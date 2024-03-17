@@ -1,170 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123C5210E7;
-	Sun, 17 Mar 2024 23:27:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E114B208B0
+	for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 23:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710718025; cv=none; b=UhzqEqbds6KZ57MLKSJXz8lmTyYrBIJ8WKhwUqmn2tmHGoA4FWJX1eLLHgLs/C/GCy1IsBAEoVrwU466q6FKxZabI82pg8CtMW95pRn2To3kaz+M6BG+dKv0OjkwskYzfzrMX4atbxi7TKzapJt3SPggLXKxwF9ZRtKAku5A1WI=
+	t=1710718230; cv=none; b=pCGxD9WDvpBRKROhT6UaePZrp+Q9z0/a/HD++zrBbSg5SZZ0IVyg0oPLSWY78uS/0Dp5dbOA5YSi+zmJA810dLl9Q3tohbdu2eUOZeOcK0jt2EkV0ZR6b1KPYFfaGk8ZqJ4B0Y1Qr42lmAfKU3wWLGmLIDvixdDYqKQU2MnhHJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710718025; c=relaxed/simple;
-	bh=J3mH4Lz+h6JdZbI06BLdCCwKx2xsG2E17TgdAzhbbZs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=btJFOn9QEv83ans4bU3Rcqmc9g2LwViSHus1rIFsaDuv5lhCDusGI5IozldBItuN7uBovHZtVw/ZKlQvO8bmioufcg0MkR8DIy6DA0IAmsQfHXsihX5H+DI9rii0Tv5FfCVHPLMbjUMmVBttvPJWqvJs8t+VNHgDORE5kS/qasI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TdrrpH9R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710718230; c=relaxed/simple;
+	bh=U75otsaamijrV2NAmRD0P2IsQSWXPIOQDC+dVt2vt8A=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=RHHxEbczCABPkMT9PexAjtj7snD65YkDmKwUt8oBYCyRI+56Ya0cxoXYOJQL0s4uOtd2gaxC8MDVqwz7UJKop3tlrzy6qjdpPDv958weXRwEwVl+KxmoRAaflDsS0F+0p8PsQTK+OeZaadD9z8Z1MQQgaIfn+b5ghJt9RDpHxvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DWIo2AnZ; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TdrrpH9R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63422C433C7;
-	Sun, 17 Mar 2024 23:27:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710718024;
-	bh=J3mH4Lz+h6JdZbI06BLdCCwKx2xsG2E17TgdAzhbbZs=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=TdrrpH9R5ddZPd3pLMl20GBDUGKcavhTcY/z3s1mBmsFgERaBEoJcVlFQ1VYU52CI
-	 ljPJdNYPCOt2S499Of5DHqXABFAEO8BTeSmn9meXzISylaLVzdeMd7GviPSi1YESvx
-	 qfG2ug+Gco9PLmYC2kwWOKui2rJ458RBcLHvb9FLmYuumOvmNXhPrWwJgdcw3qS4eD
-	 b5X7FwocaeGvEeeEqQyi4N8HCzXEpAM6y6CgMj1zTwuDLgMvTHW+xbZ3jjqG01xhT5
-	 Ef7Pek4XgfEB0W89KhIrhfu4WjugSGR4OmC03hwOSK6AhJ7bqPxEmq/SNLtESgkLzK
-	 uDZ2JzIiqyATg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 38D74CE0D83; Sun, 17 Mar 2024 16:02:27 -0700 (PDT)
-Date: Sun, 17 Mar 2024 16:02:27 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Alan Huang <mmpgouride@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	rcu@vger.kernel.org
-Subject: Re: Question about ISA2+pooncelock+pooncelock+pombonce litmus
-Message-ID: <17ddc858-a926-4f12-beda-3f54cb91bfbb@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <12E5C279-ADB1-463E-83E2-0A4F5D193754@gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DWIo2AnZ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BFFDF20007;
+	Sun, 17 Mar 2024 23:30:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1710718219;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=qUhKoh9x7/zlcPWHn7hoEfdM/jkA+eVywgtcxwW2dlw=;
+	b=DWIo2AnZrKGlhAx/y4JpoVgijRc6hTTwiMg1TY/Pb1p/wT9ODoufJwNBW7rqwzuQzbADiD
+	ycSSlX3nd8RAlVx2/ExQBR0nCx6iCBMG4VqXIH3khjtA/z5J5UcHJdD1i/pOnBzMDwafBN
+	dhTFnwfKavzS+3wR27p5Q/UpBZ4oHYmjyEq6fjAF71j923k+4iFjd70jFeOpA0lYet5gUZ
+	RnuCsrp4YyZaYEjQ2IL+W9qlGiDbLYs5+oATxQStmX4WuT/RlFlDh9a1JM+DcLRUL0hrAo
+	9q2JBSEsMOMU11okSfaF39UOHZgB6iUsFvSSuwfWsZ0/FJJ8UBLCUngHsCmouw==
+Date: Mon, 18 Mar 2024 00:30:17 +0100
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] I3C changes for 6.9
+Message-ID: <20240317233017c4c35cab@mail.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <12E5C279-ADB1-463E-83E2-0A4F5D193754@gmail.com>
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
-On Mon, Mar 18, 2024 at 01:47:43AM +0800, Alan Huang wrote:
-> Hi,
-> 
-> I’m playing with the LKMM, then I saw the ISA2+pooncelock+pooncelock+pombonce.
-> 
-> The original litmus is as follows:
-> ------------------------------------------------------
-> P0(int *x, int *y, spinlock_t *mylock)
-> {
-> 	spin_lock(mylock);
-> 	WRITE_ONCE(*x, 1);
-> 	WRITE_ONCE(*y, 1);
-> 	spin_unlock(mylock);
-> }
-> 
-> P1(int *y, int *z, spinlock_t *mylock)
-> {
-> 	int r0;
-> 
-> 	spin_lock(mylock);
-> 	r0 = READ_ONCE(*y);
-> 	WRITE_ONCE(*z, 1);
-> 	spin_unlock(mylock);
-> }
-> 
-> P2(int *x, int *z)
-> {
-> 	int r1;
-> 	int r2;
-> 
-> 	r2 = READ_ONCE(*z);
-> 	smp_mb();
-> 	r1 = READ_ONCE(*x);
-> }
-> 
-> exists (1:r0=1 /\ 2:r2=1 /\ 2:r1=0)
-> ------------------------------------------------------
-> Of course, the result is Never. 
-> 
-> But when I delete P0’s spin_lock and P1’s spin_unlock:
-> -------------------------------------------------------
-> P0(int *x, int *y, spinlock_t *mylock)
-> {
-> 	WRITE_ONCE(*x, 1);
-> 	WRITE_ONCE(*y, 1);
-> 	spin_unlock(mylock);
-> }
-> 
-> P1(int *y, int *z, spinlock_t *mylock)
-> {
-> 	int r0;
-> 
-> 	spin_lock(mylock);
-> 	r0 = READ_ONCE(*y);
-> 	WRITE_ONCE(*z, 1);
-> }
-> 
-> P2(int *x, int *z)
-> {
-> 	int r1;
-> 	int r2;
-> 
-> 	r2 = READ_ONCE(*z);
-> 	smp_mb();
-> 	r1 = READ_ONCE(*x);
-> }
-> 
-> exists (1:r0=1 /\ 2:r2=1 /\ 2:r1=0)
-> ------------------------------------------------------
-> Then herd told me the result is Sometimes.
+Hello Linus,
 
-You mean like this?
+Here is the I3C subsystem pull request for 6.9. Not much this cycle with
+only 3 patches.
 
-Test ISA2+pooncelock+pooncelock+pombonce Allowed
-States 8
-1:r0=0; 2:r1=0; 2:r2=0;
-1:r0=0; 2:r1=0; 2:r2=1;
-1:r0=0; 2:r1=1; 2:r2=0;
-1:r0=0; 2:r1=1; 2:r2=1;
-1:r0=1; 2:r1=0; 2:r2=0;
-1:r0=1; 2:r1=0; 2:r2=1;
-1:r0=1; 2:r1=1; 2:r2=0;
-1:r0=1; 2:r1=1; 2:r2=1;
-Ok
-Witnesses
-Positive: 1 Negative: 7
-Flag unmatched-unlock
-Condition exists (1:r0=1 /\ 2:r2=1 /\ 2:r1=0)
-Observation ISA2+pooncelock+pooncelock+pombonce Sometimes 1 7
-Time ISA2+pooncelock+pooncelock+pombonce 0.01
-Hash=f55b8515e48310f812aa676084f2cc88
+The following changes since commit 6613476e225e090cc9aad49be7fa504e290dd33d:
 
-> Is this expected? 
+  Linux 6.8-rc1 (2024-01-21 14:11:32 -0800)
 
-There are no locks held initially, so why can't the following
-sequence of events unfold:
+are available in the Git repository at:
 
-o	P1() acquires the lock.
+  git://git.kernel.org/pub/scm/linux/kernel/git/i3c/linux.git tags/i3c/for-6.9
 
-o	P0() does WRITE_ONCE(*y, 1). (Yes, out of order)
+for you to fetch changes up to 8f06fb45853900b4deaa52e2a9e16f3d9550b011:
 
-o	P1() does READ_ONCE(*y), and gets 1.
+  i3c: Make i3c_bus_type const (2024-02-19 21:23:28 +0100)
 
-o	P1() does WRITE_ONCE(*z, 1).
+----------------------------------------------------------------
+I3C for 6.9
 
-o	P2() does READ_ONCE(*z) and gets 1.
+Core:
+ - i3c_bus_type is now const
 
-o	P2() does smp_mb(), but there is nothing to order with.
+Drivers:
+ - dw: disabling IBI is only allowed when hot join and SIR are disabled
 
-o	P2() does READ_ONCE(*x) and gets 0.
+----------------------------------------------------------------
+Dylan Hung (1):
+      i3c: dw: Disable IBI IRQ depends on hot-join and SIR enabling
 
-o	P0() does WRITE_ONCE(*x, 1), but too late to affect P2().
+Krzysztof Kozlowski (1):
+      dt-bindings: i3c: drop "master" node name suffix
 
-o	P0() releases the lock that is does not hold, which is why you see
-	the "Flag unmatched-unlock" in the output.  LKMM is complaining
-	that the litmus test is not legitimate, and rightly so!
+Ricardo B. Marliere (1):
+      i3c: Make i3c_bus_type const
 
-Or am I missing your point?
+ Documentation/devicetree/bindings/i3c/aspeed,ast2600-i3c.yaml | 2 +-
+ Documentation/devicetree/bindings/i3c/cdns,i3c-master.yaml    | 2 +-
+ Documentation/devicetree/bindings/i3c/i3c.yaml                | 4 ++--
+ Documentation/devicetree/bindings/i3c/mipi-i3c-hci.yaml       | 2 +-
+ Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml | 2 +-
+ Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.yaml | 2 +-
+ drivers/i3c/internals.h                                       | 2 +-
+ drivers/i3c/master.c                                          | 2 +-
+ drivers/i3c/master/dw-i3c-master.c                            | 4 +++-
+ 9 files changed, 12 insertions(+), 10 deletions(-)
 
-							Thanx, Paul
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
