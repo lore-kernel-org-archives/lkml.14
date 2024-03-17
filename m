@@ -1,172 +1,94 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E6751C69D;
-	Sun, 17 Mar 2024 15:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBFA1CD18;
+	Sun, 17 Mar 2024 15:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710688982; cv=none; b=HJGXLrP9ViDQec/gjngRWO8/dRZ+c/maT9YzL6bTCA4Hnt+9IEW3ZT59AF8Y+FebhTLG/aUZ/8rDIMslQDkwcI4sAHF53R4MiOZZ26N75UqeCbf4SHhZg+Tuuwl0fAyj+zPGb04uJqlCitwzrsQXAa3KimexFBr70orCXc98R2w=
+	t=1710689020; cv=none; b=NhjFF378NgBUH9wN1JuXaqMterhMu7oSQd0DLUP8+MLyDr6nU+vpCM4o0N8fcx8qByv9D3JLiMWXSalaqLdd2BlJfHhygIzJ1x3ReIktTkhLDkmtcbWuQb6urgN2XVn8DxJfHX8/jiZ0rgT897UIn73PgppABi+4HNIKUEOiFm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710688982; c=relaxed/simple;
-	bh=lh2MHlp2ckMexGLnsmI0DncTe+skZ/F6FnmSJx8LNLs=;
+	s=arc-20240116; t=1710689020; c=relaxed/simple;
+	bh=6dx8unnGyIlSOO3NCdASCvQGbnJap2AGaxT/PghIgBY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RK83rpNctP4II4tII4p5H4995WRfuDwDZPOQErm96VcCvgHOG6ncPlwLpByUELdbt01EXXMn+dq67zsYkZ2Ce7yAhtsMIrQfIHi2BNCWWXuxKUPLrqahOtMvIZ3bwRtknhVQVD/LubF14qSaNQ+G9tAKDIl0qR01jjAvoxTD1Rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=eT598qn6; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=HcrRxlcKe2E++qXkRJi/r4B8RVKfRXgFhCLtVkejzGAeAp8DIXr8yeZavetlbBtykfI5lJ9cmrH2XfSeGFMSVwbE2xPHrOE76MaUDg3m0nQ8xgNk0ULJzklx+OdE+9/2wt1g2UJVz5j0FP24kiQpquYam5UYejcdBzACl+UUs/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OroD0fM2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="eT598qn6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
-	s=s31663417; t=1710688956; x=1711293756; i=erick.archer@gmx.com;
-	bh=4HoP6GUCEhqxSXr5hp5FLvKgj6o9jMRN49ibj6948Ew=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:
-	 In-Reply-To;
-	b=eT598qn6JeaalM1r4RmXQVJsmphHcUe+tbZgBvsuB+pTv9mgmkiMaxTskuJdh0zS
-	 nqK8sthFLkA7kJzqFWFbXkF83/NF/A5DMyS8p+bsyPaVT4RG51Q9aporhnCyIFmAQ
-	 f6LB18Bg7paBwc6hwNdLWKCERU6YegLoPb7bNCF/y0I72DAU+J3xN3N55r9eByVXr
-	 DkR1CW/z29wWfEJs/vmFnjk6QsppFXTJ2y6gvgQNU1UcYwPWajOZTEaaaHeBFKG0M
-	 3wlj+IYLP/Z35RvqXdvL4M7NV4XIXduIZgYK04fp+QHpYZnUTpFtmiEfnaud6GZxw
-	 XugVUNgl3RZBtSwaVw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from titan ([79.157.194.183]) by mail.gmx.net (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MJE2D-1rVi8V0wYd-00KirB; Sun, 17
- Mar 2024 16:22:36 +0100
-Date: Sun, 17 Mar 2024 16:22:25 +0100
-From: Erick Archer <erick.archer@gmx.com>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Erick Archer <erick.archer@gmx.com>, Kalle Valo <kvalo@kernel.org>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Kees Cook <keescook@chromium.org>, linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] mwl8k: Avoid overlapping composite structs that contain
- flex-arrays
-Message-ID: <20240317152225.GA2850@titan>
-References: <20240316150712.4633-1-erick.archer@gmx.com>
- <cfc4c4c0-83f8-437c-8146-6b86968db67b@embeddedor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OroD0fM2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AADFC433F1;
+	Sun, 17 Mar 2024 15:23:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710689019;
+	bh=6dx8unnGyIlSOO3NCdASCvQGbnJap2AGaxT/PghIgBY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OroD0fM2iU5cf8kuRZycsEjYdR4NaQoMMTbogTvIm0PpRetOIKUucKqHqOKKlkMU5
+	 2unHyLl3LaI9e2tZ/QkVjHD84mKizVUSo1YNb8eoGVssfhFMcUHmGshiUNqD0YHWHi
+	 oZUoGusZXxD/FzqTiCW8z0muraQdZNrvjCoOYucFTdnCuEKS2Gpak8fNka5hSQa4Dz
+	 6QgOEdFp59rce2XDkvyOgbqKzjCWsbc01UFZjsRy2IfsLPZMqiT3KWrloGZsH+roRI
+	 nPp3QZD4H9MQbTV6LxoJ4p0OQJyD3kg4hF410FGE281/kzbiIWLEbjRDmXCiJe/z2B
+	 cTtz6zQNOkLvg==
+Date: Sun, 17 Mar 2024 15:23:35 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: clock: samsung,s3c6400-clock: convert to DT
+ Schema
+Message-ID: <20240317-curator-smoky-99568f9308bc@spud>
+References: <20240312185035.720491-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="avAJPhhF1TQgfXmM"
+Content-Disposition: inline
+In-Reply-To: <20240312185035.720491-1-krzysztof.kozlowski@linaro.org>
+
+
+--avAJPhhF1TQgfXmM
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cfc4c4c0-83f8-437c-8146-6b86968db67b@embeddedor.com>
-X-Provags-ID: V03:K1:iJSmX0g5bCjMfunDwDcxRBemvxA3sjELLaorhmxZxOOKFPz15cS
- lexxXL/fS6hfnoKdd1Cjbc3I+zLkWqQjp9BOQoyN47U33mu4kUE9z2KWxBheNIUAJ4DMO1d
- 1inSFW3Gr1pCDnRRIF6M2y2x2PUpSP2njBglcxgOSg9RK6iVz+vgy9L5mTrnl1e3ctEP1Ao
- q+hv8SV7isarp9OwLkLow==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:HvsWI6BjGPo=;J4J2pYE0PSII/hrBc70lKcFg4X2
- am2ZTLIRcO582PnieP8iYg6pWc0G2ahvPVjvdMpZlXt5I7QsURD+MmauSXbshn1CUmu6iNrsJ
- vcjoz/7afePOcAJPnWg0MdpW5PDkZ0Na12JY+UpYcx7bpMc2vExKI+AKVVtKRmr9r+yoNXXDq
- Uv2PXagj10MOcMXOLTlOg3Yqma4Xyys8Gvj2hOqFQhSUoJHQnojV5jrw3YkfIMKQfSztCq75r
- jwU2fUtzto/Oj9rd8iqqg4EVzXNSiAvLHN4F4t2ke6W7mUj/zo0d7dBW3/fyI/6dYqKP/Nj8O
- evX10tzKMZNKhxV9qX+IVaBQZipZu8uBIkecZ4+CBfqPSDsAx/WpVG4iNVL6+zv2DEHbTTP5F
- Zl4N1fs/kG4gFG2r26qOkSLbPqfv8HXpF1nRTT1pjB7rld8xd9tK4WJQwUGubmmIutS1VOr11
- GiBl73Acp8+z55qLtbvAm+YiUxaOeC91vcRTOwW0UdUM59Wc2EqCcJWs46zvIWDQReJbxskt7
- Eh/kV5LlSP+BYcRVpmwZ/HGUB6lljDhyH5vXtF5V7cyvyMiLCcSFpt1C3QyWFCTJl29CYantk
- KGbyrczaZWP+YDhEFxAmjcQGtDAq822pGRRpXFYZVD12zxs89UPI+el125bAWTs6I2YEoNOLk
- BLjHloSAQ8rOk/v3lwNlTl5N0hAEZC9CZO3wpIojnHgTbOiocNvD/JsW/5/rbR4cffp1djk1H
- QoWHZuoVGpWsKFgsfhiSj5smrihe4EcJjPzIiig645MB7ZWJvtmhW5fPdQvgw0A4jeAmGBTbq
- 5l/HTJr2EZZgeihSwgVlAde4TA2Y91L4kAyjPpCWJ1t4M=
-Content-Transfer-Encoding: quoted-printable
 
-Hi Gustavo,
+On Tue, Mar 12, 2024 at 07:50:35PM +0100, Krzysztof Kozlowski wrote:
+> Convert Samsung S3C6400/S3C6410 SoC clock controller bindings to DT
+> schema.
 
-On Sat, Mar 16, 2024 at 12:59:11PM -0600, Gustavo A. R. Silva wrote:
->
-> [..]
->
-> >
-> > Link: https://github.com/KSPP/linux/issues/202 [1]
-> > Signed-off-by: Erick Archer <erick.archer@gmx.com>
-> > ---
-> > Hi everyone,
-> >
-> > This patch is based on my understanding of the code. Any comments woul=
-d
-> > be greatly appreciated.
->
-> Thanks for looking into this. :)
->
-> I'm currently in the process of trying a general solution for all these
-> composite structures without having to use two separate structs, avoid t=
-oo
-> much code churn, and continue allowing for __counted_by() annotations at
-> the same time.
+> +description: |
+> +  There are several clocks that are generated outside the SoC. It is expected
+> +  that they are defined using standard clock bindings with following
+> +  clock-output-names:
+> +   - "fin_pll" - PLL input clock (xtal/extclk) - required,
+> +   - "xusbxti" - USB xtal - required,
+> +   - "iiscdclk0" - I2S0 codec clock - optional,
+> +   - "iiscdclk1" - I2S1 codec clock - optional,
+> +   - "iiscdclk2" - I2S2 codec clock - optional,
+> +   - "pcmcdclk0" - PCM0 codec clock - optional,
+> +   - "pcmcdclk1" - PCM1 codec clock - optional, only S3C6410.
 
-I searched the mailing list and found several of your patches:
+I know you've only transfered this from the text binding, but what is
+the relevance of this to the binding for this clock controller? This
+seems to be describing some ?fixed? clocks that must be provided in
+addition to this controller. I guess there's probably no other suitable
+place to mention these?
 
-Link: https://lore.kernel.org/linux-hardening/ZfCXBykRw5XqBvf0@neat/
-Link: https://lore.kernel.org/linux-hardening/cover.1709658886.git.gustavo=
-ars@kernel.org/
-Link: https://lore.kernel.org/linux-hardening/ZeeaRuTpuxInH6ZB@neat/
+--avAJPhhF1TQgfXmM
+Content-Type: application/pgp-signature; name="signature.asc"
 
-In all of them you use the `struct_group_tagged()` helper to solve the
-overlapping scenario. Great proposal ;)
+-----BEGIN PGP SIGNATURE-----
 
-> I'll be sending a bunch of patches once the merge window closes. So, for
-> now, I think it's wise to wait for those patches.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZfcK9wAKCRB4tDGHoIJi
+0n1jAP4uBRwE/QjP+OzagdtaN0k4KA+oynX+Mt38hB7fNOfFLQEAst51oJuYomCe
+qSldXRE+01t3wKQnk9claOuGWyjV2g0=
+=ujPR
+-----END PGP SIGNATURE-----
 
-So, are you working in a patch for the "mwl8k"? Or do you prefer
-a v2 of this patch based on your proposal?
-
->
-> More comments below.
->
-> [..]
->
-> > diff --git a/drivers/net/wireless/marvell/mwl8k.c b/drivers/net/wirele=
-ss/marvell/mwl8k.c
-> > index ce8fea76dbb2..57de32ba4efc 100644
-> > --- a/drivers/net/wireless/marvell/mwl8k.c
-> > +++ b/drivers/net/wireless/marvell/mwl8k.c
-> > @@ -586,13 +586,17 @@ static int mwl8k_request_firmware(struct mwl8k_p=
-riv *priv, char *fw_image,
-> >   	return 0;
-> >   }
-> >
-> > -struct mwl8k_cmd_pkt {
-> > +struct mwl8k_cmd_pkt_hdr {
-> >   	__le16	code;
-> >   	__le16	length;
-> >   	__u8	seq_num;
-> >   	__u8	macid;
-> >   	__le16	result;
-> > -	char	payload[];
-> > +} __packed;
-> > +
-> > +struct mwl8k_cmd_pkt {
-> > +	struct mwl8k_cmd_pkt_hdr header;
-> > +	char payload[];
-> >   } __packed;
->
-> One of the problems with this is that `struct mwl8k_cmd_pkt` is candidat=
-e for a
-> `__counted_by()` annotation:
->
-> @@ -592,7 +592,7 @@ struct mwl8k_cmd_pkt {
->         __u8    seq_num;
->         __u8    macid;
->         __le16  result;
-> -       char    payload[];
-> +       char    payload[] __counted_by(length);
->  } __packed;
->
-> and with the changes you propose, that is not possible anymore because t=
-he counter
-> member must be at the same level or in an anonymous struct also at the s=
-ame level
-> as `payload`.
-
-Ok, I understand the problem you raise and I agree.
-Anyway, thanks for your comments.
-
-Best regards,
-Erick
-
-> Thanks
-> --
-> Gustavo
->
+--avAJPhhF1TQgfXmM--
