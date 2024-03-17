@@ -1,329 +1,729 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEFD01BC30
-	for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 12:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F16E179AE;
+	Sun, 17 Mar 2024 13:02:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710680235; cv=none; b=B8a/NxjHzQXUrpKnVlQ0c+Z6tjvXqkEq4wsms3vVPZ2rZ04USzRnvbdENPf8ewXqzt7T4mT/GkyAAWTkD3CvBIeShGcejkqGleFnTnkIJPG+CPGc0GdKGbEyBAEwEsdHavjg1M7BI6doqLrSUWbE9Jprt60b0h4ptlhw5LafTTg=
+	t=1710680565; cv=none; b=TmixMAFiNlhIJoBfx7gIOrgSQ7IzHdriIAIbrzOZjmrGpgvDOuW0zU99iD2BasXxO5/O/s8yuqCJjNdQe79rvLXEbpmILXCA4lN1wPfxddCMfxUsqDlWS/DSPKDZJuCygpdHNihyD944YtxFNYptUj7G5r6bgLJLlEjkB8xJ2a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710680235; c=relaxed/simple;
-	bh=lc36DdAxn0rHBZyiltihGVeZ46jLuBlOH5NHV0k+tYU=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=NQwcZG4pJAYl832GAvjQd43hJG9MGLaTbrBPK4JNAhgsZALG+YSVult+c7/Sth2YJZ7rpEdVEOq4hJEmJd2um1GmdQE3s1IAo7DlgP1nQchVd5Z7HDvm4gQGy42hzvJjWwBl0yhHMkF3wzb5GNQukm0otu4l8114KZSRkUPqph8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kSk7u4VI; arc=none smtp.client-ip=209.85.208.44
+	s=arc-20240116; t=1710680565; c=relaxed/simple;
+	bh=ehv+YqI4xfsyRY+GMdU/1RCy4yog9DdyEyCmnz0qdaU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B2OCeKPgPJbkq91onFl8TRwwrXY14ZbLWC65Uf8cZ0WW8hUTH3Ab0yasr53OL5v8gkIWahB6RXobb6GXSkvmeWrPxPmPkV9ZRPSgZX13GcRp1g8ShjtKl2YlyisBqrTTDR7JWVpajDlEFvnP45MU7VKV4zu5qi/eSpnDl5Tt/o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vlf/Qie5; arc=none smtp.client-ip=209.85.219.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kSk7u4VI"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-568aa3096e9so3744637a12.0
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 05:57:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vlf/Qie5"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-690cbf99143so21093136d6.3;
+        Sun, 17 Mar 2024 06:02:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710680231; x=1711285031; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=eVoGTBJUp3BbV6NfDLt15vJ1FZo8CfrjmTE1ytSRGTQ=;
-        b=kSk7u4VIby8cbdJxwKyYzm7MMPYYLwHJb9ID+nN2SGkwPElEg2M6w+FxVes12GqV0z
-         E4FEVT0q7o0WaYcblpZN4GVsa+TUel8QeqvcVgswtLuAECZ8/x/XXKjisqN5a1f3ye+4
-         FvY5BdXrP3eb8Bk4SfYNxIGaakxhYUhBqsYpLz8F4o4UxhPEPjt7Bx5DXqJusFHYNUrS
-         uCoZRyFrvdzigKtGK0Od0KajhcxnKjcO4QRwJEC+pjtR2fPcpcAQhtOI+IBtfRPIX4j5
-         KtAhC/Ke09heiMaFph0qMKXas3j3N1YBdKqzaN/mb5GmbMjT/mP6D8AgYoIo0xlOXPP9
-         dVOw==
+        d=gmail.com; s=20230601; t=1710680562; x=1711285362; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=IUVun7Ew+1vseAO4htD3v8z/NOFT12YrrcbC5vkfZfA=;
+        b=Vlf/Qie5K2RKl2DzFFaG1NZfBY8sWmtbrszZWUO1pY8EcrxLVqV2mDhW91MAj8Iv7O
+         h5LMUHofeIGpTo5coKSvjxWR+h9/nWLIAJe5Z/EI0VkGOs1arG2wVy4oWtURfsZXxYw7
+         XC3//FaikIg/hy4UOKPoi0CXo5+FlKnOsUdESWmSzv3ng351L4V4cHJ53TAsEALErNbM
+         NRUl+KYVnDIXuugGkPEWpK4tmtcmY6zz52YjtZ9gogOjizIM9nvOOK8NpGFIg18VEtJT
+         MzM9v/FpJ5OWYitnafL4zXnYOULzaX6+TbMlRA13xz4ZqSrysT6pTlrfKLQuWSKCuEZD
+         k5MQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710680231; x=1711285031;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eVoGTBJUp3BbV6NfDLt15vJ1FZo8CfrjmTE1ytSRGTQ=;
-        b=cqMeo88HZ8FKm5hnNlqa9WPblp/psLxm9oveYpGxkM3uRcMuxa30wQ35NcaHD//yhC
-         dG+RrGcyaj0GTwYESWBJIKhxaFtG66dkJWVbbsTkDJh2RtrfC1TCltpw5rMYBDDRpZ6H
-         8QPNHGGKxHKRH2aQxbP3VkCDGBijl7l+jbJa/MDcohnbC76B3sinNQRbIm3+n+NoXjvs
-         jZHFsdvWYWxjdxzTF1y4DvqiKrIE6duh5Sx4QL5Z9IBwyjIR894S6I0bWisidP69WurM
-         OA8iUuuVneJFo7HBRN+FKqJEjK56GgpNXKMqZ1c1L/V7kfmpWhZd+ELTw2v+aSMVJqx0
-         pvNA==
-X-Forwarded-Encrypted: i=1; AJvYcCXxZcenOmDnHE0NwPJPuuUHCxF5Jol1a2Z6t/XIuCC4OEOmQ+uYW6A4Ka/xTmbwKCriVabGViy9d/uzlX4NpJbRD1vMNfqwVuEHJQo4
-X-Gm-Message-State: AOJu0YwE0mFAgPTPWWWTXnLZaRzJFMuvA2/u8MOkEsyuGsxgZ+xYR0no
-	VmpkjClcue6kLTIy0ql9AenIkEAIm1FSzbhMQ6+2imavHEIblQ6MoW1H2zj+qs9EQLHGSoW2mxd
-	zOS2HuSxf1J2V8zaMpa1bAFzpb8s=
-X-Google-Smtp-Source: AGHT+IFR5d1ViO/fD+SzvfulrBCAJbLzhAHF+tiIG+WaaeO1jrmmSJtz4ZJPaKKUGiSoESB0jGnePZZQVPoQDZ54vXE=
-X-Received: by 2002:a17:906:2a58:b0:a46:9f12:ca2a with SMTP id
- k24-20020a1709062a5800b00a469f12ca2amr3578745eje.22.1710680231144; Sun, 17
- Mar 2024 05:57:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710680562; x=1711285362;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IUVun7Ew+1vseAO4htD3v8z/NOFT12YrrcbC5vkfZfA=;
+        b=Dt3VrRgb689C9E/rjxrDiGAzlBb8er46jbgyhPKQ5z8aDxn4rlauAi9li+R9RSnmEc
+         D/sgkc0buHcMX6zS7WX0o8SxN2HaknEAvUpVDq39D7HcI6M1NQmcKKyWsc0lq8ohO3Ta
+         5gbqUvZL6QGNKlPHAyZZNyHW6WDHezIssfj2Vpn7sTc1vn5aDvQLE6vmEhSJd91wuo1G
+         yQ2OemnHb3/n2d8zjmSzWliIVZEiT4DVFOlcFAI9nXGsYUDvKERnG22nnYaIJ3/3AD0x
+         1rpqz+m5KimQS/32/e24DLHruwnmKWEtQCva7terlAJwMl6K7/YZjWVYU2dx4MPcsZvL
+         /ZQA==
+X-Forwarded-Encrypted: i=1; AJvYcCW1U7CQhZDBiH09zZ8Ll4qLnT5wP/ObU0zG72VZxOoFu1LUUlYHVvvQ0QuqsXAfoJXA2Mw3FOWXxH7bpLc+XlD5PdAdYCK16ZEv4tOX
+X-Gm-Message-State: AOJu0Yy3QCW8jLq416q/0EMQ3T00/KlDnPKxS2kcNFZKF9jsIhHI/a5m
+	DrGHo0X+q9NFMTIKYAUvm4CCDBCrkoabf4lt9ahSSFkatyNrT2USffZnZcWv
+X-Google-Smtp-Source: AGHT+IGO2UpcCgh3M8AP5XcS2WBXN6LBa0FMfNm+Y1hRtMSjccYSO/dpCqHKYysAH90AF0GfF4SMiQ==
+X-Received: by 2002:a05:6214:141b:b0:690:87d0:b9d6 with SMTP id pr27-20020a056214141b00b0069087d0b9d6mr11070914qvb.22.1710680562198;
+        Sun, 17 Mar 2024 06:02:42 -0700 (PDT)
+Received: from localhost ([2601:8c:502:14f0:acdd:1182:de4a:7f88])
+        by smtp.gmail.com with ESMTPSA id jq15-20020ad45fcf000000b00690ff31fcd0sm4087227qvb.79.2024.03.17.06.02.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Mar 2024 06:02:41 -0700 (PDT)
+Date: Sun, 17 Mar 2024 05:02:39 -0400
+From: Oliver Crumrine <ozlinuxc@gmail.com>
+To: Alejandro Colomar <alx@kernel.org>
+Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ip.7: Add not supported by SOCK_STREAM to socket options
+Message-ID: <6okjxxxylfeedmng6xafklbyrnleihzw3twr6mqvta4ihuxaxc@3bpndgyuv6ek>
+References: <ZeXzuWVmC9AnsECt@debian>
+ <7ubz52rfdl2i76sotvd3s4thv6jvbfao6zct3sywqus2owlvkx@wpbeqqdvipo4>
+ <ZehMWQ0LkemsTHAC@debian>
+ <CAK1VsR0XZMgUW8qMQMcDPohD8-+OZsgW68sZegLbVy6cdoWucQ@mail.gmail.com>
+ <ZehrtwSDQV-X7BXV@debian>
+ <CAK1VsR3MsyphK+=rA7XcEigiSd6J_-QsVW+8hH1fU9xmRY3nGQ@mail.gmail.com>
+ <CAK1VsR2zaCT3Bs1cwCEfLhAPXjwNk1byzNq5y32C736=hxqjoA@mail.gmail.com>
+ <ZfX0EBsVl4a5FQ_L@debian>
+ <f7pbphvm5cqgdblxyhbz6xucfu3fvfmvhidl2hftqirr6bn2bh@sfz26be5ss5e>
+ <ZfZPTsdxElzcqtpe@debian>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: cheung wall <zzqq0103.hey@gmail.com>
-Date: Sun, 17 Mar 2024 20:56:59 +0800
-Message-ID: <CAKHoSAt10iG-GD_4GAjRRsRenBAf5UzhjqVaF+XaAtfWb0bTHQ@mail.gmail.com>
-Subject: INFO: rcu detected stall in sys_openat
-To: Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-when using Healer to fuzz the latest Linux Kernel, the following crash
-
-was triggered on:
+Content-Type: multipart/mixed; boundary="vdeu5jh3fuqq53yh"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZfZPTsdxElzcqtpe@debian>
 
 
-HEAD commit: e8f897f4afef0031fe618a8e94127a0934896aba  (tag: v6.8)
+--vdeu5jh3fuqq53yh
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-git tree: upstream
+On Sun, Mar 17, 2024 at 03:02:53AM +0100, Alejandro Colomar wrote:
+> Hi Oliver,
+> 
+> On Sat, Mar 16, 2024 at 02:41:13PM -0400, Oliver Crumrine wrote:
+> > On Sat, Mar 16, 2024 at 08:33:36PM +0100, Alejandro Colomar wrote:
+> > > Hi Oliver,
+> > > 
+> > > On Wed, Mar 13, 2024 at 02:27:17PM -0400, Oliver Crumrine wrote:
+> > > > > Hi Alex,
+> > > > > I apologize for your repeated troubles with my test program.
+> > > > > I have attached a video of myself using it in the method that I
+> > > > > described to you. (I emailed you off-list as to avoid sending a 12
+> > > > > MB video to the whole list)
+> > > > >
+> > > > > If you are using it in the same way that works for me, I don't know
+> > > > > what the problem is. If I could've been clearer in my instructions, let
+> > > > > me know for the future.
+> > > > >
+> > > > > Thanks,
+> > > > > Oliver
+> > > > 
+> > > > Hi Alex,
+> > > > Were you able to make any progress whatsoever with this test program?
+> > > 
+> > > I'm sorry, but I haven't been able to reproduce the behavior.  The test
+> > > programs have several problems which I reported in previous mails.
+> > > Maybe there's something that makes it unstable and in your system
+> > > behaves differently?  Please clean up those examples, and try to run
+> > > them in a different system, and maybe then I can reproduce it.
+> > > 
+> > > Have a lovely day!
+> > > Alex
+> > > 
+> > > 
+> > > $ uname -a
+> > > Linux debian 6.8.0-rc7-alx-dirty #3 SMP PREEMPT_DYNAMIC Mon Mar  4 15:24:33 CET 2024 x86_64 GNU/Linux
+> > > 
+> > > -- 
+> > > <https://www.alejandro-colomar.es/>
+> > Hi Alex,
+> > I have cleaned up my test programs. I have also tested them on other
+> > systems (including on systems which I had installed the rc7 kernel
+> > onto). In the very slight chance that your netcat isn't working, (very 
+> > narrow chances, but still there), I have attached client programs to go 
+> > along with the servers.
+> > Thanks,
+> > Oliver
+> 
+> I still get warnings when compiling them.  There's clearly dead code in
+> them.
+> 
+> alx@debian:~/tmp$ cc -Wall -Wextra ds.c -o ds
+> ds.c: In function ‘main’:
+> ds.c:26:14: warning: unused variable ‘buf’ [-Wunused-variable]
+>    26 |         char buf[BUFSIZ];
+>       |              ^~~
+> alx@debian:~/tmp$ cc -Wall -Wextra dc.c -o dc
+> dc.c: In function ‘main’:
+> dc.c:16:13: warning: unused variable ‘send_len’ [-Wunused-variable]
+>    16 |         int send_len;
+>       |             ^~~~~~~~
+> 
+> 
+> > #include <stdio.h>
+> > #include <err.h>
+> > #include <string.h>
+> > #include <stdlib.h>
+> > #include <arpa/inet.h>
+> > #include <sys/socket.h>
+> > #include <unistd.h>
+> > 
+> > #define PORT 8888 //The port on which to send data
+> > #define ADDR "127.0.0.1" //The internet address to send packets to
+> > 
+> > int main(void){
+> > 	int s;
+> > 	struct sockaddr_in server_addr;
+> > 
+> > 	int send_len;
+> > 	char buf[] = "testing 1 2 3\n";
+> > 
+> > 	s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+> > 	if(s == -1){
+> > 		err(1, "error creating socket");
+> > 	}
+> > 
+> > 	memset((char*)&server_addr, 0, sizeof(server_addr));
+> 
+> You shouldn't be casting pointers that you pass to memset(3).  It
+> accepts almost anything.  That cast defeats the little type safety that
+> it has.
+> 
+> > 	
+> > 	server_addr.sin_family = AF_INET;
+> > 	server_addr.sin_port = htons(PORT);
+> > 	if(inet_pton(AF_INET, ADDR, &server_addr.sin_addr) != 1){ //I realize I'm checking the return value differently here. If you read the man page for inet_pton, it'll make sense.
+> > 		err(1, "error converting network address");
+> > 	}
+> > 
+> > 	if(sendto(s, buf, strlen(buf), 0, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1){
+> > 		err(1, "error sending data");
+> > 	}
+> > 	
+> > 	close(s);
+> > 
+> > 
+> 
+> Why two blanks here?
+> 
+> > }
+> 
+> > #include<stdio.h>
+> > #include<err.h>
+> > #include<string.h>
+> > #include<stdlib.h>
+> > #include<arpa/inet.h>
+> > #include<sys/socket.h>
+> > #include<unistd.h>
+> > 
+> > #define PORT 8888	//The port on which to listen for incoming data
+> > 
+> > 
+> > //Hi Alex,
+> > //These are the two lines that allow you to switch between the three socket options outlined in my patch
+> > //The socket options tell the kernel to add a control message (cmsg), allowing the program
+> > //to recieve the data it is requesting. The three options are: IP_RECVTOS for the type of service byte,
+> > //IP_RECVORIGDSTADDR for the orignial dst address, and IP_PKTINFO for some random packet info.
+> > #define SOCKOPT IP_RECVORIGDSTADDR
+> > //This field is synonymous with the above one. Valid options are: IP_TOS, IP_ORIGDSTADDR, and IP_PKTINFO
+> > #define RECIVEOPTION IP_ORIGDSTADDR
+> > 
+> > int main(void){
+> > 	struct sockaddr_in local_addr;
+> > 	
+> > 	int s;
+> > 	int recv_len;
+> > 	char buf[BUFSIZ];
+> > 	
+> > 	s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+> > 	if (s == -1){
+> > 		err(1, "error creating socket");
+> > 	}
+> > 	
+> > 	memset((char *) &local_addr, 0, sizeof(local_addr));
+> > 	
+> > 	local_addr.sin_family = AF_INET;
+> > 	local_addr.sin_port = htons(PORT);
+> > 	local_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+> > 
+> > 	int yes = 1;
+> > 	if(setsockopt(s, IPPROTO_IP, SOCKOPT, &yes, sizeof(yes)) == -1){
+> > 		err(1, "error setting socket option");
+> > 	}
+> > 
+> > 
+> > 	if(bind(s, (struct sockaddr*)&local_addr, sizeof(local_addr) ) == -1){
+> > 		err(1, "error binding to port. try changing it or running as root");
+> > 	}
+> > 
+> > 	while(1){
+> > 		struct msghdr mhdr;
+> > 		struct iovec iov[1];
+> > 		struct cmsghdr *cmhdr;
+> > 		char control[1000];
+> > 		char databuf[1500];
+> > 		unsigned char tos = 0;
+> > 		
+> > 		mhdr.msg_name = &local_addr;
+> > 		mhdr.msg_namelen = sizeof(local_addr);
+> > 		mhdr.msg_iov = iov;
+> > 		mhdr.msg_iovlen = 1;
+> > 		mhdr.msg_control = &control;
+> > 		mhdr.msg_controllen = sizeof(control);
+> > 		iov[0].iov_base = databuf;
+> > 		iov[0].iov_len = sizeof(databuf);
+> > 		memset(databuf, 0, sizeof(databuf));	
+> > 		
+> > 		//this is blocking
+> > 		if ((recv_len = recvmsg(s, &mhdr, 0)) == -1){
+> > 			err(1, "recvmsg");
+> > 		}
+> > 		cmhdr = CMSG_FIRSTHDR(&mhdr);
+> > 		while (cmhdr) {
+> > 			printf("cmsg recieved\n");
+> >     		    if (cmhdr->cmsg_level == IPPROTO_IP && cmhdr->cmsg_type == RECIVEOPTION) {
+> 
+> Don't mix spaces and tabs.
+> 
+> 
+> Have a lovely night!
+> Alex
+> 
+> >     		        //read the byte recieved
+> > 			    tos = ((unsigned char *)CMSG_DATA(cmhdr))[0];
+> >     		    }
+> >     		    cmhdr = CMSG_NXTHDR(&mhdr, cmhdr);
+> >     		}
+> > 		//print out the first byte of data recieved in hex. You can verify this in wireshark if you like.
+> >     		printf("data read: %sbyte = %02X\n", databuf, tos); 	
+> > 		
+> > 	}
+> > 
+> > 	close(s);
+> > 	return 0;
+> > }
+> 
+> > #include <stdio.h>
+> > #include <err.h>
+> > #include <string.h>
+> > #include <stdlib.h>
+> > #include <arpa/inet.h>
+> > #include <sys/socket.h>
+> > #include <unistd.h>
+> > 
+> > #define PORT 8888 //The port on which to send data
+> > #define ADDR "127.0.0.1" //The internet address to send packets to
+> > 
+> > int main(void){
+> > 	int s;
+> > 	struct sockaddr_in server_addr;
+> > 
+> > 	int send_len;
+> > 	char buf[] = "testing 1 2 3\n";
+> > 
+> > 	s = socket(AF_INET, SOCK_STREAM, 0);
+> > 	if(s == -1){
+> > 		err(1, "error creating socket");
+> > 	}
+> > 
+> > 	memset((char*)&server_addr, 0, sizeof(server_addr));
+> > 	
+> > 	server_addr.sin_family = AF_INET;
+> > 	server_addr.sin_port = htons(PORT);
+> > 	if(inet_pton(AF_INET, ADDR, &server_addr.sin_addr) != 1){ // I realize I'm checking the return value differently here. If you read the man page for inet_pton, it'll make sense.
+> > 		err(1, "error converting network address");
+> > 	}
+> > 
+> > 	if(connect(s, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1){
+> > 		err(1, "error connecting");
+> > 	}
+> > 	if(send(s, buf, strlen(buf), 0) == -1){
+> > 		err(1, "error sending data");
+> > 	}
+> > 	
+> > 	close(s);
+> > 
+> > 
+> > }
+> 
+> > #include<stdio.h>
+> > #include<err.h>
+> > #include<string.h>
+> > #include<stdlib.h>
+> > #include<arpa/inet.h>
+> > #include<sys/socket.h>
+> > #include<unistd.h>
+> > 
+> > #define PORT 8888	//The port on which to listen for incoming data
+> > 
+> > 
+> > //Hi Alex,
+> > //These are the two lines that allow you to switch between the three socket options outlined in my patch
+> > //The socket options tell the kernel to add a control message (cmsg), allowing the program
+> > //to recieve the data it is requesting. The three options are: IP_RECVTOS for the type of service byte,
+> > //IP_RECVORIGDSTADDR for the orignial dst address, and IP_PKTINFO for some random packet info.
+> > #define SOCKOPT IP_RECVORIGDSTADDR
+> > //This field is synonymous with the above one. Valid options are: IP_TOS, IP_ORIGDSTADDR, and IP_PKTINFO
+> > #define RECIVEOPTION IP_ORIGDSTADDR
+> > 
+> > int main(void){
+> > 	struct sockaddr_in local_addr;
+> > 	
+> > 	int s;
+> > 	int recv_len;
+> > 	char buf[BUFSIZ];
+> > 	
+> > 	s = socket(AF_INET, SOCK_STREAM, 0);
+> > 	if (s == -1){
+> > 		err(1, "error creating socket");
+> > 	}
+> > 	
+> > 	memset((char *) &local_addr, 0, sizeof(local_addr));
+> > 	
+> > 	local_addr.sin_family = AF_INET;
+> > 	local_addr.sin_port = htons(PORT);
+> > 	local_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+> > 
+> > 	int yes = 1;
+> > 	if(setsockopt(s, IPPROTO_IP, SOCKOPT, &yes, sizeof(yes)) == -1){
+> > 		err(1, "error setting socket option");
+> > 	}
+> > 
+> > 
+> > 	if(bind(s, (struct sockaddr*)&local_addr, sizeof(local_addr) ) == -1){
+> > 		err(1, "error binding to port. try changing it or running as root");
+> > 	}
+> > 	
+> > 	if(listen(s, 10) == -1){ //10 is the backlog of un-accepted connections. its just an arbitrary number
+> > 		err(1, "error listening on port");
+> > 	}
+> > 
+> > 	while(1){
+> > 		int connfd = accept(s, (struct sockaddr*)NULL, NULL);
+> > 		if(connfd == -1){
+> > 			err(1, "error accepting connection");
+> > 		}
+> > 		if(setsockopt(s, IPPROTO_IP, SOCKOPT, &yes, sizeof(yes)) == -1){ //stream sockets should have this set on the connected socket as well. I left it above for uniformity between the two programs.
+> > 			err(1, "error setting socket option");
+> > 		}
+> > 	
+> > 		struct msghdr mhdr;
+> > 		struct iovec iov[1];
+> > 		struct cmsghdr *cmhdr;
+> > 		char control[1000];
+> > 		char databuf[1500];
+> > 		unsigned char tos = 0;
+> > 		
+> > 		mhdr.msg_name = &local_addr;
+> > 		mhdr.msg_namelen = sizeof(local_addr);
+> > 		mhdr.msg_iov = iov;
+> > 		mhdr.msg_iovlen = 1;
+> > 		mhdr.msg_control = &control;
+> > 		mhdr.msg_controllen = sizeof(control);
+> > 		iov[0].iov_base = databuf;
+> > 		iov[0].iov_len = sizeof(databuf);
+> > 		memset(databuf, 0, sizeof(databuf));	
+> > 		
+> > 		//this is blocking
+> > 		if ((recv_len = recvmsg(connfd, &mhdr, 0)) == -1){
+> > 			err(1, "recvmsg\n");
+> > 		}
+> > 		cmhdr = CMSG_FIRSTHDR(&mhdr);
+> > 		while (cmhdr) {
+> > 			printf("cmsg recieved\n");
+> >     		    if (cmhdr->cmsg_level == IPPROTO_IP && cmhdr->cmsg_type == RECIVEOPTION) {
+> >     		        //read the byte recieved
+> > 			    tos = ((unsigned char *)CMSG_DATA(cmhdr))[0];
+> >     		    }
+> >     		    cmhdr = CMSG_NXTHDR(&mhdr, cmhdr);
+> >     		}
+> > 		//print out the first byte of data recieved in hex. You can verify this in wireshark if you like.
+> >     		printf("data read: %sbyte = %02X\n", databuf, tos); 	
+> > 		close(connfd);
+> > 	}
+> > 
+> > 	close(s);
+> > 	return 0;
+> > }
+> 
+> 
+> -- 
+> <https://www.alejandro-colomar.es/>
+I just realized I had cc linked to a homebrew c compler on my system and
+that's why Wall and Wextra weren't giving me the same warnings they were
+giving you. Oops.
 
-console output: https://pastebin.com/raw/U8LEMxbT
+Anyway, I have put cc back to gcc, and I finally see the unused variable
+warnings, and I cleaned them up. 
 
-kernel config: https://pastebin.com/raw/4m4ax5gq
+Peter said on the previous reply to this that netcat only worked for him
+when it was forced to IPv4, using the -4 option, so that may be the
+issue you are facing with the program.
 
-C reproducer: https://pastebin.com/raw/VBcKSXKD
 
-Syzlang reproducer: https://pastebin.com/raw/cWT05xCx
+--vdeu5jh3fuqq53yh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="testDgramSocketClient.c"
 
-If you fix this issue, please add the following tag to the commit:
+#include <stdio.h>
+#include <err.h>
+#include <string.h>
+#include <stdlib.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
-Reported-by: Qiang Zhang <zzqq0103.hey@gmail.com>
+#define PORT 8888 //The port on which to send data
+#define ADDR "127.0.0.1" //The internet address to send packets to
 
-----------------------------------------------------------
+int main(void){
+	int s;
+	struct sockaddr_in server_addr;
 
-rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-rcu: 1-...!: (1 GPs behind) idle=7a44/1/0x4000000000000000
-softirq=29512/29515 fqs=0
-workqueue: Failed to create a rescuer kthread for wq
-"ext4-rsv-conversion": -EINTR
-rcu: 4-...!: (1 GPs behind) idle=321c/1/0x4000000000000000
-softirq=29628/29631 fqs=0
-EXT4-fs: failed to create workqueue
-rcu: Tasks blocked on level-0 rcu_node (CPUs 0-4): P151/1:b..l P121/1:b..l
-rcu: (detected by 4, t=23144 jiffies, g=52361, q=1156 ncpus=5)
-Sending NMI from CPU 4 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 PID: 104 Comm: systemd-journal Not tainted 6.8.0 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-RIP: 0010:deref_stack_reg arch/x86/kernel/unwind_orc.c:403 [inline]
-RIP: 0010:unwind_next_frame+0xd02/0x2600 arch/x86/kernel/unwind_orc.c:585
-Code: 74 e5 33 00 4d 8d 75 f8 ba 08 00 00 00 48 89 df 4c 89 f6 e8 80
-f0 ff ff 31 ff 89 c6 88 44 24 28 e8 13 de 33 00 0f b6 44 24 28 <4c> 8d
-43 40 84 c0 0f 84 65 f6 ff ff e8 3d e5 33 00 4c 89 f7 e8 15
-RSP: 0018:ffff88811af09a10 EFLAGS: 00000246
-RAX: 0000000000000001 RBX: ffff88811af09a90 RCX: ffffffff90927fdd
-RDX: ffff8881043c0000 RSI: 0000000000000000 RDI: 0000000000000001
-RBP: ffffffff957d2d14 R08: ffff88811af09ad0 R09: ffff88811af09a90
-R10: 0000000000000001 R11: 1ffff110235e715c R12: 0000000000000002
-R13: ffff8881043cf1a8 R14: ffff8881043cf1a0 R15: ffffffff957d2d18
-FS:  00007faf0ef5f900(0000) GS:ffff88811af00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007faf0dfabba0 CR3: 000000010b09c003 CR4: 0000000000770ef0
-PKRU: 55555554
-Call Trace:
- <NMI>
- </NMI>
- <IRQ>
- arch_stack_walk+0xe6/0x160 arch/x86/kernel/stacktrace.c:25
- stack_trace_save+0x90/0xd0 kernel/stacktrace.c:122
- kasan_save_stack+0x24/0x50 mm/kasan/common.c:47
- kasan_save_track+0x14/0x30 mm/kasan/common.c:68
- kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:589
- poison_slab_object mm/kasan/common.c:240 [inline]
- poison_slab_object mm/kasan/common.c:211 [inline]
- __kasan_slab_free+0x106/0x190 mm/kasan/common.c:256
- kasan_slab_free include/linux/kasan.h:184 [inline]
- slab_free_hook mm/slub.c:2121 [inline]
- slab_free mm/slub.c:4299 [inline]
- kmem_cache_free+0x97/0x220 mm/slub.c:4363
- rcu_do_batch kernel/rcu/tree.c:2190 [inline]
- rcu_core+0x5f1/0x19d0 kernel/rcu/tree.c:2465
- __do_softirq+0x18a/0x575 kernel/softirq.c:553
- invoke_softirq kernel/softirq.c:427 [inline]
- __irq_exit_rcu kernel/softirq.c:632 [inline]
- irq_exit_rcu+0x7e/0xb0 kernel/softirq.c:644
- sysvec_apic_timer_interrupt+0x75/0x80 arch/x86/kernel/apic/apic.c:1076
- </IRQ>
- <TASK>
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:649
-RIP: 0010:get_current arch/x86/include/asm/current.h:42 [inline]
-RIP: 0010:__sanitizer_cov_trace_pc+0x8/0x70 kernel/kcov.c:206
-Code: 48 8b 33 b9 03 00 00 00 eb 85 0f 1f 84 00 00 00 00 00 90 90 90
-90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 48 8b 0c 24 <65> 48
-8b 14 25 00 75 03 00 65 8b 05 c0 0f 3d 6f a9 00 01 ff 00 74
-RSP: 0018:ffff8881043cf258 EFLAGS: 00000286
-RAX: 0000000000000000 RBX: ffff8881043cf2e0 RCX: ffffffff90927475
-RDX: ffff8881043c0000 RSI: 0000000000000000 RDI: 0000000000000001
-RBP: 0000000000000000 R08: ffff8881043cf320 R09: ffff8881043cf2e0
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
-R13: ffffffff90fdc428 R14: ffff8881043cf321 R15: ffff8881043cf380
- orc_find arch/x86/kernel/unwind_orc.c:202 [inline]
- unwind_next_frame+0x195/0x2600 arch/x86/kernel/unwind_orc.c:494
- arch_stack_walk+0xe6/0x160 arch/x86/kernel/stacktrace.c:25
- stack_trace_save+0x90/0xd0 kernel/stacktrace.c:122
- kasan_save_stack+0x24/0x50 mm/kasan/common.c:47
- kasan_save_track+0x14/0x30 mm/kasan/common.c:68
- unpoison_slab_object mm/kasan/common.c:312 [inline]
- __kasan_slab_alloc+0x59/0x70 mm/kasan/common.c:338
- kasan_slab_alloc include/linux/kasan.h:201 [inline]
- slab_post_alloc_hook mm/slub.c:3813 [inline]
- slab_alloc_node mm/slub.c:3860 [inline]
- kmem_cache_alloc_lru+0xde/0x250 mm/slub.c:3879
- __d_alloc+0x31/0x8b0 fs/dcache.c:1624
- d_alloc+0x44/0x1e0 fs/dcache.c:1704
- d_alloc_parallel+0xe6/0xb00 fs/dcache.c:2462
- __lookup_slow+0x10b/0x3e0 fs/namei.c:1678
- lookup_slow fs/namei.c:1710 [inline]
- walk_component+0x346/0x5b0 fs/namei.c:2005
- link_path_walk.part.0.constprop.0+0x788/0xce0 fs/namei.c:2332
- link_path_walk fs/namei.c:2257 [inline]
- path_openat+0x274/0x36f0 fs/namei.c:3798
- do_filp_open+0x1c9/0x420 fs/namei.c:3829
- do_sys_openat2+0x164/0x1d0 fs/open.c:1404
- do_sys_open fs/open.c:1419 [inline]
- __do_sys_openat fs/open.c:1435 [inline]
- __se_sys_openat fs/open.c:1430 [inline]
- __x64_sys_openat+0x140/0x1f0 fs/open.c:1430
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xb3/0x1b0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x6f/0x77
-RIP: 0033:0x7faf0f8141a4
-Code: 84 00 00 00 00 00 44 89 54 24 0c e8 36 58 f9 ff 44 8b 54 24 0c
-44 89 e2 48 89 ee 41 89 c0 bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d
-00 f0 ff ff 77 34 44 89 c7 89 44 24 0c e8 68 58 f9 ff 8b 44
-RSP: 002b:00007ffd17d44e80 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
-RAX: ffffffffffffffda RBX: 0000560a53366d60 RCX: 00007faf0f8141a4
-RDX: 0000000000080802 RSI: 0000560a533a3070 RDI: 00000000ffffff9c
-RBP: 0000560a533a3070 R08: 0000000000000000 R09: ffffffffffffff01
-R10: 0000000000000000 R11: 0000000000000293 R12: 0000000000080802
-R13: 00000000fffffffa R14: 0000560a533a0a40 R15: 0000000000000002
- </TASK>
-CPU: 4 PID: 9150 Comm: systemd-udevd Not tainted 6.8.0 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-RIP: 0010:finish_task_switch.isra.0+0x178/0x850 kernel/sched/core.c:5274
-Code: 00 00 49 8b 9c 24 c8 09 00 00 48 85 db 0f 85 1d 04 00 00 e8 ea
-7a 24 00 4c 89 e7 e8 c2 ac f5 02 fb 65 4c 8b 24 25 00 75 03 00 <49> 8d
-bc 24 38 0a 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48
-RSP: 0018:ffff88801a4ef9d8 EFLAGS: 00000212
-RAX: 0000000040000000 RBX: 0000000000000000 RCX: ffffffff90a1ea4e
-RDX: ffff888102e0a200 RSI: 0000000000000000 RDI: 0000000000000001
-RBP: ffff88801a4efa20 R08: 0000000000000000 R09: fffffbfff2a119d2
-R10: 0000000000000000 R11: 000000000000cc85 R12: ffff888102e0a200
-R13: ffff8881029f1100 R14: ffff888102e0a200 R15: ffff888102e0a200
-FS:  00007ff2754708c0(0000) GS:ffff88811b200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffbd72bb910 CR3: 000000001e928004 CR4: 0000000000770ef0
-PKRU: 55555554
-Call Trace:
- <IRQ>
- </IRQ>
- <TASK>
- context_switch kernel/sched/core.c:5403 [inline]
- __schedule+0xd3c/0x2460 kernel/sched/core.c:6727
- __schedule_loop kernel/sched/core.c:6802 [inline]
- schedule+0x90/0x250 kernel/sched/core.c:6817
- schedule_hrtimeout_range_clock+0x3a4/0x3e0 kernel/time/hrtimer.c:2295
- ep_poll fs/eventpoll.c:1920 [inline]
- do_epoll_wait+0xf92/0x14b0 fs/eventpoll.c:2317
- __do_sys_epoll_wait fs/eventpoll.c:2329 [inline]
- __se_sys_epoll_wait fs/eventpoll.c:2324 [inline]
- __x64_sys_epoll_wait+0x15a/0x260 fs/eventpoll.c:2324
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xb3/0x1b0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x6f/0x77
-RIP: 0033:0x7ff27592cd16
-Code: 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 41
-89 ca 64 8b 04 25 18 00 00 00 85 c0 75 11 b8 e8 00 00 00 0f 05 <48> 3d
-00 f0 ff ff 77 5a c3 90 48 83 ec 28 89 54 24 18 48 89 74 24
-RSP: 002b:00007ffdc170f468 EFLAGS: 00000246 ORIG_RAX: 00000000000000e8
-RAX: ffffffffffffffda RBX: 00005621013ef320 RCX: 00007ff27592cd16
-RDX: 0000000000000002 RSI: 00005621013a40a0 RDI: 0000000000000003
-RBP: ffffffffffffffff R08: 0000000000000002 R09: 0000000000000004
-R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000000001
-R13: 0000000000000002 R14: 00005620ff6bd1e7 R15: 0000000000000000
- </TASK>
-task:systemd-udevd   state:R  running task     stack:26640 pid:121
-tgid:121   ppid:1      flags:0x00000000
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5400 [inline]
- __schedule+0xd34/0x2460 kernel/sched/core.c:6727
- preempt_schedule_common kernel/sched/core.c:6904 [inline]
- preempt_schedule+0x7f/0xb0 kernel/sched/core.c:6928
- preempt_schedule_thunk+0x1a/0x30 arch/x86/entry/thunk_64.S:45
- __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152 [inline]
- _raw_spin_unlock_irqrestore+0x80/0xa0 kernel/locking/spinlock.c:194
- spin_unlock_irqrestore include/linux/spinlock.h:406 [inline]
- __wake_up_common_lock kernel/sched/wait.c:108 [inline]
- __wake_up_sync_key+0x50/0x60 kernel/sched/wait.c:173
- sock_def_readable+0x99/0x270 net/core/sock.c:3342
- __netlink_sendskb+0x12a/0x190 net/netlink/af_netlink.c:1288
- netlink_sendskb net/netlink/af_netlink.c:1294 [inline]
- netlink_unicast+0x7d5/0x920 net/netlink/af_netlink.c:1382
- netlink_sendmsg+0x887/0xd60 net/netlink/af_netlink.c:1908
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg net/socket.c:745 [inline]
- ____sys_sendmsg+0xa0d/0xbd0 net/socket.c:2584
-EXT4-fs (loop0): mount failed
- ___sys_sendmsg+0x11d/0x1c0 net/socket.c:2638
- __sys_sendmsg+0xfe/0x1d0 net/socket.c:2667
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xb3/0x1b0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x6f/0x77
-RIP: 0033:0x7ff275a17e13
-RSP: 002b:00007ffdc170f428 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 000056210139dbf0 RCX: 00007ff275a17e13
-RDX: 0000000000000000 RSI: 00007ffdc170f450 RDI: 0000000000000004
-RBP: 00005621013b5620 R08: 00005620ff6a5540 R09: 0000000000000012
-R10: 00007ff2759ffb80 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000562100b323d0 R14: 00005621013a37e8 R15: 00007ffdc170f4e0
- </TASK>
-loop0: detected capacity change from 0 to 512
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-nfs: Unknown parameter 'resuid'
-EXT4-fs (loop0): encrypted files will use data=ordered instead of data
-journaling mode
-workqueue: Failed to create a rescuer kthread for wq
-"ext4-rsv-conversion": -EINTR
-EXT4-fs: failed to create workqueue
-EXT4-fs (loop0): mount failed
-I/O error, dev loop0, sector 0 op 0x0:(READ) flags 0x80700 phys_seg 1
-prio class 0
-loop0: detected capacity change from 0 to 512
-EXT4-fs (loop0): encrypted files will use data=ordered instead of data
-journaling mode
-EXT4-fs error (device loop0): ext4_orphan_get:1394: inode #15: comm
-syz-executor.0: iget: bad extended attribute block 327680
-EXT4-fs error (device loop0): ext4_orphan_get:1397: comm
-syz-executor.0: couldn't read orphan inode 15 (err -117)
-EXT4-fs (loop0): mounted filesystem
-00000000-0000-0000-0000-000000000000 r/w without journal. Quota mode:
-writeback.
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-9pnet: p9_errstr2errno: server reported unknown error
-warning: checkpointing journal with EXT4_IOC_CHECKPOINT_FLAG_ZEROOUT can be slow
-warning: checkpointing journal with EXT4_IOC_CHECKPOINT_FLAG_ZEROOUT can be slow
-warning: checkpointing journal with EXT4_IOC_CHECKPOINT_FLAG_ZEROOUT can be slow
-warning: checkpointing journal with EXT4_IOC_CHECKPOINT_FLAG_ZEROOUT can be slow
-warning: checkpointing journal with EXT4_IOC_CHECKPOINT_FLAG_ZEROOUT can be slow
-warning: checkpointing journal with EXT4_IOC_CHECKPOINT_FLAG_ZEROOUT can be slow
-netlink: 'syz-executor.0': attribute type 4 has an invalid length.
+	char buf[] = "testing 1 2 3\n";
+
+	s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	if(s == -1){
+		err(1, "error creating socket");
+	}
+
+	memset(&server_addr, 0, sizeof(server_addr));
+	
+	server_addr.sin_family = AF_INET;
+	server_addr.sin_port = htons(PORT);
+	if(inet_pton(AF_INET, ADDR, &server_addr.sin_addr) != 1){ //I realize I'm checking the return value differently here. If you read the man page for inet_pton, it'll make sense.
+		err(1, "error converting network address");
+	}
+
+	if(sendto(s, buf, strlen(buf), 0, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1){
+		err(1, "error sending data");
+	}
+	
+	close(s);
+}
+
+--vdeu5jh3fuqq53yh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="testDgramSocketServer.c"
+
+#include<stdio.h>
+#include<err.h>
+#include<string.h>
+#include<stdlib.h>
+#include<arpa/inet.h>
+#include<sys/socket.h>
+#include<unistd.h>
+
+#define PORT 8888	//The port on which to listen for incoming data
+
+
+//Hi Alex,
+//These are the two lines that allow you to switch between the three socket options outlined in my patch
+//The socket options tell the kernel to add a control message (cmsg), allowing the program
+//to recieve the data it is requesting. The three options are: IP_RECVTOS for the type of service byte,
+//IP_RECVORIGDSTADDR for the orignial dst address, and IP_PKTINFO for some random packet info.
+#define SOCKOPT IP_RECVORIGDSTADDR
+//This field is synonymous with the above one. Valid options are: IP_TOS, IP_ORIGDSTADDR, and IP_PKTINFO
+#define RECIVEOPTION IP_ORIGDSTADDR
+
+int main(void){
+	struct sockaddr_in local_addr;	
+	int s;
+	
+	s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	if (s == -1){
+		err(1, "error creating socket");
+	}
+	
+	memset(&local_addr, 0, sizeof(local_addr));
+	
+	local_addr.sin_family = AF_INET;
+	local_addr.sin_port = htons(PORT);
+	local_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+	int yes = 1;
+	if(setsockopt(s, IPPROTO_IP, SOCKOPT, &yes, sizeof(yes)) == -1){
+		err(1, "error setting socket option");
+	}
+
+
+	if(bind(s, (struct sockaddr*)&local_addr, sizeof(local_addr) ) == -1){
+		err(1, "error binding to port. try changing it or running as root");
+	}
+
+	while(1){
+		struct msghdr mhdr;
+		struct iovec iov[1];
+		struct cmsghdr *cmhdr;
+		char control[1000];
+		char databuf[BUFSIZ];
+		unsigned char tos = 0;
+
+		mhdr.msg_name = &local_addr;
+		mhdr.msg_namelen = sizeof(local_addr);
+		mhdr.msg_iov = iov;
+		mhdr.msg_iovlen = 1;
+		mhdr.msg_control = &control;
+		mhdr.msg_controllen = sizeof(control);
+		iov[0].iov_base = databuf;
+		iov[0].iov_len = sizeof(databuf);
+		memset(databuf, 0, sizeof(databuf));	
+		
+		//this is blocking
+		int msglen = recvmsg(s, &mhdr, 0);
+		if (msglen == -1){
+			err(1, "recvmsg");
+		}
+		cmhdr = CMSG_FIRSTHDR(&mhdr);
+		while (cmhdr) {
+			printf("cmsg recieved\n");
+			if (cmhdr->cmsg_level == IPPROTO_IP && cmhdr->cmsg_type == RECIVEOPTION) {
+				//read the byte recieved
+				tos = ((unsigned char *)CMSG_DATA(cmhdr))[0];
+			}
+			cmhdr = CMSG_NXTHDR(&mhdr, cmhdr);
+		}
+		//print out the first byte of data recieved in hex. You can verify this in wireshark if you like.
+		printf("data read: %sbyte = %02X\n", databuf, tos);		
+		
+	}
+
+	close(s);
+	return 0;
+}
+
+--vdeu5jh3fuqq53yh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="testStreamSocketClient.c"
+
+#include <stdio.h>
+#include <err.h>
+#include <string.h>
+#include <stdlib.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <unistd.h>
+
+#define PORT 8888 //The port on which to send data
+#define ADDR "127.0.0.1" //The internet address to send packets to
+
+int main(void){
+	int s;
+	struct sockaddr_in server_addr;
+
+	char buf[] = "testing 1 2 3\n";
+
+	s = socket(AF_INET, SOCK_STREAM, 0);
+	if(s == -1){
+		err(1, "error creating socket");
+	}
+
+	memset(&server_addr, 0, sizeof(server_addr));
+	
+	server_addr.sin_family = AF_INET;
+	server_addr.sin_port = htons(PORT);
+	if(inet_pton(AF_INET, ADDR, &server_addr.sin_addr) != 1){ // I realize I'm checking the return value differently here. If you read the man page for inet_pton, it'll make sense.
+		err(1, "error converting network address");
+	}
+
+	if(connect(s, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1){
+		err(1, "error connecting");
+	}
+	if(send(s, buf, strlen(buf), 0) == -1){
+		err(1, "error sending data");
+	}
+	
+	close(s);
+}
+
+--vdeu5jh3fuqq53yh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="testStreamSocketServer.c"
+
+#include<stdio.h>
+#include<err.h>
+#include<string.h>
+#include<stdlib.h>
+#include<arpa/inet.h>
+#include<sys/socket.h>
+#include<unistd.h>
+
+#define PORT 8888	//The port on which to listen for incoming data
+
+
+//Hi Alex,
+//These are the two lines that allow you to switch between the three socket options outlined in my patch
+//The socket options tell the kernel to add a control message (cmsg), allowing the program
+//to recieve the data it is requesting. The three options are: IP_RECVTOS for the type of service byte,
+//IP_RECVORIGDSTADDR for the orignial dst address, and IP_PKTINFO for some random packet info.
+#define SOCKOPT IP_RECVORIGDSTADDR
+//This field is synonymous with the above one. Valid options are: IP_TOS, IP_ORIGDSTADDR, and IP_PKTINFO
+#define RECIVEOPTION IP_ORIGDSTADDR
+
+int main(void){
+	struct sockaddr_in local_addr;
+	int s;
+	
+	s = socket(AF_INET, SOCK_STREAM, 0);
+	if (s == -1){
+		err(1, "error creating socket");
+	}
+	
+	memset(&local_addr, 0, sizeof(local_addr));
+	
+	local_addr.sin_family = AF_INET;
+	local_addr.sin_port = htons(PORT);
+	local_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+	int yes = 1;
+	if(setsockopt(s, IPPROTO_IP, SOCKOPT, &yes, sizeof(yes)) == -1){
+		err(1, "error setting socket option");
+	}
+
+
+	if(bind(s, (struct sockaddr*)&local_addr, sizeof(local_addr) ) == -1){
+		err(1, "error binding to port. try changing it or running as root");
+	}
+	
+	if(listen(s, 10) == -1){ //10 is the backlog of un-accepted connections. its just an arbitrary number
+		err(1, "error listening on port");
+	}
+
+	while(1){
+		int connfd = accept(s, (struct sockaddr*)NULL, NULL);
+		if(connfd == -1){
+			err(1, "error accepting connection");
+		}
+		if(setsockopt(s, IPPROTO_IP, SOCKOPT, &yes, sizeof(yes)) == -1){ //stream sockets should have this set on the connected socket as well. I left it above for uniformity between the two programs.
+			err(1, "error setting socket option");
+		}
+	
+		struct msghdr mhdr;
+		struct iovec iov[1];
+		struct cmsghdr *cmhdr;
+		char control[1000];
+		char databuf[BUFSIZ];
+		unsigned char tos = 0;
+
+		mhdr.msg_name = &local_addr;
+		mhdr.msg_namelen = sizeof(local_addr);
+		mhdr.msg_iov = iov;
+		mhdr.msg_iovlen = 1;
+		mhdr.msg_control = &control;
+		mhdr.msg_controllen = sizeof(control);
+		iov[0].iov_base = databuf;
+		iov[0].iov_len = sizeof(databuf);
+		memset(databuf, 0, sizeof(databuf));	
+		
+		//this is blocking
+		int msglen = recvmsg(connfd, &mhdr, 0);
+		if (msglen == -1){
+			err(1, "recvmsg\n");
+		}
+		cmhdr = CMSG_FIRSTHDR(&mhdr);
+		while (cmhdr) {
+			printf("cmsg recieved\n");
+			if (cmhdr->cmsg_level == IPPROTO_IP && cmhdr->cmsg_type == RECIVEOPTION) {
+				//read the byte recieved
+				tos = ((unsigned char *)CMSG_DATA(cmhdr))[0];
+			}
+			cmhdr = CMSG_NXTHDR(&mhdr, cmhdr);
+		}
+		//print out the first byte of data recieved in hex. You can verify this in wireshark if you like.
+		printf("data read: %sbyte = %02X\n", databuf, tos);	
+		close(connfd);
+	}
+
+	close(s);
+	return 0;
+}
+
+--vdeu5jh3fuqq53yh--
