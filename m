@@ -1,71 +1,65 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9714C9B;
-	Sun, 17 Mar 2024 08:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4293A125C0
+	for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 09:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710665864; cv=none; b=AAkW73uq+Rc/yj1OUOzgIQ5/YeUsQ398OQZHLFOGxwRNa45r2fkD3o3ourJcYxczQn+YQfLTpOpEth5MUsiuZzzafubI6o6K81wm5ywNa8fhPmeMsmGWk+9bkZ5k8XLB3WUTVQV76HjiiTAEEi4rj3tAoHCZnGsPGjcgwWGjYXQ=
+	t=1710666295; cv=none; b=NTOY6qZDELMVn9he+MrYz609gkzQoSn38O5VCIA12yltXiKFt4CciTDGWyJP4vlLXryZ6f3QX9lDw4DkZe0oyqpHDDYWCNKYOzwHMQaP/B8IXMSaEXb3M9K5hHzHSsCaknTArY302NJXkEQBPYtCRYzGdYNqwym/zs7hn2hgrZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710665864; c=relaxed/simple;
-	bh=asv0cBPR28MBXshoVE/nETVp0XrutCztzTsUvJ4lhNA=;
+	s=arc-20240116; t=1710666295; c=relaxed/simple;
+	bh=3BVmMVrqxfeIeWv12FpMrgp2kLIK6rohodVbN6VxhLI=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=u9a4T/IafniUYLZf/XZ9I5SRhPJ5vUqBQKjP9jWrxm/2i0Onv9c6F8c1cMEea0wGcjTI6E22QF36mluLU9EtBThjUxXFE22+fmHb8NQod3GPca5DwFiXqJk8o8sG4UDjwpTeFYwm9/BfvtdoqETHVllP1r6m/c9UEI9rRe4PoCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CDGgdG6F; arc=none smtp.client-ip=209.85.208.41
+	 Content-Disposition; b=sJHYd2uY/UI3gfPntc0mtlvQAaWaS8ze6/fPAbLzBF5nPStiVYOubTuYJW2qUuiu0mkPpU+iGWQI4LeNhfvZKy5GE8yVSD1RjCS/xZJVU2mVVD+op6Q/sGYUv5sC4c0eZHT2aW49e3WUxRWGC5+XArC4qptPiIJp7kHf71mxZU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lRsT1pG2; arc=none smtp.client-ip=209.85.218.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDGgdG6F"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-563c403719cso4248007a12.2;
-        Sun, 17 Mar 2024 01:57:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRsT1pG2"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a46a7b8e07fso111483966b.2
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 02:04:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710665861; x=1711270661; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1710666292; x=1711271092; darn=vger.kernel.org;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=fIjwHO2kK13iUtmD0+UvARxjXLrJ4q2jGaLpjIJdcpw=;
-        b=CDGgdG6FPRe31UMyn+VdYCz36TVIPw8pmU0SsmUNGcuOzvawtaUBLelUNKFAvP4g5e
-         kVpenTASdeRrhnKxCvzxIwFrNfIbQn2OvkOUlZL+SActW4KYME9EanNmFm7pSDrbxgfV
-         k+2TlcrhnReT0aVFUSi/7hUoNK4kYgv8Wvl5XOlVHvQr3TSIv3NyNSgzE4SSTvIEDj75
-         Z/AJPp96oYMJXQGXX0Xc2DKQfFElqlOB59hZLYHo/tzRyH2od8hXyI/kMNvWoQ9ZcCME
-         /ccMD0P5c2yxAi0s4pTNHdPRn11YztDE4P3BisTvu5Lo6NLEVey7xftCVKj8XTIPL22L
-         RwlQ==
+        bh=H78NCuw5pO9iwByPeKAc/83sPk9MN9xm3bJoBDJ9yf4=;
+        b=lRsT1pG25eJuJE62wk/F+xvvzavBGCjNJrH1y56sM/fcR8JMmqnFdPuhmcG/cLbMMM
+         728sw1ZLZfnlWhAzr/wyyzQ/s6zJNHEnByMOb8ikgIC1hf0//eS0BxGXAMJA3fVF+0IW
+         Via5qxjJFx2VDD4k3nXWMzQxSdSp0otrg4PhkcLe6DQUWun84OeujLJ69D5vaoeRUGuP
+         5/NaK/q5nUatcr4EwXnMYqjxKItLHpIVJRwjLMGuYR8b+BUbMhp5KVzLikj+HF/ja6lh
+         dhpT6J8/oGd7zFBo0eTi7m5+7Ceq2PIBcc93A6oD07FgAzN1cThGOZ47q1dFlWML3rKD
+         IN3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710665861; x=1711270661;
+        d=1e100.net; s=20230601; t=1710666292; x=1711271092;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :sender:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=fIjwHO2kK13iUtmD0+UvARxjXLrJ4q2jGaLpjIJdcpw=;
-        b=LfwWIpWJD1o24oWpFYTYLDxOnta8tPY0asrmVZ+4Dqsb+Z1isEanABlHuGUNAW8jyJ
-         HFaGRT6mpqJL059rOUPKKDFl6H00EnF9biwBYmYsrmZWIVbXaGmP0KaijuvZTBnlFJmw
-         uvJb2gxXtwj8ubk76yPeCwHxF8lC/RwBMycmsWv6pb1CYpM56HNAEeqUyE8rwKs5wgWt
-         C/AqFD8YVcA/AMGcFYAMefxMVk3FRWA6sBC4F22ZVxQriKoS/F/gK+CfcME9ElHSOfKO
-         iRCqh1tMQSg5vJM1mBoMmU0DTSVZgYtBPbr+TNEn+17O87GPtvWssKLcTsQFD2pXeHHL
-         9stg==
-X-Forwarded-Encrypted: i=1; AJvYcCUIt0vRG2TfyVuY/7jSfRcZgsGyAxRiG5WpRfZJ7DrWHZHVHDAhO/wgt3za7o1XnZ2YFxzqJNeTKymQ+iIy4cxpiRd4CWsxj3fG5Pt1YjzXGQ==
-X-Gm-Message-State: AOJu0Yyv4ownIaN7o42r6gJO8WVmMWKD9eaVPbPlClY0B1rHJbgGNvkO
-	K9wnn2h8ZtEwCspU5wVUrvhin4bS8Gvy+Z1fhFP+32bip7mUiNeu
-X-Google-Smtp-Source: AGHT+IFPbvHRc5h3pW77s2BzQjCzPJmoz5cWOfWLH3LukRl5xqSVxzzHBJk0IwnkBmSRYUg/IpUV0Q==
-X-Received: by 2002:a05:6402:5018:b0:568:b18:ee19 with SMTP id p24-20020a056402501800b005680b18ee19mr7162402eda.16.1710665861180;
-        Sun, 17 Mar 2024 01:57:41 -0700 (PDT)
+        bh=H78NCuw5pO9iwByPeKAc/83sPk9MN9xm3bJoBDJ9yf4=;
+        b=b9ggz+i7kd/ELO8oHrYvnAmD25uZMq+EibbaAZUGPIVBpInfnVnlvTVazxDL8pR6iv
+         ederLD3Lu6rNQUtfnKNmvbMJ7u18Kje5fKEgGEhD66h5q3NKYtKkMKgwvmkVTNPxwwtr
+         TDgS+8ZHf7G5JTQcRaNnuqIfOWUoAZLCjyPbabl1tc5fN3qa9Jaup4VoD1guOBNpUlCd
+         bLYoTscrt/itvtB/u+3GgMFEeSeeDmpLN83VN+eTJLVuKSCsXKMrJDv6IoFahRI9sU4z
+         LsBiVo24meI9RKyIWaV3KimuzyWFlLooJdE0rNagGpahrdJfaFJyYuWFOKor68KMyPzc
+         /LlA==
+X-Gm-Message-State: AOJu0YxC6cBbYQTNAKDNHrTccOCTy8cUx5vNOlSWOKeMR+0ZGYo2/OS7
+	qOKVSAhDsgiQcBJAbBU6EGBewCGl0I8M8RKlRlvpGCAsaZl2lvNCa5rCh7qvgMQ=
+X-Google-Smtp-Source: AGHT+IE0id2R32fL4ZiJDrCn+VmuRBMEvQ+P1MkdaMM+sI8W/Y+4RnPGtVjUCPd25HN0M6qQthaGcQ==
+X-Received: by 2002:a17:906:6d98:b0:a46:a81a:330f with SMTP id h24-20020a1709066d9800b00a46a81a330fmr1945561ejt.5.1710666292087;
+        Sun, 17 Mar 2024 02:04:52 -0700 (PDT)
 Received: from gmail.com (195-38-112-2.pool.digikabel.hu. [195.38.112.2])
-        by smtp.gmail.com with ESMTPSA id cs4-20020a0564020c4400b00568a1ce4562sm3243500edb.25.2024.03.17.01.57.39
+        by smtp.gmail.com with ESMTPSA id u23-20020a1709064ad700b00a4479997b97sm3587656ejt.66.2024.03.17.02.04.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Mar 2024 01:57:40 -0700 (PDT)
+        Sun, 17 Mar 2024 02:04:51 -0700 (PDT)
 Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Sun, 17 Mar 2024 09:57:38 +0100
+Date: Sun, 17 Mar 2024 10:04:49 +0100
 From: Ingo Molnar <mingo@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] perf events fixes
-Message-ID: <Zfawgi3HBOSuWMy3@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Frederic Weisbecker <frederic@kernel.org>
+Subject: [GIT PULL] timers fix
+Message-ID: <ZfayMWuE2MgFHAGT@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,60 +71,55 @@ Content-Disposition: inline
 
 Linus,
 
-Please pull the latest perf/urgent Git tree from:
+Please pull the latest timers/urgent git tree from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2024-03-17
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-2024-03-17
 
-   # HEAD: ad8c91282c95f801c37812d59d2d9eba6899b384 perf/x86/amd/core: Avoid register reset when CPU is dead
+   # HEAD: 4b6f4c5a67c07417bf29d896c76f513a4be07516 timer/migration: Remove buggy early return on deactivation
 
-Two x86 PMU fixes:
-
- - Work around AMD erratum to filter out bogus LBR stack entries
-
- - Fix incorrect PMU reset that can result in warnings (or worse)
-   during suspend/hibernation.
+Fix timer migration bug that can result in long bootup
+delays and other oddities.
 
  Thanks,
 
 	Ingo
 
 ------------------>
-Sandipan Das (2):
-      perf/x86/amd/lbr: Discard erroneous branch entries
-      perf/x86/amd/core: Avoid register reset when CPU is dead
+Frederic Weisbecker (1):
+      timer/migration: Remove buggy early return on deactivation
 
 
- arch/x86/events/amd/core.c | 1 -
- arch/x86/events/amd/lbr.c  | 6 ++++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ kernel/time/timer_migration.c | 20 --------------------
+ 1 file changed, 20 deletions(-)
 
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 69a3b02e50bb..aec16e581f5b 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -604,7 +604,6 @@ static void amd_pmu_cpu_dead(int cpu)
+diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
+index 8f49b6b96dfd..611cd904f035 100644
+--- a/kernel/time/timer_migration.c
++++ b/kernel/time/timer_migration.c
+@@ -751,26 +751,6 @@ bool tmigr_update_events(struct tmigr_group *group, struct tmigr_group *child,
  
- 	kfree(cpuhw->lbr_sel);
- 	cpuhw->lbr_sel = NULL;
--	amd_pmu_cpu_reset(cpu);
+ 		first_childevt = evt = data->evt;
  
- 	if (!x86_pmu.amd_nb_constraints)
- 		return;
-diff --git a/arch/x86/events/amd/lbr.c b/arch/x86/events/amd/lbr.c
-index eb31f850841a..4a1e600314d5 100644
---- a/arch/x86/events/amd/lbr.c
-+++ b/arch/x86/events/amd/lbr.c
-@@ -173,9 +173,11 @@ void amd_pmu_lbr_read(void)
+-		/*
+-		 * Walking the hierarchy is required in any case when a
+-		 * remote expiry was done before. This ensures to not lose
+-		 * already queued events in non active groups (see section
+-		 * "Required event and timerqueue update after a remote
+-		 * expiry" in the documentation at the top).
+-		 *
+-		 * The two call sites which are executed without a remote expiry
+-		 * before, are not prevented from propagating changes through
+-		 * the hierarchy by the return:
+-		 *  - When entering this path by tmigr_new_timer(), @evt->ignore
+-		 *    is never set.
+-		 *  - tmigr_inactive_up() takes care of the propagation by
+-		 *    itself and ignores the return value. But an immediate
+-		 *    return is required because nothing has to be done in this
+-		 *    level as the event could be ignored.
+-		 */
+-		if (evt->ignore && !remote)
+-			return true;
+-
+ 		raw_spin_lock(&group->lock);
  
- 		/*
- 		 * Check if a branch has been logged; if valid = 0, spec = 0
--		 * then no branch was recorded
-+		 * then no branch was recorded; if reserved = 1 then an
-+		 * erroneous branch was recorded (see Erratum 1452)
- 		 */
--		if (!entry.to.split.valid && !entry.to.split.spec)
-+		if ((!entry.to.split.valid && !entry.to.split.spec) ||
-+		    entry.to.split.reserved)
- 			continue;
- 
- 		perf_clear_branch_entry_bitfields(br + out);
+ 		childstate.state = 0;
