@@ -1,127 +1,71 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF9B1C695
-	for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 16:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4441CAB7;
+	Sun, 17 Mar 2024 16:27:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710692548; cv=none; b=nrOdlGWQ7JJGSRuhHzQgeX9T/Go5bos8Q2kusf3UnxF4dR5+EbXLp2frcaM58Tm8l25PbeXEOU/m3cA8PPR4U7AHabKzmGuqdgIKW5gLmoyjfEKiqrn1DD6arO2g9vpbQsGsz3uxikedAZzU874tChm6oalrvYTuJc3/v2wdOXQ=
+	t=1710692845; cv=none; b=eBKMFZNpzbXXhdRYS0fJjFcufj8SAaCrLbR4Qvb/2HC9yBhN1XexNOoRBfSzmQWfAnJQBN4P6lbsQl7hcqVXnkjEDp/t/Hk/t0VbQTpOnxhwiReMIM+MCoRTXT4J5+UQPXODMTUAECC0QFpcljmvp8VNbtABUlcbgRHRyatFX14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710692548; c=relaxed/simple;
-	bh=X/phk1QlmzaJ/XY//OQoNTV/C4BNG3QtbNfn9CHQIuI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kQCQf1GtiUOVfUuALO0TK+eYb/dyFlKZULcdn3QewUCLETpkIHcXMBbh28Ypexe9So5SImbhsGfM9L1+0AutqW4IIWXkmu/dfBGVpjwxDEz+eJ3GnQJfeGZjo3DfiP3NwD7P8UEg7Z/Ydvu1bp7KCixAucF+z75qmRue8x3Oo+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1rltH6-0007ME-4X; Sun, 17 Mar 2024 17:22:16 +0100
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1rltH4-006ulO-3e; Sun, 17 Mar 2024 17:22:14 +0100
-Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1rltH4-00417Q-03;
-	Sun, 17 Mar 2024 17:22:14 +0100
-Date: Sun, 17 Mar 2024 17:22:14 +0100
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Rob Herring <robh@kernel.org>,
+	s=arc-20240116; t=1710692845; c=relaxed/simple;
+	bh=J6UtGI5bJeJCYfzWsrAHw9nY2Blhqb2ZvPfQpf1DE3E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f1dNWZ80y9ZbQwgAmWhZ+L5/GggS/6eb2qlSPjd/Dapk76ApiR3fEuZmTLx0a2CA6V02HuVjYJCwmInfgqGwSU3rCBMUfK0QgS4KSz5+P33GJ2nYOVfJz0giiPCqgdyXTB5TMLDrLg8IC2zLvou7edeeOaemeBPaW9Mmrsa/twA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KlBHeJEr; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KlBHeJEr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF1BEC433F1;
+	Sun, 17 Mar 2024 16:27:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710692845;
+	bh=J6UtGI5bJeJCYfzWsrAHw9nY2Blhqb2ZvPfQpf1DE3E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=KlBHeJErrrTNeBvoKkLogXoYyLonHZWhi87D8MUz1npLSq7F6Rup2lw0JoHAV1WGg
+	 kJb6at8jNZ6Hf6xNsnBK7IAGEJTUuONNStsbisDb6ZXUr/92cFDzbk3z/G0RBXCqyX
+	 Xrq8x9EXsmwYuBmrFFVOXkfiVDNRFuH+fbvd5SHRDk4CrSkmjIHxXKaJBQ8Q2mKV9X
+	 Wx8NsumtVdCnxWVxGHmEn3JibFFm3Dm32IfyDJw3qCDUCDjvJRDMGlZT2Rhx8DR3Dv
+	 BQvHVLfEncPXMN42DJ83OMoYxiOOVJJqM4XXw9uUSUxUkcW8udw1dgunePZJQ1wstn
+	 0Jv/QwTI2jG+Q==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
-Subject: Re: [PATCH 1/1] ARM: dts: imx6ul: tqma6ul + mba6ulx: Fix pinctrl
- node names
-Message-ID: <20240317162214.ssspjf2xfpid32k6@pengutronix.de>
-References: <20240314150054.2957840-1-alexander.stein@ew.tq-group.com>
+	Conor Dooley <conor+dt@kernel.org>,
+	Abel Vesa <abel.vesa@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] soc: qcom: Add X1E80100 platform and SMB2360 PMIC
+Date: Sun, 17 Mar 2024 11:27:16 -0500
+Message-ID: <171069283522.134123.14650965425548964366.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240223-x1e80100-socinfo-v1-0-be581ca60f27@linaro.org>
+References: <20240223-x1e80100-socinfo-v1-0-be581ca60f27@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240314150054.2957840-1-alexander.stein@ew.tq-group.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Alexander,
 
-just a minor, please see below.
+On Fri, 23 Feb 2024 16:37:54 +0200, Abel Vesa wrote:
+> This patchset adds the entry for the new X1E80100 SoC and one of the
+> PMICs it uses, the SMB2360. Rest of the PMICs are already added.
+> 
+> 
 
-On 24-03-14, Alexander Stein wrote:
-> imx6ul pinctrl nodes end with 'grp'. Fix node names.
-> 
-> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> ---
->  arch/arm/boot/dts/nxp/imx/imx6ul-tqma6ul-common.dtsi | 2 +-
->  arch/arm/boot/dts/nxp/imx/mba6ulx.dtsi               | 6 +++---
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul-tqma6ul-common.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ul-tqma6ul-common.dtsi
-> index 57e647fc3237..f04c6f71f538 100644
-> --- a/arch/arm/boot/dts/nxp/imx/imx6ul-tqma6ul-common.dtsi
-> +++ b/arch/arm/boot/dts/nxp/imx/imx6ul-tqma6ul-common.dtsi
-> @@ -202,7 +202,7 @@ MX6UL_PAD_UART2_RX_DATA__GPIO1_IO21	0x4001b8b0
->  		>;
->  	};
->  
-> -	pinctrl_pmic: pmic {
-> +	pinctrl_pmic: grp {
-			^
-			pmicgrp
+Applied, thanks!
 
-Regards,
-  Marco
- 
->  		fsl,pins = <
->  			/* PMIC irq */
->  			MX6UL_PAD_CSI_DATA03__GPIO4_IO24	0x1b099
-> diff --git a/arch/arm/boot/dts/nxp/imx/mba6ulx.dtsi b/arch/arm/boot/dts/nxp/imx/mba6ulx.dtsi
-> index e78d0a7d8cd2..5258ef81e6c7 100644
-> --- a/arch/arm/boot/dts/nxp/imx/mba6ulx.dtsi
-> +++ b/arch/arm/boot/dts/nxp/imx/mba6ulx.dtsi
-> @@ -505,7 +505,7 @@ MX6UL_PAD_CSI_HSYNC__UART6_DCE_CTS	0x1b0b1
->  		>;
->  	};
->  
-> -	pinctrl_uart6dte: uart6dte {
-> +	pinctrl_uart6dte: uart6dtegrp {
->  		fsl,pins = <
->  			MX6UL_PAD_CSI_PIXCLK__UART6_DTE_TX	0x1b0b1
->  			MX6UL_PAD_CSI_MCLK__UART6_DTE_RX	0x1b0b1
-> @@ -537,7 +537,7 @@ MX6UL_PAD_UART1_RTS_B__GPIO1_IO19	0x0001b099
->  		>;
->  	};
->  
-> -	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
-> +	pinctrl_usdhc1_100mhz: usdhc1-100mhzgrp {
->  		fsl,pins = <
->  			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x00017069
->  			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x000170b9
-> @@ -552,7 +552,7 @@ MX6UL_PAD_UART1_RTS_B__GPIO1_IO19	0x0001b099
->  		>;
->  	};
->  
-> -	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
-> +	pinctrl_usdhc1_200mhz: usdhc1-200mhzgrp {
->  		fsl,pins = <
->  			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x00017069
->  			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x000170f9
-> -- 
-> 2.34.1
-> 
-> 
-> 
+[1/3] dt-bindings: arm: qcom,ids: Add SoC ID for X1E80100
+      commit: 734364d0ddee6c145705bac89400266c972efc0b
+[2/3] soc: qcom: socinfo: Add X1E80100 SoC ID table entry
+      commit: e876303c6f18da4c649d97f6d488ee0a850ad384
+[3/3] soc: qcom: socinfo: Add SMB2360 PMIC
+      commit: e025171d1ab1edf286c102f7adecafd51c3a84c3
+
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
