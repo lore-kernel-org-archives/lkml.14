@@ -1,86 +1,97 @@
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 389A721353;
-	Sun, 17 Mar 2024 21:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F2F2032A;
+	Sun, 17 Mar 2024 22:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710712418; cv=none; b=bwsg3Mp1DOmjPkaAz99QUN4JCdCrlAhJe3IhLqQuzkL+7YJkzfjFHy+jim6t07r08GqSpBIPzAVLbkBrSsxt4KzcxJot3h2sx2H/ZV96Yp4QlatoTzSWBB9E7IfPL9GyFwnLDcPS7EIwG4dMoAkpmlI+3eSAjiXctMxJoS/salg=
+	t=1710713497; cv=none; b=XxFJ+WRzGEl/0irEADqXIP5uzDQodE38jE2wC/J3OWJnuTopSh4TN+BLw7FbrIJbH4war2+zkiloDQbJ6F6D5Ock7IjpQc4y5e8bNCn5bi3iNjrAvb10RY9exLz6ZkOf13zxRmLxRqaGj9DDrQryvNBQppcgvul0ICOfXLbTu68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710712418; c=relaxed/simple;
-	bh=9hghy2cayv8TUs+RB7XP/7Zs/PgLO8mmUWFiDbdfKaA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I8E9UkQP0krp18G+1qOwO7yl41GqLmECGYx0fmkX+pOplBN97yZD4FS4XXcngIxE7CwBix1EZFd8MvcJkJid2Grqiyf0phP/Zrz7zTtSnnWs8hCEQGy/kohhRzIQa5ZY7b3azRb0dFXgHq9TYOA5WIUvwUMT16LUyXdpfooKry8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TgiMKTV9; arc=none smtp.client-ip=209.85.167.181
+	s=arc-20240116; t=1710713497; c=relaxed/simple;
+	bh=7JxVARnpt8VrtLOpL/eqdg5jtbrceKiiBGREyTRVRtA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Oc/2p3k8Lp7sUNt/bTQlW50ZQ/rY9B59PAxBPyQp/TcmEP4hGfAdxWmNzfFh3U46clJiSnySxQMhvO6gPRViSpqLURG2BxJb6MFaZA1acbHBc3jBUpgLQIKKmO3lJuSlT323xv3L64nJHS6LrcNtWC4psG4ZLUEhcxAYqwBImJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HYsdadTf; arc=none smtp.client-ip=209.85.167.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TgiMKTV9"
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3c3747e7f8cso1932237b6e.0;
-        Sun, 17 Mar 2024 14:53:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HYsdadTf"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5131316693cso4628160e87.0;
+        Sun, 17 Mar 2024 15:11:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710712416; x=1711317216; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9hghy2cayv8TUs+RB7XP/7Zs/PgLO8mmUWFiDbdfKaA=;
-        b=TgiMKTV97LPnMzM+CzRsz0dzhcwNSWhtheLhbJcTbTnDKs4a/Wpdx+W84vIkhOmxF0
-         crijatoBRDChbb88v0Mwh81GrL3HU74XV1gvj6HlD9GCiEk36KjGF193Ir2egY5+Epd8
-         zzL+02J8/2uMJ8fYCh0jIYw+a2cucryWsdjoKoozTRrTxGy9wXFEGDYkIOUg28GdS4jc
-         /nyehh98D6AbbLe1+OfogP8GfClfPZzYjaWS9XFBk/nsMEvtrgly4Fv1LvswPLMyoTOc
-         8GrCLdL73Qom38FU7YNBNKdldVkZXibrejMjsdwcG9v/FPWmbVlKjWB/2YjxyZrgriDh
-         LMNg==
+        d=gmail.com; s=20230601; t=1710713493; x=1711318293; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IZmm9s9W7l5cdXxYDm6zTzBblgqnwNDluCe4+r/QOr4=;
+        b=HYsdadTfvSat8AjDAz3Sh9/JiL/p6Wzm+BGVP7dO9NuKfKPR71YXPq8UR7MNm1tsWb
+         jRqId45A45/bFYvl5DjjOM6fjdYNPTypwIGT5Zvj1wPQAWrjcbj0+ApbhfGHsys4CSz6
+         0m2LTpXTchPyuEbs6q9gUqByCbJvHOkPvOEA0vHOlMe2OFY6F93GpoYxTgQWBzgZPxDF
+         XavmDVS4p/HpsN7uw8QTrOWsr4Wgg+HO44W6/vb+9b6i8OlgcMr5veIwG1bmnJVYQUj1
+         Bb5VT4OtLjzZ6lZ1C/7BWqrz/Yr5LH4to5vwnj45XEjTbGUYawTFogc5MANfwPQGX2ar
+         UpXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710712416; x=1711317216;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9hghy2cayv8TUs+RB7XP/7Zs/PgLO8mmUWFiDbdfKaA=;
-        b=Wi6Mw7YVbD2otRaCYf9nsnjVCbzuXl/xdjUccWnQShgWOPJvo+6w4oeYc+NrE5bQLj
-         h1ipK/Z2E++Ktc7g4Nuzbanv05GVNwLZJEvrGZPiRvQpr5t4c6D0gaxqfUeZ5bXbhdP0
-         wVNIXKlvaiGMuW80Lk5OqUcTB4hMHHVAP616It7iV69SghK6i4OuRDYHj1e35vjjGE8h
-         jot5QqngSoCo7gesAyb+XFJxnWqlrz9IGZjseljRVPU1SJGR+SdEQteZOirisbPr8q+E
-         KUqQGmN2zofSb2R0FIp9mh1cNGyXv/ZpAvtNLSe/Tf0+QxmdIm/QDolcyQPkkCAE1y96
-         T5xg==
-X-Forwarded-Encrypted: i=1; AJvYcCU8eaTiq9mYlpQ2hoLGjBHOhEmQkEh1asea14FZRCTLrXiaunbRjljmQuD3fUuqnQMuePlXErFs3q+1WIc2WGh76fUnGwseJi6B/n+MDXRl1KbxPWf2yiJ2fYI82OTQWqv8SJg8vV2N3L60Wh0=
-X-Gm-Message-State: AOJu0Yx/GuD7ChokUCth8Ist9/f1sO8iQrU8wX72luBFsEOsys/q7hDP
-	ZzhpPZ7OeP6C3grCZvr9Z4xEukccUF8mOBb1guT1SFslCws2Kr32tdH9/dahKxCtvmwNLluv5Hw
-	VqtYx71HCuspetWWO9KArrdR40IY=
-X-Google-Smtp-Source: AGHT+IEmOoDTy7JXdmINjJNl7nOK2XSxmSAaTxfxxxXAKNF8Oi2WQPcrleXEZJyYTctSYgETkjO8ZWPla+Rew2yJNqg=
-X-Received: by 2002:a05:6358:9497:b0:17e:4fc7:d95 with SMTP id
- i23-20020a056358949700b0017e4fc70d95mr11914523rwb.17.1710712416202; Sun, 17
- Mar 2024 14:53:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710713493; x=1711318293;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IZmm9s9W7l5cdXxYDm6zTzBblgqnwNDluCe4+r/QOr4=;
+        b=b1XidL/JMN7zkVV4//P8Jsn1gGeUbtWD7PCMtryzINcNRodqdCP/4pXEuISfIdEGiw
+         /nly909FaV3kKqMQ2clG3od7da4lo6pUI3TEZl7fFNXeq8mo+8o1Xxlvtu1O0Hc8PWfC
+         o5QxXxd/NyQaEk/+4Gx7SVD4KbT68nnhjWYjQm8NXah3XUf2vM1UXsqJe7JA73TBquGO
+         u999PTpBfTe80lViiz8yxDhrvm3zlH+qY5Spg7GHdbTK2LXiN+ce9NTgRV/vbPikjncB
+         T1eJg3ntXTYbz9Ah/O+2O+GgzDwyu/aipPUM8cZYZQooXLgM/luIuqpq51YbdoC8WQ+P
+         tm0A==
+X-Forwarded-Encrypted: i=1; AJvYcCXCcmA1a1FWs0IdzILIyWBoCXshECrTHroOGAc0X9y9Cv92/dTVEmK6ITrfJIxVwa96rTr1OuW2PmElWDJelinK335cC1Q/c22kH+ZCbS31rFrnBjNLuk9KkTDgtRKyckbCOCKWKPpeSQ==
+X-Gm-Message-State: AOJu0Yy+1xOtulMgCabh3w0DuPlaf/WNE6DNkyOyvlflqmIsWm7brM61
+	xvV+OO9b5kLLZzis58rMBTjZiPr4Ljls2RHKv8iO8++/Osr7YwHe
+X-Google-Smtp-Source: AGHT+IGSb4vn1VG/LKLn9iIV31b0qpmYMFxtDzfKEmp2doNXYedxkw8XdC5P9x/zshzJVd8cN9Lulg==
+X-Received: by 2002:a19:e050:0:b0:513:ed0f:36c9 with SMTP id g16-20020a19e050000000b00513ed0f36c9mr194791lfj.45.1710713493135;
+        Sun, 17 Mar 2024 15:11:33 -0700 (PDT)
+Received: from localhost.lan (031011218106.poznan.vectranet.pl. [31.11.218.106])
+        by smtp.gmail.com with ESMTPSA id y16-20020a197510000000b00513d8e5a088sm973049lfe.140.2024.03.17.15.11.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Mar 2024 15:11:32 -0700 (PDT)
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+To: Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Sean Wang <sean.wang@mediatek.com>,
+	Felix Fietkau <nbd@nbd.name>,
+	"David S . Miller" <davem@davemloft.net>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+Subject: [PATCH V2 0/4] arm64: dts: mediatek: mt7622: fix some validation errors
+Date: Sun, 17 Mar 2024 23:10:46 +0100
+Message-Id: <20240317221050.18595-1-zajec5@gmail.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223163726.12397-1-dakr@redhat.com> <6ba16a74-6fa4-4051-8cc6-f0e53a68d8b4@redhat.com>
- <Ze73aPMEg-BUCE8W@hs01.dakr.org> <CANiq72kK5CF0RQathACD_=7K1Ye4eMVdUnRcvkDZx4ALtq46wg@mail.gmail.com>
- <d0159c8c-f5d8-4731-a820-012702841bfc@redhat.com>
-In-Reply-To: <d0159c8c-f5d8-4731-a820-012702841bfc@redhat.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 17 Mar 2024 22:53:17 +0100
-Message-ID: <CANiq72=CQ1EZGuGU2vJ-JuGh3J7J=p_xtpUdn0q2eaLmAvh-Hg@mail.gmail.com>
-Subject: Re: [PATCH v5] rust: str: add {make,to}_{upper,lower}case() to CString
-To: Danilo Krummrich <dakr@redhat.com>
-Cc: ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	benno.lossin@proton.me, a.hindborg@samsung.com, aliceryhl@google.com, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 12, 2024 at 9:08=E2=80=AFAM Danilo Krummrich <dakr@redhat.com> =
-wrote:
->
-> Thanks for sharing, that sounds all good. Just wanted to know if the
-> patch was queued up.
+From: Rafał Miłecki <rafal@milecki.pl>
 
-My pleasure -- I took the chance to add it to our Contributing page
-(which is our `P:` field, i.e. Maintainer Entry Profile):
-https://rust-for-linux.com/contributing
+One more step in cleaning up DTS for "make dtbs_check".
 
-Cheers,
-Miguel
+V2: Add "Fixes" tags
+
+Rafał Miłecki (4):
+  arm64: dts: mediatek: mt7622: fix clock controllers
+  arm64: dts: mediatek: mt7622: fix IR nodename
+  arm64: dts: mediatek: mt7622: fix ethernet controller "compatible"
+  arm64: dts: mediatek: mt7622: drop "reset-names" from thermal block
+
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi | 34 ++++++++++--------------
+ 1 file changed, 14 insertions(+), 20 deletions(-)
+
+-- 
+2.35.3
+
