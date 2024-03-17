@@ -1,392 +1,144 @@
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A8063BF;
-	Sun, 17 Mar 2024 11:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
+Received: from www.linux-watchdog.org (www.linux-watchdog.org [185.87.125.42])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BFE112E68;
+	Sun, 17 Mar 2024 11:48:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.87.125.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710675510; cv=none; b=iJPA+4XDFY2JWQmBFWuaY1xWlo20ifWJKtIpExFhRHjTabFIOQTiSEDzsNSgJl3r4Gg2IERrinU/hwglmm1CVzm9EiktjH34m60YbjIF0Hr2/yr78hY5vsrrmLWonEnXi1MLbNPk9VNASeTrpaPMxOCBllAjHomcV+ZV0XIMXK0=
+	t=1710676121; cv=none; b=RLhuO/XS/TKX2dBwRjtz3kALv8QcqSIsfh/SY90ta+rZIMx0cfBn7bLTke/gAHDK/ghtGVXbwWRNml9g6UokJXsUMZZqq2Tyb8NhxYQUj2ICPt6ps1jdMdZVO+e8eDzHCbv11hBFMuItBKssnPZMLPzWVYU9FlaTplI9FXY92M4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710675510; c=relaxed/simple;
-	bh=tYcMPZ7zJjxtwuj8HFC2FsRjbac76kluNtGY1VE+Pag=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=lf+1Rz+xiUMEDM7WZe+pECUJudH2QCNGhH5/BFEYfi7xjseBxiSLtPe0CJE/8HBAOmxT7zINyMeidrk4LLjq/OA2YTME6QEmXaCklMr11uJ091IOp/340R8hp/badjgBZUnP7JxjEJbu+giw1yAW6iH0PEyU+Uv86EmPP9eQ49M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G+dQBm9S; arc=none smtp.client-ip=209.85.161.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710676121; c=relaxed/simple;
+	bh=Xd3HVK9KzLr6UudVs0ql/FdH/WPlFteVyG3/uzLUdPQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=o5GyuATF+wdknT7yARkhRfkIIW68tYtmANxXH64gonpbmHNcU5BFp+vkZWJrIYAzJisdyoq7bE2EmSuwmePXDokjHa3I3b/ytBQDdrx9sLKvyv/3LSwY6uCHcSsxk2u+bAw5UU9GMAQzsnFefR3qYaapEwg/KdUdjekaFNpqg8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=linux-watchdog.org; spf=pass smtp.mailfrom=linux-watchdog.org; dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b=IlRw+Vju; arc=none smtp.client-ip=185.87.125.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=linux-watchdog.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux-watchdog.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G+dQBm9S"
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5a496fde460so538081eaf.1;
-        Sun, 17 Mar 2024 04:38:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710675507; x=1711280307; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U4KA0EFwWdVp5/tT7XS37xOqKZ+ls9/0QsFS2P56u/I=;
-        b=G+dQBm9SOOZ85hz3ogL7i7g2PcD/udhTbVVshVrMHGzJSKgnRIzR8eDFm/yRvm5yxP
-         f2UivC+oNQr7QVnvqkPHfw4GXyHbY2uKwFt36kQ3fHM/Yyq9q3EZXJKuJfcMgN9dimck
-         jI7Vbb3zRMw3Kuin2jQ4fA0ZCO4XCd84A6P8YWPNBhNftSanRC/hqjQOqNHwJokBmch0
-         5RIxQp+WVbcIlONsjMRa5et/CBER9Nfw4nn11vjlfcjD4WBy7xspgRB7yYcqcp6khqRT
-         e7A/freAfR7ciG7szvud2IdyTYYO10Coslr/quWlF58hB2jq7KFskCbQ/3An6s+stFk0
-         tx+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710675507; x=1711280307;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U4KA0EFwWdVp5/tT7XS37xOqKZ+ls9/0QsFS2P56u/I=;
-        b=tcTpa8538WrIct/TCBrMgLee+0wY0PuyCs331Be/OehPsWzkoaF42anniJ6WeC8Myx
-         7lk/v9V/yf4bFM8upKzmCVQ/gyEiG+KIBPirYPz6xkL/7xpl22jQoV4uXvHuWLfojblp
-         D3A01P+gzCqxkwH2dJEUTe6PSYbjwHuqdK/Ub0WYXfgLR28GtxTrPwTA31GLyjEY5NIj
-         y03Ev444AhpirHHd7Cfo1usDhSWEoOdImxWt0JtezmwmjRi4I66rcusxBSMTGRAbX2cO
-         U33RwemVkZYqxMVJBAbL7vay4x5iqrQQPB89YEO4/dGCqoYpE5cSdZx+h2QHfSiZ2jrg
-         IZJg==
-X-Forwarded-Encrypted: i=1; AJvYcCWP2empp1pQuyGLetz9gbOA+v8QPCKtmvJ2TdgT5b/v6dDWWGm+PMCGUiLN6Ncsp72sOgEU4V8K3TJShVMBKmM6ngjB5AICebVyh+EQ5HbWjD5zNpsD7wvZixVAc/jiawVQ
-X-Gm-Message-State: AOJu0YxWeArI2PrBIrIMbTybg8HjAtkSMEoUXKGFYqz4y5RHmTOHvi4I
-	tGi+z7sKoU4qRiDTjNOdOZxjIxKTNJ1FV6q7ieUs6CcAS78Eb4tq
-X-Google-Smtp-Source: AGHT+IFBsEAr3jxlXCoZHvU2NwTknb7DTHam44wtQnPa+t+W0z8kDScycLXfABB0q70xq8qXfl7Paw==
-X-Received: by 2002:a05:6358:52cd:b0:17e:8b5d:c7af with SMTP id z13-20020a05635852cd00b0017e8b5dc7afmr7549204rwz.30.1710675503483;
-        Sun, 17 Mar 2024 04:38:23 -0700 (PDT)
-Received: from localhost.localdomain ([120.244.140.115])
-        by smtp.gmail.com with ESMTPSA id ph4-20020a17090b3bc400b0029f6eb4c14asm2285505pjb.5.2024.03.17.04.38.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Mar 2024 04:38:23 -0700 (PDT)
-From: Zqiang <qiang.zhang1211@gmail.com>
-To: paulmck@kernel.org,
-	frederic@kernel.org,
-	neeraj.upadhyay@kernel.org,
-	joel@joelfernandes.org
-Cc: qiang.zhang1211@gmail.com,
-	rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] rcutorture: Make rcutorture support print rcu-tasks gp state
-Date: Sun, 17 Mar 2024 19:38:11 +0800
-Message-Id: <20240317113811.8085-1-qiang.zhang1211@gmail.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="IlRw+Vju"
+Received: by www.linux-watchdog.org (Postfix, from userid 500)
+	id 714F6409FE; Sun, 17 Mar 2024 12:24:37 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org 714F6409FE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
+	s=odk20180602; t=1710674677;
+	bh=Xd3HVK9KzLr6UudVs0ql/FdH/WPlFteVyG3/uzLUdPQ=;
+	h=Date:From:To:Cc:Subject:From;
+	b=IlRw+Vjulq7/UpwLcdljtarCO/nackaNnBpp/r/wlOSBoop32/Jw+sZUS8gf4A4F0
+	 qZCmsoedikIiOY79unmOuebjznheHMR33mCPqpDp8JCv3VOru0OWceM+mh5k5+7RIT
+	 M3TPdm1+utPwb+sTH4/Xoe41fShHPRDteYwZT2js=
+Date: Sun, 17 Mar 2024 12:24:37 +0100
+From: Wim Van Sebroeck <wim@linux-watchdog.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Ben Wolsieffer <ben.wolsieffer@hefring.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Jerry Hoemann <jerry.hoemann@hpe.com>,
+	Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+	Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>,
+	Minh Le <minh.le.aj@renesas.com>,
+	Stanislav Jakubek <stano.jakubek@gmail.com>,
+	Varshini Rajendran <varshini.rajendran@microchip.com>,
+	Yang Li <yang.lee@linux.alibaba.com>,
+	Yang Xiwen <forbidden405@outlook.com>
+Subject: [GIT PULL REQUEST] watchdog - v6.9 release cycle.
+Message-ID: <20240317112437.GA9174@www.linux-watchdog.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.20 (2009-12-10)
 
-This commit make rcu-tasks related rcutorture test support rcu-tasks
-gp state printing when the writer stall occurs or the at the end of
-rcutorture test, and generate rcu_ops->get_gp_data() operation to
-simplify the acquisition of gp state for different types of rcutorture
-tests.
+Hi Linus,
 
-Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
----
- 
-[   47.582683] rcu:  Start-test grace-period state: g4313 f0x0
-[   73.780444] rcu:  End-test grace-period state: g15728 f0x0 total-gps=2854
+Please pull following watchdog changes for the v6.9 release cycle.
 
-[   99.013921] srcu:  Start-test grace-period state: g0 f0x0
-[  126.596727] srcu:  End-test grace-period state: g10292 f0x0 total-gps=10292
+This series contains:
+* core: Remove usage of the deprecated ida_simple_xx() API
+* Add kernel-doc for wdt_set_timeout()
+* Add support for R-Car V4M,  StarFive's JH8100 and sam9x7-wdt
+* Fixes and small improvements
 
-[  175.664991] srcud:  Start-test grace-period state: g0 f0x0
-[  195.012774] srcud:  End-test grace-period state: g7628 f0x0 total-gps=7628
+The output from git request-pull:
+----------------------------------------------------------------
+The following changes since commit 41bccc98fb7931d63d03f326a746ac4d429c1dd3:
 
-[  216.943521] tasks:  Start-test grace-period state: g8 f0x0
-[  234.245093] tasks:  End-test grace-period state: g300 f0x0 total-gps=292
+  Linux 6.8-rc2 (2024-01-28 17:01:12 -0800)
 
-[  267.139368] tasks-rude:  Start-test grace-period state: g8 f0x0
-[  296.132748] tasks-rude:  End-test grace-period state: g684 f0x0 total-gps=676
+are available in the git repository at:
 
-[  316.044241] tasks-tracing:  Start-test grace-period state: g8 f0x0
-[  342.020447] tasks-tracing:  End-test grace-period state: g348 f0x0 total-gps=340
+  git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-6.9-rc1
 
- kernel/rcu/rcu.h        | 20 ++++++++++----------
- kernel/rcu/rcutorture.c | 29 +++++++++++++++++++++--------
- kernel/rcu/srcutree.c   |  5 +----
- kernel/rcu/tasks.h      | 21 +++++++++++++++++++++
- kernel/rcu/tree.c       | 13 +++----------
- 5 files changed, 56 insertions(+), 32 deletions(-)
+for you to fetch changes up to 6fe5aabf7fc645562faec50c79c7a21a4dd1cab6:
 
-diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
-index 86fce206560e..38238e595a61 100644
---- a/kernel/rcu/rcu.h
-+++ b/kernel/rcu/rcu.h
-@@ -522,12 +522,18 @@ static inline void show_rcu_tasks_gp_kthreads(void) {}
- 
- #ifdef CONFIG_TASKS_RCU
- struct task_struct *get_rcu_tasks_gp_kthread(void);
-+void rcu_tasks_get_gp_data(int *flags, unsigned long *gp_seq);
- #endif // # ifdef CONFIG_TASKS_RCU
- 
- #ifdef CONFIG_TASKS_RUDE_RCU
- struct task_struct *get_rcu_tasks_rude_gp_kthread(void);
-+void rcu_tasks_rude_get_gp_data(int *flags, unsigned long *gp_seq);
- #endif // # ifdef CONFIG_TASKS_RUDE_RCU
- 
-+#ifdef CONFIG_TASKS_TRACE_RCU
-+void rcu_tasks_trace_get_gp_data(int *flags, unsigned long *gp_seq);
-+#endif
-+
- #ifdef CONFIG_TASKS_RCU_GENERIC
- void tasks_cblist_init_generic(void);
- #else /* #ifdef CONFIG_TASKS_RCU_GENERIC */
-@@ -557,8 +563,7 @@ static inline void rcu_set_jiffies_lazy_flush(unsigned long j) { }
- #endif
- 
- #if defined(CONFIG_TREE_RCU)
--void rcutorture_get_gp_data(enum rcutorture_type test_type, int *flags,
--			    unsigned long *gp_seq);
-+void rcutorture_get_gp_data(int *flags, unsigned long *gp_seq);
- void do_trace_rcu_torture_read(const char *rcutorturename,
- 			       struct rcu_head *rhp,
- 			       unsigned long secs,
-@@ -566,8 +571,7 @@ void do_trace_rcu_torture_read(const char *rcutorturename,
- 			       unsigned long c);
- void rcu_gp_set_torture_wait(int duration);
- #else
--static inline void rcutorture_get_gp_data(enum rcutorture_type test_type,
--					  int *flags, unsigned long *gp_seq)
-+static inline void rcutorture_get_gp_data(int *flags, unsigned long *gp_seq)
- {
- 	*flags = 0;
- 	*gp_seq = 0;
-@@ -587,20 +591,16 @@ static inline void rcu_gp_set_torture_wait(int duration) { }
- 
- #ifdef CONFIG_TINY_SRCU
- 
--static inline void srcutorture_get_gp_data(enum rcutorture_type test_type,
--					   struct srcu_struct *sp, int *flags,
-+static inline void srcutorture_get_gp_data(struct srcu_struct *sp, int *flags,
- 					   unsigned long *gp_seq)
- {
--	if (test_type != SRCU_FLAVOR)
--		return;
- 	*flags = 0;
- 	*gp_seq = sp->srcu_idx;
- }
- 
- #elif defined(CONFIG_TREE_SRCU)
- 
--void srcutorture_get_gp_data(enum rcutorture_type test_type,
--			     struct srcu_struct *sp, int *flags,
-+void srcutorture_get_gp_data(struct srcu_struct *sp, int *flags,
- 			     unsigned long *gp_seq);
- 
- #endif
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 2f43d31fb7a5..2e8a037072eb 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -381,6 +381,7 @@ struct rcu_torture_ops {
- 	void (*gp_kthread_dbg)(void);
- 	bool (*check_boost_failed)(unsigned long gp_state, int *cpup);
- 	int (*stall_dur)(void);
-+	void (*get_gp_data)(int *flags, unsigned long *gp_seq);
- 	long cbflood_max;
- 	int irq_capable;
- 	int can_boost;
-@@ -569,6 +570,7 @@ static struct rcu_torture_ops rcu_ops = {
- 	.gp_kthread_dbg		= show_rcu_gp_kthreads,
- 	.check_boost_failed	= rcu_check_boost_fail,
- 	.stall_dur		= rcu_jiffies_till_stall_check,
-+	.get_gp_data		= rcutorture_get_gp_data,
- 	.irq_capable		= 1,
- 	.can_boost		= IS_ENABLED(CONFIG_RCU_BOOST),
- 	.extendables		= RCUTORTURE_MAX_EXTEND,
-@@ -612,6 +614,7 @@ static struct rcu_torture_ops rcu_busted_ops = {
- 	.sync		= synchronize_rcu_busted,
- 	.exp_sync	= synchronize_rcu_busted,
- 	.call		= call_rcu_busted,
-+	.get_gp_data	= NULL,
- 	.cb_barrier	= NULL,
- 	.fqs		= NULL,
- 	.stats		= NULL,
-@@ -628,6 +631,11 @@ static struct srcu_struct srcu_ctld;
- static struct srcu_struct *srcu_ctlp = &srcu_ctl;
- static struct rcu_torture_ops srcud_ops;
- 
-+static void srcu_get_gp_data(int *flags, unsigned long *gp_seq)
-+{
-+	srcutorture_get_gp_data(srcu_ctlp, flags, gp_seq);
-+}
-+
- static int srcu_torture_read_lock(void)
- {
- 	if (cur_ops == &srcud_ops)
-@@ -736,6 +744,7 @@ static struct rcu_torture_ops srcu_ops = {
- 	.call		= srcu_torture_call,
- 	.cb_barrier	= srcu_torture_barrier,
- 	.stats		= srcu_torture_stats,
-+	.get_gp_data	= srcu_get_gp_data,
- 	.cbflood_max	= 50000,
- 	.irq_capable	= 1,
- 	.no_pi_lock	= IS_ENABLED(CONFIG_TINY_SRCU),
-@@ -774,6 +783,7 @@ static struct rcu_torture_ops srcud_ops = {
- 	.call		= srcu_torture_call,
- 	.cb_barrier	= srcu_torture_barrier,
- 	.stats		= srcu_torture_stats,
-+	.get_gp_data	= srcu_get_gp_data,
- 	.cbflood_max	= 50000,
- 	.irq_capable	= 1,
- 	.no_pi_lock	= IS_ENABLED(CONFIG_TINY_SRCU),
-@@ -796,6 +806,7 @@ static struct rcu_torture_ops busted_srcud_ops = {
- 	.call		= srcu_torture_call,
- 	.cb_barrier	= srcu_torture_barrier,
- 	.stats		= srcu_torture_stats,
-+	.get_gp_data	= NULL,
- 	.irq_capable	= 1,
- 	.no_pi_lock	= IS_ENABLED(CONFIG_TINY_SRCU),
- 	.extendables	= RCUTORTURE_MAX_EXTEND,
-@@ -838,6 +849,7 @@ static struct rcu_torture_ops trivial_ops = {
- 	.get_gp_seq	= rcu_no_completed,
- 	.sync		= synchronize_rcu_trivial,
- 	.exp_sync	= synchronize_rcu_trivial,
-+	.get_gp_data	= NULL,
- 	.fqs		= NULL,
- 	.stats		= NULL,
- 	.irq_capable	= 1,
-@@ -882,6 +894,7 @@ static struct rcu_torture_ops tasks_ops = {
- 	.call		= call_rcu_tasks,
- 	.cb_barrier	= rcu_barrier_tasks,
- 	.gp_kthread_dbg	= show_rcu_tasks_classic_gp_kthread,
-+	.get_gp_data	= rcu_tasks_get_gp_data,
- 	.fqs		= NULL,
- 	.stats		= NULL,
- 	.irq_capable	= 1,
-@@ -922,6 +935,7 @@ static struct rcu_torture_ops tasks_rude_ops = {
- 	.call		= call_rcu_tasks_rude,
- 	.cb_barrier	= rcu_barrier_tasks_rude,
- 	.gp_kthread_dbg	= show_rcu_tasks_rude_gp_kthread,
-+	.get_gp_data	= rcu_tasks_rude_get_gp_data,
- 	.cbflood_max	= 50000,
- 	.fqs		= NULL,
- 	.stats		= NULL,
-@@ -974,6 +988,7 @@ static struct rcu_torture_ops tasks_tracing_ops = {
- 	.call		= call_rcu_tasks_trace,
- 	.cb_barrier	= rcu_barrier_tasks_trace,
- 	.gp_kthread_dbg	= show_rcu_tasks_trace_gp_kthread,
-+	.get_gp_data    = rcu_tasks_trace_get_gp_data,
- 	.cbflood_max	= 50000,
- 	.fqs		= NULL,
- 	.stats		= NULL,
-@@ -2264,10 +2279,8 @@ rcu_torture_stats_print(void)
- 		int __maybe_unused flags = 0;
- 		unsigned long __maybe_unused gp_seq = 0;
- 
--		rcutorture_get_gp_data(cur_ops->ttype,
--				       &flags, &gp_seq);
--		srcutorture_get_gp_data(cur_ops->ttype, srcu_ctlp,
--					&flags, &gp_seq);
-+		if (cur_ops->get_gp_data)
-+			cur_ops->get_gp_data(&flags, &gp_seq);
- 		wtp = READ_ONCE(writer_task);
- 		pr_alert("??? Writer stall state %s(%d) g%lu f%#x ->state %#x cpu %d\n",
- 			 rcu_torture_writer_state_getname(),
-@@ -3390,8 +3403,8 @@ rcu_torture_cleanup(void)
- 		fakewriter_tasks = NULL;
- 	}
- 
--	rcutorture_get_gp_data(cur_ops->ttype, &flags, &gp_seq);
--	srcutorture_get_gp_data(cur_ops->ttype, srcu_ctlp, &flags, &gp_seq);
-+	if (cur_ops->get_gp_data)
-+		cur_ops->get_gp_data(&flags, &gp_seq);
- 	pr_alert("%s:  End-test grace-period state: g%ld f%#x total-gps=%ld\n",
- 		 cur_ops->name, (long)gp_seq, flags,
- 		 rcutorture_seq_diff(gp_seq, start_gp_seq));
-@@ -3762,8 +3775,8 @@ rcu_torture_init(void)
- 			nrealreaders = 1;
- 	}
- 	rcu_torture_print_module_parms(cur_ops, "Start of test");
--	rcutorture_get_gp_data(cur_ops->ttype, &flags, &gp_seq);
--	srcutorture_get_gp_data(cur_ops->ttype, srcu_ctlp, &flags, &gp_seq);
-+	if (cur_ops->get_gp_data)
-+		cur_ops->get_gp_data(&flags, &gp_seq);
- 	start_gp_seq = gp_seq;
- 	pr_alert("%s:  Start-test grace-period state: g%ld f%#x\n",
- 		 cur_ops->name, (long)gp_seq, flags);
-diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-index d19326486edd..98f79ba01b0a 100644
---- a/kernel/rcu/srcutree.c
-+++ b/kernel/rcu/srcutree.c
-@@ -1828,12 +1828,9 @@ static void process_srcu(struct work_struct *work)
- 	srcu_reschedule(ssp, curdelay);
- }
- 
--void srcutorture_get_gp_data(enum rcutorture_type test_type,
--			     struct srcu_struct *ssp, int *flags,
-+void srcutorture_get_gp_data(struct srcu_struct *ssp, int *flags,
- 			     unsigned long *gp_seq)
- {
--	if (test_type != SRCU_FLAVOR)
--		return;
- 	*flags = 0;
- 	*gp_seq = rcu_seq_current(&ssp->srcu_sup->srcu_gp_seq);
- }
-diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-index e83adcdb49b5..e7ac9138a4fd 100644
---- a/kernel/rcu/tasks.h
-+++ b/kernel/rcu/tasks.h
-@@ -1182,6 +1182,13 @@ struct task_struct *get_rcu_tasks_gp_kthread(void)
- }
- EXPORT_SYMBOL_GPL(get_rcu_tasks_gp_kthread);
- 
-+void rcu_tasks_get_gp_data(int *flags, unsigned long *gp_seq)
-+{
-+	*flags = 0;
-+	*gp_seq = rcu_seq_current(&rcu_tasks.tasks_gp_seq);
-+}
-+EXPORT_SYMBOL_GPL(rcu_tasks_get_gp_data);
-+
- /*
-  * Protect against tasklist scan blind spot while the task is exiting and
-  * may be removed from the tasklist.  Do this by adding the task to yet
-@@ -1361,6 +1368,13 @@ struct task_struct *get_rcu_tasks_rude_gp_kthread(void)
- }
- EXPORT_SYMBOL_GPL(get_rcu_tasks_rude_gp_kthread);
- 
-+void rcu_tasks_rude_get_gp_data(int *flags, unsigned long *gp_seq)
-+{
-+	*flags = 0;
-+	*gp_seq = rcu_seq_current(&rcu_tasks_rude.tasks_gp_seq);
-+}
-+EXPORT_SYMBOL_GPL(rcu_tasks_rude_get_gp_data);
-+
- #endif /* #ifdef CONFIG_TASKS_RUDE_RCU */
- 
- ////////////////////////////////////////////////////////////////////////
-@@ -2020,6 +2034,13 @@ struct task_struct *get_rcu_tasks_trace_gp_kthread(void)
- }
- EXPORT_SYMBOL_GPL(get_rcu_tasks_trace_gp_kthread);
- 
-+void rcu_tasks_trace_get_gp_data(int *flags, unsigned long *gp_seq)
-+{
-+	*flags = 0;
-+	*gp_seq = rcu_seq_current(&rcu_tasks_trace.tasks_gp_seq);
-+}
-+EXPORT_SYMBOL_GPL(rcu_tasks_trace_get_gp_data);
-+
- #else /* #ifdef CONFIG_TASKS_TRACE_RCU */
- static void exit_tasks_rcu_finish_trace(struct task_struct *t) { }
- #endif /* #else #ifdef CONFIG_TASKS_TRACE_RCU */
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 9fbb5ab57c84..e229a12afe31 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -539,17 +539,10 @@ static struct rcu_node *rcu_get_root(void)
- /*
-  * Send along grace-period-related data for rcutorture diagnostics.
-  */
--void rcutorture_get_gp_data(enum rcutorture_type test_type, int *flags,
--			    unsigned long *gp_seq)
-+void rcutorture_get_gp_data(int *flags, unsigned long *gp_seq)
- {
--	switch (test_type) {
--	case RCU_FLAVOR:
--		*flags = READ_ONCE(rcu_state.gp_flags);
--		*gp_seq = rcu_seq_current(&rcu_state.gp_seq);
--		break;
--	default:
--		break;
--	}
-+	*flags = READ_ONCE(rcu_state.gp_flags);
-+	*gp_seq = rcu_seq_current(&rcu_state.gp_seq);
- }
- EXPORT_SYMBOL_GPL(rcutorture_get_gp_data);
- 
--- 
-2.17.1
+  watchdog: intel-mid_wdt: Get platform data via dev_get_platdata() (2024-03-10 11:14:46 +0100)
+
+----------------------------------------------------------------
+linux-watchdog 6.9-rc1 tag
+
+----------------------------------------------------------------
+Andy Shevchenko (3):
+      watchdog: intel-mid_wdt: Remove unused intel-mid.h
+      watchdog: intel-mid_wdt: Don't use "proxy" headers
+      watchdog: intel-mid_wdt: Get platform data via dev_get_platdata()
+
+Ben Wolsieffer (1):
+      watchdog: stm32_iwdg: initialize default timeout
+
+Christophe JAILLET (1):
+      watchdog: core: Remove usage of the deprecated ida_simple_xx() API
+
+Jerry Hoemann (1):
+      watchdog/hpwdt: Support Suspend and Resume
+
+Ji Sheng Teoh (3):
+      watchdog: starfive: Check pm_runtime_enabled() before decrementing usage counter
+      watchdog: starfive: check watchdog status before enabling in system resume
+      dt-bindings: watchdog: starfive,jh7100-wdt: Add compatible for JH8100
+
+Kathiravan Thirumoorthy (1):
+      watchdog: qcom: fine tune the max timeout value calculation
+
+Minh Le (1):
+      dt-bindings: watchdog: renesas-wdt: Add support for R-Car V4M
+
+Stanislav Jakubek (1):
+      dt-bindings: watchdog: sprd,sp9860-wdt: convert to YAML
+
+Varshini Rajendran (1):
+      dt-bindings: watchdog: sama5d4-wdt: add compatible for sam9x7-wdt
+
+Yang Li (1):
+      watchdog: Add kernel-doc for wdt_set_timeout()
+
+Yang Xiwen (2):
+      watchdog: sp805_wdt: deassert the reset if available
+      dt-bindings: watchdog: arm,sp805: document the reset signal
+
+ .../devicetree/bindings/watchdog/arm,sp805.yaml    |  5 ++
+ .../bindings/watchdog/atmel,sama5d4-wdt.yaml       | 12 ++--
+ .../devicetree/bindings/watchdog/renesas,wdt.yaml  |  1 +
+ .../bindings/watchdog/sprd,sp9860-wdt.yaml         | 64 ++++++++++++++++++++++
+ .../devicetree/bindings/watchdog/sprd-wdt.txt      | 19 -------
+ .../bindings/watchdog/starfive,jh7100-wdt.yaml     | 40 +++++++++++---
+ drivers/watchdog/hpwdt.c                           | 25 +++++++++
+ drivers/watchdog/intel-mid_wdt.c                   | 11 +++-
+ drivers/watchdog/it87_wdt.c                        |  4 ++
+ drivers/watchdog/qcom-wdt.c                        |  7 ++-
+ drivers/watchdog/sp805_wdt.c                       |  8 +++
+ drivers/watchdog/starfive-wdt.c                    | 14 ++++-
+ drivers/watchdog/stm32_iwdg.c                      |  3 +
+ drivers/watchdog/watchdog_core.c                   | 17 +++---
+ 14 files changed, 182 insertions(+), 48 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/sprd,sp9860-wdt.yaml
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/sprd-wdt.txt
+----------------------------------------------------------------
+
+Kind regards,
+Wim.
 
