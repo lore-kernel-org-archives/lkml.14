@@ -1,38 +1,40 @@
-Received: from smtp.smtpout.orange.fr (smtp-28.smtpout.orange.fr [80.12.242.28])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B03D1B964
-	for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 14:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.28
+Received: from smtp.smtpout.orange.fr (smtp-23.smtpout.orange.fr [80.12.242.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221351C680
+	for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 14:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710687113; cv=none; b=uYz/CVmkoC5V5FCrnIzxONmqFegtKW5joagr9m5CfdcDtxCSh8G8BmuNiW7/TZHJLcf35ILpN4SPTA7hNUKfVhH6uLBfZSPJwVkUn3z95q7sXSUVUc7jKg2/lDzGDcDghgLmZKosP4ALuY3MWLHOBA0/XamEvfGEiAnnpi1mYfo=
+	t=1710687129; cv=none; b=a4ATaYddFbNK+V1Zd2UlMZwMVPYrmo3r0NQn89/ga4QH6iV1S7VoQhHeIC00l+Qz+uaYMHisyQnkosRZn+sEXX8xeqxC8ndNSVNMvsTjjkc56//iu1F9tqJkF9ws3Iy00sAUdCDW5DFgV4ZhBD2yO4VNGtELr7Q7BKfVJvWCZHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710687113; c=relaxed/simple;
-	bh=z920P4ZDLvkSl02Dp/ph/NZ0TNImdlFqF//xRtWgElI=;
+	s=arc-20240116; t=1710687129; c=relaxed/simple;
+	bh=f2Icuq/ACq6T+8dZhLB1yQt/9EcVLoebQgqEIqasx8U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=TqgsyhE5b5BvG1FhiY/W6AUnaVn4MYc/7K4mE99awbHBtje5LaY1rb1149d0ViVoj1WBvWMASdJEUvu1KMIPDVqZVy8ls42t79xLhCcGJPQxHZnZiN/X9NcVvE6nGT+mR4nfdWVT5ahMDvYH25xVKNi1KdI29QlXW+ZiTcc+UN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=lUI78kaR; arc=none smtp.client-ip=80.12.242.28
+	 In-Reply-To:Content-Type; b=o1Ijv33vP1EFEoGpmXmALrCqvqq4ccaPB5vEHGdpLsLb1ZL+hSlzrMfVny38LRZV9TrjsmeKoAYOuiIrmUbySaJacYctTutNm5NpOc82D5NKGbF0hcFElGrakGWnbs7ASL6NRNDgYg7MymFmN9bjL0j+oqL/LCD3CuDWxjDBd+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=es3n8pFW; arc=none smtp.client-ip=80.12.242.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="lUI78kaR"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="es3n8pFW"
 Received: from [192.168.1.18] ([92.140.202.140])
 	by smtp.orange.fr with ESMTPA
-	id lriWr6OaujgOxlriWrD77y; Sun, 17 Mar 2024 15:42:38 +0100
+	id lrrerSoLHBnpilrrerSLfh; Sun, 17 Mar 2024 15:52:04 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1710686558;
-	bh=Yan/AlvVbMuiA/SKqp2eF5APWJaKjCjDOI2XvgxxnbI=;
+	s=t20230301; t=1710687124;
+	bh=rmVj1Zo0ysD4EU1EPoLJ4zF5lxo04akNScGS3Kgu0rg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=lUI78kaRgm8mQYNgkli/z47tX53piBtp36x9s69tM+jOLyIyL8Nu/h3Bu5CgBSJ+V
-	 mAwK4TZiAvdrZdxYo7bF38IaBsij+VPgnTWa6/H+6dl3Sni29cG8OViMakFdXrsV0C
-	 HoP9Gd7Bs8ETWFDvG1KG1ZeWMSzuwAlHuOe1wfqSfbGol9NixjsXPiyU5a71rjL/VI
-	 9DxZF7AbfCCfyHj0WbaNJH7OETzZ2r3Ains3VR1erE+An2B+d/Mn3NRFrbxw7gRixS
-	 9DBS6zg8ZxmuGhiAlv5BzILvh8j6fguqGJkTTFZm4Va6Yc1RobmqnU43ysRXaMsI2k
-	 WpOz6ZUKQeNzQ==
+	b=es3n8pFWzUybMMGy6wp5nM9KyX/HUzWICIddF4WGuv313uiXYM1raVUThr+qKOvaS
+	 hxLOyDZ5CfSfRYnsd5zDBj88XJlcK6mQ0eBP9HLBS3gtC4wNO+tqnoglw43CsjxmOk
+	 OTHv2g0AiHuF0hwWJz6qNtGPfqKk5kRJMw7Z0O9XZnFCHgS2K/COX2FCicG/ft5Ahp
+	 TT5JJfuUHI1YVyjGh+tjr2LuRPsuceXlAAD7loIgbZWttDKzKEBu9NiqU5tfdOU5sQ
+	 GWWpZ8YvhiiSm148kXzVyiSNezNlFrx3MVsJmfaG1mDhEneWREry5/Ujm5/h7EyMVj
+	 9ge5NVWMB9Skg==
 X-ME-Helo: [192.168.1.18]
 X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 17 Mar 2024 15:42:38 +0100
+X-ME-Date: Sun, 17 Mar 2024 15:52:04 +0100
 X-ME-IP: 92.140.202.140
-Message-ID: <1af02bc8-1b20-4508-909d-342f3b06bf78@wanadoo.fr>
-Date: Sun, 17 Mar 2024 15:42:28 +0100
+Message-ID: <5b98c4a1-26c0-4b69-b000-44ae97eb6edb@wanadoo.fr>
+Date: Sun, 17 Mar 2024 15:51:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,8 +42,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 03/14] fork: Clean-up naming of vm_strack/vm_struct
- variables in vmap stacks code
+Subject: Re: [RFC 08/14] fork: separate vmap stack alloction and free calls
 Content-Language: en-MW
 To: Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org,
  linux-mm@kvack.org, akpm@linux-foundation.org, x86@kernel.org, bp@alien8.de,
@@ -58,146 +59,51 @@ To: Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org,
  rostedt@goodmis.org, surenb@google.com, tglx@linutronix.de,
  urezki@gmail.com, vincent.guittot@linaro.org
 References: <20240311164638.2015063-1-pasha.tatashin@soleen.com>
- <20240311164638.2015063-4-pasha.tatashin@soleen.com>
+ <20240311164638.2015063-9-pasha.tatashin@soleen.com>
 From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240311164638.2015063-4-pasha.tatashin@soleen.com>
+In-Reply-To: <20240311164638.2015063-9-pasha.tatashin@soleen.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 Le 11/03/2024 à 17:46, Pasha Tatashin a écrit :
-> There are two data types: "struct vm_struct" and "struct vm_stack" that
-> have the same local variable names: vm_stack, or vm, or s, which makes
-> code confusing to read.
-> 
-> Change the code so the naming is consisent:
-
-Nit: consistent
-
-> 
-> struct vm_struct is always called vm_area
-> struct vm_stack is always called vm_stack
+> In preparation for the dynamic stacks, separate out the
+> __vmalloc_node_range and vfree calls from the vmap based stack
+> allocations. The dynamic stacks will use their own variants of these
+> functions.
 > 
 > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 > ---
->   kernel/fork.c | 38 ++++++++++++++++++--------------------
->   1 file changed, 18 insertions(+), 20 deletions(-)
+>   kernel/fork.c | 53 ++++++++++++++++++++++++++++++---------------------
+>   1 file changed, 31 insertions(+), 22 deletions(-)
 > 
 > diff --git a/kernel/fork.c b/kernel/fork.c
-> index 32600bf2422a..60e812825a7a 100644
+> index 3004e6ce6c65..bbae5f705773 100644
 > --- a/kernel/fork.c
 > +++ b/kernel/fork.c
-> @@ -192,12 +192,12 @@ struct vm_stack {
->   	struct vm_struct *stack_vm_area;
->   };
->   
-> -static bool try_release_thread_stack_to_cache(struct vm_struct *vm)
-> +static bool try_release_thread_stack_to_cache(struct vm_struct *vm_area)
->   {
->   	unsigned int i;
->   
->   	for (i = 0; i < NR_CACHED_STACKS; i++) {
-> -		if (this_cpu_cmpxchg(cached_stacks[i], NULL, vm) != NULL)
-> +		if (this_cpu_cmpxchg(cached_stacks[i], NULL, vm_area) != NULL)
->   			continue;
->   		return true;
->   	}
-> @@ -207,11 +207,12 @@ static bool try_release_thread_stack_to_cache(struct vm_struct *vm)
->   static void thread_stack_free_rcu(struct rcu_head *rh)
->   {
->   	struct vm_stack *vm_stack = container_of(rh, struct vm_stack, rcu);
-> +	struct vm_struct *vm_area = vm_stack->stack_vm_area;
->   
->   	if (try_release_thread_stack_to_cache(vm_stack->stack_vm_area))
->   		return;
->   
-> -	vfree(vm_stack);
-> +	vfree(vm_area->addr);
-
-This does not look like only a renaming of a variable. Is it?
-
-If no, should there be a Fixes tag and should it be detailed in the 
-commit description?
-
-CJ
-
+> @@ -204,6 +204,29 @@ static bool try_release_thread_stack_to_cache(struct vm_struct *vm_area)
+>   	return false;
 >   }
 >   
->   static void thread_stack_delayed_free(struct task_struct *tsk)
-> @@ -228,12 +229,12 @@ static int free_vm_stack_cache(unsigned int cpu)
->   	int i;
->   
->   	for (i = 0; i < NR_CACHED_STACKS; i++) {
-> -		struct vm_struct *vm_stack = cached_vm_stacks[i];
-> +		struct vm_struct *vm_area = cached_vm_stacks[i];
->   
-> -		if (!vm_stack)
-> +		if (!vm_area)
->   			continue;
->   
-> -		vfree(vm_stack->addr);
-> +		vfree(vm_area->addr);
->   		cached_vm_stacks[i] = NULL;
->   	}
->   
-> @@ -263,32 +264,29 @@ static int memcg_charge_kernel_stack(struct vm_struct *vm)
->   
->   static int alloc_thread_stack_node(struct task_struct *tsk, int node)
->   {
-> -	struct vm_struct *vm;
-> +	struct vm_struct *vm_area;
->   	void *stack;
->   	int i;
->   
->   	for (i = 0; i < NR_CACHED_STACKS; i++) {
-> -		struct vm_struct *s;
-> -
-> -		s = this_cpu_xchg(cached_stacks[i], NULL);
-> -
-> -		if (!s)
-> +		vm_area = this_cpu_xchg(cached_stacks[i], NULL);
-> +		if (!vm_area)
->   			continue;
->   
->   		/* Reset stack metadata. */
-> -		kasan_unpoison_range(s->addr, THREAD_SIZE);
-> +		kasan_unpoison_range(vm_area->addr, THREAD_SIZE);
->   
-> -		stack = kasan_reset_tag(s->addr);
-> +		stack = kasan_reset_tag(vm_area->addr);
->   
->   		/* Clear stale pointers from reused stack. */
->   		memset(stack, 0, THREAD_SIZE);
->   
-> -		if (memcg_charge_kernel_stack(s)) {
-> -			vfree(s->addr);
-> +		if (memcg_charge_kernel_stack(vm_area)) {
-> +			vfree(vm_area->addr);
->   			return -ENOMEM;
->   		}
->   
-> -		tsk->stack_vm_area = s;
-> +		tsk->stack_vm_area = vm_area;
->   		tsk->stack = stack;
->   		return 0;
->   	}
-> @@ -306,8 +304,8 @@ static int alloc_thread_stack_node(struct task_struct *tsk, int node)
->   	if (!stack)
->   		return -ENOMEM;
->   
-> -	vm = find_vm_area(stack);
-> -	if (memcg_charge_kernel_stack(vm)) {
-> +	vm_area = find_vm_area(stack);
-> +	if (memcg_charge_kernel_stack(vm_area)) {
->   		vfree(stack);
->   		return -ENOMEM;
->   	}
-> @@ -316,7 +314,7 @@ static int alloc_thread_stack_node(struct task_struct *tsk, int node)
->   	 * free_thread_stack() can be called in interrupt context,
->   	 * so cache the vm_struct.
->   	 */
-> -	tsk->stack_vm_area = vm;
-> +	tsk->stack_vm_area = vm_area;
->   	stack = kasan_reset_tag(stack);
->   	tsk->stack = stack;
->   	return 0;
+> +static inline struct vm_struct *alloc_vmap_stack(int node)
+> +{
+> +	void *stack;
+> +
+> +	/*
+> +	 * Allocated stacks are cached and later reused by new threads,
+> +	 * so memcg accounting is performed manually on assigning/releasing
+> +	 * stacks to tasks. Drop __GFP_ACCOUNT.
+> +	 */
+> +	stack = __vmalloc_node_range(THREAD_SIZE, THREAD_ALIGN,
+> +				     VMALLOC_START, VMALLOC_END,
+> +				     THREADINFO_GFP & ~__GFP_ACCOUNT,
+> +				     PAGE_KERNEL,
+> +				     0, node, __builtin_return_address(0));
+> +
+> +	return (stack) ? find_vm_area(stack) : NULL;
+
+Nit: superfluous ()
+
+> +}
+
+...
 
