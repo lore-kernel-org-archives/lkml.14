@@ -1,284 +1,85 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8224D11F;
-	Mon, 18 Mar 2024 14:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D89F481AC
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 14:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710770670; cv=none; b=slZKqdNGYnXJPMOINUHhVljJ/G3gemj/Uf/sk8yI3dkmjDz/9S8l3/SSbWRE22c6g4LaunWn6q/86Pph3ZUOUPGS3Y9FpTz1WSks2zbQ1AsQxploJf/7AZtxbOqkKfkfuF0TqDQQMzpmg9aU4bnNJNSm6YVBCrjmNVK8ba5gGPo=
+	t=1710770841; cv=none; b=ofasxYAQoG0HnnoghX8Is86JmTGBiu8eiLGs7GwScKIYnzBW2llfdy/u06bY+ccDnVrSL1Mr2NGxttFaQNeCoPElZPyHfPs2hm/5m3HvQAKTkgTryiau06dlw/pVQtFJs1AiqAOGDNWTjhiGQY0HPKdzC4IcRwFIsU2kd9pcvAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710770670; c=relaxed/simple;
-	bh=MT+8lBT8cJcpk+YXvh52HjX2o1Sl9MZSarUXgdolC9A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=F1r3HWBASR2z5S5cg9FM2nbb2SZ0uJ3HW5x9ZR3zXREZNgQDx24uwG9HejKnlNOwkp9Fgx+lsjzTxESBRR4rxFppjG9maSTpY/j4lS139YVq8uDVE1v5+fd6MAgIgW1RT4YmIkwZ4LHM+jfAuMUZOnyAck6WD9rLe7tFyJxS4eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=mof7LKvn; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1710770841; c=relaxed/simple;
+	bh=vkD2c6YOu/3PLLtPJN8BZ4sJ1EZR5ZziaUiEsoLiRHo=;
+	h=Content-Type:Date:Message-Id:To:Subject:Cc:From:References:
+	 In-Reply-To; b=mzPYsHQPKWRvUcLHhl1FqD7ZJmFyoyxWisYaaCXp3XVUx9BNlCOXMPdCmqK4H34s7Ansob9s4Iz+vCrLrMeaiMPbu2eEH5ADD28ep6ixDSMjT6mLKcIKsZAoe/NPUA2ly/qCmLVvS2Wpeq/0DASd57GaisqoxU1yMYwgxtt+zW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UoAASRy4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mof7LKvn"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42IE4NJG070166;
-	Mon, 18 Mar 2024 09:04:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1710770663;
-	bh=gKn3j6OpVrtOVzh71kMc8b65L9lfAR4ky93dJ+Ff/GU=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=mof7LKvn1YwbKBuli1EKIVLDxkHlVjUkSscK75EoIwheuq+nKEepWJLuHYuzMOAXe
-	 7AQziJiZiZU4tB64TRFRw3SYS+sHsMAypUauvXFHcLKGifkDU5VXCDaSkw/Es3BxOY
-	 vGEwFGdRHlfk8ZBSQqNdGCOEXPNpnvuL5ZOeL6AM=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42IE4Nxi116926
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 18 Mar 2024 09:04:23 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 18
- Mar 2024 09:04:23 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 18 Mar 2024 09:04:22 -0500
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42IE4MVm128606;
-	Mon, 18 Mar 2024 09:04:22 -0500
-Message-ID: <8e8edccd-49d4-4157-b92d-8dd0630d52ac@ti.com>
-Date: Mon, 18 Mar 2024 09:04:22 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UoAASRy4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE18FC433C7;
+	Mon, 18 Mar 2024 14:07:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710770841;
+	bh=vkD2c6YOu/3PLLtPJN8BZ4sJ1EZR5ZziaUiEsoLiRHo=;
+	h=Date:To:Subject:Cc:From:References:In-Reply-To:From;
+	b=UoAASRy49t4fYNk5zt4y3ZniIxzKKiwzxdCQE4wzQnV649Zwua5izMsVO/rVMbngB
+	 KMMX/zmbd1oJMn7AQRMeeX/sMIMN163l/RUwVVwT7LLkBwQXfG3Bf5EFSgDM869Z5q
+	 J1fqus1YFKq0OnTNxkIQj7VziN2+7BBOLm1iOgkkZbVaUSSeD9L7vO4LXAtM/2hBo6
+	 K/JUc5lAA48VTB3Mu3GzGzyZ5JFRzPCHv73prUmPeRNyPxLhAzmjy9SlQs44qv/WTZ
+	 KPpAJlD2d1JzKY3hJy6BNiSjR7FNu0Y90a+huEiqI9LHf2I8zW5VGhzEG//MGA6TmB
+	 1XPARtvsjEiVQ==
+Content-Type: multipart/signed;
+ boundary=8ac9ce41e26f4cabb23549944e22bfa9a25961dadc257ee5a3e92aa37b29;
+ micalg=pgp-sha256; protocol="application/pgp-signature"
+Date: Mon, 18 Mar 2024 15:07:13 +0100
+Message-Id: <CZWXNB1U9VWE.G9CWTCUO3ZY3@kernel.org>
+To: "Aapo Vienamo" <aapo.vienamo@linux.intel.com>,
+ <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+ <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] mtd: core: Don't fail mtd_otp_nvmem_add() if OTP
+ is unsupported
+Cc: <mika.westerberg@linux.intel.com>
+From: "Michael Walle" <mwalle@kernel.org>
+X-Mailer: aerc 0.16.0
+References: <20240313173425.1325790-1-aapo.vienamo@linux.intel.com>
+ <20240313173425.1325790-3-aapo.vienamo@linux.intel.com>
+In-Reply-To: <20240313173425.1325790-3-aapo.vienamo@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/7] mmc: sdhci_am654: Add tuning algorithm for delay
- chain
-To: Adrian Hunter <adrian.hunter@intel.com>
-CC: Andrew Davis <afd@ti.com>, <linux-mmc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
-References: <20240308005746.1059813-1-jm@ti.com>
- <20240308005746.1059813-2-jm@ti.com>
- <e0ae65bf-9cca-4dd7-9915-dd9ad67cfb35@intel.com>
-Content-Language: en-US
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <e0ae65bf-9cca-4dd7-9915-dd9ad67cfb35@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi Adrian,
+--8ac9ce41e26f4cabb23549944e22bfa9a25961dadc257ee5a3e92aa37b29
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-On 3/14/24 9:18 AM, Adrian Hunter wrote:
-> On 8/03/24 02:57, Judith Mendez wrote:
->> Currently the sdhci_am654 driver only supports one tuning
->> algorithm which should be used only when DLL is enabled. The
->> ITAPDLY is selected from the largest passing window and the
->> buffer is viewed as a circular buffer.
->>
->> The new algorithm should be used when the delay chain
->> is enabled. The ITAPDLY is selected from the largest passing
->> window and the buffer is not viewed as a circular buffer.
->>
->> This implementation is based off of the following paper: [1].
->>
->> Also add support for multiple failing windows.
->>
->> [1] https://www.ti.com/lit/an/spract9/spract9.pdf
->>
->> Fixes: 13ebeae68ac9 ("mmc: sdhci_am654: Add support for software tuning")
->> Signed-off-by: Judith Mendez <jm@ti.com>
-> 
-> One question further below, and one cosmetic change, but resolve
-> those and you may add to all patches in this patch set:
+On Wed Mar 13, 2024 at 6:34 PM CET, Aapo Vienamo wrote:
+> Handle the case where -EOPNOTSUPP is returned from OTP driver.
+>
+> This addresses an issue that occurs with the Intel SPI flash controller,
+> which has a limited supported opcode set. Whilst the OTP functionality
+> is not available due to this restriction, other parts of the MTD
+> functionality of the device are intact. This change allows the driver
+> to gracefully handle the restriction by allowing the supported
+> functionality to remain available instead of failing the probe
+> altogether.
+>
+> Signed-off-by: Aapo Vienamo <aapo.vienamo@linux.intel.com>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Appreciate your review, thanks.
+Reviewed-by: Michael Walle <mwalle@kernel.org>
 
-> 
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-> 
->> ---
->> Changelog:
->> v2->v3:
->> - Fix return for tuning algorithm
->> - Fix ITAPDLY_LAST_INDEX
->> - Use reverse fir tree order for variable declarations
->> - Remove unnecessary parenthesis
->> ---
->>   drivers/mmc/host/sdhci_am654.c | 112 +++++++++++++++++++++++++++------
->>   1 file changed, 92 insertions(+), 20 deletions(-)
->>
->> diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
->> index d659c59422e1..d11b0d769e6c 100644
->> --- a/drivers/mmc/host/sdhci_am654.c
->> +++ b/drivers/mmc/host/sdhci_am654.c
->> @@ -149,10 +149,17 @@ struct sdhci_am654_data {
->>   	int strb_sel;
->>   	u32 flags;
->>   	u32 quirks;
->> +	bool dll_enable;
->>   
->>   #define SDHCI_AM654_QUIRK_FORCE_CDTEST BIT(0)
->>   };
->>   
->> +struct window {
->> +	u8 start;
->> +	u8 end;
->> +	u8 length;
->> +};
->> +
->>   struct sdhci_am654_driver_data {
->>   	const struct sdhci_pltfm_data *pdata;
->>   	u32 flags;
->> @@ -290,10 +297,12 @@ static void sdhci_am654_set_clock(struct sdhci_host *host, unsigned int clock)
->>   
->>   	regmap_update_bits(sdhci_am654->base, PHY_CTRL4, mask, val);
->>   
->> -	if (timing > MMC_TIMING_UHS_SDR25 && clock >= CLOCK_TOO_SLOW_HZ)
->> +	if (timing > MMC_TIMING_UHS_SDR25 && clock >= CLOCK_TOO_SLOW_HZ) {
->>   		sdhci_am654_setup_dll(host, clock);
->> -	else
->> +		sdhci_am654->dll_enable = true;
->> +	} else {
->>   		sdhci_am654_setup_delay_chain(sdhci_am654, timing);
-> 
-> V2 patch had here:
-> 
-> 		sdhci_am654->dll_enable = false;
-> 
-> Was its removal intended?
+-michael
 
-I did remove on purpose since it did not seem to be necessary.
+--8ac9ce41e26f4cabb23549944e22bfa9a25961dadc257ee5a3e92aa37b29
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
->> +	}
->>   
->>   	regmap_update_bits(sdhci_am654->base, PHY_CTRL5, CLKBUFSEL_MASK,
->>   			   sdhci_am654->clkbuf_sel);
->> @@ -408,39 +417,102 @@ static u32 sdhci_am654_cqhci_irq(struct sdhci_host *host, u32 intmask)
->>   	return 0;
->>   }
->>   
->> -#define ITAP_MAX	32
->> +#define ITAPDLY_LENGTH 32
->> +#define ITAPDLY_LAST_INDEX (ITAPDLY_LENGTH - 1)
->> +
->> +static u32 sdhci_am654_calculate_itap(struct sdhci_host *host, struct window
->> +			  *fail_window, u8 num_fails, bool circular_buffer)
->> +{
->> +	u8 itap = 0, start_fail = 0, end_fail = 0, pass_length = 0;
->> +	u8 first_fail_start = 0, last_fail_end = 0;
->> +	struct device *dev = mmc_dev(host->mmc);
->> +	struct window pass_window = {0, 0, 0};
->> +	int prev_fail_end = -1;
->> +
-> 
-> Unnecessary blank line
+-----BEGIN PGP SIGNATURE-----
 
-Will remove for v4.
+iIgEABYIADAWIQQCnWSOYTtih6UXaxvNyh2jtWxG+wUCZfhKkRIcbXdhbGxlQGtl
+cm5lbC5vcmcACgkQzcodo7VsRvs0YQEAsYw1iglE8VFvcu5bjOkVo5oFjG2qb2Jo
+lbITqsfqxfoA/iYKuEvmeC+oVqLKwTwaumonvnWI4F8TpREztajbvYoD
+=uszn
+-----END PGP SIGNATURE-----
 
-> 
->> +	u8 i;
->> +
->> +	if (!num_fails)
->> +		return ITAPDLY_LAST_INDEX >> 1;
->> +
->> +	if (fail_window->length == ITAPDLY_LENGTH) {
->> +		dev_err(dev, "No passing ITAPDLY, return 0\n");
->> +		return 0;
->> +	}
->> +
->> +	first_fail_start = fail_window->start;
->> +	last_fail_end = fail_window[num_fails - 1].end;
->> +
->> +	for (i = 0; i < num_fails; i++) {
->> +		start_fail = fail_window[i].start;
->> +		end_fail = fail_window[i].end;
->> +		pass_length = start_fail - (prev_fail_end + 1);
->> +
->> +		if (pass_length > pass_window.length) {
->> +			pass_window.start = prev_fail_end + 1;
->> +			pass_window.length = pass_length;
->> +		}
->> +		prev_fail_end = end_fail;
->> +	}
->> +
->> +	if (!circular_buffer)
->> +		pass_length = ITAPDLY_LAST_INDEX - last_fail_end;
->> +	else
->> +		pass_length = ITAPDLY_LAST_INDEX - last_fail_end + first_fail_start;
->> +
->> +	if (pass_length > pass_window.length) {
->> +		pass_window.start = last_fail_end + 1;
->> +		pass_window.length = pass_length;
->> +	}
->> +
->> +	if (!circular_buffer)
->> +		itap = pass_window.start + (pass_window.length >> 1);
->> +	else
->> +		itap = (pass_window.start + (pass_window.length >> 1)) % ITAPDLY_LENGTH;
->> +
->> +	return (itap > ITAPDLY_LAST_INDEX) ? ITAPDLY_LAST_INDEX >> 1 : itap;
->> +}
->> +
->>   static int sdhci_am654_platform_execute_tuning(struct sdhci_host *host,
->>   					       u32 opcode)
->>   {
->>   	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->>   	struct sdhci_am654_data *sdhci_am654 = sdhci_pltfm_priv(pltfm_host);
->> -	int cur_val, prev_val = 1, fail_len = 0, pass_window = 0, pass_len;
->> -	u32 itap;
->> +	struct window fail_window[ITAPDLY_LENGTH];
->> +	u8 curr_pass, itap;
->> +	u8 fail_index = 0;
->> +	u8 prev_pass = 1;
->> +
->> +	memset(fail_window, 0, sizeof(fail_window));
->>   
->>   	/* Enable ITAPDLY */
->>   	regmap_update_bits(sdhci_am654->base, PHY_CTRL4, ITAPDLYENA_MASK,
->>   			   1 << ITAPDLYENA_SHIFT);
->>   
->> -	for (itap = 0; itap < ITAP_MAX; itap++) {
->> +	for (itap = 0; itap < ITAPDLY_LENGTH; itap++) {
->>   		sdhci_am654_write_itapdly(sdhci_am654, itap);
->>   
->> -		cur_val = !mmc_send_tuning(host->mmc, opcode, NULL);
->> -		if (cur_val && !prev_val)
->> -			pass_window = itap;
->> +		curr_pass = !mmc_send_tuning(host->mmc, opcode, NULL);
->>   
->> -		if (!cur_val)
->> -			fail_len++;
->> +		if (!curr_pass && prev_pass)
->> +			fail_window[fail_index].start = itap;
->>   
->> -		prev_val = cur_val;
->> +		if (!curr_pass) {
->> +			fail_window[fail_index].end = itap;
->> +			fail_window[fail_index].length++;
->> +		}
->> +
->> +		if (curr_pass && !prev_pass)
->> +			fail_index++;
->> +
->> +		prev_pass = curr_pass;
->>   	}
->> -	/*
->> -	 * Having determined the length of the failing window and start of
->> -	 * the passing window calculate the length of the passing window and
->> -	 * set the final value halfway through it considering the range as a
->> -	 * circular buffer
->> -	 */
->> -	pass_len = ITAP_MAX - fail_len;
->> -	itap = (pass_window + (pass_len >> 1)) % ITAP_MAX;
->> +
->> +	if (fail_window[fail_index].length != 0)
->> +		fail_index++;
->> +
->> +	itap = sdhci_am654_calculate_itap(host, fail_window, fail_index,
->> +					  sdhci_am654->dll_enable);
->> +
->>   	sdhci_am654_write_itapdly(sdhci_am654, itap);
->>   
->>   	return 0;
-> 
-
+--8ac9ce41e26f4cabb23549944e22bfa9a25961dadc257ee5a3e92aa37b29--
