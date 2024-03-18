@@ -1,179 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A503538385;
-	Mon, 18 Mar 2024 11:12:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4109538387
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 11:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710760362; cv=none; b=Cv3Vn1d4C+EMuV2cSfKpuD3ty0tY8zIGeZjJ4r0cKdkCi/ne1Sz9mII4PSWk7NUSozyiW8HGg9uRTFVM9VfkEWSM8duBA/i4ACmdwz0UgmkI25hFqhfnN+xNTt4EV5nR+ftTMbK6cecmXQe7HeIgNXb8MzOa+9XXDwO+Z+0nTGE=
+	t=1710760362; cv=none; b=ZGnoVYL9fYuWJE4y8oJxtnWac+XFpioWGkO+LAOJdTQGWLEZ/jJizjCQ7O2xMCD3z6xu5gsKspQq9xOCMdZ7jCwlvcUxk+KxhT01brMz2lW+Ez4FT+vpppY+6QGmQ53skl4UnF8XBjZHJbg1tSSoawfi0no2v5iW28HZspKTrOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710760362; c=relaxed/simple;
-	bh=SrNpO6frBXeFes4/cfwvtY7bovpO8PEcBwfDBnzsgX8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b/RwDKSWsG017UMNU0nKJvllmdTYPI1bsOLKwMPeIqtQ8sJrPhgpW6qKTCkybEwlZKP8+jqS23gvgIBYJoSrXijygb/hAL4VKHQHlP3zZEacP0biozCDd4Nr5XIibaV3mcOqXrR+jaGpQlOMQuiBb3EKpwSC3Uz8A2sU9/Sxkn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dKtxEQZ1; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=0Bx39X9nrmaOe2siDGBtD8UvPB5+0atvcfW4BaACz+4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gTgFh/S2p/4qIZ9gBv2KysVkCggZs3VM428meOsODnixUN9g78ICDujyySiQS5Cy/Ef3QxnCDptInSKKN6RnauVV9OBdaJBc8BLzEk9bedVHnVZDyvS+qk62K7DEjgez4fcgSoblkKeUVyZN0yn0do3aLt7N9gI0MUO0pKVPHKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cpp.in; spf=none smtp.mailfrom=cpp.in; dkim=pass (2048-bit key) header.d=cpp-in.20230601.gappssmtp.com header.i=@cpp-in.20230601.gappssmtp.com header.b=2ROMi7FD; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cpp.in
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cpp.in
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dKtxEQZ1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710760361; x=1742296361;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SrNpO6frBXeFes4/cfwvtY7bovpO8PEcBwfDBnzsgX8=;
-  b=dKtxEQZ1vGph4AFryJ7ptrpdbBXXNCuVcKi2zATf0BnmcUfFfT0XSrLt
-   PaDLZRDKVh0NL4/Nu3hr6Z8qWTzrJ36pZwIQ6mj+MWbA3YgO+WKZj68Ef
-   V8l6zn6ktcOxVQTu+YkvALI5rWDXR4REIedZ/aLjKvYCHREeJo/Y/Ghwy
-   jCMwEG+g5zkhVIlsJx6Ny+iePMRJoEQMxez1mRATBQ7ZEvYcKj6U8RP02
-   g9PUKaRFpQTocnSn9oUd2P6E6i9nW3cLQ3p2+aqOg3R93UUgLoT+2QLPz
-   ocOpQy+cCVKAyQz0joR9geOJmpQcXHgObEBGVDwNYBG728H54f8Y6n7BP
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11016"; a="17012457"
-X-IronPort-AV: E=Sophos;i="6.07,134,1708416000"; 
-   d="scan'208";a="17012457"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 04:12:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11016"; a="937060156"
-X-IronPort-AV: E=Sophos;i="6.07,134,1708416000"; 
-   d="scan'208";a="937060156"
-Received: from kuha.fi.intel.com ([10.237.72.185])
-  by fmsmga001.fm.intel.com with SMTP; 18 Mar 2024 04:12:36 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 18 Mar 2024 13:12:36 +0200
-Date: Mon, 18 Mar 2024 13:12:36 +0200
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Luca Weiss <luca.weiss@fairphone.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: typec: ptn36502: switch to DRM_AUX_BRIDGE
-Message-ID: <ZfghpN81iR6vL+pu@kuha.fi.intel.com>
-References: <20240315-ptn36502-aux-v1-1-c9d3c828ff2e@fairphone.com>
+	dkim=pass (2048-bit key) header.d=cpp-in.20230601.gappssmtp.com header.i=@cpp-in.20230601.gappssmtp.com header.b="2ROMi7FD"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dcbef31a9dbso2731421276.1
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 04:12:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cpp-in.20230601.gappssmtp.com; s=20230601; t=1710760358; x=1711365158; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CJoZDN6ezIJlLMa5gaDKCST13mLnHhS66r8V7Evf8Jc=;
+        b=2ROMi7FDJwptKqSspUrVQ6fZTE/NhmeID0jQXfMNvLylVl03Isq/pPLOH4nvdmX7Zh
+         9KCNUm4bUeY4d1Z2jy+IcbCF040fCMqQNv/K+o0Jz3qNnGqCP7yfjRhhOrMTGeLfJ1XS
+         rMoNEFfhP2MhzYeYfGbjNMN5BONjXhKg1PHYUeUqI4qKtw57aJ63VlT5j1CaVW0rorjA
+         PD24HbD2Mx2IIfVCVzpDkMOyWx63JoRqZICwfMw6b2hmdtTJf3hWfSFtbQHxSEsYC1f4
+         Iu8NrchQQBlb8LntshiWgPkRgjmlWPWBYktSPectDwSM4uVKjwHysD/PINR/CLYNGBUY
+         93pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710760358; x=1711365158;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CJoZDN6ezIJlLMa5gaDKCST13mLnHhS66r8V7Evf8Jc=;
+        b=Xcapzl97FDmRwFqIOWfNiglV/jP2vP5kjdMvTvNi5d82Ne+R0zQeLDNGV8ErEuLdSz
+         mT3qDYbOcKhJ/dnvH0UKaO3WfSSjLc2V39PPpc6yAczsa9hnC9e2y4u/+UsRQEIqa+dc
+         gDU4xcc378Nghh7TVsjQyi6tRwKCOomgCUC2jT4D+JT+9oAeh9x8hZ+eMeOSJ0TqrHp2
+         E1WX8vakY09f/Z0Ls+YJoO2mlXU6QJmZgXmCO6JUKQ0kPIaKrBBRIX/54YBbCrvtlrYd
+         5F4rpsdbCRdyK/JSvx4ozcvqk/rI4VDOSVyrdq+OgliSSWCmB1cfPm23kjoUTu6/BBlY
+         THJw==
+X-Forwarded-Encrypted: i=1; AJvYcCXwR9dYcY6SaBkp0akOzu2ze7r/iJUhJB2jY40ottEv+ea9DCNQDy1A3E0eUFRcqfC5TD/SvxPJN/7irjxtDHQO6XoECEqOWtVVvPt6
+X-Gm-Message-State: AOJu0Ywehes4MVBM9jM8ChKECyyyylG7LnjmiGrgKtllxl/faqXU+GU8
+	OsWS3PE2AXAvMGAz9WJiQF22pqInDF4hNtKeWg0ZfOhrcJNYdzeJ1kw/Yt2xgMK6lgwpAVxHrRR
+	H6nugrxowqGmptBheCV3HQ0zGiroe8He/BYpF
+X-Google-Smtp-Source: AGHT+IG/HgIgdSgvQqy3AXOe0r/4PVhQlkf8W/nO+Clig28YU2mx//r0WREn/yYLRmNX0scfU3SYjJOJrqswVfJx9YE=
+X-Received: by 2002:a25:3187:0:b0:dcc:1449:71ea with SMTP id
+ x129-20020a253187000000b00dcc144971eamr8864308ybx.50.1710760357653; Mon, 18
+ Mar 2024 04:12:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240315-ptn36502-aux-v1-1-c9d3c828ff2e@fairphone.com>
+References: <570989e3-299f-4617-adde-b6b8d1e06277@cpp.in> <000901da7922$c81acee0$58506ca0$@opensource.cirrus.com>
+In-Reply-To: <000901da7922$c81acee0$58506ca0$@opensource.cirrus.com>
+From: aigilea <i@cpp.in>
+Date: Mon, 18 Mar 2024 14:12:01 +0300
+Message-ID: <CABYkuAi9+XmXnJP0J+jvXkOaOGyK0pvRiFic1v2LmxkGo4ic0g@mail.gmail.com>
+Subject: Re: [PATCH] ALSA: hda: cs35l41: Support HP Spectre x360 14 eu0000
+To: Stefan Binding <sbinding@opensource.cirrus.com>
+Cc: James Schulman <james.schulman@cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
+	Richard Fitzgerald <rf@opensource.cirrus.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	alsa-devel@alsa-project.org, patches@opensource.cirrus.com, 
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 15, 2024 at 05:04:22PM +0100, Luca Weiss wrote:
-> Switch to using the new DRM_AUX_BRIDGE helper to create the transparent
-> DRM bridge device instead of handcoding corresponding functionality.
-> 
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+Hi.
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Indeed, my bad, this patch is obsolete then. I will update and resend
+the second one (for the patch_realtek.c) as more quirks are needed.
 
-> ---
-> Very similar to this patch:
-> c5d296bad640 ("usb: typec: nb7vpq904m: switch to DRM_AUX_BRIDGE")
-> ---
->  drivers/usb/typec/mux/Kconfig    |  2 +-
->  drivers/usb/typec/mux/ptn36502.c | 44 ++--------------------------------------
->  2 files changed, 3 insertions(+), 43 deletions(-)
-> 
-> diff --git a/drivers/usb/typec/mux/Kconfig b/drivers/usb/typec/mux/Kconfig
-> index 399c7b0983df..4827e86fed6d 100644
-> --- a/drivers/usb/typec/mux/Kconfig
-> +++ b/drivers/usb/typec/mux/Kconfig
-> @@ -60,7 +60,7 @@ config TYPEC_MUX_PTN36502
->  	tristate "NXP PTN36502 Type-C redriver driver"
->  	depends on I2C
->  	depends on DRM || DRM=n
-> -	select DRM_PANEL_BRIDGE if DRM
-> +	select DRM_AUX_BRIDGE if DRM_BRIDGE
->  	select REGMAP_I2C
->  	help
->  	  Say Y or M if your system has a NXP PTN36502 Type-C redriver chip
-> diff --git a/drivers/usb/typec/mux/ptn36502.c b/drivers/usb/typec/mux/ptn36502.c
-> index 72ae38a1b2be..0ec86ef32a87 100644
-> --- a/drivers/usb/typec/mux/ptn36502.c
-> +++ b/drivers/usb/typec/mux/ptn36502.c
-> @@ -8,7 +8,7 @@
->   * Copyright (C) 2023 Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->   */
->  
-> -#include <drm/drm_bridge.h>
-> +#include <drm/bridge/aux-bridge.h>
->  #include <linux/bitfield.h>
->  #include <linux/i2c.h>
->  #include <linux/kernel.h>
-> @@ -68,8 +68,6 @@ struct ptn36502 {
->  
->  	struct typec_switch *typec_switch;
->  
-> -	struct drm_bridge bridge;
-> -
->  	struct mutex lock; /* protect non-concurrent retimer & switch */
->  
->  	enum typec_orientation orientation;
-> @@ -283,44 +281,6 @@ static int ptn36502_detect(struct ptn36502 *ptn)
->  	return 0;
->  }
->  
-> -#if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_DRM_PANEL_BRIDGE)
-> -static int ptn36502_bridge_attach(struct drm_bridge *bridge,
-> -				  enum drm_bridge_attach_flags flags)
-> -{
-> -	struct ptn36502 *ptn = container_of(bridge, struct ptn36502, bridge);
-> -	struct drm_bridge *next_bridge;
-> -
-> -	if (!(flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR))
-> -		return -EINVAL;
-> -
-> -	next_bridge = devm_drm_of_get_bridge(&ptn->client->dev, ptn->client->dev.of_node, 0, 0);
-> -	if (IS_ERR(next_bridge)) {
-> -		dev_err(&ptn->client->dev, "failed to acquire drm_bridge: %pe\n", next_bridge);
-> -		return PTR_ERR(next_bridge);
-> -	}
-> -
-> -	return drm_bridge_attach(bridge->encoder, next_bridge, bridge,
-> -				 DRM_BRIDGE_ATTACH_NO_CONNECTOR);
-> -}
-> -
-> -static const struct drm_bridge_funcs ptn36502_bridge_funcs = {
-> -	.attach	= ptn36502_bridge_attach,
-> -};
-> -
-> -static int ptn36502_register_bridge(struct ptn36502 *ptn)
-> -{
-> -	ptn->bridge.funcs = &ptn36502_bridge_funcs;
-> -	ptn->bridge.of_node = ptn->client->dev.of_node;
-> -
-> -	return devm_drm_bridge_add(&ptn->client->dev, &ptn->bridge);
-> -}
-> -#else
-> -static int ptn36502_register_bridge(struct ptn36502 *ptn)
-> -{
-> -	return 0;
-> -}
-> -#endif
-> -
->  static const struct regmap_config ptn36502_regmap = {
->  	.max_register = 0x0d,
->  	.reg_bits = 8,
-> @@ -369,7 +329,7 @@ static int ptn36502_probe(struct i2c_client *client)
->  	if (ret)
->  		goto err_disable_regulator;
->  
-> -	ret = ptn36502_register_bridge(ptn);
-> +	ret = drm_aux_bridge_register(dev);
->  	if (ret)
->  		goto err_disable_regulator;
->  
-> 
-> ---
-> base-commit: 9bb9b28d0568991b1d63e66fe75afa5f97ad1156
-> change-id: 20240315-ptn36502-aux-15dd6f289aff
-> 
-> Best regards,
-> -- 
-> Luca Weiss <luca.weiss@fairphone.com>
-
--- 
-heikki
+On Mon, Mar 18, 2024 at 1:55=E2=80=AFPM Stefan Binding
+<sbinding@opensource.cirrus.com> wrote:
+>
+> Hi,
+>
+> Support for this laptop was previously added in patch:
+> 33e5e648e631 ("ALSA: hda: cs35l41: Support additional HP Envy Models")
+>
+> Is your branch out of date?
+>
+> Thanks,
+> Stefan Binding
+>
+> > -----Original Message-----
+> > From: Anthony I Gilea <i@cpp.in>
+> > Sent: Sunday, March 17, 2024 2:05 AM
+> > To: James Schulman <james.schulman@cirrus.com>; David Rhodes
+> > <david.rhodes@cirrus.com>; Richard Fitzgerald
+> > <rf@opensource.cirrus.com>; Jaroslav Kysela <perex@perex.cz>; Takashi
+> > Iwai <tiwai@suse.com>
+> > Cc: alsa-devel@alsa-project.org; patches@opensource.cirrus.com; linux-
+> > sound@vger.kernel.org; linux-kernel@vger.kernel.org
+> > Subject: [PATCH] ALSA: hda: cs35l41: Support HP Spectre x360 14 eu0000
+> >
+> > The new HP Spectre x360 has _DSD for CS35L41 amps in ACPI but
+> > reset-gpios and spk-id-gpios are merged into single Package of size 4 s=
+o
+> > _DSD parser fails to parse it.
+> >
+> > Overwrite broken _DSD with the correct configuration.
+> >
+> > Signed-off-by: Anthony I Gilea <i@cpp.in>
+> > ---
+> >   sound/pci/hda/cs35l41_hda_property.c | 2 ++
+> >   1 file changed, 2 insertions(+)
+> >
+> > diff --ruNp a/sound/pci/hda/cs35l41_hda_property.c
+> > b/sound/pci/hda/cs35l41_hda_property.c
+> >
+> > --- a/sound/pci/hda/cs35l41_hda_property.c    2024-03-10
+> > 23:38:09.000000000 +0300
+> > +++ b/sound/pci/hda/cs35l41_hda_property.c    2024-03-14
+> > 18:22:01.887566917 +0300
+> > @@ -64,6 +64,7 @@ static const struct cs35l41_config cs35l
+> >       { "103C8BE5", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+> > }, 0, 1, -1, 1000, 4100, 24 },
+> >       { "103C8BE6", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+> > }, 0, 1, -1, 1000, 4100, 24 },
+> >       { "103C8B3A", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+> > }, 0, 1, -1, 1000, 4100, 24 },
+> > +     { "103C8C15", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+> > }, 0, 1, -1, 1000, 4100, 24 },
+> >       { "104312AF", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+> > }, 1, 2, 0, 1000, 4500, 24 },
+> >       { "10431433", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+> > }, 0, 1, -1, 1000, 4500, 24 },
+> >       { "10431463", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+> > }, 0, 1, -1, 1000, 4500, 24 },
+> > @@ -405,6 +406,7 @@ static const struct cs35l41_prop_model c
+> >       { "CSC3551", "103C8BE5", generic_dsd_config },
+> >       { "CSC3551", "103C8BE6", generic_dsd_config },
+> >       { "CSC3551", "103C8B3A", generic_dsd_config },
+> > +     { "CSC3551", "103C8C15", generic_dsd_config },
+> >       { "CSC3551", "104312AF", generic_dsd_config },
+> >       { "CSC3551", "10431433", generic_dsd_config },
+> >       { "CSC3551", "10431463", generic_dsd_config },
+>
