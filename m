@@ -1,79 +1,77 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A8326AF7;
-	Mon, 18 Mar 2024 09:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F3B28E26;
+	Mon, 18 Mar 2024 09:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710753846; cv=none; b=uqaa62tFGFky0gfBj86q/3Znh2xfh4XNZvQf1sljlMTBdGzQo18SYSqDwGaDL9ORv+NFsfDIz4LcCmHUMJkI1RaXLhzmC0I4nm8Ma7g4ERmPlytNF+RniPpbogqjSjHPrQEmjra+Dz/ieDykz0jcBaPpG9n6bSE5TLoR8OsKZSU=
+	t=1710753878; cv=none; b=W5tHVfJR1XPzRcuCCVLpLTXKAMlA28AUaXy/rUIsbcRme/GlLcHpOkZ2XGWdYojrTZ7yn/J/VeAVyJhi5VyyD+jSgGMRLPZVJj1XG9LlaSZWsCcZht84RjENmAkn+ae7vYbzufQ9rqaEbb8y3Dzso8twbpWk4hap3GFWbYqumw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710753846; c=relaxed/simple;
-	bh=DpVVUBuvLHpQCKgKSJ/r5ujars6qANboe0uw/ZA8xpo=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eMSar+JI8OAB9tZkE4jWyYRP7QtwKdqv4P2DU+dD7rRGvFer+8e9WM6l1y+oJuSogocheJllm2pSg9UF+8fg1CmdWToBiKzz/buxhheHVWbNztdTmaztLQQdRTAE2Eoc8rRaNtKK9+9yh1+xYc6E4r77g8m0Ioo3kSYsl54guF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=GjOj/aJU; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1710753878; c=relaxed/simple;
+	bh=f4u7gfvz9oytKQulL4eGifX9xLIjGt5Zzac7xAxZyw4=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=m+qC643688xo+1IAT8RnoX2dhVN1CqyKHG9JXK/qAND5CXc6/4ngZA3vAupDhRQUxRvda4yaJUIOXd28IqkrM5FqkhARUZy0O1NmqvcEw1g/lOzVoA/5AKGc4rmXNf06VhbQ/ewyqpXATdB/mXwEHzqgTvaXXw53qbE9SrB+xC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ds2bBwb/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="GjOj/aJU"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42I90EeJ019800;
-	Mon, 18 Mar 2024 04:23:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=PODMain02222019; bh=LpFO4w9gXdXIdRz
-	3lp4nFmm9huDm3XdMOvGss5eCmI4=; b=GjOj/aJUactSeGm371ocin1DUdF65l+
-	Q2Tb8OJhGmdUdw2tuCT/907rZxuOt0u1EVhit4uy+Lz10M81zCt89bRM/dDHH/Q5
-	6gfJVAchwPB4SxN583h+dPwRyAOkUoJnZdRK4g4QrVGhlYqfb4P2XQ78PxcKsV5X
-	4ZYGzciP4JxkSh9oEFXM5Lku0Jq7Wg+J1COKKON85Jj+qHKNdghQYQIjJOb7+QzL
-	7KkEWe8Fya6vVWSz/tUew3uF6MM7DvtszrJ+UktAwWij4uOeKLsqT2ZiFJThm1xv
-	aaghj3DTkzZMt7qGK44fi1ux8PR7YRkjz+b7kod+BnyIRiLGiHSZhiA==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3ww7uj1uxm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 18 Mar 2024 04:23:48 -0500 (CDT)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 18 Mar
- 2024 09:23:47 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4
- via Frontend Transport; Mon, 18 Mar 2024 09:23:47 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id F16C3820244;
-	Mon, 18 Mar 2024 09:23:46 +0000 (UTC)
-Date: Mon, 18 Mar 2024 09:23:45 +0000
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: Kartik Agarwala <agarwala.kartik@gmail.com>
-CC: <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <patches@opensource.cirrus.com>, <linux-sound@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <javier.carrasco.cruz@gmail.com>
-Subject: Re: [PATCH] ASoC: dt-bindings: wm8776: Convert to dtschema
-Message-ID: <ZfgIIT4wObY+TlZ5@ediswmail9.ad.cirrus.com>
-References: <20240317200201.119233-1-agarwala.kartik@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ds2bBwb/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E4A4C433C7;
+	Mon, 18 Mar 2024 09:24:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710753878;
+	bh=f4u7gfvz9oytKQulL4eGifX9xLIjGt5Zzac7xAxZyw4=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=ds2bBwb/Yn+36mwDpqNfcpYJH/v8PZsTeHqCdx3Zq+gs8vrgrsx9tLunIgkYgdpbY
+	 /8y8IFwF5Ypkrzz9z9Y4waF4uCoTssTKN0jaSmowgTOguq/HRiae4G1Go7Z55mT24f
+	 W56C0U8YOvzccAJNEh0cMLgkNHiJIYeh9Sy/W3nZkTM/FPHfIboTKXpbDI3wQyq9cc
+	 6EpwfSnGKDwg1VJ9AUNqAi+/8RD2ysT8khL9zuC934WzlirDsq5GaroFcZ0Fv48BfQ
+	 uBA1O7geZTeehhfLA0TG/nwIazP+LbIgKDzXUN4TZRzKJfWYFiyDUpXOthMWfDHMr/
+	 K78pwphMme5Xg==
+From: Kalle Valo <kvalo@kernel.org>
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: briannorris@chromium.org,  linux-wireless@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  David Lin <yu-hao.lin@nxp.com>,
+  tsung-hsien.hsieh@nxp.com,  rafael.beims@toradex.com,  Francesco Dolcini
+ <francesco.dolcini@toradex.com>
+Subject: Re: [PATCH v9 0/2] wifi: mwifiex: add code to support host mlme
+References: <20240306020053.18054-1-yu-hao.lin@nxp.com>
+	<20240315094927.GA6624@francesco-nb>
+Date: Mon, 18 Mar 2024 11:24:34 +0200
+In-Reply-To: <20240315094927.GA6624@francesco-nb> (Francesco Dolcini's message
+	of "Fri, 15 Mar 2024 10:49:27 +0100")
+Message-ID: <878r2fevu5.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240317200201.119233-1-agarwala.kartik@gmail.com>
-X-Proofpoint-ORIG-GUID: WRt0zsDs5d2poBW6Pz6vUrdhezhFBfd6
-X-Proofpoint-GUID: WRt0zsDs5d2poBW6Pz6vUrdhezhFBfd6
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain
 
-On Mon, Mar 18, 2024 at 01:32:02AM +0530, Kartik Agarwala wrote:
-> Convert WM8776 audio CODEC bindings from text to dtschema.
-> 
-> Signed-off-by: Kartik Agarwala <agarwala.kartik@gmail.com>
-> ---
+Francesco Dolcini <francesco@dolcini.it> writes:
 
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> Hello Brian (and Kalle),
+>
+> On Wed, Mar 06, 2024 at 10:00:51AM +0800, David Lin wrote:
+>> This series add host based MLME support to the mwifiex driver, this
+>> enables WPA3 support in both client and AP mode.
+>
+> What's your plan for this series? I know you raised some concern when
+> this started months ago and I'd love to know if there is something that
+> would need to be addressed to move forward here.
 
-Thanks,
-Charles
+Based on the history of this patchset I am a bit concerned if these
+patches break existing setups. I'm sure Brian will look at that in
+detail but more test results from different setups we have the better.
+
+> p.s. I'm aware we are in the middle of the Linux merge window and
+> nothing will happen till it closes.
+
+BTW, thanks to some for-next branch trickery, we keep wireless-next open
+also during merge windows. This is to avoid unnecessarily stopping the
+development.
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
