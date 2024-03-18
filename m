@@ -1,169 +1,181 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB9FFC19;
-	Mon, 18 Mar 2024 02:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710727692; cv=none; b=n1ENK0cfiswYOj7+u8YjHyg3wf1OPpcXM9WLXCVejrAZJG2lpANzVXnZctBPIQI44jYAJ9GPvMLXtskkOfa7n/cXjRZENPy68HIVxkFDNELaCRkCgY4V8DykNIf4VMrVlIAsBzFYujJRI5lyd2f5aaO26mxtaiAnZRv3SZBwyw0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710727692; c=relaxed/simple;
-	bh=mws7dN5Idqqrfvi+n0P3+pOKyWtSoMBBeE76poHLdbk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BaX6PLnm0Q+bwB++KVGxwvuCngmXcEEXGmcanqutQKCjVtL0lk+Fy1pRivhjyUIoU3esdipNeduQRsGfkmME539hxSBxqklzPDYSNWGKyUV+yOSh4P1AEeqmJRSwZjgi/aaB5oihs6uh/9+C7ovSiuNCWM690E57Q/PrPJsDn7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QxUrkA21; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8811DDE9
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 02:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710727894; cv=fail; b=V8G8xpp7K63EO7uN4qGgmkaxKN8hGM0wQl/KbBykOIoELFyP3gm6cQd1qfdpV2owsKM19ncY4sERp20TKwEusHOP8kJhUMvgT+mBUJpVUsMM+1Gq9pCJfKycBhlBPH/MWQGlgmKRS+e492IcZ1xG5a4w3qWBQTMgCaMkvoPAVmo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710727894; c=relaxed/simple;
+	bh=HQIDwulmZPt2qQErNJEY4G/vulFhvOixbmxh5aK26u8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=sOFLnWchIlcD16aOGSSBRn6yUN2xccy7ITqT+4NuHR8W43s+vIS2yub26rPU3BtM7XkAFAictLw+uKqElUrhVr04NGmnO+gH6FfZoTCvsCpTU//bfsgRemcFGgAgiegzwg4PnyQKl82g/J9uRGBFQENQ71KH0GYwULnlFpanPqA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kxg1GDVi; arc=fail smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QxUrkA21"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-512bde3d197so3234340e87.0;
-        Sun, 17 Mar 2024 19:08:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710727688; x=1711332488; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eWwzY7BG/SocTQKZ/npPoCXiIUvaGwetrinQ1Oo5Q6A=;
-        b=QxUrkA21t6m/ZJKVEFTlMt7M0/ErwP/XRLGZ0uAnKLTXCl/sBuEQcOelXouDItjzxJ
-         RpilwV+O3slTYRAruSqIna1p5N2npY3SiN+31WA3o/1pOeYo4R7+UDrs08kMT4pfq0rn
-         vTsQw/gqzn+LF13eCcIeqj8NbleTidw0k3+uyYCvBpQpKd2YWg5AnKfeIEUbxOnO382P
-         n6bqVhQMhxTZ4dtn0/KE+lVKYpZm2kjlca8sYaRfFcD6aLEwmX3cR8KzinCimmTuvzCl
-         mH7fm/m4gYYp5Z6hue5AU7A/HJwzj6Eiy0eDQS5nT3W18jxamkbBPOB7CrIQddLpGi9c
-         EDXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710727688; x=1711332488;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eWwzY7BG/SocTQKZ/npPoCXiIUvaGwetrinQ1Oo5Q6A=;
-        b=RTWjbgbtKi/w5z+kCtgruzot2FxL3zOjYUH0jK1Co+Aj0neSON79S2/6VC6SfOSabO
-         bfn+B4nv4/NEFfykIIf4ySeqecJ0mYliFxhM3Lmrhn3FN19iIl9qK/72loiFVGmiXW56
-         ZlhaU12k1VkAo4HE6tlnCTm0iB618/tgz5XK/DyerMDL2sTnjgpYMhv6+/KGVrD+qj9V
-         mlTg3FvB/fwOc6qSgbdmBwujQFFH/EYy+/4fJLN/SjHp0IgPIhqkUaizP1APPk+kG99h
-         Xa8sYifUD3yGnx+qsa7WkYFNwUuoIdkU7qLs+xNdDzHe/hEDttzhzUujeB+AAaBesC94
-         fPLg==
-X-Forwarded-Encrypted: i=1; AJvYcCXZ6Bmy1AfYezUdngWQXct9K1/kQR0IKpq8f9GTkN+W2IoXuADLLplIZuC57zn9+HKj+SXcKqXEuz0gYyDPAGDVlb4KHf/FWvXRoBx95ski09RjlhC252ecuXnogdR9XJTKPr+FYVfY38V2lYvtptB067LZZ0UmJb+nGruWSYLmLioa90+d+Qnjo9dDt92wWUheqqen63fgvThZg6iPh8c=
-X-Gm-Message-State: AOJu0YwEu6b0iqOlxztDUVeNd8eV2PaPZiaJJIY73s0z/U2tKDSx7rur
-	gtf2jpIbacS5UWU26GPrwSdKae0+sDNa83UVD/BFWaYoAQJYe0T0eRXiX1GjUwOhqVxtAoqLYVc
-	1Gkhm4KzDCogxTUdnPFVKtxRWYZaOM6k4X682NL/f
-X-Google-Smtp-Source: AGHT+IELJXfpHKY5OkoWCRxQO1hyaqGsdD/u6pXhrGkKOfTw4yoWtJPKyBqeeDjD/TMgR8o3MZzm+CvWvYv7033/2Os=
-X-Received: by 2002:a19:ae17:0:b0:513:cf5e:f2ad with SMTP id
- f23-20020a19ae17000000b00513cf5ef2admr7502601lfc.60.1710727687838; Sun, 17
- Mar 2024 19:08:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kxg1GDVi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710727892; x=1742263892;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=HQIDwulmZPt2qQErNJEY4G/vulFhvOixbmxh5aK26u8=;
+  b=kxg1GDViGRd/m6o10s0dmakT6qv0WWBqbPNHVUbCd8nhIaxeZYlJK4YQ
+   O72pNXlz42s78hyWdY2k42BBDOVdJRFqEkSUhwIUQZz93ygdXDseurPOj
+   Lc1kwp7cAlt9njdwJ27pWKSTReMvKYzou1mv+LMdozBKTc3NDlau9MCAE
+   4sZo1CCotIJao9CXr85YpsxPhB8bD2WwNIy7sBxRZ+tEsFEwyrgdWwO3X
+   06viNtXtLHmqGZkPytk/bRymIbvhakzm5lk43byfkibgX/ISO8elL2F5M
+   q8RHPiDgFYStlaLjPOM3uXfGRBQscmYcs3aJeMbDf4NxZsXD4pfIO7x3j
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11016"; a="30962760"
+X-IronPort-AV: E=Sophos;i="6.07,133,1708416000"; 
+   d="scan'208";a="30962760"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2024 19:11:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,133,1708416000"; 
+   d="scan'208";a="18005284"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 17 Mar 2024 19:11:31 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 17 Mar 2024 19:11:31 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 17 Mar 2024 19:11:30 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Sun, 17 Mar 2024 19:11:30 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.100)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Sun, 17 Mar 2024 19:11:30 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OjAckDTl+2eZ006lUpULOg5yGpdv22E603bFEr2tClWhpE2rabeSuwu6uAJIIsjCnF22a+cFHdKVhMu4c94BtPb6KCFQvM7y1IJ2pXsRXImVf3ku+dr1Y3iRyJ3LFIGJQ7ONfrk1xBurqlpcwb5+1W37Jq8S9i7I9zEiAtb/u6TFmRGZhDulokCHwDLPdAdxHP7D/ABFFrJRVjC1u5fagXgUQPbt7uDjNrXZucOSojL1YLhoOf9kCMl8vfGhlRice1p//ODbr/udYXvjHh7KX5NoyNCgtxpb8vA+Gs9Mtl15nCGdBlwX6DNQPrlUJL8RlWlHPwz9GwMeON/Fo6+rkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=f8QwSD7JBuLcmHAuGPrNw84mqycbjZGTH2hxqh4pINU=;
+ b=S65yf/nQlH2RmUQMbwd02UP/3IRE5YNSTPhS16Yz364lzc+OB9yYsOMShsLRnSmaBxMx9Eqk4gh1dHnQBKqD9BTNC7L+AAE6fcMc26URDwtaNCMl0vF2Z/LKUSwa+y1T7mipHuO6j+dEII6Jf5huKyyWuXKHwaPCmhCMxLeIHTKTyzW1ayuH1yG1pSycJbGL+y79Ghwu51nRHgNuzMdrnu0yURl2wCrroKleOcsq0sqRMoFv93T09IdfOGgn1TzsQCmTh8soNzaj5qB2TMckQM5mEVX0+GFg1q4b+bST/VDvepRhWFpcahdzbYg+xvQEPxObTzbDY194tO/sn258RQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MN0PR11MB6304.namprd11.prod.outlook.com (2603:10b6:208:3c0::7)
+ by CY5PR11MB6511.namprd11.prod.outlook.com (2603:10b6:930:41::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.9; Mon, 18 Mar
+ 2024 02:11:27 +0000
+Received: from MN0PR11MB6304.namprd11.prod.outlook.com
+ ([fe80::4d4c:6d3e:4780:f643]) by MN0PR11MB6304.namprd11.prod.outlook.com
+ ([fe80::4d4c:6d3e:4780:f643%5]) with mapi id 15.20.7409.010; Mon, 18 Mar 2024
+ 02:11:27 +0000
+Date: Mon, 18 Mar 2024 09:57:30 +0800
+From: Feng Tang <feng.tang@intel.com>
+To: Waiman Long <longman@redhat.com>
+CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@intel.com>, "H .
+ Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+	<x86@kernel.org>, <paulmck@kernel.org>, <rui.zhang@intel.com>,
+	<linux-kernel@vger.kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH] x86/tsc: Use topology_max_packages() to get package
+ number
+Message-ID: <ZfefinwL7jUo+Ly0@feng-clx.sh.intel.com>
+References: <20240315112606.2248284-1-feng.tang@intel.com>
+ <e0d1b16a-2880-4e3f-b3ca-b0b47494014a@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <e0d1b16a-2880-4e3f-b3ca-b0b47494014a@redhat.com>
+X-ClientProxiedBy: SI2PR06CA0014.apcprd06.prod.outlook.com
+ (2603:1096:4:186::11) To MN0PR11MB6304.namprd11.prod.outlook.com
+ (2603:10b6:208:3c0::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240316-loongson1-dma-v6-0-90de2c3cc928@gmail.com> <CAAhV-H6aGS6VXGzkqWTyxL7bGw=KdjmnRZj7SpwrV5hT6XQcpg@mail.gmail.com>
-In-Reply-To: <CAAhV-H6aGS6VXGzkqWTyxL7bGw=KdjmnRZj7SpwrV5hT6XQcpg@mail.gmail.com>
-From: Keguang Zhang <keguang.zhang@gmail.com>
-Date: Mon, 18 Mar 2024 10:07:31 +0800
-Message-ID: <CAJhJPsVSM-8VA604p2Vr58QJEp+Tg72YTTntnip64Ejz=0aQng@mail.gmail.com>
-Subject: Re: [PATCH v6 0/2] Add support for Loongson1 DMA
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-mips@vger.kernel.org, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR11MB6304:EE_|CY5PR11MB6511:EE_
+X-MS-Office365-Filtering-Correlation-Id: 26f3ba5a-f24a-4868-58ff-08dc46f0b82f
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: C04JVaQozXuENTpjZCLqhBOo+Uh2KKgtm6toceNH/a+q8Y/lRHZdfWefuLsKuKH/X4a4f2kwcf6ccI6pNPNkueWagssbusTpmKZNsY73Z1dMnn61/8ErpI3phS0t43BSWJ2M8YtWLEJ754iT2IUy0l+zTCQOymNEEacij5icUu56MuLLZw8mV8eADWxhWrKPA3M4IT2nHpWgBqHurig5Uy5mTu4siGru2nfUXyNtbZ19/lwkBCsEMQoBkVqrCpqB3YMWGm2G/dVVOvE/4MSrCT4lcEtyc1l2V9I7RGVrlM0pb/z2EOwIuASAnmrheTywpMlWg4UkmrCZWnZQjt91M/hYBf3+ak09SMfFVvJNecbsuHUIGaM1v3pcquEZzV7VteGyv9a+f8eJR+RdC0bPASE/ZM5Am+2pobmGUC9/AAVmYY8/RPV7rfVQ3nJgy546Pfncp8G2sCP2upmpdn+WCXdfIWbUJs8YNxAhtCxDUpI1tdfL4ZDRXYhm0DE8pzcge26Xnfd94M8Fs1pPTLNTROO/MZcTXz7UGqP80O+W9lq8KAbkO1fKuZdm64gzxvFk252bsvMt5LPzoDHds5dffSLcmID4oFa8n7P+f56a/m9DRjsJMQIw+mOkOTvdahEiP5OjAZfQO+7IDXEU0PRDumQgVriE2flvwfRTiQ7cH8M=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB6304.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(1800799015)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?voMtb5hUA89MlbRfWbfjqTa4Qb4ea/aE5TVybf4SkjWQrB6d1VpUt+HBRLjb?=
+ =?us-ascii?Q?9mung1MAFyJhOtGrIpBSKWOB+doVWe0gCRsEl6G+pC/ZFk27ADmwHcn07kXE?=
+ =?us-ascii?Q?VuGaekJFAh6VZ7Du2OMeuCabygBWWlX8rvuh1qUe+Wi6MxwDeNNJ7SlG7gxW?=
+ =?us-ascii?Q?8D/L7CyLxhyGAvZu0e2Ydlb1jSlnuyCw0lLv+V/B7yYDYUzJCKX6vqcqQhQi?=
+ =?us-ascii?Q?P22eMptRHJoDltvtSFrH6zVcGwvQGY/vp85ZF6TRfwydYaLnCDucCmmGt1ya?=
+ =?us-ascii?Q?QscTUY5WRg7hO4h1fehBMBuIv+YAhDRzJih3LPC/fo2XjJhH5dC2RtSIRGSd?=
+ =?us-ascii?Q?unx1RmheLE2Svnwq979EO3IePCOBDJBR9USuXaJ/TUEcLNSJBTWb0df/i3BQ?=
+ =?us-ascii?Q?7216v/MGim8dnB4JCSrUCV1+ta1Mtm/taaTNX+mzI1Gwj1Y7l4MRb0y+weOr?=
+ =?us-ascii?Q?s3cyOOZwSVdGGlWJKOUBQ3mV6aIOAGdhZ9lXvN7VMQHTrQeB90Po3QtLSj19?=
+ =?us-ascii?Q?OV5AWJntvurhyy/xwNbM+GFf6XFfvSfw8JWTBfHmNrlbDXfWRF5paUmY7dNl?=
+ =?us-ascii?Q?ZJKQek7zoy4204zU38360vP2F9hkgRy+eq1a/SJ1oFCfrTLSPwbmt+p0CFCT?=
+ =?us-ascii?Q?HYqyPbA/Z6oW70Nfpk7MMsfqqJU8+SUcvsTNn2y1ROmTAUuZ6E7PsDbDd8DZ?=
+ =?us-ascii?Q?T4ZD1p35gGI9IwbRRlpnwQF/o16u87qzmwOIymXvxrLfpgvoO8nKRE/8z/8t?=
+ =?us-ascii?Q?s1Rs3rFfTfUExt8wPyxDWSJzm2fc0XNHGMHx6nF3pVXmAshwXgoFDZanRigT?=
+ =?us-ascii?Q?/ZkdQTH4C6TJc8t9uzOPwleHjkHUJk1TKeuYL88zkONCzzZYkRrY4vnhLLsl?=
+ =?us-ascii?Q?FuJrzvF1iJ+ZV/Sa9JnF4DRkUY6T6+2UqtLkmziM6esjTnFz3eBFGzduz6uV?=
+ =?us-ascii?Q?ZMpJhUuVgJHiIx6vlgBdUmjNBScND+O1HbkoKe+84UDRq/Pc27ktfryWFvQB?=
+ =?us-ascii?Q?mFM8ZtOqrt02suzsi0eSjihV3vzM1Jyb6gDiIw3+I7y07hErexY0skNwBd6c?=
+ =?us-ascii?Q?8O0v32EWmBYfkIOqVF0VeGg7a3HBJgRymRDB1eoIXm/7PY+AdLqdIEpPLLrP?=
+ =?us-ascii?Q?31tfHVd7N2863PNMYCD8tlzL2R13uEg9SeaZSwbYsVqnrxAkigq5JaWs1ock?=
+ =?us-ascii?Q?UGEAc65Uopa7hktEV8hq57Jq9VsITG/mHvmi9Z1snw9f2KyvP33VZ0w3JZB+?=
+ =?us-ascii?Q?VHIxfjE8pMaWQV3E1IhkFuIkEpJd/URKfiGV4Vl8ZMHMdVd5HqgRAAEmhJHV?=
+ =?us-ascii?Q?l81f6YABpeNwJInFCbMuxBg4hCjlBeudqSXEdKYYKQQNAZSMucapuSqGfw32?=
+ =?us-ascii?Q?SsNKCDO6WXO4TAOd/uEnmdgy72NcHjgaB51N7jA9E6OgxwMhpWWGkG5dRILl?=
+ =?us-ascii?Q?ojDosRJ6jbpYUrVEWPDAWIBYcrur3WVMPJtR1cDyozbQJoErfXxP9Sz/yK/U?=
+ =?us-ascii?Q?E+77P55gjsrOC6cic2q7KG+TxP75fbbp1eiu/DUFc3YT2wE2qHCqITm/behu?=
+ =?us-ascii?Q?RCp17BbJUPK/vquv6o72STao9EkWE1+yr5sfPYgR?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 26f3ba5a-f24a-4868-58ff-08dc46f0b82f
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB6304.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2024 02:11:27.6828
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: e8e2srkj7PAHjCi0qUXi4o51nZK/4UMQTCUtgrkVF6r/597FuyRyXYtpJ4F8ELORTPf20bLLBjl5F65oShKi8g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6511
+X-OriginatorOrg: intel.com
 
-Hi Huacai,
+On Sun, Mar 17, 2024 at 10:03:38PM -0400, Waiman Long wrote:
+> 
+> On 3/15/24 07:26, Feng Tang wrote:
+> > Commit b50db7095fe0 ("x86/tsc: Disable clocksource watchdog for TSC
+> > on qualified platorms") was introduced to solve problem that
+> > sometimes TSC clocksource is wrongly judged as unstable by watchdog
+> > like 'jiffies', HPET, etc.
+> > 
+> > In it, the hardware package number is a key factor for judging whether
+> > to disable the watchdog for TSC, and 'nr_online_nodes' was chosen as
+> > an estimation due to it is needed in early boot phase before
+> > registering 'tsc-early' clocksource, where all none-boot CPUs are not
+> 
+> "none-boot"? You mean "non-boot". Right?
 
-> Hi, Keguang,
->
-> Sorry for the late reply, there is already a ls2x-apb-dma driver, I'm
-> not sure but can they share the same code base? If not, can rename
-> this driver to ls1x-apb-dma for consistency?
+Yes, you are right. will fix it. non-boot CPU means AP (application
+processor) here.
 
-There are some differences between ls1x DMA and ls2x DMA, such as
-registers and DMA descriptors.
-I will rename it to ls1x-apb-dma.
-Thanks!
+> 
+> Other than that, the patch looks reasonable to me.
 
->
-> Huacai
->
-> On Sat, Mar 16, 2024 at 7:34=E2=80=AFPM Keguang Zhang via B4 Relay
-> <devnull+keguang.zhang.gmail.com@kernel.org> wrote:
-> >
-> > Add the driver and dt-binding document for Loongson1 DMA.
-> >
-> > Changelog
-> > V5 -> V6:
-> >    Change the compatible to the fallback
-> >    Implement .device_prep_dma_cyclic for Loongson1 sound driver,
-> >    as well as .device_pause and .device_resume.
-> >    Set the limitation LS1X_DMA_MAX_DESC and put all descriptors
-> >    into one page to save memory
-> >    Move dma_pool_zalloc() into ls1x_dma_alloc_desc()
-> >    Drop dma_slave_config structure
-> >    Use .remove_new instead of .remove
-> >    Use KBUILD_MODNAME for the driver name
-> >    Improve the debug information
-> >    Some minor fixes
-> > V4 -> V5:
-> >    Add the dt-binding document
-> >    Add DT support
-> >    Use DT information instead of platform data
-> >    Use chan_id of struct dma_chan instead of own id
-> >    Use of_dma_xlate_by_chan_id() instead of ls1x_dma_filter()
-> >    Update the author information to my official name
-> > V3 -> V4:
-> >    Use dma_slave_map to find the proper channel.
-> >    Explicitly call devm_request_irq() and tasklet_kill().
-> >    Fix namespace issue.
-> >    Some minor fixes and cleanups.
-> > V2 -> V3:
-> >    Rename ls1x_dma_filter_fn to ls1x_dma_filter.
-> > V1 -> V2:
-> >    Change the config from 'DMA_LOONGSON1' to 'LOONGSON1_DMA',
-> >    and rearrange it in alphabetical order in Kconfig and Makefile.
-> >    Fix comment style.
-> >
-> > Keguang Zhang (2):
-> >   dt-bindings: dma: Add Loongson-1 DMA
-> >   dmaengine: Loongson1: Add Loongson1 dmaengine driver
-> >
-> >  .../bindings/dma/loongson,ls1x-dma.yaml       |  64 +++
-> >  drivers/dma/Kconfig                           |   9 +
-> >  drivers/dma/Makefile                          |   1 +
-> >  drivers/dma/loongson1-dma.c                   | 492 ++++++++++++++++++
-> >  4 files changed, 566 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/dma/loongson,ls1x=
--dma.yaml
-> >  create mode 100644 drivers/dma/loongson1-dma.c
-> >
-> > --
-> > 2.39.2
-> >
-> > base-commit: 719136e5c24768ebdf80b9daa53facebbdd377c3
-> > ---
-> > Keguang Zhang (2):
-> >       dt-bindings: dma: Add Loongson-1 DMA
-> >       dmaengine: Loongson1: Add Loongson1 dmaengine driver
-> >
-> >  .../devicetree/bindings/dma/loongson,ls1x-dma.yaml |  66 ++
-> >  drivers/dma/Kconfig                                |   9 +
-> >  drivers/dma/Makefile                               |   1 +
-> >  drivers/dma/loongson1-dma.c                        | 665 +++++++++++++=
-++++++++
-> >  4 files changed, 741 insertions(+)
-> > ---
-> > base-commit: a1e7655b77e3391b58ac28256789ea45b1685abb
-> > change-id: 20231120-loongson1-dma-163afe5708b9
-> >
-> > Best regards,
-> > --
-> > Keguang Zhang <keguang.zhang@gmail.com>
-> >
-> >
+Thanks for the review!
 
+- Feng
 
-
---=20
-Best regards,
-
-Keguang Zhang
+> Thanks,
+> Longman
+> 
+> 
