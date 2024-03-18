@@ -1,66 +1,59 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723732D605
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 10:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC662D610
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 10:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710756167; cv=none; b=XdWsFsgnkSYS9PKk+NnuDGEa2DK1kFMl8vHc4jgsoaiww8J+4+gzkQ6PAaq8v6QIVvS+v1uypaMG3/cF6iO4EL9a2JsyG9Mv3uzX/mQD2iOKDYQcs3UewT8OkDJWM9iwUk732ss8tyDAdKJukcMNtIilR1CJydGzP/RwHCQPbIo=
+	t=1710756174; cv=none; b=YhTa6gjSh9eolhmx0iaFmsSohhkq2Gm+CARxJbdgyoXSnFmwBqcYdj2t/KgMPtzyoW0p5WKWu9SWiHiMDmQo3QLQjZ0Yp6qSzRnvn7/RFPpUlDk1ciySbfwXPnxb7lNwVdCR5ppS8EKPVYz0Sg1461yTOggebg/4P4eor25G8eY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710756167; c=relaxed/simple;
-	bh=fv713jnC4eTu0LjzOoM6QuqX7SLnyNlX9P4G5L56o7I=;
+	s=arc-20240116; t=1710756174; c=relaxed/simple;
+	bh=p8oCZBJnaZY1TnhydoJkfyKUbQPqqcrKyLCf1Bp8ukE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Drv590R45pbTM77Z8BM6l06TNHd0x7WnNBahu7+XytRGR7s4Tt/B8N3KIxm7py5GSE+I/4ylQB1KuezYAJrS5XJT3/zBE4TU9n7G/0i5Kpqq3DyF8WsQ8hrTN1kXA93MOKe2nyH0wRnomCiuMEt1hIHdLBI6rtboDQYAT4cPrHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iGJnAtkI; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=aUjuhh23vjWzvPuPu3RxhWVrEg+s8Hu9abDBiCnkhJr50lLdrdv8ck47u3Sn52CSKX6ZFcQXnttqLl9hAhC8vIwwWbU6EEKXocjIgs8eMFvJ9PbUXPEVcehTWUWT7/ajx1bHD5m+k1uBNb5t+d25/EEwEsY2PsRDSg2ogPGEem0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ll+NPcD4; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iGJnAtkI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710756164;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=i+31X8Ytz3OwzmlxhlwOLx4ZRoR3tqXflabXQ06eudU=;
-	b=iGJnAtkIMJS1Dc3kK5YyNBci9WzfiYL7lsSvQhi0br3B4d5DFW6Njdu3glhBst7g1f7WaZ
-	oNhkkvGgRCty/MecZrtCtkuH/pELoWj5Q3mWavff2o3gtIsQ1d9eP5/Gg8syy8UCRRWl0M
-	6mJAU68sK4xh3CtaC89dUg90cos3g64=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-662-hsk8ig1DPEK5j7ZrmrLmcQ-1; Mon, 18 Mar 2024 06:02:43 -0400
-X-MC-Unique: hsk8ig1DPEK5j7ZrmrLmcQ-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-40e4478a3afso22423305e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 03:02:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ll+NPcD4"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a46a7b8e07fso223474066b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 03:02:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710756170; x=1711360970; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xEMyQbDRzxqKimyVxa1436bQdzhWHFiC8NxOg49e5uk=;
+        b=Ll+NPcD4II5EP+nb8klOxY+A8iQ7Tu9vIzKS8vHqVSNbWUzz2ddyuEJaiO7wYKePh4
+         Xp7kr2D9nKFq4d1JYpr4pm4hXjkxMJPMqInIzDjNRRUj+iSaYXi1e16nduNB1A+VTlGJ
+         WsryCvadOE8+jTC7HLf55pfsr+AK+k3eOJj02QFxGtPWF+bj0eOTSakEBvsYnnPlHGsx
+         Dapt2AiALme14ze8x9XwF0gPZoh8qV+9UM0Jm8BPc8dmQMsq4N1kKIBQla6j32h5f02U
+         JH0mEp+xciElgbIcERkq1zs0B6X4cX2BLH/zR9L6x90rAXMzshQ41b1sEGrv41nbHk+F
+         hwiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710756162; x=1711360962;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :references:cc:to:content-language:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i+31X8Ytz3OwzmlxhlwOLx4ZRoR3tqXflabXQ06eudU=;
-        b=KJDIb4O9Atbw4CIevVMUE7L6THo5v0GAgodUk8NahBN8/BOtEVgJo32xLBhpC1zy7e
-         OukV5nrvDU5tkheXV7Mh9e5CuAsM6xr8CK1h83JOClaaMWXIXG9zOOwI2wlxrh/9Rq3F
-         4tkv6kYBI53B7FNzbC2MfqHuz8UeHBmlIKzpCEP5CZP41SRmHCMJrEjm3TT41lnsjSHj
-         /rklNjpIF3/JTR7n+wSwqc+1dV9nHqyHTemzEN8fvFaNGdtimJaIxkt1ezfjyXcYKOsW
-         o44x5rMkopW4T9FQwqHEe8KV0C54DKKB4fvoB2ES7wAXqFPQebmAqIOWjifKRAxlAhTT
-         xrUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX0PQ+Lst0rKCWDLKqVkAVQsbQpAa0nFKtpjeK35CWp2CJzs2KnEW7nVG+vZ2x8HjuqLMtb39yvoZDhVKA1RZh2i5g3teZrMrWiAI6c
-X-Gm-Message-State: AOJu0YwwssKY94eJ5ZBY/52BawlT/0vGmsx+Y9ECjxd2mPaonTkgPTsi
-	7G3+aI8wRFj5YmYDAhUcFFCC5KmXFL0ngtZKMOD3DkSC3AI9x7no55SEJGqz8lgtyMbr9P+YsiK
-	Ciz1uPSLe/Ofs63Z4bU2fgKJGHjfxRrAQ0Pne1IS6pbV3YAE3gQR/irRFEmBGkQ==
-X-Received: by 2002:a05:600c:444c:b0:414:12ef:83a9 with SMTP id v12-20020a05600c444c00b0041412ef83a9mr940085wmn.20.1710756161920;
-        Mon, 18 Mar 2024 03:02:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEQYOGxJB/CV+mFNG8uE93IvPkEoL7pVcQIg3RAdxLAWY2djf+MU0C9QMvFDPCb15losXY+xg==
-X-Received: by 2002:a05:600c:444c:b0:414:12ef:83a9 with SMTP id v12-20020a05600c444c00b0041412ef83a9mr940057wmn.20.1710756161466;
-        Mon, 18 Mar 2024 03:02:41 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c737:1f00:94ff:246b:30d0:686b? (p200300cbc7371f0094ff246b30d0686b.dip0.t-ipconnect.de. [2003:cb:c737:1f00:94ff:246b:30d0:686b])
-        by smtp.gmail.com with ESMTPSA id dw11-20020a0560000dcb00b0033b66c2d61esm9375131wrb.48.2024.03.18.03.02.40
+        d=1e100.net; s=20230601; t=1710756170; x=1711360970;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xEMyQbDRzxqKimyVxa1436bQdzhWHFiC8NxOg49e5uk=;
+        b=hjXBQSqA0d82aaLxyEq0L8l/uuEPPV/KBEqDc3ydeLZ+3RfJOeXhXo8fsi5UfQDOLX
+         fEwiWY7TvDdeeDSAJRB3w7jlsIJEvyQ7xYc8Ld3hJEnw9eSZcpYiaH3Cqtaoabvosea5
+         CIcTnBnX5TnL0kP7fqBpyx0eXzZdpJ4AJ6NwakxCwi9mfA6RdiJJSmvyO7xTUNgm6Dyf
+         JATtierKI3nUKG+A48KMjkoq6108haUiIvvbLY/ShcH3nqcYjTKfqHhQ8aJphfUbDi/Q
+         WcDcx8S6HazthYWzdpcOmMLDTERjlhRUVcmonu5e8fYbFyY/xX/RigMYvky+nsIuLX+B
+         EbqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXOShpCHGd4wJnyOyyTAj5VPfXSe+jaapnVHb4bHu1GF5l3zO/WTgdH425RgEPvdOMvPZf5B9CiM0dFzTRZZec5wTgUg5fjx6qzT0LW
+X-Gm-Message-State: AOJu0YyBVQjb7DGCwMVkEE6ijBXT9Jn+MxygBc/Ta15vJkA7nlgUlyGo
+	pyNjSxTq/SBf+jsCdYaAbm8Dhauvn3xr+4Kk+IwMVRzk970NnynYl3Ho3jzIArs=
+X-Google-Smtp-Source: AGHT+IESp8JqOgCMzQy4GD24NbUZR4t4iaKCi9svywrWQsXddSMIh+tmOtp/jVYc20GN2F5/dnx+cQ==
+X-Received: by 2002:a17:906:364a:b0:a46:617e:d3a7 with SMTP id r10-20020a170906364a00b00a46617ed3a7mr7368668ejb.60.1710756170266;
+        Mon, 18 Mar 2024 03:02:50 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id qa19-20020a170907869300b00a46af3d2916sm1844298ejc.168.2024.03.18.03.02.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Mar 2024 03:02:41 -0700 (PDT)
-Message-ID: <b7c3a0be-00c6-4add-a3da-3c6195e47b7e@redhat.com>
-Date: Mon, 18 Mar 2024 11:02:39 +0100
+        Mon, 18 Mar 2024 03:02:49 -0700 (PDT)
+Message-ID: <7252305b-4c7c-4cec-8ef1-8bf96293b469@linaro.org>
+Date: Mon, 18 Mar 2024 11:02:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,105 +61,128 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/mm: Fix build with _FORTIFY_SOURCE
+Subject: Re: [PATCH 3/3] dt-bindings: hwmon: max31790: Add
+ pwmout-pin-as-tach-input property
 Content-Language: en-US
-To: Vitaly Chikunov <vt@altlinux.org>,
- Andrew Morton <akpm@linux-foundation.org>, Keith Busch <kbusch@kernel.org>,
- Yang Shi <shy828301@gmail.com>, Zi Yan <ziy@nvidia.com>,
- Peter Xu <peterx@redhat.com>, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Andrea Arcangeli <aarcange@redhat.com>, Nadav Amit
- <nadav.amit@gmail.com>, Shuah Khan <shuah@kernel.org>
-References: <20240318023445.3192922-1-vt@altlinux.org>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240318023445.3192922-1-vt@altlinux.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Chanh Nguyen <chanh@amperemail.onmicrosoft.com>,
+ Chanh Nguyen <chanh@os.amperecomputing.com>, Jean Delvare
+ <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Justin Ledford
+ <justinledford@google.com>, devicetree@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+ OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+ Open Source Submission <patches@amperecomputing.com>
+Cc: Phong Vo <phong@os.amperecomputing.com>,
+ Thang Nguyen <thang@os.amperecomputing.com>,
+ Quan Nguyen <quan@os.amperecomputing.com>
+References: <20240311111347.23067-1-chanh@os.amperecomputing.com>
+ <20240311111347.23067-4-chanh@os.amperecomputing.com>
+ <9d1207f1-4941-4f2a-99d6-371f5b4709f5@linaro.org>
+ <f281d2b1-54ff-4e5a-83b9-5b05f18c40fb@amperemail.onmicrosoft.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <f281d2b1-54ff-4e5a-83b9-5b05f18c40fb@amperemail.onmicrosoft.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 18.03.24 03:34, Vitaly Chikunov wrote:
-> Add missing flags argument to open(2) call with O_CREAT.
+On 18/03/2024 10:48, Chanh Nguyen wrote:
 > 
-> Some tests fail to compile if _FORTIFY_SOURCE is defined (to any valid
-> value) (together with -O), resulting in similar error messages such as:
 > 
->    In file included from /usr/include/fcntl.h:342,
->                     from gup_test.c:1:
->    In function 'open',
->        inlined from 'main' at gup_test.c:206:10:
->    /usr/include/bits/fcntl2.h:50:11: error: call to '__open_missing_mode' declared with attribute error: open with O_CREAT or O_TMPFILE in second argument needs 3 arguments
->       50 |           __open_missing_mode ();
->          |           ^~~~~~~~~~~~~~~~~~~~~~
+> On 11/03/2024 23:56, Krzysztof Kozlowski wrote:
+>> On 11/03/2024 12:13, Chanh Nguyen wrote:
+>>> Add pwmout-pin-as-tach-input property.
+>>
+>> Why is this split from original binding? This does not make much
+>> sense... Add complete hardware description.
+>>
 > 
-> _FORTIFY_SOURCE is enabled by default in some distributions, so the
-> tests are not built by default and are skipped.
-> 
-> open(2) man-page warns about missing flags argument: "if it is not
-> supplied, some arbitrary bytes from the stack will be applied as the
-> file mode."
-> 
-> Fixes: aeb85ed4f41a ("tools/testing/selftests/vm/gup_benchmark.c: allow user specified file")
-> Fixes: fbe37501b252 ("mm: huge_memory: debugfs for file-backed THP split")
-> Fixes: c942f5bd17b3 ("selftests: soft-dirty: add test for mprotect")
-> Cc: Keith Busch <kbusch@kernel.org>
-> Cc: Zi Yan <ziy@nvidia.com>
-> Cc: Peter Xu <peterx@redhat.com>
-> Cc: Yang Shi <shy828301@gmail.com>
-> Cc: Andrea Arcangeli <aarcange@redhat.com>
-> Cc: Nadav Amit <nadav.amit@gmail.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
-> ---
+> Ok Krzysztof, I will merg the "[PATCH 1/3] dt-bindings: hwmon: Add maxim 
+> max31790 driver bindings" commit and "[PATCH 3/3] dt-bindings: hwmon: 
+> max31790: Add pwmout-pin-as-tach-input property" commit.
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+Later I checked your driver code and this explains a bit. However first
+patch should explain that instead. The split is fine, but just lack of
+rationale is confusing.
 
--- 
-Cheers,
 
-David / dhildenb
+> 
+>>>
+>>> Signed-off-by: Chanh Nguyen <chanh@os.amperecomputing.com>
+>>> ---
+>>>   Documentation/devicetree/bindings/hwmon/max31790.yaml | 11 +++++++++++
+>>>   1 file changed, 11 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/hwmon/max31790.yaml b/Documentation/devicetree/bindings/hwmon/max31790.yaml
+>>> index 5a93e6bdebda..447cac17053a 100644
+>>> --- a/Documentation/devicetree/bindings/hwmon/max31790.yaml
+>>> +++ b/Documentation/devicetree/bindings/hwmon/max31790.yaml
+>>> @@ -25,6 +25,16 @@ properties:
+>>>     reg:
+>>>       maxItems: 1
+>>>   
+>>> +  pwmout-pin-as-tach-input:
+>>> +    description: |
+>>> +      An array of six integers responds to six PWM channels for
+>>> +      configuring the pwm to tach mode.
+>>> +      When set to 0, the associated PWMOUT produces a PWM waveform for
+>>> +      control of fan speed. When set to 1, PWMOUT becomes a TACH input
+>>
+>> No vendor prefix, so generic property... but where is it defined?
+>>
+> 
+> Thank Krzysztof! It is not generic property, I'll add the vendor prefix.
+> 
+> I'll update the "pwmout-pin-as-tach-input" to 
+> "maxim,pwmout-pin-as-tach-input" at v2.
+
+Except that you should really look into common properties and use them.
+Or explain why do you need new property?
+
+Best regards,
+Krzysztof
 
