@@ -1,72 +1,111 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9E825774;
-	Mon, 18 Mar 2024 18:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6FF4779F;
+	Mon, 18 Mar 2024 18:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710788297; cv=none; b=rWweqagPXr9QPA1eUGnxjcSTJLrmFKWQZvvMhHiHCJ2bFY9xmiZmXIRtJIlqJU43El5zwHTsdYR27x9Oto4Qx2se/HYCek2QdlpZtWgtWSAszwid4wCRCkEfJ9HOUT0uxUOyU6H+/SfaohonpRc9qlFn71IWG/9C8RiBPDm8nV4=
+	t=1710788375; cv=none; b=hQikiAwMy5ZkTM0jlq/ADyQSk007WwGgxKfIypx5pWOmGHnp+8TUbc/Jq3KN1Zlvf+o4Sw8wP+6cB1VmemnwVH3REvIf785NRQtxqHSwtmto8Sz9XPczIwnLmX4IC7+wjWfgEjzWUFW0JvZ6oyCKrl5FaxHpezWcXL99l0Otaq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710788297; c=relaxed/simple;
-	bh=avsXDYPINe5LmCPSFAn0dGYnmy2Rz3niYsfJVzEkgOI=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TAPDy0zfmb35GupAn36t715aeFJk1e4dUSRiSQetY10ql68dfBy4BhvO2NsZ2QgHzug/VYx7vVu3C1AzzLZZ3JSBaeoBKgf21XiLsx6vmLaDzSP+X/mEZi8vw3Ih3XlRdwAupUs23BsoWpxVx1szRQPJ4TO3URzl+WszeX9LxF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hqsubnx3; arc=none smtp.client-ip=209.85.167.50
+	s=arc-20240116; t=1710788375; c=relaxed/simple;
+	bh=l5t8MphKyGtWNovhRr2a0wnmyVUSJcwUE4jX+Oab91Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X/aJHV69sZsxF2+ydq9Hohm33mlxUQa20Mhg8dRj9a/Hhr5wUhHWhSh6CCqw9ctaz1zJXm+OhzQKLaL0Vg5VHrDn4lS5P46NrCdHZBz4vDylaei9fqqOVHLzG7IS54ksHdZeuolCtwEKbUHxmZ1m5kgfFqs3llKZGlzWwjYmQvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=chjhjM+X; arc=none smtp.client-ip=209.85.222.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hqsubnx3"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-513d717269fso4824716e87.0;
-        Mon, 18 Mar 2024 11:58:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="chjhjM+X"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-789e3f17a6eso239464085a.0;
+        Mon, 18 Mar 2024 11:59:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710788293; x=1711393093; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1710788372; x=1711393172; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dMtWXS3dtM0NMQkLB2HmFBiUuOO+4b3zQnUwksDT1wI=;
-        b=Hqsubnx3y0aJ/kh2W3Rrla+mn+4ylPUncb7QpZVbJqGl+H9umnwvEmpgapLXXy14yl
-         N7bAXDodC2LNKquCYVJkey0BB4apQ3kPBcuRCuUXgpKUHNls/qlxUduRpskA9DQpZsUG
-         3+WeW7cBwXb/HFybZbON0ekIFDAqH+6/fMCPP3nOINMc9XrTAfnVr1auBkBGFZE8hK/F
-         F0RSUkAf8/Vd0+ZeXa3EeXwlG/yJd1l9hhz6830buluSmT+aYHYq+KDEeimVxKTLQiqy
-         eDHVn7GTMfFmiZGULSku/hOHW9lo/805IsYFWN+lGpyW6Xei0jP2PoiNZfxNvHXaPSz5
-         RQBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710788293; x=1711393093;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dMtWXS3dtM0NMQkLB2HmFBiUuOO+4b3zQnUwksDT1wI=;
-        b=LRsyC7aLBOqwd0o2LgG6KfcCfk+qg2LeTQ9VR0SrLmOFKYoKMyY1Jfy8E0kLe/5JAo
-         dtoiKDyMY33KB3Yyb7tYkUfyBPvrDtms8iSMPKu6ozisjL1998pypvSFrN2Y9auF5Z6D
-         oRPrDcC4Vnq3Txh03xoR4lUzgFIUFpvN7U/iknglyRd72YIRvdbbRjVp9RT+8qmjnV9u
-         BFDGwlt35Rma60Bl/BzFGB8SKpzkHhfsUFsCEwTs4q2dX4XI9t9LqFnBhYKbOR/PVc6W
-         96bw9579NCR6BW2ErhY09bxR/ahdHF6K4kMOLP6PmosrUk6byUoaO4HJr7gCICZfzwxi
-         5ZNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVY5xluoVKHy+Sk6TKTqN/AzNe+FrAnPQ7TH82QAM2rBWqNqbUmaRG1dYdkCkthuXcU99Cyz4+Lal+lXCRf9eneqM2B
-X-Gm-Message-State: AOJu0YyPUTlCJXI4GILIu/VfD9v+6oKGMdSyWZM1raQHRzKEuwtHNVeA
-	Xyqi00+3lV2iVrPKfzGQhc3NZgJnG5rj2wdNVT0RKQJb9skKaNF5
-X-Google-Smtp-Source: AGHT+IEjNoc3HDKsdhTnr5X7f4jx0Vo4SiPOJSkZrkKGfyW04NVHQgv+JFKtn1lpywWTX6ZnN7fYsQ==
-X-Received: by 2002:ac2:4649:0:b0:513:ba35:cacd with SMTP id s9-20020ac24649000000b00513ba35cacdmr7968211lfo.39.1710788293008;
-        Mon, 18 Mar 2024 11:58:13 -0700 (PDT)
-Received: from pc636 (host-90-235-3-101.mobileonline.telia.com. [90.235.3.101])
-        by smtp.gmail.com with ESMTPSA id m21-20020a194355000000b00513da68c536sm1264372lfj.152.2024.03.18.11.58.11
+        bh=7h7+2OWF6v/Pkb4i25rctRGD7lK8C3lTs+tkkbaSwa4=;
+        b=chjhjM+XTeKOB1/GWnoklznxLEMHWIvzz0YDBSqcSXiVqP/w7G+7OKQ6oTfumrlnJp
+         kAbeLIKrSdKzROfoa/1SirZUgIOKEjahW/aHGcOw3UawPA/CsLFpiMJGtVlWam82hrbA
+         9wjtBKEzeCa/I4G0r48MKLta09uyRR7Fh090J45FTEPHD0ATaESHuiUcEj6wGoeIgFE6
+         TOuAbcHNUl8fHk1twFR/VdKL3t7lPZMgUlqyubDTX+lkX3GhCZO7SDR36m652udw6CD2
+         aS4Tea4H1iUe3Bm1ND5fEmB+hBLdQXj2/C0AQNHz4VlJwIxEwGlyGh5yuJxyzwtdJL5G
+         05+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710788372; x=1711393172;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7h7+2OWF6v/Pkb4i25rctRGD7lK8C3lTs+tkkbaSwa4=;
+        b=O6c9vH1xV+XghHBAawrbyTAppWSL8YGPcAvxpEHY/V36yLME9T1R/fKk6sKVaAv8wv
+         Es0FU6dx1CFx4fhFd+cgcs7aGJ/EQPWmcdWdjfbU0KunvVg64goYgn5+7QI7HhvYY8wX
+         JLeIalQBC8k/j15eHSby2Jo3yikbM0+zA8abg6/4aZQNu663/2SfvTJMOlx6MlG2/51A
+         lj3PIN6SEIUN7ThBdXp/BmgQYL7Vbo27xpiDBYe25qwvbdK+4LaKgBAR275Yq158HZ4m
+         jF23/JONJJxjcVQwMQcbVLedRni8D910VP+kf5Q19XL7PRsiJ2L3l+DWvPwcSnmTLEjA
+         /1wA==
+X-Forwarded-Encrypted: i=1; AJvYcCWguJ2OZDOomEXL1EfKA5xkGoD9u+p+Ba4xEAGlwQVg2HjNkZhjpMtWNWuPPDjZAlRrcVO+d304XcliMIzkxmYpUYsz8xBC9h1Rc3NmzJGMt1KBEwAUqpS4ROFlLaSmmEogG7Pvmq4hRl3HohY=
+X-Gm-Message-State: AOJu0YyOXVPPcwpaZhijhpj+c1ORqoMHskheL/JVxjyOt7egFngTJLnU
+	gYNVgEwr+YH+Q0kkzvbjcOZT+4ZsLBQyRZlCPqthjA0C9cTO6Mpi
+X-Google-Smtp-Source: AGHT+IFJ+deQPfORoCfSt7LaRwTfKef28eErqe6B6pNphIrPzybCAUbOKyybda1jxKsb8KNqouAViA==
+X-Received: by 2002:a05:6214:8e7:b0:690:a862:9444 with SMTP id dr7-20020a05621408e700b00690a8629444mr263495qvb.47.1710788372450;
+        Mon, 18 Mar 2024 11:59:32 -0700 (PDT)
+Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id pn4-20020a056214130400b006961c1d2b6fsm1521540qvb.80.2024.03.18.11.59.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 11:58:12 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Mon, 18 Mar 2024 19:58:10 +0100
-To: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc: linux-kernel@vger.kernel.org, frederic@kernel.org, boqun.feng@gmail.com,
-	urezki@gmail.com, neeraj.iitr10@gmail.com, rcu@vger.kernel.org,
-	rostedt@goodmis.org, "Paul E. McKenney" <paulmck@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>
-Subject: Re: [PATCH v2 rcu/dev 1/2] rcu/tree: Reduce wake up for
- synchronize_rcu() common case
-Message-ID: <ZfiOwtPfnxXW4JX3@pc636>
-References: <20240308224439.281349-1-joel@joelfernandes.org>
+        Mon, 18 Mar 2024 11:59:31 -0700 (PDT)
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id 4A78B1200032;
+	Mon, 18 Mar 2024 14:59:30 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Mon, 18 Mar 2024 14:59:30 -0400
+X-ME-Sender: <xms:EY_4ZfbMJgQAsXxE2Jv7isWpXdPqTEJHw6ZSzvJwsvB_uPPz0Phb9w>
+    <xme:EY_4ZeZkaC_ASxLSx71HR3kjT8JdSO39gOaiG3TEUgEyLokAYVIm2GJCqcZdGkxSl
+    UtSQsvoRzCy2UPkaQ>
+X-ME-Received: <xmr:EY_4ZR_ygWl-jUBCc_o4hWdI5ERmzU6ggkwyM_Vr7m3TkGLvkQPHyWUCRvc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrkeejgdduudelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhu
+    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
+    htthgvrhhnpedvhedtgfefgfffvdffgfetheehtdfhfeekveelieeiudegheehleelteef
+    gfefffenucffohhmrghinhepshhprghrvggptggrphgrtghithihpghmuhhtrdgrshenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhn
+    odhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejje
+    ekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhn
+    rghmvg
+X-ME-Proxy: <xmx:EY_4ZVpdUwcQp8X3O-f2iUKoMTzgb2MayMuMuCmcz2PkVVryxtClOQ>
+    <xmx:EY_4ZapfmVs3sCQHD8zdOkypyQipM4EX8nhAfomqwzh-nKKXSlHSmg>
+    <xmx:EY_4ZbQT3-lR9DpFpi91Q5w2de0QgxEM1K1a5SpOFGKmipSyN32vog>
+    <xmx:EY_4ZSqtPLSuEuJAu3XL5ldzGAFI_j359hrlIvZzg6leKhq7LYW70g>
+    <xmx:Eo_4ZUiY_tLYYrF788VoX5Mob2DslNV9W4y7EjHgnGBksNNvCNUi8Itfn8Q>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 18 Mar 2024 14:59:29 -0400 (EDT)
+Date: Mon, 18 Mar 2024 11:59:19 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kees Cook <keescook@chromium.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Carlos Llamas <cmllamas@google.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH v3 1/4] rust: uaccess: add userspace pointers
+Message-ID: <ZfiPB_iavHr8hNbm@boqun-archlinux>
+References: <20240311-alice-mm-v3-0-cdf7b3a2049c@google.com>
+ <20240311-alice-mm-v3-1-cdf7b3a2049c@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,128 +114,143 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240308224439.281349-1-joel@joelfernandes.org>
+In-Reply-To: <20240311-alice-mm-v3-1-cdf7b3a2049c@google.com>
 
-Hello, Joel!
-
-Sorry for late checking, see below few comments:
-
-> In the synchronize_rcu() common case, we will have less than
-> SR_MAX_USERS_WAKE_FROM_GP number of users per GP. Waking up the kworker
-> is pointless just to free the last injected wait head since at that point,
-> all the users have already been awakened.
+On Mon, Mar 11, 2024 at 10:47:13AM +0000, Alice Ryhl wrote:
+> From: Wedson Almeida Filho <wedsonaf@gmail.com>
 > 
-> Introduce a new counter to track this and prevent the wakeup in the
-> common case.
-> 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
-> Rebased on paul/dev of today.
-> 
->  kernel/rcu/tree.c | 36 +++++++++++++++++++++++++++++++-----
->  kernel/rcu/tree.h |  1 +
->  2 files changed, 32 insertions(+), 5 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 9fbb5ab57c84..bd29fe3c76bf 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -96,6 +96,7 @@ static struct rcu_state rcu_state = {
->  	.ofl_lock = __ARCH_SPIN_LOCK_UNLOCKED,
->  	.srs_cleanup_work = __WORK_INITIALIZER(rcu_state.srs_cleanup_work,
->  		rcu_sr_normal_gp_cleanup_work),
-> +	.srs_cleanups_pending = ATOMIC_INIT(0),
->  };
->  
->  /* Dump rcu_node combining tree at boot to verify correct setup. */
-> @@ -1642,8 +1643,11 @@ static void rcu_sr_normal_gp_cleanup_work(struct work_struct *work)
->  	 * the done tail list manipulations are protected here.
->  	 */
->  	done = smp_load_acquire(&rcu_state.srs_done_tail);
-> -	if (!done)
-> +	if (!done) {
-> +		/* See comments below. */
-> +		atomic_dec_return_release(&rcu_state.srs_cleanups_pending);
->  		return;
-> +	}
->  
->  	WARN_ON_ONCE(!rcu_sr_is_wait_head(done));
->  	head = done->next;
-> @@ -1666,6 +1670,9 @@ static void rcu_sr_normal_gp_cleanup_work(struct work_struct *work)
->  
->  		rcu_sr_put_wait_head(rcu);
->  	}
+[...]
 > +
-> +	/* Order list manipulations with atomic access. */
-> +	atomic_dec_return_release(&rcu_state.srs_cleanups_pending);
->  }
->  
->  /*
-> @@ -1673,7 +1680,7 @@ static void rcu_sr_normal_gp_cleanup_work(struct work_struct *work)
->   */
->  static void rcu_sr_normal_gp_cleanup(void)
->  {
-> -	struct llist_node *wait_tail, *next, *rcu;
-> +	struct llist_node *wait_tail, *next = NULL, *rcu = NULL;
->  	int done = 0;
->  
->  	wait_tail = rcu_state.srs_wait_tail;
-> @@ -1699,16 +1706,35 @@ static void rcu_sr_normal_gp_cleanup(void)
->  			break;
->  	}
->  
-> -	// concurrent sr_normal_gp_cleanup work might observe this update.
-> -	smp_store_release(&rcu_state.srs_done_tail, wait_tail);
-> +	/*
-> +	 * Fast path, no more users to process. Remove the last wait head
-> +	 * if no inflight-workers. If there are in-flight workers, let them
-> +	 * remove the last wait head.
-> +	 */
-> +	WARN_ON_ONCE(!rcu);
->
-This assumption is not correct. An "rcu" can be NULL in fact. 
-
->  	ASSERT_EXCLUSIVE_WRITER(rcu_state.srs_done_tail);
->  
-> +	if (rcu && rcu_sr_is_wait_head(rcu) && rcu->next == NULL &&
-> +		/* Order atomic access with list manipulation. */
-> +		!atomic_read_acquire(&rcu_state.srs_cleanups_pending)) {
-> +		wait_tail->next = NULL;
-> +		rcu_sr_put_wait_head(rcu);
-> +		smp_store_release(&rcu_state.srs_done_tail, wait_tail);
-> +		return;
-> +	}
+> +/// A reader for [`UserSlice`].
+> +///
+> +/// Used to incrementally read from the user slice.
+> +pub struct UserSliceReader {
+> +    ptr: *mut c_void,
+> +    length: usize,
+> +}
 > +
-> +	/* Concurrent sr_normal_gp_cleanup work might observe this update. */
-> +	smp_store_release(&rcu_state.srs_done_tail, wait_tail);
+> +impl UserSliceReader {
+[...]
 > +
->  	/*
->  	 * We schedule a work in order to perform a final processing
->  	 * of outstanding users(if still left) and releasing wait-heads
->  	 * added by rcu_sr_normal_gp_init() call.
->  	 */
-> -	queue_work(sync_wq, &rcu_state.srs_cleanup_work);
-> +	atomic_inc(&rcu_state.srs_cleanups_pending);
-> +	if (!queue_work(sync_wq, &rcu_state.srs_cleanup_work)) {
-> +		atomic_dec(&rcu_state.srs_cleanups_pending);
-> +	}
->  }
-No need an extra "{}" pair.
+> +    /// Reads raw data from the user slice into a raw kernel buffer.
+> +    ///
+> +    /// Fails with `EFAULT` if the read encounters a page fault.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// The `out` pointer must be valid for writing `len` bytes.
+> +    pub unsafe fn read_raw(&mut self, out: *mut u8, len: usize) -> Result {
 
->  
->  /*
-> diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-> index bae7925c497f..affcb92a358c 100644
-> --- a/kernel/rcu/tree.h
-> +++ b/kernel/rcu/tree.h
-> @@ -420,6 +420,7 @@ struct rcu_state {
->  	struct llist_node *srs_done_tail; /* ready for GP users. */
->  	struct sr_wait_node srs_wait_nodes[SR_NORMAL_GP_WAIT_HEAD_MAX];
->  	struct work_struct srs_cleanup_work;
-> +	atomic_t srs_cleanups_pending; /* srs inflight worker cleanups. */
->  };
->  
->  /* Values for rcu_state structure's gp_flags field. */
+I don't think we want to promote the pub usage of this unsafe function,
+right? We can provide a safe version:
+
+	pub fn read_slice(&mut self, to: &[u8]) -> Result
+
+and all users can just use the safe version (with the help of
+slice::from_raw_parts_mut() if necessary).
+
+> +        if len > self.length {
+> +            return Err(EFAULT);
+> +        }
+> +        let Ok(len_ulong) = c_ulong::try_from(len) else {
+> +            return Err(EFAULT);
+> +        };
+> +        // SAFETY: The caller promises that `out` is valid for writing `len` bytes.
+> +        let res = unsafe { bindings::copy_from_user(out.cast::<c_void>(), self.ptr, len_ulong) };
+> +        if res != 0 {
+> +            return Err(EFAULT);
+> +        }
+> +        // Userspace pointers are not directly dereferencable by the kernel, so
+> +        // we cannot use `add`, which has C-style rules for defined behavior.
+> +        self.ptr = self.ptr.wrapping_byte_add(len);
+> +        self.length -= len;
+> +        Ok(())
+> +    }
+> +
+> +    /// Reads the entirety of the user slice, appending it to the end of the
+> +    /// provided buffer.
+> +    ///
+> +    /// Fails with `EFAULT` if the read encounters a page fault.
+> +    pub fn read_all(mut self, buf: &mut Vec<u8>) -> Result {
+> +        let len = self.length;
+> +        buf.try_reserve(len)?;
+> +
+> +        // SAFETY: The call to `try_reserve` was successful, so the spare
+> +        // capacity is at least `len` bytes long.
+> +        unsafe { self.read_raw(buf.spare_capacity_mut().as_mut_ptr().cast(), len)? };
+> +
+> +        // SAFETY: Since the call to `read_raw` was successful, so the next
+> +        // `len` bytes of the vector have been initialized.
+> +        unsafe { buf.set_len(buf.len() + len) };
+> +        Ok(())
+> +    }
+> +}
+> +
+> +/// A writer for [`UserSlice`].
+> +///
+> +/// Used to incrementally write into the user slice.
+> +pub struct UserSliceWriter {
+> +    ptr: *mut c_void,
+> +    length: usize,
+> +}
+> +
+> +impl UserSliceWriter {
+> +    /// Returns the amount of space remaining in this buffer.
+> +    ///
+> +    /// Note that even writing less than this number of bytes may fail.
+> +    pub fn len(&self) -> usize {
+> +        self.length
+> +    }
+> +
+> +    /// Returns `true` if no more data can be written to this buffer.
+> +    pub fn is_empty(&self) -> bool {
+> +        self.length == 0
+> +    }
+> +
+> +    /// Writes raw data to this user pointer from a raw kernel buffer.
+> +    ///
+> +    /// Fails with `EFAULT` if the write encounters a page fault.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// The `data` pointer must be valid for reading `len` bytes.
+> +    pub unsafe fn write_raw(&mut self, data: *const u8, len: usize) -> Result {
+
+Same here, just remove the `pub`, and users should use write_slice()
+(with the help of slice::from_raw_parts() if necessary).
+
+Regards,
+Boqun
+
+> +        if len > self.length {
+> +            return Err(EFAULT);
+> +        }
+> +        let Ok(len_ulong) = c_ulong::try_from(len) else {
+> +            return Err(EFAULT);
+> +        };
+> +        let res = unsafe { bindings::copy_to_user(self.ptr, data.cast::<c_void>(), len_ulong) };
+> +        if res != 0 {
+> +            return Err(EFAULT);
+> +        }
+> +        // Userspace pointers are not directly dereferencable by the kernel, so
+> +        // we cannot use `add`, which has C-style rules for defined behavior.
+> +        self.ptr = self.ptr.wrapping_byte_add(len);
+> +        self.length -= len;
+> +        Ok(())
+> +    }
+> +
+> +    /// Writes the provided slice to this user pointer.
+> +    ///
+> +    /// Fails with `EFAULT` if the write encounters a page fault.
+> +    pub fn write_slice(&mut self, data: &[u8]) -> Result {
+> +        let len = data.len();
+> +        let ptr = data.as_ptr();
+> +        // SAFETY: The pointer originates from a reference to a slice of length
+> +        // `len`, so the pointer is valid for reading `len` bytes.
+> +        unsafe { self.write_raw(ptr, len) }
+> +    }
+> +}
+> 
 > -- 
-> 2.34.1
+> 2.44.0.278.ge034bb2e1d-goog
 > 
