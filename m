@@ -1,145 +1,222 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2132.outbound.protection.partner.outlook.cn [139.219.17.132])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7762E2030B;
-	Mon, 18 Mar 2024 03:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.132
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710733532; cv=fail; b=qbQjwmAZQuenjF4ow1VRTZr0JmsMj5jCCLepK8q5+dcy8CR4ZwbybHn/nOsnOR+iKLffRlHHA8FE1MssHb+U7X7De8CI0JMrpx7wH8MWL1ZMp3xFl/UUDUJ5NFJVYjru2aNRyn3h1vth/zFn7xMPcJ4O2UqbssvdBANEMIJQHbo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710733532; c=relaxed/simple;
-	bh=hzn/TtYl43MricZZ//5KvhwxfXnKlNdDqqBFr05YU9M=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=bcG6zr4f3AP00+rVj5tQ8UTZjKmie21XEE8wDXoi5l23ZQ0qQSSD4hICXCHKgq5HxWG7NSdZD44IFmED04kQpuYCGR5eesKvhspagZBXg5l04pFaL9Fpui6YN1VeZ97M8bzOK+6JSnBqhX458RrRiGEOhgkHHKE/f02/yX/ajWw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T0gFyX3mZVA1OQBgZlBfCcBxGV+aei85zeZTCmYLoFSFIgCw4DbAtYbiak1SudhJZioFs/UzS+MPBSQX3g6c/gY6ZsfC2eb82P1b3aqxs7N/JaQT7d2e00ssOjKvudiuhKfnzCEUEu79jGuWBIbhdtKoskx6MKn26aDh/lAbx6lb7ExtPHXyMn7Gl9mKC/eUdo6Y8+Z+yVtgW1Jm07j0qgwQ0TBoSYJq6QZoEd/42XEyg0azi+N3lW/CqdL3uAsKqL3Lj28uQFiXl/+LzQtU6tMl+/xEutI0UnV8dwhqLWzwdSKg6P1ZR1ckWZGCoTLD0IcnTUZeyaIfcrXmyxHaQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hzn/TtYl43MricZZ//5KvhwxfXnKlNdDqqBFr05YU9M=;
- b=CXsbpQ8DRvsifsflEJevVCWZzfXeGEWNTJDZi+UXjNOze3KoCACjIYY++qOIr8Nrr92nOZsEmxpj48uTKohy+X2W7bQMb7BYNB0hxGAUhdhH89c8GG+dxOkVR3qIaBXVf/ArbgB9IgsiWAN+35YSHpTsgzUwOi2xXY7EMXD2vUjJ5GQO7iOEt8eLnoZc7HaMlV8EBgKywFjEx+a3d/2XnjYQPVfiFOpcEHMO3o7qMa4IWDxPq64n9k05a9jS5471gCkXpdXmzaeMXibTcuAWI5d1LWqZIGq0BjrUNkDQJBkxzX1GpHadME+zTKWaubxL9wTkUbzV+WK/sjqOUIjunA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:3::6) by NT0PR01MB1039.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:2::5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.21; Mon, 18 Mar
- 2024 03:45:24 +0000
-Received: from NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
- ([fe80::d810:3fdf:422c:75d2]) by
- NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn ([fe80::d810:3fdf:422c:75d2%6])
- with mapi id 15.20.7386.016; Mon, 18 Mar 2024 03:45:24 +0000
-From: Shengyang Chen <shengyang.chen@starfivetech.com>
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-CC: "andrzej.hajda@intel.com" <andrzej.hajda@intel.com>,
-	"neil.armstrong@linaro.org" <neil.armstrong@linaro.org>, "rfoss@kernel.org"
-	<rfoss@kernel.org>, "Laurent.pinchart@ideasonboard.com"
-	<Laurent.pinchart@ideasonboard.com>, "jonas@kwiboo.se" <jonas@kwiboo.se>,
-	"jernej.skrabec@gmail.com" <jernej.skrabec@gmail.com>,
-	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-	"mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de"
-	<tzimmermann@suse.de>, "airlied@gmail.com" <airlied@gmail.com>,
-	"daniel@ffwll.ch" <daniel@ffwll.ch>, "robh+dt@kernel.org"
-	<robh+dt@kernel.org>, "krzysztof.kozlowski+dt@linaro.org"
-	<krzysztof.kozlowski+dt@linaro.org>, "conor+dt@kernel.org"
-	<conor+dt@kernel.org>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-	"aford173@gmail.com" <aford173@gmail.com>, "agx@sigxcpu.org"
-	<agx@sigxcpu.org>, "rdunlap@infradead.org" <rdunlap@infradead.org>,
-	"u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-	"sam@ravnborg.org" <sam@ravnborg.org>, "steven.price@arm.com"
-	<steven.price@arm.com>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-	Changhuang Liang <changhuang.liang@starfivetech.com>, Keith Zhao
-	<keith.zhao@starfivetech.com>, Jack Zhu <jack.zhu@starfivetech.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4 0/2] Add StarFive JH7110 SoC DSI support
-Thread-Topic: [PATCH v4 0/2] Add StarFive JH7110 SoC DSI support
-Thread-Index: AQHaa3skQAyiC1xqJ0qDDKfqniAsTbE88lSA
-Date: Mon, 18 Mar 2024 03:45:24 +0000
-Message-ID:
- <NT0PR01MB10706470AE4A0654E45D747CEF2DA@NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn>
-References: <20240301015222.93114-1-shengyang.chen@starfivetech.com>
-In-Reply-To: <20240301015222.93114-1-shengyang.chen@starfivetech.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: NT0PR01MB1070:EE_|NT0PR01MB1039:EE_
-x-ms-office365-filtering-correlation-id: f9b4efe9-6620-484d-0d3d-08dc46fdd835
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- Zykz14hlt7BEs3pmw9yNTUxUql+XsPqkZe5tX7dontJyWBy5uUyJxM+Qlan7Zn8Z0hGt8KQ83UgkRUYmA/0pKfeMw4q129tdFW5vK/WOlU9oqjgO0V0JMJ12XwUJjY26Na3MbydCxONSoQILgZy7+/EWgG8gd8h9oyxsHIB/OjEpm73nSg7vjHnTP8x1FYXpZUuKu/PnkEH0LrQEgtZB8XCuB59fiDgGFy9ibFVkn2f+6Zmp7AHeS4JytUKy6ywuUi8uxXYke7yg4ny0z1GYAyybuGeIc0uHNbg+tLUFXkDjmHtcGKL2dtp+Uf3r51Jx+NhAbfXkgxZe1LsAcU1EQ/gW2O5QUmFQQJMH0EMoX38RXoexzSZsKd6JGbjlGcfNxJxsctpnncdEWdLtmVAvNE840ghrFzYUs+kivuaeMC8+L94e01wZShsF+xlNYuPPJTSEZJd44+2QzWhECHw5aFzO/R5YgqFPpaMAnV8rdkWHT5CtmqbqMbNCVmEFJAiHYREFzetMuYkAADwbmSd8b3yiLuebF/y6mhlkcb5tIL5B1VjAzxCb6TC9hwOLw2POJ8hmVp2Udbp+TTnTFBWvRX7lJeSUt89HAOAeDBS/AeI=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(41320700004)(1800799015)(7416005)(366007)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?1xS6rC2F00GOGprTYu7bUyRzixDdhwo0oDGeZMCGCtwD2tpOhk0FWioFhhMB?=
- =?us-ascii?Q?6QYjxvorB5gIUtxki0YtZGVa956sCZwW2qen7dR62qFxiuClrGumVM0WBfjs?=
- =?us-ascii?Q?gtu+HnlvfaxbjEbsY0xsUmeV+NMJWBBjEECU2iv3xphaoyFfeuJ4CF3fi2rf?=
- =?us-ascii?Q?iIbWF6BglC0eYSl9xVclq7qTvovYFFJjZHmr7ZUg5ogyyiouSIYHLb27Ev+1?=
- =?us-ascii?Q?IdOQxF3vhN+musccbhKrIZGKx1IX00yQNxrJEpjyqxXIJy96zFmJoO+Bnu01?=
- =?us-ascii?Q?Dh59ZbneRfcN8VyWPjAyfSsSwEdEL9reaAKYg4DAYbD/iJIESpQrXjXnbskg?=
- =?us-ascii?Q?S6xMfrw6/1B5npGjJ9GDbeFkbyrU0yanletlH1OgJSyKzJr+lT5nr2BUw668?=
- =?us-ascii?Q?MD42KoekswrRWhgZPcRb85eQBrgYlWry7PCtf67R5MHGo6LVlM/KrdGhDjqN?=
- =?us-ascii?Q?cMkXzuz08ODtJH+SF6srPBjbtTz8LPc32mARz7RW2t7uTxf67Bc4DX66dG72?=
- =?us-ascii?Q?S6D2f27T+ASkRpeXokpmvGqzrpWNrc9U1+maxz1976kKDyVjNNSBf1BrU7fh?=
- =?us-ascii?Q?IxGFIHBRLM1lj4S5AXMHxRQXHCh6C3VU8i6rL2mHNM1J7uZZgbRJk6fgrtjn?=
- =?us-ascii?Q?u1aMJgAnN15LxrmcbrvolVjKscDP8gXATB+jlP0wA2KcHhyYf2CXqF4ysWEy?=
- =?us-ascii?Q?iUNSxE86s7ox4ASiwNWty23XBfeKTr92wE5ELeWim0SSnfkvl1CTJWoESmWG?=
- =?us-ascii?Q?90S88w0ACxnJkmYaPPusaeKe789yrcilm/jh2d86Ks5Oyiq5b7DNkpSu+DE1?=
- =?us-ascii?Q?ID/uWpTtOCWPjCr2Aw2Mlr6swa2nLhVd0OKjJT3dxF0LUSnXim47Vd8VoSYS?=
- =?us-ascii?Q?drmLK4Myar8Ous7RkT3psNkhLquT6+YGOjzjWM8LkLCz7zaBZQ4zieEESVp0?=
- =?us-ascii?Q?2/G3l24tp7N0OY9f2oeM7PDXJzkUEraMEep8ulr7fnqGuleZ0xbHDypK/4Wi?=
- =?us-ascii?Q?ieSwBD/olBhi0Lk/yYnK71owDPAx4YkaTBCWnXI3zkoEeXJjYMk2PaRC2CrV?=
- =?us-ascii?Q?Ukg+bCrGtqq7hCvhB21DIYqO8BX6Y5R7ao65DvPyzBaFsN/8gA0g+Si1yTSA?=
- =?us-ascii?Q?R8uOFD0cCQ2F8/NAUN1NjA9WCZx9HdPssI/kd41DnOkjmkyjd/xz14Z/VpuC?=
- =?us-ascii?Q?xSJPIsKkoAgfp735K9vtPV8imhbbUGL3wI5doHNpJfZIZdHOaoz/kkwJ6Bmw?=
- =?us-ascii?Q?xg0VbuHunkd9zGGXt52BQx4z7dWJwstsIznXpbZDKqFVmW3Vfh6mEoR/Wbvq?=
- =?us-ascii?Q?NjAyNwwXduAIxxREU2TubNc5eGdje9wUq170TCSGrzolfrgEBpcQwgjAj/le?=
- =?us-ascii?Q?L7P6ZBfz0KL9EoYXxLiFyQdZpXsAqe/qiIJzgYUGa03iWmhS8K12gx5QXZ/x?=
- =?us-ascii?Q?1Qrnl4VHCr+IvCjuyOY88WGw0XtoFyeJdNvXXiGLjUhf1fjcfPIg4vt9wOnu?=
- =?us-ascii?Q?7GT96ZvTK54cyTmaLfFFVriNRAz/75GwtgcA0pCWNGKgv+9MvYEOzi1Dodlm?=
- =?us-ascii?Q?lhXBB0hzc+OG9G8OASOZWUPSasPPH5vaahN4KqLNJITtStDSJmxRASnzP6du?=
- =?us-ascii?Q?bg=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CBE1E866;
+	Mon, 18 Mar 2024 04:01:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710734500; cv=none; b=ICxuaTsTDO/bfCBYrhH821mVmOy6fJCJNJ93jK4wjJH4XwXCVO5Xuj3uQ2QBZQUSahvTAyZ8GWHvKSUWXFYXUKLO9nnyvvSEwY7VBcUsjjZvbSURwpVXWsvUUy0dH9VHatfoW0qcl+NOblZwY0f0eL1cXmU9qVw6gAgkvWHkcBU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710734500; c=relaxed/simple;
+	bh=eKge9M4i6lPpOTMUeCuYsdxpZrceAb6IaDSCK7EFZAo=;
+	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ckDoVBRVfhoWF0uFgtfuqlhtbC1fQs0gNzgj4NsuzNGB8X4qDf2CygbbSRZO72lwdfY1OwNpLTouj5psJywHNGsa1F4GG85NqB8w+AzzQ62zvvbPzPZFSoiP0lmDevYZ866FCAEatvTrUxKAt/PwKjV7SSmkhQJjTyIEdnivAyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Tyh1K5L67z1QBmM;
+	Mon, 18 Mar 2024 11:59:01 +0800 (CST)
+Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7D15C1A016F;
+	Mon, 18 Mar 2024 12:01:33 +0800 (CST)
+Received: from [10.67.111.82] (10.67.111.82) by canpemm500010.china.huawei.com
+ (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 18 Mar
+ 2024 12:01:33 +0800
+Subject: Re: [PATCH] usercopy: delete __noreturn from usercopy_abort
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
+ <CAG48ez1h9X7Qv-5OR6hAhwnSOng6_PSXBaR6cT7xrk2Wzu39Yg@mail.gmail.com>
+ <202403040938.D770633@keescook>
+ <77bb0d81-f496-7726-9495-57088a4c0bfc@huawei.com>
+ <202403050129.5B72ACAA0D@keescook>
+ <b274b545-9439-7ff8-e3ed-604a9ac81f65@huawei.com>
+ <20240305175846.qnyiru7uaa7itqba@treble>
+CC: Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>,
+	<gustavoars@kernel.org>, <akpm@linux-foundation.org>, <peterz@infradead.org>,
+	<dave.hansen@linux.intel.com>, <kirill.shutemov@linux.intel.com>,
+	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+	<linux-mm@kvack.org>, <nixiaoming@huawei.com>, <kepler.chenxin@huawei.com>,
+	<wangbing6@huawei.com>, <wangfangpeng1@huawei.com>, <douzhaolei@huawei.com>,
+	Russell King <linux@armlinux.org.uk>, <linux-arm-kernel@lists.infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Message-ID: <d6281777-dc1b-a72c-79e2-b1f561472523@huawei.com>
+Date: Mon, 18 Mar 2024 12:01:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9b4efe9-6620-484d-0d3d-08dc46fdd835
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2024 03:45:24.7656
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lAC680O2t2QZal+OBfxx7v82Fizhd2upnupIxr/vQ6xvxhjuBI5ZjsQiDGhvzBe15q51TV+fH/tGXI7xIngKUFAryo1zgttYGZakBHXOvIM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: NT0PR01MB1039
+In-Reply-To: <20240305175846.qnyiru7uaa7itqba@treble>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ canpemm500010.china.huawei.com (7.192.105.118)
 
-> This series is the series that attempts to support the CDNS DSI driver us=
-ed to
-> converts DPI to DSI.
-> CDNS DSI is embedded in StarFive JH7110 SoC.
-> The series has been tested on the VisionFive 2 board.
->=20
->=20
-Hi, Andrzej, Neil, Robert, Laurent, Jonas and Jernej
 
-Could you please help to review and give me some suggestions for this patch=
- series? Thank you for your time.
 
-Best regards,
-Shengyang
+On 2024/3/6 1:58, Josh Poimboeuf wrote:
+
+> Adding ARM folks -- see
+> https://lkml.kernel.org/lkml/1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com
+> for the original bug report.
+> 
+> This is an off-by-one bug which is common in unwinders, due to the fact
+> that the address on the stack points to the return address rather than
+> the call address.
+> 
+> So, for example, when the last instruction of a function is a function
+> call (e.g., to a noreturn function), it can cause the unwinder to
+> incorrectly try to unwind from the function *after* the callee.
+> 
+> For ORC (x86), we fixed this by decrementing the PC for call frames (but
+> not exception frames).  I've seen user space unwinders do similar, for
+> non-signal frames.
+> 
+> Something like the following might fix your issue (completely untested):
+> 
+
+Thank you very much. I have verified that your patch can fix my issue.
+But I have some little questions.
+
+> diff --git a/arch/arm/include/asm/stacktrace.h b/arch/arm/include/asm/stacktrace.h
+> index 360f0d2406bf..4891e38cdc1f 100644
+> --- a/arch/arm/include/asm/stacktrace.h
+> +++ b/arch/arm/include/asm/stacktrace.h
+> @@ -21,9 +21,7 @@ struct stackframe {
+>  	struct llist_node *kr_cur;
+>  	struct task_struct *tsk;
+>  #endif
+> -#ifdef CONFIG_UNWINDER_FRAME_POINTER
+>  	bool ex_frame;
+> -#endif
+>  };
+>  
+>  static __always_inline
+> @@ -37,9 +35,8 @@ void arm_get_current_stackframe(struct pt_regs *regs, struct stackframe *frame)
+>  		frame->kr_cur = NULL;
+>  		frame->tsk = current;
+>  #endif
+> -#ifdef CONFIG_UNWINDER_FRAME_POINTER
+> -		frame->ex_frame = in_entry_text(frame->pc);
+> -#endif
+> +		frame->ex_frame = !!regs;
+> +
+
+'regs' must not be NULL, frame->ex_frame will always be TRUE.
+So I think we just need to remove CONFIG_UNWINDER_FRAME_POINTER here.
+We don't need to change the frame->ex_frame assignment statement.
+
+
+> diff --git a/arch/arm/kernel/unwind.c b/arch/arm/kernel/unwind.c
+> index 9d2192156087..99ded32196af 100644
+> --- a/arch/arm/kernel/unwind.c
+> +++ b/arch/arm/kernel/unwind.c
+> @@ -407,7 +407,7 @@ int unwind_frame(struct stackframe *frame)
+>  {
+>  	const struct unwind_idx *idx;
+>  	struct unwind_ctrl_block ctrl;
+> -	unsigned long sp_low;
+> +	unsigned long sp_low, pc;
+>  
+>  	/* store the highest address on the stack to avoid crossing it*/
+>  	sp_low = frame->sp;
+> @@ -417,19 +417,22 @@ int unwind_frame(struct stackframe *frame)
+>  	pr_debug("%s(pc = %08lx lr = %08lx sp = %08lx)\n", __func__,
+>  		 frame->pc, frame->lr, frame->sp);
+>  
+> -	idx = unwind_find_idx(frame->pc);
+> +	pc = frame->ex_frame ? frame->pc : frame->pc - 4;
+
+For details, see the unwind_next_frame function in the unwind_orc.c.
+Why subtract 4 here instead of 1?
+`pc = frame->ex_frame ? frame->pc : frame->pc - 1`
+Is it more appropriate?
+
+> +
+> +	idx = unwind_find_idx(pc);
+>  	if (!idx) {
+> -		if (frame->pc && kernel_text_address(frame->pc)) {
+> -			if (in_module_plt(frame->pc) && frame->pc != frame->lr) {
+> +		if (kernel_text_address(pc)) {
+> +			if (in_module_plt(pc) && frame->pc != frame->lr) {
+>  				/*
+>  				 * Quoting Ard: Veneers only set PC using a
+>  				 * PC+immediate LDR, and so they don't affect
+>  				 * the state of the stack or the register file
+>  				 */
+>  				frame->pc = frame->lr;
+> +				frame->ex_frame = false;
+>  				return URC_OK;
+>  			}
+> -			pr_warn("unwind: Index not found %08lx\n", frame->pc);
+> +			pr_warn("unwind: Index not found %08lx\n", pc);
+>  		}
+>  		return -URC_FAILURE;
+>  	}
+> @@ -442,7 +445,7 @@ int unwind_frame(struct stackframe *frame)
+>  	if (idx->insn == 1)
+>  		/* can't unwind */
+>  		return -URC_FAILURE;
+> -	else if (frame->pc == prel31_to_addr(&idx->addr_offset)) {
+> +	else if (frame->ex_frame && pc == prel31_to_addr(&idx->addr_offset)) {
+>  		/*
+>  		 * Unwinding is tricky when we're halfway through the prologue,
+>  		 * since the stack frame that the unwinder expects may not be
+> @@ -451,9 +454,10 @@ int unwind_frame(struct stackframe *frame)
+>  		 * a function, we are still effectively in the stack frame of
+>  		 * the caller, and the unwind info has no relevance yet.
+>  		 */
+> -		if (frame->pc == frame->lr)
+> +		if (pc == frame->lr)
+>  			return -URC_FAILURE;
+>  		frame->pc = frame->lr;
+> +		frame->ex_frame = false;
+>  		return URC_OK;
+>  	} else if ((idx->insn & 0x80000000) == 0)
+>  		/* prel31 to the unwind table */
+> @@ -515,6 +519,7 @@ int unwind_frame(struct stackframe *frame)
+>  	frame->lr = ctrl.vrs[LR];
+>  	frame->pc = ctrl.vrs[PC];
+>  	frame->lr_addr = ctrl.lr_addr;
+> +	frame->ex_frame = false;
+
+Why is the value of `frame->ex_frame` directly set to false?
+Why is the value not determined based on `frame->pc`?
+That is, `frame->ex_frame = in_entry_text(frame->pc)`
+
+>  
+>  	return URC_OK;
+>  }
+> @@ -544,6 +549,7 @@ void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk,
+>  		 */
+>  here:
+>  		frame.pc = (unsigned long)&&here;
+> +		frame.ex_frame = false;
+>  	} else {
+>  		/* task blocked in __switch_to */
+>  		frame.fp = thread_saved_fp(tsk);
+> @@ -554,11 +560,12 @@ void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk,
+>  		 */
+>  		frame.lr = 0;
+>  		frame.pc = thread_saved_pc(tsk);
+> +		frame.ex_frame = false;
+>  	}
+>  
+>  	while (1) {
+>  		int urc;
+> -		unsigned long where = frame.pc;
+> +		unsigned long where = frame.ex_frame ? frame.pc : frame.pc - 4;
+>  
+>  		urc = unwind_frame(&frame);
+>  		if (urc < 0)
+> .
+> 
+
+If I refer to your demo patch and submit a new bugfix patch,
+can I mark you as "Co-developed-by" in this new bugfix patch?
