@@ -1,148 +1,237 @@
-Received: from wfhigh1-smtp.messagingengine.com (wfhigh1-smtp.messagingengine.com [64.147.123.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E421828E34
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 09:23:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D029C2C688
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 09:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710753798; cv=none; b=LgehOliPj7fCLFBkkfryJQSkQTrM5cTGROH3wyMcSMJ8rsB+4q/zolLUSTXcRjMiHA8JeOIcDG7oGgBkSw62CZL/CPiqFCRomfu0J6yvGfyKoVrzhM6b0e0tArX47Mt86G2zyah6aed++3kOXYVAsBu6UUaF4+15ugTngMifKAE=
+	t=1710753808; cv=none; b=p1M+m6GhjgXGrGHxVmQsQV7g85qH1hDWmKEXxzo6cmda+azwk/bZziBJUnV1EKHDTXL1n4hT9N9h22Wv9OyVOD7nQaCs/mm8T3nZMgp1VauGp5IngfvvlO9pJgThQ8HOsFXj9CqfFl3msbSzy+mbuI1ZhHGMSCEUB+zlCvlhkk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710753798; c=relaxed/simple;
-	bh=vgVc0nJTSCtGLh4Qy77vLltYe2aYnfglXF90ldEZ9WQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l2NsUi+iHJBY5C+3xRuHXRfskllxzD0QGcZ6eAcHj+PBsWxH1ITQzpxV26wSx0s6xku9O/GH23IdH9wJVTU6dDNcnPxHQUjRzsP26tu1fgRYUhWhSOR9J56Oj3hQscD89Ktuoljkdf0edGoFj4FD/yvDEZBOjy1fsl/UM1jqfU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=1e3CM53i; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UPEWiFgY; arc=none smtp.client-ip=64.147.123.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
+	s=arc-20240116; t=1710753808; c=relaxed/simple;
+	bh=G2/dGPQHTsouT6SIKS6kEPyTyi7iG8TB8hc9yD1KxMI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EuBH1RKb1LWY6F85cIKTD4NwfvhDKZJOa4uNGA2FYRnGSCUYklRrT8rODBnSwNkIhXkdfAXSx0gH0x8hkOLhf0DtY3g+mye26YaOSjGL1eJ8F2yhzY3nSwAqCgswadPiAlaFtdWgz4XYmgYSDjzR7lrzOEG6ntqEHJv8hp8xtIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=as5ctwoT; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="1e3CM53i";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UPEWiFgY"
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailfhigh.west.internal (Postfix) with ESMTP id C8C5B18000B9;
-	Mon, 18 Mar 2024 05:23:15 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Mon, 18 Mar 2024 05:23:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1710753795; x=
-	1710840195; bh=PUa/R/clxm2N8V+OKy2y0wtEIZOYD27dJAqezZK5f9M=; b=1
-	e3CM53iHxosZylc36+6xVFeSSSsnKAkj2NWTI34viiMVKkedvIQkewHjWfpxoZBC
-	36DKUzlrQJM5chxDzCpI/dzu79mh7MFtGUrPzfGP56XOrFDEdsU4F2UTNwaAnQqr
-	pn1hRu6yXtxl6rnSGxWmUSoLTurOi7Q3Kxe2KgKDj/HQW4fuBcz2tLa0myNA3/6z
-	7uEEY5JvkCrs/Ob9caUt+j+9gPjt4U1AE+n2QwceeMImnO51Vvo/jugJW2tTxBq6
-	y+gvtrvuKlxGPcI7/JPvbGzD+uof0lmnyiBHCHrQxdrIDNIvAlw/EthuThHVmpfL
-	45ybm5bUPFwFMJ85cmyEw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1710753795; x=1710840195; bh=PUa/R/clxm2N8V+OKy2y0wtEIZOY
-	D27dJAqezZK5f9M=; b=UPEWiFgYFN/zDywhTp18AovpShgb4x85qjodUZAbvwCs
-	SFJbLQ+1PbYSCAO6fLS1WGnrIx+oFj6yVat3sMbcgqbViYQA5JqNfEny4F40052f
-	r76eSkTg8lLmkmBg0IoBhzUrH8gaxpB0XOhZjnkW2Od00yCRf6N2vEYyrvQ1baC2
-	JMRDES+yg8m0UBPt4IGO4kc1ePA7du51D+K39YTqwxt7lX2KdIfP8IcGkz99m1i+
-	Rsc0+usL95Iap+huhYshlKxbgHeiZIqzDr5OLCK7EAC2WcVdOf913m+PqYcYbcYB
-	uIHVZseOiPp71bMB1SoLTPsdefAorGFc7O5BqFKoDg==
-X-ME-Sender: <xms:Awj4ZaUY5kqN35OQOUhMf9i3yP5mUVrA3sFxzc4dBHkg06Ks_ofYEQ>
-    <xme:Awj4ZWnYLrSlvVDCmAhncjYEycIG0XRXZ3gud33FlDRWFYGy5GvSQD6nJwrNxPar_
-    rzrpi8_bR6_qcXCpE8>
-X-ME-Received: <xmr:Awj4ZebSjFQj9QyfdyyV0tgp6yVvRkbFV-BzSwrihEG5I777JgqsK6kunCL_D3oYSX6r0-X5mgl3D0wIRhyZ3ebjSNmGWTSj-68>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrkeejgddtfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefvrghkrghs
-    hhhiucfurghkrghmohhtohcuoehoqdhtrghkrghshhhisehsrghkrghmohgttghhihdrjh
-    hpqeenucggtffrrghtthgvrhhnpeehhffhteetgfekvdeiueffveevueeftdelhfejieei
-    tedvleeftdfgfeeuudekueenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehoqdhtrghkrghshhhisehsrghkrghmohgttghhihdrjhhp
-X-ME-Proxy: <xmx:Awj4ZRXcW6rE_HOLItLLrPsISZU5k_ovwhf32LHC60r5qO5rY8WPAg>
-    <xmx:Awj4ZUlXd2YHZuzNPXgsZkxDDgfS3bnT7KQ-1YctSEBJgOBetU8uyg>
-    <xmx:Awj4ZWdcbh_NrsdpBh40qN_GK3Y0_ALp-sR3gH5J6iLxEacbLbRCcQ>
-    <xmx:Awj4ZWFzk3yyxlgGDcToiySF_uYqP5yaxqRc1NLr5qPCcMUrU8Cl4g>
-    <xmx:Awj4ZVCtoeR73GRGh61qP6JNcHSc8mIJcBZzbtmqayViqaLTmqg8w_Ccr4o>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 18 Mar 2024 05:23:13 -0400 (EDT)
-Date: Mon, 18 Mar 2024 18:23:11 +0900
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux1394-devel@lists.sourceforge.net" <linux1394-devel@lists.sourceforge.net>
-Subject: Re: [PATCH 1/2] firewire: Kill unnecessary buf check in
- device_attribute.show
-Message-ID: <20240318092311.GA678645@workstation.local>
-Mail-Followup-To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux1394-devel@lists.sourceforge.net" <linux1394-devel@lists.sourceforge.net>
-References: <20240122053942.80648-1-lizhijian@fujitsu.com>
- <20240122085604.GA254251@workstation.local>
- <20240318044609.GA659599@workstation.local>
- <625470f3-b196-43f7-9844-fa1cb6da99f8@fujitsu.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="as5ctwoT"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a46805cd977so391023666b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 02:23:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710753805; x=1711358605; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tB1Pb2tlLh6YNrZFH5WUvlCJhiEA56vnslfaevBVe4A=;
+        b=as5ctwoTNdc1YA7l820QvGugIDhqgB5mr25YVU9UnbImh7ErwluPR2E5X0aQZeqBgP
+         IdwyBOyqc/yJmOeZiF57VEMLG+EorDDyRk+u3NT/RuWB9YY//b4beymXM8Ir4J+ZUOSU
+         LgGcVsFQ8+XCet/BG9bm9+QWqKDLQN20zqEt8LVQKh/8KyawNA95twMBx8SjcLhN3Y4w
+         2pTHE4l26F4tihLqXMABSbkrBwtwWKVZ7zfno9NVZqdTym9uiGE9lGIk+7ArOeUYl9F1
+         O66afoJ1eWTyJrXDn5HPYNbP8e9d/ddLrWubKNvf/Q5290fkMyyLdBtg5vkVZ4Xu3iop
+         z3Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710753805; x=1711358605;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tB1Pb2tlLh6YNrZFH5WUvlCJhiEA56vnslfaevBVe4A=;
+        b=wjI1c7yZ0EbW4avw8AiZSITpECa4loLcro7p5tMVbde20pEOanWbceR0vUbPzCTzjx
+         JBqkCVYM8gmYNCBSTtPTEZbHUPDj98zOzfDbn/lazxHvgHq2j5Jj4uN1jGFCZkNAxrC6
+         h+uVHZF2l4j2m2qpA4QR7E2oY+IX9OueDF0doKdTaKbz5Jp8IdWXsDzCH3b2yrDcsRhq
+         qrYS6DBypRiDQrVNQnxm/nuVEyVQBNdGEuikFCxP++Y2WCbYiqmZ+a7GOLpxg6am2jyC
+         ufpbr7MQoYq29VTLuQoQD5B4Hcgrgvh81NGwjcoioSe+HBx5ufOKcqJ9sSpxtUqsePeQ
+         iEbA==
+X-Forwarded-Encrypted: i=1; AJvYcCV4AsHgbAXkvLeCwh7rYPyzpCm7zmrQ4lRh+Qwsn1gP1yDTv6QYItZEBCVhMbLfgOZx1UN1yBuhqqAAIp09zTVfFcr86JCeH+I2abTt
+X-Gm-Message-State: AOJu0Yxu3eGkaH35/bP+yqH/A9/qfcZCqr1FrgdimurjOi61dxubpbNO
+	j14HKDWxU+8vnlbDkJ4rS8Tn7K33+TZsdh9iL41dVHanqb1pViRVexb7/S+VHxY=
+X-Google-Smtp-Source: AGHT+IFfKgN3fKN/toMx8ietVToFXwqCqDevicEP6FQmK+6HM9KS7j35zgkmTVEAg2/FjcDuOLtWBw==
+X-Received: by 2002:a17:907:724a:b0:a46:8856:e6bf with SMTP id ds10-20020a170907724a00b00a468856e6bfmr7130014ejc.44.1710753805202;
+        Mon, 18 Mar 2024 02:23:25 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id cu2-20020a170906e00200b00a4660b63502sm4696764ejb.12.2024.03.18.02.23.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Mar 2024 02:23:24 -0700 (PDT)
+Message-ID: <18327bbe-10ad-4b39-ab70-2f74f0d4fb08@linaro.org>
+Date: Mon, 18 Mar 2024 10:23:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <625470f3-b196-43f7-9844-fa1cb6da99f8@fujitsu.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/14] mips: dts: ralink: mt7621: improve DTS style
+Content-Language: en-US
+To: Justin Swartz <justin.swartz@risingedge.co.za>
+Cc: Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+ =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20240316045442.31469-1-justin.swartz@risingedge.co.za>
+ <CAMhs-H9ZO-sitsrASuvsEd+ddwVyHH35gj7yAABTqFNfOCGYYw@mail.gmail.com>
+ <60512ae2-dd73-4cb6-9514-145f946300fc@linaro.org>
+ <5d6c36cb9dd9afda1efb69aa34058517@risingedge.co.za>
+ <adefc3ff-86a5-4af7-8276-73d0e0108901@linaro.org>
+ <26633d73360e43b2c548f49e544472ea@risingedge.co.za>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <26633d73360e43b2c548f49e544472ea@risingedge.co.za>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi,
+On 17/03/2024 16:43, Justin Swartz wrote:
+> On 2024-03-17 17:29, Krzysztof Kozlowski wrote:
+>> On 17/03/2024 16:22, Justin Swartz wrote:
+>>> On 2024-03-17 17:10, Krzysztof Kozlowski wrote:
+>>>> On 16/03/2024 16:49, Sergio Paracuellos wrote:
+>>>>> On Sat, Mar 16, 2024 at 5:54 AM Justin Swartz
+>>>>> <justin.swartz@risingedge.co.za> wrote:
+>>>>>>
+>>>>>> This set of patches was created with the intention of cleaning up
+>>>>>> arch/mips/boot/dts/ralink/mt7621.dtsi so that it is aligned with
+>>>>>> the Devicetree Sources (DTS) Coding Style [1] [2] guide.
+>>>>>>
+>>>>>> [1] Documentation/devicetree/bindings/dts-coding-style.rst
+>>>>>>
+>>>>>> [2] 
+>>>>>> https://docs.kernel.org/devicetree/bindings/dts-coding-style.html
+>>>>>>
+>>>>>> Justin Swartz (14):
+>>>>>>   mips: dts: ralink: mt7621: reorder cpu node attributes
+>>>>>>   mips: dts: ralink: mt7621: reorder cpuintc node attributes
+>>>>>>   mips: dts: ralink: mt7621: reorder mmc regulator attributes
+>>>>>>   mips: dts: ralink: mt7621: reorder sysc node attributes
+>>>>>>   mips: dts: ralink: mt7621: reorder gpio node attributes
+>>>>>>   mips: dts: ralink: mt7621: reorder i2c node attributes
+>>>>>>   mips: dts: ralink: mt7621: reorder spi0 node attributes
+>>>>>>   mips: dts: ralink: mt7621: move pinctrl and sort its children
+>>>>>>   mips: dts: ralink: mt7621: reorder mmc node attributes
+>>>>>>   mips: dts: ralink: mt7621: reorder gic node attributes
+>>>>>>   mips: dts: ralink: mt7621: reorder ethernet node attributes and
+>>>>>> kids
+>>>>>>   mips: dts: ralink: mt7621: reorder pcie node attributes and
+>>>>>> children
+>>>>>>   mips: dts: ralink: mt7621: reorder pci?_phy attributes
+>>>>
+>>>> These are all simple cleanups for the same file. It's one patch, not
+>>>> 15.
+>>>
+>>> I agree these are all simple cleanups.
+>>>
+>>> Even though the cleanup pattern was the same, or very similar,
+>>> for each node affected, the intention was to isolate each change
+>>> to a single node (or a grouping of nodes of that seemed logical
+>>> to me) so that if anyone had any objections, the discussion would
+>>> be easier to follow in subthreads identifiable by patch names (and
+>>
+>> Objections to what? Coding style? Coding style is defined so you either
+>> implement it or not... and even if someone disagrees with one line 
+>> swap,
+>> why it cannot be done like for every contribution: inline?
+> 
+> I had been asked to include empty lines when I had left them out when
+> I had contributed a patch regarding the serial nodes, which resulted in
+> a second version of that patch.
 
-On Mon, Mar 18, 2024 at 06:24:52AM +0000, Zhijian Li (Fujitsu) wrote:
-> ...
-> Sorry for the mistake. I haven't considered callers from other than sysfs.
-> I'm fine to reverting both *two*.
-> 
-> If we are interesting in the sysfs_emit conversion one, i cooked(see the attachment)
-> a patch to revert "firewire: Kill unnecessary buf check in device_attribute.show" only.
-> 
-> (Feel free to ignore it if you have had a local fix.)
-> ...
-> From 96ad3e15b86e2504f3c17fd6a10be48e5ff81cb1 Mon Sep 17 00:00:00 2001
-> From: Li Zhijian <lizhijian@fujitsu.com>
-> Date: Mon, 18 Mar 2024 14:05:32 +0800
-> Subject: [PATCH] Revert "firewire: Kill unnecessary buf check in
->  device_attribute.show"
-> 
-> This reverts commit 4a2b06ca33763b363038d333274e212db6ff0de1.
-> 
-> The previous fix didn't consider callers from other than sysfs. Revert
-> it to fix the NULL dereference
-> 
->  kernel:  ? sysfs_emit+0xb5/0xc0
->  kernel:  show_immediate+0x13f/0x1d0 [firewire_core]
->  kernel:  init_fw_attribute_group+0x81/0x150 [firewire_core]
->  kernel:  create_units+0x119/0x160 [firewire_core]
->  kernel:  fw_device_init+0x1a9/0x330 [firewire_core]
->  kernel:  fw_device_workfn+0x12/0x20 [firewire_core]
->  kernel:  process_one_work+0x16f/0x350
->  kernel:  worker_thread+0x306/0x440
->  kernel:  ? __pfx_worker_thread+0x10/0x10
->  kernel:  kthread+0xf2/0x120
->  kernel:  ? __pfx_kthread+0x10/0x10
->  kernel:  ret_from_fork+0x47/0x70
->  kernel:  ? __pfx_kthread+0x10/0x10
->  kernel:  ret_from_fork_asm+0x1b/0x30
->  kernel:  </TASK>
->  kernel: ---[ end trace 0000000000000000 ]---
->  kernel: ------------[ cut here ]------------
-> 
-> Fixes: 4a2b06ca3376 ("firewire: Kill unnecessary buf check in device_attribute.show")
-> Reported-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
-> ---
->  drivers/firewire/core-device.c | 16 ++++++++++++----
->  1 file changed, 12 insertions(+), 4 deletions(-)
+I don't understand why would that matter. It's expected Linux
+development process to receive comments inline in the patch.
 
-Thanks for your immediate action. I applied it to for-linus branch, and
-will send it in this week with my additional patch for notes. Let's back
-to test, hehe.
+> 
+> 
+>> Organize your patches how described in submitting patches: one per
+>> logical change. Logical change is to reorder all properties in one 
+>> file,
+>> without functional impact.
+> 
+> If I had accidentally deleted or modified an attribute in the process
+> of cleanup, this could have had a functional impact. It's easier to
+
+How is it relevant? But you did not and splitting simple cleanup
+one-line-per-patch is not affecting this. Just because you could make
+mistake it does not affect patch readability at all.
+
+Nothing improved with your patch split.
 
 
-Thanks
+> notice this sort of omission when the wall of text you're confronted
+> with is as small as possible, and not multiple pages long.
 
-Takashi Sakamoto
+We are used to handle some length of patches. Multiple scrolls for
+obvious cleanups are not problems. Why aren't you applying this approach
+to everything? Add a new driver with one function per patch and then
+finally Makefile? It would be bisectable and "easy to read" plus
+absolutely unmanageable.
+
+> 
+> 
+>>> But if there're no objections and it lessens the burden on
+>>> maintainers upstream to have less patches to apply, then I have no
+>>> problem combining them into a single patch.
+>>>
+>>
+>> Yeah, one review response instead of 14 responses... One commit in the
+>> history instead of 14.
+> 
+> I agree that 1 commit vs 14 is better.
+> 
+> But for future reference: is it not enough for the Reviewed-by: trailer
+> to be sent in response to the cover letter of a patch set if a reviewer
+> has looked at the entire set?
+
+Sure, one can. I still need to open and download 14 patches.
+
+
+Best regards,
+Krzysztof
+
