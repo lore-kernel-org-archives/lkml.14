@@ -1,240 +1,208 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62C74F200
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 15:28:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD0E4F881
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 15:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710775714; cv=none; b=ntp14qBuytHGoX558daineCrnAAf1deWLMq/BYJx/zcj6a4hQbkSCSHu0ciL9moSSqUFK0dEm2ze67WgSzbCT8b2U/t0qDTZir7txufS4Vz537fxHb2ftzl4FHcEAACraXg92UztQ6puPVYKScQa0KSqi8B1pITTAtTboCWREbw=
+	t=1710775736; cv=none; b=dCreh0o4IZum2rY0gtz4LLhFx8TnJj4ve0lFYmZxMTcE7gSL5JRmcKnp3ZhHLu7vi5MU5ji1XySflj3T6nVcyAMqTpzkUKjCB3H0K8Fznjpp34jd0gWPnIwaNSVZWyXB35cODPG8Ixm48KSw2M13W/og3vIqDycmE9kusEhcgSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710775714; c=relaxed/simple;
-	bh=cesoN5LrQO2lw73x5MpjoTR1Qb8KG91ktWn+qjMYN+o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=OdyDceATefNJ65MOhJncPHtTHpIBJ2GFsYF22FgUk6/p+bIjANt9nsgrTl8gT19wbAA5OnzHHH80ZXJugyoPdEupFO188gAPN7PXJ+CaYgdM0FEbvfwxKGXbokYyd4+50HxlqoGKWR7i+GNjdo+/+V+eQy2+U/A3QbGDhyeISZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2C3AC433F1;
-	Mon, 18 Mar 2024 15:28:32 +0000 (UTC)
-Date: Mon, 18 Mar 2024 11:30:53 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Alison Schofield <alison.schofield@intel.com>, Beau Belgrave
- <beaub@linux.microsoft.com>, Huang Yiwei <quic_hyiwei@quicinc.com>, John
- Garry <john.g.garry@oracle.com>, Randy Dunlap <rdunlap@infradead.org>,
- Thorsten Blum <thorsten.blum@toblux.com>, Vincent Donnefort
- <vdonnefort@google.com>, linke li <lilinke99@qq.com>
-Subject: [GIT PULL v2] tracing: Updates for v6.9
-Message-ID: <20240318113053.7f87ce7f@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1710775736; c=relaxed/simple;
+	bh=ksLvNZ2Wo837ga0lzZfmm0D62wGihKXV3yyTa57lg/Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gS2xWCvWThNfgcl+hoG2jAryIyyBaV4c7xCt5iIn/kFEczIWWHXRyUXmAo2n0MRgGbphgKkQ/M4DwNBAAx0WFOQldY6RzY/5sHfgqz+gKTuCpUreeeL8XpLs9zmZX7uli7b3PvubTueIsybG/VabsyLVB9ml9qB99VKtGzM2udM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CeD3uX43; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CeD3uX43"
+Message-ID: <7ddf8d4a-5b68-432d-93c1-ff270403cb60@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1710775732;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ogI4Ujs+JUHaqHuKV+R+xjZenZ7/y4llr8moF4vivgo=;
+	b=CeD3uX43HXFbFfXit67H1ug3tLxw14uwn69KdgqJY0uGyDjouwGdY0g31D4a+9TGx7skth
+	GihOEAZaixaQoGqpmLFiL7HsYAiJvTXJyG2BKW2A31ien2JWXzni4LAf4TaKPek/uy1IvJ
+	EyFVfxklW7aSc8nHZ6BV6CioQ9GqzB0=
+Date: Mon, 18 Mar 2024 11:28:49 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] iio: xilinx-ams: Don't include ams_ctrl_channels in
+ scan_mask
+Content-Language: en-US
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+ "O'Griofa, Conall" <conall.ogriofa@amd.com>,
+ "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>
+References: <20240311162800.11074-1-sean.anderson@linux.dev>
+ <20240314154824.37150a54@jic23-huawei>
+ <a9ed95ec-aafe-49f6-93dd-c94c73620de2@linux.dev>
+ <DM6PR12MB4217EAA1049F815F234EE6D18B282@DM6PR12MB4217.namprd12.prod.outlook.com>
+ <3b481539-0c9c-4110-ad03-bd252e80efb0@linux.dev>
+ <20240316133627.5d2bf585@jic23-huawei>
+ <7ee83f15-88fc-4530-84b7-b8ee31663dbc@linux.dev>
+ <20240318152446.00001345@Huawei.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20240318152446.00001345@Huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
+On 3/18/24 11:24, Jonathan Cameron wrote:
+> On Mon, 18 Mar 2024 11:18:43 -0400
+> Sean Anderson <sean.anderson@linux.dev> wrote:
+> 
+>> On 3/16/24 09:36, Jonathan Cameron wrote:
+>> > On Fri, 15 Mar 2024 13:47:40 -0400
+>> > Sean Anderson <sean.anderson@linux.dev> wrote:
+>> >   
+>> >> Hi Conall,
+>> >> 
+>> >> On 3/15/24 09:18, O'Griofa, Conall wrote:  
+>> >> > [AMD Official Use Only - General]
+>> >> > 
+>> >> > Hi,
+>> >> > 
+>> >> > I think there was a fix for this issue applied to the version that was running on 5.15 that didn't seem to make it into the upstream driver.
+>> >> > Please see link for reference https://github.com/Xilinx/linux-xlnx/commit/608426961f16ab149b1b699f1c35f7ad244c0720
+>> >> > 
+>> >> > I think a similar fix to the above patch is may be beneficial?    
+>> >> 
+>> >> These patches look functionally identical to me.  
+>> > 
+>> > Because there are no channels with scan index between
+>> > 22 * 2 + 16 (that patch) and 22 * 3 (your patch) that is
+>> > the effect is indeed the same. But given the issues is the
+>> > 64 limit on maximum scan index, 22 * 3 = 66 is an ugly value
+>> > to compare with.
+>> > 
+>> > I'm still very against the use of scan_index for anything other
+>> > than scan indices (which is why partly how this bug wasn't noticed
+>> > in the first palce). So the check should be scan_index != -1
+>> > and uses of those values elsewhere in the driver should be fixed
+>> > (which looks simple to do from a quick glance at the code).  
+>> 
+>> OK, so how do the sysfs files get named then?
+> 
+> Using channel and channel2 as appropriate (+ index and modified
+> which change the meaning of channel2) - scan_index never had
+> anything to do with sysfs file names - just the value in
+> bufferX/in_xyz_scan_index
 
-Linus,
+I tried to prototype setting scan_index to -1, but when registering channels I saw
 
-[
-  I rebased my entire queue on top of the last pull request you took from
-  me. This made it so that I didn't need to do a merge with commits in that
-  branch. It also included fixes needed for the __assign_str() update.
+[    1.637049] iio iio:device0: tried to double register : in_voltage_raw
+[    1.637245] xilinx-ams ffa50000.ams: Failed to register sysfs interfaces
+[    1.637433] xilinx-ams: probe of ffa50000.ams failed with error -16
 
-  The rebase removed the ring buffer user space mmapping and that will be
-  worked on later to fix the issues you had with it, and hopefully that can
-  go into the next merge window. Preparations for mapping are still there
-  like zeroing out the pages (that should be done anyway) and the snapshot
-  accounting.
+And AIUI .channel is filled in by ams_parse_firmware.
 
-  I added the __string() and __assign_str() checks with fixes to users that
-  had that broken. The second parameter of __assign_str() is no longer used
-  but it is now checked to make sure that its the same as what is passed into
-  __string() so that the next merge window than second parameter can be
-  removed without causing regressions.
-]
+--Sean
 
-Tracing updates for 6.9:
+>> 
+>> --Sean
+>> 
+>> >> 
+>> >> --Sean
+>> >>   
+>> >> >> -----Original Message-----
+>> >> >> From: Sean Anderson <sean.anderson@linux.dev>
+>> >> >> Sent: Thursday, March 14, 2024 5:30 PM
+>> >> >> To: Jonathan Cameron <jic23@kernel.org>
+>> >> >> Cc: linux-iio@vger.kernel.org; O'Griofa, Conall <conall.ogriofa@amd.com>;
+>> >> >> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Lars-Peter
+>> >> >> Clausen <lars@metafoo.de>
+>> >> >> Subject: Re: [PATCH] iio: xilinx-ams: Don't include ams_ctrl_channels in
+>> >> >> scan_mask
+>> >> >>
+>> >> >> Caution: This message originated from an External Source. Use proper caution
+>> >> >> when opening attachments, clicking links, or responding.
+>> >> >>
+>> >> >>
+>> >> >> On 3/14/24 11:48, Jonathan Cameron wrote:    
+>> >> >> > On Mon, 11 Mar 2024 12:28:00 -0400
+>> >> >> > Sean Anderson <sean.anderson@linux.dev> wrote:
+>> >> >> >    
+>> >> >> >> ams_enable_channel_sequence constructs a "scan_mask" for all the PS
+>> >> >> >> and PL channels. This works out fine, since scan_index for these
+>> >> >> >> channels is less than 64. However, it also includes the
+>> >> >> >> ams_ctrl_channels, where scan_index is greater than 64, triggering
+>> >> >> >> undefined behavior. Since we don't need these channels anyway, just    
+>> >> >> exclude them.    
+>> >> >> >>
+>> >> >> >> Fixes: d5c70627a794 ("iio: adc: Add Xilinx AMS driver")
+>> >> >> >> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>    
+>> >> >> >
+>> >> >> > Hi Sean,
+>> >> >> >
+>> >> >> > I'd ideally like to understand why we have channels with such large
+>> >> >> > scan indexes.  Those values should only be used for buffered capture.
+>> >> >> > It feels like they are being abused here.  Can we set them to -1
+>> >> >> > instead and check based on that?
+>> >> >> > For a channel, a scan index of -1 means it can't be captured via the
+>> >> >> > buffered interfaces but only accessed via sysfs reads.
+>> >> >> > I think that's what we have here?    
+>> >> >>
+>> >> >> From what I can tell, none of the channels support buffered reads. And we can't
+>> >> >> naïvely convert the scan_index to -1, since that causes sysfs naming conflicts
+>> >> >> (not to mention the compatibility break).
+>> >> >>    
+>> >> >> >
+>> >> >> > I just feel like if we leave these as things stand, we will get bitten
+>> >> >> > by similar bugs in the future.  At least with -1 it should be obvious why!    
+>> >> >>
+>> >> >> There are just as likely to be bugs confusing the PL/PS subdevices...
+>> >> >>
+>> >> >> FWIW I had no trouble identifying the channels involved with this bug.
+>> >> >>
+>> >> >> --Sean
+>> >> >>    
+>> >> >> > Jonathan
+>> >> >> >
+>> >> >> >    
+>> >> >> >> ---
+>> >> >> >>
+>> >> >> >>  drivers/iio/adc/xilinx-ams.c | 8 ++++++--
+>> >> >> >>  1 file changed, 6 insertions(+), 2 deletions(-)
+>> >> >> >>
+>> >> >> >> diff --git a/drivers/iio/adc/xilinx-ams.c
+>> >> >> >> b/drivers/iio/adc/xilinx-ams.c index a55396c1f8b2..4de7ce598e4d
+>> >> >> >> 100644
+>> >> >> >> --- a/drivers/iio/adc/xilinx-ams.c
+>> >> >> >> +++ b/drivers/iio/adc/xilinx-ams.c
+>> >> >> >> @@ -414,8 +414,12 @@ static void ams_enable_channel_sequence(struct
+>> >> >> >> iio_dev *indio_dev)
+>> >> >> >>
+>> >> >> >>      /* Run calibration of PS & PL as part of the sequence */
+>> >> >> >>      scan_mask = BIT(0) | BIT(AMS_PS_SEQ_MAX);
+>> >> >> >> -    for (i = 0; i < indio_dev->num_channels; i++)
+>> >> >> >> -            scan_mask |= BIT_ULL(indio_dev->channels[i].scan_index);
+>> >> >> >> +    for (i = 0; i < indio_dev->num_channels; i++) {
+>> >> >> >> +            const struct iio_chan_spec *chan =
+>> >> >> >> + &indio_dev->channels[i];
+>> >> >> >> +
+>> >> >> >> +            if (chan->scan_index < AMS_CTRL_SEQ_BASE)
+>> >> >> >> +                    scan_mask |= BIT_ULL(chan->scan_index);
+>> >> >> >> +    }
+>> >> >> >>
+>> >> >> >>      if (ams->ps_base) {
+>> >> >> >>              /* put sysmon in a soft reset to change the sequence */    
+>> >> >> >    
+>> >>   
+>> >   
+>> 
+>> 
+> 
 
-Main user visible change:
-
-- User events can now have "multi formats"
-
-  The current user events have a single format. If another event is created
-  with a different format, it will fail to be created. That is, once an
-  event name is used, it cannot be used again with a different format. This
-  can cause issues if a library is using an event and updates its format.
-  An application using the older format will prevent an application using
-  the new library from registering its event.
-
-  A task could also DOS another application if it knows the event names, and
-  it creates events with different formats.
-
-  The multi-format event is in a different name space from the single
-  format. Both the event name and its format are the unique identifier.
-  This will allow two different applications to use the same user event name
-  but with different payloads.
-
-- Added support to have ftrace_dump_on_oops dump out instances and
-  not just the main top level tracing buffer.
-
-Other changes:
-
-- Add eventfs_root_inode
-
-  Only the root inode has a dentry that is static (never goes away) and
-  stores it upon creation. There's no reason that the thousands of other
-  eventfs inodes should have a pointer that never gets set in its
-  descriptor. Create a eventfs_root_inode desciptor that has a eventfs_inode
-  descriptor and a dentry pointer, and only the root inode will use this.
-
-- Added WARN_ON()s in eventfs
-
-  There's some conditionals remaining in eventfs that should never be hit,
-  but instead of removing them, add WARN_ON() around them to make sure that
-  they are never hit.
-
-- Have saved_cmdlines allocation also include the map_cmdline_to_pid array
-
-  The saved_cmdlines structure allocates a large amount of data to hold its
-  mappings. Within it, it has three arrays. Two are already apart of it:
-  map_pid_to_cmdline[] and saved_cmdlines[]. More memory can be saved by
-  also including the map_cmdline_to_pid[] array as well.
-
-- Restructure __string() and __assign_str() macros used in TRACE_EVENT().
-
-  Dynamic strings in TRACE_EVENT() are declared with:
-
-      __string(name, source)
-
-  And assigned with:
-
-     __assign_str(name, source)
-
-  In the tracepoint callback of the event, the __string() is used to get the
-  size needed to allocate on the ring buffer and __assign_str() is used to
-  copy the string into the ring buffer. There's a helper structure that is
-  created in the TRACE_EVENT() macro logic that will hold the string length
-  and its position in the ring buffer which is created by __string().
-
-  There are several trace events that have a function to create the string
-  to save. This function is executed twice. Once for __string() and again
-  for __assign_str(). There's no reason for this. The helper structure could
-  also save the string it used in __string() and simply copy that into
-  __assign_str() (it also already has its length).
-
-  By using the structure to store the source string for the assignment, it
-  means that the second argument to __assign_str() is no longer needed.
-
-  It will be removed in the next merge window, but for now add a warning if
-  the source string given to __string() is different than the source string
-  given to __assign_str(), as the source to __assign_str() isn't even used
-  and will be going away.
-
-- Added checks to make sure that the source of __string() is also the
-  source of __assign_str() so that it can be safely removed in the next
-  merge window.
-
-  Included fixes that the above check found.
-
-- Other minor clean ups and fixes
-
-
-Please pull the latest trace-v6.9-2 tree, which can be found at:
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-trace-v6.9-2
-
-Tag SHA1: f40626f0ff0f9241d1d565a355c3375c8a007c69
-Head SHA1: 7604256cecef34a82333d9f78262d3180f4eb525
-
-
-Alison Schofield (1):
-      cxl/trace: Properly initialize cxl_poison region name
-
-Beau Belgrave (4):
-      tracing/user_events: Prepare find/delete for same name events
-      tracing/user_events: Introduce multi-format events
-      selftests/user_events: Test multi-format events
-      tracing/user_events: Document multi-format flag
-
-Huang Yiwei (1):
-      tracing: Support to dump instance traces by ftrace_dump_on_oops
-
-John Garry (1):
-      tracing: Use init_utsname()->release
-
-Randy Dunlap (1):
-      ftrace: Fix most kernel-doc warnings
-
-Steven Rostedt (Google) (22):
-      eventfs: Add WARN_ON_ONCE() to checks in eventfs_root_lookup()
-      eventfs: Create eventfs_root_inode to store dentry
-      tracing: Have saved_cmdlines arrays all in one allocation
-      tracing: Move open coded processing of tgid_map into helper function
-      tracing: Move saved_cmdline code into trace_sched_switch.c
-      ring-buffer: Make wake once of ring_buffer_wait() more robust
-      NFSD: Fix nfsd_clid_class use of __string_len() macro
-      drm/i915: Add missing ; to __assign_str() macros in tracepoint code
-      net: hns3: tracing: fix hclgevf trace event strings
-      tracing: Rework __assign_str() and __string() to not duplicate getting the string
-      tracing: Do not calculate strlen() twice for __string() fields
-      tracing: Use ? : shortcut in trace macros
-      tracing: Use EVENT_NULL_STR macro instead of open coding "(null)"
-      tracing: Fix snapshot counter going between two tracers that use it
-      tracing: Decrement the snapshot if the snapshot trigger fails to register
-      tracing: Remove __assign_str_len()
-      tracing: Add __string_len() example
-      tracing: Add warning if string in __assign_str() does not match __string()
-      tracing: Remove second parameter to __assign_rel_str()
-      tracepoints: Use WARN() and not WARN_ON() for warnings
-      tracing: Use strcmp() in __assign_str() WARN_ON() check
-      tracing: Add __string_src() helper to help compilers not to get confused
-
-Thorsten Blum (1):
-      tracing: Use div64_u64() instead of do_div()
-
-Vincent Donnefort (2):
-      ring-buffer: Zero ring-buffer sub-buffers
-      tracing: Add snapshot refcount
-
-linke li (1):
-      ring-buffer: use READ_ONCE() to read cpu_buffer->commit_page in concurrent environment
-
-----
- Documentation/admin-guide/kernel-parameters.txt    |  26 +-
- Documentation/admin-guide/sysctl/kernel.rst        |  30 +-
- Documentation/trace/user_events.rst                |  27 +-
- drivers/cxl/core/trace.h                           |  14 +-
- drivers/gpu/drm/i915/display/intel_display_trace.h |   6 +-
- .../ethernet/hisilicon/hns3/hns3pf/hclge_trace.h   |   8 +-
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h |   8 +-
- fs/nfsd/trace.h                                    |  10 +-
- fs/tracefs/event_inode.c                           |  70 +-
- fs/tracefs/internal.h                              |   2 -
- include/linux/ftrace.h                             |   4 +-
- include/linux/kernel.h                             |   1 +
- include/linux/trace_events.h                       |   3 +
- include/linux/tracepoint.h                         |   6 +-
- include/trace/events/sunrpc.h                      |  12 +-
- include/trace/stages/stage2_data_offsets.h         |   4 +-
- include/trace/stages/stage5_get_offsets.h          |  25 +-
- include/trace/stages/stage6_event_callback.h       |  29 +-
- include/uapi/linux/user_events.h                   |   6 +-
- kernel/sysctl.c                                    |   4 +-
- kernel/trace/ftrace.c                              |  90 +--
- kernel/trace/ring_buffer.c                         |  45 +-
- kernel/trace/trace.c                               | 768 ++++++---------------
- kernel/trace/trace.h                               |  18 +-
- kernel/trace/trace_benchmark.c                     |   5 +-
- kernel/trace/trace_events_trigger.c                |  63 +-
- kernel/trace/trace_events_user.c                   | 209 ++++--
- kernel/trace/trace_sched_switch.c                  | 515 ++++++++++++++
- kernel/trace/trace_selftest.c                      |   2 +-
- samples/trace_events/trace-events-sample.h         |  18 +-
- tools/testing/selftests/user_events/abi_test.c     | 134 ++++
- 31 files changed, 1363 insertions(+), 799 deletions(-)
----------------------------
