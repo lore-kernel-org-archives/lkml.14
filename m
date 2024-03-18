@@ -1,230 +1,219 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2089.outbound.protection.outlook.com [40.107.102.89])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6F2383A3;
-	Mon, 18 Mar 2024 09:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710755360; cv=fail; b=Kc6ZvtjYdR/S/Y19g1w2m5S7lfXbbO5wJVbVQu7O1lfKHAGAeJF2Q6+mEueU8DoDfvMXFm6wLTiUkzYrJwU60JqfRNcKutCFq6nYsE1Cw4Rlf55iEKoTJ/31Bz0oyo1lNREPQZMIT5xgH/E+pnw/D8nL+2NulbmGcg1OxlbqsCE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710755360; c=relaxed/simple;
-	bh=CfC8Dtdej8Bs2obErQD2thPXyALKckCC+ZpjubXph5k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mftpQCbx4dI1BycdejebCjYtkK3jEaVXycPeZAkpeJIj/MWkEWwJUiSCKJ21JcnANUZ6JsarwfJwQkj303K2XekSeQuiqrkGlDmcXuiwUqw+0XvBQo7pqZUhkgXUcS6veJSb66UvgucaR3/SVR+QrH6s2KxLixnKYYgyuVVRy90=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=P194mdFU; arc=fail smtp.client-ip=40.107.102.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05342D029;
+	Mon, 18 Mar 2024 09:50:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710755459; cv=none; b=NnUS4vbaou9b4HLYbDpG2DgYhsXnzyn0uydd3XoSdj2nVFPmL+UbEhnzmMkiEsdxaq6VCzmLC58xjIwuFIw6rBz2VAZ5Kf97bk63P+aVWG4bE4nYx0J+QZNjvZRDmwueb8myirxfNm1u4Awq0T/QWJ27GFj140+gDWegTUNmalE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710755459; c=relaxed/simple;
+	bh=GtiAsryJiIMLKj1emvBm1jrA0Ny409Z6CRr5ZugckOk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gKqGibSF0WuV4iAjZBe/IOw0OifWRVrtzeQMWM8xcSB0W0tucolz8Dj/gQRE9fz1Heb2BIrl8eDaaRGVwQ3gV4hBoLHmRP8YBCaSyJ0bVOZSpd1WseeoIGmbBV4tisbspdczUAtu0sGAXchali89Vg4M68H/YrJM0y1dpPg7XF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DA9dHlB5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="P194mdFU"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k3xbfMED2D3QOalQx6YzdwduoXcaLzocdTT7Q7TMSxBWMBeTT6Iqr5cMpOTqLQppiGTGWU+lY2rjZv840W+cn8dlm3i8AsOuBXZNnxJrH0RaRT8e/ZW2CbZtxuR8H47sNrBVJcciRHs/UJtUceSSCirqrOAZMPOh3U31YBiHySIwzgiFFEbR31H/J3tksWo/fcpt5jJqbP+0Ml4DxAyE/Uab4tUlv9rESQH7ncPY2RhR8baYDJ2sQSU/cuze54OGzbCAmxnUACINxZeRybvdeTEZa6qAYDvrcEt+BTk8s2ixKZg9X6SD8J3/iN4FzfH3dhr7s4jlSqT4tWkkzwLsdQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1dq3+SeUoyG/XIVatEuBb4Cc9u8W4ZcJ68xS0opsXjc=;
- b=kvbL23WLeVZ1NgqTsCc4i4CtJZnLs/IWSlzYj2AA29/YzG+48KH9KEhMczU/O5bLJaPs+R+hpc8RUi/ju2BvbSy2j908wmXzQYzzkwChEbj9BjVjQ8xHeriz3himwOb1NEjp0acvUXQOCuuYVYUskpn0eum7fc8gapTFynd4SPiBAO9EJX8M28iL9N7eUBj1Y/oUGH7teCFkidmEQ4Lit1S/KZJzB8+skGHxaLS94iroZzJa8ofPthA2HU/VyDLr0PVIFV3j7IgtiOGr5hFo9neSpBU+ixPwP0wOj80OHrQ/FZ8OmU4MRQ1bnYvdqZd8GmgVcldedEkzMLLtmK5R/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1dq3+SeUoyG/XIVatEuBb4Cc9u8W4ZcJ68xS0opsXjc=;
- b=P194mdFUZc8+xQIViHck7z8CP7Q5PhXOerWjG6u+sLGUcRMqIo9HHiqztXszN23PW3h69gUjy/Twb5vF8Jpb7bqhnVvRqveJF+DZA0RRFqnzRAwQoAheCrEBe/OnQmEjsjd8T2RsPn9nur8Og+x/sJ2dErHetNhfrTRhK/2deUs=
-Received: from SN1PR12CA0070.namprd12.prod.outlook.com (2603:10b6:802:20::41)
- by DS7PR12MB6335.namprd12.prod.outlook.com (2603:10b6:8:94::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.27; Mon, 18 Mar
- 2024 09:49:16 +0000
-Received: from SA2PEPF00001506.namprd04.prod.outlook.com
- (2603:10b6:802:20:cafe::e9) by SN1PR12CA0070.outlook.office365.com
- (2603:10b6:802:20::41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.26 via Frontend
- Transport; Mon, 18 Mar 2024 09:49:16 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF00001506.mail.protection.outlook.com (10.167.242.38) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7409.10 via Frontend Transport; Mon, 18 Mar 2024 09:49:15 +0000
-Received: from pyuan-Chachani-VN.amd.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 18 Mar 2024 04:49:13 -0500
-From: Perry Yuan <perry.yuan@amd.com>
-To: <rafael.j.wysocki@intel.com>, <Mario.Limonciello@amd.com>,
-	<viresh.kumar@linaro.org>, <Ray.Huang@amd.com>, <gautham.shenoy@amd.com>,
-	<Borislav.Petkov@amd.com>
-CC: <Alexander.Deucher@amd.com>, <Xinmei.Huang@amd.com>,
-	<Xiaojian.Du@amd.com>, <Li.Meng@amd.com>, <linux-pm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v8 8/8] cpufreq: amd-pstate: Add quirk for the pstate CPPC capabilities missing
-Date: Mon, 18 Mar 2024 17:48:27 +0800
-Message-ID: <b8fc02f3c7ba4515bea4def3b006dab54ecc594d.1710754409.git.perry.yuan@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1710754409.git.perry.yuan@amd.com>
-References: <cover.1710754409.git.perry.yuan@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DA9dHlB5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A03DC433F1;
+	Mon, 18 Mar 2024 09:50:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710755459;
+	bh=GtiAsryJiIMLKj1emvBm1jrA0Ny409Z6CRr5ZugckOk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DA9dHlB5p7ohUneVhqHFIENoif6fuYu7DFC1HDuAjN7aPmSlAd0eV0a28SDFA4NAt
+	 HqR+UiYy3HGL5LJXGIn4oOVNxrDq/DHQUKoLn2k61aJ0fkoUzKNcXcMHpu+9WKxKjp
+	 y+c15lq/8gxstTVx9ckmPTDI/znWLJfB1/r1gL2M1qrwY5nI0bLoiy4+AybuQCCnNI
+	 muLqkWk5MsiyysDSYsfolRQ+aaFHUyoLc+QlvxlTUTANxwYFbXr1/ZyX+1Qd1Rf2m4
+	 AHryrQU71AL+B+h6XK1If5k8odLHWDMtnFJJjQcc7usTvqAuzXFxXY8O2oLa0xXUpH
+	 DkEfIZn5h+OIg==
+Date: Mon, 18 Mar 2024 10:50:42 +0100
+From: Alejandro Colomar <alx@kernel.org>
+To: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+Cc: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>,
+	Paul Moore <paul@paul-moore.com>,
+	"Serge E . Hallyn" <serge@hallyn.com>,
+	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
+	Shervin Oloumi <enlightened@chromium.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH v2 1/2] landlock: Extend documentation for kernel support
+Message-ID: <ZfgOf2dHBVT4WUcp@debian>
+References: <20240227110550.3702236-1-mic@digikod.net>
+ <Zd4OlL1G3t1D3TgC@google.com>
+ <20240307.oxQuab5tho0u@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00001506:EE_|DS7PR12MB6335:EE_
-X-MS-Office365-Filtering-Correlation-Id: bc8e6009-2341-47de-40ac-08dc4730aca2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	G6YT1YglgkrqZ7KXhL8AvJCu1eGBi2/tyKiyVhKtNvmrZrMaIslAUC6nmPJGeB3KP38u2vcf4b4aT9MjzBTIsSVg7zv0vP/MB6h5s+E6e8PW8er1O1TzMOaM9CX16UXRou3I8CzB2whPlZlV+lcy11CLaic1iJYos7uUl3cFzGbIqk/KMnKlLghhgWzw4X6yQgyCeTPTz9S3WjZWhHYyzInqGlZhBzRDlxsaJ1iBIp2yoAVBIDnsGj+OVng0BYwsnDPXy9vOyMtXqOur9x4H9q2s81Wy19QZWeUAA8VLYNijKavJIxJbctlpz2ivLnE8CJ691ol6qxt3EIk/JsF969MsOnqU6SuTMG2W4BJUxB3sffuQEWegEnxOJikZnuC/eC19AqMOaHIYmvvFbnPNo9LJa2b6uwnl1ebXUBpJvydFTlqBmRcQTrX0d/71iHBuA/k8ser6Z7U5TnrlZP1lwcdIbQ7esXTUfoGe5OAvmpxEpOtF4xsM+I1Cd8fbLxSLHWkoVCa+Imne7rkdDxYSeW7JEtuN5Q8lpsgAMcQUvjwgjrsYLPTrXoD927UzBfObSL41u6sEazOADjHvq5i0O3e03vHyvR30y1gUvQ2nxlicMkgOfwYyg1yuJYB2eZccWfuuIJmtyhzNOM4ocAOjW5VFhg+nPzgoR1tqaC3HEn1EjIQNUF2Cu6UyR63dIhJmyZ52uMYTQdv/WnVsgRHowZrxFm1oxKzZqdN8EDeZ4VNnTLapzMimBBR/GXKoSjmj
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(376005)(82310400014)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2024 09:49:15.9459
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc8e6009-2341-47de-40ac-08dc4730aca2
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00001506.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6335
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="t2wrf6PLaMqwtsDi"
+Content-Disposition: inline
+In-Reply-To: <20240307.oxQuab5tho0u@digikod.net>
 
-Add quirks table to get CPPC capabilities issue fixed by providing
-correct perf or frequency values while driver loading.
 
-If CPPC capabilities are not defined in the ACPI tables or wrongly
-defined by platform firmware, it needs to use quick to get those
-issues fixed with correct workaround values to make pstate driver
-can be loaded even though there are CPPC capabilities errors.
+--t2wrf6PLaMqwtsDi
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 18 Mar 2024 10:50:42 +0100
+From: Alejandro Colomar <alx@kernel.org>
+To: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+Cc: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>,
+	Paul Moore <paul@paul-moore.com>,
+	"Serge E . Hallyn" <serge@hallyn.com>,
+	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
+	Shervin Oloumi <enlightened@chromium.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH v2 1/2] landlock: Extend documentation for kernel support
 
-The workaround will match the broken BIOS which lack of CPPC capabilities
-nominal_freq and lowest_freq definition in the ACPI table.
+Hi Micka=C3=ABl, G=C3=BCnther,
 
-$ cat /sys/devices/system/cpu/cpu0/acpi_cppc/lowest_freq
-0
-$ cat /sys/devices/system/cpu/cpu0/acpi_cppc/nominal_freq
-0
+Sorry for the delay!
 
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
-Signed-off-by: Perry Yuan <perry.yuan@amd.com>
----
- drivers/cpufreq/amd-pstate.c | 53 ++++++++++++++++++++++++++++++++++--
- include/linux/amd-pstate.h   |  6 ++++
- 2 files changed, 57 insertions(+), 2 deletions(-)
+On Thu, Mar 07, 2024 at 11:21:57AM +0100, Micka=C3=ABl Sala=C3=BCn wrote:
+> CCing Alejandro
+>=20
+> On Tue, Feb 27, 2024 at 05:32:20PM +0100, G=C3=BCnther Noack wrote:
+> > On Tue, Feb 27, 2024 at 12:05:49PM +0100, Micka=C3=ABl Sala=C3=BCn wrot=
+e:
+> > > Extend the kernel support section with one subsection for build time
+> > > configuration and another for boot time configuration.
+> > >=20
+> > > Extend the boot time subsection with a concrete example.
+> > >=20
+> > > Update the journalctl command to include the boot option.
+> > >=20
+> > > Cc: G=C3=BCnther Noack <gnoack@google.com>
+> > > Cc: Kees Cook <keescook@chromium.org>
+> > > Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
+> > > ---
+> > >=20
+> > > Changes since v1:
+> > > * New patch, suggested by Kees Cook.
+> > > ---
+> > >  Documentation/userspace-api/landlock.rst | 57 +++++++++++++++++++++-=
+--
+> > >  1 file changed, 51 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-index ec049b62b366..59a2db225d98 100644
---- a/drivers/cpufreq/amd-pstate.c
-+++ b/drivers/cpufreq/amd-pstate.c
-@@ -67,6 +67,7 @@ static struct cpufreq_driver amd_pstate_epp_driver;
- static int cppc_state = AMD_PSTATE_UNDEFINED;
- static bool cppc_enabled;
- static bool amd_pstate_prefcore = true;
-+static struct quirk_entry *quirks;
- 
- /*
-  * AMD Energy Preference Performance (EPP)
-@@ -111,6 +112,41 @@ static unsigned int epp_values[] = {
- 
- typedef int (*cppc_mode_transition_fn)(int);
- 
-+static struct quirk_entry quirk_amd_7k62 = {
-+	.nominal_freq = 2600,
-+	.lowest_freq = 550,
-+};
-+
-+static int __init dmi_matched_7k62_bios_bug(const struct dmi_system_id *dmi)
-+{
-+	/**
-+	 * match the broken bios for family 17h processor support CPPC V2
-+	 * broken BIOS lack of nominal_freq and lowest_freq capabilities
-+	 * definition in ACPI tables
-+	 */
-+	if (boot_cpu_has(X86_FEATURE_ZEN2)) {
-+		quirks = dmi->driver_data;
-+		pr_info("Overriding nominal and lowest frequencies for %s\n", dmi->ident);
-+		return 1;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct dmi_system_id amd_pstate_quirks_table[] __initconst = {
-+	{
-+		.callback = dmi_matched_7k62_bios_bug,
-+		.ident = "AMD EPYC 7K62",
-+		.matches = {
-+			DMI_MATCH(DMI_BIOS_VERSION, "5.14"),
-+			DMI_MATCH(DMI_BIOS_RELEASE, "12/12/2019"),
-+		},
-+		.driver_data = &quirk_amd_7k62,
-+	},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(dmi, amd_pstate_quirks_table);
-+
- static inline int get_mode_idx_from_str(const char *str, size_t size)
- {
- 	int i;
-@@ -812,8 +848,16 @@ static int amd_pstate_init_freq(struct amd_cpudata *cpudata)
- 	if (ret)
- 		return ret;
- 
--	min_freq = cppc_perf.lowest_freq * 1000;
--	nominal_freq = cppc_perf.nominal_freq * 1000;
-+	if (quirks && quirks->lowest_freq)
-+		min_freq = quirks->lowest_freq * 1000;
-+	else
-+		min_freq = cppc_perf.lowest_freq * 1000;
-+
-+	if (quirks && quirks->nominal_freq)
-+		nominal_freq = quirks->nominal_freq * 1000;
-+	else
-+		nominal_freq = cppc_perf.nominal_freq * 1000;
-+
- 	nominal_perf = READ_ONCE(cpudata->nominal_perf);
- 
- 	highest_perf = READ_ONCE(cpudata->highest_perf);
-@@ -1662,6 +1706,11 @@ static int __init amd_pstate_init(void)
- 	if (cpufreq_get_current_driver())
- 		return -EEXIST;
- 
-+	quirks = NULL;
-+
-+	/* check if this machine need CPPC quirks */
-+	dmi_check_system(amd_pstate_quirks_table);
-+
- 	switch (cppc_state) {
- 	case AMD_PSTATE_UNDEFINED:
- 		/* Disable on the following configs by default:
-diff --git a/include/linux/amd-pstate.h b/include/linux/amd-pstate.h
-index ab7e82533718..6b832153a126 100644
---- a/include/linux/amd-pstate.h
-+++ b/include/linux/amd-pstate.h
-@@ -128,4 +128,10 @@ static const char * const amd_pstate_mode_string[] = {
- 	[AMD_PSTATE_GUIDED]      = "guided",
- 	NULL,
- };
-+
-+struct quirk_entry {
-+	u32 nominal_freq;
-+	u32 lowest_freq;
-+};
-+
- #endif /* _LINUX_AMD_PSTATE_H */
--- 
-2.34.1
+[...]
 
+> > > +
+> > > +  lsm=3Dlandlock,lockdown,yama,integrity,apparmor
+> > > +
+> > > +After a reboot, we can check that Landlock is up and running by look=
+ing at
+> > > +kernel logs:
+> > > +
+> > > +.. code-block:: console
+> > > +
+> > > +    # dmesg | grep landlock || journalctl -kb -g landlock
+> > > +    [    0.000000] Command line: [...] lsm=3Dlandlock,lockdown,yama,=
+integrity,apparmor
+> > > +    [    0.000000] Kernel command line: [...] lsm=3Dlandlock,lockdow=
+n,yama,integrity,apparmor
+> > > +    [    0.000000] LSM: initializing lsm=3Dlockdown,capability,landl=
+ock,yama,integrity,apparmor
+> > > +    [    0.000000] landlock: Up and running.
+> > > +
+> > > +Note that according to the built time kernel configuration,
+> >=20
+> > s/built time/build time/
+> >                  ^
+>=20
+> OK
+
+Here, this should actually be "build-time" since it works as an
+adjective.
+
+>=20
+> >=20
+> > It feels like the phrase "according to" could be slightly more specific=
+ here.
+> >=20
+> > To paraphrase Alejandro Colomar, "Note that" is usually redundant.
+> > https://lore.kernel.org/all/0aafcdd6-4ac7-8501-c607-9a24a98597d7@gmail.=
+com/
+> >=20
+> > I'd suggest:
+> >=20
+> >   The kernel may be configured at build time to always load the ``lockd=
+own`` and
+> >   ``capability`` LSMs.  In that case, these LSMs will appear at the beg=
+inning of
+> >   the ``LSM: initializing`` log line as well, even if they are not conf=
+igured in
+> >   the boot loader.
+
+LGTM
+
+>=20
+> OK, I integrated your suggestion.  I guess `capability` is not really
+> considered an LSM but it would be too confusing and out of scope for an
+> user documentation to explain that.
+>=20
+> >=20
+> > > +``lockdown,capability,`` may always stay at the beginning of the ``L=
+SM:
+> > > +initializing lsm=3D`` list even if they are not configured with the =
+bootloader,
+> >=20
+> > Nit: The man pages spell this in two words as "boot loader".
+>=20
+> OK, I'll use "boot loader" too.
+>=20
+> >=20
+> >=20
+> > > +which is OK.
+> > > +
+> > > +Network support
+> > > +---------------
+> > > +
+> > >  To be able to explicitly allow TCP operations (e.g., adding a networ=
+k rule with
+> > >  ``LANDLOCK_ACCESS_NET_BIND_TCP``), the kernel must support TCP
+> > >  (``CONFIG_INET=3Dy``).  Otherwise, sys_landlock_add_rule() returns an
+> > >=20
+> > > base-commit: b4007fd27206c478a4b76e299bddf4a71787f520
+> > > --=20
+> > > 2.44.0
+> > >=20
+> >=20
+> > Reviewed-by: G=C3=BCnther Noack <gnoack@google.com>
+>=20
+> Thanks!
+
+Reviewed-by: Alejandro Colomar <alx@kernel.org>
+
+Have a lovely day!
+Alex
+
+--=20
+<https://www.alejandro-colomar.es/>
+Looking for a remote C programming job at the moment.
+
+--t2wrf6PLaMqwtsDi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmX4DnIACgkQnowa+77/
+2zJdTA//d7J8aVihMiGfZiCLI9GhosQmnzKqxH6nxyShkAcHLDoJYZfAPDpXfqwM
+DlQAXbMmO+WWQrBXMQ97vYvNE4g6ldl53CAb5X2R96KBhR8vXToXkm/DfvxIeeEF
+Gc+B20PgyRtWqs1fWwZ6kBpIOEv4vhi2+KSky1FQUmTp7tUQXUNd8IaB8/8pXxzY
+YP04T18MMZ8qOMVnC4PnfJm2gij39i45YG7m3OT6hiFwh+AztlK3fFAZdIBM1X1O
+HTq36UG3E2Zog6kE7SjIUeRXcN+GG/9XraeQkyjBuiAR+4EmA9Z6fOcz41j9pu7w
+1fGpZ2i/19wTRkyAvzMZGjVUrCcItur/dkGuXAfzEvuuqsgLuLcabKqvz3EbLTme
++DBSaB+Q9FIx3ema9i/X1k098GLgDrlwS755Q2whV2LnUXfhor2r+OT22kDVedby
+xpxdkOWTTkBjwsnApw0QVw75xEh+ozGmVhfqi8sSwwZ5NS3I3EzAEVNjMOJJvVZS
+UUbooDUYC1YUuBDlhZfWl3HcSPFseBx/BT9YBGs9qq30dGC2Rv8LGmxSXRRo4zYJ
++cw9OJ9iCyogF9M4wcRK8WgzCVQ3Al6LlyAS42D+WiBJcmKXS+pFRzodb+HwtxBG
+X3G5U8RdRDbVhz/YaNx1Q9IZ0A4CW6WcYi5/G45RvN8LPH4M42o=
+=XEON
+-----END PGP SIGNATURE-----
+
+--t2wrf6PLaMqwtsDi--
