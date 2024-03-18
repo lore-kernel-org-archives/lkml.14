@@ -1,54 +1,54 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E207B5F875
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 23:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8FC5FBA5
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 23:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710804842; cv=none; b=QfkEeNzu8uEi58LMQi/V536VlNv1s9Jhv605DXVA0qeVxc3efDU+vYdVuxINdTkZ2GWN6aapmXWfgr7Z01CaJP2IhmlIYsE0NWe5hjheyzspbG4Mv0WwSFjsjdthc8AeVVphzCMrfLSu1haMD6e58gTIajO+xXubCU2BLzFt1Q0=
+	t=1710804844; cv=none; b=GV8fR78XjpT6zHtvYyvkPbE5LVoEU6xZB+OYlpu2frsPJhhSlxkT2JnFjahN5Lt1uHAbEDTxjL9bBsG/FEIKj8t6Y5ZsTSxqeWouRxn1U98wkL/cYvwLJPuaKEao9dDF8h50ETOdHwELK1kZR3a0/PV9pU1L26UyLQa9psjhytc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710804842; c=relaxed/simple;
-	bh=yvPRXzIIKDAIfgevV8qF3eGwbbk94yX5qOmDDJLLpbQ=;
+	s=arc-20240116; t=1710804844; c=relaxed/simple;
+	bh=/h8SqmURALLDyuGUX7H2nBueG9nOdv0SX3aEOGmrKSU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=djgnApkOofDeCuiyfqqGdm7MXt83Qrwv/oA50mC4v9fYumOo294p24HOic4hiLg24v63tZ07j/0M/1Hg2xV0SlojG977KLkI6VLR/dBDTg7YZe1Ioi1C1PujpgwvDKHcIRSAKJ7sHynJ0fzZfiu71t84RdJ++qY0VKRfV0M5skE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H7KUZRvx; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=ZKMTRUzXDkFOYaIPaKPnvQpSbdvZyWhOQGhxqvt7kDzhlXaDeKInPFRG0gm1a2OqnIDQiJ/xPLsAQ8FwYJMlTQ730l2L4D20DgpPYCHMIQ2KeSmW1QBYqWpQE5u6dpmx8V9giFUPJRm+6cC7AxN/XRIAU8R/FVwv8lYjgIO8rAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZSwnzP6j; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H7KUZRvx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZSwnzP6j"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710804838;
+	s=mimecast20190719; t=1710804840;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nCN1VFqRBOaII0g8pJNxNRo8ssZe/H2Y1D/pGPO3lwk=;
-	b=H7KUZRvxNNrGTvMR9z5BQbB0F/AfrmMPBgUlDtuO3rtvXa/lC9xQM0eBvIYPhQXbyy1G+Q
-	q6Hjz4k/T7DtMSvZZTAALpmpEGPGHQ1rzCUe8LNjm5r3aKH7yD/eTp6LhzzWIXDnOlCCwk
-	VdEiPmFAcPKuyV2BC+B6WUF/Wn56caU=
+	bh=3akqZgNcQZFd1TqSeRZMm8OcjnakqT/fyGcLLrf83Kc=;
+	b=ZSwnzP6jMADZP2dbyG10DTjKEPzBGvAZROEpTaIjzR1zJ0LLQ2AwOwVdmLUyNL+sUbcfKG
+	6z6vyvosG3DrxAerGG993zss49kBbT0CD1t8sUF/wDVNICDa66p4BIWHtGqVMpT8Uh4DQa
+	Omo12IYFi1+hEVq+N0gdxhrYiGf3RMo=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-375-4t9h6jgkPzSNAEaEQsLyzQ-1; Mon, 18 Mar 2024 19:33:57 -0400
-X-MC-Unique: 4t9h6jgkPzSNAEaEQsLyzQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+ us-mta-12-7FSHSY0bP1OxNxIsfqICHA-1; Mon, 18 Mar 2024 19:33:55 -0400
+X-MC-Unique: 7FSHSY0bP1OxNxIsfqICHA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id ABF77101A56C;
-	Mon, 18 Mar 2024 23:33:56 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6B45885A58C;
+	Mon, 18 Mar 2024 23:33:55 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 8594C1C060A4;
-	Mon, 18 Mar 2024 23:33:56 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 44BF11121312;
+	Mon, 18 Mar 2024 23:33:55 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
 Cc: michael.roth@amd.com,
 	isaku.yamahata@intel.com,
 	seanjc@google.com
-Subject: [PATCH v4 14/15] selftests: kvm: add tests for KVM_SEV_INIT2
-Date: Mon, 18 Mar 2024 19:33:51 -0400
-Message-ID: <20240318233352.2728327-15-pbonzini@redhat.com>
+Subject: [PATCH v4 08/15] KVM: x86: Add supported_vm_types to kvm_caps
+Date: Mon, 18 Mar 2024 19:33:45 -0400
+Message-ID: <20240318233352.2728327-9-pbonzini@redhat.com>
 In-Reply-To: <20240318233352.2728327-1-pbonzini@redhat.com>
 References: <20240318233352.2728327-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -59,248 +59,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
+This simplifies the implementation of KVM_CHECK_EXTENSION(KVM_CAP_VM_TYPES),
+and also allows the vendor module to specify which VM types are supported.
+
+Suggested-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- tools/testing/selftests/kvm/Makefile          |   1 +
- .../selftests/kvm/include/kvm_util_base.h     |   6 +-
- .../selftests/kvm/set_memory_region_test.c    |   8 +-
- .../selftests/kvm/x86_64/sev_init2_tests.c    | 149 ++++++++++++++++++
- 4 files changed, 156 insertions(+), 8 deletions(-)
- create mode 100644 tools/testing/selftests/kvm/x86_64/sev_init2_tests.c
+ arch/x86/kvm/x86.c | 12 ++++++------
+ arch/x86/kvm/x86.h |  2 ++
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index 741c7dc16afc..871e2de3eb05 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -120,6 +120,7 @@ TEST_GEN_PROGS_x86_64 += x86_64/tsc_msrs_test
- TEST_GEN_PROGS_x86_64 += x86_64/vmx_pmu_caps_test
- TEST_GEN_PROGS_x86_64 += x86_64/xen_shinfo_test
- TEST_GEN_PROGS_x86_64 += x86_64/xen_vmcall_test
-+TEST_GEN_PROGS_x86_64 += x86_64/sev_init2_tests
- TEST_GEN_PROGS_x86_64 += x86_64/sev_migrate_tests
- TEST_GEN_PROGS_x86_64 += x86_64/sev_smoke_test
- TEST_GEN_PROGS_x86_64 += x86_64/amx_test
-diff --git a/tools/testing/selftests/kvm/include/kvm_util_base.h b/tools/testing/selftests/kvm/include/kvm_util_base.h
-index 3e0db283a46a..7c06ceb36643 100644
---- a/tools/testing/selftests/kvm/include/kvm_util_base.h
-+++ b/tools/testing/selftests/kvm/include/kvm_util_base.h
-@@ -890,17 +890,15 @@ static inline struct kvm_vm *vm_create_barebones(void)
- 	return ____vm_create(VM_SHAPE_DEFAULT);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 98b7979b4698..8c56bcf3feb7 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -94,6 +94,7 @@
+ 
+ struct kvm_caps kvm_caps __read_mostly = {
+ 	.supported_mce_cap = MCG_CTL_P | MCG_SER_P,
++	.supported_vm_types = BIT(KVM_X86_DEFAULT_VM),
+ };
+ EXPORT_SYMBOL_GPL(kvm_caps);
+ 
+@@ -4629,9 +4630,7 @@ static int kvm_ioctl_get_supported_hv_cpuid(struct kvm_vcpu *vcpu,
+ 
+ static bool kvm_is_vm_type_supported(unsigned long type)
+ {
+-	return type == KVM_X86_DEFAULT_VM ||
+-	       (type == KVM_X86_SW_PROTECTED_VM &&
+-		IS_ENABLED(CONFIG_KVM_SW_PROTECTED_VM) && tdp_mmu_enabled);
++	return type < 32 && (kvm_caps.supported_vm_types & BIT(type));
  }
  
--#ifdef __x86_64__
--static inline struct kvm_vm *vm_create_barebones_protected_vm(void)
-+static inline struct kvm_vm *vm_create_barebones_type(unsigned long type)
- {
- 	const struct vm_shape shape = {
- 		.mode = VM_MODE_DEFAULT,
--		.type = KVM_X86_SW_PROTECTED_VM,
-+		.type = type,
- 	};
+ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+@@ -4832,9 +4831,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 		r = kvm_caps.has_notify_vmexit;
+ 		break;
+ 	case KVM_CAP_VM_TYPES:
+-		r = BIT(KVM_X86_DEFAULT_VM);
+-		if (kvm_is_vm_type_supported(KVM_X86_SW_PROTECTED_VM))
+-			r |= BIT(KVM_X86_SW_PROTECTED_VM);
++		r = kvm_caps.supported_vm_types;
+ 		break;
+ 	default:
+ 		break;
+@@ -9829,6 +9826,9 @@ int kvm_x86_vendor_init(struct kvm_x86_init_ops *ops)
  
- 	return ____vm_create(shape);
- }
--#endif
+ 	kvm_register_perf_callbacks(ops->handle_intel_pt_intr);
  
- static inline struct kvm_vm *vm_create(uint32_t nr_runnable_vcpus)
- {
-diff --git a/tools/testing/selftests/kvm/set_memory_region_test.c b/tools/testing/selftests/kvm/set_memory_region_test.c
-index 06b43ed23580..904d58793fc6 100644
---- a/tools/testing/selftests/kvm/set_memory_region_test.c
-+++ b/tools/testing/selftests/kvm/set_memory_region_test.c
-@@ -339,7 +339,7 @@ static void test_invalid_memory_region_flags(void)
++	if (IS_ENABLED(CONFIG_KVM_SW_PROTECTED_VM) && tdp_mmu_enabled)
++		kvm_caps.supported_vm_types |= BIT(KVM_X86_SW_PROTECTED_VM);
++
+ 	if (!kvm_cpu_cap_has(X86_FEATURE_XSAVES))
+ 		kvm_caps.supported_xss = 0;
  
- #ifdef __x86_64__
- 	if (kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SW_PROTECTED_VM))
--		vm = vm_create_barebones_protected_vm();
-+		vm = vm_create_barebones_type(KVM_X86_SW_PROTECTED_VM);
- 	else
- #endif
- 		vm = vm_create_barebones();
-@@ -462,7 +462,7 @@ static void test_add_private_memory_region(void)
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index a8b71803777b..d80a4c6b5a38 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -24,6 +24,8 @@ struct kvm_caps {
+ 	bool has_bus_lock_exit;
+ 	/* notify VM exit supported? */
+ 	bool has_notify_vmexit;
++	/* bit mask of VM types */
++	u32 supported_vm_types;
  
- 	pr_info("Testing ADD of KVM_MEM_GUEST_MEMFD memory regions\n");
- 
--	vm = vm_create_barebones_protected_vm();
-+	vm = vm_create_barebones_type(KVM_X86_SW_PROTECTED_VM);
- 
- 	test_invalid_guest_memfd(vm, vm->kvm_fd, 0, "KVM fd should fail");
- 	test_invalid_guest_memfd(vm, vm->fd, 0, "VM's fd should fail");
-@@ -471,7 +471,7 @@ static void test_add_private_memory_region(void)
- 	test_invalid_guest_memfd(vm, memfd, 0, "Regular memfd() should fail");
- 	close(memfd);
- 
--	vm2 = vm_create_barebones_protected_vm();
-+	vm2 = vm_create_barebones_type(KVM_X86_SW_PROTECTED_VM);
- 	memfd = vm_create_guest_memfd(vm2, MEM_REGION_SIZE, 0);
- 	test_invalid_guest_memfd(vm, memfd, 0, "Other VM's guest_memfd() should fail");
- 
-@@ -499,7 +499,7 @@ static void test_add_overlapping_private_memory_regions(void)
- 
- 	pr_info("Testing ADD of overlapping KVM_MEM_GUEST_MEMFD memory regions\n");
- 
--	vm = vm_create_barebones_protected_vm();
-+	vm = vm_create_barebones_type(KVM_X86_SW_PROTECTED_VM);
- 
- 	memfd = vm_create_guest_memfd(vm, MEM_REGION_SIZE * 4, 0);
- 
-diff --git a/tools/testing/selftests/kvm/x86_64/sev_init2_tests.c b/tools/testing/selftests/kvm/x86_64/sev_init2_tests.c
-new file mode 100644
-index 000000000000..fe55aa5a1b04
---- /dev/null
-+++ b/tools/testing/selftests/kvm/x86_64/sev_init2_tests.c
-@@ -0,0 +1,149 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/kvm.h>
-+#include <linux/psp-sev.h>
-+#include <stdio.h>
-+#include <sys/ioctl.h>
-+#include <stdlib.h>
-+#include <errno.h>
-+#include <pthread.h>
-+
-+#include "test_util.h"
-+#include "kvm_util.h"
-+#include "processor.h"
-+#include "svm_util.h"
-+#include "kselftest.h"
-+
-+#define SVM_SEV_FEAT_DEBUG_SWAP 32u
-+
-+/*
-+ * Some features may have hidden dependencies, or may only work
-+ * for certain VM types.  Err on the side of safety and don't
-+ * expect that all supported features can be passed one by one
-+ * to KVM_SEV_INIT2.
-+ *
-+ * (Well, right now there's only one...)
-+ */
-+#define KNOWN_FEATURES SVM_SEV_FEAT_DEBUG_SWAP
-+
-+int kvm_fd;
-+u64 supported_vmsa_features;
-+bool have_sev_es;
-+
-+static int __sev_ioctl(int vm_fd, int cmd_id, void *data)
-+{
-+	struct kvm_sev_cmd cmd = {
-+		.id = cmd_id,
-+		.data = (uint64_t)data,
-+		.sev_fd = open_sev_dev_path_or_exit(),
-+	};
-+	int ret;
-+
-+	ret = ioctl(vm_fd, KVM_MEMORY_ENCRYPT_OP, &cmd);
-+	TEST_ASSERT(ret < 0 || cmd.error == SEV_RET_SUCCESS,
-+		    "%d failed: fw error: %d\n",
-+		    cmd_id, cmd.error);
-+
-+	return ret;
-+}
-+
-+static void test_init2(unsigned long vm_type, struct kvm_sev_init *init)
-+{
-+	struct kvm_vm *vm;
-+	int ret;
-+
-+	vm = vm_create_barebones_type(vm_type);
-+	ret = __sev_ioctl(vm->fd, KVM_SEV_INIT2, init);
-+	TEST_ASSERT(ret == 0,
-+		    "KVM_SEV_INIT2 return code is %d (expected 0), errno: %d",
-+		    ret, errno);
-+	kvm_vm_free(vm);
-+}
-+
-+static void test_init2_invalid(unsigned long vm_type, struct kvm_sev_init *init, const char *msg)
-+{
-+	struct kvm_vm *vm;
-+	int ret;
-+
-+	vm = vm_create_barebones_type(vm_type);
-+	ret = __sev_ioctl(vm->fd, KVM_SEV_INIT2, init);
-+	TEST_ASSERT(ret == -1 && errno == EINVAL,
-+		    "KVM_SEV_INIT2 should fail, %s.",
-+		    msg);
-+	kvm_vm_free(vm);
-+}
-+
-+void test_vm_types(void)
-+{
-+	test_init2(KVM_X86_SEV_VM, &(struct kvm_sev_init){});
-+
-+	/*
-+	 * TODO: check that unsupported types cannot be created.  Probably
-+	 * a separate selftest.
-+	 */
-+	if (have_sev_es)
-+		test_init2(KVM_X86_SEV_ES_VM, &(struct kvm_sev_init){});
-+
-+	test_init2_invalid(0, &(struct kvm_sev_init){},
-+			   "VM type is KVM_X86_DEFAULT_VM");
-+	if (kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SW_PROTECTED_VM))
-+		test_init2_invalid(KVM_X86_SW_PROTECTED_VM, &(struct kvm_sev_init){},
-+				   "VM type is KVM_X86_SW_PROTECTED_VM");
-+}
-+
-+void test_flags(uint32_t vm_type)
-+{
-+	int i;
-+
-+	for (i = 0; i < 32; i++)
-+		test_init2_invalid(vm_type,
-+			&(struct kvm_sev_init){ .flags = BIT(i) },
-+			"invalid flag");
-+}
-+
-+void test_features(uint32_t vm_type, uint64_t supported_features)
-+{
-+	int i;
-+
-+	for (i = 0; i < 64; i++) {
-+		if (!(supported_features & (1u << i)))
-+			test_init2_invalid(vm_type,
-+				&(struct kvm_sev_init){ .vmsa_features = BIT_ULL(i) },
-+				"unknown feature");
-+		else if (KNOWN_FEATURES & (1u << i))
-+			test_init2(vm_type,
-+				&(struct kvm_sev_init){ .vmsa_features = BIT_ULL(i) });
-+	}
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	int kvm_fd = open_kvm_dev_path_or_exit();
-+	bool have_sev;
-+
-+	TEST_REQUIRE(__kvm_has_device_attr(kvm_fd, 0, KVM_X86_SEV_VMSA_FEATURES) == 0);
-+	kvm_device_attr_get(kvm_fd, 0, KVM_X86_SEV_VMSA_FEATURES, &supported_vmsa_features);
-+
-+	have_sev = kvm_cpu_has(X86_FEATURE_SEV);
-+	TEST_ASSERT(have_sev == !!(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SEV_VM)),
-+		    "sev: KVM_CAP_VM_TYPES (%x) does not match cpuid (checking %x)",
-+		    kvm_check_cap(KVM_CAP_VM_TYPES), 1 << KVM_X86_SEV_VM);
-+
-+	TEST_REQUIRE(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SEV_VM));
-+	have_sev_es = kvm_cpu_has(X86_FEATURE_SEV_ES);
-+
-+	TEST_ASSERT(have_sev_es == !!(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SEV_ES_VM)),
-+		    "sev-es: KVM_CAP_VM_TYPES (%x) does not match cpuid (checking %x)",
-+		    kvm_check_cap(KVM_CAP_VM_TYPES), 1 << KVM_X86_SEV_ES_VM);
-+
-+	test_vm_types();
-+
-+	test_flags(KVM_X86_SEV_VM);
-+	if (have_sev_es)
-+		test_flags(KVM_X86_SEV_ES_VM);
-+
-+	test_features(KVM_X86_SEV_VM, 0);
-+	if (have_sev_es)
-+		test_features(KVM_X86_SEV_ES_VM, supported_vmsa_features);
-+
-+	return 0;
-+}
+ 	u64 supported_mce_cap;
+ 	u64 supported_xcr0;
 -- 
 2.43.0
 
