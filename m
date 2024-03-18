@@ -1,47 +1,47 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753CD1CD07;
-	Mon, 18 Mar 2024 01:27:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24DA717547;
+	Mon, 18 Mar 2024 01:28:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710725276; cv=none; b=QIaFhdtuecS7skmpojejXTusE7xV6+H7voZvfc7IcBxvO6OdKefiRYExbEWeiUiASeROXwIFsbPGbuCJo58wQ27641ZfcPuqx4zR9M3f61cnFvbrvjFvN6aWizU/csHGgywIeYcsJua9CwzwPU9aTEaoW3Bjgp9tf9SsKnB7dSM=
+	t=1710725308; cv=none; b=Ig7npOTDN7bBaPvGrJg3U+IXFLlZMS4bk1Cs7MbPz7Xb7zV3Oon0+hIF1n3CKx0s7UbyaucOW3EKgdlD9QAE4P1VOPuuZhku1ZT0azH3ADmsaamt1ny+/3pRiBt4xlxjDKbEIRsP9jM3MseT6bDWtaWvWq3y3crrQnJnv0b6hj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710725276; c=relaxed/simple;
-	bh=RhB/nWWwoCQMMHLsN2PtqvPB+ZkEomggWeNkRLQBVUc=;
+	s=arc-20240116; t=1710725308; c=relaxed/simple;
+	bh=AlbZN+vGvjXXms1bYQpdPhYbRme9N9s2nuII9UEMaPw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bLsmpKNpUAH6nxdY1qlO3iGcoFHYK5flGqF4I9iAn3jdagxuraBYcExPO1dbB0P3X9baCBzfiXYXLYCwE4KPR5IfG2MEH5gQNxFtLLlat0tio3X6inTqitzNmxWLwAzo+S4m+afjo7mYF6ylwF6i5By0HyGEcmDY5zqxlrNPjx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mAZqwJus; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XuxhDwaDG0LQgwsAESpzCxJ/X5K18m6AFrlhAGUKlKZdzClJvXmcjknFZK33vgIfU3n/IB92u0OoKOC3BD09arYlnWqFV4rEUFdK/RrGR0T1gHIwqExNMCeDV8B+682KZoxxicKMYupKIwFIF2k1nDdGli6NUJw/QhF6EYNsOtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=P+gdu8Dl; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mAZqwJus"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE0F4C433C7;
-	Mon, 18 Mar 2024 01:27:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710725276;
-	bh=RhB/nWWwoCQMMHLsN2PtqvPB+ZkEomggWeNkRLQBVUc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mAZqwJusQJZXb2OJMfT+mDfrdyC8ILUSY2QKpsvTPvP5oVcLiZ9GyhibASy3ausGx
-	 5JHmg3fBSOTc4NkezKfvT82kSECEFp049Z5SpFxh6nbg/natLPSx+uRbgvLJn9T3Rm
-	 AJIctURuGRrhcyszXa/oo5r/qhwp+e49EzTkjq0aPo+IlbR7ATcaKCiENjaAplVGaB
-	 BKZi9HQVhh9mamrTZoWwMWSjwngbgodqh5rXnjSb4scBrNsZr17vogzbxn2/2W5Aow
-	 08qpNcTQeweb+KERctFkLLKDCgS9DTFwqBBIE6OSqZDrsQrgz3QSrS+y/tYxRb0HuA
-	 obxAj+9QY/NNg==
-Date: Sun, 17 Mar 2024 20:27:52 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Thara Gopinath <thara.gopinath@gmail.com>, Amit Kucheria <amitk@kernel.org>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, stable@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] thermal: qcom: lmh: Check for SCM availability at
- probe
-Message-ID: <yes2jztatfs7abss6rt3dlnnifse7xh2klyd44zg2lkngp7mjf@dsmh23oqgbf6>
-References: <20240308-topic-rb1_lmh-v2-0-bac3914b0fe3@linaro.org>
- <20240308-topic-rb1_lmh-v2-2-bac3914b0fe3@linaro.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P+gdu8Dl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=AlbZN+vGvjXXms1bYQpdPhYbRme9N9s2nuII9UEMaPw=; b=P+gdu8DloCxDQmbCwFduCqsjh7
+	cUXUm0JrzyAmH/iCUvCLzbXQL1vI42GHdjWUSsJioOJdlYp7J56aiPT6lVwQUVPvAD9+q5VtfFEVn
+	yWQB/R7SVxDdmTxTW3bzZ6wKM1oUZkK70iv7otN0HHGRPn3UtLReqdYm3830i+ow9DyV/fuIRa7PV
+	VdD6AuZgYZZ1vePAXQYp4+A3qkySLT8jKQNxJm1SE3lzNd9lNklwC6hBcR+h7cTWbiK5GUrSg+6rf
+	XTr+ha1P8O09D/zjnwkcnVVww1Sex3uv0XWYLsPOLlfsCJ4y0yEd0sdCd5nXe43pBFp40brS9+1V9
+	LOVpo9Yw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rm1nb-00000006vAA-3ELB;
+	Mon, 18 Mar 2024 01:28:23 +0000
+Date: Sun, 17 Mar 2024 18:28:23 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, djwong@kernel.org, hch@infradead.org,
+	brauner@kernel.org, david@fromorbit.com, tytso@mit.edu,
+	jack@suse.cz, yi.zhang@huawei.com, chengzhihao1@huawei.com,
+	yukuai3@huawei.com
+Subject: Re: [PATCH v2 02/10] xfs: allow xfs_bmapi_convert_delalloc() to pass
+ NULL seq
+Message-ID: <ZfeYt6zWcX7u1zMG@infradead.org>
+References: <20240315125354.2480344-1-yi.zhang@huaweicloud.com>
+ <20240315125354.2480344-3-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,21 +50,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240308-topic-rb1_lmh-v2-2-bac3914b0fe3@linaro.org>
+In-Reply-To: <20240315125354.2480344-3-yi.zhang@huaweicloud.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Sat, Mar 09, 2024 at 02:15:03PM +0100, Konrad Dybcio wrote:
-> Up until now, the necessary scm availability check has not been
-> performed, leading to possible null pointer dereferences (which did
-> happen for me on RB1).
-> 
-> Fix that.
-> 
-> Fixes: 53bca371cdf7 ("thermal/drivers/qcom: Add support for LMh driver")
-> Cc: <stable@vger.kernel.org>
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+The patch looks good to me:
 
-Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-Regards,
-Bjorn
+But maybe I'd reword the commit message a bit, i.e.:
+
+xfs: make the seq argument to xfs_bmapi_convert_delalloc optional
+
+Allow callers to pass a NULLL seq argument if they don't care about
+the fork sequence number.
