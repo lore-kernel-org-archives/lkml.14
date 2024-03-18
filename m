@@ -1,56 +1,53 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6EA60ECB
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4DB60ECA
 	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 23:34:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710804851; cv=none; b=nKNj1+41QY/2/m2XI2+93DIjPI6iM5WuyzZwi9zpwlG5P1YIVh7r4zheh3PKRPGxgUmBpWx8i40BJTLyhyhDuXT6Z8Sc8Rh9glz4SbBAvGxCgdJIGe+/e0x4jIoLPbnwunMW9xheFUTOKA8O9kxahuzlCeUHWVixeKjBeomhvIA=
+	t=1710804850; cv=none; b=BgYH/V5RYufKuE9Gdm2y9E/22Dt3NWVVJ8aOspkcMqyCH4Q8zLlLQV0QEbWccopv4k104fqZK8z1RQiZMHKm4T8Xnigvg8Ey5JC/TKwtBhk3dz/FTBj8OV4b9EPB2ITP0MCN/thubq9oPq0pghM4AcDeHXrWjjOvj/6IJmKDwSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710804851; c=relaxed/simple;
-	bh=3UZOWxvel2gxNTwrPzBwKutiH6HW6UJXahf+TYTu8Rk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jwoJS213fGdF8ocq8x930t41HUYIMJ0CIgILqel2kdvSRnQZEdwmrJPHweoXJ65Gfs/KFblFWzgVBund/3POYhDZajNZv5N4KItZSiQVEgwK3fO6GWDwz3veEYvjYZhmJJfdj6l10jsTPWSRfvxUJLFpOjY7YgkMO4BhRQeoji0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aPALtLQf; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1710804850; c=relaxed/simple;
+	bh=O8d8bKZo5siR8MieahkhVmdD32+jITrspI0Yw6jg/sg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZGKkfjzZJDpPjMvzpeVODJ1DGwNmIKonrTlVLuDMD0whSPnQEMQ2GqUwxJ36hOsOdXjZ29EFT3BJ1DHdJ8QwuYkdFhHs/d++igaSyYubCtTrhcBTN3uUUVAj8/oPVg6CqL+jFR6gjcll4uLulobsuIR4KYgB67xmq5QN9muYKk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SyQAbhTB; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aPALtLQf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SyQAbhTB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1710804847;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+IyuuUxiGnoaxGNnwqcPQ8aX2JAcsb4DAgIo+w+cUTM=;
-	b=aPALtLQfLWvVMUTCUwXF7F/WEhYqF1yciWGySGYUsF+JhbMylTuMDvWrJLd0Xpc9twuiJy
-	QIw+nJGrWH90uAR0aB/w4iB/4viAXeXgZwOADjUO9UpxQGrK4EDeauqnEUAPccQFtyLTOI
-	xcODa1JUMfydGj6JR2XdpuT50gSLARc=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-644-1cbqT6GUM0qzkcQ9oKbrTg-1; Mon,
- 18 Mar 2024 19:33:54 -0400
-X-MC-Unique: 1cbqT6GUM0qzkcQ9oKbrTg-1
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Df3YFTKjtHSFy1h833T/9wNhgRF6OQfT8JsQ4nzMHO4=;
+	b=SyQAbhTBHa5Q+15iEGMhRUBN2nHO/Z//6ryWqbVnjYjTMOhpKNaSPBBu/DX076sWrSJVm8
+	DpGV3WYLRFzL1w3+7Q1oz3fvfq9qBSN8Uexkeg7KS5lq/dy57y4hvPozwXQV/V+eARMRjh
+	uJ4aB6LhYsc6Mnupq1mXdSFM5V4Bwu4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-470-bokCas9LPf2LDOxss9HlNg-1; Mon, 18 Mar 2024 19:33:54 -0400
+X-MC-Unique: bokCas9LPf2LDOxss9HlNg-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6E1D13C02451;
-	Mon, 18 Mar 2024 23:33:54 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9EAA0811E81;
+	Mon, 18 Mar 2024 23:33:53 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 474331121312;
-	Mon, 18 Mar 2024 23:33:54 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 4AD1B1121312;
+	Mon, 18 Mar 2024 23:33:53 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
 Cc: michael.roth@amd.com,
 	isaku.yamahata@intel.com,
-	seanjc@google.com
-Subject: [PATCH v4 03/15] KVM: x86: use u64_to_user_addr()
-Date: Mon, 18 Mar 2024 19:33:40 -0400
-Message-ID: <20240318233352.2728327-4-pbonzini@redhat.com>
-In-Reply-To: <20240318233352.2728327-1-pbonzini@redhat.com>
-References: <20240318233352.2728327-1-pbonzini@redhat.com>
+	seanjc@google.com,
+	Dave Hansen <dave.hansen@linux.intel.com>
+Subject: [PATCH v4 00/15] KVM: SEV: allow customizing VMSA features
+Date: Mon, 18 Mar 2024 19:33:37 -0400
+Message-ID: <20240318233352.2728327-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,79 +58,135 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-There is no danger to the kernel if 32-bit userspace provides a 64-bit
-value that has the high bits set, but for whatever reason happens to
-resolve to an address that has something mapped there.  KVM uses the
-checked version of get_user() and put_user(), so any faults are caught
-properly.
+[Dave: there is a small arch/x86/kernel/fpu change in patch 9;
+ I am CCing you in the cover letter just for context. - Paolo]
+ 
+The idea that no parameter would ever be necessary when enabling SEV or
+SEV-ES for a VM was decidedly optimistic.  The first source of variability
+that was encountered is the desired set of VMSA features, as that affects
+the measurement of the VM's initial state and cannot be changed
+arbitrarily by the hypervisor.
 
-Suggested-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/x86.c | 24 +++---------------------
- 1 file changed, 3 insertions(+), 21 deletions(-)
+This series adds all the APIs that are needed to customize the features,
+with room for future enhancements:
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 47d9f03b7778..3d2029402513 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -4842,25 +4842,13 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	return r;
- }
- 
--static inline void __user *kvm_get_attr_addr(struct kvm_device_attr *attr)
--{
--	void __user *uaddr = (void __user*)(unsigned long)attr->addr;
--
--	if ((u64)(unsigned long)uaddr != attr->addr)
--		return ERR_PTR_USR(-EFAULT);
--	return uaddr;
--}
--
- static int kvm_x86_dev_get_attr(struct kvm_device_attr *attr)
- {
--	u64 __user *uaddr = kvm_get_attr_addr(attr);
-+	u64 __user *uaddr = u64_to_user_ptr(attr->addr);
- 
- 	if (attr->group)
- 		return -ENXIO;
- 
--	if (IS_ERR(uaddr))
--		return PTR_ERR(uaddr);
--
- 	switch (attr->attr) {
- 	case KVM_X86_XCOMP_GUEST_SUPP:
- 		if (put_user(kvm_caps.supported_xcr0, uaddr))
-@@ -5712,12 +5700,9 @@ static int kvm_arch_tsc_has_attr(struct kvm_vcpu *vcpu,
- static int kvm_arch_tsc_get_attr(struct kvm_vcpu *vcpu,
- 				 struct kvm_device_attr *attr)
- {
--	u64 __user *uaddr = kvm_get_attr_addr(attr);
-+	u64 __user *uaddr = u64_to_user_ptr(attr->addr);
- 	int r;
- 
--	if (IS_ERR(uaddr))
--		return PTR_ERR(uaddr);
--
- 	switch (attr->attr) {
- 	case KVM_VCPU_TSC_OFFSET:
- 		r = -EFAULT;
-@@ -5735,13 +5720,10 @@ static int kvm_arch_tsc_get_attr(struct kvm_vcpu *vcpu,
- static int kvm_arch_tsc_set_attr(struct kvm_vcpu *vcpu,
- 				 struct kvm_device_attr *attr)
- {
--	u64 __user *uaddr = kvm_get_attr_addr(attr);
-+	u64 __user *uaddr = u64_to_user_ptr(attr->addr);
- 	struct kvm *kvm = vcpu->kvm;
- 	int r;
- 
--	if (IS_ERR(uaddr))
--		return PTR_ERR(uaddr);
--
- 	switch (attr->attr) {
- 	case KVM_VCPU_TSC_OFFSET: {
- 		u64 offset, tsc, ns;
+- a new /dev/kvm device attribute to retrieve the set of supported
+  features (right now, only debug swap)
+
+- a new sub-operation for KVM_MEM_ENCRYPT_OP that can take a struct,
+  replacing the existing KVM_SEV_INIT and KVM_SEV_ES_INIT
+
+It then puts the new op to work by including the VMSA features as a field
+of the The existing KVM_SEV_INIT and KVM_SEV_ES_INIT use the full set of
+supported VMSA features for backwards compatibility; but I am considering
+also making them use zero as the feature mask, and will gladly adjust the
+patches if so requested.
+
+In order to avoid creating *two* new KVM_MEM_ENCRYPT_OPs, I decided that
+I could as well make SEV and SEV-ES use VM types.  And then, why not make
+a SEV-ES VM, when created with the new VM type instead of KVM_SEV_ES_INIT,
+reject KVM_GET_REGS/KVM_SET_REGS and friends on the vCPU file descriptor
+once the VMSA has been encrypted...  Which is how the API should have
+always behaved.
+
+Note: despite having the same number of patches as v3, #9 and #15 are new!
+The series is structured as follows:
+
+- patches 1 and 2 change sev.c so that it is compiled only if SEV is enabled
+  in kconfig
+
+- patches 3 to 6 introduce the new device attribute to retrieve supported
+  VMSA features
+
+- patches 7 and 8 introduce new infrastructure for VM types, replacing
+  the similar code in the TDX patches
+
+- patch 9 allows setting the FPU and AVX state prior to encryption of the
+  VMSA
+
+- patches 10 to 12 introduce the new VM types for SEV and
+  SEV-ES, and KVM_SEV_INIT2 as a new sub-operation for KVM_MEM_ENCRYPT_OP.
+
+- patch 13 reenables DebugSwap, now that there is an API that allows doing
+  so without breaking backwards compatibility
+
+- patches 14 and 15 test the new ioctl.
+
+The idea is that SEV SNP will only ever support KVM_SEV_INIT2.  I have
+placed patches for QEMU to support this new API at branch sevinit2 of
+https://gitlab.com/bonzini/qemu.
+
+I haven't fully tested patch 9 and it really deserves a selftest,
+it is a bit tricky though without ucall infrastructure for SEV.
+I will look at it tomorrow.
+
+The series is at branch kvm-coco-queue of kvm.git, and I would like to
+include it in kvm/next as soon as possible after the release of -rc1.
+
+Thanks,
+
+Paolo
+
+v3->v4:
+- moved patches 1 and 5 to separate "fixes" series for 6.9
+- do not conditionalize prototypes for functions that are called by common
+  SVM code
+- rebased on top of SEV selftest infrastructure from 6.9 merge window;
+  include new patch to drop the "subtype" concept
+- rebased on top of SEV-SNP patches from 6.9 merge window
+- rebased on top of patch to disable DebugSwap from 6.8 rc;
+  drop "warn" once SEV_ES_INIT stops enabling VMSA features and
+  finally re-enable DebugSwap
+- simplified logic to return -EINVAL from ioctls
+- also block KVM_GET/SET_FPU for protected-state guests
+- move logic to set kvm_>arch.has_protected_state to svm_vm_init
+- fix "struct struct" in documentation
+
+Paolo Bonzini (14):
+  KVM: SVM: Compile sev.c if and only if CONFIG_KVM_AMD_SEV=y
+  KVM: x86: use u64_to_user_addr()
+  KVM: introduce new vendor op for KVM_GET_DEVICE_ATTR
+  KVM: SEV: publish supported VMSA features
+  KVM: SEV: store VMSA features in kvm_sev_info
+  KVM: x86: add fields to struct kvm_arch for CoCo features
+  KVM: x86: Add supported_vm_types to kvm_caps
+  KVM: SEV: sync FPU and AVX state at LAUNCH_UPDATE_VMSA time
+  KVM: SEV: introduce to_kvm_sev_info
+  KVM: SEV: define VM types for SEV and SEV-ES
+  KVM: SEV: introduce KVM_SEV_INIT2 operation
+  KVM: SEV: allow SEV-ES DebugSwap again
+  selftests: kvm: add tests for KVM_SEV_INIT2
+  selftests: kvm: switch to using KVM_X86_*_VM
+
+Sean Christopherson (1):
+  KVM: SVM: Invert handling of SEV and SEV_ES feature flags
+
+ Documentation/virt/kvm/api.rst                |   2 +
+ .../virt/kvm/x86/amd-memory-encryption.rst    |  52 +++++-
+ arch/x86/include/asm/fpu/api.h                |   3 +
+ arch/x86/include/asm/kvm-x86-ops.h            |   1 +
+ arch/x86/include/asm/kvm_host.h               |   8 +-
+ arch/x86/include/uapi/asm/kvm.h               |  12 ++
+ arch/x86/kernel/fpu/xstate.h                  |   2 -
+ arch/x86/kvm/Makefile                         |   7 +-
+ arch/x86/kvm/cpuid.c                          |   2 +-
+ arch/x86/kvm/svm/sev.c                        | 172 ++++++++++++++----
+ arch/x86/kvm/svm/svm.c                        |  27 ++-
+ arch/x86/kvm/svm/svm.h                        |  43 ++++-
+ arch/x86/kvm/x86.c                            | 170 +++++++++++------
+ arch/x86/kvm/x86.h                            |   2 +
+ tools/testing/selftests/kvm/Makefile          |   1 +
+ .../selftests/kvm/include/kvm_util_base.h     |  11 +-
+ .../selftests/kvm/include/x86_64/processor.h  |   6 -
+ .../selftests/kvm/include/x86_64/sev.h        |  16 +-
+ tools/testing/selftests/kvm/lib/kvm_util.c    |   1 -
+ .../selftests/kvm/lib/x86_64/processor.c      |  14 +-
+ tools/testing/selftests/kvm/lib/x86_64/sev.c  |  30 ++-
+ .../selftests/kvm/set_memory_region_test.c    |   8 +-
+ .../selftests/kvm/x86_64/sev_init2_tests.c    | 149 +++++++++++++++
+ 23 files changed, 569 insertions(+), 170 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/x86_64/sev_init2_tests.c
+
 -- 
 2.43.0
-
 
