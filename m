@@ -1,155 +1,163 @@
-Received: from mx.gpxsee.org (mx.gpxsee.org [37.205.14.76])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 617064F1EB;
-	Mon, 18 Mar 2024 15:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.14.76
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E305D4E1D3
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 15:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710774583; cv=none; b=VJkRHCHxieTuP+mPChrgrR05X7yBbf00fpduBCn68wzQKOFmboeyQDGMjlqeYWd9x3uRxAq5VJFsg2FOqC1gGOZOzwNFYt8ZSSMgfquU4Uz6QCEP0zeARQ4z7JJyM98IA7SU+XcLYQ8P/td4y4vRprXKb9yEK7uMv7C6ooj1MNg=
+	t=1710774626; cv=none; b=sQUcSXnHK4RY0rfdqPMRIMQ0ootR8T2zdpsh4nBCAwsgs4rngOrosCCGJ/CfLHWP70sleir5vOn7kfmon1SOZM6Zj4DwBzeL4pB0AOqpbdkaIxQzA11wrz3VzcH7Ar5+PtzM+QleEsE1Um/cttk6wAhkFVL7047pGFbM9rSKWcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710774583; c=relaxed/simple;
-	bh=FipI5WsNECJeOw6c7DF39GapkTYB24oPG38+PzmCmUo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=o13HcvXzzJwBgIGpJlv07tDTrT47GgK/2mzOe8+TJrHEf4uRF8WLH00cmrC95GE7xrBXnJFEkF8vQ3hXZX/FVukGjj7C3fxZZRMGm/fCrB7SvQ2+SoSBKIZ6RDt0KH5I58eA5EP+ePEISfcgSl8HtzBgIScpZkfweK1X7h2q6kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gpxsee.org; spf=pass smtp.mailfrom=gpxsee.org; arc=none smtp.client-ip=37.205.14.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gpxsee.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gpxsee.org
-Received: from mgb4.digiteq.red (unknown [62.77.71.229])
-	by mx.gpxsee.org (Postfix) with ESMTPSA id 13E7853CF0;
-	Mon, 18 Mar 2024 16:09:32 +0100 (CET)
-From: tumic@gpxsee.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Martin=20T=C5=AFma?= <martin.tuma@digiteqautomotive.com>
-Subject: [PATCH] media: admin-guide: Fix mgb4 driver documentation structure
-Date: Mon, 18 Mar 2024 17:09:19 +0100
-Message-ID: <20240318160919.6144-1-tumic@gpxsee.org>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1710774626; c=relaxed/simple;
+	bh=73vfzaGUrkL8OR4EpKhuTHYiz7zUQJHz8EOvbTyVe8U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Nk7argkfrdfhsX5aPQ2ASXDpHrySeACLD3Ig04XOwIIEwSS+w3x81GEWWnTm7sifrTIwMwy8AuUT1qIGYMmGHfnkP+EEwmkmaWT0+Ju+XNUKuDebmc2VOMZ7EyeCGQ92G+YtRbo1MjUAajrY2q2R8neIVEJLJ3hvwE/e49hiSog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=Hlm4MGv7; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="Hlm4MGv7"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-430c4d0408eso10002381cf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 08:10:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1710774624; x=1711379424; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9KVpr3mWHXuGxJ7EXrWZlpaYerSnna04C7a1q/1FFdM=;
+        b=Hlm4MGv7QOpozYhUXKj+XpKx84GfcBbSjFyhHfhQRkbzn/ZXfy+LO4T3PLC+klsEhx
+         jHqLEiemd1U6gAIlepSu8ISvSvmMYmvU7JPzR5DtnxoQszpO06xmns/wTxiR9jp0qRt3
+         YwlZImcRBMk4jZXf3BZyd1o+icYzVSWwDkYm9m/5QdS4LTj7/HXs+YBLeAJ5EvPqzO0N
+         HJrhQAN+XWJrsH7KjkVcEWRdtLY69u6KZVkYU0VxV7mJYda8ggoiMzyBZRoWck4QZAem
+         p5U7RmaYtbkbncJ3soY/6VZhQmwNjhEdPd13WEGSozPYE3k571cfdevVuFPW16kieoXI
+         Ul4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710774624; x=1711379424;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9KVpr3mWHXuGxJ7EXrWZlpaYerSnna04C7a1q/1FFdM=;
+        b=pH+k7OKaobf7+jWZEhyDRkVebKVBeVLgnAaRxmYddDA2xW6ToqcRJEJYlP8rZ/idqs
+         tkN9uyMROnWG3Q6B2UdYGRMFpwsR5eSBwZiyf3UyaoLhRh+MWjtI3TSAv93gdtfQHDY6
+         hgorkCPw0r/KG9oPfWGYeZ4nwb7AF6seYKBdkxacK9WyM/PnRpPtKWOwWMrhE8WeQbgT
+         854Rcgh7UVdIKKJvy+UoDuotWMfDB8aTD0WHuL7wCiSjM95iQEHbtlT0UfFOD1+BQNyK
+         F9omowOUUgL+oX3g8LFJLYX9C3+sVX0FTgj2GlBciOdZNbxOlC/9f8Aq9wb1RXy4LLka
+         3roA==
+X-Forwarded-Encrypted: i=1; AJvYcCWeBZWBQ92zWeknSFCgtT/a9P990LMUsXHEJCAPeYjrwU9jJgGdYSBeP5ap+O9WFEgE3E156Ml85Bu/2sReNrNQlQCI/94jjtiMlb8m
+X-Gm-Message-State: AOJu0Yy5Fqgvb+7P26Enre12C3WKlT+R8YRrOgzkSw4cu6AiCj1qT0P1
+	NNCVbmTopXdN9LuckL7mbVdZp9oSBB3oOt9A6FTQvCYaiyHzUHrD+estT4gDL0vWrIDvP+jfykH
+	c6mPnpXS8q4ui1xFJG5mCo6lXuf5EtnBkS2DSDQ==
+X-Google-Smtp-Source: AGHT+IHFN0fU8r0syuFMehIeN1NFAZzvX59LJVNDd/w7DnmgPi3+6kWifl8gfb5LM7luoZkAmDyKUfv3vsiwBPByVnk=
+X-Received: by 2002:a05:622a:d4:b0:430:d2ed:3bbe with SMTP id
+ p20-20020a05622a00d400b00430d2ed3bbemr3376760qtw.59.1710774623709; Mon, 18
+ Mar 2024 08:10:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240311164638.2015063-1-pasha.tatashin@soleen.com>
+ <2cb8f02d-f21e-45d2-afe2-d1c6225240f3@zytor.com> <ZfNTSjfE_w50Otnz@casper.infradead.org>
+ <2qp4uegb4kqkryihqyo6v3fzoc2nysuhltc535kxnh6ozpo5ni@isilzw7nth42>
+ <ZfNWojLB7qjjB0Zw@casper.infradead.org> <CA+CK2bAmOj2J10szVijNikexFZ1gmA913vvxnqW4DJKWQikwqQ@mail.gmail.com>
+ <39F17EC4-7844-4111-BF7D-FFC97B05D9FA@zytor.com> <CA+CK2bDothmwdJ86K1LiKWDKdWdYDjg5WCwdbapL9c3Y_Sf+kg@mail.gmail.com>
+ <bb203717ab644362a8eafe78aff23947@AcuMS.aculab.com>
+In-Reply-To: <bb203717ab644362a8eafe78aff23947@AcuMS.aculab.com>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Mon, 18 Mar 2024 11:09:47 -0400
+Message-ID: <CA+CK2bAuNLXq4p8pjwAatuw2KuadhKjD6JRwJN8ZvSEd1d7ntA@mail.gmail.com>
+Subject: Re: [RFC 00/14] Dynamic Kernel Stacks
+To: David Laight <David.Laight@aculab.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, Matthew Wilcox <willy@infradead.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "x86@kernel.org" <x86@kernel.org>, 
+	"bp@alien8.de" <bp@alien8.de>, "brauner@kernel.org" <brauner@kernel.org>, 
+	"bristot@redhat.com" <bristot@redhat.com>, "bsegall@google.com" <bsegall@google.com>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, 
+	"dianders@chromium.org" <dianders@chromium.org>, 
+	"dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>, 
+	"eric.devolder@oracle.com" <eric.devolder@oracle.com>, "hca@linux.ibm.com" <hca@linux.ibm.com>, 
+	"hch@infradead.org" <hch@infradead.org>, 
+	"jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>, 
+	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, "jroedel@suse.de" <jroedel@suse.de>, 
+	"juri.lelli@redhat.com" <juri.lelli@redhat.com>, "kinseyho@google.com" <kinseyho@google.com>, 
+	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>, "lstoakes@gmail.com" <lstoakes@gmail.com>, 
+	"luto@kernel.org" <luto@kernel.org>, "mgorman@suse.de" <mgorman@suse.de>, "mic@digikod.net" <mic@digikod.net>, 
+	"michael.christie@oracle.com" <michael.christie@oracle.com>, "mingo@redhat.com" <mingo@redhat.com>, 
+	"mjguzik@gmail.com" <mjguzik@gmail.com>, "mst@redhat.com" <mst@redhat.com>, 
+	"npiggin@gmail.com" <npiggin@gmail.com>, "peterz@infradead.org" <peterz@infradead.org>, 
+	"pmladek@suse.com" <pmladek@suse.com>, 
+	"rick.p.edgecombe@intel.com" <rick.p.edgecombe@intel.com>, "rostedt@goodmis.org" <rostedt@goodmis.org>, 
+	"surenb@google.com" <surenb@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>, 
+	"urezki@gmail.com" <urezki@gmail.com>, 
+	"vincent.guittot@linaro.org" <vincent.guittot@linaro.org>, "vschneid@redhat.com" <vschneid@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Martin Tůma <martin.tuma@digiteqautomotive.com>
+On Sun, Mar 17, 2024 at 2:58=E2=80=AFPM David Laight <David.Laight@aculab.c=
+om> wrote:
+>
+> From: Pasha Tatashin
+> > Sent: 16 March 2024 19:18
+> ...
+> > Expanding on Mathew's idea of an interface for dynamic kernel stack
+> > sizes, here's what I'm thinking:
+> >
+> > - Kernel Threads: Create all kernel threads with a fully populated
+> > THREAD_SIZE stack.  (i.e. 16K)
+> > - User Threads: Create all user threads with THREAD_SIZE kernel stack
+> > but only the top page mapped. (i.e. 4K)
+> > - In enter_from_user_mode(): Expand the thread stack to 16K by mapping
+> > three additional pages from the per-CPU stack cache. This function is
+> > called early in kernel entry points.
+> > - exit_to_user_mode(): Unmap the extra three pages and return them to
+> > the per-CPU cache. This function is called late in the kernel exit
+> > path.
+>
+> Isn't that entirely horrid for TLB use and so will require a lot of IPI?
 
-Fix the mgb4 driver documentation structure that breaks the "Video4Linux (V4L)
-driver-specific documentation" outline.
+The TLB load is going to be exactly the same as today, we already use
+small pages for VMA mapped stacks. We won't need to have extra
+flushing either, the mappings are in the kernel space, and once pages
+are removed from the page table, no one is going to access that VA
+space until that thread enters the kernel again. We will need to
+invalidate the VA range only when the pages are mapped, and only on
+the local cpu.
 
-Signed-off-by: Martin Tůma <martin.tuma@digiteqautomotive.com>
----
- Documentation/admin-guide/media/mgb4.rst | 35 ++++++++++--------------
- 1 file changed, 15 insertions(+), 20 deletions(-)
+> Remember, if a thread sleeps in 'extra stack' and is then resheduled
+> on a different cpu the extra pages get 'pumped' from one cpu to
+> another.
 
-diff --git a/Documentation/admin-guide/media/mgb4.rst b/Documentation/admin-guide/media/mgb4.rst
-index 2977f74d7e26..e434d4a9eeb3 100644
---- a/Documentation/admin-guide/media/mgb4.rst
-+++ b/Documentation/admin-guide/media/mgb4.rst
-@@ -1,8 +1,10 @@
- .. SPDX-License-Identifier: GPL-2.0
- 
--====================
--mgb4 sysfs interface
--====================
-+The mgb4 driver
-+===============
-+
-+sysfs interface
-+---------------
- 
- The mgb4 driver provides a sysfs interface, that is used to configure video
- stream related parameters (some of them must be set properly before the v4l2
-@@ -12,9 +14,8 @@ There are two types of parameters - global / PCI card related, found under
- ``/sys/class/video4linux/videoX/device`` and module specific found under
- ``/sys/class/video4linux/videoX``.
- 
--
- Global (PCI card) parameters
--============================
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
- **module_type** (R):
-     Module type.
-@@ -42,9 +43,8 @@ Global (PCI card) parameters
- 
-     where each component is a 8b number.
- 
--
- Common FPDL3/GMSL input parameters
--==================================
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
- **input_id** (R):
-     Input number ID, zero based.
-@@ -190,9 +190,8 @@ Common FPDL3/GMSL input parameters
-     *Note: This parameter can not be changed while the input v4l2 device is
-     open.*
- 
--
- Common FPDL3/GMSL output parameters
--===================================
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
- **output_id** (R):
-     Output number ID, zero based.
-@@ -282,9 +281,8 @@ Common FPDL3/GMSL output parameters
-     Number of video lines between the end of the last valid pixel line (marked
-     by DE=1) and assertion of the VSYNC signal. The default value is 2.
- 
--
- FPDL3 specific input parameters
--===============================
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
- **fpdl3_input_width** (RW):
-     Number of deserializer input lines.
-@@ -294,7 +292,7 @@ FPDL3 specific input parameters
-     | 2 - dual
- 
- FPDL3 specific output parameters
--================================
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
- **fpdl3_output_width** (RW):
-     Number of serializer output lines.
-@@ -304,7 +302,7 @@ FPDL3 specific output parameters
-     | 2 - dual
- 
- GMSL specific input parameters
--==============================
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
- **gmsl_mode** (RW):
-     GMSL speed mode.
-@@ -328,10 +326,8 @@ GMSL specific input parameters
-     | 0 - disabled
-     | 1 - enabled (default)
- 
--
--====================
--mgb4 mtd partitions
--====================
-+MTD partitions
-+--------------
- 
- The mgb4 driver creates a MTD device with two partitions:
-  - mgb4-fw.X - FPGA firmware.
-@@ -344,9 +340,8 @@ also have a third partition named *mgb4-flash* available in the system. This
- partition represents the whole, unpartitioned, card's FLASH memory and one should
- not fiddle with it...
- 
--====================
--mgb4 iio (triggers)
--====================
-+IIO (triggers)
-+--------------
- 
- The mgb4 driver creates an Industrial I/O (IIO) device that provides trigger and
- signal level status capability. The following scan elements are available:
+Yes, the per-cpu cache can get unbalanced this way, we can remember
+the original CPU where we acquired the pages to return to the same
+place.
 
-base-commit: b14257abe7057def6127f6fb2f14f9adc8acabdb
--- 
-2.44.0
+> I also suspect a stack_probe() is likely to end up being a cache miss
+> and also slow???
 
+Can you please elaborate on this point. I am not aware of
+stack_probe() and how it is used.
+
+> So you wouldn't want one on all calls.
+> I'm not sure you'd want a conditional branch either.
+>
+> The explicit request for 'more stack' can be required to be allowed
+> to sleep - removing a lot of issues.
+> It would also be portable to all architectures.
+> I'd also suspect that any thread that needs extra stack is likely
+> to need to again.
+> So while the memory could be recovered, I'd bet is isn't worth
+> doing except under memory pressure.
+> The call could also return 'no' - perhaps useful for (broken) code
+> that insists on being recursive.
+
+The current approach discussed is somewhat different from explicit
+more stack requests API. I am investigating how feasible it is to use
+kernel stack multiplexing, so the same pages can be re-used by many
+threads when they are actually used. If the multiplexing approach
+won't work, I will come back to the explicit more stack API.
+
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1=
+ 1PT, UK
+> Registration No: 1397386 (Wales)
