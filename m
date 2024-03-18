@@ -1,154 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E616A57865;
-	Mon, 18 Mar 2024 20:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F525733F
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 20:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710793569; cv=none; b=ZSZcQmhSqlUxRJWGHy2QRpAYYgxuhZvKM30Pn/EsfdyrxwNjngtfQFisBCJUTCzP+iShd/YjT+K8qI7EU4VMh20Qeq9doogI2euWBAzlpc6faaZpq3qeaUg97DvtRsHQoMZPFJsBpV00GWVVIXc77F8ydkLpUy5ZxmaUxFs0QF8=
+	t=1710793699; cv=none; b=BrXkOj/URYi+84YXk+LjCVi1zg/tCfXZwgNvTlfwGYpOPVcZvlFSvGsuEqTNekitkdfbefp0pDL2t+AKLsYaK94kg0EAjq60xu0kZCSsyrS/Vu9P9jT3AfLmPw+SXlLfBltm8XiH4LX+07qC0uLv4trJrqW3MlUu9f4hlgVe6KE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710793569; c=relaxed/simple;
-	bh=CXkyF+mHJB3DnOKcJvPFeZxccZw9WhUMjIYiH2jNhnY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OvmDcUxOWzt/9FDqeZ9F1Q4QmDowkWORSbi6SXEtiKHKalgrwiUY/eWrwncYRFQNv8VeuBlCalcGoRXXfRgLd1T5h8BEdOLkLP1qCXZyWMwIleXZo8wE9AkYlP5J8pCX1d8aoCX8tEKI4Zr387+Ma9SpIcWAgq5bbUJtolvIllk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aAh8ZuVY; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1710793699; c=relaxed/simple;
+	bh=jrxJE9RgRvLO3n7cWCIWdQ9Ydu8jF/meN9NbonVPOBg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rQ/HICYyZ+fKzsJTGwmUPt2o3y/Ksqn/tINuC9uom20iAk7SpAM9uwyhPKYxq3Azm79AoL207jexi8qZXymjqLuvYYiBClg25I4bp2O9mhlr7oP9ZTWfNXdWEyZP7XMGlB9rappHP3iESrJiHabkvL8HMRg+tS7fwKsEh/U2AMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N0CcR4Sh; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aAh8ZuVY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N0CcR4Sh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710793568; x=1742329568;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=CXkyF+mHJB3DnOKcJvPFeZxccZw9WhUMjIYiH2jNhnY=;
-  b=aAh8ZuVYfpc4cqjH2fbnjYC9XuRlVOqQgpjYmBVlYr9gd3E0TQ2xmUyt
-   m6yBncsRF6yzy37ddMwlEAFAhQDa0C3dbMABNaYOAhTraBMmue0gOQ1Q3
-   +ewFsq9GMYLOgMLsCdTdJC1R2m9hcl0bEY3eM5XtrBQ/vFZenksf6gXXF
-   X82KxlPELeLhlJ4FyUZrd9APmkfRC/InfCqrgoa80tL/5FHO+/nDL3xy8
-   d6h8Zbu3q3828RnRrmYGzvO9AIRX+ywAxCQnkzxHT/56PYDwArE+uXs1t
-   nDRShvVfWNj7Mcb9KHnBV+QpnNxWkIZozBQRZbrj2krvGqOpJYoQYtkgn
+  t=1710793698; x=1742329698;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jrxJE9RgRvLO3n7cWCIWdQ9Ydu8jF/meN9NbonVPOBg=;
+  b=N0CcR4ShYu9W1mJ1IiEdQpo1rKvCDajd+0Q6weRZ/bPMnw0TpNL0fLTB
+   IAZvNSK/HnlDDlzBzMyfRF/Cmr0abPBJd64XybWIgk7gfDky3iOgKAW8v
+   +3cfCSO+W5j4f3X+3sGfoy/lGiKcUcHwclf5M22DphfpzY2vRI/wTNTST
+   oLzbINDhooIdZBM+QB0WUrk5bBgvrtnwJyS/EmEviIyjkfZAvv21KHgdf
+   hSBm+8W1MXhlWowIpTaZaeTbf/c6yNynfG9sAVhBY1xrhxeG1bzVSiEbR
+   l69L00gO4HK5Jm1gfnInA0tJkSRMGr93OnD/JJpHmAlifubYiYvp/Fa5s
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="16356661"
+X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="5813062"
 X-IronPort-AV: E=Sophos;i="6.07,135,1708416000"; 
-   d="scan'208";a="16356661"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 13:26:07 -0700
+   d="scan'208";a="5813062"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 13:28:17 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="937060672"
 X-IronPort-AV: E=Sophos;i="6.07,135,1708416000"; 
-   d="scan'208";a="937060672"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Mar 2024 13:26:05 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 3EBD4241; Mon, 18 Mar 2024 22:26:03 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>
-Subject: [PATCH v1 1/1] ASoC: soc-jack: Get rid of legacy GPIO support
-Date: Mon, 18 Mar 2024 22:25:16 +0200
-Message-ID: <20240318202602.182619-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+   d="scan'208";a="13469429"
+Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 18 Mar 2024 13:28:14 -0700
+Received: from kbuild by b21307750695 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rmJad-000HET-1Y;
+	Mon, 18 Mar 2024 20:28:11 +0000
+Date: Tue, 19 Mar 2024 04:27:55 +0800
+From: kernel test robot <lkp@intel.com>
+To: Aravinda Prasad <aravinda.prasad@intel.com>, damon@lists.linux.dev,
+	linux-mm@kvack.org, sj@kernel.org, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, aravinda.prasad@intel.com,
+	s2322819@ed.ac.uk, sandeep4.kumar@intel.com, ying.huang@intel.com,
+	dave.hansen@intel.com, dan.j.williams@intel.com,
+	sreenivas.subramoney@intel.com, antti.kervinen@intel.com,
+	alexander.kanevskiy@intel.com
+Subject: Re: [PATCH v2 1/3] mm/damon: mm infrastructure support
+Message-ID: <202403190418.tsSXHwGu-lkp@intel.com>
+References: <20240318132848.82686-2-aravinda.prasad@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240318132848.82686-2-aravinda.prasad@intel.com>
 
-No more users.
+Hi Aravinda,
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/sound/soc-jack.h |  2 --
+kernel test robot noticed the following build errors:
 
-If I am not mistaken, after
-https://lore.kernel.org/r/20240318200804.181516-1-andriy.shevchenko@linux.intel.com
-there is no more users. Hence the above is the only dependency.
+[auto build test ERROR on akpm-mm/mm-everything]
 
- sound/soc/soc-jack.c     | 23 ++++-------------------
- 2 files changed, 4 insertions(+), 21 deletions(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Aravinda-Prasad/mm-damon-mm-infrastructure-support/20240318-212723
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20240318132848.82686-2-aravinda.prasad%40intel.com
+patch subject: [PATCH v2 1/3] mm/damon: mm infrastructure support
+config: powerpc-allmodconfig (https://download.01.org/0day-ci/archive/20240319/202403190418.tsSXHwGu-lkp@intel.com/config)
+compiler: powerpc64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240319/202403190418.tsSXHwGu-lkp@intel.com/reproduce)
 
-diff --git a/include/sound/soc-jack.h b/include/sound/soc-jack.h
-index a0abb1ee5110..3a81d4b8ca8a 100644
---- a/include/sound/soc-jack.h
-+++ b/include/sound/soc-jack.h
-@@ -44,7 +44,6 @@ struct snd_soc_jack_zone {
- /**
-  * struct snd_soc_jack_gpio - Describes a gpio pin for jack detection
-  *
-- * @gpio:         legacy gpio number
-  * @idx:          gpio descriptor index within the function of the GPIO
-  *                consumer device
-  * @gpiod_dev:    GPIO consumer device
-@@ -59,7 +58,6 @@ struct snd_soc_jack_zone {
-  *		       ADC).
-  */
- struct snd_soc_jack_gpio {
--	unsigned int gpio;
- 	unsigned int idx;
- 	struct device *gpiod_dev;
- 	const char *name;
-diff --git a/sound/soc/soc-jack.c b/sound/soc/soc-jack.c
-index b2cc13b9c77b..63971396b708 100644
---- a/sound/soc/soc-jack.c
-+++ b/sound/soc/soc-jack.c
-@@ -8,7 +8,6 @@
- 
- #include <sound/jack.h>
- #include <sound/soc.h>
--#include <linux/gpio.h>
- #include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/workqueue.h>
-@@ -345,21 +344,9 @@ int snd_soc_jack_add_gpios(struct snd_soc_jack *jack, int count,
- 				goto undo;
- 			}
- 		} else {
--			/* legacy GPIO number */
--			if (!gpio_is_valid(gpios[i].gpio)) {
--				dev_err(jack->card->dev,
--					"ASoC: Invalid gpio %d\n",
--					gpios[i].gpio);
--				ret = -EINVAL;
--				goto undo;
--			}
--
--			ret = gpio_request_one(gpios[i].gpio, GPIOF_IN,
--					       gpios[i].name);
--			if (ret)
--				goto undo;
--
--			gpios[i].desc = gpio_to_desc(gpios[i].gpio);
-+			dev_err(jack->card->dev, "ASoC: Invalid gpio at index %d\n", i);
-+		        ret = -EINVAL;
-+		        goto undo;
- 		}
- got_gpio:
- 		INIT_DELAYED_WORK(&gpios[i].work, gpio_work);
-@@ -373,7 +360,7 @@ int snd_soc_jack_add_gpios(struct snd_soc_jack *jack, int count,
- 					      gpios[i].name,
- 					      &gpios[i]);
- 		if (ret < 0)
--			goto err;
-+			goto undo;
- 
- 		if (gpios[i].wake) {
- 			ret = irq_set_irq_wake(gpiod_to_irq(gpios[i].desc), 1);
-@@ -401,8 +388,6 @@ int snd_soc_jack_add_gpios(struct snd_soc_jack *jack, int count,
- 	devres_add(jack->card->dev, tbl);
- 	return 0;
- 
--err:
--	gpio_free(gpios[i].gpio);
- undo:
- 	jack_free_gpios(jack, i, gpios);
- 	devres_free(tbl);
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403190418.tsSXHwGu-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from arch/powerpc/include/asm/kup.h:43,
+                    from arch/powerpc/include/asm/uaccess.h:8,
+                    from include/linux/uaccess.h:11,
+                    from include/linux/sched/task.h:13,
+                    from include/linux/sched/signal.h:9,
+                    from include/linux/rcuwait.h:6,
+                    from include/linux/percpu-rwsem.h:7,
+                    from include/linux/fs.h:33,
+                    from include/linux/compat.h:17,
+                    from arch/powerpc/kernel/asm-offsets.c:12:
+>> include/linux/pgtable.h:411:19: error: static declaration of 'pudp_test_and_clear_young' follows non-static declaration
+     411 | static inline int pudp_test_and_clear_young(struct vm_area_struct *vma,
+         |                   ^~~~~~~~~~~~~~~~~~~~~~~~~
+   In file included from arch/powerpc/include/asm/book3s/64/mmu-hash.h:20,
+                    from arch/powerpc/include/asm/book3s/64/mmu.h:32,
+                    from arch/powerpc/include/asm/mmu.h:391,
+                    from arch/powerpc/include/asm/paca.h:18,
+                    from arch/powerpc/include/asm/current.h:13,
+                    from include/linux/mutex.h:14,
+                    from include/linux/rhashtable-types.h:14,
+                    from include/linux/ipc.h:7,
+                    from include/uapi/linux/sem.h:5,
+                    from include/linux/sem.h:5,
+                    from include/linux/compat.h:14:
+   arch/powerpc/include/asm/book3s/64/pgtable.h:1306:12: note: previous declaration of 'pudp_test_and_clear_young' with type 'int(struct vm_area_struct *, long unsigned int,  pud_t *)'
+    1306 | extern int pudp_test_and_clear_young(struct vm_area_struct *vma,
+         |            ^~~~~~~~~~~~~~~~~~~~~~~~~
+   make[3]: *** [scripts/Makefile.build:116: arch/powerpc/kernel/asm-offsets.s] Error 1
+   make[3]: Target 'prepare' not remade because of errors.
+   make[2]: *** [Makefile:1191: prepare0] Error 2
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:240: __sub-make] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:240: __sub-make] Error 2
+   make: Target 'prepare' not remade because of errors.
+
+
+vim +/pudp_test_and_clear_young +411 include/linux/pgtable.h
+
+   409	
+   410	#ifndef pudp_test_and_clear_young
+ > 411	static inline int pudp_test_and_clear_young(struct vm_area_struct *vma,
+   412						    unsigned long address,
+   413						    pud_t *pudp)
+   414	{
+   415		return 0;
+   416	}
+   417	#endif
+   418	
+
 -- 
-2.43.0.rc1.1.gbec44491f096
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
