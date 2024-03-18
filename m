@@ -1,124 +1,90 @@
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859BC5A4DC;
-	Mon, 18 Mar 2024 22:44:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74995A786
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 22:44:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710801852; cv=none; b=gMgSEuORreUXnaAIlZwHheSaIHb2+QLc6JVHAYTsHaZUMj684hyYvYOsovVCAzkLAtmJFnAzs93nlwGIrsiOAUDQX3YdzTCzlInBnTYo/B7hlElQBLBWNLPdBMdhG0gWjU62ipIfKNho8oNNOgBevFLnwiWONrSyua0ODx6X3mk=
+	t=1710801877; cv=none; b=B/OSbE77E72e0kaLkADH2rUK/V2VDdkegkNR2YZnfNui3s8GmmATvTBZQgjV+8fk8oNE/3dBXztsPI6Cxwq9gWVsDnELEhiW/EosuHpMtbPtdEwm9skRdHOfvqpr2wu1fZOOxN8iK86lI79O9OcCuHeCOuk6OLJZ+zP5Z38zxuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710801852; c=relaxed/simple;
-	bh=QVvPe8HqF/hEu0sn46LH7OPfrbqHYTjl9rmwiW8KbI4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=uVj9PvVewUhPaDmvkI0QIke/avWTZcwWYjgWRG6tZtJiPwuWgDjmVNY3HfddwnXRugqqMUnmLS3SLvfJYuShWVgmFmaJZUOraSJdPfgXmxntiimbHjt+St+0JRv+TZoGqraxuZQQp8napN8vJ8eXRN61hmEQcMjmac9CVrOuY/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=WlS06RNI; arc=none smtp.client-ip=37.18.73.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
+	s=arc-20240116; t=1710801877; c=relaxed/simple;
+	bh=eduRgU53QZDWrAPUCPvkckYSrnk3rAFitEKcGg7eVzw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sOCdKPUfOM1kMZcuScVNbHf2UtNsgZHpJIuIIqb219F29vA+ok7YuKsRgxQuzqhBnsrS7YiY1Qefy0EJgIwPFUOdIZg3C+aCpiM6OypsmrXgSP4AzyNoqS5NbCNkroPBkxIbIE/wu3zrl3QIm/8hu3WY2vCZQPIJOuyFRcOq0XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=FI3PzdQM; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="WlS06RNI"
-Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 6A2F1100011;
-	Tue, 19 Mar 2024 01:44:06 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 6A2F1100011
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1710801846;
-	bh=pa+89jrrCMIW8EjfG4aAgry+/vfLF62TIUqpulm7Y9A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=WlS06RNIBTg0cU271+LYNhxdIVW8REnQkfL0Eq7bHWiEE2NaTUtuoRzgcod99PVOu
-	 90XcrVazKIOpMrrn2Lj5waYPR3pBMpoyE/svDsna6Hn/ncEAfIi4zZg45J34L38rKP
-	 lVo4tRAfocFgZCrdouhaItZsCLKbBfZq89MVAWFQJgD6s6aIvAf1uPVna8WJxugmor
-	 mr6LDxYqk7REZoeeNrR4tv0MyJNkhX43aJ/+u2MHK2TfgTH/luXpJhpJbSgoUEi8Ou
-	 ViJNVVN54rulbLvS7z84IQ4pLJeCbFV/tkIbru90+UwDb6C7lz+ie/jrcPfO/9lnvd
-	 wZ99a9nIdhl9w==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue, 19 Mar 2024 01:44:06 +0300 (MSK)
-Received: from [172.28.64.112] (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 19 Mar 2024 01:44:05 +0300
-Message-ID: <bafa1669-e98f-4d45-b5cc-0c707df5ed52@salutedevices.com>
-Date: Tue, 19 Mar 2024 01:43:20 +0300
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="FI3PzdQM"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-513e14b2bd9so2974212e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 15:44:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1710801873; x=1711406673; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=MH75aKXvoDEeQu9H6jcn+rQWkXLmzRwG/v/RnlP4n7w=;
+        b=FI3PzdQM/4ZwZs3RqUCo3hbFtP1BItkG6RrfxDVMLw65eI6HuT/ZeDkwwRVN/17fPw
+         PLEWcsmTKIds+MGi+j038dWhguNMe1Qd3o3BdfG5iMZ4cxpJtZrA0PV6kZuoVgMG+3ci
+         uRukA+pfmefgzCzV/YYSR/R7ue8y98oafP60Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710801873; x=1711406673;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MH75aKXvoDEeQu9H6jcn+rQWkXLmzRwG/v/RnlP4n7w=;
+        b=v3sq6v7gvXcmuAARHdbLTYVMOXMtC/t9NWXFdUBm7v55U/JiR305pmS5931Y4mpsJd
+         oTxIY3uCzji1jRLJq7AGwrAXpn0CzhMvgZzoZBGEUBkl/zS4rS2zVX8MbRLoqBgJL9k9
+         xhc9zp/rQEGRz8/DOgV6sNYEfG0VRlJIL6TRn/I0f1r3/LoZPg0Pg2kjLvD1qXktvUXY
+         iWvJ0Y2yYmXeDMkeAyxIbKXfxp0f7eo6px7eNHHjtxna28g17igg63iF5IKbVuHokSAE
+         O0f6NgAIWQdKVFl4L0Lvw0SPn/RtA/yoTLPuyCoPqwjSyvJxeIlhfvUW+CMbFCS7uslL
+         qumg==
+X-Gm-Message-State: AOJu0YwwDLCFxRIJXORnTWtB0ZRXoasZBMzkcEhyDzkVTaBcrtMHXboz
+	4bIwpo4NR4yDCmoijScsBXMdwB1eg8VemuYc5vLazZeJQDQ/AhwfLysVK1FshPd5umY6peUu4Vk
+	icHClPw==
+X-Google-Smtp-Source: AGHT+IHTbxaZzR3+4/XP/5KT/d0zEcBoiRHLkcjnm6OlsVompUoLoRczUpZS0Mz6TWEiSY/RF+zbYg==
+X-Received: by 2002:a05:6512:1c7:b0:513:d640:ff16 with SMTP id f7-20020a05651201c700b00513d640ff16mr8482195lfp.29.1710801872718;
+        Mon, 18 Mar 2024 15:44:32 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id dx9-20020a0565122c0900b00513ee207982sm348108lfb.198.2024.03.18.15.44.32
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Mar 2024 15:44:32 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-512e4f4e463so5583130e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 15:44:32 -0700 (PDT)
+X-Received: by 2002:a19:ee14:0:b0:513:aef9:5401 with SMTP id
+ g20-20020a19ee14000000b00513aef95401mr9139293lfb.66.1710801871842; Mon, 18
+ Mar 2024 15:44:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 12/25] ASoC: meson: t9015: add support for A1 SoC family
-Content-Language: en-US
-To: Mark Brown <broonie@kernel.org>
-CC: Neil Armstrong <neil.armstrong@linaro.org>, Jerome Brunet
-	<jbrunet@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Stephen
- Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liam Girdwood
-	<lgirdwood@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Jaroslav
- Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	<linux-amlogic@lists.infradead.org>, <linux-clk@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <alsa-devel@alsa-project.org>,
-	<linux-sound@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-	<kernel@salutedevices.com>
-References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
- <20240314232201.2102178-13-jan.dakinevich@salutedevices.com>
- <5f8e8cd2-f9c4-4961-a85d-a0f3217294e6@sirena.org.uk>
- <c4c0e3a3-eaa8-42c6-bbd3-e5c6993dc63b@salutedevices.com>
- <30dadd4c-de10-43a7-baf8-8ddd49f5c80e@sirena.org.uk>
-From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-In-Reply-To: <30dadd4c-de10-43a7-baf8-8ddd49f5c80e@sirena.org.uk>
+References: <ZfixMxRWFNmkf-Ta@redhat.com>
+In-Reply-To: <ZfixMxRWFNmkf-Ta@redhat.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 18 Mar 2024 15:44:15 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjnxmpk1L9+ibbZmia0qNNwa8Qnk31_57O-DZqQfL08OQ@mail.gmail.com>
+Message-ID: <CAHk-=wjnxmpk1L9+ibbZmia0qNNwa8Qnk31_57O-DZqQfL08OQ@mail.gmail.com>
+Subject: Re: [GIT PULL v2] dlm fixes for 6.9
+To: David Teigland <teigland@redhat.com>
+Cc: linux-kernel@vger.kernel.org, gfs2@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184250 [Mar 18 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: YVDakinevich@sberdevices.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 10 0.3.10 53c821b925e16276b831986eabc71d60ab82ee60, {Tracking_smtp_not_equal_from}, {Tracking_arrow_text}, {Tracking_from_domain_doesnt_match_to}, salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;sberdevices.ru:7.1.1,5.0.1;smtp.sberdevices.ru:7.1.1,5.0.1;127.0.0.199:7.1.2;100.64.160.123:7.1.2, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_white_helo}, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/03/18 20:02:00 #24276844
-X-KSMG-AntiVirus-Status: Clean, skipped
 
+On Mon, 18 Mar 2024 at 14:25, David Teigland <teigland@redhat.com> wrote:
+>
+> I dropped the commit with the bad atomic usage, and replaced it with two
+> other commits: the first reverts the unnecessary change that began using
+> atomic_t for lkb_wait_count, and the second adds comments to the recovery
+> code that forcibly resets the wait_count state.
 
+Ok, the diff certainly looks saner. I didn't look at the code outside
+the context of the diff, so that's literally just going by the patches
+themselves, but I appreciate the comment ("The wait_count will almost
+always be 1, but in case of an overlapping unlock/cancel it could be
+2: see ..") and yes, it just makes the old atomic thing sound even
+odder.
 
-On 3/18/24 16:48, Mark Brown wrote:
-> On Sun, Mar 17, 2024 at 07:27:14PM +0300, Jan Dakinevich wrote:
-> 
->> Both mic bias and ADC's input mode depends on schematics and should be
->> configurable. What is the better way to give access to these parameters?
->> Device tree?
-> 
-> Yes.
-> 
->>>> +	SOC_SINGLE("ADC Mic Bias Switch", LINEIN_CFG, MICBIAS_EN, 1, 0),
->>>> +	SOC_ENUM("ADC Mic Bias Level", a1_adc_mic_bias_level),
-> 
->>> Why would micbias be user controlled rather than a DAPM widget as
->>> normal?
-> 
->> Yes, I could use SND_SOC_DAPM_SUPPLY, but it supports only raw values,
->> and doesn't supports enums. Here, I want to use enum to restrict
->> possible values, because only these values mentioned in the
->> documentation that I have.
-> 
-> A supply is an on/off switch not an enum.  Users should not be selecting
-> values at all.
+Thanks,
 
-Ok. For me it is great if I am free to move these kcontrols to device tree.
-
--- 
-Best regards
-Jan Dakinevich
+            Linus
