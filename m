@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6EF381B1;
-	Mon, 18 Mar 2024 10:07:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5588376EE;
+	Mon, 18 Mar 2024 10:07:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710756466; cv=none; b=UaCcMydc1YiI3wPd8uoHcbwlaZIGlRnBImEryVSvTTSIovCZZy4BiTDVJ1SFtmikM8h560tl92YmecJdFqnUDaXmj2AvUdGF2HjY+tTVE0Pzwk/0wgyYa3QwqoNmAMmJLSZ1a8Nll4I8GEdy/Cxx/7GfwrOg4mklxA4/hT531Z8=
+	t=1710756466; cv=none; b=T5Y3RikC3Amh5gqAU2bILA+P9XVSnSuNNac+tk9wPFIYyz3l90ADK+VG3QFgekPgD5MqpmDAC8pVVyloPeQlu0fW6V+51v2p5GcMXicCj7hLc/wJpUANRP7rpQhntTT1Ybkw4fnxbEUHU5I8v6x2/m4hBEOVHI7Gls/QSAVjLF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710756466; c=relaxed/simple;
-	bh=93jLeJ31pIiR5JW++RIwwHuipMjVOkLdnmS/A4r21TA=;
+	bh=g6c2HTwr58RvrEkHKS24SYzTozE9rsdRTJSD5j3aFtE=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=uz/b5qIs11K2RrIWln3MPVOr+x544buPzwtXHm7bonyQwACZv91V5lNzinmR0XNSPiShoPbxG8GrAQX16ZvpdP860CKa9Rd2q2kM8mkkQBHXp65Ake5BytyxFvf+lwa4D7Y7wNYMS2zhRlxVXlP8fecCpuG78NBhoPMXkxmDykY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rVoXpLjy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZGuuL7O3; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=XLh6hSrAwoFViqWRy1p/W8lkE931VAmjsf7cPIY4JI9UISdmfvMwTbipzo9RVN8CmhPckL6L6vAfxx7JKo0nDS8OsyH7Bwov1sNDVG+eC79eSScRpTC/9e+IVbrGLNqNv5keW2JUjkXH7XrHFK46jblVWcOGtG6sG8h/1sbs6M8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yh9JHaqN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=a48u3dI5; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rVoXpLjy";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZGuuL7O3"
-Date: Mon, 18 Mar 2024 10:07:42 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yh9JHaqN";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a48u3dI5"
+Date: Mon, 18 Mar 2024 10:07:41 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1710756462;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IE+kfs6LZ4pu47SlXqqx3zZVTe7X47K1VqcW7Zkjto8=;
-	b=rVoXpLjymXe1/1tjWi8BcS1LNPBJdMjwP7u+pl3degesWRlnPp0zmKCX4GVhSnH5WNkgb0
-	98vkmj2rG6zOI5i66Gn8E03mUBn5N0rWhdPDKgUUuNYUiY2cYMahyMWx0QLobehNKAu3WQ
-	2iJabFkzZxnNF0GXBTcvpZXJLCeMu6Q1vDAsagjemKeqIomMlvP8X1K1jzG+biOTHoDPJF
-	KHI4nldE1AwINim3yDZK7Jl037evuSn65CyrpyCABsb+EeFLy8XpRYKSq6fshQ6/RDI6mR
-	h9MLLF06oWkyqHE4wtO3Tgq/pbJGkF6b/Y8bNAemXuZ6XvOuuWxAdajjAF0WLw==
+	bh=/JZuW2IBwxKy6+oQQUXe4xTgYCTtElgCxk1BH4Y5lp8=;
+	b=yh9JHaqN+nKIKaqheTHIUBvCJRX7+U5TXH6UfwCxjvrQb//519K4l0Mi4FqODJSWpz7+57
+	soVqMXwMrYnZ571EW45zm5nQk8Y1aGOj1lz+FfvdgGBMEjnD0tQm/c5JCJUK96hV5oxWoH
+	1uPdp765ULBQojrkwIlm79xKYau8ZKUC7oWJwL6bjYsy49Q8uxigyPakaPxr1FFHiEPmk/
+	BvXm7C6LBuY0qEF9qgl3s+hPQOfLgE3wgbGr0U5Xe3+ThCxK6q+E+wFCTaRRIzA/shoHWc
+	tH0EEdwY3bI+Cz0IvCii9FTOKVbAvRT8SKr97NxmhK6xH8qSxZnOvyXj/T3qYg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1710756462;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,104 +38,74 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IE+kfs6LZ4pu47SlXqqx3zZVTe7X47K1VqcW7Zkjto8=;
-	b=ZGuuL7O32vp7WfAUeqzbiT4xdRoXCIFETF+VVOW0Tp7N+oJFeF7dZELPu5D4pBuCMEojnl
-	Ws7Z66MEmWT+OPDw==
-From: "tip-bot2 for Geert Uytterhoeven" <tip-bot2@linutronix.de>
+	bh=/JZuW2IBwxKy6+oQQUXe4xTgYCTtElgCxk1BH4Y5lp8=;
+	b=a48u3dI5IV1rMmrRe5mrMZEIzrgnBqfztN3FhWCxb4OsxaDTu8h4jIKm6iOuA4xpCW0Y3n
+	onD8lSexmvzLstDw==
+From: "tip-bot2 for Lad Prabhakar" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] dt-bindings: timer: renesas,tmu: Document input
- capture interrupt
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
- niklas.soderlund+renesas@ragnatech.se,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
+Subject:
+ [tip: timers/core] dt-bindings: timer: renesas: ostm: Document RZ/Five SoC
+Cc: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Conor Dooley <conor.dooley@microchip.com>,
  Daniel Lezcano <daniel.lezcano@linaro.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3C8cb38b5236213a467c6c0073f97ccc4bfd5a39ff=2E17067?=
- =?utf-8?q?17378=2Egit=2Egeert+renesas=40glider=2Ebe=3E?=
-References: =?utf-8?q?=3C8cb38b5236213a467c6c0073f97ccc4bfd5a39ff=2E170671?=
- =?utf-8?q?7378=2Egit=2Egeert+renesas=40glider=2Ebe=3E?=
+In-Reply-To: <20231115212908.33131-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20231115212908.33131-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171075646209.12214.12812854242435321555.tip-bot2@tip-bot2>
+Message-ID: <171075646140.12214.5049583001968212520.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     0076a37a426b6c850a0b41b814952760e4a70fcf
-Gitweb:        https://git.kernel.org/tip/0076a37a426b6c850a0b41b814952760e4a=
-70fcf
-Author:        Geert Uytterhoeven <geert+renesas@glider.be>
-AuthorDate:    Wed, 31 Jan 2024 17:11:45 +01:00
+Commit-ID:     69518264da6298fb1a490ca8adcfcb798c16e15c
+Gitweb:        https://git.kernel.org/tip/69518264da6298fb1a490ca8adcfcb798c16e15c
+Author:        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+AuthorDate:    Wed, 15 Nov 2023 21:29:08 
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CommitterDate: Wed, 31 Jan 2024 22:12:18 +01:00
+CommitterDate: Tue, 13 Feb 2024 14:02:41 +01:00
 
-dt-bindings: timer: renesas,tmu: Document input capture interrupt
+dt-bindings: timer: renesas: ostm: Document RZ/Five SoC
 
-Some Timer Unit (TMU) instances with 3 channels support a fourth
-interrupt: an input capture interrupt for the third channel.
+The OSTM block on the RZ/Five SoC is identical to one found on the RZ/G2UL
+SoC. "renesas,r9a07g043-ostm" compatible string will be used on the RZ/Five
+SoC so to make this clear and to keep this file consistent, update the
+comment to include RZ/Five SoC.
 
-While at it, document the meaning of the four interrupts, and add
-"interrupt-names" for clarity.
+No driver changes are required as generic compatible string "renesas,ostm"
+will be used as a fallback on RZ/Five SoC.
 
-Update the example to match reality.
-
-Inspired by a patch by Yoshinori Sato for SH.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.se>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/8cb38b5236213a467c6c0073f97ccc4bfd5a39ff.1706=
-717378.git.geert+renesas@glider.be
+Link: https://lore.kernel.org/r/20231115212908.33131-1-prabhakar.mahadev-lad.rj@bp.renesas.com
 ---
- Documentation/devicetree/bindings/timer/renesas,tmu.yaml | 18 ++++++-
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/timer/renesas,ostm.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml b/Docum=
-entation/devicetree/bindings/timer/renesas,tmu.yaml
-index a67e427..84bbe15 100644
---- a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-+++ b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-@@ -46,7 +46,19 @@ properties:
-=20
-   interrupts:
-     minItems: 2
--    maxItems: 3
-+    items:
-+      - description: Underflow interrupt, channel 0
-+      - description: Underflow interrupt, channel 1
-+      - description: Underflow interrupt, channel 2
-+      - description: Input capture interrupt, channel 2
-+
-+  interrupt-names:
-+    minItems: 2
-+    items:
-+      - const: tuni0
-+      - const: tuni1
-+      - const: tuni2
-+      - const: ticpi2
-=20
-   clocks:
-     maxItems: 1
-@@ -100,7 +112,9 @@ examples:
-             reg =3D <0xffd80000 0x30>;
-             interrupts =3D <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
-                          <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
--                         <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+                         <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-+            interrupt-names =3D "tuni0", "tuni1", "tuni2", "ticpi2";
-             clocks =3D <&mstp0_clks R8A7779_CLK_TMU0>;
-             clock-names =3D "fck";
-             power-domains =3D <&sysc R8A7779_PD_ALWAYS_ON>;
+diff --git a/Documentation/devicetree/bindings/timer/renesas,ostm.yaml b/Documentation/devicetree/bindings/timer/renesas,ostm.yaml
+index 7207929..8b06a68 100644
+--- a/Documentation/devicetree/bindings/timer/renesas,ostm.yaml
++++ b/Documentation/devicetree/bindings/timer/renesas,ostm.yaml
+@@ -23,7 +23,7 @@ properties:
+       - enum:
+           - renesas,r7s72100-ostm  # RZ/A1H
+           - renesas,r7s9210-ostm   # RZ/A2M
+-          - renesas,r9a07g043-ostm # RZ/G2UL
++          - renesas,r9a07g043-ostm # RZ/G2UL and RZ/Five
+           - renesas,r9a07g044-ostm # RZ/G2{L,LC}
+           - renesas,r9a07g054-ostm # RZ/V2L
+       - const: renesas,ostm        # Generic
