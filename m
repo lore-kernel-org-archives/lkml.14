@@ -1,108 +1,165 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B495D374CB
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 17:38:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC27C374CB;
+	Mon, 18 Mar 2024 17:38:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710783490; cv=none; b=eAgCD7zeNLVU5MsHIISRAWuamsgsJpc5xCcY3Vh55V4snaRHiD1WmlR/bnJlEZu6h+EAZOgkhX1IFvA1asMjYZn82fgpNGG8aCjwzHHcWZipbNxZOaXZCuJ+gydlfv9GaucrPR8rxRwXGQNFMYwDDmKzuDQ2tkwjWdRU3Lwpa7Y=
+	t=1710783499; cv=none; b=ph0KET8jHG659+raJGszuvtDGOLVRn+liDS8uc3g8fA7B4OgqTPgCsDGyEBj/O5p3uhbpKIk0iXsxmJyA2UufxNGswbw+itpAC5YkiqyBvBSXE8Samu7tzuEfM+wOie9molkM12V2SlBNREyEfGRFHbmjz80nlqUJYN62yi7bnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710783490; c=relaxed/simple;
-	bh=hPFv+RGaYMSlxCJMkHIePzAsGOaNOQVxwte45Qtempg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=McNPb1Y9eMt3AqV0Zpupayzzw5NF+Uwgj6jPQP5/sbpi1CvY9+uYdxY8uyLKrvNyye53QB6zBI15+NcKW7O9cUNHGpjqHHt44wyrVM5jQJqYNu9BwtM6W8KbSfNO+TTov5IdGIb4DTYBVMkc4EMBbKnjo+heXUAR2XZHB64XR0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=VAyHdp2V; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1710783499; c=relaxed/simple;
+	bh=brMabtGVAVPTn4BOLl5qxz9oAua4OXqtQFzWar13NBE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VbVvzWQFHpFXnVzY38ivJyMbRCsIabmJ/8lvZuqIvldmkXWcEeV5lrZ9YnYH9g+T5C55Vx+wUdG0UctNg2XCLerYyknf6K72UjI2etlq6O5z22GAsZ6Ta/8Da/4cP4Cywy5zRhF7QC4s+CUn7Akx9F7uf9rP+7LWroq4n3QK8BQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=r5acfYKb; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Pzb5Dzut; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=r5acfYKb; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Pzb5Dzut; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="VAyHdp2V"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-609ff069a40so54429177b3.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 10:38:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1710783488; x=1711388288; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tQ/GoT+qLpaPN7pTPDFxNZKaxLFNg4IP20IBxyg9WHU=;
-        b=VAyHdp2VaF4yf6YsGlGPTMIhc5iQOdxsEFoYGKENk6ibV75ScuZ+mRrwL4LATYT+BP
-         cACQ4mGODNSVLmMOJGSKMfeIfJQNrR8Sv1+Q/5z8s8c2cvJ7bm2pOwMqfAYDHuROdH2n
-         VhkdN5LRY+lksHDN1OlsrebvI3VsuO0kBXKSvRTpWkrAN6829YsvrmxbM5kV7blc+3Rm
-         /cRlylE9BGC/qo9zmbrLbJ7SRf1RuF9LPGUfiy0yIfFaG6vT+s6gwo4niphsmRz0vIqg
-         o0h+1uFXH2snVoLT8erEb50cTmBRd14TXMBoWBOTqVWDbjbaMvzVeAKx55NzG4r0EB8I
-         J7eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710783488; x=1711388288;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tQ/GoT+qLpaPN7pTPDFxNZKaxLFNg4IP20IBxyg9WHU=;
-        b=pIaX+OFa9nuMXhvdA28XOywf1gXfeCRFBn58IbUEKKMH6C4DJ8LoylEFckB/sincEe
-         PusBpSoVySOzFYJv9BwqfLiQupxFuJ1yvwBv5GKmfw8SpznSgjlGKu9F6gJnuW45LcP5
-         LyUiK7KUNf0pk6mcGwqSgBY8tySTS6VbuGt1Dz5jUZAhB7I+29K3i4MJ2TRvG+BOtvNJ
-         BX3fgIoocPCr32BGyCLBBU/nEw9fsTEOTxjtB/dTYAseT7a6YWocl5KVYbv5UXe7RnfZ
-         OllZx9lhXxbvpPVQhPbAAVTWMKDGtgfHYd6NZpDwaASM1EMOBfiO/LlmkarZg1eNa+w7
-         pwJg==
-X-Forwarded-Encrypted: i=1; AJvYcCVuiXanrNyEcrihudXefcR59zXcXS3DOkXSg/1ek8R+z1b57853y1X2motPCt7YobzaiMxvL+MuPWYC7krdftasBaiWUkxyVo0ikppq
-X-Gm-Message-State: AOJu0Yw0UGfNzL9wCGHpRxjaF9FKEVZ04iFFVY7NNGKnS0XoMlJyc+wI
-	06Paw8DIYKwriDjRZTmC5s4Rq2F/K0xmTNxVR2W0knoOSBJnF4KTnNzfswDnbj2dNoYLU/QBgFn
-	PfkoyG4ELz7kC7CTOgZ7/ygRPp/5MpPcS1NQwMQ==
-X-Google-Smtp-Source: AGHT+IGI4AZ0kuz5ttCn79/hpiKk+rHMF3x+qjTJSggJqgGyjT+A46w36muUkMqrDbG5g6EMUzo//pcfoym7S3BGVyQ=
-X-Received: by 2002:a05:6902:389:b0:dc7:4b43:db3f with SMTP id
- f9-20020a056902038900b00dc74b43db3fmr7681050ybs.21.1710783487828; Mon, 18 Mar
- 2024 10:38:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="r5acfYKb";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Pzb5Dzut";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="r5acfYKb";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Pzb5Dzut"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id E0A9D5C80D;
+	Mon, 18 Mar 2024 17:38:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710783493;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=i9KtxmJe4u+gXhi6vxQQsvto+Xk9+LnXPNm2ix/8clI=;
+	b=r5acfYKb4IWgXoOnLqtBmnj+akX3lExnpM5JVeWN2Yn+eC2qcM8hhL+rI3iE40oTB9HV07
+	UDFETcVfEvij7DR0FtsHciCeIRhUJxBG0pgFLSrG+cTmU54azQj1gLs9/KWmZIBKtIa0fX
+	DHNMHsUcbxkb2rdp7V4Uwkxd/C2PEbw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710783493;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=i9KtxmJe4u+gXhi6vxQQsvto+Xk9+LnXPNm2ix/8clI=;
+	b=Pzb5DzutVR/j+TIQ+roiNWGp1acJT8IGhDssUNb9pEF+z8fvDQRw6VjIA7gy/rIDeTQC/n
+	SRp90gNK7Vii41Cg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710783493;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=i9KtxmJe4u+gXhi6vxQQsvto+Xk9+LnXPNm2ix/8clI=;
+	b=r5acfYKb4IWgXoOnLqtBmnj+akX3lExnpM5JVeWN2Yn+eC2qcM8hhL+rI3iE40oTB9HV07
+	UDFETcVfEvij7DR0FtsHciCeIRhUJxBG0pgFLSrG+cTmU54azQj1gLs9/KWmZIBKtIa0fX
+	DHNMHsUcbxkb2rdp7V4Uwkxd/C2PEbw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710783493;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=i9KtxmJe4u+gXhi6vxQQsvto+Xk9+LnXPNm2ix/8clI=;
+	b=Pzb5DzutVR/j+TIQ+roiNWGp1acJT8IGhDssUNb9pEF+z8fvDQRw6VjIA7gy/rIDeTQC/n
+	SRp90gNK7Vii41Cg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C382E1349D;
+	Mon, 18 Mar 2024 17:38:13 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id aWKULwV8+GUGfgAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Mon, 18 Mar 2024 17:38:13 +0000
+Date: Mon, 18 Mar 2024 18:31:00 +0100
+From: David Sterba <dsterba@suse.cz>
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+	Christian Brauner <brauner@kernel.org>
+Cc: Anand Jain <anand.jain@oracle.com>, David Sterba <dsterba@suse.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Christian Brauner <brauner@kernel.org>
+Subject: Re: linux-next: build failure after merge of the btrfs-fixes tree
+Message-ID: <20240318173100.GD16737@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <20240318091755.1d0f696f@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240311164638.2015063-1-pasha.tatashin@soleen.com>
- <2cb8f02d-f21e-45d2-afe2-d1c6225240f3@zytor.com> <ZfNTSjfE_w50Otnz@casper.infradead.org>
- <2qp4uegb4kqkryihqyo6v3fzoc2nysuhltc535kxnh6ozpo5ni@isilzw7nth42>
- <ZfNWojLB7qjjB0Zw@casper.infradead.org> <CA+CK2bAmOj2J10szVijNikexFZ1gmA913vvxnqW4DJKWQikwqQ@mail.gmail.com>
- <39F17EC4-7844-4111-BF7D-FFC97B05D9FA@zytor.com> <CA+CK2bDothmwdJ86K1LiKWDKdWdYDjg5WCwdbapL9c3Y_Sf+kg@mail.gmail.com>
- <74c82d8a6b5f490784cc8f16fa7d2c12@AcuMS.aculab.com> <CA+CK2bCksQyhNWh-ZonMQSdcr95dDCfe4W0VNVhG+0i7et1fiw@mail.gmail.com>
-In-Reply-To: <CA+CK2bCksQyhNWh-ZonMQSdcr95dDCfe4W0VNVhG+0i7et1fiw@mail.gmail.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Mon, 18 Mar 2024 13:37:29 -0400
-Message-ID: <CA+CK2bAuH80JhTR9X6cbcHA3xH01sTXeDQBnXO_rUDGak-c+iw@mail.gmail.com>
-Subject: Re: [RFC 00/14] Dynamic Kernel Stacks
-To: David Laight <David.Laight@aculab.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, Matthew Wilcox <willy@infradead.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "x86@kernel.org" <x86@kernel.org>, 
-	"bp@alien8.de" <bp@alien8.de>, "brauner@kernel.org" <brauner@kernel.org>, 
-	"bristot@redhat.com" <bristot@redhat.com>, "bsegall@google.com" <bsegall@google.com>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, 
-	"dianders@chromium.org" <dianders@chromium.org>, 
-	"dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>, 
-	"eric.devolder@oracle.com" <eric.devolder@oracle.com>, "hca@linux.ibm.com" <hca@linux.ibm.com>, 
-	"hch@infradead.org" <hch@infradead.org>, 
-	"jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>, 
-	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, "jroedel@suse.de" <jroedel@suse.de>, 
-	"juri.lelli@redhat.com" <juri.lelli@redhat.com>, "kinseyho@google.com" <kinseyho@google.com>, 
-	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>, "lstoakes@gmail.com" <lstoakes@gmail.com>, 
-	"luto@kernel.org" <luto@kernel.org>, "mgorman@suse.de" <mgorman@suse.de>, "mic@digikod.net" <mic@digikod.net>, 
-	"michael.christie@oracle.com" <michael.christie@oracle.com>, "mingo@redhat.com" <mingo@redhat.com>, 
-	"mjguzik@gmail.com" <mjguzik@gmail.com>, "mst@redhat.com" <mst@redhat.com>, 
-	"npiggin@gmail.com" <npiggin@gmail.com>, "peterz@infradead.org" <peterz@infradead.org>, 
-	"pmladek@suse.com" <pmladek@suse.com>, 
-	"rick.p.edgecombe@intel.com" <rick.p.edgecombe@intel.com>, "rostedt@goodmis.org" <rostedt@goodmis.org>, 
-	"surenb@google.com" <surenb@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>, 
-	"urezki@gmail.com" <urezki@gmail.com>, 
-	"vincent.guittot@linaro.org" <vincent.guittot@linaro.org>, "vschneid@redhat.com" <vschneid@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240318091755.1d0f696f@canb.auug.org.au>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=r5acfYKb;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=Pzb5Dzut
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-1.21 / 50.00];
+	 ARC_NA(0.00)[];
+	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BAYES_HAM(-0.00)[37.35%];
+	 MIME_GOOD(-0.10)[text/plain];
+	 REPLYTO_ADDR_EQ_FROM(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[7];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 TO_DN_ALL(0.00)[];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Spam-Score: -1.21
+X-Rspamd-Queue-Id: E0A9D5C80D
+X-Spam-Flag: NO
 
-> > Perhaps a 'garbage collection' activity that reclaims stack
-> > pages from processes that have been asleep 'for a while' or
-> > haven't used a lot of stack recently (if hw 'page accessed'
-> > bit can be used) might make more sense.
+On Mon, Mar 18, 2024 at 09:17:55AM +1100, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the btrfs-fixes tree, today's linux-next build (powerpc
+> ppc64_defconfig) failed like this:
+> 
+> fs/btrfs/volumes.c: In function 'btrfs_scan_one_device':
+> fs/btrfs/volumes.c:1413:55: error: 'bdev_handle' undeclared (first use in this function)
+>  1413 |         if (btrfs_skip_registration(disk_super, path, bdev_handle->bdev->bd_dev,
+>       |                                                       ^~~~~~~~~~~
+> fs/btrfs/volumes.c:1413:55: note: each undeclared identifier is reported only once for each function it appears in
+> 
+> Caused by commit
+> 
+>   cc019bc0d55b ("btrfs: do not skip re-registration for the mounted device")
+> 
+> I have used the btrfs-fixes tree from next-20240315 for today.
+> 
+> This is actually caused by an interaction with commit
+> 
+>   9ae061cf2a46 ("btrfs: port device access to file")
+> 
+> which has been in Linus' tree since March 12 (and linux-next since Feb 26).
 
-Interesting approach: if we take the original Andy's suggestion of
-using an access bit to know which stack pages were never used during
-context switch and unmap them, and as an extra optimization have a
-"garbage collector" that unmaps stacks in some long sleeping rarely
-used threads.  I will think about this.
+I would really appreciate if all infrastructure changes to btrfs code
+have CC:linux-btrfs@, the whole series "Open block devices as files" has
+never been CCed so the build breakage is noticed only by accident. Also
+I wonder why I have to repeatedly ask for that and why people think that
+doing broad changes to code maintained by somebody else is ok.
 
-Thanks,
-Pasha
+There are 26 patches in linux-next intersecting fs/btrfs most of which I
+see for the first time now. I don't have time to read fsdevel@ regularly
+and act rather on events (i.e. CC or mails).
+
+VFS is in the center of many other subsystems I understand that adding
+the CC: manually is not feasible but scripting "if $path add CC:$subsys"
+should be doable, namely when it's not just one-time job. Please try to
+find some middle ground between efforts and patch workflow sanity.
+Thanks for understanding.
