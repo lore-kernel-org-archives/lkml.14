@@ -1,128 +1,261 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E2222263E;
-	Mon, 18 Mar 2024 07:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3164023767
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 07:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710748029; cv=none; b=lmku1fG2ZwCifIb7n2YdXnVBnFM6AvgB1RXn9G1yV+EJ6Xh4lpyEyADRL/ZDMfChX+gC0yCvYEL/E9JzHOWTSYsYmaFlYHH4Re97CJ+A7X/TXuW/aod+BQKhuJG5FqXL7R3Oq/kwyqYz4FIZ8H5mEWLKRLYi5z1SpA3HlyUevso=
+	t=1710748254; cv=none; b=Rl1HSVGP1qmoXr2lDs1phccQXfo7BQlG5joysNPVWxy7FDg6DKl0oqJOxy9ZNaXoBAPslMAgnV8FhSe/EOOfxkYr9qaxoyKghuGUHbOQhglPy6s3/HtrYwmWqaxAUX6+vRrECfz3919ZP5wyjUqBteYqAEa+fhaDAXn+hdah6+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710748029; c=relaxed/simple;
-	bh=yqJggufrP1i89wxFjM8Tt9txIjYYksGH/+vHGN6ns3E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MnyEFOyp/PIf6B1f1CkWF1ccNbKzUQ4msFAFDbr7+WSNzrPRViLsUwNHqLRGTWY3xjjBpgzeTCxK9BW6RUYCXtumSpih1DLo0wr6Qqb3l0OvRu0ugalFbH0lQTtSKxOayIuV0VHFBD7sY29tyaQ0fwmzydYbPasKAF8OEUTDR4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rZl3ght+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710748254; c=relaxed/simple;
+	bh=bElOvLFlA2lRQnpxtaLmrESGqRhuJI/dzvLGPlMWjgI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NGiRakUKSeRqZxxuNPek4Pa8u9Yft8mEyR7mqMwQxBRuH1GUBS1tCaearm2lfv935J1Jll5we5syfovPLrpNKWf9tDwq9nUp6I+DAheAkbI5OADL70RvX84BPZhEjmm9+Zh0n0YxU+VOLoEBctu5zrxeV4siK3imYI1VJ8cjgag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QL+r+2jB; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rZl3ght+"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EA793C43394;
-	Mon, 18 Mar 2024 07:47:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710748029;
-	bh=yqJggufrP1i89wxFjM8Tt9txIjYYksGH/+vHGN6ns3E=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=rZl3ght+gdctwTo1KYg1qy7K6K+Y56nl0Me788LqtkfMsrdd3kFhNLWRals15v5ZK
-	 egAv2hMvERHxvIqLAg12EPQ9+iYh/nBEfTjtyKjew9z3B8qnidsIJD9z+EDsWV9CVb
-	 npiMsoOb/2P58nhgKWwiEAv1wWIcJ/BRQ7zq6Q6ssdriCAJFJU6G3mwZYVpBbpfjP9
-	 GujUAmcfdNU0PFveiIGZW+i0q5hJeC+PmIcs/riEOBbaWgkdLB2xhPyCYmXTPihFkX
-	 rJK/Y7BRC22QnI5hfC2JUDZfsIR63Gkk7+SAma+Inprlf6OLtF+evjlyLobzAXx9q5
-	 1B3wALh+X2D+g==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D088FC54E71;
-	Mon, 18 Mar 2024 07:47:08 +0000 (UTC)
-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
- <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Mon, 18 Mar 2024 10:46:24 +0300
-Subject: [PATCH 2/3] net: dsa: mt7530: fix disabling EEE on failure on
- MT7531 and MT7988
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QL+r+2jB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710748252;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M61ri+LtQ+sPozYEZ1McUz+TEhyS+suTMSA9oAYcUks=;
+	b=QL+r+2jBe54wa4DN4tveEduKoeU8j3NTq/KfEmHjlWSHMUF4KeUzL+4bpUiq3qmjrvRTdz
+	KrO9suZgXjM/mS45HFrSm5sDfqyYVv2jKP5U4/u3dgRowpLPTjzkzo1nbQ89QVrzc4WkNw
+	O58o/ylrcAJ6/FLQpnBBwNAmqgp6ts8=
+Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com
+ [209.85.210.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-217-08Qzfc7gOca6gQx85vEFOg-1; Mon, 18 Mar 2024 03:50:50 -0400
+X-MC-Unique: 08Qzfc7gOca6gQx85vEFOg-1
+Received: by mail-ot1-f69.google.com with SMTP id 46e09a7af769-6e0ee5097feso4652188a34.1
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 00:50:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710748250; x=1711353050;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M61ri+LtQ+sPozYEZ1McUz+TEhyS+suTMSA9oAYcUks=;
+        b=un/wRqcUsiZgaLOXO2Mfz4ZeypkP9nBAuKNJa3feIAqCJKN4ehyz5oBbtU6LYUMETn
+         1L+Pzp0ud+WiW/hPL+p2tc7RhANI6ygnURDTXVyf2LtEaZvreufDuoyRjykZFNQxlwdN
+         NUTOTApCjfqUGX+Z+icCWEcffuLUygPqn9KT1HzVZGh6EtoJ4eliBUnimhc18A5lpWvu
+         IvZ8ut8Ru43XaL1MofDjntqvTydJDjT1apnl+AJqXqFay/OzlYyNOL600KqNm2C98zjI
+         u7uBVQ2BMLsloRRCR4MqYD2O+/gY7uJXDLmHUm4g+uQ1b4va2bJw6kuE51JiK/BFfBrO
+         5Upw==
+X-Forwarded-Encrypted: i=1; AJvYcCUN/GqJkfwSmQ877o1L+Epri/NCBT0sxUNzjSBlhLITWmlXJj3DSfMEfFEPO0Ds9JcWCxqxW80kcQEE0x9brCOVBo5Wai2R4jZI29d8
+X-Gm-Message-State: AOJu0YyRu1MLoQmnABeTLsLl+06Vu/rnJSTYEQ9Er+vq4cxE8LuOIynU
+	PG0+G1GicmmUmgGIbJ586ieYQIdtVBZNlKTagApKXRZEXsIggclrI9OV8J0Qhu4swWNMf8C55MU
+	xxOQkJFVC1DaqE0hpR0Q/hLA7htV6A+RI51SuaUyRX1Jma2Lxg0BZGEHQ/JbrSg==
+X-Received: by 2002:a9d:6e8e:0:b0:6e4:9456:6b04 with SMTP id a14-20020a9d6e8e000000b006e494566b04mr12857360otr.5.1710748249611;
+        Mon, 18 Mar 2024 00:50:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE083dlEzBLt+Sky3z69bRCGJ12X1u/z5aEMtKwBNnHV8LauRWAFwR09RP3WUCW/rBcAqaHMg==
+X-Received: by 2002:a9d:6e8e:0:b0:6e4:9456:6b04 with SMTP id a14-20020a9d6e8e000000b006e494566b04mr12857341otr.5.1710748249106;
+        Mon, 18 Mar 2024 00:50:49 -0700 (PDT)
+Received: from redhat.com ([2.52.5.113])
+        by smtp.gmail.com with ESMTPSA id g9-20020a056830084900b006e682c00e59sm843274ott.57.2024.03.18.00.50.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Mar 2024 00:50:48 -0700 (PDT)
+Date: Mon, 18 Mar 2024 03:50:41 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Gavin Shan <gshan@redhat.com>
+Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+	jasowang@redhat.com, xuanzhuo@linux.alibaba.com, yihyu@redhat.com,
+	shan.gavin@gmail.com, Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	linux-arm-kernel@lists.infradead.org, mochs@nvidia.com
+Subject: Re: [PATCH] virtio_ring: Fix the stale index in available ring
+Message-ID: <20240318034710-mutt-send-email-mst@kernel.org>
+References: <20240314040443-mutt-send-email-mst@kernel.org>
+ <9b148de7-b687-4d10-b177-5608b8dc7046@redhat.com>
+ <20240314074216-mutt-send-email-mst@kernel.org>
+ <23dc6d00-6a57-4ddf-8611-f3c6f6a8e43c@redhat.com>
+ <20240314085630-mutt-send-email-mst@kernel.org>
+ <63002c24-8117-458f-84c7-fa4f7acd8cc6@redhat.com>
+ <20240315065318-mutt-send-email-mst@kernel.org>
+ <66e12633-b2d6-4b9a-9103-bb79770fcafa@redhat.com>
+ <20240317124214-mutt-send-email-mst@kernel.org>
+ <589d980f-2e4d-47b4-9dc7-8c64dbe271ce@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: =?utf-8?q?=3C20240318-for-net-mt7530-fix-eee-for-mt7531-mt7988-v?=
- =?utf-8?q?1-2-3f17226344e8=40arinc9=2Ecom=3E?=
-References: =?utf-8?q?=3C20240318-for-net-mt7530-fix-eee-for-mt7531-mt7988-v?=
- =?utf-8?q?1-0-3f17226344e8=40arinc9=2Ecom=3E?=
-In-Reply-To: =?utf-8?q?=3C20240318-for-net-mt7530-fix-eee-for-mt7531-mt7988-?=
- =?utf-8?q?v1-0-3f17226344e8=40arinc9=2Ecom=3E?=
-To: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
- Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, 
- Florian Fainelli <f.fainelli@gmail.com>, 
- Vladimir Oltean <olteanv@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- =?utf-8?q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>, 
- Russell King <linux@armlinux.org.uk>, 
- SkyLake Huang <SkyLake.Huang@mediatek.com>, 
- Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Bartel Eerdekens <bartel.eerdekens@constell8.be>, 
- mithat.guner@xeront.com, erkin.bozoglu@xeront.com, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, 
- =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710748010; l=1925;
- i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=DsZ4XshfmuCrCshjsgaop6WdjUbPqTHmbY230mILEL4=;
- b=ZS2k0DqfL9loUCm/WH/G9QtdGPn4jxGPZw06+JXJaEZak6hQGeq8Eo2REkCgRqRRkLXD1yaJo
- PcRkQSXM9Q6Az5i1Ibchy0fQ6e6xoBAq81gevdHjvamgoEvGlL5+Gp2
-X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
- pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
-X-Endpoint-Received:
- by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt with auth_id=115
-X-Original-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-Reply-To: <arinc.unal@arinc9.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <589d980f-2e4d-47b4-9dc7-8c64dbe271ce@redhat.com>
 
-From: Arınç ÜNAL <arinc.unal@arinc9.com>
+On Mon, Mar 18, 2024 at 09:41:45AM +1000, Gavin Shan wrote:
+> On 3/18/24 02:50, Michael S. Tsirkin wrote:
+> > On Fri, Mar 15, 2024 at 09:24:36PM +1000, Gavin Shan wrote:
+> > > 
+> > > On 3/15/24 21:05, Michael S. Tsirkin wrote:
+> > > > On Fri, Mar 15, 2024 at 08:45:10PM +1000, Gavin Shan wrote:
+> > > > > > > Yes, I guess smp_wmb() ('dmb') is buggy on NVidia's grace-hopper platform. I tried
+> > > > > to reproduce it with my own driver where one thread writes to the shared buffer
+> > > > > and another thread reads from the buffer. I don't hit the out-of-order issue so
+> > > > > far.
+> > > > 
+> > > > Make sure the 2 areas you are accessing are in different cache lines.
+> > > > 
+> > > 
+> > > Yes, I already put those 2 areas to separate cache lines.
+> > > 
+> > > > 
+> > > > > My driver may be not correct somewhere and I will update if I can reproduce
+> > > > > the issue with my driver in the future.
+> > > > 
+> > > > Then maybe your change is just making virtio slower and masks the bug
+> > > > that is actually elsewhere?
+> > > > 
+> > > > You don't really need a driver. Here's a simple test: without barriers
+> > > > assertion will fail. With barriers it will not.
+> > > > (Warning: didn't bother testing too much, could be buggy.
+> > > > 
+> > > > ---
+> > > > 
+> > > > #include <pthread.h>
+> > > > #include <stdio.h>
+> > > > #include <stdlib.h>
+> > > > #include <assert.h>
+> > > > 
+> > > > #define FIRST values[0]
+> > > > #define SECOND values[64]
+> > > > 
+> > > > volatile int values[100] = {};
+> > > > 
+> > > > void* writer_thread(void* arg) {
+> > > > 	while (1) {
+> > > > 	FIRST++;
+> > > > 	// NEED smp_wmb here
+> > >          __asm__ volatile("dmb ishst" : : : "memory");
+> > > > 	SECOND++;
+> > > > 	}
+> > > > }
+> > > > 
+> > > > void* reader_thread(void* arg) {
+> > > >       while (1) {
+> > > > 	int first = FIRST;
+> > > > 	// NEED smp_rmb here
+> > >          __asm__ volatile("dmb ishld" : : : "memory");
+> > > > 	int second = SECOND;
+> > > > 	assert(first - second == 1 || first - second == 0);
+> > > >       }
+> > > > }
+> > > > 
+> > > > int main() {
+> > > >       pthread_t writer, reader;
+> > > > 
+> > > >       pthread_create(&writer, NULL, writer_thread, NULL);
+> > > >       pthread_create(&reader, NULL, reader_thread, NULL);
+> > > > 
+> > > >       pthread_join(writer, NULL);
+> > > >       pthread_join(reader, NULL);
+> > > > 
+> > > >       return 0;
+> > > > }
+> > > > 
+> > > 
+> > > Had a quick test on NVidia's grace-hopper and Ampere's CPUs. I hit
+> > > the assert on both of them. After replacing 'dmb' with 'dsb', I can
+> > > hit assert on both of them too. I need to look at the code closely.
+> > > 
+> > > [root@virt-mtcollins-02 test]# ./a
+> > > a: a.c:26: reader_thread: Assertion `first - second == 1 || first - second == 0' failed.
+> > > Aborted (core dumped)
+> > > 
+> > > [root@nvidia-grace-hopper-05 test]# ./a
+> > > a: a.c:26: reader_thread: Assertion `first - second == 1 || first - second == 0' failed.
+> > > Aborted (core dumped)
+> > > 
+> > > Thanks,
+> > > Gavin
+> > 
+> > 
+> > Actually this test is broken. No need for ordering it's a simple race.
+> > The following works on x86 though (x86 does not need barriers
+> > though).
+> > 
+> > 
+> > #include <pthread.h>
+> > #include <stdio.h>
+> > #include <stdlib.h>
+> > #include <assert.h>
+> > 
+> > #if 0
+> > #define x86_rmb()  asm volatile("lfence":::"memory")
+> > #define x86_mb()  asm volatile("mfence":::"memory")
+> > #define x86_smb()  asm volatile("sfence":::"memory")
+> > #else
+> > #define x86_rmb()  asm volatile("":::"memory")
+> > #define x86_mb()  asm volatile("":::"memory")
+> > #define x86_smb()  asm volatile("":::"memory")
+> > #endif
+> > 
+> > #define FIRST values[0]
+> > #define SECOND values[640]
+> > #define FLAG values[1280]
+> > 
+> > volatile unsigned values[2000] = {};
+> > 
+> > void* writer_thread(void* arg) {
+> > 	while (1) {
+> > 	/* Now synchronize with reader */
+> > 	while(FLAG);
+> > 	FIRST++;
+> > 	x86_smb();
+> > 	SECOND++;
+> > 	x86_smb();
+> > 	FLAG = 1;
+> > 	}
+> > }
+> > 
+> > void* reader_thread(void* arg) {
+> >      while (1) {
+> > 	/* Now synchronize with writer */
+> > 	while(!FLAG);
+> > 	x86_rmb();
+> > 	unsigned first = FIRST;
+> > 	x86_rmb();
+> > 	unsigned second = SECOND;
+> > 	assert(first - second == 1 || first - second == 0);
+> > 	FLAG = 0;
+> > 
+> > 	if (!(first %1000000))
+> > 		printf("%d\n", first);
+> >     }
+> > }
+> > 
+> > int main() {
+> >      pthread_t writer, reader;
+> > 
+> >      pthread_create(&writer, NULL, writer_thread, NULL);
+> >      pthread_create(&reader, NULL, reader_thread, NULL);
+> > 
+> >      pthread_join(writer, NULL);
+> >      pthread_join(reader, NULL);
+> > 
+> >      return 0;
+> > }
+> > 
+> 
+> I tried it on host and VM of NVidia's grace-hopper. Without the barriers, I
+> can hit assert. With the barriers, it's working fine without hitting the
+> assert.
+> 
+> I also had some code to mimic virtio vring last weekend, and it's just
+> working well. Back to our original issue, __smb_wmb() is issued by guest
+> while __smb_rmb() is executed on host. The VM and host are running at
+> different exception level: EL2 vs EL1. I'm not sure it's the cause. I
+> need to modify my code so that __smb_wmb() and __smb_rmb() can be executed
+> from guest and host.
 
-The MT7531_FORCE_EEE1G and MT7531_FORCE_EEE100 bits let the
-PMCR_FORCE_EEE1G and PMCR_FORCE_EEE100 bits determine the 1G/100 EEE
-abilities of the MAC. If MT7531_FORCE_EEE1G and MT7531_FORCE_EEE100 are
-unset, the abilities are left to be determined by PHY auto polling.
-
-The commit 40b5d2f15c09 ("net: dsa: mt7530: Add support for EEE features")
-made it so that the PMCR_FORCE_EEE1G and PMCR_FORCE_EEE100 bits are set on
-mt753x_phylink_mac_link_up(). But it did not set the MT7531_FORCE_EEE1G and
-MT7531_FORCE_EEE100 bits. Because of this, EEE will be enabled on the
-switch MACs by polling the PHY, regardless of the result of phy_init_eee().
-
-Define these bits and add them to MT7531_FORCE_MODE which is being used by
-the subdriver. With this, EEE will be prevented from being enabled on the
-switch MACs when phy_init_eee() fails.
-
-Fixes: 40b5d2f15c09 ("net: dsa: mt7530: Add support for EEE features")
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
----
- drivers/net/dsa/mt7530.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
-index 509ed5362236..5b99aeca34b4 100644
---- a/drivers/net/dsa/mt7530.h
-+++ b/drivers/net/dsa/mt7530.h
-@@ -299,11 +299,15 @@ enum mt7530_vlan_port_acc_frm {
- #define  MT7531_FORCE_DPX		BIT(29)
- #define  MT7531_FORCE_RX_FC		BIT(28)
- #define  MT7531_FORCE_TX_FC		BIT(27)
-+#define  MT7531_FORCE_EEE100		BIT(26)
-+#define  MT7531_FORCE_EEE1G		BIT(25)
- #define  MT7531_FORCE_MODE		(MT7531_FORCE_LNK | \
- 					 MT7531_FORCE_SPD | \
- 					 MT7531_FORCE_DPX | \
- 					 MT7531_FORCE_RX_FC | \
--					 MT7531_FORCE_TX_FC)
-+					 MT7531_FORCE_TX_FC | \
-+					 MT7531_FORCE_EEE100 | \
-+					 MT7531_FORCE_EEE1G)
- #define  PMCR_LINK_SETTINGS_MASK	(PMCR_TX_EN | PMCR_FORCE_SPEED_1000 | \
- 					 PMCR_RX_EN | PMCR_FORCE_SPEED_100 | \
- 					 PMCR_TX_FC_EN | PMCR_RX_FC_EN | \
+It is thinkably possible that on grace-hopper barriers work
+differently somehow. We need to find out more though.
+Anyone from Nvidia can chime in?
 
 -- 
-2.40.1
+MST
 
