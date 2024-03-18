@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC605A786;
-	Mon, 18 Mar 2024 22:47:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF9B5A793
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 22:47:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710802042; cv=none; b=Xtq1Ej1ueU+2MlhSuFF1WcYIanTdej9/hPM/yDjOSUcSpD/+x+Tuji0bE/8YoybdLN/GgkPahcUwZ3nn9IoIL2frxTi2r3+i6r0v8RenknfOjBSaKQOWA9a0HGI2VtbEd4N4T2zHHXw5kyoNDl0R9/uBxL3GoF7d+IZpVXkO29Y=
+	t=1710802042; cv=none; b=rJm0T7EG/wxFzFXoh8cKr2+L1Zsr33qih8gXuAloqxom9bEPMj/xnDcEHCg1C7UoaoAIDsxS4otq3Q+SM2jgbLL7S2liF3x2zqNLtQB49UWpVyJ9FyLveuSwYMtLajtaam6X1/Is0ATtf2OFrRW0kQaPE8EJjPxmPgcitVn2Gbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710802042; c=relaxed/simple;
-	bh=+oeCCZuGnI9DcVme6NWVIVJJgNcEbP+7SYrOodPau6A=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=blIOTuT+vWffjlTxBmrx32SlRg1nmYnhfPBLjjuZ2imEf9llX21w6d35mWyPfopXkmlNaZPZqtT1Z2JobHAv43RXb0UWEqV/2IeN1nok0pTu+maf4DN3dHPddgB/7ZMYy/InPBKY5EW6tOYvhGtYn8yrQ/60K0Yi6Glp7TwJowA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CjYCusVd; arc=none smtp.client-ip=10.30.226.201
+	bh=xnDBrr9ieA4Of9z0F4s7qNHKn3cs2MLpFDqgecAAoC8=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=lJN7GG5Tt6HSxqHi4EjcgQ2RhEIwhVlTtZMwP0IxcGPysws1rkXfw/cIikAbgekAxzt5Yibe8cvVk+dGqiPej173k5QMc18vv/l25nYPQueJX94mMeO0ONzzVTcSL5KH0G4dc/PSiYAq7bXztYAcQ2MfwAD/c5vdncuuWj/EF9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xw1K7P++; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CjYCusVd"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 492C7C433C7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xw1K7P++"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9FC6CC433A6;
 	Mon, 18 Mar 2024 22:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1710802042;
-	bh=+oeCCZuGnI9DcVme6NWVIVJJgNcEbP+7SYrOodPau6A=;
+	bh=xnDBrr9ieA4Of9z0F4s7qNHKn3cs2MLpFDqgecAAoC8=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=CjYCusVdCPlzf/MFrgzsqGKMRiMHAwB4X177B374Du+vkQDFsA3JlW75xnMQwnhAF
-	 02mp6qVs6nc0Gj5FcfBfUNGcntzXtcIHKomJIGFJjYgFPzdisuKrdHJ2QP59LYVGrW
-	 2ATBuwPWAcUL5giL2zJzFe0l//CltiMNmq21TqsRTFrdFNzE5VKh54mcKUGShS2KMw
-	 U1NPiCHpNfaKRHT7EV251EuxLfH/vD7MjEzWuKf+j7kr1bnNSzBLfYDBdprQGpfL8M
-	 AGh0DhaoLq15JLaZBN9EFJpks0oHbT6IyyvdzXEMgGaqmZpZJ2KzJxIBXJHGuKPgeq
-	 2Oz90rynqtqKw==
+	b=Xw1K7P++M5AipCiiMv7vIzfWDpVgKNU/JXAN6mUulMA4ngOjvbnm8rXWCud147uXS
+	 U0I87jju8CY8dVtFu/HYOJ9sm5MI9npXQYoGJ9Jqq0zj9IZ/jS56dVfDO64baS8ptn
+	 LwmmY9lhT+uEycMnQOWIJeTKDUOKupDGlt0F6x7X7RDmEAMkgk5cEoQt5uE4zMHXlo
+	 x2mljdA2oyGFujiwRoSAydUZJK/a8SUepjCHmHWQWrkw8N980VMCgzeQF63BIJx3Is
+	 u+dy3rFmBiYuyfoUtf0lodTyWDKyW5viBg3tlRxj0ECKbOUxT4vpPqaKSfginD4fzj
+	 ZLxAmAUY83GZQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3CA75D84BB3;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 97B65D84BB4;
 	Mon, 18 Mar 2024 22:47:22 +0000 (UTC)
-Subject: Re: [GIT PULL] sysctl changes for v6.9-rc1
+Subject: Re: [GIT PULL] ktest: Updates for 6.9
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240318122559.jedemqmrgms2wmgq@joelS2.panther.com>
-References: <CGME20240318122602eucas1p1d7761ac44909f55a8bb369982d2e0adb@eucas1p1.samsung.com> <20240318122559.jedemqmrgms2wmgq@joelS2.panther.com>
+In-Reply-To: <20240318120304.3c471ffa@gandalf.local.home>
+References: <20240318120304.3c471ffa@gandalf.local.home>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240318122559.jedemqmrgms2wmgq@joelS2.panther.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/sysctl/sysctl.git/ tags/sysctl-6.9-rc1
-X-PR-Tracked-Commit-Id: 4f1136a55dc8e2c27d51e934d0675e12331c7291
+X-PR-Tracked-Message-Id: <20240318120304.3c471ffa@gandalf.local.home>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-ktest.git ktest-v6.9
+X-PR-Tracked-Commit-Id: 07283c1873a4d0eaa0e822536881bfdaea853910
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2cb5c8683981ebd5033e3cc91f7dd75794f16e61
-Message-Id: <171080204223.23091.18349900387276389619.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 65b64246f28bee13f9c15e4f0847fd6cca39ada3
+Message-Id: <171080204261.23091.6780170056401394041.pr-tracker-bot@kernel.org>
 Date: Mon, 18 Mar 2024 22:47:22 +0000
-To: Joel Granados <j.granados@samsung.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>, Thomas =?utf-8?B?V2Vp77+9c2NodWg=?= <linux@weissschuh.net>, Christian Brauner <brauner@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, Joel Granados <j.granados@samsung.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, John 'Warthog9' Hawley <warthog9@kernel.org>, "Ricardo B. Marliere" <ricardo@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Mon, 18 Mar 2024 13:25:59 +0100:
+The pull request you sent on Mon, 18 Mar 2024 12:03:04 -0400:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/sysctl/sysctl.git/ tags/sysctl-6.9-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-ktest.git ktest-v6.9
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2cb5c8683981ebd5033e3cc91f7dd75794f16e61
+https://git.kernel.org/torvalds/c/65b64246f28bee13f9c15e4f0847fd6cca39ada3
 
 Thank you!
 
