@@ -1,164 +1,94 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15674438F;
-	Mon, 18 Mar 2024 13:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88FC45BE0
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 13:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710768058; cv=none; b=RRMjfuCpzA874WAZHompfdX4dNKqOwstOa+OnqJd5ELnjc2hbg35I7ZUpHdhK0gtwQwPJkFPCpeMKHwdgVGnBjxD0cthuM/uONn3kn9fHT4Em2MynzAGzP5KsBsWxpDY+QFbuY4JbwvTGEzeT0VzaOyerPr0c6zsS4DwoQH5OfQ=
+	t=1710768208; cv=none; b=tR81v+TeFxhAp3OJ6U+yDBXJSKGKqzLiJBEGYFx/CIrf3CW8rbzTZIFbzLJOw7O1gLgHaOPSkErGwcS1ljaffvMvybD9JJPnwLaXxqr5eaZrTkBTGN/zxivHvLxvNETvz7mLcq3yTAk6ffnKvmgCw5lKL3GCslDjSRMbElGTT0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710768058; c=relaxed/simple;
-	bh=Ro9DhNywcl6K5qDRLecjZIB/mP5nv+WPca/RqnMk09M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HZIOWwun8+lN98l85XYRMmVYQYYAR7Xj0TYWftt5WYkF7WR1GtwHoLWH+WsmxgcGhXwm45w39uIDQKHhH7yTboZ7M7Grz07BvR+MVm5Dqet2wfu5S1mEow8YgppGcDVahnNo/hdyYhBmRnrvJTwDHA/XbF4M3VXb8MfahNDPv7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PlQ+c4bl; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PlQ+c4bl"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d41d1bedc9so73982051fa.3;
-        Mon, 18 Mar 2024 06:20:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710768055; x=1711372855; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=B6f1uddVmun0jJOTXaZCQpPLYe/6XOnd9oX08SFGjC0=;
-        b=PlQ+c4bl91Dpmes14fBswcC6BcIbol49w+sQwMRe/TAeUvvaM3ac2D3bcjkLQiab3e
-         kxvAeD1ESF4SceQgKmgzJ2UA0gDA+vS5cLHgahaKEv6qs03SWOck70/XdJDI5IWog36G
-         Cc+kEbTy24WU4yCgCy+Y4HAA703c6iV7BjFvAktvlPwl0C1VqO2zid2eAmG9iHyWh/iv
-         SsvqDm1zzIKjeBUAg0lAfUvfOYrrUEsLEVsmRit3cs4k1W6IIhUbQ4Bye+krtc3Z550S
-         KEnewm6A/DwcFKXC2Vr8QdYGhMrYWiiV9BZu4obD1LP6Duww0X5bGdkL4fyHMV45JBNs
-         d6mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710768055; x=1711372855;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B6f1uddVmun0jJOTXaZCQpPLYe/6XOnd9oX08SFGjC0=;
-        b=k2jtj/y/Nc2CXNuqtZIKCbwLJ7H5zs20+up0seADMaJvYxQ8rbYg3MKRxgUUTIcfUV
-         nRupgC/BSSsU5lYl3IbCYS1pSr5g3e9ETkcQLWJ4OFdUE4XCRPQJbPS+SH+aDMypfDgs
-         xXzYP3sD0si/gFik5en7IqniCUyJN0sil25IYyFki5gLBa5mTf1HeZVbodjLo1p+FNaj
-         J0n31HArjK7r86gfTSN+H5ghZXrj+6MsMJnqF3qFwhCgCn5YIlAedi6Z9UZ8JDWXJJnl
-         4y1lW5kvmqAQK7siIrtnQAhMHsEonIrR0GRpZnzTzCdxso5uuFd/nx8tO2P6JRtT7SAI
-         HoIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+b8K65aybDDKyYXTuzO2rocOP3kcjpoyZgHHfUjkndoHF6J7zufyGTXC8F+0UM+9GsCzAyoNkWbVxz0+h9MUI/ElQHi3XdJdeqq+LErZg2ZiaduZlcN2cAlQrCN4jso248XCWhXY=
-X-Gm-Message-State: AOJu0YxDp+zm9pBLMxoc/K1SzjM4becevr4L6qgx4qcQS/V8SVg36l4B
-	LfuC9/G4otewzdSgH8auYTA1MwjV2l6sc499NO8S1papeFhZ408Z
-X-Google-Smtp-Source: AGHT+IGo7h2AxBg2UxkUko/nh1IfJYKCRKIBQwNwYP8I35nwUeXbiEw4QWW6hWgGVAaLpuqdbDqs6Q==
-X-Received: by 2002:a2e:9bcd:0:b0:2d4:5c03:5ccb with SMTP id w13-20020a2e9bcd000000b002d45c035ccbmr5121261ljj.10.1710768054395;
-        Mon, 18 Mar 2024 06:20:54 -0700 (PDT)
-Received: from ?IPV6:2620:10d:c096:310::2181? ([2620:10d:c092:600::1:429a])
-        by smtp.gmail.com with ESMTPSA id wk18-20020a170907055200b00a46c7ecb464sm709545ejb.27.2024.03.18.06.20.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Mar 2024 06:20:54 -0700 (PDT)
-Message-ID: <0a556650-9627-48ee-9707-05d7cab33f0f@gmail.com>
-Date: Mon, 18 Mar 2024 13:19:19 +0000
+	s=arc-20240116; t=1710768208; c=relaxed/simple;
+	bh=sVMQ2WwTDTCT3C55Gs/Vv2ttOOQ2sw6WqofWzGXj7rw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RN906jNHcxU172dlb1LlcJoyZw2U0pV5du52rdPSztx0XXMAxAitUTfI0iXW9ztlo+MYTa8DruZ90XRUacFPKxcx1IDJi19K/p9Fp3+AUlqQKqDXs1OFPByYIlSLp1rADAtYh9FFk50tofqc2l9GxUzThP7y9XIreTMlb2a3HZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.29])
+	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4Tyvn24Vhyz9xqwm
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 20:49:10 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.27])
+	by mail.maildlp.com (Postfix) with ESMTP id 370C2140121
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 21:05:06 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.81.220.121])
+	by APP2 (Coremail) with SMTP id GxC2BwDXECX4O_hl1WCFBA--.53744S2;
+	Mon, 18 Mar 2024 14:05:05 +0100 (CET)
+From: Petr Tesarik <petrtesarik@huaweicloud.com>
+To: Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Petr Tesarik <petr.tesarik1@huawei-partners.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Will Deacon <will@kernel.org>,
+	linux-kernel@vger.kernel.org (open list),
+	iommu@lists.linux.dev (open list:DMA MAPPING HELPERS)
+Cc: Roberto Sassu <roberto.sassu@huaweicloud.com>,
+	Petr Tesarik <petr@tesarici.cz>
+Subject: [PATCH v2 0/2] swiotlb: allocate padding slots if necessary
+Date: Mon, 18 Mar 2024 14:04:45 +0100
+Message-Id: <20240318130447.594-1-petrtesarik@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: Do not break out of sk_stream_wait_memory() with
- TIF_NOTIFY_SIGNAL
-Content-Language: en-US
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: netdev@vger.kernel.org, kernel@pengutronix.de,
- linux-kernel@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
- Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org
-References: <20240315100159.3898944-1-s.hauer@pengutronix.de>
- <7b82679f-9b69-4568-a61d-03eb1e4afc18@gmail.com>
- <ZfgvNjWP8OYMIa3Y@pengutronix.de>
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <ZfgvNjWP8OYMIa3Y@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:GxC2BwDXECX4O_hl1WCFBA--.53744S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xr45JFWkJr4DZr18GrW7Jwb_yoWDCFc_AF
+	W8JrWUAw1DZFnYyasagrsrArWvqr4jvr1xCa98XrsxJry3Zw1fZ3Z7KFWjqr1UWan8CFn7
+	tr95WryxCr17KjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbD8YFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x02
+	67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267
+	AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v
+	6xkF7I0E8cxan2IY04v7MxkF7I0En4kS14v26r4a6rW5MxkF7I0Ew4C26cxK6c8Ij28Icw
+	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
+	vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMI
+	IF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0piG-enUUUUU
+	=
+X-CM-SenderInfo: hshw23xhvd2x3n6k3tpzhluzxrxghudrp/
 
-On 3/18/24 12:10, Sascha Hauer wrote:
-> On Fri, Mar 15, 2024 at 05:02:05PM +0000, Pavel Begunkov wrote:
->> On 3/15/24 10:01, Sascha Hauer wrote:
->>> It can happen that a socket sends the remaining data at close() time.
->>> With io_uring and KTLS it can happen that sk_stream_wait_memory() bails
->>> out with -512 (-ERESTARTSYS) because TIF_NOTIFY_SIGNAL is set for the
->>> current task. This flag has been set in io_req_normal_work_add() by
->>> calling task_work_add().
->>
->> The entire idea of task_work is to interrupt syscalls and let io_uring
->> do its job, otherwise it wouldn't free resources it might be holding,
->> and even potentially forever block the syscall.
->>
->> I'm not that sure about connect / close (are they not restartable?),
->> but it doesn't seem to be a good idea for sk_stream_wait_memory(),
->> which is the normal TCP blocking send path. I'm thinking of some kinds
->> of cases with a local TCP socket pair, the tx queue is full as well
->> and the rx queue of the other end, and io_uring has to run to receive
->> the data.
+From: Petr Tesarik <petr.tesarik1@huawei-partners.com>
 
-There is another case, let's say the IO is done via io-wq
-(io_uring's worker thread pool) and hits the waiting. Now the
-request can't get cancelled, which is done by interrupting the
-task with TIF_NOTIFY_SIGNAL. User requested request cancellations
-is one thing, but we'd need to check if io_uring can ever be closed
-in this case.
+If the allocation alignment is bigger than IO_TLB_SIZE and min_align_mask
+covers some bits in the original address between IO_TLB_SIZE and
+alloc_align_mask, preserve these bits by allocating additional padding
+slots before the actual swiotlb buffer.
 
+Changes from v1
+---------------
+* Rename padding to pad_slots.
+* Set pad_slots only for the first allocated non-padding slot.
+* Do not bother initializing orig_addr to INVALID_PHYS_ADDR.
+* Change list and pad_slots to unsigned short to avoid growing
+  struct io_tlb_slot on 32-bit targets.
+* Add build-time check that list and pad_slots can hold the maximum
+  allowed value of IO_TLB_SEGSIZE.
 
->> If interruptions are not welcome you can use different io_uring flags,
->> see IORING_SETUP_COOP_TASKRUN and/or IORING_SETUP_DEFER_TASKRUN.
-> 
-> I tried with different combinations of these flags. For example
-> IORING_SETUP_TASKRUN_FLAG | IORING_SETUP_SINGLE_ISSUER | IORING_SETUP_DEFER_TASKRUN
-> makes the issue less likely, but nevertheless it still happens.
-> 
-> However, reading the documentation of these flags, they shall provide
-> hints to the kernel for optimizations, but it should work without these
-> flags, right?
+Petr Tesarik (2):
+  swiotlb: extend buffer pre-padding to alloc_align_mask if necessary
+  bug: introduce ASSERT_VAR_CAN_HOLD()
 
-That's true, and I guess there are other cases as well, like
-io-wq and perhaps even a stray fput.
-
-
->> Maybe I'm missing something, why not restart your syscall?
-> 
-> The problem comes with TLS. Normally with synchronous encryption all
-> data on a socket is written during write(). When asynchronous
-> encryption comes into play, then not all data is written during write(),
-> but instead the remaining data is written at close() time.
-
-Was it considered to do the final cleanup in workqueue
-and only then finalising the release?
-
-
-> Here is my call stack when things go awry:
-> 
-> [  325.560946] tls_push_sg: tcp_sendmsg_locked returned -512
-> [  325.566371] CPU: 1 PID: 305 Comm: webserver_libur Not tainted 6.8.0-rc6-00022-g932acd9c444b-dirty #248
-> [  325.575684] Hardware name: NXP i.MX8MPlus EVK board (DT)
-> [  325.580997] Call trace:
-> [  325.583444]  dump_backtrace+0x90/0xe8
-> [  325.587122]  show_stack+0x18/0x24
-> [  325.590444]  dump_stack_lvl+0x48/0x60
-> [  325.594114]  dump_stack+0x18/0x24
-> [  325.597432]  tls_push_sg+0xfc/0x22c
-> [  325.600930]  tls_tx_records+0x114/0x1cc
-> [  325.604772]  tls_sw_release_resources_tx+0x3c/0x140
-> [  325.609658]  tls_sk_proto_close+0x2b0/0x3ac
-> [  325.613846]  inet_release+0x4c/0x9c
-> [  325.617341]  __sock_release+0x40/0xb4
-> [  325.621007]  sock_close+0x18/0x28
-> [  325.624328]  __fput+0x70/0x2bc
-> [  325.627386]  ____fput+0x10/0x1c
-> [  325.630531]  task_work_run+0x74/0xcc
-> [  325.634113]  do_notify_resume+0x22c/0x1310
-> [  325.638220]  el0_svc+0xa4/0xb4
-> [  325.641279]  el0t_64_sync_handler+0x120/0x12c
-> [  325.645643]  el0t_64_sync+0x190/0x194
-> 
-> As said, TLS is sending remaining data at close() time in tls_push_sg().
-> Here sk_stream_wait_memory() gets interrupted and returns -ERESTARTSYS.
-> There's no way to restart this operation, the socket is about to be
-> closed and won't accept data anymore.
+ include/linux/build_bug.h | 10 ++++++++++
+ kernel/dma/swiotlb.c      | 37 +++++++++++++++++++++++++++++++------
+ 2 files changed, 41 insertions(+), 6 deletions(-)
 
 -- 
-Pavel Begunkov
+2.34.1
+
