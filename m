@@ -1,180 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F1E58ADF;
-	Mon, 18 Mar 2024 21:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710797538; cv=fail; b=XgY/C59i3BdM8mfRWMI8Dso7N4hYIbwtAGQFRe6zeCA5JNYv0iCtR05dlquNwr7qrcUvp1bfDh9mKxFD9BdiTLA2JZjL4lRpRvr7JuO23qpV5Ue/lJCeHJpoRP2GbLUSVESY0uPEOzEFHnMQZE4m7wBUYcPWRWQV+s9vLpb0vC4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710797538; c=relaxed/simple;
-	bh=gxEfvMqKE5/0AGJ1BfqKymWLqXEEggyc9HYFSSpg19A=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ZhU2/0wDwUTwy+zvmuAljGwU1akV09NZOdmbqR1cg/6k8IBxdBaxDyRUTJc7H0lZZmB1qJxiSMP4pwJebeWXwcLjfCxaA5sWchX84dD4GZRhEOZOJOo3GqHePHduvfMlwREuTPPabBTXzufL8Q43rCqRqEDpHq5wUi9g0ECk2Hk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k22yWgQp; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4D358AC3
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 21:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710797587; cv=none; b=BQE+lL85963AvwqBzeMGi2wPaM5m2DW8R1/dyc64hSxu7dGb8yLBw9u2TOee+6iSW7iUm4GeTqv9HPc25K+U+mkTyGTF9LwiRJhyNQ+Toq+CWnNpY4NlhNP4Emao13rwaTwP0CddK/zPEj+Dc2hYJnWxtSjI9vtiqvKnF2as2gs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710797587; c=relaxed/simple;
+	bh=9UyEleUnZum8/j9s4RGJ600MaybJEwjgwNGZe5TtsUk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aQS0gOW3/IooCLBU5xpGbz+YPLw0zhqdCoxX30O0DapQ3k+q56mofgVRnx6nwb2xiVfiy08K5s1AAPH10Wk9/QCfD18zhBkoHGYJe5pOO/FJ/+2tpY07yh9GJZvl7Mz0QwQZLIGSS+R0pkvls6Xy5cAWsndTbagvnNrvpKrB908=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=RTDU9oaq; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k22yWgQp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710797535; x=1742333535;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=gxEfvMqKE5/0AGJ1BfqKymWLqXEEggyc9HYFSSpg19A=;
-  b=k22yWgQpMug37heOKuwycwtFOjtqB8goccnu+rVPb3NqLNBNKO+6+E9e
-   +IxkMleWnacIdRVsMSCXfmmy1war8eMHjchv6+pnuxqxL3fafL5L6MUoD
-   7RFaDX5eHPgPxlCsakOIOMHuIzMHk+gAZqH3YwaWJCN2ExQr19t9u00qB
-   /eBii1CAICghITNJHDR6GTD7NvZU4voFQwoYvkidoN+JEaqHO9nKDOrRj
-   SIa9JAfRmWXv43l7Fsc6wxNWkU6XcqzllwmJ6dTLU0KepROjbsZTHiICu
-   tWL613FKLbUtsVTK9WCwuTFADlIpbZMhognkQI30TxgQ0+1wuxfxfOqX7
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="16181589"
-X-IronPort-AV: E=Sophos;i="6.07,135,1708416000"; 
-   d="scan'208";a="16181589"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 14:32:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,135,1708416000"; 
-   d="scan'208";a="18169364"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 18 Mar 2024 14:32:15 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 18 Mar 2024 14:32:14 -0700
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 18 Mar 2024 14:32:13 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 18 Mar 2024 14:32:13 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.168)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 18 Mar 2024 14:31:33 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GCria/Spo4V+g4pdfM9f39WRYqaR3mEFfzyGPD+gPi/yFVtUz06dSZCb7UZHAIN/k2iFl/RqJmJqVPujOsXtJMlf3ZRdnHnPuu1e1tp6vS0Zx8JWUsYArmjnyge1LqylnZb7+1oVzxRiisHyiAWgCeaKXNtZLTuEunArD8WbGVr5ro19EExRXLSfkMO1LP+Ifw777eso0lgpgwmOtJAg2AAWGT2Z1EpFGKyI4lHJOVaKctSIm3pIngxqBnC3yaDENC3qydVBr7GYcjd+Xot7zEbneEep03Imnr2Zjx7+9sWl+vFCt2+EDiVNVPPgbbHMztsMkxBt01p0f0jZWDZQ9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gkykG7UxxYvAvDxq5bmeck7bX8LFoV213Zg0ZvIHJNU=;
- b=W7ZxGcmIC9NzrgFlMntvtoBKPmhYeEWroh5wh3BKIXeoY2L/5H6oyyMP+ZV6xsug5w25V2VqOh04mtUatgP3hjL3q5UNLc2SuaMoXG4L8BXAVY9WCsb4L+WOPJPGQNel30Bv5xOtbFEZ1a3w5Aevf65oPgI4XFAr7VI5cHQ1Hwf6SKyKdHnEMyTBjny28VSoaaimUGzKy/VXUayIP7FWOXYgrGRuG1YBu66707oAZ/8Nqovq2R+K2KwSY+GWSXfU3l+IDIRzPKAWJZ4Wg13sAjExEUMLppkcwtdNQ8o57wx91iiD9LAj0GXQh/T4T147mqdTU0fyuO2PEvA5o7Gxww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SJ0PR11MB5816.namprd11.prod.outlook.com (2603:10b6:a03:427::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.10; Mon, 18 Mar
- 2024 21:31:30 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7409.009; Mon, 18 Mar 2024
- 21:31:30 +0000
-Date: Mon, 18 Mar 2024 14:31:27 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Robert Richter <rrichter@amd.com>, "Rafael J. Wysocki"
-	<rafael@kernel.org>, Alison Schofield <alison.schofield@intel.com>, "Dan
- Williams" <dan.j.williams@intel.com>, Dave Hansen
-	<dave.hansen@linux.intel.com>
-CC: <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, Derick Marks <derick.w.marks@intel.com>, "Len
- Brown" <lenb@kernel.org>
-Subject: Re: [PATCH 1/3] x86/numa: Fix SRAT lookup for CFMWS ranges with
- numa_fill_memblks()
-Message-ID: <65f8b2afdfc38_aa22294ef@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20240318210904.2188120-1-rrichter@amd.com>
- <20240318210904.2188120-2-rrichter@amd.com>
- <Zfiuow9LiOIl3C7X@rric.localdomain>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <Zfiuow9LiOIl3C7X@rric.localdomain>
-X-ClientProxiedBy: MW4PR04CA0071.namprd04.prod.outlook.com
- (2603:10b6:303:6b::16) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="RTDU9oaq"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-42a0ba5098bso28525151cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 14:33:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1710797583; x=1711402383; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=mGPv8yamP9bphcl7rsqbJVKUCn1NBYwIxJacintSX4E=;
+        b=RTDU9oaqsdXUorIbRjEhK9OIxR741Co9b21x0FX5SCuhXXUtUQrsjFs5DQ9P+rOVGm
+         7y4EoDmqrd19H6iiU9yAc35sYfVodWMS6HZ+L9aBG+cA7O23YmGe+DVJB7NRzIckOhoY
+         TbIEIux0kSGGBAhKnf8KHFtVnrFna3qGgLcAui5SpkrPmIg/xzhUEAcJVaJCU97frCPo
+         DXICth2ujuhmOa1I3yF/UQZAnx0mTomKdZ9sjx6Lyybslhc0O0UCCVA2GQ7dm8jf6QxM
+         YFbrzR5qakiy094/zZJvRWrQvy3qMl0nm+RN4jnazi/az8cKw2CL9f3v4Y0Ez2IOrbKz
+         hYJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710797583; x=1711402383;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mGPv8yamP9bphcl7rsqbJVKUCn1NBYwIxJacintSX4E=;
+        b=jqmilrfzSImIQUFHitvnbnlnJTC/hHUQGYGnYmwVWQ6X9X6WYzUId0Xl/kHRjQ9tya
+         FMwcJ9HQyHgMAiVKVubf6l4BaKU7ekrwhoHa7Nt0Oo1RhSrm88uBePVkD3fi5ydToDwP
+         Npas1gwl2987SPkFwGUBaWw8oZZTC3tNBH2n6kpRpQLw0lrhaf04c35n+DLh6a0j06Xe
+         V8NieqNtAbUqKX0radXng7T3882CRnEnyT6dWywRt9ab2SK23S9jGty6qh1ZKU3VwgWC
+         yDyeiYqGS9stm+JkZyViaHqmpTedwUD4EAOhQTnoaoNEDOPiQdxgFgpQjMv2PDRiTPB2
+         /dWw==
+X-Forwarded-Encrypted: i=1; AJvYcCXGXR4sSmJXDOrzk8HOJjDGlkSEftzVRYUipSZ6TI4WI/BHpa/F5ucgNf9mfNVAFZhAOP6+aSc+g1R/920dvm1nvQssJuF60sGMjzhc
+X-Gm-Message-State: AOJu0YxqVcpq28cs1cAyXCjQ7uGhT4To8q4Vw/1PFlTxnczYPzJYG9M7
+	tlaND/w+bdXN8Ytf6IDpbzvkm/BXF4gjzZ9eveFBLRggg0gTysvQKWSCoMjhPTomuKjhpV+LkoY
+	8
+X-Google-Smtp-Source: AGHT+IHy9RlxCISU3kmenwXlDWSWKdj/pdGdU/FQ7uGUX7Pn1QHqJCVyLWVjT1NiurJWUrhsxjcsvQ==
+X-Received: by 2002:ac8:7e96:0:b0:430:e2a3:f80c with SMTP id w22-20020ac87e96000000b00430e2a3f80cmr696515qtj.31.1710797582770;
+        Mon, 18 Mar 2024 14:33:02 -0700 (PDT)
+Received: from localhost (2603-7000-0c01-2716-da5e-d3ff-fee7-26e7.res6.spectrum.com. [2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with ESMTPSA id ay29-20020a05622a229d00b00430b385f721sm3924923qtb.15.2024.03.18.14.33.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Mar 2024 14:33:02 -0700 (PDT)
+Date: Mon, 18 Mar 2024 17:32:57 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Barry Song <21cnbao@gmail.com>
+Cc: Yosry Ahmed <yosryahmed@google.com>, Nhat Pham <nphamcs@gmail.com>,
+	syzbot <syzbot+adbc983a1588b7805de3@syzkaller.appspotmail.com>,
+	akpm@linux-foundation.org, chengming.zhou@linux.dev,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	syzkaller-bugs@googlegroups.com, Barry Song <v-songbaohua@oppo.com>
+Subject: Re: [syzbot] [mm?] kernel BUG in sg_init_one
+Message-ID: <20240318213257.GB4210@cmpxchg.org>
+References: <000000000000bbb3d80613f243a6@google.com>
+ <CAKEwX=MAX0km1p43DQmKbeSy2G4dPFHiF+deH_qzqygc2Vnjig@mail.gmail.com>
+ <CAJD7tkbEuFkGuQeYjKS02rQoAAKOKieAJ1P2mwukirW3e2JN9A@mail.gmail.com>
+ <20240318210917.GA4210@cmpxchg.org>
+ <CAGsJ_4wEjgAscao4BiLbNFChfF7aTpFFdXXozWC45_j+vADdPw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ0PR11MB5816:EE_
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VTlsizwA9zHhHNi2xoXqjKuCqjbjDCXMdO3hlpNbUDBSgar4GHcaiOAXoyqrWOXB9SyYG60VM6sYtURkCJkCxgFdEYC21ZftXXgl2O/51fRQ+YZvfoNaqKNCOiZ7cDtsryC/qtxt/ADgT7XmqBxeEqIRDX3qh/a5JBKkCltqYciRca5FuVapJky0fH4M7F5z1yMiauoRRBCE/Nub4D9Z9bZtyfXobm2eobnLpCzNIQSX6EoZD0cqlsRv0Vggk1C6DDpCt0qA2Jg0tuASNvax/PUiEXjbg/l51cv1XmED1iZSJLyVh4TcI/0gg3f0kd5fohYnn8n9IRjXpjzh9gntkSjT+97YhHpLGGYRpM6VDFsiy8GBzcAYygmDxHDfzgEVbS9KBZZiUWyj4/3KcugnQ6AWnvMjITf6+ls8iCHCzCA0XL2bny5THVFILfM+K3XuD3c78dQBgmzzO2knYz8TMholKdyK6dkE6YNxj2rQ53flAfQdrvAOsco0wBLfk8jKmnFr7c6Pt6Y1W5dudGgpJVJ91Ave1aL3dh7lsr+DxqfCCqiq+ORnRY5LR+nvY3/e5n99FQY9mLN/ahhK5uSIWHTf4TW3LDz1yWkvZF1ypDD+05zjqQw/iY2BahJvIYGuHNfRGOQpQquM4qsZFFfxEu3pRWPFHD8ce8476HulIHM=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xE3o83aCZ8mkNtBEkHnyI2pUQmBfUHTWGFya6aqJiO1xmyjjCuXxD2HmHZoZ?=
- =?us-ascii?Q?z9peizTQCXxd6444HR4Nek5ZSD2alumDAyPeXY1ODIjo1QU+SUxMyGO4fHHv?=
- =?us-ascii?Q?XvmDhm9s3admF+Dgpgws7Np6bfzzCk6Bd93sYeK3wmjv/J5HD6OY3vb469Se?=
- =?us-ascii?Q?ncJcMiml3xSPa0zac6rcNBinIGJ+lXr6ut5C2dAFiAI83hwTtGmcRTKMbWH0?=
- =?us-ascii?Q?oXFmq3RKO/Eam6ARtg+h29N7hKveVsjGrLgBoZvSIbMo9kkIAV8IOQShzntn?=
- =?us-ascii?Q?V6b2b/bn0xcSTuk2FjU2HYoymlvhzEe75WQ/+Vih9Fs7wwLaqOSpJJ2PCaV7?=
- =?us-ascii?Q?XZAzn3wPldk5L8SypD4Dr0DsAaLCW4LUyWAepbQ0gcSk6RQP5JQ6N1prLHEX?=
- =?us-ascii?Q?Js/5g/2jWmqrRUaHD/UygBL8cv+iYlk63Pgg58xtVUEMMN26uOOo13g3xJm6?=
- =?us-ascii?Q?XCRyFAl+WICJwcIUUbvUsuQaFPOpUMlchMceGtckS2822gHdqAczAyxCLlLi?=
- =?us-ascii?Q?zrlI0ApshUsH9wpHISqjiIVXOgBevnEOF/ONRxfQc1an9Jpb533P6mPrPIBE?=
- =?us-ascii?Q?QR2o3IlbFHSaCnVkyx80lEMV6PWe0B+AjEHJagw001vn2N1UjyoZVyElrA0u?=
- =?us-ascii?Q?WFd1iB3dcaQIAJGuR8Eo9YLRcRqWgWqa0NX0fQFVPv8fDdphDhD5Z8k4PLd4?=
- =?us-ascii?Q?gOW4ZWl135P+oPbIVY01vIaikstSJMfWL1JOM3ozvh69a5ViVbzP0xyGfzMD?=
- =?us-ascii?Q?FNXUGXh8UbGG1JdrzSwJCApQkf9gU4dvH7YTwiqtlIJQL3xCA7D0//9xVsUd?=
- =?us-ascii?Q?yuWiy0WcbJ0Q5NjNbWcXmhmsArccNkfotjVjHWbJStFJ5pdcRKA7r7JZ0bNi?=
- =?us-ascii?Q?6DGPHcyafQTYStkuS3spaVc7y6CERFa6R+RIgG0mp5Wr+FOf9U6aHVouEez8?=
- =?us-ascii?Q?W5+Quqr8+C1tVuDnR3W2Os0VE9r8fMv5pVMCP2xPaojpnW5sIhQT50Toa0Pb?=
- =?us-ascii?Q?TufegBX1kl8Iwsyr9b5cimpxmSEICh0PM/0R/iIIquZGb8SkB7fB8f0VA1mA?=
- =?us-ascii?Q?ccFArOAs57ddzopBvkWHDMyTPIQ33u8/DRZ2bcwCjLkga45dxXqxJ2oNtN8Z?=
- =?us-ascii?Q?H0zgWZHJpN2d9loGHKGF7EPIhRl3VRCWgjZ7p4PsxKXo9nUUo25DloY9ScW/?=
- =?us-ascii?Q?B6GuW5FMTBpH8tfTvxLvXkxPalseCYSdNRFLOkcv6sk0WnOhQI1ZfbycGrPv?=
- =?us-ascii?Q?5c+Fh8nFjGzmsErXensgA+vs2oeAzP8on3bb0Cj3RD0o1KdscpMn0fn88dZ5?=
- =?us-ascii?Q?81k+v+4ReLxw8n1bOHFAztrak+0SjvDzhtX0M5kYpOAzaPXpe9/zT8p+/BXl?=
- =?us-ascii?Q?q0Q944384da8UKrsRKfa4lh+k0US+BVIvlFquMn+Cz+SUSblsnhdopKjoWL/?=
- =?us-ascii?Q?gZWXvH1nHqg2Csfarifc+LsO/WAcdOiwHqSrTnEFEaQprfmlJzRnDYt6RfUu?=
- =?us-ascii?Q?4S5aknKfM+GyjvCktApucR9KW59CIpIIlXN1IfEtWl0gmW4ZE+fdJr6l6lYZ?=
- =?us-ascii?Q?CLRxWgE5YpqbbWg0+mdMCQ1wG7rjgbiV9GLwgCWNVa7u8kWcsAbbK3TpEec9?=
- =?us-ascii?Q?QQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0f1d67cb-0fb2-4159-7947-08dc4792c692
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2024 21:31:30.3212
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FoZSerQMuWe75/orpsLMb3JfhzC93y9z2uYXrQXkysYvmdgbIyXL+pfeSz21Mnv6J8Vb2yNry6HykMEIRi5nXEt86YNlRe7r6hctwPg/SEo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5816
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGsJ_4wEjgAscao4BiLbNFChfF7aTpFFdXXozWC45_j+vADdPw@mail.gmail.com>
 
-Robert Richter wrote:
-> On 18.03.24 22:09:00, Robert Richter wrote:
-> > With kconfig option NUMA_KEEP_MEMINFO disabled the SRAT lookup done
-> > with numa_fill_memblks() fails returning NUMA_NO_MEMBLK (-1). An
-> > existing SRAT memory range cannot be found for a CFMWS address range.
-> > This causes the addition of a duplicate numa_memblk with a different
-> > node id and a subsequent page fault and kernel crash during boot.
-> > 
-> > Note that the issue was initially introduced with [1]. But since
-> > phys_to_target_node() was originally used that returned the valid node
-> > 0, an additional numa_memblk was not added. Though, the node id was
-> > wrong too.
-> > 
-> > Fix this by enabling NUMA_KEEP_MEMINFO for x86 with ACPI and NUMA
-> > enabled.
-> > 
-> > [1] fd49f99c1809 ("ACPI: NUMA: Add a node and memblk for each CFMWS not in SRAT")
-> > 
-> > Fixes: 8f1004679987 ("ACPI/NUMA: Apply SRAT proximity domain to entire CFMWS window")
-> > Cc: Derick Marks <derick.w.marks@intel.com>
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Cc: Alison Schofield <alison.schofield@intel.com>
-> > Signed-off-by: Robert Richter <rrichter@amd.com>
+On Tue, Mar 19, 2024 at 10:15:43AM +1300, Barry Song wrote:
+> On Tue, Mar 19, 2024 at 10:10 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> >
+> > On Mon, Mar 18, 2024 at 01:17:19PM -0700, Yosry Ahmed wrote:
+> > > On Mon, Mar 18, 2024 at 11:00 AM Nhat Pham <nphamcs@gmail.com> wrote:
+> > > >
+> > > > On Mon, Mar 18, 2024 at 9:58 AM syzbot
+> > > > <syzbot+adbc983a1588b7805de3@syzkaller.appspotmail.com> wrote:
+> > > > >
+> > > > > Hello,
+> > > > >
+> > > > > syzbot found the following issue on:
+> > > > >
+> > > > > HEAD commit:    e5eb28f6d1af Merge tag 'mm-nonmm-stable-2024-03-14-09-36' ..
+> > > > > git tree:       upstream
+> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=13043abe180000
+> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=19bb57c23dffc38e
+> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=adbc983a1588b7805de3
+> > > > > compiler:       arm-linux-gnueabi-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> > > > > userspace arch: arm
+> > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1706d231180000
+> > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13ba7959180000
+> > > > >
+> > > > > Downloadable assets:
+> > > > > disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/8ead8862021c/non_bootable_disk-e5eb28f6.raw.xz
+> > > > > vmlinux: https://storage.googleapis.com/syzbot-assets/0a7371c63ff2/vmlinux-e5eb28f6.xz
+> > > > > kernel image: https://storage.googleapis.com/syzbot-assets/7539441b4add/zImage-e5eb28f6.xz
+> > > > >
+> > > > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > > > > Reported-by: syzbot+adbc983a1588b7805de3@syzkaller.appspotmail.com
+> > > > >
+> > > > > ------------[ cut here ]------------
+> > > > > kernel BUG at include/linux/scatterlist.h:187!
+> > > >
+> > > > Looks like the provided buffer is invalid:
+> > > >
+> > > > #ifdef CONFIG_DEBUG_SG
+> > > > BUG_ON(!virt_addr_valid(buf));
+> > > > #endif
+> > > >
+> > > > which is "src" from:
+> > > >
+> > > > sg_init_one(&input, src, entry->length);
+> > > >
+> > > > Looking at the surrounding code and recent history, there's this
+> > > > commit that stands out:
+> > > >
+> > > > mm/zswap: remove the memcpy if acomp is not sleepable
+> > > > (sha: 270700dd06ca41a4779c19eb46608f076bb7d40e)
+> > > >
+> > > > which has the effect of, IIUC, using the zpool mapped memory directly
+> > > > as src, instead of acomp_ctx->buffer (which was previously the case,
+> > > > as zsmalloc was not sleepable).
+> > > >
+> > > > This might not necessarily be a bug with that commit itself, but might
+> > > > have revealed another bug elsewhere.
+> > > >
+> > > > Anyway, cc-ing the author, Barry Song, to fact check me :) Will take a
+> > > > closer look later.
+> > >
+> > > I am not a highmem expert, but the reproducer has CONFIG_HIGHMEM=y,
+> > > and it seems like zs_map_object() may return a highmem address if the
+> > > compressed object is entirely in a single page to avoid copying to a
+> > > buffer:
+> > >
+> > > if (off + class->size <= PAGE_SIZE) {
+> > >    /* this object is contained entirely within a page */
+> > >    area->vm_addr = kmap_atomic(page);
+> > >    ret = area->vm_addr + off;
+> > >    goto out;
+> > > }
+> > >
+> > > The virt_addr_valid() check seems to indicate that we expect a direct
+> > > map address in sg_init_one(), right?
+> >
+> > If the page is highmem, kmap_atomic() establishes a temporary mapping
+> > to it in the direct map, such that we have a legit kernel pointer to
+> > the memory. Otherwise the memcpy() in zswap also wouldn't work... Am I
+> > missing something?
 > 
-> This patch should be dropped in favor of the other 1/3 patch, it is a
-> leftover.
+> Right, we built a map but it is not a linear mapping. so we can't use
+> virt_to_page
+> on this kind of non-linear mapping.
+> kmap_to_page can handle both linear and non-linear, but  Ira's commit
+> added a WARN_ON_ONCE in it for non-linear mapping case.
 
-What "other" patch? Did I respond to the wrong one?
+Ah, I misread what virt_addr_valid() does. It actually excludes
+kmap. Which, yes, makes sense, if the next line does virt_to_page()...
+
+Sorry about the noise.
