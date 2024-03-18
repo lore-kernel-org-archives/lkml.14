@@ -1,142 +1,84 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DB02D627
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 10:02:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF8E2D03D;
+	Mon, 18 Mar 2024 10:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710756175; cv=none; b=AMVPL6IL/S8ztrq3frkeQtnviRJiBtq1sJdKMbPH6ToyUJeWvNd45rDmc+EoRGT8isNgxHWRqjjOB9VFIkPJ/LLdl+yFJ2fnCKhKFY9aM785PlYZycw2IQUpjCg+77fFtlsaLovIDxNFAWiQSYFjFOxRhvv9Vsf5Eskec7ethjs=
+	t=1710756226; cv=none; b=H8DgBmBjcmGPMZPy0ihmGl5OLkMjkRVtAdu1XjcY36nkHmLZ3feYsaxq1Va7QQexV7IcfWerPh+i5sr9N4Lsco22Qqbr67QpyfpnfNG/aZolKwXDm/hKPQF57dWP63rKjAyiImz518EHv+fviY+yAI8SpqP48I+DENFEqQJ8YPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710756175; c=relaxed/simple;
-	bh=23AJFBOQzolb/bX7PhDzjxxjGAgihS0rUtF2sxZKRPg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ca7/PrCeDWfepW4QChvJihVyPc0ukOV6H6F9/FkL0ybhaeiQ0sHMsp/WAM7wBQAsBfk8QVg7VScjx7rNYPcEx1AY1K8tzuiGzqys+zppurCYWft8RjQwZT3slpaB8SR1Joa6O7xopacJE32CV1mNCDbSaafsC78PkJqvE9NTlC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UPBhNVYN; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710756226; c=relaxed/simple;
+	bh=xDlNMWqUTXTBM8em3VlJSfREj2/BL9qrToesVMEcMoI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qGjoh0PLhbiUcHTRKp9gQ6kLeKcwx8oZckhwmukXOGVR545fFFXcLzuO+IOMROm3PG+VTru663N7FXJHD+WugMoVYgyfJdCiLcO3Xmrcv2p6Rkdi4TUJ7ojdgH0mGWEoSJ7qo9/4NXukfpwYfKHMuiaZ8MO0zyDsYxh+yDObqp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WactNBc7; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UPBhNVYN"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1dddad37712so39303745ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 03:02:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710756173; x=1711360973; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gV1l9rmzBCzJNW3ECkvyrqDRGHWu7/CWeWMayLYT9Qk=;
-        b=UPBhNVYNbDfuGoWKqZgic7sn1XRBEpjI9evX6FAluPcLWR6J0Tij3fNpbsfjCqKPtb
-         u8KkyVFNApTRxwLb3nVm3Hod48WRmBgBiKylGOx4/ilDLutKzr9+SLRDpa45qA3ikNPl
-         9hOcYmPZ3OYefG/WHMlktmkOxglpOK4s3aWFm2vlckXJRpnsHHFJB0BghyZvNaemXsD2
-         Cqt8HZRpCSxFpNJNHunYjACJzi6T6FlxYf6TiC4XYiPm5RCPv75ZvXE8X/pqVnq6EO7e
-         xsRuy9eIEt6BdJFydUyZ9UA6dXnM9NRdSnQpOb3SfyxzxfuOgk01mmFpUO9DYWAoP+3m
-         P70w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710756173; x=1711360973;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gV1l9rmzBCzJNW3ECkvyrqDRGHWu7/CWeWMayLYT9Qk=;
-        b=AvgDJSyaOwS2WIAjCnJaJhDvGT6+kNrozbRW6QLpFSK8bo/cUNN43ksaUice9eBotu
-         77ebvxvMc6dccfaldwHx6O46pHPO8wD6xP+zPc8DuFK+1dT0+yTTKqkTLmvhUZBLsBGz
-         R0au5fUXsXtu85LS3/RsOa8P42B/+UC/I1F6KXgYmjx8HL8gUYilkFIXjt2PWu2pPEs1
-         XpUlvLtM0Vp7Ydo75EBFmcquI9aWRJZLufPLGDilCUd1OIhxKLzJpVePJ7l+mSqh1YvY
-         d1aPlqvD/1ud7iOApqZsdfbNvGFbDU80p14w8AICKLQs9r7SLNMkgiH59Uc9qwN62j/J
-         nIyw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0jJN/u3Zucy5N+baN7q9DxASEQ/UD9tjBFPfUgT2EAKdp0nHNQb5TqcvdMAz6EGTXs5LRg9DTPY7BcfQ03MJMiCBQof5FW77UtNja
-X-Gm-Message-State: AOJu0YwGrVNA6WHn3CIPqTOJiBHY7jDcd0nZuGRbsyprZRcd2SX2InR7
-	bs5TRVw7PWY4GFzGXYxJ3ojqJ97rWd8x9GrQlyMs0kXwvuAtfvSm
-X-Google-Smtp-Source: AGHT+IEcvsWQUyJLQ8qV7FkXWB79q4QhcFWpWDYu78GsX363yZUh1ev5rOsRAXQM6lfbTC9LQZr5sA==
-X-Received: by 2002:a17:90b:440b:b0:29c:7845:cba with SMTP id hx11-20020a17090b440b00b0029c78450cbamr10647032pjb.36.1710756172888;
-        Mon, 18 Mar 2024 03:02:52 -0700 (PDT)
-Received: from DESKTOP-4R0U3NR.siflower.com ([2a09:bac5:6249:183c::26a:36])
-        by smtp.gmail.com with ESMTPSA id rr7-20020a17090b2b4700b0029bcf877eabsm7360608pjb.10.2024.03.18.03.02.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 03:02:52 -0700 (PDT)
-From: Qingfang Deng <dqfext@gmail.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Atish Patra <atishp@atishpatra.org>,
-	Anup Patel <anup@brainfault.org>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: Qingfang Deng <qingfang.deng@siflower.com.cn>
-Subject: [PATCH v2] perf: RISC-V: fix IRQ detection on T-Head C908
-Date: Mon, 18 Mar 2024 18:02:40 +0800
-Message-Id: <20240318100241.267857-1-dqfext@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WactNBc7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710756225; x=1742292225;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xDlNMWqUTXTBM8em3VlJSfREj2/BL9qrToesVMEcMoI=;
+  b=WactNBc723FWsyDwt6b5yZLza4dAx5hV7XKPcoGw1SbMQp3HGgRHblGX
+   EaJEPZVgmoezgpzLS440qpXlvboeS/3V0DbCTwjd22yJ2YdgpF/rBtm7u
+   qChIqlqSTUk3jfJ6kuRLhhe2QK1Ly/Hm6iqFnPMvtd54CWmSlnKwEB+fj
+   6DEfNA36GZOp7QqyjWN8DGUPJ9MqTe/1ppi2m69OwGgF04ZgCEBRGUnKg
+   9n0Vht+f5oBiHNSIJryD23OAtFBUmsZJnLfYK+TY9QeuQwJYxpE9XmfCN
+   B5Jd7KBHLy+ORoI0XDeX9SdmUFc5a84mVytqy/Ei8kpR3UWuMl11D/IlV
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11016"; a="5685231"
+X-IronPort-AV: E=Sophos;i="6.07,134,1708416000"; 
+   d="scan'208";a="5685231"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 03:03:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11016"; a="914587235"
+X-IronPort-AV: E=Sophos;i="6.07,134,1708416000"; 
+   d="scan'208";a="914587235"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 03:03:41 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rm9qE-0000000DuN5-1Kpj;
+	Mon, 18 Mar 2024 12:03:38 +0200
+Date: Mon, 18 Mar 2024 12:03:37 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] serial: 8250_lpc18xx: disable clks on error in probe()
+Message-ID: <ZfgReWkDIFnoUiCZ@smile.fi.intel.com>
+References: <92646c10-e0b5-4117-a9ac-ce9987d33ce3@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <92646c10-e0b5-4117-a9ac-ce9987d33ce3@moroto.mountain>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Qingfang Deng <qingfang.deng@siflower.com.cn>
+On Sat, Mar 16, 2024 at 12:30:09PM +0300, Dan Carpenter wrote:
+> Goto the clean up path to clean up a couple clocks before returning
+> on this error path.
 
-T-Head C908 has the same IRQ num and CSR as previous C9xx cores, but
-reports non-zero marchid and mimpid. Add the check for C908 ID.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Fixes: 65e9fb081877 ("drivers/perf: riscv_pmu_sbi: add support for PMU variant on T-Head C9xx cores")
-Signed-off-by: Qingfang Deng <qingfang.deng@siflower.com.cn>
----
-v2: add C908 ID check
+Thank you for fixing this!
 
- arch/riscv/errata/thead/errata.c       | 5 +++--
- arch/riscv/include/asm/vendorid_list.h | 2 ++
- drivers/perf/riscv_pmu_sbi.c           | 6 ++++--
- 3 files changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/arch/riscv/errata/thead/errata.c b/arch/riscv/errata/thead/errata.c
-index b1c410bbc1ae..da3b34866d8f 100644
---- a/arch/riscv/errata/thead/errata.c
-+++ b/arch/riscv/errata/thead/errata.c
-@@ -125,8 +125,9 @@ static bool errata_probe_pmu(unsigned int stage,
- 	if (!IS_ENABLED(CONFIG_ERRATA_THEAD_PMU))
- 		return false;
- 
--	/* target-c9xx cores report arch_id and impid as 0 */
--	if (arch_id != 0 || impid != 0)
-+	/* Early c9xx cores report arch_id and impid as 0 */
-+	if (!((arch_id == 0 && impid == 0) ||
-+	      (arch_id == THEAD_C908_ARCH_ID && impid == THEAD_C908_IMP_ID)))
- 		return false;
- 
- 	if (stage == RISCV_ALTERNATIVES_EARLY_BOOT)
-diff --git a/arch/riscv/include/asm/vendorid_list.h b/arch/riscv/include/asm/vendorid_list.h
-index 2f2bb0c84f9a..57b3de510d38 100644
---- a/arch/riscv/include/asm/vendorid_list.h
-+++ b/arch/riscv/include/asm/vendorid_list.h
-@@ -8,5 +8,7 @@
- #define ANDES_VENDOR_ID		0x31e
- #define SIFIVE_VENDOR_ID	0x489
- #define THEAD_VENDOR_ID		0x5b7
-+#define  THEAD_C908_ARCH_ID	0x8000000009140d00
-+#define  THEAD_C908_IMP_ID	0x8a000
- 
- #endif
-diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-index bbd6fe021b3a..34d8689982de 100644
---- a/drivers/perf/riscv_pmu_sbi.c
-+++ b/drivers/perf/riscv_pmu_sbi.c
-@@ -833,8 +833,10 @@ static int pmu_sbi_setup_irqs(struct riscv_pmu *pmu, struct platform_device *pde
- 		riscv_pmu_use_irq = true;
- 	} else if (IS_ENABLED(CONFIG_ERRATA_THEAD_PMU) &&
- 		   riscv_cached_mvendorid(0) == THEAD_VENDOR_ID &&
--		   riscv_cached_marchid(0) == 0 &&
--		   riscv_cached_mimpid(0) == 0) {
-+		   ((riscv_cached_marchid(0) == 0 &&
-+		     riscv_cached_mimpid(0) == 0) ||
-+		    (riscv_cached_marchid(0) == THEAD_C908_ARCH_ID &&
-+		     riscv_cached_mimpid(0) == THEAD_C908_IMP_ID))) {
- 		riscv_pmu_irq_num = THEAD_C9XX_RV_IRQ_PMU;
- 		riscv_pmu_use_irq = true;
- 	} else if (riscv_isa_extension_available(NULL, XANDESPMU) &&
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
