@@ -1,177 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94BD63BBF5;
-	Mon, 18 Mar 2024 13:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A605B3FB99
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 13:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710767062; cv=none; b=dELOtqsUdx9lKqDrnDD0jXUutP9FCWloobZj+l28CYns5tFHq4+46C0lMHzYvc68WrvsFJmBPQOZfXRPCgS4+/8t6VTqG/8NK95ZlaC+YyDaBeG3TL/5D/BQcOua+VP1CFCCn5r+FPFBOPO9ZxqhK6GoiVVLEY6v5GOOnAzE5Yc=
+	t=1710767109; cv=none; b=qsK5lkeIbxd7wAOlpNWlbQSWF8IoK2lfF/+GZoUcMk5OWMeUOvmiiRYuLjvpRe3aSskT/H8qcmGg1zfoSI+6p1I+XKQ0Ext1YcrTwhCnHjJUXh+shmao1OvV9Hz4ivfweYTIGkmQ6q0nKyzfHPYTl+m+upcuOeZ0irZeTulQZuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710767062; c=relaxed/simple;
-	bh=p82qphfLz+VUhriAAE/LBeA9xdMiTaxUuvgYxMmjVIs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WgpeivHu7BEiBmplma5hgwezzxg/s2CPVsyJq37eDnnY8+iAKBDoNcUAeXfVkj5E0vBP5o+qFo3vNkZExDWvGIWY9GpWzOdfCP+mHyOcEssVu80b51Dv9VXqZ2mAX1TSqFv60J0uBlPK7hQ/FT937E6tq92Jn3od+dEN/8eqDkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=McsYoMts; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="McsYoMts"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710767060; x=1742303060;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=p82qphfLz+VUhriAAE/LBeA9xdMiTaxUuvgYxMmjVIs=;
-  b=McsYoMtsRwLQ3xIiBM516V+roip+cmt9U2+HIxo9swSbUR9K+H28B50A
-   rTzqmwFDLHAjhKxYsQ5LRThVV4E6RpQ3nUnXniq8PU/sJL+Q4TUF8SrUE
-   FCvaSNu0SKiyrD7IX60W7PVes54wCOgsdzYkcxBSZtWuNeT1OqZNZ+++T
-   p+s4V0vuLnKyrhW7YsnB6AzxdJoMBAYsP0OGydLlDXuXU/KvDTIoke+fX
-   u/OtaJBkI63Rbga8IDcs3gnoM8hG0bQNkdbEVChb2RkCaOvoE8uBYV653
-   /tjSVYITHMzjiCe5YhhEz+zZq0NFk4hKsIbzM21xkUcU4Nyzjmv7QuSTm
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11016"; a="5707163"
-X-IronPort-AV: E=Sophos;i="6.07,134,1708416000"; 
-   d="scan'208";a="5707163"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 06:04:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,134,1708416000"; 
-   d="scan'208";a="44392891"
-Received: from newjersey.igk.intel.com ([10.102.20.203])
-  by orviesa002.jf.intel.com with ESMTP; 18 Mar 2024 06:04:18 -0700
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-To: linux-hardening@vger.kernel.org
-Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Marco Elver <elver@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RFC kspp-next 3/3] idpf: sprinkle __counted_by{,_le}() in the virtchnl2 header
-Date: Mon, 18 Mar 2024 14:03:54 +0100
-Message-ID: <20240318130354.2713265-4-aleksander.lobakin@intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240318130354.2713265-1-aleksander.lobakin@intel.com>
-References: <20240318130354.2713265-1-aleksander.lobakin@intel.com>
+	s=arc-20240116; t=1710767109; c=relaxed/simple;
+	bh=ZarPO9ClVSp9miIoAdrkxdLyf33d8aB50kRIYFkoTQw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tjT5YHY9l38Z7cttFSNMfn3XV/dMIpee8wqrSINhOIykgrwW0GcQk3tWZU0bTQHG5vH266TwdT2dgEiQSsPD8/qy2NunTi6yLpx//E8JzFSSurgS9HiUDlarDjbxn8jEWs2x1L4ig43NZfhr5CCbURqk/5N1r594Us8pg+H2Cqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DCE18DA7;
+	Mon, 18 Mar 2024 06:05:40 -0700 (PDT)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 87B973F23F;
+	Mon, 18 Mar 2024 06:05:04 -0700 (PDT)
+Message-ID: <b4488238-0c05-4d06-a60d-10e00460ea98@arm.com>
+Date: Mon, 18 Mar 2024 13:05:03 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] swiotlb: extend buffer pre-padding to
+ alloc_align_mask if necessary
+Content-Language: en-GB
+To: Michael Kelley <mhklinux@outlook.com>,
+ Petr Tesarik <petrtesarik@huaweicloud.com>, Christoph Hellwig <hch@lst.de>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, Will Deacon <will@kernel.org>,
+ Nicolin Chen <nicolinc@nvidia.com>,
+ "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
+ open list <linux-kernel@vger.kernel.org>
+Cc: Roberto Sassu <roberto.sassu@huaweicloud.com>,
+ Petr Tesarik <petr.tesarik1@huawei-partners.com>
+References: <20240312134149.497-1-petrtesarik@huaweicloud.com>
+ <SN6PR02MB4157FB27CD890E9F29408926D4282@SN6PR02MB4157.namprd02.prod.outlook.com>
+From: Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <SN6PR02MB4157FB27CD890E9F29408926D4282@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Both virtchnl2.h and its consumer idpf_virtchnl.c are very error-prone.
-There are 10 structures with flexible arrays at the end, but 9 of them
-has flex member counter in Little Endian.
-Make the code a bit more robust by applying __counted_by_le() to those
-9. LE platforms is the main target for this driver, so they would
-receive additional protection.
-While we're here, add __counted_by() to virtchnl2_ptype::proto_id, as
-its counter is `u8` regardless of the Endianness.
-Compile test on x86_64 (LE) didn't reveal any new issues after applying
-the attributes.
+On 15/03/2024 2:53 am, Michael Kelley wrote:
+[...]
+>> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+>> index 86fe172b5958..8ce11abc691f 100644
+>> --- a/kernel/dma/swiotlb.c
+>> +++ b/kernel/dma/swiotlb.c
+>> @@ -69,11 +69,13 @@
+>>    * @alloc_size:	Size of the allocated buffer.
+>>    * @list:	The free list describing the number of free entries available
+>>    *		from each index.
+>> + * @padding:    Number of preceding padding slots.
+>>    */
+>>   struct io_tlb_slot {
+>>   	phys_addr_t orig_addr;
+>>   	size_t alloc_size;
+>>   	unsigned int list;
+>> +	unsigned int padding;
+> 
+> Even without the padding field, I presume that in
+> 64-bit builds this struct is already 24 bytes in size so as
+> to maintain 64-bit alignment for the orig_addr and
+> alloc_size fields. If that's the case, then adding the
+> padding field doesn't change the amount of memory
+> required for the slot array.  Is that correct? Both the
+> "list" and "padding" fields contain only small integers,
+> but presumably reducing their size from "int" to "short"
+> wouldn't help except in 32-bit builds.
 
-Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
----
- drivers/net/ethernet/intel/idpf/virtchnl2.h | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+Technically I think we could shrink the whole thing down to 16 bytes*, 
+since just 24 bits of size should still be more than enough, with the 
+remaining 8 bits similarly plenty for a padding slot count. Depends if 
+we think the overall memory saving is worth the marginal extra 
+complexity of packing values into bitfields.
 
-diff --git a/drivers/net/ethernet/intel/idpf/virtchnl2.h b/drivers/net/ethernet/intel/idpf/virtchnl2.h
-index 29419211b3d9..63deb120359c 100644
---- a/drivers/net/ethernet/intel/idpf/virtchnl2.h
-+++ b/drivers/net/ethernet/intel/idpf/virtchnl2.h
-@@ -555,7 +555,7 @@ VIRTCHNL2_CHECK_STRUCT_LEN(32, virtchnl2_queue_reg_chunk);
- struct virtchnl2_queue_reg_chunks {
- 	__le16 num_chunks;
- 	u8 pad[6];
--	struct virtchnl2_queue_reg_chunk chunks[];
-+	struct virtchnl2_queue_reg_chunk chunks[] __counted_by_le(num_chunks);
- };
- VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_queue_reg_chunks);
- 
-@@ -703,7 +703,7 @@ struct virtchnl2_config_tx_queues {
- 	__le32 vport_id;
- 	__le16 num_qinfo;
- 	u8 pad[10];
--	struct virtchnl2_txq_info qinfo[];
-+	struct virtchnl2_txq_info qinfo[] __counted_by_le(num_qinfo);
- };
- VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_config_tx_queues);
- 
-@@ -782,7 +782,7 @@ struct virtchnl2_config_rx_queues {
- 	__le32 vport_id;
- 	__le16 num_qinfo;
- 	u8 pad[18];
--	struct virtchnl2_rxq_info qinfo[];
-+	struct virtchnl2_rxq_info qinfo[] __counted_by_le(num_qinfo);
- };
- VIRTCHNL2_CHECK_STRUCT_LEN(24, virtchnl2_config_rx_queues);
- 
-@@ -868,7 +868,7 @@ VIRTCHNL2_CHECK_STRUCT_LEN(32, virtchnl2_vector_chunk);
- struct virtchnl2_vector_chunks {
- 	__le16 num_vchunks;
- 	u8 pad[14];
--	struct virtchnl2_vector_chunk vchunks[];
-+	struct virtchnl2_vector_chunk vchunks[] __counted_by_le(num_vchunks);
- };
- VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_vector_chunks);
- 
-@@ -912,7 +912,7 @@ struct virtchnl2_rss_lut {
- 	__le16 lut_entries_start;
- 	__le16 lut_entries;
- 	u8 pad[4];
--	__le32 lut[];
-+	__le32 lut[] __counted_by_le(lut_entries);
- };
- VIRTCHNL2_CHECK_STRUCT_LEN(12, virtchnl2_rss_lut);
- 
-@@ -977,7 +977,7 @@ struct virtchnl2_ptype {
- 	u8 ptype_id_8;
- 	u8 proto_id_count;
- 	__le16 pad;
--	__le16 proto_id[];
-+	__le16 proto_id[] __counted_by(proto_id_count);
- } __packed __aligned(2);
- VIRTCHNL2_CHECK_STRUCT_LEN(6, virtchnl2_ptype);
- 
-@@ -1104,7 +1104,7 @@ struct virtchnl2_rss_key {
- 	__le32 vport_id;
- 	__le16 key_len;
- 	u8 pad;
--	u8 key_flex[];
-+	u8 key_flex[] __counted_by_le(key_len);
- } __packed;
- VIRTCHNL2_CHECK_STRUCT_LEN(7, virtchnl2_rss_key);
- 
-@@ -1131,7 +1131,7 @@ VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_queue_chunk);
- struct virtchnl2_queue_chunks {
- 	__le16 num_chunks;
- 	u8 pad[6];
--	struct virtchnl2_queue_chunk chunks[];
-+	struct virtchnl2_queue_chunk chunks[] __counted_by_le(num_chunks);
- };
- VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_queue_chunks);
- 
-@@ -1195,7 +1195,7 @@ struct virtchnl2_queue_vector_maps {
- 	__le32 vport_id;
- 	__le16 num_qv_maps;
- 	u8 pad[10];
--	struct virtchnl2_queue_vector qv_maps[];
-+	struct virtchnl2_queue_vector qv_maps[] __counted_by_le(num_qv_maps);
- };
- VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_queue_vector_maps);
- 
-@@ -1247,7 +1247,7 @@ struct virtchnl2_mac_addr_list {
- 	__le32 vport_id;
- 	__le16 num_mac_addr;
- 	u8 pad[2];
--	struct virtchnl2_mac_addr mac_addr_list[];
-+	struct virtchnl2_mac_addr mac_addr_list[] __counted_by_le(num_mac_addr);
- };
- VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_mac_addr_list);
- 
--- 
-2.44.0
+Thanks,
+Robin.
 
+
+* The relevance of SWIOTLB to 32-bit builds is primarily going to be for 
+PAE cases where phys_addr_t is still 64-bit.
