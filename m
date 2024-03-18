@@ -1,60 +1,59 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80ED22262B
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 07:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEEA02263E
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 07:39:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710747382; cv=none; b=Oyt69XOR3i2en6r/v6+GeBNeJoYHtcR/YZQT3h+IBT01PUcNSI2X/p7oKXw4hOcGvbGaMaSiHKyrhP3gfx0m4CVtWjCCvEtHNYUkEZiRIHbgh3vKTlQIR07UyWlq+UooMZkY2yVN6p7neJ20ucJKtqzCT6UX5Sw6XbI2JTw8hiE=
+	t=1710747561; cv=none; b=Fob8udqU2MfgS+mKp4XqMt0txohHFnBvUMIB8047rxa6fAfDkpuigPfJ/iK7im+z58Y/OoIs3UkKg/RvTkHksujWR6CRkV11zQeC0pgo1Gwu7LSl7qlJBvSF9ED8X7ZbB9Lx7L8diQNwxlmoFJtpT2WULKyaHXsYCcWGHyDna8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710747382; c=relaxed/simple;
-	bh=Md4o0qJ8lUko0AhbWk3KKm+2tQIMSvfoWRAOIoEfCaY=;
+	s=arc-20240116; t=1710747561; c=relaxed/simple;
+	bh=hTD+DFmL9BqgDo+/sVwNvDWJ5y06rS+S7BZatmp9f8Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BKIpDc6tOphWs/SaOek7CFsGdzHSMGBmydPSLXcfIqpHQLQ9tX5CcY5/cSq7yp5ptKbsQ+V5Dkd+R5WtymP/kHTWBU8Xm6II9Iyx/jK28iAjUpu/qV62OqdPtdqNbldZt1idQcBFnH9kqX6mYOq9Hq2LdddDoKOLbBxna+aJiW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sOgJdyBA; arc=none smtp.client-ip=209.85.208.41
+	 In-Reply-To:Content-Type; b=GiDTSgUHlK6zzOotP0WIDCUMHXDrb8ozRXAlLv256FfIgmUQ9Abg6ryZQI7oNKmRhkETB+Bnhbr9oUFzMPtf5LfhqrKMZWd39DwwPulKw1CeBJY36FEQm36TGxLDrvtclBT4duD+FJKmCKLCOwzE9Dn/IMe4GOvtRCFcXqnJUew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OEztGX0C; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sOgJdyBA"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-568aa3096e9so4572405a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 00:36:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OEztGX0C"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-563c595f968so4927920a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 00:39:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710747379; x=1711352179; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=MfjiiYYXEp81SaS6PQp9hkSFCb7c2xr3ZnLROIncV98=;
-        b=sOgJdyBAACMaK75J9W9Q3OCPAFW42XIZtWxDvgXocYUrLNyk3rR9xkEvgVRcxbtllG
-         L1PaEnhLCN8eWlo9i1w72ZwyV0mgDBjiaLMKkL0GjN/1mS8VT/4xizOwdJ4vMJBvnR1Z
-         V5BYKF+b2lF2bFnmoo4CqDUD9h9nBHKIUcbcokQ91mEHMB17SVcP/19DFYTH1pHondpB
-         8yKoL8rQZHmNl+m/NVREQ4b4oGuqieTrRZgZmnLhYcW9JRas29JUe1RPBfDVcG9kVc85
-         yY6Kyw6K4nnmKe9lw+tNq9sfE0ngdGvQZsW9Q9OmihxJqH28kpN6TjsWoeKwZK2Lm32r
-         AHmQ==
+        d=linaro.org; s=google; t=1710747558; x=1711352358; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vpoJHq2kVU4cubYvHHTHZKWABpZl9dQPC/sCgzyCCfo=;
+        b=OEztGX0Crdn6wuuNL7cqqHeacl7mKxaGzGfXFvsE9FTSZWI+Aa5T0u5AwAyM2PxJW/
+         eB96b/WSgLK21UONdeUgCEV6VpyuO1Yjvo1UPsx5Kl06RES9fwgs2FNLzPKeGSnS+uSd
+         umM3fs3rSXG7vMsMorKaoOIix4OdWcnnm2dnkL5PHASYPqkoWIgEzEGY8Kyd9RsyNH5U
+         yPL7R5DXzhuw1KsMSaVavsKd51gDk+RG8cYDimXti47C+A72OfSRd/gevEf3S2IaLYQ6
+         iqA1OLuXQPpwvQigCfOiQulUGe40YmiplLyxCMsR/leJdzonZPQqYjKebpHsPIdJCLPG
+         37Mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710747379; x=1711352179;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MfjiiYYXEp81SaS6PQp9hkSFCb7c2xr3ZnLROIncV98=;
-        b=Ip/Im36JNhBSc+cNYO/nEiL2rAugeEA6eS5ZZbG2TXsGTeN4Zu1l/yvs5YoERH6akB
-         hChqQBF86eA6rIpF5iKbAaatrmOyOlFoXylumZfL3D5XA2wDuBraZC4vrpdm+aWlBDjD
-         Fc3ELF815ApMGd/CIaQaeEZx2xYgzY+p0a5uiGmKYUEauY+C35f4JL2Q65vt3mNp1kmT
-         U994tXmirASX7AU6s5slEy0DnRF2iiwjl8hScjIAZHRhcDYu0s03R0SOR59VIU4BIC1Z
-         QjzwdlgMkxjkQ6G3q6k63k7o1V8WXf6SgMszY1u9Zm65fM5KoQ8iwbAXiEPMKQcSmnj9
-         1VhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV50gHLX1gqUVzcFLozkzXLrXjbrB+yVqluf7SrUtt3OBhAPpviD1T/7dhhjI+3aY5n30zPPsK8sEsZJ3ctPTADnWXQVF8jPOtVFWey
-X-Gm-Message-State: AOJu0Yzx0v2rg507kEUJMm2Cppfyium/ixSnkUyfXZYtSQlZz1QSij0p
-	u650spbcr9dqdlliK38HFGPO1hzrnMdsnhiQL2blg8jyzo+yUeqSPTqUBWmEMcw=
-X-Google-Smtp-Source: AGHT+IEa+fkX+R3HtaY5jARiu8UhuzhoenRKPwtRIcYIVNLvMrDRbi+IkiMFsyIULGGxUp9hdlv9Jw==
-X-Received: by 2002:a17:907:3e8a:b0:a46:3d7d:35c with SMTP id hs10-20020a1709073e8a00b00a463d7d035cmr16103686ejc.30.1710747378886;
-        Mon, 18 Mar 2024 00:36:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710747558; x=1711352358;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vpoJHq2kVU4cubYvHHTHZKWABpZl9dQPC/sCgzyCCfo=;
+        b=TI9ivEJLk4fJ22HM2oDRcjPXq7a5whGoCxn5r0KZgB09HgdRRe/JElCx2myaNwnYlx
+         uO42zKEy4Onl00lQAF9SW05Wvp4W18uskwZ7Fiov9g+YxGeHwLsv0aGLMHrceE1pGiWz
+         vp47z2EXlwdmvgQ4hrag7bUBwfS2kfK16oLrWYeW0jnQeR4fxPeUGRhmvrgATmHzVZCO
+         2dcF6uM6RqoC2hq0/EwllIrkoTbBylHXhWjWbF5aOSHRp9nfsr9wxrDlnUkwhNx6EPPI
+         NkoCml/x+iwv9bYSNndP4AXPR/yQZhh8XuXbxdm2n2RwOmsF3k5xmBcOdeNkGIiWxstl
+         BlYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUYdA1OUkWLFmhTdYjBYytpV/QeMPXtNdcPkHMuP1OKQARYkqfxLld1+vSKVsH3QtYS/P1b346MQFy2mpsa8+6MfA/+opYb0hiJ8lG8
+X-Gm-Message-State: AOJu0YxOzyQdEeSn/xV8t7nIRr9d2QYpvToViUFfMB7Q8snQ/H8UsfP6
+	bpJoNLe04xbXzCgEveCBym3lZ4gt3so4U7uqWMKz3pZXK5q0A82YKsk/zYQV2XQ=
+X-Google-Smtp-Source: AGHT+IFzRNxfhosEyI+rRgGgowaMy78jv75fcicSpz5Y5yLsGIrZvtYgBwFW7R2LulAEPEzO9jc+hw==
+X-Received: by 2002:a05:6402:2401:b0:568:a05e:eafd with SMTP id t1-20020a056402240100b00568a05eeafdmr9346676eda.39.1710747558031;
+        Mon, 18 Mar 2024 00:39:18 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id hj11-20020a170906874b00b00a46a04d7daesm2589682ejb.115.2024.03.18.00.36.15
+        by smtp.gmail.com with ESMTPSA id g13-20020a056402428d00b005689f3d6936sm4350727edc.53.2024.03.18.00.39.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Mar 2024 00:36:18 -0700 (PDT)
-Message-ID: <c8a6d671-8391-440f-b4da-28eaf1a68b73@linaro.org>
-Date: Mon, 18 Mar 2024 08:36:14 +0100
+        Mon, 18 Mar 2024 00:39:17 -0700 (PDT)
+Message-ID: <85123b46-188c-47b3-88e9-3122ad67ec47@linaro.org>
+Date: Mon, 18 Mar 2024 08:39:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +63,9 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 1/3] arm64: dts: S32G3: Introduce device tree for
  S32G-VNP-RDB3
-To: Wadim Mueller <wafgo01@gmail.com>
+Content-Language: en-US
+To: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
+ Wadim Mueller <wafgo01@gmail.com>
 Cc: "David S. Miller" <davem@davemloft.net>,
  Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
  Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
@@ -92,9 +93,7 @@ Cc: "David S. Miller" <davem@davemloft.net>,
  linux-stm32@st-md-mailman.stormreply.com, linux-clk@vger.kernel.org
 References: <20240315222754.22366-1-wafgo01@gmail.com>
  <20240315222754.22366-2-wafgo01@gmail.com>
- <cc55daa1-0256-48d1-97a4-0f755fb4951b@linaro.org>
- <20240317231000.GA22886@bhlegrsu.conti.de>
-Content-Language: en-US
+ <4e168fbc-8a13-4666-ab80-e3032f61ef38@oss.nxp.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -140,36 +139,54 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240317231000.GA22886@bhlegrsu.conti.de>
+In-Reply-To: <4e168fbc-8a13-4666-ab80-e3032f61ef38@oss.nxp.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 18/03/2024 00:10, Wadim Mueller wrote:
->>> +
->>> +			mtl_tx_setup_gmac0: tx-queues-config {
->>> +				snps,tx-queues-to-use = <5>;
->>> +				#address-cells = <1>;
->>> +				#size-cells = <0>;
->>> +
->>> +				queue@0 {};
->>> +				queue@1 {};
->>> +				queue@2 {};
->>> +				queue@3 {};
->>> +				queue@4 {};
->>> +			};
->>> +
->>> +			gmac0_mdio: mdio0 {
+On 18/03/2024 08:32, Ghennadi Procopciuc wrote:
+> On 3/16/24 00:27, Wadim Mueller wrote:
+>> This commit adds device tree support for the NXP S32G3-based
+>> S32G-VNP-RDB3 Board (Vehicle Networking Platform - Reference Design Board) [1].
 >>
->> mdio?
+>> The S32G3 features an 8-core ARM Cortex-A53 based SoC developed by NXP.
 >>
+>> The device tree files are derived from the official NXP downstream Linux tree [2].
+>>
+>> This addition encompasses a limited selection of peripherals that are upstream-supported. Apart from the ARM System Modules (GIC, Generic Timer, etc.), the following IPs have been validated:
+>>
+>>     UART: fsl-linflexuart
+>>     SDHC: fsl-imx-esdhc
+>>     Ethernet: synopsys gmac/stmac
+>>
+>> Clock settings for the chip rely on ATF Firmware [3]. Pin control integration into the device tree is pending and currently relies on Firmware/U-Boot settings [4].
+>>
+>> These changes were validated using the latest BSP39 Firmware/U-Boot from NXP [5].
+>>
+>> The modifications enable booting the official Ubuntu 22.04 from NXP on
+>> the RDB3 with default settings from the SD card and eMMC.
+>>
+>> [1] https://www.nxp.com/design/design-center/designs/s32g3-vehicle-networking-reference-design:S32G-VNP-RDB3
+>> [2] https://github.com/nxp-auto-linux/linux
+>> [3] https://github.com/nxp-auto-linux/arm-trusted-firmware
+>> [4] https://github.com/nxp-auto-linux/u-boot
+>> [5] https://github.com/nxp-auto-linux/auto_yocto_bsp
+>>
+>> Signed-off-by: Wadim Mueller <wafgo01@gmail.com>
 > 
-> Can you please explain what the problem with mdio is? Is it the label?
-> 
+> This patch seems to be heavily based on the downstream version of the
+> kernel. Many of the changes originate from NXP. Therefore, shouldn't the
+> authors also be mentioned here?
 
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+Let's say there are 100 commits with 100 authors in downstream. Do you
+expect to list them all? Please point to parts which are directly copied
+(with references to original commits).
 
+Anyway, Wadim's SoB is enough from DCO point of view. We do not keep
+authorship of downstream sources. If downstream cared, they would
+upstreamed it much earlier than the community.
+
+However if original work has any copyright statements, they should be
+retained if this is indeed derivative work.
 
 Best regards,
 Krzysztof
