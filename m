@@ -1,131 +1,144 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B981DDF4
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 03:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689D9208A4;
+	Mon, 18 Mar 2024 03:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710732507; cv=none; b=XUjCgeCiD3mmmKNvWN+raoOtRAqrkW3uhmS23+Gr+KzddbJHHI5q0F1PqyRQ660X09gvvGsogREjeHAeJN4o07vj+iL7Ujfrx+rhOgEfZkEsMGicVrwDlb8ZUQgGAdbrT3gqw/NJZWhACl58/PE9ILp0c9dX5zzjUwST4FEjKD4=
+	t=1710732630; cv=none; b=rdwgFdKavxg1/9+VglQ3dwaBCMX/HYy5tJ0xh3ftNpicIHtYeRMzuT9TE8vNAr4/ttPhdNcpzU6L67oRSmzFLcm52YcRlDmofn1SvR42OtpSvmcwM77uegNOKuVmUP6dZUyXCMDhhp/COpjP3s8mlovEYE147yr8uNIhpKgh7Ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710732507; c=relaxed/simple;
-	bh=n+IvaFg5pDR8fyHm+L0s6tr64Pxcm4bGuDa/VfNWVXY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q2PRp8G6lfpAiVHy7g+tqOFFzOdtauohVrpGOoqzmTSuEQMyA6irEvCsp1COlJ1vyhOOeeoAriCHrzzDTZHE6TRjwSL32uz9D4i9LZMEz4EcaCpDdFHF3hynDUSzXU4eWpXoYs9mD2zUMb9LinHPa6Q2H1VMqGUICTC0jb9FDxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JAE4AHGL; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JAE4AHGL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=Mywcfnh5NNAq/uHuTcHdgmDU+e61uebZtDEUql6Qjmw=; b=JAE4AHGLLAA2zK2ofDzl5hLk36
-	/+4V+3CniMhm7baMAv5R3LEgDXySCbFUc8wFAhzff4ybeXNCp+1u/D7iy9sF+zDr/5W9lHtHB3RSC
-	cjrL9rNzpQuabd26vq4jFlTPKXQVR0G9U9b1Umfj+oEMDXjYsFEzGdFngM7HEN2AKklbpYfkofe28
-	wYfVIVcLeKDE45So9YsTtH9LhnxC/gyTxiE0HUV0QHxd4/Za0rTExc5Gl9n+lQrI14SXT+DPjUkl3
-	lT1dNIk5fsx5BUoXW3NnI0QtHavIVC5Q51QGk3BrUA/jj+NMdtTk6I+V5OoNcqSuGDopwL04KM7q/
-	po/8tNzw==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rm3fW-0000000GDq7-21up;
-	Mon, 18 Mar 2024 03:28:10 +0000
-Date: Mon, 18 Mar 2024 03:28:10 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: =?utf-8?B?6buE5pyd6ZizIChaaGFveWFuZyBIdWFuZyk=?= <zhaoyang.huang@unisoc.com>
-Cc: Zhaoyang Huang <huangzhaoyang@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	=?utf-8?B?5bq357qq5ruoIChTdGV2ZSBLYW5nKQ==?= <Steve.Kang@unisoc.com>
-Subject: Re: reply: [PATCH] mm: fix a race scenario in folio_isolate_lru
-Message-ID: <Zfe0yl2QTV1zSS1n@casper.infradead.org>
-References: <b88ce9ecad0d456d8adbc78e42ec713a@BJMBX01.spreadtrum.com>
+	s=arc-20240116; t=1710732630; c=relaxed/simple;
+	bh=EMgNM80bPZ4CDOuBL+T0inL+ZN+YgA6L9AcGFFdTTR4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=pX6t/s/v0G9ygE+wq9U28zjVlHb1GMYhmFstdL4JBYjmx9bAAaKfJZkPrzVBvk0LDJPtIFgr6+4w20R5NNOqWK2dZZp+lhR/xCnIAwMCH4yEe268WqjGDiMzJ+G6dIQFRoI8zSjve6fX/yJ39NfYQ+RjZSE9rFm4OKzXZA+wq1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Tyg1H2ZSjz1FMlh;
+	Mon, 18 Mar 2024 11:13:55 +0800 (CST)
+Received: from dggpemd100002.china.huawei.com (unknown [7.185.36.164])
+	by mail.maildlp.com (Postfix) with ESMTPS id 23FF1140381;
+	Mon, 18 Mar 2024 11:14:16 +0800 (CST)
+Received: from [10.67.110.48] (10.67.110.48) by dggpemd100002.china.huawei.com
+ (7.185.36.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Mon, 18 Mar
+ 2024 11:14:15 +0800
+Message-ID: <07a3c30d-5a81-4b99-8090-38753b650432@huawei.com>
+Date: Mon, 18 Mar 2024 11:14:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b88ce9ecad0d456d8adbc78e42ec713a@BJMBX01.spreadtrum.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH stable 5.10] serial: sc16is7xx: convert from _raw_ to
+ _noinc_ regmap functions for FIFO
+Content-Language: en-US
+From: Gong Ruiqi <gongruiqi1@huawei.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
+	<jirislaby@kernel.org>, Hugo Villeneuve <hvilleneuve@dimonoff.com>
+CC: Jon Ringle <jringle@gridpoint.com>, <linux-serial@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Wang Weiyang <wangweiyang2@huawei.com>,
+	<stable@vger.kernel.org>
+References: <20240318025259.1412353-1-gongruiqi1@huawei.com>
+In-Reply-To: <20240318025259.1412353-1-gongruiqi1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemd100002.china.huawei.com (7.185.36.164)
 
-On Mon, Mar 18, 2024 at 01:37:04AM +0000, 黄朝阳 (Zhaoyang Huang) wrote:
-> >On Sun, Mar 17, 2024 at 12:07:40PM +0800, Zhaoyang Huang wrote:
-> >> Could it be this scenario, where folio comes from pte(thread 0), local
-> >> fbatch(thread 1) and page cache(thread 2) concurrently and proceed
-> >> intermixed without lock's protection? Actually, IMO, thread 1 also
-> >> could see the folio with refcnt==1 since it doesn't care if the page
-> >> is on the page cache or not.
-> >>
-> >> madivise_cold_and_pageout does no explicit folio_get thing since the
-> >> folio comes from pte which implies it has one refcnt from pagecache
-> >
-> >Mmm, no.  It's implicit, but madvise_cold_or_pageout_pte_range()
-> >does guarantee that the folio has at least one refcount.
-> >
-> >Since we get the folio from vm_normal_folio(vma, addr, ptent); we know that
-> >there is at least one mapcount on the folio.  refcount is always >= mapcount.
-> >Since we hold pte_offset_map_lock(), we know that mapcount (and therefore
-> >refcount) cannot be decremented until we call pte_unmap_unlock(), which we
-> >don't do until we have called folio_isolate_lru().
-> >
-> >Good try though, took me a few minutes of looking at it to convince myself that
-> >it was safe.
-> >
-> >Something to bear in mind is that if the race you outline is real, failing to hold a
-> >refcount on the folio leaves the caller susceptible to the
-> >VM_BUG_ON_FOLIO(!folio_ref_count(folio), folio); if the other thread calls
-> >folio_put().
-> Resend the chart via outlook.
-> I think the problem rely on an special timing which is rare, I would like to list them below in timing sequence.
+Oops. + Cc stable@vger.kernel.org
+
+On 2024/03/18 10:52, GONG, Ruiqi wrote:
+> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 > 
-> 1. thread 0 calls folio_isolate_lru with refcnt == 1
-
-(i assume you mean refcnt == 2 here, otherwise none of this makes sense)
-
-> 2. thread 1 calls release_pages with refcnt == 2.(IMO, it could be 1 as release_pages doesn't care if the folio is used by page cache or fs)
-> 3. thread 2 decrease refcnt to 1 by calling filemap_free_folio.(as I mentioned in 2, thread 2 is not mandatary here)
-> 4. thread 1 calls folio_put_testzero and pass.(lruvec->lock has not been take here)
-
-But there's already a bug here.
-
-Rearrange the order of this:
-
-2. thread 1 calls release_pages with refcount == 2 (decreasing refcount to 1)
-3. thread 2 decrease refcount to 0 by calling filemap_free_folio
-1. thread 0 calls folio_isolate_lru() and hits the BUG().
-
-> 5. thread 0 clear folio's PG_lru by calling folio_test_clear_lru. The folio_get behind has no meaning there.
-> 6. thread 1 failed in folio_test_lru and leave the folio on the LRU.
-> 7. thread 1 add folio to pages_to_free wrongly which could break the LRU's->list and will have next folio experience list_del_invalid
+> commit dbf4ab821804df071c8b566d9813083125e6d97b upstream.
 > 
-> #thread 0(madivise_cold_and_pageout)        #1(lru_add_drain->fbatch_release_pages)       #2(read_pages->filemap_remove_folios)
-> refcnt == 1(represent page cache)             refcnt==2(another one represent LRU)          folio comes from page cache
-
-This is still illegible.  Try it this way:
-
-Thread 0	Thread 1	Thread 2
-madvise_cold_or_pageout_pte_range
-		lru_add_drain
-		fbatch_release_pages
-				read_pages
-				filemap_remove_folio
-
-Some accuracy in your report would also be appreciated.  There's no
-function called madivise_cold_and_pageout, nor is there a function called
-filemap_remove_folios().  It's a little detail, but it's annoying for
-me to try to find which function you're actually referring to.  I have
-to guess, and it puts me in a bad mood.
-
-At any rate, these three functions cannot do what you're proposing.
-In read_page(), when we call filemap_remove_folio(), the folio in
-question will not have the uptodate flag set, so can never have been
-put in the page tables, so cannot be found by madvise().
-
-Also, as I said in my earlier email, madvise_cold_or_pageout_pte_range()
-does guarantee that the refcount on the folio is held and can never
-decrease to zero while folio_isolate_lru() is running.  So that's two
-ways this scenario cannot happen.
-
+> The SC16IS7XX IC supports a burst mode to access the FIFOs where the
+> initial register address is sent ($00), followed by all the FIFO data
+> without having to resend the register address each time. In this mode, the
+> IC doesn't increment the register address for each R/W byte.
+> 
+> The regmap_raw_read() and regmap_raw_write() are functions which can
+> perform IO over multiple registers. They are currently used to read/write
+> from/to the FIFO, and although they operate correctly in this burst mode on
+> the SPI bus, they would corrupt the regmap cache if it was not disabled
+> manually. The reason is that when the R/W size is more than 1 byte, these
+> functions assume that the register address is incremented and handle the
+> cache accordingly.
+> 
+> Convert FIFO R/W functions to use the regmap _noinc_ versions in order to
+> remove the manual cache control which was a workaround when using the
+> _raw_ versions. FIFO registers are properly declared as volatile so
+> cache will not be used/updated for FIFO accesses.
+> 
+> Fixes: dfeae619d781 ("serial: sc16is7xx")
+> Cc:  <stable@vger.kernel.org>
+> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> Link: https://lore.kernel.org/r/20231211171353.2901416-6-hugo@hugovil.com
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
+> ---
+> 
+> The mainline commit dbf4ab821804 ("serial: sc16is7xx: convert from _raw_
+> to _noinc_ regmap functions for FIFO") by Hugo has been assigned to be
+> CVE-2023-52488, but for stable branches lower than 6.1 there's no
+> official backport.
+> 
+> I made up this backport patch for 5.10, and its correctness has been
+> confirmed in previous communication with Hugo. Let's publicize it and
+> merge it into upstream.
+> 
+>  drivers/tty/serial/sc16is7xx.c | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
+> index 31e0c5c3ddea..29f05db0d49b 100644
+> --- a/drivers/tty/serial/sc16is7xx.c
+> +++ b/drivers/tty/serial/sc16is7xx.c
+> @@ -376,9 +376,7 @@ static void sc16is7xx_fifo_read(struct uart_port *port, unsigned int rxlen)
+>  	const u8 line = sc16is7xx_line(port);
+>  	u8 addr = (SC16IS7XX_RHR_REG << SC16IS7XX_REG_SHIFT) | line;
+>  
+> -	regcache_cache_bypass(s->regmap, true);
+> -	regmap_raw_read(s->regmap, addr, s->buf, rxlen);
+> -	regcache_cache_bypass(s->regmap, false);
+> +	regmap_noinc_read(s->regmap, addr, s->buf, rxlen);
+>  }
+>  
+>  static void sc16is7xx_fifo_write(struct uart_port *port, u8 to_send)
+> @@ -394,9 +392,7 @@ static void sc16is7xx_fifo_write(struct uart_port *port, u8 to_send)
+>  	if (unlikely(!to_send))
+>  		return;
+>  
+> -	regcache_cache_bypass(s->regmap, true);
+> -	regmap_raw_write(s->regmap, addr, s->buf, to_send);
+> -	regcache_cache_bypass(s->regmap, false);
+> +	regmap_noinc_write(s->regmap, addr, s->buf, to_send);
+>  }
+>  
+>  static void sc16is7xx_port_update(struct uart_port *port, u8 reg,
+> @@ -489,6 +485,11 @@ static bool sc16is7xx_regmap_precious(struct device *dev, unsigned int reg)
+>  	return false;
+>  }
+>  
+> +static bool sc16is7xx_regmap_noinc(struct device *dev, unsigned int reg)
+> +{
+> +	return reg == SC16IS7XX_RHR_REG;
+> +}
+> +
+>  static int sc16is7xx_set_baud(struct uart_port *port, int baud)
+>  {
+>  	struct sc16is7xx_port *s = dev_get_drvdata(port->dev);
+> @@ -1439,6 +1440,8 @@ static struct regmap_config regcfg = {
+>  	.cache_type = REGCACHE_RBTREE,
+>  	.volatile_reg = sc16is7xx_regmap_volatile,
+>  	.precious_reg = sc16is7xx_regmap_precious,
+> +	.writeable_noinc_reg = sc16is7xx_regmap_noinc,
+> +	.readable_noinc_reg = sc16is7xx_regmap_noinc,
+>  };
+>  
+>  #ifdef CONFIG_SERIAL_SC16IS7XX_SPI
