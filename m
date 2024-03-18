@@ -1,217 +1,225 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2064.outbound.protection.outlook.com [40.107.93.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6F735F0C
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 12:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710764980; cv=none; b=IyZlCd1iXi6GI9ebxlk42tLt2XfxlCSrYmeTLWaUL0sNz3A27gaZVAVXDLyIbusdyvs9SiaxAyijzaLRsJZhHSbUbYdkXd87anNyOY5tEPsd429u9wGm17xYBjScQwItVprE9Jr7mZKgB0KTooH3sD1NjgDl+bLOQAeWoDodNEE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710764980; c=relaxed/simple;
-	bh=c03dE12UeJlqwedqJCILCOd1Aabrn0LF0cxuIHLG2CA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=F9cJFbg5MuEvnl5tMpDlJZ8potj0gfrUwCn3WalSA7sCAHaJmt5yyL+txg0B57poVNqGMu6dPtW23GLzZq+VaQFtE76qFMy+hYqX3Su5DlZ3IFNaaU/FpDrDAXTovAzKPjzJuCKZZ866qpQQRyYekEB0X5r90nXsl9aBxhdaxoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F/GNjHFV; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4006B38389
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 12:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710765002; cv=fail; b=igYNZ8j0zuLf9/+lzOd3X/q5pWgrLdmgp3jIHLlM2/IkpMLgL6rYL8zb2aQEZJHwNQAKNgxADeHAZwLaLsY3jQsvrhbcg1F1f/JwFZ0gK+4DrSY7P/AVADT5O40dy1hGBPDc/QMD/tsiYt+nj3146Ym9J4E8HFiWzIIbLx02VGg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710765002; c=relaxed/simple;
+	bh=kk/q+npbmLdFAA09LoV3DYU1QaOS6sDigzQZW2j4iyI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=rI904PX/TA8FS80iZZgnAyUY/ioi9ccUDRt0vxQvonX8NN3RAPXsI2rVCNBheRQrUAx+U06V2EWj5Ljyd7MSKdIbQt1i8t9wXUwQiYxODiOUQRRHy4YwGr08WvLQoP35pyW2jugZceR6V75bmtpfWG9a4yM0iYMlIO+AEae/gvQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Mk8RMf2Q; arc=fail smtp.client-ip=40.107.93.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F/GNjHFV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710764977;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Qd3Ti1yhOKyhE1wdO4t/ObQcvkCuqFS6ubwJ/hFGslE=;
-	b=F/GNjHFVyAs+/0CrbTQwEyIzfLnyfOQpK6BQIwlOujMJkaSnmPc2S4eHgT/0whAzadGQkp
-	A546OGEtd2aTCvmk6Ka/0TjTXwGP+stlWgQ4sd+KJHe1PK1PrYt3yj9Pn4N8mLpM0gFOLB
-	Nz6qMZVasViPbSM6REDgnx/bBuNhZOY=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-581-mQ2o3y_QP3eH8xj5NY5RzA-1; Mon, 18 Mar 2024 08:29:36 -0400
-X-MC-Unique: mQ2o3y_QP3eH8xj5NY5RzA-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-41330261f8cso21173385e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 05:29:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710764975; x=1711369775;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :references:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Qd3Ti1yhOKyhE1wdO4t/ObQcvkCuqFS6ubwJ/hFGslE=;
-        b=jy9iO6x0UaUwf+jtBvgQga8azyH33Bb55Y/RVolbiSGSPvG03/+kb6tXrhmiGupsJo
-         41gLLtsikG2K0Lj2nVEFNnsaGvLHzLh7s32k+QuaPtORW/5MEyVF2e/ldJdN8Qm/U6I/
-         3xvLxt7ZAifdjS9gJBQCrNyThVEeqw0Ob7z1MaRLB1iPmBG08eCnA5UiQaRO2u8FvMHY
-         4nT+cAiWKqGUz2hcnU91rcF/sClhhfadnhdWm04l9YUubfZDUxdPsPaM44WIqN3yCy5T
-         GsMIqPNZdlx/yFoNkf7DrAfDARLwKW2aWnh8EjDs86N2mr9LWzIqCEGMIE2utcFKze37
-         Ppyw==
-X-Forwarded-Encrypted: i=1; AJvYcCWF8tN4gQkO4ltS1S4MJqwYFfIRGL20RtfoXhSgNiOfuuOa1vM08dt7w3pDavLsc5b13UQDbU8oePz0aCDGgzttkpXz/LdBtEZ++HSN
-X-Gm-Message-State: AOJu0Yybnx2XBZA1vcc8D1s/aRGc5bXQNWsfeEJadzPZkZAdcdFmubsC
-	cm5WSCnHZ3tI/qRiSkyt7BYwOkiO/LADTrqfh8xgdRjs80RvCp6RqV0m6vnbtQWkGv0D646AdGh
-	0tsin8WQUpSa25DvAn3y0Ey4Wt2gynjzp8Vm/JBtGxJXdIQG/izGmvObtaHRenA==
-X-Received: by 2002:adf:f68a:0:b0:33e:1ee0:6292 with SMTP id v10-20020adff68a000000b0033e1ee06292mr8701883wrp.58.1710764974904;
-        Mon, 18 Mar 2024 05:29:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEXKWayXUSnshm/cgscrcgeZ+/KdZxTg5IOFA7dJBV5T7MU6u5AGUiuKx1zQsFuOlof/ONBXQ==
-X-Received: by 2002:adf:f68a:0:b0:33e:1ee0:6292 with SMTP id v10-20020adff68a000000b0033e1ee06292mr8701868wrp.58.1710764974451;
-        Mon, 18 Mar 2024 05:29:34 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c737:1f00:94ff:246b:30d0:686b? (p200300cbc7371f0094ff246b30d0686b.dip0.t-ipconnect.de. [2003:cb:c737:1f00:94ff:246b:30d0:686b])
-        by smtp.gmail.com with ESMTPSA id bv16-20020a0560001f1000b00341798ba0a8sm1446779wrb.87.2024.03.18.05.29.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Mar 2024 05:29:34 -0700 (PDT)
-Message-ID: <bdd94939-efda-443f-9d2b-0e507923fd01@redhat.com>
-Date: Mon, 18 Mar 2024 13:29:33 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Mk8RMf2Q"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IXCWTvE4J+TibbkfSPCbp5wl8/xwnnnRvby6SNO4kWyFDtcHh3K1PaeX4yWRYHKnF5rZSLhIz5FAvl1/XdVFcye2r7elCWrfU0NgyhTB1cyMaQT3gr4HjQmlTdoWlktS++5l/qgiyDM5B4qTqghtuWlHq+KIMIAW/4QQPe1CCTVI9LZEbjqEzK07LeCXB2ZfgDmOtm/Qq3AYPJ+7t5wobv6k6F1rL/kA1PjnJM2bbADxhGomP8BXKPvIyZq/Js/RjnA556k/JrCIfJcEjkm1rQwLzYiTvWRJhUYCm44bt1jkoWorLKkyyTwMBnkttL7Y/gG3rNlFamRNx/WR4517VQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=A4DPdwhtgsNqagCQZZutij8T6xcD8OVC8vc25mfOh9E=;
+ b=oN8dmgr6k4xr9FBpdnw46SJaD4bM4/17zLW1s+fSsgwyjEcxtAmxdDoZTup1f7fZtt9gWDeglM54SDMZsWAr5VQHsmR9R/7pHYr0EqBlIWDA86JjEutWNc2DDrnaicoYtjqrKE24AnxDDFciI1vS0zdx3lfx7MTdOVVm8sZMgLlAJlqJSbNkl0bt2ofdUJ7fFQ4Eqj15IVLRjcCb/Nx3TvRzJOihsbMDNpza6TNxylBgQtpMF51xBx7PP0cYHSlWVo3J4QSG1Em9UolJzNnlFwRYaUP5nC6nCXULAQT1TUp+MZXuj4L1ikSibYOCnAEzXGW21sYDWp70SjP8v25wqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A4DPdwhtgsNqagCQZZutij8T6xcD8OVC8vc25mfOh9E=;
+ b=Mk8RMf2Qt4wRObrGoCcNkwX0G7AeZB+Pva2kJrL+u8VWHVDOfo/7CShYZdXLwgafGuanoSc0tv9SdP6A8WdclVNKt1gck2sSc79UubcT5XHzzpq4cpy9fATNwHK1yU5GDgadFagxITsLr4mGjL1NRsdGVkyI7hqhOM+I/WsAd+w=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by DS7PR12MB9043.namprd12.prod.outlook.com (2603:10b6:8:db::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7386.26; Mon, 18 Mar 2024 12:29:57 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::f2b6:1034:76e8:f15a]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::f2b6:1034:76e8:f15a%6]) with mapi id 15.20.7386.023; Mon, 18 Mar 2024
+ 12:29:57 +0000
+Message-ID: <f7d34df0-f0c6-4475-89c7-437833391999@amd.com>
+Date: Mon, 18 Mar 2024 13:29:55 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/amdgpu: remove the adev check for NULL
+Content-Language: en-US
+To: Sunil Khatri <sunil.khatri@amd.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Shashank Sharma <shashank.sharma@amd.com>
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, Dan Carpenter <dan.carpenter@linaro.org>
+References: <20240318062900.541823-1-sunil.khatri@amd.com>
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <20240318062900.541823-1-sunil.khatri@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR3P281CA0160.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:a2::15) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] mm/gup: pass flags by value in faultin_page
-Content-Language: en-US
-To: yorha.op@gmail.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20240317124611.81280-1-yorha.op@gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240317124611.81280-1-yorha.op@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|DS7PR12MB9043:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2146a2e9-8492-42e8-7e0c-08dc47471f1f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	GG/+esPNT20H3ZSlXETzvuDjz+ajQ4C05laQB3/lCFfWOmZz29zODfm9hUJ0rPn4C7crNLU5TcgaAhX7PWk95DgCW1uTThp4JCQgtEf053tiVK8n1HtnNjSsjhicZm3jEuzqucR+OpwEZlhS7v3E48fnjpCH5/gGkutHfHUuVZb0Ztyg14/JvigK5HdEDjrZpzKw07LwmHaNmEujdY4CyRonXjtlSrldhRObEgS3s9pNTnW2UGsXf7QPz+LEwjxFIRBz3OYUC4NZnH/+Kw2cn9oxaGr1fuXI3kGnPl3x/1TvFHLA43qsYyWZpWtVuK7PK6KoCekUj96RFJdB62+FnxRuFKQ4FuEt9AoY8Qx9jqHVolrI8qmmPvbhjkrWyI5cXxx7qUdDTrHPtvlhpEAI+a+CfNzl5cEK2SgbXAa4ExV6JXK8K1W6wiamlQfmrI8QA52XO8OhoDxBCrrlAnNb5ZibKO3vX0UAc+JQameR1aqdLnWT76me9KN9DMPq4kH3Il1VHiYWvvqGbc12a8DEcIXeqM0znB5OjjUXabtln7t2PMgBAQYT/90ZoHpoeJgP0XTJ05zUaDwu0ZvzlYYns3y/H5vGXr0AxZLGOCXM7D7GhykYVBhA39r51PmRLW9XsqFzwY+mEX9vhsuPAk8AEOmtAV95ErydcnH6zKVFW68=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Zk9EZC9KS1p6ZkVxOXc1K2Urc2NGY3IwZFZRZHRIaktGbDZycVhVVEhURmc0?=
+ =?utf-8?B?c05XQmM3Mk4vanY0TVROUDdSWXplMUxBM0hqRVZ6YzZyS0pjYlhWUHFOT2di?=
+ =?utf-8?B?RDRTL0RhcHczd2lJelZDcG1WWXR5anJvaUdLMUZqZ1JaNFJ0UE5Jc2drYTVB?=
+ =?utf-8?B?bytjQWRjdDFOVU1haWs2SlNXTGZlOEVHc2poTHpCeE9UZHV1WEpIZEtwdzh4?=
+ =?utf-8?B?VGdHNVhaMDhTaFBTUlIrYWR4bSttSXB4Rno2VU9nVCtCRFM4Z1g5cCtLa1do?=
+ =?utf-8?B?L2FZU3dPT2FyUG1rODV1NW9RK01JUEdKN3hmL0Z4Z3A4UFpqREFzMEQ3N2VO?=
+ =?utf-8?B?VHVYanM0d0Y2VGwya1kxbzJrS09ZOFh1NEJwR1E5bExCVkN2VlprOCtVUERl?=
+ =?utf-8?B?NUVHUFBEVXVpOXg1YkhES3JOcWVwWDBkOVpIU1IvM01NV2hnVXJvSzE4aW5S?=
+ =?utf-8?B?b2VJNEY2dm1FOVk1dS9SYXZxSGxXVEk0anhSaDJyaUJMK3U3MEl4NW14RTRl?=
+ =?utf-8?B?ZWFBSUJSTXFCcVBoc1M5VEU5c0ordTdqcUczRmw1WlQ5MmJ6blJ4MGVvb1lN?=
+ =?utf-8?B?ZHN0M1g2Q2NHaEsyREFIWW5pM0Z3aTZFZDRiUTVPdmJFamRCMldpVmppakZs?=
+ =?utf-8?B?YmVkMzRoL0FVdjQ2WkNSTHRwSzFNL29BOS84ZUg5MFVJdnJYTkRValhwL2Iw?=
+ =?utf-8?B?bXJvTmdIYS9UL0N1VHlvTERkTm4rdnF3aHBnQko0ckV5QnNiaTFEUi8zQXdU?=
+ =?utf-8?B?dE5lcmNsbENWVFFsaDIyNkVzUTJJU28zNU82M0JsWWdZS1NDSUdBU041Y0lK?=
+ =?utf-8?B?UlB6dEkyNFFKb2dKNVBnL2FnNFVoeVV3NG14dm91UEc3MUtNNGR5b2x3eEh1?=
+ =?utf-8?B?bzFHTlg0eXhrZjZXeEpRNE1FaTQwQzVGWThzb1g1ZTQrL3NadzVQeUp3ek81?=
+ =?utf-8?B?aUEyek1OU09jMVNWcDd2VWsrWSttZ2pTUE03YmFIUHNaWGxtWC81ZXhhb2V3?=
+ =?utf-8?B?Mk14bk9Lb0FMdVlHOWd4b29JV2NpZFVSK3gwTDMycjVCS2Y0aXJKdzRwNDN4?=
+ =?utf-8?B?dG5MS0pTTUlkeEl3c2czRTBrMnRNSzJCRUZadTdPQW9wQitFUzhtckJtWDNI?=
+ =?utf-8?B?M09tS1JlcisrbEJaVERIQTZZdk1YTWlyMU1SUVJpR29hdWMvWGkrRGhZbHNZ?=
+ =?utf-8?B?THlVVTMyUGVyMThjcHNkZ0NoclcwUHQzNisvcktuQ2V4ZkMxVCtYdXBoR2VH?=
+ =?utf-8?B?eHNUTWphUjJpa25Jalo2QWc2WGF4Sk1RL2tSTWZQRFFlckxvRHpWU3RvS292?=
+ =?utf-8?B?TmI0Zkx1cmJzMEpEQlA1OEFHTDhMcDlaWkJ5Q2dZR21RYldvMy9rSlRVdGox?=
+ =?utf-8?B?cTJ1bXVzYTRaVGxPZ29MQVR3ek52clE2aWJtY0tzZFcwT3oyMk9SRS9XVUEr?=
+ =?utf-8?B?aGVjVHNCNUhxQVlvRkxnaDFCVllxM3RJTGhzRUQxUkx0S3NJWHEzbE91cXNG?=
+ =?utf-8?B?a3RCVE0xTTNwaHJCWEtiU2x4Nzk0VytaWWpwOTB2YzBVa2M2RTJhN2JRQjNH?=
+ =?utf-8?B?Yno4R3Z2N0szWW1mKy96d09sQk1qaUIwVUVRWEpwQkxQUE9lTGxJUVBPNkUv?=
+ =?utf-8?B?aldaenFvVnlISDNlUFZmNGIyK0xLa0JkVkJqMGswZlJta1VGWFY1YzVCMU9H?=
+ =?utf-8?B?MmpOL3BZMlV2OUFMSlhuT1VrMHlOVDdJOTBtVEdDUllzOG5LSGRYWEdkMVcr?=
+ =?utf-8?B?bTJuRUg2UXorcUY4Wjk0RThNM0U4enpybkFrVDBZZmR3V3lPQ1FTSUdHNCti?=
+ =?utf-8?B?REczY1ZZVkhHZERNM0FQd1RiY1dkbGpBWXhpZXJQYWZDSVF1cDdpdzJSbHBy?=
+ =?utf-8?B?VGdCUGYrRW9oN3JPbjRzU1RzSy9mSHlwSC9xb2gyQ2FlTk9DUmgzT1dGMFoy?=
+ =?utf-8?B?M3I3aG5nMWRFRDhhNDNZV2wwd3dnb3MyeHFnc09VcXNuL1ZkcnpoYkZQOHlO?=
+ =?utf-8?B?VjdRbDVRNWRJWUQ1OEVaUkpuVFlQSkRJdkQ4c2RFNzBwN25ldVJNMzFmOTla?=
+ =?utf-8?B?Z2lQaGpYTFJtdkUzbHJLWVJRbjFzenBnS2lqMmtTSmFqUjV1SEsxZDdVelRJ?=
+ =?utf-8?Q?eHFBtTtz48czTUIFDNCfiZaDN?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2146a2e9-8492-42e8-7e0c-08dc47471f1f
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2024 12:29:57.1200
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2mwp3TA/hopOc6+KzQacHaIi2zZABafXgI2NFmleQZkFV5U5ktZSBV/dnG9Pq0gm
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB9043
 
-On 17.03.24 13:46, yorha.op@gmail.com wrote:
-> From: Alex Rusuf <yorha.op@gmail.com>
-> 
-> There's no need to pass flags as a pointer,
-> because it's not expected to be changed now.
-> 
-> Signed-off-by: Alex Rusuf <yorha.op@gmail.com>
+Am 18.03.24 um 07:29 schrieb Sunil Khatri:
+> adev is a global data structure and isn't expected
+> to be NULL and hence removing the redundant adev
+> check from the devcoredump code.
+>
+> CC: Dan Carpenter <dan.carpenter@linaro.org>
+> Signed-off-by: Sunil Khatri <sunil.khatri@amd.com>
+> Suggested-by: Dan Carpenter <dan.carpenter@linaro.org>
+
+Acked-by: Christian König <christian.koenig@amd.com>
+
 > ---
->   mm/gup.c | 20 ++++++++++----------
->   1 file changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 231711efa390..f308785fa530 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -915,19 +915,19 @@ static int get_gate_page(struct mm_struct *mm, unsigned long address,
->    * to 0 and -EBUSY returned.
->    */
->   static int faultin_page(struct vm_area_struct *vma,
-> -		unsigned long address, unsigned int *flags, bool unshare,
-> +		unsigned long address, unsigned int flags, bool unshare,
->   		int *locked)
->   {
->   	unsigned int fault_flags = 0;
->   	vm_fault_t ret;
+>   drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c | 57 ++++++++++-------------
+>   1 file changed, 25 insertions(+), 32 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c
+> index 1434e9a5506b..3398f2a368d5 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c
+> @@ -211,7 +211,8 @@ amdgpu_devcoredump_read(char *buffer, loff_t offset, size_t count,
+>   	struct drm_printer p;
+>   	struct amdgpu_coredump_info *coredump = data;
+>   	struct drm_print_iterator iter;
+> -	int i;
+> +	struct amdgpu_vm_fault_info *fault_info;
+> +	int i, ver;
 >   
-> -	if (*flags & FOLL_NOFAULT)
-> +	if (flags & FOLL_NOFAULT)
->   		return -EFAULT;
-> -	if (*flags & FOLL_WRITE)
-> +	if (flags & FOLL_WRITE)
->   		fault_flags |= FAULT_FLAG_WRITE;
-> -	if (*flags & FOLL_REMOTE)
-> +	if (flags & FOLL_REMOTE)
->   		fault_flags |= FAULT_FLAG_REMOTE;
-> -	if (*flags & FOLL_UNLOCKABLE) {
-> +	if (flags & FOLL_UNLOCKABLE) {
->   		fault_flags |= FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
->   		/*
->   		 * FAULT_FLAG_INTERRUPTIBLE is opt-in. GUP callers must set
-> @@ -935,12 +935,12 @@ static int faultin_page(struct vm_area_struct *vma,
->   		 * That's because some callers may not be prepared to
->   		 * handle early exits caused by non-fatal signals.
->   		 */
-> -		if (*flags & FOLL_INTERRUPTIBLE)
-> +		if (flags & FOLL_INTERRUPTIBLE)
->   			fault_flags |= FAULT_FLAG_INTERRUPTIBLE;
+>   	iter.data = buffer;
+>   	iter.offset = 0;
+> @@ -233,26 +234,22 @@ amdgpu_devcoredump_read(char *buffer, loff_t offset, size_t count,
+>   			   coredump->reset_task_info.pid);
+>   
+>   	/* GPU IP's information of the SOC */
+> -	if (coredump->adev) {
+> -		drm_printf(&p, "\nIP Information\n");
+> -		drm_printf(&p, "SOC Family: %d\n", coredump->adev->family);
+> -		drm_printf(&p, "SOC Revision id: %d\n", coredump->adev->rev_id);
+> -		drm_printf(&p, "SOC External Revision id: %d\n",
+> -			   coredump->adev->external_rev_id);
+> -
+> -		for (int i = 1; i < MAX_HWIP; i++) {
+> -			for (int j = 0; j < HWIP_MAX_INSTANCE; j++) {
+> -				int ver = coredump->adev->ip_versions[i][j];
+> -
+> -				if (ver)
+> -					drm_printf(&p, "HWIP: %s[%d][%d]: v%d.%d.%d.%d.%d\n",
+> -						   hw_ip_names[i], i, j,
+> -						   IP_VERSION_MAJ(ver),
+> -						   IP_VERSION_MIN(ver),
+> -						   IP_VERSION_REV(ver),
+> -						   IP_VERSION_VARIANT(ver),
+> -						   IP_VERSION_SUBREV(ver));
+> -			}
+> +	drm_printf(&p, "\nIP Information\n");
+> +	drm_printf(&p, "SOC Family: %d\n", coredump->adev->family);
+> +	drm_printf(&p, "SOC Revision id: %d\n", coredump->adev->rev_id);
+> +	drm_printf(&p, "SOC External Revision id: %d\n", coredump->adev->external_rev_id);
+> +
+> +	for (int i = 1; i < MAX_HWIP; i++) {
+> +		for (int j = 0; j < HWIP_MAX_INSTANCE; j++) {
+> +			ver = coredump->adev->ip_versions[i][j];
+> +			if (ver)
+> +				drm_printf(&p, "HWIP: %s[%d][%d]: v%d.%d.%d.%d.%d\n",
+> +					   hw_ip_names[i], i, j,
+> +					   IP_VERSION_MAJ(ver),
+> +					   IP_VERSION_MIN(ver),
+> +					   IP_VERSION_REV(ver),
+> +					   IP_VERSION_VARIANT(ver),
+> +					   IP_VERSION_SUBREV(ver));
+>   		}
 >   	}
-> -	if (*flags & FOLL_NOWAIT)
-> +	if (flags & FOLL_NOWAIT)
->   		fault_flags |= FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_RETRY_NOWAIT;
-> -	if (*flags & FOLL_TRIED) {
-> +	if (flags & FOLL_TRIED) {
->   		/*
->   		 * Note: FAULT_FLAG_ALLOW_RETRY and FAULT_FLAG_TRIED
->   		 * can co-exist
-> @@ -974,7 +974,7 @@ static int faultin_page(struct vm_area_struct *vma,
+>   
+> @@ -263,18 +260,14 @@ amdgpu_devcoredump_read(char *buffer, loff_t offset, size_t count,
+>   			   coredump->ring->name);
 >   	}
 >   
->   	if (ret & VM_FAULT_ERROR) {
-> -		int err = vm_fault_to_errno(ret, *flags);
-> +		int err = vm_fault_to_errno(ret, flags);
+> -	if (coredump->adev) {
+> -		struct amdgpu_vm_fault_info *fault_info =
+> -			&coredump->adev->vm_manager.fault_info;
+> -
+> -		drm_printf(&p, "\n[%s] Page fault observed\n",
+> -			   fault_info->vmhub ? "mmhub" : "gfxhub");
+> -		drm_printf(&p, "Faulty page starting at address: 0x%016llx\n",
+> -			   fault_info->addr);
+> -		drm_printf(&p, "Protection fault status register: 0x%x\n\n",
+> -			   fault_info->status);
+> -	}
+> +	/* Add page fault information */
+> +	fault_info = &coredump->adev->vm_manager.fault_info;
+> +	drm_printf(&p, "\n[%s] Page fault observed\n",
+> +		   fault_info->vmhub ? "mmhub" : "gfxhub");
+> +	drm_printf(&p, "Faulty page starting at address: 0x%016llx\n", fault_info->addr);
+> +	drm_printf(&p, "Protection fault status register: 0x%x\n\n", fault_info->status);
 >   
->   		if (err)
->   			return err;
-> @@ -1236,7 +1236,7 @@ static long __get_user_pages(struct mm_struct *mm,
->   
->   		page = follow_page_mask(vma, start, foll_flags, &ctx);
->   		if (!page || PTR_ERR(page) == -EMLINK) {
-> -			ret = faultin_page(vma, start, &foll_flags,
-> +			ret = faultin_page(vma, start, foll_flags,
->   					   PTR_ERR(page) == -EMLINK, locked);
->   			switch (ret) {
->   			case 0:
-
-Right, possibly my commit
-
-commit 5535be3099717646781ce1540cf725965d680e7b
-Author: David Hildenbrand <david@redhat.com>
-Date:   Tue Aug 9 22:56:40 2022 +0200
-
-     mm/gup: fix FOLL_FORCE COW security issue and remove FOLL_COW
-
-
-Removed the last modifications.
-
-Reviewed-by: David Hildenbrand <david@redhat.com>
-
--- 
-Cheers,
-
-David / dhildenb
+> +	/* Add ring buffer information */
+>   	drm_printf(&p, "Ring buffer information\n");
+>   	for (int i = 0; i < coredump->adev->num_rings; i++) {
+>   		int j = 0;
 
