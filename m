@@ -1,115 +1,188 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C0252F79
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 15:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42CB14EB50;
+	Mon, 18 Mar 2024 15:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710776350; cv=none; b=X2ljvV+lLY/IzhKRqF9OGuoiNoSowRCpb8hVRPVfUABkbDUk6qhftssItWwkTR/rh/4vKDIGiflVDiJRjPdFO3TwCcW8mChP51h29hrMY3BM4wuVv1PKWEpo/3Z7fe+J8b2e3jW9yNRMlgfD2tkkwZfrdICBeG2IWyHk6CiuKuw=
+	t=1710776428; cv=none; b=s3hVzNgCRBw+QypXuuo3Qd6cT7n5JrdMUuumaMrgLXO+5c9iRCK8H1Sy8zmXQejT/czEm6VXCIF8HRRoxgFe0uQ4zTS8x7HdqrD1bgrcD3LSZdyI4FGRI1jbEePDP1JWrfVjBpcp42f4bzCcSOkoZ3bPIZW+W3arYs8UifmCgvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710776350; c=relaxed/simple;
-	bh=Gvu8dnFAnEHni20ihzX3JsZz/u9pi9EJVtJMF0uInvg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=B2SSUuBVJbnaHzabUelzKnyCqZ0M6Azcp0Qael8eqYQgen0fb2autO41y7dpncJEP81aJb+7kc4LfL5/D+PorBb6i1J37jNmWcrOnc+A0xBdA5JHhbdfKAfDC5m1tU5yk41ZYTLCW+FCsdF4aUyCMN9OKkMcUYnQIs9gU1Nwhkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-321-1qHIhjo7NAe4MMzwaZccqA-1; Mon, 18 Mar 2024 15:38:59 +0000
-X-MC-Unique: 1qHIhjo7NAe4MMzwaZccqA-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 18 Mar
- 2024 15:38:36 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Mon, 18 Mar 2024 15:38:36 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Pasha Tatashin' <pasha.tatashin@soleen.com>, "H. Peter Anvin"
-	<hpa@zytor.com>
-CC: Matthew Wilcox <willy@infradead.org>, Kent Overstreet
-	<kent.overstreet@linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "x86@kernel.org"
-	<x86@kernel.org>, "bp@alien8.de" <bp@alien8.de>, "brauner@kernel.org"
-	<brauner@kernel.org>, "bristot@redhat.com" <bristot@redhat.com>,
-	"bsegall@google.com" <bsegall@google.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "dianders@chromium.org"
-	<dianders@chromium.org>, "dietmar.eggemann@arm.com"
-	<dietmar.eggemann@arm.com>, "eric.devolder@oracle.com"
-	<eric.devolder@oracle.com>, "hca@linux.ibm.com" <hca@linux.ibm.com>,
-	"hch@infradead.org" <hch@infradead.org>, "jacob.jun.pan@linux.intel.com"
-	<jacob.jun.pan@linux.intel.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
-	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, "jroedel@suse.de"
-	<jroedel@suse.de>, "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-	"kinseyho@google.com" <kinseyho@google.com>,
-	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-	"lstoakes@gmail.com" <lstoakes@gmail.com>, "luto@kernel.org"
-	<luto@kernel.org>, "mgorman@suse.de" <mgorman@suse.de>, "mic@digikod.net"
-	<mic@digikod.net>, "michael.christie@oracle.com"
-	<michael.christie@oracle.com>, "mingo@redhat.com" <mingo@redhat.com>,
-	"mjguzik@gmail.com" <mjguzik@gmail.com>, "mst@redhat.com" <mst@redhat.com>,
-	"npiggin@gmail.com" <npiggin@gmail.com>, "peterz@infradead.org"
-	<peterz@infradead.org>, "pmladek@suse.com" <pmladek@suse.com>,
-	"rick.p.edgecombe@intel.com" <rick.p.edgecombe@intel.com>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>, "surenb@google.com"
-	<surenb@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
-	"urezki@gmail.com" <urezki@gmail.com>, "vincent.guittot@linaro.org"
-	<vincent.guittot@linaro.org>, "vschneid@redhat.com" <vschneid@redhat.com>
-Subject: RE: [RFC 00/14] Dynamic Kernel Stacks
-Thread-Topic: [RFC 00/14] Dynamic Kernel Stacks
-Thread-Index: AQHad9a+Y5/0t6VtDk+hhnG+kSJKOLE9nqig
-Date: Mon, 18 Mar 2024 15:38:36 +0000
-Message-ID: <74c82d8a6b5f490784cc8f16fa7d2c12@AcuMS.aculab.com>
-References: <20240311164638.2015063-1-pasha.tatashin@soleen.com>
- <2cb8f02d-f21e-45d2-afe2-d1c6225240f3@zytor.com>
- <ZfNTSjfE_w50Otnz@casper.infradead.org>
- <2qp4uegb4kqkryihqyo6v3fzoc2nysuhltc535kxnh6ozpo5ni@isilzw7nth42>
- <ZfNWojLB7qjjB0Zw@casper.infradead.org>
- <CA+CK2bAmOj2J10szVijNikexFZ1gmA913vvxnqW4DJKWQikwqQ@mail.gmail.com>
- <39F17EC4-7844-4111-BF7D-FFC97B05D9FA@zytor.com>
- <CA+CK2bDothmwdJ86K1LiKWDKdWdYDjg5WCwdbapL9c3Y_Sf+kg@mail.gmail.com>
-In-Reply-To: <CA+CK2bDothmwdJ86K1LiKWDKdWdYDjg5WCwdbapL9c3Y_Sf+kg@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1710776428; c=relaxed/simple;
+	bh=/eRpQJuG4LsRNwLBbm0QTXnmISrSwsU6in96ypWB5ZU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CWDXkQBtS+xkgBGn7f6XkQ04R5MwLQCmCorUMOv/V9+B/F0uBTTWgqNvUqPuvPya3tss6ap6tsZy/UJ8pnXtxvDdEDHx2pdz4f8E6UK13FWHiu2gG+jmFW7OoXf5wpkjhCPuILUUTBJ4fnJD5n4aSRnBmeg8QJE+qFBrq/X7HKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SO59E6n0; arc=none smtp.client-ip=209.85.210.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SO59E6n0"
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6e677008501so2195140a34.1;
+        Mon, 18 Mar 2024 08:40:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710776426; x=1711381226; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zQ7MzVtD5gszzcPFq8VPRHELTS+8uClWAmYrbElEuaw=;
+        b=SO59E6n00CI6v72pB8D+hX4HYf1UQLqVG1HCKtJnvomW+Yr5gKnqC6YSjc/MlUFIWk
+         hEbxod7RrniB27WOyPNsNs+BSurKAsMJkWJmLeXg3MoTQXzNEdTKBJ4bjI8zKqQhxHCe
+         2EPGf3sjr0Zv8MR1/yHQSVDSZgAyX3h8Kd+/ahUFekasj4K93WGNw0LdYgEaIdo3yp6R
+         5LHhjam3avVyhmJRimnHnGFb8Tc3Ypls+Nc8Uc4fujkMWXhnOdsFNT3PnFViS6XT9Dpx
+         hHXDwY/nfv4zszxCynLXVEiO/wWJFI89jUlscWDWqrPfmjB8GqZJOjQeSTLzh3mPZa8h
+         QM/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710776426; x=1711381226;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zQ7MzVtD5gszzcPFq8VPRHELTS+8uClWAmYrbElEuaw=;
+        b=n7j7rZCx1yMChET7xypoFtzOUB7sVl1EHSU/aYHXBuDLQW+r7WuoJBSaHYd0uNwh6I
+         WSeZyJS6dd2o+l51PJ80vJe7YBJeRRC97/jJM3Gu5uVNhDm6rfD1Hj6+Iyzo14bZYv5h
+         Y4VavyXaHS1QdVQgSj4kQSDQJoBZM1kThQImi7EOur20nXgJW1IeMiE42uKboYzk3OOc
+         +5eSYgv7FCyceXPI5e7rC4cTJPIROl6C9U6ndu+7hTPx1/12vpMBZBFYq0SLN+fbSc/e
+         +Mf0HH/WV9GNiRxgPNwXMAWL4onO8v9YjnoNIYjiYLQ7wFYcCTjRrXJ3RNBx2MBHs+1l
+         QMTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWx1VWAsibtcZzG+k2k3lUuSgugKVw0u4pFWf+CUpoqNibuy6TUB9qSqWYxOamQFNZjyk6ZHarvzTGs5gmmIXCGz3s2GDtZNMAIyzUFeE1cqE/t/563Wq9/i+KjbVLQKgyaapv9TenGOvO5ufZrJB6qQ1uG2RRtiKb5xi+bMsJJdhGyZw==
+X-Gm-Message-State: AOJu0YwH5+ZJw3T3sehrSLFR8xVwZbVEdYGHneQaMquUsYi12NJ97uq/
+	99XM8ZFRKCwKcSk7NsIlYpiWENUWaTHWXShdSkaRodRlFYaJuAzA
+X-Google-Smtp-Source: AGHT+IGypVRU7c1Y3fdttezh6tHIOCu0ntSwcDNrBefkzdlwCpoddPWfn8R8gdF7uR+na/H3UcQPUw==
+X-Received: by 2002:a05:6870:9108:b0:221:e082:228a with SMTP id o8-20020a056870910800b00221e082228amr15354064oae.57.1710776425557;
+        Mon, 18 Mar 2024 08:40:25 -0700 (PDT)
+Received: from localhost.localdomain ([122.187.117.179])
+        by smtp.gmail.com with ESMTPSA id t23-20020a63b257000000b005dcbb699abfsm7374105pgo.34.2024.03.18.08.40.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Mar 2024 08:40:25 -0700 (PDT)
+From: Animesh Agarwal <animeshagarwal28@gmail.com>
+To: 
+Cc: animeshagarwal28@gmail.com,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] dt-bindings: nxp,pnx-i2c: Convert to dtschema
+Date: Mon, 18 Mar 2024 21:09:53 +0530
+Message-ID: <20240318153959.30755-1-animeshagarwal28@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 
-Li4uDQo+IC0gZXhpdF90b191c2VyX21vZGUoKTogVW5tYXAgdGhlIGV4dHJhIHRocmVlIHBhZ2Vz
-IGFuZCByZXR1cm4gdGhlbSB0bw0KPiB0aGUgcGVyLUNQVSBjYWNoZS4gVGhpcyBmdW5jdGlvbiBp
-cyBjYWxsZWQgbGF0ZSBpbiB0aGUga2VybmVsIGV4aXQNCj4gcGF0aC4NCg0KV2h5IGJvdGhlcj8N
-ClRoZSBudW1iZXIgb2YgdGFza3MgcnVubmluZyBpbiB1c2VyX21vZGUgaXMgbGltaXRlZCB0byB0
-aGUgbnVtYmVyDQpvZiBjcHUuIFNvIHRoZSBtb3N0IHlvdSBzYXZlIGlzIGEgZmV3IHBhZ2VzIHBl
-ciBjcHUuDQoNClBsYXVzaWJseSBhIGNvbnRleHQgc3dpdGNoIGZyb20gYW4gaW50ZXJydXB0IChl
-ZyB0aW1lciB0aWNrKQ0KY291bGQgc3VzcGVuZCBhIHRhc2sgd2l0aG91dCBzYXZpbmcgYW55dGhp
-bmcgb24gaXRzIGtlcm5lbCBzdGFjay4NCkJ1dCBob3cgY29tbW9uIGlzIHRoYXQgaW4gcmVhbGl0
-eT8NCkluIGEgd2VsbCBiZWhhdmVkIHN5c3RlbSBtb3N0IHVzZXIgdGhyZWFkcyB3aWxsIGJlIHNs
-ZWVwaW5nIG9uDQpzb21lIGV2ZW50IC0gc28gd2l0aCBhbiBhY3RpdmUga2VybmVsIHN0YWNrLg0K
-DQpJIGNhbiBhbHNvIGltYWdpbmUgdGhhdCBzb21ldGhpbmcgbGlrZSBzeXNfZXBvbGwoKSBhY3R1
-YWxseQ0Kc2xlZXBzIHdpdGggbm90ICh0aGF0IG11Y2gpIHN0YWNrIGFsbG9jYXRlZC4NCkJ1dCB0
-aGUgY2FsbHMgaW50byBhbGwgdGhlIGRyaXZlcnMgdG8gY2hlY2sgdGhlIHN0YXR1cw0KY291bGQg
-ZWFzaWx5IGdvIGludG8gYW5vdGhlciBwYWdlLg0KWW91IHJlYWxseSB3b3VsZG4ndCB0byBrZWVw
-IGFsbG9jYXRpbmcgYW5kIGRlYWxsb2NhdGluZw0KcGh5c2ljYWwgcGFnZXMgKHdoaWNoIEknbSBz
-dXJlIGhhcyBUTEIgZmx1c2hpbmcgY29zdHMpDQphbGwgdGhlIHRpbWUgZm9yIHRob3NlIHByb2Nl
-c3Nlcy4NCg0KUGVyaGFwcyBhICdnYXJiYWdlIGNvbGxlY3Rpb24nIGFjdGl2aXR5IHRoYXQgcmVj
-bGFpbXMgc3RhY2sNCnBhZ2VzIGZyb20gcHJvY2Vzc2VzIHRoYXQgaGF2ZSBiZWVuIGFzbGVlcCAn
-Zm9yIGEgd2hpbGUnIG9yDQpoYXZlbid0IHVzZWQgYSBsb3Qgb2Ygc3RhY2sgcmVjZW50bHkgKGlm
-IGh3ICdwYWdlIGFjY2Vzc2VkJw0KYml0IGNhbiBiZSB1c2VkKSBtaWdodCBtYWtlIG1vcmUgc2Vu
-c2UuDQoNCkhhdmUgeW91IGRvbmUgYW55IGluc3RydW1lbnRhdGlvbiB0byBzZWUgd2hpY2ggc3lz
-dGVtIGNhbGxzDQphcmUgYWN0dWFsbHkgdXNpbmcgbW9yZSB0aGFuIChzYXkpIDhrIG9mIHN0YWNr
-Pw0KQW5kIGhvdyBvZnRlbiB0aGUgdXNlciB0aHJlYWRzIHRoYXQgbWFrZSB0aG9zZSBjYWxscyBk
-byBzbz8NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxl
-eSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0
-aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+Convert the NXP PNX I2C Controller bindings to DT schema.
+Keep only one example in DT schema to remove redundancy.
+
+Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
+
+---
+Changes in v2:
+- Changed the file name from nxp,i2c-pnx.yaml to nxp,pnx-i2c.yaml.
+- Dropped properties which were already defined in the top level $ref.
+- Dropped unused labels in example.
+---
+ .../devicetree/bindings/i2c/i2c-pnx.txt       | 34 --------------
+ .../devicetree/bindings/i2c/nxp,pnx-i2c.yaml  | 46 +++++++++++++++++++
+ 2 files changed, 46 insertions(+), 34 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-pnx.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml
+
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-pnx.txt b/Documentation/devicetree/bindings/i2c/i2c-pnx.txt
+deleted file mode 100644
+index 2a59006cf79e..000000000000
+--- a/Documentation/devicetree/bindings/i2c/i2c-pnx.txt
++++ /dev/null
+@@ -1,34 +0,0 @@
+-* NXP PNX I2C Controller
+-
+-Required properties:
+-
+- - reg: Offset and length of the register set for the device
+- - compatible: should be "nxp,pnx-i2c"
+- - interrupts: configure one interrupt line
+- - #address-cells: always 1 (for i2c addresses)
+- - #size-cells: always 0
+-
+-Optional properties:
+-
+- - clock-frequency: desired I2C bus clock frequency in Hz, Default: 100000 Hz
+-
+-Examples:
+-
+-	i2c1: i2c@400a0000 {
+-		compatible = "nxp,pnx-i2c";
+-		reg = <0x400a0000 0x100>;
+-		interrupt-parent = <&mic>;
+-		interrupts = <51 0>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-	};
+-
+-	i2c2: i2c@400a8000 {
+-		compatible = "nxp,pnx-i2c";
+-		reg = <0x400a8000 0x100>;
+-		interrupt-parent = <&mic>;
+-		interrupts = <50 0>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		clock-frequency = <100000>;
+-	};
+diff --git a/Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml b/Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml
+new file mode 100644
+index 000000000000..3125b2f5891e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml
+@@ -0,0 +1,46 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/i2c/nxp,pnx-i2c.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP PNX I2C Controller
++
++maintainers:
++  - Animesh Agarwal<animeshagarwal28@gmail.com>
++
++allOf:
++  - $ref: /schemas/i2c/i2c-controller.yaml#
++
++properties:
++  compatible:
++    const: nxp,pnx-i2c
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clock-frequency:
++    default: 100000
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#address-cells"
++  - "#size-cells"
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    i2c@400a0000 {
++        compatible = "nxp,pnx-i2c";
++        reg = <0x400a0000 0x100>;
++        interrupt-parent = <&mic>;
++        interrupts = <51 0>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++    };
+-- 
+2.44.0
 
