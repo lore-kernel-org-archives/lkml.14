@@ -1,190 +1,222 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F01E381D4
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 12:37:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5152C1B6;
+	Mon, 18 Mar 2024 12:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710765430; cv=none; b=Z+yC1oehRcUli0quflZ2mriKqI9kWtO2qvuWOTzR7H+6EBUvMs1COpbQz4ZtqjeJdwdqNtlS0c2ewjHtWGRa6DFsJ5+d5RhhHaVM7jQETJbZRaD6p6XkpAcL2hNOEkqQU1ozp6Pm21GRLjuFKz6UHFzsgRINjJ8PcIg1Y8YzztI=
+	t=1710765459; cv=none; b=badohQ4TjGSg1Vfmv46Os1RraS663vcnz0ToFGoiGNcEXoofkZhEqszSJRevlca8Dq5F4/vkFX9aiQ5kXrTepJeJXEUqrPHJK/VahzXZet0SZHYm73UNdskKjeW1oimoax9O4CVj6D7r66YbHAEETaMBn78VrJas0ThNYFcp04s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710765430; c=relaxed/simple;
-	bh=ffVSz7DOuhkOHsp+hZtUJyFaeYyOmG7SnEA1gJweHr8=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=uXhiVG7E3a3ngu+vII+BO2Lv3weXt5DpmEau4INesK/UxQq2C5oY/tHwYo5MD5cTlI8zPXQr5pWyip6HKBEN3TGol+x531O83TG9ms2l6C2TgOnLkA0XBFl/LG40v2GXyiwx74Dk9flwQycPcaNAfpeyWFzjxVxSBN8qKIX4GF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=3H1r+fcn; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1710765459; c=relaxed/simple;
+	bh=n3nj14kJhGQoVcDiuHhUwEg8Bhy8pR2tKc0A0QnHthE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tjScqa2I29sFSTlT5gziY93jey+1EwUegMCHwJgscrYLIz/a5j5rOpUSuyov93fZknfQY7HHF9SFMDTwhn/ONAoIEZiAUZLnoeV+JoGpizYgkae7+9ABNMv3rd+o7Mzhl00AoLdIuafCB2A7BqyiNCnVtq6kwWIDzFaCM3UtyLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AjaGvWzg; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="3H1r+fcn"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-33ddd1624beso2673653f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 05:37:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AjaGvWzg"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e6cb0f782bso3586116b3a.1;
+        Mon, 18 Mar 2024 05:37:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1710765427; x=1711370227; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=rOOelAXYkB/aiK2SaiRN9v1LrZq2BMclSsiRMOgV+hM=;
-        b=3H1r+fcnra/gm/Xsk+79PZMv5zKsl7ToQOUHMjp2643/bLLbVsoe1nk9I1djcBzljM
-         IadEKd3FWf/M/zDloxKzRnXng0veGHo7IRA+HK8EaNzLKHw75ZX5FiVl7XL4qexiLfVv
-         8E3SkROWFiLYjAybftrvQ+Smj8bay+x+WvjwfvusMusMgeYNCS/CziCUPMrfUaf3WH0O
-         XFB4haA3eSNqTakEHHzWoJ/nk85hqCpF1zxiu1j/k64RpBebZrglJ7QbsrYu8f2ZvuZ6
-         GuMI00vL+1cAPuzrKTt3E0ejpb/NCG/oU6OZpj+IPut02GwPHGi/mln878luOEucieGk
-         9RDg==
+        d=gmail.com; s=20230601; t=1710765457; x=1711370257; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HanPhs+5pxNZQ2UN6SW5+54Ajhvbvl08qcxZF5kLZJw=;
+        b=AjaGvWzgD0D8RqccSYzLOshHEUSJ07UHw5HPwdoN+C9LTD7yqnK70vTglzCqrM47sg
+         e0sGpWjEOXA00kzAyvhKFMNqlc3YGisi9j7kAhujCgIcCDRXSs2bflx1lfu2u2ZeFwLx
+         xEU51nBf4w9J6D+VjFP2+EKYkHi/Z5zZLuXm3kcuQuBoEkYFCptIOQSgPUpwHE27fjT6
+         AIdHa5K1MSGYWfUV5RpP+t1HeVgqQcZ6BOIiBqQWm6kriN4XS7hQCqfaI0cMYxirkEu1
+         Su86IQ3etAFF+tyxSjmZZmu4WLdlq3w9adWSJ3KuuUiHH8dzFZYX9Tuih+KwetGDwToS
+         t/MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710765427; x=1711370227;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rOOelAXYkB/aiK2SaiRN9v1LrZq2BMclSsiRMOgV+hM=;
-        b=acMEtp1Ug76plm2etFzbL/aZm9V+3gaAPvewJbLftbj4HAtfl9mGpA90oD1rl6OKu8
-         KcJ4uEWdxaA5lZeBIlqfYumW7UbJdjD8z3HmpVx+ovO0tXOOkusDm17KL2a/RwQc5P4c
-         LEWxmfqc7n+KP8Kn+rjYwm0di1olTC5lb3KHfM7gxrODNF90Ik9ALtoALVBC7gSAoIi1
-         0xY0pkK4+viIsUsTQEh9VRtBEdPl/yIAxWZeuC9BF25hxBxIQmko5VZhfHE1QBBSl02n
-         cpRggmhnWv0F6wqprYNjhsYu7aBkgE8DcEPzu2TVAW2f+cVWWa/gDrm+t6x4mVvRkpEy
-         ofmw==
-X-Forwarded-Encrypted: i=1; AJvYcCXa9mCVmDzyfC1mhyNrcptnSfl5apP6TqpKpVXKdvetZKF2DtwRfNp6/xux5OpTB27/Eh3+DtG0u9LKgMUBGAPIQjQ3zNmZNSLBPFJR
-X-Gm-Message-State: AOJu0YxKiLxTfuHGrzNEHZJA+vzYbxR2Ipu4261tyUJLIZ9UPfApSOmA
-	HCRoue6/fELJ+GbTiqPNC6nhqc7eB3CQz3OOcWomYRO5u6O4GruYjoP0NXrEkdY=
-X-Google-Smtp-Source: AGHT+IGH3TE2GhAXJz1wHAYIWwW1VoL15oPzUDNMTpeZ23Nb9XboEbKTQoGyB/c9i7ijddIXELni7w==
-X-Received: by 2002:a5d:404a:0:b0:33e:6a81:d8b9 with SMTP id w10-20020a5d404a000000b0033e6a81d8b9mr10519425wrp.20.1710765426924;
-        Mon, 18 Mar 2024 05:37:06 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:e4d5:78c0:18b:ad85])
-        by smtp.gmail.com with ESMTPSA id p6-20020adfe606000000b0033e79eca6dfsm9665379wrm.50.2024.03.18.05.37.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 05:37:06 -0700 (PDT)
-References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
- <20240314232201.2102178-14-jan.dakinevich@salutedevices.com>
- <ca80caab-2664-4797-a222-e14537eea440@linaro.org>
- <1jil1nhjwd.fsf@starbuckisacylon.baylibre.com>
- <6feba9ff-8bbf-4494-93f0-732679bc4032@salutedevices.com>
- <1j1q87hkq2.fsf@starbuckisacylon.baylibre.com>
-User-agent: mu4e 1.10.8; emacs 29.2
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Krzysztof Kozlowski
- <krzysztof.kozlowski@linaro.org>, Neil Armstrong
- <neil.armstrong@linaro.org>, Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
-  Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Kevin
-  Hilman <khilman@baylibre.com>, Martin Blumenstingl
- <martin.blumenstingl@googlemail.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
- linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org,
- kernel@salutedevices.com
-Subject: Re: [PATCH 13/25] ASoC: dt-bindings: meson: axg-pdm: document
- 'sysrate' property
-Date: Mon, 18 Mar 2024 13:19:28 +0100
-In-reply-to: <1j1q87hkq2.fsf@starbuckisacylon.baylibre.com>
-Message-ID: <1jwmpzg1hq.fsf@starbuckisacylon.baylibre.com>
+        d=1e100.net; s=20230601; t=1710765457; x=1711370257;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HanPhs+5pxNZQ2UN6SW5+54Ajhvbvl08qcxZF5kLZJw=;
+        b=gkpqj9PJDI2iacZNaqZZ2/YScAeg0oGqfDrb7zgRJrKlLlw4vWkIJJNZxCLTXiq2S+
+         gd9Y2wc7XT4M9vX6riDeOiDmaMXQEyYjMRfaHn3YGZCz/4SSpQVbmse7iFPlNX6zdngj
+         NnH7Gqbsd2zsP/vnivYeoHUsBmTC3x/AkpNbb6VtBK3iH3cYrVBUNgJI2y63Jq3RxUiO
+         xcflQx36BNuOgtvqltEuJFJW7DpI48uYyQPvv7K+Ee1RHz7ZzUmpHnntWDwhqcAGpjUW
+         vhYnVKc9nxJ7aaA8qlDS5iWLVGRFaMbolcdpHsyRrFCO0EchjzurFm5C+cgGurwkLqrR
+         45ig==
+X-Forwarded-Encrypted: i=1; AJvYcCXXZ1G54m/kCM7wMRKSDfuya8a6RUjRKOZo9ywdZ/goWyPPOtptpPmHIu9wg5qwwjeaJdHIs7P12rbqBx1BT8ENqKdYUJWyDkaG4H9FScO/0pDg3+ow7bxxOWMBCkGIdh+5E+gaxjgNgC19td3cv0VUWSjVY9AxGeSeL6wRffX6i7VQYw==
+X-Gm-Message-State: AOJu0YzKCpqTDwfWhZY63ePrAjBaGKDQWtrZYekifCS+aRvD9p7/yFKC
+	KTd9qGacb7EQxhKsVn98U1edy/xxaE6FWKKE3zqvr4ijXXlo6tQ4
+X-Google-Smtp-Source: AGHT+IE28j3JMcgmkhIHT5C2xjMBKmVzdMK31Wr/3TQ9SLPD+hsnPLfW9CeJ8hkB4t35V3ofHy0FWQ==
+X-Received: by 2002:a05:6a20:9185:b0:1a3:6b98:9a84 with SMTP id v5-20020a056a20918500b001a36b989a84mr852665pzd.10.1710765456826;
+        Mon, 18 Mar 2024 05:37:36 -0700 (PDT)
+Received: from [172.16.116.58] ([103.15.228.94])
+        by smtp.gmail.com with ESMTPSA id r3-20020a17090ad40300b0029c68206e2bsm7569501pju.0.2024.03.18.05.37.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Mar 2024 05:37:36 -0700 (PDT)
+Message-ID: <c3f5aa60-61e1-46df-8c3c-864e0acc750e@gmail.com>
+Date: Mon, 18 Mar 2024 18:07:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/8] dt-bindings: misc: Add mikrobus-connector
+To: Rob Herring <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, jkridner@beagleboard.org,
+ robertcnelson@beagleboard.org, Vaishnav M A <vaishnav@beagleboard.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
+ <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Johan Hovold <johan@kernel.org>,
+ Alex Elder <elder@kernel.org>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
+ linux-serial@vger.kernel.org, greybus-dev@lists.linaro.org
+References: <20240315184908.500352-1-ayushdevel1325@gmail.com>
+ <20240315184908.500352-2-ayushdevel1325@gmail.com>
+ <20240317205927.GA2178147-robh@kernel.org>
+Content-Language: en-US
+From: Ayush Singh <ayushdevel1325@gmail.com>
+In-Reply-To: <20240317205927.GA2178147-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+A new version of the patch is up and can be found here: 
+https://lore.kernel.org/lkml/20240317193714.403132-1-ayushdevel1325@gmail.com/
 
 
-On Mon 18 Mar 2024 at 11:55, Jerome Brunet <jbrunet@baylibre.com> wrote:
+On 3/18/24 02:29, Rob Herring wrote:
 
-> On Sun 17 Mar 2024 at 18:52, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
+> On Sat, Mar 16, 2024 at 12:18:59AM +0530, Ayush Singh wrote:
+>> Add DT bindings for mikroBUS interface. MikroBUS is an open standard
+>> developed by MikroElektronika for connecting add-on boards to
+>> microcontrollers or microprocessors.
+>>
+>> Signed-off-by: Ayush Singh <ayushdevel1325@gmail.com>
+>> ---
+>>   .../bindings/misc/mikrobus-connector.yaml     | 110 ++++++++++++++++++
+>>   MAINTAINERS                                   |   6 +
+>>   2 files changed, 116 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/misc/mikrobus-connector.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/misc/mikrobus-connector.yaml b/Documentation/devicetree/bindings/misc/mikrobus-connector.yaml
+>> new file mode 100644
+>> index 000000000000..6eace2c0dddc
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/misc/mikrobus-connector.yaml
+>> @@ -0,0 +1,110 @@
+>> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/misc/mikrobus-connector.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: mikroBUS add-on board socket
+>> +
+>> +maintainers:
+>> +  - Ayush Singh <ayushdevel1325@gmail.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: mikrobus-connector
+>> +
+>> +  pinctrl-0: true
+>> +  pinctrl-1: true
+>> +  pinctrl-2: true
+>> +  pinctrl-3: true
+>> +  pinctrl-4: true
+>> +  pinctrl-5: true
+>> +  pinctrl-6: true
+>> +  pinctrl-7: true
+>> +  pinctrl-8: true
+>> +
+>> +  pinctrl-names:
+>> +    items:
+>> +      - const: default
+>> +      - const: pwm_default
+>> +      - const: pwm_gpio
+>> +      - const: uart_default
+>> +      - const: uart_gpio
+>> +      - const: i2c_default
+>> +      - const: i2c_gpio
+>> +      - const: spi_default
+>> +      - const: spi_gpio
+>> +
+>> +  mikrobus-gpios:
+>> +    minItems: 11
+>> +    maxItems: 12
+> What is each GPIO entry?
+
+
+
+
 >
->> On 3/15/24 13:22, Jerome Brunet wrote:
->>> 
->>> On Fri 15 Mar 2024 at 11:00, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
->>> 
->>>> On 15/03/2024 00:21, Jan Dakinevich wrote:
->>>>> This option allow to redefine the rate of DSP system clock.
->>>>
->>>> And why is it suitable for bindings? Describe the hardware, not what you
->>>> want to do in the driver.
->>>>
->>>>>
->>>>> Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
->>>>> ---
->>>>>  Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml | 4 ++++
->>>>>  1 file changed, 4 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
->>>>> index df21dd72fc65..d2f23a59a6b6 100644
->>>>> --- a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
->>>>> +++ b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
->>>>> @@ -40,6 +40,10 @@ properties:
->>>>>    resets:
->>>>>      maxItems: 1
->>>>>  
->>>>> +  sysrate:
->>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>>>> +    description: redefine rate of DSP system clock
->>>>
->>>> No vendor prefix, so is it a generic property? Also, missing unit
->>>> suffix, but more importantly I don't understand why this is a property
->>>> of hardware.
->>> 
->>> +1.
->>> 
->>> The appropriate way to set rate of the clock before the driver take over
->>> is 'assigned-rate', if you need to customize this for different
->>> platform.
->>> 
->>
->> It would be great, but it doesn't work. Below, is what I want to see:
->>
->> 	assigned-clocks =
->> 		<&clkc_audio AUD2_CLKID_PDM_SYSCLK_SEL>,
->> 		<&clkc_audio AUD2_CLKID_PDM_SYSCLK_DIV>;
->> 	assigned-clock-parents =
->> 		<&clkc_pll CLKID_FCLK_DIV3>,
->> 		<0>;
->> 	assigned-clock-rates =
->> 		<0>,
->> 		<256000000>;
->>
->> But regardles of this declaration, PDM's driver unconditionally sets
->> sysclk'rate to 250MHz and throws away everything that was configured
->> before, reparents audio2_pdm_sysclk_mux to hifi_pll and changes
->> hifi_pll's rate.
->>
->> This value 250MHz is declared here:
->>
->> static const struct axg_pdm_cfg axg_pdm_config = {
->> 	.filters = &axg_default_filters,
->> 	.sys_rate = 250000000,
->> };
->>
->> The property 'sysrate' is intended to redefine hardcoded 'sys_rate'
->> value in 'axg_pdm_config'.
+>> +
+>> +  i2c-adapter:
+> We already have i2c-bus and i2c-parent properties. Neither of those work
+> for you?
+
+I think i2c-bus should work. Although I could only find information 
+about what it is supposed to be in some old kernel i2c.txt so is there a 
+general place for such properties to be discovered?
+
+>> +    description: i2c adapter attached to the mikrobus socket.
+>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>> +
+>> +  spi-controller:
+>> +    description: spi bus number of the spi-master attached to the mikrobus socket.
+>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>> +
+>> +  uart:
+> Nice and consistent. In 3 properties, we have 'adapter', 'controller'
+> and <null>...
+
+Right. So the names I am currently using are from v2 of the patch and 
+are based on Linux kernel names for this. But yes, they probably need to 
+be changed since dt-bindings are not supposed to be tied to Linux. Not 
+sure if `spi-bus` and `serial-bus` are appropriate though, so maybe 
+`{spi, serial}-controller` is fine?
+
+To explain why these are here in the first place, mikroBUS addon boards 
+are free to only use a few of these buses or multiple of these 
+simultaneously. Also, some of the properties of spi, i2c etc device 
+needs to be changed depending on the mikroBUS board (mostly described by 
+mikroBUS manifest). This means, the driver needs access to i2c adapter, 
+spi controller, serdev-controller, pwm associated with the mikroBUS 
+connector to configure them (or not use them in case of Not Connected) 
+and register the board.
+
+> Also, DT generally uses 'serial' rather than 'uart'.
+Noted
+>> +    description: uart port attached to the mikrobus socket
+>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>> +
+>> +  pwms:
+>> +    description: the pwm-controller corresponding to the mikroBUS PWM pin.
+>> +    maxItems: 1
+>> +
+>> +  spi-cs:
+>> +    description: spi chip-select numbers corresponding to the chip-selects on the mikrobus socket.
+>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+>> +    items:
+>> +      - description: chip select corresponding to CS pin
+>> +      - description: chip select corresponding to RST pin
+> How would someone handle any of the properties defined in
+> spi-peripheral-props.yaml?
 >
-> What is stopping you from removing that from the driver and adding
-> assigned-rate to 250M is the existing platform ?
-
-... Also, considering how PDM does work, I'm not sure I get the point of
-the doing all this to go from 250MHz to 256Mhz.
-
-PDM value is sampled at ~75% of the half period. That clock basically
-feeds a counter and the threshold is adjusted based on the clock rate.
-
-So there is no need to change the rate. Changing it is only necessary
-when the captured audio rate is extremely slow (<8kHz) and the counter
-may overflow. The driver already adjust this automatically.
-
-So changing the input rate from 250MHz to 256MHz should not make any
-difference.
-
 >
->>
->>> Then you don't have to deal with it in the device driver.
->>> 
->>>>
->>>> Best regards,
->>>> Krzysztof
->>> 
->>> 
+> Rob
 
+After taking a look at `spi-peripheral-props.yaml`, the properties 
+described here will actually be specified by mikroBUS manifest and thus 
+will be set by the driver after parsing the manifest.
 
--- 
-Jerome
+If you are referring to keeping `spi-cs` in sync with `reg`, well I'm 
+not quite sure how to do it better than the current implementation.
+
+Ayush Singh
+
