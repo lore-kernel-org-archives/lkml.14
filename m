@@ -1,105 +1,143 @@
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3B722EF4;
-	Mon, 18 Mar 2024 07:15:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F3222612;
+	Mon, 18 Mar 2024 07:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710746152; cv=none; b=kQOajtstgfH8UxmW+2wPwlaGhdLROGXzVIbHyKBFc1fblj6HJB8XYiWMTWH5zNBNC1w71iI1Brk7RmbUhFBTC2SX8wzcqR0lFHu9zxM1pMTF0eyYbTzxNJ02Ongwdj4a3TrPZthQ4+6GB6wRIdGCsUGoXjsGwgZ903ziHXF4S2M=
+	t=1710746168; cv=none; b=HQJfVZvn4MSNC/XiKTrrSGEGIzSnFh2Qw7mhgbmrGeFp3o9QUDGNJsCoc4A6wXLPmMRHXTcMqU8uy3YnptP7Ub+Ab7KSCk6OEnbHkafA8NTiUht5w98XMENbx95fJXcipeUu5kPGvhPXuix7trev0J/0tik56wJ6U4mrUKviz+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710746152; c=relaxed/simple;
-	bh=H0xcAujiHOPzW4Dxw69wqAMqrD7WsCFBdG5Om9v6QJQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mOypWlguqofd67900eYlc+LTjN+BguiPVwuQWKxo7tuA86fku1fifpNupND0BgebV9yuVP7w0e1R7WM+8pymXawimmljyngrJhyCjQcC9aYcl0QtJZUdh1MEOqbXBhUev6sMfctl8tPdEfvM02t3xbT0XKf0B7YVTSNNhbONpFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id AFF932800BBC5;
-	Mon, 18 Mar 2024 08:06:01 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 9C3F8577CCE; Mon, 18 Mar 2024 08:06:01 +0100 (CET)
-Date: Mon, 18 Mar 2024 08:06:01 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Bharat Bhushan <bbhushan2@marvell.com>
-Cc: Stefan Berger <stefanb@linux.vnet.ibm.com>,
-	"keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-	"herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"saulo.alessandre@tse.jus.br" <saulo.alessandre@tse.jus.br>,
-	"jarkko@kernel.org" <jarkko@kernel.org>,
-	Stefan Berger <stefanb@linux.ibm.com>
-Subject: Re: [EXTERNAL] [PATCH v6 12/13] crypto: asymmetric_keys - Adjust
- signature size calculation for NIST P521
-Message-ID: <Zffn2XpvwPk9GVhv@wunner.de>
-References: <20240312183618.1211745-1-stefanb@linux.vnet.ibm.com>
- <20240312183618.1211745-13-stefanb@linux.vnet.ibm.com>
- <SN7PR18MB531481F0A287ADCED3711193E32D2@SN7PR18MB5314.namprd18.prod.outlook.com>
+	s=arc-20240116; t=1710746168; c=relaxed/simple;
+	bh=aLS6AX7W+AXgAh4hgoumByC0Igk0YWUJhR1plA7yRec=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ui3Ds9ViYvE1a9PJCV6tAWz4DjBbDS59rlVii12pDpQbpdib1UrHHKtLdFxzCz2fxgVxQaNCqtxN7VtrJIROp6An5X5wN51syqYBn76Bw1iIuStICCNby01DXahF5b8SKUPkyuMa33PsFohdJQ4SKkSkumzkEtHxQjOjU3Ay/ZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=4qfo7+Bo; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="4qfo7+Bo"
+Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 42I7ETdi910464
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Mon, 18 Mar 2024 00:14:34 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 42I7ETdi910464
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024031401; t=1710746075;
+	bh=lOgqPli4E6y6mgNZ3XzJ8MlzC1fqsi4wvgAp64a4zdg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=4qfo7+Bopd2+cAB5JZREDFFnwJ9EUBUQzcTriimHV5zBacAHniCvGQvo/sA6muLna
+	 r4PwVGXSNtnFAarpjPSIkcS/hfYgUg4ojZl9bimUFHmnM0P9CO9rh8dpDRYahLqOvt
+	 jnGim1lPI+5C7q/LXw9w5uKxwMQXRUaNszLu95FjFea3zs0mFNXuwyPH5LagxqX0vC
+	 DosUI2YMVafFXw+c4aHUHb5JuMOQj2w2l2V9R0IlbFLWugYYUIdGE6Z5Vy6yC1MuaW
+	 vy1Q4stBFIJ3UVxNPttVvgPU9sLEwyljSMMwcFiw0pKIcgh2pkDHDqZRXAoNS8IABG
+	 Eqfo27oqDTeqA==
+From: "Xin Li (Intel)" <xin@zytor.com>
+To: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-arch@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        jgross@suse.com, boris.ostrovsky@oracle.com, arnd@arndb.de
+Subject: [PATCH v2 1/1] x86: Rename __{start,end}_init_task to __{start,end}_init_stack
+Date: Mon, 18 Mar 2024 00:14:29 -0700
+Message-ID: <20240318071429.910454-1-xin@zytor.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN7PR18MB531481F0A287ADCED3711193E32D2@SN7PR18MB5314.namprd18.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 18, 2024 at 05:58:23AM +0000, Bharat Bhushan wrote:
-> > --- a/crypto/asymmetric_keys/public_key.c
-> > +++ b/crypto/asymmetric_keys/public_key.c
-> > @@ -233,6 +233,7 @@ static int software_key_query(const struct
-> > kernel_pkey_params *params,
-> >  	info->key_size = len * 8;
-> > 
-> >  	if (strncmp(pkey->pkey_algo, "ecdsa", 5) == 0) {
-> > +		int slen = len;
-> >  		/*
-> >  		 * ECDSA key sizes are much smaller than RSA, and thus could
-> >  		 * operate on (hashed) inputs that are larger than key size.
-> > @@ -246,8 +247,19 @@ static int software_key_query(const struct
-> > kernel_pkey_params *params,
-> >  		 * Verify takes ECDSA-Sig (described in RFC 5480) as input,
-> >  		 * which is actually 2 'key_size'-bit integers encoded in
-> >  		 * ASN.1.  Account for the ASN.1 encoding overhead here.
-> > +		 *
-> > +		 * NIST P192/256/384 may prepend a '0' to a coordinate to
-> > +		 * indicate a positive integer. NIST P521 never needs it.
-> >  		 */
-> > -		info->max_sig_size = 2 * (len + 3) + 2;
-> > +		if (strcmp(pkey->pkey_algo, "ecdsa-nist-p521") != 0)
-> > +			slen += 1;
-> > +		/* Length of encoding the x & y coordinates */
-> > +		slen = 2 * (slen + 2);
-> > +		/*
-> > +		 * If coordinate encoding takes at least 128 bytes then an
-> > +		 * additional byte for length encoding is needed.
-> > +		 */
-> > +		info->max_sig_size = 1 + (slen >= 128) + 1 + slen;
-> 
-> Is "(slen >= 128)" valid for P192/256/384 also?
+The stack of a task has been separated from the memory of a task_struct
+struture for a long time on x86, as a result __{start,end}_init_task no
+longer mark the start and end of the init_task structure, but its stack
+only.
 
-It is valid but never true for those.
+Rename __{start,end}_init_task to __{start,end}_init_stack.
 
-The signature consists of two integers encoded in ASN.1.
-So each integer is prepended by 1 byte for the tag and 1 byte for the length.
+Note other architectures are not affected because __{start,end}_init_task
+are used on x86 only.
 
-The two integers are bundled together in a "sequence", which in turn requires
-1 byte for the tag and 1 byte for the length.  However, for P521 the length
-of the sequence is at least 2*(1+1+66) = 136 bytes, which exceeds 128 bytes
-and therefore the length of the sequence occupies 2 bytes instead of 1.
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+---
 
-For the shorter key lengths, the sequence fits in less than 128 bytes and
-does not require the extra byte for the sequence length.
+Change since v1:
+* Revert an accident insane change, init_task to init_stack (Jürgen Groß).
+---
+ arch/x86/include/asm/processor.h  | 4 ++--
+ arch/x86/kernel/head_64.S         | 2 +-
+ arch/x86/xen/xen-head.S           | 2 +-
+ include/asm-generic/vmlinux.lds.h | 6 +++---
+ 4 files changed, 7 insertions(+), 7 deletions(-)
 
-So the code is fine AFAICS.
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 811548f131f4..8b3a3f3bb859 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -636,10 +636,10 @@ static __always_inline void prefetchw(const void *x)
+ #define KSTK_ESP(task)		(task_pt_regs(task)->sp)
+ 
+ #else
+-extern unsigned long __end_init_task[];
++extern unsigned long __end_init_stack[];
+ 
+ #define INIT_THREAD {							\
+-	.sp	= (unsigned long)&__end_init_task -			\
++	.sp	= (unsigned long)&__end_init_stack -			\
+ 		  TOP_OF_KERNEL_STACK_PADDING -				\
+ 		  sizeof(struct pt_regs),				\
+ }
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index d8198fbd70e5..c7babd7ebb0f 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -66,7 +66,7 @@ SYM_CODE_START_NOALIGN(startup_64)
+ 	mov	%rsi, %r15
+ 
+ 	/* Set up the stack for verify_cpu() */
+-	leaq	(__end_init_task - TOP_OF_KERNEL_STACK_PADDING - PTREGS_SIZE)(%rip), %rsp
++	leaq	(__end_init_stack - TOP_OF_KERNEL_STACK_PADDING - PTREGS_SIZE)(%rip), %rsp
+ 
+ 	/* Setup GSBASE to allow stack canary access for C code */
+ 	movl	$MSR_GS_BASE, %ecx
+diff --git a/arch/x86/xen/xen-head.S b/arch/x86/xen/xen-head.S
+index 04101b984f24..43eadf03f46d 100644
+--- a/arch/x86/xen/xen-head.S
++++ b/arch/x86/xen/xen-head.S
+@@ -49,7 +49,7 @@ SYM_CODE_START(startup_xen)
+ 	ANNOTATE_NOENDBR
+ 	cld
+ 
+-	leaq	(__end_init_task - TOP_OF_KERNEL_STACK_PADDING - PTREGS_SIZE)(%rip), %rsp
++	leaq	(__end_init_stack - TOP_OF_KERNEL_STACK_PADDING - PTREGS_SIZE)(%rip), %rsp
+ 
+ 	/* Set up %gs.
+ 	 *
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 514d3002ad8a..cdfdcca23045 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -399,13 +399,13 @@
+ 
+ #define INIT_TASK_DATA(align)						\
+ 	. = ALIGN(align);						\
+-	__start_init_task = .;						\
++	__start_init_stack = .;						\
+ 	init_thread_union = .;						\
+ 	init_stack = .;							\
+ 	KEEP(*(.data..init_task))					\
+ 	KEEP(*(.data..init_thread_info))				\
+-	. = __start_init_task + THREAD_SIZE;				\
+-	__end_init_task = .;
++	. = __start_init_stack + THREAD_SIZE;				\
++	__end_init_stack = .;
+ 
+ #define JUMP_TABLE_DATA							\
+ 	. = ALIGN(8);							\
 
-Thanks,
+base-commit: 7e19a79344df2ed5e106091c29338962261b0290
+-- 
+2.44.0
 
-Lukas
