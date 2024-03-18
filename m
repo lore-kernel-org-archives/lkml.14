@@ -1,105 +1,110 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7551B1EF18;
-	Mon, 18 Mar 2024 12:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B381E49E
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 12:32:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710765054; cv=none; b=TtSiOTqhlOz339sH27ATSyuKMydJ2/HL6IqKz+jv3QxbcWRHjgug5OhTZLGhHdvXVueilHt0YpCf2xL88kFl9WpYQiVvd784g3k/q9ptkoX0OD+FpcvFDW/9ailaQ5EqdeYsHq7HAueJI0a4STk9Y2VJ5uwrCT4ES3wkc7k+2Mg=
+	t=1710765160; cv=none; b=S+r28NLSRBs0KNJtL6GuXqy6uJwTcAaDe4C0GQVGWm+DMXCY8APDoWpgB+vfMB14NMISJHKaNniy0PmomPBpagiYEUPO5Gt/f1nyWU5S/qN4oPKxfqIKJswvqrlAwDeRqo1eCJ2vijc8kJu7bzV4pGBsuqABHfdZtyjKssw1xc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710765054; c=relaxed/simple;
-	bh=0oFjsR8UMfssqHaMgHT3LLZ1XLAc6e6F+5fJPvG3290=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Fp53wZBl7+PA5uuTGZOuYTBqiAMDretLMncHM5BcXOlY8ohCwMtpzrnPBK9J4nJlKDt2gL1m8L5Tl4N2fCrBnQa88HtG5y+PBIlQHK7MjXd54UzJN96tvIMmJ8d1jRlqrN0CWj5+HZGInucmrPKxYytATr4R61g93jecwc0eTVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TyvM83LKRz6JBZp;
-	Mon, 18 Mar 2024 20:30:12 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id C0D73140A78;
-	Mon, 18 Mar 2024 20:30:41 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 18 Mar
- 2024 12:29:54 +0000
-Date: Mon, 18 Mar 2024 12:29:53 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dominique Martinet <dominique.martinet@atmark-techno.com>
-CC: David Lechner <dlechner@baylibre.com>, Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Syunya
- Ohshio <syunya.ohshio@atmark-techno.com>, Guido =?ISO-8859-1?Q?G?=
- =?ISO-8859-1?Q?=FCnther?= <agx@sigxcpu.org>, Lars-Peter Clausen
-	<lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: industrialio-core: look for aliases to request
- device index
-Message-ID: <20240318122953.000013f3@Huawei.com>
-In-Reply-To: <ZfejyEvPIncygKJ9@atmark-techno.com>
-References: <20240228051254.3988329-1-dominique.martinet@atmark-techno.com>
-	<7f03bb12-0976-4cb7-9ca9-4e4e28170bdd@linaro.org>
-	<Zd7hSOw3_zosyrn3@atmark-techno.com>
-	<daed8ada-9e01-41ad-82af-5da5cbbc865c@linaro.org>
-	<Zd7qz1Qte8HWieF_@atmark-techno.com>
-	<20240228142441.00002a79@Huawei.com>
-	<Zd_zB_ymxkx0HB3q@atmark-techno.com>
-	<ZfPg-nMANUtBlr6S@atmark-techno.com>
-	<CAMknhBG_kJx8JPvTBQo7zpy3mFAkUjZpRY3DLBfXt+39nRJWiA@mail.gmail.com>
-	<ZfejyEvPIncygKJ9@atmark-techno.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1710765160; c=relaxed/simple;
+	bh=efnVPpmb2teYRxdgVuvr53GXPaEARKO2oJiZDPTgVSQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sMRW907IUYoYSOPOOjWXvBGFNu60OXI20CGrFR9RVtl49N3P0oio9gO3ISYL1cLgPfunzO8eFeri5h6G0BboLLXEiTUmYpgV3HSROQg46ffzbnuDa0mjvArm4mMv7C0klMg53epo5pgnwAeM2HwMR6q62bt5Fo+q2BYW/kY+bZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XEm+Wdrx; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XEm+Wdrx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=HSPhwXSCxS++lB8cW7HjxSToUp/DCPeVhcBtHho/j3E=; b=XEm+WdrxFnpkahFybnf2FrA+2/
+	rw1XzkwVssLBE54wENkAoZC8nJIs/MbYgaGfgGfxS12nOe5T+nND8XrN9cBOt0W3TfZx1NvE1oOWU
+	HFevprZ7dWzFtOFYcLSMCvABeljS5xnpTCzBV3OGCeA3RRk28Rh8X3/ijDv785eu6/dnqRbCSOI+a
+	YcsB95n1tMjF0A+SWYwN5OtsaP2CJ/dJHjeWfVhlmjrGXbjg7iB14GUT2mijIQYh99nD/1wTnHzqp
+	7BE4J7lKnVCgkaN6T4VCUcHwuyzIrtPt3dauNribIu8tiXLoxuARtDB/aK/H1yMrTjWQO2XDys2ds
+	7lBlZfVg==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rmCAC-0000000H9S1-2Xle;
+	Mon, 18 Mar 2024 12:32:24 +0000
+Date: Mon, 18 Mar 2024 12:32:24 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: =?utf-8?B?6buE5pyd6ZizIChaaGFveWFuZyBIdWFuZyk=?= <zhaoyang.huang@unisoc.com>
+Cc: Zhaoyang Huang <huangzhaoyang@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	=?utf-8?B?5bq357qq5ruoIChTdGV2ZSBLYW5nKQ==?= <Steve.Kang@unisoc.com>
+Subject: Re: summarize all information again at bottom//reply: reply: [PATCH]
+ mm: fix a race scenario in folio_isolate_lru
+Message-ID: <Zfg0WLrcOmCtdn_M@casper.infradead.org>
+References: <be75859d7e4245939d825da5e881902c@BJMBX01.spreadtrum.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <be75859d7e4245939d825da5e881902c@BJMBX01.spreadtrum.com>
 
-On Mon, 18 Mar 2024 11:15:36 +0900
-Dominique Martinet <dominique.martinet@atmark-techno.com> wrote:
 
-> David Lechner wrote on Fri, Mar 15, 2024 at 10:53:36AM -0500:
-> > How about using udev rules to create symlinks for each device based on
-> > the label attribute? No changes to the kernel are needed.  
+Stop creating new threads.  You're really annoying.
+
+On Mon, Mar 18, 2024 at 09:32:32AM +0000, 黄朝阳 (Zhaoyang Huang) wrote:
+> Summarize all information below to make it more clear(remove thread2 which is not mandatory and make the scenario complex)
+
+You've gone back to over-indenting.  STOP IT.
+
+> #thread 0(madivise_cold_and_pageout)        #thread1(truncate_inode_pages_range) 
+
+This is still an impossible race, and it's the third time I've told you
+this.  And madivise_cold_and_pageout does not exist, it's
+madvise_cold_or_pageout_pte_range().  I'm going to stop responding to
+your emails if you keep on uselessly repeating the same mistakes.
+
+So, once again,
+
+For madvise_cold_or_pageout_pte_range() to find a page, it must have
+a PTE pointing to the page.  That means there's a mapcount on the page.
+That means there's a refcount on the page.
+
+truncate_inode_pages_range() will indeed attempt to remove a page from
+the page cache.  BUT before it does that, it has to shoot down TLB
+entries that refer to the affected folios.  That happens like this:
+
+                for (i = 0; i < folio_batch_count(&fbatch); i++)
+                        truncate_cleanup_folio(fbatch.folios[i]);
+truncate_cleanup_folio() -> unmap_mapping_folio ->
+unmap_mapping_range_tree() -> unmap_mapping_range_vma() ->
+zap_page_range_single() -> unmap_single_vma -> unmap_page_range ->
+zap_p4d_range -> zap_pud_range -> zap_pmd_range -> zap_pte_range ->
+pte_offset_map_lock()
+
+> pte_offset_map_lock						 takes NO lock
+> 										 truncate_inode_folio(refcnt == 2)
+> 										 <decrease the refcnt of page cache>
+> folio_isolate_lru(refcnt == 1)	                 
+> 										 release_pages(refcnt == 1)
+> folio_test_clear_lru 
+> <remove folio's PG_lru>
+> 										folio_put_testzero == true
+> folio_get(refer to isolation)
+> 										folio_test_lru == false
+> 									  	<No lruvec_del_folio>
+> 										list_add(folio->lru, pages_to_free)
+> 										****current folio will break LRU's integrity since it has not been deleted****
 > 
-> Right, it's definitely possible to make symlinks for each "device" -- my
-> patch comment links to such an udev script "solution":
-> https://git.toradex.com/cgit/meta-toradex-bsp-common.git/tree/recipes-core/udev/files/verdin-imx8mm/toradex-adc.sh?h=kirkstone-6.x.y
-> (the script is launched by udev here:
-> https://git.toradex.com/cgit/meta-toradex-bsp-common.git/tree/recipes-core/udev/files/verdin-imx8mm/99-toradex.rules
-> )
-> 
-> My conceptual problem with this is that this makes symlinks in /dev to
-> files in /sys and it feels like we're crossing boundaries.
-> As far as I can tell there is no way for userspace to create arbitrary
-> symlinks in /sys, so I think we could have an interface more
-> user-friendly by allowing paths to be static for users with multiple
-> devices.
-> (I guess that's a weak argument given e.g. disks etc will also have an
-> unreliable name in /sys in the general case, but simple programs don't
-> interact with them in /sys and can use stable links in /dev so my
-> expectations here aren't quite the same)
-> 
-> 
-> Ultimately, the problem might run deeper in that we're having userspace
-> interact with the device through /sys and not the /dev char dev... As
-> far as I could see /dev/iio:deviceX only allows reading buffered values
-> and doesn't have any ioctl or other way of reading immediate values as
-> is possible in /sys though, so that'd require quite a bit of work to
-> duplicate the interface there...
-
-Don't.  The sysfs interface as only control is entirely intentional and
-we do not want IOCTL based duplication.
-
-Just addressing this bit as I'm still a bit snowed under to think about this
-more generally.
-
-
-
+> 0. Folio's refcnt decrease from 2 to 1 by filemap_remove_folio
+> 1. thread 0 calls folio_isolate_lru with refcnt == 1. Folio comes from vm's pte
+> 2. thread 1 calls release_pages with refcnt == 1. Folio comes from address_space
+> (refcnt == 1 make sense for both of folio_isolate_lru and release_pages)
+> 3. thread0 clear folio's PG_lru by folio_test_clear_lru
+> 4. thread1 decrease folio's refcnt from 1 to 0 and get permission to proceed
+> 5. thread1 failed in folio_test_lru and do no list_del(folio)
+> 6. thread1 add folio to pages_to_free wrongly which break the LRU's->list 
+> 7. next folio after current one within thread1 experiences list_del_invalid when calling lruvec_del_folio
