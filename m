@@ -1,54 +1,54 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D70A5F86C
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 23:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B225F85B
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 23:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710804842; cv=none; b=nfFTkVFL8BkxN85koDE2L3RmOdy0juDYhbhmcBxMnYO+fAoBHOmiuxtX4P2MRhNmH/gZiJe6HBYR1gFDhOTsqqTqCcTHTlaJ7h4VfTsUMDx+77Q7v4WZLR2Iy6Q1sHwbOlmiFEhQ+CNAsyS6XGxB8mM1/V4ZYQTQqb6CUgSy2so=
+	t=1710804841; cv=none; b=m8Vb6pEsh89tW7q47X3Wp7D4AG2FoIo96wej6/vUmAfkKf32d+EetwkKDHjJjO+Hs0t+etIk6A4eBiO2KcBPPHM36f9Hc6rHBtjUWXnskVV8X455qHzLU37YVquxQxhhGZbIOOaHfz13+sIdg5k+oo1+jfBh9AAWlzp8NJZF77s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710804842; c=relaxed/simple;
-	bh=EcmswukeZI313nMpV8tNY2A/YJT9P17ql1iH81L5DCo=;
+	s=arc-20240116; t=1710804841; c=relaxed/simple;
+	bh=cjIU+B6BLsuurs7zM20656DcF0/I2SGoWy906srd+qs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KKp+kAVZsZBEzezcwaDmShGHkPMcQxaCYk9u3AjPRH4E8aRjS22JAZ6lTpZa+cEm46DVG/KFsgviXnJpmh4JwDlRVvSqdpxHBBkRuBpv2LKeE4b9d1UFt109gskZpA8UQbaTJTJBbeJU0KESEdX3r3i39qOUIX1NyW5NcfcUNjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X6e33VYH; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=AmKPhzL8rfIv71Xrr1F77mScFndtJB1hcOtTTX1KRRBOnSgz7h+xHXSAQJnQ/ZKEeTN4x5//UV4mBURM1TkCkdgk7SZhQzKV5UsLTQ/cfMQSVFYRkMTUXiGwBF9qLgGcvYHy70wIyKbx/+xVjhLqlwxy9pLoPt9UJZmzf2eOrW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QqyzF95M; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X6e33VYH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QqyzF95M"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710804838;
+	s=mimecast20190719; t=1710804837;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CU08kKmFr2y+l/PfA7wEzPvqxMRumVnT+OH5USVjR9A=;
-	b=X6e33VYHVnTcZTjXDsoToB27RZ5GMdb9WKMiSdkDO8YfmIWzf5m9xc3QWspQbapMPS0Jgg
-	uP6iS/eTgBQByuURsCBpoZxe1NvRgw1bFBdQPcusWYe5zEC+A88OEGdShgMPF+yuxk9CeT
-	ciQzwLpeBJ0XOHtss4H+RxAPHVUWrOM=
+	bh=3qB+9WOwj6VlTsZBkG/PbOw2H1v6jsG7recEA+AUYPU=;
+	b=QqyzF95MNTa3oy6tTxkHEmwpa1rUJJx1+RHgvhfVSyeJCvY7QpHZpBs1tZdjW+ZkXPvQvb
+	hujJ3p9oSz47ATGlIaDjsX04JickRzDMnOq/9Z9lzBsXgUYVKIQmQJblgRg6wbFnmWcGs6
+	zofVM9E7zHJh8AV3U97YJ3+XUnK/bF4=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-662-ueGFrfW5NUGeIrIZwqWvTA-1; Mon, 18 Mar 2024 19:33:56 -0400
-X-MC-Unique: ueGFrfW5NUGeIrIZwqWvTA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+ us-mta-495-4ZzVU31FNsKti-upSKoqsg-1; Mon, 18 Mar 2024 19:33:55 -0400
+X-MC-Unique: 4ZzVU31FNsKti-upSKoqsg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7CA9B101A552;
-	Mon, 18 Mar 2024 23:33:56 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 080AC85A58B;
+	Mon, 18 Mar 2024 23:33:55 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 56A611C060A4;
-	Mon, 18 Mar 2024 23:33:56 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id D57E71121312;
+	Mon, 18 Mar 2024 23:33:54 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
 Cc: michael.roth@amd.com,
 	isaku.yamahata@intel.com,
 	seanjc@google.com
-Subject: [PATCH v4 13/15] KVM: SEV: allow SEV-ES DebugSwap again
-Date: Mon, 18 Mar 2024 19:33:50 -0400
-Message-ID: <20240318233352.2728327-14-pbonzini@redhat.com>
+Subject: [PATCH v4 06/15] KVM: SEV: store VMSA features in kvm_sev_info
+Date: Mon, 18 Mar 2024 19:33:43 -0400
+Message-ID: <20240318233352.2728327-7-pbonzini@redhat.com>
 In-Reply-To: <20240318233352.2728327-1-pbonzini@redhat.com>
 References: <20240318233352.2728327-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -59,37 +59,162 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-The DebugSwap feature of SEV-ES provides a way for confidential guests
-to use data breakpoints.  Its status is record in VMSA, and therefore
-attestation signatures depend on whether it is enabled or not.  In order
-to avoid invalidating the signatures depending on the host machine, it
-was disabled by default (see commit 5abf6dceb066, "SEV: disable SEV-ES
-DebugSwap by default", 2024-03-09).
+Right now, the set of features that are stored in the VMSA upon
+initialization is fixed and depends on the module parameters for
+kvm-amd.ko.  However, the hypervisor cannot really change it at will
+because the feature word has to match between the hypervisor and whatever
+computes a measurement of the VMSA for attestation purposes.
 
-However, we now have a new API to create SEV VMs that allows enabling
-DebugSwap based on what the user tells KVM to do, and we also changed the
-legacy KVM_SEV_ES_INIT API to never enable DebugSwap.  It is therefore
-possible to re-enable the feature without breaking compatibility with
-kernels that pre-date the introduction of DebugSwap, so go ahead.
+Add a field to kvm_sev_info that holds the set of features to be stored
+in the VMSA; and query it instead of referring to the module parameters.
+
+Because KVM_SEV_INIT and KVM_SEV_ES_INIT accept no parameters, this
+does not yet introduce any functional change, but it paves the way for
+an API that allows customization of the features per-VM.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Message-Id: <20240209183743.22030-6-pbonzini@redhat.com>
+Reviewed-by: Michael Roth <michael.roth@amd.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/svm/sev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/svm/sev.c | 29 +++++++++++++++++++++--------
+ arch/x86/kvm/svm/svm.c |  2 +-
+ arch/x86/kvm/svm/svm.h |  3 ++-
+ 3 files changed, 24 insertions(+), 10 deletions(-)
 
 diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index dc22b31faebd..1a11840facfb 100644
+index 22c35a39c25f..a8300646a280 100644
 --- a/arch/x86/kvm/svm/sev.c
 +++ b/arch/x86/kvm/svm/sev.c
-@@ -42,7 +42,7 @@ static bool sev_es_enabled = true;
- module_param_named(sev_es, sev_es_enabled, bool, 0444);
+@@ -96,6 +96,14 @@ static inline bool is_mirroring_enc_context(struct kvm *kvm)
+ 	return !!to_kvm_svm(kvm)->sev_info.enc_context_owner;
+ }
  
- /* enable/disable SEV-ES DebugSwap support */
--static bool sev_es_debug_swap_enabled = false;
-+static bool sev_es_debug_swap_enabled = true;
- module_param_named(debug_swap, sev_es_debug_swap_enabled, bool, 0444);
- static u64 sev_supported_vmsa_features;
++static bool sev_vcpu_has_debug_swap(struct vcpu_svm *svm)
++{
++	struct kvm_vcpu *vcpu = &svm->vcpu;
++	struct kvm_sev_info *sev = &to_kvm_svm(vcpu->kvm)->sev_info;
++
++	return sev->vmsa_features & SVM_SEV_FEAT_DEBUG_SWAP;
++}
++
+ /* Must be called with the sev_bitmap_lock held */
+ static bool __sev_recycle_asids(unsigned int min_asid, unsigned int max_asid)
+ {
+@@ -245,6 +253,11 @@ static int sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp)
  
+ 	sev->active = true;
+ 	sev->es_active = argp->id == KVM_SEV_ES_INIT;
++	sev->vmsa_features = sev_supported_vmsa_features;
++	if (sev_supported_vmsa_features)
++		pr_warn_once("Enabling DebugSwap with KVM_SEV_ES_INIT. "
++			     "This will not work starting with Linux 6.10\n");
++
+ 	ret = sev_asid_new(sev);
+ 	if (ret)
+ 		goto e_no_asid;
+@@ -266,6 +279,7 @@ static int sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ 	sev_asid_free(sev);
+ 	sev->asid = 0;
+ e_no_asid:
++	sev->vmsa_features = 0;
+ 	sev->es_active = false;
+ 	sev->active = false;
+ 	return ret;
+@@ -560,6 +574,8 @@ static int sev_launch_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ 
+ static int sev_es_sync_vmsa(struct vcpu_svm *svm)
+ {
++	struct kvm_vcpu *vcpu = &svm->vcpu;
++	struct kvm_sev_info *sev = &to_kvm_svm(vcpu->kvm)->sev_info;
+ 	struct sev_es_save_area *save = svm->sev_es.vmsa;
+ 
+ 	/* Check some debug related fields before encrypting the VMSA */
+@@ -601,11 +617,7 @@ static int sev_es_sync_vmsa(struct vcpu_svm *svm)
+ 	save->xss  = svm->vcpu.arch.ia32_xss;
+ 	save->dr6  = svm->vcpu.arch.dr6;
+ 
+-	if (sev_supported_vmsa_features) {
+-		save->sev_features = sev_supported_vmsa_features;
+-		pr_warn_once("Enabling DebugSwap with KVM_SEV_ES_INIT. "
+-			     "This will not work starting with Linux 6.10\n");
+-	}
++	save->sev_features = sev->vmsa_features;
+ 
+ 	pr_debug("Virtual Machine Save Area (VMSA):\n");
+ 	print_hex_dump_debug("", DUMP_PREFIX_NONE, 16, 1, save, sizeof(*save), false);
+@@ -1685,6 +1697,7 @@ static void sev_migrate_from(struct kvm *dst_kvm, struct kvm *src_kvm)
+ 	dst->pages_locked = src->pages_locked;
+ 	dst->enc_context_owner = src->enc_context_owner;
+ 	dst->es_active = src->es_active;
++	dst->vmsa_features = src->vmsa_features;
+ 
+ 	src->asid = 0;
+ 	src->active = false;
+@@ -3057,7 +3070,7 @@ static void sev_es_init_vmcb(struct vcpu_svm *svm)
+ 	svm_set_intercept(svm, TRAP_CR8_WRITE);
+ 
+ 	vmcb->control.intercepts[INTERCEPT_DR] = 0;
+-	if (!sev_es_debug_swap_enabled) {
++	if (!sev_vcpu_has_debug_swap(svm)) {
+ 		vmcb_set_intercept(&vmcb->control, INTERCEPT_DR7_READ);
+ 		vmcb_set_intercept(&vmcb->control, INTERCEPT_DR7_WRITE);
+ 		recalc_intercepts(svm);
+@@ -3112,7 +3125,7 @@ void sev_es_vcpu_reset(struct vcpu_svm *svm)
+ 					    sev_enc_bit));
+ }
+ 
+-void sev_es_prepare_switch_to_guest(struct sev_es_save_area *hostsa)
++void sev_es_prepare_switch_to_guest(struct vcpu_svm *svm, struct sev_es_save_area *hostsa)
+ {
+ 	/*
+ 	 * All host state for SEV-ES guests is categorized into three swap types
+@@ -3140,7 +3153,7 @@ void sev_es_prepare_switch_to_guest(struct sev_es_save_area *hostsa)
+ 	 * the CPU (Type-B). If DebugSwap is disabled/unsupported, the CPU both
+ 	 * saves and loads debug registers (Type-A).
+ 	 */
+-	if (sev_es_debug_swap_enabled) {
++	if (sev_vcpu_has_debug_swap(svm)) {
+ 		hostsa->dr0 = native_get_debugreg(0);
+ 		hostsa->dr1 = native_get_debugreg(1);
+ 		hostsa->dr2 = native_get_debugreg(2);
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 450535d6757f..c22e87ebf0de 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -1523,7 +1523,7 @@ static void svm_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
+ 		struct sev_es_save_area *hostsa;
+ 		hostsa = (struct sev_es_save_area *)(page_address(sd->save_area) + 0x400);
+ 
+-		sev_es_prepare_switch_to_guest(hostsa);
++		sev_es_prepare_switch_to_guest(svm, hostsa);
+ 	}
+ 
+ 	if (tsc_scaling)
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index 864fac367424..b7707514d042 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -85,6 +85,7 @@ struct kvm_sev_info {
+ 	unsigned long pages_locked; /* Number of pages locked */
+ 	struct list_head regions_list;  /* List of registered regions */
+ 	u64 ap_jump_table;	/* SEV-ES AP Jump Table address */
++	u64 vmsa_features;
+ 	struct kvm *enc_context_owner; /* Owner of copied encryption context */
+ 	struct list_head mirror_vms; /* List of VMs mirroring */
+ 	struct list_head mirror_entry; /* Use as a list entry of mirrors */
+@@ -684,7 +685,7 @@ int sev_handle_vmgexit(struct kvm_vcpu *vcpu);
+ int sev_es_string_io(struct vcpu_svm *svm, int size, unsigned int port, int in);
+ void sev_es_vcpu_reset(struct vcpu_svm *svm);
+ void sev_vcpu_deliver_sipi_vector(struct kvm_vcpu *vcpu, u8 vector);
+-void sev_es_prepare_switch_to_guest(struct sev_es_save_area *hostsa);
++void sev_es_prepare_switch_to_guest(struct vcpu_svm *svm, struct sev_es_save_area *hostsa);
+ void sev_es_unmap_ghcb(struct vcpu_svm *svm);
+ 
+ /* These symbols are used in common code and are stubbed below.  */
+-- 
+2.43.0
+
 
