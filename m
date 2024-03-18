@@ -1,96 +1,83 @@
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A4C482F2;
-	Mon, 18 Mar 2024 13:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2AE33B1AA;
+	Mon, 18 Mar 2024 13:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710769935; cv=none; b=r166SRhPRAO7ZX61KlwKpeyXgqnz/AvPZ0Mu2+1ii7cLy5dwhb9Rnha+d09EcqMl4RxgeMghzRARj+a62vdIpYR8DipXjT1QReJHqXv/0B1XSaOrL+QMPm5qVytCq1N/lOqguqeiwJIgMlHTFS96EF2Httq9NFST0VfQPtti5dI=
+	t=1710770029; cv=none; b=oAJ5gmoOkXd8VXCXiwcqFDORpWVNkx+wXOyLo+SVLBaPPXTNFrvVJ698hfkBmHnjtyuaLhP85vGeqY1aJ3NOIAMXDWTXNio/zBHbmvRIWRytXHWEnl3xOx/VJ6aS7AlLOABDuEhWdqgyGh6Yb33OqnSUsUcK4W+lsxN/biA4vtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710769935; c=relaxed/simple;
-	bh=PookXp4bPOX0npWy6gd5rk2aO3Vm9Zf52HsOGP+Nz4k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iFWbJtbKxjkoD3PeVECr/6ddTU6ms+v3cYaGFcpQPphv02HUNekgo22rOOv3kwW9j4r+6u+Kj9vmWlDXANNBm6v1sX7hRZ/zlTInm0DaIv/P8bkyl9JEbYn6LVddSQG2uEbiLyNuyijhK/giYgNYTtAZwPJSuBcjOV6mPEbUAnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3c380e99582so583082b6e.1;
-        Mon, 18 Mar 2024 06:52:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710769933; x=1711374733;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w7ebsFZDfZ8wRGX/ymUxLQCpYnUCXb5v3M/6qeGcR2k=;
-        b=hjfS2nO8SHKLtE/PoUkK8lSjYBwP/CENXlm/UFFmQ7Tom+pK1QMakkn4zD1SrWAI3G
-         th6tHu/kjjMre5ZzW8Y7qw+zoGINfA4N/Dv8qSMCVPzaz/qt3r2t7aX/GWVbL783DYvT
-         CrTWsteHGzyGiDZSw7FAte4PxrKo1M5j4dYWm5vRwbtDix7sSyYIwBYM6pxLDfsCwRc2
-         CgYS2ooHk+gJUyDjhpNGjiGvJQ2nYRTyIYH0z2GUmb5F9t58p7vSik6HEYCRIe8oNfNs
-         yhw2YoKZLFW4cZfcLSKeRzHzV1llRPt2NlCvDM2cuYf3w1a5gVJg6HnIlZkG/wRyLcwT
-         Z1Pg==
-X-Forwarded-Encrypted: i=1; AJvYcCWMATI41fj60/ceIxox66L1642dnYoWGPmP5sDwV4EJdGCdKIo0fgtTgGhl/pEEGtZpD/3yFbE15qgMwjJ7UZdiBv1HctRRUKfs/91ZnDD9MYmWJbJY38LXc51It1B9WrkJLpzf5A6/ZlOf17Kxte1x49WaM2rzOWQNnOfaIW2FobE=
-X-Gm-Message-State: AOJu0YzM5NqZ8U8xepE7ccV/Q3Xv8Hkd7w/J3BFNstG0cTQH3ehw80nh
-	P3+A/JcFszTo7a+iGd6/y5xmyabtdaBhW8993uUmzHIynjEQjGliOFYXwtNNHEZ15PUVRCf9KEH
-	jzPLnQ08dm/G5qJkUO+H8rLICAbE=
-X-Google-Smtp-Source: AGHT+IFkp+fjhly6fcg9naTNI6FjwK6V6nEo8JqRLqLJlYLU9NJHzdhKUmIPMkqXB5aEfMpA4Kog4/1ILyL5IzDJNzk=
-X-Received: by 2002:a05:6820:d02:b0:5a4:5630:93d6 with SMTP id
- ej2-20020a0568200d0200b005a4563093d6mr9713906oob.1.1710769933182; Mon, 18 Mar
- 2024 06:52:13 -0700 (PDT)
+	s=arc-20240116; t=1710770029; c=relaxed/simple;
+	bh=Vu96on3ELce8oj2lYXDb7Wwq/sWwPtuQ5VXawLVemTk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BxiXZ6BcuEjYfkahmS7eN+5KlmaZYDJal4a12hB5lr0qn/eBlfYX/fbwvEDIFBuE36QW5tL/IsL4wSBBuSjYMqffFleEShBFzZsHS35K/2JlNQFUeGxJA9zyQ4RWoxQ0VsNh8yPUtzGrVkQwelTPWH5Y1dd4PvLZymXAL6fLmqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Tywkq0z5Vz1QBtL;
+	Mon, 18 Mar 2024 21:32:19 +0800 (CST)
+Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3A19C1400CB;
+	Mon, 18 Mar 2024 21:34:51 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.2) by
+ kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 18 Mar 2024 21:34:50 +0800
+From: Jijie Shao <shaojijie@huawei.com>
+To: <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <michal.kubiak@intel.com>, <rkannoth@marvell.com>
+CC: <shenjian15@huawei.com>, <wangjie125@huawei.com>,
+	<liuyonglong@huawei.com>, <shaojijie@huawei.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH V3 net 2/3] net: hns3: fix kernel crash when devlink reload during pf initialization
+Date: Mon, 18 Mar 2024 21:29:47 +0800
+Message-ID: <20240318132948.3624333-3-shaojijie@huawei.com>
+X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20240318132948.3624333-1-shaojijie@huawei.com>
+References: <20240318132948.3624333-1-shaojijie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240318055054.1564696-1-d-gole@ti.com> <20240318055054.1564696-3-d-gole@ti.com>
-In-Reply-To: <20240318055054.1564696-3-d-gole@ti.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 18 Mar 2024 14:52:02 +0100
-Message-ID: <CAJZ5v0hP0TR1zVc1hNMw+SnqCw7hJUcFM-J5Y6Mtgh-tnrrdEw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] PM: wakeup: Remove unnecessary else from device_init_wakeup
-To: Dhruva Gole <d-gole@ti.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Tony Lindgren <tony@atomide.com>, 
-	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	theo.lebrun@bootlin.com, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600007.china.huawei.com (7.193.23.208)
 
-On Mon, Mar 18, 2024 at 6:55=E2=80=AFAM Dhruva Gole <d-gole@ti.com> wrote:
->
-> Checkpatch warns that else is generally not necessary after a return
-> condition which exists in the if part of this function. Hence, just to
-> abide by what checkpatch recommends, follow it's guidelines.
->
-> Signed-off-by: Dhruva Gole <d-gole@ti.com>
-> ---
->  include/linux/pm_wakeup.h | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
->
-> diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
-> index 428803eed798..76cd1f9f1365 100644
-> --- a/include/linux/pm_wakeup.h
-> +++ b/include/linux/pm_wakeup.h
-> @@ -234,11 +234,10 @@ static inline int device_init_wakeup(struct device =
-*dev, bool enable)
->         if (enable) {
->                 device_set_wakeup_capable(dev, true);
->                 return device_wakeup_enable(dev);
-> -       } else {
-> -               device_wakeup_disable(dev);
-> -               device_set_wakeup_capable(dev, false);
-> -               return 0;
->         }
-> +       device_wakeup_disable(dev);
-> +       device_set_wakeup_capable(dev, false);
-> +       return 0;
->  }
->
->  #endif /* _LINUX_PM_WAKEUP_H */
-> --
+From: Yonglong Liu <liuyonglong@huawei.com>
 
-This one is fine with me, but not 6.9-rc material.
+The devlink reload process will access the hardware resources,
+but the register operation is done before the hardware is initialized.
+so, if process the devlink reload during initialization, may lead to kernel
+crash. This patch fixes this by checking whether the NIC is initialized.
 
-Thanks!
+Fixes: b741269b2759 ("net: hns3: add support for registering devlink for PF")
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Jijie Shao <shaojijie@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_devlink.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_devlink.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_devlink.c
+index 9a939c0b217f..80db4f7b05f6 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_devlink.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_devlink.c
+@@ -40,8 +40,9 @@ static int hclge_devlink_reload_down(struct devlink *devlink, bool netns_change,
+ 	struct pci_dev *pdev = hdev->pdev;
+ 	int ret;
+ 
+-	if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state)) {
+-		dev_err(&pdev->dev, "reset is handling\n");
++	if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state) ||
++	    !test_bit(HCLGE_STATE_NIC_REGISTERED, &hdev->state)) {
++		dev_err(&pdev->dev, "reset is handling or driver removed\n");
+ 		return -EBUSY;
+ 	}
+ 
+-- 
+2.30.0
+
