@@ -1,156 +1,95 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE6C22F0C
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 07:46:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 607962233E
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 07:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710747969; cv=none; b=mu+jqkhSCd4adRmoI2ej6UgOOT4iiCZQOWzyuCYXxeqVPFf4jgDo4pe8cL9VL0hfwiSo2qGS0ALgR4gZVq0Rz4iK3fwsV+BDE67YNLmmI6GF78z1N/xkwuo6HdZmlG/3NhNejc1PISo0UlzhlBxtVPeW6/Hgu+BQdNB5dXS9XLc=
+	t=1710748011; cv=none; b=TTjXozvVCeZgCPBZ6n44RSINTstZ7PekowtqS9ezarlet0R0fByw3LXr5/cNhi0GJPax/6SCN0QZzB/5FsrZkAoNq27k2w7pZgEf3vgTKKKcqM0QwiuaD4XM0vEC94GiCc4hC3LJgXbm5RfhDsUMMeVgUWBI3z8li980+UPFKFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710747969; c=relaxed/simple;
-	bh=y3WZnxaRLumzG6G1ASmxGTs/zWsV4MVpU9WYuiMAELU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZFj7aR85JhWYRrg1L0seLLo/eqnnx3cZaX4p40SYEGPLDHwg5pOmNft20yEf+NvJuafU5nsSac6waILwOgFWeMJGCAPUQk3f/VyxJGZOxaSZwoCfEtRsucgaMRgmnQ6nVKKrhc/tzoCQLUGyJFl+vTr57cfFEWe/EtELlGFSF0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kN0K0IUS; arc=none smtp.client-ip=209.85.218.49
+	s=arc-20240116; t=1710748011; c=relaxed/simple;
+	bh=UTJYMf+NRe+rvxB+RF4YgiuMYkKlsh1f8OgGGwkdlwE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xz1wPMSC0uOwnZZOEQVsONg8+fxVAvTijDu6lClQFKFMxLjWB+Qm0Da2vQTnvMu5+2oRHnSoZBnNyPGFAm29C3e7bovm0lqiu/OYUjJwxC/4XizBX2HI/dS+ZdUaz1uU57CEll8qDxvkKEUydeTeQSs2LdUypYYjHRp5UJLk1Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B4WN0RnI; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kN0K0IUS"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a467d8efe78so386084766b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 00:46:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B4WN0RnI"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-56acd06c016so420636a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 00:46:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710747966; x=1711352766; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=U6FdA6MCBFgFpfyExPtk5oTZiXP8Z8L3nOt0OhNonkg=;
-        b=kN0K0IUS8qIvANB/kfHr11GW6MAO1MXtbbMgLPgMVOkN4gQNTttM+5MtUB+WJNTB9b
-         MaJSeW8HkfJb5M9L/Llj3Kb+ALaIv2q9HcB13k4YswpoiKnp9u/tbHZ1quZxo6AK1aaq
-         575/GlaSsleecsoqix8ADCNx6riYFE76scAd9Soxd4Txitv/Rw6JdGHiHyIeo7/b6EsU
-         awfLo3mzLPoSO3AAWVonvoEUIS8AO4sOcCGvL115lmDSTbvdf7D+Y7lkLvF0MwaVZ33S
-         KhEn5a4o7W6wEaDtG9zHbgoPbTbnRJ5imtmSGFG3XtRsL2JaOwEL3CuIP1AmPxPBl6g4
-         6Oew==
+        d=linaro.org; s=google; t=1710748008; x=1711352808; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1S8gaPXAtnKdawB9vZ5HJ600QW3oApTxrNP/2KihUaY=;
+        b=B4WN0RnI4bwt+NZ4FBA7NrbEOPbTvb6B7cv6+TPMJIkKvdMOyK9Ch0QIWB+5f9n/u8
+         ef6Iz+A2t7ONkgAQp/W6xP8rT7n+0mzsCEL0bAosvvo9t7yFIvRuHrv6d7Z3TDi48Fec
+         KjboRG5ppBnc963IjkOxJ7xYT7IqiSXsKlpQnEGS1H9LBCKHTKA/BNoqToZND7fvIRI3
+         9UasotzvJ3nVQ/1RpptUi8+0KVLbgV40nvnh4V2cLAzqDxZ40wSxeD67YL8tFbqbpnP2
+         oi1gU34rFaJgHiw4BfrwHb8g6fIyjTRHb5n1s36Pjrtx/aNrZExgxsK3r0w63yoNIz3d
+         T31A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710747966; x=1711352766;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U6FdA6MCBFgFpfyExPtk5oTZiXP8Z8L3nOt0OhNonkg=;
-        b=BNq1engRIILi2CpPSgkC6Mt/XI0NF8ulydXVjj8JVPqAfFrDpsAnO59Jm4xgJS5kbB
-         pIK4wyxK2WeYQBh5Nzmxm1XvHbHIrDF9WObLdGb0jN698i72ZfPIspzktKiKSd64t/V3
-         ty0UQPueA2ArxVRObOS8gek9Y/3Gfqc3npM7R8H91Cw++z/BfiXwkK47oswg+B1XWMZL
-         5oNZBKNMsBWEvW4qmVYRfKdO2cyHSAvPVviM0BIZFMlDSrZF+UjK5M8Rc5DbmSmuCNXZ
-         jJtG3K0dZrCcUVSmc62dEonW3cgSPmajJmdf0nhqaucpTdVOktHymfGQLB8bAsDQwyKH
-         eNuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWlz03Rw9EgNENe2FsGgMfnQ7SnfaJFa+EimxMcoz6pRAmlZMSK5BjbkasiT21B34ORlqeBS7QbRDR8q+wZtyDbYz6kcNF87+onKmdM
-X-Gm-Message-State: AOJu0Yx2d8YkzGZ8z82mYHpZxCnUk2MCE1kKjqZ0rx4kigzsLoQThOI0
-	vMOPvKc5dsO0fkNEjqi1lSMYOCcvb1HfdPqed351LtmPWqWMlj7j5/D2IFWo9HY=
-X-Google-Smtp-Source: AGHT+IFLySr29BPlmK1ab29F+3z9XjUhu8TKS1L9V6lJm6vACuiT9TzdJV7XudEk7ySfdgh7lgvVpQ==
-X-Received: by 2002:a17:906:3e18:b0:a44:51c1:733c with SMTP id k24-20020a1709063e1800b00a4451c1733cmr7411199eji.39.1710747966456;
-        Mon, 18 Mar 2024 00:46:06 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id k9-20020a1709063e0900b00a469aaad6e6sm2917532eji.206.2024.03.18.00.46.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Mar 2024 00:46:05 -0700 (PDT)
-Message-ID: <a007c2ee-2777-4db0-bdaa-c119bceeefe9@linaro.org>
-Date: Mon, 18 Mar 2024 08:46:02 +0100
+        d=1e100.net; s=20230601; t=1710748008; x=1711352808;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1S8gaPXAtnKdawB9vZ5HJ600QW3oApTxrNP/2KihUaY=;
+        b=vfc7481Mv4+oQgjSrHDevr+MDIOF3GhqxetiyeVudRlkT3KUcOPpABiepQuWTLmfYN
+         KpI82zqM41sx8zNNLkzwEGE+bIrSlCL3xhK33dIVCP3OU+mbhIRt92/7ee+fpUrX44ve
+         IKuB5syxa1fAK7a/gWQ132JVMUe3YzYR2RszP8JZq99tXGf8Kam2eHtdvYETEbaNW/J9
+         khmtaf2HVh3vu2Kg142On0WnVsXwU+5IqrLFuYXbF9vmb3KYQCZbG28nfEc80Tw2cPv1
+         eBNoQ7QnRBvi6udhWkHgv2CwYq4fmQSBEeqbrMHtn371hspfhfmvjjbOk2X07ml7Uein
+         Cacg==
+X-Forwarded-Encrypted: i=1; AJvYcCWqSNUqybthUAUXNbufN5kQM9FRDpT5uE6HBn7R+NgYw73PsmtJXkRAb81lKBdBn1RkMTXLX0ShiJmD/OLaJ3VDNoEAQIoXLziFuqrC
+X-Gm-Message-State: AOJu0YyRVO5j0oEke2+Ec1tIucS3jHXJw4FpYvh7nORl9GWZpgilVD1F
+	9UOFag4g6IftGtWBWKbTx/m+ZX8+cvKecwso/76AZ+XR/v6DFCLjajpzYbScMjQ=
+X-Google-Smtp-Source: AGHT+IGqDPxJV0DskYtRlE0rM526L4YfePoEYEQmPu+WGA9GEZOFbtgzqJ82dKbHS/Fpr71YqKHykw==
+X-Received: by 2002:a05:6402:4581:b0:568:bda1:9630 with SMTP id ig1-20020a056402458100b00568bda19630mr3449092edb.7.1710748007599;
+        Mon, 18 Mar 2024 00:46:47 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id p4-20020a05640210c400b0056b0af78d80sm431346edu.34.2024.03.18.00.46.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Mar 2024 00:46:47 -0700 (PDT)
+Date: Mon, 18 Mar 2024 10:46:42 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Ayush Tiwari <ayushtiw0110@gmail.com>
+Cc: Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
+	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev, outreachy@lists.linux.dev
+Subject: Re: [PATCH] staging: rtl8712: aggregate conditional statements
+Message-ID: <1e45558d-2a89-4cb7-a855-2682b54bbf12@moroto.mountain>
+References: <ZfcxGebTKxVUJONY@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/25] ASoC: dt-bindings: meson: t9015: add support for A1
- SoC family
-Content-Language: en-US
-To: Jan Dakinevich <jan.dakinevich@salutedevices.com>,
- Rob Herring <robh@kernel.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
- Jerome Brunet <jbrunet@baylibre.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
- Kevin Hilman <khilman@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, linux-amlogic@lists.infradead.org,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
- linux-gpio@vger.kernel.org, kernel@salutedevices.com
-References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
- <20240314232201.2102178-12-jan.dakinevich@salutedevices.com>
- <20240317190316.GA2071139-robh@kernel.org>
- <7d61700d-bfb5-46c6-bd45-a18aecf06a5b@salutedevices.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <7d61700d-bfb5-46c6-bd45-a18aecf06a5b@salutedevices.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZfcxGebTKxVUJONY@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
 
-On 18/03/2024 00:39, Jan Dakinevich wrote:
+On Sun, Mar 17, 2024 at 11:36:17PM +0530, Ayush Tiwari wrote:
+> Aggregate the two conditional statements into one conditional
+> statement to reduce code length and simplify the code structure.
 > 
-> 
-> On 3/17/24 22:03, Rob Herring wrote:
->> On Fri, Mar 15, 2024 at 02:21:47AM +0300, Jan Dakinevich wrote:
->>> Add "amlogic,t9015-a1" compatible string.
->>
->> That's obvious from the diff. Perhaps what does 'a1' mean? What the 
->> difference from the existing compatible?
->>
-> 
-> a1 means A1 SoC family. The difference is described in next commit where
-> this compatible string is added to driver. Should I duplicate here the
-> explanation from that commit?
-> 
+> Signed-off-by: Ayush Tiwari <ayushtiw0110@gmail.com>
 
-Bindings, not the driver, describe the hardware.
+I'm not a fan of this sort of thing.  The new code is fine but the
+original code was fine.  If you were going to be taking over the
+maintainership of the rtl8712 driver, then you could do whatever you
+want.  But if you're just sending drive by patches, then it's just leave
+the original code as is.  You might be right.  But it's not worth
+debating or even thinking about for more than a second or two.
 
-Best regards,
-Krzysztof
+Someone was complaining about my code recently where I tend to break
+things up into separate if statements and they were like "You could
+combine them all on one line", and I'm like, "Yeah.  It was that way to
+begin with but I was fixing some issues and I deliberately separated it
+out for readability."  So that's one life hack which that if you don't
+like someone's code style, just find some mistakes and re-write it.
+
+regards,
+dan carpenter
 
