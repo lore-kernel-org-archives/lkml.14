@@ -1,177 +1,179 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6E4374CC
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 11:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A503538385;
+	Mon, 18 Mar 2024 11:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710760306; cv=none; b=lgh7U4R6z7uLCdCBSaDYIYWa8bbzaYPAlFmHyIdRIb8sb1tFqo2pvf+nEiyccieMD1PXjkalJXWBJsAHSuAVWC8zkggyUMrNKFOZkGgwpyaRhuDeIReQ8PUBzzW9yxLWL+NsJIJKduPHkjxWAFe8+SQYH4r+lnpohwlgOKiYWqM=
+	t=1710760362; cv=none; b=Cv3Vn1d4C+EMuV2cSfKpuD3ty0tY8zIGeZjJ4r0cKdkCi/ne1Sz9mII4PSWk7NUSozyiW8HGg9uRTFVM9VfkEWSM8duBA/i4ACmdwz0UgmkI25hFqhfnN+xNTt4EV5nR+ftTMbK6cecmXQe7HeIgNXb8MzOa+9XXDwO+Z+0nTGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710760306; c=relaxed/simple;
-	bh=vpxP2TC2qbkVtFFP21jKsCrf2Cm91PVj9H+H8hFENmI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dAzdHtgxZvP8G6cX8wgmYVIz41264oka7kjOKJ+QXvPUcLcGBMWo2xMHX/f22ERVUvJRJIWxwP1HuaziNYypHmY/jdpy691nqsbDTxPUC3chED7s3c5g3DI09VCZ12CevHqq+jRGKmaJccouwkg3QztIbrWkLTTorhnjeoTcfjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hlmdLOVi; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710760362; c=relaxed/simple;
+	bh=SrNpO6frBXeFes4/cfwvtY7bovpO8PEcBwfDBnzsgX8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b/RwDKSWsG017UMNU0nKJvllmdTYPI1bsOLKwMPeIqtQ8sJrPhgpW6qKTCkybEwlZKP8+jqS23gvgIBYJoSrXijygb/hAL4VKHQHlP3zZEacP0biozCDd4Nr5XIibaV3mcOqXrR+jaGpQlOMQuiBb3EKpwSC3Uz8A2sU9/Sxkn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dKtxEQZ1; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hlmdLOVi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710760303;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KCRrLRgzcFtsj04jmn2kcF48w7FCWYzPNjCCNXWwhN8=;
-	b=hlmdLOViuolPGWd/IsZNI5nzakY4Fi3Y2G+b6SaUceH75tR5wurCCV+choVAGk2kY3q4Vy
-	PYljugOfsrMBbfrj6S6+/s6S90tOIZ4x2vWFqRtPAytyMQJ+yRQc8ldSyK6wG9BVFw+uCP
-	GnhGj0REFXbI/bxvFiRj7zJZFj16Vqo=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-13-0gvp2ng9MFq8fmyfAwYZSw-1; Mon, 18 Mar 2024 07:11:42 -0400
-X-MC-Unique: 0gvp2ng9MFq8fmyfAwYZSw-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a46cedd9689so23376366b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 04:11:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710760301; x=1711365101;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KCRrLRgzcFtsj04jmn2kcF48w7FCWYzPNjCCNXWwhN8=;
-        b=L+XokCsEAADq42VwU6NAkdDw98SQ7NA+I6SZRKfO2TOI4P5zS0OZ4vw120IAnn0zUN
-         MtnU8F3vLPLdwgPKVMCrchGxkWZYaBWyuE6t15tEQZpuRO7/MnevSnEGJCq6Mv9b3d+3
-         d/+GFLCMQXIVwwSdJb55qN0pUq3oJeCdvnvDcG/1SMEUd+RZeB6V6bjBdBqvaCD6c+TY
-         EeXGWVJ9lbC1JipczSD85fluB+SOCj9QbUfdP7njrhm2qofEuXYLQBVPU0voZ4Lj2jIb
-         LmF6v4I2LHpyBJpaSVDYeWTQ1SPwHHA5AOthJXWzF/FYOAsqCA9+VSA4d0pM1ptiSu8t
-         wPHA==
-X-Forwarded-Encrypted: i=1; AJvYcCXLWthjDo7FD4a+bcR2XhQB6JOh4cAMZQTgBMfGuxLzuzUD3LDl6OU4Uv5xnxmX6tx/AFV7sSw+NVh/9bN0QZB1ht+RaeiyfVLChTtE
-X-Gm-Message-State: AOJu0YxdnZXOEcKVppN73jxbTMepqzwmbuqyDTuDA0wyFMfvi9wh4jP/
-	uA6+/hjO2hsdSf07sM4CicysSGDzTmFB+vC4YwPN8HegUxgsRqlpLM7TxKPwyrWwHOnGYsZQ2Sc
-	VUa92kFctVHJx21+ybzlcjRdyQ76rhUBz6bUfhGz3GmachhwtYn/Hx7ruQEbglw==
-X-Received: by 2002:a17:906:ddb:b0:a46:a1f7:156d with SMTP id p27-20020a1709060ddb00b00a46a1f7156dmr4019171eji.2.1710760301094;
-        Mon, 18 Mar 2024 04:11:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEknhYpk/UoBbIXiSyWkooZJA3/ywR9QXOka5TQQi9XFr2kwrDhiLCZltxYyDrNnVlq8/TlEA==
-X-Received: by 2002:a17:906:ddb:b0:a46:a1f7:156d with SMTP id p27-20020a1709060ddb00b00a46a1f7156dmr4019152eji.2.1710760300703;
-        Mon, 18 Mar 2024 04:11:40 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id sd9-20020a170906ce2900b00a4628cacad4sm4722437ejb.195.2024.03.18.04.11.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Mar 2024 04:11:40 -0700 (PDT)
-Message-ID: <281f9b71-a565-4ff3-8343-ca36d604584d@redhat.com>
-Date: Mon, 18 Mar 2024 12:11:39 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dKtxEQZ1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710760361; x=1742296361;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SrNpO6frBXeFes4/cfwvtY7bovpO8PEcBwfDBnzsgX8=;
+  b=dKtxEQZ1vGph4AFryJ7ptrpdbBXXNCuVcKi2zATf0BnmcUfFfT0XSrLt
+   PaDLZRDKVh0NL4/Nu3hr6Z8qWTzrJ36pZwIQ6mj+MWbA3YgO+WKZj68Ef
+   V8l6zn6ktcOxVQTu+YkvALI5rWDXR4REIedZ/aLjKvYCHREeJo/Y/Ghwy
+   jCMwEG+g5zkhVIlsJx6Ny+iePMRJoEQMxez1mRATBQ7ZEvYcKj6U8RP02
+   g9PUKaRFpQTocnSn9oUd2P6E6i9nW3cLQ3p2+aqOg3R93UUgLoT+2QLPz
+   ocOpQy+cCVKAyQz0joR9geOJmpQcXHgObEBGVDwNYBG728H54f8Y6n7BP
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11016"; a="17012457"
+X-IronPort-AV: E=Sophos;i="6.07,134,1708416000"; 
+   d="scan'208";a="17012457"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 04:12:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11016"; a="937060156"
+X-IronPort-AV: E=Sophos;i="6.07,134,1708416000"; 
+   d="scan'208";a="937060156"
+Received: from kuha.fi.intel.com ([10.237.72.185])
+  by fmsmga001.fm.intel.com with SMTP; 18 Mar 2024 04:12:36 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 18 Mar 2024 13:12:36 +0200
+Date: Mon, 18 Mar 2024 13:12:36 +0200
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Luca Weiss <luca.weiss@fairphone.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: typec: ptn36502: switch to DRM_AUX_BRIDGE
+Message-ID: <ZfghpN81iR6vL+pu@kuha.fi.intel.com>
+References: <20240315-ptn36502-aux-v1-1-c9d3c828ff2e@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Future handling of complex RGB devices on Linux v3
-To: Werner Sembach <wse@tuxedocomputers.com>
-Cc: Lee Jones <lee@kernel.org>, jikos@kernel.org,
- linux-kernel@vger.kernel.org, Jelle van der Waa <jelle@vdwaa.nl>,
- Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- linux-input@vger.kernel.org, ojeda@kernel.org, linux-leds@vger.kernel.org,
- Pavel Machek <pavel@ucw.cz>, Gregor Riepl <onitake@gmail.com>
-References: <0cdb78b1-7763-4bb6-9582-d70577781e61@tuxedocomputers.com>
- <7228f2c6-fbdd-4e19-b703-103b8535d77d@redhat.com>
- <730bead8-6e1d-4d21-90d2-4ee73155887a@tuxedocomputers.com>
- <952409e1-2f0e-4d7a-a7a9-3b78f2eafec7@redhat.com>
- <9851a06d-956e-4b57-be63-e10ff1fce8b4@tuxedocomputers.com>
- <1bc6d6f0-a13d-4148-80cb-9c13dec7ed32@redhat.com>
- <b70b2ea8-abfd-4d41-b336-3e34e5bdb8c6@tuxedocomputers.com>
- <477d30ee-247e-47e6-bc74-515fd87fdc13@redhat.com>
- <e21a7d87-3059-4a51-af04-1062dac977d2@tuxedocomputers.com>
- <247b5dcd-fda8-45a7-9896-eabc46568281@tuxedocomputers.com>
- <ZdZ2kMASawJ9wdZj@duo.ucw.cz>
- <b6d79727-ae94-44b1-aa88-069416435c14@redhat.com>
- <a21f6c49-2c05-4496-965c-a7524ed38634@gmail.com>
- <825129ea-d389-4c6c-8a23-39f05572e4b4@redhat.com>
- <adbfdf6c-fb59-4fae-a472-17b04dd8a3f6@tuxedocomputers.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <adbfdf6c-fb59-4fae-a472-17b04dd8a3f6@tuxedocomputers.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240315-ptn36502-aux-v1-1-c9d3c828ff2e@fairphone.com>
 
-Hi Werner,
-
-Sorry for the late reply.
-
-On 2/22/24 2:14 PM, Werner Sembach wrote:
-> Hi,
+On Fri, Mar 15, 2024 at 05:04:22PM +0100, Luca Weiss wrote:
+> Switch to using the new DRM_AUX_BRIDGE helper to create the transparent
+> DRM bridge device instead of handcoding corresponding functionality.
 > 
-> Thanks everyone for the exhaustive feedback. And at least this thread is a good comprehesive reference for the future ^^.
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+
+> ---
+> Very similar to this patch:
+> c5d296bad640 ("usb: typec: nb7vpq904m: switch to DRM_AUX_BRIDGE")
+> ---
+>  drivers/usb/typec/mux/Kconfig    |  2 +-
+>  drivers/usb/typec/mux/ptn36502.c | 44 ++--------------------------------------
+>  2 files changed, 3 insertions(+), 43 deletions(-)
 > 
-> To recap the hopefully final UAPI for complex RGB lighting devices:
+> diff --git a/drivers/usb/typec/mux/Kconfig b/drivers/usb/typec/mux/Kconfig
+> index 399c7b0983df..4827e86fed6d 100644
+> --- a/drivers/usb/typec/mux/Kconfig
+> +++ b/drivers/usb/typec/mux/Kconfig
+> @@ -60,7 +60,7 @@ config TYPEC_MUX_PTN36502
+>  	tristate "NXP PTN36502 Type-C redriver driver"
+>  	depends on I2C
+>  	depends on DRM || DRM=n
+> -	select DRM_PANEL_BRIDGE if DRM
+> +	select DRM_AUX_BRIDGE if DRM_BRIDGE
+>  	select REGMAP_I2C
+>  	help
+>  	  Say Y or M if your system has a NXP PTN36502 Type-C redriver chip
+> diff --git a/drivers/usb/typec/mux/ptn36502.c b/drivers/usb/typec/mux/ptn36502.c
+> index 72ae38a1b2be..0ec86ef32a87 100644
+> --- a/drivers/usb/typec/mux/ptn36502.c
+> +++ b/drivers/usb/typec/mux/ptn36502.c
+> @@ -8,7 +8,7 @@
+>   * Copyright (C) 2023 Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>   */
+>  
+> -#include <drm/drm_bridge.h>
+> +#include <drm/bridge/aux-bridge.h>
+>  #include <linux/bitfield.h>
+>  #include <linux/i2c.h>
+>  #include <linux/kernel.h>
+> @@ -68,8 +68,6 @@ struct ptn36502 {
+>  
+>  	struct typec_switch *typec_switch;
+>  
+> -	struct drm_bridge bridge;
+> -
+>  	struct mutex lock; /* protect non-concurrent retimer & switch */
+>  
+>  	enum typec_orientation orientation;
+> @@ -283,44 +281,6 @@ static int ptn36502_detect(struct ptn36502 *ptn)
+>  	return 0;
+>  }
+>  
+> -#if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_DRM_PANEL_BRIDGE)
+> -static int ptn36502_bridge_attach(struct drm_bridge *bridge,
+> -				  enum drm_bridge_attach_flags flags)
+> -{
+> -	struct ptn36502 *ptn = container_of(bridge, struct ptn36502, bridge);
+> -	struct drm_bridge *next_bridge;
+> -
+> -	if (!(flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR))
+> -		return -EINVAL;
+> -
+> -	next_bridge = devm_drm_of_get_bridge(&ptn->client->dev, ptn->client->dev.of_node, 0, 0);
+> -	if (IS_ERR(next_bridge)) {
+> -		dev_err(&ptn->client->dev, "failed to acquire drm_bridge: %pe\n", next_bridge);
+> -		return PTR_ERR(next_bridge);
+> -	}
+> -
+> -	return drm_bridge_attach(bridge->encoder, next_bridge, bridge,
+> -				 DRM_BRIDGE_ATTACH_NO_CONNECTOR);
+> -}
+> -
+> -static const struct drm_bridge_funcs ptn36502_bridge_funcs = {
+> -	.attach	= ptn36502_bridge_attach,
+> -};
+> -
+> -static int ptn36502_register_bridge(struct ptn36502 *ptn)
+> -{
+> -	ptn->bridge.funcs = &ptn36502_bridge_funcs;
+> -	ptn->bridge.of_node = ptn->client->dev.of_node;
+> -
+> -	return devm_drm_bridge_add(&ptn->client->dev, &ptn->bridge);
+> -}
+> -#else
+> -static int ptn36502_register_bridge(struct ptn36502 *ptn)
+> -{
+> -	return 0;
+> -}
+> -#endif
+> -
+>  static const struct regmap_config ptn36502_regmap = {
+>  	.max_register = 0x0d,
+>  	.reg_bits = 8,
+> @@ -369,7 +329,7 @@ static int ptn36502_probe(struct i2c_client *client)
+>  	if (ret)
+>  		goto err_disable_regulator;
+>  
+> -	ret = ptn36502_register_bridge(ptn);
+> +	ret = drm_aux_bridge_register(dev);
+>  	if (ret)
+>  		goto err_disable_regulator;
+>  
 > 
-> - By default there is a singular /sys/class/leds/* entry that treats the device as if it was a single zone RGB keyboard backlight with no special effects.
-
-Ack this sounds good.
-
+> ---
+> base-commit: 9bb9b28d0568991b1d63e66fe75afa5f97ad1156
+> change-id: 20240315-ptn36502-aux-15dd6f289aff
 > 
-> - There is an accompanying misc device with the sysfs attributes "name", "device_type",  "firmware_version_string", "serial_number" for device identification and "use_leds_uapi" that defaults to 1.
+> Best regards,
+> -- 
+> Luca Weiss <luca.weiss@fairphone.com>
 
-You don't need a char misc device here, you can just make this sysfs attributes on the LED class device's parent device by using device_driver.dev_groups. Please don't use a char misc device just to attach sysfs attributes to it.
-
-Also I'm a bit unsure about most of these attributes, "use_leds_uapi" was discussed before
-and makes sense. But at least for HID devices the rest of this info is already available
-in sysfs attributes on the HID devices (things like vendor and product id) and since the
-userspace code needs per device code to drive the kbd anyways it can also have device
-specific code to retrieve all this info, so the other sysfs attributes just feel like
-duplicating information. Also there already are a ton of existing hidraw userspace rgbkbd
-drivers which already get this info from other places.
-
->     - If set to 0 the /sys/class/leds/* entry disappears. The driver should keep the last state the backlight was in active if possible.
-> 
->     - If set 1 it appears again. The driver should bring it back to a static 1 zone setting while avoiding flicker if possible.
-
-Ack, if this finds it way into some documentation (which it should) please make it
-clear that this is about the "use_leds_uapi" sysfs attribute.
-
-> - If the device is not controllable by for example hidraw, the misc device might also implement additional ioctls or sysfs attributes to allow a more complex low level control for the keyboard backlight. This is will be a highly vendor specific UAPI.
-
-IMHO this is the only case where actually using a misc device makes sense, so that
-you have a chardev to do the ioctls on. misc-device-s should really only be used
-when you need a chardev under /dev . Since you don't need the chardev for the e.g.
-hidraw case you should not use a miscdev there IMHO.
-
-> 
->     - The actual logic interacting with this low level UAPI is implemented by a userspace driver
-> 
-> Implementation wise: For the creation of the misc device with the use_leds_uapi switch a helper function/macro might be useful? Wonder if it should go into leds.h, led-class-multicolor.h, or a new header file?
-
-See above, I don't think we want the misc device for the hidraw case, at which
-point I think the helper becomes unnecessary since just a single sysfs write
-callback is necessary.
-
-Also for adding new sysfs attributes it is strongly encouraged to use
-device_driver.dev_groups so that the device core handled registering /
-unregistering the sysfs attributes which fixes a bunch of races; and
-using device_driver.dev_groups does not mix well with a helper as you've
-suggested.
-
-> 
-> - Out of my head it would look something like this:
-> 
-> led_classdev_add_optional_misc_control(
->     struct led_classdev *led_cdev,
->     char* name,
->     char* device_type,
->     char* firmware_version_string,
->     char* serial_number,
->     void (*deregister_led)(struct led_classdev *led_cdev),
->     void (*reregister_led)(struct led_classdev *led_cdev))
-> 
-> Let me know your thoughts and hopefully I can start implementing it soon for one of our devices.
-
-I think overall the plan sounds good, with my main suggested change
-being to not use an unnecessary misc device for the hid-raw case.
-
-Regards,
-
-Hans
-
-
+-- 
+heikki
