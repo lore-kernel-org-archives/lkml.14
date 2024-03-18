@@ -1,90 +1,136 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3745579C
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 17:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BC23B18D;
+	Mon, 18 Mar 2024 17:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710783516; cv=none; b=P+YTptspM/G3HM2z7F/jJ/A0AbY2KGCk9pzrbgbMlz1dTq6bALeGaZiOy4bU8vSzC/elBE9prFEm4fb7A/vQ5qC45MmYco6vO5E+ObEazl2O8La5Knw2X7s47JuUKAp6+h+dhrWVOT+5gaJbLawQcSvTPl89KS+Kfqz6ZtQhMxA=
+	t=1710783676; cv=none; b=L7ZFPgEiV/xeZKDSN5rwcHK92JPRDW7jAY5P5T5BMNP4dYhF6see4lNbBTiS2ym8Cw5nH5crf+dDNdvY3PuvTmeDucQpG3a+KHtobsus85gLb59TA9QXYToN8f5NPCP2yxUWHEOahleRMg/jYRCe8iZqDZYoRNebs72M8InpTEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710783516; c=relaxed/simple;
-	bh=R76I21nWlclOcet2e0P90I1PHkxwCPo5keHk8owejo4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BLRyzdvIMuUO0yVQOL8I1hX9vnicNA7LqEeYdHUzfDQ9zi2jUlZEjD1MPJO0xCt7fSyzgOxQ6IeIdV7hpUtneqitYKYxndEJtqEXF/D2l7RuyM0Yz/++eIP2WGkw9I69PYGBOi++jt12OKbuBG2Ov2o1Sn+2NGWZa9GIwmJ3hjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UuKaQd/k; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1710783676; c=relaxed/simple;
+	bh=E9X/vXcE+KfbqUnxxDsQCnC6isDz8nMc3x3A5fhOaPY=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pv24dSbeacilhaYZ/XK7bQo8iCWh2uIQCmW/YiaKXGDpB7Es+kDPcP8hkRaqAflaVAsoexjhVKNmVtoky84Ta++gQ/4QR7ZTjWfBC211xYurw57J38A3QqXzOH6rgSkhBDCBN0ojEjEZsZWbHvdJaBB3Ln637FOGp24ASbRN4KY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NBp3bQEc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UuKaQd/k"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1e036b76725so5658605ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 10:38:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1710783514; x=1711388314; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=texmG0Gw1zeNIT3HK3A5521t3H/aX3K5C6j7gLeepPE=;
-        b=UuKaQd/kdUfqjFpdzStNEI14LWD6cUu+mlPELBj0uTovOm248wSiuF8z29fsIttms0
-         3jK7x5fmUURJ7wCOknt21/mkCZ3wHtLtpde78PS6cjxFx9yKGXU42LOE2stFLBTd5i40
-         iOetnjbZ81AcABVxnKR1StvGJXG2rQv3ZZRVg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710783514; x=1711388314;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=texmG0Gw1zeNIT3HK3A5521t3H/aX3K5C6j7gLeepPE=;
-        b=OBkgZOc9p4iDRLhHU/EyWo0t8IMAh2oF9h0EJp5VGxOO/qMozeOgkGjmVo7dIeqDo+
-         X+Wik4NXRfi+Hj1w9TJC+6gXecahQCuhTSRLyqxPdMn5MxlHjg3AEQaeIaIknu5KB5yM
-         i8SYvnk2DHFlMNw2j1oQHIB6sDx6yTNzHDlCN0Y/p1y/34Ug99OQtF80AKBJ4L5PNdS3
-         Lv0XbZIxy6Ixt5+EcOPEw1nXHcS1KbQRThrpqK7o4VdQwfELYiM1/KQsCpYHdLIjjXGQ
-         ifsDt8I+ibXZ/3wqXuYI7wjf3bh/gbpG1vaNXGGqxp4dPjshhCMxB1VSn84HTzdOE3ov
-         yR3w==
-X-Forwarded-Encrypted: i=1; AJvYcCWikoc8O7uvRPB6qhnymegSHKUWLjUvPEaRQCrnGQz4WQwQToQdYqKdbQ59SaV3yBHRYfltZO/30/MMkAN8cl3I2TgadrpnQVdNwe8x
-X-Gm-Message-State: AOJu0YwzSJ7vqpY9iRxLKTSx/IAg3wtoBGJ4MGMjGs8q2fsyCRHQgAGj
-	rOAGILuHChh1PhSUXKuLzFDv2P2QxbI3G9MgmOvNlaTcSclP7FHWzPRqLu4HDg==
-X-Google-Smtp-Source: AGHT+IFwifvFDojSxhKBkKKqy3uuDnQSOhhO6SnmFZueyTL3hVRvKoeX4hiPXzD3uMyruoUadtwycA==
-X-Received: by 2002:a17:902:e841:b0:1de:e9b5:bb54 with SMTP id t1-20020a170902e84100b001dee9b5bb54mr478461plg.34.1710783514163;
-        Mon, 18 Mar 2024 10:38:34 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 13-20020a170902ee4d00b001dd7d66aa18sm9500656plo.67.2024.03.18.10.38.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 10:38:33 -0700 (PDT)
-Date: Mon, 18 Mar 2024 10:38:32 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: linux-hardening@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Marco Elver <elver@google.com>, Jakub Kicinski <kuba@kernel.org>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC kspp-next 0/3] compiler_types: add
- Endianness-dependent __counted_by_{le,be}
-Message-ID: <202403181037.C66CB5ABE@keescook>
-References: <20240318130354.2713265-1-aleksander.lobakin@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NBp3bQEc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 208E6C43390;
+	Mon, 18 Mar 2024 17:41:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710783676;
+	bh=E9X/vXcE+KfbqUnxxDsQCnC6isDz8nMc3x3A5fhOaPY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NBp3bQEcp/MJFUxlDZZdTRT+zxsK1KhrVvtNTwiqett4hZDhYBEgYGIHpc6UHCEvS
+	 EkesHyPTiPyQPuHPBWc3avUjHOjXPt3NkwrF0DsetSTiEtkfzualAki1E+D3pBjcm8
+	 eXdQUP8pYq03mJEPUXChGIOxc2mqGZQroTdoXoB933rxnvhuy6Sw4ne2cIJjdr1+1G
+	 4Aq4xVgsM7VpfafU7r33mRbSswMvvvE27KRCQUQY9WPyk9SO9NyAeeCn8w94lHJ5yi
+	 ZRzmAq6ACJNrSOAJlD88wxRiVFOYzqLKEysA6vU9bbD+DKbNkSiUwyXvK+RVEZ4igi
+	 H7zgOUD6oUWNw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rmGz2-00DLD7-Q3;
+	Mon, 18 Mar 2024 17:41:12 +0000
+Date: Mon, 18 Mar 2024 17:41:12 +0000
+Message-ID: <86ttl3zbd3.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+	kvm@vger.kernel.org,
+	Paolo Bonzini
+ <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Oliver Upton
+ <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K
+ Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Lorenzo Pieralisi
+ <lpieralisi@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown
+ <len.brown@intel.com>,
+	Pavel Machek <pavel@ucw.cz>,
+	Mostafa Saleh
+ <smostafa@google.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev,
+	linux-pm@vger.kernel.org
+Subject: Re: [RFC PATCH v2 0/4] arm64: Add PSCI v1.3 SYSTEM_OFF2 support for hibernation
+In-Reply-To: <eb9215850e8231ab8ef75f523925be671cc6f5a0.camel@infradead.org>
+References: <20240318164646.1010092-1-dwmw2@infradead.org>
+	<86wmpzzdep.wl-maz@kernel.org>
+	<eb9215850e8231ab8ef75f523925be671cc6f5a0.camel@infradead.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240318130354.2713265-1-aleksander.lobakin@intel.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, lpieralisi@kernel.org, rafael@kernel.org, len.brown@intel.com, pavel@ucw.cz, smostafa@google.com, jean-philippe@linaro.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev, linux-pm@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Mon, Mar 18, 2024 at 02:03:51PM +0100, Alexander Lobakin wrote:
-> Some structures contain flexible arrays at the end and the counter for
-> them, but the counter has explicit Endianness and thus __counted_by()
-> can't be used directly.
+On Mon, 18 Mar 2024 17:26:07 +0000,
+David Woodhouse <dwmw2@infradead.org> wrote:
 > 
-> To increase test coverage for potential problems without breaking
-> anything, introduce __counted_by_{le,be} defined depending on platform's
-> Endianness to either __counted_by() when applicable or noop otherwise.
-> The first user will be virtchnl2.h from idpf just as example with 9 flex
-> structures having Little Endian counters.
+> [1  <text/plain; UTF-8 (quoted-printable)>]
+> On Mon, 2024-03-18 at 16:57 +0000, Marc Zyngier wrote:
+> > 
+> > > 
+> > > There *is* a way for a VMM to opt *out* of newer PSCI versions... by 
+> > > setting a per-vCPU "special" register that actually ends up setting the 
+> > > PSCI version KVM-wide. Quite why this isn't just a simple KVM_CAP, I 
+> > > have no idea.
+> > 
+> > Because the expectations are that the VMM can blindly save/restore the
+> > guest's state, including the PSCI version, and restore that blindly.
+> > KVM CAPs are just a really bad design pattern for this sort of things.
+> 
+> Hm, am I missing something here? Does the *guest* get to set the PSCI
+> version somehow, and opt into the latest version that it understands
+> regardless of what the firmware/host can support?
 
-Yeah, okay, that makes good sense. It'll give us as much coverage as we
-can get until the compilers gain "expression" support for the
-'counted_by' attribute.
+No. The *VMM* sets the PSCI version by writing to a pseudo register.
+It means that when the guest migrates, the VMM saves and restores that
+version, and the guest doesn't see any change.
 
-Acked-by: Kees Cook <keescook@chromium.org>
+The host firmware has nothing to do with it, obviously. This is all
+about KVM's own implementation of the "firmware", as seen by the guest.
+
+> Because if not, surely it's just part of the basic shape of the
+> machine, like "how many vCPUs does it have". You don't need to be able
+> to query it back again.
+
+Nobody needs to do this.
+
+> I don't think we ever aspired to be able to hand an arbitrary KVM fd to
+> a userspace VMM and have the VMM be able to drive that VM without
+> having any a priori context, did we?
+
+Arbitrary? No. This is actually very specific and pretty well
+documented.
+
+Also, to answer your question about why we treat 0.1 differently from
+0.2+: 0.1 didn't specify the PSCI SMC/HCR encoding, meaning that KVM
+implemented something that was never fully specified. The VMM has to
+provide firmware tables that describe that. With 0.2+, there is a
+standard encoding for all functions, and the VMM doesn't have to
+provide the encoding to the guest.
+
+	M.
 
 -- 
-Kees Cook
+Without deviation from the norm, progress is not possible.
