@@ -1,104 +1,115 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0524D59B5B;
-	Mon, 18 Mar 2024 19:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0356D56755
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 19:12:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710789113; cv=none; b=sm4Z7LZAPFDAeeSjb7Gj7YxR0XHq+FMDEGjhXy7q1LIhL1hmsoUUXhIQHHRAphbOxRLgZ4OCnQgAXBoJiFhcG7jdGQCnhwc8i21PfNE/q56RBOWzCdK4ywNFpu0Q9PvZjd5ojqn87mAlUnoiunrEP1Ex4NxYgpZylP/mPnGGHgY=
+	t=1710789161; cv=none; b=SYT3yB53TVoce4Mj9zShGI5dH9u96vA2vH+Xhs8qZZ8Og8AL7MtM4ib/jyiPCgnkZ49+FDjISGPMT0W7Shb51HhCmoqfSgDy5VCHQZfhpWcmhSSPdPIlpRdkWYFC8TGubAqHDlzOBTeWOAM1NzI4Tpu2kujshE41xTEV7Hw43H4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710789113; c=relaxed/simple;
-	bh=w+U8dd24WK1O+NzyyQAzyJz36Ga+IMWO8GLVjDe9OFs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YE+2+p4vmsqZCEN8Pcj1kXCe8RE9jqeIjcRXE3JVGvZjkaXfUorcMTXmjNE1Qfp7XjCsNeD2FyR3qcwC0sD3U7QJvSUQQqQNrgLsoqUPX6DRBras1X8OgruVptLQ5VWapJOwyW+A1f7t1TcRc/jIo/jWtNS2RNGtl+xbBAu/3i0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=axCbMvJP; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1710789161; c=relaxed/simple;
+	bh=azAsnPQAVK2iBIAnXaor0VpPHFvaPYrmjfryKMkNBHc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NWNqjZy0uPs6TAiNfexZ3d4hyBFrLDY2kw6Q6OZjWJdl2adsfTkNqgVr+3n61ieABvmsmi/ZPYiMoryu4cY/MLC/UMnqIk3TI/mqOuBcs9BiHx3GZRGeIShK6EjgYMiD/RvYIKi3MtSCiUUejgdaj4UwqEQ2C0LVPiqeAm5y/qM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ohlCySQn; arc=none smtp.client-ip=209.85.217.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="axCbMvJP"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42IJBhGe011619;
-	Mon, 18 Mar 2024 14:11:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1710789103;
-	bh=Sjnv3EHyIk3g36tJhda/Ig6DJdjN+/yL0V89SeofzHo=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=axCbMvJP7O3hoiYoKOb3PVtZv5tLJd1tEcyoZh1LeOK2pnrJ2HeoUyO5BtU+5YXBo
-	 KJkgiiOX5keNhoEmCUHViFtdK4I4T2hfmCasbyX4vVMCFt690xh1ajOcM49Y06Ds79
-	 BPa9hu8FPdF1OcrdujVMEY+kJH3n/ng23qAKnpCY=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42IJBhE5021311
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 18 Mar 2024 14:11:43 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 18
- Mar 2024 14:11:43 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 18 Mar 2024 14:11:43 -0500
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42IJBhcA077624;
-	Mon, 18 Mar 2024 14:11:43 -0500
-From: Judith Mendez <jm@ti.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter
-	<adrian.hunter@intel.com>
-CC: Andrew Davis <afd@ti.com>, <linux-mmc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 5/7] mmc: sdhci_am654: Update comments in sdhci_am654_set_clock
-Date: Mon, 18 Mar 2024 14:11:40 -0500
-Message-ID: <20240318191143.27638-6-jm@ti.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240318191143.27638-1-jm@ti.com>
-References: <20240318191143.27638-1-jm@ti.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ohlCySQn"
+Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4765792fc76so990728137.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 12:12:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710789159; x=1711393959; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lIPYiS6AqT1tNRa+kXH/qxTnijO9SB6Y3hbgkaDiv84=;
+        b=ohlCySQnxier1SqXYCtxavbjBcoJEYaDwqDVXsUoUJG1wJdx6ISW0U2gvkfk9tMaIB
+         f4p/JadXVx4vOcdKuHMGR/I0GBhx4H5JcLF6ULxAidWtajKTyQwOMXmr+LocMSDVmGIY
+         JNqXky4pXo5vxp5l91VKsRBJSBcOONM1VNcow3VX8evSDhrWiYl0jjYrGlS/Pr+dQBt4
+         ef+gfk+6e4DX8R6Hi3Ggk8sxZnCSpftwBYZik3L2HiWvomExYOEliTTi+IYtBq0YR5Ih
+         3gt2C/jwJ4cMx9yqHe5LF+tLJa6qoz9XF33tnN8GRjGAu3QQ0/swcOCtUY3W2ER6lN8J
+         fT8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710789159; x=1711393959;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lIPYiS6AqT1tNRa+kXH/qxTnijO9SB6Y3hbgkaDiv84=;
+        b=NX/rSw2Fq4LjZzO5S1Tp7REV9Nl+TNyyd8+DR7kimA/7gztYJTC5lE4w2OTtPzyR0X
+         NAC1Ek9dC+BA212651QH64pgDntKrCpVkx5CGY8bwUYdCeTngb1a1aqaHENOAesUnWv+
+         QEqIaOxevXlsG4Lf0SHDOJN38Bw2R7weV/vjKipflg5CApjUC/y/z7a9VOpVFaFuqj47
+         AN7JKAycgUuQE7hiALtIr54hQEApaVJJY4nbu34NBs96d8ODTneqAyk4uYn4x2g57QC+
+         r8Uk8bnmCjXNe3qGSQnHHAhgZ9Wq+PUKYJwFTKxy6xl3XdBiVm2VKvN7D/UIYiWRplvN
+         PC3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVHk+qdqSK4oteIjRs1QiWkosdAtZoo+J6hVtVcIGht0aFpK/9dPQXh9PIgiYnybcxnjdYiUwGBl0e+HN1dvE+dKhlvLkpFBAb51Fio
+X-Gm-Message-State: AOJu0Yz39atb/bdnPsqu4AWnDid9RYGhnz0caYqGht/+NT7gJYPcFi28
+	Y8Lg7lDKhjkVIqP6HGY/1sOV403RsFs4yE9b4+nIURdnn3GhoJ27SOg7lixKiOc/YPKVWGMdwqW
+	E6ptSJa6p7hhYhpVhIev5Xad9DDWZyYUetBcI
+X-Google-Smtp-Source: AGHT+IFEDnXmFC0T46g4e3RXdTra2OHUDn/F9pxl9qas27NyWz4W8MEV58eyTz1wBY4vhIQxnax9RfgFyGEFnEXlN/4=
+X-Received: by 2002:a05:6102:a54:b0:473:ac82:27dd with SMTP id
+ i20-20020a0561020a5400b00473ac8227ddmr329639vss.6.1710789158712; Mon, 18 Mar
+ 2024 12:12:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20240311-alice-mm-v3-0-cdf7b3a2049c@google.com>
+ <20240311-alice-mm-v3-1-cdf7b3a2049c@google.com> <ZfiPB_iavHr8hNbm@boqun-archlinux>
+In-Reply-To: <ZfiPB_iavHr8hNbm@boqun-archlinux>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 18 Mar 2024 20:12:27 +0100
+Message-ID: <CAH5fLghs7=V2hHYBnQE-h=xpQYKX5ZxrV1iVdB4ybt7pAXFMWQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] rust: uaccess: add userspace pointers
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, 
+	Kees Cook <keescook@chromium.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	Christian Brauner <brauner@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The sdhci_am654_set_clock function is also used to enable
-delay chain, therefore fix comments to be more generic in
-case we are not enabling DLL.
+On Mon, Mar 18, 2024 at 7:59=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
+rote:
+>
+> On Mon, Mar 11, 2024 at 10:47:13AM +0000, Alice Ryhl wrote:
+> > +
+> > +    /// Reads raw data from the user slice into a raw kernel buffer.
+> > +    ///
+> > +    /// Fails with `EFAULT` if the read encounters a page fault.
+> > +    ///
+> > +    /// # Safety
+> > +    ///
+> > +    /// The `out` pointer must be valid for writing `len` bytes.
+> > +    pub unsafe fn read_raw(&mut self, out: *mut u8, len: usize) -> Res=
+ult {
+>
+> I don't think we want to promote the pub usage of this unsafe function,
+> right? We can provide a safe version:
+>
+>         pub fn read_slice(&mut self, to: &[u8]) -> Result
+>
+> and all users can just use the safe version (with the help of
+> slice::from_raw_parts_mut() if necessary).
 
-Signed-off-by: Judith Mendez <jm@ti.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
----
-Changelog:
-v3->v4:
-- Add acked-by
----
- drivers/mmc/host/sdhci_am654.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Personally, I think having the function be unsafe is plenty discouragement.
 
-diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-index db25efda60f5..076229887d0b 100644
---- a/drivers/mmc/host/sdhci_am654.c
-+++ b/drivers/mmc/host/sdhci_am654.c
-@@ -279,7 +279,7 @@ static void sdhci_am654_set_clock(struct sdhci_host *host, unsigned int clock)
- 
- 	sdhci_set_clock(host, clock);
- 
--	/* Setup DLL Output TAP delay */
-+	/* Setup Output TAP delay */
- 	otap_del_sel = sdhci_am654->otap_del_sel[timing];
- 
- 	mask = OTAPDLYENA_MASK | OTAPDLYSEL_MASK;
-@@ -321,7 +321,7 @@ static void sdhci_j721e_4bit_set_clock(struct sdhci_host *host,
- 	u32 itap_del_ena;
- 	u32 mask, val;
- 
--	/* Setup DLL Output TAP delay */
-+	/* Setup Output TAP delay */
- 	otap_del_sel = sdhci_am654->otap_del_sel[timing];
- 
- 	mask = OTAPDLYENA_MASK | OTAPDLYSEL_MASK;
--- 
-2.43.2
+Also, this method would need an &mut [u8], which opens the can of
+worms related to uninitialized memory. The _raw version of this method
+is strictly more powerful.
 
+I don't think I actually use it directly in Binder, so I can make it
+private if you think that's important. It needs to be pub(crate),
+though, since it is used in `Page`.
+
+Alice
