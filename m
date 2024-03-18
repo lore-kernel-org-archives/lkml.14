@@ -1,193 +1,190 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2114.outbound.protection.outlook.com [40.107.21.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B58825A783;
-	Mon, 18 Mar 2024 20:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.114
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710794736; cv=fail; b=LCI4vsd0kN4UVCuVT3mFquoS9SgLAhKpVgQyIZzGEP5xgnouMGr8brGyoc9HEMRIZSnWqKyfKa/W3RjtMk8gDDTW+mbC1e7f0RLbtIjoM5hLn0wiONgHnC1qD2ywA/V8FM5lPaxFiECNqi3YHSAdXqtpFqoEhRTwzvtLwRE0SGw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710794736; c=relaxed/simple;
-	bh=ljnlvogNa9wjnjqYA+qrmJGp+L08YvFN1+NqfGiLnuk=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=DBNGiOdJauTFe7+VpeXAdpb0UcboYPFsMLB5vH29r6h63H476Ax7nz87gZBOJlKWHuKudnRHH/xJB05prerGRiC8xHaOytX/Ws7TxlI6KX4QGOCDB5oSoKE4CGzMR7pcE+5o8HKnoihAhVR3iOwb8M05ggalrofO/z75L7X11BQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=FxFF3ojU; arc=fail smtp.client-ip=40.107.21.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851DA2374C;
+	Mon, 18 Mar 2024 20:47:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710794837; cv=none; b=puy7xqyr80RSUrhLHTneO9TStL/Wu1XzesKVU592mJSs/Wg4yxqNFNiSh9mg5tSjar99UBCUPqlWfBu0gf1LVA1c6HLLtzo/3p/nP003sBhnAYVe6zGSzSfL9h8AsFycHihXfBFLP+N2o+iZGLcdMS7VdqJKfGTsz1Yl7a1eyzw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710794837; c=relaxed/simple;
+	bh=propEZiaTFPfb98S1/if7kHudI0IPUijlSrOPK+6Eg8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RwGjD2Uqz8FU87CLKHCa6y2hPwKJsQpaivShWsVVIP0ljjm+9FPY3WlwmdSN+2P2DrQ+z2agzaqRtdz4uGMH8CZx5FxzSus9h8UDO03RD7GoQ374YC0kjJ9QDM1MNfp1460XMD45MkQ/QL6SnmfduJUhGqGZdvomLFmzkvB7BMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T8wFHt2h; arc=none smtp.client-ip=209.85.161.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="FxFF3ojU"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IQlsOfpAzB7jn3RUU7FYa2lbY8eD4z/ePU2BUtBCC39ONC3yFalY0WRWDL5+moQUWPZuyCY34UXwhZB9D5PtowYMsM3Dmk9cwokALcy1BMDP4Qlii+/nLv5VsrYRA/DQ/rxmGY5EhbDayM6HnAGHw1WyH8trmaWZJhhIPcd0wXJyE2JAyPhD21VGHiOphh/fkOUwSt2LyY7luqaqyJD9g6hE7ouVZwpK38BQleXlYtC07RhQXPeD3RP0MbUIkxk3y2igSWk7cFWWJB+bDuyf6ZWh84+NTqTGT0tMjRcDi2yZBJPEga6/Z03+wvVR9ww5caR8QjTGYW8gIeDrWOQ+Kw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=waST1WDc7IwCRjnOr9xnT/UgX5vct1eYeHIekxCI1Ps=;
- b=DYe/H29FYk9vqrf4Oh8+mcH7J0LJR7d+64zzG7CSWkpC+cBT44h7FGjD2FCTVIiCu2ztLylTv+Tjd6eCqi0y7q0YlK++R+qEAYKJlDt3TDaHSmFPbkPBKkrE9E1PM+7cgChyJUI04mHNVwSEQAAM6VEtgaeQaQWvIRvKKF3enjvGSvJp13kZOFE++nCLc+Yih7UtGwmbF13MgxPgNPgLTxNoAWU8N4y5k34sxYnKiBmEY3GgFnAZ4daOShoDskltjUGJ9N1KbXnijomflRrGvoCxMYrYPGCW0RaOttZlZKD4csHfmgQqO2WW2IIooBUp9PMrgXabpy3A78Rid7DvMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=waST1WDc7IwCRjnOr9xnT/UgX5vct1eYeHIekxCI1Ps=;
- b=FxFF3ojUCbe3aENunLGDeOd9dX0GxUyuH1aMeme2h5a3iDvTI2zRo/QBP8KYIUtpXF0csq/jCEm96fbibLl7zQR/nm6gWo3+Pvsen/A6V5xLP3hPp/f37T8O+b1J6krDmgIr3LICaNOpN2WuvvUsu6HfP8TOCaDADxDqCFBjC4Y=
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PAXPR04MB8489.eurprd04.prod.outlook.com (2603:10a6:102:1dd::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.26; Mon, 18 Mar
- 2024 20:45:31 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7386.025; Mon, 18 Mar 2024
- 20:45:31 +0000
-From: Frank Li <Frank.Li@nxp.com>
-Date: Mon, 18 Mar 2024 16:44:38 -0400
-Subject: [PATCH v3 5/5] dmaengine: imx-sdma: Add i2c dma support
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240318-sdma_upstream-v3-5-da37ddd44d49@nxp.com>
-References: <20240318-sdma_upstream-v3-0-da37ddd44d49@nxp.com>
-In-Reply-To: <20240318-sdma_upstream-v3-0-da37ddd44d49@nxp.com>
-To: Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
- Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Joy Zou <joy.zou@nxp.com>
-Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>, 
- Robin Gong <yibin.gong@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, 
- Daniel Baluta <daniel.baluta@nxp.com>
-X-Mailer: b4 0.13-dev-c87ef
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710794703; l=1789;
- i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=WnRMemTOoEpPrh74qdvslzZv7uH3a8I9p3b25CXOt2w=;
- b=r5sGLNOZz29yoq/nSBHpN/0L5T6UoRlY+t4u8x2vZGWexln3Kcg6PA8aaJJygTWqnRgqbDGK8
- B8KCE6i2FGWAIAnjlfTAXtxt1rHuiTOKxPbAY2mrb35DSmzHBgvqEAY
-X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
- pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-ClientProxiedBy: SJ0P220CA0005.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:a03:41b::12) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T8wFHt2h"
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-5a1bd83d55dso1855378eaf.2;
+        Mon, 18 Mar 2024 13:47:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710794834; x=1711399634; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bc+UKdozhBzHVHSFyFyGz25vJz3UJoLR5quhN0tZVyU=;
+        b=T8wFHt2h4ac92AVEfN0Hvw3bkKVB8m2KzGd0H9FoWN6+5VEXwqFSQnouvjCGykEiMj
+         CNcGhKNF2mnXqq03kX26CqsBR+aYb0qajdH/5+dtdNGmGp9V1IbOZzM0V/H9KONJXiBq
+         hBOJA98xZDPhLsYb7M9yu9NRzcZbSA2qwuaIvSbpdQU8hVkPqxGZ/hDyYJ7grhAlXbcp
+         RkoCVo7vAAEvzryw6RjQk/Zq6nk9tdxN/+XVkOIn186OnhXa6ZAbp1xjqPCT3amkg3EY
+         qhy3+B/mDwc7bRFIopisnJG+ZmaLp4HIL4n37IyaoXx6uvuUREWVNnMxfX0X9D33jBXk
+         7KOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710794834; x=1711399634;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Bc+UKdozhBzHVHSFyFyGz25vJz3UJoLR5quhN0tZVyU=;
+        b=AcDPCj65p7ICrvmfzssF2TKl90CAU/Akmj45Qddc3o48INSANlnERNPbx4w5DYxYar
+         qW+uO3KNN7Q3hprnXPxGs+ro9L4MZ+n954BcNW3NSXTLEly+YoqwyhrkW7X3naOECGjD
+         67t/gmTcuGVXS8Uvx+IcECcYCqtNCExdfOMN5ZucEZLIR2mtDfBmx7QDoCi18VA+fF6c
+         6q6OrzsFIk3kfoEQ9NwbfNFUniCiGsPhCB8/VCRzDVmZSOfWWDckNHD5CNFyTSWOKLRq
+         mOy5QdSjzEOsdwzvsWCLpLl7rtmVHNNFPjVmlh2bjkHqatEqhdH0fNuBa01dUTU0o3fN
+         HbgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXZlpkfUOPj/bjpwfaniO1B/kwIuNH+zrTMkxx/Ud5HjTPFBd+O+WHQZp5NKIH3KClQp/zivVQcUCEq1AIUUjC5uoLyg6N3egFBnzDF/bnxzvn5xZGEe9LWYWMI2a3F0uOOcu1X6/quCQ==
+X-Gm-Message-State: AOJu0YxtQn0K9Yg4HCU31Zf33id7Z265QZTx7VTDZK771SV1ooSk0hfr
+	i1YPpZUA/U9sgTjKI0dDf+PfOG6Hu9ggDr0UTmi0Wgl2EQbdTJUz
+X-Google-Smtp-Source: AGHT+IE0ymGgtO4x+xkYqfk4U10ppkOio8I2ZH26Wj8PUeHYtk6oGX3JHoevr+p1KcKIg3If2y3S6w==
+X-Received: by 2002:a05:6358:5605:b0:17e:f422:5e48 with SMTP id b5-20020a056358560500b0017ef4225e48mr3794718rwf.13.1710794834596;
+        Mon, 18 Mar 2024 13:47:14 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q20-20020a62ae14000000b006e6c38cbe96sm8352379pff.29.2024.03.18.13.47.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Mar 2024 13:47:13 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <d259663b-8713-4c7a-8872-ea775882891d@roeck-us.net>
+Date: Mon, 18 Mar 2024 13:47:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PAXPR04MB8489:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	qcvl6hlV3g8SXpGha8JrdjJ1pKXiKiIzS9WDLb1LcZv9PqJ2jBO6A3xJ8x9AiNl8cXyBPm5vnN9ofxh6nHmUvyyPaoWKNL64cFudNeItK4pBT4uQV6Z+O5NAujYLevZhsQ0SXn4kPM9p2QjPrfDg8p1KorjG7XdceXKOSTHJM3nurGaK8pwtDUKn0JyFSNqfKP5Qul8D0HAr1+765d4aVjVZzkSCj1l+JkS/qTRIHN1SkIJpHPxG0lzTlVxfcDwoNpBRGisdcOcu9zzWwArrGJ/lgluqRK5S1espUsHdzBN1zh06pMVFDWwrkgvj6dRes2GL/cnl7I2mgD8h9vaCm5axR4XcIRGTyPI3VLgfFKl0Cj3l5+j2mHWspOQ5DcKom77EN2hotiP2ay6pGLLIZ/XkJ4LT9A/XY7eheW0gyl4736zeY9FCkD0TiE+Yff9pDtmP2iesi1MuPVTlpsIimp7JVCri+LTUSfitHbFzjK9k2EtL/xmxo8HaFmajrpuVWL3pvIuBHIEmvYdYRd93W4rtO7EHAQ6jwu8Iz0zwQrMBlfKraaFgjoVxJZMJh7AMngXzIA/ya63eqzKBFMZE55GycvyJdHBzAH0biHKtCI6luMlxmLUsqZUPRjg5Vd+zhLtb7kJHSKrjLmcMwSIJScxu6nI+pAFpCbQVPmET3ZmtDOvmyY3kY7J8GaHy0Wu5qK5zJj7+z5+QMia3bXrlhIkrIeWdNEUT+JI+tdZoiWg=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(7416005)(52116005)(1800799015)(38350700005)(921011);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QlNIUjkxamRVczc3cjVGdEhxMHVGNmFTVFY5Vk16aUUxK1FzSWFSbFppaDYw?=
- =?utf-8?B?aFV1OEFZekdUUHk4bkx2SlIwWTZkcVdUNW5JUEx4bWtWV2dEYk5ZT1U2aUZa?=
- =?utf-8?B?WFpkSFA4UGpvWVVJak1qREozUjEwUi9xdVpLcFVRREo4YWVHUnl4dkgxZVNy?=
- =?utf-8?B?ZC9uMVF4MTdOeU16R0QrT0lHdzd0UkgzY0lCWHpXTS9JcTN6WVVpbnZUcjJU?=
- =?utf-8?B?WUNXWkVUb1BBV1ZUclFLNjc2dlZicTJsZ3YvTHdMZ0hVY3BVK2VKRXgyWS9r?=
- =?utf-8?B?SFZTR2lLbHRrMStwTnhYVkRDQzJ4UnVJRGUzRTVNNS9KWk9xaXhMMjlpZWtV?=
- =?utf-8?B?YTZPK2dpRmYxSi9HRWEyRUtqY0ZjTzBJejhpeEg0UGhtK01zaXV3Nm5RSzZM?=
- =?utf-8?B?ckdPUUhXL2grMTBOb2tOM05tcUlycTJsWHY4VWVyckh2bmQ3MDloK0hjTWpY?=
- =?utf-8?B?TnlJU0xYRG9TK2R2S0Z4RHZJVTdPTmRRVFltNzFGOUdZMWQyTmVoaTFlbVBP?=
- =?utf-8?B?NzFtQWMvL2s5aFVMNDdRaDNZRjdrcmxHNHlBVzY5RVdkNG1yVlRoZnZnSHc3?=
- =?utf-8?B?VjZRTGhLVnZOL25RR0R6YjgvU1V0cnZ2dnpjQnFNRWlXb2tKQlAwa2lNcTFH?=
- =?utf-8?B?Yzh2dnBWN0hPQlVjd1ZJTS9Lb25tWVZ3Y29oeG1SdFBQZGFvalZ5c3Z4cTVa?=
- =?utf-8?B?OTRLa3Y5cTcyUEM5VXdDWFRYaEdlUm1qSFE3czVGSGVlTkpxcUhaeFF1NWNP?=
- =?utf-8?B?M0hJVkNXKzBFSVR1MzFtWm15Mkx6clA2ZWsvKzdsb1ErbW12aU1BMUVmeFU4?=
- =?utf-8?B?cU1hcXdKWlBlUDJIU2x2TXoybmloRytsNDF3bEN5WlN2YndGQmg1TjI4ai9Q?=
- =?utf-8?B?SG5sL3BISC9KdGtuUHBDYnJDckNuMFZIalRqNGZYMVoyRU0vYWxCRERySTBB?=
- =?utf-8?B?K25jZE5rR1dFS0dJMjkrN1pBWjh4ZjlGanFLNG91YWxLUkdxWEdBN0xOazhE?=
- =?utf-8?B?KzB3MDVOZm1RUzN5MEF3NFdnU3pBNWFmMjAxRC9kY3NmY3E4Zk4rU3Yvblly?=
- =?utf-8?B?aTFFVzlJZW93ZyszS2RuaFpDSlFWOThkRHY0VWkwUkNGTjNyWVVEVlZUdTBV?=
- =?utf-8?B?YXZLTnl6RFlGZ0VMbnBhMzhRQ2FURDRweWdtSlN2WXlUYVd2OUU0ck5ISHpB?=
- =?utf-8?B?M3c2K3RwcHVVQXJJekdMVCtsUGNKNXpsaG41OUNLTEFDakxidFZ5ZE1VTXRj?=
- =?utf-8?B?VjJyclBJWE8xZW4xaEVKMHJTZXIzSEJrNURIbnl4VnFJMTVwcjAzYVJMM08x?=
- =?utf-8?B?Y0J3VUlZdWs1TnlGSGxObmdQNlc1S080c0o5TlJValhBdzF6dmpwQ2xqVlNa?=
- =?utf-8?B?K0NaM2NjN2d6NmZnSDFsWktiNDFRYWQwS2VxdkRwZ3ZOMjJIZGs0bkRCQ1I5?=
- =?utf-8?B?ZHc2MUoxTGg5RzVwcTBQZmgrbUtzWXc0NlJheWV6Tng0RklsNzNtRFhhZDNY?=
- =?utf-8?B?NTFxRU1icGZvM2NycEtmb2RTV0tHVC9mMklVM2NONnFvUGRjZTNuRHpXNk1O?=
- =?utf-8?B?UjVWZTJtSWxqWmtLTlI3bGJ0WG1ZK2JuaTJudkJKclhRWERxOW43MEovbzNW?=
- =?utf-8?B?UElFUGh2WTN2ZEViWXh1VXZEZUJHM1p1ZzRvYlB2ZkFSZzdZUDZqYTZVcHo3?=
- =?utf-8?B?NEY3cmpWTnpodXFIeGlWc1BGNUhmZTdjOXFaQzR4bXh3Yyt6bTRGM1pva2FF?=
- =?utf-8?B?V1ZIcEJqajFUQnVkMnVodndmN3JTR2pyRjYzaUJmR1Q4QTExSnRiOHNJNFE5?=
- =?utf-8?B?VlhjMENaVVZ3d05qbG13aHd4aThlQUFiWFNIUlB1UytUc0w3dy9xak0yTUgy?=
- =?utf-8?B?Qy9XbjMxelhKNEJIb1F2enF2NzhPVWRwTDE5MXNSM3c1RmtZTmZZVC9ULy9p?=
- =?utf-8?B?c1JFeXNwMHdWdThTUklBMy9mdlJtNG9GSUVFbmxvcjV1VFp4M0VhbXB1RXNL?=
- =?utf-8?B?WUdLeDJQWkNvNVNVYkUrQVRIbmYvOUEwUFpoRVpabzZYelF2Y3UxaUFMRmFO?=
- =?utf-8?B?djlnV0tHT0xRZmtXVnQ1dFdvZmlXenoxWlkxdVpiUWdTcU5BRUlqeGxhZXd4?=
- =?utf-8?Q?QqoTwuuqcoNP4Jvq3IB3vvsJL?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e98e84c2-82ab-4e34-1767-08dc478c5a3d
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2024 20:45:31.5580
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SHgtE1822wiiv9kPU2XiNOTBBcrMbcZQ6WM99JHBq6zCdliBOhBJRF6mV7AHJXM3F5msjq/t7VoC/2Yd0s4I2w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8489
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] of: create of_root if no dtb provided
+Content-Language: en-US
+To: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>,
+ =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Lizhi Hou <lizhi.hou@xilinx.com>, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20230317053415.2254616-1-frowand.list@gmail.com>
+ <20230317053415.2254616-2-frowand.list@gmail.com>
+ <886049ed-4f5f-4e17-86f4-1245024ade3a@roeck-us.net>
+ <CAL_JsqKsF53v7d7uZ3XT4kPFy-2FBWHfvKNSFdTx2oZhmSZkDA@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <CAL_JsqKsF53v7d7uZ3XT4kPFy-2FBWHfvKNSFdTx2oZhmSZkDA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-From: Robin Gong <yibin.gong@nxp.com>
+On 3/18/24 12:26, Rob Herring wrote:
+> +Stephen
+> 
+> On Mon, Mar 18, 2024 at 12:09 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>>
+>> Hi,
+>>
+>> On Fri, Mar 17, 2023 at 12:34:14AM -0500, Frank Rowand wrote:
+>>> When enabling CONFIG_OF on a platform where of_root is not populated by
+>>> firmware, we end up without a root node. In order to apply overlays and
+>>> create subnodes of the root node, we need one. Create this root node
+>>> by unflattening an empty builtin dtb.
+>>>
+>>> If firmware provides a flattened device tree (FDT) then the FDT is
+>>> unflattened via setup_arch().  Otherwise setup_of(), which is called
+>>> immediately after setup_arch(), will create the default root node
+>>> if it does not exist.
+>>>
+>>> Signed-off-by: Frank Rowand <frowand.list@gmail.com>
+>>
+>> This patch results in a crash on nios2.
+> 
+> This patch was never applied. I assume you meant a later version of it
+> that did get applied.
+> 
 
-New sdma script (sdma-6q: v3.6, sdma-7d: v4.6) support i2c at imx8mp and
-imx6ull. So add I2C dma support.
+It is the patch in the link that was provided with the patch. What else
+should we use as reference ? FWIW, I did look for a more recent version,
+but I must have missed it. My bad.
 
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Acked-by: Clark Wang <xiaoning.wang@nxp.com>
-Reviewed-by: Joy Zou <joy.zou@nxp.com>
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- drivers/dma/imx-sdma.c      | 7 +++++++
- include/linux/dma/imx-dma.h | 1 +
- 2 files changed, 8 insertions(+)
+>>
+>> Building nios2:10m50-ghrd:10m50_defconfig:10m50_devboard.dts ... running ...R failed (crashed)
+> 
+> Booting with DT?
+> 
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 35fb69a84a8da..5bc4419fd45f3 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -247,6 +247,8 @@ struct sdma_script_start_addrs {
- 	s32 sai_2_mcu_addr;
- 	s32 uart_2_mcu_rom_addr;
- 	s32 uartsh_2_mcu_rom_addr;
-+	s32 i2c_2_mcu_addr;
-+	s32 mcu_2_i2c_addr;
- 	/* End of v3 array */
- 	s32 mcu_2_zqspi_addr;
- 	/* End of v4 array */
-@@ -1077,6 +1079,11 @@ static int sdma_get_pc(struct sdma_channel *sdmac,
- 		per_2_emi = sdma->script_addrs->sai_2_mcu_addr;
- 		emi_2_per = sdma->script_addrs->mcu_2_sai_addr;
- 		break;
-+	case IMX_DMATYPE_I2C:
-+		per_2_emi = sdma->script_addrs->i2c_2_mcu_addr;
-+		emi_2_per = sdma->script_addrs->mcu_2_i2c_addr;
-+		sdmac->is_ram_script = true;
-+		break;
- 	case IMX_DMATYPE_HDMI:
- 		emi_2_per = sdma->script_addrs->hdmi_dma_addr;
- 		sdmac->is_ram_script = true;
-diff --git a/include/linux/dma/imx-dma.h b/include/linux/dma/imx-dma.h
-index cfec5f946e237..76a8de9ae1517 100644
---- a/include/linux/dma/imx-dma.h
-+++ b/include/linux/dma/imx-dma.h
-@@ -41,6 +41,7 @@ enum sdma_peripheral_type {
- 	IMX_DMATYPE_SAI,	/* SAI */
- 	IMX_DMATYPE_MULTI_SAI,	/* MULTI FIFOs For Audio */
- 	IMX_DMATYPE_HDMI,       /* HDMI Audio */
-+	IMX_DMATYPE_I2C,	/* I2C */
- };
- 
- enum imx_dma_prio {
+Yes, with arch/nios2/boot/dts/10m50_devboard.dtb.
 
--- 
-2.34.1
+>> ------------
+>> qemu log: >> earlycon: uart8250 at MMIO32 0x18001600 (options '')
+>> printk: legacy bootconsole [uart8250] enabled
+>> Linux version 6.8.0-11409-gf6cef5f8c37f (groeck@desktop) (nios2-linux-gcc (GCC) 11.4.0, GNU ld (GNU Binutils) 2.40) #1 Sun Mar 17 23:38:59 PDT 2024
+>> Kernel panic - not syncing: early_init_dt_alloc_memory_arch: Failed to allocate 72 bytes align=0x40
+>> ---[ end Kernel panic - not syncing: early_init_dt_alloc_memory_arch: Failed to allocate 72 bytes align=0x40 ]---
+> 
+> nios2 looks utterly broken to me. This change should be a nop unless
+> initial_boot_params is NULL. It looks like it is possible for r6 (dtb
+> address) to be 0 depending on kconfig options, but that would have
+> skipped copying and unflattening which would then panic in
+> setup_cpuinfo(). If initial_boot_params is not NULL, then the same
+> early_init_dt_alloc_memory_arch() calls should fail when copying the
+> DT. So I don't see how nios2 booting with DT ever worked.
+> 
+
+All I can say that it did work with devicetree until this patch was
+applied. It doesn't boot without it. I tried without devicetree file
+after reverting this patch. That results in
+
+Kernel panic - not syncing: setup_cpuinfo: No CPU found in devicetree!
+
+Guenter
 
