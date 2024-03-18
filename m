@@ -1,61 +1,61 @@
-Received: from sonic304-28.consmr.mail.ne1.yahoo.com (sonic304-28.consmr.mail.ne1.yahoo.com [66.163.191.154])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3457E546
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 00:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.191.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B609AD23;
+	Mon, 18 Mar 2024 00:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710721772; cv=none; b=aDER5U97slGwrDCl3miLIubzStwoEqCWc1XqcqRYJhCIljMPTYbaOfO+OKQ6kATJlBVSUsIQ7Em9EbpicKU6sKUL0GvdopIBF8MDS5cj5ha8iq3TnnhqqinF+uS4MplnhOOMM0/7Kl8howqdZ2oCKd4p2K8G+yfCAEDrpPIlOAs=
+	t=1710722028; cv=none; b=t4fRPKE5LSGTe9nZkNv/itT69lpcWX15pVlfa7ofNpRCHzfgX4/0C0p2swj+MGGywov3PvE+ENuXCgRuP5TNieg3mFf7dgiXUIDsmwFZScaoYXV/mdd4NyQj1DIdryae+8GqxmPiKm8XKrbXgRP3FiPaPJz4vyLO/+Qz0MDgoJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710721772; c=relaxed/simple;
-	bh=XDO8/d0iz2V7sZELfeXZrkyddM4LNSpiyQLIYgDR2lU=;
+	s=arc-20240116; t=1710722028; c=relaxed/simple;
+	bh=psz1eCidTIDSQgxOYHEcO2MpAtuGi8B5che1X86lyto=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MHYq7BY858LnuJCQAfT74Ez9rc/GlQ1Il4edm7ONKdhsh81u9EHKwP/oXoD8iy/FJiniEH7bZzJORSsxL4df/X5KHdTkH8PtPNvpo+5vt/5/KthyuEGMgxXOtDPaA2AoyE8PT3wdG1g+/Z7R7N01f7hUpvXK1Q6mSGf20lJrE+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=AvS44cfC; arc=none smtp.client-ip=66.163.191.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
+	 In-Reply-To:Content-Type; b=n7tzF+J1hkI/f86+Ts4SB+kzh9btl/7C0tSWc3ge+70bpaBcwlIBHeuNE+L1xAj0fwKs3VPEmCW5gOD8V9cmj30CCemKSliJye0sc9BOUPVf9h1+Q0vMlAwkAbzQNUpY263Ad+0kxFtpLo9vywK9X4CNoxH91OpJVkWeAgFsI0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qezxlb9f; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="AvS44cfC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1710721762; bh=ur7+Dkhuv0fZsBGL1hE8C24/tID4EaLfwPGhqZvAJgY=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=AvS44cfChNQDHKTVOFAQfgNG/A8vna6dU8MYOobY0i7HWjfsR5ZMJglv9F0HU5ocfGpqL+AphJoq0uEjrJ4calYHiMv5L/ViYpBMf+MVOH2RaCEL9D/GKBinNvbavW/A/gaieH+ncH+oZRzSL+0+mRztn/10xVg90HNGRzx4P/Dj4bZEte5eVQxA+DdQu3cWOFAmx71BOMG2r53m/1MDGp9vlIxJESSrGkbuuaXk8F8vo6yci/4rb6dbgGFS8Uz+qMYV2h0Rsq8itRFfIXtujyLXNQ6tiSEoH3/byld8U9bz7RpGCt8hZeUjELNsRzxrm8VDCavJ9n1YQg1mmOuR3Q==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1710721762; bh=7OGIpH70jZ/hB8P3wZb0f6KkrqJ6y5lJnl9p6axDTmd=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=SHqSvTJ9C5caI+YU7dNEocpRu3399l41rC85PBn/yVVdmx5//RmRtJHAmH+WDFE4v0eUPMl2OMRkOs962kgJV1u/3XsG/P6Ns8qN9SMPi2n8gAQVwVqd5PZZPBkXKxjGuwthR2XUbdQ9oMWXiRpzPmx0CIWg/6xLd56o62RR5mNGyKmHefDX19CLRMdoV9BL3zuiLYUgmLOC43PrvSkYRbzPlf5y9Misk2txdlTV63uYNH0BD+qS7CCKWguaHrXApaJqqUQwWhiM/y2v3K24hssAEO6PMfZUwovnAZvQZZAmNCPX5iHKva7Tcp3AbqLWsxl23uj7tgEoSMY2+K0hjw==
-X-YMail-OSG: waeWX9kVM1kChxFe64VzLjBz9sv1R5rKfCT4V4ptBO_lda.ol45fdlkGTy4P.OF
- R_XhFht3m6K3UV48QOjt6dEAoCP.Dj9OPDxGhOjGduy9aIb6VqvOlnhfrExAiCgx_dNwGbqV6nHI
- Lg8w0pp30_Y6lJ2VeONHYhP8Cook_pd3dQhO46cazukTHlIZMIk15fbyUbvYFe4W7i98cPs7T7Kp
- cxvt19FBYl4zpq5N5p0xYuGo6nsTm__jR68eAhbVlqJ_RNMUP2aEHYCLWU9JHeP7Z7Yj2KPiVC4E
- YCCOyK7Qrx9ZAPAW4luxpPVE7YBStWoYIIa6vocGCvAoFzjL9egXHHZkxfpIokU_Am7IszUpIpQp
- Oyiu50lSC69OZEHQe_uWJfx80CFNOtnvcKAe0GhH3AJmHVZDuLPp4RFvBm3RKmJ2VZ4fik5jX1u8
- 5t5BU8twOWTH0efac3HItgKZoiar2ppGdGZNWVAaJjOlLxuqOa_.fAPfFtHAjTxxCOm.xfJ38HNL
- vD4SQBkPEUAqL2Odddm0ueAY9TXmRtMhnCNOxxGNSITMsUuXjDqPL89Vrw98NCWB2vvzu7AQjxtj
- iVwb6tLBm9dxPmA6qga92Zmpy0z3U5O442u0174wwkDp3cLJ5EmXIyMOiOU8g1fdxrfXbuv7PSTn
- O9ktdwD4Rfhasl0eVEd.voxNeKM9y8qKFQOSH2wfTRPbSBPwgDcx_GT_Xner9ucrxHL8kdHWFH8p
- lj8vOAL5m.nld3q4ttrbE5o5V.H84Q9OWWqo9g39AKO5iJ3Mxb_7WcczrAUZFBFRqoSaVeFkdoFt
- iIcpr2FXyIuXbv89Z2CB8u6uGaybvpS5r723teOZR8_E0jTu8xmvTSI4AjMHm6CVmjOGCJKsxXlr
- r.K2rSYi1v2HSBbkjXdZabje1U5FyHx11Xmawf4dbCuioxWl97Yz6yGSanhTK137dZCkD5o8RESa
- CgzvSt7EpaETOB97_BX.FgDjMzm.A8oldcjPgExI5YTvU1j.fQXrw5iKq2Lo_RLSvG2q.lr0D2zN
- iWB5HBS3mdB5joadSS7EskB7sxTu6utUh83PGP3nFm0gwJ8fM63MkCMJ7r4_MHTJvhmEpZ5FWjjf
- kMrSPcs0imyt22ooV5TS7GEv1CiNbDCpCSdATLTkJ04tIwLGzK0bDPlK_ZiVXsYK3QNrilg8AwxF
- ePr9PsjzID5nxknkl_ym.LH6m03Rm_s8gzWejnPxmFUQ4a48UIUip2NRQSviAZLSUFfh_PgtbA_r
- 4lYWGYuwZbH48x8Qr.iXy5FKJq4I_UcCcXVHtrJ9S010mewL4EO0svvggqnL24MDjXRr0C497XWR
- F31dag4KTXx0jmixitgWWH4vSbh3644OV6PmwDkiBKQTKuF.o5JOzDP05z0HkOGsKQuRCz8yoDkV
- YdpROOgrKpgLr8JN2YI5eTf84JKZx9gDPu0BZ61oPHK7q9AYkX59I5ll1AoXKPUfp0m6XReh6t6g
- XZph7HyV8E0.IAF5LelBFRJMRrcUwcYPaQRf2k1jfvHGYSAAmQVfbY8U1SFnpHhzsSpzwoSIFJuX
- WnXZ5kKxYqJBjasw6diSqxtjEGwdOVVNk52wUoFtfGSC5qIvJIEagVpxqRhsIbj3jPxi2f.qRpwY
- bqMqGXwoIP12aACemy5DL5ZcrTelzxdnird.IwcF9BDiznxtD28xRqSME3l8VLxRN9T_coOVIhYT
- 4NVfsF8AJtP9QP319kQBIilJsFJLDG7Eb9fdaWW8RG.LEdZWSrEihSND.FwYdt_bUG5ClNCUHxFx
- QeCS1t3zl7F6MiBKPyx2Z5nlufBfrTjVyqFafmNERLWYFT2r.mlSrfvRbnvQ0fLwbShFs1xpMuVU
- cW3vSrTLj3ayjOOAL2F7KDmFOJ_lEmVgSa.cpFXttipQPRsgeeyzkZJB_yE6vDrApYbYheIF5sPz
- 1efZ2e_rLD9dHgNLFUSdEKu4OjB8odHU6tJpATafJwMmLb_LGrme2uX2cBg_kGhCdaPp.tJWOmLv
- e5FRdNMFANZYjUFIXRPLeIhs4eal7j4jwY1GcUDorn2t8UB0jlN1_PNFrk1o93yRiPV5bhDylEgJ
- 1fLlExIQyyI0x0f_Vull_IWVjNfyIUC1qwA3gyWcSD6WvDpmEGwejsw4MP7oWNC0xP.vE3wPAeGk
- gsWyOU1OfqXuoPuKaCFOAWtb.pQqspU7GjJ_61IhRL7lLGIoCP.InxJfhPChgU4wkKbzTjWu7L8D
- KpqzGwiJKwRR9vU2ds6GlhM5cW1pwm427KEqbEgVV9J8rM5mV6HA5st1YDa57qCg-
-X-Sonic-MF: <casey@schaufler-ca.com>
-X-Sonic-ID: 4dceb0cb-286e-4bb1-86ec-98cee84315d7
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.ne1.yahoo.com with HTTP; Mon, 18 Mar 2024 00:29:22 +0000
-Received: by hermes--production-gq1-5c57879fdf-p26ct (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID a7bd0b665c9e1192bb72e35953a758c0;
-          Mon, 18 Mar 2024 00:29:16 +0000 (UTC)
-Message-ID: <43958767-32db-4c53-8408-8367cfc14d2f@schaufler-ca.com>
-Date: Sun, 17 Mar 2024 17:29:14 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qezxlb9f"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1dd10ae77d8so22835425ad.0;
+        Sun, 17 Mar 2024 17:33:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710722026; x=1711326826; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=DfhnDW5OGlo/pr+6UOixZkMPM1UIxu68W5Spy7o3JkA=;
+        b=Qezxlb9fEwDK3u56jCik5iIgbIKWsqsWQu7FEQl+Z34adNBblshoEfDcalQ/mSDMIA
+         /iS2N8FVD45FWl1HXS08LHTW/9m3W6J/1hDV3TWFrChqqnr+llXvMlzLa4Grk0heCMf3
+         g/UmW1oSWG+iAIGhHxywntB1oYl52Lc/c3SisqohDZKBsjDAkklk3oc6YF2nzVzyLLh5
+         1KYDqSy15XRdWroadtMEj01aVkns4DvvIhiacNgj1+DZqx1KrV+m2cfadmcg7r8f1c3O
+         eKtUv3+1BAGjoIAFVmG4A3rTKntrwJ+RlDFevX7zReZZqI7IN0qRPyJ9RTu1quZ3PgCe
+         looA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710722026; x=1711326826;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DfhnDW5OGlo/pr+6UOixZkMPM1UIxu68W5Spy7o3JkA=;
+        b=BKR832s/NP7eadTjej0/hgdlHDRSYw129GhIMY1Mq+iK8zZdyNCQHfaMN1s4/MnkWx
+         mwnLAcMbJsX0utLwwDRLGtvMIgfpbHVVUE3ylVQD5CIQv0k4FMvej09EaLPqArA3fhzF
+         FB4jl6v2rQI6TR3O7cYnwiit/AXOupUSNsBfuUP9ZKD7UkN44asLca8r9SuLxI4tkrS4
+         fiWSlIyHFw0RjIzW/EBBjlr3ig4y4xRcYl65WLWYg914R4A01sXj98STnNBkCxMJYQw8
+         Tvh/s1XuQ0SsMLIywwezAQDJGSUJuPw1Q1/UZl1zX04SHcFnmF1qockPBEGOYfB4Y+S9
+         gnJg==
+X-Forwarded-Encrypted: i=1; AJvYcCX2b1m4falwWKEVKsz1TwpkTnTvk/6NyVui56NUbV4KEeyXcdPzsbrcMv/B87BfA+9Ez4cW1v1+S06d2N2WrV+beKvpKkOAyfJ59ex9b40CsN7U177xn6h7dqg7rQ/M3oN7UAse16HannVJ
+X-Gm-Message-State: AOJu0Yy2jpSfpEjBbcgyYCn8eoN6p7q/8z3fRZSqx4jFBXBHNnDCxsM1
+	7J/kVKz9A8YLhEubzDheWKohEontvwALDBRqr19oAoMbYusRnAF4
+X-Google-Smtp-Source: AGHT+IGtuEDzxb+Wqgr47235rCw5OYIMzyj+3tRx96vOT5GTPK9NvbyTEx2Mt8dtDP5/HYJfdv0BNA==
+X-Received: by 2002:a17:903:2282:b0:1e0:e11:c631 with SMTP id b2-20020a170903228200b001e00e11c631mr3442856plh.34.1710722025684;
+        Sun, 17 Mar 2024 17:33:45 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p6-20020a170902eac600b001dd689a6ff4sm7789618pld.227.2024.03.17.17.33.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 17 Mar 2024 17:33:45 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <92746b1d-6993-43a2-9245-adda3d9b7e79@roeck-us.net>
+Date: Sun, 17 Mar 2024 17:33:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,130 +63,158 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v15 05/21] initramfs|security: Add a security hook to
- do_populate_rootfs()
+Subject: Re: [PATCH v7] crypto: scompress: remove memcpy if sg_nents is 1 and
+ pages are lowmem
 Content-Language: en-US
-To: Fan Wu <wufan@linux.microsoft.com>, corbet@lwn.net, zohar@linux.ibm.com,
- jmorris@namei.org, serge@hallyn.com, tytso@mit.edu, ebiggers@kernel.org,
- axboe@kernel.dk, agk@redhat.com, snitzer@kernel.org, eparis@redhat.com,
- paul@paul-moore.com
-Cc: linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
- linux-security-module@vger.kernel.org, fsverity@lists.linux.dev,
- linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
- audit@vger.kernel.org, linux-kernel@vger.kernel.org,
- Casey Schaufler <casey@schaufler-ca.com>
-References: <1710560151-28904-1-git-send-email-wufan@linux.microsoft.com>
- <1710560151-28904-6-git-send-email-wufan@linux.microsoft.com>
-From: Casey Schaufler <casey@schaufler-ca.com>
-In-Reply-To: <1710560151-28904-6-git-send-email-wufan@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: WebService/1.1.22129 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+To: Barry Song <21cnbao@gmail.com>
+Cc: herbert@gondor.apana.org.au, davem@davemloft.net,
+ linux-crypto@vger.kernel.org, akpm@linux-foundation.org, chrisl@kernel.org,
+ sjenning@redhat.com, vitaly.wool@konsulko.com, linux-kernel@vger.kernel.org,
+ Barry Song <v-songbaohua@oppo.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Nhat Pham <nphamcs@gmail.com>, Yosry Ahmed <yosryahmed@google.com>,
+ Chengming Zhou <zhouchengming@bytedance.com>
+References: <20240301192745.14987-1-21cnbao@gmail.com>
+ <aaa8b7d7-5abe-47bf-93f6-407942436472@roeck-us.net>
+ <CAGsJ_4wWEdxk0qNV89bL0zeGaXUBb7h92mdNeRCgcUCY5C84ww@mail.gmail.com>
+ <bf2a5631-79cc-414e-82f0-6b45e487c8d9@roeck-us.net>
+ <CAGsJ_4xGKFaQPD-KurP2=qiD5zSdnOwZtH-kyASP_PgFX_mJAg@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <CAGsJ_4xGKFaQPD-KurP2=qiD5zSdnOwZtH-kyASP_PgFX_mJAg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 3/15/2024 8:35 PM, Fan Wu wrote:
-> This patch introduces a new hook to notify security system that the
-> content of initramfs has been unpacked into the rootfs.
->
-> Upon receiving this notification, the security system can activate
-> a policy to allow only files that originated from the initramfs to
-> execute or load into kernel during the early stages of booting.
->
-> This approach is crucial for minimizing the attack surface by
-> ensuring that only trusted files from the initramfs are operational
-> in the critical boot phase.
->
-> Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
->
-> ---
-> v1-v11:
->   + Not present
->
-> v12:
->   + Introduced
->
-> v13:
->   + Rename the hook name to initramfs_populated()
->
-> v14:
->   + No changes
->
-> v15:
->   + No changes
-> ---
->  include/linux/lsm_hook_defs.h |  2 ++
->  include/linux/security.h      |  8 ++++++++
->  init/initramfs.c              |  3 +++
->  security/security.c           | 10 ++++++++++
->  4 files changed, 23 insertions(+)
->
-> diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-> index 334e00efbde4..7db99ae75651 100644
-> --- a/include/linux/lsm_hook_defs.h
-> +++ b/include/linux/lsm_hook_defs.h
-> @@ -450,3 +450,5 @@ LSM_HOOK(int, 0, uring_override_creds, const struct cred *new)
->  LSM_HOOK(int, 0, uring_sqpoll, void)
->  LSM_HOOK(int, 0, uring_cmd, struct io_uring_cmd *ioucmd)
->  #endif /* CONFIG_IO_URING */
-> +
-> +LSM_HOOK(void, LSM_RET_VOID, initramfs_populated, void)
+On 3/17/24 17:21, Barry Song wrote:
+> On Mon, Mar 18, 2024 at 8:14 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>>
+>> On 3/17/24 16:48, Barry Song wrote:
+>>> On Mon, Mar 18, 2024 at 7:13 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>>>>
+>>>> Hi,
+>>>>
+>>>> On Sat, Mar 02, 2024 at 08:27:45AM +1300, Barry Song wrote:
+>>>> [ ... ]
+>>>>> @@ -152,8 +165,17 @@ static int scomp_acomp_comp_decomp(struct acomp_req *req, int dir)
+>>>>>                         ret = -ENOSPC;
+>>>>>                         goto out;
+>>>>>                 }
+>>>>> -             scatterwalk_map_and_copy(scratch->dst, req->dst, 0, req->dlen,
+>>>>> -                                      1);
+>>>>> +             if (dst == scratch->dst) {
+>>>>> +                     scatterwalk_map_and_copy(scratch->dst, req->dst, 0,
+>>>>> +                                              req->dlen, 1);
+>>>>> +             } else {
+>>>>> +                     int nr_pages = DIV_ROUND_UP(req->dst->offset + req->dlen, PAGE_SIZE);
+>>>>> +                     int i;
+>>>>> +                     struct page *dst_page = sg_page(req->dst);
+>>>>> +
+>>>>> +                     for (i = 0; i < nr_pages; i++)
+>>>>> +                             flush_dcache_page(dst_page + i);
+>>>>
+>>>> flush_dcache_page() is an empty macro on some architectures
+>>>> such as xtensa. This results in
+>>>
+>>> Hi Guenter,
+>>>
+>>> this is a bug of xtensa, could you test the patch:
+>>
+>> Thanks for the update.
+>>
+>>> https://lore.kernel.org/all/20240313045036.51065-1-21cnbao@gmail.com/
+>>>
+>>
+>> That doesn't build for me.
+>>
+>>     CC      arch/xtensa/kernel/asm-offsets.s
+>> In file included from ./include/linux/highmem.h:8,
+>>                    from ./include/linux/bvec.h:10,
+>>                    from ./include/linux/blk_types.h:10,
+>>                    from ./include/linux/writeback.h:13,
+>>                    from ./include/linux/memcontrol.h:23,
+>>                    from ./include/linux/swap.h:9,
+>>                    from ./include/linux/suspend.h:5,
+>>                    from arch/xtensa/kernel/asm-offsets.c:24:
+>> ./include/linux/cacheflush.h:9:5: error: "ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE" is not defined, evaluates to 0 [-Werror=undef]
+>>       9 | #if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+>>
+>> A similar works for loongarch, so I don't know what is wrong.
+>> Maybe some context patch is missing.
+> 
+> this is weird as include/asm-generic/cacheflush.h will define it to 0
+> 
+>   #ifndef ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+>   static inline void flush_dcache_page(struct page *page)
+>   {
+>   }
+> 
+>   #define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
+>   #endif
+> 
+> Maybe somewhere else also needs to be fixed.
+> Can you tell me your toolchain version and toolchain name? and defconfig name?
+> 
 
-This is an awfully expensive way to set a flag. Adding a LSM hook list
-isn't free. Isn't there a way to capture this state change through one of
-the mount hooks?
+config is allmodconfig - GCC_PLUGINS.
 
-> diff --git a/include/linux/security.h b/include/linux/security.h
-> index 41a8f667bdfa..14fff542f2e3 100644
-> --- a/include/linux/security.h
-> +++ b/include/linux/security.h
-> @@ -2255,4 +2255,12 @@ static inline int security_uring_cmd(struct io_uring_cmd *ioucmd)
->  #endif /* CONFIG_SECURITY */
->  #endif /* CONFIG_IO_URING */
->  
-> +#ifdef CONFIG_SECURITY
-> +extern void security_initramfs_populated(void);
-> +#else
-> +static inline void security_initramfs_populated(void)
-> +{
-> +}
-> +#endif /* CONFIG_SECURITY */
-> +
->  #endif /* ! __LINUX_SECURITY_H */
-> diff --git a/init/initramfs.c b/init/initramfs.c
-> index da79760b8be3..cc9115117896 100644
-> --- a/init/initramfs.c
-> +++ b/init/initramfs.c
-> @@ -17,6 +17,7 @@
->  #include <linux/namei.h>
->  #include <linux/init_syscalls.h>
->  #include <linux/umh.h>
-> +#include <linux/security.h>
->  
->  #include "do_mounts.h"
->  
-> @@ -719,6 +720,8 @@ static void __init do_populate_rootfs(void *unused, async_cookie_t cookie)
->  #endif
->  	}
->  
-> +	security_initramfs_populated();
-> +
->  done:
->  	/*
->  	 * If the initrd region is overlapped with crashkernel reserved region,
-> diff --git a/security/security.c b/security/security.c
-> index 287bfac6b471..b10230c51c0b 100644
-> --- a/security/security.c
-> +++ b/security/security.c
-> @@ -5675,3 +5675,13 @@ int security_uring_cmd(struct io_uring_cmd *ioucmd)
->  	return call_int_hook(uring_cmd, ioucmd);
->  }
->  #endif /* CONFIG_IO_URING */
-> +
-> +/**
-> + * security_initramfs_populated() - Notify LSMs that initramfs has been loaded
-> + *
-> + * Tells the LSMs the initramfs has been unpacked into the rootfs.
-> + */
-> +void security_initramfs_populated(void)
-> +{
-> +	call_void_hook(initramfs_populated);
-> +}
+Toolchains are self-built from gcc source using the buildall system. I tried
+gcc 11.4, 12.3, and 13.2. I don't think that matters, though, since
+"asm-generic/cacheflush.h" isn't included from arch/xtensa. The diff below
+seems to fix the problem, but I have not fully tested it.
+
+Guenter
+
+---
+diff --git a/arch/xtensa/include/asm/cacheflush.h b/arch/xtensa/include/asm/cacheflush.h
+index 11efdc8eb262..62662919cbbc 100644
+--- a/arch/xtensa/include/asm/cacheflush.h
++++ b/arch/xtensa/include/asm/cacheflush.h
+@@ -183,4 +183,6 @@ extern void copy_from_user_page(struct vm_area_struct*, struct page*,
+
+  #endif
+
++#include <asm-generic/cacheflush.h>
++
+  #endif /* _XTENSA_CACHEFLUSH_H */
+
