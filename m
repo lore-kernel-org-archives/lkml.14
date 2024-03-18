@@ -1,158 +1,152 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C192E644
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 10:46:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD01724B26
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 10:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710758763; cv=none; b=BaxuJHKdrqn203Go2GlxJMrdRS8mF0mYvrV6UHsSoL46vjtOO/heA7DEeRv/M5puWEno79Sg8lybStOpY1aUI09aLdj7t8ksirfTlhp9zP1+oEsSWuDNqbqWiPJR1+sAG+c/jvQHs8RhtCnEtqsCE3sDd755o/pSOgWJpFlNTVo=
+	t=1710758969; cv=none; b=FCPgqvF7y2tWPZ8GC+RhDYHaFHZ/I6XzBWHsKeV8ndyQHFLjLNmF1sb8dTMv5X5ZC4OAC6efsUxcpatOx1elP+OwqxQjzH8+5CuiXgR2RlGQxHnCivmi7PyZNfEDKxu8/Tl1zqei/YZYeEuMQeu6FpBZwWuhYdpHU5IIKeq/EMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710758763; c=relaxed/simple;
-	bh=AnN09J7l+NzyG+L7VRxA++nqcTL77gssPZ6K+HlliN0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=SLsAM23w4nsWKTnnKxSN+Z5g77ig22LQ7h6BcCHK4XyRKrEbHiH+2kcoB1E9/SlavllbStXFJaOIwkQVJMyGu6PEsVhUISAymi0LHu8yYRCJ+iRIQokQVbBAjengU0Y6n7qhja2OdS92Bck6ok7QgQI9HkCA6Ksr/fVjGIn+iC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=gFShZaJm; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1710758969; c=relaxed/simple;
+	bh=w8kGD73Xz/uZpQJ5ZgCw6GsFXXl9zD5Qm0dcGMbIXpc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=K4oh5YfxgaDt8dZDcgh3tO93AXds96Nt/pNxZNYbr+1wLb/KuXaQ8Ew7NURn0Ly/ZYay7xrPCZbNggNMoxYCJhLM9oDik7WRxvlMhfO7cuYdJFfILdB0qvzBbpAEOnqyaa1+czyT23lyceG62z+JF10GHHNzywUtR2tuAvbsvvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=KWICTmE6; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="gFShZaJm"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a46c35dfb5aso74219466b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 03:46:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="KWICTmE6"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-41413ad1f73so3480725e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 03:49:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1710758759; x=1711363559; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1710758966; x=1711363766; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QT8ZXpFVpdTpbU/Iue/RRtJuRFnBjnoJvr+qPsVlQ40=;
-        b=gFShZaJm0J/4fRAbBSE/Url3e3UYnEDBjMm6YvFOstIIFcZ3JhM8nkwmm1YHtfhdBo
-         UM07BNaqk9p7ncnNkJOMX2VfzlA4nChzpk4PGMDW5UIfV5MP2Xrcxx+sa93E2eiA1AGA
-         P3PnAc5NDhPtoQAPmq+xsHgs2PB4gzNW/s2cryCSxgpdQcYWZ4V7ntR5Phmri+DRu/Oo
-         GLyVTOn2ZUICM1g+vIhTFkaPUkss/VMGodQyNn2K5d0K7D46D/lmJVz7WgmAjhx50SPG
-         eusJcLM3ESl5s9WRt9EF0DTSAb1wswHyUcRfhvHobGDLQmrKBiZ8pgACW5X8hybcF0jw
-         fRSw==
+        bh=G7t60vDpglsBHCmAmlybKd04G36JOxRBGBizt48yxWg=;
+        b=KWICTmE6NJO9weCBlZUnGlGljaSiuk6R39tYYCWdc0DeefF7eyIVvQfuJcmDicCPyl
+         jH37jR29E9oaYYkcs5Vrrw+FoS6Cs88tMJdU4oesm8eqQbo2OEFpuI8JF0AgfX5IcD5w
+         LmF7SH2lGAfxL0trfwCOq58kgIh1UD9X6QL/rE7Tl2pAjdi9kJJnL6sVE/1KidvuUFMB
+         qYKVXjpNNlXbsDQL4tqIdDH69HB5b4iRRU11tTPMmzBl3rC2eKjJuZC8IaB7L0ouVJ2k
+         fWqv2j0f9mJaqQVuehLTUkedwSPiAIgbgGjBgrgpwSbDgF2Z7mTEW7p24F0VzabpUp7+
+         e1iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710758759; x=1711363559;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QT8ZXpFVpdTpbU/Iue/RRtJuRFnBjnoJvr+qPsVlQ40=;
-        b=MVCUGIhdmiRHvC7ERLRHoPAb29fUmm4KO5GoMDw8XbHynqh7/sWonhA9ESuDLHUWGD
-         KKmNPeREToe/lJOTzlWlUlDi4/StvromIj8WZaUWrokVsZobhsh+5k95b0466CqiXPsk
-         pSgQaZTG4SeUJOhHIsFQ9j9ln47H0vhrF6UYrestFfvj8NFL4vhp7Ysa0JV83icG+j00
-         iaWeWSoZGW/bj25AmaIrMjehzF6YQyeLlBrONeyY79pPpDpKaHa8qJ312ugzrHCLguo4
-         2gVs4KZBGudPUsRm5XWprA6ICkCAMh1WpFQ39SE2vKSSk2enQSba8Xax7szexYBmSjcC
-         5KUA==
-X-Forwarded-Encrypted: i=1; AJvYcCWznYfRZe42rTo9RmWaTLV8E2WjB1TLEablhc6QogxjQMUUMOHUi1p4DGfl1wUwt7DS2j0afwes59vR+sX2jhSZEJyC+PmoOqrFnCT1
-X-Gm-Message-State: AOJu0YxVKhObomaa0fApJpDNHLnGy5zs6fBZgOiLFmdwSz2V91HldneN
-	0dz1qUi8kRvXjX5VvlP+A5LKtU0nSoppoz2KpUWo0EI13ppArlCMWISJVixb0Dt2cy/9Ogy0pqs
-	I
-X-Google-Smtp-Source: AGHT+IFPJHgyGW8eWsjDqZVT5V0Yr6Jl+8ZG3GAIH6rvmehrSUpZJRzmZ6+jGP8apXMV0anVvWUU5w==
-X-Received: by 2002:a17:907:961a:b0:a46:3785:4adc with SMTP id gb26-20020a170907961a00b00a4637854adcmr9600678ejc.57.1710758759368;
-        Mon, 18 Mar 2024 03:45:59 -0700 (PDT)
-Received: from localhost (046125249120.public.t-mobile.at. [46.125.249.120])
-        by smtp.gmail.com with ESMTPSA id g14-20020a170906198e00b00a46d049ff63sm114217ejd.21.2024.03.18.03.45.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Mar 2024 03:45:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710758966; x=1711363766;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G7t60vDpglsBHCmAmlybKd04G36JOxRBGBizt48yxWg=;
+        b=M1x3KvnsadPb+a+4ofQdwu2dpvhW4c1PaLl0CTGCxd0pQ12P2LgvdhpLH59cFm6os/
+         FvW2Nzba3YAs4oZTyu6gp3e95zfpSVZi2mk9pxmH5iCcm9O279ShfTzhGPlQaypEceGv
+         q4W2PSFVln9IIEUDUH97mo5Nk2Bb7Io+pwr0iwTr7l3hmPcsHCvNAgN1rWTjdkuLEPfe
+         hqE/7X9BsvSFCnygUd/0CDeaash/us8sbj3qJ7+VW2XQ7rW+RVjfI3ajJK+Pjt8n7XrU
+         uj54auZmkKT87OGz2JiPx5Ip4Ts5fQLeH3QZfUuSYIqPQQ6DsvDkX7cy4s1p+mj8Pku4
+         3CNA==
+X-Forwarded-Encrypted: i=1; AJvYcCXoVOSBo90PllSsQ5I/3runlV2d+Y82O89DDCtPResxNvXPkytT320meBx71RzyJNspV6VOLk6QCO9fMH8fTi4zaqo1Ysrq5zYwnoYe
+X-Gm-Message-State: AOJu0YxsbOa7KLnj66estAZ7lqZeHI0dy2LvXa2IJKOdR0Jd7mLDESV1
+	79CB5X2MsmPF/PO3JRuFqIObD/FnkGWOZn0IFfcm2Pk/ob684YecUvo8HiAT6oUxSnqM6KROW3p
+	KPeQ=
+X-Google-Smtp-Source: AGHT+IFRTKwvp4NAQQcRK/V8ww6cX01HYijcJTkmICr2vjDu8vieDPT+5eRXaPiSiQ6RMubCEtHFHA==
+X-Received: by 2002:a05:600c:1987:b0:413:ee55:8bba with SMTP id t7-20020a05600c198700b00413ee558bbamr5642354wmq.4.1710758965961;
+        Mon, 18 Mar 2024 03:49:25 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-82-135-80-212.dynamic.mnet-online.de. [82.135.80.212])
+        by smtp.gmail.com with ESMTPSA id o5-20020a05600c510500b00412cfdc41f7sm4899567wms.0.2024.03.18.03.49.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Mar 2024 03:49:25 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: thorsten.blum@toblux.com
+Cc: David.Laight@ACULAB.COM,
+	bp@alien8.de,
+	dave.hansen@intel.com,
+	dave.hansen@linux.intel.com,
+	hpa@zytor.com,
+	linux-kernel@vger.kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	tglx@linutronix.de,
+	wei.liu@kernel.org,
+	x86@kernel.org
+Subject: [RESEND PATCH v3] x86/apic: Improve data types to fix Coccinelle warnings
+Date: Mon, 18 Mar 2024 11:47:23 +0100
+Message-ID: <20240318104721.117741-3-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240308230228.3161-2-thorsten.blum@toblux.com>
+References: <20240308230228.3161-2-thorsten.blum@toblux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 18 Mar 2024 11:45:57 +0100
-Message-Id: <CZWTD7P4CE12.1ZUNPF2WFTBHR@fairphone.com>
-Cc: "Konrad Dybcio" <konrad.dybcio@linaro.org>, "Vinod Koul"
- <vkoul@kernel.org>, "Kishon Vijay Abraham I" <kishon@kernel.org>, "Rob
- Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Abhinav Kumar" <quic_abhinavk@quicinc.com>,
- <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFT 0/7] arm64: qcom: allow up to 4 lanes for the Type-C
- DisplayPort Altmode
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-To: "Bjorn Andersson" <andersson@kernel.org>, "Neil Armstrong"
- <neil.armstrong@linaro.org>
-X-Mailer: aerc 0.15.2
-References: <20240229-topic-sm8x50-upstream-phy-combo-typec-mux-v1-0-07e24a231840@linaro.org> <CZUHV429NTF7.1GW9TN9NXB4J1@fairphone.com> <7a7aa05f-9ae6-4ca0-a423-224fc78fbd0c@linaro.org> <liah4xvkfattlen7s2zi3vt2bl5pbbxqgig3k5ljqpveoao656@iacnommxkjkt>
-In-Reply-To: <liah4xvkfattlen7s2zi3vt2bl5pbbxqgig3k5ljqpveoao656@iacnommxkjkt>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Sat Mar 16, 2024 at 5:01 PM CET, Bjorn Andersson wrote:
-> On Fri, Mar 15, 2024 at 06:35:15PM +0100, Neil Armstrong wrote:
-> > On 15/03/2024 18:19, Luca Weiss wrote:
-> > > On Thu Feb 29, 2024 at 2:07 PM CET, Neil Armstrong wrote:
-> > > > Register a typec mux in order to change the PHY mode on the Type-C
-> > > > mux events depending on the mode and the svid when in Altmode setup=
-.
-> > > >=20
-> > > > The DisplayPort phy should be left enabled if is still powered on
-> > > > by the DRM DisplayPort controller, so bail out until the DisplayPor=
-t
-> > > > PHY is not powered off.
-> > > >=20
-> > > > The Type-C Mode/SVID only changes on plug/unplug, and USB SAFE stat=
-es
-> > > > will be set in between of USB-Only, Combo and DisplayPort Only so
-> > > > this will leave enough time to the DRM DisplayPort controller to
-> > > > turn of the DisplayPort PHY.
-> > > >=20
-> > > > The patchset also includes bindings changes and DT changes.
-> > > >=20
-> > > > This has been successfully tested on an SM8550 board, but the
-> > > > Thinkpad X13s deserved testing between non-PD USB, non-PD DisplayPo=
-rt,
-> > > > PD USB Hubs and PD Altmode Dongles to make sure the switch works
-> > > > as expected.
-> > > >=20
-> > > > The DisplayPort 4 lanes setup can be check with:
-> > > > $ cat /sys/kernel/debug/dri/ae01000.display-controller/DP-1/dp_debu=
-g
-> > > > 	name =3D msm_dp
-> > > > 	drm_dp_link
-> > > > 		rate =3D 540000
-> > > > 		num_lanes =3D 4
-> > >=20
-> > > Hi Neil,
-> > >=20
-> > > I tried this on QCM6490/SC7280 which should also support 4-lane DP bu=
-t I
-> > > haven't had any success so far.
-> > >=20
-> [..]
-> > > [ 1775.563969] [drm:dp_ctrl_link_train] *ERROR* max v_level reached
-> > > [ 1775.564031] [drm:dp_ctrl_link_train] *ERROR* link training #1 fail=
-ed. ret=3D-11
-> >=20
-> > Interesting #1 means the 4 lanes are not physically connected to the ot=
-her side,
-> > perhaps QCM6490/SC7280 requires a specific way to enable the 4 lanes in=
- the PHY,
-> > or some fixups in the init tables.
-> >=20
->
-> I tested the same on rb3gen2 (qcs6490) a couple of weeks ago, with the
-> same outcome. Looking at the AUX reads, after switching to 4-lane the
-> link training is failing on all 4 lanes, in contrast to succeeding only
-> on the first 2 if you e.g. forget to mux the other two.
+Given that acpi_pm_read_early() returns a u32 (masked to 24 bits), several
+variables that store its return value are improved by adjusting their data
+types from unsigned long to u32. Specifically, change deltapm's type from
+long to u32 because its value fits into 32 bits and it cannot be negative.
 
-Good to know it's not just my device then ;)
+These data type improvements resolve the following two Coccinelle/
+coccicheck warnings reported by do_div.cocci:
 
->
-> As such, my expectation is that there's something wrong in the QMP PHY
-> (or possibly redriver) for this platform.
+arch/x86/kernel/apic/apic.c:734:1-7: WARNING: do_div() does a 64-by-32
+division, please consider using div64_long instead.
 
-Since I imagine rb3gen2 uses a different redriver setup compared to FP5,
-I wouldn't say that's at fault for now? And at least my ptn36502 driver
-only has very little difference between 2-lane and 4-lane setup, only
-setting the mode to DP-only and 4-lane (vs USB+DP and 2-lane), nothing
-else.
+arch/x86/kernel/apic/apic.c:742:2-8: WARNING: do_div() does a 64-by-32
+division, please consider using div64_long instead.
 
-Regards
-Luca
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+Changes in v2:
+- Revert changing do_div() to div64_ul() after feedback from David Laight
+- Use u32 instead of unsigned long to fix Coccinelle warnings
+- Update patch title and description
 
->
-> Regards,
-> Bjorn
+Changes in v3:
+- Adjust patch summary and description after feedback from Dave Hansen
+---
+ arch/x86/kernel/apic/apic.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 4667bc4b00ab..184e1843620d 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -664,7 +664,7 @@ void lapic_update_tsc_freq(void)
+ static __initdata int lapic_cal_loops = -1;
+ static __initdata long lapic_cal_t1, lapic_cal_t2;
+ static __initdata unsigned long long lapic_cal_tsc1, lapic_cal_tsc2;
+-static __initdata unsigned long lapic_cal_pm1, lapic_cal_pm2;
++static __initdata u32 lapic_cal_pm1, lapic_cal_pm2;
+ static __initdata unsigned long lapic_cal_j1, lapic_cal_j2;
+ 
+ /*
+@@ -674,7 +674,7 @@ static void __init lapic_cal_handler(struct clock_event_device *dev)
+ {
+ 	unsigned long long tsc = 0;
+ 	long tapic = apic_read(APIC_TMCCT);
+-	unsigned long pm = acpi_pm_read_early();
++	u32 pm = acpi_pm_read_early();
+ 
+ 	if (boot_cpu_has(X86_FEATURE_TSC))
+ 		tsc = rdtsc();
+@@ -699,7 +699,7 @@ static void __init lapic_cal_handler(struct clock_event_device *dev)
+ }
+ 
+ static int __init
+-calibrate_by_pmtimer(long deltapm, long *delta, long *deltatsc)
++calibrate_by_pmtimer(u32 deltapm, long *delta, long *deltatsc)
+ {
+ 	const long pm_100ms = PMTMR_TICKS_PER_SEC / 10;
+ 	const long pm_thresh = pm_100ms / 100;
+@@ -710,7 +710,7 @@ calibrate_by_pmtimer(long deltapm, long *delta, long *deltatsc)
+ 	return -1;
+ #endif
+ 
+-	apic_printk(APIC_VERBOSE, "... PM-Timer delta = %ld\n", deltapm);
++	apic_printk(APIC_VERBOSE, "... PM-Timer delta = %u\n", deltapm);
+ 
+ 	/* Check, if the PM timer is available */
+ 	if (!deltapm)
+-- 
+2.44.0
 
