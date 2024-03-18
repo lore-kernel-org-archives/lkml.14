@@ -1,139 +1,140 @@
-Received: from fhigh3-smtp.messagingengine.com (fhigh3-smtp.messagingengine.com [103.168.172.154])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357B45789B;
-	Mon, 18 Mar 2024 19:58:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7463657886;
+	Mon, 18 Mar 2024 19:58:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710791915; cv=none; b=q1WfY9Ziag0ZVExJp1LZ0YHHP7b/4YEIuVNVSIIO/mdVnop7hwIzxV0tFgsO32worAwTh3jesR9EZwt5F9tXeVHo1pFb2E4vVGFac2qQppa17u9R8u2YFrlg16KKhZDmhjRWMPXl9/D4xR5kOcUZli+LmSyZwUyHRp6bcuyRCIQ=
+	t=1710791926; cv=none; b=hKTbdmmWM4p9PBr/5N4Rl3DDvqwIDyIkaz215SEa06neXFmLmSDq8xme9SxwC0P8SAMdh0osbWoPdvhPPgLgiRpTVn/j8OgHwUqldxGqfZpATZuEQvb/19ufNxHDfb/EPtjAl31jv0xmRmpOFltqWZwZqCHMrS3FLfi5VcCjWnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710791915; c=relaxed/simple;
-	bh=pzuE4YP2rRS8OHKAZHUUC1TXYvLCTQj9bof0aUirCXA=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=C+ueilsc3BxCySKxOaWb3+nt2wwRIw+vJq/SUhsSRGbTIAvILmgaKj0KbzoJ/i13GFfwJpNQ0xV0UsDhpHNxsk7oQ9kfgS9alueYSNV9nt2Cf5HsuEreFrTYpKjwAiL1m/UbxGkzDG16rHnwkbPO6uLQ66U3m1g97eLxECpIs4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=S3WiUdBG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jnAYL+N6; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1710791926; c=relaxed/simple;
+	bh=BQx6VNvTlzK5oQIvrUO32TBVz9kFRTi0gekP4j1rY5I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WEa+ZdomfYpGLE0HFSG2BaIsDhzXN1bWqVWvkjGq/JTRumLuIVJ1BcpdZ734ba3pyjybBGw8KF8K1DfIdA1EnYOgU4OMNmetyoItXV/CzVnK06NP9dwARmCliDYRjcEdNj0iKBGlxZveGSbidbPyaCSQs2nSqwR6fYva8qp2NUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JELimW9i; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="S3WiUdBG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jnAYL+N6"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 237A81140111;
-	Mon, 18 Mar 2024 15:58:32 -0400 (EDT)
-Received: from imap41 ([10.202.2.91])
-  by compute2.internal (MEProxy); Mon, 18 Mar 2024 15:58:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1710791912;
-	 x=1710878312; bh=A2axe0Z4A4luBsCO2YW01p36HbVjlyDUfOi4kr5ev4Q=; b=
-	S3WiUdBGmQMdEkiwntifAy/gwZjjJC/sJt/WKAgo0hYJfkOvtP11hwjMqHMY+QrG
-	AEjGfbhwfdHjEJi98XHpoHj2ILx6spdH3HJf9Tthkn8Dy+5jwGbTwQhIBzqtCmLb
-	p8xsitFkhhaI9oQR4oOnea73L0hMcNwq5lFIyL35h12REULcGVZrV9cI3RGoQ9yj
-	igVOwcPyPkEr5zVnEogS6EHBA9toHm6+QSqlUsZV594YI3f0HCJ0PfUKUHeIIqrX
-	/tLzEK/jQXfOqwOQ6XENoD4kKhenNs/7y4CXCaUjAn+yYXkukyRs5VvM1wMWqDCU
-	KxjxDV3uEg+HZI6XIWwV2A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1710791912; x=
-	1710878312; bh=A2axe0Z4A4luBsCO2YW01p36HbVjlyDUfOi4kr5ev4Q=; b=j
-	nAYL+N6nrcNjvahTnrbtCchgdVyApvvBLLxGQ7iwVpRsOg+NN6QZb2s8KI6WwcKU
-	EPRggNcnWL1zwySjesA9rYH9FdfcczrQ5F0QtwxCjIZcmzgu6BcpfNkr8tKByLeu
-	Au80uH4CIz8IyXRgAUen9FKqFyz7JMUw1KX+mCzsaEs6dg926s/Kj4h2piTJnt6O
-	7wEyFye7AbqFIyf7JjLZf3xCnmoQi6Q59p57tQyf4M7xnoaXDzZ7J5BR0OaDM1L0
-	vOFG8u4G9c90BWuzTc/GRXlTcz+0j6BqqkuYOz0m+C1erTzTiHaYvpOSaVBCb3LO
-	JnP+d56RMmNXYyxeQQlNA==
-X-ME-Sender: <xms:55z4ZczhdLVfUx2oiiuWqxFjgKiL6U04mDLjKmxACO3sNIBv20gt_g>
-    <xme:55z4ZQSIp50GArJbtICRb--0FsiSCeY_91P4KVXVy2DrVxRRiQZmOsonNbEKlGl2N
-    6Khn5MooxwI9UgZpz4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrkeejgddufeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfn
-    uhhkvgculfhonhgvshdfuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrth
-    htvghrnhepueekiedtfeethfeuudegiedtveffteefueeiveejieegkeehgfeghfffgfek
-    teevnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:55z4ZeXZmHeYNnvNdKf6gtZS--7-CUiW3jenO7YWIzWQgasx10dYYg>
-    <xmx:55z4Zajw1_n28oi9QnV0lwsNqjxu_miWilCBD_gFXpT-Zo-uKeduMA>
-    <xmx:55z4ZeArTCpGhIqTejaatkIykB-n8Pj8crzvWs4iJcY1QDUCQudliQ>
-    <xmx:55z4ZbKKQKVkOgf3Vj1xqVyCCel_C1vm1k6dGDLRR_sV9qUbhgRHfA>
-    <xmx:6Jz4ZZPU2OKQAe8xY4iFEdmVEMnwWdqMq0C_fucLu3Uy0qdsGm9ndA>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id D07532340081; Mon, 18 Mar 2024 15:58:31 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-300-gdee1775a43-fm-20240315.001-gdee1775a
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JELimW9i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710791925; x=1742327925;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=BQx6VNvTlzK5oQIvrUO32TBVz9kFRTi0gekP4j1rY5I=;
+  b=JELimW9ic695Y73W0STnxjU3SGjMVDjcwY4yU5kh7jMpMTuEoRClNC8A
+   kiFr2F0e+cPIeIWYr6ooCx+NxMdCBHqE/4QJu+Kfh2jTRKix1a/zbThsu
+   fQuFyAnuaLIIE200s3KLproULhdpc+daOJbJHTjzqgvPB3pd2yu5UFnox
+   TrH2H+83s8srZLRZtaNCjWtbGSu4KGsFx8BJkaMkL08X1pryDJic9YekM
+   UB+tRlVu6ix3bJwLGq9avIwLGsVYTs4eStChmsxjp6bdpEyyLn2JrUQst
+   u9fQRE4QWZ5dpL4Y44kdC/yxhinGS//8wS48RGiTpNyb03P4tiA5swFgT
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="16776143"
+X-IronPort-AV: E=Sophos;i="6.07,135,1708416000"; 
+   d="scan'208";a="16776143"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 12:58:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="937060632"
+X-IronPort-AV: E=Sophos;i="6.07,135,1708416000"; 
+   d="scan'208";a="937060632"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 18 Mar 2024 12:58:39 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id C6F03815; Mon, 18 Mar 2024 21:58:38 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: alsa-devel@alsa-project.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-sound@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Shengjiu Wang <shengjiu.wang@gmail.com>,
+	Xiubo Li <Xiubo.Lee@gmail.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Nicolin Chen <nicoleotsuka@gmail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] ASoC: fsl: imx-es8328: Switch to using gpiod API
+Date: Mon, 18 Mar 2024 21:58:37 +0200
+Message-ID: <20240318195837.180069-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <90fe07e4-2945-4b78-971c-1012615e2fea@app.fastmail.com>
-In-Reply-To: <9ccb144f-3e6e-0ae7-496e-de4cf75171e5@linux.intel.com>
-References: <20240310065408.63703-1-luke@ljones.dev>
- <9ccb144f-3e6e-0ae7-496e-de4cf75171e5@linux.intel.com>
-Date: Tue, 19 Mar 2024 08:58:10 +1300
-From: "Luke Jones" <luke@ljones.dev>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
- "Hans de Goede" <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 0/1] asus-wmi: add support for 2024 ROG Mini-LED
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, 19 Mar 2024, at 1:09 AM, Ilpo J=C3=A4rvinen wrote:
-> On Sun, 10 Mar 2024, Luke D. Jones wrote:
->=20
-> > Changelog:
-> > - v1
-> >   - Add missing value conversion for new mini-led
-> >   - Catch and ignore a bogus read return if set to "off"
-> >=20
-> > Luke D. Jones (1):
-> >   platform/x86: asus-wmi: add support for 2024 ROG Mini-LED
->=20
-> Hi Luke,
->=20
-> I've small troubles in following the patch version in your recent batc=
-h=20
-> of patches. Could you please list which of these are the versions you=20
-> consider the correct / "latest" one:
->=20
-> https://patchwork.kernel.org/project/platform-driver-x86/list/?submitt=
-er=3D193685
->=20
+This updates the driver to gpiod API, and removes yet another use of
+of_get_named_gpio().
 
-Yes very sorry about that. The following are latest:
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ sound/soc/fsl/imx-es8328.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-https://patchwork.kernel.org/project/platform-driver-x86/patch/202403100=
-55312.11293-2-luke@ljones.dev/
+diff --git a/sound/soc/fsl/imx-es8328.c b/sound/soc/fsl/imx-es8328.c
+index 6f0d031c1d5f..ad915c55cc35 100644
+--- a/sound/soc/fsl/imx-es8328.c
++++ b/sound/soc/fsl/imx-es8328.c
+@@ -3,7 +3,7 @@
+ // Copyright 2012 Freescale Semiconductor, Inc.
+ // Copyright 2012 Linaro Ltd.
+ 
+-#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
+@@ -23,7 +23,7 @@ struct imx_es8328_data {
+ 	struct snd_soc_card card;
+ 	char codec_dai_name[DAI_NAME_SIZE];
+ 	char platform_name[DAI_NAME_SIZE];
+-	int jack_gpio;
++	struct gpio_desc *jack_gpiod;
+ };
+ 
+ static struct snd_soc_jack_gpio headset_jack_gpios[] = {
+@@ -54,8 +54,8 @@ static int imx_es8328_dai_init(struct snd_soc_pcm_runtime *rtd)
+ 					struct imx_es8328_data, card);
+ 	int ret = 0;
+ 
+-	/* Headphone jack detection */
+-	if (gpio_is_valid(data->jack_gpio)) {
++	if (data->jack_gpiod) {
++		/* Headphone jack detection */
+ 		ret = snd_soc_card_jack_new_pins(rtd->card, "Headphone",
+ 						 SND_JACK_HEADSET | SND_JACK_BTN_0,
+ 						 &headset_jack,
+@@ -64,7 +64,7 @@ static int imx_es8328_dai_init(struct snd_soc_pcm_runtime *rtd)
+ 		if (ret)
+ 			return ret;
+ 
+-		headset_jack_gpios[0].gpio = data->jack_gpio;
++		headset_jack_gpios[0].desc = data->jack_gpiod;
+ 		ret = snd_soc_jack_add_gpios(&headset_jack,
+ 					     ARRAY_SIZE(headset_jack_gpios),
+ 					     headset_jack_gpios);
+@@ -174,7 +174,11 @@ static int imx_es8328_probe(struct platform_device *pdev)
+ 
+ 	data->dev = dev;
+ 
+-	data->jack_gpio = of_get_named_gpio(pdev->dev.of_node, "jack-gpio", 0);
++	data->jack_gpiod = devm_gpiod_get_optional(dev, "jack");
++	if (IS_ERR(data->jack_gpiod)) {
++		ret = PTR_ERR(data->jack_gpiod);
++		goto put_device;
++	}
+ 
+ 	/*
+ 	 * CPU == Platform
+-- 
+2.43.0.rc1.1.gbec44491f096
 
-https://patchwork.kernel.org/project/platform-driver-x86/patch/202403100=
-55750.13160-2-luke@ljones.dev/
-
-https://patchwork.kernel.org/project/platform-driver-x86/patch/202403100=
-61715.16531-1-luke@ljones.dev/
-
-https://patchwork.kernel.org/project/platform-driver-x86/patch/202403100=
-65408.63703-2-luke@ljones.dev/
-
-https://patchwork.kernel.org/project/platform-driver-x86/patch/202403102=
-33722.30884-1-luke@ljones.dev/
-
-
-> ?
->=20
-> While Hans will be handling the 6.10 cycle, I could review the latest=20
-> versions and close the wrong ones so it will be easier for Hans to pic=
-k up=20
-> the correct ones.
->=20
-> --=20
-> i.
->=20
->=20
