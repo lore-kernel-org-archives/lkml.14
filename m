@@ -1,202 +1,121 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37CDD3A28B
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 17:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2458B3B18D;
+	Mon, 18 Mar 2024 17:41:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710783677; cv=none; b=TSxHex47R08HtoMGVkKx3hsFlwKqNKBQRsYpzLH5VFIYrrAPRu7UBMdYTYG1cFnmlWw80p10SzfhQSy6puo9AoW0VipqwrO6YOKYY2u1yxGHmoVeFuiAsjshwLJqXIc+u6fL/vIIE5OfBUONtksq9ouUiw3DnfFfAaxeOIEMD7U=
+	t=1710783687; cv=none; b=WmY8K0vqNiDTm1I0m+CllueLt3VTBCV4VT++4m9VqzqGg4F7Zqj+klbDo2R+O2RUboq+zwwTSHZHaQlhWNAz6XMIrWhR+vJqO0oqTdtutpSemqP/vGcauVTRejlINFFn5evdGpmLqQBMo/+2zwo2Tu8MDJbXIQzGYZwWGG7oXWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710783677; c=relaxed/simple;
-	bh=05oiR2lU2TsDEcoK5/SsgXTOvq07hiupNFthPxkAt/Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A9aancjDocL7pG4moo3/TSEMBdXcJSR/48++G401YemNL4qTfdes35VyIGk4vmwKb3IrzKm40bD+qEYD/f/oLqkpe+NqvGOH3JZSb5OnqfNQhgUu93LL7XtRE4Z4/zFd/6qYDujmAn0tE49NyddsScFczCzfLemIFBQy+9831sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=KA0YjSiy; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1710783687; c=relaxed/simple;
+	bh=AeD+xtd/SWdYD0ybNwABImyLxfcVppzYgjid8FtIZMM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UM/R6iNU5JE85ltxWuIHad2L7hFmQhXFC/P0gZlB1ZNV6W0jaS1UDdo4ct6AqOG+y5QrcoiLdR+NwvJ6VRcHiwHRkEyeauKiQaMIovHjME82bthEX0DAkcWWkikGT142umnGHx+xBF582XyJ7yZ9wIkvp6ENlrT90I7CTh4N9sY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X8mCslIJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="KA0YjSiy"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 788FC7E9;
-	Mon, 18 Mar 2024 18:40:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1710783646;
-	bh=05oiR2lU2TsDEcoK5/SsgXTOvq07hiupNFthPxkAt/Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KA0YjSiy3NPZm8PF5+ZqDwPxUQoNwb6o57uy+1iXHwqDvaZkCN8B/ws0rHpxjXV45
-	 3Lg8PBe7MyNVRd1BsDXfwAIVCwgVKZ+jVOrnL2zZwaycmt6lLcHmpW8fU1dBx5P1gQ
-	 GKZBVIQmf8aFinvN1H4uvUeT+gmcEXKq2ZKHywc8=
-Date: Mon, 18 Mar 2024 19:41:10 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	dri-devel@lists.freedesktop.org, David Airlie <airlied@gmail.com>,
-	linux-kernel@vger.kernel.org, Michal Simek <michal.simek@amd.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 4/6] drm: zynqmp_dp: Split off several helper functions
-Message-ID: <20240318174110.GK13682@pendragon.ideasonboard.com>
-References: <20240315230916.1759060-1-sean.anderson@linux.dev>
- <20240315230916.1759060-5-sean.anderson@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X8mCslIJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64606C43390;
+	Mon, 18 Mar 2024 17:41:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710783687;
+	bh=AeD+xtd/SWdYD0ybNwABImyLxfcVppzYgjid8FtIZMM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=X8mCslIJIo1YZdYA2qtn6bHDe/Z6vt63FyeHlUC1LTEksaNYluGTpDK36t3ARGjRK
+	 PO7VNeiHWTW3oRswcZEaMqwfkMtglb1ZGo4SRPuEORJoyVlugPmgVzZLgTWALaL/2j
+	 WSn3oU3anH1itPzPuS9RS/WJj8LmpFVK/YCfYE6TlaYV+YPtmYnmOEzEiLmg6MF3Os
+	 Bj5WQYDGPB2bReNlXnYd4nFeEuOm1rYn1USDlASwpRF/U0+vLB5RqonzpY4h3Qs2LA
+	 0HZTttew4XXeR3mY6SV8EK46ra+txecW8WTswu2V1LgA976K5JXd29OG4f61JqpeQI
+	 tUstXPO9z4r7w==
+From: Daniel Bristot de Oliveira <bristot@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [GIT PULL] tracing/tools: Updates for 6.9
+Date: Mon, 18 Mar 2024 18:41:13 +0100
+Message-ID: <20240318174116.420584-1-bristot@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240315230916.1759060-5-sean.anderson@linux.dev>
+Content-Transfer-Encoding: 8bit
 
-Hi Sean,
+Steven,
 
-Thank you for the patch.
+Tracing tooling updates for 6.9
 
-On Fri, Mar 15, 2024 at 07:09:14PM -0400, Sean Anderson wrote:
-> In preparation for supporting compliance testing, split off several
-> helper functions. No functional change intended.
-> 
-> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-> ---
-> 
->  drivers/gpu/drm/xlnx/zynqmp_dp.c | 49 +++++++++++++++++++++-----------
->  1 file changed, 33 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> index d2dee58e7bf2..24043847dab4 100644
-> --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> @@ -627,6 +627,7 @@ static void zynqmp_dp_adjust_train(struct zynqmp_dp *dp,
->  /**
->   * zynqmp_dp_update_vs_emph - Update the training values
->   * @dp: DisplayPort IP core structure
-> + * @train_set: A set of training values
->   *
->   * Update the training values based on the request from sink. The mapped values
->   * are predefined, and values(vs, pe, pc) are from the device manual.
-> @@ -634,12 +635,12 @@ static void zynqmp_dp_adjust_train(struct zynqmp_dp *dp,
->   * Return: 0 if vs and emph are updated successfully, or the error code returned
->   * by drm_dp_dpcd_write().
->   */
-> -static int zynqmp_dp_update_vs_emph(struct zynqmp_dp *dp)
-> +static int zynqmp_dp_update_vs_emph(struct zynqmp_dp *dp, u8 *train_set)
->  {
->  	unsigned int i;
->  	int ret;
->  
-> -	ret = drm_dp_dpcd_write(&dp->aux, DP_TRAINING_LANE0_SET, dp->train_set,
-> +	ret = drm_dp_dpcd_write(&dp->aux, DP_TRAINING_LANE0_SET, train_set,
->  				dp->mode.lane_cnt);
->  	if (ret < 0)
->  		return ret;
-> @@ -647,7 +648,7 @@ static int zynqmp_dp_update_vs_emph(struct zynqmp_dp *dp)
->  	for (i = 0; i < dp->mode.lane_cnt; i++) {
->  		u32 reg = ZYNQMP_DP_SUB_TX_PHY_PRECURSOR_LANE_0 + i * 4;
->  		union phy_configure_opts opts = { 0 };
-> -		u8 train = dp->train_set[i];
-> +		u8 train = train_set[i];
->  
->  		opts.dp.voltage[0] = (train & DP_TRAIN_VOLTAGE_SWING_MASK)
->  				   >> DP_TRAIN_VOLTAGE_SWING_SHIFT;
-> @@ -691,7 +692,7 @@ static int zynqmp_dp_link_train_cr(struct zynqmp_dp *dp)
->  	 * So, This loop should exit before 512 iterations
->  	 */
->  	for (max_tries = 0; max_tries < 512; max_tries++) {
-> -		ret = zynqmp_dp_update_vs_emph(dp);
-> +		ret = zynqmp_dp_update_vs_emph(dp, dp->train_set);
->  		if (ret)
->  			return ret;
->  
-> @@ -756,7 +757,7 @@ static int zynqmp_dp_link_train_ce(struct zynqmp_dp *dp)
->  		return ret;
->  
->  	for (tries = 0; tries < DP_MAX_TRAINING_TRIES; tries++) {
-> -		ret = zynqmp_dp_update_vs_emph(dp);
-> +		ret = zynqmp_dp_update_vs_emph(dp, dp->train_set);
->  		if (ret)
->  			return ret;
->  
-> @@ -779,28 +780,28 @@ static int zynqmp_dp_link_train_ce(struct zynqmp_dp *dp)
->  }
->  
->  /**
-> - * zynqmp_dp_train - Train the link
-> - * @dp: DisplayPort IP core structure
-> + * zynqmp_dp_setup() - Set up major link parameters
-> + * @bw_code: The link bandwidth as a multiple of 270 MHz
-> + * @lane_cnt: The number of lanes to use
-> + * @enhanced: Use enhanced framing
-> + * @downspread: Enable spread-spectrum clocking
->   *
-> - * Return: 0 if all trains are done successfully, or corresponding error code.
-> + * Return: 0 on success, or -errno on failure
->   */
-> -static int zynqmp_dp_train(struct zynqmp_dp *dp)
-> +static int zynqmp_dp_setup(struct zynqmp_dp *dp, u8 bw_code, u8 lane_cnt,
-> +			   bool enhanced, bool downspread)
->  {
->  	u32 reg;
-> -	u8 bw_code = dp->mode.bw_code;
-> -	u8 lane_cnt = dp->mode.lane_cnt;
->  	u8 aux_lane_cnt = lane_cnt;
-> -	bool enhanced;
->  	int ret;
->  
->  	zynqmp_dp_write(dp, ZYNQMP_DP_LANE_COUNT_SET, lane_cnt);
-> -	enhanced = drm_dp_enhanced_frame_cap(dp->dpcd);
->  	if (enhanced) {
->  		zynqmp_dp_write(dp, ZYNQMP_DP_ENHANCED_FRAME_EN, 1);
->  		aux_lane_cnt |= DP_LANE_COUNT_ENHANCED_FRAME_EN;
->  	}
->  
-> -	if (dp->dpcd[3] & 0x1) {
-> +	if (downspread) {
->  		zynqmp_dp_write(dp, ZYNQMP_DP_DOWNSPREAD_CTL, 1);
->  		drm_dp_dpcd_writeb(&dp->aux, DP_DOWNSPREAD_CTRL,
->  				   DP_SPREAD_AMP_0_5);
-> @@ -843,8 +844,24 @@ static int zynqmp_dp_train(struct zynqmp_dp *dp)
->  	}
->  
->  	zynqmp_dp_write(dp, ZYNQMP_DP_PHY_CLOCK_SELECT, reg);
-> -	ret = zynqmp_dp_phy_ready(dp);
-> -	if (ret < 0)
-> +	return zynqmp_dp_phy_ready(dp);
-> +}
-> +
-> +
-> +/**
-> + * zynqmp_dp_train - Train the link
-> + * @dp: DisplayPort IP core structure
-> + *
-> + * Return: 0 if all trains are done successfully, or corresponding error code.
-> + */
-> +static int zynqmp_dp_train(struct zynqmp_dp *dp)
-> +{
-> +	int ret;
-> +
-> +	ret = zynqmp_dp_setup(dp, dp->mode.bw_code, dp->mode.lane_cnt,
-> +			      drm_dp_enhanced_frame_cap(dp->dpcd),
-> +			      dp->dpcd[3] & 0x1);
+Tracing:
+        - Update makefiles for latency-collector and RTLA,
+          using tools/build/ makefiles like perf does, inheriting
+          its benefits. For example, having a proper way to
+          handle dependencies.
 
-This patch looks OK. Assuming you make correct use of the new functions
-in the next patches,
+        - The timerlat tracer has an interface for any tool to use.
+          rtla timerlat tool uses this interface dispatching its
+          own threads as workload. But, rtla timerlat could also be
+          used for any other process. So, add 'rtla timerlat -U'
+          option, allowing the timerlat tool to measure the latency of
+          any task using the timerlat tracer interface.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Verification:
+        - Update makefiles for verification/rv, using tools/build/
+          makefiles like perf does, inheriting its benefits.
+          For example, having a proper way to handle dependencies.
 
-On a side note, I think the above could be written
 
-	ret = zynqmp_dp_setup(dp, dp->mode.bw_code, dp->mode.lane_cnt,
-			      drm_dp_enhanced_frame_cap(dp->dpcd),
-			      dp->dpcd[DP_MAX_DOWNSPREAD] & DP_MAX_DOWNSPREAD_0_5);
+Please pull the latest trace-tools-v6.9 tree, which can be found at:
 
-> +	if (ret)
->  		return ret;
->  
->  	zynqmp_dp_write(dp, ZYNQMP_DP_SCRAMBLING_DISABLE, 1);
 
--- 
-Regards,
+  git://git.kernel.org/pub/scm/linux/kernel/git/bristot/linux.git
+trace-tools-v6.9
 
-Laurent Pinchart
+Tag SHA1: 2eb09a97c56af3c27bd9dcebccb495f70d56d5c0
+Head SHA1: 9c63d9f58a42b979a42bcaed534d9246996ac0d9
+
+
+Daniel Bristot de Oliveira (4):
+      tools/tracing: Use tools/build makefiles on latency-collector
+      tools/rtla: Use tools/build makefiles to build rtla
+      tools/verification: Use tools/build makefiles on rv
+      tools/rtla: Add -U/--user-load option to timerlat
+
+----
+ .../tools/rtla/common_timerlat_options.rst         |   6 +
+ tools/tracing/latency/.gitignore                   |   5 +-
+ tools/tracing/latency/Build                        |   1 +
+ tools/tracing/latency/Makefile                     | 105 ++++++++--
+ tools/tracing/latency/Makefile.config              |  30 +++
+ tools/tracing/rtla/.gitignore                      |   7 +-
+ tools/tracing/rtla/Build                           |   1 +
+ tools/tracing/rtla/Makefile                        | 217 +++++++--------------
+ tools/tracing/rtla/Makefile.config                 |  47 +++++
+ tools/tracing/rtla/Makefile.rtla                   |  80 ++++++++
+ tools/tracing/rtla/Makefile.standalone             |  26 +++
+ tools/tracing/rtla/sample/timerlat_load.py         |  74 +++++++
+ tools/tracing/rtla/src/Build                       |  11 ++
+ tools/tracing/rtla/src/timerlat_hist.c             |  16 +-
+ tools/tracing/rtla/src/timerlat_top.c              |  14 +-
+ tools/verification/rv/.gitignore                   |   6 +
+ tools/verification/rv/Build                        |   1 +
+ tools/verification/rv/Makefile                     | 207 +++++++-------------
+ tools/verification/rv/Makefile.config              |  47 +++++
+ tools/verification/rv/Makefile.rv                  |  51 +++++
+ tools/verification/rv/src/Build                    |   4 +
+ 21 files changed, 650 insertions(+), 306 deletions(-)
+ create mode 100644 tools/tracing/latency/Build
+ create mode 100644 tools/tracing/latency/Makefile.config
+ create mode 100644 tools/tracing/rtla/Build
+ create mode 100644 tools/tracing/rtla/Makefile.config
+ create mode 100644 tools/tracing/rtla/Makefile.rtla
+ create mode 100644 tools/tracing/rtla/Makefile.standalone
+ create mode 100644 tools/tracing/rtla/sample/timerlat_load.py
+ create mode 100644 tools/tracing/rtla/src/Build
+ create mode 100644 tools/verification/rv/.gitignore
+ create mode 100644 tools/verification/rv/Build
+ create mode 100644 tools/verification/rv/Makefile.config
+ create mode 100644 tools/verification/rv/Makefile.rv
+ create mode 100644 tools/verification/rv/src/Build
+---------------------------
