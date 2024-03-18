@@ -1,237 +1,373 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2128.outbound.protection.outlook.com [40.107.92.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEE7364AB;
-	Mon, 18 Mar 2024 11:01:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53014328B6;
+	Mon, 18 Mar 2024 11:01:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.128
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710759709; cv=fail; b=jIk4BLSotb0zTBkKPDV7W5umoFRwwmiBkC/I1IFyB+KAS1c6sqOG6e7UHmxq0A7yrBk+z5nRxMGiRUnseeb5C5mxoTULmiFvmBgCaq19pH9VIBbUCA4so5Az6htDiBfCET1ZAqjFzXOnLGCMsGUn13abD4h9UFbLAvLvuV8hLoU=
+	t=1710759711; cv=fail; b=lnZ3yIc7kCFtCueOSV7lkWytLZVwDRE7Z5lcjaw1XWnhG6bSf24u4yui802I7hf7nVYS50RbuXxPY4TzvBKd3sj5lBUxfjLhnPn6FB+QU5reOUXsRr+2/ULeXsWCXf+FlEc0s3Kl5YGZ3kBosIgMHvhs4du24/XL2sXNT/lfNe0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710759709; c=relaxed/simple;
-	bh=HNAIVZuuF9cJZ2UhoYmC1HM66yTLiQDHJBTpQKMkDXE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=msA6q2re4T1EeYkXKC8DxSNA2hHbpv7yUJjZne13+UuIArr5LQLdAw0r5WCXs7mTg9mf5XnL4/TsQXhY6DKzyW0NcVVeSHXw/zf/wOVpu3fhSYjKSUeaNIRiRdtFVy6yv7vkINTT1ArVtMMmlmxaZP+5Mwijqu6TvZ1pdCbm5YE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=W4IIszAC; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=kWj6eI3P; arc=fail smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1710759711; c=relaxed/simple;
+	bh=GM0p4sJZxxCOJGhyRXgi+CSJWdxGl+YFZmAYs4T7Vyc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=K7/q5+0/mq8VOzlh5khaU3aLue3isyQnBNA+eClqG14uSSqanN6Y8wjZdKQ3BF5CSyM4mc54g8774hWnySi1MaawAFql4yl7KSf3IEH2wKlE72cI6JGdMdKkeBC9nbxmvG8RuZM1s542RgAq+2lPX/tOAX4XiO77YEOPVswGRrE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=pSURvjHc; arc=fail smtp.client-ip=40.107.92.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="W4IIszAC";
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="kWj6eI3P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1710759706; x=1742295706;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=HNAIVZuuF9cJZ2UhoYmC1HM66yTLiQDHJBTpQKMkDXE=;
-  b=W4IIszAC8PQ6xfOe7Ft0NBfQkG95UoI6gkODKfpf12c3oeAOSKBa8wlx
-   gRFH9SLuwx7a+uyhMX5bXvb0iudFnbbkREcHNwkH5PScK8+oBNVpERlxL
-   vWjYswJrm5ggwk7lLFbKzlMXfK+z2UPv0VtgsINmcGwaKMUHGn8emZ6ef
-   VuZwYEOHa2DvfobqjQPonGzLBhE9RAhgJvibyRSqEljLpHF9pGO0Ob+p+
-   oigovA6zJC3Bpz2pfzjYl1qUgCetNiERMMlDw5IffH8qyc1leZ1W/Ozkj
-   uyGnnnxP0PUgzU7pVVupKTDU6JdQEGF8R4FBRLKVNACHHmxAU9cHI28kI
-   w==;
-X-CSE-ConnectionGUID: 5m+ti3J/TXSy6z8EqO64Jw==
-X-CSE-MsgGUID: R2KMnYXjQ+29zyScI9GRzA==
-X-IronPort-AV: E=Sophos;i="6.07,134,1708412400"; 
-   d="scan'208";a="18315042"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 18 Mar 2024 04:01:45 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 18 Mar 2024 04:01:15 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.10.215.250)
- by email.microchip.com (10.10.87.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 18 Mar 2024 04:01:15 -0700
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="pSURvjHc"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jgT6GWDtegQgzBl4oUK9vXiKNFxuFP1GUkU15tZoEan2S8QUZWTocj/q46agkwWA3pMG9U/wYWo3BgbPm0gisiMxU66CKushVBs0EFhGDvfa5XqJcQiHBUhttSoMTsabKfF++QLzaTfXZ4xm2CnNwdrAAo5mzBGSd6koxQFYwS3bnUDfCmBI4ISusH+Dbe2yV+MUncPyViwoo4DQgiQhSXCerM9vaAEzPtlA3Gw+BJcgqWve3DE8HesCkztl1apSL4nqBdZTO4buzoZhOf3v92GSL4RtlECcVsaHut6t3ElgiSn0l6ZKsVFUdwm6D9nkTq6yNECxKivV0BcnPssnqA==
+ b=HotgCD2wgCScTwhyShFEDTyDetSVoaJzxtoq3FG3F7QA1txh/Jw/rymR2W1Z5EOn2Y8LSTAkKpKQ1ET/q6+9LwZE/VtHYKmhpBOCvy+0MtUZQxD1aqZVTb6QflGBN7HnNTq86M2hzbuw/D/DkaC+McSVAcrROiR4DhN5rI/Rl9PPlI3Z3FfuyB99YXtAbS3dJ5vGwY63wiCbkZN7OD9OAZ0lHn+qXc/d0G2AzOh4u5TOBcXxBjj1iCkxVE62ZfXtjQtx4USGGen2ZNbtFQTr9mjqmsmNYSvXceFF1yAZo/+UXudA1CCPSJ9CIbWZAp1t9Uk5+UxzFvltypFGT7Idew==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HNAIVZuuF9cJZ2UhoYmC1HM66yTLiQDHJBTpQKMkDXE=;
- b=XEw8J8sanQumD3zjl1yaws2Z2zrNSAAp70xswt68rKJONqhx9i9HEOYmjUQ+c1khMu8M7TgsKLyeGIrmR004RBLlPHl+Gsa/s5aKvE5pZUVYzP3AhFcAGByCbbizeUG+T1cbwpg+L5wZOdbc6BV5X7nRMk2TRKJgMW1Edk7jXeu9gmhkbr5kJdH74Bz8wUat9P4lag0Hd1xHXGY8OfC7NLih/lhNWOaFtYobXlbe6xMj44PRZ1MMirUnD+cS/poccS092+tudhEM7bfHHnuIhXjNEFDxO+p4o+2TP8jEVoXPKDSKIqEOsUq/0iEKjUrxuu6ITZImB48kOTZJ9nTRIA==
+ bh=vZDY5Vcrw+IqpvLuGMjmKB5JmIew6oL1QKwYVqiK9ZQ=;
+ b=JL0iCM2u5+YJVAQxCQUv5U+jIwOaiCIb7nxyWjnrGmNBOaAXRmhXaShc/B5HtsvU6WwC64cLQcfmXfQdOzCIGjTwBsD+5JWc015nWrTxloY66Gro6cj7e/cNsBnGZkue8Ve0eHWOOqO+fPM1LU+hFpru+3ovg76RY59v8YBX2/jaP8UTLn1Kqa2oJyCBMysQfzC8OZ4fu/2TokFaMyEJyaobI+b+eyX99oXX95b3QjxsgJw7VnV4+eR38YvGNQ35p3V4FQHujXMTxGDGwAXy1UKUVRUSLDVQXghK4oOz1M12QYdqGwMjTxG6KcP2X4rhXUc/vGvmxC3e1uncQ8er4g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
- s=selector1;
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HNAIVZuuF9cJZ2UhoYmC1HM66yTLiQDHJBTpQKMkDXE=;
- b=kWj6eI3PNuX5j3+g70+5KS4PMyF55Of8qFcSnSEbPwG6HKNVP07uphybUsfnIx5/zMKcze5sqofbPoRofT7YIRZg8qXYAoytWfekWNq3GTTnn06VlW9EYWUrNV1yFcBhySYry751Jlr6visaDShitbFu8KGAfYG+p9cmSWS2ZgIX/h8MT37kdHicSx5jrOuKksiusWfd0Tt4ipa8UBbK3vGspFiDWGieujJvPAq0l5L2hRmdEg6o3Ht+pVaZik62NCf0igPq5Zbh1ddtTtA2GqlJGwMXv61LfAFi38F5KmFfmd6wdsQVTl2wbG3UD/ecn+7amwYf764VH/9AwpJUAw==
-Received: from SA1PR11MB8278.namprd11.prod.outlook.com (2603:10b6:806:25b::19)
- by SA1PR11MB6823.namprd11.prod.outlook.com (2603:10b6:806:2b0::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.14; Mon, 18 Mar
- 2024 11:01:13 +0000
-Received: from SA1PR11MB8278.namprd11.prod.outlook.com
- ([fe80::f633:b9d4:f539:177d]) by SA1PR11MB8278.namprd11.prod.outlook.com
- ([fe80::f633:b9d4:f539:177d%6]) with mapi id 15.20.7386.015; Mon, 18 Mar 2024
- 11:01:13 +0000
-From: <Parthiban.Veerasooran@microchip.com>
-To: <andrew@lunn.ch>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <horms@kernel.org>, <saeedm@nvidia.com>,
-	<anthony.l.nguyen@intel.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <corbet@lwn.net>,
-	<linux-doc@vger.kernel.org>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<devicetree@vger.kernel.org>, <Horatiu.Vultur@microchip.com>,
-	<ruanjinjie@huawei.com>, <Steen.Hegelund@microchip.com>,
-	<vladimir.oltean@nxp.com>, <UNGLinuxDriver@microchip.com>,
-	<Thorsten.Kummermehr@microchip.com>, <Pier.Beruto@onsemi.com>,
-	<Selvamani.Rajagopal@onsemi.com>, <Nicolas.Ferre@microchip.com>,
-	<benjamin.bigler@bernformulastudent.ch>
-Subject: Re: [PATCH net-next v3 06/12] net: ethernet: oa_tc6: implement
- internal PHY initialization
-Thread-Topic: [PATCH net-next v3 06/12] net: ethernet: oa_tc6: implement
- internal PHY initialization
-Thread-Index: AQHab6OHj5kLkYW7WEGlK1Xe+8KWTLEregYAgADhwoCAACAwgIABRrCAgAAYZQCAD4ziAA==
-Date: Mon, 18 Mar 2024 11:01:12 +0000
-Message-ID: <372a45c3-1372-4956-8d42-8e989f86d131@microchip.com>
-References: <20240306085017.21731-1-Parthiban.Veerasooran@microchip.com>
- <20240306085017.21731-7-Parthiban.Veerasooran@microchip.com>
- <8c2b95f4-75a7-4d6d-ab9c-9c3498c040d8@lunn.ch>
- <eeb57938-e21e-406d-a835-93c6fb19b161@microchip.com>
- <7ddbe599-187e-401f-b508-4dc62bca8374@lunn.ch>
- <e9bc573e-61f0-484a-b1fb-b5100eb9ee0a@microchip.com>
- <8de7a4bb-a127-4771-97dd-038f08fcce9d@lunn.ch>
-In-Reply-To: <8de7a4bb-a127-4771-97dd-038f08fcce9d@lunn.ch>
-Accept-Language: en-US
+ bh=vZDY5Vcrw+IqpvLuGMjmKB5JmIew6oL1QKwYVqiK9ZQ=;
+ b=pSURvjHcXHjhV6WQaPCTSoEpqO74GMMhvl6P+3Tp5hDQFFR9R3qYflPrDX1xvKJFIQJj/NhDoMT7HSP726nRQsp4xnZaytImowC9fv4YGwrc0M1X1/5XFJuWUKPJuzXFNpDyKoLT9xPHKbEkPf0eriiRxvn5ae0kw0rALbohmwE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from SJ2PR01MB8101.prod.exchangelabs.com (2603:10b6:a03:4f6::10) by
+ SA1PR01MB6797.prod.exchangelabs.com (2603:10b6:806:1a6::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7386.25; Mon, 18 Mar 2024 11:01:46 +0000
+Received: from SJ2PR01MB8101.prod.exchangelabs.com
+ ([fe80::d3dd:ece:637f:bde9]) by SJ2PR01MB8101.prod.exchangelabs.com
+ ([fe80::d3dd:ece:637f:bde9%3]) with mapi id 15.20.7386.025; Mon, 18 Mar 2024
+ 11:01:45 +0000
+Message-ID: <84bb27a2-0649-4ba4-8f31-baff7b3a9b3a@os.amperecomputing.com>
+Date: Mon, 18 Mar 2024 16:31:34 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 09/28] arm64: RME: RTT handling
 Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Mozilla Thunderbird
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR11MB8278:EE_|SA1PR11MB6823:EE_
-x-ms-office365-filtering-correlation-id: 78d83ebd-175d-451c-8bef-08dc473ab9c5
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8QYYGsrT+sx3V0reIh3mfBkbH0qWG70cmiVwqS/uWvYuZdKoQBJCusbpJ31Ro6WdhZmvdl7/HUDowGIier/k/uMWuN42k5ToEMq4Y/2bgK5aHnb5+uHujMq3CVzVIUARZMle6ATfe+qG9twZgAjQfL/cmjsq/+LS9wcyy2KFHMTx4j+CyyT0RKaz7ocjht4M169wLPkrxKsTGglrF45AFV+PCN/dsabS6AHBmCemSmRGsuxIInyx66HI3AegbQIw8gXVHL0JB+0OCTkhCQVON6gprYoDmIVhFyivozBcE+8i0MYdWbp6GLRJ35oFVyKHhu4drDrm9j0qMVxuNbRvB5K9/3muj5BmqPX/WJiWpEZENnbC3DOumFGPSZPJjdiSukAVUVwhKUU5lyfOcs2OJA49TUdHZ8dVaN7icGzBSE4fEgChgxXAN7YhUrYlbgxRS54LWsE4lSnQbDe2Y9QhdwY5x+QFcRBQoxmQ1UVTuvc55Qpi8LSgn73CZqU7aKJTen/EC6GqczWrcbux042hVsKNEtGkG5XoSYLxDnYz8VOkFFnw/8JClwA2JqWjBR0VDIFIym1YKFJrtBP4PWJ/QE/Bspr7kM2ClpNk/FCDFQL9Dlh8czEK5iB1WdRdDQ+WR5bHfM5yrzPd6h7yr6b2cQyXjTOSg7ny9rRQqsVgzNl241CkTEDfugOUC5Pyd9DSYIRQvw4M6r5SIA4RlqbDta5VMy/FS5npO5lPWxoMZbI=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB8278.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(376005)(366007)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WW1aTTJOMkNEc01HQ2lHR2gycGVVVUl6ZUZLaG1wZXgyRWh5d0RmNG1VRStJ?=
- =?utf-8?B?anFrcFlCcDZDNXFsVnI2eXY1aHVCR2g1UFhIOFBScDBDK21CbHRnYVJBbnNM?=
- =?utf-8?B?d3VDd0JpUFF3TmF0cEJUUkM5S0RwRVdxSXpxcnc0YzZOME0wT290N0tSMEFO?=
- =?utf-8?B?SU82VGlkekZ3UlU1WEFWK05FQ0h5anVBd3ozMVBHekxucGZQQ0VRbWVjWjda?=
- =?utf-8?B?aDFtUm8rYUJaWVZQTE04QTJKdkdsY0ZHWWFBbHNyUzJQYVRCKzF6WGNSdnVE?=
- =?utf-8?B?U2J5UjFkV1lNanRiM1BlRmd6WlpWeHVSWUFOTWViSjAvSHdFV2M2OVpQdGpX?=
- =?utf-8?B?Zi9zQ2RkTm9BK1VRYk5wYnNwVzg4Z2lFZTFOZkxtUkdFZHI0eHBIeUI3V0Jj?=
- =?utf-8?B?cGJvTDVlaWF2QkFBNmNtR2dOMHRrSGM5eEdhYVhidlcvWlNBQzFiMW4wZyta?=
- =?utf-8?B?TS9KL0k0RTQ3S2ppNVJSbXRrc1Q3dkltU0FGSkJCKzRidjFHTGxIQ3BLOGRp?=
- =?utf-8?B?MVdCcTRTUmlEdTM4NngvbDFWL05KNWUwM1J6TzR2WG9YbnhMcnIxU3EvRU5O?=
- =?utf-8?B?OXUyelVtQVMzQ2NqZXRFVjhsK2hJNFVoMjlPV1RXZ1czQjF4YVI4eklzOWgz?=
- =?utf-8?B?Y2dwT3BJaWI0OUdtbkcrTTRSUXVpL293TGdlQUZNTXFOWng4OUx1U3lUVHJo?=
- =?utf-8?B?MWIyT0RTZS81ZkFLYkJJdXk2a0xsUjMyNy9QV0pzSnpOczVNbDczc0pNVFBQ?=
- =?utf-8?B?eGdlSkppZGRVcWJUVnNjREhMSmdYZVdxRzlOUlhDR1hzSWRRaVpiUUFXQUJp?=
- =?utf-8?B?YUU3Q1ZSRkpKLzRtdzlGR0kxa1NOdko1ZXYxdi9hK1lBRzFCZ1ZSVzlGVmli?=
- =?utf-8?B?aHJodllTYTdDUSsxQTRPK1F4ajB4NTVQMjN1Vis4VXowbU5hU21KZm1QTkt4?=
- =?utf-8?B?REozaS9rd0VUUHF3eE11dHdNTTY0c003Qk9mZVV3cEJJVHQvM3BNbEEwVjY1?=
- =?utf-8?B?UkxKYVhuZmZKeEtDeUlWaXhPN3BTa1hla3JPVTdIWVlBYXB2cEZ4aUx6UG1t?=
- =?utf-8?B?KzNldnEvRWhSdkFUWkthZmQ3OUVJWE8xM3BDR2NydmlXRnNYbG5VTlloUXlx?=
- =?utf-8?B?dkdUWVdTMERnTk8rN1l4UHN0RUg2ZGFvZ1poWXpMTUovWFdjRmZVS2tBeHFl?=
- =?utf-8?B?ZXRnQkh1YzdpeGVnNWUvMGRuRnFsZzlmZysrN0lzeElRaTQwTE1qbkp6SjVB?=
- =?utf-8?B?YloyK3JuSVMvU2hTeFZscjlQdUhpYzNpUVJETXJUR1VZYTFvYkY0M0lrajVB?=
- =?utf-8?B?cnNHdkNWTjVRVUhud2lCSWFMVmJvaEF2QzZmSzVicVJUVGhaYTJyVHFKejVV?=
- =?utf-8?B?N1A0czhtUTBWU3dVeS8rL0dEb00zYWQxZzdKQTVrWXd1WHJnd1lZS1ppYlo1?=
- =?utf-8?B?V3dvaERqZ3JraUVOSUw2MnFXK1hIUzI0NkpRZForS0tVSUtSNXhDSERDNVhl?=
- =?utf-8?B?aWFQZ1gwQ0pyR1FhZXVzdkJPaHZOUy9SYVNlb1AzeVVwNEdodk1zbitpejIz?=
- =?utf-8?B?KytRK3puUmRhUlZwQzVIODVCdzdtVWRzY1hOT1ZqUjhhR2NOTGczeFBXdnpM?=
- =?utf-8?B?bUtwM1lXcEV3cWpNVERpQkhWK0UrZEFkbEhIbGg1Z0hmeWo2RTl4MmNZdVQw?=
- =?utf-8?B?a3BXWGEvWXBPUzdzUXVhMEZRaUdaVWozNXdYa3NwTHhQMGVnTlRPeFBtMnBK?=
- =?utf-8?B?YTNvR3kzdHk0WlJuYXNIdlgwM3RCaysrZEdBYUlMRmdtcnlHQ1Yxd29yNlZr?=
- =?utf-8?B?d01DKzRlbXRwck9KQkZtc2RxVGVZSmw4ZWRTQ2U5OGxOckpuRUtqemRhTk9l?=
- =?utf-8?B?QVVkNlgvZlJVb0IxTzM1UDB4eDczeEJlZ3FyTERobjVHK3Nud3lZTStCRzBI?=
- =?utf-8?B?emM3RFdRcW1EYzJNeThNaUp2eitNaHZuLzNrVUIydkxVdmFFc0FHdWZCVDZD?=
- =?utf-8?B?ZitYcVN6bXYxU2FwaEdnUUpZdlMvbHVGdXJ0b09RdkREK0FBL3doWU9DQzl4?=
- =?utf-8?B?dTZtWENTckdvalhNdEMyRDB5d3ByYUJpelNiUFowUXRnR3FVMGVYNG1BSGZx?=
- =?utf-8?B?a2N6MWp2ZFZBWmdmWTJzLzBHNkFKUDloRzNFaFQvVUEyVURncWxBa3FlQmJq?=
- =?utf-8?B?R3c9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <73F76D68D1F25A4296C5E2497F345832@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
+ Alexandru Elisei <alexandru.elisei@arm.com>,
+ Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-coco@lists.linux.dev
+References: <20230127112248.136810-1-suzuki.poulose@arm.com>
+ <20230127112932.38045-1-steven.price@arm.com>
+ <20230127112932.38045-10-steven.price@arm.com>
+From: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+In-Reply-To: <20230127112932.38045-10-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH0P221CA0040.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:610:11d::20) To SJ2PR01MB8101.prod.exchangelabs.com
+ (2603:10b6:a03:4f6::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR01MB8101:EE_|SA1PR01MB6797:EE_
+X-MS-Office365-Filtering-Correlation-Id: 840c9568-67d8-4efc-dbc1-08dc473acd31
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	VX3WJ625SBFnngRW5VPOwcvrf8Jr0YwU6bxyd34utdFc3qld7+TXjivz/iRn+CEWXEwm7b4CTUx+5/rqwmG2QFIU8m7z8rf9NLSWKeFqc/JJZq2JSYm1CDm1MsaJ+5/m9GtXG0je1pfm/G+y9IKADFu6ZxCYLr2y6m3SU3GSerPX4r8qNebG5KuYFmhxyiWv3UyRdbfi1CFRCM1khmQcel/zijfhmx4pEWgmv4dgxe3B2AwVvKMjWSUDagZpqX+b1sJMLZbqSqJr1lY1q/YQBHapVdUbgjy8cg37bvSeylv2f9sKXCp/OAZi7BS1QxFxWX6/UOdl7zYxxCJsR3oJx5uyTSqdphlaGxGYncHwxiMRyq6NkSAObhhIiFJLwvOlMd58DBAjITKyaWr+PTYKDZYTW5nfJoF9VxQM/4czb7lPWdpzTugpgpb5z2XFB8TmYUIMOiax5aK/jpuwdtW39uIPvmNbSUtmo5tmFsz+yR3kJErPBNqf0XxuiXvCfHwMF/9eXlsN2Vu7vUp3vGrAHvWwDdF7IoxLGU7Htee1qzP9r3lZyIR9M192Is/KXQS7Z/2GsgoLzgPtAtmWfrnIQfjJ2YCdartuWg0aQaYhyUnIEm9fs/gu/9shnQAYFyAy3jHfYKOcHAobq/TMH0rp2CCpYCvTf3ql6JUqyzROppM=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR01MB8101.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(7416005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?a3FCc2tRdFMxZ1dIM1BHRGFJaC9vRk5yeUVvcmljaUpkMklSVlM2ampMY3BT?=
+ =?utf-8?B?MmRrWGQ4RGdPb0d1bkYvL0Y0OVR3YXBOQmMzQVNOTmtsK3lZaDBVVWd3TGtv?=
+ =?utf-8?B?MVpyN0NJMkllQVJneHYzd0ovQlN1QVllaXlobVY4blh5N2h2VzNYSThGb2Fn?=
+ =?utf-8?B?Z0U4c3FZamw4WGFZSTg4b3UwUjladis2dzZOSkl5NTh6N1BuK3BITnd4TVZy?=
+ =?utf-8?B?V0F2UGVCUnZKbkhPOGdJK0Q2V3VnVmtxZ0NEYkp3VjRNaWdMTFBncGpDWUlT?=
+ =?utf-8?B?bWhlbWJxQjdHSjRJTTBiYmpHQ3RMTHIxa1BEdEhrdnYzNlBpWHJ1TjdFNDFW?=
+ =?utf-8?B?Y2M0TjBFS3VQNWdRQTdDbng0R2ZBclZ1M2tSTmRxdWJOME1hamRzLzlkWThp?=
+ =?utf-8?B?WWhQZkVzRk5JcTlvS1FiWWx1aTZEdEtDT0NrRGVNbGpsS0VtWElJb29mL0Y4?=
+ =?utf-8?B?amhrV2JGbmJaNEh0aWZQSSsxZ3dGVll5RE5QcGFTQ2VLZm40d0ltRmN0bmFI?=
+ =?utf-8?B?Tm5TckNIVm9rTjliTitnR01DdW5zSTNiUEY2ZXR1bWFvMVlLWnlOUDhuOENP?=
+ =?utf-8?B?R2ZjWm1tbDFpM3JxYjNMQkhsZitBc1dpTFBDbGFFeEJ3MlV3cFlobE1RMU8z?=
+ =?utf-8?B?aGppZytzTDNaY1lTTk1iYnVPcTVrN21KbitjZ1RZU2pJdFZhWU9vMmt3RmIw?=
+ =?utf-8?B?cGpnZVZBenpEQU50MWk4a2dyWjZMcFZnYjN2WnV6S2gxMU5BVnBZWGRjYzRr?=
+ =?utf-8?B?cktXUEZZZURmVGxJajBQckp2Zm5ZWHJrV3lDTkQwV25yc2NXa0Z4TGRlcERt?=
+ =?utf-8?B?ckdzWDUzM3hjZksrTjAyMk1lcXFsQzJ6Y0lLem5meEFzOWt4dk1PaUF0YkY2?=
+ =?utf-8?B?KzJGTmVKbjdCRGpmMkhVRFBocWN4c285V1NJNit5eGFjTWFOd0hpS0RTOEFh?=
+ =?utf-8?B?SjR6RW5VTjNwcmpTR2VuN3Y4Sk82L0g0dWdaUStCUzllT2d0RGsxNHRNQmx1?=
+ =?utf-8?B?VkZlWUV4bHpNNEdYU0E5NVlGaVp4RWpGaVorVVBXUGtFT2hhTlJaaUVmeTFz?=
+ =?utf-8?B?MVJMcVhYcURReElSeFM4b1ZQK2IydFp5MndhOGNub3pUdlRVYXE1Z3RtYzdz?=
+ =?utf-8?B?eEpxa2pBOG9XYWNlWW5KQjhwYTBSK3N0a25ZRXEwc3dsTnNqLzVaaTBKK09Q?=
+ =?utf-8?B?MGFJc0xncUhXekFvS3VZYUs1QmEwNllFb1Y3aDJ5Y1V6R2VHd3ZXSWFMZG1x?=
+ =?utf-8?B?WDJJSzFMbGZDMk1xRk9VZFh3Rm1zNlRFMEh4ancwTkljR1RXbkZicWpSS2p2?=
+ =?utf-8?B?Z1haN1VjNGpCMFRDbFZ3MlFxdWo1UHRQUzhycWNFaFFSekgyZGdtTVI3U1lO?=
+ =?utf-8?B?NmdWbVB6L01hNWpnbndwRTl2Z3c0bTBCNFZSZU5aSUZzZW9pUEFjd3RQa01u?=
+ =?utf-8?B?bFd5eHlJSVUvMmFRclBIaWU3R1FlNjB6UTZtdndqeW00d0NWbFRUZjNGNDhm?=
+ =?utf-8?B?L3dDd0xKNEZuME9PdmprbitSRTVJeUZRREZrK3EyNHBxYUxEZFV3Y25jdzRo?=
+ =?utf-8?B?MDNZMS9jSXJ0UzF4T09XSzdieTNHak5hMXMvcXpNRmEvcnNGUnJ0K3RxNDhh?=
+ =?utf-8?B?MTdkYXlxVFV6RVZxaVZ1SHJoMklPL0VUOFFocUNtbE5SL2dFRFNKeW9GYlVO?=
+ =?utf-8?B?NjZnV0o4VFE2Umowc0RmbXh4TUFLUXViUWl2eE84bEZIanZnVGM1dUR5OEM3?=
+ =?utf-8?B?U2ZSOGxweXFXOGlhby9MaEFtZ2dQM2tINkQ0ZWZVTWh3Y3ovNzNVMDNGUVpm?=
+ =?utf-8?B?SFlIUDZPQlVxRnlMeFZ1Rnp4VTFEQlllMDJiNmgwVjM3MFgyaG9iU2Jmd0k4?=
+ =?utf-8?B?em00QmRkanl6ZkVzRHRqcVpRWVU0bVB1TENqZ2ZidzE5bjA5RDBnVFhuQ05w?=
+ =?utf-8?B?NnNPSVM0SHhYVHA3eFJuMTE1c2IrVmhpTkY5VWh5ZGpsak1kR0pWcDJWd2h1?=
+ =?utf-8?B?eitGdy8zeTRmTUQyc3ZCRzh3cWlKNHAzVGY2RTVZaldyMG1SdW1jcjI2WXBy?=
+ =?utf-8?B?R0hMcEl2WEgzVmlEM3lBQm5GV1JJTW1VSHhCd2Vya1B2WkFiUm5DOXlDYzRY?=
+ =?utf-8?B?VGZvdVNSMHliTVhLYlFsdGNaMWx6bUY2STBBSkFaMkwrZGtWT1RYajFJc210?=
+ =?utf-8?Q?KdkiKk5AkqUH3qpIOWqXTFCIEYyhDLWjs5qj5ABt1DAx?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 840c9568-67d8-4efc-dbc1-08dc473acd31
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR01MB8101.prod.exchangelabs.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB8278.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78d83ebd-175d-451c-8bef-08dc473ab9c5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2024 11:01:12.9673
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2024 11:01:45.7363
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cXTgPLljKQQJKP0EZm7hJGns0Fg+Fry+uUqvLqxy1qSwqoHMPG3skjX/mJmqtEnq5MB+tuUHf4HoDK6bha/F1FQn6qwxUK0qWIE8/hCloFt+IGNpKekW8YIY34loN3W7
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6823
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UaMyPaTzvK2PLWMnDCa6jzQyERMvVANxPuMXC7vq8MV5C+dhw6MaV2qboT5TFEwYk1IGApCqMksaL40bMOuQvufQbPkj+loIKF7yZB9CBWeqGPe9CKsiclssRTmk3JUD
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR01MB6797
 
-SGkgQW5kcmV3LA0KDQpPbiAwOC8wMy8yNCA3OjAzIHBtLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
-RVhURVJOQUwgRU1BSUw6IERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVu
-bGVzcyB5b3Uga25vdyB0aGUgY29udGVudCBpcyBzYWZlDQo+IA0KPj4gT2ssIGFzIHBlciB0aGUg
-dGFibGUgNiBpbiB0aGUgc3BlYywgUEhZIEM0NSByZWdpc3RlcnMgYXJlIG1hcHBlZCBpbiB0aGUN
-Cj4+IE1NUyBsaWtlIGJlbG93LA0KPj4NCj4+IFBIWSDigJMgUENTIFJlZ2lzdGVycyAoTU1EIDMp
-ICAtLS0+ICBNTVMgMg0KPj4gUEhZIOKAkyBQTUEvUE1EIFJlZ2lzdGVycyAoTU1EIDEpICAtLS0+
-ICAgTU1TIDMNCj4+IFBIWSDigJMgVmVuZG9yIFNwZWNpZmljIGFuZCBQTENBIFJlZ2lzdGVycyAo
-TU1EIDMxKSAgLS0tPiAgTU1TIDQNCj4+IFBIWSDigJMgQXV0by1OZWdvdGlhdGlvbiBSZWdpc3Rl
-cnMgKE1NRCA3KSAgLS0tPiAgTU1TIDUNCj4+IFBIWSDigJMgUG93ZXIgVW5pdCAoTU1EIDEzKSAg
-LS0tPiAgTU1TIDYNCj4+DQo+PiBNTUQgMTMgZm9yIFBIWSAtIFBvd2VyIFVuaXQgaXMgbm90IGRl
-ZmluZWQgaW4gdGhlIG1kaW8uaC4gU28gaW4gdGhlDQo+PiBiZWxvdyBjb2RlIEkgaGF2ZSBkZWZp
-bmVkIGl0IGxvY2FsbHkgKE1ESU9fTU1EX1BPV0VSX1VOSVQpLiBNYXkgYmUNCj4+IG5lZWRlZCB0
-byBkbyB0aGlzIGluIHRoZSBtZGlvLmggZmlsZSB3aGVuIGNvbWluZyB0byB0aGlzIHBhdGNoLg0K
-PiANCj4gWWVzLCBwbGVhc2UgYWRkIGl0IHRvIG1kaW8uaA0KU3VyZSB3aWxsIGFkZCBpdCBpbiB0
-aGUgbWRpby5oIGZpbGUuDQo+IA0KPj4gLyogUEhZIOKAkyBDbGF1c2UgNDUgcmVnaXN0ZXJzIG1l
-bW9yeSBtYXAgc2VsZWN0b3IgKE1NUykgYXMgcGVyIHRhYmxlIDYgaW4NCj4+IHRoZSBPUEVOIEFs
-bGlhbmNlIHNwZWNpZmljYXRpb24uDQo+PiAgICAqLw0KPj4gI2RlZmluZSBPQV9UQzZfUEhZX1BD
-U19NTVMyICAgICAgICAgICAgICAgICAgICAgMiAgICAgICAvKiBNTUQgMyAqLw0KPj4gI2RlZmlu
-ZSBPQV9UQzZfUEhZX1BNQV9QTURfTU1TMyAgICAgICAgICAgICAgICAgMyAgICAgICAvKiBNTUQg
-MSAqLw0KPj4gI2RlZmluZSBPQV9UQzZfUEhZX1ZTX1BMQ0FfTU1TNCAgICAgICAgICAgICAgICAg
-NCAgICAgICAvKiBNTUQgMzEgKi8NCj4+ICNkZWZpbmUgT0FfVEM2X1BIWV9BVVRPX05FR19NTVM1
-ICAgICAgICAgICAgICAgIDUgICAgICAgLyogTU1EIDcgKi8NCj4+ICNkZWZpbmUgT0FfVEM2X1BI
-WV9QT1dFUl9VTklUX01NUzYgICAgICAgICAgICAgIDYgICAgICAgLyogTU1EIDEzICovDQo+Pg0K
-Pj4gLyogTURJTyBNYW5hZ2VhYmxlIERldmljZSAoTU1EKSBmb3IgUEhZIFBvd2VyIFVuaXQgKi8N
-Cj4+ICNkZWZpbmUgTURJT19NTURfUE9XRVJfVU5JVCAgICAgICAgICAgICAgICAgICAgIDEzICAg
-ICAgLyogUEhZIFBvd2VyIFVuaXQgKi8NCj4+DQo+PiBzdGF0aWMgaW50IG9hX3RjNl9tZGlvYnVz
-X3JlYWRfYzQ1KHN0cnVjdCBtaWlfYnVzICpidXMsIGludCBhZGRyLCBpbnQNCj4+IGRldm51bSwg
-aW50IHJlZ251bSkNCj4+IHsNCj4+DQo+PiAgICAgICAgICAgc3RydWN0IG9hX3RjNiAqdGM2ID0g
-YnVzLT5wcml2Ow0KPj4NCj4+ICAgICAgICAgICB1MzIgcmVndmFsOw0KPj4NCj4+ICAgICAgICAg
-ICBib29sIHJldDsNCj4+DQo+PiAgICAgICAgICAgdTMyIG1tczsNCj4+DQo+Pg0KPj4NCj4+ICAg
-ICAgICAgICBpZiAoZGV2bnVtID09IE1ESU9fTU1EX1BDUykNCj4+DQo+PiAgICAgICAgICAgICAg
-ICAgICBtbXMgPSBPQV9UQzZfUEhZX1BDU19NTVMyOw0KPj4NCj4+ICAgICAgICAgICBlbHNlIGlm
-IChkZXZudW0gPT0gTURJT19NTURfUE1BUE1EKQ0KPj4NCj4+ICAgICAgICAgICAgICAgICAgIG1t
-cyA9IE9BX1RDNl9QSFlfUE1BX1BNRF9NTVMzOw0KPj4NCj4+ICAgICAgICAgICBlbHNlIGlmIChk
-ZXZudW0gPT0gTURJT19NTURfVkVORDIpDQo+Pg0KPj4gICAgICAgICAgICAgICAgICAgbW1zID0g
-T0FfVEM2X1BIWV9WU19QTENBX01NUzQ7DQo+Pg0KPj4gICAgICAgICAgIGVsc2UgaWYgKGRldm51
-bSA9PSBNRElPX01NRF9BTikNCj4+DQo+PiAgICAgICAgICAgICAgICAgICBtbXMgPSBPQV9UQzZf
-UEhZX0FVVE9fTkVHX01NUzU7DQo+Pg0KPj4gICAgICAgICAgIGVsc2UgaWYgKGRldm51bSA9PSBN
-RElPX01NRF9QT1dFUl9VTklUKQ0KPj4NCj4+ICAgICAgICAgICAgICAgICAgIG1tcyA9IE9BX1RD
-Nl9QSFlfUE9XRVJfVU5JVF9NTVM2Ow0KPiANCj4gSSB3b3VsZCBwcm9iYWJseSB1c2UgYSBzd2l0
-Y2ggc3RhdGVtZW50Lg0KQWggb2ssIEkgd2lsbCB1c2Ugc3dpdGNoIGhlcmUuDQo+IA0KPj4NCj4+
-ICAgICAgICAgICBlbHNlDQo+Pg0KPj4gICAgICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9UU1VQ
-UDsNCj4gDQo+IDgwMi4zIHNheXM6DQo+IA0KPiAgICBJZiBhIGRldmljZSBzdXBwb3J0cyB0aGUg
-TURJTyBpbnRlcmZhY2UgaXQgc2hhbGwgcmVzcG9uZCB0byBhbGwNCj4gICAgcG9zc2libGUgcmVn
-aXN0ZXIgYWRkcmVzc2VzIGZvciB0aGUgZGV2aWNlIGFuZCByZXR1cm4gYSB2YWx1ZSBvZg0KPiAg
-ICB6ZXJvIGZvciB1bmRlZmluZWQgYW5kIHVuc3VwcG9ydGVkIHJlZ2lzdGVycy4gV3JpdGVzIHRv
-IHVuZGVmaW5lZA0KPiAgICByZWdpc3RlcnMgYW5kIHJlYWQtb25seSByZWdpc3RlcnMgc2hhbGwg
-aGF2ZSBubyBlZmZlY3QuIFRoZQ0KPiAgICBvcGVyYXRpb24gb2YgYW4gTU1EIHNoYWxsIG5vdCBi
-ZSBhZmZlY3RlZCBieSB3cml0ZXMgdG8gcmVzZXJ2ZWQgYW5kDQo+ICAgIHVuc3VwcG9ydGVkIHJl
-Z2lzdGVyIGJpdHMsIGFuZCBzdWNoIHJlZ2lzdGVyIGJpdHMgc2hhbGwgcmV0dXJuIGENCj4gICAg
-dmFsdWUgb2YgemVybyB3aGVuIHJlYWQuDQo+IA0KPiBTbyBtYXliZSByZXR1cm4gMC4gRU5PVFNV
-UFAgaXMgd3JvbmcsIHRoYXQgaXMgYW4gTkZTIG9ubHkgZXJyb3INCj4gY29kZS4gVGhlIGdlbmVy
-aWMgb25lIGlzIEVPUE5PVFNVUFAuIEkgd291bGQgc2F5IC1FT1BOT1RTVVBQIGlzIGFsc28NCj4g
-Ty5LLg0KU3VyZSwgSSB3aWxsIHVzZSAtRU9QTk9UU1VQUCBpbiB0aGUgbmV4dCB2ZXJzaW9uIGlu
-c3RlYWQgb2YgLUVOT1RTVVBQLg0KPiANCj4+ICAgICAgICAgICByZXQgPSBvYV90YzZfcmVhZF9y
-ZWdpc3Rlcih0YzYsIChtbXMgPDwgMTYpIHwgcmVnbnVtLCAmcmVndmFsKTsNCj4+DQo+PiAgICAg
-ICAgICAgaWYgKHJldCkNCj4+DQo+PiAgICAgICAgICAgICAgICAgICByZXR1cm4gLUVOT0RFVjsN
-Cj4gDQo+IG9hX3RjNl9yZWFkX3JlZ2lzdGVyKCkgc2hvdWxkIHJldHVybiBhbiBlcnJvciBjb2Rl
-LCBzbyByZXR1cm4gd2hhdGV2ZXINCj4gaXMgcmV0dXJucy4gRG9uJ3Qgb3ZlcndyaXRlIGVycm9y
-IGNvZGVzLiBJdCBtYWtlcyBpdCBoYXJkZXIgdG8gdHJhY2sNCj4gZXJyb3JzIHRocm91Z2ggdGhl
-IGNhbGwgc3RhY2suDQpBaCBvaywgd2lsbCByZXR1cm4gdGhlIGVycm9yIGNvZGUgZnJvbSBvYV90
-YzZfcmVhZF9yZWdpc3RlcigpIGluIHRoZSANCm5leHQgdmVyc2lvbi4NCg0KQmVzdCByZWdhcmRz
-LA0KUGFydGhpYmFuIFYNCj4gDQo+ICAgICAgICAgQW5kcmV3DQo+IA0KDQo=
+
+On 27-01-2023 04:59 pm, Steven Price wrote:
+> The RMM owns the stage 2 page tables for a realm, and KVM must request
+> that the RMM creates/destroys entries as necessary. The physical pages
+> to store the page tables are delegated to the realm as required, and can
+> be undelegated when no longer used.
+> 
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+>   arch/arm64/include/asm/kvm_rme.h |  19 +++++
+>   arch/arm64/kvm/mmu.c             |   7 +-
+>   arch/arm64/kvm/rme.c             | 139 +++++++++++++++++++++++++++++++
+>   3 files changed, 162 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kvm_rme.h
+> index a6318af3ed11..eea5118dfa8a 100644
+> --- a/arch/arm64/include/asm/kvm_rme.h
+> +++ b/arch/arm64/include/asm/kvm_rme.h
+> @@ -35,5 +35,24 @@ u32 kvm_realm_ipa_limit(void);
+>   int kvm_realm_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap);
+>   int kvm_init_realm_vm(struct kvm *kvm);
+>   void kvm_destroy_realm(struct kvm *kvm);
+> +void kvm_realm_destroy_rtts(struct realm *realm, u32 ia_bits, u32 start_level);
+> +
+> +#define RME_RTT_BLOCK_LEVEL	2
+> +#define RME_RTT_MAX_LEVEL	3
+> +
+> +#define RME_PAGE_SHIFT		12
+> +#define RME_PAGE_SIZE		BIT(RME_PAGE_SHIFT)
+
+Can we use PAGE_SIZE and PAGE_SHIFT instead of redefining?
+May be we can use them to define RME_PAGE_SIZE and RME_PAGE_SHIFT.
+
+> +/* See ARM64_HW_PGTABLE_LEVEL_SHIFT() */
+> +#define RME_RTT_LEVEL_SHIFT(l)	\
+> +	((RME_PAGE_SHIFT - 3) * (4 - (l)) + 3)
+
+Instead of defining again, can we define to
+ARM64_HW_PGTABLE_LEVEL_SHIFT?
+
+> +#define RME_L2_BLOCK_SIZE	BIT(RME_RTT_LEVEL_SHIFT(2))
+> +
+> +static inline unsigned long rme_rtt_level_mapsize(int level)
+> +{
+> +	if (WARN_ON(level > RME_RTT_MAX_LEVEL))
+> +		return RME_PAGE_SIZE;
+> +
+> +	return (1UL << RME_RTT_LEVEL_SHIFT(level));
+> +}
+>   
+>   #endif
+> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+> index 22c00274884a..f29558c5dcbc 100644
+> --- a/arch/arm64/kvm/mmu.c
+> +++ b/arch/arm64/kvm/mmu.c
+> @@ -834,16 +834,17 @@ void stage2_unmap_vm(struct kvm *kvm)
+>   void kvm_free_stage2_pgd(struct kvm_s2_mmu *mmu)
+>   {
+>   	struct kvm *kvm = kvm_s2_mmu_to_kvm(mmu);
+> -	struct kvm_pgtable *pgt = NULL;
+> +	struct kvm_pgtable *pgt;
+>   
+>   	write_lock(&kvm->mmu_lock);
+> +	pgt = mmu->pgt;
+>   	if (kvm_is_realm(kvm) &&
+>   	    kvm_realm_state(kvm) != REALM_STATE_DYING) {
+> -		/* TODO: teardown rtts */
+>   		write_unlock(&kvm->mmu_lock);
+> +		kvm_realm_destroy_rtts(&kvm->arch.realm, pgt->ia_bits,
+> +				       pgt->start_level);
+>   		return;
+>   	}
+> -	pgt = mmu->pgt;
+>   	if (pgt) {
+>   		mmu->pgd_phys = 0;
+>   		mmu->pgt = NULL;
+> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+> index 0c9d70e4d9e6..f7b0e5a779f8 100644
+> --- a/arch/arm64/kvm/rme.c
+> +++ b/arch/arm64/kvm/rme.c
+> @@ -73,6 +73,28 @@ static int rmi_check_version(void)
+>   	return 0;
+>   }
+>   
+> +static void realm_destroy_undelegate_range(struct realm *realm,
+> +					   unsigned long ipa,
+> +					   unsigned long addr,
+> +					   ssize_t size)
+> +{
+> +	unsigned long rd = virt_to_phys(realm->rd);
+> +	int ret;
+> +
+> +	while (size > 0) {
+> +		ret = rmi_data_destroy(rd, ipa);
+> +		WARN_ON(ret);
+> +		ret = rmi_granule_undelegate(addr);
+> +
+> +		if (ret)
+> +			get_page(phys_to_page(addr));
+> +
+> +		addr += PAGE_SIZE;
+> +		ipa += PAGE_SIZE;
+> +		size -= PAGE_SIZE;
+> +	}
+> +}
+> +
+>   static unsigned long create_realm_feat_reg0(struct kvm *kvm)
+>   {
+>   	unsigned long ia_bits = VTCR_EL2_IPA(kvm->arch.vtcr);
+> @@ -170,6 +192,123 @@ static int realm_create_rd(struct kvm *kvm)
+>   	return r;
+>   }
+>   
+> +static int realm_rtt_destroy(struct realm *realm, unsigned long addr,
+> +			     int level, phys_addr_t rtt_granule)
+> +{
+> +	addr = ALIGN_DOWN(addr, rme_rtt_level_mapsize(level - 1));
+> +	return rmi_rtt_destroy(rtt_granule, virt_to_phys(realm->rd), addr,
+> +			level);
+> +}
+> +
+> +static int realm_destroy_free_rtt(struct realm *realm, unsigned long addr,
+> +				  int level, phys_addr_t rtt_granule)
+> +{
+> +	if (realm_rtt_destroy(realm, addr, level, rtt_granule))
+> +		return -ENXIO;
+> +	if (!WARN_ON(rmi_granule_undelegate(rtt_granule)))
+> +		put_page(phys_to_page(rtt_granule));
+> +
+> +	return 0;
+> +}
+> +
+> +static int realm_rtt_create(struct realm *realm,
+> +			    unsigned long addr,
+> +			    int level,
+> +			    phys_addr_t phys)
+> +{
+> +	addr = ALIGN_DOWN(addr, rme_rtt_level_mapsize(level - 1));
+> +	return rmi_rtt_create(phys, virt_to_phys(realm->rd), addr, level);
+> +}
+> +
+> +static int realm_tear_down_rtt_range(struct realm *realm, int level,
+> +				     unsigned long start, unsigned long end)
+> +{
+> +	phys_addr_t rd = virt_to_phys(realm->rd);
+> +	ssize_t map_size = rme_rtt_level_mapsize(level);
+> +	unsigned long addr, next_addr;
+> +	bool failed = false;
+> +
+> +	for (addr = start; addr < end; addr = next_addr) {
+> +		phys_addr_t rtt_addr, tmp_rtt;
+> +		struct rtt_entry rtt;
+> +		unsigned long end_addr;
+> +
+> +		next_addr = ALIGN(addr + 1, map_size);
+> +
+> +		end_addr = min(next_addr, end);
+> +
+> +		if (rmi_rtt_read_entry(rd, ALIGN_DOWN(addr, map_size),
+> +				       level, &rtt)) {
+> +			failed = true;
+> +			continue;
+> +		}
+> +
+> +		rtt_addr = rmi_rtt_get_phys(&rtt);
+> +		WARN_ON(level != rtt.walk_level);
+> +
+> +		switch (rtt.state) {
+> +		case RMI_UNASSIGNED:
+> +		case RMI_DESTROYED:
+> +			break;
+> +		case RMI_TABLE:
+> +			if (realm_tear_down_rtt_range(realm, level + 1,
+> +						      addr, end_addr)) {
+> +				failed = true;
+> +				break;
+> +			}
+> +			if (IS_ALIGNED(addr, map_size) &&
+> +			    next_addr <= end &&
+> +			    realm_destroy_free_rtt(realm, addr, level + 1,
+> +						   rtt_addr))
+> +				failed = true;
+> +			break;
+> +		case RMI_ASSIGNED:
+> +			WARN_ON(!rtt_addr);
+> +			/*
+> +			 * If there is a block mapping, break it now, using the
+> +			 * spare_page. We are sure to have a valid delegated
+> +			 * page at spare_page before we enter here, otherwise
+> +			 * WARN once, which will be followed by further
+> +			 * warnings.
+> +			 */
+> +			tmp_rtt = realm->spare_page;
+> +			if (level == 2 &&
+> +			    !WARN_ON_ONCE(tmp_rtt == PHYS_ADDR_MAX) &&
+> +			    realm_rtt_create(realm, addr,
+> +					     RME_RTT_MAX_LEVEL, tmp_rtt)) {
+> +				WARN_ON(1);
+> +				failed = true;
+> +				break;
+> +			}
+> +			realm_destroy_undelegate_range(realm, addr,
+> +						       rtt_addr, map_size);
+> +			/*
+> +			 * Collapse the last level table and make the spare page
+> +			 * reusable again.
+> +			 */
+> +			if (level == 2 &&
+> +			    realm_rtt_destroy(realm, addr, RME_RTT_MAX_LEVEL,
+> +					      tmp_rtt))
+> +				failed = true;
+> +			break;
+> +		case RMI_VALID_NS:
+> +			WARN_ON(rmi_rtt_unmap_unprotected(rd, addr, level));
+> +			break;
+> +		default:
+> +			WARN_ON(1);
+> +			failed = true;
+> +			break;
+> +		}
+> +	}
+> +
+> +	return failed ? -EINVAL : 0;
+> +}
+> +
+> +void kvm_realm_destroy_rtts(struct realm *realm, u32 ia_bits, u32 start_level)
+> +{
+> +	realm_tear_down_rtt_range(realm, start_level, 0, (1UL << ia_bits));
+> +}
+> +
+>   /* Protects access to rme_vmid_bitmap */
+>   static DEFINE_SPINLOCK(rme_vmid_lock);
+>   static unsigned long *rme_vmid_bitmap;
+
+Thanks,
+Ganapat
