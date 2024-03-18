@@ -1,205 +1,133 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE235645C;
-	Mon, 18 Mar 2024 19:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6222E55C14;
+	Mon, 18 Mar 2024 19:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710788565; cv=none; b=jnkuzjxuA9OYhkiTMMEhc4iMwZm4ZExWziSYbktK7g1tKvvtSuIC/CtX3smI1M5i5YuVpafhqycNFLVtVJ26jx/x3S43dfE1gsPBPO3+U3U4bCi/A+I50xNyEAZeDfCSW6xmUIuStjaOk2FK+8GZQfONPWp5M8AsDXpe5lhrM9Y=
+	t=1710788753; cv=none; b=oL5nvm6hHp/8ekBl1yvLen+ZMI+SIGajFL0E7hLErVr1yXS+3wPH/5qhZ6Ch+A3X9vjFYiLIf33++4Ka7zW6AhjATrpKuDLqx2gvdwpKVYPD98b67/NPEkbtYgeN95fjmrKyNi+/fB6l92VK/oUUSSIHRfR9j8hRMgouFNXbWII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710788565; c=relaxed/simple;
-	bh=z3Xld9/7/DDCMRDufaRKujC9gmU3SIBIYnbq+ZzOM3w=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=r5OzuED8IjHrAjXcvGbD/jzHFQfoNHtI+1sLQyYX291MVAcsS7V0qj/auIeHFKyPra3wP6se+HeY8PM7bp1yB+r7zeuAmSitmkF5EdXma4qKEC2woGxzgM5t1hk3/8AqMTdgs1ErLvIrQJ+6iLD4QwGNbFy/oE36mnC15V8riHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YkZwBAUK; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1710788753; c=relaxed/simple;
+	bh=Mht4IjPTPbiVxklqtYVZxHMsoaQVQkLBmLv8VDC5ro4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=puWxLO7ArtbBSch3GLunWuugsIRcKKvFGbacsuxfhTBFnZfOW8rPu1I/788el8va4gZG6C4Tp9o0v/T2jb/HW7kLMc7W1IXcf3TPxjQ0gM9IIr03kDN9lA3kBcV/tJqaFN64Wa2/ANgmeFibNVpa2mD1O6QHHYk3/KzO+d5XPvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=3bmfbIhp; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=wBDMufWN; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=3bmfbIhp; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=wBDMufWN; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YkZwBAUK"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42IHfM2b016130;
-	Mon, 18 Mar 2024 19:02:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:from:to:cc:references
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=SqpQcUYqes3Cs8Uu9tkbzQvcgpVIF66UjNmZ42F6quQ=; b=Yk
-	ZwBAUK/pCwEVzXhwob0umqJec/R4HyXNPWDsk8RtdkdcbTqCycgnIL3vaIv+joLk
-	cjLYTpcbjbSmHcO/JEYITwL/sW/OnpOtEo1DK8nSw3u5QFpv+NfCwd2fyVEfHWrO
-	YI6PqsNOLbvQ7VJTu0GBInehjt17or4Bi/KU8xtz03g3+zJhw6UqaZBIorK0IvCu
-	W9GJskn1vMi6OP+StEMpWi4Jr0wJLmc/nPlBsHMgZ8Ha4PZ2u8HTSensdaMdCkDv
-	rwdD8EZnos8Qdm6RfBSw/IP6/SaAvhbqBd2z4TS7lF9S42jARYWS2YcHUqPIl0K5
-	hCSgJa+2lixvx0erLq/A==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wxt7d05e7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 18 Mar 2024 19:02:15 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42IJ2DkI017831
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 18 Mar 2024 19:02:13 GMT
-Received: from [10.46.19.239] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 18 Mar
- 2024 12:02:09 -0700
-Message-ID: <66ad9e5b-0126-476e-bf0f-6a33f446c976@quicinc.com>
-Date: Mon, 18 Mar 2024 12:02:09 -0700
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="3bmfbIhp";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="wBDMufWN";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="3bmfbIhp";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="wBDMufWN"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id A0DCF34E11;
+	Mon, 18 Mar 2024 19:05:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710788749;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6mzBoP4Rx2h04+Ob6weFKLFhQYf79XaB88sBTL4zNKg=;
+	b=3bmfbIhp2LoNb5NSB75nHf2wS4bfGrf2gIF/io/nYXjN44dKxV9B2Ut+edHuIR+4n6UFbJ
+	jz+8k5KW/wDjWQOjcR9DGCBIpEHelmlfHNNgpov47fsu30fagptDjb45aohUbfommL4xlV
+	ttDdjzeLDDXqHIt0/umM/+umP+uyIwU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710788749;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6mzBoP4Rx2h04+Ob6weFKLFhQYf79XaB88sBTL4zNKg=;
+	b=wBDMufWN94l+fjjU8hpHOErbXK6BQ95le6/bl59iB6oKyQqilrKMeHyVOJdzdbKmaCTw3h
+	n5rnf6TaYdYN8NBQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710788749;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6mzBoP4Rx2h04+Ob6weFKLFhQYf79XaB88sBTL4zNKg=;
+	b=3bmfbIhp2LoNb5NSB75nHf2wS4bfGrf2gIF/io/nYXjN44dKxV9B2Ut+edHuIR+4n6UFbJ
+	jz+8k5KW/wDjWQOjcR9DGCBIpEHelmlfHNNgpov47fsu30fagptDjb45aohUbfommL4xlV
+	ttDdjzeLDDXqHIt0/umM/+umP+uyIwU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710788749;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6mzBoP4Rx2h04+Ob6weFKLFhQYf79XaB88sBTL4zNKg=;
+	b=wBDMufWN94l+fjjU8hpHOErbXK6BQ95le6/bl59iB6oKyQqilrKMeHyVOJdzdbKmaCTw3h
+	n5rnf6TaYdYN8NBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 86CE2136A5;
+	Mon, 18 Mar 2024 19:05:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id kvizII2Q+GXDGgAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Mon, 18 Mar 2024 19:05:49 +0000
+Date: Mon, 18 Mar 2024 19:58:36 +0100
+From: David Sterba <dsterba@suse.cz>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Anand Jain <anand.jain@oracle.com>, David Sterba <dsterba@suse.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Christian Brauner <brauner@kernel.org>
+Subject: Re: linux-next: build failure after merge of the btrfs-fixes tree
+Message-ID: <20240318185836.GG16737@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <20240318091755.1d0f696f@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4] net: Re-use and set mono_delivery_time bit
- for userspace tstamp packets
-From: "Abhishek Chauhan (ABC)" <quic_abchauha@quicinc.com>
-To: Martin KaFai Lau <martin.lau@linux.dev>
-CC: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, <kernel@quicinc.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Andrew Halaney
-	<ahalaney@redhat.com>,
-        Martin KaFai Lau <martin.lau@kernel.org>, bpf
-	<bpf@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Alexei
- Starovoitov" <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>
-References: <20240301201348.2815102-1-quic_abchauha@quicinc.com>
- <2a4cb416-5d95-459d-8c1c-3fb225240363@linux.dev>
- <65f16946cd33e_344ff1294fc@willemb.c.googlers.com.notmuch>
- <28282905-065a-4233-a0a2-53aa9b85f381@linux.dev>
- <65f2004e65802_3d1e792943e@willemb.c.googlers.com.notmuch>
- <0dff8f05-e18d-47c8-9f19-351c44ea8624@linux.dev>
- <e5da91bc-5827-4347-ab38-36c92ae2dfa2@quicinc.com>
- <65f21d65820fc_3d934129463@willemb.c.googlers.com.notmuch>
- <bc037db4-58bb-4861-ac31-a361a93841d3@linux.dev>
- <65f2c81fc7988_3ee61729465@willemb.c.googlers.com.notmuch>
- <5692ddb3-9558-4440-a7bf-47fcc47401ed@linux.dev>
- <65f35e00a83c0_2132294f5@willemb.c.googlers.com.notmuch>
- <e270b646-dae0-41cf-9ef8-e991738b9c57@quicinc.com>
- <8d245f5a-0c75-4634-9513-3d420eb2c88f@linux.dev>
- <d10254cc-a908-4d81-98d2-2eed715e521f@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <d10254cc-a908-4d81-98d2-2eed715e521f@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Fs-n4a9nCVZ0zaDyrqzbof_dsR3RM1rl
-X-Proofpoint-GUID: Fs-n4a9nCVZ0zaDyrqzbof_dsR3RM1rl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-18_12,2024-03-18_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- spamscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
- suspectscore=0 priorityscore=1501 clxscore=1015 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2403140001 definitions=main-2403180144
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240318091755.1d0f696f@canb.auug.org.au>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -1.01
+X-Spamd-Result: default: False [-1.01 / 50.00];
+	 ARC_NA(0.00)[];
+	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BAYES_HAM(-0.01)[50.84%];
+	 MIME_GOOD(-0.10)[text/plain];
+	 REPLYTO_ADDR_EQ_FROM(0.00)[];
+	 NEURAL_HAM_LONG(-0.99)[-0.995];
+	 RCPT_COUNT_FIVE(0.00)[6];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 TO_DN_ALL(0.00)[];
+	 NEURAL_HAM_SHORT(-0.20)[-0.998];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Spam-Flag: NO
 
+On Mon, Mar 18, 2024 at 09:17:55AM +1100, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the btrfs-fixes tree, today's linux-next build (powerpc
+> ppc64_defconfig) failed like this:
+> 
+> fs/btrfs/volumes.c: In function 'btrfs_scan_one_device':
+> fs/btrfs/volumes.c:1413:55: error: 'bdev_handle' undeclared (first use in this function)
+>  1413 |         if (btrfs_skip_registration(disk_super, path, bdev_handle->bdev->bd_dev,
+>       |                                                       ^~~~~~~~~~~
+> fs/btrfs/volumes.c:1413:55: note: each undeclared identifier is reported only once for each function it appears in
 
-
-On 3/14/2024 3:29 PM, Abhishek Chauhan (ABC) wrote:
-> 
-> 
-> On 3/14/2024 2:48 PM, Martin KaFai Lau wrote:
->> On 3/14/24 1:53 PM, Abhishek Chauhan (ABC) wrote:
->>>>> The bpf_convert_tstamp_{read,write} and the helper bpf_skb_set_tstamp need to be
->>>>> changed to handle the new "user_delivery_time" bit anyway, e.g.
->>>>> bpf_skb_set_tstamp(BPF_SKB_TSTAMP_DELIVERY_MONO) needs to clear the
->>>>> "user_delivery_time" bit.
->>>>>
->>>>> I think the "struct inet_frag_queue" also needs a new "user_delivery_time"
->>>>> field. "mono_delivery_time" is already in there.
->>
->> [ ... ]
->>
-
-Martin, Do we really need to add user_delivery_time as part of inet_frag_queue struct? I was wondering why is this required since we are using tstamp_type:2 to 
-distinguish between timestamp anyway .
-
-Let me know what you think ? 
-
->> I would think the first step is to revert this patch. I don't think much of the current patch can be reused.
->>
->>> 1. I will raise one patch to introduce rename mono_delivery_time to
->>> tstamp_type
->>
->> Right, I expect something like this:
->>
->> struct sk_buff {
->>         /* ... */
->> -            __u8                    mono_delivery_time:1;
->> +        __u8            tstamp_type:1;
->>         /* ... */
->> };
->>
-> 
-> Okay ,This should be straight-forward. 
-> 
->>> 2. I will introduce setting of userspace timestamp type as the second bit
->>> whem transmit_time is set.
->>
->> I expect the second patch should be introducing the enum first
->>
->> enum skb_tstamp_type {
->>     SKB_TSTAMP_TYPE_RX_REAL = 0, /* A RX (receive) time in real */
->>     SKB_TSTAMP_TYPE_TX_MONO = 1, /* A TX (delivery) time in mono */
->> };
->>
->> and start doing "skb->tstamp_type = SKB_TSTAMP_TYPE_TX_MONO;" instead of
->> "skb->tstamp_type = 1;"
->>
->> and the same for "skb->tstamp_type = SKB_TSTAMP_TYPE_RX_REAL;" instead of
->> "skb->tstamp_type = 0;"
->>
->>
->> This one I am not sure but probably need to change the skb_set_delivery_time() function signature also:
->>
->> static inline void skb_set_delivery_time(struct sk_buff *skb, ktime_t kt,
->> -                                        bool mono)
->> +                     enum skb_tstamp_type tstamp_type)
->>
-> This should be straight-forward as well 
-> 
->> The third patch is to change tstamp_type from 1 bit to 2 bits and add SKB_TSTAMP_TYPE_TX_USER.
->>
->> struct sk_buff {
->>         /* ... */
->> -        __u8            tstamp_type:1;
->> +        __u8            tstamp_type:2;
->>         /* ... */
->> };
->>
->> enum skb_tstamp_type {
->>     SKB_TSTAMP_TYPE_RX_REAL = 0,    /* A RX (receive) time in real */
->>     SKB_TSTAMP_TYPE_TX_MONO = 1,    /* A TX (delivery) time in mono */
->> +    SKB_TSTAMP_TYPE_TX_USER = 2,    /* A TX (delivery) time and its clock
->>                      * is in skb->sk->sk_clockid.
->>                      */
->>                
->> };
->>
->> This will shift a bit out of the byte where tstamp_type lives. It should be the "inner_protocol_type" bit by my hand count. Please check if it is directly used in bpf instruction (filter.c). As far as I look, it is not, so should be fine. Some details about bpf instruction accessible skb bit field here: https://lore.kernel.org/all/20230321014115.997841-1-kuba@kernel.org/
-> This is where i would need thorough reviews from you and Willem as my area of expertise is limited to part of network stack and BPF is not one of them. 
-> But i have plan on this and i know how to do it. 
-> 
-> Expect patches to be arriving to your inboxes next week, as we have a long weekend in Qualcomm 
-> Fingers crossed :) 
-> 
->>
->>
->>> 3. This will be a first step to make the design scalable.
->>> 4. Tomorrow if we have more timestamp to support, upstream community has to do is
->>> update the enum and increase the bitfield from 2=>3 and so on.
->>>
->>> I need help from Martin to test the patch which renames the mono_delivery_time
->>> to tstamp_type (Which i feel should be straight forward as the value of the bit is 1)
->>
->> The bpf change is not a no-op rename of mono_delivery_time. It needs to take care of the new bit added to the tstamp_type. Please see the previous email (and I also left it in the beginning of this email).
->>
->> Thus, you need to compile the selftests/bpf/ and run it to verify the changes when handling the new bit. The Documentation/bpf/bpf_devel_QA.rst has the howto details. You probably only need the newer llvm (newer gcc should work also as bpf CI has been using it) and the newer pahole. I can definitely help if there is issue in running the test_progs in selftests/bpf or you have question on making the changes in filter.c. To run the test: "./test_progs -t tc_redirect/tc_redirect_dtime"
->>
+I've updated the for-next snapshot so it contains the updated version
+that is based on top of the required changes. The same patch will be
+also sent for merge.
