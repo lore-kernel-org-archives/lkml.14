@@ -1,63 +1,63 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4546359B74
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 20:04:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B02C5A10C
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 20:04:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710792260; cv=none; b=nO7eAyR71xVFExyrh6CD/Vqmv7f3Idd7oIwbnT3o97d15Iebs+A2UJEnTnlQzVehGoWS7127Hil9K+/RGdatqzC+Z4w38QDGOG/zOsDCDZ10m8zebFU5BRAQQNIMeQNBDenMuTmpaX1Cf+zO03sZmKHbwMmgfg/hCh9M4H+Co+U=
+	t=1710792262; cv=none; b=upFwF/QAF6KqoOwDktJLEsOEDmUcBzH8ZMXzpS44LfBFHJKxno4BaLJn4bsKzAjAeGwZ3MFaImGaUcAi4sQKuOavpifVML4cs03DKGnWn1rhdlxPlVWu/1GVlBImd7+wDbXwXvbo3QC5McHL0tZ67LdK2QCgS8pMM5wkZ9CK0Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710792260; c=relaxed/simple;
-	bh=xsXv+igcIa2LD7vY6Lm1s+FcdmOPBabwjo2Ma8p3Wuc=;
+	s=arc-20240116; t=1710792262; c=relaxed/simple;
+	bh=5RHxSgtdvJKVCp5Pr7PrdSJPxWg3TC/UA6xoLVOm0PY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bXDv8UHyeI2MAG+fgd2rhAsGrfe2zXQHaOlaEQJXaKGnUE1cNSPirXEELoQfRcN1ZCxUaIIYymigL0RBRzMl3qQ/+26cQ0ldK52Qeje+GLSRNfc0nEtsKLTR32uscU6p778ha4Xuher1fC4duyAXOp/cIFZAnimtvCKcHecQmBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Mw6XQS2y; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=OtU/n2/jQaHp/xqYysABgxVTrxnj/zWq+3fCP7uMkvTw6bROFmxH6/IZ29je2sXFjpuATqXZdzsHgve8sg77lCmtnSCM6A7qTwr3xHFVuk6QJ6kmDQpWu07QfnyRIx7pjBkM1odOXQ640VswxwPnGMtiBCOGmmaeb9TJvJOQxZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q4pSmCqs; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mw6XQS2y"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q4pSmCqs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710792258;
+	s=mimecast20190719; t=1710792259;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vtZJyICZEGrBJHpYWSu5beimQ7UmPGzVa4S5UCB/Dcs=;
-	b=Mw6XQS2ydeiJ2OY+FGnKceeK1XbSz8gMZGBxBJYvcvYXKiqhxNSwhaANiZ2umRgLcM4fz4
-	fn8X2vq7+b8jA14Wz77o2VYrunOQjzYN14RXy7gd1aj1Bsh2PGPmIir9IiIOdZfuFV/Q7L
-	bVrzDVv6FJTogPtYTJ6TTm+nhmHdwIU=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=4C+lWpN1qDfU+nymiqOVXkY7IqPiijqTb8F5rFjpmTU=;
+	b=Q4pSmCqsAEUSRMQIAZlKkFU4pvuON9ds096d1EDQeGDqj50BeVFZe+bY9sOZlWKANnK7fz
+	2Wx9hRaNILhQfMRzRgBYsydoh2WLwe5tp8ZvlNDuoXwieiGh4t0dNZGr69N9bxFU0bisK4
+	VVH4ZxO2sqjSL6kXrn70nKNHnb2vi+k=
+Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
+ [209.85.210.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-467-F3n1eiPyMYaevvpyH3Kktw-1; Mon, 18 Mar 2024 16:04:13 -0400
-X-MC-Unique: F3n1eiPyMYaevvpyH3Kktw-1
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-430b4572a97so17523051cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 13:04:13 -0700 (PDT)
+ us-mta-689-8bNcC5kpOOyVIcC0hyiH4g-1; Mon, 18 Mar 2024 16:04:18 -0400
+X-MC-Unique: 8bNcC5kpOOyVIcC0hyiH4g-1
+Received: by mail-ot1-f70.google.com with SMTP id 46e09a7af769-6dde25ac92fso2115193a34.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 13:04:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710792253; x=1711397053;
+        d=1e100.net; s=20230601; t=1710792257; x=1711397057;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vtZJyICZEGrBJHpYWSu5beimQ7UmPGzVa4S5UCB/Dcs=;
-        b=ECNyTdekzZlsDQsdGQgINCY5gpih+OjpmCt7/YuCw/N8sMTUsAW0Y9eL4IGaq0GCJa
-         IYyowzCpdOeFybMD8PAxlpxF7kGHktV8iMKg5cn7qTeX/o7Rf/KSypvhV9oztyHtdm1p
-         QsR73jKJxaAZaV1sFpmBfykFlg/lciU+8+LcG6f1INBJHTca9RDW/umTac5/RuieCyZO
-         Kw8zAxMTgV0ihk4mx8ATZahFcfORRb7JHlVJ7XsN3c1WXPHTZGMgckv1NnxAL65LaDFK
-         r+0Z7mBkfr6//F9EkGsKCFZ2Qffvtapk/ChoX07Gg1vUcN7m62j5rQk2HMY32yjX++97
-         I+PQ==
-X-Gm-Message-State: AOJu0Yy3wAd1lh+CtK/aGruwQuC+vI5bQZdjLsPGtezlmZR8Zpr4pPht
-	NDr+h8b9MRsuFAlIAzrCgf1D+dkuIcskhakT1QepvE80eecvOzGRCzoMGuRRarujBNxcj9eDcOt
-	hopNXzGqyBLqVOT3O6ttdYCw3ZEdXJbJ/oxRHxWKv6JpE7V0JAP/gAVtzUYF1gbJoVuhnCY2O5j
-	8VcnGfsv7/+Pg18tOomquZ3dogPZ/waCqcEaX6+ByFCiM=
-X-Received: by 2002:a05:622a:134e:b0:430:c82f:b9ab with SMTP id w14-20020a05622a134e00b00430c82fb9abmr6625425qtk.0.1710792252475;
-        Mon, 18 Mar 2024 13:04:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFopBSFWwBK3v15ombZ7ZQDo2UFCgzW4nradhEvm8gSdWhrm9dq3oWG6x2VBEnxvd6M1ShIXA==
-X-Received: by 2002:a05:622a:134e:b0:430:c82f:b9ab with SMTP id w14-20020a05622a134e00b00430c82fb9abmr6625362qtk.0.1710792251793;
-        Mon, 18 Mar 2024 13:04:11 -0700 (PDT)
+        bh=4C+lWpN1qDfU+nymiqOVXkY7IqPiijqTb8F5rFjpmTU=;
+        b=Cpx+jBCnAGUPREv7jCXW8Z1D39oXiZnmX5/l91+WiBOOoMvUS9x4xA70KrpDKd04yJ
+         Su/V6LLFQYjoZZ2LCgiWrxa1tE22sUJKutNMEbEFnyQvY2Kr4bAyEVpmYWldhn49iKev
+         iqepSPN1R0OHLD71egi5141et0vS9HTcXpPmiMS0zXJqIGreIDwmFFQjytQLcKBqtp4i
+         XnZlMrPUoqZr35zMZ7f9DduwXfZQPl8nuvCk0YKU/kXIm3/Q02YsHT0RV4xapaMY5e/S
+         bWOp4l9XJF3iqw2tCOTQvIjNnFqMExPVtM7KNPXxTbj41+OzQ3BZn42Z3fzXMKa/ktQL
+         2Wog==
+X-Gm-Message-State: AOJu0YyfmqpE549AVjwspLhfzAz3jgNSCapTiYB271duzux3cTrl1UYC
+	QyBplpDPywcS3x+tkmMFuGF8A7otwBy7ToiYulkJQxoins1LDBdVFvL3i4+Qs6RMOMnDwUqZOjd
+	rh1VurysUAWhE3nfK2psRfvB2tkPO3uA+MAdbHlBIxKBtsAAYx28BwJMwAUMU2X+1m2Z6bNVoVx
+	uGWuMD4ufdbQ+8berOF8WrGSGh3R7c1ppETBmLTC94e8s=
+X-Received: by 2002:a05:6830:33eb:b0:6e5:14d1:54bc with SMTP id i11-20020a05683033eb00b006e514d154bcmr11071085otu.0.1710792257199;
+        Mon, 18 Mar 2024 13:04:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEa6+F4MLCWW6AG4iEABFfgYmZgzy20NeyXKIcAPU+wG9nL9kvLpyVpLWIkaaqT6A2sxlc6og==
+X-Received: by 2002:a05:6830:33eb:b0:6e5:14d1:54bc with SMTP id i11-20020a05683033eb00b006e514d154bcmr11071025otu.0.1710792256645;
+        Mon, 18 Mar 2024 13:04:16 -0700 (PDT)
 Received: from x1n.. ([99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id hj10-20020a05622a620a00b0042ebbc1196fsm3484491qtb.87.2024.03.18.13.04.10
+        by smtp.gmail.com with ESMTPSA id hj10-20020a05622a620a00b0042ebbc1196fsm3484491qtb.87.2024.03.18.13.04.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 13:04:11 -0700 (PDT)
+        Mon, 18 Mar 2024 13:04:16 -0700 (PDT)
 From: peterx@redhat.com
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
@@ -72,14 +72,16 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	linux-arm-kernel@lists.infradead.org,
 	peterx@redhat.com,
-	Naoya Horiguchi <naoya.horiguchi@nec.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Subject: [PATCH v2 04/14] mm/x86: Change pXd_huge() behavior to exclude swap entries
-Date: Mon, 18 Mar 2024 16:03:54 -0400
-Message-ID: <20240318200404.448346-5-peterx@redhat.com>
+	Russell King <linux@armlinux.org.uk>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Fabio Estevam <festevam@denx.de>
+Subject: [PATCH v2 07/14] mm/arm: Redefine pmd_huge() with pmd_leaf()
+Date: Mon, 18 Mar 2024 16:03:57 -0400
+Message-ID: <20240318200404.448346-8-peterx@redhat.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240318200404.448346-1-peterx@redhat.com>
 References: <20240318200404.448346-1-peterx@redhat.com>
@@ -89,108 +91,62 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Peter Xu <peterx@redhat.com>
 
-This patch partly reverts below commits:
+Most of the archs already define these two APIs the same way.  ARM is more
+complicated in two aspects:
 
-3a194f3f8ad0 ("mm/hugetlb: make pud_huge() and follow_huge_pud() aware of non-present pud entry")
-cbef8478bee5 ("mm/hugetlb: pmd_huge() returns true for non-present hugepage")
+  - For pXd_huge() it's always checking against !PXD_TABLE_BIT, while for
+    pXd_leaf() it's always checking against PXD_TYPE_SECT.
 
-Right now, pXd_huge() definition across kernel is unclear. We have two
-groups that think differently on swap entries:
+  - SECT/TABLE bits are defined differently on 2-level v.s. 3-level ARM
+    pgtables, which makes the whole thing even harder to follow.
 
-  - x86/sparc:     Allow pXd_huge() to accept swap entries
-  - all the rest:  Doesn't allow pXd_huge() to accept swap entries
+Luckily, the second complexity should be hidden by the pmd_leaf()
+implementation against 2-level v.s. 3-level headers.  Invoke pmd_leaf()
+directly for pmd_huge(), to remove the first part of complexity.  This
+prepares to drop pXd_huge() API globally.
 
-This is so confusing.  Since the sparc helpers seem to be added in 2016,
-which is after x86's (2015), so sparc could have followed a trend.  x86
-proposed such swap handling in 2015 to resolve hugetlb swap entries hit in
-GUP, but now GUP guards swap entries with !pXd_present() in all layers so
-we should be safe.
+When at it, drop the obsolete comments - it's outdated.
 
-We should define this API properly, one way or another, rather than keep
-them defined differently across archs.
-
-Gut feeling tells me that pXd_huge() shouldn't include swap entries, and it
-turns out that I am not the only one thinking so, the question was raised
-when the current pmd_huge() for x86 was proposed by Ville Syrjälä:
-
-https://lore.kernel.org/all/Y2WQ7I4LXh8iUIRd@intel.com/
-
-  I might also be missing something obvious, but why is it even necessary
-  to treat PRESENT==0+PSE==0 as a huge entry?
-
-It is also questioned when Jason Gunthorpe reviewed the other patchset on
-swap entry handlings:
-
-https://lore.kernel.org/all/20240221125753.GQ13330@nvidia.com/
-
-Revert its meaning back to original.  It shouldn't have any functional
-change as we should be ready with guards on !pXd_present() explicitly
-everywhere.
-
-Note that I also dropped the "#if CONFIG_PGTABLE_LEVELS > 2", it was there
-probably because it was breaking things when 3a194f3f8ad0 was proposed,
-according to the report here:
-
-https://lore.kernel.org/all/Y2LYXItKQyaJTv8j@intel.com/
-
-Now we shouldn't need that.
-
-Instead of reverting to _PAGE_PSE raw check, leverage pXd_leaf().
-
-Cc: Naoya Horiguchi <naoya.horiguchi@nec.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: x86@kernel.org
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Fabio Estevam <festevam@denx.de>
+Cc: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- arch/x86/mm/hugetlbpage.c | 18 ++++--------------
- 1 file changed, 4 insertions(+), 14 deletions(-)
+ arch/arm/mm/hugetlbpage.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/arch/x86/mm/hugetlbpage.c b/arch/x86/mm/hugetlbpage.c
-index 5804bbae4f01..8362953a24ce 100644
---- a/arch/x86/mm/hugetlbpage.c
-+++ b/arch/x86/mm/hugetlbpage.c
-@@ -20,29 +20,19 @@
- #include <asm/elf.h>
+diff --git a/arch/arm/mm/hugetlbpage.c b/arch/arm/mm/hugetlbpage.c
+index dd7a0277c5c0..c2fa643f6bb5 100644
+--- a/arch/arm/mm/hugetlbpage.c
++++ b/arch/arm/mm/hugetlbpage.c
+@@ -18,11 +18,6 @@
+ #include <asm/tlb.h>
+ #include <asm/tlbflush.h>
  
- /*
-- * pmd_huge() returns 1 if @pmd is hugetlb related entry, that is normal
-- * hugetlb entry or non-present (migration or hwpoisoned) hugetlb entry.
-- * Otherwise, returns 0.
-+ * pmd_huge() returns 1 if @pmd is hugetlb related entry.
-  */
- int pmd_huge(pmd_t pmd)
- {
--	return !pmd_none(pmd) &&
--		(pmd_val(pmd) & (_PAGE_PRESENT|_PAGE_PSE)) != _PAGE_PRESENT;
-+	return pmd_leaf(pmd);
- }
- 
- /*
-- * pud_huge() returns 1 if @pud is hugetlb related entry, that is normal
-- * hugetlb entry or non-present (migration or hwpoisoned) hugetlb entry.
-- * Otherwise, returns 0.
-+ * pud_huge() returns 1 if @pud is hugetlb related entry.
-  */
+-/*
+- * On ARM, huge pages are backed by pmd's rather than pte's, so we do a lot
+- * of type casting from pmd_t * to pte_t *.
+- */
+-
  int pud_huge(pud_t pud)
  {
--#if CONFIG_PGTABLE_LEVELS > 2
--	return !pud_none(pud) &&
--		(pud_val(pud) & (_PAGE_PRESENT|_PAGE_PSE)) != _PAGE_PRESENT;
--#else
--	return 0;
--#endif
-+	return pud_leaf(pud);
- }
+ 	return 0;
+@@ -30,5 +25,5 @@ int pud_huge(pud_t pud)
  
- #ifdef CONFIG_HUGETLB_PAGE
+ int pmd_huge(pmd_t pmd)
+ {
+-	return pmd_val(pmd) && !(pmd_val(pmd) & PMD_TABLE_BIT);
++	return pmd_leaf(pmd);
+ }
 -- 
 2.44.0
 
