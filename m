@@ -1,63 +1,63 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144445821B
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 20:04:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15DEA59175
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 20:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710792256; cv=none; b=WFuv9i1Tu15f1k17IOum8BN5HIziMojCv8YHe9X1FwEGUurK5JLbNNrfqN8J2pFbC5jQxVTYk6y900tX46SDbl928DTYEV5yL1+qYjlQ6+mecSJrhgdTrsUCMIncPeCe2jKtErfA4fbvRTtV9FSDQJzdALhhIHKxXBeepsKlDWU=
+	t=1710792258; cv=none; b=PE2v0qaQ6ojJtH02uoPnN/MEH0SlW+Ha32qt8G+6xSrR2WEK65vtFuzkVLQ8RNSSpjG6XxjQLDlvM2IafrhowmsxXy1Vvw9liq/iOIkkm1F7XO+xFtWhfINCvZEXeMJVHPpyaJ9vbv/UZt520nkTnwIPBboAX75XKvzjdxm8Ud8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710792256; c=relaxed/simple;
-	bh=XKAmzhpmXEAjAsa42PYgBQQ2HzrzYrw3Lh5/ehBy8nY=;
+	s=arc-20240116; t=1710792258; c=relaxed/simple;
+	bh=iHHSvsdkBOFub0mcOT/89y75sePdz9RiRVPlZT5QMlQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J24YHZOnudDb8KLcqGVr0KwAXx6sV+cSvyFwFG9nyyvLRsZBG1A0Y67JZ9CmVmhTGnVpdIY/FQVSKo32Rz0Jix6jLx56pIGmWGwz7SUcp7S0O6AlTOYMivvQ8JA5ouXVO3+CKM3EmuzfdRUCPIN5sXCSi6muAdKHEKlEFyjgVqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CYpBgvBF; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=qQSP7Fy+loyiuijsj2YFDAz38a6angki8pkVxg9u33LtIn0a7uqW3ECt7RwznBlpUv+u0eNhChb1GXdBsdbZXbKgqyaib1oVRHyFRbJvlLJUnbCZ0+RzO7IRSwZghZiLSoX+K86WICNZ+/pAJ5KjzQAFUyM+UTpqY3Y+9pWZvSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EPl4GA9W; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CYpBgvBF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EPl4GA9W"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710792254;
+	s=mimecast20190719; t=1710792256;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OThRyXZFMjugEtcpgf//pX/PpGcoxbD3wNFnQts0Kco=;
-	b=CYpBgvBFBU7+pUOX2fRSsN+iwKKjs5LAFpibov9hLuYTaX6SyA6c4pIjn2RD12StG0eT3b
-	+bh0VC7tgFbLc154GOo9pqtDWBSBwL+k2r5KylW+n7Ij96OjNTBBqvFZJQuOIet8jbFjpC
-	sFoty/bJiHt5QJXYwXNd40P3BhAKpZE=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=dXyJDuJosTa0kFBnhKvW1aqbtapsaxz0OHU+bPr+fnc=;
+	b=EPl4GA9WvSWdWpPHlKsn7Rh7Hb+GOHKpJ/eLzmbMCBh5VTcpp8RVHinnSfBITdu2M1xDhv
+	8gTEOp38fCtVJBa/pHqf6jgNAveAHbdQ3hQkDiwmVEc/khrN2pogPf+vVCS0w9+CKMyuMW
+	tCUuDU5ZqO75kcJX0fu5S+spWXaqf7c=
+Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
+ [209.85.167.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-20-qVsjrnXYP1CgWOBHWBTaWQ-1; Mon, 18 Mar 2024 16:04:11 -0400
-X-MC-Unique: qVsjrnXYP1CgWOBHWBTaWQ-1
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-430b4572a97so17522751cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 13:04:11 -0700 (PDT)
+ us-mta-199-UlfJOExmPpSz5mB0RQr7wA-1; Mon, 18 Mar 2024 16:04:14 -0400
+X-MC-Unique: UlfJOExmPpSz5mB0RQr7wA-1
+Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-3c386baa6feso290842b6e.1
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 13:04:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710792251; x=1711397051;
+        d=1e100.net; s=20230601; t=1710792254; x=1711397054;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OThRyXZFMjugEtcpgf//pX/PpGcoxbD3wNFnQts0Kco=;
-        b=jKe+zlehpdU6c+Vkm8FPxBNj2bnr2ymoN5IugdU3lhYAR/mATMz0qVeqnhVcT5WgOG
-         cD88dyrlpAtzgyeplDzY5TP8Gr94Hu2nNoKpqaqSBCcJ09YBrUs1vrrCisM66lLCS6fi
-         rEOHeBH4xJyR104ThqVtWlO5rRgZ/Bn3KhpPFjv/c1QGuqV5gJJJ8budvgD5370WEsfg
-         F5oCMx04oc8RI5K0jwPpl/Rqg3GH/gg7wUrhkqUs6e9I6eZF62L79b88Wo27vIRRB0f9
-         Bkr/zcIAwhNx89MkZSP5r0owMUrqAtT05RGROKQiuFuu646gNX+YzO8yZZ4Zb1Zxivdz
-         XBpg==
-X-Gm-Message-State: AOJu0Yw/2zd8vjFRbEiCBc25Swyt/cxvMRFI8Myyb0jeLLQ6PYxCOqdv
-	P7jmTv37/VIlBnzQIO5n+PWTCYTdlIdRPfI3jrSBllDjyg4+rWUyLVXWvpgB/ch4yQnrooAWqrX
-	Jm+LKSkGtVN9oxZTf5HJJvnp5iySQhG8WvXzBL15hIIb1ffv+QyJd0ggAhXriDtxGWCiNYxR5gG
-	htz8+NW4IRuYD5qL4GT+TBcG06Ix8YJB20q2nQ9nqwt1M=
-X-Received: by 2002:a05:622a:100b:b0:430:ace8:9801 with SMTP id d11-20020a05622a100b00b00430ace89801mr13041024qte.1.1710792250936;
-        Mon, 18 Mar 2024 13:04:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE3lB75/Xyi/Yr3FGp4iv8P5rE4DSC0aUJAJLEw6DejnKFtl7A4ZV0qXSchssNp4WRDw4IDoQ==
-X-Received: by 2002:a05:622a:100b:b0:430:ace8:9801 with SMTP id d11-20020a05622a100b00b00430ace89801mr13040968qte.1.1710792250407;
-        Mon, 18 Mar 2024 13:04:10 -0700 (PDT)
+        bh=dXyJDuJosTa0kFBnhKvW1aqbtapsaxz0OHU+bPr+fnc=;
+        b=edNAvDak688+H1lIHTKLSLN63gGie7xil3+wuodSL3yfAkh4i8OYX3rwzRbz7if7r+
+         ZoqWpiq4tLaEdXrlZFxjloQCAANdyzq4HWG4RMTKAJXtBWlNjT773vwqjxGnX0iL/g8w
+         rDUooxjmfAPki7bG036CBG9OgBdGp8A2CjCGwtMXl4Fu+b5Vwu92wNLHEduzCAdUMOft
+         IynDg7jwsv1BjrpOQXt4Nc0yGBW73F3v69zSzstLp6gucWLEh0d6cQk4ZB/PXeuffNHp
+         XBVsEyghEfKQjDonnu8hPl/r0hvCgSVvnyI4qQ6uldAtCxcSsGoHeUINhr2K5+OQU7Ou
+         hAVA==
+X-Gm-Message-State: AOJu0Yzjtwn8sncsgGKmKs0xBVCG+tMsc7zfYrXr9kXqtI6OboV1MNyv
+	mKC9LmAY13Gcw8IxeN5g5jmSh0bqUUJrvVgr5sBhFfh6zxmw1WEJpAFzUn64WQY9zsgCyJh7jty
+	5G/twXQPkdV9fPG3b1Rquu5zt9abm1DtfQr869U9bgM6ZQx6MDerqWSA86AkkJnBn+7r3Ydw3tD
+	h/mD8XB0h5rQ9gHudmWAEswyIgCFYr3JI16nCzHEoPdM8=
+X-Received: by 2002:a05:6808:1508:b0:3c3:62e8:b257 with SMTP id u8-20020a056808150800b003c362e8b257mr12175265oiw.2.1710792253782;
+        Mon, 18 Mar 2024 13:04:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEUhgF4cxTmP19vnk1XO+36zS6Ji6sYyFBctjoFtXbctIHX3L15GV2lInQmSaTOj2BJ1Nuktg==
+X-Received: by 2002:a05:6808:1508:b0:3c3:62e8:b257 with SMTP id u8-20020a056808150800b003c362e8b257mr12175212oiw.2.1710792253188;
+        Mon, 18 Mar 2024 13:04:13 -0700 (PDT)
 Received: from x1n.. ([99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id hj10-20020a05622a620a00b0042ebbc1196fsm3484491qtb.87.2024.03.18.13.04.09
+        by smtp.gmail.com with ESMTPSA id hj10-20020a05622a620a00b0042ebbc1196fsm3484491qtb.87.2024.03.18.13.04.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 13:04:09 -0700 (PDT)
+        Mon, 18 Mar 2024 13:04:12 -0700 (PDT)
 From: peterx@redhat.com
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
@@ -71,10 +71,12 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	linuxppc-dev@lists.ozlabs.org,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	linux-arm-kernel@lists.infradead.org,
-	peterx@redhat.com
-Subject: [PATCH v2 03/14] mm/gup: Check p4d presence before going on
-Date: Mon, 18 Mar 2024 16:03:53 -0400
-Message-ID: <20240318200404.448346-4-peterx@redhat.com>
+	peterx@redhat.com,
+	"David S . Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>
+Subject: [PATCH v2 05/14] mm/sparc: Change pXd_huge() behavior to exclude swap entries
+Date: Mon, 18 Mar 2024 16:03:55 -0400
+Message-ID: <20240318200404.448346-6-peterx@redhat.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240318200404.448346-1-peterx@redhat.com>
 References: <20240318200404.448346-1-peterx@redhat.com>
@@ -88,38 +90,40 @@ Content-Transfer-Encoding: 8bit
 
 From: Peter Xu <peterx@redhat.com>
 
-Currently there should have no p4d swap entries so it may not matter much,
-however this may help us to rule out swap entries in pXd_huge() API, which
-will include p4d_huge().  The p4d_present() checks make it 100% clear that
-we won't rely on p4d_huge() for swap entries.
+Please refer to the previous patch on the reasoning for x86.  Now sparc is
+the only architecture that will allow swap entries to be reported as
+pXd_huge().  After this patch, all architectures should forbid swap entries
+in pXd_huge().
 
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Andreas Larsson <andreas@gaisler.com>
+Cc: sparclinux@vger.kernel.org
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- mm/gup.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/sparc/mm/hugetlbpage.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 69a777f4fc5c..802987281b2f 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -776,7 +776,7 @@ static struct page *follow_p4d_mask(struct vm_area_struct *vma,
+diff --git a/arch/sparc/mm/hugetlbpage.c b/arch/sparc/mm/hugetlbpage.c
+index b432500c13a5..d31c2cec35c9 100644
+--- a/arch/sparc/mm/hugetlbpage.c
++++ b/arch/sparc/mm/hugetlbpage.c
+@@ -409,14 +409,12 @@ pte_t huge_ptep_get_and_clear(struct mm_struct *mm, unsigned long addr,
  
- 	p4dp = p4d_offset(pgdp, address);
- 	p4d = READ_ONCE(*p4dp);
--	if (p4d_none(p4d))
-+	if (!p4d_present(p4d))
- 		return no_page_table(vma, flags);
- 	BUILD_BUG_ON(p4d_huge(p4d));
- 	if (unlikely(p4d_bad(p4d)))
-@@ -3069,7 +3069,7 @@ static int gup_p4d_range(pgd_t *pgdp, pgd_t pgd, unsigned long addr, unsigned lo
- 		p4d_t p4d = READ_ONCE(*p4dp);
+ int pmd_huge(pmd_t pmd)
+ {
+-	return !pmd_none(pmd) &&
+-		(pmd_val(pmd) & (_PAGE_VALID|_PAGE_PMD_HUGE)) != _PAGE_VALID;
++	return pmd_leaf(pmd);;
+ }
  
- 		next = p4d_addr_end(addr, end);
--		if (p4d_none(p4d))
-+		if (!p4d_present(p4d))
- 			return 0;
- 		BUILD_BUG_ON(p4d_huge(p4d));
- 		if (unlikely(is_hugepd(__hugepd(p4d_val(p4d))))) {
+ int pud_huge(pud_t pud)
+ {
+-	return !pud_none(pud) &&
+-		(pud_val(pud) & (_PAGE_VALID|_PAGE_PUD_HUGE)) != _PAGE_VALID;
++	return pud_leaf(pud);
+ }
+ 
+ static void hugetlb_free_pte_range(struct mmu_gather *tlb, pmd_t *pmd,
 -- 
 2.44.0
 
