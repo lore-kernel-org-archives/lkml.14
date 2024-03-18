@@ -1,118 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E97A1D530;
-	Mon, 18 Mar 2024 03:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568081E86A;
+	Mon, 18 Mar 2024 03:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710733038; cv=none; b=gZ7MZYgGuTls8XBwvApMA7gIVpJWj+UpTcNCLhC1jOZnrukil16vct7qwNlbDZLZcVn3QctMkWSOUpLBnKqY55rC/0Yl8IhiE3L/uRVg88+sJNdKyUXAULkzokKNqNozAPvRH41Hd7Qh29aBdjRuL+Zwt8ey9KBTCRG5uQX2+J0=
+	t=1710733076; cv=none; b=Qw3pTTX9okvHNRwNv7BbnqtTdEUWQ/QFPD+PzgTHEwu/VnRAW2CvMT4XzeW6mu4sdoPUZ0FaNzHKVcLPVm2emD7ImslZPn5tDc7b/0o4lvPzqut9+qS54PKy/IGHOJBp5W0amkQdIkMxSNWqYLPQOEbfWttI+lU/GoRAIeMdHUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710733038; c=relaxed/simple;
-	bh=OtYNbsQDiWdUoo7LT1A1WLk7i98yL98HDFPaacqRjwM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JHufaLVcgh5KkESnyo5JgZgBnC70qUFfnIROqvxixMJBJWvtGPpAt8K28zb3VZM1LMiqbeyD1uyU4LxG9sAuVNUib6/RCpF6YihLq/NHtOjAi43YKzoLttYcncSORQnETQlx44/ep/NRYcE92PvgzAw4VAmwFUT3JAbS5vuMKvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rIfMeZve; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710733076; c=relaxed/simple;
+	bh=Z0/gdV4cCBOh4vllNLfzHr1A+MKLPraA8SnzR3S6xJ4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ruo88fRmwyJ5qmwujd9Ymig+Xj13vZatx05MRN5Cseyymx1eNwd3SZ72fKKR8SGnjpPFL7AfLwFG5DDkw2eLhjgXojcq3dAEUF+32DI24ejS5MFIuD7Sr6v4hpHtzatbNx3kuPSgCHMXC09/BOeBbNY4JnyLqXF8ufaDR9fs7BM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=Rtap6GhU; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rIfMeZve"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 490C2C433F1;
-	Mon, 18 Mar 2024 03:37:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710733038;
-	bh=OtYNbsQDiWdUoo7LT1A1WLk7i98yL98HDFPaacqRjwM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rIfMeZveN5OCk18QBPfTD0sndOtEkG1C/4pQNBc1hok8JZcWfLhjB2nGWenYIxdy4
-	 wynrBuJW0qhDlU6BzYYEblmJYe7KWxLFnkqYfAXuC34PR1jkOZrEne5ir4HmPiz4EH
-	 n8KKCqoMoSnX2A2zsXytGzxR6Nw3XyVmu8z4eVdvcFplcqpvbxKkMxa2LVXNDJdgcA
-	 eoKDC7Qpw4uMWn2XVh3IHHgapcMsz+0hh/Mg5DibI9YlbAWaJJR2mD9XGCj1ozYP3F
-	 k7U62WcARSxR6yYcqFzKCXnN0R8p+IKv2P+GrxGZxxY/5795+uKCaEVtxsJ3dJvzRD
-	 MxijlzD+C0xjA==
-Date: Sun, 17 Mar 2024 22:37:15 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/21] arm64: dts: qcom: sc8280xp: Add PCIe bridge node
-Message-ID: <26mic7smm2aez3enydiiuul2c5yru4kmx26n4mo63nvy4bscuv@jql4hhe3gia6>
-References: <20240221-pcie-qcom-bridge-dts-v1-0-6c6df0f9450d@linaro.org>
- <20240221-pcie-qcom-bridge-dts-v1-9-6c6df0f9450d@linaro.org>
- <9d6c617a-bc3a-47c4-a988-b41b804d8cfe@linaro.org>
- <20240222053958.GF3374@thinkpad>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Rtap6GhU"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42HKwTdS030284;
+	Sun, 17 Mar 2024 20:15:04 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=pfpt0220; bh=5PHteGiApJD0KUkkw4/qyw
+	UQZ26T+OOJg48LpixAtFg=; b=Rtap6GhU6GXV2oh5Gu7SJGCbR2fWjlJ1/dKgaO
+	gaYCcaEAVpuUqSwGtTM7Rx7vz8Yyh8WBsh6WPyuVRtvHPKVv5uI9w/9XlI9/ARgK
+	97TXEaUaT+Xy5oPnw/6mb6NzMpH6b5iDrFZkqTr2M5v28553OA7yzp0RpP9rl0RA
+	etlTdT9Zf9SGwjqkHGTyBR73CN7CNpd6OQkTYIm0494+Tu2KDVnM+I3zITds6z9+
+	M8ywX/jq2T8mceQmF7F+vxQ9IG4jXPuVMUEYvlPM7NGBW3tZD24f+SeTZ40qH2mS
+	dAH3kpnsjn+1l9EpivwddoeT4WTKIchsDLz8TYuJHJW3sg+A==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3wwaxgbder-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 17 Mar 2024 20:15:04 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.12; Sun, 17 Mar 2024 20:15:02 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
+ Transport; Sun, 17 Mar 2024 20:15:02 -0700
+Received: from maili.marvell.com (unknown [10.28.36.165])
+	by maili.marvell.com (Postfix) with SMTP id 8482C3F7065;
+	Sun, 17 Mar 2024 20:14:58 -0700 (PDT)
+Date: Mon, 18 Mar 2024 08:44:57 +0530
+From: Ratheesh Kannoth <rkannoth@marvell.com>
+To: Jijie Shao <shaojijie@huawei.com>
+CC: <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>, <davem@davemloft.net>,
+        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+        <michal.kubiak@intel.com>, <shenjian15@huawei.com>,
+        <wangjie125@huawei.com>, <liuyonglong@huawei.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2 net 1/3] net: hns3: fix index limit to support all
+ queue stats
+Message-ID: <20240318031457.GA1312724@maili.marvell.com>
+References: <20240316111057.277591-1-shaojijie@huawei.com>
+ <20240316111057.277591-2-shaojijie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240222053958.GF3374@thinkpad>
+In-Reply-To: <20240316111057.277591-2-shaojijie@huawei.com>
+X-Proofpoint-GUID: tcY-9LN2-udleDWftkZ1_pn0UqaAua_S
+X-Proofpoint-ORIG-GUID: tcY-9LN2-udleDWftkZ1_pn0UqaAua_S
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-17_12,2024-03-15_01,2023-05-22_02
 
-On Thu, Feb 22, 2024 at 11:09:58AM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Feb 21, 2024 at 01:39:01PM +0100, Konrad Dybcio wrote:
-> > On 21.02.2024 04:41, Manivannan Sadhasivam wrote:
-> > > On Qcom SoCs, the PCIe host bridge is connected to a single PCIe bridge
-> > > for each controller instance. Hence, add a node to represent the bridge.
-> > > 
-> > > While at it, let's remove the bridge properties from board dts as they are
-> > > now redundant.
-> > > 
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > ---
-> > >  .../dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts     |  8 -----
-> > >  arch/arm64/boot/dts/qcom/sc8280xp.dtsi             | 40 ++++++++++++++++++++++
-> > >  2 files changed, 40 insertions(+), 8 deletions(-)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
-> > > index def3976bd5bb..f0a0115e08fa 100644
-> > > --- a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
-> > > +++ b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
-> > > @@ -733,14 +733,6 @@ &pcie4 {
-> > >  	status = "okay";
-> > >  
-> > >  	pcie@0 {
-> > > -		device_type = "pci";
-> > > -		reg = <0x0 0x0 0x0 0x0 0x0>;
-> > > -		#address-cells = <3>;
-> > > -		#size-cells = <2>;
-> > > -		ranges;
-> > > -
-> > > -		bus-range = <0x01 0xff>;
-> > > -
-> > >  		wifi@0 {
-> > 
-> > This doesn't seem right, pleas use a label
-> > 
-> 
-> Why? A node label is useful if we want to reference it at the root level in
-> board dts, but here it is not.
-> 
-
-Giving the bridge a label and then adding wifi@0 as a child using that
-label in the dts is pretty much how we do for everything else.
-
-I find this over-flattening hard to follow, but relying on child node
-names when extending the structure or adding properties have bitten us
-many times in the past.
-
-As such, I think the desired result in the dts should be:
-
-&pcie4 {
-	status = "okay";
-};
-
-&pcie4_bridge {
-	wifi@0 {
-		...
-	};
-};
-
-Regards,
-Bjorn
-
-> - Mani
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+On 2024-03-16 at 16:40:55, Jijie Shao (shaojijie@huawei.com) wrote:
+> From: Jie Wang <wangjie125@huawei.com>
+>
+> Currently, hns hardware supports more than 512 queues and the index limit
+> in hclge_comm_tqps_update_stats is useless. So this patch removes it.
+s/useless/wrong
+>
+> Fixes: 287db5c40d15 ("net: hns3: create new set of common tqp stats APIs for PF and VF reuse")
+> Signed-off-by: Jie Wang <wangjie125@huawei.com>
+> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
+> ---
+>  .../ethernet/hisilicon/hns3/hns3_common/hclge_comm_tqp_stats.c  | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_tqp_stats.c b/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_tqp_stats.c
+> index f3c9395d8351..618f66d9586b 100644
+> --- a/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_tqp_stats.c
+> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_tqp_stats.c
+> @@ -85,7 +85,7 @@ int hclge_comm_tqps_update_stats(struct hnae3_handle *handle,
+>  		hclge_comm_cmd_setup_basic_desc(&desc, HCLGE_OPC_QUERY_TX_STATS,
+>  						true);
+>
+> -		desc.data[0] = cpu_to_le32(tqp->index & 0x1ff);
+> +		desc.data[0] = cpu_to_le32(tqp->index);
+>  		ret = hclge_comm_cmd_send(hw, &desc, 1);
+>  		if (ret) {
+>  			dev_err(&hw->cmq.csq.pdev->dev,
+> --
+> 2.30.0
+>
