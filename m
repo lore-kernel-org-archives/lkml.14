@@ -1,127 +1,115 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F825F569
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 23:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748F45F85F
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 23:33:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710804716; cv=none; b=pu9XMoOiaktvrMDEVCm0jbfmFNFdhrQ/rT0cNfbXuwxxpXFpsEB5slE3TAK5N61T7YgQrWEjAkv+Zi3eFqY9asm99nNikfrbphDp41XV8hHUWhZCm0fw0rUzT2fQPtHuDaDGJp5A5yPe54fl2DDKqvqYYXEQlChENxKpN331Xac=
+	t=1710804840; cv=none; b=mST2QCGvZJ/1o0jdMn//PmzHXHRKAhMb4KBuBTfvFFtX+pYpgfeIzVA6ou+9KsNqsO6MyKk8Qr2ZeY7N7LTjUHKssgGJzeJLwkzeWlFvi7YKjjUqt5cweCLvwUuZDGcpv1/p62ozG7shnSxCEUDRDVfU98cNauHUsD5MDnXdNXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710804716; c=relaxed/simple;
-	bh=G8PXI75wyQJnt2jt/Qu4uZ0MJ2bX8a6fiwFYVwQxj54=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Ai7dxSEee5ac0qpn9DUtnrrBrKnLQOKSlIDL8Xll6RK2p1yClBB5fFTe0FWubP89zIVWUqJk1heTonSxLQuMoNRGffV7qz7ZNfPwx+4OOHMHP4X62BJcJaftLGeQJ5BEoML9ZfgR84UWiTaxyGpR0V/v1KRsrSnfzXW3Lj2W/e4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g312OvpS; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	s=arc-20240116; t=1710804840; c=relaxed/simple;
+	bh=Tf4feJZhWwnmgiC2l7Is9hf7qtWmR8OKc/AKvKQIlNA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lIZCchf9V7md1YQBj3rYXoFWdlwvnjhJ0dM13myeMTv2nRv3sXaxqW/YU6254EcXvbttscuMdGTQcnOr5D7JO5/ojdTWEcB2CAABnqY+XXTCnXl/4/xSeK11PL7ZFUbN8/gi/GAS0ENX03GmCwNP4QJYES/RNODiHv0SInofG2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iWjeyHFg; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g312OvpS"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b26ce0bbso9336194276.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 16:31:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710804714; x=1711409514; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/hYA0yVMfoXQX/tkABnkiVaF9F5w17dveHRWbK7K11I=;
-        b=g312OvpSjuJfepmmeO/udfNfk+GkHNuEYN4qSpOB8eCCEfIV5Dpya11fRrUQ6GOpmb
-         jICcI55fNhFIgRHHL/3z7KhgnEDd8pVBysMy6XBO+zOx84nwtzTb2VtT4ci+Yu6vpWMA
-         Li5giSBYl/gtym+/kbcDtOte79YprYHwRkxfCRjga2dCXfFVBY4geTm0Vcvv9hUnwtf1
-         RA7QzxzZdBB2I0fGtK9vcCN91NdHW5iGQV4QcnZEKRxg0bB4kg+UYuVYUwBT3W45fLfT
-         ZIkJfbX5ZdMjaa09rT/I/gtiPWcXeIdxhKZpxBV8IpNoVPLSekPqATaplXCoc0kpwsap
-         zHGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710804714; x=1711409514;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/hYA0yVMfoXQX/tkABnkiVaF9F5w17dveHRWbK7K11I=;
-        b=XGleguy2e9GZI/8mywhe9vh2lrZK9GjMyF0//x9Upw8MaDDqdxgXOji3vbQAn2CrAq
-         jcE2j6zLfimQq7nMDT7mIf3LzRdf1PQW4D1xzmb/wNVCcA0eOosLs9h5VOLLOt+LMhGN
-         EKve5EWu4z0BPsahXmkKBnb7OjlNAOdCBntqrDD00h2oCLK/od6/ilGBRZ5KbhcV83uQ
-         XCloVEXWU0c1H3ZkAZ2A34M8Uv+fx3DovIrNMRZTTUK8oxExJsKfwKe+0RSTz+EaSJ04
-         vj1SUXs+yq2ogDms89/ORF9UsPvTEgFUNKqBEcSNyBmoskUuX82HNahgWxqGhWkkxrTx
-         xf2g==
-X-Forwarded-Encrypted: i=1; AJvYcCVNuHImteQA0W9d5zZMC5EwBdyZE1zFukUEHnH6PMsOqSx/aNetX0QI9jpLdCQfgYIuvc2fNFBxT1yuYIWDZ5xI7poUUj5tWx7D4jxB
-X-Gm-Message-State: AOJu0YxxcBLf9G39aPXc565SJAfm0H5pDZiSbpGaH+OWcjoTQ2OyXVVX
-	93Kjmy1veulbwBcgaAx3cFY61KBVrzXQwN26676ekTVqK0FcFFXtdoHIA+zc+aBVXCzlmFTWhJi
-	kubPsZI0GHiMPfkbyd2WIlQ==
-X-Google-Smtp-Source: AGHT+IEcyEAm6+e1Tg0ayOlUnAb8GesMaSFK451Mqcd23PrLdQzWt457SqIzUIwgEynyMrhJc0UBWt78TjqL2Zdx7A==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:e09:b0:dc6:dfd9:d431 with
- SMTP id df9-20020a0569020e0900b00dc6dfd9d431mr147939ybb.1.1710804714301; Mon,
- 18 Mar 2024 16:31:54 -0700 (PDT)
-Date: Mon, 18 Mar 2024 23:31:53 +0000
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iWjeyHFg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710804837;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ON5fE7hrojJzQ2xG5TVkP4zn85dxrOKCit9Bo+PfrAs=;
+	b=iWjeyHFga4HEEHT9OPzjOah248pIHcbDKDl211e7v4W2nPEgAXyrh+vnxF9OiwhNMnE3ZR
+	vnzeIcnAfWY4LEpaoA/jyoR3NRNojlHF1dWUJcCzrYXcQyACsbA1v6g/R/nYaJj3Hl7sem
+	jEWz/NShJe/WwTPn5ja7f2W0HYUiH4E=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-433-1fJNkKPdNo6AozPsADC4pg-1; Mon, 18 Mar 2024 19:33:54 -0400
+X-MC-Unique: 1fJNkKPdNo6AozPsADC4pg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CE58D101A523;
+	Mon, 18 Mar 2024 23:33:53 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id A72371121312;
+	Mon, 18 Mar 2024 23:33:53 +0000 (UTC)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Cc: michael.roth@amd.com,
+	isaku.yamahata@intel.com,
+	seanjc@google.com
+Subject: [PATCH v4 01/15] KVM: SVM: Invert handling of SEV and SEV_ES feature flags
+Date: Mon, 18 Mar 2024 19:33:38 -0400
+Message-ID: <20240318233352.2728327-2-pbonzini@redhat.com>
+In-Reply-To: <20240318233352.2728327-1-pbonzini@redhat.com>
+References: <20240318233352.2728327-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAOjO+GUC/x3NTQrCMBBA4auUWTuQn4riVURKnIwxC9My04RK6
- d0NLr/NezsoS2aF27CDcMua59JhTwPQO5TEmGM3OONG4+0VdZVCyxej5MaiWPWJKcTEK9ZI+Gl T9XGiWRgJz4bDZXTOW0vQk4vwK2//3f1xHD/Njti4fgAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710804713; l=1939;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=G8PXI75wyQJnt2jt/Qu4uZ0MJ2bX8a6fiwFYVwQxj54=; b=SMrdYSJzX+MnSMD6sDqSBZWTY/HYEMo0XCaDfBfrmOfM9iiDJ5YOsiltw5Ae6VKsEq2hKUaoK
- nbWYum1TQMPCB9YQhj00veQ+IrIgkGxFZd78icvbRcCsqYhL2pjR+Dz
-X-Mailer: b4 0.12.3
-Message-ID: <20240318-strncpy-drivers-usb-gadget-udc-mv_u3d_core-c-v1-1-64f8dcdb7c07@google.com>
-Subject: [PATCH] usb: gadget: mv_u3d: replace deprecated strncpy with strscpy
-From: Justin Stitt <justinstitt@google.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+From: Sean Christopherson <seanjc@google.com>
 
-Let's opt for the new 2-argument version of strscpy() which guarantees
-NUL-termination on the destination buffer and simplifies snytax. The
-NUL-padding behavior that strncpy() provides is not required as u3d->eps
-is already zero-allocated:
-|	u3d->eps = kzalloc(size, GFP_KERNEL);
+Leave SEV and SEV_ES '0' in kvm_cpu_caps by default, and instead set them
+in sev_set_cpu_caps() if SEV and SEV-ES support are fully enabled.  Aside
+from the fact that sev_set_cpu_caps() is wildly misleading when it *clears*
+capabilities, this will allow compiling out sev.c without falsely
+advertising SEV/SEV-ES support in KVM_GET_SUPPORTED_CPUID.
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+Reviewed-by: Michael Roth <michael.roth@amd.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
-Note: build-tested only.
+ arch/x86/kvm/cpuid.c   | 2 +-
+ arch/x86/kvm/svm/sev.c | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-Found with: $ rg "strncpy\("
----
- drivers/usb/gadget/udc/mv_u3d_core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/gadget/udc/mv_u3d_core.c b/drivers/usb/gadget/udc/mv_u3d_core.c
-index 2a421f0ff931..e1dd5cf25d08 100644
---- a/drivers/usb/gadget/udc/mv_u3d_core.c
-+++ b/drivers/usb/gadget/udc/mv_u3d_core.c
-@@ -1307,7 +1307,7 @@ static int mv_u3d_eps_init(struct mv_u3d *u3d)
- 	/* initialize ep0, ep0 in/out use eps[1] */
- 	ep = &u3d->eps[1];
- 	ep->u3d = u3d;
--	strncpy(ep->name, "ep0", sizeof(ep->name));
-+	strscpy(ep->name, "ep0");
- 	ep->ep.name = ep->name;
- 	ep->ep.ops = &mv_u3d_ep_ops;
- 	ep->wedge = 0;
-@@ -1337,7 +1337,7 @@ static int mv_u3d_eps_init(struct mv_u3d *u3d)
- 			ep->ep.caps.dir_out = true;
- 		}
- 		ep->u3d = u3d;
--		strncpy(ep->name, name, sizeof(ep->name));
-+		strscpy(ep->name, name);
- 		ep->ep.name = ep->name;
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index adba49afb5fe..bde4df13a7e8 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -761,7 +761,7 @@ void kvm_set_cpu_caps(void)
+ 	kvm_cpu_cap_mask(CPUID_8000_000A_EDX, 0);
  
- 		ep->ep.caps.type_iso = true;
+ 	kvm_cpu_cap_mask(CPUID_8000_001F_EAX,
+-		0 /* SME */ | F(SEV) | 0 /* VM_PAGE_FLUSH */ | F(SEV_ES) |
++		0 /* SME */ | 0 /* SEV */ | 0 /* VM_PAGE_FLUSH */ | 0 /* SEV_ES */ |
+ 		F(SME_COHERENT));
+ 
+ 	kvm_cpu_cap_mask(CPUID_8000_0021_EAX,
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index e5a4d9b0e79f..382c745b8ba9 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -2186,10 +2186,10 @@ void sev_vm_destroy(struct kvm *kvm)
+ 
+ void __init sev_set_cpu_caps(void)
+ {
+-	if (!sev_enabled)
+-		kvm_cpu_cap_clear(X86_FEATURE_SEV);
+-	if (!sev_es_enabled)
+-		kvm_cpu_cap_clear(X86_FEATURE_SEV_ES);
++	if (sev_enabled)
++		kvm_cpu_cap_set(X86_FEATURE_SEV);
++	if (sev_es_enabled)
++		kvm_cpu_cap_set(X86_FEATURE_SEV_ES);
+ }
+ 
+ void __init sev_hardware_setup(void)
+-- 
+2.43.0
 
----
-base-commit: bf3a69c6861ff4dc7892d895c87074af7bc1c400
-change-id: 20240318-strncpy-drivers-usb-gadget-udc-mv_u3d_core-c-50ea7422311c
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
 
