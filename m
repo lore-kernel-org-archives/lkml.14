@@ -1,150 +1,103 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B314F1E3;
-	Mon, 18 Mar 2024 15:04:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD73E20EE
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 15:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710774260; cv=none; b=R42mK9VoYyEFb+XWHoFRjEjOzChW4Qhy5YNf81bXLknHuyJx0M7ZZwx8P5k0QLewKpdibjonEO/WjxanOWHSYheZhHBe/6OkRJfpSqFDHqa72y4/JObYD+9N0P0SdgHXreChrsJxZb/tV46qRZOX+1YsBixMlomjLhGq+lj4Cio=
+	t=1710774329; cv=none; b=e2UX4KxtW7Ha/+/10brk4Ltwc4norp6Cn37QqLC7EShv4eOlVhNglWFEPMPrtzwfwl+eDI3pLd3mLrsFVqpoTdlKBX4kzuyF4fDZ6aV6WXfvx7D4hdWzXI89oXxhdFLBkPgUOH2WzBwZdoj0gAWsXtDZ7bCHxlGpt7OnrtJkJsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710774260; c=relaxed/simple;
-	bh=2LQU/waPjsREZUsLg9NrzpLXBHyStidTkJNjdyXC8Rg=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=YhbWk42GdW/gvgQPZ1ckICIndM5io/29MGvkIsfJXAvQVPyHZ/doe9DNyPqLBcdGwxSU/QQ03Q8yrm7G0CyWSalKZso69cWEleYPgDy9XfvyN8lG5LDN/kLGAM6tXjIReXm4aRz11Cm/GItUHE6K6VN7q5kiwiLad2JWBCwhuLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=zJhwOLrJ; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1710774329; c=relaxed/simple;
+	bh=RoQuI/es24H/nAqPRbUV7hKZQxcAqymp229/lw/eVsQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=r8LXxs+ECfmS7fKGCnJ7SclEcn24UZvhxdaFMtBIYtgqXw5t8R1K/LLlSpxHyR6jCGaYg76w5qR+2P8dy0nZnd71bapDp//itt89rj/I3SLJuQcaHKtlg1U6IF05flePyHUmLG4em2ErOgQv3r3TQOKQAgjb4Tg1BqWaA/YJ+Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H7MnHRfk; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="zJhwOLrJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Cc:To:Reply-To:Subject:From:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=xIz7iXaGyTgA8QLC484uOZk8/HP4X9mjTbdpsdit22s=;
-	t=1710774258; x=1711206258; b=zJhwOLrJqnKOUsr48QWkkkY5ewkRm1Y1Ay9EqFFARUcExXm
-	pQEfnGYbQ2t/W/9kh2Cpn7EKzPaiW9gl3DRjGHXbtSSfOVmfvWBh/kFMc1r7XQpq3526EkEFOY90k
-	1yWtvwCF1xfJQUw2txTeWI9QBnozXrpekUj4y5WRt7dUmIs4xjexVcZYZo759oGuXQqoPir7P5cjL
-	xHHrx+mQThSp6iZMIUnvJTvLyzkMFLobNZOIHwqHwbyTp6LZqzuPFZHdcalGOrIl/9VlcDNFCquT+
-	Roqk59yNBK41MEFOVtfMe7dmrmkbGQs3U4z9STbzfI8juU8bqT1FNOIAc/slsa5w==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rmEX6-0001co-Fx; Mon, 18 Mar 2024 16:04:12 +0100
-Message-ID: <2b54a5d8-b317-4df7-ab2e-d63a352dd77d@leemhuis.info>
-Date: Mon, 18 Mar 2024 16:04:11 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H7MnHRfk"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-513da1c1f26so4798714e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 08:05:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710774326; x=1711379126; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Lw55mJTDDxZ1K/cIy6WxXdv3l0985blDRwLkE03YRpI=;
+        b=H7MnHRfknn2KmOlkgVBp5u5nVwWeqBdDdeJR/eGYuj6hV7ifc055xZH23yiOghteh2
+         SRBP24JsWfxNlg0Y53TaZ1v4PILWH3+8WxpWhybs+BlkjzsXMjhWLs/luNbzGUjobLfd
+         jGiTPHZ7AaJEmb6p0or6kdZwnDbVimwdDqMFlwRWnF25J4eCvl6Kd/hsxnOWaIzrVs4b
+         N9T9aaL5sllxie2XXhzBZe65wp3QOy+v5cfijRk+VejIuuJLiz0aLDpLITmD/xRGCYQ7
+         Fk1tqM+Kl9B4pmSTzCxrrM8ELv9auDMpuJCfbt0MSC1eF+mus2NkpZnYl8D+eKja58eQ
+         gP9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710774326; x=1711379126;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Lw55mJTDDxZ1K/cIy6WxXdv3l0985blDRwLkE03YRpI=;
+        b=XrW45yiTPmrGAjRQ9dQLvoPLoxyXXiIbgyEtiaxwxJpxOBxNu6PWXHIiL01co6tspN
+         9Qdgc/GIt8Oa8ARLT/+b4vCEBsIfokXjWQR3GDXHI0RhKGE6P5sGES6EVNTgA4k+6FTy
+         HzQUniaO54EGJ53qlWczFDS99nk8DMvs/L98c5ztqTxLNsdk8goGiHd7k2iP9B34RsQG
+         mvLK7a22rkNai4o3Wzu3p85AU8fmcKwFteYO1ObgrINn1z2UP4gqzQGTd2kkDrM9UmAW
+         oQRNUeXbwwheNL7X53i4ljk05PddNptiFH5c6PFD0kV9xtcSYEk0L0Zrjlf6rX8cZHH+
+         EOuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWqDweb3DZR1P9c7GQm55ijkNYbp0L8PwBeW2dYEHauNFtHahf1zGUkozDYcdXl8F5iLlAfFh1WOgA/maBpZFUZTvCBXwA8Z+aWOfFk
+X-Gm-Message-State: AOJu0YyB+G9XYW9+2yfTf0m9rHr9PaF/FZCZFRJN2Ru0V1BSCOXMwedi
+	JUhh2Kn+UfxA+arrf+0NzKvriMUYXomlPoBokAdsL0HHroYyTa+j2gqO3mqGE7g=
+X-Google-Smtp-Source: AGHT+IHCgOcwR7UDs/bvxSOUb3fBuHIJicmJyacnVaRq5aIkQS/vidxg7StuFD6lZdBoGgYfzuNIPw==
+X-Received: by 2002:a19:3850:0:b0:513:5a9e:78af with SMTP id d16-20020a193850000000b005135a9e78afmr8028856lfj.58.1710774325631;
+        Mon, 18 Mar 2024 08:05:25 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id v17-20020a05600c471100b004140e9211e7sm4556317wmo.35.2024.03.18.08.05.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Mar 2024 08:05:25 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Luca Weiss <luca.weiss@fairphone.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>, 
+ Imre Deak <imre.deak@intel.com>, 
+ =?utf-8?q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, 
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240318-revert-select-drm_kms_helper-for-drm_panel_bridge-v1-1-52a42a116286@linaro.org>
+References: <20240318-revert-select-drm_kms_helper-for-drm_panel_bridge-v1-1-52a42a116286@linaro.org>
+Subject: Re: [PATCH] Revert "drm/bridge: Select DRM_KMS_HELPER for
+ DRM_PANEL_BRIDGE"
+Message-Id: <171077432467.2094782.16965623014261223688.b4-ty@linaro.org>
+Date: Mon, 18 Mar 2024 16:05:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Subject: Re: Problems with csum_partial with misaligned buffers on sh4
- platform
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-To: Guenter Roeck <linux@roeck-us.net>,
- Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Rich Felker <dalias@libc.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-References: <65ed7c95-712c-410b-84f3-58496b0c9649@roeck-us.net>
- <351dfebd-c09f-470e-8b03-cc904753b136@roeck-us.net>
-Content-Language: en-US, de-DE
-In-Reply-To: <351dfebd-c09f-470e-8b03-cc904753b136@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1710774258;3ff2e1e0;
-X-HE-SMSGID: 1rmEX6-0001co-Fx
+X-Mailer: b4 0.12.4
 
-On 11.03.24 18:04, Guenter Roeck wrote:
-> On Sat, Feb 10, 2024 at 07:12:39AM -0800, Guenter Roeck wrote:
->>
->> when running checksum unit tests on sh4 qemu emulations, I get the following
->> errors.
+Hi,
+
+On Mon, 18 Mar 2024 15:16:21 +0100, Neil Armstrong wrote:
+> This reverts commit e3f18b0dd1db242791afbc3bd173026163ce0ccc.
 > 
-> Adding to regression tracker.
+> Selecting DRM_KMS_HELPER for DRM_PANEL_BRIDGE leads to:
+> WARNING: unmet direct dependencies detected for DRM_KMS_HELPER
+>   Depends on [m]: HAS_IOMEM [=y] && DRM [=m]
+>   ...
 > 
-> #regzbot ^introduced cadc4e1a2b4d2
+> [...]
 
-Hmmm, thx for that, but well, I'm a bit taken back and forth here. That
-commit afaics is from v3.0-rc1 and Linus iirc at least once said
-something along the lines of "a regression only reported after a long
-time at some point becomes just a bug". I'd say that applies there,
-which is why I'm wondering if tracking this really is worth it.
+Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-fixes)
 
-Ciao, Thorsten
+[1/1] Revert "drm/bridge: Select DRM_KMS_HELPER for DRM_PANEL_BRIDGE"
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/dbd9698830ebafcb6f3be6498fd4a6968dcbf89a
 
+-- 
+Neil
 
->>     KTAP version 1
->>     # Subtest: checksum
->>     # module: checksum_kunit
->>     1..5
->>     # test_csum_fixed_random_inputs: ASSERTION FAILED at lib/checksum_kunit.c:500
->>     Expected ( u64)result == ( u64)expec, but
->>         ( u64)result == 53378 (0xd082)
->>         ( u64)expec == 33488 (0x82d0)
->>     not ok 1 test_csum_fixed_random_inputs
->>     # test_csum_all_carry_inputs: ASSERTION FAILED at lib/checksum_kunit.c:525
->>     Expected ( u64)result == ( u64)expec, but
->>         ( u64)result == 65281 (0xff01)
->>         ( u64)expec == 65280 (0xff00)
->>     not ok 2 test_csum_all_carry_inputs
->>     # test_csum_no_carry_inputs: ASSERTION FAILED at lib/checksum_kunit.c:573
->>     Expected ( u64)result == ( u64)expec, but
->>         ( u64)result == 65535 (0xffff)
->>         ( u64)expec == 65534 (0xfffe)
->>     not ok 3 test_csum_no_carry_inputs
->>     ok 4 test_ip_fast_csum
->>     ok 5 test_csum_ipv6_magic
->> # checksum: pass:2 fail:3 skip:0 total:5
->>
->> The above is with from a little endian system. On a big endian system,
->> the test result is as follows.
->>
->>     KTAP version 1
->>     # Subtest: checksum
->>     # module: checksum_kunit
->>     1..5
->>     # test_csum_fixed_random_inputs: ASSERTION FAILED at lib/checksum_kunit.c:500
->>     Expected ( u64)result == ( u64)expec, but
->>         ( u64)result == 33488 (0x82d0)
->>         ( u64)expec == 53378 (0xd082)
->>     not ok 1 test_csum_fixed_random_inputs
->>     # test_csum_all_carry_inputs: ASSERTION FAILED at lib/checksum_kunit.c:525
->>     Expected ( u64)result == ( u64)expec, but
->>         ( u64)result == 65281 (0xff01)
->>         ( u64)expec == 255 (0xff)
->>     not ok 2 test_csum_all_carry_inputs
->>     # test_csum_no_carry_inputs: ASSERTION FAILED at lib/checksum_kunit.c:565
->>     Expected ( u64)result == ( u64)expec, but
->>         ( u64)result == 1020 (0x3fc)
->>         ( u64)expec == 0 (0x0)
->>     not ok 3 test_csum_no_carry_inputs
->>     # test_ip_fast_csum: ASSERTION FAILED at lib/checksum_kunit.c:589
->>     Expected ( u64)expected == ( u64)csum_result, but
->>         ( u64)expected == 55939 (0xda83)
->>         ( u64)csum_result == 33754 (0x83da)
->>     not ok 4 test_ip_fast_csum
->>     # test_csum_ipv6_magic: ASSERTION FAILED at lib/checksum_kunit.c:617
->>     Expected ( u64)expected_csum_ipv6_magic[i] == ( u64)csum_ipv6_magic(saddr, daddr, len, proto, csum), but
->>         ( u64)expected_csum_ipv6_magic[i] == 6356 (0x18d4)
->>         ( u64)csum_ipv6_magic(saddr, daddr, len, proto, csum) == 43586 (0xaa42)
->>     not ok 5 test_csum_ipv6_magic
->> # checksum: pass:0 fail:5 skip:0 total:5
->>
->> Note that test_ip_fast_csum and test_csum_ipv6_magic fail on all big endian
->> systems due to a bug in the test code, unrelated to this problem.
->>
->> Analysis shows that the errors are seen only if the buffer is misaligned.
->> Looking into arch/sh/lib/checksum.S, I found commit cadc4e1a2b4d2 ("sh:
->> Handle calling csum_partial with misaligned data") which seemed to be
->> related. Reverting that commit fixes the problem.
->> This suggests that something may be wrong with that commit. Alternatively,
->> of course, it may be possible that something is wrong with the qemu
->> emulation, but that seems unlikely.
->>
->> Thanks,
->> Guenter
