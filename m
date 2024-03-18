@@ -1,272 +1,360 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101404F5E6;
-	Mon, 18 Mar 2024 15:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B98750263;
+	Mon, 18 Mar 2024 15:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710775637; cv=none; b=QXICkWNPBZi6ZGQgaIeAbCF3E9niYFc68sUuAThC0FiTKHl/7Vvuian0isl0jz++TNJNJz6klIQU8eN1gRuVM4WyxQufSjMkAt4H8hQOwdqlnm2wPbgxma54f1CD9dL98mt+b9n9hVNH3Oi4Hlj1GB1CzhKI8WS8XcxLB6gSryw=
+	t=1710775644; cv=none; b=ciABX+SgAcuQe0MyP0QCX445Y8sEehmktPHD9pQ5rNa5ZLw0jQFFDtJw+av3i2I6EapC6iJDt3XqExPZk6hebh6AslS6VOTpg+VG4FMnTo9zJ//PrhZ8K0PCerO/JauHi1Xqq3J8bNEy0uiLx7bGml5CfnFJw9OZTJXEVqCUaao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710775637; c=relaxed/simple;
-	bh=8x1tNzzp/u+SI8Kal4XZHseYtX/YOwbSpyoMtF/G+aY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ajMVg9BS/eTUG+Y4u2b6gpX1HTpuaRr3mQpzAqNkiAk2Y7eu6JB2ZAQ3VuMBMarm54TTGY9srK97v8bSvQL0gSShC+iZcjHRUOewbMNE15JRIwNad0yPvR9t2FhSXnFeGIY1DnxfYPFUiIwjvgJ8p+OaWkvNqMhFYev1SbKQxs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Gj3Eqcni; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1710775644; c=relaxed/simple;
+	bh=w+Nmk7dFekEluuWAX4zgseKd4zbRue8M+mEPv3TAmtw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l8SZLSkR9IRqIPLgVytptBpXKhlt6CyzKcD1NnrEzc7P9yDcnOWvkVZ2dqRwPN8YmwXnrs+nROkDDDNl4EEBm6TjHeoxf0TGRF/VO6NUEfTE3EqY0OSf5WlIBduEUwk4ucE3qPqv8SfEVVrk6ZX4eFNVOQg4br19lXtwF4uZFPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=hwCh5vwZ; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Gj3Eqcni"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42ICqJaH004853;
-	Mon, 18 Mar 2024 16:26:13 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=ioXYV7nSmic/A8DNcGqb4yQzdQ+evXpT4y9Sn9JtMKg=; b=Gj
-	3EqcnitK2twB1KBM1r09Eorqna/sz3nqUkM+xf2ukpczWumVnvguCsfvfD3Bf/EB
-	s4slSXOzHeHqK/K/e/iWTYycjpgNPoDZofRqRwFzLWxDAEJMps+pLBrS6gXxiN7Y
-	KG06HC1pIt9oIvMzqJg6ta7RRtI/XcbRHNzWKWuXD4MO799ZR5h6NjPhXoSxeTKc
-	IlMAlyxxos3cyYoJ8Xd+AFnImdpWxfSMoefNxfTlfKuFIOcWBOXMkFNXirqvR9Jk
-	BsfFhy0sARruVC+HTf8/gk/6xn5BJMNo5bclWssahwec2dG9S7X4fL2qxVK0WiA1
-	T/umamlj1mIDODpjKnkg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ww3n2g34y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 18 Mar 2024 16:25:48 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id AD48940044;
-	Mon, 18 Mar 2024 16:24:07 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 309D62656CF;
-	Mon, 18 Mar 2024 16:23:02 +0100 (CET)
-Received: from [10.201.22.9] (10.201.22.9) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 18 Mar
- 2024 16:23:01 +0100
-Message-ID: <abd6274c-d6c1-41de-b5a7-3ed3a1de162c@foss.st.com>
-Date: Mon, 18 Mar 2024 16:22:59 +0100
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hwCh5vwZ"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id C92B320B74C0; Mon, 18 Mar 2024 08:27:21 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C92B320B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1710775641;
+	bh=VFBMAhY7U4VdLXqwaoTumxJsp81gfZLtokq8HU3ubho=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hwCh5vwZVNucOgF91twLWYAAKosq5CIlktSGDmyL1ZWry8satsURv38vXd5fpUN24
+	 KwvRM59JglDwGMEzrFlpSeyFBKzwdPDZNbuv6PelddNairgkEJFXf6fq2MWiD/P1KT
+	 VL4Lt7MSmxevF2szDprLQHMROmpLD79S44TWzBk0=
+Date: Mon, 18 Mar 2024 08:27:21 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Ani Sinha <anisinha@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>, Olaf Hering <olaf@aepfle.de>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v3] hv/hv_kvp_daemon: Handle IPv4 and Ipv6 combination
+ for keyfile format
+Message-ID: <20240318152721.GA9257@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1710729951-2695-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <85394C37-16E1-4AA1-82D4-DEB3D58920A7@redhat.com>
+ <56EA1869-5EFA-4515-AC39-965241C373BF@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/3] dt-bindings: display: add STM32 LVDS device
-Content-Language: en-US
-To: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>,
-        David Airlie
-	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre
- Torgue <alexandre.torgue@foss.st.com>,
-        Philippe Cornu
-	<philippe.cornu@foss.st.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Conor
- Dooley <conor.dooley@microchip.com>
-References: <20240226-lvds-v6-0-15e3463fbe70@foss.st.com>
- <20240226-lvds-v6-1-15e3463fbe70@foss.st.com>
-From: Yannick FERTRE <yannick.fertre@foss.st.com>
-In-Reply-To: <20240226-lvds-v6-1-15e3463fbe70@foss.st.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-18_12,2024-03-18_01,2023-05-22_02
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <56EA1869-5EFA-4515-AC39-965241C373BF@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-Hi Raphael,
-
-thanks for the patch.
-Acked-by: Yannick Fertre <yannick.fertre@foss.st.com>
-
-Best regards
-
-On 2/26/24 11:48, Raphael Gallais-Pou wrote:
-> Add "st,stm32mp25-lvds" compatible.
->
-> Signed-off-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
-> Depends on: "dt-bindings: stm32: add clocks and reset binding for
-> 	    stm32mp25 platform" by Gabriel Fernandez
->
-> Changes in v6:
-> 	- Added Conor's Reviewed-by
->
-> Changes in v5:
-> 	- Fixed path in MAINTAINERS
->
-> Changes in v4:
-> 	- Align filename to compatible
-> 	- Fix compatible in the example
-> 	- Remove redundant word in the subject
->
-> Changes in v3:
-> 	- Clarify commit dependency
-> 	- Fix includes in the example
-> 	- Fix YAML
-> 	- Add "clock-cells" description
-> 	- s/regroups/is composed of/
-> 	- Changed compatible to show SoC specificity
->
-> Changes in v2:
-> 	- Switch compatible and clock-cells related areas
-> 	- Remove faulty #include in the example.
-> 	- Add entry in MAINTAINERS
-> ---
->   .../bindings/display/st,stm32mp25-lvds.yaml        | 119 +++++++++++++++++++++
->   MAINTAINERS                                        |   1 +
->   2 files changed, 120 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/display/st,stm32mp25-lvds.yaml b/Documentation/devicetree/bindings/display/st,stm32mp25-lvds.yaml
-> new file mode 100644
-> index 000000000000..6736f93256b5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/st,stm32mp25-lvds.yaml
-> @@ -0,0 +1,119 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/st,stm32mp25-lvds.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STMicroelectronics STM32 LVDS Display Interface Transmitter
-> +
-> +maintainers:
-> +  - Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-> +  - Yannick Fertre <yannick.fertre@foss.st.com>
-> +
-> +description: |
-> +  The STMicroelectronics STM32 LVDS Display Interface Transmitter handles the
-> +  LVDS protocol: it maps the pixels received from the upstream Pixel-DMA (LTDC)
-> +  onto the LVDS PHY.
-> +
-> +  It is composed of three sub blocks:
-> +    - LVDS host: handles the LVDS protocol (FPD / OpenLDI) and maps its input
-> +      pixels onto the data lanes of the PHY
-> +    - LVDS PHY: parallelize the data and drives the LVDS data lanes
-> +    - LVDS wrapper: handles top-level settings
-> +
-> +  The LVDS controller driver supports the following high-level features:
-> +    - FDP-Link-I and OpenLDI (v0.95) protocols
-> +    - Single-Link or Dual-Link operation
-> +    - Single-Display or Double-Display (with the same content duplicated on both)
-> +    - Flexible Bit-Mapping, including JEIDA and VESA
-> +    - RGB888 or RGB666 output
-> +    - Synchronous design, with one input pixel per clock cycle
-> +
-> +properties:
-> +  compatible:
-> +    const: st,stm32mp25-lvds
-> +
-> +  "#clock-cells":
-> +    const: 0
-> +    description:
-> +      Provides the internal LVDS PHY clock to the framework.
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: APB peripheral clock
-> +      - description: Reference clock for the internal PLL
-> +
-> +  clock-names:
-> +    items:
-> +      - const: pclk
-> +      - const: ref
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  ports:
-> +    $ref: /schemas/graph.yaml#/properties/ports
-> +
-> +    properties:
-> +      port@0:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description:
-> +          LVDS input port node, connected to the LTDC RGB output port.
-> +
-> +      port@1:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description:
-> +          LVDS output port node, connected to a panel or bridge input port.
-> +
-> +    required:
-> +      - port@0
-> +      - port@1
-> +
-> +required:
-> +  - compatible
-> +  - "#clock-cells"
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/st,stm32mp25-rcc.h>
-> +    #include <dt-bindings/reset/st,stm32mp25-rcc.h>
-> +
-> +    lvds: lvds@48060000 {
-> +        compatible = "st,stm32mp25-lvds";
-> +        reg = <0x48060000 0x2000>;
-> +        #clock-cells = <0>;
-> +        clocks = <&rcc CK_BUS_LVDS>, <&rcc CK_KER_LVDSPHY>;
-> +        clock-names = "pclk", "ref";
-> +        resets = <&rcc LVDS_R>;
-> +
-> +        ports {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            port@0 {
-> +                reg = <0>;
-> +                lvds_in: endpoint {
-> +                   remote-endpoint = <&ltdc_ep1_out>;
-> +                };
-> +            };
-> +
-> +            port@1 {
-> +                reg = <1>;
-> +                lvds_out0: endpoint {
-> +                   remote-endpoint = <&lvds_panel_in>;
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3527a2ece6cd..ff5c945f206e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7240,6 +7240,7 @@ L:	dri-devel@lists.freedesktop.org
->   S:	Maintained
->   T:	git git://anongit.freedesktop.org/drm/drm-misc
->   F:	Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml
-> +F:	Documentation/devicetree/bindings/display/st,stm32mp25-lvds.yaml
->   F:	drivers/gpu/drm/stm
->   
->   DRM DRIVERS FOR TI KEYSTONE
->
+On Mon, Mar 18, 2024 at 10:26:49AM +0530, Ani Sinha wrote:
+> 
+> 
+> > On 18-Mar-2024, at 09:51, Ani Sinha <anisinha@redhat.com> wrote:
+> > 
+> > 
+> > 
+> >> On 18-Mar-2024, at 08:15, Shradha Gupta <shradhagupta@linux.microsoft.com> wrote:
+> >> 
+> >> If the network configuration strings are passed as a combination of IPv and
+> >> IPv6 addresses, the current KVP daemon doesnot handle it for the keyfile
+> >> configuration format.
+> >> With these changes, the keyfile config generation logic scans through the
+> >> list twice to generate IPv4 and IPv6 sections for the configuration files
+> >> to handle this support.
+> >> 
+> >> Testcases ran:Rhel 9, Hyper-V VMs
+> >>             (IPv4 only, IPv6 only, IPv4 and IPv6 combination)
+> >> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> >> ---
+> >> Changes in v3
+> >> * Introduced a macro for the output string size
+> >> * Added cound checks and used strncpy instead of strncpy
+> >> * Rearranged code to reduce total lines of code
+> >> ---
+> >> tools/hv/hv_kvp_daemon.c | 177 ++++++++++++++++++++++++++++++---------
+> >> 1 file changed, 136 insertions(+), 41 deletions(-)
+> >> 
+> >> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+> >> index 318e2dad27e0..156cef99d361 100644
+> >> --- a/tools/hv/hv_kvp_daemon.c
+> >> +++ b/tools/hv/hv_kvp_daemon.c
+> >> @@ -76,6 +76,12 @@ enum {
+> >> DNS
+> >> };
+> >> 
+> >> +enum {
+> >> + IPV4 = 1,
+> >> + IPV6,
+> >> + IP_TYPE_MAX
+> >> +};
+> >> +
+> >> static int in_hand_shake;
+> >> 
+> >> static char *os_name = "";
+> >> @@ -102,6 +108,11 @@ static struct utsname uts_buf;
+> >> 
+> >> #define MAX_FILE_NAME 100
+> >> #define ENTRIES_PER_BLOCK 50
+> >> +/*
+> >> + * Change this entry if the number of addresses increases in future
+> >> + */
+> >> +#define MAX_IP_ENTRIES 64
+> >> +#define OUTSTR_BUF_SIZE ((INET6_ADDRSTRLEN + 1) * MAX_IP_ENTRIES)
+> >> 
+> >> struct kvp_record {
+> >> char key[HV_KVP_EXCHANGE_MAX_KEY_SIZE];
+> >> @@ -1171,6 +1182,18 @@ static int process_ip_string(FILE *f, char *ip_string, int type)
+> >> return 0;
+> >> }
+> >> 
+> >> +int ip_version_check(const char *input_addr)
+> >> +{
+> >> + struct in6_addr addr;
+> >> +
+> >> + if (inet_pton(AF_INET, input_addr, &addr))
+> >> + return IPV4;
+> >> + else if (inet_pton(AF_INET6, input_addr, &addr))
+> >> + return IPV6;
+> >> +
+> >> + return -EINVAL;
+> >> +}
+> >> +
+> >> /*
+> >> * Only IPv4 subnet strings needs to be converted to plen
+> >> * For IPv6 the subnet is already privided in plen format
+> >> @@ -1197,14 +1220,71 @@ static int kvp_subnet_to_plen(char *subnet_addr_str)
+> >> return plen;
+> >> }
+> >> 
+> >> +static int process_dns_gateway_nm(FILE *f, char *ip_string, int type,
+> >> +  int ip_sec)
+> >> +{
+> >> + char addr[INET6_ADDRSTRLEN], *output_str;
+> >> + int ip_offset = 0, error = 0, ip_ver;
+> >> + char *param_name;
+> >> +
+> >> + memset(addr, 0, sizeof(addr));
+> > 
+> > ^^^^^^^^^^^^^^^^^^^^^^^^
+> > Is this still needed?
+Nope, I'll get that.
+> > 
+> >> +
+> >> + if (type == DNS)
+> >> + param_name = "dns";
+> >> + else if (type == GATEWAY)
+> >> + param_name = "gateway";
+> >> + else
+> >> + return -EINVAL;
+> >> +
+> >> + output_str = (char *)calloc(OUTSTR_BUF_SIZE, sizeof(char));
+> >> + if (!output_str)
+> >> + return -ENOMEM;
+> >> +
+> >> + while (1) {
+> >> + memset(addr, 0, sizeof(addr));
+> >> +
+> >> + if (!parse_ip_val_buffer(ip_string, &ip_offset, addr,
+> >> + (MAX_IP_ADDR_SIZE * 2)))
+> >> + break;
+> >> +
+> >> + ip_ver = ip_version_check(addr);
+> >> + if (ip_ver < 0)
+> >> + continue;
+> >> +
+> >> + if ((ip_ver == IPV4 && ip_sec == IPV4) ||
+> >> +    (ip_ver == IPV6 && ip_sec == IPV6)) {
+> >> + /*
+> >> + * do a bound check to avoid out-of bound writes
+> >> + */
+> >> + if ((OUTSTR_BUF_SIZE - strlen(output_str)) >
+> >> +    (strlen(addr) + 1)) {
+> >> + strncat(output_str, addr,
+> >> + OUTSTR_BUF_SIZE - strlen(output_str));
+> >> + strncat(output_str, ",",
+> > 
+> > Please see man page for strncat(). Why is the third parameter simply not strlen(addr)? 
+> 
+> I see what you are trying to do. You are doing a bound check here. In that case, should this be
+> OUTSTR_BUF_SIZE - strlen(output_str) - 1 to accommodate the terminating NULL? Man page says
+> 
+> > it will use at most n bytes from src
+> 
+> So n bytes from addr and one extra at the end for NULL termination since strncat () will add a terminating NULL byte in the end.
+sure, that sounds right. Will get this too.
+> 
+> > 
+> >> + OUTSTR_BUF_SIZE - strlen(output_str));
+> > 
+> > 
+> > 
+> >> + }
+> >> + } else {
+> >> + continue;
+> >> + }
+> >> + }
+> >> +
+> >> + if (strlen(output_str)) {
+> > 
+> > Please add the comment I mentioned in the previous version as to why you are doing this.
+sure. Thanks
+> > 
+> >> + output_str[strlen(output_str) - 1] = '\0';
+> >> + error = fprintf(f, "%s=%s\n", param_name, output_str);
+> >> + }
+> >> +
+> >> + free(output_str);
+> >> + return error;
+> >> +}
+> >> +
+> >> static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
+> >> - int is_ipv6)
+> >> + int ip_sec)
+> >> {
+> >> char addr[INET6_ADDRSTRLEN];
+> >> char subnet_addr[INET6_ADDRSTRLEN];
+> >> int error, i = 0;
+> >> int ip_offset = 0, subnet_offset = 0;
+> >> - int plen;
+> >> + int plen, ip_ver;
+> >> 
+> >> memset(addr, 0, sizeof(addr));
+> >> memset(subnet_addr, 0, sizeof(subnet_addr));
+> >> @@ -1216,10 +1296,16 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
+> >>      subnet_addr,
+> >>      (MAX_IP_ADDR_SIZE *
+> >> 2))) {
+> >> - if (!is_ipv6)
+> >> + ip_ver = ip_version_check(addr);
+> >> + if (ip_ver < 0)
+> >> + continue;
+> >> +
+> >> + if (ip_ver == IPV4 && ip_sec == IPV4)
+> >> plen = kvp_subnet_to_plen((char *)subnet_addr);
+> >> - else
+> >> + else if (ip_ver == IPV6 && ip_sec == IPV6)
+> >> plen = atoi(subnet_addr);
+> >> + else
+> >> + continue;
+> >> 
+> >> if (plen < 0)
+> >> return plen;
+> >> @@ -1238,12 +1324,11 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
+> >> 
+> >> static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
+> >> {
+> >> - int error = 0;
+> >> + int error = 0, ip_ver;
+> >> char if_filename[PATH_MAX];
+> >> char nm_filename[PATH_MAX];
+> >> FILE *ifcfg_file, *nmfile;
+> >> char cmd[PATH_MAX];
+> >> - int is_ipv6 = 0;
+> >> char *mac_addr;
+> >> int str_len;
+> >> 
+> >> @@ -1421,52 +1506,62 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
+> >> if (error)
+> >> goto setval_error;
+> >> 
+> >> - if (new_val->addr_family & ADDR_FAMILY_IPV6) {
+> >> - error = fprintf(nmfile, "\n[ipv6]\n");
+> >> - if (error < 0)
+> >> - goto setval_error;
+> >> - is_ipv6 = 1;
+> >> - } else {
+> >> - error = fprintf(nmfile, "\n[ipv4]\n");
+> >> - if (error < 0)
+> >> - goto setval_error;
+> >> - }
+> >> -
+> >> /*
+> >> - * Now we populate the keyfile format
+> >> + * The keyfile format expects the IPv6 and IPv4 configuration in
+> >> + * different sections. Therefore we iterate through the list twice,
+> >> + * once to populate the IPv4 section and the next time for IPv6
+> >> */
+> >> + ip_ver = IPV4;
+> >> + do {
+> >> + if (ip_ver == IPV4) {
+> >> + error = fprintf(nmfile, "\n[ipv4]\n");
+> >> + if (error < 0)
+> >> + goto setval_error;
+> >> + } else {
+> >> + error = fprintf(nmfile, "\n[ipv6]\n");
+> >> + if (error < 0)
+> >> + goto setval_error;
+> >> + }
+> >> 
+> >> - if (new_val->dhcp_enabled) {
+> >> - error = kvp_write_file(nmfile, "method", "", "auto");
+> >> - if (error < 0)
+> >> - goto setval_error;
+> >> - } else {
+> >> - error = kvp_write_file(nmfile, "method", "", "manual");
+> >> + /*
+> >> + * Now we populate the keyfile format
+> >> + */
+> >> +
+> >> + if (new_val->dhcp_enabled) {
+> >> + error = kvp_write_file(nmfile, "method", "", "auto");
+> >> + if (error < 0)
+> >> + goto setval_error;
+> >> + } else {
+> >> + error = kvp_write_file(nmfile, "method", "", "manual");
+> >> + if (error < 0)
+> >> + goto setval_error;
+> >> + }
+> >> +
+> >> + /*
+> >> + * Write the configuration for ipaddress, netmask, gateway and
+> >> + * name services
+> >> + */
+> >> + error = process_ip_string_nm(nmfile, (char *)new_val->ip_addr,
+> >> +     (char *)new_val->sub_net,
+> >> +     ip_ver);
+> >> if (error < 0)
+> >> goto setval_error;
+> >> - }
+> >> 
+> >> - /*
+> >> - * Write the configuration for ipaddress, netmask, gateway and
+> >> - * name services
+> >> - */
+> >> - error = process_ip_string_nm(nmfile, (char *)new_val->ip_addr,
+> >> -     (char *)new_val->sub_net, is_ipv6);
+> >> - if (error < 0)
+> >> - goto setval_error;
+> >> -
+> >> - /* we do not want ipv4 addresses in ipv6 section and vice versa */
+> >> - if (is_ipv6 != is_ipv4((char *)new_val->gate_way)) {
+> >> - error = fprintf(nmfile, "gateway=%s\n", (char *)new_val->gate_way);
+> >> + error = process_dns_gateway_nm(nmfile,
+> >> +       (char *)new_val->gate_way,
+> >> +       GATEWAY, ip_ver);
+> >> if (error < 0)
+> >> goto setval_error;
+> >> - }
+> >> 
+> >> - if (is_ipv6 != is_ipv4((char *)new_val->dns_addr)) {
+> >> - error = fprintf(nmfile, "dns=%s\n", (char *)new_val->dns_addr);
+> >> + error = process_dns_gateway_nm(nmfile,
+> >> +       (char *)new_val->dns_addr, DNS,
+> >> +       ip_ver);
+> >> if (error < 0)
+> >> goto setval_error;
+> >> - }
+> >> +
+> >> + ip_ver++;
+> >> + } while (ip_ver < IP_TYPE_MAX);
+> >> +
+> >> fclose(nmfile);
+> >> fclose(ifcfg_file);
+> >> 
+> >> -- 
+> >> 2.34.1
+> 
