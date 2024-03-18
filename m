@@ -1,72 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF5956B7F
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 18:17:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C9055E6B
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 18:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710785848; cv=none; b=azQqX6UTxUdqk+T77snOZbSAnG5zWnj51no0tJ61DaHYWUVW8OgHqWS/0pdZ/meCKzqNfBPE0G/gVptt43O4yjB0CC4ckqtYRoqWSQ6FzxT2x4ziee7utiRB5ym8JM4v3U016bwp7jxv+jfps3c9fZLtH/7yzHgfqIOyzQpCK2g=
+	t=1710785856; cv=none; b=XYNHNUMiH1XrUODZCzAmMBwZxJej85ZrzwN+XBx++zoROFeZubLAORLnxJVfyz1QlPhKGgubFU09rVxaZPEWNOQpq/iPvkoOOIpH9owDsyAgWlWLv3mQ2nz2sEkg/elEUsFNkvQI9Got1pEryosPOg0Pa69625EOkCU7aSEE9sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710785848; c=relaxed/simple;
-	bh=wpz+jpXp1/xLYY8u8ro7WOlKUYxshynrXNl0hjCDdXc=;
+	s=arc-20240116; t=1710785856; c=relaxed/simple;
+	bh=ljUrWkPTrnxySMMgHRBsRE9NywcmS1B0dCvLNhmjtR0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=joO3HKm/v4ryyEzfF63mxgkhDWvsneWj4S3JDGyWyWqsJkHH6Ewh2YVZN8EvFy4TXMznwyqHe9BX5HvPcZaC4lMLpfZfgfJWqZqjg1E7o5p3/8jc845t65MV8jqeFxIdxwEmcTYMPsYezWssLGHYLcD1UTDG3CE/b1d3XSCJgpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9D78C433C7;
-	Mon, 18 Mar 2024 18:17:24 +0000 (UTC)
-Date: Mon, 18 Mar 2024 18:17:22 +0000
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Mark Rutland <mark.rutland@arm.com>,
-	"Christoph Lameter (Ampere)" <cl@gentwo.org>
-Cc: Will Deacon <will@kernel.org>, Jonathan.Cameron@huawei.com,
-	Matteo.Carlini@arm.com, akpm@linux-foundation.org,
-	anshuman.khandual@arm.com, Eric Mackay <eric.mackay@oracle.com>,
-	dave.kleikamp@oracle.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux@armlinux.org.uk, robin.murphy@arm.com,
-	vanshikonda@os.amperecomputing.com, yang@os.amperecomputing.com,
-	Valentin Schneider <vschneid@redhat.com>
-Subject: Re: [PATCH v3] ARM64: Dynamically allocate cpumasks and increase
- supported CPUs to 512
-Message-ID: <ZfiFMr8s68cf2uac@arm.com>
-References: <37099a57-b655-3b3a-56d0-5f7fbd49d7db@gentwo.org>
- <170983839495.1825460.8461454086733296317.b4-ty@arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=FSK5taXimkENeLF8ImeHhvcaZuq0JdkQWtLsHF3v/9kQSIEhpMt5sJ7DzlUte/oCFQ6k9/k74BQSlqPjPDfPo4/F2TAC9FYJJGVNbu58JTDAHvl70MJ71B77kcU9MREB2VRrGBXQzmTbm3TX2J+1/lEClUJqCKvHVa9fJnlv5FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rmHY8-0000eM-7a; Mon, 18 Mar 2024 19:17:28 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rmHY7-0077xN-Pn; Mon, 18 Mar 2024 19:17:27 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rmHY7-00873f-2G;
+	Mon, 18 Mar 2024 19:17:27 +0100
+Date: Mon, 18 Mar 2024 19:17:27 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Nylon Chen <nylon.chen@sifive.com>
+Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, conor@kernel.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, palmer@dabbelt.com, paul.walmsley@sifive.com, 
+	aou@eecs.berkeley.edu, thierry.reding@gmail.com, vincent.chen@sifive.com, 
+	zong.li@sifive.com, nylon7717@gmail.com
+Subject: Re: [PATCH v9 3/3] pwm: sifive: Fix the error in the idempotent test
+ within the pwm_apply_state_debug function
+Message-ID: <jvwgsszvs4jtcytcphsdjulzgqfqzdp4sisu236ddwsqgmvriw@ngi4ljgh5b74>
+References: <20240222081231.213406-1-nylon.chen@sifive.com>
+ <20240222081231.213406-4-nylon.chen@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="x44go5u7hgleqhj7"
 Content-Disposition: inline
-In-Reply-To: <170983839495.1825460.8461454086733296317.b4-ty@arm.com>
+In-Reply-To: <20240222081231.213406-4-nylon.chen@sifive.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2024 at 07:07:07PM +0000, Catalin Marinas wrote:
-> On Wed, 06 Mar 2024 17:45:04 -0800, Christoph Lameter (Ampere) wrote:
-> > Currently defconfig selects NR_CPUS=256, but some vendors (e.g. Ampere
-> > Computing) are planning to ship systems with 512 CPUs. So that all CPUs on
-> > these systems can be used with defconfig, we'd like to bump NR_CPUS to 512.
-> > Therefore this patch increases the default NR_CPUS from 256 to 512.
-> > 
-> > As increasing NR_CPUS will increase the size of cpumasks, there's a fear that
-> > this might have a significant impact on stack usage due to code which places
-> > cpumasks on the stack. To mitigate that concern, we can select
-> > CPUMASK_OFFSTACK. As that doesn't seem to be a problem today with
-> > NR_CPUS=256, we only select this when NR_CPUS > 256.
-> > 
-> > [...]
-> 
-> Applied to arm64 (for-next/misc), thanks!
-> 
-> I dropped the config entry and comment, replaced it with a select as per
-> Mark's suggestion.
-> 
-> [1/1] ARM64: Dynamically allocate cpumasks and increase supported CPUs to 512
->       https://git.kernel.org/arm64/c/0499a78369ad
 
-I re-instated this patch in arm64 for-next/core as:
+--x44go5u7hgleqhj7
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-https://git.kernel.org/arm64/c/3fbd56f0e7c1
+Hello,
 
--- 
-Catalin
+On Thu, Feb 22, 2024 at 04:12:31PM +0800, Nylon Chen wrote:
+> Round the result to the nearest whole number. This ensures that
+> real_period is always a reasonable integer that is not lower than the
+> actual value.
+>=20
+> e.g.
+> $ echo 110 > /sys/devices/platform/led-controller-1/leds/d12/brightness
+> $ .apply is not idempotent (ena=3D1 pol=3D0 1739692/4032985) -> (ena=3D1 =
+pol=3D0 1739630/4032985)
+>=20
+> Co-developed-by: Zong Li <zong.li@sifive.com>
+> Signed-off-by: Zong Li <zong.li@sifive.com>
+> Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
+> ---
+>  drivers/pwm/pwm-sifive.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+> index a586cfe4191b..bebcbebacccd 100644
+> --- a/drivers/pwm/pwm-sifive.c
+> +++ b/drivers/pwm/pwm-sifive.c
+> @@ -101,7 +101,7 @@ static void pwm_sifive_update_clock(struct pwm_sifive=
+_ddata *ddata,
+> =20
+>  	/* As scale <=3D 15 the shift operation cannot overflow. */
+>  	num =3D (unsigned long long)NSEC_PER_SEC << (PWM_SIFIVE_CMPWIDTH + scal=
+e);
+> -	ddata->real_period =3D div64_ul(num, rate);
+> +	ddata->real_period =3D DIV_ROUND_UP_ULL(num, rate);
+>  	dev_dbg(ddata->chip.dev,
+>  		"New real_period =3D %u ns\n", ddata->real_period);
+>  }
+
+pwm_sifive_apply has a DIV64_U64_ROUND_CLOSEST(). I wonder if that needs
+adaption, too?!
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--x44go5u7hgleqhj7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmX4hTYACgkQj4D7WH0S
+/k6K9QgAlQOk5zs1qZjx50SM5kcMxMw+J3ccF0gM0gezDCINIsFANkmsKs+qY3m9
+b6NUelYUChHyY1+/zWpqLNGByQmGMm3yMBO4yZ3/jn/QPG1CxgejF6t60XVthOtr
+9YjvOnCh9SSM5XkoPajFJ/n7qlk7T/xRA9+MBjSpwcVOicRZGE4FtFJ+AiToc5Yc
+uebQi/SfgQ9uTUmYgOZzUJo140Q3XnoGasCf+V9C3SUVOPCPunEmhBH8aq5H6wk7
+D9fIOAVfxEK/YIHNIzv+KjrkJ6t/b5/yeYC3zQgMzvDZYW47aRhLNioG0hQcvdPO
+2ED/sw3W2E6eBAm8IBCDIyN9LWdNRw==
+=tmD5
+-----END PGP SIGNATURE-----
+
+--x44go5u7hgleqhj7--
