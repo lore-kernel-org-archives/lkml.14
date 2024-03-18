@@ -1,143 +1,111 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765C455C2B;
-	Mon, 18 Mar 2024 17:56:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13CA455C07;
+	Mon, 18 Mar 2024 17:58:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710784583; cv=none; b=MxbUR9rcEjRkv8Iy9+04NehGTZU2KDuHIc3V0pbFHR0hEuJ1kmnP9hSMfaSRBtjAywxAAFlHFmpzb41z/fhdkW9KWNzWn8pvvdlpxocMcynEwcCmu3LEO2zNC8T9C6SZaGJS0t13nTkPIOanT6ZlCShTl2pmgS3UzVvb6Pc5zI8=
+	t=1710784721; cv=none; b=akglDLlIlhG5at42Y4tSdh8eNopnHqyTZK5B9D4pG0PWmvIqvgY+Gtfy7hBaVvHBB3HMo8l4OqZ+xqAw4dtRaglhiT6WL2YR7RG5Fvwz3vkSb3Srr4zbJI0J+iAkIX19/+LpkgMhJBMV4FcHMh5xZfe79l57Zk1Hj8OMnwTWeZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710784583; c=relaxed/simple;
-	bh=9gjkxijxpavPBjT+YAINHA1vIXHl9kXRXGA9e4hXPOg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bZQxVREwdwaH6EQ+f25llxJFPwkjgJuxa71QfVVo6OmI6k47ZBXiAZuJgsV2ZLaTrBK5+xa/LLe0nO/1WR7tYXD9Z7Zc8HoULoEs+aNmmChZjc+hmPYIh1uggme5ZlGDwhe/3qXi6ELH//yMB4q+hM5OvkmsclFuKOpwm2ykaMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=wBboJq0u; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1710784721; c=relaxed/simple;
+	bh=TPxnDE5bkgZGAxq2z8iGbeup3QwNkwr5USo3SDnON2c=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=DWiDlyPewrB3iklEiLu6BL7pf0/fKZJEbisx0nYciDFrz8F90bepAhrO12X+dgE5Pxt4aP2iAd/CPr45o0lFoW5HfoHe9IaqaXfKwIGkhFs33nigZgbCrhXm0KwEUnTT8Ns8CaaIHFP4/8uuZQ54KAZrrg7c5ksxUJ+KypzqRqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=V0+kA6Ha; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="wBboJq0u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1710784581; x=1742320581;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=9gjkxijxpavPBjT+YAINHA1vIXHl9kXRXGA9e4hXPOg=;
-  b=wBboJq0uS4JkndIvV45N//JT/OkoPK+oRKZxEhnp/paGeRKq2FkaJAgx
-   Gx72wWPqNtch91Z7JJ33ojh10O0jpYJGvQJbRD/MWsrKdts1w5f3+8n6K
-   iLX1qDNC9SlmsaASimFOB/t4hkYU7UE/KjzfvvvuaMIXpZ//hKXMIxkUp
-   YJwM9jlqXs0Rd8cPkylxcjJnSIzNqymIkbkkQGtiElDd/rw7Gh7S0wpIx
-   b6Z98nb5vZktzmCotF9K7SFoYsdLMbIChgkYMBwdteQpP61zkawrJ9wPy
-   1+tdZtQZWgaqceAZW5veaeCmv+uas5+g3npcv7DM+HCqcJT/OEx+jH8Bp
-   g==;
-X-CSE-ConnectionGUID: 4vmFKSkTSKazXyGlRjISMg==
-X-CSE-MsgGUID: 8CuTW6MIRk+GSYMwJcVhAA==
-X-IronPort-AV: E=Sophos;i="6.07,134,1708412400"; 
-   d="scan'208";a="185071343"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 18 Mar 2024 10:56:20 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 18 Mar 2024 10:55:54 -0700
-Received: from localhost (10.10.85.11) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Mon, 18 Mar 2024 10:55:54 -0700
-From: Kelvin Cao <kelvin.cao@microchip.com>
-To: <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <logang@deltatee.com>, <George.Ge@microchip.com>,
-	<christophe.jaillet@wanadoo.fr>, <hch@infradead.org>
-Subject: [PATCH v8 0/1] Switchtec Switch DMA Engine Driver
-Date: Mon, 18 Mar 2024 09:33:12 -0700
-Message-ID: <20240318163313.236948-1-kelvin.cao@microchip.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="V0+kA6Ha"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1710784692; x=1711389492; i=markus.elfring@web.de;
+	bh=EY0Hjw4+w2olzLszyx5nxJuGBBuLjuPZp0CFP/bSy4c=;
+	h=X-UI-Sender-Class:Date:To:Cc:References:Subject:From:
+	 In-Reply-To;
+	b=V0+kA6HaGYAa/C6ly7UFSp2H0nnpDWqAKynSkm9PMW1zp4uwDho8xbcsfVta02IC
+	 TECMyfpHJAgb6tzjOatfb4qt4pKi5/jxsWJBWHFhKpSrdkp538aOPB6WOYHfVjOyy
+	 qIT67Jp8LptmP5kgPUS6JDfSSdeVkGMpSYzZbTdb55Vl0cj/BrGPqo+0CcqbnCpWU
+	 leM7PVYh0icWowhyZfGGQKJff78MCjMUTx/hmO4gqEvwGILyUlNBeeRIMZrDWYkB5
+	 pPUbMmuiGZk200j+p9N1ctRaN8P6SDZN3pBPF/GuNoCOzlmVtewNGA2UcpsHYo0zv
+	 eiW33T1QVzxs8Zhb5w==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.90.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MEUW8-1rXUSX3rQo-00GPBA; Mon, 18
+ Mar 2024 18:58:12 +0100
+Message-ID: <4fe6f68a-786c-4e3d-b97d-847d6965d1d3@web.de>
+Date: Mon, 18 Mar 2024 18:58:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+To: Ayush Singh <ayushdevel1325@gmail.com>,
+ Vaishnav M A <vaishnav@beagleboard.org>, devicetree@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, lorforlinux@beagleboard.org,
+ greybus-dev@lists.linaro.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Alex Elder <elder@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Conor Dooley <conor+dt@kernel.org>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
+ <dragan.cvetic@amd.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jason Kridner <jkridner@beagleboard.org>, Johan Hovold <johan@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Mark Brown <broonie@kernel.org>, Nishanth Menon <nm@ti.com>,
+ Rob Herring <robh@kernel.org>, Robert Nelson
+ <robertcnelson@beagleboard.org>, Tero Kristo <kristo@kernel.org>,
+ Vaishnav M A <vaishnav.a@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
+References: <20240317193714.403132-5-ayushdevel1325@gmail.com>
+Subject: Re: [PATCH v4 4/5] mikrobus: Add mikroBUS driver
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240317193714.403132-5-ayushdevel1325@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:r2F2bDMqhKgRohtQ/KunHakzfn6SdVEejCaMS6iHsj0TxlpYJDf
+ RrWyxna0jlyusRSuyumnI75ggM8jsvsRXuSkQ+/ETO/lUp0oSXC9pz2E4IlOZ9wQh6jBCds
+ bS85YDJhYeS6L89hUauyhAwrYwYEqHG2jr+keShniaDz4CFsK+CsnljCojrVTaPQA/g3eCA
+ Ml3JtrgsjHUHmOJ/28sfw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ghagHPhdV3o=;yuht04V33nbPduIWJm5LROvF4bF
+ /mLWU5oe42zYF7JLibuZkzWFb+gf+YmBIGHGdYu4UCfnOp1aiD+sRl3R7M76F3vkCAhgLNcOF
+ YjrgrL7+payvk4Wh2j/YXEAp39TNY52nowu6jOq3so6bt55wnnr5IqPCqWTUA6dhWuzeAwgBY
+ SCwBY2LDqW/iwYqiS+5uqWMvA47t+fIgy2ir9HyQBMjF/UUtv/cfjIft4uDta4ez6rPWaBBmh
+ qaUoej3dKW0eeEUNPLLWqqasPR+aYU6deVd+jKgXBCDFV8J8nofHQiO0aosdcgnILhANO1boy
+ jgUU6rkvVXubH6a6U7HQwbdKWNoi2Iy8gQ5PbyoQwlzWno8Yx4FJJKNv1saruY0/YAbamVukN
+ u/CSjXJfPAseIQrjvH49stmGF7mDfANdB7bAvwpkdB8wbzOn4t8zRWLRfbDYXDuf592Qpd5eo
+ 39pT6uzskfyulbIaJXoT/dGDq8ctIlTfqRSIGFfHYuCyxqA3HDTJVaY8s/cBK+RUqXcB5k+yW
+ MAJmdQt3fCxZkTVTfPkzdNdL+5UnmM2uilI9Fuf7Gz9fRmTe+xl4aD+xqrnEr9ZepO0VLu9vF
+ owmdMlWsWtxpofgSPasQq0DC3kgfG2amOqvHHIO0gFJYk7iXrJzp4RzkfWfhJIw/RglljeDdP
+ w9aSMI+WiY6LOREuBw7/GjP/jhF4xDv0Upy68hS4CyIAXctr0/7OysI0PRa1iiRayjj7DhR4z
+ 1HtmAUAxid+S57vX0IMxdlzb52Tfl0xs4rwm+MEh4WjqI8sQUReeKqpeAPExHAMVh831maXZV
+ Hik+fmwx5psU57Jpl6tquYdXEHmYGXV+ZW7IKksyULOdc=
 
-Hi,
- 
-This is v8 of the Switchtec Switch DMA Engine Driver, incorporating
-changes for the v2/v3/v4/v5/v6 review comments. This version is same as
-v7 except some newly added Gen5 device IDs.
+=E2=80=A6
+> +++ b/drivers/misc/mikrobus/mikrobus_core.c
+=E2=80=A6
+> +static int mikrobus_pinctrl_setup(struct mikrobus_port *port,
+> +				  struct addon_board_info *board)
+> +{
+> +	int ret;
+> +
+> +	if (!board || board->pin_state[MIKROBUS_PIN_PWM] =3D=3D MIKROBUS_STATE=
+_PWM)
+> +		ret =3D mikrobus_pinctrl_select(port, "pwm_default");
+> +	else
+> +		ret =3D mikrobus_pinctrl_select(port, "pwm_gpio");
+=E2=80=A6
 
-v8 changes:
-  - Rebase onto kernel 6.8
-  - Add Gen5 device IDs
- 
-v7 changes:
-  - Remove implementation of device_prep_dma_imm_data
+How do you think about to avoid the specification of a bit of duplicate so=
+urce code here
+by using conditional operator expressions?
 
-v6 changes:
-  - Fix './scripts/checkpatch.pl --strict' warnings
-  - Use readl_poll_timeout_atomic for status checking with timeout
-  - Wrap enable_channel/disable_channel over channel_op
-  - Use flag GFP_NOWAIT for mem allocation in switchtec_dma_alloc_desc
-  - Use proper comment for macro SWITCHTEC_DMA_DEVICE
+	ret =3D mikrobus_pinctrl_select(port,
+				      ((!board ||
+					board->pin_state[MIKROBUS_PIN_PWM] =3D=3D MIKROBUS_STATE_PWM)
+				      ? "pwm_default"
+				      : "pwm_gpio"));
 
-v5 changes:
-  - Remove unnecessary structure modifier '__packed'
-  - Remove the use of union of identical data types in a structure
-  - Remove unnecessary call sites of synchronize_irq
-  - Remove unnecessary rcu lock for pdev during device initialization
-  - Use pci_request_irq/pci_free_irq to replace request_irq/free_irq
-  - Add mailing list info in file MAINTAINERS
-  - Miscellaneous cleanups
 
-v4 changes:
-  - Sort driver entry in drivers/dma/Kconfig and drivers/dma/Makefile
-    alphabetically 
-  - Fix miscellaneous style issues
-  - Correct year in copyright
-  - Add function and call sites to flush PCIe MMIO Write
-  - Add a helper to wait for status register update
-  - Move synchronize_irq out of RCU critical section
-  - Remove unnecessary endianness conversion for register access
-  - Remove some unused code
-  - Use pci_enable_device/pci_request_mem_regions instead of
-    pcim_enable_device/pcim_iomap_regions to make the resource lifetime
-    management more understandable
-  - Use offset macros instead of memory mapped structures when accessing
-    some registers
-  - Remove the attempt to set DMA mask with smaller number as it would 
-    never succeed if the first attempt with bigger number fails
-  - Use PCI_VENDOR_ID_MICROSEMI in include/linux/pci_ids.h as device ID
-
-v3 changes:
-  - Remove some unnecessary memory/variable zeroing
- 
-v2 changes:
-  - Move put_device(dma_dev->dev) before kfree(swdma_dev) as dma_dev is
-    part of swdma_dev.
-  - Convert dev_ print calls to pci_ print calls to make the use of
-    print functions consistent within switchtec_dma_create().
-  - Remove some dev_ print calls, which use device pointer as handles,
-    to ensure there's no reference issue when the device is unbound.
-  - Remove unused .driver_data from pci_device_id structure.
- 
-v1:
-The following patch implements a DMAEngine driver to use the DMA
-controller in Switchtec PSX/PFX switchtes. The DMA controller appears as
-a PCI function on the switch upstream port. The DMA function can include
-one or more DMA channels.
- 
-This patchset is based off of 6.8.
-
-Kelvin Cao (1):
-  dmaengine: switchtec-dma: Introduce Switchtec DMA engine PCI driver
-
- MAINTAINERS                 |    6 +
- drivers/dma/Kconfig         |    9 +
- drivers/dma/Makefile        |    1 +
- drivers/dma/switchtec_dma.c | 1546 +++++++++++++++++++++++++++++++++++
- 4 files changed, 1562 insertions(+)
- create mode 100644 drivers/dma/switchtec_dma.c
-
--- 
-2.25.1
-
+Regards,
+Markus
