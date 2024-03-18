@@ -1,154 +1,121 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2086.outbound.protection.outlook.com [40.107.92.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF530535D3
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 21:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710796167; cv=none; b=fua1E46GEhR9Qu2UKi4zTbNkrVaIGZ2/ICrzTHKKiSb0HbOLlvhFa/q8jGpOEYhlMTASx3m5LXwF62Aw1HazFmzBEJsY98NtJ0sjLVTU4jK+xXKXDXKYtbaKu8S5m+FyixeLv4S0+OY7tvfKyyeAv8fyjqlO0rpLi+PdmXz9Un8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710796167; c=relaxed/simple;
-	bh=C/Puvl79m49Cnp0XGqjFPs+46qFbmpop8duIGHpg/9A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W3RL6DPM839RDmh/TlhMERJTbhYUUChBT/360YYbt2sMjpCVhtqw6ualIjp26B2iA6i6c22N8n1nnS4sJcl3aTf+sRBUGmbjuLOjyjcrcshSf+EXxdnLd/ND/HF+YKg3/33LBJvSeOQtGl4Edv4T6/RejUNRwtyxC3k/QyCrBcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=V9e06hcS; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBF458ABA;
+	Mon, 18 Mar 2024 21:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710796175; cv=fail; b=De1woiBIaxWjyQVTU0RXaHRz0/p92oCWwtjql9GAgb6E2P/C/dM/SJqGjX1PU0kqxsw7juVLy9CyLMu7Rp1kmtoW92PZM01yj2FHLA/OzyCynnfypuG0FlZYyArUNc19Aj0FNMltp2WqqwNAqMaiOTS5wCDZ+grYBQ/o4hlWwzs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710796175; c=relaxed/simple;
+	bh=Rs1iJUKu5Pj9W/shCw0G3HArfRuLyGfvQTDvmlPR7+8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=J+Q5M4u8eXIJBbV5fn5yRL5fBA6QYBNlZ65/lZ/dHeJ0vIEa14JNaDWTwKGQMtTqOsGeI7S8uZ38/6iqNMVmpvwbCz9At13qztZofckLoFZapZMx/jPMWdWy8ldV5AbjO21+9nmavcKN63jd/qnn/zq1hYmncLwGi/Nh/As3xIg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2DsmLrU0; arc=fail smtp.client-ip=40.107.92.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="V9e06hcS"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-78a0ab10316so72191485a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 14:09:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1710796162; x=1711400962; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=FOqxWMcGpNyg6Z0UKe89d8UtFLAlVDl2Ge9RAirWCRg=;
-        b=V9e06hcSG9QVHvilkhymeyCrDdZKxsSj0hf+ky4aYbz224OR+jLWm6eN2bUrya8ll0
-         WADLkWJvURN/Y8G6dudPbGEtJYSN+qUpT12a9rXM860i/AMsCXqExtjkwV2fhS8/Mcr+
-         GV/E5YSSdKTfr5WnX2UW8Xz7URxih4pLRPNghOGKD0qKlxlR3QJt9LJiVeDcS+FYwVBc
-         prmlvPgT4fAgfGSbPyJQhKmYiG6o5eD+Ssrvp6r2gw/tTdXW/OIoyNoNVDCPc2r0paJ3
-         KXTY7sx+nx7miJouJymhEgknc0g+6FPUIY59YryBbCOu48RsjxtOjk7INH8EQljr0WZ1
-         i6oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710796162; x=1711400962;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FOqxWMcGpNyg6Z0UKe89d8UtFLAlVDl2Ge9RAirWCRg=;
-        b=Agwb9t96G79UkY9lIGT3hRhGrUfTgvItTq7hcRWv8+MTJ9YvggNNkm2rAMUwdYxqsU
-         WEcCpQr7yvKPgOFmBE7XLYNEzmNl7Ja8oeFa93M3RZxZ5NzrOap1atKKftgW1DgbPz1a
-         ONwPiPMy58lRntHh7T/Wz9J+YDQI/W7OfJjYT6odj1+lwWLp2gDI4RpqRV5BFLuT0Pha
-         AVVUsepnZdOFUmDeWn2ARrM45n0wPdqcQNL6WTp+h/DpetTBXUHRZNU7duifVYSlsXs/
-         YBQTnLGiwcQwaVgsDnNOJ22CP4hbEA+9/+s0JMNozHDzOwN/BGTRLnjjz8DFTHiYCTAH
-         CPrw==
-X-Forwarded-Encrypted: i=1; AJvYcCVfCjoh9oio81y5/fPdCQWEjHV/fMOQvV8HX2QgRclJWJ5bXHF7kJHBsdoxM1gJzAwBq6Cx9hUpF3+cU8CWIXvnqGZa/Cp5FkhDw2K5
-X-Gm-Message-State: AOJu0Ywegcz1Z5xyvBTxjAh4UcVQYq2MdazL9ZI55IyH+ea9FreszJkd
-	w0Pzi6zsyJdhBJCpD69ZOnW19RSRfR6RPPrtW7gJdHYqrtOd4OjGUHERgCloH44=
-X-Google-Smtp-Source: AGHT+IGmezNd7Y22mqc+VPK+jo40NclSbGwKc23t/x+1Yd4e03ws0PD4BlmbAFcaD9ucT9vdpExrYg==
-X-Received: by 2002:a05:620a:1722:b0:78a:3c3:a629 with SMTP id az34-20020a05620a172200b0078a03c3a629mr1486052qkb.23.1710796162650;
-        Mon, 18 Mar 2024 14:09:22 -0700 (PDT)
-Received: from localhost (2603-7000-0c01-2716-da5e-d3ff-fee7-26e7.res6.spectrum.com. [2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with ESMTPSA id f18-20020ae9ea12000000b007884dd207b8sm4816696qkg.55.2024.03.18.14.09.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 14:09:21 -0700 (PDT)
-Date: Mon, 18 Mar 2024 17:09:17 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: Nhat Pham <nphamcs@gmail.com>,
-	syzbot <syzbot+adbc983a1588b7805de3@syzkaller.appspotmail.com>,
-	akpm@linux-foundation.org, chengming.zhou@linux.dev,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	syzkaller-bugs@googlegroups.com, Barry Song <v-songbaohua@oppo.com>
-Subject: Re: [syzbot] [mm?] kernel BUG in sg_init_one
-Message-ID: <20240318210917.GA4210@cmpxchg.org>
-References: <000000000000bbb3d80613f243a6@google.com>
- <CAKEwX=MAX0km1p43DQmKbeSy2G4dPFHiF+deH_qzqygc2Vnjig@mail.gmail.com>
- <CAJD7tkbEuFkGuQeYjKS02rQoAAKOKieAJ1P2mwukirW3e2JN9A@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2DsmLrU0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Xi2A37wr/YkX52Mm/jJgyjs4vnvOEy2wOQkrvumdiHqAHULPANNFJ2kjy+wGOHV2CGDn8+HM/GK6ZiKcFla3UyEsmtBskhtQtjaGb/2vPHKwLlEivsCV58emFA7MU0JvCq6md+wUvGG7EpCZHqB9YxJpQ5GmrPx80s32NvA6qI5Xvp2goTirpPQsfGfycmf4GIKwSCFv2JZiZQtxp4F+liyTT8I2oD00McrkMK1Q3Vwlh14xz2cTFBexGMkcB6m+1TpgdAss2chLT9ioblGiingM1mhN5iG5Ghvvnn/RTJusJEmAaHTuDNq4SfVWunjZdu1TFXT6HBvCxVN9/F1XhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7yfvOl7OMXtczHrRxsN8kO1IjTYqSk8r6l0Qd8Hy0/Q=;
+ b=UQokN+fEXipSbGTfdOlL6RiHzE+6vpWIHWB94OnbsNGJLjW4rYr0sJFsMP7SudU7KX2Y4QwwMdOyCB7pS+jF3ZfnzcjbB9Ddnw4a6yFHghDkGK2KtiBJnE9Wmsnq4tZ+Qg8nr/sxqx09pjfA1SHiKCSXrDq28Lpp6oeVf89Js3n6MZPUZrpkKegqrx/jFFUKP9fsbbWzJZANIxsL9fvBa8PGxJIaiVgju250p1mjNmvSCmsn253lXYp0i4F3m3hIEEZjmzwYoweswMOlo7N9uPVtZfQJk8aEHuu6OY4pH3N/mG3EMH11xLUgbYAI1qu8bFhWCxLSTnd9OSxxWtH4Zg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7yfvOl7OMXtczHrRxsN8kO1IjTYqSk8r6l0Qd8Hy0/Q=;
+ b=2DsmLrU0i8EIfOLifHMj7gktmevR16vR3WhL9usrFdtAFdnZJAFRBkS0hCY8+b42dZB0ArC1RRaMD8JEmGRDJXSOITqGjiD15rLSflEo5RgYsZuJp3fSTUAAIpXBYcnQ2R93DE9BlEgIkjkhhKUBW90Hrskls94IUQ3iA/h1kRA=
+Received: from CY5PR17CA0034.namprd17.prod.outlook.com (2603:10b6:930:12::19)
+ by PH8PR12MB8431.namprd12.prod.outlook.com (2603:10b6:510:25a::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.27; Mon, 18 Mar
+ 2024 21:09:28 +0000
+Received: from CY4PEPF0000EE33.namprd05.prod.outlook.com
+ (2603:10b6:930:12:cafe::74) by CY5PR17CA0034.outlook.office365.com
+ (2603:10b6:930:12::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.27 via Frontend
+ Transport; Mon, 18 Mar 2024 21:09:28 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000EE33.mail.protection.outlook.com (10.167.242.39) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7409.10 via Frontend Transport; Mon, 18 Mar 2024 21:09:28 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 18 Mar
+ 2024 16:09:26 -0500
+From: Robert Richter <rrichter@amd.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+CC: Dave Hansen <dave.hansen@linux.intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, Robert Richter <rrichter@amd.com>
+Subject: [PATCH 0/3] ACPI/NUMA: SRAT/CEDT fixes and updates
+Date: Mon, 18 Mar 2024 22:08:59 +0100
+Message-ID: <20240318210904.2188120-1-rrichter@amd.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJD7tkbEuFkGuQeYjKS02rQoAAKOKieAJ1P2mwukirW3e2JN9A@mail.gmail.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE33:EE_|PH8PR12MB8431:EE_
+X-MS-Office365-Filtering-Correlation-Id: acf0fe87-f503-4d8c-e991-08dc478fb2ec
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	JBocndyl3UwGyWfEuNgCB7FNG4Aue917ip69iEf0Cvf6jP9N67ODGYrAQArkyaRZGSBZdDtt4Xt0eGrCCEhHBOPGpBcdYq8fmnLeDKpzp/JbpDg0O8ip9N91LifNONRIaQie91zf8pIsVxC9wJfFD/ByAvY2B9E2wbL1ZswDmGQper4/1Kn0JYurU8YXz93P57T0bWzetYTPDSGa2HQot8DnhFzZUmjlo02+pRDPKa2SrN5kSWAP3FCNwjfq6IRMfYyDd6GOo0FjklDw0JQOhS5efik7WfTmkkCf4Kr7D4S7Zg8yyBprizfmUJtr30Qysgxb7cT5BAVIJgLUKyEz0ubXFe2RP7/SLW5Jfq+DfbG3p6UrDt9tYE9wVOdNy8piHwbHAyVPZO6IINcqj+lIlWVwMkxbmaue4CbOzJnEz9TJiCeHWKxUoBqoFm+uaaxY01PNyoHktbaYgWnSr6XP7iBDsM0zjMCuJ0dS1QUIN3QOHuNILh5KLo4SiZL2Q/got6/G6MYv1RUtVXYsIh8v3w5/kk1hQIxvnCphiAk9U6Z5XJAW2ZeCp4gXfUGtrNmupF7RY2JXFVgwtXAe/Q+EeU1Fd1AfIGpsvswENiXPpD/WgyxsTM1LXO/dpgtoDtYA7WrVXXN+eR7QTlh+W2BTXTNm20J+lUtFU9HahkLBtM2STDrOlTFsQ7GSRkJudgbkboHBdXfZ01GTuFNQR9NBpk7U/XpiwGy+5yEm9OiZkSDit6bWS8fQ8QlihCu3Jly0
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(376005)(36860700004)(1800799015);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2024 21:09:28.5356
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: acf0fe87-f503-4d8c-e991-08dc478fb2ec
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EE33.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB8431
 
-On Mon, Mar 18, 2024 at 01:17:19PM -0700, Yosry Ahmed wrote:
-> On Mon, Mar 18, 2024 at 11:00 AM Nhat Pham <nphamcs@gmail.com> wrote:
-> >
-> > On Mon, Mar 18, 2024 at 9:58 AM syzbot
-> > <syzbot+adbc983a1588b7805de3@syzkaller.appspotmail.com> wrote:
-> > >
-> > > Hello,
-> > >
-> > > syzbot found the following issue on:
-> > >
-> > > HEAD commit:    e5eb28f6d1af Merge tag 'mm-nonmm-stable-2024-03-14-09-36' ..
-> > > git tree:       upstream
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=13043abe180000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=19bb57c23dffc38e
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=adbc983a1588b7805de3
-> > > compiler:       arm-linux-gnueabi-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> > > userspace arch: arm
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1706d231180000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13ba7959180000
-> > >
-> > > Downloadable assets:
-> > > disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/8ead8862021c/non_bootable_disk-e5eb28f6.raw.xz
-> > > vmlinux: https://storage.googleapis.com/syzbot-assets/0a7371c63ff2/vmlinux-e5eb28f6.xz
-> > > kernel image: https://storage.googleapis.com/syzbot-assets/7539441b4add/zImage-e5eb28f6.xz
-> > >
-> > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > > Reported-by: syzbot+adbc983a1588b7805de3@syzkaller.appspotmail.com
-> > >
-> > > ------------[ cut here ]------------
-> > > kernel BUG at include/linux/scatterlist.h:187!
-> >
-> > Looks like the provided buffer is invalid:
-> >
-> > #ifdef CONFIG_DEBUG_SG
-> > BUG_ON(!virt_addr_valid(buf));
-> > #endif
-> >
-> > which is "src" from:
-> >
-> > sg_init_one(&input, src, entry->length);
-> >
-> > Looking at the surrounding code and recent history, there's this
-> > commit that stands out:
-> >
-> > mm/zswap: remove the memcpy if acomp is not sleepable
-> > (sha: 270700dd06ca41a4779c19eb46608f076bb7d40e)
-> >
-> > which has the effect of, IIUC, using the zpool mapped memory directly
-> > as src, instead of acomp_ctx->buffer (which was previously the case,
-> > as zsmalloc was not sleepable).
-> >
-> > This might not necessarily be a bug with that commit itself, but might
-> > have revealed another bug elsewhere.
-> >
-> > Anyway, cc-ing the author, Barry Song, to fact check me :) Will take a
-> > closer look later.
-> 
-> I am not a highmem expert, but the reproducer has CONFIG_HIGHMEM=y,
-> and it seems like zs_map_object() may return a highmem address if the
-> compressed object is entirely in a single page to avoid copying to a
-> buffer:
-> 
-> if (off + class->size <= PAGE_SIZE) {
->    /* this object is contained entirely within a page */
->    area->vm_addr = kmap_atomic(page);
->    ret = area->vm_addr + off;
->    goto out;
-> }
-> 
-> The virt_addr_valid() check seems to indicate that we expect a direct
-> map address in sg_init_one(), right?
+Some fixes and updates for SRAT/CEDT parsing code. Patches can be
+applied individually and are independent.
 
-If the page is highmem, kmap_atomic() establishes a temporary mapping
-to it in the direct map, such that we have a legit kernel pointer to
-the memory. Otherwise the memcpy() in zswap also wouldn't work... Am I
-missing something?
+First patch fixes a page fault during boot. It should be marked stable.
+
+2nd patch adds diagnostic printouts for CEDT.
+
+3rd patch removes architectural code no longer needed.
+
+Robert Richter (3):
+  x86/numa: Fix SRAT lookup of CFMWS ranges with numa_fill_memblks()
+  ACPI/NUMA: Print CXL Early Discovery Table (CEDT)
+  ACPI/NUMA: Remove architecture dependent remainings
+
+ drivers/acpi/numa/Kconfig |   1 +
+ drivers/acpi/numa/srat.c  | 178 ++++++++++++++++++++++++++++----------
+ include/linux/acpi.h      |   5 --
+ 3 files changed, 133 insertions(+), 51 deletions(-)
+
+-- 
+2.39.2
+
