@@ -1,138 +1,132 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54BF52F7B
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 15:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54AB5374CB
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 15:59:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710777539; cv=none; b=q2aDod6zLAvsjtbZJVb/40x/p7kEvKs2uukVB4EDtRiF4QHBDumuZNhH0h7WOZOrPpflpJAgC4PyNBYwK7/IYARQYzY1L/GuLvPDQR0+s3tIgl3Bcljc0oPt5FCj/iJM6EnTmmL+dU3wFyZPJopHFCZd6P39DdUrsnjxXgG73Os=
+	t=1710777586; cv=none; b=CVSi2EEI9a239bBpKDJ/Jn4xLQ1LuXbqSIMSuicuh69TJIiDBhYQXolZKuGQaMooCx6Ip2LjhJkqVrfyvobB/oSPtW0dWYaReT57NSU6O2Ar5LwbJ+qN2y5H79HSzXwOcITvFVzyD6uMAq/EWY8OaMxR4EFhO3cJ4bUtu+5BZxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710777539; c=relaxed/simple;
-	bh=y76vbDJtHiugWfxpYYz3MtbHcW1T0fosoyhaoQiAPyg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YQAmuQK/xrC7TFRoHRGd7r2UcczYItfQ6dTGIXYONfBz9o9BkvMVTzJX9/lA15f5SNwq+qrTdQ9F7hl8aWkxECf64619kuDZWQORmsa1CmDB6/vhLOrB4cN/zlChMsj2jHNicZeVfVGbXPQhoZ0bsSevuRoDXqDgwZ6Xot+6xI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MaPli6sV; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1710777586; c=relaxed/simple;
+	bh=nw/RrKP3PD936mgtSAFqxdTTI8Jq9UacWra4faXk7bE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dx1sKJQ9cxaJ04JQY65T7ILd3OMXkeZVjrXuu6GTAq2XnVkIKWODeTw56uRjJHNSpNuB884iKHHJTiv4sK2zaiv+z4z6Nuk4v8hfGUTZjxlb8O15BLUc/Jx49K/Kvo8c9HSWmsHefUU/FZUNwy1hM3K6bUrL3Qbo4gS9i1Fucm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=r3+T+c5s; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MaPli6sV"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-430d3fcc511so204861cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 08:58:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710777537; x=1711382337; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y76vbDJtHiugWfxpYYz3MtbHcW1T0fosoyhaoQiAPyg=;
-        b=MaPli6sVqN+8Cm7B5NV9Om9HW/T8V6dNT5F6FPfDNotqbgJCYO0U7b5BZsjlKnVxMg
-         NYPBOb9s3EM4t14mk+1qwZAkOJbadc0npRXGziT5BrggBDpziU0lvP2wvPLwmYSBiQI9
-         4dwzSAeNwzY4kw1+9Fg90ojx8Db5NFbbYRDHhy6P1+jhPnbBJ3AMrwcL83hpYzOlL0Kx
-         pyxFG5hUG0+R2szvYc/sFRC5Kji9fz/QlvhkDnXAvLaBHLQDitOAchvXBeSQhvI2hyid
-         FGzNbrKDPX1ilf9NI5Bo/AZ9GOvBFFaCTcCH4ZiGIEBl1Waut3FF6tIQQbUd+8y3FmjZ
-         I1lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710777537; x=1711382337;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=y76vbDJtHiugWfxpYYz3MtbHcW1T0fosoyhaoQiAPyg=;
-        b=ROsVESTEox7BV8tBygzp4F1M4NOQ49kPBTiglfr2fa1+QkrY8Y0wgT5nNev5G1N+tG
-         +wB2OaZRggV3by72KYoJ7CorBsIgRA3FlEQUXUm3kUfkUc11HsiC13TVtDL7o7rZuo9l
-         CxE8SVRrnPutWXkLCpV/bL7VIqsM7RsVKwiTS0P2BQTJyxZZci0gUB2Ww8QP5QwpFrYS
-         Mp81XO90DJypNL7bJi9mG9GuPZAT3/7aX1JCRCYz1GS+zKBuoxks8sMFIIF2pVQyPHBM
-         oi9q+qdGqvsd8cUz2Najeai8gPva+txLxLfjBWlLdE8+ryax6PmX1shHkRHixC/n5sbK
-         z00g==
-X-Forwarded-Encrypted: i=1; AJvYcCUjYuSIdnsi0XQDZxWQDR+cPNlhHC8gbGh9zt8hx7N+ESxSObwJ99OW7vzHY2WOmEWGq5rIRqtY8gnQkdBbH/X+8QaLeW/w0trmhCoq
-X-Gm-Message-State: AOJu0YwFsR0gNbUeXpCDINs5PpIjdtn2SEhqEGrv/E8/yD/ZaZwTXnBo
-	QGnXQqK4xpJzVpKkHZKUgVs6lOmAKCo0dZyGKkGM9711KQHitL+Bsc7aXNM6EgsEZTtcdV1sN9A
-	v1hGB9J+jsoEde2oG/yvqbmX+MDy8hzfmAdxo
-X-Google-Smtp-Source: AGHT+IH92AsmA5CM5H9OlqSW5u+VIWFsgIEXK3B7zURDpjKRR7WOyWwIVJ3xPPtoNsV8rmrwp6HXl2P+4MhvjwRMUkY=
-X-Received: by 2002:ac8:5e4b:0:b0:430:a74f:b45e with SMTP id
- i11-20020ac85e4b000000b00430a74fb45emr377484qtx.17.1710777536483; Mon, 18 Mar
- 2024 08:58:56 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="r3+T+c5s"
+Message-ID: <af4c9583-b9d1-4f4a-bd38-422701407105@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1710777582;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TE+tlz80EbRPnSuYvI664zzw4KWc4c4acmTHITxg5sM=;
+	b=r3+T+c5sc1T32LvhHXsldOdpDORVxj+caQYTpWYkOlgUmuFTDtj/dONSWSLgoQrJPdri5o
+	SMsARMg9Zg29bKpwFOsqJ2uObYhCxy7M2YnatDowt5kydNhxTNPtaHl8EVhjtosut75v+8
+	L4Di9ki4pFIVOWSzm/9aFk10lwPkC+A=
+Date: Mon, 18 Mar 2024 23:59:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240318110855.31954-1-johan+linaro@kernel.org>
- <20240318110855.31954-2-johan+linaro@kernel.org> <CAA8EJprywWbdoyfAbys=0WzEdAkp0UK1fzzCPzxKRjyk9DrC6Q@mail.gmail.com>
- <Zfg--2_NMPSPTxK-@hovoldconsulting.com> <20240318144806.GA3963554-robh@kernel.org>
- <ZfhZffrZXwtKgZ13@hovoldconsulting.com> <CAD=FV=UpuD7Lq0DxSZAGpL4Mi2uxy9HNt3V3FZq7Y3p--gbMrg@mail.gmail.com>
- <CAD=FV=WCzrh926mkiyBnKRG_+KGuOkGN6v0DgPiXhQCD3PSQ9w@mail.gmail.com> <Zfhh-4wEg4O4Xqeu@hovoldconsulting.com>
-In-Reply-To: <Zfhh-4wEg4O4Xqeu@hovoldconsulting.com>
-From: Doug Anderson <dianders@google.com>
-Date: Mon, 18 Mar 2024 08:58:40 -0700
-Message-ID: <CAD=FV=XpOf8ZcqROgwFX9bs7B1gNGDDVOYezBztLJEy6U3AOnA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: bluetooth: add new wcn3991 compatible
- to fix bd_addr
-To: Johan Hovold <johan@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	Johan Hovold <johan+linaro@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Johan Hedberg <johan.hedberg@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, 
-	Bjorn Andersson <quic_bjorande@quicinc.com>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] drm: bridge: thc63lvd1024: Switch to use
+ of_graph_get_remote_node()
+Content-Language: en-US
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20240316172800.1168390-1-sui.jingfeng@linux.dev>
+ <20240318153326.GD13682@pendragon.ideasonboard.com>
+ <22229306-aa72-4367-b029-fbdff4410cec@linux.dev>
+ <20240318155726.GE13682@pendragon.ideasonboard.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sui Jingfeng <sui.jingfeng@linux.dev>
+In-Reply-To: <20240318155726.GE13682@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
 Hi,
 
-On Mon, Mar 18, 2024 at 8:47=E2=80=AFAM Johan Hovold <johan@kernel.org> wro=
-te:
->
-> On Mon, Mar 18, 2024 at 08:31:09AM -0700, Doug Anderson wrote:
-> > On Mon, Mar 18, 2024 at 8:26=E2=80=AFAM Doug Anderson <dianders@google.=
-com> wrote:
->
-> > > > A new compatible string (or one-off property) would allow them do m=
-ake a
-> > > > change when they are ready (e.g. by only updating the devicetrees a=
-fter
-> > > > all boot firmware has been patched and pushed out).
-> > >
-> > > I have no real opinion about the exact way this is solved so happy to
-> > > let DT folks decide on how they want this. I will note, however, that
-> > > device trees are never shipped separately and thus we have no
-> > > intrinsic need for DT backward compatbility here. It would be OK from
-> > > a ChromeOS perspective to add a property or compatible string for the
-> > > broken case.
-> >
-> > Actually, I should probably say more about this to make it clear how it=
- works.
-> >
-> > Chromebooks ship the kernel as a FIT image which bundles the kernel
-> > and device trees together. The firmware looks at all the bundled
-> > device trees and picks the proper one based on the board name,
-> > revision, and SKU ID. The firmware then looks for the bluetooth node
-> > (I believe it finds it from the "aliases" section) and adds the MAC
-> > address there.
-> >
-> > ...so we could update the DT to add a property (if that's desired)
-> > even if we don't update the firmware.
->
-> Thanks for the details. Sounds like we could get away with adding a new
-> property for the broken firmware in this case, which should resolve this
-> nicely without having to deprecate anything.
->
-> Could you carry such a devicetree patch out-of-tree until the firmware
-> has been fixed?
 
-IMO we shouldn't try to fix the firmware at all. Given the fact that
-it took me a year to get a firmware uprev completed for one trogdor
-variant for fixes that actually had functional impact, it's possible
-we'll never actually get an uprev completed that includes this fix or
-it will happen years from now when nobody remembers about it. I'm also
-certain this whole issue will also cause a bunch of debugging over the
-years if we try to fix it in firmware like that. There are cases where
-people end up running with old firmware since the developer workflow
-doesn't automatically update it.
+On 2024/3/18 23:57, Laurent Pinchart wrote:
+> On Mon, Mar 18, 2024 at 11:53:11PM +0800, Sui Jingfeng wrote:
+>> On 2024/3/18 23:33, Laurent Pinchart wrote:
+>>> On Sun, Mar 17, 2024 at 01:28:00AM +0800, Sui Jingfeng wrote:
+>>>> To reduce boilerplate, use of_graph_get_remote_node() helper instead of
+>>>> the hand-rolling code.
+>>>>
+>>>> Signed-off-by: Sui Jingfeng <sui.jingfeng@linux.dev>
+>>>> ---
+>>>>    drivers/gpu/drm/bridge/thc63lvd1024.c | 24 +++---------------------
+>>>>    1 file changed, 3 insertions(+), 21 deletions(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/bridge/thc63lvd1024.c b/drivers/gpu/drm/bridge/thc63lvd1024.c
+>>>> index d4c1a601bbb5..5f99f9724081 100644
+>>>> --- a/drivers/gpu/drm/bridge/thc63lvd1024.c
+>>>> +++ b/drivers/gpu/drm/bridge/thc63lvd1024.c
+>>>> @@ -123,28 +123,10 @@ static int thc63_parse_dt(struct thc63_dev *thc63)
+>>>>    	struct device_node *endpoint;
+>>>>    	struct device_node *remote;
+>>>>    
+>>>> -	endpoint = of_graph_get_endpoint_by_regs(thc63->dev->of_node,
+>>>> -						 THC63_RGB_OUT0, -1);
+>>>> -	if (!endpoint) {
+>>>> -		dev_err(thc63->dev, "Missing endpoint in port@%u\n",
+>>>> -			THC63_RGB_OUT0);
+>>>> -		return -ENODEV;
+>>>> -	}
+>>>> -
+>>>> -	remote = of_graph_get_remote_port_parent(endpoint);
+>>>> -	of_node_put(endpoint);
+>>>> -	if (!remote) {
+>>>> -		dev_err(thc63->dev, "Endpoint in port@%u unconnected\n",
+>>>> -			THC63_RGB_OUT0);
+>>>> +	remote = of_graph_get_remote_node(thc63->dev->of_node,
+>>>> +					  THC63_RGB_OUT0, -1);
+>>>> +	if (!remote)
+>>> The old logic is equivalent to of_graph_get_remote_node(), but now the
+>>> driver will fail probing without an error message. That's not very nice
+>>> as it leads to difficult to debug problems. I would keep one dev_err()
+>>> here:
+>>>
+>>> 		dev_err(thc63->dev, "No remote endpoint for port@%u\n",
+>>> 			THC63_RGB_OUT0);
+>>>
+>>> As your patch has been merged already, would you like to post a
+>>> follow-up patch to fix this ?
+>> Yes, this is indeed a difference. I will post a follow-up patch to fix this.
+> I'm actually build-testing a patch I already wrote :-) I'll post it in a
+> moment.
 
-The handling should be added upstream and we should just accept that
-the trogdor firmware gets it backward.
 
--Doug
+OK, then.
+
+
+>>>>    		return -ENODEV;
+>>>> -	}
+>>>> -
+>>>> -	if (!of_device_is_available(remote)) {
+>>>> -		dev_err(thc63->dev, "port@%u remote endpoint is disabled\n",
+>>>> -			THC63_RGB_OUT0);
+>>>> -		of_node_put(remote);
+>>>> -		return -ENODEV;
+>>>> -	}
+>>>>    
+>>>>    	thc63->next = of_drm_find_bridge(remote);
+>>>>    	of_node_put(remote);
+
+-- 
+Best regards,
+Sui
+
