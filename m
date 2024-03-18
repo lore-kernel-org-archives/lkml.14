@@ -1,216 +1,158 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2052.outbound.protection.outlook.com [40.107.21.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4182C6A7
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 09:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710755289; cv=none; b=BZ6WbWmmG7BWZPBTj025P/LEEfA4KSwtVJRQTfz7I3HNR9P62QtoeaOagI0yNmsKKpPm5GF5RY5m8qJHMPsxdimIkVLMZUEwH2edvkPfpQP0SyBooS27DaJgm04po9KYSDsUKQC+AR9qxUbhXt7RxrkZ5JIOwHoCeJakrAlFQDY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710755289; c=relaxed/simple;
-	bh=yLZm8UmDIbSLbszppiTYYW6vVaMGGuKCFnvT//osZEM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tDg6QhyCpv9k0GYUi6fWlpPGVdCMrp8jHMmStkmFZYZ7+a4sfglVg+9CYOv+kIbMtFFC0PM7+8k1Y0BvCZZPST79c48jj3RKKRq/Sb+BS3eYxxd7lyZWJaM3w4x2egeOqMSj7jAU3ff+az70dpLjCxrYyUIpmuu68dIuK4ZvhdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aA//cief; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A912C6B0;
+	Mon, 18 Mar 2024 09:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710755324; cv=fail; b=b/x+LYNh15ywB0A9vkut1ACrhH8pS6EaWflK6jTO65YWYauF0zFqJGsdFIn2lBWIilJpiNlPPFueVzTu3/ZQIVoMzi+tOIfhF1JjhzWyzgMie/g5Z1GsfJyxkWg60Z7/s25KDpb0dH2Sf4Ft7X05fh5SWrmZLfE3k2D7f1RBB2E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710755324; c=relaxed/simple;
+	bh=uvz8Tn9wLJ+OIzukXTQFaExe9WpHb6/mo92/Rqi8PL0=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=cGgp59igoTH8F8nPtu8zWVewdO5h3YNVlSRmGEpbKxMXtKLn7yzO1y4C6EY8fAHkNeXK6LlLoPnw72z/KOB92NdfVNe8qhrJh6S2w5NGqtlY8f+QxZUmZjmnCTqmwog6ePAtHiYEf57p+hrcS1nrAl0jFGsuIzBXts3PQYETqqE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=IUNv2e7k; arc=fail smtp.client-ip=40.107.21.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aA//cief"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710755286;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=nELhg4+vsVbvdDiQeSgfbHglrwF0XWGALe3+9j7o4IM=;
-	b=aA//ciefOrKZ6Sn9WJS64kg4mS+aNFlJ2RBpdxCEM1xcuL72lyDd2MBr43qwdKgUigPkit
-	IUrz6YRdDmdwOdijddXtzJCWXqh/7+Rqn2ifijKcV+l22HGmBWknD9+MXNc281eYIofnXB
-	flElNd8kUacatUf6Tdk6CrgfnzPEfHw=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-193-v-jYkp9DM9GhoFhhrrt_1g-1; Mon, 18 Mar 2024 05:48:04 -0400
-X-MC-Unique: v-jYkp9DM9GhoFhhrrt_1g-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-33eb8721b64so2402997f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 02:48:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710755283; x=1711360083;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :references:cc:to:content-language:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nELhg4+vsVbvdDiQeSgfbHglrwF0XWGALe3+9j7o4IM=;
-        b=j4J8fFWfBtPS1oSaxAL1NGn7m8Q5KSg/1d4SuGEbWUARHwbZG1krUCV7hvtuhxWvWh
-         vFG/XAyeScPKnc7gQumz9x8LqOhIDKaAIjQsAOYi6agy0RvgvXRGPSL8pekYpaDDdoRc
-         E24J3wqMlZ65dxnp2CeN4MRJY1tY/cKTUEoIL/eTon02UBap7pZZ18wt+xnqSwJL6Xkz
-         nbQV+g/pYmwawaRNncAXZ96cC/fdxi0kTZJHEHqCzWj5NdGatpK+WGpxIwTw1UfkVlmw
-         V5ngzIsRQl4zuPothIG9msqJyLWtC+Apcs1CQUKmV+FmwOif1ssVnJL6WENEuK2j8vqH
-         LG2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU4xEi4VFJbotc7tF/5UZ0xatqAHLOZobP99Auh0R1tJTbALl8Ag28OLM3gSLOPi+1376TbZKavOmsTuqimcCLb//Cym8R+jHgvJjVh
-X-Gm-Message-State: AOJu0Yzc1EHYOuq2INiGbDoEpHBZgJwmVQBj8xxDt2lk6Ab/OYboil6D
-	r7BD3ghazIfr2U4J2EW9xr/48jtA+aapJMN4KZxxOmLkavFTWkT9HL7Om1Nnhl1QksV0hxko061
-	6aQpRy/7aKGbcatAY6d1FliyyzH+T6zJ1W+OhVcqNg3L+kP6iP5lZx8B4vJGJWQ==
-X-Received: by 2002:a5d:5750:0:b0:33e:8fd:1173 with SMTP id q16-20020a5d5750000000b0033e08fd1173mr7686356wrw.60.1710755283645;
-        Mon, 18 Mar 2024 02:48:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHvjXZ/WmgxRXjUi1dpzJdRashyJr7cTUrwHNawSmLcVzolzcX+6CNKcKQ4GNC+8GK8pw3T4g==
-X-Received: by 2002:a5d:5750:0:b0:33e:8fd:1173 with SMTP id q16-20020a5d5750000000b0033e08fd1173mr7686336wrw.60.1710755283190;
-        Mon, 18 Mar 2024 02:48:03 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c737:1f00:94ff:246b:30d0:686b? (p200300cbc7371f0094ff246b30d0686b.dip0.t-ipconnect.de. [2003:cb:c737:1f00:94ff:246b:30d0:686b])
-        by smtp.gmail.com with ESMTPSA id p10-20020a5d638a000000b0033e206a0a7asm9318645wru.26.2024.03.18.02.48.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Mar 2024 02:48:02 -0700 (PDT)
-Message-ID: <ca6cca00-8a1b-48c8-b93a-99a772103b8e@redhat.com>
-Date: Mon, 18 Mar 2024 10:48:01 +0100
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IUNv2e7k"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IuC+A3FAot9MeAq51PJXywQud08C3k+GsDvKd7Vyeo3WjF3j/LRuFJ2+Z62QBD7k4131aOYj7w4eMzR0FzTzk+XYzb52SB9ld3vc+mE9OgVhtsoNOrvy6BDpVLunpl5KAs9pru/gkvoGcE5GvK7FRdyq2v5nqQbAT8WF5rCGf+6ERDnF7VLb1KVJpaRHNDs0fgV+Ad2bCEMH0v1tlgDN3gMguG2Fq/LPAObqOofNzt3FPjckUHOnpfZpnoA6cmIl8TFVn1NDPNMaJEXY4/thIQr9RN4c12wa8nnt146807LIdb76ynkTxGoXo6obo7eVa+dz8svKDLKbGcgZMM2Gcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sldrU3Vb9IJMnFl5q8BjB1Btb0n3uEHHyUSaqKK7qec=;
+ b=M/6TYrHppqEptlaiJnlTJcaH51+aGky5+SNeqnWjzKoohMDWl767EOi5908eseHGtw6Wd32JCC4MN7c47v+tKmKX9HoG4O1Phs4WzKsPEajpiRRBlboB//SZXhxuYm2DKE7N/EmP+2r1oKi1x1mVWR7wu2qkNEG8ulHUn+xSwrkzddp2e8fK8IDkT4WzcslyxHpP3q7bYg0QxOhfcYaSf8XV5CCQ5B7sNX05U+i3X7n0xLVH0ko6pFDvYwhglWRoJrLHD5cBoCEHjJfZSnGg6BVGjK+4lf+z+LVmol7hDFJzuoH185QJgzYEvftiru5g5FBFliMKtKro0Lfpk4iKcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sldrU3Vb9IJMnFl5q8BjB1Btb0n3uEHHyUSaqKK7qec=;
+ b=IUNv2e7kWXesIQRPJWMujWDf0pPw/aU9p/jf2FSPVNoS+kgoP+ZSANvkzrm/h/ZT6JXQEv3CbgnSKxBqTX/MfxbHdQyn+YNk7q6WCgmfjI/j5XC7ClqwYhHoJ8nDFuPXU/W0NLGG7++CgeEKMG4jsJc9a+pmW4V0+G0Nm33bdqw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PA4PR04MB9367.eurprd04.prod.outlook.com (2603:10a6:102:2aa::7)
+ by AM9PR04MB8938.eurprd04.prod.outlook.com (2603:10a6:20b:409::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.25; Mon, 18 Mar
+ 2024 09:48:39 +0000
+Received: from PA4PR04MB9367.eurprd04.prod.outlook.com
+ ([fe80::688c:22a3:9638:9ded]) by PA4PR04MB9367.eurprd04.prod.outlook.com
+ ([fe80::688c:22a3:9638:9ded%5]) with mapi id 15.20.7386.023; Mon, 18 Mar 2024
+ 09:48:39 +0000
+From: Joy Zou <joy.zou@nxp.com>
+To: frank.li@nxp.com,
+	ping.bai@nxp.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de
+Cc: kernel@pengutronix.de,
+	festevam@gmail.com,
+	linux-imx@nxp.com,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev
+Subject: [PATCH v5 0/3] add pmic pca9451a support
+Date: Mon, 18 Mar 2024 17:56:30 +0800
+Message-Id: <20240318095633.4079027-1-joy.zou@nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR01CA0016.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:191::20) To PA4PR04MB9367.eurprd04.prod.outlook.com
+ (2603:10a6:102:2aa::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2] mm: support multi-size THP numa balancing
-Content-Language: en-US
-To: Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Huang, Ying" <ying.huang@intel.com>
-Cc: akpm@linux-foundation.org, mgorman@techsingularity.net,
- wangkefeng.wang@huawei.com, jhubbard@nvidia.com, 21cnbao@gmail.com,
- ryan.roberts@arm.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <903bf13fc3e68b8dc1f256570d78b55b2dd9c96f.1710493587.git.baolin.wang@linux.alibaba.com>
- <871q88vzc4.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <f00316da-e45d-46c1-99b8-ee160303eaaa@linux.alibaba.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <f00316da-e45d-46c1-99b8-ee160303eaaa@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9367:EE_|AM9PR04MB8938:EE_
+X-MS-Office365-Filtering-Correlation-Id: 77975863-49a5-48ff-6852-08dc473096be
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	usfufK/D0H72GmsBxpxsXafg52pCfcpJ/J1XmJwhNIVR03rP3bNtA5HzCrCmnqmPNiqHqALBaKak70sb+JTAPCjW23ZzF+scgJhO9HR4qoiw1a/uJZLmskeH0KsMYjla+AIxhwg2Eioa+fz/9uLMsEdJYLHgvJzQ3hVkbTjukf6Yo2UclsVoUuCpJGZ3/cubU6QN51IndhAv3uD9+8J9yyK+MMtTB6Qc40N3kn6vkTTfcXr2GHX5lUYxRPMRr1JUuhGrBPgLdWMf+0Uxz7L17G1JnFRKWcFdKxCVAhC5JiLtjT2VN2EX5SAFF28FEHvTq1M2r5ixm+d5OOmCSbKRczFTU0DVuMZIOrSL6z9/xB381Ob8wtaUkaTiyXmYh2FqE18LlIuIUzS+x0diOciuFCrYOWxX8g07Ccs7yJXglFwG2gAeAnlaiqLFUkDnWyCXz0WCf4+gOcBLtpXaIwIkT4+Gg+L+beaUbOomeSmipHHdsdc+Q8vEKKFMHKG7xXeh0VbeZFvtE5le8QuC1keSNb4PSnznv3551ZHLOC8rneUF+MNZDlSavNGhOrIARqcUe9719XvMaybJqQJ1pkR/akvYGZE1os4jLzCb7DB/Pxjsi7R8Nknbgn7SjzkTWI6M9TBwGfGOu0b8F7aiwDnchB/5lv4iFjzMnL3IdTKPLbWzZXyi4FE/kuE8iPph0YP+AdoiB7sl/FP8FfjTl62Ur494g6OSacJWrCJSS38yJ4A=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9367.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(52116005)(366007)(1800799015)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?DTwf/La/E5xExAAahZzpE74ZfFPhAGLJjULA1mQvy0V6D+XwU6H6I2K2AbRc?=
+ =?us-ascii?Q?hNZtT6oiLC7CH9FTKG0DvlQM9nTTYLuKdXlqy+gHE46RluzkhZr9R0mIqk81?=
+ =?us-ascii?Q?JwL8Ef2pFZttetdiLDWEUW1OX1gYyMAZFfTuLotLw7Xx2fgEswh2pbozHOOf?=
+ =?us-ascii?Q?zLWYgMylZx1PWoKsldeQNerW3Gf97SSI8mFm6Y9TJ94iO8T9zIyFCNBn8EkH?=
+ =?us-ascii?Q?yWrezxYfWlbTwlWLZS20lAz/oFxspyq1JMA0KlU3OCwKZfhPP4e76Cj2GW5M?=
+ =?us-ascii?Q?hHGviX4AZEsKwHE4Z+TD35JdXWDvmqwsTvt9ncfa46UzYL94D8dUnJFMfNc1?=
+ =?us-ascii?Q?2BM2vrFepxyrDR+revKDI7Vp0lhiR0CWtu7DezS/byZBp+1Z5jBWwLKAMvdO?=
+ =?us-ascii?Q?yxOYQ9aRW31Dd07b6TS0VDdGO/dnIoh0S1KWt6y6RzGECkOQyKP2RwiNOpJv?=
+ =?us-ascii?Q?iyConTCQauS0R9VZeD/gGxfhB+OA62B0dK+1RrrzG7bo8DOwY0CZg0IB0Sm9?=
+ =?us-ascii?Q?146sG596K7Z03c0DuntqoJFFBTfbmW8P+gqbfMEW1Cd6luvXJh7dP+LXtCEJ?=
+ =?us-ascii?Q?3Rx7WbZ7Ch88cgKtaqBA9hayp80nn4WlNuy+6VDA2nDMwWixjm0nWlYtcBd2?=
+ =?us-ascii?Q?OMQxzggnMwzSiK6ttuu8xs0wJt8FcptZ6BZSSlC1tViSAjKWR6BsOK/AbbAl?=
+ =?us-ascii?Q?WVWe5gL2zfUbnpmnF1hUXrAlP3sGP2nT2fjt8b1LHK752ld9laob6BkPxAaA?=
+ =?us-ascii?Q?2kwwb5wF6bnuHVg87jYzYfK8HlPK4i24n6d6ASVAldZyRfegIf9B1jQqWcoD?=
+ =?us-ascii?Q?c4cR9pDuRuBXVVtBAXIFHNwURimxmCmJYX0KJMA0PzUXGwG8JNaICiwBHSz6?=
+ =?us-ascii?Q?zMkNSaD0l/RWk/SShf5Fzu7Zl0jvap4rP2FHa1+P6JZcFqW3fyw/yuYMSwj3?=
+ =?us-ascii?Q?ZG2HFJ3v4f9rkZPir0SnIJm77Jree7uGmaGOfWZcOLk945sPa9a6pny2dQrg?=
+ =?us-ascii?Q?yTPfS9WzixEg4JJyHSqCUCow7k5lESjGznK/+qdogeA2qK++2LfRh+lLhu0N?=
+ =?us-ascii?Q?Bj5VIwEjBFNNsB6w56a6NYtVqnBXRzGN084FwZIOG6ai0XbH5a/iU6Q8BJpG?=
+ =?us-ascii?Q?PWhOOF4Hyrv7ACfwOEMtukpgK1rE2+mco6YvDR4iagiqFsI2pjHv8e3M5gaa?=
+ =?us-ascii?Q?yhvIVBUUeuDzsA5yj5R8XsWQWm+yPSv25G2r6YaiCfJU1h0Kdr3vHaegQy2v?=
+ =?us-ascii?Q?VLdOsMWdAoqDU9ID5eQcBHiRCkC33fVvAg5aAr3LhgmP0qk40/o4hDDvjlAA?=
+ =?us-ascii?Q?Gk5W8q6BtJTicpVy86U3sYIbIzyN5LNO3KYcf9N1DTMyiqZ6hk0E6jyEGsu6?=
+ =?us-ascii?Q?O7LEOUxeyVIuoief5gT4zha5frVQ2dRBCyCrqP+metTJC81nQPdkEhWFgmyk?=
+ =?us-ascii?Q?IYtErKElOICemdywKVFUxOzxtfawqEr9gwQh1xMQdtD2eRiQUh1PclbbBLyu?=
+ =?us-ascii?Q?Gwp1EDr7aAT/tH4iFwykc57EPbnVdJNhqshELhnpYNZrUZ2aNZ8DLvn4J2Ha?=
+ =?us-ascii?Q?SZ1i2E0v7C44XO2MIFqc+u9e+k5LsSmwJGdvjyEU?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77975863-49a5-48ff-6852-08dc473096be
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9367.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2024 09:48:39.6517
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XmFwweoS4G0Rivc7mhaUsUHzsoHoVpErA4fU+Zvlayn/sEt6NDEvQ8RneAxq1Cei
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8938
 
-On 18.03.24 10:42, Baolin Wang wrote:
-> 
-> 
-> On 2024/3/18 14:16, Huang, Ying wrote:
->> Baolin Wang <baolin.wang@linux.alibaba.com> writes:
->>
->>> Now the anonymous page allocation already supports multi-size THP (mTHP),
->>> but the numa balancing still prohibits mTHP migration even though it is an
->>> exclusive mapping, which is unreasonable. Thus let's support the exclusive
->>> mTHP numa balancing firstly.
->>>
->>> Allow scanning mTHP:
->>> Commit 859d4adc3415 ("mm: numa: do not trap faults on shared data section
->>> pages") skips shared CoW pages' NUMA page migration to avoid shared data
->>> segment migration. In addition, commit 80d47f5de5e3 ("mm: don't try to
->>> NUMA-migrate COW pages that have other uses") change to use page_count()
->>> to avoid GUP pages migration, that will also skip the mTHP numa scaning.
->>> Theoretically, we can use folio_maybe_dma_pinned() to detect the GUP
->>> issue, although there is still a GUP race, the issue seems to have been
->>> resolved by commit 80d47f5de5e3. Meanwhile, use the folio_estimated_sharers()
->>> to skip shared CoW pages though this is not a precise sharers count. To
->>> check if the folio is shared, ideally we want to make sure every page is
->>> mapped to the same process, but doing that seems expensive and using
->>> the estimated mapcount seems can work when running autonuma benchmark.
->>>
->>> Allow migrating mTHP:
->>> As mentioned in the previous thread[1], large folios are more susceptible
->>> to false sharing issues, leading to pages ping-pong back and forth during
->>> numa balancing, which is currently hard to resolve. Therefore, as a start to
->>> support mTHP numa balancing, only exclusive mappings are allowed to perform
->>> numa migration to avoid the false sharing issues with large folios. Similarly,
->>> use the estimated mapcount to skip shared mappings, which seems can work
->>> in most cases (?), and we've used folio_estimated_sharers() to skip shared
->>> mappings in migrate_misplaced_folio() for numa balancing, seems no real
->>> complaints.
->>
->> IIUC, folio_estimated_sharers() cannot identify multi-thread
->> applications.  If some mTHP is shared by multiple threads in one
-> 
-> Right.
-> 
+The patchset supports pmic pca9451a.
+For the details, please check the patch commit log.
 
-Wasn't this "false sharing" previously raised/described by Mel in this 
-context?
+---
+Changes in v5:
+- adjust gpio@22 to the front of pmic@25.
 
->> process, how to deal with that?
-> 
-> IMHO, seems the should_numa_migrate_memory() already did something to help?
-> 
-> ......
-> 	if (!cpupid_pid_unset(last_cpupid) &&
-> 				cpupid_to_nid(last_cpupid) != dst_nid)
-> 		return false;
-> 
-> 	/* Always allow migrate on private faults */
-> 	if (cpupid_match_pid(p, last_cpupid))
-> 		return true;
-> ......
-> 
-> If the node of the CPU that accessed the mTHP last time is different
-> from this time, which means there is some contention for that mTHP among
-> threads. So it will not allow migration.
-> 
-> If the contention for the mTHP among threads is light or the accessing
-> is relatively stable, then we can allow migration?
-> 
->> For example, I think that we should avoid to migrate on the first fault
->> for mTHP in should_numa_migrate_memory().
->>
->> More thoughts?  Can we add a field in struct folio for mTHP to count
->> hint page faults from the same node?
-> 
-> IIUC, we do not need add a new field for folio, seems we can reuse
-> ->_flags_2a field. But how to use it? If there are multiple consecutive
-> NUMA faults from the same node, then allow migration?
+Changes in v4:
+- modify the comment for uSDHC but not i2c.
 
-_flags_2a cannot be used. You could place something after _deferred_list 
-IIRC. But only for folios with order>1.
+Changes in v3:
+- modify the dts voltags constraints.
+- remove unnecessary changes in driver code.
+- modify commit message.
+- add tag for dt-bindings.
 
-But I also wonder how one could achieve that using a new field.
+Changes in v2:
+- drop old part support.
+
+Joy Zou (3):
+  regulator: dt-bindings: pca9450: add pca9451a support
+  regulator: pca9450: add pca9451a support
+  arm64: dts: imx93-11x11-evk: add pca9451a support
+
+ .../regulator/nxp,pca9450-regulator.yaml      |   1 +
+ .../boot/dts/freescale/imx93-11x11-evk.dts    | 111 ++++++++++
+ drivers/regulator/pca9450-regulator.c         | 194 +++++++++++++++++-
+ include/linux/regulator/pca9450.h             |   1 +
+ 4 files changed, 305 insertions(+), 2 deletions(-)
 
 -- 
-Cheers,
-
-David / dhildenb
+2.37.1
 
