@@ -1,160 +1,126 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A436D57881
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 19:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9FE458209;
+	Mon, 18 Mar 2024 19:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710789171; cv=none; b=RwI7K9rBFQwYb+6Z/GH92Xc7UbQSloAahtXGl/nIEeNsEQ5BQkP1vsUEoxrKgqFxk0fXKyI9J6KfKvwJ8NWc6ONvydaNyJS6DlXfaf8nLZBuyF7qb381GlUhbH/CAufjEYosWdJzLRbvbMTsGHelthPJdq+UucT3dsPGmfQtMJ8=
+	t=1710789208; cv=none; b=L5LrjsPCi9w+C1u9yQW/75Def3lrQd6fv5ln3sJjye+tvVD2CsP+s490Uhnx+rMifAxewKHS725KMGOKnMoackOo4NKKEiDp3rEPIUIHg9KhrDB5F/pgdzpaOLhDYQN7+WOA5YJpuvvi6CwhYLCHgWuF2QFBFHeDsmCXo7iRb60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710789171; c=relaxed/simple;
-	bh=BRzAVB64xba4LajsrQesEnO3VNhDC6VLDMobsb0exZQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OwzfGG9xkP2F7S/X4QsyjbMNBpKcydQfdY0qVy/N/NWOwIxm6a9cFxjt3K7XAKOaoHlUI+JFPQ3MARGDY/X+PAV7dBAN6u1OZLSKJyNlDs4xaYNTN7MsfCWAGWPyyf+Dp7z7+K5yJYTaYQcWEDC9dqc09wU4LaZWTkHUadKD2Jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=YxNpQkjr; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1710789208; c=relaxed/simple;
+	bh=g3OpJ2WmV+FZJE+8M2WBoafZTplReYZUKjMO+eX5RQI=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=jSFpEzDUVlhIS/AwpNlMILQPlF/lAXf+swvHLKlMzmzuVe0EhKzSaic6zGQvrOZJbwOdAGY1E7XWYAYfT96jM/4FmlMft+OQuRyji0VBFFy14xdMMXZNj44zp6kGqomHjRiAbETeDUGOHrgewfWwUaY2mNfV87sinM0U04hio2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=orIhn1/d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="YxNpQkjr"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.4.0)
- id 088c641c652891ff; Mon, 18 Mar 2024 19:12:46 +0100
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 1DB7C66B492;
-	Mon, 18 Mar 2024 19:12:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1710785566;
-	bh=BRzAVB64xba4LajsrQesEnO3VNhDC6VLDMobsb0exZQ=;
-	h=From:To:Cc:Subject:Date;
-	b=YxNpQkjrXnpoUqSEXOE1pYdXAuD1eQ2+smUsMNnvoMUI7DNIsnJRQKXsFlxCnWi4K
-	 cRBc5EzWHw2jrZoWn57APymPLEe3h8ZIiBc2lUGN/hz/f8R29J1Dm5L8OpRKS1tP8e
-	 INWnYGp2rlJU640mbMeplMPO2tFiaE63LL7xC2lGM7+VH7l/F4d/THjpaeSPbc3EbU
-	 TtJYkoHnUMo8gJFl0ORtj46Cxr9JpX66Sos4vEVsfRhJEZvBJkRqCAOEKvx+b7/8a2
-	 ALnQDp49YVVOrtnaWgUPwFnZJNiDTfC3auTGNVJtyXKvCnpcktanee2g2ozDpxq4XR
-	 0Ou9r4YtYztAA==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: x86 Maintainers <x86@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, Borislav Petkov <bp@alien8.de>
-Subject: [PATCH v1] arch: x86: kernel: Remove leftover contents of topology.c
-Date: Mon, 18 Mar 2024 19:12:45 +0100
-Message-ID: <12422874.O9o76ZdvQC@kreacher>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="orIhn1/d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E62E5C43394;
+	Mon, 18 Mar 2024 19:13:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710789208;
+	bh=g3OpJ2WmV+FZJE+8M2WBoafZTplReYZUKjMO+eX5RQI=;
+	h=In-Reply-To:References:Date:From:To:Cc:Subject:From;
+	b=orIhn1/dm1QGLuuhDj7vCaZPAhboHKV2GIrsPlJ4yErZMbGHt/MV+xtdIcBsXeqgW
+	 xtGbFgWviOV6m6L7On19eE0d2TH2t4xS8bp13wfPxn+FbCO6A0QrbiG9jPTRXcgVwm
+	 YF1MmFcCTINK8o/P935lRfAwWZudiU6wE6XYzgwEpJy96+i4bBOLTedH6aBro6sih2
+	 QBCALxs6KkUnvg0orvLXnGHfy0XotTvvd0vF86+ym8TvjgIKpYo0P2PPkql4qPU9p8
+	 iuWrKSL9tv+Iyzapl2HfNNU2m0+aazVQ5s4KXEepSO/hEQRu2lZ1IC4eoO8Ro027Et
+	 o4ndfozFFFx1g==
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id E1E871200068;
+	Mon, 18 Mar 2024 15:13:26 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Mon, 18 Mar 2024 15:13:26 -0400
+X-ME-Sender: <xms:VpL4Zc7DTVO6ahUR0C9nfK2uduZB3NQfsrgeXbkzlnqPDk5YfPvmbg>
+    <xme:VpL4Zd6O5cOkq6HLsB9lOkX-P7PzZQCys-sUS0d-EbQ-D_wmqaHGGzLThbRuNX5fP
+    GY4za1G9xV2nYlLwdE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrkeejgdduvddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusehkvghrnhgvlhdrohhrgheqnecuggftrf
+    grthhtvghrnhepvdeviefgtedugeevieelvdfgveeuvdfgteegfeeiieejjeffgeeghedu
+    gedtveehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    eprghrnhguodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduvdekhedujedt
+    vdegqddvkeejtddtvdeigedqrghrnhgupeepkhgvrhhnvghlrdhorhhgsegrrhhnuggsrd
+    guvg
+X-ME-Proxy: <xmx:VpL4ZbegIdepxIWufOinCPkBfB4L8_nx0q3zvyYmW2EGHaeRunzsww>
+    <xmx:VpL4ZRJETe_p4fLlkhXwG8h2dUtsojHdPJopkPfB7yCxjn0B7ersRg>
+    <xmx:VpL4ZQLs6ee0IHf962xtLGamYz7DDVtHUAudLz8v_oeTzhkqXZY7aw>
+    <xmx:VpL4ZSzlYbekp-yod14FwOsZ9AYMr2rUoKbBJLbj8RYcsI-P6rHkzQ>
+    <xmx:VpL4Zf8kZo1mD7qofWIED-qSjq5LzD2bc5er9Nn8rGX1IHBT9WT0HXvAG_Y>
+Feedback-ID: i36794607:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 48FC7B6008D; Mon, 18 Mar 2024 15:13:26 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-300-gdee1775a43-fm-20240315.001-gdee1775a
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrkeejgdduuddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepffffffekgfehheffleetieevfeefvefhleetjedvvdeijeejledvieehueevueffnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohepiedprhgtphhtthhopeigkeeisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhglhigsehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtohepuggrvhgvrdhhrghnshgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegsphesrghlihgvnhekrdguvg
-X-DCC--Metrics: v370.home.net.pl 1024; Body=6 Fuz1=6 Fuz2=6
+Message-Id: <28ceb124-b634-44e0-bcd4-848fc3b0be7a@app.fastmail.com>
+In-Reply-To: <87le6fih5w.ffs@tglx>
+References: <20240303235029.555787150@linutronix.de>
+ <20240304005104.622511517@linutronix.de>
+ <e20d88d0-5fb9-4307-be67-88b04ae9a188@roeck-us.net>
+ <CAHk-=whK=G1o6RtS9DS3wEGF1KU7WLgLL1+6Se86bj8m7wwqrQ@mail.gmail.com>
+ <87y1ajjsv9.ffs@tglx> <87o7bfjeae.ffs@tglx>
+ <CAHk-=wiP+XMGHr8NU13sSOG_oasNZN02O9_c1PzCJNG7+O-GPw@mail.gmail.com>
+ <877ci3j80k.ffs@tglx> <87le6fih5w.ffs@tglx>
+Date: Mon, 18 Mar 2024 20:13:05 +0100
+From: "Arnd Bergmann" <arnd@kernel.org>
+To: "Thomas Gleixner" <tglx@linutronix.de>,
+ "Linus Torvalds" <torvalds@linuxfoundation.org>
+Cc: "Guenter Roeck" <linux@roeck-us.net>, LKML <linux-kernel@vger.kernel.org>,
+ x86@kernel.org, "Uros Bizjak" <ubizjak@gmail.com>,
+ linux-sparse@vger.kernel.org, "kernel test robot" <lkp@intel.com>,
+ oe-kbuild-all@lists.linux.dev
+Subject: Re: [patch 5/9] x86: Cure per CPU madness on UP
+Content-Type: text/plain
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Mon, Mar 18, 2024, at 18:27, Thomas Gleixner wrote:
+> On Sat, Mar 16 2024 at 02:11, Thomas Gleixner wrote:
+>> On Fri, Mar 15 2024 at 16:23, Linus Torvalds wrote:
+>> The amount of subtle SMP=n fallout has been kinda exponentially
+>> increasing over the years and it's just putting burden on the wrong
+>> people. TBH, I'm tired of this nonsense.
+>
+> And for the fun of it I hacked Kconfig to allow a SMP=y NR_CPUS=1 build
+> and checked the size of vmlinux:
+>
+>                 64-bit          32-bit
+> SMP, NCPUS=1    38438400        22110177
+> UP              38393703        21682041
+> Delta              44697          428076
+>                      0.1%              2%              
+>
+> The UP savings are not really impressive...
+>
+> Let me look what it actually takes to do that.
 
-The only useful piece of arch/x86/kernel/topology.c is the definition
-of arch_cpu_is_hotpluggable() that can be moved elsewhere (other
-architectures tend to put it into setup.c), so do that and delete
-the rest of the file.
+FWIW, I did some experiments a few weeks ago on 32-bit ARM,
+using a fairly minimal kernel in a virtual machine, and
+checking the runtime memory consumption rather than compile-time.
+In a kvm guest with 32MiB RAM, I saw a difference of multiple
+megabytes in memory usage:
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- arch/x86/kernel/Makefile   |    2 +-
- arch/x86/kernel/setup.c    |    8 ++++++++
- arch/x86/kernel/topology.c |   43 -------------------------------------------
- 3 files changed, 9 insertions(+), 44 deletions(-)
+Linux testvm 6.8.0-rc4-00410-gc02197fc9076-dirty #1 SMP PREEMPT armv7l
+root@testvm:~# free
+           	total   used    free  	shared  buff/cache   available
+Mem:       	26932   14956   1732   	    52       12800   	11976
+Swap:      	16360    3632   12728
 
-Index: linux-pm/arch/x86/kernel/setup.c
-===================================================================
---- linux-pm.orig/arch/x86/kernel/setup.c
-+++ linux-pm/arch/x86/kernel/setup.c
-@@ -7,6 +7,7 @@
-  */
- #include <linux/acpi.h>
- #include <linux/console.h>
-+#include <linux/cpu.h>
- #include <linux/crash_dump.h>
- #include <linux/dma-map-ops.h>
- #include <linux/dmi.h>
-@@ -1222,3 +1223,10 @@ static int __init register_kernel_offset
- 	return 0;
- }
- __initcall(register_kernel_offset_dumper);
-+
-+#ifdef CONFIG_HOTPLUG_CPU
-+bool arch_cpu_is_hotpluggable(int cpu)
-+{
-+	return cpu > 0;
-+}
-+#endif /* CONFIG_HOTPLUG_CPU */
-Index: linux-pm/arch/x86/kernel/topology.c
-===================================================================
---- linux-pm.orig/arch/x86/kernel/topology.c
-+++ /dev/null
-@@ -1,43 +0,0 @@
--/*
-- * Populate sysfs with topology information
-- *
-- * Written by: Matthew Dobson, IBM Corporation
-- * Original Code: Paul Dorwin, IBM Corporation, Patrick Mochel, OSDL
-- *
-- * Copyright (C) 2002, IBM Corp.
-- *
-- * All rights reserved.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful, but
-- * WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or
-- * NON INFRINGEMENT.  See the GNU General Public License for more
-- * details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-- *
-- * Send feedback to <colpatch@us.ibm.com>
-- */
--#include <linux/interrupt.h>
--#include <linux/nodemask.h>
--#include <linux/export.h>
--#include <linux/mmzone.h>
--#include <linux/init.h>
--#include <linux/smp.h>
--#include <linux/irq.h>
--#include <asm/io_apic.h>
--#include <asm/cpu.h>
--
--#ifdef CONFIG_HOTPLUG_CPU
--bool arch_cpu_is_hotpluggable(int cpu)
--{
--	return cpu > 0;
--}
--#endif /* CONFIG_HOTPLUG_CPU */
-Index: linux-pm/arch/x86/kernel/Makefile
-===================================================================
---- linux-pm.orig/arch/x86/kernel/Makefile
-+++ linux-pm/arch/x86/kernel/Makefile
-@@ -60,7 +60,7 @@ obj-$(CONFIG_X86_64)	+= sys_x86_64.o
- obj-$(CONFIG_X86_ESPFIX64)	+= espfix_64.o
- obj-$(CONFIG_SYSFS)	+= ksysfs.o
- obj-y			+= bootflag.o e820.o
--obj-y			+= pci-dma.o quirks.o topology.o kdebugfs.o
-+obj-y			+= pci-dma.o quirks.o kdebugfs.o
- obj-y			+= alternative.o i8253.o hw_breakpoint.o
- obj-y			+= tsc.o tsc_msr.o io_delay.o rtc.o
- obj-y			+= resource.o
+Linux testvm 6.8.0-rc4-00410-gc02197fc9076-dirty #2 PREEMPT armv7l
+root@testvm:~# free
+           	total    used  	free  	shared  buff/cache   available
+Mem:       	26932   13744  	5648        32       10092   	13188
+Swap:      	16360    3880  	12480
 
+There is a little difference between runs, but this does seem
+significant enough to keep it. The SMP build was with
+CONFIG_NR_CPUS=2 (the smallest supported compile-time number),
+but running on a single-CPU qemu instance.
 
-
+      Arnd
