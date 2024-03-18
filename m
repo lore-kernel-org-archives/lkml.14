@@ -1,83 +1,198 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2AE33B1AA;
-	Mon, 18 Mar 2024 13:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623F548CFC
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 13:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710770029; cv=none; b=oAJ5gmoOkXd8VXCXiwcqFDORpWVNkx+wXOyLo+SVLBaPPXTNFrvVJ698hfkBmHnjtyuaLhP85vGeqY1aJ3NOIAMXDWTXNio/zBHbmvRIWRytXHWEnl3xOx/VJ6aS7AlLOABDuEhWdqgyGh6Yb33OqnSUsUcK4W+lsxN/biA4vtA=
+	t=1710770210; cv=none; b=L3HeYnQ44ixvMEkrd04bZEI02D7f2jTvsE+E+5lbAksldroOl2r3RZEHLUTkXNH8NDMdKJ65JMi2DARVOODJpcjuKXs3Iowc3YhSeV7+ft/oBjqlzJyx7AbgwcSeXevKVBVtRfqqsYCja+Fea8sFMq5vdSKmIZ8JkN2NKLX4NKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710770029; c=relaxed/simple;
-	bh=Vu96on3ELce8oj2lYXDb7Wwq/sWwPtuQ5VXawLVemTk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BxiXZ6BcuEjYfkahmS7eN+5KlmaZYDJal4a12hB5lr0qn/eBlfYX/fbwvEDIFBuE36QW5tL/IsL4wSBBuSjYMqffFleEShBFzZsHS35K/2JlNQFUeGxJA9zyQ4RWoxQ0VsNh8yPUtzGrVkQwelTPWH5Y1dd4PvLZymXAL6fLmqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Tywkq0z5Vz1QBtL;
-	Mon, 18 Mar 2024 21:32:19 +0800 (CST)
-Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3A19C1400CB;
-	Mon, 18 Mar 2024 21:34:51 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.2) by
- kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 18 Mar 2024 21:34:50 +0800
-From: Jijie Shao <shaojijie@huawei.com>
-To: <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <michal.kubiak@intel.com>, <rkannoth@marvell.com>
-CC: <shenjian15@huawei.com>, <wangjie125@huawei.com>,
-	<liuyonglong@huawei.com>, <shaojijie@huawei.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH V3 net 2/3] net: hns3: fix kernel crash when devlink reload during pf initialization
-Date: Mon, 18 Mar 2024 21:29:47 +0800
-Message-ID: <20240318132948.3624333-3-shaojijie@huawei.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20240318132948.3624333-1-shaojijie@huawei.com>
-References: <20240318132948.3624333-1-shaojijie@huawei.com>
+	s=arc-20240116; t=1710770210; c=relaxed/simple;
+	bh=ERVnSpjVdDsO/HGZdby1785ElVvvS6M95VHMrvBbUs4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gCS1CdocgE20rCsEbt9Ctg6J4/+YeOtPJm/bmqei6SBueRBPe+vurxvYlpb9eEHwy+pm/0PJRi9B1aw/RQ/TJxk2bZzmpJddpr9NRLgSif5S2uspzrndTYt7JhIeFtuWJe1zPxkIW5jvUSdR4UnJmR90JUpNd6QGSa3L+Vxa8yA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kfiTWVdT; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kfiTWVdT"
+Message-ID: <6f0a86cd-dd01-40b1-87ed-39f8d655e18a@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1710770205;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=muvpwz7a96M6/2doTJBM5VlsnMcGZ+AFVmWiFaXOnls=;
+	b=kfiTWVdT8ReLHqMbkUM8dB16NUYpUQUu9Yfp8lnzUy1+Tt/BID2KvcFeq1kyyd8XZNw+kF
+	qBPpBYMR2nJqFecICQ2n+oHEsQPz6kmT96Pf3Wm3CD8l/HvSrrP2hiOdKlKcGuxRd/3fw3
+	7hjvwA236ed1PCoUQV/oqXVOJQlnIYs=
+Date: Mon, 18 Mar 2024 14:56:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600007.china.huawei.com (7.193.23.208)
+Subject: Re: [EXTERNAL] Re: [PATCH rdma-next 1/4] RDMA/mana_ib: Introduce
+ helpers to create and destroy mana queues
+To: Konstantin Taranov <kotaranov@microsoft.com>,
+ Konstantin Taranov <kotaranov@linux.microsoft.com>,
+ "sharmaajay@microsoft.com" <sharmaajay@microsoft.com>,
+ Long Li <longli@microsoft.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
+ "leon@kernel.org" <leon@kernel.org>
+Cc: "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1710336299-27344-1-git-send-email-kotaranov@linux.microsoft.com>
+ <1710336299-27344-2-git-send-email-kotaranov@linux.microsoft.com>
+ <7956dd4b-3002-4073-aff7-f85ea436e6e0@linux.dev>
+ <PAXPR83MB0557CAF749EE4161E3EE5A31B42D2@PAXPR83MB0557.EURPRD83.prod.outlook.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <PAXPR83MB0557CAF749EE4161E3EE5A31B42D2@PAXPR83MB0557.EURPRD83.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Yonglong Liu <liuyonglong@huawei.com>
 
-The devlink reload process will access the hardware resources,
-but the register operation is done before the hardware is initialized.
-so, if process the devlink reload during initialization, may lead to kernel
-crash. This patch fixes this by checking whether the NIC is initialized.
+On 18.03.24 10:31, Konstantin Taranov wrote:
+>>> From: Konstantin Taranov <kotaranov@microsoft.com>
+>>>
+>>> Intoduce helpers to work with mana ib queues (struct mana_ib_queue).
+>>> A queue always consists of umem, gdma_region, and id.
+>>> A queue can be used for a WQ or a CQ.
+>>>
+>>> Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
+>>> ---
+>>>    drivers/infiniband/hw/mana/main.c    | 40
+>> ++++++++++++++++++++++++++++
+>>>    drivers/infiniband/hw/mana/mana_ib.h | 10 +++++++
+>>>    2 files changed, 50 insertions(+)
+>>>
+>>> diff --git a/drivers/infiniband/hw/mana/main.c
+>>> b/drivers/infiniband/hw/mana/main.c
+>>> index 71e33feee..0ec940b97 100644
+>>> --- a/drivers/infiniband/hw/mana/main.c
+>>> +++ b/drivers/infiniband/hw/mana/main.c
+>>> @@ -237,6 +237,46 @@ void mana_ib_dealloc_ucontext(struct
+>> ib_ucontext *ibcontext)
+>>>                ibdev_dbg(ibdev, "Failed to destroy doorbell page %d\n", ret);
+>>>    }
+>>>
+>>> +int mana_ib_create_queue(struct mana_ib_dev *mdev, u64 addr, u32 size,
+>>> +                      struct mana_ib_queue *queue) {
+>>> +     struct ib_umem *umem;
+>>> +     int err;
+>>> +
+>>> +     queue->umem = NULL;
+>>> +     queue->id = INVALID_QUEUE_ID;
+>>> +     queue->gdma_region = GDMA_INVALID_DMA_REGION;
+>>> +
+>>> +     umem = ib_umem_get(&mdev->ib_dev, addr, size,
+>> IB_ACCESS_LOCAL_WRITE);
+>>> +     if (IS_ERR(umem)) {
+>>> +             err = PTR_ERR(umem);
+>>> +             ibdev_dbg(&mdev->ib_dev, "Failed to get umem, %d\n", err);
+>>> +             return err;
+>>> +     }
+>>> +
+>>> +     err = mana_ib_create_zero_offset_dma_region(mdev, umem, &queue-
+>>> gdma_region);
+>>> +     if (err) {
+>>> +             ibdev_dbg(&mdev->ib_dev, "Failed to create dma region, %d\n",
+>> err);
+>>> +             goto free_umem;
+>>> +     }
+>>> +     queue->umem = umem;
+>>> +
+>>> +     ibdev_dbg(&mdev->ib_dev,
+>>> +               "create_dma_region ret %d gdma_region 0x%llx\n",
+>>> +               err, queue->gdma_region);
+>>> +
+>>> +     return 0;
+>>> +free_umem:
+>>> +     ib_umem_release(umem);
+>>> +     return err;
+>>> +}
+>>> +
+>>> +void mana_ib_destroy_queue(struct mana_ib_dev *mdev, struct
+>>> +mana_ib_queue *queue) {
+>>> +     mana_ib_gd_destroy_dma_region(mdev, queue->gdma_region);
+>> The function mana_ib_gd_destroy_dma_region will call
+>> mana_gd_destroy_dma_region. In the function
+>> mana_gd_destroy_dma_region, the function mana_gd_send_request will
+>> return the error -EPROTO.
+>> The procedure is as below. So the function mana_ib_destroy_queue should
+>> also handle this error?
+> Thanks for the comment!
+> This error can be ignored and it was ignored before this commit.
+> I checked the corresponding Windows driver code, and it is also intentionally ignored there.
+> I can add a comment that the error is ignored intentionally if you want.
 
-Fixes: b741269b2759 ("net: hns3: add support for registering devlink for PF")
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Jijie Shao <shaojijie@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_devlink.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Sure. Thanks a lot.
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_devlink.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_devlink.c
-index 9a939c0b217f..80db4f7b05f6 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_devlink.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_devlink.c
-@@ -40,8 +40,9 @@ static int hclge_devlink_reload_down(struct devlink *devlink, bool netns_change,
- 	struct pci_dev *pdev = hdev->pdev;
- 	int ret;
- 
--	if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state)) {
--		dev_err(&pdev->dev, "reset is handling\n");
-+	if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state) ||
-+	    !test_bit(HCLGE_STATE_NIC_REGISTERED, &hdev->state)) {
-+		dev_err(&pdev->dev, "reset is handling or driver removed\n");
- 		return -EBUSY;
- 	}
- 
--- 
-2.30.0
+Zhu Yanjun
 
+>
+>> mana_ib_gd_destroy_dma_region --- > mana_gd_destroy_dma_region
+>>
+>>    693 int mana_gd_destroy_dma_region(struct gdma_context *gc, u64
+>> dma_region_handle)
+>>    694 {
+>>
+>> ...
+>>
+>>    706         err = mana_gd_send_request(gc, sizeof(req), &req,
+>> sizeof(resp), &resp);
+>>    707         if (err || resp.hdr.status) {
+>>    708                 dev_err(gc->dev, "Failed to destroy DMA region:
+>> %d, 0x%x\n",
+>>    709                         err, resp.hdr.status);
+>>    710                 return -EPROTO;
+>>    711         }
+>>
+>> ...
+>>
+>>    714 }
+>>
+>> Zhu Yanjun
+>>
+>>> +     ib_umem_release(queue->umem);
+>>> +}
+>>> +
+>>>    static int
+>>>    mana_ib_gd_first_dma_region(struct mana_ib_dev *dev,
+>>>                            struct gdma_context *gc, diff --git
+>>> a/drivers/infiniband/hw/mana/mana_ib.h
+>>> b/drivers/infiniband/hw/mana/mana_ib.h
+>>> index f83390eeb..859fd3bfc 100644
+>>> --- a/drivers/infiniband/hw/mana/mana_ib.h
+>>> +++ b/drivers/infiniband/hw/mana/mana_ib.h
+>>> @@ -45,6 +45,12 @@ struct mana_ib_adapter_caps {
+>>>        u32 max_inline_data_size;
+>>>    };
+>>>
+>>> +struct mana_ib_queue {
+>>> +     struct ib_umem *umem;
+>>> +     u64 gdma_region;
+>>> +     u64 id;
+>>> +};
+>>> +
+>>>    struct mana_ib_dev {
+>>>        struct ib_device ib_dev;
+>>>        struct gdma_dev *gdma_dev;
+>>> @@ -169,6 +175,10 @@ int mana_ib_create_dma_region(struct
+>> mana_ib_dev *dev, struct ib_umem *umem,
+>>>    int mana_ib_gd_destroy_dma_region(struct mana_ib_dev *dev,
+>>>                                  mana_handle_t gdma_region);
+>>>
+>>> +int mana_ib_create_queue(struct mana_ib_dev *mdev, u64 addr, u32 size,
+>>> +                      struct mana_ib_queue *queue); void
+>>> +mana_ib_destroy_queue(struct mana_ib_dev *mdev, struct
+>> mana_ib_queue
+>>> +*queue);
+>>> +
+>>>    struct ib_wq *mana_ib_create_wq(struct ib_pd *pd,
+>>>                                struct ib_wq_init_attr *init_attr,
+>>>                                struct ib_udata *udata);
