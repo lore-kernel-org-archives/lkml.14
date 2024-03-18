@@ -1,158 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3EE1E862;
-	Mon, 18 Mar 2024 01:55:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA2518029;
+	Mon, 18 Mar 2024 01:58:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710726934; cv=none; b=sBXtAwAJnfX1qgqLUoWRa4ZnKim8PYb3lX2qGhfTTa3n7JAozK8kuVatpayzoNvUm2NpnDL/9MrR39rJVtLN0LEhsIPT3euPpnD9EWhFrOgeO7grqUuBmupgWQFhM+FM2G5wgeNoh2T/53ciklmY1y4lMSv/mSfNbRUb4hS4BEo=
+	t=1710727115; cv=none; b=E1SVx2yyFYznKwUbpypwHw9Z7gXAYJi2bACXWrB9CWa6KVu2bqSAHy2sdqgG0SSBJb+KJhWt19yPupzRFC3Dq+PtTRW8l/rfwJ8lyXv+9319d21GFdt5uYs/uKGOZt040lCiQw5655y45119KSO9p8wzsbGSTfuOSx8nT33IScw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710726934; c=relaxed/simple;
-	bh=iUMk+G89JkHrqV4fUL3Gt28oxAeNaZnrFGaHr6SxGkU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PZqhkYlnKHq2fXG2WjHTdyGtKOLhklEO49UOIOwp6L67yDF5DgN/ilHBNSt3NNAYZjBrybiiAcwPPlzOPBtPe926pSKCPzBbLFBJoonwdrpiR2gyX6E3bU4oYftCWR2Z3DJKks+LBxIZ5oWPDcE7VD5y54kP9pHnRbirFH6m31I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UjUANLT9; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1710727115; c=relaxed/simple;
+	bh=DcITcUi0UAzIfJfgwKPQR+v9uBz4blRpVUIme3CHnFc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CFB7oUWlaZy1S9LuLIQei7HvUopv+wqWl5PRuliKxnhW5fgMuoTuvbRRUdf2PM4yL1ioC91L8N6WSrUaduiMDTIGbb5t58mJf+vnBsHmNzRwylEuS1ZosHbi5NrnunexnP6oAy24ztEPm4U7aK1HhS8SwPBa+kuBNU8FwQGUAWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sAIvdc3+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UjUANLT9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710726933; x=1742262933;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=iUMk+G89JkHrqV4fUL3Gt28oxAeNaZnrFGaHr6SxGkU=;
-  b=UjUANLT9jAo8tjCK8wAGSQTnlyg600xxCaigcuF7w8QVrL65eZqD44O9
-   5jZDUwXyDyfx2zCB5zdHj4lVUk9cXDlyer3T/qYJNLnDwjb+D7t9Xb+HZ
-   kz1JORYPXyI8Z2pmU5u5Jvpw6EvzEdY4P18js1u8mJ1Nxddzg6aYXXK5W
-   zUIANXikv7HzvjyuDrS4AuMS7O0thEdDJV2Z+Sna7P0zL1iZO0h+NBLRJ
-   x1fdkgXWeeiT8bmUY9iPvMOW3fWJfAicC6TWELU5J/7DO4mjXNwxd5LEt
-   K33Cus+19/TVQ1R0rBTGu2U1Z9fQDjSkp42zwIJsDQrBvOTlL6auz1ogF
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11016"; a="16668193"
-X-IronPort-AV: E=Sophos;i="6.07,133,1708416000"; 
-   d="scan'208";a="16668193"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2024 18:55:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,133,1708416000"; 
-   d="scan'208";a="44248090"
-Received: from haibo-optiplex-7090.sh.intel.com ([10.239.159.132])
-  by orviesa002.jf.intel.com with ESMTP; 17 Mar 2024 18:55:29 -0700
-From: Haibo Xu <haibo1.xu@intel.com>
-To: linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-efi@vger.kernel.org
-Cc: paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	ardb@kernel.org,
-	sunilvl@ventanamicro.com,
-	xiaobo55x@gmail.com,
-	Haibo Xu <haibo1.xu@intel.com>
-Subject: [PATCH v2] riscv: dmi: Add SMBIOS/DMI support
-Date: Mon, 18 Mar 2024 10:09:16 +0800
-Message-Id: <20240318020916.1299190-1-haibo1.xu@intel.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sAIvdc3+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05C89C433F1;
+	Mon, 18 Mar 2024 01:58:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710727114;
+	bh=DcITcUi0UAzIfJfgwKPQR+v9uBz4blRpVUIme3CHnFc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sAIvdc3+W8FabzOBdpjbNt/g0jAjRvax2T9f3NSY8kAOrB89h8mK4nw5jTJ1lrenD
+	 Y5qJKBbqvraWed/nleybq9nkZkavn7X/B9pLcKMZ1RPzbmJIOqC6x55bnHDT4ptj2g
+	 QSAQrQNFYvSN1c0wA/TAzTJSdNUGCbRKNvhLHnzIrkFXe7GKNV4g3jxQFKm2y92vQg
+	 EGlj9Ghn5fxsugSIIZ46rB0m79t1yhi3O7zAJiCl+U8fDLM+HlwrAesQjIOxWwh0Sl
+	 +sYxdTnEGNnsvz6zIZjBqEX4whzIGPHGiA3MjK/WIv240fYQj8/x76UwEfvan5BkyN
+	 doWb5r1bfJjRw==
+Date: Sun, 17 Mar 2024 21:58:32 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: "Mukunda,Vijendar" <vijendar.mukunda@amd.com>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Jiawei Wang <me@jwang.link>, Mark Brown <broonie@kernel.org>,
+	lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+	Syed.SabaKareem@amd.com, linux-sound@vger.kernel.org,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	"Dommati, Sunil-kumar" <Sunil-kumar.Dommati@amd.com>
+Subject: Re: [PATCH AUTOSEL 6.6 12/17] ASoC: amd: yc: add new YC platform
+ variant (0x63) support
+Message-ID: <ZfefyOEkKM_GHvhC@sashalap>
+References: <20240311151314.317776-1-sashal@kernel.org>
+ <20240311151314.317776-12-sashal@kernel.org>
+ <b13786b0-fdee-45a4-9f1a-33427cef5635@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <b13786b0-fdee-45a4-9f1a-33427cef5635@amd.com>
 
-Enable the dmi driver for riscv which would allow access the
-SMBIOS info through some userspace file(/sys/firmware/dmi/*).
+On Mon, Mar 11, 2024 at 09:10:54PM +0530, Mukunda,Vijendar wrote:
+>On 11/03/24 20:43, Sasha Levin wrote:
+>> From: Jiawei Wang <me@jwang.link>
+>>
+>> [ Upstream commit 316a784839b21b122e1761cdca54677bb19a47fa ]
+>>
+>> The Lenovo 21J2 (ThinkBook 16 G5+ APO) has this new variant,
+>> as detected with lspci:
+>>
+>> 64:00.5 Multimedia controller: Advanced Micro Devices, Inc. [AMD]
+>>         ACP/ACP3X/ACP6x Audio Coprocessor (rev 63)
+>>
+>> Signed-off-by: Jiawei Wang <me@jwang.link>
+>> Link: https://msgid.link/r/20240228073914.232204-1-me@jwang.link
+>> Signed-off-by: Mark Brown <broonie@kernel.org>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>
+>This patch has to be reverted.
+>Pci revision id 0x63 corresponds to Pink Sardine (PS) platform.
+>Its not yellow corp platform.
+>Already PS platform ACP driver with PDM controller support available
+>in mainline kernel.
+>https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/sound/soc/amd/ps?h=v6.7.9
 
-The change was based on that of arm64 and has been verified
-by dmidecode tool.
+I'll drop it, thanks.
 
-Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
----
-Changes since v1
-  - Change to use memremap/memunmap for dmi_(early)_remap/unmap
-    definition(suggested by Ard)
-  - Minor clean up for comments (Ard)
----
- arch/riscv/Kconfig                   | 11 +++++++++++
- arch/riscv/include/asm/dmi.h         | 24 ++++++++++++++++++++++++
- drivers/firmware/efi/riscv-runtime.c | 13 +++++++++++++
- 3 files changed, 48 insertions(+)
- create mode 100644 arch/riscv/include/asm/dmi.h
-
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 8ebafe337eac..3639151cb4ef 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -952,6 +952,17 @@ config EFI
- 	  allow the kernel to be booted as an EFI application. This
- 	  is only useful on systems that have UEFI firmware.
- 
-+config DMI
-+	bool "Enable support for SMBIOS (DMI) tables"
-+	depends on EFI
-+	default y
-+	help
-+	  This enables SMBIOS/DMI feature for systems.
-+
-+	  This option is only useful on systems that have UEFI firmware.
-+	  However, even with this option, the resultant kernel should
-+	  continue to boot on existing non-UEFI platforms.
-+
- config CC_HAVE_STACKPROTECTOR_TLS
- 	def_bool $(cc-option,-mstack-protector-guard=tls -mstack-protector-guard-reg=tp -mstack-protector-guard-offset=0)
- 
-diff --git a/arch/riscv/include/asm/dmi.h b/arch/riscv/include/asm/dmi.h
-new file mode 100644
-index 000000000000..ca7cce557ef7
---- /dev/null
-+++ b/arch/riscv/include/asm/dmi.h
-@@ -0,0 +1,24 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2024 Intel Corporation
-+ *
-+ * based on arch/arm64/include/asm/dmi.h
-+ *
-+ * This file is subject to the terms and conditions of the GNU General Public
-+ * License.  See the file "COPYING" in the main directory of this archive
-+ * for more details.
-+ */
-+
-+#ifndef __ASM_DMI_H
-+#define __ASM_DMI_H
-+
-+#include <linux/io.h>
-+#include <linux/slab.h>
-+
-+#define dmi_early_remap(x, l)		memremap(x, l, MEMREMAP_WB)
-+#define dmi_early_unmap(x, l)		memunmap(x)
-+#define dmi_remap(x, l)			memremap(x, l, MEMREMAP_WB)
-+#define dmi_unmap(x)			memunmap(x)
-+#define dmi_alloc(l)			kzalloc(l, GFP_KERNEL)
-+
-+#endif
-diff --git a/drivers/firmware/efi/riscv-runtime.c b/drivers/firmware/efi/riscv-runtime.c
-index 09525fb5c240..c3bfb9e77e02 100644
---- a/drivers/firmware/efi/riscv-runtime.c
-+++ b/drivers/firmware/efi/riscv-runtime.c
-@@ -152,3 +152,16 @@ void arch_efi_call_virt_teardown(void)
- {
- 	efi_virtmap_unload();
- }
-+
-+static int __init riscv_dmi_init(void)
-+{
-+	/*
-+	 * On riscv, DMI depends on UEFI, and dmi_setup() needs to
-+	 * be called early because dmi_id_init(), which is an arch_initcall
-+	 * itself, depends on dmi_scan_machine() having been called already.
-+	 */
-+	dmi_setup();
-+
-+	return 0;
-+}
-+core_initcall(riscv_dmi_init);
 -- 
-2.34.1
-
+Thanks,
+Sasha
