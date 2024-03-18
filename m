@@ -1,79 +1,177 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95280524D1
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 15:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1696524CF;
+	Mon, 18 Mar 2024 15:51:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710776939; cv=none; b=GePUGfcBxXZlZ4oxMwgbjiX7bh62GQQCFb7SNnr2kAuj5nt5WR0I71zfRCU3+zKf1rIz1FGN8+PWQ/Q/iFZ1re/LC7E05IzHIk2jZtVHApIY7gXu8gKXX7glwhDl5ms3dzKKRL2XOzhLYuqcTbSubsoU7DLo1kdm/fFqm0hoqUI=
+	t=1710777071; cv=none; b=fgcm6rw5hQ55lAfxvgHtjXNYRMc4ZonvNaaxc+ACjJfUOzlImm3YK4HzSnd0fL5GbXZ65zc/yyjLWSTWnjhmH8OFuTDzMgWFjZUh1bZgKBb98qUIH+vaZ0on5hyMr7IbySQAjNRpPOBjxPacWaLbTizfnz10o8PwsK5ABcIhx9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710776939; c=relaxed/simple;
-	bh=P2mrvSmlzie7vQSmXFC32spGcjtp7fqRoyCIPryRSRs=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=ORHXxqsDnDk1W43TtaAdno8JOky3//hCa515ZtYOETjL2/froY1sY9cX71gdXBd5qbXEb6qoc2c7cp+Ym5kkF/M/EYS3MxwX/wcdPvLQnXrcrcpiaZHWDEHNfTSA9wkQHeQjcVsmaHS4xvUowxqOW6J8CugFEIoMzeDBSU1RZvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=cnmFKxKn; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1710777071; c=relaxed/simple;
+	bh=vFEF/OGYpnkktObt7GRCXvKVIPiNuH/3wZneowmoO2I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=TYVPwOLC68JMEP+sr3mgfDhDIM8dUs/sCqXHmryqXtszVeTJVH8dOSuY/pLteYyE58JQ0ENbKJWytumEs8zLLYjhzASNubhomZafroUq7N1ZbxrQcRgdZ1iYUB7PjtEYv1zO9wwSbB+Uc6IVRIIftxz1REcxpkE66ypfYUBZpHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Z8+NyVtn; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="cnmFKxKn"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 5A32324002B
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 16:48:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1710776928; bh=P2mrvSmlzie7vQSmXFC32spGcjtp7fqRoyCIPryRSRs=;
-	h=Content-Type:Mime-Version:Subject:From:Date:Cc:
-	 Content-Transfer-Encoding:Message-Id:To:From;
-	b=cnmFKxKn0+APiCmv+eTDjs1YIjZIlKWbTZGXwgTagExa64Mhli4fMPXr0gnetBNEE
-	 1PmCuYANO3Z2waQvNfuC4vSRhFJRkIj7lxsW7UCxKzjLrWMfTArP0GiMZ5T7LPnc0G
-	 tab6HG4Hdu8DvlWZpw4fXzT5Mev3PjDpz9XhE4vLn9FN8mS9JVyvh8MJ0Hx590SBJy
-	 gCa5yIJSVml3mRFzchAbFO32u7R1sTN+vfX3b+Ey2oS7jbgzAKvR5ZOMQNXgMvo0uh
-	 r374aMUqrPHsBQJbBjpPlR9sRAbgpyjkoK1ZLJsSlXkFK0Dce9YsrRR7SYRVtKKQjN
-	 /9KS3YrhMM5eQ==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4TyzmD52ZWz9rxN;
-	Mon, 18 Mar 2024 16:48:44 +0100 (CET)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Z8+NyVtn"
+Received: from [127.0.1.1] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id D8BC11B1C;
+	Mon, 18 Mar 2024 16:50:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1710777041;
+	bh=vFEF/OGYpnkktObt7GRCXvKVIPiNuH/3wZneowmoO2I=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=Z8+NyVtn4em2i8blDUKcsmGRiU2QTA1dCqc9g/+vwZwvB2kX90wnbaFEA8aGp7QD5
+	 1lxa7Z2SJO2sai/M87Xs761h0XkLnO1r3I9u8Hsg+R7nt7kHdDLD5N7sNnDR7Bifu1
+	 rTdXPWHb3O3gL/IV1FDgHuzlVlW0lnFNN1MaOE2g=
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Date: Mon, 18 Mar 2024 17:49:56 +0200
+Subject: [PATCH 1/4] media: uapi: Add meta formats for PiSP FE config and
+ stats
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
-Subject: Re: [syzbot] [v9fs?] KMSAN: uninit-value in v9fs_evict_inode
-From: Charalampos Mitrodimas <charmitro@posteo.net>
-In-Reply-To: <0000000000002750950613c53e72@google.com>
-Date: Mon, 18 Mar 2024 15:48:11 +0000
-Cc: asmadeus@codewreck.org,
- ericvh@kernel.org,
- linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- linux_oss@crudebyte.com,
- lucho@ionkov.net,
- syzkaller-bugs@googlegroups.com,
- v9fs@lists.linux.dev
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B6E22992-FF45-44E3-8FBE-D157BED7B922@posteo.net>
-References: <0000000000002750950613c53e72@google.com>
-To: syzbot <syzbot+eb83fe1cce5833cd66a0@syzkaller.appspotmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240318-rp1-cfe-v1-1-ac6d960ff22d@ideasonboard.com>
+References: <20240318-rp1-cfe-v1-0-ac6d960ff22d@ideasonboard.com>
+In-Reply-To: <20240318-rp1-cfe-v1-0-ac6d960ff22d@ideasonboard.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Naushir Patuck <naush@raspberrypi.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
+ Kieran Bingham <kieran.bingham@ideasonboard.com>, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4239;
+ i=tomi.valkeinen@ideasonboard.com; h=from:subject:message-id;
+ bh=vFEF/OGYpnkktObt7GRCXvKVIPiNuH/3wZneowmoO2I=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBl+GLoQiGKkmp9T7eCWGA0g1jd2pCFPuauIw9ss
+ DsaPZybQv2JAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZfhi6AAKCRD6PaqMvJYe
+ 9Tx1D/oCn/zaGnZu1Jl5GazYhG6+m1v2p2UYXJ9gKHErKw3w8Ni1zRRN+PuXU/SLqkApEDY+4ez
+ ww/b87Royxd6h8nQK5CCVef65kVWn0lBMoNKhb/YVNlEYGlDvwez/dowkhzCfQrU1k0RRJVAFl2
+ EEKIV4g/1EkZEwritusWQ8ST9F9KOf5hCY5F+2/DPd3zaqSJKhbr5nOSxedBjqp+cHtj5tngGqS
+ 92nA9vnnR6i0UbtkPGjFbLzmC0Ap+oKjGISvcSSpXZLuIQh1GKgJtfFzC0NEkHj0YJ3vCd9s0nO
+ c1V/BwZUqqa/4HMBInwvaD1JIcLgFJxIXtOfL8Sk9NwRNAsuyjaUx4f4/GMLkRnpViq8j2H/5b9
+ qm9kNZm2wzLlrDenS3KWSEd0lJhM04FZCtNw3yUvme4oOq2mRpCYI+8BHdqUZnNZ8HHU6DQUkFF
+ 95IKT8tRkPELM4OVm1nkH7Rzw3w3e2F8NOXPpLDLM50Bi4coWvmLnGraCEWvi0tTO1K/n3nDJZU
+ RkaTFeeBB3h4Unxf5W0p5yHDxzE0Qkw4qkBcYHXVQDHMfwkht21hanbA4ULSHv98Mty9nVzSFUP
+ ndzXIAoB7zUPou9Hjc/Yt0J45o8NVNmWHDBoTWIqRSw5UKBgyLYoaZ+akm79mzl87DHu05PIn0E
+ aBEIVfH1Fgp2mvA==
+X-Developer-Key: i=tomi.valkeinen@ideasonboard.com; a=openpgp;
+ fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
-please test uv in v9fs_evict_inode
+Add two meta formats for PiSP FE: V4L2_META_FMT_RPI_FE_CFG and
+V4L2_META_FMT_RPI_FE_STATS. The former is used to provide configuration
+for the FE and the latter is used to read the statistics from the FE.
 
-#syz test =
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git =
-master
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+---
+ .../userspace-api/media/v4l/meta-formats.rst       |  1 +
+ .../userspace-api/media/v4l/metafmt-pisp-fe.rst    | 39 ++++++++++++++++++++++
+ drivers/media/v4l2-core/v4l2-ioctl.c               |  2 ++
+ include/uapi/linux/videodev2.h                     |  2 ++
+ 4 files changed, 44 insertions(+)
 
-diff --git a/fs/9p/vfs_inode.c b/fs/9p/vfs_inode.c
-index 360a5304ec03..5d046f63e5fa 100644
---- a/fs/9p/vfs_inode.c
-+++ b/fs/9p/vfs_inode.c
-@@ -353,7 +353,8 @@ void v9fs_evict_inode(struct inode *inode)
- 	filemap_fdatawrite(&inode->i_data);
+diff --git a/Documentation/userspace-api/media/v4l/meta-formats.rst b/Documentation/userspace-api/media/v4l/meta-formats.rst
+index d82a5a9cbd2f..19493c579a8c 100644
+--- a/Documentation/userspace-api/media/v4l/meta-formats.rst
++++ b/Documentation/userspace-api/media/v4l/meta-formats.rst
+@@ -15,6 +15,7 @@ These formats are used for the :ref:`metadata` interface only.
+     metafmt-d4xx
+     metafmt-intel-ipu3
+     metafmt-pisp-be
++    metafmt-pisp-fe
+     metafmt-rkisp1
+     metafmt-uvc
+     metafmt-vsp1-hgo
+diff --git a/Documentation/userspace-api/media/v4l/metafmt-pisp-fe.rst b/Documentation/userspace-api/media/v4l/metafmt-pisp-fe.rst
+new file mode 100644
+index 000000000000..fddeada83e4a
+--- /dev/null
++++ b/Documentation/userspace-api/media/v4l/metafmt-pisp-fe.rst
+@@ -0,0 +1,39 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++.. _v4l2-meta-fmt-rpi-fe-cfg:
++
++************************
++V4L2_META_FMT_RPI_FE_CFG
++************************
++
++Raspberry Pi PiSP Front End configuration format
++================================================
++
++The Raspberry Pi PiSP Front End image signal processor is configured by
++userspace by providing a buffer of configuration parameters to the
++`rp1-cfe-fe-config` output video device node using the
++:c:type:`v4l2_meta_format` interface.
++
++The `Raspberry Pi PiSP technical specification
++<https://datasheets.raspberrypi.com/camera/raspberry-pi-image-signal-processor-specification.pdf>`_
++provide detailed description of the Front End configuration and programming
++model.
++
++.. _v4l2-meta-fmt-rpi-fe-stats:
++
++**************************
++V4L2_META_FMT_RPI_FE_STATS
++**************************
++
++Raspberry Pi PiSP Front End statistics format
++=============================================
++
++The Raspberry Pi PiSP Front End image signal processor provides statistics data
++by writing to a buffer provided via the `rp1-cfe-fe-stats` capture video device
++node using the
++:c:type:`v4l2_meta_format` interface.
++
++The `Raspberry Pi PiSP technical specification
++<https://datasheets.raspberrypi.com/camera/raspberry-pi-image-signal-processor-specification.pdf>`_
++provide detailed description of the Front End configuration and programming
++model.
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index 0b4f5372c217..1d44303b7e81 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -1465,6 +1465,8 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+ 	case V4L2_META_FMT_GENERIC_CSI2_20:	descr = "8b Generic Meta, 20b CSI-2"; break;
+ 	case V4L2_META_FMT_GENERIC_CSI2_24:	descr = "8b Generic Meta, 24b CSI-2"; break;
+ 	case V4L2_META_FMT_RPI_BE_CFG:	descr = "RPi PiSP BE Config format"; break;
++	case V4L2_META_FMT_RPI_FE_CFG: descr = "RPi PiSP FE Config format"; break;
++	case V4L2_META_FMT_RPI_FE_STATS: descr = "RPi PiSP FE Statistics format"; break;
+ 
+ 	default:
+ 		/* Compressed formats */
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index 1eb60baeb3ea..ad1a519eefe5 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -865,6 +865,8 @@ struct v4l2_pix_format {
+ 
+ /* Vendor specific - used for RaspberryPi PiSP */
+ #define V4L2_META_FMT_RPI_BE_CFG v4l2_fourcc('R', 'P', 'B', 'C') /* PiSP BE configuration */
++#define V4L2_META_FMT_RPI_FE_CFG v4l2_fourcc('R', 'P', 'F', 'C')
++#define V4L2_META_FMT_RPI_FE_STATS v4l2_fourcc('R', 'P', 'F', 'S')
+ 
+ /* priv field value to indicates that subsequent fields are valid. */
+ #define V4L2_PIX_FMT_PRIV_MAGIC		0xfeedcafe
 
- #ifdef CONFIG_9P_FSCACHE
--	fscache_relinquish_cookie(v9fs_inode_cookie(v9inode), false);
-+	if (v9fs_inode_cookie(v9inode))
-+		fscache_relinquish_cookie(v9fs_inode_cookie(v9inode), =
-false);
- #endif
- }=
+-- 
+2.34.1
+
