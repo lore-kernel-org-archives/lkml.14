@@ -1,118 +1,179 @@
-Received: from outgoing1.flk.host-h.net (outgoing1.flk.host-h.net [188.40.0.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51C8364AA;
-	Mon, 18 Mar 2024 10:57:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.0.86
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD3C92E65B;
+	Mon, 18 Mar 2024 10:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710759464; cv=none; b=lsWVUR/AnWBXaRTwAE3v3P0ENCsXS0mTbIxZyPE60UTNUcAATj1jZq4JRuSle+YruIdTZqRnKma44+jbuDDZA8+fYiUJmJaMSVEZBQp674dZSM2S8i1QYHZDLg7U2Fx2dulS2iqlA5mI9bOngpgGU1jrB7IS61L4pEbbGV73GtE=
+	t=1710759547; cv=none; b=bac1KPB3QVs8hN352MKiYEesJVE34X7/aro8S+ApGUOp3gfl64jNbyFJk/WQWnI2VXvxX/JCTvhcADYKewBTDd3M2slS8fmnkagzYeCFOggIqD3sDR5ZcUM+o7sgN6kE+l6/XWCNGoPwLIOXSw4vc4J3YR0Rbhkyn6BV7ZF4qUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710759464; c=relaxed/simple;
-	bh=MWTf8fkNQ2QCgpFxTZvn5qcwx9xBfiKmXj3w2Usv5hg=;
-	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:In-Reply-To:
-	 References:Message-ID; b=eRfzW1BytnaWyUvykH5wuawsem41P28pD1+cYr/xxDgftLEqxJsLWHPh/LLff4IX6YPZnrDrvCrNs6wwp5hPMeAVvHTiKFLJATSw5x5ovGMgrMFkDoYfNIQIdEhaQXlrQrWPdIMEBVJh1Kl9iwK5QX5pa1JvFzsQnKPKj8fsq+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=risingedge.co.za; spf=pass smtp.mailfrom=risingedge.co.za; dkim=pass (2048-bit key) header.d=risingedge.co.za header.i=@risingedge.co.za header.b=JVIJ7Mpm; arc=none smtp.client-ip=188.40.0.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=risingedge.co.za
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=risingedge.co.za
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=risingedge.co.za header.i=@risingedge.co.za header.b="JVIJ7Mpm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=risingedge.co.za; s=xneelo; h=Message-ID:References:In-Reply-To:Subject:Cc:
-	To:From:Date:Content-Transfer-Encoding:Content-Type:MIME-Version:reply-to:
-	sender:bcc; bh=OYVkuxYH48Jn2o5BWCgkp6UzoiSG4Lirr71ccRWrpI0=; b=JVIJ7MpmFJ7+9n
-	ewbSIFtxi9OYXnp95IC8uD3sMn8NF4l144+umswJSQRi0qqnGlEg4DwbkBOGP6rkGa+rwy02CYdz2
-	n/5qZks4Anz280ujPMfkJSSEJVF+zXB1JFmpltChHOywCB0JN54SHadzFUoy4CtJZLjP+ayJcho/1
-	EwcqkawJhTgbp5ob7t3ORt0YotwUU4EafawgXggYc2maTuKx1omTlpJQbe5i5SPUzGK2SIOnwp9G1
-	SYkk4gt/+DKRceWmY/9l+TyBg6PPcMX3QrKkpod0hQF173hmJyi1vH73lNL3jnPrV57sTeXXYYUmV
-	f4SnItL++raFL96+FTdw==;
-Received: from www31.flk1.host-h.net ([188.40.1.173])
-	by antispam3-flk1.host-h.net with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <justin.swartz@risingedge.co.za>)
-	id 1rmAgG-00D3tt-SA; Mon, 18 Mar 2024 12:57:27 +0200
-Received: from roundcubeweb1.flk1.host-h.net ([138.201.244.33] helo=webmail9.konsoleh.co.za)
-	by www31.flk1.host-h.net with esmtpa (Exim 4.92)
-	(envelope-from <justin.swartz@risingedge.co.za>)
-	id 1rmAgE-0003Z9-91; Mon, 18 Mar 2024 12:57:22 +0200
+	s=arc-20240116; t=1710759547; c=relaxed/simple;
+	bh=m4C7IJM/lBOjxxuMNRxJEzICHUkxmZPvIn8SOjuKfPs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j2CGz57JgDer6HWjbHrOezesVwithqzh+mVhTrPzX+TYEr4PjxP+RTCyK1Ru3UsCTl+tut1w2BABAZidacPNBtlsdRqlYZGdZUDeKjfw1PEwFFpZbZLHcNIR5VGdtiaE9AhX+zcFR17A3ak1Y1li2dUdFyfJI65Y42fjRSTpwHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E971106F;
+	Mon, 18 Mar 2024 03:59:39 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.71.172])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 42E1B3F762;
+	Mon, 18 Mar 2024 03:59:00 -0700 (PDT)
+Date: Mon, 18 Mar 2024 10:58:57 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Yan Zhai <yan@cloudflare.com>, netdev@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jiri Pirko <jiri@resnulli.us>, Simon Horman <horms@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Coco Li <lixiaoyan@google.com>, Wei Wang <weiwan@google.com>,
+	Alexander Duyck <alexanderduyck@fb.com>,
+	Hannes Frederic Sowa <hannes@stressinduktion.org>,
+	linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+	bpf@vger.kernel.org, kernel-team@cloudflare.com,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Toke Hoiland-Jorgensen <toke@redhat.com>,
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>
+Subject: Re: [PATCH v4 net 1/3] rcu: add a helper to report consolidated
+ flavor QS
+Message-ID: <ZfgecVqd6p-ACSZ5@FVFF77S0Q05N>
+References: <cover.1710525524.git.yan@cloudflare.com>
+ <491d3af6c7d66dfb3b60b2f210f38e843dfe6ed2.1710525524.git.yan@cloudflare.com>
+ <790ce7e7-a8fd-4d28-aaf3-1b991a898be2@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date: Mon, 18 Mar 2024 12:57:22 +0200
-From: Justin Swartz <justin.swartz@risingedge.co.za>
-To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc: =?UTF-8?Q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>, Rob
- Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Matthias Brugger
- <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, linux-mips@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH 00/14] mips: dts: ralink: mt7621: improve DTS style
-In-Reply-To: <CAMhs-H_1bwfKO8yquz-3BHQ0UQYW1FFVJYHE66w8Q9m1+fCCHw@mail.gmail.com>
-References: <20240316045442.31469-1-justin.swartz@risingedge.co.za>
- <CAMhs-H9ZO-sitsrASuvsEd+ddwVyHH35gj7yAABTqFNfOCGYYw@mail.gmail.com>
- <60512ae2-dd73-4cb6-9514-145f946300fc@linaro.org>
- <5d6c36cb9dd9afda1efb69aa34058517@risingedge.co.za>
- <adefc3ff-86a5-4af7-8276-73d0e0108901@linaro.org>
- <26633d73360e43b2c548f49e544472ea@risingedge.co.za>
- <CAMhs-H_1bwfKO8yquz-3BHQ0UQYW1FFVJYHE66w8Q9m1+fCCHw@mail.gmail.com>
-Message-ID: <c2b8e6e52468fa9fa62da4c66689306f@risingedge.co.za>
-X-Sender: justin.swartz@risingedge.co.za
-User-Agent: Roundcube Webmail/1.3.17
-X-Authenticated-Sender: justin.swartz@risingedge.co.za
-X-Virus-Scanned: Clear
-X-SpamExperts-Domain: risingedge.co.za
-X-SpamExperts-Username: 
-Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.09)
-X-Recommended-Action: accept
-X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT8CUKWN3S0rKpOTOocUYUj1PUtbdvnXkggZ
- 3YnVId/Y5jcf0yeVQAvfjHznO7+bT5wCPRB8bAzJcv2cv+UqiTTc2+CpNcmBnO4XM3Sck4bwNogU
- WCl1nkLBzZX0KuJ9bXiS85Z42w/+2OBolTNFbPomXFWCX8oNdggW7HE9XDTdSejrkEpbuUvwMvHx
- 3T+KSG//gbuP7hnUK8NQdLwsVWKIFDZRrTGv3rxiw9tFrqFSCFNiLZt/QXQnOBRD+jq1HsKsDh/6
- Srgk2K3gr1VBfJbChkYH6fbrypLNrde+UooQVNLReLErukdelEOHUIpaBbp5GdnsN8+UvimwMinK
- 0+Txhz2u9qvrL2PODYgMZQApJXOjDLkqunZ9NcY2bHZn7CfFscMZZf3sCkN20I5vMh4akiObI7Kj
- vK7X04QEin24qbfMFd8eGjnYW8aSH5qj4ujh/13psIvqSqJFa1CcANErDW/w69saM9prk3jNnHtn
- nuEt/J9wDZeQfiNOYsLDFBdwYt2XtlLzy7G7T4kla0JNMwpa8J6LDEGB71xpBP9rMN3suOKfn8Hl
- koyhyj7ioi1H+3FR74FPtCVqefSOps3D+BsRiAfACpgn8kblwE1ZM57Ph7wksNU44DWpObor+fqr
- AP5R/Cae/ZemygD++WnmLtBcNrQxKZYuPe8bdCyw79zlPbqLQkZr26Lcxdvj8cqI+CogZdOhX7v3
- ClXzrmMENhJLl6MBfhzHVBR0wHQZxzIUka7Uq615Mik1qzcz30+tdk6yIuh9K7v+Nq0Cm3JVhle6
- F/kpBdN+oWjoATjEFDwcaiz0R34rhTN+GTbl4uS+pZovX9cex7Ac4fawcerGI7TrGXpM/B/M0BZd
- PfIU1BX7pZc1sE3vsz58auH/srM2fgZ9JmgLbj7sqoEiwv7LCxIiAE5ODMnmwjvj2589zjbyZCiM
- WpBpW8YvoIIqmZcWhL/r/eFjMjJnMHeiAPOVAT1rE1/vP68Bb4z3v3h3gCdXrv2+9GnNX30LKqXb
- fwFKgm/rnYBl+Mj5KqOl6Jzub/f3QhLRbOgisvi5VU9eNBtgo6zjiatjNO/pnMCjuIvXs/AyV/Ns
- URB/R+FlEHyAzksgfaRvdgw0WK34QWnzHHMcN6qoXPjenLhIOF1oeRYbjF1Hp647mOWoQlc3hL3c
- dBMSQgQtiTUcJp5roVy0aeoLdGEqJusV1340htLevvx4u/m4iBmYb1/LCV4/EuVHup06w3Vwxf9C
- F7D6LKKRTfdjzQ6YC7Heg3Xf7O1TOd6RcY/MXB8eEq3bCN2QohZvyS03iBmgsz450Kmjd3fGV40p
- dJLitcoGgbEqkFmuUJ3wODI4njOoaB5WEUmF8qr+Ibtf63VNbf0lrvssY+k7AHGi1NevGWTo2+h8
- Lhk4HCeZR7ymlGVRtthBJ2y8A5arx6JItKpFaUNPGMMlvbMX0nyK1NiAJ0y2Qvvn6ds6mor35w4f
- SfHzQbABJfgy21HclcZkPRq7NhoxyMwqi8Q23Rgadfh5T5n5D4OHHpbEIgsllZKWnzc5M5WlNtVJ
- qo05MS+4ayUpOtEhdxekWDmK9g==
-X-Report-Abuse-To: spam@antispamquarantine.host-h.net
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <790ce7e7-a8fd-4d28-aaf3-1b991a898be2@paulmck-laptop>
 
-On 2024-03-18 10:48, Sergio Paracuellos wrote:
-> On Sun, Mar 17, 2024 at 4:43 PM Justin Swartz
-> <justin.swartz@risingedge.co.za> wrote:
->> But for future reference: is it not enough for the Reviewed-by: 
->> trailer
->> to be sent in response to the cover letter of a patch set if a 
->> reviewer
->> has looked at the entire set?
+On Fri, Mar 15, 2024 at 10:40:56PM -0700, Paul E. McKenney wrote:
+> On Fri, Mar 15, 2024 at 12:55:03PM -0700, Yan Zhai wrote:
+> > There are several scenario in network processing that can run
+> > extensively under heavy traffic. In such situation, RCU synchronization
+> > might not observe desired quiescent states for indefinitely long period.
+> > Create a helper to safely raise the desired RCU quiescent states for
+> > such scenario.
+> > 
+> > Currently the frequency is locked at HZ/10, i.e. 100ms, which is
+> > sufficient to address existing problems around RCU tasks. It's unclear
+> > yet if there is any future scenario for it to be further tuned down.
 > 
-> It is enough, AFAICT. I found your patchset very easy to review so I
-> am ok with the patchset as it is. However, at the end this will be
-> through the mips tree, so let's do what Thomas prefers: add all
-> patches as they are or squash all of them in one commit.
+> I suggest something like the following for the commit log:
 > 
-> Thanks,
->     Sergio Paracuellos
+> ------------------------------------------------------------------------
+> 
+> When under heavy load, network processing can run CPU-bound for many tens
+> of seconds.  Even in preemptible kernels, this can block RCU Tasks grace
+> periods, which can cause trace-event removal to take more than a minute,
+> which is unacceptably long.
+> 
+> This commit therefore creates a new helper function that passes
+> through both RCU and RCU-Tasks quiescent states every 100 milliseconds.
+> This hard-coded value suffices for current workloads.
 
-Thank you for the review. I'm glad to squash them if need be.
+FWIW, this sounds good to me.
+
+> 
+> ------------------------------------------------------------------------
+> 
+> > Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+> > Reviewed-by: Jesper Dangaard Brouer <hawk@kernel.org>
+> > Signed-off-by: Yan Zhai <yan@cloudflare.com>
+> > ---
+> > v3->v4: comment fixup
+> > 
+> > ---
+> >  include/linux/rcupdate.h | 24 ++++++++++++++++++++++++
+> >  1 file changed, 24 insertions(+)
+> > 
+> > diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+> > index 0746b1b0b663..da224706323e 100644
+> > --- a/include/linux/rcupdate.h
+> > +++ b/include/linux/rcupdate.h
+> > @@ -247,6 +247,30 @@ do { \
+> >  	cond_resched(); \
+> >  } while (0)
+> >  
+> > +/**
+> > + * rcu_softirq_qs_periodic - Periodically report consolidated quiescent states
+> > + * @old_ts: last jiffies when QS was reported. Might be modified in the macro.
+> > + *
+> > + * This helper is for network processing in non-RT kernels, where there could
+> > + * be busy polling threads that block RCU synchronization indefinitely.  In
+> > + * such context, simply calling cond_resched is insufficient, so give it a
+> > + * stronger push to eliminate all potential blockage of all RCU types.
+> > + *
+> > + * NOTE: unless absolutely sure, this helper should in general be called
+> > + * outside of bh lock section to avoid reporting a surprising QS to updaters,
+> > + * who could be expecting RCU read critical section to end at local_bh_enable().
+> > + */
+> 
+> How about something like this for the kernel-doc comment?
+> 
+> /**
+>  * rcu_softirq_qs_periodic - Report RCU and RCU-Tasks quiescent states
+>  * @old_ts: jiffies at start of processing.
+>  *
+>  * This helper is for long-running softirq handlers, such as those
+>  * in networking.  The caller should initialize the variable passed in
+>  * as @old_ts at the beginning of the softirq handler.  When invoked
+>  * frequently, this macro will invoke rcu_softirq_qs() every 100
+>  * milliseconds thereafter, which will provide both RCU and RCU-Tasks
+>  * quiescent states.  Note that this macro modifies its old_ts argument.
+>  *
+>  * Note that although cond_resched() provides RCU quiescent states,
+>  * it does not provide RCU-Tasks quiescent states.
+>  *
+>  * Because regions of code that have disabled softirq act as RCU
+>  * read-side critical sections, this macro should be invoked with softirq
+>  * (and preemption) enabled.
+>  *
+>  * This macro has no effect in CONFIG_PREEMPT_RT kernels.
+>  */
+
+Considering the note about cond_resched(), does does cond_resched() actually
+provide an RCU quiescent state for fully-preemptible kernels? IIUC for those
+cond_resched() expands to:
+
+	__might_resched();
+	klp_sched_try_switch()
+
+... and AFAICT neither reports an RCU quiescent state.
+
+So maybe it's worth dropping the note?
+
+Seperately, what's the rationale for not doing this on PREEMPT_RT? Does that
+avoid the problem through other means, or are people just not running effected
+workloads on that?
+
+Mark.
+
+> 
+> 							Thanx, Paul
+> 
+> > +#define rcu_softirq_qs_periodic(old_ts) \
+> > +do { \
+> > +	if (!IS_ENABLED(CONFIG_PREEMPT_RT) && \
+> > +	    time_after(jiffies, (old_ts) + HZ / 10)) { \
+> > +		preempt_disable(); \
+> > +		rcu_softirq_qs(); \
+> > +		preempt_enable(); \
+> > +		(old_ts) = jiffies; \
+> > +	} \
+> > +} while (0)
+> > +
+> >  /*
+> >   * Infrastructure to implement the synchronize_() primitives in
+> >   * TREE_RCU and rcu_barrier_() primitives in TINY_RCU.
+> > -- 
+> > 2.30.2
+> > 
+> > 
