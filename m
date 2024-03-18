@@ -1,165 +1,181 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2130.outbound.protection.partner.outlook.cn [139.219.146.130])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CAA1E866;
-	Mon, 18 Mar 2024 03:22:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.130
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710732160; cv=fail; b=N5Fi+Cko9RcrfcmHBMR0chVvQ9o0vaHauWNbyU5dbAG4qUfVJ3/h3CZP62QM1ODOl4/eHty6YqLj6QGtIS9Irkpe1PeMN2zBiAELe0UCXrjKZw6vKBv1GSoU3E5ygBQU+HVeeZpQbTSPiNO/Qe0rnnCxbVG35AsKZcZyYtT+wi0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710732160; c=relaxed/simple;
-	bh=uo++a0+tJTxY9IcQXOrjcvRjY0G1GIO30O7mbJkoNqE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dz3A3bCoVkRhFjAPCSMm6H1Vod2IxKkzVb2D/Jd60lphD0ZsPGPIPVvAZRA+EY76nkYI2yell54Fm335wkbwYa2S10kJK7D/Yo7EDNCm/q3GZ2df26hYEj8sP7R/FfreMRnjQGgWidZyRWLZG9DSLIUgTiytOJpPSZjgF2zgrCc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Isnf6Ml83z3pkIUlqmOrbSWw3hEKbCX+E7Ve7sOfqg9BxXTgGTjyU5cjNN5WgjW6nM1yRAD3WD4Wd4vICHGwol0mJSpmU5LTF0VOcHRQfLpvwD0QGzKLxxj30zDDgTtQ4bPG+bO4Sx+kajYZb7RHI/WuhaKggMv0FCAuWpRWhnw9iWV+UsyXOYqxEjicxc7ptpOCpswC92cM1sMG5HsjGQNEoXuHjw17OUepbJoRqYDafGt1zCtTQyk/+udCpqLGCMCLmrfbgFIPq+njAxXdQi7RbVZUYSJsaxxXLl6rm6byQXQxCByFusOk1Md9sDHQNOa/qycCRGYsWqFG4HqRjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vwesO3TlWOUb/SeUcoTcgPg2OAH7CMFLLOgpIP0oUaI=;
- b=Gh0uL+U/D+otwMbLwqrhew65e/9wUcubv16l+UsDJklIbkbMWKxTs66NWMa3+8SxUri25ZJNBgUGDOmZ8cA92mb8ZcYUrjdY6vyZt+ERBn1CvRdjIZY5uOBQW4YjGaUQqXcpUAbQshAUYkrByjQhbaKHOEjcZvc7DFp9eG/JHyKlUX3UgT+oT/TrlZzku8yQGZF/Z3fWttd3GNPItaE4asEfRzphHx5uVTwZdqatBIB4NeLgkYIE+1K9TYqVqWH5k+zY6eoybMCWS9Fks79Rrv6CTuswm9kpRAjVJDOZfie/VofyIBWK08orYBmnbPUFfhhO7yw/p4B1ksHs2Q29PQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from NTZPR01MB0986.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:b::14) by NTZPR01MB1049.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:a::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.20; Mon, 18 Mar
- 2024 03:06:58 +0000
-Received: from NTZPR01MB0986.CHNPR01.prod.partner.outlook.cn
- ([fe80::6011:feb9:5761:3880]) by
- NTZPR01MB0986.CHNPR01.prod.partner.outlook.cn ([fe80::6011:feb9:5761:3880%6])
- with mapi id 15.20.7386.016; Mon, 18 Mar 2024 03:06:58 +0000
-From: Ziv Xu <ziv.xu@starfivetech.com>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Walker Chen <walker.chen@starfivetech.com>,
-	Xingyu Wu <xingyu.wu@starfivetech.com>,
-	linux-kernel@vger.kernel.org,
-	Conor Dooley <conor@kernel.org>
-Subject: [PATCH v9 3/3] riscv: dts: jh7110: starfive: Add timer node
-Date: Mon, 18 Mar 2024 11:06:49 +0800
-Message-Id: <20240318030649.10413-4-ziv.xu@starfivetech.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240318030649.10413-1-ziv.xu@starfivetech.com>
-References: <20240318030649.10413-1-ziv.xu@starfivetech.com>
-Content-Type: text/plain
-X-ClientProxiedBy: NT0PR01CA0018.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510::11) To NTZPR01MB0986.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:b::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6A01E86A;
+	Mon, 18 Mar 2024 03:25:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710732311; cv=none; b=bVnLtilTpvxblq3GqKOOQCY1jMff3LNbrlXXEqytJ63xkGzDPeRFdWgQCznu1G/vDh0BVUEM2pbGeLKdOVdvLLgc1z2VnoraEwOX8XpGnkK3VoU/K9+BYbDKYf4gRhSyw3JKEStzKi9qVjMuWbVeCHqPEuEjU8qxqkVcl1/37t4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710732311; c=relaxed/simple;
+	bh=NV+IEiKEp7lCdjzjbneFkp6G29/AFeVDyz/GqmHX3m4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=qI9I8/C6jvBvgSNuCCFvnjTqzeoFisRHqtE3qI9yvJaq+bb9OBGWx/yWfy95GlIINluKUU0ORg9rRQPsS//T9CGnBX7SRqWHI+cE8l0dQBnISAYkJQmE8ckRG8rqFgRFENJzD+8w/hC7e8ec2LSh5cj7ssB8mqmDCiAbeKq/Jw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=aZwR6Ce1; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="aZwR6Ce1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1710732306;
+	bh=NV+IEiKEp7lCdjzjbneFkp6G29/AFeVDyz/GqmHX3m4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=aZwR6Ce11vNXim4mOCh1eXkx7K65RfM+cau+BhgB9SdLqlZPW+NSBiMfH6HvhOd0A
+	 Cxq4iA45zUMfJd0t0fiCZUW9oT7MdElC1lAHDwjgYhkFVet+3SexBY3VTuWZ+t2GS/
+	 R6YtLN+mqg6XUSgVsgcCPTEOKRlHDfSmPt/ef1FfXW6waLfQPAdiG7JMm/zsq5BT3k
+	 vdQUUXBAz8sJiI6L7YfwQCfB8GuYQWxC3Reysu8xNTnmju7VZ+DNwIB5BF60uJsyDk
+	 OdmHw4LQNlhzuekWxZGLa0lNLJlIa+tl6Z4Z3Fg6YFxfGk0yqItTN1sXJzV54NgtGp
+	 w8QwwUGGGIyQQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TygG42yLDz4wc1;
+	Mon, 18 Mar 2024 14:25:00 +1100 (AEDT)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Guenter Roeck <linux@roeck-us.net>, Geert Uytterhoeven
+ <geert@linux-m68k.org>
+Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>, Arnd
+ Bergmann <arnd@arndb.de>, =?utf-8?Q?Ma=C3=ADra?= Canal <mcanal@igalia.com>,
+ Dan Carpenter
+ <dan.carpenter@linaro.org>, Kees Cook <keescook@chromium.org>, Daniel Diaz
+ <daniel.diaz@linaro.org>, David Gow <davidgow@google.com>, Arthur Grillo
+ <arthurgrillo@riseup.net>, Brendan Higgins <brendan.higgins@linux.dev>,
+ Naresh Kamboju <naresh.kamboju@linaro.org>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Maxime Ripard <mripard@kernel.org>, Ville
+ =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, Daniel Vetter
+ <daniel@ffwll.ch>,
+ Thomas Zimmermann <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org,
+ kunit-dev@googlegroups.com, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ loongarch@lists.linux.dev, netdev@lists.linux.dev
+Subject: Re: [PATCH 00/14] Add support for suppressing warning backtraces
+In-Reply-To: <04f34097-7788-490d-a9c2-82b44bf6af44@roeck-us.net>
+References: <20240312170309.2546362-1-linux@roeck-us.net>
+ <CAMuHMdUkvagJVEfnhq=Nx2jnmdS0Ax+zy1CvyN0k7k1EwUpu+g@mail.gmail.com>
+ <6d9269c0-bd38-4965-a454-4358e0a182e3@roeck-us.net>
+ <04f34097-7788-490d-a9c2-82b44bf6af44@roeck-us.net>
+Date: Mon, 18 Mar 2024 14:24:59 +1100
+Message-ID: <87ttl4z0fo.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: NTZPR01MB0986:EE_|NTZPR01MB1049:EE_
-X-MS-Office365-Filtering-Correlation-Id: 685ca1a6-f96e-48e7-7335-08dc46f8792c
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	R2MMQshF4yl6PnIGzPPUiz+cYxr6WpGGxYmXr7YTrcjMRxNDIPXtVJ0hzGR8+q0qlQnZmeeYYPksDM1n5ieHJr3GuHUEP81/AxJ5kc1KLm6bVRSlHRvGGDxbKmqDGYyes3Q54Ni/yp4lTH5OIAGXBkkMdxC0WCEKuAWmaTDY4emat2kzwqJ8SOvlGiZpZXq12Npf0WV3cMl2aD6mmN/4cyg0cFIlx1Z7fdA5UtBI0NkU5KvMs+2zsBsH17Affk5yBRDwbX9hKBDF5O+M6gzAPkhdZCDVCCREuWgKuPEs+ww1MNIKj7uBsBp09AEk6l91iRhqpbVRbe4lVuM1R9dsDAQM7ZxgSeaCo6InbGE3b1ejV8hAKfvK3N7gh+Zfpb0buHs7gvCWIY97fxZe9+p8D+OUMIoUr8bsMAQ/Ame4s+W3PwuvvexfYIwgpV7z/tmgn/51JyGdMvAI3OeATvpepiJKhi9baj20fP9N8+UMCOY5EylySOC1tnyH8Xaghq4+/1WkFqPb2Bl/2RlaVP+h5v1C36xr8sZQ6CKfZ/1F5RwO+OgGLYQi15JYlCz+lrDIaVO2Yvc+ODTcCcr2rSX7rzEAMpR9eSFaVUtvsbZqP6ps++iAZAgXnYgxer4W9wAU
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NTZPR01MB0986.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(52116005)(1800799015)(7416005)(41320700004)(366007)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?x4ZWWwT9cW2ujWoxKEwVCPHcaWqCWBYjXiqviyx4TweXWPv69FuORzRX6eFb?=
- =?us-ascii?Q?SvU3dibLvDoYqi3JprAQU9kYvqUQ+qAgm42oo82exVY2m7hAhziT1S+Cwnkp?=
- =?us-ascii?Q?ZRkl7WH/iIx5sZmytETFqmwCfZZ+L0/weZ80+qPvG0tTVtDhFLnOuaEIhrzM?=
- =?us-ascii?Q?gUAOi51zBEfkqWLYgew7/OZ+TSSxIziwfiAUYoT0SNt6m5nnMh06TbdrXoTm?=
- =?us-ascii?Q?wnFKvCKR2g+vS1DbMc5K1evx10PQY9n2/wJd5zva0/btk4APFfRffSMWEBSY?=
- =?us-ascii?Q?iHfpz6yEFcWH/I5ikKJ4xvo+pNdFxObHUquL6LUNyZa7KOkpMB5YXaUU4fN+?=
- =?us-ascii?Q?K1J/Xe4z7ah3HZd7E49QVn7EfQIb3al1ZtWZnoABBSNnTH2SXaurO1zRmD5C?=
- =?us-ascii?Q?UuXIOEesV6ki/Tz9nIJhHkVm5DHW4LTbpmw5UqmDFl93FrodLEGXfY+DiPG2?=
- =?us-ascii?Q?Xhrg6zO7qbt+g6I9FZN5e0PoG0YT9VvMzIns1B9jKdMfkCzLi/6UcbdTcFP/?=
- =?us-ascii?Q?KuxOvriAXUWUXNwbrYmeuKUzUvxPuFayi8jJ11/L5gwW0L/87F+XryRIH9Z7?=
- =?us-ascii?Q?5rkyzIInnFJ3i0iadJJj4jSM9YNR46ICeJGMqNiVbgUUjkvkXRVAVojIb8I7?=
- =?us-ascii?Q?eOQs+wPRY6R4KU+urWwG6DDQOqIK0nohXOipIFxkHOsqOFnSBYo2lDfbb5gi?=
- =?us-ascii?Q?elWEHcwWLgEPAxiV9KbQNPgDw3pWfIWwMwGfrXWF4gE+nmEC4Gn0Uku2F60E?=
- =?us-ascii?Q?F32yTaJtHot8EJMwwairJ/1WRRsSwbQH71n4i7+i7XkJlFiNeob/w5yxbIl4?=
- =?us-ascii?Q?ku0DZdWdP61jWzoU5yQ7nYfmhQHrNOFPUaODpYaxRhto6LKiPxAs8aSxlNSo?=
- =?us-ascii?Q?tERzzeZFYGZ+OgTjwjAvuGCKE/6V4rnwS0xruYAY+uv6oMV5/kws1elJpz7G?=
- =?us-ascii?Q?Nu7U5ezA3u5Vs3NRDPLjRtzYLixeGe7Zj+OaIs//LqGSHW2O0wLOFudY8mxN?=
- =?us-ascii?Q?y7WJdIRfGdTgZsKhwWsKzYpe3I3QaVee5Y+juPSxr+k3VlyVIQ7kWq0xC5Q0?=
- =?us-ascii?Q?51td16YU9JSR4mlbhDgaGQTBwLCEypyarzk79NdHw+NOu1ppF7jqHqo649Cv?=
- =?us-ascii?Q?BDW4PCG7AlZhHksl5JZXIQog8a8oZrLgjJaTssz8GkQUaiy0YdEGaTJAacbO?=
- =?us-ascii?Q?u6AkSiCnpmeJRDd590VOKDHMPbl7qoUioki1MZvqwiUJ7Yf4R0ykvUFCJu6+?=
- =?us-ascii?Q?F4fOHytfqHkXWwVBmIIrpmsLVGHFpoE/nJGQmd536aWjzdOFrsUuLsSXXsve?=
- =?us-ascii?Q?NMd1qVvLpRQ2guvCOUTBJmuMP19ex4YkTyhqNayXFWaiDWQWMwfmsg4/nuRI?=
- =?us-ascii?Q?nAcGkuMaM5EbGJGrNzN/akU+sf8V7Vai3Kmgyr++YICf72z7aJFJ/B96NgMx?=
- =?us-ascii?Q?zhaN+Cpqlo9EfxCEtpFORn6kYytqSN8vQ4Gi6+Ay8M0KGdOZI8HdBIDkBDgM?=
- =?us-ascii?Q?5P/ySeWuD/cSNqFKuu3kosLwTnuqI8ix08tB+Otnrfdo8HrxKenqXD8IEJIu?=
- =?us-ascii?Q?y7FtgYkizFjm5cvaA7u7FoqJVam+sbRC+3b5Dd77?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 685ca1a6-f96e-48e7-7335-08dc46f8792c
-X-MS-Exchange-CrossTenant-AuthSource: NTZPR01MB0986.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2024 03:06:57.9615
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: o6KiNd5F0vUMI3IUEgoiGSVAOl7GNOW1t217HpDXBVdF+YCeuvWG6B1ftYd+jbhIKAU4rW1YcRj3rIb2cdhzYQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: NTZPR01MB1049
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Xingyu Wu <xingyu.wu@starfivetech.com>
+Guenter Roeck <linux@roeck-us.net> writes:
+> On 3/14/24 07:37, Guenter Roeck wrote:
+>> On 3/14/24 06:36, Geert Uytterhoeven wrote:
+>>> Hi G=C3=BCnter,
+>>>
+>>> On Tue, Mar 12, 2024 at 6:03=E2=80=AFPM Guenter Roeck <linux@roeck-us.n=
+et> wrote:
+>>>> Some unit tests intentionally trigger warning backtraces by passing bad
+>>>> parameters to kernel API functions. Such unit tests typically check the
+>>>> return value from such calls, not the existence of the warning backtra=
+ce.
+>>>>
+>>>> Such intentionally generated warning backtraces are neither desirable
+>>>> nor useful for a number of reasons.
+>>>> - They can result in overlooked real problems.
+>>>> - A warning that suddenly starts to show up in unit tests needs to be
+>>>> =C2=A0=C2=A0 investigated and has to be marked to be ignored, for exam=
+ple by
+>>>> =C2=A0=C2=A0 adjusting filter scripts. Such filters are ad-hoc because=
+ there is
+>>>> =C2=A0=C2=A0 no real standard format for warnings. On top of that, suc=
+h filter
+>>>> =C2=A0=C2=A0 scripts would require constant maintenance.
+>>>>
+>>>> One option to address problem would be to add messages such as "expect=
+ed
+>>>> warning backtraces start / end here" to the kernel log.=C2=A0 However,=
+ that
+>>>> would again require filter scripts, it might result in missing real
+>>>> problematic warning backtraces triggered while the test is running, and
+>>>> the irrelevant backtrace(s) would still clog the kernel log.
+>>>>
+>>>> Solve the problem by providing a means to identify and suppress specif=
+ic
+>>>> warning backtraces while executing test code. Support suppressing mult=
+iple
+>>>> backtraces while at the same time limiting changes to generic code to =
+the
+>>>> absolute minimum. Architecture specific changes are kept at minimum by
+>>>> retaining function names only if both CONFIG_DEBUG_BUGVERBOSE and
+>>>> CONFIG_KUNIT are enabled.
+>>>>
+>>>> The first patch of the series introduces the necessary infrastructure.
+>>>> The second patch introduces support for counting suppressed backtraces.
+>>>> This capability is used in patch three to implement unit tests.
+>>>> Patch four documents the new API.
+>>>> The next two patches add support for suppressing backtraces in drm_rect
+>>>> and dev_addr_lists unit tests. These patches are intended to serve as
+>>>> examples for the use of the functionality introduced with this series.
+>>>> The remaining patches implement the necessary changes for all
+>>>> architectures with GENERIC_BUG support.
+>>>
+>>> Thanks for your series!
+>>>
+>>> I gave it a try on m68k, just running backtrace-suppression-test,
+>>> and that seems to work fine.
+>>>
+>>>> Design note:
+>>>> =C2=A0=C2=A0 Function pointers are only added to the __bug_table secti=
+on if both
+>>>> =C2=A0=C2=A0 CONFIG_KUNIT and CONFIG_DEBUG_BUGVERBOSE are enabled to a=
+void image
+>>>> =C2=A0=C2=A0 size increases if CONFIG_KUNIT=3Dn. There would be some b=
+enefits to
+>>>> =C2=A0=C2=A0 adding those pointers all the time (reduced complexity, a=
+bility to
+>>>> =C2=A0=C2=A0 display function names in BUG/WARNING messages). That cha=
+nge, if
+>>>> =C2=A0=C2=A0 desired, can be made later.
+>>>
+>>> Unfortunately this also increases kernel size in the CONFIG_KUNIT=3Dm
+>>> case (ca. 80 KiB for atari_defconfig), making it less attractive to have
+>>> kunit and all tests enabled as modules in my standard kernel.
+>>>
+>>=20
+>> Good point. Indeed, it does. I wanted to avoid adding a configuration op=
+tion,
+>> but maybe I should add it after all. How about something like this ?
+>>=20
+>> +config KUNIT_SUPPRESS_BACKTRACE
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool "KUnit - Enable backtrace sup=
+pression"
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 default y
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 help
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Enable backtrace suppr=
+ession for KUnit. If enabled, backtraces
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 generated intentionall=
+y by KUnit tests can be suppressed. Disable
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 to reduce kernel image=
+ size if image size is more important than
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 suppression of backtra=
+ces generated by KUnit tests.
+>
+> Any more comments / feedback on this ? Otherwise I'll introduce the
+> above configuration option in v2 of the series.
+>
+> In this context, any suggestions if it should be enabled or disabled by
+> default ? I personally think it would be more important to be able to
+> suppress backtraces, but I understand that others may not be willing to
+> accept a ~1% image size increase with CONFIG_KUNIT=3Dm unless
+> KUNIT_SUPPRESS_BACKTRACE is explicitly disabled.
 
-Add the timer node for the Starfive JH7110 SoC.
+Please enable it by default.
 
-Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Reviewed-by: Walker Chen <walker.chen@starfivetech.com>
-Signed-off-by: Xingyu Wu <xingyu.wu@starfivetech.com>
----
- arch/riscv/boot/dts/starfive/jh7110.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+There are multiple CI systems that will benefit from it, whereas the
+number of users enabling KUNIT in severely spaced constrainted
+environments is surely small - perhaps just Geert ;).
 
-diff --git a/arch/riscv/boot/dts/starfive/jh7110.dtsi b/arch/riscv/boot/dts/starfive/jh7110.dtsi
-index 74ed3b9264d8..40dcceaf1f98 100644
---- a/arch/riscv/boot/dts/starfive/jh7110.dtsi
-+++ b/arch/riscv/boot/dts/starfive/jh7110.dtsi
-@@ -904,6 +904,26 @@
- 			#gpio-cells = <2>;
- 		};
- 
-+		timer@13050000 {
-+			compatible = "starfive,jh7110-timer";
-+			reg = <0x0 0x13050000 0x0 0x10000>;
-+			interrupts = <69>, <70>, <71>, <72>;
-+			clocks = <&syscrg JH7110_SYSCLK_TIMER_APB>,
-+				 <&syscrg JH7110_SYSCLK_TIMER0>,
-+				 <&syscrg JH7110_SYSCLK_TIMER1>,
-+				 <&syscrg JH7110_SYSCLK_TIMER2>,
-+				 <&syscrg JH7110_SYSCLK_TIMER3>;
-+			clock-names = "apb", "ch0", "ch1",
-+				      "ch2", "ch3";
-+			resets = <&syscrg JH7110_SYSRST_TIMER_APB>,
-+				 <&syscrg JH7110_SYSRST_TIMER0>,
-+				 <&syscrg JH7110_SYSRST_TIMER1>,
-+				 <&syscrg JH7110_SYSRST_TIMER2>,
-+				 <&syscrg JH7110_SYSRST_TIMER3>;
-+			reset-names = "apb", "ch0", "ch1",
-+				      "ch2", "ch3";
-+		};
-+
- 		watchdog@13070000 {
- 			compatible = "starfive,jh7110-wdt";
- 			reg = <0x0 0x13070000 0x0 0x10000>;
--- 
-2.17.1
-
+cheers
