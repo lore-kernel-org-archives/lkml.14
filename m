@@ -1,165 +1,141 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D62A55780;
-	Mon, 18 Mar 2024 17:44:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2270D55C14;
+	Mon, 18 Mar 2024 17:45:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710783890; cv=none; b=DQ2Vl+XCIG83L1Wgq4Q47iKD9YTgiNCu+a6WemdIdFXPQoBFHfKOq/Gei0CiUUNHxc/QNtCLb+klnVVxgO9to4ygHxnarUwltURZcjtdWRI9CQucakmRo9vo/TAqNIS2IFZkgTdNw+IxsqL6xwAmBSOHPPeMQtwun9f/5nX18Oc=
+	t=1710783909; cv=none; b=PXAUB3C5X5uxHSdK7qWU8uaIsLu2ZZjrsih98upGw21BPAzfDngPsgtYSvdjWmSNva43tfvExIfMTWv/m6uV4ilTt/SejXQJznWYIar+WWhYXaQfsYu1u9f6eBjPNmbaDhV1w5w3/hp/FmFB4YlrZ1q96PeJuZHWTX63WQvzsU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710783890; c=relaxed/simple;
-	bh=qfKaM5LBkZKQTIItZKKvgOoaUbhM+c7eSygjt0v+vqQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cV0mwPWi3rcfvbFSX5AfDA7MMY4exjSulIwNENmK/eEnrZNJC3nFdYkw1NEfpVvmhmVR8OaqWdLLPwnLtT0l+rBkx4XlNGqXBCbdEWO49REa/Nu4kFcctn5NAG6q8CXxA+gin/QWz7YOHJ6xFYdCcOwuE0oQJUDe/2ydV3vH+zU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lDlxi31b; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710783909; c=relaxed/simple;
+	bh=Rv/2CA5wPLokC7VCqSey3DSFL6DXzXxuAMNj1og1Kh8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=htG0RGqTwPjeT1VPB8uWvApYDKrkj47FD134YOuHyH/6DJAQ9PJwhKITacf/ZVXI6VHKIlw4NupePjbPVFPNcLKucN5Z90xx0Pbp4UEE30uK3lTrLIHpgl9smWNVXxDf4m+tiTyodHZsLnswJ9pXfcfMKmKHpZuMCfrpS9nsJjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WWaNDbWT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lDlxi31b"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-513d599dbabso5106146e87.1;
-        Mon, 18 Mar 2024 10:44:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710783887; x=1711388687; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6k38GrEZImqBDaAsrtBm+TtkuYBS+WSHMTIZNXDlWsM=;
-        b=lDlxi31b1Uw0EZ3i7Sqp5RfGErhfDWMp/n1Ite7Z1z9fcYBBZly3V0jdWKl4XSg/v7
-         oo1QMUZNDTsuDkwwdx+GnT7gWl8Cxzw9i9oJST46rRJWeHLRXikQA+hBW6o7sZlz6WC/
-         NvQ8jH9UjW92bNhCTdBR5ZJ7mAQcZKE6F6wHpGobnoGbSfOlIp4dsTmU+NPzXVToXGkw
-         fDsxfe+0Fc2zlb3x9yKZkTu2XXmmeK2LqoA/RDTbIclM47YHZgJG8vCaSwvKyWs4w5Lm
-         e9TI/Qmjw61tF2ZJ0FwBlres5mRyCFKsDMYAkbDpYyiKCdB6IOfNp9b0+eT48vpb0lsD
-         hi+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710783887; x=1711388687;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6k38GrEZImqBDaAsrtBm+TtkuYBS+WSHMTIZNXDlWsM=;
-        b=YBTDRi9jUY2OteNnRwS6NdU5fHsL5Taq3SkkNlU1XsiCTGC2V3iU3S0GmsuFLDS5NX
-         B+k5S2Yf5l5aU3iwj6mCpx7qJXni2d/xZQWP4EVUq2vKE6aIuyPmigN4TZC+AYbT6uDL
-         I7r54gQnWnJczB15WKnJsa0KqNbeHSy4ZbnxcJpmkCoHWPrzAgsKuOgj/zb+DpUysPuM
-         shNVlay/q9ukMqNckP+1wq4UPuJvo9efUUYKsQPI2Lfh2DVa/O8K6cuWdhthqGjpJxcL
-         veNhs0p6atKXUiCWZmiBxBKana6fp6NzS40Dw8iAD7KMZ2Q4y+HF1Jq8PqwkMARz9Fsv
-         4uaw==
-X-Forwarded-Encrypted: i=1; AJvYcCXb+Hi0lYhAFpHYKJDVwO6OoF3WBKV7MI1C91LFXrKMuTSoEiORt7bX9TsMZ54//TOdoUayaKpTyKSPBXLYZ+vj2ZY4ayKCX1w5gBg+q8Nmb68GzqGowCxFFE45ejv7hlx8vWh2PghtfV3S4a58
-X-Gm-Message-State: AOJu0Yz8XPIqMVcgLMH+6SN+usIbIvwp7iy0SIA04opSpm1mASi2H9Gj
-	1nKUUUXCRSFuqBuip3IZGeMj6YP2i8D9DYP3i8HH8edBNY3YAMa0
-X-Google-Smtp-Source: AGHT+IEkUiXLyxU5UPRstO9MUMp5QcKxm7rDr3KID4QPK+LYjmiPv0g1RPmMqWb8AsO3TXBOvAdSLA==
-X-Received: by 2002:ac2:442e:0:b0:513:db34:7caf with SMTP id w14-20020ac2442e000000b00513db347cafmr146224lfl.17.1710783886410;
-        Mon, 18 Mar 2024 10:44:46 -0700 (PDT)
-Received: from prasmi.home ([2a00:23c8:2500:a01:c23f:76ae:8149:291])
-        by smtp.gmail.com with ESMTPSA id n20-20020a05600c501400b00414112a6159sm3433274wmr.44.2024.03.18.10.44.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 10:44:45 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] ARM: dts: renesas: r7s72100: Add 'interrupt-names' property in SCIF nodes
-Date: Mon, 18 Mar 2024 17:43:45 +0000
-Message-Id: <20240318174345.46824-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WWaNDbWT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5570FC433C7;
+	Mon, 18 Mar 2024 17:45:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710783908;
+	bh=Rv/2CA5wPLokC7VCqSey3DSFL6DXzXxuAMNj1og1Kh8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WWaNDbWTEAAmKf9IeOXu65Mq96lSZxdoIzl57Yufwp7sGduxsN9HEXIrYzX7xVFRB
+	 Hy1mtA1Are4jKEG2IACOEirgKrPxv9Zs1dp7fdnMC0bfOtcyEQQneb+Sq2IR+LNeuJ
+	 Qm4PaSYyJSYzEW1PyUQ3GA1oW4uCUo9cP2Kl9ZFUVbePgoZjMoBtm4yIL6lG3iI5Y6
+	 Ap2yMBGMzoB+Ep1+VDrr0mYHjUf9hszzwqUb9eC2syA33HpPQrMK2u0+nfb9oVk6BT
+	 M0dwO4pTylvIrS88SdlZVkZ9B3ZjCplzmiIWt/w24KRM8YTMndNRvb32gsfsIG37Lt
+	 rRb95s82iaBfg==
+Date: Mon, 18 Mar 2024 17:45:03 +0000
+From: Simon Horman <horms@kernel.org>
+To: Erwan Velu <erwanaliasr1@gmail.com>
+Cc: Erwan Velu <e.velu@criteo.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 iwl-net] i40e: Prevent setting MTU if greater than MFS
+Message-ID: <20240318174503.GE1623@kernel.org>
+References: <20240313090719.33627-2-e.velu@criteo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240313090719.33627-2-e.velu@criteo.com>
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Wed, Mar 13, 2024 at 10:07:16AM +0100, Erwan Velu wrote:
+> Commit 6871a7de705 ("[intelxl] Use admin queue to set port MAC address
+> and maximum frame size") from iPXE project set the MFS to 0x600 = 1536.
+> See https://github.com/ipxe/ipxe/commit/6871a7de705
+> 
+> At boot time the i40e driver complains about it with
+> the following message but continues.
+> 
+> 	MFS for port 1 has been set below the default: 600
+> 
+> If the MTU size is increased, the driver accepts it but large packets will
+> not be processed by the firmware generating tx_errors. The issue is pretty
+> silent for users. i.e doing TCP in such context will generates lots of
+> retransmissions until the proper window size (below 1500) will be used.
+> 
+> To fix this case, it would have been ideal to increase the MFS,
+> via i40e_aqc_opc_set_mac_config, incoming patch will take care of it.
+> 
+> At least, commit prevents setting up an MTU greater than the current MFS.
+> It will avoid being in the position of having an MTU set to 9000 on the
+> netdev with a firmware refusing packets larger than 1536.
+> 
+> A typical trace looks like:
+> [  377.548696] i40e 0000:5d:00.0 eno5: Error changing mtu to 9000, Max is 1500. MFS is too small.
+> 
 
-Add 'interrupt-names' property into SCIF nodes for clarity.
+Hi Erwan, all,
 
-This allows us to update the DT binding to mark 'interrupt-names' property
-as required for all the SoCs which have multiple interrupts and also allow
-us to validate the DT binding doc using dtbs_check.
+As a fix, I think this patch warrants a fixes tag.
+Perhaps this one is appropriate?
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
-Note, all the SoCs with multiple interrupts using renesas,scif.yaml already have
-interrupt-names property apart from this SoC. This change allows us to validate the
-DT.
----
- arch/arm/boot/dts/renesas/r7s72100.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Fixes: 41c445ff0f48 ("i40e: main driver core")
 
-diff --git a/arch/arm/boot/dts/renesas/r7s72100.dtsi b/arch/arm/boot/dts/renesas/r7s72100.dtsi
-index e6d8da6faffb..08ea4c551ed0 100644
---- a/arch/arm/boot/dts/renesas/r7s72100.dtsi
-+++ b/arch/arm/boot/dts/renesas/r7s72100.dtsi
-@@ -125,6 +125,7 @@ scif0: serial@e8007000 {
- 				     <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "eri", "rxi", "txi", "bri";
- 			clocks = <&mstp4_clks R7S72100_CLK_SCIF0>;
- 			clock-names = "fck";
- 			power-domains = <&cpg_clocks>;
-@@ -138,6 +139,7 @@ scif1: serial@e8007800 {
- 				     <GIC_SPI 195 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "eri", "rxi", "txi", "bri";
- 			clocks = <&mstp4_clks R7S72100_CLK_SCIF1>;
- 			clock-names = "fck";
- 			power-domains = <&cpg_clocks>;
-@@ -151,6 +153,7 @@ scif2: serial@e8008000 {
- 				     <GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "eri", "rxi", "txi", "bri";
- 			clocks = <&mstp4_clks R7S72100_CLK_SCIF2>;
- 			clock-names = "fck";
- 			power-domains = <&cpg_clocks>;
-@@ -164,6 +167,7 @@ scif3: serial@e8008800 {
- 				     <GIC_SPI 203 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 201 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "eri", "rxi", "txi", "bri";
- 			clocks = <&mstp4_clks R7S72100_CLK_SCIF3>;
- 			clock-names = "fck";
- 			power-domains = <&cpg_clocks>;
-@@ -177,6 +181,7 @@ scif4: serial@e8009000 {
- 				     <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "eri", "rxi", "txi", "bri";
- 			clocks = <&mstp4_clks R7S72100_CLK_SCIF4>;
- 			clock-names = "fck";
- 			power-domains = <&cpg_clocks>;
-@@ -190,6 +195,7 @@ scif5: serial@e8009800 {
- 				     <GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "eri", "rxi", "txi", "bri";
- 			clocks = <&mstp4_clks R7S72100_CLK_SCIF5>;
- 			clock-names = "fck";
- 			power-domains = <&cpg_clocks>;
-@@ -203,6 +209,7 @@ scif6: serial@e800a000 {
- 				     <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "eri", "rxi", "txi", "bri";
- 			clocks = <&mstp4_clks R7S72100_CLK_SCIF6>;
- 			clock-names = "fck";
- 			power-domains = <&cpg_clocks>;
-@@ -216,6 +223,7 @@ scif7: serial@e800a800 {
- 				     <GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "eri", "rxi", "txi", "bri";
- 			clocks = <&mstp4_clks R7S72100_CLK_SCIF7>;
- 			clock-names = "fck";
- 			power-domains = <&cpg_clocks>;
--- 
-2.34.1
+> Signed-off-by: Erwan Velu <e.velu@criteo.com>
+> ---
+>  drivers/net/ethernet/intel/i40e/i40e_main.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+> index f86578857e8a..85ecf2f3de18 100644
+> --- a/drivers/net/ethernet/intel/i40e/i40e_main.c
+> +++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+> @@ -2946,7 +2946,7 @@ static int i40e_change_mtu(struct net_device *netdev, int new_mtu)
+>  	struct i40e_netdev_priv *np = netdev_priv(netdev);
+>  	struct i40e_vsi *vsi = np->vsi;
+>  	struct i40e_pf *pf = vsi->back;
+> -	int frame_size;
+> +	int frame_size, mfs, max_mtu;
+>  
+>  	frame_size = i40e_max_vsi_frame_size(vsi, vsi->xdp_prog);
+>  	if (new_mtu > frame_size - I40E_PACKET_HDR_PAD) {
 
+I am fine with this patch, so please take what follows as a suggestion
+for improvement, possibly as a follow-up. Not as a hard requirement from
+my side.
+
+The part of this function between the two hunks of this patch is:
+
+		netdev_err(netdev, "Error changing mtu to %d, Max is %d\n",
+			   new_mtu, frame_size - I40E_PACKET_HDR_PAD);
+
+My reading is that with this patch two different limits are
+checked wrt maximum MTU size:
+
+1. A VSI level limit, which relates to RX buffer size
+2. A PHY level limit that relates to the MFS
+
+That seems fine to me. But the log message for 1 (above) does
+not seem particularly informative wrt which limit has been exceeded.
+
+> @@ -2955,6 +2955,14 @@ static int i40e_change_mtu(struct net_device *netdev, int new_mtu)
+>  		return -EINVAL;
+>  	}
+>  
+> +	mfs = pf->hw.phy.link_info.max_frame_size;
+> +	max_mtu = mfs - I40E_PACKET_HDR_PAD;
+> +	if (new_mtu > max_mtu) {
+> +		netdev_err(netdev, "Error changing mtu to %d, Max is %d. MFS is too small.\n",
+> +			   new_mtu, max_mtu);
+> +		return -EINVAL;
+> +	}
+> +
+>  	netdev_dbg(netdev, "changing MTU from %d to %d\n",
+>  		   netdev->mtu, new_mtu);
+>  	netdev->mtu = new_mtu;
+> -- 
+> 2.44.0
+> 
+> 
