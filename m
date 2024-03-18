@@ -1,193 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0C45A0E9
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 22:00:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D393C59B5E
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 22:01:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710799220; cv=none; b=hQ89usRI2oBH6Wlr1KYPuEBh+IH5+bPnL+vgBNqKTT9ZDo3j/MDKGStST674x2RHHVkIqsFJz4q9DIkMuC0Qa+NYnDfaiDGaID8BlyXvaFccWcuZcbWUORhY2AzHRcT0kI4GaqfQHjohAgHzpGo7Bb20K6MfZvi14Xlvzh9JYGk=
+	t=1710799286; cv=none; b=pF6I7wNofkzaEbN8vH+FBuihH76C9Vev0MVC3tOrd6QII+2l90g1CrtgAGRVCuPrhJbUACUCT6xP2XqjF4RzMgmI/j0Wz362J6JJ2o321vMCt4IZ10nwQ54bLbMnagb/zp2PciW6Vtdisz2lKMfPl/L8nHMYZOjLMlIZgaGmhXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710799220; c=relaxed/simple;
-	bh=GH6BWPSigJxYv51qRplfTJgCiA30VVhLkJmJtG7tqU4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V+jwWjakFZULcu6ZHSlmwHvlseQ3AiTAtOWjQQoW9wLwT/aCGaL1g7M9gagNhJU2Z1WQiaZaxGPBGKPVcT0jRdJRk/XprWZPzdksRrdwaBCg4m2KUzqY2nwcgri40DAS/CHI3XuOfV8FZxVFkjYf3tZHD9JDfI9IxT8idgRWF5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aDPnmY4X; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1710799286; c=relaxed/simple;
+	bh=7EdK8NAm1pxBaAUpg57HenZat5hfoEYA3UgL0477Yf4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I2n0byUQN408nLvqbZ+E57APquR4poN7N0rZZoXNyWK283WS9QndPzFDzwPdR9nnomxjwl4Y2TzzDtaV5265yWQIfVz/8dizOIUZjOv4byFm/IsxzRbP9pTAH4OUIzmVzo99tJit/m1Jw9/48CH1J9/AEfccMflTT7aMq2eiWfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hs1/DWul; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aDPnmY4X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710799219; x=1742335219;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GH6BWPSigJxYv51qRplfTJgCiA30VVhLkJmJtG7tqU4=;
-  b=aDPnmY4XRVLSxyPzGZ44sfoCvd7ZXnYeVyhhrwWgOkirMgG/DbRb4ESw
-   kfWMj/ES1CSPcrFOqmhTHWMSRfKakBtv5DT9LdoxqBxTgFUCepjzX22kW
-   Sm9oOBg2fSaTv+KNRUIhyS0tT4Pt4lM6VmIU5ffpbXKpJ8H0vqE2UmBuN
-   e9h8GIIidbKaI1pPY/XDunztGNBwlvkvRhHoFanmTx+BLpKtkxbFGk2QD
-   bGul8sfqGx9K/HsyNUjwEqED7+HwtGEH5zs/TC0V3VGMnv2UCgA/wnqXn
-   mjnBylb5w5yqh8Li3TVoREKZZ37fGjV0BzSSoHa9NNuu1J6rAS7f9qwMd
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="23095575"
-X-IronPort-AV: E=Sophos;i="6.07,135,1708416000"; 
-   d="scan'208";a="23095575"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 15:00:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,135,1708416000"; 
-   d="scan'208";a="13559456"
-Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 18 Mar 2024 15:00:15 -0700
-Received: from kbuild by b21307750695 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rmL1g-000HG7-1M;
-	Mon, 18 Mar 2024 22:00:12 +0000
-Date: Tue, 19 Mar 2024 05:59:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: Aravinda Prasad <aravinda.prasad@intel.com>, damon@lists.linux.dev,
-	linux-mm@kvack.org, sj@kernel.org, linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	aravinda.prasad@intel.com, s2322819@ed.ac.uk,
-	sandeep4.kumar@intel.com, ying.huang@intel.com,
-	dave.hansen@intel.com, dan.j.williams@intel.com,
-	sreenivas.subramoney@intel.com, antti.kervinen@intel.com,
-	alexander.kanevskiy@intel.com
-Subject: Re: [PATCH v2 2/3] mm/damon: profiling enhancement
-Message-ID: <202403190550.8chO4Zt4-lkp@intel.com>
-References: <20240318132848.82686-3-aravinda.prasad@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hs1/DWul"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710799283;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bfZZXfR1kSbJWAilZOdtsf7QJvf/A9npXvRYhQ2sZZc=;
+	b=hs1/DWulG93uSw5BDMUjpNFSeaPOzr8ce+G3iJgnWbpUSJMx+8MMBskmrZSXkmtS2Wvq9V
+	hHjb5KqnkK3p79jOjaM5FZz3eUNGMRUSa10s9NzcJ3aPFZ7wCA57jAlTb6gUUybMSPgXa2
+	fNO7p2nZvL11LGcDJcKKhp/K2EODG0g=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-247-dNJXvZVnOHGKb8PqqwI1Ig-1; Mon, 18 Mar 2024 18:01:22 -0400
+X-MC-Unique: dNJXvZVnOHGKb8PqqwI1Ig-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-40e435a606aso26011745e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 15:01:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710799281; x=1711404081;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bfZZXfR1kSbJWAilZOdtsf7QJvf/A9npXvRYhQ2sZZc=;
+        b=wq3h/pBjcq9liVRlrrW1LOB6YtvEuFGvNXNzlnCGrZVt9jWEX6bHgWlS8xuTd74Nnh
+         cLwqfEa9kDOpV6emJEAZRArcaADx6PkKLZhceYpT29SJuIWlWhZjen/9Fi1Vl2JQktQ5
+         kGax7Ycraqdg+RgaXGGP8sMkn9ACLYtdPAO+VPWoeITOr+cojntVO6Gh5oZauimHjYS/
+         HpTZzdetM28OdqT6LoEu3aypnNZ2zVV9hcqb+XOe9AFnkE1n4ddbzHrTbimCPbg3aaX6
+         XYqD8LlER0xOaaifvSccwIKzfXmmvU3u+NOVCd6fjcPmaRbj8WbDtcytbvNEtFmh/3L1
+         qz7A==
+X-Gm-Message-State: AOJu0YyDUOAyz95zlhHvoJmVmIdvfjO9Oc5INqJ5PgrLTDrF8m43jz9y
+	5eo2JbyRP0v7OAVdMfKZmXGYNMjXedlT/5iAfIi12pIpNSi/RWulwnNoMcN/9X1C4co+/J1iDF6
+	Q2IVBMSx3Y2m1+5uSckX1QI17DB/5k8Z2mH2U72Iul7NL+kZLW6nsQx+qpW7NAmILILUaS+1VrX
+	VLInSXza8C7rdXwvWkYJnz5rOTQVA4lKccq0+c
+X-Received: by 2002:a05:600c:314e:b0:413:ee58:db7e with SMTP id h14-20020a05600c314e00b00413ee58db7emr559875wmo.3.1710799280976;
+        Mon, 18 Mar 2024 15:01:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEPBtYKJBfOb3aBQLqb3AHBFvSowntgdfM4R7ayXLVxzEAxtnXjLmVXKjhj6EG9VnTPbKNmqcKmxN5CCTPdHHE=
+X-Received: by 2002:a05:600c:314e:b0:413:ee58:db7e with SMTP id
+ h14-20020a05600c314e00b00413ee58db7emr559860wmo.3.1710799280659; Mon, 18 Mar
+ 2024 15:01:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240318132848.82686-3-aravinda.prasad@intel.com>
+References: <20240226190344.787149-1-pbonzini@redhat.com> <20240226190344.787149-11-pbonzini@redhat.com>
+ <20240314024952.w6n6ol5hjzqayn2g@amd.com>
+In-Reply-To: <20240314024952.w6n6ol5hjzqayn2g@amd.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Mon, 18 Mar 2024 23:01:09 +0100
+Message-ID: <CABgObfYpGUBYj94PSNkYsa_NDGVE=NOJnjHSZoE5d7sSGmVfQA@mail.gmail.com>
+Subject: Re: [PATCH v3 10/15] KVM: x86: add fields to struct kvm_arch for CoCo features
+To: Michael Roth <michael.roth@amd.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, seanjc@google.com, 
+	aik@amd.com, pankaj.gupta@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Aravinda,
+On Thu, Mar 14, 2024 at 3:50=E2=80=AFAM Michael Roth <michael.roth@amd.com>=
+ wrote:
+> I've been trying to get SNP running on top of these patches and hit and
+> issue with these due to fpstate_set_confidential() being done during
+> svm_vcpu_create(), so when QEMU tries to sync FPU state prior to calling
+> SNP_LAUNCH_FINISH it errors out. I think the same would happen with
+> SEV-ES as well.
+>
+> Maybe fpstate_set_confidential() should be relocated to SEV_LAUNCH_FINISH
+> site as part of these patches?
 
-kernel test robot noticed the following build errors:
+To SEV_LAUNCH_UPDATE_VMSA, I think, since that's where the last
+opportunity lies to sync the contents of struct kvm_vcpu.
 
-[auto build test ERROR on akpm-mm/mm-everything]
+> Also, do you happen to have a pointer to the WIP QEMU patches? Happy to
+> help with posting/testing those since we'll need similar for
+> SEV_INIT2-based SNP patches.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Aravinda-Prasad/mm-damon-mm-infrastructure-support/20240318-212723
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20240318132848.82686-3-aravinda.prasad%40intel.com
-patch subject: [PATCH v2 2/3] mm/damon: profiling enhancement
-config: hexagon-allmodconfig (https://download.01.org/0day-ci/archive/20240319/202403190550.8chO4Zt4-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 8f68022f8e6e54d1aeae4ed301f5a015963089b7)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240319/202403190550.8chO4Zt4-lkp@intel.com/reproduce)
+Pushed to https://gitlab.com/bonzini/qemu, branch sevinit2. There is a
+hackish commit "runstate: skip initial CPU reset if reset is not
+actually possible" that needs some auditing, because I'd like to
+replace
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403190550.8chO4Zt4-lkp@intel.com/
+-    cpu_synchronize_all_post_reset();
++    if (cpus_are_resettable()) {
++        cpu_synchronize_all_post_reset();
++    } else {
++        /* Assume that cpu_synchronize_all_post_init() was enough. */
++        assert(runstate_check(RUN_STATE_PRELAUNCH));
++    }
 
-All errors (new ones prefixed by >>):
+with
 
-   In file included from mm/damon/vaddr.c:10:
-   In file included from include/linux/highmem.h:10:
-   In file included from include/linux/mm.h:2194:
-   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   In file included from mm/damon/vaddr.c:10:
-   In file included from include/linux/highmem.h:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     547 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     560 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-         |                                                   ^
-   In file included from mm/damon/vaddr.c:10:
-   In file included from include/linux/highmem.h:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     573 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-         |                                                   ^
-   In file included from mm/damon/vaddr.c:10:
-   In file included from include/linux/highmem.h:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     584 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     594 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     604 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
->> mm/damon/vaddr.c:78:6: error: call to undeclared function 'pgtable_l5_enabled'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-      78 |         if (pgtable_l5_enabled()) {
-         |             ^
-   7 warnings and 1 error generated.
+-    cpu_synchronize_all_post_reset();
++    /*
++     * cpu_synchronize_all_post_init() has already happened if the VM hasn=
+'t
++     * launched.
++     */
++    if (!runstate_check(RUN_STATE_PRELAUNCH)) {
++        cpu_synchronize_all_post_reset();
++    }
 
+Paolo
 
-vim +/pgtable_l5_enabled +78 mm/damon/vaddr.c
-
-    54	
-    55	/* Pick the highest possible page table profiling level for addr
-    56	 * in the region defined by start and end
-    57	 */
-    58	static int pick_profile_level(unsigned long start, unsigned long end,
-    59			unsigned long addr)
-    60	{
-    61		/* Start with PTE and check if higher levels can be picked */
-    62		int level = 0;
-    63	
-    64		if (!arch_has_hw_nonleaf_pmd_young())
-    65			return level;
-    66	
-    67		/* Check if PMD or higher can be picked, else use PTE */
-    68		if (pmd_addr_start(addr, (start) - 1) < start
-    69				|| pmd_addr_end(addr, (end) + 1) > end)
-    70			return level;
-    71	
-    72		level++;
-    73		/* Check if PUD or higher can be picked, else use PMD */
-    74		if (pud_addr_start(addr, (start) - 1) < start
-    75				|| pud_addr_end(addr, (end) + 1) > end)
-    76			return level;
-    77	
-  > 78		if (pgtable_l5_enabled()) {
-    79			level++;
-    80			/* Check if P4D or higher can be picked, else use PUD */
-    81			if (p4d_addr_start(addr, (start) - 1) < start
-    82					|| p4d_addr_end(addr, (end) + 1) > end)
-    83				return level;
-    84		}
-    85	
-    86		level++;
-    87		/* Check if PGD can be picked, else return PUD level */
-    88		if (pgd_addr_start(addr, (start) - 1) < start
-    89				|| pgd_addr_end(addr, (end) + 1) > end)
-    90			return level;
-    91	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
