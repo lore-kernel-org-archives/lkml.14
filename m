@@ -1,119 +1,136 @@
-Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03BAB3BB35
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 13:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85F338385;
+	Mon, 18 Mar 2024 13:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710767134; cv=none; b=E8563Z+ICv6yvul6EBxxv4sy92p/S3J4+XZDhSen9rfT4aqER1dXROoIuSJCkmM9CN0edwHDrclQ8WuajOFp8XAahg+Rw9JzqsrZ3NPbgdGrV0Rq/lGFBdlVJZjZTwe+S/xrRc4wQkjP502VfvUojuqlgvaH+RNAY3onZhTg0Z0=
+	t=1710767198; cv=none; b=eCDkf2vW3Etp6rsl6m3LhArWj24ZXYgmMGPMi9nXNcpgqwqEU1uxgfgKWB+7zAKCaWDZiwpnzqzAmDHyZZyvZxXD4j7k9jSL6BnmOQEOxUjjODte9NoFKl1xtiOsWeQF2qu31W6bPpdMfOygm4VFBrwCMgE3T7X86bbiqVoaxvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710767134; c=relaxed/simple;
-	bh=j+WvT6VY0MWDb1dtFDjX5MTHHdryLEFjoY3E/4msKTQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rXGIvaTqw3KeYC+iHCZdZWUtNtwAA+ZYQISXyXFWHXUdv5QOh3YkSd0W2FYm67l+tp8Owfd8wetVaYQJAFnfIOYvWPGjuytY+nCnwQXJo2q1sWuhRjbYKdNmGg9ZYWggzKTuvSMYvwCfQWsY6ifSLc8x6pNXY6aqgxpNvfzViSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4TyvnW0CPLz9xHvb
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 20:49:35 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id DAAFB1405A1
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 21:05:20 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.81.220.121])
-	by APP2 (Coremail) with SMTP id GxC2BwDXECX4O_hl1WCFBA--.53744S4;
-	Mon, 18 Mar 2024 14:05:20 +0100 (CET)
-From: Petr Tesarik <petrtesarik@huaweicloud.com>
-To: Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Petr Tesarik <petr.tesarik1@huawei-partners.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Will Deacon <will@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	iommu@lists.linux.dev (open list:DMA MAPPING HELPERS)
-Cc: Roberto Sassu <roberto.sassu@huaweicloud.com>,
-	Petr Tesarik <petr@tesarici.cz>
-Subject: [PATCH v2 2/2] bug: introduce ASSERT_VAR_CAN_HOLD()
-Date: Mon, 18 Mar 2024 14:04:47 +0100
-Message-Id: <20240318130447.594-3-petrtesarik@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240318130447.594-1-petrtesarik@huaweicloud.com>
-References: <20240318130447.594-1-petrtesarik@huaweicloud.com>
+	s=arc-20240116; t=1710767198; c=relaxed/simple;
+	bh=WrAEeEsm2dnWpOkvKTcEiN05vIFPd1XTg8CXuJ0xj24=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=iw5GfTA3CZu8nfQ9VvAJ0FcSqnpazVUISjUUKuzMF7SOcxXyYMApV0lZgv3XZt7hEqdffxyPhNUIjgmzYU/B6BTFPEDzY7DNkiWqNSc/soNOsXNSu3k9tlnYdhCHmAy4pr64xxccAnwYfN+jDnBtxtxDFjjVz7ugjm+YCF8yDJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03EA6C43390;
+	Mon, 18 Mar 2024 13:06:34 +0000 (UTC)
+Message-ID: <00fe576e-df97-4cae-9937-d8e9272cf5e0@xs4all.nl>
+Date: Mon, 18 Mar 2024 14:06:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:GxC2BwDXECX4O_hl1WCFBA--.53744S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kw1DWF1xKw4ktr45GrW8tFb_yoW8WFy7pa
-	sxArn5KF4jqFyfZF12934DCF1fK34q9347Cas0gryYvF12qF9aqFWqkrW3WFyvqr4vgF43
-	Cw1SgrWYyw1UArDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQGb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXw
-	A2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
-	Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
-	Ij6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_
-	Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I
-	0E8cxan2IY04v7MxkF7I0En4kS14v26r4a6rW5MxkF7I0Ew4C26cxK6c8Ij28IcwCF04k2
-	0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
-	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41l
-	IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIx
-	AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
-	jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0piQtxsUUUUU=
-X-CM-SenderInfo: hshw23xhvd2x3n6k3tpzhluzxrxghudrp/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v21 3/9] media: test-drivers: Set REQBUFS minimum number
+ of buffers
+Content-Language: en-US, nl
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+To: Benjamin Gaignard <benjamin.gaignard@collabora.com>, mchehab@kernel.org,
+ tfiga@chromium.org, m.szyprowski@samsung.com, ezequiel@vanguardiasur.com.ar,
+ p.zabel@pengutronix.de, nicolas@ndufresne.ca
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, kernel@collabora.com
+References: <20240314153226.197445-1-benjamin.gaignard@collabora.com>
+ <20240314153226.197445-4-benjamin.gaignard@collabora.com>
+ <43d27ed7-94ff-4916-b1f3-07204b2f54ab@xs4all.nl>
+In-Reply-To: <43d27ed7-94ff-4916-b1f3-07204b2f54ab@xs4all.nl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Petr Tesarik <petr.tesarik1@huawei-partners.com>
+On 18/03/2024 11:06 am, Hans Verkuil wrote:
+> Hi Benjamin,
+> 
+> On 14/03/2024 4:32 pm, Benjamin Gaignard wrote:
+>> Instead of using 'min_queued_buffers' field to specify the
+>> minimum number of buffers to be allocated when calling REQBUF
+>> use 'min_reqbufs_allocation' field which is dedicated to this
+>> purpose.
+>>
+>> While at it rename vivid_create_queue() parameter.
+>>
+>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+>> ---
+>>  drivers/media/test-drivers/vimc/vimc-capture.c | 2 +-
+>>  drivers/media/test-drivers/vivid/vivid-core.c  | 4 ++--
+>>  2 files changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/media/test-drivers/vimc/vimc-capture.c b/drivers/media/test-drivers/vimc/vimc-capture.c
+>> index 2a2d19d23bab..97693561f1e4 100644
+>> --- a/drivers/media/test-drivers/vimc/vimc-capture.c
+>> +++ b/drivers/media/test-drivers/vimc/vimc-capture.c
+>> @@ -432,7 +432,7 @@ static struct vimc_ent_device *vimc_capture_add(struct vimc_device *vimc,
+>>  	q->mem_ops = vimc_allocator == VIMC_ALLOCATOR_DMA_CONTIG
+>>  		   ? &vb2_dma_contig_memops : &vb2_vmalloc_memops;
+>>  	q->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
+>> -	q->min_queued_buffers = 2;
+>> +	q->min_reqbufs_allocation = 2;
+>>  	q->lock = &vcapture->lock;
+>>  	q->dev = v4l2_dev->dev;
+>>  
+>> diff --git a/drivers/media/test-drivers/vivid/vivid-core.c b/drivers/media/test-drivers/vivid/vivid-core.c
+>> index 159c72cbb5bf..11b8520d9f57 100644
+>> --- a/drivers/media/test-drivers/vivid/vivid-core.c
+>> +++ b/drivers/media/test-drivers/vivid/vivid-core.c
+>> @@ -861,7 +861,7 @@ static const struct media_device_ops vivid_media_ops = {
+>>  static int vivid_create_queue(struct vivid_dev *dev,
+>>  			      struct vb2_queue *q,
+>>  			      u32 buf_type,
+>> -			      unsigned int min_queued_buffers,
+>> +			      unsigned int min_reqbufs_allocation,
+>>  			      const struct vb2_ops *ops)
+>>  {
+>>  	if (buf_type == V4L2_BUF_TYPE_VIDEO_CAPTURE && dev->multiplanar)
+>> @@ -898,7 +898,7 @@ static int vivid_create_queue(struct vivid_dev *dev,
+>>  	q->mem_ops = allocators[dev->inst] == 1 ? &vb2_dma_contig_memops :
+>>  						  &vb2_vmalloc_memops;
+>>  	q->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
+>> -	q->min_queued_buffers = supports_requests[dev->inst] ? 0 : min_queued_buffers;
+>> +	q->min_reqbufs_allocation = min_reqbufs_allocation;
+>>  	q->lock = &dev->mutex;
+>>  	q->dev = dev->v4l2_dev.dev;
+>>  	q->supports_requests = supports_requests[dev->inst];
+> 
+> How did you test this series? If I run the test-media script using the patch
+> v4l2-compliance (the v9 series) I get two failures. Both are traced to code
+> in vivid: meta_out_queue_setup() and touch_cap_queue_setup():
+> 
+> Both have this code:
+> 
+>         if (*nplanes) {
+>                 if (sizes[0] < size)
+>                         return -EINVAL;
+>         } else {
+>                 sizes[0] = size;
+>         }
+> 
+>         if (q_num_bufs + *nbuffers < 2)
+>                 *nbuffers = 2 - q_num_bufs;
+> 
+>         *nplanes = 1;
+>         return 0;
+> 
+> It's the *nbuffers assignment that is wrong. Looking at vivid-core.c I see
+> that vivid_create_queue() is called with min_reqbufs_allocation set to 1 for
+> these two devices. I think that should be 2, and then the code above can
+> be dropped.
 
-Introduce an ASSERT_VAR_CAN_HOLD() macro to check at build time that a
-variable can hold the given value.
+Note that if that 'if (q_num_bufs + *nbuffers < 2)' is dropped, then you
+should also drop the q_num_bufs assignment at the beginning of the function
+since that is now no longer used.
 
-Use this macro in swiotlb to make sure that the list and pad_slots fields
-of struct io_tlb_slot are big enough to hold the maximum possible value of
-IO_TLB_SEGSIZE.
+Regards,
 
-Signed-off-by: Petr Tesarik <petr.tesarik1@huawei-partners.com>
----
- include/linux/build_bug.h | 10 ++++++++++
- kernel/dma/swiotlb.c      |  2 ++
- 2 files changed, 12 insertions(+)
+	Hans
 
-diff --git a/include/linux/build_bug.h b/include/linux/build_bug.h
-index 3aa3640f8c18..6e2486508af0 100644
---- a/include/linux/build_bug.h
-+++ b/include/linux/build_bug.h
-@@ -86,4 +86,14 @@
- 		"Offset of " #field " in " #type " has changed.")
- 
- 
-+/*
-+ * Compile time check that a variable can hold the given value
-+ */
-+#define ASSERT_VAR_CAN_HOLD(var, value) ({		\
-+	typeof(value) __val = (value);			\
-+	typeof(var) __tmp = __val;			\
-+	BUILD_BUG_ON_MSG(__tmp != __val,		\
-+		#var " cannot hold " #value ".");	\
-+})
-+
- #endif	/* _LINUX_BUILD_BUG_H */
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index aefb05ff55e7..0737c1283f86 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -285,6 +285,8 @@ static void swiotlb_init_io_tlb_pool(struct io_tlb_pool *mem, phys_addr_t start,
- 		mem->areas[i].used = 0;
- 	}
- 
-+	ASSERT_VAR_CAN_HOLD(mem->slots[0].list, IO_TLB_SEGSIZE);
-+	ASSERT_VAR_CAN_HOLD(mem->slots[0].pad_slots, IO_TLB_SEGSIZE);
- 	for (i = 0; i < mem->nslabs; i++) {
- 		mem->slots[i].list = min(IO_TLB_SEGSIZE - io_tlb_offset(i),
- 					 mem->nslabs - i);
--- 
-2.34.1
+> 
+> It is probably best to post a v21.1 3/9 patch only.
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> 
+> 
 
