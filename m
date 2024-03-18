@@ -1,126 +1,139 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABB64F1FC
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 15:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B1054F891
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 15:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710775881; cv=none; b=Mc4vzxeRpgVyyESAPnWmrw0WuPJveDG8w5MIep7Fv3jDNR5qVlp7NT4lJIA4pe3pKfYPzbe1TnZnh+FKU40UL5PXip27aGBUoAh+y1ck1Y0Gv7JRdjbYaYbEoPKzLDWFqh0whOqz+QtfHKsdDOOqLA0NgkQxof39eNJ26VT2TWE=
+	t=1710775887; cv=none; b=HzlLs1P94RZfiNG4H+n0JKtZknoC53/7B33XV0Rjp28XondEH8benY1NyADSvs1fn+ylBVo9vrYnMeA58jjac58000b+MyyXPiFpNNtxkv0BikCDBnhg+umB+YRVCDaYWpukv4h9V840O35mdWRqw6JIZjf09MyleItUyx73UPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710775881; c=relaxed/simple;
-	bh=T0Ne9yMNYLZi4uTj1Xuo2ZKrcAbKFkp6jK9oc5YUMpg=;
+	s=arc-20240116; t=1710775887; c=relaxed/simple;
+	bh=m4+I6MBoUeUHGxnrD5vzjttWojTZkPCJQ14dx3myEDk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yksl9Y6NltyPf3ATJuZFPCA96ys8jcnNo8IMhSfqFAprh+Xp72Mg8IrBlWwK8oaxIsB1aYyjcxCBqxvQx+SNtrCkcbdDmL9UNx3h46DNpgNVq+CqCOKLoguQ+9wZ+CWpl1NA4JpvByIdBw7W9334e45QQ2dFYzhwOsbPEHy1uGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=R5MNsB4F; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	 To:Cc:Content-Type; b=lVJ3nDmV131SulVAl3hVJMV/C/5CtZvXCV0bX35jDSYwuOXuGd3pCl2YQt0031YZm3QwPbCZ1PBvS06DwM74GI3Hgx5JT2m2/pQ88U942GKLGBBXCv+B4K9J0KncKLBNLh7xAkL7ubJJudOTT5DlMx/W4QIIYQY9SlxmawFpSTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oW+ds6Wx; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="R5MNsB4F"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-42e29149883so18685591cf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 08:31:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oW+ds6Wx"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-430d3fcc511so197001cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 08:31:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1710775879; x=1711380679; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710775885; x=1711380685; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BnbQuLUwlY/yZQSEJ6UKuPd4bJoloGALr8ZQRUHT1Jc=;
-        b=R5MNsB4Fifqd1eCnameang+os7as9bXZ3nIlwxLPkyGC8kLuK4v5leY8JmAjmMHrQW
-         r2Tfx0c7S2Zrb2Dl9sn98NyWCS1OnBAiLIsCcNxKTCUpLPAOTT0U9GQpoFfcQcrHcWcn
-         qCNhjHvIiBO0YdnCfaLTxHx7kVD3CDZx6wBZ9B9JSKQpgxnBet2SQP7teK4Pr8XfGQoi
-         BWsSw+ArhyyAf3mn3+NIan2VayH17DjJJg4PjLcWUa0eJnH1jfUU9GHPfpmh3Ci5InTT
-         CdutYP8X1uEjPLZven4iwIJbD60GspzOzFY6prMEt7B4muvF52r8zbcMSYXqy0AeYUS2
-         5K1A==
+        bh=VA9/NiX8/E19WUiHKA9tr52IADuhSxANcPtKQ97R1nM=;
+        b=oW+ds6WxOpW/jRhOjraBRnZ9oYYtUDIgqGcTiI85U7K+Cpj8UktYnD9iWkB0J6OnGZ
+         c2TNHu9EpLVqHrKYgQayqEAY3RLhQc/B/mf6fNManTAVjNN/zEA02701EyoSgQukjHYM
+         MK8S3x0j44jgkZun13lguylavxOPYCsWEuvLSIZWcu5xr6C4OSoEkTFuRA8xmBXR1y+V
+         /uFIY9300VbpIrFPs3Cn9cgtXjwkjtF8K0urRG+6KKl03MF7V9SiUMRrgtTpp5pVEK2j
+         2jdwfKzWkL27aaIzCGKLYVXkz9qR7WzfeJ3IUoTfFSAyt8Iq5U5oTaodMnrlwV0ffY1G
+         3Zyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710775879; x=1711380679;
+        d=1e100.net; s=20230601; t=1710775885; x=1711380685;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BnbQuLUwlY/yZQSEJ6UKuPd4bJoloGALr8ZQRUHT1Jc=;
-        b=N5AX1iUyIBDVH0vCqH+UR3u9NqY017BICP9cd5eiDeTAvs5LGvYD9SPywQfWM6g+Ym
-         IqdDgOf0T7HdBbmkdct5scrkwF/c621tzvQdW19ScxJ7kznnNtqS9n2YO0h1ZlOyNmyl
-         N0dmLJu+OTJJvDNpdsT889Vyik+a4GmJH5NGKmXQL4oi5QEPDBc3vdjmGv7WpfvXN5Vg
-         LeAL2vh3Tj1llI+YYdo7Wxsq0pGqmfKnPGLWaTKoIBAdeDn6Y6H5rfbG/I6Ge7FYxpE8
-         nGpPBHw5aCW3d6mtxwzUcUXA61hkJZKGaxTjJCzS5J71M4goruJzmn8DgmwZ4FzLBbKL
-         RMyw==
-X-Forwarded-Encrypted: i=1; AJvYcCWJ1M6NcwH8pLdvo5ulNw9peeIa45KVoliwJvQD9ZWC0Xxhckr9phLedRte87yUpeLfDSsluVNv65cd9bAfQbq2/uh65/fpy9hB5MIg
-X-Gm-Message-State: AOJu0Yzpn/8s1A+pXTeuMpLv3EwAIsXZ6jglJaIpxzBxKax+J5ddIDFV
-	hHUwmKNgBLqQLR2OKQhXW/dc7xh81UhkjU+JkZYv/BSZZqvyuab8TgNbSZab129dvUJtlMo9wgz
-	RrzD/8Fg16cEABb8fycAAc+eGsfzwsBBFS6sLgQ==
-X-Google-Smtp-Source: AGHT+IEHJI3BKnTNZ4pHvdvXvf6ScyD+ygtuclFrnt6J3mDPUAzP6GAAk2aJt67Hogo1BqGPjrMe4sHxSLrZLo1EbcE=
-X-Received: by 2002:ac8:5d8c:0:b0:42e:f950:d225 with SMTP id
- d12-20020ac85d8c000000b0042ef950d225mr18462982qtx.1.1710775878637; Mon, 18
- Mar 2024 08:31:18 -0700 (PDT)
+        bh=VA9/NiX8/E19WUiHKA9tr52IADuhSxANcPtKQ97R1nM=;
+        b=NByCJfWv1a7wjeYQ+2XoSSkxChnYflqYDPfn1wwnSwW9YEzjHZZccJlrHsBRG4u0m0
+         Ew/N3T0tRLhk7v9Xhf4oRs/HryUB/w75F9JzdnvsjPT/fythhd09UMwCD4vW+ohB3b2O
+         gxYp5DYjhwMhX3c8u7GYDYvlkhmx+jlv+6BNUXqwvBVqQFnssVZX7hUxWEAAnLI1srE4
+         dRZGxK6UXYac7DgU/Fju6/S4rMyG8+8XdqVmNctrtak5iXvNiY88yuhVFBB+79ioHKXE
+         VE0go4MWkAOsWYiJOdeO96+kTPlIKsDJQpPk4mIj9WvZd67L5SNJEYjQyegtfabSfVxB
+         mVgw==
+X-Forwarded-Encrypted: i=1; AJvYcCVs+ZykbG+OkSpBBP2UYEtsdAej7UUJ3vFjXNnulskeFGnnIV1mdoLM/4Cyk3ZoD4qdFpg+V8+AlJbkq1n+hdfalx00cEcRHBcX/LW9
+X-Gm-Message-State: AOJu0Ywlyh4whC0fNwL1uBHlUvwGGjRryYmLLw/vWB0kUs4YyTeqBsxN
+	MWD7y6caPfkNJePEd/uhSdmG3iH8GN5hwcq7GtyexJdXYiFxeRsZ19crcbZboOMpEDN7Vd883pi
+	sSk/Cm0x5pM45WCymJJLRwl1tGjaeelRQXsNi
+X-Google-Smtp-Source: AGHT+IGzWqUIOUu5I0duuZgvPFrMrMabv8H/NdN0jk0nuFo5i4muxUfa/my0tZITK0IRu5y8Tg7eEzkZ4UvjvZQkd6c=
+X-Received: by 2002:ac8:5913:0:b0:430:a5df:a3af with SMTP id
+ 19-20020ac85913000000b00430a5dfa3afmr367264qty.5.1710775885132; Mon, 18 Mar
+ 2024 08:31:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240311164638.2015063-1-pasha.tatashin@soleen.com>
- <2cb8f02d-f21e-45d2-afe2-d1c6225240f3@zytor.com> <ZfNTSjfE_w50Otnz@casper.infradead.org>
- <2qp4uegb4kqkryihqyo6v3fzoc2nysuhltc535kxnh6ozpo5ni@isilzw7nth42>
- <ZfNWojLB7qjjB0Zw@casper.infradead.org> <CA+CK2bAmOj2J10szVijNikexFZ1gmA913vvxnqW4DJKWQikwqQ@mail.gmail.com>
- <39F17EC4-7844-4111-BF7D-FFC97B05D9FA@zytor.com> <CA+CK2bDothmwdJ86K1LiKWDKdWdYDjg5WCwdbapL9c3Y_Sf+kg@mail.gmail.com>
- <bb203717ab644362a8eafe78aff23947@AcuMS.aculab.com> <CA+CK2bAuNLXq4p8pjwAatuw2KuadhKjD6JRwJN8ZvSEd1d7ntA@mail.gmail.com>
- <Zfhblk609XJn5clL@casper.infradead.org>
-In-Reply-To: <Zfhblk609XJn5clL@casper.infradead.org>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Mon, 18 Mar 2024 11:30:42 -0400
-Message-ID: <CA+CK2bDFUekHnh=XqLcLJS-VgTMrTRWPm4xgmXHWgFCd9JXYmw@mail.gmail.com>
-Subject: Re: [RFC 00/14] Dynamic Kernel Stacks
-To: Matthew Wilcox <willy@infradead.org>
-Cc: David Laight <David.Laight@aculab.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "x86@kernel.org" <x86@kernel.org>, 
-	"bp@alien8.de" <bp@alien8.de>, "brauner@kernel.org" <brauner@kernel.org>, 
-	"bristot@redhat.com" <bristot@redhat.com>, "bsegall@google.com" <bsegall@google.com>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, 
-	"dianders@chromium.org" <dianders@chromium.org>, 
-	"dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>, 
-	"eric.devolder@oracle.com" <eric.devolder@oracle.com>, "hca@linux.ibm.com" <hca@linux.ibm.com>, 
-	"hch@infradead.org" <hch@infradead.org>, 
-	"jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>, 
-	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, "jroedel@suse.de" <jroedel@suse.de>, 
-	"juri.lelli@redhat.com" <juri.lelli@redhat.com>, "kinseyho@google.com" <kinseyho@google.com>, 
-	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>, "lstoakes@gmail.com" <lstoakes@gmail.com>, 
-	"luto@kernel.org" <luto@kernel.org>, "mgorman@suse.de" <mgorman@suse.de>, "mic@digikod.net" <mic@digikod.net>, 
-	"michael.christie@oracle.com" <michael.christie@oracle.com>, "mingo@redhat.com" <mingo@redhat.com>, 
-	"mjguzik@gmail.com" <mjguzik@gmail.com>, "mst@redhat.com" <mst@redhat.com>, 
-	"npiggin@gmail.com" <npiggin@gmail.com>, "peterz@infradead.org" <peterz@infradead.org>, 
-	"pmladek@suse.com" <pmladek@suse.com>, 
-	"rick.p.edgecombe@intel.com" <rick.p.edgecombe@intel.com>, "rostedt@goodmis.org" <rostedt@goodmis.org>, 
-	"surenb@google.com" <surenb@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>, 
-	"urezki@gmail.com" <urezki@gmail.com>, 
-	"vincent.guittot@linaro.org" <vincent.guittot@linaro.org>, "vschneid@redhat.com" <vschneid@redhat.com>
+References: <20240318110855.31954-1-johan+linaro@kernel.org>
+ <20240318110855.31954-2-johan+linaro@kernel.org> <CAA8EJprywWbdoyfAbys=0WzEdAkp0UK1fzzCPzxKRjyk9DrC6Q@mail.gmail.com>
+ <Zfg--2_NMPSPTxK-@hovoldconsulting.com> <20240318144806.GA3963554-robh@kernel.org>
+ <ZfhZffrZXwtKgZ13@hovoldconsulting.com> <CAD=FV=UpuD7Lq0DxSZAGpL4Mi2uxy9HNt3V3FZq7Y3p--gbMrg@mail.gmail.com>
+In-Reply-To: <CAD=FV=UpuD7Lq0DxSZAGpL4Mi2uxy9HNt3V3FZq7Y3p--gbMrg@mail.gmail.com>
+From: Doug Anderson <dianders@google.com>
+Date: Mon, 18 Mar 2024 08:31:09 -0700
+Message-ID: <CAD=FV=WCzrh926mkiyBnKRG_+KGuOkGN6v0DgPiXhQCD3PSQ9w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: bluetooth: add new wcn3991 compatible
+ to fix bd_addr
+To: Johan Hovold <johan@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	Johan Hovold <johan+linaro@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Johan Hedberg <johan.hedberg@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, 
+	Bjorn Andersson <quic_bjorande@quicinc.com>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 18, 2024 at 11:19=E2=80=AFAM Matthew Wilcox <willy@infradead.or=
-g> wrote:
+Hi,
+
+On Mon, Mar 18, 2024 at 8:26=E2=80=AFAM Doug Anderson <dianders@google.com>=
+ wrote:
 >
-> On Mon, Mar 18, 2024 at 11:09:47AM -0400, Pasha Tatashin wrote:
-> > The TLB load is going to be exactly the same as today, we already use
-> > small pages for VMA mapped stacks. We won't need to have extra
-> > flushing either, the mappings are in the kernel space, and once pages
-> > are removed from the page table, no one is going to access that VA
-> > space until that thread enters the kernel again. We will need to
-> > invalidate the VA range only when the pages are mapped, and only on
-> > the local cpu.
+> Hi,
 >
-> No; we can pass pointers to our kernel stack to other threads.  The
-> obvious one is a mutex; we put a mutex_waiter on our own stack and
-> add its list_head to the mutex's waiter list.  I'm sure you can
-> think of many other places we do this (eg wait queues, poll(), select(),
-> etc).
+> On Mon, Mar 18, 2024 at 8:10=E2=80=AFAM Johan Hovold <johan@kernel.org> w=
+rote:
+> >
+> > > > I wanted to avoid doing this, but if we have to support Google's br=
+oken
+> > > > boot firmware for these devices, then this is how it needs to be do=
+ne.
+> > >
+> > > Don't Chromebooks update everything together. So maybe we don't care =
+in
+> > > this case?
+> >
+> > That was my hope, but Matthias seemed to suggest that we need to
+> > continue supporting the current (broken) binding because doing such a
+> > coordinated update may be easier said than done:
+> >
+> >         https://lore.kernel.org/lkml/ZcuQ2qRX0zsLSVRL@google.com/
+>
+> Chromebooks update kernel and devicetree together, but not firmware.
+> Firmware is relatively hard to get updated trying to have kernel and
+> firmware updates coordinated at the exact same time has challenges.
+> This would further be complicated by the fact that firmware
+> qualification for each variant happens on its own timeline.
+>
+>
+> > A new compatible string (or one-off property) would allow them do make =
+a
+> > change when they are ready (e.g. by only updating the devicetrees after
+> > all boot firmware has been patched and pushed out).
+>
+> I have no real opinion about the exact way this is solved so happy to
+> let DT folks decide on how they want this. I will note, however, that
+> device trees are never shipped separately and thus we have no
+> intrinsic need for DT backward compatbility here. It would be OK from
+> a ChromeOS perspective to add a property or compatible string for the
+> broken case.
 
-Hm, it means that stack is sleeping in the kernel space, and has its
-stack pages mapped and invalidated on the local CPU, but access from
-the remote CPU to that stack pages would be problematic.
+Actually, I should probably say more about this to make it clear how it wor=
+ks.
 
-I think we still won't need IPI, but VA-range invalidation is actually
-needed on unmaps, and should happen during context switch so every
-time we go off-cpu. Therefore, what Brian/Andy have suggested makes
-more sense instead of kernel/enter/exit paths.
+Chromebooks ship the kernel as a FIT image which bundles the kernel
+and device trees together. The firmware looks at all the bundled
+device trees and picks the proper one based on the board name,
+revision, and SKU ID. The firmware then looks for the bluetooth node
+(I believe it finds it from the "aliases" section) and adds the MAC
+address there.
 
-Pasha
+...so we could update the DT to add a property (if that's desired)
+even if we don't update the firmware.
+
+-Doug
