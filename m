@@ -1,223 +1,84 @@
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C49158131
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 21:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1259C59140;
+	Mon, 18 Mar 2024 21:06:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710795947; cv=none; b=eNQp5vsGS6TsDhRp1ZmLLp0+6FS37MVmsbKBM8QEdQVRjXcBuy/32rJnoLXysta2eGLGzWNHI9kyERqxDNGF7OgmSdXjr5EpKyqgwPdt9Eda238O7xwTSglGvHIeDWeoWKml6+mnTeZvFgMFiTVurzXyQ4bPGW6HqLn2uXxrrxg=
+	t=1710795987; cv=none; b=G+o3WUG9LY/4OqCtU2a/gbwcsaKYto7yWKiyVGokVBXgRjhxTm8A1uf5CKMrbpw/SHAzBJjigzZ0oY5lGietBXzHA+iJSTK4QHquyZYBxpfaeeuP2Cs34xm2BEFnzsU10lySmBfX9A/LxnY9wo/SNC1HedNqY1Och3iKQKfG8Ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710795947; c=relaxed/simple;
-	bh=mhEDrR9C7YEoGmhM49MXiXEW0net0pIPpVQcSKsrjxU=;
-	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
-	 Cc:In-Reply-To:To; b=l8zgP5k+9EE0lWeNcUT5fMtMPkeQnw41FYDZ/ju+geXNVnH/9kMTb+9znhV4mhxlNHbAo5zFx7q8rB/F01vlRiLMcSnm34Nrwpk9gwnW0M0lrj01wtmbrYHw2LkihRArTgu/XeqZ1bE9G05Kl1EIXTcML3TqP++nB32XGE+kF0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=Cd2rvKxY; arc=none smtp.client-ip=209.85.160.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
+	s=arc-20240116; t=1710795987; c=relaxed/simple;
+	bh=pJ/CyztUdbXkkqcUV0GUIL8dyTKiysy8Ki9KKV1f3h4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=ORIKI+8DTZ18f78xTMN89r5eQ0arvKveYNvSl7S2U1XIzr30KQu5PwikS38peQHSNbIlt05glqRtyRntKldlHI8j/sUqFREoSduDFpO7ceoma0D+wsdpn0ROEaiiTuduU8Q1MYGQCxJ3WUNvqUscmhQcmOYwYUh00+gv7PGsx1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=orx4i0IN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Cd2rvKxY"
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-22200c78d4fso2011546fac.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 14:05:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1710795944; x=1711400744; darn=vger.kernel.org;
-        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
-         :from:content-transfer-encoding:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Oc7CYcOIjU7/6iBC8IZweQUGbpgg4UYyzRmGvk3Smcg=;
-        b=Cd2rvKxYH000We5oWwfC/L1x7/fjHAD0dldRas9UAjG8RGhSeqJ4TK3mQuNzLngwQq
-         YU5tWQRs5VRkoQmpWrQ9EtUASJiYIjlWTV9ISlriVG1x/ChL8GPPJOrUyFgaV6o3cOJR
-         ck+vauPMkjBNpRMNANtcOMW40AtcfSGJSDZSU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710795944; x=1711400744;
-        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
-         :from:content-transfer-encoding:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Oc7CYcOIjU7/6iBC8IZweQUGbpgg4UYyzRmGvk3Smcg=;
-        b=EKrw38+kuaDyY3kIvLOfbqv484pcc2/my2hlcy18Z7KGlq8nX0kqs29v6oibmD7TjD
-         KLbr0xWzkXz+watAwly9d8UpTGPTjB9Rd3/8wFnJwUN5/k7BpsJWTxwqjrywQ9rNPClQ
-         qf9sY29RawR30W3qXjnoZBELFd+1K7aQ8yXEgZurCUAxmhHf0Fv1T2q1oiLW//kL6FsU
-         KQY7YHDcL9VxDmUxehIocE7LcuYQP20RfdbLy5/0GsbWQlmI0BafFw/j5YWJYYn4aXbq
-         2+FcWV5zpFKEpaYnw3YP63yPg4bCTEyTLSAYlqqtk5bCh8P8hpujgIWM+Bf0y56AIPjs
-         UO2Q==
-X-Gm-Message-State: AOJu0Yzv/J0sszJ214bDFsVPAC2L1XmbN0GzmesbQ7eGJoZpC7Ze/P9B
-	2VnOisCBjZsbsrJ6KtdWCNTM32GburRkbOWHdUlTFaieyNpdQdjf1Zbhkq96Id8=
-X-Google-Smtp-Source: AGHT+IHW33l7BhtlKga5NrVN1zzblIpi1h58wHOlcqfnnpO0183ZjvtHvYrb1MW3aDsUS/gWGPIT/g==
-X-Received: by 2002:a05:6870:548e:b0:221:1c2f:23ee with SMTP id f14-20020a056870548e00b002211c2f23eemr14426318oan.22.1710795944325;
-        Mon, 18 Mar 2024 14:05:44 -0700 (PDT)
-Received: from smtpclient.apple ([192.145.116.24])
-        by smtp.gmail.com with ESMTPSA id u11-20020ad45aab000000b006942dcac56asm2755948qvg.103.2024.03.18.14.05.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Mar 2024 14:05:43 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From: Joel Fernandes <joel@joelfernandes.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="orx4i0IN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90476C433C7;
+	Mon, 18 Mar 2024 21:06:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710795986;
+	bh=pJ/CyztUdbXkkqcUV0GUIL8dyTKiysy8Ki9KKV1f3h4=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=orx4i0INsgRD1dta9fCM8Rgd0iyTkoL2CO8Oc29a0N5JT5BcHnX9eZusc90UvjS4I
+	 itNYVaBfV0svTRkURpxgtSMUTWUqRB15bjkCe3lOdby1WEX5b97xwB45KFaLSNyVjz
+	 syQaAvljvQWqEzxjRJeyn22TVMJc8qw6DA1EOryzZoClTw27UGGbvMiJgWseQYvgvj
+	 oawpiPL7vPWYE7Iyo6Wpk97V99pWPSy++IHFRhdWSIeQzmlgRsE/G+xBDBqmjGJQVH
+	 f4msTyrAbfeHs3yW7Hb5LpJT+iiQccFfyU+yaevOuTxwYIuNqyCBw4uliN/3IKF1vq
+	 ANtMRNVI5OCzg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2 rcu/dev 1/2] rcu/tree: Reduce wake up for synchronize_rcu() common case
-Date: Mon, 18 Mar 2024 17:05:31 -0400
-Message-Id: <404E28F5-B018-4CE7-BE57-D0362B0C9969@joelfernandes.org>
-References: <ZfiOwtPfnxXW4JX3@pc636>
-Cc: linux-kernel@vger.kernel.org, frederic@kernel.org, boqun.feng@gmail.com,
- neeraj.iitr10@gmail.com, rcu@vger.kernel.org, rostedt@goodmis.org,
- "Paul E. McKenney" <paulmck@kernel.org>,
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
- Josh Triplett <josh@joshtriplett.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>
-In-Reply-To: <ZfiOwtPfnxXW4JX3@pc636>
-To: Uladzislau Rezki <urezki@gmail.com>
-X-Mailer: iPhone Mail (21D61)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 18 Mar 2024 23:06:22 +0200
+Message-Id: <CZX6K8KC480D.12UJ5ZTZZU55K@kernel.org>
+Subject: Re: [PATCH v6 09/13] crypto: ecdsa - Replace ndigits with nbits
+ where precision is needed
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Stefan Berger" <stefanb@linux.vnet.ibm.com>,
+ <keyrings@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+ <herbert@gondor.apana.org.au>, <davem@davemloft.net>
+Cc: <linux-kernel@vger.kernel.org>, <saulo.alessandre@tse.jus.br>,
+ <lukas@wunner.de>, <bbhushan2@marvell.com>, "Stefan Berger"
+ <stefanb@linux.ibm.com>
+X-Mailer: aerc 0.15.2
+References: <20240312183618.1211745-1-stefanb@linux.vnet.ibm.com>
+ <20240312183618.1211745-10-stefanb@linux.vnet.ibm.com>
+In-Reply-To: <20240312183618.1211745-10-stefanb@linux.vnet.ibm.com>
 
+On Tue Mar 12, 2024 at 8:36 PM EET, Stefan Berger wrote:
+> From: Stefan Berger <stefanb@linux.ibm.com>
+>
+> Replace the usage of ndigits with nbits where more precise space
+> calculations are needed, such as in ecdsa_max_size where the length of a
+> coordinate is determined.
 
+What does "more precise" mean?
 
-> On Mar 18, 2024, at 2:58=E2=80=AFPM, Uladzislau Rezki <urezki@gmail.com> w=
-rote:
->=20
-> =EF=BB=BFHello, Joel!
->=20
-> Sorry for late checking, see below few comments:
->=20
->> In the synchronize_rcu() common case, we will have less than
->> SR_MAX_USERS_WAKE_FROM_GP number of users per GP. Waking up the kworker
->> is pointless just to free the last injected wait head since at that point=
-,
->> all the users have already been awakened.
->>=20
->> Introduce a new counter to track this and prevent the wakeup in the
->> common case.
->>=20
->> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
->> ---
->> Rebased on paul/dev of today.
->>=20
->> kernel/rcu/tree.c | 36 +++++++++++++++++++++++++++++++-----
->> kernel/rcu/tree.h |  1 +
->> 2 files changed, 32 insertions(+), 5 deletions(-)
->>=20
->> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
->> index 9fbb5ab57c84..bd29fe3c76bf 100644
->> --- a/kernel/rcu/tree.c
->> +++ b/kernel/rcu/tree.c
->> @@ -96,6 +96,7 @@ static struct rcu_state rcu_state =3D {
->>    .ofl_lock =3D __ARCH_SPIN_LOCK_UNLOCKED,
->>    .srs_cleanup_work =3D __WORK_INITIALIZER(rcu_state.srs_cleanup_work,
->>        rcu_sr_normal_gp_cleanup_work),
->> +    .srs_cleanups_pending =3D ATOMIC_INIT(0),
->> };
->>=20
->> /* Dump rcu_node combining tree at boot to verify correct setup. */
->> @@ -1642,8 +1643,11 @@ static void rcu_sr_normal_gp_cleanup_work(struct w=
-ork_struct *work)
->>     * the done tail list manipulations are protected here.
->>     */
->>    done =3D smp_load_acquire(&rcu_state.srs_done_tail);
->> -    if (!done)
->> +    if (!done) {
->> +        /* See comments below. */
->> +        atomic_dec_return_release(&rcu_state.srs_cleanups_pending);
->>        return;
->> +    }
->>=20
->>    WARN_ON_ONCE(!rcu_sr_is_wait_head(done));
->>    head =3D done->next;
->> @@ -1666,6 +1670,9 @@ static void rcu_sr_normal_gp_cleanup_work(struct wo=
-rk_struct *work)
->>=20
->>        rcu_sr_put_wait_head(rcu);
->>    }
->> +
->> +    /* Order list manipulations with atomic access. */
->> +    atomic_dec_return_release(&rcu_state.srs_cleanups_pending);
->> }
->>=20
->> /*
->> @@ -1673,7 +1680,7 @@ static void rcu_sr_normal_gp_cleanup_work(struct wo=
-rk_struct *work)
->>  */
->> static void rcu_sr_normal_gp_cleanup(void)
->> {
->> -    struct llist_node *wait_tail, *next, *rcu;
->> +    struct llist_node *wait_tail, *next =3D NULL, *rcu =3D NULL;
->>    int done =3D 0;
->>=20
->>    wait_tail =3D rcu_state.srs_wait_tail;
->> @@ -1699,16 +1706,35 @@ static void rcu_sr_normal_gp_cleanup(void)
->>            break;
->>    }
->>=20
->> -    // concurrent sr_normal_gp_cleanup work might observe this update.
->> -    smp_store_release(&rcu_state.srs_done_tail, wait_tail);
->> +    /*
->> +     * Fast path, no more users to process. Remove the last wait head
->> +     * if no inflight-workers. If there are in-flight workers, let them
->> +     * remove the last wait head.
->> +     */
->> +    WARN_ON_ONCE(!rcu);
->>=20
-> This assumption is not correct. An "rcu" can be NULL in fact.
+>
+> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> Tested-by: Lukas Wunner <lukas@wunner.de>
+> ---
+>  crypto/ecdsa.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/crypto/ecdsa.c b/crypto/ecdsa.c
+> index 1814f009f971..4daefb40c37a 100644
+> --- a/crypto/ecdsa.c
+> +++ b/crypto/ecdsa.c
+> @@ -266,7 +266,7 @@ static unsigned int ecdsa_max_size(struct crypto_akci=
+pher *tfm)
+>  {
+>  	struct ecc_ctx *ctx =3D akcipher_tfm_ctx(tfm);
+> =20
+> -	return ctx->pub_key.ndigits << ECC_DIGITS_TO_BYTES_SHIFT;
+> +	return DIV_ROUND_UP(ctx->curve->nbits, 8);
+>  }
+> =20
+>  static int ecdsa_nist_p384_init_tfm(struct crypto_akcipher *tfm)
 
-Hmm I could never trigger that. Are you saying that is true after Neeraj rec=
-ent patch or something else? Note, after Neeraj patch to handle the lack of h=
-eads availability, it could be true so I requested him to rebase his patch o=
-n top of this one.
-
-However I will revisit my patch and look for if it could occur but please le=
-t me know if you knew of a sequence of events to make it NULL.
->=20
->>    ASSERT_EXCLUSIVE_WRITER(rcu_state.srs_done_tail);
->>=20
->> +    if (rcu && rcu_sr_is_wait_head(rcu) && rcu->next =3D=3D NULL &&
->> +        /* Order atomic access with list manipulation. */
->> +        !atomic_read_acquire(&rcu_state.srs_cleanups_pending)) {
->> +        wait_tail->next =3D NULL;
->> +        rcu_sr_put_wait_head(rcu);
->> +        smp_store_release(&rcu_state.srs_done_tail, wait_tail);
->> +        return;
->> +    }
->> +
->> +    /* Concurrent sr_normal_gp_cleanup work might observe this update. *=
-/
->> +    smp_store_release(&rcu_state.srs_done_tail, wait_tail);
->> +
->>    /*
->>     * We schedule a work in order to perform a final processing
->>     * of outstanding users(if still left) and releasing wait-heads
->>     * added by rcu_sr_normal_gp_init() call.
->>     */
->> -    queue_work(sync_wq, &rcu_state.srs_cleanup_work);
->> +    atomic_inc(&rcu_state.srs_cleanups_pending);
->> +    if (!queue_work(sync_wq, &rcu_state.srs_cleanup_work)) {
->> +        atomic_dec(&rcu_state.srs_cleanups_pending);
->> +    }
->> }
-> No need an extra "{}" pair.
-
-I do prefer it for readability but I am ok with dropping it.
-
-Thanks!
-
- - Joel=20
-
-
->=20
->>=20
->> /*
->> diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
->> index bae7925c497f..affcb92a358c 100644
->> --- a/kernel/rcu/tree.h
->> +++ b/kernel/rcu/tree.h
->> @@ -420,6 +420,7 @@ struct rcu_state {
->>    struct llist_node *srs_done_tail; /* ready for GP users. */
->>    struct sr_wait_node srs_wait_nodes[SR_NORMAL_GP_WAIT_HEAD_MAX];
->>    struct work_struct srs_cleanup_work;
->> +    atomic_t srs_cleanups_pending; /* srs inflight worker cleanups. */
->> };
->>=20
->> /* Values for rcu_state structure's gp_flags field. */
->> --
->> 2.34.1
->>=20
+BR, Jarkko
