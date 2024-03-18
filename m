@@ -1,144 +1,77 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61BE65DF03
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 23:17:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905145DF2D;
+	Mon, 18 Mar 2024 23:20:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710803848; cv=none; b=SmoTyhF2OkRPWsDsoR1Y32NXbJw4D97+7ZvZi4abpRCWAY09uOA+9DcPKb59q6eCESUpaQlzNo8aP8wpeQku3RUXZ8LjxCeooq3WT0MiBN/AUGm0JhhdippiGhKRwzenRmDIw+WfvluZnMLVlcgCxvPrfDEhnfZb492YF5aiZ7Q=
+	t=1710804048; cv=none; b=ptHv1SOe8RZBxmvU9vy9AB27E+UxjI0G/bWhAws28Eprp8FxMufZEWosYKlBkKozHnaOOvGu2I/5DT1t1cJ2ZpLULQVHOslMuIUEujItdY+YjvaKBg7iURheNAE4v4eCPDIvYG4fT3uTBmu3hFVYcouZCzOMz/47shcTGvuMva8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710803848; c=relaxed/simple;
-	bh=2WaEYq9CzU+FAeWlZLffJUIMJBRhvk4H1BattzDDvS0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K+qjvLzKRzbwQPVRYGfz+p55yYDDNjhDGf5oNq8JrItgUm8PMnvtSD+4zweuVmy7STcN1ZhiVoyn/4xmr2rLfCrFMraEf6+gZ8dHrf5GZTpNb3e1lqb3AL1yl8thztX4rtHn4yTuK3A5OI6CHb5pftBK9CKZz44pKhCbdyMRkOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O1BH0+Em; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1710804048; c=relaxed/simple;
+	bh=DDHPuHjimB+eInGEiyuX23sCywLwLYXf4GLYlJb7AWY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s//hlv5HP9OxkONus6Ql6BcxtLhx0nWk53rDEMIQ0SyP3YIHtmG+yL7ISu+Jn8ZMNtZxbMVhbv3n/I9GDmFB+Su1MQ+Id+QYPhqYzxR01AaO+L180fxbk5XE3lVGSK5tyQ/NvINXCa/mCmz9M1ObjO1ryB65aMdTU9n/OE+/P7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=3RZ1lIWn; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O1BH0+Em"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a46db55e64fso14143266b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 16:17:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710803845; x=1711408645; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MYlJ0m8B4UnARm2TPYjOnOf8jyZsU1XoJlsBaw3m4Ek=;
-        b=O1BH0+EmU7y67oznT2nOyarBQBWs4ButPue1UVLUoc5I4077uL5u88BoR1LHMwVoBm
-         2zxGmgtC268LSa6hcv10nhXziecTCApY07+EAV0YkurczmN7JIAFb4EdXXxS++MoP3pt
-         5xGNHSvSX1qsyMoMUWSX1lopuUIjvhFz5ult30WagvIONimWKLCXiQf7KEufl1bzi9+4
-         jwFId9/MZvOXyKJS10zyqrCFzuUKvmQiXVBUYdJuJ2bRsxQJVUGeu3xm2ne4EP3vN3RQ
-         xmzrWKORPYWy6WOyrtOAADpXacDKKDmZf7IOPYPFXWA0uks8IYaV3qkaoisN+8uFuAZm
-         oOVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710803845; x=1711408645;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MYlJ0m8B4UnARm2TPYjOnOf8jyZsU1XoJlsBaw3m4Ek=;
-        b=nUx5DM7qMiiqTE4WqRn3GumUAmYC/mSBak8YzIU6cR4WOoevfxtoAYUgYPWnXVMv50
-         phy9kBuCUfIgsiARER293YdXOWorfYRLSylwO8BmyWPlE2TUC/TBFEpXFnswg+/ZMwer
-         mbDZ6JBkb8ep/cGX4L6LX8pXaRPOEUl9a3QC2SBaF7REcvrDz7UcJXr8qUo7xcVDD5Nv
-         16+EegvGvpC/lhChtVVdrqMjB4JnFdU41pAd/sGJOLzLrziBPQ4PJixJyFmEWwdjPorE
-         IciF98AxSo31eGP3kEnZiA+eTZ0j7QupulvmULqk9rmLOJ6tt4JETJMyqOL6QIk3J3mF
-         ephA==
-X-Forwarded-Encrypted: i=1; AJvYcCXIdby7YL28r05/WywR3H5dOSOX7z6Jk5RdELhyNzDaBHIx30ZS1K27m4Lv8gvTLfycByEGCESYPhjpbl7S2Yeq4u5qFyC/dESx9f/I
-X-Gm-Message-State: AOJu0YzW9BA12GQA1bu8ZnurXYPkyVF8DJKY80XAcg7COVpFgrCqXPM0
-	wQu8+v9HebgJjTgIg0DTKKmif++5X6RyQJdHBj7g/mCpiq7PH1SonldgoxKH4JDaEb74DjxXQTt
-	q419xZuBSbe4IK0qFWKggs+YKQ9LZoiwTg/zl
-X-Google-Smtp-Source: AGHT+IGxy+nudpmCt0OCP8vE+D/ayY+4MLDrueOCL5VIn37CqXgAP7JT5EqPjiBfS+AcsXqTVkMlldAxDCiV3W8RiSE=
-X-Received: by 2002:a17:907:971c:b0:a46:9a9e:f3b0 with SMTP id
- jg28-20020a170907971c00b00a469a9ef3b0mr8215722ejc.67.1710803844571; Mon, 18
- Mar 2024 16:17:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3RZ1lIWn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=U5hIl2aY7B11ZMNAsPi+v840t3fuUcO6Vox3nrOcilQ=; b=3RZ1lIWnO0oWioItdZPDwSg9rF
+	EsyCQtd7T3cLWBxmAjAEpkvTFkcHEYQ1gM4uCyKlfY0x5IWBgd/nzM5BxShXPz3kqAbHEerSvMWv4
+	l5bA2UDexKOMPIFD/BWlomNsu1kQP5jDMGYiKcTJWGcF9+s1ifnKdBZYbewBulXj0ls0KMte2tkYU
+	Wnz78Ch3JZQrEoeCuEqNFc733Ds+qJPIoOGnmGRbb58btmR3aSnQsjItIBR+f7cbhm+P3EKtdkHQ/
+	MehX1Ea56OmyMghzoowEKb6MbP2euzT22LPDI4egr8Oa84S/Ggkhpw5G2B5Ia2AseuzgHBkpHgt9C
+	7cxfHhrg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rmMHX-0000000AWmW-3N6Y;
+	Mon, 18 Mar 2024 23:20:39 +0000
+Date: Mon, 18 Mar 2024 16:20:39 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	David Stevens <stevensd@chromium.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Yu Zhang <yu.c.zhang@linux.intel.com>,
+	Isaku Yamahata <isaku.yamahata@gmail.com>,
+	Zhi Wang <zhi.wang.linux@gmail.com>,
+	Maxim Levitsky <mlevitsk@redhat.com>, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v11 0/8] KVM: allow mapping non-refcounted pages
+Message-ID: <ZfjMRzJrN6cfhHJI@infradead.org>
+References: <9e604f99-5b63-44d7-8476-00859dae1dc4@amd.com>
+ <ZfHKoxVMcBAMqcSC@google.com>
+ <93df19f9-6dab-41fc-bbcd-b108e52ff50b@amd.com>
+ <ZfHhqzKVZeOxXMnx@google.com>
+ <c84fcf0a-f944-4908-b7f6-a1b66a66a6bc@amd.com>
+ <d2a95b5c-4c93-47b1-bb5b-ef71370be287@amd.com>
+ <CAD=HUj5k+N+zrv-Yybj6K3EvfYpfGNf-Ab+ov5Jv+Zopf-LJ+g@mail.gmail.com>
+ <985fd7f8-f8dd-4ce4-aa07-7e47728e3ebd@amd.com>
+ <ZfeYU6hqlVF7y9YO@infradead.org>
+ <CABgObfZCay5-zaZd9mCYGMeS106L055CxsdOWWvRTUk2TPYycg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240318230013.87543-1-21cnbao@gmail.com> <CAJD7tkYVJHsWoaEkTiTigJRzSNBrRSg3YVAL3Q5Q96cLSNJZrQ@mail.gmail.com>
- <CAGsJ_4wqPuZc47h=QRPForrxinhG3cvoh4VupLyDRo_uhneC-g@mail.gmail.com>
-In-Reply-To: <CAGsJ_4wqPuZc47h=QRPForrxinhG3cvoh4VupLyDRo_uhneC-g@mail.gmail.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Mon, 18 Mar 2024 16:16:46 -0700
-Message-ID: <CAJD7tkaZNNn2p-WXx9EGTS+kR3yzYYC4JZwq=5g0D1VsHP=kdQ@mail.gmail.com>
-Subject: Re: [PATCH] mm: zswap: fix kernel BUG in sg_init_one
-To: Barry Song <21cnbao@gmail.com>
-Cc: hannes@cmpxchg.org, nphamcs@gmail.com, akpm@linux-foundation.org, 
-	chrisl@kernel.org, v-songbaohua@oppo.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, ira.weiny@intel.com, 
-	syzbot+adbc983a1588b7805de3@syzkaller.appspotmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABgObfZCay5-zaZd9mCYGMeS106L055CxsdOWWvRTUk2TPYycg@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Mon, Mar 18, 2024 at 4:12=E2=80=AFPM Barry Song <21cnbao@gmail.com> wrot=
-e:
->
-> On Tue, Mar 19, 2024 at 12:06=E2=80=AFPM Yosry Ahmed <yosryahmed@google.c=
-om> wrote:
-> >
-> > On Mon, Mar 18, 2024 at 4:00=E2=80=AFPM Barry Song <21cnbao@gmail.com> =
-wrote:
-> > >
-> > > From: Barry Song <v-songbaohua@oppo.com>
-> > >
-> > > sg_init_one() relies on linearly mapped low memory for the safe
-> > > utilization of virt_to_page(). Consequently, we have two choices:
-> > > either employ kmap_to_page() alongside sg_set_page(), or resort to
-> > > copying high memory contents to a temporary buffer residing in low
-> > > memory. However, considering the introduction of the WARN_ON_ONCE
-> > > in commit ef6e06b2ef870 ("highmem: fix kmap_to_page() for
-> > > kmap_local_page() addresses"), which specifically addresses high
-> > > memory concerns, it appears that memcpy remains the sole viable
-> > > option.
-> > >
-> > > Reported-and-tested-by: syzbot+adbc983a1588b7805de3@syzkaller.appspot=
-mail.com
-> > > Closes: https://lore.kernel.org/all/000000000000bbb3d80613f243a6@goog=
-le.com/
-> > > Fixes: 270700dd06ca ("mm/zswap: remove the memcpy if acomp is not sle=
-epable")
-> > > Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-> > > ---
-> > >  mm/zswap.c | 5 +++--
-> > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/mm/zswap.c b/mm/zswap.c
-> > > index 9dec853647c8..17bf6d87b274 100644
-> > > --- a/mm/zswap.c
-> > > +++ b/mm/zswap.c
-> > > @@ -1080,7 +1080,8 @@ static void zswap_decompress(struct zswap_entry=
- *entry, struct page *page)
-> > >         mutex_lock(&acomp_ctx->mutex);
-> > >
-> > >         src =3D zpool_map_handle(zpool, entry->handle, ZPOOL_MM_RO);
-> > > -       if (acomp_ctx->is_sleepable && !zpool_can_sleep_mapped(zpool)=
-) {
-> > > +       if ((acomp_ctx->is_sleepable && !zpool_can_sleep_mapped(zpool=
-)) ||
-> > > +           !virt_addr_valid(src)) {
-> >
-> >
-> > Would it be better to explicitly check is_kmap_addr() here? I am
-> > particularly worried about hiding a bug where the returned address
-> > from zpool_map_handle() is not a kmap address, but also not a valid
-> > linear mapping address.
-> >
-> > If we use is_kmap_addr() here, then the virt_addr_valid() check in
-> > sg_init_one() will catch any non-kmap non-linear mapping addresses.
-> > WDYT? Am I being paranoid? :)
->
-> we have a possibility that a userspace buffer or vmalloc address is given=
- to
-> sg_init_one, then it is non-kmap non-linear. but is it possible someday s=
-ome
-> people return a vmalloc/vmap address from zpool_map_handle() in the futur=
-e?
-> then we still need !virt_addr_valid().
+On Mon, Mar 18, 2024 at 02:10:55PM +0100, Paolo Bonzini wrote:
+> Another possibility is to have a double-underscore version that allows
+> FOLL_GET, and have the "clean" kvm_follow_pfn() forbid it. So you
+> would still have the possibility to convert to __kvm_follow_pfn() with
+> FOLL_GET first, and then when you remove the refcount you switch to
+> kvm_follow_pfn().
 
-Hmm I guess if zpool_map_handle() ever returns a vmalloc/vmap address
-we would need to copy the data to the buffer in zswap code, at least
-until we enlighten the code to deal with them directly. So I guess we
-can keep virt_addr_valid(). Ideally the comment will clarify this.
+That does sound much better.  Then again anything that actually wants
+pages (either for a good reason or historic reasons) really should be
+using get/pin_user_pages anyway and not use follow_pte.
 
-Thanks!
