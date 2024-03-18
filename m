@@ -1,118 +1,160 @@
-Received: from wfout8-smtp.messagingengine.com (wfout8-smtp.messagingengine.com [64.147.123.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5665D2C18F
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 09:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AAFB28E11
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 09:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710753488; cv=none; b=Fg0Prh4uZhjK/5Ffbz9QHBdNErzGMCnVHQ9Yjq6SWXwUVTeDdCGTwZHCyLWaYhsKy1TIPbHYe8fABYkRW9i4RfF1qF9yG+UcWWUshv9ejaH65e4AqqW6+O82cS1mDfLJwXxN+gSVGKOY8p6EoH10Z90w6rB0jZlwwJdsO+nWlFc=
+	t=1710753587; cv=none; b=k5TnBH+RZzxZIS4nwe+hiKLxvE5mDys6ymKyXfwzD5ru3bNeuH98EkQF7PPe8ItWQ/xhKeKhptNTEQenCf5u5KpPBbE2n3unV9zQH4sLA3BUEqqHwRPM+79hDfyncCQwnznWegbsTTo4u2VUOyyJSTlIp4YGa4QbTHMj5XlGbP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710753488; c=relaxed/simple;
-	bh=ScHSHwihvRsqyvfslSI+2wXoLFxmTbTzzKqARaQ7TsA=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PbRnAjdqaBezXy8m+knQ25u8uka8roWpsZxtSrfV3D305L/RvUNP/4Qn1bNB24SUbQXebE4ZZHO3uSVhCz+TioswHrCpS+yJLRCujZ+WKOHkME82AqEnvj0Iub+JqKYfnSGCWKWOGwbepjTmwGThH0v28+Ksa8NrWhf/Mqoy/+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=W+VR4C0e; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=EnLSYf1e; arc=none smtp.client-ip=64.147.123.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
+	s=arc-20240116; t=1710753587; c=relaxed/simple;
+	bh=jp7QZPp2a/Gaou65Z69AxcDk/5PHYR3FnTCZRxVmIgs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uaem+lQVCOMV+ae4xDkBOtdY5GojRoJagoyEHyFoYU0nIrOg/UjJmB1Ff5WLDD1aHheTVBvHNddHP+jp8LH//C58OQRC0QZ7yNI1iPvNhWdDBs5NQ1Dv33gUyVbHTP6wx2qSfy8IKYCRi4cQRDtYJWUWMUGcX2r1B4g2RZvwvHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JRCWbvs1; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="W+VR4C0e";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EnLSYf1e"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id 380841C0009B;
-	Mon, 18 Mar 2024 05:18:05 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Mon, 18 Mar 2024 05:18:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1710753484; x=
-	1710839884; bh=0RFvEZpgNJ5bK7Ro7X/Ka3XCibshAo7oB/5HUK+KVBQ=; b=W
-	+VR4C0elU/mSiDZEMxJNgm8ecHs24zUwrCfoKXI6jHzCUup1ZQwHlsFExsw3PExE
-	Td62LmG0S7JZWIeXnHfLH8GgGppcOwO31tSPu9B2RIC2wZJH9Gg1LDvnFoJEOyto
-	oi5A7fXOFYN1lQC8hNrIxH13YGVY4Lc+3fXxs77BqfE3+Wx0lvOr4ykMQBdoOIqu
-	Rs/JPLqTSz8MAwIaX+MLf8jPOfuF7nDhKF/R1oa8OHumeS635rZplq33arIc+RjC
-	fYkgzYjjdf6DJttZAa+/4/J4i20DHun0qd6/NYro7RcLtvToDJAy03YdNF4d0fqQ
-	balp2nQ8aFaLuAj4wqp2A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:content-type
-	:date:date:feedback-id:feedback-id:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm2; t=1710753484; x=1710839884; bh=0RFvEZpgNJ5bK
-	7Ro7X/Ka3XCibshAo7oB/5HUK+KVBQ=; b=EnLSYf1e1waplDHDfU5zLBTOlmZ84
-	TPUujIVTZER0+vNoZwDUgpNpOJJ7SaUdoq0QIVamwDPwKZHtOrmLOFjtVLMCIhR2
-	IUSF+vh9TOqtXpNgF93o7NjsvpswJeypir6G7K8rfUthULAnKn6cY3W4YMVDMrwW
-	+jgIl8TWkqC/XWcMkzNPw8HJDpkYLWyRFoLJ4MpubEZsq61MDNNZ6+p9sGjhRgaC
-	iUgzmZQojp45rnEumFjfDeJxfFgUC2gTQ11kaj5O2+2xrQmVXsolY1sXdffAO9uJ
-	uiqhm0allXYsdfV73xi7SB15KGfL6SZgYqB5HJXi6FgNZolouxdXSF2fw==
-X-ME-Sender: <xms:zAb4ZRT2FMZto-YUK9S7gwraxcs5kF2lmZNOub_hx0oOAK5nmnl6Ww>
-    <xme:zAb4ZazaaKZ13HkDDhr3W-cnNPeOcjVT1LIrULSWXornAl8ZQhf5j8afvGD3yB2bN
-    S-5aZbyjkjTWYVeSWU>
-X-ME-Received: <xmr:zAb4ZW37C8Wuz1UbCH8KLkWTXmGY7nGtmLJFH0qk096x4vrpuTsXuzu1kl6k1DqEM4vlte7Kl7n7KOaSMeKYool8tAewUFAO8N90sol6VhL0dQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrkeejgddtvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
-    ertddtnecuhfhrohhmpefvrghkrghshhhiucfurghkrghmohhtohcuoehoqdhtrghkrghs
-    hhhisehsrghkrghmohgttghhihdrjhhpqeenucggtffrrghtthgvrhhnpeevfefffeekte
-    fgveegfeelheffhfeujedtjeevtefhkeevkedtjeejvddtjefhjeenucevlhhushhtvghr
-    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghshhhisehsrg
-    hkrghmohgttghhihdrjhhp
-X-ME-Proxy: <xmx:zAb4ZZBnXT3yxKGDkiBsE7Tw9cQI0B8fzpBCFGV4ihfMyZ8Qa0t3Ow>
-    <xmx:zAb4Zag81KAxl5MWUcAYEYaPpdqcukwV1xGvRDW-3Ub1ltiu7Jjnug>
-    <xmx:zAb4Zdpfo0Qv-VZxe2SiN0A5JakYTXv3AZ2eYZhku36lql3qd9_UZA>
-    <xmx:zAb4ZVg9Q9230mVT2D2w7C2J-UkUKHogwE1jXQ5GULg5h0zwobIFaQ>
-    <xmx:zAb4ZbsmwncwBLWmmwYyXTz6_UmHzyQiySlLbrB_sZMIZYu3wTfnrLF4300>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 18 Mar 2024 05:18:03 -0400 (EDT)
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: linux1394-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] firewire: core: add memo about the caller of show functions for device attributes
-Date: Mon, 18 Mar 2024 18:17:58 +0900
-Message-ID: <20240318091759.678326-1-o-takashi@sakamocchi.jp>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240318044609.GA659599@workstation.local>
-References: <20240318044609.GA659599@workstation.local>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JRCWbvs1"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56a2bb1d84eso984139a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 02:19:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710753583; x=1711358383; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6DmORVVqQRASoZ9rnkfY0LA6LIBlyeKMNcLspwpQKNk=;
+        b=JRCWbvs12RiY0GNoEpReQSPMXMEUarw5bwO/kdzJHjrjDbryBSzwFH7GwKYx/GN0wk
+         I9aFbTiSPEuqj7L79qHejvTMpK14QcGwNZZc/7hovbRmNBnyiQaLEYx04NVapnt7pou7
+         +PWFJtS4CeViE01GNageelJ2Z4LOUhbTfwVt+iD5lu/Rz+D1Sgor/GJBME1en1SxUvJi
+         s4Y8GXvVh5sX3RCwQzgwLmgUM9S7hiBqcbGO/kENUbIdgNuyzab+dxOINbBM1noIZl02
+         O0vhGvzfzWsZ+8KEr3CmFTvTHiNXt2XTKKhlmAparXlroBqR0JsEGB7+L8pv42fhWuoJ
+         +HHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710753583; x=1711358383;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6DmORVVqQRASoZ9rnkfY0LA6LIBlyeKMNcLspwpQKNk=;
+        b=eI5BKPV+0GyOKnebXjycoYGjmLLvh3wvPG1/LhFs7ritd1iddt2Yf6MIeQhPsL2Od+
+         TaXBK1atH6RCh0AQrBuxtIBB13n2W+8cG7IeMl2QoXYlPPrmelYzVRlFVcRGRE+SbfGL
+         67qEogWhkWI0JbA6c5PUtejO+B+Yjrs72qUdM4OzYetVagm4BPQp3lHuJKIPUdAMsnpH
+         ZBRiqbo8CtR2kgyN7r7SRWyVyR7lBqfRhlYFSeLLD5knk/XGYGe6wcvC56r/N9IQPBJ6
+         uuuWle+YyMrG/F/+UYOoS00/dHrD/EZ3wdU99pef9WBKvrDNTHJP+Ypzd0S1NIOewjr4
+         hfEA==
+X-Forwarded-Encrypted: i=1; AJvYcCVVahfg0mL2YPe9qYuI0Ch1iGCvSxrGGuVTi0mT1npgWQk5HdRN+9RgMwiu4FO09pSMUaR6Wy+fr3Jz9bLiHvfrKlpYS7N76YLiOUHJ
+X-Gm-Message-State: AOJu0Yx5Cf8E1hiKwKiv+odVTcfh+qiZMI3XlRHAG28swNNdLEa5ZxOv
+	48EBpub5NEo9seZUK/Vp+cqO1mus2P8/tBgyqNZKoxmuIAIKl+Y/u/KtlUGXR/k=
+X-Google-Smtp-Source: AGHT+IEO7HsXFmgG7cuRv+XQ37xkX8fwJoLmGPXNGPpfTG+c2mFTpqtwRjx9ZqjjwFVZwbR/mziCIg==
+X-Received: by 2002:a05:6402:3814:b0:568:d21c:e0ef with SMTP id es20-20020a056402381400b00568d21ce0efmr3109311edb.6.1710753582701;
+        Mon, 18 Mar 2024 02:19:42 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id x1-20020a056402414100b00568d2d4e4besm1390210eda.54.2024.03.18.02.19.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Mar 2024 02:19:42 -0700 (PDT)
+Message-ID: <8a6e717d-a63b-4f1f-9873-efce2a868a4a@linaro.org>
+Date: Mon, 18 Mar 2024 10:19:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/14] mips: dts: ralink: mt7621: improve DTS style
+Content-Language: en-US
+To: Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+ Justin Swartz <justin.swartz@risingedge.co.za>
+Cc: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20240316045442.31469-1-justin.swartz@risingedge.co.za>
+ <CAMhs-H9ZO-sitsrASuvsEd+ddwVyHH35gj7yAABTqFNfOCGYYw@mail.gmail.com>
+ <60512ae2-dd73-4cb6-9514-145f946300fc@linaro.org>
+ <5d6c36cb9dd9afda1efb69aa34058517@risingedge.co.za>
+ <adefc3ff-86a5-4af7-8276-73d0e0108901@linaro.org>
+ <26633d73360e43b2c548f49e544472ea@risingedge.co.za>
+ <CAMhs-H_1bwfKO8yquz-3BHQ0UQYW1FFVJYHE66w8Q9m1+fCCHw@mail.gmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <CAMhs-H_1bwfKO8yquz-3BHQ0UQYW1FFVJYHE66w8Q9m1+fCCHw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-In the case of firewire core function, the caller of show functions for
-device attributes is not only sysfs user, but also device initialization.
+On 18/03/2024 09:48, Sergio Paracuellos wrote:
+>>
+>>
+>>>> But if there're no objections and it lessens the burden on
+>>>> maintainers upstream to have less patches to apply, then I have no
+>>>> problem combining them into a single patch.
+>>>>
+>>>
+>>> Yeah, one review response instead of 14 responses... One commit in the
+>>> history instead of 14.
+>>
+>> I agree that 1 commit vs 14 is better.
+>>
+>> But for future reference: is it not enough for the Reviewed-by: trailer
+>> to be sent in response to the cover letter of a patch set if a reviewer
+>> has looked at the entire set?
+> 
+> It is enough, AFAICT. I found your patchset very easy to review so I
+> am ok with the patchset as it is. However, at the end this will be
+> through the mips tree, so let's do what Thomas prefers: add all
+> patches as they are or squash all of them in one commit.
 
-This commit adds memo about it against the typical assumption that the
-functions are just dedicated to sysfs user.
+Yeah, like fixing language typos in comments: one typo per patch.
 
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
----
- drivers/firewire/core-device.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/firewire/core-device.c b/drivers/firewire/core-device.c
-index f208a02d0ebf..a8172a6c2caa 100644
---- a/drivers/firewire/core-device.c
-+++ b/drivers/firewire/core-device.c
-@@ -322,6 +322,7 @@ static ssize_t show_immediate(struct device *dev,
- 	if (value < 0)
- 		return -ENOENT;
- 
-+	// Note that this function is called by init_fw_attribute_group() with NULL pointer.
- 	return buf ? sysfs_emit(buf, "0x%06x\n", value) : 0;
- }
- 
-@@ -357,6 +358,7 @@ static ssize_t show_text_leaf(struct device *dev,
- 		}
- 	}
- 
-+	// Note that this function is called by init_fw_attribute_group() with NULL pointer.
- 	if (buf) {
- 		bufsize = PAGE_SIZE - 1;
- 	} else {
--- 
-2.43.0
+Best regards,
+Krzysztof
 
