@@ -1,159 +1,74 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8354159B64
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 22:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5766159B6D;
+	Mon, 18 Mar 2024 22:19:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710799813; cv=none; b=G+Rr59p97nmnkJadmR5xSkmemJtqf1TIk4vYfAgdLIn/ybQWXdwx6T4X4Y5GsHtzFN8JHIko92K+/HPbx6o7ONW+gvcOhmDLroLJ+72KP/6P4XH6Ub7NGA1CjGYQkzv11OwkLtVRTgiD4JziLNaDuxzMvgN+rUVZV/YmM9BwgJE=
+	t=1710800346; cv=none; b=FnJwzCTG6vjRNdmOl3dX2GEV/wQr0vLV7c+021kdzNRSgF/29OqpJBWMWxMO3TdW/VykiBF/eulx1I9/ojAq+W+7o+NxVa1EtFAFswkxdMc5V/ffmkr8eGyKI+sebBgXIfpfxhP7nrp4fVOlG8yEl+Alr6MCq9TJO/WfLVTac8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710799813; c=relaxed/simple;
-	bh=jBqGxeE+IhKyoXM9zVHSpir3KZfZHpFMsiIw7rgHpZE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FBPHb3dlXoC+lA2zFaTtOYY6Qg2pn6nIRc/BrneLmyIWP7DKcjliYXHVhdnGdL1hib9XtGzpnQQQAoRVs/qolvvSGaG0M7BDb04QLuCOFCiobb2iJTBqGR/QqkpGlNUgDgrt550ZkhdIIhtyASpBhc6a1z7OcNefE4F/NB9/Yvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZQYea57B; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710800346; c=relaxed/simple;
+	bh=bBUdjSqAYdT3A5Fi0UHHxuEbnI27V0nxpNkqe+gPutg=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=LNRmna9APNXZE6c9B6Bou8srhqAOKe0dTCtz5MdcAJjSiJLzkBmmb2QJEwicKrVfOhk+LuhVVSK+TjZJXktJxzWEu8AOJdqEyDTYfkAFiu9Rh8pATWriT8cZKXazTqKTmpbdfzgIP39+0KcD/H+/avrwC3S7v4vzMtNYgxHMqbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=REvq95K6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZQYea57B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710799810;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OyCsbi8n3w9nlxB/vU9IG/7BiogA4ynph3bT+cZ/wPg=;
-	b=ZQYea57BYWnRORW+e2z/PzBZ96Z35+KPSWn9LeHyfwZ1DXfeW61iSuIXK/57FMVR6nqMXL
-	DEg2iAeKFI/UY2uTLtbb82MsjXbCY72i9CObQrRZKgKwwsGSedvD1xNH+oivvwWfaVCC4M
-	vPcGrK2Rlf0XZd1dCv5e/MOpD2Byk/g=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-262-nIs2tlAGOB-euepDbDHAPQ-1; Mon,
- 18 Mar 2024 18:10:04 -0400
-X-MC-Unique: nIs2tlAGOB-euepDbDHAPQ-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2F78A2800E8B;
-	Mon, 18 Mar 2024 22:10:04 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 03EC9492BC8;
-	Mon, 18 Mar 2024 22:10:03 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: seanjc@google.com,
-	Ashish Kalra <ashish.kalra@amd.com>,
-	stable@vger.kernel.org,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH 3/7] KVM: SVM: Add support for allowing zero SEV ASIDs
-Date: Mon, 18 Mar 2024 18:09:58 -0400
-Message-ID: <20240318221002.2712738-4-pbonzini@redhat.com>
-In-Reply-To: <20240318221002.2712738-1-pbonzini@redhat.com>
-References: <20240318221002.2712738-1-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="REvq95K6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1C04C433C7;
+	Mon, 18 Mar 2024 22:19:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710800345;
+	bh=bBUdjSqAYdT3A5Fi0UHHxuEbnI27V0nxpNkqe+gPutg=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=REvq95K6gh9vgQXGpO8my+dqQwJp56Hd8M4yJKDMoK6gryKTdlUJ5SMg4qUXNme/Y
+	 T9Vk4oanJQ8NJ7N0vw+HNNgCKweengGZIKvctyUYuO4/anoh9UvzRFv20HXlOK7vAW
+	 axiD+V7AZy9ghpASkVVx+B4cZZU6bWXhk7+noQTDWr3Ho3mE7o7NAFs6R6fRwIcJuO
+	 S3ityzFzwq7+SiFS87zDrrH+G77OH6cs42Hg9Hq/VDkoqyfpEnOvfgwp5a25gPdraw
+	 qfWDgb6kgse6gb5nawFkzAfv0ZFZ2NJS2Ld09MixUvrRqz0IrcBY22EfytIiA9MoZv
+	 yBL3d1R0+5eJA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 19 Mar 2024 00:19:01 +0200
+Message-Id: <CZX83UT326IV.3KOKLZ23UH9EZ@kernel.org>
+Subject: Re: [PATCH v6 04/13] crypto: ecdsa - Extend res.x mod n calculation
+ for NIST P521
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Lukas Wunner" <lukas@wunner.de>
+Cc: "Stefan Berger" <stefanb@linux.vnet.ibm.com>,
+ <keyrings@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+ <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+ <linux-kernel@vger.kernel.org>, <saulo.alessandre@tse.jus.br>,
+ <bbhushan2@marvell.com>, "Stefan Berger" <stefanb@linux.ibm.com>
+X-Mailer: aerc 0.15.2
+References: <20240312183618.1211745-1-stefanb@linux.vnet.ibm.com>
+ <20240312183618.1211745-5-stefanb@linux.vnet.ibm.com>
+ <CZX5VA5Q4NYY.34VCD8R3ND3KL@kernel.org> <ZfimcDtBNQ42UEqB@wunner.de>
+In-Reply-To: <ZfimcDtBNQ42UEqB@wunner.de>
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+On Mon Mar 18, 2024 at 10:39 PM EET, Lukas Wunner wrote:
+> On Mon, Mar 18, 2024 at 10:33:47PM +0200, Jarkko Sakkinen wrote:
+> > On Tue Mar 12, 2024 at 8:36 PM EET, Stefan Berger wrote:
+> > > Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> > > Tested-by: Lukas Wunner <lukas@wunner.de>
+> >=20
+> > What was there to test in this anyway? I see only comment change below.
+>
+> The full series was tested, irrespective of the content of the individual
+> patches.
 
-Some BIOSes allow the end user to set the minimum SEV ASID value
-(CPUID 0x8000001F_EDX) to be greater than the maximum number of
-encrypted guests, or maximum SEV ASID value (CPUID 0x8000001F_ECX)
-in order to dedicate all the SEV ASIDs to SEV-ES or SEV-SNP.
+Tested-by's should be per patch, and in this patch tested-by has no
+meaning at all.
 
-The SEV support, as coded, does not handle the case where the minimum
-SEV ASID value can be greater than the maximum SEV ASID value.
-As a result, the following confusing message is issued:
+In order to determine which patches tested-by is applicable it can
+be derived on what was actually tested.
 
-[   30.715724] kvm_amd: SEV enabled (ASIDs 1007 - 1006)
+This looks as tested-by was used in place of acked/reviewed-by, which
+is not how it should be used.
 
-Fix the support to properly handle this case.
-
-Fixes: 916391a2d1dc ("KVM: SVM: Add support for SEV-ES capability in KVM")
-Suggested-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-Cc: stable@vger.kernel.org
-Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
-Link: https://lore.kernel.org/r/20240104190520.62510-1-Ashish.Kalra@amd.com
-Link: https://lore.kernel.org/r/20240131235609.4161407-4-seanjc@google.com
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kvm/svm/sev.c | 29 +++++++++++++++++++----------
- 1 file changed, 19 insertions(+), 10 deletions(-)
-
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index eeef43c795d8..5f8312edee36 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -144,10 +144,21 @@ static void sev_misc_cg_uncharge(struct kvm_sev_info *sev)
- 
- static int sev_asid_new(struct kvm_sev_info *sev)
- {
--	unsigned int asid, min_asid, max_asid;
-+	/*
-+	 * SEV-enabled guests must use asid from min_sev_asid to max_sev_asid.
-+	 * SEV-ES-enabled guest can use from 1 to min_sev_asid - 1.
-+	 * Note: min ASID can end up larger than the max if basic SEV support is
-+	 * effectively disabled by disallowing use of ASIDs for SEV guests.
-+	 */
-+	unsigned int min_asid = sev->es_active ? 1 : min_sev_asid;
-+	unsigned int max_asid = sev->es_active ? min_sev_asid - 1 : max_sev_asid;
-+	unsigned int asid;
- 	bool retry = true;
- 	int ret;
- 
-+	if (min_asid > max_asid)
-+		return -ENOTTY;
-+
- 	WARN_ON(sev->misc_cg);
- 	sev->misc_cg = get_current_misc_cg();
- 	ret = sev_misc_cg_try_charge(sev);
-@@ -159,12 +170,6 @@ static int sev_asid_new(struct kvm_sev_info *sev)
- 
- 	mutex_lock(&sev_bitmap_lock);
- 
--	/*
--	 * SEV-enabled guests must use asid from min_sev_asid to max_sev_asid.
--	 * SEV-ES-enabled guest can use from 1 to min_sev_asid - 1.
--	 */
--	min_asid = sev->es_active ? 1 : min_sev_asid;
--	max_asid = sev->es_active ? min_sev_asid - 1 : max_sev_asid;
- again:
- 	asid = find_next_zero_bit(sev_asid_bitmap, max_asid + 1, min_asid);
- 	if (asid > max_asid) {
-@@ -2234,8 +2239,10 @@ void __init sev_hardware_setup(void)
- 		goto out;
- 	}
- 
--	sev_asid_count = max_sev_asid - min_sev_asid + 1;
--	WARN_ON_ONCE(misc_cg_set_capacity(MISC_CG_RES_SEV, sev_asid_count));
-+	if (min_sev_asid <= max_sev_asid) {
-+		sev_asid_count = max_sev_asid - min_sev_asid + 1;
-+		WARN_ON_ONCE(misc_cg_set_capacity(MISC_CG_RES_SEV, sev_asid_count));
-+	}
- 	sev_supported = true;
- 
- 	/* SEV-ES support requested? */
-@@ -2266,7 +2273,9 @@ void __init sev_hardware_setup(void)
- out:
- 	if (boot_cpu_has(X86_FEATURE_SEV))
- 		pr_info("SEV %s (ASIDs %u - %u)\n",
--			sev_supported ? "enabled" : "disabled",
-+			sev_supported ? min_sev_asid <= max_sev_asid ? "enabled" :
-+								       "unusable" :
-+								       "disabled",
- 			min_sev_asid, max_sev_asid);
- 	if (boot_cpu_has(X86_FEATURE_SEV_ES))
- 		pr_info("SEV-ES %s (ASIDs %u - %u)\n",
--- 
-2.43.0
-
-
+BR, Jarkko
