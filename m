@@ -1,175 +1,140 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F852DF9D
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 10:40:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710758450; cv=none; b=JvzhiyBpwe78IaGmTTLoLq9iVe0DCzubjhkgbBYnrN1Go4S1uTmug4IuHTe37ykwX8INsmm2AK/uVN5q0wjtvDgqOCsCljc1EcNzfzv0o9GTFHxMxGWRgWWCGTcdlqrauOp69ZFnAZRXJz5uxcVmk+VYOjz1OVLzvAYfP0cXll8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710758450; c=relaxed/simple;
-	bh=i5ixDYb3wbENoImw8j5KKJEmWmhgfjQSVNTIJMv1DhY=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=Ns0MkzkwnALxdfLa7kBGHZp1KJuezYRCEiLn4jvmlMCSWtcNB//5uKcIE5mjn0ytNEHjaSqDMTPr6zx7smgHcYvKHztGCMPfG5WBhYkVnoatSFjHkuEif8Up7GlwTWwQbA2kpxCwdHZWIF07Qfh2LrayccJqltuuvGJwJQnDMdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Ngikuw+3; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6C72206B
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 10:44:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710758662; cv=fail; b=WqzFHmTJujmEvGsj1KqIDHgskcea/K2ASU8u+ZGnxwmN3za76uWfTAGcUe5xveUa3j6ajpUBzkuCNqGVXdKDXutH31gcsHFntxWj4Hiw8WhWoPhsi2gxYI68QPhlLVvw0hyEQVs6CXQMII4cFalUc4ilqM0eGXpfW6dn/cNEBaU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710758662; c=relaxed/simple;
+	bh=F4YwaoZQ6/WPbYlCM6OYzPIO/LM928buSLw8V2cIOCA=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=pn535LmSqQ+P4d3gaauCTFnIuknQ2jdOSaljnbuCLlLtvIdrw+9Q5irannIGTF4niifhkCHTqeY3RjFefaJn4PHR/MrXQqeOPT/HWSKm2NSliIiZ35mfGXHQQFKLisiRbJm+5V8pe7kBORIVtrqgf1QZTUViYhDefQV3E01wvAc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=CKL7TqUx; arc=fail smtp.client-ip=40.107.236.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Ngikuw+3"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-41409fd8b6bso11107065e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 03:40:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1710758445; x=1711363245; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=xNzf7P8nz60f5DqiZ1A/ORzVISDkI6sI6tCR2mQw6JE=;
-        b=Ngikuw+3cNJp9rXoQiOJ2p93RAsF34UruLbhm6ntsmzb9jVrQn7uD1aG7Xz6ErKrxy
-         2fPnnQZVHAS6hTNgqCXBwtVIQW2TZ7YlfxjQvLeuIn6xAyind4ZIrh7Z6KU/Gh8JECv6
-         vqjpkfV9IjZ9y0uKxq4tvL6YFKofrlbdB5pfdMLk48d/W1gwtxSacexXTPLG0ZDdIomJ
-         RuJhePL/Fd/mX8gjzjDdV+ZeBKY+JXSXi8uH67e3mW+vx+WLGysWFlZJpETFAgwfUzuJ
-         3s9W6Cz7ufbkn/6/OYUQxQ9NnxJDQs0GL6yzW/11CXrME36NCFesd/wSS2EZt6LVKaAD
-         KSVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710758445; x=1711363245;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xNzf7P8nz60f5DqiZ1A/ORzVISDkI6sI6tCR2mQw6JE=;
-        b=uJO+bT9olJBrCH/IHufz3ZbEIE3X2bmA618IzpUYx87L+obAwLkpaopH9QlriPKjbV
-         KNvB0c1pcjdg4l4qpQgKGurnR3gWtPl1copguMaX7np61ViSoW7mVIOkAV+1AK7mIVSS
-         5/q5qkoIBdwSK8Xw6imBDlqEG7i9I2RfLDhUU0E2ArqSo7KWOUd1vF4R6jyNapVkDsfZ
-         Xlw1GKhs8viuE5faVeB+eB9T2Mg5xXNd8eOoxNL/zS0iWNhnAF1jdMZx59SlK+EK3sgd
-         6Xq6hPnBO1yqYsdvepIDqLEHIO8nl17YU2ZnyS7bdNzkrN/E8Xghwpxt3wqRKt2Hwnwv
-         OCxw==
-X-Forwarded-Encrypted: i=1; AJvYcCV+jMpe/ch6J1XJkrfB1mKUNgaKuze+omjcVzMIYC9gXIvoZXg/w/1FU4IhTHoRss0ZNEESydNv7jvTFow2h783R7vmQZNBKFAgw707
-X-Gm-Message-State: AOJu0Yz280x2b2KIpWl5/+2jBnP/9SmTJbkEJuiqd9q2wNH9KQthkG4N
-	RpLLWidG6CplA/PPFxiXfSPJmwE58n4Dk1Kf934lJ0bthQRKVYt5ob89Ee3fI/I=
-X-Google-Smtp-Source: AGHT+IF2NPmkDgNrJwjlDs0dlEQjbzK0dB/C1p7NsE17fQtvvBPtrHxeI38T1w1hQ953d1PS97HQkQ==
-X-Received: by 2002:a05:600c:4707:b0:414:ca1:6531 with SMTP id v7-20020a05600c470700b004140ca16531mr3050478wmo.41.1710758445095;
-        Mon, 18 Mar 2024 03:40:45 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:e4d5:78c0:18b:ad85])
-        by smtp.gmail.com with ESMTPSA id f19-20020a05600c155300b00414105c4cd9sm2909256wmg.21.2024.03.18.03.40.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 03:40:44 -0700 (PDT)
-References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
- <20240314232201.2102178-2-jan.dakinevich@salutedevices.com>
- <1j8r2jj24k.fsf@starbuckisacylon.baylibre.com>
- <cbfd9c66-cca5-49f5-9468-43710c48518e@salutedevices.com>
-User-agent: mu4e 1.10.8; emacs 29.2
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Kevin
- Hilman <khilman@baylibre.com>, Martin Blumenstingl
- <martin.blumenstingl@googlemail.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
- linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org,
- kernel@salutedevices.com
-Subject: Re: [PATCH 01/25] clk: meson: a1: restrict an amount of 'hifi_pll'
- params
-Date: Mon, 18 Mar 2024 11:17:14 +0100
-In-reply-to: <cbfd9c66-cca5-49f5-9468-43710c48518e@salutedevices.com>
-Message-ID: <1jedc7hlg4.fsf@starbuckisacylon.baylibre.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="CKL7TqUx"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OLDgSLUT+aurUO0IJJHb/2IwU1TQBCou9eeTp+AEQY/JASYanjik7iyhlQLv+4na5103NxFQQHRZhiBFA8tJhes3OHeETExiXerayx7HosclxvX32ckzr7G62RP/GA7IGq86m6OZumqtigbv/pYMJWY6tpnbtQcELTuQML+1cquUSlQpAvKbdbCuZj1PcTAFf/lpO7AROS46/xcAfVOnF61fbRf7gcxb0/PtgmtKEXSU3Z8RpCr+s4NXGeXU5zsCQy1iXmjiCFOQVrzwmbBlh641PKyzcJOlSBtj57bx0qFgZqk4MA+FQTONp02B40bqQ3vVZ0HBLeSg+/DoeM1vrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bvM+smfL+o6+uJrvwXf6r10zsNW57CHeFzpfaDrD0t4=;
+ b=H15skXTX6BepzE5zqx8wXOvI/et1YGuphTY8i2LtyA0hWMmSIZb7gCjtnJHF2v7+3ldZlcK32/c4b6CxVFsQNenoY/Nr03vxzM1g9kPIHE3QxbLvz5dV8LcGX92i4D7NpSF4+K4Cvs6A7YD+EXu3MpnUbbzHMfzfObq/yJOc5AFTUQETf96ncaHt2R2DGY0EAoGg0rzSut6qWpcL4pKZFxKLB8zhH4NrLX1z0kFNxy3IpaX6ziDRxAvpd9KYQcbByQxOvXhdZpIy1LygRmL7yJV3iLfjNtAxw74hd8v/RD93LVPHBGiv/PPNRsg+PjmYE5r3g6XPymEBmt101bdzPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bvM+smfL+o6+uJrvwXf6r10zsNW57CHeFzpfaDrD0t4=;
+ b=CKL7TqUxYxMQ5uBBh7Lp80v/ZyFocUrDrUpZqNbuVxEt1NwPV8rlmmuk0ta/bNrMjs032VrvMFYAwdTN3KMtK8yh4iqVzAw8tgGZS6STDAR+BYz2QLxKzEQHdU+oU1QYSqqhYhEcacmVX9ebdD+4ONIo+FUkSCP8fLq6xeyb6qU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by IA1PR12MB8239.namprd12.prod.outlook.com (2603:10b6:208:3f7::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.26; Mon, 18 Mar
+ 2024 10:44:17 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::ee44:e235:d5d7:94a1]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::ee44:e235:d5d7:94a1%4]) with mapi id 15.20.7386.025; Mon, 18 Mar 2024
+ 10:44:17 +0000
+Message-ID: <6b0c6f19-b054-0ffe-ad45-776b2f7c441f@amd.com>
+Date: Mon, 18 Mar 2024 16:14:09 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: Re: [PATCH] perf/amd/ibs: provide weights for all IBS op samples
+To: Stephane Eranian <eranian@google.com>, linux-kernel@vger.kernel.org
+Cc: peterz@infradead.org, namhyung@kernel.org, irogers@google.com,
+ sandipan.das@amd.com, ananth.narayan@amd.com, Ingo Molnar
+ <mingo@redhat.com>, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20240313175453.433166-1-eranian@google.com>
+Content-Language: en-US
+In-Reply-To: <20240313175453.433166-1-eranian@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0178.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:26::33) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|IA1PR12MB8239:EE_
+X-MS-Office365-Filtering-Correlation-Id: d61ea95f-e529-4e40-4073-08dc47385be6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	zMtsRTWl2tX/5yZVACvihVKUW382wdU/wdaWUZDQGvTlyKIBbUrwnXrGEAf1cm+aUGAPk+txBvvfp9NlC8byiMQluwraCzfASuBg/KpSOdmFYVdjE7a5q1cP7UrPKdRH3ZSNfReUMK3mqiWo3J5gfrTcdM6hOIgDA2SSO9qK61dJByXGx547I7E60+vUUzfM1hwBkdJVtXknnsiu9kctz9Rskk5KERDMh+lLRW7hRE5tG8gjimhh2wLIEfy9G38uFTn6I2387fNL+uO5hUMXxvdNLgWRgYhaGZNmKDf5ibbacxmqhuDEjOyoRRBwMUIf6updH6+PfFLc+tPET4G7aIBDgAu+aZ15jqauoiSwimPouCsNAuv4O7zOo1ZnXiendkfjNLqPT88bGt1eYhML5paVZ2NUxMRLCLXOD7WnJJB9POXqUMNOGKJ7o3KcVVazP1DLhU84N1M4EXHYMkQod7KPSuQ2AaabkBDlIT+HlLFOPhm9iyAFOY30NpFfblzs3N6zemPH4HvBozk3P3PuJeGxJ3fmL/qSRfkAtkVGV32haRUjrNt4kHgfbZ+8XIIjQK5n0u81bUktLynJhxOBxLlSVNOuFFBQ7oZaVcYsd9W9ntBEBZEmjtgICRFKgxmzUhG2i1XA/CUTGXmmbgbBiw==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VWhmY2tOQklRWk02VlBIWjY5aUFXTFhkeVdLTHdYSzBBcWlIMWlCNFFCUFIz?=
+ =?utf-8?B?R0w0ck5QL0NWdGdXN2JWNGJUdTFiOVlHZXAzcnpwaFN5M09ldHZSTmV6dzRT?=
+ =?utf-8?B?OGI3eEhpMUNOc0hUYXprUVJjbk9kL0VVSlVzTUtiV3R3bmZlRGdva1VQT0I0?=
+ =?utf-8?B?dXMwTFg5YkhUYzFHS2FSemFjeW54b0dUVTRqVGpoY01JbWIrR3JEUkpGcFpj?=
+ =?utf-8?B?YkNmTzR4eFA4UmVkRzdad05yUjZmQ2s2UitOZU9IZlFaYzgvYkRMbkxPRUVC?=
+ =?utf-8?B?dmZOWnVGdTQrSWU4b0xuM3V3S1VhTk56b1Z1a3BIN2JFR1U4OHNCeHlzWWJS?=
+ =?utf-8?B?TWxNczA2OXhWN3hPNU1UaVllZTl6R01GSFNOb1BEY09JQmlTMmEzekpGc2pv?=
+ =?utf-8?B?YnYrTEd1S3RLR1lTUTZ3UHdMUFhUaXJRc0hva1hkVHFjRGsydnlQZ1RtVjdl?=
+ =?utf-8?B?TDBhWXUxU1ZyaWg1eVZjQytiL3lsczBkZC9aenE1VjhHZ2U2UDQvenVmYVl1?=
+ =?utf-8?B?MG5kdDQvQkwrYTk0ellLNE1KQjI0eXVkWHBRZC9IbDc3QnM5VGR0SXFtMlhh?=
+ =?utf-8?B?N1FDT2JBeUxUeGF1bTNBWVpBbWZybEt2Y3VhK3ZuS0licm56YWRUdEFBazlm?=
+ =?utf-8?B?WllabkFsSEg2Y3UwOTJyWVdhUDRmaHprVzZTUjFpNTdNNTg3T0duaEM2QUh3?=
+ =?utf-8?B?d0tZaUN1Wi9EN1hXK09DK2Q0Nng2Tm1FbmFJTFFrMVo1VmhNeGZoNmpSV3NM?=
+ =?utf-8?B?aU41ZXJEa2ZyVGRSR25HdytGYjlkZkJJKzlMNWRQNFlPdE1LTE9Gd2NEVUZI?=
+ =?utf-8?B?NjdVVWpPRnRKNHQ1NWhMdi91WEVybG9rRGZHdFc4S1Uzdm1vWlIxV00zRUpY?=
+ =?utf-8?B?RFpjT1ZQclJyWUE1T1RwNHJML2FhUTBNNDJUZ2RYNlFsbC8yempIZUF4a1FI?=
+ =?utf-8?B?SXduQy9rSzlNOUFpQS9qdmNvTlllakZvbFdsUVZ5RE0wUDM1NFpVSVR5LzdE?=
+ =?utf-8?B?TG1KWHRoWmVMdEt5QjQxK1MxbGRMZW9RR2J5cFIvLzBuSW8wRTY5K1duQi8x?=
+ =?utf-8?B?eVVZZklRNVNyOFJacmdoMXo0VHk4SENHbkU1TjF1Ym8zZ1R6eVozNjhuSkY4?=
+ =?utf-8?B?SW1ER3NHeXVJTTlMcTAzNTNUSlBIT0lIMVNoVU5iQms4MkxpQWxRTmwyWlcx?=
+ =?utf-8?B?bnpMdVpjUytSSnYwSWkwZUVZQkZhSDZyN0EwbFUwWUE1cUh1MEFFb1dQckJC?=
+ =?utf-8?B?YlVVRlhSZFlISlhwVE41bEdoUTRhOFA4SEhMZHlCSEg5dVpKZkpONHgvcVBL?=
+ =?utf-8?B?NlVLa0JLM0JicFF0TUorc3ZVOTArQThrWXViY0dEdTNHV3dqV0xueWltOERZ?=
+ =?utf-8?B?UWxhRmlTY1NCOWtBVG53SWl0YSt5Z1hrczdBbFhTT2g3Z05LalJ3Y2tFZEZT?=
+ =?utf-8?B?dVNVNkZrUmZRbndBa3hGNWJaNXJxSHp0RS9obmVyWlRuOUxkSWg0Ykk0Q0sw?=
+ =?utf-8?B?b0NWNSthM2Y0OVhiWjBFbzdBa1RXbllTSjNRQ0pVTnprd3ZoUXpHbXhOY3Fv?=
+ =?utf-8?B?eGpFQTdxNS93R0VaTzhuOTNJYlVic29XM3RzVkxWeENmcDY4NGJsd1dOcWdU?=
+ =?utf-8?B?NGxJZHFid3YrdndIK1piNHhiVWx5RmVzOWtDVXN0S1VERnFpSTBiOUkydEs0?=
+ =?utf-8?B?YnllSlhuU3RUOGhqWmc0STRreHg0V1pTZnhMQUZOQzNkM2I2bXh0RDdwbjhC?=
+ =?utf-8?B?YTVOWUp2eEM2YUZwWE9VUXlWQm1GWVZLY3pVYVlid0FpODUrRlJuRVVuckhv?=
+ =?utf-8?B?dXVveGJENkRwRFFxZVB3czlVTW54SzFoR2g4YzU4NERETXBnV1EvVmMybWlG?=
+ =?utf-8?B?QVYwMUJqN21UMGVNaC9qYWNkaGxRaFZ2N255Nnc5c3MxN3E2QVZzdXBnbVBz?=
+ =?utf-8?B?SWRPVEh0bDJQMEk3Y1pjN0wzckxLeitVQ2lFQ3RUdVhPaHhnY1A1Z1RveVVE?=
+ =?utf-8?B?dE1XVm1zWlN3cG4zVnZzVjJFU1IrRkFTcUdoeDJ6ZEduTHhMMWwyeWdTaEph?=
+ =?utf-8?B?NzFEZXd6bHJrcExMejgxRTR4eGNsc1NwNTJLMlRqanJqeVFDLzdCc2hTb2V1?=
+ =?utf-8?Q?IbwSu4YbpzrqS/V3dtQrSfsUb?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d61ea95f-e529-4e40-4073-08dc47385be6
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2024 10:44:16.9113
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mLBVr7Dg9Ij/zWABg8Dw1CTSnl1HiDtCO8817TvFbQqZTT+IU/LZ3Vdas6YUlzBwQsAHyTEKAa4zI4jnfXU88g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8239
 
+cc: +Ingo
 
-On Sun 17 Mar 2024 at 17:17, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
+On 13-Mar-24 11:24 PM, Stephane Eranian wrote:
+> IBS Op provides instructions latencies for each uop sampled. The current
+> code was only providing the weights only for loads. This is useful
+> information for performance analysis. This patch modifies the logic to
+> provide the weights for all uops.
+> 
+> $ perf record -a -W -c 100003 -e ibs_op/cnt_ctl=1/GH ....
+> 
+> Signed-off-by: Stephane Eranian <eranian@google.com>
 
-> On 3/15/24 11:58, Jerome Brunet wrote:
->> 
->> On Fri 15 Mar 2024 at 02:21, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
->> 
->>> Existing values were insufficient to produce accurate clock for audio
->>> devices. New values are safe and most suitable to produce 48000Hz sample
->>> rate.
->> 
->> The hifi pll is not about 48k only. I see no reason to restrict the PLL
->> to a single setting.
->> > You've provided no justification why the PLL driver can't reach the same
->> setting for 48k. The setting below is just the crude part. the fine
->> tuning is done done with the frac parameter so I doubt this provides a
->> more accurate rate.
->> 
->
-> You are right, it is not about 48k only. However, there are two issues.
->
-> First, indeed, I could just extend the range of multipliers to 1..255.
-
-Why 1..255 ? This is not what I'm pointing out
-
-According to the datasheet - the range is 32 - 64, as currently
-set in the driver.
-
-The change you have provided request a multipler of 128/5 = 25,6
-If you put assigned-rate = 614400000 in DT, I see no reason can find the
-same solution on its own.
-
-> But I am unsure if hifi_pll is able to handle whole range of
-> mulptipliers. The value 128 is taken from Amlogic's branch, and I am
-> pretty sure that it works.
-
->
-> Second, unfortunately frac parameter currently doesn't work. When frac
-> is used enabling of hifi_pll fails in meson_clk_pll_wait_lock(). I see
-> it when try to use 44100Hz and multipliers' range is set to 1..255. So,
-> support of other rates than 48k requires extra effort.
-
-Then your change is even more problematic because it certainly does not
-disable frac ... which you say is broken.
-
-That parameter should be removed with a proper comment explaining why
-you are disabling it. That type a limitation / known issue should be
-mentionned in your change.
-
->
->>>
->>> Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
->>> ---
->>>  drivers/clk/meson/a1-pll.c | 8 ++++----
->>>  1 file changed, 4 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/clk/meson/a1-pll.c b/drivers/clk/meson/a1-pll.c
->>> index 4325e8a6a3ef..00e06d03445b 100644
->>> --- a/drivers/clk/meson/a1-pll.c
->>> +++ b/drivers/clk/meson/a1-pll.c
->>> @@ -74,9 +74,9 @@ static struct clk_regmap fixed_pll = {
->>>  	},
->>>  };
->>>  
->>> -static const struct pll_mult_range hifi_pll_mult_range = {
->>> -	.min = 32,
->>> -	.max = 64,
->>> +static const struct pll_params_table hifi_pll_params_table[] = {
->>> +	PLL_PARAMS(128, 5),
->>> +	{ },
->>>  };
->>>  
->>>  static const struct reg_sequence hifi_init_regs[] = {
->>> @@ -124,7 +124,7 @@ static struct clk_regmap hifi_pll = {
->>>  			.shift   = 6,
->>>  			.width   = 1,
->>>  		},
->>> -		.range = &hifi_pll_mult_range,
->>> +		.table = hifi_pll_params_table,
->>>  		.init_regs = hifi_init_regs,
->>>  		.init_count = ARRAY_SIZE(hifi_init_regs),
->>>  	},
->> 
->> 
-
-
--- 
-Jerome
+Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
