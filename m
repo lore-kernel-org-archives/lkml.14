@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCC8249ED;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD28249F7;
 	Mon, 18 Mar 2024 07:47:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710748029; cv=none; b=lWKBMvL5/4lazEF/ArZniiSWmQyH9c45vcjr02Z4srVITbsymTWfhUUbzcdDD1g0EvNePe+6eTRKLv6zx9ymOxgNZ8JIB9rI2y1FQZwYB6KiWj7N38vz2SdNgYx40A3b1eq7OqZeUnaGfXjmxaxeyoG1fBP4yeDFYCVI00t3pTw=
+	t=1710748029; cv=none; b=mptGTlB4RvweZu5WKd6J5oZDCAqGNxHcTRpUjwJA+sVrr3kY5XWveg0EdLN9cqBJSM/76EMPqw+LGtwOvDmmV21/XC6L+eQ8HyXJeYZF5xXGyIVKo/cED9VG02GMw+yMSty0IzWEHXBBru7I2to8yMKBnnS3KyzuzYJYFGPKUmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710748029; c=relaxed/simple;
-	bh=0IileY4KTERKAEQx1LyPEiRlXaWXwOgaikBtQNDncX8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nWMGKMu7GVVYrsE7hhw7XtfU6PRZMVIVOz5LbJx/MCxw9LwMr8n2MbqtJPFCL+MYiiam45lsPG+8UeFToo+8ZX0h0oDhGWSDwc1E84UhEsLcH2yUUVhtEOxy54pfstGxoTPRgOlFKPfPOp1vMzWCNbdiETO3u3IyqFtewowGoe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D0RObpfF; arc=none smtp.client-ip=10.30.226.201
+	bh=Qg6wGn348TMW5vD8jxjP5W64953WeOV0NbR9aKpKJWE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=OA/3AFSICk8s/htj1SUt9vJwKGM2har9KNp/rTjZ4+usqMSYz8dWQGSIjh6A8gqfcrI8dtMqYnte6GaF49+5T2XDWAa+eTeMo8FhYpVMfMXTUCBknfczbFRAIKMMUK/KKRBdRn2e3g1ZWPvjQRlknqMGLJoXw4uZmJsFI985H3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFJv2dbo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D0RObpfF"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C7FF0C433F1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFJv2dbo"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id ED23DC433A6;
 	Mon, 18 Mar 2024 07:47:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710748028;
-	bh=0IileY4KTERKAEQx1LyPEiRlXaWXwOgaikBtQNDncX8=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=D0RObpfF7D0s2IGO8bd9Cf3HmHJPOBYplNJgK0W4Jt4SUk951XgCcGTkDezqRAI2X
-	 eYqH27vPts4qF4ZxANtnU2TAZXaqvFnzXVXkY5BS2eHIpNp2Fa7460/Uc8oNPqUWGt
-	 U0/leJ9meebE4DLYCU+mdi8QjxtuphSPryzBgh1ceF0kbv/msElYYDyT2kMXvnh9Iz
-	 kZgWk0tBPiB90URtD7dOqnUGM0/TLhbbX3uFoHp/vv56LpUq1PN0jymzLwQpybiG6K
-	 vlseMFNv0daQMoSNXLJgE9LuYMxDtVLBS1KeVjNe7/bmIt5K9YRzyXOpVutGcRVkbx
-	 98/MMd2QDtzag==
+	s=k20201202; t=1710748029;
+	bh=Qg6wGn348TMW5vD8jxjP5W64953WeOV0NbR9aKpKJWE=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=fFJv2dbopy2N08oK7/uaLZlAJAyNVDYDT5UVFJPMifpqxz/tRnpMo+yFC6JXDqbqc
+	 n9AzVWq5IPAl6K5Sid0rcE788s1jlezqbTklhyPpY32u1UP1RbIqo+FmfWiiAdAh2M
+	 /VGhLLMZpxuU9ic2Kli49ONnv05/wXO/vA8EB+ejS9vsqBhuaVoo+pcwYU8gqPeDpD
+	 ed9H1CNibz0o5nSq7s8YmpxdWrfrySPqd3t3ZcXBexui5TYXqbZvkZbLJYqi0gNZm7
+	 fniXmkj6Hi1OTjvIhcAYhfCriy8B9N9hFP8q3qvv7xIwfUIxUAK6bUkNRrSZxeYa4m
+	 wIbk1bAgB0zLA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3983C54E5D;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD04BC54E6A;
 	Mon, 18 Mar 2024 07:47:08 +0000 (UTC)
 From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
  <devnull+arinc.unal.arinc9.com@kernel.org>
-Subject: [PATCH 0/3] Fix EEE support for MT7531 and MT7988 SoC switch
-Date: Mon, 18 Mar 2024 10:46:22 +0300
-Message-Id: =?utf-8?q?=3C20240318-for-net-mt7530-fix-eee-for-mt7531-mt7988-v?=
- =?utf-8?q?1-0-3f17226344e8=40arinc9=2Ecom=3E?=
+Date: Mon, 18 Mar 2024 10:46:25 +0300
+Subject: [PATCH 3/3] net: phy: mediatek-ge: do not disable EEE
+ advertisement
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,9 +42,12 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAE7x92UC/x2NQQqDMBREryJ/7YfEGJL2KtKFxIn+RWNJpBTEu
- zdmNbzHMHNSQRYUenYnZXylyJ4q6L6jsM1pBctSmQY1jMpox3HPnHDw+3DWKI7yYwBNN6XveHj
- Psw12tCYEBU917pNRy+1qel3XH2pcu9x6AAAA
+Message-Id: =?utf-8?q?=3C20240318-for-net-mt7530-fix-eee-for-mt7531-mt7988-v?=
+ =?utf-8?q?1-3-3f17226344e8=40arinc9=2Ecom=3E?=
+References: =?utf-8?q?=3C20240318-for-net-mt7530-fix-eee-for-mt7531-mt7988-v?=
+ =?utf-8?q?1-0-3f17226344e8=40arinc9=2Ecom=3E?=
+In-Reply-To: =?utf-8?q?=3C20240318-for-net-mt7530-fix-eee-for-mt7531-mt7988-?=
+ =?utf-8?q?v1-0-3f17226344e8=40arinc9=2Ecom=3E?=
 To: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
  Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, 
  Florian Fainelli <f.fainelli@gmail.com>, 
@@ -63,11 +66,11 @@ Cc: Bartel Eerdekens <bartel.eerdekens@constell8.be>,
  linux-mediatek@lists.infradead.org, 
  =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710748010; l=899;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710748010; l=1173;
  i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=0IileY4KTERKAEQx1LyPEiRlXaWXwOgaikBtQNDncX8=;
- b=MvoN53hH2wrfbvyDLe2J5XZFtp6mqVf4l86LIsFblVBKfoyUfPbX/amdemD8asCtN6EGZKuEz
- u42E5pne4MiDXlAfYr/fO4zn5HkWlZDvIGDC85H9eXfauPMi8AW1P5J
+ bh=5X/oaW7mTS2TiAUhw0sZVt3FkSCBq14+if6oX62AfQ4=;
+ b=+MNXFbgyZ7XWlbB+caj20Ex4VdOFh3bRWNk+7DxEulDTftFo/dQMZlnVMPgDMgzfE7zV31TEr
+ 3C0SXiZRhwiArszbs0GX8DiM1j4yZODltXA+UTuvosvV+CjFhIJGXcI
 X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
  pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
 X-Endpoint-Received:
@@ -75,28 +78,37 @@ X-Endpoint-Received:
 X-Original-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
 Reply-To: <arinc.unal@arinc9.com>
 
-Hi.
+From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-This patch series fixes EEE support for MT7531 and the switch on the MT7988
-SoC. EEE did not work on MT7531 on most boards before this, it is unclear
-what's the status on MT7988 SoC switch as I don't have the hardware.
+There's no need to disable Energy-Efficient Ethernet (EEE) advertisement on
+the MT7530 and MT7531 switch PHYs. EEE works fine on MT7530 and MT7531
+switch PHYs. Remove the code where EEE advertisement is disabled.
 
+This is a bugfix because there's a possible race condition where the
+mediatek-ge driver would kick in after the MT7530 DSA subdriver which would
+have EEE disabled until manually enabled.
+
+Fixes: e40d2cca0189 ("net: phy: add MediaTek Gigabit Ethernet PHY driver")
 Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
 ---
-Arınç ÜNAL (3):
-      net: dsa: mt7530: fix enabling EEE on MT7531 switch on all boards
-      net: dsa: mt7530: fix disabling EEE on failure on MT7531 and MT7988
-      net: phy: mediatek-ge: do not disable EEE advertisement
-
- drivers/net/dsa/mt7530.c      | 7 +++++++
- drivers/net/dsa/mt7530.h      | 7 ++++++-
  drivers/net/phy/mediatek-ge.c | 3 ---
- 3 files changed, 13 insertions(+), 4 deletions(-)
----
-base-commit: ea80e3ed09ab2c2b75724faf5484721753e92c31
-change-id: 20240317-for-net-mt7530-fix-eee-for-mt7531-mt7988-a5c5453cc0e8
+ 1 file changed, 3 deletions(-)
 
-Best regards,
+diff --git a/drivers/net/phy/mediatek-ge.c b/drivers/net/phy/mediatek-ge.c
+index a493ae01b267..54ea64a37ab3 100644
+--- a/drivers/net/phy/mediatek-ge.c
++++ b/drivers/net/phy/mediatek-ge.c
+@@ -23,9 +23,6 @@ static int mtk_gephy_write_page(struct phy_device *phydev, int page)
+ 
+ static void mtk_gephy_config_init(struct phy_device *phydev)
+ {
+-	/* Disable EEE */
+-	phy_write_mmd(phydev, MDIO_MMD_AN, MDIO_AN_EEE_ADV, 0);
+-
+ 	/* Enable HW auto downshift */
+ 	phy_modify_paged(phydev, MTK_PHY_PAGE_EXTENDED, 0x14, 0, BIT(4));
+ 
+
 -- 
-Arınç ÜNAL <arinc.unal@arinc9.com>
+2.40.1
 
