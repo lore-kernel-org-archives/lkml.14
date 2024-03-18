@@ -1,158 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4831E1FB5
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 10:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33C726AC1
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 10:40:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710758146; cv=none; b=sKiuzsBQvP53WSW/+HSzAbUFb7H7eQBVyajZVABjZ+Z8aaWdPhGhTgd/6Q/eMBpMTqSulbBwfuuKpjCBbS03Z4csG52zlCgYJSls8YE3pBIjGb2/KFFKd56laSMgns/Ayfr7X7bquYRRMPpTpbUtrUUIhjjBj4/Jizp57aZ+n2M=
+	t=1710758404; cv=none; b=LxVC+YRkYRxbfYsHCba+LRxyOt2E1nU7/LT9mV2NTnkn+TciqpEUi8op1zBWNgDL9AOLpnuX8Ccd2py97Z6+YrPqbugyNb2tIZkpSGPlJVqE59i8VLajrPEVFK6QHWuxl32Pxxq1tVfirQjenrWnxgGlhAuuNjBtiKvTGWV3Eh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710758146; c=relaxed/simple;
-	bh=CkgNZo2VZ1mRD1qHIehHKPRG0ccnO/PVak+xrzyRH8k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R0+R322FGLisMWEumdRV8s0sbY2GncQ+bvzz+q6EXFWALEIZ2qE285bi/dUkRE00TEH10OCNjozt8ncXA3mCDMvtfG1NhR/APQNfnfIctlkzcR15e7leWp/3SN1xCVkkwAkaDajuGuBmUVYYJD7K9qp/3fDXy76WGZrCeHVRBcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bdABAXjb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710758404; c=relaxed/simple;
+	bh=fnpFiMr3sDJw+gw4JYAit/P3p7arQxre0TOz9l1njew=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=RMDbn0Iw2uvez9AUm+KJmcqBEo8RInjD/FkzFHI4t6Dq3XtsAvM1RH8vHDetSEITKmjuqWdvn8QoXC8l0uejada4XKPkE7I/4j2xCJZwrhCoZBp5oxtwccQxh/NVxjmD97Q8TBszWHF9qLP3mfkPsooaZkEbsmf/KxseOQAFPgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=Cie3cON9; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bdABAXjb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC40FC433C7;
-	Mon, 18 Mar 2024 10:35:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710758145;
-	bh=CkgNZo2VZ1mRD1qHIehHKPRG0ccnO/PVak+xrzyRH8k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bdABAXjbuipaqAf+DKR+nyxiX48WoCWJl0da45FgNSucOvTNqOxRz6wm53ohZjoHB
-	 zBrMIZmPMxznWjWcVTzQITm+aiyLTe9tLfaiYT8bZky6Fc/6ELKVkdKjyUR4h6wDe/
-	 fszmt/OWvCLuSNm3iWAqdhT90FMAiGQ/fbd8uJXn8HMVjLLjjLcTyrbxjQAAddfT8v
-	 2CNTus5LyjDUYXoFhuelIrFG9wtXBQhDkzzBSmtemJUWGUvRP02/3TSicPXt/UhIKu
-	 r6dGoHGX5kaa0CfQtRYqwG8L6vvlxaF7SReGkoutMLkT86OyUP3+IlwvmsRnH7srW9
-	 qfWBKNftvJnCg==
-Date: Mon, 18 Mar 2024 10:35:42 +0000
-From: Lee Jones <lee@kernel.org>
-To: Robert Frohl <rfrohl@suse.de>
-Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: CVE-2021-47115: nfc: fix NULL ptr dereference in
- llcp_sock_getname() after failed connect
-Message-ID: <20240318103542.GR1522089@google.com>
-References: <2024031508-CVE-2021-47115-9715@gregkh>
- <1183ad89-f88a-4663-a78a-38155a6e4028@suse.de>
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Cie3cON9"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6e6b5aa0b52so3493090b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 03:40:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1710758402; x=1711363202; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5ID0p7f2CL6yvEozBjg6sfwc1IPzOU4d80fq7ceZnco=;
+        b=Cie3cON9EkDvk1UHE/UhHLme4zCMPo5foyD2MREZ9uBznohKfYfWY58EA9rsCx5jSo
+         A7jjOetoejSemzXc6DGy8Al6HIRFTG0t6bxRQu1vaJGa7WDCJOO6HXTsALiL2B2CA04x
+         vnowsIevg0ju4DKHqVsSYAVZ6T3f3XqjVHCJkJoIBRz912Hsyn5dMjkrTvRS3Ba9V6hc
+         HQ7yZI3NcnNVzUuE5xBRXlYTCvTAxqPlqX/veVRIR/sRsTJWdkjRFxQLqJ3g9BfOf331
+         YrvqM4zPTvFiLHi1PhzGXUG6W9ni1tBwpCf44J9GKg6plCWQAmKx41+CMHjDo1LKJzJI
+         LtSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710758402; x=1711363202;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5ID0p7f2CL6yvEozBjg6sfwc1IPzOU4d80fq7ceZnco=;
+        b=MtybSQxRuVi7hwahrxOV1SDXa7VzzZMYwGdAkgyGvD04cWFKATyPWUt7ZG9xo8TgZQ
+         plKIZ6wunKHsd+AnVZJzxLMM0CrmGFmsfnGJ62kbHvz7Rc8RBsnlWeU8CUPXo+ky0NmJ
+         FzXKfToSgezlEA5uNR1n88wm/OZuDyLyf0MOtksgqIeXZuoga8odrWEvqjlwH4BypKo2
+         SYZwnD70kf9wZJ/1zHIoCpmbyFbCj0LyNz7O1vlCDFcrqun1Y5X+Ic/6+v+oidSkhUig
+         FcVSC9VmCZZ9Cyx9k+A2aPyaJiTZDP5VUswI34n9MmbDwk6aMwJ6rpVNOkP5wskjynZF
+         5bTg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpEEJvlD6pUerc1sZsQFKHytph2sDjjEaGbD+rSNvPf3k+nfmojYrz6yZbRmCgeq2dBJwEg2KTRr+otuSA5tZKcUTyItg3QXGqkLsh
+X-Gm-Message-State: AOJu0YxrHb6Trjd9+QWBuQwckGl6Rop4Htlmi4UopQTjxXGVEp/xKt6U
+	m7RS1ANGqhSqY/GSqY3Cz+Z4YzT+vUvz/hFgTiNL1jCkSmPhxBwWloCy9LDSHoo=
+X-Google-Smtp-Source: AGHT+IFybbfcMxdPeEklAEm0VGt4DQEXS5sWv1NO8Ih8hC+93i804/jYj2EHmREofX0BM04dNDwUXA==
+X-Received: by 2002:a05:6a00:23d2:b0:6e6:9cea:69e7 with SMTP id g18-20020a056a0023d200b006e69cea69e7mr12433497pfc.29.1710758401876;
+        Mon, 18 Mar 2024 03:40:01 -0700 (PDT)
+Received: from [127.0.1.1] (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
+        by smtp.gmail.com with ESMTPSA id c11-20020a056a00008b00b006e647716b6esm7838969pfj.149.2024.03.18.03.39.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Mar 2024 03:40:01 -0700 (PDT)
+From: Andy Chiu <andy.chiu@sifive.com>
+Subject: [PATCH v3 0/7] Support Zve32[xf] and Zve64[xfd] Vector
+ subextensions
+Date: Mon, 18 Mar 2024 18:39:53 +0800
+Message-Id: <20240318-zve-detection-v3-0-e12d42107fa8@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1183ad89-f88a-4663-a78a-38155a6e4028@suse.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPkZ+GUC/03MQQ6CMBCF4auQWTtNO7QirryHcdG0g8wCMG0lK
+ uHuNq5cfsl7/waZk3CGc7NB4lWyLHNFe2ggjH6+M0qsBtJkdWtO+FkZIxcOpS7RaaOPkaJ31EH
+ 9PBIP8vr1rrfqIS0TljGx/69YY8lZUqbvXYcG/RzfKozyvGQZZGUVlgn2/Qs5CNDYnQAAAA==
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Andy Chiu <andy.chiu@sifive.com>, Vincent Chen <vincent.chen@sifive.com>, 
+ Heiko Stuebner <heiko@sntech.de>, Conor Dooley <conor.dooley@microchip.com>, 
+ Conor Dooley <conor@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Palmer Dabbelt <palmer@rivosinc.com>, 
+ Greentime Hu <greentime.hu@sifive.com>, Guo Ren <guoren@kernel.org>, 
+ devicetree@vger.kernel.org, linux-doc@vger.kernel.org, 
+ =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <cleger@rivosinc.com>, 
+ Joel Granados <j.granados@samsung.com>
+X-Mailer: b4 0.13-dev-a684c
 
-On Mon, 18 Mar 2024, Robert Frohl wrote:
+The series composes of two parts. The first part provides a quick fix for
+the issue on a recent thread[1]. The issue happens when a platform has
+ununified vector register length across multiple cores. Specifically,
+patch 1 adds a comment at a callsite of riscv_setup_vsize to clarify how
+vlenb is observed by the system. Patch 2 fixes the issue by failing the
+boot process of a secondary core if vlenb mismatches.
 
-> Hi all,
-> 
-> CVE-2021-47115 looks like a duplicate of CVE-2021-38208 [0].
+The second part of the series provide a finer grain view of the Vector
+extension. Patch 3 give the obsolete ISA parser the ability to expand
+ISA extensions for sigle letter extensions. Patch 3, 4 introduces Zve32x,
+Zve32f, Zve64x, Zve64f, Zve64d for isa parsing and hwprobe. Patch 5
+updates all callsites such that Vector subextensions are maximumly
+supported by the kernel.
 
-CVE-2021-47115 now rejected, thank you for the report Robert.
+Two parts of the series are sent together to ease the effort of picking
+dependency patches. The first part can be merged independent of the
+second one if necessary.
 
-https://lore.kernel.org/all/20240318103331.2845054-2-lee@kernel.org/
+The series is tested on a QEMU and verified that booting, Vector
+programs context-switch, signal, ptrace, prctl(sysctl knob) interfaces
+works when we only report partial V from the ISA.
 
-> Cheers,
-> Robert
-> 
-> [0] https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-38208
-> 
-> 
-> On 15.03.24 21:15, Greg Kroah-Hartman wrote:
-> > Description
-> > ===========
-> > 
-> > In the Linux kernel, the following vulnerability has been resolved:
-> > 
-> > nfc: fix NULL ptr dereference in llcp_sock_getname() after failed connect
-> > 
-> > It's possible to trigger NULL pointer dereference by local unprivileged
-> > user, when calling getsockname() after failed bind() (e.g. the bind
-> > fails because LLCP_SAP_MAX used as SAP):
-> > 
-> >    BUG: kernel NULL pointer dereference, address: 0000000000000000
-> >    CPU: 1 PID: 426 Comm: llcp_sock_getna Not tainted 5.13.0-rc2-next-20210521+ #9
-> >    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.14.0-1 04/01/2014
-> >    Call Trace:
-> >     llcp_sock_getname+0xb1/0xe0
-> >     __sys_getpeername+0x95/0xc0
-> >     ? lockdep_hardirqs_on_prepare+0xd5/0x180
-> >     ? syscall_enter_from_user_mode+0x1c/0x40
-> >     __x64_sys_getpeername+0x11/0x20
-> >     do_syscall_64+0x36/0x70
-> >     entry_SYSCALL_64_after_hwframe+0x44/0xae
-> > 
-> > This can be reproduced with Syzkaller C repro (bind followed by
-> > getpeername):
-> > https://syzkaller.appspot.com/x/repro.c?x=14def446e00000
-> > 
-> > The Linux kernel CVE team has assigned CVE-2021-47115 to this issue.
-> > 
-> > 
-> > Affected and fixed versions
-> > ===========================
-> > 
-> > 	Issue introduced in 3.3 with commit d646960f7986 and fixed in 4.4.272 with commit eb6875d48590
-> > 	Issue introduced in 3.3 with commit d646960f7986 and fixed in 4.9.272 with commit 39c15bd2e5d1
-> > 	Issue introduced in 3.3 with commit d646960f7986 and fixed in 4.14.236 with commit ffff05b9ee5c
-> > 	Issue introduced in 3.3 with commit d646960f7986 and fixed in 4.19.194 with commit 93e4ac2a9979
-> > 	Issue introduced in 3.3 with commit d646960f7986 and fixed in 5.4.125 with commit 5d4c4b06ed9f
-> > 	Issue introduced in 3.3 with commit d646960f7986 and fixed in 5.10.43 with commit 48ee0db61c82
-> > 	Issue introduced in 3.3 with commit d646960f7986 and fixed in 5.12.10 with commit 0c4559736d9a
-> > 	Issue introduced in 3.3 with commit d646960f7986 and fixed in 5.13 with commit 4ac06a1e013c
-> > 
-> > Please see https://www.kernel.org or a full list of currently supported
-> > kernel versions by the kernel community.
-> > 
-> > Unaffected versions might change over time as fixes are backported to
-> > older supported kernel versions.  The official CVE entry at
-> > 	https://cve.org/CVERecord/?id=CVE-2021-47115
-> > will be updated if fixes are backported, please check that for the most
-> > up to date information about this issue.
-> > 
-> > 
-> > Affected files
-> > ==============
-> > 
-> > The file(s) affected by this issue are:
-> > 	net/nfc/llcp_sock.c
-> > 
-> > 
-> > Mitigation
-> > ==========
-> > 
-> > The Linux kernel CVE team recommends that you update to the latest
-> > stable kernel version for this, and many other bugfixes.  Individual
-> > changes are never tested alone, but rather are part of a larger kernel
-> > release.  Cherry-picking individual commits is not recommended or
-> > supported by the Linux kernel community at all.  If however, updating to
-> > the latest release is impossible, the individual changes to resolve this
-> > issue can be found at these commits:
-> > 	https://git.kernel.org/stable/c/eb6875d48590d8e564092e831ff07fa384d7e477
-> > 	https://git.kernel.org/stable/c/39c15bd2e5d11bcf7f4c3dba2aad9e1e110a5d94
-> > 	https://git.kernel.org/stable/c/ffff05b9ee5c74c04bba2801c1f99b31975d74d9
-> > 	https://git.kernel.org/stable/c/93e4ac2a9979a9a4ecc158409ed9c3044dc0ae1f
-> > 	https://git.kernel.org/stable/c/5d4c4b06ed9fb7a69d0b2e2a73fc73226d25ab70
-> > 	https://git.kernel.org/stable/c/48ee0db61c8299022ec88c79ad137f290196cac2
-> > 	https://git.kernel.org/stable/c/0c4559736d9a4ec1ca58ba98ca34e7c4da4c422b
-> > 	https://git.kernel.org/stable/c/4ac06a1e013cf5fdd963317ffd3b968560f33bba
-> > 
-> 
-> -- 
-> Security Engineer, SUSE Software Solutions Germany GmbH, Frankenstraße 146,
-> 90461 Nürnberg, Germany, GF: Ivo Totev, Andrew McDonald, Werner Knoblich
-> (HRB 36809, AG Nürnberg)
-> GPG: D29F 82AA 9FD5 9D6E 74B1  6370 089E DB3D 230A 2404
+This patch should be able to apply on risc-v for-next branch on top of
+the commit 099dbac6e90c ("Merge patch series "riscv: Use Kconfig to set unaligned access speed"")
 
+[1]: https://lore.kernel.org/all/20240228-vicinity-cornstalk-4b8eb5fe5730@spud/T/#u
 
+v2 of this series can be found at: https://lore.kernel.org/all/20240314142542.19957-1-andy.chiu@sifive.com/
 
+Changelog v3:
+ - Include correct maintainers and mailing list into CC.
+ - Cleanup isa string parser code (3)
+ - Adjust extensions order and name (4, 5)
+ - Refine commit message (6)
 
+Changelog v2:
+ - Update comments and commit messages (1, 2, 7)
+ - Refine isa_exts[] lists for zve extensions (4)
+ - Add a patch for dt-binding (5)
+ - Make ZVE* extensions depend on has_vector(ZVE32X) (6, 7)
 
+---
+Andy Chiu (7):
+      riscv: vector: add a comment when calling riscv_setup_vsize()
+      riscv: smp: fail booting up smp if inconsistent vlen is detected
+      riscv: cpufeature: call match_isa_ext() for single-letter extensions
+      riscv: cpufeature: add zve32[xf] and zve64[xfd] isa detection
+      dt-bindings: riscv: add Zve32[xf] Zve64[xfd] ISA extension description
+      riscv: hwprobe: add zve Vector subextensions into hwprobe interface
+      riscv: vector: adjust minimum Vector requirement to ZVE32X
 
+ Documentation/arch/riscv/hwprobe.rst               | 15 ++++++
+ .../devicetree/bindings/riscv/extensions.yaml      | 30 ++++++++++++
+ arch/riscv/include/asm/hwcap.h                     |  5 ++
+ arch/riscv/include/asm/switch_to.h                 |  2 +-
+ arch/riscv/include/asm/vector.h                    | 21 +++++---
+ arch/riscv/include/asm/xor.h                       |  2 +-
+ arch/riscv/include/uapi/asm/hwprobe.h              |  5 ++
+ arch/riscv/kernel/cpufeature.c                     | 56 ++++++++++++++++++----
+ arch/riscv/kernel/head.S                           | 14 +++---
+ arch/riscv/kernel/kernel_mode_vector.c             |  4 +-
+ arch/riscv/kernel/process.c                        |  4 +-
+ arch/riscv/kernel/signal.c                         |  6 +--
+ arch/riscv/kernel/smpboot.c                        | 14 ++++--
+ arch/riscv/kernel/sys_hwprobe.c                    | 13 ++++-
+ arch/riscv/kernel/vector.c                         | 15 +++---
+ arch/riscv/lib/uaccess.S                           |  2 +-
+ 16 files changed, 163 insertions(+), 45 deletions(-)
+---
+base-commit: 099dbac6e90c620d8ce0bbf75bbdc94da1feb4fb
+change-id: 20240318-zve-detection-50106d2da527
+
+Best regards,
 -- 
-Lee Jones [李琼斯]
+Andy Chiu <andy.chiu@sifive.com>
+
