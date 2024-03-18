@@ -1,62 +1,56 @@
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 725F238FA0;
-	Mon, 18 Mar 2024 13:02:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BD537711;
+	Mon, 18 Mar 2024 13:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710766938; cv=none; b=qJPDcEtJiBMXrcg39ZUJaXiu91R9fmeZfu6iRc/8/t+JrkzGTaXjc3sGcgOm0O8wQ5bcQxEQ8CV3N+VGl17aebBOo7OXroeFsFg3zJ7abErI+FyUPW4g1njMn/PQi6QwpXbehnaHKeXGTOaBHyZW+HLuYT3n+9ryNI0E1W2feXk=
+	t=1710767056; cv=none; b=kR1568kmfgMFmmnCma+c42nYcT0TF4DkSTCdy7l9NZ01+KAf7PzJJvPl35grcZch5Am8CnZCLwsrAieqtEWWdd1naHrJnAgGmId/BX/qK0bGE56SQIMSL4VC/0sVkC/NWsbAup41pxHc0k43aEV58/38jTb6pd+gLlu2mOGO7N8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710766938; c=relaxed/simple;
-	bh=Xeh3Xh85wAPq6QKrTjMMaqZtUieeXwfUZQqVI4BpdR0=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=RZNgZyUCEQqnwxfSnIcSGjtD7QWVEKJFY36rlt8fx3r1zEn8sm2CvlEHEeO3MM7o36dyFniJ88rTyc50HynWPjWybY3k6WDed7h5SVkvM7OHARrB3ledmYUpjGrB92WmOQc1Du9K8JtzOuPA2s5/0HKR/xjeIcYYMvo4LNSfqeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=tNHXVlmL; arc=none smtp.client-ip=178.238.236.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	s=arc-20240116; t=1710767056; c=relaxed/simple;
+	bh=CYdWZsOzq1pnl9m/WNdRLA7plSjBlkbbLINFudwQ8gA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iP2O6rCjATCcR/A28PFFVcMGILxdigxOhqz4A6fxqAIso7RqVNmRFx9BO6ax7Wei1oSlnYGQG9SpG2G0+1qXV1y6wPnmw5sKOZp9jvgY5wHK0g/0XSi8cQhSdtXUTTlP8qNNT5dbWsED+bknGTiuQUidue2LPAfgju3Tte3g8C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MFVwYSq+; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="tNHXVlmL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:MIME-Version:
-	Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=9sfZOx2DCTn54LYO3IjAwhuh25pOQkcCf5EGt7OZU20=; b=tNHXVlmLU/vIQ1W5czs79Ux/VF
-	yq/UDFl5wKMH3L1pBMJoZI7L7iC17AJl9/8JLiJioS7x73i7HthN0LrXTBLVbBTL3zdal70GTMK2m
-	y8nsbnZNGeR2uskiIWOOFzpevXgvI3qWfUxaaefL4l5b6My8T4Bo8kFEF+9cvq8tQOiLpvT2lm6Tw
-	uJMCjLNf4Xyz7zRMj6Sv+dp1AZYBfN+xhpicn5bqekLHwzHb+vJFWxRneR9I0xaUtlJDU4hG3XNjc
-	LSxWwEGN4pjRY8XctouvXQwemtHSBblfw57A+a2/vBCmjFlsa0C+zyaEOy0cElk33hxJijQNELYZ2
-	WQp/ZgjQ==;
-Received: from p200301077701e8001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:107:7701:e800:1a3d:a2ff:febf:d33a] helo=aktux)
-	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <andreas@kemnade.info>)
-	id 1rmCIV-000LTn-JD; Mon, 18 Mar 2024 13:40:59 +0100
-Received: from andi by aktux with local (Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1rmCIU-00HTpq-0T;
-	Mon, 18 Mar 2024 13:40:58 +0100
-From: Andreas Kemnade <andreas@kemnade.info>
-To: dmitry.torokhov@gmail.com,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	lee@kernel.org,
-	alexandre.belloni@bootlin.com,
-	wim@linux-watchdog.org,
-	linux@roeck-us.net,
-	andreas@kemnade.info,
-	linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rtc@vger.kernel.org,
-	linux-watchdog@vger.kernel.org,
-	linux-omap@vger.kernel.org,
-	sre@kernel.org
-Subject: [PATCH] dt-bindings: mfd: twl: Convert trivial subdevices to json-schema
-Date: Mon, 18 Mar 2024 13:40:50 +0100
-Message-Id: <20240318124051.4166253-1-andreas@kemnade.info>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MFVwYSq+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710767054; x=1742303054;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=CYdWZsOzq1pnl9m/WNdRLA7plSjBlkbbLINFudwQ8gA=;
+  b=MFVwYSq+NEL5KfkIr14tQutnzR59AXXdMdD4fAUojjqzuMUOFiyBk+fn
+   MfDrC0SC51ycLQKfGbA+GP9c+linI93gZjWhS4crrFNsL5DV46gM+QZ0u
+   tNaELut0MRZqwvfmayno+KE2FpSXLtnU9MgJqWCDnDGz7NEGhFsIofSXF
+   +z/O6XM5fLV4FiM8VFWW1qtYzMFaSRFwdp6kZUk5BJN/KZovsFSrKYzhC
+   FXBhPCGhuF6yTgzomHb9dSfbxUhu1/ZWId1Y5Y9m0pd//Zk0kGoiK4udC
+   IdLa9TKYXGDovWlg61w10kpeV1VZZ6k8vODfOqyxdrJGILazgEp4Nvmd+
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11016"; a="5707133"
+X-IronPort-AV: E=Sophos;i="6.07,134,1708416000"; 
+   d="scan'208";a="5707133"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 06:04:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,134,1708416000"; 
+   d="scan'208";a="44392842"
+Received: from newjersey.igk.intel.com ([10.102.20.203])
+  by orviesa002.jf.intel.com with ESMTP; 18 Mar 2024 06:04:11 -0700
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+To: linux-hardening@vger.kernel.org
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH RFC kspp-next 0/3] compiler_types: add Endianness-dependent __counted_by_{le,be}
+Date: Mon, 18 Mar 2024 14:03:51 +0100
+Message-ID: <20240318130354.2713265-1-aleksander.lobakin@intel.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,174 +59,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert subdevices with just an interrupt and compatbile to
-json-schema and wire up already converted subdevices.
-RTC is available in all variants, so allow it unconditionally
-GPADC binding for TWL603X uses two different compatibles, so
-specify just the compatible and not include it.
+Some structures contain flexible arrays at the end and the counter for
+them, but the counter has explicit Endianness and thus __counted_by()
+can't be used directly.
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-Well, my name is in that yaml file, so I should take care of my sheep,
-in case a step-by-step approach is acceptable this is at least a
-checkpoint for me that I understand multi file binding mechanics
-properly.
+To increase test coverage for potential problems without breaking
+anything, introduce __counted_by_{le,be} defined depending on platform's
+Endianness to either __counted_by() when applicable or noop otherwise.
+The first user will be virtchnl2.h from idpf just as example with 9 flex
+structures having Little Endian counters.
 
- .../bindings/input/twl4030-pwrbutton.txt      | 21 ------
- .../devicetree/bindings/mfd/ti,twl.yaml       | 68 +++++++++++++++++++
- .../devicetree/bindings/rtc/twl-rtc.txt       | 11 ---
- .../bindings/watchdog/twl4030-wdt.txt         | 10 ---
- 4 files changed, 68 insertions(+), 42 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt
- delete mode 100644 Documentation/devicetree/bindings/rtc/twl-rtc.txt
- delete mode 100644 Documentation/devicetree/bindings/watchdog/twl4030-wdt.txt
+Maybe it would be a good idea to introduce such attributes on compiler
+level if possible, but for now let's stop on what we have.
 
-diff --git a/Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt b/Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt
-deleted file mode 100644
-index 6c201a2ba8acf..0000000000000
---- a/Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt
-+++ /dev/null
-@@ -1,21 +0,0 @@
--Texas Instruments TWL family (twl4030) pwrbutton module
--
--This module is part of the TWL4030. For more details about the whole
--chip see Documentation/devicetree/bindings/mfd/ti,twl.yaml.
--
--This module provides a simple power button event via an Interrupt.
--
--Required properties:
--- compatible: should be one of the following
--   - "ti,twl4030-pwrbutton": For controllers compatible with twl4030
--- interrupts: should be one of the following
--   - <8>: For controllers compatible with twl4030
--
--Example:
--
--&twl {
--	twl_pwrbutton: pwrbutton {
--		compatible = "ti,twl4030-pwrbutton";
--		interrupts = <8>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/mfd/ti,twl.yaml b/Documentation/devicetree/bindings/mfd/ti,twl.yaml
-index 52ed228fb1e7e..03d725d5294db 100644
---- a/Documentation/devicetree/bindings/mfd/ti,twl.yaml
-+++ b/Documentation/devicetree/bindings/mfd/ti,twl.yaml
-@@ -15,6 +15,65 @@ description: |
-   USB transceiver or Audio amplifier.
-   These chips are connected to an i2c bus.
- 
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: ti,twl4030
-+    then:
-+      properties:
-+        madc:
-+          type: object
-+          $ref: ../iio/adc/ti,twl4030-madc.yaml
-+
-+          unevaluatedProperties: false
-+        bci:
-+          type: object
-+          $ref: ../power/supply/twl4030-charger.yaml
-+
-+          unevaluatedProperties: false
-+        pwrbutton:
-+          type: object
-+          properties:
-+            compatible:
-+              const: ti,twl4030-pwrbutton
-+            interrupts:
-+              const: 8
-+
-+          additionalProperties: false
-+        watchdog:
-+          type: object
-+          properties:
-+            compatible:
-+              const: ti,twl4030-wdt
-+
-+          additionalProperties: false
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: ti,twl6030
-+    then:
-+      properties:
-+        gpadc:
-+          type: object
-+          properties:
-+            compatible:
-+              const: ti,twl6030-gpadc
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: ti,twl6032
-+    then:
-+      properties:
-+        gpadc:
-+          type: object
-+          properties:
-+            compatible:
-+              const: ti,twl6032-gpadc
-+
- properties:
-   compatible:
-     description:
-@@ -42,6 +101,15 @@ properties:
-   "#clock-cells":
-     const: 1
- 
-+  rtc:
-+    type: object
-+    properties:
-+      compatible:
-+        const: ti,twl4030-rtc
-+      interrupts:
-+        maxItems: 1
-+    additionalProperties: false
-+
- additionalProperties: false
- 
- required:
-diff --git a/Documentation/devicetree/bindings/rtc/twl-rtc.txt b/Documentation/devicetree/bindings/rtc/twl-rtc.txt
-deleted file mode 100644
-index 8f9a94f2f8969..0000000000000
---- a/Documentation/devicetree/bindings/rtc/twl-rtc.txt
-+++ /dev/null
-@@ -1,11 +0,0 @@
--* Texas Instruments TWL4030/6030 RTC
--
--Required properties:
--- compatible : Should be "ti,twl4030-rtc"
--- interrupts : Should be the interrupt number.
--
--Example:
--	rtc {
--		compatible = "ti,twl4030-rtc";
--		interrupts = <11>;
--	};
-diff --git a/Documentation/devicetree/bindings/watchdog/twl4030-wdt.txt b/Documentation/devicetree/bindings/watchdog/twl4030-wdt.txt
-deleted file mode 100644
-index 80a37193c0b86..0000000000000
---- a/Documentation/devicetree/bindings/watchdog/twl4030-wdt.txt
-+++ /dev/null
-@@ -1,10 +0,0 @@
--Device tree bindings for twl4030-wdt driver (TWL4030 watchdog)
--
--Required properties:
--	compatible = "ti,twl4030-wdt";
--
--Example:
--
--watchdog {
--	compatible = "ti,twl4030-wdt";
--};
+Alexander Lobakin (3):
+  compiler_types: add Endianness-dependent __counted_by_{le,be}
+  idpf: make virtchnl2.h self-contained
+  idpf: sprinkle __counted_by{,_le}() in the virtchnl2 header
+
+ include/linux/compiler_types.h              | 11 ++++++++++
+ drivers/net/ethernet/intel/idpf/virtchnl2.h | 24 ++++++++++-----------
+ 2 files changed, 23 insertions(+), 12 deletions(-)
+
 -- 
-2.39.2
+2.44.0
 
