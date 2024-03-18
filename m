@@ -1,425 +1,127 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2130.outbound.protection.outlook.com [40.107.92.130])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4018922EE5;
-	Mon, 18 Mar 2024 07:03:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.130
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710745435; cv=fail; b=sKJU765+ApNj+anas+ilSBI2SAUOnJf5ZryTNZBBc5Yqn4w+lS14dtWCk4hftwP8szzV7HEBTnQW6NxqGxH6rZcFrjiPJWqUOXEcGvi2hzZSIfHADWkaMs/+vn0bJFf/kxN38KV3apaKY92Y6FpVEEhQVBmx2sQyefygtRP1A6s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710745435; c=relaxed/simple;
-	bh=2Nfhux9MmYuj73BDBWvXhlhfMM/VmWLXd9ALj4gG88w=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=RffHwT7G2GLm5eBk/GwOALeC9Uhipi6klwvXk6bxVATv5BoDp5q56QIuY5r3Om3JVYCNlyYDS+P0ANQJVhO1O6hXKqE0WZOy7Sy55CoqYkH4vsrw5/CY1VewZzI/3+ja9F+6ciNqA7lB8LVdRwftTM0rEEthGVDdUHM1o38zh0E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=v3m9tVgQ; arc=fail smtp.client-ip=40.107.92.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E33661CA89;
+	Mon, 18 Mar 2024 07:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710745771; cv=none; b=DNBbtI3J41DcqyrsNLUFNQ/4wK5GEBDw6parujusd4sPKv71xDJAEJ3u+59PG2Pkejoj6l0XXxrouyWecjS7ChV052JV5Icx0YSBImf50LyJMC8rE5W7yEBxXsXj64gO1SyTL73HVI8WvPFuUs2CEu/meRhV847LrM7XubgKRhg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710745771; c=relaxed/simple;
+	bh=uuwFTLvyMNqlpKTyNz8SdpNe0H6SFIIuVGNRpJwqqGc=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YcR1UTTBG77dSKEY9RwEyxbdza8G8TaWfkFQKETB8I541JIVsVK6sQg+GRNOcYH7mUTbbkOgJPeWbK5IIZg8zygD1iVJEZf9K7ENjmgDSCePzCuI9qxu8Xd1xcBGzcnZubrgRjD5xEeBelK/MVEXCt1/sM/EUYsMfUkWPyAgyvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=YSB4ad8t; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="v3m9tVgQ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cQE4XzblOMJR5b8arnv4p45wLLxEjJ/0WrzX72YHohJROQECXTnVy66gs44sAFgw4FuzDJKEydPbuFUmJauFYYm/k9wPV3YNPYuK9ZMdpw3umUsWesmpwe8W0pk6JTJvytXkrR0msGS3SY9MisRfTE3JCUwszEo5s+Pabl8lDYUGTKlfd5e3jRKDe5kfI6lr7tWl3pWAjwSqao5zNG9CvwfphALsS7gxsvl/dowJe/ORHXldneOtKqjaoOVXCPUjAbirxq5yoHcUeDGNgbON8s+LzcXG1qtDRUQiqa8XUQTaO2GJIgwMX487dFkYHtXi7JfQkIcW8OW5MR93MTfluA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=anAnmk5BmAO/1JV6SIU9HcG4NDo+kycBOv8dI1swjUU=;
- b=fmjrmJgrdF65mh8+GlMKruo37dAioe5zTNBmxexzIBPGJcJvHteGEOjKglUUtoYSxhRlkXKDFZMR3zmm1ppo9S1BmOcUf8dMTEIWgWeFaEITClNbZCyxdO59z7TJDEskSLC/Du0/+KzJzdPGciLaRgBzrmgc/UTwa8j7AAU2Jg4IspfSWvtXj1zhhJXoz1X4wLargV86ap9e2rvLClSSaKOci7pyrrERtDhjQGRx2WK5eejjRyubmpVMlotmg5EE7B4ZYUC3s/F/m7JIkdkPssMrAUwnMfJE6h7azSSK9tEYpJBiSeYtq5dwC+D39jj0tw52fYgTKBxZdzYoMaMxPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=anAnmk5BmAO/1JV6SIU9HcG4NDo+kycBOv8dI1swjUU=;
- b=v3m9tVgQbkfaAkrOlYSIWDqWMl1leV/WbmTRE3iphXgJphx4/rIR8IDnhs12rynLwkwrn6jntaeAHnyi7qJvbWyv51WWiVAO3IBEmkERIAcgU7UtBWdRiQcuJQ8HsJZUA3OIYbNFQY6+f97yRYrdnK5bpGZbv0Jb/brUPMs27Ow=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from SJ2PR01MB8101.prod.exchangelabs.com (2603:10b6:a03:4f6::10) by
- CH0PR01MB7019.prod.exchangelabs.com (2603:10b6:610:108::10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7386.27; Mon, 18 Mar 2024 07:03:48 +0000
-Received: from SJ2PR01MB8101.prod.exchangelabs.com
- ([fe80::d3dd:ece:637f:bde9]) by SJ2PR01MB8101.prod.exchangelabs.com
- ([fe80::d3dd:ece:637f:bde9%3]) with mapi id 15.20.7386.025; Mon, 18 Mar 2024
- 07:03:47 +0000
-Message-ID: <aaf10e76-657f-4667-a920-e71b93419efd@os.amperecomputing.com>
-Date: Mon, 18 Mar 2024 12:33:35 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 03/28] arm64: RME: Add wrappers for RMI calls
-Content-Language: en-US
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
- Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev
-References: <20230127112248.136810-1-suzuki.poulose@arm.com>
- <20230127112932.38045-1-steven.price@arm.com>
- <20230127112932.38045-4-steven.price@arm.com>
-From: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-In-Reply-To: <20230127112932.38045-4-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH0PR13CA0059.namprd13.prod.outlook.com
- (2603:10b6:610:b2::34) To SJ2PR01MB8101.prod.exchangelabs.com
- (2603:10b6:a03:4f6::10)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YSB4ad8t"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42I63EYF085045;
+	Mon, 18 Mar 2024 01:03:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1710741794;
+	bh=eb0Ccz7HpZ5APiazpAPXMBC/gybVlUfHgyxFsx8OJ5c=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=YSB4ad8t69Xt6z8Q9rUY7EPVPxlrBq3REXebtcGlwp2Xm9RDgJhWweHPSkviZerXB
+	 sECEHphpbqVd6gYcEzGnykTJsRuqoFIEyjiUgvEoZmz51wvOS+gqLTJH9eanEIJrXb
+	 51pd1marzgijpu8vVM65WjCMxGNME2Yx2hb6+A9o=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42I63EkG002963
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 18 Mar 2024 01:03:14 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 18
+ Mar 2024 01:03:14 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 18 Mar 2024 01:03:14 -0500
+Received: from localhost (dhruva.dhcp.ti.com [172.24.227.68])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42I63DLB033059;
+	Mon, 18 Mar 2024 01:03:14 -0500
+Date: Mon, 18 Mar 2024 11:33:12 +0530
+From: Dhruva Gole <d-gole@ti.com>
+To: Jagadeesh Kona <quic_jkona@quicinc.com>
+CC: "Rafael J . Wysocki" <rafael@kernel.org>,
+        Kevin Hilman
+	<khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>, Pavel Machek
+	<pavel@ucw.cz>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad
+ Dybcio <konrad.dybcio@linaro.org>,
+        Michael Turquette
+	<mturquette@baylibre.com>,
+        Andy Gross <agross@kernel.org>, Stephen Boyd
+	<sboyd@kernel.org>,
+        Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+        Vikash
+ Garodia <quic_vgarodia@quicinc.com>,
+        "Bryan O'Donoghue"
+	<bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Abel Vesa
+	<abel.vesa@linaro.org>, Taniya Das <quic_tdas@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, Imran Shaik <quic_imrashai@quicinc.com>,
+        Ajit
+ Pandey <quic_ajipan@quicinc.com>
+Subject: Re: [PATCH V5 1/5] PM: domains: Allow devices attached to genpd to
+ be managed by HW
+Message-ID: <20240318060312.z5pk4roz6uqhwosc@dhruva>
+References: <20240315111046.22136-1-quic_jkona@quicinc.com>
+ <20240315111046.22136-2-quic_jkona@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR01MB8101:EE_|CH0PR01MB7019:EE_
-X-MS-Office365-Filtering-Correlation-Id: bdc93212-92db-4b1a-f417-08dc47198ef2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	P+1LQS5uj3jdMe4KbK/szEd7O6ZL34TnkIGzhrha8hVmAH7uQe1st834CSLEjPHpFhzEQKeZ7Zz0ZejdTeWCk4+H+OkEbz8/7nSMNMpUs+SqH1s0LliRAvLXUcHiCT+6fq+258bm6eZdDZsPwQ0Vcd/9TSYhEOZsGRwDgIrTjnzy7MZpuQlttL7NCLDVwSrRWqHit//QyE9w2se/gTHpcz6Aoz8Lq6n8bBBX/Zq9Vg961ZcDkjhw84FgiEznhUUl2sNJvLrtsIf5wxeIJRX9vVyi6NWxZ0FNIDiiuKFU6V5YOh1Sd5GSbRVX7eM50nAfuXbUTNFnsWneHQ7n/GVrSdqjNJsZIrkuhK15Q8PhQvu9qAkgy/MqmFoqYLITJuHViVXAYi84HE0xRf73J1Zr0Krt8Ar3J+2DJHu15gCjLY8PsJPtV+uItjzquhp+Mn0LoOzHZg57HZwKDZmlmAiKpCz0zr4wWn8timp5d3EykFG3spn7niiMbTZfm/h+PmYS1H2Nrdtk+pFrvG70UjVTbZ5bgxXUsrGQ29MZCdvXJjwfOJKXSAY3lxvGxoA+hC+I58hoUx/gUIeqUMnsq38b+BdbPk/wPi687iOGLAjtiu9OWeQYlXbiRNwnnokgW2Pk4S99kp0qTYADYHZ67BU5dsnp8UzKqDUx12+UI3zmFDo=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR01MB8101.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(1800799015)(366007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dGdHcXdnMnN5OVEzeTF3RC9XYVM4SGtIK0pQREozTER6YWJqTFVuTUtKZWJu?=
- =?utf-8?B?YUsxVXdkM2RqczJmTmNBRmpSckdsOVFuOXFZUTNLSTcvOFliNkJuNVlpQWtt?=
- =?utf-8?B?aWFFOVNsTnRxQzY2QThNVmJBRlQ4U3o2N2ZBd3lDS1Y3RW1vYUY1RktkMVF2?=
- =?utf-8?B?dTZRME5keGVvU3FIa2hwM2dtdGFiWWtld1pMQTlkL0tia3lhbzVtRkh6V0h4?=
- =?utf-8?B?UG9lWk01aGxWWWYySFpFalF4VEtWSGF0ZXFvUm41V1hWeXFaVnlYR2RNb1NJ?=
- =?utf-8?B?TGYzQW90S1RqRzNLenUrOHhmcUMrZnY0WC9lNDAzbEVSa2JZVWovSVRwVXow?=
- =?utf-8?B?ekVNcWhwQkNCcFY0UEVOK29Jdmp5ckUzZkdoTEZ2cEFOdmcwWDg1T01HUERL?=
- =?utf-8?B?UGp2Q2FTWlhyRExIdzVMN3QxWERLV0JrRFpwWFNScmlBVUhGeFhKMm84N1A3?=
- =?utf-8?B?NXBNa3cwQ3BxSXhnTGFvRERXb3RRK0t5RDJNUkN2NVpUY0ZCN1Y1ZHpyZ1JE?=
- =?utf-8?B?V2N4L281OGl1NUs4dTVxOFE3NVhyb0I0VFZWc0JiRll1d0VoVkROazRUYm1h?=
- =?utf-8?B?Z2pxcFJkV29XZ3pNWFJFNUE4d1VhT3d1UTdxTWJGbkwwNFJKdlBad25XT2x3?=
- =?utf-8?B?ZzRxeS9xTXdMSTBWWEVVT3hKY3Y0a29FQXFWOTJDSzBIRnhZblF4emxiWno5?=
- =?utf-8?B?WXUxQTRVdjFHbktLSmR1MjN0aCtXeFV1Nk9JV0tsZ21QM2hYeTFDY1Z2NGJq?=
- =?utf-8?B?SWErQklJOGQ5RHVRMW95RFI2aEs1cjhUZEM5eG5Va2lDSXdnTTNNYXZDbFlh?=
- =?utf-8?B?aXFmbDFhU2s3dW9ROXhaelg1ampBeFNyN0lZTDc1QS9RYUg5cXIrVVh4MnhN?=
- =?utf-8?B?YkxsNWFjcXZxR1BadnAxdEYyaWJRc0ROaUpHYXlvM0tpOG53OWV2SWxEZlZ3?=
- =?utf-8?B?NC9RMVFWc095ZVdQWnVoTXlDdmdvNThHNVVqZHFza2k5NGJhMjBLOU9VZDhv?=
- =?utf-8?B?QkRGditxa0JwS2JIVmlLcUJsWHY1ZnVpb1Z6cnByWGN2MzlQWloreVZ5VVZU?=
- =?utf-8?B?N05QY1BIbVg2WjZVN1BNWXhyMHNYU3JBVkoza1ZpMERtTlpRS3FXZjVKNXVW?=
- =?utf-8?B?YmFNMGxRNkI1VHViRzNidWdwQitzdlpsc2EzdC9VOHpEMEZEUHVGNU84NnVr?=
- =?utf-8?B?alpQVnZnNndRWWJHdzQzU0NLZ1kzWG4vQlhuQ1ZqOWZLMjBadXhDajY3clZj?=
- =?utf-8?B?eW41NlI1c2ZJUE1kYXVjdlF1NlE3RmhNMzFQSE1RQXRKV1RCSzFHVTNXaXFS?=
- =?utf-8?B?bUdLYjV3T3I2RzJmVy8rWU5lSFlTQzBzK0FtTVNzTEpsMllCTkVRYy9XQ2Jo?=
- =?utf-8?B?aktJRkxTcnYrQXJpRUNyZER2UXQrY3QrVUVwMVYzWXV4Rm1selhLd2NnTDlh?=
- =?utf-8?B?STNGcWtUUlVxV1cwZDJvTEpJT2F0dFlvOG12MnVpYXdkNmpzSHpmMmdaMHBX?=
- =?utf-8?B?NHBzb3Nza1B0SzJ4NjJaWUxOZlhIUVdwQUZHa3JaajR1SFhDVDluUUxUdHNH?=
- =?utf-8?B?NVpicDQraTNGQ001d2hnWVl2aTFCQmdmOGJOU2wvWkxLZCt1SCthOGJXeDVY?=
- =?utf-8?B?MDZvTWJLSEpjWlQ3SUlJQlIzVkRhWEQ0R0VqY1VYajJKZXRjV0hoZTNOSktL?=
- =?utf-8?B?dEhZWTBDYTZCSFlXMnh4VlNtR0M0WU1Vc3BMcEcyVzhIMS9DNkxSQkFOUVN1?=
- =?utf-8?B?djlPSjNLSlJFbHVTeWQ4TjBjUlNtQzNsOWdRZ3gxT01GU2tzaTBVL21JZ2Ir?=
- =?utf-8?B?YUNIc2NrL2RDSW1sTEVCOWZUVW1jNnYxUExJUnlTTXdIZTd2WWJkT0FVbDc5?=
- =?utf-8?B?eGNmQXo5WlpwNE45cnIwMkNNV0xFR2ZndmlsTFlhazhPQU0ralowa21OcmNl?=
- =?utf-8?B?UFpIY0d4M0VGL0tnUWd1enY1LzdJRnhRVGtDK0tkN2FEOFlMRS8wUlJ5Y0Vx?=
- =?utf-8?B?Qm5DWllsdUlqK0JadlowZ1ZkSTV0cU1Od3lyQmhrTUVZcWxJRHNpcTRsZTJL?=
- =?utf-8?B?OVRVY01zY01HTkdrdFlJUEt4amE2bXpwY3BQb0pCejVNNU1saVZxQXhJUmVh?=
- =?utf-8?B?YjluZ0Q5MnZZOXg2VTVVckZuUGlKS2JWZmYzT1dMNDRIUVVoNWNYVGh3eklz?=
- =?utf-8?Q?nZUVyoGN1Pj1lGcJBtfgUQmOapSNAkV2lNpyGjZXHGsA?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bdc93212-92db-4b1a-f417-08dc47198ef2
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR01MB8101.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2024 07:03:47.8906
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4ZFqcD3bv/BuCrj/J4v2+ZNjtw78UaLyd9QGABlLxKwpHJ7CprdngnAbWkKpIAsYWY7NCHV4JV15oDvi2wDb7iGrQeLHuDdf0120BjDsGhmwpc6oLZLfC3p5k9gZvbEh
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR01MB7019
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240315111046.22136-2-quic_jkona@quicinc.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-
-Hi Steven,
-
-On 27-01-2023 04:59 pm, Steven Price wrote:
-> The wrappers make the call sites easier to read and deal with the
-> boiler plate of handling the error codes from the RMM.
+On Mar 15, 2024 at 16:40:42 +0530, Jagadeesh Kona wrote:
+> From: Ulf Hansson <ulf.hansson@linaro.org>
 > 
-> Signed-off-by: Steven Price <steven.price@arm.com>
+> Some power-domains may be capable of relying on the HW to control the power
+> for a device that's hooked up to it. Typically, for these kinds of
+> configurations the consumer driver should be able to change the behavior of
+> power domain at runtime, control the power domain in SW mode for certain
+> configurations and handover the control to HW mode for other usecases.
+> 
+> To allow a consumer driver to change the behaviour of the PM domain for its
+> device, let's provide a new function, dev_pm_genpd_set_hwmode(). Moreover,
+> let's add a corresponding optional genpd callback, ->set_hwmode_dev(),
+> which the genpd provider should implement if it can support switching
+> between HW controlled mode and SW controlled mode. Similarly, add the
+> dev_pm_genpd_get_hwmode() to allow consumers to read the current mode and
+> its corresponding optional genpd callback, ->get_hwmode_dev(), which the
+> genpd provider can also implement to synchronize the initial HW mode
+> state in genpd_add_device() by reading back the mode from the hardware.
+> 
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > ---
->   arch/arm64/include/asm/rmi_cmds.h | 259 ++++++++++++++++++++++++++++++
->   1 file changed, 259 insertions(+)
->   create mode 100644 arch/arm64/include/asm/rmi_cmds.h
+>  drivers/pmdomain/core.c   | 64 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_domain.h | 17 +++++++++++
+>  2 files changed, 81 insertions(+)
 > 
-> diff --git a/arch/arm64/include/asm/rmi_cmds.h b/arch/arm64/include/asm/rmi_cmds.h
-> new file mode 100644
-> index 000000000000..d5468ee46f35
-> --- /dev/null
-> +++ b/arch/arm64/include/asm/rmi_cmds.h
-> @@ -0,0 +1,259 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2023 ARM Ltd.
-> + */
-> +
-> +#ifndef __ASM_RMI_CMDS_H
-> +#define __ASM_RMI_CMDS_H
-> +
-> +#include <linux/arm-smccc.h>
-> +
-> +#include <asm/rmi_smc.h>
-> +
-> +struct rtt_entry {
-> +	unsigned long walk_level;
-> +	unsigned long desc;
-> +	int state;
-> +	bool ripas;
-> +};
-> +
-> +static inline int rmi_data_create(unsigned long data, unsigned long rd,
-> +				  unsigned long map_addr, unsigned long src,
-> +				  unsigned long flags)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_DATA_CREATE, data, rd, map_addr, src,
-> +			     flags, &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static inline int rmi_data_create_unknown(unsigned long data,
-> +					  unsigned long rd,
-> +					  unsigned long map_addr)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_DATA_CREATE_UNKNOWN, data, rd, map_addr,
-> +			     &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static inline int rmi_data_destroy(unsigned long rd, unsigned long map_addr)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_DATA_DESTROY, rd, map_addr, &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static inline int rmi_features(unsigned long index, unsigned long *out)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_FEATURES, index, &res);
-> +
-> +	*out = res.a1;
-> +	return res.a0;
-> +}
-> +
-> +static inline int rmi_granule_delegate(unsigned long phys)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_GRANULE_DELEGATE, phys, &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static inline int rmi_granule_undelegate(unsigned long phys)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_GRANULE_UNDELEGATE, phys, &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static inline int rmi_psci_complete(unsigned long calling_rec,
-> +				    unsigned long target_rec)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_PSCI_COMPLETE, calling_rec, target_rec,
-> +			     &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static inline int rmi_realm_activate(unsigned long rd)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_REALM_ACTIVATE, rd, &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static inline int rmi_realm_create(unsigned long rd, unsigned long params_ptr)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_REALM_CREATE, rd, params_ptr, &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static inline int rmi_realm_destroy(unsigned long rd)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_REALM_DESTROY, rd, &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static inline int rmi_rec_aux_count(unsigned long rd, unsigned long *aux_count)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_REC_AUX_COUNT, rd, &res);
-> +
-> +	*aux_count = res.a1;
-> +	return res.a0;
-> +}
-> +
-> +static inline int rmi_rec_create(unsigned long rec, unsigned long rd,
-> +				 unsigned long params_ptr)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_REC_CREATE, rec, rd, params_ptr, &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static inline int rmi_rec_destroy(unsigned long rec)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_REC_DESTROY, rec, &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static inline int rmi_rec_enter(unsigned long rec, unsigned long run_ptr)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_REC_ENTER, rec, run_ptr, &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static inline int rmi_rtt_create(unsigned long rtt, unsigned long rd,
-> +				 unsigned long map_addr, unsigned long level)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_RTT_CREATE, rtt, rd, map_addr, level,
-> +			     &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static inline int rmi_rtt_destroy(unsigned long rtt, unsigned long rd,
-> +				  unsigned long map_addr, unsigned long level)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_RTT_DESTROY, rtt, rd, map_addr, level,
-> +			     &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static inline int rmi_rtt_fold(unsigned long rtt, unsigned long rd,
-> +			       unsigned long map_addr, unsigned long level)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_RTT_FOLD, rtt, rd, map_addr, level, &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static inline int rmi_rtt_init_ripas(unsigned long rd, unsigned long map_addr,
-> +				     unsigned long level)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_RTT_INIT_RIPAS, rd, map_addr, level, &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static inline int rmi_rtt_map_unprotected(unsigned long rd,
-> +					  unsigned long map_addr,
-> +					  unsigned long level,
-> +					  unsigned long desc)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_RTT_MAP_UNPROTECTED, rd, map_addr, level,
-> +			     desc, &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static inline int rmi_rtt_read_entry(unsigned long rd, unsigned long map_addr,
-> +				     unsigned long level, struct rtt_entry *rtt)
-> +{
-> +	struct arm_smccc_1_2_regs regs = {
-> +		SMC_RMI_RTT_READ_ENTRY,
-> +		rd, map_addr, level
-> +	};
-> +
-> +	arm_smccc_1_2_smc(&regs, &regs);
-> +
-> +	rtt->walk_level = regs.a1;
-> +	rtt->state = regs.a2 & 0xFF;
-> +	rtt->desc = regs.a3;
-> +	rtt->ripas = regs.a4 & 1;
-> +
-> +	return regs.a0;
-> +}
-> +
-> +static inline int rmi_rtt_set_ripas(unsigned long rd, unsigned long rec,
-> +				    unsigned long map_addr, unsigned long level,
-> +				    unsigned long ripas)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_RTT_SET_RIPAS, rd, rec, map_addr, level,
-> +			     ripas, &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static inline int rmi_rtt_unmap_unprotected(unsigned long rd,
-> +					    unsigned long map_addr,
-> +					    unsigned long level)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_RTT_UNMAP_UNPROTECTED, rd, map_addr,
-> +			     level, &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static inline phys_addr_t rmi_rtt_get_phys(struct rtt_entry *rtt)
-> +{
-> +	return rtt->desc & GENMASK(47, 12);
-> +}
-> +
-> +#endif
 
-Can we please replace all occurrence of "unsigned long" with u64?
-Also as per spec, RTT level is Int64, can we change accordingly?
+LGTM!
 
-Please CC me in future cca patch-sets.
-gankulkarni@os.amperecomputing.com
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
 
-
-Thanks,
-Ganapat
+-- 
+Best regards,
+Dhruva
