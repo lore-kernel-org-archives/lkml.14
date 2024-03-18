@@ -1,96 +1,111 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B03364BA
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 11:32:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC252EAE0;
+	Mon, 18 Mar 2024 11:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710761571; cv=none; b=cvF1pZYGtts8igA0Lceuh/dlUcKpFCBi/tuIp4/7cV7+6LCZKbs8d5jULEig96JUCg6qd1xJQGtBj3630CyK31SAVbxFB5sR5XTAOBdc4afgizQAqcez/NlVxJVSplhnXNMTpgcjZMgU+7HOQN8fiTiKT3xWeBuyTOGUfrlkwHY=
+	t=1710761778; cv=none; b=a7ZYVJz5PhFfxOVymglJcfkxtUxoqyyS9xvhBQChMDVttXpyqq/TcPHVFrmhQ8rCNm/oF0AY2QoQcXHkrIoH6UTpW3BVeZOLT/0HfIxrTrqSkIO/ueDR2JFfwhEgMA83nU1g7UC28PrcSPT94u+yoDNxGPIrKp/qH+LfjLBEy3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710761571; c=relaxed/simple;
-	bh=/d5mJxYY4XDPQ3SgGmz93D2aIiHlNJP2hzTiAI2mHJw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Hw8pQbe4CVs3FER2BM5l6KMdonXRAM4vbC1VQ8H2H9aDmHK1bPMzfn7gTPhWJx36NOHhqS+eOnJ9b/igYeyQV2+l+PEQHcqhoS9yndo9cJ4ttlr5udhRwOwbVPIde49rRKHxHcEQNloIy20yFioSYlIhS+bY4yGgQsLwGQDh6Jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=DwDAwUJe; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1710761778; c=relaxed/simple;
+	bh=E37YPtRMQLajq0y7J+0i5Qyxqy8cnmFB2WeJKMX7wOA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EUoREGcXXuO9F1NsJBgPMLq82hs0g1kR4JnC1Dt0cv31joDSGRTrWbzJZYDkC003azo185IkNy3ImVKK18CicLW5tbnSEK9Z0m/xD0lmPo9NltFdRMDkGw+jajo/+d0z/asTHCjrUpJhfNqwmpMJKVGbIkpCDNvq/fR110dBEDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=AWvY+op5; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="DwDAwUJe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1710761565;
-	bh=/d5mJxYY4XDPQ3SgGmz93D2aIiHlNJP2hzTiAI2mHJw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=DwDAwUJePBLCCDWQPb6+9mbOnzo5lmTbjLowhBYzzO7xsxnxQ6VVmr6q0qYsgumvd
-	 32vzMhI4guZ5sTlz04PTtkGnVIwj6LNBesNsajbUw40WLNJo40Ujo5YF4ZF3TVBUNW
-	 oWW9dgw3lzq6KRFnGNYQuks9JK83P2wFmMYqhcMDKfdP4mW4UuT5WrYSdPt6Ne+rFj
-	 gRlZlgLyof6Xf9IfzeZB3mmm7cn5+h5F4MZjLTuCrHtKzNjlWzlHVdUb7m/kOhH3v7
-	 +meubq4217R3HPsT/K5bI4vXvLNcQBIWbbg8UMzLnRX66NA9yzss5BotsJWQO3lK2o
-	 2C45V7SctO4rA==
-Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 1D41A37811D4;
-	Mon, 18 Mar 2024 11:32:45 +0000 (UTC)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: matthias.bgg@gmail.com
-Cc: angelogioacchino.delregno@collabora.com,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	wenst@chromium.org,
-	treapking@chromium.org,
-	kernel@collabora.com
-Subject: [PATCH] soc: mediatek: mtk-svs: Append "-thermal" to thermal zone names
-Date: Mon, 18 Mar 2024 12:32:37 +0100
-Message-ID: <20240318113237.125802-1-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="AWvY+op5"
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42IAjrru010689;
+	Mon, 18 Mar 2024 07:23:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
+	from:to:subject:date:message-id:mime-version:content-type
+	:content-transfer-encoding; s=DKIM; bh=dwNsCIszrSUBJV4E/OUlM450N
+	4H1ANqdvohbTLT71w0=; b=AWvY+op5ZUqSaHXwI8yVQKY6dwnv5VZZc2x81OF88
+	55K3BPZnYe2KAF8DMO3kA6EKGeSo4hqHCq/5iUCgeWO0JFm6cPD8GRhBYtPbwzKj
+	QcQpml/mIFwxUIjYdUXmG8IFuQ0CsQU0Aw0BBtMnjWovzNhcww5U8FNNeUXZhoMs
+	0j/fg46TAIns6CSPkOt//TyApo4+OetHL3rHcbht8FY5QXIaJHhwuXs9mK3QqUb1
+	bMxOxdsUxDXnudw+yug7wvlSJi4MvEg7Tzo8mk1FimjIIZYys9VK7KHAa/krdTjG
+	GxAg/3n+DFpydArKczY3roTz603Tt6+O7nfMwAaiQ1bnw==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 3wxecys6uq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 18 Mar 2024 07:23:06 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 42IBN50P024981
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 18 Mar 2024 07:23:05 -0400
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Mon, 18 Mar 2024 07:23:04 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Mon, 18 Mar 2024 07:23:04 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Mon, 18 Mar 2024 07:23:04 -0400
+Received: from radu.ad.analog.com ([10.48.65.243])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 42IBMkMc030326;
+	Mon, 18 Mar 2024 07:22:48 -0400
+From: Radu Sabau <radu.sabau@analog.com>
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+        "Rob
+ Herring" <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Delphine CC Chiu
+	<Delphine_CC_Chiu@Wiwynn.com>,
+        Radu Sabau <radu.sabau@analog.com>, <linux-hwmon@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-i2c@vger.kernel.org>
+Subject: [PATCH 0/2] Add ADP1050 support
+Date: Mon, 18 Mar 2024 13:21:33 +0200
+Message-ID: <20240318112140.385244-1-radu.sabau@analog.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-ORIG-GUID: sGQqd6QPndlgI_Ih23rwr4VEPoTV4TVR
+X-Proofpoint-GUID: sGQqd6QPndlgI_Ih23rwr4VEPoTV4TVR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-18_02,2024-03-18_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
+ mlxlogscore=876 spamscore=0 malwarescore=0 priorityscore=1501
+ clxscore=1011 lowpriorityscore=0 impostorscore=0 mlxscore=0 bulkscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403140001 definitions=main-2403180085
 
-The thermal framework registers thermal zones as specified in DT and
-including the "-thermal" suffix: append that to the driver specified
-tzone_name to actually match the thermal zone name as registered by
-the thermal API.
+The ADP1050 is an advanced digital controller with a PMBus™
+interface targeting high density, high efficiency dc-to-dc power 
+conversion which can measure input/output voltages, input currents
+and temperature.
 
-Fixes: 2bfbf82956e2 ("soc: mediatek: mtk-svs: Constify runtime-immutable members of svs_bank")
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- drivers/soc/mediatek/mtk-svs.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Radu Sabau (2):
+  dt-bindings: hwmon: pmbus: adp1050 : add bindings
+  hwmon: pmbus: adp1050 : Add driver support
 
-diff --git a/drivers/soc/mediatek/mtk-svs.c b/drivers/soc/mediatek/mtk-svs.c
-index e553800a9e4d..e431e0a53ed9 100644
---- a/drivers/soc/mediatek/mtk-svs.c
-+++ b/drivers/soc/mediatek/mtk-svs.c
-@@ -1768,6 +1768,7 @@ static int svs_bank_resource_setup(struct svs_platform *svsp)
- 	const struct svs_bank_pdata *bdata;
- 	struct svs_bank *svsb;
- 	struct dev_pm_opp *opp;
-+	char tz_name_buf[20];
- 	unsigned long freq;
- 	int count, ret;
- 	u32 idx, i;
-@@ -1819,10 +1820,12 @@ static int svs_bank_resource_setup(struct svs_platform *svsp)
- 		}
- 
- 		if (!IS_ERR_OR_NULL(bdata->tzone_name)) {
--			svsb->tzd = thermal_zone_get_zone_by_name(bdata->tzone_name);
-+			snprintf(tz_name_buf, ARRAY_SIZE(tz_name_buf),
-+				 "%s-thermal", bdata->tzone_name);
-+			svsb->tzd = thermal_zone_get_zone_by_name(tz_name_buf);
- 			if (IS_ERR(svsb->tzd)) {
- 				dev_err(svsb->dev, "cannot get \"%s\" thermal zone\n",
--					bdata->tzone_name);
-+					tz_name_buf);
- 				return PTR_ERR(svsb->tzd);
- 			}
- 		}
+ .../bindings/hwmon/pmbus/adi,adp1050.yaml     |  65 ++++++++++
+ Documentation/hwmon/adp1050.rst               |  69 +++++++++++
+ Documentation/hwmon/index.rst                 |   1 +
+ MAINTAINERS                                   |   8 ++
+ drivers/hwmon/pmbus/Kconfig                   |  10 ++
+ drivers/hwmon/pmbus/Makefile                  |   1 +
+ drivers/hwmon/pmbus/adp1050.c                 | 111 ++++++++++++++++++
+ 7 files changed, 265 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/pmbus/adi,adp1050.yaml
+ create mode 100644 Documentation/hwmon/adp1050.rst
+ create mode 100644 drivers/hwmon/pmbus/adp1050.c
+
 -- 
-2.44.0
+2.34.1
 
