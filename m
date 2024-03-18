@@ -1,188 +1,142 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F092C1A5;
-	Mon, 18 Mar 2024 09:19:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08AD20314
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 09:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710753591; cv=none; b=MW8TTwzAv1DLIqNvxEpGORxSjiXJbZUPzmtmUeAlrYaEMH3jvj0gkXatbLza3eviMXgZ1POWQIpI9zi+dlRs2lTWMNssx8lwhN9TpdIL2Pbn39OLFql6oRvEmn4u+kuPT5cGbY7qjDxlfXKfs90rEKU7fjgZ/vScIIss8dCp894=
+	t=1710753681; cv=none; b=vBejeOb1fsYbwJrIQReGIER5kIlthm3/0PJpYgxZ5wfHp6Z7PW6zVcmjkTtuJldGjMCQwjWadmkUo2pML/6RiNp9M+5LhEC57wKReKCDhXOEFyKOVUo/3mEFeRyBEiQ0jv8xBzJgO9arp9lEXXLm2pFDKAZcSyfRLUGjNmG1Fiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710753591; c=relaxed/simple;
-	bh=0/bH2v1SxnlMvU1gNmRHoh/bUh7CS6a4DhRrchxagAU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z6K37FZejsxaHz1jZb8NKa2JAjC4kC2VBkLn9bi3EYvhW9d/O2sSW6MCDaSIwoWcvc7XpUKtOnD4ZGLsJUccxmS5+kal9jz7UxJU+D4j6Wo9nqI4ah14XQR8GhgW+SjRxoGwgcck3FlhDyRw82tJg6QudMujvgzxS8D7xB+EK3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mfwgfKUy; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710753681; c=relaxed/simple;
+	bh=5+6iTQ0gzis+PQcHuNf7VDmaig60PJvYvukmbUIlpQU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JEEWnh3SigxXYeiTxoESda2oOlu8xhGD/c6A+HAaBxariVmDDEVieizpinXBlz97cVBZGt9ctH3ccVHONNOqQQkPVgrt3k9l0l3WFgWNqo88ItybFxqTozY48kJmgaRnDyWjhSIlTj4AIj/LGCLndv2PxVmW+m0622C+B1r2ZaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KE7VQoLT; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mfwgfKUy"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-29dee60302fso1901040a91.1;
-        Mon, 18 Mar 2024 02:19:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KE7VQoLT"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d109e82bd0so52184211fa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 02:21:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710753589; x=1711358389; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5KrBHzMj0MJ+9ueUnX5Wp5wwIc33dtSo5xG4fIvxfRI=;
-        b=mfwgfKUyjqOv/caqbpeVbrZZ/zF0VazNs4Q4g9KCLn+QUVYcdMkCDup7Z15RdiP47V
-         AsucfenBcJ+L01yMU8WiUIJ9kQpQ2OGKDcQaiJ0B5AognXIdnryfQiYgjsZeDJp0hBha
-         Q+iFJ1mLrBuw1Gp7cJ/1h7LAMaDguux8u2w8cJEZmlU/NIEX6TmcTPZ67iPchMFSi0n7
-         zCI/T96+TQLfMBUNTu9XpaVj+NynHkrfEqgwa9bwYIESrRheFRz3vBVZqJhHllkou/Zm
-         CVuBPyweuiVPnZUH5V3YDX+2WmdJBYrN1xFTcGUZuXbMLiGcLrGFs12jM7MGxJAliJTd
-         7O4Q==
+        d=linaro.org; s=google; t=1710753678; x=1711358478; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=lLj/tCGNP2MK0uv/n4AThhr2XVPFu3MQ0EBorGXinCk=;
+        b=KE7VQoLTJa10MVKWUmSLpeWaO+9CicbsHGABWoeNsFmwRJFFew/NBhrsxWTbaK8ts5
+         fplS68NEiXiWVFl6S0ggj5Y1+FMDZiLRwvBZJgnDoXZJi9b9pHPLS54AMXBKd+3ybNDC
+         dODEDB6BN/GSBgsY9VTNVH3ikcmdAEG1USspRrtL0vr+8dxlhJNVwuBqAu+Z4u3H49hH
+         BBi33+YbHBvfIjObGjS306qP59Q0l18+nt1RoluvpVr0XltIJp15D3iA8z5KqasFOwAK
+         Hk9LA+28IOvIbcuLF3qSSpni1oiNJVO+io4+jv7kx8Z4b9od2rJ/Gra8f1B0eLT4coq0
+         uxTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710753589; x=1711358389;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5KrBHzMj0MJ+9ueUnX5Wp5wwIc33dtSo5xG4fIvxfRI=;
-        b=ZuvKCXH2yft2mCAfM38dQf9JDvvuhfo4/THDofuk6MS9uEVaVjejCh+vV5y6modjdZ
-         QsfpjJNYlNZDU6m+urDQyDXsypkNaSImonzypnCeXKK4340PvqwCvsbCoaPx3uqi45KZ
-         blLpIZsBluHz6z2SaR+jm6qIXX9yG/cOR/vjokgblDMvmHDu743OUYLQRaii6qpvCw17
-         i5rn7G5/3sFkF8R90+TFwjyaE3lXDSQSYxZ8RZzxcVjLkcfe6QnDn+f2ubsCSZ0n3KZG
-         ZCoOTO5gddZTW6b8LGpNcayeCgi4Vz1YWGPnHCq/aor5xbRWAIJFr6232gfCQwD68a+z
-         o4EQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXD6f8Mj1f/mRaoh16j4Vd4KzveVUXKZaZuYsOo9DOoJWiNsGjZsvFayPmZ5Qp/+mZFypxI7lzJ1GXplFZT1rz72GMg0MfiQyQDb72iHKsVpJq8/LkIKOXNlGkz2k+gjdATtumqdwRZMWlhRBPQ20EcgmcxI3kXzTkpp9/0xyKL6fmjqw==
-X-Gm-Message-State: AOJu0Yw8BIbUHoFddOww6PKzHSSJBjDuOI71ggscMxEOr3Jq4PX4tbb/
-	kywx17PrDtbCuRZr5yAwmZw44KWWk/dX0ZrAn6gVdyXkO3P1AlUK
-X-Google-Smtp-Source: AGHT+IHxe5taQmN4p+oWcyEX3XvgTtq3vfnZc/v/1M/WCqshdn8lhwKji+zC2ZGKKhGioVvuVzv76g==
-X-Received: by 2002:a17:90b:4f90:b0:29f:b10b:5fc1 with SMTP id qe16-20020a17090b4f9000b0029fb10b5fc1mr2581170pjb.8.1710753589200;
-        Mon, 18 Mar 2024 02:19:49 -0700 (PDT)
-Received: from localhost.localdomain ([122.187.117.179])
-        by smtp.gmail.com with ESMTPSA id a10-20020a17090abe0a00b0029c61521eb5sm7076532pjs.43.2024.03.18.02.19.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 02:19:48 -0700 (PDT)
-From: Animesh Agarwal <animeshagarwal28@gmail.com>
-To: 
-Cc: animeshagarwal28@gmail.com,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: nxp,i2c-pnx: Convert to dtschema
-Date: Mon, 18 Mar 2024 14:49:05 +0530
-Message-ID: <20240318091911.13426-1-animeshagarwal28@gmail.com>
-X-Mailer: git-send-email 2.44.0
+        d=1e100.net; s=20230601; t=1710753678; x=1711358478;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lLj/tCGNP2MK0uv/n4AThhr2XVPFu3MQ0EBorGXinCk=;
+        b=DEU+9VxZHefUN/WGgUnPHVXxWLWo6WXjNEIBTixF0momalVWlRPL8pQSp8dRmZWn5H
+         y4/Rk4WioQZTkUdYMcLKCPZLEDya1Do4a75ntmZ1S1LIkAxO5AheBiQ1bRGP6sm1t8PL
+         OnbI0+tvYHTchIZDu2jNq1Hv2TQc/kWDTnF2InUGK2mMNza3ivLBZH5RJpbGGNvRUlCh
+         rXBJ6SWWI6KwfuYmu634bUnIptpqYfbdyY+Dm+Y2j8W9sMPbHd3oHcQ6c+DjoHSFAi3t
+         jz7JQ5spejPc9c3G2M63r9HeFERF24PsrbQC9h/Cboh+0AfVqHf8hNzMdnSwINOT1gFF
+         RrQA==
+X-Forwarded-Encrypted: i=1; AJvYcCVNAfAvZ3uV3msmsBW8CA1i7VDY4v6Zg68detS4RUl2djygHJbImXVQfvmeghu1/jyjZ50o3xsxh3/oJejbjMIdjIKMXgVorjZI6sjs
+X-Gm-Message-State: AOJu0Yw1QNiU4frBwlTei6UEKuGSdChKZ7mYAZ9QagKGEdPhQ0GSGEtY
+	gwPKkbn7xnQee7Z46I71HzdQcXo6BhohSdgYH58u5GSlEBcrVh5p8DGE7QENIgE=
+X-Google-Smtp-Source: AGHT+IEyiY99jR9sVdK1Xei3RjmIYwEQfVpGB3cJ9kv1n8zHC1PY1YHncHzoFF8Q7qYrAKzwaduuLw==
+X-Received: by 2002:a2e:9357:0:b0:2d4:7455:8a02 with SMTP id m23-20020a2e9357000000b002d474558a02mr7412983ljh.21.1710753677917;
+        Mon, 18 Mar 2024 02:21:17 -0700 (PDT)
+Received: from [192.168.52.106] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id g11-20020a2e9ccb000000b002d34c754a9asm1366392ljj.109.2024.03.18.02.21.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Mar 2024 02:21:17 -0700 (PDT)
+Message-ID: <b9724b4c-7c99-4903-aa53-19592df5695f@linaro.org>
+Date: Mon, 18 Mar 2024 10:21:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: sc8280xp: Describe the PCIe
+ SMMUv3
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+ Rob Herring <robh@kernel.org>, Marijn Suijten
+ <marijn.suijten@somainline.org>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+ Johan Hovold <johan+linaro@kernel.org>
+References: <20231219-topic-8280_smmuv3-v2-0-c67bd3226687@linaro.org>
+ <20231219-topic-8280_smmuv3-v2-2-c67bd3226687@linaro.org>
+ <phledylmdu23yrw6f4x7fkefntrejuwagazebsnkgyxsweodzg@pddhnc2gwexz>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <phledylmdu23yrw6f4x7fkefntrejuwagazebsnkgyxsweodzg@pddhnc2gwexz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Convert the NXP PNX I2C Controller bindings to DT schema.
-Keep only one example in DT schema to remove redundancy.
+On 18.03.2024 02:31, Bjorn Andersson wrote:
+> On Sat, Mar 09, 2024 at 02:31:10PM +0100, Konrad Dybcio wrote:
+>> SC8280XP actually has a third SMMU, which can be seen in e.g. the IORT
+>> ACPI table and is used for the PCIe hosts.
+>>
+>> Unfortunately though, the secure firmware seems to be configured in a
+>> way such that Linux can't touch it, not even read back the ID registers.
+>> It also seems like the SMMU is configured to run in some sort of bypass
+>> mode, completely opaque to the OS.
+>>
+>> Describe it so that one can configure it when running Linux as a
+>> hypervisor (e.g with [1]) and for hardware description completeness.
+>>
+>> [1] https://github.com/TravMurav/slbounce
+>> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> 
+> Have this information been validated? Or are you suggesting we add it
+> for documentation purposes?
 
-Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
----
- .../devicetree/bindings/i2c/i2c-pnx.txt       | 34 ------------
- .../devicetree/bindings/i2c/nxp,i2c-pnx.yaml  | 52 +++++++++++++++++++
- 2 files changed, 52 insertions(+), 34 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-pnx.txt
- create mode 100644 Documentation/devicetree/bindings/i2c/nxp,i2c-pnx.yaml
+I confirmed the platforms boots up with this if the hypervisor is gone.
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-pnx.txt b/Documentation/devicetree/bindings/i2c/i2c-pnx.txt
-deleted file mode 100644
-index 2a59006cf79e..000000000000
---- a/Documentation/devicetree/bindings/i2c/i2c-pnx.txt
-+++ /dev/null
-@@ -1,34 +0,0 @@
--* NXP PNX I2C Controller
--
--Required properties:
--
-- - reg: Offset and length of the register set for the device
-- - compatible: should be "nxp,pnx-i2c"
-- - interrupts: configure one interrupt line
-- - #address-cells: always 1 (for i2c addresses)
-- - #size-cells: always 0
--
--Optional properties:
--
-- - clock-frequency: desired I2C bus clock frequency in Hz, Default: 100000 Hz
--
--Examples:
--
--	i2c1: i2c@400a0000 {
--		compatible = "nxp,pnx-i2c";
--		reg = <0x400a0000 0x100>;
--		interrupt-parent = <&mic>;
--		interrupts = <51 0>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--	};
--
--	i2c2: i2c@400a8000 {
--		compatible = "nxp,pnx-i2c";
--		reg = <0x400a8000 0x100>;
--		interrupt-parent = <&mic>;
--		interrupts = <50 0>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--		clock-frequency = <100000>;
--	};
-diff --git a/Documentation/devicetree/bindings/i2c/nxp,i2c-pnx.yaml b/Documentation/devicetree/bindings/i2c/nxp,i2c-pnx.yaml
-new file mode 100644
-index 000000000000..b44e4f995b73
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/nxp,i2c-pnx.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/i2c/nxp,i2c-pnx.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: NXP PNX I2C Controller
-+
-+maintainers:
-+  - Animesh Agarwal<animeshagarwal28@gmail.com>
-+
-+allOf:
-+  - $ref: /schemas/i2c/i2c-controller.yaml#
-+
-+properties:
-+  compatible:
-+    const: nxp,pnx-i2c
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+  clock-frequency:
-+    default: 100000
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    i2c1: i2c@400a0000 {
-+        compatible = "nxp,pnx-i2c";
-+        reg = <0x400a0000 0x100>;
-+        interrupt-parent = <&mic>;
-+        interrupts = <51 0>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+    };
--- 
-2.44.0
-
+Konrad
