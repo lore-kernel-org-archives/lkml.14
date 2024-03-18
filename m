@@ -1,115 +1,160 @@
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0356D56755
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 19:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A436D57881
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 19:12:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710789161; cv=none; b=SYT3yB53TVoce4Mj9zShGI5dH9u96vA2vH+Xhs8qZZ8Og8AL7MtM4ib/jyiPCgnkZ49+FDjISGPMT0W7Shb51HhCmoqfSgDy5VCHQZfhpWcmhSSPdPIlpRdkWYFC8TGubAqHDlzOBTeWOAM1NzI4Tpu2kujshE41xTEV7Hw43H4=
+	t=1710789171; cv=none; b=RwI7K9rBFQwYb+6Z/GH92Xc7UbQSloAahtXGl/nIEeNsEQ5BQkP1vsUEoxrKgqFxk0fXKyI9J6KfKvwJ8NWc6ONvydaNyJS6DlXfaf8nLZBuyF7qb381GlUhbH/CAufjEYosWdJzLRbvbMTsGHelthPJdq+UucT3dsPGmfQtMJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710789161; c=relaxed/simple;
-	bh=azAsnPQAVK2iBIAnXaor0VpPHFvaPYrmjfryKMkNBHc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NWNqjZy0uPs6TAiNfexZ3d4hyBFrLDY2kw6Q6OZjWJdl2adsfTkNqgVr+3n61ieABvmsmi/ZPYiMoryu4cY/MLC/UMnqIk3TI/mqOuBcs9BiHx3GZRGeIShK6EjgYMiD/RvYIKi3MtSCiUUejgdaj4UwqEQ2C0LVPiqeAm5y/qM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ohlCySQn; arc=none smtp.client-ip=209.85.217.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1710789171; c=relaxed/simple;
+	bh=BRzAVB64xba4LajsrQesEnO3VNhDC6VLDMobsb0exZQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OwzfGG9xkP2F7S/X4QsyjbMNBpKcydQfdY0qVy/N/NWOwIxm6a9cFxjt3K7XAKOaoHlUI+JFPQ3MARGDY/X+PAV7dBAN6u1OZLSKJyNlDs4xaYNTN7MsfCWAGWPyyf+Dp7z7+K5yJYTaYQcWEDC9dqc09wU4LaZWTkHUadKD2Jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=YxNpQkjr; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ohlCySQn"
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4765792fc76so990728137.3
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 12:12:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710789159; x=1711393959; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lIPYiS6AqT1tNRa+kXH/qxTnijO9SB6Y3hbgkaDiv84=;
-        b=ohlCySQnxier1SqXYCtxavbjBcoJEYaDwqDVXsUoUJG1wJdx6ISW0U2gvkfk9tMaIB
-         f4p/JadXVx4vOcdKuHMGR/I0GBhx4H5JcLF6ULxAidWtajKTyQwOMXmr+LocMSDVmGIY
-         JNqXky4pXo5vxp5l91VKsRBJSBcOONM1VNcow3VX8evSDhrWiYl0jjYrGlS/Pr+dQBt4
-         ef+gfk+6e4DX8R6Hi3Ggk8sxZnCSpftwBYZik3L2HiWvomExYOEliTTi+IYtBq0YR5Ih
-         3gt2C/jwJ4cMx9yqHe5LF+tLJa6qoz9XF33tnN8GRjGAu3QQ0/swcOCtUY3W2ER6lN8J
-         fT8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710789159; x=1711393959;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lIPYiS6AqT1tNRa+kXH/qxTnijO9SB6Y3hbgkaDiv84=;
-        b=NX/rSw2Fq4LjZzO5S1Tp7REV9Nl+TNyyd8+DR7kimA/7gztYJTC5lE4w2OTtPzyR0X
-         NAC1Ek9dC+BA212651QH64pgDntKrCpVkx5CGY8bwUYdCeTngb1a1aqaHENOAesUnWv+
-         QEqIaOxevXlsG4Lf0SHDOJN38Bw2R7weV/vjKipflg5CApjUC/y/z7a9VOpVFaFuqj47
-         AN7JKAycgUuQE7hiALtIr54hQEApaVJJY4nbu34NBs96d8ODTneqAyk4uYn4x2g57QC+
-         r8Uk8bnmCjXNe3qGSQnHHAhgZ9Wq+PUKYJwFTKxy6xl3XdBiVm2VKvN7D/UIYiWRplvN
-         PC3g==
-X-Forwarded-Encrypted: i=1; AJvYcCVHk+qdqSK4oteIjRs1QiWkosdAtZoo+J6hVtVcIGht0aFpK/9dPQXh9PIgiYnybcxnjdYiUwGBl0e+HN1dvE+dKhlvLkpFBAb51Fio
-X-Gm-Message-State: AOJu0Yz39atb/bdnPsqu4AWnDid9RYGhnz0caYqGht/+NT7gJYPcFi28
-	Y8Lg7lDKhjkVIqP6HGY/1sOV403RsFs4yE9b4+nIURdnn3GhoJ27SOg7lixKiOc/YPKVWGMdwqW
-	E6ptSJa6p7hhYhpVhIev5Xad9DDWZyYUetBcI
-X-Google-Smtp-Source: AGHT+IFEDnXmFC0T46g4e3RXdTra2OHUDn/F9pxl9qas27NyWz4W8MEV58eyTz1wBY4vhIQxnax9RfgFyGEFnEXlN/4=
-X-Received: by 2002:a05:6102:a54:b0:473:ac82:27dd with SMTP id
- i20-20020a0561020a5400b00473ac8227ddmr329639vss.6.1710789158712; Mon, 18 Mar
- 2024 12:12:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="YxNpQkjr"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.4.0)
+ id 088c641c652891ff; Mon, 18 Mar 2024 19:12:46 +0100
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 1DB7C66B492;
+	Mon, 18 Mar 2024 19:12:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1710785566;
+	bh=BRzAVB64xba4LajsrQesEnO3VNhDC6VLDMobsb0exZQ=;
+	h=From:To:Cc:Subject:Date;
+	b=YxNpQkjrXnpoUqSEXOE1pYdXAuD1eQ2+smUsMNnvoMUI7DNIsnJRQKXsFlxCnWi4K
+	 cRBc5EzWHw2jrZoWn57APymPLEe3h8ZIiBc2lUGN/hz/f8R29J1Dm5L8OpRKS1tP8e
+	 INWnYGp2rlJU640mbMeplMPO2tFiaE63LL7xC2lGM7+VH7l/F4d/THjpaeSPbc3EbU
+	 TtJYkoHnUMo8gJFl0ORtj46Cxr9JpX66Sos4vEVsfRhJEZvBJkRqCAOEKvx+b7/8a2
+	 ALnQDp49YVVOrtnaWgUPwFnZJNiDTfC3auTGNVJtyXKvCnpcktanee2g2ozDpxq4XR
+	 0Ou9r4YtYztAA==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: x86 Maintainers <x86@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Borislav Petkov <bp@alien8.de>
+Subject: [PATCH v1] arch: x86: kernel: Remove leftover contents of topology.c
+Date: Mon, 18 Mar 2024 19:12:45 +0100
+Message-ID: <12422874.O9o76ZdvQC@kreacher>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240311-alice-mm-v3-0-cdf7b3a2049c@google.com>
- <20240311-alice-mm-v3-1-cdf7b3a2049c@google.com> <ZfiPB_iavHr8hNbm@boqun-archlinux>
-In-Reply-To: <ZfiPB_iavHr8hNbm@boqun-archlinux>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Mon, 18 Mar 2024 20:12:27 +0100
-Message-ID: <CAH5fLghs7=V2hHYBnQE-h=xpQYKX5ZxrV1iVdB4ybt7pAXFMWQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] rust: uaccess: add userspace pointers
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, 
-	Kees Cook <keescook@chromium.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Christian Brauner <brauner@kernel.org>
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrkeejgdduuddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepffffffekgfehheffleetieevfeefvefhleetjedvvdeijeejledvieehueevueffnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohepiedprhgtphhtthhopeigkeeisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhglhigsehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtohepuggrvhgvrdhhrghnshgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegsphesrghlihgvnhekrdguvg
+X-DCC--Metrics: v370.home.net.pl 1024; Body=6 Fuz1=6 Fuz2=6
 
-On Mon, Mar 18, 2024 at 7:59=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
-rote:
->
-> On Mon, Mar 11, 2024 at 10:47:13AM +0000, Alice Ryhl wrote:
-> > +
-> > +    /// Reads raw data from the user slice into a raw kernel buffer.
-> > +    ///
-> > +    /// Fails with `EFAULT` if the read encounters a page fault.
-> > +    ///
-> > +    /// # Safety
-> > +    ///
-> > +    /// The `out` pointer must be valid for writing `len` bytes.
-> > +    pub unsafe fn read_raw(&mut self, out: *mut u8, len: usize) -> Res=
-ult {
->
-> I don't think we want to promote the pub usage of this unsafe function,
-> right? We can provide a safe version:
->
->         pub fn read_slice(&mut self, to: &[u8]) -> Result
->
-> and all users can just use the safe version (with the help of
-> slice::from_raw_parts_mut() if necessary).
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Personally, I think having the function be unsafe is plenty discouragement.
+The only useful piece of arch/x86/kernel/topology.c is the definition
+of arch_cpu_is_hotpluggable() that can be moved elsewhere (other
+architectures tend to put it into setup.c), so do that and delete
+the rest of the file.
 
-Also, this method would need an &mut [u8], which opens the can of
-worms related to uninitialized memory. The _raw version of this method
-is strictly more powerful.
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ arch/x86/kernel/Makefile   |    2 +-
+ arch/x86/kernel/setup.c    |    8 ++++++++
+ arch/x86/kernel/topology.c |   43 -------------------------------------------
+ 3 files changed, 9 insertions(+), 44 deletions(-)
 
-I don't think I actually use it directly in Binder, so I can make it
-private if you think that's important. It needs to be pub(crate),
-though, since it is used in `Page`.
+Index: linux-pm/arch/x86/kernel/setup.c
+===================================================================
+--- linux-pm.orig/arch/x86/kernel/setup.c
++++ linux-pm/arch/x86/kernel/setup.c
+@@ -7,6 +7,7 @@
+  */
+ #include <linux/acpi.h>
+ #include <linux/console.h>
++#include <linux/cpu.h>
+ #include <linux/crash_dump.h>
+ #include <linux/dma-map-ops.h>
+ #include <linux/dmi.h>
+@@ -1222,3 +1223,10 @@ static int __init register_kernel_offset
+ 	return 0;
+ }
+ __initcall(register_kernel_offset_dumper);
++
++#ifdef CONFIG_HOTPLUG_CPU
++bool arch_cpu_is_hotpluggable(int cpu)
++{
++	return cpu > 0;
++}
++#endif /* CONFIG_HOTPLUG_CPU */
+Index: linux-pm/arch/x86/kernel/topology.c
+===================================================================
+--- linux-pm.orig/arch/x86/kernel/topology.c
++++ /dev/null
+@@ -1,43 +0,0 @@
+-/*
+- * Populate sysfs with topology information
+- *
+- * Written by: Matthew Dobson, IBM Corporation
+- * Original Code: Paul Dorwin, IBM Corporation, Patrick Mochel, OSDL
+- *
+- * Copyright (C) 2002, IBM Corp.
+- *
+- * All rights reserved.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or
+- * NON INFRINGEMENT.  See the GNU General Public License for more
+- * details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+- *
+- * Send feedback to <colpatch@us.ibm.com>
+- */
+-#include <linux/interrupt.h>
+-#include <linux/nodemask.h>
+-#include <linux/export.h>
+-#include <linux/mmzone.h>
+-#include <linux/init.h>
+-#include <linux/smp.h>
+-#include <linux/irq.h>
+-#include <asm/io_apic.h>
+-#include <asm/cpu.h>
+-
+-#ifdef CONFIG_HOTPLUG_CPU
+-bool arch_cpu_is_hotpluggable(int cpu)
+-{
+-	return cpu > 0;
+-}
+-#endif /* CONFIG_HOTPLUG_CPU */
+Index: linux-pm/arch/x86/kernel/Makefile
+===================================================================
+--- linux-pm.orig/arch/x86/kernel/Makefile
++++ linux-pm/arch/x86/kernel/Makefile
+@@ -60,7 +60,7 @@ obj-$(CONFIG_X86_64)	+= sys_x86_64.o
+ obj-$(CONFIG_X86_ESPFIX64)	+= espfix_64.o
+ obj-$(CONFIG_SYSFS)	+= ksysfs.o
+ obj-y			+= bootflag.o e820.o
+-obj-y			+= pci-dma.o quirks.o topology.o kdebugfs.o
++obj-y			+= pci-dma.o quirks.o kdebugfs.o
+ obj-y			+= alternative.o i8253.o hw_breakpoint.o
+ obj-y			+= tsc.o tsc_msr.o io_delay.o rtc.o
+ obj-y			+= resource.o
 
-Alice
+
+
