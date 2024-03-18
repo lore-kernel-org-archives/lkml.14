@@ -1,322 +1,138 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21CC28814;
-	Mon, 18 Mar 2024 02:45:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765571CD23;
+	Mon, 18 Mar 2024 02:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710729954; cv=none; b=kayX09RcNUd9MVFSjgmvtBsCEsOQLxyUXr89kYPfPOScCNOqqNV3laRs5U+myiIqk15w5JwhsV75Nw9Bgz46BYqUfBqVANJ3OSPYbGmBYQVBaVKYjENzaP4gEI99BlhfgoOgx/pqCIyhVtibR6tvLZc7xtYqNTAyAB5f87Le9G8=
+	t=1710729975; cv=none; b=f+AuVP8oESkPvbUpxbAx3G8eBV3EfRcT66M4OGsPmAIReSArbPSRGaW+ENVmh+5fDpvK7oVD0loQiNhLG5wl2KKC3AMEh3Zz22Zj0Mkiu7zUhpikxy5XaVzZ1wcJwx3MpKRayW/wWIxFo1/V7uZpVfOVogJKp8pvlRT5mJh61go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710729954; c=relaxed/simple;
-	bh=CxnsZd7rbZMrQtDk4mHIEY+JTsHd4K0H9jn4yBsFhgA=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=UfQvNfKaijpS66YtNx18nJn1SuxnbXfY+FB3w5L8PQxa4Jfw0J4wf+UH3MIFioeQb0N0TjExh55tYkhwPafL0NnFO4z4mUbkH8trO3QGb4L0shn9qcM9z6gn6QWvhVDivsOisBNFPyh2I2qVx4xoDe9ZKH6kbB/xCdiaHItwXc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=aGHg4Ibm; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="aGHg4Ibm"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 9520020B74C0; Sun, 17 Mar 2024 19:45:52 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9520020B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1710729952;
-	bh=rvVWLQiGsfQNZCfj9wc8a/tjixWzO4wJ12FE9seR5i0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=aGHg4Ibmiv0G8KbRHkwOe0IIbzq898ovzRbPS+o53r7SRV+7evZfzenjmQWK8BgvU
-	 fB8gbpfq2EYvEs9hd7dxsBzAg4KehjuEd9+g9E5YgVvobpyu2pOwkmYsAFKHRcujbz
-	 TW8rkQfgzmIcsZLiDD8yf7NrUkcE+GOqJ7mbhuR8=
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Olaf Hering <olaf@aepfle.de>,
-	Ani Sinha <anisinha@redhat.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: [PATCH v3] hv/hv_kvp_daemon: Handle IPv4 and Ipv6 combination for keyfile format
-Date: Sun, 17 Mar 2024 19:45:51 -0700
-Message-Id: <1710729951-2695-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	s=arc-20240116; t=1710729975; c=relaxed/simple;
+	bh=iMalHyvOjYJTB5z6bdp7v0zygCXgTHvNs47aIBcNDys=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sqydRA9BgRBMSkx7NFXUHvmayPBA7BqbdYdtTtDTPTk2tHlsHMRgRu1d59S8haqanMmiIL1G8rrl/iEEMu043uaBST7hxCuRnN0xFJX4UnqWqVw/1nH7cs6riwS6l1SbRtlc4SZbNcZV0PrHyE9P+f+ewPaRVixg4PmYPazEiu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4TyfLC11yYz1QBmL;
+	Mon, 18 Mar 2024 10:43:31 +0800 (CST)
+Received: from dggpemd100002.china.huawei.com (unknown [7.185.36.164])
+	by mail.maildlp.com (Postfix) with ESMTPS id D28B11400CB;
+	Mon, 18 Mar 2024 10:46:02 +0800 (CST)
+Received: from huawei.com (10.67.174.33) by dggpemd100002.china.huawei.com
+ (7.185.36.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Mon, 18 Mar
+ 2024 10:46:02 +0800
+From: "GONG, Ruiqi" <gongruiqi1@huawei.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
+	<jirislaby@kernel.org>, Hugo Villeneuve <hvilleneuve@dimonoff.com>
+CC: Jon Ringle <jringle@gridpoint.com>, <linux-serial@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Wang Weiyang <wangweiyang2@huawei.com>
+Subject: [PATCH stable 5.10] serial: sc16is7xx: convert from _raw_ to _noinc_ regmap functions for FIFO
+Date: Mon, 18 Mar 2024 10:52:59 +0800
+Message-ID: <20240318025259.1412353-1-gongruiqi1@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemd100002.china.huawei.com (7.185.36.164)
 
-If the network configuration strings are passed as a combination of IPv and
-IPv6 addresses, the current KVP daemon doesnot handle it for the keyfile
-configuration format.
-With these changes, the keyfile config generation logic scans through the
-list twice to generate IPv4 and IPv6 sections for the configuration files
-to handle this support.
+From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 
-Testcases ran:Rhel 9, Hyper-V VMs
-              (IPv4 only, IPv6 only, IPv4 and IPv6 combination)
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+commit dbf4ab821804df071c8b566d9813083125e6d97b upstream.
+
+The SC16IS7XX IC supports a burst mode to access the FIFOs where the
+initial register address is sent ($00), followed by all the FIFO data
+without having to resend the register address each time. In this mode, the
+IC doesn't increment the register address for each R/W byte.
+
+The regmap_raw_read() and regmap_raw_write() are functions which can
+perform IO over multiple registers. They are currently used to read/write
+from/to the FIFO, and although they operate correctly in this burst mode on
+the SPI bus, they would corrupt the regmap cache if it was not disabled
+manually. The reason is that when the R/W size is more than 1 byte, these
+functions assume that the register address is incremented and handle the
+cache accordingly.
+
+Convert FIFO R/W functions to use the regmap _noinc_ versions in order to
+remove the manual cache control which was a workaround when using the
+_raw_ versions. FIFO registers are properly declared as volatile so
+cache will not be used/updated for FIFO accesses.
+
+Fixes: dfeae619d781 ("serial: sc16is7xx")
+Cc:  <stable@vger.kernel.org>
+Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Link: https://lore.kernel.org/r/20231211171353.2901416-6-hugo@hugovil.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
 ---
- Changes in v3
- * Introduced a macro for the output string size
- * Added cound checks and used strncpy instead of strncpy
- * Rearranged code to reduce total lines of code
----
- tools/hv/hv_kvp_daemon.c | 177 ++++++++++++++++++++++++++++++---------
- 1 file changed, 136 insertions(+), 41 deletions(-)
 
-diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-index 318e2dad27e0..156cef99d361 100644
---- a/tools/hv/hv_kvp_daemon.c
-+++ b/tools/hv/hv_kvp_daemon.c
-@@ -76,6 +76,12 @@ enum {
- 	DNS
+The mainline commit dbf4ab821804 ("serial: sc16is7xx: convert from _raw_
+to _noinc_ regmap functions for FIFO") by Hugo has been assigned to be
+CVE-2023-52488, but for stable branches lower than 6.1 there's no
+official backport.
+
+I made up this backport patch for 5.10, and its correctness has been
+confirmed in previous communication with Hugo. Let's publicize it and
+merge it into upstream.
+
+ drivers/tty/serial/sc16is7xx.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
+index 31e0c5c3ddea..29f05db0d49b 100644
+--- a/drivers/tty/serial/sc16is7xx.c
++++ b/drivers/tty/serial/sc16is7xx.c
+@@ -376,9 +376,7 @@ static void sc16is7xx_fifo_read(struct uart_port *port, unsigned int rxlen)
+ 	const u8 line = sc16is7xx_line(port);
+ 	u8 addr = (SC16IS7XX_RHR_REG << SC16IS7XX_REG_SHIFT) | line;
+ 
+-	regcache_cache_bypass(s->regmap, true);
+-	regmap_raw_read(s->regmap, addr, s->buf, rxlen);
+-	regcache_cache_bypass(s->regmap, false);
++	regmap_noinc_read(s->regmap, addr, s->buf, rxlen);
+ }
+ 
+ static void sc16is7xx_fifo_write(struct uart_port *port, u8 to_send)
+@@ -394,9 +392,7 @@ static void sc16is7xx_fifo_write(struct uart_port *port, u8 to_send)
+ 	if (unlikely(!to_send))
+ 		return;
+ 
+-	regcache_cache_bypass(s->regmap, true);
+-	regmap_raw_write(s->regmap, addr, s->buf, to_send);
+-	regcache_cache_bypass(s->regmap, false);
++	regmap_noinc_write(s->regmap, addr, s->buf, to_send);
+ }
+ 
+ static void sc16is7xx_port_update(struct uart_port *port, u8 reg,
+@@ -489,6 +485,11 @@ static bool sc16is7xx_regmap_precious(struct device *dev, unsigned int reg)
+ 	return false;
+ }
+ 
++static bool sc16is7xx_regmap_noinc(struct device *dev, unsigned int reg)
++{
++	return reg == SC16IS7XX_RHR_REG;
++}
++
+ static int sc16is7xx_set_baud(struct uart_port *port, int baud)
+ {
+ 	struct sc16is7xx_port *s = dev_get_drvdata(port->dev);
+@@ -1439,6 +1440,8 @@ static struct regmap_config regcfg = {
+ 	.cache_type = REGCACHE_RBTREE,
+ 	.volatile_reg = sc16is7xx_regmap_volatile,
+ 	.precious_reg = sc16is7xx_regmap_precious,
++	.writeable_noinc_reg = sc16is7xx_regmap_noinc,
++	.readable_noinc_reg = sc16is7xx_regmap_noinc,
  };
  
-+enum {
-+	IPV4 = 1,
-+	IPV6,
-+	IP_TYPE_MAX
-+};
-+
- static int in_hand_shake;
- 
- static char *os_name = "";
-@@ -102,6 +108,11 @@ static struct utsname uts_buf;
- 
- #define MAX_FILE_NAME 100
- #define ENTRIES_PER_BLOCK 50
-+/*
-+ * Change this entry if the number of addresses increases in future
-+ */
-+#define MAX_IP_ENTRIES 64
-+#define OUTSTR_BUF_SIZE ((INET6_ADDRSTRLEN + 1) * MAX_IP_ENTRIES)
- 
- struct kvp_record {
- 	char key[HV_KVP_EXCHANGE_MAX_KEY_SIZE];
-@@ -1171,6 +1182,18 @@ static int process_ip_string(FILE *f, char *ip_string, int type)
- 	return 0;
- }
- 
-+int ip_version_check(const char *input_addr)
-+{
-+	struct in6_addr addr;
-+
-+	if (inet_pton(AF_INET, input_addr, &addr))
-+		return IPV4;
-+	else if (inet_pton(AF_INET6, input_addr, &addr))
-+		return IPV6;
-+
-+	return -EINVAL;
-+}
-+
- /*
-  * Only IPv4 subnet strings needs to be converted to plen
-  * For IPv6 the subnet is already privided in plen format
-@@ -1197,14 +1220,71 @@ static int kvp_subnet_to_plen(char *subnet_addr_str)
- 	return plen;
- }
- 
-+static int process_dns_gateway_nm(FILE *f, char *ip_string, int type,
-+				  int ip_sec)
-+{
-+	char addr[INET6_ADDRSTRLEN], *output_str;
-+	int ip_offset = 0, error = 0, ip_ver;
-+	char *param_name;
-+
-+	memset(addr, 0, sizeof(addr));
-+
-+	if (type == DNS)
-+		param_name = "dns";
-+	else if (type == GATEWAY)
-+		param_name = "gateway";
-+	else
-+		return -EINVAL;
-+
-+	output_str = (char *)calloc(OUTSTR_BUF_SIZE, sizeof(char));
-+	if (!output_str)
-+		return -ENOMEM;
-+
-+	while (1) {
-+		memset(addr, 0, sizeof(addr));
-+
-+		if (!parse_ip_val_buffer(ip_string, &ip_offset, addr,
-+					 (MAX_IP_ADDR_SIZE * 2)))
-+			break;
-+
-+		ip_ver = ip_version_check(addr);
-+		if (ip_ver < 0)
-+			continue;
-+
-+		if ((ip_ver == IPV4 && ip_sec == IPV4) ||
-+		    (ip_ver == IPV6 && ip_sec == IPV6)) {
-+			/*
-+			 * do a bound check to avoid out-of bound writes
-+			 */
-+			if ((OUTSTR_BUF_SIZE - strlen(output_str)) >
-+			    (strlen(addr) + 1)) {
-+				strncat(output_str, addr,
-+					OUTSTR_BUF_SIZE - strlen(output_str));
-+				strncat(output_str, ",",
-+					OUTSTR_BUF_SIZE - strlen(output_str));
-+			}
-+		} else {
-+			continue;
-+		}
-+	}
-+
-+	if (strlen(output_str)) {
-+		output_str[strlen(output_str) - 1] = '\0';
-+		error = fprintf(f, "%s=%s\n", param_name, output_str);
-+	}
-+
-+	free(output_str);
-+	return error;
-+}
-+
- static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
--				int is_ipv6)
-+				int ip_sec)
- {
- 	char addr[INET6_ADDRSTRLEN];
- 	char subnet_addr[INET6_ADDRSTRLEN];
- 	int error, i = 0;
- 	int ip_offset = 0, subnet_offset = 0;
--	int plen;
-+	int plen, ip_ver;
- 
- 	memset(addr, 0, sizeof(addr));
- 	memset(subnet_addr, 0, sizeof(subnet_addr));
-@@ -1216,10 +1296,16 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
- 						       subnet_addr,
- 						       (MAX_IP_ADDR_SIZE *
- 							2))) {
--		if (!is_ipv6)
-+		ip_ver = ip_version_check(addr);
-+		if (ip_ver < 0)
-+			continue;
-+
-+		if (ip_ver == IPV4 && ip_sec == IPV4)
- 			plen = kvp_subnet_to_plen((char *)subnet_addr);
--		else
-+		else if (ip_ver == IPV6 && ip_sec == IPV6)
- 			plen = atoi(subnet_addr);
-+		else
-+			continue;
- 
- 		if (plen < 0)
- 			return plen;
-@@ -1238,12 +1324,11 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
- 
- static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
- {
--	int error = 0;
-+	int error = 0, ip_ver;
- 	char if_filename[PATH_MAX];
- 	char nm_filename[PATH_MAX];
- 	FILE *ifcfg_file, *nmfile;
- 	char cmd[PATH_MAX];
--	int is_ipv6 = 0;
- 	char *mac_addr;
- 	int str_len;
- 
-@@ -1421,52 +1506,62 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
- 	if (error)
- 		goto setval_error;
- 
--	if (new_val->addr_family & ADDR_FAMILY_IPV6) {
--		error = fprintf(nmfile, "\n[ipv6]\n");
--		if (error < 0)
--			goto setval_error;
--		is_ipv6 = 1;
--	} else {
--		error = fprintf(nmfile, "\n[ipv4]\n");
--		if (error < 0)
--			goto setval_error;
--	}
--
- 	/*
--	 * Now we populate the keyfile format
-+	 * The keyfile format expects the IPv6 and IPv4 configuration in
-+	 * different sections. Therefore we iterate through the list twice,
-+	 * once to populate the IPv4 section and the next time for IPv6
- 	 */
-+	ip_ver = IPV4;
-+	do {
-+		if (ip_ver == IPV4) {
-+			error = fprintf(nmfile, "\n[ipv4]\n");
-+			if (error < 0)
-+				goto setval_error;
-+		} else {
-+			error = fprintf(nmfile, "\n[ipv6]\n");
-+			if (error < 0)
-+				goto setval_error;
-+		}
- 
--	if (new_val->dhcp_enabled) {
--		error = kvp_write_file(nmfile, "method", "", "auto");
--		if (error < 0)
--			goto setval_error;
--	} else {
--		error = kvp_write_file(nmfile, "method", "", "manual");
-+		/*
-+		 * Now we populate the keyfile format
-+		 */
-+
-+		if (new_val->dhcp_enabled) {
-+			error = kvp_write_file(nmfile, "method", "", "auto");
-+			if (error < 0)
-+				goto setval_error;
-+		} else {
-+			error = kvp_write_file(nmfile, "method", "", "manual");
-+			if (error < 0)
-+				goto setval_error;
-+		}
-+
-+		/*
-+		 * Write the configuration for ipaddress, netmask, gateway and
-+		 * name services
-+		 */
-+		error = process_ip_string_nm(nmfile, (char *)new_val->ip_addr,
-+					     (char *)new_val->sub_net,
-+					     ip_ver);
- 		if (error < 0)
- 			goto setval_error;
--	}
- 
--	/*
--	 * Write the configuration for ipaddress, netmask, gateway and
--	 * name services
--	 */
--	error = process_ip_string_nm(nmfile, (char *)new_val->ip_addr,
--				     (char *)new_val->sub_net, is_ipv6);
--	if (error < 0)
--		goto setval_error;
--
--	/* we do not want ipv4 addresses in ipv6 section and vice versa */
--	if (is_ipv6 != is_ipv4((char *)new_val->gate_way)) {
--		error = fprintf(nmfile, "gateway=%s\n", (char *)new_val->gate_way);
-+		error = process_dns_gateway_nm(nmfile,
-+					       (char *)new_val->gate_way,
-+					       GATEWAY, ip_ver);
- 		if (error < 0)
- 			goto setval_error;
--	}
- 
--	if (is_ipv6 != is_ipv4((char *)new_val->dns_addr)) {
--		error = fprintf(nmfile, "dns=%s\n", (char *)new_val->dns_addr);
-+		error = process_dns_gateway_nm(nmfile,
-+					       (char *)new_val->dns_addr, DNS,
-+					       ip_ver);
- 		if (error < 0)
- 			goto setval_error;
--	}
-+
-+		ip_ver++;
-+	} while (ip_ver < IP_TYPE_MAX);
-+
- 	fclose(nmfile);
- 	fclose(ifcfg_file);
- 
+ #ifdef CONFIG_SERIAL_SC16IS7XX_SPI
 -- 
-2.34.1
+2.25.1
 
