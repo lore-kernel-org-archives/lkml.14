@@ -1,50 +1,55 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E925A782
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69EB05A4CA
 	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 22:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710799811; cv=none; b=FtPgxyCtwYI8Uf4bp8bVdrjI+99rMMeI/XuMfCBejgUSiT2mC2eT2EwavifSoPlZHkReiMgQyS6vX/yocUqPxZ36CJqRirE418VOmTS+r/ez4aptas97/TZjc6KTP3cEBdjM3lQ1SGOdqlzJWQatroKSm4voyNHwke394gFgOqc=
+	t=1710799812; cv=none; b=asTA9S9QAlWF+C66RVZXrRoZbl0N3E5tcj5OLoXiKuaD5OnlBoyexUa2Z1/Bvi6x+905kUl1vn7KjCBTq25FzGynVQrxa9ez1NDMNWdDIRkIGPHFPogVhw9Db12DwTwIVX6mnYP3v0R6u7q72hRuerTKfAoE0BaebPdW4HssgCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710799811; c=relaxed/simple;
-	bh=SS06J2Qq7Itn7uGpSS75eUlr+DDWdLd2LrLa8ZpCTXc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=q/+Azp844ZNL6Obk36SEL2JNxoleYApEySfStWn671qlpbzoWepvBAoB9Hf0UbAyFkVB60WbbQkRARQWwj4Y3kx1Ol93hl2Bgj0W2dUxTpsYyU4I3UJ3ZG4XhzcBz9XsbhUIrh/xxFzweSylmDV4eLf2kmbWncwtxCZQHr51E08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DLYiSF5I; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1710799812; c=relaxed/simple;
+	bh=Z5iRfxdNh5CyrDoUPDoH234u8YFkwUvwaTp8RBly4oA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=p4elbk+OFVa1waiFocSGhTEhdg4eC5hUy+lM4EojsGeKMBEshsGOaGbejMr5AnZ6ysBvIDN8FoIMnMCNlqOaT4GtlQnu5sZhqL/C++KifJ4l+4o0NU8GbGMFKEDzFmmGgQyaLQTQx5JgQRg4queFuGmFZOhldbKHAIutQ9ev3b8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XWKXmU5k; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DLYiSF5I"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XWKXmU5k"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1710799808;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=lU3bYlVFweW6d5myNi1cvNJ/wMZHrCTdSlP/1ol+Mt8=;
-	b=DLYiSF5I1HqwJL6rnGQw4ed5C1sz9LsiXp8C/szY4BNvwZqeZg7qCUO5OcgUXaoKvLEwld
-	YeVNDnmkL/wdrv7z0iyY+0lSuw7hmBfwRPZlJf9AyL69+nr3hpiRmRqPdBzzKCoyW7+xIs
-	e4o2HQNak8M0C261k49G3qciHKiaXj8=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WBkKm95Ln/2RsUgEOWoo/2LuPFULXZi0eLnZQwdqLAM=;
+	b=XWKXmU5kMG0UVPLYFCQ6x0ReXR9vxZsINggyDCtk4O+4Xc46qLeGMSsMQoRIj1Y0lqpb0j
+	UUECrgPKGsvisE2/hCBgy8FUmDoyIAoyeMW/iPxLym4VwgWXU6caFZcYXXklFALZJVGR12
+	gYx7MzyXyjyWvWJD9niSit79kVVbh6k=
 Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-668-iDRZ-uWrNBe7E91cIiLiGw-1; Mon,
- 18 Mar 2024 18:10:04 -0400
-X-MC-Unique: iDRZ-uWrNBe7E91cIiLiGw-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-591-NnrrJCCFNB-Nld8hG1-VXA-1; Mon,
+ 18 Mar 2024 18:10:05 -0400
+X-MC-Unique: NnrrJCCFNB-Nld8hG1-VXA-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9AE861C04338;
-	Mon, 18 Mar 2024 22:10:03 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id ACB591C04330;
+	Mon, 18 Mar 2024 22:10:04 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 7C5AF492BD3;
-	Mon, 18 Mar 2024 22:10:03 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 8BF02492BC8;
+	Mon, 18 Mar 2024 22:10:04 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
-Cc: seanjc@google.com
-Subject: [PATCH 0/7] KVM: SEV fixes for 6.9
-Date: Mon, 18 Mar 2024 18:09:55 -0400
-Message-ID: <20240318221002.2712738-1-pbonzini@redhat.com>
+Cc: seanjc@google.com,
+	Michael Roth <michael.roth@amd.com>
+Subject: [PATCH 6/7] Documentation: kvm/sev: separate description of firmware
+Date: Mon, 18 Mar 2024 18:10:01 -0400
+Message-ID: <20240318221002.2712738-7-pbonzini@redhat.com>
+In-Reply-To: <20240318221002.2712738-1-pbonzini@redhat.com>
+References: <20240318221002.2712738-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,36 +60,72 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-A small bugfix and documentation extract of my SEV_INIT2 series, plus
-4 patches from Ashish and Sean that I thought would be in the 6.9 pull
-requests.
+The description of firmware is included part under the "SEV Key Management"
+header, part under the KVM_SEV_INIT ioctl.  Put these two bits together and
+and rename "SEV Key Management" to what it actually is, namely a description
+of the KVM_MEMORY_ENCRYPT_OP API.
 
-No need to rush this in during the merge window, but please ack
-nevertheless.
+Reviewed-by: Michael Roth <michael.roth@amd.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ .../virt/kvm/x86/amd-memory-encryption.rst    | 29 +++++++++++--------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
 
-Paolo
-
-Ashish Kalra (1):
-  KVM: SVM: Add support for allowing zero SEV ASIDs
-
-Paolo Bonzini (3):
-  KVM: SEV: fix compat ABI for KVM_MEMORY_ENCRYPT_OP
-  Documentation: kvm/sev: separate description of firmware
-  Documentation: kvm/sev: clarify usage of KVM_MEMORY_ENCRYPT_OP
-
-Sean Christopherson (3):
-  KVM: SVM: Set sev->asid in sev_asid_new() instead of overloading the
-    return
-  KVM: SVM: Use unsigned integers when dealing with ASIDs
-  KVM: SVM: Return -EINVAL instead of -EBUSY on attempt to re-init
-    SEV/SEV-ES
-
- .../virt/kvm/x86/amd-memory-encryption.rst    | 42 ++++++++------
- arch/x86/include/uapi/asm/kvm.h               | 23 ++++++++
- arch/x86/kvm/svm/sev.c                        | 58 +++++++++++--------
- arch/x86/kvm/trace.h                          | 10 ++--
- 4 files changed, 86 insertions(+), 47 deletions(-)
-
+diff --git a/Documentation/virt/kvm/x86/amd-memory-encryption.rst b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
+index 995780088eb2..4f2eb441c718 100644
+--- a/Documentation/virt/kvm/x86/amd-memory-encryption.rst
++++ b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
+@@ -46,14 +46,8 @@ SEV hardware uses ASIDs to associate a memory encryption key with a VM.
+ Hence, the ASID for the SEV-enabled guests must be from 1 to a maximum value
+ defined in the CPUID 0x8000001f[ecx] field.
+ 
+-SEV Key Management
+-==================
+-
+-The SEV guest key management is handled by a separate processor called the AMD
+-Secure Processor (AMD-SP). Firmware running inside the AMD-SP provides a secure
+-key management interface to perform common hypervisor activities such as
+-encrypting bootstrap code, snapshot, migrating and debugging the guest. For more
+-information, see the SEV Key Management spec [api-spec]_
++The KVM_MEMORY_ENCRYPT_OP ioctl
++===============================
+ 
+ The main ioctl to access SEV is KVM_MEMORY_ENCRYPT_OP.  If the argument
+ to KVM_MEMORY_ENCRYPT_OP is NULL, the ioctl returns 0 if SEV is enabled
+@@ -87,10 +81,6 @@ guests, such as launching, running, snapshotting, migrating and decommissioning.
+ The KVM_SEV_INIT command is used by the hypervisor to initialize the SEV platform
+ context. In a typical workflow, this command should be the first command issued.
+ 
+-The firmware can be initialized either by using its own non-volatile storage or
+-the OS can manage the NV storage for the firmware using the module parameter
+-``init_ex_path``. If the file specified by ``init_ex_path`` does not exist or
+-is invalid, the OS will create or override the file with output from PSP.
+ 
+ Returns: 0 on success, -negative on error
+ 
+@@ -434,6 +424,21 @@ issued by the hypervisor to make the guest ready for execution.
+ 
+ Returns: 0 on success, -negative on error
+ 
++Firmware Management
++===================
++
++The SEV guest key management is handled by a separate processor called the AMD
++Secure Processor (AMD-SP). Firmware running inside the AMD-SP provides a secure
++key management interface to perform common hypervisor activities such as
++encrypting bootstrap code, snapshot, migrating and debugging the guest. For more
++information, see the SEV Key Management spec [api-spec]_
++
++The AMD-SP firmware can be initialized either by using its own non-volatile
++storage or the OS can manage the NV storage for the firmware using
++parameter ``init_ex_path`` of the ``ccp`` module. If the file specified
++by ``init_ex_path`` does not exist or is invalid, the OS will create or
++override the file with PSP non-volatile storage.
++
+ References
+ ==========
+ 
 -- 
 2.43.0
+
 
