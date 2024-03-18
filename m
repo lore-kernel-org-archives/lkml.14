@@ -1,126 +1,176 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2083.outbound.protection.outlook.com [40.107.223.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39F3524BD;
-	Mon, 18 Mar 2024 15:46:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710776784; cv=none; b=kYZ/yEnEAmqdFjaWKOlRTTUqXmt0RLyEjifjZhBwEW9GeY8qIwIbM1szsi/Zm8K8wQSs6dOfNnzW3ICrfyOn3hp/ptWphcKqCy4I063k1/15EoSpUXTiC/uId1kLXGp3sspHRspv52IM1hHAFHheAT1loTwr8LS25BOPXNXhokA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710776784; c=relaxed/simple;
-	bh=WxHwKXMNCGsjAQJ9XWxSYt4pFJRKzmB/HVljAZQq3VY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FnlYzlKMmwO7LkXc0hvj/Y3okAtgdEIh4L4okJPSFoz/QP7EVq38Hm5IOj1J8YmaS2opEShfJLYbELh62QLvimOVmtWRaiafDjxL6SZFOzILVwceavjMkq4PvUk7ZMbSgDFlkLFwC9/Mr/lHbKCSN+2lBQMYT7wG/wPZkR2cqzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V0Tr5OJe; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A2452F6C;
+	Mon, 18 Mar 2024 15:46:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710776807; cv=fail; b=biaPXV9Nwk7msdeqJDaLz7NMhRIwUoCUTUahtWyMM9qyn2KzedHWshSrJqCz5UrM7fk/AtMO76Vl01vSXmax1Y/dIjGn+0eMIPAWOCoBm0WAZHg0G72ZLVJUXY3bsx3gIQlzd2PuNUyqsf+XOOG+pGuOlSl7SqqjzRBkn8v4/Us=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710776807; c=relaxed/simple;
+	bh=HaGb1peEIkH6r+bW2+Ik8GkBwj+BRJnwNiB2fB4W2vY=;
+	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=b0S90mQTadI4L53V7f/3MsWZ1RIk70VGsu7jxmcFQ/+WjGKEryCWLyiY1UZHKhVXV6ABkrnC1zk8+8NytQQrWJw6Hxt9hoBN+AzvSFe8SELZaIqF8SE6qXXq14H9A2DsqTyReOj/DDw+OLimGrp5+khJs74PUeHFV/AZqzAmd18=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=t7TgZ7wI; arc=fail smtp.client-ip=40.107.223.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V0Tr5OJe"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e6cb0f782bso3777001b3a.1;
-        Mon, 18 Mar 2024 08:46:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710776782; x=1711381582; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eWDSD9O32qOZWl7Ul+3Std0rh3NiTvNf73A2v9mV+98=;
-        b=V0Tr5OJeR6QySZHXPh8fQeIgCjXdxO0ojsW0hIDX46GbMsoyABBNBRi5YdHePpizlw
-         usV03aaU9FA0rCBvw2gxT/I2HKl2LR0x1rOgqoe2XNDDiluUI4CZ+G1/ShOZRoiEnO+h
-         sY3yYit2M5Ob26BHiy4ljXGa3H5Rijngn40uzX3IHvuMnzjKEZkmfLVOxD/O06swJLi2
-         g0sht2Z5reE3Gsgj9/63uhId3o/40n/UrAlAM8zmXr5lDQvhHRKS7PHWP52FIV4zesSF
-         0zgZgmsR94nxsPvjC7DB461BS2fkRUl8guZbh5rPcy61DvHMeYhCWqksP4magp1+J0HO
-         DwxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710776782; x=1711381582;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eWDSD9O32qOZWl7Ul+3Std0rh3NiTvNf73A2v9mV+98=;
-        b=TzorPBEarq2oC/nOANb1utimX8Y6CT93yO0z2i/+zXYWvaajEekOfSLCwoNd+5UoLT
-         8RbOGdsL4OljfZFI437f8tb+k0d0Dq2TkJjq7u7Xc2CO6h3H/lDtSTSxE7ilhW8szYT+
-         /x5lka0QUoA15muKdOdVopBhekaelZOdPmKlOtTWdaSDsbJMPknocY+BYloGJr5j3tGF
-         IH6+D3tnQcX01Aw72hLMfKGSgPlc5lchIV3BQ2da2ICgfYrMuMa5rom47EiH88L4cZ1A
-         FJ/+a20V5CSRRmGIHzHCxxsvAtwwThsA64xYmvWD1ESmLJsiZyZQH3+z/sR7HQDBuann
-         Hu9w==
-X-Forwarded-Encrypted: i=1; AJvYcCXakiQu3QvYbSEZnNAlMdkea0hw61Ghxc94d8aaDuhKbDPk26gFAF7CfY06ArWOPEj0c3bF+n1YE/+wl/BmVi9bqT9eBL55JnHwTpA=
-X-Gm-Message-State: AOJu0YyXaDf0WEI9GU58S3y5zPAduxCN+pSmKw7L88iVk2lj6CiTen50
-	XBGlSqqwulY4wmmL3iu9InkA6Y2J8SUsihSIxi7N6rTrb6TM4dEFGoGoVTUtRDU=
-X-Google-Smtp-Source: AGHT+IF9ezMFrgmg81YnnlBQ5XtkvSji7s6rZhcEn39FQIiZxnqwEtV7xv/hjiJy3hhnovoustu1TA==
-X-Received: by 2002:a05:6a20:72ab:b0:1a3:409f:b9a3 with SMTP id o43-20020a056a2072ab00b001a3409fb9a3mr12468512pzk.23.1710776781794;
-        Mon, 18 Mar 2024 08:46:21 -0700 (PDT)
-Received: from kousik.local ([2405:201:c006:31f8:807c:8911:659b:1495])
-        by smtp.gmail.com with ESMTPSA id u8-20020a6540c8000000b005e840ad9aaesm2400080pgp.30.2024.03.18.08.46.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 08:46:21 -0700 (PDT)
-From: Kousik Sanagavarapu <five231003@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-spi@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	Mark Brown <broonie@kernel.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Kousik Sanagavarapu <five231003@gmail.com>
-Subject: [PATCH v2 2/2] hwmon: lm70: fix links in doc and comments
-Date: Mon, 18 Mar 2024 21:08:35 +0530
-Message-ID: <20240318154540.90613-3-five231003@gmail.com>
-X-Mailer: git-send-email 2.44.0.273.g4bc5b65358.dirty
-In-Reply-To: <20240318154540.90613-1-five231003@gmail.com>
-References: <20240318130840.74589-1-five231003@gmail.com>
- <20240318154540.90613-1-five231003@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="t7TgZ7wI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nWr3s45HQHL3KT/ALWC8HCLVgqp494nRBfSaMsZ6J5VHUNYPt3GA2WaoKXZu6PuQZL49oqXf2O+h8BQm068PSkPrX3gW9Mh+IZQV2Qsaly9PhpACmQWf4EyoOELs8KbPT7eFPDMl3/5Nxim3oPfrnBBqUqKRceWKD7XQCUVTq8DTBjOpMdYWIv0gHv7rh9UhrAfoH4WtRzLe1S9W+0gLOz9im7M10/sI907pXKwLGvEPKF0Ytlj/hT8ME4TcSxa1FzSIeIIsgRmNCjowK8mItZfoJpe77awXWIaz0lrpohvQH0Dy9cRvsWJv8wR+D4Vnbm+Swmn67Z5qHm7/o6Y+Ug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AHCVui+8oaQfFycyg+C8Tnu4AqxHD2npmo0hgpKikAI=;
+ b=BzI6+DGlD8whWcIR8XA1uGIGePIgj1ABsiutaSsuO5da22n8PGCApiFIE/8hgZsHUJeTFAjT/8kkNGXREBtSRQfDJt8zN9V0XnnLneuS8iFe9aeTYgu4X28JU6LEVeTmoInDhjSaU+PAnw+H770dns1tv2a+idZVbCskHk9e5Wd1Gh8pmeDZmVfn9mOu0drITcoqte6CpbQEPOjmER2dnHpOrK6WweknV5bh72Vj2XtEGDubeew3XwNGs1ZD2aLuMjJBVZSXlmcEL9Ksc41R6aB9rXA4tFr9VCoFbCjnrWWI2gkDBLhHYCT6O21lwcQLYMgMV0GmIKLYjh2S8GA+Lw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AHCVui+8oaQfFycyg+C8Tnu4AqxHD2npmo0hgpKikAI=;
+ b=t7TgZ7wIhSkkSExeDlxkrDn3vaA4SahgopgUHurjizTZF1a/YZtvg+eaowNhwA2paVBcYg59RlMSfYNgYeVGxLgaOtjBMPwJQ+YfAQWPnlIDXq5EJJIL3E51m24r7FkjUeKqvrcVAP/2RtwbuOXNE/NIjL9xEvy56AOrxAttW+k=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BYAPR12MB3109.namprd12.prod.outlook.com (2603:10b6:a03:db::17)
+ by IA1PR12MB6578.namprd12.prod.outlook.com (2603:10b6:208:3a2::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.26; Mon, 18 Mar
+ 2024 15:46:42 +0000
+Received: from BYAPR12MB3109.namprd12.prod.outlook.com
+ ([fe80::3278:b63e:55dc:d1a4]) by BYAPR12MB3109.namprd12.prod.outlook.com
+ ([fe80::3278:b63e:55dc:d1a4%4]) with mapi id 15.20.7386.022; Mon, 18 Mar 2024
+ 15:46:42 +0000
+Message-ID: <893141c6-41f8-415a-a1a3-d3e4267ec333@amd.com>
+Date: Mon, 18 Mar 2024 11:46:39 -0400
+User-Agent: Mozilla Thunderbird
+Cc: yazen.ghannam@amd.com, linux-kernel@vger.kernel.org,
+ avadhut.naik@amd.com, muralidhara.mk@amd.com
+Subject: Re: [PATCH 3/4] RAS: ATL: Add map_bits_valid to header
+Content-Language: en-US
+To: John Allen <john.allen@amd.com>, bp@alien8.de,
+ linux-edac@vger.kernel.org, tony.luck@intel.com
+References: <20240314163527.63321-1-john.allen@amd.com>
+ <20240314163527.63321-4-john.allen@amd.com>
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+In-Reply-To: <20240314163527.63321-4-john.allen@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BN8PR03CA0002.namprd03.prod.outlook.com
+ (2603:10b6:408:94::15) To BYAPR12MB3109.namprd12.prod.outlook.com
+ (2603:10b6:a03:db::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR12MB3109:EE_|IA1PR12MB6578:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1ecf0c62-8448-4851-cc06-08dc47629bbe
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	8/1GVxLiJN2HUTT/u3vHtVwp/9ZCqH4KS7tDv3wFQSo04KUsDDqrEdmdifWbzmhZIHfPwlEgNThO064c8TSf0n68MUeIV8HZdqzq8tVx77YgDTF2hLsTl/iSBhPPEbaGU5//CClPX7zwpJM8eR6rsN+EM7VbHwrEtqoPdjHNlFItFyVxC5rkGkiwgxI7sQ+s46pMXNduZ/sxs6fhebp0+Jmpqzqm+bABb0HKm3Cpp2qIA+BWXgBmtnjTVHRZ071JBhGg9bH/6HrAvKxIWvPDy/0ptOBBVFFnKWesZ4iOxzPWbgLgwdBq7mZyngDbJ9jEqiuTbXAQOKlNYDn7NUIp4EuXl6jRTdm3mpewCmiEpzTqmdr4oZUXnqML/G4EUFmSPlQqaRDRN4lVi/sb2LmUCVsdH1s0mU/xP7cggg237+wXBqwvvx3nqU8iPNP5XpRHJz59k/M5cACU384gRfiguEsUEbOIoOA+3SbTHePtf7K4XVywF280JE0dAW6lRsoTa75TDPwUwaZlDb7fRCnWUrCwdo+sWR9/qflX13DjH+kxM842mgw//odWb9nFQkFQJM22/PKx2xFs7Ye8iEM6Tx6lOBMfmkXW7AEkInzmw7fNpG274kUBPIWDdY12D7c3275Yk+MFaKMYyc71v2jZXeWRMAedSg7vmuY0E36B1E8=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3109.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NXhmTExWWE5UZmpXd3dxemdMTWo1d3oxWG9LWlZlTXZhc1Y4TjJrK3lhQVpC?=
+ =?utf-8?B?R0JjZDNPRDMxWE1qTG5SR3NJMHpwdno1cmU3SUw3UGYzMWdmeGJ3VlhqbzMr?=
+ =?utf-8?B?c3JMdnJnNlR6eFR0UEN0MkU1VFJJSWFyZFNHL0pRZGdRT1VjL0VRT0Q1UjhV?=
+ =?utf-8?B?bms2cU50SEJ5UVgyYkJEd3NFWmN4Q3dZNHJydTVkQVkrSDlzb2ZtT0JUWkJ2?=
+ =?utf-8?B?cFpsM2FMTU5hSGVSemR6dHdlWm10TmVtQ092UlpCVFdaVnlnRmZIVzVTeWhk?=
+ =?utf-8?B?eUlsRDlFbENMVTRqdmRSVGdXd2djUVRVOVM3VHcyZEl1MnJ6cmNpblkxK3Vs?=
+ =?utf-8?B?WGY5U0FTdmtBL3B5VXloTnlVNWlrNE1mM0J5TmlkTnhrMXBxUk00M016MEhv?=
+ =?utf-8?B?NWMydzB1SEw5bTlRUU5JblMxNjNpbENybU0xelJDcjl1UDFYdTg5dDU2VEsr?=
+ =?utf-8?B?YjlIK3RPY2dQcmtvYjJnUG1iOWlldzJRdXRNWno0KzNZYmU1cnVtdlZzTmZ3?=
+ =?utf-8?B?VUZBeUhOYjBDdm9zQ0RtbG5MZkE1Qmo3dGxIZXJvdTBjVUlqR2o0YVU2ZGhu?=
+ =?utf-8?B?ZWNiUU1lUTNRd3krUm5qQkxzd2RZRzY3Um84T3FXV1U4Mkx6WlJFeFV2SnlJ?=
+ =?utf-8?B?bWVoSUZBZXV4RzFLbVFsZEZadEdNNGhmWDdteUFSVU0vVmZZUzM3YTMxdHBU?=
+ =?utf-8?B?TUpHSmFBZGJvWmdjcDZOWUNPeUdLSGhQcW5GOEQxTFRtSk5tNjFDVW9PamN1?=
+ =?utf-8?B?LzJVM2oxTzhyWG02M2NyMXFvWXIvTC9xRGFBVXZuNkYwZ2FJNys1ZVNDRGJh?=
+ =?utf-8?B?eWJ3VHp4alc4eDZpMDdncnh5eGczL1BRWGtkY0NQcnpPL0hUSjFwRmh3ZlJi?=
+ =?utf-8?B?eHltUEc3Q1BTY2dTRHZUamJpWlNUb3lMSmpQakoyb2sxL0VOV3l6cWhRS0p3?=
+ =?utf-8?B?bVFWR2NOckUyWFhjOGwxRlVrZ0lITnJyMzdVQ1RPVkdveW9aQ0dEL1FtTTZs?=
+ =?utf-8?B?QTdLU21VODQvVTNuVGN4MG9nQnNBSUhHRzg4UlJpWkQ1YU9TODV4dFRRaGJn?=
+ =?utf-8?B?ZlJWeGw2U09sNmMwdTY3RTNBaTJDTjhOazA4dVc1V0dZeG9RTHRjV3NrbUJa?=
+ =?utf-8?B?NmhHNUZ5eHNrdWxaUXltbmtzRFBUMmlaRGIxRjBGYlA2SnhxamlDbXRadFh2?=
+ =?utf-8?B?eUQydFgvN1dEZlRreFRwVHNNRXpTU05tTU0wSnhKbldZTHA5REY3Mjl0WTJN?=
+ =?utf-8?B?RHY5K0ZUNU9nQ05Sdy95bjMwYVY5VXc2dVVpK2JuWjBPT0FYalRRTGFvSVJJ?=
+ =?utf-8?B?MGpxVEp3Vlp1czdidWZCcGNWTEFmWVZjWFBPY0NQRUcwcDlBc0RNaHpJU0Ix?=
+ =?utf-8?B?YVVTOW50a25lOFFzbFJhdXgwZ0RueDFxeENHNXdWMVhwT05sY0dTNnFWcEtZ?=
+ =?utf-8?B?T01NQWRDUVh6aFp4ZG5taGQyaFVZTFNMdHR2azJWODJ6NUViSjBCN3lKdHox?=
+ =?utf-8?B?dDNheHNCM3F0dC8veG94djdKMFV1TlY3d2hBaVVHVXR6NDJZcHFjdGFJNnhK?=
+ =?utf-8?B?bEZQaU1ZR1k2dE9zajdBUnd2enFCNC8vZ2tnSDJQcHBRV3RLb0g2MXpSK1Rm?=
+ =?utf-8?B?Myt2N0xKalVjTEZjdEI1c3huSjB3RDJJcytoS1luSHdwTjV2NXJZdHBkUzN6?=
+ =?utf-8?B?cWNyNDZYa1p6NmdCajJMUEN2SDJHSFRQTThCTGxTZmE2NEJvL1ovQlhBMkZ4?=
+ =?utf-8?B?YlBWRVFVaFlJRjVKbUJ6aEtmY1V3ajRHb1V5eUNCaE9iaVUvZVdubkk1dEov?=
+ =?utf-8?B?bzVJR0lHQXlLRzkzZDhST0FmVVNsL2R3MGVpL0JqckYzK294QTdjazI4NEFv?=
+ =?utf-8?B?RC8rc2xmSFhIOHVQdTZWT2FBQldvUGlFZ3FNeW9Oak4wK2YxUzJuVjVGSXFI?=
+ =?utf-8?B?S1BzMEt6eWFFVkF3ZlFQRWVVYVVwR2dsZzN0N0oxdVE5dWovZzl0c1IyeHFW?=
+ =?utf-8?B?MkR2N3Bta3cvdTRKdXpjek5TdGNhL1hTSUhNNlI5TlI2R2xyY3JvYTdtb3Fr?=
+ =?utf-8?B?c0tmaEZiaG1lK0NwbXhjNjBEVGxTRFlTRTdObjhaMmowMkhpdG9SdEd2dm9H?=
+ =?utf-8?Q?xMJJjpx7HEBmmzSiP/WBH0X49?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ecf0c62-8448-4851-cc06-08dc47629bbe
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB3109.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2024 15:46:42.6481
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vImc4rj12zOm+JJ6hSOpXTk1vUkKfEW+tWdJTbKwPphNYalte1zs1DgiMaxXIRtTiYuAuNfkuGrIYn26/6kMOg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6578
 
-Update links in the documentation and in-code comments which point to
-the datasheet.
+On 3/14/24 12:35, John Allen wrote:
+> Make map_bits_valid available in the AMD ATL internal header as the
+> function can be used in other parts of the library.
+> 
+> Signed-off-by: John Allen <john.allen@amd.com>
+> ---
+>   drivers/ras/amd/atl/dehash.c   | 2 +-
+>   drivers/ras/amd/atl/internal.h | 3 +++
+>   2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/ras/amd/atl/dehash.c b/drivers/ras/amd/atl/dehash.c
+> index 4ea46262c4f5..a20cf615b83a 100644
+> --- a/drivers/ras/amd/atl/dehash.c
+> +++ b/drivers/ras/amd/atl/dehash.c
+> @@ -19,7 +19,7 @@
+>    * If @num_intlv_dies and/or @num_intlv_sockets are 1, it means the
+>    * respective interleaving is disabled.
+>    */
+> -static inline bool map_bits_valid(struct addr_ctx *ctx, u8 bit1, u8 bit2,
+> +inline bool map_bits_valid(struct addr_ctx *ctx, u8 bit1, u8 bit2,
+>   				  u8 num_intlv_dies, u8 num_intlv_sockets)
+>   {
+>   	if (!(ctx->map.intlv_bit_pos == bit1 || ctx->map.intlv_bit_pos == bit2)) {
+> diff --git a/drivers/ras/amd/atl/internal.h b/drivers/ras/amd/atl/internal.h
+> index 05b870fcb24e..4681449321de 100644
+> --- a/drivers/ras/amd/atl/internal.h
+> +++ b/drivers/ras/amd/atl/internal.h
+> @@ -239,6 +239,9 @@ unsigned long convert_umc_mca_addr_to_sys_addr(struct atl_err *err);
+>   u64 add_base_and_hole(struct addr_ctx *ctx, u64 addr);
+>   u64 remove_base_and_hole(struct addr_ctx *ctx, u64 addr);
+>   
+> +inline bool map_bits_valid(struct addr_ctx *ctx, u8 bit1, u8 bit2,
+> +			   u8 num_intlv_dies, u8 num_intlv_sockets);
+> +
+>   /*
+>    * Make a gap in @data that is @num_bits long starting at @bit_num.
+>    * e.g. data		= 11111111'b
 
-The current links don't work because National Semiconductor (which is
-the manufacturer of this board and lm70) has been a part of Texas
-Instruments since 2011 and hence http://www.national.com/ doesn't work
-anymore.
+Ultimately, the maps should be validated as soon as they are gathered. I
+figured we would do that later. But that would wipe out this change.
+And, after looking at dehash.c again, map_bits_valid() isn't used in too
+many places right now.
 
-Fixes: e1a8e913f97e ("[PATCH] lm70: New hardware monitoring driver")
-Signed-off-by: Kousik Sanagavarapu <five231003@gmail.com>
----
- Documentation/hwmon/lm70.rst | 2 +-
- drivers/hwmon/lm70.c         | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+So I think validate_address_map() from the following patch should be
+done for all modes first. That way we don't need to add and then remove
+this function from the header.
 
-diff --git a/Documentation/hwmon/lm70.rst b/Documentation/hwmon/lm70.rst
-index 11303a7e16a8..02ed60dddffb 100644
---- a/Documentation/hwmon/lm70.rst
-+++ b/Documentation/hwmon/lm70.rst
-@@ -5,7 +5,7 @@ Supported chips:
- 
-   * National Semiconductor LM70
- 
--    Datasheet: http://www.national.com/pf/LM/LM70.html
-+    Datasheet: https://www.ti.com/product/LM70
- 
-   * Texas Instruments TMP121/TMP123
- 
-diff --git a/drivers/hwmon/lm70.c b/drivers/hwmon/lm70.c
-index c20a749fc7f2..481e4e1f8f4f 100644
---- a/drivers/hwmon/lm70.c
-+++ b/drivers/hwmon/lm70.c
-@@ -6,9 +6,9 @@
-  * Copyright (C) 2006 Kaiwan N Billimoria <kaiwan@designergraphix.com>
-  *
-  * The LM70 communicates with a host processor via an SPI/Microwire Bus
-- * interface. The complete datasheet is available at National's website
-+ * interface. The complete datasheet is available at TI's website
-  * here:
-- * http://www.national.com/pf/LM/LM70.html
-+ * https://www.ti.com/product/LM70
-  */
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--- 
-2.44.0.273.g4bc5b65358.dirty
-
+Thanks,
+Yazen
