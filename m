@@ -1,64 +1,60 @@
-Received: from esa6.hc1455-7.c3s2.iphmx.com (esa6.hc1455-7.c3s2.iphmx.com [68.232.139.139])
+Received: from esa3.hc1455-7.c3s2.iphmx.com (esa3.hc1455-7.c3s2.iphmx.com [207.54.90.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207632032D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6E620313;
 	Mon, 18 Mar 2024 01:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.139
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710725343; cv=none; b=UpYyli2IZX8lV8fBevM72TdtBIgDnvSPLoeQETdUNnBz4mckgT/t8iWLyNdpdbAmboF+RMvTi6QSilhBG4nJTpN0YPf/Yo6RwwY9j+yT1Tu8QuS75YDcgXsifb4gXisYmVAgoFd5KbjCdOZczZipg9t3R3S/iYbgPl7UaXULs3E=
+	t=1710725343; cv=none; b=YqsoLxL+Kw22wZzpiyA4bBsWHgKG2P6eWl7kKMMHm3UK6bQ0lsInrexIKd58k5GlfN3PeWhPQLp4VgI1u+iYwo7cmUkvJ5Gtz671QOIdLtT6vsrrBKiPYqFzHSglgv2cixyrAmaeG4Hk+mIqfu3l8x5KU9TMaOwVIpRvDNAQBv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710725343; c=relaxed/simple;
-	bh=lEAICoD6xublrvyvwGo3OfFKv8FKH3HxG+GESGhe6oc=;
+	bh=axSHbg87TpVBgvQGqfA/l1DEUWF2dVNkTjgunp/03F8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=peYwfEpiFPoXFHfTEIQ2DKHzgBt40NqsvN9vi8rA+AeCj242ueGbimf2ZnJuTi57mZU5D7TzfBWf4UcehL3GjNGZo4Zs8GHdrqRIwhYp3tBRR4NLD+3ksycF0aIido0o/9CVP4JYCngnfooj2haRi063JkFEgJbbPER8IoQFmOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=JdNraSZf; arc=none smtp.client-ip=68.232.139.139
+	 MIME-Version; b=XYi4C6LKTcUjWY2hgB0pbv0yMWvdlhEOfDkTYj9B+8wfX8M+RhxrVlr0CEjBrGOfI7ye9OmY4ji/bV4G91YvKQDPVuRhIBhgue9R/0ARJ+IbuWJ3fD43vWgjUVxhHBAl+iiqqL3IxeyStOvWhRj+fQOzKAm82/TiDW6SOi/Y7bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=ohFu9YDM; arc=none smtp.client-ip=207.54.90.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="JdNraSZf"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="ohFu9YDM"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
   t=1710725342; x=1742261342;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=lEAICoD6xublrvyvwGo3OfFKv8FKH3HxG+GESGhe6oc=;
-  b=JdNraSZf/VPCf4r4QFUnGgq9ulAFuwCk8bz5aybzlQNem3bZnpa8/m+b
-   PEobNAdmEzXmXvcfFrw6YSbZ2e3lHYMY2USpbhp/hm618Z51oXMI3vDEZ
-   IjhvNOTXWirSF5Fm2SX1W1RK4bBA+GhcWnC8/aqNcoNNYEc3dn8pjyCjp
-   +Ffem6fWMgcRdU9a9M+xSQFNpIehcTr2scuWgjBsK0r5m2JtuNneGrhI6
-   3+M/vnYxJJsM9XLjELpnxxSE7wHV1m1fonyiGzjxnKFOncACiqzcLErm2
-   XX2lSeLS2snb7UwnB9tg/Tgmrz0FgFni4WCAvOo45iXtQmGXzeX6huw+B
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11016"; a="154385599"
+  bh=axSHbg87TpVBgvQGqfA/l1DEUWF2dVNkTjgunp/03F8=;
+  b=ohFu9YDM2qPU7twaRJOURjPj2JY2peFDSnQpbiFO3fpTe/1szi6jcasq
+   7CP4P/qK98+ko8g+Q0Ihel58IW8dOKyEcmGpY7S6xLf3Mgua86YZBHNz1
+   lO31N0HfOlNSiKANJ/7ifZ7L809qWzoGlf/GjbfRnb4z3vjVr8Ow8WHcT
+   LqHOpYLsao/nxz+Ni3ByRmDsPrspurBQ4KHRx2yoKLwtrJ7xEVTXgpdg0
+   zNJb81pR3wajR9TJnTfXzDgmWIIaXoHSmp8MQQSRsAzZegoej1yc/ToD5
+   Mg1eXSu2yiS1zBSTetbQU2ocuKPcIQvcq0UNUUn8OiBM7d2gqdb1nZC9c
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11016"; a="152522413"
 X-IronPort-AV: E=Sophos;i="6.07,133,1708354800"; 
-   d="scan'208";a="154385599"
-Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
-  by esa6.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 10:28:52 +0900
+   d="scan'208";a="152522413"
+Received: from unknown (HELO yto-r2.gw.nic.fujitsu.com) ([218.44.52.218])
+  by esa3.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 10:28:53 +0900
 Received: from yto-m2.gw.nic.fujitsu.com (yto-nat-yto-m2.gw.nic.fujitsu.com [192.168.83.65])
-	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 5EF95D9F03;
-	Mon, 18 Mar 2024 10:28:49 +0900 (JST)
+	by yto-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 0939E2A0DFC;
+	Mon, 18 Mar 2024 10:28:50 +0900 (JST)
 Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-	by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 8FDA8D561E;
-	Mon, 18 Mar 2024 10:28:48 +0900 (JST)
+	by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 38D18D5621;
+	Mon, 18 Mar 2024 10:28:49 +0900 (JST)
 Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 19FA120098E1C;
+	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id C1619200A7D73;
 	Mon, 18 Mar 2024 10:28:48 +0900 (JST)
 Received: from localhost.localdomain (unknown [10.167.226.45])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 609231A006D;
-	Mon, 18 Mar 2024 09:28:47 +0800 (CST)
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 508CF1A006D;
+	Mon, 18 Mar 2024 09:28:48 +0800 (CST)
 From: Li Zhijian <lizhijian@fujitsu.com>
 To: linux-kernel@vger.kernel.org
 Cc: Li Zhijian <lizhijian@fujitsu.com>,
 	Jiri Kosina <jikos@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
 	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-	linux-input@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v3 2/4] HID: hid-sensor-custom: Convert sprintf/snprintf to sysfs_emit
-Date: Mon, 18 Mar 2024 09:28:17 +0800
-Message-Id: <20240318012819.1405003-2-lizhijian@fujitsu.com>
+	linux-input@vger.kernel.org
+Subject: [PATCH v3 4/4] HID: corsair,lenovo: Convert sprintf/snprintf to sysfs_emit
+Date: Mon, 18 Mar 2024 09:28:19 +0800
+Message-Id: <20240318012819.1405003-4-lizhijian@fujitsu.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20240318012819.1405003-1-lizhijian@fujitsu.com>
 References: <20240318012819.1405003-1-lizhijian@fujitsu.com>
@@ -73,12 +69,12 @@ X-TM-AS-GCONF: 00
 X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28258.003
 X-TM-AS-User-Approved-Sender: Yes
 X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28258.003
-X-TMASE-Result: 10--5.660400-10.000000
-X-TMASE-MatchedRID: aug7Rh7TzMkI7eJeU5hen5iHtCNYjckMjkDrBOJwwnQ8JmmJxjOaQXVX
-	Q3/qdw5yDiqGKKMcNgRhoUIS5GGeEs1HQN/TlJ3ZOIQ9GP2P2u/0swHSFcVJ6OTpBuL72LoPQiM
-	ingSlKoKMx5HzfQifbPE41045MrHXFDCN/1eC4ASdVNZaI2n6/8E5XPQnBzGXq8KsbROd9VSArq
-	oIZrVn15fzUkBpc072hKK/bK+QypCR9GF2J2xqMxRFJJyf5BJe3QfwsVk0UbtuRXh7bFKB7tk/P
-	KAEDs5ka64lbDnlTvs+39t8ZqOEjsNJi689wOTYNkUSDDq742k=
+X-TMASE-Result: 10--5.330400-10.000000
+X-TMASE-MatchedRID: e6WPXQD7Ri84ibokZ3+Q0CoiRKlBVkYIBXngI6jFvpfDqO6/8R69QE8U
+	roFNOGp7a6aAZTOwtJmRloiW1Kgftd2ZdKe8BPbSrMZ+BqQt2NpBHuVYxc8DW3hh5KUdlgWiKqF
+	q1hn3Eb3d+/nM3Koh0iaTw03n/wYORY1tl9vG/AZO5y1KmK5bJRSLgSFq3Tnj31GU/N5W5BDIvl
+	CZY6Ax8PdcQ4/ZOO0Rnagtny7ZPcQfE8yM4pjsDwtuKBGekqUpI/NGWt0UYPCNwL0MYcerLrxyx
+	sl0d3Y1X9HywC7qCyBBVu9NPAEIl2E+EuvoWQnY
 X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
 Per filesystems/sysfs.rst, show() should only use sysfs_emit()
@@ -96,54 +92,119 @@ COCCI=scripts/coccinelle/api/device_attr_show.cocci
 No functional change intended
 
 CC: Jiri Kosina <jikos@kernel.org>
-CC: Jonathan Cameron <jic23@kernel.org>
-CC: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 CC: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 CC: linux-input@vger.kernel.org
-CC: linux-iio@vger.kernel.org
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
 ---
-V3:
-   rewrap the line as will be under 80 chars and add Reviewed-by # Jonathan
 This is a part of the work "Fix coccicheck device_attr_show warnings"[1]
 Split them per subsystem so that the maintainer can review it easily
 [1] https://lore.kernel.org/lkml/20240116041129.3937800-1-lizhijian@fujitsu.com/
 ---
- drivers/hid/hid-sensor-custom.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/hid/hid-corsair.c |  4 ++--
+ drivers/hid/hid-lenovo.c  | 19 ++++++++-----------
+ 2 files changed, 10 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/hid/hid-sensor-custom.c b/drivers/hid/hid-sensor-custom.c
-index d85398721659..ac214777d7d9 100644
---- a/drivers/hid/hid-sensor-custom.c
-+++ b/drivers/hid/hid-sensor-custom.c
-@@ -155,7 +155,7 @@ static ssize_t enable_sensor_show(struct device *dev,
- {
- 	struct hid_sensor_custom *sensor_inst = dev_get_drvdata(dev);
+diff --git a/drivers/hid/hid-corsair.c b/drivers/hid/hid-corsair.c
+index 8c895c820b67..702f50e9841d 100644
+--- a/drivers/hid/hid-corsair.c
++++ b/drivers/hid/hid-corsair.c
+@@ -298,7 +298,7 @@ static ssize_t k90_show_macro_mode(struct device *dev,
+ 		goto out;
+ 	}
  
--	return sprintf(buf, "%d\n", sensor_inst->enable);
-+	return sysfs_emit(buf, "%d\n", sensor_inst->enable);
+-	ret = snprintf(buf, PAGE_SIZE, "%s\n", macro_mode);
++	ret = sysfs_emit(buf, "%s\n", macro_mode);
+ out:
+ 	kfree(data);
+ 
+@@ -367,7 +367,7 @@ static ssize_t k90_show_current_profile(struct device *dev,
+ 		goto out;
+ 	}
+ 
+-	ret = snprintf(buf, PAGE_SIZE, "%d\n", current_profile);
++	ret = sysfs_emit(buf, "%d\n", current_profile);
+ out:
+ 	kfree(data);
+ 
+diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
+index 149a3c74346b..26768c319361 100644
+--- a/drivers/hid/hid-lenovo.c
++++ b/drivers/hid/hid-lenovo.c
+@@ -555,7 +555,7 @@ static ssize_t attr_fn_lock_show(struct device *dev,
+ 	struct hid_device *hdev = to_hid_device(dev);
+ 	struct lenovo_drvdata *data = hid_get_drvdata(hdev);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%u\n", data->fn_lock);
++	return sysfs_emit(buf, "%u\n", data->fn_lock);
  }
  
- static int set_power_report_state(struct hid_sensor_custom *sensor_inst,
-@@ -372,14 +372,13 @@ static ssize_t show_value(struct device *dev, struct device_attribute *attr,
- 				     sizeof(struct hid_custom_usage_desc),
- 				     usage_id_cmp);
- 		if (usage_desc)
--			return snprintf(buf, PAGE_SIZE, "%s\n",
--					usage_desc->desc);
-+			return sysfs_emit(buf, "%s\n", usage_desc->desc);
- 		else
--			return sprintf(buf, "not-specified\n");
-+			return sysfs_emit(buf, "not-specified\n");
- 	 } else
- 		return -EINVAL;
+ static ssize_t attr_fn_lock_store(struct device *dev,
+@@ -599,8 +599,7 @@ static ssize_t attr_sensitivity_show_cptkbd(struct device *dev,
+ 	struct hid_device *hdev = to_hid_device(dev);
+ 	struct lenovo_drvdata *cptkbd_data = hid_get_drvdata(hdev);
  
--	return sprintf(buf, "%d\n", value);
-+	return sysfs_emit(buf, "%d\n", value);
+-	return snprintf(buf, PAGE_SIZE, "%u\n",
+-		cptkbd_data->sensitivity);
++	return sysfs_emit(buf, "%u\n", cptkbd_data->sensitivity);
  }
  
- static ssize_t store_value(struct device *dev, struct device_attribute *attr,
+ static ssize_t attr_sensitivity_store_cptkbd(struct device *dev,
+@@ -789,7 +788,7 @@ static ssize_t attr_press_to_select_show_tpkbd(struct device *dev,
+ 	struct hid_device *hdev = to_hid_device(dev);
+ 	struct lenovo_drvdata *data_pointer = hid_get_drvdata(hdev);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%u\n", data_pointer->press_to_select);
++	return sysfs_emit(buf, "%u\n", data_pointer->press_to_select);
+ }
+ 
+ static ssize_t attr_press_to_select_store_tpkbd(struct device *dev,
+@@ -819,7 +818,7 @@ static ssize_t attr_dragging_show_tpkbd(struct device *dev,
+ 	struct hid_device *hdev = to_hid_device(dev);
+ 	struct lenovo_drvdata *data_pointer = hid_get_drvdata(hdev);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%u\n", data_pointer->dragging);
++	return sysfs_emit(buf, "%u\n", data_pointer->dragging);
+ }
+ 
+ static ssize_t attr_dragging_store_tpkbd(struct device *dev,
+@@ -849,7 +848,7 @@ static ssize_t attr_release_to_select_show_tpkbd(struct device *dev,
+ 	struct hid_device *hdev = to_hid_device(dev);
+ 	struct lenovo_drvdata *data_pointer = hid_get_drvdata(hdev);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%u\n", data_pointer->release_to_select);
++	return sysfs_emit(buf, "%u\n", data_pointer->release_to_select);
+ }
+ 
+ static ssize_t attr_release_to_select_store_tpkbd(struct device *dev,
+@@ -879,7 +878,7 @@ static ssize_t attr_select_right_show_tpkbd(struct device *dev,
+ 	struct hid_device *hdev = to_hid_device(dev);
+ 	struct lenovo_drvdata *data_pointer = hid_get_drvdata(hdev);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%u\n", data_pointer->select_right);
++	return sysfs_emit(buf, "%u\n", data_pointer->select_right);
+ }
+ 
+ static ssize_t attr_select_right_store_tpkbd(struct device *dev,
+@@ -909,8 +908,7 @@ static ssize_t attr_sensitivity_show_tpkbd(struct device *dev,
+ 	struct hid_device *hdev = to_hid_device(dev);
+ 	struct lenovo_drvdata *data_pointer = hid_get_drvdata(hdev);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%u\n",
+-		data_pointer->sensitivity);
++	return sysfs_emit(buf, "%u\n", data_pointer->sensitivity);
+ }
+ 
+ static ssize_t attr_sensitivity_store_tpkbd(struct device *dev,
+@@ -938,8 +936,7 @@ static ssize_t attr_press_speed_show_tpkbd(struct device *dev,
+ 	struct hid_device *hdev = to_hid_device(dev);
+ 	struct lenovo_drvdata *data_pointer = hid_get_drvdata(hdev);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%u\n",
+-		data_pointer->press_speed);
++	return sysfs_emit(buf, "%u\n", data_pointer->press_speed);
+ }
+ 
+ static ssize_t attr_press_speed_store_tpkbd(struct device *dev,
 -- 
 2.29.2
 
