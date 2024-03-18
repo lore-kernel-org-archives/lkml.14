@@ -1,44 +1,44 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8FC5FBA5
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 23:34:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 310255FDC9
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 23:34:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710804844; cv=none; b=GV8fR78XjpT6zHtvYyvkPbE5LVoEU6xZB+OYlpu2frsPJhhSlxkT2JnFjahN5Lt1uHAbEDTxjL9bBsG/FEIKj8t6Y5ZsTSxqeWouRxn1U98wkL/cYvwLJPuaKEao9dDF8h50ETOdHwELK1kZR3a0/PV9pU1L26UyLQa9psjhytc=
+	t=1710804845; cv=none; b=F0I1i5XKgkZGOWFDquALgv+Y/AUId4ByEknANg9bb7wZTKG218hIyckbE+nrmO+EYBirftednKhx3MxrXVRCklqgyBnsly+KJHxGucv70RZLglDyHnl3GP0qzlsMbJvejDzmvyD39arORDyiiA242p6XrRQWdKB+eSpw09+Vzp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710804844; c=relaxed/simple;
-	bh=/h8SqmURALLDyuGUX7H2nBueG9nOdv0SX3aEOGmrKSU=;
+	s=arc-20240116; t=1710804845; c=relaxed/simple;
+	bh=X+wpiCLHt0A0MlEox5pBcvd+CZnKQyhur6Qdq10ypmc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZKMTRUzXDkFOYaIPaKPnvQpSbdvZyWhOQGhxqvt7kDzhlXaDeKInPFRG0gm1a2OqnIDQiJ/xPLsAQ8FwYJMlTQ730l2L4D20DgpPYCHMIQ2KeSmW1QBYqWpQE5u6dpmx8V9giFUPJRm+6cC7AxN/XRIAU8R/FVwv8lYjgIO8rAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZSwnzP6j; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=h1MjnSJV9zGkvKBRnQjbZ5E+JnZxoQG+eOrVD5aO6xNTxrWPHaqqqWKIcX4jYqNK0MMZ1nt1RmqXkxV5XAMx9w+W4niSHdhLRlwm3aOVXsQzWVmk8oOQwFVOW9oUj1G3qkUx5vUYZOcB7lP5L3YacaBEBbj8I2H2MUUlEF4x2Gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fHmLjZnz; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZSwnzP6j"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fHmLjZnz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710804840;
+	s=mimecast20190719; t=1710804842;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3akqZgNcQZFd1TqSeRZMm8OcjnakqT/fyGcLLrf83Kc=;
-	b=ZSwnzP6jMADZP2dbyG10DTjKEPzBGvAZROEpTaIjzR1zJ0LLQ2AwOwVdmLUyNL+sUbcfKG
-	6z6vyvosG3DrxAerGG993zss49kBbT0CD1t8sUF/wDVNICDa66p4BIWHtGqVMpT8Uh4DQa
-	Omo12IYFi1+hEVq+N0gdxhrYiGf3RMo=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-12-7FSHSY0bP1OxNxIsfqICHA-1; Mon, 18 Mar 2024 19:33:55 -0400
-X-MC-Unique: 7FSHSY0bP1OxNxIsfqICHA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	bh=Y/UJD6UkjatoT2sa2f7cYALB+Y8wZfv5tBpC6qWKUlU=;
+	b=fHmLjZnzKy5GF37Jj/o+klkg2aYBKHNEs7Ep7QWRLg3kHLsjbWK1+/tJ0hxY19iQaBRdPM
+	/Z8PfZMxd3ANcf3KIY33/GtMfBuPnp/j67q91lwYrYGbAidhVuEkZX9VaE2Mwqe/cG1x+e
+	RnK1Ti4hPxH1lC2z/TMET4cz4391FEQ=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-14-cKMRVEyGNuacM8ctBeGqLw-1; Mon,
+ 18 Mar 2024 19:33:56 -0400
+X-MC-Unique: cKMRVEyGNuacM8ctBeGqLw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6B45885A58C;
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E65141C05EAD;
 	Mon, 18 Mar 2024 23:33:55 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 44BF11121312;
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C01C81C060CE;
 	Mon, 18 Mar 2024 23:33:55 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
@@ -46,9 +46,9 @@ To: linux-kernel@vger.kernel.org,
 Cc: michael.roth@amd.com,
 	isaku.yamahata@intel.com,
 	seanjc@google.com
-Subject: [PATCH v4 08/15] KVM: x86: Add supported_vm_types to kvm_caps
-Date: Mon, 18 Mar 2024 19:33:45 -0400
-Message-ID: <20240318233352.2728327-9-pbonzini@redhat.com>
+Subject: [PATCH v4 10/15] KVM: SEV: introduce to_kvm_sev_info
+Date: Mon, 18 Mar 2024 19:33:47 -0400
+Message-ID: <20240318233352.2728327-11-pbonzini@redhat.com>
 In-Reply-To: <20240318233352.2728327-1-pbonzini@redhat.com>
 References: <20240318233352.2728327-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -59,75 +59,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
-
-This simplifies the implementation of KVM_CHECK_EXTENSION(KVM_CAP_VM_TYPES),
-and also allows the vendor module to specify which VM types are supported.
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
 Suggested-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/x86.c | 12 ++++++------
- arch/x86/kvm/x86.h |  2 ++
- 2 files changed, 8 insertions(+), 6 deletions(-)
+ arch/x86/kvm/svm/sev.c | 4 ++--
+ arch/x86/kvm/svm/svm.h | 5 +++++
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 98b7979b4698..8c56bcf3feb7 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -94,6 +94,7 @@
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index 800e836a69fb..704cd42b4f1b 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -94,7 +94,7 @@ static int sev_flush_asids(unsigned int min_asid, unsigned int max_asid)
  
- struct kvm_caps kvm_caps __read_mostly = {
- 	.supported_mce_cap = MCG_CTL_P | MCG_SER_P,
-+	.supported_vm_types = BIT(KVM_X86_DEFAULT_VM),
- };
- EXPORT_SYMBOL_GPL(kvm_caps);
- 
-@@ -4629,9 +4630,7 @@ static int kvm_ioctl_get_supported_hv_cpuid(struct kvm_vcpu *vcpu,
- 
- static bool kvm_is_vm_type_supported(unsigned long type)
+ static inline bool is_mirroring_enc_context(struct kvm *kvm)
  {
--	return type == KVM_X86_DEFAULT_VM ||
--	       (type == KVM_X86_SW_PROTECTED_VM &&
--		IS_ENABLED(CONFIG_KVM_SW_PROTECTED_VM) && tdp_mmu_enabled);
-+	return type < 32 && (kvm_caps.supported_vm_types & BIT(type));
+-	return !!to_kvm_svm(kvm)->sev_info.enc_context_owner;
++	return !!to_kvm_sev_info(kvm)->enc_context_owner;
  }
  
- int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
-@@ -4832,9 +4831,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 		r = kvm_caps.has_notify_vmexit;
- 		break;
- 	case KVM_CAP_VM_TYPES:
--		r = BIT(KVM_X86_DEFAULT_VM);
--		if (kvm_is_vm_type_supported(KVM_X86_SW_PROTECTED_VM))
--			r |= BIT(KVM_X86_SW_PROTECTED_VM);
-+		r = kvm_caps.supported_vm_types;
- 		break;
- 	default:
- 		break;
-@@ -9829,6 +9826,9 @@ int kvm_x86_vendor_init(struct kvm_x86_init_ops *ops)
+ static bool sev_vcpu_has_debug_swap(struct vcpu_svm *svm)
+@@ -679,7 +679,7 @@ static int __sev_launch_update_vmsa(struct kvm *kvm, struct kvm_vcpu *vcpu,
+ 	clflush_cache_range(svm->sev_es.vmsa, PAGE_SIZE);
  
- 	kvm_register_perf_callbacks(ops->handle_intel_pt_intr);
+ 	vmsa.reserved = 0;
+-	vmsa.handle = to_kvm_svm(kvm)->sev_info.handle;
++	vmsa.handle = to_kvm_sev_info(kvm)->handle;
+ 	vmsa.address = __sme_pa(svm->sev_es.vmsa);
+ 	vmsa.len = PAGE_SIZE;
+ 	ret = sev_issue_cmd(kvm, SEV_CMD_LAUNCH_UPDATE_VMSA, &vmsa, error);
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index b7707514d042..6313679d464b 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -319,6 +319,11 @@ static __always_inline struct kvm_svm *to_kvm_svm(struct kvm *kvm)
+ 	return container_of(kvm, struct kvm_svm, kvm);
+ }
  
-+	if (IS_ENABLED(CONFIG_KVM_SW_PROTECTED_VM) && tdp_mmu_enabled)
-+		kvm_caps.supported_vm_types |= BIT(KVM_X86_SW_PROTECTED_VM);
++static __always_inline struct kvm_sev_info *to_kvm_sev_info(struct kvm *kvm)
++{
++	return &to_kvm_svm(kvm)->sev_info;
++}
 +
- 	if (!kvm_cpu_cap_has(X86_FEATURE_XSAVES))
- 		kvm_caps.supported_xss = 0;
- 
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index a8b71803777b..d80a4c6b5a38 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -24,6 +24,8 @@ struct kvm_caps {
- 	bool has_bus_lock_exit;
- 	/* notify VM exit supported? */
- 	bool has_notify_vmexit;
-+	/* bit mask of VM types */
-+	u32 supported_vm_types;
- 
- 	u64 supported_mce_cap;
- 	u64 supported_xcr0;
+ static __always_inline bool sev_guest(struct kvm *kvm)
+ {
+ #ifdef CONFIG_KVM_AMD_SEV
 -- 
 2.43.0
 
