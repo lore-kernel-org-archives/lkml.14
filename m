@@ -1,104 +1,91 @@
-Received: from new-mail.astralinux.ru (new-mail.astralinux.ru [51.250.53.244])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A498364A1;
-	Mon, 18 Mar 2024 11:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.250.53.244
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 350F82EB05;
+	Mon, 18 Mar 2024 11:28:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710761292; cv=none; b=uAKCMi/8p7LOqa7Ih2+hutgVaS+BtiAhfLzpJnOSAshGjpvJgiugn11zFrdT5wMFv3ChVC7hns52WLoU2XpPAacopkU/Nd4t5lZ2Pjygk+CLaikVJxQcqNflQ4Mztjoxph5SyQLfnGmGr2iO3kzQjYUqY/3M8iF0+LJy3qS2NEU=
+	t=1710761301; cv=none; b=vAWoKxe7t6+VH2jx2qrR+A+BTH24R98fGoJdc0SL5lxGpcCbRtwW0bSUoHByMOFr65Ga9ouKPDZmq5eBGoJo+4ojOf7HsBvOhtZ45mUMi/u/0VofgD4e5U4CQNu9z012j5GMnCD4exbzkGN3GuH0/zQDherzkk56VUQ1Z1pWWio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710761292; c=relaxed/simple;
-	bh=oYKwQDdxQkJOTTN7jCxBVyN1NhP10eC12ahYUEJkMDU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=li34hpfLptcan0lYONdYOr4v7H+eisR549+rFlxAkqrHZSLyHJ+0ZZ5upZSHye4LfwUwplwcA+zg7nWyZ2689cXkiapQMj7puY5C0DnSO82+GgkSq0ovdpPnvW50XyfKKfbB/nIaw2lX6bleWetY19iHfdQL/LIQBQEqxjBLT2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=51.250.53.244
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
-Received: from localhost.localdomain (unknown [192.168.32.67])
-	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4TyszK5nf9zyNX;
-	Mon, 18 Mar 2024 14:27:57 +0300 (MSK)
-From: Dmitry Mastykin <dmastykin@astralinux.ru>
-To: corbet@lwn.net,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	thellstrom@vmware.com
-Cc: mastichi@gmail.com,
-	Dmitry Mastykin <dmastykin@astralinux.ru>
-Subject: docs: bug in "Krefs and RCU" example
-Date: Mon, 18 Mar 2024 14:27:44 +0300
-Message-Id: <20240318112744.12400-1-dmastykin@astralinux.ru>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1710761301; c=relaxed/simple;
+	bh=YWSGx/XRw+rQGSUAj5COs58nByZSMdkxqDrDOksH/64=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E4atp0jbq76oVvxgszysIGbLJThlLoW0D3Fk8CwlhrhhYcKf8hE0t61r0fY78mYBVH4nthzYu1V0+c7iYf147JCInvg/CDe4ym12RpecRrXJzjaCeU0Unqk8uieIIPWpXMp5hpEEx37HWOm/wQ4RpUJp7YQXJMlpE1wc1yY+BMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M94LeBaz; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M94LeBaz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D29AC433C7;
+	Mon, 18 Mar 2024 11:28:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710761300;
+	bh=YWSGx/XRw+rQGSUAj5COs58nByZSMdkxqDrDOksH/64=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M94LeBaz5RutfpnW9DhqWssP+WDFS9DQ55rIwEA9vZKL6kRrPxUx4YNV0nzm5yclY
+	 IJzFMl3RJ8a09aQLN56aoPDM5YC9Cc831Jjc/36B6vjckSyOfneNSnPEMcKOIUQ2+e
+	 yqp71W6Xkxr5Hsdo5PuBlWiPFbCzRLJPGW+D24ClPQEHf2VZCXiIRfWDBW5uTdbihB
+	 +REtsgrggQM4SU5ctOYzmeFCocVPMfiu9MCZAAgIQ2hO5LHixNe0deDa4C7SO/H9JS
+	 Y67FGNz3xwHLnfbagq+A1TyOLd1CQfZN8vrr9B7QpuC/Lg6YTGI76paHiASJNZE8hA
+	 3qDF2XIoY/dXg==
+Date: Mon, 18 Mar 2024 11:28:16 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Keguang Zhang <keguang.zhang@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-mips@vger.kernel.org,
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 0/2] Add support for Loongson1 DMA
+Message-ID: <20240318-average-likely-6a55c18db7bb@spud>
+References: <20240316-loongson1-dma-v6-0-90de2c3cc928@gmail.com>
+ <CAAhV-H6aGS6VXGzkqWTyxL7bGw=KdjmnRZj7SpwrV5hT6XQcpg@mail.gmail.com>
+ <CAJhJPsVSM-8VA604p2Vr58QJEp+Tg72YTTntnip64Ejz=0aQng@mail.gmail.com>
+ <CAAhV-H5TR=y_AmbF6QMJmoS0BhfB=K7forMg0-b2YWm7trktjA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-DrWeb-SpamScore: 0
-X-DrWeb-SpamState: legit
-X-DrWeb-SpamDetail: gggruggvucftvghtrhhoucdtuddrgedvfedrvdehuddgtddvucetufdoteggodetrfcurfhrohhfihhlvgemucfftfghgfeunecuuegrihhlohhuthemuceftddtnecunecujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomhepffhmihhtrhihucforghsthihkhhinhcuoegumhgrshhthihkihhnsegrshhtrhgrlhhinhhugidrrhhuqeenucggtffrrghtthgvrhhnpeeuhfeugfevvdeigeduleeuieetleeftdejieduffffkedtvdevhffghfffieelgeenucfkphepudelvddrudeikedrfedvrdeijeenucfrrghrrghmpehhvghloheplhhotggrlhhhohhsthdrlhhotggrlhguohhmrghinhdpihhnvghtpeduledvrdduieekrdefvddrieejmeegkedvledvpdhmrghilhhfrhhomhepughmrghsthihkhhinhesrghsthhrrghlihhnuhigrdhruhdpnhgspghrtghpthhtohepiedprhgtphhtthhopegtohhrsggvtheslhifnhdrnhgvthdprhgtphhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhvghllhhsthhrohhmsehvmhifrghrvgdrtghomhdprhgtphhtthhopehmrghsthhitghhihesghhmrghilhdrtghomhdprhgtphhtthhopegumhgrshhthihkihhnsegrshhtrhgrlhhinhhugidrrhhu
-X-DrWeb-SpamVersion: Vade Retro 01.423.251#02 AS+AV+AP Profile: DRWEB; Bailout: 300
-X-AntiVirus: Checked by Dr.Web [MailD: 11.1.19.2307031128, SE: 11.1.12.2210241838, Core engine: 7.00.62.01180, Virus records: 12516250, Updated: 2024-Mar-18 09:41:37 UTC]
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="QhK2PIeDRLdrsGtC"
+Content-Disposition: inline
+In-Reply-To: <CAAhV-H5TR=y_AmbF6QMJmoS0BhfB=K7forMg0-b2YWm7trktjA@mail.gmail.com>
 
-Hello all,
-It seems there is a problem in "Krefs and RCU" example, that may cause
-a crash.
-I marked the place between two problem lines with "problem is here" comment.
-If list_del_rcu() will be called between these lines, and list will become
-empty, then q.next will not point to a valid struct my_data.
-entry->refcount will also be invalid.
-Instead, q.next must be read first, and then compared with q to check
-list's emptiness (for example like in list_for_each_entry_rcu macro).
 
-Signed-off-by: Dmitry Mastykin <dmastykin@astralinux.ru>
+--QhK2PIeDRLdrsGtC
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/core-api/kref.rst b/Documentation/core-api/kref.rst
-index c61eea6f1bf2..b76d71d9c9a0 100644
---- a/Documentation/core-api/kref.rst
-+++ b/Documentation/core-api/kref.rst
-@@ -274,44 +274,45 @@ return value. If you are sure (by already having a valid pointer) that
- kref_get_unless_zero() will return true, then use kref_get() instead.
- 
- Krefs and RCU
- =============
- 
- The function kref_get_unless_zero also makes it possible to use rcu
- locking for lookups in the above example::
- 
- 	struct my_data
- 	{
- 		struct rcu_head rhead;
- 		.
- 		struct kref refcount;
- 		.
- 		.
- 	};
- 
- 	static struct my_data *get_entry_rcu()
- 	{
- 		struct my_data *entry = NULL;
- 		rcu_read_lock();
- 		if (!list_empty(&q)) {
-+			// problem is here
- 			entry = container_of(q.next, struct my_data, link);
- 			if (!kref_get_unless_zero(&entry->refcount))
- 				entry = NULL;
- 		}
- 		rcu_read_unlock();
- 		return entry;
- 	}
- 
- 	static void release_entry_rcu(struct kref *ref)
- 	{
- 		struct my_data *entry = container_of(ref, struct my_data, refcount);
- 
- 		mutex_lock(&mutex);
- 		list_del_rcu(&entry->link);
- 		mutex_unlock(&mutex);
- 		kfree_rcu(entry, rhead);
- 	}
- 
- 	static void put_entry(struct my_data *entry)
- 	{
- 		kref_put(&entry->refcount, release_entry_rcu);
- 	}
+On Mon, Mar 18, 2024 at 03:31:59PM +0800, Huacai Chen wrote:
+> On Mon, Mar 18, 2024 at 10:08=E2=80=AFAM Keguang Zhang <keguang.zhang@gma=
+il.com> wrote:
+> >
+> > Hi Huacai,
+> >
+> > > Hi, Keguang,
+> > >
+> > > Sorry for the late reply, there is already a ls2x-apb-dma driver, I'm
+> > > not sure but can they share the same code base? If not, can rename
+> > > this driver to ls1x-apb-dma for consistency?
+> >
+> > There are some differences between ls1x DMA and ls2x DMA, such as
+> > registers and DMA descriptors.
+> > I will rename it to ls1x-apb-dma.
+> OK, please also rename the yaml file to keep consistency.
+
+No, the yaml file needs to match the (one of the) compatible strings.
+
+--QhK2PIeDRLdrsGtC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZfglUAAKCRB4tDGHoIJi
+0imRAQDW5obsdOQ1Qf36y3Y9p4UM3IbT22yjGxcXNXDRMsONYwD+KVzSWGSm73jY
+MbZrvy6JxG0g0IPxRKAVdrIehFUZAgI=
+=+PD8
+-----END PGP SIGNATURE-----
+
+--QhK2PIeDRLdrsGtC--
