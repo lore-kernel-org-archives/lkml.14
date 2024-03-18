@@ -1,166 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A4F38382;
-	Mon, 18 Mar 2024 11:29:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E824C364A5;
+	Mon, 18 Mar 2024 11:30:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710761375; cv=none; b=K6umvjPZ6jk5DvOpBrDuSAHTH9qZC9Z0NnE76SJT4rGhpJrBWtB2+vWtjnSGf7wUiKInQxXVr115Krc8/12zxf77ImYwANwvp2kUAMLYC5MIikQJJEgALHil3zt/8INHySEaAVBpwGKpRoILumBStnUicznPvN1ejRPyFLowg94=
+	t=1710761403; cv=none; b=rwxiriPmNLb2FPk1d3xAMsmvoII09JZWgew+rTxNqTXeZw5QygQGr/R7vGzTm77i9B6oWDi7gdgYqYqgI4fUYFmOtA/xNGUixhoVkcVif16hoDfCv1KZdVIU4EFQeqzF+OVX9+FGJ+en20nGYj15xxjr3X7M6dETZpQzYcVr4YU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710761375; c=relaxed/simple;
-	bh=CXvlbrCMPnb9yef1bDHrNzW1AMGOSDWEgQsKsUa5qHc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LZTFKPng8sel/b8ksCyi7cIM/hb4BSzgVtcA1c2bworRKA3WFXMo1L0FfA6AqT9l0zSuBVw1gvIP0ll/oIV7aVFSVrY3r+BgibP7JDqIjHVtRlLs4c0ilH0YDOEftU4tcoQB0FG3lJ3jKEIt+5bDHIKrahT1N51e3etG9tlpUWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EwUSOlJQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710761403; c=relaxed/simple;
+	bh=Cc+Y2s39wTbCc9QtugqFeqigRiQlpu/M+4LyuNvXYyw=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=tudhxJhz/URtfY8RxPO5NFhUbIE+EYmfCHeybMXNtE6EpLyIJZ/ZkzLnlbzrvoUJySDUCexbLjEz1tMXNz07FvXSmzUSYPLqMSrOEkHIM1U4hrrdcE7DPlW24aJnXeoU37QE8lz3Oa3yDPMcx3tq4SnlgTnQUfNDuEhKTXNv320=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tOSQeZ7L; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZJIJrz6V; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EwUSOlJQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 823B5C433F1;
-	Mon, 18 Mar 2024 11:29:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710761375;
-	bh=CXvlbrCMPnb9yef1bDHrNzW1AMGOSDWEgQsKsUa5qHc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EwUSOlJQToeinOU4wVaJ8RsNNPCwNRTr5UbDj/stk9hf2On2TMRZYI+wZYWkAtAU2
-	 iCPiS9vB21HLx1IfjtzL3AJi18eTelDa2vZ07SCm+28NfsyCRB9xSIH/CIAtoTs8Ni
-	 LeiIbNbkUwB0eyvK8cbSi5KyL9adJb4XuNDEW2mAmeqX39Czpn9+iqPILYS9ktvpwk
-	 98/hEUiYRCrcpuVIWA7KH6Of7Nq9+FXCXHuXpjOqOJuUuSmSqEF3kB1m+AgciRV9Rm
-	 /l71F4THAw/n7iaqjj4zXKFRnS8yZxoh9uLPcvCAoBuTVo144iu5P7Va85AEHImcQj
-	 01Zh/sQtUkgZQ==
-Date: Mon, 18 Mar 2024 11:29:31 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Keguang Zhang <keguang.zhang@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-mips@vger.kernel.org,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 1/2] dt-bindings: dma: Add Loongson-1 DMA
-Message-ID: <20240318-value-snide-8733098b9e76@spud>
-References: <20240316-loongson1-dma-v6-0-90de2c3cc928@gmail.com>
- <20240316-loongson1-dma-v6-1-90de2c3cc928@gmail.com>
- <20240317-exorcist-spectator-90f5acb3fe2a@spud>
- <CAJhJPsWOUZsWFvreRrPqQHAjYW7uRT31THHi7CRDN46+nHpL9g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tOSQeZ7L";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZJIJrz6V"
+Date: Mon, 18 Mar 2024 11:29:59 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1710761400;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=lHv+hOuyeAed1zWZqJcAd8UUxUGKXXKvj75zinnX3Vs=;
+	b=tOSQeZ7L6D7fYlhDjajjmje1QUcDgd0afYgnjnv6lRD7uLFmmHBfBz60cOLCt88uKOUGC2
+	yMPHwWi7e0ejKWlsFf2/p65LHZsyzzTrZX1S3dh940jVAKX7cJYu96fq9nSvX2bvc/1t/t
+	yfc9UxCkKaefmBPm/F9bmlHOYpyTfAfwoxIjYccJe5o8K/IAcLLTzUMTB05ie0dEeCC1ag
+	NaaxRiH7jj+tWg6gha5zMukv/wOCxnZMqAzIgP8qZ1e96mCGuQoY1W5VSOqfuC44y1eotp
+	iBFOY+cn6RoT5krnyRNn1occ8dHub8smL1PfgBLl5IFoFuWl18T7WZMF/7OabA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1710761400;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=lHv+hOuyeAed1zWZqJcAd8UUxUGKXXKvj75zinnX3Vs=;
+	b=ZJIJrz6VtREtRwlBoUdrdSIpwG4QfEqUgUAza5MFCmCUj7ELkrYHnpXGUN9XSaWkjbewun
+	gDyE92T+W5EdN/CQ==
+From: "tip-bot2 for Biju Das" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/urgent] irqchip/renesas-rzg2l: Rename rzg2l_irq_eoi()
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+ Biju Das <biju.das.jz@bp.renesas.com>, Thomas Gleixner <tglx@linutronix.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org, maz@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="RdFJ9jAojuY1Z+9n"
-Content-Disposition: inline
-In-Reply-To: <CAJhJPsWOUZsWFvreRrPqQHAjYW7uRT31THHi7CRDN46+nHpL9g@mail.gmail.com>
+Message-ID: <171076139948.12214.17282697415452486662.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
+The following commit has been merged into the irq/urgent branch of tip:
 
---RdFJ9jAojuY1Z+9n
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Commit-ID:     b4b5cd61a6fdd92ede0dc39f0850a182affd1323
+Gitweb:        https://git.kernel.org/tip/b4b5cd61a6fdd92ede0dc39f0850a182affd1323
+Author:        Biju Das <biju.das.jz@bp.renesas.com>
+AuthorDate:    Tue, 05 Mar 2024 18:39:20 
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Mon, 18 Mar 2024 12:20:01 +01:00
 
-On Mon, Mar 18, 2024 at 02:18:27PM +0800, Keguang Zhang wrote:
-> On Sun, Mar 17, 2024 at 10:40=E2=80=AFPM Conor Dooley <conor@kernel.org> =
-wrote:
-> >
-> > On Sat, Mar 16, 2024 at 07:33:53PM +0800, Keguang Zhang via B4 Relay wr=
-ote:
-> > > From: Keguang Zhang <keguang.zhang@gmail.com>
-> > >
-> > > Add devicetree binding document for Loongson-1 DMA.
-> > >
-> > > Signed-off-by: Keguang Zhang <keguang.zhang@gmail.com>
-> > > ---
-> > > V5 -> V6:
-> > >    Change the compatible to the fallback
-> > >    Some minor fixes
-> > > V4 -> V5:
-> > >    A newly added patch
-> > > ---
-> > >  .../devicetree/bindings/dma/loongson,ls1x-dma.yaml | 66 ++++++++++++=
-++++++++++
-> > >  1 file changed, 66 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/dma/loongson,ls1x-dma.=
-yaml b/Documentation/devicetree/bindings/dma/loongson,ls1x-dma.yaml
-> > > new file mode 100644
-> > > index 000000000000..06358df725c6
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/dma/loongson,ls1x-dma.yaml
-> > > @@ -0,0 +1,66 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/dma/loongson,ls1x-dma.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Loongson-1 DMA Controller
-> > > +
-> > > +maintainers:
-> > > +  - Keguang Zhang <keguang.zhang@gmail.com>
-> > > +
-> > > +description:
-> > > +  Loongson-1 DMA controller provides 3 independent channels for
-> > > +  peripherals such as NAND and AC97.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    oneOf:
-> > > +      - const: loongson,ls1b-dma
-> > > +      - items:
-> > > +          - enum:
-> > > +              - loongson,ls1c-dma
-> > > +          - const: loongson,ls1b-dma
-> >
-> > Aren't there several more devices in this family? Do they not have DMA
-> > controllers?
-> >
-> You are right. Loongson1 is a SoC family.
-> However, only 1A/1B/1C have DMA controller.
+irqchip/renesas-rzg2l: Rename rzg2l_irq_eoi()
 
-You're missing the 1A then.
+Rename rzg2l_irq_eoi()->rzg2l_clear_irq_int() and simplify the code by
+removing redundant priv local variable.
 
->=20
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    description: Each channel has a dedicated interrupt line.
-> > > +    minItems: 1
-> > > +    maxItems: 3
-> >
-> > Is this number not fixed for each SoC?
-> >
-> Yes. Actually, it's fixed for the whole family.
+Suggested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-Then why do you have minItems: 1? Are there multiple DMA controllers
-on each SoC that only make use of a subset of the possible channels?
+---
+ drivers/irqchip/irq-renesas-rzg2l.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-> > > +  interrupt-names:
-> > > +    minItems: 1
-> > > +    items:
-> > > +      - pattern: ch0
-> > > +      - pattern: ch1
-> > > +      - pattern: ch2
-> >
-> > Why have you made these a pattern? There's no regex being used here at
-> > all.
-> >
-> Will change items to the following regex.
->   interrupt-names:
->     minItems: 1
->     items:
->       - pattern: "^ch[0-2]$"
-
-
---RdFJ9jAojuY1Z+9n
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZfglmwAKCRB4tDGHoIJi
-0myiAP9gqCVAPtwBo6/5Xq10Pb546e9hiXfet6M/dCcQh2nfTAD/ZGnnWlZC69Vs
-HL/FoR4cgDmA6m1mCAf54NbieojKPwc=
-=gd7t
------END PGP SIGNATURE-----
-
---RdFJ9jAojuY1Z+9n--
+diff --git a/drivers/irqchip/irq-renesas-rzg2l.c b/drivers/irqchip/irq-renesas-rzg2l.c
+index 599e0ab..8133f05 100644
+--- a/drivers/irqchip/irq-renesas-rzg2l.c
++++ b/drivers/irqchip/irq-renesas-rzg2l.c
+@@ -85,10 +85,9 @@ static struct rzg2l_irqc_priv *irq_data_to_priv(struct irq_data *data)
+ 	return data->domain->host_data;
+ }
+ 
+-static void rzg2l_irq_eoi(struct irq_data *d)
++static void rzg2l_clear_irq_int(struct rzg2l_irqc_priv *priv, unsigned int hwirq)
+ {
+-	unsigned int hw_irq = irqd_to_hwirq(d) - IRQC_IRQ_START;
+-	struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
++	unsigned int hw_irq = hwirq - IRQC_IRQ_START;
+ 	u32 bit = BIT(hw_irq);
+ 	u32 iitsr, iscr;
+ 
+@@ -132,7 +131,7 @@ static void rzg2l_irqc_eoi(struct irq_data *d)
+ 
+ 	raw_spin_lock(&priv->lock);
+ 	if (hw_irq >= IRQC_IRQ_START && hw_irq <= IRQC_IRQ_COUNT)
+-		rzg2l_irq_eoi(d);
++		rzg2l_clear_irq_int(priv, hw_irq);
+ 	else if (hw_irq >= IRQC_TINT_START && hw_irq < IRQC_NUM_IRQ)
+ 		rzg2l_clear_tint_int(priv, hw_irq);
+ 	raw_spin_unlock(&priv->lock);
