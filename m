@@ -1,54 +1,54 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748F45F85F
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 23:33:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A04925F870
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 23:33:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710804840; cv=none; b=mST2QCGvZJ/1o0jdMn//PmzHXHRKAhMb4KBuBTfvFFtX+pYpgfeIzVA6ou+9KsNqsO6MyKk8Qr2ZeY7N7LTjUHKssgGJzeJLwkzeWlFvi7YKjjUqt5cweCLvwUuZDGcpv1/p62ozG7shnSxCEUDRDVfU98cNauHUsD5MDnXdNXo=
+	t=1710804841; cv=none; b=QvjdONMhkaxswwVWR5x5z1UGAzr7bsf86AcqSubNH60tLdvTQY1e4mt8gEVJef0V6LIh2qibdAhHaI0XU4YOucKrwoeSk52yQdnNDRy1qB7uL9puQaVhCrTy2kpj80TwUXjBf+dXslPWREEyMSJ3KZ71/EjOmXjIgTAHeR1NV0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710804840; c=relaxed/simple;
-	bh=Tf4feJZhWwnmgiC2l7Is9hf7qtWmR8OKc/AKvKQIlNA=;
+	s=arc-20240116; t=1710804841; c=relaxed/simple;
+	bh=54nyVR2dGgebG8omWQWEhwokjb41+ZuOxUUjTXEZ9U8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lIZCchf9V7md1YQBj3rYXoFWdlwvnjhJ0dM13myeMTv2nRv3sXaxqW/YU6254EcXvbttscuMdGTQcnOr5D7JO5/ojdTWEcB2CAABnqY+XXTCnXl/4/xSeK11PL7ZFUbN8/gi/GAS0ENX03GmCwNP4QJYES/RNODiHv0SInofG2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iWjeyHFg; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=S+K6y1aDjF8UKjqtqEvTdAIY/tqrg6cGm0spayA8v8iatdOO3pHGGhQ8T5xokPf0ZkXkqIhmurkGI6OflIk0+/+ZV7/7c2cD1GOGD2TZVbIfXbLeV9kuM5qvTaX6EE8h30dixYrH/O/y0taoe2IXnCqTtcZeug3flWGibWf5sDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ByT3qbJu; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iWjeyHFg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ByT3qbJu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710804837;
+	s=mimecast20190719; t=1710804838;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ON5fE7hrojJzQ2xG5TVkP4zn85dxrOKCit9Bo+PfrAs=;
-	b=iWjeyHFga4HEEHT9OPzjOah248pIHcbDKDl211e7v4W2nPEgAXyrh+vnxF9OiwhNMnE3ZR
-	vnzeIcnAfWY4LEpaoA/jyoR3NRNojlHF1dWUJcCzrYXcQyACsbA1v6g/R/nYaJj3Hl7sem
-	jEWz/NShJe/WwTPn5ja7f2W0HYUiH4E=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-433-1fJNkKPdNo6AozPsADC4pg-1; Mon, 18 Mar 2024 19:33:54 -0400
-X-MC-Unique: 1fJNkKPdNo6AozPsADC4pg-1
+	bh=njlglT30so/A+1RKK68wAaixBuIYtSjbbdb5gDm3L0U=;
+	b=ByT3qbJuxKfn2mceB1AVf/b2FVpM/nwEYI1UUj9wjsp9jwhPTZj4ctSV+nuMGNhr3oR0ll
+	RB5r+DWR4PH8g9gtG9Cr9smkuDCS92NzRp3mYtxeiJmJ3mmhKYkRhZk1fjcnC9F8AMA9Wf
+	iQNgZdAdW2V+C2zjEFtS7IrTg8+8wOI=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-191-dXPgK_oqMVuYSDoRB_bD7A-1; Mon,
+ 18 Mar 2024 19:33:55 -0400
+X-MC-Unique: dXPgK_oqMVuYSDoRB_bD7A-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CE58D101A523;
-	Mon, 18 Mar 2024 23:33:53 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9D08638000A1;
+	Mon, 18 Mar 2024 23:33:54 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id A72371121312;
-	Mon, 18 Mar 2024 23:33:53 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 766E61121312;
+	Mon, 18 Mar 2024 23:33:54 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
 Cc: michael.roth@amd.com,
 	isaku.yamahata@intel.com,
 	seanjc@google.com
-Subject: [PATCH v4 01/15] KVM: SVM: Invert handling of SEV and SEV_ES feature flags
-Date: Mon, 18 Mar 2024 19:33:38 -0400
-Message-ID: <20240318233352.2728327-2-pbonzini@redhat.com>
+Subject: [PATCH v4 04/15] KVM: introduce new vendor op for KVM_GET_DEVICE_ATTR
+Date: Mon, 18 Mar 2024 19:33:41 -0400
+Message-ID: <20240318233352.2728327-5-pbonzini@redhat.com>
 In-Reply-To: <20240318233352.2728327-1-pbonzini@redhat.com>
 References: <20240318233352.2728327-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -61,54 +61,112 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-From: Sean Christopherson <seanjc@google.com>
+Allow vendor modules to provide their own attributes on /dev/kvm.
+To avoid proliferation of vendor ops, implement KVM_HAS_DEVICE_ATTR
+and KVM_GET_DEVICE_ATTR in terms of the same function.  You're not
+supposed to use KVM_GET_DEVICE_ATTR to do complicated computations,
+especially on /dev/kvm.
 
-Leave SEV and SEV_ES '0' in kvm_cpu_caps by default, and instead set them
-in sev_set_cpu_caps() if SEV and SEV-ES support are fully enabled.  Aside
-from the fact that sev_set_cpu_caps() is wildly misleading when it *clears*
-capabilities, this will allow compiling out sev.c without falsely
-advertising SEV/SEV-ES support in KVM_GET_SUPPORTED_CPUID.
-
-Signed-off-by: Sean Christopherson <seanjc@google.com>
 Reviewed-by: Michael Roth <michael.roth@amd.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/cpuid.c   | 2 +-
- arch/x86/kvm/svm/sev.c | 8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/kvm-x86-ops.h |  1 +
+ arch/x86/include/asm/kvm_host.h    |  1 +
+ arch/x86/kvm/x86.c                 | 43 ++++++++++++++++++++----------
+ 3 files changed, 31 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index adba49afb5fe..bde4df13a7e8 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -761,7 +761,7 @@ void kvm_set_cpu_caps(void)
- 	kvm_cpu_cap_mask(CPUID_8000_000A_EDX, 0);
+diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
+index 110d7f29ca9a..5187fcf4b610 100644
+--- a/arch/x86/include/asm/kvm-x86-ops.h
++++ b/arch/x86/include/asm/kvm-x86-ops.h
+@@ -121,6 +121,7 @@ KVM_X86_OP(enter_smm)
+ KVM_X86_OP(leave_smm)
+ KVM_X86_OP(enable_smi_window)
+ #endif
++KVM_X86_OP_OPTIONAL(dev_get_attr)
+ KVM_X86_OP_OPTIONAL(mem_enc_ioctl)
+ KVM_X86_OP_OPTIONAL(mem_enc_register_region)
+ KVM_X86_OP_OPTIONAL(mem_enc_unregister_region)
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 16e07a2eee19..f6cc7bfb5462 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1778,6 +1778,7 @@ struct kvm_x86_ops {
+ 	void (*enable_smi_window)(struct kvm_vcpu *vcpu);
+ #endif
  
- 	kvm_cpu_cap_mask(CPUID_8000_001F_EAX,
--		0 /* SME */ | F(SEV) | 0 /* VM_PAGE_FLUSH */ | F(SEV_ES) |
-+		0 /* SME */ | 0 /* SEV */ | 0 /* VM_PAGE_FLUSH */ | 0 /* SEV_ES */ |
- 		F(SME_COHERENT));
- 
- 	kvm_cpu_cap_mask(CPUID_8000_0021_EAX,
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index e5a4d9b0e79f..382c745b8ba9 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -2186,10 +2186,10 @@ void sev_vm_destroy(struct kvm *kvm)
- 
- void __init sev_set_cpu_caps(void)
- {
--	if (!sev_enabled)
--		kvm_cpu_cap_clear(X86_FEATURE_SEV);
--	if (!sev_es_enabled)
--		kvm_cpu_cap_clear(X86_FEATURE_SEV_ES);
-+	if (sev_enabled)
-+		kvm_cpu_cap_set(X86_FEATURE_SEV);
-+	if (sev_es_enabled)
-+		kvm_cpu_cap_set(X86_FEATURE_SEV_ES);
++	int (*dev_get_attr)(u64 attr, u64 *val);
+ 	int (*mem_enc_ioctl)(struct kvm *kvm, void __user *argp);
+ 	int (*mem_enc_register_region)(struct kvm *kvm, struct kvm_enc_region *argp);
+ 	int (*mem_enc_unregister_region)(struct kvm *kvm, struct kvm_enc_region *argp);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 3d2029402513..e8253aa8ef5e 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -4842,34 +4842,49 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	return r;
  }
  
- void __init sev_hardware_setup(void)
+-static int kvm_x86_dev_get_attr(struct kvm_device_attr *attr)
++static int __kvm_x86_dev_get_attr(struct kvm_device_attr *attr, u64 *val)
+ {
+-	u64 __user *uaddr = u64_to_user_ptr(attr->addr);
++	int r;
+ 
+ 	if (attr->group)
+ 		return -ENXIO;
+ 
+ 	switch (attr->attr) {
+ 	case KVM_X86_XCOMP_GUEST_SUPP:
+-		if (put_user(kvm_caps.supported_xcr0, uaddr))
+-			return -EFAULT;
+-		return 0;
++		r = 0;
++		*val = kvm_caps.supported_xcr0;
++		break;
+ 	default:
+-		return -ENXIO;
++		r = -ENXIO;
++		if (kvm_x86_ops.dev_get_attr)
++			r = static_call(kvm_x86_dev_get_attr)(attr->attr, val);
++		break;
+ 	}
++
++	return r;
++}
++
++static int kvm_x86_dev_get_attr(struct kvm_device_attr *attr)
++{
++	u64 __user *uaddr = u64_to_user_ptr(attr->addr);
++	int r;
++	u64 val;
++
++	r = __kvm_x86_dev_get_attr(attr, &val);
++	if (r < 0)
++		return r;
++
++	if (put_user(val, uaddr))
++		return -EFAULT;
++
++	return 0;
+ }
+ 
+ static int kvm_x86_dev_has_attr(struct kvm_device_attr *attr)
+ {
+-	if (attr->group)
+-		return -ENXIO;
++	u64 val;
+ 
+-	switch (attr->attr) {
+-	case KVM_X86_XCOMP_GUEST_SUPP:
+-		return 0;
+-	default:
+-		return -ENXIO;
+-	}
++	return __kvm_x86_dev_get_attr(attr, &val);
+ }
+ 
+ long kvm_arch_dev_ioctl(struct file *filp,
 -- 
 2.43.0
 
