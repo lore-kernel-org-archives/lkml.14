@@ -1,143 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C0655E44;
-	Mon, 18 Mar 2024 17:29:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C671B55766;
+	Mon, 18 Mar 2024 17:32:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710782987; cv=none; b=N/m1B0GQPgXd7k9w7e/Ae3GW0ypTGOb0hrcZZPMkH8OeUY/M6vwLv4xS4vuUMbaiuZjAfqQ9332g6+CbVoPaoYMxbHRUkKQZ68vkMvEVRSpDZiUNJCcuZdyjZSgKp2fv486elLs5xlI5PaEbCnVn8VADjAu0GKjI4Uwwvb4UJHQ=
+	t=1710783153; cv=none; b=g8mfckmaqktwJ+HlTENAyW9Bg04hF3uYAcASOnbU9fUWJw2gzlON7WEGIJDaPXlO7Fhd0GQSMqZm1sa0fpEriBWOnG3+sFVqW4tbKHGdj2KcUdx7n9Gix71Sxdhv5aI2uHg2sQj6B2RBAiFu+kn239eKDGnjMEszvk07JaVyoaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710782987; c=relaxed/simple;
-	bh=jal3puy6u47/+391s6XpWyiWuhu3q01nkmau37uIYME=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bzdhR3S+Q/PG1im1aulwCSu7TLj9gEH597lg5dQA5LShKaA9ycimpuDvNpHeGKYAJduoljxL4wqNRHeotIe5jU1ESnIcdumpdOmswI2BsOPSK0Ex/iSkCL3YhRpV+auvorqMsezLouqvu5X37hmJ9rnbaFWh74NNh7p5XPTw0Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p1gZduWK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710783153; c=relaxed/simple;
+	bh=XVPhZ3PBupJhhGEX83rbBm7q0DsDbGUve7MHqKGgqbo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ooAYBOSg8p/MkfMkGUwfRtKI+vcxWj9iltwXLwk2BXGdzi8AQhfq/vHtVK/uRO6Iz8BCZiot3dsHoMWP9jX3qEI3OIx7DIXb4ggp3Du5do46DIk09LZBjTqqQTjglhiDNVaIWUxla/Xm51mkTeoeXvCthUWaYvuFdnWtUjp5pzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QlegEMS2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p1gZduWK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD220C433C7;
-	Mon, 18 Mar 2024 17:29:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QlegEMS2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AD17C43390;
+	Mon, 18 Mar 2024 17:32:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710782985;
-	bh=jal3puy6u47/+391s6XpWyiWuhu3q01nkmau37uIYME=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=p1gZduWKJ+OsB7PpUBOfl31508AK96L5FBrCL0H/XXWtGumxroNXK4fUdOw8kC0q1
-	 uju6AV9Agrt6SO4hDDdE2eQhlPMpPEKV6WE6bPz7EJiwJGX6yOpHj0cRswTrJBH4K+
-	 b/yvojgx6wA1rUUbAjMb7YxGPs0Y2XcmUJhY7sp6JfxGDXDGPjdfCoINlOPvIKOXG6
-	 iAWaAg+VAqMonfhucZTfckXPo6z7JlMKc80Tx0ipNh4w9OQSy06rkFHSxh6qixCr06
-	 1mHToYqVMkuQBjNYsXLUjmgBrw3PJtNjgxapyMFMTu2vdjMVtpeClk3d5Oq2X68HiT
-	 +ZJH2U+5Vnncw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rmGnv-00DKyB-EO;
-	Mon, 18 Mar 2024 17:29:43 +0000
-Date: Mon, 18 Mar 2024 17:29:43 +0000
-Message-ID: <86v85jzbw8.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: linux-arm-kernel@lists.infradead.org,
-	kvm@vger.kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <len.brown@intel.com>,
-	Pavel Machek <pavel@ucw.cz>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Mostafa Saleh <smostafa@google.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kvmarm@lists.linux.dev,
-	linux-pm@vger.kernel.org
-Subject: Re: [RFC PATCH v2 2/4] KVM: arm64: Add PSCI SYSTEM_OFF2 function for hibernation
-In-Reply-To: <20240318164646.1010092-3-dwmw2@infradead.org>
-References: <20240318164646.1010092-1-dwmw2@infradead.org>
-	<20240318164646.1010092-3-dwmw2@infradead.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1710783153;
+	bh=XVPhZ3PBupJhhGEX83rbBm7q0DsDbGUve7MHqKGgqbo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=QlegEMS2KlySZVRhAqJgjHk8OhX5yMNAWv/c/0VZwTU7q+XZFt0Zjbi4cV1777cZk
+	 nBTd2LLkDL909RQhoCvNs1xCIxqMH5Q2b6eSK8VPmUmYsYL4P9f2dQ3Cze5mUg1SmN
+	 wZ00sHMrR8aKFmlqRWef4M8oER9vD3rmME1/wVdSub5vRha/eNL9DIzuDTZ99okSIW
+	 1H3nnmY0DcNvAWYWcb2OC0Dpia+DUPZIJeofq2rJA7y9CblqHdGpJsRwR7ri9FW7GP
+	 GodJu5Cj2+fXeWy8q/WLv3D6ar6V5YqxMFCEGQYUbwHdKI9294Tx2tVy6RjsrEpU5f
+	 7Xw5L6yHnJ8Tw==
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d4698f4936so66682161fa.1;
+        Mon, 18 Mar 2024 10:32:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUkYANkC5DKFQ5aYDvKxUwMywnhnCU8bvHAsvYtiFkPmlILP3pevcKS5EHOCHUwvvelSj1CMY8n18xMe4KEejFXcQVkkGuXER6G5QSRwRXomKl7U8F7x3JRFuPXYNfA8abhGlZiQUIGQfZx
+X-Gm-Message-State: AOJu0Yy4hXl865sVc6++Hc+K01/bB4TNuUTvD5aDmFFn78hkIQz4fMQv
+	purzf8X5/E2H1Qu2c38yUb40CQ1feilJB/vcRop2QvncGF8ijMaAfPasQjBRLvnyLdlAY+DqwFW
+	NSKiEAa2D/e2BiNW7euyVTZ1MpS0=
+X-Google-Smtp-Source: AGHT+IE8OEjuiWEp34I61WW4MuLVhQZoBS06afGf0qEvLiajTJnLooMq0Itj+17w7tyyJSSAp1nwJGA58BNP4UYSL68=
+X-Received: by 2002:a2e:b0f5:0:b0:2d4:a078:73c with SMTP id
+ h21-20020a2eb0f5000000b002d4a078073cmr3207729ljl.16.1710783152015; Mon, 18
+ Mar 2024 10:32:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, lpieralisi@kernel.org, rafael@kernel.org, len.brown@intel.com, pavel@ucw.cz, dwmw@amazon.co.uk, smostafa@google.com, jean-philippe@linaro.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev, linux-pm@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+References: <20240215141321.899675-1-max.kellermann@ionos.com>
+ <CAK7LNAT772pZEV09nEYTLOyU_og73zPkKjjL54e8yor-tnnHtw@mail.gmail.com> <CAKPOu+87bmXkh9uEMEjCOBQ5hjgMysWsyac9EHvQnPp5Pf5d3A@mail.gmail.com>
+In-Reply-To: <CAKPOu+87bmXkh9uEMEjCOBQ5hjgMysWsyac9EHvQnPp5Pf5d3A@mail.gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Tue, 19 Mar 2024 02:31:54 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS6QAgvTOrozaGDBBHgWdhLktrNmFqc4wzRFhRReQXJqw@mail.gmail.com>
+Message-ID: <CAK7LNAS6QAgvTOrozaGDBBHgWdhLktrNmFqc4wzRFhRReQXJqw@mail.gmail.com>
+Subject: Re: [PATCH] scripts/mod/modpost: fix null pointer dereference
+To: Max Kellermann <max.kellermann@ionos.com>
+Cc: nathan@kernel.org, nicolas@fjasle.eu, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 18 Mar 2024 16:14:24 +0000,
-David Woodhouse <dwmw2@infradead.org> wrote:
-> 
-> From: David Woodhouse <dwmw@amazon.co.uk>
-> 
-> The PSCI v1.3 specification (alpha) adds support for a SYSTEM_OFF2 function
-> which is analogous to ACPI S4 state. This will allow hosting environments
-> to determine that a guest is hibernated rather than just powered off, and
-> ensure that they preserve the virtual environment appropriately to allow
-> the guest to resume safely (or bump the hardware_signature in the FACS to
-> trigger a clean reboot instead).
-> 
-> The beta version will be changed to say that PSCI_FEATURES returns a bit
-> mask of the supported hibernate types, which is implemented here.
-> 
-> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-> ---
->  Documentation/virt/kvm/api.rst    | 11 +++++++++
->  arch/arm64/include/asm/kvm_host.h |  2 ++
->  arch/arm64/include/uapi/asm/kvm.h |  6 +++++
->  arch/arm64/kvm/arm.c              |  5 +++++
->  arch/arm64/kvm/psci.c             | 37 +++++++++++++++++++++++++++++++
->  include/uapi/linux/kvm.h          |  1 +
->  6 files changed, 62 insertions(+)
-> 
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index 0b5a33ee71ee..ff061b6a2393 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -6761,6 +6761,10 @@ the first `ndata` items (possibly zero) of the data array are valid.
->     the guest issued a SYSTEM_RESET2 call according to v1.1 of the PSCI
->     specification.
->  
-> + - for arm64, data[0] is set to KVM_SYSTEM_EVENT_SHUTDOWN_FLAG_PSCI_OFF2
-> +   if the guest issued a SYSTEM_OFF2 call according to v1.3 of the PSCI
-> +   specification.
-> +
->   - for RISC-V, data[0] is set to the value of the second argument of the
->     ``sbi_system_reset`` call.
->  
-> @@ -6794,6 +6798,13 @@ either:
->   - Deny the guest request to suspend the VM. See ARM DEN0022D.b 5.19.2
->     "Caller responsibilities" for possible return values.
->  
-> +Hibernation using the PSCI SYSTEM_OFF2 call is enabled with the
-> +KVM_CAP_ARM_SYSTEM_OFF2 VM capability. If a guest invokes the PSCI
-> +SYSTEM_OFF2 function, KVM will exit to userspace with the
-> +KVM_SYSTEM_EVENT_SHUTDOWN event type and with data[0] set to
-> +KVM_SYSTEM_EVENT_SHUTDOWN_FLAG_PSCI_OFF2. The only supported hibernate
-> +type for the SYSTEM_OFF2 function is HIBERNATE_OFF (0x0).
+On Tue, Mar 12, 2024 at 6:51=E2=80=AFPM Max Kellermann <max.kellermann@iono=
+s.com> wrote:
+>
+> On Sat, Feb 17, 2024 at 1:24=E2=80=AFPM Masahiro Yamada <masahiroy@kernel=
+.org> wrote:
+> > Can you describe the steps to reproduce it?
+> >
+> > I set CONFIG_TEST_USER_COPY=3Dm, but I could not
+> > reproduce it.
+>
+> I have just reproduced (and logged) it - with "ARCH=3Darm randconfig
+> KCONFIG_SEED=3D0xDD5A884F". Config file attached.
 
-Again, I really oppose this way of doing things. We already have an
-infrastructure for selecting PSCI levels. You may not like it, but it
-exists, and I'm not going entertain supporting yet another bike-shed
-model. Adding an orthogonal cap for a feature that is specific to a
-new PSCI version is just awful.
 
-Please make PSCI 1.3 the only version of PSCI supporting suspend in a
-non-optional way, and be done with it.
+Thanks for the test case. I confirmed that.
 
-	M.
+Applied to linux-kbuild.
 
--- 
-Without deviation from the norm, progress is not possible.
+
+
+--=20
+Best Regards
+Masahiro Yamada
