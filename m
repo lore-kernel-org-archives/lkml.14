@@ -1,207 +1,75 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6245A113
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 21:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8D85A790
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 21:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710797866; cv=none; b=C5KJ4QRVpStCs8jksDfgUkUq1S7R9hfo4J60pRYgC4vM4cGLLY1bg9rtRfVyMGCSQxcCtgQebAfbSxu1Jk3VVELhDw3/AjWTpxFD0gALKkmakkkmTK7ztFngVKM1B1+hxYd0laGQ3AIXVq3VWGkPSu0vz6+P6QBUGNHclRLm4m8=
+	t=1710797884; cv=none; b=kCmen9K0OXdNWXWhf93h8/37nbGX6vI62ODboHY5utEuuSmUVNWsbIRa57bCLKW0lASLgTKFacBvBYHA9ROOVjbsrOBlizTW/beeI8h5gFS4YDHcEjzc63i7vheGMdQwSD5ReqTRkhb8ye9hG3NR5XE5h+mOiC8XfNd//Np2IRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710797866; c=relaxed/simple;
-	bh=IVgx0pQqjlV7lIuVPFnMP2wogzuZvwN0h2VRIIOy15E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nS++fcx0vZR03tJbgPt/t+chSQ687Vv7z7wtDbOyHZr4uVJ8m5AQCeOoomVEP5F6LhJi9RbC93FrrK18/i+ZlLjw7xyAyGgP/EFFEeQdOorrw7pzxJZM+lQjTOpedcfnyAk8WBk1vqwNqzlQ2k8DHT8mHUopHQJRHb1436Yd5MI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B+bet1t7; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B+bet1t7"
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-4d43df40579so667561e0c.0
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 14:37:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710797864; x=1711402664; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ISfCadt2VgNt6/h3A04UiF5MTEGK7Lrl50I2y0DXkrU=;
-        b=B+bet1t7xL4fqWDhhyPGsln4T0sjWfgw1fla2kmD2gwoD0uTijpZRVS9Jq5j4+XGl3
-         2+QuXl25+H3HMU3YWuc16xi5JbTlzWdQTvCMmXcPWKvngLiti2+CeKDBVjiuhqd8v7Xo
-         26zLbSxbZoF+eGCT9ZejuK/o+AR7LExyv1lcD8DtCsrP/mdUIIHTAjf4h689Sj2zXcEA
-         rMZN2lX3Lv2dRRQ+2nLK3Zo5Hdad/u658hZimuNfwIYZFoENLjoO/Jzlh5+7XCicZJKK
-         aCZw6BOwDB51xWTet0iLkEA+zIwac+7ujMGdJmPbPcdLjeQ1YyDP+ruzcw9oamk7BMRa
-         qKRA==
+	s=arc-20240116; t=1710797884; c=relaxed/simple;
+	bh=O4umbVjFHYUDfEMizAn5kUkkWDtKLtGnkvI7A/r4rMg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=RMBxrN34flvvXrb/iQXz8uO3Y1Fg53YxWdnWQ+xul2T6Z9fnpPAMj90MXrW0+0bEndMxCDbF7tggf5shz+filLWaj2s8QhQzQPlkkRJ6sswYc8ZR7p4GgTX2kriBt2wWRSyH8b8Me0wjtYpP2Ww0hE1lWLWQA1kYKKijGEETlmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7c88a694b46so404342839f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 14:38:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710797864; x=1711402664;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ISfCadt2VgNt6/h3A04UiF5MTEGK7Lrl50I2y0DXkrU=;
-        b=qtiP8OtCkGpoCFlTJWmxvB4mTzO4SG6ffiaq6dI2rku619bRHn2KV6QAdd27lynJU+
-         QI8qtoBuCU8BJOYZkzW9tvt/t2l3YdPcPDmxR9fggT69WakraTaFm2oAjtXktCdBMVLw
-         MlzVwP8Um0XZhXhtckokYoeQdpB12KpH9ny+FbSVU4BreRAeBsZayojZOnzKctxczUWY
-         ST0nLogrsQAv/90vZ8rZu3lNzRahzj58YAvtWa5gqNjCauHxrcRMGCua4UnBFImw7ZDt
-         B9OOrEUSmoB9g5Lz63+Zjb5UChB3+yXPGvrZAyIPs7ah9Du6Igx6bwO19Mx1PfFsRiaB
-         sMWw==
-X-Forwarded-Encrypted: i=1; AJvYcCX+woIkoPb6HpDmyz396p5j5Pqk0xtR6ERHK7eeyvMygwdHlHBNegntyrQyBW3mgTA1NnuEoXgd1uLFnKDwveydomt51gLmgL3RFDuP
-X-Gm-Message-State: AOJu0YylQ6xX5ghqz9ar4o5TZGWsNPTFQ2/z0mB2gyf2CBvxb79Uncuv
-	g95dFopqMvoyRc8uQt1u6FYHYY4vjo+FUZunMEROoMxi5/6B1G5NMEkf+Dk77uIJUNCUzNSmddY
-	0mwLPx+zx7QY+3+YTfLxx7RUD/1c=
-X-Google-Smtp-Source: AGHT+IHVV+/P3FdLgHRN+PA5jA0FdCHz88S9BLXeFMBXLcJyCCwZCcVjA4rK5rWQARJf1YBUg6qAI8+atuOMy3WNLz4=
-X-Received: by 2002:a1f:f446:0:b0:4c8:ee1:5a0b with SMTP id
- s67-20020a1ff446000000b004c80ee15a0bmr9876864vkh.15.1710797863691; Mon, 18
- Mar 2024 14:37:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710797882; x=1711402682;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GJmAzOZTchuP4uA1qhK5Bek7hETqC3bRqV9ZUNXqqkg=;
+        b=UZ2d2r6qiNEeJP+PrR3tKTG4lrt5Gd/s3k26TXyNuGkd/xh37toVlq2YX7uKr19n5+
+         yL1PPJGMVvy3dgcEBzoq/C78kTuJJyJyGJTv4ZtIAAGwATy+3PvatIYDTAQT8ok0BfqA
+         4AhZKOy+63XYh2H//kOP/9gAwnvA/XFQb7f0xW3nsHihX4IVxtRShp/tXv8TW0Y7HOvV
+         gWXyezkwz+ZW7q5AeFzq/0SE5wQrSu/xPva1/O/AVvjh/HkDxBfgiGjE+T8Omz/XvImf
+         1TNGc4ZL7AFn2jcWV8uM1+gKAO2+d8mFy6we5mJKg/v/eKTZ38YqKyq1ud+Q/rPfq/SM
+         Hqkw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4/rUsyyjg46M+XvHtZAHM7OgFrAryXRRbjvyHZaP/cWByKLBY1mIpDaGNUFfOqtOkhaeej5fQk5sRvLxGsuT7srbvRaWdWV+bnFOB
+X-Gm-Message-State: AOJu0Yx2gX7RAHir3SJ0pxv8l89Owqk5ElBoq9NimJlM2EeouRg60r5L
+	4uHso0Q1dZHG2xMtGQwFrZyVzKsRLryguLURWHoe50xLKf/CrLV6CVdMK7h5UCR5LjSb0ax+AaM
+	jr6h9MRuZ8vl9olEjwgKsQwsi03r11P0AAB7pjmTNHfcWCf1hC+bPTB4=
+X-Google-Smtp-Source: AGHT+IEE0bl1tT2EzGs5vApz2wZu53dx4QAXfi7kjhMEVBTjBAHVikJmo68tYp6WxIDBl91ZI6pdnd0yhhgF/4otTEnc3TJgJEZQ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <000000000000bbb3d80613f243a6@google.com> <CAKEwX=MAX0km1p43DQmKbeSy2G4dPFHiF+deH_qzqygc2Vnjig@mail.gmail.com>
- <CAJD7tkbEuFkGuQeYjKS02rQoAAKOKieAJ1P2mwukirW3e2JN9A@mail.gmail.com>
- <20240318210917.GA4210@cmpxchg.org> <CAGsJ_4wEjgAscao4BiLbNFChfF7aTpFFdXXozWC45_j+vADdPw@mail.gmail.com>
- <20240318213257.GB4210@cmpxchg.org>
-In-Reply-To: <20240318213257.GB4210@cmpxchg.org>
-From: Barry Song <21cnbao@gmail.com>
-Date: Tue, 19 Mar 2024 10:37:32 +1300
-Message-ID: <CAGsJ_4xTx_FRCrh0KQ4dGAyHisWaK9kUa5UPETWcLnqPwxPkkg@mail.gmail.com>
-Subject: Re: [syzbot] [mm?] kernel BUG in sg_init_one
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Yosry Ahmed <yosryahmed@google.com>, Nhat Pham <nphamcs@gmail.com>, 
-	syzbot <syzbot+adbc983a1588b7805de3@syzkaller.appspotmail.com>, 
-	akpm@linux-foundation.org, chengming.zhou@linux.dev, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	syzkaller-bugs@googlegroups.com, Barry Song <v-songbaohua@oppo.com>
+X-Received: by 2002:a05:6602:1656:b0:7cc:76d0:cc1f with SMTP id
+ y22-20020a056602165600b007cc76d0cc1fmr25629iow.4.1710797882097; Mon, 18 Mar
+ 2024 14:38:02 -0700 (PDT)
+Date: Mon, 18 Mar 2024 14:38:02 -0700
+In-Reply-To: <B6E22992-FF45-44E3-8FBE-D157BED7B922@posteo.net>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000b942f0613f62cdf@google.com>
+Subject: Re: [syzbot] [v9fs?] KMSAN: uninit-value in v9fs_evict_inode
+From: syzbot <syzbot+eb83fe1cce5833cd66a0@syzkaller.appspotmail.com>
+To: asmadeus@codewreck.org, charmitro@posteo.net, ericvh@kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux_oss@crudebyte.com, lucho@ionkov.net, syzkaller-bugs@googlegroups.com, 
+	v9fs@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 19, 2024 at 10:33=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.or=
-g> wrote:
->
-> On Tue, Mar 19, 2024 at 10:15:43AM +1300, Barry Song wrote:
-> > On Tue, Mar 19, 2024 at 10:10=E2=80=AFAM Johannes Weiner <hannes@cmpxch=
-g.org> wrote:
-> > >
-> > > On Mon, Mar 18, 2024 at 01:17:19PM -0700, Yosry Ahmed wrote:
-> > > > On Mon, Mar 18, 2024 at 11:00=E2=80=AFAM Nhat Pham <nphamcs@gmail.c=
-om> wrote:
-> > > > >
-> > > > > On Mon, Mar 18, 2024 at 9:58=E2=80=AFAM syzbot
-> > > > > <syzbot+adbc983a1588b7805de3@syzkaller.appspotmail.com> wrote:
-> > > > > >
-> > > > > > Hello,
-> > > > > >
-> > > > > > syzbot found the following issue on:
-> > > > > >
-> > > > > > HEAD commit:    e5eb28f6d1af Merge tag 'mm-nonmm-stable-2024-03=
--14-09-36' ..
-> > > > > > git tree:       upstream
-> > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=3D130=
-43abe180000
-> > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D19b=
-b57c23dffc38e
-> > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=3Dadbc9=
-83a1588b7805de3
-> > > > > > compiler:       arm-linux-gnueabi-gcc (Debian 12.2.0-14) 12.2.0=
-, GNU ld (GNU Binutils for Debian) 2.40
-> > > > > > userspace arch: arm
-> > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D1=
-706d231180000
-> > > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D13b=
-a7959180000
-> > > > > >
-> > > > > > Downloadable assets:
-> > > > > > disk image (non-bootable): https://storage.googleapis.com/syzbo=
-t-assets/8ead8862021c/non_bootable_disk-e5eb28f6.raw.xz
-> > > > > > vmlinux: https://storage.googleapis.com/syzbot-assets/0a7371c63=
-ff2/vmlinux-e5eb28f6.xz
-> > > > > > kernel image: https://storage.googleapis.com/syzbot-assets/7539=
-441b4add/zImage-e5eb28f6.xz
-> > > > > >
-> > > > > > IMPORTANT: if you fix the issue, please add the following tag t=
-o the commit:
-> > > > > > Reported-by: syzbot+adbc983a1588b7805de3@syzkaller.appspotmail.=
-com
-> > > > > >
-> > > > > > ------------[ cut here ]------------
-> > > > > > kernel BUG at include/linux/scatterlist.h:187!
-> > > > >
-> > > > > Looks like the provided buffer is invalid:
-> > > > >
-> > > > > #ifdef CONFIG_DEBUG_SG
-> > > > > BUG_ON(!virt_addr_valid(buf));
-> > > > > #endif
-> > > > >
-> > > > > which is "src" from:
-> > > > >
-> > > > > sg_init_one(&input, src, entry->length);
-> > > > >
-> > > > > Looking at the surrounding code and recent history, there's this
-> > > > > commit that stands out:
-> > > > >
-> > > > > mm/zswap: remove the memcpy if acomp is not sleepable
-> > > > > (sha: 270700dd06ca41a4779c19eb46608f076bb7d40e)
-> > > > >
-> > > > > which has the effect of, IIUC, using the zpool mapped memory dire=
-ctly
-> > > > > as src, instead of acomp_ctx->buffer (which was previously the ca=
-se,
-> > > > > as zsmalloc was not sleepable).
-> > > > >
-> > > > > This might not necessarily be a bug with that commit itself, but =
-might
-> > > > > have revealed another bug elsewhere.
-> > > > >
-> > > > > Anyway, cc-ing the author, Barry Song, to fact check me :) Will t=
-ake a
-> > > > > closer look later.
-> > > >
-> > > > I am not a highmem expert, but the reproducer has CONFIG_HIGHMEM=3D=
-y,
-> > > > and it seems like zs_map_object() may return a highmem address if t=
-he
-> > > > compressed object is entirely in a single page to avoid copying to =
-a
-> > > > buffer:
-> > > >
-> > > > if (off + class->size <=3D PAGE_SIZE) {
-> > > >    /* this object is contained entirely within a page */
-> > > >    area->vm_addr =3D kmap_atomic(page);
-> > > >    ret =3D area->vm_addr + off;
-> > > >    goto out;
-> > > > }
-> > > >
-> > > > The virt_addr_valid() check seems to indicate that we expect a dire=
-ct
-> > > > map address in sg_init_one(), right?
-> > >
-> > > If the page is highmem, kmap_atomic() establishes a temporary mapping
-> > > to it in the direct map, such that we have a legit kernel pointer to
-> > > the memory. Otherwise the memcpy() in zswap also wouldn't work... Am =
-I
-> > > missing something?
-> >
-> > Right, we built a map but it is not a linear mapping. so we can't use
-> > virt_to_page
-> > on this kind of non-linear mapping.
-> > kmap_to_page can handle both linear and non-linear, but  Ira's commit
-> > added a WARN_ON_ONCE in it for non-linear mapping case.
->
-> Ah, I misread what virt_addr_valid() does. It actually excludes
-> kmap. Which, yes, makes sense, if the next line does virt_to_page()...
->
-> Sorry about the noise.
+Hello,
 
-no worries. I just wonder why Ira's commit ef6e06b2ef870 has added a
-WARN_ON_ONCE
-in kmap_to_page() given we still have many users :-)
+syzbot tried to test the proposed patch but the build/boot failed:
 
-drivers/fpga/fpga-mgr.c:                        pages[index] =3D
-kmap_to_page((void *)p);
-drivers/spi/spi.c:                              vm_page =3D kmap_to_page(bu=
-f);
-drivers/vfio/pci/pds/lm.c:                      pages[i] =3D
-kmap_to_page((void *)p);
-fs/erofs/data.c:                        .page =3D kmap_to_page(ptr),
-fs/smb/server/transport_rdma.c:                 page =3D kmap_to_page(buf);
-net/9p/trans_virtio.c:                          (*pages)[index] =3D
-kmap_to_page(p);
+failed to apply patch:
+checking file fs/9p/vfs_inode.c
+patch: **** unexpected end of file in patch
+
+
+
+Tested on:
+
+commit:         bf3a69c6 Merge tag 'for-linus-6.9-ofs1' of git://git.k..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+kernel config:  https://syzkaller.appspot.com/x/.config?x=48bb382b96e7eda7
+dashboard link: https://syzkaller.appspot.com/bug?extid=eb83fe1cce5833cd66a0
+compiler:       
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=160cdef1180000
+
