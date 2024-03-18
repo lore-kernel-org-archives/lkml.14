@@ -1,133 +1,282 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB3352F98
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 15:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC2052F6D;
+	Mon, 18 Mar 2024 15:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710777216; cv=none; b=AXtyLv8JComkHQjUv2kiJPgbb+KKQR6t0abEiMTnfLOK8EmKHLDeAulJvUOY89NRY3dil/D5Me4d1C1/sVRPzZamU8UOM97b3mbQWf7N6iY43KcLWj1WSOs4sCN0TXojVFJ7Ns/yJWYV9mIFhqgQYVLwlMDFKvsArjCjIDC8nxc=
+	t=1710777266; cv=none; b=pyE2M6ikfoex4KKv7sYl7u5kRP8GyEyQrKZZaeAd2Vl66OEuAWBweYji0VkFPZjQWIvgmc7rcm1ZpJ9zcnMiXSSgcNHU+afwVqocil3ZGDk1oKccAY9kJx8rpisrGp8Gzuo0uv5di/QAJhmGxg1JEzVT6Bh5gDKan7lbrjjFZAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710777216; c=relaxed/simple;
-	bh=6yHPtiZr5s5iZVtQG9zezLLM5+W/VbCy3wugNSS5C60=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=mQu+Kxs+4pUt1b3SAM4neEFbR+Kdaf41cjhVrXGliFA5RYMTyxbo2PkzB96PYMDgPcVSkskH9y8KoM3MkBo2YRJTciKHvrL5LppCL/g9ymDrdo6Wwq9lHqCmNx9Av04c/wFWpfGM2SB5+hojc5KSZm74CI7YZRTr+9N6mD4Vgpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-405-90CltE0wP0GC-d-_5R-oxQ-1; Mon, 18 Mar 2024 15:53:30 +0000
-X-MC-Unique: 90CltE0wP0GC-d-_5R-oxQ-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 18 Mar
- 2024 15:53:07 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Mon, 18 Mar 2024 15:53:07 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Pasha Tatashin' <pasha.tatashin@soleen.com>, Matthew Wilcox
-	<willy@infradead.org>
-CC: "H. Peter Anvin" <hpa@zytor.com>, Kent Overstreet
-	<kent.overstreet@linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "x86@kernel.org"
-	<x86@kernel.org>, "bp@alien8.de" <bp@alien8.de>, "brauner@kernel.org"
-	<brauner@kernel.org>, "bristot@redhat.com" <bristot@redhat.com>,
-	"bsegall@google.com" <bsegall@google.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "dianders@chromium.org"
-	<dianders@chromium.org>, "dietmar.eggemann@arm.com"
-	<dietmar.eggemann@arm.com>, "eric.devolder@oracle.com"
-	<eric.devolder@oracle.com>, "hca@linux.ibm.com" <hca@linux.ibm.com>,
-	"hch@infradead.org" <hch@infradead.org>, "jacob.jun.pan@linux.intel.com"
-	<jacob.jun.pan@linux.intel.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
-	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, "jroedel@suse.de"
-	<jroedel@suse.de>, "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-	"kinseyho@google.com" <kinseyho@google.com>,
-	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-	"lstoakes@gmail.com" <lstoakes@gmail.com>, "luto@kernel.org"
-	<luto@kernel.org>, "mgorman@suse.de" <mgorman@suse.de>, "mic@digikod.net"
-	<mic@digikod.net>, "michael.christie@oracle.com"
-	<michael.christie@oracle.com>, "mingo@redhat.com" <mingo@redhat.com>,
-	"mjguzik@gmail.com" <mjguzik@gmail.com>, "mst@redhat.com" <mst@redhat.com>,
-	"npiggin@gmail.com" <npiggin@gmail.com>, "peterz@infradead.org"
-	<peterz@infradead.org>, "pmladek@suse.com" <pmladek@suse.com>,
-	"rick.p.edgecombe@intel.com" <rick.p.edgecombe@intel.com>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>, "surenb@google.com"
-	<surenb@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
-	"urezki@gmail.com" <urezki@gmail.com>, "vincent.guittot@linaro.org"
-	<vincent.guittot@linaro.org>, "vschneid@redhat.com" <vschneid@redhat.com>
-Subject: RE: [RFC 00/14] Dynamic Kernel Stacks
-Thread-Topic: [RFC 00/14] Dynamic Kernel Stacks
-Thread-Index: AQHad9a+Y5/0t6VtDk+hhnG+kSJKOLE8RdQAgAFdD22AAAN3IA==
-Date: Mon, 18 Mar 2024 15:53:07 +0000
-Message-ID: <4b542b49b2994c9d8c4c73b9e3b42dde@AcuMS.aculab.com>
-References: <20240311164638.2015063-1-pasha.tatashin@soleen.com>
- <2cb8f02d-f21e-45d2-afe2-d1c6225240f3@zytor.com>
- <ZfNTSjfE_w50Otnz@casper.infradead.org>
- <2qp4uegb4kqkryihqyo6v3fzoc2nysuhltc535kxnh6ozpo5ni@isilzw7nth42>
- <ZfNWojLB7qjjB0Zw@casper.infradead.org>
- <CA+CK2bAmOj2J10szVijNikexFZ1gmA913vvxnqW4DJKWQikwqQ@mail.gmail.com>
- <39F17EC4-7844-4111-BF7D-FFC97B05D9FA@zytor.com>
- <CA+CK2bDothmwdJ86K1LiKWDKdWdYDjg5WCwdbapL9c3Y_Sf+kg@mail.gmail.com>
- <bb203717ab644362a8eafe78aff23947@AcuMS.aculab.com>
- <CA+CK2bAuNLXq4p8pjwAatuw2KuadhKjD6JRwJN8ZvSEd1d7ntA@mail.gmail.com>
- <Zfhblk609XJn5clL@casper.infradead.org>
- <CA+CK2bDFUekHnh=XqLcLJS-VgTMrTRWPm4xgmXHWgFCd9JXYmw@mail.gmail.com>
-In-Reply-To: <CA+CK2bDFUekHnh=XqLcLJS-VgTMrTRWPm4xgmXHWgFCd9JXYmw@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1710777266; c=relaxed/simple;
+	bh=elUv1hYWfbQaDffhIbaJRDBf1X2KxzMKUjA0oh/yR4Q=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=laSB9i4iBA8+s2eMmPfzMy+shG9YQoaw+awBIK2uLZVsDNe5M1lcHzu0OOO4lf7xR8k2HoMnXZpu/yS7k1jQT/UppVmaEw9jSxWQZUutBS8soK/0mUZ1POAeHvNGmDEOFgunXtdElATzjtN9Rx9dI0BcF6ag/iwjZp2GAfnyhGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P5+CA+A3; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P5+CA+A3"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dddbeac9f9so30017765ad.3;
+        Mon, 18 Mar 2024 08:54:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710777264; x=1711382064; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pY6Srnd5Kh93En3qT+oLWoFRArvvI8UEhcxxei/JIjg=;
+        b=P5+CA+A3oeiTmLB4EOjOGoq21CKwwM/HfRZEYdcfXrTVDfbugMNoKHCs9GSH/qqirI
+         w4r/igYnBviRxkef1cDTy6iSMSt8c0koqR0wltWBOyXSeVr6L1ZAeZsSb+cR7guXkr/4
+         NxCM7TmuF6mFgY/F/93G+58zRxssXjp48vSSRi641zqtb84uX52MQPQvHY1tJ346sAZr
+         fC1t/HS+HxZmD4Evug5Y/S8nXmT7+SR2f9olf0DUdpxd1s0o1qPtWLpeECr7nxDNjPWh
+         VoDBiRpvKYYyCj6irTPqZTA2W3sjYctgCoXq1cfKbp2iUo5zzeFg3rukb4rUuhmdHBMv
+         LHRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710777264; x=1711382064;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pY6Srnd5Kh93En3qT+oLWoFRArvvI8UEhcxxei/JIjg=;
+        b=wo6Fxd0XosPw44aQdpVwTtu3yTpl6OL+QdRIzuFc9b27dyjz6pQR3sExC1pqOlD/VS
+         MIyfQJ1w5ZCJzrRK0aXwSamIuC4gTxDKI19wO2LYXdI5ENMKB7cUTqmRW2d5AK4Jmb71
+         jYoYFVzyD2Z9uS17DQM7weyqukr6gCdA6pLpspBRFBzSG1vM2ihf5rRdtXJke2TTw1K3
+         xRQdi1YSGclZlf+Rzq5J/c5dG7S5ouPbmpV/jbCBGNERZyBbZ42O2OffA3BJ7Axl4Ll0
+         0WVHQnQ/ckSlsFnLyuS5d2IYPYEoRjvR+eDagj/x5+kiiEukHTpx0PdtoGLxLDHtlcxf
+         a78Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUWx0bp372Agbcp4EumlbBtMFJVDs+JBjtXPdU5vZqbMSjZyeo61xNONywwocccQtncJvCje1n8M+POhtSBcbajQkGE2v/w6fbUHnwak6aivquGkXaCvOQdySJyoM9Bzu+M0mcm5jbe7W4cfUQMrYONQjLLExEgT7yAtCMAm+aZDjrxq/YaCw==
+X-Gm-Message-State: AOJu0YxrMTQp6AzPvel+RIyS7bCONrAtEeL7P6R5kHj0Lomz1WGadV+W
+	b2zk2rKH8VxVNQFufnr+8qHlX7ahX0kx0CAU6uHbW7XlexkfnTFd
+X-Google-Smtp-Source: AGHT+IF+vlUFwAFTMs1qkhcULE6I3RIHgARg3GJmsJSO8I1QNVdMwKAGni0/muEuWtAL/VbS71OqGQ==
+X-Received: by 2002:a17:902:ea03:b0:1df:3a42:2769 with SMTP id s3-20020a170902ea0300b001df3a422769mr9377201plg.6.1710777264215;
+        Mon, 18 Mar 2024 08:54:24 -0700 (PDT)
+Received: from localhost.localdomain (c-73-254-87-52.hsd1.wa.comcast.net. [73.254.87.52])
+        by smtp.gmail.com with ESMTPSA id cp5-20020a170902e78500b001def18c0cfdsm6964268plb.300.2024.03.18.08.54.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Mar 2024 08:54:23 -0700 (PDT)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	hpa@zytor.com,
+	arnd@arndb.de,
+	tytso@mit.edu,
+	Jason@zx2c4.com,
+	x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-arch@vger.kernel.org
+Subject: [PATCH v3 1/1] x86/hyperv: Use Hyper-V entropy to seed guest random number generator
+Date: Mon, 18 Mar 2024 08:54:08 -0700
+Message-Id: <20240318155408.216851-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 
-RnJvbTogUGFzaGEgVGF0YXNoaW4NCj4gU2VudDogMTggTWFyY2ggMjAyNCAxNTozMQ0KPiANCj4g
-T24gTW9uLCBNYXIgMTgsIDIwMjQgYXQgMTE6MTnigK9BTSBNYXR0aGV3IFdpbGNveCA8d2lsbHlA
-aW5mcmFkZWFkLm9yZz4gd3JvdGU6DQo+ID4NCj4gPiBPbiBNb24sIE1hciAxOCwgMjAyNCBhdCAx
-MTowOTo0N0FNIC0wNDAwLCBQYXNoYSBUYXRhc2hpbiB3cm90ZToNCj4gPiA+IFRoZSBUTEIgbG9h
-ZCBpcyBnb2luZyB0byBiZSBleGFjdGx5IHRoZSBzYW1lIGFzIHRvZGF5LCB3ZSBhbHJlYWR5IHVz
-ZQ0KPiA+ID4gc21hbGwgcGFnZXMgZm9yIFZNQSBtYXBwZWQgc3RhY2tzLiBXZSB3b24ndCBuZWVk
-IHRvIGhhdmUgZXh0cmENCj4gPiA+IGZsdXNoaW5nIGVpdGhlciwgdGhlIG1hcHBpbmdzIGFyZSBp
-biB0aGUga2VybmVsIHNwYWNlLCBhbmQgb25jZSBwYWdlcw0KPiA+ID4gYXJlIHJlbW92ZWQgZnJv
-bSB0aGUgcGFnZSB0YWJsZSwgbm8gb25lIGlzIGdvaW5nIHRvIGFjY2VzcyB0aGF0IFZBDQo+ID4g
-PiBzcGFjZSB1bnRpbCB0aGF0IHRocmVhZCBlbnRlcnMgdGhlIGtlcm5lbCBhZ2Fpbi4gV2Ugd2ls
-bCBuZWVkIHRvDQo+ID4gPiBpbnZhbGlkYXRlIHRoZSBWQSByYW5nZSBvbmx5IHdoZW4gdGhlIHBh
-Z2VzIGFyZSBtYXBwZWQsIGFuZCBvbmx5IG9uDQo+ID4gPiB0aGUgbG9jYWwgY3B1Lg0KPiA+DQo+
-ID4gTm87IHdlIGNhbiBwYXNzIHBvaW50ZXJzIHRvIG91ciBrZXJuZWwgc3RhY2sgdG8gb3RoZXIg
-dGhyZWFkcy4gIFRoZQ0KPiA+IG9idmlvdXMgb25lIGlzIGEgbXV0ZXg7IHdlIHB1dCBhIG11dGV4
-X3dhaXRlciBvbiBvdXIgb3duIHN0YWNrIGFuZA0KPiA+IGFkZCBpdHMgbGlzdF9oZWFkIHRvIHRo
-ZSBtdXRleCdzIHdhaXRlciBsaXN0LiAgSSdtIHN1cmUgeW91IGNhbg0KPiA+IHRoaW5rIG9mIG1h
-bnkgb3RoZXIgcGxhY2VzIHdlIGRvIHRoaXMgKGVnIHdhaXQgcXVldWVzLCBwb2xsKCksIHNlbGVj
-dCgpLA0KPiA+IGV0YykuDQo+IA0KPiBIbSwgaXQgbWVhbnMgdGhhdCBzdGFjayBpcyBzbGVlcGlu
-ZyBpbiB0aGUga2VybmVsIHNwYWNlLCBhbmQgaGFzIGl0cw0KPiBzdGFjayBwYWdlcyBtYXBwZWQg
-YW5kIGludmFsaWRhdGVkIG9uIHRoZSBsb2NhbCBDUFUsIGJ1dCBhY2Nlc3MgZnJvbQ0KPiB0aGUg
-cmVtb3RlIENQVSB0byB0aGF0IHN0YWNrIHBhZ2VzIHdvdWxkIGJlIHByb2JsZW1hdGljLg0KPiAN
-Cj4gSSB0aGluayB3ZSBzdGlsbCB3b24ndCBuZWVkIElQSSwgYnV0IFZBLXJhbmdlIGludmFsaWRh
-dGlvbiBpcyBhY3R1YWxseQ0KPiBuZWVkZWQgb24gdW5tYXBzLCBhbmQgc2hvdWxkIGhhcHBlbiBk
-dXJpbmcgY29udGV4dCBzd2l0Y2ggc28gZXZlcnkNCj4gdGltZSB3ZSBnbyBvZmYtY3B1LiBUaGVy
-ZWZvcmUsIHdoYXQgQnJpYW4vQW5keSBoYXZlIHN1Z2dlc3RlZCBtYWtlcw0KPiBtb3JlIHNlbnNl
-IGluc3RlYWQgb2Yga2VybmVsL2VudGVyL2V4aXQgcGF0aHMuDQoNCkkgdGhpbmsgeW91J2xsIG5l
-ZWQgdG8gYnJvYWRjYXN0IGFuIGludmFsaWRhdGUuDQpDb25zaWRlcjoNCkNQVSBBOiB0YXNrIGFs
-bG9jYXRlcyBleHRyYSBwYWdlcyBhbmQgYWRkcyBzb21ldGhpbmcgdG8gc29tZSBsaXN0Lg0KQ1BV
-IEI6IGFjY2Vzc2VzIHRoYXQgZGF0YSBhbmQgbWF5YmUgbW9kaWZpZXMgaXQuDQoJU29tZSBwYWdl
-LXRhYmxlIHdhbGsgc2V0dXAgdXQgdGhlIFRMQi4NCkNQVSBBOiB0YXNrIGRldGVjdHMgdGhlIG1v
-ZGlmeSwgcmVtb3ZlcyB0aGUgaXRlbSBmcm9tIHRoZSBsaXN0LA0KCWNvbGxhcHNlcyBiYWNrIHRo
-ZSBzdGFjayBhbmQgc2xlZXBzLg0KCVN0YWNrIHBhZ2VzIGZyZWVkLg0KQ1BVIEE6IHRhc2sgd2Fr
-ZXMgdXAgKG9uIHRoZSBzYW1lIGNwdSBmb3Igc2ltcGxpY2l0eSkuDQoJR29lcyBkb3duIGEgZGVl
-cCBzdGFjayBhbmQgcHV0cyBhbiBpdGVtIG9uIGEgbGlzdC4NCglEaWZmZXJlbnQgcGh5c2ljYWwg
-cGFnZXMgYXJlIGFsbG9jYXRlZC4NCkNQVSBCOiBhY2Nlc3NlcyB0aGUgYXNzb2NpYXRlZCBLVkEu
-DQoJSXQgYmV0dGVyIG5vdCBoYXZlIGEgY2FjaGVkIFRMQi4NCg0KRG9lc24ndCB0aGF0IG5lZWQg
-YW4gSVBJPw0KDQpGcmVlaW5nIHRoZSBwYWdlcyBpcyBtdWNoIGhhcmRlciB0aGFuIGFsbG9jYXRp
-bmcgdGhlbS4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJh
-bWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0
-cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+From: Michael Kelley <mhklinux@outlook.com>
+
+A Hyper-V host provides its guest VMs with entropy in a custom ACPI
+table named "OEM0".  The entropy bits are updated each time Hyper-V
+boots the VM, and are suitable for seeding the Linux guest random
+number generator (rng). See a brief description of OEM0 in [1].
+
+Generation 2 VMs on Hyper-V use UEFI to boot. Existing EFI code in
+Linux seeds the rng with entropy bits from the EFI_RNG_PROTOCOL.
+Via this path, the rng is seeded very early during boot with good
+entropy. The ACPI OEM0 table provided in such VMs is an additional
+source of entropy.
+
+Generation 1 VMs on Hyper-V boot from BIOS. For these VMs, Linux
+doesn't currently get any entropy from the Hyper-V host. While this
+is not fundamentally broken because Linux can generate its own entropy,
+using the Hyper-V host provided entropy would get the rng off to a
+better start and would do so earlier in the boot process.
+
+Improve the rng seeding for Generation 1 VMs by having Hyper-V specific
+code in Linux take advantage of the OEM0 table to seed the rng. For
+Generation 2 VMs, use the OEM0 table to provide additional entropy
+beyond the EFI_RNG_PROTOCOL. Because the OEM0 table is custom to
+Hyper-V, parse it directly in the Hyper-V code in the Linux kernel
+and use add_bootloader_randomness() to add it to the rng. Once the
+entropy bits are read from OEM0, zero them out in the table so
+they don't appear in /sys/firmware/acpi/tables/OEM0 in the running
+VM. The zero'ing is done out of an abundance of caution to avoid
+potential security risks to the rng. Also set the OEM0 data length
+to zero so a kexec or other subsequent use of the table won't try
+to use the zero'ed bits.
+
+[1] https://download.microsoft.com/download/1/c/9/1c9813b8-089c-4fef-b2ad-ad80e79403ba/Whitepaper%20-%20The%20Windows%2010%20random%20number%20generation%20infrastructure.pdf
+
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+---
+Changes in v3:
+* Removed restriction to just Generation 1 VMs. Generation 2 VMs
+  now also use the additional entropy even though they also get
+  initial entropy via EFI_RNG_PROTOCOL [Jason Donenfeld]
+* Process the OEM0 table on ARM64 systems in addition to x86/x64,
+  as a result of no longer excluding Generation 2 VM.
+* Enlarge the range of entropy byte counts that are considered valid
+  in the OEM0 table. New range is 8 to 4K; previously the range was
+  32 to 256. [Jason Donenfeld]
+* After processing the entropy bits in OEM0, also set the OEM0
+  table length to indicate that the entropy byte count is zero,
+  to prevent a subsequent kexec or other use of the table from
+  trying to use the zero'ed bits. [Jason Donenfeld]
+
+Changes in v2:
+* Tweaked commit message [Wei Liu]
+* Removed message when OEM0 table isn't found. Added debug-level
+  message when OEM0 is successfully used to add randomness. [Wei Liu]
+
+ arch/arm64/hyperv/mshyperv.c   |  2 +
+ arch/x86/kernel/cpu/mshyperv.c |  1 +
+ drivers/hv/hv_common.c         | 69 ++++++++++++++++++++++++++++++++++
+ include/asm-generic/mshyperv.h |  2 +
+ 4 files changed, 74 insertions(+)
+
+diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
+index f1b8a04ee9f2..c8193cec1b90 100644
+--- a/arch/arm64/hyperv/mshyperv.c
++++ b/arch/arm64/hyperv/mshyperv.c
+@@ -74,6 +74,8 @@ static int __init hyperv_init(void)
+ 		return ret;
+ 	}
+ 
++	ms_hyperv_late_init();
++
+ 	hyperv_initialized = true;
+ 	return 0;
+ }
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index 303fef824167..65c9cbdd2282 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -648,6 +648,7 @@ const __initconst struct hypervisor_x86 x86_hyper_ms_hyperv = {
+ 	.init.x2apic_available	= ms_hyperv_x2apic_available,
+ 	.init.msi_ext_dest_id	= ms_hyperv_msi_ext_dest_id,
+ 	.init.init_platform	= ms_hyperv_init_platform,
++	.init.guest_late_init	= ms_hyperv_late_init,
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
+ 	.runtime.sev_es_hcall_prepare = hv_sev_es_hcall_prepare,
+ 	.runtime.sev_es_hcall_finish = hv_sev_es_hcall_finish,
+diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+index 0285a74363b3..724de94d885f 100644
+--- a/drivers/hv/hv_common.c
++++ b/drivers/hv/hv_common.c
+@@ -20,8 +20,11 @@
+ #include <linux/sched/task_stack.h>
+ #include <linux/panic_notifier.h>
+ #include <linux/ptrace.h>
++#include <linux/random.h>
++#include <linux/efi.h>
+ #include <linux/kdebug.h>
+ #include <linux/kmsg_dump.h>
++#include <linux/sizes.h>
+ #include <linux/slab.h>
+ #include <linux/dma-map-ops.h>
+ #include <linux/set_memory.h>
+@@ -347,6 +350,72 @@ int __init hv_common_init(void)
+ 	return 0;
+ }
+ 
++void __init ms_hyperv_late_init(void)
++{
++	struct acpi_table_header *header;
++	acpi_status status;
++	u8 *randomdata;
++	u32 length, i;
++
++	/*
++	 * Seed the Linux random number generator with entropy provided by
++	 * the Hyper-V host in ACPI table OEM0.
++	 */
++	if (!IS_ENABLED(CONFIG_ACPI))
++		return;
++
++	status = acpi_get_table("OEM0", 0, &header);
++	if (ACPI_FAILURE(status) || !header)
++		return;
++
++	/*
++	 * Since the "OEM0" table name is for OEM specific usage, verify
++	 * that what we're seeing purports to be from Microsoft.
++	 */
++	if (strncmp(header->oem_table_id, "MICROSFT", 8))
++		goto error;
++
++	/*
++	 * Ensure the length is reasonable. Requiring at least 8 bytes and
++	 * no more than 4K bytes is somewhat arbitrary and just protects
++	 * against a malformed table. Hyper-V currently provides 64 bytes,
++	 * but allow for a change in a later version.
++	 */
++	if (header->length < sizeof(*header) + 8 ||
++	    header->length > sizeof(*header) + SZ_4K)
++		goto error;
++
++	length = header->length - sizeof(*header);
++	randomdata = (u8 *)(header + 1);
++
++	pr_debug("Hyper-V: Seeding rng with %d random bytes from ACPI table OEM0\n",
++			length);
++
++	add_bootloader_randomness(randomdata, length);
++
++	/*
++	 * To prevent the seed data from being visible in /sys/firmware/acpi,
++	 * zero out the random data in the ACPI table and fixup the checksum.
++	 * The zero'ing is done out of an abundance of caution in avoiding
++	 * potential security risks to the rng. Similarly, reset the table
++	 * length to just the header size so that a subsequent kexec doesn't
++	 * try to use the zero'ed out random data.
++	 */
++	for (i = 0; i < length; i++) {
++		header->checksum += randomdata[i];
++		randomdata[i] = 0;
++	}
++
++	for (i = 0; i < sizeof(header->length); i++)
++		header->checksum += ((u8 *)&header->length)[i];
++	header->length = sizeof(*header);
++	for (i = 0; i < sizeof(header->length); i++)
++		header->checksum -= ((u8 *)&header->length)[i];
++
++error:
++	acpi_put_table(header);
++}
++
+ /*
+  * Hyper-V specific initialization and die code for
+  * individual CPUs that is common across all architectures.
+diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+index 430f0ae0dde2..e861223093df 100644
+--- a/include/asm-generic/mshyperv.h
++++ b/include/asm-generic/mshyperv.h
+@@ -193,6 +193,7 @@ extern u64 (*hv_read_reference_counter)(void);
+ 
+ int __init hv_common_init(void);
+ void __init hv_common_free(void);
++void __init ms_hyperv_late_init(void);
+ int hv_common_cpu_init(unsigned int cpu);
+ int hv_common_cpu_die(unsigned int cpu);
+ 
+@@ -290,6 +291,7 @@ void hv_setup_dma_ops(struct device *dev, bool coherent);
+ static inline bool hv_is_hyperv_initialized(void) { return false; }
+ static inline bool hv_is_hibernation_supported(void) { return false; }
+ static inline void hyperv_cleanup(void) {}
++static inline void ms_hyperv_late_init(void) {}
+ static inline bool hv_is_isolation_supported(void) { return false; }
+ static inline enum hv_isolation_type hv_get_isolation_type(void)
+ {
+-- 
+2.25.1
 
