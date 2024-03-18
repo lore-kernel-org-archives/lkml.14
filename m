@@ -1,142 +1,100 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F25DA54BC1
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 16:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A1C54BC4;
+	Mon, 18 Mar 2024 16:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710780333; cv=none; b=Gi3xmINPVmLTag9QbDDj+kEC5UVcuGZ/l5YV3LsId6fmDR/77RB39s/G901ikgdEocRLAx94YasUmyIXNq0YW8c0FxIOClRg1oNfnG2TyiKLfrUeLGd+ZtBQkpK44rIYuE7lD7gTOh9gjOjxhEcpc+5kLJ+s3jiEIbDZP4GRLbs=
+	t=1710780431; cv=none; b=ZVZHkI8n2rmVrm/cumVZGC3FfSl15wzVSM6aS1wRWQ9fDaGqQCe3i+Fvvmsjz8uo78MqBXhMZf0cVRMLN9aFNM1gMaKqFCn36qNsaAgjckokg8b03B2cB+qHA9jJ11ztuwBh+oO2xs4ieQbO8tT/Xo8fTxicXxUkG89XD+iFKQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710780333; c=relaxed/simple;
-	bh=CNQkh8pEl1Kc9VhW0IsTjWYvyFVNMzpjdm/foQVsSJ0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H6HeuBEIpFfU+oQwUJniOOEruQpD+NauALasBg7hCPX+zLLOlKlrGLCiA4rPYu0A5YnH95hr3wqXh3T0lIGDEAp5I09Es1SphXrA3aphUiNUvm9x+3LrhymBb42xvr1KVxcCw6mpfCs9ljgHYpHxMYfkwgFCMrBTrpnm2lbWjxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 47A5F1FB;
-	Mon, 18 Mar 2024 09:46:05 -0700 (PDT)
-Received: from [10.57.68.51] (unknown [10.57.68.51])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 305C83F67D;
-	Mon, 18 Mar 2024 09:45:26 -0700 (PDT)
-Message-ID: <9ec62266-26f1-46b6-8bb7-9917d04ed04e@arm.com>
-Date: Mon, 18 Mar 2024 16:45:24 +0000
+	s=arc-20240116; t=1710780431; c=relaxed/simple;
+	bh=JVi4X3Yp8llR/EjNT7yP76NQ5cLtcJoGUEbvuYaKKYU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DKbXfbOlaQlGVrmK3bgWIhRVXnBk00FrV1iG2Lm9qWVMvMvMgsfmsSHb3c+pGWAgR95lHslvWXEu/j7sBuRCzI6TU8oO/tYdEr8RQzxH7GnpsoqxQWZLfmkNxCXQ6qOBBhZK43OkWw7WlqbZ9Z2WUyjbL/6oUohdb9tG0FAwNzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ipCVPLOO; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ipCVPLOO"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=4Zpz2JcjWhGlazAgpId/FsjMBJt7sqHYOH/Rw/CmRqw=; b=ipCVPLOOed/JkOQ7fF2XxmRcmK
+	4Wru5XuYC6dRfKrzA1pgKjldfZ4KZBEoIcQcPPPhnTwH199fTLRQJy1vHvS8sCR5f9ENR6BhRkwTz
+	wm1235unu71rA+0gWC8ckQiMGHzaIqzp3aCZ0SUPzrCQvo7r5dgm3qV285R6KiuqIK9gWFYIlwpFn
+	sylBy6nqwmvlo5jLaPbtHTe2OubULNEfzeaAtKhxSoldoqhmtissBea2kO2HS7h8NtHiTLb+HskTT
+	/kB+Uu9GckQ6m58bDpfjOtWOXIb/ObhLLMU/xSyf8n9aoFD0rS56j15E3x1Yzyr8xO6iqUSvsDfUi
+	lhslC9Qg==;
+Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rmG8Y-0000000HYwj-0erY;
+	Mon, 18 Mar 2024 16:47:02 +0000
+Received: from dwoodhou by i7.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rmG8W-00000004F1K-1QMs;
+	Mon, 18 Mar 2024 16:46:56 +0000
+From: David Woodhouse <dwmw2@infradead.org>
+To: linux-arm-kernel@lists.infradead.org,
+	kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <len.brown@intel.com>,
+	Pavel Machek <pavel@ucw.cz>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Mostafa Saleh <smostafa@google.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev,
+	linux-pm@vger.kernel.org
+Subject: [RFC PATCH v2 3/4] KVM: arm64: nvhe: Pass through PSCI v1.3 SYSTEM_OFF2 call
+Date: Mon, 18 Mar 2024 16:14:25 +0000
+Message-ID: <20240318164646.1010092-4-dwmw2@infradead.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240318164646.1010092-1-dwmw2@infradead.org>
+References: <20240318164646.1010092-1-dwmw2@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 5/5] mm: support large folios swapin as a whole
-Content-Language: en-GB
-To: Barry Song <21cnbao@gmail.com>, "Huang, Ying" <ying.huang@intel.com>
-Cc: Matthew Wilcox <willy@infradead.org>, akpm@linux-foundation.org,
- linux-mm@kvack.org, chengming.zhou@linux.dev, chrisl@kernel.org,
- david@redhat.com, hannes@cmpxchg.org, kasong@tencent.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- mhocko@suse.com, nphamcs@gmail.com, shy828301@gmail.com,
- steven.price@arm.com, surenb@google.com, wangkefeng.wang@huawei.com,
- xiang@kernel.org, yosryahmed@google.com, yuzhao@google.com,
- Chuanhua Han <hanchuanhua@oppo.com>, Barry Song <v-songbaohua@oppo.com>
-References: <20240304081348.197341-1-21cnbao@gmail.com>
- <20240304081348.197341-6-21cnbao@gmail.com>
- <87wmq3yji6.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <CAGsJ_4x+t_X4Tn15=QPbH58e1S1FwOoM3t37T+cUE8-iKoENLw@mail.gmail.com>
- <87sf0rx3d6.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <CAGsJ_4xna1xKz7J=MWDR3h543UvnS9v0-+ggVc5fFzpFOzfpyA@mail.gmail.com>
- <87jzm0wblq.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <CAGsJ_4wTU3cmzXMCu+yQRMnEiCEUA8rO5=QQUopgG0RMnHYd5g@mail.gmail.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <CAGsJ_4wTU3cmzXMCu+yQRMnEiCEUA8rO5=QQUopgG0RMnHYd5g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Sender: David Woodhouse <dwmw2@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 
->>> I agree phones are not the only platform. But Rome wasn't built in a
->>> day. I can only get
->>> started on a hardware which I can easily reach and have enough hardware/test
->>> resources on it. So we may take the first step which can be applied on
->>> a real product
->>> and improve its performance, and step by step, we broaden it and make it
->>> widely useful to various areas  in which I can't reach :-)
->>
->> We must guarantee the normal swap path runs correctly and has no
->> performance regression when developing SWP_SYNCHRONOUS_IO optimization.
->> So we have to put some effort on the normal path test anyway.
->>
->>> so probably we can have a sysfs "enable" entry with default "n" or
->>> have a maximum
->>> swap-in order as Ryan's suggestion [1] at the beginning,
->>>
->>> "
->>> So in the common case, swap-in will pull in the same size of folio as was
->>> swapped-out. Is that definitely the right policy for all folio sizes? Certainly
->>> it makes sense for "small" large folios (e.g. up to 64K IMHO). But I'm not sure
->>> it makes sense for 2M THP; As the size increases the chances of actually needing
->>> all of the folio reduces so chances are we are wasting IO. There are similar
->>> arguments for CoW, where we currently copy 1 page per fault - it probably makes
->>> sense to copy the whole folio up to a certain size.
->>> "
+From: David Woodhouse <dwmw@amazon.co.uk>
 
-I thought about this a bit more. No clear conclusions, but hoped this might help
-the discussion around policy:
+Pass through the SYSTEM_OFF2 function for hibernation, just like SYSTEM_OFF.
 
-The decision about the size of the THP is made at first fault, with some help
-from user space and in future we might make decisions to split based on
-munmap/mremap/etc hints. In an ideal world, the fact that we have had to swap
-the THP out at some point in its lifetime should not impact on its size. It's
-just being moved around in the system and the reason for our original decision
-should still hold.
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+---
+ arch/arm64/kvm/hyp/nvhe/psci-relay.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-So from that PoV, it would be good to swap-in to the same size that was
-swapped-out. But we only kind-of keep that information around, via the swap
-entry contiguity and alignment. With that scheme it is possible that multiple
-virtually adjacent but not physically contiguous folios get swapped-out to
-adjacent swap slot ranges and then they would be swapped-in to a single, larger
-folio. This is not ideal, and I think it would be valuable to try to maintain
-the original folio size information with the swap slot. One way to do this would
-be to store the original order for which the cluster was allocated in the
-cluster. Then we at least know that a given swap slot is either for a folio of
-that order or an order-0 folio (due to cluster exhaustion/scanning). Can we
-steal a bit from swap_map to determine which case it is? Or are there better
-approaches?
-
-Next we (I?) have concerns about wasting IO by swapping-in folios that are too
-large (e.g. 2M). I'm not sure if this is a real problem or not - intuitively I'd
-say yes but I have no data. But on the other hand, memory is aged and
-swapped-out per-folio, so why shouldn't it be swapped-in per folio? If the
-original allocation size policy is good (it currently isn't) then a folio should
-be sized to cover temporally close memory and if we need to access some of it,
-chances are we need all of it.
-
-If we think the IO concern is legitimate then we could define a threshold size
-(sysfs?) for when we start swapping-in the folio in chunks. And how big should
-those chunks be - one page, or the threshold size itself? Probably the latter?
-And perhaps that threshold could also be used by zRAM to decide its upper limit
-for compression chunk.
-
-Perhaps we can learn from khugepaged here? I think it has programmable
-thresholds for how many swapped-out pages can be swapped-in to aid collapse to a
-THP? I guess that exists for the same concerns about increased IO pressure?
-
-
-If we think we will ever be swapping-in folios in chunks less than their
-original size, then we need a separate mechanism to re-foliate them. We have
-discussed a khugepaged-like approach for doing this asynchronously in the
-background. I know that scares the Android folks, but David has suggested that
-this could well be very cheap compared with khugepaged, because it would be
-entirely limited to a single pgtable, so we only need the PTL. If we need this
-mechanism anyway, perhaps we should develop it and see how it performs if
-swap-in remains order-0? Although I guess that would imply not being able to
-benefit from compressing THPs for the zRAM case.
-
-I see all this as orthogonal to synchronous vs asynchronous swap devices. I
-think the latter just implies that you might want to do some readahead to try to
-cover up the latency? If swap is moving towards being folio-orientated, then
-readahead also surely needs to be folio-orientated, but I think that should be
-the only major difference.
-
-Anyway, just some thoughts!
-
-Thanks,
-Ryan
+diff --git a/arch/arm64/kvm/hyp/nvhe/psci-relay.c b/arch/arm64/kvm/hyp/nvhe/psci-relay.c
+index d57bcb6ab94d..76c7643e7eff 100644
+--- a/arch/arm64/kvm/hyp/nvhe/psci-relay.c
++++ b/arch/arm64/kvm/hyp/nvhe/psci-relay.c
+@@ -265,6 +265,8 @@ static unsigned long psci_1_0_handler(u64 func_id, struct kvm_cpu_context *host_
+ 	case PSCI_1_0_FN_PSCI_FEATURES:
+ 	case PSCI_1_0_FN_SET_SUSPEND_MODE:
+ 	case PSCI_1_1_FN64_SYSTEM_RESET2:
++	case PSCI_1_3_FN_SYSTEM_OFF2:
++	case PSCI_1_3_FN64_SYSTEM_OFF2:
+ 		return psci_forward(host_ctxt);
+ 	case PSCI_1_0_FN64_SYSTEM_SUSPEND:
+ 		return psci_system_suspend(func_id, host_ctxt);
+-- 
+2.44.0
 
