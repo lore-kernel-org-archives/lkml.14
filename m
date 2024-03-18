@@ -1,185 +1,126 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3304B381AC;
-	Mon, 18 Mar 2024 11:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A59D36114
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 11:16:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710760372; cv=none; b=Al3o44r6zi19/HTYoGz3y0yPsH0W5hFQxT4OOsjbsL33W69/yufOnaiKfZgcmJpY5zJ6s8E5oXi5PRknpqs1gzJOc3oAUtjo3OEIS7fns8L0c283f6iMiVHSzREasxI0TMKysDTzCsws/FVyLpf/r15uPfvsLe+5GlGwKhmSXnk=
+	t=1710760605; cv=none; b=Q8davwhHDh14wiieDuL0Xxj4zRqgjbs7hUWo5cZwV+cWEW6LG3s1B78wU0P3EPuryr+yxwEOSWDO+5EsAWkMJ/5/bD4N5pTyx0TWsAtOTyRqNCFfgG21Mow69t/KFCmTnvpIkxCrknHG+aXkYthSv5Gjo2vet9fQzYIVxAZx7tY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710760372; c=relaxed/simple;
-	bh=DnVZF8SGVwGKINb0idkVhUywVWKD3UaEQ9II6Y0tp+o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cHCXk92C+Jrw4fOyoIDQAT/Zj/yak2hm+B1T0Mn7V9taRwxL0XdDf0AliwhKn3N7ZJ25aOd6Bi14BlPtj7QEMJkwKkScFhgJBjCH8ceXTboekeq97gQVKchtMCzfIQ+TD3o83KE+hlXXnVi/jjFWDw5bvH6XRA0piHtUodiRz70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vCvUgQ0n; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1710760605; c=relaxed/simple;
+	bh=K/B9jshhQTO4EDidb9xFu7jg5/YHjfatld4X7iyOsJE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kgcZd23KFEW1RC6dcYmTCIVfq9hLxD40OvEwDhS6IjTQRcUr5RVfZ7npI+NBL4Sf2x2zAAIjCwHr0vcVn8N5pOfboDbxQJaGy8gj4yqY4pRnugvek6uebR5JP9YWLTUlCwiulwTKa3jdzaIei4SzQLNC0Bz7r4/spSuHzyZeUHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K2d95yni; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vCvUgQ0n"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42IBCUfc088930;
-	Mon, 18 Mar 2024 06:12:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1710760350;
-	bh=DV4xGfeZV0MHV7EUiL5CPLZLpyUrr+cQbMmhRNUiEbU=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=vCvUgQ0no+l0m+XxSAIntTEFS5NRdg6Qg9ZfIyoCdnhCn7Epf1UxV01TV4MKOozmC
-	 6gjGxyUGmnEz1t06ZqbIvoSc3s5hOGFtXDlrkOv0Shdr4gPnhECKcg1j9deVSiwxF2
-	 MzwoiqsMCd1Z9UI9VF0/C44dE90V0uow2ekWqIbU=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42IBCUfW029670
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 18 Mar 2024 06:12:30 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 18
- Mar 2024 06:12:30 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 18 Mar 2024 06:12:30 -0500
-Received: from [172.24.227.220] (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42IBCQSs091840;
-	Mon, 18 Mar 2024 06:12:26 -0500
-Message-ID: <47f8db23-52b8-4a37-89b9-70e5ed4c8d83@ti.com>
-Date: Mon, 18 Mar 2024 16:42:25 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K2d95yni"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5687e7662a5so5672222a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 04:16:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710760602; x=1711365402; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KnHhyb7uDpQBPnfr4V2y5wGYxknsht7Nq/KOV466kCg=;
+        b=K2d95yniZgrEVp/MnijD4bieQxXizdmrePBdLfGdqUOH5HDeQHduf/gLR67hQUqsfF
+         H066RbZMyqWubbfxL2toHNaEZcokEvDzh1lrHmz+giLZByIl2Rz4i2rHO31ZXlByOREC
+         arQXIh7J8A84ZYeF5V0F8OWJluw5YZDnFOw1NUSXNPuMwLVIUXkSYyrW5gevlL6krk1b
+         TiaISAPzJ91K6gf8TSA05j57RqZmZDevVDcDM32Yp92CLZEJdZ3Qb0QgsHgAjH/WEXoL
+         E5+jkedRRPuZL7FkzxGrIzCBM1PrCPTq/DLGXRYPvwA5oNdPqp23egxIaGcGU06LEL2h
+         qU/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710760602; x=1711365402;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KnHhyb7uDpQBPnfr4V2y5wGYxknsht7Nq/KOV466kCg=;
+        b=QQbyZYLWpj8blId6M1b73dVt2JyMQgjf0FCgHLnnDK2ph76s3cGaBMHwr61jVSOZsT
+         aeC8Mfvklv4t+OMod5oGDJ2LN3qdIJ3rD4ZJuPm9Gt+sTcm8xwMLSBgW2Bt3KfVp4vaG
+         0L1BWfKUlUFU0mhpfWCiYIOtZEZ9UDX9nXjWyBF39D6jbYWLcfOwYCkBJ79ENgLJP0xc
+         qKoryRAoI9PYefkSgQmp9d9Aj0bmimHqTym8vv44bULPN4ZTAgul3KJLct7EKmwYigXu
+         z61H6EiKHEbFXxh1U65SKcCbwKhmIzi4fQNW29hBOXld9V7q2jJYWvFOrLWJagAhossF
+         Kcpw==
+X-Forwarded-Encrypted: i=1; AJvYcCWMy39q3WeKD9qUWDvO9Xgmpdcre2Y+fDBVIvQ3rOhp9pEA9HYpHykq9L8Ho39Hu0k/3Fm7UioJszvbcaKRNsf9TU4FakmfMIXNpJ0x
+X-Gm-Message-State: AOJu0YyXIE28MyD5hdX5UB9+wgHyMnBUUFQUj4whe7dhj32SFnIEKSKp
+	e2Ij8Eud35+YqIa4eNWCUwrTdaWQyhJOPYJoT4W/2W+THB/ZEv0p5GhAKps2q4ypXdqBEE6RMBm
+	5
+X-Google-Smtp-Source: AGHT+IFLgonsgY/3PtzQAbuX1V/tusa6WXagx6nFGjo08BezauKdmdlJY/CD9Qb58XVaazG7ruBA0Q==
+X-Received: by 2002:a17:907:60ca:b0:a44:5477:bb46 with SMTP id hv10-20020a17090760ca00b00a445477bb46mr10100474ejc.61.1710760601717;
+        Mon, 18 Mar 2024 04:16:41 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id w17-20020a1709064a1100b00a466e772597sm4798756eju.177.2024.03.18.04.16.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Mar 2024 04:16:41 -0700 (PDT)
+Date: Mon, 18 Mar 2024 14:16:36 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Ayush Tiwari <ayushtiw0110@gmail.com>
+Cc: Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
+	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev, outreachy@lists.linux.dev
+Subject: Re: [PATCH v5] staging: greybus: Constify gb_audio_module_type
+Message-ID: <ea44d965-e727-4fc4-86cd-b727e1e0d2be@moroto.mountain>
+References: <ZfXj1WkJ3nrYh3qL@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] net: ethernet: ti: am65-cpts: Enable PTP RX HW
- timestamp using CPTS FIFO
-Content-Language: en-US
-To: Paolo Abeni <pabeni@redhat.com>, Dan Carpenter <dan.carpenter@linaro.org>,
-        Siddharth Vadapalli <s-vadapalli@ti.com>,
-        Heiner Kallweit
-	<hkallweit1@gmail.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        "Grygorii
- Strashko" <grygorii.strashko@ti.com>,
-        Andrew Lunn <andrew@lunn.ch>, "Roger
- Quadros" <rogerq@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
-        "David
- S. Miller" <davem@davemloft.net>
-CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
-References: <20240312100233.941763-1-c-vankar@ti.com>
- <dc45f4f104a0d0691715398d2f7efa6a0a3447b8.camel@redhat.com>
-From: Chintan Vankar <c-vankar@ti.com>
-In-Reply-To: <dc45f4f104a0d0691715398d2f7efa6a0a3447b8.camel@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZfXj1WkJ3nrYh3qL@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
 
+On Sat, Mar 16, 2024 at 11:54:21PM +0530, Ayush Tiwari wrote:
+> Constify static struct kobj_type gb_audio_module_type to prevent
+> modification of data shared across many instances(instances here
+> refer to multiple kobject instances being created, since this same
+> gb_audio_module_type structure is used as a template for all audio
+> manager module kobjs, it is effectively 'shared' across all these
+> instances), ensuring that the structure's usage is consistent and
+> predictable throughout the driver and allowing the compiler to place
+> it in read-only memory. The gb_audio_module_type structure is used
+> when initializing and adding kobj instances to the kernel's object
+> hierarchy. After adding const, any attempt to alter
+> gb_audio_module_type in the code would raise a compile-time error.
+> This enforcement ensures that the sysfs interface and operations for
+> audio modules remain stable.
+> 
 
+Basically the patch is fine.  The only comments have been around the
+commit message.  And all the reviewers have said correct things...  But
+I'm still going to chime in as well.
 
-On 12/03/24 16:20, Paolo Abeni wrote:
-> On Tue, 2024-03-12 at 15:32 +0530, Chintan Vankar wrote:
->> diff --git a/drivers/net/ethernet/ti/am65-cpts.c b/drivers/net/ethernet/ti/am65-cpts.c
->> index c66618d91c28..6c1d571c5e0b 100644
->> --- a/drivers/net/ethernet/ti/am65-cpts.c
->> +++ b/drivers/net/ethernet/ti/am65-cpts.c
->> @@ -859,29 +859,6 @@ static long am65_cpts_ts_work(struct ptp_clock_info *ptp)
->>   	return delay;
->>   }
->>   
->> -/**
->> - * am65_cpts_rx_enable - enable rx timestamping
->> - * @cpts: cpts handle
->> - * @en: enable
->> - *
->> - * This functions enables rx packets timestamping. The CPTS can timestamp all
->> - * rx packets.
->> - */
->> -void am65_cpts_rx_enable(struct am65_cpts *cpts, bool en)
->> -{
->> -	u32 val;
->> -
->> -	mutex_lock(&cpts->ptp_clk_lock);
->> -	val = am65_cpts_read32(cpts, control);
->> -	if (en)
->> -		val |= AM65_CPTS_CONTROL_TSTAMP_EN;
->> -	else
->> -		val &= ~AM65_CPTS_CONTROL_TSTAMP_EN;
->> -	am65_cpts_write32(cpts, val, control);
->> -	mutex_unlock(&cpts->ptp_clk_lock);
->> -}
->> -EXPORT_SYMBOL_GPL(am65_cpts_rx_enable);
-> 
-> It looks like the above chunk will cause a transient build break, as
-> the function is still in use and the caller will be removed by the next
-> patch. I guess you should move this chunk there.
+The commit message is too long for something very simple.
 
-Thank you for your suggestion. I will update the patch with this
-change in the next version.
+Basically all kernel maintainers understand about constness.  There is
+sometimes trickiness around constness but in this specific case there
+isn't anything subtle or interesting.  You don't need to explain about
+constness.  Maybe you can say the word "hardenning" as an explanation.
 
-> 
->> -
->>   static int am65_skb_get_mtype_seqid(struct sk_buff *skb, u32 *mtype_seqid)
->>   {
->>   	unsigned int ptp_class = ptp_classify_raw(skb);
->> @@ -906,6 +883,72 @@ static int am65_skb_get_mtype_seqid(struct sk_buff *skb, u32 *mtype_seqid)
->>   	return 1;
->>   }
->>   
->> +static u64 am65_cpts_find_rx_ts(struct am65_cpts *cpts, struct sk_buff *skb,
->> +				int ev_type, u32 skb_mtype_seqid)
->> +{
->> +	struct list_head *this, *next;
->> +	struct am65_cpts_event *event;
->> +	unsigned long flags;
->> +	u32 mtype_seqid;
->> +	u64 ns = 0;
->> +
->> +	am65_cpts_fifo_read(cpts);
->> +	spin_lock_irqsave(&cpts->lock, flags);
->> +	list_for_each_safe(this, next, &cpts->events) {
->> +		event = list_entry(this, struct am65_cpts_event, list);
->> +		if (time_after(jiffies, event->tmo)) {
->> +			list_del_init(&event->list);
->> +			list_add(&event->list, &cpts->pool);
->> +			continue;
->> +		}
->> +
->> +		mtype_seqid = event->event1 &
->> +			      (AM65_CPTS_EVENT_1_MESSAGE_TYPE_MASK |
->> +			       AM65_CPTS_EVENT_1_SEQUENCE_ID_MASK |
->> +			       AM65_CPTS_EVENT_1_EVENT_TYPE_MASK);
->> +
->> +		if (mtype_seqid == skb_mtype_seqid) {
->> +			ns = event->timestamp;
->> +			list_del_init(&event->list);
->> +			list_add(&event->list, &cpts->pool);
->> +			break;
->> +		}
->> +	}
->> +	spin_unlock_irqrestore(&cpts->lock, flags);
-> 
-> Ouch, you have to acquire an additional lock per packet and a lot of
-> cacheline dithering.
-> 
-> Not strictly necessary for this series, but I suggest to invest some
-> time reconsidering this schema, it looks bad from performance pov.
-> 
-> Possibly protecting the list with RCU and leaving the recycle to the
-> producer could help.
+Julia asked you to write what steps you had done to ensure that the
+patch doesn't break anything.  And I was curious what she meant by that
+because I had forgotten that it would be bad if there were a cast that
+removed the const.  So the bit about "any attempt to alter
+gb_audio_module_type in the code would raise a compile-time error." is
+not true.
 
-Thank you for pointing out this. I will consider your point and spend
-some time on it.
+Also we assume that you have compile tested everything so you never need
+to write that.
 
-> 
-> Additionally net-next is currently closed for the merge window, please
-> post the new revision (including the target tree in the subj prefix)
-> when net-next will re-open in ~2weeks.
-> 
-Thank you for information. I will update the patch and post its next
-version with above mentioned changes.
+The information which is missing from this commit message is the
+checkpatch warning.  I'm more familiar with checkpatch than a lot of
+kernel maintainers and I had forgotten that this was a checkpatch
+warning.  Please copy and paste the warning.
 
-> Cheers,
-> 
-> Paolo
-> 
+Basically what I want in a commit message is this:
+
+"Checkpatch complains that "gb_audio_module_type" should be const as
+part of kernel hardenning.  <Copy and paste relevant bits from
+checkpatch>.  I have reviewed how this struct is used and it's never
+modified anywhere so checkpatch is correct that it can safely be
+declared as const.  Constify it."
+
+regards,
+dan carpenter
+
