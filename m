@@ -1,85 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 185E2179B1;
-	Mon, 18 Mar 2024 12:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7551B1EF18;
+	Mon, 18 Mar 2024 12:30:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710765030; cv=none; b=pBVuXA3QBbHRJ0ZcYboOjta4y9VH4Nw/Q2FfTnBYAD0yk7qBXuYOxiscwixrGkuNuk6vdJIHRmfJ+uHUt8Qfe7+BFmCTYdoLuQeciDoiZv2l2sguGkHgJkh5c3B7hBwvd98J84qwffZI5MYWGrs9sEGi93Q21dYfheulrsXqYpI=
+	t=1710765054; cv=none; b=TtSiOTqhlOz339sH27ATSyuKMydJ2/HL6IqKz+jv3QxbcWRHjgug5OhTZLGhHdvXVueilHt0YpCf2xL88kFl9WpYQiVvd784g3k/q9ptkoX0OD+FpcvFDW/9ailaQ5EqdeYsHq7HAueJI0a4STk9Y2VJ5uwrCT4ES3wkc7k+2Mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710765030; c=relaxed/simple;
-	bh=Pf3JZGSV0vq0+Ep32XwBVnIFfn/v8WNnsG3rb8t8ghQ=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=TylQmn9GiJSRK2vRC4Ajv+1ooDd/sqSDWsvTbv8r524M03P+c58TfahOVrjSn9hfCMMHNu7rEmMgLdBr9X3Gc0WilwFKuQRMfzQkicKPdxn7emrOzEc4hHXNMtH+CMzLkVifxmLwnoJMdDfpPbUDpSegbUtc9pDfczG4S2a14sE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nGJycxgL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nGJycxgL"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AEDA4C433F1;
-	Mon, 18 Mar 2024 12:30:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710765029;
-	bh=Pf3JZGSV0vq0+Ep32XwBVnIFfn/v8WNnsG3rb8t8ghQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=nGJycxgLs+3XFpLWAHW0vsUe3BzzPE5xJRp/m8qxdtLJo8qln3kUI6WU7PK+Ubfc9
-	 UlefgKwutWEfXIyGaGscl1BC7/xIk7fdHv+KamIY3d8ETQWJadkRN45hCdsRnQwaex
-	 mxH83Du4dl8hcu9Y0GGNBJxEbpymxSSZe/86/cEkV024L+ubVMlZile6HVZYu4YRnZ
-	 TZ/KrUBiHwukN63HlT8GACqLib8vtqFNQTkD6wgDvkE1oz7AGrAClgFQOvLJSOwr9A
-	 Tbcb2c7IHU/Ci4eTfR6NaURF0GsAllXGBZnwzqUQoR+54c7NDympnR6mpPJUm1Z9ye
-	 pg+dscuOIwzFw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A00E7D95053;
-	Mon, 18 Mar 2024 12:30:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1710765054; c=relaxed/simple;
+	bh=0oFjsR8UMfssqHaMgHT3LLZ1XLAc6e6F+5fJPvG3290=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Fp53wZBl7+PA5uuTGZOuYTBqiAMDretLMncHM5BcXOlY8ohCwMtpzrnPBK9J4nJlKDt2gL1m8L5Tl4N2fCrBnQa88HtG5y+PBIlQHK7MjXd54UzJN96tvIMmJ8d1jRlqrN0CWj5+HZGInucmrPKxYytATr4R61g93jecwc0eTVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TyvM83LKRz6JBZp;
+	Mon, 18 Mar 2024 20:30:12 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id C0D73140A78;
+	Mon, 18 Mar 2024 20:30:41 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 18 Mar
+ 2024 12:29:54 +0000
+Date: Mon, 18 Mar 2024 12:29:53 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Dominique Martinet <dominique.martinet@atmark-techno.com>
+CC: David Lechner <dlechner@baylibre.com>, Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Syunya
+ Ohshio <syunya.ohshio@atmark-techno.com>, Guido =?ISO-8859-1?Q?G?=
+ =?ISO-8859-1?Q?=FCnther?= <agx@sigxcpu.org>, Lars-Peter Clausen
+	<lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: industrialio-core: look for aliases to request
+ device index
+Message-ID: <20240318122953.000013f3@Huawei.com>
+In-Reply-To: <ZfejyEvPIncygKJ9@atmark-techno.com>
+References: <20240228051254.3988329-1-dominique.martinet@atmark-techno.com>
+	<7f03bb12-0976-4cb7-9ca9-4e4e28170bdd@linaro.org>
+	<Zd7hSOw3_zosyrn3@atmark-techno.com>
+	<daed8ada-9e01-41ad-82af-5da5cbbc865c@linaro.org>
+	<Zd7qz1Qte8HWieF_@atmark-techno.com>
+	<20240228142441.00002a79@Huawei.com>
+	<Zd_zB_ymxkx0HB3q@atmark-techno.com>
+	<ZfPg-nMANUtBlr6S@atmark-techno.com>
+	<CAMknhBG_kJx8JPvTBQo7zpy3mFAkUjZpRY3DLBfXt+39nRJWiA@mail.gmail.com>
+	<ZfejyEvPIncygKJ9@atmark-techno.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v2] net: dsa: mt7530: prevent possible incorrect XTAL
- frequency selection
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171076502965.32045.18266951934755323293.git-patchwork-notify@kernel.org>
-Date: Mon, 18 Mar 2024 12:30:29 +0000
-References: <20240314-for-netnext-mt7530-better-fix-xtal-frequency-v2-1-fe30795593df@arinc9.com>
-In-Reply-To: <20240314-for-netnext-mt7530-better-fix-xtal-frequency-v2-1-fe30795593df@arinc9.com>
-To: =?utf-8?b?QXLEsW7DpyDDnE5BTCB2aWEgQjQgUmVsYXkgPGRldm51bGwrYXJpbmMudW5hbC5h?=@ci.codeaurora.org,
-	=?utf-8?b?cmluYzkuY29tQGtlcm5lbC5vcmc+?=@ci.codeaurora.org
-Cc: daniel@makrotopia.org, dqfext@gmail.com, sean.wang@mediatek.com,
- andrew@lunn.ch, f.fainelli@gmail.com, olteanv@gmail.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
- p.zabel@pengutronix.de, Landen.Chao@mediatek.com,
- bartel.eerdekens@constell8.be, mithat.guner@xeront.com,
- erkin.bozoglu@xeront.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, justin.swartz@risingedge.co.za,
- arinc.unal@arinc9.com
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Hello:
+On Mon, 18 Mar 2024 11:15:36 +0900
+Dominique Martinet <dominique.martinet@atmark-techno.com> wrote:
 
-This patch was applied to netdev/net.git (main)
-by David S. Miller <davem@davemloft.net>:
-
-On Thu, 14 Mar 2024 12:28:35 +0300 you wrote:
-> From: Arınç ÜNAL <arinc.unal@arinc9.com>
+> David Lechner wrote on Fri, Mar 15, 2024 at 10:53:36AM -0500:
+> > How about using udev rules to create symlinks for each device based on
+> > the label attribute? No changes to the kernel are needed.  
 > 
-> On MT7530, the HT_XTAL_FSEL field of the HWTRAP register stores a 2-bit
-> value that represents the frequency of the crystal oscillator connected to
-> the switch IC. The field is populated by the state of the ESW_P4_LED_0 and
-> ESW_P4_LED_0 pins, which is done right after reset is deasserted.
+> Right, it's definitely possible to make symlinks for each "device" -- my
+> patch comment links to such an udev script "solution":
+> https://git.toradex.com/cgit/meta-toradex-bsp-common.git/tree/recipes-core/udev/files/verdin-imx8mm/toradex-adc.sh?h=kirkstone-6.x.y
+> (the script is launched by udev here:
+> https://git.toradex.com/cgit/meta-toradex-bsp-common.git/tree/recipes-core/udev/files/verdin-imx8mm/99-toradex.rules
+> )
 > 
-> [...]
+> My conceptual problem with this is that this makes symlinks in /dev to
+> files in /sys and it feels like we're crossing boundaries.
+> As far as I can tell there is no way for userspace to create arbitrary
+> symlinks in /sys, so I think we could have an interface more
+> user-friendly by allowing paths to be static for users with multiple
+> devices.
+> (I guess that's a weak argument given e.g. disks etc will also have an
+> unreliable name in /sys in the general case, but simple programs don't
+> interact with them in /sys and can use stable links in /dev so my
+> expectations here aren't quite the same)
+> 
+> 
+> Ultimately, the problem might run deeper in that we're having userspace
+> interact with the device through /sys and not the /dev char dev... As
+> far as I could see /dev/iio:deviceX only allows reading buffered values
+> and doesn't have any ioctl or other way of reading immediate values as
+> is possible in /sys though, so that'd require quite a bit of work to
+> duplicate the interface there...
 
-Here is the summary with links:
-  - [net,v2] net: dsa: mt7530: prevent possible incorrect XTAL frequency selection
-    https://git.kernel.org/netdev/net/c/f490c492e946
+Don't.  The sysfs interface as only control is entirely intentional and
+we do not want IOCTL based duplication.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Just addressing this bit as I'm still a bit snowed under to think about this
+more generally.
+
 
 
