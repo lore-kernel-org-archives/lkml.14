@@ -1,66 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2814638DEF;
-	Mon, 18 Mar 2024 12:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2167364B8;
+	Mon, 18 Mar 2024 12:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710766190; cv=none; b=XnPFpe3mFKRMnfFjRzInvutlqWn8WRLx6PSpd6d2ygBao/yRMaslQEOXio0PFDetObyX1pWu/B6vI7xvNrvnojZE+DQM4KaNOLBC4gTn+vaPbAFvir1A0erSKjxJq6/QM99OUIuXNdGd8TPrCdI7FPMQG8Gc9qkECDFulKtFvu4=
+	t=1710766212; cv=none; b=MGDFOdrflqgPFqOp452o/Ahpc2dwlxtaKAeQC7sZX2KnAl6+Vl5rXg6+GlE6R0puDnKdCk+3j2Dikonv+vL7LwfI+BREco+hZPxU1jblkw22uaAOM/xNr17rAaOVJ4YOcYhc452iRYona7c6a9S23ibDkgTm2PeUZTZ+17ugcU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710766190; c=relaxed/simple;
-	bh=pnw8L0MNVMd/tH7o0U2AgWQ3mCUlzbF10paSUT8SIv0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ub9eMFcUHMe+tzaudSQtDmTjn4uCRs2ZrGhJQmxHRdOSO+qwV0dLyEzmaSI0l74hw8BJTNsGn/bc3XYkYR/Nx9961TwpoBqI1ssIv4SuNss5p9ymNJlJUkNK5eTX1KZrjqmyZfCZZJ8JN8mlmN7oD/YI/DbNFOfkcnkLnFxfYbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YReeFoj7; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YReeFoj7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 739B7C433C7;
-	Mon, 18 Mar 2024 12:49:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710766189;
-	bh=pnw8L0MNVMd/tH7o0U2AgWQ3mCUlzbF10paSUT8SIv0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YReeFoj7iZ3Ac+JFI1bQFdZ7qayaK3YaEXbMa5iR17TRY+jcv81UmRFr0aE9OMkoM
-	 N5LohlmVpmugJo3nzeci1EQUz3XZXJ5+hja9wIEO58fiA6jwwQzaw0j+qeo08or022
-	 wOSkQ/Kuv9YNvr41NbKAWf8d5E3m3r+Ss88AkkD3jq2taoje9+sNNmjTv+wVZvKHLu
-	 OVmwaiqHZCkF25GztQzHu9S95r7y9tFAXn0jRCCAaAzHMZh5FyPe9phEpNio6bWj6/
-	 L43SnZTAEBTBAFrdPzGgkotyaEb8xb69kPlDl7E4G28QxnDXR3RVPMMzJTgHPVgZFz
-	 KLmYoatt4cX7A==
-Date: Mon, 18 Mar 2024 08:49:47 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: Pavel Machek <pavel@ucw.cz>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Hou Tao <houtao1@huawei.com>, Sohil Mehta <sohil.mehta@intel.com>,
-	Alexei Starovoitov <ast@kernel.org>, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org
-Subject: Re: [PATCH AUTOSEL 4.19 1/4] x86/mm: Move is_vsyscall_vaddr() into
- asm/vsyscall.h
-Message-ID: <Zfg4a5Y1UnFO3O1m@sashalap>
-References: <20240229204208.2862333-1-sashal@kernel.org>
- <Ze9zol7kZucywfOy@duo.ucw.cz>
+	s=arc-20240116; t=1710766212; c=relaxed/simple;
+	bh=PQqpjSAlS/Y82hZ+pfu3DKlvh/6H4paTGGcF2JvLae4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A3I0ZTTzXUx8HrHJdfqow5mSWGuP/T/Ugiqj03STWFRdOFlODs8/LdV0tyQpiiK9mTCk+ys9sZtgMZ+MxbveOE0HJcnmhqZh0dTjvngYhtMJ+Q83ynOCvZVK7e0gHaSS7qba+Jj+l2zqp++vf3n+xOK/NBJX+tXVpX2ACEVQKCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3c383516de2so443597b6e.0;
+        Mon, 18 Mar 2024 05:50:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710766210; x=1711371010;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=igexqaivqyyWW/fKHDjv4jwYg+bZZIex5aTWy4MekxE=;
+        b=RLa7nx64zBLKPQLsA02E4F4psNH8j/VJF7jK9eoMaSEt/m7eyzqCwTpspIOacbJx7U
+         F+6N7YfAXff6bqd8az2qCaeWi7gKcDHSjFplicJmnC8vWVpaxDQn7oKChzhdNU0onq3Y
+         aU7JUu+VUpajXxE/IvvK5zdpFaLFce0znEeS47PwiydgRtMYCOLIo8Bq040F+z9+7JIo
+         Oodl42sBft/qn9FSrYncUVlMnD0KcwtiFzp0qLFV12JBxLh7PkT0/9EaHSPkor9vNwYL
+         tDn6YC/wluzg2K1fTJcfCHJmVfxp10g0puWVFRmi4kcxP937jfwNtkQOVucv+w9XiqVa
+         Zgeg==
+X-Forwarded-Encrypted: i=1; AJvYcCVyJ6vnXgCylb9ZMOo5uRoZ1MDYecoFFZ+zuo1njR05mBEuOGwT8sy8JZBsV3Afd4dlvx8tBLRh8ah7DgHhKA8fkwP8W73LJYD5AZ6JRHvfn+kgKqw70zF/r68fAoQqhNukM4ARvqE=
+X-Gm-Message-State: AOJu0Yy9LlrqC58EyuZDFFu7jCrEVlq4Wo5qlzxIZBP2EIk327wtnmpx
+	UC/Ef/f57OzxhZZGl9onrLR+uEecgMLZd4rSvnxhooEbMTL4j3jkX7Inzb0fnS7leBFrilYF9Xb
+	3Vc/sd2i4oe1CvVGWUbTrlu4XWls=
+X-Google-Smtp-Source: AGHT+IG/IZWhVg5Kt120gzG2Vxc/QXlTFcc7T6H4eSZ0pYKqkAFSesRo9RvMl6YITb2sPJZabPcqbppaaLC2AeBHzZI=
+X-Received: by 2002:a05:6871:58a4:b0:221:cb1b:cc05 with SMTP id
+ ok36-20020a05687158a400b00221cb1bcc05mr13027339oac.0.1710766210135; Mon, 18
+ Mar 2024 05:50:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <Ze9zol7kZucywfOy@duo.ucw.cz>
+References: <cover.1710754409.git.perry.yuan@amd.com>
+In-Reply-To: <cover.1710754409.git.perry.yuan@amd.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 18 Mar 2024 13:49:55 +0100
+Message-ID: <CAJZ5v0iQnJCVX0kHNxtOWLcnTXRRjR1HZ6m4CFhKZcQVp1SbEA@mail.gmail.com>
+Subject: Re: [PATCH v8 0/8] AMD Pstate Fixes And Enhancements
+To: Perry Yuan <perry.yuan@amd.com>, mario.limonciello@amd.com, gautham.shenoy@amd.com
+Cc: rafael.j.wysocki@intel.com, viresh.kumar@linaro.org, Ray.Huang@amd.com, 
+	Borislav.Petkov@amd.com, Alexander.Deucher@amd.com, Xinmei.Huang@amd.com, 
+	Xiaojian.Du@amd.com, Li.Meng@amd.com, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 11, 2024 at 10:12:02PM +0100, Pavel Machek wrote:
->Hi!
+On Mon, Mar 18, 2024 at 10:48=E2=80=AFAM Perry Yuan <perry.yuan@amd.com> wr=
+ote:
 >
->> Move is_vsyscall_vaddr() into asm/vsyscall.h to make it available for
->> copy_from_kernel_nofault_allowed() in arch/x86/mm/maccess.c.
+> The patch series adds some fixes and enhancements to the AMD pstate
+> driver.
+> It enables CPPC v2 for certain processors in the family 17H, as
+> requested
+> by TR40 processor users who expect improved performance and lower system
+> temperature.
 >
->This seems to be just part of a patch -- it does not move anything --
->and we should not really need it for 4.19, as we don't have those
->copy_from_kernel_nofault_allowed changes.
+> Additionally, it fixes the initialization of nominal_freq for each
+> cpudata
+> and changes latency and delay values to be read from platform firmware
+> firstly
+> for more accurate timing.
+>
+> A new quirk is also added for legacy processors that lack CPPC
+> capabilities which caused the pstate driver to fail loading.
+>
+> Testing done with one APU system while cpb boost on:
+>
+> amd_pstate_lowest_nonlinear_freq:1701000
+> amd_pstate_max_freq:3501000
+> cpuinfo_max_freq:3501000
+> cpuinfo_min_freq:400000
+> scaling_cur_freq:3084836
+> scaling_max_freq:3501000
+> scaling_min_freq:400000
+>
+> analyzing CPU 6:
+>   driver: amd-pstate-epp
+>   CPUs which run at the same hardware frequency: 6
+>   CPUs which need to have their frequency coordinated by software: 6
+>   maximum transition latency:  Cannot determine or is not supported.
+>   hardware limits: 400 MHz - 3.50 GHz
+>   available cpufreq governors: performance powersave
+>   current policy: frequency should be within 400 MHz and 3.50 GHz.
+>                   The governor "powersave" may decide which speed to use
+>                   within this range.
+>   current CPU frequency: Unable to call hardware
+>   current CPU frequency: 3.50 GHz (asserted by call to kernel)
+>   boost state support:
+>     Supported: yes
+>     Active: yes
+>     AMD PSTATE Highest Performance: 255. Maximum Frequency: 3.50 GHz.
+>     AMD PSTATE Nominal Performance: 204. Nominal Frequency: 2.80 GHz.
+>     AMD PSTATE Lowest Non-linear Performance: 124. Lowest Non-linear Freq=
+uency: 1.70 GHz.
+>     AMD PSTATE Lowest Performance: 30. Lowest Frequency: 400 MHz.
+>
+> If someone would like to test this patchset, it would need to apply
+> another patchset on top of this in case of some unexpected issue found.
+>
+> https://lore.kernel.org/lkml/cover.1707297581.git.perry.yuan@amd.com/
+> It implements the amd pstate cpb boost feature
+> the below patch link is old version, please apply the latest version
+> while you start the testing work.
+>
+> I would greatly appreciate any feedbacks.
 
-Yup, looks like it's not needed on <5.10.
+There are missing changelogs and S-o-b tags in a few messages in this serie=
+s.
 
--- 
-Thanks,
-Sasha
+Overall, I would like someone, preferably at AMD, to take
+responsibility for the amd-pstate driver, review patches modifying it
+and ACK the approved ones.
+
+Huang Rui, who is listed in MAINTAINERS as the official maintainer of
+it, does not seem to be interested in it any more.
+
+Can this be addressed, please?
