@@ -1,127 +1,144 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6972D5787B;
-	Mon, 18 Mar 2024 20:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD3A72E3F2
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 20:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710792895; cv=none; b=EMZdTKt2IssEYcf8w+zXQW/zBgXeUXqJmIBZAzdCKL5LxFUA+KxZEbNygptsdPQy4fs9EcSl+CYO3rEAnUcNjeFJj8p8X4gE8aYi3Jv9hbr8ngsoPUsZ7H63iASY6WnikU92IaXRRMqF/wH4xQWWoQLG0a9jX0UfIqX9V1RsS4E=
+	t=1710793073; cv=none; b=EQP9CCC7sL1KcV7NE/c9eUx9NSTCbL+bq5hCY0qMrl0WRR6mlmB70pE+XPqwlSBS00W4gEFw6ODYpJjSXPnSHajCU+BpdJoO0PXsj6seFb5HuV+4GUPCCo6kiE2r0AjNiH1zOXrF7/oMpGt0ZKDDV26M+9shbka4O/pBDwM3DJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710792895; c=relaxed/simple;
-	bh=VTT+EYQa5xyYiHELKKQlC+hM2bKjlq79yK4S9abZCBk=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=pWwTGj1nQ37XPEEUYQNZUE7jiuIjWI2rAsIHiwnNmLzc+xbfLmzXd/9FfraB9rNSYTZCjzNemApCcxxI6wBDPRSlMjJp5fbhikeACLjppDprwADENUy4SiyiVMuEEDXrxTrte9jKxYTz87e1I5jnBpBWo33FZKxI/QFq2Is3h18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=x34RSSk9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fjKECsEt; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1710793073; c=relaxed/simple;
+	bh=2a/s7mDDRqYelu3/00RIsORLQ/R2WRP9RJNEVPTqkgg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=HXBoflgl7bF2b9U5O1sBPhikfMOGX47h8mqSVhxxnimoM5yMCEDUM2vAzxz45viZMBCGNqehNCBJcqWh7Q2B228P7fb1oAMCd0jfqRk2oOkzE07d2oD5Bl8xBCn8PFsCJCiL5H/kc4PpmeOCt5QejYpKN3PVQU1yUl0aspAja78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=Z3UVBVCZ; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="x34RSSk9";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fjKECsEt"
-Date: Mon, 18 Mar 2024 20:14:49 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1710792891;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=E7ARMqLvSPPFaO6OAB9+eIo33ZYK9A92oxpgVLqg1fY=;
-	b=x34RSSk9vNatyJKEG4+eruW5z73H9kaSHkqZnRi5dAkFdXDTIxnhALJSefTbIslkC3MLoF
-	Gy/xCmslSOpCVyWM0NUFdxlt/AEmreYPyGDzXjOpxW2zuYlKHwJVY/4mGwqDF0zOnMWZn3
-	/4NegsJm3i4dvzUdti+sI7iAO7bnoR306N7WnxU1GYwNG2ZudfcNQO5S/1kRvahBK/JZD3
-	sm8cj/W62Og47kLE77ZtW/VbSZ84+ssZ24uwL7HfUwI3M+DhnN+KDyb/AMX6xERVAJaeCn
-	9tS+81a/OnsV82QA4cVxRkegvRUK5Hp5r9mhP+KlUt8fzVbjQszOOOWSNU0vAw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1710792891;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=E7ARMqLvSPPFaO6OAB9+eIo33ZYK9A92oxpgVLqg1fY=;
-	b=fjKECsEtOqAstJZe6OTE+5NWXTAGr96wE7x0C+9o/oA2dr4hdWPV4yq9oKetIvOKN/9x1B
-	UK3t3i2Iqikm8dBg==
-From: "tip-bot2 for Biju Das" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/urgent] irqchip/renesas-rzg2l: Do not set TIEN and TINT
- source at the same time
-Cc: Biju Das <biju.das.jz@bp.renesas.com>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org, maz@kernel.org
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="Z3UVBVCZ"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-56a2b881911so1601293a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 13:17:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1710793069; x=1711397869; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=u1VK2UrvRK1GqfS+jZTcmyrPbAehgKhpyQhy7X6GkE8=;
+        b=Z3UVBVCZnDJ9Zvrv9Ei/oBLg+jd0/t7RdrbMVcUXIADSX+12Dvrv2GnDbIwme+9NtN
+         gcrLhsTCXLGHCwqQUn42Z74vgImQjKGG6pd5edE11i3kVE5SVW7van+dVBMaLxLqc2QQ
+         /Rapb3gGffmbxnFu7/9kz0Y37ssoFUoCxo517U4oM/GcWjmmp0rU1qa5kBmj3y3G0aki
+         OrU0lyRRLpxZav+NG3jSw4mxyv/HajZFzAkOL/Avcmcvcs1SOnTeJ7FiJAuT3LHt/Pxn
+         f0Gu5UmxKGBqP5AVoEuyozZWdUAgiNY8aq5IEQViOpoCMw48Ws2ESVxiLsS0ToNdCqdn
+         McnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710793069; x=1711397869;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u1VK2UrvRK1GqfS+jZTcmyrPbAehgKhpyQhy7X6GkE8=;
+        b=s3oEyo2tLwC65YMMPQtf+enmScFxnmurSIx3dDqU9tRanlz3EmcIGbXR06NKXwcfjN
+         coSuyVnfBs2rZk5whNJxPARG/8gNKlJiQXLRvzc2WXFkrROLL7wQwuBdjF/akRDT85db
+         RbtuF1irtXQLydj2sIP+zvGGU8aUR4jO69uu0y1IS2QXoVqhRs8lTf6XB0RaBj+TzYR7
+         zjB12iHACRkSbu+UAksxTVldfg0+nxB8GeLPegRJSwkR9KHUhDMEsIhdWg0pesCuIH5A
+         3rgg6D3Jssr0uhetF8XCoz7tBLkbJqGXpas5GMefmw8pFSZk/wQjXmbbR3b5Icm2nBrN
+         IgIg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6vC9Rz8OYEHaibIu3oB1rLOnNzbuNzpeKPkwJqLN/v6b3ebJm6+FHSEoKVIgo4VI04jKflk8V3IuBYSBZaTklypLscHTXm9m3qAax
+X-Gm-Message-State: AOJu0YwRgVyyhuPTtajg2LdjF14pNFDrA91g24lXeVwWc4tFHB7+Df8R
+	8u5FZ/umJdJ3tTxITdJeK4Ziy6uDMkhbHVpLx1vBDUTj0gsnJfxiGBHtrT1msgw=
+X-Google-Smtp-Source: AGHT+IF9T4xVGnEMDWOvmebwvh7RSH//MnjXmlytzIKhD9eeivlJmumrE3KnhdTbwCwawu0TsPm8Jg==
+X-Received: by 2002:a05:6402:4347:b0:568:1882:651f with SMTP id n7-20020a056402434700b005681882651fmr276209edc.25.1710793069043;
+        Mon, 18 Mar 2024 13:17:49 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.144])
+        by smtp.gmail.com with ESMTPSA id g18-20020a056402091200b00568b6f73491sm3513123edz.14.2024.03.18.13.17.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Mar 2024 13:17:48 -0700 (PDT)
+Message-ID: <c6704551-dae1-4536-8da2-ad4764d34503@tuxon.dev>
+Date: Mon, 18 Mar 2024 22:17:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171079288966.10875.228901571490481295.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 27/39] clk: at91: sam9x7: add sam9x7 pmc driver
+Content-Language: en-US
+To: Varshini.Rajendran@microchip.com, mturquette@baylibre.com,
+ sboyd@kernel.org, Nicolas.Ferre@microchip.com,
+ alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20240223171342.669133-1-varshini.rajendran@microchip.com>
+ <20240223172831.672953-1-varshini.rajendran@microchip.com>
+ <01e96d4b-3038-498b-a9b2-2acac51f1d80@tuxon.dev>
+ <e84994fc-7ec1-4d65-84f6-efc6a47b0c2f@microchip.com>
+From: claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <e84994fc-7ec1-4d65-84f6-efc6a47b0c2f@microchip.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the irq/urgent branch of tip:
 
-Commit-ID:     dce0919c83c325ac9dec5bc8838d5de6d32c01b1
-Gitweb:        https://git.kernel.org/tip/dce0919c83c325ac9dec5bc8838d5de6d32c01b1
-Author:        Biju Das <biju.das.jz@bp.renesas.com>
-AuthorDate:    Mon, 18 Mar 2024 08:50:40 
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 18 Mar 2024 21:09:02 +01:00
 
-irqchip/renesas-rzg2l: Do not set TIEN and TINT source at the same time
+On 18.03.2024 11:25, Varshini.Rajendran@microchip.com wrote:
+> Hi Claudiu,
+> 
+> On 11/03/24 11:28 am, claudiu beznea wrote:
+>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+>>
+>> On 23.02.2024 19:28, Varshini Rajendran wrote:
+>>> Add a driver for the PMC clocks of sam9x7 Soc family.
+>>>
+>>> Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
+>>> ---
+>>> Changes in v4:
+>>> - Changed variable name alloc_mem to clk_mux_buffer to be more
+>>>    suggestive
+>>> - Changed description of @f structure member appropriately
+>>> ---
+>>>   drivers/clk/at91/Makefile |   1 +
+>>>   drivers/clk/at91/sam9x7.c | 946 ++++++++++++++++++++++++++++++++++++++
+>>>   2 files changed, 947 insertions(+)
+>>>   create mode 100644 drivers/clk/at91/sam9x7.c
+>>>
+>>> diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
+>>> index 89061b85e7d2..8e3684ba2c74 100644
+>>> --- a/drivers/clk/at91/Makefile
+>>> +++ b/drivers/clk/at91/Makefile
+[ ... ]
 
-As per the hardware team, TIEN and TINT source should not set at the same
-time due to a possible hardware race leading to spurious IRQ.
+>>> +static const struct {
+>>> +     const char *n;
+>>> +     const char *p;
+>>> +     const struct clk_pll_layout *l;
+>>> +     u8 t;
+>>> +     const struct clk_pll_characteristics *c;
+>>> +     unsigned long f;
+>>> +     u8 eid;
+>>> +} sam9x7_plls[][PLL_ID_MAX] = {
+>>> +     [PLL_ID_PLLA] = {
+>>> +             {
+>>> +                     .n = "plla_fracck",
+>>> +                     .p = "mainck",
+>>> +                     .l = &plla_frac_layout,
+>>> +                     .t = PLL_TYPE_FRAC,
+>>> +                     /*
+>>> +                      * This feeds plla_divpmcck which feeds CPU. It should
+>>> +                      * not be disabled.
+>>> +                      */
+>>> +                     .f = CLK_IS_CRITICAL | CLK_SET_RATE_GATE,
+>>> +                     .c = &plla_characteristics,
+>>> +             },
+>>> +
+>>> +             {
+>>> +                     .n = "plla_divpmcck",
+>>> +                     .p = "plla_fracck",
+>>> +                     .l = &pll_divpmc_layout,
+>>
+>> You mentioned in "[PATCH v4 24/39] clk: at91: sam9x7: add support for HW
+>> PLL freq dividers" that this has div2 but it is registered w/ a layout that
+>> has .div2 = 0.
+> 
+> This is handled in the above plla_fracck fractional part as defined in 
+> the plla_frac_layout.
 
-Currently on some scenarios hardware settings for TINT detection is not in
-sync with TINT source as the enable/disable overrides source setting value
-leading to hardware inconsistent state. For eg: consider the case GPIOINT0
-is used as TINT interrupt and configuring GPIOINT5 as edge type. During
-rzg2l_irq_set_type(), TINT source for GPIOINT5 is set. On disable(),
-clearing of the entire bytes of TINT source selection for GPIOINT5 is same
-as GPIOINT0 with TIEN disabled. Apart from this during enable(), the
-setting of GPIOINT5 with TIEN results in spurious IRQ as due to a HW race,
-it is possible that IP can use the TIEN with previous source value
-(GPIOINT0).
+Ah, right. I missed the changes in sam9x60_frac_pll_recalc_rate().
 
-So, just update TIEN during enable/disable as TINT source is already set
-during rzg2l_irq_set_type(). This will make the consistent hardware
-settings for detection method tied with TINT source and allows to simplify
-the code.
-
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- drivers/irqchip/irq-renesas-rzg2l.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/irqchip/irq-renesas-rzg2l.c b/drivers/irqchip/irq-renesas-rzg2l.c
-index 8803fac..ae67fec 100644
---- a/drivers/irqchip/irq-renesas-rzg2l.c
-+++ b/drivers/irqchip/irq-renesas-rzg2l.c
-@@ -151,7 +151,7 @@ static void rzg2l_irqc_irq_disable(struct irq_data *d)
- 
- 		raw_spin_lock(&priv->lock);
- 		reg = readl_relaxed(priv->base + TSSR(tssr_index));
--		reg &= ~(TSSEL_MASK << TSSEL_SHIFT(tssr_offset));
-+		reg &= ~(TIEN << TSSEL_SHIFT(tssr_offset));
- 		writel_relaxed(reg, priv->base + TSSR(tssr_index));
- 		raw_spin_unlock(&priv->lock);
- 	}
-@@ -163,7 +163,6 @@ static void rzg2l_irqc_irq_enable(struct irq_data *d)
- 	unsigned int hw_irq = irqd_to_hwirq(d);
- 
- 	if (hw_irq >= IRQC_TINT_START && hw_irq < IRQC_NUM_IRQ) {
--		unsigned long tint = (uintptr_t)irq_data_get_irq_chip_data(d);
- 		struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
- 		u32 offset = hw_irq - IRQC_TINT_START;
- 		u32 tssr_offset = TSSR_OFFSET(offset);
-@@ -172,7 +171,7 @@ static void rzg2l_irqc_irq_enable(struct irq_data *d)
- 
- 		raw_spin_lock(&priv->lock);
- 		reg = readl_relaxed(priv->base + TSSR(tssr_index));
--		reg |= (TIEN | tint) << TSSEL_SHIFT(tssr_offset);
-+		reg |= TIEN << TSSEL_SHIFT(tssr_offset);
- 		writel_relaxed(reg, priv->base + TSSR(tssr_index));
- 		raw_spin_unlock(&priv->lock);
- 	}
