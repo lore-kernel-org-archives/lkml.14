@@ -1,120 +1,160 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D01535A7
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 15:33:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8640C51C47
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 15:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710776016; cv=none; b=DXKvcwshlDTfQdKw62JpioaGMt4lMUBEAFL0hFGVBv23bBINfykAkTw7LlQ4LM0JK+CrEu7q+sQ6Z+vwt9sdYPT0tjG6QTj4HCPT7cYXrJzjWXKU5/oxQRgBMeq8emVzFjjh8MGn/Zn7OaCN77mZVMgG99paxSjdNTBPzoI/N/w=
+	t=1710776151; cv=none; b=rVlrMRh5tnlNmV5Ag5j4ZGSO1lB9rof1L0OiStVtX2cNWzPRMRSN718MV+qQ50OY+C4ee+OxL5qEBxGIXP6aIGXwAOk31mfYbtjkELE1LpWi1Qa+BsTrR0wDpu03bbO4rlhEqeNpfZIPP902PYVJQI+vwsBHxvoSvO+nZBEeqRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710776016; c=relaxed/simple;
-	bh=3RSr8iMZm26LvuIqeREkoGQz0HYx6DB2UxS3ouoY8cQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ll9xvBxgEqLDvn2MRycSSJg8fCW9oMrySCx7XoLHEpd7zM/MQv5s004Q5s/Q4rg0+/qjU2hiP4nX0tWrYkBCGq/6lYQ1uLBWoZ8aeEyqdytu7/OdYZAZK7JTPIpENVcsXW80oa1OWlLB65527YMTrBSwy/j3KVEgp6QQKzELNFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=kc4tIsMT; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="kc4tIsMT"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C2CE01B1C;
-	Mon, 18 Mar 2024 16:33:02 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1710775983;
-	bh=3RSr8iMZm26LvuIqeREkoGQz0HYx6DB2UxS3ouoY8cQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kc4tIsMTOCx93b8KvSCy3HhebHNltygT2gNxhsxQkVIueh2gAUAFSbXbgUdBHDcV8
-	 IRxLXWg7xB/DjWWU15zV8Dnit96KUwNJyK+uSdFtTjjW/p+EsCI5Mwy6DIPS8oq4kO
-	 fTIfHoKUkAdlXMmy7fPARntNR5ygsNKdv005MCTM=
-Date: Mon, 18 Mar 2024 17:33:26 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Sui Jingfeng <sui.jingfeng@linux.dev>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm: bridge: thc63lvd1024: Switch to use
- of_graph_get_remote_node()
-Message-ID: <20240318153326.GD13682@pendragon.ideasonboard.com>
-References: <20240316172800.1168390-1-sui.jingfeng@linux.dev>
+	s=arc-20240116; t=1710776151; c=relaxed/simple;
+	bh=U3H71QwkPMiqIJ2+6FcCRf/gkK9CN5HhGOPJxNvqYX4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VzVhViUwYp2oxgSoZsPMq6zqZkVU/R1XhjnEvkaZ9sxcDQzfp6OPgYxWXMzbVW3/oafftNnN9OwNdcL9mPzqlOzvgpvnchcng2ilX2vHoR/HuvgnT8XkUUbpKdN0O7ZDCe9eUYeOp//6BHvsn2ckRYDeqCqM+QFK/vqXTUA0IKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BDD97DA7;
+	Mon, 18 Mar 2024 08:36:22 -0700 (PDT)
+Received: from [10.57.68.51] (unknown [10.57.68.51])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 256453F67D;
+	Mon, 18 Mar 2024 08:35:44 -0700 (PDT)
+Message-ID: <a99bd601-7599-4bb5-811d-efcb94ce8938@arm.com>
+Date: Mon, 18 Mar 2024 15:35:43 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240316172800.1168390-1-sui.jingfeng@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/6] mm: vmscan: Avoid split during shrink_folio_list()
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>, "Yin, Fengwei"
+ <fengwei.yin@intel.com>, "Huang, Ying" <ying.huang@intel.com>
+Cc: "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, Gao Xiang <xiang@kernel.org>,
+ Yu Zhao <yuzhao@google.com>, Yang Shi <shy828301@gmail.com>,
+ Michal Hocko <mhocko@suse.com>, Kefeng Wang <wangkefeng.wang@huawei.com>,
+ Barry Song <21cnbao@gmail.com>, Chris Li <chrisl@kernel.org>
+References: <20240311150058.1122862-1-ryan.roberts@arm.com>
+ <20240311150058.1122862-6-ryan.roberts@arm.com>
+ <d8086108-05e7-4765-a6f5-dfb85fb44b90@redhat.com>
+ <1db242d3-5ff1-4ef5-b20a-578a317fa859@arm.com>
+ <caafeabd-fb94-45de-9dcc-2451ddc0ef50@redhat.com>
+ <5cc147fa-492e-46c3-963d-2f6e6680dce9@arm.com>
+ <878r2gwahg.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <a75ea34a-7512-4169-b987-95f11a7f3dd0@intel.com>
+ <b084270d-6c7a-400c-8f4b-0797d2ae5fa6@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <b084270d-6c7a-400c-8f4b-0797d2ae5fa6@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Sui,
+On 18/03/2024 10:05, David Hildenbrand wrote:
+> On 18.03.24 11:00, Yin, Fengwei wrote:
+>>
+>>
+>> On 3/18/2024 10:16 AM, Huang, Ying wrote:
+>>> Ryan Roberts <ryan.roberts@arm.com> writes:
+>>>
+>>>> Hi Yin Fengwei,
+>>>>
+>>>> On 15/03/2024 11:12, David Hildenbrand wrote:
+>>>>> On 15.03.24 11:49, Ryan Roberts wrote:
+>>>>>> On 15/03/2024 10:43, David Hildenbrand wrote:
+>>>>>>> On 11.03.24 16:00, Ryan Roberts wrote:
+>>>>>>>> Now that swap supports storing all mTHP sizes, avoid splitting large
+>>>>>>>> folios before swap-out. This benefits performance of the swap-out path
+>>>>>>>> by eliding split_folio_to_list(), which is expensive, and also sets us
+>>>>>>>> up for swapping in large folios in a future series.
+>>>>>>>>
+>>>>>>>> If the folio is partially mapped, we continue to split it since we want
+>>>>>>>> to avoid the extra IO overhead and storage of writing out pages
+>>>>>>>> uneccessarily.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>>>>>>>> ---
+>>>>>>>>      mm/vmscan.c | 9 +++++----
+>>>>>>>>      1 file changed, 5 insertions(+), 4 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>>>>>>>> index cf7d4cf47f1a..0ebec99e04c6 100644
+>>>>>>>> --- a/mm/vmscan.c
+>>>>>>>> +++ b/mm/vmscan.c
+>>>>>>>> @@ -1222,11 +1222,12 @@ static unsigned int shrink_folio_list(struct
+>>>>>>>> list_head
+>>>>>>>> *folio_list,
+>>>>>>>>                          if (!can_split_folio(folio, NULL))
+>>>>>>>>                              goto activate_locked;
+>>>>>>>>                          /*
+>>>>>>>> -                     * Split folios without a PMD map right
+>>>>>>>> -                     * away. Chances are some or all of the
+>>>>>>>> -                     * tail pages can be freed without IO.
+>>>>>>>> +                     * Split partially mapped folios map
+>>>>>>>> +                     * right away. Chances are some or all
+>>>>>>>> +                     * of the tail pages can be freed
+>>>>>>>> +                     * without IO.
+>>>>>>>>                           */
+>>>>>>>> -                    if (!folio_entire_mapcount(folio) &&
+>>>>>>>> +                    if (!list_empty(&folio->_deferred_list) &&
+>>>>>>>>                              split_folio_to_list(folio,
+>>>>>>>>                                      folio_list))
+>>>>>>>>                              goto activate_locked;
+>>>>>>>
+>>>>>>> Not sure if we might have to annotate that with data_race().
+>>>>>>
+>>>>>> I asked that exact question to Matthew in another context bt didn't get a
+>>>>>> response. There are examples of checking if the deferred list is empty
+>>>>>> with and
+>>>>>> without data_race() in the code base. But list_empty() is implemented like
+>>>>>> this:
+>>>>>>
+>>>>>> static inline int list_empty(const struct list_head *head)
+>>>>>> {
+>>>>>>       return READ_ONCE(head->next) == head;
+>>>>>> }
+>>>>>>
+>>>>>> So I assumed the READ_ONCE() makes everything safe without a lock? Perhaps
+>>>>>> not
+>>>>>> sufficient for KCSAN?
+>> I don't think READ_ONCE() can replace the lock.
 
-Thank you for the patch.
+But it doesn't ensure we get a consistent value and that the compiler orders the
+load correctly. There are lots of patterns in the kernel that use READ_ONCE()
+without a lock and they don't use data_race() - e.g. ptep_get_lockless().
 
-On Sun, Mar 17, 2024 at 01:28:00AM +0800, Sui Jingfeng wrote:
-> To reduce boilerplate, use of_graph_get_remote_node() helper instead of
-> the hand-rolling code.
+It sounds like none of us really understand what data_race() is for, so I guess
+I'll just do a KCSAN build and invoke the code path to see if it complains.
+
+
+>>
+>>>>>
+>>>>> Yeah, there is only one use of data_race with that list.
+>>>>>
+>>>>> It was added in f3ebdf042df4 ("THP: avoid lock when check whether THP is in
+>>>>> deferred list").
+>>>>>
+>>>>> Looks like that was added right in v1 of that change [1], so my best guess is
+>>>>> that it is not actually required.
+>>>>>
+>>>>> If not required, likely we should just cleanup the single user.
+>>>>>
+>>>>> [1]
+>>>>> https://lore.kernel.org/linux-mm/20230417075643.3287513-2-fengwei.yin@intel.com/
+>>>>
+>>>> Do you have any recollection of why you added the data_race() markup?
+>>>
+>>> Per my understanding, this is used to mark that the code accesses
+>>> folio->_deferred_list without lock intentionally, while
+>>> folio->_deferred_list may be changed in parallel.  IIUC, this is what
+>>> data_race() is used for.  Or, my understanding is wrong?
+>> Yes. This is my understanding also.
 > 
-> Signed-off-by: Sui Jingfeng <sui.jingfeng@linux.dev>
-> ---
->  drivers/gpu/drm/bridge/thc63lvd1024.c | 24 +++---------------------
->  1 file changed, 3 insertions(+), 21 deletions(-)
+> Why don't we have a data_race() in deferred_split_folio() then, before taking
+> the lock?
 > 
-> diff --git a/drivers/gpu/drm/bridge/thc63lvd1024.c b/drivers/gpu/drm/bridge/thc63lvd1024.c
-> index d4c1a601bbb5..5f99f9724081 100644
-> --- a/drivers/gpu/drm/bridge/thc63lvd1024.c
-> +++ b/drivers/gpu/drm/bridge/thc63lvd1024.c
-> @@ -123,28 +123,10 @@ static int thc63_parse_dt(struct thc63_dev *thc63)
->  	struct device_node *endpoint;
->  	struct device_node *remote;
->  
-> -	endpoint = of_graph_get_endpoint_by_regs(thc63->dev->of_node,
-> -						 THC63_RGB_OUT0, -1);
-> -	if (!endpoint) {
-> -		dev_err(thc63->dev, "Missing endpoint in port@%u\n",
-> -			THC63_RGB_OUT0);
-> -		return -ENODEV;
-> -	}
-> -
-> -	remote = of_graph_get_remote_port_parent(endpoint);
-> -	of_node_put(endpoint);
-> -	if (!remote) {
-> -		dev_err(thc63->dev, "Endpoint in port@%u unconnected\n",
-> -			THC63_RGB_OUT0);
-> +	remote = of_graph_get_remote_node(thc63->dev->of_node,
-> +					  THC63_RGB_OUT0, -1);
-> +	if (!remote)
+> It's used a bit inconsistently here.
+> 
 
-The old logic is equivalent to of_graph_get_remote_node(), but now the
-driver will fail probing without an error message. That's not very nice
-as it leads to difficult to debug problems. I would keep one dev_err()
-here:
-
-		dev_err(thc63->dev, "No remote endpoint for port@%u\n",
-			THC63_RGB_OUT0);
-
-As your patch has been merged already, would you like to post a
-follow-up patch to fix this ?
-
->  		return -ENODEV;
-> -	}
-> -
-> -	if (!of_device_is_available(remote)) {
-> -		dev_err(thc63->dev, "port@%u remote endpoint is disabled\n",
-> -			THC63_RGB_OUT0);
-> -		of_node_put(remote);
-> -		return -ENODEV;
-> -	}
->  
->  	thc63->next = of_drm_find_bridge(remote);
->  	of_node_put(remote);
-
--- 
-Regards,
-
-Laurent Pinchart
