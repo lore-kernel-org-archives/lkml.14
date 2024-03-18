@@ -1,65 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7E652F6D
-	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 15:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA3A524DE
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 15:56:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710777344; cv=none; b=osHdL5XXPFHp8V7jKQxpIVu1//gd69WSCOkQYAwp/sI+LnOwPZcJMb2KCMZQrvly1Sy2M1QAY/kbpowS1Zhqs/XA53y/LmlfGhRblAGPIm+Glz+JW0/rIzJt8Vcry/pBdxAfvfFBXPTrK4Dl7FVzgOeFH9nqZkl4J9RgulwRkn8=
+	t=1710777371; cv=none; b=rQIeHfc3VoJ//2oWat4HhGM0eB7/FZPsReztM/Y/qSy5aMpQSFqJkSbQIwFVOg1qrf+EyN8sutOiYXgbANpsfXENz4f6e7Sp+UraEsuMOMllWJtPdISc3czryRrMxU2praVcvw305bRBut6H1ivyWRUR1xk8wiwR//3PPUlLp4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710777344; c=relaxed/simple;
-	bh=J3kVjYNZKCHPoUNJ+tUmXtQFeVyfeNdZ6VNt7xpM6fY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g/5Plhn5g0uqBudqSRiV/RvAsx9FkbkuWFyqSdFBY5BfV7lySkTEkwDG/HeP5rckLZeN5WSxo8Q7wfWW35gokguPgP8hc2cvkpVJldwfrHUNRv8689T/aCIt0PDsxxN60IIp3FQLcb9Zsbln3O8MuX6UT7tGyU7FMt70W5wma84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F1A2C43390;
-	Mon, 18 Mar 2024 15:55:42 +0000 (UTC)
-Date: Mon, 18 Mar 2024 11:58:02 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Vince
- Weaver <vincent.weaver@maine.edu>, Dave Jones <dsj@fb.com>, Jann Horn
- <jannh@google.com>, Miroslav Benes <mbenes@suse.cz>, Andy Lutomirski
- <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Masami Hiramatsu
- <mhiramat@kernel.org>, Nilay Vaish <nilayvaish@google.com>
-Subject: Re: [PATCH v2 06/11] x86/unwind/orc: Convert global variables to
- static
-Message-ID: <20240318115802.39f89b73@gandalf.local.home>
-In-Reply-To: <20240229004252.awmammhp63f5udyy@treble>
-References: <cover.1587808742.git.jpoimboe@redhat.com>
-	<43ae310bf7822b9862e571f36ae3474cfde8f301.1587808742.git.jpoimboe@redhat.com>
-	<20240228183507.78c5f130@gandalf.local.home>
-	<20240229000309.ibtuk7gr27d7cbxz@treble>
-	<20240228191406.21e894b0@gandalf.local.home>
-	<20240229004252.awmammhp63f5udyy@treble>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1710777371; c=relaxed/simple;
+	bh=VI4jxzNgLrtL4yc9lnV2mABn91LpO/tbxJWk0qqgnw4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=gSNRhGBIjvY4F8RyP/HQIWexgBBzxdThOWUd6BMU47EwuRfvQmYD0e5zkxwEi8enOVmk74gWoUZ0BEhUFLiBXIxvXezoxdV9Wl4FX+UT4+SWqENj3zEyEpjO/2hTC2FQ8WzjogY1N3sW/JxDldkoXrDcf0TyTa/0yFtbEBuJfIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7cc70b85c48so84769839f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 08:56:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710777369; x=1711382169;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l3ezPXJXQwsR7BDGZUJv1LoFcv0GvmsTyFJHfj+hkm0=;
+        b=b4aP1uYoGsQiH7RAlQfDO/suGsrC+3TfkBZsuFr4st6QxWiJ4hZj2cqQ3Ekmn/U4+J
+         go4AcXm60JQzPCMi8jqLsLJLzqR/elj0LesIvgKd7zBNn2jltHxNHzOlzJ2x9dlA+oLZ
+         L+4dvGK+AJU5IczxisLQcx4NmnNTX7B8VIxQJj6SFsFjzAkQaWeDjObmnTImcvQd4yue
+         f6ristpwW3iSy+Rjxfz1Wbh6/dDejjVerPLBsaD1JRSOqtkaHhGtK+q39+zA7p5Px9f0
+         gsnnolc+bb2S8QR5312fc7bvdX9QZwgWtfpq9ccf0zb+kLe7ZjSOMZ9f2A1uZla0XTPw
+         PZ/g==
+X-Gm-Message-State: AOJu0YxVgeLVwUkOibUitD06OkBjOZZUwKkYHNbjvUs95hkBk+jK67bx
+	RecG7W+ynkUy3VTEIkvIbjetnwVuV5qaBvd7q+r2xsaPY9rCULEvJ8bdP6tMEDi7Y1Jccqtg4SY
+	HnSWg7e8zf8zEnymRAzPxnDJnpY/FQlCIFGrMeixRI25zm59QlDdwnnHT+A==
+X-Google-Smtp-Source: AGHT+IEUfGLyUpRaWvyNz7rB5R3LkvV/ohITqAazMCUjidNwTQ4B1Nn9/24mZ9rp8ukpiFTV+vDl5bMGJ0Ycv41XgklqDZC0V1TJ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6638:2403:b0:474:f25a:6fb with SMTP id
+ z3-20020a056638240300b00474f25a06fbmr932843jat.3.1710777369179; Mon, 18 Mar
+ 2024 08:56:09 -0700 (PDT)
+Date: Mon, 18 Mar 2024 08:56:09 -0700
+In-Reply-To: <000000000000169132060fc66db3@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006148170613f165e2@google.com>
+Subject: Re: [syzbot] [PATCH net v2] nfc: nci: Fix uninit-value in nci_dev_up
+From: syzbot <syzbot+7ea9413ea6749baf5574@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 28 Feb 2024 16:42:52 -0800
-Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-> > I'm guessing because we don't have the full dwarf info?  
-> 
-> DWARF isn't needed for that.  Even the symbol table has it (as does
-> System.map).  For both globals and statics.
+***
 
-It is in System.map, but I guess the real issue is that the compiler can
-optimize it out. That is, the number is never set as it is static and the
-compiler doesn't need to do anything to make it valid. To the compiler, the
-number is just a local variable. I'm not exactly sure how it does that, as
-it sets the value in one function and uses it in another. But clang appears
-to not be setting it when it is static.
+Subject: [PATCH net v2] nfc: nci: Fix uninit-value in nci_dev_up
+Author: ryasuoka@redhat.com
 
-Either removing static or making it volatile makes it work again.
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 9f8413c4a66f2fb776d3dc3c9ed20bf435eb305e
 
-Thoughts?
+diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
+index 6c9592d05120..f471fc54c6a1 100644
+--- a/net/nfc/nci/core.c
++++ b/net/nfc/nci/core.c
+@@ -1512,6 +1512,11 @@ static void nci_rx_work(struct work_struct *work)
+ 		nfc_send_to_raw_sock(ndev->nfc_dev, skb,
+ 				     RAW_PAYLOAD_NCI, NFC_DIRECTION_RX);
+ 
++		if (!nci_plen(skb->data)) {
++			kfree_skb(skb);
++			break;
++		}
++
+ 		/* Process frame */
+ 		switch (nci_mt(skb->data)) {
+ 		case NCI_MT_RSP_PKT:
 
--- Steve
