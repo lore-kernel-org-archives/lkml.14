@@ -1,90 +1,202 @@
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E597855C0E;
-	Mon, 18 Mar 2024 18:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8FB55C14
+	for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 18:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710785493; cv=none; b=FEo0jfxvXI/TyNJg11hlL9vOB7Plb2OMMcEnHbqIPtEeGzxDUghVFCTblkYIEVxUE/bAxQ329d6c7TEY3Et8397npv3zeLgpJIuhEDiAsc/X8XFXqxvNWVqIAB0pNJlPAKWlWCCDgSUJEx50iTtlYDw3NXmoOyirGTQ8U3v3EmY=
+	t=1710785550; cv=none; b=oFzAuFO3JQdlGASKfViFR2+DIopKe8R/frWSohny9mOlNYAcRgldsSqEn8bOcDgg+pCFHTwCkD4xOZRTykTzbr+/+1omdO07FcttRGHF4170YE3ndLembHXRJQS8BcmGG++ybLNLx0X+hChZ9xc7HJ8pM72g3oK2A7RFX1eU/xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710785493; c=relaxed/simple;
-	bh=tSZn6Ejd47KXYnMy/z4XjMIbJu1/NOUxNOUSsd7bn6w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mxRJMYt7qM01zIMN4ox/GAm58e+c1BqNmtRA4CEWhWtDVkh2i+QSn4k0iUWBk3UbQyVXzX57sNazINxB/XqaXHTt6dEU0JJ8PMjA0AoZrcVmgATktXAmnJB6EVGgj3uiZEqGGJgTW1VbwjsbGCs3CxDbK2rwPHI2in7iY9ervhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ns2botfh; arc=none smtp.client-ip=209.85.161.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710785550; c=relaxed/simple;
+	bh=q0sZurVySS4J85bcn1Qd/r3D0KSYIDLkRWzpFrhP7wU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gMEohUBhVUL+rQgVXMQIKB4mz2A4OTiY7hUiuQBB0lQxlq9KQGm47DsIIVms6VeKyyDNI7ah9rDt/G/U3I36KF/ApuWwkF02cDikQTyANcw5jEEDBC2vqVc1l8bi5wZiuzziazDRNkF+XW+CgKcoOVP+a7irkoF8bOa98mx74/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SuphmOWZ; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ns2botfh"
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5a49261093cso1455257eaf.3;
-        Mon, 18 Mar 2024 11:11:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710785491; x=1711390291; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X0VKqCIpVP/BtUvyp9zPnBwFIX1VHIioMo2d+w9H9LA=;
-        b=ns2botfhXbTfzwgFKzE/H1HfdzFk1n/dhCD7pOXLMDhJyuuzxYfm4C43rzfAOB6tuw
-         R9veQQD9Z2YmDA/5o6dMtU6XWLECTRJjhPUc0vE06vC530jsGCRhKAl7pZk1zhC8/3i9
-         qqrOZbwIYB3KWDXkg6tyiav3jtE5AL7cKBi8OHjyQQjKqR42IIr0hEjck5D/+jrGfqUe
-         dY+bxC+zd16LtN/XJGI6TGlLklpcNezMBrpfG6jaS29J0YrW+XiQUI5abH1VmG7eAE/b
-         cWt4FrhiozvHcYI+i6kC+t84q324g4Ya03vkT4vMXMBwHjiYFNJ+GDMBUr3Vgn5XLPQn
-         rhuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710785491; x=1711390291;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=X0VKqCIpVP/BtUvyp9zPnBwFIX1VHIioMo2d+w9H9LA=;
-        b=izYxnqz/dGwfKLrd+Srhw1y7hlZ815khXOTvoE3cPBhex9+fwHe2EdmrtJxLj6vJXc
-         03sgM78ErjDfTTkdD+nHQ/RzB86u47TlHdrGIEpZX0yldpYwT1a5VWYt9kce9aKudW4t
-         P5Pavtkw1+NHB9856VL2U+EMCLNyCpKGNATrlkgiVBxbe5dwIftufGCPfptTODtLkBKM
-         Rm/ioIOAYSUHsXrLJYEpXCHQtULj8wNIhPoIcAKTdcIIvAJMkTqWHXHv+riNWe/5zMrI
-         G4PJ1YWk6/wwPelC+SuTt00kUNDV7/T845rIKpjo0ypKq7xcV3Pa3q+Kk13UzSEzX/k6
-         jzQA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPwr4RRycnExa3BQr5Iv8c3F7iE5/jYyzki3WucnPBgbBUCAzTmJfGECmQb158Cjaq7mNoZe2YmN9mfpjgVjvT5ThN42gEFawwdqN2X4gPTsVQlzOrkuEGLxp6z66WHzgVLXZTJE4=
-X-Gm-Message-State: AOJu0Yxe2JyWTpztQKV9msbHSlKiM1QmfArrhj2a62qT+juAD7M34/8f
-	ptszoauTa8IyfcoLM3ACm6tX//dtZ/NlBUWOoV7YnYKIOfG0wdr4qELdLL/b
-X-Google-Smtp-Source: AGHT+IEPU0++5brWJmarVPFjxJR6uw46576Yky3MEE1nT2iKYYnOieBZvcEfIWsDtDRBYexZlfip2g==
-X-Received: by 2002:a05:6359:7c20:b0:17e:76a1:4dd3 with SMTP id xm32-20020a0563597c2000b0017e76a14dd3mr17527901rwb.4.1710785490915;
-        Mon, 18 Mar 2024 11:11:30 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f5-20020a056a000b0500b006e64baac744sm8255377pfu.120.2024.03.18.11.11.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 11:11:30 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Mon, 18 Mar 2024 11:11:29 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Kousik Sanagavarapu <five231003@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Subject: Re: [PATCH v2 2/2] hwmon: lm70: fix links in doc and comments
-Message-ID: <6c8b2699-5488-4ae0-8d78-59bcb2030a2e@roeck-us.net>
-References: <20240318130840.74589-1-five231003@gmail.com>
- <20240318154540.90613-1-five231003@gmail.com>
- <20240318154540.90613-3-five231003@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SuphmOWZ"
+Message-ID: <66a7d0c1-b5c0-4789-82ef-0f72b68bec44@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1710785546;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PdqzyKI2koakcy8YsZ2jjX7q7e8S3iio9zSn4TLLUgE=;
+	b=SuphmOWZaFROvQhwZIlGghHV0KPq2y3Pl672PwMULOJaIdI8Sv2nd2uVHWuiqGYkhn44MC
+	eOBhR57lphO9vqYRiRZQQmyk5nm6u1dRMV54pyKP1EfOXm4b2hfyfQt+lP70Mu83H5PRiV
+	Y6obgMQFF50IgPKs/CsuqKjG4/6JhoY=
+Date: Mon, 18 Mar 2024 14:12:22 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240318154540.90613-3-five231003@gmail.com>
+Subject: Re: [PATCH 5/6] drm: zynqmp_dp: Optionally ignore DPCD errors
+Content-Language: en-US
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ dri-devel@lists.freedesktop.org, David Airlie <airlied@gmail.com>,
+ linux-kernel@vger.kernel.org, Michal Simek <michal.simek@amd.com>,
+ linux-arm-kernel@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>
+References: <20240315230916.1759060-1-sean.anderson@linux.dev>
+ <20240315230916.1759060-6-sean.anderson@linux.dev>
+ <20240318174757.GL13682@pendragon.ideasonboard.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20240318174757.GL13682@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Mar 18, 2024 at 09:08:35PM +0530, Kousik Sanagavarapu wrote:
-> Update links in the documentation and in-code comments which point to
-> the datasheet.
+On 3/18/24 13:47, Laurent Pinchart wrote:
+> Hi Sean,
 > 
-> The current links don't work because National Semiconductor (which is
-> the manufacturer of this board and lm70) has been a part of Texas
-                      ^^^^^^^^^^
+> Thank you for the patch.
+> 
+> On Fri, Mar 15, 2024 at 07:09:15PM -0400, Sean Anderson wrote:
+>> When testing, it's convenient to be able to ignore DPCD errors if there
+>> is test equipment which can't emulate a DPRX connected to the output.
+>> Add some (currently-unused) options to ignore these errors and just
+>> reconfigure our internal registers as we usually would.
+> 
+> This seems to be a problem that is not limited to the ZynqMP DP.
+> Wouldn't it be better to solve it in the DRM DP DPCD helpers instead ?
+> You could expose a parameter on the AUX bus in debugfs to ignore errors,
+> and cause the drm_dp_dpcd_write*() functions to return 0.
 
-Is this a leftover from the other patch ? The lm70 driver supports
-the LM70 chip, not a specific board.
+I think this is probably the easiest thing. I'll add this for v2.
 
-Guenter
+I think something similar might be nice for HPD events (instead of always
+ignoring them in test mode). This would make it easier to add DPRX-driven
+testing in the future.
+
+--Sean
+
+>> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+>> ---
+>> 
+>>  drivers/gpu/drm/xlnx/zynqmp_dp.c | 37 ++++++++++++++++++++------------
+>>  1 file changed, 23 insertions(+), 14 deletions(-)
+>> 
+>> diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+>> index 24043847dab4..040f7b88ee51 100644
+>> --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
+>> +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+>> @@ -628,6 +628,7 @@ static void zynqmp_dp_adjust_train(struct zynqmp_dp *dp,
+>>   * zynqmp_dp_update_vs_emph - Update the training values
+>>   * @dp: DisplayPort IP core structure
+>>   * @train_set: A set of training values
+>> + * @ignore_dpcd: Ignore DPCD errors
+>>   *
+>>   * Update the training values based on the request from sink. The mapped values
+>>   * are predefined, and values(vs, pe, pc) are from the device manual.
+>> @@ -635,15 +636,19 @@ static void zynqmp_dp_adjust_train(struct zynqmp_dp *dp,
+>>   * Return: 0 if vs and emph are updated successfully, or the error code returned
+>>   * by drm_dp_dpcd_write().
+>>   */
+>> -static int zynqmp_dp_update_vs_emph(struct zynqmp_dp *dp, u8 *train_set)
+>> +static int zynqmp_dp_update_vs_emph(struct zynqmp_dp *dp, u8 *train_set,
+>> +				    bool ignore_dpcd)
+>>  {
+>>  	unsigned int i;
+>>  	int ret;
+>>  
+>>  	ret = drm_dp_dpcd_write(&dp->aux, DP_TRAINING_LANE0_SET, train_set,
+>>  				dp->mode.lane_cnt);
+>> -	if (ret < 0)
+>> -		return ret;
+>> +	if (ret < 0) {
+>> +		if (!ignore_dpcd)
+>> +			return ret;
+>> +		dev_warn(dp->dev, "failed to update vs/emph\n");
+>> +	}
+>>  
+>>  	for (i = 0; i < dp->mode.lane_cnt; i++) {
+>>  		u32 reg = ZYNQMP_DP_SUB_TX_PHY_PRECURSOR_LANE_0 + i * 4;
+>> @@ -692,7 +697,7 @@ static int zynqmp_dp_link_train_cr(struct zynqmp_dp *dp)
+>>  	 * So, This loop should exit before 512 iterations
+>>  	 */
+>>  	for (max_tries = 0; max_tries < 512; max_tries++) {
+>> -		ret = zynqmp_dp_update_vs_emph(dp, dp->train_set);
+>> +		ret = zynqmp_dp_update_vs_emph(dp, dp->train_set, false);
+>>  		if (ret)
+>>  			return ret;
+>>  
+>> @@ -757,7 +762,7 @@ static int zynqmp_dp_link_train_ce(struct zynqmp_dp *dp)
+>>  		return ret;
+>>  
+>>  	for (tries = 0; tries < DP_MAX_TRAINING_TRIES; tries++) {
+>> -		ret = zynqmp_dp_update_vs_emph(dp, dp->train_set);
+>> +		ret = zynqmp_dp_update_vs_emph(dp, dp->train_set, false);
+>>  		if (ret)
+>>  			return ret;
+>>  
+>> @@ -785,11 +790,12 @@ static int zynqmp_dp_link_train_ce(struct zynqmp_dp *dp)
+>>   * @lane_cnt: The number of lanes to use
+>>   * @enhanced: Use enhanced framing
+>>   * @downspread: Enable spread-spectrum clocking
+>> + * @ignore_dpcd: Ignore DPCD errors; useful for testing
+>>   *
+>>   * Return: 0 on success, or -errno on failure
+>>   */
+>>  static int zynqmp_dp_setup(struct zynqmp_dp *dp, u8 bw_code, u8 lane_cnt,
+>> -			   bool enhanced, bool downspread)
+>> +			   bool enhanced, bool downspread, bool ignore_dpcd)
+>>  {
+>>  	u32 reg;
+>>  	u8 aux_lane_cnt = lane_cnt;
+>> @@ -812,21 +818,24 @@ static int zynqmp_dp_setup(struct zynqmp_dp *dp, u8 bw_code, u8 lane_cnt,
+>>  
+>>  	ret = drm_dp_dpcd_writeb(&dp->aux, DP_LANE_COUNT_SET, aux_lane_cnt);
+>>  	if (ret < 0) {
+>> -		dev_err(dp->dev, "failed to set lane count\n");
+>> -		return ret;
+>> +		dev_warn(dp->dev, "failed to set lane count\n");
+>> +		if (!ignore_dpcd)
+>> +			return ret;
+>>  	}
+>>  
+>>  	ret = drm_dp_dpcd_writeb(&dp->aux, DP_MAIN_LINK_CHANNEL_CODING_SET,
+>>  				 DP_SET_ANSI_8B10B);
+>>  	if (ret < 0) {
+>> -		dev_err(dp->dev, "failed to set ANSI 8B/10B encoding\n");
+>> -		return ret;
+>> +		dev_warn(dp->dev, "failed to set ANSI 8B/10B encoding\n");
+>> +		if (!ignore_dpcd)
+>> +			return ret;
+>>  	}
+>>  
+>>  	ret = drm_dp_dpcd_writeb(&dp->aux, DP_LINK_BW_SET, bw_code);
+>>  	if (ret < 0) {
+>> -		dev_err(dp->dev, "failed to set DP bandwidth\n");
+>> -		return ret;
+>> +		dev_warn(dp->dev, "failed to set DP bandwidth\n");
+>> +		if (!ignore_dpcd)
+>> +			return ret;
+>>  	}
+>>  
+>>  	zynqmp_dp_write(dp, ZYNQMP_DP_LINK_BW_SET, bw_code);
+>> @@ -860,7 +869,7 @@ static int zynqmp_dp_train(struct zynqmp_dp *dp)
+>>  
+>>  	ret = zynqmp_dp_setup(dp, dp->mode.bw_code, dp->mode.lane_cnt,
+>>  			      drm_dp_enhanced_frame_cap(dp->dpcd),
+>> -			      dp->dpcd[3] & 0x1);
+>> +			      dp->dpcd[3] & 0x1, false);
+>>  	if (ret)
+>>  		return ret;
+>>  
+>> @@ -877,7 +886,7 @@ static int zynqmp_dp_train(struct zynqmp_dp *dp)
+>>  	ret = drm_dp_dpcd_writeb(&dp->aux, DP_TRAINING_PATTERN_SET,
+>>  				 DP_TRAINING_PATTERN_DISABLE);
+>>  	if (ret < 0) {
+>> -		dev_err(dp->dev, "failed to disable training pattern\n");
+>> +		dev_warn(dp->dev, "failed to disable training pattern\n");
+>>  		return ret;
+>>  	}
+>>  	zynqmp_dp_write(dp, ZYNQMP_DP_TRAINING_PATTERN_SET,
+> 
+
