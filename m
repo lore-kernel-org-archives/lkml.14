@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD28249F7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD02249F5;
 	Mon, 18 Mar 2024 07:47:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710748029; cv=none; b=mptGTlB4RvweZu5WKd6J5oZDCAqGNxHcTRpUjwJA+sVrr3kY5XWveg0EdLN9cqBJSM/76EMPqw+LGtwOvDmmV21/XC6L+eQ8HyXJeYZF5xXGyIVKo/cED9VG02GMw+yMSty0IzWEHXBBru7I2to8yMKBnnS3KyzuzYJYFGPKUmQ=
+	t=1710748029; cv=none; b=cHBExE1ZDpdd2IrHwodci79WTQ+Zw9U5x5S9/QbpqQMT1I8TAJCyV50Jlnuk3mj68la9ffiQniD9WNtIMI6QRJ34dUAQp4ahIXpcbTAMNa0JHzi5GNnuhMzzardEBKqajtu6W5nhZAvn4mG4BHQoYFYE/E+tpfExEbLKjE+yItI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710748029; c=relaxed/simple;
-	bh=Qg6wGn348TMW5vD8jxjP5W64953WeOV0NbR9aKpKJWE=;
+	bh=ITdv2pn5D4CqC5MwIs/6m1cR8j1oHZxQEiexAzXrA4A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OA/3AFSICk8s/htj1SUt9vJwKGM2har9KNp/rTjZ4+usqMSYz8dWQGSIjh6A8gqfcrI8dtMqYnte6GaF49+5T2XDWAa+eTeMo8FhYpVMfMXTUCBknfczbFRAIKMMUK/KKRBdRn2e3g1ZWPvjQRlknqMGLJoXw4uZmJsFI985H3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFJv2dbo; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=jHtTiLw44VwMriSsTV07S8v2DCNwxhMNI9wBdt7U5cl+GLskWKVnEgmK60IWLbVquwgjz/7qp0Yxqr7ZiKfttaDwU4P3kHh6x5Zv16oBefEVWpoglZDI+eoytmzT89s4Ey6kWWcnlweat8QPb4AWdwYktnW74nNioQLAUYm5abM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o96972pk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFJv2dbo"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id ED23DC433A6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o96972pk"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D36FAC43390;
 	Mon, 18 Mar 2024 07:47:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710748029;
-	bh=Qg6wGn348TMW5vD8jxjP5W64953WeOV0NbR9aKpKJWE=;
+	s=k20201202; t=1710748028;
+	bh=ITdv2pn5D4CqC5MwIs/6m1cR8j1oHZxQEiexAzXrA4A=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=fFJv2dbopy2N08oK7/uaLZlAJAyNVDYDT5UVFJPMifpqxz/tRnpMo+yFC6JXDqbqc
-	 n9AzVWq5IPAl6K5Sid0rcE788s1jlezqbTklhyPpY32u1UP1RbIqo+FmfWiiAdAh2M
-	 /VGhLLMZpxuU9ic2Kli49ONnv05/wXO/vA8EB+ejS9vsqBhuaVoo+pcwYU8gqPeDpD
-	 ed9H1CNibz0o5nSq7s8YmpxdWrfrySPqd3t3ZcXBexui5TYXqbZvkZbLJYqi0gNZm7
-	 fniXmkj6Hi1OTjvIhcAYhfCriy8B9N9hFP8q3qvv7xIwfUIxUAK6bUkNRrSZxeYa4m
-	 wIbk1bAgB0zLA==
+	b=o96972pkM02lrb3svhmh8szqud514TtEC+38sYeWCJV2mtuzlFDo2wmYF797V8aHp
+	 0i8dXkxLEHsVohyn46NBAgDMbKIMEANoajNUa/4X+BoeCAV5jMsIewUBqf4CdwlW/1
+	 DFPC2B8g+iFXijPPURDbEpT2bBYkM6YV20w38vbLjuhAER/TGx7nBiHGOSvNYmkt/K
+	 cKpVqyQ3ov8G/CICVx0rAjl07SnuUULiOqR9lEA8PBLDMotEpSVv1y/0iaQcEz20YT
+	 4Box+xyVoPMlT5YhVhE6+lrERzQEsNU2HqslCQD2Xo05Cn8UK5Xds57CAigYXv0xzI
+	 MAVRfy02OHHRw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD04BC54E6A;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C23BEC54E58;
 	Mon, 18 Mar 2024 07:47:08 +0000 (UTC)
 From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
  <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Mon, 18 Mar 2024 10:46:25 +0300
-Subject: [PATCH 3/3] net: phy: mediatek-ge: do not disable EEE
- advertisement
+Date: Mon, 18 Mar 2024 10:46:23 +0300
+Subject: [PATCH 1/3] net: dsa: mt7530: fix enabling EEE on MT7531 switch on
+ all boards
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,7 +43,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Message-Id: =?utf-8?q?=3C20240318-for-net-mt7530-fix-eee-for-mt7531-mt7988-v?=
- =?utf-8?q?1-3-3f17226344e8=40arinc9=2Ecom=3E?=
+ =?utf-8?q?1-1-3f17226344e8=40arinc9=2Ecom=3E?=
 References: =?utf-8?q?=3C20240318-for-net-mt7530-fix-eee-for-mt7531-mt7988-v?=
  =?utf-8?q?1-0-3f17226344e8=40arinc9=2Ecom=3E?=
 In-Reply-To: =?utf-8?q?=3C20240318-for-net-mt7530-fix-eee-for-mt7531-mt7988-?=
@@ -66,11 +66,11 @@ Cc: Bartel Eerdekens <bartel.eerdekens@constell8.be>,
  linux-mediatek@lists.infradead.org, 
  =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710748010; l=1173;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710748010; l=2411;
  i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=5X/oaW7mTS2TiAUhw0sZVt3FkSCBq14+if6oX62AfQ4=;
- b=+MNXFbgyZ7XWlbB+caj20Ex4VdOFh3bRWNk+7DxEulDTftFo/dQMZlnVMPgDMgzfE7zV31TEr
- 3C0SXiZRhwiArszbs0GX8DiM1j4yZODltXA+UTuvosvV+CjFhIJGXcI
+ bh=n6GBg3P0wOtkdb07AnyqLGs2kfHYSdBgEmtkDwKT6B8=;
+ b=I2LmPwjiQmjqjwCuXvNT3y9Oy+74/n1FBJ1U/eAziVxdZ8NilIckTM/4zYde6k4K5Ari39+4m
+ ZWJOVvadHrTCRVVdUIeNpsCFYJciXsPmNKj4nHEmpDy9B+jOl3NrFwy
 X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
  pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
 X-Endpoint-Received:
@@ -80,34 +80,64 @@ Reply-To: <arinc.unal@arinc9.com>
 
 From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-There's no need to disable Energy-Efficient Ethernet (EEE) advertisement on
-the MT7530 and MT7531 switch PHYs. EEE works fine on MT7530 and MT7531
-switch PHYs. Remove the code where EEE advertisement is disabled.
+The commit 40b5d2f15c09 ("net: dsa: mt7530: Add support for EEE features")
+brought EEE support but did not enable EEE on MT7531 switch MACs. EEE is
+enabled on MT7531 switch MACs either by pulling the LAN2LED0 pin low on the
+board (bootstrapping), or unsetting the EEE_DIS bit on the trap register.
 
-This is a bugfix because there's a possible race condition where the
-mediatek-ge driver would kick in after the MT7530 DSA subdriver which would
-have EEE disabled until manually enabled.
+There are existing boards that were not designed to pull the pin low.
+Therefore, unset the EEE_DIS bit on the trap register.
 
-Fixes: e40d2cca0189 ("net: phy: add MediaTek Gigabit Ethernet PHY driver")
+Unlike MT7530, the modifiable trap register won't be populated identical to
+the trap status register after reset. Therefore, read from the trap status
+register, modify the bits, then write to the modifiable trap register.
+
+The disable EEE bit on the trap pertains to the LAN2LED0 pin which is
+usually used to control an LED. Once the bit is unset, the pin will be low.
+That will make the active low LED turn on.
+
+The pin is controlled by the switch PHY. It seems that the PHY controls the
+pin in the way that it inverts the pin state. That means depending on the
+wiring of the LED connected to LAN2LED0 on the board, the LED may be on
+without an active link.
+
+Fixes: 40b5d2f15c09 ("net: dsa: mt7530: Add support for EEE features")
 Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
 ---
- drivers/net/phy/mediatek-ge.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/net/dsa/mt7530.c | 7 +++++++
+ drivers/net/dsa/mt7530.h | 1 +
+ 2 files changed, 8 insertions(+)
 
-diff --git a/drivers/net/phy/mediatek-ge.c b/drivers/net/phy/mediatek-ge.c
-index a493ae01b267..54ea64a37ab3 100644
---- a/drivers/net/phy/mediatek-ge.c
-+++ b/drivers/net/phy/mediatek-ge.c
-@@ -23,9 +23,6 @@ static int mtk_gephy_write_page(struct phy_device *phydev, int page)
+diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+index 678b51f9cea6..d741d03969eb 100644
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -2458,6 +2458,13 @@ mt7531_setup(struct dsa_switch *ds)
+ 	/* Reset the switch through internal reset */
+ 	mt7530_write(priv, MT7530_SYS_CTRL, SYS_CTRL_SW_RST | SYS_CTRL_REG_RST);
  
- static void mtk_gephy_config_init(struct phy_device *phydev)
- {
--	/* Disable EEE */
--	phy_write_mmd(phydev, MDIO_MMD_AN, MDIO_AN_EEE_ADV, 0);
--
- 	/* Enable HW auto downshift */
- 	phy_modify_paged(phydev, MTK_PHY_PAGE_EXTENDED, 0x14, 0, BIT(4));
++	/* Allow modifying the trap and enable Energy-Efficient Ethernet (EEE).
++	 */
++	val = mt7530_read(priv, MT7531_HWTRAP);
++	val |= CHG_STRAP;
++	val &= ~EEE_DIS;
++	mt7530_write(priv, MT7530_MHWTRAP, val);
++
+ 	if (!priv->p5_sgmii) {
+ 		mt7531_pll_setup(priv);
+ 	} else {
+diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
+index a71166e0a7fc..509ed5362236 100644
+--- a/drivers/net/dsa/mt7530.h
++++ b/drivers/net/dsa/mt7530.h
+@@ -457,6 +457,7 @@ enum mt7531_clk_skew {
+ #define  XTAL_FSEL_M			BIT(7)
+ #define  PHY_EN				BIT(6)
+ #define  CHG_STRAP			BIT(8)
++#define  EEE_DIS			BIT(4)
  
+ /* Register for hw trap modification */
+ #define MT7530_MHWTRAP			0x7804
 
 -- 
 2.40.1
