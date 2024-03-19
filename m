@@ -1,142 +1,118 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5077E7D098;
-	Tue, 19 Mar 2024 09:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EBA7D079;
+	Tue, 19 Mar 2024 09:51:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710841869; cv=none; b=lsdrqsHcnW6faZeWpdQIjy9bjd97ksC53WX6kJ5wBRyD1652WveF4+eHG2yP05LEEReK/f7dNTgZ+K3R6a01FJIBFT08YXqbFUuZsM6KIRLKZcXwLcaRmnk8ZoXbNf0R3zF4ElR3XjW5XeDFF5r1Dzd57JwyXQGZAAGAKZ+jX8U=
+	t=1710841877; cv=none; b=EXdhtMRsOzi3QHa3TJNWggn72rhpXqp5uz3XjgeyHt1yby0lFSrTveGNmD2ujHRVxfT7EcISZ48N6F5lzlB2iKBtDBpAyGdAqoLpiwf7h2F7IMhpeoFMX5bxHoerAdVuJ1HzFuhiRmimV4BsRPn+WoPfNv2h9UhPOR69iHUgYs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710841869; c=relaxed/simple;
-	bh=0spjMsQPlJTDmjGtorWPzWT87tD+gg4/0qmis1bJQ3U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=h+SJ4wcehIu/+DPoqA3EU/xapFOMadXlhnYGyfT6gZDuFL1WOeG/5rK9WcyCFl5CCt66BxBJNdmDMcFqrfXOz15YP0aZnLhXQKbCK/8oOvqK2JH3iBNYqBqJpaFdf7mxxr9ow/j/SikWJzZBkqTM1jNs5iFdOfijhIi4rAdQUgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=QmBDf7cd; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1710841877; c=relaxed/simple;
+	bh=JxehcCxVCci9hB9vvRL4/kO7jeL7y8Ew7zyQWMJsRtw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BOOZWnheGyhYWAkp69RpDFoGRaGw3vzqOxv73/hby0hML3rnFKUVd43K9TQdQMWh9fGSPePP4J0mBsvajGIX0K7GaCNF8C5SD2YSGr9O5C51W7i4P8KNWA1rss54hDkWOvvW10deSjKJHlUheSAQQBNK4EVsvePLY5jZQiZE65o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cJju4ed9; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QmBDf7cd"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42J9B0G6003146;
-	Tue, 19 Mar 2024 09:51:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=kfFT1P/IgpeSJp39XAmKjKLqlIuz1wFwnZS2Gt96AvU=;
- b=QmBDf7cdoRrNMAKh67Jqt6V2KPs8+RXh2dJGBZKMJJ401R58aj10Di44yX8/0FGcqkfd
- WUoAglFmUV+mM1RkSPS6mwajLkMDC8KsaVcLYqvwzVe8O3+YrtGkSd937GXu83vqTsa/
- SjHVokQfXHGy8a8wZVQ1S+vFp/URc8L4wW1PCHkFShDwCFjVZedKVmCRDHz0Kr/XK+Qj
- ObYCkPVroS4sFDszPLZM2UbEGeaBMgDZLrPDjZqQ/3WphQ/Jrn4MvHZxgywtTPKWj/zy
- uXSk7dJt5gqzD/zqZnJEHdDUvgQjjDF0hHBKZG29VA1N+JVnS/QNkwE6rHQXrkvsCY7i eQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wy74u8jtu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 09:51:02 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42J9p15R024490;
-	Tue, 19 Mar 2024 09:51:01 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wy74u8jtr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 09:51:01 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42J73Fcg017190;
-	Tue, 19 Mar 2024 09:51:01 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wwnrt6u1k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 09:51:00 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42J9otlJ48955860
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 19 Mar 2024 09:50:57 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8A4BC20040;
-	Tue, 19 Mar 2024 09:50:55 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 523F620043;
-	Tue, 19 Mar 2024 09:50:55 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 19 Mar 2024 09:50:55 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, irogers@google.com, namhyung@kernel.org
-Cc: svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH 1/2] perf report: Fix PAI counter names for s390 virtual machines
-Date: Tue, 19 Mar 2024 10:50:42 +0100
-Message-Id: <20240319095043.857594-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJju4ed9"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56845954ffeso7101221a12.2;
+        Tue, 19 Mar 2024 02:51:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710841874; x=1711446674; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KiOL3ZeQ5p28cPkTjDX06bUoAopPTJOQ4KCn7hfnHCM=;
+        b=cJju4ed9RJVxQpRcsBplvXbe8T59yRsdvFxynoIMfqfFh+xRSwCNbA5AiFirXH1v+W
+         7E+fzRoC7aN10zDCeEFt5kD6LP299TbpCZe+zDMATer8sVjZqbQnuWvlpuVA4+EOHcCV
+         YOQSBbACdJKXTXKZmN7iDbIgHyHU2JUn1LIt2Smku7ylPyrF3xrjwPIuurEuKh58SgKa
+         YSLefQuFBg12A9lB3avKzcz5eB0hpZhV4huxj2GG5gbhrGDY8WyLlCCOsb1rsPynHlH5
+         9aORxUF7HDN9KkPzQUq9Pw0ftKxNleisYLxxJWsZkpoRzRwuByChmvk1Imn81h3EUtlQ
+         m1ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710841874; x=1711446674;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KiOL3ZeQ5p28cPkTjDX06bUoAopPTJOQ4KCn7hfnHCM=;
+        b=IpFOFZSnW/7tuFrNsYXKALfzpERhiJ1bRDU9GKP6O5f2eb8ddHYXZsraRppGz3jF62
+         YoplE6EMHGNTgOBCxDV7r2b32HMgamzXJ5kZ7G4VOZH+/kTaKZFTLwPDrH8pw5fyeDa+
+         N3g/ZRMoTVSsS6qygm7NK8j0LiXV02DmjgQlPE0nsPrOfPTkw09i+OQeQT6rT3PtBhDS
+         8jok8ZrSyDOmaZebz5hcf30tnc6GCSBswljDqaCTPv3PfKyuyNst0MzTfxeSb3ITOesU
+         3uqYOIAfvgTgVU6NytCML47tWAXR4XFozHobBtAOKSCA5qMwLsvKwE0Uu1jQmpWAJqLJ
+         bupg==
+X-Forwarded-Encrypted: i=1; AJvYcCX6vBLJT7oFivagErLf6Tnwk6wRJbIhWp6RLxr93nQRAZhGp7KyLpXIeQk2ujxUGJKvO1QYe/QuwzgdzyoJcamYCW6oBo1o4CmRtQZzCkbfFnP4bWRuzknbyvWQywFQiu1ZWdHfKY0+SHIrzS+DGhPebHu1hqRaON+EAzt6rk+Y6tsBZqOIaw==
+X-Gm-Message-State: AOJu0Yx93qqjfWCjLFseyFlhjptSlRY8exUu7ptL5yqIdkVQKN6AYBHy
+	iknrIVpPpYpzxBoC4/a9e/ns+OeCrQZq+Ve7QhsMP6E0N0U2nRcV
+X-Google-Smtp-Source: AGHT+IGaNa8MmH5VMvbhTYffho95xdFBcg4tILM5madmPt8uqxtbEjuaqvHFZp+/KevR/1JD/RhVSg==
+X-Received: by 2002:a17:907:369:b0:a46:22fc:74d3 with SMTP id rs9-20020a170907036900b00a4622fc74d3mr1100248ejb.72.1710841873873;
+        Tue, 19 Mar 2024 02:51:13 -0700 (PDT)
+Received: from [192.168.20.170] (57657817.catv.pool.telekom.hu. [87.101.120.23])
+        by smtp.gmail.com with ESMTPSA id hg9-20020a1709072cc900b00a46aef32642sm3149493ejc.170.2024.03.19.02.51.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Mar 2024 02:51:13 -0700 (PDT)
+Message-ID: <b7467362-354b-460d-83b3-ced871c775d1@gmail.com>
+Date: Tue, 19 Mar 2024 10:51:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] clk: qcom: apss-ipq-pll: use an 1-D array for Huayra
+ pll register offsets
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240318-apss-ipq-pll-cleanup-v1-0-52f795429d5d@gmail.com>
+ <20240318-apss-ipq-pll-cleanup-v1-2-52f795429d5d@gmail.com>
+ <CAA8EJpo2Vo-XqstNk69dWW8pqNkGi0tz3UmHY7j6LLKd-yH22w@mail.gmail.com>
+ <09c91419-8bce-49dc-86d1-3ed1b9f28ee6@gmail.com>
+ <CAA8EJpq+PUavezxAwpStm98_3uW7HQraFyUdr6uwZCNHJ4yU5w@mail.gmail.com>
+Content-Language: hu
+From: Gabor Juhos <j4g8y7@gmail.com>
+In-Reply-To: <CAA8EJpq+PUavezxAwpStm98_3uW7HQraFyUdr6uwZCNHJ4yU5w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: WGk10ZOD1v8jBIM4hO6cgv0zJwkMzaUB
-X-Proofpoint-GUID: YhFx5wsQgtIVvoJ6XEY-ZCitFLebkiVL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-18_12,2024-03-18_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 mlxscore=0
- mlxlogscore=999 impostorscore=0 spamscore=0 bulkscore=0 suspectscore=0
- priorityscore=1501 phishscore=0 adultscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403140000 definitions=main-2403190075
 
-s390 introduced Processor Activity Instrumentation (PAI) counter
-facility on LPAR and virtual machines z/VM for models 3931 and 3932.
-These counters are stored as raw data in the perf.data file and are
-displayed with command
+2024. 03. 19. 1:09 keltezéssel, Dmitry Baryshkov írta:
+> On Mon, 18 Mar 2024 at 23:23, Gabor Juhos <j4g8y7@gmail.com> wrote:
+>>
+>> 2024. 03. 18. 15:16 keltezéssel, Dmitry Baryshkov írta:
+>>
+>> ...
+>>
+>>>> +static const u8 ipq_pll_huayra_regs[PLL_OFF_MAX_REGS] = {
+>>>> +       [PLL_OFF_L_VAL] = 0x08,
+>>>> +       [PLL_OFF_ALPHA_VAL] = 0x10,
+>>>> +       [PLL_OFF_USER_CTL] = 0x18,
+>>>> +       [PLL_OFF_CONFIG_CTL] = 0x20,
+>>>> +       [PLL_OFF_CONFIG_CTL_U] = 0x24,
+>>>> +       [PLL_OFF_STATUS] = 0x28,
+>>>> +       [PLL_OFF_TEST_CTL] = 0x30,
+>>>> +       [PLL_OFF_TEST_CTL_U] = 0x34,
+>>>>  };
+>>>
+>>> Can you please move this to clk_alpha_pll? We can then drop it from
+>>> clk-cbf-8996.c too.
+>>
+>> Sure, I can do that. By any chance, do you have a suggestion for the name of the
+>> new enum value to be used in the clk_alpha_pll_regs array?
+>>
+>> CLK_ALPHA_PLL_TYPE_HUAYRA_IPQ seems too generic, and it would be a bit
+>> misleading using that for MSM8996 CBF.
+>>
+>> CLK_ALPHA_PLL_TYPE_HUAYRA_IPQ6018_A53 is quite long and it is also misleading.
+>>
+>> Maybe we could use CLK_ALPHA_PLL_TYPE_IPQ6018_A53 which is short and unique
+>> enough and we could add an alias for that like CLK_ALPHA_PLL_TYPE_MSM8996_CBF or
+>> something similar.
+> 
+> HUAYRA_APSS ?
 
- # ./perf report -i /tmp//perfout-635468 -D | grep Counter
-	Counter:007 <unknown> Value:0x00000000000186a0
-	Counter:032 <unknown> Value:0x0000000000000001
-	Counter:032 <unknown> Value:0x0000000000000001
-	Counter:032 <unknown> Value:0x0000000000000001
- #
-
-However on z/VM virtual machines, the counter names are not retrieved
-from the PMU and are shown as '<unknown>'.
-This is caused by the CPU string saved in the mapfile.csv for this
-machine:
-
-   ^IBM.393[12].*3\.7.[[:xdigit:]]+$,3,cf_z16,core
-
-This string contains the CPU Measurement facility first and second
-version number and authorization level (3\.7.[[:xdigit:]]+).
-These numbers do not apply to the PAI counter facility.
-In fact they can be omitted.
-Shorten the CPU identification string for this machine to manufacturer
-and model. This is sufficient for all PMU devices.
-
-Output after:
- # ./perf report -i /tmp//perfout-635468 -D | grep Counter
-	Counter:007 km_aes_128 Value:0x00000000000186a0
-	Counter:032 kma_gcm_aes_256 Value:0x0000000000000001
-	Counter:032 kma_gcm_aes_256 Value:0x0000000000000001
-	Counter:032 kma_gcm_aes_256 Value:0x0000000000000001
- #
-
-Fixes: b539deafbadb ("perf report: Add s390 raw data interpretation for PAI counters")
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
----
- tools/perf/pmu-events/arch/s390/mapfile.csv | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/pmu-events/arch/s390/mapfile.csv b/tools/perf/pmu-events/arch/s390/mapfile.csv
-index a918e1af77a5..b22648d12751 100644
---- a/tools/perf/pmu-events/arch/s390/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/s390/mapfile.csv
-@@ -5,4 +5,4 @@ Family-model,Version,Filename,EventType
- ^IBM.296[45].*[13]\.[1-5].[[:xdigit:]]+$,1,cf_z13,core
- ^IBM.390[67].*[13]\.[1-5].[[:xdigit:]]+$,3,cf_z14,core
- ^IBM.856[12].*3\.6.[[:xdigit:]]+$,3,cf_z15,core
--^IBM.393[12].*3\.7.[[:xdigit:]]+$,3,cf_z16,core
-+^IBM.393[12].*$,3,cf_z16,core
--- 
-2.44.0
-
+Ok, sounds good.
