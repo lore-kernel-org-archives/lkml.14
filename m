@@ -1,162 +1,151 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2133.outbound.protection.outlook.com [40.107.243.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F963BBD4;
-	Tue, 19 Mar 2024 14:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.133
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710858368; cv=fail; b=swtwbFeq6gXP9X988X1ioAvLdwLz5mSpvyEQ5TxUIOboFTW/RkMpCAlsCT77UAsXCutM6NJyQup+yZNxXpOqKYVVK2F/ZXcoEBytQT51xYVxuF34nVDOG5an1m/DyWCUhgBg4vouGm8WCXpYUn3TTA8e7b43wv+FzC38w9sAekA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710858368; c=relaxed/simple;
-	bh=c1yHo/rslxZ4a7VM2c7tYsMh7HDymuoBYwYmdoTt96A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=DnGM3M2d8eSuFaPg/kFyRrRWvPqWOQdD0wQCHtI5hRb9L2RZJ9NQxBYqE72yHMLPvSo0V0SY0xHzmFQCoLTJHndCQSTXMBndFlTq+VlGt46DCb/s3j1L8ObpDuGcaX2JS6wqWY9JMc7k8Nx8VCOmOD9aATVmlpfrQhfOK7yNOy0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=pYBWP/LO; arc=fail smtp.client-ip=40.107.243.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F43281AAE
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 14:26:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710858370; cv=none; b=rf5VfzWFQ8rQ9deKROnoilFxfxV+uUdmrIYVOj/GT78V7fN6Q93/cNBZoAxnVbVhpUDzvYryXFHFAZr3b0kaN86dFfzENCQGjP0JYTwJizmH+mbGQa0OgpShAAPq2Pu+XrXDyKkQpDh3QcapPW7oDLJ/x68xdAz0wSAzv9quHJM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710858370; c=relaxed/simple;
+	bh=/ai7rsRCGQJwbmMN9+0MqsXjffyEnlQWeJfS3vA+etg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ByJRSQ2tnxFHy0vw7rhNLOL304KXnsU20PmL+fFR5Qs1mWZ1pgRMENFdACK6n4h3WuWoNQ/NU8GTZPFMWjJph1iKd5KCSx06E51uXe+5ESleSmYnDgUlM91zXM2To5yA6t9h9+CA8SQpm3zox3MKmsj5S31MdxAHMrzIecktEoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=ZsdNFS5C; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="pYBWP/LO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D6Mnws2FRQbV35ljQbJS1DvzVhmAbxkGt9swco6p30H8xeeOsKGjJ8lPcqIyI6k3hVWhRHRQWcrn/ywIDjPR/jfz9wakjUT3jR8YOPuAOwnLDoWAWtDjkYa3upjqLCvW+dkQ4RgeVdFFOW+GcKu6V/hJqT7ErOfXt3Bn1ykKsI3VEGFe7R+J6qEVw35u4eHKoKJ0JhM5BO/uIxqLQ31+kXzQSAyVpBZcYVUTmGXx2mzSX6X9foHFV2RuYJM9QGhjJH4kzPDacHKqXda0YFIOSQ1dSKkS7Z6Hc7xGCoZsn1DGAKKgRaBdwHe1SQ18HOuJUmoABIMpILNK0rY7xxP6Dg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1Qn19pTdajoaYoKQKKj6XWFsvxA90ru+ajjkRxTc5Ys=;
- b=BCzJqCxyTe3pt3wijK8Xh4NbjdVGBz17lDYiWSdMhf6/t2nDnVMzmUO3qsorXkFm+P/Oth9DitIDXCYF8vcUiEr+2FzTkrGMK68zydLCo6TKZ3NGqDiXRJRrOv+JePY2tf2EKjPVhpFgARYLVkwRx0WKgpetL5oZnzmWtmQvjgO/buZTRUxKjgGBXG9PZSB0Y4ACq6DtKqtmuTgulWXtgDVUtj2DcR2vduIfMx6wyXenHW5beJEf9v/GCYV66Sv7+UykkaaD70Y62aci6FNkB8WdjHYrEdOwY2yjJ5HV8bAdruN5E5v8K8F9XYESRum8NRiBd/tLC9Hxyh9UWcvcag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1Qn19pTdajoaYoKQKKj6XWFsvxA90ru+ajjkRxTc5Ys=;
- b=pYBWP/LOdf66LQxzii/SmTi1CS/7w86T++nNP0C52pdTv3sN9bYaTkcoDDuQ4eG3uP/xdzIgpPHBNJVeHIlvN/kiyJlOAnRPMy4vHeXoj/3Kn0vVsxngeswoLPBoUmSXb7uk3K0mni7OVbapN0eaG4SHYmwE3LTpLjwrakbvVWkeEh1UIUT3SMSbDkqyJPqR7lm5ekASUFEtKbO6Pu5a4W5OPaesfdMcMOOGPDwEtrgRfLwKOckSGg8bzp9CQ/aIUGFWq0rHu2NoJgP3/gY/urWCCS/quE6wtCjbjuz5smSuzDcZgSv1XjMt5+7Arbh9iUB6HrHnwLD5RIyEVphKzA==
-Received: from CY5PR12MB6179.namprd12.prod.outlook.com (2603:10b6:930:24::22)
- by SA1PR12MB5640.namprd12.prod.outlook.com (2603:10b6:806:23e::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.36; Tue, 19 Mar
- 2024 14:26:02 +0000
-Received: from CY5PR12MB6179.namprd12.prod.outlook.com
- ([fe80::b93d:10a3:632:c543]) by CY5PR12MB6179.namprd12.prod.outlook.com
- ([fe80::b93d:10a3:632:c543%4]) with mapi id 15.20.7386.025; Tue, 19 Mar 2024
- 14:26:02 +0000
-Date: Tue, 19 Mar 2024 16:25:57 +0200
-From: Ido Schimmel <idosch@nvidia.com>
-To: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
-Cc: Hangbin Liu <liuhangbin@gmail.com>, netdev@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [BUG] selftests/net: test_vxlan_mdb.sh: 84 out of 642 tests
- [FAIL]
-Message-ID: <ZfmgdVUmy-DgNklu@shredder>
-References: <5bb50349-196d-4892-8ed2-f37543aa863f@alu.unizg.hr>
- <Zfe2cGv_EWFAZXAJ@Laptop-X1>
- <f005453c-c7cf-4e1d-b266-ffe1cf8fc79e@alu.unizg.hr>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f005453c-c7cf-4e1d-b266-ffe1cf8fc79e@alu.unizg.hr>
-X-ClientProxiedBy: LO4P123CA0532.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:2c5::14) To CY5PR12MB6179.namprd12.prod.outlook.com
- (2603:10b6:930:24::22)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="ZsdNFS5C"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-42a9c21f9ecso27935481cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 07:26:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1710858367; x=1711463167; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/ai7rsRCGQJwbmMN9+0MqsXjffyEnlQWeJfS3vA+etg=;
+        b=ZsdNFS5CLyanYiKD/6naRKyWF4Gbq8HpwvdVEw9eYRwZda4V7tEQGBWn/s/rEhB/D2
+         aEQOUclwi9HR0MWvHnH8A/qVKgak0BidZvvaHTm1tSnBi+6RWQX9HuMZ9pHaVfgNXY29
+         /NKJrUKNWPMdE5ii1+3913bG1SNGZ51Ezo1j0d71fmxhEMLo0YUMn6ogQM7QGe5UAzJy
+         qWrj9V8UapEswmU28CIJNmWdY8eModaKriQIx9MB6EEXgOGpbhp9bgtr77DQWa/xPhmU
+         mwcOYKvdlXZ8eMa0U6nRdvln4jaDxsaVwEyMcuuZk0LlLIkRsvukTMiS/gPrVUO1ewcE
+         Znfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710858367; x=1711463167;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/ai7rsRCGQJwbmMN9+0MqsXjffyEnlQWeJfS3vA+etg=;
+        b=ba0Aed95p5S5yq4ETGR6KX14aprMmI93XxecF1sKDm0hMMLA5LZy5tkc1S8ZfxKZ60
+         mPIuO1zaxrh0EPNzsk/HUQb2jlTPhCfLHvy1N0l0yXRDP560vJp3Wjp+6wfRm2qFA1jx
+         E4MoC5rozb+up6pQ3DiAtZYCVCQw5ex8ybV7NiJY0l3fjG+52bMPWuK7pDcmjNHNB+7A
+         kJKjFVURcvFG3Bz/UAeAJmecM7Pte0VLkCNJRbkz7IQg83vYI4VVZrHiOaebvN7MGJWo
+         ScONU0+n/L/cwZD6xF7q1NQZ1sVsNj8XIPwRVvYebZk7ieIUSMCiHV9n0h/oNqGaR2S5
+         ewuA==
+X-Forwarded-Encrypted: i=1; AJvYcCWGZGrRoUvc4NCz4mMXMPQr26QOWXDbtO/s30gWB2FdFNIEHWSVgZT20fPyosuB57qWzJNsMFbZlq9nVU0Cnl8io9zthqYKXHau8ciS
+X-Gm-Message-State: AOJu0YyKbwlhobCXv8FJJ/ZH5HxnRZKFSjlsNd1Ri14WykvfODS5HS0z
+	UtZjQ4HzwHtPI7pelHcOkETn4YYNwDSE7anZaa9qazlUWE9giFaXHC9qJurAx7Ys4puyukQOlH0
+	fz+5VL6bcj3FmBRuGfxnuvAcYvrpjMa6OPEgwQQ==
+X-Google-Smtp-Source: AGHT+IFo9PiCBqdDBB0vvJuRxgnxergt1C9KVhjkk/hjChR3zfOYA2+Oj1/6ln63mQWAtnarjsG0RvDWTC/dvSg3Wa4=
+X-Received: by 2002:a05:622a:1991:b0:430:ef64:8637 with SMTP id
+ u17-20020a05622a199100b00430ef648637mr1164760qtc.15.1710858367665; Tue, 19
+ Mar 2024 07:26:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6179:EE_|SA1PR12MB5640:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	pSiVh5gLOpVhVGgd8IOft1GDfaEqZYLvjbGz2ZKMYKuFnbrbe2vxuzMjCcCG3ZVTuBtENGTawYYizFnaq+DLlF0DZosJg2b/loQZFQnTKW9y1X/ZaK8gbbUP2kV78y0aV6EcIg+TXyzB8LvJ8SSdf5VGAKKFoNitokIUgMhkhWQbyUfC9EDmMBvxZFnbhcidPr1e5Kidf52WTx1Dhthl3h2jftVDKbJOP4OEE947/5Fla7jJaQUug9fQwz6TBQmeTIhINNYX4UHwaKSjDw+/e5nRBE71Z/NxUvx4WI4kbCirMIW0XerXdcfH8oBxIaKGXQ4Slm/d/rF/udUjNvWXKCO/cKs4k7+kJy1qVocrNYCvcw3LDdtQU1ZePC/GMuZyaCrNKr6J75p3ClTGwKO8/BG5peo6wY1E/XrfRwD7G/IzT6mjDniAOWevebIjvCmPuw3xgAfDaBjeQ9eavwz0F9HN2ip6Sebzt1uMYSBSc5ByisreCgX6x3iCy2hIUzmzOwoEZwYKNwo9tl0YLjJI2xgr5SbJmbcBeLWIC5SgbuTyE4jEjZQFAdAvfjYSKnQrASuFpaflTmDJPUzvILQmN1IzybwtafXfay+cPB2aejnyqkT32taG7uUUFEqnTMhBQTId9ZlvN/m09HbnP11VFb3Mex/oIo5bNQfmnKQV1vc=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6179.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007)(7416005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?LMCppPAfgH8RQ0aBP9WZTas0SURrJ5As0osHByNW3XVHNrxZYO1SdzrQzCY0?=
- =?us-ascii?Q?kMT71djVRc0YJbJY6JipXjgydWa/DGWgFsUv1F6ZwSxUSSIBuUPtHY8vl00t?=
- =?us-ascii?Q?wYhvHQFYuI+2Vd9vCc0ODqlH9pSu03ta2RU+IVdABKo3JyGjUjiSZt5RImiW?=
- =?us-ascii?Q?XAPp+/SByaWdCVl0KI1rLKHtyxrAoD3O7qorT7Dgh0EFfBwkYXGraBRsOnAF?=
- =?us-ascii?Q?dArvcT1zxuyn/GDvFMNpTynMoHu2WyAGvo42Pmus+WmRMXLmvGAL/owtbvlQ?=
- =?us-ascii?Q?4SNgVGzn7LqvrDay7RmKclYP9OdYv52NlypOTYoYr9nnazdGPIX4qnFhYVL3?=
- =?us-ascii?Q?PY2gRIjlRhfPt6HmdlG8QMb08rQNf+BnzukbpBQx8sKxSahd/gKx+Y1udeCR?=
- =?us-ascii?Q?vhv8bqb3JXTd1O3NawFyNU1V4iqeQQgMGecxW6PzhFSSorW1Iot5I6S/nUcG?=
- =?us-ascii?Q?nkmT4JV1dH5RI7YuR1AiNB1FntvNou7zlazNsgv+fVakGK9sQ8eb0FDBP4oP?=
- =?us-ascii?Q?tcmGOgScE5yV5apdNpYZwI1Wkz2ZliW9syj5uLD5evp42uxqqU359gyjxjeU?=
- =?us-ascii?Q?6ep6qUeR8ptejh3lSGknSdD5G1wjSnLEE1pAhvBnqaHqztPGczbPrmxBkWIS?=
- =?us-ascii?Q?WHrf5sT06eRXaaxEY01/00ACX2f+zlUaMnGp09/g2ZHf8/insl91aAyyTmV/?=
- =?us-ascii?Q?KFeHZrb6SGTwRL2K+4NEFsaRP22bd6yn/aqBYLAXlucGLgA7xlNsRWNGl7hw?=
- =?us-ascii?Q?nFRjVOJ00dvt+rW+1TaysNybExgth5dm9HLzPU1ZXyKBfbGVWXmv5oOnkbzv?=
- =?us-ascii?Q?JqAS/7SQNce8Wjw36E0XtlvlXvBV/heTx2ScmlIKGO9fTyqJpmINgfeDu2JR?=
- =?us-ascii?Q?GTcAf/o6oWv3ii6pDln5eI69IYBkFH8JHOAoV/axZXEBjQIqsTALEhZzN++p?=
- =?us-ascii?Q?ytXxFGYuxwsU/s0Gh/jLDyW0o2z1noMxFolDLaMGNT5wqY9THRWqWoQMnR/c?=
- =?us-ascii?Q?wQxxzsiVMzk/dRmjCu3ej4tExQ63c8OiSqtMRiRzJRjRwsNoXfzXRHKBWOk+?=
- =?us-ascii?Q?+EMtFplkPEmCNySm7M/uaI2vlWwJZ9BWhfzb/lcrrf7Hpfszc5PWxev0neWA?=
- =?us-ascii?Q?TkS4BCq64OLDqrgq/bDKkFrtM1FVGSp0iqQzaHUCLU/dIgOVTB8w1Y6+AABW?=
- =?us-ascii?Q?QPnXzgwayM7RV7/5WWlTKTmUgYLi9pEtibhz3ATFMFhegS2Ouc9huJpX16dO?=
- =?us-ascii?Q?vpoviNAixC91NNxys7KUevM5aqPYnDD/qMsz1Vf6rlrtaHH1zVgPKicOXY9K?=
- =?us-ascii?Q?DUyngiL+QfVamc3gWyWx22B3wA9MnHzWChFPfnH33VUsyVs6gUxU3X+o56rl?=
- =?us-ascii?Q?V5TnBCcI+LFVfSYuSKSZejFTSlvtqm3d4utNHJT1SFmnN13+DY+2U0pLKKwv?=
- =?us-ascii?Q?4q0hfyYymdqYVpK1Bnc7DQGLd5IJFUEzNEfmDc1coGTfmdKv2J/7k9yBFVeX?=
- =?us-ascii?Q?joqU/7S05badADdZPGV1o4/thvWlOm8+zRuDxkG+B91wAnjj6IoldP/sz87N?=
- =?us-ascii?Q?48ExkKmcyME8nxlOnYcZuCM19XAOnjd1sXA0cjbg?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75b2571d-eb41-40b4-8331-08dc482080d6
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6179.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2024 14:26:01.9064
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Xuirl9XAOkvlnvLmPAEN9RTb+WU0434hEPC52kNjAJ3BFvyBIL6rDX1hI4yd9NMvCvE4kD0NInjq0xfwgiZZpQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB5640
+References: <20240220214558.3377482-1-souravpanda@google.com>
+ <20240220214558.3377482-2-souravpanda@google.com> <CA+CK2bAM4Xe7BT3TFZT-+3qQTFGgkYBiYY=oVkdqMN8gyJg_0g@mail.gmail.com>
+In-Reply-To: <CA+CK2bAM4Xe7BT3TFZT-+3qQTFGgkYBiYY=oVkdqMN8gyJg_0g@mail.gmail.com>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Tue, 19 Mar 2024 10:25:30 -0400
+Message-ID: <CA+CK2bCwi0yU_jX8qKCBMUnTeqoDYc65z7GKd5uEKcpkPAn4MA@mail.gmail.com>
+Subject: Re: [PATCH v9 1/1] mm: report per-page metadata information
+To: akpm@linux-foundation.org
+Cc: Sourav Panda <souravpanda@google.com>, corbet@lwn.net, gregkh@linuxfoundation.org, 
+	rafael@kernel.org, mike.kravetz@oracle.com, muchun.song@linux.dev, 
+	rppt@kernel.org, david@redhat.com, rdunlap@infradead.org, 
+	chenlinxuan@uniontech.com, yang.yang29@zte.com.cn, tomas.mudrunka@gmail.com, 
+	bhelgaas@google.com, ivan@cloudflare.com, yosryahmed@google.com, 
+	hannes@cmpxchg.org, shakeelb@google.com, kirill.shutemov@linux.intel.com, 
+	wangkefeng.wang@huawei.com, adobriyan@gmail.com, vbabka@suse.cz, 
+	Liam.Howlett@oracle.com, surenb@google.com, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
+	willy@infradead.org, weixugc@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 19, 2024 at 06:05:16AM +0100, Mirsad Todorovac wrote:
-> On 3/18/24 04:35, Hangbin Liu wrote:
-> > On Sun, Mar 17, 2024 at 12:19:12AM +0100, Mirsad Todorovac wrote:
-> > > Hi,
-> > > 
-> > > While running kselftest on vanilla torvalds tree kernel commit v6.8-11167-g4438a810f396,
-> > > the test suite reported a number of errors.
-> > > 
-> > > I was using the latest iproute2-next suite on an Ubuntu 22.04 LTS box.
-> > > 
-> > > # Tests passed: 558
-> > > # Tests failed:  84
-> > > not ok 90 selftests: net: test_vxlan_mdb.sh # exit=1
-> > 
-> > FYI, I tested with 6.8 kernel with net tree. All passed.
-> > 
-> > Data path: MDB torture test - IPv6 overlay / IPv6 underlay
-> > ----------------------------------------------------------
-> > TEST: Torture test                                                  [ OK ]
-> > 
-> > Tests passed: 642
-> > Tests failed:   0
-> > 
-> > # uname -r
-> > 6.8.0-virtme
-> > 
-> > Thanks
-> > Hangbin
-> 
-> Hi, Hangbin,
-> 
-> I am running an Ubuntu 22.04 LTS configuration.
+On Wed, Mar 13, 2024 at 6:40=E2=80=AFPM Pasha Tatashin
+<pasha.tatashin@soleen.com> wrote:
+>
+> On Tue, Feb 20, 2024 at 4:46=E2=80=AFPM Sourav Panda <souravpanda@google.=
+com> wrote:
+> >
+> > Adds two new per-node fields, namely nr_memmap and nr_memmap_boot,
+> > to /sys/devices/system/node/nodeN/vmstat and a global Memmap field
+> > to /proc/meminfo. This information can be used by users to see how
+> > much memory is being used by per-page metadata, which can vary
+> > depending on build configuration, machine architecture, and system
+> > use.
+> >
+> > Per-page metadata is the amount of memory that Linux needs in order to
+> > manage memory at the page granularity. The majority of such memory is
+> > used by "struct page" and "page_ext" data structures. In contrast to
+> > most other memory consumption statistics, per-page metadata might not
+> > be included in MemTotal. For example, MemTotal does not include membloc=
+k
+> > allocations but includes buddy allocations. In this patch, exported
+> > field nr_memmap in /sys/devices/system/node/nodeN/vmstat would
+> > exclusively track buddy allocations while nr_memmap_boot would
+> > exclusively track memblock allocations. Furthermore, Memmap in
+> > /proc/meminfo would exclusively track buddy allocations allowing it to
+> > be compared against MemTotal.
+> >
+> > This memory depends on build configurations, machine architectures, and
+> > the way system is used:
+> >
+> > Build configuration may include extra fields into "struct page",
+> > and enable / disable "page_ext"
+> > Machine architecture defines base page sizes. For example 4K x86,
+> > 8K SPARC, 64K ARM64 (optionally), etc. The per-page metadata
+> > overhead is smaller on machines with larger page sizes.
+> > System use can change per-page overhead by using vmemmap
+> > optimizations with hugetlb pages, and emulated pmem devdax pages.
+> > Also, boot parameters can determine whether page_ext is needed
+> > to be allocated. This memory can be part of MemTotal or be outside
+> > MemTotal depending on whether the memory was hot-plugged, booted with,
+> > or hugetlb memory was returned back to the system.
+> >
+> > Utility for userspace:
+> >
+> > Application Optimization: Depending on the kernel version and command
+> > line options, the kernel would relinquish a different number of pages
+> > (that contain struct pages) when a hugetlb page is reserved (e.g., 0, 6
+> > or 7 for a 2MB hugepage). The userspace application would want to know
+> > the exact savings achieved through page metadata deallocation without
+> > dealing with the intricacies of the kernel.
+> >
+> > Observability: Struct page overhead can only be calculated on-paper at
+> > boot time (e.g., 1.5% machine capacity). Beyond boot once hugepages are
+> > reserved or memory is hotplugged, the computation becomes complex.
+> > Per-page metrics will help explain part of the system memory overhead,
+> > which shall help guide memory optimizations and memory cgroup sizing.
+> >
+> > Debugging: Tracking the changes or absolute value in struct pages can
+> > help detect anomalies as they can be correlated with other metrics in
+> > the machine (e.g., memtotal, number of huge pages, etc).
+> >
+> > page_ext overheads: Some kernel features such as page_owner
+> > page_table_check that use page_ext can be optionally enabled via kernel
+> > parameters. Having the total per-page metadata information helps users
+> > precisely measure impact.
 
-Didn't get your first mail for some reason. Anyway, it might be related
-to the fact that Ubuntu is using an old version of libnet:
+Hi Andrew,
 
-https://launchpad.net/ubuntu/+source/libnet
+Can you please give this patch another look, does it require more
+reviews before you can take it in?
 
-I remember fixing similar issues in the past:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=cb034948ac292da82cc0e6bc1340f81be36e117d
-
-Will look into it today or later this week.
+Thank you,
+Pasha
