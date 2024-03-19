@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7137E11A;
-	Tue, 19 Mar 2024 05:51:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E993D7CF0F;
+	Tue, 19 Mar 2024 05:51:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710827483; cv=none; b=bW7I/ISBKCJQ54STIbytHHGKacG3Cu4sMjBGjEJyB97RO+CtRK7bvMYbJXAu+G0Ay+xGELq5JDHoVpACyInGHiXtKpXXUF2xBhignemtA/yEcd3xTG+aCNiD20jQoOy/uq0s7JfA9JTe5iJ21WV3PUxPd1afIgsczFt+OxCGJZw=
+	t=1710827485; cv=none; b=lWvV/kueXZU+HoMQnGOBJxoFGcH0+p3GPgwivLD/3phf3zXob+LN8n36MCiN4Ep6tMnvnosdhrV8EF6xaO2+X4m8DJc5qWRzeWHaahjEuZdcAJIVTTtCd34Sx2T7mH0BycXZ0vX0/O8DeplqHCEWm+VseTanRXNDY4f7BpMHWcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710827483; c=relaxed/simple;
-	bh=fhNxtapKIkDbH8Uy3IBe7yLRd7fJcDuZbr6w/rFDzOE=;
+	s=arc-20240116; t=1710827485; c=relaxed/simple;
+	bh=mf4B7dqQYwBHEG3EOUsWTWvUmMNcxn199ikuZuyHXX8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dAJLxqCyZmYfqLCNsNrVtS5uZ0UZabDaedDafZC+Jn/YVEDHu+O+OtP9GjFDokjJkwSL4Ctv97AUU8zugB0AvJ45zF93buq0A22EsYwrmOZSqfBQ4HL1rVBtg/AsCHGCBYHmsWahzhqV3pyzJGNXTJbKxvaBPS/2rfR6hFvAUYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F8WlFryv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=o4qK6TIcNLcxiwPga/MlDeGAeVghAo5XvvwK3K0q2Fl067ktReu84DRnXNpwjAnkASwtXtri1xXc7Hyd2I1uaVbOlDQv40nJAONnIwUNiNGU/0xtyOHDDuBDOiqoYWiTaSBK1lSqg1IK/H9F9eFGVPujv1IyFJv4WhQSbolu2Dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PtntBRFh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F8WlFryv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 800F0C4166B;
-	Tue, 19 Mar 2024 05:51:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PtntBRFh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D482C433F1;
+	Tue, 19 Mar 2024 05:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710827483;
-	bh=fhNxtapKIkDbH8Uy3IBe7yLRd7fJcDuZbr6w/rFDzOE=;
+	s=k20201202; t=1710827484;
+	bh=mf4B7dqQYwBHEG3EOUsWTWvUmMNcxn199ikuZuyHXX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=F8WlFryvloQB6nFyuVKy8qHQRe0r09HTuv2hYho3RoicNQa0+e5KpMKAxaFTHmq7K
-	 jNSDzniIqHRpdxZBX/c0cslX0GeBqiLnOEwu4jpx3NTinJtj8hY2E3eJFNWPy4PuC0
-	 UoSBXA9liL+q5Orv3Df0S0jHaFJxhsBXSCWO19OmTEFASWX47HtMrFLJveCozdbRGF
-	 44XunPCDniU4rCLU6bZx9NuN6ym2XN3jF2zQgMD9ZpVaE+cgcF2p69SV6hPjNQWhVD
-	 vxHX3FQRQuNIkxYCkJE0iYf9Di5lPTQHMCj42BT9VXy1HFgME4uQxNOQwH/5v0uotr
-	 /3LEaDw1vvXNQ==
+	b=PtntBRFhqkLS5FmNGg+r5hCM/LibLByTtcRTYcUZS4WhOEBtA6e1h9EC+UTF8bsk3
+	 2BAs9ycu3t/noS9sFCgmj3Dk7/OnFa4YvDS44zv1optsRmoBG48nDordgE1bBBtM7+
+	 CON6Tazc+SSp1/iXmc0zphTvnKSZ3QxuY5LEd5eDioMb1wFaYamqBCqnp2j4E1Sk5A
+	 6FIDni12uTX/TtFwBpIMjB/H//f6XYvtewyTpR1UvEBkcMc3cljr/VhxOeMRgIF2Yb
+	 tLp7KFfnhCqD2klAv2K0xR3/gHQZNgt0MIwti/fPEfFBzcfRaulxon78tlwQAmyKip
+	 mTB8uVqXvXV9A==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>
@@ -40,9 +40,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	linux-toolchains@vger.kernel.org,
 	linux-trace-devel@vger.kernel.org
-Subject: [PATCH 09/23] perf annotate-data: Maintain variable type info
-Date: Mon, 18 Mar 2024 22:51:01 -0700
-Message-ID: <20240319055115.4063940-10-namhyung@kernel.org>
+Subject: [PATCH 12/23] perf annotate-data: Handle global variable access
+Date: Mon, 18 Mar 2024 22:51:04 -0700
+Message-ID: <20240319055115.4063940-13-namhyung@kernel.org>
 X-Mailer: git-send-email 2.44.0.291.gc1ea87d7ee-goog
 In-Reply-To: <20240319055115.4063940-1-namhyung@kernel.org>
 References: <20240319055115.4063940-1-namhyung@kernel.org>
@@ -54,240 +54,97 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-As it collected basic block and variable information in each scope, it
-now can build a state table to find matching variable at the location.
-
-The struct type_state is to keep the type info saved in each register
-and stack slot.  The update_var_state() updates the table when it finds
-variables in the current address.  It expects die_collect_vars() filled
-a list of variables with type info and starting address.
+When updating the instruction states, it also needs to handle global
+variable accesses.  Same as it does for PC-relative addressing, it can
+look up the type by address (if it's defined in the same file), or by
+name after finding the symbol by address (for declarations).
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/annotate-data.c | 173 ++++++++++++++++++++++++++++++++
- tools/perf/util/dwarf-aux.c     |   4 +
- 2 files changed, 177 insertions(+)
+ tools/perf/util/annotate-data.c | 46 ++++++++++++++++++++++++++++++---
+ 1 file changed, 42 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index f482ccfdaa91..8eaa06f1cee5 100644
+index 3b661e693410..2cc9f56e3eea 100644
 --- a/tools/perf/util/annotate-data.c
 +++ b/tools/perf/util/annotate-data.c
-@@ -46,6 +46,62 @@ static void pr_debug_type_name(Dwarf_Die *die)
- 	free(str);
+@@ -89,7 +89,7 @@ void exit_type_state(struct type_state *state);
+ void update_var_state(struct type_state *state, struct data_loc_info *dloc,
+ 		      u64 addr, u64 insn_offset, struct die_var_type *var_types);
+ void update_insn_state(struct type_state *state, struct data_loc_info *dloc,
+-		       struct disasm_line *dl);
++		       Dwarf_Die *cu_die, struct disasm_line *dl);
+ 
+ void init_type_state(struct type_state *state, struct arch *arch __maybe_unused)
+ {
+@@ -485,7 +485,7 @@ void update_var_state(struct type_state *state, struct data_loc_info *dloc,
  }
  
-+/* Type information in a register, valid when ok is true */
-+struct type_state_reg {
-+	Dwarf_Die type;
-+	bool ok;
-+};
+ static void update_insn_state_x86(struct type_state *state,
+-				  struct data_loc_info *dloc,
++				  struct data_loc_info *dloc, Dwarf_Die *cu_die,
+ 				  struct disasm_line *dl)
+ {
+ 	struct annotated_insn_loc loc;
+@@ -577,6 +577,29 @@ static void update_insn_state_x86(struct type_state *state,
+ 				     insn_offset, src->offset, sreg, dst->reg1);
+ 			pr_debug_type_name(&tsr->type);
+ 		}
++		/* Or check if it's a global variable */
++		else if (sreg == DWARF_REG_PC) {
++			struct map_symbol *ms = dloc->ms;
++			u64 ip = ms->sym->start + dl->al.offset;
++			u64 addr;
++			int offset;
 +
-+/* Type information in a stack location, dynamically allocated */
-+struct type_state_stack {
-+	struct list_head list;
-+	Dwarf_Die type;
-+	int offset;
-+	int size;
-+	bool compound;
-+};
++			addr = annotate_calc_pcrel(ms, ip, src->offset, dl);
 +
-+/* FIXME: This should be arch-dependent */
-+#define TYPE_STATE_MAX_REGS  16
++			if (!get_global_var_type(cu_die, dloc, ip, addr, &offset,
++						 &type_die) ||
++			    !die_get_member_type(&type_die, offset, &type_die)) {
++				tsr->ok = false;
++				return;
++			}
 +
-+/*
-+ * State table to maintain type info in each register and stack location.
-+ * It'll be updated when new variable is allocated or type info is moved
-+ * to a new location (register or stack).  As it'd be used with the
-+ * shortest path of basic blocks, it only maintains a single table.
-+ */
-+struct type_state {
-+	struct type_state_reg regs[TYPE_STATE_MAX_REGS];
-+	struct list_head stack_vars;
-+};
++			tsr->type = type_die;
++			tsr->ok = true;
 +
-+static bool has_reg_type(struct type_state *state, int reg)
-+{
-+	return (unsigned)reg < ARRAY_SIZE(state->regs);
-+}
-+
-+/* These declarations will be remove once they are changed to static */
-+void init_type_state(struct type_state *state, struct arch *arch __maybe_unused);
-+void exit_type_state(struct type_state *state);
-+void update_var_state(struct type_state *state, struct data_loc_info *dloc,
-+		      u64 addr, u64 insn_offset, struct die_var_type *var_types);
-+
-+void init_type_state(struct type_state *state, struct arch *arch __maybe_unused)
-+{
-+	memset(state, 0, sizeof(*state));
-+	INIT_LIST_HEAD(&state->stack_vars);
-+}
-+
-+void exit_type_state(struct type_state *state)
-+{
-+	struct type_state_stack *stack, *tmp;
-+
-+	list_for_each_entry_safe(stack, tmp, &state->stack_vars, list) {
-+		list_del(&stack->list);
-+		free(stack);
-+	}
-+}
-+
- /*
-  * Compare type name and size to maintain them in a tree.
-  * I'm not sure if DWARF would have information of a single type in many
-@@ -262,6 +318,123 @@ static int check_variable(Dwarf_Die *var_die, Dwarf_Die *type_die, int offset,
- 	return 0;
++			pr_debug_dtp("mov [%x] global addr=%"PRIx64" -> reg%d",
++				     insn_offset, addr, dst->reg1);
++			pr_debug_type_name(&type_die);
++		}
+ 		/* Or try another register if any */
+ 		else if (src->multi_regs && sreg == src->reg1 &&
+ 			 src->reg1 != src->reg2) {
+@@ -628,11 +651,26 @@ static void update_insn_state_x86(struct type_state *state,
+ 	/* Case 4. memory to memory transfers (not handled for now) */
  }
  
-+static struct type_state_stack *find_stack_state(struct type_state *state,
-+						 int offset)
-+{
-+	struct type_state_stack *stack;
-+
-+	list_for_each_entry(stack, &state->stack_vars, list) {
-+		if (offset == stack->offset)
-+			return stack;
-+
-+		if (stack->compound && stack->offset < offset &&
-+		    offset < stack->offset + stack->size)
-+			return stack;
-+	}
-+	return NULL;
-+}
-+
-+static void set_stack_state(struct type_state_stack *stack, int offset,
-+			    Dwarf_Die *type_die)
-+{
-+	int tag;
-+	Dwarf_Word size;
-+
-+	if (dwarf_aggregate_size(type_die, &size) < 0)
-+		size = 0;
-+
-+	tag = dwarf_tag(type_die);
-+
-+	stack->type = *type_die;
-+	stack->size = size;
-+	stack->offset = offset;
-+
-+	switch (tag) {
-+	case DW_TAG_structure_type:
-+	case DW_TAG_union_type:
-+		stack->compound = true;
-+		break;
-+	default:
-+		stack->compound = false;
-+		break;
-+	}
-+}
-+
-+static struct type_state_stack *findnew_stack_state(struct type_state *state,
-+						    int offset, Dwarf_Die *type_die)
-+{
-+	struct type_state_stack *stack = find_stack_state(state, offset);
-+
-+	if (stack) {
-+		set_stack_state(stack, offset, type_die);
-+		return stack;
-+	}
-+
-+	stack = malloc(sizeof(*stack));
-+	if (stack) {
-+		set_stack_state(stack, offset, type_die);
-+		list_add(&stack->list, &state->stack_vars);
-+	}
-+	return stack;
-+}
-+
 +/**
-+ * update_var_state - Update type state using given variables
++ * update_insn_state - Update type state for an instruction
 + * @state: type state table
 + * @dloc: data location info
-+ * @addr: instruction address to match with variable
-+ * @insn_offset: instruction offset (for debug)
-+ * @var_types: list of variables with type info
++ * @cu_die: compile unit debug entry
++ * @dl: disasm line for the instruction
 + *
-+ * This function fills the @state table using @var_types info.  Each variable
-+ * is used only at the given location and updates an entry in the table.
++ * This function updates the @state table for the target operand of the
++ * instruction at @dl if it transfers the type like MOV on x86.  Since it
++ * tracks the type, it won't care about the values like in arithmetic
++ * instructions like ADD/SUB/MUL/DIV and INC/DEC.
++ *
++ * Note that ops->reg2 is only available when both mem_ref and multi_regs
++ * are true.
 + */
-+void update_var_state(struct type_state *state, struct data_loc_info *dloc,
-+		      u64 addr, u64 insn_offset, struct die_var_type *var_types)
-+{
-+	Dwarf_Die mem_die;
-+	struct die_var_type *var;
-+	int fbreg = dloc->fbreg;
-+	int fb_offset = 0;
-+
-+	if (dloc->fb_cfa) {
-+		if (die_get_cfa(dloc->di->dbg, addr, &fbreg, &fb_offset) < 0)
-+			fbreg = -1;
-+	}
-+
-+	for (var = var_types; var != NULL; var = var->next) {
-+		if (var->addr != addr)
-+			continue;
-+		/* Get the type DIE using the offset */
-+		if (!dwarf_offdie(dloc->di->dbg, var->die_off, &mem_die))
-+			continue;
-+
-+		if (var->reg == DWARF_REG_FB) {
-+			findnew_stack_state(state, var->offset, &mem_die);
-+
-+			pr_debug_dtp("var [%"PRIx64"] -%#x(stack) type=",
-+				     insn_offset, -var->offset);
-+			pr_debug_type_name(&mem_die);
-+		} else if (var->reg == fbreg) {
-+			findnew_stack_state(state, var->offset - fb_offset, &mem_die);
-+
-+			pr_debug_dtp("var [%"PRIx64"] -%#x(stack) type=",
-+				     insn_offset, -var->offset + fb_offset);
-+			pr_debug_type_name(&mem_die);
-+		} else if (has_reg_type(state, var->reg) && var->offset == 0) {
-+			struct type_state_reg *reg;
-+
-+			reg = &state->regs[var->reg];
-+			reg->type = mem_die;
-+			reg->ok = true;
-+
-+			pr_debug_dtp("var [%"PRIx64"] reg%d type=",
-+				     insn_offset, var->reg);
-+			pr_debug_type_name(&mem_die);
-+		}
-+	}
-+}
-+
- /* The result will be saved in @type_die */
- static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
+ void update_insn_state(struct type_state *state, struct data_loc_info *dloc,
+-		       struct disasm_line *dl)
++		       Dwarf_Die *cu_die, struct disasm_line *dl)
  {
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 9080119a258c..41dbbb25b256 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -9,6 +9,7 @@
- #include <stdlib.h>
- #include "debug.h"
- #include "dwarf-aux.h"
-+#include "dwarf-regs.h"
- #include "strbuf.h"
- #include "string2.h"
+ 	if (arch__is(dloc->arch, "x86"))
+-		update_insn_state_x86(state, dloc, dl);
++		update_insn_state_x86(state, dloc, cu_die, dl);
+ }
  
-@@ -1190,6 +1191,8 @@ static int reg_from_dwarf_op(Dwarf_Op *op)
- 	case DW_OP_regx:
- 	case DW_OP_bregx:
- 		return op->number;
-+	case DW_OP_fbreg:
-+		return DWARF_REG_FB;
- 	default:
- 		break;
- 	}
-@@ -1203,6 +1206,7 @@ static int offset_from_dwarf_op(Dwarf_Op *op)
- 	case DW_OP_regx:
- 		return 0;
- 	case DW_OP_breg0 ... DW_OP_breg31:
-+	case DW_OP_fbreg:
- 		return op->number;
- 	case DW_OP_bregx:
- 		return op->number2;
+ /* The result will be saved in @type_die */
 -- 
 2.44.0.291.gc1ea87d7ee-goog
 
