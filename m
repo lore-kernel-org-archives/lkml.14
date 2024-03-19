@@ -1,183 +1,172 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from DEU01-FR2-obe.outbound.protection.outlook.com (mail-fr2deu01on2123.outbound.protection.outlook.com [40.107.135.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700747D3FB;
-	Tue, 19 Mar 2024 09:56:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710842169; cv=none; b=RQrI5vX6oCDPLx+q4zs2neD8DDhScOf7TZ7IjRhWvJeK0vw48kUWYiO1qjrSZWP37jTTq/UdxrYEY9aITAo3UAo+LilyqyzH0GRP6m9RhLv9+XXqsI8lTUFSmk11+M9F+UCF0QoFH9Dx+++EKSTz5Fuf/PR9ah2hAEB/RdUitbw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710842169; c=relaxed/simple;
-	bh=6Q1YQ9YaWQnSUaD6gx/UktQdUNdjrS2tZjoZqNG5yTs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=R6Gg/VLxguN48rf/dHJsWwRCqGrSgOptcFYFjNFv/il2jaHVxhL6ddNPdFQ9BWZKFp/sUSb8K9Jr46KuvCsChQM6UkEuE0Vl1c8ifOFpYsuGmD34+05KaJFhZGhFW46JKQI2CWzzbSO6jYGAdQnhrofyiwRrho9IfGgFnZcJwkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JUYBjJRF; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC917D3FB
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 09:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.135.123
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710842189; cv=fail; b=su83Mm3e+ZH1hX/7J4D1W0bBod13ibvMSD888JZXsMlYXg4Rmrji/QySi4fx/d6Pkz60HYk7HFp8nHWb6IBiBFN04eFABk74c+mDexsdmXNzAnvtkwGgPA+wJbzlIxC1wgAtDyQkszS769t1qcWGN0qSm2y25c5fSRo8NLwhLkw=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710842189; c=relaxed/simple;
+	bh=RkF+5/KLzVRkAe11O54ZMZYXlSChr+gZTZDP3fwk0Qs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=RR4aemeI7KMg3SNmLpAOOy7OEE2inQGh9PZNpWJUdVSLOWHcw8LLFAAbWE+F1F7kCelyfbg4gKvQGGhgrc44EZ/Lricpa5LePlGJlv2AhOwjgjECHypcTGaF5m/InAhoNSF5XLcNMLE7Gg1+2Q0css57HetUr260NMqdT5oVcBE=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iesy.com; spf=pass smtp.mailfrom=iesy.com; dkim=pass (1024-bit key) header.d=iesy20.onmicrosoft.com header.i=@iesy20.onmicrosoft.com header.b=JnTWffE/; dkim=fail (1024-bit key) header.d=iesy20.onmicrosoft.com header.i=@iesy20.onmicrosoft.com header.b=MsYHnZHT reason="signature verification failed"; arc=fail smtp.client-ip=40.107.135.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iesy.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iesy.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JUYBjJRF"
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42J9WUW7021788;
-	Tue, 19 Mar 2024 09:56:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=QpOwfZ/YlyW8DcF4PsTBwqDZqHcO+DL5JJeLS2rz8Qs=;
- b=JUYBjJRFTJR2vEHdQ6gUNfiUqzapIMrWfqKSaH7WlJknGSCD/VjXI/lWNlgTK0ExMvb1
- LO6y9K2aePFNK9tkX5RR0FU/Z1uJnHttTgKwJwqfPNeiGsDMhANcQBhplTuqERGnYKnj
- 8xgPA7RzXrXKzHM7CHFdk1wQ7fpjqfkI/ULNL+EauU4nVfzq4CeGS4m8BS1X4JDzjfMu
- cUor2NgIzTwdmtv6TNsA8WZvkZt2chj8HDmhOS/ocJEqn0AhEU4OnCin8ZGQY3mZJpjV
- eX2U6vI9GlVFRCOZK68RaMbe4eybdO0McUism3fgJ7Ztr+8ccHOip61P6bD0p0NDcFyB jQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wy85n83ya-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 09:56:03 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42J9u2k8005123;
-	Tue, 19 Mar 2024 09:56:02 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wy85n83y9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 09:56:02 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42J7Jvla017231;
-	Tue, 19 Mar 2024 09:51:02 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wwnrt6u1r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 09:51:02 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42J9ouJp25297416
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 19 Mar 2024 09:50:58 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 958AB2005A;
-	Tue, 19 Mar 2024 09:50:56 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5E38020043;
-	Tue, 19 Mar 2024 09:50:56 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 19 Mar 2024 09:50:56 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, irogers@google.com, namhyung@kernel.org
-Cc: svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH 2/2] perf list: do not print metrics on s390 zvm systems
-Date: Tue, 19 Mar 2024 10:50:43 +0100
-Message-Id: <20240319095043.857594-2-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240319095043.857594-1-tmricht@linux.ibm.com>
-References: <20240319095043.857594-1-tmricht@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=iesy20.onmicrosoft.com header.i=@iesy20.onmicrosoft.com header.b="JnTWffE/";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=iesy20.onmicrosoft.com header.i=@iesy20.onmicrosoft.com header.b="MsYHnZHT"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=fail;
+ b=GVlvRj9Ccvh16GSWNI0E80mCnAMjmuLSBqZVPgHCniT8frGsendBRqObjtfdxriqF1QOb7sbxHGp9zfsP286RHpybHgbAV5BQsiLihJ0F4M7CbkgD9yoB/aUaGxVh3xjP4BSIVVsdPtiANircneOLIgSI9rwtJadSPND4SKTM4WlOCNcWbHdBqxatNuEEzOheHzfW1YTGplDepLtZOeKvYpt4vrg0lLfPmiEPViF0ox8iHPK0g61r81MpCdzAbGmG9iSSnkYieDMeZFDMK/BiXgoU/RpZPfY4kMaCUQKgrwbT5iQhO+kbxhx9gRfTcWysZwTVwNDWMT1EK2LlcS27g==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CfqgEgehjhAgi2aZAR1Ft3o57dbv5YtT3UR0ZPpnWVI=;
+ b=KSLNQqsWLgTwa0i3cj/IyawrvktltECiZw/vBqbnyDAh9mWQQ7n7Lbl2Me1qI4hclEpN1L0Or2PfNlC5/GK4Jq1dMy4jdkkOk0WryOcPC2D/XyEjHyzZdD1hWYcFPHkZRnXWYkYOucpQ4qU8h8kR3NnRn2/E2wtjcypO96COIovbiUHfEO4/dXYyT2EcOiGitYUj9MabloABTiDWpr6dWuV/9/4oWZene21LkcXmhnt2UYPzY2hNo1VnpRXLzPzKTfB/PFj3hmQhKcunkjdoS6+D9HeMNsKwbxA2qYcCqwJzAdutJ0nqyM8sHqNza+cL28B1n6gBT/1avJJiR5E+Nw==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=fail (sender ip is
+ 20.79.220.33) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=iesy.com;
+ dmarc=none action=none header.from=iesy.com; dkim=fail (body hash did not
+ verify) header.d=iesy20.onmicrosoft.com; arc=fail (47)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=iesy20.onmicrosoft.com; s=selector1-iesy20-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CfqgEgehjhAgi2aZAR1Ft3o57dbv5YtT3UR0ZPpnWVI=;
+ b=JnTWffE/1avKVn8WVjtW7Yy9JuCnKFIye/ne25KLWQ/XluuQbKenI3ij/dfx677jXkAh5X1dUgbm20Bub7rFLHr+5u9r6s5fgblbyZ6PI3yrhITjMQMJP2AGpGkhsQ0gRPuFKpcRewdkzROHkuzLBbQYXcPpA8Qi0r7ojK/fdug=
+Received: from FR5P281CA0017.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:f1::9) by
+ FR2P281MB1767.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:8e::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7386.28; Tue, 19 Mar 2024 09:56:24 +0000
+Received: from FR3PEPF00000485.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:f1:cafe::61) by FR5P281CA0017.outlook.office365.com
+ (2603:10a6:d10:f1::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.11 via Frontend
+ Transport; Tue, 19 Mar 2024 09:56:24 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 20.79.220.33)
+ smtp.mailfrom=iesy.com; dkim=fail (body hash did not verify)
+ header.d=iesy20.onmicrosoft.com;dmarc=none action=none header.from=iesy.com;
+Received-SPF: Fail (protection.outlook.com: domain of iesy.com does not
+ designate 20.79.220.33 as permitted sender) receiver=protection.outlook.com;
+ client-ip=20.79.220.33; helo=de1-emailsignatures-cloud.codetwo.com;
+Received: from de1-emailsignatures-cloud.codetwo.com (20.79.220.33) by
+ FR3PEPF00000485.mail.protection.outlook.com (10.167.240.5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7409.10 via Frontend Transport; Tue, 19 Mar 2024 09:56:24 +0000
+Received: from DEU01-FR2-obe.outbound.protection.outlook.com (104.47.11.168) by de1-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Tue, 19 Mar 2024 09:56:23 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ToVoiln8slz24Zd5tONWlhpxMFV8VXHxgnh1ywBSRBfKoLyD4tO5jVcOFHxkzdLlS3ciBJNxDixpkPQILX2KfR8qIhX/0eXjKdBqzT7VHQ+sUhnjHbvbj2QCZgP7gxNXNUZ2ii8PnFyAxz0USdbsouylhVOfmv0VVCL/bIYQZfHCcyfYMSa/Cd+gnPf2bJXc4K9nbyZ6RBYuGcXb0xGlX8G2wANHX4L+2fdH2fysL1PAAn900TPvLzPMXGuXdS6tDoFDZi/M4/EotXco3Af11JWxkULeILciC6vy+dNvKLLWzoEAP+5zw54hJAP/oxxKvpeiZWxmK+kevVwwRnPRpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=k9Q7flSpE0KZCAn04UCUZRESTfWID1OR/7DzyuaLbiE=;
+ b=blZM7keuEKQzjaQb/W2Wc3s79sXuIBIz9Aqmb2ajYumolhonK8gDr2BI+8figuBaEbg4xN1p9tUJlG7dw1RLtRMAGT5gsZ0h4Vc9OgeR/bgQ5VX0gZgiuyw5hUTW2eQ4zkGv2rlisXRJx/zDINhcCfIHdJk5sOgtF/TkGV9sY2mWs15y4xymbOpxQJHhvj16lqfHjpqLDB5fGwoB8ho2GCVdpCB4PhJQaA3cnFI59vOKBNMNp6q/8Nk9+0t2oYaVK+C/d9/VYhzNry7mYwzLdmqvl19K1Xb6L/Vm6GSVj3wgoqrFwZF/slTHNy+6+9rwhKa92h5ndypWwQ+c9Zo93A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=iesy.com; dmarc=pass action=none header.from=iesy.com;
+ dkim=pass header.d=iesy.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=iesy20.onmicrosoft.com; s=selector1-iesy20-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=k9Q7flSpE0KZCAn04UCUZRESTfWID1OR/7DzyuaLbiE=;
+ b=MsYHnZHTpR4xAF+qz2z4gHDjNATRZ3Q0wxX2Gows9kEXCrFvqrvEaMZu9DAqmxyHq+nr09/dya45PWUiUX4AzCL61mr9PcTaFLQGtAIgHNRAbZPtvLZZia6Rquv3TptIRWkFwn4mwRb6fJmFi+5REBJMHK0b/Hq0ny6GCR5Lt8k=
+Received: from FR2P281MB2393.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:39::12)
+ by BEYP281MB3930.DEUP281.PROD.OUTLOOK.COM (2603:10a6:b10:b4::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.29; Tue, 19 Mar
+ 2024 09:56:22 +0000
+Received: from FR2P281MB2393.DEUP281.PROD.OUTLOOK.COM
+ ([fe80::8af4:a741:edb6:e851]) by FR2P281MB2393.DEUP281.PROD.OUTLOOK.COM
+ ([fe80::8af4:a741:edb6:e851%3]) with mapi id 15.20.7386.025; Tue, 19 Mar 2024
+ 09:56:22 +0000
+From: Dominik Poggel <pog@iesy.com>
+To: robh+dt@kernel.org
+CC: Dominik Poggel <pog@iesy.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Sebastian Reichel <sre@kernel.org>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Tianling Shen <cnsztl@gmail.com>,
+	Ondrej Jirman <megi@xff.cz>,
+	Andy Yan <andyshrk@163.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: [PATCH 2/3] dt-bindings: vendor-prefixes: add iesy
+Date: Tue, 19 Mar 2024 10:54:01 +0100
+Message-ID: <20240319095411.4112296-3-pog@iesy.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20240319095411.4112296-1-pog@iesy.com>
+References: <20240319095411.4112296-1-pog@iesy.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR10CA0067.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:15::20) To FR2P281MB2393.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:39::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: UcUxdN1hkDnoEjw-dYDpE_aJfsQIKbNq
-X-Proofpoint-GUID: 2jVV7YqfoNoE154-d1m7KTWv6n0pjF5h
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-18_12,2024-03-18_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- mlxlogscore=999 spamscore=0 suspectscore=0 phishscore=0 impostorscore=0
- priorityscore=1501 clxscore=1015 malwarescore=0 bulkscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403140000 definitions=main-2403190076
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-TrafficTypeDiagnostic:
+	FR2P281MB2393:EE_|BEYP281MB3930:EE_|FR3PEPF00000485:EE_|FR2P281MB1767:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original:
+ yQktxLhofcdNpLGkCcoEtcUj/zZf+QriJMovKfft9fylMzp61zXQXAE0ydQuiSxijzWDfrRoJ1Q2P5XzL+lp9tBN1rANnQS2prAZcqRvhIWtL3QOcu5z7gngBr/5yOysySjlce2102jgYg2dEuKK9Sy9oayovNFzN5BYPHSlFvYcM22BRN4Fg/dEzSS/G2EOuMoOQBUMSgeeIcH3R6nIrmUSrbrVFFPEhRYDH71wxJ2UpRIkdK9wQD3OmmqxJ4hc7QtQc0JR4ILRG7+xCUkxBfrfsDNVZL1Je9R6eQVI7SaI2OsqWNzSF7DuRAZpUav03LNAwiNayn/q1owIynXoFc0SCU2tdlnk608vRfvfaBtvBWQmuT8KBk7QaZHjsKPrJxE2fP++6jN7Zi+qjfsfTBPrbsEQyGYNfluFCn7ys+tSnvu8qa4MOwlppPO+j641P3Sfnphc/SeQ35QZKy8nqUz5OsIWtHXy/ezlwUkfJ7HmSElmPlqgbNKd+RJ2tIbeK4zY6/4d2jsk373spbUSI0iU5fxXTTIbUDMONL27QGRbZ5ENssvSGay8L33/7xMEu/NnPZ3rgTtZ+5ySCZKX4eJizhYIoKA9eetHU0CKWk8OYBsIScLHUoZYZB7nvs7Gyr/oqaGsTC4INrRfUVoOUM7tyUmRVwuhKFqfaw2sqPUz7r4WTfLVdyDeUQoN/fN9XCysWMs3QbK6EtqQWZ2xrrpSIX1RTOhLnMm5AyOrFD0=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:FR2P281MB2393.DEUP281.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007)(52116005)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BEYP281MB3930
+X-CodeTwo-MessageID: 1aa96dd6-e3b0-43a2-99e2-fc62a399cc61.20240319095623@de1-emailsignatures-cloud.codetwo.com
+X-CodeTwoProcessed: true
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ FR3PEPF00000485.DEUP281.PROD.OUTLOOK.COM
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f66707b8-0af1-432e-f454-08dc47fad660
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	D9Znzy1NJVXTW2bGubRPYfHDW7efvji3Drx0nz4neAJ7jVsi4LYJOMPpGLFY3zHhWPGBR5sDTSOZuipjX+UXSBBusGZhnzUlVTHAipRbXd4L6w2ckVaUsB7iwL8UY4CqjLzThF8qNO+lKhWaN2CbCMsUkDp4jDwvahoEkYCxLzsbqze7FsPV/nL/xcFjRHPRc2tpqvKd+BAb5KUEkXXvplFslz8Dv+vPHZOneFjtREEjFGrdIZYaO8a4bQyJYOiZvXqGVg/kdEa7EsTO6C9Uy5tpgtaSQrGp9k23pweV3kMM65UvryRi5U8wLy7OwKm5wMv3G2T2R0+Bd5JjBuuf5UqKAgPcG7PFPU0AedB+OVqqtYYE42sB4rKA+Uxyp2pJ/MkJbDg501goMssrvQRII5b7ZE/a/FdkwvqhVZxjNLkmA3XWmtz2pbvEJR3w9Ef1KuzfbgYhG/HQytjFt/ewqHEbXMVYPTX9xLZMeSUd6opTQ8G2PSmxAVnYu/W9WAhFvcL1SNvKpllb2ixGeCPPuyf7DEs+D4YWasMh+WIAqatm4yUBeTtfdtnE2Q1QVFaEiRQQm/+CtZ7PiCWNuu16XbbOUJaNYUbktaZ0tyACq9jTqBHxentbZnoQbhEL6eXydecxSbkQlPPlu8ZnurUTlqVNPWx46z/Ya72pZWE4kn6z9KhGJdhQWZkqmrMDS8IG38lb5NSrH3rp+z9rPjBg+lII8Z8W/9yO0QYyfsyjQGI+FzW7lLPqgHTJ/BjVUKfv
+X-Forefront-Antispam-Report:
+	CIP:20.79.220.33;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:de1-emailsignatures-cloud.codetwo.com;PTR:de1-emailsignatures-cloud.codetwo.com;CAT:NONE;SFS:(13230031)(1800799015)(376005)(82310400014)(36860700004);DIR:OUT;SFP:1102;
+X-OriginatorOrg: iesy.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2024 09:56:24.3529
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f66707b8-0af1-432e-f454-08dc47fad660
+X-MS-Exchange-CrossTenant-Id: ace663fd-5672-464f-8169-8d373312f6bc
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=ace663fd-5672-464f-8169-8d373312f6bc;Ip=[20.79.220.33];Helo=[de1-emailsignatures-cloud.codetwo.com]
+X-MS-Exchange-CrossTenant-AuthSource: FR3PEPF00000485.DEUP281.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: FR2P281MB1767
 
-On s390 z/VM virtual machines command perf list also displays metrics:
+Add iesy GmbH
 
- # ./perf list | grep -A 20 'Metric Groups:'
- Metric Groups:
-
- No_group:
-  cpi
-       [Cycles per Instruction]
-  est_cpi
-       [Estimated Instruction Complexity CPI infinite Level 1]
-  finite_cpi
-       [Cycles per Instructions from Finite cache/memory]
-  l1mp
-       [Level One Miss per 100 Instructions]
-  l2p
-       [Percentage sourced from Level 2 cache]
-  l3p
-       [Percentage sourced from Level 3 on same chip cache]
-  l4lp
-       [Percentage sourced from Level 4 Local cache on same book]
-  l4rp
-       [Percentage sourced from Level 4 Remote cache on different book]
-  memp
-       [Percentage sourced from memory]
-  ....
- #
-
-This is not correct, on s390 z/VM virtual machines the referenced
-CPU Counter Measurement facility does not exist. The command
-
- # ./perf stat -M cpi -- true
- event syntax error: '{CPU_CYCLES/metric-id=CPU_CYCLES/.....'
-                       \___ Bad event or PMU
-
- Unable to find PMU or event on a PMU of 'CPU_CYCLES'
-
- event syntax error: '{CPU_CYCLES/metric-id=CPU_CYCLES/...'
-                       \___ Cannot find PMU `CPU_CYCLES'.
-			    Missing kernel support?
- #
-
-fails.
-
-Perf list should not display the metrics when the referenced
-CPU Counter Measurement PMU is not available.
-
-Output after:
- # ./perf list | grep -A 20 'Metric Groups:'
- #
-
-Fixes: 7f76b3113068 ("perf list: Add IBM z16 event description for s390")
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+Signed-off-by: Dominik Poggel <pog@iesy.com>
 ---
- tools/perf/arch/s390/util/pmu.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/arch/s390/util/pmu.c b/tools/perf/arch/s390/util/pmu.c
-index 886c30e001fa..2dc27acc860c 100644
---- a/tools/perf/arch/s390/util/pmu.c
-+++ b/tools/perf/arch/s390/util/pmu.c
-@@ -8,6 +8,7 @@
- #include <string.h>
- 
- #include "../../../util/pmu.h"
-+#include "../../../util/pmus.h"
- 
- #define	S390_PMUPAI_CRYPTO	"pai_crypto"
- #define	S390_PMUPAI_EXT		"pai_ext"
-@@ -20,3 +21,19 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
- 	    !strcmp(pmu->name, S390_PMUCPUM_CF))
- 		pmu->selectable = true;
- }
-+
-+const struct pmu_metrics_table *pmu_metrics_table__find(void)
-+{
-+	struct perf_pmu *pmu;
-+
-+	/*
-+	 * Metrics defined on events from PMU cpum_cf aren't supported
-+	 * on z/VM. Make sure the PMU exists and return NULL if that
-+	 * PMU cannot be found.
-+	 */
-+	pmu = perf_pmus__find("cpum_cf");
-+	if (pmu)
-+		return perf_pmu__find_metrics_table(pmu);
-+
-+	return NULL;
-+}
--- 
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Docum=
+entation/devicetree/bindings/vendor-prefixes.yaml
+index 04505cb0b640..ffb2abb5edc2 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -656,6 +656,8 @@ patternProperties:
+     description: International Business Machines (IBM)
+   "^icplus,.*":
+     description: IC Plus Corp.
++  "^iesy,.*":
++    description: iesy GmbH
+   "^idt,.*":
+     description: Integrated Device Technologies, Inc.
+   "^iei,.*":
+--=20
 2.44.0
 
