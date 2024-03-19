@@ -1,67 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492E8179A6
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 17:11:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B45E25601;
+	Tue, 19 Mar 2024 17:11:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710868272; cv=none; b=s2/3g5I5+UHpcGImlCd9ouMSDIevBTPDZVMGyFWNIrrL1kP/4rhP0Ueiu5txHbJemzJsWPN2utg3e06wKLfTlQNDk3SGNQkBo4WMeIxt5Enfj4FJUBy6QG6hghWJHodgPPN9A0M2ifJjfGmwwqsTD8XJEanY1qI/pHG909Nw7dA=
+	t=1710868276; cv=none; b=Q6ZFrQAvMUXMRvrsIlOEDaanC8R6GwzfCsueHGsLmnsIhuleyXPFKtfjNs7Sk4Hs4lAuEnHIHNBWuvVFzM7XlpW2RSfy2/UOJ20FIwYAiDKI0tkRi+Y3XQb8Tk8w1f0/npPNWaq8TujYg7NiNOan6VYISEiR57T+EwXjgcpq3gY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710868272; c=relaxed/simple;
-	bh=ebwOVxoBOs8lCcSplls0CzG67Wju8dHmF6pjC8vwD5U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RBKMm7hVoLXYiDbZNBAaICwGVpqAgWCsxbn9mlW5XzixQJjqKL1eKVdJB5OgMM5RUqdRCdMBuNKaCfseZnduYpg/tna3dmU7P2K4S1z6CjoHZ0hpRRnmN+3vlPT99Uxiz7Wku3xCVDHrZzSbwDcaOjo8Zz6udPWVmKPzbVq7lUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AD7BC433C7;
-	Tue, 19 Mar 2024 17:11:10 +0000 (UTC)
-Date: Tue, 19 Mar 2024 13:13:33 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Alison Schofield <alison.schofield@intel.com>, Beau Belgrave
- <beaub@linux.microsoft.com>, Huang Yiwei <quic_hyiwei@quicinc.com>, John
- Garry <john.g.garry@oracle.com>, Randy Dunlap <rdunlap@infradead.org>,
- Thorsten Blum <thorsten.blum@toblux.com>, Vincent Donnefort
- <vdonnefort@google.com>, linke li <lilinke99@qq.com>
-Subject: Re: [GIT PULL v2] tracing: Updates for v6.9
-Message-ID: <20240319131333.504c93fc@gandalf.local.home>
-In-Reply-To: <20240319130653.0cfdaf6e@gandalf.local.home>
-References: <20240318113053.7f87ce7f@gandalf.local.home>
-	<CAHk-=wjxX16kWd=uxG5wzqt=aXoYDf1BgWOKk+qVmAO0zh7sjA@mail.gmail.com>
-	<20240319130653.0cfdaf6e@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1710868276; c=relaxed/simple;
+	bh=AXUUA0MHhoFgs3p9tiIKZfmiVx6wFX8jEmLp/axwRCk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sVS6mZOpOAwkcHuXezXPAHL0cIFMhfGMUiUFkPnLVcRqzEXfPYN7alO3BiawgAQkxBtj/UQQmlNIEQw2NSCaXeCa3q0JgIqn3QplKvfcuctf7xcjpw5cw2AIbug/2xbmcRUvd5EV8J3bYBDjSoApetsJB93ERgZLmjT3gie1GAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKjNIz9C; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKjNIz9C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54D4EC43399;
+	Tue, 19 Mar 2024 17:11:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710868276;
+	bh=AXUUA0MHhoFgs3p9tiIKZfmiVx6wFX8jEmLp/axwRCk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iKjNIz9CzHgRbmJYyn7RDFWoVSskgL7NJuYUxk7+cPb1m2hbGdUGbNLCyo802GB+G
+	 D+Wwjk/3Vgq4c6G3DyxA22o/b2cu72riCCmXwmpc5jGiA5x9m3HZ0yqtdLqtOxHtSM
+	 uFFhJGZq6KGYVnaYLumPzn8uhK5+LUflt8hAFOVKixSg5XtjGQrWQfj/jcOAxQ8bQF
+	 mprDNKAQeCoGciQMSR4ivZxg2x9IdQbx5zUDssXZyGlg32gTZITWalFwKJuhqQV8y/
+	 0Iz4vH8Dx5Hlp0I58QpOBbtJ4B485rdYhZHIhQ7x50AKPzFc7xeguWyGqfWPMpW2FD
+	 o4saCxWUJ93qw==
+Date: Tue, 19 Mar 2024 17:11:09 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Harald Mommer <harald.mommer@opensynergy.com>
+Cc: Haixu Cui <quic_haixcui@quicinc.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>, linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, quic_ztu@quicinc.com,
+	Matti Moell <Matti.Moell@opensynergy.com>,
+	Mikhail Golubev <Mikhail.Golubev@opensynergy.com>
+Subject: Re: [PATCH v2 3/3] virtio-spi: Add virtio SPI driver.
+Message-ID: <cfb5092b-ad8f-4364-8655-8f797c428b25@sirena.org.uk>
+References: <20240304154342.44021-1-Harald.Mommer@opensynergy.com>
+ <20240304154342.44021-4-Harald.Mommer@opensynergy.com>
+ <99afc631-c02b-42da-a8d4-87c65087f390@quicinc.com>
+ <5dedcd26-ed59-415f-b978-87a546a0816d@opensynergy.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="U3aj3hIp60dvMzZi"
+Content-Disposition: inline
+In-Reply-To: <5dedcd26-ed59-415f-b978-87a546a0816d@opensynergy.com>
+X-Cookie: You were s'posed to laugh!
 
-On Tue, 19 Mar 2024 13:06:53 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> This is in the fast path (where the trace event happens), but I can make it
-> always do strcmp(), even though it will slow down what is being recorded,
-> as I plan on removing the parameter in the next merge window anyway.
+--U3aj3hIp60dvMzZi
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'll change it to this:
+On Tue, Mar 19, 2024 at 04:05:55PM +0100, Harald Mommer wrote:
+> On 18.03.24 10:39, Haixu Cui wrote:
 
-#define __assign_str(dst, src)						\
-	do {								\
-		char *__str__ = __get_str(dst);				\
-		int __len__ = __get_dynamic_array_len(dst) - 1;		\
-		WARN_ON_ONCE(!src != !__data_offsets.dst##_ptr_);	\
-		WARN_ON_ONCE(src && strcmp((src), __data_offsets.dst##_ptr_)); \
-		memcpy(__str__, __data_offsets.dst##_ptr_ ? :		\
-		       EVENT_NULL_STR, __len__);			\
-		__str__[__len__] = '\0';				\
-	} while (0)
+> Looks in my setup like this:
+>=20
+> virtio_mmio@4b013000 {
+> =A0 compatible =3D "virtio,mmio";
+> =A0 reg =3D <0x0 0x4b013000 0x0 0x1000>;
+> =A0 /* GIC_SPI =3D 0, IRQ_TYPE_LEVEL_HIGH =3D 4 */
+> =A0 interrupts =3D <0 497 4>;
+> =A0 spi,bus-num =3D <1234>; /* <<<=3D=3D=3D This here has been added */
+> };
+>=20
+> The "spi,bus-num" is missing in your setup so you use the default of 0.
 
-The first WARN_ON() will report the bug if src is not NULL and the pointer
-is even though the strcmp() will likely crash in that case. But that's a
-bug if that happens anyway.
+The default should be dynamic assignment, why would you need a fixed bus
+number?
 
--- Steve
+--U3aj3hIp60dvMzZi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmX5xywACgkQJNaLcl1U
+h9CX2wf9H3E0UNXhWUm+l3tVXXnXvcmMdUJKkKmVSQoF3Lbu1dQkub2gIAgs1/QA
+Yi248HgER2Ktt1S4ToKpr+8/jI8uraFmfCYobLjsyi2OqANMiOHdE371lyy608WN
+x1e4BtDFk5rp4/w+LThE5BureH9ue/EVjM3ad2QFjDHJzj4pTgKIKxxbU2uZ41TD
+ZOqnW6k75su7/4DSL03Mjwar/ahz8X/aO/pcXWLiZhbUUeYZKerSmvPxXzveKrXw
+lA4f63tl8yx3v8uoM/g9R31wcdL/kTrxKPyaH/Cm73CoDiepNBKg2ZhQEKxFGdUc
+/RCWNccSxPQnLOsn5h+rHgg5R1OGWg==
+=5WeE
+-----END PGP SIGNATURE-----
+
+--U3aj3hIp60dvMzZi--
