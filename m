@@ -1,127 +1,173 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 712DD7E56B
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 10:44:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E5557898
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 10:44:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710845071; cv=none; b=MQhvxrLfX+DMVgmRUi4i0R9JJJRf0svlEQvykmgX5lSrF6C7g9uiNKmrzEZ5gZS6ydDkbxrYpBp9sQLL7ejJ9lJG/6OwyR3GrXVclFoZrmKaH0dyvyNiz44W0adxt3v22DxeRhHDEET4G5V0FndSNZVvkPPCqL2cBZbvuMZoZ7w=
+	t=1710845084; cv=none; b=Sfe55AGEaKk+yshvbfJ6fuIqncNY+qgFfE2UjY5YKXU81QkcjfA9k9qoC1m9ceqBavZ7YPE8RipU8t/TdY87VWihp//K6YnJs/bbHEUi1tgvqKLvyzhZwKskAXc2imU1b4KUD9WpZv2a2wSCFyH4QGzKwiZeVdzwpboW9OXmXe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710845071; c=relaxed/simple;
-	bh=d7tiEHopGAl3cIz2XD2WOO3+d1hLbV9VFAs1Dhfjv2E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D31EZXyaIEkrnxHdEQlFIuwbcbrOtNWWugUp0fLXOf74xbKoy2kJ5/G93FfnsvBukrlg6VBjcCkw5Jq3AqmMlBiR01Iu4mFMFjXghDNBjDAjHSMRrFsT43RH9yntSlOv6klercOAPbKtU8Y2Vt/YnCwpQ5Ud6JcLUzHe4BClckQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WGR8xswj; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710845084; c=relaxed/simple;
+	bh=m3pSUc46LB6V21p4bYJawYlmpmQ1kewBH2mwVCgKFp0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=nrmYV2J0ZLQ5usGhxcgNOLXDG+35Z7kGPuwsgL8N9GqtVB5GdC1Ag57mM/HKJH26xm6a0/1AfTTGTQ9kHuYOW9LYAV3VquZle0TINb8WOG26uy1qIxTGddcbZyu+2MbYKlqXVFaaoV1pGYTET4jPf7WYtcwiC963J33e/epzXzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Go+m2bUD; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WGR8xswj"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a46dd7b4bcbso66799466b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 03:44:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Go+m2bUD"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-41412411622so13025705e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 03:44:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710845068; x=1711449868; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MQ1yb6iGb3d17BmqG638lsarTHpqGq0a9mQ6hQHFbc8=;
-        b=WGR8xswjzDNvHKDiOf10WFPVqKuhFsUcRjBoA9SQy/jenAD832ESrIaE1A2VnmTX4Y
-         AQ2/4FmfHAXEYwoxZLWuwrVaJU7vDivYqhQkKX7u2ZWtFTlzHm0hBfwy23Eexa3wYmz5
-         282TzrFNa4crejk8AxXeJCeHcUqL9+HsBicTrYTdydrPBY+I+oT+AErOiglMP+pmBuVa
-         KUTsTv0TX8cL9BSgyaX1aXjaC5GgpDejK4L9JVrMP06Adiq06mYDE891AQk2cnDuSkfq
-         OmoZM6eUQw/RUNmpzoDovzS4vKpg+Q3FPxzNfxvU5ixvqo5qKS38E/TKFPFSXplXsokj
-         aQBw==
+        d=linaro.org; s=google; t=1710845081; x=1711449881; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w+CyiJitb+sZvqjM+l2rTfce0izU6NohaEsgLPWj2lU=;
+        b=Go+m2bUDUYh0Nm+QbkdRpElBEtcaElp85oiFuN1lNOwTCaqeYCxzq78bDTtC5F0+87
+         YaJOmEFp0WabZSNGnPlQ9YcoisBAnft+/n2uf8ktvIcOTXzveW7mH5VW2lLXBk+hNl9B
+         x5he2QSRgsankCCr3ETKJb/gAhX/YbnnLzpYbASyK85l/D092s6Z4mGATPowY06eehf0
+         opdnpbSeHw6ImVGzjVzU5bUGHWEOW0REGV7bkoOghxO3IrvTf1vI39GonmqqIqNuONIJ
+         M+BbxgaUqXnDBN5WPaqjnBZsy2HQjZ2JJhmY9q2aVP3iW20NWEReBMi8KYhzTBqxrQdq
+         YKVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710845068; x=1711449868;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1710845081; x=1711449881;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MQ1yb6iGb3d17BmqG638lsarTHpqGq0a9mQ6hQHFbc8=;
-        b=BdJ4wGdNk5SWUPWWsl6G1gfBLNbBIigKQq9qU1En37iedkmd63xCJk3YNOQpk/o4i1
-         tjTZvTu7Zvrp/BfMVBVwPPfew9jAzGr+i5w5pRwSyYY3l11cAb3wOYhRHOUuUoeC93C0
-         klK0QCPfhiKnlyJpWLTaK7V+HzxRN6k/Ms4kAMNv70I7gV8hFrHSq+9XL20fEfKkMLBW
-         l5MvgkfYea0Ux7OUQOcp11vSj6po2SHZuyMlTH/1LBmkFbTl+xwZGesI1FVb2KLkjj/0
-         KreCQP58cQg7arQdViiYb6cMvvhgIJzrz4Ym3T3vzuNuFcFoASaX4uLDDTF5qkK3/m26
-         iY0A==
-X-Forwarded-Encrypted: i=1; AJvYcCU1iqIA0okk+IJikzIlidCF48ac3SBpP3VFLVoxdAtQFLLgpDamGWMnRyUlZvDLcVnFDgk/GpJs94Hm1CeVMpX4NTmk94TaBXc7dQ24
-X-Gm-Message-State: AOJu0YySLdYehxYfk2DTgOt9ZV0nQass1UKxmgSYjPLT3luCbUxvcnxs
-	/4CybZbZwAntk4rMXppscUowAXlOygrI91SCrkeOp5ynWmN5u5fF
-X-Google-Smtp-Source: AGHT+IGG7cKhtzJvfiihETkYMGvT1No23quZLCmVUevI6w+biET3gRJt3h/Fi3eX38/WxTmTbyxorQ==
-X-Received: by 2002:a17:907:33d3:b0:a46:1a14:3563 with SMTP id zk19-20020a17090733d300b00a461a143563mr10374480ejb.50.1710845067548;
-        Tue, 19 Mar 2024 03:44:27 -0700 (PDT)
-Received: from 123000256IE.iskraemeco.si ([193.77.86.250])
-        by smtp.gmail.com with ESMTPSA id bx21-20020a170906a1d500b00a4655976025sm5882342ejb.82.2024.03.19.03.44.26
+        bh=w+CyiJitb+sZvqjM+l2rTfce0izU6NohaEsgLPWj2lU=;
+        b=fUbXn63HiDOGUaSOQ+2HFZLTCDzLQrHClcGtaaGx5G1B8gixOYagKCX+uaKYuHK/sD
+         PCMHrr46ZS1BI56RPyWqmRi6Z2RYzj6biLRN267EvD0Q+5pvqEJ5f0D3IOs0A9LFu5It
+         UpkdTtewKaQKeQFKU6tbgaFsGjxtQha4rrDa14wmW5heUuBxadTIMehTnlp27+oxPc1b
+         aZKQQqD5/1s8hBwILW+Op6ucMmmeQ7gwHm0M5Z18aPFdQpU32HB5xyOEZFkpro1LL/JH
+         XuhW3xbqe8wWCzptoJGE2Mn9l0VBLRpJmB1zipyFf09hoB4sM9z2kuoJs1UemjQ7OElf
+         fq4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX3N17OJ1tYmfAI0RyzT4yW7clWZBgWuaej9+MvoVr77F1sJ6XJA56nRQf8dzAH50NMeuGrSdtF/Ba/eRSUMdep8WXpRqH6l+Yl9YyO
+X-Gm-Message-State: AOJu0Yw8V+4Vsnn3EkGEPqgs/pdxSapgk4krD3xFrgASUZ/Hkx5/0ngo
+	nc/ahT2fB53/Tno//2482sjm+eencKQuH4Yet0wYqGKSzHWNWGI0Y++32Qqywhk=
+X-Google-Smtp-Source: AGHT+IFod7aH8if5MK1ECasnS6ahDAVSxt86oZPskyfEsyagEJMqbHS5KlO7A4yywx58PageRYB7OQ==
+X-Received: by 2002:a05:600c:19cd:b0:413:ea5a:7787 with SMTP id u13-20020a05600c19cd00b00413ea5a7787mr9881899wmq.22.1710845081371;
+        Tue, 19 Mar 2024 03:44:41 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id a5-20020a5d4d45000000b0033e03a6b1ecsm12029459wru.18.2024.03.19.03.44.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 03:44:26 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Brian Gerst <brgerst@gmail.com>,
-	Denys Vlasenko <dvlasenk@redhat.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Josh Poimboeuf <jpoimboe@redhat.com>,
-	Sean Christopherson <seanjc@google.com>
-Subject: [PATCH -tip 3/3] x86/asm: Use %a instead of %P operand modifier in asm templates
-Date: Tue, 19 Mar 2024 11:40:14 +0100
-Message-ID: <20240319104418.284519-4-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240319104418.284519-1-ubizjak@gmail.com>
-References: <20240319104418.284519-1-ubizjak@gmail.com>
+        Tue, 19 Mar 2024 03:44:41 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Date: Tue, 19 Mar 2024 11:44:27 +0100
+Subject: [PATCH 1/7] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: document
+ PHY AUX clock on SM8[456]50 SoCs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240319-topic-sm8x50-upstream-pcie-1-phy-aux-clk-v1-1-926d7a4ccd80@linaro.org>
+References: <20240319-topic-sm8x50-upstream-pcie-1-phy-aux-clk-v1-0-926d7a4ccd80@linaro.org>
+In-Reply-To: <20240319-topic-sm8x50-upstream-pcie-1-phy-aux-clk-v1-0-926d7a4ccd80@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2495;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=m3pSUc46LB6V21p4bYJawYlmpmQ1kewBH2mwVCgKFp0=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBl+WyU7GicaV/Sa+DAWz8H7pfML0XZg2u0PZSmIsdY
+ L6oe5wKJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZflslAAKCRB33NvayMhJ0XMKD/
+ 9uRTCJZKFuVtev94M7vFk4bDB7e0lWMazZKjKs+HT61PBJqNBPU7c3ZTJ+d5072U0MG7cm3+9b6Yo3
+ fnfqL3qbBfQ3iQZtdsH58AsG8O/nqde9bfiJwdklVmmTaF651OFPIfjc+MWDzhCGLC/b0sQGeOjZzL
+ kaK5lEjx/NT71KTCp/CAP5zVWdhnqA4iSGUu8z5m1bhhpoqWdEQL4sHbbs7nZ4k7l/qbR7BV8W+OUq
+ nCOpQQDBUvBlMhSzX6CjUiv4vGWyRg2WvlfhboFOHRwhbK63PPf2bJmgrMwPle9ZBFuczuIzxAN2uW
+ NDA1fNgB0Q5do86B3M+r0YAg17p5RqyN7vXmIJMweqj7GLcRQo/K6vqDRguiAykZxJq4Xres+IkTd9
+ dSbfT/l+637W8FWTpg2hd0Ds3NN9L2xwLjA6IV7nGGzp4DjLcMNa14eEbb4B9WpfbI4hii7M1WPjJo
+ OgE7/Zqh3RZd7iWESTM6CagexAESeOcymNZid+hbT4O50ONrggsCHiijnkCW8WSOwM2zqbsDKnnF82
+ rObVGqBK3AJ19Vc/DCa7jg6NuK4ch4zkLdczuIYOGE8G9PSHvIL5qPr+TExVApN9RlBoatyKU0QeK4
+ bgPrtjxYM203L5Z0b55YoNH+GjvM8V9y55HdN2UP1Dccgko70dxlMgEbWezw==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-The "P" asm operand modifier is a x86 target-specific modifier.
+The PCIe Gen4x2 PHY found in the SM8[456]50 SoCs have a second clock named
+"PHY_AUX_CLK" which is an input of the Global Clock Controller (GCC) which
+is muxed & gated then returned to the PHY as an input.
 
-For x86_64, when used with a symbol reference, the "%P" modifier
-emits "sym" instead of "sym(%rip)". This property is currently
-used to issue bare symbol reference.
+Document the clock IDs to select the PIPE clock or the AUX clock,
+also enforce a second clock-output-names and a #clock-cells value of 1
+for the PCIe Gen4x2 PHY found in the SM8[456]50 SoCs.
 
-The generic "a" operand modifier should be used instead. The "a"
-asm operand modifier substitutes a memory reference, with the
-actual operand treated as address.  For x86_64, when a symbol is
-provided, the "a" modifier emits "sym(%rip)" instead of "sym",
-enabling shorter %rip-relative addressing.
-
-Also note that unlike GCC, clang emits %rip-relative symbol
-reference with "P" asm operand modifier, so the patch also unifies
-symbol handling with both compilers.
-
-No functional changes intended.
-
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- arch/x86/include/asm/cpufeature.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml   | 27 +++++++++++++++++++---
+ include/dt-bindings/phy/phy-qcom-qmp.h             |  4 ++++
+ 2 files changed, 28 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
-index fa938ed96506..daae5c6e7d0e 100644
---- a/arch/x86/include/asm/cpufeature.h
-+++ b/arch/x86/include/asm/cpufeature.h
-@@ -172,7 +172,7 @@ static __always_inline bool _static_cpu_has(u16 bit)
- 		ALTERNATIVE_TERNARY("jmp 6f", %c[feature], "", "jmp %l[t_no]")
- 		".pushsection .altinstr_aux,\"ax\"\n"
- 		"6:\n"
--		" testb %[bitnum]," _ASM_RIP(%P[cap_byte]) "\n"
-+		" testb %[bitnum], %a[cap_byte]\n"
- 		" jnz %l[t_yes]\n"
- 		" jmp %l[t_no]\n"
- 		".popsection\n"
+diff --git a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
+index ba966a78a128..14ac341b1577 100644
+--- a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
+@@ -88,11 +88,11 @@ properties:
+           - description: offset of PCIe 4-lane configuration register
+           - description: offset of configuration bit for this PHY
+ 
+-  "#clock-cells":
+-    const: 0
++  "#clock-cells": true
+ 
+   clock-output-names:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 2
+ 
+   "#phy-cells":
+     const: 0
+@@ -213,6 +213,27 @@ allOf:
+         reset-names:
+           maxItems: 1
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,sm8450-qmp-gen4x2-pcie-phy
++              - qcom,sm8550-qmp-gen4x2-pcie-phy
++              - qcom,sm8650-qmp-gen4x2-pcie-phy
++    then:
++      properties:
++        clock-output-names:
++          minItems: 2
++        "#clock-cells":
++          const: 1
++    else:
++      properties:
++        clock-output-names:
++          maxItems: 1
++        "#clock-cells":
++          const: 0
++
+ examples:
+   - |
+     #include <dt-bindings/clock/qcom,gcc-sc8280xp.h>
+diff --git a/include/dt-bindings/phy/phy-qcom-qmp.h b/include/dt-bindings/phy/phy-qcom-qmp.h
+index 4edec4c5b224..6b43ea9e0051 100644
+--- a/include/dt-bindings/phy/phy-qcom-qmp.h
++++ b/include/dt-bindings/phy/phy-qcom-qmp.h
+@@ -17,4 +17,8 @@
+ #define QMP_USB43DP_USB3_PHY		0
+ #define QMP_USB43DP_DP_PHY		1
+ 
++/* QMP PCIE PHYs */
++#define QMP_PCIE_PIPE_CLK		0
++#define QMP_PCIE_PHY_AUX_CLK		1
++
+ #endif /* _DT_BINDINGS_PHY_QMP */
+
 -- 
-2.44.0
+2.34.1
 
