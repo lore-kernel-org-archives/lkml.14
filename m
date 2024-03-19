@@ -1,33 +1,32 @@
-Received: from smtp-bc0a.mail.infomaniak.ch (smtp-bc0a.mail.infomaniak.ch [45.157.188.10])
+Received: from smtp-1908.mail.infomaniak.ch (smtp-1908.mail.infomaniak.ch [185.125.25.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B7D56444;
-	Tue, 19 Mar 2024 10:55:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5C85BAF0
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 10:55:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710845714; cv=none; b=cEZiWLzrSoEBVihpkJXpNR2TBmLvWcb2suc1kY46jQIP9N5vsJZeoYupkGszc6adjAkkYtAfIMHzu/Ypxz/BORMxYL7KgJCxn/41efsi0iUjMqepYghuAV6bovJa3UfJ+jH0RXZEhev6Dc4vbMlibglN7FWdvs/a4F3L4t+3oTs=
+	t=1710845715; cv=none; b=rTfGXLZyVKGaZHGxGBfu7BsmeVaV+A6Z9V2y9BEfixYI/OdddtJsXyVfyt7Lj/eoOFJmGj2r9nR6nkog2JBLdjDBW9IJ7jHG7qlr+dJv0k9UQgo9ROxh8NKq0lhPUa8xlbdxd2jbOPMg8ESygA8TWLMro7+OWvl/JDSXdOKJeNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710845714; c=relaxed/simple;
-	bh=71EEtOY8haZwTtkTzteQK0uaERkTAj9zbYONX0mzdMA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C+kyWezc+oko8rXFUMjlfsqifZ7b4zpfKaioQQyyxDCzH2lwykqtWxUSBa/YzfrQL+8NqVDmZckRTwBXPxomQeb5Rdv+uTfziVKG8Z1F78GNelnJDinycag+13rJI/eWDyres8aDwQPSRu2cyjvuXl3vmr47K+GTsWD1RjpZups=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=UewFEH4i; arc=none smtp.client-ip=45.157.188.10
+	s=arc-20240116; t=1710845715; c=relaxed/simple;
+	bh=titjicsS13zyLYpwVbjFKzsdWlMZsZ9iAVihS7vtrRU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ghkx6RZmLE2SUfzn7KXeJY5zVkJEg/24SqpHT4et7WClcM0bb8YJHobIHGQ4rsKWtvPn5NDOUWqiI39uMBdFC2myiidUUc9f8Sf9GKTet+8JzHFRNrqXkr0P3W8Ko9wXD7ktx5mnSbZYxKUEi/SyMGW83WLMOYjQ+z1mdS9RHiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=Q7tT/TcJ; arc=none smtp.client-ip=185.125.25.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="UewFEH4i"
-Received: from smtp-4-0000.mail.infomaniak.ch (unknown [10.7.10.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TzT4Q53BnzMq2xZ;
-	Tue, 19 Mar 2024 11:49:26 +0100 (CET)
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4TzT4P6PZPzlgm;
-	Tue, 19 Mar 2024 11:49:25 +0100 (CET)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="Q7tT/TcJ"
+Received: from smtp-4-0001.mail.infomaniak.ch (unknown [10.7.10.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TzT4G1GLBzMq3Gc;
+	Tue, 19 Mar 2024 11:49:18 +0100 (CET)
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4TzT4D5thVzvGg;
+	Tue, 19 Mar 2024 11:49:16 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1710845366;
-	bh=71EEtOY8haZwTtkTzteQK0uaERkTAj9zbYONX0mzdMA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UewFEH4iSrJrSPok5JS56YwvhtiOCFyy6B9GXYlmlHWpW3KWLdiRoId3n+kFBXjMF
-	 etwj9/UZH7Ip6ElZVb89YVw79q7dLm3KuQrZ/8/TT5X81VPhxlKYsM6gBmIBzZv/Vk
-	 NDB2kDMrDI0ThVP+B7S6krYlWLMWDirT6vs4HyD0=
+	s=20191114; t=1710845358;
+	bh=titjicsS13zyLYpwVbjFKzsdWlMZsZ9iAVihS7vtrRU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Q7tT/TcJvK7xnZ0yNnH8RKseTWW7HMLg8r+H4B7xE+inCtDOxMj/yIS0gmUAS574p
+	 d1VT8nzN0WuOf/YgPmyMQPrKaMGUA+ZhjzVHME00J/VthdkIqwsIZEFZc80GJoFmyR
+	 cBePVO0WziY1W198OVLF5Mx5uDP8hjU07byNStJ4=
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Brendan Higgins <brendanhiggins@google.com>,
 	David Gow <davidgow@google.com>,
@@ -59,11 +58,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	linux-security-module@vger.kernel.org,
 	linux-um@lists.infradead.org,
 	x86@kernel.org
-Subject: [PATCH v3 7/7] kunit: Add tests for fault
-Date: Tue, 19 Mar 2024 11:48:57 +0100
-Message-ID: <20240319104857.70783-8-mic@digikod.net>
-In-Reply-To: <20240319104857.70783-1-mic@digikod.net>
-References: <20240319104857.70783-1-mic@digikod.net>
+Subject: [PATCH v3 0/7] Handle faults in KUnit tests
+Date: Tue, 19 Mar 2024 11:48:50 +0100
+Message-ID: <20240319104857.70783-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,98 +71,52 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Add a test case to check NULL pointer dereference and make sure it would
-result as a failed test.
+Hi,
 
-The full kunit_fault test suite is marked as skipped when run on UML
-because it would result to a kernel panic.
+This patch series teaches KUnit to handle kthread faults as errors, and
+it brings a few related fixes and improvements.
 
-Tested with:
-./tools/testing/kunit/kunit.py run --arch x86_64 kunit_fault
-./tools/testing/kunit/kunit.py run --arch arm64 \
-  --cross_compile=aarch64-linux-gnu- kunit_fault
+Shuah, everything should be OK now, could you please merge this series?
 
-Cc: Brendan Higgins <brendanhiggins@google.com>
-Cc: Rae Moar <rmoar@google.com>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Reviewed-by: David Gow <davidgow@google.com>
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Link: https://lore.kernel.org/r/20240319104857.70783-8-mic@digikod.net
----
+All these tests pass (on top of v6.8):
+./tools/testing/kunit/kunit.py run --alltests
+./tools/testing/kunit/kunit.py run --alltests --arch x86_64
+./tools/testing/kunit/kunit.py run --alltests --arch arm64 \
+  --cross_compile=aarch64-linux-gnu-
 
-Changes since v2:
-* Add David's Reviewed-by.
+I added Reviewed-by, Tested-by and Fixes tags according to previous
+review.  I improved a commit message and added a comment.
 
-Changes since v1:
-* Remove the rodata and const test cases for now.
-* Replace CONFIG_X86 check with !CONFIG_UML, and remove the "_x86"
-  references.
----
- lib/kunit/kunit-test.c | 45 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 44 insertions(+), 1 deletion(-)
+A new test case check NULL pointer dereference, which wasn't possible
+before.
 
-diff --git a/lib/kunit/kunit-test.c b/lib/kunit/kunit-test.c
-index f7980ef236a3..0fdca5fffaec 100644
---- a/lib/kunit/kunit-test.c
-+++ b/lib/kunit/kunit-test.c
-@@ -109,6 +109,48 @@ static struct kunit_suite kunit_try_catch_test_suite = {
- 	.test_cases = kunit_try_catch_test_cases,
- };
- 
-+#ifndef CONFIG_UML
-+
-+static void kunit_test_null_dereference(void *data)
-+{
-+	struct kunit *test = data;
-+	int *null = NULL;
-+
-+	*null = 0;
-+
-+	KUNIT_FAIL(test, "This line should never be reached\n");
-+}
-+
-+static void kunit_test_fault_null_dereference(struct kunit *test)
-+{
-+	struct kunit_try_catch_test_context *ctx = test->priv;
-+	struct kunit_try_catch *try_catch = ctx->try_catch;
-+
-+	kunit_try_catch_init(try_catch,
-+			     test,
-+			     kunit_test_null_dereference,
-+			     kunit_test_catch);
-+	kunit_try_catch_run(try_catch, test);
-+
-+	KUNIT_EXPECT_EQ(test, try_catch->try_result, -EINTR);
-+	KUNIT_EXPECT_TRUE(test, ctx->function_called);
-+}
-+
-+#endif /* !CONFIG_UML */
-+
-+static struct kunit_case kunit_fault_test_cases[] = {
-+#ifndef CONFIG_UML
-+	KUNIT_CASE(kunit_test_fault_null_dereference),
-+#endif /* !CONFIG_UML */
-+	{}
-+};
-+
-+static struct kunit_suite kunit_fault_test_suite = {
-+	.name = "kunit_fault",
-+	.init = kunit_try_catch_test_init,
-+	.test_cases = kunit_fault_test_cases,
-+};
-+
- /*
-  * Context for testing test managed resources
-  * is_resource_initialized is used to test arbitrary resources
-@@ -826,6 +868,7 @@ static struct kunit_suite kunit_current_test_suite = {
- 
- kunit_test_suites(&kunit_try_catch_test_suite, &kunit_resource_test_suite,
- 		  &kunit_log_test_suite, &kunit_status_test_suite,
--		  &kunit_current_test_suite, &kunit_device_test_suite);
-+		  &kunit_current_test_suite, &kunit_device_test_suite,
-+		  &kunit_fault_test_suite);
- 
- MODULE_LICENSE("GPL v2");
+This is useful to test current kernel self-protection mechanisms or
+future ones such as Heki: https://github.com/heki-linux
+
+Previous version:
+v2: https://lore.kernel.org/r/20240301194037.532117-1-mic@digikod.net
+v1: https://lore.kernel.org/r/20240229170409.365386-1-mic@digikod.net
+
+Regards,
+
+Mickaël Salaün (7):
+  kunit: Handle thread creation error
+  kunit: Fix kthread reference
+  kunit: Fix timeout message
+  kunit: Handle test faults
+  kunit: Fix KUNIT_SUCCESS() calls in iov_iter tests
+  kunit: Print last test location on fault
+  kunit: Add tests for fault
+
+ include/kunit/test.h      | 24 ++++++++++++++++++---
+ include/kunit/try-catch.h |  3 ---
+ lib/kunit/kunit-test.c    | 45 ++++++++++++++++++++++++++++++++++++++-
+ lib/kunit/try-catch.c     | 38 ++++++++++++++++++++++-----------
+ lib/kunit_iov_iter.c      | 18 ++++++++--------
+ 5 files changed, 100 insertions(+), 28 deletions(-)
+
+
+base-commit: e8f897f4afef0031fe618a8e94127a0934896aba
 -- 
 2.44.0
 
