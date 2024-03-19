@@ -1,136 +1,118 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF4E8002A;
-	Tue, 19 Mar 2024 13:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59DE57F7ED;
+	Tue, 19 Mar 2024 13:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710854760; cv=none; b=obKaKNxV0zKv6pUetpFTk0FnSreOj40bOd+RUlrAHYIByUJfNrFF0HUjjmyd8hYXr5mSnHlrj62fjItVYP/75W9KezpHyvzWuY4b50MPbsOffZ7aHJWwoh6t/npwGR1E+m5j+wK5tg+Qaix1lB+vuoM23TGY/bnLIIJpyvX/KiM=
+	t=1710854772; cv=none; b=mFXiJhBGkeID4s/v4u1ca9YsY36eZhMlN/LJ3bh0cSzTsBm14K+DvHbrkdTcN0awIgbMojBQtoNNiayN0oDhKR6IxGwCmKIopk5Y/3Mf8ohrgRgUS5fUWGPWxgVsc82/WSUMa7MWmJCEQ5U8Z6iYbeX75zVoYFFzNRx8r6C2Hqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710854760; c=relaxed/simple;
-	bh=QMp0a6X0zF1/jLhQMcPxC09b0tWyVVG0eCAEf4UbP4E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FtPwC6Vd56N6qAKWm0BcH+1aoCRiWMVlMsQiMOlqYumMqP502/F4yLNUu5+GsYIkQm9RS7SRoTkN31GyC3DmSJIAlZsCJHF3xEHzcBjrbJmg8+DD5TxUQz874QGLSJh0I05aZ4hYwwrTGo3Kv6aGPf/Sjy+UyZh+6Rc9xpghWQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1710854772; c=relaxed/simple;
+	bh=+Lf9yfo6mkbfFEH+Juha5BSbT1+36sEDAJTijaXsEcw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZIkih+yf9CzIIxrTfp0ZcLxBDVNBLnh3InYMoQquMt3aFnySRBC0D5wMVAd9l62+z0mtmS/xdDjyHTlBVEHVnVw2rAns7tsat8PY4cRpGoDXZEv1qlU71Hcu3125Az9jiWYFJf+TjDm66iAXYW41SJVCGQ/OdMF+xY52fx3xEYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mVa/GDGh; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-609ed7ca444so51530507b3.1;
-        Tue, 19 Mar 2024 06:25:58 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mVa/GDGh"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-41462295004so7593255e9.0;
+        Tue, 19 Mar 2024 06:26:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710854768; x=1711459568; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EEOjV6AJZtNxCuHMhEml9OSDSgFvsq54cZ/lHYpo9oA=;
+        b=mVa/GDGhBJqaW/3qUR/fRSWxxT9nLW4L/eGZ3u5W+JMi7yP9Qzyf/jcc2yLenjI/nR
+         Ktq1TvcnxtZpO1lnopk8bYRxVcQKqRaUjU9if53YbHyGp3qy2TGnwzyruT1AJoJNFl1s
+         mAFQ9XkBhgMTfQPC5pz+9s9snVizvwqkWoRdSRKI33h+h+P/irJSttoLoVer+ONf+DFy
+         ytqpWx5yL6VjZ8DYIWBXh5jYzgGDLCqLINrwSTzQ69TtP46E54lHWToPEDyRKYCzf4uA
+         Cq66xw1+QmzrcdK3Sse/pTBZuRXoofE9q647ijaGQEeX/K28evb6oz0nCTCZJHKK81XP
+         6cgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710854757; x=1711459557;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=roVBegNwTJt5k2/1YSZU0EzfT6WRuPewqC12eJohDSE=;
-        b=P9HAYdhZvfqfSJoi+dngcjmjIagdjNjv7jzMTpNaZEVms7xCbQ8I6/Rqh7DNVHopLQ
-         G/f+nC6Jy6UJu/tbRrZC+r1KizbLvUltacM/Tg4t+Z451T5xHWsGBV3UVXjXzi0kAGa+
-         5+k7qaBDeUdS+05aIQBcE+wWBvG+aEhAA7ggE6tg3l+FtfJH2wQwYAzxBE9y6wWLyPpo
-         Mtzxiv7sPXMat3dxnz3B+d1g507gWs+2QsoWUJBP56vDr45L6BLor6ryXeaf5dyD5xCJ
-         iUvqqxzEeigaUGIiTKNOLhixs0CJSraR+ratUwS0qCdvT2hRA3dCLveMl/YyzhcumFWP
-         BY+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVUfZLfrdE/hKrqXB4+8L+lIOS8cbyJhY05W+x/sM1NCqTYxyFf96zKeEmbfbw4JuxO8z1PAsid0vgq9JjoUYkcVk5+YOgCmmtRFtvaxiUvk6TYBT6f7mmWU7O+VxG+n0yDOKQPxOiV0G/1OKOHgD8PlWvX+3XP+dfx9nQ8YeHSAdhK+ywVv93Kpuf1FmJCqw8pQiekWNDWp/UEu63e5vQNcoaN31E4NErL
-X-Gm-Message-State: AOJu0Yy34WPLd1K67g0v4NiL8+i1GTSKgVTvRC7Yyil6rAVmUE7D+5Tn
-	eAA9NOT+QMLXvTUGFwqJutXzDgv+A+mxXUd/Op5KgpntOChPI5eeRM9783dqh+o=
-X-Google-Smtp-Source: AGHT+IEpK0fCbMXb5ndXOgGdw9eq4LBstpJ97QsVGI4+/tj7rJPsLOz+AAa+kfxbWcbZIB27nbKP+w==
-X-Received: by 2002:a81:8a41:0:b0:610:b448:663b with SMTP id a62-20020a818a41000000b00610b448663bmr6573252ywg.37.1710854756950;
-        Tue, 19 Mar 2024 06:25:56 -0700 (PDT)
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
-        by smtp.gmail.com with ESMTPSA id y21-20020a81a115000000b0060a085163adsm2368014ywg.73.2024.03.19.06.25.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Mar 2024 06:25:56 -0700 (PDT)
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-609ed7ca444so51530237b3.1;
-        Tue, 19 Mar 2024 06:25:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWULV3Fj9FllAcDslO7dDZ7P74ZED8L/VeiZpIu7q7GJ63x5pzioMqLTepe67Dy4x6mC+NJjizF2MISPZ1UdOzDqApW0TrZJ+VXNJDywPPbdXeEcOuvFB7jXmKuG9lPWxp0ZZvj9OJXigREiuJ0cE9xhMmGzEmxQNrA2XmL4eoPYQYlBE2RicFlvKcxQAvT7cVFNNgq8EhcIBzFk70C8Tr8ED03R6PiSxa7
-X-Received: by 2002:a81:8a41:0:b0:610:b448:663b with SMTP id
- a62-20020a818a41000000b00610b448663bmr6573232ywg.37.1710854756514; Tue, 19
- Mar 2024 06:25:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710854768; x=1711459568;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EEOjV6AJZtNxCuHMhEml9OSDSgFvsq54cZ/lHYpo9oA=;
+        b=SSK1gcehtYioJJlUq1BwD4WdZRs35sBkqb/YuFpazCYtWqeT5qjn/ct64kLs4qZEfa
+         dfC2LT2k6t4kpxTxR4z6uThHnzLVD9thioTH1AadYswcoNh1E/P5H03nx85iV+mnem9W
+         TK4daLKKmZv1XYrPkJl7lHVNSsxIQlod7AEIhNXL3UqNZPfGB7TxIU+fV2SBjQVU9nFP
+         ei12jFTHRIfXn6alPTTTQqBr7q/6pe1DxEunP1duzOPq0Efprcl0I9x6gN0tsJy1w/K3
+         f5Km3+hQ78j6uSm4oUHU2tcJLKngGEydGYKL09SEbDICbQo3QltB9+g7y0XSRu24fmtq
+         cuCw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4pD6sr+v8RJ1VfwKrVpczW5v4Ii3V4XOBvqdnIZ6yQICG0TyzjOgEkeLLyueEfPEMEPPfpqXMtb3jCPfvenNXX6DfV/mTCUVp96NRWxhSMcufBUnB90yiMhYBnBpezkHZfReBJgnZccYJ/+2LG5boatWPH5F4YI1gl+6briZTboKPxw==
+X-Gm-Message-State: AOJu0YzH3mIpAiTjQUYL5KjLuhdj2D8ezN1nNPhJPlJU6vfDdvsa9YpX
+	zTwUNF8110nANTLQ+HuTAU25LGWZn75wqKiBJvvfDe0M2Stvp89N
+X-Google-Smtp-Source: AGHT+IGhb4DPnIcwetsmnjlwEq6a03j52n4/F6VPdXGJpjtmE63SNwm9Z70GYrH3UiatbHtqGFWiyw==
+X-Received: by 2002:adf:cf08:0:b0:33d:c657:6ae3 with SMTP id o8-20020adfcf08000000b0033dc6576ae3mr11982182wrj.7.1710854768345;
+        Tue, 19 Mar 2024 06:26:08 -0700 (PDT)
+Received: from prasmi.home ([2a00:23c8:2500:a01:3c11:2c6f:3ba9:bab])
+        by smtp.gmail.com with ESMTPSA id g4-20020adfe404000000b0033dd2a7167fsm12370020wrm.29.2024.03.19.06.26.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 06:26:07 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Chris Brandt <chris.brandt@renesas.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v3 0/4] Add RIIC support for Renesas RZ/V2H SoC
+Date: Tue, 19 Mar 2024 13:24:59 +0000
+Message-Id: <20240319132503.80628-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240318172102.45549-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240318172102.45549-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <db13e305-adc4-4990-b9ec-b1cdcdad4406@linaro.org> <010e4742-438f-413f-811f-a033ec104832@linaro.org>
- <CA+V-a8txP39HJJrJcNqCUgw2NkdA3uSvBrbdSzw0bN6r5LpNaQ@mail.gmail.com> <51743788-3444-4817-864b-404205a06137@linaro.org>
-In-Reply-To: <51743788-3444-4817-864b-404205a06137@linaro.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 19 Mar 2024 14:25:43 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVWMt_JqpiWasZxS3D8dS5JYgxDU0SKbFxNVV-zWk8D+w@mail.gmail.com>
-Message-ID: <CAMuHMdVWMt_JqpiWasZxS3D8dS5JYgxDU0SKbFxNVV-zWk8D+w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] dt-bindings: serial: renesas,scif: Validate
- 'interrupts' and 'interrupt-names'
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-serial@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Krzysztof,
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On Tue, Mar 19, 2024 at 2:04=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
-> On 19/03/2024 13:43, Lad, Prabhakar wrote:
-> >>>> diff --git a/Documentation/devicetree/bindings/serial/renesas,scif.y=
-aml b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-> >>>> index af72c3420453..53f18e9810fd 100644
-> >>>> --- a/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-> >>>> +++ b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-> >>>> @@ -82,38 +82,6 @@ properties:
-> >>>>    reg:
-> >>>>      maxItems: 1
-> >>>>
-> >>>> -  interrupts:
-> >>>
-> >>> I don't understand what is happening with this patchset. Interrupts m=
-ust
-> >>> stay here. Where did you receive any different feedback?
-> >>
-> >> Look how it is done:
-> >> https://elixir.bootlin.com/linux/v6.8/source/Documentation/devicetree/=
-bindings/ufs/qcom,ufs.yaml#L44
-> >>
-> > Thanks for the pointer, as the above binding doesn't have any
->
-> Yeah, that's just an example to point you the concept: top level
-> property comes with widest constraints (or widest matching items
-> description) and each variant narrows the choice.
->
-> > description items as compared to our case, to clarify I have updated
-> > the binding is below. Is this the correct approach?
-> >
-> > option #1
-> > ---------------
->
->
-> Yes, it looks correct.
+Hi all,
 
-Why duplicate all the descriptions? The only differences are the number
-of valid interrupts?
-What was wrong with "[PATCH v2 2/2] dt-bindings: serial: renesas,scif:
-Validate 'interrupts' and 'interrupt-names'"[1]?
+This patch series aims to add RIIC support for Renesas RZ/V2H(P) SoC.
 
-https://lore.kernel.org/r/20240307114217.34784-3-prabhakar.mahadev-lad.rj@b=
-p.renesas.com/
+v2->v3
+- Included RB tags
+- For riic_writeb() now passing val as second argument and 
+  offset as third argument
 
-Gr{oetje,eeting}s,
+v1->v2
+- Dropped dt binding which update the comment.
+- Used a const for V2H SoC instead of enum in items list
+- Dropped internal review tags
+- Renamed i2c read/write to riic_readb/riic_writeb
+- Made riic as first parameter for riic_writeb
+- Dropped family from struct riic_of_data
+- Included RIIC_REG_END in enum list as flexible array member
+  in a struct with no named members is not allowed
 
-                        Geert
+Cheers,
+Prabhakar
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Lad Prabhakar (4):
+  dt-bindings: i2c: renesas,riic: Document R9A09G057 support
+  i2c: riic: Introduce helper functions for I2C read/write operations
+  i2c: riic: Pass register offsets and chip details as OF data
+  i2c: riic: Add support for R9A09G057 SoC
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+ .../devicetree/bindings/i2c/renesas,riic.yaml |  19 +--
+ drivers/i2c/busses/i2c-riic.c                 | 125 +++++++++++++-----
+ 2 files changed, 100 insertions(+), 44 deletions(-)
+
+-- 
+2.34.1
+
