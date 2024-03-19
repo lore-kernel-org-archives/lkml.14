@@ -1,154 +1,189 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2130.outbound.protection.outlook.com [40.107.7.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D0D64CE6;
-	Tue, 19 Mar 2024 01:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710812191; cv=none; b=JVD5VFaMbR7vnoXhfo9aN+/v5O15tcfe+UH15U9rAJvdicqnYxCIIXmk/+ugFbCj07kH96jpoSLxvtQq2fkysMrrYsRaq4BiWebTZN6LUDynyZ/8NjzdgSLiNQBwRv+EDhdWB6puYV1cxzerTwl7ofsY/KMzlCgmSnJrASlh3aU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710812191; c=relaxed/simple;
-	bh=o4H8PrhpY77bG69iFjnWF46CIYn0Hh8JwxDCfzb70ns=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QbIk05Hg3F1D06VpG6LMlus5mKb78vWPB94qJGqCS13Jb4MWi3HTMtvsL+5nWUA6IwFaly1z8QZrCX3VTV4uh5EyfOEJN5JFUo4Bzsg1jb7J8klmXl6ET6OkvhXnWXGYkInuUIDvgC+GvymNI+bcff0JDdknJv8Tehp+GhG/3vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TzDPZ2LBvz4f3mJ1;
-	Tue, 19 Mar 2024 09:18:26 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 338D31A0E78;
-	Tue, 19 Mar 2024 09:18:34 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAn9g7O5_hlUIGNHQ--.34497S8;
-	Tue, 19 Mar 2024 09:18:33 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	djwong@kernel.org,
-	hch@infradead.org,
-	brauner@kernel.org,
-	david@fromorbit.com,
-	tytso@mit.edu,
-	jack@suse.cz,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	chengzhihao1@huawei.com,
-	yukuai3@huawei.com
-Subject: [PATCH v3 4/9] xfs: convert delayed extents to unwritten when zeroing post eof blocks
-Date: Tue, 19 Mar 2024 09:10:57 +0800
-Message-Id: <20240319011102.2929635-5-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240319011102.2929635-1-yi.zhang@huaweicloud.com>
-References: <20240319011102.2929635-1-yi.zhang@huaweicloud.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9851E504;
+	Tue, 19 Mar 2024 01:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.130
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710812429; cv=fail; b=D+Pyy323erKhSE65Kb7wbWoEOIZvTl6AdBRX0+fduuFJourv+O7hDZWFO5z0glMCIGF6EXsJsEiX0SYX6YTlj3dNB2RkaEXtWTlFw8x9aTHxoxUOqkxFiOaEvp0PWUTf/vBGpu1pVkBMDLD2wjLowHbpyq+HfEMgAfw/ilPkABI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710812429; c=relaxed/simple;
+	bh=GnoLhJyR0iesly2dv1uybV5hG44Ge4soDrEHq14375M=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=H340gFYOoF7vTv61Mlf9xucnMouwXrRFbIKgOD4lJR6k6M1zpbWef/kjK78/HywE68Is41t7XE1GQbRSSqmVuFJfqCdFJeDXR1fHvNBbAb91z0wYva6QVs9/lOmduNV1axnvGVjP1JMHjiA0nSI/6wj6a3GnK8RPlTqEEAQgZyI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=QQ5qQmw9; arc=fail smtp.client-ip=40.107.7.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QQ5qQmw9"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G9XgiLd+s6qMlv5LY0C1k8R/zvt8e8KBjvhxZsq4vTtkQt2SdWtPszZ7J11w2+SL2hJoYLGOOtUoPozNeTgIf5sfNsxD6SgRz2eh3Fu9mB/w/9m/IyC16/SuROQ0Szf/XD3wYiQ8VnumNh5OK+EElPlqEM7x6F0LSuErOdX66VZurK5lVp5pHRnP4vY1F8yTpFhVJt2Nhq31GVT8LeQVJ+BQj9aZfjc7T+6EVF3js2eQrtZ+5S4jDff6GeOg/N/PhusWKfrVPt7krPyaGdv39QEo7fys79eEC/PQ5weg0eRWvRtdVABl8NAKaXBqhq6TKdf9RYsfEHYU8fd95tUTVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GnoLhJyR0iesly2dv1uybV5hG44Ge4soDrEHq14375M=;
+ b=ZNy9T356uUdy5t36DO6LBsPszzxjzoGkaAoW+GdFBDj4TsoUP8seGo7rqneZ+0eFkmuh5/+5gvLumls12zWtb0D0CAkNyjr0WhpdGlFrdOj37B4y2GWU50t9ti1gJqHPIi4dlE+6X7qsKDxQQP/fiVCqkxNK6+FfB7PamZ2nJoNqqC1grZrd3tUB4Q4amdDSWsdwKwwFUp0p2Ydy5OqKaYHi0YyvMm+Mb/6/BjN9vmcPcqWrYSsdHZZCnpl2cCqDQB3pkk11hB1K2j64W2Pl518eDl9uvnFsC9TokU94W5Yjph7M6CiYG+iprKdBtzRhCOgDcmnKqf7aQErwrlJNuQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GnoLhJyR0iesly2dv1uybV5hG44Ge4soDrEHq14375M=;
+ b=QQ5qQmw9Wp/qPLA0Uv9I3ukplznT5BlERQHs27kig98lDDEWJC8ggcnR5tfKrx0/ynIjaJf28l318BXV5IzSIW2LznOxJyxyn8xWKhIQP1XiaoclzXau1ldQM+hj0MPZ5RsuxcOeWdZyPMNhv5qjW0aCIBBB3X4VnRRMjj5/Yqg=
+Received: from PA4PR04MB9638.eurprd04.prod.outlook.com (2603:10a6:102:273::20)
+ by DB8PR04MB7001.eurprd04.prod.outlook.com (2603:10a6:10:11f::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.26; Tue, 19 Mar
+ 2024 01:40:24 +0000
+Received: from PA4PR04MB9638.eurprd04.prod.outlook.com
+ ([fe80::6e8:79bd:7877:afa7]) by PA4PR04MB9638.eurprd04.prod.outlook.com
+ ([fe80::6e8:79bd:7877:afa7%3]) with mapi id 15.20.7386.025; Tue, 19 Mar 2024
+ 01:40:24 +0000
+From: David Lin <yu-hao.lin@nxp.com>
+To: Kalle Valo <kvalo@kernel.org>, Francesco Dolcini <francesco@dolcini.it>
+CC: "briannorris@chromium.org" <briannorris@chromium.org>,
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pete Hsieh
+	<tsung-hsien.hsieh@nxp.com>, rafael.beims <rafael.beims@toradex.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>
+Subject: RE: [EXT] Re: [PATCH v9 0/2] wifi: mwifiex: add code to support host
+ mlme
+Thread-Topic: [EXT] Re: [PATCH v9 0/2] wifi: mwifiex: add code to support host
+ mlme
+Thread-Index: AQHab2onJLj7by1TDUGmc5gbcJq9YLE4nU6AgASwFVyAAQ/s8A==
+Date: Tue, 19 Mar 2024 01:40:24 +0000
+Message-ID:
+ <PA4PR04MB9638820A9F4074F03F026B89D12C2@PA4PR04MB9638.eurprd04.prod.outlook.com>
+References: <20240306020053.18054-1-yu-hao.lin@nxp.com>
+	<20240315094927.GA6624@francesco-nb> <878r2fevu5.fsf@kernel.org>
+In-Reply-To: <878r2fevu5.fsf@kernel.org>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PA4PR04MB9638:EE_|DB8PR04MB7001:EE_
+x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ l8QlYruWGQ+XyI8vPebdTaYgL1dEg/U8bX4XFTBpaPXZTTDMcVhegqP/5TZB4M8Q+9eGNmepV6X1dVNgcCU4cFw7MzCHUGSahILQTfZ36AB6CJgBcg8gnG5gbosfBK9o9rPxlUYOXY3cMaGP8CMwIgKcmn+9s9n7oQISnIY3i0suteEBkmY+ktoK6IIFGVwBaa38YUMnAdY/8suiTYynhLxjMWxUrmjLvZNiBKAcnD0zFR5WUBQlrYtvioRiNFx2kQma0qm3xjv4+9SNTUbGQsGjfUejmc23ZefHjVoF0TMR+C2EbIQ6iYQi3BWA/1H4KYtSsrxthgtFaWmf9rNt3vRpHhgb8W/oLbuvuHwD9Yq+VolCQZDvCKrTcISrREwnqMhMZGKWpEhWmceVZGbIHxtu1Oa7R070dtwt1EsaeeHhDrpERlNRTPEurW7Ea7hKyc1uLBTZW7egmUJx8uTxTWa+mvEsj10RWGm0TwRv/vILr/5Rag7T7fTWr3jLmgW/nfJaA2ffsOtXBPon+L5FFNZFvzNPL8QN7+xRznNh509dg+y8m/RBMgUMWw1zWPVyrg/E5Lmcz7bOt7NrhWjVYIf6vtWMIZN5xDjkyDVS0haQ4fycbzZqgvgqRYOA+uyreyRrwzOzxviFKLxrhSg3LmIjS28dFh2pU0zMf0l3j3s=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?RVKRIUkn+HR0zeU9dy+oBuZSkR2EH59k9rNj7HHc7KK1bA/FC3ShXyayjkf5?=
+ =?us-ascii?Q?F2ljgH9OCVMxEp6MMbnEFGQq0YJPQQJWhOaYZehTOzg+ufkxMD0ZNZu+7pzv?=
+ =?us-ascii?Q?xQrWIu1RwrCGNjTp/iDNNlEVzSn4/c3rd1XfeHSxVyANrPmfpdD28xbI8fWS?=
+ =?us-ascii?Q?/xWpzn280UManjFLdDKgGLPZh7DHBzq5N2NcawpuqxziZjxFDV8cXICmHHUh?=
+ =?us-ascii?Q?K1mQKzUoA+d0OvRgl44y63V8bRUSMj9e3bzBOT3OItM3wh0vxYt9na+Kj5HD?=
+ =?us-ascii?Q?AbHon4YcPkwwKbx2SeeOFnP/eQXJStRoF704iUgCQ3Mll9RXxIISwAdQkeOh?=
+ =?us-ascii?Q?QZFa8iHZNUGZriEXqu+uyj1sibMZIkOtEAg5tBN1P0iOEMPZH0EdHudISe9l?=
+ =?us-ascii?Q?DyC797uSg3QX7SnwCvjZZInihexpB275zpWHRVafnNyE3NNcoIu0rY0CFlPb?=
+ =?us-ascii?Q?FNkIwzqXc21xpmpL7L3x1X0KSZ73B2C0e0Z+W9pHVFD2tqxmwEa/xV3fMHlE?=
+ =?us-ascii?Q?Yggq4cElXCa39TnR9urnkk9xyp5guvDFv3M6lmlSbouaICHyKZPR5CimqzpR?=
+ =?us-ascii?Q?10BcCRG//Azp90VmF1ij/u5CEBSFruGGS9cpIQjP3p9mletbUYg9J3IYVqu1?=
+ =?us-ascii?Q?VCNlXGT8MD0eqGxHHl4VE2t7g+E04a9jLnSJ2m4/rOonng067BocrciYLmYr?=
+ =?us-ascii?Q?su8CE1MuYBulamZUAZDSWhN4JmwKYf2IDdV9zdTxswpMy0hK7t49rUhHW3/z?=
+ =?us-ascii?Q?hu4ZPDR5zUFXZ8xGSPMfSogD0W3Hqwg9/VOgpCFZaQra1P08jh30owSDt6II?=
+ =?us-ascii?Q?YXwhSYHkuSa/XwPAfeHjFU53CI8dy3CUWNAZqj7c3u7xJBkdReh0TW1hiBDo?=
+ =?us-ascii?Q?7Su2I6MQLzRjrpI+i0rabK7gA+gJ/msZoBKn/iLYNuVY6TjRBM3PYeULgoTA?=
+ =?us-ascii?Q?L0Ok+jpBvZW9rppKBC0QYyMgusWCu0An7BrHRWg+ZtU3IyxKihSznL7t/i75?=
+ =?us-ascii?Q?xeLhf9tOEylhYdip3asmtkorlp8TDnbJ96NuuRtui91KA5PiG9FzgscZ9Rj8?=
+ =?us-ascii?Q?3sexQZODqu3/SRIRy8Ob4i9Khu9mjlkbCclyfYdKBXgLQBh1jX68vaeYZwQp?=
+ =?us-ascii?Q?T7NaZcKNEeOoO1neGpuXXhbDv8B8fIqC45pksBcXxyPnojb3z+N4+YDrwGWZ?=
+ =?us-ascii?Q?YawWv4vAErFQ5mGa1g6+zwt4ltsu3XielVkwFbYjwJQYEvhYa4m+YbUd74RG?=
+ =?us-ascii?Q?7VCdjsvqs+Kb2X2vpihlDZhhflQWOdNlaQjSNkhMTepy8LnjtpIQkRL9toE0?=
+ =?us-ascii?Q?S6zNXmLyiwAhsn5UZCx9Qje4QPX2Jvxjo2JvqWDsxCaQAsLaUflfGrOD1YlU?=
+ =?us-ascii?Q?YV6YggB0VFBH3N3bxQHn972d+Mna8TWC/AFWE8una+sEL0V9knyYk0i582HO?=
+ =?us-ascii?Q?I9/Tn652oObwl+hWR07UZCoLW1xI+aVtF5XKiMuPos8RyNJNg7crYjCkRFLE?=
+ =?us-ascii?Q?WIjurvMDN/nUIxks3rQBjwXlaPK2KU/s4nn+zIyHT8GB3IcrZlR/Rtd6uRsW?=
+ =?us-ascii?Q?OwuXxiyO8aFUYIjCdoVZ9C2V12jlcjHG6V+GS3eP?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAn9g7O5_hlUIGNHQ--.34497S8
-X-Coremail-Antispam: 1UD129KBjvJXoWxGw4ktry7GF4Utw4UurW8Crg_yoW5Aw15pF
-	Z3Kwn8GrsxGw13Zws3AFnagw1F9wn5Cw4UJryfWwn3Xas8tr1IgryIy3WYgw18ArZ3A3Wj
-	gF4YgF1I934UuaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPF14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-	kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUOBTY
-	UUUUU
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9638.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47c226fe-43bb-4479-56e5-08dc47b58c04
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2024 01:40:24.3304
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: oraQZKHCll8HVBYlXXoCRXmrENxRt4wcFCBMGCRmtaFEQoWLqJHWvMZ0rYj995zT/D0vg0XjoGlga0RudIBKCQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7001
 
-From: Zhang Yi <yi.zhang@huawei.com>
+> From: Kalle Valo <kvalo@kernel.org>
+> Sent: Monday, March 18, 2024 5:25 PM
+> To: Francesco Dolcini <francesco@dolcini.it>
+> Cc: briannorris@chromium.org; linux-wireless@vger.kernel.org;
+> linux-kernel@vger.kernel.org; David Lin <yu-hao.lin@nxp.com>; Pete Hsieh
+> <tsung-hsien.hsieh@nxp.com>; rafael.beims <rafael.beims@toradex.com>;
+> Francesco Dolcini <francesco.dolcini@toradex.com>
+> Subject: [EXT] Re: [PATCH v9 0/2] wifi: mwifiex: add code to support host=
+ mlme
+>=20
+> Caution: This is an external email. Please take care when clicking links =
+or
+> opening attachments. When in doubt, report the message using the 'Report
+> this email' button
+>=20
+>=20
+> Francesco Dolcini <francesco@dolcini.it> writes:
+>=20
+> > Hello Brian (and Kalle),
+> >
+> > On Wed, Mar 06, 2024 at 10:00:51AM +0800, David Lin wrote:
+> >> This series add host based MLME support to the mwifiex driver, this
+> >> enables WPA3 support in both client and AP mode.
+> >
+> > What's your plan for this series? I know you raised some concern when
+> > this started months ago and I'd love to know if there is something
+> > that would need to be addressed to move forward here.
+>=20
+> Based on the history of this patchset I am a bit concerned if these patch=
+es
+> break existing setups. I'm sure Brian will look at that in detail but mor=
+e test
+> results from different setups we have the better.
+>=20
 
-Current clone operation could be non-atomic if the destination of a file
-is beyond EOF, user could get a file with corrupted (zeroed) data on
-crash.
+With host mlme: tested by NXP QA and Rafael.
+Without host mlme: tested by Francesco and myself.
 
-The problem is about to pre-alloctions. If you write some data into a
-file [A, B) (the position letters are increased one by one), and xfs
-could pre-allocate some blocks, then we get a delayed extent [A, D).
-Then the writeback path allocate blocks and convert this delayed extent
-[A, C) since lack of enough contiguous physical blocks, so the extent
-[C, D) is still delayed. After that, both the in-memory and the on-disk
-file size are B. If we clone file range into [E, F) from another file,
-xfs_reflink_zero_posteof() would call iomap_zero_range() to zero out the
-range [B, E) beyond EOF and flush range. Since [C, D) is still a delayed
-extent, it will be zeroed and the file's in-memory && on-disk size will
-be updated to D after flushing and before doing the clone operation.
-This is wrong, because user can user can see the size change and read
-zeros in the middle of the clone operation.
+Thanks,
+David
 
-We need to keep the in-memory and on-disk size before the clone
-operation starts, so instead of writing zeroes through the page cache
-for delayed ranges beyond EOF, we convert these ranges to unwritten and
-invalidating any cached data over that range beyond EOF.
-
-Suggested-by: Dave Chinner <david@fromorbit.com>
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
----
- fs/xfs/xfs_iomap.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
-
-diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-index ccf83e72d8ca..1a6d05830433 100644
---- a/fs/xfs/xfs_iomap.c
-+++ b/fs/xfs/xfs_iomap.c
-@@ -1035,6 +1035,24 @@ xfs_buffered_write_iomap_begin(
- 	}
- 
- 	if (imap.br_startoff <= offset_fsb) {
-+		/*
-+		 * For zeroing out delayed allocation extent, we trim it if
-+		 * it's partial beyonds EOF block, or convert it to unwritten
-+		 * extent if it's all beyonds EOF block.
-+		 */
-+		if ((flags & IOMAP_ZERO) &&
-+		    isnullstartblock(imap.br_startblock)) {
-+			xfs_fileoff_t eof_fsb = XFS_B_TO_FSB(mp, XFS_ISIZE(ip));
-+
-+			if (offset_fsb >= eof_fsb)
-+				goto convert_delay;
-+			if (end_fsb > eof_fsb) {
-+				end_fsb = eof_fsb;
-+				xfs_trim_extent(&imap, offset_fsb,
-+						end_fsb - offset_fsb);
-+			}
-+		}
-+
- 		/*
- 		 * For reflink files we may need a delalloc reservation when
- 		 * overwriting shared extents.   This includes zeroing of
-@@ -1158,6 +1176,17 @@ xfs_buffered_write_iomap_begin(
- 	xfs_iunlock(ip, lockmode);
- 	return xfs_bmbt_to_iomap(ip, iomap, &imap, flags, 0, seq);
- 
-+convert_delay:
-+	xfs_iunlock(ip, lockmode);
-+	truncate_pagecache(inode, offset);
-+	error = xfs_bmapi_convert_delalloc(ip, XFS_DATA_FORK, offset,
-+					iomap, NULL);
-+	if (error)
-+		return error;
-+
-+	trace_xfs_iomap_alloc(ip, offset, count, XFS_DATA_FORK, &imap);
-+	return 0;
-+
- found_cow:
- 	seq = xfs_iomap_inode_sequence(ip, 0);
- 	if (imap.br_startoff <= offset_fsb) {
--- 
-2.39.2
-
+> > p.s. I'm aware we are in the middle of the Linux merge window and
+> > nothing will happen till it closes.
+>=20
+> BTW, thanks to some for-next branch trickery, we keep wireless-next open =
+also
+> during merge windows. This is to avoid unnecessarily stopping the
+> development.
+>=20
+> --
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpatch=
+wor
+> k.kernel.org%2Fproject%2Flinux-wireless%2Flist%2F&data=3D05%7C02%7Cyu-hao
+> .lin%40nxp.com%7C8d38662f40b342dd6f9f08dc472d3cde%7C686ea1d3bc2b4c
+> 6fa92cd99c5c301635%7C0%7C0%7C638463506823212295%7CUnknown%7CT
+> WFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJX
+> VCI6Mn0%3D%7C0%7C%7C%7C&sdata=3DfFO%2F1WjAubSnNNfMtXfRXXmAMP
+> UEMjTHIIgjD4JDUnY%3D&reserved=3D0
+>=20
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fwirel=
+ess.
+> wiki.kernel.org%2Fen%2Fdevelopers%2Fdocumentation%2Fsubmittingpatches
+> &data=3D05%7C02%7Cyu-hao.lin%40nxp.com%7C8d38662f40b342dd6f9f08dc47
+> 2d3cde%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63846350682
+> 3225278%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2l
+> uMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=3DuLvfm66Y
+> G0OGFWNV2ZXngwVK%2FyuJlK5YO7wjbG8mUd0%3D&reserved=3D0
