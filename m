@@ -1,146 +1,185 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2807E3EA77
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 20:58:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0BB3FB99;
+	Tue, 19 Mar 2024 21:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710881934; cv=none; b=W4q5eeE9PrGvENSTXuLdphzzvcrpcWsdOEbyFnRRNrQdQNSO/i/5ys0gXFagHWZb3OOt+vak4aXz2d2A+ZPt88tN06HyG79XO1NZ72uaVh3j3Y0rt0TkXiDnGPwzicS6CKdukxYUWKicZ9ppOTovANBgkkLbzup/r1h6g/yF00E=
+	t=1710882020; cv=none; b=TDUvqsOPTJ+wqO/OwuM/ZP3iGUjY84gxZBTK/FNoeAVgD3k3vnQPVNgQh+nGxCRoX+BeoNxS+Kzm0fjuKbpfwj3gVeS9f4Z4spZv6VGw6Q5JJIrC/iEE8j617q6p1uJdyf32Kb73Tba64QK8cQMKqcHoIusRfPb7rMzMuAZaET0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710881934; c=relaxed/simple;
-	bh=1zsj+M/d9chbnwHl1CpZYf7kzFLbX8aqGDVZhE8fT8w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=teOv6helOhoP3ZJsK5PTU3Z9eCAMG5eF3uev2tZq0BCJ/kyLRBbg3D8dQCZ/vBxC7xNsptO09ZySJlqomkZ2LSW+poOYA3wYV8MRRc5s2IM0txsS2YDFz5dUA5hCiCwkcSlMfU/1Eg7vTb4UBUc31SwTu0XEheafx9hUr/MqOUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LrPMDPN7; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1710882020; c=relaxed/simple;
+	bh=bhy84YlengXETx08r7sse1M0VWl1v653zOdsuGcwMCI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UDhuIu0ifPiOiYV03HPZywu0PzLJ6nkBPtGEKGROpO/96zGjlOMlFyLlin1LB+f3Y6ZwlhbveP+M+0Do01nVBBXNTiQmaghaIQUFqxpVsBmo9MxWTcpSXxXqC5Gx1biTc1DcgrPFl25V3PBpNLU48fD6IE9szwMDv6Fi76OlkIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cLP/h6K6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LrPMDPN7"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6e6b22af648so216154b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 13:58:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1710881932; x=1711486732; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yvO6Pb0Q30VcXTFiNcwxiPMuBmsILWnZccwRus/VuqA=;
-        b=LrPMDPN7DIHXep07bfHUFLuHf1xZ97oc+2uTzmanCYnIsFfF8xq1jgMAbC0/EsKYv0
-         FOoAfBba067OrayLKyJoYuuj1uVMOMf8igxUSLkcKZq1i6u+88ON58gU4j++AUdwBhnQ
-         9A6XcIyl8Q3NdayUvP+pqBnfOMLT/xOMFrXwc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710881932; x=1711486732;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yvO6Pb0Q30VcXTFiNcwxiPMuBmsILWnZccwRus/VuqA=;
-        b=HbnjRWPWzpKlR4nKVf7Y1F3Sdyx4we/H8ooPb4k2VhCfDzHtgpmfSBRcgjfXOIiu+1
-         ghtl4obaCx4M5UFtlBRxEhoUVqNfsuyK8sLqcdTJtZjI4s8Rz/1IOrCeELBS6MccyoPI
-         X2nO3Z08yxjPmLXj8T9Zvv6MhkQVIAtSjRC7sLue9Cyuv0nAixDGcJx+X/7jURq/GyC6
-         nVeci3jhBEWFu2F5H5RErHp7bvirUIve4ZKzeHsp67QuS2xlxGpZhw157sB190Z6sUjR
-         1LMxXE4Ve5K9c3uHJmGrvXl3pbvolVUXo2QMvXE4YXPC2h/Q8QloKJscnT23CeH85Q8O
-         AIMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV/2ZXtPxDLGh8rgZHbwYftwNmkqErhZa86aX6o2rt8unZDbhZ1tPXi+rnWYMGjd5xHchg7SXA0Jlodve9eqq+kw73gkrhNIy5fgrkB
-X-Gm-Message-State: AOJu0YypS2H+1+rVSByFhZi+nQBbsuWgMUYrPi3Psa8W85qNbP/EG3AC
-	RQrNqcNKhVCYZXbBLGRlL1zpq37QRWGUADzArzhSeXrMh9E5adoAzxqDUYffcQ==
-X-Google-Smtp-Source: AGHT+IGaxQlsWiVI/mJV/nB+Mp2IICAlnHIViegR1Fkm5V0vh3BgrBRwfRrC08WiUB3qWRSrGBNuQA==
-X-Received: by 2002:a17:903:234f:b0:1df:f818:8936 with SMTP id c15-20020a170903234f00b001dff8188936mr836476plh.21.1710881932430;
-        Tue, 19 Mar 2024 13:58:52 -0700 (PDT)
-Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:f4b6:c22b:c130:6c79])
-        by smtp.gmail.com with ESMTPSA id z6-20020a170903018600b001dde2c3fea5sm11800110plg.50.2024.03.19.13.58.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 13:58:51 -0700 (PDT)
-From: Douglas Anderson <dianders@chromium.org>
-To: dri-devel@lists.freedesktop.org,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: linux-tegra@vger.kernel.org,
-	Mikko Perttunen <mperttunen@nvidia.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	Ankit Nautiyal <ankit.k.nautiyal@intel.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	David Airlie <airlied@gmail.com>,
-	Imre Deak <imre.deak@intel.com>,
-	Jani Nikula <jani.nikula@intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] drm/dp: Clarify that wait_hpd_asserted() is not optional for panels
-Date: Tue, 19 Mar 2024 13:58:39 -0700
-Message-ID: <20240319135836.v2.1.I521dad0693cc24fe4dd14cba0c7048d94f5b6b41@changeid>
-X-Mailer: git-send-email 2.44.0.291.gc1ea87d7ee-goog
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cLP/h6K6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 833E8C433C7;
+	Tue, 19 Mar 2024 21:00:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710882019;
+	bh=bhy84YlengXETx08r7sse1M0VWl1v653zOdsuGcwMCI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cLP/h6K6AKNx77IvHJsSYlLIRrloVJhj4AO4/P3PUxRWgmdRFwtNpFskdh50lZ5P5
+	 PB9WDMb43x1ifdBmMlVdQ6BglEsaNXwyrU2V0XOHnQR61/HniTlggpq9pwmhRU2O/v
+	 Mmlas5hxNwcinCHVvvUtZnXx53AMIqiLjFTZo0vMCsqQzCPLH3JsGYknrAlnkoASCE
+	 FssbFzOpJW5HkOx6hUtfKz0Q0VPOMGFC3H+MmpkcVAFNyslSnIsBcn98Y5Kg8kziEL
+	 mhncQcU5sMLTDMZtSqSJOItmClZ3aFqptdnp0U+8ReCCU538yYSNyhRgvUrwitt3le
+	 uqcUG2e2adPHA==
+Date: Tue, 19 Mar 2024 14:00:19 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, hch@infradead.org, brauner@kernel.org,
+	david@fromorbit.com, tytso@mit.edu, jack@suse.cz,
+	yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com
+Subject: Re: [PATCH v3 4/9] xfs: convert delayed extents to unwritten when
+ zeroing post eof blocks
+Message-ID: <20240319210019.GH1927156@frogsfrogsfrogs>
+References: <20240319011102.2929635-1-yi.zhang@huaweicloud.com>
+ <20240319011102.2929635-5-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240319011102.2929635-5-yi.zhang@huaweicloud.com>
 
-In response to my patch removing the "wait for HPD" logic at the
-beginning of the MSM DP transfer() callback [1], we had some debate
-about what the "This is an optional function" meant in the
-documentation of the wait_hpd_asserted() callback. Let's clarify.
+On Tue, Mar 19, 2024 at 09:10:57AM +0800, Zhang Yi wrote:
+> From: Zhang Yi <yi.zhang@huawei.com>
+> 
+> Current clone operation could be non-atomic if the destination of a file
+> is beyond EOF, user could get a file with corrupted (zeroed) data on
+> crash.
+> 
+> The problem is about to pre-alloctions. If you write some data into a
 
-As talked about in the MSM DP patch [1], before wait_hpd_asserted()
-was introduced there was no great way for panel drivers to wait for
-HPD in the case that the "built-in" HPD signal was used. Panel drivers
-could only wait for HPD if a GPIO was used. At the time, we ended up
-just saying that if we were using the "built-in" HPD signal that DP
-AUX controllers needed to wait for HPD themselves at the beginning of
-their transfer() callback. The fact that the wait for HPD at the
-beginning of transfer() was awkward/problematic was the whole reason
-wait_hpd_asserted() was added.
+"...is about preallocations."
 
-Let's make it obvious that if a DP AUX controller implements
-wait_hpd_asserted() that they don't need a loop waiting for HPD at the
-start of their transfer() function. We'll still allow DP controllers
-to work the old way but mark it as deprecated.
+> file [A, B) (the position letters are increased one by one), and xfs
 
-[1] https://lore.kernel.org/r/20240315143621.v2.3.I535606f6d4f7e3e5588bb75c55996f61980183cd@changeid
+I think it would help with understandability if you'd pasted the ascii
+art from the previous thread(s) into this commit message:
 
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-I would consider changing the docs to say that implementing
-wait_hpd_asserted() is actually _required_ for any DP controllers that
-want to support eDP panels parented on the DP AUX bus. The issue is
-that one DP controller (tegra/dpaux.c, found by looking for those that
-include display/drm_dp_aux_bus.h) does populate the DP AUX bus but
-doesn't implement wait_hpd_asserted(). I'm actually not sure how/if
-this work on tegra since I also don't see any delay loop for HPD in
-tegra's transfer() callback. For now, I've left wait_hpd_asserted() as
-optional and described the old/deprecated way things used to work
-before wait_hpd_asserted().
+"The problem is about preallocations.  If you write some data into a
+file:
 
-Changes in v2:
-- Make it clear that panels don't need to call if HPD is a GPIO.
+	[A...B)
 
- include/drm/display/drm_dp_helper.h | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+and XFS decides to preallocate some post-eof blocks, then it can create
+a delayed allocation reservation:
 
-diff --git a/include/drm/display/drm_dp_helper.h b/include/drm/display/drm_dp_helper.h
-index a62fcd051d4d..6c6a96496df6 100644
---- a/include/drm/display/drm_dp_helper.h
-+++ b/include/drm/display/drm_dp_helper.h
-@@ -422,7 +422,18 @@ struct drm_dp_aux {
- 	 * @wait_hpd_asserted: wait for HPD to be asserted
- 	 *
- 	 * This is mainly useful for eDP panels drivers to wait for an eDP
--	 * panel to finish powering on. This is an optional function.
-+	 * panel to finish powering on. It is optional for DP AUX controllers
-+	 * to implement this function. It is required for DP AUX endpoints
-+	 * (panel drivers) to call this function after powering up but before
-+	 * doing AUX transfers unless the DP AUX endpoint driver knows that
-+	 * we're not using the AUX controller's HPD. One example of the panel
-+	 * driver not needing to call this is if HPD is hooked up to a GPIO
-+	 * that the panel driver can read directly.
-+	 *
-+	 * If a DP AUX controller does not implement this function then it
-+	 * may still support eDP panels that use the AUX controller's built-in
-+	 * HPD signal by implementing a long wait for HPD in the transfer()
-+	 * callback, though this is deprecated.
- 	 *
- 	 * This function will efficiently wait for the HPD signal to be
- 	 * asserted. The `wait_us` parameter that is passed in says that we
--- 
-2.44.0.291.gc1ea87d7ee-goog
+	[A.........D)
 
+The writeback path tries to convert delayed extents to real ones by
+allocating blocks.  If there aren't enough contiguous free space, we can
+end up with two extents, the first real and the second still delalloc:
+
+	[A....C)[C.D)
+
+After that, both the in-memory and the on-disk file sizes are still B.
+If we clone into the range [E...F) from another file:
+
+	[A....C)[C.D)      [E...F)
+
+then xfs_reflink_zero_posteof calls iomap_zero_range to zero out the
+range [B, E) beyond EOF and flush it.  Since [C, D) is still a delalloc
+extent, its pagecache will be zeroed and both the in-memory and on-disk
+size will be updated to D after flushing but before cloning.  This is
+wrong, because the user can see the size change and read the zeroes
+while the clone operation is ongoing."
+
+> could pre-allocate some blocks, then we get a delayed extent [A, D).
+> Then the writeback path allocate blocks and convert this delayed extent
+> [A, C) since lack of enough contiguous physical blocks, so the extent
+> [C, D) is still delayed. After that, both the in-memory and the on-disk
+> file size are B. If we clone file range into [E, F) from another file,
+> xfs_reflink_zero_posteof() would call iomap_zero_range() to zero out the
+> range [B, E) beyond EOF and flush range. Since [C, D) is still a delayed
+> extent, it will be zeroed and the file's in-memory && on-disk size will
+> be updated to D after flushing and before doing the clone operation.
+> This is wrong, because user can user can see the size change and read
+> zeros in the middle of the clone operation.
+> 
+> We need to keep the in-memory and on-disk size before the clone
+> operation starts, so instead of writing zeroes through the page cache
+> for delayed ranges beyond EOF, we convert these ranges to unwritten and
+> invalidating any cached data over that range beyond EOF.
+
+"...and invalidate any cached data..."
+
+> Suggested-by: Dave Chinner <david@fromorbit.com>
+> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/xfs/xfs_iomap.c | 29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
+> index ccf83e72d8ca..1a6d05830433 100644
+> --- a/fs/xfs/xfs_iomap.c
+> +++ b/fs/xfs/xfs_iomap.c
+> @@ -1035,6 +1035,24 @@ xfs_buffered_write_iomap_begin(
+>  	}
+>  
+>  	if (imap.br_startoff <= offset_fsb) {
+> +		/*
+> +		 * For zeroing out delayed allocation extent, we trim it if
+> +		 * it's partial beyonds EOF block, or convert it to unwritten
+> +		 * extent if it's all beyonds EOF block.
+
+"Trim a delalloc extent that extends beyond the EOF block.  If it starts
+beyond the EOF block, convert it to an unwritten extent."
+
+> +		 */
+> +		if ((flags & IOMAP_ZERO) &&
+> +		    isnullstartblock(imap.br_startblock)) {
+> +			xfs_fileoff_t eof_fsb = XFS_B_TO_FSB(mp, XFS_ISIZE(ip));
+> +
+> +			if (offset_fsb >= eof_fsb)
+> +				goto convert_delay;
+> +			if (end_fsb > eof_fsb) {
+> +				end_fsb = eof_fsb;
+> +				xfs_trim_extent(&imap, offset_fsb,
+> +						end_fsb - offset_fsb);
+> +			}
+> +		}
+> +
+>  		/*
+>  		 * For reflink files we may need a delalloc reservation when
+>  		 * overwriting shared extents.   This includes zeroing of
+> @@ -1158,6 +1176,17 @@ xfs_buffered_write_iomap_begin(
+>  	xfs_iunlock(ip, lockmode);
+>  	return xfs_bmbt_to_iomap(ip, iomap, &imap, flags, 0, seq);
+>  
+> +convert_delay:
+> +	xfs_iunlock(ip, lockmode);
+> +	truncate_pagecache(inode, offset);
+> +	error = xfs_bmapi_convert_delalloc(ip, XFS_DATA_FORK, offset,
+> +					iomap, NULL);
+
+Either indent this two tabs (XFS style), or make the second line of
+arguments line up with the start of the arguments on the first line
+(kernel style).
+
+With those improvements applied,
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+
+--D
+
+> +	if (error)
+> +		return error;
+> +
+> +	trace_xfs_iomap_alloc(ip, offset, count, XFS_DATA_FORK, &imap);
+> +	return 0;
+> +
+>  found_cow:
+>  	seq = xfs_iomap_inode_sequence(ip, 0);
+>  	if (imap.br_startoff <= offset_fsb) {
+> -- 
+> 2.39.2
+> 
+> 
