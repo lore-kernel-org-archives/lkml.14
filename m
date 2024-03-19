@@ -1,113 +1,136 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FC3847C;
-	Tue, 19 Mar 2024 01:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731B98465
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 01:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710811127; cv=none; b=BwfDUMle8XgolXM1+WhoJjuMm0CYc7OhPj3qBp+dIjZ4GPzUPaiAb2QUCMZPsCiCLsMGUAfBeOWZduRMI2gDfKHLqCzStX3bybhAbMx5651+hhue99DE1zga5Y7a2SLUyRnT8tpm0DUHdz+ex7nlXRRRqi9hD4SmzBjaPtvrVQ4=
+	t=1710811330; cv=none; b=V4RLWli//T1oFS7NMZWeUzjmHkmnWJKGrfRJkRCQ2t9faw3Y/kh4r36WDvLi/QU0rfNqctcBQrVIuUcbH592L5fh4edVYFKy7TBQYe2cyCSL+LJMVOfINq8Cr2g5Bcz+6YjzVVXVOJ5+JPUkx5Sbng433JCsmce+pT3Y9iswBug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710811127; c=relaxed/simple;
-	bh=MMrbMRAxlRdrfAR82H7F/UOhyfZI3AaGwXVLWaHdmc8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DyTha109+1a2DR+TBoH0adNZYIFhfrczAtlaUNmDmp3SKg0Hj0Z2hsxOed/esWf3K2KwFq4LAQkGEk8HDj1yR+H0t2+BfHqcGl+LYoIA3e51u48Rer+5FV6FsGW9e80TNZhbXkjXdk0sChQTncFVHaYB42G/xvXc30N4PEHhJoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	s=arc-20240116; t=1710811330; c=relaxed/simple;
+	bh=mCC8FTIRAwD5fQPhpX09CUlKaa8U8agWu9qqe+6F6/E=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=tdbWsxpigm8peXvWGaXXGAYushISKDj01oIPUqCk21RW981ENMnhb9VIgl2+k0rjc+olZVt0l6bYvqXqsfSVATZY9K0nuRRntWgIS2Sl6PTsub28otBtkSdScCfNwXVtoyaIqZEDVUTLOMidzkuavEGn0TT6LAc5RAc7WVwEV7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4TzDPf6qNKz4f3kFp;
-	Tue, 19 Mar 2024 09:18:30 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TzDTj2Lcbz4f3kJr
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 09:22:01 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id DC0C91A017A;
-	Tue, 19 Mar 2024 09:18:36 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAn9g7O5_hlUIGNHQ--.34497S13;
-	Tue, 19 Mar 2024 09:18:36 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	djwong@kernel.org,
-	hch@infradead.org,
-	brauner@kernel.org,
-	david@fromorbit.com,
-	tytso@mit.edu,
-	jack@suse.cz,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	chengzhihao1@huawei.com,
-	yukuai3@huawei.com
-Subject: [PATCH v3 9/9] iomap: do some small logical cleanup in buffered write
-Date: Tue, 19 Mar 2024 09:11:02 +0800
-Message-Id: <20240319011102.2929635-10-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240319011102.2929635-1-yi.zhang@huaweicloud.com>
-References: <20240319011102.2929635-1-yi.zhang@huaweicloud.com>
+	by mail.maildlp.com (Postfix) with ESMTP id 2D19E1A0FAA
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 09:22:05 +0800 (CST)
+Received: from [10.174.178.55] (unknown [10.174.178.55])
+	by APP1 (Coremail) with SMTP id cCh0CgAn9g676PhlcMqNHQ--.34739S3;
+	Tue, 19 Mar 2024 09:22:05 +0800 (CST)
+Subject: Re: [PATCH 1/1] mm/mm_init.c: eliminate a local variable in
+ mem_debugging_and_hardening_init()
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Zhen Lei <thunder.leizhen@huawei.com>
+References: <20240318135715.312-1-thunder.leizhen@huaweicloud.com>
+ <Zfhs5LD-1RQt3aw4@kernel.org>
+From: "Leizhen (ThunderTown)" <thunder.leizhen@huaweicloud.com>
+Message-ID: <5fd9144b-fb1c-08fc-8124-1972f86253a4@huaweicloud.com>
+Date: Tue, 19 Mar 2024 09:22:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAn9g7O5_hlUIGNHQ--.34497S13
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZrykWry8urWrArWUZr4xJFb_yoW8Jw43pr
-	nxKay8CrW0qwsruF1kAF9ruFyjya97Gry7GrWUGw45urs8ArWYgFy0gayjv3W8XrZ3C34S
-	vr4vy348Jw15ArJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-	kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQ
-	SdkUUUUU=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+In-Reply-To: <Zfhs5LD-1RQt3aw4@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:cCh0CgAn9g676PhlcMqNHQ--.34739S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr4kJr17Kw1rJF17uFy3urg_yoW5JrWrpF
+	WrJ3WjyFZ5ArZak39rtrWq9ryUt395KF47JryUXa45Xw18CrWfKF1kKr15ZF92vFs2qayf
+	ta93Kr9xZw15ta7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij
+	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE
+	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
+	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CPfJUUUUU==
+X-CM-SenderInfo: hwkx0vthuozvpl2kv046kxt4xhlfz01xgou0bp/
 
-From: Zhang Yi <yi.zhang@huawei.com>
 
-Since iomap_write_end() can never return a partial write length, the
-comperation between written, copied and bytes becomes useless, just
-merge them with the unwritten branch.
 
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
----
- fs/iomap/buffered-io.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+On 2024/3/19 0:33, Mike Rapoport wrote:
+> On Mon, Mar 18, 2024 at 09:57:14PM +0800, thunder.leizhen@huaweicloud.com wrote:
+>> From: Zhen Lei <thunder.leizhen@huawei.com>
+>>
+>> The local variable 'page_poisoning_requested' is assigned true at only
+>> one point. It can be eliminated by moving the code that depends on it
+>> to the location where it is assigned true. This also make the moved
+>> code to be compiled only if CONFIG_PAGE_POISONING is set.
+> 
+> I don't see it as much of an improvement and code readability becomes worse
+> IMO.
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 004673ea8bc1..f2fb89056259 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -937,11 +937,6 @@ static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
- 
- 		if (old_size < pos)
- 			pagecache_isize_extended(iter->inode, old_size, pos);
--		if (written < bytes)
--			iomap_write_failed(iter->inode, pos + written,
--					   bytes - written);
--		if (unlikely(copied != written))
--			iov_iter_revert(i, copied - written);
- 
- 		cond_resched();
- 		if (unlikely(written == 0)) {
-@@ -951,6 +946,9 @@ static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
- 			 * halfway through, might be a race with munmap,
- 			 * might be severe memory pressure.
- 			 */
-+			iomap_write_failed(iter->inode, pos, bytes);
-+			iov_iter_revert(i, copied);
-+
- 			if (chunk > PAGE_SIZE)
- 				chunk /= 2;
- 			if (copied) {
+Yes, the moved branch will be optimized by the compiler if CONFIG_PAGE_POISONING is
+not set. But for a reader, he can simply skip over that moved branch when
+CONFIG_PAGE_POISONING is not set.
+
+>  
+>> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+>> ---
+>>  mm/mm_init.c | 17 +++++++----------
+>>  1 file changed, 7 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/mm/mm_init.c b/mm/mm_init.c
+>> index 549e76af8f82a8e..3eb217130bcb2b5 100644
+>> --- a/mm/mm_init.c
+>> +++ b/mm/mm_init.c
+>> @@ -2614,7 +2614,6 @@ DEFINE_STATIC_KEY_MAYBE(CONFIG_DEBUG_VM, check_pages_enabled);
+>>   */
+>>  static void __init mem_debugging_and_hardening_init(void)
+>>  {
+>> -	bool page_poisoning_requested = false;
+>>  	bool want_check_pages = false;
+>>  
+>>  #ifdef CONFIG_PAGE_POISONING
+>> @@ -2626,18 +2625,16 @@ static void __init mem_debugging_and_hardening_init(void)
+>>  	     (!IS_ENABLED(CONFIG_ARCH_SUPPORTS_DEBUG_PAGEALLOC) &&
+>>  	      debug_pagealloc_enabled())) {
+>>  		static_branch_enable(&_page_poisoning_enabled);
+>> -		page_poisoning_requested = true;
+>>  		want_check_pages = true;
+>> -	}
+>> -#endif
+>>  
+>> -	if ((_init_on_alloc_enabled_early || _init_on_free_enabled_early) &&
+>> -	    page_poisoning_requested) {
+>> -		pr_info("mem auto-init: CONFIG_PAGE_POISONING is on, "
+>> -			"will take precedence over init_on_alloc and init_on_free\n");
+>> -		_init_on_alloc_enabled_early = false;
+>> -		_init_on_free_enabled_early = false;
+>> +		if (_init_on_alloc_enabled_early || _init_on_free_enabled_early) {
+>> +			pr_info("mem auto-init: CONFIG_PAGE_POISONING is on, "
+>> +				"will take precedence over init_on_alloc and init_on_free\n");
+>> +			_init_on_alloc_enabled_early = false;
+>> +			_init_on_free_enabled_early = false;
+>> +		}
+>>  	}
+>> +#endif
+>>  
+>>  	if (_init_on_alloc_enabled_early) {
+>>  		want_check_pages = true;
+>> -- 
+>> 2.34.1
+>>
+> 
+
 -- 
-2.39.2
+Regards,
+  Zhen Lei
 
