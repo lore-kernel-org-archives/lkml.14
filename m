@@ -1,201 +1,298 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E607CF25
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 06:38:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85FD5024E;
+	Tue, 19 Mar 2024 06:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710830340; cv=none; b=sBlrZ4lx724kmiOQ6UaFJP7Ad61jWy05uQUe1BWNf3CKvI2mmmvfwOMbnpTHy/AMnwXkTmMnxvSVG/i5hfQIsHrZ2ex7uU9d5sf8pjRQpv9V8h5cA1SpsDJmMGsIvEUqU/i9OgDEGH4jUPKBOduRnyEww3W9Oe0eVaCjlVPZfyY=
+	t=1710830407; cv=none; b=Z4SfAPvA30CTuuwlnN782+rim0F2LkgpPnMsopJvG8l4AXQkhNL9dapDx85uCSBOjoXPU+hgI0SEbFLcUdZaZtTTDCmJOmbj62NTtqzBmUYYlUbd42bhBus43e6JwDvsMqueTKx/yUNLdLZwgqc2vCxOEVdON/QAWlKlsVkVazQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710830340; c=relaxed/simple;
-	bh=QgucDFrEr/SvLAZY1wBdMptDb13bGtRFhwoS3CnfYNE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PITrePI3dfPub8ijfvEtYnQgHtkP+6ZDf/DtZlhnLSSYLrcVZdbtNZ/3JtfZx32X4aG8iGV1vXezGWLelwfjzhCLMlEkfEgmNZhTpqw+WFFHDbuiRRUE7K2pyCAgrYlJQoqtCRllVtm0t3IQtoDXUs4ez+EmRx8TVJY+1d7Q5sM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hvKPPN7/; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710830407; c=relaxed/simple;
+	bh=igetNCexyau5jpzxn3bC4vTACZALpnEId5+W6FhTmC4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JsbxUUc5up12HBG2CyRguDemXyTjKpZvcwCMsuqEBLSN55lGjhRcE/GP+eNxW+AIF45t40BMbUf4RgQ4mPp45ieIISYpa8iMwNIPHl6hN5OWOhAGc2YrSf9KvB4DYjomwEUuqLDrsbhhH0OR17xiw+m9yQO44IQJ7jJWT8nV94s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aJgWBx65; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hvKPPN7/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710830337;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5PWFWfjNWiRH0RK0T1uriWMCNRFoVCxB1MnvhpCDvFQ=;
-	b=hvKPPN7/X4RBR2qEe50dzR5TTXOGdm0t8U+YHdlU78QtybURq1X5SBSixLS/iSib1ApG+e
-	5RWRq73erimWIqoZXkynF7ALMOlMX6aTQz7WLIMWSSlorWcksXzKyRTdBE196wXk9uXTh4
-	fiYJgo1lfpVrDdvWoWYfDFQdVotBzvo=
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
- [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-553-mY06-Ue7MYW1GQAE02riAA-1; Tue, 19 Mar 2024 02:38:56 -0400
-X-MC-Unique: mY06-Ue7MYW1GQAE02riAA-1
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-6e6bf91a8dfso5324608b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 23:38:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710830335; x=1711435135;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5PWFWfjNWiRH0RK0T1uriWMCNRFoVCxB1MnvhpCDvFQ=;
-        b=PfckpZLtBaf7sEsIstU7vkH6IDQhmQoDaVtNYzMOHB3NM5K32JGkta+tdPVzNk9+Bn
-         vD9wqwTJVc0PMDYMBfJHdOojvYmL7J08R9h7FNQ2lj994bGzF6NVizFSvoD89L9L4gII
-         DbCYo1vbZEy+yQYYv9LHAehwLKHHKxvpBeRnrQ8Mz79hRJnzQl2Olcy5h4pPrf0KLMzr
-         aWgIlWAD1m2fCFT/RtBmrkY296a8FnBS7FrHfsPLxj0pK19/EuYgQzhlaEN4XACKETxc
-         vEeUQCrIPFpMnd4DdK/ef1E+CzCnuWgPO2jnBFz/ZxwkEv7Hk5jpa/kGb4LLWK5oi2lm
-         hRsA==
-X-Forwarded-Encrypted: i=1; AJvYcCXkXm6tkYpDA4TOU2x9vEy1zE2UdseuUQENq6Hv+F5ZY/psAirwCPpF+AoDblMC1zzO9U4v1UxfXLeGSf+FfijA21rbXGDB93+//Usi
-X-Gm-Message-State: AOJu0YxgpTvcO7FHHJqlkTC2AOMOTFwJl1qxl13u1CDZWDmI11rPDpT7
-	mWYmi066f7RfurEhzcIvc/N5znAZmR4Y5u6Hr9lW9XlMHndGD7Nlh6TXK7MAeE5yNNYdQAyrJ6p
-	6JzNt4Xe9xHuUoIX1ln0hoqj1bdAVgKMqy9kNR6dYG6rQEgYTY6Qqq3ITn+AmXA==
-X-Received: by 2002:a05:6a21:78a9:b0:1a3:5299:1648 with SMTP id bf41-20020a056a2178a900b001a352991648mr11972189pzc.16.1710830335509;
-        Mon, 18 Mar 2024 23:38:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG4CuCVJiYhCSgYrUKlARZPvazBultLs5Ehqesd5coo9WIACzRgb9oUYr+Q8e3TOtm1pisQnQ==
-X-Received: by 2002:a05:6a21:78a9:b0:1a3:5299:1648 with SMTP id bf41-20020a056a2178a900b001a352991648mr11972179pzc.16.1710830335114;
-        Mon, 18 Mar 2024 23:38:55 -0700 (PDT)
-Received: from [192.168.68.51] ([43.252.115.31])
-        by smtp.gmail.com with ESMTPSA id d6-20020a170902654600b001db8f7720e2sm10759114pln.288.2024.03.18.23.38.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Mar 2024 23:38:54 -0700 (PDT)
-Message-ID: <9b3030d1-cb2c-4ce0-8b24-1074b616fc84@redhat.com>
-Date: Tue, 19 Mar 2024 16:38:49 +1000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aJgWBx65"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710830406; x=1742366406;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=igetNCexyau5jpzxn3bC4vTACZALpnEId5+W6FhTmC4=;
+  b=aJgWBx65/Q5QqC3EvpO+ED1ZnyRFZ8S0SceM6sYLgXjVRfaiIJqzNRE/
+   FVwLEAXO3TjFgTJ3b9iy/cvaIfv1m2N4KfN54ykZ4JRXJ5vjklzmWvtdP
+   fDlWsFdMVSazQ60N0+IScKZ2Z89NmLt87hi0ix9eIdVYO2xS0z8ju2lG/
+   24e/gbzR1lE/aFCqrWMDzjUVi8mrSvXTrtqeIV1TIvqYFE8M2vZNzGkYV
+   rQhGL76jmCp04huNqW+2ipzXOLv5KHXMGgbPQhNj4gZ5IkocuciL4ZHka
+   72xDyd8JkNML/rh8aYCC+/bl4KdtxI20LdAO1EXE+G6wu6+GZOVP/SfAh
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="5527841"
+X-IronPort-AV: E=Sophos;i="6.07,136,1708416000"; 
+   d="scan'208";a="5527841"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 23:40:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,136,1708416000"; 
+   d="scan'208";a="18406359"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa005.jf.intel.com with ESMTP; 18 Mar 2024 23:40:01 -0700
+Date: Tue, 19 Mar 2024 14:35:29 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Charles Perry <charles.perry@savoirfairelinux.com>
+Cc: mdf@kernel.org, avandiver@markem-imaje.com, bcody@markem-imaje.com,
+	Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>,
+	Tom Rix <trix@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michal Simek <michal.simek@amd.com>, linux-fpga@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 3/3] fpga: xilinx-selectmap: add new driver
+Message-ID: <ZfkyMSczuFUdy3tU@yilunxu-OptiPlex-7050>
+References: <20240313225746.489253-1-charles.perry@savoirfairelinux.com>
+ <20240313225746.489253-4-charles.perry@savoirfairelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] virtio_ring: Fix the stale index in available ring
-Content-Language: en-US
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Will Deacon <will@kernel.org>, virtualization@lists.linux.dev,
- linux-kernel@vger.kernel.org, jasowang@redhat.com,
- xuanzhuo@linux.alibaba.com, yihyu@redhat.com, shan.gavin@gmail.com,
- linux-arm-kernel@lists.infradead.org,
- Catalin Marinas <catalin.marinas@arm.com>, mochs@nvidia.com
-References: <20240314074923.426688-1-gshan@redhat.com>
- <20240318165924.GA1824@willie-the-truck>
- <35a6bcef-27cf-4626-a41d-9ec0a338fe28@redhat.com>
- <20240319020905-mutt-send-email-mst@kernel.org>
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20240319020905-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240313225746.489253-4-charles.perry@savoirfairelinux.com>
 
-On 3/19/24 16:09, Michael S. Tsirkin wrote:
-
->>>> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
->>>> index 49299b1f9ec7..7d852811c912 100644
->>>> --- a/drivers/virtio/virtio_ring.c
->>>> +++ b/drivers/virtio/virtio_ring.c
->>>> @@ -687,9 +687,15 @@ static inline int virtqueue_add_split(struct virtqueue *_vq,
->>>>    	avail = vq->split.avail_idx_shadow & (vq->split.vring.num - 1);
->>>>    	vq->split.vring.avail->ring[avail] = cpu_to_virtio16(_vq->vdev, head);
->>>> -	/* Descriptors and available array need to be set before we expose the
->>>> -	 * new available array entries. */
->>>> -	virtio_wmb(vq->weak_barriers);
->>>> +	/*
->>>> +	 * Descriptors and available array need to be set before we expose
->>>> +	 * the new available array entries. virtio_wmb() should be enough
->>>> +	 * to ensuere the order theoretically. However, a stronger barrier
->>>> +	 * is needed by ARM64. Otherwise, the stale data can be observed
->>>> +	 * by the host (vhost). A stronger barrier should work for other
->>>> +	 * architectures, but performance loss is expected.
->>>> +	 */
->>>> +	virtio_mb(false);
->>>>    	vq->split.avail_idx_shadow++;
->>>>    	vq->split.vring.avail->idx = cpu_to_virtio16(_vq->vdev,
->>>>    						vq->split.avail_idx_shadow);
->>>
->>> Replacing a DMB with a DSB is _very_ unlikely to be the correct solution
->>> here, especially when ordering accesses to coherent memory.
->>>
->>> In practice, either the larger timing different from the DSB or the fact
->>> that you're going from a Store->Store barrier to a full barrier is what
->>> makes things "work" for you. Have you tried, for example, a DMB SY
->>> (e.g. via __smb_mb()).
->>>
->>> We definitely shouldn't take changes like this without a proper
->>> explanation of what is going on.
->>>
->>
->> Thanks for your comments, Will.
->>
->> Yes, DMB should work for us. However, it seems this instruction has issues on
->> NVidia's grace-hopper. It's hard for me to understand how DMB and DSB works
->> from hardware level. I agree it's not the solution to replace DMB with DSB
->> before we fully understand the root cause.
->>
->> I tried the possible replacement like below. __smp_mb() can avoid the issue like
->> __mb() does. __ndelay(10) can avoid the issue, but __ndelay(9) doesn't.
->>
->> static inline int virtqueue_add_split(struct virtqueue *_vq, ...)
->> {
->>      :
->>          /* Put entry in available array (but don't update avail->idx until they
->>           * do sync). */
->>          avail = vq->split.avail_idx_shadow & (vq->split.vring.num - 1);
->>          vq->split.vring.avail->ring[avail] = cpu_to_virtio16(_vq->vdev, head);
->>
->>          /* Descriptors and available array need to be set before we expose the
->>           * new available array entries. */
->>          // Broken: virtio_wmb(vq->weak_barriers);
->>          // Broken: __dma_mb();
->>          // Work:   __mb();
->>          // Work:   __smp_mb();
->>          // Work:   __ndelay(100);
->>          // Work:   __ndelay(10);
->>          // Broken: __ndelay(9);
->>
->>         vq->split.avail_idx_shadow++;
->>          vq->split.vring.avail->idx = cpu_to_virtio16(_vq->vdev,
->>                                                  vq->split.avail_idx_shadow);
+On Wed, Mar 13, 2024 at 06:57:37PM -0400, Charles Perry wrote:
+> Xilinx 7 series FPGA can be programmed using a parallel port named
+> the SelectMAP interface in the datasheet. This interface is compatible
+> with the i.MX6 EIM bus controller but other types of external memory
+> mapped parallel bus might work.
 > 
-> What if you stick __ndelay here?
+> xilinx-selectmap currently only supports the x8 mode where data is loaded
+> at one byte per rising edge of the clock, with the MSb of each byte
+> presented to the D0 pin.
 > 
-
-        /* Put entry in available array (but don't update avail->idx until they
-          * do sync). */
-         avail = vq->split.avail_idx_shadow & (vq->split.vring.num - 1);
-         vq->split.vring.avail->ring[avail] = cpu_to_virtio16(_vq->vdev, head);
-
-         /* Descriptors and available array need to be set before we expose the
-          * new available array entries. */
-         virtio_wmb(vq->weak_barriers);
-         vq->split.avail_idx_shadow++;
-         vq->split.vring.avail->idx = cpu_to_virtio16(_vq->vdev,
-                                                 vq->split.avail_idx_shadow);
-         /* Try __ndelay(x) here as Michael suggested
-          *
-          * Work:      __ndelay(200);    possiblly make it hard to reproduce
-          * Broken:    __ndelay(100);
-          * Broken:    __ndelay(20);
-          * Broken:    __ndelay(10);
-          */
-         __ndelay(200);
-
-
+> Signed-off-by: Charles Perry <charles.perry@savoirfairelinux.com>
+> ---
+> Changes since v4: (from Yilun review)
+>  * xilinx-core: select between prog/init and prog_b/init-b
 > 
->>          vq->num_added++;
->>
->>          pr_debug("Added buffer head %i to %p\n", head, vq);
->>          END_USE(vq);
->>          :
->> }
->>
->> I also tried to measure the consumed time for various barrier-relative instructions using
->> ktime_get_ns() which should have consumed most of the time. __smb_mb() is slower than
->> __smp_wmb() but faster than __mb()
->>
->>      Instruction           Range of used time in ns
->>      ----------------------------------------------
->>      __smp_wmb()           [32  1128032]
->>      __smp_mb()            [32  1160096]
->>      __mb()                [32  1162496]
->>
+>  drivers/fpga/Kconfig            |  8 +++
+>  drivers/fpga/Makefile           |  1 +
+>  drivers/fpga/xilinx-core.c      | 29 +++++++++-
+>  drivers/fpga/xilinx-selectmap.c | 97 +++++++++++++++++++++++++++++++++
+>  4 files changed, 133 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/fpga/xilinx-selectmap.c
+> 
+> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+> index d27a1ebf40838..37b35f58f0dfb 100644
+> --- a/drivers/fpga/Kconfig
+> +++ b/drivers/fpga/Kconfig
+> @@ -67,6 +67,14 @@ config FPGA_MGR_STRATIX10_SOC
+>  config FPGA_MGR_XILINX_CORE
+>  	tristate
+> 
+> +config FPGA_MGR_XILINX_SELECTMAP
+> +	tristate "Xilinx Configuration over SelectMAP"
+> +	depends on HAS_IOMEM
+> +	select FPGA_MGR_XILINX_CORE
+> +	help
+> +	  FPGA manager driver support for Xilinx FPGA configuration
+> +	  over SelectMAP interface.
+> +
+>  config FPGA_MGR_XILINX_SPI
+>  	tristate "Xilinx Configuration over Slave Serial (SPI)"
+>  	depends on SPI
+> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+> index 7ec795b6a5a70..aeb89bb13517e 100644
+> --- a/drivers/fpga/Makefile
+> +++ b/drivers/fpga/Makefile
+> @@ -16,6 +16,7 @@ obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)	+= socfpga-a10.o
+>  obj-$(CONFIG_FPGA_MGR_STRATIX10_SOC)	+= stratix10-soc.o
+>  obj-$(CONFIG_FPGA_MGR_TS73XX)		+= ts73xx-fpga.o
+>  obj-$(CONFIG_FPGA_MGR_XILINX_CORE)	+= xilinx-core.o
+> +obj-$(CONFIG_FPGA_MGR_XILINX_SELECTMAP)	+= xilinx-selectmap.o
+>  obj-$(CONFIG_FPGA_MGR_XILINX_SPI)	+= xilinx-spi.o
+>  obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+= zynq-fpga.o
+>  obj-$(CONFIG_FPGA_MGR_ZYNQMP_FPGA)	+= zynqmp-fpga.o
+> diff --git a/drivers/fpga/xilinx-core.c b/drivers/fpga/xilinx-core.c
+> index a35c43382dd5f..ccdeb45eba4ee 100644
+> --- a/drivers/fpga/xilinx-core.c
+> +++ b/drivers/fpga/xilinx-core.c
+> @@ -171,6 +171,29 @@ static int xilinx_core_write_complete(struct fpga_manager *mgr,
+>  	return -ETIMEDOUT;
+>  }
+> 
+> +/**
+> + * xilinx_core_devm_gpiod_get - Obtain a resource-managed GPIO using a
+> + *                              legacy consumer name fallback.
+> + *
+> + * @dev:           Device managing the GPIO
+> + * @con_id:        Consumer id
+> + * @legacy_con_id: Legacy consumer id
+> + * @flags:         optional GPIO initialization flags
+> + */
+
+No need to have kernel doc comments for internal functions.
+
+> +static inline struct gpio_desc *
+> +xilinx_core_devm_gpiod_get(struct device *dev, const char *con_id,
+> +			   const char *legacy_con_id, enum gpiod_flags flags)
+> +{
+> +	struct gpio_desc *desc;
+> +
+> +	desc = devm_gpiod_get(dev, con_id, flags);
+> +	if (IS_ERR(desc) && PTR_ERR(desc) == -ENOENT &&
+> +	    of_device_is_compatible(dev->of_node, "xlnx,fpga-slave-serial"))
+> +		desc = devm_gpiod_get(dev, legacy_con_id, flags);
+> +
+> +	return desc;
+> +}
+> +
+>  static const struct fpga_manager_ops xilinx_core_ops = {
+>  	.state = xilinx_core_state,
+>  	.write_init = xilinx_core_write_init,
+> @@ -186,12 +209,14 @@ int xilinx_core_probe(struct xilinx_fpga_core *core)
+>  		return -EINVAL;
+> 
+>  	/* PROGRAM_B is active low */
+> -	core->prog_b = devm_gpiod_get(core->dev, "prog_b", GPIOD_OUT_LOW);
+> +	core->prog_b = xilinx_core_devm_gpiod_get(core->dev, "prog", "prog_b",
+> +						  GPIOD_OUT_LOW);
+>  	if (IS_ERR(core->prog_b))
+>  		return dev_err_probe(core->dev, PTR_ERR(core->prog_b),
+>  				     "Failed to get PROGRAM_B gpio\n");
+> 
+> -	core->init_b = devm_gpiod_get_optional(core->dev, "init-b", GPIOD_IN);
+> +	core->init_b = xilinx_core_devm_gpiod_get(core->dev, "init", "init-b",
+> +						  GPIOD_IN);
+>  	if (IS_ERR(core->init_b))
+>  		return dev_err_probe(core->dev, PTR_ERR(core->init_b),
+>  				     "Failed to get INIT_B gpio\n");
+
+Please make a separate patch for the naming change. This give a chance
+to explain why the change and how to correctly use the GPIO names.
+
+> diff --git a/drivers/fpga/xilinx-selectmap.c b/drivers/fpga/xilinx-selectmap.c
+> new file mode 100644
+> index 0000000000000..b63f4623f8b2c
+> --- /dev/null
+> +++ b/drivers/fpga/xilinx-selectmap.c
+> @@ -0,0 +1,97 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Xilinx Spartan6 and 7 Series SelectMAP interface driver
+> + *
+> + * (C) 2024 Charles Perry <charles.perry@savoirfairelinux.com>
+> + *
+> + * Manage Xilinx FPGA firmware loaded over the SelectMAP configuration
+> + * interface.
+> + */
+> +
+> +#include "xilinx-core.h"
+> +
+> +#include <linux/platform_device.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/module.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/of.h>
+> +#include <linux/io.h>
+
+alphabetical order please.
+
+> +
+> +struct xilinx_selectmap_conf {
+> +	struct xilinx_fpga_core core;
+> +	void __iomem *base;
+> +};
+> +
+> +#define to_xilinx_selectmap_conf(obj) \
+> +	container_of(obj, struct xilinx_selectmap_conf, core)
+> +
+> +static int xilinx_selectmap_write(struct xilinx_fpga_core *core,
+> +				  const char *buf, size_t count)
+> +{
+> +	struct xilinx_selectmap_conf *conf = to_xilinx_selectmap_conf(core);
+> +	u32 i;
+> +
+> +	for (i = 0; i < count; ++i)
+> +		writeb(buf[i], conf->base);
+> +
+> +	return 0;
+> +}
+> +
+> +static int xilinx_selectmap_probe(struct platform_device *pdev)
+> +{
+> +	struct xilinx_selectmap_conf *conf;
+> +	struct resource *r;
+> +	void __iomem *base;
+> +	struct gpio_desc *csi_b;
+> +	struct gpio_desc *rdwr_b;
+
+One gpio_desc is enough, is it?  We don't use these gpio_desc anywhere
+else.
+
+BTW, reverse Xmas tree is not strictly required, but please do it when it is easy to follow.
+
+> +
+> +	conf = devm_kzalloc(&pdev->dev, sizeof(*conf), GFP_KERNEL);
+> +	if (!conf)
+> +		return -ENOMEM;
+> +
+> +	conf->core.dev = &pdev->dev;
+> +	conf->core.write = xilinx_selectmap_write;
+> +
+> +	base = devm_platform_get_and_ioremap_resource(pdev, 0, &r);
+
+I can't find where 'r' is used.
 
 Thanks,
-Gavin
+Yilun
 
+> +	if (IS_ERR(base))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(base),
+> +				     "ioremap error\n");
+> +	conf->base = base;
+> +
+> +	/* CSI_B is active low */
+> +	csi_b = devm_gpiod_get_optional(&pdev->dev, "csi", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(csi_b))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(csi_b),
+> +				     "Failed to get CSI_B gpio\n");
+> +
+> +	/* RDWR_B is active low */
+> +	rdwr_b = devm_gpiod_get_optional(&pdev->dev, "rdwr", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(rdwr_b))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(rdwr_b),
+> +				     "Failed to get RDWR_B gpio\n");
+> +
+> +	return xilinx_core_probe(&conf->core);
+> +}
+> +
+> +static const struct of_device_id xlnx_selectmap_of_match[] = {
+> +	{ .compatible = "xlnx,fpga-xc7s-selectmap", }, // Spartan-7
+> +	{ .compatible = "xlnx,fpga-xc7a-selectmap", }, // Artix-7
+> +	{ .compatible = "xlnx,fpga-xc7k-selectmap", }, // Kintex-7
+> +	{ .compatible = "xlnx,fpga-xc7v-selectmap", }, // Virtex-7
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, xlnx_selectmap_of_match);
+> +
+> +static struct platform_driver xilinx_selectmap_driver = {
+> +	.driver = {
+> +		.name = "xilinx-selectmap",
+> +		.of_match_table = xlnx_selectmap_of_match,
+> +	},
+> +	.probe  = xilinx_selectmap_probe,
+> +};
+> +
+> +module_platform_driver(xilinx_selectmap_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Charles Perry <charles.perry@savoirfairelinux.com>");
+> +MODULE_DESCRIPTION("Load Xilinx FPGA firmware over SelectMap");
+> --
+> 2.43.0
+> 
