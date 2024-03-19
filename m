@@ -1,116 +1,71 @@
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D186981751
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 15:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F0765BAA
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 16:01:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710863938; cv=none; b=MSJv0hNcZqlansqDLvJNNy5oFBny2T4pd+JK74YXf7+9WkZIXRylq6107/pkn2SLqkqty7IgxhgYlQYUsFh3Ivj9dNAEW+9SmcEblUe6wxWcyapWKWMunORD9Bisf8U/ou5ulFaPfjmbmXXkAFDNy8oDb58v03+csoSWHdcvjSw=
+	t=1710864090; cv=none; b=N5APyIAS1mCHZKDKA/NA4ZT82Jh7Pw8oiBQhYFViG3WcDjPApo9gxvEDfWQv/OWeAxP7f2bbvA5LgnZmOlq5UsN/ernYIWtlegCkVLC7sMlffUKJMY1J3dd0GqfY2WbmdPqVhQVC+ffKKA+9ZF3C8VHqaEMP4sUNg1nIK90tews=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710863938; c=relaxed/simple;
-	bh=7UKzrWG8Ihaae65NIIDTFYHHZUF/qzUeTBE7PxmmGmE=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=uVQR1mmSQgY3Fd+9sI2jlcB0A0eUfD1yZftXKnxkZXhjxEN0fgoPjcYE3nDgpjnzrGhaReJmGOvzzOgswd76XU9WsOHZQUEeOIguXOAMZZlrMqgPianu/INuVJHNl2lveezSQSxmBjAfaroQOICGu6PFweg7/zg187eZtuSkGJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=fG3zPby4; arc=none smtp.client-ip=162.62.57.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1710864090; c=relaxed/simple;
+	bh=EJNNgx8uoxlcenj0kJ6LOq9STgZE7L/wlKEhoCh8VXU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DfKJuxuhZsD2y4mR3Mo1FZ9HKYO7Tnn5RlVreRSbOIvCDi2nPHoV5fq5JuMqN9L/h1eqvdTBwc8np5DhMCPDSgWxXUHeTpS3ziUyuJ5SLe+TGUkakJROswwxA+HXgiIHeK7XgOvdP4y7J1ZKK+aVitrmpVDqDtvQxrvHvh9YuwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=n9sQEweH; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="fG3zPby4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1710863932;
-	bh=Ouz5Tp2AWgO33XyZ8LV/WRAebZU4cotdGkPEacGY5bA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=fG3zPby40Dx0eIfOFhoP2fVP8yZ3LnHmqKwqWfZo/ko96ZYh9m0c+qs/ecj8GD9Dk
-	 0bmhdpOMfVA0jwgwo0RPslZ0UcJEzQp3qGX+nystCSIsCiH5DPXyW1HZs8XECgtzK/
-	 l2AdhuhUEteVBsComjWzypr8WAxffh4KIjqD4GyI=
-Received: from localhost.localdomain ([2409:8a60:2a60:b160:1774:d6f7:f5f5:b6a])
-	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
-	id E8996A1C; Tue, 19 Mar 2024 23:58:09 +0800
-X-QQ-mid: xmsmtpt1710863909tff4xyr5i
-Message-ID: <tencent_1FBC930BE9F1CC5E7E0BCF7955BFD4E54108@qq.com>
-X-QQ-XMAILINFO: M4JyzWMRFsOyhWPvwEsMdXIpXG1TLEWG5CFL3qGzs/CMyvJHlUojFWcCHhN04k
-	 S32NgkTKBdzuuuTE/4uHeTkPEt2ITOLJqee3udNpI5WGbV3mPZF0RxAnTkM3uA2pAFjQmUl1YgMD
-	 X43WThIpc8vgJbJqpekBLYTH7CBQkaPYQscTjF7pw+MT32C5nF33s+z88svO4YbAPTQGIapRzhVq
-	 KUyMcSJPoHPdiq8uQsMxSc0dDc8wMouy5X37h5FgNcAUZsMSjo/IOLBZAC2p8CU8QjoQtX+tTMss
-	 0+S1FBW8vjsGuilg9G6fn2v/av/oIb5VsjfSRHfcJ2hjLCgzsTCGo6AJk3geHw8kFnTpK03Cvzx5
-	 97bjjB6fCL20Bd5ohOF+yvJ7b28Ji5epFOQIV1j1cDN0KdHCTFxfn/KpLhFPArKETmtfQQMx7JFz
-	 xtuYKmUR7OIepRoIaTgBcH3gocRoXedXPlUfTA74tijq7vZsJNhyuk3ZzjA7WP9cmlbT4AVbDtFd
-	 MFKYn6fS+Xz/89bsRQTs1w5OWJGYIFRR51P3Ft57w3VYvIWw7eOilbvXfTYUkML7EU39qSYa/m5E
-	 sop5y/4eeF2wjw3W/rhhyLV39KQbhvxfkcdWtOtKZfKgj60v8FzdGU7uqxT6LwCmP0SO1ClcqDbn
-	 KinvEc+oXvL+7w/A3CscCObbvbcy5/+sJbZspONzEBunyk5mLXeYYJvXl5Wt6egcCpFAJ0XV17iA
-	 WwxEr0IqUba+FYUnNdhBKXt/zqxJmnk6kPNTDFWlACbEYPqMhXHu241EXb6YVeYEwaAYWKXqXKY/
-	 +Ks723h6Oxfzx4bYqeiwmMAsBoCwV6F6BzpLkUMX8Uodch6/IvMYCY4ls3niOhxu9fN97uH+fvk0
-	 cpAy9EYmu/Ll8QseUhJkhMyTppOTY0xOFwOcD5RSwfq1mMh4mEBRtSgXaj7NsUqTYM1MbH+a/onx
-	 d9n0TLL4FBfXdnBhHwqkpovn6PaLkMy5zBgNiGumJpjVh5m8p5oAb+W6Iy0pjGD+CIMilj9DRukG
-	 PS1HF48S5Vnk/mhkrgTKLPhTbBG+4KNR05F2lz0FcX1rNO8AnoFNH97Y6rn+zCcyLVuI3DXKxGT2
-	 HvCwhRKtGbkoV50FU=
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-From: wenyang.linux@foxmail.com
-To: "Eric W . Biederman" <ebiederm@xmission.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Joel Granados <j.granados@samsung.com>,
-	Christian Brauner <brauner@kernel.org>
-Cc: Dave Young <dyoung@redhat.com>,
-	Wen Yang <wenyang.linux@foxmail.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH v2 9/9] ucounts: delete these unnecessary static variables ue_zero and ue_int_max
-Date: Tue, 19 Mar 2024 23:57:50 +0800
-X-OQ-MSGID: <8dde20421374b7da2d449896b5612b3a6fa72920.1710863674.git.wenyang.linux@foxmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <26c450f6467b4cbaf94cdb10f047abc6ab0c2a5d.1710863674.git.wenyang.linux@foxmail.com>
-References: <26c450f6467b4cbaf94cdb10f047abc6ab0c2a5d.1710863674.git.wenyang.linux@foxmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n9sQEweH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=308AIC0mKgKOiFvltlBe5QH+mWjYoXhfz7TbckUNBXs=; b=n9sQEweH79RVcYq6RuXmpk8whB
+	tl+mVIbNHr458LsfgJxEPHqudBd6nNoh0juqADM9zMVmsUNYCbMYPnbQs0dQwDzXOgzUzmKdlCx2q
+	IdLpH4Q3WD7ND4T6zti2Z4qa9cEWIpIi60zKs8JTtr4kkmMZjLU5MQlTZ9uyKS8fFKcsPdSY4hU3Y
+	SyOa2L2VMsQS05fWA9RGVZPuirvpiUIAEvGbhgGvH3UdrTgfaUrtMFfETm/ZrzUrvkXNNRuU+DcwV
+	8l3j5t3/sI6me2mxECUBO+VbzvuwXxqsdDfu1zzRfDbzI0nruWXjim6EWhD+J+wRYGplrKFLMy1kQ
+	njOSo0Bg==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rmbu2-00000002GUm-2rIJ;
+	Tue, 19 Mar 2024 16:01:26 +0000
+Date: Tue, 19 Mar 2024 16:01:26 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Boqun Feng <boqun.feng@gmail.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>,
+	Clark Williams <williams@redhat.com>
+Subject: Re: [PATCH] Locking: Let PREEMPT_RT compile again with new rwsem
+ asserts.
+Message-ID: <Zfm21jBMZIci3P6P@casper.infradead.org>
+References: <20240319070550.ws_uO21-@linutronix.de>
+ <ZfmVPid-d7cpf6Yt@casper.infradead.org>
+ <20240319141506.DUd9NKl4@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240319141506.DUd9NKl4@linutronix.de>
 
-From: Wen Yang <wenyang.linux@foxmail.com>
+On Tue, Mar 19, 2024 at 03:15:06PM +0100, Sebastian Andrzej Siewior wrote:
+> On 2024-03-19 13:38:06 [+0000], Matthew Wilcox wrote:
+> > On Tue, Mar 19, 2024 at 08:05:50AM +0100, Sebastian Andrzej Siewior wrote:
+> > > -static inline void rwsem_assert_held_write_nolockdep(const struct rw_semaphore *sem)
+> > > +static __always_inline bool rwsem_held_write(const struct rw_semaphore *sem)
+> > 
+> > The locking maintainers were very clear that this predicate Should Not
+> > Exist.  It encourages people to write bad code.  Assertions only!
+> 
+> What do you refer to? The inline vs __always_inline or
+> rwsem_held_write() should not exists and it should invoke directly
+> rw_base_is_write_locked()?
 
-Delete unnecessary static variables (ue_zero and ue_int_max)
-and encode them directly in the table entry.
-
-Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Joel Granados <j.granados@samsung.com>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org
----
- kernel/ucount.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/ucount.c b/kernel/ucount.c
-index 4aa6166cb856..f1c7a160f361 100644
---- a/kernel/ucount.c
-+++ b/kernel/ucount.c
-@@ -58,17 +58,15 @@ static struct ctl_table_root set_root = {
- 	.permissions = set_permissions,
- };
- 
--static long ue_zero = 0;
--static long ue_int_max = INT_MAX;
--
- #define UCOUNT_ENTRY(name)					\
- 	{							\
- 		.procname	= name,				\
- 		.maxlen		= sizeof(long),			\
- 		.mode		= 0644,				\
- 		.proc_handler	= proc_doulongvec_minmax,	\
--		.extra1		= &ue_zero,			\
--		.extra2		= &ue_int_max,			\
-+		.min		= SYSCTL_NUMERIC_ZERO,		\
-+		.max		= SYSCTL_NUMERIC_INT_MAX,	\
-+		.extra_flags	= SYSCTL_TABLE_EXTRA_LONG_INIT_MINMAX \
- 	}
- static struct ctl_table user_table[] = {
- 	UCOUNT_ENTRY("max_user_namespaces"),
--- 
-2.25.1
-
+I see Waiman already gave you the substantial answer ... but why did you
+change inline to __always_inline?
