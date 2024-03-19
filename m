@@ -1,250 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A0E2257D;
-	Tue, 19 Mar 2024 00:26:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71947363;
+	Tue, 19 Mar 2024 00:29:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710807984; cv=none; b=iPXruCqYKbnuSNCPm7+A262xu3FjOAgz5tkGeCGR0ObGS0HqDB25n2QBYrGFLcQRHCd0MQDmXBEP7ko1wtzMJyPZWnFemHCPY3RUWDaiXEMqHVCJrFU6mP8NoIzssg0GuLbH8UwrBaIwit3Kzd/de1/3LB5A/2w9MAvH7w6NYMk=
+	t=1710808177; cv=none; b=Ra9BSkkrQ5haBLlfxBEQJWPw5eFCwDTM340IZR4p4Bfbv8DSJuLGeNTsyGacZwvuOsaLvryf1nCKwmN0tfx19KyrLlt79yR4joIWUb9PDptHfZbxiAC0JVE0O3xeb3alu+LFgD6VYtItdFSpALUD1bk7EBZjxaX1Ky5Bkfh7V9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710807984; c=relaxed/simple;
-	bh=LLIv+pugsr/ev0LduqYltbP1hJ6nxTnyLZiG33er3Xk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e6vlyMIYble78iwseS6P2noI2oBDtBOZHCpFMaZfOIfY3aIe3jgUOW3bXp9kbwbvC3TY84UwdYQ5FDy+bNP9uXDBCdfOkk1wROTn5BGjEZcwW2TIyUfXp+D+YeAqRudJmPLcL79N6Ve6u3wjIwMMk83i6QMkIhu2/eHayNvZRcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GTE80Hf8; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1710808177; c=relaxed/simple;
+	bh=7SQMhToJXVIevHGRudA6WrEHyve1h3fUPRthLx3mW1c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cJAhTA1jrcg4MMVVqqZA2vzYD8Sg5y7uNbLSxFlGA9F3i6oiylzjTVH9f3b0tVteoUdh34pc/ZMVb249WmkWuNqIzxMuBtrwIk48FujcR6fboyaCx4mNLNui4wUtIbJs50vJ4z9kUglg0VraUG2Fmy7oP9DhN9BR5gvbKS8NUOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YUYDS3E7; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GTE80Hf8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710807982; x=1742343982;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LLIv+pugsr/ev0LduqYltbP1hJ6nxTnyLZiG33er3Xk=;
-  b=GTE80Hf80IMKcoGUcDpOlP43rSENJgXJiyq70XWz3YSzyZfWzl3g3j3A
-   EV2bwxmBYt+2ox/aV8aExdJCXPofuuihIOjxpI0trynWBZCHkPoXsUox2
-   YF+Nz/Sc2CaBbQM4wqWBtIw8GZBDicCrTk25nRjUSTIzZHyY7i9rFPeR/
-   RyADVIJZPJR3nS45yisT+UpzWP3ZoigZjUdHS67wqK3PYjQzEhqKYx1SE
-   vCoJf8FS5zHi4ULwzLjCO5BmkzR23scKHFs45T835cSJLwmb7zxG3aoik
-   i045ODMMjWdeyTmU51uOZ/xpIzp5h2WodC5zgdASMlJqoR9a0BOpoXktt
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="5530491"
-X-IronPort-AV: E=Sophos;i="6.07,135,1708416000"; 
-   d="scan'208";a="5530491"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 17:26:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,135,1708416000"; 
-   d="scan'208";a="18104690"
-Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 18 Mar 2024 17:26:17 -0700
-Received: from kbuild by b21307750695 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rmNJ1-000HKt-0X;
-	Tue, 19 Mar 2024 00:26:15 +0000
-Date: Tue, 19 Mar 2024 08:25:22 +0800
-From: kernel test robot <lkp@intel.com>
-To: Radu Sabau <radu.sabau@analog.com>, Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>,
-	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-i2c@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH 2/2] hwmon: pmbus: adp1050 : Add driver support
-Message-ID: <202403190800.h8cSGROp-lkp@intel.com>
-References: <20240318112140.385244-3-radu.sabau@analog.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YUYDS3E7"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-56b95eb687fso66280a12.3;
+        Mon, 18 Mar 2024 17:29:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710808174; x=1711412974; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zrKFOJwh3FiWFz8PnJclBgTo8T3TCygx+u8PGzuODoQ=;
+        b=YUYDS3E7k04ovhh4Igmol9MKAK+7JRpKve9/HbZDyI/Ii0szUfNyuLDp2Ax5JG8CJM
+         52gj02gO0HTPSYyYo319U41t6wdkYTRKiG+sQVTPA73oiMsJCnCSnhRriY40mIe1OjaI
+         rgmOExbOxz8tcNP+JRqYyTvsK8IkV6JqwTEzNhNJEbwMoP9NYanm0vpgb3vcHP/1zCH1
+         UqaDxKHikjCWZgkqUta0lWlbwKafa0JoBynwvC8qNjO/dScTe5HOl+2JEOyZoDwAOIRl
+         PwVebmPG9UCwR3xNoQjNmVdOWI8ZUkTd+d2f/nmaTOn96rGTAIgDdjsozUrxYhEFVQJm
+         eLog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710808174; x=1711412974;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zrKFOJwh3FiWFz8PnJclBgTo8T3TCygx+u8PGzuODoQ=;
+        b=rMmsk2poWStIuFTsp0sJkgmI205FXj9o3W0ZYHLPmzsAf9hpozdiFexc3jMFjtE5iF
+         EEBC7ZGwVTJLCs7MnR29iGFRP4RkBBX9jT1RQBkLXAC7jmRyCcozaY4PFCBaewX5ftuN
+         4mMXUHXoaD8vh7dm7/obiz5lMSMMf/yoMX5kQj0KpxjmI/tTUfCpcvIbfc8CT1puJaF7
+         YXUvVlVG+dpP7KGBfr7ymuEK0fG18DhDO5Fs5K/jsZokmnx91S1izpZYp1kmLFiKzRE0
+         KtXyW05sTowPPgBUloIkPY29fL76ehF/+X23tw+p3O464oeqYHTskfOi7of8uCIhzh9x
+         2G1w==
+X-Forwarded-Encrypted: i=1; AJvYcCWA8E0lGAJfaIeZ8nGV7RBuPXhUmbY7FlhZEcXNqluD2D2oHkDTNmK0eIGk3nc5kadDk1APrTNze8WqsFx/JSUTCW/wjzDWhnmiXXv5AhQz1VAPyw12dv9k8vM+vrSMA8yaBXzg0Avm
+X-Gm-Message-State: AOJu0YwkLnFWjeUcVu4YVS+ClBeIjl7qL/leU5j7VkjVxhu0U6PnGIHN
+	ktyKtREkD4pEkb69C49mdOxLnPNT3Gh7jvVbWPaSng+/78cgXLEQ
+X-Google-Smtp-Source: AGHT+IEK3rOMctA1l8OyKcfeERlG+g5vtHULcdOeNylbLFbhwyYvU3kzATfpnZSg996ud9Xa7si3mA==
+X-Received: by 2002:a05:6402:ea9:b0:566:a357:d535 with SMTP id h41-20020a0564020ea900b00566a357d535mr7980265eda.27.1710808173330;
+        Mon, 18 Mar 2024 17:29:33 -0700 (PDT)
+Received: from localhost.localdomain ([2a04:ee41:82:7577:8c96:c55f:eab0:860])
+        by smtp.gmail.com with ESMTPSA id co24-20020a0564020c1800b00568c613570dsm2700227edb.79.2024.03.18.17.29.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Mar 2024 17:29:32 -0700 (PDT)
+From: Vasileios Amoiridis <vassilisamir@gmail.com>
+To: jic23@kernel.org
+Cc: lars@metafoo.de,
+	andriy.shevchenko@linux.intel.com,
+	ang.iglesiasg@gmail.com,
+	mazziesaccount@gmail.com,
+	ak@it-klinger.de,
+	petre.rodan@subdimension.ro,
+	phil@raspberrypi.com,
+	579lpy@gmail.com,
+	linus.walleij@linaro.org,
+	semen.protsenko@linaro.org,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Vasileios Amoiridis <vassilisamir@gmail.com>
+Subject: [PATCH v3 0/6] Series to add triggered buffer support to BMP280 driver
+Date: Tue, 19 Mar 2024 01:29:19 +0100
+Message-Id: <20240319002925.2121016-1-vassilisamir@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240318112140.385244-3-radu.sabau@analog.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Radu,
+Changes in v3:
 
-kernel test robot noticed the following build errors:
+Patch 2: Add guard(mutex) as per request {read/write}_raw() functions.
 
-[auto build test ERROR on groeck-staging/hwmon-next]
-[also build test ERROR on robh/for-next linus/master v6.8 next-20240318]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Patch 3: Patch 2 of v2. Added IIO return value as per request.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Radu-Sabau/dt-bindings-hwmon-pmbus-adp1050-add-bindings/20240318-202619
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
-patch link:    https://lore.kernel.org/r/20240318112140.385244-3-radu.sabau%40analog.com
-patch subject: [PATCH 2/2] hwmon: pmbus: adp1050 : Add driver support
-config: hexagon-allmodconfig (https://download.01.org/0day-ci/archive/20240319/202403190800.h8cSGROp-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 8f68022f8e6e54d1aeae4ed301f5a015963089b7)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240319/202403190800.h8cSGROp-lkp@intel.com/reproduce)
+Patch 4: Patch 3 of v2.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403190800.h8cSGROp-lkp@intel.com/
+Patch 5: Patch 4 of v2.
 
-All errors (new ones prefixed by >>):
+Patch 6: Completely different approach from v2. Instead of leveraging the
+functionality of the read_*() functions for the oneshot capture, burst reads
+were used in order to read all the values in one single read operation. This
+minimizes the number of accesses to the device to just 1 time, which all the
+values are being read. Different buffer_handler() functions were implemented
+for the different "families" of sensors because there were a lot of differences
+in the register configuration and read operation for different sensors.
 
-   In file included from drivers/hwmon/pmbus/adp1050.c:9:
-   In file included from include/linux/i2c.h:19:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:13:
-   In file included from include/linux/cgroup.h:26:
-   In file included from include/linux/kernel_stat.h:9:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     547 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     560 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-         |                                                   ^
-   In file included from drivers/hwmon/pmbus/adp1050.c:9:
-   In file included from include/linux/i2c.h:19:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:13:
-   In file included from include/linux/cgroup.h:26:
-   In file included from include/linux/kernel_stat.h:9:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     573 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-         |                                                   ^
-   In file included from drivers/hwmon/pmbus/adp1050.c:9:
-   In file included from include/linux/i2c.h:19:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:13:
-   In file included from include/linux/cgroup.h:26:
-   In file included from include/linux/kernel_stat.h:9:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     584 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     594 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     604 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   In file included from drivers/hwmon/pmbus/adp1050.c:9:
-   In file included from include/linux/i2c.h:19:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:20:
-   In file included from include/linux/mm.h:2188:
-   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
->> drivers/hwmon/pmbus/adp1050.c:47:60: error: too few arguments to function call, expected at least 3, have 2
-      47 |                 dev_err_probe(&client->dev, "Device can't be unlocked.\n");
-         |                 ~~~~~~~~~~~~~                                            ^
-   include/linux/dev_printk.h:277:20: note: 'dev_err_probe' declared here
-     277 | __printf(3, 4) int dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
-         |                    ^             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/hwmon/pmbus/adp1050.c:53:63: error: too few arguments to function call, expected at least 3, have 2
-      53 |                 dev_err_probe(&client->dev, "Device couldn't be unlocked.\n");
-         |                 ~~~~~~~~~~~~~                                               ^
-   include/linux/dev_printk.h:277:20: note: 'dev_err_probe' declared here
-     277 | __printf(3, 4) int dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
-         |                    ^             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   7 warnings and 2 errors generated.
+BMP085 and BMP180 have a very well defined read operation that is kept in the
+buffer_handler(). There is no option for a burst read in these sensors.
 
+BM(P/E)2xx, BMP3xx, and BMP5xx have their own buffer_handler() functions.
+Registers, endianess and compensation formulas are different in each one of
+those 3 categories which doesn't allow for a more generic buffer_handler().
 
-vim +47 drivers/hwmon/pmbus/adp1050.c
+[v2] https://lore.kernel.org/linux-iio/20240313174007.1934983-1-vassilisamir@gmail.com
+[v1] https://lore.kernel.org/linux-iio/20240303165300.468011-1-vassilisamir@gmail.com
 
-    32	
-    33	static int adp1050_probe(struct i2c_client *client)
-    34	{
-    35		u32 vin_scale_monitor, iin_scale_monitor;
-    36		int ret;
-    37	
-    38		if (!i2c_check_functionality(client->adapter,
-    39					     I2C_FUNC_SMBUS_WRITE_WORD_DATA))
-    40			return -ENODEV;
-    41	
-    42		/* Unlock CHIP's password in order to be able to read/write to it's
-    43		 * VIN_SCALE and IIN_SCALE registers.
-    44		*/
-    45		ret = i2c_smbus_write_word_data(client, ADP1050_CHIP_PASSWORD, 0xFFFF);
-    46		if (ret < 0) {
-  > 47			dev_err_probe(&client->dev, "Device can't be unlocked.\n");
-    48			return ret;
-    49		}
-    50	
-    51		ret = i2c_smbus_write_word_data(client, ADP1050_CHIP_PASSWORD, 0xFFFF);
-    52		if (ret < 0) {
-    53			dev_err_probe(&client->dev, "Device couldn't be unlocked.\n");
-    54			return ret;
-    55		}
-    56	
-    57		/* If adi,vin-scale-monitor isn't set or is set to 0 means that the
-    58		 * VIN monitor isn't used, therefore 0 is used as scale in order
-    59		 * for the readings to return 0.
-    60		*/
-    61		if (device_property_read_u32(&client->dev, "adi,vin-scale-monitor",
-    62					     &vin_scale_monitor))
-    63			vin_scale_monitor = 0;
-    64	
-    65		/* If adi,iin-scale-monitor isn't set or is set to 0 means that the
-    66		 * IIN monitor isn't used, therefore 0 is used as scale in order
-    67		 * for the readings to return 0.
-    68		*/
-    69		if (device_property_read_u32(&client->dev, "adi,iin-scale-monitor",
-    70					     &iin_scale_monitor))
-    71			iin_scale_monitor = 0;
-    72	
-    73		ret = i2c_smbus_write_word_data(client, ADP1050_VIN_SCALE_MONITOR,
-    74						vin_scale_monitor);
-    75		if (ret < 0)
-    76			return ret;
-    77	
-    78		ret = i2c_smbus_write_word_data(client, ADP1050_IIN_SCALE_MONITOR,
-    79						iin_scale_monitor);
-    80		if (ret < 0)
-    81			return ret;
-    82	
-    83		return pmbus_do_probe(client, &adp1050_info);
-    84	}
-    85	
+Vasileios Amoiridis (6):
+  iio: pressure: BMP280 core driver headers sorting
+  iio: pressure: Introduce new cleanup routines to BMP280 driver *_raw()
+    functions
+  iio: pressure: Generalize read_{temp/press/humid}() functions
+  iio: pressure: Add SCALE and RAW values for channels
+  iio: pressure: Add timestamp and scan_masks for BMP280 driver
+  iio: pressure: Add triggered buffer support for BMP280 driver
+
+ drivers/iio/pressure/Kconfig       |   2 +
+ drivers/iio/pressure/bmp280-core.c | 727 +++++++++++++++++++++--------
+ drivers/iio/pressure/bmp280-spi.c  |   8 +-
+ drivers/iio/pressure/bmp280.h      |  28 +-
+ 4 files changed, 570 insertions(+), 195 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.25.1
+
