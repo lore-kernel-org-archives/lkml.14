@@ -1,79 +1,91 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0F52F22
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 02:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9BE2F22
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 02:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710814727; cv=none; b=r+u+zgU1UEofx0uQ56+UhXC4gUpC192o5G+V6WkFaLNRuaHeMOrVmqHt5hBSf1CHVBjv8G+v68WSZWgO31iMvtqeyjcZOXCImSW42jI0d5L90EeSJa92CjRRsta3JGjz0ECAmah62XYsiVyAUDL+P41AuACIprrmKtRbuVRkxoU=
+	t=1710814814; cv=none; b=SA+Ce75jIdvrT6T/YtRkJJN8g10JE4aduyraHbQ0S8+GHCEjTva8nvbBFLVFtven0OhI3tbcMg3C753wD7AYJJmAfsTx5Fzrc9wTzjT7qWr5kmlgR4JgiNSq+nDcrORy2vYf2pKM7Nc1Sy15T7j2Xbt+FArfITql8NorvZ3K+qY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710814727; c=relaxed/simple;
-	bh=HXKLdL388ATP1x+Bi+eSNo4AL5q14dhPe1cC6n4T8UU=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=iU6bkJGZB58+VYMiM9jE4L+mk4lDBNUymMT6A0FCdv7FOGzx6Seb3i78+VG3YJ3IqSg+emAXAbbOKDAB/4Ajz0xNMKFA7JvpjUBA+LdcskpyYuo7nuto5QtTZnNWbwajtN2u2p4Jfq13g8ji2Y/duUnPItMzU1J5vLoEHzVI5/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7c9aa481ce4so453251039f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 19:18:45 -0700 (PDT)
+	s=arc-20240116; t=1710814814; c=relaxed/simple;
+	bh=NkB88W5odC1JOVEAvvKJhHDlY4baHLv2+zt6C5wYeU4=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=TbPsTo07Sz0lC5U4kdbQ9vEjluRcUr7zTtL2hYL3UE4rvDu/05l9ejf6MqjaAkKkRjZ+VCgipHr1r2ixk9SozLbKbAapfhb5VoGYcjvX7POV0v1/HAHWqZiVH+wuqOgFVqEfg5PYgLfa8tHUDQHEAnF1DauTH3WNfac5WhZ6Qwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=1OU6lEyn; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="1OU6lEyn"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-29df844539bso911870a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 19:20:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1710814812; x=1711419612; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k6rINp0way2lyVv3peFrobuPlDokerF7vmkwEfe9Xuo=;
+        b=1OU6lEyngpVvbebxokTite4Ph3MAyg/wB+BWB1xnerJHDGHuqVSmwTWUkFNQNUUxBG
+         JvbEWeArhs8oT4FEu2brMF/V7suKaHvx/CRmH9NtxERYfYQRQizTevL8040l9Xxhukmx
+         9F5aTFkr9B2Roo2ODvzlzMtJi3uhXUTJlGTVVg7aLUe4prZgXvr9BL0T+89CvBMY3pw0
+         gbrSCqJkmSRMhqosmcA8CXT4pZO38Jb3/mfD/TPY/Fx0oxegW4oSJihHi4JjB9AaSjlJ
+         /rltEE1BfT4DCLcf0htIUgj96YMs9FDCtHx1v5GezzYmOW5PWh+H8KVvvET3pMEJzVdA
+         OtsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710814724; x=1711419524;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TcyfP03YnAHU9fTdFHb9Le6Rp18xT6BHtV9FG9VE+/A=;
-        b=uHf1P8hexG1EsTekBfaCI7NI1Kl/I9hFR/jLjpiQcsTgyDs0X+igyZGoqkRtNJCp3I
-         isssJf3jbFTp+aGd6mLV7wWjH4DNn+EYa4KoMmr66kSHZXzNFEcF34uOL5RWlJYQ8P6+
-         ScFyqEktumsspUxatqHFVJA1ihr9+K0JgvUfeFg629bX9DO8nF3ubnlWT6c63Vt/CkN2
-         4oVHWuQloeaf4oaQQeaIBNNdhJT4/fQMqc3iWIm1cWejxJw2Rn2jHVQ/xOPpIaOlSmha
-         q6AMr1RPndIEHR16gHMM2QgCD38q77FxAxaWTOphVrke6z/AvH6zO/HOYv+iG4fiSLkM
-         c6Zw==
-X-Gm-Message-State: AOJu0YxsHxEjNKgPPvr3ujDgVQGUWwpTloqN7r9gggLw+j+dxgKnKt1R
-	gP9sHWIYT29P+RHN6lwrfxK3p0wJTjUkQvkL+mu6TaU8L/hs9m187J4nya3+9V6xl5YJa4/PvLd
-	im75TRya1TFgg3FYnJMFKsGfTlLQEt43GAhMeMoHIJKlZ0vlF1zZZryS5KA==
-X-Google-Smtp-Source: AGHT+IH+SIkJA9OiiAvMxUBaVbyd15sZUiHaxYTatdrgLfT7+NU33T26mdc8HhVw+ssjxH1rkxEWQhH3KaCvQCPqOZ6fd7Le+AWI
+        d=1e100.net; s=20230601; t=1710814812; x=1711419612;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k6rINp0way2lyVv3peFrobuPlDokerF7vmkwEfe9Xuo=;
+        b=WfSmincfBfxFVEbvSAsF3uRoBqbP0dXHkBAYuXNtpaV30UOLPd6EQzjUuT5ou+sIPW
+         PpIIiIYfZQr2k9Xil7IbHh/oa6JPEDRPHqWEPR7A2pm38mQqS0f817r7di+BsKBqdMg2
+         2ZfBaerbRleqfoH5QpI4MEZNyu3I4aeR5+LpB/AYK6HmSH9zFTzCT6mO4RExKh81D9L3
+         x8ip8ciZySfKIkcoCHxL6jA74TEOzvBEZb5eFQVxDOp/ok07+mUYhpWBVPGYWn/w5oA6
+         GAEejVamhpG4e26JGK1YbMF3jajWY5X38IzNB8ezUquZNiU+zfXgQMzWfaY2dcSPD/Pe
+         1QMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXfC2ICVsIgsx3cd4wrjNLtWF+M0/X6pat+jtQlA+XqbR7709FOcsWTyYKWPPzc4CWBEIV9uWiWjQ+3LbFfOKWFbtJ71UtWUyrQVPx4
+X-Gm-Message-State: AOJu0YxgENYSpyWGMV8AtqNx8AA40Ze5UGL8wKOmlPeme75EBjQWmsAA
+	ZopigWVztAUwyvRrEB7tCMPUqT+17prJICAPNRxP1AuRvjVp9Q0z31oWvC6TB3OonOR/32nfTrg
+	a
+X-Google-Smtp-Source: AGHT+IGW+uH6FebClXKqGEQc72uKT7oc9xlJzngrxaJXnCi2iuB+/iW70vvT7zCn43lAmJr8Fpz5+w==
+X-Received: by 2002:a05:6a21:9982:b0:1a3:713d:1059 with SMTP id ve2-20020a056a21998200b001a3713d1059mr1022446pzb.4.1710814811772;
+        Mon, 18 Mar 2024 19:20:11 -0700 (PDT)
+Received: from [127.0.0.1] ([198.8.77.194])
+        by smtp.gmail.com with ESMTPSA id z3-20020a170903018300b001e00295e3dbsm3062473plg.149.2024.03.18.19.20.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Mar 2024 19:20:11 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: Denis Efremov <efremov@linux.com>, linux-block@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Yufeng Wang <wangyufeng@kylinos.cn>
+In-Reply-To: <20240319014219.7812-1-wangyufeng@kylinos.cn>
+References: <20240319014219.7812-1-wangyufeng@kylinos.cn>
+Subject: Re: [PATCH v2] floppy: remove duplicated code in redo_fd_request()
+Message-Id: <171081481063.643317.5474387504952434927.b4-ty@kernel.dk>
+Date: Mon, 18 Mar 2024 20:20:10 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:3791:b0:474:ecf4:2b71 with SMTP id
- w17-20020a056638379100b00474ecf42b71mr900903jal.4.1710814724787; Mon, 18 Mar
- 2024 19:18:44 -0700 (PDT)
-Date: Mon, 18 Mar 2024 19:18:44 -0700
-In-Reply-To: <0000000000005f31a3060de282e6@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f29ebd0613fa175a@google.com>
-Subject: Re: [syzbot] [PATCH net v2] nfc: nci: Fix uninit-value in nci_dev_up
-From: syzbot <syzbot+29b5ca705d2e0f4a44d2@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.5-dev-2aabd
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
 
-***
+On Tue, 19 Mar 2024 09:42:19 +0800, Yufeng Wang wrote:
+> duplicated code in redo_fd_request(),
+> unlock_fdc() function has the same code "do_floppy = NULL" inside.
+> 
+> 
 
-Subject: [PATCH net v2] nfc: nci: Fix uninit-value in nci_dev_up
-Author: ryasuoka@redhat.com
+Applied, thanks!
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 610a9b8f49fbcf1100716370d3b5f6f884a2835a
+[1/1] floppy: remove duplicated code in redo_fd_request()
+      commit: 50171b8667733146f139c773d8f00866ceb4cee4
 
-diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
-index 6c9592d05120..f471fc54c6a1 100644
---- a/net/nfc/nci/core.c
-+++ b/net/nfc/nci/core.c
-@@ -1512,6 +1512,11 @@ static void nci_rx_work(struct work_struct *work)
- 		nfc_send_to_raw_sock(ndev->nfc_dev, skb,
- 				     RAW_PAYLOAD_NCI, NFC_DIRECTION_RX);
- 
-+		if (!nci_plen(skb->data)) {
-+			kfree_skb(skb);
-+			break;
-+		}
-+
- 		/* Process frame */
- 		switch (nci_mt(skb->data)) {
- 		case NCI_MT_RSP_PKT:
+Best regards,
+-- 
+Jens Axboe
+
+
 
