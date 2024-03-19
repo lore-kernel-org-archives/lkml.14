@@ -1,134 +1,155 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2071.outbound.protection.outlook.com [40.107.237.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A03E7FBB9;
-	Tue, 19 Mar 2024 11:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710848022; cv=fail; b=qzA/A6K1Fo6X5rktEF7h3YG2AIfLVO8mt/Xmjf55i663NichsdNxCJ/Ba1QZZq6aeaFsqWbYR2p/B03VThR9fDzQkdsrXir9lPR2hkO1EWA651Xcd9bdRFNfjzuWGXFQiC4DwStZIZr92OMhk8ey2votiLKV1rdHVt4ahTKab44=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710848022; c=relaxed/simple;
-	bh=KONc5UKShc4NqllYcxFGx6fEWh70f+iZ5fBkkyFMKXg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=vEyJH8CzVl0tfEGVlpM0YlIWB6JRGAg5n8ms2s/aJBOnl7NYZig234MPphcf5DjoCEa0ljncqW8JEbPqjJYvu6g7rfRjDEzP87pYHyoqEMrDgpdLpmUG42FvSkIcRvRVmqrNASHzZOq2Imt1eeMLYCNUCHP1w2K+PYD3M7vgZIM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Soe78rsx; arc=fail smtp.client-ip=40.107.237.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD9F53E09;
+	Tue, 19 Mar 2024 11:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710848224; cv=none; b=lRDnjzQKeoun2ikNAVBtlsNCx6OBpJljsbnL1vGJe0DrnM7yz4+4syqCYA3YCc367vpB0LKU5p9TgxoYr55kX7AdxbnP8dKVLa/Xz5LUKl1xDdfIfxQFoxsYEWxlQA8k2VVk+yFOLBJ19+7S4dn3FrvulaOHPGB2X4z9sAfaDfw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710848224; c=relaxed/simple;
+	bh=qKcu8EaYJp0rxLpfIpqkAN5cPH1+9ScDj2xHFfsv2ZM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pjLoFXiLbbgGapihAN6iM0leM39jy0fkda6VVnK7CpKSoo86djIpW8C/U2MgaN2ANy/6qw/VwLk6nLY4dypseIA7WRc78zcE4pUu9Ge5ZVUWGeoP3NyQs02Rs9zdi+b0CphM3jay87sG1WsZyK18HEWjNxEMqS6lWcuFUOp3VOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JcYsrBZr; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Soe78rsx"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ar53jN1Vhx5mlJey0PS++2xgq/rcXN9Y3TxfnGW/z5MgdFOQh17YBvC7ADMUPTK2ZW8VrmqtzkShULBXXzoG8bMS6SjWlBahGC9K2tZ9UrNejSggx73NFnjqPuPED8Ld8IsKdWvQShS7JiYEPKD1olkEx7LIgjcOMd1kR/dNoRgPsFzqldw7NXWFUci89YZfwczhzpECzuyuTkyvP7VJ1b+GFvE2Ph52cGr++aGIKkfikEjzLX9ssmc4DUJBD3oKmIDwbKRmewKVwOQUZp88QD9kBj9kUOFljGocFCMPo0coLOmWGdsY2TRAb0cZ7m58BxdFvjwc0HBsbsoHPmjhNg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QrThdxDYx+HelMReifKH/2yl+3W9qSQwuZ/6QxmbMqA=;
- b=PdP6MIWr8wKmi/0nS77YRqZp+nXKoza6vYn0OwHV6dug3UUViQ5OVGFVNzbGnfWnqtM8prILvyl+dvoG3Dez3n1KBJB44EA4d0Rt/ljQw5/lE5CRh9AmNjUglmY9znHuVKgqbm5k2mcqyN/QHHuNsKjF5EfKlAOA0Xs21HTphnifbcUlV33AEvMGaABOxGskLIM1gnEJBFnbensV9LusSEaioJ6srkFFwlOwnmcaywO+nGXoat5w8ElDIyCEohymkcrqZk29rIfrXnlnVLgS64B991UXrMwQJeIVzIBB7UvAOtfLr6FMjC5wR8YiSo30GF7pO/IMv5TOR257PUlJ/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=alien8.de smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QrThdxDYx+HelMReifKH/2yl+3W9qSQwuZ/6QxmbMqA=;
- b=Soe78rsxKSNONz0luaqqLJAkfwvHlDmZAeMQ2qHKvfRUr9c7DsLL3kfQQOHT+HIVYZtK4aCSfJtiuWC+23At+E/b9EZzmqM4F4we3DHOjFUITLNNKJTJ5hjOB6226aQdxU+3MMz0e2J9YPM+VYJDfvVHX0BTc2TMNC5pm6ZnsIw=
-Received: from MW3PR05CA0016.namprd05.prod.outlook.com (2603:10b6:303:2b::21)
- by IA1PR12MB6284.namprd12.prod.outlook.com (2603:10b6:208:3e4::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.26; Tue, 19 Mar
- 2024 11:33:34 +0000
-Received: from CO1PEPF000066E6.namprd05.prod.outlook.com (2603:10b6:303:2b::4)
- by MW3PR05CA0016.outlook.office365.com (2603:10b6:303:2b::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7409.12 via Frontend Transport; Tue, 19 Mar 2024 11:33:34 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000066E6.mail.protection.outlook.com (10.167.249.4) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7409.10 via Frontend Transport; Tue, 19 Mar 2024 11:33:33 +0000
-Received: from quartz-7b1chost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 19 Mar
- 2024 06:33:32 -0500
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: <bp@alien8.de>, <tony.luck@intel.com>, <linux-edac@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <avadhut.naik@amd.com>,
-	<john.allen@amd.com>, <naveenkrishna.chatradhi@amd.com>,
-	<muralidhara.mk@amd.com>, Yazen Ghannam <yazen.ghannam@amd.com>
-Subject: [PATCH 1/2] RAS/AMD/FMPM: Avoid NULL ptr deref in get_saved_records()
-Date: Tue, 19 Mar 2024 06:33:21 -0500
-Message-ID: <20240319113322.280096-2-yazen.ghannam@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240319113322.280096-1-yazen.ghannam@amd.com>
-References: <20240319113322.280096-1-yazen.ghannam@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JcYsrBZr"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1e00896dfdcso14128815ad.1;
+        Tue, 19 Mar 2024 04:37:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710848222; x=1711453022; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=umAIavC67cazmJ9lW2ejp2jSJGxVPgTOeby3+DV2+G4=;
+        b=JcYsrBZrh/cC4qT6ZqtinwYsNFQc5A0RBfgObkG73u38w4vBEp7PXDwY2BOmZsUypn
+         Ck0Fhkzyy+HkHZBul092FeIEiv3WOjMZAeBFdV5lCy+GAnQ6N4dc5ARzsUvwh6Mbi4QM
+         6VzskSUoF6d0Z0WGRrW82SXLWUb8W5cHYB9sPdfBEUVSKFDsnunbUtyTDHS9LeZROl02
+         AyqP1ZM2BQqlP28GTzCVu/UX8I2E2dq/PtS8AT5FzzO8r+cWBUBWjIAP6S4mqy8aVrZd
+         iloryZ+6GmqhJl6lk0TI6sJoAtqKAc8F46ZyGQ62V/V2eKgdr3Red/qaa8YZUTzjcX/U
+         tGUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710848222; x=1711453022;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=umAIavC67cazmJ9lW2ejp2jSJGxVPgTOeby3+DV2+G4=;
+        b=isUec89rXbkgocP8uMFtk+V18hDLYCpri9oKcrj80JRpuooPE4ORYVvNP+YQzDLB2A
+         WwJ/rA/ukvmWAffTO1W+D92OESM5WlboKXYsV1UFJ3U80g/z8PoB56pmg01ZgiSpeCI8
+         KhZuI84AYeaHscypyDUpZ7t8ihWhj/qQ/juk2S83oO/qJYAvxrvAXFQjemdpYAoKFhUK
+         0RE6HWmOgRQz3tjOFJGbji/HgWuyosXPVbrkStDtCdojF4tWuQrX956RshGvj6BwBK7f
+         +bNxwRCoLh0dOKx/UcfzxHxmWdJ0lL1impbgfm+WhgBHkpLfsfgYNNtDYPFpx1tqEcXx
+         TwQg==
+X-Forwarded-Encrypted: i=1; AJvYcCXqEG5O9ZBRNqCxeKIT9DbPDEY54WPgftuLpSdBaxnWo4voRYuX7LlbhHBNcLGgMRSqQBKU7oUdZtw7339aUaTfHSw06mYfVrx5GhQflCNbSTyxb8jW2sdap6eFRym5m29SffKW52PBxZERqessk0BvlDz1aD318Pt6V2OjWtFuQkCTlQ==
+X-Gm-Message-State: AOJu0YxjudfQ8xS9/o7o5lsfdP5UDP4DHhnyBNYiTbPMXuQbpUkxkfg6
+	56kno5nLWqRt9U/4UEJwqKAhXPilWf83IAJ8Ho8eFb5pw/C06WcDrWxmDcWNo1A=
+X-Google-Smtp-Source: AGHT+IF+DsFLA4Qvhq8yiEnjGjx2GBguwAi8iI5wKdvQAedsOquaxYYW+xLfytLU6wfSwtrLpVXPfw==
+X-Received: by 2002:a17:902:6502:b0:1e0:3861:9e46 with SMTP id b2-20020a170902650200b001e038619e46mr2136786plk.49.1710848222071;
+        Tue, 19 Mar 2024 04:37:02 -0700 (PDT)
+Received: from [172.16.116.58] ([103.15.228.94])
+        by smtp.gmail.com with ESMTPSA id lg7-20020a170902fb8700b001dd1d7bc0f7sm11218702plb.154.2024.03.19.04.36.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Mar 2024 04:37:01 -0700 (PDT)
+Message-ID: <5a9b1cd9-05ec-4606-92b6-eadbc7af6202@gmail.com>
+Date: Tue, 19 Mar 2024 17:06:36 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000066E6:EE_|IA1PR12MB6284:EE_
-X-MS-Office365-Filtering-Correlation-Id: fae5604a-1b9a-49da-b1fd-08dc4808692b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	iLcX8DxUlgK3EgITdF9l56//QFyH/+KmLAQHgMyxVYyU5orusU2vj9grJ+Mc3R90ZH7z4YGAMq3L4Go4jm8uZAhG6ax+L7IoGPyDvbp5wB2oR01EKJX+oAv1YOG9JzuqSq1yVhqt1gSnR0hbkiz2HYA2u0z0DfvdVejPeaBKZAFnPMxS2EhZzdGx7dtnSEqILMF6bHsYtbhW2tbFTi60IIsdbyCQSg6vABMEzGo0edHOaCmo7IWUCrEt/1D+8yiWO8xjejEkVSSu16f3qo3HcnTy4R3uxNCHe5vL4yt7QB/YiBLv0Du5MPWbtzobcDp5o0oExfusPjjr62hhBmsotPKQGWH2ywQCjYDkYk40dQZIQEy3dW0dzrcgvR5SXlVJsJmYIV8HyYNWdPKvWJ9HT5iQBzWbataK3my6+AWvNny1KF4RrJeS0harqPzOMNbXsIovcyMNwMkyZXtIm5FMx5WJCyYHOjuKz+OwEutY89eIoDwlESxpeRMUDkFbvfsbDKwep00OMYzedazOUQ5212u8B+T+ohbl/t/06JGfZBvrLg3KasVUCbeR4qXakpWFC7B+BNcPwB7IQ1UStmXHRVlswY9QDOWyiT7bHxhzE6VlD8hv51LA3cY+e/GeX+t3oqt9gttzdcutlCJUn1cksT2KKycAKfDZITe6wuHVreqkO9QFR4EHpeYlRA9p9XTyWZQ6t1I1JuDvbpqB/KyRIXddIxWIbM4PHs7y4tFgXZ3OjDdWgp/bgVXTfecDZ7JZ
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(36860700004)(376005)(82310400014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2024 11:33:33.8208
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fae5604a-1b9a-49da-b1fd-08dc4808692b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000066E6.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6284
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/5] dt-bindings: misc: Add mikrobus-connector
+Content-Language: en-US
+To: Michael Walle <mwalle@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ open list <linux-kernel@vger.kernel.org>
+Cc: jkridner@beagleboard.org, robertcnelson@beagleboard.org,
+ lorforlinux@beagleboard.org, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
+ <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Vaishnav M A <vaishnav.a@ti.com>, Mark Brown <broonie@kernel.org>,
+ Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>,
+ "moderated list:ARM/TEXAS INSTRUMENTS K3 ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+ "moderated list:GREYBUS SUBSYSTEM" <greybus-dev@lists.linaro.org>,
+ Vaishnav M A <vaishnav@beagleboard.org>
+References: <20240317193714.403132-1-ayushdevel1325@gmail.com>
+ <20240317193714.403132-2-ayushdevel1325@gmail.com>
+ <CZWVF90JJO98.2M7ARQ9WMGC94@kernel.org>
+ <d4dc4d94-d323-4158-8c08-b7d37d8750d3@gmail.com>
+ <0f3f56d4-3381-44f1-91bc-c126f3ced085@linaro.org>
+ <c8031e17-5ae8-4794-8b8c-1736be6452d3@gmail.com>
+ <CZXMK3W52AFO.1APK080GVJESK@kernel.org>
+From: Ayush Singh <ayushdevel1325@gmail.com>
+In-Reply-To: <CZXMK3W52AFO.1APK080GVJESK@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-An old, invalid record should be cleared and skipped.
+On 3/19/24 15:08, Michael Walle wrote:
 
-Currently, the record is cleared in ERST, but it is not skipped. This
-leads to a NULL pointer dereference when attempting to copy the old
-record to the new record.
+> Hi,
+>
+>> Regardless, this patch actually does not contain any code for EEPROM
+>> support I have just mentioned it to give more context on why mikroBUS
+>> manifest is the focus of this patch instead of DT overlay or something
+>> else.
+> Right, and I think this is the crux here. Why can't you use DT
+> overlays? The manifest files, seem to be yet another hardware
+> description (method) and we already have DT. Can't we have some kind
+> of userspace helper that could translate them to DT overlays? That
+> way, you could also handle the EEPROM vs non-EEPROM case, or have
+> some other kind of method to load a DT overlay.
+>
+> Admittedly, I've never worked with in-kernel overlays, but AFAIK
+> they work with some subsystems.
+>
+> -michael
 
-Continue the loop after clearing an old, invalid record to skip it.
 
-Fixes: 6f15e617cc99 ("RAS: Introduce a FRU memory poison manager")
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Tested-by: Muralidhara M K <muralidhara.mk@amd.com>
----
- drivers/ras/amd/fmpm.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+So let me 1st go over 3 cases that the driver needs to support:
 
-diff --git a/drivers/ras/amd/fmpm.c b/drivers/ras/amd/fmpm.c
-index 2f4ac9591c8f..9d25195b4538 100644
---- a/drivers/ras/amd/fmpm.c
-+++ b/drivers/ras/amd/fmpm.c
-@@ -676,8 +676,10 @@ static int get_saved_records(void)
- 		}
- 
- 		new = get_valid_record(old);
--		if (!new)
-+		if (!new) {
- 			erst_clear(record_id);
-+			continue;
-+		}
- 
- 		/* Restore the record */
- 		memcpy(new, old, len);
--- 
-2.34.1
+1. Non EEPROM boards:
 
+Using overlays should be pretty similar to current solution. If the 
+manifest is converted to overlay in userspace, then we do not even need 
+to do manifest parsing, setting up spi, i2c etc in the kernel driver.
+
+
+2. EEPROM boards
+
+How do you propose handling these. If you are proposing storing dt 
+overlay in EEPROM, then this raises some questions regarding support 
+outside of Linux.
+
+The other option would be generating overlay from manifest in the kernel 
+driver, which I'm not sure is significantly better than registering the 
+i2c, spi, etc. interfaces separately using standard kernel APIs.
+
+
+3. Over Greybus
+
+It is quite important to have mikroBUS over greybus for BeagleConnect. 
+This is one of the major reasons why greybus manifest was chosen for the 
+manifest format.
+
+
+Also, it is important to note that mikroBUS manifest is being used since 
+2020 now and thus manifests for a lot of boards (both supporting clickID 
+and not supporting it exist). So I would prefer using it, unless of 
+course there are strong reasons not to.
+
+
+Ayush Singh
+
+CorrectBasicCloseSpellingPossible spelling mistake found.GrabsGrey 
+busIgnore
