@@ -1,192 +1,300 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1CB374C2;
-	Tue, 19 Mar 2024 17:26:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D0139AD5
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 17:27:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710869214; cv=none; b=QTyG8TryBsnrZ2E6WyD8fzux1NpCSjiS8YGbtu3NAcAZsyV6IWABPO5sSh7fotksmYzDkH1O1++/SNoNN5ItzTQYStZ/gY4JKQQL93CRKsuMH3FwyBBNfutSruubIC7gwAQ2WyMOEF+iK8WLRACedv3j4yRUki5piq4YPFoS9kQ=
+	t=1710869231; cv=none; b=j8Xlfq6Szafzi02svLXF/s4LOmbSu4ZXpP0erp0KtexkcH6HggoIIW6KiChkCJ7JqB/L70RMagD96t660cKhW0/Lsgqnr1kOfx7YiKt8XptLs6hoSrQD5LQadGxRlaedAaASQa8iH3YRFpB/IfiYl5vTZcMNi1x/vSCfNSg4v/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710869214; c=relaxed/simple;
-	bh=eU+P2/MBs13nPLBXxxwA/HXUg83uLjebvsfj9Z0uxdE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EsZvhL2jXhdRKY3S1umykL08YNxi6RDoI5LmhdaB4S5bsuE98fmvFyCZCfQMnc6GWCgQa3Omhgizn+cz9DAQhRXYznxevu0l9cTQd54LKOHiaRdSNlJTSWyUKO95HoP22RSHhA+8VHxMKPkcmd+usGwtnDfRE3YkAhNzSMTCefY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56a0c0a7ebcso3159186a12.1;
-        Tue, 19 Mar 2024 10:26:52 -0700 (PDT)
+	s=arc-20240116; t=1710869231; c=relaxed/simple;
+	bh=BHyPuwCGdM8QOzVKsIwiYVKlOpsOXE/7vMV2rvxpnCY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KIGFFl42/2i8nDNC7mYgTAH+V4fzivZCqo2Olyffqq9qiC/6WguW0FvDss9nGl75nmjqZ9VDxnB1NMQ0l40u3ktBWRgqf1MpErGkYoVOfxztTNW+1aW8l1YlC4Tc1yuttvztIcBUlpV2KNDpBOTQPKq8Nnf0FS7cN5IRcH3vPow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Q+20GPqJ; arc=none smtp.client-ip=209.85.167.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q+20GPqJ"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3bbd6ea06f5so31743b6e.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 10:27:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710869228; x=1711474028; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5x0OLis2HEaDYcgS+EngPASHiGFVGElFdRHgyHAw6Lc=;
+        b=Q+20GPqJUWUSfpMzcPp1cHSGY4rCMHhONXqQLncC1lF//WPB+HusZFYZKI61X2uKmD
+         UUykwjTDI6CB89ifPdM5l/yQrPwvORubUnTq12/IF9Rl6MacNEDyZX9INkX1pUWuh8vL
+         ic2IqroNC0QnrxR8AHliAtFIzeAJFLmt8PIQTbzng9y90QoWrboTXO4dCCiRTBTUr3Q8
+         yWu7kiqCuro3TaM4oDbM+NDmOYVsKxTN0XFPie6AJp43ooSDuWrfZfrJSakJrNNtOOiU
+         +dQ1x05+Mpa7wrT4Yw/Anj3KxZMbCbgh5VxNl7spFDFTjYfLSyjYYRbSh186K7lWhMbJ
+         a5dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710869210; x=1711474010;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nj6gp724uOW1KD+nqa2YBsagOiwdMbhIpU0FKvAx1ns=;
-        b=nQJ4iiSLXTJayno7rrFpdhYqHenWmQZa9iIVj3bs/PaQPEWITWdBBOSciAp0QK4Jmh
-         TXxkpv7F4NwUfzRkA5AFEIGhAnG7rZ0Go/mYSbPJWhDcNhX2TXcyHTd+rB7/yQmFx3II
-         IGXiMHf39TmxabyC192jnR6DOvT4p76q/PX9hdQDG2V/ctNu0ph4GjjBeMFkc2AUQOPl
-         Gzt5Ri8nKcczeFX1+XS7dL+9LgJ+ajKcVVS2JmDkyGJIslq8iO2x4VGyuZTkL3L+NDuo
-         4K6cHcXHVuvR6XQlEjECwdeL2n6b2m6f90l+ceSxqjCzj/Ek92oA1BKxZNQPHcgFQD31
-         bi/g==
-X-Forwarded-Encrypted: i=1; AJvYcCVlU5aIXJbRQwa7EqM4xJuVl8JfOUUv/Bw5vm5BY+K9XCRVolsEq9urqlelsraUFJp+zX5enjzwweZETvfpIcUfw9bDn10nIa1lAEXwXIybt80XvqPS5cGhq39jaMLIJhRp3f6j83b2rOZ8acY=
-X-Gm-Message-State: AOJu0YzAOiEnl9B2z7gWcATnBcR7DwgZJki6TqM1BNZ/0eOaSu5VpDK2
-	hW8itRUtRYuSU4Sv9SrIA3SgLIZC+TISXFJzu6pM2NdjV1TCBOGK
-X-Google-Smtp-Source: AGHT+IGqPYzi15ZClAe7ZRvWRK4D8R06KTDHnSa4SAjBsmYlJhc8mVkjl3dB57nGoQKb81uTgBRkNA==
-X-Received: by 2002:a17:906:a88c:b0:a46:adab:dd75 with SMTP id ha12-20020a170906a88c00b00a46adabdd75mr6086510ejb.11.1710869210439;
-        Tue, 19 Mar 2024 10:26:50 -0700 (PDT)
-Received: from localhost (fwdproxy-lla-002.fbsv.net. [2a03:2880:30ff:2::face:b00c])
-        by smtp.gmail.com with ESMTPSA id di9-20020a170906730900b00a462e166b9bsm6263067ejc.112.2024.03.19.10.26.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 10:26:49 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-To: Igor Mitsyanko <imitsyanko@quantenna.com>,
-	Sergey Matyukevich <geomatsi@gmail.com>,
-	Kalle Valo <kvalo@kernel.org>
-Cc: kuba@kernel.org,
-	keescook@chromium.org,
-	linux-wireless@vger.kernel.org (open list:QUANTENNA QTNFMAC WIRELESS DRIVER),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] wifi: qtnfmac: allocate dummy net_device dynamically
-Date: Tue, 19 Mar 2024 10:26:19 -0700
-Message-ID: <20240319172634.894327-1-leitao@debian.org>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1710869228; x=1711474028;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5x0OLis2HEaDYcgS+EngPASHiGFVGElFdRHgyHAw6Lc=;
+        b=nSfpqqaFh/YG6udj8rWCy5dRlQoQXXQRjkgA0/JOl9CsoEsg5479066uLq/rVqbSkX
+         DS0gzJuuep0lCevuoVKFM69NXQEx7rZAhUjgz9tjCulCHb2A1OdobqLNQdsqq12gCXhL
+         GxPraRu5s/k/gtzIKsoJoOKkSvQmgxNYY4lbqMAv53KfSEGXbgQJ/VP7s0+ZkG7OkmLj
+         vAmJF35F6V3Awqn/ScpCCo1Km2evpBJbPH1WbcHu0bntKUpp2UNd5gfCQL+0tBjGKQa0
+         YpyTlY10gFdaZn5RES2Ke+AUHLqMaPlgn67qlwUPaxu1+SbBdM3e8DWu+UmgWyKwS0pd
+         GUtg==
+X-Forwarded-Encrypted: i=1; AJvYcCWUyn+MhfYT5QXwhvo1sy80GTLmuO9S9gjJ7Tgv2zeMfNhqPYl16pj0mxMRSg+OXrXQ1rC7ulOJmqcVyf4Uu4U67HN9rxtJmOadt0Qw
+X-Gm-Message-State: AOJu0Yw9htWsn2ZNrRbQrGvGXkRWMHkaVZQ8J2VfeivKfv/nfzdJ4QQm
+	K8nqi9X/EA3ygREXsDHadzWXH89e++rLYKVWmf70Gc6O+n/72HrnySIqSRglii9DwEjQXEuVFZU
+	JlHr9lOAjEZLrPv8Av58fIN52B3WLA2JeZXd3nQ==
+X-Google-Smtp-Source: AGHT+IH+vjRBCJwZWMQcYN3nqasG4Vwt0oDrL9dcErdMyptA7sWYXQPaEC2SbcVIHTOZhBZqaY4n8opwUj3Qx4Za914=
+X-Received: by 2002:a05:6808:10c8:b0:3c3:7090:2784 with SMTP id
+ s8-20020a05680810c800b003c370902784mr1160387ois.7.1710869228221; Tue, 19 Mar
+ 2024 10:27:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240307092132.943881-1-jens.wiklander@linaro.org>
+ <ZereCD7kJxP+vzHN@lpieralisi> <CAHUa44Har+TLBXOgz4EqekEu7fKWgFeCuOa0i8UiNLfen4tJiw@mail.gmail.com>
+ <ZfmfIN_ODYq9MvOq@bogus>
+In-Reply-To: <ZfmfIN_ODYq9MvOq@bogus>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Date: Tue, 19 Mar 2024 18:26:57 +0100
+Message-ID: <CAHUa44FVmK6im92cKTUshBG936xHAwS6nASfyBa9D2Yb44ansg@mail.gmail.com>
+Subject: Re: [PATCH] firmware: arm_ffa: support running as a guest in a vm
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Marc Bonnici <marc.bonnici@arm.com>, 
+	Olivier Deprez <Olivier.Deprez@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Embedding net_device into structures prohibits the usage of flexible
-arrays in the net_device structure. For more details, see the discussion
-at [1].
+On Tue, Mar 19, 2024 at 3:20=E2=80=AFPM Sudeep Holla <sudeep.holla@arm.com>=
+ wrote:
+>
+> On Fri, Mar 08, 2024 at 01:35:05PM +0100, Jens Wiklander wrote:
+> > On Fri, Mar 8, 2024 at 10:44=E2=80=AFAM Lorenzo Pieralisi <lpieralisi@k=
+ernel.org> wrote:
+> > >
+> > > On Thu, Mar 07, 2024 at 10:21:32AM +0100, Jens Wiklander wrote:
+> > > > Add support for running the driver in a guest to a hypervisor. The =
+main
+> > > > difference is that the notification interrupt is retrieved
+> > > > with FFA_FEAT_NOTIFICATION_PENDING_INT and that
+> > > > FFA_NOTIFICATION_BITMAP_CREATE doesn't need to be called.
+> > >
+> > > I have a couple of questions about these changes, comments below.
+> > >
+> > > > FFA_FEAT_NOTIFICATION_PENDING_INT gives the interrupt the hyperviso=
+r has
+> > > > chosen to notify its guest of pending notifications.
+> > > >
+> > > > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+> > > > ---
+> > > >  drivers/firmware/arm_ffa/driver.c | 45 ++++++++++++++++++---------=
+----
+> > > >  1 file changed, 27 insertions(+), 18 deletions(-)
+> > > >
+> > > > diff --git a/drivers/firmware/arm_ffa/driver.c b/drivers/firmware/a=
+rm_ffa/driver.c
+> > > > index f2556a8e9401..c183c7d39c0f 100644
+> > > > --- a/drivers/firmware/arm_ffa/driver.c
+> > > > +++ b/drivers/firmware/arm_ffa/driver.c
+> > > > @@ -1306,17 +1306,28 @@ static void ffa_sched_recv_irq_work_fn(stru=
+ct work_struct *work)
+> > > >       ffa_notification_info_get();
+> > > >  }
+> > > >
+> > > > +static int ffa_get_notif_intid(int *intid)
+> > > > +{
+> > > > +     int ret;
+> > > > +
+> > > > +     ret =3D ffa_features(FFA_FEAT_SCHEDULE_RECEIVER_INT, 0, intid=
+, NULL);
+> > > > +     if (!ret)
+> > > > +             return 0;
+> > > > +     ret =3D ffa_features(FFA_FEAT_NOTIFICATION_PENDING_INT, 0, in=
+tid, NULL);
+> > > > +     if (!ret)
+> > > > +             return 0;
+> > >
+> > > I think that both interrupts should be probed in eg a host and the
+> > > actions their handlers should take are different.
+> > >
+>
+> +1, I have the same opinion.
+>
+> > > > +
+> > > > +     pr_err("Failed to retrieve one of scheduler Rx or notif pendi=
+ng interrupts\n");
+> > > > +     return ret;
+> > > > +}
+> > > > +
+> > > >  static int ffa_sched_recv_irq_map(void)
+> > > >  {
+> > > > -     int ret, irq, sr_intid;
+> > > > +     int ret, irq, intid;
+> > > >
+> > > > -     /* The returned sr_intid is assumed to be SGI donated to NS w=
+orld */
+> > > > -     ret =3D ffa_features(FFA_FEAT_SCHEDULE_RECEIVER_INT, 0, &sr_i=
+ntid, NULL);
+> > > > -     if (ret < 0) {
+> > > > -             if (ret !=3D -EOPNOTSUPP)
+> > > > -                     pr_err("Failed to retrieve scheduler Rx inter=
+rupt\n");
+> > > > +     ret =3D ffa_get_notif_intid(&intid);
+> > > > +     if (ret)
+> > > >               return ret;
+> > > > -     }
+> > > >
+> > > >       if (acpi_disabled) {
+> > > >               struct of_phandle_args oirq =3D {};
+> > > > @@ -1329,12 +1340,12 @@ static int ffa_sched_recv_irq_map(void)
+> > > >
+> > > >               oirq.np =3D gic;
+> > > >               oirq.args_count =3D 1;
+> > > > -             oirq.args[0] =3D sr_intid;
+> > > > +             oirq.args[0] =3D intid;
+> > > >               irq =3D irq_create_of_mapping(&oirq);
+> > > >               of_node_put(gic);
+> > > >  #ifdef CONFIG_ACPI
+> > > >       } else {
+> > > > -             irq =3D acpi_register_gsi(NULL, sr_intid, ACPI_EDGE_S=
+ENSITIVE,
+> > > > +             irq =3D acpi_register_gsi(NULL, intid, ACPI_EDGE_SENS=
+ITIVE,
+> > > >                                       ACPI_ACTIVE_HIGH);
+> > > >  #endif
+> > >
+> > > This means that for both schedule receiver interrupt and notification
+> > > pending interrupt we would end up calling FFA_NOTIFICATION_INFO_GET (=
+?),
+> > > which is not correct AFAIK, for many reasons.
+> > >
+> > > If there is a pending notification for a VM, a scheduler receiver
+> > > interrupt is triggered in the host. This would end up calling
+> > > FFA_NOTIFICATION_INFO_GET(), that is destructive (calling it again in
+> > > the notified *guest* - in the interrupt handler triggered by the
+> > > hypervisor - would not return the pending notifications for it).
+> > >
+> > > Therefore, the action for the pending notification interrupt should
+> > > be different and should just call FFA_NOTIFICATION_GET.
+> > >
+> > > Please let me know if that matches your understanding, this
+> > > hunk is unclear to me.
+>
+> As you can expect, the above matches my understanding too.
+>
+> >
+> > This patch was made from the assumption that this FF-A driver is a
+> > guest driver, that is, FFA_NOTIFICATION_INFO_GET lands in the
+> > Hypervisor at EL2. The FFA_NOTIFICATION_INFO_GET call is needed to
+> > know which FFA_NOTIFICATION_GET calls should be dispatched in this VM,
+> > to retrieve global notifications and per vCPU notifications.
+> >
+>
+> OK and I assume this aligns with the below excerpts from the spec about
+> FFA_NOTIFICATION_INFO_GET:
+> "
+> This ABI is invoked by a VM at the Non-secure virtual FF-A instance with =
+the
+> SMC or HVC conduits to request the Hypervisor to return the list of SPs a=
+nd
+> VMs that have pending notifications. The Hypervisor returns the list of t=
+hose
+> endpoints whose schedulers are implemented in the calling VM.
+> "
+>
+> But if OPTEE driver in the VM/guest is the scheduler for the OPTEE SP,
+> then I would expect the FF-A driver to just register for SRI. It can't be
+> NPI as that contradicts with above.
+>
+> > If the FF-A driver is supposed to be a host driver instead, then I
+> > wonder where we should have the guest driver.
+> >
+>
+> At least so far we haven't found a strong reason to have different versio=
+ns
+> for each.
+>
+> > For clarification, my setup has Xen as hypervisor at EL2 (doing the
+> > host processing), TF-A as SPMD at EL3, and OP-TEE as SPMC at S-EL1.
+> > I'm testing this on QEMU. I'm going to post the Xen patches relating
+> > to this quite soon.
+> >
+>
+> OK, thanks for the setup info.
+>
+> > I believe that until now the FF-A driver has worked under the
+> > assumption that it's a non-secure physical FF-A instance. With
+> > hypervisor at EL2 it becomes a virtual FF-A instance.
+> >
+>
+> Agreed.
+>
+> > >
+> > > >       }
+> > > > @@ -1442,17 +1453,15 @@ static void ffa_notifications_setup(void)
+> > > >       int ret, irq;
+> > > >
+> > > >       ret =3D ffa_features(FFA_NOTIFICATION_BITMAP_CREATE, 0, NULL,=
+ NULL);
+> > > > -     if (ret) {
+> > > > -             pr_info("Notifications not supported, continuing with=
+ it ..\n");
+> > > > -             return;
+> > > > -     }
+> > > > +     if (!ret) {
+> > > >
+> > > > -     ret =3D ffa_notification_bitmap_create();
+> > > > -     if (ret) {
+> > > > -             pr_info("Notification bitmap create error %d\n", ret)=
+;
+> > > > -             return;
+> > > > +             ret =3D ffa_notification_bitmap_create();
+> > > > +             if (ret) {
+> > > > +                     pr_err("notification_bitmap_create error %d\n=
+", ret);
+> > > > +                     return;
+> > > > +             }
+> > > > +             drv_info->bitmap_created =3D true;
+> > > >       }
+> > > > -     drv_info->bitmap_created =3D true;
+> > >
+> > > This boils down to saying that FFA_NOTIFICATION_BITMAP_CREATE is not
+> > > implemented for a VM (because the hypervisor should take care of issu=
+ing
+> > > that call before the VM is created), so if the feature is not present
+> > > that does not mean that notifications aren't supported.
+> > >
+> > > It is just about removing a spurious log.
+> > >
+> > > Is that correct ?
+> >
+> > No, this is about not aborting notification setup just because we have
+> > a hypervisor that handles the FFA_NOTIFICATION_BITMAP_CREATE call.
+>
+> Understood.
+>
+> > With this patch, if ffa_get_notif_intid() fails, then we don't have
+> > support for notifications.
+> >
+>
+> But I still don't understand the mixup of SRI and NPI in your usecase
+> model. It should be just SRI. NPI handler must just use NOTIFICATION_GET
+> and not INFO_GET as Lorenzo has explained above.
 
-Un-embed the net_device from struct qtnf_bus by converting it
-into a pointer. Then use the leverage alloc_netdev() to allocate the
-net_device object at qtnf_pcie_probe(). The free of the device occurs at
-qtnf_pcie_remove().
+Sorry for my confusion, I get your point now. I'll make a v2 where I
+add an NPI handler and keep the SRI handler as you described.
 
-[1] https://lore.kernel.org/all/20240229225910.79e224cf@kernel.org/
+Thanks,
+Jens
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- drivers/net/wireless/quantenna/qtnfmac/bus.h        |  2 +-
- drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c  | 13 +++++++++++--
- .../wireless/quantenna/qtnfmac/pcie/pearl_pcie.c    |  6 +++---
- .../wireless/quantenna/qtnfmac/pcie/topaz_pcie.c    |  6 +++---
- 4 files changed, 18 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/wireless/quantenna/qtnfmac/bus.h b/drivers/net/wireless/quantenna/qtnfmac/bus.h
-index 3334c45aac13..7f8646e77ee0 100644
---- a/drivers/net/wireless/quantenna/qtnfmac/bus.h
-+++ b/drivers/net/wireless/quantenna/qtnfmac/bus.h
-@@ -59,7 +59,7 @@ struct qtnf_bus {
- 	struct qtnf_qlink_transport trans;
- 	struct qtnf_hw_info hw_info;
- 	struct napi_struct mux_napi;
--	struct net_device mux_dev;
-+	struct net_device *mux_dev;
- 	struct workqueue_struct *workqueue;
- 	struct workqueue_struct *hprio_workqueue;
- 	struct work_struct fw_work;
-diff --git a/drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c b/drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c
-index 9ad4c120fa28..f8f55db2f454 100644
---- a/drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c
-+++ b/drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c
-@@ -372,7 +372,13 @@ static int qtnf_pcie_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 		goto error;
- 	}
- 
--	init_dummy_netdev(&bus->mux_dev);
-+	bus->mux_dev = alloc_netdev(0, "dummy", NET_NAME_UNKNOWN,
-+				    init_dummy_netdev);
-+	if (!bus->mux_dev) {
-+		ret = -ENOMEM;
-+		goto error;
-+	}
-+
- 	qtnf_pcie_init_irq(pcie_priv, use_msi);
- 	pcie_priv->sysctl_bar = sysctl_bar;
- 	pcie_priv->dmareg_bar = dmareg_bar;
-@@ -381,11 +387,13 @@ static int qtnf_pcie_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 
- 	ret = pcie_priv->probe_cb(bus, tx_bd_size_param, rx_bd_size_param);
- 	if (ret)
--		goto error;
-+		goto error_free;
- 
- 	qtnf_pcie_bringup_fw_async(bus);
- 	return 0;
- 
-+error_free:
-+	free_netdev(bus->mux_dev);
- error:
- 	destroy_workqueue(pcie_priv->workqueue);
- 	pci_set_drvdata(pdev, NULL);
-@@ -417,6 +425,7 @@ static void qtnf_pcie_remove(struct pci_dev *dev)
- 	netif_napi_del(&bus->mux_napi);
- 	destroy_workqueue(priv->workqueue);
- 	tasklet_kill(&priv->reclaim_tq);
-+	free_netdev(bus->mux_dev);
- 
- 	qtnf_pcie_free_shm_ipc(priv);
- 	qtnf_debugfs_remove(bus);
-diff --git a/drivers/net/wireless/quantenna/qtnfmac/pcie/pearl_pcie.c b/drivers/net/wireless/quantenna/qtnfmac/pcie/pearl_pcie.c
-index 8c23a77d1671..c1a53e1ba3be 100644
---- a/drivers/net/wireless/quantenna/qtnfmac/pcie/pearl_pcie.c
-+++ b/drivers/net/wireless/quantenna/qtnfmac/pcie/pearl_pcie.c
-@@ -761,12 +761,12 @@ static int qtnf_pcie_pearl_rx_poll(struct napi_struct *napi, int budget)
- 				napi_gro_receive(napi, skb);
- 			} else {
- 				pr_debug("drop untagged skb\n");
--				bus->mux_dev.stats.rx_dropped++;
-+				bus->mux_dev->stats.rx_dropped++;
- 				dev_kfree_skb_any(skb);
- 			}
- 		} else {
- 			if (skb) {
--				bus->mux_dev.stats.rx_dropped++;
-+				bus->mux_dev->stats.rx_dropped++;
- 				dev_kfree_skb_any(skb);
- 			}
- 		}
-@@ -1146,7 +1146,7 @@ static int qtnf_pcie_pearl_probe(struct qtnf_bus *bus, unsigned int tx_bd_size,
- 	}
- 
- 	tasklet_setup(&ps->base.reclaim_tq, qtnf_pearl_reclaim_tasklet_fn);
--	netif_napi_add_weight(&bus->mux_dev, &bus->mux_napi,
-+	netif_napi_add_weight(bus->mux_dev, &bus->mux_napi,
- 			      qtnf_pcie_pearl_rx_poll, 10);
- 
- 	ipc_int.fn = qtnf_pcie_pearl_ipc_gen_ep_int;
-diff --git a/drivers/net/wireless/quantenna/qtnfmac/pcie/topaz_pcie.c b/drivers/net/wireless/quantenna/qtnfmac/pcie/topaz_pcie.c
-index d83362578374..ef5c069542d4 100644
---- a/drivers/net/wireless/quantenna/qtnfmac/pcie/topaz_pcie.c
-+++ b/drivers/net/wireless/quantenna/qtnfmac/pcie/topaz_pcie.c
-@@ -667,12 +667,12 @@ static int qtnf_topaz_rx_poll(struct napi_struct *napi, int budget)
- 				netif_receive_skb(skb);
- 			} else {
- 				pr_debug("drop untagged skb\n");
--				bus->mux_dev.stats.rx_dropped++;
-+				bus->mux_dev->stats.rx_dropped++;
- 				dev_kfree_skb_any(skb);
- 			}
- 		} else {
- 			if (skb) {
--				bus->mux_dev.stats.rx_dropped++;
-+				bus->mux_dev->stats.rx_dropped++;
- 				dev_kfree_skb_any(skb);
- 			}
- 		}
-@@ -1159,7 +1159,7 @@ static int qtnf_pcie_topaz_probe(struct qtnf_bus *bus,
- 	}
- 
- 	tasklet_setup(&ts->base.reclaim_tq, qtnf_reclaim_tasklet_fn);
--	netif_napi_add_weight(&bus->mux_dev, &bus->mux_napi,
-+	netif_napi_add_weight(bus->mux_dev, &bus->mux_napi,
- 			      qtnf_topaz_rx_poll, 10);
- 
- 	ipc_int.fn = qtnf_topaz_ipc_gen_ep_int;
--- 
-2.43.0
-
+>
+> --
+> Regards,
+> Sudeep
