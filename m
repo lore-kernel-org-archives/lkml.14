@@ -1,141 +1,106 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E6222339;
-	Tue, 19 Mar 2024 08:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD58364
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 08:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710837287; cv=none; b=LzdVvrQdM45+UFQgIV30N/fd9lRFVLJgkTuZzZ7ZO80Rn1HuUlW5jghn0ZiPaySNcuaE7MJyxawWChm6pKNE9Ns8L6CvPchvAZpUQub+bF1uJ32DS2sWBEkIxLVITXYpXxTmVPS2FGSHtJm3b5zqvLRDSBIVlA1skt4+82dbszc=
+	t=1710837335; cv=none; b=Ark8Cwv3oajDnTHsfUanC0VIaSBoBjAFsz2T20l+rgLRACxPGfWDZTqO523A4iP90jcclSgLhX6QoNfHylPVrKcU7LeLN1qNThDtQlxmbQaPUmFMpE84aveEmZE3Rsd55jz/3NymQQbCRyX5qSi46iuIO1Ge+qxc5mR4SAquOIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710837287; c=relaxed/simple;
-	bh=pZCwEcBu5MwlxyM1kCa+BjpqXn0IzjmWygFH2xHMQG0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=b2MDgS1oC4QeBOXkvUGwzFVdAzWyQaCP+fSyCRYZcsmnaYdJiAJKHaCvRw9a85eCAEyTTPF73S/9SwsLkffBiCM52pIFWpNL6S2NK0MfSYxmek/DEM/vMmJUUNFvDoRYImecs8MyvQEZMJTd6q5QvPMeQeHsdjMiUj484lXy8g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QyclQmQU; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1710837335; c=relaxed/simple;
+	bh=Uhw7X37ePZrOYI/rJry/tZ9rI468Mam9nGel7TLxUcI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GKj1ZPCbVJYvqL8edxkJc8mOny3hlp95rrRpdrGVdeNZvcqwl/py0LMvljRp2Qy3QqdhckTnRwnHf3yqrjNOXGgQN8ybMcngV+bbPO/nedW4zmsTUZFBAhAsJ4fu7SdUp9sYP/b/6J5cwpy1vOdR3GuzBBdGKg1o2Lkbr8eR2vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h8/UGenF; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QyclQmQU"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42J6TTjU024457;
-	Tue, 19 Mar 2024 08:34:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=IVuU61o5Z0vG27BocK0lkfi/gc5Z+ncaUAAfauu0R3E=; b=Qy
-	clQmQUpDIrL60LNQV9Ai7ZAzAYcyrBaOAj71s2pXUEnvUOOuLCOKT99J0qenlLhq
-	2VulOvHprPZl2CeEXq00qb91RLmDrB3cwTGSaMgEZlbjuYKwG+GtAx/sDxMgJnoR
-	ZsMIiMj9IKKbM0wsuSRheC3BdKvkOcSG0I99gBvD4TBfBd2v8DWqrQWg0uvLFTzD
-	vIKPcI4ecwZ27cHuv3gJvqccwZeFh/grOHE/hgGH5E1asOV5XGzN9SXg3IKmEPx/
-	90qLTS/mztPsUcvqMQNQjgrDMT7Pk3OaSlzCRFJNJuRTw/daAW6sf0aiKppKHYA/
-	7gRyajBuOqvV15M41OxQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wy2ea0jxw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 08:34:40 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42J8Yesq016125
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 08:34:40 GMT
-Received: from [10.214.67.128] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 19 Mar
- 2024 01:34:36 -0700
-Message-ID: <3e9218a6-5fe7-5506-7ae4-09bace08f844@quicinc.com>
-Date: Tue, 19 Mar 2024 14:04:33 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h8/UGenF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710837332;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bidhNprDIaXErWo++B8NK9gU1Mr0P973Tkk526SOsxc=;
+	b=h8/UGenF7DKlb3cEw/hagnsGNv/KKOdfutUhaayyM+5y2zthTPc013go6V4CdVgsbH7ULn
+	UrL/39iQKMtEpuvBUCBv54lSYD/2W7ka2EbjKiutJURrtTcBxdbytB4I/kN5GHsJ9F9GZC
+	LKhnhorCy86QXtDdCBRLRcWn7u5eT6I=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-158-ViRNNpPeNSGjZuJMFlAqBg-1; Tue, 19 Mar 2024 04:35:31 -0400
+X-MC-Unique: ViRNNpPeNSGjZuJMFlAqBg-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a3fb52f121eso235121666b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 01:35:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710837330; x=1711442130;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bidhNprDIaXErWo++B8NK9gU1Mr0P973Tkk526SOsxc=;
+        b=mtXzcqMOF42NaKTqHWT5o4J9ySH3o/lDS/S/dw0LaAQTYfm12Zq/TeHDDSGMdRg3Pd
+         N5+1YIjLVsSAHpsIKylyOAbg86+jfWUrsYZ/mRODEJfWov/hc1NRzMzAciD1y3hbA3kH
+         U5QnkwrBKJDrMy0bj4dt0eNA1fI1ddN402oT7nryUMmsj3+lKVusvViUZAobgJYJEdn1
+         H5BqtdMTEHiLk3du+xZUBDBhneoZzEt4Nw2PxcZiQerm18A3r1UyVF6SszpWohfJgkZM
+         zufdzGZt2gX/6lvPjSnhpmI1hCJFKHXar5fTHzvor9I3VniTyoBlt0+Gai4EeaVL1tIC
+         15mg==
+X-Forwarded-Encrypted: i=1; AJvYcCU1+uPVi7ZLs63pGAHCOffnPY94fHyjbt6wctyS3+yvDGb2bX/yfMr855iEoL2e7nUvpIj5xixNtvFBEZzKa0ctzRl7tP+HB7IUekvn
+X-Gm-Message-State: AOJu0YwmFwcUAfYS4f9ArSKzOzq9xA5jgm7ZfSxiGfSiOvKiTaGaOR0Q
+	2aomoOxtprRQkAVAvuk0AtM/El89Q/LiXLQRsbk8M0oB4b2ln3dsQm4+nZubNqceEGp57mZUNmf
+	lj6vBe3fnjDaUbAI4XenoPQ1Fvsw40IYU97hwx6AjVb3zTal9NUfVY1/Jf+7IztY1XXg+ew==
+X-Received: by 2002:a17:906:364a:b0:a46:617e:d3a7 with SMTP id r10-20020a170906364a00b00a46617ed3a7mr9211984ejb.60.1710837330130;
+        Tue, 19 Mar 2024 01:35:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH2M46P0WU30p/kI4KM147xUw+jHFCsikBReD0bxprbCUbp1whXFumyfQAXLRkNAFtveWMugw==
+X-Received: by 2002:a05:6512:68c:b0:513:db96:2be9 with SMTP id t12-20020a056512068c00b00513db962be9mr10460157lfe.64.1710836978279;
+        Tue, 19 Mar 2024 01:29:38 -0700 (PDT)
+Received: from redhat.com ([2.52.6.254])
+        by smtp.gmail.com with ESMTPSA id g14-20020a5d540e000000b0033e95bf4796sm11737388wrv.27.2024.03.19.01.29.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 01:29:37 -0700 (PDT)
+Date: Tue, 19 Mar 2024 04:29:33 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Tobias Huschle <huschle@linux.ibm.com>
+Cc: Luis Machado <luis.machado@arm.com>, Jason Wang <jasowang@redhat.com>,
+	Abel Wu <wuyun.abel@bytedance.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Linux Kernel <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	nd <nd@arm.com>
+Subject: Re: EEVDF/vhost regression (bisected to 86bfbb7ce4f6 sched/fair: Add
+ lag based placement)
+Message-ID: <20240319042829-mutt-send-email-mst@kernel.org>
+References: <07974.124020102385100135@us-mta-501.us.mimecast.lan>
+ <20240201030341-mutt-send-email-mst@kernel.org>
+ <89460.124020106474400877@us-mta-475.us.mimecast.lan>
+ <20240311130446-mutt-send-email-mst@kernel.org>
+ <cf813f92-9806-4449-b099-1bb2bd492b3c@arm.com>
+ <73123.124031407552500165@us-mta-156.us.mimecast.lan>
+ <20240314110649-mutt-send-email-mst@kernel.org>
+ <84704.124031504335801509@us-mta-515.us.mimecast.lan>
+ <20240315062839-mutt-send-email-mst@kernel.org>
+ <b3fd680c675208370fc4560bb3b4d5b8@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH 2/3] arm64: dts: qcom: qdu1000-idp: enable USB nodes
-Content-Language: en-US
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>
-CC: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Amrit Anand
-	<quic_amrianan@quicinc.com>
-References: <20240311120859.18489-1-quic_kbajaj@quicinc.com>
- <20240311120859.18489-3-quic_kbajaj@quicinc.com>
- <CAA8EJpqMWBWAEUCiJXm0x7zjZYbP8SkRDgu+w+goYjB=8JBN0A@mail.gmail.com>
- <e787706d-b5ef-40bd-9fa8-fed784a9d7b7@linaro.org>
-From: Komal Bajaj <quic_kbajaj@quicinc.com>
-In-Reply-To: <e787706d-b5ef-40bd-9fa8-fed784a9d7b7@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: uWoXB43SlU8K_p1wwgxw5qumRekGUsoS
-X-Proofpoint-GUID: uWoXB43SlU8K_p1wwgxw5qumRekGUsoS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-18_12,2024-03-18_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- spamscore=0 phishscore=0 impostorscore=0 malwarescore=0 adultscore=0
- clxscore=1015 mlxlogscore=617 lowpriorityscore=0 bulkscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2403140001 definitions=main-2403190065
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b3fd680c675208370fc4560bb3b4d5b8@linux.ibm.com>
 
-
-
-On 3/12/2024 5:34 AM, Konrad Dybcio wrote:
+On Tue, Mar 19, 2024 at 09:21:06AM +0100, Tobias Huschle wrote:
+> On 2024-03-15 11:31, Michael S. Tsirkin wrote:
+> > On Fri, Mar 15, 2024 at 09:33:49AM +0100, Tobias Huschle wrote:
+> > > On Thu, Mar 14, 2024 at 11:09:25AM -0400, Michael S. Tsirkin wrote:
+> > > >
+> > 
+> > Could you remind me pls, what is the kworker doing specifically that
+> > vhost is relying on?
 > 
-> 
-> On 3/11/24 13:14, Dmitry Baryshkov wrote:
->> On Mon, 11 Mar 2024 at 14:10, Komal Bajaj <quic_kbajaj@quicinc.com> 
->> wrote:
->>>
->>> Enable both USB controllers and associated hsphy and qmp phy nodes
->>> on QDU1000 IDP.
->>>
->>> Co-developed-by: Amrit Anand <quic_amrianan@quicinc.com>
->>> Signed-off-by: Amrit Anand <quic_amrianan@quicinc.com>
->>> Signed-off-by: Komal Bajaj <quic_kbajaj@quicinc.com>
->>> ---
->>>   arch/arm64/boot/dts/qcom/qdu1000-idp.dts | 24 ++++++++++++++++++++++++
->>>   1 file changed, 24 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/qcom/qdu1000-idp.dts 
->>> b/arch/arm64/boot/dts/qcom/qdu1000-idp.dts
->>> index 89b84fb0f70a..126bc71afd90 100644
->>> --- a/arch/arm64/boot/dts/qcom/qdu1000-idp.dts
->>> +++ b/arch/arm64/boot/dts/qcom/qdu1000-idp.dts
->>> @@ -500,3 +500,27 @@ &tlmm {
->>>   &uart7 {
->>>          status = "okay";
->>>   };
->>> +
->>> +&usb_1 {
->>> +       status = "okay";
->>> +};
->>> +
->>> +&usb_1_dwc3 {
->>> +       dr_mode = "peripheral";
->>
->> Are these ports really peripheral-only?
+> The kworker is handling the actual data moving in memory if I'm not
+> mistaking.
 
-This was done for testing. Will add the usb-role-switch role.
+I think that is the vhost process itself. Maybe you mean the
+guest thread versus the vhost thread then?
 
->>
->>> +       maximum-speed = "high-speed";
-> 
-> More importantly, are these ports really HS-only?
-
-Apologies for this, added it for testing purpose only, forgot to remove it.
-Will remove it.
-
-Thanks
-Komal
-
-> 
-> Konrad
