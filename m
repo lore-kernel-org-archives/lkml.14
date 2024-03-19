@@ -1,168 +1,124 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D832E400;
-	Tue, 19 Mar 2024 12:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E940254BDA;
+	Tue, 19 Mar 2024 12:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710851505; cv=none; b=A9BbrRlShl912acAakpneR6sNqcEOsA7E8ehxAB+nZFcSwbAyvViWyLNxCbTyVzwdHyQTVXsx8L0mulZNRl5EyTDbqt7z6PN23H4hTtIcqhOkTkJaq1A0V9H+YnHWMkM1tfvdi6ENGYUvkdmKa1OGf/22fwCHMz2QBD33dI99Lc=
+	t=1710851506; cv=none; b=a1BbXxFzdh/bOaT0tDc3mAC5jVHIkwLpO+RDyrCV2KVxgk963/6hNQ1zf2Xxg+cEJtmVqfhbtNNlLRSuo65+a31sZsudhG/37eQprG07bqoO7uV2CDNzmjrBwUfIQq7VG+CgnXvnMikeWj9zpHmnnQkAHalDMpDksAZdQk8OPwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710851505; c=relaxed/simple;
-	bh=nWsuFg+nvKimCB4J0dPbZBgLS5phK0OHmb1s7ySmek0=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=tl8Ed3mAIvSrvT7cz8Lk0B8hsQLopHNwKU2i8sYc7izOhJ8Paatc+VduxSHFt1pMuFNALc1H8Y1AvO8yIbjHLZ0jy1uiBcZhnIM8YHHdBUKI9lwIqe/5Dv67c6+8FZGvgZUy7h7NLjd2wSPqnMdxHgxRpyrearGkWZEyM2aKOi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v3Cswu0R; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0HC5NkWc; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1710851506; c=relaxed/simple;
+	bh=dpUPLrqHwakMnlL6jbNOapLyjpMQqdiCfAGidRZmjgI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=lMD+I57yUaneqdZQUCndgCtQCoj8sU4Lbp2KOiihyTPzlXqK1KGy/XgXUyDqZtSzc+hVDgyZbh9x9VzDD4xC29NSqQdDrBbuCPutdqEA/pYYCJHhrQR2JUneC+fYPv6SXW35+NfHZE/xNiOEJ6Y23JwXabalHhjoqXmGuzkh0uQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eQmoZWZ7; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v3Cswu0R";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0HC5NkWc"
-Date: Tue, 19 Mar 2024 12:31:41 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1710851502;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QRo7t5zANXrFccUKajJfOkGAnApTY+nXBuT6H9mcWZA=;
-	b=v3Cswu0RojObyjeAcupo+7EBP4P30Swz41yHh550dhqDzCnrbSNo12A+0DP5wRRV0PaHgX
-	Ks8bUFNZJasbICfDtkQYhX6AgsIQ+eq7WX/yxjAQCQo9wAjx7ljxTcIQFZmUGh2P8gDU1M
-	sO1dwQTN/cb+gLTmlp3H/FmzzautQR3np83pdtYRUCk8HeEduZvR9EpZB6XMXne5iLUee4
-	oaSQq1XP0TofyO+nL2yo5dlWw8HzF8l0C4VqeR1jwLVfY3rdB+Y3JlSpbesYJxCsLEOtgL
-	p8YZ7clrIcdboos7cA87LJSavWjVoTiic8LFcC7Ee2GfcByHmiWvyD+FkyRxwA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1710851502;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QRo7t5zANXrFccUKajJfOkGAnApTY+nXBuT6H9mcWZA=;
-	b=0HC5NkWcxwPf1F4YjEFEbsTSHaY2vTC178p06VgRUmFE97BjrYbAAvefAevoQ6YIEjm36V
-	3NWnXhn/AmS8WYAg==
-From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/asm] x86/asm: Remove %P operand modifier from altinstr asm
- templates
-Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Josh Poimboeuf <jpoimboe@redhat.com>, Ard Biesheuvel <ardb@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240319104418.284519-2-ubizjak@gmail.com>
-References: <20240319104418.284519-2-ubizjak@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eQmoZWZ7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710851505; x=1742387505;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=dpUPLrqHwakMnlL6jbNOapLyjpMQqdiCfAGidRZmjgI=;
+  b=eQmoZWZ7g3BzcE1hRYQkn/AwzXZeNgA8hRAwXYCORSKX1eb3hk6gnawy
+   jhWRJG4HqxNCZj4HIJ5Dn5YLn6AuA0nVW0bhiP7UC62Xc7PXBR5mNbrsp
+   Fn7m34FaOzdTyxZ1rnvBmIpywJM6deA8RFKHlxq5XAfVsMB46h3OQsIL0
+   fCh/tqAkmw0kIGoNiVPK7lFJYAE7fSiP5zb8lBWDcabOX9YVzJIHUscGb
+   lFGLOC+XgcURdSr6ks2a6OUFhA2tZtd0UVAdrsBdcrNoRWVhvqoWzfD6p
+   iqVGVH5vBvoabT4eqf/2bynXoD4GN4bWGgRbk3/S4GtsBS8gB+SWFDa03
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="5583057"
+X-IronPort-AV: E=Sophos;i="6.07,136,1708416000"; 
+   d="scan'208";a="5583057"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 05:31:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,136,1708416000"; 
+   d="scan'208";a="18250218"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.12])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 05:31:42 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 19 Mar 2024 14:31:38 +0200 (EET)
+To: "Luke D. Jones" <luke@ljones.dev>
+cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/1] platform/x86: asus-wmi: add support variant of
+ TUF RGB
+In-Reply-To: <20240310055750.13160-2-luke@ljones.dev>
+Message-ID: <42f1c0d5-e7ac-4efb-fef7-75d07ad2ffaa@linux.intel.com>
+References: <20240310055750.13160-1-luke@ljones.dev> <20240310055750.13160-2-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171085150114.10875.3719610470474227640.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-The following commit has been merged into the x86/asm branch of tip:
+On Sun, 10 Mar 2024, Luke D. Jones wrote:
 
-Commit-ID:     a3ff53167cef2b5c6c8948246172d6f9279f037f
-Gitweb:        https://git.kernel.org/tip/a3ff53167cef2b5c6c8948246172d6f9279f037f
-Author:        Uros Bizjak <ubizjak@gmail.com>
-AuthorDate:    Tue, 19 Mar 2024 11:40:12 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 19 Mar 2024 13:15:34 +01:00
+> Adds support for a second TUF RGB wmi call that some versions of the TUF
+> laptop come with. Also adjusts existing support to select whichever is
+> available.
+> 
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> ---
+>  drivers/platform/x86/asus-wmi.c            | 12 +++++++++++-
+>  include/linux/platform_data/x86/asus-wmi.h |  1 +
+>  2 files changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 2cf695289655..ca8c73c15fcc 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -280,6 +280,7 @@ struct asus_wmi {
+>  	bool nv_temp_tgt_available;
+>  
+>  	bool kbd_rgb_mode_available;
+> +	u32 kbd_rgb_dev;
+>  	bool kbd_rgb_state_available;
+>  
+>  	bool throttle_thermal_policy_available;
+> @@ -870,6 +871,7 @@ static ssize_t kbd_rgb_mode_store(struct device *dev,
+>  				 struct device_attribute *attr,
+>  				 const char *buf, size_t count)
+>  {
+> +	struct asus_wmi *asus = dev_get_drvdata(dev);
+>  	u32 cmd, mode, r, g, b, speed;
+>  	int err;
+>  
+> @@ -906,7 +908,7 @@ static ssize_t kbd_rgb_mode_store(struct device *dev,
+>  		speed = 0xeb;
+>  	}
+>  
+> -	err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS, ASUS_WMI_DEVID_TUF_RGB_MODE,
+> +	err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS, asus->kbd_rgb_dev,
+>  			cmd | (mode << 8) | (r << 16) | (g << 24), b | (speed << 8), NULL);
+>  	if (err)
+>  		return err;
+> @@ -4537,6 +4539,14 @@ static int asus_wmi_add(struct platform_device *pdev)
+>  		asus->gpu_mux_dev = ASUS_WMI_DEVID_GPU_MUX_VIVO;
+>  	}
+>  
+> +	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE)) {
+> +		asus->kbd_rgb_mode_available = true;
+> +		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE;
+> +	} else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE2)) {
+> +		asus->kbd_rgb_mode_available = true;
+> +		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE2;
+> +	}
 
-x86/asm: Remove %P operand modifier from altinstr asm templates
+Hi,
 
-The "P" asm operand modifier is a x86 target-specific modifier.
+Why are you leaving this line there (unlike in the GPU MUX patch where 
+you replaced it with the similar if()s as above):
 
-For x86_64, when used with a symbol reference, the "%P" modifier
-emits "sym" instead of "sym(%rip)". This property is currently
-used to prevent %RIP-relative addressing in .altinstr sections.
+	asus->kbd_rgb_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE);
 
-%RIP-relative addresses are nowadays correctly handled in .altinstr
-sections, so remove %P operand modifier from altinstr asm templates.
+?
 
-Also note that unlike GCC, clang emits %rip-relative symbol
-reference with "P" asm operand modifier, so the patch also unifies
-symbol handling with both compilers.
+-- 
+ i.
 
-No functional changes intended.
-
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Link: https://lore.kernel.org/r/20240319104418.284519-2-ubizjak@gmail.com
----
- arch/x86/include/asm/apic.h          | 2 +-
- arch/x86/include/asm/processor.h     | 6 +++---
- arch/x86/include/asm/special_insns.h | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-index 94ce0f7..fa2e424 100644
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -91,7 +91,7 @@ static inline void native_apic_mem_write(u32 reg, u32 v)
- {
- 	volatile u32 *addr = (volatile u32 *)(APIC_BASE + reg);
- 
--	alternative_io("movl %0, %P1", "xchgl %0, %P1", X86_BUG_11AP,
-+	alternative_io("movl %0, %1", "xchgl %0, %1", X86_BUG_11AP,
- 		       ASM_OUTPUT2("=r" (v), "=m" (*addr)),
- 		       ASM_OUTPUT2("0" (v), "m" (*addr)));
- }
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 811548f..438c0c8 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -587,7 +587,7 @@ extern char			ignore_fpu_irq;
- # define BASE_PREFETCH		""
- # define ARCH_HAS_PREFETCH
- #else
--# define BASE_PREFETCH		"prefetcht0 %P1"
-+# define BASE_PREFETCH		"prefetcht0 %1"
- #endif
- 
- /*
-@@ -598,7 +598,7 @@ extern char			ignore_fpu_irq;
-  */
- static inline void prefetch(const void *x)
- {
--	alternative_input(BASE_PREFETCH, "prefetchnta %P1",
-+	alternative_input(BASE_PREFETCH, "prefetchnta %1",
- 			  X86_FEATURE_XMM,
- 			  "m" (*(const char *)x));
- }
-@@ -610,7 +610,7 @@ static inline void prefetch(const void *x)
-  */
- static __always_inline void prefetchw(const void *x)
- {
--	alternative_input(BASE_PREFETCH, "prefetchw %P1",
-+	alternative_input(BASE_PREFETCH, "prefetchw %1",
- 			  X86_FEATURE_3DNOWPREFETCH,
- 			  "m" (*(const char *)x));
- }
-diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
-index 2e9fc5c..0ee2ba5 100644
---- a/arch/x86/include/asm/special_insns.h
-+++ b/arch/x86/include/asm/special_insns.h
-@@ -182,8 +182,8 @@ static __always_inline void clflush(volatile void *__p)
- 
- static inline void clflushopt(volatile void *__p)
- {
--	alternative_io(".byte 0x3e; clflush %P0",
--		       ".byte 0x66; clflush %P0",
-+	alternative_io(".byte 0x3e; clflush %0",
-+		       ".byte 0x66; clflush %0",
- 		       X86_FEATURE_CLFLUSHOPT,
- 		       "+m" (*(volatile char __force *)__p));
- }
