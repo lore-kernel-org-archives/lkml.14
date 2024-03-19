@@ -1,61 +1,64 @@
-Received: from esa2.hc1455-7.c3s2.iphmx.com (esa2.hc1455-7.c3s2.iphmx.com [207.54.90.48])
+Received: from esa10.hc1455-7.c3s2.iphmx.com (esa10.hc1455-7.c3s2.iphmx.com [139.138.36.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF64F4F895;
-	Tue, 19 Mar 2024 06:32:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784DF50279;
+	Tue, 19 Mar 2024 06:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.36.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710829954; cv=none; b=i+J3RvWoweo+fYwT8qpoMpoyckDQHX2iHyRHodweW6ZhxtU3ri8eVb3sqYsP9cPwYROPmi6TJ1vEpusnCo/WcYZhQWgxmCsOSc8liXqFJs1d6wvK47RrEFntxK4tXxyqbxCtGESHG/2ufcZ8gh69B+gFRo2PUfPolAk9X3x/jtw=
+	t=1710829954; cv=none; b=RW2zY87YnnBpjBlll2wwx4fwALLAbOvGois4SwrgAc4P/eYmN3JCVSRnEAX01Yb9UTaqxDBUXarD98Ei4RfrbI9+xIlJIQQmH+sReXnKamGn0sd2kWoDzt6jS++/rjFcXTUs7YSp2zZiTxHetrawYVc5qPYejf9KlJkQbxuSZek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710829954; c=relaxed/simple;
-	bh=l4EGtJOYU2BZ1+ETyz/jemY9d6AOB2fByG/+zecyHN4=;
+	bh=xhFm5S9bv8PdsQiVkORsEXJrFQSOjWeefwiAd+XLuJk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=O5gXrJ9yeuqsyGQ236gBvdYf6WxPrPv4HJwJWbG+QPJp/NBIGe6sRyVFWEg0mEnefQjEWl4mPUZLTppBv30VhlRJgrSNZEYuBUvtDfY2F6nYv0WVKiVhB5U89H2n/A7bLsAFI6r5WvQfvofN1ELZEirOJ7Y/tABjMwI/UjV8EKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=LtXaYeBB; arc=none smtp.client-ip=207.54.90.48
+	 MIME-Version; b=scPfZbdX1mHvzt053zd56z+kJf6pmGZPpyAs2qexp9gMBEXdFpbgCYEO8knoBeDOmiz6rfceUGVEyNxwrEAkUgmUCC4Fp4bK9Izu5eTwv2+5kbe2bIIVE/gKjkxbVdCNaY/e6jb1mFLynjztr8CKmQoUCem2Ys9tbZETJwryZMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=Wyze/PQ7; arc=none smtp.client-ip=139.138.36.225
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="LtXaYeBB"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="Wyze/PQ7"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1710829952; x=1742365952;
+  t=1710829951; x=1742365951;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=l4EGtJOYU2BZ1+ETyz/jemY9d6AOB2fByG/+zecyHN4=;
-  b=LtXaYeBBGfTQhRmThKLcGNo9AmfBvh+iY2ZhX6uHDxhXsbEKGhBgKBVw
-   m3aNVAgnwL/Sy1QompTwsBWqhEEnXd2Fus+zscj3S6Udpx0cbuhbXypQE
-   222qDoO7z9DSa9R2PLtrpc8eVkiXlmMJPtEuDOS4TEnnjpUfG8QBPiRD+
-   B74TRQexIAbqv1hAgoFDO++w72pWiLG4Dc4TolQafk7rC+XBY+jJkaCLr
-   viybmxM3FRQLu/UvHhdsT1L2C87xC0J/FLtcDBGUc6e0YJpQ0HWkFcFIT
-   1NZPbIvjmjhc9LkXFe+H3OP3OOl0/bPFVcVWQflc23t63uR1Utok+40ap
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="152728480"
+  bh=xhFm5S9bv8PdsQiVkORsEXJrFQSOjWeefwiAd+XLuJk=;
+  b=Wyze/PQ713Cjj3IKztgqxY3TAWspGnNZZwyiEfzZ5zmmTJiMipHa9JFQ
+   Y9bhVquOwvhPcnrbwnOuahhlHda221yrPknE2T+VQr0D4dHSIRxpHfxyJ
+   MRlENqv8iVFZVkcsgqGbj88brYJMl1pvTDDsmhlOktVJ2JZR2YXWqnAwV
+   uxnCT3o9EvyCBl7YneKfNwjwOCbsHAkwYnISrBgmY/Uv4CAU6JH0UAUuy
+   iHIirbzqrce1qeFjUilX8u7NBomyfkiPUpUzY8dihQyvFmfFw15R4QUu3
+   6TBjoDWy0DNA5bB4TxQIwkMHZClfOFNWg3n++uLXh7LT5J3QAtB5fu+Ps
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="140310356"
 X-IronPort-AV: E=Sophos;i="6.07,136,1708354800"; 
-   d="scan'208";a="152728480"
-Received: from unknown (HELO oym-r4.gw.nic.fujitsu.com) ([210.162.30.92])
-  by esa2.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 15:32:30 +0900
-Received: from oym-m1.gw.nic.fujitsu.com (oym-nat-oym-m1.gw.nic.fujitsu.com [192.168.87.58])
-	by oym-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 318E714121D;
-	Tue, 19 Mar 2024 15:32:27 +0900 (JST)
-Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
-	by oym-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 54242B3C92;
-	Tue, 19 Mar 2024 15:32:26 +0900 (JST)
+   d="scan'208";a="140310356"
+Received: from unknown (HELO yto-r2.gw.nic.fujitsu.com) ([218.44.52.218])
+  by esa10.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 15:32:26 +0900
+Received: from yto-m3.gw.nic.fujitsu.com (yto-nat-yto-m3.gw.nic.fujitsu.com [192.168.83.66])
+	by yto-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 3B5A62A0E05;
+	Tue, 19 Mar 2024 15:32:24 +0900 (JST)
+Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
+	by yto-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id 6252FF933;
+	Tue, 19 Mar 2024 15:32:23 +0900 (JST)
 Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id E5A56228822;
-	Tue, 19 Mar 2024 15:32:25 +0900 (JST)
+	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id E3EF520097CC5;
+	Tue, 19 Mar 2024 15:32:22 +0900 (JST)
 Received: from localhost.localdomain (unknown [10.167.226.45])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 6F5101A006D;
-	Tue, 19 Mar 2024 14:32:25 +0800 (CST)
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 5941E1A006D;
+	Tue, 19 Mar 2024 14:32:22 +0800 (CST)
 From: Li Zhijian <lizhijian@fujitsu.com>
 To: linux-kernel@vger.kernel.org
 Cc: Li Zhijian <lizhijian@fujitsu.com>,
-	Hannes Reinecke <hare@kernel.org>,
+	Sathya Prakash <sathya.prakash@broadcom.com>,
+	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
 	"James E.J. Bottomley" <jejb@linux.ibm.com>,
 	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org
-Subject: [PATCH v2 16/25] scsi: myrb,myrs: Convert sprintf() family to sysfs_emit() family
-Date: Tue, 19 Mar 2024 14:31:23 +0800
-Message-Id: <20240319063132.1588443-16-lizhijian@fujitsu.com>
+	linux-scsi@vger.kernel.org,
+	MPT-FusionLinux.pdl@broadcom.com
+Subject: [PATCH v2 08/25] scsi: mpt3sas: Convert sprintf() family to sysfs_emit() family
+Date: Tue, 19 Mar 2024 14:31:15 +0800
+Message-Id: <20240319063132.1588443-8-lizhijian@fujitsu.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20240319063132.1588443-1-lizhijian@fujitsu.com>
 References: <20240319063132.1588443-1-lizhijian@fujitsu.com>
@@ -70,15 +73,13 @@ X-TM-AS-GCONF: 00
 X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28260.005
 X-TM-AS-User-Approved-Sender: Yes
 X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28260.005
-X-TMASE-Result: 10--4.285300-10.000000
-X-TMASE-MatchedRID: GSiycdxM5vsbO59FK9BdmJiHtCNYjckMjkDrBOJwwnQ8JmmJxjOaQXVX
-	Q3/qdw5yDiqGKKMcNgRhoUIS5GGeEs1HQN/TlJ3ZOIQ9GP2P2u/0swHSFcVJ6F31Af36gMaTQiM
-	ingSlKoKMx5HzfQifbPE41045MrHXFDCN/1eC4ASdVNZaI2n6/wmWvXEqQTm5wLkNMQzGl5B+Kr
-	WCPbERPznpYPqS6jzxvFpiUsjOqVtpORapdxWmu2e0R3NAF/choR62RNvkvOv96X4NHK9fCPcwy
-	VYGZr7I9kNGk0VfW+w9dnB5Mf9AazWs2YGWPbxrSs47mbT7SAQEa8g1x8eqF/xgxLWmrr87e9QK
-	gtmmT7G4fRLMfglY9qIARNsBFTF+najGxrJsU4OeAiCmPx4NwBnUJ0Ek6yhjxEHRux+uk8hxKpv
-	EGAbTDtcfz+9wuQ+oOHlFnapd16lRoZ4ddQWWr+rnUHJcqmwEPrsXjQEwF8woVeFxQ9MsFb5OWK
-	0WrsAiIkqNhtxgNbTw7XGexxnxSluMG6V02+QySir3tZId0WN+6klq53W5kJ9Gzq4huQVX
+X-TMASE-Result: 10--16.997600-10.000000
+X-TMASE-MatchedRID: QKiaQG5nP+EbO59FK9BdmJiHtCNYjckMjkDrBOJwwnQ8JmmJxjOaQXVX
+	Q3/qdw5yDiqGKKMcNgRhoUIS5GGeEs1HQN/TlJ3ZOIQ9GP2P2u/iwxLjNbuPBWO0yVK/5LmcQiM
+	ingSlKoKMx5HzfQifbPE41045MrHXFDCN/1eC4ASdVNZaI2n6/8E5XPQnBzGXq8KsbROd9VSD3F
+	7iC1Qm2m0i/QDeFI5bplCaRSPAyU1p7HSuASUA2oDCiwMF64/BFmTypof4a70qqPvLKmtzi3eAH
+	GnweZvi7XjA6blEVJXGa+8lifC91ft1xYHpY/PCRcGHEV0WBxCYasbATu5ay2fIvzHS0qU7WQhP
+	PzYpzgDAAzSPOLl0BJ2oLZ8u2T3EHxPMjOKY7A8LbigRnpKlKT4yqD4LKu3A
 X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
 Per filesystems/sysfs.rst, show() should only use sysfs_emit()
@@ -95,349 +96,289 @@ COCCI=scripts/coccinelle/api/device_attr_show.cocci
 
 No functional change intended
 
-CC: Hannes Reinecke <hare@kernel.org>
+CC: Sathya Prakash <sathya.prakash@broadcom.com>
+CC: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+CC: Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>
 CC: "James E.J. Bottomley" <jejb@linux.ibm.com>
 CC: "Martin K. Petersen" <martin.petersen@oracle.com>
 CC: linux-scsi@vger.kernel.org
+CC: MPT-FusionLinux.pdl@broadcom.com
 Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
 ---
 This is a part of the work "Fix coccicheck device_attr_show warnings"[1]
 Split them per subsystem so that the maintainer can review it easily
 [1] https://lore.kernel.org/lkml/20240116041129.3937800-1-lizhijian@fujitsu.com/
 ---
- drivers/scsi/myrb.c | 38 ++++++++++----------
- drivers/scsi/myrs.c | 88 ++++++++++++++++++++++-----------------------
- 2 files changed, 63 insertions(+), 63 deletions(-)
+ drivers/scsi/mpt3sas/mpt3sas_ctl.c | 85 +++++++++++++++---------------
+ 1 file changed, 43 insertions(+), 42 deletions(-)
 
-diff --git a/drivers/scsi/myrb.c b/drivers/scsi/myrb.c
-index ca2e932dd9b7..06a5e6fb9f99 100644
---- a/drivers/scsi/myrb.c
-+++ b/drivers/scsi/myrb.c
-@@ -1767,7 +1767,7 @@ static ssize_t raid_state_show(struct device *dev,
- 	int ret;
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+index 1c9fd26195b8..4ac3b13f7025 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+@@ -2876,11 +2876,11 @@ version_fw_show(struct device *cdev, struct device_attribute *attr,
+ 	struct Scsi_Host *shost = class_to_shost(cdev);
+ 	struct MPT3SAS_ADAPTER *ioc = shost_priv(shost);
  
- 	if (!sdev->hostdata)
--		return snprintf(buf, 16, "Unknown\n");
-+		return sysfs_emit(buf, "Unknown\n");
- 
- 	if (sdev->channel == myrb_logical_channel(sdev->host)) {
- 		struct myrb_ldev_info *ldev_info = sdev->hostdata;
-@@ -1775,10 +1775,10 @@ static ssize_t raid_state_show(struct device *dev,
- 
- 		name = myrb_devstate_name(ldev_info->state);
- 		if (name)
--			ret = snprintf(buf, 32, "%s\n", name);
-+			ret = sysfs_emit(buf, "%s\n", name);
- 		else
--			ret = snprintf(buf, 32, "Invalid (%02X)\n",
--				       ldev_info->state);
-+			ret = sysfs_emit(buf, "Invalid (%02X)\n",
-+					 ldev_info->state);
- 	} else {
- 		struct myrb_pdev_state *pdev_info = sdev->hostdata;
- 		unsigned short status;
-@@ -1796,10 +1796,10 @@ static ssize_t raid_state_show(struct device *dev,
- 		else
- 			name = myrb_devstate_name(pdev_info->state);
- 		if (name)
--			ret = snprintf(buf, 32, "%s\n", name);
-+			ret = sysfs_emit(buf, "%s\n", name);
- 		else
--			ret = snprintf(buf, 32, "Invalid (%02X)\n",
--				       pdev_info->state);
-+			ret = sysfs_emit(buf, "Invalid (%02X)\n",
-+					 pdev_info->state);
- 	}
- 	return ret;
+-	return snprintf(buf, PAGE_SIZE, "%02d.%02d.%02d.%02d\n",
+-	    (ioc->facts.FWVersion.Word & 0xFF000000) >> 24,
+-	    (ioc->facts.FWVersion.Word & 0x00FF0000) >> 16,
+-	    (ioc->facts.FWVersion.Word & 0x0000FF00) >> 8,
+-	    ioc->facts.FWVersion.Word & 0x000000FF);
++	return sysfs_emit(buf, "%02d.%02d.%02d.%02d\n",
++			  (ioc->facts.FWVersion.Word & 0xFF000000) >> 24,
++			  (ioc->facts.FWVersion.Word & 0x00FF0000) >> 16,
++			  (ioc->facts.FWVersion.Word & 0x0000FF00) >> 8,
++			  ioc->facts.FWVersion.Word & 0x000000FF);
  }
-@@ -1886,11 +1886,11 @@ static ssize_t raid_level_show(struct device *dev,
+ static DEVICE_ATTR_RO(version_fw);
  
- 		name = myrb_raidlevel_name(ldev_info->raid_level);
- 		if (!name)
--			return snprintf(buf, 32, "Invalid (%02X)\n",
--					ldev_info->state);
--		return snprintf(buf, 32, "%s\n", name);
-+			return sysfs_emit(buf, "Invalid (%02X)\n",
-+					  ldev_info->state);
-+		return sysfs_emit(buf, "%s\n", name);
- 	}
--	return snprintf(buf, 32, "Physical Drive\n");
-+	return sysfs_emit(buf, "Physical Drive\n");
+@@ -2901,11 +2901,11 @@ version_bios_show(struct device *cdev, struct device_attribute *attr,
+ 
+ 	u32 version = le32_to_cpu(ioc->bios_pg3.BiosVersion);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%02d.%02d.%02d.%02d\n",
+-	    (version & 0xFF000000) >> 24,
+-	    (version & 0x00FF0000) >> 16,
+-	    (version & 0x0000FF00) >> 8,
+-	    version & 0x000000FF);
++	return sysfs_emit(buf, "%02d.%02d.%02d.%02d\n",
++			  (version & 0xFF000000) >> 24,
++			  (version & 0x00FF0000) >> 16,
++			  (version & 0x0000FF00) >> 8,
++			  version & 0x000000FF);
  }
- static DEVICE_ATTR_RO(raid_level);
+ static DEVICE_ATTR_RO(version_bios);
  
-@@ -1903,17 +1903,17 @@ static ssize_t rebuild_show(struct device *dev,
- 	unsigned char status;
+@@ -2924,8 +2924,9 @@ version_mpi_show(struct device *cdev, struct device_attribute *attr,
+ 	struct Scsi_Host *shost = class_to_shost(cdev);
+ 	struct MPT3SAS_ADAPTER *ioc = shost_priv(shost);
  
- 	if (sdev->channel < myrb_logical_channel(sdev->host))
--		return snprintf(buf, 32, "physical device - not rebuilding\n");
-+		return sysfs_emit(buf, "physical device - not rebuilding\n");
- 
- 	status = myrb_get_rbld_progress(cb, &rbld_buf);
- 
- 	if (rbld_buf.ldev_num != sdev->id ||
- 	    status != MYRB_STATUS_SUCCESS)
--		return snprintf(buf, 32, "not rebuilding\n");
-+		return sysfs_emit(buf, "not rebuilding\n");
- 
--	return snprintf(buf, 32, "rebuilding block %u of %u\n",
--			rbld_buf.ldev_size - rbld_buf.blocks_left,
--			rbld_buf.ldev_size);
-+	return sysfs_emit(buf, "rebuilding block %u of %u\n",
-+			  rbld_buf.ldev_size - rbld_buf.blocks_left,
-+			  rbld_buf.ldev_size);
+-	return snprintf(buf, PAGE_SIZE, "%03x.%02x\n",
+-	    ioc->facts.MsgVersion, ioc->facts.HeaderVersion >> 8);
++	return sysfs_emit(buf, "%03x.%02x\n",
++			  ioc->facts.MsgVersion,
++			  ioc->facts.HeaderVersion >> 8);
  }
+ static DEVICE_ATTR_RO(version_mpi);
  
- static ssize_t rebuild_store(struct device *dev,
-@@ -2140,7 +2140,7 @@ static ssize_t ctlr_num_show(struct device *dev,
- 	struct Scsi_Host *shost = class_to_shost(dev);
- 	struct myrb_hba *cb = shost_priv(shost);
+@@ -2944,7 +2945,7 @@ version_product_show(struct device *cdev, struct device_attribute *attr,
+ 	struct Scsi_Host *shost = class_to_shost(cdev);
+ 	struct MPT3SAS_ADAPTER *ioc = shost_priv(shost);
  
--	return snprintf(buf, 20, "%u\n", cb->ctlr_num);
-+	return sysfs_emit(buf, "%u\n", cb->ctlr_num);
+-	return snprintf(buf, 16, "%s\n", ioc->manu_pg0.ChipName);
++	return sysfs_emit(buf, "%s\n", ioc->manu_pg0.ChipName);
  }
- static DEVICE_ATTR_RO(ctlr_num);
+ static DEVICE_ATTR_RO(version_product);
  
-@@ -2150,7 +2150,7 @@ static ssize_t firmware_show(struct device *dev,
- 	struct Scsi_Host *shost = class_to_shost(dev);
- 	struct myrb_hba *cb = shost_priv(shost);
+@@ -2963,8 +2964,8 @@ version_nvdata_persistent_show(struct device *cdev,
+ 	struct Scsi_Host *shost = class_to_shost(cdev);
+ 	struct MPT3SAS_ADAPTER *ioc = shost_priv(shost);
  
--	return snprintf(buf, 16, "%s\n", cb->fw_version);
-+	return sysfs_emit(buf, "%s\n", cb->fw_version);
+-	return snprintf(buf, PAGE_SIZE, "%08xh\n",
+-	    le32_to_cpu(ioc->iounit_pg0.NvdataVersionPersistent.Word));
++	return sysfs_emit(buf, "%08xh\n",
++		le32_to_cpu(ioc->iounit_pg0.NvdataVersionPersistent.Word));
  }
- static DEVICE_ATTR_RO(firmware);
+ static DEVICE_ATTR_RO(version_nvdata_persistent);
  
-@@ -2160,7 +2160,7 @@ static ssize_t model_show(struct device *dev,
- 	struct Scsi_Host *shost = class_to_shost(dev);
- 	struct myrb_hba *cb = shost_priv(shost);
+@@ -2983,8 +2984,8 @@ version_nvdata_default_show(struct device *cdev, struct device_attribute
+ 	struct Scsi_Host *shost = class_to_shost(cdev);
+ 	struct MPT3SAS_ADAPTER *ioc = shost_priv(shost);
  
--	return snprintf(buf, 16, "%s\n", cb->model_name);
-+	return sysfs_emit(buf, "%s\n", cb->model_name);
+-	return snprintf(buf, PAGE_SIZE, "%08xh\n",
+-	    le32_to_cpu(ioc->iounit_pg0.NvdataVersionDefault.Word));
++	return sysfs_emit(buf, "%08xh\n",
++		le32_to_cpu(ioc->iounit_pg0.NvdataVersionDefault.Word));
  }
- static DEVICE_ATTR_RO(model);
+ static DEVICE_ATTR_RO(version_nvdata_default);
  
-diff --git a/drivers/scsi/myrs.c b/drivers/scsi/myrs.c
-index a1eec65a9713..5dda3b669ec1 100644
---- a/drivers/scsi/myrs.c
-+++ b/drivers/scsi/myrs.c
-@@ -939,7 +939,7 @@ static ssize_t raid_state_show(struct device *dev,
- 	int ret;
+@@ -3003,7 +3004,7 @@ board_name_show(struct device *cdev, struct device_attribute *attr,
+ 	struct Scsi_Host *shost = class_to_shost(cdev);
+ 	struct MPT3SAS_ADAPTER *ioc = shost_priv(shost);
  
- 	if (!sdev->hostdata)
--		return snprintf(buf, 16, "Unknown\n");
-+		return sysfs_emit(buf, "Unknown\n");
- 
- 	if (sdev->channel >= cs->ctlr_info->physchan_present) {
- 		struct myrs_ldev_info *ldev_info = sdev->hostdata;
-@@ -947,10 +947,10 @@ static ssize_t raid_state_show(struct device *dev,
- 
- 		name = myrs_devstate_name(ldev_info->dev_state);
- 		if (name)
--			ret = snprintf(buf, 32, "%s\n", name);
-+			ret = sysfs_emit(buf, "%s\n", name);
- 		else
--			ret = snprintf(buf, 32, "Invalid (%02X)\n",
--				       ldev_info->dev_state);
-+			ret = sysfs_emit(buf, "Invalid (%02X)\n",
-+					 ldev_info->dev_state);
- 	} else {
- 		struct myrs_pdev_info *pdev_info;
- 		const char *name;
-@@ -958,10 +958,10 @@ static ssize_t raid_state_show(struct device *dev,
- 		pdev_info = sdev->hostdata;
- 		name = myrs_devstate_name(pdev_info->dev_state);
- 		if (name)
--			ret = snprintf(buf, 32, "%s\n", name);
-+			ret = sysfs_emit(buf, "%s\n", name);
- 		else
--			ret = snprintf(buf, 32, "Invalid (%02X)\n",
--				       pdev_info->dev_state);
-+			ret = sysfs_emit(buf, "Invalid (%02X)\n",
-+					 pdev_info->dev_state);
- 	}
- 	return ret;
+-	return snprintf(buf, 16, "%s\n", ioc->manu_pg0.BoardName);
++	return sysfs_emit(buf, "%s\n", ioc->manu_pg0.BoardName);
  }
-@@ -1058,7 +1058,7 @@ static ssize_t raid_level_show(struct device *dev,
- 	const char *name = NULL;
+ static DEVICE_ATTR_RO(board_name);
  
- 	if (!sdev->hostdata)
--		return snprintf(buf, 16, "Unknown\n");
-+		return sysfs_emit(buf, "Unknown\n");
+@@ -3022,7 +3023,7 @@ board_assembly_show(struct device *cdev, struct device_attribute *attr,
+ 	struct Scsi_Host *shost = class_to_shost(cdev);
+ 	struct MPT3SAS_ADAPTER *ioc = shost_priv(shost);
  
- 	if (sdev->channel >= cs->ctlr_info->physchan_present) {
- 		struct myrs_ldev_info *ldev_info;
-@@ -1066,13 +1066,13 @@ static ssize_t raid_level_show(struct device *dev,
- 		ldev_info = sdev->hostdata;
- 		name = myrs_raid_level_name(ldev_info->raid_level);
- 		if (!name)
--			return snprintf(buf, 32, "Invalid (%02X)\n",
--					ldev_info->dev_state);
-+			return sysfs_emit(buf, "Invalid (%02X)\n",
-+					  ldev_info->dev_state);
- 
- 	} else
- 		name = myrs_raid_level_name(MYRS_RAID_PHYSICAL);
- 
--	return snprintf(buf, 32, "%s\n", name);
-+	return sysfs_emit(buf, "%s\n", name);
+-	return snprintf(buf, 16, "%s\n", ioc->manu_pg0.BoardAssembly);
++	return sysfs_emit(buf, "%s\n", ioc->manu_pg0.BoardAssembly);
  }
- static DEVICE_ATTR_RO(raid_level);
+ static DEVICE_ATTR_RO(board_assembly);
  
-@@ -1086,7 +1086,7 @@ static ssize_t rebuild_show(struct device *dev,
- 	unsigned char status;
+@@ -3041,7 +3042,7 @@ board_tracer_show(struct device *cdev, struct device_attribute *attr,
+ 	struct Scsi_Host *shost = class_to_shost(cdev);
+ 	struct MPT3SAS_ADAPTER *ioc = shost_priv(shost);
  
- 	if (sdev->channel < cs->ctlr_info->physchan_present)
--		return snprintf(buf, 32, "physical device - not rebuilding\n");
-+		return sysfs_emit(buf, "physical device - not rebuilding\n");
- 
- 	ldev_info = sdev->hostdata;
- 	ldev_num = ldev_info->ldev_num;
-@@ -1098,11 +1098,11 @@ static ssize_t rebuild_show(struct device *dev,
- 		return -EIO;
- 	}
- 	if (ldev_info->rbld_active) {
--		return snprintf(buf, 32, "rebuilding block %zu of %zu\n",
--				(size_t)ldev_info->rbld_lba,
--				(size_t)ldev_info->cfg_devsize);
-+		return sysfs_emit(buf, "rebuilding block %zu of %zu\n",
-+				  (size_t)ldev_info->rbld_lba,
-+				  (size_t)ldev_info->cfg_devsize);
- 	} else
--		return snprintf(buf, 32, "not rebuilding\n");
-+		return sysfs_emit(buf, "not rebuilding\n");
+-	return snprintf(buf, 16, "%s\n", ioc->manu_pg0.BoardTracerNumber);
++	return sysfs_emit(buf, "%s\n", ioc->manu_pg0.BoardTracerNumber);
  }
+ static DEVICE_ATTR_RO(board_tracer);
  
- static ssize_t rebuild_store(struct device *dev,
-@@ -1190,7 +1190,7 @@ static ssize_t consistency_check_show(struct device *dev,
- 	unsigned short ldev_num;
+@@ -3063,7 +3064,7 @@ io_delay_show(struct device *cdev, struct device_attribute *attr,
+ 	struct Scsi_Host *shost = class_to_shost(cdev);
+ 	struct MPT3SAS_ADAPTER *ioc = shost_priv(shost);
  
- 	if (sdev->channel < cs->ctlr_info->physchan_present)
--		return snprintf(buf, 32, "physical device - not checking\n");
-+		return sysfs_emit(buf, "physical device - not checking\n");
+-	return snprintf(buf, PAGE_SIZE, "%02d\n", ioc->io_missing_delay);
++	return sysfs_emit(buf, "%02d\n", ioc->io_missing_delay);
+ }
+ static DEVICE_ATTR_RO(io_delay);
  
- 	ldev_info = sdev->hostdata;
- 	if (!ldev_info)
-@@ -1198,11 +1198,11 @@ static ssize_t consistency_check_show(struct device *dev,
- 	ldev_num = ldev_info->ldev_num;
- 	myrs_get_ldev_info(cs, ldev_num, ldev_info);
- 	if (ldev_info->cc_active)
--		return snprintf(buf, 32, "checking block %zu of %zu\n",
--				(size_t)ldev_info->cc_lba,
--				(size_t)ldev_info->cfg_devsize);
-+		return sysfs_emit(buf, "checking block %zu of %zu\n",
-+				  (size_t)ldev_info->cc_lba,
-+				  (size_t)ldev_info->cfg_devsize);
+@@ -3085,7 +3086,7 @@ device_delay_show(struct device *cdev, struct device_attribute *attr,
+ 	struct Scsi_Host *shost = class_to_shost(cdev);
+ 	struct MPT3SAS_ADAPTER *ioc = shost_priv(shost);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%02d\n", ioc->device_missing_delay);
++	return sysfs_emit(buf, "%02d\n", ioc->device_missing_delay);
+ }
+ static DEVICE_ATTR_RO(device_delay);
+ 
+@@ -3106,7 +3107,7 @@ fw_queue_depth_show(struct device *cdev, struct device_attribute *attr,
+ 	struct Scsi_Host *shost = class_to_shost(cdev);
+ 	struct MPT3SAS_ADAPTER *ioc = shost_priv(shost);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%02d\n", ioc->facts.RequestCredit);
++	return sysfs_emit(buf, "%02d\n", ioc->facts.RequestCredit);
+ }
+ static DEVICE_ATTR_RO(fw_queue_depth);
+ 
+@@ -3128,8 +3129,8 @@ host_sas_address_show(struct device *cdev, struct device_attribute *attr,
+ 	struct Scsi_Host *shost = class_to_shost(cdev);
+ 	struct MPT3SAS_ADAPTER *ioc = shost_priv(shost);
+ 
+-	return snprintf(buf, PAGE_SIZE, "0x%016llx\n",
+-	    (unsigned long long)ioc->sas_hba.sas_address);
++	return sysfs_emit(buf, "0x%016llx\n",
++			  (unsigned long long)ioc->sas_hba.sas_address);
+ }
+ static DEVICE_ATTR_RO(host_sas_address);
+ 
+@@ -3148,7 +3149,7 @@ logging_level_show(struct device *cdev, struct device_attribute *attr,
+ 	struct Scsi_Host *shost = class_to_shost(cdev);
+ 	struct MPT3SAS_ADAPTER *ioc = shost_priv(shost);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%08xh\n", ioc->logging_level);
++	return sysfs_emit(buf, "%08xh\n", ioc->logging_level);
+ }
+ static ssize_t
+ logging_level_store(struct device *cdev, struct device_attribute *attr,
+@@ -3184,7 +3185,7 @@ fwfault_debug_show(struct device *cdev, struct device_attribute *attr,
+ 	struct Scsi_Host *shost = class_to_shost(cdev);
+ 	struct MPT3SAS_ADAPTER *ioc = shost_priv(shost);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%d\n", ioc->fwfault_debug);
++	return sysfs_emit(buf, "%d\n", ioc->fwfault_debug);
+ }
+ static ssize_t
+ fwfault_debug_store(struct device *cdev, struct device_attribute *attr,
+@@ -3221,7 +3222,7 @@ ioc_reset_count_show(struct device *cdev, struct device_attribute *attr,
+ 	struct Scsi_Host *shost = class_to_shost(cdev);
+ 	struct MPT3SAS_ADAPTER *ioc = shost_priv(shost);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%d\n", ioc->ioc_reset_count);
++	return sysfs_emit(buf, "%d\n", ioc->ioc_reset_count);
+ }
+ static DEVICE_ATTR_RO(ioc_reset_count);
+ 
+@@ -3249,7 +3250,7 @@ reply_queue_count_show(struct device *cdev,
  	else
--		return snprintf(buf, 32, "not checking\n");
-+		return sysfs_emit(buf, "not checking\n");
+ 		reply_queue_count = 1;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%d\n", reply_queue_count);
++	return sysfs_emit(buf, "%d\n", reply_queue_count);
  }
+ static DEVICE_ATTR_RO(reply_queue_count);
  
- static ssize_t consistency_check_store(struct device *dev,
-@@ -1303,7 +1303,7 @@ static ssize_t serial_show(struct device *dev,
+@@ -3314,7 +3315,7 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
  
- 	memcpy(serial, cs->ctlr_info->serial_number, 16);
- 	serial[16] = '\0';
--	return snprintf(buf, 16, "%s\n", serial);
-+	return sysfs_emit(buf, "%s\n", serial);
+ 	/* BRM status is in bit zero of GPIOVal[24] */
+ 	backup_rail_monitor_status = le16_to_cpu(io_unit_pg3.GPIOVal[24]);
+-	rc = snprintf(buf, PAGE_SIZE, "%d\n", (backup_rail_monitor_status & 1));
++	rc = sysfs_emit(buf, "%d\n", (backup_rail_monitor_status & 1));
+ 
+  out:
+ 	mutex_unlock(&ioc->pci_access_mutex);
+@@ -3371,7 +3372,7 @@ host_trace_buffer_size_show(struct device *cdev,
+ 		size = le32_to_cpu(request_data->Size);
+ 
+ 	ioc->ring_buffer_sz = size;
+-	return snprintf(buf, PAGE_SIZE, "%d\n", size);
++	return sysfs_emit(buf, "%d\n", size);
  }
- static DEVICE_ATTR_RO(serial);
+ static DEVICE_ATTR_RO(host_trace_buffer_size);
  
-@@ -1313,7 +1313,7 @@ static ssize_t ctlr_num_show(struct device *dev,
- 	struct Scsi_Host *shost = class_to_shost(dev);
- 	struct myrs_hba *cs = shost_priv(shost);
- 
--	return snprintf(buf, 20, "%d\n", cs->host->host_no);
-+	return sysfs_emit(buf, "%d\n", cs->host->host_no);
- }
- static DEVICE_ATTR_RO(ctlr_num);
- 
-@@ -1361,22 +1361,22 @@ static ssize_t processor_show(struct device *dev,
- 		}
- 	}
- 	if (first_processor && second_processor)
--		ret = snprintf(buf, 64, "1: %s (%s, %d cpus)\n"
--			       "2: %s (%s, %d cpus)\n",
--			       info->cpu[0].cpu_name,
--			       first_processor, info->cpu[0].cpu_count,
--			       info->cpu[1].cpu_name,
--			       second_processor, info->cpu[1].cpu_count);
-+		ret = sysfs_emit(buf, "1: %s (%s, %d cpus)\n"
-+				 "2: %s (%s, %d cpus)\n",
-+				 info->cpu[0].cpu_name,
-+				 first_processor, info->cpu[0].cpu_count,
-+				 info->cpu[1].cpu_name,
-+				 second_processor, info->cpu[1].cpu_count);
- 	else if (first_processor && !second_processor)
--		ret = snprintf(buf, 64, "1: %s (%s, %d cpus)\n2: absent\n",
--			       info->cpu[0].cpu_name,
--			       first_processor, info->cpu[0].cpu_count);
-+		ret = sysfs_emit(buf, "1: %s (%s, %d cpus)\n2: absent\n",
-+				 info->cpu[0].cpu_name,
-+				 first_processor, info->cpu[0].cpu_count);
- 	else if (!first_processor && second_processor)
--		ret = snprintf(buf, 64, "1: absent\n2: %s (%s, %d cpus)\n",
--			       info->cpu[1].cpu_name,
--			       second_processor, info->cpu[1].cpu_count);
-+		ret = sysfs_emit(buf, "1: absent\n2: %s (%s, %d cpus)\n",
-+				 info->cpu[1].cpu_name,
-+				 second_processor, info->cpu[1].cpu_count);
+@@ -3458,12 +3459,12 @@ host_trace_buffer_enable_show(struct device *cdev,
+ 	if ((!ioc->diag_buffer[MPI2_DIAG_BUF_TYPE_TRACE]) ||
+ 	   ((ioc->diag_buffer_status[MPI2_DIAG_BUF_TYPE_TRACE] &
+ 	    MPT3_DIAG_BUFFER_IS_REGISTERED) == 0))
+-		return snprintf(buf, PAGE_SIZE, "off\n");
++		return sysfs_emit(buf, "off\n");
+ 	else if ((ioc->diag_buffer_status[MPI2_DIAG_BUF_TYPE_TRACE] &
+ 	    MPT3_DIAG_BUFFER_IS_RELEASED))
+-		return snprintf(buf, PAGE_SIZE, "release\n");
++		return sysfs_emit(buf, "release\n");
  	else
--		ret = snprintf(buf, 64, "1: absent\n2: absent\n");
-+		ret = sysfs_emit(buf, "1: absent\n2: absent\n");
- 
- 	return ret;
- }
-@@ -1388,7 +1388,7 @@ static ssize_t model_show(struct device *dev,
- 	struct Scsi_Host *shost = class_to_shost(dev);
- 	struct myrs_hba *cs = shost_priv(shost);
- 
--	return snprintf(buf, 28, "%s\n", cs->model_name);
-+	return sysfs_emit(buf, "%s\n", cs->model_name);
- }
- static DEVICE_ATTR_RO(model);
- 
-@@ -1398,7 +1398,7 @@ static ssize_t ctlr_type_show(struct device *dev,
- 	struct Scsi_Host *shost = class_to_shost(dev);
- 	struct myrs_hba *cs = shost_priv(shost);
- 
--	return snprintf(buf, 4, "%d\n", cs->ctlr_info->ctlr_type);
-+	return sysfs_emit(buf, "%d\n", cs->ctlr_info->ctlr_type);
- }
- static DEVICE_ATTR_RO(ctlr_type);
- 
-@@ -1408,7 +1408,7 @@ static ssize_t cache_size_show(struct device *dev,
- 	struct Scsi_Host *shost = class_to_shost(dev);
- 	struct myrs_hba *cs = shost_priv(shost);
- 
--	return snprintf(buf, 8, "%d MB\n", cs->ctlr_info->cache_size_mb);
-+	return sysfs_emit(buf, "%d MB\n", cs->ctlr_info->cache_size_mb);
- }
- static DEVICE_ATTR_RO(cache_size);
- 
-@@ -1418,10 +1418,10 @@ static ssize_t firmware_show(struct device *dev,
- 	struct Scsi_Host *shost = class_to_shost(dev);
- 	struct myrs_hba *cs = shost_priv(shost);
- 
--	return snprintf(buf, 16, "%d.%02d-%02d\n",
--			cs->ctlr_info->fw_major_version,
--			cs->ctlr_info->fw_minor_version,
--			cs->ctlr_info->fw_turn_number);
-+	return sysfs_emit(buf, "%d.%02d-%02d\n",
-+			  cs->ctlr_info->fw_major_version,
-+			  cs->ctlr_info->fw_minor_version,
-+			  cs->ctlr_info->fw_turn_number);
- }
- static DEVICE_ATTR_RO(firmware);
- 
-@@ -1488,7 +1488,7 @@ static ssize_t disable_enclosure_messages_show(struct device *dev,
- 	struct Scsi_Host *shost = class_to_shost(dev);
- 	struct myrs_hba *cs = shost_priv(shost);
- 
--	return snprintf(buf, 3, "%d\n", cs->disable_enc_msg);
-+	return sysfs_emit(buf, "%d\n", cs->disable_enc_msg);
+-		return snprintf(buf, PAGE_SIZE, "post\n");
++		return sysfs_emit(buf, "post\n");
  }
  
- static ssize_t disable_enclosure_messages_store(struct device *dev,
+ static ssize_t
+@@ -3879,7 +3880,7 @@ drv_support_bitmap_show(struct device *cdev,
+ 	struct Scsi_Host *shost = class_to_shost(cdev);
+ 	struct MPT3SAS_ADAPTER *ioc = shost_priv(shost);
+ 
+-	return snprintf(buf, PAGE_SIZE, "0x%08x\n", ioc->drv_support_bitmap);
++	return sysfs_emit(buf, "0x%08x\n", ioc->drv_support_bitmap);
+ }
+ static DEVICE_ATTR_RO(drv_support_bitmap);
+ 
+@@ -3899,7 +3900,7 @@ enable_sdev_max_qd_show(struct device *cdev,
+ 	struct Scsi_Host *shost = class_to_shost(cdev);
+ 	struct MPT3SAS_ADAPTER *ioc = shost_priv(shost);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%d\n", ioc->enable_sdev_max_qd);
++	return sysfs_emit(buf, "%d\n", ioc->enable_sdev_max_qd);
+ }
+ 
+ /**
+@@ -4047,8 +4048,8 @@ sas_address_show(struct device *dev, struct device_attribute *attr,
+ 	struct scsi_device *sdev = to_scsi_device(dev);
+ 	struct MPT3SAS_DEVICE *sas_device_priv_data = sdev->hostdata;
+ 
+-	return snprintf(buf, PAGE_SIZE, "0x%016llx\n",
+-	    (unsigned long long)sas_device_priv_data->sas_target->sas_address);
++	return sysfs_emit(buf, "0x%016llx\n", (unsigned long long)
++			  sas_device_priv_data->sas_target->sas_address);
+ }
+ static DEVICE_ATTR_RO(sas_address);
+ 
+@@ -4069,8 +4070,8 @@ sas_device_handle_show(struct device *dev, struct device_attribute *attr,
+ 	struct scsi_device *sdev = to_scsi_device(dev);
+ 	struct MPT3SAS_DEVICE *sas_device_priv_data = sdev->hostdata;
+ 
+-	return snprintf(buf, PAGE_SIZE, "0x%04x\n",
+-	    sas_device_priv_data->sas_target->handle);
++	return sysfs_emit(buf, "0x%04x\n",
++			  sas_device_priv_data->sas_target->handle);
+ }
+ static DEVICE_ATTR_RO(sas_device_handle);
+ 
+@@ -4107,8 +4108,8 @@ sas_ncq_prio_enable_show(struct device *dev,
+ 	struct scsi_device *sdev = to_scsi_device(dev);
+ 	struct MPT3SAS_DEVICE *sas_device_priv_data = sdev->hostdata;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%d\n",
+-			sas_device_priv_data->ncq_prio_enable);
++	return sysfs_emit(buf, "%d\n",
++			  sas_device_priv_data->ncq_prio_enable);
+ }
+ 
+ static ssize_t
 -- 
 2.29.2
 
