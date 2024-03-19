@@ -1,140 +1,191 @@
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C786639ACD;
-	Tue, 19 Mar 2024 18:53:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F5C939ACD
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 18:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710874403; cv=none; b=AS6xMQQ+ks7N6+2cEJ0Lcn6BerqKHpl/It3LJgYiw6BFENU8ieW8WHp2xZo9JFO1PDYMUDTssQgfal0u7c97jmw/mC2Y+IO81s95DnkRmu+qLms8nuxwJ0bN3D22oc7OCOgzdpNouxRng/OdNrwuYZ2auCfzXaxd/tT5Wz47DcU=
+	t=1710874507; cv=none; b=tQmPvJCryg3J4TwsCsDiqGNCLsLM/ALcjGDeqR7R5k51sXC4qar0zuVz88zV/AfS5D1BPTA9tJt3Y1Z/i8Hx7fgaWUqpsMn5WLB20I+1M62dRVl3kFJKInOE/S8P4QpnLBOR2oHkxYW694o/r7bWkpORYbd3Mtp6O7tFkzf+T8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710874403; c=relaxed/simple;
-	bh=lBQhmh2kAEkLdGWl3ngSGG0TPu+2FbksK509QDmeZTQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kD4r6xN4xuG4UmRwlfeas7t9txB5h5wJvd1r4Xvp+pZHVQVGM1mNbo3XKd7MjmNUGnpz4dKxmRvYJ5f7yidfj7xAJ5Pre0+TPgP4sD3KzovislcPzo/9SiaeEp0lDW9rso0+cu9wDH8FNNVjdECmQsGDW4uZ1/47Bd2Ib7ddmZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=lM95JhmQ; arc=none smtp.client-ip=217.70.178.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+	s=arc-20240116; t=1710874507; c=relaxed/simple;
+	bh=9tQwu/pTYuSg4zKOhht1Xekaj5u2ebuKBMHtRD/e+M0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IeYOt8MIqApPNHy7QVJW+xi7msN0HO5eCvbiPgFbcCnoOxBsbaWYm/3Z1/KTX+SGnXONrg2iPZQ9HEiOzEeu51kM1RDfgy4XWS+hZsSrYfVZYWB48bCDJf7GBSPjFjwcTHhv+7k+2ZkC0Ox0qYuIhlrjqkR56a2/R8sfcRlC3XE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=s2WeZm35; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="lM95JhmQ"
-Received: from relay5-d.mail.gandi.net (unknown [217.70.183.197])
-	by mslow1.mail.gandi.net (Postfix) with ESMTP id 3CFAFC102C;
-	Tue, 19 Mar 2024 18:47:03 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 296531C0005;
-	Tue, 19 Mar 2024 18:46:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-	t=1710874015;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hqjw5/4OqJvrXdntVY+Zb5+0XQA0wPKvw3S8mwvRbX4=;
-	b=lM95JhmQPcXUfhGSFLijlkAHQxEuDJdCn0ODi7c+UcwmmUpfUz5Jmcfdg8whXK6f/RpGEz
-	DILnO21s+QISwJhhIFPHDkahn+GFdTsYGh6fxmQmpGZ0YCAd3vxPHpNhL4pPLDLYClVeOy
-	j/f4yJWXq3s+SSYUK878yVsGwlXhEOl54UiFd63sqdK32b4vlVvIYOa8tznzL60IRo9y6W
-	9XAA6+IHnK5e6c5jLGmHIVBP3iT+W3BTBlSsyGVxDaclnM0j2niazvM3zEByu9j3Yh3W2q
-	xfVvLW2p+YEmJPJCzvdv1MBwTpN/K/nGFn5NzfcpQbnNeVDfqWTT6Cs5oi5APw==
-Message-ID: <00ec9779-19ce-4005-83f0-f4abf37350fc@arinc9.com>
-Date: Tue, 19 Mar 2024 21:46:30 +0300
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="s2WeZm35"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6e675db6fbaso3483263a34.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 11:55:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google; t=1710874503; x=1711479303; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1rbLDP9C5tBEsyxTYFGuT0+N/vSDd8dZonUgNGX8BHM=;
+        b=s2WeZm35n5r6lclZ9WfmlwxVr7lBrNQ4jT+IL+uIYk6mRl1AkE44eISLbL27y2OPWt
+         spsthZnRT2nacWqCAsL+Qto9Y1V8h95F4QW+7xzcEJQUljYm5ba26CEz9AS9mkY2/LbG
+         PFM3i6JnM9tXczWW62vc2g4mkw4GvnqY0HLm4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710874503; x=1711479303;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1rbLDP9C5tBEsyxTYFGuT0+N/vSDd8dZonUgNGX8BHM=;
+        b=KypO7Ujkunpp0IwKzg8V8XkcYi0gCTjLZf/00CRsgHHHxWYH2UqYM0R4XGiOQ4X/uP
+         ltwRrPtrcQVPFBgIT6A2HdwrQH+pfI1mZvFOFRJQl1tiaDzJFitR0+wcK8PQ8hJ1Om4U
+         rbOG+7/GxexwVJIiqEWtjqCZwjLVXWS2CNrGbcHlkC+shcBoh0CnfNr3QuEnqfI8ag2O
+         AkfQnAtO4ZVCpn8gClZc4Q3Wmk6aToxjqM97TKEU9ZBCYqlEhD7AbrfPAOmRl0intmBj
+         LWFOI3iWw+Lih05fj/7v7/29K6jWawFeEHBBcAfT3SXhwEKPCv9H0SaA5Ih29iqgZB0K
+         1EzA==
+X-Gm-Message-State: AOJu0Yyq2ujH3IHx0IJL1cW62etUKI5iQjSEnnzModOtgGxBD6qox2Y7
+	WQQh7vhpJYip4h4PBcq6QqKdxxPtbbJ0on+nd/nQjZZ7h9Tm4kxJXMVrL81PLi1CoEpnjHrtnPL
+	U
+X-Google-Smtp-Source: AGHT+IGRuRQLFJ+LQ7GNxxar6uONk9dp+dom60UmGbwCzV2PiV02mP8ZtM6CtxNZWJET0w94SVR5kg==
+X-Received: by 2002:a05:6830:12c3:b0:6e6:968d:8df4 with SMTP id a3-20020a05683012c300b006e6968d8df4mr3604953otq.26.1710874503419;
+        Tue, 19 Mar 2024 11:55:03 -0700 (PDT)
+Received: from joelbox2.. (c-98-249-43-138.hsd1.va.comcast.net. [98.249.43.138])
+        by smtp.gmail.com with ESMTPSA id v18-20020a05620a123200b0078a0edbaa94sm1135519qkj.91.2024.03.19.11.55.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 11:55:02 -0700 (PDT)
+From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To: linux-kernel@vger.kernel.org,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>
+Cc: urezki@gmail.com,
+	neeraj.iitr10@gmail.com,
+	rcu@vger.kernel.org
+Subject: [PATCH v4] rcu/tree: Reduce wake up for synchronize_rcu() common case
+Date: Tue, 19 Mar 2024 14:54:57 -0400
+Message-Id: <20240319185458.3968308-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Fix EEE support for MT7531 and MT7988 SoC switch
-Content-Language: en-US
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: DENG Qingfang <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>,
- Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
- Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- =?UTF-8?Q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>,
- Russell King <linux@armlinux.org.uk>,
- SkyLake Huang <SkyLake.Huang@mediatek.com>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- Bartel Eerdekens <bartel.eerdekens@constell8.be>, mithat.guner@xeront.com,
- erkin.bozoglu@xeront.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <<20240318-for-net-mt7530-fix-eee-for-mt7531-mt7988-v>
- <ZfnYkuzuvwLepIfC@makrotopia.org>
-From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <ZfnYkuzuvwLepIfC@makrotopia.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Flag: yes
-X-Spam-Level: **************************
-X-GND-Spam-Score: 400
-X-GND-Status: SPAM
-X-GND-Sasl: arinc.unal@arinc9.com
 
-On 19.03.2024 21:25, Daniel Golle wrote:
-> On Mon, Mar 18, 2024 at 10:46:22AM +0300, Arınç ÜNAL via B4 Relay wrote:
->> Hi.
->>
->> This patch series fixes EEE support for MT7531 and the switch on the MT7988
->> SoC. EEE did not work on MT7531 on most boards before this, it is unclear
->> what's the status on MT7988 SoC switch as I don't have the hardware.
-> 
-> EEE seems to already work just fine on the MT7988 built-in switch, at least
-> on the BPI-R4. I don't think the SoC has bootstrap pins related to EEE like
-> stand-alone MT753x may have.
-> 
-> root@bpi-r4:~# ethtool --show-eee lan1
-> EEE settings for lan1:
->      EEE status: disabled
->      Tx LPI: 30 (us)
->      Supported EEE link modes:  100baseT/Full
->                                 1000baseT/Full
->      Advertised EEE link modes:  Not reported
->      Link partner advertised EEE link modes:  100baseT/Full
->                                               1000baseT/Full
-> 
-> root@bpi-r4:~# ethtool --set-eee lan1 eee on
-> root@bpi-r4:~# ethtool --show-eee lan1
-> EEE settings for lan1:
->      EEE status: enabled - inactive
->      Tx LPI: 30 (us)
->      Supported EEE link modes:  100baseT/Full
->                                 1000baseT/Full
->      Advertised EEE link modes:  100baseT/Full
->                                  1000baseT/Full
->      Link partner advertised EEE link modes:  Not reported
-> root@bpi-r4:~# ethtool --show-eee lan1
-> EEE settings for lan1:
->      EEE status: enabled - active
->      Tx LPI: 30 (us)
->      Supported EEE link modes:  100baseT/Full
->                                 1000baseT/Full
->      Advertised EEE link modes:  100baseT/Full
->                                  1000baseT/Full
->      Link partner advertised EEE link modes:  100baseT/Full
->                                               1000baseT/Full
-> 
-> So don't fix if it ain't broken maybe...?
+In the synchronize_rcu() common case, we will have less than
+SR_MAX_USERS_WAKE_FROM_GP number of users per GP. Waking up the kworker
+is pointless just to free the last injected wait head since at that point,
+all the users have already been awakened.
 
-I would argue that EEE advertisement on the PHY should be enabled by
-default. I guess we're supposed to supply that on the PHY driver. Can you
-test with this diff applied and see if it works without manually enabling
-EEE using ethtool?
+Introduce a new counter to track this and prevent the wakeup in the
+common case.
 
-diff --git a/drivers/net/phy/mediatek-ge-soc.c b/drivers/net/phy/mediatek-ge-soc.c
-index 0f3a1538a8b8..5f482c12018a 100644
---- a/drivers/net/phy/mediatek-ge-soc.c
-+++ b/drivers/net/phy/mediatek-ge-soc.c
-@@ -978,6 +978,9 @@ static void mt798x_phy_eee(struct phy_device *phydev)
-  		       MTK_PHY_RG_LPI_PCS_DSP_CTRL_REG122,
-  		       MTK_PHY_LPI_NORM_MSE_HI_THRESH1000_MASK,
-  		       FIELD_PREP(MTK_PHY_LPI_NORM_MSE_HI_THRESH1000_MASK, 0xff));
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+v1->v2: Rebase on paul/dev
+v2->v3: Additional optimization for wait_tail->next == NULL case.
+v3->v4: Apply clean ups from Vlad. Tested rcutorture all scenarios.
+---
+ kernel/rcu/tree.c | 35 ++++++++++++++++++++++++++++++-----
+ kernel/rcu/tree.h |  1 +
+ 2 files changed, 31 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 9fbb5ab57c84..f3193670fe42 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -96,6 +96,7 @@ static struct rcu_state rcu_state = {
+ 	.ofl_lock = __ARCH_SPIN_LOCK_UNLOCKED,
+ 	.srs_cleanup_work = __WORK_INITIALIZER(rcu_state.srs_cleanup_work,
+ 		rcu_sr_normal_gp_cleanup_work),
++	.srs_cleanups_pending = ATOMIC_INIT(0),
+ };
+ 
+ /* Dump rcu_node combining tree at boot to verify correct setup. */
+@@ -1642,8 +1643,11 @@ static void rcu_sr_normal_gp_cleanup_work(struct work_struct *work)
+ 	 * the done tail list manipulations are protected here.
+ 	 */
+ 	done = smp_load_acquire(&rcu_state.srs_done_tail);
+-	if (!done)
++	if (!done) {
++		/* See comments below. */
++		atomic_dec_return_release(&rcu_state.srs_cleanups_pending);
+ 		return;
++	}
+ 
+ 	WARN_ON_ONCE(!rcu_sr_is_wait_head(done));
+ 	head = done->next;
+@@ -1666,6 +1670,9 @@ static void rcu_sr_normal_gp_cleanup_work(struct work_struct *work)
+ 
+ 		rcu_sr_put_wait_head(rcu);
+ 	}
 +
-+	phy_write_mmd(phydev, MDIO_MMD_AN, MDIO_AN_EEE_ADV, MDIO_EEE_100TX |
-+		      MDIO_EEE_1000T);
-  }
-  
-  static int cal_sw(struct phy_device *phydev, enum CAL_ITEM cal_item,
++	/* Order list manipulations with atomic access. */
++	atomic_dec_return_release(&rcu_state.srs_cleanups_pending);
+ }
+ 
+ /*
+@@ -1673,7 +1680,7 @@ static void rcu_sr_normal_gp_cleanup_work(struct work_struct *work)
+  */
+ static void rcu_sr_normal_gp_cleanup(void)
+ {
+-	struct llist_node *wait_tail, *next, *rcu;
++	struct llist_node *wait_tail, *next = NULL, *rcu = NULL;
+ 	int done = 0;
+ 
+ 	wait_tail = rcu_state.srs_wait_tail;
+@@ -1699,16 +1706,34 @@ static void rcu_sr_normal_gp_cleanup(void)
+ 			break;
+ 	}
+ 
+-	// concurrent sr_normal_gp_cleanup work might observe this update.
+-	smp_store_release(&rcu_state.srs_done_tail, wait_tail);
++	/*
++	 * Fast path, no more users to process except putting the second last
++	 * wait head if no inflight-workers. If there are in-flight workers,
++	 * they will remove the last wait head.
++	 *
++	 * Note that the ACQUIRE orders atomic access with list manipulation.
++	 */
++	if (wait_tail->next && wait_tail->next->next == NULL &&
++	    rcu_sr_is_wait_head(wait_tail->next) &&
++	    !atomic_read_acquire(&rcu_state.srs_cleanups_pending)) {
++		rcu_sr_put_wait_head(wait_tail->next);
++		wait_tail->next = NULL;
++	}
++
++	/* Concurrent sr_normal_gp_cleanup work might observe this update. */
+ 	ASSERT_EXCLUSIVE_WRITER(rcu_state.srs_done_tail);
++	smp_store_release(&rcu_state.srs_done_tail, wait_tail);
+ 
+ 	/*
+ 	 * We schedule a work in order to perform a final processing
+ 	 * of outstanding users(if still left) and releasing wait-heads
+ 	 * added by rcu_sr_normal_gp_init() call.
+ 	 */
+-	queue_work(sync_wq, &rcu_state.srs_cleanup_work);
++	if (wait_tail->next) {
++		atomic_inc(&rcu_state.srs_cleanups_pending);
++		if (!queue_work(sync_wq, &rcu_state.srs_cleanup_work))
++			atomic_dec(&rcu_state.srs_cleanups_pending);
++	}
+ }
+ 
+ /*
+diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+index bae7925c497f..affcb92a358c 100644
+--- a/kernel/rcu/tree.h
++++ b/kernel/rcu/tree.h
+@@ -420,6 +420,7 @@ struct rcu_state {
+ 	struct llist_node *srs_done_tail; /* ready for GP users. */
+ 	struct sr_wait_node srs_wait_nodes[SR_NORMAL_GP_WAIT_HEAD_MAX];
+ 	struct work_struct srs_cleanup_work;
++	atomic_t srs_cleanups_pending; /* srs inflight worker cleanups. */
+ };
+ 
+ /* Values for rcu_state structure's gp_flags field. */
+-- 
+2.34.1
 
-Arınç
