@@ -1,606 +1,357 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-191.mail.qq.com (out203-205-221-191.mail.qq.com [203.205.221.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB16127B57
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 16:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED3D81ABB
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 16:15:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710864855; cv=none; b=RprZxYXPLUXYY/FTZKEtQHUKvlYQ+ZvvddzxvO2ZMWOJOZYn9ASKZnnz1H4W9dtvEyUweAZMx5DmqYHhCa2PlNyXcXIx5WNGzNYMRmy7EZtCQryUWrzHmAa0HuAQzDWarlQerNdN8B9X7X50BWwoowGb+WeYKL8F18iNQJzra3I=
+	t=1710864960; cv=none; b=GY7e1fGxNdPazkWiB37TdOaFA4m5qksmTIo4YeM/Qr4BrGTJfDOGlmj57jEmjsjlg0OICGhupFon5VRH94eHq1bQz/X8vmouKG/QCdkZ37wwdSiBLCw4y9hflBnOho8uIuzxqNwIyLDSRqpZKGLOsYVe11uhMXVpvzZ2YJA4/wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710864855; c=relaxed/simple;
-	bh=SLteJC1Oftcfx/pDSbdV85hEd9RawwKiLDMA9H5ZvQo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=H8bB0tBQcu/AKFsJANxZqehFz1Art6Q2yKEanhB+4TFef0tA65pFJZyhOSB+2zbyd5nPMAN5jUC/mVMU3rnXdiLmBfJPg94dP95r9PFuVze1vtuvfHfYg7/1YkZh4mY7O8kv7PfUT0B2YQWLLkfnIm+ybTFlCPsDfJC4vWVWZxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tA4jD1eg; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1710864960; c=relaxed/simple;
+	bh=MQwq3CaKFobz/Og+FyJkBLflAT+jCfZ/jcxb/K41MAY=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=TIDXkTrzyi/zbOSTF1LXEO15fmFoPIjyRtAzoGEk9fo5pwAlx6I5/S/1pClsElMepjj4P2kMN6rM4C6nHiV1IcHjhUZSZwceinLasaLbZkyhb3AOS/Djp0RHWz4Wx4W+008YwklNkjRDG33bQyWG8KP/P0i2rBMn3a60K3GB4pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=cBIDENnM; arc=none smtp.client-ip=203.205.221.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tA4jD1eg"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-513e14b2bd9so4040270e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 09:14:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710864851; x=1711469651; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6FR1TiIQMNFX2hWmjLoC33+sHjKjffc4UPvr2nbRk1Q=;
-        b=tA4jD1egJn2JjFsKO9qRkkq0RRljsxOb0JPeqXhtVGz4O2D7lzTTByfmK+Qot9BNXh
-         1P/FRq5jKx/wuT+mWAdqug+tOQundswp2M5buip/WvRqMeIZF7tZkfK3O9rYwA48nndB
-         OZcyOD7QA9jwh4MZ4GG8GrM6DAiq4C4RDxyjN2UApecoDp1wIFbUXfmEpv+qko0t6yoS
-         dJJLPrCwqYRjWJGIRxvG+Gn35vFzvER/JdySRiBM6ingEoXsRXrK+qkB/30PpQfAEtir
-         jlujvOi5X8F/TMf+X2X55eHfHwlTInVCM5a7UHbXvB13EMPnwnX6/6ewnDrKVsqhjhKG
-         jAIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710864851; x=1711469651;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6FR1TiIQMNFX2hWmjLoC33+sHjKjffc4UPvr2nbRk1Q=;
-        b=YdvjMpQ6I4nTiD1SCSJ9BFgu3ATsQwZLpZQ42CQyt4oxzYKOhV9Azj92/ozHCtBvEs
-         gUw7skJRJ2594RO3VZvT2FPsML8bs/zH2RNyPPaUHCJEBD8PaFXI030ZN0fH2ufMfRxh
-         uPvdiJOe489WkzT20M1IU2MZXnxIG5U7f+95EEC3rBPpNauYpnJRG4sKYamyAt5cG8Bm
-         1Tl+1YNX8zIpONp0Ubj5NiL22Eu5LSqRMUg5b7YZtChDNwZ25xbYpKMcmvYfMh7cRbeo
-         Hnze3e6Y0Dng2bB3n0fCULJnbEqrHhyzhEf1ZS513Bijg3h99UO2zfFfm07ex9fmq5kx
-         BgUg==
-X-Forwarded-Encrypted: i=1; AJvYcCXdjYdUkwBkEAFxDrTMznK1mP76dcqQBkXoj8HrpFvsfdAZARoxRV84B7DCYBOdnJZwfHdcYVG2tNjFNBFUq30qxeZdwpQhQujvebw/
-X-Gm-Message-State: AOJu0YxWDzUCRmvulC4fppdT3PYCFZTiXv/w6mM6tcIC4pVOpIy4olNG
-	kPW4j0PjP8Lt8FpuwE4Gy8GPL5jYgLDy4pdeVdCvqatFOWqU8ljJ4G0byO8kHG4=
-X-Google-Smtp-Source: AGHT+IFzAzNEOn9bAyW0fToELJusiFTewqoKadptmhXkjC5eh4XSNmEtEPk2wa5TopiADiwNVyT5mw==
-X-Received: by 2002:a19:ca1a:0:b0:513:d94a:670a with SMTP id a26-20020a19ca1a000000b00513d94a670amr8510655lfg.38.1710864851440;
-        Tue, 19 Mar 2024 09:14:11 -0700 (PDT)
-Received: from [127.0.1.1] (netpanel-87-246-222-29.pol.akademiki.lublin.pl. [87.246.222.29])
-        by smtp.gmail.com with ESMTPSA id dx9-20020a0565122c0900b00513ee207982sm607686lfb.198.2024.03.19.09.14.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 09:14:11 -0700 (PDT)
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Date: Tue, 19 Mar 2024 17:14:00 +0100
-Subject: [PATCH 30/31] arm64: dts: qcom: sm8550-*: Remove thermal zone
- polling delays
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="cBIDENnM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1710864949;
+	bh=fwstqXNrz8sY5tQtk9MdOqROTvTakp2tAFmoCiSvqDs=;
+	h=From:To:Cc:Subject:Date;
+	b=cBIDENnMtYV2oQ6R1iwcTp6EN1EAfCach3I8e1MLZPl3t3W4pDhalvegm+WtGWI49
+	 uMCNqxyWYS1j4g/DptiF4u+sqpcBNmmeAp2vplmcagBRONXxV3OQlyZGDp7oZGlPfv
+	 7ICqwRDANWD/VgkqW9J/TPw00nONND128YNrqkZA=
+Received: from localhost.localdomain ([2409:8a60:2a60:b160:1774:d6f7:f5f5:b6a])
+	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
+	id E8996A1C; Tue, 19 Mar 2024 23:58:09 +0800
+X-QQ-mid: xmsmtpt1710863889tsixp1msu
+Message-ID: <tencent_0D6ABA209A4980742DE6003FBFE7FE2A3207@qq.com>
+X-QQ-XMAILINFO: OZZSS56D9fAjJx2XFB9CPVqNM2/4Sxeta/bYS5Nf960ywqFXKQQtZpe/1Ub5sH
+	 Z8oTDc2Gdjz4phxaPWEcl2KqRPj3ugBceSY18RteibdfMOLWdYLWnDPrK6TFLKVekjBE/hVLwH8C
+	 jRjv3nGMJZfv5ronxCEnaLthKXF10AaiRYL7CDQ/PxMogKpEDTnWkX8QnpqP0Luj9/hXMsvBVbAP
+	 Vsf9kClTEpsnBcbqVaNFcsIjzItWqHWhfL143bMXgHQJvhcdeiZPCT6OvzYUjPIS6SauCoxYCjtO
+	 P0fQ48wP7mCwF8M9m2pKUx5/AUA00DVW6Au7ubptgdCHWeMdWJ2LEwxkxyU3iIn/riQ/HAs7Ahtp
+	 oT6LgqLGqzGigbKLg7XG27y/5mtcqVCgB7FRG0wzWV0KiVtcUDbYSDM575VpmsbF/StHrX2QxVVn
+	 raxZYtMA6whSH667/vEfRnY42F2gBpzjLiND7cb5ze7Uox+T1WNG1xTHLerb73DQGc9kVgSRc0t1
+	 e98zgjqxf67H/tWtmV8NqhFJJPbgLQpyyc76SXHg03pMaK88qBjDybMH1rucG9Cqcpiotb4cmMMj
+	 Ows3y4kWLbl3vROzOXg8vlxtli9/JSamZAFgcucRRKOUhkSZFpfUire3jYmsQeqIExoghiCZnqEA
+	 nNzEFUoicZiCya8tRdPJegC8dtvE9H9O5qdpA6/afQh93O61Xe4XfkgSyPRYDyYGc9ZFtcpmqcGQ
+	 8Kj73cqOgBNlvje969scq05Z7ippwRiFU6tPQN39lo3Qlt2ri1/C9/Xd264M9dYMhR3IjG1fjpRt
+	 wKTIHm4odZ5IKYsV6nUkUrweM8pPDoKU7cuiVnOyD11S+md2f4L5J7cf0ihRqr9AbWBoaNqxbLiI
+	 5dcCuvLYIL96wSd7Gu5qvwoecD6al9fi/Es8xDdS5ntseeMGLY+HR75jGTF4XRiMnZ0pCPAKOCoZ
+	 zp3GzW4PE+fQaUqnWQcXeaKAfJ2adPO9wRPjekAXh03iajRJNUSmITFdo5m3TMlDfvABKgoidH5b
+	 19Jc/M9+5+HxE9b+UN
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: wenyang.linux@foxmail.com
+To: "Eric W . Biederman" <ebiederm@xmission.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Joel Granados <j.granados@samsung.com>,
+	Christian Brauner <brauner@kernel.org>
+Cc: Dave Young <dyoung@redhat.com>,
+	Wen Yang <wenyang.linux@foxmail.com>,
+	Iurii Zaikin <yzaikin@google.com>,
+	linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH v2 1/9] sysctl: support encoding values directly in the table entry
+Date: Tue, 19 Mar 2024 23:57:42 +0800
+X-OQ-MSGID: <26c450f6467b4cbaf94cdb10f047abc6ab0c2a5d.1710863674.git.wenyang.linux@foxmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240319-topic-msm-polling-cleanup-v1-30-e0aee1dbcd78@linaro.org>
-References: <20240319-topic-msm-polling-cleanup-v1-0-e0aee1dbcd78@linaro.org>
-In-Reply-To: <20240319-topic-msm-polling-cleanup-v1-0-e0aee1dbcd78@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Konrad Dybcio <konrad.dybcio@linaro.org>
-X-Mailer: b4 0.13-dev-0438c
+Content-Transfer-Encoding: 8bit
 
-All of the thermal zone suppliers are interrupt-driven, remove the
-bogus and unnecessary polling that only wastes CPU time.
+From: Wen Yang <wenyang.linux@foxmail.com>
 
-Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Eric pointed out:
+- by turning .extra1 and .extra2 into longs instead of keeping them as
+  pointers and needing constants to be pointed at somewhere.
+- The only people I can see who find a significant benefit by consolidating
+  all of the constants into one place are people who know how to stomp
+  kernel memory.
+
+This patch supports encoding values directly in table entries through the
+following work:
+- extra1/extra2 and min/max are placed in one union to ensure that the
+  previous code is not broken, then we have time to remove unnecessary
+  extra1/extra2 progressively;
+- since type only has two states, use one bit to represent it;
+- two bits were used to represent the information of the above union( 0:
+  using extra1/extra2, 1: using min, 2: using max, 3: using both min/max);
+- added some helper macros.
+
+Suggested-by: Eric W. Biederman <ebiederm@xmission.com>
+Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Joel Granados <j.granados@samsung.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Iurii Zaikin <yzaikin@google.com>
+Cc: linux-kernel@vger.kernel.org
 ---
- arch/arm64/boot/dts/qcom/pm8010.dtsi    |  6 ---
- arch/arm64/boot/dts/qcom/pm8550.dtsi    |  3 --
- arch/arm64/boot/dts/qcom/pm8550b.dtsi   |  3 --
- arch/arm64/boot/dts/qcom/pm8550ve.dtsi  |  3 --
- arch/arm64/boot/dts/qcom/pm8550vs.dtsi  | 12 -----
- arch/arm64/boot/dts/qcom/pmr735d_a.dtsi |  3 --
- arch/arm64/boot/dts/qcom/pmr735d_b.dtsi |  3 --
- arch/arm64/boot/dts/qcom/sm8550.dtsi    | 82 ---------------------------------
- 8 files changed, 115 deletions(-)
+ include/linux/sysctl.h | 108 ++++++++++++++++++++++++++++++++++++++---
+ kernel/sysctl.c        |  61 +++++++++++++++++------
+ 2 files changed, 148 insertions(+), 21 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/pm8010.dtsi b/arch/arm64/boot/dts/qcom/pm8010.dtsi
-index 0ea641e12209..583c3c49d603 100644
---- a/arch/arm64/boot/dts/qcom/pm8010.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8010.dtsi
-@@ -9,9 +9,6 @@
- / {
- 	thermal-zones {
- 		pm8010-m-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
--
- 			thermal-sensors = <&pm8010_m_temp_alarm>;
- 
- 			trips {
-@@ -30,9 +27,6 @@ trip1 {
- 		};
- 
- 		pm8010-n-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
--
- 			thermal-sensors = <&pm8010_n_temp_alarm>;
- 
- 			trips {
-diff --git a/arch/arm64/boot/dts/qcom/pm8550.dtsi b/arch/arm64/boot/dts/qcom/pm8550.dtsi
-index 797a18c249a4..27719876a098 100644
---- a/arch/arm64/boot/dts/qcom/pm8550.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8550.dtsi
-@@ -9,9 +9,6 @@
- / {
- 	thermal-zones {
- 		pm8550-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
--
- 			thermal-sensors = <&pm8550_temp_alarm>;
- 
- 			trips {
-diff --git a/arch/arm64/boot/dts/qcom/pm8550b.dtsi b/arch/arm64/boot/dts/qcom/pm8550b.dtsi
-index 72609f31c890..44c0d4cf3fc8 100644
---- a/arch/arm64/boot/dts/qcom/pm8550b.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8550b.dtsi
-@@ -9,9 +9,6 @@
- / {
- 	thermal-zones {
- 		pm8550b-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
--
- 			thermal-sensors = <&pm8550b_temp_alarm>;
- 
- 			trips {
-diff --git a/arch/arm64/boot/dts/qcom/pm8550ve.dtsi b/arch/arm64/boot/dts/qcom/pm8550ve.dtsi
-index 4dc1f03ab2c7..7d13e8d9236b 100644
---- a/arch/arm64/boot/dts/qcom/pm8550ve.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8550ve.dtsi
-@@ -9,9 +9,6 @@
- / {
- 	thermal-zones {
- 		pm8550ve-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
--
- 			thermal-sensors = <&pm8550ve_temp_alarm>;
- 
- 			trips {
-diff --git a/arch/arm64/boot/dts/qcom/pm8550vs.dtsi b/arch/arm64/boot/dts/qcom/pm8550vs.dtsi
-index 97b1c18aa7d8..a7a85f14c650 100644
---- a/arch/arm64/boot/dts/qcom/pm8550vs.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8550vs.dtsi
-@@ -9,9 +9,6 @@
- / {
- 	thermal-zones {
- 		pm8550vs-c-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
--
- 			thermal-sensors = <&pm8550vs_c_temp_alarm>;
- 
- 			trips {
-@@ -30,9 +27,6 @@ trip1 {
- 		};
- 
- 		pm8550vs-d-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
--
- 			thermal-sensors = <&pm8550vs_d_temp_alarm>;
- 
- 			trips {
-@@ -51,9 +45,6 @@ trip1 {
- 		};
- 
- 		pm8550vs-e-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
--
- 			thermal-sensors = <&pm8550vs_e_temp_alarm>;
- 
- 			trips {
-@@ -72,9 +63,6 @@ trip1 {
- 		};
- 
- 		pm8550vs-g-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
--
- 			thermal-sensors = <&pm8550vs_g_temp_alarm>;
- 
- 			trips {
-diff --git a/arch/arm64/boot/dts/qcom/pmr735d_a.dtsi b/arch/arm64/boot/dts/qcom/pmr735d_a.dtsi
-index 37daaefe3431..e2ffe5d077a6 100644
---- a/arch/arm64/boot/dts/qcom/pmr735d_a.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pmr735d_a.dtsi
-@@ -9,9 +9,6 @@
- / {
- 	thermal-zones {
- 		pmr735d-k-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
--
- 			thermal-sensors = <&pmr735d_k_temp_alarm>;
- 
- 			trips {
-diff --git a/arch/arm64/boot/dts/qcom/pmr735d_b.dtsi b/arch/arm64/boot/dts/qcom/pmr735d_b.dtsi
-index 3b470f6ac46f..e8ececc6eee3 100644
---- a/arch/arm64/boot/dts/qcom/pmr735d_b.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pmr735d_b.dtsi
-@@ -9,9 +9,6 @@
- / {
- 	thermal-zones {
- 		pmr735d-l-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
--
- 			thermal-sensors = <&pmr735d_l_temp_alarm>;
- 
- 			trips {
-diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-index 3904348075f6..b502471c7c9b 100644
---- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-@@ -4537,8 +4537,6 @@ compute-cb@8 {
- 
- 	thermal-zones {
- 		aoss0-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens0 0>;
- 
- 			trips {
-@@ -4557,8 +4555,6 @@ reset-mon-config {
- 		};
- 
- 		cpuss0-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens0 1>;
- 
- 			trips {
-@@ -4577,8 +4573,6 @@ reset-mon-config {
- 		};
- 
- 		cpuss1-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens0 2>;
- 
- 			trips {
-@@ -4597,8 +4591,6 @@ reset-mon-config {
- 		};
- 
- 		cpuss2-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens0 3>;
- 
- 			trips {
-@@ -4617,8 +4609,6 @@ reset-mon-config {
- 		};
- 
- 		cpuss3-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens0 4>;
- 
- 			trips {
-@@ -4637,8 +4627,6 @@ reset-mon-config {
- 		};
- 
- 		cpu3-top-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens0 5>;
- 
- 			trips {
-@@ -4663,8 +4651,6 @@ cpu3_top_crit: cpu-critical {
- 		};
- 
- 		cpu3-bottom-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens0 6>;
- 
- 			trips {
-@@ -4689,8 +4675,6 @@ cpu3_bottom_crit: cpu-critical {
- 		};
- 
- 		cpu4-top-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens0 7>;
- 
- 			trips {
-@@ -4715,8 +4699,6 @@ cpu4_top_crit: cpu-critical {
- 		};
- 
- 		cpu4-bottom-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens0 8>;
- 
- 			trips {
-@@ -4741,8 +4723,6 @@ cpu4_bottom_crit: cpu-critical {
- 		};
- 
- 		cpu5-top-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens0 9>;
- 
- 			trips {
-@@ -4767,8 +4747,6 @@ cpu5_top_crit: cpu-critical {
- 		};
- 
- 		cpu5-bottom-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens0 10>;
- 
- 			trips {
-@@ -4793,8 +4771,6 @@ cpu5_bottom_crit: cpu-critical {
- 		};
- 
- 		cpu6-top-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens0 11>;
- 
- 			trips {
-@@ -4819,8 +4795,6 @@ cpu6_top_crit: cpu-critical {
- 		};
- 
- 		cpu6-bottom-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens0 12>;
- 
- 			trips {
-@@ -4845,8 +4819,6 @@ cpu6_bottom_crit: cpu-critical {
- 		};
- 
- 		cpu7-top-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens0 13>;
- 
- 			trips {
-@@ -4871,8 +4843,6 @@ cpu7_top_crit: cpu-critical {
- 		};
- 
- 		cpu7-middle-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens0 14>;
- 
- 			trips {
-@@ -4897,8 +4867,6 @@ cpu7_middle_crit: cpu-critical {
- 		};
- 
- 		cpu7-bottom-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens0 15>;
- 
- 			trips {
-@@ -4923,8 +4891,6 @@ cpu7_bottom_crit: cpu-critical {
- 		};
- 
- 		aoss1-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens1 0>;
- 
- 			trips {
-@@ -4943,8 +4909,6 @@ reset-mon-config {
- 		};
- 
- 		cpu0-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens1 1>;
- 
- 			trips {
-@@ -4969,8 +4933,6 @@ cpu0_crit: cpu-critical {
- 		};
- 
- 		cpu1-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens1 2>;
- 
- 			trips {
-@@ -4995,8 +4957,6 @@ cpu1_crit: cpu-critical {
- 		};
- 
- 		cpu2-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens1 3>;
- 
- 			trips {
-@@ -5021,8 +4981,6 @@ cpu2_crit: cpu-critical {
- 		};
- 
- 		cdsp0-thermal {
--			polling-delay-passive = <10>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens2 4>;
- 
- 			trips {
-@@ -5053,8 +5011,6 @@ cdsp0_junction_config: junction-config {
- 		};
- 
- 		cdsp1-thermal {
--			polling-delay-passive = <10>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens2 5>;
- 
- 			trips {
-@@ -5085,8 +5041,6 @@ cdsp1_junction_config: junction-config {
- 		};
- 
- 		cdsp2-thermal {
--			polling-delay-passive = <10>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens2 6>;
- 
- 			trips {
-@@ -5117,8 +5071,6 @@ cdsp2_junction_config: junction-config {
- 		};
- 
- 		cdsp3-thermal {
--			polling-delay-passive = <10>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens2 7>;
- 
- 			trips {
-@@ -5149,8 +5101,6 @@ cdsp3_junction_config: junction-config {
- 		};
- 
- 		video-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens1 8>;
- 
- 			trips {
-@@ -5169,8 +5119,6 @@ reset-mon-config {
- 		};
- 
- 		mem-thermal {
--			polling-delay-passive = <10>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens1 9>;
- 
- 			trips {
-@@ -5195,8 +5143,6 @@ reset-mon-config {
- 		};
- 
- 		modem0-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens1 10>;
- 
- 			trips {
-@@ -5227,8 +5173,6 @@ reset-mon-config {
- 		};
- 
- 		modem1-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens1 11>;
- 
- 			trips {
-@@ -5259,8 +5203,6 @@ reset-mon-config {
- 		};
- 
- 		modem2-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens1 12>;
- 
- 			trips {
-@@ -5291,8 +5233,6 @@ reset-mon-config {
- 		};
- 
- 		modem3-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens1 13>;
- 
- 			trips {
-@@ -5323,8 +5263,6 @@ reset-mon-config {
- 		};
- 
- 		camera0-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens1 14>;
- 
- 			trips {
-@@ -5343,8 +5281,6 @@ reset-mon-config {
- 		};
- 
- 		camera1-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens1 15>;
- 
- 			trips {
-@@ -5363,8 +5299,6 @@ reset-mon-config {
- 		};
- 
- 		aoss2-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens2 0>;
- 
- 			trips {
-@@ -5383,8 +5317,6 @@ reset-mon-config {
- 		};
- 
- 		gpuss-0-thermal {
--			polling-delay-passive = <10>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens2 1>;
- 
- 			cooling-maps {
-@@ -5422,8 +5354,6 @@ gpu0_junction_config: junction-config {
- 		};
- 
- 		gpuss-1-thermal {
--			polling-delay-passive = <10>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens2 2>;
- 
- 			cooling-maps {
-@@ -5461,8 +5391,6 @@ gpu1_junction_config: junction-config {
- 		};
- 
- 		gpuss-2-thermal {
--			polling-delay-passive = <10>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens2 3>;
- 
- 			cooling-maps {
-@@ -5500,8 +5428,6 @@ gpu2_junction_config: junction-config {
- 		};
- 
- 		gpuss-3-thermal {
--			polling-delay-passive = <10>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens2 4>;
- 
- 			cooling-maps {
-@@ -5539,8 +5465,6 @@ gpu3_junction_config: junction-config {
- 		};
- 
- 		gpuss-4-thermal {
--			polling-delay-passive = <10>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens2 5>;
- 
- 			cooling-maps {
-@@ -5578,8 +5502,6 @@ gpu4_junction_config: junction-config {
- 		};
- 
- 		gpuss-5-thermal {
--			polling-delay-passive = <10>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens2 6>;
- 
- 			cooling-maps {
-@@ -5617,8 +5539,6 @@ gpu5_junction_config: junction-config {
- 		};
- 
- 		gpuss-6-thermal {
--			polling-delay-passive = <10>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens2 7>;
- 
- 			cooling-maps {
-@@ -5656,8 +5576,6 @@ gpu6_junction_config: junction-config {
- 		};
- 
- 		gpuss-7-thermal {
--			polling-delay-passive = <10>;
--			polling-delay = <0>;
- 			thermal-sensors = <&tsens2 8>;
- 
- 			cooling-maps {
-
+diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+index ee7d33b89e9e..1ba980219e40 100644
+--- a/include/linux/sysctl.h
++++ b/include/linux/sysctl.h
+@@ -61,6 +61,25 @@ extern const int sysctl_vals[];
+ 
+ extern const unsigned long sysctl_long_vals[];
+ 
++#define	SYSCTL_NUMERIC_NEG_ONE			((long)-1)
++#define	SYSCTL_NUMERIC_ZERO			(0L)
++#define	SYSCTL_NUMERIC_ONE			(1L)
++#define	SYSCTL_NUMERIC_TWO			(2L)
++#define	SYSCTL_NUMERIC_THREE			(3L)
++#define	SYSCTL_NUMERIC_FOUR			(4L)
++#define	SYSCTL_NUMERIC_ONE_HUNDRED		(100L)
++#define	SYSCTL_NUMERIC_TWO_HUNDRED		(200L)
++#define	SYSCTL_NUMERIC_THREE_HUNDRED		(300L)
++#define	SYSCTL_NUMERIC_FIVE_HUNDRED		(500L)
++#define	SYSCTL_NUMERIC_ONE_THOUSAND		(1000L)
++#define	SYSCTL_NUMERIC_TWO_THOUSAND		(2000L)
++#define	SYSCTL_NUMERIC_THREE_THOUSAND		(3000L)
++#define	SYSCTL_NUMERIC_16K			(16384L)
++#define	SYSCTL_NUMERIC_U8_MAX			((long)U8_MAX)
++#define	SYSCTL_NUMERIC_U16_MAX			((long)U16_MAX)
++#define	SYSCTL_NUMERIC_INT_MAX			((long)INT_MAX)
++#define	SYSCTL_NUMERIC_LONG_MAX			(LONG_MAX)
++
+ typedef int proc_handler(struct ctl_table *ctl, int write, void *buffer,
+ 		size_t *lenp, loff_t *ppos);
+ 
+@@ -131,6 +150,18 @@ static inline void *proc_sys_poll_event(struct ctl_table_poll *poll)
+ #define DEFINE_CTL_TABLE_POLL(name)					\
+ 	struct ctl_table_poll name = __CTL_TABLE_POLL_INITIALIZER(name)
+ 
++enum {
++	SYSCTL_TABLE_TYPE_DEFAULT,
++	SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY
++};
++
++enum {
++	SYSCTL_TABLE_EXTRA_PTR,
++	SYSCTL_TABLE_EXTRA_LONG_INIT_MIN,
++	SYSCTL_TABLE_EXTRA_LONG_INIT_MAX,
++	SYSCTL_TABLE_EXTRA_LONG_INIT_MINMAX
++};
++
+ /* A sysctl table is an array of struct ctl_table: */
+ struct ctl_table {
+ 	const char *procname;		/* Text ID for /proc/sys, or zero */
+@@ -138,20 +169,39 @@ struct ctl_table {
+ 	int maxlen;
+ 	umode_t mode;
+ 	/**
+-	 * enum type - Enumeration to differentiate between ctl target types
++	 * type - Indicates to differentiate between ctl target types
+ 	 * @SYSCTL_TABLE_TYPE_DEFAULT: ctl target with no special considerations
+ 	 * @SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY: Used to identify a permanently
+ 	 *                                       empty directory target to serve
+ 	 *                                       as mount point.
+ 	 */
+-	enum {
+-		SYSCTL_TABLE_TYPE_DEFAULT,
+-		SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY
+-	} type;
++	u8 type:1;
++
++	/**
++	 * extra_flags
++	 * @SYSCTL_TABLE_EXTRA_PTR: flag indicating that this uses extra1/extra2.
++	 * @SYSCTL_TABLE_EXTRA_LONG_INIT_MIN: flag indicating that this uses min/max
++					      and min has been initialized.
++	 * @SYSCTL_TABLE_EXTRA_LONG_INIT_MAX: flag indicating that this uses min/max
++					      and max has been initialized.
++	 * @SYSCTL_TABLE_EXTRA_LONG_INIT_MINMAX: flag indicating that this uses min/max
++						 and both have been initialized.
++	 *
++	 */
++	u8 extra_flags:2;
++	union {
++		struct {
++			void *extra1;
++			void *extra2;
++		};
++		struct {
++			long min;
++			long max;
++		};
++	};
++
+ 	proc_handler *proc_handler;	/* Callback for text formatting */
+ 	struct ctl_table_poll *poll;
+-	void *extra1;
+-	void *extra2;
+ } __randomize_layout;
+ 
+ struct ctl_node {
+@@ -213,6 +263,50 @@ struct ctl_table_root {
+ #define register_sysctl(path, table)	\
+ 	register_sysctl_sz(path, table, ARRAY_SIZE(table))
+ 
++#define CTL_TABLE_ENTRY(_name, _data, _len, _mode, _func)		      \
++	{								      \
++		.procname = _name,					      \
++		.data = _data,						      \
++		.maxlen = _len,						      \
++		.mode = _mode,						      \
++		.proc_handler = _func,					      \
++		.extra_flags = SYSCTL_TABLE_EXTRA_PTR,			      \
++	}
++
++#define CTL_TABLE_ENTRY_MIN(_name, _data, _len, _mode, _func, _min)	      \
++	{								      \
++		.procname = _name,					      \
++		.data = _data,						      \
++		.maxlen = _len,						      \
++		.mode = _mode,						      \
++		.proc_handler = _func,					      \
++		.min = _min,						      \
++		.extra_flags = SYSCTL_TABLE_EXTRA_LONG_INIT_MIN,	      \
++	}
++
++#define CTL_TABLE_ENTRY_MAX(_name, _data, _len, _mode, _func, _max)	      \
++	{								      \
++		.procname = _name,					      \
++		.data = _data,						      \
++		.maxlen = _len,						      \
++		.mode = _mode,						      \
++		.proc_handler = _func,					      \
++		.max = _max,						      \
++		.extra_flags = SYSCTL_TABLE_EXTRA_LONG_INIT_MAX,	      \
++	}
++
++#define CTL_TABLE_ENTRY_MINMAX(_name, _data, _len, _mode, _func, _min, _max)  \
++	{								      \
++		.procname = _name,					      \
++		.data = _data,						      \
++		.maxlen = _len,						      \
++		.mode = _mode,						      \
++		.proc_handler = _func,					      \
++		.min = _min,						      \
++		.max = _max,						      \
++		.extra_flags = SYSCTL_TABLE_EXTRA_LONG_INIT_MINMAX,	      \
++	}
++
+ #ifdef CONFIG_SYSCTL
+ 
+ void proc_sys_poll_notify(struct ctl_table_poll *poll);
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 157f7ce2942d..144c441236ab 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -822,6 +822,20 @@ struct do_proc_dointvec_minmax_conv_param {
+ 	int *max;
+ };
+ 
++static void do_int_conv_param_init(const struct ctl_table *table,
++		struct do_proc_dointvec_minmax_conv_param *param)
++{
++	if (table->extra_flags == SYSCTL_TABLE_EXTRA_PTR) {
++		param->min = table->extra1;
++		param->max = table->extra2;
++	} else {
++		param->min = (table->extra_flags & SYSCTL_TABLE_EXTRA_LONG_INIT_MIN) ?
++			(int *)&table->min : NULL;
++		param->max = (table->extra_flags & SYSCTL_TABLE_EXTRA_LONG_INIT_MAX) ?
++			(int *)&table->max : NULL;
++	}
++}
++
+ static int do_proc_dointvec_minmax_conv(bool *negp, unsigned long *lvalp,
+ 					int *valp,
+ 					int write, void *data)
+@@ -867,10 +881,9 @@ static int do_proc_dointvec_minmax_conv(bool *negp, unsigned long *lvalp,
+ int proc_dointvec_minmax(struct ctl_table *table, int write,
+ 		  void *buffer, size_t *lenp, loff_t *ppos)
+ {
+-	struct do_proc_dointvec_minmax_conv_param param = {
+-		.min = (int *) table->extra1,
+-		.max = (int *) table->extra2,
+-	};
++	struct do_proc_dointvec_minmax_conv_param param;
++
++	do_int_conv_param_init(table, &param);
+ 	return do_proc_dointvec(table, write, buffer, lenp, ppos,
+ 				do_proc_dointvec_minmax_conv, &param);
+ }
+@@ -889,6 +902,20 @@ struct do_proc_douintvec_minmax_conv_param {
+ 	unsigned int *max;
+ };
+ 
++static void do_uint_conv_param_init(const struct ctl_table *table,
++		struct do_proc_douintvec_minmax_conv_param *param)
++{
++	if (table->extra_flags == SYSCTL_TABLE_EXTRA_PTR) {
++		param->min = table->extra1;
++		param->max = table->extra2;
++	} else {
++		param->min = (table->extra_flags & SYSCTL_TABLE_EXTRA_LONG_INIT_MIN) ?
++			(unsigned int *)&table->min : NULL;
++		param->max = (table->extra_flags & SYSCTL_TABLE_EXTRA_LONG_INIT_MAX) ?
++			(unsigned int *)&table->max : NULL;
++	}
++}
++
+ static int do_proc_douintvec_minmax_conv(unsigned long *lvalp,
+ 					 unsigned int *valp,
+ 					 int write, void *data)
+@@ -936,10 +963,9 @@ static int do_proc_douintvec_minmax_conv(unsigned long *lvalp,
+ int proc_douintvec_minmax(struct ctl_table *table, int write,
+ 			  void *buffer, size_t *lenp, loff_t *ppos)
+ {
+-	struct do_proc_douintvec_minmax_conv_param param = {
+-		.min = (unsigned int *) table->extra1,
+-		.max = (unsigned int *) table->extra2,
+-	};
++	struct do_proc_douintvec_minmax_conv_param param;
++
++	do_uint_conv_param_init(table, &param);
+ 	return do_proc_douintvec(table, write, buffer, lenp, ppos,
+ 				 do_proc_douintvec_minmax_conv, &param);
+ }
+@@ -1038,8 +1064,16 @@ static int __do_proc_doulongvec_minmax(void *data, struct ctl_table *table,
+ 	}
+ 
+ 	i = data;
+-	min = table->extra1;
+-	max = table->extra2;
++	if (table->extra_flags == SYSCTL_TABLE_EXTRA_PTR) {
++		min = table->extra1;
++		max = table->extra2;
++	} else {
++		min = (table->extra_flags & SYSCTL_TABLE_EXTRA_LONG_INIT_MIN) ?
++			&table->min : NULL;
++		max = (table->extra_flags & SYSCTL_TABLE_EXTRA_LONG_INIT_MAX) ?
++			&table->max : NULL;
++	}
++
+ 	vleft = table->maxlen / sizeof(unsigned long);
+ 	left = *lenp;
+ 
+@@ -1274,10 +1308,9 @@ int proc_dointvec_jiffies(struct ctl_table *table, int write,
+ int proc_dointvec_ms_jiffies_minmax(struct ctl_table *table, int write,
+ 			  void *buffer, size_t *lenp, loff_t *ppos)
+ {
+-	struct do_proc_dointvec_minmax_conv_param param = {
+-		.min = (int *) table->extra1,
+-		.max = (int *) table->extra2,
+-	};
++	struct do_proc_dointvec_minmax_conv_param param;
++
++	do_int_conv_param_init(table, &param);
+ 	return do_proc_dointvec(table, write, buffer, lenp, ppos,
+ 			do_proc_dointvec_ms_jiffies_minmax_conv, &param);
+ }
 -- 
-2.40.1
+2.25.1
 
