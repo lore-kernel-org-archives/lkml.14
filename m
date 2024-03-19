@@ -1,67 +1,65 @@
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F132E2C1A3;
-	Tue, 19 Mar 2024 18:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D3A2C6AE
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 18:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710872297; cv=none; b=iIa7Di+QLpaluGt8kKklH2kCR35rCRHIXyBfPeSvHdufryPNaso+gJkVf076Uv3xjGyVTPNXYclzqAa1hPrMAWWeQhFMMQnLGzsDhRhS7zGYu3H08WFmuvrsbyHsNJEPFeH39npAdgDegyZDDZ9PC+GjoSVrPesf3MfWayx4ir8=
+	t=1710872330; cv=none; b=G+mNzSruD7GqvCN+Qp7E1useaaibphTGlBhBKZ3OwUcfjS3unO/LcGWHRtyml6EvOJnjHRsKx+ii2tIibbzRBNHbCoF7d+LEv0lowvHbNV9uyuYVNxGkmFZdreWSJ2P73VGytoY1OWpkMcHYfOYP0RYganxmpMyte5HkSLSmm34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710872297; c=relaxed/simple;
-	bh=QXOhZ8fhXE7YnPA0G5NXIgrRxRxesAzI8MRpaajT7O0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MXd5gRpzF+WDQh6n09cElX9cWKgM8HITqKMZe/WeXXSjrl/8eqxlozPgbhof+apSFzyBYFx6Y1JQJcd8BVQY+LULu3alH6YatjeLitMl+R+E3Fl4UcZEcfZlVJLMlQv1l2hNKhOJamuIg2GBk/H5hkxx4CqcE/qGu9mo376RJeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nG7vviuR; arc=none smtp.client-ip=209.85.161.47
+	s=arc-20240116; t=1710872330; c=relaxed/simple;
+	bh=hSQlxmu0JQGOLCccDVMeGRvCXoBcKwvCRhFdCa7EKfQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aIjAMaOLJGUr9ID0Sak0/m6LLX+pOeDKvUC+nTMPpSoODficjGo1EX0yqa7WFwZiTuSMmQXIYUKxR/zAJu8cHXCHsZj4GE1cbywFFBrdtP9dnxY8TptMQFwrugRqllYASQRWMwsKvwJu1KG/j7/aOWTf9YWTTmqXHMkOogi93Yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A1AD1nhm; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nG7vviuR"
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5a480985625so2785731eaf.0;
-        Tue, 19 Mar 2024 11:18:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1AD1nhm"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dde24ec08cso7639415ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 11:18:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710872295; x=1711477095; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1710872328; x=1711477128; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=szEDIHxruW7I+bn4nLl0COJDZkTjlh/OkXkS2Z0jyIg=;
-        b=nG7vviuRO5G3S+CNnzmCopkBt1Rte4fKSZ1bHal+4ya2uBMoEjh0nFQpWfB3IS/q90
-         KbPTP5yN5EEr6poiO+NcMRL+FfEMZ+Zjunrv8lVbfjQ5eoE9IdFtYuF55T1t9HPG9Dz6
-         eJT0e2cJOsd3wY9iYGHXl+g42Uv6ctjsRlQQwCiN2V0tw89udEeTwHeuq08cnelIGLJl
-         6iy92xjW15JAw5O9rICaaIN4ysIo+iEXdMg5VLJTUcaxN1ipnpvzuX9/kDX3+bP7pCfu
-         pzJcBNapANTh2f2H7qwBfohC+HcEROg88QUlPhPYJSljkFmL/YOLGvV7JtD4KEm1dIWL
-         3q1w==
+        bh=ttsLf8/Vv4XSDgXwOmjeIFqmOGIaA6d4xvoGx5K3xuw=;
+        b=A1AD1nhmTxwuJDBDCpVIY5Gb33roud97t7f0+h74S+DaMh/Cs/2qBH/UTf/41bAZUa
+         Znxn1z/iRDLGEA1LDwruBIm3JPdj3rBC6gRgY760C/E06Ybrtq14h4H2n4cKhXippjCc
+         qlLYOOcsnXj0hsXRcvCzdp2cxvijpWEiewpewY68vExu365bK0j7vL4BOF6yiuxPhBY+
+         P3vEfmC5ppfW0asIfYRk6DuOUNLCDOJt4ggM8gEqsN3KIi1qmEMR4O5EI1r4wAt3HGEN
+         MbLF4qcTtYdJUGc85C/u6dq9ZukwfUv4/9rg7edytKxvf8ccr5EEmnp5KKm5gDll5xmq
+         7fCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710872295; x=1711477095;
+        d=1e100.net; s=20230601; t=1710872328; x=1711477128;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=szEDIHxruW7I+bn4nLl0COJDZkTjlh/OkXkS2Z0jyIg=;
-        b=vFMigq1OdOYTCn8mCI22JQbPXAm8r5BqCQ3qRJJuVCapXppw2Y9HqhIoa/czwcB5cM
-         jcePPj2sbBmoPfhQIPVW4rDMbk4DxGtOALnLfyA0YNU4Oj9eWn4wGC+uYtQAXY1nBMe/
-         lSutU7Uu2yRtsRghXAxFcPoLeTOQQ5P4X9HCcKYtOAGN7K6DqTvIK+oDBC+6u4GzmkWf
-         ZNQUdEKDn1HGgz1UOUKyFg+Ayy3DPefXAZhJz6QacHkMsfGkHc5tBcarsS86ax5xic5h
-         sV7wayhQRg564/1Kjj8DbEG9cvk0CWlYMqykTHNDU37bjmYwyiOdGhlMcStcHskoiPe9
-         xFwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU99gKkEUkirlNpdWpLTfEYclcs3ZZK5tioGpWl8hkyQ8EQTP9gcPrcXAx2u2gJeH6DQyxAx7oAyCOpNT3mHAPlh8TYTUYFX1m5AonMwaur0EI2rHenfxikkyw3y5q4wbdEzmflZ5tm2dU=
-X-Gm-Message-State: AOJu0YxijLRc5SNwouoFecz/mZoDYy4VYURQ62rBQ87aL1jBicKBRwxt
-	CsUGnpPaHxjoIYyNNcNyKAMJ3Vzr9kYUg2oqxS0C7f1fY8XkQi4O
-X-Google-Smtp-Source: AGHT+IGxxtutI/2GkkVuAhNVSZPhi80oTxv/DyzjTcVfeJcKiNA+pSwqWAtuLjgZtrOVMTMsW0Uc4A==
-X-Received: by 2002:a05:6358:7f96:b0:17e:8f64:1e92 with SMTP id c22-20020a0563587f9600b0017e8f641e92mr14702410rwo.13.1710872294995;
-        Tue, 19 Mar 2024 11:18:14 -0700 (PDT)
-Received: from Ubuntu2.. ([14.139.121.51])
-        by smtp.googlemail.com with ESMTPSA id k188-20020a636fc5000000b005e438fe702dsm9216950pgc.65.2024.03.19.11.18.10
+        bh=ttsLf8/Vv4XSDgXwOmjeIFqmOGIaA6d4xvoGx5K3xuw=;
+        b=kSDd4D52huDXU84XDiQkoz/s+omkqIq9XtmiuWYb614kHOZf8oJXvMxzfiIsffMXTu
+         jeXQlXqRqDlXc9TAMZ1AP+u+h8h5bRY6kE0XBycUnmBJGHFwAKv5HWYeX72IlisXxHNR
+         KKTXw1JTt7BJvic7VTtRF/nYB/ZEYC/oNIiPmRGAtoA0MYIwNYnODWiGqLPbjzMg0LM7
+         7mF6VL2U7yJcaYSw7qDQjd7QC7uyjJFBbjbH3/zNvAikPzhJMN/AG6xq0wxk2XuNR3E3
+         NYTe0hJODFGzNIJjLXneCV4XmUitCQhWooWOmqhj9csScBtCPYZ/RO3bV3qGC/hdrZcj
+         Axgg==
+X-Forwarded-Encrypted: i=1; AJvYcCWF14M+pYwmu5oj3j52gzW5bm/PC85CpTeygr9UNYTikwBf7wB/dURLz3z2m01HCek0/289ab1dtqEahY2hWrPxffNQz7bbS8Y0ctsP
+X-Gm-Message-State: AOJu0YyPXsa1CchzMcBEmoqBTwGJCtyCvf6xvHhe4LN15TqD1hogQ7hi
+	W7gXEPCaN4AlT+gmOxCivZ98WgdB0oMEo9ax5Vwtc0+uFcHoj1mrBZee4VBbec8=
+X-Google-Smtp-Source: AGHT+IHdWSDyGQAgjTBQUrEny3k9F7nqWA36dWJEPS2flyYlHH6hN4GRg4Y09QU5dBjkGxccVy7gQQ==
+X-Received: by 2002:a17:902:e5c9:b0:1dd:db2a:62a7 with SMTP id u9-20020a170902e5c900b001dddb2a62a7mr3230063plf.3.1710872328228;
+        Tue, 19 Mar 2024 11:18:48 -0700 (PDT)
+Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id h17-20020a170902f55100b001dd6f305a81sm4306166plf.293.2024.03.19.11.18.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 11:18:14 -0700 (PDT)
-From: Chandra Pratap <chandrapratap3519@gmail.com>
-To: sudipm.mukherjee@gmail.com,
-	teddy.wang@siliconmotion.com,
-	gregkh@linuxfoundation.org,
-	linux-fbdev@vger.kernel.org,
-	linux-staging@lists.linux.dev,
+        Tue, 19 Mar 2024 11:18:47 -0700 (PDT)
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: msakai@redhat.com,
+	akpm@linux-foundation.org
+Cc: dm-devel@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	outreachy@lists.linux.dev
-Cc: Chandra Pratap <chandrapratap3519@gmail.com>
-Subject: [PATCH] staging: sm750fb: Replace comparisons with NULL and 0
-Date: Tue, 19 Mar 2024 23:47:35 +0530
-Message-Id: <20240319181735.366565-1-chandrapratap3519@gmail.com>
+	jserv@ccns.ncku.edu.tw,
+	Kuan-Wei Chiu <visitorckw@gmail.com>
+Subject: [PATCH] MAINTAINERS: Remove incorrect M: tag for dm-devel@lists.linux.dev
+Date: Wed, 20 Mar 2024 02:18:42 +0800
+Message-Id: <20240319181842.249547-1-visitorckw@gmail.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -71,36 +69,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replace '(foo != NULL)' with '(foo)' and 'x != 0'
-with 'x' to adhere to the coding standards.
+The dm-devel@lists.linux.dev mailing list should only be listed under
+the L: (List) tag in the MAINTAINERS file. However, it was incorrectly
+listed under both L: and M: (Maintainers) tags, which is not accurate.
+Remove the M: tag for dm-devel@lists.linux.dev in the MAINTAINERS file
+to reflect the correct categorization.
 
-Signed-off-by: Chandra Pratap <chandrapratap3519@gmail.com>
+Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
 ---
- drivers/staging/sm750fb/sm750.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
-index 04c1b32a22c5..4537f007a810 100644
---- a/drivers/staging/sm750fb/sm750.c
-+++ b/drivers/staging/sm750fb/sm750.c
-@@ -926,7 +926,7 @@ static void sm750fb_setup(struct sm750_dev *sm750_dev, char *src)
- 		goto NO_PARAM;
- 	}
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 82896c3e0559..e0a4e0def090 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6172,7 +6172,6 @@ F:	include/uapi/linux/dm-*.h
  
--	while ((opt = strsep(&src, ":")) != NULL && *opt != 0) {
-+	while ((opt = strsep(&src, ":")) && *opt) {
- 		dev_info(&sm750_dev->pdev->dev, "opt=%s\n", opt);
- 		dev_info(&sm750_dev->pdev->dev, "src=%s\n", src);
- 
-@@ -1147,7 +1147,7 @@ static int __init lynxfb_setup(char *options)
- 	 * strsep() updates @options to pointer after the first found token
- 	 * it also returns the pointer ahead the token.
- 	 */
--	while ((opt = strsep(&options, ":")) != NULL) {
-+	while ((opt = strsep(&options, ":"))) {
- 		/* options that mean for any lynx chips are configured here */
- 		if (!strncmp(opt, "noaccel", strlen("noaccel"))) {
- 			g_noaccel = 1;
+ DEVICE-MAPPER VDO TARGET
+ M:	Matthew Sakai <msakai@redhat.com>
+-M:	dm-devel@lists.linux.dev
+ L:	dm-devel@lists.linux.dev
+ S:	Maintained
+ F:	Documentation/admin-guide/device-mapper/vdo*.rst
 -- 
 2.34.1
 
