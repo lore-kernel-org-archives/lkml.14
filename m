@@ -1,54 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535C77F498;
-	Tue, 19 Mar 2024 02:49:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456D87F7F2;
+	Tue, 19 Mar 2024 02:49:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710816548; cv=none; b=apLfSjgHrA9fEH+QANF3O+T9T29Tv8fcqiftOecZDd+x7j85fowfZgnoS52H0lzDCAQW119SKci0OfqoB5+Bi75+2h8y3LGo38Hp5cZNzThcUAuOwxcEgwIdbqca3hswlpzGYIrZ4Tv0ZPMPfcCw79Ji2Hs76uCdYZQ/olEyQno=
+	t=1710816550; cv=none; b=Ea84rw3DLFYPYihFPbg47TIMJCVfWstMYlNct+YDftPTIoAsS2VJtBjhiew6nOklCiWX3fi/xCObhe4LsnALJLdQE/lyvkhy33qZtqM/Iihmt/sEQsUzGOoOD55nrOApAhMVP6vBN7AxpRzpI6RGZdPbnpe3Amc76yKaPoXjKzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710816548; c=relaxed/simple;
-	bh=rdWTPTQzZXcOYkX1NQ10jyVCRRxNuyNaJC3v4FRLsK8=;
+	s=arc-20240116; t=1710816550; c=relaxed/simple;
+	bh=zAJX23UHd/9Paoq2CMnqidvxB8/P6xEMFnnlO4OCSak=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OWhqqoj54coPmmAYvDxQ7D9mq66LcgnlkeUjkh5jXONo8xvAgsCtUL1nWaVs+A+8ii4oB9I9VDJ/zF7A4bRuiGDwVE0xixJcIgE/Bx1TJqw6gxRRr5Vt5MURZCS8ZT+l+H2o+rqxFlPkXDjSjENKU/57Dq/4Hdr5lMm3fjdzmJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aEsHWdcX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=CZ85MvxzH40fjMWJUxqIj/tnQkzfupnq1E8naVoqk1J01IgRaMEIKASohMTI6BApW3Xhb8wUsvm7kQeCcS9GkQtXlaAU5TPdbuNKEEZSGgo/2q/JocKLVdgobpAO/fmK947TAi5hG+pFrDVqc5L0EdmziJwWM7d7BknPgj7x8O8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tq/oqrYb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aEsHWdcX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05FCBC433F1;
-	Tue, 19 Mar 2024 02:49:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tq/oqrYb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79067C43399;
+	Tue, 19 Mar 2024 02:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710816548;
-	bh=rdWTPTQzZXcOYkX1NQ10jyVCRRxNuyNaJC3v4FRLsK8=;
+	s=k20201202; t=1710816550;
+	bh=zAJX23UHd/9Paoq2CMnqidvxB8/P6xEMFnnlO4OCSak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aEsHWdcX8XmzlNU9QAqm6+H1Lpx/mwFy9zISXOnHzqVsF955+OQwWVj8kUgNFQxkX
-	 IYIA64GLzUPV0+mOpUmcB/lXt96gAXee4J64LLL9QkHvrvr1wUXt3U3ujzyXhwYHON
-	 FVaq65N7g6prL0P5O78THgaJIYTKYxIXO86D0cn6NwbK9aIemB5WbNQ4kEHdbfVVIx
-	 7k3y2v8RpfQ9yKhJz96a8MZcuocwK+YYXQMh76fN0R66e0o4QXsnj745SWVz3tjjSn
-	 avBpfBIafLKzjuvFQKiky3QEdmi0QjhIgMF9/VqflYmLAhN0clNgqpItiXpZCjOdiC
-	 I1WzgLZKEK4oQ==
+	b=Tq/oqrYb+k5P75nIyad8a0mFyixet/T1niCR4lJ/xb2H/Sfvu2r8PhrXMHvySXMar
+	 A+wt9YN+5yp+Whzt3bcn9WzpB46pQY6JIgHonjA9niVWhYNo8z+lUL/cuUOsZoqzIM
+	 ew1dbAN8y4BARA9SG8YYsrgifHYutMwmrY1OXDTPSoYkLdPNP/4/EBXH/7sfdHnF99
+	 7y41fn66MYHl29ORexs2ZsbQwUM0Lza3T76g6ePyq5L/ljbHgMqjaYrRBjP1DKI7EA
+	 yFmSwo+8/V9Zk4bsAXY1f/t1fxxUTlR5vrK+igWV2pYWhvnATith0Y24p1ICsn51Gt
+	 QLrFlnzi3Aphg==
 From: Bjorn Andersson <andersson@kernel.org>
-To: Andy Gross <agross@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Thara Gopinath <thara.gopinath@gmail.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Rob Herring <robh+dt@kernel.org>,
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Bhupesh Sharma <bhupesh.linux@gmail.com>,
-	Luca Weiss <luca.weiss@fairphone.com>
-Cc: ~postmarketos/upstreaming@lists.sr.ht,
-	phone-devel@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
+	Jianhua Lu <lujianhua000@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: dts: qcom: sm6350: Add Crypto Engine
-Date: Mon, 18 Mar 2024 21:48:38 -0500
-Message-ID: <171081652652.198276.10264102128162813821.b4-ty@kernel.org>
+Subject: Re: [PATCH v2] arm64: dts: qcom: sm8250-xiaomi-elish: add usb pd negotiation support
+Date: Mon, 18 Mar 2024 21:48:40 -0500
+Message-ID: <171081652637.198276.12446437834826324312.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240219-sm6350-qce-v2-1-7acb8838f248@fairphone.com>
-References: <20240219-sm6350-qce-v2-1-7acb8838f248@fairphone.com>
+In-Reply-To: <20240302131025.13741-1-lujianhua000@gmail.com>
+References: <20240302131025.13741-1-lujianhua000@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,20 +51,16 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Mon, 19 Feb 2024 11:16:02 +0100, Luca Weiss wrote:
-> Add crypto engine (CE) and CE BAM related nodes and definitions for this
-> SoC.
+On Sat, 02 Mar 2024 21:10:25 +0800, Jianhua Lu wrote:
+> Add usb pd negotiation, but charging is controlled by pm8150b pmic,
+> so it can only charge battery with 5W,
 > 
-> For reference:
 > 
->   [    2.297419] qcrypto 1dfa000.crypto: Crypto device found, version 5.5.1
-> 
-> [...]
 
 Applied, thanks!
 
-[1/1] arm64: dts: qcom: sm6350: Add Crypto Engine
-      commit: fd5afa5d7e5259cb2320fbe2cf60250f7336f439
+[1/1] arm64: dts: qcom: sm8250-xiaomi-elish: add usb pd negotiation support
+      commit: 91905d8368c69bea3fb85f5c76334274a232612d
 
 Best regards,
 -- 
