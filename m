@@ -1,74 +1,99 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A2A20DC8
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 17:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B0125569
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 17:54:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710870869; cv=none; b=PvSH+x3ir8XE8bNkW4VAggcu9oFUeE62pbBbk8MEfs8567LrO3yuLZV1D4EKjtpz0WIa3kahU5mzYSUVoJpUvpP3+BnTdrGBB/3MjpuujJ9q2Dmzt2TjTSVGLENiV/K0ihhqPJP7ysPEcZBfua0UN231TClwZ2GopptX/WTr3kQ=
+	t=1710870870; cv=none; b=s+lo/RXCzuoFCwP/UqN5vs9RNffHL73tK0VJmTDY/XXICl9bchLAjoqZkr3JGdRepNh/Piw2GSZrBrOBSkPKd/n+26XphCm2yDjcfYHrQuhB6KPnLVHec/H7H63ADHHyg1noPpYAis8RvGxA9Ou/jAiNemoaMPGNk3FSn/+rvao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710870869; c=relaxed/simple;
-	bh=B9HuiwQg7X+0lbII8qyF6ES+SfD7F1pHs2MmLusxi84=;
+	s=arc-20240116; t=1710870870; c=relaxed/simple;
+	bh=Ao9hwGJl4g/w2wap7dwa291kK0JPcDjzl89BAK46zVI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QrL0y4HtgAzYw7r0p5JD5bYUy13ZjhwadNgSUoUlDrR0PvsG6IZ+klJN30GexSRajuwv23kbV9kcuwSn73mcJLOaZLiF12Kph3+Y4qdZJ3L5Q7DduI7e8IXcHbM3ZWBHt6iLg81SNtuAq9UUEt0eHDjFOTurIadSzG7jUvT5k00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=WPJEz9SG; arc=none smtp.client-ip=209.85.160.41
+	 Content-Type:Content-Disposition:In-Reply-To; b=rlcqCx4Z6NjIOcR2RdkzbZwJaLmG/XKopeq+Auo9ht3wIKFSh6zed9sX9iR9pUeftQG9bWCvXObaTMxQWCaREHPUt8+Sd/q5I8324fgtKu+LHSdfrBcnTPYzr7HeRIecDfVwWoEkmVjPPKt5xU6WHHNVc2w6w9DbnB3MND4jTDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=fiSQBkCC; arc=none smtp.client-ip=209.85.210.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="WPJEz9SG"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2220a3b3871so2597021fac.2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 10:54:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fiSQBkCC"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6e673ffbd79so3220302a34.2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 10:54:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1710870866; x=1711475666; darn=vger.kernel.org;
+        d=ziepe.ca; s=google; t=1710870867; x=1711475667; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=B9HuiwQg7X+0lbII8qyF6ES+SfD7F1pHs2MmLusxi84=;
-        b=WPJEz9SGaGxWfXrSjYp8a6um1xt0Nh7D0PgzOKoPv4tUrB07npQC8t0o4sHUlYzsr/
-         jV5IAg4bjlLbnvTwJNr/vXZjjJY1FWMcxPPfPAl9ncouIcaE5shloDQgx+Iljixyk9jf
-         S0Zzy+QTtsE3ULClsbMBvZV45T+wRwbw4ozuk7DWLysH0ggz99fSzqkC8bYAqUB4uAnD
-         I8rzgCj05tL9HDqH/1fjmPcgoP7Q7I4Kk/aYpNM0CMw+pfwRPo0KKpeHxy3kjZdFPim2
-         /cYNbGR5qWFjnkRWm83OvojpzetTCwy+nMOqjZhIyha1qc+zmvDVdxt01adVtan6AITr
-         +2bg==
+        bh=D7H3WfkclcieHpBg89GTkZxaS3r7II1qq9xezXi0hVM=;
+        b=fiSQBkCCoYVMvJ7hKOIWrIUIQtWnudcxCwuRJ3SDAmfcoUJ3LKW/OSOt0XJv0ppBom
+         r1b7EUVzGEU34UNgXl0Xub2wg6VFMC2Ly8xIcAY78NHYVcXijpAahLq3KrnWiEfepI+P
+         K3bumXlIk6qPY69qQGjZxTur6D4Xb2RFW85NT0G9m4KZ2ko8G/knkqvxD72SooihwK+Z
+         WaMPr00ehDA2unHvbCRW9HCn68HsloTpQ5rMYa4Uyj9mIfkuCzQfSnPQejaSEhgNZfAo
+         vO51olQglynGFY2d82cFKRUtHCtTWvMs7dccTYup7df0Q48rdZL147340AdvneF3HcRw
+         D7dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710870866; x=1711475666;
+        d=1e100.net; s=20230601; t=1710870867; x=1711475667;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=B9HuiwQg7X+0lbII8qyF6ES+SfD7F1pHs2MmLusxi84=;
-        b=hF46Z78sgrakYMGqcA8jU2Pc3hAoYqqWg25TiCU8ZUJXG64kwtgUhgDemvXFwN4HpL
-         yiPn3/knWgIMhP1j9V/ExkHSiN57ajThc3mBSOOmiKaRVRmiWOVPkoDq2BKliK1OSi5u
-         UPHNO+/qfm7hQ06TUZGYPSaDyFnGWih7X32JM/yARAEeGeXnm16m1cl8XriFQgGmEGiS
-         c6aqhKMcdxLquSzlnEMRkQlTf2SEiTLwmjrU369/eFY/HhpebvStxML6opFjAnPvJs+E
-         kKy+KvJWRNVRDz1pTh7aHaQWccPh17SH1V+YoP2yPHSpeZ5DA/WK6JqzdHTTWWxejZxb
-         pckg==
-X-Forwarded-Encrypted: i=1; AJvYcCXXhra6eYPO10Dcw+WAyG+mITEitrC26UdkiXP21Jv1JHXk4CqMohWZGwoCD8/2JbJXNr45yi2XXw6tKaAZL9OkTY9O0riuO2VEohsG
-X-Gm-Message-State: AOJu0YzH03KZSqHYGO9LunwbRECFseIg+9b+MSfSQT5IAAdRYgp5Obg2
-	PzT0MpnCLZj4QcFu72hVXZRia587pZ3tnTeXsF0jXkun0ALVVYHhda5yRw2R9f0=
-X-Google-Smtp-Source: AGHT+IEd8KsCy6GqIl+1n0Sol2b9f0f/25EaZRJ80XDCZoyr9TJbEhweqbC03Izk0lN9FbayxSp4fw==
-X-Received: by 2002:a05:6870:524f:b0:221:bf42:cf76 with SMTP id o15-20020a056870524f00b00221bf42cf76mr16367906oai.10.1710870866557;
-        Tue, 19 Mar 2024 10:54:26 -0700 (PDT)
+        bh=D7H3WfkclcieHpBg89GTkZxaS3r7II1qq9xezXi0hVM=;
+        b=DGiY6DARn5G4xMIa/Ste3u/GqyEr+imhL2P4SvxOVjFdEEHcpNL1ySJ7RB1t9dX/OL
+         n7r29R/I/rK/4Dgtx5OXEKF3Qmx1ExkbARvIG6LmT32pJ5/EXoa3KH7XDvR/V7oU3Mpu
+         CohrGKM2b2hSEtm1bCPFEBijD3iPGaJD/qraYZtHkDYaSBzYgZUXvXnrNIIJ2EVmV54C
+         /FaHdOzCyi5TLrrh1FsvSv35C3D/7DWUONEziQgwynusO3H5BVdLDtSMAQJ8G03QIFru
+         1v3nrac8Qb2mUfRZefusiunUDqEiKvfg+kVISwGhXtHwkyZQHWyP89PKfUx7qU8mE1Py
+         ZW+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXSNwXuzULtKrNt0arha3ajW/8iyOdONf7xIHj+GdU3p1A/T3cPamIEj6/moRVMbPtQZKP4csenePK/ZcejugtO7+ckCxn9swaMACNp
+X-Gm-Message-State: AOJu0YyIPhJ2B/tAOCvXxeeSI1H1QD8UgqbqDUf7fF1+jfzgN2v+FbkA
+	X221VC+eJ6dNnWInHcTYHUIc52DWSt8oEgj7qIztpFfk4AWV5f1+4R+0+fRdcK0=
+X-Google-Smtp-Source: AGHT+IFEKHu8FJxVRb4YxsELWM46dNSxNuN3njm0tBeD+R+fEyp1j8c0yaDa2gTZMCaYT5fxKBzgBQ==
+X-Received: by 2002:a05:6870:d20e:b0:222:99cb:2215 with SMTP id g14-20020a056870d20e00b0022299cb2215mr3580439oac.28.1710870867581;
+        Tue, 19 Mar 2024 10:54:27 -0700 (PDT)
 Received: from ziepe.ca ([12.97.180.36])
-        by smtp.gmail.com with ESMTPSA id gh11-20020a056638698b00b00477716fcbb8sm2429986jab.40.2024.03.19.10.54.25
+        by smtp.gmail.com with ESMTPSA id gh11-20020a056638698b00b00477716fcbb8sm2429986jab.40.2024.03.19.10.54.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 10:54:25 -0700 (PDT)
+        Tue, 19 Mar 2024 10:54:26 -0700 (PDT)
 Received: from jgg by wakko with local (Exim 4.95)
 	(envelope-from <jgg@ziepe.ca>)
-	id 1rmdbD-001kiW-EG;
-	Tue, 19 Mar 2024 14:50:07 -0300
-Date: Tue, 19 Mar 2024 14:50:07 -0300
+	id 1rmbVk-001elO-4L;
+	Tue, 19 Mar 2024 12:36:20 -0300
+Date: Tue, 19 Mar 2024 12:36:20 -0300
 From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Will Deacon <will@kernel.org>
-Cc: Robin Murphy <robin.murphy@arm.com>, Tyler Hicks <code@tyhicks.com>,
-	Jerry Snitselaar <jsnitsel@redhat.com>,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-	Easwar Hariharan <eahariha@linux.microsoft.com>
-Subject: Re: Why is the ARM SMMU v1/v2 put into bypass mode on kexec?
-Message-ID: <20240319175007.GC66976@ziepe.ca>
-References: <ZfKsAIt8RY/JcL/V@sequoia>
- <ZfNKv70oqqwMwIeS@sequoia>
- <120d0dec-450f-41f8-9e05-fd763e84f6dd@arm.com>
- <20240319154756.GB2901@willie-the-truck>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Leon Romanovsky <leon@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+	Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	kvm@vger.kernel.org, linux-mm@kvack.org,
+	Bart Van Assche <bvanassche@acm.org>,
+	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+	Amir Goldstein <amir73il@gmail.com>,
+	"josef@toxicpanda.com" <josef@toxicpanda.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	"daniel@iogearbox.net" <daniel@iogearbox.net>,
+	Dan Williams <dan.j.williams@intel.com>,
+	"jack@suse.com" <jack@suse.com>, Zhu Yanjun <zyjzyj2000@gmail.com>
+Subject: Re: [RFC RESEND 00/16] Split IOMMU DMA mapping operation to two steps
+Message-ID: <20240319153620.GB66976@ziepe.ca>
+References: <20240306154328.GM9225@ziepe.ca>
+ <20240306162022.GB28427@lst.de>
+ <20240306174456.GO9225@ziepe.ca>
+ <20240306221400.GA8663@lst.de>
+ <20240307000036.GP9225@ziepe.ca>
+ <20240307150505.GA28978@lst.de>
+ <20240307210116.GQ9225@ziepe.ca>
+ <20240308164920.GA17991@lst.de>
+ <20240308202342.GZ9225@ziepe.ca>
+ <20240309161418.GA27113@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,63 +102,84 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240319154756.GB2901@willie-the-truck>
+In-Reply-To: <20240309161418.GA27113@lst.de>
 
-On Tue, Mar 19, 2024 at 03:47:56PM +0000, Will Deacon wrote:
+On Sat, Mar 09, 2024 at 05:14:18PM +0100, Christoph Hellwig wrote:
+> On Fri, Mar 08, 2024 at 04:23:42PM -0400, Jason Gunthorpe wrote:
+> > > The DMA API callers really need to know what is P2P or not for
+> > > various reasons.  And they should generally have that information
+> > > available, either from pin_user_pages that needs to special case
+> > > it or from the in-kernel I/O submitter that build it from P2P and
+> > > normal memory.
+> > 
+> > I think that is a BIO thing. RDMA just calls with FOLL_PCI_P2PDMA and
+> > shoves the resulting page list into in a scattertable. It never checks
+> > if any returned page is P2P - it has no reason to care. dma_map_sg()
+> > does all the work.
+> 
+> Right now it does, but that's not really a good interface.  If we have
+> a pin_user_pages variant that only pins until the next relevant P2P
+> boundary and tells you about we can significantly simplify the overall
+> interface.
 
-> Right, it's hard to win if DMA-active devices weren't quiesced properly
-> by the outgoing kernel. Either the SMMU was left in abort (leading to the
-> problems you list above) or the SMMU is left in bypass (leading to possible
-> data corruption). Which is better?
+Sorry for the delay, I was away..
 
-For whatever reason (and I really don't like this design) alot of work
-was done on x86 so that device continues to work as-was right up until
-the crash kernel does the first DMA operation. Including having the
-crash kernel non disruptively inherit and retain the IOMMU
-configuration. (eg see translation_pre_enabled() stuff in intel
-driver)
+I kind of understand your thinking on the DMA side, but I don't see
+how this is good for users of the API beyond BIO.
 
-I think the idea was that the crash kernel driver will recover control
-of the device prior to trying to do DMA. Devices without a driver or
-devices that are not operated by the crash kernel just keep going as
-they were.
+How will this make RDMA better? We have one MR, the MR has pages, the
+HW doesn't care about the SW distinction of p2p, swiotlb, direct,
+encrypted, iommu, etc. It needs to create one HW page list for
+whatever user VA range was given.
 
-In general practice this is unworkable as some devices can't be
-recovered without doing DMA in the first place creating a catch-22.
+Or worse, whatever thing is inside a DMABUF from a DRM
+driver. DMABUF's can have a (dynamic!) mixture of P2P and regular
+AFAIK based on the GPU's migration behavior.
 
-So now lots of devices use their shutdown handler to quiet the device
-before handing over to the crash kernel.
+Or triple worse, ODP can dynamically change on a page by page basis
+the type depending on what hmm_range_fault() returns.
 
-I think this emerged as some 'small work' to try and make crash
-kernels functional at all. Implementing every shutdown handler would
-be pretty hard, but many (?) devices seem to work OK if the crash
-kernel drivers runs for a bit before destroying their DMA setup. We
-don't trigger weird platform crashes or anything due to failing DMA
-operations either.
+So I take it as a requirement that RDMA MUST make single MR's out of a
+hodgepodge of page types. RDMA MRs cannot be split. Multiple MR's are
+not a functional replacement for a single MR.
 
-Now we have all kinds of infrastructure and deployed crash kernels
-that have this assumption baked in. :( It sure would be nice to not
-spread this full complexity to ARM.
+Go back to the start of what are we trying to do here:
+ 1) Make a DMA API that can support hmm_range_fault() users in a
+    sensible and performant way
+ 2) Make a DMA API that can support RDMA MR's backed by DMABUF's, and
+    user VA's without restriction
+ 3) Allow to remove scatterlist from BIO paths
+ 4) Provide a DMABUF API that is not scatterlist that can feed into
+    the new DMA API - again supporting DMABUF's hodgepodge of types.
 
-If the original kernel could signal to the crash kernel that specific
-devices are quieted and then the crash kernel could simply ignore
-unquieted devices and set the IOMMU to abort them and don't allow any
-crash drivers to attach. (or maybe FLR them?) If someone wants a
-device to be usuable in the crash kernel then the original kernel
-needs to implement the shutdown handler.
+I'd like to do all of these things. I know 3 is your highest priority,
+but it is my lowest :)
 
-Regardless, I think if your goal is to support crash kernels then you
-have to do at least a bit of the x86 'keep the iommu unchanged'. The
-iommu shutdown should do less like x86 does and the iommu startup
-should detect the special case and try to atomic switch to the new STE
-table that aborts unquieted devices.
+So, if the new API can only do uniformity I immediately loose #1 -
+hmm_range_fault() can't guarentee anything, so it looses the IOVA
+optimization that Leon's patches illustrate.
 
-Booting a non-crash OS is a different matter and in that case you
-really want every bit of HW put back to a clean "just booted" state,
-and arguably it can't work unless the original kernel implements all
-the shutdown handlers... I don't know if x86 kexec actually support
-this, it looks like it only works on Linux OS and things like the
-Linux iommu driver have code to support the crash focused hand over
-even in non crash cases.
+For uniformity #2 probably needs multiple DMA API "transactions". This
+is doable, but it is less performant than one "transaction".
+
+#3 is perfectly happy because BIO already creates uniformity
+
+#4 is like #2, there is not guarenteed uniformity inside DMABUF so
+every DMABUF importer needs to take some complexity to deal with
+it. There are many DMABUF importers so this feels like a poor API
+abstraction if we force everyone there to take on complexity.
+
+So I'm just not seeing why this would be better. I think Leon's series
+shows the cost of non-uniformity support is actually pretty
+small. Still, we could do better, if the caller can optionally
+indicate it knows it has uniformity then that can be optimized futher.
+
+I'd like to find something that works well for all of the above, and I
+think abstracting non-uniformity at the API level is important for the
+above reasons.
+
+Can we tweak what Leon has done to keep the hmm_range_fault support
+and non-uniformity for RDMA but add a uniformity optimized flow for
+BIO?
 
 Jason
