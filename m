@@ -1,35 +1,41 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55BC17BAFB;
-	Tue, 19 Mar 2024 11:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46BD07EEF0;
+	Tue, 19 Mar 2024 11:32:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710847828; cv=none; b=pYefHA5ld9oN3y/Yh401KvORFv/R+fKNyiFqSNRGNvrbvr4xME83pp1qtNlVW91PkT9nFYRPCxwiWGwyUniGywoKNukIgz8Ai9VYiH59PTpoOBNOgijBFu7zqMhFG9K0UwU6WETW8SN55PCoYMA9tgf3GhcfTAHfLIPVU8hdTNo=
+	t=1710847935; cv=none; b=gJMkdaE87AZbUbHsrRRYoCBmfE9q9GCXJLjTIK8fY5bQWbVPIhf6y3mKRlaC4c46LGNqXlLv0QmHYOgXmxQa3GAJmSSdOd0BFN9oSxFJZPEWeeta3WTSsFZMTL2jy+VVY0mnjna4ptSRoHQw9RkAbe+pEcTbbm75lXLYTSEtR+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710847828; c=relaxed/simple;
-	bh=dnqTXQz32jKrSI6GbKSQRO/rglIIbJZjU6uIXfVIv24=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=tGbSoeOvgQkZF8saShZaHIeL/cdyVu1bTu52BgLDQhdIGjgaH3n0qmQ/ZvkXzY8hEPbN3oTuventPSRdjG+9yR8GO8J/ItZXENdqCPZw4IjPGIt9VkGXAIJuDG9uj+dE3gL/8UCsNrJ5+d9OkXPxnFq3l3OBuOeQqdTm3LlrGSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EnFN57yh; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EnFN57yh"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DA443C433C7;
-	Tue, 19 Mar 2024 11:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710847827;
-	bh=dnqTXQz32jKrSI6GbKSQRO/rglIIbJZjU6uIXfVIv24=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=EnFN57yh7tts4vSMWeMyQaIuUk2IdRewsVKIed1jARE7ms6p+gTfC3sCwnHciq2Aj
-	 Y0MUqZ0U3awUDn5MPEiLPFff/rVnFnDnAtlNDBvL9U6UxNf7vQ3E37cI2LtX8fnv7i
-	 wGcY2v/rRbMp9kDLTq8m0AprJAD8BhuXhR0TUJ3prf+0a9ujJR55ktGnZz1f5/5UVw
-	 MZNV7TV4q0JIS8BoNO3tA1uTIhmSfejvDVIjsg+/eAu6K7Tnhn28L1LjapV/xFGp4y
-	 RLMQ8a+8rDUl+F6gBRlP20i048uAaQj0t5UzThxe5LoQwJ0x+kQ/Uz3gaT9BEGGIfK
-	 +vXI4crY71u9g==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C653DD982E0;
-	Tue, 19 Mar 2024 11:30:27 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1710847935; c=relaxed/simple;
+	bh=OZpA7WL4wKhc3TzlPCYeSrdk8I55QEYuvT1JrMm4KGA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=m5SVm2nSAWepGRjrf2cLR72Fy6PZ3gouxx656M+SelCqsjVJZfZVmWq9ixWUl51Tc6ZTXR+3j6qcotRknyxqOuMaQfGJbmPThRW7inH8evRbY6hx9rhdmug6JkIW1JNjCUGYIZcTYNLTaJLN8//a5n6iOghNUCWEck51V4pR/Dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4TzTzZ2N7vzNm28;
+	Tue, 19 Mar 2024 19:30:18 +0800 (CST)
+Received: from dggpeml500021.china.huawei.com (unknown [7.185.36.21])
+	by mail.maildlp.com (Postfix) with ESMTPS id 919EC18005D;
+	Tue, 19 Mar 2024 19:32:10 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by dggpeml500021.china.huawei.com
+ (7.185.36.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 19 Mar
+ 2024 19:32:09 +0800
+From: Baokun Li <libaokun1@huawei.com>
+To: <linux-ext4@vger.kernel.org>
+CC: <tytso@mit.edu>, <adilger.kernel@dilger.ca>, <jack@suse.cz>,
+	<ritesh.list@gmail.com>, <ojaswin@linux.ibm.com>, <adobriyan@gmail.com>,
+	<linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>,
+	<yangerkun@huawei.com>, <libaokun1@huawei.com>
+Subject: [PATCH v4 2/9] ext4: refactor out ext4_generic_attr_store()
+Date: Tue, 19 Mar 2024 19:33:18 +0800
+Message-ID: <20240319113325.3110393-3-libaokun1@huawei.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20240319113325.3110393-1-libaokun1@huawei.com>
+References: <20240319113325.3110393-1-libaokun1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,43 +43,93 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v2] rds: introduce acquire/release ordering in
- acquire/release_in_xmit()
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171084782780.9693.3451064874189878588.git-patchwork-notify@kernel.org>
-Date: Tue, 19 Mar 2024 11:30:27 +0000
-References: <ZfQUxnNTO9AJmzwc@libra05>
-In-Reply-To: <ZfQUxnNTO9AJmzwc@libra05>
-To: Yewon Choi <woni9911@gmail.com>
-Cc: allison.henderson@oracle.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
- linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
- linux-kernel@vger.kernel.org, threeearcat@gmail.com
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpeml500021.china.huawei.com (7.185.36.21)
 
-Hello:
+Refactor out the function ext4_generic_attr_store() to handle the setting
+of values of various common types, with no functional changes.
 
-This patch was applied to netdev/net.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+---
+ fs/ext4/sysfs.c | 40 +++++++++++++++++++++++++---------------
+ 1 file changed, 25 insertions(+), 15 deletions(-)
 
-On Fri, 15 Mar 2024 18:28:38 +0900 you wrote:
-> acquire/release_in_xmit() work as bit lock in rds_send_xmit(), so they
-> are expected to ensure acquire/release memory ordering semantics.
-> However, test_and_set_bit/clear_bit() don't imply such semantics, on
-> top of this, following smp_mb__after_atomic() does not guarantee release
-> ordering (memory barrier actually should be placed before clear_bit()).
-> 
-> Instead, we use clear_bit_unlock/test_and_set_bit_lock() here.
-> 
-> [...]
-
-Here is the summary with links:
-  - [net,v2] rds: introduce acquire/release ordering in acquire/release_in_xmit()
-    https://git.kernel.org/netdev/net/c/1422f28826d2
-
-You are awesome, thank you!
+diff --git a/fs/ext4/sysfs.c b/fs/ext4/sysfs.c
+index ca820620b974..2b1c529b7fdf 100644
+--- a/fs/ext4/sysfs.c
++++ b/fs/ext4/sysfs.c
+@@ -443,24 +443,20 @@ static ssize_t ext4_attr_show(struct kobject *kobj,
+ 	return 0;
+ }
+ 
+-static ssize_t ext4_attr_store(struct kobject *kobj,
+-			       struct attribute *attr,
+-			       const char *buf, size_t len)
++static ssize_t ext4_generic_attr_store(struct ext4_attr *a,
++				       struct ext4_sb_info *sbi,
++				       const char *buf, size_t len)
+ {
+-	struct ext4_sb_info *sbi = container_of(kobj, struct ext4_sb_info,
+-						s_kobj);
+-	struct ext4_attr *a = container_of(attr, struct ext4_attr, attr);
+-	void *ptr = calc_ptr(a, sbi);
++	int ret;
+ 	unsigned int t;
+ 	unsigned long lt;
+-	int ret;
++	void *ptr = calc_ptr(a, sbi);
++
++	if (!ptr)
++		return 0;
+ 
+ 	switch (a->attr_id) {
+-	case attr_reserved_clusters:
+-		return reserved_clusters_store(sbi, buf, len);
+ 	case attr_pointer_ui:
+-		if (!ptr)
+-			return 0;
+ 		ret = kstrtouint(skip_spaces(buf), 0, &t);
+ 		if (ret)
+ 			return ret;
+@@ -470,19 +466,33 @@ static ssize_t ext4_attr_store(struct kobject *kobj,
+ 			*((unsigned int *) ptr) = t;
+ 		return len;
+ 	case attr_pointer_ul:
+-		if (!ptr)
+-			return 0;
+ 		ret = kstrtoul(skip_spaces(buf), 0, &lt);
+ 		if (ret)
+ 			return ret;
+ 		*((unsigned long *) ptr) = lt;
+ 		return len;
++	}
++	return 0;
++}
++
++static ssize_t ext4_attr_store(struct kobject *kobj,
++			       struct attribute *attr,
++			       const char *buf, size_t len)
++{
++	struct ext4_sb_info *sbi = container_of(kobj, struct ext4_sb_info,
++						s_kobj);
++	struct ext4_attr *a = container_of(attr, struct ext4_attr, attr);
++
++	switch (a->attr_id) {
++	case attr_reserved_clusters:
++		return reserved_clusters_store(sbi, buf, len);
+ 	case attr_inode_readahead:
+ 		return inode_readahead_blks_store(sbi, buf, len);
+ 	case attr_trigger_test_error:
+ 		return trigger_test_error(sbi, buf, len);
++	default:
++		return ext4_generic_attr_store(a, sbi, buf, len);
+ 	}
+-	return 0;
+ }
+ 
+ static void ext4_sb_release(struct kobject *kobj)
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.31.1
 
