@@ -1,60 +1,60 @@
-Received: from esa2.hc1455-7.c3s2.iphmx.com (esa2.hc1455-7.c3s2.iphmx.com [207.54.90.48])
+Received: from esa4.hc1455-7.c3s2.iphmx.com (esa4.hc1455-7.c3s2.iphmx.com [68.232.139.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94DC45102E;
-	Tue, 19 Mar 2024 06:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB29537FC;
+	Tue, 19 Mar 2024 06:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710829954; cv=none; b=Q62m6FCJEWEpZnD+zYBdgbHQgzFxxdqLFfKYZOofCKk0uTm9I/1BsvdRUTRGw7eP1e5y9RMbJIi9nx/86f+AB/Qh2SHK8mxelPCpXEHUmA8BNOrXvSy6/Xu3emiOrT5+x2/N1lMh0JA1XwpEZx7SDcfCSoOLqQY4H2FUJz0kOt0=
+	t=1710829956; cv=none; b=czOfmgnDJbsi601T1DNuzWUDNGIhs3nu6YXa9of1eJrUfkuv6wf4nvjN2qaY3QOJwMwEwh4m1n243ZMosob5cLx/x0ik9C4HzLJLf/UCBFClR/upRe8zc+R5OHwldWZVpjpEbxcKUmqawEXG3aDP00lgBlp29+WsuDQnL4GY1/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710829954; c=relaxed/simple;
-	bh=WTXpZlGLvu69orlfGdipH5GXMwQecnj3ncOT0UXMt9I=;
+	s=arc-20240116; t=1710829956; c=relaxed/simple;
+	bh=g/F/uSB80Kmdz2xmcZ9fhA6lsdgQP0M3skp+uddabjw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nZJCm/VifjuEn0IrSuuYWwEXNE4c4QEEHjPr+na/XUC9+7zzHr/SdvJDcD5tqBNBYM90C6u82jvDI3Ok0q03iWerG5vmaj1EXsB+X0IKZZ1ExkF3s/Q8XbCSIW8M6iGqCbs37QlG8N2o1iXQK+Z7gPJzJaqQ/nZkJkFRiBReQv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=Lm5PxFgV; arc=none smtp.client-ip=207.54.90.48
+	 MIME-Version; b=q+zNO7BmQ8sYf/Rc8n0tKg7YT2oQ9H4OW8WgaygOLgdtadWnngtgZHMJ2sTdck7oOOASoL7CyasvDu54lbF3iElMaDKzcyB8l1JDe/r2pGT6l18G17J60wg8Krn7rXTmn6BZEa0lf4Pxwvr2fDYb66lAKX8EZO9mlhx6zny3Heg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=OakVmdOt; arc=none smtp.client-ip=68.232.139.117
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="Lm5PxFgV"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="OakVmdOt"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1710829953; x=1742365953;
+  t=1710829954; x=1742365954;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=WTXpZlGLvu69orlfGdipH5GXMwQecnj3ncOT0UXMt9I=;
-  b=Lm5PxFgV0/CcIcZJgQZmiofhVHXT7iElG/zeIc3UfH40tSBizeonuHyu
-   z+R82Hkqx/I9sXWVnkyoDYDVu3Sq+P3sj0WIZS5BhORph7frVUL/KRXFz
-   4Sccsix4ZcZtW5pAtN4FYyJHEH63gczH47P5dbmrJGMIjz7+FsVTpwsyV
-   3ocZbT1+7/wFo+m8bMqrSzo+1oM7HE8zg55XUENgIMiHd9cGsaffvCfd6
-   mkzY7lPmBcRtQSoS77oxlW5mKAWo4AuVMYJth9VHl7qv5oVwa5iRXk/Kh
-   B0t8FU1lRTpmuqXxJhC09yRYzH2JzapGhPebkiUFayKf2U6gLT//6v8Mz
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="152728482"
+  bh=g/F/uSB80Kmdz2xmcZ9fhA6lsdgQP0M3skp+uddabjw=;
+  b=OakVmdOteelyhTVYj+N8DiKtv96F4lbN+qIvWOEr9mBBuypCcQmBVHLb
+   dWNuJLI8erE9DL2ZCsivQjkvQHaghft1fQ6xk6KI07Mvon2iAxj7OvZhz
+   WN1QJS1bE59M8OcQj8fgddf32CvDfQumeUmYBvIO+LzueDon5NHCboR2B
+   XICC3O7tbiOtnMvRmxpCbG2Z+GN3TSSl7gZNp+ec8hUB7xbeI0E1QGq2E
+   vZi5hokg6lKi5mQKk/2anGpX5sT1gQM0VyEwO2wfVn9ZwHRDO/euwCp7m
+   TFMW77Z3QApnM1KVV2Qa5aytqcJ5Ifm5DOmb5RyasRZbTW6svmLTsGAau
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="152971378"
 X-IronPort-AV: E=Sophos;i="6.07,136,1708354800"; 
-   d="scan'208";a="152728482"
-Received: from unknown (HELO yto-r2.gw.nic.fujitsu.com) ([218.44.52.218])
-  by esa2.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 15:32:30 +0900
-Received: from yto-m3.gw.nic.fujitsu.com (yto-nat-yto-m3.gw.nic.fujitsu.com [192.168.83.66])
-	by yto-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 9AC82C6817;
-	Tue, 19 Mar 2024 15:32:27 +0900 (JST)
+   d="scan'208";a="152971378"
+Received: from unknown (HELO oym-r4.gw.nic.fujitsu.com) ([210.162.30.92])
+  by esa4.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 15:32:24 +0900
+Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
+	by oym-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id F167B141218;
+	Tue, 19 Mar 2024 15:32:21 +0900 (JST)
 Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-	by yto-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id DB6ED2970B;
-	Tue, 19 Mar 2024 15:32:26 +0900 (JST)
+	by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 310D9BF4B8;
+	Tue, 19 Mar 2024 15:32:21 +0900 (JST)
 Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 77CAE20093269;
-	Tue, 19 Mar 2024 15:32:26 +0900 (JST)
+	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id BE4C420093269;
+	Tue, 19 Mar 2024 15:32:20 +0900 (JST)
 Received: from localhost.localdomain (unknown [10.167.226.45])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 0D4411A006E;
-	Tue, 19 Mar 2024 14:32:26 +0800 (CST)
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 4AE611A006D;
+	Tue, 19 Mar 2024 14:32:20 +0800 (CST)
 From: Li Zhijian <lizhijian@fujitsu.com>
 To: linux-kernel@vger.kernel.org
 Cc: Li Zhijian <lizhijian@fujitsu.com>,
 	"James E.J. Bottomley" <jejb@linux.ibm.com>,
 	"Martin K. Petersen" <martin.petersen@oracle.com>,
 	linux-scsi@vger.kernel.org
-Subject: [PATCH v2 18/25] scsi: pmcraid: Convert sprintf() family to sysfs_emit() family
-Date: Tue, 19 Mar 2024 14:31:25 +0800
-Message-Id: <20240319063132.1588443-18-lizhijian@fujitsu.com>
+Subject: [PATCH v2 02/25] scsi: aic94xx: Convert sprintf() family to sysfs_emit() family
+Date: Tue, 19 Mar 2024 14:31:09 +0800
+Message-Id: <20240319063132.1588443-2-lizhijian@fujitsu.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20240319063132.1588443-1-lizhijian@fujitsu.com>
 References: <20240319063132.1588443-1-lizhijian@fujitsu.com>
@@ -69,13 +69,13 @@ X-TM-AS-GCONF: 00
 X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28260.005
 X-TM-AS-User-Approved-Sender: Yes
 X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28260.005
-X-TMASE-Result: 10--14.511600-10.000000
-X-TMASE-MatchedRID: vWLMKRYJCzcbO59FK9BdmJiHtCNYjckMjkDrBOJwwnQ8JmmJxjOaQXVX
+X-TMASE-Result: 10--7.640100-10.000000
+X-TMASE-MatchedRID: pfKaEBrCt3IbO59FK9BdmJiHtCNYjckMjkDrBOJwwnQ8JmmJxjOaQXVX
 	Q3/qdw5yDiqGKKMcNgRhoUIS5GGeEs1HQN/TlJ3ZOIQ9GP2P2u/iwxLjNbuPBWO0yVK/5LmcQiM
-	ingSlKoKMx5HzfQifbPE41045MrHXFDCN/1eC4ASdVNZaI2n6/8E5XPQnBzGXq8KsbROd9VTZ3y
-	a1EhGxQ6HpFHQK2deBojVDzk3DrCl8M8QL/JCA9N9JA2lmQRNUC//1TMV5chNShcWO/83xogYzG
-	YtVtarB/srJ1bjaCKGdqC2fLtk9xB8TzIzimOwPC24oEZ6SpSkj80Za3RRg8BmVY5bgINIVKHlP
-	WL/eVsBinwNZyXFb2Ko6sd/AiC8FRR4hrziDrtc=
+	ingSlKoKMx5HzfQifbPE41045MrHXFDCN/1eC4ASdVNZaI2n6/8E5XPQnBzGXq8KsbROd9VSArq
+	oIZrVn15fzUkBpc0721RVFWxUguUH+0jQufZU6FIDCiwMF64/BEOqYpzM+g1kYiM67YVe6ChhBv
+	WgZlX+84vM1YF6AJbbCCfuIMF6xLSAHAopEd76vphClXDiKKk8nzRrxP+Bp1zE3Xi452DCPieKR
+	5xnjQ+4nnWiTJUlIYg==
 X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
 Per filesystems/sysfs.rst, show() should only use sysfs_emit()
@@ -101,44 +101,54 @@ This is a part of the work "Fix coccicheck device_attr_show warnings"[1]
 Split them per subsystem so that the maintainer can review it easily
 [1] https://lore.kernel.org/lkml/20240116041129.3937800-1-lizhijian@fujitsu.com/
 ---
- drivers/scsi/pmcraid.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/scsi/aic94xx/aic94xx_init.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/scsi/pmcraid.c b/drivers/scsi/pmcraid.c
-index e8bcc3a88732..56376d335b21 100644
---- a/drivers/scsi/pmcraid.c
-+++ b/drivers/scsi/pmcraid.c
-@@ -3538,7 +3538,7 @@ static ssize_t pmcraid_show_log_level(
- 	struct Scsi_Host *shost = class_to_shost(dev);
- 	struct pmcraid_instance *pinstance =
- 		(struct pmcraid_instance *)shost->hostdata;
--	return snprintf(buf, PAGE_SIZE, "%d\n", pinstance->current_log_level);
-+	return sysfs_emit(buf, "%d\n", pinstance->current_log_level);
- }
- 
- /**
-@@ -3599,8 +3599,7 @@ static ssize_t pmcraid_show_drv_version(
- 	char *buf
- )
+diff --git a/drivers/scsi/aic94xx/aic94xx_init.c b/drivers/scsi/aic94xx/aic94xx_init.c
+index 8a3340d8d7ad..39d1617834de 100644
+--- a/drivers/scsi/aic94xx/aic94xx_init.c
++++ b/drivers/scsi/aic94xx/aic94xx_init.c
+@@ -264,8 +264,7 @@ static ssize_t asd_show_dev_rev(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
  {
--	return snprintf(buf, PAGE_SIZE, "version: %s\n",
--			PMCRAID_DRIVER_VERSION);
-+	return sysfs_emit(buf, "version: %s\n", PMCRAID_DRIVER_VERSION);
+ 	struct asd_ha_struct *asd_ha = dev_to_asd_ha(dev);
+-	return snprintf(buf, PAGE_SIZE, "%s\n",
+-			asd_dev_rev[asd_ha->revision_id]);
++	return sysfs_emit(buf, "%s\n", asd_dev_rev[asd_ha->revision_id]);
+ }
+ static DEVICE_ATTR(aic_revision, S_IRUGO, asd_show_dev_rev, NULL);
+ 
+@@ -273,7 +272,7 @@ static ssize_t asd_show_dev_bios_build(struct device *dev,
+ 				       struct device_attribute *attr,char *buf)
+ {
+ 	struct asd_ha_struct *asd_ha = dev_to_asd_ha(dev);
+-	return snprintf(buf, PAGE_SIZE, "%d\n", asd_ha->hw_prof.bios.bld);
++	return sysfs_emit(buf, "%d\n", asd_ha->hw_prof.bios.bld);
+ }
+ static DEVICE_ATTR(bios_build, S_IRUGO, asd_show_dev_bios_build, NULL);
+ 
+@@ -281,7 +280,7 @@ static ssize_t asd_show_dev_pcba_sn(struct device *dev,
+ 				    struct device_attribute *attr, char *buf)
+ {
+ 	struct asd_ha_struct *asd_ha = dev_to_asd_ha(dev);
+-	return snprintf(buf, PAGE_SIZE, "%s\n", asd_ha->hw_prof.pcba_sn);
++	return sysfs_emit(buf, "%s\n", asd_ha->hw_prof.pcba_sn);
+ }
+ static DEVICE_ATTR(pcba_sn, S_IRUGO, asd_show_dev_pcba_sn, NULL);
+ 
+@@ -452,9 +451,9 @@ static ssize_t asd_show_update_bios(struct device *dev,
+ 	if (asd_ha->bios_status != FLASH_IN_PROGRESS)
+ 		asd_ha->bios_status = FLASH_OK;
+ 
+-	return snprintf(buf, PAGE_SIZE, "status=%x %s\n",
+-			flash_error_table[i].err_code,
+-			flash_error_table[i].reason);
++	return sysfs_emit(buf, "status=%x %s\n",
++			  flash_error_table[i].err_code,
++			  flash_error_table[i].reason);
  }
  
- static struct device_attribute pmcraid_driver_version_attr = {
-@@ -3632,9 +3631,8 @@ static ssize_t pmcraid_show_adapter_id(
- 	u32 adapter_id = pci_dev_id(pinstance->pdev);
- 	u32 aen_group = pmcraid_event_family.id;
- 
--	return snprintf(buf, PAGE_SIZE,
--			"adapter id: %d\nminor: %d\naen group: %d\n",
--			adapter_id, MINOR(pinstance->cdev.dev), aen_group);
-+	return sysfs_emit(buf, "adapter id: %d\nminor: %d\naen group: %d\n",
-+			  adapter_id, MINOR(pinstance->cdev.dev), aen_group);
- }
- 
- static struct device_attribute pmcraid_adapter_id_attr = {
+ static DEVICE_ATTR(update_bios, S_IRUGO|S_IWUSR,
 -- 
 2.29.2
 
