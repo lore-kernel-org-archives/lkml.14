@@ -1,285 +1,149 @@
-Received: from esa7.hc1455-7.c3s2.iphmx.com (esa7.hc1455-7.c3s2.iphmx.com [139.138.61.252])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD8851C45;
-	Tue, 19 Mar 2024 06:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.61.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA45D53E3B;
+	Tue, 19 Mar 2024 06:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710830020; cv=none; b=TiO3DhjcAfCNhsgrP6JoNIQvgLIJo5j3d8QuCci3XvmiUfzxlj7CO4b+Lak+yUokvbA+IWnKMHbqLgiBfFwvYflli8Sl4q+awtecnwKPWObbF4UiVdPg7mIk0KrLJKd3XY0P/1tAEH60wDDv+GXtlqkKZ3sKL79Gv8OnWcUozvs=
+	t=1710830073; cv=none; b=iVBR0/IQp46w4aDtAH2qQil/sETLmn989C0bhNruqLK0tykAL3lmth4f3pUyaEUfCmEnvc1KCpob3OTBcO5G5k8fdmRNW4N6ujmOpdl5hvLt6LPJj+Nd/1f51oEQKXaslL3JdcSauD8IR4Aq8DM8xg17eqy0Wr6rnznn+O5AVZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710830020; c=relaxed/simple;
-	bh=4PeghrYAkJkKJ07klpjA0g5ciCp0/essXeq/WQpnC58=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=reO4QZOiK9pD+ckoa/EEDDvCStpESqFLTjQC2MyBN4medMRB/rAX0bvuOzEu4uVtCv0ZMtLcZwphwgv7jTPob2MMagodEKCONsv9MvQoZ3esEb5meCQUuJzgQtDdttppmjRNVZT61BUpWc2ee3J+O43MzodTYjh5tP2sUI0M7BE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=oDjzxLac; arc=none smtp.client-ip=139.138.61.252
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1710830073; c=relaxed/simple;
+	bh=pRf8TvoYF8JNJ5Thdif3hhC2RUUwmwcP7kipJbjOdv8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XeDJ/3MB43eRNwjGYgPmcItlt8H52PI87aB+7Im7Tel4oqctcFB6yc/dYbRfI29HXPqofkgBS+Mz3ncq6fYtKhEcUKTV1LG7+hpC9ld03g4VAyIXB1mBYEUuZnFFg3+yYgsQWTJYx0AIY/mzxRe0RRAF4RZQmDp4N7nvAJ1rw48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XrDxmQ5J; arc=none smtp.client-ip=209.85.167.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="oDjzxLac"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1710830018; x=1742366018;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=4PeghrYAkJkKJ07klpjA0g5ciCp0/essXeq/WQpnC58=;
-  b=oDjzxLacKTYDUDrLwCkZ5JJRP3Xx3juq3pcZ1qUp8CeLt2uJlCaWOGnK
-   GF1bx0UTfJzsvs/A6no5y8NTPj7SqIpB+2BQ08qpbeArM51mpT8foFal8
-   uHE15JGz7+r/RJ1ncaikm5eiiD9C+IfufrBHwIa+pzauNYfJDFOd/GQKl
-   L88UO/ohNFWPXTF/c9kYGs7k43MUOCbbbsU+v7SY+TGdhu9yxDuPZ+V0y
-   6aHcDlohtYHcR6lZLh55ONWCdU2tedYb9mzaPHPqophxCsYyaPec/5PG3
-   ylac2ytLZsC3d4SA826hqsHo3t/mauU+bylOzfaZCacV3xPsoRowzhAIW
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="131490901"
-X-IronPort-AV: E=Sophos;i="6.07,136,1708354800"; 
-   d="scan'208";a="131490901"
-Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
-  by esa7.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 15:32:25 +0900
-Received: from yto-m3.gw.nic.fujitsu.com (yto-nat-yto-m3.gw.nic.fujitsu.com [192.168.83.66])
-	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id AE48AD9F00;
-	Tue, 19 Mar 2024 15:32:23 +0900 (JST)
-Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
-	by yto-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id E8892F933;
-	Tue, 19 Mar 2024 15:32:22 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id 75257E2B0A;
-	Tue, 19 Mar 2024 15:32:20 +0900 (JST)
-Received: from localhost.localdomain (unknown [10.167.226.45])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id BDA171A006B;
-	Tue, 19 Mar 2024 14:32:19 +0800 (CST)
-From: Li Zhijian <lizhijian@fujitsu.com>
-To: linux-kernel@vger.kernel.org
-Cc: Li Zhijian <lizhijian@fujitsu.com>,
-	Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org
-Subject: [PATCH v2 01/25] scsi: aacraid: Convert sprintf() family to sysfs_emit() family
-Date: Tue, 19 Mar 2024 14:31:08 +0800
-Message-Id: <20240319063132.1588443-1-lizhijian@fujitsu.com>
-X-Mailer: git-send-email 2.31.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XrDxmQ5J"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3c38d76384cso707240b6e.2;
+        Mon, 18 Mar 2024 23:34:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710830070; x=1711434870; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6i7aoJ1vHA+2Toojra4EO+vaFmcLOGaxt4dt9iW58AU=;
+        b=XrDxmQ5JYqZJ6izWvfhHfeyb69qoAtDh+4qSL7AsyAcgOFJkaUWvwQLaPZDTORHQIF
+         MiLf3swp9x4gRM9tX7uhHA9YFsanyfkfxnNBy4GQTcOAQmZrtCIGpxrnr784lt5h5nPz
+         X7NrW852brjeqNBqJaqdguCH7NjH4vP5Oa5TQhMNUAJIaD9lNchD5rzHvxWkjyzCafIU
+         MbkOnSKMZlqQPkNUqKDAuUglsz4/FpgqJjPfg9ooRkBmHW1a0HZ2li1Q7R29J7blre7m
+         l43ef1aiekLA80wW8HeBCay5opa4z4qAtth46J0sxluSYI89bsKjqva+ISuTO2f+vJ0b
+         eq5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710830070; x=1711434870;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6i7aoJ1vHA+2Toojra4EO+vaFmcLOGaxt4dt9iW58AU=;
+        b=PVPKjKGCGH7T32i3kV4Csk5dsCJAqYdwWLIC8BHUYma8SA7HIjZIOes8ap4Fo01QYz
+         PGSNSA8Uh9W6Pjp6qW2jdCa5L4kOUWDrYT0XF/vmrhG8/FRsR+3PpNf9LtxSQX7I4tRC
+         HcLccX9zi4DGJz6ReQKhxkeeQOzb0CYgWcqelEMN2DavpRljC/+ez0pm2NiFJ+vvDI0x
+         3fNblLgVSiTIGvg8O+auzUHGMXNfV78A53NzfkRELNIHn+DM7SunMRWKgs9s4Fmd4lJJ
+         V6iIoN1tElH8P38FgcJb8uvaZf1Ip9WqyS27XfI2Anwf8tlfTNkGrpHpHpQv5sYFJx0R
+         lzPg==
+X-Forwarded-Encrypted: i=1; AJvYcCWJdzsZPJCs4c2x1DSogLkpiT5r7qhuYpM6NglO8MSGUmDoT/xjAlu/rR9tyi3jTN2TbiC3yTfVwojPXYn+wC2DJCqG0De+Ch6mxWiLsy4KRWTFXB7k96AVFfP1qqDyTZsiRfDp4MNqyo/p/uvdTtPg8OlmMAUKRzDdYbj4AF+5o0H5FQ==
+X-Gm-Message-State: AOJu0YwhImvD8/8vVYm3is8BWkio2bE+u/vpGJCaJ05RCxf1suC3yTJT
+	ehu/o59eoFSmZe186FDFmCpdIYu+0zA0bh5iRr9w+M///GkuKr7Q
+X-Google-Smtp-Source: AGHT+IGuQNKk/56j6/1OgRfV+KuiHjrbg9qcyLSSf4NVGqlYs9w0eVzrJxbIdhfaTJLPhN/H3r/twA==
+X-Received: by 2002:a05:6871:3403:b0:222:649a:a932 with SMTP id nh3-20020a056871340300b00222649aa932mr14307687oac.7.1710830069957;
+        Mon, 18 Mar 2024 23:34:29 -0700 (PDT)
+Received: from [172.16.116.58] ([103.15.228.94])
+        by smtp.gmail.com with ESMTPSA id p13-20020a62ab0d000000b006e53cc789c3sm8958908pff.107.2024.03.18.23.34.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Mar 2024 23:34:29 -0700 (PDT)
+Message-ID: <3ed8c487-544b-4d72-b1e0-edb5baa8119b@gmail.com>
+Date: Tue, 19 Mar 2024 12:04:11 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28260.005
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28260.005
-X-TMASE-Result: 10--12.901200-10.000000
-X-TMASE-MatchedRID: FY3Fgmk8TgkbO59FK9BdmJiHtCNYjckMjkDrBOJwwnQ8JmmJxjOaQXVX
-	Q3/qdw5yDiqGKKMcNgRhoUIS5GGeEs1HQN/TlJ3ZOIQ9GP2P2u8oJgWvWZKR0GluHEj++VqUhQ6
-	YZNvnIb+Ekt/L8HtAJ785xNkZcrN2ePWEUnWb98FBDn6Fjq77jvioIsi7Sa0gwLkNMQzGl5B+Kr
-	WCPbERPyqq0O5S3DJ8eQdJcJ6RxJSmg8dBfLCnV2/6CCblACLhJScvOTX4jHN3de2OoBqgwiRM9
-	pS/s/NILp20O7VwpBaIqlZh0Y0wYRLcDqfEqfizv0DcGXX8NxWnRzlrI6bygz64b06vmARfGEG9
-	aBmVf7zi8zVgXoAltsIJ+4gwXrEtIAcCikR3vq/7nw37K75lFhfMyQcrQKrzYC7kGoI7IiaV737
-	3dnt5UgPNaS1D9v78
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/5] dts: ti: k3-am625-beagleplay: Add mikroBUS
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ open list <linux-kernel@vger.kernel.org>
+Cc: jkridner@beagleboard.org, robertcnelson@beagleboard.org,
+ lorforlinux@beagleboard.org, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
+ <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Vaishnav M A <vaishnav.a@ti.com>, Mark Brown <broonie@kernel.org>,
+ Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>,
+ "moderated list:ARM/TEXAS INSTRUMENTS K3 ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+ "moderated list:GREYBUS SUBSYSTEM" <greybus-dev@lists.linaro.org>,
+ Vaishnav M A <vaishnav@beagleboard.org>
+References: <20240317193714.403132-1-ayushdevel1325@gmail.com>
+ <20240317193714.403132-6-ayushdevel1325@gmail.com>
+ <889fb174-076c-44d1-9c6f-c3b967cd01ea@linaro.org>
+From: Ayush Singh <ayushdevel1325@gmail.com>
+In-Reply-To: <889fb174-076c-44d1-9c6f-c3b967cd01ea@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Per filesystems/sysfs.rst, show() should only use sysfs_emit()
-or sysfs_emit_at() when formatting the value to be returned to user space.
 
-coccinelle complains that there are still a couple of functions that use
-snprintf(). Convert them to sysfs_emit().
+On 3/19/24 11:29, Krzysztof Kozlowski wrote:
+> On 17/03/2024 20:37, Ayush Singh wrote:
+>> DONOTMERGE
+> Why? Explain then the purpose of this patch.
 
-sprintf() and scnprintf() will be converted as well if they have.
+Well, it was suggested to have DONOTMERGE by Vaishnav in the patches 
+until dt bindings have been approved, since this patch touches different 
+subsystems. Here is the full context from v3:
 
-Generally, this patch is generated by
-make coccicheck M=<path/to/file> MODE=patch \
-COCCI=scripts/coccinelle/api/device_attr_show.cocci
+> The reasoning behind this is that these patches go in to separate  maintainer trees and without the bindings merged first the device tree changes cannot be validated, thus it is a usual practice to get the bindings and driver merged first and the device tree changes to go in the next cycle. Another alternative is you can point to your fork with  all the changes together.
 
-No functional change intended
+>> this patch depends on patch 1
+> How? I don't see any dependency.
 
-CC: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
-CC: "James E.J. Bottomley" <jejb@linux.ibm.com>
-CC: "Martin K. Petersen" <martin.petersen@oracle.com>
-CC: linux-scsi@vger.kernel.org
-Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
----
-This is a part of the work "Fix coccicheck device_attr_show warnings"[1]
-Split them per subsystem so that the maintainer can review it easily
-[1] https://lore.kernel.org/lkml/20240116041129.3937800-1-lizhijian@fujitsu.com/
+I think it is not allowed to have code in device tree unless a 
+corresponding dt-binding exists for the device. And thus every time the 
+dt-binding changes, this patch also needs to change.So I thought it is 
+dependent on patch 1.
 
-Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
----
- drivers/scsi/aacraid/linit.c | 78 ++++++++++++++++--------------------
- 1 file changed, 35 insertions(+), 43 deletions(-)
+>> Add mikroBUS connector support for Beagleplay.
+>>
+>> Co-developed-by: Vaishnav M A <vaishnav@beagleboard.org>
+>> Signed-off-by: Vaishnav M A <vaishnav@beagleboard.org>
+>> Signed-off-by: Ayush Singh <ayushdevel1325@gmail.com>
+>> ---
+>>   .../arm64/boot/dts/ti/k3-am625-beagleplay.dts | 80 +++++++++++++++++--
+>>   1 file changed, 72 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+>> index a34e0df2ab86..e1dce1b80153 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+>> +++ b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+>> @@ -29,6 +29,7 @@ aliases {
+>>   		i2c3 = &main_i2c3;
+>>   		i2c4 = &wkup_i2c0;
+>>   		i2c5 = &mcu_i2c0;
+>> +		mikrobus0 = &mikrobus0;
+>>   		mmc0 = &sdhci0;
+>>   		mmc1 = &sdhci1;
+>>   		mmc2 = &sdhci2;
+>> @@ -230,6 +231,38 @@ simple-audio-card,codec {
+>>   		};
+>>   	};
+>>   
+>
+> Best regards,
+> Krzysztof
 
-diff --git a/drivers/scsi/aacraid/linit.c b/drivers/scsi/aacraid/linit.c
-index 68f4dbcfff49..a9c7e3e0ca33 100644
---- a/drivers/scsi/aacraid/linit.c
-+++ b/drivers/scsi/aacraid/linit.c
-@@ -558,11 +558,11 @@ static ssize_t aac_show_raid_level(struct device *dev, struct device_attribute *
- 	struct scsi_device *sdev = to_scsi_device(dev);
- 	struct aac_dev *aac = (struct aac_dev *)(sdev->host->hostdata);
- 	if (sdev_channel(sdev) != CONTAINER_CHANNEL)
--		return snprintf(buf, PAGE_SIZE, sdev->no_uld_attach
--		  ? "Hidden\n" :
-+		return sysfs_emit(buf, sdev->no_uld_attach ? "Hidden\n" :
- 		  ((aac->jbod && (sdev->type == TYPE_DISK)) ? "JBOD\n" : ""));
--	return snprintf(buf, PAGE_SIZE, "%s\n",
--	  get_container_type(aac->fsa_dev[sdev_id(sdev)].type));
-+
-+	return sysfs_emit(buf, "%s\n",
-+			  get_container_type(aac->fsa_dev[sdev_id(sdev)].type));
- }
- 
- static struct device_attribute aac_raid_level_attr = {
-@@ -585,12 +585,12 @@ static ssize_t aac_show_unique_id(struct device *dev,
- 	if (sdev_channel(sdev) == CONTAINER_CHANNEL)
- 		memcpy(sn, aac->fsa_dev[sdev_id(sdev)].identifier, sizeof(sn));
- 
--	return snprintf(buf, 16 * 2 + 2,
--		"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X\n",
--		sn[0], sn[1], sn[2], sn[3],
--		sn[4], sn[5], sn[6], sn[7],
--		sn[8], sn[9], sn[10], sn[11],
--		sn[12], sn[13], sn[14], sn[15]);
-+	return sysfs_emit(buf,
-+			  "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X\n",
-+			  sn[0], sn[1], sn[2], sn[3],
-+			  sn[4], sn[5], sn[6], sn[7],
-+			  sn[8], sn[9], sn[10], sn[11],
-+			  sn[12], sn[13], sn[14], sn[15]);
- }
- 
- static struct device_attribute aac_unique_id_attr = {
-@@ -1195,10 +1195,9 @@ static ssize_t aac_show_model(struct device *device,
- 			++cp;
- 		while (*cp == ' ')
- 			++cp;
--		len = snprintf(buf, PAGE_SIZE, "%s\n", cp);
-+		len = sysfs_emit(buf, "%s\n", cp);
- 	} else
--		len = snprintf(buf, PAGE_SIZE, "%s\n",
--		  aac_drivers[dev->cardtype].model);
-+		len = sysfs_emit(buf, "%s\n", aac_drivers[dev->cardtype].model);
- 	return len;
- }
- 
-@@ -1214,12 +1213,11 @@ static ssize_t aac_show_vendor(struct device *device,
- 		char *cp = sup_adap_info->adapter_type_text;
- 		while (*cp && *cp != ' ')
- 			++cp;
--		len = snprintf(buf, PAGE_SIZE, "%.*s\n",
--			(int)(cp - (char *)sup_adap_info->adapter_type_text),
--					sup_adap_info->adapter_type_text);
-+		len = sysfs_emit(buf, "%.*s\n",
-+			 (int)(cp - (char *)sup_adap_info->adapter_type_text),
-+			 sup_adap_info->adapter_type_text);
- 	} else
--		len = snprintf(buf, PAGE_SIZE, "%s\n",
--			aac_drivers[dev->cardtype].vname);
-+		len = sysfs_emit(buf, "%s\n", aac_drivers[dev->cardtype].vname);
- 	return len;
- }
- 
-@@ -1230,23 +1228,19 @@ static ssize_t aac_show_flags(struct device *cdev,
- 	struct aac_dev *dev = (struct aac_dev*)class_to_shost(cdev)->hostdata;
- 
- 	if (nblank(dprintk(x)))
--		len = snprintf(buf, PAGE_SIZE, "dprintk\n");
-+		len = sysfs_emit(buf, "dprintk\n");
- #ifdef AAC_DETAILED_STATUS_INFO
--	len += scnprintf(buf + len, PAGE_SIZE - len,
--			 "AAC_DETAILED_STATUS_INFO\n");
-+	len += sysfs_emit_at(buf, len, "AAC_DETAILED_STATUS_INFO\n");
- #endif
- 	if (dev->raw_io_interface && dev->raw_io_64)
--		len += scnprintf(buf + len, PAGE_SIZE - len,
--				 "SAI_READ_CAPACITY_16\n");
-+		len += sysfs_emit_at(buf, len, "SAI_READ_CAPACITY_16\n");
- 	if (dev->jbod)
--		len += scnprintf(buf + len, PAGE_SIZE - len,
--				 "SUPPORTED_JBOD\n");
-+		len += sysfs_emit_at(buf, len, "SUPPORTED_JBOD\n");
- 	if (dev->supplement_adapter_info.supported_options2 &
- 		AAC_OPTION_POWER_MANAGEMENT)
--		len += scnprintf(buf + len, PAGE_SIZE - len,
--				 "SUPPORTED_POWER_MANAGEMENT\n");
-+		len += sysfs_emit_at(buf, len, "SUPPORTED_POWER_MANAGEMENT\n");
- 	if (dev->msi)
--		len += scnprintf(buf + len, PAGE_SIZE - len, "PCI_HAS_MSI\n");
-+		len += sysfs_emit_at(buf, len, "PCI_HAS_MSI\n");
- 	return len;
- }
- 
-@@ -1258,9 +1252,9 @@ static ssize_t aac_show_kernel_version(struct device *device,
- 	int len, tmp;
- 
- 	tmp = le32_to_cpu(dev->adapter_info.kernelrev);
--	len = snprintf(buf, PAGE_SIZE, "%d.%d-%d[%d]\n",
--	  tmp >> 24, (tmp >> 16) & 0xff, tmp & 0xff,
--	  le32_to_cpu(dev->adapter_info.kernelbuild));
-+	len = sysfs_emit(buf, "%d.%d-%d[%d]\n",
-+			 tmp >> 24, (tmp >> 16) & 0xff, tmp & 0xff,
-+			 le32_to_cpu(dev->adapter_info.kernelbuild));
- 	return len;
- }
- 
-@@ -1272,9 +1266,9 @@ static ssize_t aac_show_monitor_version(struct device *device,
- 	int len, tmp;
- 
- 	tmp = le32_to_cpu(dev->adapter_info.monitorrev);
--	len = snprintf(buf, PAGE_SIZE, "%d.%d-%d[%d]\n",
--	  tmp >> 24, (tmp >> 16) & 0xff, tmp & 0xff,
--	  le32_to_cpu(dev->adapter_info.monitorbuild));
-+	len = sysfs_emit(buf, "%d.%d-%d[%d]\n",
-+			 tmp >> 24, (tmp >> 16) & 0xff, tmp & 0xff,
-+			 le32_to_cpu(dev->adapter_info.monitorbuild));
- 	return len;
- }
- 
-@@ -1286,9 +1280,9 @@ static ssize_t aac_show_bios_version(struct device *device,
- 	int len, tmp;
- 
- 	tmp = le32_to_cpu(dev->adapter_info.biosrev);
--	len = snprintf(buf, PAGE_SIZE, "%d.%d-%d[%d]\n",
--	  tmp >> 24, (tmp >> 16) & 0xff, tmp & 0xff,
--	  le32_to_cpu(dev->adapter_info.biosbuild));
-+	len = sysfs_emit(buf, "%d.%d-%d[%d]\n",
-+			 tmp >> 24, (tmp >> 16) & 0xff, tmp & 0xff,
-+			 le32_to_cpu(dev->adapter_info.biosbuild));
- 	return len;
- }
- 
-@@ -1296,7 +1290,7 @@ static ssize_t aac_show_driver_version(struct device *device,
- 					struct device_attribute *attr,
- 					char *buf)
- {
--	return snprintf(buf, PAGE_SIZE, "%s\n", aac_driver_version);
-+	return sysfs_emit(buf, "%s\n", aac_driver_version);
- }
- 
- static ssize_t aac_show_serial_number(struct device *device,
-@@ -1322,15 +1316,13 @@ static ssize_t aac_show_serial_number(struct device *device,
- static ssize_t aac_show_max_channel(struct device *device,
- 				    struct device_attribute *attr, char *buf)
- {
--	return snprintf(buf, PAGE_SIZE, "%d\n",
--	  class_to_shost(device)->max_channel);
-+	return sysfs_emit(buf, "%d\n", class_to_shost(device)->max_channel);
- }
- 
- static ssize_t aac_show_max_id(struct device *device,
- 			       struct device_attribute *attr, char *buf)
- {
--	return snprintf(buf, PAGE_SIZE, "%d\n",
--	  class_to_shost(device)->max_id);
-+	return sysfs_emit(buf, "%d\n", class_to_shost(device)->max_id);
- }
- 
- static ssize_t aac_store_reset_adapter(struct device *device,
-@@ -1360,7 +1352,7 @@ static ssize_t aac_show_reset_adapter(struct device *device,
- 	tmp = aac_adapter_check_health(dev);
- 	if ((tmp == 0) && dev->in_reset)
- 		tmp = -EBUSY;
--	len = snprintf(buf, PAGE_SIZE, "0x%x\n", tmp);
-+	len = sysfs_emit(buf, "0x%x\n", tmp);
- 	return len;
- }
- 
--- 
-2.29.2
+
+Link: 
+https://lore.kernel.org/lkml/CALudOK5v_uCUffxHGKS-jA-DKLNV7xwmKkxJwjHaMWWgDdPDqA@mail.gmail.com/ 
+Patch v3
+
+
+Ayush Singh
 
