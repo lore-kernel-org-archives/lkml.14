@@ -1,93 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD26210E6;
-	Tue, 19 Mar 2024 17:10:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492E8179A6
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 17:11:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710868254; cv=none; b=IAs4A6uVKu+bMwecvNMvsYL40SkDp0379ZqFghorafhJpETE5jfx6X//kCVHt6UQSjMallW5rmtrI48AKLkkPNDmp3XSBdpzumyPOTIniyF9Z7GbKyTrIu3+GWlZlZt3fPMEtVrr1oZpwK1lKt8+Zc05aoAsb/c9sUxBODKquPI=
+	t=1710868272; cv=none; b=s2/3g5I5+UHpcGImlCd9ouMSDIevBTPDZVMGyFWNIrrL1kP/4rhP0Ueiu5txHbJemzJsWPN2utg3e06wKLfTlQNDk3SGNQkBo4WMeIxt5Enfj4FJUBy6QG6hghWJHodgPPN9A0M2ifJjfGmwwqsTD8XJEanY1qI/pHG909Nw7dA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710868254; c=relaxed/simple;
-	bh=iE7hgBUgh9pLwag2DUIbFk0wKbpQx/A8AbEUFmM4glc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gxMrnh3wNTSf/ariHHMZERbbuAY+RVF2h3WUqILwTFUF9tkdgwu38tBa343ChI6Mf/D10eSM5b19es6qzF4phTQ/Y9oBmDTG14HXS2uCVvLY1NR7KJPrHLfZVHd8X5fNrGY+yfvb1ni2wYfIdvoJ7HS7E+J0soQcx/Wxf1dYgAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NObJJsxo; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NObJJsxo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8521AC433B2;
-	Tue, 19 Mar 2024 17:10:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710868254;
-	bh=iE7hgBUgh9pLwag2DUIbFk0wKbpQx/A8AbEUFmM4glc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NObJJsxosq3j1km2UrMN6rdRzfL829XRC58cKfSuiqCNrbknyROut7IPyYYQlY9SD
-	 YLyMw8EdLuid+yu/Ho1JWmzWl56XFbYHWF6xljmzWXgwK0hZnN0Eig/OyEL/pZqVte
-	 h9cikC6PWtM/3TFVz1CMRXpwBdBF3kzQyChCon2Dbgq4I7ju6HD8ZNPQytBstIy2PT
-	 t+sngo7ZhbpQae+iir6byQuIIXddOXIaH452rOrYhxD++L9eQJqOy9SWfuO2gD2/Yz
-	 JlnsfY+mFnJnefozuBKAP+BOw0sC5yiqZ9KnO4RTy70tDnhEZo2FuZC1+JRw+psimN
-	 9JcPdpb89kv7g==
-Date: Tue, 19 Mar 2024 17:10:49 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Julien Stephan <jstephan@baylibre.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	David Lechner <dlechner@baylibre.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v5 3/7] dt-bindings: iio: adc: ad7380: add
- pseudo-differential parts
-Message-ID: <20240319-clothes-resisting-1238980300e1@spud>
-References: <20240319-adding-new-ad738x-driver-v5-0-ce7df004ceb3@baylibre.com>
- <20240319-adding-new-ad738x-driver-v5-3-ce7df004ceb3@baylibre.com>
+	s=arc-20240116; t=1710868272; c=relaxed/simple;
+	bh=ebwOVxoBOs8lCcSplls0CzG67Wju8dHmF6pjC8vwD5U=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RBKMm7hVoLXYiDbZNBAaICwGVpqAgWCsxbn9mlW5XzixQJjqKL1eKVdJB5OgMM5RUqdRCdMBuNKaCfseZnduYpg/tna3dmU7P2K4S1z6CjoHZ0hpRRnmN+3vlPT99Uxiz7Wku3xCVDHrZzSbwDcaOjo8Zz6udPWVmKPzbVq7lUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AD7BC433C7;
+	Tue, 19 Mar 2024 17:11:10 +0000 (UTC)
+Date: Tue, 19 Mar 2024 13:13:33 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Alison Schofield <alison.schofield@intel.com>, Beau Belgrave
+ <beaub@linux.microsoft.com>, Huang Yiwei <quic_hyiwei@quicinc.com>, John
+ Garry <john.g.garry@oracle.com>, Randy Dunlap <rdunlap@infradead.org>,
+ Thorsten Blum <thorsten.blum@toblux.com>, Vincent Donnefort
+ <vdonnefort@google.com>, linke li <lilinke99@qq.com>
+Subject: Re: [GIT PULL v2] tracing: Updates for v6.9
+Message-ID: <20240319131333.504c93fc@gandalf.local.home>
+In-Reply-To: <20240319130653.0cfdaf6e@gandalf.local.home>
+References: <20240318113053.7f87ce7f@gandalf.local.home>
+	<CAHk-=wjxX16kWd=uxG5wzqt=aXoYDf1BgWOKk+qVmAO0zh7sjA@mail.gmail.com>
+	<20240319130653.0cfdaf6e@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="AAHZqaSZHdYHsTHM"
-Content-Disposition: inline
-In-Reply-To: <20240319-adding-new-ad738x-driver-v5-3-ce7df004ceb3@baylibre.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Tue, 19 Mar 2024 13:06:53 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
---AAHZqaSZHdYHsTHM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> This is in the fast path (where the trace event happens), but I can make it
+> always do strcmp(), even though it will slow down what is being recorded,
+> as I plan on removing the parameter in the next merge window anyway.
 
-On Tue, Mar 19, 2024 at 11:11:24AM +0100, Julien Stephan wrote:
-> From: David Lechner <dlechner@baylibre.com>
->=20
-> Adding AD7383 and AD7384 compatible parts that are pseudo-differential.
->=20
-> Pseudo-differential require common mode voltage supplies, so add them
-> conditionally
->=20
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> Signed-off-by: Julien Stephan <jstephan@baylibre.com>
+I'll change it to this:
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+#define __assign_str(dst, src)						\
+	do {								\
+		char *__str__ = __get_str(dst);				\
+		int __len__ = __get_dynamic_array_len(dst) - 1;		\
+		WARN_ON_ONCE(!src != !__data_offsets.dst##_ptr_);	\
+		WARN_ON_ONCE(src && strcmp((src), __data_offsets.dst##_ptr_)); \
+		memcpy(__str__, __data_offsets.dst##_ptr_ ? :		\
+		       EVENT_NULL_STR, __len__);			\
+		__str__[__len__] = '\0';				\
+	} while (0)
 
-Thanks,
-Conor.
+The first WARN_ON() will report the bug if src is not NULL and the pointer
+is even though the strcmp() will likely crash in that case. But that's a
+bug if that happens anyway.
 
---AAHZqaSZHdYHsTHM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZfnHGQAKCRB4tDGHoIJi
-0vACAP9iDMvhw9YrBRGMQEe5Lde7Eerkrn7w61VRAmvFtLtY4AEA2zYUtehEv4EC
-rIsHRfp4TuYdHPxxvm/2imbwxMb8ogE=
-=yaS1
------END PGP SIGNATURE-----
-
---AAHZqaSZHdYHsTHM--
+-- Steve
