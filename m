@@ -1,201 +1,173 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0362B9BA;
-	Tue, 19 Mar 2024 17:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B19282F1;
+	Tue, 19 Mar 2024 17:40:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710870010; cv=none; b=Hm/zE/4y/8YoApzYhbA/pchQmIjra1wtdTLb4Th3ICKywTHt7UVxlXx6I1tZZh7xPuQj/IdTekz4URBeRqBBoeQlce4mPiaQoFqAqfR6x7bqPhy/wyrKqWU/hDBie6Z+vYAfFupHSI8ULSuhcFqwgwPGYkx+WHGP0R3RO7oRvIU=
+	t=1710870020; cv=none; b=Ur6gu2NrWKkIqzNQG9tcxpcB6gmg3hO5DHxJ0wSjZg9d19qOd09L03oGHFQAmgHqhhdQDgTmcgJ4cmzAC3bXjogjEJX0BSsOk4YkdYzGMP4ODfZwYsVuugLSeCi1XFewpia3OANa+/40jRJMXcOHmELAKJ3B0fYffOuh32QgrIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710870010; c=relaxed/simple;
-	bh=MhtixsmRO9wFMNPa7fZ+A1C63+g4Vno5+EgJASe3E04=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vq1kPDlX93B65XdY1DrOBvjICyTOyw6USZFtKqhdwmSYAvdB0J6W0riBGTLmQ+kg+oPg749Vy4FGfinckkQY29BalsA4u4pPvx+j1OxI//YuI8He5rgfrxla+w1re5vFgH4eZJaIw68hBkLmhL8U+Wkfx3YvjOMC42KTyEKVCWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-29de4e12d12so4147328a91.3;
-        Tue, 19 Mar 2024 10:40:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710870009; x=1711474809;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Wh275OKIsAYQ5o+GHxL9VNQG4dc3doJhtyP2ubPY/Z8=;
-        b=PlwWOiS0hu8V9MsEQZU6ID8Ew/CV0zr8FRgkiumAPMQFTdNQ4QG7JaPGf7EjxB8SmB
-         Xj+NPes5YR72SGsmBQonFO3HpwaJe9tiZuR/jTcBPiFL33oGYQUyNnFDcsh5JQbfgri3
-         V++96vKi2rU6HPIWOKiP5GzT6okDy4M0q+2UwXdmb/JMmwE71wdTsY107CDfhBeWbqRh
-         llDLrFWrxRAcJQTR/Dt1idZXTm3EAi1VBC3ZmMsS3r7CfBuFj4NDihVj7oWJVKcjDhaI
-         mIl5UEmRqQVr52dEmxmxl/XaMTf9NG+9iDABRr2gBfqBWqZzTHlYmT/bcj+elZWCsBT4
-         DdlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV8gggwmTdcVGzSPLWbFeg40KW06TdEenyoMAzHpFor1hs3eg8sMRQlTor4Acp5yFa9F3WcgfMia9QTqCzhmFDaqIK8wW40LhUYeDQ7fyGTskH1ViJ0o69D5P/H1hwq99JM2440kjEu05iaP2+7tjBYIi5mFmu+C7bb0stIAJCwQuLo59MYDqwVAsrXwgHkKy8kQBpc2i4Hy/DHWGydNeSyXDkxifJyFNUVSDxNrdHN9G9meg==
-X-Gm-Message-State: AOJu0Yyq4iOrAzIG8lygF8SlRX77mRTFrilFIhnTfPokLgmWnOiH5sVC
-	PTqbGMaF+neur46OItjvGsbAn7Hjl/TGGUaH4viM8W9RxQXRnSulnthJKk8IMYY8QOfs0EI5ugA
-	1lxbJFlOM5x75uxbpFUlDdo7fEyRsNw7f
-X-Google-Smtp-Source: AGHT+IFiRXVc5OoJ0hTZM0ANlRt2pYfdwl7srRGMkaCNCC9FY2P/oXFOO8VZ2L36SCVsBHcHH7PesVORwZ7PyNWqqVI=
-X-Received: by 2002:a17:90b:788:b0:29c:844:a91 with SMTP id
- l8-20020a17090b078800b0029c08440a91mr11532418pjz.48.1710870008555; Tue, 19
- Mar 2024 10:40:08 -0700 (PDT)
+	s=arc-20240116; t=1710870020; c=relaxed/simple;
+	bh=PXmc3xm8yJuDKeUvCkuWoKuZ3eFrtghrllkI4BT/VtE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rAkJJOGf5km9kvkjjbI/PEFkj2VK1xIktYbKRTL5qzcolGLMCVn/JXu0xQLC5WZqBUqVqhYHeJWwtiZoZ4Jy/LrYNokjLhExZ+VQfn9rjL3hXgKLKpsa7X1ILmemjF4oJpUEDTKDbN8OyHbjKkqRUOXNxoltT/IBsOWm3TtDyNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Z2iuhMlu; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Z2iuhMlu"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42JHGrSr016655;
+	Tue, 19 Mar 2024 17:40:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=IW03d6U
+	f3DPQ9Z3IECrWzmryivfQS8a63fgm/D5fmX0=; b=Z2iuhMlukNYAC4CdSoX6XId
+	x0e9RIoAlABYut7pavUP/K43dH9pQlbhZu5Q8v6fiV+kPcbMP8vDGDtPHTev6xBC
+	EdxJeJ908fPEONzoExo+HLcV5b0/dpbysLdq5ITED9PfiSQDw7vHrow+TtmtpiTP
+	Pt27NvwtzJVREyPONVgHhvSwgMYnIeUTcCkS4y86MzzGtc6AKbE2NEfStmEmRQ9P
+	TuJ9QdF+XU+0P3BMZyYrOffXoVjoR4IRN8sMUQ6nj8O8l1dp1aUgcq82LzSPOcGM
+	reGAc9TiidsybdHN20d0CIGClIKWmIfiqtYh9lrkqjdmr2KwKw0Ck6cAmoYDw8A=
+	=
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wy553hmjh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Mar 2024 17:40:11 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42JHe2rf020876
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Mar 2024 17:40:02 GMT
+Received: from grosikop.eu.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 19 Mar 2024 10:39:59 -0700
+From: Gjorgji Rosikopulos <quic_grosikop@quicinc.com>
+To: <rfoss@kernel.org>, <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
+        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <mchehab@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <laurent.pinchart@ideasonboard.com>,
+        <hverkuil-cisco@xs4all.nl>, <quic_hariramp@quicinc.com>
+Subject: [PATCH v2 0/8] Move camss version related defs in to resources
+Date: Tue, 19 Mar 2024 19:39:27 +0200
+Message-ID: <20240319173935.481-1-quic_grosikop@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240319055115.4063940-1-namhyung@kernel.org> <20240319055115.4063940-2-namhyung@kernel.org>
- <ZfmWgbkApCMoeWHm@x1>
-In-Reply-To: <ZfmWgbkApCMoeWHm@x1>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 19 Mar 2024 10:39:56 -0700
-Message-ID: <CAM9d7cgm_-zyiZpCVoKH2dfqEESO5ohZYHYRnnBFWxagDiMrqA@mail.gmail.com>
-Subject: Re: [PATCH 01/23] perf dwarf-aux: Remove unused pc argument
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org, 
-	linux-trace-devel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: w9Wgpilii3joODpCsU05lAoFiAGB0WtN
+X-Proofpoint-ORIG-GUID: w9Wgpilii3joODpCsU05lAoFiAGB0WtN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-19_07,2024-03-18_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ clxscore=1015 malwarescore=0 bulkscore=0 spamscore=0 lowpriorityscore=0
+ phishscore=0 priorityscore=1501 adultscore=0 suspectscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403140001 definitions=main-2403190131
 
-On Tue, Mar 19, 2024 at 6:43=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Mon, Mar 18, 2024 at 10:50:53PM -0700, Namhyung Kim wrote:
-> > It's not used, let's get rid of it.
->
-> I looked for data->pc, there is usage somewhere else, but not via
-> __die_find_var_addr_cb() nor match_var_offset().
->
-> I think renaming:
->
->   struct find_var_data data;
->
-> to:
->
->   struct find_var_data var;
->
-> And:
->
->   struct find_scope_data data;
->
-> to:
->
->   struct find_scope_data scope;
->
-> Helps with grepping for 'data->pc', but that can be left for later.
+The different resources required for different camss soc versions are
+split in to two groups:
 
-Ok, I can rename them later.
+1. Camss device related. In this group are all resources described
+in the device tree, clocks, regulators etc.
 
->
-> Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+2. Sub-device specific resources. In the initialization
+of the each sub-device, the version of camss is passed.
+Based on this version the sub-device adds: hw layer support,
+per pad formats, number of dma's etc.
 
-Thanks for the review!
-Namhyung
+The code for "1" group lives in camss.c. However the "2" group
+is spread across all sub-device implementations including video device.
 
->
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/util/annotate-data.c | 4 ++--
-> >  tools/perf/util/dwarf-aux.c     | 7 ++-----
-> >  tools/perf/util/dwarf-aux.h     | 6 ++----
-> >  3 files changed, 6 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate=
--data.c
-> > index 30c4d19fcf11..59ce5f4f4a40 100644
-> > --- a/tools/perf/util/annotate-data.c
-> > +++ b/tools/perf/util/annotate-data.c
-> > @@ -263,7 +263,7 @@ static int find_data_type_die(struct debuginfo *di,=
- u64 pc, u64 addr,
-> >       offset =3D loc->offset;
-> >
-> >       if (reg =3D=3D DWARF_REG_PC) {
-> > -             if (die_find_variable_by_addr(&cu_die, pc, addr, &var_die=
-, &offset)) {
-> > +             if (die_find_variable_by_addr(&cu_die, addr, &var_die, &o=
-ffset)) {
-> >                       ret =3D check_variable(&var_die, type_die, offset=
-,
-> >                                            /*is_pointer=3D*/false);
-> >                       loc->offset =3D offset;
-> > @@ -312,7 +312,7 @@ static int find_data_type_die(struct debuginfo *di,=
- u64 pc, u64 addr,
-> >       /* Search from the inner-most scope to the outer */
-> >       for (i =3D nr_scopes - 1; i >=3D 0; i--) {
-> >               if (reg =3D=3D DWARF_REG_PC) {
-> > -                     if (!die_find_variable_by_addr(&scopes[i], pc, ad=
-dr,
-> > +                     if (!die_find_variable_by_addr(&scopes[i], addr,
-> >                                                      &var_die, &offset)=
-)
-> >                               continue;
-> >               } else {
-> > diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> > index 2791126069b4..e84d0d6a7750 100644
-> > --- a/tools/perf/util/dwarf-aux.c
-> > +++ b/tools/perf/util/dwarf-aux.c
-> > @@ -1456,7 +1456,6 @@ static int __die_find_var_addr_cb(Dwarf_Die *die_=
-mem, void *arg)
-> >  /**
-> >   * die_find_variable_by_addr - Find variable located at given address
-> >   * @sc_die: a scope DIE
-> > - * @pc: the program address to find
-> >   * @addr: the data address to find
-> >   * @die_mem: a buffer to save the resulting DIE
-> >   * @offset: the offset in the resulting type
-> > @@ -1464,12 +1463,10 @@ static int __die_find_var_addr_cb(Dwarf_Die *di=
-e_mem, void *arg)
-> >   * Find the variable DIE located at the given address (in PC-relative =
-mode).
-> >   * This is usually for global variables.
-> >   */
-> > -Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr pc,
-> > -                                  Dwarf_Addr addr, Dwarf_Die *die_mem,
-> > -                                  int *offset)
-> > +Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr add=
-r,
-> > +                                  Dwarf_Die *die_mem, int *offset)
-> >  {
-> >       struct find_var_data data =3D {
-> > -             .pc =3D pc,
-> >               .addr =3D addr,
-> >       };
-> >       Dwarf_Die *result;
-> > diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-> > index 85dd527ae1f7..9973801a20c1 100644
-> > --- a/tools/perf/util/dwarf-aux.h
-> > +++ b/tools/perf/util/dwarf-aux.h
-> > @@ -146,9 +146,8 @@ Dwarf_Die *die_find_variable_by_reg(Dwarf_Die *sc_d=
-ie, Dwarf_Addr pc, int reg,
-> >                                   Dwarf_Die *die_mem);
-> >
-> >  /* Find a (global) variable located in the 'addr' */
-> > -Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr pc,
-> > -                                  Dwarf_Addr addr, Dwarf_Die *die_mem,
-> > -                                  int *offset);
-> > +Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr add=
-r,
-> > +                                  Dwarf_Die *die_mem, int *offset);
-> >
-> >  #else /*  HAVE_DWARF_GETLOCATIONS_SUPPORT */
-> >
-> > @@ -170,7 +169,6 @@ static inline Dwarf_Die *die_find_variable_by_reg(D=
-warf_Die *sc_die __maybe_unus
-> >  }
-> >
-> >  static inline Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die _=
-_maybe_unused,
-> > -                                                Dwarf_Addr pc __maybe_=
-unused,
-> >                                                  Dwarf_Addr addr __mayb=
-e_unused,
-> >                                                  Dwarf_Die *die_mem __m=
-aybe_unused,
-> >                                                  int *offset __maybe_un=
-used)
-> > --
-> > 2.44.0.291.gc1ea87d7ee-goog
-> >
+This kind of separation is not very convenient when adding new camss soc
+version. The reason is that you need to add support in all sub-device
+implementations.
+
+There were some improvements in this direction where some of the
+hw version related definitions were moved in to the "1". One
+example is attaching of the hw operations.
+
+This series aim to improve the things more and add additional definitions
+in to the "1".
+
+What is included:
+
+- Remove all format definitions from camss video. The will be passed
+  by the parent sub-device
+
+- Make camss generic format definition mapping, containing mbus to
+  v4l2 mapping, mbus bpp and other required fields used by the
+  sub-device and video node.
+
+- Add per sub-device type union in the resources, different
+  sub-devices are using different resources, as an example: is_lite flag.
+
+- Move camss link operation in to the resources. Currently one
+  function supports different topologies depending of the number
+  of devices. As hw version support increases this is not good
+  way of supporting different topologies.
+
+- Add parent device ops in to the resources. This resolves
+  inter-dependencies of vfe and csid. Csid requests the clocks
+  regulators etc from parent device instead calling directly vfe
+  functions.
+
+- Some cleanups in csid code for split the configuration of
+  RX and testgen and RDI.
+
+Changes in V2:
+- Rebased on top of sc8280xp v6.
+- The change "Designate lite subdevices in resources" was dropped,
+  it was already merged in previous series.
+
+Atanas Filipov (1):
+  media: qcom: camss: Decompose register and link operations
+
+Milen Mitkov (2):
+  media: qcom: camss: Split testgen, RDI and RX for CSID 170
+  media: qcom: camss: Decouple VFE from CSID
+
+Radoslav Tsvetkov (5):
+  media: qcom: camss: Add per sub-device type resources
+  media: qcom: camss: Attach formats to VFE resources
+  media: qcom: camss: Attach formats to CSID resources
+  media: qcom: camss: Attach formats to CSIPHY resources
+  media: qcom: camss: Move format related functions
+
+ drivers/media/platform/qcom/camss/Makefile    |   1 +
+ .../platform/qcom/camss/camss-csid-4-1.c      | 132 +---
+ .../platform/qcom/camss/camss-csid-4-7.c      | 160 +---
+ .../platform/qcom/camss/camss-csid-gen2.c     | 410 ++++------
+ .../media/platform/qcom/camss/camss-csid.c    | 512 ++++++++++++-
+ .../media/platform/qcom/camss/camss-csid.h    |  32 +-
+ .../media/platform/qcom/camss/camss-csiphy.c  |  74 +-
+ .../media/platform/qcom/camss/camss-csiphy.h  |  23 +-
+ .../media/platform/qcom/camss/camss-format.c  |  98 +++
+ .../media/platform/qcom/camss/camss-format.h  |  67 ++
+ .../media/platform/qcom/camss/camss-vfe-17x.c |  10 +-
+ .../media/platform/qcom/camss/camss-vfe-4-1.c |   4 +-
+ .../media/platform/qcom/camss/camss-vfe-4-7.c |   6 +-
+ .../media/platform/qcom/camss/camss-vfe-4-8.c |   6 +-
+ .../platform/qcom/camss/camss-vfe-gen1.c      |   8 +-
+ drivers/media/platform/qcom/camss/camss-vfe.c | 483 +++++++-----
+ drivers/media/platform/qcom/camss/camss-vfe.h |  22 +-
+ .../media/platform/qcom/camss/camss-video.c   | 295 +-------
+ .../media/platform/qcom/camss/camss-video.h   |   5 +-
+ drivers/media/platform/qcom/camss/camss.c     | 709 +++++++++++++-----
+ drivers/media/platform/qcom/camss/camss.h     |  28 +-
+ 21 files changed, 1747 insertions(+), 1338 deletions(-)
+ create mode 100644 drivers/media/platform/qcom/camss/camss-format.c
+ create mode 100644 drivers/media/platform/qcom/camss/camss-format.h
+
+-- 
+2.17.1
+
