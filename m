@@ -1,47 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A59382C690;
-	Tue, 19 Mar 2024 18:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1383838F;
+	Tue, 19 Mar 2024 18:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710873725; cv=none; b=lgT52/UY3k+09pZWGqc0O5GfP2RXxv5VvLHqNiosvzI5lFJ3wmjl+bzI9XYFj7Sr6mNEEGyHD5u52sOnm8ojc0qa93sl9xpZ32vdKaZSYACYK53VE1jLkE21JPWgpdFJ/36F9wUQoZq+xb9hkyu6Yx1SpgDW39Ni9ItA55IBUqI=
+	t=1710873743; cv=none; b=ut+VYbSRXHZyxkAFEhTTPa9oXM0w17A09TEynD1lCP9Uaipct+DRv02DSkDQIiYOoMQPPoME3LBekTSgvj2WB4RDsimwtJU67+rjh/zHMdhqNlVkGmQPNuKHJwzoFFB7D+EAvaEdL29p3m/fDV+YFdkWFsWFk8V77AXeKCJ3tuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710873725; c=relaxed/simple;
-	bh=/Xdo3nItTl5sMcBffTOyaNJrd79EpP5bGPedf1unGSA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nObDhreRQglCZEGmB5+bbvrQeFmgb0sL+Hbj4vRCLtg+0SjrAKwDRAq41rqBn12zcmPzyos6HZ0dJ0xF1KX4FJpF8FEEUP8OHdwWYyytESlAolBxn0lKeF70wAFbfAb3M4Zia/B+o94LuLIlCXXD59SLtjHLtOmKTUNgYt2UX3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gpCpHlIb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710873743; c=relaxed/simple;
+	bh=VN/elIqf9LElJlgNTtPrq8H9FEwfVHcaHoZhKnOzMuw=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=AQ/n38V5DJK+f9aLNkuRxOAH5Mf/d4Hbl0TQKQvfoKrvuTK3UEn7HLi3mh+EQG/e91bZuZk7p8DgavimUh09+JI9WY/gsNW3F0SAqlvdHFxQwGNVY2NqcF6kbV8xH5KdPNJOzDdD50DtBCfFarjFWO0j7Ijz5cxbkq0oxoE9uKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=bZRSuirt; arc=none smtp.client-ip=23.155.224.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gpCpHlIb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42EFBC433C7;
-	Tue, 19 Mar 2024 18:42:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710873725;
-	bh=/Xdo3nItTl5sMcBffTOyaNJrd79EpP5bGPedf1unGSA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gpCpHlIbdzMeUzAQj0R9Dd63LUg2B8fV6shgM8BsPWL8WNCK2ZzhCdiS5Qy50m6+o
-	 qAVh9yXmzUgpH/q908cwHMoKzYX4wVR57IzrSiBzz6WkKBoSqArJTZhQmpda7/WGI9
-	 uOgGATTIYZ+u69a7N4xZZhoHLC9Lo9YcHmPfZZ7L3kI16r8M+Mb817M/YXPTNbY72/
-	 lHvoC1EO78OvuYNODy66ib4kUH7CyGztsQ9U5AdYG9fxBW714VDPO3K4gS+MHSyZ82
-	 qS33KTUcTUkHrL/98s8uOOO+m0pcxoKIOQZn7s0jWTrr6QpwH6ahbGxN3FHfJBbk/+
-	 0aJmkG6x3vb8g==
-Date: Tue, 19 Mar 2024 15:42:00 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
-	David Lechner <dlechner@baylibre.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] iio: adc: ad7944: Add support for "3-wire mode"
-Message-ID: <ZfnceCKWLmbkWIgb@x1>
-References: <20240314-mainline-ad7944-3-wire-mode-v2-1-d469da0705d2@baylibre.com>
- <ZfX5jynjW4M9pvw1@surfacebook.localdomain>
- <20240318124041.0000032d@Huawei.com>
- <CAHp75VeQcvuEy4V6-+3PeWTZJ9=Qae0AiiNB93OOw3wuc-uh3A@mail.gmail.com>
- <20240318142923.000042f4@Huawei.com>
+	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="bZRSuirt"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 6486482853FD;
+	Tue, 19 Mar 2024 13:36:55 -0500 (CDT)
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id zNGRQb1hjFIX; Tue, 19 Mar 2024 13:36:53 -0500 (CDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 95ED982857C6;
+	Tue, 19 Mar 2024 13:36:53 -0500 (CDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 95ED982857C6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
+	t=1710873413; bh=jjl+qmMtiRVpAUsU+d+UXWZRLmd8K+2jgNQsp7lj+04=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=bZRSuirtYJVJx6DLzBTldOSSqPcXRGEoyzhi4eq6ezoK3oOseSQDCxWemf+VcT27i
+	 P/2bOL4Vy81473wmz5gBDMJvZNe96fzmvW6jtLHauh0qPnwNM/o/JoLAm8dX1OX4HK
+	 pEZEQTCZDnUY8x8A6J7bhD/nF/t+H+0XQdN7gKfc=
+X-Virus-Scanned: amavisd-new at rptsys.com
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id C_5K4lh6-1JZ; Tue, 19 Mar 2024 13:36:53 -0500 (CDT)
+Received: from vali.starlink.edu (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 531A182853FD;
+	Tue, 19 Mar 2024 13:36:53 -0500 (CDT)
+Date: Tue, 19 Mar 2024 13:36:51 -0500 (CDT)
+From: Timothy Pearson <tpearson@raptorengineering.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Shivaprasad G Bhat <sbhat@linux.ibm.com>, 
+	Timothy Pearson <tpearson@raptorengineering.com>, 
+	Alex Williamson <alex.williamson@redhat.com>, 
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
+	Michael Ellerman <mpe@ellerman.id.au>, npiggin <npiggin@gmail.com>, 
+	christophe leroy <christophe.leroy@csgroup.eu>, 
+	aneesh kumar <aneesh.kumar@kernel.org>, 
+	naveen n rao <naveen.n.rao@linux.ibm.com>, 
+	gbatra <gbatra@linux.vnet.ibm.com>, brking@linux.vnet.ibm.com, 
+	Alexey Kardashevskiy <aik@ozlabs.ru>, robh@kernel.org, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	kvm <kvm@vger.kernel.org>, aik <aik@amd.com>, msuchanek@suse.de, 
+	jroedel <jroedel@suse.de>, vaibhav <vaibhav@linux.ibm.com>, 
+	svaidy@linux.ibm.com
+Message-ID: <1386271253.24278379.1710873411133.JavaMail.zimbra@raptorengineeringinc.com>
+In-Reply-To: <20240319143202.GA66976@ziepe.ca>
+References: <171026724548.8367.8321359354119254395.stgit@linux.ibm.com> <171026725393.8367.17497620074051138306.stgit@linux.ibm.com> <20240319143202.GA66976@ziepe.ca>
+Subject: Re: [RFC PATCH 1/3] powerpc/pseries/iommu: Bring back userspace
+ view for single level TCE tables
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,76 +69,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240318142923.000042f4@Huawei.com>
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC122 (Linux)/8.5.0_GA_3042)
+Thread-Topic: powerpc/pseries/iommu: Bring back userspace view for single level TCE tables
+Thread-Index: eRa4lP8lSoGisWT5ua6Vo0RITwt14g==
 
-On Mon, Mar 18, 2024 at 02:29:23PM +0000, Jonathan Cameron wrote:
-> On Mon, 18 Mar 2024 15:09:32 +0200
-> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> 
-> > On Mon, Mar 18, 2024 at 2:41 PM Jonathan Cameron
-> > <Jonathan.Cameron@huawei.com> wrote:
-> > > > >  struct ad7944_adc {
-> > > > >     struct spi_device *spi;
-> > > > > +   enum ad7944_spi_mode spi_mode;
-> > > > >     /* Chip-specific timing specifications. */
-> > > > >     const struct ad7944_timing_spec *timing_spec;
-> > > > >     /* GPIO connected to CNV pin. */
-> > > > > @@ -58,6 +75,9 @@ struct ad7944_adc {
-> > > > >      } sample __aligned(IIO_DMA_MINALIGN);
-> > > > >  };  
-> > > >
-> > > > Have you run `pahole` to see if there is a better place for a new member?  
-> > >
-> > > I know this matters for structures where we see lots of them, but do we actually
-> > > care for one offs?  Whilst it doesn't matter here I'd focus much more
-> > > on readability and like parameter grouping for cases like this than wasting
-> > > a few bytes.  
-> > 
-> > This is _also_ true, but think more about cache line contamination.
-> > Even not-so-important bytes may decrease the performance. In some
-> > cases it's tolerable, in some it is not (high-speed ADC). In general I
-> > assume that the developer has to understand many aspects of the
-> > software and cache line contamination may be last but definitely not
-> > least.
-> > 
-> 
-> Not totally sure what you are covering with contamination as many aspects
-> around caches and that's not really a standard term for any of them (as
-> far as I know).
-> 
-> It's part of a multi cacheline allocation anyway (because it's tacked on the
-> end of the iio device struct, so fairly unlikely to share with other allocations
-> and definitely not on ARM because of the trailing __aligned(IIO_DMA_MINALIGN)
-> elements.
-> 
-> If it matters more locally, then pahole is more likely to push you to pack
 
-You mean 'pahole --reorganize', right? Yeah, I need to take into account
-explicit __attribute__((__aligned__)) at the start of cachelines as a
-hint that the fields in a cacheline can't be moved outside of that
-cacheline or plain leave that cacheline members alone, as-is.
 
-I also need to get perf's data-type profiling as an input for 'pahole
---reorganize', with that we may take into account the existing
-__aligned__ markings and combine it with what we get from data-type
-profiling.
+----- Original Message -----
+> From: "Jason Gunthorpe" <jgg@ziepe.ca>
+> To: "Shivaprasad G Bhat" <sbhat@linux.ibm.com>
+> Cc: "Timothy Pearson" <tpearson@raptorengineering.com>, "Alex Williamson" <alex.williamson@redhat.com>, "linuxppc-dev"
+> <linuxppc-dev@lists.ozlabs.org>, "Michael Ellerman" <mpe@ellerman.id.au>, "npiggin" <npiggin@gmail.com>, "christophe
+> leroy" <christophe.leroy@csgroup.eu>, "aneesh kumar" <aneesh.kumar@kernel.org>, "naveen n rao"
+> <naveen.n.rao@linux.ibm.com>, "gbatra" <gbatra@linux.vnet.ibm.com>, brking@linux.vnet.ibm.com, "Alexey Kardashevskiy"
+> <aik@ozlabs.ru>, robh@kernel.org, "linux-kernel" <linux-kernel@vger.kernel.org>, "kvm" <kvm@vger.kernel.org>, "aik"
+> <aik@amd.com>, msuchanek@suse.de, "jroedel" <jroedel@suse.de>, "vaibhav" <vaibhav@linux.ibm.com>, svaidy@linux.ibm.com
+> Sent: Tuesday, March 19, 2024 9:32:02 AM
+> Subject: Re: [RFC PATCH 1/3] powerpc/pseries/iommu: Bring back userspace view for single level TCE tables
 
-- Arnaldo
+> On Tue, Mar 12, 2024 at 01:14:20PM -0500, Shivaprasad G Bhat wrote:
+>> The commit 090bad39b237a ("powerpc/powernv: Add indirect levels to
+>> it_userspace") which implemented the tce indirect levels
+>> support for PowerNV ended up removing the single level support
+>> which existed by default(generic tce_iommu_userspace_view_alloc/free()
+>> calls). On pSeries the TCEs are single level, and the allocation
+>> of userspace view is lost with the removal of generic code.
+> 
+> :( :(
+> 
+> If this has been broken since 2018 and nobody cared till now can we
+> please go in a direction of moving this code to the new iommu APIs
+> instead of doubling down on more of this old stuff that apparently
+> almost nobody cares about ??
+> 
+> Jason
 
-> things together in a fashion that makes false sharing and similar perf issues
-> more likely if you are grouping things for packing purposes rather than
-> logical groups.
-> 
-> If you just mean cache pressure then fair enough if we squeeze everything into
-> one cacheline and that doesn't cause false sharing.
-> 'Maybe' this will fit on x86. On Arm64 it's not going to
-> make any difference, just moving the padding around a bit within the line.
-> 
-> So I'd argue premature optimization for a small, one off, structure.
-> 
-> Jonathan
-> 
-> 
-> 
+Just FYI Raptor is working on porting things over to the new APIs.  RFC patches should be posted in the next week or two.
