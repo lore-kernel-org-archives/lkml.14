@@ -1,204 +1,162 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E300250249
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 08:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A116E3BBCA;
+	Tue, 19 Mar 2024 08:07:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710835636; cv=none; b=K/IbL1/TLZL/ZwhRvzfLDRDbIAXyEc+1ZEdQ6m3YkWITHG3+x7NO8C+jyrMdjVRdpDipuxNupkfKrFAmsh3c/9wuSc6yiHbE+QuYZCkHm4XyB4Mxmuc9SEupFf9PneDh+cyumV7ZhKSuMbQ9Xuf6NzKegeyDHpqQ1SkI+Wbha6o=
+	t=1710835680; cv=none; b=JTNTq9p+yB7w79JVi1aNM1DmIeZxhGWi8BJuvaWN99QY7y2I5nMkfr5KowXpZZMBBWljdcP5Vy/wAWakHAMYA1HH7dzr0kBc2fTKfEssve8fZ4l3JRcziiTehORn0H1u4Q/mKBYX0L/KvKePtGjlsbb9tElOSMnFq50nNY4eths=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710835636; c=relaxed/simple;
-	bh=BWfuo9855ONPF1k1D4oUaIBz6CAGhQMFb/rHZw4p2oE=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=DwuWaiVUcZFyok232osTs1iB81D35IA8/pBPvrGWVnfDUFY08f+nn2eX0TiiWO78gPe2kaNfXrkX7TUwljqi+TFudeYuZ0Pa1Vt/M9QAMuMpFBoeLbYDoxK2G2zNXARppqvMYUItI/jAyEXbDlPHzhxjtfcdMYjnPe9yzF5mrRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pK7+2DYV; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pK7+2DYV"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-33ddd1624beso3235789f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 01:07:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710835632; x=1711440432; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=spYxpIEXYSNCSvAxWfrD34Q6PwS/7IJ3TtTp+AY4irk=;
-        b=pK7+2DYVqiVYb1RfP+VxSnGlaKTUC3zv8IZIXwKegYU5cPJ0kz2TOitEGgua72XG3x
-         5WHXs3z1DoELhnKYNMdlIT0oYngdHq8TZyvR4D31rzH3nhf1KnnCoZSp2YXjGbFgvJP8
-         e7urFdJT2v9it+7RfMXNuObtYMeFGBXWeKgkzRs8Jqg7ifB37+FL/m+29PUCZG3biP1X
-         yc+SSpEBzrVsJygRDTiUNHekIA4BcIoREdlfFFfbR2BQLzE73TjWk2yq2lOljvijDqen
-         QOGa+ziELW6Abb144XiV1f9TOkcStPrh/BtKfAHshM0FEPKycYzL9TeQIuRWJhXB3jjn
-         aH+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710835632; x=1711440432;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=spYxpIEXYSNCSvAxWfrD34Q6PwS/7IJ3TtTp+AY4irk=;
-        b=NCQ+H9N8F48kXn92W6z2xsmYTfp4vLPjSfhZvoo0GSbXKZMGWsW22j2Q9F6vdjp0DX
-         p8sh/IH5KJp0jnXi4Y/yzCnZgvG22DFVAjcAWPHiSvg3bhGRN1p+NAzMy8WXoKP/ju2F
-         RIsGNnMiXM3Y7YHscQf8dnjYgWakaIwKC3NEIU/HVeneQGbtyrY38ocile266aEQMuE4
-         wwkPM12aMuVom0D5YLaPY85d4T9jPMB1h/4QOiPY7MyA3BuVI/Hbp1eL4YzGQ3NoLH91
-         9WzGsiZOc9351pgRSeaYd6lHcsuM9zPsXBdQNqtd76aEiVKgwG0KgWLbHUT3vDwf4bKZ
-         gSrg==
-X-Forwarded-Encrypted: i=1; AJvYcCW78giXhfYbE/g1xJIEwqUwqfPvuMNfkXjSXI8eq62pux5AxBA3j5ENIqzySN1Ox+I2yJJoGoUeuPzkiVWVb8stmb+TicqX5ZNDMCoc
-X-Gm-Message-State: AOJu0Yz28AEBrQYXMuR8dmLWx5JDcZniTwa3dLeNdsTrpYceDk7sVAsr
-	YREL6kS7e7lna+SiAkDuwg6KmTXbYp2SCmBcUyb+uEX2T1A1NPWHJM4QpsCEjag=
-X-Google-Smtp-Source: AGHT+IFcvq6E9fBSZM2MY1IqdcxNGVVY1riao78wmDDVCMtvpbhSlftq640TPYVM8TuqdrlVOk7mkg==
-X-Received: by 2002:adf:e2ca:0:b0:33e:764b:ab17 with SMTP id d10-20020adfe2ca000000b0033e764bab17mr1433241wrj.14.1710835632086;
-        Tue, 19 Mar 2024 01:07:12 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:2fcf:6f16:3b3b:da8e? ([2a01:e0a:982:cbb0:2fcf:6f16:3b3b:da8e])
-        by smtp.gmail.com with ESMTPSA id bu27-20020a056000079b00b0033ecbfc6941sm11461315wrb.110.2024.03.19.01.07.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Mar 2024 01:07:11 -0700 (PDT)
-Message-ID: <9907040c-7e25-4aa5-a4be-6f4820e335f1@linaro.org>
-Date: Tue, 19 Mar 2024 09:07:10 +0100
+	s=arc-20240116; t=1710835680; c=relaxed/simple;
+	bh=ImzNxqs0xkj2U6J7gTa9sJdI5GGIwkLF3v5xPj/nHYQ=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=Y9RHgFsFrIFSgNyJ/zPfFF3WXFsFJrAsZCt2dnn/dqLJD1AWV6gbw/8aI3TwVUUXrow139P7UCHdYHSIJ34/hDMskxpGrpIUDkcH76rT+HhfTIgpSW+uXB38HVOVPH9nUH9d0MT311UVbZdojt3uRf3wjd1wFyJKAsrUDZO92FY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id ECA6F201E5A;
+	Tue, 19 Mar 2024 09:07:56 +0100 (CET)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 87AAE201364;
+	Tue, 19 Mar 2024 09:07:56 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 78A2C180031C;
+	Tue, 19 Mar 2024 16:07:54 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: hverkuil@xs4all.nl,
+	sakari.ailus@iki.fi,
+	tfiga@chromium.org,
+	m.szyprowski@samsung.com,
+	mchehab@kernel.org,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	shengjiu.wang@gmail.com,
+	Xiubo.Lee@gmail.com,
+	festevam@gmail.com,
+	nicoleotsuka@gmail.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	alsa-devel@alsa-project.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v15 05/16] ASoC: fsl_asrc: register m2m platform device
+Date: Tue, 19 Mar 2024 15:51:03 +0800
+Message-Id: <1710834674-3285-6-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1710834674-3285-1-git-send-email-shengjiu.wang@nxp.com>
+References: <1710834674-3285-1-git-send-email-shengjiu.wang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2] drm,fbdev: td043mtea1: Convert sprintf() family to
- sysfs_emit() family
-Content-Language: en-US, fr
-To: Li Zhijian <lizhijian@fujitsu.com>, linux-kernel@vger.kernel.org
-Cc: Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg
- <sam@ravnborg.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Helge Deller <deller@gmx.de>, linux-omap@vger.kernel.org,
- linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
-References: <20240319035555.1577734-1-lizhijian@fujitsu.com>
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro Developer Services
-In-Reply-To: <20240319035555.1577734-1-lizhijian@fujitsu.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-Hi,
+Register m2m platform device, that user can
+use M2M feature.
 
-On 19/03/2024 04:55, Li Zhijian wrote:
-> Per filesystems/sysfs.rst, show() should only use sysfs_emit()
-> or sysfs_emit_at() when formatting the value to be returned to user space.
-> 
-> coccinelle complains that there are still a couple of functions that use
-> snprintf(). Convert them to sysfs_emit().
-> 
-> sprintf() and scnprintf() will be converted as well if they have.
-> 
-> Generally, this patch is generated by
-> make coccicheck M=<path/to/file> MODE=patch \
-> COCCI=scripts/coccinelle/api/device_attr_show.cocci
-> 
-> No functional change intended
+Defined platform data structure and platform
+driver name.
 
-Please split patches in 2, while the driver targets the same hw, they
-are not under the same subsystems.
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Mark Brown <broonie@kernel.org>
+---
+ include/sound/fsl_asrc_common.h | 23 +++++++++++++++++++++++
+ sound/soc/fsl/fsl_asrc.c        | 18 ++++++++++++++++++
+ 2 files changed, 41 insertions(+)
 
-Neil
-
-> 
-> CC: Neil Armstrong <neil.armstrong@linaro.org>
-> CC: Jessica Zhang <quic_jesszhan@quicinc.com>
-> CC: Sam Ravnborg <sam@ravnborg.org>
-> CC: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> CC: Maxime Ripard <mripard@kernel.org>
-> CC: Thomas Zimmermann <tzimmermann@suse.de>
-> CC: David Airlie <airlied@gmail.com>
-> CC: Daniel Vetter <daniel@ffwll.ch>
-> CC: Helge Deller <deller@gmx.de>
-> CC: linux-omap@vger.kernel.org
-> CC: linux-fbdev@vger.kernel.org
-> CC: dri-devel@lists.freedesktop.org
-> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
-> ---
-> V2:
->     Fix missing '+' before '=' in drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td043mtea1.c
-> 
-> This is a part of the work "Fix coccicheck device_attr_show warnings"[1]
-> Split them per subsystem so that the maintainer can review it easily
-> [1] https://lore.kernel.org/lkml/20240116041129.3937800-1-lizhijian@fujitsu.com/
-> ---
->   drivers/gpu/drm/panel/panel-tpo-td043mtea1.c        | 13 ++++---------
->   .../omap2/omapfb/displays/panel-tpo-td043mtea1.c    | 12 ++++--------
->   2 files changed, 8 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-tpo-td043mtea1.c b/drivers/gpu/drm/panel/panel-tpo-td043mtea1.c
-> index cf4609bb9b1d..0983fe47eb5a 100644
-> --- a/drivers/gpu/drm/panel/panel-tpo-td043mtea1.c
-> +++ b/drivers/gpu/drm/panel/panel-tpo-td043mtea1.c
-> @@ -242,16 +242,11 @@ static ssize_t gamma_show(struct device *dev, struct device_attribute *attr,
->   	struct td043mtea1_panel *lcd = dev_get_drvdata(dev);
->   	ssize_t len = 0;
->   	unsigned int i;
-> -	int ret;
->   
-> -	for (i = 0; i < ARRAY_SIZE(lcd->gamma); i++) {
-> -		ret = snprintf(buf + len, PAGE_SIZE - len, "%u ",
-> -			       lcd->gamma[i]);
-> -		if (ret < 0)
-> -			return ret;
-> -		len += ret;
-> -	}
-> -	buf[len - 1] = '\n';
-> +	for (i = 0; i < ARRAY_SIZE(lcd->gamma); i++)
-> +		len += sysfs_emit_at(buf, len, "%u ", lcd->gamma[i]);
-> +	if (len)
-> +		buf[len - 1] = '\n';
->   
->   	return len;
->   }
-> diff --git a/drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td043mtea1.c b/drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td043mtea1.c
-> index 477789cff8e0..3624452e1dd0 100644
-> --- a/drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td043mtea1.c
-> +++ b/drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td043mtea1.c
-> @@ -228,14 +228,10 @@ static ssize_t tpo_td043_gamma_show(struct device *dev,
->   	int ret;
->   	int i;
->   
-> -	for (i = 0; i < ARRAY_SIZE(ddata->gamma); i++) {
-> -		ret = snprintf(buf + len, PAGE_SIZE - len, "%u ",
-> -				ddata->gamma[i]);
-> -		if (ret < 0)
-> -			return ret;
-> -		len += ret;
-> -	}
-> -	buf[len - 1] = '\n';
-> +	for (i = 0; i < ARRAY_SIZE(ddata->gamma); i++)
-> +		len += sysfs_emit_at(buf, len, "%u ", ddata->gamma[i]);
-> +	if (len)
-> +		buf[len - 1] = '\n';
->   
->   	return len;
->   }
+diff --git a/include/sound/fsl_asrc_common.h b/include/sound/fsl_asrc_common.h
+index 3b53d366182f..c709b8906929 100644
+--- a/include/sound/fsl_asrc_common.h
++++ b/include/sound/fsl_asrc_common.h
+@@ -71,6 +71,7 @@ struct fsl_asrc_pair {
+  * @dma_params_rx: DMA parameters for receive channel
+  * @dma_params_tx: DMA parameters for transmit channel
+  * @pdev: platform device pointer
++ * @m2m_pdev: m2m platform device pointer
+  * @regmap: regmap handler
+  * @paddr: physical address to the base address of registers
+  * @mem_clk: clock source to access register
+@@ -103,6 +104,7 @@ struct fsl_asrc {
+ 	struct snd_dmaengine_dai_dma_data dma_params_rx;
+ 	struct snd_dmaengine_dai_dma_data dma_params_tx;
+ 	struct platform_device *pdev;
++	struct platform_device *m2m_pdev;
+ 	struct regmap *regmap;
+ 	unsigned long paddr;
+ 	struct clk *mem_clk;
+@@ -139,6 +141,27 @@ struct fsl_asrc {
+ 	void *private;
+ };
+ 
++/**
++ * struct fsl_asrc_m2m_pdata - platform data
++ * @asrc: pointer to struct fsl_asrc
++ * @fmt_in: input sample format
++ * @fmt_out: output sample format
++ * @chan_min: minimum channel number
++ * @chan_max: maximum channel number
++ * @rate_min: minimum rate
++ * @rate_max: maximum rete
++ */
++struct fsl_asrc_m2m_pdata {
++	struct fsl_asrc *asrc;
++	u64 fmt_in;
++	u64 fmt_out;
++	int chan_min;
++	int chan_max;
++	int rate_min;
++	int rate_max;
++};
++
++#define M2M_DRV_NAME "fsl_asrc_m2m"
+ #define DRV_NAME "fsl-asrc-dai"
+ extern struct snd_soc_component_driver fsl_asrc_component;
+ 
+diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
+index 7d8643ee0ba0..5ecb5d869607 100644
+--- a/sound/soc/fsl/fsl_asrc.c
++++ b/sound/soc/fsl/fsl_asrc.c
+@@ -1187,6 +1187,7 @@ static int fsl_asrc_runtime_suspend(struct device *dev);
+ static int fsl_asrc_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
++	struct fsl_asrc_m2m_pdata m2m_pdata;
+ 	struct fsl_asrc_priv *asrc_priv;
+ 	struct fsl_asrc *asrc;
+ 	struct resource *res;
+@@ -1368,6 +1369,18 @@ static int fsl_asrc_probe(struct platform_device *pdev)
+ 		goto err_pm_get_sync;
+ 	}
+ 
++	m2m_pdata.asrc = asrc;
++	m2m_pdata.fmt_in = FSL_ASRC_FORMATS;
++	m2m_pdata.fmt_out = FSL_ASRC_FORMATS | SNDRV_PCM_FMTBIT_S8;
++	m2m_pdata.rate_min = 5512;
++	m2m_pdata.rate_max = 192000;
++	m2m_pdata.chan_min = 1;
++	m2m_pdata.chan_max = 10;
++	asrc->m2m_pdev = platform_device_register_data(&pdev->dev,
++						       M2M_DRV_NAME,
++						       PLATFORM_DEVID_AUTO,
++						       &m2m_pdata,
++						       sizeof(m2m_pdata));
+ 	return 0;
+ 
+ err_pm_get_sync:
+@@ -1380,6 +1393,11 @@ static int fsl_asrc_probe(struct platform_device *pdev)
+ 
+ static void fsl_asrc_remove(struct platform_device *pdev)
+ {
++	struct fsl_asrc *asrc = dev_get_drvdata(&pdev->dev);
++
++	if (asrc->m2m_pdev && !IS_ERR(asrc->m2m_pdev))
++		platform_device_unregister(asrc->m2m_pdev);
++
+ 	pm_runtime_disable(&pdev->dev);
+ 	if (!pm_runtime_status_suspended(&pdev->dev))
+ 		fsl_asrc_runtime_suspend(&pdev->dev);
+-- 
+2.34.1
 
