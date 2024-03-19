@@ -1,191 +1,146 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2042.outbound.protection.outlook.com [40.107.223.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B9E7C08E;
-	Tue, 19 Mar 2024 08:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710836955; cv=none; b=PuPNkdzn34LCcZeF0SXzQpJ75oMzmFCqj7PaAE0WEexxl3NVPqN2g8Y9koVd7zN472oSZwb1AH9P70pOmzqrz6MVZa0CNQMFK9AsfMf5ejiOl0d/BFZ3sNYZd+gHd/UKKNNF6laWZ7ilDJPzxOaiDXY85XjAC69lcSuNI+n/ioE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D8D7C0A6;
+	Tue, 19 Mar 2024 08:29:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710836955; cv=fail; b=GCW929YQucq8JvOqCDV8HVIsz3C+JAji3FEIwzoHl61S1aCCVvyZILsGkSu2edBYfpV/5aGaWVjruBkwG44G/FUfVT5PoQbXQaKXuhUS3dQHe/3T21fEk2DDRFgRbIBM7ueQfZLvQJfqn55DACZqMFRfsp+xMp8ki38ke5XbjIA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710836955; c=relaxed/simple;
-	bh=rVF9H8p5A/tZCcUzg90IMGb1EulK+WvD39yZtuREOCE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JHovoFAQQAEJ3HL3L/H9mk9a+QPvq5T7pbyNZZBB/sG1RkCkOzXiqls2OGnNdCEOs7nPV1qC90uZMSSsA8xpwOKeqFNw2VVuhMBdL5kxQez+lr3hTo7RuDBgFLFfLIr6kk5Mk828MqJ3K6XevZ6Z9FDgA85a/pH66kkcCQxGd9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cE3LpN2/; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=Yr9wdyvingd3lIRRk7qqywV6i/5N0l+mbsB1DkkaYxM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ni6PL64joyKbV8tyOdmtwP5YNA4l0cTX68CvEAZirHvApImsgNAnpl/7/tYlO/s/I56dOdQDYjGTPkXw+kqp4LbMVu4mXc0pRC4M0SJtfU9ec9qmIxdUjBL4Xe1rN5FcNorV71eIl8MZDvEW1pq1MS172UpmmS1LmuHDi/v3cGA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4ZgKtM20; arc=fail smtp.client-ip=40.107.223.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cE3LpN2/"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5684ea117a3so7717949a12.0;
-        Tue, 19 Mar 2024 01:29:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710836952; x=1711441752; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k+caFpiF1NE9VjCHjmW6BZDvqMJLVV4nvdJHe6aB/9w=;
-        b=cE3LpN2/GMOpGdvs+lXMV+/pVld0OiUT795aLQnqV29mzUD1emWLleOd4Sh9XbZpkG
-         sfDma3OKiBD8qVukQaWKp/hEbgT/nWUiaAms7rospyf7rgghz8rx9oUYwolBvK0Re+59
-         TlLhq35i6D8ygOt4wnYaPJkc5un4K9ozJ5ovAVu7EjW7o3Bji4fbzNFwmjadJt77qlCx
-         ICt1UhGWSg8xm+ThO670FWVa5MVUd3a/A74DwVvO+BE8vqW/qrKEPYBkY+KHxB2d90i7
-         PHlphRw93c5gSBCauOE+oylBG3Dta26vWmQOCZjAoOqDyT2FWCrFMVcF4BV9jO+fXlAd
-         0zyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710836952; x=1711441752;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k+caFpiF1NE9VjCHjmW6BZDvqMJLVV4nvdJHe6aB/9w=;
-        b=Kmweg7FJPiz6kbZmviLmaaZsJwiglloK9v4qRHlefvH+5SCROb/TuI3kS5JHZRSO3B
-         OFaSk4ih4+bHx7aP8XQHndAlfT2BRBBBjj+GlNl1RN7zm31pzcPrjq9/fhx1NqW4kbJf
-         4KY19CStfclaxjkmgaKncHOEDh0DIKTnjpx+YU/GjScTK0uzwPObIcizHUeiTNhjgPkM
-         IHjp/BOJX04bB9XiW3wlKuw4MT7VJwzO1vqMaq1bMBmockkahM01MOnCuXQD4AN0blNh
-         nPRiaqoJfedyAQi+4qLbAeGgXZAFmBCKCrzSK1P6xOkpr42v1ihFsCQ5vocTKDGEDnv8
-         Rftg==
-X-Forwarded-Encrypted: i=1; AJvYcCUYjE76bAnfKVx+YiAT/i2+++OQbdq3iWuyIPF77/yFYptKD3EXS9jEK45hiBvBfzIyvriMoWJHt0uPhE2knTmIWh/VzlgiyY4P0R3iPfgnTNOISbfzpgPvsurStk8H+xZ+SzeFDZK1ctmfDN4xk8LaW70NQla+Ma1Q+9c+sI1OxWA8KRWjgrOZVtflYo8P0BVu0CAX4qbBxre4RSdiB1k=
-X-Gm-Message-State: AOJu0YycfI4gVkc8yZl5Xi5m//o2tYlZASSjgwcNfgDducsOfaFAhg7a
-	h1b/Yv3KIgpDfpP5QTSXGv4CEm4abTctyEGCyx2ttU+AssNFaIJEyMDci83x7pGAzfUn9toW+4q
-	hY8C1gxHG7ENPbXUsEDAbKibfHOk=
-X-Google-Smtp-Source: AGHT+IENQGSo2CY36rseL4WEmz3mPXsVW0fWojGGC/2UdA9byb37TJLO4V6lJIqrbscjz/c+UmnsE5alQVGx2i6us3s=
-X-Received: by 2002:a05:6402:320d:b0:56b:9ef8:f656 with SMTP id
- g13-20020a056402320d00b0056b9ef8f656mr149159eda.7.1710836951986; Tue, 19 Mar
- 2024 01:29:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4ZgKtM20"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Li0IlAAMTj1OwxT9IZUqsIqrQyZc0bu0ZTf1LvTCV7HIKhn04bnAI/jzYZeLwIBZzVZiFSl2m5ms1SuLOBryYwJuiXg03d9/QxEqXSPNSgojkqBHrzJiW8uuoZnwNSeWrppcwf0FdPimuqYSfoThxeqJ7DLiOmzYypGdMepmuy5Mz3uHFhRcauNRlYUHugwJtTl5kPGmAbaAdIEhVqdipMBu3QZ0F8qmf0+nK3Mp/bDiGqfrM76u1TDZOclI2Bkygihek0o/UtDNEbwoHhxa28lWACX6vR3Cd1FUD0eLz28tz2mdq66yKEZBtlQWcGKR2rcBzlTnBZYvtDwQa3lAfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gmMGYmAfZoM8710DzJKs9Npp9QaOVlOTT5Egye2i8uM=;
+ b=NDGG5OcM/oANN5Q7hWyvAg9Y5I5jmTcjkeAng2PkIuPWktcZLpt0Noc3D06WBBT+/5rrw/d6lKXO1lkJTfkw6it9PdpdbR26b9GZ/f0pAPceeONL4JQbUaOtJNOXdDzqi8X9XpDgVeC9px4YG9Mro+LgHWNc70UENdnBiFINIFgNjemUj8FDGSdzg4MMRfdcfBngJHPMYaSw9lptCrBUfvD2EZos/nOA+RgFL/8UIrSBQ2fmDNxgoVZcfRT5ZsBsp2GpUgjnnmo/Z66Fb9l9ggVvvX+01BvDPwVwRSS0mLiAfOEZQ4GsFO2u8PF3QdvPPVoQKvl//3hYA9jFYba29A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gmMGYmAfZoM8710DzJKs9Npp9QaOVlOTT5Egye2i8uM=;
+ b=4ZgKtM20ekcR9SCt268EiO9qvWeCuz8nuxQOGTd2CLvCSMOimuB1Kk1JVzRKuuA1iuwEXPZFKoBLpVoMXIHpwlhyFiBmfICeQfzZdrTBr/i3qn6yU00vxH2wUVxGWpyOv6PXQ4VYBxm5bvz+bWvMA/mKsSQQV3K6ysA67yCF0zk=
+Received: from SJ0PR05CA0118.namprd05.prod.outlook.com (2603:10b6:a03:334::33)
+ by MN6PR12MB8591.namprd12.prod.outlook.com (2603:10b6:208:471::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.27; Tue, 19 Mar
+ 2024 08:29:11 +0000
+Received: from SJ5PEPF000001D2.namprd05.prod.outlook.com
+ (2603:10b6:a03:334:cafe::9e) by SJ0PR05CA0118.outlook.office365.com
+ (2603:10b6:a03:334::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.11 via Frontend
+ Transport; Tue, 19 Mar 2024 08:29:10 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ5PEPF000001D2.mail.protection.outlook.com (10.167.242.54) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7409.10 via Frontend Transport; Tue, 19 Mar 2024 08:29:10 +0000
+Received: from pyuan-Chachani-VN.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 19 Mar 2024 03:29:06 -0500
+From: Perry Yuan <perry.yuan@amd.com>
+To: <rafael.j.wysocki@intel.com>, <Mario.Limonciello@amd.com>,
+	<viresh.kumar@linaro.org>, <gautham.shenoy@amd.com>,
+	<Borislav.Petkov@amd.com>, <Ray.Huang@amd.com>
+CC: <Alexander.Deucher@amd.com>, <Xinmei.Huang@amd.com>,
+	<oleksandr@natalenko.name>, <Xiaojian.Du@amd.com>, <Li.Meng@amd.com>,
+	<linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v9 2/8] cpufreq: amd-pstate: Document the units for freq variables in amd_cpudata
+Date: Tue, 19 Mar 2024 16:28:37 +0800
+Message-ID: <0ee190df1d882d826faeeee28a000b06eacf6034.1710836407.git.perry.yuan@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1710836407.git.perry.yuan@amd.com>
+References: <cover.1710836407.git.perry.yuan@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240316-loongson1-dma-v6-0-90de2c3cc928@gmail.com>
- <20240316-loongson1-dma-v6-1-90de2c3cc928@gmail.com> <20240317-exorcist-spectator-90f5acb3fe2a@spud>
- <CAJhJPsWOUZsWFvreRrPqQHAjYW7uRT31THHi7CRDN46+nHpL9g@mail.gmail.com>
-In-Reply-To: <CAJhJPsWOUZsWFvreRrPqQHAjYW7uRT31THHi7CRDN46+nHpL9g@mail.gmail.com>
-From: Keguang Zhang <keguang.zhang@gmail.com>
-Date: Tue, 19 Mar 2024 16:28:35 +0800
-Message-ID: <CAJhJPsXzGjD43nj7eLPSmtDLgp1FCvzJFRJDDTY=9Uq_Dc8Qdg@mail.gmail.com>
-Subject: Re: [PATCH v6 1/2] dt-bindings: dma: Add Loongson-1 DMA
-To: Conor Dooley <conor@kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-mips@vger.kernel.org, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D2:EE_|MN6PR12MB8591:EE_
+X-MS-Office365-Filtering-Correlation-Id: 22bd9725-3788-4591-9231-08dc47eea6ec
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	5+9QYS6KXkhhJ7tP1lgxzmR+Ud9Fs2vk3HvAsOlgrXMTo6+CV9aR0NL48kZaRPewGN2+f8zdDaCQ0wDEWwEz4cwp6tc8kHz9WNSWyH2LqbrLusm1GhDUEkucZWh1G5tJiWuNoZ2nwePho4SpXaZP7p0TmFgSW9DwTcqkWRX9yb9+d74sZzjDyg0paS1xZBAZ/U+l6Onw8t+KoMHMfatieAKEdc0HH0xKo6m53hJOknmCEWe7TvRB8H3sclJEYfGjlSLdpX/9xDA0k9GNuRzwv7dI8zBzNfED84AxZlW/FD7DuuJRdu0VTUsygSoDQNj2nPxf9bA/kjmlUeSmpnhL9BoO8WFetdQsPNYL6TXRAbREQTR0c9aOgBwh5ZTPTf/fmiF5CA2lmufYRZcmgRCY2hIYB5y6T7ke4alHTGzYbHw46ll/5TFbzmpCj9iV1s+hAAjU21fT2ImNjvtx1XwntLRVk/+mrz/SKpl+2KZsnNEpUxuaO9FUFyki2iY8XHdhPJQ0dX1rquyaL8OeswG0tCtjxm4bCwzHfxSIb9U6iNICnK43ZKLqSzU4FaTPXRya++64+QvEfWG7mBkJulhtwdy0WvH1g4eE0zmqpetZPgY1Xs/epkrctMjMb16PlVS5tMa2zSU+hGRL208/1Y9eWYqAM7NoOaqlBrmZGUtjLNb8CCxruIBTXo9NsHVmBJ537gqC2qwxpH67uHNKSoQB/5ocX3Pb39CaCRRqiZWkb2qvseujPCSuK5lysMcb3K8P
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(1800799015)(82310400014)(376005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2024 08:29:10.6671
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22bd9725-3788-4591-9231-08dc47eea6ec
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001D2.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR12MB8591
 
-On Mon, Mar 18, 2024 at 2:18=E2=80=AFPM Keguang Zhang <keguang.zhang@gmail.=
-com> wrote:
->
-> On Sun, Mar 17, 2024 at 10:40=E2=80=AFPM Conor Dooley <conor@kernel.org> =
-wrote:
-> >
-> > On Sat, Mar 16, 2024 at 07:33:53PM +0800, Keguang Zhang via B4 Relay wr=
-ote:
-> > > From: Keguang Zhang <keguang.zhang@gmail.com>
-> > >
-> > > Add devicetree binding document for Loongson-1 DMA.
-> > >
-> > > Signed-off-by: Keguang Zhang <keguang.zhang@gmail.com>
-> > > ---
-> > > V5 -> V6:
-> > >    Change the compatible to the fallback
-> > >    Some minor fixes
-> > > V4 -> V5:
-> > >    A newly added patch
-> > > ---
-> > >  .../devicetree/bindings/dma/loongson,ls1x-dma.yaml | 66 ++++++++++++=
-++++++++++
-> > >  1 file changed, 66 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/dma/loongson,ls1x-dma.=
-yaml b/Documentation/devicetree/bindings/dma/loongson,ls1x-dma.yaml
-> > > new file mode 100644
-> > > index 000000000000..06358df725c6
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/dma/loongson,ls1x-dma.yaml
-> > > @@ -0,0 +1,66 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/dma/loongson,ls1x-dma.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Loongson-1 DMA Controller
-> > > +
-> > > +maintainers:
-> > > +  - Keguang Zhang <keguang.zhang@gmail.com>
-> > > +
-> > > +description:
-> > > +  Loongson-1 DMA controller provides 3 independent channels for
-> > > +  peripherals such as NAND and AC97.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    oneOf:
-> > > +      - const: loongson,ls1b-dma
-> > > +      - items:
-> > > +          - enum:
-> > > +              - loongson,ls1c-dma
-> > > +          - const: loongson,ls1b-dma
-> >
-> > Aren't there several more devices in this family? Do they not have DMA
-> > controllers?
-> >
-> You are right. Loongson1 is a SoC family.
-> However, only 1A/1B/1C have DMA controller.
->
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    description: Each channel has a dedicated interrupt line.
-> > > +    minItems: 1
-> > > +    maxItems: 3
-> >
-> > Is this number not fixed for each SoC?
-> >
-> Yes. Actually, it's fixed for the whole family.
->
-> > > +  interrupt-names:
-> > > +    minItems: 1
-> > > +    items:
-> > > +      - pattern: ch0
-> > > +      - pattern: ch1
-> > > +      - pattern: ch2
-> >
-> > Why have you made these a pattern? There's no regex being used here at
-> > all.
-> >
-> Will change items to the following regex.
->   interrupt-names:
->     minItems: 1
->     items:
->       - pattern: "^ch[0-2]$"
->
-Sorry. This pattern fails in dt_binding_check.
-Will use const instead of pattern.
-  interrupt-names:
-   items:
-     - const: ch0
-     - const: ch1
-     - const: ch2
+From: "Gautham R. Shenoy" <gautham.shenoy@amd.com>
 
+The min_limit_freq, max_limit_freq, min_freq, max_freq, nominal_freq
+and the lowest_nominal_freq members of struct cpudata store the
+frequency value in khz to be consistent with the cpufreq
+core. Update the comment to document this.
 
-> Thanks!
->
-> > Cheers,
-> > Cono4.
->
->
->
-> --
-> Best regards,
->
-> Keguang Zhang
+Signed-off-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
+Signed-off-by: Perry Yuan <perry.yuan@amd.com>
+---
+ include/linux/amd-pstate.h | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
+diff --git a/include/linux/amd-pstate.h b/include/linux/amd-pstate.h
+index 212f377d615b..ab7e82533718 100644
+--- a/include/linux/amd-pstate.h
++++ b/include/linux/amd-pstate.h
+@@ -51,15 +51,15 @@ struct amd_aperf_mperf {
+  * 		  priority.
+  * @min_limit_perf: Cached value of the perf corresponding to policy->min
+  * @max_limit_perf: Cached value of the perf corresponding to policy->max
+- * @min_limit_freq: Cached value of policy->min
+- * @max_limit_freq: Cached value of policy->max
+- * @max_freq: the frequency that mapped to highest_perf
+- * @min_freq: the frequency that mapped to lowest_perf
+- * @nominal_freq: the frequency that mapped to nominal_perf
+- * @lowest_nonlinear_freq: the frequency that mapped to lowest_nonlinear_perf
++ * @min_limit_freq: Cached value of policy->min (in khz)
++ * @max_limit_freq: Cached value of policy->max (in khz)
++ * @max_freq: the frequency (in khz) that mapped to highest_perf
++ * @min_freq: the frequency (in khz) that mapped to lowest_perf
++ * @nominal_freq: the frequency (in khz) that mapped to nominal_perf
++ * @lowest_nonlinear_freq: the frequency (in khz) that mapped to lowest_nonlinear_perf
+  * @cur: Difference of Aperf/Mperf/tsc count between last and current sample
+  * @prev: Last Aperf/Mperf/tsc count value read from register
+- * @freq: current cpu frequency value
++ * @freq: current cpu frequency value (in khz)
+  * @boost_supported: check whether the Processor or SBIOS supports boost mode
+  * @hw_prefcore: check whether HW supports preferred core featue.
+  * 		  Only when hw_prefcore and early prefcore param are true,
+-- 
+2.34.1
 
-
---
-Best regards,
-
-Keguang Zhang
