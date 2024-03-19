@@ -1,105 +1,105 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C00B340871;
-	Tue, 19 Mar 2024 06:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB2C4594E;
+	Tue, 19 Mar 2024 06:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710828421; cv=none; b=JSau1KpDFL/PFl5U9b66r4nGNA5XCc2gutHQSjd0QD3p8kJdjMEDY5SqIJCSOrOJDE1IyQOuXO0m+pzddZxY7HtHT4aEAuJQ+cD2NFY97nQDabOVQ5GQA4fM5xzCQfoSFtUSnVJBjJ3iwDhmSWZAC3ZUwCs5OWEGf2it3X+q+Rk=
+	t=1710828447; cv=none; b=NE0oy0ygP31eNoZa+ux52QhD5DfF3kf+fUUh9qeoHOt4KR7OlRpEY/1xmuHmE854hhUoPUP8qTSgW7cDOWZzMCeg89BAKmO1rRuoqAC4o5gd40sGPMpm+Qmshy2PR+2nyNiVRGxkGNXANbe87WK7HCcGH1c+O00xhE1SKEZ1uO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710828421; c=relaxed/simple;
-	bh=/7//9IvK644zKbbWFR+2Mg8EQuaMO1xLAgjlV0hPrGs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FMt0T6sdx33v1UctYXTrLxac67iuxYakuoqguhk+7Q37+hral4csKhucdylYEOI9TfDr0GOAJL5BkivAehaTfqGgmq9Xp4un9w2q+R9+lVu7jku8bO7Xj+WOjhB1XHSDDjhEeYLwcUKyJ2AGGA+ttej0lWDL9wGV2akGEF319sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WIWys34m; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WIWys34m"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-29e0229d6b5so2575401a91.3;
-        Mon, 18 Mar 2024 23:06:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710828419; x=1711433219; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tREO4d8RmiNtsd+whKdi4MR0BBPbIXQPPfzk16lCgjE=;
-        b=WIWys34mbSyj+Y/iUxiChHFBFxNQvOEXNty2HmqjEmQ4PLfYBSVdkbAoKObk+B6wew
-         jifWN99WNBmtJAGVvfPdLzP5eWHfDTbqGefl8Kwp8/8OstFEVA61WJXz/mIufsqnm0w5
-         4O+v9U9oXNqT3GOj38gTbssCTL6GTWINNMi9XlDZW44aJW2ibBbORffzKESaOzKF4usJ
-         SFA0OkspyuwtCMRtpOJ0eenUEmWS48iJMPQDZELECsOFbkJHHfqqxhXJ61LXmqK9SzSO
-         L5KmDXxKgu5KaZCVQvFtB6KqzuqPn8OZDolWiaiJe2yTA/YLv84OthHrkbOO4Z4EuYrq
-         F6Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710828419; x=1711433219;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tREO4d8RmiNtsd+whKdi4MR0BBPbIXQPPfzk16lCgjE=;
-        b=ScxIhAvxBqb4ZAz65z77+PnGGbetNX5R/J0G/mIEmivE/bLyzLEP15dXp6GT/mUgmm
-         77Z1mvlnPWd4YKcP3FXyT1KEfudyMGn0trnPVac7m5WrqN3bxy5ylj9cw/j7zJk/ybRd
-         QJ0/0KfIO870uXG/w5VhodFmz0sfaH6jTYPG3eUShyBicNaP+tZ8puyvkUqY4weY/sh/
-         zm/421uA9riu8jC+/O72B9dm3+Jo5zs8sGm3cNjY8Aql5gPzBiwIhSByqNSmDkmHnPHi
-         9zPBZUuiio6CSWS6K1U88D5kF1i5zrMnJF9AvSyRmp6Uc4CXnxbnaqTh2I22Et5cSsgp
-         dT/A==
-X-Forwarded-Encrypted: i=1; AJvYcCXLc9vKyIDLmhyslctSKy0h6W8fPdVKWkL0E2Vcvzu1uphXRe0pKVhwaMEpJLeTjuiFSCqEzBnLoSBdL3KCzu2sszuMKlLoYGnFnqhy
-X-Gm-Message-State: AOJu0Yz6M8sJzsVwUhmB5tU5FEXc5HST9fwB06YFVciBr1CvthQ+MVVU
-	Hh+ZoBzpzvP3TL4NkJLCqrWt/NptKJNoC9HOn5VXNYK9ALAKWx98QyNrYEYt
-X-Google-Smtp-Source: AGHT+IH187ljG8QdZPrNOqG+UAbYRdtcWoMKe+UDZx9PIRwBTWm+C1MuVXwFjzCmoA4pTNn/2wG5pg==
-X-Received: by 2002:a17:90a:17e4:b0:29d:e004:f8ce with SMTP id q91-20020a17090a17e400b0029de004f8cemr12421175pja.6.1710828418589;
-        Mon, 18 Mar 2024 23:06:58 -0700 (PDT)
-Received: from archlinux.srmu.edu.in ([103.4.221.252])
-        by smtp.gmail.com with ESMTPSA id ee12-20020a17090afc4c00b0029ade1f7abasm8747004pjb.4.2024.03.18.23.06.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 23:06:58 -0700 (PDT)
-From: Anshul Dalal <anshulusr@gmail.com>
-To: linux-iio@vger.kernel.org,
+	s=arc-20240116; t=1710828447; c=relaxed/simple;
+	bh=97rmmRyR/THWjxWYYtBPperXwuTci/JnGu8FEM9o6/M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NWnfvVYHorWJNhlOxEhwHpQmhRqc9/ndlsMjw73uNaO4F+ypIA6LWLFEe+amR+5JZyOhMCJhfY5OYUdTvkvnf1wQmaNxaivX9wZZVfspvK1Eb7q25XbnhO2Xox+ftvXZPb/3QcnUXM1rfDbwEw1D68YNRYs/q5ogC0ivluGFIlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 58ace020264d481a83be61a850fd3cbb-20240319
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:7193bbf2-430b-478f-801c-480c7314e308,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-5
+X-CID-INFO: VERSION:1.1.37,REQID:7193bbf2-430b-478f-801c-480c7314e308,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:6f543d0,CLOUDID:55bba981-4f93-4875-95e7-8c66ea833d57,B
+	ulkID:240319135640TV1N0V1G,BulkQuantity:0,Recheck:0,SF:17|19|44|66|38|24|1
+	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC
+	:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS
+X-UUID: 58ace020264d481a83be61a850fd3cbb-20240319
+X-User: aichao@kylinos.cn
+Received: from localhost.localdomain [(112.64.161.44)] by mailgw
+	(envelope-from <aichao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1627458638; Tue, 19 Mar 2024 13:56:38 +0800
+From: Ai Chao <aichao@kylinos.cn>
+To: corentin.chary@gmail.com,
+	luke@ljones.dev,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Anshul Dalal <anshulusr@gmail.com>,
-	jic23@kernel.org,
-	ciprian.hegbeli@analog.com,
-	marcelo.schmitt@analog.com,
-	dragos.bogdan@analog.com
-Subject: iio: GSoC 2024: RFC on AD7294-2 driver proposal
-Date: Tue, 19 Mar 2024 11:35:27 +0530
-Message-ID: <20240319060528.1238089-1-anshulusr@gmail.com>
-X-Mailer: git-send-email 2.43.0
+Cc: Ai Chao <aichao@kylinos.cn>
+Subject: [PATCH v1] platform/x86: asus-wmi: use sysfs_emit() instead of sprintf()
+Date: Tue, 19 Mar 2024 13:56:36 +0800
+Message-Id: <20240319055636.150289-1-aichao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hello everyone,
+This changes all *_show attributes in asus-wmi.c to use sysfs_emit()
+instead of the older method of writing to the output buffer manually.
 
-I am Anshul Dalal, a pre-final year student at SRMIST (India). I am
-pursuing my Bachelor's in Computer Science and Engineering and wish to
-participate in GSoC 2024 as part of The Linux Foundation under the IIO
-worksgroup.
+Follow the advice in Documentation/filesystems/sysfs.rst:
+show() should only use sysfs_emit() or sysfs_emit_at() when formatting
+the value to be returned to user space.
 
-Following the suggestion from the IIO GSoC page[1], I would like to work
-on a driver for AD7294-2. I am interested in the device since it offers
-a wide array of functionality that is different from my past IIO
-drivers[2]. I have prepared a draft proposal and would like to get early
-feedback:
-https://docs.google.com/document/d/1zf9yDq2-Ba8Vqh10w1cYI3buHzh0qIYwzf7xBkaEzDM
-
-I'm aware of interest in the same device from other contributors[3]. If
-required, I'm ready to work on any other part suggested by the company
-or the IIO community.
-
-Best regards,
-Anshul
-
+Signed-off-by: Ai Chao <aichao@kylinos.cn>
 ---
+ drivers/platform/x86/asus-wmi.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-[1]: https://wiki.linuxfoundation.org/gsoc/2024-gsoc-iio-driver
-[2]: Microchip MCP4821 DAC:
-     https://lore.kernel.org/lkml/20231220151954.154595-1-anshulusr@gmail.com/
-     LiteOn LTR390 light sensor:
-     https://lore.kernel.org/lkml/20231208102211.413019-1-anshulusr@gmail.com/
-     Aosong AGS02MA air quality sensor:
-     https://lore.kernel.org/lkml/20231215162312.143568-1-anshulusr@gmail.com/
-[3]: https://lore.kernel.org/linux-iio/20240229184636.13368-1-danascape@gmail.com/
-     https://lore.kernel.org/linux-iio/YlXR0d7waKW9xncd@fedora/
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 3f07bbf809ef..df4c103459da 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -2326,7 +2326,7 @@ static ssize_t pwm1_show(struct device *dev,
+ 
+ 	/* If we already set a value then just return it */
+ 	if (asus->agfn_pwm >= 0)
+-		return sprintf(buf, "%d\n", asus->agfn_pwm);
++		return sysfs_emit(buf, "%d\n", asus->agfn_pwm);
+ 
+ 	/*
+ 	 * If we haven't set already set a value through the AGFN interface,
+@@ -2512,8 +2512,8 @@ static ssize_t asus_hwmon_temp1(struct device *dev,
+ 	if (err < 0)
+ 		return err;
+ 
+-	return sprintf(buf, "%ld\n",
+-		       deci_kelvin_to_millicelsius(value & 0xFFFF));
++	return sysfs_emit(buf, "%ld\n",
++			  deci_kelvin_to_millicelsius(value & 0xFFFF));
+ }
+ 
+ /* GPU fan on modern ROG laptops */
+@@ -4061,7 +4061,7 @@ static ssize_t show_sys_wmi(struct asus_wmi *asus, int devid, char *buf)
+ 	if (value < 0)
+ 		return value;
+ 
+-	return sprintf(buf, "%d\n", value);
++	return sysfs_emit(buf, "%d\n", value);
+ }
+ 
+ #define ASUS_WMI_CREATE_DEVICE_ATTR(_name, _mode, _cm)			\
+-- 
+2.25.1
+
