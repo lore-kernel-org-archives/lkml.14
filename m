@@ -1,96 +1,122 @@
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.124.171])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20CE64CE8
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 01:48:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.124.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1E18F72
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 01:48:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710812936; cv=none; b=JF12yTVYQOemOpEJGgnIXg/A/PDG4PJZJjx4C/ufhlGo92DxeXcpkvh+LWeKlNAUNVplG1tK1Y9T3hmaJ6wuJUNDkxhcp8Vp91jFtSVFZTtyDt9edWzQeQ5vkfOWSU3Tdo0aCkwMYHknpzTgQQD+TTJVYhKlTVvkv2nIsRkDHT0=
+	t=1710812937; cv=none; b=e9PWNTNbinEba5vK2FN2xa1I9hWFk4HzXCguFw254SzwmnBlsqPqbcOd31r2W+BhrasyUkI1U+38TNQahzh1/VcG3OHp5ecDL5VRODuirGKaFEBJ5RnuhcRgAaOV5VuydAJ4BAGDUQKJ8j/sVT0ZFi7ZQMgk3JNK12C8Hsl85CQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710812936; c=relaxed/simple;
-	bh=vIuX7v/1lkLgY2fOi60Jxyk4Xs4mf3t/50VIOV3Ewqc=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=txtC2N/a3665oF4k6Pvj2y7LXIOoKl22GNE0BeDCpzl8ApU1xvwKQ74j1TCSqhUq8Gsnq08TcwUfMTYF9t4v/LOnhrk91Mv2sBiEHHUp8r/y1R+s/jnqDUCd7toADGPLuXTHgQemvUFgZ1iAiD8GWJ5/gk2Jl4BPFAr3GT7YHyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=114.132.124.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-X-QQ-mid: bizesmtp87t1710812787txn79iic
-X-QQ-Originating-IP: nn20Uw5fBjQGjECP/p7Tcj6Nc3iToFw+wfLTiBd77ls=
-Received: from [10.7.13.112] ( [125.76.217.162])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 19 Mar 2024 09:46:25 +0800 (CST)
-X-QQ-SSF: 01400000000000D0I000000A0000000
-X-QQ-FEAT: eSZ1CZgv+JDqNoDswHbdN6UkMSJdNx7bqXAFK4WPcUlEHxtEbTEJnQFMwJTO5
-	RTO+LnPR5Krhjq5ZGeDmTEYJ8MNnDG6gjOBpp9Ax11jUQqgCj2F4oEcGb2jEJtbqQboOKms
-	ncYHQS/5cqIojItGaDrHSmLMScUoHqClPii5bL1Xm2MXXU03qfCIAE2F1kGxSaDdocKhoaS
-	NF80/FJERbewbsukgZ/bMN8yz4utTxXn3QmDOBX0qaSRbzT7y4T6EM4O7dI/MHJp0E7Q2aj
-	0FB4UXI0uh8mqiOZflL/TJio1G+NwKxlQzWQ0r0zo77Ovh0OicFEWtVNLRucq6d8HPWYsyo
-	5+1h6kABdrNxjUxYgC4IVyqDbCTyamY/Vnx8TkOvOrscPHC6Ow=
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 15793990951295875605
-Subject: Re: [PATCH v2] locking/osq_lock: Optimize osq_lock performance using
- per-NUMA
-To: David Laight <David.Laight@ACULAB.COM>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "mingo@redhat.com" <mingo@redhat.com>, "will@kernel.org" <will@kernel.org>,
- "longman@redhat.com" <longman@redhat.com>,
- "boqun.feng@gmail.com" <boqun.feng@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20240318055023.25546-1-guohui@uniontech.com>
- <e8e933ab37f84ac68ac70f4b1ed8d524@AcuMS.aculab.com>
-From: Guo Hui <guohui@uniontech.com>
-Message-ID: <660FFEAB399D5815+aa201e41-b902-3fa3-fb4a-333a166b9cd4@uniontech.com>
-Date: Tue, 19 Mar 2024 09:46:25 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+	s=arc-20240116; t=1710812937; c=relaxed/simple;
+	bh=LnWlBNfTDWHh58y1phkPOt1JzGmEm4RmOHBPdmXruQo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kCn7XmdOTI2iyFKd/aNWMxsj5l0rAwxvWIkZk4+FFrT0b+Wlt80uiI7Sb/BgTSwyIU7xlHlwkZZunclOotn4e69zJyBO+RS5ywZqwlvHmDpXSuIdK4LTPlVP3i198Wxs+D9BlAMRmU/hYiChMAI1r8W5BEJdi2OHXRJjbb8xWLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UfV9D6U4; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UfV9D6U4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710812935; x=1742348935;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=LnWlBNfTDWHh58y1phkPOt1JzGmEm4RmOHBPdmXruQo=;
+  b=UfV9D6U45lnUDk4nSWSCFpT/CO8qpOZqoUkZp2DYPqJpOrwtoJ0anDiD
+   bETaFEZolMIM8wrA8GujaaaMpvehvcDCxTZwdpJz/p8tJjaBD80aEgjDj
+   2L1ylMsDqxsRSlpXk4IIVta/r/Qtwc1VTeuYmJemW1+OOl1iMAXiKUbB4
+   xCScKfzOi2HdwJdAH63JYT4PA+hpOR6lzLrPTcc/HhR4dWmhwY4Vpk29f
+   hpbcIeYmnAzN+IrZ1D83BcS1+JPNkYcs8pyH9hRkNfPhZCfd7qCDpjKxy
+   dnz+bXWSDhCKYnbeHFfKbD7MU1qZ7b5fsgikmEO2cYMua7H/1H6VFbSE7
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="5776866"
+X-IronPort-AV: E=Sophos;i="6.07,135,1708416000"; 
+   d="scan'208";a="5776866"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 18:48:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,135,1708416000"; 
+   d="scan'208";a="13697312"
+Received: from server.sh.intel.com ([10.239.53.117])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 18:48:50 -0700
+From: Kai Huang <kai.huang@intel.com>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org,
+	dave.hansen@intel.com,
+	bp@alien8.de,
+	kirill.shutemov@linux.intel.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	hpa@zytor.com,
+	luto@kernel.org,
+	peterz@infradead.org,
+	rick.p.edgecombe@intel.com,
+	thomas.lendacky@amd.com,
+	ashish.kalra@amd.com,
+	chao.gao@intel.com,
+	bhe@redhat.com,
+	nik.borisov@suse.com,
+	pbonzini@redhat.com,
+	seanjc@google.com
+Subject: [PATCH v2 0/5] TDX host: kexec() support
+Date: Tue, 19 Mar 2024 01:48:43 +0000
+Message-Id: <cover.1710811610.git.kai.huang@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <e8e933ab37f84ac68ac70f4b1ed8d524@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrsz:qybglogicsvrsz4a-0
+Content-Transfer-Encoding: 8bit
+
+Currently kexec() support and TDX host are muturally exclusive in the
+Kconfig.  This series adds the TDX host kexec support so that they can
+work together and can be enabled at the same time in the Kconfig.
+
+v1 -> v2:
+ - Do unconditional WBINVD during kexec() -- Boris
+ - Change to cover crash kexec() -- Rick
+ - Add a new patch (last one) to add a mechanism to reset all TDX private
+   pages due to having to cover crash kexec().
+ - Other code improvements  -- Dave
+ - Rebase to latest tip/master.
+
+Hi Dave, Sean, Paolo,
+
+The last patch provides a new mechanism to handle all other TDX private
+pages when they become possible to exist, e.g., when KVM is ready to run
+TDX guests.  It's not mandatory at this stage because currently we only
+have PAMT as private pages, but if we agree it's the right way to do then
+it can be applied together with rest patches too.
+
+KVM will be the first user of this, could you help to review?
+
+Thanks in advance.
+
+Hi Tom, Ashish,
+
+This series touches AMD SME code too, and I don't have AMD machine to
+test.  I appreciate if you can help to review and/or test.
+
+Kai Huang (5):
+  x86/kexec: do unconditional WBINVD in stop_this_cpu()
+  x86/kexec: do unconditional WBINVD in relocate_kernel()
+  x86/kexec: Reset TDX private memory on platforms with TDX erratum
+  x86/virt/tdx: Remove the !KEXEC_CORE dependency
+  x86/virt/tdx: Add TDX memory reset notifier to reset other private
+    pages
+
+ arch/x86/Kconfig                     |   1 -
+ arch/x86/include/asm/kexec.h         |   3 +-
+ arch/x86/include/asm/tdx.h           |  16 +++++
+ arch/x86/kernel/machine_kexec_64.c   |  30 ++++++--
+ arch/x86/kernel/process.c            |  17 ++---
+ arch/x86/kernel/relocate_kernel_64.S |  13 +---
+ arch/x86/virt/vmx/tdx/tdx.c          | 100 +++++++++++++++++++++++++++
+ 7 files changed, 150 insertions(+), 30 deletions(-)
 
 
-On 3/18/24 5:47 PM, David Laight wrote:
-> From: Guo Hui
->> Sent: 18 March 2024 05:50
->>
->> Changes in version v1:
->> The queue is divided according to NUMA nodes,
->> but the tail of each NUMA node is still stored
->> in the structure optimistic_spin_queue.
-> The description should be before any 'changes'.
-> The changes between versions don't go into the commit message.
->
-> Does this change affect a real workload, or just some benchmark?
->
-> In reality you don't want a lot of threads waiting on a single
-> lock (of any kind).
-> So if a real workload is getting a long queue of waiters on
-> an OSQ lock then the underlying code really needs fixing to
-> 'not do that' (either by changing the way the lock is held
-> or acquired).
->
-> The whole osq lock is actually quite strange.
-> (I worked out how it all worked a while ago.)
-> It is an ordered queue of threads waiting for the thread
-> spinning on a mutex/rwlock to either obtain the mutex or
-> to give up spinning and sleep.
-> I suspect that the main benefit over spinning on the mutex
-> itself is the fact that it is ordered.
-> It also remove the 'herd of wildebeest' doing a cmpxchg - but
-> one will win and the others do back to a non-locked poll.
->
-> Are the gains you are seeing from the osq-lock code itself,
-> or because the thread that ultimately holds the mutex is running
-> on the same NUMA node as the previous thread than held the mutex?
-
-This is because the thread that ultimately holds the mutex is running on 
-the same NUMA node as the previous thread than held the mutex.
+base-commit: 7e19a79344df2ed5e106091c29338962261b0290
+-- 
+2.34.1
 
