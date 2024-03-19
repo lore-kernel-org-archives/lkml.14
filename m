@@ -1,143 +1,147 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C287D071
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 09:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83A97D079
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 09:41:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710841286; cv=none; b=qENCe/0KqH9DJ+8vCMvnWQU1CiEsUmjxDJrCapqdbF0DqNH2Mjbve9/DC9iLhBK1YIiyO/jTdiF+f6z7kz+yIvKStxjaB+om6PJIngBUOddI4qEzY+Foj23ywXHUNcUZBbV8DnSlJEQ0N94GE5ACma2CjzjXjkhjNQ6uFYtRP+Q=
+	t=1710841302; cv=none; b=ZuiRlFx6n7jjJtUcWkXwYlNB69/EU6Sw1SWrtSdvatJk9s/YolhtNwKTCYcL0kW/UGWXz6Vo0mHwNXbICNG/FiA3ZpgkmVTlJNX4VLhpZibX+/NNEOBmjiwoOHIooN5sdKJHjv3qZSPEcWYuXy20T0jlhtPniKvQLak6YqA+//M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710841286; c=relaxed/simple;
-	bh=WSRXdaHyR/St2+sEZoOfX/v5Yu+ffUghmEGJ94qqbdM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=NEFBQjRlRC5cmd46iFGL3wxv6rpGw8CtHw2elHDwv1mDdyXmFY3nRItfM0LrbK8MYmiuqpdxeNlmE6h7Mh62zJYOe68CVuhVkwg4qiwdvQH/JTJK2jmN4wspvKinOqo1ni92v1/D2mShGta9ZbbcSDvXNC7zBKAbCdjv7tzSshU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3684bee9c40so3650915ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 02:41:24 -0700 (PDT)
+	s=arc-20240116; t=1710841302; c=relaxed/simple;
+	bh=e9942nq5aT5eyY8hrU8Ph3EpBv6qY/MhoAXI0Jf7c8U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kpY/ehbr5xxRe1SSrLVkQqaOYsepzsgzweeaQDOXnVEcbNyaD3sDWdntRo2MMqNM7dCEpUpY7z5fFR6U3lL3B67st10njoBnQrW3KCizGRYsE2epFUFElZAjclulL6kqUK4gzrOvdBwcV71otsjz9cA3HlYEW444SPFU9YdYu3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jEkhTND5; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jEkhTND5"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6e6bee809b8so4922050b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 02:41:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710841300; x=1711446100; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=puEj9jlVApVqcnYFYETJHMNHyp/J8GRj2biAnc/m+zM=;
+        b=jEkhTND59/2Jsej71HO0PAGiVsu7XJSLIPSwlELd2LTcO8b+iATSAwu0LQZulIS+qs
+         X5rfXP39mDqF/SuPCUhuiIkA5i6fYKNDPbgXZaDUfA4RpShdB3WOvmwrMdjROVcj2BiL
+         Woi40c82gRm+m1rJ91R7oxDUpjFzlq+lBAHFOjPCKB7k+P3wqzwGb61dRcpuLQxNFmOj
+         oqQP7+IUDFHOn4T0SLpHGVwdqtnstQEth0XUPrQAlUAxYD+1STlRlf+t2qA41JiRgddR
+         oGE67Pi46RlREexy8RMM9EP8tFuD5CCWKbHnxScAdqPUfIG/NYNKrmzZdHndtgVRSmJL
+         Crrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710841284; x=1711446084;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VOWak57WiH13JUfOTtx/gvvxfJdemGXy/XxXWhD0h1Y=;
-        b=TEEQwpL9Dhmp8H8qIwPYOMeo7lC6UZC8DfOIqGISIMUbfwWwUtkm+88JH92ySi3Zl6
-         6j0wc5THcHaZBLREA5HHf7yq7Q04409E3LjU+CfHsiSfafUUDH8DzKsFq1jRs5iaksEv
-         YNRAu+hHbjD0OM8BLifACerH8sH77nK7CjxhdHC/gfnSCKGjJH2+oI3aO5VyVc9poFyB
-         cFYTvUHIv4h6mutMltcftMZH7UXIQF2H1ZnCTK3HeS47xvSz/orJQSLFP8qduye9KqXb
-         PO/EGzdjX0KbLvVTX3iS++zmY4689hj17L21y0X04dWsFd7XhueKIrlz8eoT0AJm9Sev
-         3IAg==
-X-Forwarded-Encrypted: i=1; AJvYcCU92dPK/ixzCpvBYbx4O6OpR9vgoYggU/UJhyTpDRMkSRfvouqShJynLlA5lKto9fE2LYD8gjMvnI5L2hR6bc1nGLXjpzPq8y74+IJH
-X-Gm-Message-State: AOJu0YwRErzqFFiLx3V/5XseA9OxsQUPXH5SZsfLYmkRWWQZ5+fmk5Jc
-	WKsWW+ht6j3ADtp/tkl3tam19fodn+ANXiKVaeCSXe+6FW4FnJQ7yRPRkFzflY6MWPVwGr1k4cd
-	NU95JYV9MjXRoePRyJCM2yo8N6Z+9qLrm+Dnt0ZwVvT3sA/JUWVBxzgI=
-X-Google-Smtp-Source: AGHT+IHS9PU1oo63iSR4+FyL8Z/4O+lqtHH83DqqKSMZnqDkZX6bQfWJOe6A7Zs1CUxjy2Sx5LkjG3Vtyud+u7j1gI1lggIvW5jf
+        d=1e100.net; s=20230601; t=1710841300; x=1711446100;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=puEj9jlVApVqcnYFYETJHMNHyp/J8GRj2biAnc/m+zM=;
+        b=Bb9hmTzn+UCR+a60LQ33nXGbgFEDPc+wLHO/Jex/FqOUfsiGI6nx82582sLN+R/E8d
+         F49mr2ByfqUnjQWt7FOJZJXRvWsfh2ge+7Ffvj3g1erVlz/rLRPbOQ+p7+9swVt6ZOym
+         Th2H52Yb0c5d+BxlZKhgtJ6Vdv2ChEJmBIscUvTuhgcW68S+ior6bh8r0nDnr2dWJ8zX
+         gBAG024RDc8LfedoD1zV3fHUr9YeobRVC/No4Jibj6UEDfNmoGWQM0OCtqnCHkHxg75f
+         QE2RFnJv5VZmFj+HZJtEt3/MIi0TYeaMRaRxjI9JHygxL+UAGcf+v5IaMpXwBY3uycc3
+         rSEg==
+X-Forwarded-Encrypted: i=1; AJvYcCW9K/gHTIlqGwMatvxbYt2IoyRZyh0QuaTOwzJyGju+RbhUMYFvB0Sq3puLJyjidmvCYrbR1chtuVX+PRzfDaUkBiUhhirNA9j2iJ9c
+X-Gm-Message-State: AOJu0YytJojcMGNEZ1KBewy6XC1Bx+TUJfUjU//EtJj4Q0zYMyxoOC1X
+	RzeODKEulTdDzSQAeJTIGb2W3EB84/NR744DbuBPug0nSxh8uEIQ9Xptj6htYoGvw5jV
+X-Google-Smtp-Source: AGHT+IG4o+wBrs96/pLzi9W1461HZ72r8FyQRkQy+dgKMIyHVuf32UmjCcid72BjHEib7UXR5q9H/Q==
+X-Received: by 2002:a05:6a00:2301:b0:6e5:64cd:8f52 with SMTP id h1-20020a056a00230100b006e564cd8f52mr18473179pfh.0.1710841299968;
+        Tue, 19 Mar 2024 02:41:39 -0700 (PDT)
+Received: from KASONG-MB2.tencent.com ([43.132.141.21])
+        by smtp.gmail.com with ESMTPSA id i185-20020a62c1c2000000b006e583a649b4sm9708761pfg.210.2024.03.19.02.41.38
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 19 Mar 2024 02:41:39 -0700 (PDT)
+From: Kairui Song <ryncsn@gmail.com>
+To: linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	linux-kernel@vger.kernel.org,
+	Kairui Song <kasong@tencent.com>
+Subject: [PATCH 0/4] mm/filemap: optimize folio adding and splitting
+Date: Tue, 19 Mar 2024 17:27:29 +0800
+Message-ID: <20240319092733.4501-1-ryncsn@gmail.com>
+X-Mailer: git-send-email 2.43.0
+Reply-To: Kairui Song <kasong@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2196:b0:366:bbfb:5866 with SMTP id
- j22-20020a056e02219600b00366bbfb5866mr143668ila.3.1710841284084; Tue, 19 Mar
- 2024 02:41:24 -0700 (PDT)
-Date: Tue, 19 Mar 2024 02:41:24 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000015b940614004701@google.com>
-Subject: [syzbot] [mm?] WARNING: refcount bug in __reset_page_owner
-From: syzbot <syzbot+98c1a1753a0731df2dd4@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+From: Kairui Song <kasong@tencent.com>
 
-syzbot found the following issue on:
+Currently, at least 3 tree walks are needed for filemap folio adding a
+previously evicted folio. One for getting the order, one for ranged conflict
+check, and one for another order retrieving. If a split is needed, more walks
+are needed.
 
-HEAD commit:    741e9d668aa5 Merge tag 'scsi-misc' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=112d3bb9180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1c6662240382da2
-dashboard link: https://syzkaller.appspot.com/bug?extid=98c1a1753a0731df2dd4
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17d6ee31180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1338fc6e180000
+This series is trying to merge these walks, and speed up filemap_add_folio.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-741e9d66.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/1d3f3486333c/vmlinux-741e9d66.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/41a39292f22a/bzImage-741e9d66.xz
+Instead of doing multiple tree walks, do one optimism range check
+with lock hold, and exit if raced with another insertion. If a shadow
+exists, check it with a new xas_get_order helper before releasing the
+lock to avoid redundant tree walks for getting its order.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+98c1a1753a0731df2dd4@syzkaller.appspotmail.com
+Drop the lock and do the allocation only if a split is needed.
 
-------------[ cut here ]------------
-refcount_t: decrement hit 0; leaking memory.
-WARNING: CPU: 0 PID: 42 at lib/refcount.c:31 refcount_warn_saturate+0x1ed/0x210 lib/refcount.c:31
-Modules linked in:
-CPU: 0 PID: 42 Comm: kcompactd0 Not tainted 6.8.0-syzkaller-11339-g741e9d668aa5 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-RIP: 0010:refcount_warn_saturate+0x1ed/0x210 lib/refcount.c:31
-Code: 8b e8 17 19 d5 fc 90 0f 0b 90 90 e9 c3 fe ff ff e8 e8 7b 12 fd c6 05 a1 c1 0e 0b 01 90 48 c7 c7 80 75 6e 8b e8 f4 18 d5 fc 90 <0f> 0b 90 90 e9 a0 fe ff ff 48 89 ef e8 42 64 6d fd e9 44 fe ff ff
-RSP: 0018:ffffc900009a7350 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff814fc049
-RDX: ffff8880186e2440 RSI: ffffffff814fc056 RDI: 0000000000000001
-RBP: ffff8881064ad33c R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff8881064ad33c
-R13: 0000000000000000 R14: 00000000026401ed R15: ffff888016a2c278
-FS:  0000000000000000(0000) GS:ffff88806b200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055556f261ca8 CR3: 000000000d57a000 CR4: 0000000000350ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __refcount_dec include/linux/refcount.h:336 [inline]
- refcount_dec include/linux/refcount.h:351 [inline]
- dec_stack_record_count mm/page_owner.c:215 [inline]
- __reset_page_owner+0x2ea/0x370 mm/page_owner.c:253
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1141 [inline]
- free_unref_page_prepare+0x527/0xb10 mm/page_alloc.c:2347
- free_unref_page+0x33/0x3c0 mm/page_alloc.c:2487
- __folio_put_small mm/swap.c:119 [inline]
- __folio_put+0x166/0x1f0 mm/swap.c:142
- folio_put include/linux/mm.h:1506 [inline]
- migrate_folio_done+0x27a/0x320 mm/migrate.c:1106
- migrate_folio_move mm/migrate.c:1329 [inline]
- migrate_pages_batch+0x18a4/0x2c60 mm/migrate.c:1778
- migrate_pages_sync mm/migrate.c:1844 [inline]
- migrate_pages+0x1b9f/0x2840 mm/migrate.c:1953
- compact_zone+0x1f68/0x41c0 mm/compaction.c:2659
- compact_node+0x1a2/0x2d0 mm/compaction.c:2923
- kcompactd+0x73c/0xdb0 mm/compaction.c:3221
- kthread+0x2c1/0x3a0 kernel/kthread.c:388
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
- </TASK>
+In the best case, it only need to walk the tree once. If it needs
+to alloc and split, 3 walks are issued (One for first ranced
+conflict check and order retrieving, one for the second check after
+allocation, one for the insert after split).
 
+Testing with 4k pages, in an 8G cgroup, with 20G brd as block device:
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+fio -name=cached --numjobs=16 --filename=/mnt/test.img \
+  --buffered=1 --ioengine=mmap --rw=randread --time_based \
+  --ramp_time=30s --runtime=5m --group_reporting
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Before:
+bw (  MiB/s): min=  790, max= 3665, per=100.00%, avg=2499.17, stdev=20.64, samples=8698
+iops        : min=202295, max=938417, avg=639785.81, stdev=5284.08, samples=8698
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+After (+4%):
+bw (  MiB/s): min=  451, max= 3868, per=100.00%, avg=2599.83, stdev=23.39, samples=8653
+iops        : min=115596, max=990364, avg=665556.34, stdev=5988.20, samples=8653
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+Test result with THP (do a THP test then switch to 4K page in hope it
+issues a lot of splitting):
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+fio -name=cached --numjobs=16 --filename=/mnt/test.img \
+  --buffered=1 --ioengine mmap -thp=1 --readonly \
+  --rw=randread --random_distribution=random \
+  --time_based --runtime=5m --group_reporting
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+fio -name=cached --numjobs=16 --filename=/mnt/test.img \
+  --buffered=1 --ioengine mmap --readonly \
+  --rw=randread --random_distribution=random \
+  --time_based --runtime=5s --group_reporting
 
-If you want to undo deduplication, reply with:
-#syz undup
+Before:
+bw (  KiB/s): min=28071, max=62359, per=100.00%, avg=53542.44, stdev=179.77, samples=9520
+iops        : min= 7012, max=15586, avg=13379.39, stdev=44.94, samples=9520
+bw (  MiB/s): min= 2457, max= 6193, per=100.00%, avg=3923.21, stdev=82.48, samples=144
+iops        : min=629220, max=1585642, avg=1004340.78, stdev=21116.07, samples=144
+
+After (+-0.0%):
+bw (  KiB/s): min=30561, max=63064, per=100.00%, avg=53635.82, stdev=177.21, samples=9520
+iops        : min= 7636, max=15762, avg=13402.82, stdev=44.29, samples=9520
+bw (  MiB/s): min= 2449, max= 6145, per=100.00%, avg=3914.68, stdev=81.15, samples=144
+iops        : min=627106, max=1573156, avg=1002158.11, stdev=20774.77, samples=144
+
+The performance is better (+4%) for 4K cached read and unchanged for THP.
+
+Kairui Song (4):
+  mm/filemap: return early if failed to allocate memory for split
+  mm/filemap: clean up hugetlb exclusion code
+  lib/xarray: introduce a new helper xas_get_order
+  mm/filemap: optimize filemap folio adding
+
+ include/linux/xarray.h |   6 ++
+ lib/xarray.c           |  49 +++++++++-----
+ mm/filemap.c           | 145 ++++++++++++++++++++++++-----------------
+ 3 files changed, 121 insertions(+), 79 deletions(-)
+
+-- 
+2.43.0
+
