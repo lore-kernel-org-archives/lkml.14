@@ -1,75 +1,154 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADBB34594E
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 06:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4F74594E
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 06:27:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710829564; cv=none; b=upG3DOM6HhkgjK6p0HWbhhSONPUcKQDrYMeNeF4SIc5ubLQjPqp0QDZMveO2R+9j3yN1F0PU2Y1GTYnM3AaCtigLw5/ECtb3CXSkqg2iPGWOvjNchompibO/424h7hWnnE5qUtW2t8w458vs2no7eGBpsCB2o2ml+A90/Ta1evY=
+	t=1710829649; cv=none; b=jxVh35ziJo+7h0vJkjhtSOpwQZW4Bi7SfqsXjy2UIaPTSsYgz+BOSzhAjm/kXr08Fs9U7z4G9KBgdaqP2eyU1hNzEATwflV1OPa2G5woOczGzg2M99NnjPeWugt5SOMl9Lz0Kkpq+mhpNUQdjSlmSRIk7NpN1DIjK8M10XRmCpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710829564; c=relaxed/simple;
-	bh=Vdnf5nY/czOnJuaGBtdc0SPAtrzeEIXDsmcxSs4q/hk=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=qR36gZrHF4Ft4QCNu6pTxhtc0jRDmgU3/M5qMlKyhhRLWUkqBNQ+BkL+8ff0vc/AnQAs0NPiRk3h3FYtjikebDiW+Fs3zqEykDpdIY/fYONzKR7SShveVb2W+K2lpVS6nvK1VtBn71gJ7WulM2AuXn2gQ/+pr2gkNdGdyJjydAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7c874fb29a3so364266739f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 23:26:02 -0700 (PDT)
+	s=arc-20240116; t=1710829649; c=relaxed/simple;
+	bh=s9Npf4BnVmi7B3XVY1acshbD50GVpEXc7ci83JbHTts=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xr1DK0VqJCC7HG+1nmvfnz9x65+baMigvES/DujWFvLiLLEo07EYLDnRWEoc6kJmkOQCs5NZetwRfbRHCMI0WP6BgkxeiSyK+na67Jckt9FK0q8pHkQGY3Lms4Xu+/+mMM8UEjefzouMpG4WyyIJKX5eYvBjR+QqCfpyJmYoA84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com; spf=pass smtp.mailfrom=shopee.com; dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b=C4b7QSIJ; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shopee.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b="C4b7QSIJ"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1dee27acf7aso33357855ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 23:27:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shopee.com; s=shopee.com; t=1710829647; x=1711434447; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Oac/H665Upn99d/GW4a2mZh9auV+zuFrhXx9xokbC9M=;
+        b=C4b7QSIJ78Zs8OVIIjlKyBd+fwzTYS7foHjt+5R8NNGM46UJnrOTBPVGEuK2WnFhfi
+         j1nnMIov6ASNUVSI1lenVjQoCk5m/O84Qp0hWFM1yITHvGzt5itz0boYu6OWaE0uIlOk
+         pa7CYLYQyEtG6xA3TDWTUbxqxbJTmUHt3a2XhCHKcjE2ATd0te9VgXq31TR4vLFycWp0
+         xfu+/A1nr34dkcq8oVz3VEswVwNq6S8vK+zUGS3fTVUmUyF2yolBX5Wk8YAc5Ccy3bNp
+         FlUn1jxFrP5QvIJDompiBE2BA2S3I5+9hn44fCccNRSn26Xu0bZQ6+IUvZzZF0E/TAiI
+         DBOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710829562; x=1711434362;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SGyIYPow4NlrefKnKPQPE6bAcLRxnsVwIJ5cTlLJan8=;
-        b=lCHoVmjCjEoFbfpoNkep7aCsoXXEjqePM7hINFlbtciCXj4sphH1yu7tzt3MMnH6Zi
-         L/nYas3hFahFnxNLr+HI15Uy31db58dgob4P40kav6ZsBuT7e/QPDzfN6ECDQvdb6rIz
-         anM2T9C9/iiEON1Yvh3R7nOXgZtQUHZXxjrhO4sGGS56rft2J6nAWhS+hXPgbaQk58+N
-         JiNEy4hhFBZ7w0a0/OHehv+zJS/rOELv5AlretG5zZtCDE07pQoMv5SSF7nQXA9XTWO9
-         De+YYrGPJ1Y74k4i/qMmMUMfOVmEUysRmZfsM5iUHmJGxm3bywgyaY2A94vJ//KGSq1R
-         qS/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW8XTXXV6xxTQY8dca/mswPHrnv603ZDZvSFwwPItYlNARp5J+gEteu29wbdur2l4h90Scs2zGyJxPokZweZ69epNN0nlndT8rcU+bP
-X-Gm-Message-State: AOJu0Yzow07aD+Jj/hhNdZOqFpscXUKR5ItaA059XZS5abzOHzNcNb+Y
-	BhVSwZ5VczcofdkbUGhz4epoF0+pnrgsYATvUotsacIEzT9J4qkm10WI8vBfmcmVS7/LAT7oEQw
-	Ys+Tr8lEyKbqn4OFOsr/9TtyajCW2rO+d75Y2emUxZW9Re4/J1SkCv7Q=
-X-Google-Smtp-Source: AGHT+IE2QD0gDlbEx3Hy3y/Bkl9ZHnqqTTwLra5wel1Aa+fBhvD4Qk670jJxAR1r48q58RoFOTHF+8ak7zpqJ97cuZoc/2yby5Dw
+        d=1e100.net; s=20230601; t=1710829647; x=1711434447;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Oac/H665Upn99d/GW4a2mZh9auV+zuFrhXx9xokbC9M=;
+        b=VIZ7FgMcZ9Im082pFSs2SFYAoQ832uOLuy8Zi3SanXx8ixZJLCzwJgzosLV2bLAxDS
+         X6v3B8TJVDlMegr1eCjfOeBpWZprVGmK6VrRp+OlYfTEb16yQG/xmvu+hzDTuiPm2A0l
+         6v9icQxTnceRtS3dbr9HAMcLUnegfr848BR1XEmo5MbaLe/D1maZxVNzU3VUUYEqt+nL
+         TdYRYIZXLxTlaI/t12vNnxT6TkbSL3973Xs9Oho4ZgXq60AAYe1yg5thP23tWV6flQxY
+         ry2QPxDQJDbRUi0ygrG344ZtalOPtKOQpZ9Hr5DyBBtzcm5h3h4BLZY6k4rDwfEiHdVY
+         erzw==
+X-Forwarded-Encrypted: i=1; AJvYcCUm4oqC96QZNrfVp5b21HbAhEk60LgW9kkYvLajvNnanXxHUiNEPRx5QpQXgwpjl2zBcuqLg00yc+EOSx39rX8+VVAUpjQDPWN5LVEY
+X-Gm-Message-State: AOJu0YxMxeMtc/jm0Zao5gH+AltlOcBeS7UMEJm/FZXd0HTIP8dFpkbj
+	qZGii7JexzZ1KYm6sLeU+QXE8A9RQv8GhOaV58njAb3iy/hXJVSyVcl0A4uPkos=
+X-Google-Smtp-Source: AGHT+IE+FTHrD+f7KT3cSLTSqyat6zpyuVkiZgNrpvtXJduzhveRWd079fxz4nWY4nbOn6e8qn9uUA==
+X-Received: by 2002:a17:902:f80f:b0:1dd:96ca:e1ae with SMTP id ix15-20020a170902f80f00b001dd96cae1aemr12208125plb.69.1710829647650;
+        Mon, 18 Mar 2024 23:27:27 -0700 (PDT)
+Received: from [10.54.24.74] (static-ip-148-99-134-202.rev.dyxnet.com. [202.134.99.148])
+        by smtp.gmail.com with ESMTPSA id m5-20020a170902db8500b001dd5b86d809sm10416953pld.279.2024.03.18.23.27.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Mar 2024 23:27:27 -0700 (PDT)
+Message-ID: <ed992a7f-7b1d-415d-8d90-1fbb8b619a8c@shopee.com>
+Date: Tue, 19 Mar 2024 14:27:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:19c7:b0:366:b696:e943 with SMTP id
- r7-20020a056e0219c700b00366b696e943mr559353ill.5.1710829562024; Mon, 18 Mar
- 2024 23:26:02 -0700 (PDT)
-Date: Mon, 18 Mar 2024 23:26:02 -0700
-In-Reply-To: <ec51cc1d-beaa-4aa1-a54d-e503223dd365@posteo.net>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000050e6310613fd8ccd@google.com>
-Subject: Re: [syzbot] [v9fs?] KMSAN: uninit-value in v9fs_evict_inode
-From: syzbot <syzbot+eb83fe1cce5833cd66a0@syzkaller.appspotmail.com>
-To: asmadeus@codewreck.org, charmitro@posteo.net, ericvh@kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux_oss@crudebyte.com, lucho@ionkov.net, syzkaller-bugs@googlegroups.com, 
-	v9fs@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot tried to test the proposed patch but the build/boot failed:
-
-failed to apply patch:
-checking file fs/9p/vfs_inode.c
-patch: **** unexpected end of file in patch
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/2] x86/resctrl: Rename pseudo_lock_event.h to trace.h
+To: Reinette Chatre <reinette.chatre@intel.com>, james.morse@arm.com
+Cc: fenghua.yu@intel.com, babu.moger@amd.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ peternewman@google.com, x86@kernel.org, linux-kernel@vger.kernel.org,
+ corbet@lwn.net, linux-doc@vger.kernel.org
+References: <20240308074132.409107-1-haifeng.xu@shopee.com>
+ <20240308074132.409107-2-haifeng.xu@shopee.com>
+ <f1fd3dbf-a4a3-419e-9092-ff7f9302c874@intel.com>
+From: Haifeng Xu <haifeng.xu@shopee.com>
+In-Reply-To: <f1fd3dbf-a4a3-419e-9092-ff7f9302c874@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
 
-Tested on:
+On 2024/3/14 06:46, Reinette Chatre wrote:
+> Hi Haifeng,
+> 
+> On 3/7/2024 11:41 PM, Haifeng Xu wrote:
+>> Now only pseudo-locking part uses tracepoints to do event tracking, but
+>> other parts of resctrl may need new tracepoints. It is unnecessary to
+>> create separate header files and define CREATE_TRACE_POINTS in different
+>> c files which fragments the resctrl tracing.
+>>
+>> Therefore, give the resctrl tracepoint header file a generic name to
+>> support its use for tracepoints that are not specific to pseudo-locking.
+>>
+>> No functional change.
+>>
+>> Signed-off-by: Haifeng Xu <haifeng.xu@shopee.com>
+>> Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
+>> ---
+>>  arch/x86/kernel/cpu/resctrl/pseudo_lock.c                   | 2 +-
+>>  .../x86/kernel/cpu/resctrl/{pseudo_lock_event.h => trace.h} | 6 +++---
+>>  2 files changed, 4 insertions(+), 4 deletions(-)
+>>  rename arch/x86/kernel/cpu/resctrl/{pseudo_lock_event.h => trace.h} (88%)
+>>
+>> diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+>> index 884b88e25141..492c8e28c4ce 100644
+>> --- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+>> +++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+>> @@ -31,7 +31,7 @@
+>>  #include "internal.h"
+>>  
+>>  #define CREATE_TRACE_POINTS
+>> -#include "pseudo_lock_event.h"
+>> +#include "trace.h"
+>>  
+>>  /*
+>>   * The bits needed to disable hardware prefetching varies based on the
+>> diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock_event.h b/arch/x86/kernel/cpu/resctrl/trace.h
+>> similarity index 88%
+>> rename from arch/x86/kernel/cpu/resctrl/pseudo_lock_event.h
+>> rename to arch/x86/kernel/cpu/resctrl/trace.h
+>> index 428ebbd4270b..ed5c66b8ab0b 100644
+>> --- a/arch/x86/kernel/cpu/resctrl/pseudo_lock_event.h
+>> +++ b/arch/x86/kernel/cpu/resctrl/trace.h
+>> @@ -2,7 +2,7 @@
+>>  #undef TRACE_SYSTEM
+>>  #define TRACE_SYSTEM resctrl
+>>  
+>> -#if !defined(_TRACE_PSEUDO_LOCK_H) || defined(TRACE_HEADER_MULTI_READ)
+>> +#if !defined(_TRACE_RESCTRL_H) || defined(TRACE_HEADER_MULTI_READ)
+>>  #define _TRACE_PSEUDO_LOCK_H
+> 
+> The above #define should match the new name also.
 
-commit:         b3603fcb Merge tag 'dlm-6.9' of git://git.kernel.org/p..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=48bb382b96e7eda7
-dashboard link: https://syzkaller.appspot.com/bug?extid=eb83fe1cce5833cd66a0
-compiler:       
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=13a5fe81180000
-
+Sorry, I forgot to replace it with 'RESCTRL' in this version.
+Thanks for pointing that out!
+> 
+>>  
+>>  #include <linux/tracepoint.h>
+>> @@ -35,9 +35,9 @@ TRACE_EVENT(pseudo_lock_l3,
+>>  	    TP_printk("hits=%llu miss=%llu",
+>>  		      __entry->l3_hits, __entry->l3_miss));
+>>  
+>> -#endif /* _TRACE_PSEUDO_LOCK_H */
+>> +#endif /* _TRACE_RESCTRL_H */
+>>  
+>>  #undef TRACE_INCLUDE_PATH
+>>  #define TRACE_INCLUDE_PATH .
+>> -#define TRACE_INCLUDE_FILE pseudo_lock_event
+>> +#define TRACE_INCLUDE_FILE trace
+>>  #include <trace/define_trace.h>
+> 
+> The rest looks good.
+> 
+> Thank you.
+> 
+> Reinette
