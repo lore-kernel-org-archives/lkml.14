@@ -1,139 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D69D5F86E;
-	Tue, 19 Mar 2024 23:00:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B825D5EE8D
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 23:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710889237; cv=none; b=YR3XafHx2a4QANNiNju4N+ShYIR+QlRtTSRAl1hcVQVW87ueheM8ZZHrjI+TNhTk5Yh4jcb8iHhIDt0pYz+xjXe5xZNSRVSeS3QaIqsabO5kerK4wMWImS8XaA6msf3Y8tYKhVp66woOwSRYWirATbpq6T/v1wf6pWrLwxLcfSE=
+	t=1710889242; cv=none; b=fTefqGkEeZNQPwntIeYe3qUOeVTVjx54zeU3a0dyu59N82Cx4oNvqL6eaGgr7DT47ZbcGe8oUdbvFfzEPDz7t/DnAbmlbUpFd/Fbz3x5oxwwyCmAe6ykb9GA+m8nPwGH1xphutgTNWnaMdq3VzST/q1wLrgOC3hOxBNKILNX0yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710889237; c=relaxed/simple;
-	bh=Rg9kLOe7EynCjlAo/kFPcMuXUbZElAONgC515/UjszU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d2vvZU7523glgpQSdDYipKngGMNnUyzVaKFe5iZ2y68GvLkADfiESU4l45qyshNSyA1gAbksWhdqSa7rT4hQPpXavxZaAU7tXObw2VBJd8USb3RDhWmAlmzRLiyT5ltmZXkZ4BY0Y96VOZLZNqeqO3ZdpWtTUOwNIqjii8wUf7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45471C433C7;
-	Tue, 19 Mar 2024 23:00:36 +0000 (UTC)
-Date: Tue, 19 Mar 2024 19:02:59 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Daniel Bristot de Oliveira <bristot@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] tracing/tools: Updates for 6.9
-Message-ID: <20240319190259.0086706f@gandalf.local.home>
-In-Reply-To: <20240318174116.420584-1-bristot@kernel.org>
-References: <20240318174116.420584-1-bristot@kernel.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1710889242; c=relaxed/simple;
+	bh=bmttXQsn7ePJrS3RSsRzViZwsDiwqJQZqSCfH7XcvBo=;
+	h=Date:Message-ID:MIME-Version:Content-Type:Content-Disposition:
+	 From:To:Cc:Subject:References:In-Reply-To; b=UjaLFpWwLBOOdE5APLV0XSR2aE52qnlat8HnXn7tXgYyy1cpQgBV2C/xL7y4XdhD2p+50xV+gqgPXPm2SjMstHn2fdikceJqpovIdVCRPJqdiN1n0XatIKEqaQiNnTDikrba4B1K48F+fVi8AqEnmsmd5jkiZdS5v2At8IIZmbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=ZjATGIlj; arc=none smtp.client-ip=209.85.210.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="ZjATGIlj"
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6e675db6fbaso3602609a34.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 16:00:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1710889238; x=1711494038; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :content-disposition:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=B1lUfZg/s5mLlW6pu+C9FV0f0xOiWFAgmrfGrW7+FU8=;
+        b=ZjATGIljivVKYYgwMgGMIWB8z+sQBX6k+j5wY/UdbOLwZNqYXQtQB+u8GX7wbcUz3c
+         yyG181UcJsN8akPkxvSBPlpq+Wm7yzjzOH9fxGsEXTuHdDRkl1fg3xxV3c6mt6EEy3qO
+         flasldwlS2DaSRo6xP74o3BIze2fU7/4fKCf6XGntIz+n3HjpgsgqWRLvCv4GDGzaAuB
+         6bPv4mn7C8z8pi4L0X9V/jzxVHWmzgOOr8fBWDyV67MZgmKZTmlz9poKUK86yt49af+a
+         +miRssM+ZalwSP/5FLfVo1ohugUWowN5gpnn44H/x8R0tJGQKO0pHqtbdFENRWbjnorO
+         KtGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710889238; x=1711494038;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :content-disposition:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=B1lUfZg/s5mLlW6pu+C9FV0f0xOiWFAgmrfGrW7+FU8=;
+        b=KtnoXN6WBZGH1WgnxRBXv2vAlE3zBt2R04t1VxiQzy9WHnW6SJ17LQd/ApQZut9wVv
+         LlvyM8QHRsiiOwh2L+A5YFBrhZCkmNfCAR7agT+wW+icBCk2cM6taiTOoQB1/x+PjL2r
+         RXwY/eaiUTMYepHBKaEzL3ZA0bvWq5FwxBRa2mT9eDQvc6aOsJzDqxCQj2DwKYO12UP5
+         GLxeVnKgiKsRTw8U4Wkr1RPp19nlC4AEJeIXV7KI6AT5uT9JNduLWUd8QlacCBsjfvl5
+         q8BLP+6ZAKAjcfQjxKwlb+Bl2B2seQg+B6bgYoMp/FCf6os5qic8s83/Gf19qBF8Qpvg
+         cAwA==
+X-Forwarded-Encrypted: i=1; AJvYcCWG/hvjIccp5Vq00f5jlePVws5jO3Jm6f+MqvWc4QpJOmYKWTuob0frVcWbHjUVNTILecgGaqqYEKZUuNNqkA9lDgycKLU6i0s4Czql
+X-Gm-Message-State: AOJu0Ywlb72ZvZw9pFOpXK5TTyR+xyoPloZhzIHRpu20giQm+g0JSmB7
+	2QfNkVreuddQDjJrpg41ymSTiyzIhnSsX0UbQ1p3ISF5PIHsaXHAmKjABH/TCg==
+X-Google-Smtp-Source: AGHT+IH2BedFErXZvc/MdlUeUrWLnHnhWM0nrDa4rkAsKAMXW5C+nK0wePxGkm9DoXwZPu+DqNui8g==
+X-Received: by 2002:a9d:7f94:0:b0:6e6:7a82:5cf with SMTP id t20-20020a9d7f94000000b006e67a8205cfmr4422911otp.33.1710889237766;
+        Tue, 19 Mar 2024 16:00:37 -0700 (PDT)
+Received: from localhost ([70.22.175.108])
+        by smtp.gmail.com with ESMTPSA id dc33-20020a05620a522100b007885cd1c058sm5972263qkb.103.2024.03.19.16.00.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 16:00:37 -0700 (PDT)
+Date: Tue, 19 Mar 2024 19:00:36 -0400
+Message-ID: <f5cf9d285bd5f09bbc3f79b0800d37fc@paul-moore.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 
+Content-Type: text/plain; charset=utf-8 
+Content-Disposition: inline 
+Content-Transfer-Encoding: 8bit
+From: Paul Moore <paul@paul-moore.com>
+To: Fan Wu <wufan@linux.microsoft.com>, corbet@lwn.net, zohar@linux.ibm.com, jmorris@namei.org, serge@hallyn.com, tytso@mit.edu, ebiggers@kernel.org, axboe@kernel.dk, agk@redhat.com, snitzer@kernel.org, eparis@redhat.com
+Cc: linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org, fsverity@lists.linux.dev, linux-block@vger.kernel.org, dm-devel@lists.linux.dev, audit@vger.kernel.org, linux-kernel@vger.kernel.org, Fan Wu <wufan@linux.microsoft.com>
+Subject: Re: [PATCH RFC v15 12/21] security: add security_bdev_setintegrity()  hook
+References: <1710560151-28904-13-git-send-email-wufan@linux.microsoft.com>
+In-Reply-To: <1710560151-28904-13-git-send-email-wufan@linux.microsoft.com>
 
-On Mon, 18 Mar 2024 18:41:13 +0100
-Daniel Bristot de Oliveira <bristot@kernel.org> wrote:
-
-> Steven,
+On Mar 15, 2024 Fan Wu <wufan@linux.microsoft.com> wrote:
 > 
-> Tracing tooling updates for 6.9
+> This patch introduces a new hook to save block device's integrity
+> data. For example, for dm-verity, LSMs can use this hook to save
+> the roothash signature of a dm-verity into the security blob,
+> and LSMs can make access decisions based on the data inside
+> the signature, like the signer certificate.
 > 
-> Tracing:
->         - Update makefiles for latency-collector and RTLA,
->           using tools/build/ makefiles like perf does, inheriting
->           its benefits. For example, having a proper way to
->           handle dependencies.
+> Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
 > 
->         - The timerlat tracer has an interface for any tool to use.
->           rtla timerlat tool uses this interface dispatching its
->           own threads as workload. But, rtla timerlat could also be
->           used for any other process. So, add 'rtla timerlat -U'
->           option, allowing the timerlat tool to measure the latency of
->           any task using the timerlat tracer interface.
+> --
+> v1-v14:
+>   + Not present
 > 
-> Verification:
->         - Update makefiles for verification/rv, using tools/build/
->           makefiles like perf does, inheriting its benefits.
->           For example, having a proper way to handle dependencies.
+> v15:
+>   + Introduced
 > 
-> 
-> Please pull the latest trace-tools-v6.9 tree, which can be found at:
-> 
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/bristot/linux.git
-> trace-tools-v6.9
+> ---
+>  include/linux/lsm_hook_defs.h |  2 ++
+>  include/linux/security.h      | 14 ++++++++++++++
+>  security/security.c           | 28 ++++++++++++++++++++++++++++
+>  3 files changed, 44 insertions(+)
 
-Looks like you just built on top of a random commit from Linus's tree:
+I'm not sure why you made this a separate patch, help?  If there is
+no significant reason why this is separate, please squash it together
+with patch 11/21.
 
-commit f6cef5f8c37f58a3bc95b3754c3ae98e086631ca
-Merge: 906a93befec8 8f06fb458539
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun Mar 17 16:59:33 2024 -0700
+> diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+> index c335404470dc..6808ae763913 100644
+> --- a/include/linux/lsm_hook_defs.h
+> +++ b/include/linux/lsm_hook_defs.h
+> @@ -455,4 +455,6 @@ LSM_HOOK(void, LSM_RET_VOID, initramfs_populated, void)
+>  
+>  LSM_HOOK(int, 0, bdev_alloc_security, struct block_device *bdev)
+>  LSM_HOOK(void, LSM_RET_VOID, bdev_free_security, struct block_device *bdev)
+> +LSM_HOOK(int, 0, bdev_setintegrity, struct block_device *bdev,
+> +	 enum lsm_intgr_type type, const void *value, size_t size)
+>  
+> diff --git a/include/linux/security.h b/include/linux/security.h
+> index 9965b5c50df4..eaff8868766a 100644
+> --- a/include/linux/security.h
+> +++ b/include/linux/security.h
+> @@ -83,6 +83,10 @@ enum lsm_event {
+>  	LSM_POLICY_CHANGE,
+>  };
+>  
+> +enum lsm_intgr_type {
+> +	__LSM_INTGR_MAX
+> +};
+> +
+>  /*
+>   * These are reasons that can be passed to the security_locked_down()
+>   * LSM hook. Lockdown reasons that protect kernel integrity (ie, the
+> @@ -511,6 +515,9 @@ int lsm_fill_user_ctx(struct lsm_ctx __user *uctx, u32 *uctx_len,
+>  		      void *val, size_t val_len, u64 id, u64 flags);
+>  int security_bdev_alloc(struct block_device *bdev);
+>  void security_bdev_free(struct block_device *bdev);
+> +int security_bdev_setintegrity(struct block_device *bdev,
+> +			       enum lsm_intgr_type type, const void *value,
+> +			       size_t size);
+>  #else /* CONFIG_SECURITY */
+>  
+>  static inline int call_blocking_lsm_notifier(enum lsm_event event, void *data)
+> @@ -1495,6 +1502,13 @@ static inline void security_bdev_free(struct block_device *bdev)
+>  {
+>  }
+>  
+> +static inline int security_bdev_setintegrity(struct block_device *bdev,
+> +					     enum lsm_intgr_type, type,
+> +					     const void *value, size_t size)
+> +{
+> +	return 0;
+> +}
+> +
+>  #endif	/* CONFIG_SECURITY */
+>  
+>  #if defined(CONFIG_SECURITY) && defined(CONFIG_WATCH_QUEUE)
+> diff --git a/security/security.c b/security/security.c
+> index 4274bbee40d0..8d88529ac904 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -5637,6 +5637,34 @@ void security_bdev_free(struct block_device *bdev)
+>  }
+>  EXPORT_SYMBOL(security_bdev_free);
+>  
+> +/**
+> + * security_bdev_setintegrity() - Set the bdev's integrity data
 
-    Merge tag 'i3c/for-6.9' of git://git.kernel.org/pub/scm/linux/kernel/git/i3c/linux
+Let's just say "Set the device's integrity data" and not ask people to
+figure out "bdev", although I will admit it should be fairly obvious :)
 
-Linus prefers basing off of real tags or previous pulls from us.
+> + * @bdev: block device
+> + * @type: type of integrity, e.g. hash digest, signature, etc
+> + * @value: the integrity value
+> + * @size: size of the integrity value
+> + *
+> + * Register a verified integrity measurement of a bdev with the LSM.
+> + *
+> + * Return: Returns 0 on success, negative values on failure.
+> + */
+> +int security_bdev_setintegrity(struct block_device *bdev,
+> +			       enum lsm_intgr_type type, const void *value,
+> +			       size_t size)
+> +{
+> +	int rc = 0;
+> +	struct security_hook_list *p;
+> +
+> +	hlist_for_each_entry(p, &security_hook_heads.bdev_setintegrity, list) {
+> +		rc = p->hook.bdev_setintegrity(bdev, type, value, size);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	return LSM_RET_DEFAULT(bdev_setintegrity);
 
-Can you rebase your changes on v6.8 and resend?
+We can just use the call_int_hook() macro here instead of open coding
+everything, right?
 
-  $ git checkout v6.8
-  $ git cherry-pick f6cef5f8c37f58a3bc95b3754c3ae98e086631ca..trace-tools-v6.9
+> +}
+> +EXPORT_SYMBOL(security_bdev_setintegrity);
+> +
+>  #ifdef CONFIG_PERF_EVENTS
+>  /**
+>   * security_perf_event_open() - Check if a perf event open is allowed
+> -- 
+> 2.44.0
 
-Appears to work fine.
-
-Thanks!
-
--- Steve
-
-
-> 
-> Tag SHA1: 2eb09a97c56af3c27bd9dcebccb495f70d56d5c0
-> Head SHA1: 9c63d9f58a42b979a42bcaed534d9246996ac0d9
-> 
-> 
-> Daniel Bristot de Oliveira (4):
->       tools/tracing: Use tools/build makefiles on latency-collector
->       tools/rtla: Use tools/build makefiles to build rtla
->       tools/verification: Use tools/build makefiles on rv
->       tools/rtla: Add -U/--user-load option to timerlat
-> 
-> ----
->  .../tools/rtla/common_timerlat_options.rst         |   6 +
->  tools/tracing/latency/.gitignore                   |   5 +-
->  tools/tracing/latency/Build                        |   1 +
->  tools/tracing/latency/Makefile                     | 105 ++++++++--
->  tools/tracing/latency/Makefile.config              |  30 +++
->  tools/tracing/rtla/.gitignore                      |   7 +-
->  tools/tracing/rtla/Build                           |   1 +
->  tools/tracing/rtla/Makefile                        | 217 +++++++--------------
->  tools/tracing/rtla/Makefile.config                 |  47 +++++
->  tools/tracing/rtla/Makefile.rtla                   |  80 ++++++++
->  tools/tracing/rtla/Makefile.standalone             |  26 +++
->  tools/tracing/rtla/sample/timerlat_load.py         |  74 +++++++
->  tools/tracing/rtla/src/Build                       |  11 ++
->  tools/tracing/rtla/src/timerlat_hist.c             |  16 +-
->  tools/tracing/rtla/src/timerlat_top.c              |  14 +-
->  tools/verification/rv/.gitignore                   |   6 +
->  tools/verification/rv/Build                        |   1 +
->  tools/verification/rv/Makefile                     | 207 +++++++-------------
->  tools/verification/rv/Makefile.config              |  47 +++++
->  tools/verification/rv/Makefile.rv                  |  51 +++++
->  tools/verification/rv/src/Build                    |   4 +
->  21 files changed, 650 insertions(+), 306 deletions(-)
->  create mode 100644 tools/tracing/latency/Build
->  create mode 100644 tools/tracing/latency/Makefile.config
->  create mode 100644 tools/tracing/rtla/Build
->  create mode 100644 tools/tracing/rtla/Makefile.config
->  create mode 100644 tools/tracing/rtla/Makefile.rtla
->  create mode 100644 tools/tracing/rtla/Makefile.standalone
->  create mode 100644 tools/tracing/rtla/sample/timerlat_load.py
->  create mode 100644 tools/tracing/rtla/src/Build
->  create mode 100644 tools/verification/rv/.gitignore
->  create mode 100644 tools/verification/rv/Build
->  create mode 100644 tools/verification/rv/Makefile.config
->  create mode 100644 tools/verification/rv/Makefile.rv
->  create mode 100644 tools/verification/rv/src/Build
-> ---------------------------
-
+--
+paul-moore.com
