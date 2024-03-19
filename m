@@ -1,120 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC7D18C05;
-	Tue, 19 Mar 2024 17:06:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E791FBF0;
+	Tue, 19 Mar 2024 17:10:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710868013; cv=none; b=ogY1m9OKB+L/RtywgmUzrrlge20//dyxk10kCEocv+Sq17g0W+8+2dwWqJrshaodnKlE835cIyGKENK5VerS2Ji3E8niOkqzqGi8j5JhlILGoQAweDnH1IxttEp1XUVXfPqdKRjah+kIp+Gd5J8L6IBg7KoFvDYYkYNQ3UvXMzY=
+	t=1710868250; cv=none; b=elb8adzisoqXY60locy52P+nPI/r+BKubVHu1EfBCRMZD9iqSNfDInIi+jIxaZKAlcn64MWhuT1UYkgciVupTuPmLzxy61RqkPgVq/u8ypgXGpYt48tk6qtMwx/DFf0CJRX5f+14FnBFjxjd5b+HY18dJtH6cSGKekLBzWtc12A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710868013; c=relaxed/simple;
-	bh=4sfHshxTfCzjYdFQoq9cTJXqvZmtR9W4NjZzxQaBRow=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FZemrE64XEwvTJpEphdw+BUxyaYxJUrvM1HBKhSR3/8WwkXRMGTtuvFPxL22E/sPU9w+kMDB6F1Z+wU8B0xH7pkwDsHYrpvIfm44ar++cSQp3nKVDvahOKemx3A/gO8Tv47NfPpYqPDyHlN9kY29s+Ov+bJv2TVSc/zY3HVnREw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QMdNq+SY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710868250; c=relaxed/simple;
+	bh=chLaU/1e7fuTEiGMQDP7fwuUnBlDqgypzyaFA4B5D/I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RYf7MS6AGZsFHqBQ7MOu6tO3nPY+PRBc3Tj/LnOnOUinlOzasq8EJpl7KoFZ8Yyn6owIum1QqM29jHtgU1riq1oKeYdiz/oNPqA68xn5irHRmdswbSIlx+gkBp9KRZUNlJQ9r0HCAIJTqTJW6Jr+JLyZAa1MzQhMhbwZfXGBhg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E0+JBnNM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QMdNq+SY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F547C433C7;
-	Tue, 19 Mar 2024 17:06:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E0+JBnNM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AE7AC433C7;
+	Tue, 19 Mar 2024 17:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710868013;
-	bh=4sfHshxTfCzjYdFQoq9cTJXqvZmtR9W4NjZzxQaBRow=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QMdNq+SYrlw395jnqI4gXOzFdKI0cTTrjTlHx2fvU/T+Cs0RDSulUlb5283MsxYbQ
-	 pe/nqzrLhZl+6e5cJbOQv9rIwxdtXilynchXZMJlC4TbuHddq93v3LmZo0PY1Ev19m
-	 ycUaGfMf8ywgGunDRMQ6sOf3mYdcNPDx39r1a6dWebxYkdkPz6ZZ+2UUaWYygFe9KT
-	 CeGfzJ88mzql6FS3/kYdKb6gNhIUASjZYkk3tlSwUdqC9wg6rc5d8WenekYbyq08IC
-	 0yAKFJg2pydhVApat1qp/GB2aFD5r8C1ZgXrLYDbjO9aseSGCNuBxc8Iy1170O9rdb
-	 ph9cHI9GP8okg==
-Date: Tue, 19 Mar 2024 17:06:47 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Javier Carrasco <javier.carrasco@wolfvision.net>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Henrik Rydberg <rydberg@bitmath.org>,
-	Bastian Hecht <hechtb@gmail.com>,
-	Michael Riesch <michael.riesch@wolfvision.net>,
-	Jeff LaBundy <jeff@labundy.com>, linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-	Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 1/4] dt-bindings: touchscreen: add touch-overlay
- property
-Message-ID: <20240319-sympathy-vertigo-9bc884e5fef0@spud>
-References: <20240119-feature-ts_virtobj_patch-v7-0-eda70985808f@wolfvision.net>
- <20240119-feature-ts_virtobj_patch-v7-1-eda70985808f@wolfvision.net>
- <e373c2c7-0cd9-40d6-a19b-3b9a1a81feb2@wolfvision.net>
+	s=k20201202; t=1710868249;
+	bh=chLaU/1e7fuTEiGMQDP7fwuUnBlDqgypzyaFA4B5D/I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=E0+JBnNMxAhJUtYep+rLCG3N2uUAuNHcnVZgVDffhTTd+iN+UKC8dIMKaaKqlQG3+
+	 A+jXW1KsbnYkcxKExsQcgjhDzmN+FtMhlWpsdYDx7Db0eSmv2fbKcRqgI4YwIfy+Cn
+	 KkxK2XTNMqCKjC+eOvahe7rQAPxIwNIynDAjzAd4lSbdv+6etCfQJRn32mY+qmr/9h
+	 E3gY/+mIlS1X5v8yeB0hJOUjRQses4i/eGVchqbNNeG357DrTD3YPoDHWz9/dQzjTg
+	 oZmALqkVwr9hPcK3VboINeB3spT07mnCtyc87TEk32SjUf1pObrrHkVvu2DaaIiSB7
+	 GY4ZrICEkUy0Q==
+Date: Tue, 19 Mar 2024 10:10:48 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mark <mark@yotsuba.nl>
+Cc: netdev@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Eric
+ Dumazet <edumazet@google.com>, Breno Leitao <leitao@debian.org>, Ingo
+ Molnar <mingo@redhat.com>, "David S. Miller" <davem@davemloft.net>, Paolo
+ Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] netpoll: support sending over raw IP interfaces
+Message-ID: <20240319101048.5b7c6949@kernel.org>
+In-Reply-To: <93E237FA-9F0B-48E4-8A89-B9C2619B90A5@yotsuba.nl>
+References: <20240313124613.51399-1-mark@yotsuba.nl>
+	<20240314113455.152cebc9@kernel.org>
+	<93E237FA-9F0B-48E4-8A89-B9C2619B90A5@yotsuba.nl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="U9CU1yZFVMXNIoZu"
-Content-Disposition: inline
-In-Reply-To: <e373c2c7-0cd9-40d6-a19b-3b9a1a81feb2@wolfvision.net>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Mon, 18 Mar 2024 12:47:46 +0100 Mark wrote:
+> > Would be great if this could come with a simple selftest under
+> > tools/testing/selftests/net. Preferably using some simple tunnel
+> > device, rather than wg to limit tooling dependencies ;)  
+> 
+> Yes, that makes a lot of sense. I wrote a selftest that tests netconsole
+> using IPIP and GRE tunnels, and they too seem to work correctly and pass (and
+> more importantly, fail without the patch ;-). Would you prefer me to submit
+> a v2 with that test now, or when net-next reopens in a week?
 
---U9CU1yZFVMXNIoZu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Mar 19, 2024 at 12:13:08PM +0100, Javier Carrasco wrote:
-> On 1/19/24 08:43, Javier Carrasco wrote:
-> > The touch-overlay encompasses a number of touch areas that define a
-> > clipped touchscreen area and/or buttons with a specific functionality.
-> >=20
-> > A clipped touchscreen area avoids getting events from regions that are
-> > physically hidden by overlay frames.
-> >=20
-> > For touchscreens with printed overlay buttons, sub-nodes with a suitable
-> > key code can be defined to report key events instead of the original
-> > touch events.
-> >=20
-> > Reviewed-by: Jeff LaBundy <jeff@labundy.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Javier Carrasco <javier.carrasco@wolfvision.net>
-> > ---
-> >  .../bindings/input/touchscreen/touchscreen.yaml    | 119 +++++++++++++=
-++++++++
-> >  1 file changed, 119 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/touchs=
-creen.yaml b/Documentation/devicetree/bindings/input/touchscreen/touchscree=
-n.yaml
-> > index 431c13335c40..eb1e86fa86c6 100644
-> > --- a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.y=
-aml
-> > +++ b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.y=
-aml
-> > @@ -87,6 +87,125 @@ properties:
-> >    touchscreen-y-plate-ohms:
-> >      description: Resistance of the Y-plate in Ohms
-> > =20
-> > +  touch-overlay:
->=20
-> Even though it has already been reviewed, just in case before it gets
-> applied. Should it not be:
->=20
-> 	description: |
-> 	  List of nodes...
->=20
-> instead, to keep formatting?
-
-Yes.
-
---U9CU1yZFVMXNIoZu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZfnGJwAKCRB4tDGHoIJi
-0r+pAQCQN27PZoCuDBHZdZc6ygr5G/8Gjo17ikuaVKSOz2crTAD/e2nwlGPphrqJ
-h1HPjRq7LLIXp5qwQEWUA2oFZPw0TQk=
-=K3lV
------END PGP SIGNATURE-----
-
---U9CU1yZFVMXNIoZu--
+Feel free to post as [RFC net-next v2] now. I can't guarantee people
+will find the time to review, but it shouldn't hurt to have it on 
+the list :)
