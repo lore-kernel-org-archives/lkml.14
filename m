@@ -1,118 +1,108 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50181097B;
-	Tue, 19 Mar 2024 17:02:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17C6111B1
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 17:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710867778; cv=none; b=YKpZTylpmfAv+UqsU9+9vdPvPq8PesvpSZHHRmo3Ppei4iFYIltRYlTi4WmNI8DtG342T9CmRFkR6iNzxIlynHMhCogWTnbdTCrWirKeMRfB3TamR7Es9/dhnnuB8a7NxFTFQGCUiKsLly2c3iYfsMt6oe9K00DNqi2qvMgcTho=
+	t=1710867873; cv=none; b=KLNq8orYQZ65FjNiwPBgeS4bML01R+MkYTMjgunS6Vf4CMkBpy6W/uhIIqI4vHhHPhDLa83CLuiuHL/ehvMTQDvVoa4235jiRWmtN+hATsaDFmuBU8KCQVu5XJI7Nmnu57o3kRIElK5CnuOiDIg0nyKQS9pcaD2v5qgfhivaEuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710867778; c=relaxed/simple;
-	bh=QLj4SBziSYByNfn+PkyMFIwzh3/oLmaSdq6Fx2MFGvY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KHueg41OvQI7eCJq4Bo5FO2gpx51e/kdW1tfYJOjrXILmL1lQF44vvoDnfPPRzVspLguWHWKv+qK3HAaJmS6rm8Uelsy2wfDCTGG31RH3eZellQrApLRKR7jZMIeWqaaUgaDSyt90WjG1CKkD/Fa6+4iGVYO70B+m6O51b8m5Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dbXbCNAF; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dbXbCNAF"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d4a8bddc21so33233071fa.0;
-        Tue, 19 Mar 2024 10:02:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710867775; x=1711472575; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cvnTFyrLCKf1xltd5FyTxVjgf+ydvsYO9RUlNuwgGNc=;
-        b=dbXbCNAFoA81TU1QP5B02NWcTe33ppf4XfkIW4BVN+3x35zDVbp+SYccWNVe4kyIwK
-         qJEMPDvQzi0sMirWBQKZViWt5SmbR1ClOKFNypK5YUUe3zSwOBq9Vnp5lbfsdfFNwbBC
-         PVic0b6ktRDwfLAXHuf2gVz7lurc5rqtqY6yF9VdWwsJM/e98UKxewLf0F/D7qVA3YfB
-         NV1EMlReXajPCY8x26ZrfNb6Bn40e3W1M9uUdDEoKqvNjHjeiKTqAPZ/xq7BWUUG+Hfc
-         vqc/b5zKWaSAcOgoL6HOkU+jf+lEaYQ0rznhedS/pdahTaEDLQTddYAGV2t54vno9QuA
-         GSPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710867775; x=1711472575;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cvnTFyrLCKf1xltd5FyTxVjgf+ydvsYO9RUlNuwgGNc=;
-        b=xN3TJe8WJw5mZnxo4dy4WhvvThxHH30zLbxOFo2Xl7OEkczD3XtdMVkFWJDLt/pPof
-         uBxzFw+6MJn2xbiIymQ7sHHALcVp8xkvRFXLAs++qYPgT/hzvGaif0EpaHMalfUFUxR6
-         JMS/ILTNnGmT0tY5a6YY+8NkxmUKgbgNJ1d7l93TGTR4rxaukIlOt7vI2kYVlxSiSFX3
-         MobIG4+cA5w9ssc+Pz6L1gGNNzkPn8WCY4yhRn9dvs4upC3JgXF32LUk4exkjrlwybto
-         ghmANxaJogvQgVH1Jo/uueSZ69BmZm+qn4qOQRjPlKvKtpm6X6pw3Lef2pgkdkfJqd48
-         n+sg==
-X-Forwarded-Encrypted: i=1; AJvYcCUvTdI1KneeB1AzNUbd1QlWfqMgl0TgsNsHXowkKela0ZjSSs5HM8XQ4gEBQvHMmXz4inOoNWRVEQdr7je9A0Pm5zwvD7tHWFgA3EV6Rz2UDNy6cM7tdcWVx009ZO3+6edRInR74pZbd+CXtIKxe2830NPdMSHnZmu4CewtyAHqcmnPdp4QdRYVg4ACbgPAkfk3SQVW/B06vNgbXea93BI57Aev5NgSgZKBpPAN6vYix01npFmH6JxsguuFWc9nNKTyWl5/12sI5U+mEu5punFNfJ2SAc/CPrw=
-X-Gm-Message-State: AOJu0YxjAKVx8d9P+iZ8XUp8ypQU2SMEY65N+zys3CUUtvq/OomRN2Ub
-	98EBX61q4sGqxCtNpGLk3/6dWOhauAb9YBdbthMn0JaC1v2sbZ1wHKa55F0r5j2mKQSRjkuhDqq
-	GpksTBbyyMxU+Vl76jpp7D5KyvEK/5AU0POd5VbeG
-X-Google-Smtp-Source: AGHT+IHu8Ej1RfFnLRLx3VFYlsyKjxzDRYeik3lLZdY+MA4TepHpLzJmBwJvzbebQlseQBGhVzDyYxktI0tQMU+ogsc=
-X-Received: by 2002:a2e:a9a7:0:b0:2d4:1700:34a2 with SMTP id
- x39-20020a2ea9a7000000b002d4170034a2mr13234874ljq.33.1710867774534; Tue, 19
- Mar 2024 10:02:54 -0700 (PDT)
+	s=arc-20240116; t=1710867873; c=relaxed/simple;
+	bh=0f0Lamjx/p5FWofoisDahieLZWYw9/EunEeJsbYhEV8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bbITUaqMeSGwCiNRib9FA/+nF13SIvnag41erDVEk5LAcX+n1k4MJufgrF2vtnL52qVMXjudxE3qskwH3Dmoel2Q2IbN9gMldoqS5y+ue0e//LZmDCwAALQSkXauEflcV1yEoSxvHVfgqCW9P16iRWPdoIX3eM9lcNbkXLNLRaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31E9DC433C7;
+	Tue, 19 Mar 2024 17:04:31 +0000 (UTC)
+Date: Tue, 19 Mar 2024 13:06:53 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Alison Schofield <alison.schofield@intel.com>, Beau Belgrave
+ <beaub@linux.microsoft.com>, Huang Yiwei <quic_hyiwei@quicinc.com>, John
+ Garry <john.g.garry@oracle.com>, Randy Dunlap <rdunlap@infradead.org>,
+ Thorsten Blum <thorsten.blum@toblux.com>, Vincent Donnefort
+ <vdonnefort@google.com>, linke li <lilinke99@qq.com>
+Subject: Re: [GIT PULL v2] tracing: Updates for v6.9
+Message-ID: <20240319130653.0cfdaf6e@gandalf.local.home>
+In-Reply-To: <CAHk-=wjxX16kWd=uxG5wzqt=aXoYDf1BgWOKk+qVmAO0zh7sjA@mail.gmail.com>
+References: <20240318113053.7f87ce7f@gandalf.local.home>
+	<CAHk-=wjxX16kWd=uxG5wzqt=aXoYDf1BgWOKk+qVmAO0zh7sjA@mail.gmail.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240319152926.1288-1-johan+linaro@kernel.org>
- <20240319152926.1288-3-johan+linaro@kernel.org> <CAD=FV=VUFodCAXEJgfpSqZZdtQaw5-8n_-sX_2p6LuQ2ixLRpQ@mail.gmail.com>
- <Zfm8nifvqb3xO5HG@hovoldconsulting.com>
-In-Reply-To: <Zfm8nifvqb3xO5HG@hovoldconsulting.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Tue, 19 Mar 2024 17:02:41 +0000
-Message-ID: <CABBYNZLCm2w=oBZUFON+AW2rHo8zPMVGosZr3SAVXbs77XPgUQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] Bluetooth: add quirk for broken address properties
-To: Johan Hovold <johan@kernel.org>
-Cc: Doug Anderson <dianders@chromium.org>, Johan Hovold <johan+linaro@kernel.org>, 
-	Marcel Holtmann <marcel@holtmann.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	cros-qcom-dts-watchers@chromium.org, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Johan Hedberg <johan.hedberg@gmail.com>, 
-	Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, Matthias Kaehlcke <mka@chromium.org>, 
-	Rocky Liao <quic_rjliao@quicinc.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
- Hi,
+On Tue, 19 Mar 2024 09:23:10 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-On Tue, Mar 19, 2024 at 4:26=E2=80=AFPM Johan Hovold <johan@kernel.org> wro=
-te:
->
-> On Tue, Mar 19, 2024 at 09:10:23AM -0700, Doug Anderson wrote:
-> > On Tue, Mar 19, 2024 at 8:29=E2=80=AFAM Johan Hovold <johan+linaro@kern=
-el.org> wrote:
->
-> > > +       /* When this quirk is set, the Bluetooth Device Address provi=
-ded by
-> > > +        * the 'local-bd-address' fwnode property is incorrectly spec=
-ified in
-> > > +        * big-endian order.
-> > > +        *
-> > > +        * This quirk can be set before hci_register_dev is called or
-> > > +        * during the hdev->setup vendor callback.
-> > > +        */
-> > > +       HCI_QUIRK_BDADDR_PROPERTY_BROKEN,
+> On Mon, 18 Mar 2024 at 08:28, Steven Rostedt <rostedt@goodmis.org> wrote:
 > >
-> > Like with the binding, I feel like
-> > "HCI_QUIRK_BDADDR_PROPERTY_BACKWARDS" or
-> > "HCI_QUIRK_BDADDR_PROPERTY_SWAPPED" would be more documenting but I
-> > don't feel strongly.
->
-> So, same reasoning here, this it not some quirk that people should go
-> around setting without first considering to fix their boot firmware.
+> > - Added checks to make sure that the source of __string() is also the
+> >   source of __assign_str() so that it can be safely removed in the next
+> >   merge window.  
+> 
+> Aargh.
+> 
+> I didn't notice this initially, because it doesn't happen with gcc (or
+> maybe not with allmodconfig), but with clang I get
+> 
+>     CC [M]  net/sunrpc/sched.o
+>   In file included from net/sunrpc/sched.c:31:
+>   In file included from ./include/trace/events/sunrpc.h:2524:
+>   In file included from ./include/trace/define_trace.h:102:
+>   In file included from ./include/trace/trace_events.h:419:
+>   include/trace/events/sunrpc.h:707:4: error: result of comparison
+> against a string literal is unspecified (use an explicit string
+> comparison function instead) [-Werror,-Wstring-compare]
+> 
+> and then about 250 lines ot messy "explanations" for how it was
+> expanded because it happens on line 709 too in the same macro, and it
+> ends up being three macros deep or something.
+> 
+> So no, this all needs to be re-done. That
+> 
+>                 WARN_ON_ONCE(__builtin_constant_p(src) ?                \
+>                              strcmp((src), __data_offsets.dst##_ptr_) : \
+>                              (src) != __data_offsets.dst##_ptr_);       \
+> 
+> does *NOT* work.
 
-Or we just change its meaning to say what byteorder is the BDADDR e.g:
-HCI_QUIRK_BDADDR_PROPERTY_BYTEORDER=3Dbe
+In most all cases, src is not a constant and should always equal to what was
+passed to __string(), but if it is a constant like "some string" then clang
+warns that comparing pointers to strings is UB.
 
-> Johan
+That is,
 
+	__string(src, mystring)
 
+[..]
 
---=20
-Luiz Augusto von Dentz
+	__assign_str(src, mystring);
+
+works, but if it has:
+
+	__string(src, "this string");
+
+then
+
+	__assign_str(src, "this string");
+
+is UB due to the compiler having two different pointers to "this string".
+
+I originally just had the "src != str" check but then it was reported that
+clang complained about it. It still complained with the
+__builtin_constant_p() but the code that it produced did the right thing.
+
+This is in the fast path (where the trace event happens), but I can make it
+always do strcmp(), even though it will slow down what is being recorded,
+as I plan on removing the parameter in the next merge window anyway.
+
+-- Steve
+
