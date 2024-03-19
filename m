@@ -1,106 +1,93 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6F1364D4;
-	Tue, 19 Mar 2024 22:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6254364D4
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 22:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710888610; cv=none; b=YNMT5KYt42HYVXqNHecc+KxCuwtVRFmM8gfpTtcyt4XHaGl0P9pARY6BkHQOJjzxf8N9qTfu2g48q2saOVcdvvP8x6ZvjA5/aDen88yNaEsKhINxBr7Exi0nnzrltWZdF1mQOpUPNfkXSHqq5cI2b74qBXm6tSReBT136/3Fg8A=
+	t=1710888701; cv=none; b=Y9JDafqnmzQhGCEdHPMPK2HHFY9uhXI5uRqnkjiGKI2Tmfs6+vGeBchbErUG2DM4NcO1J2DEQ3yWc/s7Uan3c1nNYquh6sIQCl0/ssKgQts7tQYyRDUgy/kBpB38RN1cnvcFpISwuzoZJA5+hyL18PSQ0eMWQZrAxVF3g9ry2k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710888610; c=relaxed/simple;
-	bh=1flOJ3RWi62qhATNMgJWjfQ18bBCP95T4oDhosHEGzc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RzQg7/NzgjJV+ndoPiy7alIajDg1azAZlN2Uyykfq0OntUur6lth8VJSbAkK3HRUpFbUxR4E+g4o6sztB7KYXjfDJuuTUsgukD5jbPWe6WkGz6ggUibznUO8CwRCMYHBgWAZfGl6oyhVDlMHgtcSNeZ3n92+3dmr2r3l17gmNP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.178.112] (p57b378ee.dip0.t-ipconnect.de [87.179.120.238])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 152AC61E5FE3D;
-	Tue, 19 Mar 2024 23:48:19 +0100 (CET)
-Message-ID: <cd42aca9-ac6c-4579-96d5-121a38ebded5@molgen.mpg.de>
-Date: Tue, 19 Mar 2024 23:48:17 +0100
+	s=arc-20240116; t=1710888701; c=relaxed/simple;
+	bh=3XFBPid9R0JCqt0fTgacbRotaAtE8OIG1lMDUtvpRyc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gXWqahfBuFHZsU8XsbD00kCxKLdVcv5RZwsCn1pDXr1rG/jX3zKGYhuI3f67SL8bW0N6SC50p1n043bsadHUmDYI4m1wTmBsrF3suceDlDdRYjl0n4xt8JXNyCazXxdA0meTpjh79p6u+wl/lFAoSuL1KTz7cI+xH4QrdU1RuG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qC24ItmC; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qC24ItmC"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1710888696;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=S9/a7zZ7K+tzZcY0ZjcWN73TQAR+qMuQ1J4ijtfKAJ4=;
+	b=qC24ItmCdcMeli2r0BvFALbREJppQpq2xZ8hq0cobqTPHl04AqCVy89u8A2Wpw1VBMh33S
+	oMyUcNYcrR4O7E4LFmAt0Pldik8LMLStopcKkZ4MFEDHSklREBUpCsHs7mNUSK1OJ4SLQ9
+	6qC/S1K+g3mlLsQ8cnAKltw2q2Biqb8=
+From: Sean Anderson <sean.anderson@linux.dev>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	dri-devel@lists.freedesktop.org
+Cc: Michal Simek <michal.simek@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Daniel Vetter <daniel@ffwll.ch>,
+	linux-arm-kernel@lists.infradead.org,
+	Sean Anderson <sean.anderson@linux.dev>
+Subject: [PATCH v2 0/8] drm: zynqmp_dp: Misc. patches and debugfs support
+Date: Tue, 19 Mar 2024 18:51:13 -0400
+Message-Id: <20240319225122.3048400-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [PATCH v5 00/11] Add support for Intel PPS
- Generator
-Content-Language: en-US
-To: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
-Cc: tglx@linutronix.de, jstultz@google.com, giometti@enneenne.com,
- corbet@lwn.net, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- mallikarjunappa.sangannavar@intel.com, alexandre.torgue@foss.st.com,
- perex@perex.cz, basavaraj.goudar@intel.com, thejesh.reddy.t.r@intel.com,
- christopher.s.hall@intel.com, x86@kernel.org, joabreu@synopsys.com,
- peter.hilber@opensynergy.com, intel-wired-lan@lists.osuosl.org,
- subramanian.mohan@intel.com, linux-sound@vger.kernel.org,
- andriy.shevchenko@linux.intel.com, netdev@vger.kernel.org,
- pandith.n@intel.com, eddie.dong@intel.com, mcoquelin.stm32@gmail.com,
- anthony.l.nguyen@intel.com, davem@davemloft.net
-References: <20240319130547.4195-1-lakshmi.sowjanya.d@intel.com>
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240319130547.4195-1-lakshmi.sowjanya.d@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Dear Lakshmi,
+This series adds debugfs support for the zynqmp_dp driver. The intent is
+to enable compliance testing or to help debug signal-integrity issues.
 
+The first four patches are general improvements (and could be applied
+independently), while the last four add debugfs support.
 
-Thank you for your patch series.
+Changes in v2:
+- Fix kerneldoc
+- Rearrange zynqmp_dp for better padding
+- Document hpd_irq_work
+- Split off the HPD IRQ work into another commit
+- Expand the commit message
+- Document debugfs files
+- Add ignore_aux_errors and ignore_hpd debugfs files to replace earlier
+  implicit functionality
+- Attempt to fix unreproducable, spurious build warning
+- Drop "Optionally ignore DPCD errors" in favor of a debugfs file
+  directly affecting zynqmp_dp_aux_transfer.
 
-Am 19.03.24 um 14:05 schrieb lakshmi.sowjanya.d@intel.com:
-> From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
-> 
-> The goal of the PPS(Pulse Per Second) hardware/software is to generate a
+Sean Anderson (8):
+  drm: xlnx: Fix kerneldoc
+  drm: zynqmp_dp: Downgrade log level for aux retries message
+  drm: zynqmp_dp: Adjust training values per-lane
+  drm: zynqmp_dp: Rearrange zynqmp_dp for better padding
+  drm: zynqmp_dp: Don't retrain the link in our IRQ
+  drm: zynqmp_dp: Add locking
+  drm: zynqmp_dp: Split off several helper functions
+  drm: zynqmp_dp: Add debugfs interface for compliance testing
 
-Please add a space before (.
+ Documentation/gpu/drivers.rst       |   1 +
+ Documentation/gpu/zynqmp.rst        | 149 +++++
+ MAINTAINERS                         |   1 +
+ drivers/gpu/drm/xlnx/zynqmp_disp.c  |   6 +-
+ drivers/gpu/drm/xlnx/zynqmp_dp.c    | 836 +++++++++++++++++++++++++---
+ drivers/gpu/drm/xlnx/zynqmp_dpsub.h |   1 +
+ drivers/gpu/drm/xlnx/zynqmp_kms.h   |   4 +-
+ 7 files changed, 931 insertions(+), 67 deletions(-)
+ create mode 100644 Documentation/gpu/zynqmp.rst
 
-> signal from the system on a wire so that some third-party hardware can
-> observe that signal and judge how close the system's time is to another
-> system or piece of hardware.
-> 
-> Existing methods (like parallel ports) require software to flip a bit at
-> just the right time to create a PPS signal. Many things can prevent
-> software from doing this precisely. This (Timed I/O) method is better
-> because software only "arms" the hardware in advance and then depends on
-> the hardware to "fire" and flip the signal at just the right time.
-> 
-> To generate a PPS signal with this new hardware, the kernel wakes up
-> twice a second, once for 1->0 edge and other for the 0->1 edge. It does
-> this shortly (~10ms) before the actual change in the signal needs to be
-> made. It computes the TSC value at which edge will happen, convert to a
-> value hardware understands and program this value to Timed I/O hardware.
-> The actual edge transition happens without any further action from the
-> kernel.
-> 
-> The result here is a signal coming out of the system that is roughly
-> 1,000 times more accurate than the old methods. If the system is heavily
-> loaded, the difference in accuracy is larger in old methods.
-> 
-> Application Interface:
-> The API to use Timed I/O is very simple. It is enabled and disabled by
-> writing a '1' or '0' value to the sysfs enable attribute associated with
-> the Timed I/O PPS device. Each Timed I/O pin is represented by a PPS
-> device. When enabled, a pulse-per-second(PPS) synchronized with the
+-- 
+2.35.1.1320.gc452695387.dirty
 
-Please add a space before (.
-
-> system clock is continuously produced on the Timed I/O pin, otherwise it
-> is pulled low.
-> 
-> The Timed I/O signal on the motherboard is enabled in the BIOS setup.
-
-It’d be great if you documented your test setup including the name of 
-the system firmware option.
-
-
-Kind regards,
-
-Paul
