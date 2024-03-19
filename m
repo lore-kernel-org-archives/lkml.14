@@ -1,132 +1,114 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A0651C5F;
-	Tue, 19 Mar 2024 08:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A36537E6;
+	Tue, 19 Mar 2024 08:13:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710835957; cv=none; b=ECefPDykVXKeZuaIcOBk+HpOmS0qe4MU2ynvwu6MaKqXiezTNOQU8EoCSIOr1AG9MW1IaPrCnft8dBwv/oAkul9830dummtyoD3HLYu4jgGiFcO/RU61OMBCQQKMmUObgEY+JoSB3avkon5Q7dIEkZiZ0lS3d0CDWszfp7IsKAs=
+	t=1710836025; cv=none; b=V2PmeBFQbu/OuCedOYdmAT2YgVo7DYDm2ba4pY3C/1QX4lMzKqeUk2xlJbKxWcw0bP7x44ueBXsexmZkQBrtCRxSpr8Q6C4kGoIpVBPV6sfu7s6QPxpVvl1vqrX4BCBZmqKH/KsWfdKxQLWWqMGNAFz2Mk2c4Z0L2fN1Enw/qKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710835957; c=relaxed/simple;
-	bh=9caLd301JPjjyVwXBcpRgYu6Tjsc9zw0rESPSmtUeG8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=tU3JKU60o5/DLKv27tUX30v7+UA5c4GmQ4qLKdifXplg49RRUG5erd+PiyThbhoOJcULk0ccIAZKnD0RtksvVxwLHxcw6XwC51yQw746UX2KBs/0NmkkvGaEVuaLjH75/RcV7SpC8c/dwRvO3pPM8jf7tUX7rWf5X6ZNBk7CHDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from msexch01.omp.ru (10.188.4.12) by msexch02.omp.ru (10.188.4.13)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 19 Mar
- 2024 11:12:23 +0300
-Received: from msexch01.omp.ru ([fe80::485b:1c4a:fb7f:c753]) by
- msexch01.omp.ru ([fe80::485b:1c4a:fb7f:c753%5]) with mapi id 15.02.1258.012;
- Tue, 19 Mar 2024 11:12:23 +0300
-From: Roman Smirnov <r.smirnov@omp.ru>
-To: Helge Deller <deller@gmx.de>, Daniel Vetter <daniel@ffwll.ch>
-CC: Thomas Zimmermann <tzimmermann@suse.de>, Sergey Shtylyov
-	<s.shtylyov@omp.ru>, Karina Yankevich <k.yankevich@omp.ru>,
-	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>
-Subject: Re: [PATCH v2] fbmon: prevent division by zero in
- fb_videomode_from_videomode()
-Thread-Topic: [PATCH v2] fbmon: prevent division by zero in
- fb_videomode_from_videomode()
-Thread-Index: AQHabwRs4YTUR6hF/0+sHxdCA/um27E4WY8AgATgDMOAAId3gIABCvMT
-Date: Tue, 19 Mar 2024 08:12:23 +0000
-Message-ID: <57b3f6a6cc184c8ead51ecc50669b503@omp.ru>
-References: <20240305135150.23240-1-r.smirnov@omp.ru>
- <64bbc4dd-b617-4f3d-809e-763bedf37fb7@gmx.de>
- <9688d1d453b0472cb90f5e2151cbd2f8@omp.ru>,<b5d52c4c-534f-4897-ab96-351f09bee89a@gmx.de>
-In-Reply-To: <b5d52c4c-534f-4897-ab96-351f09bee89a@gmx.de>
-Accept-Language: ru-RU, en-US
-Content-Language: ru-RU
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-kse-serverinfo: msexch02.omp.ru, 9
-x-kse-antivirus-interceptor-info: scan successful
-x-kse-antivirus-info: Clean, bases: 3/19/2024 6:00:00 AM
-x-kse-attachment-filter-triggered-rules: Clean
-x-kse-attachment-filter-triggered-filters: Clean
-x-kse-bulkmessagesfiltering-scan-result: InTheLimit
-Content-Type: text/plain; charset="koi8-r"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1710836025; c=relaxed/simple;
+	bh=NZRW6tzTmDle8kSotz8FaxRCcE6d0Ym/4Gh5ibq+z7o=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=dV/jRQuCtwOoPWr0sNcaGBFiSyV+fqAzwCyRQ+F03I3cNqaX6ow8q1gWw0JxVGmoc+2yq+zofEdsR2W6km7Hz+TQZ5axqa/qYQq1/UT1/uyluFc5A5+bnhtCa72MUYoqa5QCftjBQO4or2wnImIganT7y3lXAgIvQMgjvWo+/XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 355C720136F;
+	Tue, 19 Mar 2024 09:07:55 +0100 (CET)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F0A7D201364;
+	Tue, 19 Mar 2024 09:07:54 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id E5F011820F76;
+	Tue, 19 Mar 2024 16:07:52 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: hverkuil@xs4all.nl,
+	sakari.ailus@iki.fi,
+	tfiga@chromium.org,
+	m.szyprowski@samsung.com,
+	mchehab@kernel.org,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	shengjiu.wang@gmail.com,
+	Xiubo.Lee@gmail.com,
+	festevam@gmail.com,
+	nicoleotsuka@gmail.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	alsa-devel@alsa-project.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v15 04/16] ASoC: fsl_asrc: move fsl_asrc_common.h to include/sound
+Date: Tue, 19 Mar 2024 15:51:02 +0800
+Message-Id: <1710834674-3285-5-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1710834674-3285-1-git-send-email-shengjiu.wang@nxp.com>
+References: <1710834674-3285-1-git-send-email-shengjiu.wang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
 
-On Mon, 18 Mar 2024 20:15:55 +0100 Helge Deller wrote:
-> On 3/18/24 09:11, Roman Smirnov wrote:
-> > On Fri, 15 Mar 2024 09:44:08 +0100 Helge Deller wrote:
-> > > On 3/5/24 14:51, Roman Smirnov wrote:
-> > > > The expression htotal * vtotal can have a zero value on
-> > > > overflow.
-> > >
-> > > I'm not sure if those always results in zero in kernel on overflow.
-> > > Might be architecture-depended too, but let's assume it
-> > > can become zero, ....
-> > >
-> > > > It is necessary to prevent division by zero like in
-> > > > fb_var_to_videomode().
-> > > >
-> > > > Found by Linux Verification Center (linuxtesting.org) with Svace.
-> > > >
-> > > > Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
-> > > > Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
-> > > > ---
-> > > >    V1 -> V2: Replaced the code of the first version with a check.
-> > > >
-> > > >    drivers/video/fbdev/core/fbmon.c | 2 +-
-> > > >    1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/video/fbdev/core/fbmon.c b/drivers/video/fbdev=
-/core/fbmon.c
-> > > > index 79e5bfbdd34c..b137590386da 100644
-> > > > --- a/drivers/video/fbdev/core/fbmon.c
-> > > > +++ b/drivers/video/fbdev/core/fbmon.c
-> > > > @@ -1344,7 +1344,7 @@ int fb_videomode_from_videomode(const struct =
-videomode *vm,
-> > > >         vtotal =3D vm->vactive + vm->vfront_porch + vm->vback_porch=
- +
-> > > >                  vm->vsync_len;
-> > > >         /* prevent division by zero */
-> > > > -     if (htotal && vtotal) {
-> > > > +     if (htotal && vtotal && (vm->pixelclock / htotal >=3D vtotal)=
-) {
-> > >
-> > > why don't you then simply check for
-> > >          if .. ((htotal * vtotal) =3D=3D 0) ...
-> > > instead?
-> > >
-> > > Helge
-> >
-> > Thomas Zimmermann from the previous discussion said:
-> > On Tue, 5 Mar 2024 11:18:05 +0100 Thomas Zimmerman wrote:
-> > > Maybe use
-> > >
-> > >     if (htotal && vtotal && (vm->pixelclock / htotal >=3D vtotal))
-> > >
-> > > for the test. That rules out overflowing multiplication and sets
-> > > refresh to 0 in such cases.
-> >
-> > This prevents overflow, which is also a problematic case.
->
-> I don't like adding another division here and I doubt we have
-> a problem with possible overflow.
-> So, I suggest to keep it simple, something like:
->        ...
->        total =3D htotal * vtotal;
->        if (total)
->                fbmode->refresh =3D vm->pixelclock / total;
->        else...
+Move fsl_asrc_common.h to include/sound that it can be
+included from other drivers.
 
-Okay, I'll prepare a third version with that change:
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Mark Brown <broonie@kernel.org>
+---
+ {sound/soc/fsl => include/sound}/fsl_asrc_common.h | 0
+ sound/soc/fsl/fsl_asrc.h                           | 2 +-
+ sound/soc/fsl/fsl_asrc_dma.c                       | 2 +-
+ sound/soc/fsl/fsl_easrc.h                          | 2 +-
+ 4 files changed, 3 insertions(+), 3 deletions(-)
+ rename {sound/soc/fsl => include/sound}/fsl_asrc_common.h (100%)
 
-    if (htotal && vtotal && (htotal * vtotal))
-
-I think that will be enough.
+diff --git a/sound/soc/fsl/fsl_asrc_common.h b/include/sound/fsl_asrc_common.h
+similarity index 100%
+rename from sound/soc/fsl/fsl_asrc_common.h
+rename to include/sound/fsl_asrc_common.h
+diff --git a/sound/soc/fsl/fsl_asrc.h b/sound/soc/fsl/fsl_asrc.h
+index 1c492eb237f5..66544624de7b 100644
+--- a/sound/soc/fsl/fsl_asrc.h
++++ b/sound/soc/fsl/fsl_asrc.h
+@@ -10,7 +10,7 @@
+ #ifndef _FSL_ASRC_H
+ #define _FSL_ASRC_H
+ 
+-#include  "fsl_asrc_common.h"
++#include  <sound/fsl_asrc_common.h>
+ 
+ #define ASRC_M2M_INPUTFIFO_WML		0x4
+ #define ASRC_M2M_OUTPUTFIFO_WML		0x2
+diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
+index f501f47242fb..f067bf1ecea7 100644
+--- a/sound/soc/fsl/fsl_asrc_dma.c
++++ b/sound/soc/fsl/fsl_asrc_dma.c
+@@ -12,7 +12,7 @@
+ #include <sound/dmaengine_pcm.h>
+ #include <sound/pcm_params.h>
+ 
+-#include "fsl_asrc_common.h"
++#include <sound/fsl_asrc_common.h>
+ 
+ #define FSL_ASRC_DMABUF_SIZE	(256 * 1024)
+ 
+diff --git a/sound/soc/fsl/fsl_easrc.h b/sound/soc/fsl/fsl_easrc.h
+index c9f770862662..a24e540876a4 100644
+--- a/sound/soc/fsl/fsl_easrc.h
++++ b/sound/soc/fsl/fsl_easrc.h
+@@ -9,7 +9,7 @@
+ #include <sound/asound.h>
+ #include <linux/dma/imx-dma.h>
+ 
+-#include "fsl_asrc_common.h"
++#include <sound/fsl_asrc_common.h>
+ 
+ /* EASRC Register Map */
+ 
+-- 
+2.34.1
 
