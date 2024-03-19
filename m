@@ -1,73 +1,75 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2074.outbound.protection.outlook.com [40.107.243.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437347C0A7;
-	Tue, 19 Mar 2024 08:29:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710836976; cv=fail; b=Q8JUY2Ixwm1HBVHba1CKAzYtWF1VwJnBlWro/WLf98H+0v3F2t7jjKuI51JgtEiN4watiMHMvk3MwFpU4uBmLkmve3y8EiD9LjT7KAxqgB6CCMp44NLy7M1AdLQYsG2Vh0bmRt8/OU2wZxf6LWuAH/VsfGDcqb7wc85oA5ReRck=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710836976; c=relaxed/simple;
-	bh=CfC8Dtdej8Bs2obErQD2thPXyALKckCC+ZpjubXph5k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nyEXLHsW/2CA+5Pjxdg147YKkB+C6ygcc99d7WqVJCSjmbFKiDW4K56t6soWiILYYLd17JbaEgZMgQD1baz+pGYb6q1ItQ0jYko76Nnv+pl724FV8e2R9kh8++YGGM1OAjZD013oIyGznB05eNO9HbAyzkkMXIiwSeoHLbQAzGE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YwBElpk3; arc=fail smtp.client-ip=40.107.243.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78762548F8
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 08:31:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710837067; cv=none; b=hjC/jyHpfrjO9gE822bp0lapk5ztF/78deaKrmrx8499kvMmm+eKYtP2UezGS1yaUrZD69PjgRTKHI8RYFGP8FF9gdeYfXE39RexPBsfE9Cidu62mvB3krUGbkahWZmQrJP4P2IzuPycJ0Im9Ue6iDFDvNkBvSsdzTeEC40QT2M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710837067; c=relaxed/simple;
+	bh=9eh9Mce20G8kV32TZt3BCMXWNixzHImnHuGbC8f5HvU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PPK7dWIqVBLQWoc2nO/7paAE8JoC4uQkQNL88CmACnY7EmbT9Xm44E0GqDRDrYrjCKtFmI4ilWUx9g73uZ+DkjsE2+b5P3sM+7OIhWQrYfTauYEX+1F8ppSDT7NYXf0Uw8R+CKzIP0ZnpiVJoAQnOJq7k7vopHacMv/E96Yqhuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com; spf=pass smtp.mailfrom=shopee.com; dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b=HZ3aT2qx; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shopee.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YwBElpk3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DMkvTB8pfeajKPkYIH2Mmg+is9vKkd6fuYIgl4za4i8NyPC4+3Xn/1JjF3YvkMDVKLwOeQAN/lenvRaZEOGcWgj5aMULrVQ/g8rSturnfssIzJ7S2ckbpFAwCxz+nZerg/vPzYxAn0pR3MYg/4gpXmt1lGKs1Du/h2Y5Me06iNJOoT4StFin2tRmBU94V89eoA68aajWl6PuQsOa5WgXSw0EzbQoeEMoqqIZpDgd4Lnb5IGXSpIk5WMcvf1u72jCB75rRp46HzrIA099uHsiGPXvqSqcLcEw62afrjM5hMiBoHofNLyACdl8dVCg1pYi7Qu21Wa45NJjoD3W1RAOEw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1dq3+SeUoyG/XIVatEuBb4Cc9u8W4ZcJ68xS0opsXjc=;
- b=iZarxQj+YXTHb9KyAAGr+RIFvkVxNQ+AseK6yIquShjEWL3Rx46LwHmSlWNOB+lDpi92afQnlBZxNDq3S4Ou1ZxruYWAjQDhQu6jaTBA6PjSzzhj+uKL6BcQhutmPZ9RzgWDaS7Vv5BCp2zoFkHSZutdcW+ELmAC7FdLAIXm2NTZX05ceUt7oKnH3nB0TsRPPY1eb5vTlM2e/FBKghwSrUCkpTjh6bLKb33VNMCf6BvBAylvDusyKb7D3Fm7c/7YlBFueey0J1G36WDl1NCF500xpJB5wE/3CIz2gQ0wirx8ntkf7ae4Ls4PTryvEeu/KWV/Ct+o/mVsUvNZRLB8XQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1dq3+SeUoyG/XIVatEuBb4Cc9u8W4ZcJ68xS0opsXjc=;
- b=YwBElpk3KTJMI7htSF4hHgneSttrPglxJ8lH4FcVQgQbX3TtYQYUfHGo/M+y/0mKGfH9L6B8npdzDshtFiN3UYahmtVk5OUfmaYf+FDj8kepBwtQfPctaI7K105CVf+7WIhSzdtZjlSY2NcSJeSsUu4BDSzry67tIpvxqmAUSCk=
-Received: from SJ0PR05CA0007.namprd05.prod.outlook.com (2603:10b6:a03:33b::12)
- by SJ2PR12MB7896.namprd12.prod.outlook.com (2603:10b6:a03:4c6::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.28; Tue, 19 Mar
- 2024 08:29:31 +0000
-Received: from SJ5PEPF000001D4.namprd05.prod.outlook.com
- (2603:10b6:a03:33b:cafe::f5) by SJ0PR05CA0007.outlook.office365.com
- (2603:10b6:a03:33b::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.11 via Frontend
- Transport; Tue, 19 Mar 2024 08:29:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF000001D4.mail.protection.outlook.com (10.167.242.56) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7409.10 via Frontend Transport; Tue, 19 Mar 2024 08:29:31 +0000
-Received: from pyuan-Chachani-VN.amd.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 19 Mar 2024 03:29:27 -0500
-From: Perry Yuan <perry.yuan@amd.com>
-To: <rafael.j.wysocki@intel.com>, <Mario.Limonciello@amd.com>,
-	<viresh.kumar@linaro.org>, <gautham.shenoy@amd.com>,
-	<Borislav.Petkov@amd.com>, <Ray.Huang@amd.com>
-CC: <Alexander.Deucher@amd.com>, <Xinmei.Huang@amd.com>,
-	<oleksandr@natalenko.name>, <Xiaojian.Du@amd.com>, <Li.Meng@amd.com>,
-	<linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v9 8/8] cpufreq: amd-pstate: Add quirk for the pstate CPPC capabilities missing
-Date: Tue, 19 Mar 2024 16:28:43 +0800
-Message-ID: <a2966f070294a58bfd318a6fac16423071bdba83.1710836407.git.perry.yuan@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1710836407.git.perry.yuan@amd.com>
-References: <cover.1710836407.git.perry.yuan@amd.com>
+	dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b="HZ3aT2qx"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-29fa98705b1so1370098a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 01:31:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shopee.com; s=shopee.com; t=1710837063; x=1711441863; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iC286gqeu87dpLs4MzEjxy2NyBEm8le59VZf4WE61d0=;
+        b=HZ3aT2qxzOrL49vlXpjp70a8VLhH7QgDgTtVSF9zZceluP8860pb8YHxsM47M7m8Vc
+         CbTPrZbXh/oU48qCEHPqJbTRtAtVyDA6UzlEt0gA4W6Z6O7hNSys4Ba1DQVtkNLua4sX
+         nHrv5CS4ikiO8VdX9ST1iQS4zJ7PrwU4i/OZHJeEVqvEVGpp7d1Acoeap+MO7jQ7s+WG
+         HwZsU1PxKrvK0xHv/MTNXzP3KShwTTKhan/uPL+ievVCFAugYEKOoNQkWkfodjcq7IwN
+         l9qFVyZDozSV8ds9gUEPGxzfZbORtH/sKDKQaX0w7QPx4A/S0Htis2r0evg7Z2rqOPCc
+         R+Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710837063; x=1711441863;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iC286gqeu87dpLs4MzEjxy2NyBEm8le59VZf4WE61d0=;
+        b=PgRSZPURJfVHS8YjYqFF9BlS6p9UwE6W6IWOd7guV9P+LAJIoiQ2NfG434dLF8A18a
+         UN9p2EAlBqpBWWGrnQwgbFWsMTORlYS8D9wkuhDZ9/Vl+3w8rebmpz2rMuhhz0Bedkbo
+         1svUeC5jpS2fDiWfwQacMM65cTFE13AX1AAHYLYtNKcd0LJTnMcxoQqj5JkvixKqONxK
+         i95wT02cWw3TxZR8LVbNHHrI5FQJd65T5FxHZCnJXn+PvTG9Nx2iSYFJkOFhhHauK8Nx
+         2TY57Vq1KUya7BshY1BGDFh9pUOU4g8vHgZoRLf7JW9n+nxw22a2W9zBnOBhgey3QqvO
+         XSRA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/ZC+g9OX2pqB6kOfpMwtDHeH3lmulUu5mZmvJcY78Peq3sXgojZ1EVsKwodJDpIuHxNIiFcv16qc4wbmr08/5gCmIb3mczTtAozWj
+X-Gm-Message-State: AOJu0Yyr2crXrWXNazJxb2do8YA6ljVoz/doIKlina9K2DkyZZhFY81y
+	+4CKwBQOspGDLvjyxqPA6/BVf7JMaE7GWnIiiLIw7mWbii0HgNsgrlbXK8IInFs=
+X-Google-Smtp-Source: AGHT+IFU8wMBn+TegkCWAEmm0MesjQjAYvuEWxjgmyw2w+xFgWQ61hWTlvku1dpOQeyJSKuyuc/Trg==
+X-Received: by 2002:a17:90a:c7cb:b0:29f:6753:ca66 with SMTP id gf11-20020a17090ac7cb00b0029f6753ca66mr1764789pjb.41.1710837062887;
+        Tue, 19 Mar 2024 01:31:02 -0700 (PDT)
+Received: from seacloud.vm ([143.92.64.20])
+        by smtp.gmail.com with ESMTPSA id k90-20020a17090a4ce300b0029ddd0a6ed4sm9941249pjh.38.2024.03.19.01.30.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 01:31:02 -0700 (PDT)
+From: Haifeng Xu <haifeng.xu@shopee.com>
+To: reinette.chatre@intel.com,
+	james.morse@arm.com
+Cc: fenghua.yu@intel.com,
+	babu.moger@amd.com,
+	bp@alien8.de,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	dave.hansen@linux.intel.com,
+	hpa@zytor.com,
+	peternewman@google.com,
+	x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	corbet@lwn.net,
+	linux-doc@vger.kernel.org,
+	Haifeng Xu <haifeng.xu@shopee.com>
+Subject: [PATCH v6 0/2] x86/resctrl: Track llc_occupancy of RMIDs in limbo list
+Date: Tue, 19 Mar 2024 16:30:37 +0800
+Message-Id: <20240319083039.223088-1-haifeng.xu@shopee.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,156 +77,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D4:EE_|SJ2PR12MB7896:EE_
-X-MS-Office365-Filtering-Correlation-Id: c9b7807d-9969-4cd3-10e9-08dc47eeb36f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	aqxf70//zge2nSEJRuf8J6ZgT15FaYUC9uNZopv/8cDxC1jl3nG8i0UqoWan3rLrTpTg35v2jhAwdc+E/u3x8bWxbBJiKXjBsBQoEkuxssLgk0G8Dzy7bRfFZT5myBi5Op74vVEjJLCdFU4WMbPpEj1MalQIUprTbOjyYqofqysHzKE67YQsi6JcwKKIs86m5/+anL+R/UkvyTyO7Ki/GMFUhal4H7kDIXT8NBxFOpvxCY7WjFYLbk7Pb8wm9x6ej69TTbs0l0Qb8q5ibujzoFW61LoAD+IuePsdjd8n7UNSs6O3BMr+BonKiJLKG1dSrwkCJ3DqYtQCJOkEdO6e/cK5QssnkeoT9XuBsS487uhQd6o0PYam2hKQOIfAxtmSkez4DvJMjbOW+aLosdgsC1cwGDYnYt2y7ruzpQXzOFATuRa5dE588+vbqpHKEOXcTghlta28uvw4b7GFFH5awAFN/fPxODZyQLLmNXqLNuz0OgoWgIRdR0ZmuWnuMa1rZXyXk+P2Zc05J3yjqrRRmR54TsYrPeYtEWvrmfO9LELUmmRWE59zaYKuxPKe6axQbbJ7Z1mfB0P8vHRbXtBg46Pv4FhrYvzOlUjaOt9tk697jz/UPOveym8/OOADvGNxEOsKK3bycy6uvumi21QmjAS8O01fZGgLn0gbzd3E3z+DdTeV75RhyIFDAvlYSpVGsLXJInGdrMM1BM7G2iJfq95QB3bDjwdSUlCrHyIiD5RFXzznQHDWlckVU7rUh7AK
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(1800799015)(376005)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2024 08:29:31.6706
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c9b7807d-9969-4cd3-10e9-08dc47eeb36f
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001D4.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7896
 
-Add quirks table to get CPPC capabilities issue fixed by providing
-correct perf or frequency values while driver loading.
+After removing a monitor group, its RMID may not be freed immediately
+unless its llc_occupancy is less than the re-allocation threshold. If
+turning up the threshold, the RMID can be reused. In order to know how
+much the threshold should be, it's necessary to acquire the llc_occupancy.
 
-If CPPC capabilities are not defined in the ACPI tables or wrongly
-defined by platform firmware, it needs to use quick to get those
-issues fixed with correct workaround values to make pstate driver
-can be loaded even though there are CPPC capabilities errors.
+The patch series provides a new tracepoint to track the llc_occupancy.
 
-The workaround will match the broken BIOS which lack of CPPC capabilities
-nominal_freq and lowest_freq definition in the ACPI table.
+Changes since v1:
+- Rename pseudo_lock_event.h instead of creating a new header file.
+- Modify names used in the tracepoint.
+- Update changelog.
 
-$ cat /sys/devices/system/cpu/cpu0/acpi_cppc/lowest_freq
-0
-$ cat /sys/devices/system/cpu/cpu0/acpi_cppc/nominal_freq
-0
+Changes since v2:
+- Fix typo and use the x86/resctrl subject prefix in the cover letter.
+- Track both CLOSID and RMID in the tracepoint.
+- Remove the details on how perf can be used in patch2's changelog.
 
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
-Signed-off-by: Perry Yuan <perry.yuan@amd.com>
----
- drivers/cpufreq/amd-pstate.c | 53 ++++++++++++++++++++++++++++++++++--
- include/linux/amd-pstate.h   |  6 ++++
- 2 files changed, 57 insertions(+), 2 deletions(-)
+Changes since v3:
+- Put the tracepoint in the 'else' section of the if/else after
+  resctrl_arch_rmid_read().
+- Modify names used in the tracepoint.
+- Document the properties of the tracepoint.
 
-diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-index ec049b62b366..59a2db225d98 100644
---- a/drivers/cpufreq/amd-pstate.c
-+++ b/drivers/cpufreq/amd-pstate.c
-@@ -67,6 +67,7 @@ static struct cpufreq_driver amd_pstate_epp_driver;
- static int cppc_state = AMD_PSTATE_UNDEFINED;
- static bool cppc_enabled;
- static bool amd_pstate_prefcore = true;
-+static struct quirk_entry *quirks;
- 
- /*
-  * AMD Energy Preference Performance (EPP)
-@@ -111,6 +112,41 @@ static unsigned int epp_values[] = {
- 
- typedef int (*cppc_mode_transition_fn)(int);
- 
-+static struct quirk_entry quirk_amd_7k62 = {
-+	.nominal_freq = 2600,
-+	.lowest_freq = 550,
-+};
-+
-+static int __init dmi_matched_7k62_bios_bug(const struct dmi_system_id *dmi)
-+{
-+	/**
-+	 * match the broken bios for family 17h processor support CPPC V2
-+	 * broken BIOS lack of nominal_freq and lowest_freq capabilities
-+	 * definition in ACPI tables
-+	 */
-+	if (boot_cpu_has(X86_FEATURE_ZEN2)) {
-+		quirks = dmi->driver_data;
-+		pr_info("Overriding nominal and lowest frequencies for %s\n", dmi->ident);
-+		return 1;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct dmi_system_id amd_pstate_quirks_table[] __initconst = {
-+	{
-+		.callback = dmi_matched_7k62_bios_bug,
-+		.ident = "AMD EPYC 7K62",
-+		.matches = {
-+			DMI_MATCH(DMI_BIOS_VERSION, "5.14"),
-+			DMI_MATCH(DMI_BIOS_RELEASE, "12/12/2019"),
-+		},
-+		.driver_data = &quirk_amd_7k62,
-+	},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(dmi, amd_pstate_quirks_table);
-+
- static inline int get_mode_idx_from_str(const char *str, size_t size)
- {
- 	int i;
-@@ -812,8 +848,16 @@ static int amd_pstate_init_freq(struct amd_cpudata *cpudata)
- 	if (ret)
- 		return ret;
- 
--	min_freq = cppc_perf.lowest_freq * 1000;
--	nominal_freq = cppc_perf.nominal_freq * 1000;
-+	if (quirks && quirks->lowest_freq)
-+		min_freq = quirks->lowest_freq * 1000;
-+	else
-+		min_freq = cppc_perf.lowest_freq * 1000;
-+
-+	if (quirks && quirks->nominal_freq)
-+		nominal_freq = quirks->nominal_freq * 1000;
-+	else
-+		nominal_freq = cppc_perf.nominal_freq * 1000;
-+
- 	nominal_perf = READ_ONCE(cpudata->nominal_perf);
- 
- 	highest_perf = READ_ONCE(cpudata->highest_perf);
-@@ -1662,6 +1706,11 @@ static int __init amd_pstate_init(void)
- 	if (cpufreq_get_current_driver())
- 		return -EEXIST;
- 
-+	quirks = NULL;
-+
-+	/* check if this machine need CPPC quirks */
-+	dmi_check_system(amd_pstate_quirks_table);
-+
- 	switch (cppc_state) {
- 	case AMD_PSTATE_UNDEFINED:
- 		/* Disable on the following configs by default:
-diff --git a/include/linux/amd-pstate.h b/include/linux/amd-pstate.h
-index ab7e82533718..6b832153a126 100644
---- a/include/linux/amd-pstate.h
-+++ b/include/linux/amd-pstate.h
-@@ -128,4 +128,10 @@ static const char * const amd_pstate_mode_string[] = {
- 	[AMD_PSTATE_GUIDED]      = "guided",
- 	NULL,
- };
-+
-+struct quirk_entry {
-+	u32 nominal_freq;
-+	u32 lowest_freq;
-+};
-+
- #endif /* _LINUX_AMD_PSTATE_H */
+Changes since v4:
+- Add Reviewed-by tags.
+- Include more maintainers in the submission.
+
+Changes since v5:
+- Update the documentation and comments of the tracepoint.
+- Code cleanup.
+
+Haifeng Xu (2):
+  x86/resctrl: Rename pseudo_lock_event.h to trace.h
+  x86/resctrl: Add tracepoint for llc_occupancy tracking
+
+ Documentation/arch/x86/resctrl.rst            |  6 +++++
+ arch/x86/kernel/cpu/resctrl/monitor.c         | 11 +++++++++
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c     |  2 +-
+ .../resctrl/{pseudo_lock_event.h => trace.h}  | 24 +++++++++++++++----
+ 4 files changed, 38 insertions(+), 5 deletions(-)
+ rename arch/x86/kernel/cpu/resctrl/{pseudo_lock_event.h => trace.h} (56%)
+
 -- 
-2.34.1
+2.25.1
 
