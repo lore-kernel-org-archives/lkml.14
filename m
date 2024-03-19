@@ -1,92 +1,239 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6A88565C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F48885629
 	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 16:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710864843; cv=none; b=g6mkPO9HmF7DpEzPgnmBrgmEektetxszHau1k0vvhPUyar3vx+UP159TsH4P/1kIZAxaHaNgJ9/b+GvDFWj2FpcMybWbqW6Ps/1wpHVLZ2BG9MSiBBd78v94daCbvqpxyzRiYPT3H+smBG/6q1M3dy7p0wUaaTjG10QllMjnR0c=
+	t=1710864843; cv=none; b=LKzBg1kh2X7YaJ8r9iucJD3E6zyPPGXPmX1P6S8sUDWC/OCopq4A1rnROv//RL8etiz1hMWEDz18/Ku1Requ5RZlDvVjc0T3PTcjAJ1kbnPYUUuOvP3tynMa+dsSU+ETK/5fVMhElXxko9SiH/r214Ft02CFcbNUlY0jTtXJprM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710864843; c=relaxed/simple;
-	bh=xK6oFtMSPOO/+MFMrzgdRfpeW/yJYOp63dnRub6XKM4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ciQ7VJdgbwgRdQx+D6ysbPnNO/XJyczAfUMUNLhWOgE0+fsA0tMODuunLMjSl5aCUVqaEXmbDOl4Kqc/xaUuHqjKkeoFvqH3wn7um1V47Rv/Kid/t3SarwA9r03kkkLvzPVpahCQOGDU7KhKl8vba50dQJ/ZIqmRyg7YiWeicJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=l+V0fC34; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	bh=WvPyzZfNQUrQySxckVP5QXfPEr3BylcrJTFZjJRL61g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=AjWFyhiKCOG9LF7Eu0jCSxlofPH/YRdsh0aMTtNCkeaM2EXVhtOSozlVFMu5Es7AMK2sFbMA4P/2axspvb1kkH7pk4/RUAN/oxlVhBNpClpo2zotrhsJGJ1VhKqsBR3Q2Waj513jQkYkwBn/YMfRufPIYtjDxBpMk1JK9lo05y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QDVXop/L; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="l+V0fC34"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-56b9e5ed074so993303a12.3
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QDVXop/L"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-512ed314881so4119411e87.2
         for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 09:14:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1710864839; x=1711469639; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qssoFyi0EHVSMQZ8tvcNSLF8ll1cyBFfjAUL3WkFTKQ=;
-        b=l+V0fC34qbWms3t2kAM2Tsaco+GNRpzk32yyo0NNeSGtZuo5iLyGwkDFxfHS7jyxuT
-         EjYfJjUYY/jl10/fim6+6QLQfSlCeSzFvYZY0aAjsYBNlqdd16aIRTso+2GaFAMF86Wh
-         g0+a6IL6vAXBN23hxZ4lFYPLWdEr8CCHoiv+E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710864839; x=1711469639;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1710864838; x=1711469638; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=qssoFyi0EHVSMQZ8tvcNSLF8ll1cyBFfjAUL3WkFTKQ=;
-        b=ZnILdYG4pIWN6tYkRavHk9b+8wB4zllzO5Ck29kJLHdqgjocDGwQgeOeTfdDlwgjJu
-         BU/cl1gvhDZjGY5tJlMsK4snoyFHP/J/KMFKaUxxonXBgE45/T1cQ3kTi7ykCeJSzp7+
-         tqFbMWXO0FIf4U2HoxBZra83Z3/uzUysURFjYCH47vIjtknd1ouIVBNhKPFg4t006cx2
-         4LlXEjkJOChtC4OaTa5S19S3dInhgqX9Ad68xsH7gRBwDSC39nrGpE4np0ZmCNzu8sJE
-         zHSar2XR0DigqXdMFU7SwmRvAu/OqugZ4q9d40MJWilLDdwStVB4y1tORWKNbaIdXkcp
-         1rRw==
-X-Forwarded-Encrypted: i=1; AJvYcCW564naZALjeDrL4oVBZ+cZyz/mk4g1oep6qx1FA4Fve6GTvlKtTEDzQ6/SYDsdgnUJBX21GXsGNfP949WmBo5gC+VCBWCBfhUwy17+
-X-Gm-Message-State: AOJu0YxN9qepRJ/2b5jGq9PwWihDX8cGO2FjBrLDezTrercfSs0nrOcq
-	HqjOBLLfBiGzAcdwhU4HqsWP+2NTXyyfSj90ZYSXgDe5UcfUnv8dG+Ga2WwAR1uARbawXsCKavl
-	fy6TC8uxu9rZyyzkMzqY3osLnWIDwbiD0DqR6nA==
-X-Google-Smtp-Source: AGHT+IG80idJ/eoHfs/tS8xY4ItmYTZEjrCulMFp8PsOW5O33PBCGW/QH9XqH6EWMgC+d4lP/zrFK1SKGKNE4vf/7pM=
-X-Received: by 2002:a17:906:af07:b0:a46:47bc:580b with SMTP id
- lx7-20020a170906af0700b00a4647bc580bmr2203920ejb.56.1710864838625; Tue, 19
- Mar 2024 09:13:58 -0700 (PDT)
+        bh=INVlAMS/JfEb8n+Ryd4uQ5TKLO8ePn6L/ZZbKVUldII=;
+        b=QDVXop/LRZ24TtAcm0/l7AOfrinN4v3n3GL7w/ixXGSY3ps+kFZDkS/W3+IEWVagGI
+         WYnADkh37tbVlq5dcYmr3B6/TZADRS9oFMm3T8c7MpemTIrz9R2caJcAjqEmHRw2Z8dj
+         cQLB4ucsbmbs05yN+tGM5REdJV0AGmVVnggvACK/kYfJc1348XzSaLPWcgvzdWATB6T6
+         9QPabHuhc+2mUL/XmaJ4nWtF1hAuDSWxkR8UUckMlDt1sOmgAQ3D/gubBRNfEA/KySqA
+         SqUnY2dZNVnaY4IstMU4adxKkiLtocH1DVV12yYeLVw+azUiwtHNLBwMCzZKUlplthHk
+         QQ5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710864838; x=1711469638;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=INVlAMS/JfEb8n+Ryd4uQ5TKLO8ePn6L/ZZbKVUldII=;
+        b=hJehF9UFhYPsbqXEoWLTxxsaQmGtSMBwOrW6BTTIDYbujiHlZDFKZaqreiBDkEC/5B
+         zL3wosnZ5vVk60cbagPzBVO2HK3SQwqLZX36eDtVudtRK+x+tAY+gF5gafSwRdTJflYF
+         0J+Drj68iz6FiTQ39dgSzA1a63GEiyqzOQDEdsQP1qfL/a6To8xKsgGnFJAzQe1wqCmr
+         jsOTWxoX2wfeJ5sqI+FsiXeN5+6j9T3Uz0QJYp+jmElO93Nqvv0RJjwgFUQ1R880oQUs
+         FIapZ8ZaY/eWq7oRbzEqiJ8JZGWughUJ/8Ce+z+VqDX/CN2WkQQrb83wpVF1OeOeNeZ7
+         epFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXvbbNH8X4B+cPb+pO7Ai7VdgojxuQfULnaqepLeM8LRthTAZqF8Vde7lti2K+7dX8DobcthnhIjSso4hZcsatD1UtMsf7HyK6BxY7n
+X-Gm-Message-State: AOJu0YzOUnQz96czMbBzoqknuq+ZDvKn01HAnMeommnA+yKHK3o4v9a0
+	dIRthqEsaBJR2Eze3cRdrHCyH3m4RP6lDrE18gqPB/esOkiZkZyHWWpeRIbzcvA=
+X-Google-Smtp-Source: AGHT+IGbyA85Wt5UtTI71E56whtDNrT9UVmjbmi/g9ZDIbZFuiPEsalu9HEPteYL6ysWDwPWZtFjtw==
+X-Received: by 2002:ac2:495c:0:b0:512:e220:d3ab with SMTP id o28-20020ac2495c000000b00512e220d3abmr2313798lfi.65.1710864838712;
+        Tue, 19 Mar 2024 09:13:58 -0700 (PDT)
+Received: from [127.0.1.1] (netpanel-87-246-222-29.pol.akademiki.lublin.pl. [87.246.222.29])
+        by smtp.gmail.com with ESMTPSA id dx9-20020a0565122c0900b00513ee207982sm607686lfb.198.2024.03.19.09.13.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 09:13:58 -0700 (PDT)
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Date: Tue, 19 Mar 2024 17:13:49 +0100
+Subject: [PATCH 19/31] arm64: dts: qcom: sc8280xp-*: Remove thermal zone
+ polling delays
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1668172.1709764777@warthog.procyon.org.uk> <ZelGX3vVlGfEZm8H@casper.infradead.org>
- <1831809.1709807788@warthog.procyon.org.uk> <CAJfpegv8X0PY7PvxEF=zEwRbdZ7yZZcwB80iDO+XLverognx+g@mail.gmail.com>
- <651179.1710857687@warthog.procyon.org.uk>
-In-Reply-To: <651179.1710857687@warthog.procyon.org.uk>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Tue, 19 Mar 2024 17:13:47 +0100
-Message-ID: <CAJfpegsUYUwp2YNnCE3ZP+JtL0whgQ=3+wcsBABGXH9MjXC0zA@mail.gmail.com>
-Subject: Re: [RFC PATCH] mm: Replace ->launder_folio() with flush and wait
-To: David Howells <dhowells@redhat.com>
-Cc: Matthew Wilcox <willy@infradead.org>, Trond Myklebust <trond.myklebust@hammerspace.com>, 
-	Christoph Hellwig <hch@lst.de>, Andrew Morton <akpm@linux-foundation.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Jeff Layton <jlayton@kernel.org>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
-	netfs@lists.linux.dev, v9fs@lists.linux.dev, linux-afs@lists.infradead.org, 
-	ceph-devel@vger.kernel.org, linux-cifs@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, devel@lists.orangefs.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240319-topic-msm-polling-cleanup-v1-19-e0aee1dbcd78@linaro.org>
+References: <20240319-topic-msm-polling-cleanup-v1-0-e0aee1dbcd78@linaro.org>
+In-Reply-To: <20240319-topic-msm-polling-cleanup-v1-0-e0aee1dbcd78@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Konrad Dybcio <konrad.dybcio@linaro.org>
+X-Mailer: b4 0.13-dev-0438c
 
-On Tue, 19 Mar 2024 at 15:15, David Howells <dhowells@redhat.com> wrote:
+All of the thermal zone suppliers are interrupt-driven, remove the
+bogus and unnecessary polling that only wastes CPU time.
 
-> What particular usage case of invalidate_inode_pages2() are you thinking of?
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+---
+ .../dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts     |  2 --
+ arch/arm64/boot/dts/qcom/sc8280xp-pmics.dtsi       |  4 ---
+ arch/arm64/boot/dts/qcom/sc8280xp.dtsi             | 33 ----------------------
+ 3 files changed, 39 deletions(-)
 
-FUSE_NOTIFY_INVAL_INODE will trigger invalidate_inode_pages2_range()
-to clean up the cache.
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
+index 15ae94c1602d..cd6a585359f7 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
++++ b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
+@@ -296,8 +296,6 @@ linux,cma {
+ 
+ 	thermal-zones {
+ 		skin-temp-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <0>;
+ 			thermal-sensors = <&pmk8280_adc_tm 5>;
+ 
+ 			trips {
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-pmics.dtsi b/arch/arm64/boot/dts/qcom/sc8280xp-pmics.dtsi
+index 945de77911de..4283d59c556d 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp-pmics.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc8280xp-pmics.dtsi
+@@ -13,8 +13,6 @@
+ / {
+ 	thermal-zones {
+ 		pm8280_1_thermal: pm8280-1-thermal {
+-			polling-delay-passive = <100>;
+-			polling-delay = <0>;
+ 			thermal-sensors = <&pm8280_1_temp_alarm>;
+ 
+ 			trips {
+@@ -33,8 +31,6 @@ trip1 {
+ 		};
+ 
+ 		pm8280_2_thermal: pm8280-2-thermal {
+-			polling-delay-passive = <100>;
+-			polling-delay = <0>;
+ 			thermal-sensors = <&pm8280_2_temp_alarm>;
+ 
+ 			trips {
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
+index a5b194813079..00fd4a187297 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
+@@ -5648,9 +5648,6 @@ sound: sound {
+ 
+ 	thermal-zones {
+ 		cpu0-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
+-
+ 			thermal-sensors = <&tsens0 1>;
+ 
+ 			trips {
+@@ -5663,9 +5660,6 @@ cpu-crit {
+ 		};
+ 
+ 		cpu1-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
+-
+ 			thermal-sensors = <&tsens0 2>;
+ 
+ 			trips {
+@@ -5678,9 +5672,6 @@ cpu-crit {
+ 		};
+ 
+ 		cpu2-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
+-
+ 			thermal-sensors = <&tsens0 3>;
+ 
+ 			trips {
+@@ -5693,9 +5684,6 @@ cpu-crit {
+ 		};
+ 
+ 		cpu3-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
+-
+ 			thermal-sensors = <&tsens0 4>;
+ 
+ 			trips {
+@@ -5708,9 +5696,6 @@ cpu-crit {
+ 		};
+ 
+ 		cpu4-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
+-
+ 			thermal-sensors = <&tsens0 5>;
+ 
+ 			trips {
+@@ -5723,9 +5708,6 @@ cpu-crit {
+ 		};
+ 
+ 		cpu5-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
+-
+ 			thermal-sensors = <&tsens0 6>;
+ 
+ 			trips {
+@@ -5738,9 +5720,6 @@ cpu-crit {
+ 		};
+ 
+ 		cpu6-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
+-
+ 			thermal-sensors = <&tsens0 7>;
+ 
+ 			trips {
+@@ -5753,9 +5732,6 @@ cpu-crit {
+ 		};
+ 
+ 		cpu7-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
+-
+ 			thermal-sensors = <&tsens0 8>;
+ 
+ 			trips {
+@@ -5768,9 +5744,6 @@ cpu-crit {
+ 		};
+ 
+ 		cluster0-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
+-
+ 			thermal-sensors = <&tsens0 9>;
+ 
+ 			trips {
+@@ -5783,9 +5756,6 @@ cpu-crit {
+ 		};
+ 
+ 		gpu-thermal {
+-			polling-delay-passive = <0>;
+-			polling-delay = <0>;
+-
+ 			thermal-sensors = <&tsens2 2>;
+ 
+ 			trips {
+@@ -5798,9 +5768,6 @@ gpu-crit {
+ 		};
+ 
+ 		mem-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
+-
+ 			thermal-sensors = <&tsens1 15>;
+ 
+ 			trips {
 
-The server is free to discard writes resulting from this invalidation
-and delay reads in the region until the invalidation finishes.  This
-would no longer work with your change, since the mapping could
-silently be reinstated between the writeback and the removal from the
-cache due to the page being unlocked/relocked.
+-- 
+2.40.1
 
-I'm not saying such a filesystem actually exists, but it's a
-theoretical possibility.  And maybe there are cases which I haven't
-thought of.
-
-Thanks,
-Miklos
