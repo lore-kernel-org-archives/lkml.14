@@ -1,159 +1,200 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from esa2.hc1455-7.c3s2.iphmx.com (esa2.hc1455-7.c3s2.iphmx.com [207.54.90.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E49665190;
-	Tue, 19 Mar 2024 06:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2AA62CAB;
+	Tue, 19 Mar 2024 06:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710829805; cv=none; b=R3/p8CvD827TE70ZQ9OdzEnGzNFYSawj5/CaVvpTD/eFUKmSmJa4kt6QapNUxki7DXKbiLp1slvU+9D191URle3g1BS0Ucnz1T5zQqvHbF4nzT4UrrEHPUQGI/1s4JmjPFobHuwNVAYxsseWLJ5+s1otlk5jEWbktue45nUaPiM=
+	t=1710829950; cv=none; b=ZzUvhRxEpB5hoADS8RoSEQtOSD8vnRJHxo5jtembuZe6xOolT7fsmzZUamHc3yCeblYOStzpsSIPhz+Q/blfO3R1pRhexf2pxzZa+HpSFR7ZXwyyDAVxdAfccs5/NC4V+7t9gwzyaSFbcCMLZQlUlFc5wc7F3iZRvtC3+2CsKoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710829805; c=relaxed/simple;
-	bh=IlB5SC8elaxZxZ7jC3HSF6c2qr46rgiI44EFyJKcBPw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tiJyHDjnGZP2f0UTbCkfS6jxp14qkWZRh8NOyxOZXmFVdHVD5HM3oPEBOiORYjh3auMTDiBALIn7z0HFUxbdVk+pef6IO2j9+6MkpwjOfBQoYCRS3yi45XoEtiGXk+/auKHB/jCtFLD6nR1aRVucb/gWClUOpt7DiGI9TtYRL3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=T2zk/TEV; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1710829950; c=relaxed/simple;
+	bh=qEfLqdJeT2Gpt9qf+K4ddERyTTfpjjSSEO6EwWF7Fl4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=gZHi4wskOOLCFIuOYNpA/TfJoDN6NcFhPQdlobRogSKc6PvDRUuijPVvM1Rf1UgUSS79T0hept73P/OaRdHNnDeJkFcYfhqPsjf3zhAxjxAcDk6sUcc0YU/wVpfExvLmoFcQtGSduQ0cr/IzOh4Y5amNJLFWXUS3DudnvAXmnJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=scOO9/Fb; arc=none smtp.client-ip=207.54.90.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="T2zk/TEV"
-Received: from [192.168.88.20] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 28C44480;
-	Tue, 19 Mar 2024 07:29:34 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1710829775;
-	bh=IlB5SC8elaxZxZ7jC3HSF6c2qr46rgiI44EFyJKcBPw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=T2zk/TEVPl9lQ1LQ49Mw8Z8Zp8wh9ByIzkg6GBAaskM6rL9AfWIF2spIGOWMC6Kwn
-	 XD6sSUsGqoZnZ5mLza5kU47IKh2LciNXsAooFaXillAtkrpW/YahrY4echgMLvHxOz
-	 K/ZmBfp4LpLqA/ZEL8PJhw++saH9pW0NZsp0eczE=
-Message-ID: <fcea0340-68f0-4a16-9b47-4d9eb91ffb1a@ideasonboard.com>
-Date: Tue, 19 Mar 2024 08:29:57 +0200
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="scOO9/Fb"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1710829949; x=1742365949;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=qEfLqdJeT2Gpt9qf+K4ddERyTTfpjjSSEO6EwWF7Fl4=;
+  b=scOO9/FbVC+jGdaJO0E9jtMCl5NvVobZw60pAxENZgdCjNvwsD6w9rez
+   ygyVIxOYqSwtB3h9Y6xwwWenE4hEStDebwvdubvasC5BmcMC60qitrIjR
+   r/m3JxjTW1oV5iVhC7yAObev5etPxCGgXoEK4XurBiMcrrAFu4R7aEydg
+   3ovwvvir83GXmWXIHX7LvcdYi0z+6hH0FGPOTomRc6nIr121Sn80yxj3t
+   yem7DPX5yYZTBQAXKe6J7Z3sspJaEzkVqpuo+H+5yFdzfhLGeI7+1iu/p
+   yFl9rPkYSMOMhsliIVl/36FNKqsn1u6ZAepNEuh5X7H619lH+xPZ0lHQ3
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="152728470"
+X-IronPort-AV: E=Sophos;i="6.07,136,1708354800"; 
+   d="scan'208";a="152728470"
+Received: from unknown (HELO oym-r3.gw.nic.fujitsu.com) ([210.162.30.91])
+  by esa2.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 15:32:25 +0900
+Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
+	by oym-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id A6467C21AA;
+	Tue, 19 Mar 2024 15:32:22 +0900 (JST)
+Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
+	by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id D457BBF4B8;
+	Tue, 19 Mar 2024 15:32:21 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id 6B970227ABA;
+	Tue, 19 Mar 2024 15:32:21 +0900 (JST)
+Received: from localhost.localdomain (unknown [10.167.226.45])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id D73171A006B;
+	Tue, 19 Mar 2024 14:32:20 +0800 (CST)
+From: Li Zhijian <lizhijian@fujitsu.com>
+To: linux-kernel@vger.kernel.org
+Cc: Li Zhijian <lizhijian@fujitsu.com>,
+	Ketan Mukadam <ketan.mukadam@broadcom.com>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org
+Subject: [PATCH v2 04/25] scsi: be2iscsi: Convert sprintf() family to sysfs_emit() family
+Date: Tue, 19 Mar 2024 14:31:11 +0800
+Message-Id: <20240319063132.1588443-4-lizhijian@fujitsu.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20240319063132.1588443-1-lizhijian@fujitsu.com>
+References: <20240319063132.1588443-1-lizhijian@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] media: raspberrypi: Support RPi5's CFE
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, Naushir Patuck
- <naush@raspberrypi.com>, Laurent Pinchart
- <laurent.pinchart@ideasonboard.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
- Kieran Bingham <kieran.bingham@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-References: <20240318-rp1-cfe-v1-0-ac6d960ff22d@ideasonboard.com>
- <28754b32-35c7-4285-a610-3e101da41047@linaro.org>
- <c6526c63-3e8d-46f3-abc2-3cc513617161@ideasonboard.com>
- <0c1820fb-fbc0-4aae-b0d4-b5bb5c996377@linaro.org>
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <0c1820fb-fbc0-4aae-b0d4-b5bb5c996377@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28260.005
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28260.005
+X-TMASE-Result: 10--13.790600-10.000000
+X-TMASE-MatchedRID: IVNJzyZeXh4bO59FK9BdmJiHtCNYjckMjkDrBOJwwnQ8JmmJxjOaQXVX
+	Q3/qdw5yDiqGKKMcNgRhoUIS5GGeEs1HQN/TlJ3ZOIQ9GP2P2u/iwxLjNbuPBWO0yVK/5LmcQiM
+	ingSlKoKMx5HzfQifbPE41045MrHXFDCN/1eC4ASdVNZaI2n6/8E5XPQnBzGXq8KsbROd9VSArq
+	oIZrVn15fzUkBpc072yMN2dG5I164tNVV5XI3AlKrxFQMz0ixcnGHnXg+7RhleGZa58oEXZMDDF
+	OyfVeOuNEF4KUzfJuJtF7TiMxHpjVR40HmL/vatdo0n+JPFcJp9LQinZ4QefJOK2Na/r7MIF70J
+	Bot7Y8+OhzOa6g8KrT3S35z9KvuQfgg1QRAVfi7hmLgtHa1C3yNbJDfyNQDOblWKG7Tq1kw=
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-On 19/03/2024 08:23, Krzysztof Kozlowski wrote:
-> On 19/03/2024 07:21, Tomi Valkeinen wrote:
->> Hi,
->>
->> On 19/03/2024 08:05, Krzysztof Kozlowski wrote:
->>> On 18/03/2024 16:49, Tomi Valkeinen wrote:
->>>> This series adds support to the CFE hardware block on RaspberryPi 5. The
->>>> CFE (Camera Front End) contains a CSI-2 receiver and Front End, a small
->>>> ISP.
->>>>
->>>> This series is currently based on multiple other serieses:
->>>>
->>>> - Sakari's "[PATCH v8 00/38] Generic line based metadata support, internal
->>>>     pads" for metadata support
->>>> - Laurent's "[PATCH 00/15] media: Add driver for the Raspberry Pi <5
->>>>     CSI-2 receiver" for a few new pixel formats and imx219 (for testing).
->>>> - Jacopo's "[PATCH v5 0/9] media: raspberrypi: Add support for PiSP Back
->>>>     End" for some shared uapi headers.
->>>>
->>>> And to run this, one of course needs the basic RPi5 kernel support plus
->>>> relevant dts changes to enable the cfe and camera.
->>>
->>> Which makes it impossible to merge. Please work on decoupling.
->>
->> Yes, it's not for merging as I wrote: "So at the moment we cannot merge
->> this driver, but hopefully the dependencies will get merged before the
->> reviews on this one are done."
->>
->> I believe Sakari's and Jacopo's serieses should be very close to
->> merging, and those should satisfy the needs of the driver itself.
->>
->> The DT bindings example uses a header from RPi5 base support series, and
->> if merging the base support seems to take a long time, I guess I could
->> drop the include and just use numbers instead for RP1_INT_MIPI0 and
->> RP1_CLK_MIPI0_CFG. And change those back later when the base support is
->> merged.
-> 
-> The problem is that your patches cannot be tested by automated tools.
+Per filesystems/sysfs.rst, show() should only use sysfs_emit()
+or sysfs_emit_at() when formatting the value to be returned to user space.
 
-Yes, I understand. I will send testable and mergeable patches when the 
-dependencies are in, and until that this series is do-not-merge. But as 
-reviews sometimes take a very long time, I think it's better to start 
-sooner than later.
+coccinelle complains that there are still a couple of functions that use
+snprintf(). Convert them to sysfs_emit().
 
-Is there a way to mark a series as "don't bother testing" for automated 
-tools? RFC in the subject? I considered making this RFC, but I felt the 
-patches themselves are not RFC quality. I've also seen DNI 
-(do-not-integrate) used somewhere, but I'm not sure that's universally 
-understood.
+sprintf() and scnprintf() will be converted as well if they have.
 
-  Tomi
+Generally, this patch is generated by
+make coccicheck M=<path/to/file> MODE=patch \
+COCCI=scripts/coccinelle/api/device_attr_show.cocci
+
+No functional change intended
+
+CC: Ketan Mukadam <ketan.mukadam@broadcom.com>
+CC: "James E.J. Bottomley" <jejb@linux.ibm.com>
+CC: "Martin K. Petersen" <martin.petersen@oracle.com>
+CC: linux-scsi@vger.kernel.org
+Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+---
+This is a part of the work "Fix coccicheck device_attr_show warnings"[1]
+Split them per subsystem so that the maintainer can review it easily
+[1] https://lore.kernel.org/lkml/20240116041129.3937800-1-lizhijian@fujitsu.com/
+---
+ drivers/scsi/be2iscsi/be_mgmt.c | 36 ++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/scsi/be2iscsi/be_mgmt.c b/drivers/scsi/be2iscsi/be_mgmt.c
+index 4e899ec1477d..4174e71932a6 100644
+--- a/drivers/scsi/be2iscsi/be_mgmt.c
++++ b/drivers/scsi/be2iscsi/be_mgmt.c
+@@ -1142,7 +1142,7 @@ ssize_t
+ beiscsi_drvr_ver_disp(struct device *dev, struct device_attribute *attr,
+ 		       char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, BE_NAME "\n");
++	return sysfs_emit(buf, BE_NAME "\n");
+ }
+ 
+ /**
+@@ -1161,7 +1161,7 @@ beiscsi_fw_ver_disp(struct device *dev, struct device_attribute *attr,
+ 	struct Scsi_Host *shost = class_to_shost(dev);
+ 	struct beiscsi_hba *phba = iscsi_host_priv(shost);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%s\n", phba->fw_ver_str);
++	return sysfs_emit(buf, "%s\n", phba->fw_ver_str);
+ }
+ 
+ /**
+@@ -1185,12 +1185,11 @@ beiscsi_active_session_disp(struct device *dev, struct device_attribute *attr,
+ 		if (test_bit(ulp_num, (void *)&phba->fw_config.ulp_supported)) {
+ 			avlbl_cids = BEISCSI_ULP_AVLBL_CID(phba, ulp_num);
+ 			total_cids = BEISCSI_GET_CID_COUNT(phba, ulp_num);
+-			len += scnprintf(buf+len, PAGE_SIZE - len,
+-					 "ULP%d : %d\n", ulp_num,
+-					 (total_cids - avlbl_cids));
++			len += sysfs_emit_at(buf, len, "ULP%d : %d\n", ulp_num,
++					     (total_cids - avlbl_cids));
+ 		} else
+-			len += scnprintf(buf+len, PAGE_SIZE - len,
+-					 "ULP%d : %d\n", ulp_num, 0);
++			len += sysfs_emit_at(buf, len, "ULP%d : %d\n", ulp_num,
++					     0);
+ 	}
+ 
+ 	return len;
+@@ -1215,12 +1214,11 @@ beiscsi_free_session_disp(struct device *dev, struct device_attribute *attr,
+ 
+ 	for (ulp_num = 0; ulp_num < BEISCSI_ULP_COUNT; ulp_num++) {
+ 		if (test_bit(ulp_num, (void *)&phba->fw_config.ulp_supported))
+-			len += scnprintf(buf+len, PAGE_SIZE - len,
+-					 "ULP%d : %d\n", ulp_num,
++			len += sysfs_emit_at(buf, len, "ULP%d : %d\n", ulp_num,
+ 					 BEISCSI_ULP_AVLBL_CID(phba, ulp_num));
+ 		else
+-			len += scnprintf(buf+len, PAGE_SIZE - len,
+-					 "ULP%d : %d\n", ulp_num, 0);
++			len += sysfs_emit_at(buf, len, "ULP%d : %d\n", ulp_num,
++					     0);
+ 	}
+ 
+ 	return len;
+@@ -1248,16 +1246,16 @@ beiscsi_adap_family_disp(struct device *dev, struct device_attribute *attr,
+ 	case BE_DEVICE_ID1:
+ 	case OC_DEVICE_ID1:
+ 	case OC_DEVICE_ID2:
+-		return snprintf(buf, PAGE_SIZE,
+-				"Obsolete/Unsupported BE2 Adapter Family\n");
++		return sysfs_emit(buf,
++				  "Obsolete/Unsupported BE2 Adapter Family\n");
+ 	case BE_DEVICE_ID2:
+ 	case OC_DEVICE_ID3:
+-		return snprintf(buf, PAGE_SIZE, "BE3-R Adapter Family\n");
++		return sysfs_emit(buf, "BE3-R Adapter Family\n");
+ 	case OC_SKH_ID1:
+-		return snprintf(buf, PAGE_SIZE, "Skyhawk-R Adapter Family\n");
++		return sysfs_emit(buf, "Skyhawk-R Adapter Family\n");
+ 	default:
+-		return snprintf(buf, PAGE_SIZE,
+-				"Unknown Adapter Family: 0x%x\n", dev_id);
++		return sysfs_emit(buf, "Unknown Adapter Family: 0x%x\n",
++				  dev_id);
+ 	}
+ }
+ 
+@@ -1277,8 +1275,8 @@ beiscsi_phys_port_disp(struct device *dev, struct device_attribute *attr,
+ 	struct Scsi_Host *shost = class_to_shost(dev);
+ 	struct beiscsi_hba *phba = iscsi_host_priv(shost);
+ 
+-	return snprintf(buf, PAGE_SIZE, "Port Identifier : %u\n",
+-			phba->fw_config.phys_port);
++	return sysfs_emit(buf, "Port Identifier : %u\n",
++			  phba->fw_config.phys_port);
+ }
+ 
+ void beiscsi_offload_cxn_v0(struct beiscsi_offload_params *params,
+-- 
+2.29.2
 
