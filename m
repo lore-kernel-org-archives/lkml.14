@@ -1,87 +1,71 @@
-Received: from wfout3-smtp.messagingengine.com (wfout3-smtp.messagingengine.com [64.147.123.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49ACB2E400
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 15:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668AF46BF
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 15:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710863282; cv=none; b=L18S8kPNGpLvrxZQ+IcvqmYDBKzPHIm7FsHzUxRQRMYqYhvnbG9HWhcmqCJI7002j7gZ5soxt1E+lO1QZzjsqPEORMlDQQ2LYE1Hpv+vPxQsqPSPvobnIXABsT0Kf5k5u63S+bxlR7xDe8o/pFfUNWTHc009xui5Tt8JAx2SMPU=
+	t=1710863357; cv=none; b=jN7Q/BzOpWQHCeQ1eNk1+UBhGGlj/1PHy7j7QDLtVvcVm8ds8BgkvwqwKZLPiwAOYyZgsLPvQwElOYLt7ftV0it1YZBMpGQiKD6f/zQTkGRMk5RfWp3NfjYAj5pZEDUyozE2niM4rECYgedc3s1eGdLgnRXUBwyYpoo4TUzmDQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710863282; c=relaxed/simple;
-	bh=Bc1T32A34DjgDza/Nbd7gpMv8tERceu8/EdVkXPeZ/U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lz8QWDwwkS0bbMijQlBSlRHnhnGE2cfVjvJyAinPzFyWGLV+rtrJVyfGFhi0h2Z/hjrGtitHNBeFgGADLlizV42elHA4K2CiFjxBzDLpjFhE+V/jS9O2PU4yvndwnkJIw+nlJblmPk+v28nxXQhycvLmArErQ4KRXTWgL/DvVjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=J0vcsUth; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=X0tz1iv0; arc=none smtp.client-ip=64.147.123.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sent.com
+	s=arc-20240116; t=1710863357; c=relaxed/simple;
+	bh=2pyYCimS//Qq6yBYv8hqGm6lMX6inWdKtpT/73DHq4o=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=fRaPGGAEXdeBVSXdMeXigqQqeIW07GBC4iK2//GHNqb0MG47lGUaQcfC/7TxJyv4hMXNG6JwTWf7WExxa+x//GnSR0KnKv9a+7kKSKWKUZdIRVeUKRKFgIZkvuTtaP7f8j8PoMn7iwRK+K71L3yLaPifjm9xnx7SsMuO2+QTibE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LEw8RiMv; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="J0vcsUth";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X0tz1iv0"
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
-	by mailfout.west.internal (Postfix) with ESMTP id 790B21C000F7;
-	Tue, 19 Mar 2024 11:47:58 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute7.internal (MEProxy); Tue, 19 Mar 2024 11:47:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:reply-to:subject:subject:to:to; s=fm2; t=1710863277; x=
-	1710949677; bh=nessaiOBTaNCwP7gjUOn86nFinuzdOOpq2kbEfd5EGw=; b=J
-	0vcsUthTSQYrwXZb6x4NqkHmEFK8yNAKPH0eud1LI9GxXiA4y6Mh+lULGpL352Z8
-	6Ck0j00psKFiBfpR6y/Bh48vki09ys+eSlehhtyprmArhs+X2kO+jALDpO/6bL8M
-	gh6VuMoCSrFea8mcbIDfWqPsj4wHeqWAzMOu9tZMGKAH9LABV2ZI8tiDa1Dg/E98
-	kgfdPdu/VF34hy/G/UDENvx3OPytMZpFr/ZZXG2zpjx0gA0JuKdjBEiM9L4YFlrg
-	0DaYh6Wka0wt1j6NZvzLqcEMGGbbAN+iWBCZQndZazIOWHxy0ff04YvnO4TXRMG9
-	qpsJ9p4WHuS+5616exHFA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:reply-to
-	:subject:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; t=1710863277; x=1710949677; bh=n
-	essaiOBTaNCwP7gjUOn86nFinuzdOOpq2kbEfd5EGw=; b=X0tz1iv04y3dkcwvP
-	OLigajGJCLsEEzXoX99mR0e/P/WBdFXnAeyY8pqKsydTTcuSlQu1IQHo1zr0kvA+
-	aoSO+AamEqs2vocidbud0M3pCfJQvdUMOakknueQcV+YAk6YaQCoNmaRTriJYkK1
-	gub+QxUCMSoYPxzp6He5dTlfAHtqpzV+aDqdPs95DE0FVh74BKFI6PvcySUXKUu/
-	mn6i0dQbUh4EqnjyCZuuo/ndrbhO86oed4bBUKAvIDN9pgxOwjJNfSLhioGKxzYg
-	gzv3fm2x+oAuHGe68LnJX79hs2+sfce+KgOo+2xdk8SmBSMSBqfbvIE1LCBOsr84
-	KBW+w==
-X-ME-Sender: <xms:rLP5ZSM-qdF3yIUHvLUbGYH-VL4TgqmOd6-qbj1q1kteRjC4lUJdtw>
-    <xme:rLP5ZQ8DHT2HdMEO80kMF1dy_KXMQ9rpHFWMO0h2enb8huBmXoMPM8mdss1-oeD6Q
-    ptDhF3dmxunpyRxQg>
-X-ME-Received: <xmr:rLP5ZZQfTuGBucvO-fyuxy8cFmy6Urd9zs14lj-Ny-1o0ZtjNzBS4PYUqLQ1gT5ey12wKI9pCsmr8jjZvdkG1kH_2yAcJZ48iM1RxCd2-jEPu9cPvuypTq6z>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrledtgdehgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvfevufffkfforhggtgfgsehtkeertdertdejnecuhfhrohhmpegkihcujggr
-    nhcuoeiiihdrhigrnhesshgvnhhtrdgtohhmqeenucggtffrrghtthgvrhhnpeetudevhe
-    etheehieetiefhjeevjeeltdfgvdeiueeiudetffdtvedthfetvedtffenucffohhmrghi
-    nhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomhepiihirdihrghnsehsvghnthdrtghomh
-X-ME-Proxy: <xmx:rLP5ZSvW9dcktSUDDJ3SQJJb4DVoWtpym0mVf2cUmjyoemIWyNCLnQ>
-    <xmx:rLP5ZaeW_se_tU8FTiKsocZtiUEm7h1zDVCEZJCOpkiJRvZIHsDjRg>
-    <xmx:rLP5ZW3LmhfD6dx9NgWNRkEpEm5TnSxz5HIkUUwQESv43uD5vJuQsw>
-    <xmx:rLP5Ze8cxqD-jRpES4m3QcyM9iNKjIUuVDA-UJ77rZ68cQcA8ZieyQ>
-    <xmx:rbP5ZQ03f8EYYZuK_LRJqHT9vqyDjHqsbEdd18SVaEwFxGdWfQQONBzr9U0>
-Feedback-ID: iccd040f4:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 19 Mar 2024 11:47:56 -0400 (EDT)
-From: Zi Yan <zi.yan@sent.com>
-To: linux-mm@kvack.org
-Cc: Zi Yan <ziy@nvidia.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Yang Shi <shy828301@gmail.com>,
-	Huang Ying <ying.huang@intel.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Yin, Fengwei" <fengwei.yin@intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] mm/migrate: split source folio if it is on deferred split list
-Date: Tue, 19 Mar 2024 11:47:53 -0400
-Message-ID: <20240319154753.253262-1-zi.yan@sent.com>
-X-Mailer: git-send-email 2.43.0
-Reply-To: Zi Yan <ziy@nvidia.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LEw8RiMv"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-41467d697a2so3679065e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 08:49:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710863354; x=1711468154; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ADtjyGn0eFpMcL5tcHRmk098Oppmok1FxnjO4slrBOM=;
+        b=LEw8RiMvdDcBWTPLnVUdK8ELyXyE/23UjjnhNp+OpukaMJKXO4ZwyGoyV2bgw051Ft
+         83ztXeLP6s4v+IRQdlx12l2hkxyyyZfj0v7th6Vt179yOdoYiKZp14t09kd4fuTyKnKa
+         T6F6DTB/nD24RhuO3L1RGJTG/h6wAybvolK9n01CiT+FmJARu/AFfgvMFyra+JMXty3e
+         dhVF2gfeiNMHvSyBQ0mZ4y11plAVMjgSNlHpUfPGO6ZExsfU45on6dnMewWkihYMHaQy
+         iz5TxrkErQAjtMyH8w26zVxjNv4+LoRiIHETviM9h68Zt0XIw5gnJoBna/4StYr+wKGv
+         b4Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710863354; x=1711468154;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ADtjyGn0eFpMcL5tcHRmk098Oppmok1FxnjO4slrBOM=;
+        b=MtGggNs3YxsXhPHVicsiL/l2fl/paRrKGMH3rWizNjWsdsepaCdli9C10ggkXDkBuu
+         vftf5XVU2Mxp1ko7xToRBGXCgOs3UT1i041ZPmt/i6O/LhtOs5JrXb0bRLVi4dDjUPy3
+         MrvOXheluA5P6KnOAr69KrAmIMydbyKG/sIgDVLaFaMunRAWlXQf8/1WFvP88YPUiN6J
+         JwRhH59y+yuLiJPW/g8VWYl30bs8OlFkKMgK4QfBZttA+4IvgoPkQYgiboo6jvwha4JO
+         neFaiLpL4hh192XqWRepEaalY+KT1Upu/mLg+iVOJf+aEspSKjIVXsrI4U3NQTIbaau6
+         0N5g==
+X-Forwarded-Encrypted: i=1; AJvYcCX/XCEcgh4OYeV/l+S3+Lc3wIeIIDKfQyiaO3yeUrkbMpxACrDP0zHnLBoDfCHpstHv3jq3RpgkCwAlphdcOPclv1OPwrmEUif6qA/p
+X-Gm-Message-State: AOJu0YwEHOtPKPogbq7bW47CPvUlMuLyF3Z0zSY7jd7wtgbRl7714V1f
+	LHh9OCgB0R6MB1QjrF5PF+CGlOXyT367CtQgq+/VS7a48I0O9/21wolY+RAQN/w=
+X-Google-Smtp-Source: AGHT+IHrOnj4CaHghcEG+9l8AS5c9AIXpcElhpR8lUv76uiBOgUiYCWAhhNkUgilfTUHBoAMu3DNnA==
+X-Received: by 2002:a05:600c:82c9:b0:413:e956:6893 with SMTP id eo9-20020a05600c82c900b00413e9566893mr14388206wmb.41.1710863353717;
+        Tue, 19 Mar 2024 08:49:13 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id m9-20020a05600c3b0900b00413ebaf0055sm18742915wms.7.2024.03.19.08.49.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 08:49:13 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: quic_jesszhan@quicinc.com, sam@ravnborg.org, 
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
+ airlied@gmail.com, daniel@ffwll.ch, robh@kernel.org, 
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+ thierry.reding@gmail.com, Nathan Morrisson <nmorrisson@phytec.com>
+Cc: w.egorov@phytec.de, dri-devel@lists.freedesktop.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ upstream@lists.phytec.de
+In-Reply-To: <20240318161708.1415484-1-nmorrisson@phytec.com>
+References: <20240318161708.1415484-1-nmorrisson@phytec.com>
+Subject: Re: [PATCH 0/2] Add POWERTIP PH128800T006-ZHC01 panel
+Message-Id: <171086335278.3926836.15356889496427917031.b4-ty@linaro.org>
+Date: Tue, 19 Mar 2024 16:49:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,186 +73,28 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.4
 
-From: Zi Yan <ziy@nvidia.com>
+Hi,
 
-If the source folio is on deferred split list, it is likely some subpages
-are not used. Split it before migration to avoid migrating unused subpages.
+On Mon, 18 Mar 2024 09:17:06 -0700, Nathan Morrisson wrote:
+> Add the device tree bindings, timings, and compatible string for the
+> POWERTIP PH128800T006-ZHC01 panel.
+> 
+> Nathan Morrisson (2):
+>   dt-bindings: display: simple: Add POWERTIP PH128800T-006-ZHC01 panel
+>   drm/panel: simple: Add POWERTIP PH128800T006-ZHC01 panel entry
+> 
+> [...]
 
-Commit 616b8371539a6 ("mm: thp: enable thp migration in generic path")
-did not check if a THP is on deferred split list before migration, thus,
-the destination THP is never put on deferred split list even if the source
-THP might be. The opportunity of reclaiming free pages in a partially
-mapped THP during deferred list scanning is lost, but no other harmful
-consequence is present[1].
+Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-next)
 
-From v2:
-1. Split the source folio instead of migrating it (per Matthew Wilcox)[2].
+[1/2] dt-bindings: display: simple: Add POWERTIP PH128800T-006-ZHC01 panel
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/3b2304cfeddd141523cb50cc1a3ba7624b865011
+[2/2] drm/panel: simple: Add POWERTIP PH128800T006-ZHC01 panel entry
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/fd6aa8f2dcb7236e511c1a58d82c2a178170e6ff
 
-From v1:
-1. Used dst to get correct deferred split list after migration
-   (per Ryan Roberts).
-
-[1]: https://lore.kernel.org/linux-mm/03CE3A00-917C-48CC-8E1C-6A98713C817C@nvidia.com/
-[2]: https://lore.kernel.org/linux-mm/Ze_P6xagdTbcu1Kz@casper.infradead.org/
-
-Fixes: 616b8371539a ("mm: thp: enable thp migration in generic path")
-Signed-off-by: Zi Yan <ziy@nvidia.com>
----
- mm/huge_memory.c | 22 ------------------
- mm/internal.h    | 23 +++++++++++++++++++
- mm/migrate.c     | 60 +++++++++++++++++++++++++++++++++++++++---------
- 3 files changed, 72 insertions(+), 33 deletions(-)
-
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 9859aa4f7553..c6d4d0cdf4b3 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -766,28 +766,6 @@ pmd_t maybe_pmd_mkwrite(pmd_t pmd, struct vm_area_struct *vma)
- 	return pmd;
- }
- 
--#ifdef CONFIG_MEMCG
--static inline
--struct deferred_split *get_deferred_split_queue(struct folio *folio)
--{
--	struct mem_cgroup *memcg = folio_memcg(folio);
--	struct pglist_data *pgdat = NODE_DATA(folio_nid(folio));
--
--	if (memcg)
--		return &memcg->deferred_split_queue;
--	else
--		return &pgdat->deferred_split_queue;
--}
--#else
--static inline
--struct deferred_split *get_deferred_split_queue(struct folio *folio)
--{
--	struct pglist_data *pgdat = NODE_DATA(folio_nid(folio));
--
--	return &pgdat->deferred_split_queue;
--}
--#endif
--
- void folio_prep_large_rmappable(struct folio *folio)
- {
- 	if (!folio || !folio_test_large(folio))
-diff --git a/mm/internal.h b/mm/internal.h
-index d1c69119b24f..8fa36e84463a 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1107,6 +1107,29 @@ struct page *follow_trans_huge_pmd(struct vm_area_struct *vma,
- 				   unsigned long addr, pmd_t *pmd,
- 				   unsigned int flags);
- 
-+#ifdef CONFIG_MEMCG
-+static inline
-+struct deferred_split *get_deferred_split_queue(struct folio *folio)
-+{
-+	struct mem_cgroup *memcg = folio_memcg(folio);
-+	struct pglist_data *pgdat = NODE_DATA(folio_nid(folio));
-+
-+	if (memcg)
-+		return &memcg->deferred_split_queue;
-+	else
-+		return &pgdat->deferred_split_queue;
-+}
-+#else
-+static inline
-+struct deferred_split *get_deferred_split_queue(struct folio *folio)
-+{
-+	struct pglist_data *pgdat = NODE_DATA(folio_nid(folio));
-+
-+	return &pgdat->deferred_split_queue;
-+}
-+#endif
-+
-+
- /*
-  * mm/mmap.c
-  */
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 73a052a382f1..3fd58b267e37 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1654,25 +1654,63 @@ static int migrate_pages_batch(struct list_head *from,
- 
- 			/*
- 			 * Large folio migration might be unsupported or
--			 * the allocation might be failed so we should retry
--			 * on the same folio with the large folio split
-+			 * the folio is on deferred split list so we should
-+			 * retry on the same folio with the large folio split
- 			 * to normal folios.
- 			 *
- 			 * Split folios are put in split_folios, and
- 			 * we will migrate them after the rest of the
- 			 * list is processed.
- 			 */
--			if (!thp_migration_supported() && is_thp) {
--				nr_failed++;
--				stats->nr_thp_failed++;
--				if (!try_split_folio(folio, split_folios)) {
--					stats->nr_thp_split++;
--					stats->nr_split++;
-+			if (is_thp) {
-+				bool is_on_deferred_list = false;
-+
-+				/*
-+				 * Check without taking split_queue_lock to
-+				 * reduce locking overheads. The worst case is
-+				 * that if the folio is put on the deferred
-+				 * split list after the check, it will be
-+				 * migrated and not put back on the list.
-+				 * The migrated folio will not be split
-+				 * via shrinker during memory pressure.
-+				 */
-+				if (!data_race(list_empty(&folio->_deferred_list))) {
-+					struct deferred_split *ds_queue;
-+					unsigned long flags;
-+
-+					ds_queue =
-+						get_deferred_split_queue(folio);
-+					spin_lock_irqsave(&ds_queue->split_queue_lock,
-+							  flags);
-+					/*
-+					 * Only check if the folio is on
-+					 * deferred split list without removing
-+					 * it. Since the folio can be on
-+					 * deferred_split_scan() local list and
-+					 * removing it can cause the local list
-+					 * corruption. Folio split process
-+					 * below can handle it with the help of
-+					 * folio_ref_freeze().
-+					 */
-+					is_on_deferred_list =
-+						!list_empty(&folio->_deferred_list);
-+					spin_unlock_irqrestore(&ds_queue->split_queue_lock,
-+							       flags);
-+				}
-+				if (!thp_migration_supported() ||
-+						is_on_deferred_list) {
-+					nr_failed++;
-+					stats->nr_thp_failed++;
-+					if (!try_split_folio(folio,
-+							     split_folios)) {
-+						stats->nr_thp_split++;
-+						stats->nr_split++;
-+						continue;
-+					}
-+					stats->nr_failed_pages += nr_pages;
-+					list_move_tail(&folio->lru, ret_folios);
- 					continue;
- 				}
--				stats->nr_failed_pages += nr_pages;
--				list_move_tail(&folio->lru, ret_folios);
--				continue;
- 			}
- 
- 			rc = migrate_folio_unmap(get_new_folio, put_new_folio,
-
-base-commit: 384df0d61b071bb7a38ae63bae9b59d088335911
 -- 
-2.43.0
+Neil
 
