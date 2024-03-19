@@ -1,92 +1,139 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A3D2F2C;
-	Tue, 19 Mar 2024 23:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D69D5F86E;
+	Tue, 19 Mar 2024 23:00:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710889213; cv=none; b=rk8jAFDpsXYDA5rzTlRGad3RYcyfJgmT7x/D9vPtTdOml+7v+AX/gjyTd09xxc1bV3hNGlosxMLznk15SV5mbywyG7nAzhQ6epTx44KaTEpOz0Lxodi9MCoJdt1QMt7zyplCjhYoXCZyuXiKvw4W3r10CcPCGSMVP3pV5DqyZvM=
+	t=1710889237; cv=none; b=YR3XafHx2a4QANNiNju4N+ShYIR+QlRtTSRAl1hcVQVW87ueheM8ZZHrjI+TNhTk5Yh4jcb8iHhIDt0pYz+xjXe5xZNSRVSeS3QaIqsabO5kerK4wMWImS8XaA6msf3Y8tYKhVp66woOwSRYWirATbpq6T/v1wf6pWrLwxLcfSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710889213; c=relaxed/simple;
-	bh=XHWs2TDukjWaaM4rMlR7z3I+PmKwh7KX8+TCMymIhAQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=sczpHTkQ7fxo77R9RRoFic7DfY4YOTjEVjIi5W6YMPRB3siwJAfG5bcNL/ePuRynMCxN9OHOurOcJD0FJU8vw737CrCHlX6v+MIhStKvsBJOefCJCNtxYnuNGzSAetPv7O5uI8cLQMsdDBH0pTSLuPP01y5Zv98FTMRnWPUy3IU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=VluhFGrs; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VluhFGrs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1710889199;
-	bh=1l5ZS/wHawdSMjrNk1CO13TVElMFEtzAMIJXZOHtZgk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=VluhFGrs+d4RzzohQs6oQjBVGtOGsfg6cLPIPLjdf6MOLOcH8kqtlSem4tdgkQPF7
-	 4zjOaSH4jeh8DEHWRDxveB6W3sfb6MS7ZuObNU32u9u4452hig6VZoMDib4wpo+iEN
-	 IhXeVBlsX9ZV+juIWZsrjcEtALQnmDyNbaAHu9JDiTb8NCRt+HKkkflICKLZQJ1hnC
-	 LfVwYAQf5at/KlkYQMrwxP5Q9vlgW9AuJ60tZJMRe8/WdC0j4HABSA4cMIJVfgKpln
-	 CBvEVjL+inwC4q1O7IIWL+eM7veW1gExr6iqTGOyyuG1iYlXSMqNT7Phm6bS5tG/QO
-	 HkjX78uc7+nYA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TznHL6mNbz4wc9;
-	Wed, 20 Mar 2024 09:59:58 +1100 (AEDT)
-Date: Wed, 20 Mar 2024 09:59:57 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Steve French <smfrench@gmail.com>, CIFS <linux-cifs@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the cifs tree
-Message-ID: <20240320095957.324ec03b@canb.auug.org.au>
+	s=arc-20240116; t=1710889237; c=relaxed/simple;
+	bh=Rg9kLOe7EynCjlAo/kFPcMuXUbZElAONgC515/UjszU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d2vvZU7523glgpQSdDYipKngGMNnUyzVaKFe5iZ2y68GvLkADfiESU4l45qyshNSyA1gAbksWhdqSa7rT4hQPpXavxZaAU7tXObw2VBJd8USb3RDhWmAlmzRLiyT5ltmZXkZ4BY0Y96VOZLZNqeqO3ZdpWtTUOwNIqjii8wUf7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45471C433C7;
+	Tue, 19 Mar 2024 23:00:36 +0000 (UTC)
+Date: Tue, 19 Mar 2024 19:02:59 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Daniel Bristot de Oliveira <bristot@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] tracing/tools: Updates for 6.9
+Message-ID: <20240319190259.0086706f@gandalf.local.home>
+In-Reply-To: <20240318174116.420584-1-bristot@kernel.org>
+References: <20240318174116.420584-1-bristot@kernel.org>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/C.hddX4Iwyg3ysjcjrO=mvA";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/C.hddX4Iwyg3ysjcjrO=mvA
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Hi all,
+On Mon, 18 Mar 2024 18:41:13 +0100
+Daniel Bristot de Oliveira <bristot@kernel.org> wrote:
 
-After merging the cifs tree, today's linux-next build (powerpc
-ppc64_defconfig) failed like this:
+> Steven,
+> 
+> Tracing tooling updates for 6.9
+> 
+> Tracing:
+>         - Update makefiles for latency-collector and RTLA,
+>           using tools/build/ makefiles like perf does, inheriting
+>           its benefits. For example, having a proper way to
+>           handle dependencies.
+> 
+>         - The timerlat tracer has an interface for any tool to use.
+>           rtla timerlat tool uses this interface dispatching its
+>           own threads as workload. But, rtla timerlat could also be
+>           used for any other process. So, add 'rtla timerlat -U'
+>           option, allowing the timerlat tool to measure the latency of
+>           any task using the timerlat tracer interface.
+> 
+> Verification:
+>         - Update makefiles for verification/rv, using tools/build/
+>           makefiles like perf does, inheriting its benefits.
+>           For example, having a proper way to handle dependencies.
+> 
+> 
+> Please pull the latest trace-tools-v6.9 tree, which can be found at:
+> 
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/bristot/linux.git
+> trace-tools-v6.9
 
-In file included from fs/smb/client/cifsglob.h:27,
-                 from fs/smb/client/cifsfs.c:36:
-fs/smb/client/../common/smb2pdu.h:291:9: error: unknown type name '_u8'
-  291 |         _u8 BlobData[];
-      |         ^~~
+Looks like you just built on top of a random commit from Linus's tree:
 
-Caused by commit
+commit f6cef5f8c37f58a3bc95b3754c3ae98e086631ca
+Merge: 906a93befec8 8f06fb458539
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun Mar 17 16:59:33 2024 -0700
 
-  354c620afff2 ("smb311: additional compression flag defined in updated pro=
-tocol spec")
+    Merge tag 'i3c/for-6.9' of git://git.kernel.org/pub/scm/linux/kernel/git/i3c/linux
 
-I have used the cifs tree from next-20240319 for today.
+Linus prefers basing off of real tags or previous pulls from us.
 
---=20
-Cheers,
-Stephen Rothwell
+Can you rebase your changes on v6.8 and resend?
 
---Sig_/C.hddX4Iwyg3ysjcjrO=mvA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+  $ git checkout v6.8
+  $ git cherry-pick f6cef5f8c37f58a3bc95b3754c3ae98e086631ca..trace-tools-v6.9
 
------BEGIN PGP SIGNATURE-----
+Appears to work fine.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmX6GO0ACgkQAVBC80lX
-0GyCrQf/QtN3N7SKfmC9l+xkLpw8xEp0XDS3i2wNT0NHq30jzlpH+skmGLaROFxV
-GDdPolyXLomLufURWbGm0+NaIK4BlVFU+kpeG447UOdlwSbtfrjLr2zMxlmm1rD8
-5Kb96kgdC+xBXe62fofXVlluhStykbXyVOFg4jCh1wiIZ91Pq4c6wyFVv6h+y8Of
-C+mMC0kFLpXl4WDPZNVvTYVn6LEDNRcEWtI6Q3pfMJB+WnwUkEzJosUseVdAGr7Z
-U9k22JAcVILCuCiDl1elJS17t/On17HN2oFR9NdFrHiZDP6RPSF87kxqN1FD85eC
-KX7NaGH4NsnDiUOyT0D4hpiio5sRCg==
-=K3J+
------END PGP SIGNATURE-----
+Thanks!
 
---Sig_/C.hddX4Iwyg3ysjcjrO=mvA--
+-- Steve
+
+
+> 
+> Tag SHA1: 2eb09a97c56af3c27bd9dcebccb495f70d56d5c0
+> Head SHA1: 9c63d9f58a42b979a42bcaed534d9246996ac0d9
+> 
+> 
+> Daniel Bristot de Oliveira (4):
+>       tools/tracing: Use tools/build makefiles on latency-collector
+>       tools/rtla: Use tools/build makefiles to build rtla
+>       tools/verification: Use tools/build makefiles on rv
+>       tools/rtla: Add -U/--user-load option to timerlat
+> 
+> ----
+>  .../tools/rtla/common_timerlat_options.rst         |   6 +
+>  tools/tracing/latency/.gitignore                   |   5 +-
+>  tools/tracing/latency/Build                        |   1 +
+>  tools/tracing/latency/Makefile                     | 105 ++++++++--
+>  tools/tracing/latency/Makefile.config              |  30 +++
+>  tools/tracing/rtla/.gitignore                      |   7 +-
+>  tools/tracing/rtla/Build                           |   1 +
+>  tools/tracing/rtla/Makefile                        | 217 +++++++--------------
+>  tools/tracing/rtla/Makefile.config                 |  47 +++++
+>  tools/tracing/rtla/Makefile.rtla                   |  80 ++++++++
+>  tools/tracing/rtla/Makefile.standalone             |  26 +++
+>  tools/tracing/rtla/sample/timerlat_load.py         |  74 +++++++
+>  tools/tracing/rtla/src/Build                       |  11 ++
+>  tools/tracing/rtla/src/timerlat_hist.c             |  16 +-
+>  tools/tracing/rtla/src/timerlat_top.c              |  14 +-
+>  tools/verification/rv/.gitignore                   |   6 +
+>  tools/verification/rv/Build                        |   1 +
+>  tools/verification/rv/Makefile                     | 207 +++++++-------------
+>  tools/verification/rv/Makefile.config              |  47 +++++
+>  tools/verification/rv/Makefile.rv                  |  51 +++++
+>  tools/verification/rv/src/Build                    |   4 +
+>  21 files changed, 650 insertions(+), 306 deletions(-)
+>  create mode 100644 tools/tracing/latency/Build
+>  create mode 100644 tools/tracing/latency/Makefile.config
+>  create mode 100644 tools/tracing/rtla/Build
+>  create mode 100644 tools/tracing/rtla/Makefile.config
+>  create mode 100644 tools/tracing/rtla/Makefile.rtla
+>  create mode 100644 tools/tracing/rtla/Makefile.standalone
+>  create mode 100644 tools/tracing/rtla/sample/timerlat_load.py
+>  create mode 100644 tools/tracing/rtla/src/Build
+>  create mode 100644 tools/verification/rv/.gitignore
+>  create mode 100644 tools/verification/rv/Build
+>  create mode 100644 tools/verification/rv/Makefile.config
+>  create mode 100644 tools/verification/rv/Makefile.rv
+>  create mode 100644 tools/verification/rv/src/Build
+> ---------------------------
+
