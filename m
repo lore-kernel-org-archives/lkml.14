@@ -1,243 +1,162 @@
-Received: from wfout4-smtp.messagingengine.com (wfout4-smtp.messagingengine.com [64.147.123.147])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B76111A1
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 16:33:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6948489;
+	Tue, 19 Mar 2024 16:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710866031; cv=none; b=A64Low3XbfWsc9puUtxzxx9eCQB82t4EhdB0mKl2OdOBXWmEkcRJbH7KYVvkg5z/cs4Ci8hd/9xHkZpIsg/GoQQKBIkKYIFEBCzHX0Qjgchs80D+f3jdc42UhGJ49QnSU2Y7zQou74TCgFZtYLsYyTCG8ZuWJ1js/uo240Tp3zo=
+	t=1710866054; cv=none; b=C6iUU9LZgSr7uz19G0EmFA2xixd9VOx57QTLtNKOGV5KVWMwL00ioJ7SReBhEgBU5mQhIfq/3r2F46z50mUhrSz3k4Iqnw2jfy5QLYpLi3TED5ki2paQxbEuJtLGjd2Q6NDxMznEedk5l3EO9X4EQd0NEFxhbJhFFlNOQCqRpi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710866031; c=relaxed/simple;
-	bh=jTuP7UOxNU4eiH1N4MkH4w+MtwnyDyycW6NcQNT0/1I=;
-	h=MIME-Version:Message-Id:Date:From:To:Cc:Subject:Content-Type; b=F7VuWlGNioPH8iPx7eCmPgyKlRlniVx9EbXOzirwPihWSwzI24PMsSL9Gdk2cUSXUkI5ywd/mNA+PGC9hfpIi1GWaE21cmJGqLmONaPSHne1RiKtO7xso8BBfTVv53Ji2UWVGbTYZO3kIiXa2E6HGxOumm7zSk365OvyE0vd4Q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=BnsGpS5f; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=oQlVvSB5; arc=none smtp.client-ip=64.147.123.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1710866054; c=relaxed/simple;
+	bh=YlAPJJDgoDVZ9sazmRhBUOaRf5OWOWpXawB/hpsB/qI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RtnmAkycay5Mnbnu2pSfZwOMkuQ5a3Ti0BNUNR0c/wImiV4CsOHC321h9jAbz/fSQOa2acOcLXk3m8q+xJm8O6ie9SksZZUpiaWTbZN6M6mbgKCsG83v0lCxSzTmC5QN3hQxZpeBN26vctM2WjVqhJo6NkgOgaV6bNjIzTzMBaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pj9QGjAT; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="BnsGpS5f";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oQlVvSB5"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id F292D1C00108;
-	Tue, 19 Mar 2024 12:33:47 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 19 Mar 2024 12:33:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm1; t=1710866027; x=1710952427; bh=5P
-	acjDnrv60KmvLGthOosWtkrJp+6d39J0qvJm8IlpM=; b=BnsGpS5f7UfNmfoPnY
-	1bjTCyPTeqoTaARq4e42Yupb/lq4FrV6SwiedHMvuhdpIYjthiQAXqXfg0+Y82Fl
-	DZF0Qs4JIo7HcOmRSJRMeh6TdP8K/O4gfmr6R3A6jctqTrN/NG0gSdryz4nbKOgH
-	zoMcBGQMwgwRzh301cB1ur12Uf+jYwfE7wxyHbGjRhDyv93eM45/ujwlGkgySF34
-	Aq2Tis74BSyj0Ak16Me8+BREnrXJYimMvodbmEMlx+nsazaDuOWfbJG/ugtjroO6
-	ZYFZx57l4r1FEHCyXNP8Qc01q5udhwa+o7wzISQDXan5HfWC9jk29l/dbEGOKOuE
-	oWlA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm2; t=1710866027; x=1710952427; bh=5PacjDnrv60Km
-	vLGthOosWtkrJp+6d39J0qvJm8IlpM=; b=oQlVvSB56wG6zXVZ3wctyVbMSuwc4
-	tm8naZev045clh+N1cxN2r+OAtSwAH9X2gf7A073jVsEmLbwuvfUqMHr2pKUscsW
-	wjHJdEHUpfB3QQsNaRae+0NK1vqwAUXKDnAPz6eCexIv2F0NwZ7joCVPdbxAj0jp
-	B+D0fgm5c4dUXRWkVdUVPgy3G33lD/D0zsBBqn9uIMfp163/JnrF+Eun57DuvOpm
-	C8u/jnydrzousBPjEV56KXOc4rCU9kbm+9u5ITf3qLHE8N3axNeqTqJ0+jbZgQIq
-	EXnaqZvA8wgtkou9J1L+SlraDrBbKOSC/drTDzk2H7yutMdCGWy7TbeXA==
-X-ME-Sender: <xms:a775ZcPaQ33jPDikZaYIKZ0lpBcn8qclOW4vTVLS4f3zwx0YKDNMQA>
-    <xme:a775ZS9zKVre4CFvVX7HXLZvdOvTUg-I8ToVXbHClAnONeUw5x3NpDKyyh7ezRqEc
-    xF0vawYi6UDgz8GvJw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrledtgdeifecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnheptddvleffkedvueekvedvffekieejteevfeduvdffgfeljeegtddvuefhuedtkeej
-    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpphgvnhhguhhtrhhonhhigidruggvpd
-    hgihhthhhusgdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:a775ZTSd1omhJ4z6VR2CwDRfUfmRteWdCeq7uw2lDI8LPTWU3IyiEg>
-    <xmx:a775ZUsTccp6fIKWdGQzUIF6bALdMqK-4sFu0ACNe2f682LXaursCQ>
-    <xmx:a775ZUdd4th9gsYJ6MVEzPH92ssGS8Qv-JcwiCVHhynNtv9Xtql5ig>
-    <xmx:a775ZY0disioWAjSGeeFb6xZuBHm0M1GjvEh7d00m0lCU459hlNvVw>
-    <xmx:a775ZT7GMF1_LGwIi1AB1wXiHD9iEhWfOV5vNr7hdIVKdIvLRqNfqpUfJos>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 34349B6008D; Tue, 19 Mar 2024 12:33:47 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-300-gdee1775a43-fm-20240315.001-gdee1775a
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pj9QGjAT"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7C1171BF208;
+	Tue, 19 Mar 2024 16:34:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1710866048;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oYIimeHKwBqqC6DKuj5E7MDRAp7vlcQ07WCRWyQmkBA=;
+	b=pj9QGjATc1a0H5dialB43VBvVSKpAUdAGAbcNJmUivGu3/45f0JBnQklJhy26AxveZhfsD
+	NzjZudfp6zuWrMW3Uvy2cRbQ80GsLLjRHp46mGzWbD0LkH09L3Awtj1pmKcwHVNVieULO0
+	4Nk4ZmgiCOMY8hUJp9RTM8ErwdVdo/opIrcJ9tBwzl7ntXYGl7uD1Yp0emCUd9uMTAYnlW
+	D0GiVrXJ16XsRT9lqrigkoh+xvxEcMW+dKZ8hdlbXFT9prZIt/F6MBr6QP/OYO6H1k1/Jn
+	kyAlMFeWGqux+z3dYUmLwZPOvaQS8eFXMzcN80Ytl9qjJ3IvRPNkRhCbwdMN2A==
+Date: Tue, 19 Mar 2024 17:34:04 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>, Max
+ Zhen <max.zhen@amd.com>, Sonal Santan <sonal.santan@amd.com>, Stefano
+ Stabellini <stefano.stabellini@xilinx.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, PCI <linux-pci@vger.kernel.org>, Allan
+ Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
+ <kwilczynski@kernel.org>
+Subject: Re: [PATCH v2 0/2] Attach DT nodes to existing PCI devices
+Message-ID: <20240319173404.019b424a@bootlin.com>
+In-Reply-To: <20240319152513.GA1227721@bhelgaas>
+References: <20231215145207.0cf098e5@bootlin.com>
+	<20240319152513.GA1227721@bhelgaas>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <2227a206-d1b8-40e0-812e-c9b601bc0cc7@app.fastmail.com>
-Date: Tue, 19 Mar 2024 17:32:22 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Linus Torvalds" <torvalds@linuxfoundation.org>
-Cc: soc@kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Subject: [GIT PULL] ARM: late SoC changes for 6.9
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 
-The following changes since commit d206a76d7d2726f3b096037f2079ce0bd3ba3=
-29b:
+Hi Bjorn,
 
-  Linux 6.8-rc6 (2024-02-25 15:46:06 -0800)
+On Tue, 19 Mar 2024 10:25:13 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-are available in the Git repository at:
+> [+cc Krzysztof]
+> 
+> On Fri, Dec 15, 2023 at 02:52:07PM +0100, Herve Codina wrote:
+> > On Mon, 4 Dec 2023 07:59:09 -0600
+> > Rob Herring <robh@kernel.org> wrote:  
+> > > On Mon, Dec 4, 2023 at 6:43 AM Herve Codina <herve.codina@bootlin.com> wrote:  
+> > > > On Fri, 1 Dec 2023 16:26:45 -0600
+> > > > Rob Herring <robh@kernel.org> wrote:  
+> > > > > On Thu, Nov 30, 2023 at 10:57 AM Herve Codina <herve.codina@bootlin.com> wrote:  
+> > > > > ...  
+> 
+> > > > > --- a/drivers/pci/of.c
+> > > > > +++ b/drivers/pci/of.c
+> > > > > @@ -31,6 +31,8 @@ int pci_set_of_node(struct pci_dev *dev)
+> > > > >                 return 0;
+> > > > >
+> > > > >         node = of_pci_find_child_device(dev->bus->dev.of_node, dev->devfn);
+> > > > > +       if (!node && pci_is_bridge(dev))
+> > > > > +               of_pci_make_dev_node(dev);
+> > > > >         if (!node)
+> > > > >                 return 0;    
+> > > >
+> > > > Maybe it is too early.
+> > > > of_pci_make_dev_node() creates a node and fills some properties based on
+> > > > some already set values available in the PCI device such as its struct resource
+> > > > values.
+> > > > We need to have some values set by the PCI infra in order to create our DT node
+> > > > with correct values.    
+> > > 
+> > > Indeed, that's probably the issue I'm having. In that case,
+> > > DECLARE_PCI_FIXUP_HEADER should work. That's later, but still before
+> > > device_add().
+> > > 
+> > > I think modifying sysfs after device_add() is going to race with
+> > > userspace. Userspace is notified of a new device, and then the of_node
+> > > link may or may not be there when it reads sysfs. Also, not sure if
+> > > we'll need DT modaliases with PCI devices, but they won't work if the
+> > > DT node is not set before device_add().  
+> > 
+> > DECLARE_PCI_FIXUP_HEADER is too early as well as doing the DT node creation
+> > just before the device_add() call.
+> > Indeed, in order to fill the DT properties, resources need to be assigned
+> > (needed for the 'ranges' property used for addresses translation).
+> > The resources assignment is done after the call to device_add().  
+> 
+> Do we need to know the actual address *value* before creating the
+> sysfs file, or is it enough to know that the file should *exist*, even
+> if the value may be changed later?
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/soc-l=
-ate-6.9
+I think, the problematic file is 'of_node'.
+This file is a symlink present in the device directory pointing to the
+node in a device-tree subdir.
 
-for you to fetch changes up to 72ebb41b88f9d7c10c5e159e0507074af0a22fe2:
+How can we create this of_node symlink without having the device-tree
+subdir available ?
 
-  soc: fsl: dpio: fix kcalloc() argument order (2024-03-13 17:17:32 +010=
-0)
+> 
+> > Some PCI sysfs files are already created after adding the device by the
+> > pci_create_sysfs_dev_files() call:
+> >   https://elixir.bootlin.com/linux/v6.6/source/drivers/pci/bus.c#L347
+> > 
+> > Is it really an issue to add the of_node link to sysfs on an already
+> > present device ?  
+> 
+> Yes, I think this would be an issue.  We've been trying to get rid of
+> pci_create_sysfs_dev_files() altogether because there's a long history
+> of race issues related to it:
+> 
+>   https://lore.kernel.org/r/1271099285.9831.13.camel@localhost/ WARNING: at fs/sysfs/dir.c:451 sysfs_add_one: sysfs: cannot create duplicate filename '/devices/pci0000:00/0000:00:01.0/slot'
+>   https://lore.kernel.org/r/19461.26166.427857.612983@pilspetsen.it.uu.se/ [2.6.35-rc1 regression] sysfs: cannot create duplicate filename ... XVR-600 related?
+>   https://lore.kernel.org/r/20200716110423.xtfyb3n6tn5ixedh@pali/ PCI: Race condition in pci_create_sysfs_dev_files
+>   https://lore.kernel.org/r/m3eebg9puj.fsf@t19.piap.pl/ PCI: Race condition in pci_create_sysfs_dev_files (can't boot)
+>   https://bugzilla.kernel.org/show_bug.cgi?id=215515 sysfs: cannot create duplicate filename '.../0000:e0'
+> 
+> And several previous attempts to fix them:
+> 
+>   https://lore.kernel.org/r/4469eba2-188b-aab7-07d1-5c77313fc42f@gmail.com/ Guard pci_create_sysfs_dev_files with atomic value
+>   https://lore.kernel.org/r/20230316103036.1837869-1-alexander.stein@ew.tq-group.com PCI/sysfs: get rid of pci_sysfs_init late_initcall
+>   https://lore.kernel.org/r/1702093576-30405-1-git-send-email-ssengar@linux.microsoft.com/ PCI/sysfs: Fix race in pci sysfs creation
+> 
 
-----------------------------------------------------------------
-ARM: late SoC changes for 6.9
+I am not sure we are facing in the same kind of issues.
+The ones you mentioned are related to some sysfs duplication.
+In the of_node case, the issue (if any) is that the symlink will be created
+after the other device's file. Not sure that it can lead to some file
+duplication.
 
-These are changes that for some reason ended up not making it into the
-first four branches but that should still make it into 6.9:
-
- - A rework of the omap clock support that touches both drivers and
-   device tree files
-
- - The reset controller branch changes that had a dependency on late
-   bugfixes. Merging them here avoids a backmerge of 6.8-rc5 into the
-   drivers branch
-
- - The RISC-V/starfive, RISC-V/microchip and ARM/Broadcom devicetree
-   changes that got delayed and needed some extra time in linux-next
-   for wider testing.
-
-----------------------------------------------------------------
-Arnd Bergmann (8):
-      ARM: bcm: stop selecing CONFIG_TICK_ONESHOT
-      Merge tag 'omap-for-v6.9/dt-warnings-signed' of git://git.kernel.o=
-rg/pub/scm/linux/kernel/git/tmlind/linux-omap into soc/late
-      Merge tag 'reset-for-v6.9' of git://git.pengutronix.de/pza/linux i=
-nto soc/late
-      Merge tag 'riscv-dt-for-v6.9' of https://git.kernel.org/pub/scm/li=
-nux/kernel/git/conor/linux into soc/late
-      Merge tag 'arm-soc/for-6.9/devicetree-arm64' of https://github.com=
-/Broadcom/stblinux into soc/late
-      Merge tag 'arm-soc/for-6.9/drivers' of https://github.com/Broadcom=
-/stblinux into soc/late
-      Merge tag 'arm-soc/for-6.9/soc' of https://github.com/Broadcom/stb=
-linux into soc/late
-      soc: fsl: dpio: fix kcalloc() argument order
-
-Changhuang Liang (1):
-      riscv: dts: starfive: jh7110: Add camera subsystem nodes
-
-Chen Wang (2):
-      dt-bindings: reset: sophgo: support SG2042
-      reset: simple: add support for Sophgo SG2042
-
-Conor Dooley (1):
-      riscv: dts: microchip: add missing CAN bus clocks
-
-Cristian Ciocaltea (4):
-      riscv: dts: starfive: jh7100: Add sysmain and gmac DT nodes
-      riscv: dts: starfive: jh7100-common: Setup pinmux and enable gmac
-      riscv: dts: starfive: visionfive-v1: Setup ethernet phy
-      riscv: dts: starfive: beaglev-starlight: Setup phy reset gpio
-
-Florian Fainelli (3):
-      dt-bindings: bus: Document Broadcom GISB arbiter 74165 compatible
-      bus: brcmstb_gisb: Added support for 74165 register layout
-      ARM: brcmstb: Add debug UART entry for 74165
-
-Heinrich Schuchardt (1):
-      dt-bindings: riscv: cpus: reg matches hart ID
-
-Ji Sheng Teoh (1):
-      dt-bindings: pwm: opencores: Add compatible for StarFive JH8100
-
-Krzysztof Kozlowski (4):
-      of: Add of_phandle_args_equal() helper
-      cpufreq: do not open-code of_phandle_args_equal()
-      reset: gpio: Add GPIO-based reset controller
-      reset: Instantiate reset GPIO controller for shared reset-gpios
-
-Rafa=C5=82 Mi=C5=82ecki (2):
-      arm64: dts: broadcom: bcmbca: bcm4908: use NVMEM layout for Asus G=
-T-AC5300
-      arm64: dts: broadcom: bcmbca: bcm4908: drop invalid switch cells
-
-Shravan Chippa (1):
-      riscv: dts: microchip: add specific compatible for mpfs pdma
-
-Tony Lindgren (4):
-      clk: ti: Handle possible address in the node name
-      clk: ti: Improve clksel clock bit parsing for reg property
-      ARM: dts: am3: Update clksel clocks to use reg instead of ti,bit-s=
-hift
-      ARM: dts: omap3: Update clksel clocks to use reg instead of ti,bit=
--shift
-
-Uwe Kleine-K=C3=B6nig (2):
-      bus: ts-nbus: Convert to atomic pwm API
-      bus: ts-nbus: Improve error reporting
-
-William Qiu (3):
-      dt-bindings: pwm: Add bindings for OpenCores PWM Controller
-      riscv: dts: starfive: jh7100: Add PWM node and pins configuration
-      riscv: dts: starfive: jh7110: Add PWM node and pins configuration
-
- .../devicetree/bindings/bus/brcm,gisb-arb.yaml     |   1 +
- .../devicetree/bindings/pwm/opencores,pwm.yaml     |  56 +++
- .../bindings/reset/sophgo,sg2042-reset.yaml        |  35 ++
- Documentation/devicetree/bindings/riscv/cpus.yaml  |   4 +
- MAINTAINERS                                        |   5 +
- arch/arm/boot/dts/ti/omap/am33xx-clocks.dtsi       |  39 +-
- arch/arm/boot/dts/ti/omap/am35xx-clocks.dtsi       |  18 +-
- arch/arm/boot/dts/ti/omap/omap3430es1-clocks.dtsi  |  52 ++-
- .../boot/dts/ti/omap/omap34xx-omap36xx-clocks.dtsi |  86 ++--
- .../omap36xx-am35xx-omap3430es2plus-clocks.dtsi    |  28 +-
- arch/arm/boot/dts/ti/omap/omap36xx-clocks.dtsi     |   7 +-
- .../ti/omap/omap36xx-omap3430es2plus-clocks.dtsi   |  46 +-
- arch/arm/boot/dts/ti/omap/omap3xxx-clocks.dtsi     | 510 +++++++++++---=
--------
- arch/arm/include/debug/brcmstb.S                   |   8 +-
- arch/arm/mach-bcm/Kconfig                          |   1 -
- .../dts/broadcom/bcmbca/bcm4908-asus-gt-ac5300.dts |  13 +-
- arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi   |   3 -
- arch/riscv/boot/dts/microchip/mpfs.dtsi            |   6 +-
- .../boot/dts/starfive/jh7100-beaglev-starlight.dts |  11 +
- arch/riscv/boot/dts/starfive/jh7100-common.dtsi    | 108 +++++
- .../dts/starfive/jh7100-starfive-visionfive-v1.dts |  22 +-
- arch/riscv/boot/dts/starfive/jh7100.dtsi           |  45 ++
- .../dts/starfive/jh7110-starfive-visionfive-2.dtsi |  71 +++
- arch/riscv/boot/dts/starfive/jh7110.dtsi           |  76 +++
- drivers/bus/brcmstb_gisb.c                         |  15 +
- drivers/bus/ts-nbus.c                              |  81 ++--
- drivers/clk/ti/apll.c                              |  11 +-
- drivers/clk/ti/clk.c                               |  71 ++-
- drivers/clk/ti/clock.h                             |   1 +
- drivers/clk/ti/divider.c                           |   5 +-
- drivers/clk/ti/gate.c                              |   9 +-
- drivers/clk/ti/interface.c                         |   4 +-
- drivers/clk/ti/mux.c                               |   6 +-
- drivers/reset/Kconfig                              |  12 +-
- drivers/reset/Makefile                             |   1 +
- drivers/reset/core.c                               | 224 ++++++++-
- drivers/reset/reset-gpio.c                         | 119 +++++
- drivers/reset/reset-simple.c                       |   2 +
- drivers/soc/fsl/dpio/dpio-service.c                |   2 +-
- include/dt-bindings/reset/sophgo,sg2042-reset.h    |  87 ++++
- include/linux/clk/ti.h                             |   3 +
- include/linux/cpufreq.h                            |   3 +-
- include/linux/of.h                                 |  16 +
- include/linux/reset-controller.h                   |   4 +
- 44 files changed, 1441 insertions(+), 486 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pwm/opencores,pwm.=
-yaml
- create mode 100644 Documentation/devicetree/bindings/reset/sophgo,sg204=
-2-reset.yaml
- create mode 100644 drivers/reset/reset-gpio.c
- create mode 100644 include/dt-bindings/reset/sophgo,sg2042-reset.h
+Best regards,
+Hervé
+-- 
+Hervé Codina, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
