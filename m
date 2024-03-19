@@ -1,49 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30CC7FBA0;
-	Tue, 19 Mar 2024 02:49:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36037BB1E;
+	Tue, 19 Mar 2024 02:49:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710816550; cv=none; b=jdkrmjqkQNZWvVQS/DpnK39MDFYupA8S/gyR5W3DWZBpsoxZQdwCttJR52JzY2hlgMDlZiy9pgrqOMArIdTgGa0UbmefXdoi4Y5CgWPhCkqhw8YUy2X+k5RI5pgg+D8z27yfSe7xwip5ifxHGmKHK0a6sl/YcKEeQk6MEzS2zbs=
+	t=1710816552; cv=none; b=VOluaikyH8y3Y5u18+6ROr4/GwVLLWN/XcdrYoFDFRGtb0CKfZK/tKbvquBpZmjZPU0iFhp1kfuQsdp9MmvyLzv4RaZUYbzfncNHdotQAH4GLnEHMRCUzc8+uGc0+I2APst9jqehOiMbuMBcblfNCLwaDcAh6BV4cak6tcznNVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710816550; c=relaxed/simple;
-	bh=CWfhtDXwapArzpS2/ShuQxMZtfvWQfLsKurMqVDkLCE=;
+	s=arc-20240116; t=1710816552; c=relaxed/simple;
+	bh=2YvfeBS4cRD3JCds/SxiHJRXbHV9oCMn1wgNuVDXen4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GLa+CWzTCs/XmUOFnFW7cU382pC6V34+yCqCbAoBsk0eNpNcc8TdKQhH41E5qv1F7rhCn1yzIvzFTpX2cqkQ+TS9cwLhL3P577LnmyDA6PjAKz/NCfCg9Ww3JobC356loDH0ZNjYz6XTYo0j0j5qApAPH2WgjlbpMub51IS1Cmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gyOcU66H; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=iPi8OpQBxXVKceczm2ok3JW2ufflA8zWk0RWkeDdSQgzHL/hqy65gE5iaDN3AxABe91gwJ0NDk1czLRYykBhvJ6RpK+Hn5oKYczWY6KOWTCbNGOLtMCHjJfFvlm4/B6rFJXNX2MzokfqAhszSoTzl5xRs9Chn0zMOvwGjDRiYAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sT3ColQI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gyOcU66H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E1A4C43390;
-	Tue, 19 Mar 2024 02:49:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sT3ColQI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9BC7C433C7;
+	Tue, 19 Mar 2024 02:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710816549;
-	bh=CWfhtDXwapArzpS2/ShuQxMZtfvWQfLsKurMqVDkLCE=;
+	s=k20201202; t=1710816552;
+	bh=2YvfeBS4cRD3JCds/SxiHJRXbHV9oCMn1wgNuVDXen4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gyOcU66H3km7F66bQFvWdPdygrrvv7zuxKXrua1kVS0IPzRNUTTpMVt1oE9ATdDYl
-	 LF/qIi+B1gbBFqVICEw1A+JNxOYy+Gb+deKa35zcQfTOJZgEZhadBySF/a8qLNK4Gj
-	 XxUkl9eP+esNZjIoEjnglfF0vjCeKLWuIxwFHu8Se0tBiwNHdYwZfuKI/pi3SMoPTw
-	 VElyIPwsd34mnn0eQiDrlTgqCpbJedlljSIotBptAcIrQ8awvcl3zK00B6px3tuI7A
-	 c7pkB1vRLVCbu70iOyZ9pvt+Eo5WJUrxqtbsg4jPurC/C79jJAdb9nfv9b5TXxMyG5
-	 4nuAuT6jhuGKg==
+	b=sT3ColQIqVSUAJKbPAIs97KvQbzBHXXcEaYkWFZy0bKNxqjmSkDiEnbQdK3mW7fAQ
+	 S/sHtYJ5k/A7/YgoGOwJv0hSdO2LnSOcEqKN+CyLRygoj2/vTeCJiQztEGy7ijihXW
+	 JbtZ9x11DxvrSgGMypdoy/5t8s+51xzBEnEG6D8PtZ3Xcl7Pvt2g/fNe4PjLJSu4FW
+	 zOcoazDEOes+UoJPKm3fWl9ERashM4EatxmoitYIW9Tq0oMLh2M//7AJtzAS114GQe
+	 BZQb6njv/o0Fqzc5HzdcN6nbmT+M07bazwEWOur8SurHCD+oIKBTIOtSNbGHylWa4g
+	 L6DMxgIM8zK/A==
 From: Bjorn Andersson <andersson@kernel.org>
-To: ~postmarketos/upstreaming@lists.sr.ht,
-	phone-devel@vger.kernel.org,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Andy Gross <andy.gross@linaro.org>,
-	Luca Weiss <luca@z3ntu.xyz>
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>
 Cc: linux-arm-msm@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] Some devicetree cleanup for MSM8974 Sony Xperia Z2 Tablet
-Date: Mon, 18 Mar 2024 21:48:39 -0500
-Message-ID: <171081652657.198276.9729045181357785741.b4-ty@kernel.org>
+Subject: Re: [PATCH 0/3] arm64: dts: qcom: sm8[456]50: add missing qcom,non-secure-domain property
+Date: Mon, 18 Mar 2024 21:48:42 -0500
+Message-ID: <171081652642.198276.15833859282515233329.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240306-castor-changes-v1-0-2286eaf85fff@z3ntu.xyz>
-References: <20240306-castor-changes-v1-0-2286eaf85fff@z3ntu.xyz>
+In-Reply-To: <20240227-topic-sm8x50-upstream-fastrpc-non-secure-domain-v1-0-15c4c864310f@linaro.org>
+References: <20240227-topic-sm8x50-upstream-fastrpc-non-secure-domain-v1-0-15c4c864310f@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,25 +52,21 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Wed, 06 Mar 2024 00:18:03 +0100, Luca Weiss wrote:
-> The sony-castor dts has been around for a while, clean up some things to
-> prepare for further changes including the introduction of the
-> shinano-based Sony Xperia Z3.
+On Tue, 27 Feb 2024 13:53:03 +0100, Neil Armstrong wrote:
+> By default the DSP domains are non secure, add the missing
+> qcom,non-secure-domain property to SM8450, SM8550 and SM8650
+> in order to mark them as non-secure.
 > 
 > 
 
 Applied, thanks!
 
-[1/5] ARM: dts: qcom: msm8974pro-castor: Clean up formatting
-      commit: c0b9c616e881a1ea6b158dcad73e2198c483a56a
-[2/5] ARM: dts: qcom: msm8974pro-castor: Add mmc aliases
-      commit: 0268bfec8ae06bc1091c2b9058287391872f8853
-[3/5] ARM: dts: qcom: msm8974pro-castor: Remove camera button definitions
-      commit: 26b950f2af40bd6cc36c3ac8ee6643ff3e905753
-[4/5] ARM: dts: qcom: msm8974pro-castor: Add debounce-interval for keys
-      commit: ead56f2e68b874c3549a67c6ae0c6186f780bf2f
-[5/5] ARM: dts: qcom: msm8974pro-castor: Rename wifi node name
-      commit: b756001175b1145a4855c8cfa77ceec78350c36a
+[1/3] arm64: dts: qcom: sm8450: add missing qcom,non-secure-domain property
+      commit: 033fbfa0eb60e519f50e97ef93baec270cd28a88
+[2/3] arm64: dts: qcom: sm8550: add missing qcom,non-secure-domain property
+      commit: 49c50ad9e6cbaa6a3da59cdd85d4ffb354ef65f4
+[3/3] arm64: dts: qcom: sm8650: add missing qcom,non-secure-domain property
+      commit: 039d379490eabf798baded4de2d698a7324ab7e6
 
 Best regards,
 -- 
