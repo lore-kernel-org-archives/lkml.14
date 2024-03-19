@@ -1,103 +1,136 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh8-smtp.messagingengine.com (fhigh8-smtp.messagingengine.com [103.168.172.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C2525601
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 16:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 698FC1118E;
+	Tue, 19 Mar 2024 16:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710867392; cv=none; b=gxEIYV6VlZAYO5VWHmhdCtpGxL8jWr+eUWGdK2gxkvUv6cemU68+0yOAp6ITF/ar6Bs9ANyJpXLnok9/QV28VM72aA0iSQPUBLRXRFvgPnKGANsJMTuLM20tjlCoZLutiLV+XT/IEFnfo4irXm/Qahc7Q7yc0Qp10RI6jSHBYg0=
+	t=1710867590; cv=none; b=cbrqfawiaPDJOumImTYUGOhyDTd6Totzd5pLDLxWl1h2LFmrCASZB2ZZc2HuEg0roKn5U+qnskUaifWfASWYb5CsuUoQGQS/jC2auTeCEvPy9YIjdyufLl13Vb13FYqbdI3pAHB/l938aOH7Ib4BmUZHhtT1E63+LlI8mZNIfT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710867392; c=relaxed/simple;
-	bh=xjgzHX9IZesh/m9mX3LwRDZEWPaQf//ud0zb58ExHUE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CBb8QZ9e9hG3ma0+wMNhQVeX8Mkmv6Sb4wJfA0u2q84fVt5rnuqXxj5GGIulV8QamsY9+XRiXcbmkB52GIwMuJ/CUkD7w9DwKDoyBKKnuYWra+AvOMRN5231+PK/42vq1+uIna5wyZ9T03FMoyrmMqmDL5VMLkUU8DafTn5DVQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GdiPitYE; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1710867590; c=relaxed/simple;
+	bh=TPYwpJrngVJym4yY5SzYj0P5kZ+FMMniYM2lAo+nnhI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VO+ahk80UR8HHCy8r8La9dAtuzltYDny1OZdJ1muhMHrlMoFCvLZAG6JjwBu4HN53O5efHOWmlW5fF5izkglVozXTJ7xnK2OGi1hZhAs6d0S5amOwgnTW5emDwACBoKKid4DFmmh7ik3O9Z6t6pH3liOXYf3ANNTtqIzcb/eYzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.fm; spf=pass smtp.mailfrom=fastmail.fm; dkim=pass (2048-bit key) header.d=fastmail.fm header.i=@fastmail.fm header.b=0u9/fpcI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lrNIPM4x; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.fm
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.fm
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GdiPitYE"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1def89f0cfdso586635ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 09:56:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1710867390; x=1711472190; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IuNfW02G+/boJdMGNpGppLuETi2AT/FTA/TQaVA8xgU=;
-        b=GdiPitYE6QEh0arRBKslX2pd+8Naw4qNnm2dLaG2i9ZWUkrECenDxMpuDRKTcfCjAB
-         VD2Vzs2WKLtE8gW8EJUYMQvpPWVmNNMDgiHQNSIPSj6AgJjp1E3gvYKeBIrMtmaXX9a4
-         MuMI89g55ZTiiY2VxygXz6bcGtN6NPDJxYtt4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710867390; x=1711472190;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IuNfW02G+/boJdMGNpGppLuETi2AT/FTA/TQaVA8xgU=;
-        b=PVYlTSPIUDJd7edc7yHCW/53cn7mPqSJj0ph78RsW8B87MmWcxVCHmLjHEgg7LTJpI
-         m0zq92wJ7y+INfWcJMezA7pyb1qKA95IKbd+QRLlEscibYblirKwGJZdu/oBwKEqu7fO
-         +vfdoo/OWzOLPY3xB/xABWTm7iXXHAexqLwb1RGOtgzJYd0y/R/MElhAn3SscrDEZRdO
-         /IvmKWm68kHACSo7Zlq6Lv/ohArF+jt9oES8ygxex2wgHu7OyQHsWOJeZ9pC1+Kt01xq
-         nEZeaOzPqMKVT4zhzuiVujQnJQOMRJ+slwJ1KtOP2nV9EXTo22TJjY9tJ2WMhTgUHWoh
-         KzLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUulgWIKE2J5rlu4ciOk1TKWNLzDkNocRGzoS6Xp9+jugxA4DcTbk0duXvn68kh14J2mGuaTX9LVWtGEzfLLOcyCxRmUOfGAX4NjRJo
-X-Gm-Message-State: AOJu0Yyck4zjBYM3OUnnWXvsxSjrq/pUVYuqrPZnotXJvIHUQIeSGUGU
-	3M9KsCNBwgOeDJwuzTQL28e7GBZSCUdrkLDVXOH0xXmhdDUgi0IARqYqY1qozQ==
-X-Google-Smtp-Source: AGHT+IFkeoK263knhmrpLNnBINDlmy10rclHAlIAD41tF+qJaj4Clmgqm/zNALlw6SqC/+XtoKd3Lw==
-X-Received: by 2002:a17:902:a388:b0:1de:fab2:98eb with SMTP id x8-20020a170902a38800b001defab298ebmr51491pla.5.1710867390467;
-        Tue, 19 Mar 2024 09:56:30 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k10-20020a170902c40a00b001defa2d8e22sm8424413plk.233.2024.03.19.09.56.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 09:56:29 -0700 (PDT)
-Date: Tue, 19 Mar 2024 09:56:29 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: tglx@linutronix.de, Guixiong Wei <weiguixiong@bytedance.com>,
-	jgross@suse.com, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, peterz@infradead.org,
-	gregkh@linuxfoundation.org, tony.luck@intel.com,
-	adobriyan@gmail.com, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] x86, relocs: Ignore relocations in .notes section on
- walk_relocs
-Message-ID: <202403190955.25E5E03E6@keescook>
-References: <20240317150547.24910-1-weiguixiong@bytedance.com>
- <171079804927.224083.15609364452504732018.b4-ty@chromium.org>
- <20240318215612.GDZfi4fG52DTgra51p@fat_crate.local>
- <202403181644.690285D3@keescook>
- <20240319081640.GAZflJ6IBQ7TEKD2Ll@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=fastmail.fm header.i=@fastmail.fm header.b="0u9/fpcI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lrNIPM4x"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 8750E1140101;
+	Tue, 19 Mar 2024 12:59:47 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Tue, 19 Mar 2024 12:59:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.fm; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1710867587;
+	 x=1710953987; bh=cHdFUwNUaNtHseK/mzgvFDOdmo7eBJ0OS3s8iO/q7R0=; b=
+	0u9/fpcIJQPoY0zpSCSJ6gTPGTGnlb3KOcQLJQwVoFNWumffgMIIO56GHh0ukM4I
+	PWYbUjIJOaDdaZZ3BKwmOQIybUPlcppqssGdWvfDmEfRO1C+EhqIHG5qLORrYn1o
+	qq6MWOx/cN4EvD9Wu/N9lFNoUoWXO1uo9Aa+Py8FP7yFheRD3pvRA4a6VyaWd+Rb
+	yqy2xrgqf+UftdQXAjWZorzwEthFH1X4bUPGo5GhF13V1yLhgioycWUwQLGTQ1BP
+	E4Jc5iJ4+9kAOv2HXWSWAp1Xxj+FuEJ9YkgfYRN2bwlUe96iq7tSRA01cR+2list
+	hQl6u6AbGGgsmn8nPUK2xQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1710867587; x=
+	1710953987; bh=cHdFUwNUaNtHseK/mzgvFDOdmo7eBJ0OS3s8iO/q7R0=; b=l
+	rNIPM4xpEKf2RZpW1L6EY8hMPyl0jjOpe1MzAtqVxSww7hjUNwG+igvOnMrB2vKD
+	uk5/6o9swhOhRdTEBhPQFfKaj2tVsMMNPM5/dnt4AMFILolNuIwVeOnWY2ciHnyf
+	WN58rRHTp6Mo14sWlR8R0Yap+DaTkJMfaGFljXx5ENWroxZPgRr3/BmE6e0bNba7
+	U2BXvYFY+eiV8fi8BFz5gTGNoHm4orSK7Gja3/QQsrhR0aTgZOUVC7b3Yuj2UBry
+	8bn/qTnv6kojC+Hzm+5xruFjYzL6RIr66kh6rlkc/RP1JlEFJydP1JVI4wkb4yEL
+	1eKgP3HUkQNAR3pU7X/Cg==
+X-ME-Sender: <xms:gsT5ZcZAHXxbcYEsXh2kFe2XEGrKSbNqGQBdQc-OzhXhZ7TWuh1B9Q>
+    <xme:gsT5ZXaUJNPxGEC-EGUIISLXOzYax5A6JWwRmGSgMLewfoFfXMLfjJvPstAyL2Oiy
+    4ZRT7XKSrQL8SE0>
+X-ME-Received: <xmr:gsT5ZW-SHey_qu8C_n65vo9NmpDxAoNNWHaiCuCOvvihVmXqK7X5lJfVjYvTCYCktg6McJZf_WNCST2JODi6EI6tUlu4y9gsfgZw7W-x_DDDaaeQ2BvN>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrledtgdejtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomhepuegvrhhn
+    ugcuufgthhhusggvrhhtuceosggvrhhnugdrshgthhhusggvrhhtsehfrghsthhmrghilh
+    drfhhmqeenucggtffrrghtthgvrhhnpeevhffgvdeltddugfdtgfegleefvdehfeeiveej
+    ieefveeiteeggffggfeulefgjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegsvghrnhgurdhstghhuhgsvghrthesfhgrshhtmhgrihhlrdhf
+    mh
+X-ME-Proxy: <xmx:gsT5ZWp_Xp8g-XeIUTn3R3XwcTxPEI87lEYYuBopKtA1ZW2yuelMCA>
+    <xmx:gsT5ZXpAsV-4kCS8ULBvaHC4sBvy5j1Au1FZfetCOl79nYNNGA7CyQ>
+    <xmx:gsT5ZUSsxLu4tR4TgEBX3FnVK8rJNxhJI8Q-5dX6YQnrD8gAnJxrrg>
+    <xmx:gsT5ZXoC0N7zIHK-a-_46_RtZYXB5rwZGTfRRa9OZt-BiFUrc2fU6g>
+    <xmx:g8T5ZeelEAZbKzgWvJSrQWBb4nfdzh9IQCPESFVTj-2G0oAdFX45Qg>
+Feedback-ID: id8a24192:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 19 Mar 2024 12:59:44 -0400 (EDT)
+Message-ID: <63e67db9-7425-4928-afb2-cbe7cc6232bb@fastmail.fm>
+Date: Tue, 19 Mar 2024 17:59:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240319081640.GAZflJ6IBQ7TEKD2Ll@fat_crate.local>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] mm: Replace ->launder_folio() with flush and wait
+To: Miklos Szeredi <miklos@szeredi.hu>, David Howells <dhowells@redhat.com>
+Cc: Matthew Wilcox <willy@infradead.org>,
+ Trond Myklebust <trond.myklebust@hammerspace.com>,
+ Christoph Hellwig <hch@lst.de>, Andrew Morton <akpm@linux-foundation.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jeff Layton <jlayton@kernel.org>,
+ linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev,
+ v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
+ ceph-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1668172.1709764777@warthog.procyon.org.uk>
+ <ZelGX3vVlGfEZm8H@casper.infradead.org>
+ <1831809.1709807788@warthog.procyon.org.uk>
+ <CAJfpegv8X0PY7PvxEF=zEwRbdZ7yZZcwB80iDO+XLverognx+g@mail.gmail.com>
+ <651179.1710857687@warthog.procyon.org.uk>
+ <CAJfpegsUYUwp2YNnCE3ZP+JtL0whgQ=3+wcsBABGXH9MjXC0zA@mail.gmail.com>
+ <CAJfpegsCBEm11OHS8bfQdgossOgofPcYhLTFtw7_+T66iBvznw@mail.gmail.com>
+Content-Language: en-US, de-DE, fr
+From: Bernd Schubert <bernd.schubert@fastmail.fm>
+In-Reply-To: <CAJfpegsCBEm11OHS8bfQdgossOgofPcYhLTFtw7_+T66iBvznw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 19, 2024 at 09:16:40AM +0100, Borislav Petkov wrote:
-> On Mon, Mar 18, 2024 at 04:45:45PM -0700, Kees Cook wrote:
-> > The commit it refs to landed via -hardening,
+
+
+On 3/19/24 17:40, Miklos Szeredi wrote:
+> On Tue, 19 Mar 2024 at 17:13, Miklos Szeredi <miklos@szeredi.hu> wrote:
+>>
+>> On Tue, 19 Mar 2024 at 15:15, David Howells <dhowells@redhat.com> wrote:
+>>
+>>> What particular usage case of invalidate_inode_pages2() are you thinking of?
+>>
+>> FUSE_NOTIFY_INVAL_INODE will trigger invalidate_inode_pages2_range()
+>> to clean up the cache.
+>>
+>> The server is free to discard writes resulting from this invalidation
+>> and delay reads in the region until the invalidation finishes.  This
+>> would no longer work with your change, since the mapping could
+>> silently be reinstated between the writeback and the removal from the
+>> cache due to the page being unlocked/relocked.
 > 
-> Yap, saw that. It should've gone through tip too as it is clearly a tip
-> tree patch.
+> This would also matter if a distributed filesystem wanted to implement
+> coherence even if there are mmaps.   I.e. a client could get exclusive
+> access to a region by issuing FUSE_NOTIFY_INVAL_INODE on all other
+> clients and blocking reads.  With your change this would fail.
 > 
-> > responsibility of landing this fix too. But it's fine to go via -tip
-> > if you prefer?
-> 
-> Yes, please. Just send a Reviewed-by and it'll get picked up.
+> Again, this is purely theoretical, and without a way to differentiate
+> between the read-only and write cases it has limited usefulness.
+> Adding leases to fuse (which I plan to do) would make this much more
+> useful.
 
-Okay, thanks!
+Thanks Miklos! Fyi, we are actually planning to extend fuse
+notifications from inode to page ranges.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
 
-> 
-> Btw, while looking at that second patch, why does it have *three* Fixes:
-> tags? I think it wants to fix only your
-> 
-> aaa8736370db ("x86, relocs: Ignore relocations in .notes section")
-
-As I understand it, the first first was incomplete.
-
--- 
-Kees Cook
+Thanks,
+Bernd
