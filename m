@@ -1,112 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73BFD19BDC;
-	Tue, 19 Mar 2024 17:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F6925601
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 17:40:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710869916; cv=none; b=e7yO4h/L8fmWDxroIUM0qmid17v+XCPqlo1PQZvEAxCIg1+i2VTClznjEs7xFkY4XLICDkqYSmjW6szf6igixwLTJORGep/LecaOTWvzT6KqzjYtzB+h78yF+T8POcpp5ygOrblAsJ7kmW0TEXYCWKtFtABVU0rMDXiAM1OZbW8=
+	t=1710870001; cv=none; b=pzy9WY4DLywYYTMuIyrEu1Mn0q6+4SNVHLrV64ZcN6V+8YUooS50JK2aeIMCR7mE7llczp/cZKunu2W9V10hc0GuETGlchkh/dKO5/Jar7o0lMSeAtjwu7Hvuakq1yqjguN4CEkF1xOp5gNoI3E0ZfgaGmEztw1fQ0A+x3LAxCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710869916; c=relaxed/simple;
-	bh=4vuAWBj1evs6v+OZMqxOpqf/OaE6RssOo2tlPJIKe2o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FBbHb3nfeM5Y/ZwZNvNJO52MK5dNvVsdAY6wmuHFZLsFg7Ua36MpynaYReQNJTxu6/85yVS07Ifwxh4IvH+MK5mQzUbSWyiF5CUkFl7DAEnN1EBJaBMLg8EqXJ+bI3KmJyFIfb5fLbLD5TMlLn95UnSjEaukTu0MgHKwBeKpv6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FhpGq69C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710870001; c=relaxed/simple;
+	bh=I30bldMoMsql+hzCHnhN/5IetJJd8PIn6Aa43/sDw8E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rwL/uifqof7EX2BWfDfPbQxHtv5zXlhzZpaEiyq2bFR35XB/jKRUJ4919FIy3g8MZIwV3w2s7B0/zmBujYMwDeFj8xLlFAvbcmRb9fB0f3/lsV0LkhIgnntV7wBfktacZOYau2NGj3ptrEH0ql1zT/pmjIXjYoNxmN7WI3O2VyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mlhro7yo; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FhpGq69C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00477C433F1;
-	Tue, 19 Mar 2024 17:38:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710869916;
-	bh=4vuAWBj1evs6v+OZMqxOpqf/OaE6RssOo2tlPJIKe2o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FhpGq69CjbpLw7gdlpfimviyUI9rG1eiCMCeg4oRTfRHYiaEvNeWnvg8fB629aLZW
-	 AZ81lwqhxnWfbJDM9iuNZ5Kl5VgSgWoIfbkIO/0TdZPrxNElSmJNv1D4NHBr1x3QQd
-	 d98gs93XJgtAocflD6uznvPw2sPCqqyu19aSUi6BLS8vDa9pSw7V22D7C0mag/CeXa
-	 J+Bwkwx3Dn4Rg02ptndnzDRowRBiznOdoFMON7/tYTQ3gGghhJIQFnLmaFVdaWM7K0
-	 tRNrfqA5FYAFZjs861/KJiC57kUwu+d4A5Q5wuYc3cLP7a6wjL6pOW4W69YHBVCwGG
-	 HvG5QSe0kw+nQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rmdQA-0000000016b-11LA;
-	Tue, 19 Mar 2024 18:38:42 +0100
-Date: Tue, 19 Mar 2024 18:38:42 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Doug Anderson <dianders@chromium.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	cros-qcom-dts-watchers@chromium.org,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Balakrishna Godavarthi <quic_bgodavar@quicinc.com>,
-	Matthias Kaehlcke <mka@chromium.org>,
-	Rocky Liao <quic_rjliao@quicinc.com>,
-	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] Bluetooth: add quirk for broken address properties
-Message-ID: <ZfnNoi4ahVlzHvvo@hovoldconsulting.com>
-References: <20240319152926.1288-1-johan+linaro@kernel.org>
- <20240319152926.1288-3-johan+linaro@kernel.org>
- <CAD=FV=VUFodCAXEJgfpSqZZdtQaw5-8n_-sX_2p6LuQ2ixLRpQ@mail.gmail.com>
- <Zfm8nifvqb3xO5HG@hovoldconsulting.com>
- <CAA8EJprp89VgFMjHv=EynROUs632CfQPbEka0GAcEAy743EMaA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mlhro7yo"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5c6bd3100fcso3598879a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 10:40:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710869999; x=1711474799; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FbVTZraF0QJZsJx7Z45tBr7Rj39spiA67Pwo/WgWCSA=;
+        b=Mlhro7yo5ABClgTDAprC3Xu8Z+DnusuY/jZIqqSdfMjXe25gLCuecJuLa3tB5Z1viU
+         +yrdyoyk2/HqZWMYJ9IKEu6VAq5SFQz/nDl37+dGDZCyr2ToobrIw75IPZo/7Chs+JmR
+         L3dazb9Bv44ZJm0hsSjn/KorBo3yUmqFyK2YYQPVcRs99jvBD4QmxWWuEaUAO2RDqq6K
+         kOBqYFVKYs+Tcy6oz6CSL3LgSfA2NJEx0pRYc2G3nTiUE/rWqMhg3cq3aSjegHlxLYpr
+         aYyNjKW9+jZUPUpuP6PU6E3LVuAJAsk8Tq5w+5ouayk8Z95acZtmd2dGSzevaEEoy0U5
+         YaSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710869999; x=1711474799;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FbVTZraF0QJZsJx7Z45tBr7Rj39spiA67Pwo/WgWCSA=;
+        b=w58siXabdW6OpUnM8sXALY02pM+pyllhXNvAPXGkkCNv61XYTHRieOmNjwm26HKHVz
+         3Mk5suJhWcqu+RkGtZvLINK7WZpzCNKzrOe4f1ElTnydhxyYBi0drdR2XWvIT/oWaIBk
+         Hju/TRLn/6IRotBT5+i8PjfZEoj+o5rMtZVW5QcILPJnul/x98GmHrhvG7Wv/lZCS9qI
+         NNXPXaCchWzVCQHaKmu+nFyxkKZ7NxKZLzRcptUtnQ58Z/4OST5wjzrf9CdutQ7PTSAd
+         G38+42OMe8g1te/xuw0otRHcDZvtVNwFjl2qZ84/lm3eu0PmKGGpOfm/6ACiX+W4WQKA
+         dJCA==
+X-Gm-Message-State: AOJu0YyFQXgXPYIf3ZU7ciseShWuPFURFGQh0u333sK9YxNi0WEJUpTe
+	Cumb6Oia7SaxbuY0JwAaXFM9SSTdRT+kpRCYS3QcX2TlJAhktH0honDK5cBC
+X-Google-Smtp-Source: AGHT+IFYhLc2hSKuMQw5BZW+1ji9lDf9Uyhy39Hk8kaH5hAfZNyyBimblILB6SQU1QfwvKgTXE6xpQ==
+X-Received: by 2002:a05:6a20:94cf:b0:1a3:6ee9:305 with SMTP id ht15-20020a056a2094cf00b001a36ee90305mr4484410pzb.2.1710869999244;
+        Tue, 19 Mar 2024 10:39:59 -0700 (PDT)
+Received: from daehojeong-desktop.mtv.corp.google.com ([2620:0:1000:8411:ce48:f01a:1f52:5e0a])
+        by smtp.gmail.com with ESMTPSA id i185-20020a62c1c2000000b006e583a649b4sm10392921pfg.210.2024.03.19.10.39.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 10:39:58 -0700 (PDT)
+From: Daeho Jeong <daeho43@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	kernel-team@android.com
+Cc: Daeho Jeong <daehojeong@google.com>
+Subject: [PATCH v3] f2fs: prevent writing without fallocate() for pinned files
+Date: Tue, 19 Mar 2024 10:39:55 -0700
+Message-ID: <20240319173955.4090079-1-daeho43@gmail.com>
+X-Mailer: git-send-email 2.44.0.291.gc1ea87d7ee-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAA8EJprp89VgFMjHv=EynROUs632CfQPbEka0GAcEAy743EMaA@mail.gmail.com>
 
-On Tue, Mar 19, 2024 at 07:01:57PM +0200, Dmitry Baryshkov wrote:
-> On Tue, 19 Mar 2024 at 18:26, Johan Hovold <johan@kernel.org> wrote:
-> >
-> > On Tue, Mar 19, 2024 at 09:10:23AM -0700, Doug Anderson wrote:
-> > > On Tue, Mar 19, 2024 at 8:29 AM Johan Hovold <johan+linaro@kernel.org> wrote:
-> >
-> > > > +       /* When this quirk is set, the Bluetooth Device Address provided by
-> > > > +        * the 'local-bd-address' fwnode property is incorrectly specified in
-> > > > +        * big-endian order.
-> > > > +        *
-> > > > +        * This quirk can be set before hci_register_dev is called or
-> > > > +        * during the hdev->setup vendor callback.
-> > > > +        */
-> > > > +       HCI_QUIRK_BDADDR_PROPERTY_BROKEN,
-> > >
-> > > Like with the binding, I feel like
-> > > "HCI_QUIRK_BDADDR_PROPERTY_BACKWARDS" or
-> > > "HCI_QUIRK_BDADDR_PROPERTY_SWAPPED" would be more documenting but I
-> > > don't feel strongly.
-> >
-> > So, same reasoning here, this it not some quirk that people should go
-> > around setting without first considering to fix their boot firmware.
-> 
-> The address can be considered broken in many different ways. The name
-> should still be descriptive enough. If you want to specify that it is
-> a broken behaviour, please consider something like BROKEN_BE.
+From: Daeho Jeong <daehojeong@google.com>
 
-I doubt that Qualcomm will be able come up with another way to break the
-address property. They'd have to try real hard.
+In a case writing without fallocate(), we can't guarantee it's allocated
+in the conventional area for zoned stroage.
 
-And this is an internal define which can be changed at any time. There's
-also some worth in keeping it aligned with the DT property, which I'm
-more open to renaming (e.g. if the DT maintainers thinks dropping the
-vendor prefix makes sense).
+Signed-off-by: Daeho Jeong <daehojeong@google.com>
+---
+v2: covered the direct io case
+v3: covered the mkwrite case
+---
+ fs/f2fs/data.c | 14 ++++++++++++--
+ fs/f2fs/file.c | 16 ++++++++--------
+ 2 files changed, 20 insertions(+), 10 deletions(-)
 
-The alternative I considered but rejected was something like
-"local-bd-address-be" as that would be too neutral.
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index c21b92f18463..d3e5ab2736a6 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -1584,8 +1584,11 @@ int f2fs_map_blocks(struct inode *inode, struct f2fs_map_blocks *map, int flag)
+ 
+ 	/* use out-place-update for direct IO under LFS mode */
+ 	if (map->m_may_create &&
+-	    (is_hole || (f2fs_lfs_mode(sbi) && flag == F2FS_GET_BLOCK_DIO))) {
+-		if (unlikely(f2fs_cp_error(sbi))) {
++	    (is_hole || (f2fs_lfs_mode(sbi) && flag == F2FS_GET_BLOCK_DIO &&
++			 !f2fs_is_pinned_file(inode)))) {
++		if (unlikely(f2fs_cp_error(sbi)) ||
++		    (f2fs_is_pinned_file(inode) && is_hole &&
++		     flag != F2FS_GET_BLOCK_PRE_DIO)) {
+ 			err = -EIO;
+ 			goto sync_out;
+ 		}
+@@ -3378,6 +3381,8 @@ static int prepare_write_begin(struct f2fs_sb_info *sbi,
+ 		f2fs_map_lock(sbi, flag);
+ 		locked = true;
+ 	} else if ((pos & PAGE_MASK) >= i_size_read(inode)) {
++		if (f2fs_is_pinned_file(inode))
++			return -EIO;
+ 		f2fs_map_lock(sbi, flag);
+ 		locked = true;
+ 	}
+@@ -3407,6 +3412,11 @@ static int prepare_write_begin(struct f2fs_sb_info *sbi,
+ 
+ 	if (!f2fs_lookup_read_extent_cache_block(inode, index,
+ 						 &dn.data_blkaddr)) {
++		if (f2fs_is_pinned_file(inode)) {
++			err = -EIO;
++			goto out;
++		}
++
+ 		if (locked) {
+ 			err = f2fs_reserve_block(&dn, index);
+ 			goto out;
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 82277e95c88f..4db3b21c804b 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -57,7 +57,7 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
+ 	struct inode *inode = file_inode(vmf->vma->vm_file);
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 	struct dnode_of_data dn;
+-	bool need_alloc = true;
++	bool need_alloc = !f2fs_is_pinned_file(inode);
+ 	int err = 0;
+ 	vm_fault_t ret;
+ 
+@@ -114,19 +114,15 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
+ 		goto out_sem;
+ 	}
+ 
++	set_new_dnode(&dn, inode, NULL, NULL, 0);
+ 	if (need_alloc) {
+ 		/* block allocation */
+-		set_new_dnode(&dn, inode, NULL, NULL, 0);
+ 		err = f2fs_get_block_locked(&dn, page->index);
+-	}
+-
+-#ifdef CONFIG_F2FS_FS_COMPRESSION
+-	if (!need_alloc) {
+-		set_new_dnode(&dn, inode, NULL, NULL, 0);
++	} else {
+ 		err = f2fs_get_dnode_of_data(&dn, page->index, LOOKUP_NODE);
+ 		f2fs_put_dnode(&dn);
+ 	}
+-#endif
++
+ 	if (err) {
+ 		unlock_page(page);
+ 		goto out_sem;
+@@ -4611,6 +4607,10 @@ static int f2fs_preallocate_blocks(struct kiocb *iocb, struct iov_iter *iter,
+ 			return ret;
+ 	}
+ 
++	/* For pinned files, it should be fallocate()-ed in advance. */
++	if (f2fs_is_pinned_file(inode))
++		return 0;
++
+ 	/* Do not preallocate blocks that will be written partially in 4KB. */
+ 	map.m_lblk = F2FS_BLK_ALIGN(pos);
+ 	map.m_len = F2FS_BYTES_TO_BLK(pos + count);
+-- 
+2.44.0.291.gc1ea87d7ee-goog
 
-Perhaps "local-bd-address-reversed" would at least signal that something
-is backwards, but I still fear that that may be too subtle.
-
-Johan
