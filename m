@@ -1,130 +1,91 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3257C6CE;
-	Tue, 19 Mar 2024 05:53:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8884594F
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 05:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710827629; cv=none; b=q0mFVcFusxFBuTCOugQidZewdmcYncyFfTM+gXhKkxC8ykksVcGmSjYuUhOaPYTwBuU+wOLqH6cDQT6tRNqX+00ooMZucFrhmTX1AQ8xinYXxL4y8sAqMNbFAAUccLt6ywT/8P+5qzayyJKG/ZvworII3G+nRkDe2ugzYXWypM8=
+	t=1710827657; cv=none; b=pvuMuIlq8JQ3ZpUUvC42pSTlY+me7wlohqxWTc3Cnui4jxY0G4jWzFWjIaicd1PRnVa6H9PIu5IvBpEgtbKcdU823xd0YbcQvxZGwtgqnGxEIIdIkUrom6JE/Z1SgnOkYOsP38J8ZrYlVLJQg+DVWUcnePztDe6RoI7pTMjb2uU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710827629; c=relaxed/simple;
-	bh=PsieqNlg0izoRjsoe59ZVNJpX8rC5zYulh4OIjSqqjA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ocoI1/7a8V0fu0f8OpN0mB/R+YWKTP8pV9f5jJGYwfev1iH/mJdfA14b6fzjohvgon6qQ3gRKxVnpKOmWOmkEl6CZybNvgm4ry4hCluQQB10dIqQjoQoovBPUWzJHcxRi9Hfaxh6nzUQWxNvqPAzfo5XbkWoq3jF+BChM44Zf6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Te6P2tL3; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1710827657; c=relaxed/simple;
+	bh=1hih6VSpKV8xqGVxi4o4YhgWg8A3pPntjmOFpkgpVZU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nFEVLZJcXd54RyL2B/bpy41ToSJLsW9YeVJT9FVDhYcjG4MYqv43HBMcKQ4A6/AWHqVy2NNvan5UnkvSkMMLpTISbrnODvMA9umLYyNnHULOTwAtxSBw3OQKHtgSFFDsT4X7b7ZCI9VC5ycqMtzrxJ+rbuDW0yUKN+k7wBkinQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JlWABp9j; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Te6P2tL3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1710827627; x=1742363627;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=PsieqNlg0izoRjsoe59ZVNJpX8rC5zYulh4OIjSqqjA=;
-  b=Te6P2tL3f9mJP5kZI/uN5cG/3Q9pVTYhlnxM1ICiBF4MC0GnUX/MTV0B
-   6cS9Mm54fTcnng/QuRJEBf1r0HJgL6sl32JPEg93EVXn+Mlus/2N3/Cyu
-   gNgR/1AxCAuyAQR2eG3vczUKgvPu91HfXJ/8ExnEZp+yVc7WFGnJKACyq
-   kprb/4TPTKQrpNXA4lgzOplABDHn9FpoX6GgJz+6CljsYViuieb6cb0wJ
-   K0VbSUbfXxv4UXHUMqo109O+oI9K1Q5VVAJRWRSV3QysHvGzpUOcqRKVL
-   a2A5aQdJq4m16tZgvfFzRut0/LKawNHQW0Q53k1C0phOvFR1CEqzDKz/8
-   g==;
-X-CSE-ConnectionGUID: VmcjLmElSdeXl3on+0k91w==
-X-CSE-MsgGUID: 9Q9gbBK7RZu/13jyP3vR4g==
-X-IronPort-AV: E=Sophos;i="6.07,136,1708412400"; 
-   d="scan'208";a="19565333"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 18 Mar 2024 22:53:44 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 18 Mar 2024 22:53:35 -0700
-Received: from HYD-DK-UNGSW21.microchip.com (10.10.85.11) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Mon, 18 Mar 2024 22:53:32 -0700
-From: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
-To: <netdev@vger.kernel.org>
-CC: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<edumazet@google.com>, <linux-kernel@vger.kernel.org>,
-	<bryan.whitehead@microchip.com>, <UNGLinuxDriver@microchip.com>
-Subject: [PATCH net V1 3/3] net: lan743x: Address problems with wake option flags configuration sequences
-Date: Tue, 19 Mar 2024 11:21:10 +0530
-Message-ID: <20240319055110.764002-4-Raju.Lakkaraju@microchip.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240319055110.764002-1-Raju.Lakkaraju@microchip.com>
-References: <20240319055110.764002-1-Raju.Lakkaraju@microchip.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JlWABp9j"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-34175878e3cso1042072f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 22:54:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710827654; x=1711432454; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vl6AA9br/anlnpNsGMnkWOpzBxrWrKpWnKKq2r224oo=;
+        b=JlWABp9joYdgeaOpU8Kvf+9q18vjOHAevhyHScmXidU4MWSxV1yoxrmrxPy3vrO/dt
+         zbsC7+JzT3WQVDn9z6ikBxVf7qI5lfuyd9nKKyZGbrmFfC8OmfVAkJjfbE1gvB6cHxZ5
+         JsRu9kWSldTGmtquxVA+WQ3FxI7c4EnPKp+zj485EC0iVA3ry/bH8JS3aaw4RlEFaIJo
+         y2u8JYV5g3WM41sToBEmH1e00m49NFbwPRF9xYQW2VTwKmqRbOqjCUUbfrLtBnbTvBee
+         uBVHvE+RVCEC3Sh63kZqadamFsHxmHgxklg3I2sGW9A2vVNMV3CQdsWm93u76hYNLCae
+         auFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710827654; x=1711432454;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vl6AA9br/anlnpNsGMnkWOpzBxrWrKpWnKKq2r224oo=;
+        b=IqkVTmQaLyx76cKOJtGFTOxqihqOsnhyxgRUTlKMz2dAOb4mu3kjew7E2hVmbxL8J7
+         6WI1HucpS8rsVdGWlAVm5MbgxVQmBjFbm0ysHebs72PQXwA5j8a4ymCsG1Ypoq9sG8Ai
+         Lh+4Du1DgJLjR3HCNxTKj6TX7nTIiyL6WpAB2bPqaAFpvSiB+4PGFmIY3PyYyCD7xfpI
+         gBwcQ9XNlhlDPq7DrC5pBINjXZOdxdpZ1h+/UCRehERfUHsulV+Ppk/mFZK0AltPcGcK
+         Zg4V84SbfcdAr9EOyMiK0BO57G2shP8j7xsTdY8vEDRZ3P83s5Q+1hvH2jzp1nNnU/Md
+         9r+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWT2jy+kXaDV2mzBcVbMG9FyNP1FhNGxLNyStiKcQbnIG28y2kPoJ2F1e0DwQrfp9CX9mNpflaDxLWSq8OkPllrqYFE5jqUPgS5cfDi
+X-Gm-Message-State: AOJu0YwgFdCiGrznJXpfL9xFNnaSmv3CpzGxQwNQGitYdA1lD6Vry0ng
+	H3vn7J7YKrEcyEPhiEdzIXQcc3YCx8B779ryeX8L7fV5f6u1V2Rx091amkV6LIY=
+X-Google-Smtp-Source: AGHT+IElLSQLz49jl6r3n4FmIzslQwWn+SuuJwo5rV6apuyC+62iDEgiFx46QapPIPE18jQwDqHimQ==
+X-Received: by 2002:adf:a494:0:b0:33e:6a17:3e63 with SMTP id g20-20020adfa494000000b0033e6a173e63mr7815867wrb.47.1710827653420;
+        Mon, 18 Mar 2024 22:54:13 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id z5-20020a5d44c5000000b0033b87c2725csm11418889wrr.104.2024.03.18.22.54.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Mar 2024 22:54:12 -0700 (PDT)
+Date: Tue, 19 Mar 2024 08:54:00 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Ayush Tiwari <ayushtiw0110@gmail.com>
+Cc: Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
+	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev, outreachy@lists.linux.dev
+Subject: Re: [PATCH v2] staging: rtl8712: Fix line length exceeding 100
+ columns
+Message-ID: <51060bc1-7d1c-4687-ae20-864e65068858@moroto.mountain>
+References: <ZfiNNvks6v0JGhRA@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZfiNNvks6v0JGhRA@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
 
-WOL secure-on and magic packet configuration table:
---------------------------------------------------------------------------------
-| Ethtool Ops     | Send magic packet | Send magic packet | Send magic packet  |
-|                 |                   | with password     | with wrong password|
---------------------------------------------------------------------------------
-|WAKE_MAGIC (g)   |      wake         |     wake          |        wake        |
---------------------------------------------------------------------------------
-|WAKE_SECURE_MAGIC|    no wake        |     wake          |       no wake      |
-|     (s)         |                   |                   |                    |
---------------------------------------------------------------------------------
-| WAKE_MAGIC &    |                   |                   |                    |
-|WAKE_SECURE_MAGIC|      wake         |     wake          |        wake        |
-|     (gs)        |                   |                   |                    |
---------------------------------------------------------------------------------
+On Tue, Mar 19, 2024 at 12:21:34AM +0530, Ayush Tiwari wrote:
+> Split the argument list of the kthread_run function call across two
+> lines to address the checkpatch warning "line length exceeds 100
+> columns".
+> 
+> Signed-off-by: Ayush Tiwari <ayushtiw0110@gmail.com>
+> 
+> ---
+> change in v2: Fixed the alignment to address checkpatch.pl warning
 
-Fixes: 6b3768ac8e2b3 ("net: lan743x: Add support to Secure-ON WOL")
-Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
----
-Change List:
-------------
-V0 -> V1:
-  - Fix the wake option flags configuration sequences
+You've created this patch to be applied on top of the v1 patch that we
+are not going to apply.  You need to restart based on a clean repo.
 
- drivers/net/ethernet/microchip/lan743x_ethtool.c | 3 +--
- drivers/net/ethernet/microchip/lan743x_main.c    | 8 +++++++-
- 2 files changed, 8 insertions(+), 3 deletions(-)
+https://staticthinking.wordpress.com/2022/07/27/how-to-send-a-v2-patch/
 
-diff --git a/drivers/net/ethernet/microchip/lan743x_ethtool.c b/drivers/net/ethernet/microchip/lan743x_ethtool.c
-index 4899582b3d1d..442c52aa0b0e 100644
---- a/drivers/net/ethernet/microchip/lan743x_ethtool.c
-+++ b/drivers/net/ethernet/microchip/lan743x_ethtool.c
-@@ -1188,8 +1188,7 @@ static int lan743x_ethtool_set_wol(struct net_device *netdev,
- 		adapter->wolopts |= WAKE_PHY;
- 	if (wol->wolopts & WAKE_ARP)
- 		adapter->wolopts |= WAKE_ARP;
--	if (wol->wolopts & WAKE_MAGICSECURE &&
--	    wol->wolopts & WAKE_MAGIC) {
-+	if (wol->wolopts & WAKE_MAGICSECURE) {
- 		memcpy(adapter->sopass, wol->sopass, sizeof(wol->sopass));
- 		adapter->wolopts |= WAKE_MAGICSECURE;
- 	} else {
-diff --git a/drivers/net/ethernet/microchip/lan743x_main.c b/drivers/net/ethernet/microchip/lan743x_main.c
-index 5641b466d70d..43e8e35fe9d0 100644
---- a/drivers/net/ethernet/microchip/lan743x_main.c
-+++ b/drivers/net/ethernet/microchip/lan743x_main.c
-@@ -3639,9 +3639,15 @@ static void lan743x_pm_set_wol(struct lan743x_adapter *adapter)
- 		lan743x_csr_write(adapter, MAC_MP_SO_LO, sopass);
- 		sopass = *(u16 *)&adapter->sopass[4];
- 		lan743x_csr_write(adapter, MAC_MP_SO_HI, sopass);
--		wucsr |= MAC_MP_SO_EN_;
-+		wucsr |= MAC_MP_SO_EN_ | MAC_WUCSR_MPEN_;
-+		macrx |= MAC_RX_RXEN_;
-+		pmtctl |= PMT_CTL_WOL_EN_ | PMT_CTL_MAC_D3_RX_CLK_OVR_;
- 	}
- 
-+	if (adapter->wolopts & WAKE_MAGICSECURE &&
-+	    adapter->wolopts & WAKE_MAGIC)
-+		wucsr &= ~MAC_MP_SO_EN_;
-+
- 	lan743x_csr_write(adapter, MAC_WUCSR, wucsr);
- 	lan743x_csr_write(adapter, PMT_CTL, pmtctl);
- 	lan743x_csr_write(adapter, MAC_RX, macrx);
--- 
-2.34.1
+regards,
+dan carpenter
 
