@@ -1,274 +1,205 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0028120F;
-	Tue, 19 Mar 2024 14:21:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6323781721;
+	Tue, 19 Mar 2024 14:23:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710858093; cv=none; b=S10VmhAhK4vqk1chaY25iO1Syp8dRzc6fCPcLpwkKO7yDgxdp3TLWTN2HjR/5Httj+WL9bUhohPmTC0g1e79GSN7MnUCCHwk77ZbdHFNKzL0jBQb418v3aRFpfqPESIEmuVlPD77PWvrE5O/4dAYL/ZPpzD8JdyjC3zdKaAqOKQ=
+	t=1710858209; cv=none; b=LvcdfSr1RAkE+AIAQUYt9AlFe0XgZ8/vZljYLkjYlYVEBIErjcYd74bX+QDB9fldcKTNrsyYwfg+8U5gC6Wtan0ZuiWOO6Grc27uIJVcCpFJeOQNrDDaF7GN4pZmALrd5oFLA0X0Yo7aD8T3doiGH5H9cpuNpBVudikIOidCI4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710858093; c=relaxed/simple;
-	bh=y34XZ0vtIVzYLMMHoygcdczC5B3Or+zKFqx1fZDqsl0=;
-	h=Content-Type:Date:Message-Id:From:To:Subject:Cc:References:
-	 In-Reply-To; b=Lm3DFyKOEwM9Rk5RcVVjWi1lBEJqK6SXTZKzLKgiN+iDFA3nlqyk0yBEQfvuFz0mgjRIsDK+/PRs301IIDmlZZKoQlA0zHvwBQcd/lQZsASuCvAnSCmw9Vg+rePkcrQ/iN1NauxRXOu7+gm9Cnig0xpkt6GG3DOCs6ps1YpuE5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c39viybc; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c39viybc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1E1CC433F1;
-	Tue, 19 Mar 2024 14:21:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710858093;
-	bh=y34XZ0vtIVzYLMMHoygcdczC5B3Or+zKFqx1fZDqsl0=;
-	h=Date:From:To:Subject:Cc:References:In-Reply-To:From;
-	b=c39viybc6vbm3s8cK0P+o1KOgxA9cxDSMr8QauJSlsRB1i7KNLxeYuyiaS0U1nF8Q
-	 ZQZS/+j2UWK49g0Gv1nC0yeHHEN4r1+lUg/xh/UKIl8uKC0cWF1DgLVYaDHGAPpwko
-	 8fUTuZTsDCarBOsEp4BwmWF4m5Th/gpKFfZP2FaZ3UXI5rxn+GUkiwffiLKXtYPbG8
-	 Xrykxxk4Owf9+Qs7ZS4w90OA/HUvEkPfRKLAF0vbKpHXzZ9EKgUjlXt+vK4HBQmt0+
-	 fMRxYnwNPRhJPj71S5lyE5ewhzG7OaU5Eq5A83ny7sxL5oFFn0RFbt5MAXstsXL6MN
-	 rEguoFIDao6cA==
-Content-Type: multipart/signed;
- boundary=484ebd4306fe9471bc399d353521ffa4b2c7aa00a6aaca1e7f444141b61c;
- micalg=pgp-sha256; protocol="application/pgp-signature"
-Date: Tue, 19 Mar 2024 15:21:21 +0100
-Message-Id: <CZXSKOLK6S1S.N86E2AZG2V90@kernel.org>
-From: "Michael Walle" <mwalle@kernel.org>
-To: "Ayush Singh" <ayushdevel1325@gmail.com>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski@linaro.org>, "open list"
- <linux-kernel@vger.kernel.org>, "Andrew Lunn" <andrew@lunn.ch>
-Subject: Re: [PATCH v4 1/5] dt-bindings: misc: Add mikrobus-connector
-Cc: <jkridner@beagleboard.org>, <robertcnelson@beagleboard.org>,
- <lorforlinux@beagleboard.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Nishanth Menon" <nm@ti.com>, "Vignesh Raghavendra"
- <vigneshr@ti.com>, "Tero Kristo" <kristo@kernel.org>, "Derek Kiernan"
- <derek.kiernan@amd.com>, "Dragan Cvetic" <dragan.cvetic@amd.com>, "Arnd
- Bergmann" <arnd@arndb.de>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Vaishnav M A" <vaishnav.a@ti.com>, "Mark
- Brown" <broonie@kernel.org>, "Johan Hovold" <johan@kernel.org>, "Alex
- Elder" <elder@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE
- TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/TEXAS
- INSTRUMENTS K3 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open
- list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>, "moderated list:GREYBUS
- SUBSYSTEM" <greybus-dev@lists.linaro.org>, "Vaishnav M A"
- <vaishnav@beagleboard.org>
-X-Mailer: aerc 0.16.0
-References: <20240317193714.403132-1-ayushdevel1325@gmail.com>
- <20240317193714.403132-2-ayushdevel1325@gmail.com>
- <CZWVF90JJO98.2M7ARQ9WMGC94@kernel.org>
- <d4dc4d94-d323-4158-8c08-b7d37d8750d3@gmail.com>
- <0f3f56d4-3381-44f1-91bc-c126f3ced085@linaro.org>
- <c8031e17-5ae8-4794-8b8c-1736be6452d3@gmail.com>
- <CZXMK3W52AFO.1APK080GVJESK@kernel.org>
- <5a9b1cd9-05ec-4606-92b6-eadbc7af6202@gmail.com>
- <CZXPQZY8PUGE.QZM8XSOUNMT4@kernel.org>
- <81ec4156-8758-406e-876b-5acf13951d09@gmail.com>
-In-Reply-To: <81ec4156-8758-406e-876b-5acf13951d09@gmail.com>
+	s=arc-20240116; t=1710858209; c=relaxed/simple;
+	bh=Xmo2x6S5V7/NQhmCgDANew9z2mao2c7yl6NKCnwOGZQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t/uNy1GdFLg3+OtSXbWFjS9cKGADb9IGFbuaygI17fte583yxAPgi09+wYdf5xWApbnXIoxerKxZ67oTEcGGGjofVULyLe1CoxX6wDmcpABmQf9Ves1dI3AshOsmXrAg+74JtejgENMqfIZTB2wASVZ0zgcZqtUxmdbtn4ApY2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7976FC433F1;
+	Tue, 19 Mar 2024 14:23:27 +0000 (UTC)
+Date: Tue, 19 Mar 2024 10:25:49 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: <xu.xin16@zte.com.cn>
+Cc: <edumazet@google.com>, <davem@davemloft.net>, <mhiramat@kernel.org>,
+ <dsahern@kernel.org>, <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+ <yang.yang29@zte.com.cn>, <he.peilin@zte.com.cn>, <liu.chun2@zte.com.cn>,
+ <jiang.xuexin@zte.com.cn>, <zhang.yunkai@zte.com.cn>
+Subject: Re: [PATCH v2] net/ipv4: add tracepoint for icmp_send
+Message-ID: <20240319102549.7f7f6f53@gandalf.local.home>
+In-Reply-To: <202403192013525995034@zte.com.cn>
+References: <202403192013525995034@zte.com.cn>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
---484ebd4306fe9471bc399d353521ffa4b2c7aa00a6aaca1e7f444141b61c
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+On Tue, 19 Mar 2024 20:13:52 +0800 (CST)
+<xu.xin16@zte.com.cn> wrote:
 
-On Tue Mar 19, 2024 at 2:03 PM CET, Ayush Singh wrote:
-> >>>> Regardless, this patch actually does not contain any code for EEPROM
-> >>>> support I have just mentioned it to give more context on why mikroBU=
-S
-> >>>> manifest is the focus of this patch instead of DT overlay or somethi=
-ng
-> >>>> else.
-> >>> Right, and I think this is the crux here. Why can't you use DT
-> >>> overlays? The manifest files, seem to be yet another hardware
-> >>> description (method) and we already have DT. Can't we have some kind
-> >>> of userspace helper that could translate them to DT overlays? That
-> >>> way, you could also handle the EEPROM vs non-EEPROM case, or have
-> >>> some other kind of method to load a DT overlay.
-> >>>
-> >>> Admittedly, I've never worked with in-kernel overlays, but AFAIK
-> >>> they work with some subsystems.
-> >>>
-> >>> -michael
-> >>
-> >> So let me 1st go over 3 cases that the driver needs to support:
-> >>
-> >> 1. Non EEPROM boards:
-> >>
-> >> Using overlays should be pretty similar to current solution. If the
-> >> manifest is converted to overlay in userspace, then we do not even nee=
-d
-> >> to do manifest parsing, setting up spi, i2c etc in the kernel driver.
-> >>
-> >>
-> >> 2. EEPROM boards
-> >>
-> >> How do you propose handling these. If you are proposing storing dt
-> >> overlay in EEPROM, then this raises some questions regarding support
-> >> outside of Linux.
-> >>
-> >> The other option would be generating overlay from manifest in the kern=
-el
-> >> driver, which I'm not sure is significantly better than registering th=
-e
-> >> i2c, spi, etc. interfaces separately using standard kernel APIs.
-> > You did answer that yourself in (1): you could use a user space
-> > helper to translate it to a DT overlay, I don't think this has to be
-> > done in the kernel.
->
-> I do not understand what you mean. For EEPROM supported boards, user=20
-> space is not involved. The driver can directly read the manifest from=20
-> add-on board and setup everything, so it is plug and play.
+> From: Peilin He<he.peilin@zte.com.cn>
+> 
+> Introduce a tracepoint for icmp_send, which can help users to get more
+> detail information conveniently when icmp abnormal events happen.
+> 
+> 1. Giving an usecase example:
+> =============================
+> When an application experiences packet loss due to an unreachable UDP
+> destination port, the kernel will send an exception message through the
+> icmp_send function. By adding a trace point for icmp_send, developers or
+> system administrators can obtain detailed information about the UDP
+> packet loss, including the type, code, source address, destination address,
+> source port, and destination port. This facilitates the trouble-shooting
+> of UDP packet loss issues especially for those network-service
+> applications.
+> 
+> 2. Operation Instructions:
+> ==========================
+> Switch to the tracing directory.
+>         cd /sys/kernel/debug/tracing
 
-A driver could call a user-space helper, which will read the EEPROM
-content (or maybe the driver already passes the content to the
-helper), translate it to a DT overlay, and load it. Wouldn't that
-work?
+FYI, that directory is obsolete. Please always reference /sys/kernel/tracing.
 
-I'm not saying that is the way to go, just evaluate some ideas.
+> Filter for destination port unreachable.
+>         echo "type==3 && code==3" > events/icmp/icmp_send/filter
+> Enable trace event.
+>         echo 1 > events/icmp/icmp_send/enable
+> 
+> 3. Result View:
+> ================
+>  udp_client_erro-11370   [002] ...s.12   124.728002:
+>  icmp_send: icmp_send: type=3, code=3.
+>  From 127.0.0.1:41895 to 127.0.0.1:6666 ulen=23
+>  skbaddr=00000000589b167a
+> 
+> v1->v2:
+> Some fixes according to
+> https://lore.kernel.org/all/CANn89iL-y9e_VFpdw=sZtRnKRu_tnUwqHuFQTJvJsv-nz1xPDw@mail.gmail.com/
+> 	1. adjust the trace_icmp_send() to more protocols than UDP.
+> 	2. move the calling of trace_icmp_send after sanity checks
+> 	   in __icmp_send().
+> 
+> Signed-off-by: Peilin He<he.peilin@zte.com.cn>
+> Reviewed-by: xu xin <xu.xin16@zte.com.cn>
+> Reviewed-by: Yunkai Zhang <zhang.yunkai@zte.com.cn>
+> Cc: Yang Yang <yang.yang29@zte.com.cn>
+> Cc: Liu Chun <liu.chun2@zte.com.cn>
+> Cc: Xuexin Jiang <jiang.xuexin@zte.com.cn>
+> ---
+>  include/trace/events/icmp.h | 64 +++++++++++++++++++++++++++++++++++++++++++++
+>  net/ipv4/icmp.c             |  4 +++
+>  2 files changed, 68 insertions(+)
+>  create mode 100644 include/trace/events/icmp.h
+> 
+> diff --git a/include/trace/events/icmp.h b/include/trace/events/icmp.h
+> new file mode 100644
+> index 000000000000..c3dc337be7bc
+> --- /dev/null
+> +++ b/include/trace/events/icmp.h
+> @@ -0,0 +1,64 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM icmp
+> +
+> +#if !defined(_TRACE_ICMP_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_ICMP_H
+> +
+> +#include <linux/icmp.h>
+> +#include <linux/tracepoint.h>
+> +
+> +TRACE_EVENT(icmp_send,
+> +
+> +		TP_PROTO(const struct sk_buff *skb, int type, int code),
+> +
+> +		TP_ARGS(skb, type, code),
+> +
+> +		TP_STRUCT__entry(
+> +			__field(__u16, sport)
+> +			__field(__u16, dport)
+> +			__field(int, type)
+> +			__field(int, code)
+> +			__array(__u8, saddr, 4)
+> +			__array(__u8, daddr, 4)
+> +                	__field(const void *, skbaddr)
+> +			__field(unsigned short, ulen)
 
-> The manual involvement of user space is only for non EEPROM boards since=
-=20
-> we do not have a way to identify the board without the user needing to=20
-> provide the manifest.
+Note, to prevent holes, I usually suggest pointers and longs go first,
+followed by ints, and then end with char.
 
-FWIW, I'm not talking about manual steps here. But more of
-call_usermodehelper(). Or maybe udev can do it?
+                	__field(const void *, skbaddr)
+			__field(int, type)
+			__field(int, code)
+			__array(__u8, saddr, 4)
+			__array(__u8, daddr, 4)
+			__field(__u16, sport)
+			__field(__u16, dport)
+			__field(unsigned short, ulen)
 
-Btw, [1] mentions hot-plugging. Is that really hot-plugging while
-the system is running? How would that work?
-
-> > Also how do you know whether there is an EEPROM
-> > or not?
->
-> Set RST GPIO to low. clickID supported board will enter ID MODE, Then=20
-> check if CS line has a w1 gpio bus.
-
-Ok.
-
-> >> 3. Over Greybus
-> >>
-> >> It is quite important to have mikroBUS over greybus for BeagleConnect.
-> >> This is one of the major reasons why greybus manifest was chosen for t=
-he
-> >> manifest format.
-> >>
-> >> Also, it is important to note that mikroBUS manifest is being used sin=
-ce
-> >> 2020 now and thus manifests for a lot of boards (both supporting click=
-ID
-> >> and not supporting it exist). So I would prefer using it, unless of
-> >> course there are strong reasons not to.
-> > And also here, I'm not really familiar with greybus. Could you give
-> > a more complex example? My concern is that some driver might need
-> > additional properties from DT (or software nodes) to function
-> > properly. It might not only be a node with a compatible string but
-> > also more advanced bindings. How would that play together with this?
-> > My gut feeling is that you can handle any missing properties
-> > easier/better (eg. for existing modules) in user space. But maybe
-> > that is already solved in/with greybus?
->
-> Greybus is a communication protocol designed for modular electronic=20
-> devices. It allows different parts of a device to be hot plugged (added=
-=20
-> or removed) while the device is still running. Greybus manifest is used=
-=20
-> to describe the capabilities of a module in the greybus network. The=20
-> host then creates appropriate bidirectional unipro connections with the=
-=20
-> module based on the cports described in the manifest. I have added a=20
-> link to lwn article that goes into more detail.
->
-> BeagleConnect simply allows using greybus over any bidirectional=20
-> transport, instead of just Unipro.
->
-> I cannot comment much about how greybus handles missing properties.=20
-> While greybus also works just in kernel space, greybus protocols are=20
-> inherently higher level than kernel driver, so it might have an easier=20
-> time with this.
->
-> I have also added a link to eLInux page which provides rational for the=
-=20
-> mikroBUS manifest. But the crux seems to be that dynamic overlays were=20
-> not well-supported back then. Also, the use of mikroBUS using greybus=20
-> subsystem was already used. Hence the mikroBUS driver.
-
-I see this as an opportunity to improve the in-kernel overlays :)
-
-> Greybus is not a big blocker from my perspective, since it is always=20
-> possible to introduce a new protocol for mikroBUS in Greybus spec. I=20
-> think as long as both EEPROM and non EEPROM boards can be supported by=20
-> mikroBUS driver and dt-bindings, are can be used outside of Linux (eg:=20
-> ZephyrRTOS, nuttx, etc), it is fine.
->
-> > Here's a random one: the manifest [1] just lists the compatible
-> > string apparently, but the actual DT binding has also reset-gpios,
-> > some -supply and interrupt properties.
-> >
-> > -michael
-> >
-> > [1] https://github.com/MikroElektronika/click_id/blob/main/manifests/WE=
-ATHER-CLICK.mnfs
->
->
-> Yes, the concern is valid. Support for validating the manifest is=20
-> nowhere near as good as devicetree overlays. But I think that would be a=
-=20
-> problem with the device rather than the responsibility of the kernel. It=
-=20
-> is up to the manufacturer to have valid manifests.
-
-But does the manifest have the capabilities to express all that
-information? To me it looks like just some kind of pinmux, some
-vendor strings and a (DT) compatible string.
-[coming back to this after seeing [2]: there are more properties,
-but it seem just be a list of property=3Dvalue]
-
-What I'd like to avoid is some kind of in-kernel mapping list from
-manifest to actual driver instantiation.
-
-I guess you'll get much of that with DT overlays already and if you
-have some kind of automatic translation from manifest to DT overlay,
-it will still be plug-and-play. You could fix up any missing
-properties, etc. manually loading some manifests/dt overlays for
-modules without EEPROMs.
-
-Again, a more complex manifest file would really be appreciated
-here. Not just a simple "there is exactly one trivial SPI device on
-the bus".
-
-FWIW, here is a more complex example [2] which uses the ssd1306
-display driver. Dunno if that is a good example, as it seems to use
-the fb_ssd1306 driver (at least that's what I'm deducing by reading
-the driver-string-id) in staging and there is also ssd1307fb.c in
-drivers/video/fbdev. But how are the additional information like
-width and height translate to the properties of the driver (device
-tree properties, swnode properties, platform_data*)?
-
-On a side note, does the manifest files use the (linux) kernel
-module name for the driver-string-id?
-
--michael
-
-[1] https://github.com/MikroElektronika/click_id/blob/main/README.md
-[2] https://github.com/MikroElektronika/click_id/blob/main/manifests/OLEDB-=
-CLICK.mnfs
-
-> Link: https://lwn.net/Articles/715955/ Greybus
-> Link https://elinux.org/Mikrobus eLinux article
+-- Steve
 
 
---484ebd4306fe9471bc399d353521ffa4b2c7aa00a6aaca1e7f444141b61c
-Content-Type: application/pgp-signature; name="signature.asc"
+> +		),
+> +
+> +		TP_fast_assign(
+> +			struct iphdr *iph = ip_hdr(skb);
+> +			int proto_4 = iph->protocol;
+> +			__be32 *p32;
+> +
+> +			__entry->skbaddr = skb;
+> +			__entry->type = type;
+> +			__entry->code = code;
+> +
+> +			if (proto_4 == IPPROTO_UDP) {
+> +				struct udphdr *uh = udp_hdr(skb);
+> +				__entry->sport = ntohs(uh->source);
+> +				__entry->dport = ntohs(uh->dest);
+> +				__entry->ulen = ntohs(uh->len);
+> +			} else {
+> +				__entry->sport = 0;
+> +				__entry->dport = 0;
+> +				__entry->ulen = 0;
+> +			}
+> +
+> +			p32 = (__be32 *) __entry->saddr;
+> +			*p32 = iph->saddr;
+> +
+> +			p32 = (__be32 *) __entry->daddr;
+> +			*p32 = iph->daddr;
+> +		),
+> +
+> +		TP_printk("icmp_send: type=%d, code=%d. From %pI4:%u to %pI4:%u ulen=%d skbaddr=%p",
+> +			__entry->type, __entry->code,
+> +			__entry->saddr, __entry->sport, __entry->daddr,
+> +			__entry->dport, __entry->ulen, __entry->skbaddr)
+> +);
+> +
+> +#endif /* _TRACE_ICMP_H */
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
+> \ No newline at end of file
+> diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
+> index e63a3bf99617..21fb41257fe9 100644
+> --- a/net/ipv4/icmp.c
+> +++ b/net/ipv4/icmp.c
+> @@ -92,6 +92,8 @@
+>  #include <net/inet_common.h>
+>  #include <net/ip_fib.h>
+>  #include <net/l3mdev.h>
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/icmp.h>
+> 
+>  /*
+>   *	Build xmit assembly blocks
+> @@ -672,6 +674,8 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
+>  		}
+>  	}
+> 
+> +	trace_icmp_send(skb_in, type, code);
+> +
+>  	/* Needed by both icmp_global_allow and icmp_xmit_lock */
+>  	local_bh_disable();
+> 
 
------BEGIN PGP SIGNATURE-----
-
-iIgEABYIADAWIQQCnWSOYTtih6UXaxvNyh2jtWxG+wUCZfmfYhIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQzcodo7VsRvuwwAEAsN5Pnsa/SNvIm6g3jIvfx0VgPgf5jZ1o
-mhKMHynealgBALAiZQULQPGr8MO/zU2lTMGIz7VTGegs2Q9Kz7ZrUeAC
-=ZkPm
------END PGP SIGNATURE-----
-
---484ebd4306fe9471bc399d353521ffa4b2c7aa00a6aaca1e7f444141b61c--
