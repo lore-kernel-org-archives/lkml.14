@@ -1,155 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.actia.se (mail.actia.se [212.181.117.226])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF011E536
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 08:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB39A64CF7;
+	Tue, 19 Mar 2024 08:52:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710838361; cv=none; b=niedRFpqY+xwsqW/MbLKeMQEM9w/2h/oE/haQQOmIVpYznLvu24t4Jrw8fkwgHSed3PEaSW2t7vaMKLJRDs0UD+ynlzQG98plOw7AjtplzOQTxbT92pIeUenFn2vUL+6QgC5ozqWswzS8RYXIMnXMDSWgegPX4DihMWoURYvD0g=
+	t=1710838381; cv=none; b=B5h1wrRXDufF1gbpzMv/gSmDOpkC5YnwXx+m7H274pg/iKI86wNPx6UsszxJX+yJpxsImXGDjN0dMYg8GC2SmKBJ1sffPVoAS/zY4Gfd3zYis7YUoX/OztwKfDjPPK+DHp12GMjgclMT8qnKTls7GY5D/nKZ8vYWm5VbOW6WOTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710838361; c=relaxed/simple;
-	bh=BpATYCWHMlDg+lXKRP1ZOVld6HIBGCoWxOXIwEyHUKg=;
-	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=X7E9MG79nsZGD6LwxjOldPek5fzOQXgolSliu3vHxdi+l6//3y/6Db3Muxeb+CCRCXJ/C/IYkoH7Gge8jgfv4cSPVqS8pHhio+tFJAqgwJAOOQ8bqaie7NaNXi5bplLU8yE8j/axNhdbEIr3aAyal3KkUbA+bmQBtCL5+6qJk+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M8hxEtec; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M8hxEtec"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710838358;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LAFBEpXu4T6nIL4CcBb6XaYWpcmzJRFyTet/O4fBErk=;
-	b=M8hxEtecNLzq50fkh9k4o14T2dWQfafkCju481os9KtHEDnlR4HSt52Ju9riI21IKgS6OX
-	gYpUHqnyEqAc/hcCCtVIsICRfFv5NGvjy8phZiLUcZKshcl6wzuweA3O3+w2Gr1LyrVomd
-	gVZit5hUbjwmKqjAQDAnzqVnjJe+1vs=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-449-3J22H1LoNReOjb9-iy2s9g-1; Tue, 19 Mar 2024 04:52:37 -0400
-X-MC-Unique: 3J22H1LoNReOjb9-iy2s9g-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-33ed71800f2so1886138f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 01:52:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710838356; x=1711443156;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:to:from:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=LAFBEpXu4T6nIL4CcBb6XaYWpcmzJRFyTet/O4fBErk=;
-        b=mavFOZEPPSWpXCq0I21lPGZd0g8AxHsrtP39BuvSLhQvD1ifKjR6A5EHGBvZuqpLFW
-         47rVt+60tw33ok6JO87ab/NTIEtHI3ep09siGHbiDN/VfcLdeztb6iVcIGsQ284EGxke
-         qkYklhb9aKprJ51pogRHTeb9mJ/U1fI89Sk/IxFYgCxZpbe6CgRkqembDX+MyPP//ZFp
-         Mnt2HPi9zjcs+VtdArh+O1vhKelthQ5Pe34XoRH9BU5aQKD078XNa7mM56STHDrkwcac
-         nc/1TUrGTxZszbTOWR96sAbLhf5GlfIfb3fNvSfQHRkY/tPzb+xMwprm6skPkexV34FI
-         TrfA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqzvZpiZFjIp0RIhEMEn5StQYhcp3oJqX/t+wZlTlQ/bWutMr56VHtwVzIP05W3hqzArznQYVeWTORdduKxKSpCQwY8v6ITZ/ysmRv
-X-Gm-Message-State: AOJu0YydxZiag9Q33ZJ4t9N9Fl0+ZZsaK0qiCQ40ifw235+tmun/3Goy
-	MEsxdDTdzDtMVrKHAF+trQpxQb2KOoerJnXrRiDqLbWIbLGMNaGjs/yIZsrZYGM1pgPUypmP4wr
-	OmZjopOacnyhC6rIuUVmY1WKxLqOn6nYYjmfoZujjBLquRtuaEJTmAR1ih8Ychw==
-X-Received: by 2002:a5d:400e:0:b0:33e:7650:1297 with SMTP id n14-20020a5d400e000000b0033e76501297mr1180592wrp.6.1710838355896;
-        Tue, 19 Mar 2024 01:52:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEviy2BfD6h1n7GQIr/ySZRIA5TMsVkUat79nA6OyGDi7lEfv/1uq9WRg7/G+zkox+G3WNbig==
-X-Received: by 2002:a5d:400e:0:b0:33e:7650:1297 with SMTP id n14-20020a5d400e000000b0033e76501297mr1180574wrp.6.1710838355482;
-        Tue, 19 Mar 2024 01:52:35 -0700 (PDT)
-Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id bo6-20020a056000068600b003418016b04csm2954367wrb.76.2024.03.19.01.52.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 01:52:35 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, Mehdi Djait
- <mehdi.djait.k@gmail.com>, daniel@ffwll.ch,
- maarten.lankhorst@linux.intel.com, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Subject: Re: drm/tiny: QUESTION: What to use instead of
- drm_simple_display_pipe ?
-In-Reply-To: <da7cfff1-e147-48ea-bcda-9ea913e5feee@suse.de>
-References: <ZfiTbYAa7qxXlrPd@mehdi-archlinux>
- <da7cfff1-e147-48ea-bcda-9ea913e5feee@suse.de>
-Date: Tue, 19 Mar 2024 09:52:34 +0100
-Message-ID: <87o7ba1u3x.fsf@minerva.mail-host-address-is-not-set>
+	s=arc-20240116; t=1710838381; c=relaxed/simple;
+	bh=dRo4GmUb2CpgkVklfQFqQDwVG9vwNuWtJN6hgdDy7AE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Ukr1n6eTqZii7ndp99k+eTa98i8WbfCblDdQuEaf/cXuWs6Ip5ZL0F43E4TTP1HGUWzLVePO8DWcXMP1qPe/511ndEDRavmcb/EJpxwKsh2TLyQfcBc7tvl4zhHD9vOxjeQ2jQ7fC8OWoLteQTxrhE+mtg0n+kx46F+QNsrAKVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=actia.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
+Received: from S036ANL.actianordic.se (10.12.31.117) by S036ANL.actianordic.se
+ (10.12.31.117) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Tue, 19 Mar
+ 2024 09:37:45 +0100
+Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
+ S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%4]) with mapi id
+ 15.01.2507.037; Tue, 19 Mar 2024 09:37:45 +0100
+From: John Ernberg <john.ernberg@actia.se>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+CC: Wei Fang <wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>, "Clark
+ Wang" <xiaoning.wang@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
+ Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Heiner Kallweit
+	<hkallweit1@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrew Lunn
+	<andrew@lunn.ch>, Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH net v3 2/2] net: fec: Suspend the PHY on probe
+Thread-Topic: [PATCH net v3 2/2] net: fec: Suspend the PHY on probe
+Thread-Index: AQHab8t46xO1JP3Hxke5Lu7SCFbkbbEq8XCAgBPPogA=
+Date: Tue, 19 Mar 2024 08:37:44 +0000
+Message-ID: <9490ed31-dede-4a14-9c62-5ef83e30593a@actia.se>
+References: <20240306133734.4144808-1-john.ernberg@actia.se>
+ <20240306133734.4144808-3-john.ernberg@actia.se>
+ <20240306190539.4ab9f369@device-28.home>
+In-Reply-To: <20240306190539.4ab9f369@device-28.home>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-esetresult: clean, is OK
+x-esetid: 37303A2958D729556D726A
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <337EC15ED87FD94C94F790B11765AE40@actia.se>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-Thomas Zimmermann <tzimmermann@suse.de> writes:
-
-Hello Mehdi,
-
-> Hi
->
-> Am 18.03.24 um 20:18 schrieb Mehdi Djait:
->> Hello everyone :)
->>
->> I am implementing a tiny drm driver and I am currently working on the
->> V2: https://lore.kernel.org/dri-devel/cover.1701267411.git.mehdi.djait@b=
-ootlin.com/
->>
->> I got a review on the v1 telling me not to use the
->> drm_simple_display_pipe. Can someone please explain this further ? Or
->> give me an example drm driver that does it the right way ?
->
-> You can copy the code from drm_simple_kms_helper.c into your driver file=
-=20
-> and start inlining everything. For example
->
->  =C2=A01) Your driver calls drm_simple_display_pipe_init(), so you copy t=
-hat=20
-> code into your source file
->  =C2=A02) drm_simple_display_pipe_init() uses drm_simple_kms_plane_funcs =
-and=20
-> drm_simple_kms_crtc_funcs, so you copy these into your source file;=20
-> together with the drm_simple_kms_*() helpers that they use for their=20
-> callback pointers.
->  =C2=A03) Mayb do this for other drm_simple_kms_*() code.
->  =C2=A04) Then start inlining: inline your copy of=20
-> drm_simple_display_pipe_iit(). Instead of using=20
-> sharp_ls027b7dh01_pipe_funcs, inline its functions into your copy of the=
-=20
-> callers. And so on.
->  =C2=A05) Rename the resulting code, so that it fits you driver.
->
-> With careful changes, you 'll end up with the same functionality as=20
-> before, but without the intermediate layer of the simple-KMS code.
->
-
-On top of what Thomas said, you can check 622113b9f11f ("drm/ssd130x:
-Replace simple display helpers with the atomic helpers") that did this
-change for the drivers/gpu/drm/solomon/ssd130x.c driver.
-
-The driver is also for a monochrome panel controller and it does support
-SPI as transport, which means the controller is similar to yours in many
-aspects. You could use that driver code as a reference for your driver.
-
-> Best regards
-> Thomas
->
->>
->> --
->> Kind Regards
->> Mehdi Djait
->
-> --=20
-> --
-> Thomas Zimmermann
-> Graphics Driver Developer
-> SUSE Software Solutions Germany GmbH
-> Frankenstrasse 146, 90461 Nuernberg, Germany
-> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-> HRB 36809 (AG Nuernberg)
->
-
---=20
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
-
+SGkgTWF4aW1lLA0KDQpBcG9sb2dpZXMgZm9yIHRoZSBkZWxheSBpbiBteSByZXNwb25zZS4NCg0K
+T24gMy82LzI0IDE5OjA1LCBNYXhpbWUgQ2hldmFsbGllciB3cm90ZToNCj4gSGVsbG8gSm9obiwN
+Cj4gDQo+IEknbSBhZGRpbmcgQW5kcmV3IGFuZCBSdXNzZWxsIHRvIHRoZSB0aHJlYWQgYXMgUEhZ
+IG1haW50YWluZXJzIGFuZA0KPiByZXZpZXdlcnMuDQo+IA0KPiBPbiBXZWQsIDYgTWFyIDIwMjQg
+MTM6Mzc6NDUgKzAwMDANCj4gSm9obiBFcm5iZXJnIDxqb2huLmVybmJlcmdAYWN0aWEuc2U+IHdy
+b3RlOg0KPiANCj4+IFNpbmNlIHRoZSBwb3dlciBtYW5hZ2VtZW50IGlzIG5vdyBwZXJmb3JtZWQg
+YnkgdGhlIEZFQyBpbnN0ZWFkIG9mIGdlbmVyaWMNCj4+IHBtIHRoZSBQSFkgd2lsbCBub3Qgc3Vz
+cGVuZCB1bnRpbCB0aGUgbGluayBoYXMgYmVlbiB1cC4NCj4+DQo+PiBUaGVyZWZvciBzdXNwZW5k
+IGl0IG9uIHByb2JlLiBJdCB3aWxsIGJlIHJlc3VtZWQgYnkge29mXyx9cGh5X2Nvbm5lY3QoKQ0K
+Pj4gd2hlbiB0aGUgbGluayBpcyBicm91Z2h0IHVwLg0KPj4NCj4+IFNpbmNlIHtvZl8sfXBoeV9j
+b25uZWN0KCkgYW5kIHBoeV9kaXNjb25uZWN0KCkgd2lsbCByZXN1bWUgYW5kIHN1c3BlbmQgdGhl
+DQo+PiBQSFkgd2hlbiB0aGUgbGluayBpcyBicm91Z2h0IHVwIGFuZCBkb3duIHJlc3BlY3RpdmVs
+eSwgYW5kIHBoeV9zdG9wKCkgYW5kDQo+PiBwaHlfc3RhcnQoKSB3aWxsIHJlc3VtZSBhbmQgc3Vz
+cGVuZCB0aGUgUEhZIGluIHRoZSBzdXNwZW5kLXJlc3VtZSBwYXRocw0KPj4gdGhlcmUgaXMgbm8g
+bmVlZCBmb3IgYW55IGFkZGl0aW9uYWwgY2FsbHMgYW55d2hlcmUuDQo+Pg0KPj4gU2lnbmVkLW9m
+Zi1ieTogSm9obiBFcm5iZXJnIDxqb2huLmVybmJlcmdAYWN0aWEuc2U+DQo+IA0KPiBbLi4uXQ0K
+PiANCj4+IEBAIC0yNTM5LDggKzI1MzksMTAgQEAgc3RhdGljIGludCBmZWNfZW5ldF9taWlfaW5p
+dChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPj4gICAJLyogZmluZCBhbGwgdGhlIFBI
+WSBkZXZpY2VzIG9uIHRoZSBidXMgYW5kIHNldCBtYWNfbWFuYWdlZF9wbSB0byB0cnVlICovDQo+
+PiAgIAlmb3IgKGFkZHIgPSAwOyBhZGRyIDwgUEhZX01BWF9BRERSOyBhZGRyKyspIHsNCj4+ICAg
+CQlwaHlkZXYgPSBtZGlvYnVzX2dldF9waHkoZmVwLT5taWlfYnVzLCBhZGRyKTsNCj4+IC0JCWlm
+IChwaHlkZXYpDQo+PiArCQlpZiAocGh5ZGV2KSB7DQo+PiAgIAkJCXBoeWRldi0+bWFjX21hbmFn
+ZWRfcG0gPSB0cnVlOw0KPj4gKwkJCXBoeV9zdXNwZW5kKHBoeWRldik7DQo+PiArCQl9DQo+IA0K
+PiBJIGRvbid0IHRoaW5rIHRoYXQncyBjb3JyZWN0LiBoZXJlIHBoeV9zdXNwZW5kKCkgaXMgYmVp
+bmcgY2FsbGVkIGJlZm9yZQ0KPiB0aGUgUEhZIGdvdCBhdHRhY2hlZCwgc28gdGhlIFBIWSB3YXNu
+J3QgaW5pdGlhbGl6ZWQgYXQgYWxsIGF0IHRoYXQNCj4gcG9pbnQgKHdoaWNoIEkgZ3Vlc3MgaXMg
+eW91ciBpc3N1ZSBhcyB0aGUgUEhZIGlzIHN0aWxsIGluIHRoZSBzdGF0ZSBpdA0KPiB3YXMgY29u
+ZmlndXJlZCBpbnRvIGJ5IHRoZSBib290bG9hZGVyKQ0KPiANCj4gRm9sbG93aW5nIHRoZSBjb2Rl
+IHBhdGhzLCBpdCBsb29rcyBsaWtlIHRoaXMgd29ya3MgZm9yIHlvdSBiZWNhdXNlIHRoZQ0KPiBQ
+SFkgeW91J3JlIHVzaW5nIGhhcyBhIC5zdXNwZW5kIGNhbGxiYWNrIHBvcHVsYXRlZCwgYnV0IGZv
+ciBhbnkgUEhZDQo+IHRoYXQgdXNlcyB0aGUgZ2VucGh5IGRyaXZlciwgdGhpcyB3aWxsIGRvIG5v
+dGhpbmcgYXQgYWxsICh0aGUgUEhZIGlzbid0DQo+IHlldCBhdHRhY2hlZCB0byB0aGUgZ2VucGh5
+IG9wcywgdGhlcmVmb3JlIGdlbnBoeV9zdXNwZW5kIHdvbid0IGJlDQo+IGNhbGxlZCkuDQoNClRo
+YW5rcyBmb3IgaGlnaGxpZ2h0aW5nIHRoaXMuDQoNClllcywgaXQncyBhIHByb2JsZW0gZm9yIGdl
+bnBoeSwgYWx0aG91Z2ggZHVlIHRvIHdoZW4gZ2VucGh5IGlzIHByb2JlZCwgDQppdCdzIGFsd2F5
+cyBiZWVuIGEgcHJvYmxlbSBmb3IgZ2VucGh5LCBldmVuIGJlZm9yZSB0aGlzIHBhdGNoLiBXaGVy
+ZWFzIA0KUEhZcyB3aXRoIHNwZWNpZmljIGRyaXZlcnMgd29ya2VkIGJlZm9yZSBkdWUgdG8gTURJ
+TyBidXMgUE0uDQoNClRoZXJlIGlzIGFsc28gYSBjYXNlIHdoZXJlIHRoZSBwaHkgZHJpdmVyIG1v
+ZHVsZSBpcyBub3QgYXV0b21hdGljYWxseSANCmxvYWRlZCwgaW4gY2FzZXMgd2hlcmUgcmVxdWVz
+dF9tb2R1bGUoKSBmYWlscywgZWl0aGVyIGR1ZSB0byB0aGUgDQp1c2Vyc3BhY2UgaGVscGVyIGZl
+YXR1cmUgYmVpbmcgY29tcGlsZWQgb3V0IG9yIG90aGVyIHJlYXNvbnMsIGFuZCB0aGUgDQptb2R1
+bGUgaXMgbG9hZGVkIG1hbnVhbGx5IGxhdGVyLiBJIHN1c3BlY3QgZm9yIHJlYXNvbnMgbGlrZSB0
+aGVzZSB0aGUgDQpnZW5waHkgcHJvYmUgaGFwcGVucyBzbyBsYXRlLiBNeSBzb2x1dGlvbiBoZXJl
+IGRvZXNuJ3QgY292ZXIgbm9uLWxvYWRlZCANCm1vZHVsZXMgZWl0aGVyLCBidXQgdGhpcyBjb3Vs
+ZCBtYXliZSBiZSBjb3ZlcmVkIGJ5IG1vdmluZyBwaHlfc3VzcGVuZCgpIA0KdG8gcGh5X3Byb2Jl
+KCkuIFVubGVzcyB0aGVyZSBpcyBhbiBldmVuIG1vcmUgY2xldmVyIHdheSB0byBnbyBhYm91dCBp
+dCANCndoaWNoIEkgY2FuJ3Qgc2VlIGZyb20gaW5leHBlcmllbmNlLg0KDQpJZiBhIFBIWSBkcml2
+ZXIgZG9lc24ndCBwb3B1bGF0ZSAuc3VzcGVuZCB0aGVyZSdzIHByb2JhYmx5IGEgZ29vZCByZWFz
+b24gDQpmb3IgaXQgYW5kIGl0IG1ha2VzIHNlbnNlIHRvIG5vdCBzdXNwZW5kIHN1Y2ggYSBQSFks
+IHNvICBJJ20gbm90IA0KY29uY2VybmVkIGFib3V0IGFuIHVucG9wdWxhdGVkIC5zdXNwZW5kLg0K
+DQpCZXN0IHJlZ2FyZHMgLy8gSm9obiBFcm5iZXJnDQoNCj4gDQo+IEJlc3QgcmVnYXJkcywNCj4g
+DQo+IE1heGltZQ0K
