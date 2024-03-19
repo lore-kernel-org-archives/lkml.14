@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74AAC24B33;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B165657B2;
 	Tue, 19 Mar 2024 15:29:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710862193; cv=none; b=GfpLlOSb8GTc4W3BPQywerqzvvEGbSJQqQltCxXCdrOVZe1RB3YhYamNf7hZEJCKRV/p02tbFTYk+3BBWFqHwahonlo5xoQnd2IbQNwQsLpfYREqPtASFtS3mnNJSYrs3d3vvncXehEWb0bedOutS+Rk+t3xG1ggJuA8DW+AcPc=
+	t=1710862193; cv=none; b=Ntxj/IvCJ/4B/MxQLk+1RC5hmsTBxFrsk6/edKy3l6p7X7xftY6lHj3ASLb81MO6az2k3g8aIjkFSrGsihucDfH0qpplBnM9f79YrF77Jt6bt9cRrOIyp7tIGAn43ZbDRjSON0649N8DcPaY2Ty7jbrePO+UbvbA9HACVKtv//0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710862193; c=relaxed/simple;
-	bh=GlKb7exKEjnOBWdPf3Xo0Tq4lX2VT0Np+I2c1gOvVDo=;
+	bh=J6fbFW/hwqiA6LHzfsT/AMLYc+NWeHRMPXg1NtzMCYA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iHOYdbeDfK4O76x3PcaF6jUQZzC9vkRoTnyfIVg8jGbXeTMSsaqIoDROdVQBZJd4eVcbLjyTTH8jDdk8ngACFKKiaqWrpx358N1/p8RpztKL0sjUicQwzoUKVRLFTTPfpzS7nmHKvoxKb3Fd08kf6qJ6Po65F5+xe0IDpLiRweA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rtd3eZol; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PjrRhTb7fdRNqg3pvlp6Kfk5brs3iqCTz/yez07tFir3cW4Xc0pUU7wlLwv+McOBrHzHZodC/SZnqJ9Zb86dFGcTYSjthP2DI8/CVvx55vvkAlwLThQvl535WkwEzF1/gMAyg2ZBfpu4wO0RQeKVWVzj51las6OGKWdn59epLE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WbOEhBTF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rtd3eZol"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 445CAC43390;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WbOEhBTF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46972C43394;
 	Tue, 19 Mar 2024 15:29:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1710862193;
-	bh=GlKb7exKEjnOBWdPf3Xo0Tq4lX2VT0Np+I2c1gOvVDo=;
+	bh=J6fbFW/hwqiA6LHzfsT/AMLYc+NWeHRMPXg1NtzMCYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rtd3eZolOpnk+hy4zpiZ1Mz3ZZpaLFJeIV1tvkRAq2x6GEdU6V6OAAaYgoqmWgcJ0
-	 GkEjU2OYG88xD2TXL7Re5tZhjrDwkBxHWUXrsE+inxaGWXsgHCh7g8+ZngnqZBx6hj
-	 jGXoiIljP7qlQmRRnuM04O0+JPTv1hvEYchak6Y5keMzuDjn4HhPSmMY95HEtm7hjC
-	 lQCrV/6K/V0xF2b01kGaNHjaOb0ttyHJprgGjycsOapYSEXC9tig+wkrSvLxjxF+bK
-	 Sn7KcattZWiUTIXug2bvSgiEnahFUY5Hf6vt1CtQ0COi4n500+jC+Y7JB7u+r9Tpj3
-	 FowITlqeA7n7g==
+	b=WbOEhBTFeXAdxstMkBJ6ztS1KBg2hbVkr5PS1mveNvUknB4WliWXG6r54oZ8u2Y4t
+	 YXB8a6MQARRjjY50sYMvO0SZMWwxZ2sorrRV5coXKnQeeVQkyorbsGhFvAjLYjJUys
+	 /QOtJWsU0TJHsMqb6aM11UJvBKkGEOHy5dd6D/MpBoZcoYwlqvalNXMvTbFj7jfG6t
+	 nwuyHo//zrbWj9GZIhtoK3N7XBqSWOMrPpUgDSyotA8QmhVX2Xx34ISeISnzqaNuMq
+	 RVrYI4bHdDhdQo1OUmCTK/sdjzBsXBJrN4V8Tvm2ODS/nQnVf2uloKt9jhSk12/BAS
+	 J+GNgKQ1JEWCQ==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1rmbPb-000000000LI-3dbm;
-	Tue, 19 Mar 2024 16:29:59 +0100
+	id 1rmbPc-000000000LM-0CB1;
+	Tue, 19 Mar 2024 16:30:00 +0100
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Marcel Holtmann <marcel@holtmann.org>,
 	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
@@ -52,9 +52,9 @@ Cc: Rob Herring <robh+dt@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>,
 	stable@vger.kernel.org
-Subject: [PATCH v3 2/5] Bluetooth: add quirk for broken address properties
-Date: Tue, 19 Mar 2024 16:29:23 +0100
-Message-ID: <20240319152926.1288-3-johan+linaro@kernel.org>
+Subject: [PATCH v3 4/5] Bluetooth: qca: add workaround for broken address properties
+Date: Tue, 19 Mar 2024 16:29:25 +0100
+Message-ID: <20240319152926.1288-5-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.43.2
 In-Reply-To: <20240319152926.1288-1-johan+linaro@kernel.org>
 References: <20240319152926.1288-1-johan+linaro@kernel.org>
@@ -66,63 +66,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some Bluetooth controllers lack persistent storage for the device
-address and instead one can be provided by the boot firmware using the
-'local-bd-address' devicetree property.
+Due to a long-standing bug in the Qualcomm Bluetooth driver, the device
+address has so far been reversed when configuring non-ROME controllers.
+This, in turn, has led to one vendor reversing the address that the boot
+firmware provides using the 'local-bd-address' devicetree property.
 
-The Bluetooth devicetree bindings clearly states that the address should
-be specified in little-endian order, but due to a long-standing bug in
-the Qualcomm driver which reversed the address some boot firmware has
-been providing the address in big-endian order instead.
+The only device affected by this should be the WCN3991 used in some
+Chromebooks. As ChromeOS updates the kernel and devicetree in lockstep,
+the new 'qcom,local-bd-address-broken' property can be used to determine
+if the firmware is buggy so that the underlying driver bug can be fixed
+without breaking backwards compatibility.
 
-Add a new quirk that can be set on platforms with broken firmware and
-use it to reverse the address when parsing the property so that the
-underlying driver bug can be fixed.
+Set the HCI_QUIRK_BDADDR_PROPERTY_BROKEN quirk for such platforms so
+that the address is reversed when parsing the address property.
 
 Fixes: 5c0a1001c8be ("Bluetooth: hci_qca: Add helper to set device address")
 Cc: stable@vger.kernel.org      # 5.1
+Cc: Balakrishna Godavarthi <quic_bgodavar@quicinc.com>
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- include/net/bluetooth/hci.h | 9 +++++++++
- net/bluetooth/hci_sync.c    | 5 ++++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ drivers/bluetooth/hci_qca.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-index bdee5d649cc6..191077d8d578 100644
---- a/include/net/bluetooth/hci.h
-+++ b/include/net/bluetooth/hci.h
-@@ -176,6 +176,15 @@ enum {
- 	 */
- 	HCI_QUIRK_USE_BDADDR_PROPERTY,
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index f989c05f8177..c73481c57741 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -225,6 +225,7 @@ struct qca_serdev {
+ 	struct qca_power *bt_power;
+ 	u32 init_speed;
+ 	u32 oper_speed;
++	bool bdaddr_property_broken;
+ 	const char *firmware_name;
+ };
  
-+	/* When this quirk is set, the Bluetooth Device Address provided by
-+	 * the 'local-bd-address' fwnode property is incorrectly specified in
-+	 * big-endian order.
-+	 *
-+	 * This quirk can be set before hci_register_dev is called or
-+	 * during the hdev->setup vendor callback.
-+	 */
-+	HCI_QUIRK_BDADDR_PROPERTY_BROKEN,
+@@ -1842,6 +1843,7 @@ static int qca_setup(struct hci_uart *hu)
+ 	const char *firmware_name = qca_get_firmware_name(hu);
+ 	int ret;
+ 	struct qca_btsoc_version ver;
++	struct qca_serdev *qcadev;
+ 	const char *soc_name;
+ 
+ 	ret = qca_check_speeds(hu);
+@@ -1904,6 +1906,11 @@ static int qca_setup(struct hci_uart *hu)
+ 	case QCA_WCN6855:
+ 	case QCA_WCN7850:
+ 		set_bit(HCI_QUIRK_USE_BDADDR_PROPERTY, &hdev->quirks);
 +
- 	/* When this quirk is set, the duplicate filtering during
- 	 * scanning is based on Bluetooth devices addresses. To allow
- 	 * RSSI based updates, restart scanning if needed.
-diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
-index 5716345a26df..283ae8edc1e5 100644
---- a/net/bluetooth/hci_sync.c
-+++ b/net/bluetooth/hci_sync.c
-@@ -3215,7 +3215,10 @@ static void hci_dev_get_bd_addr_from_property(struct hci_dev *hdev)
- 	if (ret < 0 || !bacmp(&ba, BDADDR_ANY))
- 		return;
++		qcadev = serdev_device_get_drvdata(hu->serdev);
++		if (qcadev->bdaddr_property_broken)
++			set_bit(HCI_QUIRK_BDADDR_PROPERTY_BROKEN, &hdev->quirks);
++
+ 		hci_set_aosp_capable(hdev);
  
--	bacpy(&hdev->public_addr, &ba);
-+	if (test_bit(HCI_QUIRK_BDADDR_PROPERTY_BROKEN, &hdev->quirks))
-+		baswap(&hdev->public_addr, &ba);
-+	else
-+		bacpy(&hdev->public_addr, &ba);
- }
+ 		ret = qca_read_soc_version(hdev, &ver, soc_type);
+@@ -2284,6 +2291,9 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 	if (!qcadev->oper_speed)
+ 		BT_DBG("UART will pick default operating speed");
  
- struct hci_init_stage {
++	qcadev->bdaddr_property_broken = device_property_read_bool(&serdev->dev,
++			"qcom,local-bd-address-broken");
++
+ 	if (data)
+ 		qcadev->btsoc_type = data->soc_type;
+ 	else
 -- 
 2.43.2
 
