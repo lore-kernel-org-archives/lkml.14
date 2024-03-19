@@ -1,332 +1,187 @@
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4397E767;
-	Tue, 19 Mar 2024 13:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7421D40854;
+	Tue, 19 Mar 2024 13:05:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710853543; cv=none; b=TJz+LVrTnWio17FWbRLIzNNOp0TfCpQndXrBclsdPkpLJ7MG3dJCyxzeBTBe2eeE+kYeAz0KzgHoOn4cuIG/1zA0v+B9MqlMF2bYuYhdY/JyGiMTRHhE5SXtjFV9Yrpj9zDJOH6gfZr8OaDGyyqtO/3M5fS6eDcYApM38Ujq0S8=
+	t=1710853558; cv=none; b=KgDfZUzFTEf/+xD63h/BRYnq7k/b/QwCJcl9gHtU5ykKIH4EeqSjgEIcRtxU7K1DmNRaHNeWkFf+HZHCPDxdDPT437Tkfvsr3fS1HG5PPa2tIO6lf+LEhqKoudReoZzprafyX8N9vgwhss2QINbNswsQ3kdr7kOR1JmUhbCNADA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710853543; c=relaxed/simple;
-	bh=/97r7iXSsDNTYmULHXVK1ctFTQ73QJVdp8X5PO/FNT8=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=cCV+ktnNSqrqe5agH/BQY8QcS5sTKZS3Qt3LNTE+8XVjk4Ctr46G9S8RnEsReZtZheR9B1qLQLF71DLv8KJDddcJ1HsNEt9rigq23gCkTW9hpHYkzq0wbVWytGZLggwI9MTvTakpBK8QFtrC2/P7UEde41atiEZn1AN9HHfgJi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=AHyUN+tF; arc=none smtp.client-ip=208.88.110.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
+	s=arc-20240116; t=1710853558; c=relaxed/simple;
+	bh=VdqSfGB+h/sGfm1xuC2PyT3QkI3BNkLrs4O3AWSdhSA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=exU3JWGH1TlAf1U/nqayM6wJ0yGNterg36YdNVA95f/bFXINXfFTemXGuEHlYse38lbTSaz9zYre5I11Qnf5OpF6RkTzwbY7ZcSxJDFlHG9jYQYgX2gA5O0lYiChkbhRwkeiMBzZE0AYaF/90xyRVeDC+bl1JnNz2YonxRsl1bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iJjaQW4g; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="AHyUN+tF"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 1C1689C4ACB;
-	Tue, 19 Mar 2024 09:05:32 -0400 (EDT)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id GurWxxw7TEHa; Tue, 19 Mar 2024 09:05:30 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 2CBAF9C5396;
-	Tue, 19 Mar 2024 09:05:30 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 2CBAF9C5396
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1710853530; bh=CK99kLcw9PEfo9MbsDde8HxpTFYuUaCC9hKhjNwcG5Q=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=AHyUN+tFORXxM96kQQtuHIT4SdsL5VJ3hgTNhNAGF+wOQkEsjUzKX3YLNwPRFnIaz
-	 pB3cwMh1tThhGRJS9A/cu7pO6haCd5zIwSDus1DL7N8j9OWFhSW/L9fMBvtygkBjgV
-	 cCRptOrbrc1tU+purpQ64BgAvXF3nM8UnahqXl2icsYpgzFX44TcQ+ZofjxkG8J1hj
-	 3zkyiHNEIo04N1gwcPSOiMJCbOkhpdTCTfacyJDLrqWyKPuuvU07V79VGsuRi/tr2p
-	 L7/cDD+KOUA+9YzZnrqI0m5CeN8ANbtpCU3Ad2MzXeYgtJyJWiNMTgH8S7KizDpGB9
-	 wiRKJzETIgFgg==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id YVFnzGiEUBxk; Tue, 19 Mar 2024 09:05:30 -0400 (EDT)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [192.168.48.237])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id DD3BA9C4ACB;
-	Tue, 19 Mar 2024 09:05:29 -0400 (EDT)
-Date: Tue, 19 Mar 2024 09:05:29 -0400 (EDT)
-From: Charles Perry <charles.perry@savoirfairelinux.com>
-To: Xu Yilun <yilun.xu@linux.intel.com>
-Cc: mdf <mdf@kernel.org>, Allen VANDIVER <avandiver@markem-imaje.com>, 
-	Brian CODY <bcody@markem-imaje.com>, hao wu <hao.wu@intel.com>, 
-	yilun xu <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	krzysztof kozlowski+dt <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, 
-	Michal Simek <michal.simek@amd.com>, 
-	linux-fpga <linux-fpga@vger.kernel.org>, 
-	devicetree <devicetree@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Message-ID: <1292581697.1872237.1710853529674.JavaMail.zimbra@savoirfairelinux.com>
-In-Reply-To: <ZfkyMSczuFUdy3tU@yilunxu-OptiPlex-7050>
-References: <20240313225746.489253-1-charles.perry@savoirfairelinux.com> <20240313225746.489253-4-charles.perry@savoirfairelinux.com> <ZfkyMSczuFUdy3tU@yilunxu-OptiPlex-7050>
-Subject: Re: [PATCH v5 3/3] fpga: xilinx-selectmap: add new driver
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iJjaQW4g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710853556; x=1742389556;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=VdqSfGB+h/sGfm1xuC2PyT3QkI3BNkLrs4O3AWSdhSA=;
+  b=iJjaQW4g3oFunMEJBWmTys7K16jyatqEr+BK6f/03VweqDdGh/tWtj/K
+   24Zti7LCOThwsaKvutOconG4Y678C6ENVswhjqfZ8a3+Qyd6t3FCwykWr
+   KtjvMq+RYIRveDJ/Igt0fQr1xU1FuiEslMpHX2SGZDqPOcJtgx3ZKlhyc
+   Wr4SCDMnhl+Ocrv5o1x9r3ufiz5ELAVvsuYSdRP1ggW2QGxgCd9T73W/B
+   Um+Zll7BZInDgmYV0egt1+SCcg8k2hP/M9S+uXA0sDUCgLZOuSh+H5Twu
+   h6HLfzF5kVEcee2M//547/cIWOCYl3AZZDVI6jvVMmRzH9T+J6eVpuV5V
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="5842875"
+X-IronPort-AV: E=Sophos;i="6.07,137,1708416000"; 
+   d="scan'208";a="5842875"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 06:05:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,137,1708416000"; 
+   d="scan'208";a="44883155"
+Received: from inlubt0316.iind.intel.com ([10.191.20.213])
+  by fmviesa001.fm.intel.com with ESMTP; 19 Mar 2024 06:05:48 -0700
+From: lakshmi.sowjanya.d@intel.com
+To: tglx@linutronix.de,
+	jstultz@google.com,
+	giometti@enneenne.com,
+	corbet@lwn.net,
+	linux-kernel@vger.kernel.org
+Cc: x86@kernel.org,
+	netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	andriy.shevchenko@linux.intel.com,
+	eddie.dong@intel.com,
+	christopher.s.hall@intel.com,
+	jesse.brandeburg@intel.com,
+	davem@davemloft.net,
+	alexandre.torgue@foss.st.com,
+	joabreu@synopsys.com,
+	mcoquelin.stm32@gmail.com,
+	perex@perex.cz,
+	linux-sound@vger.kernel.org,
+	anthony.l.nguyen@intel.com,
+	peter.hilber@opensynergy.com,
+	pandith.n@intel.com,
+	mallikarjunappa.sangannavar@intel.com,
+	subramanian.mohan@intel.com,
+	basavaraj.goudar@intel.com,
+	thejesh.reddy.t.r@intel.com,
+	lakshmi.sowjanya.d@intel.com
+Subject: [PATCH v5 00/11] Add support for Intel PPS Generator
+Date: Tue, 19 Mar 2024 18:35:36 +0530
+Message-Id: <20240319130547.4195-1-lakshmi.sowjanya.d@intel.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.8.15_GA_4581 (ZimbraWebClient - FF120 (Linux)/8.8.15_GA_4581)
-Thread-Topic: fpga: xilinx-selectmap: add new driver
-Thread-Index: 0HF96KxB+j7D1rBnTxEW357y9Tr3RQ==
+Content-Transfer-Encoding: 8bit
 
+From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
 
-On Mar 19, 2024, at 2:35 AM, Xu Yilun yilun.xu@linux.intel.com wrote:
-> On Wed, Mar 13, 2024 at 06:57:37PM -0400, Charles Perry wrote:
->> Xilinx 7 series FPGA can be programmed using a parallel port named
->> the SelectMAP interface in the datasheet. This interface is compatible
->> with the i.MX6 EIM bus controller but other types of external memory
->> mapped parallel bus might work.
->> 
->> xilinx-selectmap currently only supports the x8 mode where data is loaded
->> at one byte per rising edge of the clock, with the MSb of each byte
->> presented to the D0 pin.
->> 
->> Signed-off-by: Charles Perry <charles.perry@savoirfairelinux.com>
->> ---
->> Changes since v4: (from Yilun review)
->>  * xilinx-core: select between prog/init and prog_b/init-b
->> 
->>  drivers/fpga/Kconfig            |  8 +++
->>  drivers/fpga/Makefile           |  1 +
->>  drivers/fpga/xilinx-core.c      | 29 +++++++++-
->>  drivers/fpga/xilinx-selectmap.c | 97 +++++++++++++++++++++++++++++++++
->>  4 files changed, 133 insertions(+), 2 deletions(-)
->>  create mode 100644 drivers/fpga/xilinx-selectmap.c
->> 
->> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
->> index d27a1ebf40838..37b35f58f0dfb 100644
->> --- a/drivers/fpga/Kconfig
->> +++ b/drivers/fpga/Kconfig
->> @@ -67,6 +67,14 @@ config FPGA_MGR_STRATIX10_SOC
->>  config FPGA_MGR_XILINX_CORE
->>  	tristate
->> 
->> +config FPGA_MGR_XILINX_SELECTMAP
->> +	tristate "Xilinx Configuration over SelectMAP"
->> +	depends on HAS_IOMEM
->> +	select FPGA_MGR_XILINX_CORE
->> +	help
->> +	  FPGA manager driver support for Xilinx FPGA configuration
->> +	  over SelectMAP interface.
->> +
->>  config FPGA_MGR_XILINX_SPI
->>  	tristate "Xilinx Configuration over Slave Serial (SPI)"
->>  	depends on SPI
->> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
->> index 7ec795b6a5a70..aeb89bb13517e 100644
->> --- a/drivers/fpga/Makefile
->> +++ b/drivers/fpga/Makefile
->> @@ -16,6 +16,7 @@ obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)	+= socfpga-a10.o
->>  obj-$(CONFIG_FPGA_MGR_STRATIX10_SOC)	+= stratix10-soc.o
->>  obj-$(CONFIG_FPGA_MGR_TS73XX)		+= ts73xx-fpga.o
->>  obj-$(CONFIG_FPGA_MGR_XILINX_CORE)	+= xilinx-core.o
->> +obj-$(CONFIG_FPGA_MGR_XILINX_SELECTMAP)	+= xilinx-selectmap.o
->>  obj-$(CONFIG_FPGA_MGR_XILINX_SPI)	+= xilinx-spi.o
->>  obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+= zynq-fpga.o
->>  obj-$(CONFIG_FPGA_MGR_ZYNQMP_FPGA)	+= zynqmp-fpga.o
->> diff --git a/drivers/fpga/xilinx-core.c b/drivers/fpga/xilinx-core.c
->> index a35c43382dd5f..ccdeb45eba4ee 100644
->> --- a/drivers/fpga/xilinx-core.c
->> +++ b/drivers/fpga/xilinx-core.c
->> @@ -171,6 +171,29 @@ static int xilinx_core_write_complete(struct fpga_manager
->> *mgr,
->>  	return -ETIMEDOUT;
->>  }
->> 
->> +/**
->> + * xilinx_core_devm_gpiod_get - Obtain a resource-managed GPIO using a
->> + *                              legacy consumer name fallback.
->> + *
->> + * @dev:           Device managing the GPIO
->> + * @con_id:        Consumer id
->> + * @legacy_con_id: Legacy consumer id
->> + * @flags:         optional GPIO initialization flags
->> + */
-> 
-> No need to have kernel doc comments for internal functions.
-> 
+The goal of the PPS(Pulse Per Second) hardware/software is to generate a
+signal from the system on a wire so that some third-party hardware can
+observe that signal and judge how close the system's time is to another
+system or piece of hardware.
 
-Ok, will remove.
+Existing methods (like parallel ports) require software to flip a bit at
+just the right time to create a PPS signal. Many things can prevent
+software from doing this precisely. This (Timed I/O) method is better
+because software only "arms" the hardware in advance and then depends on
+the hardware to "fire" and flip the signal at just the right time.
 
->> +static inline struct gpio_desc *
->> +xilinx_core_devm_gpiod_get(struct device *dev, const char *con_id,
->> +			   const char *legacy_con_id, enum gpiod_flags flags)
->> +{
->> +	struct gpio_desc *desc;
->> +
->> +	desc = devm_gpiod_get(dev, con_id, flags);
->> +	if (IS_ERR(desc) && PTR_ERR(desc) == -ENOENT &&
->> +	    of_device_is_compatible(dev->of_node, "xlnx,fpga-slave-serial"))
->> +		desc = devm_gpiod_get(dev, legacy_con_id, flags);
->> +
->> +	return desc;
->> +}
->> +
->>  static const struct fpga_manager_ops xilinx_core_ops = {
->>  	.state = xilinx_core_state,
->>  	.write_init = xilinx_core_write_init,
->> @@ -186,12 +209,14 @@ int xilinx_core_probe(struct xilinx_fpga_core *core)
->>  		return -EINVAL;
->> 
->>  	/* PROGRAM_B is active low */
->> -	core->prog_b = devm_gpiod_get(core->dev, "prog_b", GPIOD_OUT_LOW);
->> +	core->prog_b = xilinx_core_devm_gpiod_get(core->dev, "prog", "prog_b",
->> +						  GPIOD_OUT_LOW);
->>  	if (IS_ERR(core->prog_b))
->>  		return dev_err_probe(core->dev, PTR_ERR(core->prog_b),
->>  				     "Failed to get PROGRAM_B gpio\n");
->> 
->> -	core->init_b = devm_gpiod_get_optional(core->dev, "init-b", GPIOD_IN);
->> +	core->init_b = xilinx_core_devm_gpiod_get(core->dev, "init", "init-b",
->> +						  GPIOD_IN);
->>  	if (IS_ERR(core->init_b))
->>  		return dev_err_probe(core->dev, PTR_ERR(core->init_b),
->>  				     "Failed to get INIT_B gpio\n");
-> 
-> Please make a separate patch for the naming change. This give a chance
-> to explain why the change and how to correctly use the GPIO names.
-> 
+To generate a PPS signal with this new hardware, the kernel wakes up
+twice a second, once for 1->0 edge and other for the 0->1 edge. It does
+this shortly (~10ms) before the actual change in the signal needs to be
+made. It computes the TSC value at which edge will happen, convert to a
+value hardware understands and program this value to Timed I/O hardware.
+The actual edge transition happens without any further action from the
+kernel.
 
-Ok
+The result here is a signal coming out of the system that is roughly
+1,000 times more accurate than the old methods. If the system is heavily
+loaded, the difference in accuracy is larger in old methods.
 
->> diff --git a/drivers/fpga/xilinx-selectmap.c b/drivers/fpga/xilinx-selectmap.c
->> new file mode 100644
->> index 0000000000000..b63f4623f8b2c
->> --- /dev/null
->> +++ b/drivers/fpga/xilinx-selectmap.c
->> @@ -0,0 +1,97 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Xilinx Spartan6 and 7 Series SelectMAP interface driver
->> + *
->> + * (C) 2024 Charles Perry <charles.perry@savoirfairelinux.com>
->> + *
->> + * Manage Xilinx FPGA firmware loaded over the SelectMAP configuration
->> + * interface.
->> + */
->> +
->> +#include "xilinx-core.h"
->> +
->> +#include <linux/platform_device.h>
->> +#include <linux/gpio/consumer.h>
->> +#include <linux/module.h>
->> +#include <linux/mod_devicetable.h>
->> +#include <linux/of.h>
->> +#include <linux/io.h>
-> 
-> alphabetical order please.
-> 
+Application Interface:
+The API to use Timed I/O is very simple. It is enabled and disabled by
+writing a '1' or '0' value to the sysfs enable attribute associated with
+the Timed I/O PPS device. Each Timed I/O pin is represented by a PPS
+device. When enabled, a pulse-per-second(PPS) synchronized with the
+system clock is continuously produced on the Timed I/O pin, otherwise it
+is pulled low.
 
-Ok
+The Timed I/O signal on the motherboard is enabled in the BIOS setup.
 
->> +
->> +struct xilinx_selectmap_conf {
->> +	struct xilinx_fpga_core core;
->> +	void __iomem *base;
->> +};
->> +
->> +#define to_xilinx_selectmap_conf(obj) \
->> +	container_of(obj, struct xilinx_selectmap_conf, core)
->> +
->> +static int xilinx_selectmap_write(struct xilinx_fpga_core *core,
->> +				  const char *buf, size_t count)
->> +{
->> +	struct xilinx_selectmap_conf *conf = to_xilinx_selectmap_conf(core);
->> +	u32 i;
->> +
->> +	for (i = 0; i < count; ++i)
->> +		writeb(buf[i], conf->base);
->> +
->> +	return 0;
->> +}
->> +
->> +static int xilinx_selectmap_probe(struct platform_device *pdev)
->> +{
->> +	struct xilinx_selectmap_conf *conf;
->> +	struct resource *r;
->> +	void __iomem *base;
->> +	struct gpio_desc *csi_b;
->> +	struct gpio_desc *rdwr_b;
-> 
-> One gpio_desc is enough, is it?  We don't use these gpio_desc anywhere
-> else.
-> 
+References:
+https://en.wikipedia.org/wiki/Pulse-per-second_signal
+https://drive.google.com/file/d/1vkBRRDuELmY8I3FlfOZaEBp-DxLW6t_V/view
+https://youtu.be/JLUTT-lrDqw
 
-Ok
+Patch 1 adds base clock properties in clocksource structure
+Patch 2 adds function to convert realtime to base clock
+Patch 3 - 7 removes reference to convert_art_to_tsc function across
+drivers
+Patch 8 removes the convert art to tsc functions which are no longer
+used
+Patch 9 adds the pps(pulse per second) generator tio driver to the pps
+subsystem.
+Patch 10 documentation and usage of the pps tio generator module.
+Patch 11 includes documentation for sysfs interface. 
 
-> BTW, reverse Xmas tree is not strictly required, but please do it when it is
-> easy to follow.
->
+Please help to review the changes.
 
-Ok
- 
->> +
->> +	conf = devm_kzalloc(&pdev->dev, sizeof(*conf), GFP_KERNEL);
->> +	if (!conf)
->> +		return -ENOMEM;
->> +
->> +	conf->core.dev = &pdev->dev;
->> +	conf->core.write = xilinx_selectmap_write;
->> +
->> +	base = devm_platform_get_and_ioremap_resource(pdev, 0, &r);
-> 
-> I can't find where 'r' is used.
-> 
-> Thanks,
-> Yilun
-> 
+Thanks in advance,
+Sowjanya
 
-I'm guilty of keeping things around in case I need them in the future
-here! Ok, will use NULL.
+Changes from v2:
+ - Split patch 1 to remove the functions in later stages.
+ - Include required headers in pps_gen_tio.
 
-Regards,
-Charles
+Changes from v3:
+ - Corrections in Documentation.
+ - Introducing non-RFC version of the patch series.
 
->> +	if (IS_ERR(base))
->> +		return dev_err_probe(&pdev->dev, PTR_ERR(base),
->> +				     "ioremap error\n");
->> +	conf->base = base;
->> +
->> +	/* CSI_B is active low */
->> +	csi_b = devm_gpiod_get_optional(&pdev->dev, "csi", GPIOD_OUT_HIGH);
->> +	if (IS_ERR(csi_b))
->> +		return dev_err_probe(&pdev->dev, PTR_ERR(csi_b),
->> +				     "Failed to get CSI_B gpio\n");
->> +
->> +	/* RDWR_B is active low */
->> +	rdwr_b = devm_gpiod_get_optional(&pdev->dev, "rdwr", GPIOD_OUT_HIGH);
->> +	if (IS_ERR(rdwr_b))
->> +		return dev_err_probe(&pdev->dev, PTR_ERR(rdwr_b),
->> +				     "Failed to get RDWR_B gpio\n");
->> +
->> +	return xilinx_core_probe(&conf->core);
->> +}
->> +
->> +static const struct of_device_id xlnx_selectmap_of_match[] = {
->> +	{ .compatible = "xlnx,fpga-xc7s-selectmap", }, // Spartan-7
->> +	{ .compatible = "xlnx,fpga-xc7a-selectmap", }, // Artix-7
->> +	{ .compatible = "xlnx,fpga-xc7k-selectmap", }, // Kintex-7
->> +	{ .compatible = "xlnx,fpga-xc7v-selectmap", }, // Virtex-7
->> +	{},
->> +};
->> +MODULE_DEVICE_TABLE(of, xlnx_selectmap_of_match);
->> +
->> +static struct platform_driver xilinx_selectmap_driver = {
->> +	.driver = {
->> +		.name = "xilinx-selectmap",
->> +		.of_match_table = xlnx_selectmap_of_match,
->> +	},
->> +	.probe  = xilinx_selectmap_probe,
->> +};
->> +
->> +module_platform_driver(xilinx_selectmap_driver);
->> +
->> +MODULE_LICENSE("GPL");
->> +MODULE_AUTHOR("Charles Perry <charles.perry@savoirfairelinux.com>");
->> +MODULE_DESCRIPTION("Load Xilinx FPGA firmware over SelectMap");
->> --
->> 2.43.0
+Changes from v4:
+ - Setting id in ice_ptp
+ - Modified conversion logic in convert_base_to_cs.
+ - Included the usage of the APIs in the commit message of 2nd patch.
+
+Lakshmi Sowjanya D (6):
+  x86/tsc: Add base clock properties in clocksource structure
+  timekeeping: Add function to convert realtime to base clock
+  x86/tsc: Remove art to tsc conversion functions which are obsolete
+  pps: generators: Add PPS Generator TIO Driver
+  Documentation: driver-api: pps: Add Intel Timed I/O PPS generator
+  ABI: pps: Add ABI documentation for Intel TIO
+
+Thomas Gleixner (5):
+  e1000e: remove convert_art_to_tsc()
+  igc: remove convert_art_to_tsc()
+  stmmac: intel: remove convert_art_to_tsc()
+  ALSA: hda: remove convert_art_to_tsc()
+  ice/ptp: remove convert_art_to_tsc()
+
+ .../ABI/testing/sysfs-platform-pps-tio        |   7 +
+ Documentation/driver-api/pps.rst              |  22 ++
+ arch/x86/include/asm/tsc.h                    |   3 -
+ arch/x86/kernel/tsc.c                         |  92 ++-----
+ drivers/net/ethernet/intel/e1000e/ptp.c       |   3 +-
+ drivers/net/ethernet/intel/ice/ice_ptp.c      |   3 +-
+ drivers/net/ethernet/intel/igc/igc_ptp.c      |   6 +-
+ .../net/ethernet/stmicro/stmmac/dwmac-intel.c |   3 +-
+ drivers/pps/generators/Kconfig                |  16 ++
+ drivers/pps/generators/Makefile               |   1 +
+ drivers/pps/generators/pps_gen_tio.c          | 245 ++++++++++++++++++
+ include/linux/clocksource.h                   |  27 ++
+ include/linux/clocksource_ids.h               |   1 +
+ include/linux/timekeeping.h                   |   6 +
+ kernel/time/timekeeping.c                     | 105 +++++++-
+ sound/pci/hda/hda_controller.c                |   3 +-
+ 16 files changed, 460 insertions(+), 83 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-pps-tio
+ create mode 100644 drivers/pps/generators/pps_gen_tio.c
+
+-- 
+2.35.3
+
