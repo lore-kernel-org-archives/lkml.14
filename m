@@ -1,32 +1,32 @@
-Received: from out-176.mta0.migadu.com (out-176.mta0.migadu.com [91.218.175.176])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF6E5FB97
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 22:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573325FDB0
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 22:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710888705; cv=none; b=HmEEt+JNCTrACBzem133k/WpYXpR8MewwcJ9Q/VKXL1sOV0Dgu8YH851E/3FLtfpACANiMXWkSIJhOz76PlopFvGZQVHLxwukDP0CM1kcjOSmNXkd88Kh48ImLoKYaWoMZt3p6Fw/H644JvLzZQ7+JKQ3IFLX37UzFYXoZ3yA3A=
+	t=1710888708; cv=none; b=Rjq9GuxXDtw6MFKi4wQQj9zEn3eG6ov2LQaYeaLH5Eu6LZHQZvz6iwPZWA7MiY/Lal/89nvsgVQ04Un9Nv3UEUG2vB/y6k2RnTCL88LimYHaNUC8p6nJh25EV6ss4bSTFuIAYHnaJui9cEsLDWmml11K5W1RX71mEl7BvMaSMWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710888705; c=relaxed/simple;
-	bh=MWuTKfjHkHaCEukGyzuOT0/yJ2QmwbAVkuQmjpVP8YU=;
+	s=arc-20240116; t=1710888708; c=relaxed/simple;
+	bh=A9tHoVn2DwQtqBrXofHm2LX1eAtW/NBYudaDgbbXUzI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uILqeZ6AjKFK0zJU80p5mCaMF3AzzWMljOMCBYyJEJfdZb7ORyG+54u2G3b3fKvMg3ZBeNiraKcUIXmhcHQgshtjWBB6VBw3U2Yseq/nzH7vWJgUtT0HIsnnrDjFAZUd7IfCb6fJpAVmxrIVlW+RoYqFO/z4vshood5WDBKFr/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LN8mrOGd; arc=none smtp.client-ip=91.218.175.176
+	 MIME-Version; b=aEZtWX4536KqFezFx0JKS9a6q1v6toJ0oHJG8Od919wWq7nIvU49ih4E/pUBY5ksdR24tJtjQldw4QsTw08RB5hhHNbp0ellt6Udoy5iTChKon8nG5lFRuSRx8OQnIDI9lbfKefSYU175v652IEn/IT4HiGS8lY/9pRgDLUoNPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=seV259zX; arc=none smtp.client-ip=91.218.175.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LN8mrOGd"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="seV259zX"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1710888702;
+	t=1710888704;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=U6urapeaZnHdW/DTzeHEHFd6f+TsIuajmiHq4Eb1FjY=;
-	b=LN8mrOGdATpuIA+XTvh2wePemRSNcyWEJNCGn+sZpgJEsunJhvJDNJukRMB2ru8j/QBufY
-	YiswVT4xw+wAzZencVWtu2RBLy8YbBprJPHn/MNxZ8NK6uxX6ZAG+XiS+29JjbAV5jeAx8
-	p/T1eE95awqHrt34Vq1WgHpqYtySunE=
+	bh=22MOrFn6Jv82M2hVwDO7x3NptrRxbkjYXXxqCJWSeQI=;
+	b=seV259zXIx8RJKOwI0MDotOAEjzP+juNH/bWlbGRbh6ap4CtCnQrsUaDJ0ZK1LsqzBNAjV
+	6R1oP+eSNpNZLP01oqbjLCeskK14c85TKt04yQs3Ty35D1obgsbYQjK5Kf7tzGpZDZXMIB
+	NJlDPtthqS4EwUN/yPCjp9AFNyIC8WU=
 From: Sean Anderson <sean.anderson@linux.dev>
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
 	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
@@ -39,9 +39,9 @@ Cc: Michal Simek <michal.simek@amd.com>,
 	Daniel Vetter <daniel@ffwll.ch>,
 	linux-arm-kernel@lists.infradead.org,
 	Sean Anderson <sean.anderson@linux.dev>
-Subject: [PATCH v2 3/8] drm: zynqmp_dp: Adjust training values per-lane
-Date: Tue, 19 Mar 2024 18:51:16 -0400
-Message-Id: <20240319225122.3048400-4-sean.anderson@linux.dev>
+Subject: [PATCH v2 4/8] drm: zynqmp_dp: Rearrange zynqmp_dp for better padding
+Date: Tue, 19 Mar 2024 18:51:17 -0400
+Message-Id: <20240319225122.3048400-5-sean.anderson@linux.dev>
 In-Reply-To: <20240319225122.3048400-1-sean.anderson@linux.dev>
 References: <20240319225122.3048400-1-sean.anderson@linux.dev>
 Precedence: bulk
@@ -53,59 +53,75 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-The feedback we get from the DPRX is per-lane. Make changes using this
-information, instead of picking the maximum values from all lanes. This
-results in more-consistent training on marginal links.
+Sort the members of struct zynqmp_dp to reduce padding necessary for
+alignment.
 
 Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
 ---
 
-(no changes since v1)
+Changes in v2:
+- New
 
- drivers/gpu/drm/xlnx/zynqmp_dp.c | 23 ++++++++---------------
- 1 file changed, 8 insertions(+), 15 deletions(-)
+ drivers/gpu/drm/xlnx/zynqmp_dp.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-index 98a32e6a0459..8635b5673386 100644
+index 8635b5673386..f1834c8e3c02 100644
 --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
 +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-@@ -605,28 +605,21 @@ static void zynqmp_dp_adjust_train(struct zynqmp_dp *dp,
- 				   u8 link_status[DP_LINK_STATUS_SIZE])
- {
- 	u8 *train_set = dp->train_set;
--	u8 voltage = 0, preemphasis = 0;
- 	u8 i;
- 
- 	for (i = 0; i < dp->mode.lane_cnt; i++) {
--		u8 v = drm_dp_get_adjust_request_voltage(link_status, i);
--		u8 p = drm_dp_get_adjust_request_pre_emphasis(link_status, i);
-+		u8 voltage = drm_dp_get_adjust_request_voltage(link_status, i);
-+		u8 preemphasis =
-+			drm_dp_get_adjust_request_pre_emphasis(link_status, i);
- 
--		if (v > voltage)
--			voltage = v;
-+		if (voltage >= DP_TRAIN_VOLTAGE_SWING_LEVEL_3)
-+			voltage |= DP_TRAIN_MAX_SWING_REACHED;
- 
--		if (p > preemphasis)
--			preemphasis = p;
--	}
-+		if (preemphasis >= DP_TRAIN_PRE_EMPH_LEVEL_2)
-+			preemphasis |= DP_TRAIN_MAX_PRE_EMPHASIS_REACHED;
- 
--	if (voltage >= DP_TRAIN_VOLTAGE_SWING_LEVEL_3)
--		voltage |= DP_TRAIN_MAX_SWING_REACHED;
--
--	if (preemphasis >= DP_TRAIN_PRE_EMPH_LEVEL_2)
--		preemphasis |= DP_TRAIN_MAX_PRE_EMPHASIS_REACHED;
--
--	for (i = 0; i < dp->mode.lane_cnt; i++)
- 		train_set[i] = voltage | preemphasis;
-+	}
- }
+@@ -255,10 +255,10 @@ struct zynqmp_dp_link_config {
+  * @fmt: format identifier string
+  */
+ struct zynqmp_dp_mode {
+-	u8 bw_code;
+-	u8 lane_cnt;
+-	int pclock;
+ 	const char *fmt;
++	int pclock;
++	u8 bw_code;
++	u8 lane_cnt;
+ };
  
  /**
+@@ -295,27 +295,27 @@ struct zynqmp_dp_config {
+  * @train_set: set of training data
+  */
+ struct zynqmp_dp {
++	struct drm_dp_aux aux;
++	struct drm_bridge bridge;
++	struct delayed_work hpd_work;
++
++	struct drm_bridge *next_bridge;
+ 	struct device *dev;
+ 	struct zynqmp_dpsub *dpsub;
+ 	void __iomem *iomem;
+ 	struct reset_control *reset;
+-	int irq;
+-
+-	struct drm_bridge bridge;
+-	struct drm_bridge *next_bridge;
+-
+-	struct zynqmp_dp_config config;
+-	struct drm_dp_aux aux;
+ 	struct phy *phy[ZYNQMP_DP_MAX_LANES];
+-	u8 num_lanes;
+-	struct delayed_work hpd_work;
++
+ 	enum drm_connector_status status;
++	int irq;
+ 	bool enabled;
+ 
+-	u8 dpcd[DP_RECEIVER_CAP_SIZE];
+-	struct zynqmp_dp_link_config link_config;
+ 	struct zynqmp_dp_mode mode;
++	struct zynqmp_dp_link_config link_config;
++	struct zynqmp_dp_config config;
++	u8 dpcd[DP_RECEIVER_CAP_SIZE];
+ 	u8 train_set[ZYNQMP_DP_MAX_LANES];
++	u8 num_lanes;
+ };
+ 
+ static inline struct zynqmp_dp *bridge_to_dp(struct drm_bridge *bridge)
 -- 
 2.35.1.1320.gc452695387.dirty
 
