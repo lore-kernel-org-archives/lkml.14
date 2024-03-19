@@ -1,154 +1,82 @@
-Received: from out203-205-221-153.mail.qq.com (out203-205-221-153.mail.qq.com [203.205.221.153])
+Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5CF57F7F6
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 16:03:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01FD651BE;
+	Tue, 19 Mar 2024 16:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710864215; cv=none; b=qXyRqVoPsYnpBtLD9W48oimDsFDxjn7H1voxRa56gWaa+IC+Bydgo24n5i8i6relsLhVyRZs1cPG0rPqwFCKxXAqBtM8mwYQKjlA/UcpXx09Q3AxhsbT0B8QtwN5lRzYG5zlJBJ793ClrlDQXZqw0FmLrIk++8j3yCXNru7A1dg=
+	t=1710864240; cv=none; b=rkrLrW4yvMF2vvckJKbWvBAcjW5Xlcqs+WoaYIw9ur+26H2nQoEQuMEkDL4A1YwN/A0F3SVuhcZuo732QBh+J71ACBS6ZasbFc6eutuleo2PCipgWmWCL5nTecEtWVOEfTAmXt+6VBobhVizUmVPReyPra2bgomxyc/5akJJ7Qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710864215; c=relaxed/simple;
-	bh=zlIWbJfvd/AikIfWNp9cyeVLD3JixwOsMUEl/SMnHHQ=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=oBQWrcY35hkYJz1kQW5pPkoMTYOtHnKDNkYqRATXCelFv13hs1bzPkREB5zMaQxNwJ9KNPzcHbk66MHlZ4EELsHEijJGQ9Rh0c7miJ8T91rZAlddTaIOEvsGcvTwNdqq4CT6TEd/j32vO1ESaF/fQFMoNI0ouTggRsUynY3wqcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=mz/QiRN7; arc=none smtp.client-ip=203.205.221.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1710864240; c=relaxed/simple;
+	bh=CEUhq594SW1Z9wHf3qYoTJ70gFZ0XXHV/NW7y+d4pYQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GEl3ZOwfEzTQFosArQnqegSGMA1uOExUSeXFv0aYNCsPfZcEOn1xB4JpJfjAclZKQlj1pJkvIxfC8JTBtyw0VxQgdYo6hHpqmMSsOhzygfNWLKcFRnJegI0pK3sn7Kt+w8agGO4tr289MZ70VjQgCAKJMdL60xz7fq4bw4V7nRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=1GD/VRLI; arc=none smtp.client-ip=199.89.1.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="mz/QiRN7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1710863903;
-	bh=DxyBLVjpfnxukK2thKG7gUTZdlVeeTVCdm35Y9whOV0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=mz/QiRN7s6y/Lf6Mm6oG51tmrhyHAiPT7h3siBJefm68lHndDrdWDZHyIA+vh7ZqG
-	 1AaWcGap3LYgp10HmYDcZHna9alpHd9YnFsdnEKc8qdnuTbNAo435N2tC9XkE+o3nq
-	 2+cHbJNECPKdoK7q7cXBSknOgkI+V8soYVMO7Nus=
-Received: from localhost.localdomain ([2409:8a60:2a60:b160:1774:d6f7:f5f5:b6a])
-	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
-	id E8996A1C; Tue, 19 Mar 2024 23:58:09 +0800
-X-QQ-mid: xmsmtpt1710863900t5klrhap6
-Message-ID: <tencent_DEA0A6C9C1F45C66383FB767F7AA51EAB207@qq.com>
-X-QQ-XMAILINFO: OKkKo7I1HxIeXwUCIYCfOd/G1JlnjD4TgMrZMOYcFdH1tKXQYmhKfBMTcd5lEN
-	 9TdqBn10jBOi3VcLRXl7cvoDgN3o4Yf399DsesGneh816IEc8l6dXMVDuraoin+DvZHThC5qNiem
-	 3XHvH0HTEM/0VmM2SB5RLHQcQklG+6v0O/9tx4M3naDGnr4SokDzv+SGnzkoJXhmoOobCBC1+GVQ
-	 KziTQi01mEOwGOVMt1sHF7L6JA64lZkXTpGZpdOTFpLCPZ1IZ6Ta9gNWhQGvWC32SVluyUIXe4D+
-	 YFK49Z4jGgIdmg8HJ7+TYZFAaZLvLUSTsfWGIPBcbbGx6gO9pgqqcIlaJ/1idrFTKyRsS4WcCAkX
-	 vZKvQGVK2+2efTHtBNR9lGMjJ5WYAPdEdxtlUYxOHFppz3U+ebmtpjFrVo5QmdwWk9ApDocR2FPT
-	 JfyktK2nYvyQGXD4O3C0cg7/xz1WvyvbbfK52+6kPC7xUJaMIXBmoxs45Lh8acl9ZDIxKFTZ2+iw
-	 8WF9IxqMM96G8apgSTcP1xRDmiwquTyLMV3dmtDYhLY5t8KCPeixKv5ZrIVUrUabDA0KhTd3gTaq
-	 ViWhAhNsnSpGGkwz9UKITy0xU60d9UOJ8m8u6uaL6HLT7F2nT2eNhmsjHyZF0qSQXlkL9Sa6/4SE
-	 /PfSfeEf+XHPK2QAZ2GQ5a072J9XyKIgkQGU+3AJLBdUG1lTSoTVwd+iUgLtRzT1mUHj+DHG9Pkw
-	 XiZMq7mtGwIBshr7xbiRjmLTobFts0dz37jaEYAhrLJgfWUUcPtz6WA9pnJrhZegc3uO+JN/LPvn
-	 05j6poogk6dhH45P5BaJ2NiOf+SyK/sZAg/482to+8Cas0eXuRT6N2++y64OjZf+0arjfNFTpaix
-	 0axs3GnfhLNaLpIDu84/CBn4NbhiijyYuz02AHkRJY3SJ2qBQWuORlLGpA3+daY0O8Q4nPU69G39
-	 nDQXrItl1m9p3XKwqd210TCeeusU11PLwrGg6eZRR9yA62nMWCfZSswBl1ZLf96x8mziuqVfo7XF
-	 Yez7sVgtq2tU3KGtRgzKY2i/nCAvN9BS9mJYlDWrQ4zHILOuIeKEIsnJ01y+E=
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: wenyang.linux@foxmail.com
-To: "Eric W . Biederman" <ebiederm@xmission.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Joel Granados <j.granados@samsung.com>,
-	Christian Brauner <brauner@kernel.org>
-Cc: Dave Young <dyoung@redhat.com>,
-	Wen Yang <wenyang.linux@foxmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH v2 5/9] svcrdma: delete these unnecessary static variables min_ord, max_ord, etc
-Date: Tue, 19 Mar 2024 23:57:46 +0800
-X-OQ-MSGID: <9ff013657a6ed7ad81d7b99c7b0e03d54577f315.1710863674.git.wenyang.linux@foxmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <26c450f6467b4cbaf94cdb10f047abc6ab0c2a5d.1710863674.git.wenyang.linux@foxmail.com>
-References: <26c450f6467b4cbaf94cdb10f047abc6ab0c2a5d.1710863674.git.wenyang.linux@foxmail.com>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="1GD/VRLI"
+Received: from localhost (localhost [127.0.0.1])
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4Tzc3D2nP7z6Cnk8y;
+	Tue, 19 Mar 2024 16:03:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:references:content-language:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1710864229; x=1713456230; bh=eS0GccxVXWypqUcgMEYj0E+W
+	EKgYMi2i2cBpKDqor1Y=; b=1GD/VRLIz8hJStZSXeXadtBmzhDOchXyKzRp3CJ6
+	homyFeEjoIlh8ztTY0SlA0u2gFi/eIut8oAM5LKT7I9zmKPS2WLGb98Pte1N2wZH
+	OsOK5eNRDehPTPcworC2UL2sEpJObmbkU3KLpg0MYcwsTEOkS1E1pyYit8CtT/Gr
+	8OcxuKRM/UdxIiHbd+3XfaYnuVj1O37HInp4nTGf2ExFSbgVRkltofgxko1UgfBz
+	rBcZRPpnkn5stjJYOHfHDW9QWEJM1G3Fcnqo7SKo3BE0YGHGD/FhcWsKsC5H8j1o
+	vae1oJA5MAZ7WCKtgad/q35lGWzuyqwpeeWVHk2sJvpYyw==
+X-Virus-Scanned: by MailRoute
+Received: from 008.lax.mailroute.net ([127.0.0.1])
+ by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id L_Mqn8hu0QZA; Tue, 19 Mar 2024 16:03:49 +0000 (UTC)
+Received: from [192.168.51.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4Tzc3771Nhz6Cnk8t;
+	Tue, 19 Mar 2024 16:03:47 +0000 (UTC)
+Message-ID: <d1a1b0b8-41f1-4ead-b393-d8d2f099b0c4@acm.org>
+Date: Tue, 19 Mar 2024 09:03:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] scsi: core: Make scsi_lib KUnit tests modular for real
+Content-Language: en-US
+To: Geert Uytterhoeven <geert@linux-m68k.org>,
+ Mike Christie <michael.christie@oracle.com>,
+ "James E . J . Bottomley" <jejb@linux.ibm.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>,
+ Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <48ca5e827ca420bbdbabb1643e2179dc95c9e0b7.1710849638.git.geert@linux-m68k.org>
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <48ca5e827ca420bbdbabb1643e2179dc95c9e0b7.1710849638.git.geert@linux-m68k.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Wen Yang <wenyang.linux@foxmail.com>
+On 3/19/24 05:02, Geert Uytterhoeven wrote:
+> While SCSI_LIB_KUNIT_TEST is a tristate config symbol, configuring a
+> modular build of this test does not do anything: as the test code is
+> just included by the mid layer code, it only works in the built-in case.
+> 
+> Fix this by converting the test to a stand-alone module.  This requires
+> exporting scsi_check_passthrough() and adding a MODULE_LICENSE() tag.
 
-Delete unnecessary static variables (min_ord, max_ord, etc.)
-and encode them directly in the table entry.
+I don't like it that scsi_check_passthrough() is exported so that counts
+as a disadvantage of this patch. Why to convert scsi_lib_test into a
+kernel module? What are the advantages compared to the current approach?
+That information is missing from the patch description.
 
-Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Joel Granados <j.granados@samsung.com>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: David Ahern <dsahern@kernel.org>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: linux-kernel@vger.kernel.org
----
- net/sunrpc/xprtrdma/svc_rdma.c | 21 +++++++++------------
- 1 file changed, 9 insertions(+), 12 deletions(-)
+Thanks,
 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma.c b/net/sunrpc/xprtrdma/svc_rdma.c
-index f86970733eb0..98cde9c2bf5a 100644
---- a/net/sunrpc/xprtrdma/svc_rdma.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma.c
-@@ -53,15 +53,9 @@
- 
- /* RPC/RDMA parameters */
- unsigned int svcrdma_ord = 16;	/* historical default */
--static unsigned int min_ord = 1;
--static unsigned int max_ord = 255;
- unsigned int svcrdma_max_requests = RPCRDMA_MAX_REQUESTS;
- unsigned int svcrdma_max_bc_requests = RPCRDMA_MAX_BC_REQUESTS;
--static unsigned int min_max_requests = 4;
--static unsigned int max_max_requests = 16384;
- unsigned int svcrdma_max_req_size = RPCRDMA_DEF_INLINE_THRESH;
--static unsigned int min_max_inline = RPCRDMA_DEF_INLINE_THRESH;
--static unsigned int max_max_inline = RPCRDMA_MAX_INLINE_THRESH;
- static unsigned int svcrdma_stat_unused;
- static unsigned int zero;
- 
-@@ -114,8 +108,9 @@ static struct ctl_table svcrdma_parm_table[] = {
- 		.maxlen		= sizeof(unsigned int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= &min_max_requests,
--		.extra2		= &max_max_requests
-+		.min		= SYSCTL_NUMERIC_FOUR,
-+		.max		= SYSCTL_NUMERIC_16K,
-+		.extra_flags	= SYSCTL_TABLE_EXTRA_LONG_INIT_MINMAX,
- 	},
- 	{
- 		.procname	= "max_req_size",
-@@ -123,8 +118,9 @@ static struct ctl_table svcrdma_parm_table[] = {
- 		.maxlen		= sizeof(unsigned int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= &min_max_inline,
--		.extra2		= &max_max_inline
-+		.min		= RPCRDMA_DEF_INLINE_THRESH,
-+		.max		= RPCRDMA_MAX_INLINE_THRESH,
-+		.extra_flags	= SYSCTL_TABLE_EXTRA_LONG_INIT_MINMAX,
- 	},
- 	{
- 		.procname	= "max_outbound_read_requests",
-@@ -132,8 +128,9 @@ static struct ctl_table svcrdma_parm_table[] = {
- 		.maxlen		= sizeof(unsigned int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= &min_ord,
--		.extra2		= &max_ord,
-+		.min		= SYSCTL_NUMERIC_ONE,
-+		.max		= SYSCTL_NUMERIC_U8_MAX,
-+		.extra_flags	= SYSCTL_TABLE_EXTRA_LONG_INIT_MINMAX,
- 	},
- 
- 	{
--- 
-2.25.1
-
+Bart.
