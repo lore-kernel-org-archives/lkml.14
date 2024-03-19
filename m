@@ -1,138 +1,75 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A383B2BAF0
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 18:12:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB12D2C6AE;
+	Tue, 19 Mar 2024 18:12:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710871943; cv=none; b=lLbXixAeynnUNH9cNgc0jePW8OtaRYKithGGJm/GSWSug+CHgcAr1/PKB3QfbdTVFpuOZbQ+8ZnL31Eq7xbGZetxcmFvJmNmpvmbGq7F9IOrRBgufArDydjGEFSJfL9vIoNuGjGFHxaGh9TQxJdOh2gojsu6ssNKGQGCP6chTBA=
+	t=1710871952; cv=none; b=cmpSXHz9qTY6RVGNmYXcnUiAiNrHTmlgQuCG2cMPCEO80tKaiZq20/8AzgdZd4pwI40l6ciKEyLFuZpQ09Zw5cCRrS4SNViN4ITIt2I7CDwysHx0GOwDV7zQrw4pvocEcIJhDx63iUQPT1qJIL4yjhqy21HC5DHbvZqknqhPGZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710871943; c=relaxed/simple;
-	bh=8CwvOpkzHWi5sDEiBu4yO13qK3DYHyI818weqm9THfY=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=X4JkLzTSIQ+tVzS+tQgnUtY2FXAACq/Ikv8GgKaX91l7x8cSft3fYFzMwHeVXREyZ5hPDoVDuLUt19EVNZLV7K29pfg06uWdQWIDcQqAxAevFJIB+j3eFJg/80FtjtGwO/v04iUGo4PWMtMEP0FYCxSViVyuWUwMhuiaePGgcLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7c8a98e52b5so440460939f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 11:12:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710871941; x=1711476741;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KUl8KngKDhKat2ID3WrGzxmO4pwALhdfll2XNSs2Xd8=;
-        b=Unx9dMp7gJQn8s23/NuC447vM5a/GBa6HXfAgiA/vFVG+jCVWUnk5K8aHkL8zMs+ZB
-         i3h6SCiUU0XHHPaJS7MG94dr/oatlAqrzQMISbEVce3H0PUHDbmrvz1N4sM3mzu1VCNo
-         85wWEghsYv9+U8CE1dUnV0E8e+0w/pnGpC4Yo17pAhnO7JlwLmQ/o2M0WBcFF9P3qGpK
-         2bztWtEfW/eoAZWDvWRKdmHy6/VKArlrAxt+uzuN01rV+Al2fHxc5whvE9/lS/fCxMH8
-         17pHnVqSqqB/jsu9s+hJG74G+QEknSwFlszGqCe8USd39lVIyl+AK3dffeU9Vd4g+R1x
-         ug0A==
-X-Forwarded-Encrypted: i=1; AJvYcCWuxz2prJkRYoSxI0oYs/ZUVxn25paP+WkW8Rga0EVAtflQu7UsHg5hD51NCrxl12UWiIrs+KMNBTlyEHOdWlQoWGT5NNCYd0vYCEVr
-X-Gm-Message-State: AOJu0YydydYmo31J/4hQJPTJQqFay8iou+BrILLbnAKh5GkVxHK45FQP
-	pKU+jRzNb0q7zVvVlvxzDaijI6oz4HtoX7iPB9Jp6sMFcOryRJhc3dYW56pJj0whfLibN5x0Zen
-	XNiL4UhOjo1yA+9v4SJ5knPm/bv9w10p2exFggL7TyyJruosy0jjhPBU=
-X-Google-Smtp-Source: AGHT+IHMVS2mCLbNF2hdzoCk8GpLFWyRFSX1ZPuWPNcY8kCgzSWWzeStiW6AYWuYmGmqcqZcY80wuhTt/0Tm5wb/HVekb4fvy3gb
+	s=arc-20240116; t=1710871952; c=relaxed/simple;
+	bh=SftRlw25717KfraW/oJEXJbHD1EPneudXtNW4HSfDh0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JrTutZ2N5Gahv5f8vVXVzT10dVoKAOnIa0U+CLkO5dWUHmB4n7wZFPbN55UfziPUQk5mYdb1sqaAFtgvpImVAJby5s9/XSUiQNit3/Xdd6RDtQsyH9xC368+wrt2lXVjwClAeD9xPLE0UBQGiwmRq3r7njsVmilcsuv7i21c2oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hE/QSKOE; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hE/QSKOE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49514C433C7;
+	Tue, 19 Mar 2024 18:12:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710871952;
+	bh=SftRlw25717KfraW/oJEXJbHD1EPneudXtNW4HSfDh0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hE/QSKOELxDbrTwwKGHc86OuDRyhnMRz7p1Z0RNdTbSRZWM/rP0MmXmtqJlMrupoA
+	 Zz+eHvgHcC2Y8fIrYOanYS50LHQ/eaToRhT/u39AzQc9TcbQ0o16B1XvaJzqYAN3gX
+	 3OSdHpEIF4ngB1793CqW/QJX5L0Wu1LKVMsPg9TY61FlrVvYDCuuEYhnIEh/Tjl8Yg
+	 wlNsuarphgAZA5jbuJHntgptuVKVchJuEDkl+W0QIzoToQBnYnLpZ87L3Qc9UWn8Ol
+	 VsgWz10dOlKPlT/vxjVAKez1pAgAzk2cygGSpwfB5TjLWTHpZTL/saUNZjAraIIh7a
+	 0OpOHW1q87NJQ==
+Date: Tue, 19 Mar 2024 15:12:28 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Stephane Eranian <eranian@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-toolchains@vger.kernel.org, linux-trace-devel@vger.kernel.org
+Subject: Re: [PATCH 09/23] perf annotate-data: Maintain variable type info
+Message-ID: <ZfnVjPlo_L5l51Bq@x1>
+References: <20240319055115.4063940-1-namhyung@kernel.org>
+ <20240319055115.4063940-10-namhyung@kernel.org>
+ <ZfmcN4YuvQpVgJQN@x1>
+ <CAM9d7cjatKSH7hw_sC3MCmY1fYT+bDBgSpFWJg=RM2oqgL5X0A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:1693:b0:7cc:ce74:4293 with SMTP id
- s19-20020a056602169300b007ccce744293mr171278iow.0.1710871940020; Tue, 19 Mar
- 2024 11:12:20 -0700 (PDT)
-Date: Tue, 19 Mar 2024 11:12:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003dc8e00614076ab6@google.com>
-Subject: [syzbot] [bpf?] UBSAN: array-index-out-of-bounds in check_stack_range_initialized
-From: syzbot <syzbot+33f4297b5f927648741a@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, martin.lau@linux.dev, netdev@vger.kernel.org, 
-	sdf@google.com, song@kernel.org, syzkaller-bugs@googlegroups.com, 
-	yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7cjatKSH7hw_sC3MCmY1fYT+bDBgSpFWJg=RM2oqgL5X0A@mail.gmail.com>
 
-Hello,
+On Tue, Mar 19, 2024 at 10:44:31AM -0700, Namhyung Kim wrote:
+> On Tue, Mar 19, 2024 at 7:07 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > > +void exit_type_state(struct type_state *state)
+> > > +{
+> > > +     struct type_state_stack *stack, *tmp;
+> > > +
+> > > +     list_for_each_entry_safe(stack, tmp, &state->stack_vars, list) {
+> > > +             list_del(&stack->list);
 
-syzbot found the following issue on:
+> > list_del_init()?
+ 
+> Maybe.. but I'm not sure how much value it'd have as we free it right after.
 
-HEAD commit:    0740b6427e90 Merge branch 'bpf-arena-followups'
-git tree:       bpf
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=12fed769180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
-dashboard link: https://syzkaller.appspot.com/bug?extid=33f4297b5f927648741a
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1763a479180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15c38711180000
+Usually the value is in catching use after free more quickly, i.e.
+someone may have a pointer to a freed list and then it would be able to
+traverse the list of freed elements.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/c9e6e9f97566/disk-0740b642.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/78476a588b62/vmlinux-0740b642.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/50cd6fab9ead/bzImage-0740b642.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+33f4297b5f927648741a@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-UBSAN: array-index-out-of-bounds in kernel/bpf/verifier.c:7190:12
-index -1 is out of range for type 'u8[8]' (aka 'unsigned char[8]')
-CPU: 0 PID: 5071 Comm: syz-executor474 Not tainted 6.8.0-syzkaller-05226-g0740b6427e90 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
- ubsan_epilogue lib/ubsan.c:217 [inline]
- __ubsan_handle_out_of_bounds+0x121/0x150 lib/ubsan.c:415
- check_stack_range_initialized+0x1668/0x19a0 kernel/bpf/verifier.c:7190
- check_helper_mem_access+0x2eb/0xfa0 kernel/bpf/verifier.c:7294
- check_helper_call+0x263c/0x7220 kernel/bpf/verifier.c:10252
- do_check+0x9e29/0x10530 kernel/bpf/verifier.c:17801
- do_check_common+0x14bd/0x1dd0 kernel/bpf/verifier.c:20500
- do_check_main kernel/bpf/verifier.c:20591 [inline]
- bpf_check+0x136ab/0x19010 kernel/bpf/verifier.c:21261
- bpf_prog_load+0x1667/0x20f0 kernel/bpf/syscall.c:2895
- __sys_bpf+0x4ee/0x810 kernel/bpf/syscall.c:5631
- __do_sys_bpf kernel/bpf/syscall.c:5738 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:5736 [inline]
- __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5736
- do_syscall_64+0xfb/0x240
- entry_SYSCALL_64_after_hwframe+0x6d/0x75
-RIP: 0033:0x7f8416194629
-Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffdc6f0fdb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 00007ffdc6f0ff88 RCX: 00007f8416194629
-RDX: 0000000000000090 RSI: 00000000200000c0 RDI: 0000000000000005
-RBP: 00007f8416207610 R08: 0000000000000000 R09: 00007ffdc6f0ff88
-R10: 00000000fffffff8 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007ffdc6f0ff78 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
----[ end trace ]---
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+- Arnaldo
