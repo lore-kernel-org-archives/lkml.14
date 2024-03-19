@@ -1,205 +1,171 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-bc0a.mail.infomaniak.ch (smtp-bc0a.mail.infomaniak.ch [45.157.188.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F3A2A8D7
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 10:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B7D56444;
+	Tue, 19 Mar 2024 10:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710845641; cv=none; b=QcR3Ck0egBMSDimU7mEM2ClTiUF2el10Vn1gYGunVD9gEZBT4WrCDmkiLM9IZN9yhw4dCD92H6B+MR4IyZRvM4FboxzPXeasWSYqIqwici7oV16nzb6uAqwcyrXyBCZ0aUeYhdFoeFIn3vDMO0VXQb19HQ362JInZCoPvAF/6r8=
+	t=1710845714; cv=none; b=cEZiWLzrSoEBVihpkJXpNR2TBmLvWcb2suc1kY46jQIP9N5vsJZeoYupkGszc6adjAkkYtAfIMHzu/Ypxz/BORMxYL7KgJCxn/41efsi0iUjMqepYghuAV6bovJa3UfJ+jH0RXZEhev6Dc4vbMlibglN7FWdvs/a4F3L4t+3oTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710845641; c=relaxed/simple;
-	bh=0CFj6WLTbL2G6/h3lbw6P9chFf3lSBNHLOBxuvKPaDc=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=kFNYBfWaPDHFGTPmfWKWUF1wZBq2GJ6GqJMwobnKanQLFIKtVFn26mbcCZ20wpchWGfkd9a6XMWAzNM2HqCzoYBx/KrwV5WdnqHGPVMD/yU05rMCoQczu+6iuW1R4D3d2a3O2le/layEZi8g6KI3pBX7SctxlWsfGruUXqJ1b8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=t0o/JiE8; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1710845714; c=relaxed/simple;
+	bh=71EEtOY8haZwTtkTzteQK0uaERkTAj9zbYONX0mzdMA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C+kyWezc+oko8rXFUMjlfsqifZ7b4zpfKaioQQyyxDCzH2lwykqtWxUSBa/YzfrQL+8NqVDmZckRTwBXPxomQeb5Rdv+uTfziVKG8Z1F78GNelnJDinycag+13rJI/eWDyres8aDwQPSRu2cyjvuXl3vmr47K+GTsWD1RjpZups=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=UewFEH4i; arc=none smtp.client-ip=45.157.188.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t0o/JiE8"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-513d23be0b6so5622825e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 03:53:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710845638; x=1711450438; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=d/DjqoQiR0R0fc2p4xoiFRrU53XeCEIiGCOv5JI1nK8=;
-        b=t0o/JiE89P8G4I1iP8NXaiK+xuXsEhEU0qf2p71Xp2PgKSti6o8U/wWKSaLcdJ/hVN
-         gDotiqjInMuVvC0XX8scXIjIKjQsovsmr+ZNqHVyQCAYwP+urs5uXuhs78/Pvm6u4Bsh
-         SopTeZYDSLaahL1XxDtWyUJMVCr3WpH8KqZrIdR0tB4OUP9sMQs032+c468XxosLUh22
-         XygGzl5UT0YryKfb08X3aA2GrUNmSgDKfZFBpyDsTAlRuHSqJFSYbNLj1IRJ3JnQw+GE
-         XrF6aKm8LA7gH4LZjwG3oqknhuLF4FnCnq0bZsSfeP3SMV/tpwFZ2Zejq6vos/Vkfc/t
-         Qmcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710845638; x=1711450438;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=d/DjqoQiR0R0fc2p4xoiFRrU53XeCEIiGCOv5JI1nK8=;
-        b=MdqPkTlXj4xx2oXel19o/FBELvNoJ73m6OUZ+E4iczX3PT7SlxOpqYrggkrvc5XjDn
-         KH25VKW8QPAvYGOOXdxBjuBIjKWK89+/MiI5CXsQx1HIZEvvynb38LtIls/XO5U9TzlL
-         uv0fB6biOM6VWb3CNqFieGC1Zc2laDZOm9WcVj9qs0gntftxCyMfL64F/p1Wcz4JjOCt
-         vxuOcnViyICp9CTBoP7NsHXDFlcSJSNYZ3/VKZYlf8vplM6KcPFbIbiguWl+t4KXaQTd
-         PCYYInbn1UYIDxjPu0bp88TfmEkmwcKeP2tCamFpYicTepKWa3wsfhE5GKDvmoS7eVrq
-         LZ/A==
-X-Forwarded-Encrypted: i=1; AJvYcCW0aqWfMGMQJJiZOJGceLRgDq+8sh4z6ehd3RLlHfCA1/wCc14rI+HAidgzjUCfHxapCL9Wrv5FLEikQF68Mk8LefaxNP02URGeG7ZR
-X-Gm-Message-State: AOJu0YziPoAMMbCcrRpJm2a9ZICjoNQKwgn8HRKkBsHfXxzs1syvzQVd
-	8BOfhSUNfE6Y+CNnokdMJbuS+d/EyEOj60qV6pw+W+C6f2M+/GIGMjfKYg10x90=
-X-Google-Smtp-Source: AGHT+IE+4biFzS6VHwcFyzJJDB/i6rUdj6OVW4UaAM9KlShxmO5wvl+5UviUmjPZTFTj75cJF5rC5Q==
-X-Received: by 2002:ac2:504f:0:b0:513:a140:fbf8 with SMTP id a15-20020ac2504f000000b00513a140fbf8mr1778581lfm.30.1710845638000;
-        Tue, 19 Mar 2024 03:53:58 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:2fcf:6f16:3b3b:da8e? ([2a01:e0a:982:cbb0:2fcf:6f16:3b3b:da8e])
-        by smtp.gmail.com with ESMTPSA id q11-20020a05600c46cb00b0041312d21a35sm21261582wmo.7.2024.03.19.03.53.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Mar 2024 03:53:57 -0700 (PDT)
-Message-ID: <10bcbff4-4e8d-4899-bf14-b28b59b5614a@linaro.org>
-Date: Tue, 19 Mar 2024 11:53:56 +0100
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="UewFEH4i"
+Received: from smtp-4-0000.mail.infomaniak.ch (unknown [10.7.10.107])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TzT4Q53BnzMq2xZ;
+	Tue, 19 Mar 2024 11:49:26 +0100 (CET)
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4TzT4P6PZPzlgm;
+	Tue, 19 Mar 2024 11:49:25 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1710845366;
+	bh=71EEtOY8haZwTtkTzteQK0uaERkTAj9zbYONX0mzdMA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=UewFEH4iSrJrSPok5JS56YwvhtiOCFyy6B9GXYlmlHWpW3KWLdiRoId3n+kFBXjMF
+	 etwj9/UZH7Ip6ElZVb89YVw79q7dLm3KuQrZ/8/TT5X81VPhxlKYsM6gBmIBzZv/Vk
+	 NDB2kDMrDI0ThVP+B7S6krYlWLMWDirT6vs4HyD0=
+From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To: Brendan Higgins <brendanhiggins@google.com>,
+	David Gow <davidgow@google.com>,
+	Rae Moar <rmoar@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>
+Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	James Morris <jamorris@linux.microsoft.com>,
+	Kees Cook <keescook@chromium.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
+	Marco Pagani <marpagan@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Thara Gopinath <tgopinath@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Wanpeng Li <wanpengli@tencent.com>,
+	Zahra Tarkhani <ztarkhani@microsoft.com>,
+	kvm@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	x86@kernel.org
+Subject: [PATCH v3 7/7] kunit: Add tests for fault
+Date: Tue, 19 Mar 2024 11:48:57 +0100
+Message-ID: <20240319104857.70783-8-mic@digikod.net>
+In-Reply-To: <20240319104857.70783-1-mic@digikod.net>
+References: <20240319104857.70783-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 2/7] phy: qcom: qmp-pcie: refactor clock register code
-Content-Language: en-US, fr
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240319-topic-sm8x50-upstream-pcie-1-phy-aux-clk-v1-0-926d7a4ccd80@linaro.org>
- <20240319-topic-sm8x50-upstream-pcie-1-phy-aux-clk-v1-2-926d7a4ccd80@linaro.org>
- <CAA8EJpqbhc_Y+EBTdz1WTnAnZN=vkTUAzc6feH4NYgbdR-ZibQ@mail.gmail.com>
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro Developer Services
-In-Reply-To: <CAA8EJpqbhc_Y+EBTdz1WTnAnZN=vkTUAzc6feH4NYgbdR-ZibQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
-On 19/03/2024 11:50, Dmitry Baryshkov wrote:
-> On Tue, 19 Mar 2024 at 12:45, Neil Armstrong <neil.armstrong@linaro.org> wrote:
->>
->> The PCIe Gen4x2 PHY found in the SM8[456]50 SoCs have a second clock,
->> in order to expose it, split the current clock registering in two parts:
->> - CCF clock registering
->> - DT clock registering
->>
->> Also switch to devm_of_clk_add_hw_provider().
->>
->> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
->> ---
->>   drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 27 +++++++++++----------------
->>   1 file changed, 11 insertions(+), 16 deletions(-)
->>
->> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
->> index 8836bb1ff0cc..079b3e306489 100644
->> --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
->> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
->> @@ -3635,11 +3635,6 @@ static int qmp_pcie_clk_init(struct qmp_pcie *qmp)
->>          return devm_clk_bulk_get_optional(dev, num, qmp->clks);
->>   }
->>
->> -static void phy_clk_release_provider(void *res)
->> -{
->> -       of_clk_del_provider(res);
->> -}
->> -
->>   /*
->>    * Register a fixed rate pipe clock.
->>    *
->> @@ -3664,7 +3659,7 @@ static int phy_pipe_clk_register(struct qmp_pcie *qmp, struct device_node *np)
->>          struct clk_init_data init = { };
->>          int ret;
->>
->> -       ret = of_property_read_string(np, "clock-output-names", &init.name);
->> +       ret = of_property_read_string_index(np, "clock-output-names", 0, &init.name);
->>          if (ret) {
->>                  dev_err(qmp->dev, "%pOFn: No clock-output-names\n", np);
->>                  return ret;
->> @@ -3683,19 +3678,19 @@ static int phy_pipe_clk_register(struct qmp_pcie *qmp, struct device_node *np)
->>
->>          fixed->hw.init = &init;
->>
->> -       ret = devm_clk_hw_register(qmp->dev, &fixed->hw);
->> -       if (ret)
->> -               return ret;
->> +       return devm_clk_hw_register(qmp->dev, &fixed->hw);
->> +}
->>
->> -       ret = of_clk_add_hw_provider(np, of_clk_hw_simple_get, &fixed->hw);
->> +static int qmp_pcie_register_clocks(struct qmp_pcie *qmp, struct device_node *np)
->> +{
->> +       int ret;
->> +
->> +       ret = phy_pipe_clk_register(qmp, np);
->>          if (ret)
->>                  return ret;
->>
->> -       /*
->> -        * Roll a devm action because the clock provider is the child node, but
->> -        * the child node is not actually a device.
->> -        */
->> -       return devm_add_action_or_reset(qmp->dev, phy_clk_release_provider, np);
->> +       return devm_of_clk_add_hw_provider(qmp->dev, of_clk_hw_simple_get,
->> +                                          &qmp->pipe_clk_fixed.hw);
-> 
-> No. The driver has to register a clock provider at the np rather than
-> at dev->of_node. Otherwise legacy DT will be broken.
+Add a test case to check NULL pointer dereference and make sure it would
+result as a failed test.
 
-Indeed
+The full kunit_fault test suite is marked as skipped when run on UML
+because it would result to a kernel panic.
 
-Thx
-Neil
+Tested with:
+./tools/testing/kunit/kunit.py run --arch x86_64 kunit_fault
+./tools/testing/kunit/kunit.py run --arch arm64 \
+  --cross_compile=aarch64-linux-gnu- kunit_fault
 
-> 
->>   }
->>
->>   static int qmp_pcie_parse_dt_legacy(struct qmp_pcie *qmp, struct device_node *np)
->> @@ -3899,7 +3894,7 @@ static int qmp_pcie_probe(struct platform_device *pdev)
->>          if (ret)
->>                  goto err_node_put;
->>
->> -       ret = phy_pipe_clk_register(qmp, np);
->> +       ret = qmp_pcie_register_clocks(qmp, np);
->>          if (ret)
->>                  goto err_node_put;
->>
->>
->> --
->> 2.34.1
->>
->>
-> 
-> 
+Cc: Brendan Higgins <brendanhiggins@google.com>
+Cc: Rae Moar <rmoar@google.com>
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Reviewed-by: David Gow <davidgow@google.com>
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Link: https://lore.kernel.org/r/20240319104857.70783-8-mic@digikod.net
+---
+
+Changes since v2:
+* Add David's Reviewed-by.
+
+Changes since v1:
+* Remove the rodata and const test cases for now.
+* Replace CONFIG_X86 check with !CONFIG_UML, and remove the "_x86"
+  references.
+---
+ lib/kunit/kunit-test.c | 45 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 44 insertions(+), 1 deletion(-)
+
+diff --git a/lib/kunit/kunit-test.c b/lib/kunit/kunit-test.c
+index f7980ef236a3..0fdca5fffaec 100644
+--- a/lib/kunit/kunit-test.c
++++ b/lib/kunit/kunit-test.c
+@@ -109,6 +109,48 @@ static struct kunit_suite kunit_try_catch_test_suite = {
+ 	.test_cases = kunit_try_catch_test_cases,
+ };
+ 
++#ifndef CONFIG_UML
++
++static void kunit_test_null_dereference(void *data)
++{
++	struct kunit *test = data;
++	int *null = NULL;
++
++	*null = 0;
++
++	KUNIT_FAIL(test, "This line should never be reached\n");
++}
++
++static void kunit_test_fault_null_dereference(struct kunit *test)
++{
++	struct kunit_try_catch_test_context *ctx = test->priv;
++	struct kunit_try_catch *try_catch = ctx->try_catch;
++
++	kunit_try_catch_init(try_catch,
++			     test,
++			     kunit_test_null_dereference,
++			     kunit_test_catch);
++	kunit_try_catch_run(try_catch, test);
++
++	KUNIT_EXPECT_EQ(test, try_catch->try_result, -EINTR);
++	KUNIT_EXPECT_TRUE(test, ctx->function_called);
++}
++
++#endif /* !CONFIG_UML */
++
++static struct kunit_case kunit_fault_test_cases[] = {
++#ifndef CONFIG_UML
++	KUNIT_CASE(kunit_test_fault_null_dereference),
++#endif /* !CONFIG_UML */
++	{}
++};
++
++static struct kunit_suite kunit_fault_test_suite = {
++	.name = "kunit_fault",
++	.init = kunit_try_catch_test_init,
++	.test_cases = kunit_fault_test_cases,
++};
++
+ /*
+  * Context for testing test managed resources
+  * is_resource_initialized is used to test arbitrary resources
+@@ -826,6 +868,7 @@ static struct kunit_suite kunit_current_test_suite = {
+ 
+ kunit_test_suites(&kunit_try_catch_test_suite, &kunit_resource_test_suite,
+ 		  &kunit_log_test_suite, &kunit_status_test_suite,
+-		  &kunit_current_test_suite, &kunit_device_test_suite);
++		  &kunit_current_test_suite, &kunit_device_test_suite,
++		  &kunit_fault_test_suite);
+ 
+ MODULE_LICENSE("GPL v2");
+-- 
+2.44.0
 
