@@ -1,210 +1,153 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE8358230;
-	Tue, 19 Mar 2024 13:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56BA183CAE;
+	Tue, 19 Mar 2024 13:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710853816; cv=none; b=khlPt2BJ9li+S5hAxHrKIOsCZraLLqEk62cureIPXpx4dq/Ifvp8bYt+LDe9Lriw4zbfwxe0yZeez0NeeJzbph2fAykZBqHsjW/A8MW+y6Hc3uIfvL2JSemWdKe8T+Dj0i2ZIIJsi2NWXldcej+ZHRSB0+qpEn5w/Vho0bcbz0s=
+	t=1710853820; cv=none; b=XzGRX+r/wUZwV7HfQhFiMPnwwjPPrbPq5w+Q/aT2dyR2eyu1jCIxckI+qdp0wfJ9UimVKuEWwmHVAahD3i/WHPJ3v5BCb3g6wLCltmgztFMXP3QDFTHgIHRn5lswLIhXWRmhImdr6Hsg416TDpY1X0cDkcjVirx+N/9YomsjFN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710853816; c=relaxed/simple;
-	bh=hJhgWkLohJdvACTnHkCzjlvaAU9vl52G+i074OtHDzA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e/3VYGxj44wXDaWDxeJwPpstliYd8qzOzrAyWfPadkQk6H9FDx3Fv+1Wgunb7az7ISFdHJf3AWjxZ51Ycx2YsM2DxtgQuKv1V6UagoNUTyiMYZinKWenof2tisDqjdSpE/LMmcb39PLWYlifgEoc9kLhEQYSRHDvUlONwWtONac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eeXJ04Y4; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
+	s=arc-20240116; t=1710853820; c=relaxed/simple;
+	bh=SpyapOi+YNjXiDlh3WYtvbhPHkpVL36i0qOTdjclph0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KY5rSWrqv23AMwo+fKWDY/S1jtfV2TZ5VnbubpQOCgvT1U1OZDn5g9dUo/+L5dHAyLFtYDp4dUXosObMvm/g8QCQO+m3tBWiFyalpMFMWmdmadgfVeBIuhgYanFhdDeLcJlAPNBHBfKGyR8pnqzLtmKdVw0Vskl+oSwjG6avw4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=OQUTd8Iv; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eeXJ04Y4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=YTLpMmpkNGuhvFQgvKQCItGbMWw/zhTL9LcZsBFvYlg=; b=eeXJ04Y4UGErDaAsaqfUJbLl4K
-	DUih3BS9hCsOyVYqkk7c9t9dIklm52DZm5P6xD57GpMiGVUoRi4pBTSH4jOi8aUa3viuJ9niE9Ej2
-	JC2LUuE2qmK6PqqUJo03dlv7wxIao/pLl02KvjoqhoPjrgemoR3FYESgeea3EgBBqMzVb0EtbpVJ5
-	gNwx1/F1bc0apsELDOBSl6CsayQladUWU/fR1h3laY0Tqzw2EwzeCP5iGP3atrColPgnrFeNRO4fx
-	dLSpKiTOLiwjBPn7jIJZIhoZv3aQo2y6vv8P571SOUSQ84q7hy1lDRiyhkBhstJfX823Pp9pInVfF
-	tTN96Ejw==;
-Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rmZEA-0000000DDlx-1inm;
-	Tue, 19 Mar 2024 13:10:03 +0000
-Received: from dwoodhou by i7.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rmZE9-00000004PMy-0Gs2;
-	Tue, 19 Mar 2024 13:10:01 +0000
-From: David Woodhouse <dwmw2@infradead.org>
-To: linux-arm-kernel@lists.infradead.org,
-	kvm@vger.kernel.org
-Cc: Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <len.brown@intel.com>,
-	Pavel Machek <pavel@ucw.cz>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Mostafa Saleh <smostafa@google.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kvmarm@lists.linux.dev,
-	linux-pm@vger.kernel.org
-Subject: [RFC PATCH v3 3/5] KVM: arm64: Add PSCI v1.3 SYSTEM_OFF2 function for hibernation
-Date: Tue, 19 Mar 2024 12:59:04 +0000
-Message-ID: <20240319130957.1050637-4-dwmw2@infradead.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240319130957.1050637-1-dwmw2@infradead.org>
-References: <20240319130957.1050637-1-dwmw2@infradead.org>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="OQUTd8Iv"
+Received: from [192.168.1.105] (unknown [103.86.18.138])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1F756C80;
+	Tue, 19 Mar 2024 14:09:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1710853788;
+	bh=SpyapOi+YNjXiDlh3WYtvbhPHkpVL36i0qOTdjclph0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OQUTd8IvUiJQefhyc0KfsTRBDB2wMr4qpIRGCnB2T8ZQ+ZRzuKmi91XN77DNfsT7V
+	 CUoF8VZ9lWbnJHErxDD/O/swhh3/jXwuIPoyH9J3vzU38J1Z0kHsz4sF17YYEUjOZQ
+	 7V7XT1mcQUyE/q8ylxXtXoEEl3AIfX6Kks+4EEvk=
+Message-ID: <4bb01eb0-bf53-43f2-a488-7959aadacc3b@ideasonboard.com>
+Date: Tue, 19 Mar 2024 18:40:06 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: David Woodhouse <dwmw2@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/2] media: i2c: Add imx283 camera sensor driver
+Content-Language: en-US
+To: linux-media@vger.kernel.org
+Cc: Kieran Bingham <kieran.bingham@ideasonboard.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ willl will <will@willwhang.com>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, tomi.valkeinen@ideasonboard.com,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20240313070705.91140-1-umang.jain@ideasonboard.com>
+From: Umang Jain <umang.jain@ideasonboard.com>
+In-Reply-To: <20240313070705.91140-1-umang.jain@ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: David Woodhouse <dwmw@amazon.co.uk>
+Hello,
 
-The PSCI v1.3 specification (alpha) adds support for a SYSTEM_OFF2 function
-which is analogous to ACPI S4 state. This will allow hosting environments
-to determine that a guest is hibernated rather than just powered off, and
-ensure that they preserve the virtual environment appropriately to allow
-the guest to resume safely (or bump the hardware_signature in the FACS to
-trigger a clean reboot instead).
+Ping for review and also the streams API streams_mask issue mentioned 
+below.
 
-The beta version will be changed to say that PSCI_FEATURES returns a bit
-mask of the supported hibernate types, which is implemented here.
+Is anyone interested in looking at this particular issue?
 
-Although this new feature is inflicted unconditionally on unexpecting
-userspace, it ought to be mostly OK because it still results in the same
-KVM_SYSTEM_EVENT_SHUTDOWN event, just with a new flag which hopefully
-won't cause userspace to get unhappy.
-
-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
----
- Documentation/virt/kvm/api.rst    | 11 +++++++++
- arch/arm64/include/uapi/asm/kvm.h |  6 +++++
- arch/arm64/kvm/psci.c             | 37 +++++++++++++++++++++++++++++++
- 3 files changed, 54 insertions(+)
-
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 0b5a33ee71ee..ba4ddb13e253 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -6761,6 +6761,10 @@ the first `ndata` items (possibly zero) of the data array are valid.
-    the guest issued a SYSTEM_RESET2 call according to v1.1 of the PSCI
-    specification.
- 
-+ - for arm64, data[0] is set to KVM_SYSTEM_EVENT_SHUTDOWN_FLAG_PSCI_OFF2
-+   if the guest issued a SYSTEM_OFF2 call according to v1.3 of the PSCI
-+   specification.
-+
-  - for RISC-V, data[0] is set to the value of the second argument of the
-    ``sbi_system_reset`` call.
- 
-@@ -6794,6 +6798,13 @@ either:
-  - Deny the guest request to suspend the VM. See ARM DEN0022D.b 5.19.2
-    "Caller responsibilities" for possible return values.
- 
-+Hibernation using the PSCI SYSTEM_OFF2 call is enabled when PSCI v1.3
-+is enabled. If a guest invokes the PSCI SYSTEM_OFF2 function, KVM will
-+exit to userspace with the KVM_SYSTEM_EVENT_SHUTDOWN event type and with
-+data[0] set to KVM_SYSTEM_EVENT_SHUTDOWN_FLAG_PSCI_OFF2. The only
-+supported hibernate type for the SYSTEM_OFF2 function is HIBERNATE_OFF
-+0x0).
-+
- ::
- 
- 		/* KVM_EXIT_IOAPIC_EOI */
-diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
-index 964df31da975..66736ff04011 100644
---- a/arch/arm64/include/uapi/asm/kvm.h
-+++ b/arch/arm64/include/uapi/asm/kvm.h
-@@ -484,6 +484,12 @@ enum {
-  */
- #define KVM_SYSTEM_EVENT_RESET_FLAG_PSCI_RESET2	(1ULL << 0)
- 
-+/*
-+ * Shutdown caused by a PSCI v1.3 SYSTEM_OFF2 call.
-+ * Valid only when the system event has a type of KVM_SYSTEM_EVENT_SHUTDOWN.
-+ */
-+#define KVM_SYSTEM_EVENT_SHUTDOWN_FLAG_PSCI_OFF2	(1ULL << 0)
-+
- /* run->fail_entry.hardware_entry_failure_reason codes. */
- #define KVM_EXIT_FAIL_ENTRY_CPU_UNSUPPORTED	(1ULL << 0)
- 
-diff --git a/arch/arm64/kvm/psci.c b/arch/arm64/kvm/psci.c
-index f689ef3f2f10..7acf07900c08 100644
---- a/arch/arm64/kvm/psci.c
-+++ b/arch/arm64/kvm/psci.c
-@@ -194,6 +194,12 @@ static void kvm_psci_system_off(struct kvm_vcpu *vcpu)
- 	kvm_prepare_system_event(vcpu, KVM_SYSTEM_EVENT_SHUTDOWN, 0);
- }
- 
-+static void kvm_psci_system_off2(struct kvm_vcpu *vcpu)
-+{
-+	kvm_prepare_system_event(vcpu, KVM_SYSTEM_EVENT_SHUTDOWN,
-+				 KVM_SYSTEM_EVENT_SHUTDOWN_FLAG_PSCI_OFF2);
-+}
-+
- static void kvm_psci_system_reset(struct kvm_vcpu *vcpu)
- {
- 	kvm_prepare_system_event(vcpu, KVM_SYSTEM_EVENT_RESET, 0);
-@@ -353,6 +359,11 @@ static int kvm_psci_1_x_call(struct kvm_vcpu *vcpu, u32 minor)
- 			if (test_bit(KVM_ARCH_FLAG_SYSTEM_SUSPEND_ENABLED, &kvm->arch.flags))
- 				val = 0;
- 			break;
-+		case PSCI_1_3_FN_SYSTEM_OFF2:
-+		case PSCI_1_3_FN64_SYSTEM_OFF2:
-+			if (minor >= 3)
-+				val = 1UL << PSCI_1_3_HIBERNATE_TYPE_OFF;
-+			break;
- 		case PSCI_1_1_FN_SYSTEM_RESET2:
- 		case PSCI_1_1_FN64_SYSTEM_RESET2:
- 			if (minor >= 1)
-@@ -374,6 +385,32 @@ static int kvm_psci_1_x_call(struct kvm_vcpu *vcpu, u32 minor)
- 			return 0;
- 		}
- 		break;
-+	case PSCI_1_3_FN_SYSTEM_OFF2:
-+		kvm_psci_narrow_to_32bit(vcpu);
-+		fallthrough;
-+	case PSCI_1_3_FN64_SYSTEM_OFF2:
-+		if (minor < 3)
-+			break;
-+
-+		arg = smccc_get_arg1(vcpu);
-+		if (arg != PSCI_1_3_HIBERNATE_TYPE_OFF) {
-+			val = PSCI_RET_INVALID_PARAMS;
-+			break;
-+		}
-+		kvm_psci_system_off2(vcpu);
-+		/*
-+		 * We shouldn't be going back to guest VCPU after
-+		 * receiving SYSTEM_OFF2 request.
-+		 *
-+		 * If user space accidentally/deliberately resumes
-+		 * guest VCPU after SYSTEM_OFF2 request then guest
-+		 * VCPU should see internal failure from PSCI return
-+		 * value. To achieve this, we preload r0 (or x0) with
-+		 * PSCI return value INTERNAL_FAILURE.
-+		 */
-+		val = PSCI_RET_INTERNAL_FAILURE;
-+		ret = 0;
-+		break;
- 	case PSCI_1_1_FN_SYSTEM_RESET2:
- 		kvm_psci_narrow_to_32bit(vcpu);
- 		fallthrough;
--- 
-2.44.0
+On 13/03/24 12:36 pm, Umang Jain wrote:
+> Add a v4l2 subdevice driver for the Sony IMX283 image sensor.
+>    
+> The IMX283 is a 20MP Diagonal 15.86 mm (Type 1) CMOS Image Sensor with
+> Square Pixel for Color Cameras.
+>      
+> The following features are supported:
+> - Manual exposure an gain control support
+> - vblank/hblank/link freq control support
+> - Test pattern support control
+> - Arbitrary horizontal and vertical cropping
+> - Supported resolution:
+>     - 5472x3648 @ 20fps (SRGGB12)
+>     - 5472x3648 @ 25fps (SRGGB10)
+>     - 2736x1824 @ 50fps (SRGGB12)
+>
+> The driver is tested on mainline branch v6.8-rc2 on IMX8MP Debix-SOM-A.
+> Additional testing has been done on RPi5 with the downstream BSP.
+>
+> Changes in v3:
+> - fix headers includes
+> - Improve #define(s) readability
+> - Drop __func__ from error logs
+> - Use HZ_PER_MHZ instead of MEGA
+> - mdsel* variables should be u8
+> - Use container_of_const() instead of container_of()
+> - Use clamp() used of clamp_t variant
+> - Use streams API imx283_{enable|disable}_streams (**NOTE**)
+> - Properly fix PM runtime handling
+>    (pm_ptr(), DEFINE_RUNTIME_DEV_PM_OPS,
+>     imx283_runtime_suspend, imx283_runtime_resume)
+> - Fix format modifiers, signed-ness at various places
+>
+>
+> **NOTE**
+> There is streams mask issue, as no routes are defined with 1 pad:
+> For testing, I have the following applied locally:
+> ```
+> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+> index 4c6198c48dd6..38545d779620 100644
+> --- a/drivers/media/v4l2-core/v4l2-subdev.c
+> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
+> @@ -2115,8 +2115,10 @@ int v4l2_subdev_enable_streams(struct v4l2_subdev *sd, u32 pad,
+>          if (pad >= sd->entity.num_pads)
+>                  return -EINVAL;
+>   
+> -       if (!streams_mask)
+> -               return 0;
+> +       if (!streams_mask) {
+> +               dev_err(sd->dev, "no streams mask, returning ....\n");
+> +               //return 0;
+> +       }
+>   
+>          /* Fallback on .s_stream() if .enable_streams() isn't available. */
+>          if (!sd->ops->pad || !sd->ops->pad->enable_streams)
+> ```
+>
+> changes in v2 (summary):
+> - Use u32 wherever possible
+> - Use MEGA macro instead of self defined MHZ() macro
+> - Properly refine regs using CCI
+> - Drop tracking of current mode. Shifted to infer from active state directly.
+>    (Laurent's review)
+> - Cont. from above: Pass the struct imx283_mode to functions whereever required.
+> - Remove unused comments
+> - Remove custom mutex. Use control handler one instead.
+> - Drop imx283_reset_colorspace() and inline
+> - Set colorspace field properly (drop _DEFAULTS)
+> - Use __maybe_unused for imx283_power_on() and imx283_power_off()
+> - Store controls  v4l2_ctrl handles for those required, not all.
+> - Drop imx283_free_controls(). Use v4l2_ctrl_handler_free
+> - fix reset-gpios handling and add it to DT schema
+> - fix data-lanes property in DT schema
+> - fix IMX283 Kconfig
+> - Remove unused macros
+> - Alphabetical case consistency
+>
+> Kieran Bingham (1):
+>    media: i2c: Add imx283 camera sensor driver
+>
+> Umang Jain (1):
+>    media: dt-bindings: media: Add bindings for IMX283
+>
+>   .../bindings/media/i2c/sony,imx283.yaml       |  107 ++
+>   MAINTAINERS                                   |    9 +
+>   drivers/media/i2c/Kconfig                     |   10 +
+>   drivers/media/i2c/Makefile                    |    1 +
+>   drivers/media/i2c/imx283.c                    | 1596 +++++++++++++++++
+>   5 files changed, 1723 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx283.yaml
+>   create mode 100644 drivers/media/i2c/imx283.c
+>
 
