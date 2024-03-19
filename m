@@ -1,56 +1,59 @@
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A23A7C0B2;
-	Tue, 19 Mar 2024 05:53:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9284E53378;
+	Tue, 19 Mar 2024 05:53:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710827627; cv=none; b=cjsDzpwSgUpbVP7eIRxQSdEJO+6WrL1qlvSRQ3g19lwRnoZbFmWv9S5r6fyTHoFPeCFJiZ8xqDBzu9uU19TjkSCav74lbGvOnPtmP+JsGQOYNp7zkD3olT4e4Qv8MQIsD4jrlkesLI6MewkuVqG4yjDt/jnosZ3eAK/a6cwyovk=
+	t=1710827627; cv=none; b=vCuK3hAg7AE5Y7jKS4ZOGT8ZJCd6AQK7VchWnBXQ4shzTP29FGRwjgP8UuxeIQp3o5Av5rSXKxJcD3jLskltJN1RzxxWYNY4aiOte0Rdjqkop7HuItsd8D7UBCqZDHc9BzrX1ab4s1fxv57UO2Cm5WA1yRMv1nHzXukOiXyD+RY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710827627; c=relaxed/simple;
-	bh=h8STsQMndqtQLRxWZ/502ZZ2IGP8EzUZ+KWr5huUdSY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nGk3uCpsaqqR0aHEwElHlyyijiqAjgljqaLf9aXH5CkzPbfXwX+OhHsYl8ABwX/CY/DYdNVO2Cdh8M6OuNibLkcQNrJcZU7TUtRXUzEiU37iRvTT3lmB1aWG4Sr203hSDcLyrFKrIsH2rFR+LKFiAM9XIk1fuc53dkNw3gKAwPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=1smB/Pz5; arc=none smtp.client-ip=68.232.153.233
+	bh=C1KTS43iNb7xCJMeLZHV/iIX5f8wXoKRqUfcQWPIpVg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GtqUKkL3emuYKJBLtcoG84nUXjmGK1FouJbZ49k/1bfxmyTdWhRBfSmbx4IQWMKk5DU2Vjb3S2FCXPUOhG60jTeNR7Iw0Kp8rGNRO6aBP+5ITlwQO8qqAMRSsF+xjVFtUPP8D7nyfG01xNAQYhgg/v/W3pe01W3HS6ClqONVvpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=j2Q3ISZN; arc=none smtp.client-ip=68.232.153.233
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="1smB/Pz5"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="j2Q3ISZN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
   t=1710827625; x=1742363625;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=h8STsQMndqtQLRxWZ/502ZZ2IGP8EzUZ+KWr5huUdSY=;
-  b=1smB/Pz5z3ty8cpF22CLXXStca0yIJOgy1Qsz8ecpLznK9dTyrS8WoFN
-   1stUASzv3quubPcxXWRxzGo8xM2N4EPo09PTR2V29QPaoJx0HEoOZyVK7
-   NMlrBE3OhS9h8u6KLL846D+bfQT1sJBdjq7jvYqjRgd1GT1wvr7/G9aan
-   MNQ8odGVyIECId7KDrpGyyw2BXUCoO724qIDhvd0aTZsgo8ABt7sa7Uk5
-   FyRygBfzjkSKMPQf+mtXJ8Js/LsAXJyG+dlfd3JMV1fgHxrZTZDw2wT+k
-   jjMUzKQJab9nKtNVZZ4gIik804uMvhYZQa///XPm34gsaTVTpmB8buE8u
-   w==;
-X-CSE-ConnectionGUID: unQe8ohHTbCZ5NhrklpG1g==
-X-CSE-MsgGUID: bgmS1SoqRJaNQXc+N1vVpg==
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=C1KTS43iNb7xCJMeLZHV/iIX5f8wXoKRqUfcQWPIpVg=;
+  b=j2Q3ISZN6LpZxcIfejtGpep1Kx5/XtD2AEu5PpJB296KS8+04SwIVhaX
+   PDS88IxUnslPrgm50d0rEsuCFfVwYrTJwvDHna3F0p7ZI6BtIx0ib08P8
+   UEmSezsWI0kRANsx7lptr3OEzFH4a1B3n48nsgL4hOkljVmrSQwk0Ie/E
+   2R3Q83F+Cjmmc29Re3/OSQP1IR6hunHWWbFWPvpsrjckMjZJADKkBvMg5
+   e8Jp+XbxfTrWaagfskjANY/YFzNGrxQsGT1rDx17mCIzL1AYz8DjjVW5z
+   P2W9lm4b8b5nFGLK8ibIXjA6qBfS3i9Y26FwOS/mgkkgUSZxaJo9e5TGC
+   Q==;
+X-CSE-ConnectionGUID: VmcjLmElSdeXl3on+0k91w==
+X-CSE-MsgGUID: XBVubKrHSiG17DUa7pipdQ==
 X-IronPort-AV: E=Sophos;i="6.07,136,1708412400"; 
-   d="scan'208";a="17825495"
+   d="scan'208";a="19565327"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 18 Mar 2024 22:53:44 -0700
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 18 Mar 2024 22:53:43 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 18 Mar 2024 22:53:24 -0700
+ 15.1.2507.35; Mon, 18 Mar 2024 22:53:31 -0700
 Received: from HYD-DK-UNGSW21.microchip.com (10.10.85.11) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Mon, 18 Mar 2024 22:53:21 -0700
+ 15.1.2507.35 via Frontend Transport; Mon, 18 Mar 2024 22:53:28 -0700
 From: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
 To: <netdev@vger.kernel.org>
 CC: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
 	<edumazet@google.com>, <linux-kernel@vger.kernel.org>,
 	<bryan.whitehead@microchip.com>, <UNGLinuxDriver@microchip.com>
-Subject: [PATCH net V1 0/2] net: lan743x: Fixes for multiple WOL related issues
-Date: Tue, 19 Mar 2024 11:21:07 +0530
-Message-ID: <20240319055110.764002-1-Raju.Lakkaraju@microchip.com>
+Subject: [PATCH net V1 2/2] net: lan743x: support WOL in MAC even when PHY does not
+Date: Tue, 19 Mar 2024 11:21:09 +0530
+Message-ID: <20240319055110.764002-3-Raju.Lakkaraju@microchip.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240319055110.764002-1-Raju.Lakkaraju@microchip.com>
+References: <20240319055110.764002-1-Raju.Lakkaraju@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,30 +63,51 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-This patch series implement the following fixes:
-1. Disable WOL upon resume in order to restore full data path operation
-2. Support WOL in MAC even when PHY does not
+Allow WOL support if MAC supports it, even if the PHY does not support it
 
+Fixes: e9e13b6adc338 ("lan743x: fix for potential NULL pointer dereference with bare card")
+Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
+---
 Change List:
 ------------
-V0 -> V1:
-  - Include the missing maintainer's email ids in 'CC list
-  - Remove the patch "Address problems with wake option flags configuration
-    sequences" from this patch series. Will fix this in next patch series.
-  - Variable "data" change from "int" to "unsigned int"
   - Change the "phy does not support WOL" print from netif_info() to
     netif_dbg()
 
-Raju Lakkaraju (2):
-  net: lan743x: disable WOL upon resume to restore full data path
-    operation
-  net: lan743x: support WOL in MAC even when PHY does not
+ drivers/net/ethernet/microchip/lan743x_ethtool.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
- .../net/ethernet/microchip/lan743x_ethtool.c  | 14 +++++++++--
- drivers/net/ethernet/microchip/lan743x_main.c | 24 ++++++++++++++++++-
- drivers/net/ethernet/microchip/lan743x_main.h | 24 +++++++++++++++++++
- 3 files changed, 59 insertions(+), 3 deletions(-)
-
+diff --git a/drivers/net/ethernet/microchip/lan743x_ethtool.c b/drivers/net/ethernet/microchip/lan743x_ethtool.c
+index 8a6ae171e375..7509a19269c3 100644
+--- a/drivers/net/ethernet/microchip/lan743x_ethtool.c
++++ b/drivers/net/ethernet/microchip/lan743x_ethtool.c
+@@ -1163,6 +1163,17 @@ static int lan743x_ethtool_set_wol(struct net_device *netdev,
+ 				   struct ethtool_wolinfo *wol)
+ {
+ 	struct lan743x_adapter *adapter = netdev_priv(netdev);
++	int ret;
++
++	if (netdev->phydev) {
++		ret = phy_ethtool_set_wol(netdev->phydev, wol);
++		if (ret != -EOPNOTSUPP && ret != 0)
++			return ret;
++
++		if (ret == -EOPNOTSUPP)
++			netif_dbg(adapter, drv, adapter->netdev,
++				  "phy does not support WOL\n");
++	}
+ 
+ 	adapter->wolopts = 0;
+ 	if (wol->wolopts & WAKE_UCAST)
+@@ -1187,8 +1198,7 @@ static int lan743x_ethtool_set_wol(struct net_device *netdev,
+ 
+ 	device_set_wakeup_enable(&adapter->pdev->dev, (bool)wol->wolopts);
+ 
+-	return netdev->phydev ? phy_ethtool_set_wol(netdev->phydev, wol)
+-			: -ENETDOWN;
++	return 0;
+ }
+ #endif /* CONFIG_PM */
+ 
 -- 
 2.34.1
 
