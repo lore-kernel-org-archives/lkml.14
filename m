@@ -1,106 +1,195 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD58364
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 08:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CDE154BCB
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 08:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710837335; cv=none; b=Ark8Cwv3oajDnTHsfUanC0VIaSBoBjAFsz2T20l+rgLRACxPGfWDZTqO523A4iP90jcclSgLhX6QoNfHylPVrKcU7LeLN1qNThDtQlxmbQaPUmFMpE84aveEmZE3Rsd55jz/3NymQQbCRyX5qSi46iuIO1Ge+qxc5mR4SAquOIc=
+	t=1710837359; cv=none; b=assdthBzJpyxKO2LAdb8S57wT82a8Tk7uCZQEMMXd14KaXveHDq7uwXJdXaajbazOAQtu7Y1Bp5INozmr7hknFHoLMwLeIT/82koTjfMtvra/Vcrdxqx2ftyJpPFjH8lVnGByFgqpeIfskh2NWD/X6K/Evpde07TN9SejPbkOUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710837335; c=relaxed/simple;
-	bh=Uhw7X37ePZrOYI/rJry/tZ9rI468Mam9nGel7TLxUcI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GKj1ZPCbVJYvqL8edxkJc8mOny3hlp95rrRpdrGVdeNZvcqwl/py0LMvljRp2Qy3QqdhckTnRwnHf3yqrjNOXGgQN8ybMcngV+bbPO/nedW4zmsTUZFBAhAsJ4fu7SdUp9sYP/b/6J5cwpy1vOdR3GuzBBdGKg1o2Lkbr8eR2vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h8/UGenF; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710837359; c=relaxed/simple;
+	bh=wIpGG5R6KkYoemAVk2Sazcjr1VHV8sWaDJxHwhXckco=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=m4KEDrNjOLbjPgnAcEjgQpk8R4tZBl/sElgu6g7OOGqZKExv5raYgpGmbt+qKMBaD4ppegF9puethu4w9mTffXvBoOj2Fas8vvNIeeKak9gKbUlBqB2s7X9OHwjXn0eQqoUUcxySsLcoIVp+HiCckAx6MXZnXiieA5II8GE/vY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rRfbE/T3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=2yhlVDNT; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rRfbE/T3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=2yhlVDNT; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h8/UGenF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710837332;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bidhNprDIaXErWo++B8NK9gU1Mr0P973Tkk526SOsxc=;
-	b=h8/UGenF7DKlb3cEw/hagnsGNv/KKOdfutUhaayyM+5y2zthTPc013go6V4CdVgsbH7ULn
-	UrL/39iQKMtEpuvBUCBv54lSYD/2W7ka2EbjKiutJURrtTcBxdbytB4I/kN5GHsJ9F9GZC
-	LKhnhorCy86QXtDdCBRLRcWn7u5eT6I=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-158-ViRNNpPeNSGjZuJMFlAqBg-1; Tue, 19 Mar 2024 04:35:31 -0400
-X-MC-Unique: ViRNNpPeNSGjZuJMFlAqBg-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a3fb52f121eso235121666b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 01:35:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710837330; x=1711442130;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bidhNprDIaXErWo++B8NK9gU1Mr0P973Tkk526SOsxc=;
-        b=mtXzcqMOF42NaKTqHWT5o4J9ySH3o/lDS/S/dw0LaAQTYfm12Zq/TeHDDSGMdRg3Pd
-         N5+1YIjLVsSAHpsIKylyOAbg86+jfWUrsYZ/mRODEJfWov/hc1NRzMzAciD1y3hbA3kH
-         U5QnkwrBKJDrMy0bj4dt0eNA1fI1ddN402oT7nryUMmsj3+lKVusvViUZAobgJYJEdn1
-         H5BqtdMTEHiLk3du+xZUBDBhneoZzEt4Nw2PxcZiQerm18A3r1UyVF6SszpWohfJgkZM
-         zufdzGZt2gX/6lvPjSnhpmI1hCJFKHXar5fTHzvor9I3VniTyoBlt0+Gai4EeaVL1tIC
-         15mg==
-X-Forwarded-Encrypted: i=1; AJvYcCU1+uPVi7ZLs63pGAHCOffnPY94fHyjbt6wctyS3+yvDGb2bX/yfMr855iEoL2e7nUvpIj5xixNtvFBEZzKa0ctzRl7tP+HB7IUekvn
-X-Gm-Message-State: AOJu0YwmFwcUAfYS4f9ArSKzOzq9xA5jgm7ZfSxiGfSiOvKiTaGaOR0Q
-	2aomoOxtprRQkAVAvuk0AtM/El89Q/LiXLQRsbk8M0oB4b2ln3dsQm4+nZubNqceEGp57mZUNmf
-	lj6vBe3fnjDaUbAI4XenoPQ1Fvsw40IYU97hwx6AjVb3zTal9NUfVY1/Jf+7IztY1XXg+ew==
-X-Received: by 2002:a17:906:364a:b0:a46:617e:d3a7 with SMTP id r10-20020a170906364a00b00a46617ed3a7mr9211984ejb.60.1710837330130;
-        Tue, 19 Mar 2024 01:35:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH2M46P0WU30p/kI4KM147xUw+jHFCsikBReD0bxprbCUbp1whXFumyfQAXLRkNAFtveWMugw==
-X-Received: by 2002:a05:6512:68c:b0:513:db96:2be9 with SMTP id t12-20020a056512068c00b00513db962be9mr10460157lfe.64.1710836978279;
-        Tue, 19 Mar 2024 01:29:38 -0700 (PDT)
-Received: from redhat.com ([2.52.6.254])
-        by smtp.gmail.com with ESMTPSA id g14-20020a5d540e000000b0033e95bf4796sm11737388wrv.27.2024.03.19.01.29.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 01:29:37 -0700 (PDT)
-Date: Tue, 19 Mar 2024 04:29:33 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Tobias Huschle <huschle@linux.ibm.com>
-Cc: Luis Machado <luis.machado@arm.com>, Jason Wang <jasowang@redhat.com>,
-	Abel Wu <wuyun.abel@bytedance.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Linux Kernel <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	nd <nd@arm.com>
-Subject: Re: EEVDF/vhost regression (bisected to 86bfbb7ce4f6 sched/fair: Add
- lag based placement)
-Message-ID: <20240319042829-mutt-send-email-mst@kernel.org>
-References: <07974.124020102385100135@us-mta-501.us.mimecast.lan>
- <20240201030341-mutt-send-email-mst@kernel.org>
- <89460.124020106474400877@us-mta-475.us.mimecast.lan>
- <20240311130446-mutt-send-email-mst@kernel.org>
- <cf813f92-9806-4449-b099-1bb2bd492b3c@arm.com>
- <73123.124031407552500165@us-mta-156.us.mimecast.lan>
- <20240314110649-mutt-send-email-mst@kernel.org>
- <84704.124031504335801509@us-mta-515.us.mimecast.lan>
- <20240315062839-mutt-send-email-mst@kernel.org>
- <b3fd680c675208370fc4560bb3b4d5b8@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rRfbE/T3";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="2yhlVDNT";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rRfbE/T3";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="2yhlVDNT"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 956293754A;
+	Tue, 19 Mar 2024 08:35:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1710837349; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=QDQ8BGnF0EPZ6BvnbghWANat2RUqDRmHdJvdpWEN6cc=;
+	b=rRfbE/T3bKNK79atff7gLWbKhySNwYIaTxu1knYeWKmzfWTuMv0Bta4NivzOYJCWtOIhWi
+	DLLJt9saiehXOsekoJiqHbb1vXIjLKw9o3UA/MWW/t+Cats3ZKP/0vidM5yXoC1fzeDAFg
+	jNJfgZG+On8GLO+KNRF92Bt0IZJckY4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1710837349;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=QDQ8BGnF0EPZ6BvnbghWANat2RUqDRmHdJvdpWEN6cc=;
+	b=2yhlVDNT+fpy/tNC79+octfyHoQJU8dtnDIubFpIX6xOHfdjNpODLdqs2gqr7uh/SzO0BM
+	LmwwpEr1cCFjMVBQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1710837349; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=QDQ8BGnF0EPZ6BvnbghWANat2RUqDRmHdJvdpWEN6cc=;
+	b=rRfbE/T3bKNK79atff7gLWbKhySNwYIaTxu1knYeWKmzfWTuMv0Bta4NivzOYJCWtOIhWi
+	DLLJt9saiehXOsekoJiqHbb1vXIjLKw9o3UA/MWW/t+Cats3ZKP/0vidM5yXoC1fzeDAFg
+	jNJfgZG+On8GLO+KNRF92Bt0IZJckY4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1710837349;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=QDQ8BGnF0EPZ6BvnbghWANat2RUqDRmHdJvdpWEN6cc=;
+	b=2yhlVDNT+fpy/tNC79+octfyHoQJU8dtnDIubFpIX6xOHfdjNpODLdqs2gqr7uh/SzO0BM
+	LmwwpEr1cCFjMVBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6CDC0136D6;
+	Tue, 19 Mar 2024 08:35:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id imQ3GWVO+WXXfwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 19 Mar 2024 08:35:49 +0000
+Message-ID: <da7cfff1-e147-48ea-bcda-9ea913e5feee@suse.de>
+Date: Tue, 19 Mar 2024 09:35:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b3fd680c675208370fc4560bb3b4d5b8@linux.ibm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: drm/tiny: QUESTION: What to use instead of
+ drm_simple_display_pipe ?
+To: Mehdi Djait <mehdi.djait.k@gmail.com>, daniel@ffwll.ch,
+ maarten.lankhorst@linux.intel.com, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <ZfiTbYAa7qxXlrPd@mehdi-archlinux>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <ZfiTbYAa7qxXlrPd@mehdi-archlinux>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: *
+X-Spam-Score: 1.20
+X-Spamd-Result: default: False [1.20 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 BAYES_HAM(-0.01)[49.13%];
+	 RCPT_COUNT_FIVE(0.00)[5];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 FREEMAIL_TO(0.00)[gmail.com,ffwll.ch,linux.intel.com,lists.freedesktop.org,vger.kernel.org];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 SUBJECT_ENDS_QUESTION(1.00)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Flag: NO
 
-On Tue, Mar 19, 2024 at 09:21:06AM +0100, Tobias Huschle wrote:
-> On 2024-03-15 11:31, Michael S. Tsirkin wrote:
-> > On Fri, Mar 15, 2024 at 09:33:49AM +0100, Tobias Huschle wrote:
-> > > On Thu, Mar 14, 2024 at 11:09:25AM -0400, Michael S. Tsirkin wrote:
-> > > >
-> > 
-> > Could you remind me pls, what is the kworker doing specifically that
-> > vhost is relying on?
-> 
-> The kworker is handling the actual data moving in memory if I'm not
-> mistaking.
+Hi
 
-I think that is the vhost process itself. Maybe you mean the
-guest thread versus the vhost thread then?
+Am 18.03.24 um 20:18 schrieb Mehdi Djait:
+> Hello everyone :)
+>
+> I am implementing a tiny drm driver and I am currently working on the
+> V2: https://lore.kernel.org/dri-devel/cover.1701267411.git.mehdi.djait@bootlin.com/
+>
+> I got a review on the v1 telling me not to use the
+> drm_simple_display_pipe. Can someone please explain this further ? Or
+> give me an example drm driver that does it the right way ?
+
+You can copy the code from drm_simple_kms_helper.c into your driver file 
+and start inlining everything. For example
+
+  1) Your driver calls drm_simple_display_pipe_init(), so you copy that 
+code into your source file
+  2) drm_simple_display_pipe_init() uses drm_simple_kms_plane_funcs and 
+drm_simple_kms_crtc_funcs, so you copy these into your source file; 
+together with the drm_simple_kms_*() helpers that they use for their 
+callback pointers.
+  3) Mayb do this for other drm_simple_kms_*() code.
+  4) Then start inlining: inline your copy of 
+drm_simple_display_pipe_iit(). Instead of using 
+sharp_ls027b7dh01_pipe_funcs, inline its functions into your copy of the 
+callers. And so on.
+  5) Rename the resulting code, so that it fits you driver.
+
+With careful changes, you 'll end up with the same functionality as 
+before, but without the intermediate layer of the simple-KMS code.
+
+Best regards
+Thomas
+
+>
+> --
+> Kind Regards
+> Mehdi Djait
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
