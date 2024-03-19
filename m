@@ -1,150 +1,136 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5502F5A782
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 13:24:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF4E8002A;
+	Tue, 19 Mar 2024 13:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710854660; cv=none; b=mbOYwol+ALjP1PnAjnNmXWqxQmcnaPcBtwaq0tI4p02M91ti0mww9jwBCQhbje6peBsaNEqy7xl8QPclEJvyEtYfmHB6pa3aoJbTxYjtiD+wjKqhXLyE5KHgW8AZ0W+a0DwyTQy0LvfohpqKtH5m25K59HEzbFcBhzwPXDH4h+U=
+	t=1710854760; cv=none; b=obKaKNxV0zKv6pUetpFTk0FnSreOj40bOd+RUlrAHYIByUJfNrFF0HUjjmyd8hYXr5mSnHlrj62fjItVYP/75W9KezpHyvzWuY4b50MPbsOffZ7aHJWwoh6t/npwGR1E+m5j+wK5tg+Qaix1lB+vuoM23TGY/bnLIIJpyvX/KiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710854660; c=relaxed/simple;
-	bh=IvLkjdjQGF/TCP6cddg87/pEKPLedEzEkFzH9n8rqcE=;
+	s=arc-20240116; t=1710854760; c=relaxed/simple;
+	bh=QMp0a6X0zF1/jLhQMcPxC09b0tWyVVG0eCAEf4UbP4E=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hhjhwXseeeNJCdIByMUmK5Pr95gTI1e5NgqzuD0DYw8Dj2ZcFdAkBW/f1mTB13H+qPnqBBhHrB/K7Y/ZiI6fzmK0UqjoPlyx+HaF21UKKZjiWdgyvh0oa7xZittZ4D74F5Vud6wCHpWfRHC+J3tV35ZSU2ttUK5R0YzWX00Hcgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=noqT1yq0; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 To:Cc:Content-Type; b=FtPwC6Vd56N6qAKWm0BcH+1aoCRiWMVlMsQiMOlqYumMqP502/F4yLNUu5+GsYIkQm9RS7SRoTkN31GyC3DmSJIAlZsCJHF3xEHzcBjrbJmg8+DD5TxUQz874QGLSJh0I05aZ4hYwwrTGo3Kv6aGPf/Sjy+UyZh+6Rc9xpghWQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="noqT1yq0"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d24a727f78so64700411fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 06:24:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710854656; x=1711459456; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+zj3ZaLyAv3SkG5Vq41cklaD23PSmzrOWDDpGwJYwUE=;
-        b=noqT1yq0Vp0+bMsyyiWudJ60kPwxNNT6RE2SZ/5vbgR7vShw4NSe5wjExHVhmYgZ86
-         FPRAliLoIXxsUZrMWG+0fL+rIg9qoxWnRFmfiVyr4zMIoTscPdzsBiEOselQh9cdB9vo
-         JGfZEyGBEaYCyv7FnRonrM5Igyl1zhlaTzXCAXa3h3LC7LpCVy5w1HCgy+wwnbHBsjFO
-         20ECycNjbPPR8yscOgfHAOWJbSr1qUB7Zpl5RoZyye1SmOhPftfbzM63A0eD1LxzSWyO
-         dwp2/4f1+Js4FFqmvR24eaSdGrBe2E8tKkh4VkZZik1hlWWctancbW9DU8CcVlkN8V4n
-         olyA==
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-609ed7ca444so51530507b3.1;
+        Tue, 19 Mar 2024 06:25:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710854656; x=1711459456;
+        d=1e100.net; s=20230601; t=1710854757; x=1711459557;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+zj3ZaLyAv3SkG5Vq41cklaD23PSmzrOWDDpGwJYwUE=;
-        b=p8P+/Z19cRmy/jD9AWNjvnG5EDI1AzgmtuzCSbA0ERJ+Wj7NnTzG9vIqvOF5HnyKC5
-         XGPORb7UmiuCB0/5Fq9h8KmXMxv6eYA5rAK6yhDbHdodu9ExwEcNk2hK1Ic6ksNd7sUG
-         OGf2NdOtjhDoRLHFV0eldV2iUfatW5aDKbDHRgQxE4qhS4GR9SuVAVFtHP3EuVobIySx
-         LjqZiQzuQ1rSpt8o94Okc32+eU/iGTryliVgXrwOUa/7qHkpEUjT5LIwHZTDcvgFuhYM
-         J9WDhavtwf65jZTkUNSyKuHv1Yo/0hHLMLSOYqyUrLHTKLYD8S59pYh85aTSgXmLkX7r
-         VvGg==
-X-Forwarded-Encrypted: i=1; AJvYcCXzfda8mhzpbMOPfAt9OOSkrajAV04dq8tzBXVtyFUocjLcnu8WU88uiGnOb/T18l8iAQv3/BxItq7WkxW7S/GxhAWkTBvJal4j5Zmi
-X-Gm-Message-State: AOJu0Yz+yQ3eu0uDOe/1WVd8RS3wheAJ8C/DkIcakgdbzebukDe4z4BH
-	maKYaLbhKH/Bl3TZrEEXBU0f5lnK1hpwY0y3ITHZd1oFvZWDG6UTni9lWBxXC58ElN+3idwfssM
-	dg6x6hoArCapMLdRzhzEU/ZCXDXg=
-X-Google-Smtp-Source: AGHT+IEsVwpkIXaZq4hohzh9Ge0QrxMmGlnEABQyll4kgUjzHtDfoupS3qtDTbOFAx6mPr8qIHt9agEb+oU55Tg3qK8=
-X-Received: by 2002:a2e:9c07:0:b0:2d4:3dbc:16ec with SMTP id
- s7-20020a2e9c07000000b002d43dbc16ecmr11569534lji.20.1710854656221; Tue, 19
- Mar 2024 06:24:16 -0700 (PDT)
+        bh=roVBegNwTJt5k2/1YSZU0EzfT6WRuPewqC12eJohDSE=;
+        b=P9HAYdhZvfqfSJoi+dngcjmjIagdjNjv7jzMTpNaZEVms7xCbQ8I6/Rqh7DNVHopLQ
+         G/f+nC6Jy6UJu/tbRrZC+r1KizbLvUltacM/Tg4t+Z451T5xHWsGBV3UVXjXzi0kAGa+
+         5+k7qaBDeUdS+05aIQBcE+wWBvG+aEhAA7ggE6tg3l+FtfJH2wQwYAzxBE9y6wWLyPpo
+         Mtzxiv7sPXMat3dxnz3B+d1g507gWs+2QsoWUJBP56vDr45L6BLor6ryXeaf5dyD5xCJ
+         iUvqqxzEeigaUGIiTKNOLhixs0CJSraR+ratUwS0qCdvT2hRA3dCLveMl/YyzhcumFWP
+         BY+w==
+X-Forwarded-Encrypted: i=1; AJvYcCVUfZLfrdE/hKrqXB4+8L+lIOS8cbyJhY05W+x/sM1NCqTYxyFf96zKeEmbfbw4JuxO8z1PAsid0vgq9JjoUYkcVk5+YOgCmmtRFtvaxiUvk6TYBT6f7mmWU7O+VxG+n0yDOKQPxOiV0G/1OKOHgD8PlWvX+3XP+dfx9nQ8YeHSAdhK+ywVv93Kpuf1FmJCqw8pQiekWNDWp/UEu63e5vQNcoaN31E4NErL
+X-Gm-Message-State: AOJu0Yy34WPLd1K67g0v4NiL8+i1GTSKgVTvRC7Yyil6rAVmUE7D+5Tn
+	eAA9NOT+QMLXvTUGFwqJutXzDgv+A+mxXUd/Op5KgpntOChPI5eeRM9783dqh+o=
+X-Google-Smtp-Source: AGHT+IEpK0fCbMXb5ndXOgGdw9eq4LBstpJ97QsVGI4+/tj7rJPsLOz+AAa+kfxbWcbZIB27nbKP+w==
+X-Received: by 2002:a81:8a41:0:b0:610:b448:663b with SMTP id a62-20020a818a41000000b00610b448663bmr6573252ywg.37.1710854756950;
+        Tue, 19 Mar 2024 06:25:56 -0700 (PDT)
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
+        by smtp.gmail.com with ESMTPSA id y21-20020a81a115000000b0060a085163adsm2368014ywg.73.2024.03.19.06.25.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Mar 2024 06:25:56 -0700 (PDT)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-609ed7ca444so51530237b3.1;
+        Tue, 19 Mar 2024 06:25:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWULV3Fj9FllAcDslO7dDZ7P74ZED8L/VeiZpIu7q7GJ63x5pzioMqLTepe67Dy4x6mC+NJjizF2MISPZ1UdOzDqApW0TrZJ+VXNJDywPPbdXeEcOuvFB7jXmKuG9lPWxp0ZZvj9OJXigREiuJ0cE9xhMmGzEmxQNrA2XmL4eoPYQYlBE2RicFlvKcxQAvT7cVFNNgq8EhcIBzFk70C8Tr8ED03R6PiSxa7
+X-Received: by 2002:a81:8a41:0:b0:610:b448:663b with SMTP id
+ a62-20020a818a41000000b00610b448663bmr6573232ywg.37.1710854756514; Tue, 19
+ Mar 2024 06:25:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240319104418.284519-1-ubizjak@gmail.com> <CAMzpN2iTU05j5R1L9=LhjDoQ9krOymzOWH9QHi50vq-fAaOM5w@mail.gmail.com>
-In-Reply-To: <CAMzpN2iTU05j5R1L9=LhjDoQ9krOymzOWH9QHi50vq-fAaOM5w@mail.gmail.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Tue, 19 Mar 2024 14:24:04 +0100
-Message-ID: <CAFULd4Zu+XhAboEss2GfBuQPXJEgxA-dQ7JX415q_Y=9fFNFoQ@mail.gmail.com>
-Subject: Re: [PATCH -tip 0/3] x86/asm: Use generic asm operand modifiers
- instead of %P in asm templates
-To: Brian Gerst <brgerst@gmail.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Andy Lutomirski <luto@kernel.org>, Denys Vlasenko <dvlasenk@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, 
-	Josh Poimboeuf <jpoimboe@redhat.com>, Sean Christopherson <seanjc@google.com>
+References: <20240318172102.45549-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240318172102.45549-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <db13e305-adc4-4990-b9ec-b1cdcdad4406@linaro.org> <010e4742-438f-413f-811f-a033ec104832@linaro.org>
+ <CA+V-a8txP39HJJrJcNqCUgw2NkdA3uSvBrbdSzw0bN6r5LpNaQ@mail.gmail.com> <51743788-3444-4817-864b-404205a06137@linaro.org>
+In-Reply-To: <51743788-3444-4817-864b-404205a06137@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 19 Mar 2024 14:25:43 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVWMt_JqpiWasZxS3D8dS5JYgxDU0SKbFxNVV-zWk8D+w@mail.gmail.com>
+Message-ID: <CAMuHMdVWMt_JqpiWasZxS3D8dS5JYgxDU0SKbFxNVV-zWk8D+w@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] dt-bindings: serial: renesas,scif: Validate
+ 'interrupts' and 'interrupt-names'
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-serial@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 19, 2024 at 2:10=E2=80=AFPM Brian Gerst <brgerst@gmail.com> wro=
-te:
+Hi Krzysztof,
+
+On Tue, Mar 19, 2024 at 2:04=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+> On 19/03/2024 13:43, Lad, Prabhakar wrote:
+> >>>> diff --git a/Documentation/devicetree/bindings/serial/renesas,scif.y=
+aml b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
+> >>>> index af72c3420453..53f18e9810fd 100644
+> >>>> --- a/Documentation/devicetree/bindings/serial/renesas,scif.yaml
+> >>>> +++ b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
+> >>>> @@ -82,38 +82,6 @@ properties:
+> >>>>    reg:
+> >>>>      maxItems: 1
+> >>>>
+> >>>> -  interrupts:
+> >>>
+> >>> I don't understand what is happening with this patchset. Interrupts m=
+ust
+> >>> stay here. Where did you receive any different feedback?
+> >>
+> >> Look how it is done:
+> >> https://elixir.bootlin.com/linux/v6.8/source/Documentation/devicetree/=
+bindings/ufs/qcom,ufs.yaml#L44
+> >>
+> > Thanks for the pointer, as the above binding doesn't have any
 >
-> On Tue, Mar 19, 2024 at 6:44=E2=80=AFAM Uros Bizjak <ubizjak@gmail.com> w=
-rote:
-> >
-> > The "P" asm operand modifier is a x86 target-specific modifier.
-> >
-> > For x86_64, when used with a symbol reference, the "P" modifier
-> > emits "sym" instead of "sym(%rip)". When used with a constant, the
-> > "P" modifier emits "cst" instead of "$cst". This property is used to
-> > emit bare symbol references and bare constants without all
-> > syntax-specific prefixes.
-> >
-> > The generic "c", "n" and "a" operand modifiers should be used instead.
-> > The following table shows the modifiers supported by all targets and
-> > their effects:
-> >
-> > Modifier    Description
-> > -----------------------------------------------------------
-> > 'c'         Require a constant operand and print the
-> >             constant expression with no punctuation.
-> > 'n'         Like '%c' except that the value of the constant
-> >             is negated before printing.
-> > 'a'         Substitute a memory reference, with the actual
-> >             operand treated as the address.  This may be
-> >             useful when outputting a "load address"
-> >             instruction, because often the assembler syntax
-> >             for such an instruction requires you to write
-> >             the operand as if it were a memory reference.
-> >
-> > Also note that unlike GCC, clang emits %rip-relative symbol
-> > reference with "P" asm operand modifier, so the patch also unifies
-> > symbol handling with both compilers.
-> >
-> > No functional changes intended.
-> >
-> > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> > Cc: Andy Lutomirski <luto@kernel.org>
-> > Cc: Brian Gerst <brgerst@gmail.com>
-> > Cc: Denys Vlasenko <dvlasenk@redhat.com>
-> > Cc: H. Peter Anvin <hpa@zytor.com>
-> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > Cc: Ingo Molnar <mingo@kernel.org>
-> > Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> > Cc: Sean Christopherson <seanjc@google.com>
-> >
-> > Uros Bizjak (3):
-> >   x86/asm: Remove %P operand modifier from altinstr asm templates
-> >   x86/asm: Use %c/%n instead of %P operand modifier in asm templates
-> >   x86/asm: Use %a instead of %P operand modifier in asm templates
-> >
-> >  arch/x86/boot/main.c                 |  4 ++--
-> >  arch/x86/include/asm/alternative.h   | 22 +++++++++++-----------
-> >  arch/x86/include/asm/apic.h          |  2 +-
-> >  arch/x86/include/asm/atomic64_32.h   |  2 +-
-> >  arch/x86/include/asm/cpufeature.h    |  4 ++--
-> >  arch/x86/include/asm/irq_stack.h     |  2 +-
-> >  arch/x86/include/asm/processor.h     |  6 +++---
-> >  arch/x86/include/asm/special_insns.h |  4 ++--
-> >  arch/x86/include/asm/uaccess.h       |  4 ++--
-> >  9 files changed, 25 insertions(+), 25 deletions(-)
-> >
-> > --
-> > 2.44.0
-> >
+> Yeah, that's just an example to point you the concept: top level
+> property comes with widest constraints (or widest matching items
+> description) and each variant narrows the choice.
 >
-> My one concern is does this work with older compilers?  Technically,
-> GCC 5.1 is still supported.  I seem to recall some issues around these
-> modifiers in the past, but don't remember any details.  Otherwise,
-> it's a nice cleanup.
+> > description items as compared to our case, to clarify I have updated
+> > the binding is below. Is this the correct approach?
+> >
+> > option #1
+> > ---------------
+>
+>
+> Yes, it looks correct.
 
-It will work. Please see [1] for a testcase.
+Why duplicate all the descriptions? The only differences are the number
+of valid interrupts?
+What was wrong with "[PATCH v2 2/2] dt-bindings: serial: renesas,scif:
+Validate 'interrupts' and 'interrupt-names'"[1]?
 
-[1] https://godbolt.org/z/eb6rcz8YW
+https://lore.kernel.org/r/20240307114217.34784-3-prabhakar.mahadev-lad.rj@b=
+p.renesas.com/
 
-Uros.
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
