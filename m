@@ -1,114 +1,281 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53217C0BE
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 04:26:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69337C08B
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 04:27:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710822384; cv=none; b=UQtpsyfKMj4k1vidUS6bGNxRP50hvYhaMS/siVGzJpEsP2UHTW4WrblYSqmbPYbef26YlQtITun24z2A1+IVwB3JJQFomEQ1G4rlGneLbMEK+nqKLPzTsPeGAlyEOjzMG0XQ44UB1eBAsBxkkCIGGFnpc2LAbeZ0s943fcWfc8g=
+	t=1710822463; cv=none; b=uc2O23qpXlr4bqOSY/dCc/kQmEgvY81oM7tAefM+Rt5SR0T1Z06Hha3amalBUna6n/ezxOKUfT/n+YTELO5cNIssDrhtrSAMrONOv0mgimDKdVIljfcUkxHJDVWVrsdLlZWb6pVqAKNoKZZiA8DlNYdvYVVVQheeiVOglQH2b5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710822384; c=relaxed/simple;
-	bh=u02e9JnhtgF01wLoGi9eloHZoYbmUfQfrlrPML9EgIU=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Dl0Ijahw1cpLwcvo7hsZs+tLSlCr4WjRO5+IzRYrQbGKkG+9h1NlNMTqYQLR8KorY10mFraC9HZ7r8ddVa9mc/ck87AujZxX6FfDfDPIiF3duCFwnWCbwYICiglU2N4tZj0K0p0AivtdZefhUGLNEsw98BQ29zBOUs/YJTfIEOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZTAFK3kI; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1710822463; c=relaxed/simple;
+	bh=JmzK7Zbo9hPfx8/XuPbiw7bbbYqr8mArE5GHiVVNrjs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FnCJl1ihuBAf5KKZbirD57FGpy8pLaAW6YogeJbZCYH8MpIamaSjDR2j1W8YglwVr0G/bsLpq+NmDzE3Om8+nsyRzuRz21+2MRQJ/20vao/0dBJmtUlMVGF3y1QaKUspJNRdMAVrJel4Jpmwx99Q3243PKRsg/rENWXnvF11fRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=EG1dHoQu; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZTAFK3kI"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1710822380;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kgOYrA8AEdh1woTHtD2vW3ca3PCtrZkdcZD77qbWikM=;
-	b=ZTAFK3kIV8AKtSNFLFj4r5t0E2RLRk79ahMgFgMUh3jepMgCaS/mVJWw+RNCCrBHBN52gG
-	NXM8ti3nDdYB1W5KBlYW6GIieZZXNfTfpKEBYqCv/yKV1dd9Ool2dQxzcp3DvEWHCDX49h
-	rpX1jczrZg5j7IQxr3uyYzwVPdmEh3E=
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="EG1dHoQu"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dcc73148611so5471583276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 21:27:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1710822460; x=1711427260; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7fSeo85Yh8XHxlmyjnlgCbtVU1rId28fL57bIXUgDgo=;
+        b=EG1dHoQuB8X3FzCPLvHnp6iB2AabsZCpU2YR0veCsHJtgP49hLJ+vdtxXeGprJj98W
+         OvYQykEJlZCYtTLuNQvW8ky8EJ4v5l8yiwgwJgp6P6f29FpkBABzN45U7bVrQZbCpmh/
+         1w9ilYtFMGaE42LbbseopvEogU/mX5UgYUEHbZgZiMofpNmrqzAlvP/m7HXKrpU+Kg/e
+         6VBD2mt75GyZtbQ4vw4CGatR6goOZa+Q8LpDk5Y0nHyIu75/SdrKPjGCLL96FYoV00hy
+         RZqNko1YrvYiWoovAB4D96+HHSwvRfwLdnopJ+aAfBeAxpZROq1UlgmBv+1d/T1fqixE
+         Hzxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710822460; x=1711427260;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7fSeo85Yh8XHxlmyjnlgCbtVU1rId28fL57bIXUgDgo=;
+        b=eYDezSlIZXtegU1tiuzI+UUj/VePoiGruetU16NPDXeCI2l4wuYsk7XuQpYkvb7jpz
+         o3bH5LdQkCRY+QG2g5Pf8URP9HcOAZgInC1/AJD5K+S06CKmElat7/EAnOW7N4lDO9Me
+         XsfhSzpq3dkYOa0qlnK4GI2evZ1l7WUfhpgVtEMNI2FlqLUI25FkTpWmY8OT268PUnaT
+         Er9youmWqYfxcHuEeexQSQzIN04YlqDrWWNUxRf3aqWkLvn0JToguA500XdBptusvDEn
+         hH80yvdOcIrx52iENelBOg3zS7l2s+bL5dzm9tVmTwyHfB2Ay4Sz+6oVIrm0waUcpnP6
+         J5LA==
+X-Forwarded-Encrypted: i=1; AJvYcCVRBA66GySJpaRPN28rHPNWeYPxujXTEDP12QgKPWdAkmgl+sLwsxi2Kq3EtWPOLVHJkr7MGrMw05iDcAIihVw/Gg3zTRz4FvGzg73C
+X-Gm-Message-State: AOJu0Yyl5FEmfzrPuRqmZQRTGz/qxB+u9M6niNpGQTM6dg1D82qdWIJw
+	qlRE8jMnztQkxWKLcNBf/Lk+Ulu50ulYeoMuHXaWvd4fWe5rcnEpsTQT+NC/I58=
+X-Google-Smtp-Source: AGHT+IHgaLA2b2A4WmPe+4Rv2P3Jrxx3QjSR6PArx5q5wlgmR/45U+DUfpoQCzkEkaNfhEua0UrDTA==
+X-Received: by 2002:a25:db85:0:b0:dc6:238e:d766 with SMTP id g127-20020a25db85000000b00dc6238ed766mr13124502ybf.2.1710822460000;
+        Mon, 18 Mar 2024 21:27:40 -0700 (PDT)
+Received: from [100.64.0.1] ([136.226.86.189])
+        by smtp.gmail.com with ESMTPSA id w12-20020a02968c000000b004743bc59379sm2659823jai.59.2024.03.18.21.27.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Mar 2024 21:27:39 -0700 (PDT)
+Message-ID: <b4863d37-2182-479d-8ca2-79951badfb8d@sifive.com>
+Date: Mon, 18 Mar 2024 23:27:37 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: Re: [PATCH v2 05/14] mm/sparc: Change pXd_huge() behavior to exclude
- swap entries
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <20240318200404.448346-6-peterx@redhat.com>
-Date: Tue, 19 Mar 2024 12:25:39 +0800
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux-MM <linux-mm@kvack.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- x86@kernel.org,
- Mike Rapoport <rppt@kernel.org>,
- Matthew Wilcox <willy@infradead.org>,
- sparclinux@vger.kernel.org,
- Jason Gunthorpe <jgg@nvidia.com>,
- linuxppc-dev@lists.ozlabs.org,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- linux-arm-kernel@lists.infradead.org,
- "David S . Miller" <davem@davemloft.net>,
- Andreas Larsson <andreas@gaisler.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <744C19CB-4AE0-472B-ABD8-2064EB04FDA0@linux.dev>
-References: <20240318200404.448346-1-peterx@redhat.com>
- <20240318200404.448346-6-peterx@redhat.com>
-To: Peter Xu <peterx@redhat.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/4] dt-bindings: dmaengine: Add dmamux for
+ CV18XX/SG200X series SoC
+Content-Language: en-US
+To: Inochi Amaoto <inochiama@outlook.com>, Vinod Koul <vkoul@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Jisheng Zhang <jszhang@kernel.org>, Liu Gui <kenneth.liu@sophgo.com>,
+ Jingbao Qiu <qiujingbao.dlmu@gmail.com>, dlan@gentoo.org,
+ dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ Chen Wang <unicorn_wang@outlook.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+References: <IA1PR20MB49536DED242092A49A69CEB6BB2D2@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <IA1PR20MB49532DE75E794419E58F9268BB2D2@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <29f468c5-1aaa-4326-8088-e03a1d6b7174@sifive.com>
+ <IA1PR20MB495363835DD4C6B0EA2DA224BB2C2@IA1PR20MB4953.namprd20.prod.outlook.com>
+From: Samuel Holland <samuel.holland@sifive.com>
+In-Reply-To: <IA1PR20MB495363835DD4C6B0EA2DA224BB2C2@IA1PR20MB4953.namprd20.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hi Inochi,
 
+On 2024-03-18 11:03 PM, Inochi Amaoto wrote:
+> On Mon, Mar 18, 2024 at 10:22:47PM -0500, Samuel Holland wrote:
+>> On 2024-03-18 1:38 AM, Inochi Amaoto wrote:
+>>> The DMA IP of Sophgo CV18XX/SG200X is based on a DW AXI CORE, with
+>>> an additional channel remap register located in the top system control
+>>> area. The DMA channel is exclusive to each core.
+>>>
+>>> Add the dmamux binding for CV18XX/SG200X series SoC
+>>>
+>>> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
+>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>> ---
+>>>  .../bindings/dma/sophgo,cv1800-dmamux.yaml    | 47 ++++++++++++++++
+>>>  include/dt-bindings/dma/cv1800-dma.h          | 55 +++++++++++++++++++
+>>>  2 files changed, 102 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/dma/sophgo,cv1800-dmamux.yaml
+>>>  create mode 100644 include/dt-bindings/dma/cv1800-dma.h
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/dma/sophgo,cv1800-dmamux.yaml b/Documentation/devicetree/bindings/dma/sophgo,cv1800-dmamux.yaml
+>>> new file mode 100644
+>>> index 000000000000..c813c66737ba
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/dma/sophgo,cv1800-dmamux.yaml
+>>> @@ -0,0 +1,47 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/dma/sophgo,cv1800-dmamux.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Sophgo CV1800/SG200 Series DMA mux
+>>> +
+>>> +maintainers:
+>>> +  - Inochi Amaoto <inochiama@outlook.com>
+>>> +
+>>> +allOf:
+>>> +  - $ref: dma-router.yaml#
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    const: sophgo,cv1800-dmamux
+>>> +
+>>> +  reg:
+>>> +    maxItems: 2
+>>> +
+>>> +  '#dma-cells':
+>>> +    const: 3
+>>> +    description:
+>>> +      The first cells is DMA channel. The second one is device id.
+>>> +      The third one is the cpu id.
+>>
+>> There are 43 devices, but only 8 channels. Since the channel is statically
+>> specified in the devicetree as the first cell here, that means the SoC DT author
+>> must pre-select which 8 of the 43 devices are usable, right? 
+> 
+> Yes, you are right.
+> 
+>> And then the rest
+>> would have to omit their dma properties. Wouldn't it be better to leave out the
+>> channel number here and dynamically allocate channels at runtime?
+>>
+> 
+> You mean defining all the dma channel in the device and allocation channel
+> selectively? This is workable, but it still needs a hint to allocate channel.
 
-> On Mar 19, 2024, at 04:03, peterx@redhat.com wrote:
->=20
-> From: Peter Xu <peterx@redhat.com>
->=20
-> Please refer to the previous patch on the reasoning for x86.  Now =
-sparc is
-> the only architecture that will allow swap entries to be reported as
-> pXd_huge().  After this patch, all architectures should forbid swap =
-entries
-> in pXd_huge().
->=20
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: Andreas Larsson <andreas@gaisler.com>
-> Cc: sparclinux@vger.kernel.org
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
-> arch/sparc/mm/hugetlbpage.c | 6 ++----
-> 1 file changed, 2 insertions(+), 4 deletions(-)
->=20
-> diff --git a/arch/sparc/mm/hugetlbpage.c b/arch/sparc/mm/hugetlbpage.c
-> index b432500c13a5..d31c2cec35c9 100644
-> --- a/arch/sparc/mm/hugetlbpage.c
-> +++ b/arch/sparc/mm/hugetlbpage.c
-> @@ -409,14 +409,12 @@ pte_t huge_ptep_get_and_clear(struct mm_struct =
-*mm, unsigned long addr,
->=20
-> int pmd_huge(pmd_t pmd)
-> {
-> - 	return !pmd_none(pmd) &&
-> - 	(pmd_val(pmd) & (_PAGE_VALID|_PAGE_PMD_HUGE)) !=3D _PAGE_VALID;
-> + 	return pmd_leaf(pmd);;
+I mean allocating hardware channels only when a channel is requested by a client
+driver. The dmamux driver could maintain a counter and allocate the channels
+sequentially -- then the first 8 calls to cv1800_dmamux_route_allocate() would
+succeed and later calls from other devices would fail.
 
-There is a redundant semicolon in the end.
+> Also, according to the information from sophgo, it does not support dynamic 
+> channel allocation, so all channel can only be initialize once.
 
-Thanks.
+That's important to know. In that case, the driver should probably leave the
+registers alone in cv1800_dmamux_free(), and then scan to see if a device is
+already mapped to a channel before allocating a new one. (Or it should have some
+other way of remembering the mapping.) That way a single client can repeatedly
+allocate/free its DMA channel without consuming all of the hardware channels.
 
-> }
->=20
-> int pud_huge(pud_t pud)
-> {
-> - 	return !pud_none(pud) &&
-> - 	(pud_val(pud) & (_PAGE_VALID|_PAGE_PUD_HUGE)) !=3D _PAGE_VALID;
-> + 	return pud_leaf(pud);
-> }
->=20
-> static void hugetlb_free_pte_range(struct mmu_gather *tlb, pmd_t *pmd,
-> --=20
-> 2.44.0
->=20
+> There is another problem, since we defined all the dmas property in the device,
+> How to mask the devices if we do not want to use dma on them? I have see SPI
+> device will disable DMA when allocation failed, I guess this is this mechanism
+> is the same for all devices?
+
+I2C/SPI/UART controller drivers generally still work after failing to acquire a
+DMA channel. For audio-related drivers, DMA is generally a hard dependency.
+
+If each board has 8 or fewer DMA-capable devices enabled in its DT, there is no
+problem. If some board enables more than 8 DMA-capable devices, then it should
+use "/delete-property/ dmas;" on the devices that would be least impacted by
+missing DMA. Otherwise, which devices get functional DMA depends on driver probe
+order.
+
+Normally you wouldn't need to do "/delete-property/ dmas;", because many drivers
+only request the DMA channel when actively being used (e.g. userspace has the
+TTY/spidev/ALSA device file open), but this doesn't help if you can only assign
+each channel once.
+
+Regards,
+Samuel
+
+>>> +
+>>> +  dma-masters:
+>>> +    maxItems: 1
+>>> +
+>>> +  dma-requests:
+>>> +    const: 8
+>>> +
+>>> +required:
+>>> +  - '#dma-cells'
+>>> +  - dma-masters
+>>> +
+>>> +additionalProperties: false
+>>> +
+>>> +examples:
+>>> +  - |
+>>> +    dma-router {
+>>> +      compatible = "sophgo,cv1800-dmamux";
+>>> +      #dma-cells = <3>;
+>>> +      dma-masters = <&dmac>;
+>>> +      dma-requests = <8>;
+>>> +    };
+>>> diff --git a/include/dt-bindings/dma/cv1800-dma.h b/include/dt-bindings/dma/cv1800-dma.h
+>>> new file mode 100644
+>>> index 000000000000..3ce9dac25259
+>>> --- /dev/null
+>>> +++ b/include/dt-bindings/dma/cv1800-dma.h
+>>> @@ -0,0 +1,55 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
+>>> +
+>>> +#ifndef __DT_BINDINGS_DMA_CV1800_H__
+>>> +#define __DT_BINDINGS_DMA_CV1800_H__
+>>> +
+>>> +#define DMA_I2S0_RX		0
+>>> +#define DMA_I2S0_TX		1
+>>> +#define DMA_I2S1_RX		2
+>>> +#define DMA_I2S1_TX		3
+>>> +#define DMA_I2S2_RX		4
+>>> +#define DMA_I2S2_TX		5
+>>> +#define DMA_I2S3_RX		6
+>>> +#define DMA_I2S3_TX		7
+>>> +#define DMA_UART0_RX		8
+>>> +#define DMA_UART0_TX		9
+>>> +#define DMA_UART1_RX		10
+>>> +#define DMA_UART1_TX		11
+>>> +#define DMA_UART2_RX		12
+>>> +#define DMA_UART2_TX		13
+>>> +#define DMA_UART3_RX		14
+>>> +#define DMA_UART3_TX		15
+>>> +#define DMA_SPI0_RX		16
+>>> +#define DMA_SPI0_TX		17
+>>> +#define DMA_SPI1_RX		18
+>>> +#define DMA_SPI1_TX		19
+>>> +#define DMA_SPI2_RX		20
+>>> +#define DMA_SPI2_TX		21
+>>> +#define DMA_SPI3_RX		22
+>>> +#define DMA_SPI3_TX		23
+>>> +#define DMA_I2C0_RX		24
+>>> +#define DMA_I2C0_TX		25
+>>> +#define DMA_I2C1_RX		26
+>>> +#define DMA_I2C1_TX		27
+>>> +#define DMA_I2C2_RX		28
+>>> +#define DMA_I2C2_TX		29
+>>> +#define DMA_I2C3_RX		30
+>>> +#define DMA_I2C3_TX		31
+>>> +#define DMA_I2C4_RX		32
+>>> +#define DMA_I2C4_TX		33
+>>> +#define DMA_TDM0_RX		34
+>>> +#define DMA_TDM0_TX		35
+>>> +#define DMA_TDM1_RX		36
+>>> +#define DMA_AUDSRC		37
+>>> +#define DMA_SPI_NAND		38
+>>> +#define DMA_SPI_NOR		39
+>>> +#define DMA_UART4_RX		40
+>>> +#define DMA_UART4_TX		41
+>>> +#define DMA_SPI_NOR1		42
+>>> +
+>>> +#define DMA_CPU_A53		0
+>>> +#define DMA_CPU_C906_0		1
+>>> +#define DMA_CPU_C906_1		2
+>>> +
+>>> +
+>>> +#endif // __DT_BINDINGS_DMA_CV1800_H__
+>>> --
+>>> 2.44.0
+>>>
+>>>
+>>> _______________________________________________
+>>> linux-riscv mailing list
+>>> linux-riscv@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-riscv
+>>
 
