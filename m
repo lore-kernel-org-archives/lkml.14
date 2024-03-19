@@ -1,110 +1,165 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E365FDD3;
-	Tue, 19 Mar 2024 22:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1F260250
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 22:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710888710; cv=none; b=JsHY11tpUaDez4QN8Rio/+o85CUbMsTzFVEjQgYTgyCnIZwy0G8c+uTjSTuFp9V48SWy218qcJE07WEbX+FgImoKgQl1D3LhhAAaizer7ZahqIv6qZHJa0rAa+ThKAXVG43umYqGlXRy1bPbJ2p/DJWuDK8h5tKq1nNxfxtb5mk=
+	t=1710888710; cv=none; b=D0ZodjP41Fbj/Edexj3cXZD36fajhv7BchG8N26LDNvhmKz4IhlbmMdp7tm4COIsRVW1/Fmq84TcJLqynlzPEi+8AKSWiJFEcZ4UiuhzW6NnQDWSJIObn8d/2AKejluTYu7Sa6T424bAwT+zAyndr2MEwBA5X9XehEm263icfEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710888710; c=relaxed/simple;
-	bh=IU1PCXQe1NSdbBnY4sTGTjqiGnGliYg75WlahJ675b4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:Mime-Version; b=VJVuSRRxhwaqP9gdwSjHYl9kuXoPtjW/14JYmllJ2dkUz779+Fzpn719M1x/KtDMPEXog+e0ZAsINuZHp5g3mYuH0zRcLuQVok7xvf6v7cgzoPyZliFYFCxpVTbs2VC/fRaBjIIiXeCkqIXnMtBp+cmemaWVfFl0NxpkTU7geHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=P6Ogfuac; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	bh=s64Pf1BLDbOpOL2f4d7AToLS9pNdSyVcToFfD9BN+Qs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=PoaVCsUW6pyw3FI4G17O6EogSGTLkuA56gGW0lGmV3j/rB3c7QPMaI1ZjY46SJMTuSe1A4uuwX9KlEWWktPLw8NWaDNDzeMzyXdo0UPielUCuCQjED6Xhf8P+F3iNEwstje+nquN8IO2d+mWpBhAs+TrzC5xceq/0shnZT50t9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OMzjesS1; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="P6Ogfuac"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42JLewjK024577;
-	Tue, 19 Mar 2024 22:51:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=SU/WmQVRnDFhOMmtaXP3ay9X1IDxE95+NRNPtSj9LQY=;
- b=P6OgfuacAmbiXGR9HLmE+e1I/uh7ihnzs4Cabq0G6r/nfG+4/95DAtozri4UUfP/us9E
- V1RqP55pUe0yElXDI0AciZu5IZDAyhLcM/vQWNsRgJAd2QEPsDs1htNzj77a46Rk+WGx
- bJ0DDcPwPlvm6pxbjNV1b+YVuY6bdyBjTppQb5ZABAR+dTsplFByq35ehlc7o4AISZ5d
- 2S3U91qqhO74Am9274bqGtmRHg2Dv2ZJ8BILsR8oxsB0Fu7ASOiaotrF314yW33cebjY
- edhmjcr911SL1IyOCcwIb0+vRwIAVuKlaYzHo5ktgT0YQh6UPFXJSZF44PkzBhGEZG1j 6g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wyg2qgfyk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 22:51:22 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42JMpLm6010859;
-	Tue, 19 Mar 2024 22:51:21 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wyg2qgfyg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 22:51:21 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42JKjCkF010073;
-	Tue, 19 Mar 2024 22:51:20 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wxvauykhx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 22:51:20 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42JMpH6T41747044
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 19 Mar 2024 22:51:19 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9436D58059;
-	Tue, 19 Mar 2024 22:51:17 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EC20B58055;
-	Tue, 19 Mar 2024 22:51:16 +0000 (GMT)
-Received: from li-5cd3c5cc-21f9-11b2-a85c-a4381f30c2f3.ibm.com (unknown [9.61.80.83])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 19 Mar 2024 22:51:16 +0000 (GMT)
-Message-ID: <45f3d3c56a140d174e8234198124c1d2e1712f64.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 03/10] evm: Implement per signature type decision in
- security_inode_copy_up_xattr
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Stefan Berger <stefanb@linux.ibm.com>, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-unionfs@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, paul@paul-moore.com, jmorris@namei.org,
-        serge@hallyn.com, roberto.sassu@huawei.com, amir73il@gmail.com,
-        brauner@kernel.org, miklos@szeredi.hu
-Date: Tue, 19 Mar 2024 18:51:16 -0400
-In-Reply-To: <20240223172513.4049959-4-stefanb@linux.ibm.com>
-References: <20240223172513.4049959-1-stefanb@linux.ibm.com>
-	 <20240223172513.4049959-4-stefanb@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-23.el8_9) 
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OMzjesS1"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1710888706;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IyA1pp/Og9a0uR7KxvRUeBHWPGqjk6cC2yqaXPFBa2g=;
+	b=OMzjesS1g9SgReAooXmXRO+rEeJVZZbO6Fw4R7WVyiz+Aa9xbBeLmtWXnAt5W4EGrFHIuc
+	ZcKCCp5Hx1RcmuU3fc+KSCRCbJ+N7vMEMGQiXQsM7vz/qA90NBCUbHwtOSe5SWcia4bzV1
+	DhIc4OJlMAb1g4JIKmfOCdsLzRRijLI=
+From: Sean Anderson <sean.anderson@linux.dev>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	dri-devel@lists.freedesktop.org
+Cc: Michal Simek <michal.simek@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Daniel Vetter <daniel@ffwll.ch>,
+	linux-arm-kernel@lists.infradead.org,
+	Sean Anderson <sean.anderson@linux.dev>
+Subject: [PATCH v2 5/8] drm: zynqmp_dp: Don't retrain the link in our IRQ
+Date: Tue, 19 Mar 2024 18:51:18 -0400
+Message-Id: <20240319225122.3048400-6-sean.anderson@linux.dev>
+In-Reply-To: <20240319225122.3048400-1-sean.anderson@linux.dev>
+References: <20240319225122.3048400-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: i8FJ9rBkXC0xX0Ei8BS5wURKlyPCn43u
-X-Proofpoint-ORIG-GUID: FRDB_SQk1rFHaHJOT17cBwsHNcicwSOr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-19_09,2024-03-18_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- clxscore=1015 mlxlogscore=888 priorityscore=1501 lowpriorityscore=0
- phishscore=0 malwarescore=0 impostorscore=0 mlxscore=0 spamscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403140000 definitions=main-2403190176
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 2024-02-23 at 12:25 -0500, Stefan Berger wrote:
-> To support "portable and immutable signatures" on otherwise unsupported
-> filesystems, determine the EVM signature type by the content of a file's
-> xattr. If the file has the appropriate signature type then allow it to be
-> copied up. All other signature types are discarded as before.
-> 
-> "Portable and immutable" EVM signatures can be copied up by stacked file-
-> system since the metadata their signature covers does not include file-
-> system-specific data such as a file's inode number, generation, and UUID.
-> 
-> Co-developed-by: Mimi Zohar <zohar@linux.ibm.com>
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+Retraining the link can take a while, and might involve waiting for
+DPCD reads/writes to complete. This is inappropriate for an IRQ handler.
+Just schedule this work for later completion. This is racy, but will be
+fixed in the next commit.
 
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+---
+Actually, on second look this IRQ is threaded. So why do we have a
+workqueue for HPD events? Maybe we should make it unthreaded?
+
+Changes in v2:
+- Document hpd_irq_work
+- Split this off from the lcoking changes
+
+ drivers/gpu/drm/xlnx/zynqmp_dp.c | 43 ++++++++++++++++++++------------
+ 1 file changed, 27 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+index f1834c8e3c02..f3fcdbf662fa 100644
+--- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
++++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+@@ -287,6 +287,7 @@ struct zynqmp_dp_config {
+  * @phy: PHY handles for DP lanes
+  * @num_lanes: number of enabled phy lanes
+  * @hpd_work: hot plug detection worker
++ * @hpd_irq_work: hot plug detection IRQ worker
+  * @status: connection status
+  * @enabled: flag to indicate if the device is enabled
+  * @dpcd: DP configuration data from currently connected sink device
+@@ -298,6 +299,7 @@ struct zynqmp_dp {
+ 	struct drm_dp_aux aux;
+ 	struct drm_bridge bridge;
+ 	struct delayed_work hpd_work;
++	struct delayed_work hpd_irq_work;
+ 
+ 	struct drm_bridge *next_bridge;
+ 	struct device *dev;
+@@ -1611,6 +1613,27 @@ static void zynqmp_dp_hpd_work_func(struct work_struct *work)
+ 	drm_bridge_hpd_notify(&dp->bridge, status);
+ }
+ 
++static void zynqmp_dp_hpd_irq_work_func(struct work_struct *work)
++{
++	struct zynqmp_dp *dp = container_of(work, struct zynqmp_dp,
++					    hpd_irq_work.work);
++	u8 status[DP_LINK_STATUS_SIZE + 2];
++	int err;
++
++	err = drm_dp_dpcd_read(&dp->aux, DP_SINK_COUNT, status,
++			       DP_LINK_STATUS_SIZE + 2);
++	if (err < 0) {
++		dev_dbg_ratelimited(dp->dev,
++				    "could not read sink status: %d\n", err);
++	} else {
++		if (status[4] & DP_LINK_STATUS_UPDATED ||
++		    !drm_dp_clock_recovery_ok(&status[2], dp->mode.lane_cnt) ||
++		    !drm_dp_channel_eq_ok(&status[2], dp->mode.lane_cnt)) {
++			zynqmp_dp_train_loop(dp);
++		}
++	}
++}
++
+ static irqreturn_t zynqmp_dp_irq_handler(int irq, void *data)
+ {
+ 	struct zynqmp_dp *dp = (struct zynqmp_dp *)data;
+@@ -1635,23 +1658,9 @@ static irqreturn_t zynqmp_dp_irq_handler(int irq, void *data)
+ 	if (status & ZYNQMP_DP_INT_HPD_EVENT)
+ 		schedule_delayed_work(&dp->hpd_work, 0);
+ 
+-	if (status & ZYNQMP_DP_INT_HPD_IRQ) {
+-		int ret;
+-		u8 status[DP_LINK_STATUS_SIZE + 2];
++	if (status & ZYNQMP_DP_INT_HPD_IRQ)
++		schedule_delayed_work(&dp->hpd_irq_work, 0);
+ 
+-		ret = drm_dp_dpcd_read(&dp->aux, DP_SINK_COUNT, status,
+-				       DP_LINK_STATUS_SIZE + 2);
+-		if (ret < 0)
+-			goto handled;
+-
+-		if (status[4] & DP_LINK_STATUS_UPDATED ||
+-		    !drm_dp_clock_recovery_ok(&status[2], dp->mode.lane_cnt) ||
+-		    !drm_dp_channel_eq_ok(&status[2], dp->mode.lane_cnt)) {
+-			zynqmp_dp_train_loop(dp);
+-		}
+-	}
+-
+-handled:
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -1676,6 +1685,7 @@ int zynqmp_dp_probe(struct zynqmp_dpsub *dpsub)
+ 	dp->status = connector_status_disconnected;
+ 
+ 	INIT_DELAYED_WORK(&dp->hpd_work, zynqmp_dp_hpd_work_func);
++	INIT_DELAYED_WORK(&dp->hpd_irq_work, zynqmp_dp_hpd_irq_work_func);
+ 
+ 	/* Acquire all resources (IOMEM, IRQ and PHYs). */
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dp");
+@@ -1775,6 +1785,7 @@ void zynqmp_dp_remove(struct zynqmp_dpsub *dpsub)
+ 	zynqmp_dp_write(dp, ZYNQMP_DP_INT_DS, ZYNQMP_DP_INT_ALL);
+ 	disable_irq(dp->irq);
+ 
++	cancel_delayed_work_sync(&dp->hpd_irq_work);
+ 	cancel_delayed_work_sync(&dp->hpd_work);
+ 
+ 	zynqmp_dp_write(dp, ZYNQMP_DP_TRANSMITTER_ENABLE, 0);
+-- 
+2.35.1.1320.gc452695387.dirty
 
