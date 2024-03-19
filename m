@@ -1,101 +1,88 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from gauss.telenet-ops.be (gauss.telenet-ops.be [195.130.132.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4296B657BA
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 15:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F470651BE
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 15:55:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710863642; cv=none; b=WbQOdlfOphRVg3WOJrrPqV2YESRqcfdHtYJS6SAKjW0mDha1WIn5wnsChb1UUe7vL0kgEQHCQtTbL34hMc+Pvv6JACZ6I4HYXci9mjQeuRvK6Eem81XhIRPwd4iOIyUApkdJw+4TtfZApK+NPbrgmvTgr7PhQNWtJ4QQEpZiWDk=
+	t=1710863750; cv=none; b=U18KA953T4KFek2v80rvRuJ2+R7cj/6KSLylC7PtX60FdkByxCYe46nYcDZ/0Ch/03DZPVH34PXhDStZD9bpVRmJ0Tcp7IaMDbKOfeIvDvhnmSNRk16Gyh7OjvrcLSanjWifa5zED77UAfyH1pHCmbldczKCmdHY3dUOvq4L2l4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710863642; c=relaxed/simple;
-	bh=paSWeKBIFxB+F/AXMlOAQl6P1bEPAiBsLyGlr2J3chs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K/5WOjljey+/fJXZ0X+68rwUfaYvv8Eo7QnQcj3jF86cXkxEgX4fnuqvzGm4hRilaZACSjlp2uERNOsuK6tpSeY40itbB4QlBCPLQpopl22NyuAEfbN15hOww6Si8h+QKirMMJN8cmSAW70iDpQMu+lds7VhyRyFr3uDII6QhI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gcYDTijV; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gcYDTijV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710863640;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ko9D6jNCbeVAgprQATdARtgHSvmfZlnh+pwV+XTC6LU=;
-	b=gcYDTijVM6RpkRLGRAL5e2N6YQchIZjHELMa+Q4Rj7yxyY3mFMiHRIqdA1XYC/EmZ2HxRo
-	k4h+/IP71TX9bTbQpVnraQq/t0EixYAgciGAMpQrWYGYYlUnkjvDLBUg0tf/trCuHw3sle
-	sXT8lYH9LEs+4Q9F2ZpYgn6uyPy0rpY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-616-zfuj1Uq-N6GFgh1hIK-5Tw-1; Tue, 19 Mar 2024 11:53:55 -0400
-X-MC-Unique: zfuj1Uq-N6GFgh1hIK-5Tw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6784D800266;
-	Tue, 19 Mar 2024 15:53:55 +0000 (UTC)
-Received: from [10.22.10.159] (unknown [10.22.10.159])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id F06D01121306;
-	Tue, 19 Mar 2024 15:53:54 +0000 (UTC)
-Message-ID: <9b4f3dac-779a-4eef-945b-3ca1455c0dfe@redhat.com>
-Date: Tue, 19 Mar 2024 11:53:50 -0400
+	s=arc-20240116; t=1710863750; c=relaxed/simple;
+	bh=l3fAhMFwXdTrWlgZNWbnVdbuoEcQXgaCLUpfAHd+muQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=PXKTYoZooNXucdiEEdhj2b7l74kPpwoxIQb7eZoRkzafTWMTS1kh4DTOkqnlgvhjN9L565VnD0FxlHhu0bANl0uN4TUcLFyBrOUcbgzCR0N9G3ZKQvd+YD56pOs00/X9L3ZNcYddRRN/QKhdO47ynXJ+HlPj9kYP8/wGCEoKG8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
+	by gauss.telenet-ops.be (Postfix) with ESMTPS id 4Tzbfx2Pc1z4wyxx
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 16:46:17 +0100 (CET)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:76d0:2bff:fec8:549])
+	by andre.telenet-ops.be with bizsmtp
+	id 0fm82C00K0SSLxL01fm8mp; Tue, 19 Mar 2024 16:46:10 +0100
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rmbev-00468j-Ez;
+	Tue, 19 Mar 2024 16:46:08 +0100
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rmbfE-000pFV-Bw;
+	Tue, 19 Mar 2024 16:46:08 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: devicetree@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 1/3] dt-bindings: timer: renesas,tmu: Add R-Mobile APE6 support
+Date: Tue, 19 Mar 2024 16:46:03 +0100
+Message-Id: <18b3778031f939a8e40a9865f9be0a9ec2e28a1e.1710862701.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1710862701.git.geert+renesas@glider.be>
+References: <cover.1710862701.git.geert+renesas@glider.be>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Locking: Let PREEMPT_RT compile again with new rwsem
- asserts.
-Content-Language: en-US
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Matthew Wilcox <willy@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Boqun Feng <boqun.feng@gmail.com>,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
- Clark Williams <williams@redhat.com>
-References: <20240319070550.ws_uO21-@linutronix.de>
- <ZfmVPid-d7cpf6Yt@casper.infradead.org>
- <20240319141506.DUd9NKl4@linutronix.de>
-From: Waiman Long <longman@redhat.com>
-In-Reply-To: <20240319141506.DUd9NKl4@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+Content-Transfer-Encoding: 8bit
 
+Document support for the Timer Unit (TMU) on the R-Mobile APE6 (R8A73A4)
+Soc.
 
-On 3/19/24 10:15, Sebastian Andrzej Siewior wrote:
-> On 2024-03-19 13:38:06 [+0000], Matthew Wilcox wrote:
->> On Tue, Mar 19, 2024 at 08:05:50AM +0100, Sebastian Andrzej Siewior wrote:
->>> -static inline void rwsem_assert_held_write_nolockdep(const struct rw_semaphore *sem)
->>> +static __always_inline bool rwsem_held_write(const struct rw_semaphore *sem)
->> The locking maintainers were very clear that this predicate Should Not
->> Exist.  It encourages people to write bad code.  Assertions only!
-> What do you refer to? The inline vs __always_inline or
-> rwsem_held_write() should not exists and it should invoke directly
-> rw_base_is_write_locked()?
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ Documentation/devicetree/bindings/timer/renesas,tmu.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Just merge rwsem_held_write() into rwsem_assert_held_write_nolockdep() 
-and we should be all set.
-
-Cheers,
-Longman
-
->>>   {
->>> -	rw_base_assert_held_write(sem);
->>> +	return rw_base_is_write_locked(&sem->rwbase);
->>> +}
->>> +
->>> +static __always_inline void rwsem_assert_held_write_nolockdep(const struct rw_semaphore *sem)
->>> +{
->>> +	WARN_ON(!rwsem_held_write(sem));
->>>   }
->>>   
->>>   static __always_inline int rwsem_is_contended(struct rw_semaphore *sem)
-> Sebastian
->
+diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
+index 2c915101d7bcec68..8df9d4718cf82a28 100644
+--- a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
++++ b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
+@@ -21,6 +21,7 @@ properties:
+   compatible:
+     items:
+       - enum:
++          - renesas,tmu-r8a73a4  # R-Mobile APE6
+           - renesas,tmu-r8a7740  # R-Mobile A1
+           - renesas,tmu-r8a774a1 # RZ/G2M
+           - renesas,tmu-r8a774b1 # RZ/G2N
+@@ -94,6 +95,7 @@ if:
+       compatible:
+         contains:
+           enum:
++            - renesas,tmu-r8a73a4
+             - renesas,tmu-r8a7740
+             - renesas,tmu-r8a7778
+             - renesas,tmu-r8a7779
+-- 
+2.34.1
 
