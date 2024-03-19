@@ -1,167 +1,150 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD942B9CF;
-	Tue, 19 Mar 2024 19:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F6A52B9CF;
+	Tue, 19 Mar 2024 19:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710874951; cv=none; b=AAEv66llt6RAWpMiFnaDfRvegNwN8bAH5POXYYIq3wc0MXR9jFfPTnvO7/wXr0F8MR5thju5O/NyJRE11a3AA2aqroH1vvsDARj3GzC5jqdLGnBAfkw8UGAdHjTSXUxt4Y4QloTHXImwIqmBDfaO4dSlwWi1+01dXFHrpl9eVns=
+	t=1710875069; cv=none; b=cn5Yo3V9GLM87u4p65xhpBpexOADqQZuKTmxSJeBodqUW6MLy3ym7lvvi/VvuIAsS6q/tccEVRoxp4nN37NFqvtx/hHkUL3Go58Xa25Z84HZzemKQGc5iGBOWisFA9qf4m3WND7pxOqW92HMKBn7CHEHNO+/n4A1QnKf2tiZvhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710874951; c=relaxed/simple;
-	bh=xhTBM1ype8leo2fNoMrinBhzHLV6MNlmhVPmBxtLa5g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=l1Iqn19AgoEy+jQQSII1q7NqhpLdD5KymBDI7ANbP8Dj1SUjtE3kgMjn7dpUp3p/VOK9GwJHPuP9B+C/HT238WlA4EZoQI75csJJ4XbTfgN8SSGbbJOH04VvU7W9xqJ1bjCUa68n7RDBK4FZIRJd5TOSsYifCAwV+JnC/Ro7nns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=e3b+/0f0; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1710875069; c=relaxed/simple;
+	bh=1pjcoLPclLzjr/spIkeBg9aX2MPdr/BpKaruYoQCPz4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ut2VRqoHomVB5QIU16BOfnRhImEWLLiXLDg8D0BRF1scDmVmGBdUzFLtnuRXP9jes75SDS22mz/hp0CZ3qd/JrHnUBmCK6t28ZtQRVHclpiUnOk170BLAhRlSXYxq2JAtgsUNzYSyIZOCF+kKnf04W1FRXdCaa+GeK6sJZ9bdco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=kRc6YG2S; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5dZwg4br; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=kRc6YG2S; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5dZwg4br; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="e3b+/0f0"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42JHH1Zt021200;
-	Tue, 19 Mar 2024 19:02:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=G2fmueehjhCwLS/hDvr7oz47odVkbmYslG1ZuIcCUWY=; b=e3
-	b+/0f0vnkIn1qgiPbaEjPK18/08PLUmQax5LKZ3VqIKxboY5gXX58Um27M/L3cF3
-	f8hGqd2BqrqEPdakhCadauzc5lJTIyQgYve2myeuyOJ0Bj3hZQ5uA2Hq9J/HsBPp
-	EvC9p66uEpp/UuaRx9wE1tw4MM7jqQ4fPNzrWMYxSOaN54GDNjK7fC9OUHnMb3eC
-	wI8Ub6NNEQSnujuB4H4PsFAlAyxkCPjVUp4rBj5Oa5yNAYx+Ppd2ws8mfV2yINxv
-	3nEneFCK217FJR20tOOYPjEoo/zE8CGAWp5kYMdy4xGBTMce6lQ1M4mbbFL2Mn7X
-	eZfdO2at4UrYYOdbH3Kw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wy2ea251q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 19:02:18 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42JJ2HK9000577
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 19:02:17 GMT
-Received: from [10.110.10.159] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 19 Mar
- 2024 12:02:14 -0700
-Message-ID: <2fa9a262-de60-2c1e-9ac3-1e478ec65bb8@quicinc.com>
-Date: Tue, 19 Mar 2024 12:02:06 -0700
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="kRc6YG2S";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5dZwg4br";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="kRc6YG2S";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5dZwg4br"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 39E552269E;
+	Tue, 19 Mar 2024 19:04:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710875065;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=m62pe4FrwAX4W2HKydm4w3ADTQa0VQzYozY1M6lUmqg=;
+	b=kRc6YG2SeImuplw8mrkrbKl3wl1XvxFbvIG60cqI4+KqpBclNfMzGjFu1uivSlc4BL1dhR
+	L3aM/VziCWSBbfMzgl3oAf8Sn/HUE6d8eVY5I196h68y/LOEc6yk384iD5dl5MbBsu4TSM
+	f51s6sLUFWGeRqdJHfsPE3BHOuXs64I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710875065;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=m62pe4FrwAX4W2HKydm4w3ADTQa0VQzYozY1M6lUmqg=;
+	b=5dZwg4brtsInmvMmSkeb9afo9JrrV1Kb0M5/7ZEg/HEXIwm0yAevAC3aHkhbBGGEcGpUS9
+	VqWluK7WGnw5D3AQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710875065;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=m62pe4FrwAX4W2HKydm4w3ADTQa0VQzYozY1M6lUmqg=;
+	b=kRc6YG2SeImuplw8mrkrbKl3wl1XvxFbvIG60cqI4+KqpBclNfMzGjFu1uivSlc4BL1dhR
+	L3aM/VziCWSBbfMzgl3oAf8Sn/HUE6d8eVY5I196h68y/LOEc6yk384iD5dl5MbBsu4TSM
+	f51s6sLUFWGeRqdJHfsPE3BHOuXs64I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710875065;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=m62pe4FrwAX4W2HKydm4w3ADTQa0VQzYozY1M6lUmqg=;
+	b=5dZwg4brtsInmvMmSkeb9afo9JrrV1Kb0M5/7ZEg/HEXIwm0yAevAC3aHkhbBGGEcGpUS9
+	VqWluK7WGnw5D3AQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1C9361376B;
+	Tue, 19 Mar 2024 19:04:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id xgzGBrnh+WWTWQAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Tue, 19 Mar 2024 19:04:25 +0000
+Date: Tue, 19 Mar 2024 19:57:11 +0100
+From: David Sterba <dsterba@suse.cz>
+To: Maximilian Heyne <mheyne@amazon.de>
+Cc: stable@vger.kernel.org, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	Filipe Manana <fdmanana@suse.com>, Qu Wenruo <wqu@suse.com>,
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4.19 5.4 5.15] btrfs: defrag: fix memory leak in
+ btrfs_ioctl_defrag
+Message-ID: <20240319185711.GA14596@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <20240319170055.17942-1-mheyne@amazon.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] drm/dp: Clarify that wait_hpd_asserted() is not optional
- for panels
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Douglas Anderson
-	<dianders@chromium.org>
-CC: <dri-devel@lists.freedesktop.org>, <linux-tegra@vger.kernel.org>,
-        Mikko
- Perttunen <mperttunen@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ankit Nautiyal
-	<ankit.k.nautiyal@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>, David Airlie
-	<airlied@gmail.com>,
-        Imre Deak <imre.deak@intel.com>, Jani Nikula
-	<jani.nikula@intel.com>,
-        Maxime Ripard <mripard@kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240319111432.1.I521dad0693cc24fe4dd14cba0c7048d94f5b6b41@changeid>
- <CAA8EJpq-NjmYkWHAVsuP5jA_Z7Xx0jCiqEDgU-0ni9BCg7Opuw@mail.gmail.com>
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <CAA8EJpq-NjmYkWHAVsuP5jA_Z7Xx0jCiqEDgU-0ni9BCg7Opuw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: -tVAJIW7Oc6ZEn_8xtyzaDPHEbKWtYIq
-X-Proofpoint-GUID: -tVAJIW7Oc6ZEn_8xtyzaDPHEbKWtYIq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-19_08,2024-03-18_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- spamscore=0 phishscore=0 impostorscore=0 malwarescore=0 adultscore=0
- clxscore=1015 mlxlogscore=999 lowpriorityscore=0 bulkscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2403140001 definitions=main-2403190145
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240319170055.17942-1-mheyne@amazon.de>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Score: -2.81
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-2.81 / 50.00];
+	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 TO_DN_SOME(0.00)[];
+	 REPLYTO_ADDR_EQ_FROM(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[9];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 BAYES_HAM(-0.10)[65.16%];
+	 ARC_NA(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCVD_DKIM_ARC_DNSWL_HI(-1.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 RCVD_IN_DNSWL_HI(-0.50)[2a07:de40:b281:104:10:150:64:97:from];
+	 RCVD_TLS_ALL(0.00)[];
+	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=kRc6YG2S;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=5dZwg4br
+X-Rspamd-Queue-Id: 39E552269E
 
-
-
-On 3/19/2024 11:35 AM, Dmitry Baryshkov wrote:
-> On Tue, 19 Mar 2024 at 20:15, Douglas Anderson <dianders@chromium.org> wrote:
->>
->> In response to my patch removing the "wait for HPD" logic at the
->> beginning of the MSM DP transfer() callback [1], we had some debate
->> about what the "This is an optional function" meant in the
->> documentation of the wait_hpd_asserted() callback. Let's clarify.
->>
->> As talked about in the MSM DP patch [1], before wait_hpd_asserted()
->> was introduced there was no great way for panel drivers to wait for
->> HPD in the case that the "built-in" HPD signal was used. Panel drivers
->> could only wait for HPD if a GPIO was used. At the time, we ended up
->> just saying that if we were using the "built-in" HPD signal that DP
->> AUX controllers needed to wait for HPD themselves at the beginning of
->> their transfer() callback. The fact that the wait for HPD at the
->> beginning of transfer() was awkward/problematic was the whole reason
->> wait_hpd_asserted() was added.
->>
->> Let's make it obvious that if a DP AUX controller implements
->> wait_hpd_asserted() that they don't need a loop waiting for HPD at the
->> start of their transfer() function. We'll still allow DP controllers
->> to work the old way but mark it as deprecated.
->>
->> [1] https://lore.kernel.org/r/20240315143621.v2.3.I535606f6d4f7e3e5588bb75c55996f61980183cd@changeid
->>
->> Signed-off-by: Douglas Anderson <dianders@chromium.org>
->> ---
->> I would consider changing the docs to say that implementing
->> wait_hpd_asserted() is actually _required_ for any DP controllers that
->> want to support eDP panels parented on the DP AUX bus. The issue is
->> that one DP controller (tegra/dpaux.c, found by looking for those that
->> include display/drm_dp_aux_bus.h) does populate the DP AUX bus but
->> doesn't implement wait_hpd_asserted(). I'm actually not sure how/if
->> this work on tegra since I also don't see any delay loop for HPD in
->> tegra's transfer() callback. For now, I've left wait_hpd_asserted() as
->> optional and described the old/deprecated way things used to work
->> before wait_hpd_asserted().
->>
->>   include/drm/display/drm_dp_helper.h | 8 +++++++-
->>   1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/include/drm/display/drm_dp_helper.h b/include/drm/display/drm_dp_helper.h
->> index a62fcd051d4d..b170efa1f5d2 100644
->> --- a/include/drm/display/drm_dp_helper.h
->> +++ b/include/drm/display/drm_dp_helper.h
->> @@ -422,7 +422,13 @@ struct drm_dp_aux {
->>           * @wait_hpd_asserted: wait for HPD to be asserted
->>           *
->>           * This is mainly useful for eDP panels drivers to wait for an eDP
->> -        * panel to finish powering on. This is an optional function.
->> +        * panel to finish powering on. It is optional for DP AUX controllers
->> +        * to implement this function but required for DP AUX endpoints (panel
->> +        * drivers) to call it after powering up but before doing AUX transfers.
->> +        * If a DP AUX controller does not implement this function then it
->> +        * may still support eDP panels that use the AUX controller's built-in
->> +        * HPD signal by implementing a long wait for HPD in the transfer()
->> +        * callback, though this is deprecated.
+On Tue, Mar 19, 2024 at 05:00:55PM +0000, Maximilian Heyne wrote:
+> Prior to commit c853a5783ebe ("btrfs: allocate
+> btrfs_ioctl_defrag_range_args on stack") range is allocated on the heap
+> and must be freed. However, commit 173431b274a9 ("btrfs: defrag: reject
+> unknown flags of btrfs_ioctl_defrag_range_args") didn't take care of
+> this when it was backported to kernel < 5.15.
 > 
-> It doesn't cover a valid case when the panel driver handles HPD signal
-> on its own.
+> Add a kfree on the error path for stable kernels that lack
+> commit c853a5783ebe ("btrfs: allocate btrfs_ioctl_defrag_range_args on
+> stack").
 > 
+> This bug was discovered and resolved using Coverity Static Analysis
+> Security Testing (SAST) by Synopsys, Inc.
 
-This doc is only for wait_for_hpd_asserted(). If panel driver handles 
-HPD signal on its own, this will not be called. Do we need a doc for that?
+Good catch, thanks.
 
->>           *
->>           * This function will efficiently wait for the HPD signal to be
->>           * asserted. The `wait_us` parameter that is passed in says that we
->> --
->> 2.44.0.291.gc1ea87d7ee-goog
->>
-> 
-> 
+The affected versions are as you say 4.19, 5.4, 5.15, the fixup is
+sufficient and minimal fix, c853a5783ebe is reasonably safe for backport
+too.
