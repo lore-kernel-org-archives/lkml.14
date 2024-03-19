@@ -1,49 +1,49 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [195.130.137.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE30657AD;
-	Tue, 19 Mar 2024 15:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96411823D9
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 15:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710863173; cv=none; b=tUjI39Tai9YQfqEGc10dXP46UgPZ5FXwIJC+yhH526251fZryXNUQj7vPDdq6/Za24J3OqatX+wy09zD0W6cqTvjmMK3v7VnbTGpGckQZ2x+uf+tyllnkElomaa73ZUHPtOSmaDJBhs6kmU0uLNYDn2iez3yiQFpSHvpRhoJNyg=
+	t=1710863181; cv=none; b=c2IrUIs9L9zXx3hYSWwnS80cj2Rj/5a931cu7hClySJ5kRIVw2YvYMGSDbE1JiGYPiA+pl9VlovsTfK1g8bscwQMZzY0ha90NpCiinExwL3lenDbaIMUaRVPn0kuq1uyvsF8lTa8Gh1s4fJLvbbgv3eYOgrMNqXP3wLb/lue2j0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710863173; c=relaxed/simple;
-	bh=71GoqhGH8N8bnYtZsq9ijp622SfqGqj12oKJWg3VC74=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TcTP2qPNdllX5k3Yzn+ucmuUE9Itmx067gASSvujHiFv45pFJLH+A9AohIa5+QU/Xi58kwriJnMk0XZm2Tjp134OuThuW65qt7syANTbtUYoMJNjcxBIcJGBJSN1lgvpyYMT4tQxfaS644YbXHgLhrHVq5AjUxn4b+7fqLNy96E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FDwpXITz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FDwpXITz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B12BC433F1;
-	Tue, 19 Mar 2024 15:46:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710863173;
-	bh=71GoqhGH8N8bnYtZsq9ijp622SfqGqj12oKJWg3VC74=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FDwpXITzgKpJYpScRM4cJlp8JdccJ61kLQnExKuxUbGRi3xpVwvEiFUhKz5MoQBBY
-	 IOvfBRWJ2ZAGTm2uk5U4G9wFRkMyCudQTWi5Dwbg+0fw7IGEb/eMQOiFzOQ3sJ8gWl
-	 MD735TzjhiMaTEFXt/25AYj/8RB3r4Kx1wCCTdjhXCzsmRJanXWYiMZe/Y4la76Nk4
-	 XhkOiGTG0xq17xMARVI3+SM3SU2Q9Gix/LEOXKbom4XLhR7Yq5cmzMPYnhd4HDonMf
-	 4kINiBELTVNk4g6BJHCT3j9zuklxE6E423+9xUZSizgVImeDqrp6XUkLrIxlda370p
-	 LiMRwkt1VLsBQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan+linaro@kernel.org>)
-	id 1rmbfQ-000000000eX-1tKc;
-	Tue, 19 Mar 2024 16:46:20 +0100
-From: Johan Hovold <johan+linaro@kernel.org>
-To: Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Zhengping Jiang <jiangzp@google.com>,
-	linux-bluetooth@vger.kernel.org,
+	s=arc-20240116; t=1710863181; c=relaxed/simple;
+	bh=COltmYJO1++YuiN/+fIts00RxSIor65frAGKOCNQkDQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=YTXTxxUKX88PNKkCnGr8kxrpR4vj+Q82wX9oS3EyUywkH1CrPKQe1rg6n8HglnspRsELkgDKE2dAn+KOV5JLwtIRMTfY07N1IW3rkNftu3mE/B2jKDxIxmGLRlSbSIyWTCVr3wL2ScLDdAjCPmrBiSWBSHjMCSZ7Cv9k2t6q3ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:76d0:2bff:fec8:549])
+	by albert.telenet-ops.be with bizsmtp
+	id 0fmA2C00A0SSLxL06fmAcF; Tue, 19 Mar 2024 16:46:12 +0100
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rmbev-00468l-FR;
+	Tue, 19 Mar 2024 16:46:08 +0100
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rmbfE-000pFY-Cp;
+	Tue, 19 Mar 2024 16:46:08 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: devicetree@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>,
-	stable@vger.kernel.org
-Subject: [PATCH 2/2] Bluetooth: qca: fix NULL-deref on non-serdev setup
-Date: Tue, 19 Mar 2024 16:46:11 +0100
-Message-ID: <20240319154611.2492-3-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240319154611.2492-1-johan+linaro@kernel.org>
-References: <20240319154611.2492-1-johan+linaro@kernel.org>
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 2/3] dt-bindings: timer: renesas,tmu: Add RZ/G1 support
+Date: Tue, 19 Mar 2024 16:46:04 +0100
+Message-Id: <aee943078c91e6c627f33a62c7cd2b73320a1dc5.1710862701.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1710862701.git.geert+renesas@glider.be>
+References: <cover.1710862701.git.geert+renesas@glider.be>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,37 +52,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Qualcomm ROME controllers can be registered from the Bluetooth line
-discipline and in this case the HCI UART serdev pointer is NULL.
+Document support for the Timer Unit (TMU) on RZ/G1 SoCs.
 
-Add the missing sanity check to prevent a NULL-pointer dereference when
-setup() is called for a non-serdev controller.
-
-Fixes: e9b3e5b8c657 ("Bluetooth: hci_qca: only assign wakeup with serial port support")
-Cc: stable@vger.kernel.org      # 6.2
-Cc: Zhengping Jiang <jiangzp@google.com>
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/bluetooth/hci_qca.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/timer/renesas,tmu.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 84f728943962..6a69a7f9ef64 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -1960,8 +1960,10 @@ static int qca_setup(struct hci_uart *hu)
- 		qca_debugfs_init(hdev);
- 		hu->hdev->hw_error = qca_hw_error;
- 		hu->hdev->cmd_timeout = qca_cmd_timeout;
--		if (device_can_wakeup(hu->serdev->ctrl->dev.parent))
--			hu->hdev->wakeup = qca_wakeup;
-+		if (hu->serdev) {
-+			if (device_can_wakeup(hu->serdev->ctrl->dev.parent))
-+				hu->hdev->wakeup = qca_wakeup;
-+		}
- 	} else if (ret == -ENOENT) {
- 		/* No patch/nvm-config found, run with original fw/config */
- 		set_bit(QCA_ROM_FW, &qca->flags);
+diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
+index 8df9d4718cf82a28..7670ec74eabdf4c3 100644
+--- a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
++++ b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
+@@ -23,6 +23,11 @@ properties:
+       - enum:
+           - renesas,tmu-r8a73a4  # R-Mobile APE6
+           - renesas,tmu-r8a7740  # R-Mobile A1
++          - renesas,tmu-r8a7742  # RZ/G1H
++          - renesas,tmu-r8a7743  # RZ/G1M
++          - renesas,tmu-r8a7744  # RZ/G1N
++          - renesas,tmu-r8a7745  # RZ/G1E
++          - renesas,tmu-r8a77470 # RZ/G1C
+           - renesas,tmu-r8a774a1 # RZ/G2M
+           - renesas,tmu-r8a774b1 # RZ/G2N
+           - renesas,tmu-r8a774c0 # RZ/G2E
 -- 
-2.43.2
+2.34.1
 
