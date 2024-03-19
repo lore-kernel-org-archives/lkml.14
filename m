@@ -1,107 +1,105 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A18454BC4;
-	Tue, 19 Mar 2024 22:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C402C604AA;
+	Tue, 19 Mar 2024 22:54:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710888867; cv=none; b=a1r2h5DJ0yYyh9wnoJrMapvtwEo/jTiJXiCUsRaumh1TAlT8CMTvIrkkkCHhtSUQfYxNIEMofZlaujEzxbFcNZSj3vswxNuGMyRw38DVEnOdjc80iXqKnxKII0SxT+H8fTcjYkgV1GxjN2yP55k5CESXf+TQ9FxIcc6F+GQXk6U=
+	t=1710888886; cv=none; b=MmECEHgey1B5iddYGnayNFn+j7v5guerb8LPwS+o/KXyRSI5wWlsNyaZx9AC4NHBgefoTThK9E8CkqteUIpjqQMtK5Kz2/YYd3XSazqLFUXvKmLHBfQBBR9PUbAg3/70ko9NMxCvVqoqt064ZgS+D4y0pPTVQ9VDWvTEbh2eCH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710888867; c=relaxed/simple;
-	bh=3UZZ30OA0jA5JUILju1kNyfyf/u621MYz2QjrmvfMq8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:Mime-Version; b=tU83oo05139r+HjQLAw2yGMou4aWblU0TfemtAlsATpulcVrUUAJO96r8X7gEi14k/2XHyNsLMievywVMvUduqchZ4zMbKumXwv49IKkIGwk9aCO7q5ukBOIA5BbRFanZ0a5NQcL1520lDOP8V+e7/SXkEletoFd25euj1qDqNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MPAxnsGs; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1710888886; c=relaxed/simple;
+	bh=SApLnzf9V9paj7A27Dp2wAi/qBGP4wIFVkmJyrYbWmI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=BkbDTp6zBOUfBQ5fiCW40zF9I0ZftAYJCfaesdd81nP0UlkmMRA/QnxB4S/3CVt9uYvtvC4r+7Cu7tYqMmhnZWqsh29pCKHc8VcqeG9tfv1X1+h6WXFcHcGfsp5yhwB62oqFF8BXe0vypwPzxPps3ebL0C5pz57KHYJG1u8Th0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=R1FSve7Q; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MPAxnsGs"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42JMkGrN012244;
-	Tue, 19 Mar 2024 22:54:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=7X9jcGNPmWLmFdVW41kX9OfYyqZ3FxypITECaxqWny8=;
- b=MPAxnsGszLC0JaO5tUKgNkkVWy5Wf/WHKe5FOHM/hE44evEShvlyeMs853t/2PLU17wW
- ZGxB8S6z0XbzYve4emDewGK102lfAMZU4+3W2K+uQz+uwTfa7wwnDo6Tq6pHIeDx68EY
- g2ANFaUlTuIXWcDxonEfM63o1wiLnHMhsp/Zxo2ST09GIqcq52rhqcbuoecwisBQrg0w
- SDMz8mmWaHtMiEVsGNnDW4b9AzvijxgNiiB+W2VfwEjxU6pswrRlvzsGIZV2Bl6tyhHS
- i06Y/f1hfnw9y1elRplcp0XnEmywd3VFX3giHKQ6BkO6YwoAv9XQwsr7EuISbwueq+Zq 9A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wykner0sf-1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="R1FSve7Q"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42JMfsZR006654;
+	Tue, 19 Mar 2024 22:54:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=ukAH7JGYlF+FVSLp4/U8HRgc2Qj8dfLCCawIfIhcZ9Q=; b=R1
+	FSve7Q7z0b0p4XD1BWSEcu7iFPCjdOZcC2x0oqLV+VD42AE1zyvmfmZVJVbUOGKZ
+	5H082+6YsLd4YCNxP95Vlf+VVeCgKrrdjl1PfdFfbwBU7yZv1dFg71SjR20s5A9q
+	NlOdpno8xeKn4wA8Cj8bfxYEZoczGD0L5YPLj/dyyJUSpMzbt84gcX70b5XhDSOn
+	aRJ/KueWd9DdFlPiozvX8Eq0bkhlq2swOXwdTruB05QKNA6qcbSISokOBtXKxBra
+	8aVQraQiEbAHyEde3IQxk1zCtsp3AcoplAIXYs3FaZP8DoBocMTyKdVkrWqEou9/
+	BoAmhOsHrxzxm8c+HDMQ==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wyh8e0acn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 22:54:09 +0000
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42JMs9hr023631;
-	Tue, 19 Mar 2024 22:54:09 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wykner0rp-1
+	Tue, 19 Mar 2024 22:54:30 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42JMsThT018329
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 22:54:09 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42JKoR03010061;
-	Tue, 19 Mar 2024 22:51:55 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wxvauykmy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 22:51:55 +0000
-Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42JMpqs039977548
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 19 Mar 2024 22:51:55 GMT
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A24E95805E;
-	Tue, 19 Mar 2024 22:51:52 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8B4A858052;
-	Tue, 19 Mar 2024 22:51:51 +0000 (GMT)
-Received: from li-5cd3c5cc-21f9-11b2-a85c-a4381f30c2f3.ibm.com (unknown [9.61.80.83])
-	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 19 Mar 2024 22:51:51 +0000 (GMT)
-Message-ID: <17b17f3ba8ce7af3bccda15bf81535950fa78a48.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 02/10] security: allow finer granularity in
- permitting copy-up of security xattrs
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Stefan Berger <stefanb@linux.ibm.com>, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-unionfs@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, paul@paul-moore.com, jmorris@namei.org,
-        serge@hallyn.com, roberto.sassu@huawei.com, amir73il@gmail.com,
-        brauner@kernel.org, miklos@szeredi.hu
-Date: Tue, 19 Mar 2024 18:51:51 -0400
-In-Reply-To: <20240223172513.4049959-3-stefanb@linux.ibm.com>
-References: <20240223172513.4049959-1-stefanb@linux.ibm.com>
-	 <20240223172513.4049959-3-stefanb@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-23.el8_9) 
+	Tue, 19 Mar 2024 22:54:29 GMT
+Received: from [10.110.120.226] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 19 Mar
+ 2024 15:54:28 -0700
+Message-ID: <328306d9-953f-482b-bf9a-a753d7d4e2ed@quicinc.com>
+Date: Tue, 19 Mar 2024 15:54:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] wireless: ti: Can we just remove this flexible array?
+Content-Language: en-US
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kalle Valo
+	<kvalo@kernel.org>
+CC: <linux-wireless@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>
+References: <3a531d5b-9bf6-4e88-ba8c-a76cfa95be20@embeddedor.com>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <3a531d5b-9bf6-4e88-ba8c-a76cfa95be20@embeddedor.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: rfWDJbAYl7ce7tdpLkNmdGwaITZT7433
-X-Proofpoint-GUID: SwMPlrKBIgxhT5FE2UTZjN7qpE3X_svk
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: aVjG2jj2h7EngEFGX_zsXtDYP-B3f0I2
+X-Proofpoint-GUID: aVjG2jj2h7EngEFGX_zsXtDYP-B3f0I2
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-03-19_09,2024-03-18_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 malwarescore=0 mlxlogscore=620 bulkscore=0
- impostorscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0 suspectscore=0
- clxscore=1015 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403140000 definitions=main-2403190176
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ mlxlogscore=684 adultscore=0 suspectscore=0 lowpriorityscore=0 spamscore=0
+ priorityscore=1501 phishscore=0 malwarescore=0 impostorscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403140001 definitions=main-2403190176
 
-On Fri, 2024-02-23 at 12:25 -0500, Stefan Berger wrote:
-> Copying up xattrs is solely based on the security xattr name. For finer
-> granularity add a dentry parameter to the security_inode_copy_up_xattr
-> hook definition, allowing decisions to be based on the xattr content as
-> well.
+On 3/19/2024 2:59 PM, Gustavo A. R. Silva wrote:
+> Hi!
 > 
-> Co-developed-by: Mimi Zohar <zohar@linux.ibm.com>
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> Acked-by: Amir Goldstein <amir73il@gmail.com>
+> `struct wl1271_cmd_header` is currently embedded in multiple other
+> structs, and it's causing many `-Wflex-array-member-not-at-end` warnings.
+> 
+> Has this flexible-array member been used in the past or is it intended
+> for future use?
+> 
+> Otherwise, I think we could just remove it.
+> 
+> diff --git a/drivers/net/wireless/ti/wlcore/cmd.h b/drivers/net/wireless/ti/wlcore/cmd.h
+> index f2609d5b6bf7..4c2f2608ef3b 100644
+> --- a/drivers/net/wireless/ti/wlcore/cmd.h
+> +++ b/drivers/net/wireless/ti/wlcore/cmd.h
+> @@ -208,8 +208,6 @@ enum cmd_templ {
+>   struct wl1271_cmd_header {
+>          __le16 id;
+>          __le16 status;
+> -       /* payload */
+> -       u8 data[];
+>   } __packed;
 
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+I'd think you should just remove it
+
 
