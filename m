@@ -1,161 +1,132 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5FA5381D;
-	Tue, 19 Mar 2024 08:22:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4D65381D;
+	Tue, 19 Mar 2024 08:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710836581; cv=none; b=R9863ajLmSX6WCjURH9nat/kw/9B9fCsSGDmB1JL+lyuhH2WwW6NC3h30k9C2mYhRSCoyOPLcoEvhKhDIPedWvqvaKvmpMQdTZHPWnOOU2VvcdvuPh7YnFigsMaOtdVzVL0CRFy+WJiMUJE83h5GcY/kn1Ef1N71R9Mn66qpnik=
+	t=1710836586; cv=none; b=JJpVScUAscojGmW03TQhHf2go9txlrqeZvidS6KnRC2ZIXreDVqDmU250vkTgYZL3VOSrfluABB1lhRRkOdHuYeiy+WVtktYprFVvB7tivXzn21UTgeco5mYll+rw+9gn5e+R4g8hNrdkfdlr+1lF9I8+cWWvhMsGHOcr7U0xoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710836581; c=relaxed/simple;
-	bh=2SFz89yAkAWvPswrpO+79T3cLeMOEzJVPjffwpyCHtY=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=dPxSGwntfOdyWJk1B/KpSepfknh3e2wIVuWQmZqKSM5IgXOdr9tlBhbj35YWx2xijHV40m7dpn69A9ZcP/5+npLuPWIfpYa23/Qs2JacmwPlhDDX0M/KkBLOG1TsSLaO4gPkUiFRgK7c2+Lmrp1I30ScMiAehggLKR/J1Jj60DQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from [192.168.1.105] (178.176.79.255) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 19 Mar
- 2024 11:22:49 +0300
-Subject: Re: [PATCH v2] fbmon: prevent division by zero in
- fb_videomode_from_videomode()
-To: Roman Smirnov <r.smirnov@omp.ru>, Helge Deller <deller@gmx.de>, Daniel
- Vetter <daniel@ffwll.ch>
-CC: Thomas Zimmermann <tzimmermann@suse.de>, Karina Yankevich
-	<k.yankevich@omp.ru>, "linux-fbdev@vger.kernel.org"
-	<linux-fbdev@vger.kernel.org>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "lvc-project@linuxtesting.org"
-	<lvc-project@linuxtesting.org>
-References: <20240305135150.23240-1-r.smirnov@omp.ru>
- <64bbc4dd-b617-4f3d-809e-763bedf37fb7@gmx.de>
- <9688d1d453b0472cb90f5e2151cbd2f8@omp.ru>
- <b5d52c4c-534f-4897-ab96-351f09bee89a@gmx.de>
- <57b3f6a6cc184c8ead51ecc50669b503@omp.ru>
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <e730b2cd-5f29-8685-7427-8a798066e111@omp.ru>
-Date: Tue, 19 Mar 2024 11:22:49 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+	s=arc-20240116; t=1710836586; c=relaxed/simple;
+	bh=3uEgcL14/KgOuyUT7DBq5tefLQ6t4ehjg3mzEL3+jfo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=cX6tpwNtkff5dVlst8K0hhaFVmicZftR00jD0clu4mVaqq6vIl5iWuOCpYXvccpJrT/jrc2FbxHs0ic3LfwXQD4RlaYN/mU98OsTUulEg/CLkJeNkIKMJlLgoGjK/kfxA1nxFv8oQk2mNkMQJyeG+s9Y5OmvsT2jIh58aoBM5yA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=SlVttPhl; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="SlVttPhl"
+Received: from [127.0.1.1] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4C0F9480;
+	Tue, 19 Mar 2024 09:22:34 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1710836555;
+	bh=3uEgcL14/KgOuyUT7DBq5tefLQ6t4ehjg3mzEL3+jfo=;
+	h=From:Subject:Date:To:Cc:From;
+	b=SlVttPhlZmdAZ8gccAq6wQTegHctamRKMdfu9Po5XhbEqiXORQDbrQ8XDmJS3IARs
+	 kDy7ymBgWr8EDqEJnJhQfnlWaXDMsLhDy1EmH8hnuokuPF8pey+sThBfYv1ALduMgD
+	 358wyAXc1YStlLyTWSJ9cVzyIDpsdUviGMdfNxuU=
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Subject: [PATCH v2 0/4] drm: xlnx: zynqmp: Add DP audio support
+Date: Tue, 19 Mar 2024 10:22:35 +0200
+Message-Id: <20240319-xilinx-dp-audio-v2-0-92d6d3a7ca7e@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <57b3f6a6cc184c8ead51ecc50669b503@omp.ru>
-Content-Type: text/plain; charset="koi8-r"
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 03/19/2024 08:06:05
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 59
-X-KSE-AntiSpam-Info: Lua profiles 184251 [Mar 19 2024]
-X-KSE-AntiSpam-Info: Version: 6.1.0.4
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 10 0.3.10
- 53c821b925e16276b831986eabc71d60ab82ee60
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {relay has no DNS name}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.79.255 in (user)
- dbl.spamhaus.org}
-X-KSE-AntiSpam-Info:
-	omp.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
-X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.79.255
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 59
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 03/19/2024 08:10:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 3/19/2024 6:00:00 AM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+X-B4-Tracking: v=1; b=H4sIAExL+WUC/3WNywrCMBBFf6XM2pEmhmhc9T+kizztgCYl0VIp+
+ Xdj9y7PgXvuBsVn8gWu3QbZL1QoxQb80IGddLx7JNcYeM9Ff2IcV3pQXNHNqN+OEgp50Y7xoII
+ U0FZz9oHWvXgbG09UXil/9oOF/ez/1sKwR6mkPaugrTFqIOd1SdEknd3RpieMtdYvddEXYLUAA
+ AA=
+To: Lars-Peter Clausen <lars@metafoo.de>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Mark Brown <broonie@kernel.org>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Michal Simek <michal.simek@amd.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, Vishal Sagar <vishal.sagar@amd.com>, 
+ Anatoliy Klymenko <anatoliy.klymenko@amd.com>, 
+ =?utf-8?q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2328;
+ i=tomi.valkeinen@ideasonboard.com; h=from:subject:message-id;
+ bh=3uEgcL14/KgOuyUT7DBq5tefLQ6t4ehjg3mzEL3+jfo=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBl+UteszrAX3VCstAgTvoLpu8isthstgM8lQo14
+ ZRi8mNeUreJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZflLXgAKCRD6PaqMvJYe
+ 9VWGEACTMaOmmgN7gTLqZ+nMj1xJZzveP7DfyJPSYOOzO00onkaLVb6oBLFhnr33FFybYk1hOGi
+ KhYv3zigVDzM73PmV8hEZgCsmBBdU8eYihGctjn8PIkwi2+EQ8MEzlUIkE/zkzMF5t3Z1ttywbu
+ Vc7cSTcAZIGnvYjtqkOLrK34sHGPFJUN5f7pNbS6qwV3zz1zDVGkTFubmRJC6/g07WUxcz/JiMw
+ URydx9qINppM5/CbIOvEG/Q2wOsiDR8ac/KPx/I8Qd/jLKiyIY51SAcrG2k/aPYG6Zni0M52Dy6
+ Nwt83wdvPC5Vt3BPD3kRMOaseGUCKud+yy8YNHsGb9AkaJzY5cipxLq3YV5DPtwFl1oypmV7tR1
+ KblwN7cfFezCFtLL7oMq0TZXLeNemll01fISlNjUTvaRo3qA123VdJ9gRhnUCa9N6YVvX3H8xI+
+ gKy0pCKmSIHRxxrm52ABFe5D0hJa2zbuJzamo+CXRfhB4Ct5QKLmjl57MYCUH/fUm+90Hyyx5ox
+ vapDAMEPx0PZiYknT5y0bK0pqTTH4+TacjnmlxnH04X9JMcw2slKGThvRw6Qi5pbqHo8Sr8BBQJ
+ cwThUb40B/0QNUrGB9PHfDoHX+GLniYBAck9RMt9ZionewHu2qt7WEhSvNMCaCtm9Xwlnd0PhPp
+ tZojWuEVv3/r0Sw==
+X-Developer-Key: i=tomi.valkeinen@ideasonboard.com; a=openpgp;
+ fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
-On 3/19/24 11:12 AM, Roman Smirnov wrote:
-[...]
+Add DisplayPort audio support for Xilinx ZynqMP platforms.
 
->>>> On 3/5/24 14:51, Roman Smirnov wrote:
->>>>> The expression htotal * vtotal can have a zero value on
->>>>> overflow.
->>>>
->>>> I'm not sure if those always results in zero in kernel on overflow.
->>>> Might be architecture-depended too, but let's assume it
->>>> can become zero, ....
->>>>
->>>>> It is necessary to prevent division by zero like in
->>>>> fb_var_to_videomode().
->>>>>
->>>>> Found by Linux Verification Center (linuxtesting.org) with Svace.
->>>>>
->>>>> Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
->>>>> Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
->>>>> ---
->>>>>    V1 -> V2: Replaced the code of the first version with a check.
->>>>>
->>>>>    drivers/video/fbdev/core/fbmon.c | 2 +-
->>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/video/fbdev/core/fbmon.c b/drivers/video/fbdev/core/fbmon.c
->>>>> index 79e5bfbdd34c..b137590386da 100644
->>>>> --- a/drivers/video/fbdev/core/fbmon.c
->>>>> +++ b/drivers/video/fbdev/core/fbmon.c
->>>>> @@ -1344,7 +1344,7 @@ int fb_videomode_from_videomode(const struct videomode *vm,
->>>>>         vtotal = vm->vactive + vm->vfront_porch + vm->vback_porch +
->>>>>                  vm->vsync_len;
->>>>>         /* prevent division by zero */
->>>>> -     if (htotal && vtotal) {
->>>>> +     if (htotal && vtotal && (vm->pixelclock / htotal >= vtotal)) {
->>>>
->>>> why don't you then simply check for
->>>>          if .. ((htotal * vtotal) == 0) ...
->>>> instead?
->>>>
->>>> Helge
->>>
->>> Thomas Zimmermann from the previous discussion said:
->>> On Tue, 5 Mar 2024 11:18:05 +0100 Thomas Zimmerman wrote:
->>>> Maybe use
->>>>
->>>>     if (htotal && vtotal && (vm->pixelclock / htotal >= vtotal))
->>>>
->>>> for the test. That rules out overflowing multiplication and sets
->>>> refresh to 0 in such cases.
->>>
->>> This prevents overflow, which is also a problematic case.
->>
->> I don't like adding another division here and I doubt we have
->> a problem with possible overflow.
->> So, I suggest to keep it simple, something like:
->>        ...
->>        total = htotal * vtotal;
->>        if (total)
->>                fbmode->refresh = vm->pixelclock / total;
->>        else...
-> 
-> Okay, I'll prepare a third version with that change:
-> 
->     if (htotal && vtotal && (htotal * vtotal))
+This depends on patch adding cyclic DMA mode for DPDMA driver:
 
-   I think the 1st 2 checks here are now redundant. Also, the inner
-parens are not necessary...
+https://lore.kernel.org/all/20240228042124.3074044-3-vishal.sagar@amd.com/
 
-> I think that will be enough.
+If that patch is missing, starting an audio playback will fail with an
+ASoC error.
 
-   More than enough. :-)
+The current DT is, for some reason, missing the DMA channels for the
+audio. This series adds that to the bindings and the dts file, but to
+support older dtb files without the audio DMA, the driver will not fail
+if the audio DMA is missing, but will just mark the audio support as
+disabled.
 
-MBR, Sergey
+The series also includes an improvement to the
+soc-generic-dmaengine-pcm.c, required to support two dmaengine_pcms.
+
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+---
+Changes in v2:
+- Fix a missing double-quote in the DT binding
+- Link to v1: https://lore.kernel.org/r/20240312-xilinx-dp-audio-v1-0-696c79facbb9@ideasonboard.com
+
+---
+Tomi Valkeinen (4):
+      ASoC: dmaengine_pcm: Allow passing component name via config
+      dt-bindings: display/xlnx/zynqmp-dpsub: Add audio DMAs
+      arm64: dts: zynqmp: Add DMA for DP audio
+      drm: xlnx: zynqmp_dpsub: Add DP audio support
+
+ .../bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml   |  10 +-
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi             |   7 +-
+ drivers/gpu/drm/xlnx/Kconfig                       |   9 +
+ drivers/gpu/drm/xlnx/Makefile                      |   1 +
+ drivers/gpu/drm/xlnx/zynqmp_disp.c                 |  50 ---
+ drivers/gpu/drm/xlnx/zynqmp_disp_regs.h            |   7 +-
+ drivers/gpu/drm/xlnx/zynqmp_dp.c                   |  54 ++-
+ drivers/gpu/drm/xlnx/zynqmp_dp.h                   |   7 +
+ drivers/gpu/drm/xlnx/zynqmp_dp_audio.c             | 461 +++++++++++++++++++++
+ drivers/gpu/drm/xlnx/zynqmp_dpsub.c                |  39 +-
+ drivers/gpu/drm/xlnx/zynqmp_dpsub.h                |  15 +-
+ include/sound/dmaengine_pcm.h                      |   2 +
+ sound/soc/soc-core.c                               |   8 +-
+ sound/soc/soc-generic-dmaengine-pcm.c              |   3 +
+ 14 files changed, 563 insertions(+), 110 deletions(-)
+---
+base-commit: e8f897f4afef0031fe618a8e94127a0934896aba
+change-id: 20240312-xilinx-dp-audio-468ad12f9f64
+
+Best regards,
+-- 
+Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+
