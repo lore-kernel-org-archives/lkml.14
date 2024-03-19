@@ -1,151 +1,169 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23CF24A18
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 00:51:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C41A34
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 00:55:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710809502; cv=none; b=Os+1SFaYwJhIzJPLKUtu1q6NUf6DTpikuBlD87zD+5EpipicGxDCqKG7DPG+qgmZ2ISOEXU1tLp8OkzbM/jJMzOuD7y5kVQpzTNkKDa2pgjVVgBGaw7WoCz+atp5LFZhK4qVz5cwyss7HC1MkQEPPXz5UD284E0W6/s2T4Lg6Xc=
+	t=1710809725; cv=none; b=FNG3xxAoziO7eT1r4MvLWPnR3YWGqNsAXf62k4w0D7O3KLnr9EEEQLmzKiSctwUjWgkODWnRBRpPOpC0tCJcwEj/P+aV4MO8aQeYLrT1uYMlr5JoVHC4/drj9/3bjdx0aG7xZ5QMnAT2TGIckQiXbqeBGgNMzQVSErlt2vnJtDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710809502; c=relaxed/simple;
-	bh=HBeMcQvgxDv8cJ7fNi77ty7lDhfxxyKirL3rYdRCbzU=;
+	s=arc-20240116; t=1710809725; c=relaxed/simple;
+	bh=P3Zw3UnmHayy6IcD02MvkORw1tTePTVJ6DUJUMeG+7w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z99Wwr9gBqcn9EqiIbI18TL+f/9zIjRx7nYBwiCFAjr7NYYV0zyQbaWn3EGNf4t558AeO2U/69iIcsTkOppp/sxWe5EvFEfUraUGR1ZL2GubdlA3E7FtSizB+mrkamMRcg1vJ/5iSXF0tcxRLFsofT3NrDDijzvC4CuHEK6Queg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PiPAMnx6; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=AEE5S1XbyIROMquUKc58o8VZoXaheoageS3Q/blCyyFm7sDCDnX7tXP85xNioYsq3uwoIwhF1wfFray/3irVz0R2tW5iI52+YpigM9qC15zK6mAhzkbPfy6ztAtcQki5Djn3umE5AZVJPBcxhw7rnAgpjJV1osIx9wcX5oazbuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pOLzhnEM; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PiPAMnx6"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-41428b378b9so16315e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 17:51:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pOLzhnEM"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-609fb19ae76so53242807b3.2
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Mar 2024 17:55:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710809499; x=1711414299; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ubavkzthuO7FFM43XgPG5WP9PAb9aevt0/P5aVLiPkg=;
-        b=PiPAMnx6gla55QP+xpzqyAbb5XBDsmvJGuElBzz7PSxX9OxUl25+omoqBllZ86aWDa
-         5WnMQr1p5+ZFC17VwizsbRbK666EhxbW1TyYpaEZb80aRHAfj888olvuNULnQLRJuPzZ
-         WXfC0+8ytn5vSyBnTffXtgZgS/wQhZlXIj3CYw0qhVaCpDPRh2MTNM5oUEmgqTBw8+oT
-         57dOXVierHjP7kcnqaG6/kOIoDgN3/MuHxCvNFaE3nFb5IkQvie4VzfFA0w8s6DJaJWW
-         G51lH5uI0T6ntL+cKMnjh5+A8yh3r4/3Cew236fjEN4zA1LrlFyk8E1d6o2iez7z/Pc8
-         K22g==
+        d=linaro.org; s=google; t=1710809723; x=1711414523; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=IJp2wlS1QcmyKoSILRJh4VbMcwABTvJV1wN+wh3MV9E=;
+        b=pOLzhnEMntqpL1rvlSr2xeEQgHzRxLpKJk8DQygZN36GP9yk3PByckm6apcRnrM4By
+         2+ArAp16V/uiN6ujkkBm34n3q1eHZzPFBqL73Xf/hhKbPw2Go17g8QVm/uCMd3YHSGoi
+         Sf9CpwJyE2TSH0SKzbCclPO8bVUHIGnv85SN70jsOkauENWuhQrf288kZ36YaxIMsN4z
+         ELIYoFpjjibcQdaIec69ijH79XgshDmLq8Y7lpJ0JSc++zVFyV5W9kGDztk2vgCu6u93
+         9jTcK5bjrhN/Xri8K3zfArRpRTVYkdAxPoSuHyAAtu43f01ks6lJwZUQ5IeXLuu/4liU
+         eFpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710809499; x=1711414299;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ubavkzthuO7FFM43XgPG5WP9PAb9aevt0/P5aVLiPkg=;
-        b=g80HsT+exKY4Vy/MsqkzMpYbUEk9At3QxTTAkxfp0bdx68F1yLbXDAigj0uolbnZmZ
-         AT/J/uMj274qnWlEG9r8yFnOzknD+vdw3I/bSjg+GciGCzg03QmF4tC/eeoyi73w+HbU
-         YV4ef0DHxVhEhgsbG//p8Rdh3Ic1jlmMUvNufG82vStIMLzVn2mkGTAILCttyV85811j
-         8l8VGUCVdpf9rhq688oC95dh2FKWBYyM2wvS233Qw0S0Pce40xqzMIM3U5FaHoXKJdEO
-         C6vA5FFMtOIYqVnWgK8ppFXPpoOkkDHY4903GhRwzomZlaJvNThZD3G6raxbMfwycbYw
-         EnJw==
-X-Forwarded-Encrypted: i=1; AJvYcCX7c7VSbkZ2ufWOXSGiKpHNO4Hg8rYKVVO5PhS4FrbcGumdBo5jV+ENGTy3stl+Heyr8z/2SoT0nvSPUEhisT6gcRh43+98Oi2DnrAL
-X-Gm-Message-State: AOJu0YzWnpJETKxiRznMa9i2IGe9EewocUCnbxH+O8LdKQmL+7uqICfx
-	NWlZcYJqZhNpL/H541l1PwnnInEm+/r65Gjj6vumtbV5PWgi/K8uzf9G702upfGsksGUHV8MARa
-	UAe7sQVyUz7efwpyv4hBsZ4qrVTZTHghDS4NT
-X-Google-Smtp-Source: AGHT+IHfRln6v044hZGAlSuMPi3J0FOHg5vrtS307mpMoHwBCb0TtGiONlvOul2Ord2/xXZWPGRPnOrWFfjX4JJ6H5s=
-X-Received: by 2002:a05:600c:1da0:b0:414:8b7:638 with SMTP id
- p32-20020a05600c1da000b0041408b70638mr97055wms.4.1710809499211; Mon, 18 Mar
- 2024 17:51:39 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710809723; x=1711414523;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IJp2wlS1QcmyKoSILRJh4VbMcwABTvJV1wN+wh3MV9E=;
+        b=nCTJCWW94UgK5pbObrXorHchNa7qS5k7x+AU0WAVl6kPKOo1NHpO5LF/5C7QKc4AT7
+         nfJUyvONU4pesRd5J4treHTY7lA41p2int9rFtwQ4SVUeoUktRlilmTvRF/y3focHHzk
+         cTLrQUqEPwWaneZ7PKV9hhVqqsv0qlsm4sSFc70qjCZXXioQKDVXYk5+CaCsX6HVBs3p
+         yETOb/4Ay+vfhohQv8VRTdVgtWkoaVIsIGffgA5m0CkpRvhEt8YcZHE/AfLshw5GDyPT
+         UwkyuGk0QPqiOCvTURng7d7nLNmbRJrWy8uzJiJmq/BgVPQPdFsMJRHyYIZXzPLSNXf1
+         /9/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXBiCyU5DLVTXWMsO/nDCNNe3Pm2sXf3ggv++RGdjemTAm9yYgYZ2rOvVotsDI8oYuXuCA09mzIxvDp2K2YZbk5dE902JzmLn/QWyRB
+X-Gm-Message-State: AOJu0YxtaI+vF3sVbReKJGTKoFAVtI8Ia7tBsFhrVwfAAeRg170h0+Pp
+	1tkpn+kRKbsfn4OwK4xOXcOZQBdiIbSKIzS9XiXHI/J3UozoH8Y8bzCHAILDI2APM0Ib1qup9SK
+	fH2kqqTaxjyGZcdDUS5Sl9T8UUZ4dpQLezsweLQ==
+X-Google-Smtp-Source: AGHT+IEGKYwv10lcfsSdgNSEMTidawwMjd39KQKkAtnp/4ZbSUUFgDbTKVLqQgyVWylbNRxZHqjPhJycsO3zJfAmsks=
+X-Received: by 2002:a0d:fd87:0:b0:609:e4b4:c2fb with SMTP id
+ n129-20020a0dfd87000000b00609e4b4c2fbmr12750368ywf.27.1710809723036; Mon, 18
+ Mar 2024 17:55:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240318132848.82686-1-aravinda.prasad@intel.com>
-In-Reply-To: <20240318132848.82686-1-aravinda.prasad@intel.com>
-From: Yu Zhao <yuzhao@google.com>
-Date: Mon, 18 Mar 2024 20:51:01 -0400
-Message-ID: <CAOUHufZq9=3wtFtUg0y_=OJjBcG59W9Dw2gkSG1nOOfKP83EoA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] mm/damon: Profiling enhancements for DAMON
-To: Aravinda Prasad <aravinda.prasad@intel.com>
-Cc: damon@lists.linux.dev, linux-mm@kvack.org, sj@kernel.org, 
-	linux-kernel@vger.kernel.org, s2322819@ed.ac.uk, sandeep4.kumar@intel.com, 
-	ying.huang@intel.com, dave.hansen@intel.com, dan.j.williams@intel.com, 
-	sreenivas.subramoney@intel.com, antti.kervinen@intel.com, 
-	alexander.kanevskiy@intel.com
+References: <20240315213717.1411017-1-dianders@chromium.org>
+ <20240315143621.v2.3.I535606f6d4f7e3e5588bb75c55996f61980183cd@changeid> <e2319b19-d999-24e7-48fa-bbc19bbfbeea@quicinc.com>
+In-Reply-To: <e2319b19-d999-24e7-48fa-bbc19bbfbeea@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Tue, 19 Mar 2024 02:55:11 +0200
+Message-ID: <CAA8EJppau--vt3RLkH96K0SF2x-QGWz+5U8tErvLFDvz-GQN4Q@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] drm/msm/dp: Delete the old 500 ms wait for eDP HPD
+ in aux transfer
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: Douglas Anderson <dianders@chromium.org>, Rob Clark <robdclark@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>, 
+	Kuogee Hsieh <quic_khsieh@quicinc.com>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Bjorn Andersson <quic_bjorande@quicinc.com>, 
+	Johan Hovold <johan@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 18, 2024 at 9:24=E2=80=AFAM Aravinda Prasad
-<aravinda.prasad@intel.com> wrote:
+On Tue, 19 Mar 2024 at 02:19, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
 >
-> DAMON randomly samples one or more pages in every region and tracks
-> accesses to them using the ACCESSED bit in PTE (or PMD for 2MB pages).
-> When the region size is large (e.g., several GBs), which is common
-> for large footprint applications, detecting whether the region is
-> accessed or not completely depends on whether the pages that are
-> actively accessed in the region are picked during random sampling.
-> If such pages are not picked for sampling, DAMON fails to identify
-> the region as accessed. However, increasing the sampling rate or
-> increasing the number of regions increases CPU overheads of kdamond.
+> +bjorn, johan as fyi for sc8280xp
 >
-> This patch proposes profiling different levels of the application=E2=80=
-=99s
-> page table tree to detect whether a region is accessed or not. This
-> patch set is based on the observation that, when the accessed bit for a
-> page is set, the accessed bits at the higher levels of the page table
-> tree (PMD/PUD/PGD) corresponding to the path of the page table walk
-> are also set. Hence, it is efficient to check the accessed bits at
-> the higher levels of the page table tree to detect whether a region
-> is accessed or not. For example, if the access bit for a PUD entry
-> is set, then one or more pages in the 1GB PUD subtree is accessed as
-> each PUD entry covers 1GB mapping. Hence, instead of sampling
-> thousands of 4K/2M pages to detect accesses in a large region,
-> sampling at the higher level of page table tree is faster and efficient.
+> On 3/15/2024 2:36 PM, Douglas Anderson wrote:
+> > Before the introduction of the wait_hpd_asserted() callback in commit
+> > 841d742f094e ("drm/dp: Add wait_hpd_asserted() callback to struct
+> > drm_dp_aux") the API between panel drivers and DP AUX bus drivers was
+> > that it was up to the AUX bus driver to wait for HPD in the transfer()
+> > function.
+> >
+> > Now wait_hpd_asserted() has been added. The two panel drivers that are
+> > DP AUX endpoints use it. See commit 2327b13d6c47 ("drm/panel-edp: Take
+> > advantage of wait_hpd_asserted() in struct drm_dp_aux") and commit
+> > 3b5765df375c ("drm/panel: atna33xc20: Take advantage of
+> > wait_hpd_asserted() in struct drm_dp_aux"). We've implemented
+> > wait_hpd_asserted() in the MSM DP driver as of commit e2969ee30252
+> > ("drm/msm/dp: move of_dp_aux_populate_bus() to eDP probe()"). There is
+> > no longer any reason for long wait in the AUX transfer() function.
+> > Remove it.
+> >
+> > NOTE: the wait_hpd_asserted() is listed as "optional". That means it's
+> > optional for the DP AUX bus to implement. In the case of the MSM DP
+> > driver we implement it so we can assume it will be called.
+> >
 >
-> This patch set is based on 6.8-rc5 kernel (commit: f48159f8, mm-unstable
-> tree)
+> How do we enforce that for any new edp panels to be used with MSM, the
+> panels should atleast invoke wait_hpd_asserted()?
 >
-> Changes since v1 [1]
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> I agree that since MSM implements it, even though its listed as
+> optional, we can drop this additional wait. So nothing wrong with this
+> patch for current users including sc8280xp, sc7280 and sc7180.
 >
->  - Added support for 5-level page table tree
->  - Split the patch to mm infrastructure changes and DAMON enhancements
->  - Code changes as per comments on v1
->  - Added kerneldoc comments
+> But, does there need to be some documentation that the edp panels not
+> using the panel-edp framework should still invoke wait_hpd_asserted()?
 >
-> [1] https://lkml.org/lkml/2023/12/15/272
->
-> Evaluation:
->
-> - MASIM benchmark with 1GB, 10GB, 100GB footprint with 10% hot data
->   and 5TB with 10GB hot data.
-> - DAMON: 5ms sampling, 200ms aggregation interval. Rest all
->   parameters set to default value.
-> - DAMON+PTP: Page table profiling applied to DAMON with the above
->   parameters.
->
-> Profiling efficiency in detecting hot data:
->
-> Footprint       1GB     10GB    100GB   5TB
-> ---------------------------------------------
-> DAMON           >90%    <50%     ~0%      0%
-> DAMON+PTP       >90%    >90%    >90%    >90%
->
-> CPU overheads (in billion cycles) for kdamond:
->
-> Footprint       1GB     10GB    100GB   5TB
-> ---------------------------------------------
-> DAMON           1.15    19.53   3.52    9.55
-> DAMON+PTP       0.83     3.20   1.27    2.55
->
-> A detailed explanation and evaluation can be found in the arXiv paper:
-> https://arxiv.org/pdf/2311.10275.pdf
+> Since its marked as optional, what happens if the edp panel driver,
+> skips calling wait_hpd_asserted()?
 
-NAK, on the ground of citing the nonfactual source above and
-misrespenting the existing idea as your own invention [1].
+It is optional for the DP AUX implementations, not for the panel to be called.
 
-The existing idea was purposely not patented so that all CPU vendors
-are free to use it. Not sure what kind of peer review that source had,
-but it's not getting around the reviewers here easily. Please do feel
-free to ask any 3rd party that has no conflict of interest to override
-my NAK though.
+>
+> Now, since the wait from MSM is removed, it has a potential to fail.
+>
+> > ALSO NOTE: the wait wasn't actually _hurting_ anything and wasn't even
+> > causing long timeouts, but it's still nice to get rid of unneeded
+> > code. Specificaly it's not truly needed because to handle other DP
+> > drivers that can't power on as quickly (specifically parade-ps8640) we
+> > already avoid DP AUX transfers for eDP panels that aren't powered
+> > on. See commit 8df1ddb5bf11 ("drm/dp: Don't attempt AUX transfers when
+> > eDP panels are not powered").
+> >
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+> >
+> > (no changes since v1)
+> >
+> >   drivers/gpu/drm/msm/dp/dp_aux.c | 17 -----------------
+> >   1 file changed, 17 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/msm/dp/dp_aux.c b/drivers/gpu/drm/msm/dp/dp_aux.c
+> > index 75c51f3ee106..ecefd1922d6d 100644
+> > --- a/drivers/gpu/drm/msm/dp/dp_aux.c
+> > +++ b/drivers/gpu/drm/msm/dp/dp_aux.c
+> > @@ -313,23 +313,6 @@ static ssize_t dp_aux_transfer(struct drm_dp_aux *dp_aux,
+> >               goto exit;
+> >       }
+> >
+> > -     /*
+> > -      * For eDP it's important to give a reasonably long wait here for HPD
+> > -      * to be asserted. This is because the panel driver may have _just_
+> > -      * turned on the panel and then tried to do an AUX transfer. The panel
+> > -      * driver has no way of knowing when the panel is ready, so it's up
+> > -      * to us to wait. For DP we never get into this situation so let's
+> > -      * avoid ever doing the extra long wait for DP.
+> > -      */
+> > -     if (aux->is_edp) {
+> > -             ret = dp_catalog_aux_wait_for_hpd_connect_state(aux->catalog,
+> > -                                                             500000);
+> > -             if (ret) {
+> > -                     DRM_DEBUG_DP("Panel not ready for aux transactions\n");
+> > -                     goto exit;
+> > -             }
+> > -     }
+> > -
+> >       dp_aux_update_offset_and_segment(aux, msg);
+> >       dp_aux_transfer_helper(aux, msg, true);
+> >
 
-[1] https://lore.kernel.org/CAOUHufbDzy5dMcLR9ex25VdB_QBmSrW_We-2+KftZVYKNn=
-4s9g@mail.gmail.com/
-[2] https://lore.kernel.org/YE6yrQC1Ps195wPw@google.com/
+
+
+-- 
+With best wishes
+Dmitry
