@@ -1,373 +1,199 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796587B3EB;
-	Tue, 19 Mar 2024 07:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5805251C39
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 07:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710831797; cv=none; b=ObdYWZ7NJaYo1lpayGNThwGASMN2RG6clfTwROUVY5aPjvbXro5LESWnhjjx6yfmLQvv0NZDDhLZy1SLySVsa7MMJuLeXRIP3Bi/sSRGBZym/9s97rZn95uECK4xTGvmhUvRNi9+Md65JWrLA+WE3j4qK3qMnKgvFja9FNcbJm8=
+	t=1710831905; cv=none; b=h9ofyfJKNGhbOMgvMnW6sg1Pjjb475sQ8r2GtT9U0gwH7mHYUue1KAbTBwCgmm1foQp32xunq9+zypB9GyRLvTZ9QBpnXzFfL+wKV+tLf5EwaHMkQUb/179DBvMd3SNfPaigL5fw0ue0Kn0b483CJhx9Nm/ZyO5/cCzjLvGeeXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710831797; c=relaxed/simple;
-	bh=aWJcNYclacJfEgLJFuxoV/gYrq4FCDF03IQGcWWk2Do=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nNSAoOe8zcFn5DlV3xMVCMT2K+x7O5ZT6HuCE7CxhAL/pE6KWYv5WJ9biJHlJnYYxlrEKgBYAP/uLTGQwlgkpysdSBBELVfJRT5QWFU9GvjX47qXRIz+fx03aY7YloJa9PHytXI2oi2MU+drbYsq6ZJG3MAz8xLNAh6C9+232o8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=oSZjL/Xu; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1710831905; c=relaxed/simple;
+	bh=Ndfh/nh824nN5WcyANy2Uoh6V4Gixx5ZzpqNUelrwP0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AhsuPxF/rKKmoF2NpvIomokfmmm8mkA9IcaisD7Ko85scMkJBmv7v+tRZYkkRHdtEQi32melrTIKEwIDbCa9d1nVREaZ8eNrZ2RUmBxgLqZK37G2WGML7nxfLXaUdVnIzWHeOUUeOUM4ZPOWAnOsRWayENZQ+iUDE21wwztAL/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K/jA0ZbM; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="oSZjL/Xu"
-X-UUID: b96427bce5be11ee935d6952f98a51a9-20240319
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=+LWoxtyP1tt9fd9GqjRLv7v8sgU4FuI2HJWv2FDhjOs=;
-	b=oSZjL/XuMGTNE8CdqwsrNgihzcKxOXMW/f0NX5qhJA5p+QB2HshKVm9TmsKWQlnt4jCzYXTB0NS9bDKgxTCY2w98cDAOBCxeM4ZxQ9Pdja4zkazE9fB99kuu3nNnKiAO/SBpClw5TI2YXZ8WnP4DjHyhRpDSRpqdtFNAz+SWeEk=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:47cdaa39-754f-451e-9ae8-561672e4a155,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:6f543d0,CLOUDID:f0850f00-c26b-4159-a099-3b9d0558e447,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_ULN,TF_CID_SPAM_SNR
-X-UUID: b96427bce5be11ee935d6952f98a51a9-20240319
-Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw02.mediatek.com
-	(envelope-from <shawn.sung@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1489226744; Tue, 19 Mar 2024 15:03:01 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Tue, 19 Mar 2024 15:02:59 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Tue, 19 Mar 2024 15:02:59 +0800
-From: Shawn Sung <shawn.sung@mediatek.com>
-To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>
-CC: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?q?Christian=20K=C3=B6nig?=
-	<christian.koenig@amd.com>, <dri-devel@lists.freedesktop.org>,
-	<linux-mediatek@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-media@vger.kernel.org>,
-	<linaro-mm-sig@lists.linaro.org>, Hsiao Chien Sung
-	<shawn.sung@mediatek.corp-partner.google.com>
-Subject: [PATCH v2 04/14] drm/mediatek: Rename "mtk_drm_gem" to "mtk_gem"
-Date: Tue, 19 Mar 2024 15:02:47 +0800
-Message-ID: <20240319070257.6443-5-shawn.sung@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20240319070257.6443-1-shawn.sung@mediatek.com>
-References: <20240319070257.6443-1-shawn.sung@mediatek.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K/jA0ZbM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710831903;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=msk7w1tinlaWzEk2KKg0h88gDmDQY/OKdF9U/8feTqI=;
+	b=K/jA0ZbMCsDDlqzV9Qj/YlPqWmn9yY1P+ZEUpaDjG7n26mKp8KipB1+FQHVXYdU8oXE28W
+	cdP9okj5alIBpmRzSF3RuIFr+K8V6BeM7pESp3N/wmCAaiG8SewSlIHIZBft4zu6GHQfMQ
+	pmD6/1iwvhMxmV9J/HjMLFdFW3amAzk=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-259-2AmQmwVhPlKvNhjnZUiD3A-1; Tue, 19 Mar 2024 03:05:01 -0400
+X-MC-Unique: 2AmQmwVhPlKvNhjnZUiD3A-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4140edcb197so10942685e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 00:05:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710831900; x=1711436700;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=msk7w1tinlaWzEk2KKg0h88gDmDQY/OKdF9U/8feTqI=;
+        b=bL6C99JR0t8BAwwzmAZ2MLEzmaGiB43iGU8zN3Hktc74OFBMxkNfZSk8tE6faPSlPb
+         FClwRuH+93YFRHLbAZXnx1g44uqA+hmeCVVZEbFn6gYafBmxEs33Sh/QgNo/0k/Knk5v
+         CfPwVRd+pLdaNw+KMhqVSgP52vV/LLddkdicMOglriKVxHoAWW8EnaaAOjnleHRhieZl
+         XOhrNeBM8V3VBN/4WeATkE2LzrVu4hERCDYSfJbM9K47NzCgp95jTuEiApQPtJLj2PpH
+         S1IvzZnzJFwNwNrBN2ZrHNJOEug12wEi+lWPVQiTTg5irWTD5Oyoem69UPrTl4ZwAtQ3
+         V6/g==
+X-Forwarded-Encrypted: i=1; AJvYcCUW0M8tEEbbRRv/3dxdavqA/9ClexSx4fuKSQ8u5ZB/r2+tLaRuaUI16phUQxoL1ImAc7gmd6ZnIO8mCRD9n1+nArKJnB/y0zSXjfu5
+X-Gm-Message-State: AOJu0YylFjazN0Wo5x6pj39NMCoA/PtFqHQ3taj+oABrrfqMExYMBz5Q
+	SAIKRSqhYby7yi7VcV9ZTmS96OoP61vbHETo4AbmKr/s11cKohqi0WC8RTNsZNXyFr6e/UPXzsD
+	4UqwgrC+mPBd2QlsU3u6X9FpTOVuVb14j+gCsBYjAeu4owdSMjMME4gHuxON7yQ==
+X-Received: by 2002:a05:600c:4eca:b0:414:1e0:2afa with SMTP id g10-20020a05600c4eca00b0041401e02afamr8358557wmq.3.1710831900156;
+        Tue, 19 Mar 2024 00:05:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHz4xz32UCYWB9lnqEcxFh5GXgSTBxzG1zltbsajW5LUv/qBjfGkKiOalU52s/Yd0zHsKkWFA==
+X-Received: by 2002:a05:600c:4eca:b0:414:1e0:2afa with SMTP id g10-20020a05600c4eca00b0041401e02afamr8358522wmq.3.1710831899535;
+        Tue, 19 Mar 2024 00:04:59 -0700 (PDT)
+Received: from redhat.com ([2.52.6.254])
+        by smtp.gmail.com with ESMTPSA id w9-20020a05600c474900b0041408af4b34sm9695750wmo.10.2024.03.19.00.04.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 00:04:59 -0700 (PDT)
+Date: Tue, 19 Mar 2024 03:04:55 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Gavin Shan <gshan@redhat.com>
+Cc: Will Deacon <will@kernel.org>, virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org, jasowang@redhat.com,
+	xuanzhuo@linux.alibaba.com, yihyu@redhat.com, shan.gavin@gmail.com,
+	linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>, mochs@nvidia.com
+Subject: Re: [PATCH] virtio_ring: Fix the stale index in available ring
+Message-ID: <20240319030148-mutt-send-email-mst@kernel.org>
+References: <20240314074923.426688-1-gshan@redhat.com>
+ <20240318165924.GA1824@willie-the-truck>
+ <35a6bcef-27cf-4626-a41d-9ec0a338fe28@redhat.com>
+ <20240319020905-mutt-send-email-mst@kernel.org>
+ <20240319020949-mutt-send-email-mst@kernel.org>
+ <6b829cfc-9cbe-42eb-9935-62d2cf5fbcc4@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--11.002300-8.000000
-X-TMASE-MatchedRID: W1ysna59tDO4pD9RIlWSGjl/LoO+pjoA1cuIRwt/4MinwjKA2gmo6ns2
-	Av5Ik/UmKuucQMr5Le1crf+SzjXK+6XzgcphDfm8Q4srjeRbxTZKPIx+MJF9o99RlPzeVuQQHz5
-	ccRN5kLOBaBRzDGEmYn14G9D44tEeKHkDdtY6yKltzb3s8Aa1Zq3iVpZ0luwMaJhgBHgcsbKCfu
-	zlIXNj9gIZI0NPFsfzDYPvps2zaW1AXbiRmn1bD7Ke1KMOtvrhBGvINcfHqhf8jaMGsnXcibtJp
-	0gQDlobklZ1XWq43DzsrjQMhTlNDsfeJfU5DGcL4bl1FkKDELfDHSNFHFxB8ypVRG/5CQXco8WM
-	kQWv6iXBcIE78YqRWo6HM5rqDwqt34yWiKei97kPCHZx/AWJCtqwyvtgOAKahToQPOKHO36Rp0P
-	nFFDuqw==
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--11.002300-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP:
-	9B8024E72F5E6B2F29E76484757A5EFC421D60F01FF9148E804FA53F0CB956A32000:8
-X-MTK: N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6b829cfc-9cbe-42eb-9935-62d2cf5fbcc4@redhat.com>
 
-From: Hsiao Chien Sung <shawn.sung@mediatek.corp-partner.google.com>
+On Tue, Mar 19, 2024 at 04:54:15PM +1000, Gavin Shan wrote:
+> On 3/19/24 16:10, Michael S. Tsirkin wrote:
+> > On Tue, Mar 19, 2024 at 02:09:34AM -0400, Michael S. Tsirkin wrote:
+> > > On Tue, Mar 19, 2024 at 02:59:23PM +1000, Gavin Shan wrote:
+> > > > On 3/19/24 02:59, Will Deacon wrote:
+> [...]
+> > > > > > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> > > > > > index 49299b1f9ec7..7d852811c912 100644
+> > > > > > --- a/drivers/virtio/virtio_ring.c
+> > > > > > +++ b/drivers/virtio/virtio_ring.c
+> > > > > > @@ -687,9 +687,15 @@ static inline int virtqueue_add_split(struct virtqueue *_vq,
+> > > > > >    	avail = vq->split.avail_idx_shadow & (vq->split.vring.num - 1);
+> > > > > >    	vq->split.vring.avail->ring[avail] = cpu_to_virtio16(_vq->vdev, head);
+> > > > > > -	/* Descriptors and available array need to be set before we expose the
+> > > > > > -	 * new available array entries. */
+> > > > > > -	virtio_wmb(vq->weak_barriers);
+> > > > > > +	/*
+> > > > > > +	 * Descriptors and available array need to be set before we expose
+> > > > > > +	 * the new available array entries. virtio_wmb() should be enough
+> > > > > > +	 * to ensuere the order theoretically. However, a stronger barrier
+> > > > > > +	 * is needed by ARM64. Otherwise, the stale data can be observed
+> > > > > > +	 * by the host (vhost). A stronger barrier should work for other
+> > > > > > +	 * architectures, but performance loss is expected.
+> > > > > > +	 */
+> > > > > > +	virtio_mb(false);
+> > > > > >    	vq->split.avail_idx_shadow++;
+> > > > > >    	vq->split.vring.avail->idx = cpu_to_virtio16(_vq->vdev,
+> > > > > >    						vq->split.avail_idx_shadow);
+> > > > > 
+> > > > > Replacing a DMB with a DSB is _very_ unlikely to be the correct solution
+> > > > > here, especially when ordering accesses to coherent memory.
+> > > > > 
+> > > > > In practice, either the larger timing different from the DSB or the fact
+> > > > > that you're going from a Store->Store barrier to a full barrier is what
+> > > > > makes things "work" for you. Have you tried, for example, a DMB SY
+> > > > > (e.g. via __smb_mb()).
+> > > > > 
+> > > > > We definitely shouldn't take changes like this without a proper
+> > > > > explanation of what is going on.
+> > > > > 
+> > > > 
+> > > > Thanks for your comments, Will.
+> > > > 
+> > > > Yes, DMB should work for us. However, it seems this instruction has issues on
+> > > > NVidia's grace-hopper. It's hard for me to understand how DMB and DSB works
+> > > > from hardware level. I agree it's not the solution to replace DMB with DSB
+> > > > before we fully understand the root cause.
+> > > > 
+> > > > I tried the possible replacement like below. __smp_mb() can avoid the issue like
+> > > > __mb() does. __ndelay(10) can avoid the issue, but __ndelay(9) doesn't.
+> > > > 
+> > > > static inline int virtqueue_add_split(struct virtqueue *_vq, ...)
+> > > > {
+> > > >      :
+> > > >          /* Put entry in available array (but don't update avail->idx until they
+> > > >           * do sync). */
+> > > >          avail = vq->split.avail_idx_shadow & (vq->split.vring.num - 1);
+> > > >          vq->split.vring.avail->ring[avail] = cpu_to_virtio16(_vq->vdev, head);
+> > > > 
+> > > >          /* Descriptors and available array need to be set before we expose the
+> > > >           * new available array entries. */
+> > > >          // Broken: virtio_wmb(vq->weak_barriers);
+> > > >          // Broken: __dma_mb();
+> > > >          // Work:   __mb();
+> > > >          // Work:   __smp_mb();
+> > 
+> > Did you try __smp_wmb ? And wmb?
+> > 
+> 
+> virtio_wmb(false) is equivalent to __smb_wmb(), which is broken.
+> 
+> __wmb() works either. No issue found with it.
 
-Rename all "mtk_drm_gem" to "mtk_gem":
-- To align the naming rule
-- To reduce the code size
+Oh interesting. So how do smp_mb() and wmb() disassemble on this
+platform? Can you please check?
 
-Reviewed-by: AngeloGiaocchino Del Regno <angelogioacchino.delregno@collabora.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.corp-partner.google.com>
----
- drivers/gpu/drm/mediatek/mtk_drm_drv.c   |  8 +--
- drivers/gpu/drm/mediatek/mtk_drm_gem.c   | 63 ++++++++++++------------
- drivers/gpu/drm/mediatek/mtk_drm_gem.h   | 23 +++++----
- drivers/gpu/drm/mediatek/mtk_drm_plane.c |  2 +-
- 4 files changed, 47 insertions(+), 49 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index c46773569b3c9..81e8aa65abd6d 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -576,8 +576,8 @@ DEFINE_DRM_GEM_FOPS(mtk_drm_fops);
-  * We need to override this because the device used to import the memory is
-  * not dev->dev, as drm_gem_prime_import() expects.
-  */
--static struct drm_gem_object *mtk_drm_gem_prime_import(struct drm_device *dev,
--						       struct dma_buf *dma_buf)
-+static struct drm_gem_object *mtk_gem_prime_import(struct drm_device *dev,
-+						   struct dma_buf *dma_buf)
- {
- 	struct mtk_drm_private *private = dev->dev_private;
- 
-@@ -587,9 +587,9 @@ static struct drm_gem_object *mtk_drm_gem_prime_import(struct drm_device *dev,
- static const struct drm_driver mtk_drm_driver = {
- 	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_ATOMIC,
- 
--	.dumb_create = mtk_drm_gem_dumb_create,
-+	.dumb_create = mtk_gem_dumb_create,
- 
--	.gem_prime_import = mtk_drm_gem_prime_import,
-+	.gem_prime_import = mtk_gem_prime_import,
- 	.gem_prime_import_sg_table = mtk_gem_prime_import_sg_table,
- 	.fops = &mtk_drm_fops,
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_gem.c b/drivers/gpu/drm/mediatek/mtk_drm_gem.c
-index 4f2e3feabc0f8..445fd8a8b8988 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_gem.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_gem.c
-@@ -14,26 +14,26 @@
- #include "mtk_drm_drv.h"
- #include "mtk_drm_gem.h"
- 
--static int mtk_drm_gem_object_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma);
-+static int mtk_gem_object_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma);
- 
- static const struct vm_operations_struct vm_ops = {
- 	.open = drm_gem_vm_open,
- 	.close = drm_gem_vm_close,
- };
- 
--static const struct drm_gem_object_funcs mtk_drm_gem_object_funcs = {
--	.free = mtk_drm_gem_free_object,
-+static const struct drm_gem_object_funcs mtk_gem_object_funcs = {
-+	.free = mtk_gem_free_object,
- 	.get_sg_table = mtk_gem_prime_get_sg_table,
--	.vmap = mtk_drm_gem_prime_vmap,
--	.vunmap = mtk_drm_gem_prime_vunmap,
--	.mmap = mtk_drm_gem_object_mmap,
-+	.vmap = mtk_gem_prime_vmap,
-+	.vunmap = mtk_gem_prime_vunmap,
-+	.mmap = mtk_gem_object_mmap,
- 	.vm_ops = &vm_ops,
- };
- 
--static struct mtk_drm_gem_obj *mtk_drm_gem_init(struct drm_device *dev,
--						unsigned long size)
-+static struct mtk_gem_obj *mtk_gem_init(struct drm_device *dev,
-+					unsigned long size)
- {
--	struct mtk_drm_gem_obj *mtk_gem_obj;
-+	struct mtk_gem_obj *mtk_gem_obj;
- 	int ret;
- 
- 	size = round_up(size, PAGE_SIZE);
-@@ -42,7 +42,7 @@ static struct mtk_drm_gem_obj *mtk_drm_gem_init(struct drm_device *dev,
- 	if (!mtk_gem_obj)
- 		return ERR_PTR(-ENOMEM);
- 
--	mtk_gem_obj->base.funcs = &mtk_drm_gem_object_funcs;
-+	mtk_gem_obj->base.funcs = &mtk_gem_object_funcs;
- 
- 	ret = drm_gem_object_init(dev, &mtk_gem_obj->base, size);
- 	if (ret < 0) {
-@@ -54,15 +54,15 @@ static struct mtk_drm_gem_obj *mtk_drm_gem_init(struct drm_device *dev,
- 	return mtk_gem_obj;
- }
- 
--struct mtk_drm_gem_obj *mtk_drm_gem_create(struct drm_device *dev,
--					   size_t size, bool alloc_kmap)
-+struct mtk_gem_obj *mtk_gem_create(struct drm_device *dev,
-+				   size_t size, bool alloc_kmap)
- {
- 	struct mtk_drm_private *priv = dev->dev_private;
--	struct mtk_drm_gem_obj *mtk_gem;
-+	struct mtk_gem_obj *mtk_gem;
- 	struct drm_gem_object *obj;
- 	int ret;
- 
--	mtk_gem = mtk_drm_gem_init(dev, size);
-+	mtk_gem = mtk_gem_init(dev, size);
- 	if (IS_ERR(mtk_gem))
- 		return ERR_CAST(mtk_gem);
- 
-@@ -97,9 +97,9 @@ struct mtk_drm_gem_obj *mtk_drm_gem_create(struct drm_device *dev,
- 	return ERR_PTR(ret);
- }
- 
--void mtk_drm_gem_free_object(struct drm_gem_object *obj)
-+void mtk_gem_free_object(struct drm_gem_object *obj)
- {
--	struct mtk_drm_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
-+	struct mtk_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
- 	struct mtk_drm_private *priv = obj->dev->dev_private;
- 
- 	if (mtk_gem->sg)
-@@ -114,10 +114,10 @@ void mtk_drm_gem_free_object(struct drm_gem_object *obj)
- 	kfree(mtk_gem);
- }
- 
--int mtk_drm_gem_dumb_create(struct drm_file *file_priv, struct drm_device *dev,
--			    struct drm_mode_create_dumb *args)
-+int mtk_gem_dumb_create(struct drm_file *file_priv, struct drm_device *dev,
-+			struct drm_mode_create_dumb *args)
- {
--	struct mtk_drm_gem_obj *mtk_gem;
-+	struct mtk_gem_obj *mtk_gem;
- 	int ret;
- 
- 	args->pitch = DIV_ROUND_UP(args->width * args->bpp, 8);
-@@ -130,7 +130,7 @@ int mtk_drm_gem_dumb_create(struct drm_file *file_priv, struct drm_device *dev,
- 	args->size = args->pitch;
- 	args->size *= args->height;
- 
--	mtk_gem = mtk_drm_gem_create(dev, args->size, false);
-+	mtk_gem = mtk_gem_create(dev, args->size, false);
- 	if (IS_ERR(mtk_gem))
- 		return PTR_ERR(mtk_gem);
- 
-@@ -148,16 +148,16 @@ int mtk_drm_gem_dumb_create(struct drm_file *file_priv, struct drm_device *dev,
- 	return 0;
- 
- err_handle_create:
--	mtk_drm_gem_free_object(&mtk_gem->base);
-+	mtk_gem_free_object(&mtk_gem->base);
- 	return ret;
- }
- 
--static int mtk_drm_gem_object_mmap(struct drm_gem_object *obj,
--				   struct vm_area_struct *vma)
-+static int mtk_gem_object_mmap(struct drm_gem_object *obj,
-+			       struct vm_area_struct *vma)
- 
- {
- 	int ret;
--	struct mtk_drm_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
-+	struct mtk_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
- 	struct mtk_drm_private *priv = obj->dev->dev_private;
- 
- 	/*
-@@ -188,7 +188,7 @@ static int mtk_drm_gem_object_mmap(struct drm_gem_object *obj,
-  */
- struct sg_table *mtk_gem_prime_get_sg_table(struct drm_gem_object *obj)
- {
--	struct mtk_drm_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
-+	struct mtk_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
- 	struct mtk_drm_private *priv = obj->dev->dev_private;
- 	struct sg_table *sgt;
- 	int ret;
-@@ -212,7 +212,7 @@ struct sg_table *mtk_gem_prime_get_sg_table(struct drm_gem_object *obj)
- struct drm_gem_object *mtk_gem_prime_import_sg_table(struct drm_device *dev,
- 			struct dma_buf_attachment *attach, struct sg_table *sg)
- {
--	struct mtk_drm_gem_obj *mtk_gem;
-+	struct mtk_gem_obj *mtk_gem;
- 
- 	/* check if the entries in the sg_table are contiguous */
- 	if (drm_prime_get_contiguous_size(sg) < attach->dmabuf->size) {
-@@ -220,7 +220,7 @@ struct drm_gem_object *mtk_gem_prime_import_sg_table(struct drm_device *dev,
- 		return ERR_PTR(-EINVAL);
- 	}
- 
--	mtk_gem = mtk_drm_gem_init(dev, attach->dmabuf->size);
-+	mtk_gem = mtk_gem_init(dev, attach->dmabuf->size);
- 	if (IS_ERR(mtk_gem))
- 		return ERR_CAST(mtk_gem);
- 
-@@ -230,9 +230,9 @@ struct drm_gem_object *mtk_gem_prime_import_sg_table(struct drm_device *dev,
- 	return &mtk_gem->base;
- }
- 
--int mtk_drm_gem_prime_vmap(struct drm_gem_object *obj, struct iosys_map *map)
-+int mtk_gem_prime_vmap(struct drm_gem_object *obj, struct iosys_map *map)
- {
--	struct mtk_drm_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
-+	struct mtk_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
- 	struct sg_table *sgt = NULL;
- 	unsigned int npages;
- 
-@@ -270,10 +270,9 @@ int mtk_drm_gem_prime_vmap(struct drm_gem_object *obj, struct iosys_map *map)
- 	return 0;
- }
- 
--void mtk_drm_gem_prime_vunmap(struct drm_gem_object *obj,
--			      struct iosys_map *map)
-+void mtk_gem_prime_vunmap(struct drm_gem_object *obj, struct iosys_map *map)
- {
--	struct mtk_drm_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
-+	struct mtk_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
- 	void *vaddr = map->vaddr;
- 
- 	if (!mtk_gem->pages)
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_gem.h b/drivers/gpu/drm/mediatek/mtk_drm_gem.h
-index 78f23b07a02e2..66e5f154f6980 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_gem.h
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_gem.h
-@@ -3,8 +3,8 @@
-  * Copyright (c) 2015 MediaTek Inc.
-  */
- 
--#ifndef _MTK_DRM_GEM_H_
--#define _MTK_DRM_GEM_H_
-+#ifndef _MTK_GEM_H_
-+#define _MTK_GEM_H_
- 
- #include <drm/drm_gem.h>
- 
-@@ -22,7 +22,7 @@
-  * P.S. this object would be transferred to user as kms_bo.handle so
-  *	user can access the buffer through kms_bo.handle.
-  */
--struct mtk_drm_gem_obj {
-+struct mtk_gem_obj {
- 	struct drm_gem_object	base;
- 	void			*cookie;
- 	void			*kvaddr;
-@@ -32,18 +32,17 @@ struct mtk_drm_gem_obj {
- 	struct page		**pages;
- };
- 
--#define to_mtk_gem_obj(x)	container_of(x, struct mtk_drm_gem_obj, base)
-+#define to_mtk_gem_obj(x) container_of(x, struct mtk_gem_obj, base)
- 
--void mtk_drm_gem_free_object(struct drm_gem_object *gem);
--struct mtk_drm_gem_obj *mtk_drm_gem_create(struct drm_device *dev, size_t size,
--					   bool alloc_kmap);
--int mtk_drm_gem_dumb_create(struct drm_file *file_priv, struct drm_device *dev,
--			    struct drm_mode_create_dumb *args);
-+void mtk_gem_free_object(struct drm_gem_object *gem);
-+struct mtk_gem_obj *mtk_gem_create(struct drm_device *dev, size_t size,
-+				   bool alloc_kmap);
-+int mtk_gem_dumb_create(struct drm_file *file_priv, struct drm_device *dev,
-+			struct drm_mode_create_dumb *args);
- struct sg_table *mtk_gem_prime_get_sg_table(struct drm_gem_object *obj);
- struct drm_gem_object *mtk_gem_prime_import_sg_table(struct drm_device *dev,
- 			struct dma_buf_attachment *attach, struct sg_table *sg);
--int mtk_drm_gem_prime_vmap(struct drm_gem_object *obj, struct iosys_map *map);
--void mtk_drm_gem_prime_vunmap(struct drm_gem_object *obj,
--			      struct iosys_map *map);
-+int mtk_gem_prime_vmap(struct drm_gem_object *obj, struct iosys_map *map);
-+void mtk_gem_prime_vunmap(struct drm_gem_object *obj, struct iosys_map *map);
- 
- #endif
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_plane.c b/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-index 43137c46fc148..db63a32c407e3 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-@@ -135,7 +135,7 @@ static void mtk_plane_update_new_state(struct drm_plane_state *new_state,
- {
- 	struct drm_framebuffer *fb = new_state->fb;
- 	struct drm_gem_object *gem;
--	struct mtk_drm_gem_obj *mtk_gem;
-+	struct mtk_gem_obj *mtk_gem;
- 	unsigned int pitch, format;
- 	u64 modifier;
- 	dma_addr_t addr;
--- 
-2.18.0
+> > > >          // Work:   __ndelay(100);
+> > > >          // Work:   __ndelay(10);
+> > > >          // Broken: __ndelay(9);
+> > > > 
+> > > >         vq->split.avail_idx_shadow++;
+> > > >          vq->split.vring.avail->idx = cpu_to_virtio16(_vq->vdev,
+> > > >                                                  vq->split.avail_idx_shadow);
+> > > 
+> > > What if you stick __ndelay here?
+> > 
+> > And keep virtio_wmb above?
+> > 
+> 
+> The result has been shared through a separate reply.
+> 
+> > > 
+> > > >          vq->num_added++;
+> > > > 
+> > > >          pr_debug("Added buffer head %i to %p\n", head, vq);
+> > > >          END_USE(vq);
+> > > >          :
+> > > > }
+> > > > 
+> > > > I also tried to measure the consumed time for various barrier-relative instructions using
+> > > > ktime_get_ns() which should have consumed most of the time. __smb_mb() is slower than
+> > > > __smp_wmb() but faster than __mb()
+> > > > 
+> > > >      Instruction           Range of used time in ns
+> > > >      ----------------------------------------------
+> > > >      __smp_wmb()           [32  1128032]
+> > > >      __smp_mb()            [32  1160096]
+> > > >      __mb()                [32  1162496]
+> > > > 
+> 
+> Thanks,
+> Gavin
 
