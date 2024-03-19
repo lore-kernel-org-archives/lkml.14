@@ -1,236 +1,409 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from out203-205-221-149.mail.qq.com (out203-205-221-149.mail.qq.com [203.205.221.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0DD657BE;
-	Tue, 19 Mar 2024 15:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA6E65BA1
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 15:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710863857; cv=none; b=uMfBHwrvOhNQUfk+4AVpFpZv83mX0f3OM61ZLqOjg4WEOEkHWg3o8IPf/VYoOMhOvCdCXIaEbkFwGMKMXrJ1Svjo2q65k2cxDR8TqagxP+RQyEGXk6GAwFCzaCNdRpzWAskAj461Qiiz2RCA+KFMLgqNsFVM7cW2mnStKIjiO5c=
+	t=1710863911; cv=none; b=TrdJBRSM3EG0IFhhHPQ/NRrTqWZcozdZfdPCEa/sLZvhU2xT2aMGyHPcE5/QT+NYIhT1Sga+xAqnuY/bmClCIYMww5tyxBU5OLnk0+aeA5KETBUI206KMPdoNGyjxooPnWFSA91NinyLfbuqd/KPKZexqKaHJVLjR4f5WAidlgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710863857; c=relaxed/simple;
-	bh=J5iLX9r+OXm0BHNs30o1O2m+uW0ux1ewSKvY64f4v/w=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=c+3MTbAgbg2B3MlOjknOaAOSIb3AGq9ws6jVZYRRgBN7AQpZfaLVl66Rysjqhv3/DJO1FKIXz7WTJMyF5wCha9n6EaD8BCpWYRZhqmTdzlulp0mM+QwLxKrXl+YyRzQvn1+bL5avoZyaT29u9wwhHRieULpwXvQ3Qh7VYnUR0hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FiPiC2Cm; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
+	s=arc-20240116; t=1710863911; c=relaxed/simple;
+	bh=7sRfioFmtmF5F5YgminWOfmHP22Uae5P7Pyi525wbTA=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=j5rPM+9IHJjj3K9FhKsI+GwoZ3vJRynyxX/lJx5NaDbGnpAaIaBYRIDelVgaDDfHdIDj8o6DSm4GVASOSTsvqaJUTJGSDajux/LmB/fgEeoVhGAtCNlVIjw7JYNbedgubyEKAW5oO5McjIc6Dl5ATzVimj3u/GbQ0Z7f8ElR3Kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=u7slaV2I; arc=none smtp.client-ip=203.205.221.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FiPiC2Cm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=J5iLX9r+OXm0BHNs30o1O2m+uW0ux1ewSKvY64f4v/w=; b=FiPiC2Cm8NXbh1ZdwFySiMxQNW
-	burz2OkpWdRiaEpWHM7dOYoYRupNS2D/hVJJ1/rGT1pB7BeMCi22NKdlQRCiAks/TlOPq9RfA2rRk
-	kIMsjrPVXzNTpfkRKDSQcqBiNezgsypcTkgZV2FuaBgKbLhuIY5Y9WhfJwiTmuKPzKJIQ9KxvW+iF
-	AqlKP5+mlGxPEskBFq/MivnJY2gsjYY0lKciszQXve19qo6fM0HYkNd7GmHnRm/z+r2EFvMdn1yEF
-	T+kZZG5+WtdkzlhV/y51FdQG63gRDWieQigxvMbL7ewXGYoF0/zFUrOcw/ylWniCg7TISmwL5pf0R
-	r1z6x6lw==;
-Received: from [2001:8b0:10b:5:8879:b0f0:4282:ed8] (helo=u3832b3a9db3152.ant.amazon.com)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rmbqF-00000002Fkz-1E0a;
-	Tue, 19 Mar 2024 15:57:32 +0000
-Message-ID: <dce1e4ce98446660905398e9a4c2afc49596a34c.camel@infradead.org>
-Subject: Re: [syzbot] [kvm?] WARNING in __kvm_gpc_refresh
-From: David Woodhouse <dwmw2@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: syzbot <syzbot+106a4f72b0474e1d1b33@syzkaller.appspotmail.com>, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com, 
-	syzkaller-bugs@googlegroups.com, paul <paul@xen.org>
-Date: Tue, 19 Mar 2024 15:57:30 +0000
-In-Reply-To: <Zfmt8rxlF1ag1iA_@google.com>
-References: <0000000000005fa5cc0613f1cebd@google.com>
-	 <b7561e6d6d357fcd8ec1a1257aaf2f97d971061c.camel@infradead.org>
-	 <ZfizYzC9-9Qo47tE@google.com>
-	 <33bcc5778e39780c6895ffa9f52f4b12cf83ad89.camel@infradead.org>
-	 <Zfmt8rxlF1ag1iA_@google.com>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-qHYKURByT8NhYd+d56Rd"
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="u7slaV2I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1710863895;
+	bh=9UgUOj1ogZO5bIld9wyvdw1ttRAAZG74D3bk6rSCtuI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=u7slaV2IsypbdWqPANFoYCW1pmDMsBf3EhWb98UM0G8Y4sZFF2QZRgGWW5liqC1dJ
+	 F+v2MkDyZ2pnmLV0cX0LxcOwBUExmrX/j97DSTgJaXcGrnnwuD/MpcjpAyFrAuz6rD
+	 4EeZivvMNhnV71yDl/YS6/imkeExpG4p5JfPvldU=
+Received: from localhost.localdomain ([2409:8a60:2a60:b160:1774:d6f7:f5f5:b6a])
+	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
+	id E8996A1C; Tue, 19 Mar 2024 23:58:09 +0800
+X-QQ-mid: xmsmtpt1710863892t5sd3mjlu
+Message-ID: <tencent_45CCF47E36CFFE5531D485417D93D0E96B08@qq.com>
+X-QQ-XMAILINFO: MR/iVh5QLeie6hk/FLpFtin0oH91yemkGfAix76v5JVUBr5mjJYe5eBbLUoaMH
+	 bjWs3I5KLgvdXdtG7xgwXOxoSMhVRFsLlD/7I2XO2d7dy+x9BuxrJXBwuMtaMWoVnaDrEHzB4jva
+	 MQWZVQgulARvIBtmCy9kSNDCxWkf9tG4TYjbNMZTvfjh8uQTBWwiR3S/3zZ1bQQj6t5EcRzcSWsH
+	 JgSfyTzU6Qs4DcKCZ3mwpk7FvvLP35rIntSRZS7BX0uBOBw432gTbatZhZB8KV7/WNkWRuCyVfJ6
+	 A3+SfKoqrErryyMkvfBDxdALzjmdPQlciclSNt8FlrL/AuF7Ly0f1Z5nlfE71E/gipm/9nn8PRB8
+	 ynO4DvpyLoYBRFgeRa3v6nuk/nL09TYLEZU0mgIBqpG129On+Fq+0pi6pTaqEnJeZ0E/bxraccnu
+	 k1ic/U2TYLimcrjCPVTw3lWs3jksQXE0PT4LoOpzYfq07SzBPLy6o4gmLGeGXj7KF7bmVGfeHJFW
+	 yuJ1QYtacsFo6WL+GknH8ew6QxMTAMsmLdkNe9inrfnePVoHIgTlM6c2YdGNio5PoPklCzKbyM4W
+	 FH/Qre6S696xL1wUy9vF/ch6EBYx0iCeQyqYLvYkgHwyEDKkgHiOG1s7ZeTQWvlmDRMkLwzS1NaM
+	 I5nASwVoDiIbGa6Oxst+IDEtK05vOsgSXaS7th+NNsNZpSj+7hbwvhpoeZKZbUGT5CJwuysQkASs
+	 k2LTK+KNaB16DUyafZSYPn5KfPlXnE+DTXyuhNDI61fLYycD131dX4AMUwJKiUzRgho0upXFTCYS
+	 4qEePMRsbADExlUdvN1VjIDxTbcY8wdSzo6RDuJNakfcpNOwJ1477ClFqCQUbQaNTpYT898Hf7pD
+	 atBVjvzzkyCRCdzpLqJB7J3CzpTelFbzL1DwLYHUMOnFI3+vy9dGyiKbUO/YyG41R6bVoMCTWUxQ
+	 cyBjSbGIYzoJ78rzrkirQXCqaZWXcXfC7+5+TbKxbIP76hfI6h7jXKbauy0UQyPcViuoQFQbdCwi
+	 MMA4nHh9SWNO8nBfJyUeMDtDSyMKY=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: wenyang.linux@foxmail.com
+To: "Eric W . Biederman" <ebiederm@xmission.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Joel Granados <j.granados@samsung.com>,
+	Christian Brauner <brauner@kernel.org>
+Cc: Dave Young <dyoung@redhat.com>,
+	Wen Yang <wenyang.linux@foxmail.com>,
+	Iurii Zaikin <yzaikin@google.com>,
+	linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH v2 2/9] kernel/sysctl-test: add some kunit test cases for min/max detection
+Date: Tue, 19 Mar 2024 23:57:43 +0800
+X-OQ-MSGID: <1c47c8e61b9e3fe6cdbaa67935cd85b0edd8c323.1710863674.git.wenyang.linux@foxmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <26c450f6467b4cbaf94cdb10f047abc6ab0c2a5d.1710863674.git.wenyang.linux@foxmail.com>
+References: <26c450f6467b4cbaf94cdb10f047abc6ab0c2a5d.1710863674.git.wenyang.linux@foxmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 
+From: Wen Yang <wenyang.linux@foxmail.com>
 
---=-qHYKURByT8NhYd+d56Rd
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Add some kunit test cases and explicitly check the newly added min/max
+initialization behavior. Including basic parsing tests, min/max overflow,
+and writing data, etc
 
-On Tue, 2024-03-19 at 08:23 -0700, Sean Christopherson wrote:
-> On Mon, Mar 18, 2024, David Woodhouse wrote:
-> > On Mon, 2024-03-18 at 14:34 -0700, Sean Christopherson wrote:
-> > > On Mon, Mar 18, 2024, David Woodhouse wrote:
-> > > >=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Either gpa or uhva mu=
-st be valid, but not both */
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (WARN_ON_ONCE(kvm_is_=
-error_gpa(gpa) =3D=3D kvm_is_error_hva(uhva)))
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
-> > > >=20
-> > > > Hm, that comment doesn't match the code. It says "not both", but th=
-e
-> > > > code also catches the "neither" case. I think the gpa is in %rbx an=
-d
-> > > > uhva is in %r12, so this is indeed the 'neither' case.
-> > > >=20
-> > > > Is it expected that we can end up with a cache marked active, but w=
-ith
-> > > > the address not valid? Maybe through a race condition with deactive=
-? or
-> > > > more likely than that?
-> > >=20
-> > > It's the darn PV system time MSR, which allows the guest to triggerin=
-g activation
-> > > with any GPA value.=C2=A0 That results in the cache being marked acti=
-ve without KVM
-> > > ever setting the GPA (or any other fields).=C2=A0 The fix I'm testing=
- is to move the
-> > > offset+len check up into activate() and refresh().
-> >=20
-> > Not sure I even want a gpc of length 1 to work at INVALID_GPA; I don't
-> > think it's the offset+length check we want to be looking at?
-> >=20
-> > If we've activated the gpc with gpa=3D=3DINVALID_GPA, surely the right
->=20
-> This particular issue isn't due to activating with gpa=3D=3DINVALID_GPA, =
-it's due to
-> marking the gpc as active without actually activating it.=C2=A0 The offse=
-t+length
-> check is simply what causes KVM to prematurely bail from activation.
+Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Joel Granados <j.granados@samsung.com>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Iurii Zaikin <yzaikin@google.com>
+Cc: linux-kernel@vger.kernel.org
+---
+ kernel/sysctl-test.c | 300 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 300 insertions(+)
 
-Ah, right. Yes, that makes more sense now; thanks.
+diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
+index 6ef887c19c48..0a2b19ae2a8c 100644
+--- a/kernel/sysctl-test.c
++++ b/kernel/sysctl-test.c
+@@ -367,6 +367,300 @@ static void sysctl_test_api_dointvec_write_single_greater_int_max(
+ 	KUNIT_EXPECT_EQ(test, 0, *((int *)table.data));
+ }
+ 
++/*
++ * Test that writing the int value and check if the min/max are met
++ */
++static void sysctl_test_api_dointvec_write_single_with_minmax_check(
++		struct kunit *test)
++{
++	int data = 0;
++	struct ctl_table table = CTL_TABLE_ENTRY_MINMAX("foo",
++							&data,
++							sizeof(int),
++							0644,
++							proc_dointvec_minmax,
++							SYSCTL_NUMERIC_NEG_ONE,
++							SYSCTL_NUMERIC_ONE_HUNDRED);
++	size_t max_len = 32, len;
++	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
++	char __user *user_buffer = (char __user *)buffer;
++	loff_t pos = 0;
++	int i;
++
++	for (i = SYSCTL_NUMERIC_NEG_ONE; i <= SYSCTL_NUMERIC_ONE_HUNDRED; i++) {
++		pos = 0;
++		KUNIT_ASSERT_LT(test,
++				(size_t)snprintf(buffer, max_len, "%d", i),
++				max_len);
++		len = strlen(buffer);
++		KUNIT_EXPECT_EQ(test, 0,
++				proc_dointvec_minmax(&table, KUNIT_PROC_WRITE,
++					user_buffer, &len, &pos));
++		KUNIT_EXPECT_EQ(test, i, data);
++	}
++
++	data = 0;
++	for (i = -10; i < SYSCTL_NUMERIC_NEG_ONE; i++) {
++		pos = 0;
++		KUNIT_ASSERT_LT(test,
++				(size_t)snprintf(buffer, max_len, "%d", i),
++				max_len);
++		len = strlen(buffer);
++		KUNIT_EXPECT_EQ(test, -EINVAL,
++				proc_dointvec_minmax(&table, KUNIT_PROC_WRITE,
++					user_buffer, &len, &pos));
++		KUNIT_EXPECT_EQ(test, 0, data);
++	}
++
++	for (i = SYSCTL_NUMERIC_ONE_HUNDRED + 1; i < 110; i++) {
++		pos = 0;
++		KUNIT_ASSERT_LT(test,
++				(size_t)snprintf(buffer, max_len, "%d", i),
++				max_len);
++		len = strlen(buffer);
++		KUNIT_EXPECT_EQ(test, -EINVAL,
++				proc_dointvec_minmax(&table, KUNIT_PROC_WRITE,
++					user_buffer, &len, &pos));
++		KUNIT_EXPECT_EQ(test, 0, data);
++	}
++}
++
++/*
++ * Test that writing the int value and check if the min is met
++ */
++static void sysctl_test_api_dointvec_write_single_with_min_check(
++		struct kunit *test)
++{
++	size_t max_len = 32, len;
++	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
++	char __user *user_buffer = (char __user *)buffer;
++	int data = 0, i;
++	loff_t pos = 0;
++	struct ctl_table table = CTL_TABLE_ENTRY_MIN("bar",
++			&data,
++			sizeof(int),
++			0644,
++			proc_dointvec_minmax,
++			-10);
++
++	for (i = -10; i <= SYSCTL_NUMERIC_ONE_HUNDRED; i++) {
++		pos = 0;
++		KUNIT_ASSERT_LT(test,
++				(size_t)snprintf(buffer, max_len, "%d", i),
++				max_len);
++		len = strlen(buffer);
++		KUNIT_EXPECT_EQ(test, 0,
++				proc_dointvec_minmax(&table, KUNIT_PROC_WRITE,
++					user_buffer, &len, &pos));
++		KUNIT_EXPECT_EQ(test, i, data);
++	}
++
++	data = 0;
++	for (i = -20; i < -10; i++) {
++		pos = 0;
++		KUNIT_ASSERT_LT(test,
++				(size_t)snprintf(buffer, max_len, "%d", i),
++				max_len);
++		len = strlen(buffer);
++		KUNIT_EXPECT_EQ(test, -EINVAL,
++				proc_dointvec_minmax(&table, KUNIT_PROC_WRITE,
++					user_buffer, &len, &pos));
++		KUNIT_EXPECT_EQ(test, 0, data);
++	}
++}
++
++/*
++ * Test that writing the int value and check if the max is met
++ */
++static void sysctl_test_api_dointvec_write_single_with_max_check(
++		struct kunit *test)
++{
++	size_t max_len = 32, len;
++	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
++	char __user *user_buffer = (char __user *)buffer;
++	loff_t pos = 0;
++	int data = 0, i;
++	struct ctl_table table = CTL_TABLE_ENTRY_MAX("qux",
++			&data,
++			sizeof(int),
++			0644,
++			proc_dointvec_minmax,
++			SYSCTL_NUMERIC_ONE_HUNDRED);
++
++	for (i = -20; i <= SYSCTL_NUMERIC_ONE_HUNDRED; i++) {
++		pos = 0;
++		KUNIT_ASSERT_LT(test,
++				(size_t)snprintf(buffer, max_len, "%d", i),
++				max_len);
++		len = strlen(buffer);
++		KUNIT_EXPECT_EQ(test, 0,
++				proc_dointvec_minmax(&table, KUNIT_PROC_WRITE,
++					user_buffer, &len, &pos));
++		KUNIT_EXPECT_EQ(test, i, data);
++	}
++
++	data = 0;
++	for (i = SYSCTL_NUMERIC_ONE_HUNDRED + 1; i < SYSCTL_NUMERIC_TWO_HUNDRED; i++) {
++		pos = 0;
++		KUNIT_ASSERT_LT(test,
++				(size_t)snprintf(buffer, max_len, "%d", i),
++				max_len);
++		len = strlen(buffer);
++		KUNIT_EXPECT_EQ(test, -EINVAL,
++				proc_dointvec_minmax(&table, KUNIT_PROC_WRITE,
++					user_buffer, &len, &pos));
++		KUNIT_EXPECT_EQ(test, 0, data);
++	}
++}
++
++/*
++ * Test that writing the unsigned int value and check if the min/max are met
++ */
++static void sysctl_test_api_douintvec_write_single_with_minmax_check(
++		struct kunit *test)
++{
++	unsigned int data = 0;
++	struct ctl_table table1 = CTL_TABLE_ENTRY_MINMAX("foo",
++							 &data,
++							 sizeof(unsigned int),
++							 0644,
++							 proc_douintvec_minmax,
++							 SYSCTL_NUMERIC_ZERO,
++							 SYSCTL_NUMERIC_ONE_THOUSAND);
++	size_t max_len = 32, len;
++	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
++	char __user *user_buffer = (char __user *)buffer;
++	loff_t pos = 0;
++	int i;
++
++	for (i = SYSCTL_NUMERIC_ZERO; i <= SYSCTL_NUMERIC_ONE_THOUSAND; i++) {
++		pos = 0;
++		KUNIT_ASSERT_LT(test,
++				(size_t)snprintf(buffer, max_len, "%d", i),
++				max_len);
++		len = strlen(buffer);
++		KUNIT_EXPECT_EQ(test, 0, proc_douintvec_minmax(&table1, KUNIT_PROC_WRITE,
++					user_buffer, &len, &pos));
++		KUNIT_EXPECT_EQ(test, i, data);
++	}
++
++	data = 0;
++	for (i = -10; i < 0; i++) {
++		pos = 0;
++		KUNIT_ASSERT_LT(test,
++				(size_t)snprintf(buffer, max_len, "%d", i),
++				max_len);
++		len = strlen(buffer);
++		KUNIT_EXPECT_EQ(test, -EINVAL, proc_douintvec_minmax(&table1, KUNIT_PROC_WRITE,
++					user_buffer, &len, &pos));
++		KUNIT_EXPECT_EQ(test, 0, data);
++	}
++
++	for (i = SYSCTL_NUMERIC_ONE_THOUSAND + 1; i < SYSCTL_NUMERIC_ONE_THOUSAND + 10; i++) {
++		pos = 0;
++		KUNIT_ASSERT_LT(test,
++				(size_t)snprintf(buffer, max_len, "%d", i),
++				max_len);
++		len = strlen(buffer);
++		KUNIT_EXPECT_EQ(test, -EINVAL, proc_douintvec_minmax(&table1, KUNIT_PROC_WRITE,
++					user_buffer, &len, &pos));
++		KUNIT_EXPECT_EQ(test, 0, data);
++	}
++}
++
++/*
++ * Test that writing the unsigned int value and check if the min is met
++ */
++static void sysctl_test_api_douintvec_write_single_with_min_check(
++		struct kunit *test)
++{
++	size_t max_len = 32, len;
++	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
++	char __user *user_buffer = (char __user *)buffer;
++	loff_t pos = 0;
++	unsigned int data = 0, i;
++	struct ctl_table table = CTL_TABLE_ENTRY_MIN("bar",
++			&data,
++			sizeof(unsigned int),
++			0644,
++			proc_douintvec_minmax,
++			SYSCTL_NUMERIC_FOUR);
++
++	for (i = SYSCTL_NUMERIC_FOUR; i <= SYSCTL_NUMERIC_ONE_THOUSAND; i++) {
++		pos = 0;
++		KUNIT_ASSERT_LT(test,
++				(size_t)snprintf(buffer, max_len, "%u", i),
++				max_len);
++		len = strlen(buffer);
++		KUNIT_EXPECT_EQ(test, 0,
++				proc_douintvec_minmax(&table, KUNIT_PROC_WRITE,
++					user_buffer, &len, &pos));
++		KUNIT_EXPECT_EQ(test, i, data);
++	}
++
++	data = 0;
++	for (i = SYSCTL_NUMERIC_ZERO; i < SYSCTL_NUMERIC_FOUR; i++) {
++		pos = 0;
++		KUNIT_ASSERT_LT(test,
++				(size_t)snprintf(buffer, max_len, "%u", i),
++				max_len);
++		len = strlen(buffer);
++
++		KUNIT_EXPECT_EQ(test, -EINVAL,
++				proc_douintvec_minmax(&table, KUNIT_PROC_WRITE,
++					user_buffer, &len, &pos));
++		KUNIT_EXPECT_EQ(test, 0, data);
++	}
++}
++
++/*
++ * Test that writing the unsigned int value and check if the max is met
++ */
++static void sysctl_test_api_douintvec_write_single_with_max_check(
++		struct kunit *test)
++{
++	size_t max_len = 32, len;
++	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
++	char __user *user_buffer = (char __user *)buffer;
++	loff_t pos = 0;
++	unsigned int data = 0, i;
++	struct ctl_table table = CTL_TABLE_ENTRY_MAX("bar",
++			&data,
++			sizeof(unsigned int),
++			0644,
++			proc_douintvec_minmax,
++			SYSCTL_NUMERIC_TWO_THOUSAND);
++
++	for (i = SYSCTL_NUMERIC_ONE_THOUSAND; i <= SYSCTL_NUMERIC_TWO_THOUSAND;
++			i++) {
++		pos = 0;
++		KUNIT_ASSERT_LT(test,
++				(size_t)snprintf(buffer, max_len, "%u", i),
++				max_len);
++		len = strlen(buffer);
++		KUNIT_EXPECT_EQ(test, 0,
++				proc_douintvec_minmax(&table, KUNIT_PROC_WRITE,
++					user_buffer, &len, &pos));
++		KUNIT_EXPECT_EQ(test, i, data);
++	}
++
++	data = 0;
++	for (i = SYSCTL_NUMERIC_TWO_THOUSAND + 1;
++			i <  SYSCTL_NUMERIC_THREE_THOUSAND;
++			i++) {
++		pos = 0;
++		KUNIT_ASSERT_LT(test,
++				(size_t)snprintf(buffer, max_len, "%u", i),
++				max_len);
++		len = strlen(buffer);
++
++		KUNIT_EXPECT_EQ(test, -EINVAL,
++				proc_douintvec_minmax(&table, KUNIT_PROC_WRITE,
++					user_buffer, &len, &pos));
++		KUNIT_EXPECT_EQ(test, 0, data);
++	}
++}
++
+ static struct kunit_case sysctl_test_cases[] = {
+ 	KUNIT_CASE(sysctl_test_api_dointvec_null_tbl_data),
+ 	KUNIT_CASE(sysctl_test_api_dointvec_table_maxlen_unset),
+@@ -378,6 +672,12 @@ static struct kunit_case sysctl_test_cases[] = {
+ 	KUNIT_CASE(sysctl_test_dointvec_write_happy_single_negative),
+ 	KUNIT_CASE(sysctl_test_api_dointvec_write_single_less_int_min),
+ 	KUNIT_CASE(sysctl_test_api_dointvec_write_single_greater_int_max),
++	KUNIT_CASE(sysctl_test_api_dointvec_write_single_with_minmax_check),
++	KUNIT_CASE(sysctl_test_api_dointvec_write_single_with_min_check),
++	KUNIT_CASE(sysctl_test_api_dointvec_write_single_with_max_check),
++	KUNIT_CASE(sysctl_test_api_douintvec_write_single_with_minmax_check),
++	KUNIT_CASE(sysctl_test_api_douintvec_write_single_with_min_check),
++	KUNIT_CASE(sysctl_test_api_douintvec_write_single_with_max_check),
+ 	{}
+ };
+ 
+-- 
+2.25.1
 
-> > thing to do is just let it fail (perhaps with an explicit check or just
-> > letting the memslot lookup fail). After fixing that WARN_ON be
-> >=20
-> > =C2=A0=C2=A0 if (WARN_ON_ONCE(!kvm_is_error_gpa(gpa) && !kvm_is_error_h=
-va(uhva)))
->=20
-> I really don't want to relax the sanity check, as I feel strongly that KV=
-M needs
-> an invariant that an active cache is either GPA-based or HVA-based, i.e. =
-that at
-> least one of GPA or HVA is "valid".=C2=A0 In quotes because the GPA doesn=
-'t need to
-> be fully validated, just something that doesn't trip kvm_is_error_gpa().
-
-Agreed.
-
---=-qHYKURByT8NhYd+d56Rd
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
-ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
-EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
-FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
-aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
-VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
-ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
-QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
-rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
-ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
-U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
-BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
-dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
-BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
-QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
-CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
-xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
-IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
-kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
-eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
-KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
-1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
-OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
-x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
-5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
-DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
-VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
-UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
-MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
-ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
-oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
-SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
-xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
-RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
-bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
-NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
-KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
-5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
-C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
-gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
-VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
-MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
-by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
-b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
-BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
-QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
-c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
-AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
-qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
-v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
-Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
-tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
-Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
-YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
-ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
-IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
-ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
-GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
-h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
-9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
-P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
-2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
-BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
-7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
-lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
-lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
-AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
-Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
-FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
-BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
-cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
-aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
-LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
-BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
-Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
-lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
-WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
-hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
-IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
-dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
-NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
-xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQwMzE5MTU1NzMwWjAvBgkqhkiG9w0BCQQxIgQgN5OAgChW
-NOzXFkWLNQ9Xa8fdZEtD9ioBkC7s0zD9Dw0wgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
-A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
-dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
-DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
-MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
-Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgCO7OFmgjmG0Mk+cosB0r2p5V3GvIbPi9KF
-6WqfIFTwU+JqS/R0sULnnpIoth0U6uE0J5JESQkwBAV0+DTXyTsDusX2Izert/sHuwstSacKJ9wU
-e2FZDFGF04DUuiarByYrwBQ3b9E15RPNBsXGnKl883IJUuQSO9GbgHb4Rv4/3Qm2uTLYJoEPmnk2
-7l5z1Qm9d4h2GTkByAw9KV7iOF5051WYuYDmsMgsxBIOLO7Zau9yormZTTVqTGQi1BARR880xb3q
-uVaTooRmZgD5Y4Kio2tBN10S+zsVh4LDKKPl8CZjCtvkZ2EqDmUQFBESx2CGJjtiWEJfYpKMuU85
-Y3qlkq9f0j4zrYhjbjq5CpHGEKSYI3SL76CAPffOI2PkphP+11mrYdhYM1Cr5GfKLZdO0Am9mepY
-dToZyaKiqBa2xU1e8rpE2Iu/LCcncsRDU88aRASqXQySMp3HVCKLyR/AkuB4W09kJVU11po8t9GK
-aihSgZPCUXcks+Ds21m1oRY1Wg7tcNd+apYB5UHjb4+6aZUiuzq68zOZzBd9hB9Yr4/O9/9ciyCc
-lFt4T0Xn4rTl6oXH7dXBaEkiVRKqovDhrork29d46VewhgNNqBJW1PnbKeGnJ3ud3QoxTc+nR2AF
-8GhITZAwjxp+cEjZg84toGUMf3gx5CZ3EP+BjC/V2gAAAAAAAA==
-
-
---=-qHYKURByT8NhYd+d56Rd--
