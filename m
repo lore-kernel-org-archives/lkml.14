@@ -1,109 +1,172 @@
-Received: from mail.actia.se (mail.actia.se [212.181.117.226])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB39A64CF7;
-	Tue, 19 Mar 2024 08:52:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD4A54BE2
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 08:54:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710838381; cv=none; b=B5h1wrRXDufF1gbpzMv/gSmDOpkC5YnwXx+m7H274pg/iKI86wNPx6UsszxJX+yJpxsImXGDjN0dMYg8GC2SmKBJ1sffPVoAS/zY4Gfd3zYis7YUoX/OztwKfDjPPK+DHp12GMjgclMT8qnKTls7GY5D/nKZ8vYWm5VbOW6WOTY=
+	t=1710838471; cv=none; b=W58ZGF2YURuAR4eZa5lWC2sBiFAbqgso0lz8jSdDH96oQ0/8vymAgTwdrBe3N0wTUydurWQhPUXPtygMjY8zD5satPT1b8Q2T3P6GzZJTTKrqAVlbS3keLeuoMah+hg0t37IldY/w4H9xts6BNmTqkbY/sAFbu+mhR5lTEZgYpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710838381; c=relaxed/simple;
-	bh=dRo4GmUb2CpgkVklfQFqQDwVG9vwNuWtJN6hgdDy7AE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Ukr1n6eTqZii7ndp99k+eTa98i8WbfCblDdQuEaf/cXuWs6Ip5ZL0F43E4TTP1HGUWzLVePO8DWcXMP1qPe/511ndEDRavmcb/EJpxwKsh2TLyQfcBc7tvl4zhHD9vOxjeQ2jQ7fC8OWoLteQTxrhE+mtg0n+kx46F+QNsrAKVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=actia.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
-Received: from S036ANL.actianordic.se (10.12.31.117) by S036ANL.actianordic.se
- (10.12.31.117) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Tue, 19 Mar
- 2024 09:37:45 +0100
-Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
- S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%4]) with mapi id
- 15.01.2507.037; Tue, 19 Mar 2024 09:37:45 +0100
-From: John Ernberg <john.ernberg@actia.se>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-CC: Wei Fang <wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>, "Clark
- Wang" <xiaoning.wang@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Heiner Kallweit
-	<hkallweit1@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrew Lunn
-	<andrew@lunn.ch>, Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH net v3 2/2] net: fec: Suspend the PHY on probe
-Thread-Topic: [PATCH net v3 2/2] net: fec: Suspend the PHY on probe
-Thread-Index: AQHab8t46xO1JP3Hxke5Lu7SCFbkbbEq8XCAgBPPogA=
-Date: Tue, 19 Mar 2024 08:37:44 +0000
-Message-ID: <9490ed31-dede-4a14-9c62-5ef83e30593a@actia.se>
-References: <20240306133734.4144808-1-john.ernberg@actia.se>
- <20240306133734.4144808-3-john.ernberg@actia.se>
- <20240306190539.4ab9f369@device-28.home>
-In-Reply-To: <20240306190539.4ab9f369@device-28.home>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-esetresult: clean, is OK
-x-esetid: 37303A2958D729556D726A
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <337EC15ED87FD94C94F790B11765AE40@actia.se>
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1710838471; c=relaxed/simple;
+	bh=cPXdOCWg2Zm0aGBLPKptpjIpUx0cYGjdrLj7S7fZN74=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=os2oMwPctB5iyMwpgIGWoFGj/mG4ycf1rqJwswsrT44NICnO3s+QDk42mGgr13pHWLtrj+OthGA8oNqpWxGkWAhntOqTJSa4zJcPiHNFmcBF0dELhA6Xq8RI6dlpxgk0q9xTS40RYVM90puDjwPaCWgG/g3gaGFlGDKyF58Q6k0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NVFt023F; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NVFt023F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710838469;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=cHI9Ej3Lf04bJjgoXi156s83uuxxw+VhvThPFcOejXM=;
+	b=NVFt023FHgc3c+P47L5GGa3DMsJYGcVqILEPbkHqUfCEb2rr6F7FRSAxE20vaQlfo6lcea
+	1WTLCCSOsKKAvq4h8+L8XBoGwLYAH5ej8zxrPJYm1kBZtiBHTRoCs6qGEkajRcaoRW7NWD
+	YnGyU0iFQkQmoyK0VPKvIQQ1udjcfEI=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-552-l_uhYCE-OIOegh-QQXA-6A-1; Tue, 19 Mar 2024 04:54:27 -0400
+X-MC-Unique: l_uhYCE-OIOegh-QQXA-6A-1
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2d4a8dc0e79so18980521fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 01:54:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710838466; x=1711443266;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cHI9Ej3Lf04bJjgoXi156s83uuxxw+VhvThPFcOejXM=;
+        b=j1CofP3jr0jX1pAkeZ9/zyVabHc5mV5HKBW1rTcHCyLZZMhyYg/gi3EbgKuSw2d6BF
+         /tJ8ZRpwBLq6I+y5p0NjNawXWlg8pTflOljzF4+b02LvDODnggDv8d8kmD1wM6yOcRSB
+         XoTiwXUUG4QyhbGoBYs6gvOmTs1WPUsV1eBVaKwEBHnpGLI/Kj8nqXQyvWyoITtxcmOz
+         Ewra/gDkZYljquWSUp4AoZ6vNFhdKT9ijq139WpChm7CLm0GjZC2q55XmbT86JiVR7g1
+         ugIHZB8b6jCmz3rykxBTU0W371WEFA9TvqYHwvyLCBSleFiXGkAia+oxo8xPB8Cs3TYV
+         yM3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUeBHJziOKVgryeon6gxwof5HfSgLdB3GPnwnpVL5hAugTebH+uBTNMZHcAD/OAnW37rPNtFLNNFQH4yf4r7jpgueJozmUZNn3sHI7z
+X-Gm-Message-State: AOJu0YyRN5NNdfxD8LA1CqXrBr+xrnTRf3gWu5txvA2OjsKKPhxFXNGA
+	M3GOr2dyOjnQzNTRdSo80Cj4F6FG5Dye+agbbpTctFdZcCM/NOE7nKMj4uc/nZim/fTOcnWQuWU
+	xmo82KBPrlDjTT+ToS7RVBZlDNUk6THN7HN/2+OsQxQutAKB53gTi0T1IvqWU9g==
+X-Received: by 2002:a2e:904e:0:b0:2d4:3635:b52d with SMTP id n14-20020a2e904e000000b002d43635b52dmr1454992ljg.0.1710838466070;
+        Tue, 19 Mar 2024 01:54:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGEyy3N2ZSSt3LGibqHW1RyMjjZxPlzdtcW+fik0j1Phb6wcTPnPrRqceSWT+ghux7roZii0w==
+X-Received: by 2002:a2e:904e:0:b0:2d4:3635:b52d with SMTP id n14-20020a2e904e000000b002d43635b52dmr1454958ljg.0.1710838465600;
+        Tue, 19 Mar 2024 01:54:25 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c741:2200:2adc:9a8d:ae91:2e9f? (p200300cbc74122002adc9a8dae912e9f.dip0.t-ipconnect.de. [2003:cb:c741:2200:2adc:9a8d:ae91:2e9f])
+        by smtp.gmail.com with ESMTPSA id u14-20020a056000038e00b0033e34c53354sm7407373wrf.56.2024.03.19.01.54.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Mar 2024 01:54:25 -0700 (PDT)
+Message-ID: <659fc57f-0c02-4bf2-9938-976200262145@redhat.com>
+Date: Tue, 19 Mar 2024 09:54:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] virtio_balloon: Treat stats requests as wakeup events
+Content-Language: en-US
+To: David Stevens <stevensd@chromium.org>,
+ "Michael S . Tsirkin" <mst@redhat.com>
+Cc: virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+References: <20240318091034.535573-1-stevensd@google.com>
+ <20240318091034.535573-3-stevensd@google.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240318091034.535573-3-stevensd@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-SGkgTWF4aW1lLA0KDQpBcG9sb2dpZXMgZm9yIHRoZSBkZWxheSBpbiBteSByZXNwb25zZS4NCg0K
-T24gMy82LzI0IDE5OjA1LCBNYXhpbWUgQ2hldmFsbGllciB3cm90ZToNCj4gSGVsbG8gSm9obiwN
-Cj4gDQo+IEknbSBhZGRpbmcgQW5kcmV3IGFuZCBSdXNzZWxsIHRvIHRoZSB0aHJlYWQgYXMgUEhZ
-IG1haW50YWluZXJzIGFuZA0KPiByZXZpZXdlcnMuDQo+IA0KPiBPbiBXZWQsIDYgTWFyIDIwMjQg
-MTM6Mzc6NDUgKzAwMDANCj4gSm9obiBFcm5iZXJnIDxqb2huLmVybmJlcmdAYWN0aWEuc2U+IHdy
-b3RlOg0KPiANCj4+IFNpbmNlIHRoZSBwb3dlciBtYW5hZ2VtZW50IGlzIG5vdyBwZXJmb3JtZWQg
-YnkgdGhlIEZFQyBpbnN0ZWFkIG9mIGdlbmVyaWMNCj4+IHBtIHRoZSBQSFkgd2lsbCBub3Qgc3Vz
-cGVuZCB1bnRpbCB0aGUgbGluayBoYXMgYmVlbiB1cC4NCj4+DQo+PiBUaGVyZWZvciBzdXNwZW5k
-IGl0IG9uIHByb2JlLiBJdCB3aWxsIGJlIHJlc3VtZWQgYnkge29mXyx9cGh5X2Nvbm5lY3QoKQ0K
-Pj4gd2hlbiB0aGUgbGluayBpcyBicm91Z2h0IHVwLg0KPj4NCj4+IFNpbmNlIHtvZl8sfXBoeV9j
-b25uZWN0KCkgYW5kIHBoeV9kaXNjb25uZWN0KCkgd2lsbCByZXN1bWUgYW5kIHN1c3BlbmQgdGhl
-DQo+PiBQSFkgd2hlbiB0aGUgbGluayBpcyBicm91Z2h0IHVwIGFuZCBkb3duIHJlc3BlY3RpdmVs
-eSwgYW5kIHBoeV9zdG9wKCkgYW5kDQo+PiBwaHlfc3RhcnQoKSB3aWxsIHJlc3VtZSBhbmQgc3Vz
-cGVuZCB0aGUgUEhZIGluIHRoZSBzdXNwZW5kLXJlc3VtZSBwYXRocw0KPj4gdGhlcmUgaXMgbm8g
-bmVlZCBmb3IgYW55IGFkZGl0aW9uYWwgY2FsbHMgYW55d2hlcmUuDQo+Pg0KPj4gU2lnbmVkLW9m
-Zi1ieTogSm9obiBFcm5iZXJnIDxqb2huLmVybmJlcmdAYWN0aWEuc2U+DQo+IA0KPiBbLi4uXQ0K
-PiANCj4+IEBAIC0yNTM5LDggKzI1MzksMTAgQEAgc3RhdGljIGludCBmZWNfZW5ldF9taWlfaW5p
-dChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPj4gICAJLyogZmluZCBhbGwgdGhlIFBI
-WSBkZXZpY2VzIG9uIHRoZSBidXMgYW5kIHNldCBtYWNfbWFuYWdlZF9wbSB0byB0cnVlICovDQo+
-PiAgIAlmb3IgKGFkZHIgPSAwOyBhZGRyIDwgUEhZX01BWF9BRERSOyBhZGRyKyspIHsNCj4+ICAg
-CQlwaHlkZXYgPSBtZGlvYnVzX2dldF9waHkoZmVwLT5taWlfYnVzLCBhZGRyKTsNCj4+IC0JCWlm
-IChwaHlkZXYpDQo+PiArCQlpZiAocGh5ZGV2KSB7DQo+PiAgIAkJCXBoeWRldi0+bWFjX21hbmFn
-ZWRfcG0gPSB0cnVlOw0KPj4gKwkJCXBoeV9zdXNwZW5kKHBoeWRldik7DQo+PiArCQl9DQo+IA0K
-PiBJIGRvbid0IHRoaW5rIHRoYXQncyBjb3JyZWN0LiBoZXJlIHBoeV9zdXNwZW5kKCkgaXMgYmVp
-bmcgY2FsbGVkIGJlZm9yZQ0KPiB0aGUgUEhZIGdvdCBhdHRhY2hlZCwgc28gdGhlIFBIWSB3YXNu
-J3QgaW5pdGlhbGl6ZWQgYXQgYWxsIGF0IHRoYXQNCj4gcG9pbnQgKHdoaWNoIEkgZ3Vlc3MgaXMg
-eW91ciBpc3N1ZSBhcyB0aGUgUEhZIGlzIHN0aWxsIGluIHRoZSBzdGF0ZSBpdA0KPiB3YXMgY29u
-ZmlndXJlZCBpbnRvIGJ5IHRoZSBib290bG9hZGVyKQ0KPiANCj4gRm9sbG93aW5nIHRoZSBjb2Rl
-IHBhdGhzLCBpdCBsb29rcyBsaWtlIHRoaXMgd29ya3MgZm9yIHlvdSBiZWNhdXNlIHRoZQ0KPiBQ
-SFkgeW91J3JlIHVzaW5nIGhhcyBhIC5zdXNwZW5kIGNhbGxiYWNrIHBvcHVsYXRlZCwgYnV0IGZv
-ciBhbnkgUEhZDQo+IHRoYXQgdXNlcyB0aGUgZ2VucGh5IGRyaXZlciwgdGhpcyB3aWxsIGRvIG5v
-dGhpbmcgYXQgYWxsICh0aGUgUEhZIGlzbid0DQo+IHlldCBhdHRhY2hlZCB0byB0aGUgZ2VucGh5
-IG9wcywgdGhlcmVmb3JlIGdlbnBoeV9zdXNwZW5kIHdvbid0IGJlDQo+IGNhbGxlZCkuDQoNClRo
-YW5rcyBmb3IgaGlnaGxpZ2h0aW5nIHRoaXMuDQoNClllcywgaXQncyBhIHByb2JsZW0gZm9yIGdl
-bnBoeSwgYWx0aG91Z2ggZHVlIHRvIHdoZW4gZ2VucGh5IGlzIHByb2JlZCwgDQppdCdzIGFsd2F5
-cyBiZWVuIGEgcHJvYmxlbSBmb3IgZ2VucGh5LCBldmVuIGJlZm9yZSB0aGlzIHBhdGNoLiBXaGVy
-ZWFzIA0KUEhZcyB3aXRoIHNwZWNpZmljIGRyaXZlcnMgd29ya2VkIGJlZm9yZSBkdWUgdG8gTURJ
-TyBidXMgUE0uDQoNClRoZXJlIGlzIGFsc28gYSBjYXNlIHdoZXJlIHRoZSBwaHkgZHJpdmVyIG1v
-ZHVsZSBpcyBub3QgYXV0b21hdGljYWxseSANCmxvYWRlZCwgaW4gY2FzZXMgd2hlcmUgcmVxdWVz
-dF9tb2R1bGUoKSBmYWlscywgZWl0aGVyIGR1ZSB0byB0aGUgDQp1c2Vyc3BhY2UgaGVscGVyIGZl
-YXR1cmUgYmVpbmcgY29tcGlsZWQgb3V0IG9yIG90aGVyIHJlYXNvbnMsIGFuZCB0aGUgDQptb2R1
-bGUgaXMgbG9hZGVkIG1hbnVhbGx5IGxhdGVyLiBJIHN1c3BlY3QgZm9yIHJlYXNvbnMgbGlrZSB0
-aGVzZSB0aGUgDQpnZW5waHkgcHJvYmUgaGFwcGVucyBzbyBsYXRlLiBNeSBzb2x1dGlvbiBoZXJl
-IGRvZXNuJ3QgY292ZXIgbm9uLWxvYWRlZCANCm1vZHVsZXMgZWl0aGVyLCBidXQgdGhpcyBjb3Vs
-ZCBtYXliZSBiZSBjb3ZlcmVkIGJ5IG1vdmluZyBwaHlfc3VzcGVuZCgpIA0KdG8gcGh5X3Byb2Jl
-KCkuIFVubGVzcyB0aGVyZSBpcyBhbiBldmVuIG1vcmUgY2xldmVyIHdheSB0byBnbyBhYm91dCBp
-dCANCndoaWNoIEkgY2FuJ3Qgc2VlIGZyb20gaW5leHBlcmllbmNlLg0KDQpJZiBhIFBIWSBkcml2
-ZXIgZG9lc24ndCBwb3B1bGF0ZSAuc3VzcGVuZCB0aGVyZSdzIHByb2JhYmx5IGEgZ29vZCByZWFz
-b24gDQpmb3IgaXQgYW5kIGl0IG1ha2VzIHNlbnNlIHRvIG5vdCBzdXNwZW5kIHN1Y2ggYSBQSFks
-IHNvICBJJ20gbm90IA0KY29uY2VybmVkIGFib3V0IGFuIHVucG9wdWxhdGVkIC5zdXNwZW5kLg0K
-DQpCZXN0IHJlZ2FyZHMgLy8gSm9obiBFcm5iZXJnDQoNCj4gDQo+IEJlc3QgcmVnYXJkcywNCj4g
-DQo+IE1heGltZQ0K
+On 18.03.24 10:10, David Stevens wrote:
+> From: David Stevens <stevensd@chromium.org>
+> 
+> Treat stats requests as wakeup events to ensure that the driver responds
+> to device requests in a timely manner.
+> 
+> Signed-off-by: David Stevens <stevensd@chromium.org>
+> ---
+>   drivers/virtio/virtio_balloon.c | 75 ++++++++++++++++++++-------------
+>   1 file changed, 46 insertions(+), 29 deletions(-)
+> 
+> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> index 7fe7ef5f1c77..402dec98e08c 100644
+> --- a/drivers/virtio/virtio_balloon.c
+> +++ b/drivers/virtio/virtio_balloon.c
+> @@ -121,11 +121,14 @@ struct virtio_balloon {
+>   	struct page_reporting_dev_info pr_dev_info;
+>   
+>   	/* State for keeping the wakeup_source active while adjusting the balloon */
+> -	spinlock_t adjustment_lock;
+> -	bool adjustment_signal_pending;
+> -	bool adjustment_in_progress;
+> +	spinlock_t wakeup_lock;
+> +	bool processing_wakeup_event;
+> +	u32 wakeup_signal_mask;
+>   };
+>   
+> +#define ADJUSTMENT_WAKEUP_SIGNAL (1 << 0)
+> +#define STATS_WAKEUP_SIGNAL (1 << 1)
+
+I'd suggest a different naming like:
+
+VIRTIO_BALLOON_WAKEUP_SIGNAL_ADJUST
+VIRTIO_BALLOON_WAKEUP_SIGNAL_STATS
+
+
+Apart from that, nothing jumped at me.
+
+Acked-by: David Hildenbrand <david@redhat.com>
+
+-- 
+Cheers,
+
+David / dhildenb
+
