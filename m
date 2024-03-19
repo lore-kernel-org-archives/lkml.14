@@ -1,146 +1,135 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2BF3C00;
-	Tue, 19 Mar 2024 22:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729124F5F9;
+	Tue, 19 Mar 2024 22:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710886632; cv=none; b=aE7SHyggrjhrj4PDB6+NiAEZu0Pexm+WaKXLwh5NqJddsw2C5/Ot86r5+YVSolakC2S2DYgUuUfHUjkfs5ykJXbhOWPeySHPybnng/Qp3bZ/Opoal5kzXkucFVUMUhVkxKISBVDP+X58VKKzy2VNKmbIBZ+WBB7a51t2RbtAFPE=
+	t=1710886646; cv=none; b=SjPcXhXqIwuh4b96t2lYZEP11l7kcKrDA/HUyVrsl5V9XsXrMBMKyVBgxIIp8Yej9WTubIZip1NOQX1ClWhLcy7LJxVC6U0iVxQgXAEbMZUwYHwrPMum+ejDyLe0ULArWUG8NsPgtrWY5cq0rnBbntoyw96wOgSq0rrOUdADaMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710886632; c=relaxed/simple;
-	bh=zIT8Wfgemy9DaAZc5faN7nuYrZ5y5Mh4VfnUshKlkaI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=owOwkskAQZTs8ZbeTixLyp8xyJJATRqsPrcVT1nG5np20P/xvSkLciVkIK5OXsTfb053xLMjngLmZBoKE9NUpJOQLJ+UFLFAIFUahSzkdgeODTP9RJqz9rJxh/LzwPxLN78pUMx2/LG9l1Tn0B6IpfU22abBKJ8p3USsPCk4DUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jfcy594L; arc=none smtp.client-ip=209.85.219.51
+	s=arc-20240116; t=1710886646; c=relaxed/simple;
+	bh=iSWaMEWDug/PqAcpOySOPvs1GqiZV7u1C4XYEixAJCE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ot612y7tmShKUDBIqQ7X/tRPxTJ5w8SyNyp5OXMJKSFQHmrZx5qTV6kIU67g5Iaw9eQJOcAq6iFogQZCASTZPNPcfa/OtwdjD/44LPyjU/JRnKG4gsrAM5YzMrY0iSEGNOed82pesDCPumedBDDcb47y658tce/OdxVTIa6KFUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jtZA6t61; arc=none smtp.client-ip=209.85.208.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jfcy594L"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-69145fc4265so42065686d6.1;
-        Tue, 19 Mar 2024 15:17:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jtZA6t61"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-56ba73c02b2so765141a12.0;
+        Tue, 19 Mar 2024 15:17:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710886630; x=1711491430; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6mKF14OWHZkkElq0bOodAxiF/Zp1dq4sueaSM4wOt9E=;
-        b=Jfcy594Lf/DZCzPvMCgnjIut56CrS//mMOIYQWXk1ElUSkN67e/al2GR3GdjWDCnHQ
-         gDhp4ev4VymzpWviMTY07rKb4V5TdSt8IqysXamoy9KudHGL2AEoZJNCIvbNUsoTROkT
-         HCccZKhfDRr8gKCQzpC0r1nulreW8QuyghDY5GUKfvXJx2RUlQlZ4mYZQDXBjfJyusF1
-         MQY13wqhMNDrUHqAqRhQUrRdwzQD7rH/yzCgL7tqhrT17GLxx1xhzntI5+4zmORspR+1
-         A+EcA1Jepqd+rUUlziMoHb0Cgn9vsLzFhFu4K++QjMhuvb3rIsFZY0sQ8sSfb06g6S/T
-         MH/g==
+        d=gmail.com; s=20230601; t=1710886642; x=1711491442; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cSNk7Vf1g7S81rJhVAJNnvcZ02nEXYFCinajVc9WiKg=;
+        b=jtZA6t61Cp8qIl7A1LRA27ekgSA9h3CbMO5+RrTkH7geKuJb5svNaRvdRyOniILrEj
+         wnF7eJOyB9HRpX7sZ/gNZGnhmGUEG7HUrmW6RRN1cEkJQwTnMsbNHFje1Tfn4CGaaCfb
+         p4jVWPY2xBZJqIZpZLtzDJHY9Q7X19XpSLR00aJ0c+0fy4099212J2OJtNttnoTHxA/q
+         pSqZbp8NDWYbJP0obajERx3etm9iBs9IAfB29H6dsqGFkTkd7A12KIP1kCoQHbDUnBlG
+         G11SrYErxVLndnIfGOJi+9F0aLy9i3xfeTMLG/lnnSWwP7IOlVFFBizmNze0aUbH37Uj
+         ig1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710886630; x=1711491430;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6mKF14OWHZkkElq0bOodAxiF/Zp1dq4sueaSM4wOt9E=;
-        b=OIfp/zPLlhCL3+OhRwrzARfE1fvx5JZ16Y4/0MG/wTO7LYLDlUIwWH/onyLahrCYzw
-         +ESjuGrfUxWQqs9mJ3mcn/+HWfa4k/iOXZtUGKo508YYWlZM2oAA/iEklaFu0ncimSI7
-         oCkHHwc1l1CZ5cvV8DXnFp4P96iuJCwx+bSHCWJqbeVUHtuX+cSLmoQ9nx6KB2QXTX2k
-         F4xFyJ1jsT2gvDCLmPi/ZgSgOgsyU24YFxScF8CCfjo2onwvRhsCth/Ne0PAl4E1hG40
-         ODlGfsd5D74AW13rQZP9bA3uz3o2E0C87mbKoPhtNFnWEcH2srVGu3gFF0r3wi20CV+p
-         4tzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXy002H7PjDZc/oSsNfELI8lDRayOZiZ84/f2f2sqzmq5dWCSVLZXLs9EzWdIM5SKte0HdGATMXbZ8+iWswnnRxcLPvenWSo078N3Fb/g4OijMrt3Yh0UwZFcVtlfMkGrOMYqL4YI+JzcF3FTk=
-X-Gm-Message-State: AOJu0Yz6FODeM6QjL//Qc/7qzkHinyJ7gC5zCUnPKMqJ8e2NEYIQdnyD
-	b2YZ/8S33ZPTZWSnbMA6lIWlAOiGRk3Da0i+VOtteEIwKZlyeG7z
-X-Google-Smtp-Source: AGHT+IFgcZi0l7LPJvcopa2SKXhsTMMmijH0zolxqJkPFZ+cvmw30Nbu2wYxGYeecQxYVOmJXFly9A==
-X-Received: by 2002:ad4:4d53:0:b0:696:25e9:92e3 with SMTP id m19-20020ad44d53000000b0069625e992e3mr3689993qvm.57.1710886629980;
-        Tue, 19 Mar 2024 15:17:09 -0700 (PDT)
-Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id im14-20020a056214246e00b0069049298fccsm6952366qvb.65.2024.03.19.15.17.08
+        d=1e100.net; s=20230601; t=1710886642; x=1711491442;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cSNk7Vf1g7S81rJhVAJNnvcZ02nEXYFCinajVc9WiKg=;
+        b=R4Mg3yeqUrvcGzUI+V9mq3s2+98j9rys1WUgckF8WQMupu2obotfoDd3egL8OK74Vx
+         JpZAF44c9yEKZdeovhfRbpIAQ745P504Jo3+7LQ3pcAXpcYtzEVZw5mM+Z2ENk591E98
+         l3NqaQdIMFbuk2C8EqU855BzRiSUkYXnVsEmCRtL3PtrOnzbSJ4Q/I7ihexJKIT27kk8
+         4jA3GrG0W/2ld7h1VJ5V24DF2CHNiABVseBmyhJDE4Bq/2OOAs0B44M7UM+T/Nnclk1f
+         XevOnk5oOy9P1XnqSwuZYst+qwWyPOjFluzjdHRAKX5tWjqfrWJJ4j7o3vBsHCTgWVxk
+         LaJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZds5yINfqgGTDg95y1A4yqiWMt/YNozlDen3WgRspe7Z/6pJN6COmgfnRq2uQefvJ+JNXKl6YCnp7HOjWHTmka2IP4CvkdauU4dimwdXMjuqdzoVbnHISGqExF1TgersxrHTb9KP09No1lgtQtPwIO7o1jhA5c2TyxAm3KFLktZMI0iKhMw==
+X-Gm-Message-State: AOJu0YxphkJ6LdULXh/m9/JcTLG1tG7Dqa/lxUhwFKudngHe8fXtX8NY
+	63dCrwwJi9H288aShz1WYCVyc4RvhFvKYOdnwj22gmT1Uj6tLg+b
+X-Google-Smtp-Source: AGHT+IGMRTODL29KcDlbOCHNLwkDAaChUKnvdXRP1BG+7isiw1RpTe6iNe5o6suqQifNVnwSPURhdQ==
+X-Received: by 2002:a05:6402:4499:b0:568:c6df:d23 with SMTP id er25-20020a056402449900b00568c6df0d23mr6871268edb.1.1710886641585;
+        Tue, 19 Mar 2024 15:17:21 -0700 (PDT)
+Received: from bhlegrsu.conti.de ([2a02:908:2525:6ea0::11c2])
+        by smtp.googlemail.com with ESMTPSA id n13-20020a05640204cd00b00569aed32c32sm2761182edw.75.2024.03.19.15.17.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 15:17:09 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id A448F1200066;
-	Tue, 19 Mar 2024 18:17:08 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Tue, 19 Mar 2024 18:17:08 -0400
-X-ME-Sender: <xms:4w76ZRdEwreDqNILDtfTl1jTvfIPze8mOBIiei9YBgNx26u1HrcRwA>
-    <xme:4w76ZfPDDcZ4PNKIG5IAcnnNWCX4K3tT5tr_D9jP5D42H6rLVUKx02VqtYgTm7fCC
-    GHi-UXFuJWDKNW26g>
-X-ME-Received: <xmr:4w76ZagYTQfrIggh3KQMb-jNH5xcgikEYtA53oC4BXH4drSOeo8YYITquoQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrledtgddufeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhu
-    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
-    htthgvrhhnpeehudfgudffffetuedtvdehueevledvhfelleeivedtgeeuhfegueeviedu
-    ffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    gsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdei
-    gedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfih
-    igmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:4w76Za_bvQ94Vsny740UBsJkJcbhWCP4Ngf30x_piKG_bfjBx7vPoA>
-    <xmx:4w76ZduHzcqgWRUjd1VSM8R42w-mW01s2qPm2YjBcXtApT2wqFhfZQ>
-    <xmx:4w76ZZE2XKp01y4qK3OcL8_AE-olVYamzNskAELZ1f0t9LfOKf7yHA>
-    <xmx:4w76ZUMTk-B6Evl0_vJBk2hz5X8hJqktK-1uvXP-EhWbeSUsLpOczA>
-    <xmx:5A76ZR3lN2k7zPsI7sQYNeEgt5UeW-z46pJRFPKkkj-_bJnbpvVmDNvuk3I>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 19 Mar 2024 18:17:07 -0400 (EDT)
-Date: Tue, 19 Mar 2024 15:16:54 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kees Cook <keescook@chromium.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
+        Tue, 19 Mar 2024 15:17:21 -0700 (PDT)
+From: Wadim Mueller <wafgo01@gmail.com>
+To: 
+Cc: Wadim Mueller <wafgo01@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Carlos Llamas <cmllamas@google.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	Christian Brauner <brauner@kernel.org>
-Subject: Re: [PATCH v3 4/4] rust: add abstraction for `struct page`
-Message-ID: <ZfoO1h0Kzdz4ln26@boqun-archlinux>
-References: <20240311-alice-mm-v3-0-cdf7b3a2049c@google.com>
- <20240311-alice-mm-v3-4-cdf7b3a2049c@google.com>
+	Jiri Slaby <jirislaby@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Chester Lin <chester62515@gmail.com>,
+	=?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+	Matthias Brugger <mbrugger@suse.com>,
+	NXP S32 Linux Team <s32@nxp.com>,
+	Tim Harvey <tharvey@gateworks.com>,
+	Marco Felsch <m.felsch@pengutronix.de>,
+	Gregor Herburger <gregor.herburger@ew.tq-group.com>,
+	Marek Vasut <marex@denx.de>,
+	Joao Paulo Goncalves <joao.goncalves@toradex.com>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Markus Niebel <Markus.Niebel@ew.tq-group.com>,
+	Matthias Schiffer <matthias.schiffer@tq-group.com>,
+	Stefan Wahren <stefan.wahren@chargebyte.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Philippe Schenker <philippe.schenker@toradex.com>,
+	Li Yang <leoyang.li@nxp.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 0/2] NXP S32G3 SoC initial bring-up
+Date: Tue, 19 Mar 2024 23:16:08 +0100
+Message-Id: <20240319221614.56652-1-wafgo01@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240311-alice-mm-v3-4-cdf7b3a2049c@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 11, 2024 at 10:47:16AM +0000, Alice Ryhl wrote:
-[...]
->  /* `bindgen` gets confused at certain things. */
->  const size_t RUST_CONST_HELPER_ARCH_SLAB_MINALIGN = ARCH_SLAB_MINALIGN;
-> +const size_t RUST_CONST_HELPER_PAGE_SIZE = PAGE_SIZE;
-> +const size_t RUST_CONST_HELPER_PAGE_MASK = PAGE_MASK;
 
-At least for me, bindgen couldn't work out the macro expansion, and I
-got:
+This series brings up initial support for the NXP S32G3 SoC,
+used on the S32G-VNP-RDB3 board [1].
 
-	pub const PAGE_SIZE: usize = 4096;
-	extern "C" {
-	    pub static RUST_CONST_HELPER_PAGE_MASK: usize;
-	}
+The following features are supported in this initial port:
 
-in rust/bindings/bindings_generated.rs, which will eventually cause the
-code cannot compile.
+  * Devicetree for the S32G-VNP-RDB3 
+  * UART (fsl-linflexuart) with earlycon support
+  * SDHC: fsl-imx-esdhc (SD/eMMC)
 
-I'm using bindgen-cli 0.65.1, libclang (16 or 17), rustc (1.76 or 1.77).
+== Changes since v1 ==:
 
-Anyone else sees the same thing?
+  * fix the reported checkpatch.pl errors. Two warnings still available but can be ignored
+  * clean up unneeded DT nodes and properties
+  * fix 'make dt_binding_check dtbs_check' errors
+  * remove the S32 STMMAC driver and DT node which will be introduced in a new patchset
+  * add NXP authorship and copyright into the dtsi header
+ 
 
-Regards,
-Boqun
+[1] https://www.nxp.com/design/design-center/designs/s32g3-vehicle-networking-reference-design:S32G-VNP-RDB3
 
->  const gfp_t RUST_CONST_HELPER_GFP_KERNEL = GFP_KERNEL;
->  const gfp_t RUST_CONST_HELPER___GFP_ZERO = __GFP_ZERO;
-> +const gfp_t RUST_CONST_HELPER___GFP_HIGHMEM = ___GFP_HIGHMEM;
-[...]
+
+Wadim Mueller (2):
+  arm64: dts: S32G3: Introduce device tree for S32G-VNP-RDB3
+  dt-bindings: arm: fsl: Document missing s32g3 board and linflexuart
+
+ .../devicetree/bindings/arm/fsl.yaml          |   6 +
+ .../bindings/serial/fsl,s32-linflexuart.yaml  |   3 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ arch/arm64/boot/dts/freescale/s32g3.dtsi      | 236 ++++++++++++++++++
+ .../boot/dts/freescale/s32g399a-rdb3.dts      |  43 ++++
+ 5 files changed, 289 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/s32g3.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/s32g399a-rdb3.dts
+
+-- 
+2.25.1
+
