@@ -1,29 +1,29 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA7672231F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E40E322325;
 	Tue, 19 Mar 2024 17:00:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710867627; cv=none; b=o1RkvSv0eEDQIyySXkaEkH4A+DWXmfNDyUzTRV5sa1j+sulUlUq6res3F0HC7Zfcds7qwWH5hoiJr41nUJj8hQx4q+CZuyr4jbLqXqMRPha3ZG5Uxw5GDU8uiiyeFkBnQgcxx+urME38FPL/SAkwmFjOxQwnxrTHA7ovQkhGhDA=
+	t=1710867627; cv=none; b=VXUwt+2pNkp8TW5WXfAnk6ZgEJgFHtJfJZZ82C5NbHYvqpIfg2LlImzBxRV0SmuAD7QUCRzZKHOZwRCoOMzX0u7vy99AFsxDvgNvKABGgkqAEXPSiJdYjILf/M7h5TgHZXIZvwrHQbDThn5u2KYigVJf7JmguyVkhFx/pXad0Js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710867627; c=relaxed/simple;
-	bh=FmzbsTQVkoVAsFEMC+38ieoxv9Kn1qv2d3kI7COHFIE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=fGn+UB8i6Lom7nwgSTcYbQsvvCPiZe1oABK+I2JGU236sIEvG1AnFzSg2YFx98GAfvz7EjA4OvVXFV2ruG0X5Wa5PDv/2GO1YbJl5eQc6hqBvlMMlKxOsF0k8wOSbDT2dT/CFaYO7xoQbQX473BYE72munV9OIYDdaT97scTKX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=OuasJ1/0; arc=none smtp.client-ip=13.77.154.182
+	bh=VYWbTKvwiXxX5MoDZMS5LsE+7Y09WRO1EMZa66vY0S0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=ByITyodrx8pQwQ7awfYdLK2F+eYp+nMqj59ET5iUJcyGBbozfBEX77N8UWiTK5Yely3C+oE0LJ1l4bYY+7ybP5RaTgbiGk0fELnMDU6H6WTHkxu80g6ZE4COYst/g5MvFCx1YZ3gQtv2mxlHGkmHPor0d1vnCK0LhbH2iZ29YUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ScJnI+e9; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OuasJ1/0"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ScJnI+e9"
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5472C20B74C1;
+	by linux.microsoft.com (Postfix) with ESMTPSA id 8479F20B74C3;
 	Tue, 19 Mar 2024 10:00:25 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5472C20B74C1
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8479F20B74C3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1710867625;
-	bh=aA2NSqe6Xdgu3VeZvewL+kJBF3nLK/wPPYLng5FrHZg=;
+	bh=ufX/U1zNv09Ri+oL2azvLywYnvh8PET/KeZx2M1KecA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OuasJ1/0LQqoBcofZ8uNxAn6zwVFGO/04p4rsyv0FaKYBo+5WyQyxbZtYr1zr0zLO
-	 7DiI4gEAjjbhXITLBw+3OKvo7puV0N301TWiiUK/4G3sVx3XkiERMVc27qtjV1oLxh
-	 m3xSQ6YShbF/5tx+tF3Uhl605p49t5lQzoG7N9hQ=
+	b=ScJnI+e9AxKQQNkLjqlO2M58+kbyQdF1aNVzw+qlfwsgOk5K5UY2ROXvFL0Zo69aP
+	 uQfCy7jpvDfIdlwrmw6Ex5n6FM5hQiM/kn8cg3wKfE6/QCd2OQdm+HQLAoz2XVg3QB
+	 rXZewXt/1Rhp2JwjLQgLPw+TiSchUZkWWtYfRdbM=
 From: Konstantin Taranov <kotaranov@linux.microsoft.com>
 To: kotaranov@microsoft.com,
 	sharmaajay@microsoft.com,
@@ -32,9 +32,9 @@ To: kotaranov@microsoft.com,
 	leon@kernel.org
 Cc: linux-rdma@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH rdma-next v2 1/4] RDMA/mana_ib: Introduce helpers to create and destroy mana queues
-Date: Tue, 19 Mar 2024 10:00:10 -0700
-Message-Id: <1710867613-4798-2-git-send-email-kotaranov@linux.microsoft.com>
+Subject: [PATCH rdma-next v2 3/4] RDMA/mana_ib: Use struct mana_ib_queue for WQs
+Date: Tue, 19 Mar 2024 10:00:12 -0700
+Message-Id: <1710867613-4798-4-git-send-email-kotaranov@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1710867613-4798-1-git-send-email-kotaranov@linux.microsoft.com>
 References: <1710867613-4798-1-git-send-email-kotaranov@linux.microsoft.com>
@@ -46,98 +46,133 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
 From: Konstantin Taranov <kotaranov@microsoft.com>
 
-Intoduce helpers to work with mana ib queues (struct mana_ib_queue).
-A queue always consists of umem, gdma_region, and id.
-A queue can become a WQ or a CQ.
+Use struct mana_ib_queue and its helpers for WQs
 
 Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
 ---
- drivers/infiniband/hw/mana/main.c    | 43 ++++++++++++++++++++++++++++
- drivers/infiniband/hw/mana/mana_ib.h | 10 +++++++
- 2 files changed, 53 insertions(+)
+ drivers/infiniband/hw/mana/mana_ib.h |  4 +---
+ drivers/infiniband/hw/mana/qp.c      | 10 ++++-----
+ drivers/infiniband/hw/mana/wq.c      | 31 ++++------------------------
+ 3 files changed, 10 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
-index 71e33feee..4524c6b80 100644
---- a/drivers/infiniband/hw/mana/main.c
-+++ b/drivers/infiniband/hw/mana/main.c
-@@ -237,6 +237,49 @@ void mana_ib_dealloc_ucontext(struct ib_ucontext *ibcontext)
- 		ibdev_dbg(ibdev, "Failed to destroy doorbell page %d\n", ret);
- }
- 
-+int mana_ib_create_queue(struct mana_ib_dev *mdev, u64 addr, u32 size,
-+			 struct mana_ib_queue *queue)
-+{
-+	struct ib_umem *umem;
-+	int err;
-+
-+	queue->umem = NULL;
-+	queue->id = INVALID_QUEUE_ID;
-+	queue->gdma_region = GDMA_INVALID_DMA_REGION;
-+
-+	umem = ib_umem_get(&mdev->ib_dev, addr, size, IB_ACCESS_LOCAL_WRITE);
-+	if (IS_ERR(umem)) {
-+		err = PTR_ERR(umem);
-+		ibdev_dbg(&mdev->ib_dev, "Failed to get umem, %d\n", err);
-+		return err;
-+	}
-+
-+	err = mana_ib_create_zero_offset_dma_region(mdev, umem, &queue->gdma_region);
-+	if (err) {
-+		ibdev_dbg(&mdev->ib_dev, "Failed to create dma region, %d\n", err);
-+		goto free_umem;
-+	}
-+	queue->umem = umem;
-+
-+	ibdev_dbg(&mdev->ib_dev,
-+		  "create_dma_region ret %d gdma_region 0x%llx\n",
-+		  err, queue->gdma_region);
-+
-+	return 0;
-+free_umem:
-+	ib_umem_release(umem);
-+	return err;
-+}
-+
-+void mana_ib_destroy_queue(struct mana_ib_dev *mdev, struct mana_ib_queue *queue)
-+{
-+	/* Ignore return code as there is not much we can do about it.
-+	 * The error message is printed inside.
-+	 */
-+	mana_ib_gd_destroy_dma_region(mdev, queue->gdma_region);
-+	ib_umem_release(queue->umem);
-+}
-+
- static int
- mana_ib_gd_first_dma_region(struct mana_ib_dev *dev,
- 			    struct gdma_context *gc,
 diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
-index f83390eeb..859fd3bfc 100644
+index 6acb5c281..a8953ee80 100644
 --- a/drivers/infiniband/hw/mana/mana_ib.h
 +++ b/drivers/infiniband/hw/mana/mana_ib.h
-@@ -45,6 +45,12 @@ struct mana_ib_adapter_caps {
- 	u32 max_inline_data_size;
+@@ -59,11 +59,9 @@ struct mana_ib_dev {
+ 
+ struct mana_ib_wq {
+ 	struct ib_wq ibwq;
+-	struct ib_umem *umem;
++	struct mana_ib_queue queue;
+ 	int wqe;
+ 	u32 wq_buf_size;
+-	u64 gdma_region;
+-	u64 id;
+ 	mana_handle_t rx_object;
  };
  
-+struct mana_ib_queue {
-+	struct ib_umem *umem;
-+	u64 gdma_region;
-+	u64 id;
-+};
-+
- struct mana_ib_dev {
- 	struct ib_device ib_dev;
- 	struct gdma_dev *gdma_dev;
-@@ -169,6 +175,10 @@ int mana_ib_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
- int mana_ib_gd_destroy_dma_region(struct mana_ib_dev *dev,
- 				  mana_handle_t gdma_region);
+diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
+index d7485ee6a..f606caa75 100644
+--- a/drivers/infiniband/hw/mana/qp.c
++++ b/drivers/infiniband/hw/mana/qp.c
+@@ -194,7 +194,7 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
+ 		ibcq = ibwq->cq;
+ 		cq = container_of(ibcq, struct mana_ib_cq, ibcq);
  
-+int mana_ib_create_queue(struct mana_ib_dev *mdev, u64 addr, u32 size,
-+			 struct mana_ib_queue *queue);
-+void mana_ib_destroy_queue(struct mana_ib_dev *mdev, struct mana_ib_queue *queue);
-+
- struct ib_wq *mana_ib_create_wq(struct ib_pd *pd,
- 				struct ib_wq_init_attr *init_attr,
- 				struct ib_udata *udata);
+-		wq_spec.gdma_region = wq->gdma_region;
++		wq_spec.gdma_region = wq->queue.gdma_region;
+ 		wq_spec.queue_size = wq->wq_buf_size;
+ 
+ 		cq_spec.gdma_region = cq->queue.gdma_region;
+@@ -212,18 +212,18 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
+ 		}
+ 
+ 		/* The GDMA regions are now owned by the WQ object */
+-		wq->gdma_region = GDMA_INVALID_DMA_REGION;
++		wq->queue.gdma_region = GDMA_INVALID_DMA_REGION;
+ 		cq->queue.gdma_region = GDMA_INVALID_DMA_REGION;
+ 
+-		wq->id = wq_spec.queue_index;
++		wq->queue.id = wq_spec.queue_index;
+ 		cq->queue.id = cq_spec.queue_index;
+ 
+ 		ibdev_dbg(&mdev->ib_dev,
+ 			  "ret %d rx_object 0x%llx wq id %llu cq id %llu\n",
+-			  ret, wq->rx_object, wq->id, cq->queue.id);
++			  ret, wq->rx_object, wq->queue.id, cq->queue.id);
+ 
+ 		resp.entries[i].cqid = cq->queue.id;
+-		resp.entries[i].wqid = wq->id;
++		resp.entries[i].wqid = wq->queue.id;
+ 
+ 		mana_ind_table[i] = wq->rx_object;
+ 
+diff --git a/drivers/infiniband/hw/mana/wq.c b/drivers/infiniband/hw/mana/wq.c
+index 7c9c69962..f959f4b92 100644
+--- a/drivers/infiniband/hw/mana/wq.c
++++ b/drivers/infiniband/hw/mana/wq.c
+@@ -13,7 +13,6 @@ struct ib_wq *mana_ib_create_wq(struct ib_pd *pd,
+ 		container_of(pd->device, struct mana_ib_dev, ib_dev);
+ 	struct mana_ib_create_wq ucmd = {};
+ 	struct mana_ib_wq *wq;
+-	struct ib_umem *umem;
+ 	int err;
+ 
+ 	if (udata->inlen < sizeof(ucmd))
+@@ -32,39 +31,18 @@ struct ib_wq *mana_ib_create_wq(struct ib_pd *pd,
+ 
+ 	ibdev_dbg(&mdev->ib_dev, "ucmd wq_buf_addr 0x%llx\n", ucmd.wq_buf_addr);
+ 
+-	umem = ib_umem_get(pd->device, ucmd.wq_buf_addr, ucmd.wq_buf_size,
+-			   IB_ACCESS_LOCAL_WRITE);
+-	if (IS_ERR(umem)) {
+-		err = PTR_ERR(umem);
++	err = mana_ib_create_queue(mdev, ucmd.wq_buf_addr, ucmd.wq_buf_size, &wq->queue);
++	if (err) {
+ 		ibdev_dbg(&mdev->ib_dev,
+-			  "Failed to get umem for create wq, err %d\n", err);
++			  "Failed to create queue for create wq, %d\n", err);
+ 		goto err_free_wq;
+ 	}
+ 
+-	wq->umem = umem;
+ 	wq->wqe = init_attr->max_wr;
+ 	wq->wq_buf_size = ucmd.wq_buf_size;
+ 	wq->rx_object = INVALID_MANA_HANDLE;
+-
+-	err = mana_ib_create_zero_offset_dma_region(mdev, wq->umem, &wq->gdma_region);
+-	if (err) {
+-		ibdev_dbg(&mdev->ib_dev,
+-			  "Failed to create dma region for create wq, %d\n",
+-			  err);
+-		goto err_release_umem;
+-	}
+-
+-	ibdev_dbg(&mdev->ib_dev,
+-		  "create_dma_region ret %d gdma_region 0x%llx\n",
+-		  err, wq->gdma_region);
+-
+-	/* WQ ID is returned at wq_create time, doesn't know the value yet */
+-
+ 	return &wq->ibwq;
+ 
+-err_release_umem:
+-	ib_umem_release(umem);
+-
+ err_free_wq:
+ 	kfree(wq);
+ 
+@@ -86,8 +64,7 @@ int mana_ib_destroy_wq(struct ib_wq *ibwq, struct ib_udata *udata)
+ 
+ 	mdev = container_of(ib_dev, struct mana_ib_dev, ib_dev);
+ 
+-	mana_ib_gd_destroy_dma_region(mdev, wq->gdma_region);
+-	ib_umem_release(wq->umem);
++	mana_ib_destroy_queue(mdev, &wq->queue);
+ 
+ 	kfree(wq);
+ 
 -- 
 2.43.0
 
