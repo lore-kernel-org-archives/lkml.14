@@ -1,293 +1,223 @@
-Received: from out203-205-221-153.mail.qq.com (out203-205-221-153.mail.qq.com [203.205.221.153])
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01on2078.outbound.protection.outlook.com [40.107.15.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E945915E
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 16:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.153
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710864408; cv=none; b=oCtSiE1y6BmwspArASVfekzMHy7qSbjsU+H8enesFNe9zFW3o1XAjkA6lYg2gKcpCG+HQxkOS73t7KWSIlYtpCUuJ9fp70PNlCFX7f907jHVaQJbUjasqQDPyoz/V1jaqEJVNfDKA2nAbVc2xaGzyroGcme3tOu30FUxzTVfCy4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710864408; c=relaxed/simple;
-	bh=9Gz2RXz51oHRw8OR/4Cz4VUaTiWu8pStV9bUPdYwH/A=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=qx27FJRTITa2Vttf+KAvr4Gl4zyq5QtHuAIFe+3Kn7EcKaTeoBq42KZlNRgz6faPQjqhsQauFQ1q6lDtm8PCoKs2sZSNHCYzTDpKombWZHnsDD0q6CuSO7rtONGLOWGrn3MtngpdwF82bAbqrgTSBxGnOorhq8awCRMOW9nsyEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=TXkmPfgm; arc=none smtp.client-ip=203.205.221.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 695AD657D2;
+	Tue, 19 Mar 2024 16:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.15.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710864446; cv=fail; b=mldzodwl5y8SMOWktR74s00tvXTHu9NX22S6UlZ0phWaLeW8LzDec02uBbvTe3MC0LTvf5vRBOABB/LmMNBmiUg7/ltXB/H6Y8K/q7oUuQC4R+hovo/rTN6v2IiU0OBW97g5CNbQuFEQ1LrZ/s+nCgUiN9sfezVzM+WuwGfFxBI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710864446; c=relaxed/simple;
+	bh=JJXqx52t4SOPohvMnQLx1kp/6SCXWc6KO44Qih5BpVc=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=sqmsOVuwf0OPrajuLwHmVPdKB+ruO4am32tUj5vPaXqBZ+l7SujdBCLZ+Id4v94KNQC6kR4WoYnobZ+JNn0Y7ZKU25Qy+ZQHWJ+ubKNlENKeRNjLOtCTIx7GwnzGpOrt2PUEh8SPu/+pRee9IIORPcS9EIsVG+GG+Z4pyW4Kt2U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=fsjWrBdP; arc=fail smtp.client-ip=40.107.15.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="TXkmPfgm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1710864404;
-	bh=pzUshAmwIhfns0JHddsR8oSXiooWQ8z0An7EKzxYuC0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=TXkmPfgm7mhlO717TyTDtGyNaDtZlMLy0Fu9BxoI4Yzbs8UZgZ8jjq/LKT6nWxsPP
-	 0OuVpLVRLZzGomeobY/OY1uW6WVxoe2wkO4qCYLeaeoG3em7mcpJZjMc4LUZtYQgcU
-	 u6NRlX4TeeZjvJ7jU5Bn8Z/KDDn/BkSMECG/Wi84=
-Received: from localhost.localdomain ([2409:8a60:2a60:b160:1774:d6f7:f5f5:b6a])
-	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
-	id E8996A1C; Tue, 19 Mar 2024 23:58:09 +0800
-X-QQ-mid: xmsmtpt1710863894t22ri8u26
-Message-ID: <tencent_093C67575151D704214D42A68332A7F9F50A@qq.com>
-X-QQ-XMAILINFO: NQR8mRxMnur9/9vdW8nlMOL6LAgsFq9dYIsrVHStc265nfl1wF7GtnkDr3SmY6
-	 J6eJf5Bm4n3DL6irk2pY3o5Pjf7M8iIqZzB7kuZ6PQ3ldaGWsd1+bJT2VamcuxrQgL9W94XZmCS2
-	 DANo5KvlXf0O3fk8eu2b6oCKVymeZkDB4HwEMrg8NA0tZ9ydYgPVKBtcX0ZrCYbD36HVlvQX0Ndb
-	 0u4Ayb1rJbnntiDYAreNQ+HmD6kOpz0vskmmdS+CF63s55SufHrCxUHMSbk9dHYXcxQrCkzx5k8x
-	 RSjwD/yL6bkumMurE1Q4PhYzcGF3o9ot7ZcwmcsTvwVWqq1tFYPkscS7Q5AuhWfTY1LK9BXJPnJn
-	 Z8L54DbxXFBTV89alQQbIS/uf2kfV+V9FqqFSCdQUQDF/qTEsRo8I4+eFMStPeGs8FqlsCvQUwu5
-	 OCHj4xCHsmCylJmj/5CmwOBJR9RWx36XqYpm2W7zvJzF0UdnprLQJW9nEGam6dUPARh02/SqOwVj
-	 b69qyGdJT3bBhorwMAETctgv5FiyPI/nb21tsOzrDlNiIU6qxh+AuqDDGT1lK4RhLkHUmWhbTZxq
-	 gtUv1HorOmG/WqavZRjXKx3effyzCk6EP2yDtVNVimVS9OZKJTkcHptpbW/dITgg1RsL9LM2TAJC
-	 qtngSfxg2seKftLcOVd5HmFqySkEhdHmw9N2ooGB6DNHf4Gd+Z9jZd1viwaKCEBqn84CIA7OMe3v
-	 EhoKBJqDiFOxoNDhw+k6jWqbdOhUwMeCKM/975bdkwqR5xFQ9+chi9zPvdyJRSQTzC5pigYSPPIF
-	 FXHtxzrWe6vbQcQBNW1gsC9V625JB/vr/nQGurzb/vYgpuXpwttrJD5gn42Sy0I8sJLNTLAFgo3y
-	 84s2G4/I0Ixr24i///RqTgAom9E5APcBeywcYA73pEYlLeMziGY9p2EzqSGGJ65JFCqnrWeK21TN
-	 QpElVlz0ftTL7xEzD7k9ZmTKGof/9Lp1D8NMNmtLO5lomMESbMCJJXdatk/cuQmSEGojxYBGFPJ/
-	 U7VKmgYgCqoGCQqFdw5ZveCTNsLM/eH/fjbaZV9Q==
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: wenyang.linux@foxmail.com
-To: "Eric W . Biederman" <ebiederm@xmission.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Joel Granados <j.granados@samsung.com>,
-	Christian Brauner <brauner@kernel.org>
-Cc: Dave Young <dyoung@redhat.com>,
-	Wen Yang <wenyang.linux@foxmail.com>,
-	David Howells <dhowells@redhat.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH v2 3/9] rxrpc: delete these unnecessary static variables n_65535, four, max_500, etc
-Date: Tue, 19 Mar 2024 23:57:44 +0800
-X-OQ-MSGID: <99e5c01e90cdad6dc78ae62d08bd3c47fe53974f.1710863674.git.wenyang.linux@foxmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <26c450f6467b4cbaf94cdb10f047abc6ab0c2a5d.1710863674.git.wenyang.linux@foxmail.com>
-References: <26c450f6467b4cbaf94cdb10f047abc6ab0c2a5d.1710863674.git.wenyang.linux@foxmail.com>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fsjWrBdP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kBVyIJ4zfycHNqu4jKNxjs6I4+c9EwTzfgutl8e7U0BniYKEPNtG68WG3S6CUhAhuHov5u/8f1Oy0ZTeQ6JkJB3crQAJdCsUaX6I1nNkxxlTSyc5nCh59EGakSX/q83/w6+uWQ4QtFQRLmHVuG/JGLKPQzOz0VvleBmPGXb9tJYft/ojE6B4e2g6jMIXjE/vVIwp2i/FnLF7KdID0KBCDv5HrJBN6SbYUQjHVJeTE6nRWdO/sxYI8DKpsTMlyiKMuZcPQ5WSsmBNEYIk4Y/KJO8mKZR12eEHPbNrjGwupRo5ZmNZUTzVPdyk3rc9ueLji5svSgXuTAqWJypNQkyjMg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7qQZVZ5gYrJyv7FJDP/9J8gx3SfXbvVi+WtgFvAg8J4=;
+ b=ejaCvVPSVdHBMzIyC/i4fp++7Lu0WMa7cwc55zgZPFzItJ7TRyQDaH9MXp/+OZI2H79BofjvX4McVMLzzCihsHIlWMxa7M6gY+dCGgiyBF8LMF3ucjOX865CsJx0B16EdgsJVjYo+TKtutXIzinSragBjFjZx9X7x7GWI/AyJhHKEdJQZOnGBU0GaYxyrNnz+HD869g3ID0HXN2eYaviczbdbVkG9cSD9Wy8aYG328hBJYIu6K2FappS9SzVeJTpSzk/39MtWsP+x0vzoqie/RewMZYaECMSFg9Yx1BK8SlYQTMCZS42oeyovDrAuhfO+nlxqDxKhxmVWRLzdCm0Tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7qQZVZ5gYrJyv7FJDP/9J8gx3SfXbvVi+WtgFvAg8J4=;
+ b=fsjWrBdP7DZhfdljPulmFWAh0XPcK9b3b0vBYq49FtaTvheb5gXNLqgNmbzbl/Yihw9FlKV7fAkJW9mw41sDBf6dpto6g0Bizx9gerpw7Kx90Gpygnuo61neWrvl0/ruaL3QsX5EfYa3QUiP8DnbAu6n5N4FYg6hqJQOaV3DLLs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DBBPR04MB7772.eurprd04.prod.outlook.com (2603:10a6:10:1e3::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.27; Tue, 19 Mar
+ 2024 16:07:20 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7386.025; Tue, 19 Mar 2024
+ 16:07:19 +0000
+From: Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH v5 0/5] PCI: dwc: Add common pme_turn_off message by using
+ outbound iATU
+Date: Tue, 19 Mar 2024 12:07:10 -0400
+Message-Id: <20240319-pme_msg-v5-0-af9ffe57f432@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAC64+WUC/2XMTQ7CIBCG4asY1mJgCqV15T2MMcgMlkV/UkyjM
+ b27tBvauPwm87xfFmkMFNn58GUjTSGGvktDHw/MNbZ7Eg+YNgMBSshC8KGlexufHBGwkkR1VZU
+ sfQ8j+fBeS9db2k2Ir378rOFJLtf/xiS54KjhISyidsZduvdwcn3LlsIEWYGQWUFSpSmN0OCpt
+ Gqviq2CrIqkvAfrtbECLO6V2ihZZKWSIrAOFRoLNWQ1z/MPRcq7JD4BAAA=
+To: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
+ Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Frank Li <Frank.Li@nxp.com>, 
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+ Serge Semin <fancer.lancer@gmail.com>
+X-Mailer: b4 0.13-dev-e586c
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710864436; l=3771;
+ i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
+ bh=JJXqx52t4SOPohvMnQLx1kp/6SCXWc6KO44Qih5BpVc=;
+ b=8uWI/GZZl7hhPi4OnAU+pdv3eQw27dcAK6DV6LvVDie/fY6agWJPQBVtK+stV4l9sCFYfqmmg
+ cOyAI39v3n0A8OI8tfR8e7nxnKr2AlHvWxUxuk3BmlE0yrLlIkU8bzB
+X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
+ pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
+X-ClientProxiedBy: BYAPR07CA0104.namprd07.prod.outlook.com
+ (2603:10b6:a03:12b::45) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBBPR04MB7772:EE_
+X-MS-Office365-Filtering-Correlation-Id: 44714148-45c1-480f-4b78-08dc482ea7a9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	omnXsOMUqnP9KbQ3mlLEP/oneDxM/VoGF8pqRsOBW++VZXsn4AHRsdMldq386VHz4sMohwYkdg9sjonuqIMRsuUec/4tvoRUQoDhSOENqWsT+mOicHj8xwtkKqQyvHyiEFMRi6UfdkT4wpNiy65dCM0HqSCbtbUpmesHPO/1vN6vC8ZBpBm0K6mdXQmoU8d4LzZd8ZJYI3kMRBma1ByzgzlKhwUIQ6cQINTF/DfXQ7a7oa/H8/CPCkArQI5/2aPjKrgVj7sGftjbNh7aWgvd3qvSOoD2TSoU9c9nmAryexnRMQOrlQ8Yh5Co1yRP6AW/Oja9XQw8a/1EvBLTB9Yv+Wg8LzTRMQQz/lhHBJ2lhsxGBfNne0kiMSkNUTzp5z9SawsPUYjtDMg287vUDE4t4HBLo4DRxaZ5s31u/QDZUScFLPWflodismWA3i67RvuZyn/Q8CwvTsAXkSSCMzwgqMI9UoLJPKPWsjislEr2wWZOVcK7RYN6z5tktACfC69tHDeVq0tbWS+G6ns/BCw6OwpuPWJFVgvBkg3nQybA9Lj1egy+fv1r8Z+I2OTTgVmuyrR4Y3X439xORplQuZKb1dQRWp9WbyN+GXQ3P6PrKIgwaCXDZN/KuL52LUwDZSX/DS+dBo6pC9o4f3ll5bm5XLEx5HeYkQ9elQoHKJsFHjhtdwidRUM5TOe/Q0LFMl9u
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(52116005)(366007)(1800799015)(7416005)(376005)(38350700005)(921011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?alZ6bFkvUWMrTk02N3c0b0cvM0Z2NmQ3SGFDVldZZkpWbktaUjNtQUdoNlM1?=
+ =?utf-8?B?d1kwRVpwTmVQSE9ZSFVGTTdORTNBMFIwRG1HeWVzbGxLSmQ5MFdzYXpkMW1O?=
+ =?utf-8?B?bDJzMnpJeUZ6UWpvYTdsWEd6MTN5dmdhSm4xdWRqZnZVVDdJWThOUlJBdGp1?=
+ =?utf-8?B?d3p2S2VzSS9Vd01wd1A4ZmdOZmkxMHdPcCt0c3ByTmVudGdIRDFGQkJrKytQ?=
+ =?utf-8?B?cXJFcGNoVnlzVXRqT3kxeVpCYWhLaTZxQXZGRGRqT3UzcWFNNmVONzRkN1RT?=
+ =?utf-8?B?UzBvVlRlYVZqaVJCU1lqclFDaUZYWlJ5MW0rMXZ2S290d08yWSs5N1l1WXlM?=
+ =?utf-8?B?blg1U3g4YTJQN0dnY2V0Yk40SWZpcGNtVUh1MUxqRzlUZS8xOWN0VTlsYlp4?=
+ =?utf-8?B?aThKWnFpNngyUXA4STFJd1pGNUNWbk1rREk5WXkxWSt3RzZpYVl4Umh4WHlR?=
+ =?utf-8?B?eE1mWnVwanVjeWJVMXVIRFhXd20ySm1KTlJrdi9TZmRTT3p1cnh4RzEvWnV4?=
+ =?utf-8?B?bDdkTC9BYmlCMGFjVW1uQzVEOXM4L1JwNUowTzUwMFFTRXFSb3hlWk1qcnBJ?=
+ =?utf-8?B?aVp4V2RRWU1vQzMzejhJNzQwd01ERjdTeS94MElkYndETWpqUDVNNmRxOVZs?=
+ =?utf-8?B?RDIxeTB0SDhoaUlwc0svT3YwbklmekJzdGkzWWdPRVVMYXpLQW1jQnpuMFhQ?=
+ =?utf-8?B?VzNvRUdTbnA0d1ZsemRlZzhNVTBBQkhUd1hHS2NVQm00Y2NOZjUxV0ZteG9I?=
+ =?utf-8?B?a3RNaUhad3FGb2Y3OFNpbVYxUU1MV2gzUnFlOS9JR1VpMDQrMXVmeDNYSi9h?=
+ =?utf-8?B?cmpkeHZObFBuL1MrT21zUFFCSXhFM3dUaVUwVkM3aGlIbUd5amJNSk9XUUdC?=
+ =?utf-8?B?VHdlbHRVN3VxSHRlR2NRNTdDQ1NiMEdUUGNST05ldXZ4MzNnaGp6L3dVNlBU?=
+ =?utf-8?B?cXZCdHFrVEpobkxVWDhpOW5BZ204OXlTMnp2WDIxNkM4eTFuMnhEd0lHSnht?=
+ =?utf-8?B?d1ExaWpHTnNtbVN6S01WNFdJc1JNS3dtOWFNMGdKMFZuVkVFblRpOUg1Ukdj?=
+ =?utf-8?B?RWZCZnNQRnNJL1hqQWlqdnFJTS9Cd3k5TUYybFhmeHdEU1RrczJRMCtrazFh?=
+ =?utf-8?B?NVliTGRlODBVWjFRczVRZW9GUTBsZ0hpdjhWNmg2YVZQQndHN3BTQ0huckxL?=
+ =?utf-8?B?ZmlZYS9ZbHY2N1FBOFFLTFh5SHBGWVptWktsZ1diVGMwSWxaSGJkZmpEWEJ0?=
+ =?utf-8?B?RmxZOFRXeVo2Tm90dDlvZGJXc1AxR3YwbVQ2UnVQOHU4ZnRzRnFDZGJaSUlE?=
+ =?utf-8?B?YVZoZGk1Z0VBdGZIdDJIRUd4cFViVjZHQWt4UTkvc0VOaWZFemxEclNLdjdF?=
+ =?utf-8?B?dklkc0xCcVFIc01HVUJmaXpBeVhKd0JSLzlJdytRV0VEUjBxbmZzeVpzRzVL?=
+ =?utf-8?B?alRYSGV2amw5ODErSUVlbnAvTnlJUXE1aFZIQXgxbUlMSHFYdFVyeGVIOEIr?=
+ =?utf-8?B?TEtlWU1IeXJEbFhFYkthUklSdUttem16UytORk1yMldYMmxpbWp4N3ZBMEZq?=
+ =?utf-8?B?bnB6bGo4NWt6Z2s0dXRBcEpXMWkzckg1NjBuelRtMUsrbjZaWFA1S0FzYjFG?=
+ =?utf-8?B?aStTUlJnT3lXamc0Ty8wdGJ1WjdVUzZJdW9OUmJEYWtCSXVoa0RFckNTL1dW?=
+ =?utf-8?B?TkRqS1VLaWpCYmtiQW9uZ3AyK2Eyd2FvWHdlV0docWRxYWZ0RTA0TFBYTnpE?=
+ =?utf-8?B?RFpSeEN5ekp2Y2NGUFNid0xtdm5XUzBMWEJVdUxwSTgybkVtS0RoK29Gc2lX?=
+ =?utf-8?B?ZWlGTjlhUGJEdk1TOWxKYlBiYmg3cGxVK3k1TitjNTcwOU9MWDNZd1l2YnlQ?=
+ =?utf-8?B?clZTb0o5YVBUeEZ4R2laaE1oOENkdTkyY3AxanlvQzZ0MW85MU13T2x2c1pp?=
+ =?utf-8?B?QUV2ZmE1SVc4K043RnpDZmVLMkk4MlVQVHZPeHNteCtRSlFQVWlYUlZjdkdy?=
+ =?utf-8?B?ZjF6RTN2bm5YclRvbW9NWXdlREZaZWY4KzNaZGVwNmNaK1FMcTBPa05sRlQy?=
+ =?utf-8?B?U21NSzZzUnVRVmV1d2pKenlTd3RmZEZ4Rit6ZEh4RXlLUkc0Skh5ZHh4Z2lG?=
+ =?utf-8?Q?cSwUvdSKOFMSnugCuDN9Ujtya?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44714148-45c1-480f-4b78-08dc482ea7a9
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2024 16:07:19.9138
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: naI46od6/sUEIGaFpu7fr5J740eAq0wmxA8yuflUW2aoLu2+yT4MWiU8vvogV7uxT17Fr7rtt5OIAsA/Yifofg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7772
 
-From: Wen Yang <wenyang.linux@foxmail.com>
+Involve an new and common mathod to send pme_turn_off() message. Previously
+pme_turn_off() implement by platform related special register to trigge    
+it.                                                                        
+                                                                           
+But Yoshihiro give good idea by using iATU to send out message. Previously 
+Yoshihiro provide patches to raise INTx message by dummy write to outbound 
+iATU.                                                                      
+                                                                           
+Use similar mathod to send out pme_turn_off message.                       
+                                                                           
+Previous two patches is picked from Yoshihiro' big patch serialise.        
+ PCI: dwc: Change arguments of dw_pcie_prog_outbound_atu()                 
+ PCI: Add INTx Mechanism Messages macros                                   
+                                                                           
+PCI: Add PME_TURN_OFF message macro                                        
+dt-bindings: PCI: dwc: Add 'msg" register region, Add "msg" region to use  
+to map PCI msg.                                                            
+                                                                           
+PCI: dwc: Add common pme_turn_off message method                           
+Using common pme_turn_off() message if platform have not define their.
 
-Delete unnecessary static variables(n_65535, four, max_500, etc.)
-and encode them directly in the table entry.
-
-Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Joel Granados <j.granados@samsung.com>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Marc Dionne <marc.dionne@auristor.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- net/rxrpc/sysctl.c | 169 +++++++++++++++++++--------------------------
- 1 file changed, 70 insertions(+), 99 deletions(-)
+Changes in v5:
+- Default disable allocate TLP message memory windows. If driver need use
+this feature, need set use_atu_msg = true before call dw_host_init().
 
-diff --git a/net/rxrpc/sysctl.c b/net/rxrpc/sysctl.c
-index ecaeb4ecfb58..26ec6eff8402 100644
---- a/net/rxrpc/sysctl.c
-+++ b/net/rxrpc/sysctl.c
-@@ -11,15 +11,6 @@
- #include "ar-internal.h"
- 
- static struct ctl_table_header *rxrpc_sysctl_reg_table;
--static const unsigned int four = 4;
--static const unsigned int max_backlog = RXRPC_BACKLOG_MAX - 1;
--static const unsigned int n_65535 = 65535;
--static const unsigned int n_max_acks = 255;
--static const unsigned long one_jiffy = 1;
--static const unsigned long max_jiffies = MAX_JIFFY_OFFSET;
--#ifdef CONFIG_AF_RXRPC_INJECT_RX_DELAY
--static const unsigned long max_500 = 500;
--#endif
- 
- /*
-  * RxRPC operating parameters.
-@@ -29,102 +20,82 @@ static const unsigned long max_500 = 500;
-  */
- static struct ctl_table rxrpc_sysctl_table[] = {
- 	/* Values measured in milliseconds but used in jiffies */
--	{
--		.procname	= "soft_ack_delay",
--		.data		= &rxrpc_soft_ack_delay,
--		.maxlen		= sizeof(unsigned long),
--		.mode		= 0644,
--		.proc_handler	= proc_doulongvec_ms_jiffies_minmax,
--		.extra1		= (void *)&one_jiffy,
--		.extra2		= (void *)&max_jiffies,
--	},
--	{
--		.procname	= "idle_ack_delay",
--		.data		= &rxrpc_idle_ack_delay,
--		.maxlen		= sizeof(unsigned long),
--		.mode		= 0644,
--		.proc_handler	= proc_doulongvec_ms_jiffies_minmax,
--		.extra1		= (void *)&one_jiffy,
--		.extra2		= (void *)&max_jiffies,
--	},
--	{
--		.procname	= "idle_conn_expiry",
--		.data		= &rxrpc_conn_idle_client_expiry,
--		.maxlen		= sizeof(unsigned long),
--		.mode		= 0644,
--		.proc_handler	= proc_doulongvec_ms_jiffies_minmax,
--		.extra1		= (void *)&one_jiffy,
--		.extra2		= (void *)&max_jiffies,
--	},
--	{
--		.procname	= "idle_conn_fast_expiry",
--		.data		= &rxrpc_conn_idle_client_fast_expiry,
--		.maxlen		= sizeof(unsigned long),
--		.mode		= 0644,
--		.proc_handler	= proc_doulongvec_ms_jiffies_minmax,
--		.extra1		= (void *)&one_jiffy,
--		.extra2		= (void *)&max_jiffies,
--	},
-+	CTL_TABLE_ENTRY_MINMAX("soft_ack_delay",
-+			       &rxrpc_soft_ack_delay,
-+			       sizeof(unsigned long),
-+			       0644,
-+			       proc_doulongvec_ms_jiffies_minmax,
-+			       SYSCTL_NUMERIC_ONE,
-+			       MAX_JIFFY_OFFSET),
-+	CTL_TABLE_ENTRY_MINMAX("idle_ack_delay",
-+			       &rxrpc_idle_ack_delay,
-+			       sizeof(unsigned long),
-+			       0644,
-+			       proc_doulongvec_ms_jiffies_minmax,
-+			       SYSCTL_NUMERIC_ONE,
-+			       MAX_JIFFY_OFFSET),
-+	CTL_TABLE_ENTRY_MINMAX("idle_conn_expiry",
-+			       &rxrpc_conn_idle_client_expiry,
-+			       sizeof(unsigned long),
-+			       0644,
-+			       proc_doulongvec_ms_jiffies_minmax,
-+			       SYSCTL_NUMERIC_ONE,
-+			       MAX_JIFFY_OFFSET),
-+	CTL_TABLE_ENTRY_MINMAX("idle_conn_fast_expiry",
-+			       &rxrpc_conn_idle_client_fast_expiry,
-+			       sizeof(unsigned long),
-+			       0644,
-+			       proc_doulongvec_ms_jiffies_minmax,
-+			       SYSCTL_NUMERIC_ONE,
-+			       MAX_JIFFY_OFFSET),
- 
- 	/* Values used in milliseconds */
- #ifdef CONFIG_AF_RXRPC_INJECT_RX_DELAY
--	{
--		.procname	= "inject_rx_delay",
--		.data		= &rxrpc_inject_rx_delay,
--		.maxlen		= sizeof(unsigned long),
--		.mode		= 0644,
--		.proc_handler	= proc_doulongvec_minmax,
--		.extra1		= (void *)SYSCTL_LONG_ZERO,
--		.extra2		= (void *)&max_500,
--	},
-+	CTL_TABLE_ENTRY_MINMAX("inject_rx_delay",
-+			       &rxrpc_inject_rx_delay,
-+			       sizeof(unsigned long),
-+			       0644,
-+			       proc_doulongvec_minmax,
-+			       SYSCTL_NUMERIC_ZERO,
-+			       SYSCTL_NUMERIC_FIVE_HUNDRED),
- #endif
- 
- 	/* Non-time values */
--	{
--		.procname	= "reap_client_conns",
--		.data		= &rxrpc_reap_client_connections,
--		.maxlen		= sizeof(unsigned int),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= (void *)SYSCTL_ONE,
--		.extra2		= (void *)&n_65535,
--	},
--	{
--		.procname	= "max_backlog",
--		.data		= &rxrpc_max_backlog,
--		.maxlen		= sizeof(unsigned int),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= (void *)&four,
--		.extra2		= (void *)&max_backlog,
--	},
--	{
--		.procname	= "rx_window_size",
--		.data		= &rxrpc_rx_window_size,
--		.maxlen		= sizeof(unsigned int),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= (void *)SYSCTL_ONE,
--		.extra2		= (void *)&n_max_acks,
--	},
--	{
--		.procname	= "rx_mtu",
--		.data		= &rxrpc_rx_mtu,
--		.maxlen		= sizeof(unsigned int),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= (void *)SYSCTL_ONE,
--		.extra2		= (void *)&n_65535,
--	},
--	{
--		.procname	= "rx_jumbo_max",
--		.data		= &rxrpc_rx_jumbo_max,
--		.maxlen		= sizeof(unsigned int),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= (void *)SYSCTL_ONE,
--		.extra2		= (void *)&four,
--	},
-+	CTL_TABLE_ENTRY_MINMAX("reap_client_conns",
-+			       &rxrpc_reap_client_connections,
-+			       sizeof(unsigned int),
-+			       0644,
-+			       proc_dointvec_minmax,
-+			       SYSCTL_NUMERIC_ONE,
-+			       SYSCTL_NUMERIC_U16_MAX),
-+	CTL_TABLE_ENTRY_MINMAX("max_backlog",
-+			       &rxrpc_max_backlog,
-+			       sizeof(unsigned int),
-+			       0644,
-+			       proc_dointvec_minmax,
-+			       SYSCTL_NUMERIC_FOUR,
-+			       RXRPC_BACKLOG_MAX - 1),
-+	CTL_TABLE_ENTRY_MINMAX("rx_window_size",
-+			       &rxrpc_rx_window_size,
-+			       sizeof(unsigned int),
-+			       0644,
-+			       proc_dointvec_minmax,
-+			       SYSCTL_NUMERIC_ONE,
-+			       SYSCTL_NUMERIC_U8_MAX),
-+	CTL_TABLE_ENTRY_MINMAX("rx_mtu",
-+			       &rxrpc_rx_mtu,
-+			       sizeof(unsigned int),
-+			       0644,
-+			       proc_dointvec_minmax,
-+			       SYSCTL_NUMERIC_ONE,
-+			       SYSCTL_NUMERIC_U16_MAX),
-+	CTL_TABLE_ENTRY_MINMAX("rx_jumbo_max",
-+			       &rxrpc_rx_jumbo_max,
-+			       sizeof(unsigned int),
-+			       0644,
-+			       proc_dointvec_minmax,
-+			       SYSCTL_NUMERIC_ONE,
-+			       SYSCTL_NUMERIC_FOUR),
- 	{ }
- };
- 
--- 
-2.25.1
+- Link to v4: https://lore.kernel.org/r/20240213-pme_msg-v4-0-e2acd4d7a292@nxp.com
+
+Changes in v4:
+- Remove dt-binding patch. Needn't change any dts file and binding doc.
+  Reserve a region at end of first IORESOURCE_MEM window by call
+  request_resource(). So PCIe stack will not use this reserve region to any
+PCIe devices.
+  I tested it by reserve at begin of IORESOURCE_MEM window. PCIe stack
+will skip it as expection.
+
+  Fixed a issue, forget set iATU index when sent PME_turn_off.
+
+- Link to v3: https://lore.kernel.org/r/20240202-pme_msg-v3-0-ff2af57a02ad@nxp.com
+
+Changes in v3:
+- fix 'MSG"
+- Add pcie spec ref in head file
+- using function name dw_pci_pme_turn_off()
+- Using PCIE_ prefix macro
+- Link to v2: https://lore.kernel.org/r/20240201-pme_msg-v2-0-6767052fe6a4@nxp.com
+
+Changes in v2:
+  - Add my sign off at PCI: dwc: Add outbound MSG TLPs support
+  - Add Bjorn review tag at  Add INTx Mechanism Messages macros
+  - using PME_Turn_Off match PCIe spec
+  - ref to pcie spec v6.1
+  - using section number.
+
+- Link to v1: https://lore.kernel.org/r/20240130-pme_msg-v1-0-d52b0add5c7c@nxp.com
+
+---
+Frank Li (2):
+      PCI: Add PCIE_MSG_CODE_PME_TURN_OFF message macro
+      PCI: dwc: Add common send PME_Turn_Off message method
+
+Yoshihiro Shimoda (3):
+      PCI: Add INTx Mechanism Messages macros
+      PCI: dwc: Consolidate args of dw_pcie_prog_outbound_atu() into a structure
+      PCI: dwc: Add outbound MSG TLPs support
+
+ drivers/pci/controller/dwc/pcie-designware-ep.c   |  21 ++--
+ drivers/pci/controller/dwc/pcie-designware-host.c | 146 +++++++++++++++++++---
+ drivers/pci/controller/dwc/pcie-designware.c      |  54 ++++----
+ drivers/pci/controller/dwc/pcie-designware.h      |  22 +++-
+ drivers/pci/pci.h                                 |  20 +++
+ 5 files changed, 199 insertions(+), 64 deletions(-)
+---
+base-commit: e08fc59eee9991afa467d406d684d46d543299a9
+change-id: 20240130-pme_msg-dd2d81ee9886
+
+Best regards,
+---
+Frank Li <Frank.Li@nxp.com>
 
