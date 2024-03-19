@@ -1,221 +1,175 @@
-Received: from smtp-190f.mail.infomaniak.ch (smtp-190f.mail.infomaniak.ch [185.125.25.15])
+Received: from smtp-42ab.mail.infomaniak.ch (smtp-42ab.mail.infomaniak.ch [84.16.66.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF137CF03
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 10:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13587E579
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 10:55:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710845737; cv=none; b=mSO0EfNv0mJAHLO7yiZWNiMITv2dz0qu7/RkRz7Do9YywQysGhnNG0kEiJFZhdzS2wtaa8eWhlGFPqFxMHvMIelUaDH5vxfuyab7jFQBXa08VXhe0lFlqTzRtkIEYXBjpoXkFGYI/jk2IO5jywCwK/TWtdBMyJYle5iAO6G4wKA=
+	t=1710845738; cv=none; b=Q5Ztrr6EH85+ygp+xQmpngkvyEuJqj2JSIbXrNPzkkKp6GUqdVz3YfHt1AafW5hmHuFwLWUW4kl6h6F2zYnGabaozBtaBbKR1GbpdKrZy5/XIwtjfrrKRpaawNsIoWsb85eA8088+A5xC4D/+meddquR20qEHU6uGGGaI7j9Kak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710845737; c=relaxed/simple;
-	bh=Y7LFLz2yHd9yIyVMMmNOIi+K+sOwaMQ2yNDvGWc72JM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UCT8eKTwm1K1h9cuLt41yJG8o6w2xM0ZhkyHLTI5ZGi+SndIFTWjVhyYzOgmznLIYNm7vKEWUoeGJmXO1yT+t7hnH84N3IAh7Ll6ZEL94VlbXA17woZMBS+t1mhKDEHE588Bd5NZY+bwQvW90m3PphlRTJD2Mg+tM8rZCYBE3rY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=TePPjuqL; arc=none smtp.client-ip=185.125.25.15
+	s=arc-20240116; t=1710845738; c=relaxed/simple;
+	bh=fENQjvqNGOJIElMLG83NAteDijrFr0EuoPVi3ck1bAQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OFMhKGzWFEdVu5mgObCuvn8GjMrse+aOK3RDnUSXE0EoQHAs24U0IdeFHhMsiB1l4AY6aR/UxJ9K/X/y60hkqIkBTM9WlMFE72FZ5J3I07htg+nAM+RSf1R+f3av3GnDjSvtSDI6Wa8Dzu7RB0PCs0TVKBOz6XjBKkxetC0sh3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=fLP8aoLq; arc=none smtp.client-ip=84.16.66.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="TePPjuqL"
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TzT4P3th8zMZ7;
-	Tue, 19 Mar 2024 11:49:25 +0100 (CET)
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4TzT4N4spgzMpnPc;
-	Tue, 19 Mar 2024 11:49:24 +0100 (CET)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="fLP8aoLq"
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TzT181pX4zLC8;
+	Tue, 19 Mar 2024 11:46:36 +0100 (CET)
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4TzT171j29zlxf;
+	Tue, 19 Mar 2024 11:46:35 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1710845365;
-	bh=Y7LFLz2yHd9yIyVMMmNOIi+K+sOwaMQ2yNDvGWc72JM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TePPjuqLC0xBIEbGy6Z1xt0ZB9ximrtLx/5QCewjGn/21CT19iJrOHPjeJJcGFBzk
-	 eSXUz8nNDlsgAzA6EMU+PVtlrIO60Kp81l/DqdVb8z6QUxahUJeJ+p+LFoQpM+hMG0
-	 b8C/ungtLOe4nlLJoXcf8eHZFHxSt0XXyNyiwYoE=
-From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To: Brendan Higgins <brendanhiggins@google.com>,
-	David Gow <davidgow@google.com>,
-	Rae Moar <rmoar@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	James Morris <jamorris@linux.microsoft.com>,
-	Kees Cook <keescook@chromium.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
-	Marco Pagani <marpagan@redhat.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Thara Gopinath <tgopinath@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Wanpeng Li <wanpengli@tencent.com>,
-	Zahra Tarkhani <ztarkhani@microsoft.com>,
-	kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	x86@kernel.org
-Subject: [PATCH v3 6/7] kunit: Print last test location on fault
-Date: Tue, 19 Mar 2024 11:48:56 +0100
-Message-ID: <20240319104857.70783-7-mic@digikod.net>
-In-Reply-To: <20240319104857.70783-1-mic@digikod.net>
-References: <20240319104857.70783-1-mic@digikod.net>
+	s=20191114; t=1710845196;
+	bh=fENQjvqNGOJIElMLG83NAteDijrFr0EuoPVi3ck1bAQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fLP8aoLqfwWxGvgT0LsfcIyzPHD/8iMS/MwlF2Wtg2OuMyi/eTKLveb3Wg61JyEnB
+	 mQEIliTADiOnC6WwkYzT3g9X+1A475sCVJIJp5cPychq2M3DrOG1K3HzN8jyJMRwts
+	 LbZmsVZgHJCVXOPPBUzCe7GF7aM4Znki8SobB/UQ=
+Date: Tue, 19 Mar 2024 11:46:34 +0100
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Alejandro Colomar <alx@kernel.org>
+Cc: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
+	Paul Moore <paul@paul-moore.com>, "Serge E . Hallyn" <serge@hallyn.com>, 
+	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>, Shervin Oloumi <enlightened@chromium.org>, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH v2 1/2] landlock: Extend documentation for kernel support
+Message-ID: <20240319.eeb8tajeiPee@digikod.net>
+References: <20240227110550.3702236-1-mic@digikod.net>
+ <Zd4OlL1G3t1D3TgC@google.com>
+ <20240307.oxQuab5tho0u@digikod.net>
+ <ZfgOf2dHBVT4WUcp@debian>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZfgOf2dHBVT4WUcp@debian>
 X-Infomaniak-Routing: alpha
 
-This helps identify the location of test faults with opportunistic calls
-to _KUNIT_SAVE_LOC().  This can be useful while writing tests or
-debugging them.  It is possible to call KUNIT_SUCCESS() to explicit save
-last location.
+On Mon, Mar 18, 2024 at 10:50:42AM +0100, Alejandro Colomar wrote:
+> Hi Mickaël, Günther,
+> 
+> Sorry for the delay!
+> 
+> On Thu, Mar 07, 2024 at 11:21:57AM +0100, Mickaël Salaün wrote:
+> > CCing Alejandro
+> > 
+> > On Tue, Feb 27, 2024 at 05:32:20PM +0100, Günther Noack wrote:
+> > > On Tue, Feb 27, 2024 at 12:05:49PM +0100, Mickaël Salaün wrote:
+> > > > Extend the kernel support section with one subsection for build time
+> > > > configuration and another for boot time configuration.
+> > > > 
+> > > > Extend the boot time subsection with a concrete example.
+> > > > 
+> > > > Update the journalctl command to include the boot option.
+> > > > 
+> > > > Cc: Günther Noack <gnoack@google.com>
+> > > > Cc: Kees Cook <keescook@chromium.org>
+> > > > Signed-off-by: Mickaël Salaün <mic@digikod.net>
+> > > > ---
+> > > > 
+> > > > Changes since v1:
+> > > > * New patch, suggested by Kees Cook.
+> > > > ---
+> > > >  Documentation/userspace-api/landlock.rst | 57 +++++++++++++++++++++---
+> > > >  1 file changed, 51 insertions(+), 6 deletions(-)
+> 
+> [...]
+> 
+> > > > +
+> > > > +  lsm=landlock,lockdown,yama,integrity,apparmor
+> > > > +
+> > > > +After a reboot, we can check that Landlock is up and running by looking at
+> > > > +kernel logs:
+> > > > +
+> > > > +.. code-block:: console
+> > > > +
+> > > > +    # dmesg | grep landlock || journalctl -kb -g landlock
+> > > > +    [    0.000000] Command line: [...] lsm=landlock,lockdown,yama,integrity,apparmor
+> > > > +    [    0.000000] Kernel command line: [...] lsm=landlock,lockdown,yama,integrity,apparmor
+> > > > +    [    0.000000] LSM: initializing lsm=lockdown,capability,landlock,yama,integrity,apparmor
+> > > > +    [    0.000000] landlock: Up and running.
+> > > > +
+> > > > +Note that according to the built time kernel configuration,
+> > > 
+> > > s/built time/build time/
+> > >                  ^
+> > 
+> > OK
+> 
+> Here, this should actually be "build-time" since it works as an
+> adjective.
 
-Cc: Brendan Higgins <brendanhiggins@google.com>
-Cc: David Gow <davidgow@google.com>
-Cc: Rae Moar <rmoar@google.com>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Link: https://lore.kernel.org/r/20240319104857.70783-7-mic@digikod.net
----
+Thanks Alex but this was already merged:
+https://git.kernel.org/torvalds/c/35e886e88c803920644c9d3abb45a9ecb7f1e761
 
-Changes since v2:
-* Extend the commit message according to discussion with David.
+Because I picked Günther's below suggestion, it should be good right?
 
-Changes since v1:
-* Add Kees's Reviewed-by.
----
- include/kunit/test.h  | 24 +++++++++++++++++++++---
- lib/kunit/try-catch.c | 10 +++++++---
- 2 files changed, 28 insertions(+), 6 deletions(-)
+> 
+> > 
+> > > 
+> > > It feels like the phrase "according to" could be slightly more specific here.
+> > > 
+> > > To paraphrase Alejandro Colomar, "Note that" is usually redundant.
+> > > https://lore.kernel.org/all/0aafcdd6-4ac7-8501-c607-9a24a98597d7@gmail.com/
+> > > 
+> > > I'd suggest:
+> > > 
+> > >   The kernel may be configured at build time to always load the ``lockdown`` and
+> > >   ``capability`` LSMs.  In that case, these LSMs will appear at the beginning of
+> > >   the ``LSM: initializing`` log line as well, even if they are not configured in
+> > >   the boot loader.
+> 
+> LGTM
+> 
+> > 
+> > OK, I integrated your suggestion.  I guess `capability` is not really
+> > considered an LSM but it would be too confusing and out of scope for an
+> > user documentation to explain that.
+> > 
+> > > 
+> > > > +``lockdown,capability,`` may always stay at the beginning of the ``LSM:
+> > > > +initializing lsm=`` list even if they are not configured with the bootloader,
+> > > 
+> > > Nit: The man pages spell this in two words as "boot loader".
+> > 
+> > OK, I'll use "boot loader" too.
+> > 
+> > > 
+> > > 
+> > > > +which is OK.
+> > > > +
+> > > > +Network support
+> > > > +---------------
+> > > > +
+> > > >  To be able to explicitly allow TCP operations (e.g., adding a network rule with
+> > > >  ``LANDLOCK_ACCESS_NET_BIND_TCP``), the kernel must support TCP
+> > > >  (``CONFIG_INET=y``).  Otherwise, sys_landlock_add_rule() returns an
+> > > > 
+> > > > base-commit: b4007fd27206c478a4b76e299bddf4a71787f520
+> > > > -- 
+> > > > 2.44.0
+> > > > 
+> > > 
+> > > Reviewed-by: Günther Noack <gnoack@google.com>
+> > 
+> > Thanks!
+> 
+> Reviewed-by: Alejandro Colomar <alx@kernel.org>
+> 
+> Have a lovely day!
+> Alex
+> 
+> -- 
+> <https://www.alejandro-colomar.es/>
+> Looking for a remote C programming job at the moment.
 
-diff --git a/include/kunit/test.h b/include/kunit/test.h
-index fcb4a4940ace..f3aa66eb0087 100644
---- a/include/kunit/test.h
-+++ b/include/kunit/test.h
-@@ -301,6 +301,8 @@ struct kunit {
- 	struct list_head resources; /* Protected by lock. */
- 
- 	char status_comment[KUNIT_STATUS_COMMENT_SIZE];
-+	/* Saves the last seen test. Useful to help with faults. */
-+	struct kunit_loc last_seen;
- };
- 
- static inline void kunit_set_failure(struct kunit *test)
-@@ -567,6 +569,15 @@ void __printf(2, 3) kunit_log_append(struct string_stream *log, const char *fmt,
- #define kunit_err(test, fmt, ...) \
- 	kunit_printk(KERN_ERR, test, fmt, ##__VA_ARGS__)
- 
-+/*
-+ * Must be called at the beginning of each KUNIT_*_ASSERTION().
-+ * Cf. KUNIT_CURRENT_LOC.
-+ */
-+#define _KUNIT_SAVE_LOC(test) do {					       \
-+	WRITE_ONCE(test->last_seen.file, __FILE__);			       \
-+	WRITE_ONCE(test->last_seen.line, __LINE__);			       \
-+} while (0)
-+
- /**
-  * KUNIT_SUCCEED() - A no-op expectation. Only exists for code clarity.
-  * @test: The test context object.
-@@ -575,7 +586,7 @@ void __printf(2, 3) kunit_log_append(struct string_stream *log, const char *fmt,
-  * words, it does nothing and only exists for code clarity. See
-  * KUNIT_EXPECT_TRUE() for more information.
-  */
--#define KUNIT_SUCCEED(test) do {} while (0)
-+#define KUNIT_SUCCEED(test) _KUNIT_SAVE_LOC(test)
- 
- void __noreturn __kunit_abort(struct kunit *test);
- 
-@@ -601,14 +612,16 @@ void __kunit_do_failed_assertion(struct kunit *test,
- } while (0)
- 
- 
--#define KUNIT_FAIL_ASSERTION(test, assert_type, fmt, ...)		       \
-+#define KUNIT_FAIL_ASSERTION(test, assert_type, fmt, ...) do {		       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	_KUNIT_FAILED(test,						       \
- 		      assert_type,					       \
- 		      kunit_fail_assert,				       \
- 		      kunit_fail_assert_format,				       \
- 		      {},						       \
- 		      fmt,						       \
--		      ##__VA_ARGS__)
-+		      ##__VA_ARGS__);					       \
-+} while (0)
- 
- /**
-  * KUNIT_FAIL() - Always causes a test to fail when evaluated.
-@@ -637,6 +650,7 @@ void __kunit_do_failed_assertion(struct kunit *test,
- 			      fmt,					       \
- 			      ...)					       \
- do {									       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	if (likely(!!(condition_) == !!expected_true_))			       \
- 		break;							       \
- 									       \
-@@ -698,6 +712,7 @@ do {									       \
- 		.right_text = #right,					       \
- 	};								       \
- 									       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	if (likely(__left op __right))					       \
- 		break;							       \
- 									       \
-@@ -758,6 +773,7 @@ do {									       \
- 		.right_text = #right,					       \
- 	};								       \
- 									       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	if (likely((__left) && (__right) && (strcmp(__left, __right) op 0)))   \
- 		break;							       \
- 									       \
-@@ -791,6 +807,7 @@ do {									       \
- 		.right_text = #right,					       \
- 	};								       \
- 									       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	if (likely(__left && __right))					       \
- 		if (likely(memcmp(__left, __right, __size) op 0))	       \
- 			break;						       \
-@@ -815,6 +832,7 @@ do {									       \
- do {									       \
- 	const typeof(ptr) __ptr = (ptr);				       \
- 									       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	if (!IS_ERR_OR_NULL(__ptr))					       \
- 		break;							       \
- 									       \
-diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-index 7a3910dd78a6..d36e78095fdc 100644
---- a/lib/kunit/try-catch.c
-+++ b/lib/kunit/try-catch.c
-@@ -96,9 +96,13 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
- 
- 	if (exit_code == -EFAULT)
- 		try_catch->try_result = 0;
--	else if (exit_code == -EINTR)
--		kunit_err(test, "try faulted\n");
--	else if (exit_code == -ETIMEDOUT)
-+	else if (exit_code == -EINTR) {
-+		if (test->last_seen.file)
-+			kunit_err(test, "try faulted after %s:%d\n",
-+				  test->last_seen.file, test->last_seen.line);
-+		else
-+			kunit_err(test, "try faulted before the first test\n");
-+	} else if (exit_code == -ETIMEDOUT)
- 		kunit_err(test, "try timed out\n");
- 	else if (exit_code)
- 		kunit_err(test, "Unknown error: %d\n", exit_code);
--- 
-2.44.0
 
