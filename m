@@ -1,60 +1,63 @@
-Received: from esa4.hc1455-7.c3s2.iphmx.com (esa4.hc1455-7.c3s2.iphmx.com [68.232.139.117])
+Received: from esa6.hc1455-7.c3s2.iphmx.com (esa6.hc1455-7.c3s2.iphmx.com [68.232.139.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB29537FC;
-	Tue, 19 Mar 2024 06:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A2C50A6B;
+	Tue, 19 Mar 2024 06:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710829956; cv=none; b=czOfmgnDJbsi601T1DNuzWUDNGIhs3nu6YXa9of1eJrUfkuv6wf4nvjN2qaY3QOJwMwEwh4m1n243ZMosob5cLx/x0ik9C4HzLJLf/UCBFClR/upRe8zc+R5OHwldWZVpjpEbxcKUmqawEXG3aDP00lgBlp29+WsuDQnL4GY1/Q=
+	t=1710829954; cv=none; b=HoGGdzrFVwSR0/MwgnajxFinrsBmwC2ko4bxdqzTxam0CU7D3RUbi6kgCKBddxpz+kTIkK3QkqhUmybaCuvexJ60m+gFinusAgERKSXHQq2M0XH+g+rbj2ITBmICWCouRw2wGHRxI6CT87sZdrVgN6Dj0xOWwRY4e3ksfGcmpHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710829956; c=relaxed/simple;
-	bh=g/F/uSB80Kmdz2xmcZ9fhA6lsdgQP0M3skp+uddabjw=;
+	s=arc-20240116; t=1710829954; c=relaxed/simple;
+	bh=0b2qgSBqgSzkHwDXgqHElPgOfM/2DWLifKS11fB9qg0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=q+zNO7BmQ8sYf/Rc8n0tKg7YT2oQ9H4OW8WgaygOLgdtadWnngtgZHMJ2sTdck7oOOASoL7CyasvDu54lbF3iElMaDKzcyB8l1JDe/r2pGT6l18G17J60wg8Krn7rXTmn6BZEa0lf4Pxwvr2fDYb66lAKX8EZO9mlhx6zny3Heg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=OakVmdOt; arc=none smtp.client-ip=68.232.139.117
+	 MIME-Version; b=Say6MmiYQsGli29FfVWn7j5jORKNdMYTymbG/7OrGZ14dnUWAU3sLFqeNCf65WnmG0Y9IZMQG1rNb2kH0Vde7GNCmTbuzj1BBITjTsL9qoq1WuvincFz1Gn5rVUbm/Ybw5Cw4jbqxoe2ENZ51BIjsXMIihjmTLcutQHL4+VlJHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=UUQRcH8v; arc=none smtp.client-ip=68.232.139.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="OakVmdOt"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="UUQRcH8v"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1710829954; x=1742365954;
+  t=1710829952; x=1742365952;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=g/F/uSB80Kmdz2xmcZ9fhA6lsdgQP0M3skp+uddabjw=;
-  b=OakVmdOteelyhTVYj+N8DiKtv96F4lbN+qIvWOEr9mBBuypCcQmBVHLb
-   dWNuJLI8erE9DL2ZCsivQjkvQHaghft1fQ6xk6KI07Mvon2iAxj7OvZhz
-   WN1QJS1bE59M8OcQj8fgddf32CvDfQumeUmYBvIO+LzueDon5NHCboR2B
-   XICC3O7tbiOtnMvRmxpCbG2Z+GN3TSSl7gZNp+ec8hUB7xbeI0E1QGq2E
-   vZi5hokg6lKi5mQKk/2anGpX5sT1gQM0VyEwO2wfVn9ZwHRDO/euwCp7m
-   TFMW77Z3QApnM1KVV2Qa5aytqcJ5Ifm5DOmb5RyasRZbTW6svmLTsGAau
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="152971378"
+  bh=0b2qgSBqgSzkHwDXgqHElPgOfM/2DWLifKS11fB9qg0=;
+  b=UUQRcH8vUzzAvoXcLgQ/jrYKghLKtRpDZaEamKpko5G04cZExMhouqSj
+   Yd4ccoS0xwdyxRJllqm9wRbsF7BPLmGXZXGBI/qwtqYcMIN68j23mM5yS
+   505tFmDJl0qXTTt19HgkcMwEtwZPOr39e+0utgdvZ10wlLRJOZYNZ1pFk
+   ZD1ku8Bq5RsTt6BhGhUSA3RyI9eASw4hZBcVVoOwwSsrNoZYlBV+Rr6I7
+   PI8TsSKyP2OTaGbsJAncJCH2PNdHaNfJHFXh3pcR5V2QdTRgkK1zIVxMv
+   WUJ70eqU1Uv7aO09EquujGSqy+afp+raNxuFT+1jIoQq44Aa4GpIhag4k
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="154551203"
 X-IronPort-AV: E=Sophos;i="6.07,136,1708354800"; 
-   d="scan'208";a="152971378"
-Received: from unknown (HELO oym-r4.gw.nic.fujitsu.com) ([210.162.30.92])
-  by esa4.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 15:32:24 +0900
-Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
-	by oym-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id F167B141218;
-	Tue, 19 Mar 2024 15:32:21 +0900 (JST)
-Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-	by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 310D9BF4B8;
-	Tue, 19 Mar 2024 15:32:21 +0900 (JST)
+   d="scan'208";a="154551203"
+Received: from unknown (HELO oym-r1.gw.nic.fujitsu.com) ([210.162.30.89])
+  by esa6.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 15:32:27 +0900
+Received: from oym-m1.gw.nic.fujitsu.com (oym-nat-oym-m1.gw.nic.fujitsu.com [192.168.87.58])
+	by oym-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id EF065D4800;
+	Tue, 19 Mar 2024 15:32:24 +0900 (JST)
+Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
+	by oym-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 21987C5205;
+	Tue, 19 Mar 2024 15:32:24 +0900 (JST)
 Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id BE4C420093269;
-	Tue, 19 Mar 2024 15:32:20 +0900 (JST)
+	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id A4E9E228818;
+	Tue, 19 Mar 2024 15:32:23 +0900 (JST)
 Received: from localhost.localdomain (unknown [10.167.226.45])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 4AE611A006D;
-	Tue, 19 Mar 2024 14:32:20 +0800 (CST)
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 12AB91A006E;
+	Tue, 19 Mar 2024 14:32:23 +0800 (CST)
 From: Li Zhijian <lizhijian@fujitsu.com>
 To: linux-kernel@vger.kernel.org
 Cc: Li Zhijian <lizhijian@fujitsu.com>,
+	Nilesh Javali <njavali@marvell.com>,
+	Manish Rangankar <mrangankar@marvell.com>,
+	GR-QLogic-Storage-Upstream@marvell.com,
 	"James E.J. Bottomley" <jejb@linux.ibm.com>,
 	"Martin K. Petersen" <martin.petersen@oracle.com>,
 	linux-scsi@vger.kernel.org
-Subject: [PATCH v2 02/25] scsi: aic94xx: Convert sprintf() family to sysfs_emit() family
-Date: Tue, 19 Mar 2024 14:31:09 +0800
-Message-Id: <20240319063132.1588443-2-lizhijian@fujitsu.com>
+Subject: [PATCH v2 10/25] scsi: qla4xxx: Convert sprintf() family to sysfs_emit() family
+Date: Tue, 19 Mar 2024 14:31:17 +0800
+Message-Id: <20240319063132.1588443-10-lizhijian@fujitsu.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20240319063132.1588443-1-lizhijian@fujitsu.com>
 References: <20240319063132.1588443-1-lizhijian@fujitsu.com>
@@ -69,13 +72,13 @@ X-TM-AS-GCONF: 00
 X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28260.005
 X-TM-AS-User-Approved-Sender: Yes
 X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28260.005
-X-TMASE-Result: 10--7.640100-10.000000
-X-TMASE-MatchedRID: pfKaEBrCt3IbO59FK9BdmJiHtCNYjckMjkDrBOJwwnQ8JmmJxjOaQXVX
+X-TMASE-Result: 10--11.994500-10.000000
+X-TMASE-MatchedRID: ujgZRN8RQFMbO59FK9BdmJiHtCNYjckMjkDrBOJwwnQ8JmmJxjOaQXVX
 	Q3/qdw5yDiqGKKMcNgRhoUIS5GGeEs1HQN/TlJ3ZOIQ9GP2P2u/iwxLjNbuPBWO0yVK/5LmcQiM
-	ingSlKoKMx5HzfQifbPE41045MrHXFDCN/1eC4ASdVNZaI2n6/8E5XPQnBzGXq8KsbROd9VSArq
-	oIZrVn15fzUkBpc0721RVFWxUguUH+0jQufZU6FIDCiwMF64/BEOqYpzM+g1kYiM67YVe6ChhBv
-	WgZlX+84vM1YF6AJbbCCfuIMF6xLSAHAopEd76vphClXDiKKk8nzRrxP+Bp1zE3Xi452DCPieKR
-	5xnjQ+4nnWiTJUlIYg==
+	ingSlKoKMx5HzfQifbPE41045MrHXFDCN/1eC4ASdVNZaI2n6/8E5XPQnBzGXq8KsbROd9VSD3F
+	7iC1Qm2iWQSYYFGzuMXnkq6nWMKnzGt2xdLsY3ZJd30s5W7go90MQw+++ihy+fvSnHBLeDKqcN7
+	Wy+6vTToO4V4RSl8odH9XJtpa3/0+UWmx8yAzoMdo0n+JPFcJp9LQinZ4QefPcjNeVeWlqY+gtH
+	j7OwNO31Kzk40dEY9ZGcndTn6RXdaOfWGmAu2+yAU4siFHdrrNyHn7HzWfNa
 X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
 Per filesystems/sysfs.rst, show() should only use sysfs_emit()
@@ -92,6 +95,9 @@ COCCI=scripts/coccinelle/api/device_attr_show.cocci
 
 No functional change intended
 
+CC: Nilesh Javali <njavali@marvell.com>
+CC: Manish Rangankar <mrangankar@marvell.com>
+CC: GR-QLogic-Storage-Upstream@marvell.com
 CC: "James E.J. Bottomley" <jejb@linux.ibm.com>
 CC: "Martin K. Petersen" <martin.petersen@oracle.com>
 CC: linux-scsi@vger.kernel.org
@@ -101,54 +107,173 @@ This is a part of the work "Fix coccicheck device_attr_show warnings"[1]
 Split them per subsystem so that the maintainer can review it easily
 [1] https://lore.kernel.org/lkml/20240116041129.3937800-1-lizhijian@fujitsu.com/
 ---
- drivers/scsi/aic94xx/aic94xx_init.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/scsi/qla4xxx/ql4_attr.c | 54 +++++++++++++++++----------------
+ 1 file changed, 28 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/scsi/aic94xx/aic94xx_init.c b/drivers/scsi/aic94xx/aic94xx_init.c
-index 8a3340d8d7ad..39d1617834de 100644
---- a/drivers/scsi/aic94xx/aic94xx_init.c
-+++ b/drivers/scsi/aic94xx/aic94xx_init.c
-@@ -264,8 +264,7 @@ static ssize_t asd_show_dev_rev(struct device *dev,
- 				struct device_attribute *attr, char *buf)
+diff --git a/drivers/scsi/qla4xxx/ql4_attr.c b/drivers/scsi/qla4xxx/ql4_attr.c
+index abfa6ef60480..f250f13506e7 100644
+--- a/drivers/scsi/qla4xxx/ql4_attr.c
++++ b/drivers/scsi/qla4xxx/ql4_attr.c
+@@ -156,13 +156,13 @@ qla4xxx_fw_version_show(struct device *dev,
+ 	struct scsi_qla_host *ha = to_qla_host(class_to_shost(dev));
+ 
+ 	if (is_qla80XX(ha))
+-		return snprintf(buf, PAGE_SIZE, "%d.%02d.%02d (%x)\n",
+-				ha->fw_info.fw_major, ha->fw_info.fw_minor,
+-				ha->fw_info.fw_patch, ha->fw_info.fw_build);
++		return sysfs_emit(buf, "%d.%02d.%02d (%x)\n",
++				  ha->fw_info.fw_major, ha->fw_info.fw_minor,
++				  ha->fw_info.fw_patch, ha->fw_info.fw_build);
+ 	else
+-		return snprintf(buf, PAGE_SIZE, "%d.%02d.%02d.%02d\n",
+-				ha->fw_info.fw_major, ha->fw_info.fw_minor,
+-				ha->fw_info.fw_patch, ha->fw_info.fw_build);
++		return sysfs_emit(buf, "%d.%02d.%02d.%02d\n",
++				  ha->fw_info.fw_major, ha->fw_info.fw_minor,
++				  ha->fw_info.fw_patch, ha->fw_info.fw_build);
+ }
+ 
+ static ssize_t
+@@ -170,7 +170,7 @@ qla4xxx_serial_num_show(struct device *dev, struct device_attribute *attr,
+ 			char *buf)
  {
- 	struct asd_ha_struct *asd_ha = dev_to_asd_ha(dev);
--	return snprintf(buf, PAGE_SIZE, "%s\n",
--			asd_dev_rev[asd_ha->revision_id]);
-+	return sysfs_emit(buf, "%s\n", asd_dev_rev[asd_ha->revision_id]);
+ 	struct scsi_qla_host *ha = to_qla_host(class_to_shost(dev));
+-	return snprintf(buf, PAGE_SIZE, "%s\n", ha->serial_number);
++	return sysfs_emit(buf, "%s\n", ha->serial_number);
  }
- static DEVICE_ATTR(aic_revision, S_IRUGO, asd_show_dev_rev, NULL);
  
-@@ -273,7 +272,7 @@ static ssize_t asd_show_dev_bios_build(struct device *dev,
- 				       struct device_attribute *attr,char *buf)
+ static ssize_t
+@@ -178,8 +178,8 @@ qla4xxx_iscsi_version_show(struct device *dev, struct device_attribute *attr,
+ 			   char *buf)
  {
- 	struct asd_ha_struct *asd_ha = dev_to_asd_ha(dev);
--	return snprintf(buf, PAGE_SIZE, "%d\n", asd_ha->hw_prof.bios.bld);
-+	return sysfs_emit(buf, "%d\n", asd_ha->hw_prof.bios.bld);
+ 	struct scsi_qla_host *ha = to_qla_host(class_to_shost(dev));
+-	return snprintf(buf, PAGE_SIZE, "%d.%02d\n", ha->fw_info.iscsi_major,
+-			ha->fw_info.iscsi_minor);
++	return sysfs_emit(buf, "%d.%02d\n", ha->fw_info.iscsi_major,
++			  ha->fw_info.iscsi_minor);
  }
- static DEVICE_ATTR(bios_build, S_IRUGO, asd_show_dev_bios_build, NULL);
  
-@@ -281,7 +280,7 @@ static ssize_t asd_show_dev_pcba_sn(struct device *dev,
- 				    struct device_attribute *attr, char *buf)
+ static ssize_t
+@@ -187,9 +187,11 @@ qla4xxx_optrom_version_show(struct device *dev, struct device_attribute *attr,
+ 			    char *buf)
  {
- 	struct asd_ha_struct *asd_ha = dev_to_asd_ha(dev);
--	return snprintf(buf, PAGE_SIZE, "%s\n", asd_ha->hw_prof.pcba_sn);
-+	return sysfs_emit(buf, "%s\n", asd_ha->hw_prof.pcba_sn);
- }
- static DEVICE_ATTR(pcba_sn, S_IRUGO, asd_show_dev_pcba_sn, NULL);
- 
-@@ -452,9 +451,9 @@ static ssize_t asd_show_update_bios(struct device *dev,
- 	if (asd_ha->bios_status != FLASH_IN_PROGRESS)
- 		asd_ha->bios_status = FLASH_OK;
- 
--	return snprintf(buf, PAGE_SIZE, "status=%x %s\n",
--			flash_error_table[i].err_code,
--			flash_error_table[i].reason);
-+	return sysfs_emit(buf, "status=%x %s\n",
-+			  flash_error_table[i].err_code,
-+			  flash_error_table[i].reason);
+ 	struct scsi_qla_host *ha = to_qla_host(class_to_shost(dev));
+-	return snprintf(buf, PAGE_SIZE, "%d.%02d.%02d.%02d\n",
+-			ha->fw_info.bootload_major, ha->fw_info.bootload_minor,
+-			ha->fw_info.bootload_patch, ha->fw_info.bootload_build);
++	return sysfs_emit(buf, "%d.%02d.%02d.%02d\n",
++			  ha->fw_info.bootload_major,
++			  ha->fw_info.bootload_minor,
++			  ha->fw_info.bootload_patch,
++			  ha->fw_info.bootload_build);
  }
  
- static DEVICE_ATTR(update_bios, S_IRUGO|S_IWUSR,
+ static ssize_t
+@@ -197,7 +199,7 @@ qla4xxx_board_id_show(struct device *dev, struct device_attribute *attr,
+ 		      char *buf)
+ {
+ 	struct scsi_qla_host *ha = to_qla_host(class_to_shost(dev));
+-	return snprintf(buf, PAGE_SIZE, "0x%08X\n", ha->board_id);
++	return sysfs_emit(buf, "0x%08X\n", ha->board_id);
+ }
+ 
+ static ssize_t
+@@ -207,8 +209,8 @@ qla4xxx_fw_state_show(struct device *dev, struct device_attribute *attr,
+ 	struct scsi_qla_host *ha = to_qla_host(class_to_shost(dev));
+ 
+ 	qla4xxx_get_firmware_state(ha);
+-	return snprintf(buf, PAGE_SIZE, "0x%08X%8X\n", ha->firmware_state,
+-			ha->addl_fw_state);
++	return sysfs_emit(buf, "0x%08X%8X\n", ha->firmware_state,
++			  ha->addl_fw_state);
+ }
+ 
+ static ssize_t
+@@ -220,7 +222,7 @@ qla4xxx_phy_port_cnt_show(struct device *dev, struct device_attribute *attr,
+ 	if (is_qla40XX(ha))
+ 		return -ENOSYS;
+ 
+-	return snprintf(buf, PAGE_SIZE, "0x%04X\n", ha->phy_port_cnt);
++	return sysfs_emit(buf, "0x%04X\n", ha->phy_port_cnt);
+ }
+ 
+ static ssize_t
+@@ -232,7 +234,7 @@ qla4xxx_phy_port_num_show(struct device *dev, struct device_attribute *attr,
+ 	if (is_qla40XX(ha))
+ 		return -ENOSYS;
+ 
+-	return snprintf(buf, PAGE_SIZE, "0x%04X\n", ha->phy_port_num);
++	return sysfs_emit(buf, "0x%04X\n", ha->phy_port_num);
+ }
+ 
+ static ssize_t
+@@ -244,7 +246,7 @@ qla4xxx_iscsi_func_cnt_show(struct device *dev, struct device_attribute *attr,
+ 	if (is_qla40XX(ha))
+ 		return -ENOSYS;
+ 
+-	return snprintf(buf, PAGE_SIZE, "0x%04X\n", ha->iscsi_pci_func_cnt);
++	return sysfs_emit(buf, "0x%04X\n", ha->iscsi_pci_func_cnt);
+ }
+ 
+ static ssize_t
+@@ -253,7 +255,7 @@ qla4xxx_hba_model_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct scsi_qla_host *ha = to_qla_host(class_to_shost(dev));
+ 
+-	return snprintf(buf, PAGE_SIZE, "%s\n", ha->model_name);
++	return sysfs_emit(buf, "%s\n", ha->model_name);
+ }
+ 
+ static ssize_t
+@@ -261,8 +263,8 @@ qla4xxx_fw_timestamp_show(struct device *dev, struct device_attribute *attr,
+ 			  char *buf)
+ {
+ 	struct scsi_qla_host *ha = to_qla_host(class_to_shost(dev));
+-	return snprintf(buf, PAGE_SIZE, "%s %s\n", ha->fw_info.fw_build_date,
+-			ha->fw_info.fw_build_time);
++	return sysfs_emit(buf, "%s %s\n", ha->fw_info.fw_build_date,
++			  ha->fw_info.fw_build_time);
+ }
+ 
+ static ssize_t
+@@ -270,7 +272,7 @@ qla4xxx_fw_build_user_show(struct device *dev, struct device_attribute *attr,
+ 			   char *buf)
+ {
+ 	struct scsi_qla_host *ha = to_qla_host(class_to_shost(dev));
+-	return snprintf(buf, PAGE_SIZE, "%s\n", ha->fw_info.fw_build_user);
++	return sysfs_emit(buf, "%s\n", ha->fw_info.fw_build_user);
+ }
+ 
+ static ssize_t
+@@ -278,7 +280,7 @@ qla4xxx_fw_ext_timestamp_show(struct device *dev, struct device_attribute *attr,
+ 			      char *buf)
+ {
+ 	struct scsi_qla_host *ha = to_qla_host(class_to_shost(dev));
+-	return snprintf(buf, PAGE_SIZE, "%s\n", ha->fw_info.extended_timestamp);
++	return sysfs_emit(buf, "%s\n", ha->fw_info.extended_timestamp);
+ }
+ 
+ static ssize_t
+@@ -300,7 +302,7 @@ qla4xxx_fw_load_src_show(struct device *dev, struct device_attribute *attr,
+ 		break;
+ 	}
+ 
+-	return snprintf(buf, PAGE_SIZE, "%s\n", load_src);
++	return sysfs_emit(buf, "%s\n", load_src);
+ }
+ 
+ static ssize_t
+@@ -309,8 +311,8 @@ qla4xxx_fw_uptime_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct scsi_qla_host *ha = to_qla_host(class_to_shost(dev));
+ 	qla4xxx_about_firmware(ha);
+-	return snprintf(buf, PAGE_SIZE, "%u.%u secs\n", ha->fw_uptime_secs,
+-			ha->fw_uptime_msecs);
++	return sysfs_emit(buf, "%u.%u secs\n", ha->fw_uptime_secs,
++			  ha->fw_uptime_msecs);
+ }
+ 
+ static DEVICE_ATTR(fw_version, S_IRUGO, qla4xxx_fw_version_show, NULL);
 -- 
 2.29.2
 
