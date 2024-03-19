@@ -1,97 +1,86 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A78222339;
-	Tue, 19 Mar 2024 08:37:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1FA22339;
+	Tue, 19 Mar 2024 08:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710837432; cv=none; b=uP+4RtxwT/83oXxX2nPvG5MNiaABYQlG04u8AeXr2Lg+2DYxFrp7w1fTa0oTnNnA/2b+1g72vCOs0/aAuYmpf/UDLpHrmNpOKE88O5RZrtAzCMToKcEa6I5t/MG1ySPtGf04Ra74Cpj3nFU2hbIQlEuhJIxLEOc9V0O9ZB3/NmE=
+	t=1710837619; cv=none; b=T6M6tZ3Fe6SdRo9oWoQAKFSjz2RNZLN/Lm9uFKHhLLXWjH0hZbxjq2vUh/2ZLyHE/XeCQKsw7RU08FOCTllq5fFnpG0/EahPhHzTx6nhW3DAWXVYBoXhexRisf4mSdy5hbqn1xxzp8iuqcN8AhjOe2tcId40XwwJe56lmb08/xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710837432; c=relaxed/simple;
-	bh=KxEovkRLfcOBJo8sLybFppNre+BC/0BqX5kv7PHyjYY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hOp54i5dYWHJMYXLn9vYPMF4JEjO9rVfoMVohkFuFf5sPf/bS4qr5f+mqdOlPelmXyKcIOts+r+OgMZ6on9/F4bDgqDckp+iRdk1Lsim176I4tpI5p7ucK4iLhHCMzh0ev3abnwpQX7Sbop5JXizKgwIKdQOz78AmT5+4dSiHjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=1pY4XLkN; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1710837619; c=relaxed/simple;
+	bh=awU6bHfyFvME5sBPQIOIZlxiBWs4318LwwLhArgAyPM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=A/zOmJe9eEH1b5jklJ8M3BF5iWjBrdBrjlOdMmymbg0V4v0c8eXq6hAYYtZ4pmjayojoxib2aWUwbMmdRhBXSr2V0jM8LxE9by82qW8lPE9vSUlGPYncZhqLkJDuxOthuDcRBL/IWHGMOF3rF2LqZJUVKUcX60fVAnUg4aokGZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=m/M173BU; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="1pY4XLkN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1710837430; x=1742373430;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=KxEovkRLfcOBJo8sLybFppNre+BC/0BqX5kv7PHyjYY=;
-  b=1pY4XLkN8M3AeN4xZUrVuppVrHDCABPDf8VEOBB1QhaWWq+GuemsvHHn
-   fZoQ6hW/IdSw7LjHn0oJv5MQAa21jrSPfShPC0AMN1ROTQC6Klnjqu2ot
-   2vicVEX7NDXmdSpWMpB76UIvwPU18LZCuG34Gnjly5Qo21Kjslw20w9Ly
-   pNT75TLcQSvswiSJf2eEiRASu9YFPgG/ptQdPEwe0UTeeAajAX5VMripA
-   PQGRALWSUYaKAZvcqCP3M3SWWqKx7LkXeLeiUehgxSL2BHKBQqKUK1XGF
-   PUb1giofIZZCWQrfWWwTS2fU0kbdfls4MKYS+qRe25yLu9I04F36a4pwq
-   w==;
-X-CSE-ConnectionGUID: nAyssGQoRB+MEbN67pDo4w==
-X-CSE-MsgGUID: 66fYV4QuQzi8PbUn7UuNOQ==
-X-IronPort-AV: E=Sophos;i="6.07,136,1708412400"; 
-   d="scan'208";a="19571076"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 19 Mar 2024 01:37:04 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 19 Mar 2024 01:36:37 -0700
-Received: from che-lt-i64410lx.microchip.com (10.10.85.11) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Tue, 19 Mar 2024 01:36:34 -0700
-From: Balamanikandan Gunasundar <balamanikandan.gunasundar@microchip.com>
-To: <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-	<linux-crypto@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-CC: <balamanikandan.gunasundar@microchip.com>, <Hari.PrasathGE@microchip.com>
-Subject: [PATCH] MAINTAINERS: update maintainer for microchip nand and pmecc drivers
-Date: Tue, 19 Mar 2024 14:06:20 +0530
-Message-ID: <20240319083620.88181-1-balamanikandan.gunasundar@microchip.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="m/M173BU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:To:Subject:MIME-Version:Date:Message-ID:
+	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=osWUnIlqD8Dt5t4BF7gk8jBXgg5fKeale1jkrNw0dMk=; t=1710837617;
+	x=1711269617; b=m/M173BUwddvN7kpdyUNyosaXEKl5ilpVXeTJZLlCir3fCAXM3+ET2NRyJoAT
+	Ve6SsZP6Ka/qGagMhuz+zKH3oFSoKl/m84x8D3fPjuRtBOhosFd7O9rjrzh27a2pzFuxPjzPlznkV
+	QXJsAuAnF4ry7ROSAvsTgpbL/GDW5vzSIkVBSbIzVk27AQob3Nsax0eAccp9zyUiNNw30I77KopDh
+	3Rk/fRQ5GDaX4gnodWnlJZ+wVgkjs9a1gnyM1G9p9z6+JQplMRk6SWLvOAIFAyOcv2sORbkbXmH1y
+	6ssqYIMBwaxfm6APGP9JBFhuR43DDXkt/NxASt5JiZxIJiKmBg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rmV0y-000611-V8; Tue, 19 Mar 2024 09:40:09 +0100
+Message-ID: <be5a7213-78b3-4917-b95b-ec31cd2350e4@leemhuis.info>
+Date: Tue, 19 Mar 2024 09:40:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [regression] 6.8.1: fails to hibernate with
+ pm_runtime_force_suspend+0x0/0x120 returns -16
+Content-Language: en-US, de-DE
+To: Martin Steigerwald <martin@lichtvoll.de>, linux-pm@vger.kernel.org,
+ regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <2325246.ElGaqSPkdT@lichtvoll.de>
+ <12401263.O9o76ZdvQC@lichtvoll.de>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <12401263.O9o76ZdvQC@lichtvoll.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1710837617;2b3652af;
+X-HE-SMSGID: 1rmV0y-000611-V8
 
-Update myself as maintainer for microchip nand and pmecc drivers.
+On 16.03.24 17:12, Martin Steigerwald wrote:
+> Martin Steigerwald - 16.03.24, 17:02:44 CET:
+>> ThinkPad T14 AMD Gen 1 fails to hibernate with self-compiled 6.8.1.
+>> Hibernation works correctly with self-compiled 6.7.9.
+> 
+> Apparently 6.8.1 does not even reboot correctly anymore. runit on Devuan.
+> It says it is doing the system reboot but then nothing happens.
+> 
+> As for hibernation the kernel cancels the attempt and returns back to
+> user space desktop session.
+> 
+>> Trying to use "no_console_suspend" to debug next. Will not do bisect
+>> between major kernel releases on a production machine.
 
-Signed-off-by: Balamanikandan Gunasundar <balamanikandan.gunasundar@microchip.com>
----
- MAINTAINERS | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+FWIW, without a bisection I guess no developer will take a closer look
+(but I might be wrong and you lucky here!), as any change in those
+hundreds of drivers used on that machine can possibly lead to problems
+like yours. So without a bisection we are likely stuck here, unless
+someone else runs into the same problem and bisects or fixes it. Sorry,
+but that's just how it is.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 82896c3e0559..46c177aa2b60 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14394,8 +14394,9 @@ F:	Documentation/devicetree/bindings/media/microchip,csi2dc.yaml
- F:	drivers/media/platform/microchip/microchip-csi2dc.c
- 
- MICROCHIP ECC DRIVER
-+M:	Balamanikandan Gunasundar <balamanikandan.gunasundar@microchip.com>
- L:	linux-crypto@vger.kernel.org
--S:	Orphan
-+S:	Supported
- F:	drivers/crypto/atmel-ecc.*
- 
- MICROCHIP EIC DRIVER
-@@ -14500,8 +14501,9 @@ S:	Maintained
- F:	drivers/mmc/host/atmel-mci.c
- 
- MICROCHIP NAND DRIVER
-+M:	Balamanikandan Gunasundar <balamanikandan.gunasundar@microchip.com>
- L:	linux-mtd@lists.infradead.org
--S:	Orphan
-+S:	Supported
- F:	Documentation/devicetree/bindings/mtd/atmel-nand.txt
- F:	drivers/mtd/nand/raw/atmel/*
- 
--- 
-2.25.1
+> [...]
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
