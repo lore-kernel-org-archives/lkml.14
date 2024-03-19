@@ -1,259 +1,240 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D817C2E400;
-	Tue, 19 Mar 2024 13:55:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8B981216
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 13:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710856507; cv=none; b=MeiqPEv1fL+Rrg1cHBxyhkGZ1lXXcpT2E72mfpfp5Tnrd8xXqB8B+6o0V4Sd3Dc2P0ay47oLMoOI/YvBPD9tC8uPeX3YinA9bXgaavfrg7Ef3zWzA4hpA5RZ0g5fNMMrBtDEzs0ZRm2vxjY6ZM7OhR8Eq6png805fLfnIFqacaE=
+	t=1710856604; cv=none; b=cb3+ILSMjz/bLesc3x7buYBa3I/+H3Hl5yWrtv+4j+jsvWTTIonPBihQowUjcHU58E/3xx5cYpcAiaq8+J+GPgEEb41dnETParsJNJjCJ1OM/1qYvz3Ko/EIzxvATANxEx9KJlQ0IFHxnXTwUVPg7mmsxRU/0ZVyrYjjpETpAGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710856507; c=relaxed/simple;
-	bh=qziAJaseZHHgfgm21J4PRkLv2UKbDlCmE6GZg/0BK1g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NUAg5awQq1rmG+UKpgrUdmq6gvfSB9Z84mdjMFY4Dh79WiY5+bTonGOKcwyyGVDEt/XTXpPk+jYC6LyxIDs39BkSkb19eAIyLPq+8sfHhoiP4O3q6gIltNaOaGu2mofGsSLg9l1DXxnA0/QbcV+2BTbh8r7rvJl2M3T3PmAuWFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tWPNg9A4; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tWPNg9A4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC7C8C433F1;
-	Tue, 19 Mar 2024 13:55:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710856506;
-	bh=qziAJaseZHHgfgm21J4PRkLv2UKbDlCmE6GZg/0BK1g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tWPNg9A4HBB2oCD+wGaOqNo/cah8AyDCWs7/bizzcEvjo7Svh5mbHNPlwSPDi80QA
-	 plo8ZeKf8IneRTw5cYArX/uf+Uxg4oHz+Q/dGx14ExBKx9KdIb0GD+DNPx1HHuoqx7
-	 2uyFMbgPk0E0a4KU1mZ39f2gBH+/r1ZdtTRm/N7LcEg7YCocUI9sLKAPWt0iKkMK0P
-	 coms6jRpXWdfFc6c2D8rdeRsaBi67abiytuKECq7vj7I/2V3SgBKKTPW/HPWv+Ojew
-	 +OLFC4Juar6rwkJmO0jlGRep6V4Tyyeda3X3L+dhHJoYs/qW7Ce1OH8yDMRAiBhRky
-	 X3KOkrho0+mNQ==
-Date: Tue, 19 Mar 2024 10:55:02 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Stephane Eranian <eranian@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-toolchains@vger.kernel.org, linux-trace-devel@vger.kernel.org
-Subject: Re: [PATCH 03/23] perf dwarf-aux: Handle type transfer for memory
- access
-Message-ID: <ZfmZNp1DaKYZCwyf@x1>
-References: <20240319055115.4063940-1-namhyung@kernel.org>
- <20240319055115.4063940-4-namhyung@kernel.org>
+	s=arc-20240116; t=1710856604; c=relaxed/simple;
+	bh=SiSKHuFwh9lLOtDAXnJW9R6P2jVsOoCWB+Gw3+hldUg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=FDoLWMsuNHxSjKn5AMgjb2eBUWW4OcpZd7N/QCj1xQZl+EIm0k9E5nVsTu5z7/zEhbp0JkvhQhxpKctIo1H9JR4as8fvzqNtFJL0DjTUsS0UmDWDkW6V4v3a80wqcJyWHddVEoZWxq0lP7kJxxZJUElCbfX1/WKPJvql6KlHlEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7cbfd4781fcso376756739f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 06:56:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710856602; x=1711461402;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G9TLtr2LXddztPLvauUkkgcrDfwPnuzScqtnLmCwUfs=;
+        b=rWs9LSOFGVcKhr3HsUiPBFCTFRtvgfr4R5BMSc41cQD/7BbRkeJnOItN9fJo3NzgiD
+         AWYluhjWeFPIJGAkuXuTeLXVOLfMmH+VTsezmcIYjRlXEPwi+oNxPoi+xoJbhUYhzN1d
+         w69DJFygcvo2IKfFUcZKeSEU1tmRvKo7E2+LuNV13SV7MJK68s3hQyqTqudUbqNza/RV
+         FOLb2sZZwSUqVhmjffgCguDqQaVkVp5XI+iAtSMzKw5ip57tpB+Nz/+EZsVc5R9+V5QD
+         BZApEdsdgwYf34czZ0mrVy55CM1Hj8LZ8gZVM240JNF3v0n6TSDse4keGbJyhiJfWFWB
+         wAVg==
+X-Gm-Message-State: AOJu0YzPeeyUc5ToZu/f65XqfaGsS/bZBNkGA+YRBXZkSCIcdkHv2Ox9
+	QTMmTceRC7BL03M4FgcjE/aqONWlurQ15gndfb0KQ6QWBH8bu7+y8S18/h7kCpG++EA8yr8NTmL
+	sQ16+dAHv0HCa33I7gb+AXF+wUA9NY40qUrkEAyJ8hk7V6yDUXyDrfcnTpQ==
+X-Google-Smtp-Source: AGHT+IGyYV88jGflZZU+zKAPhICTypPZEU4mYkuEDAyUxNRJLQ1fV9oO/ZvKHWpn/zm5ztV6SkU4QOi8qBaqbrnsj6ck3+40nI0Q
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240319055115.4063940-4-namhyung@kernel.org>
+X-Received: by 2002:a05:6638:8923:b0:474:ed8f:ffa8 with SMTP id
+ jc35-20020a056638892300b00474ed8fffa8mr69278jab.4.1710856601948; Tue, 19 Mar
+ 2024 06:56:41 -0700 (PDT)
+Date: Tue, 19 Mar 2024 06:56:41 -0700
+In-Reply-To: <0000000000002750950613c53e72@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000563d3061403d83d@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [v9fs?] KMSAN: uninit-value in v9fs_evict_inode
+From: syzbot <syzbot+eb83fe1cce5833cd66a0@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 18, 2024 at 10:50:55PM -0700, Namhyung Kim wrote:
-> We want to track type states as instructions are executed.  Each
-> instruction can access compound types like struct or union and load/
-> store its members to a different location.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+
+***
+
+Subject: Re: [syzbot] [v9fs?] KMSAN: uninit-value in v9fs_evict_inode
+Author: eric.vanhensbergen@linux.dev
+
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/ericvh/v9fs.git b4/fix-evict-uninitialized-value
+
+March 16, 2024 at 6:15 AM, "syzbot" <syzbot+eb83fe1cce5833cd66a0@syzkaller.appspotmail.com> wrote:
 > 
-> The die_deref_ptr_type() is to find a type of memory access with a
-> pointer variable.  If it points to a compound type like struct, the
-> target memory is a member in the struct.  The access will happen
-> with an offset indicating which member it refers.  Let's follow the
-> DWARF info to figure out the type of the pointer target.
+> Hello,
 > 
-> For example, say we have the following code.
+> syzbot found the following issue on:
 > 
->   struct foo {
->     int a;
->     int b;
->   };
+> HEAD commit: 66a27abac311 Merge tag 'powerpc-6.9-1' of git://git.kernel..
 > 
->   struct foo *p = malloc(sizeof(*p));
->   p->b = 0;
+> git tree: upstream
 > 
-> The last pointer access should produce x86 asm like below:
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=147b32a5180000
 > 
->   mov  0x0, 4(%rbx)
+> kernel config: https://syzkaller.appspot.com/x/.config?x=48bb382b96e7eda7
 > 
-> And we know %rbx register has a pointer to struct foo.  Then offset 4
-> should return the debug info of member 'b'.
+> dashboard link: https://syzkaller.appspot.com/bug?extid=eb83fe1cce5833cd66a0
 > 
-> Also variables of compound types can be accessed directly without a
-> pointer.  The die_get_member_type() is to handle a such case.
+> compiler: Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 > 
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> syz repro: https://syzkaller.appspot.com/x/repro.syz?x=12598006180000
+> 
+> C reproducer: https://syzkaller.appspot.com/x/repro.c?x=105d8aa5180000
+> 
+> Downloadable assets:
+> 
+> disk image: https://storage.googleapis.com/syzbot-assets/37968fa0451e/disk-66a27aba.raw.xz
+> 
+> vmlinux: https://storage.googleapis.com/syzbot-assets/5b288c5c3088/vmlinux-66a27aba.xz
+> 
+> kernel image: https://storage.googleapis.com/syzbot-assets/792ddbf8146d/bzImage-66a27aba.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> 
+> Reported-by: syzbot+eb83fe1cce5833cd66a0@syzkaller.appspotmail.com
+> 
+> =====================================================
+> 
+> BUG: KMSAN: uninit-value in fscache_relinquish_cookie include/linux/fscache.h:307 [inline]
+> 
+> BUG: KMSAN: uninit-value in v9fs_evict_inode+0x109/0x130 fs/9p/vfs_inode.c:356
+> 
+>  fscache_relinquish_cookie include/linux/fscache.h:307 [inline]
+> 
+>  v9fs_evict_inode+0x109/0x130 fs/9p/vfs_inode.c:356
+> 
+>  evict+0x3ae/0xa60 fs/inode.c:667
+> 
+>  iput_final fs/inode.c:1741 [inline]
+> 
+>  iput+0x9ca/0xe10 fs/inode.c:1767
+> 
+>  iget_failed+0x15e/0x180 fs/bad_inode.c:248
+> 
+>  v9fs_fid_iget_dotl+0x375/0x570 fs/9p/vfs_inode_dotl.c:96
+> 
+>  v9fs_get_inode_from_fid fs/9p/v9fs.h:230 [inline]
+> 
+>  v9fs_mount+0xc02/0x12b0 fs/9p/vfs_super.c:142
+> 
+>  legacy_get_tree+0x114/0x290 fs/fs_context.c:662
+> 
+>  vfs_get_tree+0xa7/0x570 fs/super.c:1779
+> 
+>  do_new_mount+0x71f/0x15e0 fs/namespace.c:3352
+> 
+>  path_mount+0x742/0x1f20 fs/namespace.c:3679
+> 
+>  do_mount fs/namespace.c:3692 [inline]
+> 
+>  __do_sys_mount fs/namespace.c:3898 [inline]
+> 
+>  __se_sys_mount+0x725/0x810 fs/namespace.c:3875
+> 
+>  __x64_sys_mount+0xe4/0x150 fs/namespace.c:3875
+> 
+>  do_syscall_64+0xd5/0x1f0
+> 
+>  entry_SYSCALL_64_after_hwframe+0x6d/0x75
+> 
+> Uninit was created at:
+> 
+>  __alloc_pages+0x9d6/0xe70 mm/page_alloc.c:4598
+> 
+>  __alloc_pages_node include/linux/gfp.h:238 [inline]
+> 
+>  alloc_pages_node include/linux/gfp.h:261 [inline]
+> 
+>  alloc_slab_page mm/slub.c:2175 [inline]
+> 
+>  allocate_slab mm/slub.c:2338 [inline]
+> 
+>  new_slab+0x2de/0x1400 mm/slub.c:2391
+> 
+>  ___slab_alloc+0x1184/0x33d0 mm/slub.c:3525
+> 
+>  __slab_alloc mm/slub.c:3610 [inline]
+> 
+>  __slab_alloc_node mm/slub.c:3663 [inline]
+> 
+>  slab_alloc_node mm/slub.c:3835 [inline]
+> 
+>  kmem_cache_alloc_lru+0x6d7/0xbe0 mm/slub.c:3864
+> 
+>  alloc_inode_sb include/linux/fs.h:3089 [inline]
+> 
+>  v9fs_alloc_inode+0x62/0x130 fs/9p/vfs_inode.c:228
+> 
+>  alloc_inode+0x86/0x460 fs/inode.c:261
+> 
+>  iget_locked+0x2bf/0xee0 fs/inode.c:1280
+> 
+>  v9fs_fid_iget_dotl+0x7f/0x570 fs/9p/vfs_inode_dotl.c:62
+> 
+>  v9fs_get_inode_from_fid fs/9p/v9fs.h:230 [inline]
+> 
+>  v9fs_mount+0xc02/0x12b0 fs/9p/vfs_super.c:142
+> 
+>  legacy_get_tree+0x114/0x290 fs/fs_context.c:662
+> 
+>  vfs_get_tree+0xa7/0x570 fs/super.c:1779
+> 
+>  do_new_mount+0x71f/0x15e0 fs/namespace.c:3352
+> 
+>  path_mount+0x742/0x1f20 fs/namespace.c:3679
+> 
+>  do_mount fs/namespace.c:3692 [inline]
+> 
+>  __do_sys_mount fs/namespace.c:3898 [inline]
+> 
+>  __se_sys_mount+0x725/0x810 fs/namespace.c:3875
+> 
+>  __x64_sys_mount+0xe4/0x150 fs/namespace.c:3875
+> 
+>  do_syscall_64+0xd5/0x1f0
+> 
+>  entry_SYSCALL_64_after_hwframe+0x6d/0x75
+> 
+> CPU: 1 PID: 5014 Comm: syz-executor406 Not tainted 6.8.0-syzkaller-11136-g66a27abac311 #0
+> 
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024
+> 
+> =====================================================
+> 
 > ---
->  tools/perf/util/dwarf-aux.c | 110 ++++++++++++++++++++++++++++++++++++
->  tools/perf/util/dwarf-aux.h |   6 ++
->  2 files changed, 116 insertions(+)
 > 
-> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> index 785aa7a3d725..cd9364d296b6 100644
-> --- a/tools/perf/util/dwarf-aux.c
-> +++ b/tools/perf/util/dwarf-aux.c
-> @@ -1838,3 +1838,113 @@ int die_get_scopes(Dwarf_Die *cu_die, Dwarf_Addr pc, Dwarf_Die **scopes)
->  	*scopes = data.scopes;
->  	return data.nr;
->  }
-> +
-> +static int __die_find_member_offset_cb(Dwarf_Die *die_mem, void *arg)
-> +{
-> +	Dwarf_Die type_die;
-> +	Dwarf_Word size, loc;
-> +	Dwarf_Word offset = (long)arg;
-> +	int tag = dwarf_tag(die_mem);
-> +
-> +	if (tag != DW_TAG_member)
-> +		return DIE_FIND_CB_SIBLING;
-> +
-> +	/* Unions might not have location */
-> +	if (die_get_data_member_location(die_mem, &loc) < 0)
-> +		loc = 0;
-> +
-> +	if (offset == loc)
-> +		return DIE_FIND_CB_END;
-> +
-> +	die_get_real_type(die_mem, &type_die);
-
-Don't we have to check that the type_die was initialized? From what I
-can see there is the possibility it isn't:
-
-  Dwarf_Die type_die;
-  die_get_real_type(die_mem, &type_die);
-        do {
-                vr_die = __die_get_real_type(vr_die, die_mem);
-        } while (vr_die && dwarf_tag(vr_die) == DW_TAG_typedef);
-        
-        return vr_die;
-
-    static Dwarf_Die *__die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
-
-        do {
-                vr_die = die_get_type(vr_die, die_mem);
-                if (!vr_die)
-                        break;
-
-   Dwarf_Die *die_get_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
-
-        Dwarf_Attribute attr;
-
-        if (dwarf_attr_integrate(vr_die, DW_AT_type, &attr) &&
-            dwarf_formref_die(&attr, die_mem))
-                return die_mem;
-        else
-                return NULL;
-  } 
-
-> +	if (dwarf_aggregate_size(&type_die, &size) < 0)
-> +		size = 0;
-> +
-> +	if (loc < offset && offset < (loc + size))
-> +		return DIE_FIND_CB_END;
-> +
-> +	return DIE_FIND_CB_SIBLING;
-> +}
-> +
-> +/**
-> + * die_get_member_type - Return type info of struct member
-> + * @type_die: a type DIE
-> + * @offset: offset in the type
-> + * @die_mem: a buffer to save the resulting DIE
-> + *
-> + * This function returns a type of a member in @type_die where it's located at
-> + * @offset if it's a struct.  For now, it just returns the first matching
-> + * member in a union.  For other types, it'd return the given type directly
-> + * if it's within the size of the type or NULL otherwise.
-> + */
-> +Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset,
-> +			       Dwarf_Die *die_mem)
-> +{
-> +	Dwarf_Die *member;
-> +	Dwarf_Die mb_type;
-> +	int tag;
-> +
-> +	tag = dwarf_tag(type_die);
-> +	/* If it's not a compound type, return the type directly */
-> +	if (tag != DW_TAG_structure_type && tag != DW_TAG_union_type) {
-> +		Dwarf_Word size;
-> +
-> +		if (dwarf_aggregate_size(type_die, &size) < 0)
-> +			size = 0;
-> +
-> +		if ((unsigned)offset >= size)
-> +			return NULL;
-> +
-> +		*die_mem = *type_die;
-> +		return die_mem;
-> +	}
-> +
-> +	mb_type = *type_die;
-> +	/* TODO: Handle union types better? */
-> +	while (tag == DW_TAG_structure_type || tag == DW_TAG_union_type) {
-> +		member = die_find_child(&mb_type, __die_find_member_offset_cb,
-> +					(void *)(long)offset, die_mem);
-> +		if (member == NULL)
-> +			return NULL;
-> +
-> +		if (die_get_real_type(member, &mb_type) == NULL)
-> +			return NULL;
-> +
-> +		tag = dwarf_tag(&mb_type);
-> +
-> +		if (tag == DW_TAG_structure_type || tag == DW_TAG_union_type) {
-> +			Dwarf_Word loc;
-> +
-> +			/* Update offset for the start of the member struct */
-> +			if (die_get_data_member_location(member, &loc) == 0)
-> +				offset -= loc;
-> +		}
-> +	}
-> +	*die_mem = mb_type;
-> +	return die_mem;
-> +}
-> +
-> +/**
-> + * die_deref_ptr_type - Return type info for pointer access
-> + * @ptr_die: a pointer type DIE
-> + * @offset: access offset for the pointer
-> + * @die_mem: a buffer to save the resulting DIE
-> + *
-> + * This function follows the pointer in @ptr_die with given @offset
-> + * and saves the resulting type in @die_mem.  If the pointer points
-> + * a struct type, actual member at the offset would be returned.
-> + */
-> +Dwarf_Die *die_deref_ptr_type(Dwarf_Die *ptr_die, int offset,
-> +			      Dwarf_Die *die_mem)
-> +{
-> +	Dwarf_Die type_die;
-> +
-> +	if (dwarf_tag(ptr_die) != DW_TAG_pointer_type)
-> +		return NULL;
-> +
-> +	if (die_get_real_type(ptr_die, &type_die) == NULL)
-> +		return NULL;
-> +
-> +	return die_get_member_type(&type_die, offset, die_mem);
-> +}
-> diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-> index cd171b06fd4c..16c916311bc0 100644
-> --- a/tools/perf/util/dwarf-aux.h
-> +++ b/tools/perf/util/dwarf-aux.h
-> @@ -144,6 +144,12 @@ struct die_var_type {
->  	int offset;
->  };
->  
-> +/* Return type info of a member at offset */
-> +Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset, Dwarf_Die *die_mem);
-> +
-> +/* Return type info where the pointer and offset point to */
-> +Dwarf_Die *die_deref_ptr_type(Dwarf_Die *ptr_die, int offset, Dwarf_Die *die_mem);
-> +
->  #ifdef HAVE_DWARF_GETLOCATIONS_SUPPORT
->  
->  /* Get byte offset range of given variable DIE */
-> -- 
-> 2.44.0.291.gc1ea87d7ee-goog
+> This report is generated by a bot. It may contain errors.
+> 
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> 
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> 
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+> If the report is already addressed, let syzbot know by replying with:
+> 
+> #syz fix: exact-commit-title
+> 
+> If you want syzbot to run the reproducer, reply with:
+> 
+> #syz test: git://repo/address.git branch-or-commit-hash
+> 
+> If you attach or paste a git patch, syzbot will apply it before testing.
+> 
+> If you want to overwrite report's subsystems, reply with:
+> 
+> #syz set subsystems: new-subsystem
+> 
+> (See the list of subsystem names on the web dashboard)
+> 
+> If the report is a duplicate of another one, reply with:
+> 
+> #syz dup: exact-subject-of-another-report
+> 
+> If you want to undo deduplication, reply with:
+> 
+> #syz undup
+>
