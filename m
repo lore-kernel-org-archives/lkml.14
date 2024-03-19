@@ -1,60 +1,62 @@
-Received: from esa6.hc1455-7.c3s2.iphmx.com (esa6.hc1455-7.c3s2.iphmx.com [68.232.139.139])
+Received: from esa10.hc1455-7.c3s2.iphmx.com (esa10.hc1455-7.c3s2.iphmx.com [139.138.36.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF2CC2628C;
-	Tue, 19 Mar 2024 06:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6E550263;
+	Tue, 19 Mar 2024 06:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.36.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710829952; cv=none; b=KlKTyl6oq8XbRzRCeXsJW5l7lJc+WrKtqU8smVrU8DtmKBcnOcMRJ8+J5WnXF4FqGt9gIxQfFeJB3Tur7gt1XcufmMlpL/Iberk45N2/owPYxpVRtFCMcHv6H/7H5PtlPeKy45K9PGhb/PPFmc9jHlgMioXqqv6szAvCzAsjSrg=
+	t=1710829953; cv=none; b=HWHevLnZqtsMLPC0sYckg9O4K2dlCSr4lrzG3Yh1fWtZFJuv1136UJxE7JXNTSarQkXjpwS0EBjpMw+Lpg6sdxVk4g8sPAYS/SR8T8wnt1sHLaJK6dR1Zl/lgYID1vB5a2f+5iUuLJ5GAxFFqUH+YvzV1x8RpnP2XlCRcYJHNnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710829952; c=relaxed/simple;
-	bh=K2Yido6l2Harc2sExVjNgO4huCImJneSbabgn0YyLvY=;
+	s=arc-20240116; t=1710829953; c=relaxed/simple;
+	bh=nZyfZZS2anfXFv69+y8nmBtqiJPKCJ5FHkiZs7WXN60=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qJ6itSPQO+nM7GQkNLe5NG2fSWA8xP+pCz6aCHoYufbmOel2oTu0BWfEejHsO+oWNbFQgYAC7Nl0vMQUCLK7AwKNmRbcm6STxT9oxrfspKP2X2MqQ5Oj1KeRkt2gBHxkHFAFps5eqkvyHGKHZt8hE96XwJJRMfhdrmoSpMtvIZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=LY94AJaA; arc=none smtp.client-ip=68.232.139.139
+	 MIME-Version; b=Q8akbs6fpP3ngS9Duwr+0YRxm3j+zcR5s+d1ejoy3bTm/sJByFidXjfL7kewtn8oGURDxbEQjpc3SAeHzv0L1lPSkPY18f1B8tUC/IeYGjqiCxF8dPcr0NHvb+Z2KnEBjPg7M0hzSw0u7vBbPXTZkWnwtBxjcRlAINtVtjwmHws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=iLCdpJC1; arc=none smtp.client-ip=139.138.36.225
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="LY94AJaA"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="iLCdpJC1"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1710829950; x=1742365950;
+  t=1710829951; x=1742365951;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=K2Yido6l2Harc2sExVjNgO4huCImJneSbabgn0YyLvY=;
-  b=LY94AJaA0upSeQmjq9iIlFTV3pGrjgjyvpvgQJ+a/0umtF5IFmPs3GE6
-   wrjo4f2F/6hZet+R/S/8jBWYOCm3vwe+wM87udasHoHp5lNhgFlgAzFGr
-   7DhAdSCiOMCgqzDnNcdvgQI1i1MnvSjpe+emY2NgtA1dbkyh0fX1sMz5k
-   NAtvahHf03OGvQbi4qwCgncqLhSFRe4+objMjQSjsUB11B7aWWcEGCapu
-   JazAV5w1kAgmnJqDvrMSR/SSJXL+Xv+439z1UFfqNsbPxjvIQPhaltRtL
-   sqiB/2WL7diB008eG4wScDnXZ19o7IYjVuT2TGfxPu40JeKLM3cIRqcBx
+  bh=nZyfZZS2anfXFv69+y8nmBtqiJPKCJ5FHkiZs7WXN60=;
+  b=iLCdpJC1t8eIUKTsyA6OrAiM4GVv7CgdD/anBWkNXzUQaxop8RRiOo//
+   AfJF1fnKw1wMQRl3Y3eEBG5waa6zftO1uw5Sjv+AIWdOFR4eIorvZwEg4
+   cHugGf6Q7qmPIdWwDhjBPIpAAoBxpNIi605HpM8WU4QsQkRU1wwsBoGgK
+   AyfcfecwOoeHfObKI+E48u5rBxlpUPlmzFODtzZLY79z7PY4pAB3r/XbW
+   bzZbCbu66eWGLNKUh/F2ppZQ1zTgWe8iJj3SuXzVGjDekYG5ojvwzl8wx
+   rTd8+SxKKOppbEah8SRlRNmK/i6OW6ItqlK/I2U+xVX8Yzk2ZWkWf0uqt
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="154551200"
+X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="140310358"
 X-IronPort-AV: E=Sophos;i="6.07,136,1708354800"; 
-   d="scan'208";a="154551200"
+   d="scan'208";a="140310358"
 Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
-  by esa6.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 15:32:26 +0900
-Received: from yto-m4.gw.nic.fujitsu.com (yto-nat-yto-m4.gw.nic.fujitsu.com [192.168.83.67])
-	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 69CBAD9F04;
-	Tue, 19 Mar 2024 15:32:24 +0900 (JST)
+  by esa10.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 15:32:27 +0900
+Received: from yto-m1.gw.nic.fujitsu.com (yto-nat-yto-m1.gw.nic.fujitsu.com [192.168.83.64])
+	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id B4684D9F04;
+	Tue, 19 Mar 2024 15:32:25 +0900 (JST)
 Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-	by yto-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id A77D7D7B90;
-	Tue, 19 Mar 2024 15:32:23 +0900 (JST)
+	by yto-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id EA1BFD4241;
+	Tue, 19 Mar 2024 15:32:24 +0900 (JST)
 Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 3723C200932DF;
-	Tue, 19 Mar 2024 15:32:23 +0900 (JST)
+	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 7A6E7200A7E3A;
+	Tue, 19 Mar 2024 15:32:24 +0900 (JST)
 Received: from localhost.localdomain (unknown [10.167.226.45])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id BC6771A006B;
-	Tue, 19 Mar 2024 14:32:22 +0800 (CST)
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id E48201A006D;
+	Tue, 19 Mar 2024 14:32:23 +0800 (CST)
 From: Li Zhijian <lizhijian@fujitsu.com>
 To: linux-kernel@vger.kernel.org
 Cc: Li Zhijian <lizhijian@fujitsu.com>,
+	Karan Tilak Kumar <kartilak@cisco.com>,
+	Sesidhar Baddela <sebaddel@cisco.com>,
 	"James E.J. Bottomley" <jejb@linux.ibm.com>,
 	"Martin K. Petersen" <martin.petersen@oracle.com>,
 	linux-scsi@vger.kernel.org
-Subject: [PATCH v2 09/25] scsi: pcmcia: Convert sprintf() family to sysfs_emit() family
-Date: Tue, 19 Mar 2024 14:31:16 +0800
-Message-Id: <20240319063132.1588443-9-lizhijian@fujitsu.com>
+Subject: [PATCH v2 12/25] scsi: snic: Convert sprintf() family to sysfs_emit() family
+Date: Tue, 19 Mar 2024 14:31:19 +0800
+Message-Id: <20240319063132.1588443-12-lizhijian@fujitsu.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20240319063132.1588443-1-lizhijian@fujitsu.com>
 References: <20240319063132.1588443-1-lizhijian@fujitsu.com>
@@ -69,13 +71,13 @@ X-TM-AS-GCONF: 00
 X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28260.005
 X-TM-AS-User-Approved-Sender: Yes
 X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28260.005
-X-TMASE-Result: 10--3.342400-10.000000
-X-TMASE-MatchedRID: xt1fvVgCaAwbO59FK9BdmJiHtCNYjckMjkDrBOJwwnQ8JmmJxjOaQXVX
-	Q3/qdw5yDiqGKKMcNgRhoUIS5GGeEs1HQN/TlJ3ZOIQ9GP2P2u/iwxLjNbuPBWO0yVK/5LmcQiM
-	ingSlKoKMx5HzfQifbPE41045MrHXFDCN/1eC4ASdVNZaI2n6/8E5XPQnBzGXq8KsbROd9VSArq
-	oIZrVn10Bh0sVevfs+bG2wDyGdkFGR9GF2J2xqMxRFJJyf5BJeZVXUb4KTaXv6C0ePs7A07Z5Vb
-	9l0vnaP6BiQH5RE9GykJuPIM8bumHugYxnMUtnsUnf7Nq2zVouDOCaAfFRgnXgv4L5We1m0Rj9j
-	9K5jZHac80ZtDh/a4d4qZkKihSdfhpPsVGqnTA8BxCsB8GHr28FEsV4fo4lIJMMP4MGO4TA=
+X-TMASE-Result: 10--13.604400-10.000000
+X-TMASE-MatchedRID: RKkR8WK0E1obO59FK9BdmJiHtCNYjckMjkDrBOJwwnQ8JmmJxjOaQXVX
+	Q3/qdw5yDiqGKKMcNgRhoUIS5GGeEs1HQN/TlJ3ZOIQ9GP2P2u+49IoBojnioWluHEj++VqUhQ6
+	YZNvnIb+Ekt/L8HtAJ785xNkZcrN2ePWEUnWb98FBDn6Fjq77jvioIsi7Sa0gwLkNMQzGl5B+Kr
+	WCPbERPznpYPqS6jzxXnkq6nWMKnzGt2xdLsY3ZHzmmMD/HXF+NGYVVYIZ7j0GWfDd0b0zMaPFj
+	JEFr+olwXCBO/GKkVqOhzOa6g8Krd/ayBsm1u+IQ0FGsEBH1RwTQPdH9Gpv0uXnYQFK4PLxGg6U
+	Cv2vKWA=
 X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
 Per filesystems/sysfs.rst, show() should only use sysfs_emit()
@@ -92,6 +94,8 @@ COCCI=scripts/coccinelle/api/device_attr_show.cocci
 
 No functional change intended
 
+CC: Karan Tilak Kumar <kartilak@cisco.com>
+CC: Sesidhar Baddela <sebaddel@cisco.com>
 CC: "James E.J. Bottomley" <jejb@linux.ibm.com>
 CC: "Martin K. Petersen" <martin.petersen@oracle.com>
 CC: linux-scsi@vger.kernel.org
@@ -101,22 +105,52 @@ This is a part of the work "Fix coccicheck device_attr_show warnings"[1]
 Split them per subsystem so that the maintainer can review it easily
 [1] https://lore.kernel.org/lkml/20240116041129.3937800-1-lizhijian@fujitsu.com/
 ---
- drivers/scsi/pcmcia/sym53c500_cs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/snic/snic_attrs.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/pcmcia/sym53c500_cs.c b/drivers/scsi/pcmcia/sym53c500_cs.c
-index 278c78d066c4..264eeb24b811 100644
---- a/drivers/scsi/pcmcia/sym53c500_cs.c
-+++ b/drivers/scsi/pcmcia/sym53c500_cs.c
-@@ -624,7 +624,7 @@ SYM53C500_show_pio(struct device *dev, struct device_attribute *attr,
- 	struct sym53c500_data *data =
- 	    (struct sym53c500_data *)SHp->hostdata;
+diff --git a/drivers/scsi/snic/snic_attrs.c b/drivers/scsi/snic/snic_attrs.c
+index 3ddbdbc3ded1..48bf82d042b4 100644
+--- a/drivers/scsi/snic/snic_attrs.c
++++ b/drivers/scsi/snic/snic_attrs.c
+@@ -13,7 +13,7 @@ snic_show_sym_name(struct device *dev,
+ {
+ 	struct snic *snic = shost_priv(class_to_shost(dev));
  
--	return snprintf(buf, 4, "%d\n", data->fast_pio);
-+	return sysfs_emit(buf, "%d\n", data->fast_pio);
+-	return snprintf(buf, PAGE_SIZE, "%s\n", snic->name);
++	return sysfs_emit(buf, "%s\n", snic->name);
  }
  
  static ssize_t
+@@ -23,8 +23,7 @@ snic_show_state(struct device *dev,
+ {
+ 	struct snic *snic = shost_priv(class_to_shost(dev));
+ 
+-	return snprintf(buf, PAGE_SIZE, "%s\n",
+-			snic_state_str[snic_get_state(snic)]);
++	return sysfs_emit(buf, "%s\n", snic_state_str[snic_get_state(snic)]);
+ }
+ 
+ static ssize_t
+@@ -32,7 +31,7 @@ snic_show_drv_version(struct device *dev,
+ 		      struct device_attribute *attr,
+ 		      char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%s\n", SNIC_DRV_VERSION);
++	return sysfs_emit(buf, "%s\n", SNIC_DRV_VERSION);
+ }
+ 
+ static ssize_t
+@@ -45,8 +44,8 @@ snic_show_link_state(struct device *dev,
+ 	if (snic->config.xpt_type == SNIC_DAS)
+ 		snic->link_status = svnic_dev_link_status(snic->vdev);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%s\n",
+-			(snic->link_status) ? "Link Up" : "Link Down");
++	return sysfs_emit(buf, "%s\n",
++			  (snic->link_status) ? "Link Up" : "Link Down");
+ }
+ 
+ static DEVICE_ATTR(snic_sym_name, S_IRUGO, snic_show_sym_name, NULL);
 -- 
 2.29.2
 
