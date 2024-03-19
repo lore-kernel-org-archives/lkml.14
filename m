@@ -1,173 +1,136 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3D645940;
-	Tue, 19 Mar 2024 10:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5EB74CE08
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 10:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710845005; cv=none; b=IDR4DU9OTwZvn2dQu3pGEIq8VU5fwrauQa0TWEQNBHzWNpxgvEoFhxsPRcCk49g6v2SAOBBEyvE2x/mEiN2MGLKeEdBuMWFkLxlaX6PS8ueRZ52PaC8ePKfX2zYyHK1Sm/uAkwHLD5KH+UclwviPyo2WpIDytFjcd1/v+uJ1Ivw=
+	t=1710845066; cv=none; b=jab+5xtTO4zb51w/WGFejw5u0v7sR+2LX4oqPOLYkMd2WUIaMkPZbG2DnKaAKcmgr1rWEtzJhDh/GEwyNl6Stu/zmaMLCt64wEAdtVkZ/jNM93/IHTEn1ap7d2mb4a9mgqP3aP0+rJBjRJ70kmTtxk4K61+Z1k40XdpX8YzE1JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710845005; c=relaxed/simple;
-	bh=wfZw348qOVvoQEgYtNjW9hkBoUWwvnTKCeGzyYxTRk4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kpfhg/IpTVtnkl9KqQbnYjvFrE2yNRZwMldDXGoNCaoLh//jFp65zF06VqTAgXJZyZuZBfAh6VDR5GGlllUDvzJj46QKn5HUwETZNacp54ONnsrN9Wf90CLSwi7WwbJI3ihLy858WSNq3ZBcXFD75K7E+nn/kjhVsEg5v8aIwsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=aw62y5jY; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1710845066; c=relaxed/simple;
+	bh=7LhSr5+k+GBVSUTqtH/lpjLZtcZyDsWwQPJKp5P9d9w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SYk8IAcUNXO2sbnv4e6xs7UTsf8eSgLCvwfaeNKt+8cBT6tnFFcDwZW6FLkydqFpSVPK0cno9dketPi+18T9Ls5ph1YmMrjW8rE3r7rAPhxYgdxKTTO0RnDTjUCBbDzJToa3LvdFhxjkAlvdIW6ospEmwXLhshMgjD3nfnr/0R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q0/icrU+; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="aw62y5jY"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6F47EFF806;
-	Tue, 19 Mar 2024 10:43:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1710845000;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JhgjBROAlzrbl8Iz37haY9BTjg5Buwc2hFjKtvnhtcc=;
-	b=aw62y5jYBsNZs//0dVc32M2AHv8fVidEmf+i3fheCHEIJx+l72garengqb9wQPxxvge0uS
-	VE1z2Uvk3XQ+zpGZ3kZRmlEcF2gQi8qaIHEHoP0tPkbrg5lU7cCRUv6FpWWtTgNlx9RZLN
-	jYgkfm6VitcQVGUsHBURuBftG30xH1m7FpsZJCIyaNRh4azX6tOBPIvbWerzyJGifdMfn3
-	cT6SKSiNc3zuqWsVbG98DNvftsROvNo72DOkhtyAKbjZYHxnlzppzEbEGm0KaCPOgIpSnW
-	Bd5eBpsR/++29RJ5Swca7psPmkUhDGfKlbNXJlXk1OTCgxBzNH6m/PdevWZKhw==
-Date: Tue, 19 Mar 2024 11:43:16 +0100
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Md Sadre Alam <quic_mdalam@quicinc.com>
-Cc: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
- <broonie@kernel.org>, <robh@kernel.org>,
- <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
- <richard@nod.at>, <vigneshr@ti.com>, <manivannan.sadhasivam@linaro.org>,
- <neil.armstrong@linaro.org>, <daniel@makrotopia.org>, <arnd@arndb.de>,
- <chris.packham@alliedtelesis.co.nz>, <christophe.kerello@foss.st.com>,
- <linux-arm-msm@vger.kernel.org>, <linux-spi@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-mtd@lists.infradead.org>, <quic_srichara@quicinc.com>,
- <quic_varada@quicinc.com>
-Subject: Re: [PATCH v4 2/5] drivers: mtd: nand: Add qpic_common API file
-Message-ID: <20240319114316.4b977d93@xps-13>
-In-Reply-To: <93b08226-3297-2161-cc7d-d33d839c32f0@quicinc.com>
-References: <20240308091752.16136-1-quic_mdalam@quicinc.com>
-	<20240308091752.16136-3-quic_mdalam@quicinc.com>
-	<20240315124517.4a546ce9@xps-13>
-	<93b08226-3297-2161-cc7d-d33d839c32f0@quicinc.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q0/icrU+"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-568a53d2ce0so6431813a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 03:44:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710845063; x=1711449863; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hKApB2VQZ41H14nOfmTeU37ZbkewUvI4J/KbtvIHGSo=;
+        b=Q0/icrU+JRwARSbDm8WiC0DToeZdO3ReZrJtPUVIBLmXM0oUvM0rlm50Eu2VO1MY7q
+         KWdwp+CUfNSYWrm/Nl4Hre83IFh6cyqk5PR500WT0bqLkurSpcPer6QKdsVA822CTYtA
+         qy3/2i6O3sUWFLNZiaT9z0p7i6yKGqyNvul1EdtSo1fv8Hyo4ZFammi+CUM2EcvUrNiu
+         q8omMh3/gQjTGCdXP7xlFJq8qyGDQ211icCKG/0BXQfy0F++LhjkZUZKcgPGArPHz091
+         M2rtwytC2Swm1qsTeT6yWQv3wbvCAVF9rrYme8CTxTFuB/SHW7mg/K30uymdE+3ljvVa
+         keYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710845063; x=1711449863;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hKApB2VQZ41H14nOfmTeU37ZbkewUvI4J/KbtvIHGSo=;
+        b=RV8hI6YSFEfRwKjHUl6eneIcb8NBrgy34WQwLKOzOjcRWJE+4L9gdFhBiD5fHSIVSs
+         u+uywwK7JrdVj52feW3I5ybKGv8LI+jPaOEsEqDCbKbaEMEYjstq3l3gDlgPyjIgEvBL
+         VNjEIbn6gTZTjndmfbG4C0JsHeSOjZH3Ojv32MyHxPetyP74qKV7KcB5jZVW2Fshn97/
+         Fwm0qkAmDpJZaUWmH+aFTRiz9V1furV33pigM8yfJgHEE7Liyd9XuJV97gss75L52VS8
+         TbzraWEcO4C3jaIz/f0yRnNIYuY0oJ5hpaBTgDiCd5/Cx3vzJIdEnE6gm3oVdAmQ4dIc
+         Nspw==
+X-Forwarded-Encrypted: i=1; AJvYcCWljsQBjGe3wr9rNwknZLEB7leLddYtwby9suU35W+LPl3T2TKok4O1HUoPqYLqEkjdEfeksV+BOMlRT4SU8bfGybyGn9UaH0axxGyH
+X-Gm-Message-State: AOJu0YwP8rJXtv+lm/5v3WkdNsbmSqzzNqasWXn9r1wXTUvqQaVCtSVV
+	ngMKbLWO2gsWfECHIdEEJbAw9/pssbyAFrAIlsCStr2tB8k//qDZTGY+v5g0Vec=
+X-Google-Smtp-Source: AGHT+IFiOg2Ym/6DOZ9i+B7WKNVM7xgwYC1wSyMGcyKbuxBnwRN+BbqAM7drQIZ6fTBB8U8bda1AEA==
+X-Received: by 2002:a17:906:40d0:b0:a46:5d40:eb97 with SMTP id a16-20020a17090640d000b00a465d40eb97mr8593785ejk.70.1710845062948;
+        Tue, 19 Mar 2024 03:44:22 -0700 (PDT)
+Received: from 123000256IE.iskraemeco.si ([193.77.86.250])
+        by smtp.gmail.com with ESMTPSA id bx21-20020a170906a1d500b00a4655976025sm5882342ejb.82.2024.03.19.03.44.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 03:44:22 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Brian Gerst <brgerst@gmail.com>,
+	Denys Vlasenko <dvlasenk@redhat.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Josh Poimboeuf <jpoimboe@redhat.com>,
+	Sean Christopherson <seanjc@google.com>
+Subject: [PATCH -tip 0/3] x86/asm: Use generic asm operand modifiers instead of %P in asm templates
+Date: Tue, 19 Mar 2024 11:40:11 +0100
+Message-ID: <20240319104418.284519-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-Hi,
+The "P" asm operand modifier is a x86 target-specific modifier.
 
-> >> +/**
-> >> + * qcom_offset_to_nandc_reg() - Get the actual offset
-> >> + * @regs: pointer to nandc_reg structure
-> >> + * @offset: register offset
-> >> + *
-> >> + * This function will reurn the actual offset for qpic controller reg=
-ister
-> >> + */
-> >> +__le32 *qcom_offset_to_nandc_reg(struct nandc_regs *regs, int offset)
-> >> +{
-> >> +	switch (offset) {
-> >> +	case NAND_FLASH_CMD:
-> >> +		return &regs->cmd;
-> >> +	case NAND_ADDR0:
-> >> +		return &regs->addr0;
-> >> +	case NAND_ADDR1:
-> >> +		return &regs->addr1;
-> >> +	case NAND_FLASH_CHIP_SELECT:
-> >> +		return &regs->chip_sel;
-> >> +	case NAND_EXEC_CMD:
-> >> +		return &regs->exec;
-> >> +	case NAND_FLASH_STATUS:
-> >> +		return &regs->clrflashstatus;
-> >> +	case NAND_DEV0_CFG0:
-> >> +		return &regs->cfg0;
-> >> +	case NAND_DEV0_CFG1:
-> >> +		return &regs->cfg1;
-> >> +	case NAND_DEV0_ECC_CFG:
-> >> +		return &regs->ecc_bch_cfg;
-> >> +	case NAND_READ_STATUS:
-> >> +		return &regs->clrreadstatus;
-> >> +	case NAND_DEV_CMD1:
-> >> +		return &regs->cmd1;
-> >> +	case NAND_DEV_CMD1_RESTORE:
-> >> +		return &regs->orig_cmd1;
-> >> +	case NAND_DEV_CMD_VLD:
-> >> +		return &regs->vld;
-> >> +	case NAND_DEV_CMD_VLD_RESTORE:
-> >> +		return &regs->orig_vld;
-> >> +	case NAND_EBI2_ECC_BUF_CFG:
-> >> +		return &regs->ecc_buf_cfg;
-> >> +	case NAND_READ_LOCATION_0:
-> >> +		return &regs->read_location0;
-> >> +	case NAND_READ_LOCATION_1:
-> >> +		return &regs->read_location1;
-> >> +	case NAND_READ_LOCATION_2:
-> >> +		return &regs->read_location2;
-> >> +	case NAND_READ_LOCATION_3:
-> >> +		return &regs->read_location3;
-> >> +	case NAND_READ_LOCATION_LAST_CW_0:
-> >> +		return &regs->read_location_last0;
-> >> +	case NAND_READ_LOCATION_LAST_CW_1:
-> >> +		return &regs->read_location_last1;
-> >> +	case NAND_READ_LOCATION_LAST_CW_2:
-> >> +		return &regs->read_location_last2;
-> >> +	case NAND_READ_LOCATION_LAST_CW_3:
-> >> +		return &regs->read_location_last3; =20
-> >=20
-> > Why do you need this indirection? =20
->=20
-> This indirection I believe is needed by the write_reg_dma function,
-> wherein a bunch of registers are modified based on a starting register.
-> Can I change this in a separate cleanup series as a follow up to this?
+For x86_64, when used with a symbol reference, the "P" modifier
+emits "sym" instead of "sym(%rip)". When used with a constant, the
+"P" modifier emits "cst" instead of "$cst". This property is used to
+emit bare symbol references and bare constants without all
+syntax-specific prefixes.
 
-I think it would be cleaner to make the changes I requested first and
-then make a copy. I understand it is more work on your side, so if you
-really prefer you can (1) make the copy and then (2) clean it all. But
-please do it all in this series.
+The generic "c", "n" and "a" operand modifiers should be used instead.
+The following table shows the modifiers supported by all targets and
+their effects:
 
-> >> diff --git a/include/linux/mtd/nand-qpic-common.h b/include/linux/mtd/=
-nand-qpic-common.h
-> >> new file mode 100644
-> >> index 000000000000..aced15866627
-> >> --- /dev/null
-> >> +++ b/include/linux/mtd/nand-qpic-common.h
-> >> @@ -0,0 +1,486 @@
-> >> +/* SPDX-License-Identifier: GPL-2.0 */
-> >> +/*
-> >> + * QCOM QPIC common APIs header file
-> >> + *
-> >> + * Copyright (c) 2023 Qualcomm Inc.
-> >> + * Authors:     Md sadre Alam           <quic_mdalam@quicinc.com>
-> >> + *		Sricharan R             <quic_srichara@quicinc.com>
-> >> + *		Varadarajan Narayanan   <quic_varada@quicinc.com>
-> >> + *
-> >> + */
-> >> +#ifndef __MTD_NAND_QPIC_COMMON_H__
-> >> +#define __MTD_NAND_QPIC_COMMON_H__
-> >> +
-> >> +#include <linux/bitops.h>
-> >> +#include <linux/clk.h>
-> >> +#include <linux/delay.h>
-> >> +#include <linux/dmaengine.h>
-> >> +#include <linux/dma-mapping.h>
-> >> +#include <linux/dma/qcom_adm.h>
-> >> +#include <linux/dma/qcom_bam_dma.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/mtd/partitions.h>
-> >> +#include <linux/mtd/rawnand.h> =20
-> >=20
-> > You really need this? =20
-> Yes , since some generic structure used here.
+Modifier    Description
+-----------------------------------------------------------
+'c'         Require a constant operand and print the
+            constant expression with no punctuation.
+'n'         Like '%c' except that the value of the constant
+            is negated before printing.
+'a'         Substitute a memory reference, with the actual
+            operand treated as the address.  This may be
+            useful when outputting a "load address"
+            instruction, because often the assembler syntax
+            for such an instruction requires you to write
+            the operand as if it were a memory reference.
 
-Which ones? If this is a common file, you probably should not.
+Also note that unlike GCC, clang emits %rip-relative symbol
+reference with "P" asm operand modifier, so the patch also unifies
+symbol handling with both compilers.
 
-Thanks,
-Miqu=C3=A8l
+No functional changes intended.
+
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>
+
+Uros Bizjak (3):
+  x86/asm: Remove %P operand modifier from altinstr asm templates
+  x86/asm: Use %c/%n instead of %P operand modifier in asm templates
+  x86/asm: Use %a instead of %P operand modifier in asm templates
+
+ arch/x86/boot/main.c                 |  4 ++--
+ arch/x86/include/asm/alternative.h   | 22 +++++++++++-----------
+ arch/x86/include/asm/apic.h          |  2 +-
+ arch/x86/include/asm/atomic64_32.h   |  2 +-
+ arch/x86/include/asm/cpufeature.h    |  4 ++--
+ arch/x86/include/asm/irq_stack.h     |  2 +-
+ arch/x86/include/asm/processor.h     |  6 +++---
+ arch/x86/include/asm/special_insns.h |  4 ++--
+ arch/x86/include/asm/uaccess.h       |  4 ++--
+ 9 files changed, 25 insertions(+), 25 deletions(-)
+
+-- 
+2.44.0
+
