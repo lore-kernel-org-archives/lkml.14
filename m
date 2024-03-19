@@ -1,97 +1,99 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1E1C8E1
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 16:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A69F50D
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 16:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710866345; cv=none; b=etBjj46pws2o0LAsaFz9P9N6mfomSMPH5pIv7Jx4cuNpe92wmomzksjVFL7XKnRa6cVc3ATN/60JTb3QLS/APtNOpXoP9pg0wH7e/O5dl4NDC0Ghqjxa/p0odVXnjJqlmvzAAkdHEdG23MPqm+xILFA70Z+9EGExLxjIJ6Cw7jw=
+	t=1710866473; cv=none; b=pAaEvDNxxzEkg+qWg5JwM6VeU6bQdCIv0Yi3b3dEYAYy94KOk9+XQsUptqQwNa5xs2l5B5Kc8V3L8jh8HuchJpo1NZxFKvb1V+Q1TI8/ge+bGkYbvKNnE9W1zNOOwKJva2zY4uMMUAbZAu7JSSea5R70s7KXMYa3/uthCdch8v0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710866345; c=relaxed/simple;
-	bh=gOtdMVFyUxOjX7VK78TUlEAvDfLjmRn3AgHX7DpQsDg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RnS5skjEOjkIfzg/6aoDzHj+JG7FH51tckz7Kfz8pFi7/N4Yj5uXDKFTEZSt4R357Dz3As/BHBtYG0LW28G3Sqo/ARklGDAn310yRVsza9KEoB6U2JprpypT+Ubhggu+2Z+283u4eBVbUuvg82SjnPqePAW6Ngw0W2wDmlYAsv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rmcUH-0005aE-D9; Tue, 19 Mar 2024 17:38:53 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rmcUG-007JGe-La; Tue, 19 Mar 2024 17:38:52 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rmcUG-008Tj5-1t;
-	Tue, 19 Mar 2024 17:38:52 +0100
-Date: Tue, 19 Mar 2024 17:38:52 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Dimitri Fedrau <dima.fedrau@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] pwm: mc33xs2410: add support for direct inputs
-Message-ID: <dwd6idyv2dvfih57sdfnr6cxztrx6gv3pwuy6rdopjw2lv2z6y@in2sn56t3x5k>
-References: <20240301111124.29283-1-dima.fedrau@gmail.com>
- <20240301111124.29283-4-dima.fedrau@gmail.com>
+	s=arc-20240116; t=1710866473; c=relaxed/simple;
+	bh=nRp7+YyTBHw31NX7xj7EtsXhg3dkAR+p6w1ZMt+sOEU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ThEpqmgwh85lGDivYXOnw1GbijIkET8zgTgFNC7ANOMoAyn1Dcr6FhulTKQMdkgphbhmzfnXCc6/sY0QBYN5xhOcsZ4LmkFG7TnWAS/l7XadJNGxcqoT+JOmuFUtAL8Ph4fYHdTYepw0yhKUv7jyRjoKOLWCqh7KHbyTrsCesKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=Bjc+xpQA; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Bjc+xpQA"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56ba72fffd6so328591a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 09:41:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1710866470; x=1711471270; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=931BN8XdKyOBXgviRQCefbI6odUP2QsuOngK2FvcTOs=;
+        b=Bjc+xpQAwY3z3fbUSs5mWFZqOgAsXiWOfTt2fETf32xVt5LGMFFT8BlXOVa1nShF4e
+         u3hKGCc3sXooS8tjsd1KJrhLeAY0AsQHmlDDydrwglGH1JSvNWnPALsWFn98NxkI4Uc4
+         VoScTVzsNWKZM++T29YZIQ9ySLCKZz1WGzusQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710866470; x=1711471270;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=931BN8XdKyOBXgviRQCefbI6odUP2QsuOngK2FvcTOs=;
+        b=WMF8QSaeNIhg0cydB/CHLdiFZbJAdJyzkcDrOH+vNzUwmwXfrFlrllEw5FJ4pZpiCA
+         +XwNbjOTRFCXgyTxnbO8CUndGAWYZ2bUUhcQIju0ZB7C9U+sKFzat3PeP+ggZIv1AgcM
+         I2PGrxhQL2Chlb5UFSb5MaQVZvgTPWoE2tYFsepqiccz4m+YOmSYTypG7E2bLhLk7na7
+         S48pY03VDwaNM3Q0C2zgCHed3HtpnvEfRduaBDDk3U79gD3erI7k03FRQM3FsjpoSFFd
+         kHSa62CoSmYpFaT4ZKldFt9llcxbNUMTTah3133UdT/4Gr/+w+85bkV29Dpiz4ABYB44
+         Ir8A==
+X-Forwarded-Encrypted: i=1; AJvYcCW4oOEmyMaabWIGENkzyyR7zlXPIk9WUJltZ+rejgCQFs9RjgCksQB3NB2qU2q7Ha8QzAEK9ilaGjhgO/rmIPDP3xdUlI26IwSOZc0a
+X-Gm-Message-State: AOJu0Yy4g5sccUOtQ20MCKDD6qhkpwzGET4kjiTpmaPmOl6hUVc/yOEW
+	o8bawI9FvZsdy9VxJE2IyRksmgazhn7QUp3KShdMsa13yxYOqq/duqK4OJ5QOF+NAsTFrlURsqg
+	iD52/H/ZyY3K7MfFHLX5jvNkHdL9geIkpXWDjBgFpOuVtRtVAyzg=
+X-Google-Smtp-Source: AGHT+IFDeEEaIOtSBG5DGppYGHWRw4rXZqpgILKwzYCMW4SSXhcYWj+KFRDuw5xeuXxFLrQ0w0/J7Jaydr+ESekL/l8=
+X-Received: by 2002:a17:906:70c9:b0:a46:6bb8:1ec4 with SMTP id
+ g9-20020a17090670c900b00a466bb81ec4mr8429584ejk.76.1710866470240; Tue, 19 Mar
+ 2024 09:41:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="sshteucfry4z3ncl"
-Content-Disposition: inline
-In-Reply-To: <20240301111124.29283-4-dima.fedrau@gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <1668172.1709764777@warthog.procyon.org.uk> <ZelGX3vVlGfEZm8H@casper.infradead.org>
+ <1831809.1709807788@warthog.procyon.org.uk> <CAJfpegv8X0PY7PvxEF=zEwRbdZ7yZZcwB80iDO+XLverognx+g@mail.gmail.com>
+ <651179.1710857687@warthog.procyon.org.uk> <CAJfpegsUYUwp2YNnCE3ZP+JtL0whgQ=3+wcsBABGXH9MjXC0zA@mail.gmail.com>
+In-Reply-To: <CAJfpegsUYUwp2YNnCE3ZP+JtL0whgQ=3+wcsBABGXH9MjXC0zA@mail.gmail.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Tue, 19 Mar 2024 17:40:58 +0100
+Message-ID: <CAJfpegsCBEm11OHS8bfQdgossOgofPcYhLTFtw7_+T66iBvznw@mail.gmail.com>
+Subject: Re: [RFC PATCH] mm: Replace ->launder_folio() with flush and wait
+To: David Howells <dhowells@redhat.com>
+Cc: Matthew Wilcox <willy@infradead.org>, Trond Myklebust <trond.myklebust@hammerspace.com>, 
+	Christoph Hellwig <hch@lst.de>, Andrew Morton <akpm@linux-foundation.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Jeff Layton <jlayton@kernel.org>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
+	netfs@lists.linux.dev, v9fs@lists.linux.dev, linux-afs@lists.infradead.org, 
+	ceph-devel@vger.kernel.org, linux-cifs@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Tue, 19 Mar 2024 at 17:13, Miklos Szeredi <miklos@szeredi.hu> wrote:
+>
+> On Tue, 19 Mar 2024 at 15:15, David Howells <dhowells@redhat.com> wrote:
+>
+> > What particular usage case of invalidate_inode_pages2() are you thinking of?
+>
+> FUSE_NOTIFY_INVAL_INODE will trigger invalidate_inode_pages2_range()
+> to clean up the cache.
+>
+> The server is free to discard writes resulting from this invalidation
+> and delay reads in the region until the invalidation finishes.  This
+> would no longer work with your change, since the mapping could
+> silently be reinstated between the writeback and the removal from the
+> cache due to the page being unlocked/relocked.
 
---sshteucfry4z3ncl
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This would also matter if a distributed filesystem wanted to implement
+coherence even if there are mmaps.   I.e. a client could get exclusive
+access to a region by issuing FUSE_NOTIFY_INVAL_INODE on all other
+clients and blocking reads.  With your change this would fail.
 
-Hello Dimitri,
+Again, this is purely theoretical, and without a way to differentiate
+between the read-only and write cases it has limited usefulness.
+Adding leases to fuse (which I plan to do) would make this much more
+useful.
 
-On Fri, Mar 01, 2024 at 12:11:24PM +0100, Dimitri Fedrau wrote:
-> Add support for direct inputs, which are used to directly turn-on or
-> turn-off the outputs. Direct inputs have the advantage over the SPI
-> controlled outputs that they aren't limited to the frequency steps.
-> Frequency resolution depends on the input signal, range is still
-> from 0.5Hz to 2.048kHz.
-
-I didn't make a big effort, but I fail to understand the concept here.
-I'll delay giving more feedback till the next review round for this
-driver. Maybe then the description is easier to grasp.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---sshteucfry4z3ncl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmX5v5sACgkQj4D7WH0S
-/k61/Qf/earPR5mvVL8g/6x+RcAbaGizt7zmAhC5GqPYU+feD/35KUY7mDs+3dZ9
-2NhfAtkGBBXKGAbTlCftBSAq45tkCUtTZlIM0etBVKIVij0rsFkC/gN4pFxaVdSX
-nX086aiHC9JVaUgJA4JkPlif6XhRUn6UTo/R6bPzEzK1cE4WWk0wlAX1SXHcyoiI
-8POTK231Vdmgw1k3MptQm6cWZPtQJbTcWuYdQmGcdX032TdE1w27kOrNJH09p8L1
-TJcLhnUIUlQ5+/KWnnqk8j6aS9yfOTVyM6twTQdgw4F1n+0b5dtuWNDvslndB1JU
-o5izYSH8AFT+GTpAuN3ihO5OhkZ5jA==
-=l7tv
------END PGP SIGNATURE-----
-
---sshteucfry4z3ncl--
+Thanks,
+Miklos
