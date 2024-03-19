@@ -1,88 +1,104 @@
-Received: from gauss.telenet-ops.be (gauss.telenet-ops.be [195.130.132.49])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F470651BE
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 15:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1517FBAB
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 15:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710863750; cv=none; b=U18KA953T4KFek2v80rvRuJ2+R7cj/6KSLylC7PtX60FdkByxCYe46nYcDZ/0Ch/03DZPVH34PXhDStZD9bpVRmJ0Tcp7IaMDbKOfeIvDvhnmSNRk16Gyh7OjvrcLSanjWifa5zED77UAfyH1pHCmbldczKCmdHY3dUOvq4L2l4=
+	t=1710863782; cv=none; b=odFyLHM6cr4TBnSqg+/lHo5a1nbfUcrXNwot9B+AkAoq3+FVFxZ9GLyAEDrfKnjX6zEiva172H/c7zqvcpkgWs81GNW0xmz/ZmWzBaGxx8kFoHNQ6RjqZrARDywfiBUAdiqSYWLjGH8dzCditAyT4r4ahmcuGLWYnPhkI2Pdel8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710863750; c=relaxed/simple;
-	bh=l3fAhMFwXdTrWlgZNWbnVdbuoEcQXgaCLUpfAHd+muQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PXKTYoZooNXucdiEEdhj2b7l74kPpwoxIQb7eZoRkzafTWMTS1kh4DTOkqnlgvhjN9L565VnD0FxlHhu0bANl0uN4TUcLFyBrOUcbgzCR0N9G3ZKQvd+YD56pOs00/X9L3ZNcYddRRN/QKhdO47ynXJ+HlPj9kYP8/wGCEoKG8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
-	by gauss.telenet-ops.be (Postfix) with ESMTPS id 4Tzbfx2Pc1z4wyxx
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 16:46:17 +0100 (CET)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:76d0:2bff:fec8:549])
-	by andre.telenet-ops.be with bizsmtp
-	id 0fm82C00K0SSLxL01fm8mp; Tue, 19 Mar 2024 16:46:10 +0100
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rmbev-00468j-Ez;
-	Tue, 19 Mar 2024 16:46:08 +0100
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rmbfE-000pFV-Bw;
-	Tue, 19 Mar 2024 16:46:08 +0100
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Cc: devicetree@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/3] dt-bindings: timer: renesas,tmu: Add R-Mobile APE6 support
-Date: Tue, 19 Mar 2024 16:46:03 +0100
-Message-Id: <18b3778031f939a8e40a9865f9be0a9ec2e28a1e.1710862701.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1710862701.git.geert+renesas@glider.be>
-References: <cover.1710862701.git.geert+renesas@glider.be>
+	s=arc-20240116; t=1710863782; c=relaxed/simple;
+	bh=txdGx+DK7znFHGf/0tjjerKq64zYiimbR1qcsYKXEwc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HeadZdZmSuH3W5VFboDXP2o0asMHZehVGfRyAE7o8aIVxc2zW5WoyuWZNhR/q4GmQnnf5VlmrlYKFle9mHPq0bxRUMmAO7UfKGba0FII+vyj5AmNY7QqFSysvqJLQdpZILhjnedWFZ+eIrIcuTSoZqm3ATibmZIst+U8sNGCijY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lfZms955; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lfZms955"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A3ADC433C7;
+	Tue, 19 Mar 2024 15:56:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710863782;
+	bh=txdGx+DK7znFHGf/0tjjerKq64zYiimbR1qcsYKXEwc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lfZms95528UbY5tS+DZlHXPvGdfzpILgEyRdEPXRU5/FevqAaYzJl8l/uYMo4T/5g
+	 G0KyQQL1bDZ+4bh8Z2JpuF/vI2koqKVWwjHxmAAKVy1CXZGfnqxhj9vxhcyHNify9p
+	 6Hssk2wpYQDvFdCUEoWvFulZMmMqWZKThqWCh/zrXHvbfWOIWk2Ra2Qk7Dx8CvPKAv
+	 3IMLgBimgp08RRx/QskyZowU2DD05VdT+48IKH/xLbqpjBdhdIfUadK786BPq7ufGS
+	 cnhAkC4Re/eeuHZ1CNF8nhxVApf/051Ax2LlqJjwZTl4ZLb9+SijLBMaboTC68D/uC
+	 6Xibd+2/5wFSA==
+Date: Tue, 19 Mar 2024 15:56:16 +0000
+From: Will Deacon <will@kernel.org>
+To: Conor Dooley <conor@kernel.org>, catalin.marinas@arm.com
+Cc: linux-riscv@lists.infradead.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf: starfive: fix 64-bit only COMPILE_TEST condition
+Message-ID: <20240319155616.GC2901@willie-the-truck>
+References: <20240318-emphatic-rally-f177a4fe1bdc@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240318-emphatic-rally-f177a4fe1bdc@spud>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Document support for the Timer Unit (TMU) on the R-Mobile APE6 (R8A73A4)
-Soc.
+On Mon, Mar 18, 2024 at 03:35:04PM +0000, Conor Dooley wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
+> 
+> ARCH_STARFIVE is not restricted to 64-bit platforms, so while Will's
+> addition of a 64-bit only condition satisfied the build robots doing
+> COMPILE_TEST builds, Palmer ran into the same problems with writeq()
+> being undefined during regular rv32 builds.
+> 
+> Promote the dependency on 64-bit to its own `depends on` so that the
+> driver can never be included in 32-bit builds.
+> 
+> Reported-by: Palmer Dabbelt <palmer@rivosinc.com>
+> Fixes: c2b24812f7bc ("perf: starfive: Add StarLink PMU support")
+> Fixes: f0dbc6d0de38 ("perf: starfive: Only allow COMPILE_TEST for 64-bit architectures")
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+> CC: Will Deacon <will@kernel.org>
+> CC: Mark Rutland <mark.rutland@arm.com>
+> CC: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
+> CC: linux-arm-kernel@lists.infradead.org
+> CC: linux-kernel@vger.kernel.org
+> ---
+>  drivers/perf/Kconfig | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
+> index 5060e1f1ea10..7526a9e714fa 100644
+> --- a/drivers/perf/Kconfig
+> +++ b/drivers/perf/Kconfig
+> @@ -87,7 +87,8 @@ config RISCV_PMU_SBI
+>  	  filtering, counter configuration.
+>  
+>  config STARFIVE_STARLINK_PMU
+> -	depends on ARCH_STARFIVE || (COMPILE_TEST && 64BIT)
+> +	depends on ARCH_STARFIVE || COMPILE_TEST
+> +	depends on 64BIT
+>  	bool "StarFive StarLink PMU"
+>  	help
+>  	   Provide support for StarLink Performance Monitor Unit.
+> -- 
+> 2.43.0
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/devicetree/bindings/timer/renesas,tmu.yaml | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-index 2c915101d7bcec68..8df9d4718cf82a28 100644
---- a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-+++ b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-@@ -21,6 +21,7 @@ properties:
-   compatible:
-     items:
-       - enum:
-+          - renesas,tmu-r8a73a4  # R-Mobile APE6
-           - renesas,tmu-r8a7740  # R-Mobile A1
-           - renesas,tmu-r8a774a1 # RZ/G2M
-           - renesas,tmu-r8a774b1 # RZ/G2N
-@@ -94,6 +95,7 @@ if:
-       compatible:
-         contains:
-           enum:
-+            - renesas,tmu-r8a73a4
-             - renesas,tmu-r8a7740
-             - renesas,tmu-r8a7778
-             - renesas,tmu-r8a7779
--- 
-2.34.1
+Thanks guys, I don't know what a starfive is so sorry for not spotting
+this when I noticed the build failure on arm64.
 
+Acked-by: Will Deacon <will@kernel.org>
+
+Catalin -- please can you pick this into the arm64 fixes branch for -rc1?
+
+Cheers,
+
+Will
