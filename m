@@ -1,115 +1,209 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D097F48A
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 12:21:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5907CF03;
+	Tue, 19 Mar 2024 12:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.251.27.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710850917; cv=none; b=Y5+zztob8aO2KuyDhuE+tLY9N9VdoEtYH6TuhK14cTgY6Zu55jsUAx2gEo+SVcgqaR8++NoUlCDeD8jbVhouoJrhwL1uYorii7Ldc6siV7E9cA53TZ3g28DmYOFDkuhxM4V08Q+WS0Rk+mUheNc8952rfHRKg2Q/3zkcOeBHLqg=
+	t=1710850981; cv=none; b=EADDZehyqJvo0tDoRi9px65FHMIufOHi92DCl53iJyI4KMVVWAKHmmu+5uPKl1oV/Upk4wsU9++spMbEJMHcJXwQIKRDQZ7jEg15kvlWaT3FZtxP8xk2COP+hnwkx0GqS0IV3u3B6N+Q2UjByd7AitsinmL59WsNWDM5Oif0zSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710850917; c=relaxed/simple;
-	bh=qjqkqT8pZjwVcGcPOjT8S/YwSWCuV7Rv8qOtJCVbWUw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bsy3a4lXoHPghjKMw7mXUw6MVY7OZ+jdSOaqDVAK/GJrlgMB8RpSn3yWPr97s1cW/4mXeAXW97OzANVfMNgfPH/OxvwCPZ1Q4++aQlJArHfbGrqPQ1dy5NBptMD8YH2WAghl411sLFJvmAB7V3mYvxShaKYLOhod5hxmuAHDhG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W727OLu4; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W727OLu4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710850914;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fcURuON76N2jBOBvhQi/fRmFrRjaRgELhmNbazWraRw=;
-	b=W727OLu4y/6TQo9Xn7668FoOZwcRclkuXkBRK8FrYpvQIQeDWUebgR4arJ//k/HCOqAgXF
-	uWzi6iHES4OtcSUocon794rHtR978+rKdEs4IITrbKCzv78w8Y2Yv2k4edM+GqlmU3E5hA
-	XAaMjTlRaLkFtwDJYTyv6ORRgvKazIo=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-110-_2qNrA5oPMqFS5WFLhzuCw-1; Tue, 19 Mar 2024 08:21:53 -0400
-X-MC-Unique: _2qNrA5oPMqFS5WFLhzuCw-1
-Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-5148eaa60acso1699670e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 05:21:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710850911; x=1711455711;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fcURuON76N2jBOBvhQi/fRmFrRjaRgELhmNbazWraRw=;
-        b=VRKY0tTs/yjFkERI9ncooh4ofyTaCCZLypXHs7oHr1Hw7wXyWtq2MrdVuE3/byqT7T
-         ZVaJ5gL/N/zTNx+hhplAXhwGaVmHm85GQFcgV3fKQL2CGbLGb4dFC885btjAu77MfndM
-         WOx3HrJvDjic1ndaiOn4iOKmZRHkWaMMiJt6zzj5tax+QAsBIa4X+ElyMH3rCHHHUaXD
-         dSavxBG9ZFxSihIuBm69/v3jLxJmq1dwWi5DwlaRinIriKJLaBXeZcm6NmAxVVRIeBKX
-         b04xfqTa5PgnYkstYsuNtV6TOkZXS++Y7n8qPutukGCTz5lCZQAB2ShS2buuUH9pKyYV
-         Kz8w==
-X-Forwarded-Encrypted: i=1; AJvYcCUGJQqOQIscHgF4V5Brynu/AKNzd7VNfIJ+oN6gw/NT7dsW9S7WW1E3HTbHYrp2V4p4gndhtp95u/I8LAaf2jq5lSim58Xws74ObJu4
-X-Gm-Message-State: AOJu0YyJMdGOlwi5erXudUm3C4A3/AtZAYXEBbPmZZNqvas8xLAFC9YZ
-	GK1vBS21thq2USdsWRZH4MiHOBlBC/zZmro23RtNbtpOOKZldnVx6n/IlVZFVYbBch3qaTV0zXI
-	i0xdTTnjP1sR13ge93VsisFrzLoAQCHWAd/0lnNUG2jUPyJqV593chgOPwwtQZg==
-X-Received: by 2002:a05:6512:29c:b0:513:1e31:ddec with SMTP id j28-20020a056512029c00b005131e31ddecmr1778315lfp.40.1710850911473;
-        Tue, 19 Mar 2024 05:21:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFhc9xlMsZwNZSLJmLpjDngn3edaSnQJUFYnLMn1neznXIr75uSIGVCW6AHqadrgQY3NJEJYg==
-X-Received: by 2002:a05:6512:29c:b0:513:1e31:ddec with SMTP id j28-20020a056512029c00b005131e31ddecmr1778292lfp.40.1710850910940;
-        Tue, 19 Mar 2024 05:21:50 -0700 (PDT)
-Received: from redhat.com ([2.52.6.254])
-        by smtp.gmail.com with ESMTPSA id f2-20020a7bc8c2000000b00414041032casm442527wml.1.2024.03.19.05.21.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 05:21:50 -0700 (PDT)
-Date: Tue, 19 Mar 2024 08:21:46 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Maxime Coquelin <maxime.coquelin@redhat.com>
-Cc: jasowang@redhat.com, xuanzhuo@linux.alibaba.com,
-	xieyongji@bytedance.com, virtualization@lists.linux-foundation.org,
-	linux-kernel@vger.kernel.org, david.marchand@redhat.com,
-	lulu@redhat.com
-Subject: Re: [PATCH v7 0/3] vduse: add support for networking devices
-Message-ID: <20240319081938-mutt-send-email-mst@kernel.org>
-References: <20240109111025.1320976-1-maxime.coquelin@redhat.com>
- <f25f3c31-c793-4743-a587-0e2063dc2d65@redhat.com>
- <20240201033944-mutt-send-email-mst@kernel.org>
- <27d1fc65-14d2-4a1c-b1fa-c3250ac2356a@redhat.com>
+	s=arc-20240116; t=1710850981; c=relaxed/simple;
+	bh=uCjFt+EN7lwVjnDEYYdMMqzK2Ho+1l7zaLyTOIID/uw=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=Mrw5YjkwP0hY1PIJ9IKjxJSydWalyOZ6UpZmVRjHksykOkSVkJPmvsVU5lSs5Ph40ptrk/yNZjYAfhC6OjE4WPDTkm8NryOW8Dq+Q6JF9PV0OgkRMp3ET97rIVb8oAtPBHDTf96V4HlhTFk71dNqOdp3shwZHiNkREDyA28jk9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=58.251.27.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mxde.zte.com.cn (unknown [10.35.20.121])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4TzVy92HcgzW8Z;
+	Tue, 19 Mar 2024 20:14:09 +0800 (CST)
+Received: from mxhk.zte.com.cn (unknown [192.168.250.138])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mxde.zte.com.cn (FangMail) with ESMTPS id 4TzVy41cP4zCPs3L;
+	Tue, 19 Mar 2024 20:14:04 +0800 (CST)
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4TzVxv0qMxz4xPGL;
+	Tue, 19 Mar 2024 20:13:55 +0800 (CST)
+Received: from xaxapp03.zte.com.cn ([10.88.97.17])
+	by mse-fl1.zte.com.cn with SMTP id 42JCDnnN063621;
+	Tue, 19 Mar 2024 20:13:49 +0800 (+08)
+	(envelope-from xu.xin16@zte.com.cn)
+Received: from mapi (xaxapp03[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Tue, 19 Mar 2024 20:13:52 +0800 (CST)
+Date: Tue, 19 Mar 2024 20:13:52 +0800 (CST)
+X-Zmail-TransId: 2afb65f98180ffffffffd4a-d0cf2
+X-Mailer: Zmail v1.0
+Message-ID: <202403192013525995034@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <27d1fc65-14d2-4a1c-b1fa-c3250ac2356a@redhat.com>
+Mime-Version: 1.0
+From: <xu.xin16@zte.com.cn>
+To: <edumazet@google.com>, <davem@davemloft.net>
+Cc: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <dsahern@kernel.org>,
+        <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <yang.yang29@zte.com.cn>, <xu.xin16@zte.com.cn>,
+        <he.peilin@zte.com.cn>, <liu.chun2@zte.com.cn>,
+        <jiang.xuexin@zte.com.cn>, <zhang.yunkai@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIHYyXSBuZXQvaXB2NDogYWRkIHRyYWNlcG9pbnQgZm9yIGljbXBfc2VuZA==?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 42JCDnnN063621
+X-Fangmail-Gw-Spam-Type: 0
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 65F98190.000/4TzVy92HcgzW8Z
 
-On Thu, Feb 29, 2024 at 11:16:04AM +0100, Maxime Coquelin wrote:
-> Hello Michael,
-> 
-> On 2/1/24 09:40, Michael S. Tsirkin wrote:
-> > On Thu, Feb 01, 2024 at 09:34:11AM +0100, Maxime Coquelin wrote:
-> > > Hi Jason,
-> > > 
-> > > It looks like all patches got acked by you.
-> > > Any blocker to queue the series for next release?
-> > > 
-> > > Thanks,
-> > > Maxime
-> > 
-> > I think it's good enough at this point. Will put it in
-> > linux-next shortly.
-> > 
-> 
-> I fetched linux-next and it seems the series is not in yet.
-> Is there anything to be reworked on my side?
-> 
-> Thanks,
-> Maxime
+From: Peilin He<he.peilin@zte.com.cn>
 
-I am sorry I messed up. It was in a wrong branch and was not
-pushed so of course it did not get tested and I kept wondering
-why. I pushed it in my tree but it is too late to put it upstream
-for this cycle. Assuming Linus merges my tree
-with no drama, I will make an effort not to rebase my tree below them
-so these patches will keep their hashes, you can use them already.
+Introduce a tracepoint for icmp_send, which can help users to get more
+detail information conveniently when icmp abnormal events happen.
+
+1. Giving an usecase example:
+=============================
+When an application experiences packet loss due to an unreachable UDP
+destination port, the kernel will send an exception message through the
+icmp_send function. By adding a trace point for icmp_send, developers or
+system administrators can obtain detailed information about the UDP
+packet loss, including the type, code, source address, destination address,
+source port, and destination port. This facilitates the trouble-shooting
+of UDP packet loss issues especially for those network-service
+applications.
+
+2. Operation Instructions:
+==========================
+Switch to the tracing directory.
+        cd /sys/kernel/debug/tracing
+Filter for destination port unreachable.
+        echo "type==3 && code==3" > events/icmp/icmp_send/filter
+Enable trace event.
+        echo 1 > events/icmp/icmp_send/enable
+
+3. Result View:
+================
+ udp_client_erro-11370   [002] ...s.12   124.728002:
+ icmp_send: icmp_send: type=3, code=3.
+ From 127.0.0.1:41895 to 127.0.0.1:6666 ulen=23
+ skbaddr=00000000589b167a
+
+v1->v2:
+Some fixes according to
+https://lore.kernel.org/all/CANn89iL-y9e_VFpdw=sZtRnKRu_tnUwqHuFQTJvJsv-nz1xPDw@mail.gmail.com/
+	1. adjust the trace_icmp_send() to more protocols than UDP.
+	2. move the calling of trace_icmp_send after sanity checks
+	   in __icmp_send().
+
+Signed-off-by: Peilin He<he.peilin@zte.com.cn>
+Reviewed-by: xu xin <xu.xin16@zte.com.cn>
+Reviewed-by: Yunkai Zhang <zhang.yunkai@zte.com.cn>
+Cc: Yang Yang <yang.yang29@zte.com.cn>
+Cc: Liu Chun <liu.chun2@zte.com.cn>
+Cc: Xuexin Jiang <jiang.xuexin@zte.com.cn>
+---
+ include/trace/events/icmp.h | 64 +++++++++++++++++++++++++++++++++++++++++++++
+ net/ipv4/icmp.c             |  4 +++
+ 2 files changed, 68 insertions(+)
+ create mode 100644 include/trace/events/icmp.h
+
+diff --git a/include/trace/events/icmp.h b/include/trace/events/icmp.h
+new file mode 100644
+index 000000000000..c3dc337be7bc
+--- /dev/null
++++ b/include/trace/events/icmp.h
+@@ -0,0 +1,64 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM icmp
++
++#if !defined(_TRACE_ICMP_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_ICMP_H
++
++#include <linux/icmp.h>
++#include <linux/tracepoint.h>
++
++TRACE_EVENT(icmp_send,
++
++		TP_PROTO(const struct sk_buff *skb, int type, int code),
++
++		TP_ARGS(skb, type, code),
++
++		TP_STRUCT__entry(
++			__field(__u16, sport)
++			__field(__u16, dport)
++			__field(int, type)
++			__field(int, code)
++			__array(__u8, saddr, 4)
++			__array(__u8, daddr, 4)
++                	__field(const void *, skbaddr)
++			__field(unsigned short, ulen)
++		),
++
++		TP_fast_assign(
++			struct iphdr *iph = ip_hdr(skb);
++			int proto_4 = iph->protocol;
++			__be32 *p32;
++
++			__entry->skbaddr = skb;
++			__entry->type = type;
++			__entry->code = code;
++
++			if (proto_4 == IPPROTO_UDP) {
++				struct udphdr *uh = udp_hdr(skb);
++				__entry->sport = ntohs(uh->source);
++				__entry->dport = ntohs(uh->dest);
++				__entry->ulen = ntohs(uh->len);
++			} else {
++				__entry->sport = 0;
++				__entry->dport = 0;
++				__entry->ulen = 0;
++			}
++
++			p32 = (__be32 *) __entry->saddr;
++			*p32 = iph->saddr;
++
++			p32 = (__be32 *) __entry->daddr;
++			*p32 = iph->daddr;
++		),
++
++		TP_printk("icmp_send: type=%d, code=%d. From %pI4:%u to %pI4:%u ulen=%d skbaddr=%p",
++			__entry->type, __entry->code,
++			__entry->saddr, __entry->sport, __entry->daddr,
++			__entry->dport, __entry->ulen, __entry->skbaddr)
++);
++
++#endif /* _TRACE_ICMP_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+\ No newline at end of file
+diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
+index e63a3bf99617..21fb41257fe9 100644
+--- a/net/ipv4/icmp.c
++++ b/net/ipv4/icmp.c
+@@ -92,6 +92,8 @@
+ #include <net/inet_common.h>
+ #include <net/ip_fib.h>
+ #include <net/l3mdev.h>
++#define CREATE_TRACE_POINTS
++#include <trace/events/icmp.h>
+
+ /*
+  *	Build xmit assembly blocks
+@@ -672,6 +674,8 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
+ 		}
+ 	}
+
++	trace_icmp_send(skb_in, type, code);
++
+ 	/* Needed by both icmp_global_allow and icmp_xmit_lock */
+ 	local_bh_disable();
 
 -- 
-MST
-
+2.15.2
