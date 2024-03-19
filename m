@@ -1,212 +1,300 @@
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A188489;
-	Tue, 19 Mar 2024 00:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE3948465;
+	Tue, 19 Mar 2024 00:35:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710808299; cv=none; b=R5+IIrBRhpw3cP2BukviY2dAbkTXIkl2GAvGaWfhLXnerv0qiQYkiLREQNxXi0yM8AWfjmzEMkfZC0CrL61qNjWYZUUenKpwUV5Ymy7UJYbu2JOild0r2tQjmImdOPa1WZBGmSnwKd4m5zJxiHGL7bDSU+W13M+4v+NKxKBlRlU=
+	t=1710808531; cv=none; b=sJiFhsLXRusDG5z4NlDb6tXEA5DAKdT1xpnFtKHzOYoFs1zjxu+O6j57G/oC23Bvm5FxK4Icb/dMu929ekOuL1wsZ3iCg7cNrkVDWWlkB6d0DtmblcjVgJzsZTl70sZC5Ll21nIRWquJ89qnITxEShhin9myCCKu732pcqYLJF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710808299; c=relaxed/simple;
-	bh=Ju5FiwD0/Poegw+WicEP42Mt789iqidnebQo4EBb6/Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=BZwV/GJvtHR3JJDghneF9p9R5c5Zoj+HEnq7LFydnz4HsLA+teEG1HxFZKkhTKZDEQNuG1ITU9TF3w3vPoEpYaXc28bonhEjouYPNHZ1ANfDhxt1nrCHrzJleJ89wFV1MtoshuZy5hXMZmO/8zXiE+fIPzFgD0Pu99NQcB1g58I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=loU4GwBy; arc=none smtp.client-ip=37.18.73.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
+	s=arc-20240116; t=1710808531; c=relaxed/simple;
+	bh=evt/QjjewDa5FyHkyULrULdNpk3hc17dFGup/YxaVVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ufHfjdC+LHL5wX0Qd4kNa6NF37p7R0jVrsgm5ScNk/WXWFlBnBUcFixddNSiolJ9buFK1/GSuVEA2sk6teAb27IhYMbWc3JqEf/4IfTJKqiJcc2hVtCUuyKFDLFcBINvhgLRmfOdi4r/7c/ffpDHro+r0X0sW0PxeY/jgoXA6Wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=G3C4LgSr; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="loU4GwBy"
-Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id A3E89100007;
-	Tue, 19 Mar 2024 03:31:32 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru A3E89100007
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1710808292;
-	bh=+YwZKtSaR+pjRPk6L9WeQ8b6BmPf9L3Et32PnbS21HY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=loU4GwByqN5/mXr3sPY0IbEQ4WiTXG4iuIV6E5c3JKFJ/oFTF3Fzaai6uOXUIM1Rw
-	 S1fSzLqsApsfzp8jo7HYC9+BOGIS8I3NrCTUCvrzVfQM3HYw/j4ZFdbWj0YbZ3OLdQ
-	 +zIP6iUk6FSerAYZld7gbxkexFedcYtmDstikVEbgxnx4UJ0hrf3RIeXZ0apeZi4JK
-	 bVi7aoShiICvR4VJm1iNeDP/6sIYEO+/vvkI6qMQSP3apoA0PVlwGprRyKGsvf6KBl
-	 fDiXZR6veUjw0+oGU/IaJ4Pc9lMNRvA4QhH2RZqK/+a1Rz6LGE50X6SUCSOBF9Y7yW
-	 klLSoot5ABQVQ==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue, 19 Mar 2024 03:31:31 +0300 (MSK)
-Received: from [172.28.224.29] (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 19 Mar 2024 03:31:30 +0300
-Message-ID: <158343f2-23af-4260-b631-922d81afce88@salutedevices.com>
-Date: Tue, 19 Mar 2024 03:30:45 +0300
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="G3C4LgSr"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0614F480;
+	Tue, 19 Mar 2024 01:34:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1710808500;
+	bh=evt/QjjewDa5FyHkyULrULdNpk3hc17dFGup/YxaVVE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G3C4LgSr6TPfDOFVC1xkw6FIzkOyvHyt+X0wjg6d1WuuatSGibUEmxq6m8DoqBAkD
+	 F8tLyiV37TUekoASi3EGXifXz64wLX5nHt/UrArTJArUMrf1Ys0oAaVWkDhuO57//N
+	 N/4Cfk77ApWqTJYzr+Nr92IRGMNdxDcT7Ys/g2To=
+Date: Tue, 19 Mar 2024 02:35:23 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Anatoliy Klymenko <anatoliy.klymenko@amd.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Michal Simek <michal.simek@amd.com>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH v2 5/8] drm: xlnx: zynqmp_dpsub: Set input live format
+Message-ID: <20240319003523.GW13682@pendragon.ideasonboard.com>
+References: <20240312-dp-live-fmt-v2-0-a9c35dc5c50d@amd.com>
+ <20240312-dp-live-fmt-v2-5-a9c35dc5c50d@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 13/25] ASoC: dt-bindings: meson: axg-pdm: document
- 'sysrate' property
-Content-Language: en-US
-To: Jerome Brunet <jbrunet@baylibre.com>
-CC: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Neil Armstrong
-	<neil.armstrong@linaro.org>, Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman
-	<khilman@baylibre.com>, Martin Blumenstingl
-	<martin.blumenstingl@googlemail.com>, Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	<linux-amlogic@lists.infradead.org>, <linux-clk@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <alsa-devel@alsa-project.org>,
-	<linux-sound@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-	<kernel@salutedevices.com>
-References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
- <20240314232201.2102178-14-jan.dakinevich@salutedevices.com>
- <ca80caab-2664-4797-a222-e14537eea440@linaro.org>
- <1jil1nhjwd.fsf@starbuckisacylon.baylibre.com>
- <6feba9ff-8bbf-4494-93f0-732679bc4032@salutedevices.com>
- <1j1q87hkq2.fsf@starbuckisacylon.baylibre.com>
- <1jwmpzg1hq.fsf@starbuckisacylon.baylibre.com>
-From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-In-Reply-To: <1jwmpzg1hq.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184250 [Mar 18 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: YVDakinevich@sberdevices.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 10 0.3.10 53c821b925e16276b831986eabc71d60ab82ee60, {Tracking_smtp_not_equal_from}, {Tracking_bl_eng_cat, c15}, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;sberdevices.ru:7.1.1,5.0.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;100.64.160.123:7.1.2;salutedevices.com:7.1.1;smtp.sberdevices.ru:7.1.1,5.0.1, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_white_helo}, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/03/18 21:41:00 #24279760
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240312-dp-live-fmt-v2-5-a9c35dc5c50d@amd.com>
 
+Hi Anatoliy,
 
+Thank you for the patch.
 
-On 3/18/24 15:19, Jerome Brunet wrote:
+On Tue, Mar 12, 2024 at 05:55:02PM -0700, Anatoliy Klymenko wrote:
+> Program live video input format according to selected media bus format.
 > 
-> On Mon 18 Mar 2024 at 11:55, Jerome Brunet <jbrunet@baylibre.com> wrote:
-> 
->> On Sun 17 Mar 2024 at 18:52, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
->>
->>> On 3/15/24 13:22, Jerome Brunet wrote:
->>>>
->>>> On Fri 15 Mar 2024 at 11:00, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
->>>>
->>>>> On 15/03/2024 00:21, Jan Dakinevich wrote:
->>>>>> This option allow to redefine the rate of DSP system clock.
->>>>>
->>>>> And why is it suitable for bindings? Describe the hardware, not what you
->>>>> want to do in the driver.
->>>>>
->>>>>>
->>>>>> Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
->>>>>> ---
->>>>>>  Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml | 4 ++++
->>>>>>  1 file changed, 4 insertions(+)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
->>>>>> index df21dd72fc65..d2f23a59a6b6 100644
->>>>>> --- a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
->>>>>> +++ b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
->>>>>> @@ -40,6 +40,10 @@ properties:
->>>>>>    resets:
->>>>>>      maxItems: 1
->>>>>>  
->>>>>> +  sysrate:
->>>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>>>>> +    description: redefine rate of DSP system clock
->>>>>
->>>>> No vendor prefix, so is it a generic property? Also, missing unit
->>>>> suffix, but more importantly I don't understand why this is a property
->>>>> of hardware.
->>>>
->>>> +1.
->>>>
->>>> The appropriate way to set rate of the clock before the driver take over
->>>> is 'assigned-rate', if you need to customize this for different
->>>> platform.
->>>>
->>>
->>> It would be great, but it doesn't work. Below, is what I want to see:
->>>
->>> 	assigned-clocks =
->>> 		<&clkc_audio AUD2_CLKID_PDM_SYSCLK_SEL>,
->>> 		<&clkc_audio AUD2_CLKID_PDM_SYSCLK_DIV>;
->>> 	assigned-clock-parents =
->>> 		<&clkc_pll CLKID_FCLK_DIV3>,
->>> 		<0>;
->>> 	assigned-clock-rates =
->>> 		<0>,
->>> 		<256000000>;
->>>
->>> But regardles of this declaration, PDM's driver unconditionally sets
->>> sysclk'rate to 250MHz and throws away everything that was configured
->>> before, reparents audio2_pdm_sysclk_mux to hifi_pll and changes
->>> hifi_pll's rate.
->>>
->>> This value 250MHz is declared here:
->>>
->>> static const struct axg_pdm_cfg axg_pdm_config = {
->>> 	.filters = &axg_default_filters,
->>> 	.sys_rate = 250000000,
->>> };
->>>
->>> The property 'sysrate' is intended to redefine hardcoded 'sys_rate'
->>> value in 'axg_pdm_config'.
->>
->> What is stopping you from removing that from the driver and adding
->> assigned-rate to 250M is the existing platform ?
-> 
-> ... Also, considering how PDM does work, I'm not sure I get the point of
-> the doing all this to go from 250MHz to 256Mhz.
-> 
+> In the bridge mode of operation, DPSUB is connected to FPGA CRTC which
+> almost certainly supports a single media bus format as its output. Expect
+> this to be delivered via the new bridge atomic state. Program DPSUB
+> registers accordingly.
 
-The point is to use fclk_div3 clock as source for PDM's sysclock and
-keep hiff_pll clock free for TDM. Because, I can get 256MHz from any
-hifi_pll and fclk_div3, but only hifi_pll is able to provide accurate
-48kHz (after several divider).
+No line breaks within paragraphs. Add a blank line if you want to
+paragraphs, remove the line break otherwise.
 
-> PDM value is sampled at ~75% of the half period. That clock basically
-> feeds a counter and the threshold is adjusted based on the clock rate.
+> Update zynqmp_disp_layer_set_format() API to fit both live and non-live
+> layer types.
 > 
-> So there is no need to change the rate. Changing it is only necessary
-> when the captured audio rate is extremely slow (<8kHz) and the counter
-> may overflow. The driver already adjust this automatically.
+> Signed-off-by: Anatoliy Klymenko <anatoliy.klymenko@amd.com>
+> ---
+>  drivers/gpu/drm/xlnx/zynqmp_disp.c | 93 +++++++++++++++++++++++++++++++-------
+>  drivers/gpu/drm/xlnx/zynqmp_disp.h |  2 +-
+>  drivers/gpu/drm/xlnx/zynqmp_dp.c   | 13 ++++--
+>  drivers/gpu/drm/xlnx/zynqmp_kms.c  |  2 +-
+>  4 files changed, 87 insertions(+), 23 deletions(-)
 > 
-> So changing the input rate from 250MHz to 256MHz should not make any
-> difference.
-> 
+> diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+> index dd48fa60fa9a..0cacd597f4b8 100644
+> --- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
+> +++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+> @@ -383,7 +383,7 @@ static const struct zynqmp_disp_format avbuf_live_fmts[] = {
+>  				  ZYNQMP_DISP_AV_BUF_LIVE_CONFIG_FMT_RGB,
+>  		.sf		= scaling_factors_666,
+>  	}, {
+> -		.bus_fmt	= MEDIA_BUS_FMT_UYVY8_1X24,
+> +		.bus_fmt	= MEDIA_BUS_FMT_RBG888_1X24,
 
-Thank you for the explanation.
+Does this belong to a previous patch ?
 
->>
->>>
->>>> Then you don't have to deal with it in the device driver.
->>>>
->>>>>
->>>>> Best regards,
->>>>> Krzysztof
->>>>
->>>>
-> 
+>  		.buf_fmt	= ZYNQMP_DISP_AV_BUF_LIVE_CONFIG_BPC_8 |
+>  				  ZYNQMP_DISP_AV_BUF_LIVE_CONFIG_FMT_RGB,
+>  		.sf		= scaling_factors_888,
+> @@ -433,19 +433,28 @@ static void zynqmp_disp_avbuf_set_format(struct zynqmp_disp *disp,
+>  					 const struct zynqmp_disp_format *fmt)
+>  {
+>  	unsigned int i;
+> -	u32 val;
+> +	u32 val, reg;
+>  
+> -	val = zynqmp_disp_avbuf_read(disp, ZYNQMP_DISP_AV_BUF_FMT);
+> -	val &= zynqmp_disp_layer_is_video(layer)
+> -	    ? ~ZYNQMP_DISP_AV_BUF_FMT_NL_VID_MASK
+> -	    : ~ZYNQMP_DISP_AV_BUF_FMT_NL_GFX_MASK;
+> -	val |= fmt->buf_fmt;
+> -	zynqmp_disp_avbuf_write(disp, ZYNQMP_DISP_AV_BUF_FMT, val);
+> +	layer->disp_fmt = fmt;
+> +	if (layer->mode == ZYNQMP_DPSUB_LAYER_NONLIVE) {
+> +		reg = ZYNQMP_DISP_AV_BUF_FMT;
+> +		val = zynqmp_disp_avbuf_read(disp, ZYNQMP_DISP_AV_BUF_FMT);
+> +		val &= zynqmp_disp_layer_is_video(layer)
+> +		    ? ~ZYNQMP_DISP_AV_BUF_FMT_NL_VID_MASK
+> +		    : ~ZYNQMP_DISP_AV_BUF_FMT_NL_GFX_MASK;
+> +		val |= fmt->buf_fmt;
+> +	} else {
+> +		reg = zynqmp_disp_layer_is_video(layer)
+> +		    ? ZYNQMP_DISP_AV_BUF_LIVE_VID_CONFIG
+> +		    : ZYNQMP_DISP_AV_BUF_LIVE_GFX_CONFIG;
+> +		val = fmt->buf_fmt;
+> +	}
+> +	zynqmp_disp_avbuf_write(disp, reg, val);
+>  
+>  	for (i = 0; i < ZYNQMP_DISP_AV_BUF_NUM_SF; i++) {
+> -		unsigned int reg = zynqmp_disp_layer_is_video(layer)
+> -				 ? ZYNQMP_DISP_AV_BUF_VID_COMP_SF(i)
+> -				 : ZYNQMP_DISP_AV_BUF_GFX_COMP_SF(i);
+> +		reg = zynqmp_disp_layer_is_video(layer)
+> +		    ? ZYNQMP_DISP_AV_BUF_VID_COMP_SF(i)
+> +		    : ZYNQMP_DISP_AV_BUF_GFX_COMP_SF(i);
+>  
+>  		zynqmp_disp_avbuf_write(disp, reg, fmt->sf[i]);
+>  	}
+> @@ -984,23 +993,73 @@ void zynqmp_disp_layer_disable(struct zynqmp_disp_layer *layer)
+>  	zynqmp_disp_blend_layer_disable(layer->disp, layer);
+>  }
+>  
+> +struct zynqmp_disp_bus_to_drm {
+> +	u32 bus_fmt;
+> +	u32 drm_fmt;
+> +};
+> +
+> +/**
+> + * zynqmp_disp_reference_drm_format - Get reference DRM format corresponding
+> + * to the given media bus format.
+> + * @bus_format: Media bus format
+> + *
+> + * Map media bus format to some DRM format that represents the same color space
+> + * and chroma subsampling as the @bus_format video signal. These DRM format
+> + * properties are required to program the blender.
+> + *
+> + * Return: DRM format code corresponding to @bus_format
+> + */
+> +static u32 zynqmp_disp_reference_drm_format(u32 bus_format)
+> +{
+> +	static const struct zynqmp_disp_bus_to_drm format_map[] = {
+> +		{
+> +			.bus_fmt = MEDIA_BUS_FMT_RGB666_1X18,
+> +			.drm_fmt = DRM_FORMAT_RGB565,
+> +		}, {
+> +			.bus_fmt = MEDIA_BUS_FMT_RBG888_1X24,
+> +			.drm_fmt = DRM_FORMAT_RGB888,
+> +		}, {
+> +			.bus_fmt = MEDIA_BUS_FMT_UYVY8_1X16,
+> +			.drm_fmt = DRM_FORMAT_YUV422,
+> +		}, {
+> +			.bus_fmt = MEDIA_BUS_FMT_VUY8_1X24,
+> +			.drm_fmt = DRM_FORMAT_YUV444,
+> +		}, {
+> +			.bus_fmt = MEDIA_BUS_FMT_UYVY10_1X20,
+> +			.drm_fmt = DRM_FORMAT_P210,
+> +		},
+
+Hmmmm... Looking at this, I think you should have both bus_fmt and
+drm_fmt in zynqmp_disp_format. It seems it would simplify the code flow
+and make things more readable. If you would like me to give it a try,
+please let me know.
+
+> +	};
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(format_map); ++i)
+> +		if (format_map[i].bus_fmt == bus_format)
+> +			return format_map[i].drm_fmt;
+> +
+> +	return DRM_FORMAT_INVALID;
+> +}
+> +
+>  /**
+>   * zynqmp_disp_layer_set_format - Set the layer format
+>   * @layer: The layer
+> - * @info: The format info
+> + * @drm_or_bus_format: DRM or media bus format
+>   *
+>   * Set the format for @layer to @info. The layer must be disabled.
+>   */
+>  void zynqmp_disp_layer_set_format(struct zynqmp_disp_layer *layer,
+> -				  const struct drm_format_info *info)
+> +				  u32 drm_or_bus_format)
+>  {
+>  	unsigned int i;
+>  
+> -	layer->disp_fmt = zynqmp_disp_layer_find_format(layer, info->format);
+> -	layer->drm_fmt = info;
+> -
+> +	layer->disp_fmt = zynqmp_disp_layer_find_format(layer, drm_or_bus_format);
+>  	zynqmp_disp_avbuf_set_format(layer->disp, layer, layer->disp_fmt);
+>  
+> +	if (layer->mode == ZYNQMP_DPSUB_LAYER_LIVE)
+> +		drm_or_bus_format = zynqmp_disp_reference_drm_format(drm_or_bus_format);
+> +
+> +	layer->drm_fmt = drm_format_info(drm_or_bus_format);
+> +	if (!layer->drm_fmt)
+> +		return;
+> +
+>  	if (layer->mode == ZYNQMP_DPSUB_LAYER_LIVE)
+>  		return;
+>  
+> @@ -1008,7 +1067,7 @@ void zynqmp_disp_layer_set_format(struct zynqmp_disp_layer *layer,
+>  	 * Set pconfig for each DMA channel to indicate they're part of a
+>  	 * video group.
+>  	 */
+> -	for (i = 0; i < info->num_planes; i++) {
+> +	for (i = 0; i < layer->drm_fmt->num_planes; i++) {
+>  		struct zynqmp_disp_layer_dma *dma = &layer->dmas[i];
+>  		struct xilinx_dpdma_peripheral_config pconfig = {
+>  			.video_group = true,
+> diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.h b/drivers/gpu/drm/xlnx/zynqmp_disp.h
+> index 88c285a12e23..9f9a5f50ffbc 100644
+> --- a/drivers/gpu/drm/xlnx/zynqmp_disp.h
+> +++ b/drivers/gpu/drm/xlnx/zynqmp_disp.h
+> @@ -55,7 +55,7 @@ u32 *zynqmp_disp_layer_formats(struct zynqmp_disp_layer *layer,
+>  void zynqmp_disp_layer_enable(struct zynqmp_disp_layer *layer);
+>  void zynqmp_disp_layer_disable(struct zynqmp_disp_layer *layer);
+>  void zynqmp_disp_layer_set_format(struct zynqmp_disp_layer *layer,
+> -				  const struct drm_format_info *info);
+> +				  u32 drm_or_bus_format);
+>  int zynqmp_disp_layer_update(struct zynqmp_disp_layer *layer,
+>  			     struct drm_plane_state *state);
+>  
+> diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> index a0d169ac48c0..fc6b1d783c28 100644
+> --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> @@ -1281,7 +1281,8 @@ static void zynqmp_dp_disp_enable(struct zynqmp_dp *dp,
+>  {
+>  	enum zynqmp_dpsub_layer_id layer_id;
+>  	struct zynqmp_disp_layer *layer;
+> -	const struct drm_format_info *info;
+> +	struct drm_bridge_state *bridge_state;
+> +	u32 bus_fmt;
+>  
+>  	if (dp->dpsub->connected_ports & BIT(ZYNQMP_DPSUB_PORT_LIVE_VIDEO))
+>  		layer_id = ZYNQMP_DPSUB_LAYER_VID;
+> @@ -1291,10 +1292,14 @@ static void zynqmp_dp_disp_enable(struct zynqmp_dp *dp,
+>  		return;
+>  
+>  	layer = dp->dpsub->layers[layer_id];
+> +	bridge_state = drm_atomic_get_new_bridge_state(old_bridge_state->base.state,
+> +						       old_bridge_state->bridge);
+> +	if (WARN_ON(!bridge_state))
+> +		return;
+> +
+> +	bus_fmt = bridge_state->input_bus_cfg.format;
+> +	zynqmp_disp_layer_set_format(layer, bus_fmt);
+>  
+> -	/* TODO: Make the format configurable. */
+> -	info = drm_format_info(DRM_FORMAT_YUV422);
+> -	zynqmp_disp_layer_set_format(layer, info);
+>  	zynqmp_disp_layer_enable(layer);
+>  
+>  	if (layer_id == ZYNQMP_DPSUB_LAYER_GFX)
+> diff --git a/drivers/gpu/drm/xlnx/zynqmp_kms.c b/drivers/gpu/drm/xlnx/zynqmp_kms.c
+> index bf9fba01df0e..d96b3f3f2e3a 100644
+> --- a/drivers/gpu/drm/xlnx/zynqmp_kms.c
+> +++ b/drivers/gpu/drm/xlnx/zynqmp_kms.c
+> @@ -111,7 +111,7 @@ static void zynqmp_dpsub_plane_atomic_update(struct drm_plane *plane,
+>  		if (old_state->fb)
+>  			zynqmp_disp_layer_disable(layer);
+>  
+> -		zynqmp_disp_layer_set_format(layer, new_state->fb->format);
+> +		zynqmp_disp_layer_set_format(layer, new_state->fb->format->format);
+>  	}
+>  
+>  	zynqmp_disp_layer_update(layer, new_state);
 > 
 
 -- 
-Best regards
-Jan Dakinevich
+Regards,
+
+Laurent Pinchart
