@@ -1,131 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08CB651AD;
-	Tue, 19 Mar 2024 15:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5517024B33;
+	Tue, 19 Mar 2024 15:26:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710861915; cv=none; b=CBdvskjl6ILtvfURp+HTeQHxoVoNj+Z6NXOJvE0+DZLNebTFVCP9p754f3W4TAs5qOG/etiE1vMq2IZCWZgPzhJTQ++mIj8F3wgVDAavzW2O6gKoyjsbGRyHCrMb0HZEcx37LREBF0fjcSpcJOPluZOT0JOGWyRGflvLNmwilog=
+	t=1710861995; cv=none; b=uIBV9Zvs3FHpikLBsTaqY6OWH9CbRKEOJz6f2kGQZ7nzKYRXba3/gUBZ4hHN20pG+Q/1EKaBqksgv3qqOwzGo20wYyStyRuD2ZTUD8yxPzyfrmVFPGZkfN8hfT2gpZKr9gMg2cmJDvJsas7IQfbvw96QZ3htNui/PN0sG7xdoUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710861915; c=relaxed/simple;
-	bh=XgC+oIhFKtNDAik4l1Rt4yEt/LCvYMBQQFsAEqu4RWY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=MfApuk8iTsxJ0+mla1jcvLm+YdWuUsXPW041mHEuqQVqr3Zk/eFclJ2ai3VG150DBZEwJ/sZrIYIAF9kr3O39IsR0jvMfjT9oDcHbXB1TK7QKXZcbCzo3/UVtcrw87hC4dWeB+De4mGh7e439xMfbex8cbu9OLzhl3Q4xA64f0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gNW3A9Xt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710861995; c=relaxed/simple;
+	bh=yNuXDV24kN5Tq58Ff6lS2FO83vxVjbX+X+J+Juwqd4Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E6Fs4rAAGvVN6T+SJQQrEkwVylz4I7Idlp8XnyqYUH7GMNv4HhbycXjYi0jfOFFVq/9N6B0GNj+WihZt6ykLU8cwR4vwsi3vHpZHLXr9wTxgL2ThLF3zIvlZWzGm/hycL4g8iu26wwsYe0x7hmjg61y9ts3PCDUt9UQ4QOazDDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=TmXklku9; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gNW3A9Xt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1445C433F1;
-	Tue, 19 Mar 2024 15:25:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710861915;
-	bh=XgC+oIhFKtNDAik4l1Rt4yEt/LCvYMBQQFsAEqu4RWY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=gNW3A9XtthFbAruB4DGpESZNAV1KN7mmlGxyiZZhLekabuNokSizuQkGZV6m12yhX
-	 1aQeojCjTR+MblE2ZDWyqK6rS9/4vvZ8hFBkvmKInBQpuVZ1BdU0kSAYTbe4xe2GgP
-	 SyLuUeGLKpnezme4H8RyzHbyt3CYoJAvNF7SVxYBKf5CRnnrU8jC/9ykJzzmKf7MwD
-	 iqn+Gavfvn2TETe4YmigKmDmiJhoZUnr1rcxbCDm7ysQLf1KW0/sIXrfThdlIklqKx
-	 PwWA/TfLYmjZp+ZA3YjWlBfohdtpp7TYFsPE0mnuTOYht8IwvuL0IizcJii6QISu4h
-	 RXYl3H3Re8uXA==
-Date: Tue, 19 Mar 2024 10:25:13 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Rob Herring <robh@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
-	Max Zhen <max.zhen@amd.com>, Sonal Santan <sonal.santan@amd.com>,
-	Stefano Stabellini <stefano.stabellini@xilinx.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	PCI <linux-pci@vger.kernel.org>,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v2 0/2] Attach DT nodes to existing PCI devices
-Message-ID: <20240319152513.GA1227721@bhelgaas>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="TmXklku9"
+Received: from [192.168.42.20] (pd9e59c8a.dip0.t-ipconnect.de [217.229.156.138])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 873592FC010D;
+	Tue, 19 Mar 2024 16:18:41 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1710861522;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OLYrKqHUM/IS0ZPTvZGbAWfjnkzw3USLCJuf00OnxW8=;
+	b=TmXklku9GoSmsAqKgvFjAdvKArNOxe6Ng926gjBEtTf3XVHFd/jpvZ05aFiBmld1CLguCq
+	muxHUNdiSvwyaj1HS4SM2wSgyiAPBU5Dxil0wx0FqvM6OC6irM8F8Sz1HUvSQibYPNc+iL
+	4yi62HVK0MqzxvgZENWETG1QP4z7yRg=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <93d70ac3-bb18-4732-abb4-134750a5b50c@tuxedocomputers.com>
+Date: Tue, 19 Mar 2024 16:18:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: Future handling of complex RGB devices on Linux v3
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Lee Jones <lee@kernel.org>, jikos@kernel.org,
+ linux-kernel@vger.kernel.org, Jelle van der Waa <jelle@vdwaa.nl>,
+ Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ linux-input@vger.kernel.org, ojeda@kernel.org, linux-leds@vger.kernel.org,
+ Pavel Machek <pavel@ucw.cz>, Gregor Riepl <onitake@gmail.com>
+References: <0cdb78b1-7763-4bb6-9582-d70577781e61@tuxedocomputers.com>
+ <7228f2c6-fbdd-4e19-b703-103b8535d77d@redhat.com>
+ <730bead8-6e1d-4d21-90d2-4ee73155887a@tuxedocomputers.com>
+ <952409e1-2f0e-4d7a-a7a9-3b78f2eafec7@redhat.com>
+ <9851a06d-956e-4b57-be63-e10ff1fce8b4@tuxedocomputers.com>
+ <1bc6d6f0-a13d-4148-80cb-9c13dec7ed32@redhat.com>
+ <b70b2ea8-abfd-4d41-b336-3e34e5bdb8c6@tuxedocomputers.com>
+ <477d30ee-247e-47e6-bc74-515fd87fdc13@redhat.com>
+ <e21a7d87-3059-4a51-af04-1062dac977d2@tuxedocomputers.com>
+ <247b5dcd-fda8-45a7-9896-eabc46568281@tuxedocomputers.com>
+ <ZdZ2kMASawJ9wdZj@duo.ucw.cz>
+ <b6d79727-ae94-44b1-aa88-069416435c14@redhat.com>
+ <a21f6c49-2c05-4496-965c-a7524ed38634@gmail.com>
+ <825129ea-d389-4c6c-8a23-39f05572e4b4@redhat.com>
+ <adbfdf6c-fb59-4fae-a472-17b04dd8a3f6@tuxedocomputers.com>
+ <281f9b71-a565-4ff3-8343-ca36d604584d@redhat.com>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <281f9b71-a565-4ff3-8343-ca36d604584d@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231215145207.0cf098e5@bootlin.com>
 
-[+cc Krzysztof]
+Hi Hans,
 
-On Fri, Dec 15, 2023 at 02:52:07PM +0100, Herve Codina wrote:
-> On Mon, 4 Dec 2023 07:59:09 -0600
-> Rob Herring <robh@kernel.org> wrote:
-> > On Mon, Dec 4, 2023 at 6:43 AM Herve Codina <herve.codina@bootlin.com> wrote:
-> > > On Fri, 1 Dec 2023 16:26:45 -0600
-> > > Rob Herring <robh@kernel.org> wrote:
-> > > > On Thu, Nov 30, 2023 at 10:57 AM Herve Codina <herve.codina@bootlin.com> wrote:  
-> > > > ...
+Am 18.03.24 um 12:11 schrieb Hans de Goede:
+> Hi Werner,
+>
+> Sorry for the late reply.
+np
+>
+> On 2/22/24 2:14 PM, Werner Sembach wrote:
+>> Hi,
+>>
+>> Thanks everyone for the exhaustive feedback. And at least this thread is a good comprehesive reference for the future ^^.
+>>
+>> To recap the hopefully final UAPI for complex RGB lighting devices:
+>>
+>> - By default there is a singular /sys/class/leds/* entry that treats the device as if it was a single zone RGB keyboard backlight with no special effects.
+> Ack this sounds good.
+>
+>> - There is an accompanying misc device with the sysfs attributes "name", "device_type",  "firmware_version_string", "serial_number" for device identification and "use_leds_uapi" that defaults to 1.
+> You don't need a char misc device here, you can just make this sysfs attributes on the LED class device's parent device by using device_driver.dev_groups. Please don't use a char misc device just to attach sysfs attributes to it.
+>
+> Also I'm a bit unsure about most of these attributes, "use_leds_uapi" was discussed before
+> and makes sense. But at least for HID devices the rest of this info is already available
+> in sysfs attributes on the HID devices (things like vendor and product id) and since the
+> userspace code needs per device code to drive the kbd anyways it can also have device
+> specific code to retrieve all this info, so the other sysfs attributes just feel like
+> duplicating information. Also there already are a ton of existing hidraw userspace rgbkbd
+> drivers which already get this info from other places.
+The parent device can be a hid device, a wmi device, a platform device etc. so I 
+thought it would be nice to have some unified way for identification.
+>
+>>      - If set to 0 the /sys/class/leds/* entry disappears. The driver should keep the last state the backlight was in active if possible.
+>>
+>>      - If set 1 it appears again. The driver should bring it back to a static 1 zone setting while avoiding flicker if possible.
+> Ack, if this finds it way into some documentation (which it should) please make it
+> clear that this is about the "use_leds_uapi" sysfs attribute.
+Ack
+>
+>> - If the device is not controllable by for example hidraw, the misc device might also implement additional ioctls or sysfs attributes to allow a more complex low level control for the keyboard backlight. This is will be a highly vendor specific UAPI.
+> IMHO this is the only case where actually using a misc device makes sense, so that
+> you have a chardev to do the ioctls on. misc-device-s should really only be used
+> when you need a chardev under /dev . Since you don't need the chardev for the e.g.
+> hidraw case you should not use a miscdev there IMHO.
 
-> > > > --- a/drivers/pci/of.c
-> > > > +++ b/drivers/pci/of.c
-> > > > @@ -31,6 +31,8 @@ int pci_set_of_node(struct pci_dev *dev)
-> > > >                 return 0;
-> > > >
-> > > >         node = of_pci_find_child_device(dev->bus->dev.of_node, dev->devfn);
-> > > > +       if (!node && pci_is_bridge(dev))
-> > > > +               of_pci_make_dev_node(dev);
-> > > >         if (!node)
-> > > >                 return 0;  
-> > >
-> > > Maybe it is too early.
-> > > of_pci_make_dev_node() creates a node and fills some properties based on
-> > > some already set values available in the PCI device such as its struct resource
-> > > values.
-> > > We need to have some values set by the PCI infra in order to create our DT node
-> > > with correct values.  
-> > 
-> > Indeed, that's probably the issue I'm having. In that case,
-> > DECLARE_PCI_FIXUP_HEADER should work. That's later, but still before
-> > device_add().
-> > 
-> > I think modifying sysfs after device_add() is going to race with
-> > userspace. Userspace is notified of a new device, and then the of_node
-> > link may or may not be there when it reads sysfs. Also, not sure if
-> > we'll need DT modaliases with PCI devices, but they won't work if the
-> > DT node is not set before device_add().
-> 
-> DECLARE_PCI_FIXUP_HEADER is too early as well as doing the DT node creation
-> just before the device_add() call.
-> Indeed, in order to fill the DT properties, resources need to be assigned
-> (needed for the 'ranges' property used for addresses translation).
-> The resources assignment is done after the call to device_add().
+My train of thought was that it would be nice to have the use_leds_uapi at a 
+somewhat unified location in sysfs. The parent device can be of any kind, like I 
+mentioned above, and while for deactivating it can easily be found via 
+/sys/class/leds/*/device/. For reactivating, the leds entry doesn't exist.
 
-Do we need to know the actual address *value* before creating the
-sysfs file, or is it enough to know that the file should *exist*, even
-if the value may be changed later?
+>
+>>      - The actual logic interacting with this low level UAPI is implemented by a userspace driver
+>>
+>> Implementation wise: For the creation of the misc device with the use_leds_uapi switch a helper function/macro might be useful? Wonder if it should go into leds.h, led-class-multicolor.h, or a new header file?
+> See above, I don't think we want the misc device for the hidraw case, at which
+> point I think the helper becomes unnecessary since just a single sysfs write
+> callback is necessary.
+>
+> Also for adding new sysfs attributes it is strongly encouraged to use
+> device_driver.dev_groups so that the device core handled registering /
+> unregistering the sysfs attributes which fixes a bunch of races; and
+> using device_driver.dev_groups does not mix well with a helper as you've
+> suggested.
+Ok, I will see when I start implementing.
+>
+>> - Out of my head it would look something like this:
+>>
+>> led_classdev_add_optional_misc_control(
+>>      struct led_classdev *led_cdev,
+>>      char* name,
+>>      char* device_type,
+>>      char* firmware_version_string,
+>>      char* serial_number,
+>>      void (*deregister_led)(struct led_classdev *led_cdev),
+>>      void (*reregister_led)(struct led_classdev *led_cdev))
+>>
+>> Let me know your thoughts and hopefully I can start implementing it soon for one of our devices.
+> I think overall the plan sounds good, with my main suggested change
+> being to not use an unnecessary misc device for the hid-raw case.
+>
+> Regards,
+>
+> Hans
+>
+>
+Thanks for the feedback,
 
-> Some PCI sysfs files are already created after adding the device by the
-> pci_create_sysfs_dev_files() call:
->   https://elixir.bootlin.com/linux/v6.6/source/drivers/pci/bus.c#L347
-> 
-> Is it really an issue to add the of_node link to sysfs on an already
-> present device ?
+Werner
 
-Yes, I think this would be an issue.  We've been trying to get rid of
-pci_create_sysfs_dev_files() altogether because there's a long history
-of race issues related to it:
-
-  https://lore.kernel.org/r/1271099285.9831.13.camel@localhost/ WARNING: at fs/sysfs/dir.c:451 sysfs_add_one: sysfs: cannot create duplicate filename '/devices/pci0000:00/0000:00:01.0/slot'
-  https://lore.kernel.org/r/19461.26166.427857.612983@pilspetsen.it.uu.se/ [2.6.35-rc1 regression] sysfs: cannot create duplicate filename ... XVR-600 related?
-  https://lore.kernel.org/r/20200716110423.xtfyb3n6tn5ixedh@pali/ PCI: Race condition in pci_create_sysfs_dev_files
-  https://lore.kernel.org/r/m3eebg9puj.fsf@t19.piap.pl/ PCI: Race condition in pci_create_sysfs_dev_files (can't boot)
-  https://bugzilla.kernel.org/show_bug.cgi?id=215515 sysfs: cannot create duplicate filename '.../0000:e0'
-
-And several previous attempts to fix them:
-
-  https://lore.kernel.org/r/4469eba2-188b-aab7-07d1-5c77313fc42f@gmail.com/ Guard pci_create_sysfs_dev_files with atomic value
-  https://lore.kernel.org/r/20230316103036.1837869-1-alexander.stein@ew.tq-group.com PCI/sysfs: get rid of pci_sysfs_init late_initcall
-  https://lore.kernel.org/r/1702093576-30405-1-git-send-email-ssengar@linux.microsoft.com/ PCI/sysfs: Fix race in pci sysfs creation
-
-Bjorn
