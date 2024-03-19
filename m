@@ -1,257 +1,236 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D02657BE;
-	Tue, 19 Mar 2024 15:56:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0DD657BE;
+	Tue, 19 Mar 2024 15:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710863782; cv=none; b=fiVnuqJRdP1shHZAuZjw7oTjYJlLKDA6t3SgNX2pdD9fqSMeBwndHgRCPLHCrbH0HzOHkcAvETtYBa6MdyGYtSH4rLZ7/JH3H/7c14zB9UQVN05ntkbg4jbheLaBC4ZbmObLoGqsSCKoc+VqlKSi/TJp2VCaypKGymdKTHoYtI0=
+	t=1710863857; cv=none; b=uMfBHwrvOhNQUfk+4AVpFpZv83mX0f3OM61ZLqOjg4WEOEkHWg3o8IPf/VYoOMhOvCdCXIaEbkFwGMKMXrJ1Svjo2q65k2cxDR8TqagxP+RQyEGXk6GAwFCzaCNdRpzWAskAj461Qiiz2RCA+KFMLgqNsFVM7cW2mnStKIjiO5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710863782; c=relaxed/simple;
-	bh=kTIWQgBaqX7BCGZ6l0YNbzF24DBdzNGDd7qEdfi2zjw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mu3kj6J0rtqzjeCcyHdEwWxe1VvAubA09dTzNTpjaoPsbTldTul1RPbxj9ncOVl5qL2+BFT7/NYpaKD9PHna4wA4+pa4cSB21XIH6c6ZTRWpa1KkE8tFWhhUJUewQ2jueZcM4cCfu2IUwUDSvVXbDmNeM7yu5qrsCnabGjk+1Hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZRnaBHcS; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710863857; c=relaxed/simple;
+	bh=J5iLX9r+OXm0BHNs30o1O2m+uW0ux1ewSKvY64f4v/w=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=c+3MTbAgbg2B3MlOjknOaAOSIb3AGq9ws6jVZYRRgBN7AQpZfaLVl66Rysjqhv3/DJO1FKIXz7WTJMyF5wCha9n6EaD8BCpWYRZhqmTdzlulp0mM+QwLxKrXl+YyRzQvn1+bL5avoZyaT29u9wwhHRieULpwXvQ3Qh7VYnUR0hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FiPiC2Cm; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZRnaBHcS"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-513dd2d2415so4466880e87.3;
-        Tue, 19 Mar 2024 08:56:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710863778; x=1711468578; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=t4IC/jDYnczASn/Z+j5D8kmO/fWJVOdRI8Restnbwbk=;
-        b=ZRnaBHcSHAD+8+R8QRL2dOdv4nqz6wfl5XkNZnQboQfE3He7ktwl1Qqzn2lgXwGeRz
-         wmzPBxx8Xb2G7aZUk8VbJSZsqiAvIMDjHyangjKl9e36ynPbeylPoEG/AVzZ8tKg/2qW
-         hU183za6xaJDMZ6PYPLVkWXHEOP6SsmOR1cw5w1XNbGKNQldVQooETaexRe5lfozFSCw
-         DDa2TPJkTqi8gzI8xXt/o+bQfnO/TcdlK2ki2s1g/y3jN4go9RV1HmyH9h3ejdY29X6a
-         2Fz2JwXPcdkZbAzn1kCi3mRdpcendQ7PRXOa7EA6M3yjsC7No1/bxtEInEbe4C+y6+Aw
-         7eSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710863778; x=1711468578;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=t4IC/jDYnczASn/Z+j5D8kmO/fWJVOdRI8Restnbwbk=;
-        b=CryyjrPH1M+T8YrvdUlG5rBrATQJPkpTd+UNlK68WaCaorlIzx16AcCfE6Yb8w4jBr
-         xk2+cQu7WKf2tHXNi77LNmkcxFce1WtIim3TmwazfotpV28rcc1qNP94Nnt3R3jLUhh6
-         EDwWcce+YoSy6pFEf7/0ObFpFJCuCatznPh4uDQXj+QTVJshZpLFxxuiHt/M7Dkn0qY4
-         /ClWccd8GhioiWqUcDwVVMatxroaNb38IGwtd10OVHS1EVuImn4ZgxLFmMz3q1Xxa+pX
-         61C1sFMCJhJ2zPFcjOX8/afQmr9wXPOX6yzXE6UA+lRspV3PrWxZuyVsYDf8nM1lfneG
-         zb/g==
-X-Forwarded-Encrypted: i=1; AJvYcCWEcnD11AkPlm3UqnzqJZC7+3o+yxes0UcZaNnXz2zz8v8jzmzMkadZrkdv5a2byT5zQCIBC3Gmle43vvu6l/O4gM66W9VOfa9G/J5/FnfHUfaL1uH+Ye3lZ4WtuD2v+RRerut7e5xE1g==
-X-Gm-Message-State: AOJu0YzS2bXG1+40ziDySyTbTn3/JZOAeAVHnkLxXzCFLjIgzcUNNrQo
-	vZQH3sHan6XfTn2Y2zM40d1lVTjnFsWxRRW4KwcysfH+ALFxMSaq
-X-Google-Smtp-Source: AGHT+IHPjsVkIChJGewZZKSNJVAbvELDs1703BC5ZulAjkk2eenekYwRB/mjugs3Enk3gw3PaJ7LfA==
-X-Received: by 2002:a19:ca05:0:b0:513:b30c:53c7 with SMTP id a5-20020a19ca05000000b00513b30c53c7mr9644413lfg.10.1710863778027;
-        Tue, 19 Mar 2024 08:56:18 -0700 (PDT)
-Received: from ?IPV6:2001:999:708:5b57:30d6:2195:bb7b:bb94? ([2001:999:708:5b57:30d6:2195:bb7b:bb94])
-        by smtp.gmail.com with ESMTPSA id u13-20020ac25bcd000000b005131434454bsm1959551lfn.228.2024.03.19.08.56.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Mar 2024 08:56:17 -0700 (PDT)
-Message-ID: <9d123584-1feb-404b-890f-2da694cf56d5@gmail.com>
-Date: Tue, 19 Mar 2024 17:57:57 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FiPiC2Cm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=J5iLX9r+OXm0BHNs30o1O2m+uW0ux1ewSKvY64f4v/w=; b=FiPiC2Cm8NXbh1ZdwFySiMxQNW
+	burz2OkpWdRiaEpWHM7dOYoYRupNS2D/hVJJ1/rGT1pB7BeMCi22NKdlQRCiAks/TlOPq9RfA2rRk
+	kIMsjrPVXzNTpfkRKDSQcqBiNezgsypcTkgZV2FuaBgKbLhuIY5Y9WhfJwiTmuKPzKJIQ9KxvW+iF
+	AqlKP5+mlGxPEskBFq/MivnJY2gsjYY0lKciszQXve19qo6fM0HYkNd7GmHnRm/z+r2EFvMdn1yEF
+	T+kZZG5+WtdkzlhV/y51FdQG63gRDWieQigxvMbL7ewXGYoF0/zFUrOcw/ylWniCg7TISmwL5pf0R
+	r1z6x6lw==;
+Received: from [2001:8b0:10b:5:8879:b0f0:4282:ed8] (helo=u3832b3a9db3152.ant.amazon.com)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rmbqF-00000002Fkz-1E0a;
+	Tue, 19 Mar 2024 15:57:32 +0000
+Message-ID: <dce1e4ce98446660905398e9a4c2afc49596a34c.camel@infradead.org>
+Subject: Re: [syzbot] [kvm?] WARNING in __kvm_gpc_refresh
+From: David Woodhouse <dwmw2@infradead.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: syzbot <syzbot+106a4f72b0474e1d1b33@syzkaller.appspotmail.com>, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com, 
+	syzkaller-bugs@googlegroups.com, paul <paul@xen.org>
+Date: Tue, 19 Mar 2024 15:57:30 +0000
+In-Reply-To: <Zfmt8rxlF1ag1iA_@google.com>
+References: <0000000000005fa5cc0613f1cebd@google.com>
+	 <b7561e6d6d357fcd8ec1a1257aaf2f97d971061c.camel@infradead.org>
+	 <ZfizYzC9-9Qo47tE@google.com>
+	 <33bcc5778e39780c6895ffa9f52f4b12cf83ad89.camel@infradead.org>
+	 <Zfmt8rxlF1ag1iA_@google.com>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-qHYKURByT8NhYd+d56Rd"
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/13] ASoC: ti: davinci-i2s: Add TDM support
-To: Bastien Curutchet <bastien.curutchet@bootlin.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>
-Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, herve.codina@bootlin.com,
- christophercordahi@nanometrics.ca
-References: <20240315112745.63230-1-bastien.curutchet@bootlin.com>
- <20240315112745.63230-8-bastien.curutchet@bootlin.com>
-Content-Language: en-US
-From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-In-Reply-To: <20240315112745.63230-8-bastien.curutchet@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 
 
+--=-qHYKURByT8NhYd+d56Rd
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 15/03/2024 13:27, Bastien Curutchet wrote:
-> TDM is not supported by the McBSP driver. The McBSP datasheet does not
-> name explicitly TDM as a supported format but it is possible to configure
-> the McBSP to do TDM if all slots are used by McBSP.
-> 
-> Add TDM support. It uses single-phase frame. Slot width is used to
-> compute the McBSP's word length.
-> 
-> Implement the set_tdm_slot() hook of snd_soc_dai_ops struct. It only
-> supports TDM if all slots are used by McBSP.
-> 
-> The snd_soc_dai_driver's capture.channels_max is updated from 2 to 128.
-> 128 is the maximum frame length when using single-phase frame.
-> playback.channels_max has not been updated as I could not test TDM on
-> playbacks with my hardware.
-> 
-> This was tested on platform designed off of DAVINCI/OMAP_L138 with BP_FC
-> format so this is only supported format for TDM yet. A check is done in
-> davinci_i2s_set_dai_fmt() to prevent TDM to be used with other formats
-> 
-> Signed-off-by: Bastien Curutchet <bastien.curutchet@bootlin.com>
-> ---
->  sound/soc/ti/davinci-i2s.c | 81 ++++++++++++++++++++++++++++++++++++--
->  1 file changed, 77 insertions(+), 4 deletions(-)
-> 
-> diff --git a/sound/soc/ti/davinci-i2s.c b/sound/soc/ti/davinci-i2s.c
-> index f4514d4dff07..4adaed010700 100644
-> --- a/sound/soc/ti/davinci-i2s.c
-> +++ b/sound/soc/ti/davinci-i2s.c
-> @@ -160,6 +160,9 @@ struct davinci_mcbsp_dev {
->  	unsigned int fmt;
->  	int clk_div;
->  	bool i2s_accurate_sck;
-> +
-> +	int tdm_slots;
-> +	int slot_width;
->  };
->  
->  static inline void davinci_mcbsp_write_reg(struct davinci_mcbsp_dev *dev,
-> @@ -213,6 +216,57 @@ static void davinci_mcbsp_stop(struct davinci_mcbsp_dev *dev, int playback)
->  	toggle_clock(dev, playback);
->  }
->  
-> +static int davinci_i2s_tdm_word_length(int tdm_slot_width)
-> +{
-> +	switch (tdm_slot_width) {
-> +	case 8:
-> +		return DAVINCI_MCBSP_WORD_8;
-> +	case 12:
-> +		return DAVINCI_MCBSP_WORD_12;
-> +	case 16:
-> +		return DAVINCI_MCBSP_WORD_16;
-> +	case 20:
-> +		return DAVINCI_MCBSP_WORD_20;
-> +	case 24:
-> +		return DAVINCI_MCBSP_WORD_24;
-> +	case 32:
-> +		return DAVINCI_MCBSP_WORD_32;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int davinci_i2s_set_tdm_slot(struct snd_soc_dai *cpu_dai,
-> +				    unsigned int tx_mask,
-> +				    unsigned int rx_mask,
-> +				    int slots, int slot_width)
-> +{
-> +	struct davinci_mcbsp_dev *dev = snd_soc_dai_get_drvdata(cpu_dai);
-> +
-> +	dev_dbg(dev->dev, "%s - slots %d, slot_width %d\n", __func__, slots, slot_width);
+On Tue, 2024-03-19 at 08:23 -0700, Sean Christopherson wrote:
+> On Mon, Mar 18, 2024, David Woodhouse wrote:
+> > On Mon, 2024-03-18 at 14:34 -0700, Sean Christopherson wrote:
+> > > On Mon, Mar 18, 2024, David Woodhouse wrote:
+> > > >=20
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Either gpa or uhva mu=
+st be valid, but not both */
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (WARN_ON_ONCE(kvm_is_=
+error_gpa(gpa) =3D=3D kvm_is_error_hva(uhva)))
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+> > > >=20
+> > > > Hm, that comment doesn't match the code. It says "not both", but th=
+e
+> > > > code also catches the "neither" case. I think the gpa is in %rbx an=
+d
+> > > > uhva is in %r12, so this is indeed the 'neither' case.
+> > > >=20
+> > > > Is it expected that we can end up with a cache marked active, but w=
+ith
+> > > > the address not valid? Maybe through a race condition with deactive=
+? or
+> > > > more likely than that?
+> > >=20
+> > > It's the darn PV system time MSR, which allows the guest to triggerin=
+g activation
+> > > with any GPA value.=C2=A0 That results in the cache being marked acti=
+ve without KVM
+> > > ever setting the GPA (or any other fields).=C2=A0 The fix I'm testing=
+ is to move the
+> > > offset+len check up into activate() and refresh().
+> >=20
+> > Not sure I even want a gpc of length 1 to work at INVALID_GPA; I don't
+> > think it's the offset+length check we want to be looking at?
+> >=20
+> > If we've activated the gpc with gpa=3D=3DINVALID_GPA, surely the right
+>=20
+> This particular issue isn't due to activating with gpa=3D=3DINVALID_GPA, =
+it's due to
+> marking the gpc as active without actually activating it.=C2=A0 The offse=
+t+length
+> check is simply what causes KVM to prematurely bail from activation.
 
-The __func__ can be ommited, it is better to leave it for dynamic
-debugging by adding "dyndbg=+pmf" module parameter if needed.
+Ah, right. Yes, that makes more sense now; thanks.
 
-> +
-> +	if (slots > 128 || !slots) {
-> +		dev_err(dev->dev, "Invalid number of slots\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (rx_mask != (1 << slots) - 1) {
-> +		dev_err(dev->dev, "Invalid RX mask (0x%08x) : all slots must be used by McBSP\n",
-> +			rx_mask);
-> +		return -EINVAL;
+> > thing to do is just let it fail (perhaps with an explicit check or just
+> > letting the memslot lookup fail). After fixing that WARN_ON be
+> >=20
+> > =C2=A0=C2=A0 if (WARN_ON_ONCE(!kvm_is_error_gpa(gpa) && !kvm_is_error_h=
+va(uhva)))
+>=20
+> I really don't want to relax the sanity check, as I feel strongly that KV=
+M needs
+> an invariant that an active cache is either GPA-based or HVA-based, i.e. =
+that at
+> least one of GPA or HVA is "valid".=C2=A0 In quotes because the GPA doesn=
+'t need to
+> be fully validated, just something that doesn't trip kvm_is_error_gpa().
 
-This is only a restriction for RX?
+Agreed.
 
-> +	}
-> +
-> +	if (davinci_i2s_tdm_word_length(slot_width) < 0) {
-> +		dev_err(dev->dev, "%s: Unsupported slot_width %d\n", __func__, slot_width);
-> +		return -EINVAL;
-> +	}
-> +
-> +	dev->tdm_slots = slots;
-> +	dev->slot_width = slot_width;
-> +
-> +	return 0;
-> +}
-> +
->  #define DEFAULT_BITPERSAMPLE	16
->  
->  static int davinci_i2s_set_dai_fmt(struct snd_soc_dai *cpu_dai,
-> @@ -228,6 +282,13 @@ static int davinci_i2s_set_dai_fmt(struct snd_soc_dai *cpu_dai,
->  		DAVINCI_MCBSP_SRGR_FWID(DEFAULT_BITPERSAMPLE - 1);
->  
->  	dev->fmt = fmt;
-> +
-> +	if ((dev->tdm_slots || dev->slot_width) &&
-> +	    ((fmt & SND_SOC_DAIFMT_CLOCK_PROVIDER_MASK) != SND_SOC_DAIFMT_BP_FC)) {
-> +		dev_err(dev->dev, "TDM is only supported for BP_FC format\n");
-> +		return -EINVAL;
+--=-qHYKURByT8NhYd+d56Rd
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
 
-I think this is not a valid statement, Fsync can be generated internally
-or coming from external source in TDM mode also.
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
+ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
+EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
+FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
+aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
+EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
+VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
+aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
+ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
+QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
+rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
+ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
+U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
+DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
+BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
+dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
+BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
+QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
+CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
+xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
+IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
+kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
+eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
+KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
+1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
+OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
+x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
+5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
+DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
+VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
+UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
+MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
+ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
+oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
+SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
+xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
+RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
+bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
+NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
+KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
+5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
+C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
+gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
+VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
+MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
+by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
+b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
+BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
+QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
+c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
+AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
+qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
+v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
+Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
+tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
+Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
+YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
+ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
+IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
+ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
+GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
+h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
+9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
+P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
+2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
+BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
+7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
+lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
+lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
+AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
+Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
+FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
+BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
+cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
+aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
+LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
+BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
+cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
+Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
+lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
+WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
+hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
+IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
+dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
+NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
+xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQwMzE5MTU1NzMwWjAvBgkqhkiG9w0BCQQxIgQgN5OAgChW
+NOzXFkWLNQ9Xa8fdZEtD9ioBkC7s0zD9Dw0wgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
+A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
+dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
+DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
+MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
+Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
+lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgCO7OFmgjmG0Mk+cosB0r2p5V3GvIbPi9KF
+6WqfIFTwU+JqS/R0sULnnpIoth0U6uE0J5JESQkwBAV0+DTXyTsDusX2Izert/sHuwstSacKJ9wU
+e2FZDFGF04DUuiarByYrwBQ3b9E15RPNBsXGnKl883IJUuQSO9GbgHb4Rv4/3Qm2uTLYJoEPmnk2
+7l5z1Qm9d4h2GTkByAw9KV7iOF5051WYuYDmsMgsxBIOLO7Zau9yormZTTVqTGQi1BARR880xb3q
+uVaTooRmZgD5Y4Kio2tBN10S+zsVh4LDKKPl8CZjCtvkZ2EqDmUQFBESx2CGJjtiWEJfYpKMuU85
+Y3qlkq9f0j4zrYhjbjq5CpHGEKSYI3SL76CAPffOI2PkphP+11mrYdhYM1Cr5GfKLZdO0Am9mepY
+dToZyaKiqBa2xU1e8rpE2Iu/LCcncsRDU88aRASqXQySMp3HVCKLyR/AkuB4W09kJVU11po8t9GK
+aihSgZPCUXcks+Ds21m1oRY1Wg7tcNd+apYB5UHjb4+6aZUiuzq68zOZzBd9hB9Yr4/O9/9ciyCc
+lFt4T0Xn4rTl6oXH7dXBaEkiVRKqovDhrork29d46VewhgNNqBJW1PnbKeGnJ3ud3QoxTc+nR2AF
+8GhITZAwjxp+cEjZg84toGUMf3gx5CZ3EP+BjC/V2gAAAAAAAA==
 
-> +	}
-> +
->  	/* set master/slave audio interface */
->  	switch (fmt & SND_SOC_DAIFMT_CLOCK_PROVIDER_MASK) {
->  	case SND_SOC_DAIFMT_BP_FP:
-> @@ -383,7 +444,13 @@ static int davinci_i2s_hw_params(struct snd_pcm_substream *substream,
->  
->  	master = dev->fmt & SND_SOC_DAIFMT_CLOCK_PROVIDER_MASK;
->  	fmt = params_format(params);
-> -	mcbsp_word_length = asp_word_length[fmt];
-> +	if (dev->slot_width)
-> +		mcbsp_word_length = davinci_i2s_tdm_word_length(dev->slot_width);
-> +	else
-> +		mcbsp_word_length = asp_word_length[fmt];
-> +
-> +	if (mcbsp_word_length < 0)
-> +		return mcbsp_word_length;
->  
->  	switch (master) {
->  	case SND_SOC_DAIFMT_BP_FP:
-> @@ -483,8 +550,13 @@ static int davinci_i2s_hw_params(struct snd_pcm_substream *substream,
->  	switch (master) {
->  	case SND_SOC_DAIFMT_BP_FP:
->  	case SND_SOC_DAIFMT_BP_FC:
-> -		rcr |= DAVINCI_MCBSP_RCR_RFRLEN1(0);
-> -		xcr |= DAVINCI_MCBSP_XCR_XFRLEN1(0);
-> +		if (dev->tdm_slots > 0) {
-> +			rcr |= DAVINCI_MCBSP_RCR_RFRLEN1(dev->tdm_slots - 1);
-> +			xcr |= DAVINCI_MCBSP_XCR_XFRLEN1(dev->tdm_slots - 1);
-> +		} else {
-> +			rcr |= DAVINCI_MCBSP_RCR_RFRLEN1(0);
-> +			xcr |= DAVINCI_MCBSP_XCR_XFRLEN1(0);
-> +		}
->  		break;
->  	case SND_SOC_DAIFMT_BC_FC:
->  	case SND_SOC_DAIFMT_BC_FP:
-> @@ -609,6 +681,7 @@ static const struct snd_soc_dai_ops davinci_i2s_dai_ops = {
->  	.hw_params	= davinci_i2s_hw_params,
->  	.set_fmt	= davinci_i2s_set_dai_fmt,
->  	.set_clkdiv	= davinci_i2s_dai_set_clkdiv,
-> +	.set_tdm_slot   = davinci_i2s_set_tdm_slot,
->  
->  };
->  
-> @@ -621,7 +694,7 @@ static struct snd_soc_dai_driver davinci_i2s_dai = {
->  	},
->  	.capture = {
->  		.channels_min = 2,
-> -		.channels_max = 2,
-> +		.channels_max = 128,
->  		.rates = DAVINCI_I2S_RATES,
->  		.formats = DAVINCI_I2S_FORMATS,
->  	},
 
--- 
-Péter
+--=-qHYKURByT8NhYd+d56Rd--
