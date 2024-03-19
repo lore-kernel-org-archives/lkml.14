@@ -1,118 +1,133 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1379E54BF6
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 11:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD33B7E586;
+	Tue, 19 Mar 2024 11:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710847079; cv=none; b=SpugGnpdm3mVhntE00wPw2movglc/xpNnrUZcjl7OYDPXlLxH+ZJ62HVfABmujAyxuB2b65nkd8zwScz7ts0EmVlQmmR3ng8tS/8VCCF6SIPW/S1k1lgu+KVbNKYefnopSjnjvQWK+mTfxQwd3UyGGmS/IgNaO85sdgG9R2FEuM=
+	t=1710847096; cv=none; b=I9pSPcXoD90EBfupFaWNH7AB/SM5JMZqheb9kDEwBgQle2Y7434o0xcU+NVWmsaPl6fmErz/OHGRFcSUN3Ms3Xy4z+eFHcEfsUVgB0ekDWMzWfOrr1lpmVPMFmkhA3/rmb73uxDTGN5IKWZR6UzdfvLbPqDZ6ZszF8HiByv6cp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710847079; c=relaxed/simple;
-	bh=qbS/Fq6/ZtBC6Ftwa7pn2jPBmoaqXs1RyTvJMpw3UQc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ek03O7/A4IIKefvR8CdtWgHsjnUvz7xGfIcLMCkW8oZp0qcxF8SvAhbjQ+tfgp5DX77tBkxOT1ZlWVMQsZ9oQFowaybmFDwtj/ShAKwdfMyfmvLW0UvhRMyn+vlD0IzdfOeWTuoVBak6I6dTuMQmbqZggzmEyEd6ATauA9mM+gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=R2lHCizn; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	s=arc-20240116; t=1710847096; c=relaxed/simple;
+	bh=m+H0KA5nCWiconiv95w6H27brgFiAtSdm/hSpOIX4N4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=GelwYl9I0UYoMJj5Y1jIyD+cmFA+LR6wO5lHugIXY6SW1mhLuiiCLM/sJDdjzpLzThHL2IpJF5KBbusJEta47PZxU7Kb2RUw9gm7oF/9Nndyh0mQcKs4QRcIDvnO3hmZ+hLruptxRh/J5F9SoyPG8n0iXgr3iAg8vjRDdNN2QqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=c1cxIKWE; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="R2lHCizn"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4146172fb7eso10885555e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 04:17:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1710847075; x=1711451875; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kcvCGlMHRwj9k6ByHHyaeay4OtVn7NmyScS9HG65Uco=;
-        b=R2lHCizneRB+LKYuLEQfSKd6olc5CnyhRIx8n8NRaba+xTEup6yMpkvwRsAIhY44rA
-         6BRgwTEkeHNp1ZUFx6Wk9x6nTqT0FXhC/UvJSMJE8vyIUtTTuL9GDy1qJrpoBwTaD1r5
-         Rx4ruZR07vVF99oIFV/o45tVb+UPQfYrKfxNeELy5z187biUT99KXuQQomZiPtvNY0Fd
-         xA0RiLsdlcN0odBR75YnU2qKVa7KWMZCv89mDdHhsVDOz6tjPsK66j3/fh85FpADghEL
-         XRRvH+7P1UsrzFMjsrrPhVi7oJeOa9EGCIkIouAY0vsKaadmxHjhL4sYN5tIDIiy3joe
-         /ryw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710847075; x=1711451875;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kcvCGlMHRwj9k6ByHHyaeay4OtVn7NmyScS9HG65Uco=;
-        b=lRad9BJ6iR8PrMr0iOpEsb/TiQUihqEWXGOATijnM6QaPj7K6zI3LDc5bS9MVuxq8t
-         vGBxuLcvbIKQvNeCOsZSEemWIn4aNQEfqzWFGuzYAPk/EVvDJFUWiJvcbW5ZAChXtWXo
-         FBbMUQ/5PJVLJtHk7nRbEZWYYJfuFEJQIqDztmSf8bFIX9kE5jj7fQHNMeLchqHBxsVo
-         P0HrKL8VciUbaKVCOA3HVJSiz5ybmXclBOzyY+hqi+COkPBX8H7CzMW+DSF5wLD+fr6A
-         Rit+vZvSMqwn5rAkHsyjJc0CgnhbJ67SLzsRrFmc1bRRFosEupZUFM0gJoRWaM9Wr9MR
-         rRqA==
-X-Forwarded-Encrypted: i=1; AJvYcCXf5htrNEqJAhtHZShQxaPexEbf5pgueDDfUPyYb+CjrW9QQPiEMclQMonSTf3fNRYwWf1pRM2M3TMDGpz2GQThDXMPzIGYSut8aTSH
-X-Gm-Message-State: AOJu0YzHTOvbGiTL7Vc0S/CagOWSK7pO+adEdioOlfnkRUZI9Pjj5ZNo
-	svNVld8GqK5DY4FB6WzEq7/gfSVF5u4vFJ0ZAO1QnHFXukLHJsdX8NLLgjIs4Hs=
-X-Google-Smtp-Source: AGHT+IE4g8Wl2ZoiP7Nozc66zsCnp4nObAKcwAoSyvr4KFr0lJ/nsG98UjxjzFxXlsaHKFuKlZZy9Q==
-X-Received: by 2002:a05:600c:3556:b0:412:beee:36b3 with SMTP id i22-20020a05600c355600b00412beee36b3mr10520229wmq.7.1710847075115;
-        Tue, 19 Mar 2024 04:17:55 -0700 (PDT)
-Received: from localhost ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id d20-20020a05600c34d400b0041466d8e33bsm1183307wmq.27.2024.03.19.04.17.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 04:17:54 -0700 (PDT)
-Date: Tue, 19 Mar 2024 12:17:51 +0100
-From: Jiri Pirko <jiri@resnulli.us>
-To: Jijie Shao <shaojijie@huawei.com>
-Cc: yisen.zhuang@huawei.com, salil.mehta@huawei.com, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	michal.kubiak@intel.com, rkannoth@marvell.com,
-	shenjian15@huawei.com, wangjie125@huawei.com,
-	liuyonglong@huawei.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 net 2/3] net: hns3: fix kernel crash when devlink
- reload during pf initialization
-Message-ID: <Zfl0Xz3vNNH_3Mfo@nanopsycho>
-References: <20240318132948.3624333-1-shaojijie@huawei.com>
- <20240318132948.3624333-3-shaojijie@huawei.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="c1cxIKWE"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42JAjvL2004341;
+	Tue, 19 Mar 2024 11:18:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pp1; bh=Y+una7k+ujlpQWzyvteLpzJZsZGHX4ZCn548C358cCQ=;
+ b=c1cxIKWE392Y/78ob+sDyvqhwjQXmW0Ycq8xGyfFhokhAFadiqTSyCyQLbX30CDxkWg1
+ 9vgzw3ocBUsdpyeu0LAdwFsL0Vx1B1MVGJ3R8QcxmDuqoVSMpQB9C0uLgt+gdchMowP0
+ aevKHfYLVFeAYoL6/vKe9vAOWvK7xtuMw3Eb7Gdpy3fy2pSb2xbXHNuCj3+efCxJp6oz
+ leMMwCVdPWUur16xh5vyJ3cx0IbqkYwYi6ExTakZrvDfaaxKoPSHk3rao4lJgQ8RXJrT
+ eXlqI/FnzVnniFI5WQ+QmnNGMvR+fLhgaN0ldWs5efQIUvkiVk5lvpBNPqmxOJO3P+5J sw== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wy8nxgcn3-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Mar 2024 11:18:10 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42J8RKZP011594;
+	Tue, 19 Mar 2024 11:17:04 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wwq8kxtrh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Mar 2024 11:17:04 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42JBGwBa44433860
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 19 Mar 2024 11:17:00 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 63BE92004B;
+	Tue, 19 Mar 2024 11:16:58 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C7BC32004E;
+	Tue, 19 Mar 2024 11:16:57 +0000 (GMT)
+Received: from osiris (unknown [9.171.33.131])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 19 Mar 2024 11:16:57 +0000 (GMT)
+Date: Tue, 19 Mar 2024 12:16:56 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Li Zhijian <lizhijian@fujitsu.com>
+Cc: linux-kernel@vger.kernel.org, Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org
+Subject: Re: [PATCH] s390/cio: Convert sprintf/snprintf to sysfs_emit
+Message-ID: <20240319111656.23303-E-hca@linux.ibm.com>
+References: <20240314095209.1325229-1-lizhijian@fujitsu.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240314095209.1325229-1-lizhijian@fujitsu.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: x1Zq21fjDM7KhpiRWE0TCuLRjVMWeHsC
+X-Proofpoint-GUID: x1Zq21fjDM7KhpiRWE0TCuLRjVMWeHsC
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240318132948.3624333-3-shaojijie@huawei.com>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-19_01,2024-03-18_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ priorityscore=1501 phishscore=0 impostorscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 bulkscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=820 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403140000 definitions=main-2403190086
 
-Mon, Mar 18, 2024 at 02:29:47PM CET, shaojijie@huawei.com wrote:
->From: Yonglong Liu <liuyonglong@huawei.com>
->
->The devlink reload process will access the hardware resources,
->but the register operation is done before the hardware is initialized.
->so, if process the devlink reload during initialization, may lead to kernel
->crash. This patch fixes this by checking whether the NIC is initialized.
-
-Fix your locking, you should take devl_lock during your init. That would
-disallow reload to race with it.
-
-pw-bot: cr
-
->
->Fixes: b741269b2759 ("net: hns3: add support for registering devlink for PF")
->Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
->Signed-off-by: Jijie Shao <shaojijie@huawei.com>
->---
-> drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_devlink.c | 5 +++--
-> 1 file changed, 3 insertions(+), 2 deletions(-)
->
->diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_devlink.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_devlink.c
->index 9a939c0b217f..80db4f7b05f6 100644
->--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_devlink.c
->+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_devlink.c
->@@ -40,8 +40,9 @@ static int hclge_devlink_reload_down(struct devlink *devlink, bool netns_change,
-> 	struct pci_dev *pdev = hdev->pdev;
-> 	int ret;
+On Thu, Mar 14, 2024 at 05:52:09PM +0800, Li Zhijian wrote:
+> Per filesystems/sysfs.rst, show() should only use sysfs_emit()
+> or sysfs_emit_at() when formatting the value to be returned to user space.
 > 
->-	if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state)) {
->-		dev_err(&pdev->dev, "reset is handling\n");
->+	if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state) ||
->+	    !test_bit(HCLGE_STATE_NIC_REGISTERED, &hdev->state)) {
->+		dev_err(&pdev->dev, "reset is handling or driver removed\n");
-> 		return -EBUSY;
-> 	}
+> coccinelle complains that there are still a couple of functions that use
+> snprintf(). Convert them to sysfs_emit().
 > 
->-- 
->2.30.0
->
->
+> sprintf() will be converted as weel if they have.
+> 
+> Generally, this patch is generated by
+> make coccicheck M=<path/to/file> MODE=patch \
+> COCCI=scripts/coccinelle/api/device_attr_show.cocci
+> 
+> No functional change intended
+> 
+> CC: Vineeth Vijayan <vneethv@linux.ibm.com>
+> CC: Peter Oberparleiter <oberpar@linux.ibm.com>
+> CC: Heiko Carstens <hca@linux.ibm.com>
+> CC: Vasily Gorbik <gor@linux.ibm.com>
+> CC: Alexander Gordeev <agordeev@linux.ibm.com>
+> CC: Christian Borntraeger <borntraeger@linux.ibm.com>
+> CC: Sven Schnelle <svens@linux.ibm.com>
+> CC: linux-s390@vger.kernel.org
+> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+> ---
+> This is a part of the work "Fix coccicheck device_attr_show warnings"[1]
+> Split them per subsystem so that the maintainer can review it easily
+> [1] https://lore.kernel.org/lkml/20240116041129.3937800-1-lizhijian@fujitsu.com/
+> ---
+>  drivers/s390/cio/css.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+
+Applied, but...
+
+> @@ -396,7 +396,7 @@ static ssize_t pimpampom_show(struct device *dev,
+>  	struct subchannel *sch = to_subchannel(dev);
+>  	struct pmcw *pmcw = &sch->schib.pmcw;
+>  
+> -	return sprintf(buf, "%02x %02x %02x\n",
+> +	return sysfs_emit(buf, "%02x %02x %02x\n",
+>  		       pmcw->pim, pmcw->pam, pmcw->pom);
+
+...please make sure to fix such whitespace / indentation errors if you
+plan to provide more patches. I fixed it this time.
+
+Thanks!
