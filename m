@@ -1,311 +1,86 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E82B286AC;
-	Tue, 19 Mar 2024 17:50:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC892C183
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 17:52:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710870632; cv=none; b=fHEVEvCs4W8ld0Z9nJZ5Z6GD85zdtn6PeIsgyM9sX7NHL85HYN2BkqvxKScb388CHdNOgaNDo+9Lx490yylhjcCKL7KqNAw/QD6OmSyPxjx291R98y3af+3ek6klum+Nv/Z/fzXdWsLjSQ7zgpSMjQeqvbEZXaUdOsa2VI2Qgn0=
+	t=1710870743; cv=none; b=lWXS3RZ1jXQvsoT8WVXEKH9BjLkA8dIl+V0Ajd0SigRoRRgGh3EUiUGR9Vuh11ER6gSoePbM7moehuUWQy6oXejO99RIpPcS3mPeqSsuX7ITneVf2VVg/W/KQOlPiJmOOHxTPyUjrzPHDfrHIT3n2bxjzEX4+4PchDf+ttaGXfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710870632; c=relaxed/simple;
-	bh=2srAD5ClkT3dKxDgxCvfkFQLhGt9MLkwM22uuag/53w=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Po0wOTEdvbra7J3jWOt/u23xZyt2JFGw9SSBbHCmo55aRt/LLRe5vfNH/E2w6rwlCNHIDtUBB6Z1N7wuQZNNW7n/fsiABwLD5/16d6kS/5izZlb1uR8sw2oCRpNIW2695hNStURv97fwS1B3YWBf+B9UQrixOz/aVAi0gPwgcqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zx7+h/Ui; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710870743; c=relaxed/simple;
+	bh=/pA34yoKPuJnozUaZdll/pdd0Gh+2G414uWIjd3Nv+w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qW+Mh1cRHyp/83GkuSynw6ZN5QVb+c1Y0upaAMVcw/vhuPz0SzMdmKr6D3TlpF7/6ZFms+ofk4l1wxowWdMxRurxo5t/Wb8j3zCn+H76NRXzwHefQ1pRGdpTXSPOc4KlECB5MbT+Bg+r3x6LiSc/07W0N460KYOYM1QC30XopNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Yb0Yt7i4; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zx7+h/Ui"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56b93b45779so1427591a12.1;
-        Tue, 19 Mar 2024 10:50:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Yb0Yt7i4"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56a0c0a7ebcso3194911a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 10:52:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710870628; x=1711475428; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=K4h88E15TbnHDt476ZSp+9Jvp1kaoXpMk+VIBAfvxeU=;
-        b=Zx7+h/UigiSkspRkmZSmMrD8SskW0HFHqvqCf3i0BR1jjkTrW/Q03ysnEQ3YQES6Dt
-         ekXQ0Ctfds1gv9Trx+DcVTuRJovkh+nOLJCh9vR/hEVyDelUqKs+9YXjwA6fKECoxY0+
-         PTb34SoiW16gPOo1d7wX2VZWzybN5XEvY2ZIZD+Mi6l19lAI3z8egEpCMOjIn9/z0Wn/
-         zVLXi+23/eAvP3nBHIQswCiDvXuA6gD4MPmZjzWgxSQzKMNImqaU/aILDTLv4eIIV5Ye
-         TRpInRMbbAREnXwo6LWgJczhsW8Ce08vFMf7m2uGNWtvxLC5WvbHKJtR2TZc+1rLoX/G
-         2PbQ==
+        d=linux-foundation.org; s=google; t=1710870739; x=1711475539; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=jsDdhGB1s86A5H2uDtk1GYBCObHAe8Bc+RYw8C3RVzY=;
+        b=Yb0Yt7i4otq301JYzEqvON8bmS1ZG6HclZQEwwHY5jF2Rt/9ryolUhHhN38haWkL+h
+         EKbb5jRCvH0QDJzbRxMDvPZlkPVCUfr46hC1l+dZYKEZTZ5if9S8QVPb1/V9iP63Wi2h
+         Bx6nyfmHrRq32T0CvUKknMaDWB2rGQPcnGygc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710870628; x=1711475428;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K4h88E15TbnHDt476ZSp+9Jvp1kaoXpMk+VIBAfvxeU=;
-        b=PsEzI6p1WNIlBMaxB7KJ2Y6oFPkSDPibGqWIY31V4zKAkVf+8LST7RQTgg7orVZPT+
-         /3tnYvgtxoqn+tSdA//Z4gEnF67sFTcs99aEl5a/pOadDYtMhgW88gUESRLrJskiMi4B
-         oSlqwM1WmGdGSbPm1nsIRlxtTmVLtS4/4p5cRyrmo4GC/mxAdPse348YPa9x1d64qQk+
-         BrGexc3E3+wJ8jQMNR8Fu6vxi7hcAQIL5ibZx9WwFdlZhAnG3srtsARgsJNlitk5FLUt
-         subKik0NncUEj0F1gdoIK0FQaquP/uswmDlsTgLL2tLLN8eV198XBAYwO4PXn3Vx+Qd3
-         VA+g==
-X-Forwarded-Encrypted: i=1; AJvYcCWyrhSKbwbOZ7fwMQ0bpqxG/pJPKEOtPrglzoQ6ODUIFIkGxTp/WDchIvshUmLGC2t5wXj47RRVdjLUQCMxABI4ycJ0588lNpNH1wNj
-X-Gm-Message-State: AOJu0YzQZIRqdSCC/wMrTLXHmuG1A9V50p5sFxrFCZ33couROLL1PxUE
-	F9GlvR+Q/G2BEWfl9L4kIHJduinYFbPhvcE5fu9cuERMJ+Djoogr
-X-Google-Smtp-Source: AGHT+IGUxW7sLCdPNkkhZgR3NWA+XFmNyD07eHPGxgXx/8PSxWImUGKO+3nXDlH3LLPOVG8k4GqxQw==
-X-Received: by 2002:a50:c04a:0:b0:567:45e2:c4db with SMTP id u10-20020a50c04a000000b0056745e2c4dbmr11207171edd.39.1710870628405;
-        Tue, 19 Mar 2024 10:50:28 -0700 (PDT)
-Received: from ALDERLEJK. (89-76-44-138.dynamic.chello.pl. [89.76.44.138])
-        by smtp.gmail.com with ESMTPSA id et5-20020a056402378500b0056ba8b68505sm84329edb.92.2024.03.19.10.50.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 10:50:28 -0700 (PDT)
-From: Kamil Kasperski <ressetkk@gmail.com>
-Date: Tue, 19 Mar 2024 18:50:24 +0100
-Subject: [PATCH v4 3/3] arm64: dts: allwinner: h616: add support for T95 tv
- boxes
+        d=1e100.net; s=20230601; t=1710870739; x=1711475539;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jsDdhGB1s86A5H2uDtk1GYBCObHAe8Bc+RYw8C3RVzY=;
+        b=lGrx3WrOsU0u58FXCzfY9aW75u0wrlCCfg7XnMdOTgMUaWfL6mEiZSBKiQas/oWYDs
+         +PH9ZHyrgV8GP9JL0Wmpm7n7BAbVVfn65FYm11HoxI6uq5wM4oqdIbiuGcXRmbnkfU1A
+         BDrbrI1hsDkcK+jakB//7B92D4OMcnxzRQTWsLATlW988A/CH8rIYq9hm0lCIKVlXfvA
+         3Z90iG8GWXadj/JDiaa21bpQvs7b7Nw8B585wSPfjm/hTwroxZ2ubkxQxGOPHpDnD6ff
+         KdAeskILO0xNbMP9n5jAQ6UqpJeHpboDnuFgoDFXXY687P1TKclnO4QwhmashxPUOJmn
+         1g7w==
+X-Forwarded-Encrypted: i=1; AJvYcCVcGYoOsGJ2k3EhXmudW6iKrOVtxcVlcuoG9QnVSj19FiUna2LtRKyyHvcb9k05oHshIikZKbyjgQBIZe1EXajIDdxnBK1PLqvfi4Ez
+X-Gm-Message-State: AOJu0YwgrBYY2xnCJuG8oDgvG8ol2BWxNWshfWdWFe55WmKyJQ0gqkZ9
+	dQBh1e5/nvah1YaFmFCtOIRHSXD37JTNJGeL6E7ial9+rrQ/5Zd9W0eJnpl49uFYlvzoEeX84gS
+	rY0YuzA==
+X-Google-Smtp-Source: AGHT+IGJgNZcFdZqqgwsnvYZ0VemDzNjYsSprurDPg7IVKNRKmOi1jEazd/aYlPgU3exjcUBDfaFbw==
+X-Received: by 2002:a05:6402:458b:b0:56b:9567:3337 with SMTP id ig11-20020a056402458b00b0056b95673337mr1296011edb.1.1710870739076;
+        Tue, 19 Mar 2024 10:52:19 -0700 (PDT)
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com. [209.85.218.41])
+        by smtp.gmail.com with ESMTPSA id eo14-20020a056402530e00b00568a1897dbesm5742790edb.77.2024.03.19.10.52.18
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Mar 2024 10:52:18 -0700 (PDT)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a466fc8fcccso711838166b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 10:52:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWVdQz1EAxUBW0dYo4xzbfIz+cy2meOQuuPOkwuOlVqPKM8UmHrJvuj/65bk8fiqf9Iv7i7wrbfS0MlmhJczOFLNzGZUeM01xSiY/Rd
+X-Received: by 2002:a17:906:6d59:b0:a46:e595:f357 with SMTP id
+ a25-20020a1709066d5900b00a46e595f357mr1437660ejt.9.1710870737954; Tue, 19 Mar
+ 2024 10:52:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240319-add-t95-axp313-support-v4-3-6204b6d23229@gmail.com>
-References: <20240319-add-t95-axp313-support-v4-0-6204b6d23229@gmail.com>
-In-Reply-To: <20240319-add-t95-axp313-support-v4-0-6204b6d23229@gmail.com>
-To: Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
- Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
- Kamil Kasperski <ressetkk@gmail.com>
-X-Mailer: b4 0.13.0
+References: <20240319163656.2100766-1-glider@google.com> <20240319163656.2100766-2-glider@google.com>
+In-Reply-To: <20240319163656.2100766-2-glider@google.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 19 Mar 2024 10:52:01 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh_L4gKHEo6JVZxTZ7Rppgz1b5pt2MJyJ2mZ-A8-Mp0Qg@mail.gmail.com>
+Message-ID: <CAHk-=wh_L4gKHEo6JVZxTZ7Rppgz1b5pt2MJyJ2mZ-A8-Mp0Qg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] instrumented.h: add instrument_memcpy_before, instrument_memcpy_after
+To: Alexander Potapenko <glider@google.com>
+Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kasan-dev@googlegroups.com, tglx@linutronix.de, 
+	x86@kernel.org, Dmitry Vyukov <dvyukov@google.com>, Marco Elver <elver@google.com>, 
+	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Content-Type: text/plain; charset="UTF-8"
 
-Add dtsi file for T95 tv boxes and add initial support for T95 5G AXP313A
-variant with a board name H616-T95MAX-AXP313A-v3.0 Internal storage is not
-accessible due to lack of support for H616 NAND controller.
+On Tue, 19 Mar 2024 at 09:37, Alexander Potapenko <glider@google.com> wrote:
+>
+> +/**
+> + * instrument_memcpy_after - add instrumentation before non-instrumented memcpy
 
-Signed-off-by: Kamil Kasperski <ressetkk@gmail.com>
----
- arch/arm64/boot/dts/allwinner/Makefile             |   1 +
- arch/arm64/boot/dts/allwinner/sun50i-h616-t95.dtsi | 109 +++++++++++++++++++++
- .../dts/allwinner/sun50i-h616-t95max-axp313.dts    |  84 ++++++++++++++++
- 3 files changed, 194 insertions(+)
+Spot the cut-and-paste.
 
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index 21149b346a60..294921f12b73 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -42,6 +42,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-tanix-tx6-mini.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h616-bigtreetech-cb1-manta.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h616-bigtreetech-pi.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h616-orangepi-zero2.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h616-t95max-axp313.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h616-x96-mate.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h618-longanpi-3h.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h618-orangepi-zero2w.dtb
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h616-t95.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h616-t95.dtsi
-new file mode 100644
-index 000000000000..4c02408733bc
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h616-t95.dtsi
-@@ -0,0 +1,109 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2024 Kamil Kasperski <ressetkk@gmail.com>
-+ *
-+ * Common DT nodes for H616-based T95 TV boxes
-+ * There are two versions reported with different PMIC variants.
-+ */
-+
-+#include "sun50i-h616.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	aliases {
-+		ethernet1 = &sdio_wifi;
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	reg_vcc5v: vcc5v {
-+		/* board wide 5V supply directly from the DC input */
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc-5v";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_vcc3v3: vcc3v3 {
-+		/* discrete 3.3V regulator */
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	wifi_pwrseq: pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		clocks = <&rtc CLK_OSC32K_FANOUT>;
-+		clock-names = "ext_clock";
-+		pinctrl-0 = <&x32clk_fanout_pin>;
-+		pinctrl-names = "default";
-+		reset-gpios = <&pio 6 18 GPIO_ACTIVE_LOW>; /* PG18 */
-+	};
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci2 {
-+	status = "okay";
-+};
-+
-+&ir {
-+	status = "okay";
-+};
-+
-+&mmc0 {
-+	cd-gpios = <&pio 8 16 GPIO_ACTIVE_LOW>;	/* PI16 */
-+	bus-width = <4>;
-+	status = "okay";
-+};
-+
-+&mmc1 {
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	bus-width = <4>;
-+	non-removable;
-+	status = "okay";
-+
-+	sdio_wifi: wifi@1 {
-+		reg = <1>;
-+	};
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&ohci2 {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_ph_pins>;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&usbotg {
-+	dr_mode = "host";	/* USB A type receptable */
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h616-t95max-axp313.dts b/arch/arm64/boot/dts/allwinner/sun50i-h616-t95max-axp313.dts
-new file mode 100644
-index 000000000000..08a6b4fcc235
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h616-t95max-axp313.dts
-@@ -0,0 +1,84 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2024 Kamil Kasperski <ressetkk@gmail.com>
-+ *
-+ * Configuration for T95 TV box with board label H616-T95MAX-AXP313A-v3.0
-+ */
-+
-+/dts-v1/;
-+
-+#include "sun50i-h616-t95.dtsi"
-+
-+/ {
-+	model = "T95 5G (AXP313)";
-+	compatible = "t95,t95max-axp313", "allwinner,sun50i-h616";
-+};
-+
-+&mmc0 {
-+	vmmc-supply = <&reg_dldo1>;
-+};
-+
-+&mmc1 {
-+	vmmc-supply = <&reg_dldo1>;
-+	vqmmc-supply = <&reg_aldo1>;
-+};
-+
-+&r_i2c {
-+	status = "okay";
-+
-+	axp313: pmic@36 {
-+		compatible = "x-powers,axp313a";
-+		reg = <0x36>;
-+		#interrupt-cells = <1>;
-+		interrupt-controller;
-+
-+		vin1-supply = <&reg_vcc5v>;
-+		vin2-supply = <&reg_vcc5v>;
-+		vin3-supply = <&reg_vcc5v>;
-+
-+		regulators {
-+			reg_aldo1: aldo1 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc1v8";
-+			};
-+
-+			reg_dldo1: dldo1 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc3v3";
-+			};
-+
-+			reg_dcdc1: dcdc1 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <810000>;
-+				regulator-max-microvolt = <990000>;
-+				regulator-name = "vdd-gpu-sys";
-+			};
-+
-+			reg_dcdc2: dcdc2 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <810000>;
-+				regulator-max-microvolt = <1100000>;
-+				regulator-name = "vdd-cpu";
-+			};
-+
-+			reg_dcdc3: dcdc3 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <1500000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-name = "vdd-dram";
-+			};
-+		};
-+	};
-+};
-+
-+&pio {
-+	vcc-pc-supply = <&reg_aldo1>;
-+	vcc-pf-supply = <&reg_dldo1>;
-+	vcc-pg-supply = <&reg_aldo1>;
-+	vcc-ph-supply = <&reg_dldo1>;
-+	vcc-pi-supply = <&reg_dldo1>;
-+};
-
--- 
-2.34.1
-
+             Linus
