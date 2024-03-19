@@ -1,100 +1,188 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668AF46BF
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 15:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8AC7651BB;
+	Tue, 19 Mar 2024 15:49:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710863357; cv=none; b=jN7Q/BzOpWQHCeQ1eNk1+UBhGGlj/1PHy7j7QDLtVvcVm8ds8BgkvwqwKZLPiwAOYyZgsLPvQwElOYLt7ftV0it1YZBMpGQiKD6f/zQTkGRMk5RfWp3NfjYAj5pZEDUyozE2niM4rECYgedc3s1eGdLgnRXUBwyYpoo4TUzmDQE=
+	t=1710863383; cv=none; b=KLbhNRckCfTuUNNhvL2o++RAHIHExF+KEIbimqzAbpN8Q1CRmMfik/digFxl0HrJNJc7doJidC08x1F7qo2BSTMsCLBWaDxnIhKyGKlr8I11LlK3Jl9G0BU8P67d9ioEmk/AB62NzK2pbo8YR1kjzr+tkwjes9sJ1IqP6B34oJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710863357; c=relaxed/simple;
-	bh=2pyYCimS//Qq6yBYv8hqGm6lMX6inWdKtpT/73DHq4o=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=fRaPGGAEXdeBVSXdMeXigqQqeIW07GBC4iK2//GHNqb0MG47lGUaQcfC/7TxJyv4hMXNG6JwTWf7WExxa+x//GnSR0KnKv9a+7kKSKWKUZdIRVeUKRKFgIZkvuTtaP7f8j8PoMn7iwRK+K71L3yLaPifjm9xnx7SsMuO2+QTibE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LEw8RiMv; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1710863383; c=relaxed/simple;
+	bh=G+RyI8R6Qgj38tnCucu0XynPEdraZhcz13+xzt0MGNE=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:References; b=aTCG1YGyHPiH3T6/6qG8BEiWSSs6NlbIKWJAs762Xy9tt13UrgOW/WdRnyeAGa2w1/Z04osbgWudez0yzZa+U1vKjhYV8TIUrV+85V9gDUDRc/7sJC9ZnHX8FcBINngThmBtZ0VhYt5sU5A4/G5a1PoUb6PFjpNttnSBJgLA18g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=N2X9DZKV; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LEw8RiMv"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-41467d697a2so3679065e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 08:49:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710863354; x=1711468154; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ADtjyGn0eFpMcL5tcHRmk098Oppmok1FxnjO4slrBOM=;
-        b=LEw8RiMvdDcBWTPLnVUdK8ELyXyE/23UjjnhNp+OpukaMJKXO4ZwyGoyV2bgw051Ft
-         83ztXeLP6s4v+IRQdlx12l2hkxyyyZfj0v7th6Vt179yOdoYiKZp14t09kd4fuTyKnKa
-         T6F6DTB/nD24RhuO3L1RGJTG/h6wAybvolK9n01CiT+FmJARu/AFfgvMFyra+JMXty3e
-         dhVF2gfeiNMHvSyBQ0mZ4y11plAVMjgSNlHpUfPGO6ZExsfU45on6dnMewWkihYMHaQy
-         iz5TxrkErQAjtMyH8w26zVxjNv4+LoRiIHETviM9h68Zt0XIw5gnJoBna/4StYr+wKGv
-         b4Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710863354; x=1711468154;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ADtjyGn0eFpMcL5tcHRmk098Oppmok1FxnjO4slrBOM=;
-        b=MtGggNs3YxsXhPHVicsiL/l2fl/paRrKGMH3rWizNjWsdsepaCdli9C10ggkXDkBuu
-         vftf5XVU2Mxp1ko7xToRBGXCgOs3UT1i041ZPmt/i6O/LhtOs5JrXb0bRLVi4dDjUPy3
-         MrvOXheluA5P6KnOAr69KrAmIMydbyKG/sIgDVLaFaMunRAWlXQf8/1WFvP88YPUiN6J
-         JwRhH59y+yuLiJPW/g8VWYl30bs8OlFkKMgK4QfBZttA+4IvgoPkQYgiboo6jvwha4JO
-         neFaiLpL4hh192XqWRepEaalY+KT1Upu/mLg+iVOJf+aEspSKjIVXsrI4U3NQTIbaau6
-         0N5g==
-X-Forwarded-Encrypted: i=1; AJvYcCX/XCEcgh4OYeV/l+S3+Lc3wIeIIDKfQyiaO3yeUrkbMpxACrDP0zHnLBoDfCHpstHv3jq3RpgkCwAlphdcOPclv1OPwrmEUif6qA/p
-X-Gm-Message-State: AOJu0YwEHOtPKPogbq7bW47CPvUlMuLyF3Z0zSY7jd7wtgbRl7714V1f
-	LHh9OCgB0R6MB1QjrF5PF+CGlOXyT367CtQgq+/VS7a48I0O9/21wolY+RAQN/w=
-X-Google-Smtp-Source: AGHT+IHrOnj4CaHghcEG+9l8AS5c9AIXpcElhpR8lUv76uiBOgUiYCWAhhNkUgilfTUHBoAMu3DNnA==
-X-Received: by 2002:a05:600c:82c9:b0:413:e956:6893 with SMTP id eo9-20020a05600c82c900b00413e9566893mr14388206wmb.41.1710863353717;
-        Tue, 19 Mar 2024 08:49:13 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id m9-20020a05600c3b0900b00413ebaf0055sm18742915wms.7.2024.03.19.08.49.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 08:49:13 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-To: quic_jesszhan@quicinc.com, sam@ravnborg.org, 
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
- airlied@gmail.com, daniel@ffwll.ch, robh@kernel.org, 
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
- thierry.reding@gmail.com, Nathan Morrisson <nmorrisson@phytec.com>
-Cc: w.egorov@phytec.de, dri-devel@lists.freedesktop.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- upstream@lists.phytec.de
-In-Reply-To: <20240318161708.1415484-1-nmorrisson@phytec.com>
-References: <20240318161708.1415484-1-nmorrisson@phytec.com>
-Subject: Re: [PATCH 0/2] Add POWERTIP PH128800T006-ZHC01 panel
-Message-Id: <171086335278.3926836.15356889496427917031.b4-ty@linaro.org>
-Date: Tue, 19 Mar 2024 16:49:12 +0100
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="N2X9DZKV"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240319154938euoutp015644aac595b3d7ee08af818b062e397e~_NS23ePKD1433914339euoutp01k;
+	Tue, 19 Mar 2024 15:49:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240319154938euoutp015644aac595b3d7ee08af818b062e397e~_NS23ePKD1433914339euoutp01k
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1710863378;
+	bh=R1lP9UztVoNnnxcHKIoyWO6S39gpnGIuUG/nm9i+hWI=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=N2X9DZKVIsyaplpFJ6DHxKrJD//AmzA6htkh4+bYkGzJ7chdVtheYhAJHSy467Mne
+	 kTOhEDNNoSwMQsZQApKR/9+CXfVNLd2PY9uEoQlEdVHW+CLtySSHXfq6BkCAq9qKOz
+	 ZLW2S/v6zusOaVjrtxG9vMxK99TRmm2InQkur3Lk=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20240319154938eucas1p1701e43711b4cf34ea45a53766c767010~_NS2sxSlJ2048520485eucas1p13;
+	Tue, 19 Mar 2024 15:49:38 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+	eusmges2new.samsung.com (EUCPMTA) with SMTP id DF.4B.09814.214B9F56; Tue, 19
+	Mar 2024 15:49:38 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240319154938eucas1p10dd98f7dd53f3e91793bc8d0f34df1ec~_NS2SUOJ-0624406244eucas1p1B;
+	Tue, 19 Mar 2024 15:49:38 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240319154938eusmtrp1dc02a9a7f4c4f7469d1668c38438ab0a~_NS2Roa4M0928109281eusmtrp1Z;
+	Tue, 19 Mar 2024 15:49:38 +0000 (GMT)
+X-AuditID: cbfec7f4-711ff70000002656-e4-65f9b412fad0
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 20.10.10702.214B9F56; Tue, 19
+	Mar 2024 15:49:38 +0000 (GMT)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240319154938eusmtip12e13b71a488975293555f9019ec9c3f1~_NS2FPMQv0255302553eusmtip1E;
+	Tue, 19 Mar 2024 15:49:38 +0000 (GMT)
+Received: from localhost (106.210.248.248) by CAMSVWEXC02.scsc.local
+	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Tue, 19 Mar 2024 15:49:37 +0000
+Date: Tue, 19 Mar 2024 16:49:35 +0100
+From: Joel Granados <j.granados@samsung.com>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+CC: "Eric W. Biederman" <ebiederm@xmission.com>, Luis Chamberlain
+	<mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>,
+	<linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 0/4] sysctl: move sysctl type to ctl_table_header
+Message-ID: <20240319154935.a3ase52pvuvrqz22@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.4
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="zeom3d6o35odsrdw"
+Content-Disposition: inline
+In-Reply-To: <20240222-sysctl-empty-dir-v1-0-45ba9a6352e8@weissschuh.net>
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJKsWRmVeSWpSXmKPExsWy7djPc7pCW36mGvQ9Ubf4v62F3eJMd67F
+	nr0nWSwu75rDZvH7xzMmixsTnjI6sHnMbrjI4rFpVSebx+dNch793cfYPaYcamcJYI3isklJ
+	zcksSy3St0vgypi+dg97wQ7hioY3H1kbGG8LdDFyckgImEj8unyRqYuRi0NIYAWjxJqNR6Gc
+	L4wSa2e1s0A4nxkl1k3fwQzTMq9xIStEYjmjxKyJ+5ngqg4/nQXVspVR4t+K5YwgLSwCqhKz
+	n51nB7HZBHQkzr+5AzZKRMBGYuW3z+wgDcwCe4FGvZgPViQs4Cpxr+ceWBGvgIPE1KPzoGxB
+	iZMzn7CA2MwCFRJTfz8DsjmAbGmJ5f84QMKcAp4S6zdMZYE4VVni+r7FbBB2rcSpLbfALpUQ
+	6OeU6Hv8F6rIRaL1/xyoImGJV8e3sEPYMhKnJ/ewQDRMZpTY/+8DO4SzmlFiWeNXJogqa4mW
+	K0/YQa6QEHCUWNnnAmHySdx4KwhxJ5/EpG3TmSHCvBIdbUIQjWoSq++9YZnAqDwLyWezkHw2
+	C+EziLCexI2pU9gwhLUlli18zQxh20qsW/eeZQEj+ypG8dTS4tz01GKjvNRyveLE3OLSvHS9
+	5PzcTYzAFHb63/EvOxiXv/qod4iRiYPxEKMKUPOjDasvMEqx5OXnpSqJ8LJz/0wV4k1JrKxK
+	LcqPLyrNSS0+xCjNwaIkzquaIp8qJJCeWJKanZpakFoEk2Xi4JRqYHLZpbFw1QymF+yzog91
+	GOzI3l95y2bGXF7jUo9zr7YfW/k4tcv8XH74BJm5FbaLnp5PWqx1Yel098BrOxhNziUyVSyJ
+	EjSamjPNbdu2yApp/4z6+s3lIfknlr94ED/nmqJZ5LW3/J0VQgpf9v+P/7JPRNH8MOdk99g0
+	7kMFCXk9F8/2af1T1l0hdDwhetMM4bKjMgusk8TYLTn7zNXmP321nm/Jnr3RGp+65WVF+SU2
+	7Njc7/Ayal9E2VvFLudbTx9euTm1Myjhxt1rv7c8sb9r/L3hwMUPOo+2sMzkbJjqzpMSql2o
+	ovI8X+zkgYneE9wTNRO219/aY/W/bkbFq927rLSLXqhUVLzKnZqWdk2JpTgj0VCLuag4EQAX
+	2oZe3AMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMIsWRmVeSWpSXmKPExsVy+t/xu7pCW36mGkw/xWXxf1sLu8WZ7lyL
+	PXtPslhc3jWHzeL3j2dMFjcmPGV0YPOY3XCRxWPTqk42j8+b5Dz6u4+xe0w51M4SwBqlZ1OU
+	X1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5egl7G617Rgm3BF
+	+6JnzA2MNwW6GDk5JARMJOY1LmTtYuTiEBJYyihxbP8OdoiEjMTGL1dZIWxhiT/Xutggij4y
+	Sizb3ckEkhAS2MooMfFEKIjNIqAqMfvZebBmNgEdifNv7jCD2CICNhIrv31mB2lmFtjLKDHr
+	xXywImEBV4l7PffAingFHCSmHp3HDDHUQ+L/8X1QcUGJkzOfsIDYzAJlEo/OTgayOYBsaYnl
+	/zhAwpwCnhLrN0xlgThUWeL6vsVsEHatxOe/zxgnMArPQjJpFpJJsxAmQYR1JHZuvcOGIawt
+	sWzha2YI21Zi3br3LAsY2VcxiqSWFuem5xYb6RUn5haX5qXrJefnbmIExvC2Yz+37GBc+eqj
+	3iFGJg7GQ4wqQJ2PNqy+wCjFkpefl6okwsvO/TNViDclsbIqtSg/vqg0J7X4EKMpMBQnMkuJ
+	JucDk0teSbyhmYGpoYmZpYGppZmxkjivZ0FHopBAemJJanZqakFqEUwfEwenVAPTSst9nkw2
+	s+UPrZ63baWy4UX1e2oWbWdDnqeJWSXKHIhZx32o/beEm4ngy1lKjXyfZlT/2HGBIz7wd+zf
+	Y+uXyb1QCqi2+vzihmQ6779oRpfq+LWRyeqqZVc5ZlyQu1Fv/2AV+45nQWHOnM1OTlaCs/fP
+	u5K5aauWbAy/TWLztrpnbddVzyx7GlnK8pbju5Df8lL5/oPzJ6+bq/bz9dvX15bzn0iMSnHf
+	qTj7vN/b2Tc2LPdXSchZ3BXEmFsRyf7Ecy5nnG/8gWDeeI7EU9H+SwV2VjX/qgvoVWjauTQp
+	7Lzdx321nw/GTJlXOFc6+mCI/x62y2pqX52+sk1zTIxVCpPoLORNET508OOhszlKLMUZiYZa
+	zEXFiQCjkdkgdgMAAA==
+X-CMS-MailID: 20240319154938eucas1p10dd98f7dd53f3e91793bc8d0f34df1ec
+X-Msg-Generator: CA
+X-RootMTR: 20240319154938eucas1p10dd98f7dd53f3e91793bc8d0f34df1ec
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240319154938eucas1p10dd98f7dd53f3e91793bc8d0f34df1ec
+References: <20240222-sysctl-empty-dir-v1-0-45ba9a6352e8@weissschuh.net>
+	<CGME20240319154938eucas1p10dd98f7dd53f3e91793bc8d0f34df1ec@eucas1p1.samsung.com>
 
-Hi,
+--zeom3d6o35odsrdw
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 18 Mar 2024 09:17:06 -0700, Nathan Morrisson wrote:
-> Add the device tree bindings, timings, and compatible string for the
-> POWERTIP PH128800T006-ZHC01 panel.
-> 
-> Nathan Morrisson (2):
->   dt-bindings: display: simple: Add POWERTIP PH128800T-006-ZHC01 panel
->   drm/panel: simple: Add POWERTIP PH128800T006-ZHC01 panel entry
-> 
-> [...]
+On Thu, Feb 22, 2024 at 08:07:35AM +0100, Thomas Wei=DFschuh wrote:
+> Praparation series to enable constification of struct ctl_table further
+> down the line.
+> No functional changes are intended.
+Took me some time but I finally got around to it. I just had comments
+regarding the commit messages. I'll add this to sysctl testing to get
+the ball rolling; I'll add it to sysctl-next after you modify the commit
+messages.
 
-Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-next)
+Thx.
 
-[1/2] dt-bindings: display: simple: Add POWERTIP PH128800T-006-ZHC01 panel
-      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/3b2304cfeddd141523cb50cc1a3ba7624b865011
-[2/2] drm/panel: simple: Add POWERTIP PH128800T006-ZHC01 panel entry
-      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/fd6aa8f2dcb7236e511c1a58d82c2a178170e6ff
+>=20
+> These changes have been split out and reworked from my original
+> const sysctl patchset [0].
+> I'm resubmitting the patchset in smaller chunks for easier review.
+> Each split-out series is meant to be useful on its own.
+>=20
+> Changes since the original series:
+> * Explicit initializartion of header->type in init_header()
+> * Some additional cleanups
+>=20
+> [0] https://lore.kernel.org/lkml/20231204-const-sysctl-v2-0-7a5060b11447@=
+weissschuh.net/
+>=20
+> ---
+> Thomas Wei=DFschuh (4):
+>       sysctl: drop sysctl_is_perm_empty_ctl_table
+>       sysctl: move sysctl type to ctl_table_header
+>       sysctl: drop now unnecessary out-of-bounds check
+>       sysctl: remove unnecessary sentinel element
+>=20
+>  fs/proc/proc_sysctl.c  | 19 ++++++++-----------
+>  include/linux/sysctl.h | 22 +++++++++++-----------
+>  2 files changed, 19 insertions(+), 22 deletions(-)
+> ---
+> base-commit: b401b621758e46812da61fa58a67c3fd8d91de0d
+> change-id: 20231216-sysctl-empty-dir-71d7631f7bfe
+>=20
+> Best regards,
+> --=20
+> Thomas Wei=DFschuh <linux@weissschuh.net>
+>=20
 
--- 
-Neil
+--=20
 
+Joel Granados
+
+--zeom3d6o35odsrdw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmX5tA8ACgkQupfNUreW
+QU+3JQv/Vzo9AyQraFidBTpoHTIFJw/b4gouckAz5RkfeG+55wcKHnJjv8gRZG27
+Hf9/Bx6O9zchi0jnKT+i0JH5CeXY7yIym09/9Pu7z2EE+rcUnk67pKcU3CtLTsPn
+fj/eHMNau4rO3Ozqtg003AbuXDa86sInKtfaDVxOzEIaubM7BYd2sSfp44xwnoZm
+XI63wvl76FWgcFacfEizi5UzhZhXrzoT/pipwBUyCgtCccHJUgSXgyAZgOAD5M7J
+JG8ytuNrLgpRvdvqQEvizVlxKBnE6qsRvsN0GuTC4iHKFQw3fFqjW5xsiNLoxKCX
+o64qSqkzLD7ZyLUj21UtnqrCmrTavxuFj3Eqh3X4ZQXVGkyGhgjr3SiNMahqM19H
+r1gkjNTIgV1irklPBM3Yrip7zx27xjOwMJooiBakqavOVdrZbWlh21pcgHR1C79K
+wEpqm310ccLwndvmQ2dIQUEYWHjLGWiTZc5jl0gue4n5ruE8Id6RGaxjfmKIRRl0
+ZF/E8W+1
+=SbYd
+-----END PGP SIGNATURE-----
+
+--zeom3d6o35odsrdw--
