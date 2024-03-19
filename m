@@ -1,111 +1,94 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABAE1171C;
-	Tue, 19 Mar 2024 16:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCAE3101EB
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 16:46:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710866753; cv=none; b=hes+mA+D0tYG0QNzaXdoa8OwwCUMHjS50hOhDIF5j/8/TYtdfnijSTIKquWjhFKlvbkeR5wmVXzrbuVvqGHZUMrgEiBbG/iVOIlN5sGlXv6FDGTaMvAMyD++zgHeCkCqTFLmzdbPMQzeDg+WoXMrZ+dYy19hG3Pxb4J6JfMv2Kw=
+	t=1710866777; cv=none; b=hPVoswhBhHBevNgYUO4wxrz1YFuZyezqYS/hQauZjPgbbLgZ16XIDxOrJgA+jl+2p45FI6+ukO1YqyjkBtAqN9X41PA932yzSQ4Qksm3Z8xA+fj5zVzGSu2qW6jTW04oJ5Gd1Gla17Rj3TNGrROKHVzvF9Y7gXuZ/ZJE00nA9u8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710866753; c=relaxed/simple;
-	bh=WeQCYm+MhXwSIvkBg2FGmOP5EPVeJUv4HAMFDixtsKM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CiypeTJbkLjO6CgA+jsZIUqIE6ksYMgpj4lYW+HfjmZXlNY0cjr6RKQkovL+7JjFebAi6Jf6BMULOPVcPv/PdncQREDE9pZzn0JdJfkjQSezh3V8L4R19/kGNS9+OJeRGKYeln2+i/XKbh2b9u/sL4FTFGCdPhm2G9zg0oNdIlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mtgo6XRz; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1710866777; c=relaxed/simple;
+	bh=jf8w8ii2uTlcW7NwOINkLfBd497lj8VqXhipSYtKB0A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fb0cBZOWaJr0L7R4as/4XmcttOfR+HmB+zL876BFBuF2L4he/VVlOmoZvUHNNwzZss0hmI0qDCMsjgaU0h31WMjaPy1nGJ8LZHnemVRFuokWCg38RafFdHNDXfWYX9Lxg9qJkuBTlobsIOt+dShZp3F6lkFW3W6C3XB9B11bO1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=AK5+6/aU; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mtgo6XRz"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42JGMaj1030858;
-	Tue, 19 Mar 2024 16:45:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=n/pP5d29NyH5V1cnKGJv6V1xIfsfQJultqnn14e9mjU=;
- b=mtgo6XRzn9xAxkQ2u1+EHU7zDYvN7U4pNXdVewgaAZQxKWOAy3Q3nHVikQrMEE8NXZD2
- 101AuQyL5hZlsN9N3MvKnAiSDXjyl+2jiF9CPqZWd1rCBMKzD1SJ8Om7MeXYU8zzcPTY
- DXN8KhKVAkhqlYpr/AebA3PDb0+eOp4Jb3Z1c1dkfMoqe49PxJ/ysXqizsCWDZPVLJjv
- 6OYQh3ln6uQCVPLn8YLMJeyM9GGUvysZ/q9uWPGDLomDLQ7DDC2qqOhUS7FaRXIsPdNs
- YzojLbwE7lnFcUlKpbU3CWTMeQptU6Dfmub3QWgExLGBfBgbdl295qrGsBOPpo7FjjqK Cw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wye5yg1u5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 16:45:49 +0000
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42JGg45x031816;
-	Tue, 19 Mar 2024 16:45:48 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wye5yg1tk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 16:45:48 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42JEtZ3O019843;
-	Tue, 19 Mar 2024 16:44:38 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wwqykgh0v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 16:44:37 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42JGiWgr43909478
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 19 Mar 2024 16:44:34 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 801682004B;
-	Tue, 19 Mar 2024 16:44:32 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2DEBF20040;
-	Tue, 19 Mar 2024 16:44:32 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 19 Mar 2024 16:44:32 +0000 (GMT)
-From: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
-To: Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: Nina Schoetterl-Glausch <nsg@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        Sven Schnelle <svens@linux.ibm.com>
-Subject: [PATCH 0/2] KVM: s390: Fix V!=R bug in STFLE shadowing
-Date: Tue, 19 Mar 2024 17:44:18 +0100
-Message-Id: <20240319164420.4053380-1-nsg@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AK5+6/aU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=e12kOj6qXl56fZI+rOW98a1AZQ8vEm9EskkUsKr5Dsw=; b=AK5+6/aUf96uh/P0XgVlqjfmLQ
+	LlQM3DgfiHkzqjMXb38Boyk6/hx6ohO8/HV5wOpCaQfuiLYQMotglTvwjYZadWdS2AY1aGpj8n8/U
+	9KBgJHZg+8Hbo9UGFQBnZYRf6yS5gFq0JD00ZLD3/vnmeA2yTvXnoxINmocShKUTncyBfJwqKQdsI
+	WqU8hlEjzqWxAJdisrHyZMTckViM/Anz5mJN8JMWamSYwP7DA4av7lL5KyXa4gFwcT+vSzd7NesxZ
+	VaH2DneHCowTqD5do57m9ji6qPFNFovlKrO5PJd6kov5gsHRWHwPvFiIFh2oKfdQcS+YECJTlqoeH
+	Td5Shw3g==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rmcbG-00000002KpW-3m92;
+	Tue, 19 Mar 2024 16:46:06 +0000
+Date: Tue, 19 Mar 2024 16:46:06 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Kairui Song <kasong@tencent.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] mm/filemap: return early if failed to allocate
+ memory for split
+Message-ID: <ZfnBTnXTIGck4lVR@casper.infradead.org>
+References: <20240319092733.4501-1-ryncsn@gmail.com>
+ <20240319092733.4501-2-ryncsn@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: LqhuP0TmlnrZ-YbQHFMvoyGn-2j4y5-W
-X-Proofpoint-GUID: yTlrPZGSlX8qkBUEbAL3Bn5amzyHPhdr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-19_06,2024-03-18_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 phishscore=0 spamscore=0 priorityscore=1501
- malwarescore=0 adultscore=0 clxscore=1015 bulkscore=0 suspectscore=0
- mlxscore=0 mlxlogscore=715 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403140000 definitions=main-2403190126
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240319092733.4501-2-ryncsn@gmail.com>
 
-The address of the facility control block is a physical address,
-and therefore requires conversion from virtual (patch 2).
+On Tue, Mar 19, 2024 at 05:27:30PM +0800, Kairui Song wrote:
+> From: Kairui Song <kasong@tencent.com>
+> 
+> xas_split_alloc could fail with NOMEM, and in such case, it should abort
+> early instead of keep going and fail the xas_split below.
+> 
+> Signed-off-by: Kairui Song <kasong@tencent.com>
 
-Also send unrelated patch 1 which was previously sent as part of
-"KVM: s390: Fix minor bugs in STFLE shadowing" but deferred.
+The usual way of programming with an xa_state is to not do any error
+handling; the xas_ functions check for error and become no-ops, so we
+only have to check at the end.
 
-Nina Schoetterl-Glausch (2):
-  KVM: s390: Minor refactor of base/ext facility lists
-  KVM: s390: vsie: Use virt_to_phys for facility control block
+I think this case is worth making an exception for because we avoid
+acquiring/releasing the lock.  Not that we should be getting ENOMEM
+very often; we only allocate about 8 nodes usually and we get 7
+nodes/page.
 
- arch/s390/kvm/kvm-s390.c | 44 +++++++++++++++++-----------------------
- arch/s390/kvm/vsie.c     |  3 ++-
- 2 files changed, 21 insertions(+), 26 deletions(-)
+Acked-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-
-base-commit: e8f897f4afef0031fe618a8e94127a0934896aba
--- 
-2.40.1
-
+>  mm/filemap.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index 7437b2bd75c1..f07ea0b97698 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -880,9 +880,12 @@ noinline int __filemap_add_folio(struct address_space *mapping,
+>  		unsigned int order = xa_get_order(xas.xa, xas.xa_index);
+>  		void *entry, *old = NULL;
+>  
+> -		if (order > folio_order(folio))
+> +		if (order > folio_order(folio)) {
+>  			xas_split_alloc(&xas, xa_load(xas.xa, xas.xa_index),
+>  					order, gfp);
+> +			if (xas_error(&xas))
+> +				goto error;
+> +		}
+>  		xas_lock_irq(&xas);
+>  		xas_for_each_conflict(&xas, entry) {
+>  			old = entry;
+> -- 
+> 2.43.0
+> 
