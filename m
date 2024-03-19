@@ -1,155 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C440B1774A
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 16:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7985C8E1
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 16:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710866111; cv=none; b=qVCzmWT44cULB8hZ5a3MtZE4lh+rFCRZVsxaHrB8IdPUrmk+ss0mEluTeQ41Ot0ZZ7kMmKm2Td/BfP+kYIA1dWXpBCnOV3ZbMAcamPDYfwQoRFCBVS+xsjmMYaIhKTsxX/lCGO4XeqrvVDLbDu0H1Ap1mOv2SQzUPV1B46x90Q8=
+	t=1710866150; cv=none; b=ADncgwCwvRcqgkZ6VCaLlxfocGhO8Ar5f4/CgGi+au3YGwcSh2yg/Vir4uXn0gDdkkE+LVxQ0jZIqSeg2NaL+IjZjgNgj34SAnPQMabb3BWZosbfcZXVqfLqNwSu7X22+sCt0qc/kwqpLQ9B/FNQlgxJljc9/W9u1oDfzABDVCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710866111; c=relaxed/simple;
-	bh=DZcIdpEYDtyvpBwX6sQ+oG1Juy4yZCi8Pkp/MZRvJbk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CE9GCJgPZje6FCqHlcLlnDpZC3fDQDWsxxG5ivr7NzoaoeVtMmSTtTXDCQC4RGjGm+x31uTAf5w5PPBuwMuiq2Yfppqj8PFzcxc61g1ItKmMXzb2k62xdbyAjBqrJa6D1DpgQvkRmyKfpudvuH9/GZPLzksE8m9zMnajO0VnUiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h6FVrGfW; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710866150; c=relaxed/simple;
+	bh=q9uBXXkF/Mg0O6HtdHWp+kni+gGwOkJTVLcjuy2q/UA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=shFxZA1MlV/9baA73IqsgkGeld+3Yz8CzBz8r2YEBrYwx1+tD8RZX8hNkAU2UlvsT2PMNSVCyFkdv64LBkp/4ErHt/DoHIJSE7xsdb8BQCAGjHDbsPQfrwD76VpmNXPn04SquAoZIi96n9pnm/fpZOQlcExizfRmqp9+0Rm1ts8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b38QZMhE; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h6FVrGfW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710866108;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=1A6JplVJpKt9d5YjCUp/W/cMYHIdnlJlDtDSH3FwDD4=;
-	b=h6FVrGfWxVPkWu7n6uoklpntkzb9RckC3oP5xUzPwKqRLAVL5VHdHQvcP8pUo2JgXaNrGy
-	PwLu6me8Edx225oHQi48yz4AgH2qvmF/yREJRAVN6PmdIiBhzst94TLcuR4e2RIRH1kh9S
-	n6Pf47SCKHZ3dR4VT/31KMe49nqDG7o=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-433-WmWgR7J4PviBPQvXQR9ICQ-1; Tue, 19 Mar 2024 12:35:03 -0400
-X-MC-Unique: WmWgR7J4PviBPQvXQR9ICQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 19A9A1801DB9;
-	Tue, 19 Mar 2024 16:35:02 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.45.225.95])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 1C1FE2024517;
-	Tue, 19 Mar 2024 16:35:01 +0000 (UTC)
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
-To: kvm@vger.kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>
-Cc: Daan De Meyer <daan.j.demeyer@gmail.com>,
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b38QZMhE"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6e6b54a28ebso5607155b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 09:35:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710866148; x=1711470948; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=w96SEqzYAbTpf966liJXQFnSoV9Z+YW1Z6ZiFx4qEQs=;
+        b=b38QZMhE8jZ03+6rwp10aiCumqH/zxyRsYN7tRnUkECxAiI0fOgJm23/emDql7ikbP
+         htkFYgIb0d1ESFGqhCugKuVSNgiUKbtd1k6QjbWx9cv0ZmUfDr/wFEYevgSXzMl5kPBo
+         ir5iw+u3D3ShKPDTtfff/fdIPiQ2JQRKWubHlrvNjYNL2x0ib/fZeTzrTFxuEEQNWXSL
+         C2Y7Ayix1ArWJ2b/TiVe4A9p57kkdIkn1fsNc36n9FQ0u59V8IaECXzX3Vu0MQLZ6j36
+         f2+jeOma3JMHzow8c8jWEH3VKM8ThTR7KEgxE6P9gQeKNmq6sebtU6HRXUFtNdhGxNR2
+         zfAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710866148; x=1711470948;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=w96SEqzYAbTpf966liJXQFnSoV9Z+YW1Z6ZiFx4qEQs=;
+        b=mZu9i9IBHVybXV290AnI4kxjWb9OikjTYJdh5xG+l3KIHA8TnbFtF4190M0PFD7Mdc
+         fHvP7qPRTsKunBaXH7UQoyZcgc225IEB0AZ5A/xGrQxh/JMkjlTJ95dpwjwHXtjfQONC
+         f74bwxQDFpzmSpU8UQoOFkRpyTxPYWRFYH2ObovdLTAhRf51akuLB97g0tPx5I3uaeBQ
+         XGoW1iBUqIZPNTv1gCfN/RinW1QTZqViQekERtulCqJT8aHdxBV03EcAb6fnkbeMvzE2
+         aH02AVzPj6dSLDUJYAbZiBbE3qjeugPdymO7seBBqeDbl8F++3kRDoBCYeMsbH21oLwa
+         NbaA==
+X-Forwarded-Encrypted: i=1; AJvYcCUybtDi6WwwbVABFMekM4Y4PsS0dZmdpB9kj2w7fw3m93Z+xesLIDNdEnvtsgj9sY26Ax7ik1flG9PB8L1ow6Q8I/ub81C68595+XrO
+X-Gm-Message-State: AOJu0Yyo6Gfh8ICwgoCaYkD6ST2e9y0tQ1/qtp9eUb4x91k4OT37PT+2
+	cjQmu+nvG+ELMG2EErrJ0ffmEdp4C9tYb1sTAYlVw5hVqqEPajykpfunmb2GDA==
+X-Google-Smtp-Source: AGHT+IHUQM6pzUf/IP4HxZ2Ij8eYMGp3z1k0Y4oBtNyrAeqJ6GDq1SULh4emJAASSYdl6qKHg7E2/w==
+X-Received: by 2002:a05:6a21:3406:b0:1a3:6940:82ea with SMTP id yn6-20020a056a21340600b001a3694082eamr5204737pzb.31.1710866147866;
+        Tue, 19 Mar 2024 09:35:47 -0700 (PDT)
+Received: from thinkpad ([120.56.201.52])
+        by smtp.gmail.com with ESMTPSA id y31-20020a056a00181f00b006e61b0a4b17sm9923587pfa.185.2024.03.19.09.35.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 09:35:47 -0700 (PDT)
+Date: Tue, 19 Mar 2024 22:05:44 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Kunwu Chan <chentao@kylinos.cn>
+Cc: mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH RFC not-to-be-merged] KVM: SVM: Workaround overly strict CR3 check by Hyper-V
-Date: Tue, 19 Mar 2024 17:34:56 +0100
-Message-ID: <20240319163456.133942-1-vkuznets@redhat.com>
+Subject: Re: [PATCH v2] bus: mhi: ep: Simplify the allocation of slab caches
+ in mhi_ep_register_controller
+Message-ID: <20240319163544.GE3297@thinkpad>
+References: <20240228030056.509994-1-chentao@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+In-Reply-To: <20240228030056.509994-1-chentao@kylinos.cn>
 
-Failing VMRUNs (immediate #VMEXIT with error code VMEXIT_INVALID) for KVM
-guests on top of Hyper-V are observed when KVM does SMM emulation. The root
-cause of the problem appears to be an overly strict CR3 VMCB check done by
-Hyper-V. Here's an example of a CR state which triggers the failure:
+On Wed, Feb 28, 2024 at 11:00:56AM +0800, Kunwu Chan wrote:
+> Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
+> to simplify the creation of SLAB caches.
+> 
 
- kvm_amd: vmpl: 0   cpl: 0   efer: 0000000000001000
- kvm_amd: cr0: 0000000000050032 cr2: ffff92dcf8601000
- kvm_amd: cr3: 0000000100232003 cr4: 0000000000000040
+There are 3 kmem caches in this driver. Please change all of them.
 
-CR3 value may look a bit weird as it has non-zero PCID bits set as well as
-non-zero bits in the upper half but the processor is not in long
-mode. This, however, is a valid state upon entering SMM from a long mode
-context with PCID enabled and should not be causing VMEXIT_INVALID. APM
-says that VMEXIT_INVALID is triggered when "Any MBZ bit of CR3 is
-set.". In CR3 format the only MBZ bits are those above MAXPHYADDR, the rest
-is just "Reserved".
+- Mani
 
-Place a temporary workaround in KVM to avoid putting problematic CR3
-values into VMCB when KVM runs on top of Hyper-V. Enable CR3 READ/WRITE
-intercepts to make sure guest is not observing side-effects of the
-mangling. Also, do not overwrite 'vcpu->arch.cr3' with mangled 'save.cr3'
-value when CR3 intercepts are enabled (and thus a possible CR3 update from
-the guest would change 'vcpu->arch.cr3' instantly).
+> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+> ---
+> v2:
+>     - Simplify the allocations of mhi_ring_element slab caches
+> ---
+>  drivers/bus/mhi/ep/main.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/bus/mhi/ep/main.c b/drivers/bus/mhi/ep/main.c
+> index 65fc1d738bec..795611482f16 100644
+> --- a/drivers/bus/mhi/ep/main.c
+> +++ b/drivers/bus/mhi/ep/main.c
+> @@ -1478,9 +1478,7 @@ int mhi_ep_register_controller(struct mhi_ep_cntrl *mhi_cntrl,
+>  		goto err_free_ch;
+>  	}
+>  
+> -	mhi_cntrl->ev_ring_el_cache = kmem_cache_create("mhi_ep_event_ring_el",
+> -							sizeof(struct mhi_ring_element), 0,
+> -							SLAB_CACHE_DMA, NULL);
+> +	mhi_cntrl->ev_ring_el_cache = KMEM_CACHE(mhi_ring_element, SLAB_CACHE_DMA);
+>  	if (!mhi_cntrl->ev_ring_el_cache) {
+>  		ret = -ENOMEM;
+>  		goto err_free_cmd;
+> @@ -1493,9 +1491,7 @@ int mhi_ep_register_controller(struct mhi_ep_cntrl *mhi_cntrl,
+>  		goto err_destroy_ev_ring_el_cache;
+>  	}
+>  
+> -	mhi_cntrl->ring_item_cache = kmem_cache_create("mhi_ep_ring_item",
+> -							sizeof(struct mhi_ep_ring_item), 0,
+> -							0, NULL);
+> +	mhi_cntrl->ring_item_cache = KMEM_CACHE(mhi_ep_ring_item, 0);
+>  	if (!mhi_cntrl->ev_ring_el_cache) {
+>  		ret = -ENOMEM;
+>  		goto err_destroy_tre_buf_cache;
+> -- 
+> 2.39.2
+> 
 
-The workaround is only needed until Hyper-V gets fixed.
-
-Reported-by: Daan De Meyer <daan.j.demeyer@gmail.com>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
-- The patch serves mostly documentational purposes, I don't expect it to
-be merged to the mainline. Hyper-V *is* supposed to get fixed but the
-timeline is unclear at this point. As Azure is a fairly popular platform
-for running nested KVM, it is possible that the bug will get discovered
-again (running OVMF based guest is a good starting point!).
----
- arch/x86/kvm/svm/svm.c | 30 +++++++++++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 272d5ed37ce7..6ff7cbcb5cac 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -41,6 +41,7 @@
- #include <asm/traps.h>
- #include <asm/reboot.h>
- #include <asm/fpu/api.h>
-+#include <asm/hypervisor.h>
- 
- #include <trace/events/ipi.h>
- 
-@@ -3497,7 +3498,7 @@ static int svm_handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath)
- 	if (!sev_es_guest(vcpu->kvm)) {
- 		if (!svm_is_intercept(svm, INTERCEPT_CR0_WRITE))
- 			vcpu->arch.cr0 = svm->vmcb->save.cr0;
--		if (npt_enabled)
-+		if (npt_enabled && !svm_is_intercept(svm, INTERCEPT_CR3_WRITE))
- 			vcpu->arch.cr3 = svm->vmcb->save.cr3;
- 	}
- 
-@@ -4264,6 +4265,33 @@ static void svm_load_mmu_pgd(struct kvm_vcpu *vcpu, hpa_t root_hpa,
- 		cr3 = root_hpa;
- 	}
- 
-+#if IS_ENABLED(CONFIG_HYPERV)
-+	/*
-+	 * Workaround an issue in Hyper-V hypervisor where 'reserved' bits are treated
-+	 * as MBZ failing VMRUN.
-+	 */
-+	if (hypervisor_is_type(X86_HYPER_MS_HYPERV) && likely(npt_enabled)) {
-+		unsigned long cr3_unmod = cr3;
-+
-+		/*
-+		 * Bits MAXPHYADDR:63 are MBZ but bits 32:MAXPHYADDR-1 are just 'reserved'
-+		 * in !long mode.
-+		 */
-+		if (!is_long_mode(vcpu))
-+			cr3 &= ~rsvd_bits(32, cpuid_maxphyaddr(vcpu) - 1);
-+
-+		if (!kvm_is_cr4_bit_set(vcpu, X86_CR4_PCIDE))
-+			cr3 &= ~X86_CR3_PCID_MASK;
-+
-+		if (cr3 != cr3_unmod && !svm_is_intercept(svm, INTERCEPT_CR3_READ)) {
-+			svm_set_intercept(svm, INTERCEPT_CR3_READ);
-+			svm_set_intercept(svm, INTERCEPT_CR3_WRITE);
-+		} else if (cr3 == cr3_unmod && svm_is_intercept(svm, INTERCEPT_CR3_READ)) {
-+			svm_clr_intercept(svm, INTERCEPT_CR3_READ);
-+			svm_clr_intercept(svm, INTERCEPT_CR3_WRITE);
-+		}
-+	}
-+#endif
- 	svm->vmcb->save.cr3 = cr3;
- 	vmcb_mark_dirty(svm->vmcb, VMCB_CR);
- }
 -- 
-2.44.0
-
+மணிவண்ணன் சதாசிவம்
