@@ -1,99 +1,105 @@
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46FC2745E
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 17:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0BA3838F;
+	Tue, 19 Mar 2024 17:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710870871; cv=none; b=Ef6tkVUtZLJbC39mR2rZpXT74F5X4DLskIJQZwZjrvIApiCGn/EH/SuKdLZQDUfHT+jCPkkB+ZF3jkHHT78lPPkQw/BfZonEb7R8lrA4LVWXEHGkyZZhvrdywHalYkLvk0xjgOw0ZvpEcRZDbteo1ixd552u9CjgnsDgvIQ/9Rw=
+	t=1710870908; cv=none; b=o30+Zl6mxfQWi63UTUPCCiq+OA+XeE0zAN18r4VuGD0X4gchVxN/TJXSsvfsjYYg3OKOkcxZe6pgBBcZxpCj9o85/PC2tTc64+Lo5/Y4hBdAvqGtUF/MDfzIEgVYpEnwj0Xl+pok3QsXBXxyfsuvHXlY8pg9WpZcVVhXT/vFzqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710870871; c=relaxed/simple;
-	bh=HF6Vl5KL4xpUREI17F/A98SYy0fCl/Pf+Aw5AKvgvKY=;
+	s=arc-20240116; t=1710870908; c=relaxed/simple;
+	bh=i9Wx1B16rL428tWQhDd0HaROyOOmkti/BIWj0paHtmM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G4M3m4mO1GX8N/PZ7abaWaGHlsbuQI5O14kMWfLbYNh1XY9OvoMHh//at6uGxQGc0IPOd7ogoL2HOjbJV1Sb+aQt88CLdq56sTYH+B7S+rUDd+l5EWISQ1p1rDnfbqFYtQJ3y7dP4S19D5M3/Df0Lw39jS9TLXdtFqoLet7dNlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Zeyph68h; arc=none smtp.client-ip=209.85.160.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	 Content-Type:Content-Disposition:In-Reply-To; b=hj7F42d2AXs/yTqx/jfa0vo6AFzR4Qg18LiQJCRFs+nCT2Ic+nucK5IsaxQUyAG67M0NrYTv6bH4XoqVptjKzfi5qwRVEIXSZC8pyDip6v81iV+iA7UbJzwIEJFHXGjslq+GpsAYSCFJp8d9Uf9/B/JiJ1ioAX7PcXzX0WNaAnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B+Lu2gnZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Zeyph68h"
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-22200c78d4fso2467888fac.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 10:54:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1710870869; x=1711475669; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HF6Vl5KL4xpUREI17F/A98SYy0fCl/Pf+Aw5AKvgvKY=;
-        b=Zeyph68hDhYvRsvh3QePT9Ovap2WmcKCsLwaPl+ziByVLNxle6pkN7O8XgaezmKqXM
-         hbH25obwUJYKwihm8E7APaYbYYYayAPdfhhmawgOjGAJRF43HW/Kdkj2NzIRkuwRe6cr
-         0Cv5g7sWLFOJP8daUmYjLr4Ut380WkcDmt2s3Djx0BlxC6jINMrdzY1aBR2jcesvRzG6
-         nDN6rvBgQCayLLNChFpCWokjHuRxnL8zgFguqSt0JVT19MPv1hhxN8rTZbXb5eL7wWXS
-         WI11fWG0u5gSjoqxTZPl7u21oQU5pOnHYqpKf+xVhyxdaRkzTCm1R/ga37zaa2sNhnJy
-         +NdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710870869; x=1711475669;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HF6Vl5KL4xpUREI17F/A98SYy0fCl/Pf+Aw5AKvgvKY=;
-        b=Tc6+iyJB4x06rXox0KVia7EgBZ0ew/S6bUdvCwBTZB9arY+mvM0fklrQkOfyoQIJP3
-         VPFEJJEkKFZGonXKrKxG3zGZX9omg3BoUFmk3LQbroQJ8CckHOE39MPaGrhXKTh3LOxj
-         qeMbGkKU2OSBNTXdV/JAYqZ4Iqgo6qFwRPibliuKyNYyHhqgMG/iSZajM6miIuFq6zHn
-         FcRS2/RPLMtDCv0oLQuSvI4tqdtxxxwgsczV6r/UBN1Kwcp2IPdss+8kUyx7Fhfy9yOC
-         WT1ycq+SBeXLW87SjAJpJ1NwB9tk8ausBBGvgCXi/t+/2uszQCQP0wtoCt3eQUO49d7w
-         6f1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXHxRYQeZ23qL86BC5/aeQUo8b64Znlspx92ArnjWxgGCGiEaqWq/WR1KZnixWyHSN+cVANGsmyxPT7JXZYyfIlucurKVpt1X7W/LX2
-X-Gm-Message-State: AOJu0YzF7SHIpnPjrqZb05ptE1QO4dESeha7TNaU4/3Km1av61PfbYSi
-	UlAjJy0bIIQhKtlfcQ5Pdg/EnIYhFvSEg3wkXQJuPIafPHquJN7sTSoxRJ+UIY0=
-X-Google-Smtp-Source: AGHT+IHVIAnHnQZiZoDX/pbyOjP2H640ehA0I39KqURFs2tz8LL5UStmL8zs/cTqG9a5m1PaAXGInQ==
-X-Received: by 2002:a05:6871:110:b0:221:a517:17ec with SMTP id y16-20020a056871011000b00221a51717ecmr16967034oab.57.1710870868900;
-        Tue, 19 Mar 2024 10:54:28 -0700 (PDT)
-Received: from ziepe.ca ([12.97.180.36])
-        by smtp.gmail.com with ESMTPSA id gh11-20020a056638698b00b00477716fcbb8sm2429986jab.40.2024.03.19.10.54.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 10:54:28 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1rmaVW-001eUR-KB;
-	Tue, 19 Mar 2024 11:32:02 -0300
-Date: Tue, 19 Mar 2024 11:32:02 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Shivaprasad G Bhat <sbhat@linux.ibm.com>
-Cc: tpearson@raptorengineering.com, alex.williamson@redhat.com,
-	linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-	npiggin@gmail.com, christophe.leroy@csgroup.eu,
-	aneesh.kumar@kernel.org, naveen.n.rao@linux.ibm.com,
-	gbatra@linux.vnet.ibm.com, brking@linux.vnet.ibm.com, aik@ozlabs.ru,
-	robh@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	aik@amd.com, msuchanek@suse.de, jroedel@suse.de,
-	vaibhav@linux.ibm.com, svaidy@linux.ibm.com
-Subject: Re: [RFC PATCH 1/3] powerpc/pseries/iommu: Bring back userspace view
- for single level TCE tables
-Message-ID: <20240319143202.GA66976@ziepe.ca>
-References: <171026724548.8367.8321359354119254395.stgit@linux.ibm.com>
- <171026725393.8367.17497620074051138306.stgit@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+Lu2gnZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B343C433F1;
+	Tue, 19 Mar 2024 17:55:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710870908;
+	bh=i9Wx1B16rL428tWQhDd0HaROyOOmkti/BIWj0paHtmM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B+Lu2gnZRUnwSjPGkP4tAZPn9ic1z42vaes3QUEiGaehJFIlBTW76JxkiAUgxVBm7
+	 s7S47tbFPTsCnvBx/VqE56CEYMY5ZED2xo8jiDWXHVXZmgUFBqUwPZpn1V3aLMyVhO
+	 /jjKHzK5ntW7KLZ2F9jMhYpIBsIk/Unz1Qbz1FVAt2tb3C9uQd1CjdkISwsrYvctV/
+	 WtdS2sNb1WBVGhrgHBHofDQ000J/dkvXpPbaEZpmIS3YRD1f1gcuYSPiZMVCLkzCtC
+	 XgPpU1YEliVGDvYoflwQONf5bzWKUjBNBqbXclNNWVqe+dJpM9fDjUrUQGM/PLES1n
+	 Qek97JB+eHjuA==
+Date: Tue, 19 Mar 2024 17:55:04 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Richard Alpe <richard@bit42.se>, linux-kernel@vger.kernel.org,
+	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>,
+	Michael Walle <michael@walle.cc>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: nvmem: Remove fsl,t1023-sfp in favor of
+ fsl,layerscape-sfp
+Message-ID: <20240319-fondling-implode-322a9cb570b8@spud>
+References: <20240316002026.1808336-1-sean.anderson@linux.dev>
+ <20240317-starved-pager-7a81c5045cfc@spud>
+ <9daf9c8f-6606-4ff6-8065-6a32fa0d152c@linux.dev>
+ <20240318-scarf-startup-64088b1d8d35@spud>
+ <fa047914-da03-4234-b48f-eebdf350795e@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="nI3bLVs9cY0aY44i"
+Content-Disposition: inline
+In-Reply-To: <fa047914-da03-4234-b48f-eebdf350795e@linux.dev>
+
+
+--nI3bLVs9cY0aY44i
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <171026725393.8367.17497620074051138306.stgit@linux.ibm.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 12, 2024 at 01:14:20PM -0500, Shivaprasad G Bhat wrote:
-> The commit 090bad39b237a ("powerpc/powernv: Add indirect levels to
-> it_userspace") which implemented the tce indirect levels
-> support for PowerNV ended up removing the single level support
-> which existed by default(generic tce_iommu_userspace_view_alloc/free()
-> calls). On pSeries the TCEs are single level, and the allocation
-> of userspace view is lost with the removal of generic code.
+On Mon, Mar 18, 2024 at 11:48:06AM -0400, Sean Anderson wrote:
+> On 3/18/24 11:40, Conor Dooley wrote:
+> > On Mon, Mar 18, 2024 at 11:08:00AM -0400, Sean Anderson wrote:
+> >> On 3/17/24 11:10, Conor Dooley wrote:
+> >=20
+> >> > Additionally, should
+> >> > they fall back to t1023-sfp? I see that there's already some dts fil=
+es
+> >> > with these compatibles in them but seemingly no driver support as th=
+ere
+> >> > is for the t1023-sfp.
+> >>=20
+> >> I checked the reference manuals for these processors, and all of them =
+use TA 2.0.
+> >=20
+> > Sounds like a fallback is suitable then, although that will require
+> > updating the various dts files.
+>=20
+> Yes, a fallback (like what is done for the T-series) would be suitable,
+> but given that these devicetrees have been in-tree for eight years I
+> think it would be preferable to support the existing bindings for
+> compatibility purposes.
 
-:( :(
+Just cos stuff snuck into the tree in dts files doesn't make it right
+though, I'd rather the bindings were done correctly. I don't care if you
+want to support all of the compatibles in the driver so that it works
+with the existing devicetrees though, as long as you mention the
+rationale in the commit message.
 
-If this has been broken since 2018 and nobody cared till now can we
-please go in a direction of moving this code to the new iommu APIs
-instead of doubling down on more of this old stuff that apparently
-almost nobody cares about ??
+--nI3bLVs9cY0aY44i
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Jason
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZfnRdwAKCRB4tDGHoIJi
+0me8AP0SHieSWI60ybk0My6MtdBu8dEwX2OPXkbv0GS0b/jcAQEA0BMBzGueOCUP
+i4nd9SNbLZ1ZChDd/C2pBguwmU1K3gM=
+=fj05
+-----END PGP SIGNATURE-----
+
+--nI3bLVs9cY0aY44i--
