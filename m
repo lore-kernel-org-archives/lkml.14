@@ -1,172 +1,278 @@
-Received: from DEU01-BE0-obe.outbound.protection.outlook.com (mail-be0deu01on2105.outbound.protection.outlook.com [40.107.127.105])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 231557F7CE
-	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 09:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.127.105
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710842200; cv=fail; b=ozHgnkRMUHYQaUXyxhB2mA16rXCeyEKsbfDBbnM3JyihDM2xwNQoqj+HpGNH6kAsW+GOpm4OcFW4KXqYAvrgTNfZhLxkLopHnSubX2vunclL89lCFjxymp9R5/QK5fqJV4NfWsmPKH2htuiupbiewkxS0rx1IIsmLEMGsrLM4TU=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710842200; c=relaxed/simple;
-	bh=SftUslaHsqY8HGO3YhrDrJGlF/tU2RlUdzU760/6KF0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=F2rjENazj3L8zx2aSVcNmjEhDnE8toNTDiYiHelbHCTUU7Ht9oz8np3RwQPUc1rh0jasFw1kMsXPA3nUDQJ/zSUr499UkNxZQx/wOxtJoFvEgUC6l1Pbk7mskqY2dt+T2p10p3gi7k11o7C2dLjjPV9H11eezUS0Xqrbp+euZWI=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iesy.com; spf=pass smtp.mailfrom=iesy.com; dkim=pass (1024-bit key) header.d=iesy20.onmicrosoft.com header.i=@iesy20.onmicrosoft.com header.b=0KpalkfO; dkim=fail (1024-bit key) header.d=iesy20.onmicrosoft.com header.i=@iesy20.onmicrosoft.com header.b=r1T9OLvp reason="signature verification failed"; arc=fail smtp.client-ip=40.107.127.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iesy.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iesy.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCEE17F7E9
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 09:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710842206; cv=none; b=ZCaqf+E7zOZlXuOaYJrSsL3DQjLBdne+APyYGtG1hJJskV5lZs5ZJz6gLAVg5O4LxLEFLG0ZA+QQAkg179Tz1fF5wKTEDT6Jlj283UIcjDue0s6Db4ul6HLC8oDRSXEXLYH2H1zLygyvvlTfXLQpGFhQ5mLqpyPSvXLe9LK1roI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710842206; c=relaxed/simple;
+	bh=sVmpa3YnHgH60lI6Y+lLRwChhU3YC6GAAXpvxJnulaM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kizzyX+/A7Ox6Vpjg+Uv3HddMtFWHAH308DH+CRWCc4zgC+yIOdyAXd6FVBFGvE8DQqvsnNXrRRmEAjxger64L3Il3JIZ499KW6xAGt05c8qF18wH+kqBhMMF8xnkqR08nIDRSqsKlFDAvkTOCBYqYGnLI7M+BgksuNsI2Rlgw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=isdayeQ7; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=iesy20.onmicrosoft.com header.i=@iesy20.onmicrosoft.com header.b="0KpalkfO";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=iesy20.onmicrosoft.com header.i=@iesy20.onmicrosoft.com header.b="r1T9OLvp"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=fail;
- b=lai4m9tYlPDqp1DexJu02J5vkxu2p4px6StaSnwhxPldHCaGBxNShDclwJPT1J0qyD0sDtFEjjUhmEAXSvJ/aA8ZuusUquF8+Ejha//oTlQ52TNZgk8+byd0mzKOB/oyxIxk8Svhi9BuQZlU2yota/m3j2dssc5bxtk2pTgqJUtkBBqVY1zMrX0TaQfp69ep1Tkc0CV+1PItI5q4TwdONHRBQRWAkNF1vz+hz1Cm3NEPZaqiegKBXA4c8XJd76R4ApnWIuJZVtTwxo3iROjI9c7LgtoVkNZOP11LFWtZNfBCaSJlFRNmZE7vgy4wCPMgwKwvza86TYiLP+aeq0zVLA==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Qcm2tufEHCswe5/0BhmtkpeKGfTtdqAG/VOY759/Jdc=;
- b=n8Abz5CgyzB7Y7Dc62DmYSQDi9BiAOhMxVlen+tQYlXWIeMRwT0ePIFsmuQwPaQg0cchspDm3dY9VsBHSzT8zETxGMzyRUw22Mq3U4kP2fxB0ShkZ8INhcRHeA00R9BzPz394lGim62ZJMSmeQj7smjuWm4TVX9J1b+6aa13KlA0zXqheUumV62MoN8WTbd15PpeOCDzO/qt8AKPZNGDChb6xVAQvlMD1XvKNJIV5KMRsY9VMobO5wK+I+EVmRUTAkPO617Qc5Uh5SwgC0d4hHz9VUUsrZrCUh8DT59ZpYT6gJCUT/+oJY68zcI3EpOmCkivqGq5xVdTqDybTdNeJQ==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=fail (sender ip is
- 20.79.220.33) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=iesy.com;
- dmarc=none action=none header.from=iesy.com; dkim=fail (body hash did not
- verify) header.d=iesy20.onmicrosoft.com; arc=fail (47)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="isdayeQ7"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a467d8efe78so562093866b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 02:56:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=iesy20.onmicrosoft.com; s=selector1-iesy20-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qcm2tufEHCswe5/0BhmtkpeKGfTtdqAG/VOY759/Jdc=;
- b=0KpalkfOqvnoufamsUT3+tBFJNBJRn4C+kBaxARfQliHdOujMHXCAeaVBkaUPpBkStEyFvBHBC+Cc4OARliBSmk7ORnEWIXe5paocX+XE1yLP0MU/nrs0NrI7hvLqM4G10wmgxYIgYXqWNU45uCGfnVb+Pv7OemEJUnALcujyCQ=
-Received: from BE1P281CA0080.DEUP281.PROD.OUTLOOK.COM (2603:10a6:b10:78::7) by
- BE1P281MB3400.DEUP281.PROD.OUTLOOK.COM (2603:10a6:b10:4a::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7386.28; Tue, 19 Mar 2024 09:56:35 +0000
-Received: from BE1PEPF0000056E.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:b10:78:cafe::a4) by BE1P281CA0080.outlook.office365.com
- (2603:10a6:b10:78::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.13 via Frontend
- Transport; Tue, 19 Mar 2024 09:56:34 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 20.79.220.33)
- smtp.mailfrom=iesy.com; dkim=fail (body hash did not verify)
- header.d=iesy20.onmicrosoft.com;dmarc=none action=none header.from=iesy.com;
-Received-SPF: Fail (protection.outlook.com: domain of iesy.com does not
- designate 20.79.220.33 as permitted sender) receiver=protection.outlook.com;
- client-ip=20.79.220.33; helo=de1-emailsignatures-cloud.codetwo.com;
-Received: from de1-emailsignatures-cloud.codetwo.com (20.79.220.33) by
- BE1PEPF0000056E.mail.protection.outlook.com (10.167.241.7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7409.10 via Frontend Transport; Tue, 19 Mar 2024 09:56:34 +0000
-Received: from DEU01-FR2-obe.outbound.protection.outlook.com (104.47.11.169) by de1-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Tue, 19 Mar 2024 09:56:32 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JROeYmpXKzVNBc/1Q+qWkSIs7j5XCf+FmYSbyIkLc6hUNUwAHXvLOiP4GODYpGSfs3/QYa8aw0BCmaLpu48+cX8/HdwMuuxtWhiViZaNSSADzzZGXReap0OR6kEzd91U7BFA632oAxy/F006EBiV24mM9SEn0isV/Ou4W83Zrk4vmVWhDc6mtmJ8TMGgr++Tq2BphTcz64I7zQt4LB9p+YHVQxWBhqRoZf9IHyP4j1vznoOBIm7ENm4ifQHsl/g6uvdvscuFGjFNPcLeCz2noKiUs7DkoewLw1FWqiesz2zqlYBu4VtXHS67orTL2POFAQteLyNXvrQwi8xFihr8tg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=81GBsRSGPUJDqOX3Fq1EM8MeHwVfr+Kid8EzQf8Qk0A=;
- b=YIbrisl0vbqy8LjvIto3HYBB5T21k2G9Wh18ncICt4AGcoHZZskCEvC22UiMdP/g3lSVbQfJaT8H21VpNr1AJgMHNmqyx3kOwlKrRb88z05OkxXWKndrSnLzmB9DQlaOi/rYUPYpfXX372IuNtbz5cLxjJOfb2gP/hJ3x56QwG6YMBFIGY5OEgC0otyQMMDrxWbAamwKDfsN26szrZ2jYIZ+BV+WqaCaWpTbtCjV0tni5OzXQTe6ZEXtru/x6lJBZwBHuRNDcZNsiXH/PLA7u3WZORNXTsRnMjF95dRJD8sCFSe6pX2RjTF45n9lNQt8GTrsaY2UUFClD/i11UeEuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=iesy.com; dmarc=pass action=none header.from=iesy.com;
- dkim=pass header.d=iesy.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=iesy20.onmicrosoft.com; s=selector1-iesy20-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=81GBsRSGPUJDqOX3Fq1EM8MeHwVfr+Kid8EzQf8Qk0A=;
- b=r1T9OLvpppXNhkDHp8pSyfiyz0hkJt18r2el5KHWBT15m43/uWvvQwFKFtnr74E646hCqGv1QtOCkWfkDmJSwewd+sGDS8Izwy82xo7FzLNtbMz5O691uc/oe8CaK1hUlV+fB3K7QXj+7e66gqNj6Vvst54n95CgFC/dfGmfVm0=
-Received: from FR2P281MB2393.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:39::12)
- by BEYP281MB3930.DEUP281.PROD.OUTLOOK.COM (2603:10a6:b10:b4::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.29; Tue, 19 Mar
- 2024 09:56:29 +0000
-Received: from FR2P281MB2393.DEUP281.PROD.OUTLOOK.COM
- ([fe80::8af4:a741:edb6:e851]) by FR2P281MB2393.DEUP281.PROD.OUTLOOK.COM
- ([fe80::8af4:a741:edb6:e851%3]) with mapi id 15.20.7386.025; Tue, 19 Mar 2024
- 09:56:29 +0000
-From: Dominik Poggel <pog@iesy.com>
-To: robh+dt@kernel.org
-CC: Dominik Poggel <pog@iesy.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Tianling Shen <cnsztl@gmail.com>,
-	Andy Yan <andyshrk@163.com>,
-	Jagan Teki <jagan@edgeble.ai>,
-	Ondrej Jirman <megi@xff.cz>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] dt-bindings: arm: rockchip: add iesy RPX30 evaluation board
-Date: Tue, 19 Mar 2024 10:54:02 +0100
-Message-ID: <20240319095411.4112296-4-pog@iesy.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240319095411.4112296-1-pog@iesy.com>
-References: <20240319095411.4112296-1-pog@iesy.com>
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: AM0PR04CA0079.eurprd04.prod.outlook.com
- (2603:10a6:208:be::20) To FR2P281MB2393.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:39::12)
+        d=linaro.org; s=google; t=1710842202; x=1711447002; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=AS/cPgoMWn3JAoH60GCWZa9D3Pqyi0ONOw1eWx4Iybo=;
+        b=isdayeQ7YQ8tmcZLq47liWCvyBUU67lUnWOn8Ciu32Lo7IEY749vJ2e5Yx3LTBS5nl
+         Z7SjdXW2q/DiqrDWZ+jFugEhV6qZ9/3USJhbaFkKUBEqwD0zY2MpR+Uf+jbmneIYsvgd
+         4cLJ63uC5lIuaZEeBBp+OLlqfliBmXfzbrIAGD+3MsUjJBJs36o8VF3jrhewakfzPcQh
+         bvD5nUKjFclNQhhXuE9PZnHFAyu+5ugBZVPrCA+AYoXW6bhHzhSS3NxhUWHaoLLETG7L
+         I7qoZkzvoqpDNWcJZW4MCkaoB3LSpx6DIm7JXSDZQNhD3LnPPQLPXbM5y9mUie4QBZIT
+         qF/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710842202; x=1711447002;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AS/cPgoMWn3JAoH60GCWZa9D3Pqyi0ONOw1eWx4Iybo=;
+        b=kwr8S8c1cvKXfY/TKbSnB9gYuDDHlzNKFMNKvoY48Rg3i64QK87qBhzlIzt509ku5x
+         9Hpc0j1SRrNomR74oc3Ha+ghMGcPu9GBUBOxUE99ntvwNnf/zjL8ACro8Dk87ExS+IaI
+         nD1HVFCVkBzYf/JkvzTR+lCcA4xhLHdnbMJ+0OCziKrCPuVmSAdhk5fApKXS8Yh4/ApU
+         OGs4B5jXzjrB+0Ly27cbr4mzIFKvbUQaxuAK6Wpox6RwbhANBPzPDFDoEAzqHeOf+3yl
+         WhSnYj9SrE8qBQNBERLqCgt6RRM2/yRQk2TAf+B2KlsN429c9R70F5oFzjkL05L4nlie
+         UYkA==
+X-Forwarded-Encrypted: i=1; AJvYcCX1qQboSToCP0nZpnxbZ9bEHdTL1qRohlWPFUTaSe/du4bn/eM0zrcQc7Bn97E/NAgrK8zY7SdPBMTl6l4RQBAP0Syodg1DE2ud83tR
+X-Gm-Message-State: AOJu0YzkIhdvft/lhG79G/gZ9iVQJMGfWH901l3b6b+EKi8DFjjX0CBb
+	F3YS3MUPERUbsfWkwl9wDHK0mb6Ev9FABkTYIaWQ3jD9IF+K/v5hmSh9OVaQhpw=
+X-Google-Smtp-Source: AGHT+IH6QxuKQDs1dmD0MxMhAH0Rms/7V/LdF5xNvrXW4SyLdJchixR2Shz1zdbIqB9LOVFovu0V8g==
+X-Received: by 2002:a17:906:6817:b0:a46:bab3:e9e6 with SMTP id k23-20020a170906681700b00a46bab3e9e6mr1455041ejr.1.1710842202110;
+        Tue, 19 Mar 2024 02:56:42 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id jx25-20020a170907761900b00a4661f0f1e7sm5867045ejc.205.2024.03.19.02.56.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Mar 2024 02:56:41 -0700 (PDT)
+Message-ID: <bad5df79-e040-4868-9db6-701110894ea3@linaro.org>
+Date: Tue, 19 Mar 2024 10:56:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-TrafficTypeDiagnostic:
-	FR2P281MB2393:EE_|BEYP281MB3930:EE_|BE1PEPF0000056E:EE_|BE1P281MB3400:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original:
- 8kdmXsvPkMB3mIgL77SS3UiIYLOO5E8j8MfRSh5CpDB0KBJbfxNUNJZua7kmRzC3267UigxWPDgOdddR8aPkb7fOx524t3d2zXNWAcMxX93Fl8jhA1S76BU3v2RqibLqJEBw3qTd7gHuZTMC/EU7/CdD7O1GYFKbz6rT2iOZf/+dl6donNDaDTsVmNeDzbWH+PFR0/nTysVHFuHC2lbUXF/e7zNRkL1MW3DUIFEU6nfj5ZW8WguTIkh7lW3t46Yx8tjhh83q/HkrHrSFw4qSlHkpXIk0nsffxcEA6TTk298H72Ov/n2rAhnrHfosxCYuYDWHLS5DCCxKSbK1YVgSe2CTO3drsbeu+pSuc55Y310B/x+4/cHpr2Vc6eNH6h11TvoZZgRNOds6jV47GkgptwBYJ8Et/K5aivcxIoiWDqkDIJtzvB0Z++uczWIlWcRM7VFW0U9pliyEbu56YfU99jtDtugtGRauUEf5ReBc1bMtWwfWbzVN9fVrKu8p5bo3ex7OCJTirisC7oxMZNfdd/5pNMBS796ZFnHjr7t646VzDuvgCgnkZKW8/T14aO5yzEbrtqedG6g2dk4Iq2wRBFt5oMqYzF3Grs+OtzPRRvz1rwb+RUhqRXYg6lADD9FoFb2V6IhGw12nSAak8SC2qv+zw7ie96VLszaqLeg+qpH4qe3gVIZc1UciBd/yLctRnmRbLwwpYLExo8u4YVS4nVOqbFuxS7UMvR0qPbh6vuA=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:FR2P281MB2393.DEUP281.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007)(52116005)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BEYP281MB3930
-X-CodeTwo-MessageID: 9a9a5561-ba58-4002-b48f-78967127a1cc.20240319095632@de1-emailsignatures-cloud.codetwo.com
-X-CodeTwoProcessed: true
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- BE1PEPF0000056E.DEUP281.PROD.OUTLOOK.COM
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: cb19e226-2aa8-416f-34b7-08dc47fadc9c
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	8KoGuSVWkUXoltzDs/6Njf5St0XddPun9hmqBw4Jxwybuuven0DhzR+h8t4TwMz3QhsxU7RILwPI0f6NHoU9NspuS6KFzBiopt3eXErMmaatznXRm3h2oM2M+DMb8+rb1S7CSl6qys8JvEwkkalKnmi4tM36qlBNP0WHxq+01d/dwggH6g6EzBDC94mtBVyLaURdfWdZ18A3tfTDEi9+xCQMuEQnZmKQ/YpeeYp8uK9RIwKOakLlejvtdZahSr25ODJEYZMWjDBWCwQDwWdi275u2gfG3dGijmmce585XeayiVWTc4N6YLvYg2IK9Ua20y7g1Us6gNN9kBu/acDJyUprmhGADocwCVdHlfcjlh62qXgejntAKKa/XiAwcdjQxDiF3vaIaIF41o6CwEhy3rBkJOi5FIYtNEJaszexHQRtE5Ftojg2YFN5d0e6pzo6j3cveDbT6dMDnKAomOkE7jqwfCKmLks/h/dZ5Z0arJxnTn5+0Kgypuk5JMbAwf9FB1bGsNQCYptv2tMrCgZTtKGXMJQPTDXQoLmEhWzg3ZBadkivkMv3v9yGLb2T4bi0lrhfuoXY0Crryj1dwvEGxxJ+lqx22hslcS1JGAD45o+nYb0uFYIXbT3hFGdBURe5G2QUlB4DA/rdp4aAjXqctKyTI09JhZ73I3Qqx0IcZpxeW3k7sn5geiRZ6dw9mAOZ2Zz/GPhJRJ/aZCIasphnu4R+2ayN30Pkjyo3uy9CSaOMTF4BaQZ+YMa90p3TGAxA
-X-Forefront-Antispam-Report:
-	CIP:20.79.220.33;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:de1-emailsignatures-cloud.codetwo.com;PTR:de1-emailsignatures-cloud.codetwo.com;CAT:NONE;SFS:(13230031)(1800799015)(36860700004)(376005)(82310400014);DIR:OUT;SFP:1102;
-X-OriginatorOrg: iesy.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2024 09:56:34.7607
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb19e226-2aa8-416f-34b7-08dc47fadc9c
-X-MS-Exchange-CrossTenant-Id: ace663fd-5672-464f-8169-8d373312f6bc
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=ace663fd-5672-464f-8169-8d373312f6bc;Ip=[20.79.220.33];Helo=[de1-emailsignatures-cloud.codetwo.com]
-X-MS-Exchange-CrossTenant-AuthSource: BE1PEPF0000056E.DEUP281.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BE1P281MB3400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/4] dt-bindings: aspeed: Add eSPI controller
+To: Manojkiran Eda <manojkiran.eda@gmail.com>, patrick.rudolph@9elements.com,
+ chiawei_wang@aspeedtech.com, ryan_chen@aspeedtech.com,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ linux-mtd@lists.infradead.org
+Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
+ miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+ jk@codeconstruct.com.au, openbmc@lists.ozlabs.org
+References: <20240319093405.39833-1-manojkiran.eda@gmail.com>
+ <20240319093405.39833-5-manojkiran.eda@gmail.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240319093405.39833-5-manojkiran.eda@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-add entry for iesy rpx30 evaluation board with iesy rpx30 OSM SF SoM
+On 19/03/2024 10:34, Manojkiran Eda wrote:
+> This commit adds the device tree bindings for aspeed eSPI
+> controller.
+> 
+> Although aspeed eSPI hardware supports 4 different channels,
+> this commit only adds the support for flash channel, the
+> bindings for other channels could be upstreamed when the driver
+> support for those are added.
+> 
+> Signed-off-by: Manojkiran Eda <manojkiran.eda@gmail.com>
+> ---
+>  .../bindings/soc/aspeed/aspeed,espi.yaml      | 94 +++++++++++++++++++
+>  1 file changed, 94 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/aspeed/aspeed,espi.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/aspeed/aspeed,espi.yaml b/Documentation/devicetree/bindings/soc/aspeed/aspeed,espi.yaml
+> new file mode 100644
+> index 000000000000..3d3ad528e3b3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/aspeed/aspeed,espi.yaml
 
-Signed-off-by: Dominik Poggel <pog@iesy.com>
----
- Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+Why Rob's comments got ignored?
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Document=
-ation/devicetree/bindings/arm/rockchip.yaml
-index fcf7316ecd74..601aa1510856 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-+++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-@@ -565,6 +565,11 @@ properties:
-           - const: hugsun,x99
-           - const: rockchip,rk3399
-=20
-+      - description: iesy RPX30 Evaluation board with RPX30 OSM SF SoM
-+        items:
-+          - const: iesy,rpx30-eva-mi-v2
-+          - const: rockchip,px30
-+
-       - description: Indiedroid Nova SBC
-         items:
-           - const: indiedroid,nova
---=20
-2.44.0
+This is not a soc component.
+
+> @@ -0,0 +1,94 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# # Copyright (c) 2024 IBM Corporation.
+> +# # Copyright (c) 2021 Aspeed Technology Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/aspeed/aspeed,espi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Aspeed eSPI Controller
+> +
+> +maintainers:
+> +  - Manojkiran Eda <manojkiran.eda@gmail.com>
+> +  - Patrick Rudolph <patrick.rudolph@9elements.com>
+> +  - Chia-Wei Wang <chiawei_wang@aspeedtech.com>
+> +  - Ryan Chen <ryan_chen@aspeedtech.com>
+> +
+> +description:
+> +  Aspeed eSPI controller implements a device side eSPI endpoint device
+> +  supporting the flash channel.
+
+Explain what is eSPI.
+
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - aspeed,ast2500-espi
+> +          - aspeed,ast2600-espi
+> +      - const: simple-mfd
+
+
+That's not simple-mfd. You have driver for this. Drop.
+
+> +      - const: syscon
+
+That's not syscon. Why do you have ranges then? Where is any explanation
+of hardware which would justify such combination?
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 1
+> +
+> +  ranges: true
+> +
+> +patternProperties:
+> +  "^espi-ctrl@[0-9a-f]+$":
+> +    type: object
+> +
+> +    description: Controls the flash channel of eSPI hardware
+
+That explains nothing. Unless you wanted to use here MTD bindings.
+
+This binding did not improve much. I don't understand why this is not
+SPI (nothing in commit msg, nothing in description), what is eSPI, why
+do you need child device, what are other children (commit msg is quite
+vague here). Why there is no MTD bindings here?
+
+All this looks like crafted for your driver, instead of using existing
+DT bindings like SPI or MTD/NAND. This is a strong no-go.
+
+> +
+> +    properties:
+> +      compatible:
+> +        items:
+
+No items, just use enum.
+
+> +          - enum:
+> +              - aspeed,ast2500-espi-ctrl
+> +              - aspeed,ast2600-espi-ctrl
+> +
+> +      interrupts:
+> +        maxItems: 1
+> +
+> +      clocks:
+> +        maxItems: 1
+> +
+> +    required:
+> +      - compatible
+> +      - interrupts
+> +      - clocks
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - ranges
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/ast2600-clock.h>
+> +
+> +    espi: espi@1e6ee000 {
+> +        compatible = "aspeed,ast2600-espi", "simple-mfd", "syscon";
+> +        reg = <0x1e6ee000 0x1000>;
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        ranges = <0x0 0x1e6ee000 0x1000>;
+> +
+> +        espi_ctrl: espi-ctrl@0 {
+> +            compatible = "aspeed,ast2600-espi-ctrl";
+> +            reg = <0x0 0x800>,<0x0 0x4000000>;
+
+Fix your style in DTS. There is always a space after ','.
+
+> +            reg-names = "espi_ctrl","espi_flash";
+> +            interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+> +            clocks = <&syscon ASPEED_CLK_GATE_ESPICLK>;
+> +        };
+> +    };
+
+Best regards,
+Krzysztof
 
