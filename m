@@ -1,288 +1,97 @@
-Received: from esa11.hc1455-7.c3s2.iphmx.com (esa11.hc1455-7.c3s2.iphmx.com [207.54.90.137])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rs227.mailgun.us (rs227.mailgun.us [209.61.151.227])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B64445BFE;
-	Tue, 19 Mar 2024 05:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84990446A4
+	for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 05:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.61.151.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710827157; cv=none; b=haqWbetVoMMWGgUqwNw2OTJbHIlh+2SAKXLMx0nCgx+/vfhi5dwsgcB33Yz/6C/KbSsC4i7je+olMMvpjRknybpB21RmpyGKm49PzsZaTHbnpbZjLA+Lv4jK4hQSjDQHyqAg+ZaNSk3xadyHnM0QsD9dup224GWQqJA7Di8BmAI=
+	t=1710827252; cv=none; b=D0+XAeEGKDw/madwIqSb9kwW+nfnsBXAerq50q+6IXloqxQGGQ3RfgRXd4Wp7Q9KuGsk5Rj+syjZv0FLS9V3RW4Y6Np0K8WXuLx/Usm9y0gTfZ5ORmnecjQLiyu95SCwL/0c1gzw1Rws7Z+CU/o2IKnQnfEJ6I16mvd/pwiCy0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710827157; c=relaxed/simple;
-	bh=5nr78aM0MpUJLwLHup/vk/YYuSTxix+T18h8LOubZx8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FWcF27WYM5O0PyJRpnxjAM/bKd4A58vkUOpkllO4YUaC6RYWsx/bEqTgvOfhwKO1fDYR7I2U1MWIBJCKKxBpu5FN7fYOTTYOwrwWq3Mfn4u5isxuf8RcV+Skdfio+uZNDhWXQP1sC/MBIzwucrzR3wc93C5BgPcEIwNKhpzbAFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=RTC2txj/; arc=none smtp.client-ip=207.54.90.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1710827252; c=relaxed/simple;
+	bh=2P2DwSKvdxYAbERqA7CxZKDFTzVKzDQJD7TsOPUnsmU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qKKVN7LhvzOSzdWezBF8zShsDOZUlHVo5JDzJAAlLrUv6z2TAwrNSXtATmSuUFtEXi6s5K9xkz3npknItJhbQHcon4YFYoUnRNYeW7mzp4TLNV8nDa8FBB8JIEAFn0tkR48VDIddPTZOmX+pFYznzZT8FCQUtmGW1mvCKyVTMJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=equiv.tech; spf=pass smtp.mailfrom=equiv.tech; dkim=pass (2048-bit key) header.d=equiv.tech header.i=@equiv.tech header.b=XCkAXYYy; arc=none smtp.client-ip=209.61.151.227
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=equiv.tech
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=equiv.tech
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="RTC2txj/"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1710827156; x=1742363156;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=5nr78aM0MpUJLwLHup/vk/YYuSTxix+T18h8LOubZx8=;
-  b=RTC2txj/uvSD13ptvFtvpUqY3juJRo04bWrpyyvqMdyzYhF0NHOLq2TE
-   247sB8q3yZnZWvX6Q/7ECRR95nj6PS9rnpDF4xT8AgnD8TykgYNCbjKwC
-   7ZOZiQzk3hj2dRD7qPW9E4virWpDRtzTttfthTk7ykFR0bB44zMUs+hK+
-   5j4BzHvvmk9DiLS38PfQ21D0+eJ/5awot8B/Z3PCzGzaVze78f+HuyfHQ
-   iGcHCDypOgUvMvSns3sXwSKiy7AgDceEot5vkDIjS1H1U7qcdEYd4Y5ut
-   wASYL/9uLJQIYamq7zvcPT/zyNVcMZoSD8ETeUpClrw0BnaXNQ01BAsXR
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="132057741"
-X-IronPort-AV: E=Sophos;i="6.07,136,1708354800"; 
-   d="scan'208";a="132057741"
-Received: from unknown (HELO oym-r3.gw.nic.fujitsu.com) ([210.162.30.91])
-  by esa11.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 14:45:43 +0900
-Received: from oym-m1.gw.nic.fujitsu.com (oym-nat-oym-m1.gw.nic.fujitsu.com [192.168.87.58])
-	by oym-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id 91125C21AB;
-	Tue, 19 Mar 2024 14:45:40 +0900 (JST)
-Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
-	by oym-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id BBECDB4E22;
-	Tue, 19 Mar 2024 14:45:39 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id 51915227A9F;
-	Tue, 19 Mar 2024 14:45:39 +0900 (JST)
-Received: from localhost.localdomain (unknown [10.167.226.45])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id BF8161A006B;
-	Tue, 19 Mar 2024 13:45:38 +0800 (CST)
-From: Li Zhijian <lizhijian@fujitsu.com>
-To: linux-kernel@vger.kernel.org
-Cc: Li Zhijian <lizhijian@fujitsu.com>,
-	Stefan Achatz <erazor_de@users.sourceforge.net>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-	linux-input@vger.kernel.org
-Subject: [PATCH v4 3/4] HID: roccat: Convert sprintf() family to sysfs_emit() family
-Date: Tue, 19 Mar 2024 13:45:26 +0800
-Message-Id: <20240319054527.1581299-3-lizhijian@fujitsu.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240319054527.1581299-1-lizhijian@fujitsu.com>
-References: <20240319054527.1581299-1-lizhijian@fujitsu.com>
+	dkim=pass (2048-bit key) header.d=equiv.tech header.i=@equiv.tech header.b="XCkAXYYy"
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=equiv.tech; q=dns/txt; s=mx; t=1710827248; x=1710834448;
+ h=In-Reply-To: Content-Type: MIME-Version: References: Message-ID: Subject: Subject: Cc: To: To: From: From: Date: Sender: Sender;
+ bh=awhPCn410aSXJmB/s6Wmb5B5AXJxHHyGsZcyy9sjzsU=;
+ b=XCkAXYYyd9NGwv8zB1Rk2BrFuFti8m4HxnxLJWUqCnQ3yTsMi+mbLhT289KGa07NfwUM4dP6+HrufJPqlEMQW5rNXtGljyWSONDkkrF9h85g7zotFTeYWJ6iBWjh7lMfVIctof71avr0bX8VIkaRtFOIUfKwYtsuO913SH94j5e5FAAtUsLfcXrDkpHaxLak26zja0Bpuamh+OyHdW39+WeCCQxjKp4RdjHVC5H/yNpnjEq5oqwSJ8pb20A0MDgLfGdu4Dq+LgJL0pJr1xKqzAQQnLBjTRtO3NoqinSrV6CqzP3LlABzfFaQCWCXQytRW3iI2+SHUWhh2YmpPE2CTA==
+X-Mailgun-Sending-Ip: 209.61.151.227
+X-Mailgun-Sid: WyI4ZWI3MiIsImxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmciLCI5M2Q1YWIiXQ==
+Received: from mail.equiv.tech (equiv.tech [142.93.28.83]) by 569a831ee738 with SMTP id
+ 65f926f0c58633fd7aa38bde (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 19 Mar 2024 05:47:28 GMT
+Sender: james@equiv.tech
+Date: Mon, 18 Mar 2024 22:47:27 -0700
+From: James Seo <james@equiv.tech>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: jdelvare@suse.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC 0/1] hwmon: (hp-wmi-sensors) Support autoloading
+Message-ID: <Zfkm71dmnRsdmYJz@equiv.tech>
+References: <20240318215732.322798-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28260.005
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28260.005
-X-TMASE-Result: 10--12.236400-10.000000
-X-TMASE-MatchedRID: 9y0g8dzZ2WMbO59FK9BdmJiHtCNYjckMjkDrBOJwwnQ8JmmJxjOaQXVX
-	Q3/qdw5yDiqGKKMcNgRhoUIS5GGeEs1HQN/TlJ3ZOIQ9GP2P2u9lRzZAkKRGDWO0yVK/5LmcQiM
-	ingSlKoKMx5HzfQifbPE41045MrHXFDCN/1eC4ASdVNZaI2n6/wmWvXEqQTm5wLkNMQzGl5B+Kr
-	WCPbERPznpYPqS6jzxEi2pD9yuITpsfDeGISzthFZ85UImhNtaC//1TMV5chPBDbID4I3g4Su5i
-	Q9EM64Ey7jDpn+16bs3KejTdiQbeb7wtKKw5QU3ngIgpj8eDcAZ1CdBJOsoY8RB0bsfrpPIfiAq
-	rjYtFiTDg4T+YfoUI5rU4SqIBScFjyO1Y3e9PhpGULLpYOWucH7cGd19dSFd
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240318215732.322798-1-W_Armin@gmx.de>
 
-Per filesystems/sysfs.rst, show() should only use sysfs_emit()
-or sysfs_emit_at() when formatting the value to be returned to user space.
+On Mon, Mar 18, 2024 at 10:57:31PM +0100, Armin Wolf wrote:
+> Currently, the hp-wmi-sensors driver needs to be loaded manually
+> on supported machines. This however is unnecessary since the WMI
+> id table can be used to support autoloading.
+> 
+> However the driver might conflict with the hp-wmi driver since both
+> seem to use the same WMI GUID for registering notify handler.
+> 
+> I am thus submitting this patch as an RFC for now.
+> 
+> Armin Wolf (1):
+>   hwmon: (hp-wmi-sensors) Add missing MODULE_DEVICE_TABLE()
+> 
+>  drivers/hwmon/hp-wmi-sensors.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> --
+> 2.39.2
+>
 
-coccinelle complains that there are still a couple of functions that use
-snprintf(). Convert them to sysfs_emit().
+Autoloading was deliberately left out for now because of the GUID
+conflict with hp-wmi's WMI notify handler.
 
-sprintf() and scnprintf() will be converted as well if they have.
+HP's GUID reuse across product lines for different types of WMI
+objects with different names and shapes means that with a patch like
+this, many systems that should only load hp-wmi-sensors but not
+hp-wmi will try to autoload both. (Perhaps all of them; I want to say
+that the GUID 5FB7F034-2C63-45e9-BE91-3D44E2C707E4, which is the
+second of the two GUIDs that hp-wmi uses to autoload, exists on every
+HP system I've examined.)
 
-Generally, this patch is generated by
-make coccicheck M=<path/to/file> MODE=patch \
-COCCI=scripts/coccinelle/api/device_attr_show.cocci
+Meanwhile, hp-wmi does various other platform things, and there's so
+much hardware out there that who knows, maybe there are some systems
+that really should load both. I don't think so but I can't rule it
+out.
 
-No functional change intended
+Unlike hp-wmi-sensors, hp-wmi doesn't survive failure to install its
+notify handler, which sets up a potential race condition depending on
+when hp-wmi and hp-wmi-sensors loads on a given system.
 
-CC: Stefan Achatz <erazor_de@users.sourceforge.net>
-CC: Jiri Kosina <jikos@kernel.org>
-CC: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-CC: linux-input@vger.kernel.org
-Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
----
-This is a part of the work "Fix coccicheck device_attr_show warnings"[1]
-Split them per subsystem so that the maintainer can review it easily
-[1] https://lore.kernel.org/lkml/20240116041129.3937800-1-lizhijian@fujitsu.com/
----
- drivers/hid/hid-roccat-isku.c     |  2 +-
- drivers/hid/hid-roccat-kone.c     | 12 ++++++------
- drivers/hid/hid-roccat-koneplus.c |  4 ++--
- drivers/hid/hid-roccat-kovaplus.c | 10 +++++-----
- drivers/hid/hid-roccat-pyra.c     |  6 +++---
- 5 files changed, 17 insertions(+), 17 deletions(-)
+Therefore, I intended to add autoloading at the same time as
+converting hp-wmi-sensors to use the bus-based WMI interface once
+aggregate WMI devices are better supported.
 
-diff --git a/drivers/hid/hid-roccat-isku.c b/drivers/hid/hid-roccat-isku.c
-index 458060403397..0cd6208fb371 100644
---- a/drivers/hid/hid-roccat-isku.c
-+++ b/drivers/hid/hid-roccat-isku.c
-@@ -61,7 +61,7 @@ static ssize_t isku_sysfs_show_actual_profile(struct device *dev,
- {
- 	struct isku_device *isku =
- 			hid_get_drvdata(dev_get_drvdata(dev->parent->parent));
--	return snprintf(buf, PAGE_SIZE, "%d\n", isku->actual_profile);
-+	return sysfs_emit(buf, "%d\n", isku->actual_profile);
- }
- 
- static ssize_t isku_sysfs_set_actual_profile(struct device *dev,
-diff --git a/drivers/hid/hid-roccat-kone.c b/drivers/hid/hid-roccat-kone.c
-index 00a1abc7e839..3f8f459edcf3 100644
---- a/drivers/hid/hid-roccat-kone.c
-+++ b/drivers/hid/hid-roccat-kone.c
-@@ -400,7 +400,7 @@ static ssize_t kone_sysfs_show_actual_profile(struct device *dev,
- {
- 	struct kone_device *kone =
- 			hid_get_drvdata(dev_get_drvdata(dev->parent->parent));
--	return snprintf(buf, PAGE_SIZE, "%d\n", kone->actual_profile);
-+	return sysfs_emit(buf, "%d\n", kone->actual_profile);
- }
- static DEVICE_ATTR(actual_profile, 0440, kone_sysfs_show_actual_profile, NULL);
- 
-@@ -409,7 +409,7 @@ static ssize_t kone_sysfs_show_actual_dpi(struct device *dev,
- {
- 	struct kone_device *kone =
- 			hid_get_drvdata(dev_get_drvdata(dev->parent->parent));
--	return snprintf(buf, PAGE_SIZE, "%d\n", kone->actual_dpi);
-+	return sysfs_emit(buf, "%d\n", kone->actual_dpi);
- }
- static DEVICE_ATTR(actual_dpi, 0440, kone_sysfs_show_actual_dpi, NULL);
- 
-@@ -432,7 +432,7 @@ static ssize_t kone_sysfs_show_weight(struct device *dev,
- 
- 	if (retval)
- 		return retval;
--	return snprintf(buf, PAGE_SIZE, "%d\n", weight);
-+	return sysfs_emit(buf, "%d\n", weight);
- }
- static DEVICE_ATTR(weight, 0440, kone_sysfs_show_weight, NULL);
- 
-@@ -441,7 +441,7 @@ static ssize_t kone_sysfs_show_firmware_version(struct device *dev,
- {
- 	struct kone_device *kone =
- 			hid_get_drvdata(dev_get_drvdata(dev->parent->parent));
--	return snprintf(buf, PAGE_SIZE, "%d\n", kone->firmware_version);
-+	return sysfs_emit(buf, "%d\n", kone->firmware_version);
- }
- static DEVICE_ATTR(firmware_version, 0440, kone_sysfs_show_firmware_version,
- 		   NULL);
-@@ -451,7 +451,7 @@ static ssize_t kone_sysfs_show_tcu(struct device *dev,
- {
- 	struct kone_device *kone =
- 			hid_get_drvdata(dev_get_drvdata(dev->parent->parent));
--	return snprintf(buf, PAGE_SIZE, "%d\n", kone->settings.tcu);
-+	return sysfs_emit(buf, "%d\n", kone->settings.tcu);
- }
- 
- static int kone_tcu_command(struct usb_device *usb_dev, int number)
-@@ -553,7 +553,7 @@ static ssize_t kone_sysfs_show_startup_profile(struct device *dev,
- {
- 	struct kone_device *kone =
- 			hid_get_drvdata(dev_get_drvdata(dev->parent->parent));
--	return snprintf(buf, PAGE_SIZE, "%d\n", kone->settings.startup_profile);
-+	return sysfs_emit(buf, "%d\n", kone->settings.startup_profile);
- }
- 
- static ssize_t kone_sysfs_set_startup_profile(struct device *dev,
-diff --git a/drivers/hid/hid-roccat-koneplus.c b/drivers/hid/hid-roccat-koneplus.c
-index 22b895436a7c..8ccb3b14a1a9 100644
---- a/drivers/hid/hid-roccat-koneplus.c
-+++ b/drivers/hid/hid-roccat-koneplus.c
-@@ -242,7 +242,7 @@ static ssize_t koneplus_sysfs_show_actual_profile(struct device *dev,
- {
- 	struct koneplus_device *koneplus =
- 			hid_get_drvdata(dev_get_drvdata(dev->parent->parent));
--	return snprintf(buf, PAGE_SIZE, "%d\n", koneplus->actual_profile);
-+	return sysfs_emit(buf, "%d\n", koneplus->actual_profile);
- }
- 
- static ssize_t koneplus_sysfs_set_actual_profile(struct device *dev,
-@@ -309,7 +309,7 @@ static ssize_t koneplus_sysfs_show_firmware_version(struct device *dev,
- 			&info, KONEPLUS_SIZE_INFO);
- 	mutex_unlock(&koneplus->koneplus_lock);
- 
--	return snprintf(buf, PAGE_SIZE, "%d\n", info.firmware_version);
-+	return sysfs_emit(buf, "%d\n", info.firmware_version);
- }
- static DEVICE_ATTR(firmware_version, 0440,
- 		   koneplus_sysfs_show_firmware_version, NULL);
-diff --git a/drivers/hid/hid-roccat-kovaplus.c b/drivers/hid/hid-roccat-kovaplus.c
-index 86af538c10d6..748d4d7cb2fc 100644
---- a/drivers/hid/hid-roccat-kovaplus.c
-+++ b/drivers/hid/hid-roccat-kovaplus.c
-@@ -272,7 +272,7 @@ static ssize_t kovaplus_sysfs_show_actual_profile(struct device *dev,
- {
- 	struct kovaplus_device *kovaplus =
- 			hid_get_drvdata(dev_get_drvdata(dev->parent->parent));
--	return snprintf(buf, PAGE_SIZE, "%d\n", kovaplus->actual_profile);
-+	return sysfs_emit(buf, "%d\n", kovaplus->actual_profile);
- }
- 
- static ssize_t kovaplus_sysfs_set_actual_profile(struct device *dev,
-@@ -325,7 +325,7 @@ static ssize_t kovaplus_sysfs_show_actual_cpi(struct device *dev,
- {
- 	struct kovaplus_device *kovaplus =
- 			hid_get_drvdata(dev_get_drvdata(dev->parent->parent));
--	return snprintf(buf, PAGE_SIZE, "%d\n", kovaplus->actual_cpi);
-+	return sysfs_emit(buf, "%d\n", kovaplus->actual_cpi);
- }
- static DEVICE_ATTR(actual_cpi, 0440, kovaplus_sysfs_show_actual_cpi, NULL);
- 
-@@ -334,7 +334,7 @@ static ssize_t kovaplus_sysfs_show_actual_sensitivity_x(struct device *dev,
- {
- 	struct kovaplus_device *kovaplus =
- 			hid_get_drvdata(dev_get_drvdata(dev->parent->parent));
--	return snprintf(buf, PAGE_SIZE, "%d\n", kovaplus->actual_x_sensitivity);
-+	return sysfs_emit(buf, "%d\n", kovaplus->actual_x_sensitivity);
- }
- static DEVICE_ATTR(actual_sensitivity_x, 0440,
- 		   kovaplus_sysfs_show_actual_sensitivity_x, NULL);
-@@ -344,7 +344,7 @@ static ssize_t kovaplus_sysfs_show_actual_sensitivity_y(struct device *dev,
- {
- 	struct kovaplus_device *kovaplus =
- 			hid_get_drvdata(dev_get_drvdata(dev->parent->parent));
--	return snprintf(buf, PAGE_SIZE, "%d\n", kovaplus->actual_y_sensitivity);
-+	return sysfs_emit(buf, "%d\n", kovaplus->actual_y_sensitivity);
- }
- static DEVICE_ATTR(actual_sensitivity_y, 0440,
- 		   kovaplus_sysfs_show_actual_sensitivity_y, NULL);
-@@ -365,7 +365,7 @@ static ssize_t kovaplus_sysfs_show_firmware_version(struct device *dev,
- 			&info, KOVAPLUS_SIZE_INFO);
- 	mutex_unlock(&kovaplus->kovaplus_lock);
- 
--	return snprintf(buf, PAGE_SIZE, "%d\n", info.firmware_version);
-+	return sysfs_emit(buf, "%d\n", info.firmware_version);
- }
- static DEVICE_ATTR(firmware_version, 0440,
- 		   kovaplus_sysfs_show_firmware_version, NULL);
-diff --git a/drivers/hid/hid-roccat-pyra.c b/drivers/hid/hid-roccat-pyra.c
-index 5663b9cd9c69..eeb3d38cd805 100644
---- a/drivers/hid/hid-roccat-pyra.c
-+++ b/drivers/hid/hid-roccat-pyra.c
-@@ -283,7 +283,7 @@ static ssize_t pyra_sysfs_show_actual_cpi(struct device *dev,
- {
- 	struct pyra_device *pyra =
- 			hid_get_drvdata(dev_get_drvdata(dev->parent->parent));
--	return snprintf(buf, PAGE_SIZE, "%d\n", pyra->actual_cpi);
-+	return sysfs_emit(buf, "%d\n", pyra->actual_cpi);
- }
- static DEVICE_ATTR(actual_cpi, 0440, pyra_sysfs_show_actual_cpi, NULL);
- 
-@@ -300,7 +300,7 @@ static ssize_t pyra_sysfs_show_actual_profile(struct device *dev,
- 			&settings, PYRA_SIZE_SETTINGS);
- 	mutex_unlock(&pyra->pyra_lock);
- 
--	return snprintf(buf, PAGE_SIZE, "%d\n", settings.startup_profile);
-+	return sysfs_emit(buf, "%d\n", settings.startup_profile);
- }
- static DEVICE_ATTR(actual_profile, 0440, pyra_sysfs_show_actual_profile, NULL);
- static DEVICE_ATTR(startup_profile, 0440, pyra_sysfs_show_actual_profile, NULL);
-@@ -321,7 +321,7 @@ static ssize_t pyra_sysfs_show_firmware_version(struct device *dev,
- 			&info, PYRA_SIZE_INFO);
- 	mutex_unlock(&pyra->pyra_lock);
- 
--	return snprintf(buf, PAGE_SIZE, "%d\n", info.firmware_version);
-+	return sysfs_emit(buf, "%d\n", info.firmware_version);
- }
- static DEVICE_ATTR(firmware_version, 0440, pyra_sysfs_show_firmware_version,
- 		   NULL);
--- 
-2.29.2
+As you mentioned [1], I ran into issues when I tried to do the
+conversion by simply adding the GUID to struct wmi_driver.id_table.
+That resulted in two separate independent instances of hp_wmi_sensors
+being loaded, which isn't what I wanted.
+
+[1] https://lore.kernel.org/linux-hwmon/cd81a7d6-4b81-f074-1f28-6d1b5300b937@gmx.de/
 
