@@ -1,262 +1,253 @@
-Received: from fhigh5-smtp.messagingengine.com (fhigh5-smtp.messagingengine.com [103.168.172.156])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD30AD55;
-	Wed, 20 Mar 2024 01:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08987101E2
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 01:18:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710897513; cv=none; b=eprMoHL0edij0LqMINaKRrRfq5LAh8WDSzh+JvwElcAvLk6C1QjO6bIpD4vD16nc+C/N5iG1vW2WqphVreT0k9/QHT+0NvrW2fsamKsEOTwmADm5aYwPYEsJKJiTolGHLdUxHPfGl6Z6VgHZp50nGxk+SmNbMoWWP6LZ9DDhRS4=
+	t=1710897541; cv=none; b=FxObVVrGwqt7eAW26oVaSZo0GAGndtomMEOdFj1G7Y/6vKb5oIMjhcMlzbNNSK8WYOCGZ+98eJXQ7GPrP6R6c3atyT9oLhNZlhHve07UmCbiD/wg12mBlpqBgv3+GbS8OVn/xfbwuB6qP9HSyI2wc7Pje6KPJKOv7ROPpz3O8fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710897513; c=relaxed/simple;
-	bh=nJDqdcg97WnILE42dfLUNrr2FqSNkUR5tDc10lHna2M=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=oKAE+IUsdiAnhcwWMte8Q9OuE7sqCgdHxULnCb4EZfksOF4G+vPAdP8Oy6i5fhLMefZhpC8jZLxyGwVZswB7sTisf3gzKqxYriDJ6G4LZQ83Kz/JOXD9RmMn/kTH+EnUrwaxj0TeLIXEgwyiXx4DZM1UPs5lDcr9n9guo5KmPHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=CYidJrBm; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Zof0fiAh; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1710897541; c=relaxed/simple;
+	bh=00QKULU4l3nvL7rLD5mo1oOoHhTGPSHXHftMVqAN2yo=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=YP1Fhe/EpzJw9DMVovWwF5plj6alB5WJry0bxYYGfsSJ6Mbf60yC+Zd/3XXnB0Wa4bSUbo7gkxEFhEvh3QNvw5uETD2IzKJaUpOtCqVX1fBtp5VR3YmWqbsmaXWRscG37b1dSNB7ua+xNbjuQeDrX17ABV6N0ERJ1b/hhBOvD10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MyfR7pq/; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="CYidJrBm";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Zof0fiAh"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id BBB9811400BE;
-	Tue, 19 Mar 2024 21:18:29 -0400 (EDT)
-Received: from imap41 ([10.202.2.91])
-  by compute2.internal (MEProxy); Tue, 19 Mar 2024 21:18:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1710897509;
-	 x=1710983909; bh=NKkilPXE7dD9zs5W8ZOOYgwSrS4G1qp6twnPIafRbRQ=; b=
-	CYidJrBm13MqJ8cn+WLCFWIlBbC2YHfXOhoXkMJ7RfRscaIXCOgfdNVge1wYbTG8
-	YnbvVkvmxz+L19s7XsMvbTzp1cGn9tYP1Si4k0fClVZTS69wgP6wzbho4+I5a03u
-	mi5+LYC1p72/E4U7ccVHVSQ8T4iTsepf7sP1M16+72qXhvCVzOrK8DRWRBh6Rkgc
-	CnnCPss+sJ9oBI8oXJPp3rAZd8D4hyYozB7cJ6PRX/YsKVTxF27nFYWQgXkx2yTG
-	PgHcJstFCp5OytsqqwWJ4iIlKZRH6kegC1hmCOEMSQ5Fw1H7cEOUocnpeLJ6id06
-	W1ls5EAw4xJM2CbTERizYQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1710897509; x=
-	1710983909; bh=NKkilPXE7dD9zs5W8ZOOYgwSrS4G1qp6twnPIafRbRQ=; b=Z
-	of0fiAhKzGRjsy8jICG1ociejVBLRfKecG/7wvygYNCI3BEXpdMmooPQ3FgmlJFZ
-	tItuspN8VV7cOq1DTdybPWjLuJIWsx/RYTWfhKVGLdR8Kx3nf7Qj8n3uXzj0GrN5
-	zPmOP24ZZZxPXddJzMbK8tn1XZuMvva2vjOXWBgSdh5P9E+5x4KKO411OzyP0kDK
-	cGm0WmsZY7l8Wuhm4nAUemf8nxQ2proQ3V7XmZP/cztLL1N7YcDEIhYHLiAF7YX1
-	mrxpJpbIK71X1WR1aoA6reaQR9XyHorfY2dUJQSSj3hXEcff5yaldboeqrpMN+ob
-	7smIYFE7RGkHMVn2Th8gw==
-X-ME-Sender: <xms:ZTn6ZWBRhXrv-KFQ_GVcHUzcIvZMe8Ndvaqf13v35s96PFbKbJhZXQ>
-    <xme:ZTn6ZQgCVn7Sh5swYJqqiZS2jA6fuJuRxA5_jI1nJQaDLruN3t-frERQ3MqT0JVjQ
-    2sMY6AjVEQNmGUDg-o>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrledvgddtfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedfnfhu
-    khgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtth
-    gvrhhnpeefuefghfdvueefheeiledvgeefffevgeelhedtvdehgeekteeugedtgeeuhedv
-    leenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluh
-    hkvgeslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:ZTn6ZZllMtdIuKFKOWYfZuhlPB3r6Yl6byOLB9g0BergJfbb4Z3yPA>
-    <xmx:ZTn6ZUwkrIOqrqKZrjVOTgX0ETeMc94GBo8rDqaizk0soepp_ldEyw>
-    <xmx:ZTn6ZbSAO1OvPcaRTEBDQ9dJxgbNB2oD8nabf_nryYCkYE0qQfdyVA>
-    <xmx:ZTn6ZfYgziQo_lLABkCD-m5LB0IffMaqajF3iKOOQfKSQ53E_11jWg>
-    <xmx:ZTn6ZVdvQTg8SaD4ZvFG-BpeRxjN0Mgh7nYiOQ5VU1zfnQ2Ktt-q2w>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 7ADC12340080; Tue, 19 Mar 2024 21:18:29 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-332-gdeb4194079-fm-20240319.002-gdeb41940
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MyfR7pq/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710897537; x=1742433537;
+  h=date:from:to:cc:subject:message-id;
+  bh=00QKULU4l3nvL7rLD5mo1oOoHhTGPSHXHftMVqAN2yo=;
+  b=MyfR7pq/nn0mAEFT74RYGEzaTJk26JxYzZmyuHAMRxUzMKwpy05LJldl
+   EppQWaMlxaZuKnGlTELMxNt5NE2xI9rAVg7exEeLZBwS3IH5FbRLOqM8H
+   oikBavVhOPI8I29TfYrn7LTXJ8NKko7lc4v6HQZVgB+uhx6u9hzoYcanU
+   gjsZ2t3kT+8QVpE4qIRl+eeEWuXHspm75p1QKa/GPqV3CBtgvaABiblmw
+   ViJKLQYqDx29K8EgTYBaEEOML+bjiaJSpDMDZk2k3cr1BCXB6Oh9zafTS
+   icups26gnTHyAfJos/6Aaa1xW/3t+5Yrs/djsj5IhCrowkT8uTaNVro/o
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11018"; a="16446293"
+X-IronPort-AV: E=Sophos;i="6.07,138,1708416000"; 
+   d="scan'208";a="16446293"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 18:18:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,138,1708416000"; 
+   d="scan'208";a="14416537"
+Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 19 Mar 2024 18:18:55 -0700
+Received: from kbuild by b21307750695 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rmkbU-000IDd-1k;
+	Wed, 20 Mar 2024 01:18:52 +0000
+Date: Wed, 20 Mar 2024 09:18:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/fpu] BUILD SUCCESS
+ 5d31174f3c8c465d9dbe88f6b9d1fe5716f44981
+Message-ID: <202403200936.vHIBx0sw-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-Id: <7276ec7b-9b00-4241-a4eb-a8997daeba5c@app.fastmail.com>
-In-Reply-To: <5f853562-cbe0-32d7-2644-d42d2bb9e060@linux.intel.com>
-References: <20240310061715.16531-1-luke@ljones.dev>
- <5f853562-cbe0-32d7-2644-d42d2bb9e060@linux.intel.com>
-Date: Wed, 20 Mar 2024 14:18:09 +1300
-From: "Luke Jones" <luke@ljones.dev>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
- "Hans de Goede" <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: asus-wmi: support toggling POST sound
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/fpu
+branch HEAD: 5d31174f3c8c465d9dbe88f6b9d1fe5716f44981  x86/fpu: Fix AMD X86_BUG_FXSAVE_LEAK fixup
 
+elapsed time: 730m
 
-On Wed, 20 Mar 2024, at 6:48 AM, Ilpo J=C3=A4rvinen wrote:
-> On Sun, 10 Mar 2024, Luke D. Jones wrote:
->=20
-> > Add support for toggling the BIOS POST sound on some ASUS laptops.
-> >=20
-> > Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> > ---
-> >  .../ABI/testing/sysfs-platform-asus-wmi       |  7 +++
-> >  drivers/platform/x86/asus-wmi.c               | 54 ++++++++++++++++=
-+++
-> >  include/linux/platform_data/x86/asus-wmi.h    |  3 ++
-> >  3 files changed, 64 insertions(+)
-> >=20
-> > diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Doc=
-umentation/ABI/testing/sysfs-platform-asus-wmi
-> > index e32b4f0ae15f..f3c53b7453f0 100644
-> > --- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> > +++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> > @@ -194,3 +194,10 @@ Contact: "Luke Jones" <luke@ljones.dev>
-> >  Description:
-> >  Set the target temperature limit of the Nvidia dGPU:
-> >  * min=3D75, max=3D87
-> > +
-> > +What: /sys/devices/platform/<platform>/boot_sound
-> > +Date: Jun 2023
-> > +KernelVersion: 6.9
-> > +Contact: "Luke Jones" <luke@ljones.dev>
-> > +Description:
-> > + Set if the BIOS POST sound is played on boot.
-> > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/=
-asus-wmi.c
-> > index ca8c73c15fcc..26084e9846a1 100644
-> > --- a/drivers/platform/x86/asus-wmi.c
-> > +++ b/drivers/platform/x86/asus-wmi.c
-> > @@ -297,6 +297,7 @@ struct asus_wmi {
-> >  // The RSOC controls the maximum charging percentage.
-> >  bool battery_rsoc_available;
-> > =20
-> > + bool boot_sound_available;
-> >  bool panel_overdrive_available;
-> >  bool mini_led_mode_available;
-> >  u32 mini_led_dev_id;
-> > @@ -2106,6 +2107,55 @@ static ssize_t panel_od_store(struct device *=
-dev,
-> >  }
-> >  static DEVICE_ATTR_RW(panel_od);
-> > =20
-> > +/* Bootup sound ***************************************************=
-************/
-> > +
-> > +static ssize_t boot_sound_show(struct device *dev,
-> > +      struct device_attribute *attr, char *buf)
-> > +{
-> > + struct asus_wmi *asus =3D dev_get_drvdata(dev);
-> > + int result;
-> > +
-> > + result =3D asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_BOOT_=
-SOUND);
-> > + if (result < 0)
-> > + return result;
-> > +
-> > + return sysfs_emit(buf, "%d\n", result);
-> > +}
-> > +
-> > +static ssize_t boot_sound_store(struct device *dev,
-> > +       struct device_attribute *attr,
-> > +       const char *buf, size_t count)
-> > +{
-> > + int result, err;
-> > + u32 snd;
-> > +
-> > + struct asus_wmi *asus =3D dev_get_drvdata(dev);
-> > +
-> > + result =3D kstrtou32(buf, 10, &snd);
-> > + if (result)
-> > + return result;
-> > +
-> > + if (snd > 1)
-> > + return -EINVAL;
->=20
-> Why not just use kstrtobool()?
+configs tested: 180
+configs skipped: 132
 
-Consistency with other methods mostly. Plus the possibility that asus mi=
-ght do something like add different sounds. I'll change it if a revert b=
-ack to kstrtou32 later doesn't break things.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
->=20
-> > +
-> > + err =3D asus_wmi_set_devstate(ASUS_WMI_DEVID_BOOT_SOUND, snd, &res=
-ult);
-> > +
-> > + if (err) {
->=20
-> Don't leave empty lines between the call and its error handling.
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                          axs103_defconfig   gcc  
+arc                                 defconfig   gcc  
+arc                     haps_hs_smp_defconfig   gcc  
+arc                   randconfig-001-20240320   gcc  
+arc                   randconfig-002-20240320   gcc  
+arc                    vdk_hs38_smp_defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                          ixp4xx_defconfig   gcc  
+arm                        multi_v7_defconfig   gcc  
+arm                          pxa910_defconfig   gcc  
+arm                   randconfig-001-20240320   gcc  
+arm                   randconfig-002-20240320   gcc  
+arm                   randconfig-003-20240320   gcc  
+arm                   randconfig-004-20240320   gcc  
+arm                           spitz_defconfig   gcc  
+arm                         vf610m4_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-002-20240320   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240320   gcc  
+csky                  randconfig-002-20240320   gcc  
+hexagon                          allmodconfig   clang
+hexagon                          allyesconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240319   clang
+i386         buildonly-randconfig-001-20240320   clang
+i386         buildonly-randconfig-002-20240319   clang
+i386         buildonly-randconfig-003-20240319   clang
+i386         buildonly-randconfig-004-20240319   clang
+i386         buildonly-randconfig-004-20240320   clang
+i386         buildonly-randconfig-005-20240319   gcc  
+i386         buildonly-randconfig-006-20240319   gcc  
+i386                                defconfig   clang
+i386                  randconfig-001-20240319   clang
+i386                  randconfig-001-20240320   clang
+i386                  randconfig-002-20240319   clang
+i386                  randconfig-002-20240320   clang
+i386                  randconfig-003-20240319   clang
+i386                  randconfig-003-20240320   clang
+i386                  randconfig-004-20240319   clang
+i386                  randconfig-004-20240320   clang
+i386                  randconfig-005-20240319   clang
+i386                  randconfig-005-20240320   clang
+i386                  randconfig-006-20240319   gcc  
+i386                  randconfig-011-20240319   gcc  
+i386                  randconfig-011-20240320   clang
+i386                  randconfig-012-20240319   clang
+i386                  randconfig-012-20240320   clang
+i386                  randconfig-013-20240319   gcc  
+i386                  randconfig-013-20240320   clang
+i386                  randconfig-014-20240319   clang
+i386                  randconfig-014-20240320   clang
+i386                  randconfig-015-20240319   clang
+i386                  randconfig-016-20240319   gcc  
+i386                  randconfig-016-20240320   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240320   gcc  
+loongarch             randconfig-002-20240320   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                       m5275evb_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+microblaze                      mmu_defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                      maltasmvp_defconfig   gcc  
+nios2                         3c120_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240320   gcc  
+nios2                 randconfig-002-20240320   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                generic-32bit_defconfig   gcc  
+parisc                randconfig-001-20240320   gcc  
+parisc                randconfig-002-20240320   gcc  
+parisc64                            defconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                  iss476-smp_defconfig   gcc  
+powerpc                     kmeter1_defconfig   gcc  
+powerpc               randconfig-001-20240320   gcc  
+powerpc               randconfig-003-20240320   gcc  
+powerpc                    sam440ep_defconfig   gcc  
+powerpc                     tqm8540_defconfig   gcc  
+powerpc                      walnut_defconfig   gcc  
+powerpc64             randconfig-001-20240320   gcc  
+powerpc64             randconfig-002-20240320   gcc  
+powerpc64             randconfig-003-20240320   gcc  
+riscv                             allnoconfig   gcc  
+riscv                 randconfig-002-20240320   gcc  
+s390                          debug_defconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                                  defconfig   gcc  
+sh                             espt_defconfig   gcc  
+sh                               j2_defconfig   gcc  
+sh                          lboxre2_defconfig   gcc  
+sh                    randconfig-001-20240320   gcc  
+sh                    randconfig-002-20240320   gcc  
+sh                          rsk7201_defconfig   gcc  
+sh                        sh7757lcr_defconfig   gcc  
+sh                             shx3_defconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240320   gcc  
+sparc64               randconfig-002-20240320   gcc  
+um                               allmodconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240320   gcc  
+um                    randconfig-002-20240320   gcc  
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240319   clang
+x86_64       buildonly-randconfig-002-20240319   clang
+x86_64       buildonly-randconfig-002-20240320   clang
+x86_64       buildonly-randconfig-003-20240319   clang
+x86_64       buildonly-randconfig-003-20240320   clang
+x86_64       buildonly-randconfig-004-20240319   clang
+x86_64       buildonly-randconfig-004-20240320   clang
+x86_64       buildonly-randconfig-005-20240319   clang
+x86_64       buildonly-randconfig-006-20240319   clang
+x86_64       buildonly-randconfig-006-20240320   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240319   clang
+x86_64                randconfig-001-20240320   clang
+x86_64                randconfig-002-20240319   clang
+x86_64                randconfig-002-20240320   clang
+x86_64                randconfig-003-20240319   clang
+x86_64                randconfig-004-20240319   gcc  
+x86_64                randconfig-004-20240320   clang
+x86_64                randconfig-005-20240319   gcc  
+x86_64                randconfig-005-20240320   clang
+x86_64                randconfig-006-20240319   gcc  
+x86_64                randconfig-006-20240320   clang
+x86_64                randconfig-011-20240319   clang
+x86_64                randconfig-012-20240319   clang
+x86_64                randconfig-013-20240319   gcc  
+x86_64                randconfig-014-20240319   gcc  
+x86_64                randconfig-015-20240319   clang
+x86_64                randconfig-015-20240320   clang
+x86_64                randconfig-016-20240319   clang
+x86_64                randconfig-071-20240319   gcc  
+x86_64                randconfig-071-20240320   clang
+x86_64                randconfig-072-20240319   clang
+x86_64                randconfig-073-20240319   gcc  
+x86_64                randconfig-073-20240320   clang
+x86_64                randconfig-074-20240319   clang
+x86_64                randconfig-075-20240319   clang
+x86_64                randconfig-076-20240319   clang
+x86_64                randconfig-076-20240320   clang
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                       common_defconfig   gcc  
+xtensa                randconfig-001-20240320   gcc  
+xtensa                randconfig-002-20240320   gcc  
 
-Got it, thanks.
-If there is nothing else I'll submit new version.
-
->=20
-> --=20
-> i.
->=20
-> > + pr_warn("Failed to set boot sound: %d\n", err);
-> > + return err;
-> > + }
-> > +
-> > + if (result > 1) {
-> > + pr_warn("Failed to set panel boot sound (result): 0x%x\n", result);
-> > + return -EIO;
-> > + }
-> > +
-> > + sysfs_notify(&asus->platform_device->dev.kobj, NULL, "boot_sound");
-> > +
-> > + return count;
-> > +}
-> > +static DEVICE_ATTR_RW(boot_sound);
-> > +
-> >  /* Mini-LED mode **************************************************=
-************/
-> >  static ssize_t mini_led_mode_show(struct device *dev,
-> >     struct device_attribute *attr, char *buf)
-> > @@ -4196,6 +4246,7 @@ static struct attribute *platform_attributes[]=
- =3D {
-> >  &dev_attr_ppt_platform_sppt.attr,
-> >  &dev_attr_nv_dynamic_boost.attr,
-> >  &dev_attr_nv_temp_target.attr,
-> > + &dev_attr_boot_sound.attr,
-> >  &dev_attr_panel_od.attr,
-> >  &dev_attr_mini_led_mode.attr,
-> >  &dev_attr_available_mini_led_mode.attr,
-> > @@ -4248,6 +4299,8 @@ static umode_t asus_sysfs_is_visible(struct ko=
-bject *kobj,
-> >  ok =3D asus->nv_dyn_boost_available;
-> >  else if (attr =3D=3D &dev_attr_nv_temp_target.attr)
-> >  ok =3D asus->nv_temp_tgt_available;
-> > + else if (attr =3D=3D &dev_attr_boot_sound.attr)
-> > + ok =3D asus->boot_sound_available;
-> >  else if (attr =3D=3D &dev_attr_panel_od.attr)
-> >  ok =3D asus->panel_overdrive_available;
-> >  else if (attr =3D=3D &dev_attr_mini_led_mode.attr)
-> > @@ -4519,6 +4572,7 @@ static int asus_wmi_add(struct platform_device=
- *pdev)
-> >  asus->ppt_plat_sppt_available =3D asus_wmi_dev_is_present(asus, ASU=
-S_WMI_DEVID_PPT_PLAT_SPPT);
-> >  asus->nv_dyn_boost_available =3D asus_wmi_dev_is_present(asus, ASUS=
-_WMI_DEVID_NV_DYN_BOOST);
-> >  asus->nv_temp_tgt_available =3D asus_wmi_dev_is_present(asus, ASUS_=
-WMI_DEVID_NV_THERM_TARGET);
-> > + asus->boot_sound_available =3D asus_wmi_dev_is_present(asus, ASUS_=
-WMI_DEVID_BOOT_SOUND);
-> >  asus->panel_overdrive_available =3D asus_wmi_dev_is_present(asus, A=
-SUS_WMI_DEVID_PANEL_OD);
-> >  asus->ally_mcu_usb_switch =3D acpi_has_method(NULL, ASUS_USB0_PWR_E=
-C0_CSEE)
-> >  && dmi_match(DMI_BOARD_NAME, "RC71L");
-> > diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/li=
-nux/platform_data/x86/asus-wmi.h
-> > index 3e9a01467c67..3eb5cd6773ad 100644
-> > --- a/include/linux/platform_data/x86/asus-wmi.h
-> > +++ b/include/linux/platform_data/x86/asus-wmi.h
-> > @@ -137,6 +137,9 @@
-> >  /* TUF laptop RGB power/state */
-> >  #define ASUS_WMI_DEVID_TUF_RGB_STATE 0x00100057
-> > =20
-> > +/* Bootup sound control */
-> > +#define ASUS_WMI_DEVID_BOOT_SOUND 0x00130022
-> > +
-> >  /* DSTS masks */
-> >  #define ASUS_WMI_DSTS_STATUS_BIT 0x00000001
-> >  #define ASUS_WMI_DSTS_UNKNOWN_BIT 0x00000002
-> >=20
->=20
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
