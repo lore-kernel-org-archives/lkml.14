@@ -1,63 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28211366;
-	Wed, 20 Mar 2024 00:32:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1983629;
+	Wed, 20 Mar 2024 00:34:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710894729; cv=none; b=habRAkM2m0myKFcCSXUY+hYtDdLTySVVQ16PEk/Un0vbpIpJ04NgA/V36idvdPCakbVoeYQ5frjptuV86512SPgO5nQhwZV6jqqsTXGeDfj/WQ4v7VZntchFflmJhm7HZru2zUCM1EQUN2xd/ownhvJcbWsD0Qxf8ApdfNCxQ1Q=
+	t=1710894894; cv=none; b=KLgDWcNnxb6x98QQZw6OfYLPpyh8D36uyPctmgTEEJAYJlGKEvkuzgR0RsVsUNisesPISXRz76H/oXw6XdTQArUxN3M6jpQl0M1Oy+TClzZocKGaL7erTGEloahmjmaCXjADCL6X8/oUqm846smjTSdc3aySjv6569VkYyc6VG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710894729; c=relaxed/simple;
-	bh=OJ+DFUbaDU6D6Jdy3Jzi3cIZ7vDGjVP9P9Zwh0GdCHE=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=YV/24RXPs+9LtvsfU3jykasX4w0k+RDU+E2bWAu5HWY/xmAWbmsBoGP/azvlThWq0LHwRCUezp2rYbj6Ah7c+stRTdD3dgjnjNNNIVJ4AjV6WaFJYuaiYzGrAS2hlq1mhRAjrUqUE9ryWUIApCir0PrSfHgm/wM+clJX2aPvseg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bt3TthtJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bt3TthtJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A4118C433C7;
-	Wed, 20 Mar 2024 00:32:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710894729;
-	bh=OJ+DFUbaDU6D6Jdy3Jzi3cIZ7vDGjVP9P9Zwh0GdCHE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=bt3TthtJlY0uGATnr2gJJR9G8MY4DleAZiDIdIRCqqdfGnjLUpCz4X/voEZm26Nwj
-	 LsV3rz4w2LwHfBEeZKqv4t6b3qv1kLYBK8ffefrRrIXF1tJ4HXSKA2/bDUu/DJcLh0
-	 n5V75xemvlD728iFTLhbDyzgAQ1VaZwJzvmZL/TugpYuSajKVHYql66gJ27GerJJdE
-	 xk02PObriLx3sKdCUl/D1Vf06Mhd01TliXOj34GB73vm3na+gItzEr8EAFrfF/3Usz
-	 IB1ht174s3NMVTMQDGQbq9BLku/JHBbz7pG7+MhaiTXMzgdC/jtuMB9tQEPaK/q4fZ
-	 qa5JAoUeTA/rg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9BB69D84BB3;
-	Wed, 20 Mar 2024 00:32:09 +0000 (UTC)
-Subject: Re: [GIT PULL] bachefs fixes for 6.9-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <qhecenhgh5bnkjllimyvmqc6cv5bv4vposvh5hqtjjm7hx3q4u@r4gwjp6wl2k2>
-References: <qhecenhgh5bnkjllimyvmqc6cv5bv4vposvh5hqtjjm7hx3q4u@r4gwjp6wl2k2>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <qhecenhgh5bnkjllimyvmqc6cv5bv4vposvh5hqtjjm7hx3q4u@r4gwjp6wl2k2>
-X-PR-Tracked-Remote: https://evilpiepirate.org/git/bcachefs.git tags/bcachefs-2024-03-19
-X-PR-Tracked-Commit-Id: 2e92d26b25432ec3399cb517beb0a79a745ec60f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a4145ce1e7bc247fd6f2846e8699473448717b37
-Message-Id: <171089472962.650.4843210170856467637.pr-tracker-bot@kernel.org>
-Date: Wed, 20 Mar 2024 00:32:09 +0000
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+	s=arc-20240116; t=1710894894; c=relaxed/simple;
+	bh=ZjyLvlOBSSMgSQbTO2EhcxGH7IpxIDHqTWIIUav4yGg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OYmpz7D5Lo1Vhkd8Bh0lHiHsVZYtympRVprw2vT2LZPvZSuYPkfCXHtSYzWbilooNHRRB4qO1DPb+xT+6e+hlWDWEA8wg5eNljLBiqI5UldCRYYQrmGiOScDMbYt2TGCDkRSqkohflHAD1CMo3y8cEHbHpp+c+JHzdawnSo3aww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ED74C433C7;
+	Wed, 20 Mar 2024 00:34:52 +0000 (UTC)
+Date: Tue, 19 Mar 2024 20:37:16 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Nathan Chancellor <nathan@kernel.org>, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, ndesaulniers@google.com, morbo@google.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ llvm@lists.linux.dev, patches@lists.linux.dev, Linux Kernel Functional
+ Testing <lkft@linaro.org>
+Subject: Re: [PATCH 2/2] tracing: Ignore -Wstring-compare with diagnostic
+ macros
+Message-ID: <20240319203716.208c9b29@gandalf.local.home>
+In-Reply-To: <CAFhGd8q_4QfjPwGhtfOA40ZGNF7_wf3V43rAvcb_qXQnz1TFOw@mail.gmail.com>
+References: <20240319-tracing-fully-silence-wstring-compare-v1-0-81adb44403f5@kernel.org>
+	<20240319-tracing-fully-silence-wstring-compare-v1-2-81adb44403f5@kernel.org>
+	<CAFhGd8q_4QfjPwGhtfOA40ZGNF7_wf3V43rAvcb_qXQnz1TFOw@mail.gmail.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The pull request you sent on Tue, 19 Mar 2024 18:11:15 -0400:
+On Tue, 19 Mar 2024 17:30:41 -0700
+Justin Stitt <justinstitt@google.com> wrote:
 
-> https://evilpiepirate.org/git/bcachefs.git tags/bcachefs-2024-03-19
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a4145ce1e7bc247fd6f2846e8699473448717b37
+> > diff --git a/include/trace/stages/stage6_event_callback.h b/include/trace/stages/stage6_event_callback.h
+> > index 83da83a0c14f..56a4eea5a48e 100644
+> > --- a/include/trace/stages/stage6_event_callback.h
+> > +++ b/include/trace/stages/stage6_event_callback.h
+> > @@ -35,9 +35,14 @@
+> >         do {                                                            \
+> >                 char *__str__ = __get_str(dst);                         \
+> >                 int __len__ = __get_dynamic_array_len(dst) - 1;         \
+> > +               __diag_push();                                          \
+> > +               __diag_ignore(clang, 11, "-Wstring-compare",            \
+> > +                             "__builtin_constant_p() ensures strcmp()" \
+> > +                             "will be used for string literals");      \
+> >                 WARN_ON_ONCE(__builtin_constant_p(src) ?                \
+> >                              strcmp((src), __data_offsets.dst##_ptr_) : \
+> >                              (src) != __data_offsets.dst##_ptr_);       \  
+> 
+> What exactly is the point of the literal string comparison? Why
+> doesn't strcmp do the trick?
 
-Thank you!
+This is done in the hotpath, and is only for debugging. The string passed
+into __string() should be the same as the string passed into __assign_str().
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+But this is moot as I ended up always using strcmp() even if it will slow
+down the recording of the event.
+
+Next merge window the src parameter (along with the strcmp() checks) are
+going away.
+
+-- Steve
+
+
+> 
+> > +               __diag_pop();                                           \
+> >                 memcpy(__str__, __data_offsets.dst##_ptr_ ? :           \
+> >                        EVENT_NULL_STR, __len__);                        \
+> >                 __str__[__len__] = '\0';                                \
+> >
+> > --
+> > 2.44.0
+> >  
+
