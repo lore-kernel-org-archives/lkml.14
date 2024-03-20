@@ -1,152 +1,120 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from out203-205-221-210.mail.qq.com (out203-205-221-210.mail.qq.com [203.205.221.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC221DFE3;
-	Wed, 20 Mar 2024 11:22:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B211171D
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 11:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710933739; cv=none; b=gmZA1e1y4w9IKCqKiJtoOB90pN4KejChssGgNT71BA4OVbhwqzGB5zAF1XlQFohMBMtX4XDh+B+ohYTyMrp/64jOc8UVT6GByXmKEMLa1b5U/aUnfYDVrktaCOE9RX73/xB92p41V9OA1DoBrbSutUWN7H744WAcWltI1jfnsWU=
+	t=1710933796; cv=none; b=sPog7PtDcDhs+lC+fR4n04ERdGVG5CLrC51Zs9wceUkPCB5eia3nvgvIEp4i5+XyT4MZMNh16ZBI/8kU3cR2xb8sIeZvp7I8VJmvFFlYMEaRmaFZ8qEEL+e3TwoSR+SRhP/w5cHGFC77jgSXvriFMjSLxHLJnRs8nyuqtfbV/OE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710933739; c=relaxed/simple;
-	bh=GDJ9hRjKDTbsfi0sD5cHSSMLxf2tZ0cHxbkJIlxfXk8=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=nztKGYwbN7tnnnJlA4RL6ifzc5i0xtG5I6d7rZEbZ1X+64wGTLvmyqLwd/xnSL2RzbZgTkNJ+Lg2MvKTpdKZ64EtYdWMe69fAZFNe2fjkasQoXHhxZjBMRk7TWWKcnvEgWeCqWN/3lSopu2mjCcpBD7zW6mJz0z1jIjEe/kEcMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=khykmHUZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EKIH+6xm; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1710933796; c=relaxed/simple;
+	bh=nusKVOAceUYCL9CnXyui/hszTDW4cvOOck0z5/kb4KA=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=tYGj9ZzIR8MnmfbEVQzM4OFM1KRxMO52M7mTxHro+fCAW/HGXpC9pFbnEXUHSZwWnHdU/1IXqxLgYMGEHDXIg/ifaYXn51AzpAkOTf8mNfMQQMWYLBolg75/flRnJaOHss41/gyBGpBks0Jxl2UgUmdg53xfBXw7syEiwyjY56Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=QOFFn/XR; arc=none smtp.client-ip=203.205.221.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="khykmHUZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EKIH+6xm"
-Date: Wed, 20 Mar 2024 11:22:14 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1710933736;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pe/zNZvQM95SFF4otZ+0dCw79zVzBVMvBvF2BnJctZs=;
-	b=khykmHUZ1EIgaPAxt8vovw5ny4qKraBhVTlzTyASDj/NI/1PshLIVDSLKyN3+0d1HGkX5q
-	yaaGDghPIMHdmRtPbkfl3UFzibdN+A3jEhEf+SHdBOoA6HyG7KvjopqFHB+/HKPuQ0dQYR
-	IE4wQvxx+nVKi5a6ShWQ2TSHy02GCACTKffMQ5v1n6TTaDUGWobXygKTpFrJVokSG+nUR2
-	j/baqqqdPc+FemuDZAENftJticVF40vgbx8mgfICHHZbvlxrNAUG16iQZpggUAITUYPWV8
-	L+6uJtPZboIt1Uo5JyMRKsr0bhm0JySTCXCHdOMFkoMY4uhnuDVQuyAmVfo/KA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1710933736;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pe/zNZvQM95SFF4otZ+0dCw79zVzBVMvBvF2BnJctZs=;
-	b=EKIH+6xm9ObG4R4FbQxJOOHFNZvRtGPWnNl6UiJ5msgamGlvBPOxpBBPyuEeQ5zKzkcxxV
-	F3BJjkQpf52NEnDQ==
-From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/percpu] x86/percpu: Convert this_percpu_xchg_op() from
- asm() to C code, to generate better code
-Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240320083127.493250-1-ubizjak@gmail.com>
-References: <20240320083127.493250-1-ubizjak@gmail.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="QOFFn/XR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1710933791; bh=V2AN3h8sZEyvNDd8KWZE3vxEDjCSIaOb4bVXmJqygsY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=QOFFn/XR/iJ9G5TgGfeA54sx4L1NIcoyNDGiFF+ItZ3G3oLbDpMN9supWM9cOYw2d
+	 gs5VlWv6o94aldjyMy66aUprcQ88ufLVY5rxSLbXabBKCYySTXs++GrcXmiXbxCyLI
+	 KzRNeuXQa96Xsclyn29sqBK1MN76ZOzabnVeKglI=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
+	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
+	id 43B23EAD; Wed, 20 Mar 2024 19:16:59 +0800
+X-QQ-mid: xmsmtpt1710933419t68z7oox4
+Message-ID: <tencent_7DD17367A377E97CA3B5A443F776776A8605@qq.com>
+X-QQ-XMAILINFO: OZsapEVPoiO6pb6ZN/T6VIT8DrPQBtsIeM42KX8VgYoP7huV0pssSV3w47+sDD
+	 cz0lXOB1smSYy+d2D5iSubYYjIhnUaOTCow96wjqbUOmT45+bTVsI40M773wmDkPcas1EMKclcko
+	 lBnkrXoXZrq8rLXzttIuXXemEWC4q4oT+s4ZwXnitrpf/CkT0idB/mFbWZpVX8v0CtvTq4OEJyYP
+	 OjvrjqBdhV2lBl3ePb6bezWdKSE35GKSRg/XzXldEmw9r2kJMjE0mNXNk5Qa4tK7fr2z/YXZvZOB
+	 O5BUufCYFUX21m/MuiTy9kjn6SSsOcNnjfv7R9LddoJTJglGlZ/6PZVac8oGneiL1zhe6SJV7HIh
+	 N6Vykdiyvy0+QhqRn8lCqXxrUv0KwjYZcCyNZF1V0UqJYsfaUvHEpd9vg8oCjRQe/zomV4qFe5An
+	 kFfWyHP7BCwcamy7QHBTXa+V7FteZS5W0ZYZjw/8K9RPJiOg556uroCNSqOPsPcipkT+qiAU1wev
+	 7SDJ0q30i5eqQy6YCbZ6sqsvVLW796y1JpXVb6OlJQ6oymE0kw8FjAw5QHladLr7I3P+XAHHCpbn
+	 5C0xzFw7+MyRuXy55HY0ZyCch1HvPJn7swp3a6QRKG8esk9bpYW2Tz0HoY5xEGlnbGa9n9UQqgJN
+	 HEYtPg2BcXmZmtAS8qnW+lu+GqIrzry4o90+0UoJLCUL1tDPRLUZ9zX52kVNSSwUSQtgngnBL82o
+	 taV68Y+uYBbR6MR4P9hwNsVV6BI2HN3EUUVCg9ywuv3+rDHcR+eTomIjCgYzvJJANWQqd0UgKCPW
+	 aRJxFnMB+nQfdI3KEV+9/BX7f/DHuz5tt3uC4Q0R1AGvbALzcEoR3MOQp+SYEsY1dgISq1ZN6h1h
+	 XKTWXJOCAk4bN5PBkFvWHXk+9VhTqe7xLqj6Qw6vVCBspvDs3evJt91/xoQiCvZ41x8Xn80wzNmL
+	 mArJr6v7am1iODG/o03Q==
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+33f4297b5f927648741a@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [bpf?] UBSAN: array-index-out-of-bounds in check_stack_range_initialized
+Date: Wed, 20 Mar 2024 19:17:00 +0800
+X-OQ-MSGID: <20240320111659.1320058-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000003dc8e00614076ab6@google.com>
+References: <0000000000003dc8e00614076ab6@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171093373498.10875.4458171139312642534.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the x86/percpu branch of tip:
+please test oob in check_stack_range_initialized
 
-Commit-ID:     50c6d2457d01944d58af355d324cb7106de19a66
-Gitweb:        https://git.kernel.org/tip/50c6d2457d01944d58af355d324cb7106de19a66
-Author:        Uros Bizjak <ubizjak@gmail.com>
-AuthorDate:    Wed, 20 Mar 2024 09:30:40 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 20 Mar 2024 12:08:11 +01:00
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git master
 
-x86/percpu: Convert this_percpu_xchg_op() from asm() to C code, to generate better code
 
-Rewrite percpu_xchg_op() using generic percpu primitives instead
-of using asm. The new implementation is similar to local_xchg() and
-allows the compiler to perform various optimizations: e.g. the
-compiler is able to create fast path through the loop, according
-to likely/unlikely annotations in percpu_try_cmpxchg_op().
-
-No functional changes intended.
-
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20240320083127.493250-1-ubizjak@gmail.com
----
- arch/x86/include/asm/percpu.h | 32 +++++++++++---------------------
- 1 file changed, 11 insertions(+), 21 deletions(-)
-
-diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
-index 44958eb..de991e6 100644
---- a/arch/x86/include/asm/percpu.h
-+++ b/arch/x86/include/asm/percpu.h
-@@ -230,25 +230,15 @@ do {									\
- })
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 1dd3b99d1bb9..6306925c5e47 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -7177,6 +7177,11 @@ static int check_stack_range_initialized(
+ 		return 0;
+ 	}
  
- /*
-- * xchg is implemented using cmpxchg without a lock prefix. xchg is
-- * expensive due to the implied lock prefix.  The processor cannot prefetch
-- * cachelines if xchg is used.
-+ * this_cpu_xchg() is implemented using cmpxchg without a lock prefix.
-+ * xchg is expensive due to the implied lock prefix. The processor
-+ * cannot prefetch cachelines if xchg is used.
-  */
--#define percpu_xchg_op(size, qual, _var, _nval)				\
-+#define this_percpu_xchg_op(_var, _nval)				\
- ({									\
--	__pcpu_type_##size pxo_old__;					\
--	__pcpu_type_##size pxo_new__ = __pcpu_cast_##size(_nval);	\
--	asm qual (__pcpu_op2_##size("mov", __percpu_arg([var]),		\
--				    "%[oval]")				\
--		  "\n1:\t"						\
--		  __pcpu_op2_##size("cmpxchg", "%[nval]",		\
--				    __percpu_arg([var]))		\
--		  "\n\tjnz 1b"						\
--		  : [oval] "=&a" (pxo_old__),				\
--		    [var] "+m" (__my_cpu_var(_var))			\
--		  : [nval] __pcpu_reg_##size(, pxo_new__)		\
--		  : "memory");						\
--	(typeof(_var))(unsigned long) pxo_old__;			\
-+	typeof(_var) pxo_old__ = this_cpu_read(_var);			\
-+	do { } while (!this_cpu_try_cmpxchg(_var, &pxo_old__, _nval));	\
-+	pxo_old__;							\
- })
++	if (INT_MIN - access_size > max_off) {
++		verbose(env, "invalid access size\n");
++		return -EACCES;
++	}
++
+ 	for (i = min_off; i < max_off + access_size; i++) {
+ 		u8 *stype;
  
- /*
-@@ -534,9 +524,9 @@ do {									\
- #define this_cpu_or_1(pcp, val)		percpu_to_op(1, volatile, "or", (pcp), val)
- #define this_cpu_or_2(pcp, val)		percpu_to_op(2, volatile, "or", (pcp), val)
- #define this_cpu_or_4(pcp, val)		percpu_to_op(4, volatile, "or", (pcp), val)
--#define this_cpu_xchg_1(pcp, nval)	percpu_xchg_op(1, volatile, pcp, nval)
--#define this_cpu_xchg_2(pcp, nval)	percpu_xchg_op(2, volatile, pcp, nval)
--#define this_cpu_xchg_4(pcp, nval)	percpu_xchg_op(4, volatile, pcp, nval)
-+#define this_cpu_xchg_1(pcp, nval)	this_percpu_xchg_op(pcp, nval)
-+#define this_cpu_xchg_2(pcp, nval)	this_percpu_xchg_op(pcp, nval)
-+#define this_cpu_xchg_4(pcp, nval)	this_percpu_xchg_op(pcp, nval)
+@@ -8589,6 +8594,8 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
+ 		return 0;
+ 	}
  
- #define raw_cpu_add_return_1(pcp, val)		percpu_add_return_op(1, , pcp, val)
- #define raw_cpu_add_return_2(pcp, val)		percpu_add_return_op(2, , pcp, val)
-@@ -575,7 +565,7 @@ do {									\
- #define this_cpu_and_8(pcp, val)		percpu_to_op(8, volatile, "and", (pcp), val)
- #define this_cpu_or_8(pcp, val)			percpu_to_op(8, volatile, "or", (pcp), val)
- #define this_cpu_add_return_8(pcp, val)		percpu_add_return_op(8, volatile, pcp, val)
--#define this_cpu_xchg_8(pcp, nval)		percpu_xchg_op(8, volatile, pcp, nval)
-+#define this_cpu_xchg_8(pcp, nval)		this_percpu_xchg_op(pcp, nval)
- #define this_cpu_cmpxchg_8(pcp, oval, nval)	percpu_cmpxchg_op(8, volatile, pcp, oval, nval)
- #define this_cpu_try_cmpxchg_8(pcp, ovalp, nval)	percpu_try_cmpxchg_op(8, volatile, pcp, ovalp, nval)
- #endif
++	printk("1meta:%p, maptr:%p, ks:%d, kv:%d,%s\n",
++		meta, meta->map_ptr, meta->map_ptr->key_size, meta->map_ptr->value_size, __func__);
+ 	if (type_is_pkt_pointer(type) &&
+ 	    !may_access_direct_pkt_data(env, meta, BPF_READ)) {
+ 		verbose(env, "helper access to the packet is not allowed\n");
+@@ -8704,6 +8711,8 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
+ 			verbose(env, "invalid map_ptr to access map->key\n");
+ 			return -EACCES;
+ 		}
++		printk("meta:%p, maptr:%p, ks:%d, reg->map_ptr:%p, %s\n",
++			meta, meta->map_ptr, meta->map_ptr->key_size, reg->map_ptr, __func__);
+ 		err = check_helper_mem_access(env, regno,
+ 					      meta->map_ptr->key_size, false,
+ 					      NULL);
+@@ -8721,6 +8730,8 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
+ 			return -EACCES;
+ 		}
+ 		meta->raw_mode = arg_type & MEM_UNINIT;
++		printk("meta:%p, maptr:%p, vs:%d, reg->map_ptr:%p, %s\n",
++			meta, meta->map_ptr, meta->map_ptr->value_size, reg->map_ptr, __func__);
+ 		err = check_helper_mem_access(env, regno,
+ 					      meta->map_ptr->value_size, false,
+ 					      meta);
+@@ -10248,6 +10259,8 @@ static int check_helper_call(struct bpf_verifier_env *env, struct bpf_insn *insn
+ 
+ 	meta.func_id = func_id;
+ 	/* check args */
++	printk("meta:%p, maptr:%p, ks:%d, kv:%d,%s\n",
++		meta, meta->map_ptr, meta->map_ptr->key_size, meta->map_ptr->value_size, __func__);
+ 	for (i = 0; i < MAX_BPF_FUNC_REG_ARGS; i++) {
+ 		err = check_func_arg(env, i, &meta, fn, insn_idx);
+ 		if (err)
+
