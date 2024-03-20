@@ -1,243 +1,195 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442B12BB0A
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 02:48:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710902885; cv=none; b=MMyrQOvtlqQ3zCCD2gqknkn5a9og9+e7ouVapel923A/zwqh2iDbbTbN4uPHjdsQhGE5656PI+i7ZkwodHxdwu8rk6+J2SguZKp+1L6y7M5TW0WETLG879ZQDteMXeM9WXk9Nm8KPNpZyaSVOfW37pCWZ5i7llFTkRPn7VnPSt0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710902885; c=relaxed/simple;
-	bh=LwB7Xs9yyepMcXo/druWrMcEuXVo4j7h2tFRCWTAtsM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EOXVfLFKRzuOzEPz+nlpK9MraXjIYZAzfJSOyAEjwObhBLZCNKLL17pWrkKMLJolyKGln4yDfbEPemqPUP2QafnDxqx2e2ZAGHkvkWj853Yhs6HevU5ndHnC4c8Q3+gLQOkyT1XB0rduhMnkrcAEEuYtE090OOYkucFu0ZRzwx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WJCvIH/Q; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6387C374CF;
+	Wed, 20 Mar 2024 02:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=210.61.82.184
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710902950; cv=fail; b=GRZ38btVRCI0arG0sFkaBQb9IK6iyqn3Y5A9KmrOVlsDF0pGSw30In0CEGSCr89gk7cwmf8GM5avcTsalFhpmbD2jhFiLad5lMdAoM2kRTlOaE+GApzlRIhnXHYL3+wHxU+qx8/ZgykZWaqRJf6WB5Kb1XpVYRcHIEyT2dKEEtg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710902950; c=relaxed/simple;
+	bh=TEIFv0RBUWITLrd+XHoJKA3DfXM+KH0LdY55ULjyX0E=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=GbuegzF6f8BJMHCLMML+bUCKVbmnOkGpZdz+MTxnQE3McsfB6qnzNw4m6YOqrXdrPIUlM6wI5A/lFOh/DHTg48Trh+bcBgLhGsy2lh+DKi80KIHpkSw1Oh1oiJStOlES9+7F1rNNYCBuw92u2pTCK3u0OyOpQhZKYxretqjHGJs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=SZc/Iajj; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=WcwLp502; arc=fail smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJCvIH/Q"
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-7e0a3fdaef3so297561241.3
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 19:48:02 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="SZc/Iajj";
+	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="WcwLp502"
+X-UUID: 68bb1c8ee66411ee935d6952f98a51a9-20240320
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=TEIFv0RBUWITLrd+XHoJKA3DfXM+KH0LdY55ULjyX0E=;
+	b=SZc/Iajj5gX5klwuHtnLpoME/XXfV3pbqanO66DHFY3rjI1dX7ju4s6oVfrEDuE78hcIMFRx3V+kgOtFSbYPo29QVyJ8W9ZSCDBRFTJuXYGE0xvXx5JyYbp1T0MkbEZvN3ZG7AegR7rDzyidoWYxTS7N+CLls/vkE401vfhXRFA=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:628739e3-708b-42ea-9f53-c451f47b47df,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6f543d0,CLOUDID:416cb381-4f93-4875-95e7-8c66ea833d57,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: 68bb1c8ee66411ee935d6952f98a51a9-20240320
+Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw02.mediatek.com
+	(envelope-from <shawn.sung@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 296550592; Wed, 20 Mar 2024 10:49:02 +0800
+Received: from mtkmbs10n1.mediatek.inc (172.21.101.34) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Wed, 20 Mar 2024 10:49:00 +0800
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (172.21.101.237)
+ by mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Wed, 20 Mar 2024 10:49:00 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=d1qCH0mg8NHO/dqDGcpxrVDKSoabsn43DrOdyMezvG1GisPpgaVdIbtoD9FyJSvAPV5c2+7BAKs7Cu3dpMOsWqQLRb+AvrI+opEtIqcpZCkbatrEILneiZMV9HaAsyupd8Qo3SHCBNd2cmX5P9DlM84MXabA1Nlifvvj7hQ4DrPGXOdWW4C67iHmSPpd+VAKQvS03zgrVk/mOi/TvemtYZcjSOgvQv35jUUWqeap7DFK41Qr0/yhuW7WaUXSnH2v3r+qiVFbaQtm/m4D7pTcsX7soFDmyVVPmBSgpiopuvPgu3xLcchdTGjuBNJPpzcRNCCvvj4ygerKrYp1KxnFnw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TEIFv0RBUWITLrd+XHoJKA3DfXM+KH0LdY55ULjyX0E=;
+ b=YcQ/FwrlKAhCw2Xpa4IywqeznHdb43f+v/il0KJM3V2HGa8Y6mu9sPIx+OEFQAJVUy4yPwEVQLteyutkZsN/G6ouO6NCFzyueqAqaGq/R+j71Hzzblhjdop1DiLLgsKvGstiSGKnSoo2o7CincUJSvDSaI+d4MbjR0hnYz+KXnytTLm+QXvpqYRTaPNK/agUGbNAO6OJbqpDNppighkWlBETZDjBuNI9w2bgPM8Wk5bMIRXMNGqXVQ4XMzTz4fCT2tsDQweI/3NMqobzhAoi7lMqioaNbQ3CtO9CKpCvfe8MFPdEpbYcQ6ApQReHOD3EBoFsw77fvDcJJ/1v5Jgbtg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
+ dkim=pass header.d=mediatek.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710902882; x=1711507682; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g2zDHLzD2gozMABkU+Rb308kWqluttfK/My8IZFv7bE=;
-        b=WJCvIH/QaHJkXCdfR25onhkclYQ/VFJfIlPc4PdSJDwnih4KPayagGH6baYbVd4Xpz
-         /QcjEwwxUtH4tdNOiccdXUm5xQOIYfK4wugXwKTReqMtgpxkuFPzermd5zb8DWmMqC1T
-         Jz1DZOJkgzpzGeMQfsy1a9ANW4z0L4LeDbiROMU+Li576LDuP9ua96cr0Kjw+2IuCEUo
-         tBfGn6OLY7Plk9BHPm9CQwr6BWL9hyAUXS/C8hhfwWOLwLBSSldFBMh6XXY+aH1GPeO/
-         PlXzpCF/WqBQy5NIxwT33qulaJoVrmMLElZVwUpi62W+hib8NOwwXVQsXzcF5LW0TNlw
-         PZTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710902882; x=1711507682;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g2zDHLzD2gozMABkU+Rb308kWqluttfK/My8IZFv7bE=;
-        b=jYyRz6Qj8ixaHhH2UrCnjkQZa6k9S3FkSP/G2pxImoyfS5MM+xoQYDPpCfd/YORXYq
-         nn4d4w2JWXmE/N3DvHSEkf6S0DucH/27H3LzSuzTNkV4RtVppAiaKNPOnA3fLuYgoHYR
-         pWnWitrd6+tNBZ4O0WYoNhoYZ18jWuyzLxxqxJ3PUHIZT6TVg9dA5A5QVf0H9AgxcTSw
-         Z/T1l+1mVfb38XvkdsvVEj4wqchxFSzjgHW3J8h7y2EnDLpWX5ey8eY6Mia5PPguqc5o
-         pLqoiuzqeZXUo4088B2ttC9HtDy+2AZzH58s/x0pvXhOGrNd6ng0C4M0dljeQJggGckU
-         CPLg==
-X-Forwarded-Encrypted: i=1; AJvYcCVpn6oaFeWVWb8hJsrk4r75b5L5/eCMDEUea5jWd5ipIC3sXAS+0M/HYR/yWR/rgxihvwfrrnG0aeTwYTqaqIFwzR6aILAcwr31yn84
-X-Gm-Message-State: AOJu0YxB/F8FUA+OQ1BYQ7XeIIZDYMyuSfp5ux/7W+jouR4jv+NgF9xQ
-	7yL2vi3LehfhJaiQb2ActyDuIg2dcCW/VMTNWBVRruxL8eFXVokMWEfFV8YH6uWP4TwEaeJ5TjX
-	WodXf5t3ExcAEK7f93Olhu+aTW1k=
-X-Google-Smtp-Source: AGHT+IFPKyvY1+N1OUzaJDaMMheT9M1hSCaKRHjOgDe3v3QLnyYDrkevkMjsjrIdW148I9iAOA9baVXo//SuHF7Ly8A=
-X-Received: by 2002:a1f:eb43:0:b0:4d4:1a1a:6db7 with SMTP id
- j64-20020a1feb43000000b004d41a1a6db7mr672030vkh.2.1710902881911; Tue, 19 Mar
- 2024 19:48:01 -0700 (PDT)
+ d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TEIFv0RBUWITLrd+XHoJKA3DfXM+KH0LdY55ULjyX0E=;
+ b=WcwLp502Cv6vVm7VqSdUA1sNCdLIT5BajWQsjA0z16mweXT6J6R79wFLMeKuPsTE7kWZFanI31DX3e41+gOcI9WWBUvTTCtcuo42ojQEDFS1MBfORLZn39uYNZgQQKbqNp1zX8YfVajNbhX5ch3XVgRww8PP12EmiNzfq0kzPxg=
+Received: from TYZPR03MB6623.apcprd03.prod.outlook.com (2603:1096:400:1f5::13)
+ by SEZPR03MB8322.apcprd03.prod.outlook.com (2603:1096:101:192::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.26; Wed, 20 Mar
+ 2024 02:48:58 +0000
+Received: from TYZPR03MB6623.apcprd03.prod.outlook.com
+ ([fe80::be:5466:6e74:793f]) by TYZPR03MB6623.apcprd03.prod.outlook.com
+ ([fe80::be:5466:6e74:793f%6]) with mapi id 15.20.7386.030; Wed, 20 Mar 2024
+ 02:48:58 +0000
+From: =?utf-8?B?U2hhd24gU3VuZyAo5a6L5a2d6KyZKQ==?= <Shawn.Sung@mediatek.com>
+To: =?utf-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>,
+	"chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>,
+	"angelogioacchino.delregno@collabora.com"
+	<angelogioacchino.delregno@collabora.com>
+CC: "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+	"christian.koenig@amd.com" <christian.koenig@amd.com>, "daniel@ffwll.ch"
+	<daniel@ffwll.ch>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"shawn.sung@mediatek.corp-partner.google.com"
+	<shawn.sung@mediatek.corp-partner.google.com>, "airlied@gmail.com"
+	<airlied@gmail.com>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "matthias.bgg@gmail.com"
+	<matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 11/14] drm/mediatek: Rename files "mtk_drm_plane.c" to
+ "mtk_plane.c"
+Thread-Topic: [PATCH v2 11/14] drm/mediatek: Rename files "mtk_drm_plane.c" to
+ "mtk_plane.c"
+Thread-Index: AQHaemrhviPaq25Y9kaX0q5S1OVV3LE/7XiA
+Date: Wed, 20 Mar 2024 02:48:58 +0000
+Message-ID: <0af9e986235f9cb1df2c27975d4bc810760ecddb.camel@mediatek.com>
+References: <20240319070257.6443-1-shawn.sung@mediatek.com>
+	 <20240319070257.6443-12-shawn.sung@mediatek.com>
+	 <58072faffa7127e2fd4e47a8149dbaab1256a59e.camel@mediatek.com>
+In-Reply-To: <58072faffa7127e2fd4e47a8149dbaab1256a59e.camel@mediatek.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYZPR03MB6623:EE_|SEZPR03MB8322:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: MNIJYQ9m2+pTjyoTVmUbj8M64aOXiy4MLnmGifaLGNT7A//EIaD80gYAaM2fVk/PNnaIBpUmQRPqXlwccsLkf4CMgPh1AYaH7VOXtwBJM0v9aLAeaW2F0zdFbMCq/vdX3KFTY85CaZh56kCL4yn85U59VWMjGXPnUZiOW+gbNq5GRMEjgRq14xIYRVkAubhNMl+l18DdcVGR+RH594MAtU6dHVQKUN7wBIDa5W4dX7g/phK+5yAJ9JfZkebt/GPZQwlTuTANyFj6+AnxeZ18VKdqmUFYqaIuQuB1v4cKsY7k+dUsiuj++vaQn6GOF1kGLUTq7wHzWphIq29PRfuzsdPz9uhV2Ju5FLzAXO9ILeMGc/1mai0oG7jSFxiCwd5uPl4tX2h6hyCjApMJ6puOfBxq6DdBzOMJ1ouujN7kQFkH51tK6SoNwCTzCDLt+/zJdlbSdHf58AK40Da+3X83By28rshUYy5kcmFqwi88HqwWcMwznA67PuSwM5vXrePDFL7JXnTQ0QY3+/PAWmYaUJEQgK7345X1bjvs6Xn9rY+a9eL7KAJmvq9Of7SnLrROxNeSkJX2Nmd5EJPIO8ghe6gl0YAJCDhuBoe6g8fy15HKScsRaRdbtE4I8LrFsHfF1v80yAVk3xDTFBVzRw9rRxZffYfTFpmyV+ZzO2B8irU=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6623.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(366007)(376005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?a1FyK2NZYysvMjZGMmcyQUlNQTBlS25pbmpOemNyVGoxem1ZUXVwWnhycE54?=
+ =?utf-8?B?MmVtQTNuU2RRbDhsUzBLQi9UR0IydWVyb2Z4eldVOVFmV2pzWUFWWW5yYVRy?=
+ =?utf-8?B?ZTU5YkZGUmlmNEhwK0dDT1hEZEwrcytHRTRYcWhFUmM5UTQrdDdFMlhvc251?=
+ =?utf-8?B?SURmZkZLK2VGTDFqRk51dWdpMnA1MnE5ajJZWjZ0QUVXeUxseHlkZEwvOER2?=
+ =?utf-8?B?UHpwd1hGYlphdEpFcDhEVlRlQU9uVzRra1ZEWFpZRkF2cnoyZE9jWXdDVDl3?=
+ =?utf-8?B?enZSV01MaFBHYUJ6ekxwS2JpVkUyZDJ6M0h5enEwNHkvTFdIeUdWUVJMUXNr?=
+ =?utf-8?B?ZjEwL0RvQnRYN0x4VS9YMDI3dy9lVFBpR3hXZ2xFb0RnMURBR2NGbzhuaGdr?=
+ =?utf-8?B?Q1F0MDFzdjJxM0RTaDVTUGZXL1VnazZVRFNybmZ4ZlNlRkpFaUtOZjZPeW9z?=
+ =?utf-8?B?ZjloVnROT2ZqbjR5MnBVcGVjN0E0VXlwY1JqejRIYUtWVkE0YlNueElFRjFG?=
+ =?utf-8?B?OUZCbFp2OG9HYXRZVHRkOGJ3M0JNRFl6NVdtMWtQclB6QkowOHpvQTJpekZy?=
+ =?utf-8?B?UmpVSUxDMTk1Qk03OFhrUENKQTRON0JINjJwY1duYlZMOUlBWlJYWHRNR215?=
+ =?utf-8?B?ZC9EY2xnMkNrNU8yREpFR211NDFna2Urd0d6dUp4YXZncitnS2tXTEZZNkQ3?=
+ =?utf-8?B?V2lNeGJsSUl4VHJ5aElRNlNNaGkrSGM0ckVQL1RwZ0p5aDRDTk15K0pvUFJy?=
+ =?utf-8?B?MUFGSnZSaHpzNUs4VWRFL2N0THRaK1IxeVdXTTBYbTh3NTdabUFFWnJHS0xX?=
+ =?utf-8?B?aTUrTjRBTVRXZko0UzE3Y2dOUFVLMVI0NGtRWThyUFplSER2M3hjV2JhdHpj?=
+ =?utf-8?B?bmZGYWh2ays1YTBUb0pGU2N3RW4zRlFVbVlZeHE1RzRzb1pqdTN5RkxobWd2?=
+ =?utf-8?B?QUZBMU50cVhJS2pMUUQxN2V5YkppYmpCb2hlbEJhRlQ2ZHpNL3FkQUZ6Z0tl?=
+ =?utf-8?B?UXdZcFdaNXZmWm8rSUdOaFFTOFR3TFYwRTU1dzgrQnoreEY1eXFBRHhDZTNF?=
+ =?utf-8?B?TUg3OUZhSWtDQlJBWlo4S3J4N1o5aW9vRFJQY1NvUmpqRTdLck52b3NHWmhh?=
+ =?utf-8?B?U1RvbysyN2pLdVNkY25mNHFvTUZ6cTAzQlZsZGx5MGFCdm92YUVJc1dtS3Vt?=
+ =?utf-8?B?c3NvWTZtMjVwVGN5NkdMOEM1VXY1elFhKzBCNStUaHZZS2dHL3p0MEl1UmlD?=
+ =?utf-8?B?c0V2cThSbXMvR25TandyR3lka1VnM1ZPK0lscE5zTlM1dDdsWkc3L0lJM240?=
+ =?utf-8?B?Y0JVbWpXVisvWmtlUDZPQm4vQUcxN2ZDQ3ZhRVZUSUxxRDZJVUQ4U20rVlEx?=
+ =?utf-8?B?TWdDSkRyOTZreHczQVJuNEI2a1BWc1pjOFYvekYxZk0xNG9HTCt6Y1dzR0dL?=
+ =?utf-8?B?V0xUN2o2TTRhZWt3dG96aUhRV3JMWGFUaUk1TkF6TThRTWUvKzZZdFJrNWxx?=
+ =?utf-8?B?ZDhzdkY3c215ZFI4bW1JRXl1WEZjTVNRSmt3a29SMVRYbXpraHFZK28wdW9w?=
+ =?utf-8?B?NTVnTzNkaG5tTjZYZ2FHdERwRXJ2QVV1bXBZUmJnUklvTjFNeHZHc3lwaVpP?=
+ =?utf-8?B?T0tSOVNvQU9Oc0FtOW0xd0xSc0RtdTh1TmhGSlMva0lCOFg3ZmZ3UGRpMkU5?=
+ =?utf-8?B?OFhlcVc5QUJtdTB6MUNvTkUxdmpNUC9COWhTemZma2lrM3Q4M01VWFFQYXFx?=
+ =?utf-8?B?SVk5cGJqSVo3TWlVWDNwTkNwbkk4R0tyWVpTajI5c1pOaHhET0l0K3dLUkJy?=
+ =?utf-8?B?U1I0b0p6M3pHeGZsV21tS2dUWXNtM0pIT1I4ZWE2ZHI3NTlocjYzNHdKTVl6?=
+ =?utf-8?B?MHkzTVFTNi9uZngzQysyTzJ2eDFJMldOeWhMZmJLcDh5akNYT00xd1JHWlVQ?=
+ =?utf-8?B?ckhEenk5N21IRENJWmlEU0NucUZHd0toRitlTHZOZkdCNE1aVUVjWXpRb2hY?=
+ =?utf-8?B?OUUxWmpDbTJvRWMzZldvend2U3o0ZXBFbHV4bDcrRjhUdnpqRldNS0VwbDcy?=
+ =?utf-8?B?OStjTG1EbG42c1VrMjJZWnllYzlrQU5FRkV5S1ZZS2hrSmQ0aGJDWlUyTFVp?=
+ =?utf-8?B?S3JyemVoOGNiNVREdWl4RldadmhUcjA4SSt1Wng2WWRvWUNwRllMUWpCb1lo?=
+ =?utf-8?B?aVE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1DA97435E20A2848A6E50B8B5260749D@apcprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240304081348.197341-1-21cnbao@gmail.com> <20240304081348.197341-6-21cnbao@gmail.com>
- <87wmq3yji6.fsf@yhuang6-desk2.ccr.corp.intel.com> <CAGsJ_4x+t_X4Tn15=QPbH58e1S1FwOoM3t37T+cUE8-iKoENLw@mail.gmail.com>
- <87sf0rx3d6.fsf@yhuang6-desk2.ccr.corp.intel.com> <CAGsJ_4xna1xKz7J=MWDR3h543UvnS9v0-+ggVc5fFzpFOzfpyA@mail.gmail.com>
- <87jzm0wblq.fsf@yhuang6-desk2.ccr.corp.intel.com> <CAGsJ_4wTU3cmzXMCu+yQRMnEiCEUA8rO5=QQUopgG0RMnHYd5g@mail.gmail.com>
- <9ec62266-26f1-46b6-8bb7-9917d04ed04e@arm.com> <87jzlyvar3.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <f918354d-12ee-4349-9356-fc02d2457a26@arm.com> <87zfutsl25.fsf@yhuang6-desk2.ccr.corp.intel.com>
-In-Reply-To: <87zfutsl25.fsf@yhuang6-desk2.ccr.corp.intel.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Wed, 20 Mar 2024 15:47:50 +1300
-Message-ID: <CAGsJ_4zuEFnLwM_h7DF1BN2eN3P4S0Sw=omxo90ucKpPT4ampA@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 5/5] mm: support large folios swapin as a whole
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>, Matthew Wilcox <willy@infradead.org>, akpm@linux-foundation.org, 
-	linux-mm@kvack.org, chengming.zhou@linux.dev, chrisl@kernel.org, 
-	david@redhat.com, hannes@cmpxchg.org, kasong@tencent.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	mhocko@suse.com, nphamcs@gmail.com, shy828301@gmail.com, steven.price@arm.com, 
-	surenb@google.com, wangkefeng.wang@huawei.com, xiang@kernel.org, 
-	yosryahmed@google.com, yuzhao@google.com, Chuanhua Han <hanchuanhua@oppo.com>, 
-	Barry Song <v-songbaohua@oppo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6623.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dec355c3-ae02-40bc-c575-08dc48884a7e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Mar 2024 02:48:58.1899
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BF4qvQB69ME88yNDYGJen8bTJJPugajJR0d2fGvLgXLrv3tvBScPjA+v2GjQjd1qpSD18XI3jNBEFJ9t2e3sVA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR03MB8322
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--14.414900-8.000000
+X-TMASE-MatchedRID: zdfKSpJbRLjUL3YCMmnG4ir0r2wNA5jBjLOy13Cgb4/eUmhIcPpKYFDQ
+	UTMuNMdQEOd3g5mfB6NiSVnIdboij5hDg82nqVsGlGudLLtRO1u1k3bRIdXVNDMVY5itbDoD5lA
+	WcqJGaGfi8zVgXoAltj2Xsf5MVCB1ZiFQvkZhFu1q8/xv2Um1avoLR4+zsDTt/KO2LNTSuGMmvw
+	jz6vd7Yx6Tgb6u9/BjvkyCDBzaWlHGjA9y2cpBWg==
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--14.414900-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP:
+	2E1E375FB81F1E1023B745FC564EE9625F307F7CBEB00B59E9FFF1D1CE893DF12000:8
 
-On Wed, Mar 20, 2024 at 3:20=E2=80=AFPM Huang, Ying <ying.huang@intel.com> =
-wrote:
->
-> Ryan Roberts <ryan.roberts@arm.com> writes:
->
-> > On 19/03/2024 09:20, Huang, Ying wrote:
-> >> Ryan Roberts <ryan.roberts@arm.com> writes:
-> >>
-> >>>>>> I agree phones are not the only platform. But Rome wasn't built in=
- a
-> >>>>>> day. I can only get
-> >>>>>> started on a hardware which I can easily reach and have enough har=
-dware/test
-> >>>>>> resources on it. So we may take the first step which can be applie=
-d on
-> >>>>>> a real product
-> >>>>>> and improve its performance, and step by step, we broaden it and m=
-ake it
-> >>>>>> widely useful to various areas  in which I can't reach :-)
-> >>>>>
-> >>>>> We must guarantee the normal swap path runs correctly and has no
-> >>>>> performance regression when developing SWP_SYNCHRONOUS_IO optimizat=
-ion.
-> >>>>> So we have to put some effort on the normal path test anyway.
-> >>>>>
-> >>>>>> so probably we can have a sysfs "enable" entry with default "n" or
-> >>>>>> have a maximum
-> >>>>>> swap-in order as Ryan's suggestion [1] at the beginning,
-> >>>>>>
-> >>>>>> "
-> >>>>>> So in the common case, swap-in will pull in the same size of folio=
- as was
-> >>>>>> swapped-out. Is that definitely the right policy for all folio siz=
-es? Certainly
-> >>>>>> it makes sense for "small" large folios (e.g. up to 64K IMHO). But=
- I'm not sure
-> >>>>>> it makes sense for 2M THP; As the size increases the chances of ac=
-tually needing
-> >>>>>> all of the folio reduces so chances are we are wasting IO. There a=
-re similar
-> >>>>>> arguments for CoW, where we currently copy 1 page per fault - it p=
-robably makes
-> >>>>>> sense to copy the whole folio up to a certain size.
-> >>>>>> "
-> >>>
-> >>> I thought about this a bit more. No clear conclusions, but hoped this=
- might help
-> >>> the discussion around policy:
-> >>>
-> >>> The decision about the size of the THP is made at first fault, with s=
-ome help
-> >>> from user space and in future we might make decisions to split based =
-on
-> >>> munmap/mremap/etc hints. In an ideal world, the fact that we have had=
- to swap
-> >>> the THP out at some point in its lifetime should not impact on its si=
-ze. It's
-> >>> just being moved around in the system and the reason for our original=
- decision
-> >>> should still hold.
-> >>>
-> >>> So from that PoV, it would be good to swap-in to the same size that w=
-as
-> >>> swapped-out.
-> >>
-> >> Sorry, I don't agree with this.  It's better to swap-in and swap-out i=
-n
-> >> smallest size if the page is only accessed seldom to avoid to waste
-> >> memory.
-> >
-> > If we want to optimize only for memory consumption, I'm sure there are =
-many
-> > things we would do differently. We need to find a balance between memor=
-y and
-> > performance. The benefits of folios are well documented and the kernel =
-is
-> > heading in the direction of managing memory in variable-sized blocks. S=
-o I don't
-> > think it's as simple as saying we should always swap-in the smallest po=
-ssible
-> > amount of memory.
->
-> It's conditional, that is,
->
-> "if the page is only accessed seldom"
->
-> Then, the page swapped-in will be swapped-out soon and adjacent pages in
-> the same large folio will not be accessed during this period.
->
-> So, I suggest to create an algorithm to decide swap-in order based on
-> swap-readahead information automatically.  It can detect the situation
-> above via reduced swap readahead window size.  And, if the page is
-> accessed for quite long time, and the adjacent pages in the same large
-> folio are accessed too, swap-readahead window will increase and large
-> swap-in order will be used.
-
-The original size of do_anonymous_page() should be honored, considering it
-embodies a decision influenced by not only sysfs settings and per-vma
-HUGEPAGE hints but also architectural characteristics, for example
-CONT-PTE.
-
-The model you're proposing may offer memory-saving benefits or reduce I/O,
-but it entirely disassociates the size of the swap in from the size prior t=
-o the
-swap out. Moreover, there's no guarantee that the large folio generated by
-the readahead window is contiguous in the swap and can be added to the
-swap cache, as we are currently dealing with folio->swap instead of
-subpage->swap.
-
-Incidentally, do_anonymous_page() serves as the initial location for alloca=
-ting
-large folios. Given that memory conservation is a significant consideration=
- in
-do_swap_page(), wouldn't it be even more crucial in do_anonymous_page()?
-
-A large folio, by its nature, represents a high-quality resource that has t=
-he
-potential to leverage hardware characteristics for the benefit of the
-entire system.
-Conversely, I don't believe that a randomly determined size dictated by the
-readahead window possesses the same advantageous qualities.
-
-SWP_SYNCHRONOUS_IO devices are not reliant on readahead whatsoever,
-their needs should also be respected.
-
-> > You also said we should swap *out* in smallest size possible. Have I
-> > misunderstood you? I thought the case for swapping-out a whole folio wi=
-thout
-> > splitting was well established and non-controversial?
->
-> That is conditional too.
->
-> >>
-> >>> But we only kind-of keep that information around, via the swap
-> >>> entry contiguity and alignment. With that scheme it is possible that =
-multiple
-> >>> virtually adjacent but not physically contiguous folios get swapped-o=
-ut to
-> >>> adjacent swap slot ranges and then they would be swapped-in to a sing=
-le, larger
-> >>> folio. This is not ideal, and I think it would be valuable to try to =
-maintain
-> >>> the original folio size information with the swap slot. One way to do=
- this would
-> >>> be to store the original order for which the cluster was allocated in=
- the
-> >>> cluster. Then we at least know that a given swap slot is either for a=
- folio of
-> >>> that order or an order-0 folio (due to cluster exhaustion/scanning). =
-Can we
-> >>> steal a bit from swap_map to determine which case it is? Or are there=
- better
-> >>> approaches?
-> >>
-> >> [snip]
->
-> --
-> Best Regards,
-> Huang, Ying
-
-Thanks
-Barry
+SGkgQ0ssDQoNCk9uIFdlZCwgMjAyNC0wMy0yMCBhdCAwMjowNCArMDAwMCwgQ0sgSHUgKOiDoeS/
+iuWFiSkgd3JvdGU6DQo+IEhpLCBTaGF3bjoNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9wbGFuZS5jDQo+ID4gYi9kcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvbXRrX3BsYW5lLmMNCj4gPiBzaW1pbGFyaXR5IGluZGV4IDk5JQ0KPiA+IHJlbmFtZSBm
+cm9tIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX3BsYW5lLmMNCj4gPiByZW5hbWUg
+dG8gZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19wbGFuZS5jDQo+ID4gaW5kZXggOTVhNDMy
+OGE5YjBiNi4uNDYyNWRlYjIxZDQwNiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0v
+bWVkaWF0ZWsvbXRrX2RybV9wbGFuZS5jDQo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19wbGFuZS5jDQo+ID4gQEAgLTE2LDcgKzE2LDcgQEANCj4gPiAgI2luY2x1ZGUgIm10
+a19jcnRjLmgiDQo+ID4gICNpbmNsdWRlICJtdGtfZGRwX2NvbXAuaCINCj4gPiAgI2luY2x1ZGUg
+Im10a19kcm1fZHJ2LmgiDQo+ID4gLSNpbmNsdWRlICJtdGtfZHJtX2dlbS5oIg0KPiA+ICsjaW5j
+bHVkZSAibXRrX2dlbS5oIg0KPiANCj4gVGhpcyBzaG91bGQgYmUgYW5vdGhlciBwYXRjaC4gQWZ0
+ZXIgcmVtb3ZpbmcgdGhpcywNCj4gDQo+IFJldmlld2VkLWJ5OiBDSyBIdSA8Y2suaHVAbWVkaWF0
+ZWsuY29tPg0KPiANCg0KVGhhbmsgeW91IGZvciB0aGUgbm90aWZpY2F0aW9uLg0KV2lsbCBmaXgg
+dGhpcyBlcnJvciBpbiB0aGUgbmV4dCB2ZXJzaW9uLg0KDQpSZWdhcmRzLA0KU2hhd24NCg==
