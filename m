@@ -1,171 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96DF1E54C
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 02:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3683C11182
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 02:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710901213; cv=none; b=J8pO+N55s1nXsulNHkY4NqkE4SJdyEeRt+4e59rLmCZp9YTcxaQ/sWeC/ueJSLbO7ZudIKNSi91VFYGiN9H44ZsHdyqu9rDFu0zTyL18vJO62BaaPgQpC6glDoYeq6sDQuHGQk1rsKKef/ClCiId6aEVEQ+qIT24eGog5ReVWYU=
+	t=1710901226; cv=none; b=f3J8QnpDYwPkRaWNWJfDEzx7icC1Gm/dpq/vxESS/ZgD+DIWUh78Osmi6t26uhYH5sgZLymx37f/AqmPMRyjhyr9ABzcijc3hYk0Fy3+bXe5Qs5+vVDA2wi9RD04NWcW9/KmQ8trv3rt4zSbOhSPL9+AhZ/dK7JL/iyGTECAMms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710901213; c=relaxed/simple;
-	bh=T0GWfvNZD4CoU9h2YcX9DL4cW7mete9K+BslYn1DsKE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=EiemHdDcDBkWDqTJXRFdfDi6qeGn3/GdeUCsbqht1zLcsMnKKJDMXe4s9MR6f4EvilnvEAiRPy+SKwCIWmv+vEadNAD/keZiLed9787zJP8J4gRbek/6I3IilrstoGHOWk7f6O1BCV2lvly3IIXuhzhMLjoI/f8NmdArJMNmwxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EbyN2Z8n; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1710901226; c=relaxed/simple;
+	bh=r1a2dQmso7WmPn6SVeXwodMlSbIH+idSKJIJvPtb1Es=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ExQQKLwHNL/ZCycFrWqJB54tYcao17qzRCL2M270sTkzcKmTpATmOdbxX1uBGUTsLREogoYTEGfDsyrN01tqx+O6xzj8uyUYNzPXSPKkJPh71dJFUQfm6+HLg40kk0D5x92rEHFEqBCi02/3/uqtxdMZz3SF2+/bvLVvyJ3i5Nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=D7FppUSG; arc=none smtp.client-ip=209.85.160.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EbyN2Z8n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710901211; x=1742437211;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=T0GWfvNZD4CoU9h2YcX9DL4cW7mete9K+BslYn1DsKE=;
-  b=EbyN2Z8n9RfbyTYRwVk1UvAeBAWwe68fpwAGr6Sxx/s/Sv9XQ+wtKgkh
-   C5f56VRFFSdxK0P9YQou9dqi4WV0HpobSCXv2zTLhV1XNnrQzUjWquWhA
-   zxWVOUKVVE2TFYBpAeEKePes4vMahVvgQJs7RZy/VFlnw4KzNYN0cWjne
-   kyB6iw/dwiNvR6ljakB4ihG+2Aw+GqHGClNkJu461fGZ66tpKWLN46Qn7
-   qIGHRXWHMRjkym9n2vZ/vGVLQTAv3gQrgMusjtGVV7+XVi9ntn98eivIJ
-   WcbBLou9lg3vXMK7/RD3NhSfx8F2evYRUqWcvISL49B9+yjW2ddh8FcSi
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11018"; a="5931284"
-X-IronPort-AV: E=Sophos;i="6.07,138,1708416000"; 
-   d="scan'208";a="5931284"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 19:20:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,138,1708416000"; 
-   d="scan'208";a="13909615"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 19:20:04 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Barry Song <21cnbao@gmail.com>,  Matthew Wilcox <willy@infradead.org>,
-  <akpm@linux-foundation.org>,  <linux-mm@kvack.org>,
-  <chengming.zhou@linux.dev>,  <chrisl@kernel.org>,  <david@redhat.com>,
-  <hannes@cmpxchg.org>,  <kasong@tencent.com>,
-  <linux-arm-kernel@lists.infradead.org>,  <linux-kernel@vger.kernel.org>,
-  <mhocko@suse.com>,  <nphamcs@gmail.com>,  <shy828301@gmail.com>,
-  <steven.price@arm.com>,  <surenb@google.com>,
-  <wangkefeng.wang@huawei.com>,  <xiang@kernel.org>,
-  <yosryahmed@google.com>,  <yuzhao@google.com>,  "Chuanhua Han"
- <hanchuanhua@oppo.com>,  Barry Song <v-songbaohua@oppo.com>
-Subject: Re: [RFC PATCH v3 5/5] mm: support large folios swapin as a whole
-In-Reply-To: <f918354d-12ee-4349-9356-fc02d2457a26@arm.com> (Ryan Roberts's
-	message of "Tue, 19 Mar 2024 12:19:27 +0000")
-References: <20240304081348.197341-1-21cnbao@gmail.com>
-	<20240304081348.197341-6-21cnbao@gmail.com>
-	<87wmq3yji6.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAGsJ_4x+t_X4Tn15=QPbH58e1S1FwOoM3t37T+cUE8-iKoENLw@mail.gmail.com>
-	<87sf0rx3d6.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAGsJ_4xna1xKz7J=MWDR3h543UvnS9v0-+ggVc5fFzpFOzfpyA@mail.gmail.com>
-	<87jzm0wblq.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAGsJ_4wTU3cmzXMCu+yQRMnEiCEUA8rO5=QQUopgG0RMnHYd5g@mail.gmail.com>
-	<9ec62266-26f1-46b6-8bb7-9917d04ed04e@arm.com>
-	<87jzlyvar3.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<f918354d-12ee-4349-9356-fc02d2457a26@arm.com>
-Date: Wed, 20 Mar 2024 10:18:10 +0800
-Message-ID: <87zfutsl25.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="D7FppUSG"
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2218da9620cso3933777fac.3
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 19:20:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1710901223; x=1711506023; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OOyJHHqFC/8u3+w4ikgJUO8ZFv830cLwlnuWmCFNnBM=;
+        b=D7FppUSG14qP71gSkaJoqQjKCJ6cyNY5tx8dTFRsNp3AlDgZ0eXR1oFSCGL6p59VTr
+         KMzTdzTFNOheUTitsHl6ip7XlYK6srzhDfF2Mf6d9qaxv8QSr5gTE99KJxbtyW3hUJvq
+         mJeweWpd2xEiYpcZxnO2qmtWCiP8OWVE8jzwwVFCrQPqpVGWOE6aVKlEcyeqQry+z0er
+         PJBUzAmW30Pa1xhNOFJQSq5hH5fJGFz/tkUwRbcamDdZhy1sLdCEarNi9RvNUNC4FXJc
+         f+J/Cfpb1r8wU5WaHP8KJrW3eYuHvJahbZUtm8Gkjt5gQuFwGDFI3yxtUmy77PYhW+MD
+         ucnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710901223; x=1711506023;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OOyJHHqFC/8u3+w4ikgJUO8ZFv830cLwlnuWmCFNnBM=;
+        b=UA7Gw3ggdZ21AyL6ZR0E7ydNIQDs4WnKBA9XEOTsdc+9bFYFEKHp7bC9tIkj05b9uB
+         XBgcmi/RcRzDnZlRNxPY0PuZyBYhag9Gr+6tQKU0pM9IV5hbW/9IwyKXz38hMko4pDpy
+         ergO/nqZbeYOP1MKYTW3xeqjhkwTRuCGc2bCk0tYAisgwSF/V6cOhfG49v5e6MCpuHgd
+         +IGgSvhKcrkAptHE0H91TnYguwXacxQJZv5MDus+WtrqL9fLAP7ueJna2jX2jfj5+cCY
+         bp9dv5saH6fh4fBB6C7Gbtife6TgzqhQHLFErJ7aIGiJs/Ovv3Gd5zQYF9PnXnC933I7
+         v0YQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUAa7UtgoBzrUsYvpfzO1zJdycjfNND65ATLSb19J2R1AhbNDSKIsIz1nBkRZbzlx8axX93TJZNe/GBHM4I1vA500Jmj7d8+WdJj5dV
+X-Gm-Message-State: AOJu0YxXqrDbyGEOmy0OmIuvi0R+7p+rgj2hsZkNm1u4hBOkj7UsQHtj
+	jxkVf8tpfJm7+1oR+QsrNapfWwSJRggh8WyV44w1fzDl0eYtokmWvmLxS3LDsrwKeQQDnlxwf6f
+	vJGdLSZK5MpgmBVe7sty2oWzwC0E/GuGEyPMUyg==
+X-Google-Smtp-Source: AGHT+IFD3N83WmavB5Hm7jsd91hTsO36CvDfhQosv4S2NtXZYOzNE5wIlFjWRDHY3yAUCsc8x4RZGs2LuqSiWwL1Tcc=
+X-Received: by 2002:a05:6870:218a:b0:221:3ba2:fff0 with SMTP id
+ l10-20020a056870218a00b002213ba2fff0mr18600721oae.45.1710901223344; Tue, 19
+ Mar 2024 19:20:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+References: <mvmy1aegrhm.fsf@suse.de>
+In-Reply-To: <mvmy1aegrhm.fsf@suse.de>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Wed, 20 Mar 2024 10:20:12 +0800
+Message-ID: <CAEEQ3wkg5kP7q6qnjV5Xmi_-jJnGBSLb2PkN1M88h5rjsif4oQ@mail.gmail.com>
+Subject: Re: [External] [PATCH v2] riscv: use KERN_INFO in do_trap
+To: Andreas Schwab <schwab@suse.de>
+Cc: linux-riscv@lists.infradead.org, Conor Dooley <conor@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Ryan Roberts <ryan.roberts@arm.com> writes:
+Hi Andreas,
 
-> On 19/03/2024 09:20, Huang, Ying wrote:
->> Ryan Roberts <ryan.roberts@arm.com> writes:
->> 
->>>>>> I agree phones are not the only platform. But Rome wasn't built in a
->>>>>> day. I can only get
->>>>>> started on a hardware which I can easily reach and have enough hardware/test
->>>>>> resources on it. So we may take the first step which can be applied on
->>>>>> a real product
->>>>>> and improve its performance, and step by step, we broaden it and make it
->>>>>> widely useful to various areas  in which I can't reach :-)
->>>>>
->>>>> We must guarantee the normal swap path runs correctly and has no
->>>>> performance regression when developing SWP_SYNCHRONOUS_IO optimization.
->>>>> So we have to put some effort on the normal path test anyway.
->>>>>
->>>>>> so probably we can have a sysfs "enable" entry with default "n" or
->>>>>> have a maximum
->>>>>> swap-in order as Ryan's suggestion [1] at the beginning,
->>>>>>
->>>>>> "
->>>>>> So in the common case, swap-in will pull in the same size of folio as was
->>>>>> swapped-out. Is that definitely the right policy for all folio sizes? Certainly
->>>>>> it makes sense for "small" large folios (e.g. up to 64K IMHO). But I'm not sure
->>>>>> it makes sense for 2M THP; As the size increases the chances of actually needing
->>>>>> all of the folio reduces so chances are we are wasting IO. There are similar
->>>>>> arguments for CoW, where we currently copy 1 page per fault - it probably makes
->>>>>> sense to copy the whole folio up to a certain size.
->>>>>> "
->>>
->>> I thought about this a bit more. No clear conclusions, but hoped this might help
->>> the discussion around policy:
->>>
->>> The decision about the size of the THP is made at first fault, with some help
->>> from user space and in future we might make decisions to split based on
->>> munmap/mremap/etc hints. In an ideal world, the fact that we have had to swap
->>> the THP out at some point in its lifetime should not impact on its size. It's
->>> just being moved around in the system and the reason for our original decision
->>> should still hold.
->>>
->>> So from that PoV, it would be good to swap-in to the same size that was
->>> swapped-out.
->> 
->> Sorry, I don't agree with this.  It's better to swap-in and swap-out in
->> smallest size if the page is only accessed seldom to avoid to waste
->> memory.
+On Tue, Mar 19, 2024 at 11:40=E2=80=AFPM Andreas Schwab <schwab@suse.de> wr=
+ote:
 >
-> If we want to optimize only for memory consumption, I'm sure there are many
-> things we would do differently. We need to find a balance between memory and
-> performance. The benefits of folios are well documented and the kernel is
-> heading in the direction of managing memory in variable-sized blocks. So I don't
-> think it's as simple as saying we should always swap-in the smallest possible
-> amount of memory.
+> Print the instruction dump with info instead of emergency level.  The
+> unhandled signal message is only for informational purpose.
+>
+> Fixes: b8a03a634129 ("riscv: add userland instruction dump to RISC-V spla=
+ts")
+> Signed-off-by: Andreas Schwab <schwab@suse.de>
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+> v2: clarify commit message
+> ---
+>  arch/riscv/kernel/traps.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+> index a1b9be3c4332..142f5f5168fb 100644
+> --- a/arch/riscv/kernel/traps.c
+> +++ b/arch/riscv/kernel/traps.c
+> @@ -121,7 +121,7 @@ void do_trap(struct pt_regs *regs, int signo, int cod=
+e, unsigned long addr)
+>                 print_vma_addr(KERN_CONT " in ", instruction_pointer(regs=
+));
+>                 pr_cont("\n");
+>                 __show_regs(regs);
+> -               dump_instr(KERN_EMERG, regs);
+> +               dump_instr(KERN_INFO, regs);
+>         }
+>
+>         force_sig_fault(signo, code, (void __user *)addr);
+> --
+> 2.44.0
+>
+>
+> --
+> Andreas Schwab, SUSE Labs, schwab@suse.de
+> GPG Key fingerprint =3D 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D=
+7
+> "And now for something completely different."
 
-It's conditional, that is,
+Reviewed-by: Yunhui Cui <cuiyunhui@bytedance.com>
 
-"if the page is only accessed seldom"
 
-Then, the page swapped-in will be swapped-out soon and adjacent pages in
-the same large folio will not be accessed during this period.
-
-So, I suggest to create an algorithm to decide swap-in order based on
-swap-readahead information automatically.  It can detect the situation
-above via reduced swap readahead window size.  And, if the page is
-accessed for quite long time, and the adjacent pages in the same large
-folio are accessed too, swap-readahead window will increase and large
-swap-in order will be used.
-
-> You also said we should swap *out* in smallest size possible. Have I
-> misunderstood you? I thought the case for swapping-out a whole folio without
-> splitting was well established and non-controversial?
-
-That is conditional too.
-
->> 
->>> But we only kind-of keep that information around, via the swap
->>> entry contiguity and alignment. With that scheme it is possible that multiple
->>> virtually adjacent but not physically contiguous folios get swapped-out to
->>> adjacent swap slot ranges and then they would be swapped-in to a single, larger
->>> folio. This is not ideal, and I think it would be valuable to try to maintain
->>> the original folio size information with the swap slot. One way to do this would
->>> be to store the original order for which the cluster was allocated in the
->>> cluster. Then we at least know that a given swap slot is either for a folio of
->>> that order or an order-0 folio (due to cluster exhaustion/scanning). Can we
->>> steal a bit from swap_map to determine which case it is? Or are there better
->>> approaches?
->> 
->> [snip]
-
---
-Best Regards,
-Huang, Ying
+Thanks,
+Yunhui
