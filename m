@@ -1,314 +1,256 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailscanner01.zoner.fi (mailscanner01.zoner.fi [84.34.166.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A956A8A6
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 18:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A3C6A8A6
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 18:39:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.34.166.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710959933; cv=none; b=R/1B4CPG2CNMl+1y4GgEAczifSnajmi9Q85O8Pw4ebPZD3ismvplKWhiOp44SdJx9trdJqkxgYkq9KYFLdjgi796wra2cLlCRx4H6on7af50VXk+D7pQ5PBfcLD7xUCBazcMDApKsbDQILLB7iHsAU+tQ7mI36Xri6gumyqjxNQ=
+	t=1710959979; cv=none; b=lpPQDWlbB0XW4OwEZBa3OzSMDbKatceJJYQOK7JX/W+S36Jx1G2ezUgnDs32flLl+LD+pk8v2bLmKLCxDSpG3LMsZ3bvboEtbuz1t2zLd9hV9/bbpsEY1z52oiWXH1GZHyhOWbdzLkqXW4J9znLLR1yWvIxxVqBFkDy21VIslDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710959933; c=relaxed/simple;
-	bh=J/HdPUQnjGsMI7eKE08wmL9T5eh9N3pNUphWmAfIIMM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PI2c5Cy/AeXLx+mQegc2VZIQg791cMebD0yNYmKxoXShNRrNvu3/6UtB6d3JgpneDqR+CdAebXnPjgh/PSaTiXMqBfPpsIP8dGyh6fZWp0XyHyEfAWRGqP7Vrk9aGV5wYQnVIGB3PP46IYgZvU+0lyrLxig7uJWes8fZTf+r7fU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SeRwTSFu; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SeRwTSFu"
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-7e0425e5aa8so60918241.3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 11:38:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710959930; x=1711564730; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y9GLo3WEc0TbH91CgwMuG9NfCun8rQAOObu/qOhupcY=;
-        b=SeRwTSFuOUCsX9mB38wp85WAWK90vXxjUN9fFhF3RKJXjLVJGk109awOi+AJW4YT/r
-         WLcQkyeKtOmTe6iL/2D3Ypo/6LzA7v9q6Hs37wIAX4HAqZLUB+fp7bC/bpdKIaSPaxzi
-         fQDtxKXMPh+W1sCQRU7VGDToVp30qRl8gc+E8VoRbm3pyQTY12J4zSJK8Wro0+d/kA69
-         90AVZEMrK93Ad09GikjVhI6MLhGXqtW+RnD7l58p8dlVAjnVj1C96FZR7jaj1LqBuHxk
-         WEWDCY/6pqJHi2UjAskt1q7+dWy2+SH7AoO9Z4xFyo2vJcb/2THei1eBTWxXxtrX3EJT
-         2qPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710959930; x=1711564730;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=y9GLo3WEc0TbH91CgwMuG9NfCun8rQAOObu/qOhupcY=;
-        b=odEjpOnx6HbKCmpUffQkQ4E0a7e0OxqR0GSgPgckZVY11Z3wBAjqxTXUp/vQs2KiYL
-         D3bLCQYlWlcAbo8v8RipHkhu3kMSWRqJj05KaHhactC1x6yRcTMtDuPdWlyAeq1j1/n9
-         k7kbJ1jqtd2b/qPu7ERvXit1cZL/h6LIHV+qBxRPFiXvi+w4uUu60ipZD22B/ZiBGR/5
-         2d5D1VxDGjXI8h1l5J75Iv0vxkekYrQoRxCgnbXXkryI7zuIJOV0uPyZVaysWFAatxad
-         je2haKlD81UBXqhxxX7wZLoC6GgWt4+iN7nvirdiE0HlmNwAYL7BQBZTqoy2qbmPWi2k
-         e+kA==
-X-Forwarded-Encrypted: i=1; AJvYcCXISJ02zBDNN4QmZ/gf2aQnl+Y+AI5vmvGbXDYr7RXwtkt/lO7P68NJVifSipyCXoWa2qQkSZt6rm+6cLBuCPfL69m/HywqfAAiiv1s
-X-Gm-Message-State: AOJu0Yxrr7qSx7f5G6suDZw7qBDGmogJafC8f0OBkUfTF0daOIkBdK3F
-	J/RaCR+E/zLxmnwO/FfWYOLyaw4Iye8f11tA/c57sXKgFruaDEjp6Q+XfOK6KEFCCfjVjAb2yXY
-	hebsllRiw3LNfpdhP0mq7o407A0c=
-X-Google-Smtp-Source: AGHT+IEs5Eh5D+EFQ6awkQSFrKzkTsQwstEfjurELStBp0tO+tXg6nua+i5QpOBvbNrK1kEEMgXPP+O+8zdTwSv1O9E=
-X-Received: by 2002:a67:eb0a:0:b0:473:18d9:caf5 with SMTP id
- a10-20020a67eb0a000000b0047318d9caf5mr16166904vso.24.1710959928887; Wed, 20
- Mar 2024 11:38:48 -0700 (PDT)
+	s=arc-20240116; t=1710959979; c=relaxed/simple;
+	bh=aVTXMepemamYIgEqhcZaCqWZdKxJee31zHLwpcDfTPM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Onkh/z4DLnXcxtrZnsYnVWCw5NocFF+gWdmLOtU1MNbgZbknOEEh3oPk1tzCXCm2Yzd57GZihoeKizWCcQFjW4jQq3R5c8iW2is9RZtKLoRA/P/KCfbbI2oSGMKZnvDmJTlZI462KCnUiR+MBHKZRSO0BPZb5IW9FPjWMh7XLLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org; spf=pass smtp.mailfrom=tukaani.org; arc=none smtp.client-ip=84.34.166.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tukaani.org
+Received: from www25.zoner.fi (www25.zoner.fi [84.34.147.45])
+	by mailscanner01.zoner.fi (Postfix) with ESMTPS id E55284254A;
+	Wed, 20 Mar 2024 20:39:26 +0200 (EET)
+Received: from mail.zoner.fi ([84.34.147.244])
+	by www25.zoner.fi with esmtp (Exim 4.96.1-7-g79877b70e)
+	(envelope-from <lasse.collin@tukaani.org>)
+	id 1rn0qU-0001dW-2N;
+	Wed, 20 Mar 2024 20:39:26 +0200
+From: Lasse Collin <lasse.collin@tukaani.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Lasse Collin <lasse.collin@tukaani.org>,
+	Jia Tan <jiat0218@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 09/11] xz: Add RISC-V BCJ filter
+Date: Wed, 20 Mar 2024 20:38:42 +0200
+Message-ID: <20240320183846.19475-10-lasse.collin@tukaani.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240320183846.19475-1-lasse.collin@tukaani.org>
+References: <20240320183846.19475-1-lasse.collin@tukaani.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240304081348.197341-1-21cnbao@gmail.com> <20240304081348.197341-6-21cnbao@gmail.com>
- <87wmq3yji6.fsf@yhuang6-desk2.ccr.corp.intel.com> <CAGsJ_4x+t_X4Tn15=QPbH58e1S1FwOoM3t37T+cUE8-iKoENLw@mail.gmail.com>
- <87sf0rx3d6.fsf@yhuang6-desk2.ccr.corp.intel.com> <CAGsJ_4xna1xKz7J=MWDR3h543UvnS9v0-+ggVc5fFzpFOzfpyA@mail.gmail.com>
- <87jzm0wblq.fsf@yhuang6-desk2.ccr.corp.intel.com> <CAGsJ_4wTU3cmzXMCu+yQRMnEiCEUA8rO5=QQUopgG0RMnHYd5g@mail.gmail.com>
- <9ec62266-26f1-46b6-8bb7-9917d04ed04e@arm.com> <87jzlyvar3.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <f918354d-12ee-4349-9356-fc02d2457a26@arm.com> <87zfutsl25.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <CAGsJ_4zuEFnLwM_h7DF1BN2eN3P4S0Sw=omxo90ucKpPT4ampA@mail.gmail.com> <87msqts9u1.fsf@yhuang6-desk2.ccr.corp.intel.com>
-In-Reply-To: <87msqts9u1.fsf@yhuang6-desk2.ccr.corp.intel.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Thu, 21 Mar 2024 07:38:37 +1300
-Message-ID: <CAGsJ_4wP_Zy9LZxZA-5KG13S3sQOak4LJK7rOhs3M=ETNJppNw@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 5/5] mm: support large folios swapin as a whole
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>, Matthew Wilcox <willy@infradead.org>, akpm@linux-foundation.org, 
-	linux-mm@kvack.org, chengming.zhou@linux.dev, chrisl@kernel.org, 
-	david@redhat.com, hannes@cmpxchg.org, kasong@tencent.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	mhocko@suse.com, nphamcs@gmail.com, shy828301@gmail.com, steven.price@arm.com, 
-	surenb@google.com, wangkefeng.wang@huawei.com, xiang@kernel.org, 
-	yosryahmed@google.com, yuzhao@google.com, Chuanhua Han <hanchuanhua@oppo.com>, 
-	Barry Song <v-songbaohua@oppo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 20, 2024 at 7:22=E2=80=AFPM Huang, Ying <ying.huang@intel.com> =
-wrote:
->
-> Barry Song <21cnbao@gmail.com> writes:
->
-> > On Wed, Mar 20, 2024 at 3:20=E2=80=AFPM Huang, Ying <ying.huang@intel.c=
-om> wrote:
-> >>
-> >> Ryan Roberts <ryan.roberts@arm.com> writes:
-> >>
-> >> > On 19/03/2024 09:20, Huang, Ying wrote:
-> >> >> Ryan Roberts <ryan.roberts@arm.com> writes:
-> >> >>
-> >> >>>>>> I agree phones are not the only platform. But Rome wasn't built=
- in a
-> >> >>>>>> day. I can only get
-> >> >>>>>> started on a hardware which I can easily reach and have enough =
-hardware/test
-> >> >>>>>> resources on it. So we may take the first step which can be app=
-lied on
-> >> >>>>>> a real product
-> >> >>>>>> and improve its performance, and step by step, we broaden it an=
-d make it
-> >> >>>>>> widely useful to various areas  in which I can't reach :-)
-> >> >>>>>
-> >> >>>>> We must guarantee the normal swap path runs correctly and has no
-> >> >>>>> performance regression when developing SWP_SYNCHRONOUS_IO optimi=
-zation.
-> >> >>>>> So we have to put some effort on the normal path test anyway.
-> >> >>>>>
-> >> >>>>>> so probably we can have a sysfs "enable" entry with default "n"=
- or
-> >> >>>>>> have a maximum
-> >> >>>>>> swap-in order as Ryan's suggestion [1] at the beginning,
-> >> >>>>>>
-> >> >>>>>> "
-> >> >>>>>> So in the common case, swap-in will pull in the same size of fo=
-lio as was
-> >> >>>>>> swapped-out. Is that definitely the right policy for all folio =
-sizes? Certainly
-> >> >>>>>> it makes sense for "small" large folios (e.g. up to 64K IMHO). =
-But I'm not sure
-> >> >>>>>> it makes sense for 2M THP; As the size increases the chances of=
- actually needing
-> >> >>>>>> all of the folio reduces so chances are we are wasting IO. Ther=
-e are similar
-> >> >>>>>> arguments for CoW, where we currently copy 1 page per fault - i=
-t probably makes
-> >> >>>>>> sense to copy the whole folio up to a certain size.
-> >> >>>>>> "
-> >> >>>
-> >> >>> I thought about this a bit more. No clear conclusions, but hoped t=
-his might help
-> >> >>> the discussion around policy:
-> >> >>>
-> >> >>> The decision about the size of the THP is made at first fault, wit=
-h some help
-> >> >>> from user space and in future we might make decisions to split bas=
-ed on
-> >> >>> munmap/mremap/etc hints. In an ideal world, the fact that we have =
-had to swap
-> >> >>> the THP out at some point in its lifetime should not impact on its=
- size. It's
-> >> >>> just being moved around in the system and the reason for our origi=
-nal decision
-> >> >>> should still hold.
-> >> >>>
-> >> >>> So from that PoV, it would be good to swap-in to the same size tha=
-t was
-> >> >>> swapped-out.
-> >> >>
-> >> >> Sorry, I don't agree with this.  It's better to swap-in and swap-ou=
-t in
-> >> >> smallest size if the page is only accessed seldom to avoid to waste
-> >> >> memory.
-> >> >
-> >> > If we want to optimize only for memory consumption, I'm sure there a=
-re many
-> >> > things we would do differently. We need to find a balance between me=
-mory and
-> >> > performance. The benefits of folios are well documented and the kern=
-el is
-> >> > heading in the direction of managing memory in variable-sized blocks=
-. So I don't
-> >> > think it's as simple as saying we should always swap-in the smallest=
- possible
-> >> > amount of memory.
-> >>
-> >> It's conditional, that is,
-> >>
-> >> "if the page is only accessed seldom"
-> >>
-> >> Then, the page swapped-in will be swapped-out soon and adjacent pages =
-in
-> >> the same large folio will not be accessed during this period.
-> >>
-> >> So, I suggest to create an algorithm to decide swap-in order based on
-> >> swap-readahead information automatically.  It can detect the situation
-> >> above via reduced swap readahead window size.  And, if the page is
-> >> accessed for quite long time, and the adjacent pages in the same large
-> >> folio are accessed too, swap-readahead window will increase and large
-> >> swap-in order will be used.
-> >
-> > The original size of do_anonymous_page() should be honored, considering=
- it
-> > embodies a decision influenced by not only sysfs settings and per-vma
-> > HUGEPAGE hints but also architectural characteristics, for example
-> > CONT-PTE.
-> >
-> > The model you're proposing may offer memory-saving benefits or reduce I=
-/O,
-> > but it entirely disassociates the size of the swap in from the size pri=
-or to the
-> > swap out.
->
-> Readahead isn't the only factor to determine folio order.  For example,
-> we must respect "never" policy to allocate order-0 folio always.
-> There's no requirements to use swap-out order in swap-in too.  Memory
-> allocation has different performance character of storage reading.
+This filter can be used by Squashfs without modifications to the Squashfs
+kernel code (only needs support in userspace Squashfs-tools).
 
-Still quite unclear.
+Co-developed-by: Jia Tan <jiat0218@gmail.com>
+Signed-off-by: Jia Tan <jiat0218@gmail.com>
+Signed-off-by: Lasse Collin <lasse.collin@tukaani.org>
+---
+ lib/xz/Kconfig       |   5 +++
+ lib/xz/xz_dec_bcj.c  | 105 ++++++++++++++++++++++++++++++++++++++++++-
+ lib/xz/xz_dec_syms.c |   4 +-
+ lib/xz/xz_private.h  |   6 ++-
+ 4 files changed, 116 insertions(+), 4 deletions(-)
 
-If users have only enabled 64KiB (4-ORDER) large folios in sysfs, and the
-readahead algorithm requires 16KiB, what should be set as the large folio s=
-ize?
-Setting it to 16KiB doesn't align with users' requirements, while
-setting it to 64KiB
-would be wasteful according to your criteria.
+diff --git a/lib/xz/Kconfig b/lib/xz/Kconfig
+index 1166627a87dc..20aa459bfb3e 100644
+--- a/lib/xz/Kconfig
++++ b/lib/xz/Kconfig
+@@ -40,6 +40,11 @@ config XZ_DEC_SPARC
+ 	default y
+ 	select XZ_DEC_BCJ
+ 
++config XZ_DEC_RISCV
++	bool "RISC-V BCJ filter decoder" if EXPERT
++	default y
++	select XZ_DEC_BCJ
++
+ config XZ_DEC_MICROLZMA
+ 	bool "MicroLZMA decoder"
+ 	default n
+diff --git a/lib/xz/xz_dec_bcj.c b/lib/xz/xz_dec_bcj.c
+index 941198a8a55b..c04767d357bd 100644
+--- a/lib/xz/xz_dec_bcj.c
++++ b/lib/xz/xz_dec_bcj.c
+@@ -5,6 +5,7 @@
+  *
+  * Authors: Lasse Collin <lasse.collin@tukaani.org>
+  *          Igor Pavlov <https://7-zip.org/>
++ *          Jia Tan <jiat0218@gmail.com>
+  */
+ 
+ #include "xz_private.h"
+@@ -24,7 +25,8 @@ struct xz_dec_bcj {
+ 		BCJ_ARM = 7,        /* Little endian only */
+ 		BCJ_ARMTHUMB = 8,   /* Little endian only */
+ 		BCJ_SPARC = 9,      /* Big or little endian */
+-		BCJ_ARM64 = 10      /* AArch64 */
++		BCJ_ARM64 = 10,     /* AArch64 */
++		BCJ_RISCV = 11      /* RV32GQC_Zfh, RV64GQC_Zfh */
+ 	} type;
+ 
+ 	/*
+@@ -388,6 +390,99 @@ static size_t bcj_arm64(struct xz_dec_bcj *s, uint8_t *buf, size_t size)
+ }
+ #endif
+ 
++#ifdef XZ_DEC_RISCV
++static size_t bcj_riscv(struct xz_dec_bcj *s, uint8_t *buf, size_t size)
++{
++	size_t i;
++	uint32_t b1;
++	uint32_t b2;
++	uint32_t b3;
++	uint32_t instr;
++	uint32_t instr2;
++	uint32_t instr2_rs1;
++	uint32_t addr;
++
++	if (size < 8)
++		return 0;
++
++	size -= 8;
++
++	for (i = 0; i <= size; i += 2) {
++		instr = buf[i];
++
++		if (instr == 0xEF) {
++			/* JAL */
++			b1 = buf[i + 1];
++			if ((b1 & 0x0D) != 0)
++				continue;
++
++			b2 = buf[i + 2];
++			b3 = buf[i + 3];
++
++			addr = ((b1 & 0xF0) << 13) | (b2 << 9) | (b3 << 1);
++			addr -= s->pos + (uint32_t)i;
++
++			buf[i + 1] = (uint8_t)((b1 & 0x0F)
++					| ((addr >> 8) & 0xF0));
++
++			buf[i + 2] = (uint8_t)(((addr >> 16) & 0x0F)
++					| ((addr >> 7) & 0x10)
++					| ((addr << 4) & 0xE0));
++
++			buf[i + 3] = (uint8_t)(((addr >> 4) & 0x7F)
++					| ((addr >> 13) & 0x80));
++
++			i += 4 - 2;
++
++		} else if ((instr & 0x7F) == 0x17) {
++			/* AUIPC */
++			instr |= (uint32_t)buf[i + 1] << 8;
++			instr |= (uint32_t)buf[i + 2] << 16;
++			instr |= (uint32_t)buf[i + 3] << 24;
++
++			if (instr & 0xE80) {
++				/* AUIPC's rd doesn't equal x0 or x2. */
++				instr2 = get_unaligned_le32(buf + i + 4);
++
++				if (((instr << 8) ^ (instr2 - 3)) & 0xF8003) {
++					i += 6 - 2;
++					continue;
++				}
++
++				addr = (instr & 0xFFFFF000) + (instr2 >> 20);
++
++				instr = 0x17 | (2 << 7) | (instr2 << 12);
++				instr2 = addr;
++			} else {
++				/* AUIPC's rd equals x0 or x2. */
++				instr2_rs1 = instr >> 27;
++
++				if ((uint32_t)((instr - 0x3117) << 18)
++						>= (instr2_rs1 & 0x1D)) {
++					i += 4 - 2;
++					continue;
++				}
++
++				addr = get_unaligned_be32(buf + i + 4);
++				addr -= s->pos + (uint32_t)i;
++
++				instr2 = (instr >> 12) | (addr << 20);
++
++				instr = 0x17 | (instr2_rs1 << 7)
++					| ((addr + 0x800) & 0xFFFFF000);
++			}
++
++			put_unaligned_le32(instr, buf + i);
++			put_unaligned_le32(instr2, buf + i + 4);
++
++			i += 8 - 2;
++		}
++	}
++
++	return i;
++}
++#endif
++
+ /*
+  * Apply the selected BCJ filter. Update *pos and s->pos to match the amount
+  * of data that got filtered.
+@@ -439,6 +534,11 @@ static void bcj_apply(struct xz_dec_bcj *s,
+ 	case BCJ_ARM64:
+ 		filtered = bcj_arm64(s, buf, size);
+ 		break;
++#endif
++#ifdef XZ_DEC_RISCV
++	case BCJ_RISCV:
++		filtered = bcj_riscv(s, buf, size);
++		break;
+ #endif
+ 	default:
+ 		/* Never reached but silence compiler warnings. */
+@@ -615,6 +715,9 @@ XZ_EXTERN enum xz_ret xz_dec_bcj_reset(struct xz_dec_bcj *s, uint8_t id)
+ #endif
+ #ifdef XZ_DEC_ARM64
+ 	case BCJ_ARM64:
++#endif
++#ifdef XZ_DEC_RISCV
++	case BCJ_RISCV:
+ #endif
+ 		break;
+ 
+diff --git a/lib/xz/xz_dec_syms.c b/lib/xz/xz_dec_syms.c
+index 495d2cc2e6e8..8f4925af9737 100644
+--- a/lib/xz/xz_dec_syms.c
++++ b/lib/xz/xz_dec_syms.c
+@@ -22,6 +22,6 @@ EXPORT_SYMBOL(xz_dec_microlzma_end);
+ #endif
+ 
+ MODULE_DESCRIPTION("XZ decompressor");
+-MODULE_VERSION("1.1");
+-MODULE_AUTHOR("Lasse Collin <lasse.collin@tukaani.org> and Igor Pavlov");
++MODULE_VERSION("1.2");
++MODULE_AUTHOR("Lasse Collin, Igor Pavlov, Jia Tan");
+ MODULE_LICENSE("Dual BSD/GPL");
+diff --git a/lib/xz/xz_private.h b/lib/xz/xz_private.h
+index 307e0de8c260..a8b1cbe8d21d 100644
+--- a/lib/xz/xz_private.h
++++ b/lib/xz/xz_private.h
+@@ -39,6 +39,9 @@
+ #		ifdef CONFIG_XZ_DEC_ARM64
+ #			define XZ_DEC_ARM64
+ #		endif
++#		ifdef CONFIG_XZ_DEC_RISCV
++#			define XZ_DEC_RISCV
++#		endif
+ #		ifdef CONFIG_XZ_DEC_MICROLZMA
+ #			define XZ_DEC_MICROLZMA
+ #		endif
+@@ -102,7 +105,8 @@
+ #	if defined(XZ_DEC_X86) || defined(XZ_DEC_POWERPC) \
+ 			|| defined(XZ_DEC_IA64) \
+ 			|| defined(XZ_DEC_ARM) || defined(XZ_DEC_ARMTHUMB) \
+-			|| defined(XZ_DEC_SPARC) || defined(XZ_DEC_ARM64)
++			|| defined(XZ_DEC_SPARC) || defined(XZ_DEC_ARM64) \
++			|| defined(XZ_DEC_RISCV)
+ #		define XZ_DEC_BCJ
+ #	endif
+ #endif
+-- 
+2.44.0
 
->
-> > Moreover, there's no guarantee that the large folio generated by
-> > the readahead window is contiguous in the swap and can be added to the
-> > swap cache, as we are currently dealing with folio->swap instead of
-> > subpage->swap.
->
-> Yes.  We can optimize only when all conditions are satisfied.  Just like
-> other optimization.
->
-> > Incidentally, do_anonymous_page() serves as the initial location for al=
-locating
-> > large folios. Given that memory conservation is a significant considera=
-tion in
-> > do_swap_page(), wouldn't it be even more crucial in do_anonymous_page()=
-?
->
-> Yes.  We should consider that too.  IIUC, that is why mTHP support is
-> off by default for now.  After we find a way to solve the memory usage
-> issue.  We may make default "on".
-
-It's challenging to establish a universal solution because various systems
-exhibit diverse hardware characteristics, and VMAs may require different
-alignments. The current sysfs and per-vma hints allow users the opportunity
-o customize settings according to their specific requirements.
-
->
-> > A large folio, by its nature, represents a high-quality resource that h=
-as the
-> > potential to leverage hardware characteristics for the benefit of the
-> > entire system.
->
-> But not at the cost of memory wastage.
->
-> > Conversely, I don't believe that a randomly determined size dictated by=
- the
-> > readahead window possesses the same advantageous qualities.
->
-> There's a readahead algorithm which is not pure random.
->
-> > SWP_SYNCHRONOUS_IO devices are not reliant on readahead whatsoever,
-> > their needs should also be respected.
->
-> I understand that there are special requirements for SWP_SYNCHRONOUS_IO
-> devices.  I just suggest to work on general code before specific
-> optimization.
-
-I disagree with your definition of "special" and "general". According
-to your logic,
-non-SWP_SYNCHRONOUS_IO devices could also be classified as "special".
-Furthermore, the number of systems running SWP_SYNCHRONOUS_IO is
-significantly greater than those running non-SWP_SYNCHRONOUS_IO,
-contradicting your assertion.
-
-SWP_SYNCHRONOUS_IO devices have a minor chance of being involved
-in readahead. However, in OPPO's code, which hasn't been sent in the
-LKML yet, we use the exact same size as do_anonymous_page for readahead.
-Without a clear description of how you want the new readahead
-algorithm to balance memory waste and users' hints from sysfs and
-per-vma flags, it appears to be an ambiguous area to address.
-
-Please provide a clear description of how you would like the new readahead
-algorithm to function. I believe this clarity will facilitate others
-in attempting to
-implement it.
-
->
-> >> > You also said we should swap *out* in smallest size possible. Have I
-> >> > misunderstood you? I thought the case for swapping-out a whole folio=
- without
-> >> > splitting was well established and non-controversial?
-> >>
-> >> That is conditional too.
-> >>
-> >> >>
-> >> >>> But we only kind-of keep that information around, via the swap
-> >> >>> entry contiguity and alignment. With that scheme it is possible th=
-at multiple
-> >> >>> virtually adjacent but not physically contiguous folios get swappe=
-d-out to
-> >> >>> adjacent swap slot ranges and then they would be swapped-in to a s=
-ingle, larger
-> >> >>> folio. This is not ideal, and I think it would be valuable to try =
-to maintain
-> >> >>> the original folio size information with the swap slot. One way to=
- do this would
-> >> >>> be to store the original order for which the cluster was allocated=
- in the
-> >> >>> cluster. Then we at least know that a given swap slot is either fo=
-r a folio of
-> >> >>> that order or an order-0 folio (due to cluster exhaustion/scanning=
-). Can we
-> >> >>> steal a bit from swap_map to determine which case it is? Or are th=
-ere better
-> >> >>> approaches?
-> >> >>
-> >> >> [snip]
->
-> --
-> Best Regards,
-> Huang, Ying
-
-Thanks
-Barry
