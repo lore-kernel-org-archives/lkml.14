@@ -1,76 +1,86 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F22F11712
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 03:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1EA1364;
+	Wed, 20 Mar 2024 04:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710906870; cv=none; b=dZXPFnUos1dPdSr7eoKIgtb/fkbwdMKa0cwZtIpijc4bqGpuAU8iC/MVmRPmFQJgt61jyLUGYJO1r/wrAPV0uA37Sf7TcId2nxXSFHhyikCM6e58sFstxnN8dla73zTeEa92xRUKsXaoJL5Qnwf5yq06gj8wnegVw2LDq4jpdDo=
+	t=1710907418; cv=none; b=TzrNjgmBS6lmcxBYNB8fGjUfmizGHAnCV1j41rJ5LVhpO4Q+KhrDT6hi1iZ8CE1JSbC5++6PlscX1FDdkwj67zsxzB4G3oFJZn72YrOFovEwc0vfOSTuIcM5kphI/M9ZjOWIJ0z1bJGv5t9r1RLihVwiTgYnnteAxU6/01Khi4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710906870; c=relaxed/simple;
-	bh=XVB6+9HFSTGPkmI81vMP7oAx1uomsLy1PXz5e4m89X8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I5paH4S65v5RBaJ4LSfjxVLZEpVVKTou11YVbOoERaHNGCBS8ZvIIP1No60iTvYq7bchw5Cz2buQKZCZ2S3BOSUPg5ng5tNzud9NnbKE9HqXuEgGyb0bynIy33OSwz5Y8dZ5kQ/54L1QTZz8K25BHp0n5i9I2IlREzn1QIKJv/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from fsav413.sakura.ne.jp (fsav413.sakura.ne.jp [133.242.250.112])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 42K3sPLu062256;
-	Wed, 20 Mar 2024 12:54:26 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav413.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav413.sakura.ne.jp);
- Wed, 20 Mar 2024 12:54:25 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav413.sakura.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 42K3sPRp062253
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Wed, 20 Mar 2024 12:54:25 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <f9a8a442-0ff2-4da9-af4d-3d0e2805c4a7@I-love.SAKURA.ne.jp>
-Date: Wed, 20 Mar 2024 12:54:25 +0900
+	s=arc-20240116; t=1710907418; c=relaxed/simple;
+	bh=a1iPkS19wKvYjByVRjYUWC8hvrMspm4HWjt5L6aSPzE=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=e55pbXMVMHnBP851rtCkCxgQFBCh9qMiD2mRyap2LVAsZfgDrsxqJZ7CvkG2BXFrnW+evJyx0bqA/EAABjhOL8i7dsjHqECmjAhfVijlyUThi5Av7ih2wCYuiZ90ERqYHnNwIJdbR0OULAbBbAkadKUM1ZmLbNxfTGvfIt61AuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5062F200B54;
+	Wed, 20 Mar 2024 05:03:30 +0100 (CET)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 170402016B4;
+	Wed, 20 Mar 2024 05:03:30 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 0A0C5183AD0A;
+	Wed, 20 Mar 2024 12:03:27 +0800 (+08)
+From: Richard Zhu <hongxing.zhu@nxp.com>
+To: l.stach@pengutronix.de,
+	bhelgaas@google.com,
+	lorenzo.pieralisi@arm.com,
+	marex@denx.de,
+	frank.li@nxp.com,
+	manivannan.sadhasivam@linaro.org
+Cc: linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de,
+	linux-imx@nxp.com,
+	Richard Zhu <hongxing.zhu@nxp.com>
+Subject: [PATCH] PCI: imx6: Fix i.MX8MP PCIe EP can not trigger MSI
+Date: Wed, 20 Mar 2024 11:45:38 +0800
+Message-Id: <1710906338-4596-1-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/3] x86: call instrumentation hooks from copy_mc.c
-Content-Language: en-US
-To: Alexander Potapenko <glider@google.com>, akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        kasan-dev@googlegroups.com, tglx@linutronix.de, x86@kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dmitry Vyukov <dvyukov@google.com>, Marco Elver <elver@google.com>
-References: <20240319163656.2100766-1-glider@google.com>
- <20240319163656.2100766-3-glider@google.com>
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <20240319163656.2100766-3-glider@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 2024/03/20 1:36, Alexander Potapenko wrote:
-> @@ -61,10 +62,20 @@ unsigned long copy_mc_enhanced_fast_string(void *dst, const void *src, unsigned
->   */
->  unsigned long __must_check copy_mc_to_kernel(void *dst, const void *src, unsigned len)
->  {
-> -	if (copy_mc_fragile_enabled)
-> -		return copy_mc_fragile(dst, src, len);
-> -	if (static_cpu_has(X86_FEATURE_ERMS))
-> -		return copy_mc_enhanced_fast_string(dst, src, len);
-> +	unsigned long ret;
-> +
-> +	if (copy_mc_fragile_enabled) {
-> +		instrument_memcpy_before(dst, src, len);
+Fix i.MX8MP PCIe EP can't trigger MSI issue.
+There is one 64Kbytes minimal requirement on i.MX8M PCIe outbound
+region configuration.
 
-I feel that instrument_memcpy_before() needs to be called *after*
-copy_mc_fragile() etc. , for we can't predict how many bytes will
-copy_mc_fragile() etc. actually copy.
+EP uses Bar0 to set the outboud region to configure the MSI setting.
+Set the page_size to "epc_features->align" to meet the requirement,
+let the MSI can be triggered successfully.
 
-> +		ret = copy_mc_fragile(dst, src, len);
-> +		instrument_memcpy_after(dst, src, len, ret);
-> +		return ret;
-> +	}
+Fixes: 1bd0d43dcf3b ("PCI: imx6: Clean up addr_space retrieval code")
+Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+Reviewed-by: Frank Li <frank.li@nxp.com>
+Acked-by: Jason Liu <jason.hui.liu@nxp.com>
+---
+ drivers/pci/controller/dwc/pci-imx6.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 99a60270b26c..3238b63721bc 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -1013,9 +1013,14 @@ static void imx6_pcie_ep_init(struct dw_pcie_ep *ep)
+ {
+ 	enum pci_barno bar;
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
++	const struct pci_epc_features *epc_features;
+ 
+ 	for (bar = BAR_0; bar <= BAR_5; bar++)
+ 		dw_pcie_ep_reset_bar(pci, bar);
++	if (ep->ops->get_features) {
++		epc_features = ep->ops->get_features(ep);
++		ep->page_size = epc_features->align;
++	}
+ }
+ 
+ static int imx6_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+-- 
+2.37.1
 
