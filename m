@@ -1,159 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8D533062;
-	Wed, 20 Mar 2024 21:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7834F8B2
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 21:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710971558; cv=none; b=FgSsv+PjDIFQUrALvOmXfni2ig7F6EXWe3Kkjb9UsjSUQcYsE/UjbUJzZK6Dltuoo3Val57Emm9jVzHdjNI1hrIJjfNd8yl2roj/oJ79c+0O+5ZOfVdUj0xIITF5IUk+3Wwq87vGn/czAoawZoZEfliN3K4eSNhhCup20OIX7ms=
+	t=1710971781; cv=none; b=TRWHmtjfuw66dgk4I5CogaD7Zo0lKCptIGrTKKSKw172h2qJ7nAZS+XPA1tj8i7kSGTjl1IqCWlVLwZjfOlTc9sq1UQprpS+YHDC5YBUdamKmhATz1IlAg4fDGQYfSyU2Tsr1Nmcag3Dwv6nZEe9CzkJLcx0QqbA9jGJ5K7cPLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710971558; c=relaxed/simple;
-	bh=8zhUcMHgW8RImpLOFFWUdVjfodb9oNMgadrLsX11UVo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XyKCOzz0HGoyTQ9h8OhuVGsb7VNtiVsFY9Js2/VOYXy8nZikY4dTunDflmAGRPhVvl0Pxg8ZPdrOEt6AHIolmNLLJTjTreQiei+Y8CtHOoV/13r9LDPbFzCCOZLn26hYPMq2yiM7HIj/33VbB4Lx3Vwfe3Z0mhRlWf6zo4uxFbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lZCnSeSl; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1710971781; c=relaxed/simple;
+	bh=3Y9zpf1wfvY5KLBzI213sJGWxjZ+o1dGQveIv1ywB5Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=akgWo1kZ91BEIPLvLFOZC/PLK8LIhUhs65NvM6bDvY3SN7sJcmGoGeMQHA0+rzoiHl78pMAhDPc/YwrlGMDAmU4CsiUELR7WpRrL/lNYAR26oDm2fzjqWRAkTBWD1GivoaFtKx/qr/I0onmS4hMyzJuQUP4U21oe78CUvNEcpgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=efficientek.com; spf=pass smtp.mailfrom=efficientek.com; dkim=pass (2048-bit key) header.d=efficientek-com.20230601.gappssmtp.com header.i=@efficientek-com.20230601.gappssmtp.com header.b=HKyvxAZx; arc=none smtp.client-ip=209.85.161.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=efficientek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficientek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lZCnSeSl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710971551; x=1742507551;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8zhUcMHgW8RImpLOFFWUdVjfodb9oNMgadrLsX11UVo=;
-  b=lZCnSeSlA4DcmdZl80bV6j7Po5zE27RDGkI+NkNdnsJs0t/8lQ0Pq9cd
-   wy+YzGLG3e8BFuYREcDyGYNoddQVZawy+PXHM0Xf9Ai8jlVuLB9EJ62NL
-   cDPCdLawavS/6PmMEnitDjUvqCMOHUndnmYgRoCALKBGIPvhOXUzmKyHT
-   3rPjPoW6jqeRk+/Cb9ZTorUCRUHqwAEl8Ei3Qt6mueomGg/QnGY3gND2+
-   J9dMXguZF8SQkkBpFnSTLXthzQMqKv0QDTb4LDTxOddrL5EiJflPCAg6b
-   xPhGqnYtjrj4t0X1XXUAexlRFI7a3shS09qsLXvfNgBTEh7v+V5E5oz14
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="5816216"
-X-IronPort-AV: E=Sophos;i="6.07,141,1708416000"; 
-   d="scan'208";a="5816216"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 14:50:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,141,1708416000"; 
-   d="scan'208";a="45386606"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 14:50:19 -0700
-Date: Wed, 20 Mar 2024 14:50:13 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: "Huang, Kai" <kai.huang@intel.com>
-Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
-	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com,
-	Sean Christopherson <seanjc@google.com>,
-	Sagi Shahar <sagis@google.com>, chen.bo@intel.com,
-	hang.yuan@intel.com, tina.zhang@intel.com,
-	Binbin Wu <binbin.wu@linux.intel.com>,
-	Yuan Yao <yuan.yao@intel.com>, isaku.yamahata@linux.intel.com
-Subject: Re: [PATCH v19 030/130] KVM: TDX: Add helper functions to print TDX
- SEAMCALL error
-Message-ID: <20240320215013.GJ1994522@ls.amr.corp.intel.com>
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <1259755bde3a07ec4dc2c78626fa348cf7323b33.1708933498.git.isaku.yamahata@intel.com>
- <315bfb1b-7735-4e26-b881-fcaa25e0d3f3@intel.com>
+	dkim=pass (2048-bit key) header.d=efficientek-com.20230601.gappssmtp.com header.i=@efficientek-com.20230601.gappssmtp.com header.b="HKyvxAZx"
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5a21859a4b8so136477eaf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 14:56:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=efficientek-com.20230601.gappssmtp.com; s=20230601; t=1710971779; x=1711576579; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:subject
+         :cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NwLRl82njW9qOCI08DiI0Mi6Z9GVC805nkZi5Fy+J9U=;
+        b=HKyvxAZxTSMEeUfFujy9WMqCQfTdS/hXv6tZfmJlVLwreIfFN38Nx5vfGkDYSQBdJB
+         NBNHVQBnz8aPgPl1ZDy0xFiZZhqr+btDSva6F8RC3XmVyzhnPkS0XtdMxCLiS3OdhSUm
+         RaSY0LiuZyB1mQBKCiiZqRSlH2HBzHcjprFDWPXbcCB1k+Zz5mzoHDTIH2TYo+g4znyL
+         3zqXWHTVcBbTLYaTSmlS+GRVbcAb1R3rtD2wL2BAzTwxF4EuFXKGSYQzLJdv5HG4tE2a
+         GzrABiUSGfEEUNXh7BKpGGUEbySQEJDnBm7aGjqvwHnbkLJP/hQxXnyB+ywddSzOSV4I
+         eLQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710971779; x=1711576579;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:subject
+         :cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NwLRl82njW9qOCI08DiI0Mi6Z9GVC805nkZi5Fy+J9U=;
+        b=QC8qiWmUyjV/wEdzCEhQGdch16JlR7FaQhY+IguoW85RW1wnju9rKPg0T/1lL/DpF4
+         OP5p+P42Jb8wTxLRfeD0Sv0vQEdPZFu+eutdcPyrdUzdfS9IMwoBLEsoNKH6U5pwZxxA
+         hFUuK3Pi3fCKtjWH1cckMdTeQqGnTD9dqYbgo7lvN2wcKxfL9jKe3S6i78w5mkF85qCs
+         Sg4s6CcL+PLuiJoudU9ZpCU2wOxZ2znd0f4lS/6Y0H+wF2V68Sefd7iPU/vUvRbdwmnY
+         BvPtKSvWlUJ6BI9PKrE/FfUqhqT4YFbUqJZMztc++mEHmvOcI+pVYv7CYX4pRPbDIkCs
+         19sQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBm4KS3S4A80J8+11p9nqReDEG/9oWnzhxiMLRjbfv2U668Qv7IawIx/pE8kXYI8Vq3mGR03P4x0n1Ge4igvDP9wSzbhxDAZRYqBDB
+X-Gm-Message-State: AOJu0Yw9vqO6xRn8c/ETxayXKs2VKCy/BT8MbIfYcUyvdGq/S4KuIj5U
+	ScASrqgGdLkM5QoVKa0Uo75ketm696NXEIzZbteEgWLhWvIEPPbaaPyOVaXy1A==
+X-Google-Smtp-Source: AGHT+IERVnHDyCRKMbKQ1CvMqRQ1iTEgmI48bTHDG/oAkD5At/lDqY2l5505tlZOZPPXI9jhbAQZAQ==
+X-Received: by 2002:a05:6870:6195:b0:220:99bf:c26d with SMTP id a21-20020a056870619500b0022099bfc26dmr397339oah.9.1710971779086;
+        Wed, 20 Mar 2024 14:56:19 -0700 (PDT)
+Received: from crass-HP-ZBook-15-G2 ([204.13.164.84])
+        by smtp.gmail.com with ESMTPSA id lb3-20020a056a004f0300b006e664031f10sm12270964pfb.51.2024.03.20.14.56.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Mar 2024 14:56:18 -0700 (PDT)
+Date: Wed, 20 Mar 2024 16:56:09 -0500
+From: Glenn Washburn <development@efficientek.com>
+To: Jens Axboe <axboe@kernel.dk>, Alasdair Kergon <agk@redhat.com>, Mike
+ Snitzer <snitzer@kernel.org>, Mikulas Patocka <mpatocka@redhat.com>
+Cc: dm-devel@lists.linux.dev, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Cannot create dm-linear or dm-crypt mapping on scsi or mmc block
+ device if mapping already exists on partition of device
+Message-ID: <20240320165339.1c6b4d39@crass-HP-ZBook-15-G2>
+Reply-To: development@efficientek.com
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.37; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <315bfb1b-7735-4e26-b881-fcaa25e0d3f3@intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 20, 2024 at 01:29:07PM +1300,
-"Huang, Kai" <kai.huang@intel.com> wrote:
+Saludos,
 
-> 
-> 
-> On 26/02/2024 9:25 pm, isaku.yamahata@intel.com wrote:
-> > From: Isaku Yamahata <isaku.yamahata@intel.com>
-> > 
-> > Add helper functions to print out errors from the TDX module in a uniform
-> > manner.
-> 
-> Likely we need more information here.  See below.
-> 
-> > 
-> > Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-> > Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
-> > Reviewed-by: Yuan Yao <yuan.yao@intel.com>
-> > ---
-> > v19:
-> > - dropped unnecessary include <asm/tdx.h>
-> > 
-> > v18:
-> > - Added Reviewed-by Binbin.
-> 
-> The tag doesn't show in the SoB chain.
-> 
-> > 
-> > Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-> > ---
-> 
-> [...]
-> 
-> > +void pr_tdx_error(u64 op, u64 error_code, const struct tdx_module_args *out)
-> > +{
-> > +	if (!out) {
-> > +		pr_err_ratelimited("SEAMCALL (0x%016llx) failed: 0x%016llx\n",
-> > +				   op, error_code);
-> > +		return;
-> > +	}
-> 
-> I think this is the reason you still want the @out in tdx_seamcall()?
-> 
-> But I am not sure either -- even if you want to have @out *here* -- why
-> cannot you pass a NULL explicitly when you *know* the concerned SEAMCALL
-> doesn't have a valid output?
-> 
-> > +
-> > +#define MSG	\
-> > +	"SEAMCALL (0x%016llx) failed: 0x%016llx RCX 0x%016llx RDX 0x%016llx R8 0x%016llx R9 0x%016llx R10 0x%016llx R11 0x%016llx\n"
-> > +	pr_err_ratelimited(MSG, op, error_code, out->rcx, out->rdx, out->r8,
-> > +			   out->r9, out->r10, out->r11);
-> > +}
-> 
-> Besides the regs that you are printing, there are more regs (R12-R15, RDI,
-> RSI) in the structure.
-> 
-> It's not clear why you only print some, but not all.
-> 
-> AFAICT the VP.ENTER SEAMCALL can have all regs as valid output?
+I've hit some unexpected behavior that is not intuitive and might be
+considered a bug. A dm-linear or dm-crypt (possibly others) mapping is
+attempted to be created on a scsi or mmc block device (again, possibly
+others) when there already exists a mapping on a sub block device, the
+mapping creation will fail with EBUSY.  Here's a concrete example:
 
-Only those are used for SEAMCALLs except TDH.VP.ENTER. TDH.VP.ENTER is an
-exception.
+# dmsetup create --concise "dm-test,,,ro,0 8 linear /dev/sda1 0"
+# dmsetup create --concise "dm-test2,,,ro,0 4 linear /dev/sda1 2"
+# dmsetup create --concise "dm-test3,,,ro,0 4 linear /dev/sda 2"
+[  968.046906] device-mapper: table: 252:2: linear: Device lookup failed (-EBUSY)
+[  968.047305] device-mapper: ioctl: error adding target to table
+device-mapper: reload ioctl on dm-test3 (252:2) failed: Device or resource busy
+Command failed.
+# dmsetup create --concise "dm-test4,,,ro,0 4 linear ${DEV}2 8"
+# dmsetup table --show
+dm-test: 0 8 linear 8:1 0
+dm-test2: 0 4 linear 8:1 2
+dm-test4: 0 4 linear 8:2 8
 
-As discussed at [1], out can be eliminated. We will have only limited output.
-If we go for that route, we'll have the two following functions.
-Does it make sense?
+The second command shows that dm-linear has no issues with creating an
+overlapping mapping on the same device. It makes little sense that the
+third command fails where the second and fourth succeed. Further testing
+shows that if there is an existing linear mapping on the full block device,
+then mappings fail to be created on any partition block devices. This has
+been tested on scsi and mmc devices. It is also true for the dm-crypt
+target and mixing dm-linear and dm-crypt mappings. I've tested on Ubuntu's
+6.8.1 test kernel. I doubt this is affected by any Ubuntu patching, but
+perhaps someone could confirm this on a vanilla kernel.
 
-void pr_tdx_error(u64 op, u64 error_code)
-{
-        pr_err_ratelimited("SEAMCALL (0x%016llx) failed: 0x%016llx\n",
-                           op, error_code);
-}
+I noticed this because I tried to create a dm-linear mapping of a scsi
+device to capture sectors not contained in a partition, but it failed
+because I already had a dm-crypt mapping on a partition of the device.
 
-void pr_tdx_sept_error(u64 op, u64 error_code, const union tdx_sept_entry *entry,
-		       const union tdx_sept_level_state *level_state)
-{
-#define MSG \
-        "SEAMCALL (0x%016llx) failed: 0x%016llx entry 0x%016llx level_state 0x%016llx\n"
-        pr_err_ratelimited(MSG, op, error_code, entry->raw, level_state->raw);
-}
+Any ideas what's going on? Are there good reasons for this behavior that
+I'm unaware of? I've done some searching but haven't found it having been
+reported anywhere. If this has been discussed, please point me in that
+direction.
 
-
-[1] https://lore.kernel.org/kvm/20240320213600.GI1994522@ls.amr.corp.intel.com/
-
-> 
-> Anyway, that being said, you might need to put more text in
-> changelog/comment to make this patch (at least more) reviewable.
-> 
-
--- 
-Isaku Yamahata <isaku.yamahata@intel.com>
+Glenn
