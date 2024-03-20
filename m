@@ -1,86 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508756A327;
-	Wed, 20 Mar 2024 18:03:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC47BA45;
+	Wed, 20 Mar 2024 18:03:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710957789; cv=none; b=HhRB3nb2l9RyFgy6nFtKQ/cKjuEtMhS+XsbJ5IEuS0yTy/jm5q56mzUpm/yO84ycK434TtosVs66UzKrETJATtDPIcKpvyQIFi9h4XSqRsEevFHaDqo2Wl6ObQ2dd0vf1vFUZU99evSiYFPZYRx9TmW0HSLjK4fvTSDjYcEMRMI=
+	t=1710957812; cv=none; b=KvWuz3sRHKjBKls37AUg+Rw1J46Ai+ok5c4aiqlssz38offIVFqSGD+QiNSQesRnL3IRQroMUHuD5xiFRLYF74wSWGgIwrCGnN2Bw3aRUa6WFTT3IAtywacYa3RwRbwKU+WUlFq+bqC6HeTPtNW/2lHoMn8AHSIS6K7eF/7YBlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710957789; c=relaxed/simple;
-	bh=sQaZL7VLbnroXfvNjOJrzk5y7wEaU2H+hGDvuuVnmt4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RB3bX8qI8QXCek5TE6Xznzb11Da+GcGdWgqx4WAoVELvClNZd24+kzOBq6Qov7Omve5eZsKdtpTD19Ss42WqfpyLik3PV+qIY76pxC6La0tVolCmhs/FmSNWuSKLOlbYKT1JX/vewUTs3nJz2UgezdYs+ZGjqx4eNWhfJDbjfKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pxaYGgfw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710957812; c=relaxed/simple;
+	bh=Ed1I1kIY0Feqy3rs76Gh064Y1IF28xMwtxyZdBPm2NU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t7015FXYR4R7s22GsIkJF3KESKUBNV03O7wITm60FcMdev9mHjimNVSLeOve6OoB8cfgm34haLlTqdQdqpjfPAIbfBBGKbr/X4Ol1gR5AJKWml+3qPuwBu/aUEcycIRGycPc5/wYB6qxUKZSTYd2zXSjvS3KTgAFqFUpzHAhYXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iP93OzJq; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pxaYGgfw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E1E0C433C7;
-	Wed, 20 Mar 2024 18:03:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710957788;
-	bh=sQaZL7VLbnroXfvNjOJrzk5y7wEaU2H+hGDvuuVnmt4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=pxaYGgfwM5gWfUwAIQVlvbsFIvuR9xWLbhy80E2Y1VaeUB7Errm0apfISDlmeqp/N
-	 Czc4TuEQ/cPtriXw/RWwCyWFz3ardBGSic0KeDlKpgROUVkYm1R3RUBoxUf9YTPOby
-	 fNHMzg7BJP374ArTFNYeGN9POxQeidOiMX4l3TYsX7Jvisgzdo9ifIZ4/OB94cQB4c
-	 GMFWBwAkJ39BRxDBArgDoiafbGvCD5LQjh75wIli3Npl1eHMPw/y4vb/xDRyL3BnmB
-	 3jTA3TtH/dtAZ+GGEbyQoa68/PZCuaIKl95vUttTCKv9DHF1bne5TPsKOu9UaQ71fp
-	 cjqj3M79ewPng==
-From: Arnd Bergmann <arnd@kernel.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Ben Cheatham <Benjamin.Cheatham@amd.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Len Brown <lenb@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Avadhut Naik <Avadhut.Naik@amd.com>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	linux-acpi@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iP93OzJq"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1dfff641d10so277945ad.2;
+        Wed, 20 Mar 2024 11:03:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710957810; x=1711562610; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fe7+QgceZjZtuMFOC/wsDTnTO94d6hKvWRrBFM6nBWE=;
+        b=iP93OzJqSAbyYpCERL7fMvUaSRjtX+WBXCAcu5ob2NGsTq8zFGfA630NzYucvPE/ly
+         PvSyuVn5B8msv1HAs2mGtO3y3+1xd6Pi/sVnFoV09yc6Mz9YpJ5vDUOLUfZFeYLV7+Ri
+         1iiR+c2onau+EO6XqpXOVk//74G3MBM8QrqDDjaR9iBqotU+vJZpUuTUvzKxq1Hr3f6f
+         7pax4vPSUuRaRM4T5RPlwpbKCYciHdomvOVU5b8iAaM9qm8xstDfF8/NuLNe2I7ULmx4
+         qJWib01E30+LOJn4ITXCcIRy6CuzM3/Udn+59tLe+pe29WwiwTyChavVW6lNKt6ipQQ6
+         m9VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710957810; x=1711562610;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fe7+QgceZjZtuMFOC/wsDTnTO94d6hKvWRrBFM6nBWE=;
+        b=kLakEWZjn7/Bww7XGUewa/AZ+hzFOmlmmBIPHFY1tCxSpHstGLelW/ljWXiF9k3yL0
+         LXgC3iREgSq76RydAsw/XoyfvnuqlzX2d0lecGibW9lqwOoqXGLeP3P6s3pfwnQhgApZ
+         ocoRBUoBtdSVjF0al4TonkjLuDittee8GpY+VgJk8obAXhqlB0e3NwhuAoUxGat2lQXQ
+         uPgCPzKHsTglD2jSHQ+EmpHtTCaSJt4GoyWHu2AzkceMJYg9DTK8V/HqKTE2Fr/W8Jmb
+         RGBacgKte0oLUEa9nC60QvfDBQu8PJwlpBwaHJNcHnAeHhno113BtJZmp8ONYOSJwNvg
+         fE+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWeBADOO+TefesbYAsSqgXTe7F+HotI5Q8K9Z1fhh3d2gDqoJ56EIxJu34NWjQIExAv7aDnc5siLiEwlCNRrBCGV9FlHxypBxnbvMsSe1ugQAu9j76/qdyhylmKUudDmC4MuwWPL4ju8sUFWXatE+97p/+cLDcuLS+IxivyiWOGWdKKEzRI
+X-Gm-Message-State: AOJu0Yzpei0K1cAjXN8nA4dXeSZZ09laoaFt+qTYLqiVXvvcLvKLwx5g
+	TYEAoTf2N1zom4iaYOoA7udPCn/vqPMAKlKiMV61+Lo1IyJrM7WR
+X-Google-Smtp-Source: AGHT+IFFRnrbIv+zEXFsZYEZVqnWgrBJ55jSh4gJkPcPwRtlksgsWMna4/o7BKn9T2JkLcq5eMh0Xg==
+X-Received: by 2002:a17:902:7c87:b0:1de:eca6:483d with SMTP id y7-20020a1709027c8700b001deeca6483dmr16898141pll.27.1710957809804;
+        Wed, 20 Mar 2024 11:03:29 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id u13-20020a170902e80d00b001dd95b5dd0fsm9801984plg.69.2024.03.20.11.03.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Mar 2024 11:03:29 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Wed, 20 Mar 2024 11:03:28 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, peiyu li <579lpy@gmail.com>,
+	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] acpi: EINJ: mark remove callback as non-__exit
-Date: Wed, 20 Mar 2024 19:02:50 +0100
-Message-Id: <20240320180302.143707-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+Subject: Re: [PATCH 1/2] dt-bindings: hwmon: lm87: convert to dtschema
+Message-ID: <13eff821-e800-415c-bf0c-6d9c11ece565@roeck-us.net>
+References: <20240320-hwmon_yaml-v1-0-a349ca21ccab@gmail.com>
+ <20240320-hwmon_yaml-v1-1-a349ca21ccab@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240320-hwmon_yaml-v1-1-a349ca21ccab@gmail.com>
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Wed, Mar 20, 2024 at 06:04:57PM +0100, Javier Carrasco wrote:
+> Convert existing bindings to dtschema to support validation.
+> 
+> This is a straightforward conversion with no new properties.
+> 
+> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
-The remove callback of a device is called whenever it is unbound,
-which may happen during runtime e.g. through sysfs, so this is not
-allowed to be dropped from the binary:
+Applied to hwmon-next.
 
-WARNING: modpost: vmlinux: section mismatch in reference: einj_driver+0x8 (section: .data) -> einj_remove (section: .exit.text)
-ERROR: modpost: Section mismatches detected.
+Please note that I'll push the branch after the commit window closed.
 
-Remove that annotation.
-
-Fixes: 12fb28ea6b1c ("EINJ: Add CXL error type support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/acpi/apei/einj-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/acpi/apei/einj-core.c b/drivers/acpi/apei/einj-core.c
-index 66e7f529e92f..01faca3a238a 100644
---- a/drivers/acpi/apei/einj-core.c
-+++ b/drivers/acpi/apei/einj-core.c
-@@ -851,7 +851,7 @@ static int __init einj_probe(struct platform_device *pdev)
- 	return rc;
- }
- 
--static void __exit einj_remove(struct platform_device *pdev)
-+static void einj_remove(struct platform_device *pdev)
- {
- 	struct apei_exec_context ctx;
- 
--- 
-2.39.2
-
+Thanks,
+Guenter
