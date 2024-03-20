@@ -1,165 +1,115 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2082.outbound.protection.outlook.com [40.107.241.82])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE262208B
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 07:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710920055; cv=fail; b=OW7sxiE+hD9zJvcWH+/SfwdTynOLenmW0Pmu7SA9dbba6HmnyUuVQh909t3d0X2i1dArRF3KfDqHwfkNTxeTARbCElEjuSIlvCwAj3gsHAEQxk7eQqmtkoUAvXE/BA6nYXS//MDojEOa5NVA7XlBi3c3UA3omeUZcFj+ehTNtKU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710920055; c=relaxed/simple;
-	bh=WY7mIU9YtsSl9roUgukGjb3lFUJIKHCeAVbk70ClbJY=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=IxUjGhq0rn0iYiveBU+3ODEBusjlMyxHNJTsJmVMUbKbFVxeT6nv1iHEQUrgRSlryoJYgpjJxdRTjkjKRBddjQLwRYJlNDA1yLXCWLOPxOaV7iSPCDpz5WqQuYOqxt94GyTe8h62AjKG1PwY4KdPg/ii8da/hA4v1rz1BHHf9j4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=doPrtrAi; arc=fail smtp.client-ip=40.107.241.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789B42208B
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 07:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710920187; cv=none; b=aXc3996YOB0B5QQ8g2+tf4ql0OuI12z4my5+gQDrJFaOt5zvZR8sMfZXH1jGeaPPVuRg0Ud/6nL6iEaIJpmY5CW2Xko9UlHK2Ji+n4QOqWSNnu+HoYf5RzlnApUDv4lrx5k/D92xnl6mU8UP6x+kUDWXK2lakRHNJwxBm0Utvoo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710920187; c=relaxed/simple;
+	bh=8FrklcNQldLvI3BHw70NdCm4S6Qev5UhA6Rr0CTq/mo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EwhohCX0svp33d4HUQU+/U2MOyRhVP53TmVzSF1upaajK6dy168XAqbyLJsNz4UoIDAnAKLTfwn4qxWFxj2Bll6BjXgQM6wanMxqEBTAB4VomHKg87NEekT4Z2woEOn0GGfXl2qbRpDsRMuHy5jXKaQLLRA7PaHg8YcBYdxUMoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=W8PfZpQY; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="doPrtrAi"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SS48Df6ky6zXfaTQXTahQVnZP+3GYbSMSb9gN82F0YA0X/UwgyqnIBU3Qu2G6zJdoW99P+NFVS+2ntJUUidPAa4Lis81flxl85NAXIQD2D4KFRMyQErvTzFmsmC9008+UH7fPZ2oUlKYcUKBij6IGUSja9Xq5wyo9Y6HQSAVwPHYFIFeadbVkrTMRdC2C6yNWlcwMXD5PcYjF8l49S528Xh0wvmTzxKGGUv0ZRyIwPmtkVIFu1AoVsfol0L8f7Q15NOviDtu2ALTSEHEGMPu6UGkkomIRpuf7AeU+ZqeufVMRU9uSwA1Oa3FCsO2osy/uPGuSMM6LXMvWTBPGKsVtQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mEa2Os3lBXfToh4/Rzbn0rgApqcEl7SpEz7tztXzlpY=;
- b=Fr1FtXjbnIJ1692pvzlXD3wwU+uXn0KMYj7Juu1UMfcVywY+7QViHcJJKur82BJH3PUpDUNYMFv+nrpBH2RG2YXPN7W7LiKWac47NcKApAVx/MBRXMU0EoXKXaXMnnMFYyVdZbYml7sEdtge3TjP1TyZN9ViMjg4C3Pc8Xy+AQgLNw1MTY6dhu9VbLVYrlmhuGOI+PRhrbO0c4l/9KMyAdeZpQZtP5NF3HXwzMJ5/XZWDn8TTla2RQMuq/s7Xy7f5OJ54uHz96tluVi7SKRPB0Pm5Yux7bTBQJdXLq6w0wJVuHDys8vwcyRzKWRSNeINtzEEtzedP6I+6CuNTrgbaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mEa2Os3lBXfToh4/Rzbn0rgApqcEl7SpEz7tztXzlpY=;
- b=doPrtrAiwuAVsMm8Inrpz9TT5395DcDDeBdwC7EaVUDHGrdyBHfmzFK3EbTCv+ZKD+3FynGhGQwneV74Xd94ICDShdPlFFJy4WXPpZpI06fgGe+lvvF3j0x6p08mbSkmz+X/+O1TyBk1whXjQIUY649slB6fKLNCwFQqe9T0BqQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by DBBPR04MB7724.eurprd04.prod.outlook.com (2603:10a6:10:209::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.30; Wed, 20 Mar
- 2024 07:34:10 +0000
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::d30b:44e7:e78e:662d]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7386.017; Wed, 20 Mar 2024
- 07:34:10 +0000
-From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-To: sudeep.holla@arm.com,
-	cristian.marussi@arm.com
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH] firmware: arm_scmi: perf: print domain name in error path
-Date: Wed, 20 Mar 2024 15:42:13 +0800
-Message-Id: <20240320074213.1615888-1-peng.fan@oss.nxp.com>
-X-Mailer: git-send-email 2.37.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR02CA0007.apcprd02.prod.outlook.com
- (2603:1096:4:194::23) To DU0PR04MB9417.eurprd04.prod.outlook.com
- (2603:10a6:10:358::11)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="W8PfZpQY"
+Received: from [192.168.88.20] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B936EB1;
+	Wed, 20 Mar 2024 08:35:55 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1710920156;
+	bh=8FrklcNQldLvI3BHw70NdCm4S6Qev5UhA6Rr0CTq/mo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=W8PfZpQY7aN7ioLHqtSKdkr2iJyynYUfckLxYN+9Jd4R8b9pe0ZmUI5CF5U3nur4q
+	 loefYTM7XB12q3cJjjccMHh+Yw179wIjcHjLq0cb2kRZ+kIHpNbWKIG5aux+PENOtZ
+	 rYW3XNxl/EyJAOD6/Ac16gX8vstfhvAVE0uRptKI=
+Message-ID: <dc46558d-9254-47e6-9499-4c2ace437f3a@ideasonboard.com>
+Date: Wed, 20 Mar 2024 09:36:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|DBBPR04MB7724:EE_
-X-MS-Office365-Filtering-Correlation-Id: c343ac1b-21a4-499d-9469-08dc48b021e2
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	9GORvsCN4fpnITEnxdH8oa0bSGRq1SahOyw6Lvw2m9XD8g0odL1PG9bgSRGLRqPBujIVQpzLPwGISw7ieEMlhH3Ri+ncctCc8/E6CtscFEXn58K6klkqQDfs8Y6XGvBWSBP1gcu++AZSVbOOYVQ7wk8JyVpgTnQi5R4Ci22HWkzGz5NcI9r1sSBG7v/EnLVZighBBHnYkf8mmxv+idFol37U1Pazxn4mZOubX1ZdRkI1I+lYb+87YQ4iaThAvTFXqZvA0kXq1W6/mdTgNh0v2yB4TtMffB6VbAXjBi9lqPTTppw9A+FVL/D4hbQFxb//Rr4XxPvCh5mTBWULH4yBhZhpBO76ZeuL1acUk+DxBtgvo4apOtjtcyuNATtuk3kNF51sjhIDJV9mtjNYc2PjOkWj8Ax3c5TPiAkVJmn/HcOtGEFlh9zmtVDZ5oRmPBu2qU1cKazx48jus1yNaOIH2rYYN4wq2vdZWCVAPz8gP/qhMCD89hpPofXwyrLV+Rd3Gs9M6xJurWHf1lgZmYhkvUC+NKD1jQpMws/9DTmPrjoyth8WHQQA7PzLiLPR6NN/3LN4mGfpdOXYA1PgEqSiehr19ahVmwsYlrzafJARElyC2dUQvLL36uMjMEmGFlvA7yOoBp7xSVydlfM9eMfvRkzvQV9JVil2gqpjl/MeAn2qI9z3xiCPZ6C54gMtw5N2ZU1d7PxUYIoo+Xsi51ZxuoqgXMcBkw8YjCo+tMjiE9o=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(52116005)(366007)(376005)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?cLh2idBxTLcKyvQjz+ThmEplwmfHpkVg3h2haRl32SK8f15x3Hsi4JgnKGpo?=
- =?us-ascii?Q?zJs1VOEow7uxCf/et1YTzY0M/NshAax1CG51ekmrGNCbZRwkOJulOJRfiTTS?=
- =?us-ascii?Q?CmFwYjuY4Ep97ncV7qM6cH29qJk+NK2QNUhtk8cUkVv+o0/HbKBglGo66BbP?=
- =?us-ascii?Q?M197lOAJbWi6OpXoaWMYEkrypUq2Wa0ADEp57FVrychiYHCGlUER08XIRxgs?=
- =?us-ascii?Q?nrQicvuekrEc9lT/owVR62cUvtZGM6MIIFIg71y5nufyA9wwE87G2bjIuia5?=
- =?us-ascii?Q?XFJK5Sr/aimpxpCx3Oj4ugR7aJuo1JlTERP4o2OIthfw6tjuBPs9F/pp4RxO?=
- =?us-ascii?Q?7f9NFdc5kEX0clu/k3f3tFWjnSvaRx40+Bfu2cD2kDl0AANPGZTTrEIMr8GI?=
- =?us-ascii?Q?ejZq/QuC/53vPzjv5VL4VJDbhGwkT3f3McUVJbHYyY/YT+lbw1yeHR+oDfAx?=
- =?us-ascii?Q?a+On99vCgf+rL7Jy/D1anevvzisweFBwXekViOc11+0n9OYhsF6sYiwHHkCG?=
- =?us-ascii?Q?OhYIm0VMmk1ipt381uctGi9dUrmMm+sZu5556FNBq3i3+8VMa/s1CIWNrtes?=
- =?us-ascii?Q?yFJ4Ls7ptOQ5Lw0nfdxmP749Bpppgg92590d0rfXkHB17onhJR9GOYLfy4Dh?=
- =?us-ascii?Q?fb0fGg37f4FV9dbiDCRfHHNdsyRCUeMfVfZktpc+mWZtr61OdPEVhlyb8txh?=
- =?us-ascii?Q?Z12JHg4qKyk0cE0szAC74qeeW5bF5/l8/oaI5JPd/k34W4Rq3emKOQrAHmm6?=
- =?us-ascii?Q?FKnaHJI8lrMEzVpu84GUOloKNEuLZjjeqM/oIc2/3MgJ5ukoVeQ3JXNcVtWI?=
- =?us-ascii?Q?b5l5+N5tyXIP/O8F0kPJTBJQZYtJlGVH3mjs/kqL8Dl6klgrHMoY0ds0e3y4?=
- =?us-ascii?Q?UunGsM7Q0YZKgGxhxcb0ias9h7HBA01qNbwGFCjSxEU96HMG99NTd+DfsBJL?=
- =?us-ascii?Q?DBjP5d1+561o9rd36g6jL6g9VbtPHO5uvQCTis22hVTQZ2zyfrgU+aPr1I6h?=
- =?us-ascii?Q?yH9D5uAYV3pxNkZq0jDXpErZlA4eG43baSW7Kq6GnYiW+DAe6ez3Rfq+sjkj?=
- =?us-ascii?Q?Y27ouTIZx5KSFOTlCrO2EgcoUse3x2B8u7BylX+RMBN9tSy07d8/T70KJBB4?=
- =?us-ascii?Q?U75EZkaYfsOfc8vnez61OBcH2TS81yHg4ypRdFkYiqLVQZC5y1UMCM0nY/yH?=
- =?us-ascii?Q?Z3kkHocHxMIAeRmCA010eVfFoXrxr1WUzMe5+Rm/qoLFBw719P5vV3+z/xXY?=
- =?us-ascii?Q?8Scvf1GzpSqjfer904w40fZQ4h2t35GHBopBPRiMttwdKeWNKj9gi+dSN3RA?=
- =?us-ascii?Q?p1ROt7/4Svk3rNXuTOD2OjWW+8KfCA0x9HazWC5vm+gJl+x7fI127tNPF7HY?=
- =?us-ascii?Q?jyPz8kQB/p2wKzUhdOrtRrLsIALitx+IYMpF9ujRiVK0FTz2TPcfVl+G8yc0?=
- =?us-ascii?Q?aziQ4E6gww01Mw0KyiPx2i55M7Y8ihjv0+K00hq9czByKE3wdyRsk0xiVeDX?=
- =?us-ascii?Q?JEN4nopzq5DGADxOVQXO/yoCXXMRncCYQsdQaCBreQK7VJHYcCOVfGYzDCaB?=
- =?us-ascii?Q?vl4UrvOobTGliNm2ed7bbopjQYO745PvtSbUyaa4?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c343ac1b-21a4-499d-9469-08dc48b021e2
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2024 07:34:10.1673
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Fn9ISYZvPTBQOwsgCeXnVjJZ4PT0KwG55orYWG1HovAbY7HYtNonuewoUF/cEuRdochGIgnR9Wr+gY+pKy9AoA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7724
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 7/8] drm: zynqmp_dp: Split off several helper functions
+Content-Language: en-US
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Michal Simek <michal.simek@amd.com>, David Airlie <airlied@gmail.com>,
+ linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+ linux-arm-kernel@lists.infradead.org,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ dri-devel@lists.freedesktop.org
+References: <20240319225122.3048400-1-sean.anderson@linux.dev>
+ <20240319225122.3048400-8-sean.anderson@linux.dev>
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <20240319225122.3048400-8-sean.anderson@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Peng Fan <peng.fan@nxp.com>
+On 20/03/2024 00:51, Sean Anderson wrote:
+> In preparation for supporting compliance testing, split off several
+> helper functions. No functional change intended.
+> 
+> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+> 
+> (no changes since v1)
+> 
+>   drivers/gpu/drm/xlnx/zynqmp_dp.c | 49 ++++++++++++++++++++++----------
+>   1 file changed, 34 insertions(+), 15 deletions(-)
+> 
 
-It would be easier to locate the problem if domain name is printed out.
-And including a coding style update.
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- drivers/firmware/arm_scmi/perf.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
-index 345fff167b52..e98ca6d15b0c 100644
---- a/drivers/firmware/arm_scmi/perf.c
-+++ b/drivers/firmware/arm_scmi/perf.c
-@@ -79,7 +79,7 @@ struct scmi_msg_resp_perf_domain_attributes {
- 	__le32 rate_limit_us;
- 	__le32 sustained_freq_khz;
- 	__le32 sustained_perf_level;
--	    u8 name[SCMI_SHORT_NAME_MAX_SIZE];
-+	u8 name[SCMI_SHORT_NAME_MAX_SIZE];
- };
- 
- struct scmi_msg_perf_describe_levels {
-@@ -387,8 +387,8 @@ process_response_opp(struct device *dev, struct perf_dom_info *dom,
- 
- 	ret = xa_insert(&dom->opps_by_lvl, opp->perf, opp, GFP_KERNEL);
- 	if (ret)
--		dev_warn(dev, "Failed to add opps_by_lvl at %d - ret:%d\n",
--			 opp->perf, ret);
-+		dev_warn(dev, "Failed to add opps_by_lvl at %d for %s- ret:%d\n",
-+			 opp->perf, dom->info.name, ret);
- }
- 
- static inline void
-@@ -405,8 +405,8 @@ process_response_opp_v4(struct device *dev, struct perf_dom_info *dom,
- 
- 	ret = xa_insert(&dom->opps_by_lvl, opp->perf, opp, GFP_KERNEL);
- 	if (ret)
--		dev_warn(dev, "Failed to add opps_by_lvl at %d - ret:%d\n",
--			 opp->perf, ret);
-+		dev_warn(dev, "Failed to add opps_by_lvl at %d for %s - ret:%d\n",
-+			 opp->perf, dom->info.name, ret);
- 
- 	/* Note that PERF v4 reports always five 32-bit words */
- 	opp->indicative_freq = le32_to_cpu(r->opp[loop_idx].indicative_freq);
--- 
-2.37.1
+  Tomi
 
