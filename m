@@ -1,36 +1,35 @@
-Received: from mailscanner07.zoner.fi (mailscanner07.zoner.fi [5.44.246.16])
+Received: from mailscanner09.zoner.fi (mailscanner09.zoner.fi [5.44.246.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BC785931
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 18:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.44.246.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DCD485623
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 18:49:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.44.246.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710960541; cv=none; b=vDm+f65XwtVhfCWSrhq5D+vX1OKLIjaj9fyVXLNAcGSWBXv/vdhunvy5SyBpR//wvbisHi/FjX/dTdb2l6/f61LwePlfYe/DNXkdlXdSk7lRbzIoCPEZBSZj1fggBxHFPLep7aeJP5JMlcFWep7I29EXwsnbncoEatKFOy3UvWI=
+	t=1710960554; cv=none; b=SgDwIC4JT2jqbnIV5Eu/BykbzQHfqds9HnknT2oTZ8bkRsG/GvbWSXVfeXhkvrYrHKBn2LSDKbeHy2W1/uR5L4RW/ZWIKC9lrGjQ55fPpwATGhmYA5cXo9ASbHdwEnNBpSw8T6Mb9cjNrxTMkOuilgAPXOBFX1b3bORBoApyvNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710960541; c=relaxed/simple;
-	bh=2QBczl5jsg6EeCkH1elB74pqXKrCgP+CdZwrAvNomqc=;
+	s=arc-20240116; t=1710960554; c=relaxed/simple;
+	bh=ByoVqAuRdD1oD3TBj0N5QxLkM+fd/TEn0WNYkz4c3B0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dcJOHjjE29r1XqHXnjLNtSo2UtyASM6UOjxQwEFXOk2L1EJs19FCTm5Ky2nbyd+UrNANpa60Y9bbLZaljSwbF514q9ICAalf8xovfAqG8LYgFlYxp+rf/vs9elJIpsffJCPWyoZaBL8Kf1L5k8HOdH1JOBW8eme9eegCQF3BsRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org; spf=pass smtp.mailfrom=tukaani.org; arc=none smtp.client-ip=5.44.246.16
+	 MIME-Version; b=K3/lONLuUwx12vz/L/Om0skqGmAf9ZnmLwWZOMw9bUaw1v0SKcMM42GFoEsmAwMhBifIqhN220fp9eE4ozELF5/RZgkHYPpop/qVEAKsXTJNIuJWLk6xUxlrx20fmSmSpBMeVjTvFPklifyOe57uDQ8SZQ4sbT1dUsFYlK9QywU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org; spf=pass smtp.mailfrom=tukaani.org; arc=none smtp.client-ip=5.44.246.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tukaani.org
 Received: from www25.zoner.fi (www25.zoner.fi [84.34.147.45])
-	by mailscanner07.zoner.fi (Postfix) with ESMTPS id 62D3721257;
+	by mailscanner09.zoner.fi (Postfix) with ESMTPS id CC5652108E;
 	Wed, 20 Mar 2024 20:39:26 +0200 (EET)
 Received: from mail.zoner.fi ([84.34.147.244])
 	by www25.zoner.fi with esmtp (Exim 4.96.1-7-g79877b70e)
 	(envelope-from <lasse.collin@tukaani.org>)
-	id 1rn0qU-0001dW-0c;
+	id 1rn0qU-0001dW-23;
 	Wed, 20 Mar 2024 20:39:26 +0200
 From: Lasse Collin <lasse.collin@tukaani.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Lasse Collin <lasse.collin@tukaani.org>,
 	Jia Tan <jiat0218@gmail.com>,
-	Rui Li <me@lirui.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 04/11] xz: Documentation/staging/xz.rst: Revise thoroughly
-Date: Wed, 20 Mar 2024 20:38:37 +0200
-Message-ID: <20240320183846.19475-5-lasse.collin@tukaani.org>
+Subject: [PATCH 08/11] xz: Add ARM64 BCJ filter
+Date: Wed, 20 Mar 2024 20:38:41 +0200
+Message-ID: <20240320183846.19475-9-lasse.collin@tukaani.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240320183846.19475-1-lasse.collin@tukaani.org>
 References: <20240320183846.19475-1-lasse.collin@tukaani.org>
@@ -42,197 +41,154 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add SPDX license identifier.
+Also omit a duplicated check for XZ_DEC_ARM in xz_private.h.
 
-Omit xz_dec_test info. That isn't relevant to developers of non-XZ code.
+This filter can be used by Squashfs without modifications to the Squashfs
+kernel code (only needs support in userspace Squashfs-tools).
 
-Revise the docs about xzkern and add xzkern_with_size. The latter was
-added to scripts/Makefile.lib in the commit 7ce7e984ab2b218d ("kbuild:
-rename cmd_{bzip2,lzma,lzo,lz4,xzkern,zstd22}").
-
-Omit contact info as MAINTAINERS has it.
-
-Omit other info that is outdated or not relevant in the kernel context.
-
-Co-developed-by: Jia Tan <jiat0218@gmail.com>
-Signed-off-by: Jia Tan <jiat0218@gmail.com>
+Reviewed-by: Jia Tan <jiat0218@gmail.com>
 Signed-off-by: Lasse Collin <lasse.collin@tukaani.org>
 ---
- Documentation/staging/xz.rst | 130 +++++++++++++----------------------
- 1 file changed, 46 insertions(+), 84 deletions(-)
 
-diff --git a/Documentation/staging/xz.rst b/Documentation/staging/xz.rst
-index b2f5ff12a161..301b1eeff411 100644
---- a/Documentation/staging/xz.rst
-+++ b/Documentation/staging/xz.rst
-@@ -1,3 +1,5 @@
-+.. SPDX-License-Identifier: 0BSD
+Notes:
+    Compared to the first patch I submitted on 2023-11-08
+    (see <https://lore.kernel.org/lkml/20231108194448.674cd0ad@kaneli/>),
+    this has a minor tweak to make the for-loop condition faster.
+    
+    Squashfs-tools Git repository already has support for creating
+    file systems that use the ARM64 filter.
+
+ lib/xz/Kconfig      |  5 +++++
+ lib/xz/xz_dec_bcj.c | 52 ++++++++++++++++++++++++++++++++++++++++++++-
+ lib/xz/xz_private.h |  7 ++++--
+ 3 files changed, 61 insertions(+), 3 deletions(-)
+
+diff --git a/lib/xz/Kconfig b/lib/xz/Kconfig
+index 6b80453d8f54..1166627a87dc 100644
+--- a/lib/xz/Kconfig
++++ b/lib/xz/Kconfig
+@@ -30,6 +30,11 @@ config XZ_DEC_ARMTHUMB
+ 	default y
+ 	select XZ_DEC_BCJ
+ 
++config XZ_DEC_ARM64
++	bool "ARM64 BCJ filter decoder" if EXPERT
++	default y
++	select XZ_DEC_BCJ
 +
- ============================
- XZ data compression in Linux
- ============================
-@@ -6,21 +8,17 @@ Introduction
- ============
+ config XZ_DEC_SPARC
+ 	bool "SPARC BCJ filter decoder" if EXPERT
+ 	default y
+diff --git a/lib/xz/xz_dec_bcj.c b/lib/xz/xz_dec_bcj.c
+index e0b4bf4999c0..941198a8a55b 100644
+--- a/lib/xz/xz_dec_bcj.c
++++ b/lib/xz/xz_dec_bcj.c
+@@ -23,7 +23,8 @@ struct xz_dec_bcj {
+ 		BCJ_IA64 = 6,       /* Big or little endian */
+ 		BCJ_ARM = 7,        /* Little endian only */
+ 		BCJ_ARMTHUMB = 8,   /* Little endian only */
+-		BCJ_SPARC = 9       /* Big or little endian */
++		BCJ_SPARC = 9,      /* Big or little endian */
++		BCJ_ARM64 = 10      /* AArch64 */
+ 	} type;
  
- XZ is a general purpose data compression format with high compression
--ratio and relatively fast decompression. The primary compression
--algorithm (filter) is LZMA2. Additional filters can be used to improve
--compression ratio even further. E.g. Branch/Call/Jump (BCJ) filters
--improve compression ratio of executable data.
--
--The XZ decompressor in Linux is called XZ Embedded. It supports
--the LZMA2 filter and optionally also BCJ filters. CRC32 is supported
--for integrity checking. The home page of XZ Embedded is at
--<https://tukaani.org/xz/embedded.html>, where you can find the
--latest version and also information about using the code outside
--the Linux kernel.
-+ratio. The XZ decompressor in Linux is called XZ Embedded. It supports
-+the LZMA2 filter and optionally also Branch/Call/Jump (BCJ) filters
-+for executable code. CRC32 is supported for integrity checking. The
-+home page of XZ Embedded is at <https://xz.tukaani.org/xz-embedded/>.
-+There you can find the latest version which includes a few optional
-+extra features that aren't required in the Linux kernel and information
-+about using the code outside the Linux kernel.
+ 	/*
+@@ -346,6 +347,47 @@ static size_t bcj_sparc(struct xz_dec_bcj *s, uint8_t *buf, size_t size)
+ }
+ #endif
  
- For userspace, XZ Utils provide a zlib-like compression library
- and a gzip-like command line tool. XZ Utils can be downloaded from
--<https://tukaani.org/xz/>.
-+<https://xz.tukaani.org/xz-utils/>.
- 
- XZ related components in the kernel
- ===================================
-@@ -29,29 +27,24 @@ The xz_dec module provides XZ decompressor with single-call (buffer
- to buffer) and multi-call (stateful) APIs. The usage of the xz_dec
- module is documented in include/linux/xz.h.
- 
--The xz_dec_test module is for testing xz_dec. xz_dec_test is not
--useful unless you are hacking the XZ decompressor. xz_dec_test
--allocates a char device major dynamically to which one can write
--.xz files from userspace. The decompressed output is thrown away.
--Keep an eye on dmesg to see diagnostics printed by xz_dec_test.
--See the xz_dec_test source code for the details.
--
- For decompressing the kernel image, initramfs, and initrd, there
- is a wrapper function in lib/decompress_unxz.c. Its API is the
- same as in other decompress_*.c files, which is defined in
- include/linux/decompress/generic.h.
- 
--scripts/xz_wrap.sh is a wrapper for the xz command line tool found
--from XZ Utils. The wrapper sets compression options to values suitable
--for compressing the kernel image.
-+For kernel makefiles, three commands are provided for use with
-+$(call if_changed). They require the xz tool from XZ Utils.
++#ifdef XZ_DEC_ARM64
++static size_t bcj_arm64(struct xz_dec_bcj *s, uint8_t *buf, size_t size)
++{
++	size_t i;
++	uint32_t instr;
++	uint32_t addr;
 +
-+  - $(call if_changed,xzkern) is for compressing the kernel image.
-+    It runs the script scripts/xz_wrap.sh which uses arch-optimized
-+    options and a big LZMA2 dictionary.
++	size &= ~(size_t)3;
++
++	for (i = 0; i < size; i += 4) {
++		instr = get_unaligned_le32(buf + i);
++
++		if ((instr >> 26) == 0x25) {
++			/* BL instruction */
++			addr = instr - ((s->pos + (uint32_t)i) >> 2);
++			instr = 0x94000000 | (addr & 0x03FFFFFF);
++			put_unaligned_le32(instr, buf + i);
++
++		} else if ((instr & 0x9F000000) == 0x90000000) {
++			/* ADRP instruction */
++			addr = ((instr >> 29) & 3) | ((instr >> 3) & 0x1FFFFC);
++
++			/* Only convert values in the range +/-512 MiB. */
++			if ((addr + 0x020000) & 0x1C0000)
++				continue;
++
++			addr -= (s->pos + (uint32_t)i) >> 12;
++
++			instr &= 0x9000001F;
++			instr |= (addr & 3) << 29;
++			instr |= (addr & 0x03FFFC) << 3;
++			instr |= (0U - (addr & 0x020000)) & 0xE00000;
++
++			put_unaligned_le32(instr, buf + i);
++		}
++	}
++
++	return i;
++}
++#endif
++
+ /*
+  * Apply the selected BCJ filter. Update *pos and s->pos to match the amount
+  * of data that got filtered.
+@@ -392,6 +434,11 @@ static void bcj_apply(struct xz_dec_bcj *s,
+ 	case BCJ_SPARC:
+ 		filtered = bcj_sparc(s, buf, size);
+ 		break;
++#endif
++#ifdef XZ_DEC_ARM64
++	case BCJ_ARM64:
++		filtered = bcj_arm64(s, buf, size);
++		break;
+ #endif
+ 	default:
+ 		/* Never reached but silence compiler warnings. */
+@@ -565,6 +612,9 @@ XZ_EXTERN enum xz_ret xz_dec_bcj_reset(struct xz_dec_bcj *s, uint8_t id)
+ #endif
+ #ifdef XZ_DEC_SPARC
+ 	case BCJ_SPARC:
++#endif
++#ifdef XZ_DEC_ARM64
++	case BCJ_ARM64:
+ #endif
+ 		break;
  
--For kernel makefiles, two commands are provided for use with
--$(call if_needed). The kernel image should be compressed with
--$(call if_needed,xzkern) which will use a BCJ filter and a big LZMA2
--dictionary. It will also append a four-byte trailer containing the
--uncompressed size of the file, which is needed by the boot code.
--Other things should be compressed with $(call if_needed,xzmisc)
--which will use no BCJ filter and 1 MiB LZMA2 dictionary.
-+  - $(call if_changed,xzkern_with_size) is like xzkern above but this
-+    also appends a four-byte trailer containing the uncompressed size
-+    of the file, which is needed by the boot code on some archs.
-+
-+  - Other things can be compressed with $(call if_needed,xzmisc)
-+    which will use no BCJ filter and 1 MiB LZMA2 dictionary.
- 
- Notes on compression options
- ============================
-@@ -61,7 +54,7 @@ CRC32, make sure that you don't use some other integrity check type
- when encoding files that are supposed to be decoded by the kernel. With
- liblzma, you need to use either LZMA_CHECK_NONE or LZMA_CHECK_CRC32
- when encoding. With the xz command line tool, use --check=none or
----check=crc32.
-+--check=crc32 to override the default --check=crc64.
- 
- Using CRC32 is strongly recommended unless there is some other layer
- which will verify the integrity of the uncompressed data anyway.
-@@ -71,57 +64,26 @@ by the decoder; you can only change the integrity check type (or
- disable it) for the actual uncompressed data.
- 
- In userspace, LZMA2 is typically used with dictionary sizes of several
--megabytes. The decoder needs to have the dictionary in RAM, thus big
--dictionaries cannot be used for files that are intended to be decoded
--by the kernel. 1 MiB is probably the maximum reasonable dictionary
--size for in-kernel use (maybe more is OK for initramfs). The presets
--in XZ Utils may not be optimal when creating files for the kernel,
--so don't hesitate to use custom settings. Example::
--
--	xz --check=crc32 --lzma2=dict=512KiB inputfile
--
--An exception to above dictionary size limitation is when the decoder
--is used in single-call mode. Decompressing the kernel itself is an
--example of this situation. In single-call mode, the memory usage
--doesn't depend on the dictionary size, and it is perfectly fine to
--use a big dictionary: for maximum compression, the dictionary should
--be at least as big as the uncompressed data itself.
--
--Future plans
--============
--
--Creating a limited XZ encoder may be considered if people think it is
--useful. LZMA2 is slower to compress than e.g. Deflate or LZO even at
--the fastest settings, so it isn't clear if LZMA2 encoder is wanted
--into the kernel.
--
--Support for limited random-access reading is planned for the
--decompression code. I don't know if it could have any use in the
--kernel, but I know that it would be useful in some embedded projects
--outside the Linux kernel.
--
--Conformance to the .xz file format specification
--================================================
--
--There are a couple of corner cases where things have been simplified
--at expense of detecting errors as early as possible. These should not
--matter in practice all, since they don't cause security issues. But
--it is good to know this if testing the code e.g. with the test files
--from XZ Utils.
--
--Reporting bugs
--==============
--
--Before reporting a bug, please check that it's not fixed already
--at upstream. See <https://tukaani.org/xz/embedded.html> to get the
--latest code.
--
--Report bugs to <lasse.collin@tukaani.org> or visit #tukaani on
--Freenode and talk to Larhzu. I don't actively read LKML or other
--kernel-related mailing lists, so if there's something I should know,
--you should email to me personally or use IRC.
--
--Don't bother Igor Pavlov with questions about the XZ implementation
--in the kernel or about XZ Utils. While these two implementations
--include essential code that is directly based on Igor Pavlov's code,
--these implementations aren't maintained nor supported by him.
-+megabytes. The decoder needs to have the dictionary in RAM:
-+
-+  - In multi-call mode the dictionary is allocated as part of the
-+    decoder state. The reasonable maximum dictionary size for in-kernel
-+    use will depend on the target hardware: a few megabytes should be
-+    fine for desktop systems while 64 KiB to 1 MiB might be more
-+    appropriate on some embedded systems.
-+
-+  - In single-call mode the output buffer is used as the dictionary
-+    buffer. That is, the size of the dictionary doesn't affect the
-+    decompressor memory usage at all. Only the base data structures
-+    are allocated which take a little less than 30 KiB of memory.
-+    For the best compression, the dictionary should be at least
-+    as big as the uncompressed data. A notable example of single-call
-+    mode is decompressing the kernel itself (except on PowerPC).
-+
-+The compression presets in XZ Utils may not be optimal when creating
-+files for the kernel, so don't hesitate to use custom settings to,
-+for example, set the dictionary size. Also, xz may produce a smaller
-+file in single-threaded mode so setting that explicitly is recommended.
-+Example::
-+
-+    xz --threads=1 --check=crc32 --lzma2=dict=512KiB inputfile
+diff --git a/lib/xz/xz_private.h b/lib/xz/xz_private.h
+index 811add814ae4..307e0de8c260 100644
+--- a/lib/xz/xz_private.h
++++ b/lib/xz/xz_private.h
+@@ -36,6 +36,9 @@
+ #		ifdef CONFIG_XZ_DEC_SPARC
+ #			define XZ_DEC_SPARC
+ #		endif
++#		ifdef CONFIG_XZ_DEC_ARM64
++#			define XZ_DEC_ARM64
++#		endif
+ #		ifdef CONFIG_XZ_DEC_MICROLZMA
+ #			define XZ_DEC_MICROLZMA
+ #		endif
+@@ -97,9 +100,9 @@
+  */
+ #ifndef XZ_DEC_BCJ
+ #	if defined(XZ_DEC_X86) || defined(XZ_DEC_POWERPC) \
+-			|| defined(XZ_DEC_IA64) || defined(XZ_DEC_ARM) \
++			|| defined(XZ_DEC_IA64) \
+ 			|| defined(XZ_DEC_ARM) || defined(XZ_DEC_ARMTHUMB) \
+-			|| defined(XZ_DEC_SPARC)
++			|| defined(XZ_DEC_SPARC) || defined(XZ_DEC_ARM64)
+ #		define XZ_DEC_BCJ
+ #	endif
+ #endif
 -- 
 2.44.0
 
