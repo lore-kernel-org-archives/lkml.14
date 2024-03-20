@@ -1,34 +1,34 @@
 Received: from ssh248.corpemail.net (ssh248.corpemail.net [210.51.61.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC7D3FBB2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC553FBAF
 	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 08:58:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710925082; cv=none; b=lNS2Z5mOBIJWsZdZdK5eAtsebQT+Q7sGJcL9v3GE1t4StubZAy7HcY4Pzv4tBaYiXBTrulq57syXiC7StmaESDtDzirAwH1n6W3aFByqjiC3JWEukBS8+pe2wXBsah2ihY71emITj78euNPu7EkmKk4oI4VRUu0pRWK2fEZgPlE=
+	t=1710925082; cv=none; b=EGnQt2Dt8QkLuaCtEK0bERz8rXrO3blDjIW56k8LcIHx6cx1TU/q52XvrGXmm8VFXLgZpmTtE0Kdtw8g3QJE3zEniEeE8pPZOYeAl+NppM+VT9nKOSTnxHUnzjOp7/PDg8iGZ1NceReyxvJxz4c7U/fR4eogdawvDlmVjNN93nI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710925082; c=relaxed/simple;
-	bh=hH4XCpkO9AUdbLdm2eAXWrmDLlKqakm6XkL5rn0HaVk=;
+	bh=KTThakjEVLSm9rYtl4XZGoVpA/S/KB4K11m8jZ5OaAw=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QCR0Uea3CrJHqDcrOo4PD9qzqkSLjxPKk82YyBa61IPWfYTFtDYW8pgCe9rxKo6cZb3YY/PIXKcZC9+f3OCD2CTkmNRD9nF182RjOU2347TJm1wHCbJ60gk/sJZX3t3+1oi5th2FKH1lL1Iugwpm6vJzKPGITVN1e4O2eB53GMY=
+	 MIME-Version:Content-Type; b=GjWjvXX3aWEf+gFqe77g7Unw+hCSjydWwId6ONdOHcSNhD6osjH3kOhbjWcFDt5gozdnrQN3ACjsTUZW5e3ahEOH8636xN+D25ujiH9ZW9DUmiw7Af48U1xrIfecEZqbfZRD7DKB7ue7YMGJlITnBhqHDfyf5bwaweMQpshPxgk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.248
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
 Received: from ssh248.corpemail.net
-        by ssh248.corpemail.net ((D)) with ASMTP (SSL) id RDA00153;
-        Wed, 20 Mar 2024 16:57:53 +0800
+        by ssh248.corpemail.net ((D)) with ASMTP (SSL) id RDA00056;
+        Wed, 20 Mar 2024 16:57:56 +0800
 Received: from localhost.localdomain (10.94.17.92) by
  jtjnmail201610.home.langchao.com (10.100.2.10) with Microsoft SMTP Server id
- 15.1.2507.35; Wed, 20 Mar 2024 16:57:54 +0800
+ 15.1.2507.35; Wed, 20 Mar 2024 16:57:57 +0800
 From: Bo Liu <liubo03@inspur.com>
 To: <support.opensource@diasemi.com>, <lgirdwood@gmail.com>,
 	<broonie@kernel.org>, <matthias.bgg@gmail.com>,
 	<angelogioacchino.delregno@collabora.com>, <jagan@amarulasolutions.com>
 CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-mediatek@lists.infradead.org>, Bo Liu <liubo03@inspur.com>
-Subject: [PATCH v1 08/13] regulator: pfuze100: convert to use maple tree register cache
-Date: Wed, 20 Mar 2024 04:57:35 -0400
-Message-ID: <20240320085740.4604-9-liubo03@inspur.com>
+Subject: [PATCH v1 10/13] regulator: rtq6752: convert to use maple tree register cache
+Date: Wed, 20 Mar 2024 04:57:37 -0400
+Message-ID: <20240320085740.4604-11-liubo03@inspur.com>
 X-Mailer: git-send-email 2.18.2
 In-Reply-To: <20240320085740.4604-1-liubo03@inspur.com>
 References: <20240320085740.4604-1-liubo03@inspur.com>
@@ -39,7 +39,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
-tUid: 202432016575329b382f83f33a89471747f9a5084164d
+tUid: 2024320165756186053ed60c66470a40aeceec52f73fc
 X-Abuse-Reports-To: service@corp-email.com
 Abuse-Reports-To: service@corp-email.com
 X-Complaints-To: service@corp-email.com
@@ -51,22 +51,22 @@ more appropriate for modern systems than those made by the rbtree cache.
 
 Signed-off-by: Bo Liu <liubo03@inspur.com>
 ---
- drivers/regulator/pfuze100-regulator.c | 2 +-
+ drivers/regulator/rtq6752-regulator.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
-index 46854602b3ea..7c04870442d3 100644
---- a/drivers/regulator/pfuze100-regulator.c
-+++ b/drivers/regulator/pfuze100-regulator.c
-@@ -680,7 +680,7 @@ static const struct regmap_config pfuze_regmap_config = {
+diff --git a/drivers/regulator/rtq6752-regulator.c b/drivers/regulator/rtq6752-regulator.c
+index 8176e5ab0683..d35d844eff3b 100644
+--- a/drivers/regulator/rtq6752-regulator.c
++++ b/drivers/regulator/rtq6752-regulator.c
+@@ -209,7 +209,7 @@ static const struct reg_default rtq6752_reg_defaults[] = {
+ static const struct regmap_config rtq6752_regmap_config = {
  	.reg_bits = 8,
  	.val_bits = 8,
- 	.max_register = PFUZE_NUMREGS - 1,
 -	.cache_type = REGCACHE_RBTREE,
 +	.cache_type = REGCACHE_MAPLE,
- };
- 
- static int pfuze100_regulator_probe(struct i2c_client *client)
+ 	.max_register = RTQ6752_REG_FAULT,
+ 	.reg_defaults = rtq6752_reg_defaults,
+ 	.num_reg_defaults = ARRAY_SIZE(rtq6752_reg_defaults),
 -- 
 2.18.2
 
