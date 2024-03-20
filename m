@@ -1,187 +1,307 @@
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A753985A
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 09:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A1A38F9A;
+	Wed, 20 Mar 2024 09:27:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710926792; cv=none; b=T7SX3hf4yx+swE01BQ7oaBTUmHnSfTGKiNOu8eQpcugrOHX9bcirQKIgypxjhamOja9Hs2GgyDreqBlUvjxIaiBIJauD/dzxhCS//jYIa90Xy751h9AVX1nsk9d3AVfXobA+PdVCvhmhAlA4UTtO+ti5Vi40Lf8Oa1AhTOLXml8=
+	t=1710926856; cv=none; b=ZiCu8kxe0yIpFMP5q8jaU3m+AUHcfn7NZ1kgSpFSCOoUXX3XIuuft64ShboKFT1zkiDiGowODFtFHhoY8LXIqJg3T5JIdeV3LnH3a4nvgxeUM2m450ypczAQpQrDd3UWfnTkzwHtQatJ5QVS/ZTYzD+iPPy8qTtNDYYvtozowbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710926792; c=relaxed/simple;
-	bh=MfL/BPIO8j35wTci6CyzvMsrqWMQO8DyRGDFT7rsa10=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qKl0u3JC7XJypr6lU4n2Z/TGhzpT22no+9kazKiHeuPcAV1pmbt3wc3QDxQI+TlBu9ZNirMZiHXy4jj+na0Qv5iluPLjAYUT97vbMLKNwGbjc7b7p6k98H4WdmUjsfi3AEEIFErwfK+K91U2mnk0LA/NMdyi8sVCc5TH/QqBxPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=ak714nlQ; arc=none smtp.client-ip=209.85.160.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ak714nlQ"
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2222b96e4d2so3864591fac.3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 02:26:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1710926790; x=1711531590; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Wqg1Bd1Azr4G+6Sz9Ni1RmpJSEG5+j5GzmKPVhSgSGE=;
-        b=ak714nlQoYu+PFdULczADyD8Z5TP4TzXQpll558RWvc9ySasT1buCsK1yfA3tzg4Df
-         9a48RwCZ94rFUK5I1PdK5hDtd4/LKc/viBPJ8b0FJsOK5NIXuL0cnhLYJsTSUxU/F/FI
-         oVowb5hPZ7g5z92d//BnZPOxuSgFDeJ/bRJ39dVkFe5cfvC+FEwbnBgvj/NvBVqnBRXV
-         nyXa743Gc1Jqh9NbmjCXUWD3MBsY9gWAKPT0xiV8BS1kHvSZ7r1zogw3rI1p/a6JYDGa
-         Z/WaqCqrRzU+VEBUnT2xuldyTlPo0pjEJKilzl77brs9mhz/lKQ/H5/NvXZKaKtXvxxa
-         p6FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710926790; x=1711531590;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Wqg1Bd1Azr4G+6Sz9Ni1RmpJSEG5+j5GzmKPVhSgSGE=;
-        b=ukV6/c+w947hUUPsnymFT6vzLqVEF3nw7uNPeJ5xW7MeRkFM53WNiYLZfbZ+K78FYZ
-         oQBRkvhD5GjPV/jNIksN1KXEAlJ+b/5T1/2EcKvDwD1VjFe6sdeQh1YLAquWQQh7x0f/
-         xtrc9LvJaax/t/M0ZeHOvd0jG/RXfEUuu9I12NKbpyVZbiAwwlID+GBswbVKwQ46octu
-         yk2E5zjZYwvPBmxRbVLv4MqW4rJpfBns3bmHh0HuMoIpj3dbO3EBGuPSKPMqpbDqOtzK
-         ZuXggyi/LM1CBQTHqtY3TCOKq06pMd6+hwBjaL2XvHPSWip8/6Ls/Gw5NxN02UZVtIfj
-         gn9g==
-X-Forwarded-Encrypted: i=1; AJvYcCW+7vUlqS616bi/2D3jDC5eOMa6PkgS+LUwITm4PJc9RajzmPmlq1mkNtpNfp00pFgKJcoljE/fdPIO8kuPluz6yfLizmhtPyntnUMB
-X-Gm-Message-State: AOJu0Yym2hknWFZWsAY83CCJJVPcf+92pAI2CpZA/3T5aKPX3Rj4RGbC
-	7+rq3GcDzDKXJIGpfXpQDIkRn6d7f1YfoKGbR6yiDEi8vh4UFQY9nnUX/vGYcze6nTzrwf09TcD
-	+1MyvGHOsa5iMWNc+q9PZimJrPI5ip7R6alV+kA==
-X-Google-Smtp-Source: AGHT+IE8aYZ5bG6wSgxZaZS6rRpkFMqmPyeQj/o6j2TMk5GVEJO2WU2vuEWw9SNt63mCQzdymn2q8KqnE3GuTtt3fDM=
-X-Received: by 2002:a05:6870:c34c:b0:222:b47b:36fd with SMTP id
- e12-20020a056870c34c00b00222b47b36fdmr5505043oak.45.1710926790147; Wed, 20
- Mar 2024 02:26:30 -0700 (PDT)
+	s=arc-20240116; t=1710926856; c=relaxed/simple;
+	bh=gCY8+IzzEml3KRG7LF4Ty/7TwwwJmNOd33gPf4Oc57c=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=UW1Up5XdEUTP0NC4pkW7rR4Hi14A/a9EESHgA+E7/kMNqFzR6MGCHV34ZsAdALvsB0YWcc61JBPTo13kidOT1Hz8iK3ekK+RcvUeL5EIe9hSBd89p9M7SVAHHJ47LWAxNGuuMvsp7IH8cJUXNdtPqGqGjPLcpZ8rUQh1WADiKCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B833E1A00BB;
+	Wed, 20 Mar 2024 10:27:26 +0100 (CET)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 54E091A0091;
+	Wed, 20 Mar 2024 10:27:26 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 96184183AC99;
+	Wed, 20 Mar 2024 17:27:24 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: abelvesa@kernel.org,
+	peng.fan@nxp.com,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	linux-imx@nxp.com,
+	shengjiu.wang@gmail.com
+Cc: linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] clk: imx: imx8mp: Add pm_runtime support for power saving
+Date: Wed, 20 Mar 2024 17:10:51 +0800
+Message-Id: <1710925851-5643-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240318-zve-detection-v3-0-e12d42107fa8@sifive.com> <20240318-zve-detection-v3-2-e12d42107fa8@sifive.com>
-In-Reply-To: <20240318-zve-detection-v3-2-e12d42107fa8@sifive.com>
-From: yunhui cui <cuiyunhui@bytedance.com>
-Date: Wed, 20 Mar 2024 17:26:19 +0800
-Message-ID: <CAEEQ3wncGPZ8W5ZnGW=by4UZFwS5f_4BrfEJn8a2fe9F-0uB-w@mail.gmail.com>
-Subject: Re: [External] [PATCH v3 2/7] riscv: smp: fail booting up smp if
- inconsistent vlen is detected
-To: Andy Chiu <andy.chiu@sifive.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Vincent Chen <vincent.chen@sifive.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Conor Dooley <conor.dooley@microchip.com>, 
-	Conor Dooley <conor@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Jonathan Corbet <corbet@lwn.net>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Palmer Dabbelt <palmer@rivosinc.com>, Greentime Hu <greentime.hu@sifive.com>, 
-	Guo Ren <guoren@kernel.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Andy,
+Add pm_runtime support for power saving. In pm runtime suspend
+state the registers will be reseted, so add registers save
+in pm runtime suspend and restore them in pm runtime resume.
 
-On Mon, Mar 18, 2024 at 6:40=E2=80=AFPM Andy Chiu <andy.chiu@sifive.com> wr=
-ote:
->
-> Currently we only support Vector for SMP platforms, that is, all SMP
-> cores have the same vlenb. If we happen to detect a mismatching vlen, it
-> is better to just fail bootting it up to prevent further race/scheduling
-> issues.
->
-> Also, move .Lsecondary_park forward and chage `tail smp_callin` into a
-> regular call in the early assembly. So a core would be parked right
-> after a return from smp_callin. Note that a successful smp_callin
-> does not return.
->
-> Fixes: 7017858eb2d7 ("riscv: Introduce riscv_v_vsize to record size of Ve=
-ctor context")
-> Reported-by: Conor Dooley <conor.dooley@microchip.com>
-> Closes: https://lore.kernel.org/linux-riscv/20240228-vicinity-cornstalk-4=
-b8eb5fe5730@spud/
-> Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
-> ---
-> Changelog v2:
->  - update commit message to explain asm code change (Conor)
-> ---
->  arch/riscv/kernel/head.S    | 14 +++++++-------
->  arch/riscv/kernel/smpboot.c | 14 +++++++++-----
->  2 files changed, 16 insertions(+), 12 deletions(-)
->
-> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> index 4236a69c35cb..a158fa9f2656 100644
-> --- a/arch/riscv/kernel/head.S
-> +++ b/arch/riscv/kernel/head.S
-> @@ -165,9 +165,15 @@ secondary_start_sbi:
->  #endif
->         call .Lsetup_trap_vector
->         scs_load_current
-> -       tail smp_callin
-> +       call smp_callin
->  #endif /* CONFIG_SMP */
->
-> +.align 2
-> +.Lsecondary_park:
-> +       /* We lack SMP support or have too many harts, so park this hart =
-*/
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
+---
+changes in v2:
+- move pm_runtime_enable before the clk register
 
-It is best to modify the comments here, instead of "lack SMP support..."
+ drivers/clk/imx/clk-imx8mp-audiomix.c | 150 +++++++++++++++++++++++---
+ 1 file changed, 137 insertions(+), 13 deletions(-)
 
+diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
+index 55ed211a5e0b..6042280d6404 100644
+--- a/drivers/clk/imx/clk-imx8mp-audiomix.c
++++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
+@@ -7,10 +7,12 @@
+ 
+ #include <linux/clk-provider.h>
+ #include <linux/device.h>
++#include <linux/io.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
+ 
+ #include <dt-bindings/clock/imx8mp-clock.h>
+ 
+@@ -18,6 +20,7 @@
+ 
+ #define CLKEN0			0x000
+ #define CLKEN1			0x004
++#define EARC			0x200
+ #define SAI1_MCLK_SEL		0x300
+ #define SAI2_MCLK_SEL		0x304
+ #define SAI3_MCLK_SEL		0x308
+@@ -26,6 +29,12 @@
+ #define SAI7_MCLK_SEL		0x314
+ #define PDM_SEL			0x318
+ #define SAI_PLL_GNRL_CTL	0x400
++#define SAI_PLL_FDIVL_CTL0	0x404
++#define SAI_PLL_FDIVL_CTL1	0x408
++#define SAI_PLL_SSCG_CTL	0x40C
++#define SAI_PLL_MNIT_CTL	0x410
++#define IPG_LP_CTRL		0x504
++#define REGS_NUM		16
+ 
+ #define SAIn_MCLK1_PARENT(n)						\
+ static const struct clk_parent_data					\
+@@ -182,13 +191,65 @@ static struct clk_imx8mp_audiomix_sel sels[] = {
+ 	CLK_SAIn(7)
+ };
+ 
++struct clk_imx8mp_audiomix_regs {
++	u32 regs_num;
++	u32 regs_off[];
++};
++
++static const struct clk_imx8mp_audiomix_regs audiomix_regs = {
++	.regs_num = REGS_NUM,
++	.regs_off = {
++		CLKEN0,
++		CLKEN1,
++		EARC,
++		SAI1_MCLK_SEL,
++		SAI2_MCLK_SEL,
++		SAI3_MCLK_SEL,
++		SAI5_MCLK_SEL,
++		SAI6_MCLK_SEL,
++		SAI7_MCLK_SEL,
++		PDM_SEL,
++		SAI_PLL_GNRL_CTL,
++		SAI_PLL_FDIVL_CTL0,
++		SAI_PLL_FDIVL_CTL1,
++		SAI_PLL_SSCG_CTL,
++		SAI_PLL_MNIT_CTL,
++		IPG_LP_CTRL
++	},
++};
++
++struct clk_imx8mp_audiomix_drvdata {
++	void __iomem *base;
++	u32 regs_save[REGS_NUM];
++};
++
++static void clk_imx8mp_audiomix_save_restore(struct device *dev, bool save)
++{
++	struct clk_imx8mp_audiomix_drvdata *drvdata = dev_get_drvdata(dev);
++	void __iomem *base = drvdata->base;
++	int i;
++
++	if (save) {
++		for (i = 0; i < audiomix_regs.regs_num; i++)
++			drvdata->regs_save[i] = readl(base + audiomix_regs.regs_off[i]);
++	} else {
++		for (i = 0; i < audiomix_regs.regs_num; i++)
++			writel(drvdata->regs_save[i], base + audiomix_regs.regs_off[i]);
++	}
++}
++
+ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
+ {
++	struct clk_imx8mp_audiomix_drvdata *drvdata;
+ 	struct clk_hw_onecell_data *priv;
+ 	struct device *dev = &pdev->dev;
+ 	void __iomem *base;
+ 	struct clk_hw *hw;
+-	int i;
++	int i, ret;
++
++	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
++	if (!drvdata)
++		return -ENOMEM;
+ 
+ 	priv = devm_kzalloc(dev,
+ 			    struct_size(priv, hws, IMX8MP_CLK_AUDIOMIX_END),
+@@ -202,6 +263,18 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
+ 
++	drvdata->base = base;
++	dev_set_drvdata(dev, drvdata);
++
++	/*
++	 * pm_runtime_enable needs to be called before clk register.
++	 * That is to make core->rpm_enabled to be true for clock
++	 * usage.
++	 */
++	pm_runtime_get_noresume(dev);
++	pm_runtime_set_active(dev);
++	pm_runtime_enable(dev);
++
+ 	for (i = 0; i < ARRAY_SIZE(sels); i++) {
+ 		if (sels[i].num_parents == 1) {
+ 			hw = devm_clk_hw_register_gate_parent_data(dev,
+@@ -216,8 +289,10 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
+ 				0, NULL, NULL);
+ 		}
+ 
+-		if (IS_ERR(hw))
+-			return PTR_ERR(hw);
++		if (IS_ERR(hw)) {
++			ret = PTR_ERR(hw);
++			goto err_clk_register;
++		}
+ 
+ 		priv->hws[sels[i].clkid] = hw;
+ 	}
+@@ -232,8 +307,10 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
+ 
+ 	hw = imx_dev_clk_hw_pll14xx(dev, "sai_pll", "sai_pll_ref_sel",
+ 				    base + 0x400, &imx_1443x_pll);
+-	if (IS_ERR(hw))
+-		return PTR_ERR(hw);
++	if (IS_ERR(hw)) {
++		ret = PTR_ERR(hw);
++		goto err_clk_register;
++	}
+ 	priv->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL] = hw;
+ 
+ 	hw = devm_clk_hw_register_mux_parent_data_table(dev,
+@@ -241,26 +318,71 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
+ 		ARRAY_SIZE(clk_imx8mp_audiomix_pll_bypass_sels),
+ 		CLK_SET_RATE_NO_REPARENT | CLK_SET_RATE_PARENT,
+ 		base + SAI_PLL_GNRL_CTL, 16, 1, 0, NULL, NULL);
+-	if (IS_ERR(hw))
+-		return PTR_ERR(hw);
++	if (IS_ERR(hw)) {
++		ret = PTR_ERR(hw);
++		goto err_clk_register;
++	}
++
+ 	priv->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_BYPASS] = hw;
+ 
+ 	hw = devm_clk_hw_register_gate(dev, "sai_pll_out", "sai_pll_bypass",
+ 				       0, base + SAI_PLL_GNRL_CTL, 13,
+ 				       0, NULL);
+-	if (IS_ERR(hw))
+-		return PTR_ERR(hw);
++	if (IS_ERR(hw)) {
++		ret = PTR_ERR(hw);
++		goto err_clk_register;
++	}
+ 	priv->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_OUT] = hw;
+ 
+ 	hw = devm_clk_hw_register_fixed_factor(dev, "sai_pll_out_div2",
+ 					       "sai_pll_out", 0, 1, 2);
+-	if (IS_ERR(hw))
+-		return PTR_ERR(hw);
++	if (IS_ERR(hw)) {
++		ret = PTR_ERR(hw);
++		goto err_clk_register;
++	}
++
++	ret = devm_of_clk_add_hw_provider(&pdev->dev, of_clk_hw_onecell_get,
++					  priv);
++	if (ret)
++		goto err_clk_register;
++
++	pm_runtime_put_sync(dev);
++	return 0;
++
++err_clk_register:
++	pm_runtime_put_sync(dev);
++	pm_runtime_disable(dev);
++	return ret;
++}
++
++static int clk_imx8mp_audiomix_remove(struct platform_device *pdev)
++{
++	pm_runtime_disable(&pdev->dev);
+ 
+-	return devm_of_clk_add_hw_provider(&pdev->dev, of_clk_hw_onecell_get,
+-					   priv);
++	return 0;
+ }
+ 
++static int clk_imx8mp_audiomix_runtime_suspend(struct device *dev)
++{
++	clk_imx8mp_audiomix_save_restore(dev, true);
++
++	return 0;
++}
++
++static int clk_imx8mp_audiomix_runtime_resume(struct device *dev)
++{
++	clk_imx8mp_audiomix_save_restore(dev, false);
++
++	return 0;
++}
++
++static const struct dev_pm_ops clk_imx8mp_audiomix_pm_ops = {
++	SET_RUNTIME_PM_OPS(clk_imx8mp_audiomix_runtime_suspend,
++			   clk_imx8mp_audiomix_runtime_resume, NULL)
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++				      pm_runtime_force_resume)
++};
++
+ static const struct of_device_id clk_imx8mp_audiomix_of_match[] = {
+ 	{ .compatible = "fsl,imx8mp-audio-blk-ctrl" },
+ 	{ /* sentinel */ }
+@@ -269,9 +391,11 @@ MODULE_DEVICE_TABLE(of, clk_imx8mp_audiomix_of_match);
+ 
+ static struct platform_driver clk_imx8mp_audiomix_driver = {
+ 	.probe	= clk_imx8mp_audiomix_probe,
++	.remove = clk_imx8mp_audiomix_remove,
+ 	.driver = {
+ 		.name = "imx8mp-audio-blk-ctrl",
+ 		.of_match_table = clk_imx8mp_audiomix_of_match,
++		.pm = &clk_imx8mp_audiomix_pm_ops,
+ 	},
+ };
+ 
+-- 
+2.34.1
 
-> +       wfi
-> +       j .Lsecondary_park
-> +
->  .align 2
->  .Lsetup_trap_vector:
->         /* Set trap vector to exception handler */
-> @@ -181,12 +187,6 @@ secondary_start_sbi:
->         csrw CSR_SCRATCH, zero
->         ret
->
-> -.align 2
-> -.Lsecondary_park:
-> -       /* We lack SMP support or have too many harts, so park this hart =
-*/
-> -       wfi
-> -       j .Lsecondary_park
-> -
->  SYM_CODE_END(_start)
->
->  SYM_CODE_START(_start_kernel)
-> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
-> index cfbe4b840d42..1f86ee10192f 100644
-> --- a/arch/riscv/kernel/smpboot.c
-> +++ b/arch/riscv/kernel/smpboot.c
-> @@ -218,6 +218,15 @@ asmlinkage __visible void smp_callin(void)
->         struct mm_struct *mm =3D &init_mm;
->         unsigned int curr_cpuid =3D smp_processor_id();
->
-> +       if (has_vector()) {
-> +               /*
-> +                * Return as early as possible so the hart with a mismatc=
-hing
-> +                * vlen won't boot.
-> +                */
-> +               if (riscv_v_setup_vsize())
-> +                       return;
-> +       }
-> +
->         /* All kernel threads share the same mm context.  */
->         mmgrab(mm);
->         current->active_mm =3D mm;
-> @@ -230,11 +239,6 @@ asmlinkage __visible void smp_callin(void)
->         numa_add_cpu(curr_cpuid);
->         set_cpu_online(curr_cpuid, 1);
->
-> -       if (has_vector()) {
-> -               if (riscv_v_setup_vsize())
-> -                       elf_hwcap &=3D ~COMPAT_HWCAP_ISA_V;
-> -       }
-> -
->         riscv_user_isa_enable();
->
->         /*
->
-> --
-> 2.44.0.rc2
->
->
-
-Thanks,
-Yunhui
