@@ -1,194 +1,115 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BAF6481A0;
-	Wed, 20 Mar 2024 08:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3683BBF2
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 08:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710924440; cv=none; b=BEyGJNSsjw703Uiso3/TtAXqDdp/3n/+QqB3Kfb/BJIWtmfmNfuqvnHyYV1mNSNn0T5cj19Eur0JKBC/Ceo5rc8+fZqniITPNLt/IBc1p6JGqfy6idPyIkIYFKDSom/jQFXAH5KVB01jTWt4FWyhh42OEq28AaX8AM8LOUsZlqI=
+	t=1710924456; cv=none; b=SV6O87u+V5vjEAqyU+pR0jUoB6UZp5GGvTHcybapjgPAj+qKKABcEW+VguU2xJZwiv/xMBizKIcEpcnWkpX66d1e8TQps4Q6uOXRJllFTcI+N3CspU0SpkhMgMqB7CCQ6/dXTcoytZYL9bjH2vYOlxbBrj8KKGCP82+1ufrYFNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710924440; c=relaxed/simple;
-	bh=0YKEkgypwgch25SP6MvI0cxNHNU2GFwhWtjZ1AP0+fs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rK6TtFdZQk4+RtU9qOstOcwUb1/2YlhHMU/1F6rHK6k/u1FTlWTGgt4RCsqiLEp06EZQvkHZEMet4ORY/L0ZCHt0er0gYESyDdUnFvxRiZQYg1WXaD1xvD7bAYpJA2OSKcUkI24v1L4igW4qFJ23QA/EMlXVrXgLKm//vu+NEhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=buZaTYKI; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710924456; c=relaxed/simple;
+	bh=YBVrj3LlbmgFn+2nUmXC60swRuScJqKfxHTTV6P9sDA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OlPKQs+Frec7ZX+o7471SoGf7bjnmBk0g+ysWlQbgrnS3aOXb6sAo8x/87OrYMz9ocrrtszVesI0Vf4baNNQ2s6HG+OuMLUdvSfdz5QErlC5KOf57n0uwTR1tKhZFheQ8lifc97+Wvs4xg00FpBBYMqFoEkUnIDitFfvGV71PR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aLZJSJL/; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="buZaTYKI"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1dee5ef2a7bso45764415ad.1;
-        Wed, 20 Mar 2024 01:47:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710924439; x=1711529239; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KmEZR0TZIkomRjFeSaPJAkhIKg2H/Yce/rgiIixVy2k=;
-        b=buZaTYKIQOouIBhPKCvNVj62BjrLCjjsxRXrosamb/XML2+ka1GCdrFcflAXQG2VnH
-         AXBR92FYWIEVcEApET/rYb5jJAwYeX88nnbcAvqx9iop1zGrMewYBLr/Kr9rivckt2AS
-         T3QG63EcdTuTLrkFLt/r61pYP8JpyBChQqmDZ0E4bU9i/xiEz+OpVsrJlliGY4pOwqnx
-         MrgCUhlYN/+L/98YPj6K35Of1lQRMSRLPALHyTEoo2UsGX/q26vWk+YlQ7kO3XsXaaWQ
-         xRaPMyjPX+1fp4mtz6APQ6CD17RR1680WiwHTv/+jpb+Iq4cH2/ZrX2F0/otwEHXXs5O
-         KasQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710924439; x=1711529239;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KmEZR0TZIkomRjFeSaPJAkhIKg2H/Yce/rgiIixVy2k=;
-        b=KAtCbN8TfY+OOZiECXazBF2T3slfPX5OMzZ4U/WefA6xr8ngqbNHzZucT3Rxo9dR+9
-         u+oLqmyKBfiNzu05ajIRSB8cE1rc+rpiV8txUKkZhyrpo2OpW1ehVU3eMmYYl5SWz9pB
-         N5Zp7LQQciOyF+QGTdyCYrCHNgYNkAzAeT4npBBUhlVe5Wiz/uANg11TBDti6e+/auEF
-         8DFxnvUKCjk5kWb32UnBPhPS9c/UQlRLSuIXHp7hF2o7hKO3AHvkAGUQP3mj54c1NnEr
-         Q0FgrY6qtqh+QgEs/k6d47J79gD/IlSNntGDvcUpACz6ScYvCbUlMyf/SWO+14VifXEX
-         D/uA==
-X-Forwarded-Encrypted: i=1; AJvYcCWOezXwoUayUuBMq5UMUedIkTsruoFgxcAQgT67YUgH8iL6jk4J4trEnoowsccU6bAhu1wSUzRr/rA90800PvLMyIen7z6FirWb96Dqm6B2QcBndvlFjD4x6tqkSA1ttBTHVUru7E40qFWefzz2OytFMDV/0qtvcg/k/fMIQ6ABpA0ToQ==
-X-Gm-Message-State: AOJu0YyqId/NiHCupAKx9P8UuAhvoWjDEsJnD32rODSRFYgK2ui6EJUD
-	xp59T5c8ESdSa5SOWS0GKhbO+TDHDgFgRYHpozyd8jSaLJfI1Y7a
-X-Google-Smtp-Source: AGHT+IGlcuR5ZnxZUBeNvUcBhE0/p/PPIX2gmZEeCtKUIaJ7LbM8JSisiCYiBT45KMUL11ck+H0/PQ==
-X-Received: by 2002:a17:902:ec89:b0:1e0:73d:9196 with SMTP id x9-20020a170902ec8900b001e0073d9196mr12960958plg.46.1710924438602;
-        Wed, 20 Mar 2024 01:47:18 -0700 (PDT)
-Received: from localhost.localdomain ([2409:40f4:a4:a590:2a15:ea77:7177:18e3])
-        by smtp.gmail.com with ESMTPSA id x7-20020a170902a38700b001dee4bd73e0sm11768854pla.59.2024.03.20.01.47.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Mar 2024 01:47:18 -0700 (PDT)
-From: Animesh Agarwal <animeshagarwal28@gmail.com>
-To: 
-Cc: animeshagarwal28@gmail.com,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] dt-bindings: i2c: nxp,pnx-i2c: Convert to dtschema
-Date: Wed, 20 Mar 2024 14:16:20 +0530
-Message-ID: <20240320084623.82248-1-animeshagarwal28@gmail.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aLZJSJL/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710924454;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rFk7i7r/Rth0uc1ovX1/w3IsN+7Z5+mbDrMRpvOVhNM=;
+	b=aLZJSJL/+MqwPyu3Lmi2IhilGxKPkVXp4xOmgmjsEQnELPYq2ufbDm/xqVh+/BdVvxKcQt
+	RZhLQzYeBJQNaKZICG8qThr4eRDHV8nTfDtMz+ypZoV/+GPzAdTwlZ0J5corqiZwo5tjs+
+	LnueiNCt+OoMrMyCk5sCj5qAmFSDYvg=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-628-iyzdhYmPMSuJGahHdL-Mxg-1; Wed,
+ 20 Mar 2024 04:47:30 -0400
+X-MC-Unique: iyzdhYmPMSuJGahHdL-Mxg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 409D02806044;
+	Wed, 20 Mar 2024 08:47:30 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.12])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 5AFA810E47;
+	Wed, 20 Mar 2024 08:47:29 +0000 (UTC)
+Date: Wed, 20 Mar 2024 16:47:22 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+	linuxppc-dev@lists.ozlabs.org, akpm@linux-foundation.org
+Subject: Re: [PATCH 4/6] mm/mm_init.c: remove meaningless calculation of
+ zone->managed_pages in free_area_init_core()
+Message-ID: <ZfqimkC+L3M/3AYf@MiWiFi-R3L-srv>
+References: <20240318142138.783350-1-bhe@redhat.com>
+ <20240318142138.783350-5-bhe@redhat.com>
+ <Zfm6gzhKUehLwM5-@kernel.org>
+ <ZfqbygfNmFKpBCfR@MiWiFi-R3L-srv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZfqbygfNmFKpBCfR@MiWiFi-R3L-srv>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-Convert the NXP PNX I2C Controller bindings to DT schema.
-Keep only one example in DT schema to remove redundancy.
+On 03/20/24 at 04:18pm, Baoquan He wrote:
+> On 03/19/24 at 06:17pm, Mike Rapoport wrote:
+> > On Mon, Mar 18, 2024 at 10:21:36PM +0800, Baoquan He wrote:
+> > > Currently, in free_area_init_core(), when initialize zone's field, a
+> > > rough value is set to zone->managed_pages. That value is calculated by
+> > > (zone->present_pages - memmap_pages).
+> > > 
+> > > In the meantime, add the value to nr_all_pages and nr_kernel_pages which
+> > > represent all free pages of system (only low memory or including HIGHMEM
+> > > memory separately). Both of them are gonna be used in
+> > > alloc_large_system_hash().
+> > > 
+> > > However, the rough calculation and setting of zone->managed_pages is
+> > > meaningless because
+> > >   a) memmap pages are allocated on units of node in sparse_init() or
+> > >      alloc_node_mem_map(pgdat); The simple (zone->present_pages -
+> > >      memmap_pages) is too rough to make sense for zone;
+> > >   b) the set zone->managed_pages will be zeroed out and reset with
+> > >      acutal value in mem_init() via memblock_free_all(). Before the
+> > >      resetting, no buddy allocation request is issued.
+> > > 
+> > > Here, remove the meaningless and complicated calculation of
+> > > (zone->present_pages - memmap_pages), directly set zone->present_pages to
+> > > zone->managed_pages. It will be adjusted in mem_init().
+> > 
+> > Do you mean "set zone->managed_pages to zone->present_pages"?
+> 
+> Hmm, maybe 'set zone->managed_pages as zone->present_pages'
+>             or 
+>            'assign zone->present_pages to zone->managed_pages'
+> which is more precise.
+> 
+> Wwill update.
+> 
+> > 
+> > I think we can just set zone->managed_pages to 0 in free_area_init_core().
+> > Anyway it will be reset before the first use.
 
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
+Rethink about this, it's better to set zone->managed_pages to 0 because
+there isn't any page added to buddy. Will update.
 
----
-Changes in v3:
-- Added a missing whitespace character in maintainers.
-- Added parent directory in subject prefix.
-
-Changes in v2:
-- Changed the file name from nxp,i2c-pnx.yaml to nxp,pnx-i2c.yaml.
-- Dropped properties which were already defined in the top level $ref.
-- Dropped unused labels in example.
----
- .../devicetree/bindings/i2c/i2c-pnx.txt       | 34 --------------
- .../devicetree/bindings/i2c/nxp,pnx-i2c.yaml  | 46 +++++++++++++++++++
- 2 files changed, 46 insertions(+), 34 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-pnx.txt
- create mode 100644 Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml
-
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-pnx.txt b/Documentation/devicetree/bindings/i2c/i2c-pnx.txt
-deleted file mode 100644
-index 2a59006cf79e..000000000000
---- a/Documentation/devicetree/bindings/i2c/i2c-pnx.txt
-+++ /dev/null
-@@ -1,34 +0,0 @@
--* NXP PNX I2C Controller
--
--Required properties:
--
-- - reg: Offset and length of the register set for the device
-- - compatible: should be "nxp,pnx-i2c"
-- - interrupts: configure one interrupt line
-- - #address-cells: always 1 (for i2c addresses)
-- - #size-cells: always 0
--
--Optional properties:
--
-- - clock-frequency: desired I2C bus clock frequency in Hz, Default: 100000 Hz
--
--Examples:
--
--	i2c1: i2c@400a0000 {
--		compatible = "nxp,pnx-i2c";
--		reg = <0x400a0000 0x100>;
--		interrupt-parent = <&mic>;
--		interrupts = <51 0>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--	};
--
--	i2c2: i2c@400a8000 {
--		compatible = "nxp,pnx-i2c";
--		reg = <0x400a8000 0x100>;
--		interrupt-parent = <&mic>;
--		interrupts = <50 0>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--		clock-frequency = <100000>;
--	};
-diff --git a/Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml b/Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml
-new file mode 100644
-index 000000000000..798a6939b894
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml
-@@ -0,0 +1,46 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/i2c/nxp,pnx-i2c.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: NXP PNX I2C Controller
-+
-+maintainers:
-+  - Animesh Agarwal <animeshagarwal28@gmail.com>
-+
-+allOf:
-+  - $ref: /schemas/i2c/i2c-controller.yaml#
-+
-+properties:
-+  compatible:
-+    const: nxp,pnx-i2c
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clock-frequency:
-+    default: 100000
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    i2c@400a0000 {
-+        compatible = "nxp,pnx-i2c";
-+        reg = <0x400a0000 0x100>;
-+        interrupt-parent = <&mic>;
-+        interrupts = <51 0>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+    };
--- 
-2.44.0
+> 
+> Yeah, setting to 0 is also fine. I thougt of 0 ever. Considering
+> zone->present_pages is closer value to actual zone->managed_pages
+> than 0, and it may be needed in the future in some way before
+> mem_init(). If no strong objection, I will keep the assigning
+> 'zone->present_pages' to 'zone->managed_pages'.
+> 
+> Thanks again for careful reviewing.
+> 
 
