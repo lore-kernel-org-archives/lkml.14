@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F738592E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90B585951
 	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 20:50:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710967839; cv=none; b=sd1CupeEfKl0gEwf2tBs1WFuxBFeuoLZQS9Ijvn9MXaiP4J33F7n43K+Bo68apYn3EKNWUwFqM+M7XLfPNOFRkzrhMbrdmbKsMmYbhFXUZPpTcFWosejRAF/J5i4vrpLmUHeNn4k6Bbo27HmaY26zZ1e/8dL0MSGRctLKlKQbxo=
+	t=1710967839; cv=none; b=texvncaiNjLIt7B6FhnEDvYUB47j9of1lROf49ydqlYUVPrxYs558PvedynCsPSXmYy3TDVN8yJycv4WQYTnY1iswqFIBsOhighwPdxGuSwcCePTAQn2AzG/yl4aSnyaGNJRhivPyWpYNzOvm/OIV75bWrqURxsvVSElNcv8QCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710967839; c=relaxed/simple;
-	bh=l/9iJWoH/f/YfhX2gaiUfb3YoSSB39W0tME/SJHepYs=;
+	bh=x9hRnCs/W82hA20jbvKpA85eC7xzuNtacPnbZFWHB60=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=WCxLwAB3ilOk0eCoY7E4jt22RolTuHCihJpVrQJ669IEnIq8Tu/6pS9jt0160k8sl6XjgtFI9t1I09MlvWS5cdrZSBj/Sjfhk3qeVHWFjcCK4oEXdP97PVM8AwyyQtW0OVOoWfRp0TFHn901BP5OY3+7DiTn7tq4oULq5lPkAOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g5qlDElu; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=kZCYb24MkHLIvAas1ExWT7dWsMoIx6Gi3056FC5beldYoVFMVBLway1ltLovVh5cO6GtmOUTX25Lw3kaJA34Yve/jUzoQSBkpak2wFYzMhBZR1PvSdSLOVsydXCg44H7aUsjeDysHeBt1tGqKnomqBIREcWGvhAYnWuEsExA5Fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dTGTYnPJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g5qlDElu"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7B498C116B1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dTGTYnPJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5DD8EC43143;
 	Wed, 20 Mar 2024 20:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1710967839;
-	bh=l/9iJWoH/f/YfhX2gaiUfb3YoSSB39W0tME/SJHepYs=;
+	bh=x9hRnCs/W82hA20jbvKpA85eC7xzuNtacPnbZFWHB60=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=g5qlDElupvSOTbFHPMC+aQf+KLiBRimzmBFUIkAq6cUde8e5omhOmI6aH7bqZt9vU
-	 Ow8bR2/36Zs1w7SFjAIFPahmAuuRJhDGSGVvRjas1HTlGPsaKuvwHH+3+re2BDZ4hO
-	 VtJ8BE0j11uBxh8KAk4tHoDcp3nVv9MnRlnFeYtkYEPX8VGzJWPF9xsdbrQjCYnhRd
-	 R7CwrmURhpK+oTx0VAH/L2pkx1YnEl75qm4XEKn4ueQ890hyMpM1ZrrfQkXrEdJAEx
-	 Q0XT1eI5POlDLAWRbsSJLRxfju81CjEXVUM8wVzvjx+SOf2nobLHSplpretWSIFgNG
-	 pjP5da33R2W2g==
+	b=dTGTYnPJPH05yZ4VXqcyl1PlIy9mVMiD2INE2pLDgJaHDGwF96rAY/5jOgPRWJm5Q
+	 GHv/mSMJvvXOtp7qR/bU4JKGxZyr/nuXQjm7MrwCivr5XaXyZ00h7V0QKI4qeSLmHS
+	 kEq6xnFwj9elxNEuC2Mc5BQfb24/YdBQ77Fct6I1MIOOfLV/CbNo/KNzz6DDhkbLUp
+	 daws6tG2D4XQOXdYaYJr11UemCG1HhCEJIcbuIHtM5VnIFDFn3zZplirxyzpyYxeT7
+	 q7+xvTaiyzqC87vWO812w5PD6DbBrvmcVIZuEO4evH7UUyIf1drcUrXrS7PP5BFqIr
+	 8KqFwLCyInmVA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7388AD84BB0;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 56D4AD95060;
 	Wed, 20 Mar 2024 20:50:39 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,36 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv: Only flush the mm icache when setting an exec pte
+Subject: Re: [PATCH V2] riscv: vector: Fix a typo of preempt_v
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <171096783946.6804.8158757772819473697.git-patchwork-notify@kernel.org>
+ <171096783935.6804.17753775200299684808.git-patchwork-notify@kernel.org>
 Date: Wed, 20 Mar 2024 20:50:39 +0000
-References: <20240202124711.256146-1-alexghiti@rivosinc.com>
-In-Reply-To: <20240202124711.256146-1-alexghiti@rivosinc.com>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
+References: <20240221100252.3990445-1-songshuaishuai@tinylab.org>
+In-Reply-To: <20240221100252.3990445-1-songshuaishuai@tinylab.org>
+To: Song Shuai <songshuaishuai@tinylab.org>
 Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, andy.chiu@sifive.com,
+ ebiggers@google.com, vincent.chen@sifive.com, greentime.hu@sifive.com,
+ linux-kernel@vger.kernel.org, andybnac@gmail.com
 
 Hello:
 
 This patch was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Fri,  2 Feb 2024 13:47:11 +0100 you wrote:
-> We used to emit a flush_icache_all() whenever a dirty executable
-> mapping is set in the page table but we can instead call
-> flush_icache_mm() which will only send IPIs to cores that currently run
-> this mm and add a deferred icache flush to the others.
+On Wed, 21 Feb 2024 18:02:52 +0800 you wrote:
+> The term "preempt_v" represents the RISCV_PREEMPT_V field of riscv_v_flags
+> and is used in lots of comments.
 > 
-> The number of calls to sbi_remote_fence_i() (tested without IPI
-> support):
+> Here corrects the miss-spelling "prempt_v". And s/acheived/achieved/.
+> 
+> Reviewed-by: Andy Chiu <andybnac@gmail.com>
+> Signed-off-by: Song Shuai <songshuaishuai@tinylab.org>
 > 
 > [...]
 
 Here is the summary with links:
-  - riscv: Only flush the mm icache when setting an exec pte
-    https://git.kernel.org/riscv/c/01261e24cfab
+  - [V2] riscv: vector: Fix a typo of preempt_v
+    https://git.kernel.org/riscv/c/700c2d9b1b17
 
 You are awesome, thank you!
 -- 
