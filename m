@@ -1,289 +1,346 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A77A17548
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 06:10:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710915010; cv=fail; b=ifI1rz4SO6qFvN1lwVyhGLpL1x7fWm8/fgKllRASdJuEJSIZh5mG4+7P34GsZi3k+q0dq5WuWIdz8OaTPUAvg4yebrkVPhEw5ODogYXddAZ5UZQ5YqIDwIJPFMMB5mie66JAKRSqLxIJfxE2FHGKBV0gv7Xwno7gCoBPJSzqP7s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710915010; c=relaxed/simple;
-	bh=pOinMp71eRy/ae4P0/8Os+JSSOGqOOKnSI9Z73vDoxo=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=bSGUdNUdHFLVbwOaClIeC1XHbkKApShbs1IDD9tu4ieU6WWFysM3LeHdw6N+3vw8CBTQTNVedsaGavd8it5jaKvRfl/8MA1H9IwSJRSqcUd71Syv6iUotfSzPstb2dU2BlGd9LsiMMdjLmkPSdaZ7JISqhvJSdR2/N8EXNUMHFc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FsB5uX7Q; arc=fail smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6171D526
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 06:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710915044; cv=none; b=FHqWHl2lnFpt7AjKaMyATQ7sh6RWbth6BQw/fVpkBQcag1Ssq67hA/d+8ZuFfX4ncGUR6rTH+c44GMRDFQpTjtfcB66C+gCLrWPdXQNNuO23ygc28qOS+A9KdPlAu6wj/pLchR2GxNZNDECQFwD5OPrLLypXNP+5fD0kKBkIN38=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710915044; c=relaxed/simple;
+	bh=RF2gKBUaOF79gNywl1nt9n25iR7hxgWOt2AcR0MCtIU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OjwcuOuTCl/g5Dbq5CWmgeUbafCrS969UGShRBnF7w1nxtb+X50LWX2kJ5urrJKfNuqo4Rz2paJsIt2wBnDp+mGIPk7bPADz34sQmiELGH1wvOUng1C5ojOWhrVEG/0jmP2LrkZPj8Z92F2MAh9MlrCdKeSA02hJoJjRnOrq1Fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=apH8oDEH; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FsB5uX7Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710915008; x=1742451008;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=pOinMp71eRy/ae4P0/8Os+JSSOGqOOKnSI9Z73vDoxo=;
-  b=FsB5uX7Q1aR04Ke52slraZIamG0HJortlXYAW/7O5hzXQNe3ln1P5Nmg
-   NRdC7M3T6XF5yacvTYxnXV15hH7d3Xz0sW/Wr8gLsVwsBpIvBr5+AMo7d
-   Axj/+w1yUMcSX9vTxk4z7yP9Xzanh0C9f+WiM6D3c1BdUZTbylSa+r5uq
-   JQltAspw93MzuwsqtJeddmn3KrPzufNP2/MTepp3GGxCI1aTEvPk536sO
-   McdV/kTg7nRTM8cjng6TT9mrTmGivdBPou+9Rz6/ZVL+Mq7aG75h7uIoJ
-   Pp8Fb2aWmeVNC7glbAxD/oebEfB2Afpz/H4hADAFxsLcs3qCH4F2ZHw4g
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11018"; a="28296116"
-X-IronPort-AV: E=Sophos;i="6.07,139,1708416000"; 
-   d="scan'208";a="28296116"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 23:10:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,139,1708416000"; 
-   d="scan'208";a="14702306"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 19 Mar 2024 23:10:06 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 19 Mar 2024 23:10:05 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 19 Mar 2024 23:10:05 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 19 Mar 2024 23:10:05 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jjkdp83v3kHuvhieifWm6viYdjWBCMmSai0ilhndu9jRfuRQBqygWaiIT1pRfoAWXgtMVKxxbMzKcK9L5tbM2Elz6tR1NAq825myY2xy+su78QkeZQCdX+goaLxlsCPcHf/YStDlbYNwpNYtbw0busCydos9XB3sSNUSOyIAyHTv4ko3bX/Bdh171gm4jGTx2osNtyPF7wmVlIwUkytIB4wPhnVuNb43LmfLePmO9gn3UUeGlZ7fqsY0tHYbwm4MmP0lvSggeJpJVdt9BoU1wG5S8cxzkL/lST7gjLZs4VTQSY66EGNNowhbkVlhh8/1urWdDG2fw+FtDOZqxu8Y3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dqX5IWXvPdYkys541wZ3BLxlAW0a22TL6az00ewWzRc=;
- b=E6RhAY9AGHLBa0ljCCwS9PfboetQGF2PcO/WRE82uwf/GdTpMicMQpjP0yONbVp8r9A9gkYlO+DqMVTTY6ddqPaTQIZl9zO08kqfJY+GVIRvd7Y7klJI5uz7kc88GUSh7sy9wwA5etb5LG0kOlt+7Atq4krw3hT5ZGhkRENsG55QA5ygUJHrx6EBFuKgLSCC0V8fgjgsTjJkd8o9lCDtlQxeLfUFt2zCjSjXVUyCc236OSQlsLQLK+TV5qBXJ2iMB3D7jticC8XgVq0nxc7loXJCsjODXWIX28vZ4aIInnVl1M1yHxZLTqf2Z03MqSK//uXhotfYPs+IOc+DXu9/5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CY5PR11MB6392.namprd11.prod.outlook.com (2603:10b6:930:37::15)
- by LV3PR11MB8741.namprd11.prod.outlook.com (2603:10b6:408:21d::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.11; Wed, 20 Mar
- 2024 06:10:03 +0000
-Received: from CY5PR11MB6392.namprd11.prod.outlook.com
- ([fe80::7118:c3d4:7001:cf9d]) by CY5PR11MB6392.namprd11.prod.outlook.com
- ([fe80::7118:c3d4:7001:cf9d%6]) with mapi id 15.20.7409.010; Wed, 20 Mar 2024
- 06:10:03 +0000
-Date: Wed, 20 Mar 2024 14:03:17 +0800
-From: Yujie Liu <yujie.liu@intel.com>
-To: Sean Anderson <sean.anderson@linux.dev>
-CC: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, kernel test robot
-	<lkp@intel.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
-	<dri-devel@lists.freedesktop.org>, <oe-kbuild-all@lists.linux.dev>, "David
- Airlie" <airlied@gmail.com>, <linux-kernel@vger.kernel.org>, Michal Simek
-	<monstr@monstr.eu>, <linux-arm-kernel@lists.infradead.org>, Daniel Vetter
-	<daniel@ffwll.ch>
-Subject: Re: [PATCH 6/6] drm: zynqmp_dp: Add debugfs interface for compliance
- testing
-Message-ID: <Zfp8JZlR6EvM8yHt@yujie-X299>
-References: <20240315230916.1759060-7-sean.anderson@linux.dev>
- <202403161704.ACHJdSJG-lkp@intel.com>
- <ce1190ad-27c2-4a16-b36f-442c0c419dcc@linux.dev>
- <20240318175032.GM13682@pendragon.ideasonboard.com>
- <6b44c9b7-e1e2-4b69-a443-4616ceab6f17@linux.dev>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <6b44c9b7-e1e2-4b69-a443-4616ceab6f17@linux.dev>
-X-ClientProxiedBy: SG2PR06CA0194.apcprd06.prod.outlook.com (2603:1096:4:1::26)
- To CY5PR11MB6392.namprd11.prod.outlook.com (2603:10b6:930:37::15)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="apH8oDEH"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5d8ddbac4fbso4879740a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 23:10:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710915041; x=1711519841; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=jjGpwd2+hgs3NwYJ0tzCuCu9xWQmzkcWFYyJwiGu2OI=;
+        b=apH8oDEHc1HdWTyANGBMR6WuHy+jEY2LmHAZOG7VAayJJgoCFxgLkFeXfaMBpQ0DTa
+         PbrXa7G/J46i+HQog/GgLMWHrsRkoPHulxcZrhtWddgywKE4/7YKzZjpzlrmJDLWcaZs
+         DPUWqG87gItoxz7+bloxYsXBlWn/GtCjBcv0gl4m1KE7rHvEV+y4VMndLOimWvrcxj3W
+         xPfK4OUsN7Ttak5/4hEjPl24a87PUoCBjfV6lzd/ozHGwnxZLo2dzxCyUd8hd/sx8Dvq
+         3t7ZX/x7UAqnfACPgpdHqJzMJeLkpT6PMOLsfrtmZ3SOb1H2W0J2PikWnO/WvGgmmUsF
+         3jtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710915041; x=1711519841;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jjGpwd2+hgs3NwYJ0tzCuCu9xWQmzkcWFYyJwiGu2OI=;
+        b=E+zU7yl+DgjYIasB/ZktN0s7cihCdggU4NBUadF9mLzFEMLgc4zo8mbgYxq5a7byvI
+         2Slhf69h06Y+AvleNu7dGsXSrI3/URkYH9ItBjmGvU/sb4RsvCRoxEAWDwJ66z17OjqP
+         DQSz7APrQFD41BtILyUUSm6qF0FBrq9mQO6ZNGoWBZvGl2TWAZTbkp1s5vzvdiM1/mAJ
+         eQrm16E9QrQfpKzuAaNcWsQZt/I5/AOvGalDukfr+9RNEI05R+7//chmF3z2veZoNUMG
+         wIPEzsNKlza3zEaztuPF4HoZuK5nQLepEip8BxxKHim36s429LrmW3B3/88jYWjnFQJt
+         1DBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWNUKMDZsFYe6XxB2Ry0ximlivrDjsARyMpRjCgMOG0Y8A2Nq6ME1axLQb1OJc9/RkH42/5A+v7fe9kwXe+60daS2eq9KbvOewZhgaN
+X-Gm-Message-State: AOJu0YxlQKkkb4gzmAkda2eQma2QPzHJTEfC23C8D2tEJxS7axiuIOH5
+	AxnvgdzkP+6QyM4gLHeXsgRD9WgVV8IdUm7ld1Iqr66RV06Mx/pMcnLx3QTvLw==
+X-Google-Smtp-Source: AGHT+IED0oWBNyX3DizC7FdH5zxw2hP7Nb+5X5DUV+nkHRpIjxvSHC3HUDuVqvfORvXSyRW9Ukg4WQ==
+X-Received: by 2002:a17:902:ec8c:b0:1e0:2c15:f327 with SMTP id x12-20020a170902ec8c00b001e02c15f327mr7192339plg.49.1710915041315;
+        Tue, 19 Mar 2024 23:10:41 -0700 (PDT)
+Received: from thinkpad ([120.56.201.52])
+        by smtp.gmail.com with ESMTPSA id ju9-20020a170903428900b001dddce2291esm12590281plb.31.2024.03.19.23.10.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 23:10:40 -0700 (PDT)
+Date: Wed, 20 Mar 2024 11:40:34 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: endpoint: Migrate to Genalloc framework for
+ outbound window memory allocation
+Message-ID: <20240320061034.GA2525@thinkpad>
+References: <20240317-pci-ep-genalloc-v1-1-70fe52a3b9be@linaro.org>
+ <Zfm0Ws/Zg1W2UVZt@lizhi-Precision-Tower-5810>
+ <20240319162829.GC3297@thinkpad>
+ <ZfnEz9w6ICZXFZeb@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6392:EE_|LV3PR11MB8741:EE_
-X-MS-Office365-Filtering-Correlation-Id: 45c03ba1-d414-4327-23c3-08dc48a46197
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: r5yf7HwXw3KBXieikO21DMWbbnuUF1QY0f3272gN3uxcLALJG/CVGK6sTYMxcjPrwoO3gT2Y1Jc3UUdnE7BfVzdwHB8BD6gZC0YexhXj8jbiPVAdRhAQFa4hp+8VK77qIJqM7UqTQeZFhzPtSM99yC3BLa6hxqO9I8CBi1RNQEUnOiBEAlV6gDCLksVUU3ekVI8IlDJtyB6nD/wcDpkZTvUMBTJJ9D0EpFobhSctCrOF1I+MrMKRdp5JnpfogdDFBBZHbPYPL95XeI4+gIttz5vPNxwa49l3hTvJKqmAWlj4MkqdoXM05mYVYx6zFXaH+wNoOWaT1jr878IgFfLsQflofVTrLH9arw1Io+8OdUppMnXLDxRXY8yEgP6jM4Wxx9Qr4jJPNIdcf8gtuGmm+RN9EoAPoSvNR60ayt6jWsxEEWLOQ5z/o/w4vNsaJ8FlLSOmCkhPCQeEreKfPdZf825/8ZXW0Bj0GUnUxDO0DafCgK4g7oJLIa/q5wmJTb7ytmhrsJIjNyoyx6L79v0jOY4IQPpsUG3x0W3z9d11yxLSPa1GDSE3Ly0w27DmJuhw5JEkKWUuRs2XCCX/aLuW4HUZcOwKCAkjjLGcGnKijqLUBeE5y2MGUDzzCCqZHcCO
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6392.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(376005)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2sSclp0qNPWeP1BqJxd89Eutd+ee8acT05j3VkTnSxXOixDGtia7x+sCsmV5?=
- =?us-ascii?Q?i9TrsD6QR8hoCy3vvaRk3UHy4A/7eXywcjYcxXkMtm6OPyAOOVxaUFdiRki+?=
- =?us-ascii?Q?aedqt9CMUQjg5uNUUXhRzs9w/98Ap7zJQ2Md5jdR8WR9OJoP1QQNSRsmGqfk?=
- =?us-ascii?Q?PachmKXXEoiuxRHfKjxmq/kAW/UsbXVcf26Evcy1Gr4GQj+cmKsQf0OWLO5E?=
- =?us-ascii?Q?fYyk1c/opevmIo6tCqyWHe4X2XL9OEvo8YJwB3Tcp5rf1Rkl+T51VReGDJ5Q?=
- =?us-ascii?Q?iKYD+Jc7yBa0wjqc8zNcMjs05DHTe53gnZVDXASa07pXjnrbSsMYHEw+gRAh?=
- =?us-ascii?Q?/eNDSUZUIEBqnV/xU/2GvqZ33oGWZRR8/yyIifOfPXCNqzwBJ0k3bDKbP5qZ?=
- =?us-ascii?Q?Erc90UtgWroDpXMf9QRX3qel75p1ntbL7vRlzkNigLZn+dODrhC0wq1Pv3oD?=
- =?us-ascii?Q?0BKG+DDMFWZm10ltR1eeEmNwbIbL3v1j6UzAJ/IXsiGFD6MJvsPD1+JDhrvC?=
- =?us-ascii?Q?JoB7vGpXqPuZpfKmWFePe2OklXrNgDYxGxHdNSK0FE6JJGF4DPI2vM12yqxW?=
- =?us-ascii?Q?GtE/UnBaKnllxsKJSW+NMLOBBf5nQbrJjT4ZDt+n9sC0eFdg8jvn7qy9bCgj?=
- =?us-ascii?Q?VABywFlCRwEp5eahmIt03z9FHQRjBrFRc5diry1aKfSlooPyPRhwRYCSwGN7?=
- =?us-ascii?Q?wZeYunb2KytlCf8dCgCRZD8cAFV42myfnB4Xpo3wUfwSNVK8aVpguhkMvMia?=
- =?us-ascii?Q?qi80lW5GdZA525bX3wWwEA9IQImKRFR1Y0iHF7j9lC54rzIFSfZ5/9T2zMHy?=
- =?us-ascii?Q?nLqQt3GF6Gr3pywQNvFrwTF1QIWLWTzXpcL3OUN1RWYya+PBdRSVbbbbrpNE?=
- =?us-ascii?Q?/v9ICoWk84XdrJV/SS5T4WRFCFseWuE+th/LvbhqLwFiaw+CdS6RtLgfvuL6?=
- =?us-ascii?Q?gc2oJxl8/7fA+qNqE8+nFzENb2B0BeuiPVQpehFmemgsJaoPaIcAlxxSU4PB?=
- =?us-ascii?Q?HJz054wcHtAjlVXo2XoaoCcuhJuMT/R0C2jeVQD37N974Lq/aF+lxW9y6ldc?=
- =?us-ascii?Q?eisjW2AOWYSObRhwCE7xSDkAzMSX679V6mvcxlPhGMbyOmO1c+r2/yxGKm2p?=
- =?us-ascii?Q?bZgX/7dIU2gYtBzn/P0gwID1hTLt5WiT2QxTSK6bOvHQT+5XsEKFjjoJJqgE?=
- =?us-ascii?Q?J9Fv2Iw4zeKB93b3ICXcMyruiOyyg7waC2OFm8vpnBoYFy3JKPpAPhZHOjwM?=
- =?us-ascii?Q?xNcraOjqSl+lh179QFSC2UzOw5Vry07S5CWrqvKaw55SigbaNwBoKD7xTZcQ?=
- =?us-ascii?Q?YUHHPmbVBPlms6tGjExU224wL/cGI29MDgppzz0lHfXPOFd5wjEsT5l58aAY?=
- =?us-ascii?Q?Al3Wkj7DUub+7UPZCnRRL8XBywpcEzR7bMy+D8zJ2ZkkDaNb1Chi8wrfHO2T?=
- =?us-ascii?Q?0pR2H4spvYoB7BEBDrZgzaZZcKSi2ZFqDAfO6rDAq51gwU0H4x1g1PE7BcCa?=
- =?us-ascii?Q?hbWVA3j5SbVQRu6E3QmB4ez9iKDjGhaj3Bb0PkosUzsJcZ/k63T0frwzWi1h?=
- =?us-ascii?Q?Vu4tpdS2T1KjpxjCClIr+l5V6wnhgudZ2l9nXwsz?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45c03ba1-d414-4327-23c3-08dc48a46197
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6392.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2024 06:10:03.1994
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IbWe6kXGjOLtldINKY3s6CVoXokxkjvDgNxCVVvU92dvSEbxxa4Pu/uyp7zgi8oX+gSeNk9P1LOp/tKAaiFhCw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8741
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZfnEz9w6ICZXFZeb@lizhi-Precision-Tower-5810>
 
-Hi Sean,
-
-On Mon, Mar 18, 2024 at 03:05:57PM -0400, Sean Anderson wrote:
-> On 3/18/24 13:50, Laurent Pinchart wrote:
-> > On Mon, Mar 18, 2024 at 11:06:40AM -0400, Sean Anderson wrote:
-> >> On 3/16/24 06:14, kernel test robot wrote:
-> >> > Hi Sean,
-> >> > 
-> >> > kernel test robot noticed the following build warnings:
-> >> > 
-> >> > [auto build test WARNING on v6.8]
-> >> > [cannot apply to drm-misc/drm-misc-next linus/master next-20240315]
-> >> > [If your patch is applied to the wrong git tree, kindly drop us a note.
-> >> > And when submitting patch, we suggest to use '--base' as documented in
-> >> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> >> > 
-> >> > url:    https://github.com/intel-lab-lkp/linux/commits/Sean-Anderson/drm-zynqmp_dp-Downgrade-log-level-for-aux-retries-message/20240316-071208
-> >> > base:   v6.8
-> >> > patch link:    https://lore.kernel.org/r/20240315230916.1759060-7-sean.anderson%40linux.dev
-> >> > patch subject: [PATCH 6/6] drm: zynqmp_dp: Add debugfs interface for compliance testing
-> >> > config: microblaze-allmodconfig (https://download.01.org/0day-ci/archive/20240316/202403161704.ACHJdSJG-lkp@intel.com/config)
-> >> > compiler: microblaze-linux-gcc (GCC) 13.2.0
-> >> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240316/202403161704.ACHJdSJG-lkp@intel.com/reproduce)
-
-[...]
-
-> >> > 
-> >> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> >> > the same patch/commit), kindly add following tags
-> >> > | Reported-by: kernel test robot <lkp@intel.com>
-> >> > | Closes: https://lore.kernel.org/oe-kbuild-all/202403161704.ACHJdSJG-lkp@intel.com/
-> >> > 
-> >> > All warnings (new ones prefixed by >>):
-> >> > 
-> >> >    drivers/gpu/drm/xlnx/zynqmp_dp.c: In function 'zynqmp_dp_bridge_debugfs_init':
-> >> >>> drivers/gpu/drm/xlnx/zynqmp_dp.c:2168:31: warning: 'sprintf' may write a terminating nul past the end of the destination [-Wformat-overflow=]
-> >> >     2168 |                 sprintf(name, fmt, i);
-> >> >          |                               ^~~
-> >> >    drivers/gpu/drm/xlnx/zynqmp_dp.c:2168:17: note: 'sprintf' output between 18 and 20 bytes into a destination of size 19
-> >> >     2168 |                 sprintf(name, fmt, i);
-> >> >          |                 ^~~~~~~~~~~~~~~~~~~~~
-> >> 
-> >> Not a bug, as i will be at most 4, which uses 1 digit.
+On Tue, Mar 19, 2024 at 01:01:03PM -0400, Frank Li wrote:
+> On Tue, Mar 19, 2024 at 09:58:29PM +0530, Manivannan Sadhasivam wrote:
+> > On Tue, Mar 19, 2024 at 11:50:50AM -0400, Frank Li wrote:
+> > > On Sun, Mar 17, 2024 at 11:39:17AM +0530, Manivannan Sadhasivam wrote:
+> > > > As proposed during the last year 'PCI Endpoint Subsystem Open Items
+> > > > Discussion' of Linux Plumbers conference [1], let's migrate to Genalloc
+> > > > framework for managing the endpoint outbound window memory allocation.
+> > > > 
+> > > > PCI Endpoint subsystem is using a custom memory allocator in pci-epc-mem
+> > > > driver from the start for managing the memory required to map the host
+> > > > address space (outbound) in endpoint. Even though it works well, it
+> > > > completely defeats the purpose of the 'Genalloc framework', a general
+> > > > purpose memory allocator framework created to avoid various custom memory
+> > > > allocators in the kernel.
+> > > > 
+> > > > The migration to Genalloc framework is done is such a way that the existing
+> > > > API semantics are preserved. So that the callers of the EPC mem APIs do not
+> > > > need any modification (apart from the pcie-designware-epc driver that
+> > > > queries page size).
+> > > > 
+> > > > Internally, the EPC mem driver now uses Genalloc framework's
+> > > > 'gen_pool_first_fit_order_align' algorithm that aligns the allocated memory
+> > > > based on the requested size as like the previous allocator. And the
+> > > > page size passed during pci_epc_mem_init() API is used as the minimum order
+> > > > for the memory allocations.
+> > > > 
+> > > > During the migration, 'struct pci_epc_mem' is removed as it is seems
+> > > > redundant and the existing 'struct pci_epc_mem_window' in 'struct pci_epc'
+> > > > is now used to hold the address windows of the endpoint controller.
+> > > > 
+> > > > [1] https://lpc.events/event/17/contributions/1419/
+> > > > 
+> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > ---
+> > > >  drivers/pci/controller/dwc/pcie-designware-ep.c |  14 +-
+> > > >  drivers/pci/endpoint/pci-epc-mem.c              | 182 +++++++++---------------
+> > > >  include/linux/pci-epc.h                         |  25 +---
+> > > >  3 files changed, 81 insertions(+), 140 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > > > index 5befed2dc02b..37c612282eb6 100644
+> > > > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > > > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > > > @@ -482,11 +482,11 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > > >  		reg = ep_func->msi_cap + PCI_MSI_DATA_32;
+> > > >  		msg_data = dw_pcie_ep_readw_dbi(ep, func_no, reg);
+> > > >  	}
+> > > > -	aligned_offset = msg_addr_lower & (epc->mem->window.page_size - 1);
+> > > > +	aligned_offset = msg_addr_lower & (epc->windows[0]->page_size - 1);
+> > > >  	msg_addr = ((u64)msg_addr_upper) << 32 |
+> > > >  			(msg_addr_lower & ~aligned_offset);
+> > > >  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
+> > > > -				  epc->mem->window.page_size);
+> > > > +				  epc->windows[0]->page_size);
+> > > >  	if (ret)
+> > > >  		return ret;
+> > > >  
+> > > > @@ -550,10 +550,10 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > > >  		return -EPERM;
+> > > >  	}
+> > > >  
+> > > > -	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
+> > > > +	aligned_offset = msg_addr & (epc->windows[0]->page_size - 1);
+> > > >  	msg_addr &= ~aligned_offset;
+> > > >  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
+> > > > -				  epc->mem->window.page_size);
+> > > > +				  epc->windows[0]->page_size);
+> > > >  	if (ret)
+> > > >  		return ret;
+> > > >  
+> > > > @@ -572,7 +572,7 @@ void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
+> > > >  	dw_pcie_edma_remove(pci);
+> > > >  
+> > > >  	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
+> > > > -			      epc->mem->window.page_size);
+> > > > +			      epc->windows[0]->page_size);
+> > > >  
+> > > >  	pci_epc_mem_exit(epc);
+> > > >  
+> > > > @@ -742,7 +742,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> > > >  	}
+> > > >  
+> > > >  	ep->msi_mem = pci_epc_mem_alloc_addr(epc, &ep->msi_mem_phys,
+> > > > -					     epc->mem->window.page_size);
+> > > > +					     epc->windows[0]->page_size);
+> > > >  	if (!ep->msi_mem) {
+> > > >  		ret = -ENOMEM;
+> > > >  		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
+> > > > @@ -770,7 +770,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> > > >  
+> > > >  err_free_epc_mem:
+> > > >  	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
+> > > > -			      epc->mem->window.page_size);
+> > > > +			      epc->windows[0]->page_size);
+> > > >  
+> > > >  err_exit_epc_mem:
+> > > >  	pci_epc_mem_exit(epc);
+> > > > diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
+> > > > index a9c028f58da1..f9e6e1a6aeaa 100644
+> > > > --- a/drivers/pci/endpoint/pci-epc-mem.c
+> > > > +++ b/drivers/pci/endpoint/pci-epc-mem.c
+> > > > @@ -4,37 +4,18 @@
+> > > >   *
+> > > >   * Copyright (C) 2017 Texas Instruments
+> > > >   * Author: Kishon Vijay Abraham I <kishon@ti.com>
+> > > > + *
+> > > > + * Copyright (C) 2024 Linaro Ltd.
+> > > > + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > >   */
+> > > >  
+> > > > +#include <linux/genalloc.h>
+> > > >  #include <linux/io.h>
+> > > >  #include <linux/module.h>
+> > > >  #include <linux/slab.h>
+> > > >  
+> > > >  #include <linux/pci-epc.h>
+> > > >  
+> > > > -/**
+> > > > - * pci_epc_mem_get_order() - determine the allocation order of a memory size
+> > > > - * @mem: address space of the endpoint controller
+> > > > - * @size: the size for which to get the order
+> > > > - *
+> > > > - * Reimplement get_order() for mem->page_size since the generic get_order
+> > > > - * always gets order with a constant PAGE_SIZE.
+> > > > - */
+> > > > -static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
+> > > > -{
+> > > > -	int order;
+> > > > -	unsigned int page_shift = ilog2(mem->window.page_size);
+> > > > -
+> > > > -	size--;
+> > > > -	size >>= page_shift;
+> > > > -#if BITS_PER_LONG == 32
+> > > > -	order = fls(size);
+> > > > -#else
+> > > > -	order = fls64(size);
+> > > > -#endif
+> > > > -	return order;
+> > > > -}
+> > > > -
+> > > >  /**
+> > > >   * pci_epc_multi_mem_init() - initialize the pci_epc_mem structure
+> > > >   * @epc: the EPC device that invoked pci_epc_mem_init
+> > > > @@ -48,17 +29,11 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
+> > > >  			   struct pci_epc_mem_window *windows,
+> > > >  			   unsigned int num_windows)
+> > > >  {
+> > > > -	struct pci_epc_mem *mem = NULL;
+> > > > -	unsigned long *bitmap = NULL;
+> > > > -	unsigned int page_shift;
+> > > > +	struct pci_epc_mem_window *window = NULL;
+> > > >  	size_t page_size;
+> > > > -	int bitmap_size;
+> > > > -	int pages;
+> > > >  	int ret;
+> > > >  	int i;
+> > > >  
+> > > > -	epc->num_windows = 0;
+> > > > -
+> > > >  	if (!windows || !num_windows)
+> > > >  		return -EINVAL;
+> > > >  
+> > > > @@ -70,45 +45,51 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
+> > > >  		page_size = windows[i].page_size;
+> > > >  		if (page_size < PAGE_SIZE)
+> > > >  			page_size = PAGE_SIZE;
+> > > > -		page_shift = ilog2(page_size);
+> > > > -		pages = windows[i].size >> page_shift;
+> > > > -		bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
+> > > >  
+> > > > -		mem = kzalloc(sizeof(*mem), GFP_KERNEL);
+> > > > -		if (!mem) {
+> > > > +		windows[i].pool = gen_pool_create(ilog2(page_size), -1);
+> > > 
+> > > I think it is not good to modify caller's memory. This funciton suppose
+> > > pass down read-only information. And set to epc->windows[i]. I think it'd
+> > > better to use epc->windows[i].pool/windows.
+> > > 
 > > 
-> > The compiler can't know that. Please fix this, there's a zero warning
-> > policy.
+> > What do you mean by modifying caller's memory? Here, the memory for epc->windows
+> > is being allocated and the pool is created for each window.
 > 
-> I cannot reproduce this with GCC 13.2.0. So given that this is not a bug and I can't reproduce
-> it, I don't see how I can verify any fix.
-
-There is a "reproduce" link in the bot's report. We followed the steps
-in that link and found that the warning could be reproduced. Please
-notice that this is a "W=1" warning. BTW, we also tested the v2 patch
-and the warning has been fixed there. Just for your information.
-
-$ cd linux
-$ git checkout v6.8
-HEAD is now at e8f897f4afef0 Linux 6.8
-$ b4 am https://lore.kernel.org/r/20240315230916.1759060-7-sean.anderson@linux.dev
-$ git am ./20240315_sean_anderson_drm_zynqmp_dp_misc_patches_and_debugfs_support.mbx
-Applying: drm: zynqmp_dp: Downgrade log level for aux retries message
-Applying: drm: zynqmp_dp: Adjust training values per-lane
-Applying: drm: zynqmp_dp: Add locking
-Applying: drm: zynqmp_dp: Split off several helper functions
-Applying: drm: zynqmp_dp: Optionally ignore DPCD errors
-Applying: drm: zynqmp_dp: Add debugfs interface for compliance testing
-
-$ wget https://download.01.org/0day-ci/archive/20240316/202403161704.ACHJdSJG-lkp@intel.com/config
-$ mkdir build_dir
-$ cp config build_dir/.config
-$ git clone https://github.com/intel/lkp-tests.git ~/lkp-tests
-$ COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-13.2.0 ~/lkp-tests/kbuild/make.cross W=1 O=build_dir ARCH=microblaze olddefconfig
-$ COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-13.2.0 ~/lkp-tests/kbuild/make.cross W=1 O=build_dir ARCH=microblaze drivers/gpu/drm/xlnx/zynqmp_dp.o
-...
-  CC [M]  drivers/gpu/drm/xlnx/zynqmp_dp.o
-../drivers/gpu/drm/xlnx/zynqmp_dp.c: In function 'zynqmp_dp_bridge_debugfs_init':
-../drivers/gpu/drm/xlnx/zynqmp_dp.c:2168:31: warning: 'sprintf' may write a terminating nul past the end of the destination [-Wformat-overflow=]
- 2168 |                 sprintf(name, fmt, i);
-      |                               ^~~
-../drivers/gpu/drm/xlnx/zynqmp_dp.c:2168:17: note: 'sprintf' output between 18 and 20 bytes into a destination of size 19
- 2168 |                 sprintf(name, fmt, i);
-      |                 ^~~~~~~~~~~~~~~~~~~~~
-
-Best Regards,
-Yujie
-
+> windows[i].pool = gen_pool_create(ilog2(page_size), -1)
 > 
-> --Sean
+> 'windows' pass down from argument pci_epc_multi_mem_init(
+> ..struct pci_epc_mem_window *windows, )
+> 			     ^^^^^^^
+> windows[i].pool = gen_pool_create() actually change the caller's stack
+> memory.
 > 
-> >> > vim +/sprintf +2168 drivers/gpu/drm/xlnx/zynqmp_dp.c
-> >> > 
-> >> >   2136	
-> >> >   2137	DEFINE_DEBUGFS_ATTRIBUTE(fops_zynqmp_dp_rate, zynqmp_dp_rate_get,
-> >> >   2138				 zynqmp_dp_rate_set, "%llu\n");
-> >> >   2139	
-> >> >   2140	static void zynqmp_dp_bridge_debugfs_init(struct drm_bridge *bridge,
-> >> >   2141						  struct dentry *root)
-> >> >   2142	{
-> >> >   2143		struct zynqmp_dp *dp = bridge_to_dp(bridge);
-> >> >   2144		struct dentry *test;
-> >> >   2145		int i;
-> >> >   2146	
-> >> >   2147		dp->test.bw_code = DP_LINK_BW_5_4;
-> >> >   2148		dp->test.link_cnt = dp->num_lanes;
-> >> >   2149	
-> >> >   2150		test = debugfs_create_dir("test", root);
-> >> >   2151	#define CREATE_FILE(name) \
-> >> >   2152		debugfs_create_file(#name, 0600, test, dp, &fops_zynqmp_dp_##name)
-> >> >   2153		CREATE_FILE(pattern);
-> >> >   2154		CREATE_FILE(enhanced);
-> >> >   2155		CREATE_FILE(downspread);
-> >> >   2156		CREATE_FILE(active);
-> >> >   2157		CREATE_FILE(custom);
-> >> >   2158		CREATE_FILE(rate);
-> >> >   2159		CREATE_FILE(lanes);
-> >> >   2160	
-> >> >   2161		for (i = 0; i < dp->num_lanes; i++) {
-> >> >   2162			static const char fmt[] = "lane%d_preemphasis";
-> >> >   2163			char name[sizeof(fmt)];
-> >> >   2164	
-> >> >   2165			dp->debugfs_train_set[i].dp = dp;
-> >> >   2166			dp->debugfs_train_set[i].lane = i;
-> >> >   2167	
-> >> >> 2168			sprintf(name, fmt, i);
-> >> >   2169			debugfs_create_file(name, 0600, test,
-> >> >   2170					    &dp->debugfs_train_set[i],
-> >> >   2171					    &fops_zynqmp_dp_preemphasis);
-> >> >   2172	
-> >> >   2173			sprintf(name, "lane%d_swing", i);
-> >> >   2174			debugfs_create_file(name, 0600, test,
-> >> >   2175					    &dp->debugfs_train_set[i],
-> >> >   2176					    &fops_zynqmp_dp_swing);
-> >> >   2177		}
-> >> >   2178	}
-> >> >   2179	
+
+Hmm, you are right. Will fix it.
+
 > > 
+> > > > +		if (!windows[i].pool) {
+> > > >  			ret = -ENOMEM;
+> > > > -			i--;
+> > > > -			goto err_mem;
+> > > > +			goto err_free_mem;
+> > > > +		}
+> > > > +
+> > > > +		gen_pool_set_algo(windows[i].pool, gen_pool_first_fit_order_align,
+> > > > +				  NULL);
+> > > > +
+> > > > +		windows[i].virt_base = ioremap(windows[i].phys_base, windows[i].size);
+> > > > +		ret = gen_pool_add_virt(windows[i].pool, (unsigned long)windows[i].virt_base,
+> > > > +					windows[i].phys_base, windows[i].size, -1);
+> > > > +		if (ret) {
+> > > > +			iounmap(windows[i].virt_base);
+> > > > +			gen_pool_destroy(epc->windows[i]->pool);
+> > > 
+> > > I think move all free to err path will be easy to understand.
+> > > 
+> > 
+> > It is not straightforward. First we need to free the memory for current
+> > iteration and then all previous iterations, that too from different places.
+> > Moving the code to free current iteration to the error label will look messy.
 > 
+> All from current iteration.
 > 
+> err_free_mem:
+>    iounmap(windows[i].virt_base);
+>    if (epc->windows[i]->pool)
+> 	gen_pool_destroy(epc->windows[i]->pool)
+
+Initially I thought it would look messy if the memory for current iteration is
+freed in the error labels. But now I implemented it and it doesn't look that
+bad. So will change it in next iteration.
+
+> 
+> > 
+> > > > +			goto err_free_mem;
+> > > >  		}
+> > > >  
+> > > > -		bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+> > > > -		if (!bitmap) {
+> > > > +		window = kzalloc(sizeof(*window), GFP_KERNEL);
+> > > 
+> > > According to below code                                                    
+> > >                                                                            
+> > >         epc->windows = kcalloc(num_windows, sizeof(*epc->windows), GFP_KERNEL);
+> > >         if (!epc->windows)                                                 
+> > >                 return -ENOMEM;                                            
+> > >                                                                            
+> > > epc->windows already allocate whole num_windows * "struct pci_epc_mem_window".
+> > > I think you can direct use 'window = epc->windows + i', so needn't alloc      
+> > > additional memory for epc->windows[i].
+> > > 
+> > 
+> > First we are allocating the memory for 'struct pci_epc_mem_window' _pointers_ in
+> > epc->windows. Then we need to allocate memory for each pointer in epc->windows
+> > to actually store data. Otherwise, we will be referencing the nulll pointer.
+> 
+> I think two layer pointer is totally unecessary.
+> You can use one layer pointer 'struct pci_epc_mem_window       *windows;'
+> 
+
+How can you store multiple 'struct pci_epc_mem_window' with a single pointer?
+Please elaborate.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
