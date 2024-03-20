@@ -1,90 +1,171 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8A34084A
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 13:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5781F3B185;
+	Wed, 20 Mar 2024 13:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710939678; cv=none; b=TxHEY601zP/jhaSlQOVY4b1CeWtS+65nxkVexp4qT/neNjA7BsgEWIE1Dt67sToNQgDaSzP/9C2EyWAcdSSiRBFW87uXOwGhMq1SJGqiZNttl82ZKZWiqrEVslolr+cz+YDKckQR6m1KG6oe3XewDk6mRnw4dGcweNG03WzU5U0=
+	t=1710940350; cv=none; b=Cyjwct/MYPuDwCL0L3FfNBRp97aXX24uJ4hWt1EaOrjZWjGP8Pb2diT9PRVLhbBra4wHchmjDm+2aRklDYtuj4Mx1aIHN/6W1FJqFTbaaxmYarGz4Yt6MVuMmwTokclOfPVFEjUwo6IUqI5HptQ7Uc8WqksTJ9D22a4fefCuEG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710939678; c=relaxed/simple;
-	bh=BO+73+xIJDj6fO5JS9nxVFoht09VhXIE75p+8aYFASU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hu7zzTG4tFoD5MweoXw2TPkV2H9EaFngWct58XOwb5c2kI0YFELRthUs1SJLe1IqmSPEnqUYQusoMn7AJjXsduAvSsg4uNxus3iMKtc5iY9+l9Axk1dImLOqDkMvIft9p36zIAPr7BR+LBYcaZ1BpiiQztuekk6hBIWS+MfNK2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=R9snuk0E; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1710940350; c=relaxed/simple;
+	bh=IvTX9esV4P4La+jMPHTzyI2Iu053Bz2GjxkeKu1Aqwo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=M9jokY9DwsrWtEvdoJ5u3u3G2W9tg8yaYPF/uXsDfefIAY5DApE9BKI20Mg4ZoAPWGif1si3Y0nO0Q4GWfVGrRhbbacE4vn2Wv0Ma869qSxq/oRZejw8/Vh5BvRAfv8FbSVlb3+vqPnBRPFDHyiaxzQfYZOmbJgc38K7l9ISGSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nFo+KMnu; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R9snuk0E"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Pcs/qG/ocyE/tlTca8TkKVXl8mnst2CUx2O+igwbRzI=; b=R9snuk0E2vaBgnxz7miYmX5FOe
-	8ho70rGWZUDLIOHgErUJpawK6NtkPaaw4znVkvXxj6cDVa3pF/DwsCri3aJYW5Ee5n8EYVCHCefr+
-	RmPRR+IyMC201dc5hTT2Dt3G9tqR9JYRYKhBAMlpSRF6t6PBhA8HKNq/gDwpah8BJr1rsmT6494gz
-	z0jUceKAtpTjyc20uph3JoYD5fywmMPqzUvM9SyznO1D0YxeSyokls6eq4dyttX89qcBnJu9VmFWj
-	1yMRM0z4xcjt8xtThjTKxcPczW0Bj7aZ1mCb9GzwSEzEWyiqMZlYCXNu2ywwjuB7dT1e2GXdhkW/Q
-	qa38H1OA==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rmvYw-00000004L7b-24U0;
-	Wed, 20 Mar 2024 13:00:58 +0000
-Date: Wed, 20 Mar 2024 13:00:58 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: alexs@kernel.org
-Cc: Izik Eidus <izik.eidus@ravellosystems.com>,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	Hugh Dickins <hughd@google.com>, Chris Wright <chrisw@sous-sol.org>,
-	kasong@tencent.com, Andrew Morton <akpm@linux-foundation.org>,
-	"open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 03/11] mm/ksm: use a folio in remove_stable_node
-Message-ID: <ZfreCicoK9C6GW1t@casper.infradead.org>
-References: <20240320074049.4130552-1-alexs@kernel.org>
- <20240320074049.4130552-4-alexs@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nFo+KMnu"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d485886545so111753131fa.2;
+        Wed, 20 Mar 2024 06:12:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710940346; x=1711545146; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ogeDDNddqM9zHY2Gjf+myE4/yQB3YtKUwvsl5I4eJwQ=;
+        b=nFo+KMnuFX/bwT+UZGcY0v819iuM+akTsVvq0L0NAiDhW6dhcE9OTewEONbv4kjCGO
+         QAWv8fmEQpKzMa9OUUQ0jG2+FSTSGloQjRZ2XVdTF47nSbhxKsPllLQVWrReFMU0CFWX
+         5KkmE7uSvFGyQQbYL9WeSsjxZVU1WpYFMPTkyJsoJGtPD8xWauZs2NefrDCLmkx11pyw
+         BgGvv5HIEQ5zW0jpBZX4ympey+RnG2haUloVFxsga0F89ZdmzlfKaYC/gqUL1WIVBB7t
+         JMPuZn2fuaEhCQsBmCzDSatc/ZG01adk7XWh3zCfzN2LIWFkUVF8UpqURqmoxT0WE96y
+         OJrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710940346; x=1711545146;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ogeDDNddqM9zHY2Gjf+myE4/yQB3YtKUwvsl5I4eJwQ=;
+        b=u7q8lNlCHUlrvM3tnK0iA1/shQf4TASFfQAm25UiUyBhe0Y3s8Kcz+xFiVPJkBpRNE
+         3SUwba8dJiuyVQTNziQms8fUYGVcGyhtRnM+9bjptyi4aV++H8eO6giJqRQb76E8KlZA
+         2sRnjiQhbNo+Zm+m465ikV3T5tpCK0mEGSUr7+TozZG/B28hS9aY25jf1QZQMFbTuSxq
+         FynHrTqzZ+c+A8qqM0oSEUsXbasfo1P0O3Rkd723K/eVbUjWLlIxFMwkd1Ae1bZ39/CA
+         gD8MYKL2Mw7EueI6bwN5MfLEZI4T/9REX7xW9PlNXwR4do7EBRF03iCvar04gztqVV9x
+         jrnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX/oK2/t7OekWg2f6A33j2K2VrmjO59+tWsl0FxJuUnNqjWOvihEBwLMN2YaOC1IyWVJlZvTt8IsedPoyHiVhdb1kUYqrHcF4gOg8T9nT/Rcc4=
+X-Gm-Message-State: AOJu0Yw8pAO1DFGZ0G37RMTBFb3KITlkAeBiN4p+dPrZCBK63OgxtpYh
+	SN283zKZQmMiRbmGps+VALZzFA1zaThubnowwV4vGy0tYezF2PmT4GBTw3iTsY7riJ4/y5OmHGv
+	9iSKM0tCsNEGCkrvmqXO24DMlzWM=
+X-Google-Smtp-Source: AGHT+IFq9EmS3s1YLRlHzEWYMzaLV2xDhvfREZxkCVd/HKsRFiqxou7BzExgzvocaJsNz1FqdGGhG/nrH+rAULxv+oI=
+X-Received: by 2002:a2e:bb82:0:b0:2d4:6bab:15eb with SMTP id
+ y2-20020a2ebb82000000b002d46bab15ebmr9202499lje.12.1710940346206; Wed, 20 Mar
+ 2024 06:12:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240320074049.4130552-4-alexs@kernel.org>
+References: <20240320083127.493250-1-ubizjak@gmail.com> <171093476000.10875.14076471223590027773.tip-bot2@tip-bot2>
+ <ZfrMcyZXCBQD/sE8@gmail.com>
+In-Reply-To: <ZfrMcyZXCBQD/sE8@gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Wed, 20 Mar 2024 14:12:14 +0100
+Message-ID: <CAFULd4bNETbtP3VTGao4o3mtfpw6d=rhcWp5N+pnzp-f3fjXAw@mail.gmail.com>
+Subject: Re: [tip: x86/percpu] x86/percpu: Convert this_percpu_xchg_op() from
+ asm() to C code, to generate better code
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org, 
+	Nathan Chancellor <nathan@kernel.org>, Kees Cook <keescook@chromium.org>, 
+	Josh Poimboeuf <jpoimboe@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 20, 2024 at 03:40:39PM +0800, alexs@kernel.org wrote:
-> @@ -1124,22 +1124,22 @@ static int remove_stable_node(struct ksm_stable_node *stable_node)
->  	 * merge_across_nodes/max_page_sharing be switched.
->  	 */
->  	err = -EBUSY;
-> -	if (!page_mapped(page)) {
-> +	if (!folio_mapped(folio)) {
->  		/*
->  		 * The stable node did not yet appear stale to get_ksm_page(),
-> -		 * since that allows for an unmapped ksm page to be recognized
-> +		 * since that allows for an unmapped ksm folio to be recognized
->  		 * right up until it is freed; but the node is safe to remove.
-> -		 * This page might be in an LRU cache waiting to be freed,
-> +		 * This folio might be in an LRU cache waiting to be freed,
->  		 * or it might be PageSwapCache (perhaps under writeback),
+On Wed, Mar 20, 2024 at 12:45=E2=80=AFPM Ingo Molnar <mingo@kernel.org> wro=
+te:
+>
+>
+> * tip-bot2 for Uros Bizjak <tip-bot2@linutronix.de> wrote:
+>
+> > The following commit has been merged into the x86/percpu branch of tip:
+> >
+> > Commit-ID:     0539084639f3835c8d0b798e6659ec14a266b4f1
+> > Gitweb:        https://git.kernel.org/tip/0539084639f3835c8d0b798e6659e=
+c14a266b4f1
+> > Author:        Uros Bizjak <ubizjak@gmail.com>
+> > AuthorDate:    Wed, 20 Mar 2024 09:30:40 +01:00
+> > Committer:     Ingo Molnar <mingo@kernel.org>
+> > CommitterDate: Wed, 20 Mar 2024 12:29:02 +01:00
+> >
+> > x86/percpu: Convert this_percpu_xchg_op() from asm() to C code, to gene=
+rate better code
+> >
+> > Rewrite percpu_xchg_op() using generic percpu primitives instead
+> > of using asm. The new implementation is similar to local_xchg() and
+> > allows the compiler to perform various optimizations: e.g. the
+> > compiler is able to create fast path through the loop, according
+> > to likely/unlikely annotations in percpu_try_cmpxchg_op().
+>
+> So, while at it, there's two other x86 percpu code generation details I w=
+as
+> wondering about:
+>
+> 1)
+>
+> Right now it's GCC-only:
+>
+>   config CC_HAS_NAMED_AS
+>           def_bool CC_IS_GCC && GCC_VERSION >=3D 120100
+>
+> Because we wanted to create a stable core of known-working functionality.
+>
+> I suppose we have already established that with the current merge window,
+> so it might be time to expand it.
 
-s/PageSwapCache/in the swapcache/
+Please note the KASAN incompatibility issue with GCC < 13.3. This
+issue was fixed in the meantime, so I have posted a patch to re-enable
+the named AS feature for gcc-13.3+ [1].
 
->  		 * or it might have been removed from swapcache a moment ago.
->  		 */
-> -		set_page_stable_node(page, NULL);
-> +		set_page_stable_node(&folio->page, NULL);
+[1] https://lore.kernel.org/lkml/20240320124603.566923-1-ubizjak@gmail.com/
 
-Before this patch, introduce a folio_set_stable_node() (and convert the
-one caller which already has a folio).  I'd do it the other way around
-from ksm_get_folio(); that is:
+> Clang claims to be compatible:
+>
+>   https://releases.llvm.org/9.0.0/tools/clang/docs/LanguageExtensions.htm=
+l
+>
+>   "You can also use the GCC compatibility macros __seg_fs and __seg_gs fo=
+r the
+>    same purpose. The preprocessor symbols __SEG_FS and __SEG_GS indicate =
+their
+>    support."
+>
+> I haven't tried it yet though.
 
-static inline void folio_set_stable_node(struct folio *folio,
-		struct ksm_stable_node *stable_node)
-{
-	set_page_stable_node(&folio->page, stable_node);
-}
+In the RFC submission, the support was determined by the functional
+check [2]. Perhaps we should re-introduce this instead of checking for
+known compiler versions:
 
-and then we can merge the two later when there are no more calls to
-set_page_stable_node().
++config CC_HAS_NAMED_AS
++ def_bool $(success,echo 'int __seg_fs fs; int __seg_gs gs;' | $(CC)
+-x c - -c -o /dev/null)
 
+[2] https://lore.kernel.org/lkml/20231001131620.112484-3-ubizjak@gmail.com/
+
+> 2)
+>
+> Also, is the GCC_VERSION cutoff accurate - are previous GCC versions
+> known-buggy, or was it primarily a risk-reduction cutoff?
+
+This approach was chosen from our discussion [3]. The version cutoff
+is arbitrary, it was later set to gcc-12.1, because it is the version
+of the compiler you used at the time ;) I have also tried gcc-11 and
+gcc-10 in the past, and the compiler produced bootable image. Saying
+that, the usage of named address spaces in the kernel is somehow basic
+(from the compiler PoV), so I think we could try the above approach
+with the functional check and see if and what breaks. We can always
+disable the USE_X86_SEG_SUPPORT config variable for known bad compiler
+versions.
+
+[3] https://lore.kernel.org/lkml/ZRwZOtANkcwtL+5B@gmail.com/
+
+BTW: Related to percpu series is the patch that fixes the issue with
+%rip-relative addressing for PER_CPU_VAR in BPF. IMHO, this issue
+should be fixed before rc1, otherwise call thunks will be unusable
+with BPF.
+
+[4] https://lore.kernel.org/lkml/20240316232104.368561-1-joanbrugueram@gmai=
+l.com/
+
+Thanks,
+Uros.
