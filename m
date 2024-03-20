@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70A48594C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E393885C45;
 	Wed, 20 Mar 2024 20:50:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710967839; cv=none; b=O0PbG+vyZWMDC5gC65svDpc4e+OICCATw2PCNiTvMMCGF2nbQ7On8gvG+MmlROITIeYT+Zloh3aSMWt4iUtZL9gW36EhI6vRcuvTKLxMdvrqAPjdoQxmKQWjNdC8oqnY3CinJC/efuosBHsLrNflGrjAztS8GIn8EHFm6xTlV9c=
+	t=1710967840; cv=none; b=U1S2Ov4KA9tBjnZk9meMOUCV1L0xkxJiWZsrvD16H8kOU+sNpuj89czjKnZRAhH1bQ4RdjDEpeyqVqF/gq+wQxVDZXDJHbftB/N0TgHcfp5XupyQ8cvty7yyeA31uJfQuD4Rm3lfyE0/pTCnNQK82TAl8lM3W5KF6ug0o3C0YVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710967839; c=relaxed/simple;
-	bh=btAeiZEcxlPc+5rjYdZBbRGASbJnixxCwyL87/+mmOo=;
+	s=arc-20240116; t=1710967840; c=relaxed/simple;
+	bh=i1YYsB3MkP8iWkMd09oORaDoitK5kjLZDlxRsz79N1Q=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=ibXl7DyzfHYajXqd65+nij8/f6WKAv4ot8iq6MPYJZIVNKhkXS08qpKQiFTWGh3JnaK9bMNPZEMKix2hI3N9r91naYg23Fjtrei7E2EOQ4tyYALWyW5I2L5uqZ17CTReAGuZD5MF3FqgysV/6iaITh5el/lFcHz47ub2w9UDTQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JN/d0Foc; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=UVrcitfpLqtGnEKUwavx3hw1mfCFrKa6s801OqqM2hlulgF7QNVhwCQ7lLesv/aMKdcOFJximX5djlBZSG8J5QTqCB74nrFxcLJDO4d42U3w6XNqC++N+OkvLf2nMuS4qx+QOM9eR/zZLR6Ht9MGZKh4Nt4PFM9V9lRcrevepek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iJj/jQiL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JN/d0Foc"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 57AADC43142;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJj/jQiL"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 73813C4167D;
 	Wed, 20 Mar 2024 20:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1710967839;
-	bh=btAeiZEcxlPc+5rjYdZBbRGASbJnixxCwyL87/+mmOo=;
+	bh=i1YYsB3MkP8iWkMd09oORaDoitK5kjLZDlxRsz79N1Q=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=JN/d0FocPRzqdLlU5VONUvcBZvnw9D4YRv8Y3S5UurFmfqHDO7Sqn0paBjrkfe+Qj
-	 e/UDyZU3WH3eIoBQRu2Z4rHSTGvWyGxZOYGSeGXRYN2r9a0mx/YfyL8tyLYED5iQxU
-	 BSUtRnwhMtjbjXw5qX9tBgugPTbOUEZhLJ+g60ruK3nVWm7kB6JG8kqdEo7Nwuo0P2
-	 yQXBRtKyme+0ak27W6kGkJ02ncA95rZvSQpkLXoohaVPRZ5ET0drm0UCoKA2Vx85nH
-	 fWxULX7R8Lg8zokts8jPRZq4aOoNRY6cHsZT/X3fr2mCowtqrWEAuju+2l5s1bOWCh
-	 bVl1azAGYztTw==
+	b=iJj/jQiLmTJUJiTcmVysHQ35TqjzpH6Xv7OMXSzge7zuIjAgmJkWNvKGx5ly7nUKd
+	 w1mJzh9SXKMmv/6yq9A5uNV6GwWJkwn7rL7h5/uwndCaBH2Nnjw0K/N4jqnZtNBoCS
+	 a89v3+a3sav5bNZZ9DhDJanqyKwWR96AOgQzJ+7AjWggcdTwCRZreXQQGV+ov65WjF
+	 8lcQ1/9IFMyafWO2P2jv5h92222ipyp3uP1y4pTncDD2xQvquj9elRnYTsdRSvKi5T
+	 me5vXqyw/h3lLTQyTT/dQDDlRppUVMQqdWsHkF7AuqC3E5uiOBzcqnCH/LTqb0S6s5
+	 JfUdxK6D1jcuw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4A960D84BB0;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 699D8D98302;
 	Wed, 20 Mar 2024 20:50:39 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,39 +37,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv: Use kcalloc() instead of kzalloc()
+Subject: Re: [PATCH v2 0/3] riscv: mm: Use hint address in mmap if available
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <171096783930.6804.853209401745501176.git-patchwork-notify@kernel.org>
+ <171096783942.6804.4445478539972921604.git-patchwork-notify@kernel.org>
 Date: Wed, 20 Mar 2024 20:50:39 +0000
-References: <20240120135400.4710-1-erick.archer@gmx.com>
-In-Reply-To: <20240120135400.4710-1-erick.archer@gmx.com>
-To: Erick Archer <erick.archer@gmx.com>
-Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, conor.dooley@microchip.com,
- ajones@ventanamicro.com, evan@rivosinc.com, cleger@rivosinc.com,
- jszhang@kernel.org, charlie@rivosinc.com, gustavoars@kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20240130-use_mmap_hint_address-v2-0-f34ebfd33053@rivosinc.com>
+In-Reply-To: <20240130-use_mmap_hint_address-v2-0-f34ebfd33053@rivosinc.com>
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, alexghiti@rivosinc.com,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ shuah@kernel.org, corbet@lwn.net, cyy@cyyself.name, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-doc@vger.kernel.org
 
 Hello:
 
-This patch was applied to riscv/linux.git (for-next)
+This series was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Sat, 20 Jan 2024 14:54:00 +0100 you wrote:
-> As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> and Conventions" documentation [1], size calculations (especially
-> multiplication) should not be performed in memory allocator (or similar)
-> function arguments due to the risk of them overflowing. This could lead
-> to values wrapping around and a smaller allocation being made than the
-> caller was expecting. Using those allocations could lead to linear
-> overflows of heap memory and other misbehaviors.
+On Tue, 30 Jan 2024 11:04:29 -0800 you wrote:
+> On riscv, mmap currently returns an address from the largest address
+> space that can fit entirely inside of the hint address. This makes it
+> such that the hint address is almost never returned. This patch raises
+> the mappable area up to and including the hint address. This allows mmap
+> to often return the hint address, which allows a performance improvement
+> over searching for a valid address as well as making the behavior more
+> similar to other architectures.
 > 
 > [...]
 
 Here is the summary with links:
-  - riscv: Use kcalloc() instead of kzalloc()
-    https://git.kernel.org/riscv/c/28e4748e5e3d
+  - [v2,1/3] riscv: mm: Use hint address in mmap if available
+    (no matching commit)
+  - [v2,2/3] selftests: riscv: Generalize mm selftests
+    (no matching commit)
+  - [v2,3/3] docs: riscv: Define behavior of mmap
+    https://git.kernel.org/riscv/c/371a3c2055db
 
 You are awesome, thank you!
 -- 
