@@ -1,92 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C333D3A2;
-	Wed, 20 Mar 2024 08:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F6B39FEF;
+	Wed, 20 Mar 2024 08:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710924527; cv=none; b=SfWhd/kZ3hrnIobYB5XuA8DUwjzZE2rsktpI4z9Y6UxtneNVzphTuOYLOgLZtJ8YmI3Lkud9IkokvIC9f086R5VjdFMcbK44HxN5a+7nt2S/w0lThFJxfR8rq5o8k3XiutnEcUn4OduFPvktiozMeZ+gDfi1WkgUS/Vsz0vx23Q=
+	t=1710924605; cv=none; b=SPrt9w+RB3F6VuTADSM0QbROmhs7vbThaZUxJVXYfsPDlUZNslE3fH8BocpIbxf7Rbp1/LZnwrwsqPSvcd+EDBoPlq/DZXznSkd6zzkEdUQVxy8SdwjZncc58s7ZpH4+y2JU6TK7in3wlcHcX44PJ1CHO28xaO9LkL6+RnTihPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710924527; c=relaxed/simple;
-	bh=MsJ9srt0R0jo9/p+8MLEJRnYHOQ8AewGWYSuy5UdIZs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hDc1M958wJdWgSpjM9Zec48941U+ld3bHv6DHBZKl047BElal2RNMi2iQyWTtQCTTm1GFAfPwtp0hb8JAbn2Vtp3XJWSbHxxPxHTtOop5theznpVMrfk2CngN4Dfw+c2uRf3GwTPdyoexj9S6SNc1Z99GDb1pyhD51HwfLw8OHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WsUsxHfr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710924605; c=relaxed/simple;
+	bh=xGb4RhUYDWPElHint+HXBjgURCNEhZssnpEzWgr9f5I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Xm7tD5oNSIdR410vNbRMMCPPOzVAvH/aCMJrc+Aao114KPqDKL/jHkWtjwyJBFypNFGjxArTMKE+ZIXCS+JqQFexniy3iAEAIIAkwssSYRmc/mm0lG+6WP5bTzvx7q3SArDQzg89FliVAc4raMNm4EK6Dhq06llg5I3Qwi7qGKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=LP11FVl/; arc=none smtp.client-ip=185.125.188.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WsUsxHfr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48A1EC433C7;
-	Wed, 20 Mar 2024 08:48:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710924526;
-	bh=MsJ9srt0R0jo9/p+8MLEJRnYHOQ8AewGWYSuy5UdIZs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WsUsxHfrlLjmGHAgUrtuScTebQdlK7AuVa0n+mD/VxFxj30fl2qdVkZ0WlKyOGpJH
-	 VO3nYz8DW7A8P29iasD6a4ek4ud4jzElwkM0oC2H2ckKnJWSVjcYxmSFhEh8Mwj2GN
-	 Y3AR8oiGHOrkZ0XKF6vZe0NrB0B1tFd2mxIDPDOaE97GESDivYyr97xi90LRlfJ6nK
-	 r24RnmGWTlrIcQ70OSXp7GIfhJTWDtpTpsIOVdh1nTNNmbeBbfORz5OQMZtBLdoxJG
-	 BKov+rNV7jfWGj0eQLi8pEykQxr1S13SWGC5Rw/tN2Ss7+th68u1DpDhaq4fHRMviT
-	 1kumgGZRMXqpg==
-Date: Wed, 20 Mar 2024 09:48:43 +0100
-From: Wolfram Sang <wsa@kernel.org>
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: peda@axentia.se, p.zabel@pengutronix.de, krzysztof.kozlowski@linaro.org,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] i2c: muxes: pca954x: Allow sharing reset GPIO
-Message-ID: <Zfqi64ABlapvK66k@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-	Chris Packham <chris.packham@alliedtelesis.co.nz>, peda@axentia.se,
-	p.zabel@pengutronix.de, krzysztof.kozlowski@linaro.org,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240312201400.716009-1-chris.packham@alliedtelesis.co.nz>
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="LP11FVl/"
+Received: from localhost.localdomain (unknown [10.101.196.174])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id CCA2F40F3D;
+	Wed, 20 Mar 2024 08:44:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1710924249;
+	bh=+aw+nCBe+T3oJ08NUcmK8t7uBWVt6oUIlxWmPcFE1Jo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+	b=LP11FVl/yZMXhnRTXF2PkvKa6S3Dk2kwamlqfX47REpx8fr4kmO+U8NCFpjtpXML3
+	 myxDmfN4/rj5CCb80TDQqR41NDVMnyWBtiQ9WosUfAnd6VUzkuEGbehtvcEQXvWaSP
+	 hHZl82+N0tH67TmyxoneiKSS5n6qUr83yFgXmbvfAwGV+wO38cbwcgOMo9eRMB2LPe
+	 TGALCrz9NkJEs4xrWg0txyfY44sS8cO5C+SdRH/qCckqPBg+YH2VWf5kmJ/mZ/CZZL
+	 9bzZ4wtcKC7+GdtM89FDRBmGMA+Gt/6TBAXZ8KJOk6z5rL18hIawZrtIXks17ijtqN
+	 ycJPH+PkXTNpg==
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+To: rafael@kernel.org,
+	lenb@kernel.org,
+	jdelvare@suse.com,
+	linux@roeck-us.net
+Cc: robert.moore@intel.com,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	acpica-devel@lists.linux.dev,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH v5 1/2] ACPI: IPMI: Add helper to wait for when SMI is selected
+Date: Wed, 20 Mar 2024 16:43:16 +0800
+Message-Id: <20240320084317.366853-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="MyVoBAK5wpPESW1K"
-Content-Disposition: inline
-In-Reply-To: <20240312201400.716009-1-chris.packham@alliedtelesis.co.nz>
+Content-Transfer-Encoding: 8bit
 
+On Dell servers, many APCI methods of acpi_power_meter module evaluate
+variables inside IPMI region, so the region handler needs to be
+installed. In addition to that, the handler needs to be fully
+functional, and that depends on SMI being selected.
 
---MyVoBAK5wpPESW1K
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+So add a helper to let acpi_power_meter know when the handler is
+installed and ready to be used.
 
-On Wed, Mar 13, 2024 at 09:14:00AM +1300, Chris Packham wrote:
-> Some hardware designs with multiple PCA954x devices use a reset GPIO
-> connected to all the muxes. Support this configuration by making use of
-> the reset controller framework which can deal with the shared reset
-> GPIOs. Fall back to the old GPIO descriptor method if the reset
-> controller framework is not enabled.
->=20
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> Acked-by: Peter Rosin <peda@axentia.se>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+v5:
+ - No change.
 
-Dependencies are upstream, so applied to for-current, thanks!
+v4:
+ - Wording.
+ - Define and comment on timeout value.
+ - Move the completion to driver_data.
+ - Remove the tenary operator.
 
+v3:
+ - New patch.
 
---MyVoBAK5wpPESW1K
-Content-Type: application/pgp-signature; name="signature.asc"
+ drivers/acpi/acpi_ipmi.c | 23 ++++++++++++++++++++++-
+ include/acpi/acpi_bus.h  |  5 +++++
+ 2 files changed, 27 insertions(+), 1 deletion(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/drivers/acpi/acpi_ipmi.c b/drivers/acpi/acpi_ipmi.c
+index 0555f68c2dfd..5fba4dab5d08 100644
+--- a/drivers/acpi/acpi_ipmi.c
++++ b/drivers/acpi/acpi_ipmi.c
+@@ -22,6 +22,8 @@ MODULE_LICENSE("GPL");
+ /* the IPMI timeout is 5s */
+ #define IPMI_TIMEOUT			(5000)
+ #define ACPI_IPMI_MAX_MSG_LENGTH	64
++/* 2s should be suffient for SMI being selected */
++#define ACPI_IPMI_SMI_SELECTION_TIMEOUT	(2 * HZ)
+ 
+ struct acpi_ipmi_device {
+ 	/* the device list attached to driver_data.ipmi_devices */
+@@ -54,6 +56,7 @@ struct ipmi_driver_data {
+ 	 * to this selected global IPMI system interface.
+ 	 */
+ 	struct acpi_ipmi_device *selected_smi;
++	struct completion smi_selection_done;
+ };
+ 
+ struct acpi_ipmi_msg {
+@@ -463,8 +466,10 @@ static void ipmi_register_bmc(int iface, struct device *dev)
+ 		if (temp->handle == handle)
+ 			goto err_lock;
+ 	}
+-	if (!driver_data.selected_smi)
++	if (!driver_data.selected_smi) {
+ 		driver_data.selected_smi = ipmi_device;
++		complete(&driver_data.smi_selection_done);
++	}
+ 	list_add_tail(&ipmi_device->head, &driver_data.ipmi_devices);
+ 	mutex_unlock(&driver_data.ipmi_lock);
+ 
+@@ -578,6 +583,20 @@ acpi_ipmi_space_handler(u32 function, acpi_physical_address address,
+ 	return status;
+ }
+ 
++int acpi_wait_for_acpi_ipmi(void)
++{
++	long ret;
++
++	ret = wait_for_completion_interruptible_timeout(&driver_data.smi_selection_done,
++							ACPI_IPMI_SMI_SELECTION_TIMEOUT);
++
++	if (ret <= 0)
++		return -ETIMEDOUT;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(acpi_wait_for_acpi_ipmi);
++
+ static int __init acpi_ipmi_init(void)
+ {
+ 	int result;
+@@ -586,6 +605,8 @@ static int __init acpi_ipmi_init(void)
+ 	if (acpi_disabled)
+ 		return 0;
+ 
++	init_completion(&driver_data.smi_selection_done);
++
+ 	status = acpi_install_address_space_handler(ACPI_ROOT_OBJECT,
+ 						    ACPI_ADR_SPACE_IPMI,
+ 						    &acpi_ipmi_space_handler,
+diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+index 5de954e2b18a..5a69cbd58c5e 100644
+--- a/include/acpi/acpi_bus.h
++++ b/include/acpi/acpi_bus.h
+@@ -976,11 +976,16 @@ static inline void acpi_put_acpi_dev(struct acpi_device *adev)
+ {
+ 	acpi_dev_put(adev);
+ }
++
++int acpi_wait_for_acpi_ipmi(void);
++
+ #else	/* CONFIG_ACPI */
+ 
+ static inline int register_acpi_bus_type(void *bus) { return 0; }
+ static inline int unregister_acpi_bus_type(void *bus) { return 0; }
+ 
++static inline int acpi_wait_for_acpi_ipmi(void) { return 0; }
++
+ #endif				/* CONFIG_ACPI */
+ 
+ #endif /*__ACPI_BUS_H__*/
+-- 
+2.34.1
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmX6ousACgkQFA3kzBSg
-KbZfkw/+K/ucx2L5qiJCpZ35yspwE6QrPn1CB1D8YrBf37PhZcVGkrBmlrOws8KF
-FTneLXgMiaOezI+hMikDZz2aBiRa04p7x/pjWtPIHhbpHF8eojtpc69u3N6Rs8dp
-htAxH5AxfbuMszdy9+lIVD1s1/9/XjPvkGy3HWSbssGgzbNqphWRtXqEu7oI/XgS
-ZkktVdVR7BeBocQcFxPuHGufnvkBA3GTT27RJamzyHacHcvFAfnbU9h5iRHNEWOu
-tf9vl9hPoHbmYt+9xV9DOSAVnuuCWkyQZFe1pWTkjK3Nh9FRtA1ACEjNG+U5UZa6
-AnLGzGrBe0a9XCeVxNNzk7dUHMfSzdzGRemWnRhYSg/Y5CmJmJWY2AW3Nu7oqp1p
-v0URKADT829JwFUl2z6f0iYxl7dsEbWgCGUkBrWa4WLSGsXMbRpJUYl/LiCum1Cj
-kjvuM8LOoaVLBt/IUQr/E3tPTGlw85DhsOpbX29FhHLH9q6FDhvoiPcVSzPdoZT7
-1MK+R/CrzWKOzXlXD5hJxvnkWdefMFyPhx5cqM4yGirpiuAWDkpauGORcQzxjJd4
-M9lSoe7Cc2GzBbRW5Oj9F3fdtqStNOjnkJL0RA+Q/S8CHgp+9UzBy9/Lgo9AX4FN
-JBoFg158b63KymyPzJBH2+6gpxIFUtEHeWsiIfqSvVsxhu1y/QU=
-=xmSl
------END PGP SIGNATURE-----
-
---MyVoBAK5wpPESW1K--
