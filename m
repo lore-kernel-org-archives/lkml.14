@@ -1,89 +1,194 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from esa2.ltts.com (unknown [14.140.155.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54703BBE3;
-	Wed, 20 Mar 2024 10:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BBE2A1B2;
+	Wed, 20 Mar 2024 10:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.140.155.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710929702; cv=none; b=BrNTmdNiHdy2Gy07MsuLrR+73y15zve7EScQB8s2WDfOWC7em4/pLzNOUPChk6koZZs9dsfYArtN8VOk+Cb9IYdnPxgyHwVMvtqiC1GIP6R3VOXTqqwnyP0Cz75ocMbKgPi6K1DmpXaC13grCL1TE3MXpDoQLoFKrLadbe32X5Y=
+	t=1710929726; cv=none; b=AzS8Sm7POeYHjPp2ZMJhWfWMOmGk25ziuYJP1izCnxLF++lCy2gf7544/Ew6N6OoXNVQH45xApJqF7FMcfqwxCgNms4oZJ3L1XWoKc6XIzWq22fW0hjAD4KmUxh544osMNb/9h4+vrNXKf8NhA4uIc2e8ZRqLa8SuxG+wamz/TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710929702; c=relaxed/simple;
-	bh=X659WHw+/PTuk7wbU0u91cxdHTavRAC5UQ91xrIRVfQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hm3axyLi4P8yJB0KwrMbcC+tRJWQJowaFE8aM7odAfA33q6R8uSmu8dFFJL3ooYAYuK5GlczGtsYYcImmtPtnHhCbrcRITC64Jr49WoOeXf36GeJEe+zbBQ2yo4/xRZpEKKFswkSIdidmpkIJVDdJ7n5mCLlqV7819wWqKvYhho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=CsEKX2i2; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="CsEKX2i2"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 908A745E37
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1710929692; bh=OIC7b0T11EbEO2T46r+W8OeUwemPrjyx9q3L2NhrofM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=CsEKX2i2wK0thUrVhIi+imWdWPxczpLBCNUGdmQVYByBfO6gBkQMpmvPJhNqYyuYR
-	 mFWa+lelbWv9chEY41pUFGPzgu1yyyZTUcce2LwlkNTaMjGQ/1FKaOGLteOGPh1Wai
-	 MWofoSaHlOADxaa/Xigl3QBdTKVojHWcvNWIacIa0r9GNd+X0Z/8jYBod+das/Z0RQ
-	 Km+ul0hK6cYV8tcxk4uyV+skHRGOayBIFXgsNd5jPn+gwSFyme7zZSJKqqwR/mqrGr
-	 jqLGiEhXKk31H77qwKYXhZ2jHOTZ5if14QgC4YxP4gWysPVWvBbEvEqoCSKzNgvjXP
-	 rbKQvXRqFwr8Q==
-Received: from localhost (mdns.lwn.net [45.79.72.68])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 908A745E37;
-	Wed, 20 Mar 2024 10:14:51 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Linus Torvalds <torvalds@linuxfoundation.org>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Documentation fixes for 6.9
-Date: Wed, 20 Mar 2024 04:14:47 -0600
-Message-ID: <87v85h5hwo.fsf@meer.lwn.net>
+	s=arc-20240116; t=1710929726; c=relaxed/simple;
+	bh=zfDLbqWgOH8d1+adp9RxEyhJRbc2lOUnCC4kwPqZ5qc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=LseY4B1DSI2HDsGmJvjolHjO3up1hhZe0RzxKRh6ISLGP/NPDKrimwnNCTIEIzVbzSkN7eqzNluqnV1b0rson5F93gvUOpKz0lBndnhoxdun03w6kEqyKKrWYRitXynXllfUQBfIVy1ry4XzBIA0p96Zz9h0Zbrv41jvou5Anpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=14.140.155.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
+IronPort-SDR: oQrzJEPhxgP8uSFlXa+okPvyeBYCfJjsBKwDc4F+mjozrIdneuUGtuGjWkX3CLcm3b42JOf9Tz
+ bIziGp9kJiug==
+Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
+  by esa2.ltts.com with ESMTP; 20 Mar 2024 15:44:07 +0530
+From: Bhargav Raviprakash <bhargav.r@ltts.com>
+To: jpanis@baylibre.com
+Cc: arnd@arndb.de,
+	bhargav.r@ltts.com,
+	broonie@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	eblanc@baylibre.com,
+	gregkh@linuxfoundation.org,
+	kristo@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	lee@kernel.org,
+	lgirdwood@gmail.com,
+	linus.walleij@linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	m.nirmaladevi@ltts.com,
+	nm@ti.com,
+	robh+dt@kernel.org,
+	vigneshr@ti.com
+Subject: Re: [PATCH v3 01/11] mfd: tps6594: Add register definitions for TI TPS65224 PMIC
+Date: Wed, 20 Mar 2024 15:43:54 +0530
+Message-Id: <20240320101354.463936-1-bhargav.r@ltts.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <44295772-4635-42c2-b7b5-cdc37505715e@baylibre.com>
+References: <44295772-4635-42c2-b7b5-cdc37505715e@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-The following changes since commit 0c8e9b538ed7ecf4159b080ab0dafca3941c69db:
+Hello,
 
-  docs: verify/bisect: fixes, finetuning, and support for Arch (2024-03-07 =
-04:19:43 -0700)
+On Fri, 8 Mar 2024 12:24:40 +0100, Julien wrote:
+> On 3/8/24 11:34, Bhargav Raviprakash wrote:
+> > From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+> >
+> > Extend TPS6594 PMIC register and field definitions to support TPS65224
+> > power management IC.
+> >
+> > TPS65224 is software compatible to TPS6594 and can re-use many of the
+> > same definitions, new definitions are added to support additional
+> > controls available on TPS65224.
+> >
+> > Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+> > Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+> > ---
+> >   include/linux/mfd/tps6594.h | 354 ++++++++++++++++++++++++++++++++++--
+> >   1 file changed, 342 insertions(+), 12 deletions(-)
+> 
+> [...]
+> 
+> > +/* IRQs */
+> > +enum tps65224_irqs {
+> > +	/* INT_BUCK register */
+> > +	TPS65224_IRQ_BUCK1_UVOV,
+> > +	TPS65224_IRQ_BUCK2_UVOV,
+> > +	TPS65224_IRQ_BUCK3_UVOV,
+> > +	TPS65224_IRQ_BUCK4_UVOV,
+> > +	/* INT_LDO_VMON register */
+> > +	TPS65224_IRQ_LDO1_UVOV,
+> > +	TPS65224_IRQ_LDO2_UVOV,
+> > +	TPS65224_IRQ_LDO3_UVOV,
+> > +	TPS65224_IRQ_VCCA_UVOV,
+> > +	TPS65224_IRQ_VMON1_UVOV,
+> > +	TPS65224_IRQ_VMON2_UVOV,
+> > +	/* INT_GPIO register */
+> > +	TPS65224_IRQ_GPIO1,
+> > +	TPS65224_IRQ_GPIO2,
+> > +	TPS65224_IRQ_GPIO3,
+> > +	TPS65224_IRQ_GPIO4,
+> > +	TPS65224_IRQ_GPIO5,
+> > +	TPS65224_IRQ_GPIO6,
+> > +	/* INT_STARTUP register */
+> > +	TPS65224_IRQ_VSENSE,
+> > +	TPS65224_IRQ_ENABLE,
+> > +	TPS65224_IRQ_PB_SHORT,
+> > +	TPS65224_IRQ_FSD,
+> > +	TPS65224_IRQ_SOFT_REBOOT,
+> > +	/* INT_MISC register */
+> > +	TPS65224_IRQ_BIST_PASS,
+> > +	TPS65224_IRQ_EXT_CLK,
+> > +	TPS65224_IRQ_REG_UNLOCK,
+> > +	TPS65224_IRQ_TWARN,
+> > +	TPS65224_IRQ_PB_LONG,
+> > +	TPS65224_IRQ_PB_FALL,
+> > +	TPS65224_IRQ_PB_RISE,
+> > +	TPS65224_IRQ_ADC_CONV_READY,
+> > +	/* INT_MODERATE_ERR register */
+> > +	TPS65224_IRQ_TSD_ORD,
+> > +	TPS65224_IRQ_BIST_FAIL,
+> > +	TPS65224_IRQ_REG_CRC_ERR,
+> > +	TPS65224_IRQ_RECOV_CNT,
+> > +	/* INT_SEVERE_ERR register */
+> > +	TPS65224_IRQ_TSD_IMM,
+> > +	TPS65224_IRQ_VCCA_OVP,
+> > +	TPS65224_IRQ_PFSM_ERR,
+> > +	TPS65224_IRQ_BG_XMON,
+> > +	/* INT_FSM_ERR register */
+> > +	TPS65224_IRQ_IMM_SHUTDOWN,
+> > +	TPS65224_IRQ_ORD_SHUTDOWN,
+> > +	TPS65224_IRQ_MCU_PWR_ERR,
+> > +	TPS65224_IRQ_SOC_PWR_ERR,
+> > +	TPS65224_IRQ_COMM_ERR,
+> > +	TPS65224_IRQ_I2C2_ERR,
+> > +	/* INT_ESM register */
+> > +	TPS65224_IRQ_ESM_MCU_PIN,
+> > +	TPS65224_IRQ_ESM_MCU_FAIL,
+> > +	TPS65224_IRQ_ESM_MCU_RST,
+> 
+> You should remove the 3 lines above for ESM_MCU, since there is none
+> linux driver for ESM_MCU.
+> 
+> > +};
+> > +
+> > +#define TPS65224_IRQ_NAME_BUCK1_UVOV		"buck1_uvov"
+> > +#define TPS65224_IRQ_NAME_BUCK2_UVOV		"buck2_uvov"
+> > +#define TPS65224_IRQ_NAME_BUCK3_UVOV		"buck3_uvov"
+> > +#define TPS65224_IRQ_NAME_BUCK4_UVOV		"buck4_uvov"
+> > +#define TPS65224_IRQ_NAME_LDO1_UVOV		"ldo1_uvov"
+> > +#define TPS65224_IRQ_NAME_LDO2_UVOV		"ldo2_uvov"
+> > +#define TPS65224_IRQ_NAME_LDO3_UVOV		"ldo3_uvov"
+> > +#define TPS65224_IRQ_NAME_VCCA_UVOV		"vcca_uvov"
+> > +#define TPS65224_IRQ_NAME_VMON1_UVOV		"vmon1_uvov"
+> > +#define TPS65224_IRQ_NAME_VMON2_UVOV		"vmon2_uvov"
+> > +#define TPS65224_IRQ_NAME_GPIO1			"gpio1"
+> > +#define TPS65224_IRQ_NAME_GPIO2			"gpio2"
+> > +#define TPS65224_IRQ_NAME_GPIO3			"gpio3"
+> > +#define TPS65224_IRQ_NAME_GPIO4			"gpio4"
+> > +#define TPS65224_IRQ_NAME_GPIO5			"gpio5"
+> > +#define TPS65224_IRQ_NAME_GPIO6			"gpio6"
+> > +#define TPS65224_IRQ_NAME_VSENSE	        "vsense"
+> > +#define TPS65224_IRQ_NAME_ENABLE		"enable"
+> > +#define TPS65224_IRQ_NAME_PB_SHORT		"pb_short"
+> > +#define TPS65224_IRQ_NAME_FSD			"fsd"
+> > +#define TPS65224_IRQ_NAME_SOFT_REBOOT		"soft_reboot"
+> > +#define TPS65224_IRQ_NAME_BIST_PASS		"bist_pass"
+> > +#define TPS65224_IRQ_NAME_EXT_CLK		"ext_clk"
+> > +#define TPS65224_IRQ_NAME_REG_UNLOCK		"reg_unlock"
+> > +#define TPS65224_IRQ_NAME_TWARN			"twarn"
+> > +#define TPS65224_IRQ_NAME_PB_LONG		"pb_long"
+> > +#define TPS65224_IRQ_NAME_PB_FALL		"pb_fall"
+> > +#define TPS65224_IRQ_NAME_PB_RISE		"pb_rise"
+> > +#define TPS65224_IRQ_NAME_ADC_CONV_READY	"adc_conv_ready"
+> > +#define TPS65224_IRQ_NAME_TSD_ORD		"tsd_ord"
+> > +#define TPS65224_IRQ_NAME_BIST_FAIL		"bist_fail"
+> > +#define TPS65224_IRQ_NAME_REG_CRC_ERR		"reg_crc_err"
+> > +#define TPS65224_IRQ_NAME_RECOV_CNT		"recov_cnt"
+> > +#define TPS65224_IRQ_NAME_TSD_IMM		"tsd_imm"
+> > +#define TPS65224_IRQ_NAME_VCCA_OVP		"vcca_ovp"
+> > +#define TPS65224_IRQ_NAME_PFSM_ERR		"pfsm_err"
+> > +#define TPS65224_IRQ_NAME_BG_XMON		"bg_xmon"
+> > +#define TPS65224_IRQ_NAME_IMM_SHUTDOWN		"imm_shutdown"
+> > +#define TPS65224_IRQ_NAME_ORD_SHUTDOWN		"ord_shutdown"
+> > +#define TPS65224_IRQ_NAME_MCU_PWR_ERR		"mcu_pwr_err"
+> > +#define TPS65224_IRQ_NAME_SOC_PWR_ERR		"soc_pwr_err"
+> > +#define TPS65224_IRQ_NAME_COMM_ERR		"comm_err"
+> > +#define TPS65224_IRQ_NAME_I2C2_ERR		"i2c2_err"
+> > +#define TPS65224_IRQ_NAME_ESM_MCU_PIN		"esm_mcu_pin"
+> > +#define TPS65224_IRQ_NAME_ESM_MCU_FAIL		"esm_mcu_fail"
+> > +#define TPS65224_IRQ_NAME_ESM_MCU_RST		"esm_mcu_rst"
+> 
+> You should remove the 3 lines above for ESM_MCU.
+> 
+> Julien
 
-are available in the Git repository at:
+Thanks! will get it done in the next version.
 
-  git://git.lwn.net/linux.git tags/docs-6.9-2
-
-for you to fetch changes up to b8cfda5c9065cd619a97c17da081cbfab3b1e756:
-
-  docs: verify/bisect: remove a level of indenting (2024-03-18 03:43:31 -06=
-00)
-
-----------------------------------------------------------------
-A handful of late-arriving documentation fixes and enhancements.
-
-----------------------------------------------------------------
-Kendra Moore (1):
-      doc: Fix typo in admin-guide/cifs/introduction.rst
-
-Maki Hatano (1):
-      README: Fix spelling
-
-N=C3=ADcolas F. R. A. Prado (2):
-      docs: *-regressions.rst: Add colon to regzbot commands
-      docs: handling-regressions.rst: Update regzbot command fixed-by to fix
-
-Thorsten Leemhuis (4):
-      docs: verify/bisect: improve install instructions
-      docs: verify/bisect: check taint flag
-      docs: verify/bisect: drop 'v' prefix, EOL aspect, and assorted fixes
-      docs: verify/bisect: remove a level of indenting
-
- Documentation/admin-guide/cifs/introduction.rst    |   2 +-
- .../admin-guide/reporting-regressions.rst          |   2 +-
- .../verify-bugs-and-bisect-regressions.rst         | 389 +++++++++++------=
-----
- Documentation/process/handling-regressions.rst     |  12 +-
- README                                             |   2 +-
- 5 files changed, 220 insertions(+), 187 deletions(-)
+Regards,
+Bhargav
