@@ -1,128 +1,289 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9FA222309
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 06:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710914720; cv=none; b=uVRFwjpS55fX5wQeam6YobtmoXJ/RN0IbfnAs0Gnjcshwls33rSuun48p2EFQ8NKUvdUilU4g2fpUUhRR1Q6RcSG66rka9vlQFtSpFmE5PZhH50mj0r6tyWsdq18oUQx6Vj1yJ+xUS15F/WtKAZqTP5WD5exOlIIK11obC3kRpA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710914720; c=relaxed/simple;
-	bh=rAeoupFGtti/3Dvzkwv8f3C5pz+fmOK/k9qfeI9F5KQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dNEWCpt2Q059K5KF7+kMiNKxDDyl1cDpMlaSAU1Nx4mKLZcw5TNlis1yykIKCI5lQabCRMaeuW5ihR11MvOpjH41wWiG2QLgkbI3xjcCDtEaTG+42NS/8IiIbATIc5HxTArjQTjNuuiYLCQyKlcqP1Ev2hUO0LY3kxUQS+J0gac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uYZSuycr; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A77A17548
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 06:10:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710915010; cv=fail; b=ifI1rz4SO6qFvN1lwVyhGLpL1x7fWm8/fgKllRASdJuEJSIZh5mG4+7P34GsZi3k+q0dq5WuWIdz8OaTPUAvg4yebrkVPhEw5ODogYXddAZ5UZQ5YqIDwIJPFMMB5mie66JAKRSqLxIJfxE2FHGKBV0gv7Xwno7gCoBPJSzqP7s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710915010; c=relaxed/simple;
+	bh=pOinMp71eRy/ae4P0/8Os+JSSOGqOOKnSI9Z73vDoxo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=bSGUdNUdHFLVbwOaClIeC1XHbkKApShbs1IDD9tu4ieU6WWFysM3LeHdw6N+3vw8CBTQTNVedsaGavd8it5jaKvRfl/8MA1H9IwSJRSqcUd71Syv6iUotfSzPstb2dU2BlGd9LsiMMdjLmkPSdaZ7JISqhvJSdR2/N8EXNUMHFc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FsB5uX7Q; arc=fail smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uYZSuycr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=a0P5TIt0Qos8BCXptSUzVUPMQQILLLRWlv1q937+UBw=; b=uYZSuycr4Wa58UZ4VTstiJx2ef
-	g63HNwxpSn1M2h3gPOt45Gg3bIwWAV7eeSjyUIqnnYsQl4XWPM5CBYMikreSH+CqyyruNy+eFAFhQ
-	/FlMCjg6Cb9DtdMGmWkSIGls4YCicYq68eKaLLEsEobjldb2LVcqQPiNyZdcQA8iqAe4yE1VGlOHo
-	T6EsAfLyV7P7Yku/0l8Q0LGw/6QTsWSSFkF9wz0N/gt36dWOzD+8g8AAQvpSIZahxC5V8CJKTI4JO
-	gEwg9lbSIrNXxb4Ot/JioOP19f05u6eoTm5yFflvMoRDY+7mPbk6Kncm/92Lyi3IY2CiUyQSE8Bjy
-	FDLTxhXA==;
-Received: from [50.53.2.121] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rmp4c-0000000Fbdo-1xoi;
-	Wed, 20 Mar 2024 06:05:14 +0000
-Message-ID: <d4072aa1-47e4-45d3-9e04-2cd9d782b593@infradead.org>
-Date: Tue, 19 Mar 2024 23:05:12 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FsB5uX7Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710915008; x=1742451008;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=pOinMp71eRy/ae4P0/8Os+JSSOGqOOKnSI9Z73vDoxo=;
+  b=FsB5uX7Q1aR04Ke52slraZIamG0HJortlXYAW/7O5hzXQNe3ln1P5Nmg
+   NRdC7M3T6XF5yacvTYxnXV15hH7d3Xz0sW/Wr8gLsVwsBpIvBr5+AMo7d
+   Axj/+w1yUMcSX9vTxk4z7yP9Xzanh0C9f+WiM6D3c1BdUZTbylSa+r5uq
+   JQltAspw93MzuwsqtJeddmn3KrPzufNP2/MTepp3GGxCI1aTEvPk536sO
+   McdV/kTg7nRTM8cjng6TT9mrTmGivdBPou+9Rz6/ZVL+Mq7aG75h7uIoJ
+   Pp8Fb2aWmeVNC7glbAxD/oebEfB2Afpz/H4hADAFxsLcs3qCH4F2ZHw4g
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11018"; a="28296116"
+X-IronPort-AV: E=Sophos;i="6.07,139,1708416000"; 
+   d="scan'208";a="28296116"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 23:10:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,139,1708416000"; 
+   d="scan'208";a="14702306"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 19 Mar 2024 23:10:06 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 19 Mar 2024 23:10:05 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 19 Mar 2024 23:10:05 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 19 Mar 2024 23:10:05 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jjkdp83v3kHuvhieifWm6viYdjWBCMmSai0ilhndu9jRfuRQBqygWaiIT1pRfoAWXgtMVKxxbMzKcK9L5tbM2Elz6tR1NAq825myY2xy+su78QkeZQCdX+goaLxlsCPcHf/YStDlbYNwpNYtbw0busCydos9XB3sSNUSOyIAyHTv4ko3bX/Bdh171gm4jGTx2osNtyPF7wmVlIwUkytIB4wPhnVuNb43LmfLePmO9gn3UUeGlZ7fqsY0tHYbwm4MmP0lvSggeJpJVdt9BoU1wG5S8cxzkL/lST7gjLZs4VTQSY66EGNNowhbkVlhh8/1urWdDG2fw+FtDOZqxu8Y3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dqX5IWXvPdYkys541wZ3BLxlAW0a22TL6az00ewWzRc=;
+ b=E6RhAY9AGHLBa0ljCCwS9PfboetQGF2PcO/WRE82uwf/GdTpMicMQpjP0yONbVp8r9A9gkYlO+DqMVTTY6ddqPaTQIZl9zO08kqfJY+GVIRvd7Y7klJI5uz7kc88GUSh7sy9wwA5etb5LG0kOlt+7Atq4krw3hT5ZGhkRENsG55QA5ygUJHrx6EBFuKgLSCC0V8fgjgsTjJkd8o9lCDtlQxeLfUFt2zCjSjXVUyCc236OSQlsLQLK+TV5qBXJ2iMB3D7jticC8XgVq0nxc7loXJCsjODXWIX28vZ4aIInnVl1M1yHxZLTqf2Z03MqSK//uXhotfYPs+IOc+DXu9/5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CY5PR11MB6392.namprd11.prod.outlook.com (2603:10b6:930:37::15)
+ by LV3PR11MB8741.namprd11.prod.outlook.com (2603:10b6:408:21d::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.11; Wed, 20 Mar
+ 2024 06:10:03 +0000
+Received: from CY5PR11MB6392.namprd11.prod.outlook.com
+ ([fe80::7118:c3d4:7001:cf9d]) by CY5PR11MB6392.namprd11.prod.outlook.com
+ ([fe80::7118:c3d4:7001:cf9d%6]) with mapi id 15.20.7409.010; Wed, 20 Mar 2024
+ 06:10:03 +0000
+Date: Wed, 20 Mar 2024 14:03:17 +0800
+From: Yujie Liu <yujie.liu@intel.com>
+To: Sean Anderson <sean.anderson@linux.dev>
+CC: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, kernel test robot
+	<lkp@intel.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+	<dri-devel@lists.freedesktop.org>, <oe-kbuild-all@lists.linux.dev>, "David
+ Airlie" <airlied@gmail.com>, <linux-kernel@vger.kernel.org>, Michal Simek
+	<monstr@monstr.eu>, <linux-arm-kernel@lists.infradead.org>, Daniel Vetter
+	<daniel@ffwll.ch>
+Subject: Re: [PATCH 6/6] drm: zynqmp_dp: Add debugfs interface for compliance
+ testing
+Message-ID: <Zfp8JZlR6EvM8yHt@yujie-X299>
+References: <20240315230916.1759060-7-sean.anderson@linux.dev>
+ <202403161704.ACHJdSJG-lkp@intel.com>
+ <ce1190ad-27c2-4a16-b36f-442c0c419dcc@linux.dev>
+ <20240318175032.GM13682@pendragon.ideasonboard.com>
+ <6b44c9b7-e1e2-4b69-a443-4616ceab6f17@linux.dev>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <6b44c9b7-e1e2-4b69-a443-4616ceab6f17@linux.dev>
+X-ClientProxiedBy: SG2PR06CA0194.apcprd06.prod.outlook.com (2603:1096:4:1::26)
+ To CY5PR11MB6392.namprd11.prod.outlook.com (2603:10b6:930:37::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/8] drm: xlnx: Fix kerneldoc
-Content-Language: en-US
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Sean Anderson <sean.anderson@linux.dev>
-Cc: Michal Simek <michal.simek@amd.com>, David Airlie <airlied@gmail.com>,
- linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
- linux-arm-kernel@lists.infradead.org,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- dri-devel@lists.freedesktop.org
-References: <20240319225122.3048400-1-sean.anderson@linux.dev>
- <20240319225122.3048400-2-sean.anderson@linux.dev>
- <e2eba421-cba1-4dd5-837c-6be5f07ed402@ideasonboard.com>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <e2eba421-cba1-4dd5-837c-6be5f07ed402@ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR11MB6392:EE_|LV3PR11MB8741:EE_
+X-MS-Office365-Filtering-Correlation-Id: 45c03ba1-d414-4327-23c3-08dc48a46197
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: r5yf7HwXw3KBXieikO21DMWbbnuUF1QY0f3272gN3uxcLALJG/CVGK6sTYMxcjPrwoO3gT2Y1Jc3UUdnE7BfVzdwHB8BD6gZC0YexhXj8jbiPVAdRhAQFa4hp+8VK77qIJqM7UqTQeZFhzPtSM99yC3BLa6hxqO9I8CBi1RNQEUnOiBEAlV6gDCLksVUU3ekVI8IlDJtyB6nD/wcDpkZTvUMBTJJ9D0EpFobhSctCrOF1I+MrMKRdp5JnpfogdDFBBZHbPYPL95XeI4+gIttz5vPNxwa49l3hTvJKqmAWlj4MkqdoXM05mYVYx6zFXaH+wNoOWaT1jr878IgFfLsQflofVTrLH9arw1Io+8OdUppMnXLDxRXY8yEgP6jM4Wxx9Qr4jJPNIdcf8gtuGmm+RN9EoAPoSvNR60ayt6jWsxEEWLOQ5z/o/w4vNsaJ8FlLSOmCkhPCQeEreKfPdZf825/8ZXW0Bj0GUnUxDO0DafCgK4g7oJLIa/q5wmJTb7ytmhrsJIjNyoyx6L79v0jOY4IQPpsUG3x0W3z9d11yxLSPa1GDSE3Ly0w27DmJuhw5JEkKWUuRs2XCCX/aLuW4HUZcOwKCAkjjLGcGnKijqLUBeE5y2MGUDzzCCqZHcCO
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6392.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(376005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2sSclp0qNPWeP1BqJxd89Eutd+ee8acT05j3VkTnSxXOixDGtia7x+sCsmV5?=
+ =?us-ascii?Q?i9TrsD6QR8hoCy3vvaRk3UHy4A/7eXywcjYcxXkMtm6OPyAOOVxaUFdiRki+?=
+ =?us-ascii?Q?aedqt9CMUQjg5uNUUXhRzs9w/98Ap7zJQ2Md5jdR8WR9OJoP1QQNSRsmGqfk?=
+ =?us-ascii?Q?PachmKXXEoiuxRHfKjxmq/kAW/UsbXVcf26Evcy1Gr4GQj+cmKsQf0OWLO5E?=
+ =?us-ascii?Q?fYyk1c/opevmIo6tCqyWHe4X2XL9OEvo8YJwB3Tcp5rf1Rkl+T51VReGDJ5Q?=
+ =?us-ascii?Q?iKYD+Jc7yBa0wjqc8zNcMjs05DHTe53gnZVDXASa07pXjnrbSsMYHEw+gRAh?=
+ =?us-ascii?Q?/eNDSUZUIEBqnV/xU/2GvqZ33oGWZRR8/yyIifOfPXCNqzwBJ0k3bDKbP5qZ?=
+ =?us-ascii?Q?Erc90UtgWroDpXMf9QRX3qel75p1ntbL7vRlzkNigLZn+dODrhC0wq1Pv3oD?=
+ =?us-ascii?Q?0BKG+DDMFWZm10ltR1eeEmNwbIbL3v1j6UzAJ/IXsiGFD6MJvsPD1+JDhrvC?=
+ =?us-ascii?Q?JoB7vGpXqPuZpfKmWFePe2OklXrNgDYxGxHdNSK0FE6JJGF4DPI2vM12yqxW?=
+ =?us-ascii?Q?GtE/UnBaKnllxsKJSW+NMLOBBf5nQbrJjT4ZDt+n9sC0eFdg8jvn7qy9bCgj?=
+ =?us-ascii?Q?VABywFlCRwEp5eahmIt03z9FHQRjBrFRc5diry1aKfSlooPyPRhwRYCSwGN7?=
+ =?us-ascii?Q?wZeYunb2KytlCf8dCgCRZD8cAFV42myfnB4Xpo3wUfwSNVK8aVpguhkMvMia?=
+ =?us-ascii?Q?qi80lW5GdZA525bX3wWwEA9IQImKRFR1Y0iHF7j9lC54rzIFSfZ5/9T2zMHy?=
+ =?us-ascii?Q?nLqQt3GF6Gr3pywQNvFrwTF1QIWLWTzXpcL3OUN1RWYya+PBdRSVbbbbrpNE?=
+ =?us-ascii?Q?/v9ICoWk84XdrJV/SS5T4WRFCFseWuE+th/LvbhqLwFiaw+CdS6RtLgfvuL6?=
+ =?us-ascii?Q?gc2oJxl8/7fA+qNqE8+nFzENb2B0BeuiPVQpehFmemgsJaoPaIcAlxxSU4PB?=
+ =?us-ascii?Q?HJz054wcHtAjlVXo2XoaoCcuhJuMT/R0C2jeVQD37N974Lq/aF+lxW9y6ldc?=
+ =?us-ascii?Q?eisjW2AOWYSObRhwCE7xSDkAzMSX679V6mvcxlPhGMbyOmO1c+r2/yxGKm2p?=
+ =?us-ascii?Q?bZgX/7dIU2gYtBzn/P0gwID1hTLt5WiT2QxTSK6bOvHQT+5XsEKFjjoJJqgE?=
+ =?us-ascii?Q?J9Fv2Iw4zeKB93b3ICXcMyruiOyyg7waC2OFm8vpnBoYFy3JKPpAPhZHOjwM?=
+ =?us-ascii?Q?xNcraOjqSl+lh179QFSC2UzOw5Vry07S5CWrqvKaw55SigbaNwBoKD7xTZcQ?=
+ =?us-ascii?Q?YUHHPmbVBPlms6tGjExU224wL/cGI29MDgppzz0lHfXPOFd5wjEsT5l58aAY?=
+ =?us-ascii?Q?Al3Wkj7DUub+7UPZCnRRL8XBywpcEzR7bMy+D8zJ2ZkkDaNb1Chi8wrfHO2T?=
+ =?us-ascii?Q?0pR2H4spvYoB7BEBDrZgzaZZcKSi2ZFqDAfO6rDAq51gwU0H4x1g1PE7BcCa?=
+ =?us-ascii?Q?hbWVA3j5SbVQRu6E3QmB4ez9iKDjGhaj3Bb0PkosUzsJcZ/k63T0frwzWi1h?=
+ =?us-ascii?Q?Vu4tpdS2T1KjpxjCClIr+l5V6wnhgudZ2l9nXwsz?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45c03ba1-d414-4327-23c3-08dc48a46197
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6392.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2024 06:10:03.1994
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IbWe6kXGjOLtldINKY3s6CVoXokxkjvDgNxCVVvU92dvSEbxxa4Pu/uyp7zgi8oX+gSeNk9P1LOp/tKAaiFhCw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8741
+X-OriginatorOrg: intel.com
 
+Hi Sean,
 
+On Mon, Mar 18, 2024 at 03:05:57PM -0400, Sean Anderson wrote:
+> On 3/18/24 13:50, Laurent Pinchart wrote:
+> > On Mon, Mar 18, 2024 at 11:06:40AM -0400, Sean Anderson wrote:
+> >> On 3/16/24 06:14, kernel test robot wrote:
+> >> > Hi Sean,
+> >> > 
+> >> > kernel test robot noticed the following build warnings:
+> >> > 
+> >> > [auto build test WARNING on v6.8]
+> >> > [cannot apply to drm-misc/drm-misc-next linus/master next-20240315]
+> >> > [If your patch is applied to the wrong git tree, kindly drop us a note.
+> >> > And when submitting patch, we suggest to use '--base' as documented in
+> >> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> >> > 
+> >> > url:    https://github.com/intel-lab-lkp/linux/commits/Sean-Anderson/drm-zynqmp_dp-Downgrade-log-level-for-aux-retries-message/20240316-071208
+> >> > base:   v6.8
+> >> > patch link:    https://lore.kernel.org/r/20240315230916.1759060-7-sean.anderson%40linux.dev
+> >> > patch subject: [PATCH 6/6] drm: zynqmp_dp: Add debugfs interface for compliance testing
+> >> > config: microblaze-allmodconfig (https://download.01.org/0day-ci/archive/20240316/202403161704.ACHJdSJG-lkp@intel.com/config)
+> >> > compiler: microblaze-linux-gcc (GCC) 13.2.0
+> >> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240316/202403161704.ACHJdSJG-lkp@intel.com/reproduce)
 
-On 3/19/24 22:42, Tomi Valkeinen wrote:
-> On 20/03/2024 00:51, Sean Anderson wrote:
->> Fix a few errors in the kerneldoc. Mostly this addresses missing/renamed
->> members.
->>
->> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
->> ---
->>
->> Changes in v2:
->> - New
->>
->>   drivers/gpu/drm/xlnx/zynqmp_disp.c  | 6 +++---
->>   drivers/gpu/drm/xlnx/zynqmp_dpsub.h | 1 +
->>   drivers/gpu/drm/xlnx/zynqmp_kms.h   | 4 ++--
->>   3 files changed, 6 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
->> index 407bc07cec69..f79bf3fb8110 100644
->> --- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
->> +++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
->> @@ -128,9 +128,9 @@ struct zynqmp_disp_layer {
->>    * struct zynqmp_disp - Display controller
->>    * @dev: Device structure
->>    * @dpsub: Display subsystem
->> - * @blend.base: Register I/O base address for the blender
->> - * @avbuf.base: Register I/O base address for the audio/video buffer manager
->> - * @audio.base: Registers I/O base address for the audio mixer
->> + * @blend: Register I/O base address for the blender
->> + * @avbuf: Register I/O base address for the audio/video buffer manager
->> + * @audio: Registers I/O base address for the audio mixer
+[...]
+
+> >> > 
+> >> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> >> > the same patch/commit), kindly add following tags
+> >> > | Reported-by: kernel test robot <lkp@intel.com>
+> >> > | Closes: https://lore.kernel.org/oe-kbuild-all/202403161704.ACHJdSJG-lkp@intel.com/
+> >> > 
+> >> > All warnings (new ones prefixed by >>):
+> >> > 
+> >> >    drivers/gpu/drm/xlnx/zynqmp_dp.c: In function 'zynqmp_dp_bridge_debugfs_init':
+> >> >>> drivers/gpu/drm/xlnx/zynqmp_dp.c:2168:31: warning: 'sprintf' may write a terminating nul past the end of the destination [-Wformat-overflow=]
+> >> >     2168 |                 sprintf(name, fmt, i);
+> >> >          |                               ^~~
+> >> >    drivers/gpu/drm/xlnx/zynqmp_dp.c:2168:17: note: 'sprintf' output between 18 and 20 bytes into a destination of size 19
+> >> >     2168 |                 sprintf(name, fmt, i);
+> >> >          |                 ^~~~~~~~~~~~~~~~~~~~~
+> >> 
+> >> Not a bug, as i will be at most 4, which uses 1 digit.
+> > 
+> > The compiler can't know that. Please fix this, there's a zero warning
+> > policy.
 > 
-> Afaics, the kernel doc guide:
+> I cannot reproduce this with GCC 13.2.0. So given that this is not a bug and I can't reproduce
+> it, I don't see how I can verify any fix.
+
+There is a "reproduce" link in the bot's report. We followed the steps
+in that link and found that the warning could be reproduced. Please
+notice that this is a "W=1" warning. BTW, we also tested the v2 patch
+and the warning has been fixed there. Just for your information.
+
+$ cd linux
+$ git checkout v6.8
+HEAD is now at e8f897f4afef0 Linux 6.8
+$ b4 am https://lore.kernel.org/r/20240315230916.1759060-7-sean.anderson@linux.dev
+$ git am ./20240315_sean_anderson_drm_zynqmp_dp_misc_patches_and_debugfs_support.mbx
+Applying: drm: zynqmp_dp: Downgrade log level for aux retries message
+Applying: drm: zynqmp_dp: Adjust training values per-lane
+Applying: drm: zynqmp_dp: Add locking
+Applying: drm: zynqmp_dp: Split off several helper functions
+Applying: drm: zynqmp_dp: Optionally ignore DPCD errors
+Applying: drm: zynqmp_dp: Add debugfs interface for compliance testing
+
+$ wget https://download.01.org/0day-ci/archive/20240316/202403161704.ACHJdSJG-lkp@intel.com/config
+$ mkdir build_dir
+$ cp config build_dir/.config
+$ git clone https://github.com/intel/lkp-tests.git ~/lkp-tests
+$ COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-13.2.0 ~/lkp-tests/kbuild/make.cross W=1 O=build_dir ARCH=microblaze olddefconfig
+$ COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-13.2.0 ~/lkp-tests/kbuild/make.cross W=1 O=build_dir ARCH=microblaze drivers/gpu/drm/xlnx/zynqmp_dp.o
+...
+  CC [M]  drivers/gpu/drm/xlnx/zynqmp_dp.o
+../drivers/gpu/drm/xlnx/zynqmp_dp.c: In function 'zynqmp_dp_bridge_debugfs_init':
+../drivers/gpu/drm/xlnx/zynqmp_dp.c:2168:31: warning: 'sprintf' may write a terminating nul past the end of the destination [-Wformat-overflow=]
+ 2168 |                 sprintf(name, fmt, i);
+      |                               ^~~
+../drivers/gpu/drm/xlnx/zynqmp_dp.c:2168:17: note: 'sprintf' output between 18 and 20 bytes into a destination of size 19
+ 2168 |                 sprintf(name, fmt, i);
+      |                 ^~~~~~~~~~~~~~~~~~~~~
+
+Best Regards,
+Yujie
+
 > 
-> https://docs.kernel.org/doc-guide/kernel-doc.html#nested-structs-unions
+> --Sean
 > 
-> says that the current version is correct. Or is the issue that while, say, 'base' is documented, 'blend' was not?
-
-Hi,
-
-I would do it more like so:
-
----
- drivers/gpu/drm/xlnx/zynqmp_disp.c |    3 +++
- 1 file changed, 3 insertions(+)
-
-diff -- a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
---- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
-+++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
-@@ -128,8 +128,11 @@ struct zynqmp_disp_layer {
-  * struct zynqmp_disp - Display controller
-  * @dev: Device structure
-  * @dpsub: Display subsystem
-+ * @blend: blender iomem info
-  * @blend.base: Register I/O base address for the blender
-+ * @avbuf: audio/video buffer iomem info
-  * @avbuf.base: Register I/O base address for the audio/video buffer manager
-+ * @audio: audio mixer iomem info
-  * @audio.base: Registers I/O base address for the audio mixer
-  * @layers: Layers (planes)
-  */
-
-
-but in my testing, Sean's way or my way result in no warning/errors.
-
--- 
-#Randy
+> >> > vim +/sprintf +2168 drivers/gpu/drm/xlnx/zynqmp_dp.c
+> >> > 
+> >> >   2136	
+> >> >   2137	DEFINE_DEBUGFS_ATTRIBUTE(fops_zynqmp_dp_rate, zynqmp_dp_rate_get,
+> >> >   2138				 zynqmp_dp_rate_set, "%llu\n");
+> >> >   2139	
+> >> >   2140	static void zynqmp_dp_bridge_debugfs_init(struct drm_bridge *bridge,
+> >> >   2141						  struct dentry *root)
+> >> >   2142	{
+> >> >   2143		struct zynqmp_dp *dp = bridge_to_dp(bridge);
+> >> >   2144		struct dentry *test;
+> >> >   2145		int i;
+> >> >   2146	
+> >> >   2147		dp->test.bw_code = DP_LINK_BW_5_4;
+> >> >   2148		dp->test.link_cnt = dp->num_lanes;
+> >> >   2149	
+> >> >   2150		test = debugfs_create_dir("test", root);
+> >> >   2151	#define CREATE_FILE(name) \
+> >> >   2152		debugfs_create_file(#name, 0600, test, dp, &fops_zynqmp_dp_##name)
+> >> >   2153		CREATE_FILE(pattern);
+> >> >   2154		CREATE_FILE(enhanced);
+> >> >   2155		CREATE_FILE(downspread);
+> >> >   2156		CREATE_FILE(active);
+> >> >   2157		CREATE_FILE(custom);
+> >> >   2158		CREATE_FILE(rate);
+> >> >   2159		CREATE_FILE(lanes);
+> >> >   2160	
+> >> >   2161		for (i = 0; i < dp->num_lanes; i++) {
+> >> >   2162			static const char fmt[] = "lane%d_preemphasis";
+> >> >   2163			char name[sizeof(fmt)];
+> >> >   2164	
+> >> >   2165			dp->debugfs_train_set[i].dp = dp;
+> >> >   2166			dp->debugfs_train_set[i].lane = i;
+> >> >   2167	
+> >> >> 2168			sprintf(name, fmt, i);
+> >> >   2169			debugfs_create_file(name, 0600, test,
+> >> >   2170					    &dp->debugfs_train_set[i],
+> >> >   2171					    &fops_zynqmp_dp_preemphasis);
+> >> >   2172	
+> >> >   2173			sprintf(name, "lane%d_swing", i);
+> >> >   2174			debugfs_create_file(name, 0600, test,
+> >> >   2175					    &dp->debugfs_train_set[i],
+> >> >   2176					    &fops_zynqmp_dp_swing);
+> >> >   2177		}
+> >> >   2178	}
+> >> >   2179	
+> > 
+> 
+> 
