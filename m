@@ -1,111 +1,139 @@
-Received: from l2mail1.panix.com (l2mail1.panix.com [166.84.1.75])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC11D52F72;
-	Wed, 20 Mar 2024 11:13:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD3013DB8C
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 11:14:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710933202; cv=none; b=E4RqzMOJ9C0wdO/pubwENom24nTsz56oW+FT+G7ZyuYS1z97g1zkASnnzlvz0GFoJ5T22xAB6AwHIRD9VBEkEcxFb4wniueGlGeVO383SEcr0r7dv14B2gMXDHSgOwa2jq/NpS8hEtLgU4XJbqFqy0L6mBeAPi3ys+4CjqIL+HA=
+	t=1710933264; cv=none; b=My+g4OF+/1e9/d66x+mj1qgCJRnQJYPHfkaYGaBZz4rMk++n0LZzI44mofYtmSK0HBl4kiLIgVbEPkYvqje8deZ8iz6EAwWdeM6tRT1rY43qm8kC2aJpmK4Z+kLiRn1NaxqAxK4V7cpSNzVJzZyI0y/StL1oQXkl1zq3Gck4wJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710933202; c=relaxed/simple;
-	bh=KkoXZqXTiQUiGpG1SwuWDZlorVWMeQ5IO4olyeGPWfw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lk8O7zMarLa5w/9ybDlcfyNaadbpZmw+Dk7VyyTvuckOAXtSvdixDvIgtAVydgv9JuRpH7ay5DmLPgS0Umnwonu+75uVpdYV4oNXc0bn9uyOmfEtFQ7bf32dtoIHwh/rdQ3cpo0TiQN/gyMb+8ceTKnB+D7yxG8HNHb29dHFelI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=JLKYxriM; arc=none smtp.client-ip=166.84.1.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
+	s=arc-20240116; t=1710933264; c=relaxed/simple;
+	bh=f93gNh9P3wLWOA4ykU7okGdefFzZJd7zYhZkTfDnz4U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=naIkTV4SocAy1bcLdIUj6LakNebXw8n9qR/PnE0B8avXNtU57llS4k83+ZjyU4z4zlk2bcE1a72sevsIMgtLre6Vs9ml9CErGSYP4FvQVL3M0sg5/epnbIzLK8UvHLi95AQqeEEcENLdbrFTFF4SgFOuBPKUOl2Ii4ozn0FvlbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fj5aKgi6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="JLKYxriM"
-Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (1024 bits) server-digest SHA256)
-	(No client certificate requested)
-	by l2mail1.panix.com (Postfix) with ESMTPS id 4V056g2b3gzDQ2;
-	Wed, 20 Mar 2024 06:53:31 -0400 (EDT)
-Received: from [192.168.126.36] (ip70-164-218-85.oc.oc.cox.net [70.164.218.85])
-	by mailbackend.panix.com (Postfix) with ESMTPSA id 4V056R00Fnz1Cjt;
-	Wed, 20 Mar 2024 06:53:18 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
-	t=1710932000; bh=KkoXZqXTiQUiGpG1SwuWDZlorVWMeQ5IO4olyeGPWfw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=JLKYxriMX7zMfvqajAhu61lGwcXTSuYM5aom+l91dfXJe3yVu9xu8UsWUMZ9f5/MV
-	 /QEFLVN2rd5UPVcICEuTm09jLSfe9A0GRsK5HpkZADZ0S56IdZa7Lj7W5hIafYkES8
-	 YtqIk/BREIuLPvxDgftxek5C/jIc02y7B+VPfdbc=
-Message-ID: <fba7503a-7947-4487-95e6-9d41d636b075@panix.com>
-Date: Wed, 20 Mar 2024 03:53:16 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fj5aKgi6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D41DC433C7;
+	Wed, 20 Mar 2024 11:14:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710933264;
+	bh=f93gNh9P3wLWOA4ykU7okGdefFzZJd7zYhZkTfDnz4U=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=Fj5aKgi65aIHaS3d8ORiOpHAN3UYX6iaVlDuNr53RextcA6m/ygwVvKnEcu4ubm5W
+	 dKS3uf4UyDZxERnoF1O4T44onEZG/vOojjWzg3hfOivxktVBFKv8rdqWdafIWQHwaK
+	 kLPME4eeASh+8yZHWzLKLIp6dm6TWKKTRBuqfIiTfXVSw1LqM4Udgr+KMH8hKIVuMv
+	 tOWIJ6wGgjQJmp73QRQwBL4YDEFu3eYgmgUMvGCFL/4xuGOaj069jvZEYaXD/sV/ve
+	 AydlLPLwTd8+JJ/AqMxcQolmpecY6kq7vALHK70UdXdbSHQhh4ILGS9WgZkT9QuE21
+	 /0LQggvFYUpYw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 17299CE0F92; Wed, 20 Mar 2024 04:14:24 -0700 (PDT)
+Date: Wed, 20 Mar 2024 04:14:24 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>
+Subject: Re: [PATCH 2/2] timers: Fix removed self-IPI on global timer's
+ enqueue in nohz_full
+Message-ID: <1b5752c8-ef32-4ed4-b539-95d507ec99ce@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240318230729.15497-1-frederic@kernel.org>
+ <20240318230729.15497-3-frederic@kernel.org>
+ <464f6be2-4a72-440d-be53-6a1035d56a4f@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] Fix various races in UCSI
-To: "Christian A. Ehrhardt" <lk@c--e.de>, linux-kernel@vger.kernel.org
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Prashant Malani <pmalani@chromium.org>, Jameson Thies <jthies@google.com>,
- Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- =?UTF-8?Q?Samuel_=C4=8Cavoj?= <samuel@cavoj.net>, linux-usb@vger.kernel.org
-References: <20240320073927.1641788-1-lk@c--e.de>
-Content-Language: en-US
-From: Kenneth Crudup <kenny@panix.com>
-In-Reply-To: <20240320073927.1641788-1-lk@c--e.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <464f6be2-4a72-440d-be53-6a1035d56a4f@paulmck-laptop>
 
-
-Applied (cleanly) onto 6.8.1; I'll be testing over the next few days, 
-but a few connects/disconnects mixed in with suspend/resume cycles shows 
-no obvious issues (and everything seems to work).
-
-Dell XPS 9320, BIOS 2.10.0
-
--K
-
-On 3/20/24 00:39, Christian A. Ehrhardt wrote:
-> Fix various races in UCSI code:
-> - The EVENT_PENDING bit should be cleared under the PPM lock to
->    avoid spurious re-checking of the connector status.
-> - The initial connector change notification during init may be
->    lost which can cause a stuck UCSI controller. Observed by me
->    and others during resume or after module reload.
-> - Unsupported commands must be ACKed. This was uncovered by the
->    recent change from Jameson Thies that did sent unsupported commands.
-> - The DELL quirk still isn't quite complete and I've found a more
->    elegant way to handle this. A connector change ack _is_ accepted
->    on affected systems if it is bundled with a command ack.
-> - If we do two consecutive resets or the controller is already
->    reset at boog the second reset might complete early because the
->    reset complete bit is already set. ucsi_ccg.c has a work around
->    for this but it looks like an more general issue to me.
+On Tue, Mar 19, 2024 at 02:18:00AM -0700, Paul E. McKenney wrote:
+> On Tue, Mar 19, 2024 at 12:07:29AM +0100, Frederic Weisbecker wrote:
+> > While running in nohz_full mode, a task may enqueue a timer while the
+> > tick is stopped. However the only places where the timer wheel,
+> > alongside the timer migration machinery's decision, may reprogram the
+> > next event accordingly with that new timer's expiry are the idle loop or
+> > any IRQ tail.
+> > 
+> > However neither the idle task nor an interrupt may run on the CPU if it
+> > resumes busy work in userspace for a long while in full dynticks mode.
+> > 
+> > To solve this, the timer enqueue path raises a self-IPI that will
+> > re-evaluate the timer wheel on its IRQ tail. This asynchronous solution
+> > avoids potential locking inversion.
+> > 
+> > This is supposed to happen both for local and global timers but commit:
+> > 
+> > 	b2cf7507e186 ("timers: Always queue timers on the local CPU")
+> > 
+> > broke the global timers case with removing the ->is_idle field handling
+> > for the global base. As a result, global timers enqueue may go unnoticed
+> > in nohz_full.
+> > 
+> > Fix this with restoring the idle tracking of the global timer's base,
+> > allowing self-IPIs again on enqueue time.
 > 
-> NOTE:
-> As a result of these individual fixes we could think about the
-> question if there are additional cases where we send some type
-> of command to the PPM while the bit that indicates its completion
-> is already set in CCI. And in fact there is one more case where
-> this can happen: The ack command that clears the connector change
-> is sent directly after the ack command for the previous command.
-> It might be possible to simply ack the connector change along with
-> the first command ucsi_handle_connector_change() and not at the
-> end. AFAICS the connector lock should protect us from races that
-> might arise out of this.
+> Testing with the previous patch (1/2 in this series) reduced the number of
+> problems by about an order of magnitude, down to two sched_tick_remote()
+> instances and one enqueue_hrtimer() instance, very good!
 > 
-> Christian A. Ehrhardt (5):
->    usb: typec: ucsi: Clear EVENT_PENDING under PPM lock
->    usb: typec: ucsi: Check for notifications after init
->    usb: typec: ucsi: Ack unsupported commands
->    usb: typec: ucsi_acpi: Refactor and fix DELL quirk
->    usb: typec: ucsi: Clear UCSI_CCI_RESET_COMPLETE before reset
-> 
->   drivers/usb/typec/ucsi/ucsi.c      | 56 ++++++++++++++++++++--
->   drivers/usb/typec/ucsi/ucsi_acpi.c | 75 +++++++++++++-----------------
->   2 files changed, 84 insertions(+), 47 deletions(-)
-> 
+> I have kicked off a test including this patch.  Here is hoping!  ;-)
 
--- 
-Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
-County CA
+And 22*100 hours of TREE07 got me one run with a sched_tick_remote()
+complaint and another run with a starved RCU grace-period kthread.
+So this is definitely getting more reliable, but still a little ways
+to go.
+
+							Thanx, Paul
+
+> > Reported-by: Paul E. McKenney <paulmck@kernel.org>
+> > Fixes: b2cf7507e186 ("timers: Always queue timers on the local CPU")
+> > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> > ---
+> >  kernel/time/timer.c | 12 +++++++++++-
+> >  1 file changed, 11 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+> > index e69e75d3858c..dee29f1f5b75 100644
+> > --- a/kernel/time/timer.c
+> > +++ b/kernel/time/timer.c
+> > @@ -642,7 +642,8 @@ trigger_dyntick_cpu(struct timer_base *base, struct timer_list *timer)
+> >  	 * the base lock:
+> >  	 */
+> >  	if (base->is_idle) {
+> > -		WARN_ON_ONCE(!(timer->flags & TIMER_PINNED));
+> > +		WARN_ON_ONCE(!(timer->flags & TIMER_PINNED ||
+> > +			       tick_nohz_full_cpu(base->cpu)));
+> >  		wake_up_nohz_cpu(base->cpu);
+> >  	}
+> >  }
+> > @@ -2292,6 +2293,13 @@ static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem,
+> >  		 */
+> >  		if (!base_local->is_idle && time_after(nextevt, basej + 1)) {
+> >  			base_local->is_idle = true;
+> > +			/*
+> > +			 * Global timers queued locally while running in a task
+> > +			 * in nohz_full mode need a self-IPI to kick reprogramming
+> > +			 * in IRQ tail.
+> > +			 */
+> > +			if (tick_nohz_full_cpu(base_local->cpu))
+> > +				base_global->is_idle = true;
+> >  			trace_timer_base_idle(true, base_local->cpu);
+> >  		}
+> >  		*idle = base_local->is_idle;
+> > @@ -2364,6 +2372,8 @@ void timer_clear_idle(void)
+> >  	 * path. Required for BASE_LOCAL only.
+> >  	 */
+> >  	__this_cpu_write(timer_bases[BASE_LOCAL].is_idle, false);
+> > +	if (tick_nohz_full_cpu(smp_processor_id()))
+> > +		__this_cpu_write(timer_bases[BASE_GLOBAL].is_idle, false);
+> >  	trace_timer_base_idle(false, smp_processor_id());
+> >  
+> >  	/* Activate without holding the timer_base->lock */
+> > -- 
+> > 2.44.0
+> > 
