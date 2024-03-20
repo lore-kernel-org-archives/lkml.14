@@ -1,130 +1,128 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85B73DBB7;
-	Wed, 20 Mar 2024 11:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB503F9CD;
+	Wed, 20 Mar 2024 11:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710935161; cv=none; b=sDg361HS0h1xTrYi7q6WWd30N3VWg+pmDmCieaDtdjN48Z/etp/wX8cWTeEZmBKHR5xEa2ysIZQfFTBBVecgggodQNOZkMhmcDQ5e4H86OJjbrEZNEla0aNXmoz+l/Z1s/UVW+zvuoybuo0UmatIYkislWsrRhHr+4FeL93WayU=
+	t=1710935282; cv=none; b=ZbNiqGHwx1zxQ5MhtBhD4ItxSiatGlF68pIe6DDg+LXhs9fTzD1X6GKnXb8eYM+hzCDVNFFlncML01lycUuEkA2IbkzjM1T7sMqnL7BqOcidIuYj/nrdCuS2bVqwIdreyZoqdhYnjZSyeJH0LRATWmGmSUT2cgstXCoENtzKraU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710935161; c=relaxed/simple;
-	bh=01oY2je8eUOPUwF8l+M2wheZEGh5GUw6lBQ6Dq+yEmk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dlxn2HJl3fLm3nkrIwM8Fc7KohWjZLQ0znDVesqNV7+7cqi9E7ocI4fBBX/qYHsGeRdAxS+BACfbkGpCmbAXPmX0sSm/An/EXn06o4CGtTadWfhgI1aaha7CAHhzTBSpCzWsy+tqReAvKVmRp90wTPOYUz2RFgRvZsYiIl4QF9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ewiHOs1w; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710935282; c=relaxed/simple;
+	bh=VuXnyWK+oTi5rXjJkYlrTmxyXTkffXXblFiz1RaEdiA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sTChS0Cm4H0vslMMftiOaeOy0Xjur6MRoOk5/ckSO6AmOR+LLCsznOkIctkKZNSD8KorOYdHSYtLneV5fbcu6QZ100w3gDOrKQqVNjeJZWE0MzfvVUvp+hv5Pb+qKBbic/mNFBRCPXQ726tbLQyVq/NzbD4Qag4QdzSq31XVs2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BGZZkzXr; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ewiHOs1w"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-33e162b1b71so5600711f8f.1;
-        Wed, 20 Mar 2024 04:45:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710935158; x=1711539958; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=v321yfLmo8GBQ/y8FJ9LR+n1jyv6fOuhCRdabZc9zbA=;
-        b=ewiHOs1wF0IUyDLCJRvJ3oQaCmAY81+I4h/uKzaR+Rd7UVQE/309YT0tnxaaQF0rT/
-         pLgbgNbq4ghIT1cxYNnhdqh0ulJYv5stUhhI1vsubExIUrTUDBgUetnm2rIwdF4XftTE
-         2oEpUVY39O9QThJjUcYcS4aY6oJBqbNJNq0cFYoJuoKkoPlGj60SJk06Zeh6kJfrv0l0
-         RbvRWAZjbmR9v9xyM69gPpswCXzylABqYzf4MNkoyjW7KC7Wr/ztxMHAh7KAMzW2tX5C
-         tdnGryJnBZtetSpXe3Maru6/A2dj9Ludl/ORFZ1x+46PMBkHWw4v23gynfgnFzp0dHEG
-         mbuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710935158; x=1711539958;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=v321yfLmo8GBQ/y8FJ9LR+n1jyv6fOuhCRdabZc9zbA=;
-        b=a+Cd7vGSPzhrAucoFtsQQ9A+DUe/UUgPcTbbDF0MIPvNr0jFH34HN5H6K70QbAXa2A
-         dabFXtNnVx8RTq40yE7D6nBhod/EInJyL8VBa1ZAGaIcgRpUHdDoMNXShfHHpyt9QipA
-         2bNQWVgVsRVYyLph+trjtwOisQM6G9YDihiGPkD+5JSu431Hl08vmgpCUf/3cEmZiSk/
-         iOtzNNJVf4d83EHcS3f7ZheVdoduQm4kXRGCoKAGC0LBsnsl8VZ1z/0LYjWDArdb50rT
-         Wxaer0majv1ztM5SYYvb3plpXzGxhXfZo+n+lye4MCIYcfTAAtjvkkmdLgoJOt3UjPBf
-         15hg==
-X-Gm-Message-State: AOJu0YyCpEd5k9w3pU8qTLPaojIT7OvqpaG3oy/Fr/egDmbEewv4P6Ph
-	NMLvE3CYh7SbQ4cRJyLAUVXKTYrNR/nYWc6mSMqAzvpZ9860W5tKgc4MM7NXUtA=
-X-Google-Smtp-Source: AGHT+IHIaGpH1SUarfLTXZGxXsKLAEga/PSUIi9Ln03X0/ldyAVFMhtdUSadRf3ON54Hu7jEdhucQQ==
-X-Received: by 2002:a05:6000:544:b0:33e:bf0f:8156 with SMTP id b4-20020a056000054400b0033ebf0f8156mr3563811wrf.38.1710935157831;
-        Wed, 20 Mar 2024 04:45:57 -0700 (PDT)
-Received: from gmail.com (1F2EF04C.nat.pool.telekom.hu. [31.46.240.76])
-        by smtp.gmail.com with ESMTPSA id az1-20020adfe181000000b0033ed7181fd1sm11741024wrb.62.2024.03.20.04.45.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Mar 2024 04:45:57 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Wed, 20 Mar 2024 12:45:55 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: linux-kernel@vger.kernel.org, Uros Bizjak <ubizjak@gmail.com>
-Cc: linux-tip-commits@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
-	Nathan Chancellor <nathan@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [tip: x86/percpu] x86/percpu: Convert this_percpu_xchg_op() from
- asm() to C code, to generate better code
-Message-ID: <ZfrMcyZXCBQD/sE8@gmail.com>
-References: <20240320083127.493250-1-ubizjak@gmail.com>
- <171093476000.10875.14076471223590027773.tip-bot2@tip-bot2>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BGZZkzXr"
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42KBB9Gs018085;
+	Wed, 20 Mar 2024 11:47:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=aiSTuVnuK5ak9LWl6r/aXDZHUbtvdgr4VlC6QlQ1LIo=;
+ b=BGZZkzXrdv2pOCAPAeYze9XDh4WOaEg1tME2ioLlAfiZq70tuJtFYy8IS/JFdDUwNg/t
+ 2VN1MiFzNVLJ3xAFLCLC/vvkDjz7Xntqwqbml/b4SYA0m24qYS8f6fEBDqT/CV8hl4/T
+ 2euBTz1OxHCQsxQHW75QRnsPwtqLDu9nbuHQLKc1cEH8k6WOcdHFkCxPzNkJbE5/uyPH
+ ia+IU4/EWA49mjBBpwWDcZaUrv0pw5TKeetdLV2+wBQd7phTKmRanTTwA42t7SbgcLk9
+ EbGbRijm2Ti+w+lU2o12SQ61UCggAIZqy2Z4EKT6JeAF/dC5AmR0OPWKokpY0i7BF9+Q KQ== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wyxbr83sd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 20 Mar 2024 11:47:51 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42K9Jprb011558;
+	Wed, 20 Mar 2024 11:47:50 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wwq8m5wet-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 20 Mar 2024 11:47:50 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42KBlmBY20644402
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 20 Mar 2024 11:47:50 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 12AD458057;
+	Wed, 20 Mar 2024 11:47:48 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7270D58061;
+	Wed, 20 Mar 2024 11:47:47 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 20 Mar 2024 11:47:47 +0000 (GMT)
+From: Stefan Berger <stefanb@linux.ibm.com>
+To: keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
+        herbert@gondor.apana.org.au, davem@davemloft.net
+Cc: linux-kernel@vger.kernel.org, saulo.alessandre@tse.jus.br, lukas@wunner.de,
+        bbhushan2@marvell.com, jarkko@kernel.org,
+        Stefan Berger <stefanb@linux.ibm.com>
+Subject: [PATCH v7 04/13] crypto: ecdsa - Extend res.x mod n calculation for NIST P521
+Date: Wed, 20 Mar 2024 07:47:16 -0400
+Message-ID: <20240320114725.1644921-5-stefanb@linux.ibm.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240320114725.1644921-1-stefanb@linux.ibm.com>
+References: <20240320114725.1644921-1-stefanb@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <171093476000.10875.14076471223590027773.tip-bot2@tip-bot2>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: G0TD6Hx1YKt59siXYUFRfZ0e7YJfptZQ
+X-Proofpoint-GUID: G0TD6Hx1YKt59siXYUFRfZ0e7YJfptZQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-20_08,2024-03-18_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ mlxlogscore=999 priorityscore=1501 phishscore=0 malwarescore=0
+ adultscore=0 impostorscore=0 spamscore=0 clxscore=1015 suspectscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403140000 definitions=main-2403200093
 
+res.x has been calculated by ecc_point_mult_shamir, which uses
+'mod curve_prime' on res.x and therefore p > res.x with 'p' being the
+curve_prime. Further, it is true that for the NIST curves p > n with 'n'
+being the 'curve_order' and therefore the following may be true as well:
+p > res.x >= n.
 
-* tip-bot2 for Uros Bizjak <tip-bot2@linutronix.de> wrote:
+If res.x >= n then res.x mod n can be calculated by iteratively sub-
+tracting n from res.x until res.x < n. For NIST P192/256/384 this can be
+done in a single subtraction. This can also be done in a single
+subtraction for NIST P521.
 
-> The following commit has been merged into the x86/percpu branch of tip:
-> 
-> Commit-ID:     0539084639f3835c8d0b798e6659ec14a266b4f1
-> Gitweb:        https://git.kernel.org/tip/0539084639f3835c8d0b798e6659ec14a266b4f1
-> Author:        Uros Bizjak <ubizjak@gmail.com>
-> AuthorDate:    Wed, 20 Mar 2024 09:30:40 +01:00
-> Committer:     Ingo Molnar <mingo@kernel.org>
-> CommitterDate: Wed, 20 Mar 2024 12:29:02 +01:00
-> 
-> x86/percpu: Convert this_percpu_xchg_op() from asm() to C code, to generate better code
-> 
-> Rewrite percpu_xchg_op() using generic percpu primitives instead
-> of using asm. The new implementation is similar to local_xchg() and
-> allows the compiler to perform various optimizations: e.g. the
-> compiler is able to create fast path through the loop, according
-> to likely/unlikely annotations in percpu_try_cmpxchg_op().
+The mathematical reason why a single subtraction is sufficient is due to
+the values of 'p' and 'n' of the NIST curves where the following holds
+true:
 
-So, while at it, there's two other x86 percpu code generation details I was 
-wondering about:
+   note: max(res.x) = p - 1
 
-1)
+   max(res.x) - n < n
+       p - 1  - n < n
+       p - 1      < 2n  => holds true for the NIST curves
 
-Right now it's GCC-only:
+Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+Tested-by: Lukas Wunner <lukas@wunner.de>
+---
+ crypto/ecdsa.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  config CC_HAS_NAMED_AS
-          def_bool CC_IS_GCC && GCC_VERSION >= 120100
+diff --git a/crypto/ecdsa.c b/crypto/ecdsa.c
+index 64e1e69d53ba..1814f009f971 100644
+--- a/crypto/ecdsa.c
++++ b/crypto/ecdsa.c
+@@ -122,7 +122,7 @@ static int _ecdsa_verify(struct ecc_ctx *ctx, const u64 *hash, const u64 *r, con
+ 
+ 	/* res.x = res.x mod n (if res.x > order) */
+ 	if (unlikely(vli_cmp(res.x, curve->n, ndigits) == 1))
+-		/* faster alternative for NIST p384, p256 & p192 */
++		/* faster alternative for NIST p521, p384, p256 & p192 */
+ 		vli_sub(res.x, res.x, curve->n, ndigits);
+ 
+ 	if (!vli_cmp(res.x, r, ndigits))
+-- 
+2.43.0
 
-Because we wanted to create a stable core of known-working functionality.
-
-I suppose we have already established that with the current merge window, 
-so it might be time to expand it.
-
-Clang claims to be compatible:
-
-  https://releases.llvm.org/9.0.0/tools/clang/docs/LanguageExtensions.html
-
-  "You can also use the GCC compatibility macros __seg_fs and __seg_gs for the
-   same purpose. The preprocessor symbols __SEG_FS and __SEG_GS indicate their
-   support."
-
-I haven't tried it yet though.
-
-2)
-
-Also, is the GCC_VERSION cutoff accurate - are previous GCC versions 
-known-buggy, or was it primarily a risk-reduction cutoff?
-
-Thanks,
-
-	Ingo
