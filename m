@@ -1,148 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FBA633062;
-	Wed, 20 Mar 2024 21:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36CB23DE
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 21:38:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710970566; cv=none; b=eTxGCMNJvrp2H/h2GdKSSh8FiQtrmazQnuRaK2ly0OAMXL92UYlGJOXXR2SulE1xZvMVWTWLf/hNNqtocQpYich9XafBNantY7kDivYB1dhp3VARsDp0phxEuXusLCJ8D0sDGy3Rq5uo4FnIXQYWniwTOeL6VCcBW3FYZGZ6s4s=
+	t=1710970724; cv=none; b=doGx0JEWKZO15aAJIh5kT6HXUFmPSQ58MO02uynOADN9vFoIbZEWC0YMjkivjfLyjmS28d7svBAggj4Em+EqRU4LT3LeKuZ/Eed++o9smOKUzeMrsw0aN1GtQtopq+6AK1Vb/vJ6V1jePHslVgKraGvI14e1fUluVKDPxGj1yHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710970566; c=relaxed/simple;
-	bh=hX4pslLlcBSoPea9E2mRxNlAbfGvx83GcoZjftStHUw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BLKsK4hj6UwtO6Px5rGwUcZyQK9uQ9nNDwmNgEiCEBTUY1wCRRg/FtT9fm6U1p6hUrOMJTprNOfJKE+D8HxggTnU1vEzkxTnty/sOxlyGDFCd09P6EefeZN73iCDCXolNtwmIdpWFzh+Wq/Y0vDNtJaq4Ch79Q51UlN4y3H+kD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XGONm0er; arc=none smtp.client-ip=192.198.163.17
+	s=arc-20240116; t=1710970724; c=relaxed/simple;
+	bh=hwyO1p0U/dSWBYG0avzKydXMK5sMGnIo/l9kw2vMSyM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ts4oAAGLnT35dcUlTYcy1AVsPbVIFWxPMJwQ5zclct8EeOf3r83kZxLHMM6Le2T3tY2uSGKFlNt2ApFG5Dl80kwi+sGPifr0jKnQOZKIp7cMzjWBc3olyDgVgfj1S9k2vc2BdFh7h/ZA+kry/6jl9LqgKaUB0jRgWK9gjZMEl1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hES20M3n; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XGONm0er"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hES20M3n"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710970563; x=1742506563;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hX4pslLlcBSoPea9E2mRxNlAbfGvx83GcoZjftStHUw=;
-  b=XGONm0er79JI42oC0Fi1tKlURM51T8UrS43sYJo8L4FVmHrUk02CM4H9
-   tn5CXyouSSsi3f0PpZTYrwubVabORvXDxCPljNoZxA+tkSzDv4ashMLaW
-   Nha4twMMDpHJ8lVpbCevsHz+2h3WAAUyPKaixkuQ3jTi0aQA1BVVOBfaN
-   pxfcbclG2SfXlbrPwoU75sxmdz3BlWF2fNj8MiJAmSedZ+B11k8w+zAU8
-   1UlCU4Ux140avVjqKqSMr1HVBe3TYBtiYdlN5HZIqLskpCbPlFWDSzwff
-   lDwTn3JnW8lJz4SSqDJpJqkdhAsidrPmktaVsw7fNiYxLRW44jsjc9vfA
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="5783585"
+  t=1710970723; x=1742506723;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=hwyO1p0U/dSWBYG0avzKydXMK5sMGnIo/l9kw2vMSyM=;
+  b=hES20M3n9/rMt2SD4r2mX9vPh5/jCrbf67umE9/tO44gxkHlK6iRsx5Y
+   41zZ/q5kHcTEFCGgKdYc1wwQMsAg/H8+uMar+1d7K9gQItoDrOIFuS3ud
+   PENFSb/omQXhCgIonQ6IjmOIcazqEUvzWAQ/JhprnYHBJBRl3PJUZFMo/
+   a39LKUg3EFJMMODxz5mkMzJthrELqzRV716KxUqkMdWfrWHjcq7/ZrP5f
+   TTZWXaUVylN5vw8DcfE9twtBGWq0SdnNg4IKF9TF4/7Vgj4TDooRBOe98
+   ITazuPRIJctYrNp053n6rz+Zo+pMdrnH9IhDyPKaacduiMlMYHjbWK7a4
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="6137949"
 X-IronPort-AV: E=Sophos;i="6.07,141,1708416000"; 
-   d="scan'208";a="5783585"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 14:36:02 -0700
+   d="scan'208";a="6137949"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 14:33:26 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,141,1708416000"; 
-   d="scan'208";a="18869398"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 14:36:01 -0700
-Date: Wed, 20 Mar 2024 14:36:00 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: "Huang, Kai" <kai.huang@intel.com>
-Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
-	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com,
-	Sean Christopherson <seanjc@google.com>,
-	Sagi Shahar <sagis@google.com>, chen.bo@intel.com,
-	hang.yuan@intel.com, tina.zhang@intel.com,
-	Sean Christopherson <sean.j.christopherson@intel.com>,
-	Binbin Wu <binbin.wu@linux.intel.com>,
-	Yuan Yao <yuan.yao@intel.com>, isaku.yamahata@linux.intel.com
-Subject: Re: [PATCH v19 029/130] KVM: TDX: Add C wrapper functions for
- SEAMCALLs to the TDX module
-Message-ID: <20240320213600.GI1994522@ls.amr.corp.intel.com>
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <7cfd33d896fce7b49bcf4b7179d0ded22c06b8c2.1708933498.git.isaku.yamahata@intel.com>
- <579cb765-8a5e-4058-bc1d-9de7ac4b95d1@intel.com>
+   d="scan'208";a="14357271"
+Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 20 Mar 2024 14:33:24 -0700
+Received: from kbuild by b21307750695 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rn3Yo-000Ivd-0F;
+	Wed, 20 Mar 2024 21:33:22 +0000
+Date: Thu, 21 Mar 2024 05:32:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Palmer Dabbelt <palmer@rivosinc.com>
+Subject: ld.lld: error: section .bss virtual address range overlaps with
+ .init.pi.text
+Message-ID: <202403210517.QYQ8g3G8-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <579cb765-8a5e-4058-bc1d-9de7ac4b95d1@intel.com>
 
-On Wed, Mar 20, 2024 at 01:03:21PM +1300,
-"Huang, Kai" <kai.huang@intel.com> wrote:
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   a4145ce1e7bc247fd6f2846e8699473448717b37
+commit: 3b90b09af5be42491a8a74a549318cfa265b3029 riscv: Fix orphan section warnings caused by kernel/pi
+date:   11 months ago
+config: riscv-randconfig-r054-20240320 (https://download.01.org/0day-ci/archive/20240321/202403210517.QYQ8g3G8-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 8f68022f8e6e54d1aeae4ed301f5a015963089b7)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240321/202403210517.QYQ8g3G8-lkp@intel.com/reproduce)
 
-> > +static inline u64 tdx_seamcall(u64 op, struct tdx_module_args *in,
-> > +			       struct tdx_module_args *out)
-> > +{
-> > +	u64 ret;
-> > +
-> > +	if (out) {
-> > +		*out = *in;
-> > +		ret = seamcall_ret(op, out);
-> > +	} else
-> > +		ret = seamcall(op, in);
-> 
-> I think it's silly to have the @out argument in this way.
-> 
-> What is the main reason to still have it?
-> 
-> Yeah we used to have the @out in __seamcall() assembly function.  The
-> assembly code checks the @out and skips copying registers to @out when it is
-> NULL.
-> 
-> But it got removed when we tried to unify the assembly for TDCALL/TDVMCALL
-> and SEAMCALL to have a *SINGLE* assembly macro.
-> 
-> https://lore.kernel.org/lkml/cover.1692096753.git.kai.huang@intel.com/
-> 
-> To me that means we should just accept the fact we will always have a valid
-> @out.
-> 
-> But there might be some case that you _obviously_ need the @out and I
-> missed?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403210517.QYQ8g3G8-lkp@intel.com/
 
-As I replied at [1], those four wrappers need to return values.
-The first three on error, the last one on success.
+All errors (new ones prefixed by >>):
 
-  [1] https://lore.kernel.org/kvm/20240320202040.GH1994522@ls.amr.corp.intel.com/
+>> ld.lld: error: section .bss virtual address range overlaps with .init.pi.text
+   >>> .bss range is [0xFFFFFFFF82DB7000, 0xFFFFFFFF83F4943F]
+   >>> .init.pi.text range is [0xFFFFFFFF82F9EC20, 0xFFFFFFFF82FA20EF]
 
-  tdh_mem_sept_add(kvm_tdx, gpa, tdx_level, hpa, &entry, &level_state);
-  tdh_mem_page_aug(kvm_tdx, gpa, hpa, &entry, &level_state);
-  tdh_mem_page_remove(kvm_tdx, gpa, tdx_level, &entry, &level_state);
-  u64 tdh_vp_rd(struct vcpu_tdx *tdx, u64 field, u64 *value)
-
-We can delete out from other wrappers.
-Because only TDH.MNG.CREATE() and TDH.MNG.ADDCX() can return TDX_RND_NO_ENTROPY,
-we can use __seamcall().  The TDX spec doesn't guarantee such error code
-convention.  It's very unlikely, though.
-
-
-> > +static inline u64 tdh_sys_lp_shutdown(void)
-> > +{
-> > +	struct tdx_module_args in = {
-> > +	};
-> > +
-> > +	return tdx_seamcall(TDH_SYS_LP_SHUTDOWN, &in, NULL);
-> > +}
-> 
-> As Sean already pointed out, I am sure it's/should not used in this series.
-> 
-> That being said, I found it's not easy to determine whether one wrapper will
-> be used by this series or not.  The other option is we introduce the
-> wrapper(s) when they get actally used, but I can see (especially at this
-> stage) it's also a apple vs orange question that people may have different
-> preference.
-> 
-> Perhaps we can say something like below in changelog ...
-> 
-> "
-> Note, not all VM-managing related SEAMCALLs have a wrapper here, but only
-> provide wrappers that are essential to the run the TDX guest with basic
-> feature set.
-> "
-> 
-> ... so that people will at least to pay attention to this during the review?
-
-Makes sense. We can split this patch into other patches that first use the
-wrappers.
 -- 
-Isaku Yamahata <isaku.yamahata@intel.com>
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
