@@ -1,118 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64FF85645
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 19:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1854969DE9
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 19:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710964272; cv=none; b=jSZSbFDYx7La1nhywCzrMx0nFSK6Mnzmnr4wgeCkXcObFkDOnaogbwUXraf+LZmNor/YQSYkzUjunCdu++fTqmNkRrRBVHjglEwrTaXyAodzv6WcwdXo+SJENxKUCKrYZ4k7gL7Y9SaBTcl6xG7Pzkop6pilsM5nrYaVZ5N1pmU=
+	t=1710964385; cv=none; b=Gjng8pXZ5W8WA0G9BbzjTagSvAPUqnm8aMneMj50hoVuqJzB7QCdZGXFwT2NoLaSnhMwOfoouloz1fE3RUqilItaXz3bZMUCmom1MdDf3CZsGkBZ8HqMzsUEvcoU8cxxTxQKct69ubMVnzcNwoJhob0rYtF3zav5FRwaez6++nA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710964272; c=relaxed/simple;
-	bh=EpwmDWMEvj+bTYnIg0y28dqQH8LEVqmqsBX939rabos=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UHYRoBr386FsVZ+VqTlOc+xZk+/9OHzcECOT+81PCmiAoTFeXrRQQP3/MUF7bzvZjcim45R0MzJcFT49RGo8Wzz9fV/Cb3aoyNShOwMbeuIVpQyS58/q7qTFyroKLUq2FA4VcqLwBMBbOcJvpoIRJAE4f7lhOJhzn9D9ynXoEU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R8Qi/WVv; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R8Qi/WVv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710964271; x=1742500271;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=EpwmDWMEvj+bTYnIg0y28dqQH8LEVqmqsBX939rabos=;
-  b=R8Qi/WVv0w+1YwWlw8fRTLySPAi3rWY3VjlhSo/ONAZwsKYzlnhIf7ar
-   IbDXSqDD3jbdnAKQ/XlujCH9SA/DNRXi4AiZJtlfKzEkbWVINQm3c/7W9
-   128eJjYEX22g3EFkgR4Ji8Iu3VSdfip+VsvWm+T3xwgMQ099kar+NxRe3
-   lnyVjliPrNYRhx/9J0ns5BdramrTdq0mBtU+1RT/8FA2J2zPWwFQoUzKq
-   Q5riVRV23IrX8fLqdXbNaZwmhQd+wNSmXuGpVz2ZpSJggeXHS6RX0qlZ1
-   az+0VBtM1qD++ZeF6G/UTO9VV1cxb0ByO1vODwC0ZtPt68LExAVVIXksa
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="16652618"
-X-IronPort-AV: E=Sophos;i="6.07,141,1708416000"; 
-   d="scan'208";a="16652618"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 12:50:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,141,1708416000"; 
-   d="scan'208";a="14655562"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.213.7.127])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 12:50:44 -0700
-From: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
-To: Ayush Tiwari <ayushtiw0110@gmail.com>
-Cc: Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
- gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
- linux-staging@lists.linux.dev, outreachy@lists.linux.dev
-Subject: Re: [PATCH v2 0/3] Trivial code cleanup patches
-Date: Wed, 20 Mar 2024 20:50:40 +0100
-Message-ID: <4105521.oiGErgHkdL@fdefranc-mobl3>
-Organization: intel
-In-Reply-To: <6485785.DvuYhMxLoT@fdefranc-mobl3>
-References:
- <cover.1710703217.git.ayushtiw0110@gmail.com>
- <6485785.DvuYhMxLoT@fdefranc-mobl3>
+	s=arc-20240116; t=1710964385; c=relaxed/simple;
+	bh=Wp4zg/z9iTobavEVC5sgi9cc36Lp3sCE1Yl06MCm+z0=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=ieUbZHUpBKm5E4CndX3hVVZR3ex1RI3qtcELema0kQYphqCDIpvhP8FLUAN26ezaLQVElxtNnJK4Tds0MXPyoKqIzrs5bmx03+quX3BYkqU0yIHwhg1e0FjYvTPURYWS9x0ZIUA9NjEpB3SacwhiTSlbHZjH7iGFpEY5uBpodno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7cc7a6a043bso22009339f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 12:53:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710964383; x=1711569183;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=w/aYiKvwU+iPzn4sRAx1inEmDmRuRqUqLf8asrwXPZo=;
+        b=m6dS3Y6cA+ybrrP7fPMd+1vp+xG54ksY9qM9Mw1CmgP9iij5Apq8WO1XhlkdLfSn1Q
+         d9h6M8dGXt2xeHEZNXSJt5qQ2HzkqAY3J7lvBghlblmpCGv/TlzXNxZE0h64F947Auo7
+         Uuc8sQyQ3Ky6biurSLmRMHomG8n7SYpiVJ0Kp27C4/dN2HcbOTvLn0GyjW7C+9R8HNtv
+         d6TicVHf5OW4Tn2i063qodDCsUxCNymiNfHcY31N3NcAx0+tJSAvqPJZ+GSQ5VjaSh8J
+         V4GFMMrlZMAP1TTzJoCWb+lXjuDGUMN0wUhKpYT9k5Q9LxGvRmshl5ZbryArVPIgJcmt
+         3DFg==
+X-Forwarded-Encrypted: i=1; AJvYcCVzAMBrqSYglO9x6r1ZGoxBoTQtQAqGvKtu7saU/RRwV5UDoGIIWjkI9G45FFpvwzVLStCnwDa2saQHSPFDfEv/XEol5BoTWRExNAFH
+X-Gm-Message-State: AOJu0Yykm+CTsn4Zbp/XbEmbnG4u0a1BL7iqaK7l+QcqFaHYRB87ZYey
+	yWZtBJsE5g1Ro/VQV27bNFLuuT5wNkwoeViZ+A9kNdCmm/bH07PBSwR0hdbw+SF0LV13tzqXhFT
+	0U40Xrq8h0S0zh60E/SPYD8uU6p7uvOnJjVgPFb3TeVIN8WVrzp/tBRk=
+X-Google-Smtp-Source: AGHT+IE921cxxN5rrCjAvrB9Z6SL7jabK5zBU26ga6lFT9PV46cihwz8kV994JBX3g+91wUkcn3csgMhCAEb5TW6ZRb5mQjZL41v
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-Received: by 2002:a05:6638:37a8:b0:476:edba:83a1 with SMTP id
+ w40-20020a05663837a800b00476edba83a1mr1060490jal.1.1710964383399; Wed, 20 Mar
+ 2024 12:53:03 -0700 (PDT)
+Date: Wed, 20 Mar 2024 12:53:03 -0700
+In-Reply-To: <tencent_7DD17367A377E97CA3B5A443F776776A8605@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004bdf4906141cf049@google.com>
+Subject: Re: [syzbot] [bpf?] UBSAN: array-index-out-of-bounds in check_stack_range_initialized
+From: syzbot <syzbot+33f4297b5f927648741a@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tuesday, 19 March 2024 07:04:34 CET Fabio M. De Francesco wrote:
-> On Monday, 18 March 2024 20:54:09 CET Ayush Tiwari wrote:
-> > Address different kinds of checkpatch complains for the rtl8712 module
-> > to ensure adherence to coding style guidelines.
-> > 
-> > Changes in v2: Checked any possible reuse of backup_PMKID_list
-> > manually and rebuilt, 
+Hello,
 
-No you didn't do what you are saying.
+syzbot tried to test the proposed patch but the build/boot failed:
 
-> rebooted the kernel and loaded the driver
-> > with modprobe.
-> 
-> You have not made any changes to any of the three patches in this series.
-> No changes in commit messages and no changes in code. Am I missing
-> something?
-> 
-> So why did you submit a v2 of this series?
-> 
-> Fabio
-
-Julia commented on patch 1/3. You should either reply that everything is 
-correct (if it is) or fix your patch. Please don't send new versions that 
-don't change anything and don't ignore comments (mine included).
-
-> > Ayush Tiwari (3):
-> >   staging: rtl8712: rename backupPMKIDList to backup_PMKID_list
-
-This patch introduces errors. You haven't compiled this module, otherwise 
-you would have noticed that. Always compile your changes (preferably with 
-CONFIG_WERROR set). 
-
-Please read the output of git-grep:
-
-[fabio@linux]$ git grep backupPMKIDList drivers/staging/rtl8712
-drivers/staging/rtl8712/mlme_linux.c:  static struct RT_PMKID_LIST 
-backupPMKIDList[NUM_PMKID_CACHE];
-drivers/staging/rtl8712/mlme_linux.c:           memcpy(&backupPMKIDList[0],
-drivers/staging/rtl8712/mlme_linux.c:                  &backupPMKIDList[0],
-
-Can you see how patch 1/3 introduces errors?
-
-Fabio
-
-> >   staging: rtl8712: rename backupPMKIDIndex to backup_PMKID_index
-> >   staging: rtl8712: rename backupTKIPCountermeasure to
-> >   
-> >     backup_TKIP_countermeasure
-> >  
-> >  drivers/staging/rtl8712/mlme_linux.c | 18 +++++++++---------
-> >  1 file changed, 9 insertions(+), 9 deletions(-)
+kernel/bpf/verifier.c:10263:13: error: member reference type 'struct bpf_call_arg_meta' is not a pointer; did you mean to use '.'?
+kernel/bpf/verifier.c:10263:28: error: member reference type 'struct bpf_call_arg_meta' is not a pointer; did you mean to use '.'?
+kernel/bpf/verifier.c:10263:53: error: member reference type 'struct bpf_call_arg_meta' is not a pointer; did you mean to use '.'?
 
 
+Tested on:
 
+commit:         114b5b3b bpf, arm64: fix bug in BPF_LDX_MEMSX
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git master
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
+dashboard link: https://syzkaller.appspot.com/bug?extid=33f4297b5f927648741a
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=11495c6e180000
 
