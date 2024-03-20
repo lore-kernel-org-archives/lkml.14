@@ -1,227 +1,130 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A2685935;
-	Wed, 20 Mar 2024 22:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232F312E52;
+	Wed, 20 Mar 2024 22:35:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710973201; cv=none; b=rMq/OSV0jPtSJsdmPY8rd/Sh5y/TM3Pg4AqyiUxFOiSjfAMv49nD09rhOEDGYQ5vLYAw+cmm5hjBeASxoIR/ZdVm7vvySkS4/uxC400JjW3qvKj2icHDP0ymT7LaZQg+O5zsLkLkMFXlxfICApZOh1gce7Q+kj4ia1wxGI/IaI8=
+	t=1710974111; cv=none; b=mojlw9YvJiTXPlEAGUzN//kqvgs6uksa8q4HNk3hfEiV9LC/75igOkaQn5iu5mblbWjyFcS9d8DStg8UNdnWt8aU4E8QjhmL5BRsEbeXYvtNFQr5ftzs+Tsdg4tuYmry5KMc+mpqVvK0oO80hhKBy4a3DCbyyHWcodSPyFvLhDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710973201; c=relaxed/simple;
-	bh=6NYpIW+dHsze9wkrqNyjaQMh3a3tNreShgHvoIqtj7k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P3kpblNKoUGBbSmhMnNfUB++r1LWeHFFEH+SsigdPMtLEe0YXQMOUXCIJuAjVUXFgdzubxXgk6GqO4rSgeLxYRld2yQDf0C56pbV1gf+h9oTuq7h5p1I7KoJ63ZoXR9eEjHjyu1YEoY+oR67oX1NTQAdNlA0l04tMxCrvwK0Ucw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R81mH/HH; arc=none smtp.client-ip=209.85.218.45
+	s=arc-20240116; t=1710974111; c=relaxed/simple;
+	bh=/fsBbXw03619bUqlEGeLUsRsq6EMtANrA9Jhs5wFcvQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eXKUH4oZKCwia1AvbMUvVx1aiuyNuHiwncIUsLSYfAncrhlI+1Q3Q4czbtc9hPKt64CHwk4z8XSIVeV4LaCoERgrJjJrSf2GTAFU7BLzaOtETF8whGfJH6yykQtUSIR/ivMfdqNVx/MZfTJZxT6clDkbaVJxKjMuiBOYeNbNN+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TfC5lqXb; arc=none smtp.client-ip=209.85.167.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R81mH/HH"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a46f0da1b4fso40114366b.2;
-        Wed, 20 Mar 2024 15:19:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TfC5lqXb"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-51381021af1so623929e87.0;
+        Wed, 20 Mar 2024 15:35:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710973197; x=1711577997; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=q179WvDu8vP5bQHS0ss2GDd9uf0aLvPHTTRUQdULLWY=;
-        b=R81mH/HHz3s/gPw1GLQyEQ/CKvHFJ1toDXWQ2SbclsJBYTSVH2a6RRmm2wDvlIQBox
-         JVe/bAH9j1ytxctvfN27xSxddbQM4xXzOLbKB1wjyemyrqlrVX5feu26g5qSB8b00JWi
-         WoCCmY8PDaN4F+QMI8laSWZRi5h0FozIfc2ul2/uxE5GWpuTfZSrnwD6DwFrDS18jsuT
-         XeD28kAeWzeAOkGa/fgf8Xx6rMv/3dq9c4zqK2BpPER/nmPfXSCMWvDe9SGhfOuJvUtQ
-         HQdB5MMguWN99IV7UlGGjV2/+D8Szt8I7r6WpiB5JMUBRZWenxWILbZt0cVQF2CaBZZH
-         9O3g==
+        d=gmail.com; s=20230601; t=1710974107; x=1711578907; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y6uLkytCveodnbEWWcUmeLnZpizFS2D2Bpb03TRInaE=;
+        b=TfC5lqXbdG75Cw1pRoBG1lxRBLQ4mCUhENBzaN593gWlGlAxL+kIGsij0FMpbRSo9M
+         JbbNvj4OqXNoTGtd3VEwmFeUizojmVC4J0fzeOC5UYMlFR+SE/EJSn3B4p4WpDMTye2d
+         HDh7xFinFC8rDlbJ2ALJO9P14tMsWEGxu7fVEQOb7Waw8LpxA0B7skQBxN5wF2sPd5S4
+         kgajKofxzxauzwppfc2QMD0B4WPlVQpK5v10iTigfoAU0fwHfjzlrJMp6XC0xxbKXS36
+         nsF/ppQgJRmJj2baKekZcnUePPN7F7v/qzcTK9UG/0sWutH6uI1YadaIBol1SnWrLFdC
+         T1Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710973197; x=1711577997;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q179WvDu8vP5bQHS0ss2GDd9uf0aLvPHTTRUQdULLWY=;
-        b=KN7hn7Zar08PJd7+PIJaIhxB8grrdxRy6HmM4j4cCGJMgCZ2WlwKDv+AY19HGEQd/h
-         71NABhoSdjR+64qls6cKo3Bks9mipyVIYINMj6HUcoyfHjVXPh2VrUqU9NG3IONSX6rf
-         jg4ktTXte5phaGZQa+00B5V/lF15WUbYMykNorH9ySwq1fvjWIr7veBeIpcwX2CUvEf9
-         BzPiWDEHuGeFduD2sX70xF2gx4rAm/ajQQjxD08juh+AI9tJWgn5I0PZkfU4gcwNWODJ
-         mRHZF0zPPfokYXep+UzFRrqiLB/GuugukUYtog9KuNRFSNqUXrVJjXu8fZ23t7sSeIzQ
-         JaxA==
-X-Forwarded-Encrypted: i=1; AJvYcCWHU0pf1MF+llgcrMEVfXEW7NWcvTNXHSZQOarO/Du8+RKGpzI/UVoJVxPwyJZgXM35hU3IckfwqJWpf6BU9jQkyyFj+SQd/fhStn9y3NrgMpn6eOATRsCpmXY0lanePJoQWxcPsXKilg==
-X-Gm-Message-State: AOJu0YzdUncVgVdh8cD0LQ9O3BldJ2jXaP9CXYv9FKQtHU9etMO/KBe/
-	Vj4qDy9w1zua38HTTYj0GkVBW5FIquf0gHy/CsOhXkTVONonZH4A
-X-Google-Smtp-Source: AGHT+IEJu1NV0z9lDzRQZ643/ZtJs+Bw9f2kQemq86p48B/2QFBYi1CAdlak23QtcZWDePAs0qdz3w==
-X-Received: by 2002:a17:906:c08e:b0:a46:3f18:957 with SMTP id f14-20020a170906c08e00b00a463f180957mr131973ejz.36.1710973197303;
-        Wed, 20 Mar 2024 15:19:57 -0700 (PDT)
-Received: from ?IPV6:2a02:a466:68ed:1:98be:9474:6233:4b68? (2a02-a466-68ed-1-98be-9474-6233-4b68.fixed6.kpn.net. [2a02:a466:68ed:1:98be:9474:6233:4b68])
-        by smtp.gmail.com with ESMTPSA id xj4-20020a170906db0400b00a46aba003eesm5304409ejb.215.2024.03.20.15.19.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Mar 2024 15:19:56 -0700 (PDT)
-Message-ID: <f83d7735-0351-481a-af3a-16137f078058@gmail.com>
-Date: Wed, 20 Mar 2024 23:19:55 +0100
+        d=1e100.net; s=20230601; t=1710974107; x=1711578907;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y6uLkytCveodnbEWWcUmeLnZpizFS2D2Bpb03TRInaE=;
+        b=sDZaLdST2SUTPqMZIbYtGyaajklRZ4PiWtRnAsTkgXbx3ZO39sggIoKTO6tZNk6E3F
+         yajc5b+nWc4++IGfbbkG8G5qPM2SXwM5zlYOMkZ4RSZSg/quGI0QmWEbYYo758zCZ5gk
+         9xw7GGzXKgsOXbWZOcKYEY4E7jwtr/+83ef2ICUJFO1UHMUOG1jubtk0ZE+u7SEnYqhP
+         9/iuQKsGRsraKm3NSjHIgI3HQcNA0CIPTBiI5eTZ09DdbNwF1bpzfR29RZQHsSY6WeFl
+         40TT/uIewy7h2RIxw3bMHfHutKpRll12EDpYd8VI5iAO3VKodtlXgAo/qPK2uRkxNkQW
+         LeSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVEYfcav2a7ZswySdgvSlYHcCJriFaSxZAHlAss1hgiUlJN5MD3kQjIHa6VQWuev0TemXGcFrU/sGca9W5dJnhFAoXa0VsCbKZXSSAKtuPdgi9rKwlvFJ9X44nldCHv9yCBDOAgG57qFXHfsVsUePl0uOzHlWdx9f91f1meCdMj
+X-Gm-Message-State: AOJu0YwtoKXbbv63cFASMgjw6UlXrXgqWaz6gm5FdSJFJWf02KTUmIZM
+	GRXT0mhT5Mxm8lcOKeH8HaqOyURMHT1CCe0C6Bw79/6ndbkmkx6cExaHl/2qMetOdQ==
+X-Google-Smtp-Source: AGHT+IG5bitWH3Wn0hUC64Y2ptJDiGS2is9++uKcULphEyCayziP1oG59fDb4lRmo1n/NpFN50q/KQ==
+X-Received: by 2002:ac2:46d6:0:b0:513:d372:20e5 with SMTP id p22-20020ac246d6000000b00513d37220e5mr290631lfo.16.1710974107030;
+        Wed, 20 Mar 2024 15:35:07 -0700 (PDT)
+Received: from fedora (host-95-250-206-50.retail.telecomitalia.it. [95.250.206.50])
+        by smtp.gmail.com with ESMTPSA id an14-20020a17090656ce00b00a465b72a1f3sm5262273ejc.85.2024.03.20.15.35.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Mar 2024 15:35:06 -0700 (PDT)
+Date: Wed, 20 Mar 2024 23:35:05 +0100
+From: Francesco Valla <valla.francesco@gmail.com>
+To: Simon Horman <horms@kernel.org>
+Cc: Oliver Hartkopp <socketcan@hartkopp.net>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	fabio@redaril.me, linux-can@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] Documentation: networking: document CAN ISO-TP
+Message-ID: <ZftkmQfna3HIyYal@fedora>
+References: <20240313223445.87170-1-valla.francesco@gmail.com>
+ <20240313223445.87170-2-valla.francesco@gmail.com>
+ <20240319120625.GI185808@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] gpiolib: Fix debug messaging in
- gpiod_find_and_request()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Stephen Boyd <swboyd@chromium.org>,
- Ferry Toth <ftoth@exalondelft.nl>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-References: <20240320165930.1182653-1-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US
-From: Ferry Toth <fntoth@gmail.com>
-In-Reply-To: <20240320165930.1182653-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240319120625.GI185808@kernel.org>
 
-Hi
 
-Op 20-03-2024 om 17:58 schreef Andy Shevchenko:
-> When consolidating GPIO lookups in ACPI code, the debug messaging
-> had been reworked that the user may see
-> 
->    [   13.401147] (NULL device *): using ACPI '\_SB.LEDS.led-0' for '(null)' GPIO lookup
->    [   13.401378] gpio gpiochip0: Persistence not supported for GPIO 40
->    [   13.401402] gpio-40 (?): no flags found for (null)
-> 
-> instead of
-> 
->    [   14.182962] gpio gpiochip0: Persistence not supported for GPIO 40
->    [   14.182994] gpio-40 (?): no flags found for gpios
-> 
-> The '(null)' parts are less informative and likely scare the users.
-> Replace them by '(default)' which can point out to the default connection
-> IDs, such as 'gpios'.
-> 
-> While at it, amend other places where con_id is used in the messages.
-> 
-> Reported-by: Ferry Toth <ftoth@exalondelft.nl>
-> Fixes: 8eb1f71e7acc ("gpiolib: consolidate GPIO lookups")
-> Suggested-by: Dmitry Torokhov <dmitry.torokhov@gmail.c > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> v2: completele reworked solution of
-> 20231019173457.2445119-1-andriy.shevchenko@linux.intel.com
->   drivers/gpio/gpiolib.c | 32 ++++++++++++++++++--------------
->   1 file changed, 18 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index e2e583b40207..7d26e5de0b44 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -2401,6 +2401,11 @@ char *gpiochip_dup_line_label(struct gpio_chip *gc, unsigned int offset)
->   }
->   EXPORT_SYMBOL_GPL(gpiochip_dup_line_label);
->   
-> +static inline const char *function_name_or_default(const char *con_id)
-> +{
-> +	return con_id ?: "(default)";
-> +}
-> +
->   /**
->    * gpiochip_request_own_desc - Allow GPIO chip to request its own descriptor
->    * @gc: GPIO chip
-> @@ -2429,10 +2434,11 @@ struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
->   					    enum gpiod_flags dflags)
->   {
->   	struct gpio_desc *desc = gpiochip_get_desc(gc, hwnum);
-> +	const char *name = function_name_or_default(label);
->   	int ret;
->   
->   	if (IS_ERR(desc)) {
-> -		chip_err(gc, "failed to get GPIO descriptor\n");
-> +		chip_err(gc, "failed to get GPIO %s descriptor\n", name);
->   		return desc;
->   	}
->   
-> @@ -2442,8 +2448,8 @@ struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
->   
->   	ret = gpiod_configure_flags(desc, label, lflags, dflags);
->   	if (ret) {
-> -		chip_err(gc, "setup of own GPIO %s failed\n", label);
->   		gpiod_free_commit(desc);
-> +		chip_err(gc, "setup of own GPIO %s failed\n", name);
->   		return ERR_PTR(ret);
->   	}
->   
-> @@ -4157,19 +4163,17 @@ static struct gpio_desc *gpiod_find_by_fwnode(struct fwnode_handle *fwnode,
->   					      enum gpiod_flags *flags,
->   					      unsigned long *lookupflags)
->   {
-> +	const char *name = function_name_or_default(con_id);
->   	struct gpio_desc *desc = ERR_PTR(-ENOENT);
->   
->   	if (is_of_node(fwnode)) {
-> -		dev_dbg(consumer, "using DT '%pfw' for '%s' GPIO lookup\n",
-> -			fwnode, con_id);
-> +		dev_dbg(consumer, "using DT '%pfw' for '%s' GPIO lookup\n", fwnode, name);
->   		desc = of_find_gpio(to_of_node(fwnode), con_id, idx, lookupflags);
->   	} else if (is_acpi_node(fwnode)) {
-> -		dev_dbg(consumer, "using ACPI '%pfw' for '%s' GPIO lookup\n",
-> -			fwnode, con_id);
-> +		dev_dbg(consumer, "using ACPI '%pfw' for '%s' GPIO lookup\n", fwnode, name);
->   		desc = acpi_find_gpio(fwnode, con_id, idx, flags, lookupflags);
->   	} else if (is_software_node(fwnode)) {
-> -		dev_dbg(consumer, "using swnode '%pfw' for '%s' GPIO lookup\n",
-> -			fwnode, con_id);
-> +		dev_dbg(consumer, "using swnode '%pfw' for '%s' GPIO lookup\n", fwnode, name);
->   		desc = swnode_find_gpio(fwnode, con_id, idx, lookupflags);
->   	}
->   
-> @@ -4185,6 +4189,7 @@ struct gpio_desc *gpiod_find_and_request(struct device *consumer,
->   					 bool platform_lookup_allowed)
->   {
->   	unsigned long lookupflags = GPIO_LOOKUP_FLAGS_DEFAULT;
-> +	const char *name = function_name_or_default(con_id);
->   	/*
->   	 * scoped_guard() is implemented as a for loop, meaning static
->   	 * analyzers will complain about these two not being initialized.
-> @@ -4207,8 +4212,7 @@ struct gpio_desc *gpiod_find_and_request(struct device *consumer,
->   		}
->   
->   		if (IS_ERR(desc)) {
-> -			dev_dbg(consumer, "No GPIO consumer %s found\n",
-> -				con_id);
-> +			dev_dbg(consumer, "No GPIO consumer %s found\n", name);
->   			return desc;
->   		}
->   
-> @@ -4230,15 +4234,14 @@ struct gpio_desc *gpiod_find_and_request(struct device *consumer,
->   		 *
->   		 * FIXME: Make this more sane and safe.
->   		 */
-> -		dev_info(consumer,
-> -			 "nonexclusive access to GPIO for %s\n", con_id);
-> +		dev_info(consumer, "nonexclusive access to GPIO for %s\n", name);
->   		return desc;
->   	}
->   
->   	ret = gpiod_configure_flags(desc, con_id, lookupflags, flags);
->   	if (ret < 0) {
-> -		dev_dbg(consumer, "setup of GPIO %s failed\n", con_id);
->   		gpiod_put(desc);
-> +		dev_dbg(consumer, "setup of GPIO %s failed\n", name);
->   		return ERR_PTR(ret);
->   	}
->   
-> @@ -4354,6 +4357,7 @@ EXPORT_SYMBOL_GPL(gpiod_get_optional);
->   int gpiod_configure_flags(struct gpio_desc *desc, const char *con_id,
->   		unsigned long lflags, enum gpiod_flags dflags)
->   {
-> +	const char *name = function_name_or_default(con_id);
->   	int ret;
->   
->   	if (lflags & GPIO_ACTIVE_LOW)
-> @@ -4397,7 +4401,7 @@ int gpiod_configure_flags(struct gpio_desc *desc, const char *con_id,
->   
->   	/* No particular flag request, return here... */
->   	if (!(dflags & GPIOD_FLAGS_BIT_DIR_SET)) {
-> -		gpiod_dbg(desc, "no flags found for %s\n", con_id);
-> +		gpiod_dbg(desc, "no flags found for GPIO %s\n", name);
->   		return 0;
->   	}
->   
+Hi Simon,
 
-Tested-by: Ferry Toth <ftoth@exalondelft.nl> on Intel Edison (mrfld)
+On Tue, Mar 19, 2024 at 12:06:25PM +0000, Simon Horman wrote:
+> On Wed, Mar 13, 2024 at 11:34:31PM +0100, Francesco Valla wrote:
+> > Document basic concepts, APIs and behaviour of the CAN ISO-TP (ISO
+> > 15765-2) stack.
+> > 
+> > Signed-off-by: Francesco Valla <valla.francesco@gmail.com>
+> 
+> Hi Francesco,
+> 
+> As it looks like there will be a v2 of this patchset
+> please consider running checkpatch.pl --codespell
+> and addressing the warnings it reports.
+> 
+
+Will do before v2, thanks for the suggestion.
+
+> ...
+> 
+> > +Transport protocol and associated frame types
+> > +---------------------------------------------
+> > +
+> > +When transmitting data using the ISO-TP protocol, the payload can either fit
+> > +inside one single CAN message or not, also considering the overhead the protocol
+> > +is generating and the optional extended addressing. In the first case, the data
+> > +is transmitted at once using a so-called Single Frame (SF). In the second case,
+> > +ISO-TP defines a multi-frame protocol, in which the sender asks (through a First
+> > +Frame - FF) to the receiver the maximum supported size of a macro data block
+> > +(``blocksize``) and the minimum time time between the single CAN messages
+> > +composing such block (``stmin``). Once these informations have been received,
+> 
+> nit: Once this information has
+
+I never grasped the usage of "information" in English, which is not my
+first language. I'll make this correction here.
+
+> 
+> > +the sender starts to send frames containing fragments of the data payload
+> > +(called Consecutive Frames - CF), stopping after every ``blocksize``-sized block
+> > +to wait confirmation from the receiver (which should then send a Flow Control
+> > +frame - FC - to inform the sender about its availability to receive more data).
+> > +
+> 
+> ...
+
+Thanks for the review!
+
+Regards,
+Francesco
+
