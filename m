@@ -1,164 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C21FC17;
-	Wed, 20 Mar 2024 02:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33AD8F9E9;
+	Wed, 20 Mar 2024 02:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710903043; cv=none; b=OHoKGC+Jeor8yrBIb60mwnqRT/2plOWMaPxiJI79HPeo6k4g8W/DlFyL9vU4frGMqC3pHR7L6BL85vpkKG2w7ADvZqzKix9UCllRAeq7ZDRtRECKwKYTrB+Y2+OEGeNr67FZcu9OP0EylDF+8jgxItzm5AircfhqJLxAta8bY3c=
+	t=1710903118; cv=none; b=D7BDhdkiKhIuAEzQfnSJN9Lo3RWuTRdRA9AVno1mqXAuDx7ZqtDtLczQOI2VlLIZgUEcxuq4B3AJr/qLKqXSZg24hrjU0rL3Lu+l2MhSwsjQNBRrQh+T8f0rHYVF6bzlxMFnIW6QIdQf9fP9gZ/7ccVhsfz9nRbdOgKXY3XCgaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710903043; c=relaxed/simple;
-	bh=q2C5sPp5hDLmsM86/ov3qGNGGWpRQK3bmN/ElXRFtaw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=mUvKpCM2cZv7ZQ9ecZ+WGAzHUYC9YHoWTZw5wpgEK6rmRKGB867oIxvmBGdPHZWHttu86kYr6VJcb+gAcTKDqYPXpYLSCPhIMY4Y2sKTmtSWZUDK/zuTn6E30Dwv9FyvXw+lDubQebPd1fDRJ48zh6Nkf+Q7rp1kMsbGf5aoUsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BXO0M8j0; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1710903118; c=relaxed/simple;
+	bh=Ozvz96oEDbbGhiLAGb3pU679lIZRAnAiVuKChCLc13g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jIjp+fHyHXjTCcKQxlJD8yFJj7CXUaBEA8dbi9d60n02ikOXI8IM03j1SNdSBQBo10ghGqWgSqoluFk/4phAKWvCshT4m4O2KvYllRG/hTkS5WKt4m9PKuwBppm4n7F47e/lKCgYWtPrvcGTSD/nT5kN0DxF9huZhKyM/42O5ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jx5CodSg; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BXO0M8j0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710903042; x=1742439042;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=q2C5sPp5hDLmsM86/ov3qGNGGWpRQK3bmN/ElXRFtaw=;
-  b=BXO0M8j0uIxuDoqD1Or24SEn84CYtiBboc2rhjPGWIUkiLnt8MBvDsyi
-   GFjfHl9bQ80azSLB7PuJgUv53+Zrbqa8Fr1XyQZYfUCKubNDkTzs4ahDA
-   sRdkhKq1Or+LXnMY1QLZNQnFyjn7H2YK1yS+WoCsxzFTzYLpmVGLIaeBO
-   8z3tM0YBOtMFM4rX41nZTSin/vqtozdlLGzx9kTpQNVQqJXeTO6YcW65u
-   F57A936EzxwB+/q1Yq2cQNi+zKzUK6QsN14n2VVSzCKqPVcuUpncRy0nl
-   mdDYUn7sWGF86Ku0td8ZjTAEi/mgOEbeelW23Ruvue1UNsoPbuYv6N1Xv
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11018"; a="17213078"
-X-IronPort-AV: E=Sophos;i="6.07,138,1708416000"; 
-   d="scan'208";a="17213078"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 19:50:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,138,1708416000"; 
-   d="scan'208";a="14089850"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 19:50:38 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Gregory Price <gourry.memverge@gmail.com>
-Cc: linux-mm@kvack.org,  linux-api@vger.kernel.org,
-  linux-arch@vger.kernel.org,  linux-kselftest@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  dan.j.williams@intel.com,
-  honggyu.kim@sk.com,  corbet@lwn.net,  arnd@arndb.de,  luto@kernel.org,
-  akpm@linux-foundation.org,  shuah@kernel.org,  Gregory Price
- <gregory.price@memverge.com>
-Subject: Re: [RFC v3 0/3] move_phys_pages syscall - migrate page contents given
-In-Reply-To: <20240319172609.332900-1-gregory.price@memverge.com> (Gregory
-	Price's message of "Tue, 19 Mar 2024 13:26:06 -0400")
-References: <20240319172609.332900-1-gregory.price@memverge.com>
-Date: Wed, 20 Mar 2024 10:48:44 +0800
-Message-ID: <87v85hsjn7.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jx5CodSg"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6e696233f44so1039677b3a.0;
+        Tue, 19 Mar 2024 19:51:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710903116; x=1711507916; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tOqBNIYKiH/8hqRbBxGjJO8n4CKUboE+5yISgprs/oE=;
+        b=jx5CodSgJwe7HQW95qk1PgiS8Rdg47K6SX8JIln4VkewthS+OEQWMOuQ3e4yyRX5NS
+         TcH1bt5SfsYgCbwrxW8qM7SrdihhvoVkgtC8DffO7hnQnhyBb96MUWz7j6m5Adac11qD
+         /UfkTkfJSyvV4sKMNflNlpBQJnCdpxa6X4My/H8L+a1N8ca6wjXeV85Ca9DoLhcZce/C
+         /AOL6Dcd7Lm23Nk62a9E279MrxLSGFqC3TP/v7wjpRWRfuvvCb6PKOrplsXw9TJ6PwCh
+         fJPrjH//S2eZgRQz17V7fnxbN4l/RG5oPStN3oPiqUTG2N52sXQ+/o2N7N0AOLEBGEIY
+         dCJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710903116; x=1711507916;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tOqBNIYKiH/8hqRbBxGjJO8n4CKUboE+5yISgprs/oE=;
+        b=Q0Elpw8g+MINpnHt65kc5UUFXH1xQgCJTLz+XsCKlH1niU6uUiy8cNeXzDM8J2wJcB
+         ASqKOAeox/saBmPy5Ws+DWFILOddt02wG66VFNvEHALNTTYaqQvzCyGUbvOv4FVQeV97
+         oy9CW4L592Wc6ld3mBV3h7AkQdaiCU7w4Cxi9asBXUZ6itxO9sjpvGIb3hT8Pv7Om7/G
+         VrLhzldYHQ6FKA2X2LbfOnlfYhuGhCvG2Wa8PgTZMx5svrhqasdb4gJkvP4TS42U+Fg1
+         GA0zm0AZXsPu8OqFDdXJG8lZDyFDNnRKLBVgyoKhP34YVnl8HKhasmzVT6Y82DrMYBBc
+         uiYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUIEgtGJ7rHl7unY5I2Xdzr5XtS8DkLF2ntL/dL2QAeBMpObTpowb5LLOGPEV9FfasGZmx9yh1uwQEESN6nK3ZxCXzyIHQeYtsKHfFKMIU2HU3QK8libypyiiERHLY2/8EXcdbGZbNrg2IQBgbc2SIOqFg2lJ5A1F3i6Ty6nwwIsfg1ue3dgCU4ya9ED/v8RmEccoUR1LfDUpr7FWIpltzbHp3r1dYRDYVzs+Qf
+X-Gm-Message-State: AOJu0YzvOCHssPu32lbk4rXLiNo2DT2Y8vnkibAngcarL2HojoZWisV0
+	Deu74YTMTf3mgGpLAd+3WQFFUP7SNCJgzB62JX6RIBhuVFNsvd+8
+X-Google-Smtp-Source: AGHT+IFLF+sW1wqHw8Op+WICxDqpiWGU83Qoyf5GxbFCm3NED9V/egFahqM55WaQWsdQczbNJRdB8w==
+X-Received: by 2002:a05:6a00:9a5:b0:6e7:4ac1:7f9 with SMTP id u37-20020a056a0009a500b006e74ac107f9mr2866611pfg.0.1710903116342;
+        Tue, 19 Mar 2024 19:51:56 -0700 (PDT)
+Received: from visitorckw-System-Product-Name ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id jw2-20020a056a00928200b006e703e0e2f7sm7105871pfb.194.2024.03.19.19.51.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 19:51:55 -0700 (PDT)
+Date: Wed, 20 Mar 2024 10:51:51 +0800
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: Ian Rogers <irogers@google.com>
+Cc: colyli@suse.de, kent.overstreet@linux.dev, msakai@redhat.com,
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, akpm@linux-foundation.org, bfoster@redhat.com,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, adrian.hunter@intel.com, jserv@ccns.ncku.edu.tw,
+	linux-bcache@vger.kernel.org, dm-devel@lists.linux.dev,
+	linux-bcachefs@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 12/13] lib min_heap: Add min_heap_sift_up()
+Message-ID: <ZfpPR1gRGnMwtdVC@visitorckw-System-Product-Name>
+References: <20240319180005.246930-1-visitorckw@gmail.com>
+ <20240319180005.246930-13-visitorckw@gmail.com>
+ <CAP-5=fVcBAxt8Mw72=NCJPRJfjDaJcqk4rjbadgouAEAHz_q1A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVcBAxt8Mw72=NCJPRJfjDaJcqk4rjbadgouAEAHz_q1A@mail.gmail.com>
 
-Gregory Price <gourry.memverge@gmail.com> writes:
+On Tue, Mar 19, 2024 at 01:12:18PM -0700, Ian Rogers wrote:
+> On Tue, Mar 19, 2024 at 11:01 AM Kuan-Wei Chiu <visitorckw@gmail.com> wrote:
+> >
+> > Add min_heap_sift_up() to sift up the element at index 'idx' in the
+> > heap.
+> 
+> Normally sift up is used to implement the min heap but isn't part of
+> the API, eg. there is a sift up in min_heap_push. Should min_heapify
+> be renamed to min_heap_sift_down to align with this name?
+> 
 
-> v3:
-> - pull forward to v6.8
-> - style and small fixups recommended by jcameron
-> - update syscall number (will do all archs when RFC tag drops)
-> - update for new folio code
-> - added OCP link to device-tracked address hotness proposal
-> - kept void* over __u64 simply because it integrates cleanly with
->   existing migration code. If there's strong opinions, I can refactor.
->
-> This patch set is a proposal for a syscall analogous to move_pages,
-> that migrates pages between NUMA nodes using physical addressing.
->
-> The intent is to better enable user-land system-wide memory tiering
-> as CXL devices begin to provide memory resources on the PCIe bus.
->
-> For example, user-land software which is making decisions based on
-> data sources which expose physical address information no longer
-> must convert that information to virtual addressing to act upon it
-> (see background for info on how physical addresses are acquired).
->
-> The syscall requires CAP_SYS_ADMIN, since physical address source
-> information is typically protected by the same (or CAP_SYS_NICE).
->
-> This patch set broken into 3 patches:
->   1) refactor of existing migration code for code reuse
->   2) The sys_move_phys_pages system call.
->   3) ktest of the syscall
->
-> The sys_move_phys_pages system call validates the page may be
-> migrated by checking migratable-status of each vma mapping the page,
-> and the intersection of cpuset policies each vma's task.
->
->
-> Background:
->
-> Userspace job schedulers, memory managers, and tiering software
-> solutions depend on page migration syscalls to reallocate resources
-> across NUMA nodes. Currently, these calls enable movement of memory
-> associated with a specific PID. Moves can be requested in coarse,
-> process-sized strokes (as with migrate_pages), and on specific virtual
-> pages (via move_pages).
->
-> However, a number of profiling mechanisms provide system-wide information
-> that would benefit from a physical-addressing version move_pages.
->
-> There are presently at least 4 ways userland can acquire physical
-> address information for use with this interface, and 1 hardware offload
-> mechanism being proposed by opencompute.
->
-> 1) /proc/pid/pagemap: can be used to do page table translations.
->      This is only really useful for testing, and the ktest was
->      written using this functionality.
->
-> 2) X86:  IBS (AMD) and PEBS (Intel) can be configured to return physical
->      and/or vitual address information.
->
-> 3) zoneinfo:  /proc/zoneinfo exposes the start PFN of zones
->
-> 4) /sys/kernel/mm/page_idle:  A way to query whether a PFN is idle.
->    So long as the page size is known, this can be used to identify
->    system-wide idle pages that could be migrated to lower tiers.
->
->    https://docs.kernel.org/admin-guide/mm/idle_page_tracking.html
->
-> 5) CXL Offloaded Hotness Monitoring (Proposed): a CXL memory device
->    may provide hot/cold information about its memory. For example,
->    it may report the hottest device addresses (0-based) or a physical
->    address (if it has access to decoders for convert bases).
->
->    DPA can be cheaply converted to HPA by combining it with data
->    exposed by /sys/bus/cxl/ information (region address bases).
->
-> See: https://www.opencompute.org/documents/ocp-cms-hotness-tracking-requirements-white-paper-pdf-1
->
->
-> Information from these sources facilitates systemwide resource management,
-> but with the limitations of migrate_pages and move_pages applying to
-> individual tasks, their outputs must be converted back to virtual addresses
-> and re-associated with specific PIDs.
->
-> Doing this reverse-translation outside of the kernel requires considerable
-> space and compute, and it will have to be performed again by the existing
-> system calls.  Much of this work can be avoided if the pages can be
-> migrated directly with physical memory addressing.
+Sure, I can add a patch in v2 to rename min_heapify to min_heap_sift_down.
 
-One difficulty of the idea of the physical address is that we lacks some
-user space specified policy information to make decision.  For example,
-users may want to pin some pages in DRAM to improve latency, or pin some
-pages in CXL memory to do some best effort work.  To make the correct
-decision, we need PID and virtual address.
+Regards,
+Kuan-Wei
 
-Yes, I found that you have tried to avoid to break the existing policy
-in the code.  But it seems better to consider the policy beforehand to
-avoid to make the wrong decision in the first place.
-
---
-Best Regards,
-Huang, Ying
+> 
+> > Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+> > ---
+> >  include/linux/min_heap.h | 20 ++++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> >
+> > diff --git a/include/linux/min_heap.h b/include/linux/min_heap.h
+> > index ce085137fce7..586965977104 100644
+> > --- a/include/linux/min_heap.h
+> > +++ b/include/linux/min_heap.h
+> > @@ -199,6 +199,26 @@ bool __min_heap_push(struct __min_heap *heap, const void *element, size_t elem_s
+> >  #define min_heap_push(_heap, _element, _func, _args)   \
+> >         __min_heap_push(&(_heap)->heap, _element, __minheap_obj_size(_heap), _func, _args)
+> >
+> > +/* Sift up ith element from the heap, O(log2(nr)). */
+> > +static __always_inline
+> > +void __min_heap_sift_up(struct __min_heap *heap, size_t elem_size, size_t idx,
+> > +               const struct min_heap_callbacks *func, void *args)
+> > +{
+> > +       void *data = heap->data;
+> > +       size_t parent;
+> > +
+> > +       while (idx) {
+> > +               parent = (idx - 1) / 2;
+> > +               if (func->less(data + parent * elem_size, data + idx * elem_size, args))
+> > +                       break;
+> > +               func->swp(data + parent * elem_size, data + idx * elem_size, args);
+> > +               idx = parent;
+> > +       }
+> > +}
+> > +
+> > +#define min_heap_sift_up(_heap, _idx, _func, _args)    \
+> > +       __min_heap_sift_up(&(_heap)->heap, __minheap_obj_size(_heap), _idx, _func, _args)
+> > +
+> >  /* Remove ith element from the heap, O(log2(nr)). */
+> >  static __always_inline
+> >  bool __min_heap_del(struct __min_heap *heap, size_t elem_size, size_t idx,
+> > --
+> > 2.34.1
+> >
