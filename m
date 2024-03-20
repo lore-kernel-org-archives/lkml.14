@@ -1,189 +1,119 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3496A02D;
-	Wed, 20 Mar 2024 17:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51618524B7
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 17:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710956009; cv=none; b=Re5ooIzDdapeiOPrkmoQF7As7er5ftGRKCRkgljZCwQSVjsBXwnPaWGejjqTlmWFSkqZ1iALambOpkFcCsX4e/U+bx1vK5D6BuzgBUj3jDiPqF8dDVCa8224IASR1jPLzBUI2WMq3ypHlU3KvpWiO6mrIw4s7NU+HR4mRK9qmhM=
+	t=1710956185; cv=none; b=sC3KrmEzJyRlAY7QPrT8D8XbR1wMlpotz77dBB+Krgk5WR2L4aCQLkreuip0V3/PbjJJ/BmRr+BCCA4V37pc3nnnm5OSKzSoTVLf7paiPoI53DGZnjmz0w2/eYq0DLndrzbFTlP7Z1VWXGmgNPEtAKS3l6RNjehUdwKR3X9pOeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710956009; c=relaxed/simple;
-	bh=EUOYGNXttkzKdXjPhe48wrwkyokl0sot/Y+oaH9w5nA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G3DaLaES2FWi/Xbj33t3DsNKD5PcE35158dpZkv1k/KRZzkA1dvOf9FI7ZpRTMlRQkN6RKNNteaRHyRPEviUn+iwKhq4m8GGGjropqct1AipcymISewg6sZIJDRJHAi2Uv/wUuELL430DSTXE9Ddtt0d5Pg2d85mwMbEvHaYMxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=green-communications.fr; spf=pass smtp.mailfrom=green-communications.fr; arc=none smtp.client-ip=212.227.126.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=green-communications.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=green-communications.fr
-Received: from evilbit.green-communications.fr ([85.168.41.102]) by
- mrelayeu.kundenserver.de (mreue012 [213.165.67.103]) with ESMTPSA (Nemesis)
- id 1MdNwm-1rDvpV1dC4-00ZNo3; Wed, 20 Mar 2024 18:19:33 +0100
-From: Nicolas Cavallari <nicolas.cavallari@green-communications.fr>
-To: "David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ipv6: delay procfs initialization after the ipv6 structs are ready
-Date: Wed, 20 Mar 2024 18:17:36 +0100
-Message-ID: <20240320171858.2671-1-nicolas.cavallari@green-communications.fr>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1710956185; c=relaxed/simple;
+	bh=614TyGgZR8YUe7ivLVIdx/2LjYPVT1YP379tVWiMKOI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YwlOqLgDW6TZHhuXvjrALegOSzMrIzlcxJWrDuw+z4aT2xoOMCW1stVEbwuXhJIXB0s5XglCXcdnf50FDHt28KEEMBsxODt/TbI/0iyelSFRhLs54hdDJJvCbzOWCL6IDCY6mo8ZW53yqP3xrscjkNNSTPtYeU2OhtSNg1uFNJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K5tuHYZY; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K5tuHYZY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710956183; x=1742492183;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=614TyGgZR8YUe7ivLVIdx/2LjYPVT1YP379tVWiMKOI=;
+  b=K5tuHYZYRslRKZwIJs20rW49fhjpkxjdP+iYTbzncHhdL0CFL8VeTxVs
+   i6nFND3rGzhPi713t8VT/rG5lpUfbz6fVxGrcgZ/xfoqr7hLeeqQY8kZ4
+   iUSx0mAXFja4ixu7uRpVuGimy1Tqp+i2rdFIPSWJy+buPT2Qd5wJAwigU
+   YwWhd7M/a3K1ZrGsmIszazJbHSgOfdxwcFWjk/i7behJWZQ4j++w+ykMu
+   2GNIRtc3ex75cBf0+2y41YRgWhuayxtKf2AthFN6A8ynnznfPl9NbY64U
+   WERI6/XAxF8M7qmLp5Ocazc4xxcYnpatE220SZwWDP4XHt5SF8+SfAZ9q
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="8851141"
+X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
+   d="scan'208";a="8851141"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 10:36:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
+   d="scan'208";a="14303809"
+Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 20 Mar 2024 10:36:19 -0700
+Received: from kbuild by b21307750695 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rmzrN-000Ip9-0i;
+	Wed, 20 Mar 2024 17:36:17 +0000
+Date: Thu, 21 Mar 2024 01:35:55 +0800
+From: kernel test robot <lkp@intel.com>
+To: Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+	Oscar Salvador <osalvador@suse.de>,
+	syzbot+41bbfdb8d41003d12c0f@syzkaller.appspotmail.com
+Subject: Re: [PATCH v2 1/2] mm,page_owner: Fix refcount imbalance
+Message-ID: <202403210131.YLR6USxm-lkp@intel.com>
+References: <20240319183212.17156-2-osalvador@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:W7bGElgtY1racbZYK0A81P9SmHNbbxTmpzpVf+L792+wus9po92
- ndmns0ZoGBaH3CSFs6v2SIhJebA21FIwfej1y/UxEnUmNKmA336stmKZZYIhjBK7/d39S1G
- kZK2cNd0HeFWPgRttNQvAEkeh0HAKFa5H2FvtZ/23g/su1uiKmrD9cy2RpzJ5+Q7RDhuqAP
- BYOYcao0uicIdBbTC8N2g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:l9SIw4i0dFo=;KcNnrIyPfojTsQpKr4XR27UL3GX
- ocnCMD2gKzAw5r9jZ9ksrzToBPlX413sRZnORfThi7OQirW9Z86nvO2yBLXH/u9gsb486xddB
- xRcP+3i40IM5DrpCkTAn59tQei4yJVYwCzuRZhG/OZi5OMQq82xpSHh7yhBM0uk0I/JcWbTLQ
- dzEJCWKIQ93er4Lbpi/Q/VNT4dIYiasoL1FRNJNERDq7HqbxcAk0vTEmBlVWItzmVJytArAJi
- Ph8NZsraUWvvWWBnzo9bFu00rKgeSErQ8pTdFKEo7x9NH6G6K/qb6ydxG7NfepjBi1BqX5Pp2
- CWjAQN4uFY1kucr6JdYlGBjhlrgoSSYhryX73glqZho4+mwfhpY7uOo7yD+EjaAEjl6pJGT8u
- r5+hoRFylJwSr9bMS79kCXXE9b3ldZBqFhmvkSMvpiJ2Qq+Zf7RD9TFH/ezcGdHsAP6+4qWSN
- zhFvPlItddRGgCiclKq/smt67sX4fJJ1ThthGmE99uRol/CrhXvGh1Yf5kZt1I5zvNO3HCO38
- LDKH3yeSeneLKzk6HArMYDrZuWBKf2WLNLaf7oAy+GfavBvcFIyFwOgX8rXcxsOhXdGBgFgok
- hyUv2p2UuxJMSul/j3RVclCUSIZfKUmXMyFxZpxxSVHGLT1GLuWAFk+yPVpVdtKTsHPJYOEoN
- c4+6DDZMHgR/2YJzGgTntDdLyxBD3prjfArKBdM2R+cOGW259Jd50r2/X1pPK/i5HkGki1HBE
- YBc4er7bhIn2ooVy9XpneJSLEyjc+c5T5DXIJ2Ldvvvdv9Db7aM7qU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240319183212.17156-2-osalvador@suse.de>
 
-procfs files are created before the structure they reference are
-initialized.  For example, if6_proc_init() creates procfs files that
-access structures initialized by addrconf_init().
+Hi Oscar,
 
-If ipv6 is compiled as a module and a program manages to open an ipv6
-procfs file during the loading of the module, it can oops the kernel.
+kernel test robot noticed the following build warnings:
 
-It appears that we were unlucky enough to reproduce this problem
-multiple times already, out of maybe 100 boots:
+[auto build test WARNING on akpm-mm/mm-everything]
+[also build test WARNING on linus/master next-20240320]
+[cannot apply to v6.8]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-NET: Registered PF_INET6 protocol family
-8<--- cut here ---
-pwm-backlight backlight: supply power not found, using dummy regulator
-Segment Routing with IPv6
-In-situ OAM (IOAM) with IPv6
-Unable to handle kernel NULL pointer dereference at virtual address
- 00000000
-mt7915e 0000:03:00.0 wlp3s0: renamed from wlan0
-[00000000] *pgd=00000000
-Internal error: Oops: 5 [#1] SMP ARM
-Modules linked in: ipv6 mt7915e mt76_connac_lib mt76 dw_hdmi_imx
- mac80211 dw_hdmi drm_display_helper imxdrm drm_dma_helper
- drm_kms_helper snd_soc_imx_sgtl5000 syscopyarea sysfillrect sysimgblt
- fb_sys_fops imx_ipu_v3 snd_soc_fsl_asoc_card cfg80211 snd_soc_sgtl5000
- drm libarc4 snd_soc_fsl_ssi snd_soc_simple_card_utils imx_pcm_dma
- snd_soc_core rfkill snd_pcm_dmaengine snd_pcm
- drm_panel_orientation_quirks cfbfillrect cfbimgblt cfbcopyarea
- snd_timer snd egalax_ts snd_soc_imx_audmux soundcore flexcan mux_mmio
- imx2_wdt mux_core can_dev pwm_bl
-CPU: 2 PID: 850 Comm: snmpd Not tainted 6.1.14 #1
-Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-PC is at if6_seq_start+0x2c/0x98 [ipv6]
-LR is at init_net+0x0/0xc00
-[...]
- if6_seq_start [ipv6] from seq_read_iter+0xb4/0x510
- seq_read_iter from seq_read+0x80/0xac
- seq_read from proc_reg_read+0xac/0x100
- proc_reg_read from vfs_read+0xb0/0x284
- vfs_read from ksys_read+0x64/0xec
- ksys_read from ret_fast_syscall+0x0/0x54
-Exception stack(0xf0e31fa8 to 0xf0e31ff0)
-1fa0:                   b67fd0b0 be8a666b 0000000a b67fd148 00000400
- 00000000
-1fc0: b67fd0b0 be8a666b 00000001 00000003 be8a67ec 00000000 b6d7e000
- b6c9954a
-1fe0: b6d7eb30 be8a6638 b6ef11b4 b6ef0ddc
-Code: e5931004 e35100ff ca000014 e59e25dc (e7920101)
----[ end trace 0000000000000000 ]---
+url:    https://github.com/intel-lab-lkp/linux/commits/Oscar-Salvador/mm-page_owner-Fix-refcount-imbalance/20240320-023302
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20240319183212.17156-2-osalvador%40suse.de
+patch subject: [PATCH v2 1/2] mm,page_owner: Fix refcount imbalance
+config: x86_64-buildonly-randconfig-004-20240320 (https://download.01.org/0day-ci/archive/20240321/202403210131.YLR6USxm-lkp@intel.com/config)
+compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240321/202403210131.YLR6USxm-lkp@intel.com/reproduce)
 
-Signed-off-by: Nicolas Cavallari <nicolas.cavallari@green-communications.fr>
----
- net/ipv6/af_inet6.c | 45 +++++++++++++++++++++++----------------------
- 1 file changed, 23 insertions(+), 22 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403210131.YLR6USxm-lkp@intel.com/
 
-diff --git a/net/ipv6/af_inet6.c b/net/ipv6/af_inet6.c
-index 8041dc181bd4..d12d690a4867 100644
---- a/net/ipv6/af_inet6.c
-+++ b/net/ipv6/af_inet6.c
-@@ -1148,18 +1148,6 @@ static int __init inet6_init(void)
- 	err = ipv6_netfilter_init();
- 	if (err)
- 		goto netfilter_fail;
--	/* Create /proc/foo6 entries. */
--#ifdef CONFIG_PROC_FS
--	err = -ENOMEM;
--	if (raw6_proc_init())
--		goto proc_raw6_fail;
--	if (udplite6_proc_init())
--		goto proc_udplite6_fail;
--	if (ipv6_misc_proc_init())
--		goto proc_misc6_fail;
--	if (if6_proc_init())
--		goto proc_if6_fail;
--#endif
- 	err = ip6_route_init();
- 	if (err)
- 		goto ip6_route_fail;
-@@ -1226,6 +1214,19 @@ static int __init inet6_init(void)
- 	if (err)
- 		goto ioam6_fail;
- 
-+	/* Create /proc/foo6 entries only after ipv6 structs are ready. */
-+#ifdef CONFIG_PROC_FS
-+	err = -ENOMEM;
-+	if (raw6_proc_init())
-+		goto proc_raw6_fail;
-+	if (udplite6_proc_init())
-+		goto proc_udplite6_fail;
-+	if (ipv6_misc_proc_init())
-+		goto proc_misc6_fail;
-+	if (if6_proc_init())
-+		goto proc_if6_fail;
-+#endif
-+
- 	err = igmp6_late_init();
- 	if (err)
- 		goto igmp6_late_err;
-@@ -1248,6 +1249,16 @@ static int __init inet6_init(void)
- 	igmp6_late_cleanup();
- #endif
- igmp6_late_err:
-+#ifdef CONFIG_PROC_FS
-+	if6_proc_exit();
-+proc_if6_fail:
-+	ipv6_misc_proc_exit();
-+proc_misc6_fail:
-+	udplite6_proc_exit();
-+proc_udplite6_fail:
-+	raw6_proc_exit();
-+proc_raw6_fail:
-+#endif
- 	ioam6_exit();
- ioam6_fail:
- 	rpl_exit();
-@@ -1282,16 +1293,6 @@ static int __init inet6_init(void)
- ndisc_late_fail:
- 	ip6_route_cleanup();
- ip6_route_fail:
--#ifdef CONFIG_PROC_FS
--	if6_proc_exit();
--proc_if6_fail:
--	ipv6_misc_proc_exit();
--proc_misc6_fail:
--	udplite6_proc_exit();
--proc_udplite6_fail:
--	raw6_proc_exit();
--proc_raw6_fail:
--#endif
- 	ipv6_netfilter_fini();
- netfilter_fail:
- 	igmp6_cleanup();
+All warnings (new ones prefixed by >>):
+
+>> mm/page_owner.c:213:3: warning: ignoring return value of function declared with 'warn_unused_result' attribute [-Wunused-result]
+     213 |                 refcount_sub_and_test(nr_base_pages, &stack_record->count);
+         |                 ^~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 warning generated.
+
+
+vim +/warn_unused_result +213 mm/page_owner.c
+
+   206	
+   207	static void dec_stack_record_count(depot_stack_handle_t handle,
+   208					   int nr_base_pages)
+   209	{
+   210		struct stack_record *stack_record = __stack_depot_get_stack_record(handle);
+   211	
+   212		if (stack_record)
+ > 213			refcount_sub_and_test(nr_base_pages, &stack_record->count);
+   214	}
+   215	
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
