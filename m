@@ -1,54 +1,54 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55504206A;
-	Wed, 20 Mar 2024 14:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4EA4D9E8;
+	Wed, 20 Mar 2024 14:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710943934; cv=none; b=U4Ps2CrR8NFBUtP7xqCJvdceT+t0vY4nbs6QGzDGuWje1+qJ3QovZouo7RbxcgHDjpHo29IbY9U7tKA4wgf5zcSBIPMXy18u0oCodwbixejZ/chuFk3y4ExB2AcdQ5/1TGnKHposHEh6JBu4fo/hOT1fn2lPZrLb6AJQkachnfQ=
+	t=1710943937; cv=none; b=kpRGusFOSeALtqpmf1zNYmfyRknRLBrCAHj2aCL/+j+N7jiIkIq5DfM0g6gSXYU0SW/7vXmGs11zIMF8nJhaftb+W2iVnKWWbVDdOajArH8bijhA5nrl6N+rs6Q5f/olWk+4VdaYncq7wdwAPpu9ZrKNMOF/tgrC7i00zi6+T0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710943934; c=relaxed/simple;
-	bh=mgIABhFPyh2Q4+mTQ5iUl/Q0kzGupPJ9MFho63Go9as=;
+	s=arc-20240116; t=1710943937; c=relaxed/simple;
+	bh=16UKphKCBibHFk2xpQBb7f+/ci0Du5EDbth8q5I0Zh4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ixI71/57UhFXgZr3KQ2Z2JisMBk0QPYdoQM4b5/PoDXJywCmz3sbjz2e9CCyDr7ExWnGEvBKUTV3hv1FAxHQ6B2pEqUUgWE0z6b6Sx5Bu4sllPK28zLtjtu8+acOl/iaeKb8NrbwUnsi5qto+pZmp2vDrlRYjHQMptZxHBxcjos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oy/UN8qK; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=inrzpzlkWHTrbNEWsyQZDfso77tTM2oLDb3e9/rsAC4NVkyuxoxHSP8F5WPIPr2jKWYseN2OWiQEFsttJvsXCFB8DOjjxWUofW37Qvkh7d6oO8g0A6nOyOM+c/aJN5qrNjyn7NrRJKlCVt6oDtrw7K6TsOAdk8gsyhVpOMAauMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JV4RS1Mo; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oy/UN8qK"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42KEC6Fl028028;
-	Wed, 20 Mar 2024 14:12:06 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JV4RS1Mo"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42KCRbYl007731;
+	Wed, 20 Mar 2024 14:12:10 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=yQZ2HRP4l26slpaXqk+9
-	ECbf3VaDuJHfU7fjD3xFv30=; b=oy/UN8qKabJ6kNZIQd6LEAndtDcwm49dc0U4
-	xcNVTXIQQ71twHRW9HbqRlI9sMNpltfUpFzl60o2hHbYQ4Dqu5a1opbttRN/Zh7Z
-	po5eyQuEe32R/sXlT1zrWyRu1K3AvQH7lt9xKXk0BJQkIJRN5xZRODw+XaCfg8RV
-	JKjzd7XgwfdGq4Fq0NgzLkBYocNExIXStffqztL2FI9dKFRBut1oROiqG8EK3Hj8
-	2Di2rE2cm8cK1x7fnkV7jiRWs34ZMTN+k8HgojwZjLOWIat2E9NiBNr/QuexVCdP
-	ZAFeQOctnZ1IyW0f5EDmtlpsyk2zkXqFqNZoWzAOfL9PhfZExA==
+	:mime-version:content-type; s=qcppdkim1; bh=jzvt4hKl5bJ6ejlhfxh6
+	mH0hkSQY2ho4WRRwwSsNw7k=; b=JV4RS1MoStRj2IiFTbTYhrtLunUyNMpjxZzm
+	GTzTM01FTFd1jK09pubNc5n6ymOKx3TquuhfXd7hNkCiFPJx6M+1+uALWMlOnPTA
+	6P835jS6jKvYkZiz2TkxFJ00BCusQqzmqFg8ec4evOGq7CZqUj+z6qLyauvRHpzC
+	P0RchrrWiJolHBGc+CNjVgkmqt96yaBOfYk4neEFHy8+7yDf2hMZK98OTy4uqfYX
+	yzfpJmS5SwjvW5KmEvUxhGbcYFO5tQHw0klCsLTIBLuZXO6bwS3CSyDk8tRiMGgF
+	BZ6nJDVQBPmTdK3yUQwaK2bSzjn8kvSzq65SxuYPEAPlM8kcfg==
 Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x01br800u-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wyvrmrnfx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 Mar 2024 14:12:06 +0000 (GMT)
+	Wed, 20 Mar 2024 14:12:10 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42KEC3EA024546
+	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42KEC9Cn024687
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 Mar 2024 14:12:03 GMT
+	Wed, 20 Mar 2024 14:12:09 GMT
 Received: from hu-depengs-sha.qualcomm.com (10.80.80.8) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 20 Mar 2024 07:12:01 -0700
+ 15.2.1118.40; Wed, 20 Mar 2024 07:12:06 -0700
 From: Depeng Shao <quic_depengs@quicinc.com>
 To: <rfoss@kernel.org>, <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
         <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
         <mchehab@kernel.org>, <quic_yon@quicinc.com>
 CC: <quic_depengs@quicinc.com>, <linux-kernel@vger.kernel.org>,
         <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
-Subject: [PATCH v2 3/8] media: qcom: camss: Add new csiphy driver 2-1-2
-Date: Wed, 20 Mar 2024 19:41:31 +0530
-Message-ID: <20240320141136.26827-4-quic_depengs@quicinc.com>
+Subject: [PATCH v2 5/8] media: qcom: camss: Add CSID gen3 driver
+Date: Wed, 20 Mar 2024 19:41:33 +0530
+Message-ID: <20240320141136.26827-6-quic_depengs@quicinc.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240320141136.26827-1-quic_depengs@quicinc.com>
 References: <20240320141136.26827-1-quic_depengs@quicinc.com>
@@ -63,404 +63,734 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: hujS_HvwkcVLDJqmpAe6HLy0jfAfnTct
-X-Proofpoint-ORIG-GUID: hujS_HvwkcVLDJqmpAe6HLy0jfAfnTct
+X-Proofpoint-ORIG-GUID: sDF1C8RsNAKN9glIP5VRpxIepXqIMtf2
+X-Proofpoint-GUID: sDF1C8RsNAKN9glIP5VRpxIepXqIMtf2
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-03-20_09,2024-03-18_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- priorityscore=1501 phishscore=0 suspectscore=0 malwarescore=0
- clxscore=1015 mlxlogscore=999 lowpriorityscore=0 bulkscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2403140001 definitions=main-2403200112
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=999
+ mlxscore=0 phishscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0
+ bulkscore=0 adultscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2403140001
+ definitions=main-2403200112
 
-From: Yongsheng Li <quic_yon@quicinc.com>
+The CSID in SM8550 is gen3, it has new register
+offset and new functionality, the buf done irq,
+register update and reset is moved to CSID gen3.
 
-The CSIPHY register offset of SM8550 is different with
-SM8250, so add a new driver for the SM8550 platform.
-
-Signed-off-by: Yongsheng Li <quic_yon@quicinc.com>
-Co-developed-by: Depeng Shao <depengs@qti.qualcomm.com>
 Signed-off-by: Depeng Shao <quic_depengs@quicinc.com>
+Co-developed-by: Yongsheng Li <quic_yon@quicinc.com>
+Signed-off-by: Yongsheng Li <quic_yon@quicinc.com>
 ---
  drivers/media/platform/qcom/camss/Makefile    |   1 +
- .../platform/qcom/camss/camss-csiphy-2-1-2.c  | 343 ++++++++++++++++++
- .../media/platform/qcom/camss/camss-csiphy.h  |   1 +
- 3 files changed, 345 insertions(+)
- create mode 100644 drivers/media/platform/qcom/camss/camss-csiphy-2-1-2.c
+ .../platform/qcom/camss/camss-csid-gen3.c     | 639 ++++++++++++++++++
+ .../platform/qcom/camss/camss-csid-gen3.h     |  26 +
+ .../media/platform/qcom/camss/camss-csid.h    |   1 +
+ 4 files changed, 667 insertions(+)
+ create mode 100644 drivers/media/platform/qcom/camss/camss-csid-gen3.c
+ create mode 100644 drivers/media/platform/qcom/camss/camss-csid-gen3.h
 
 diff --git a/drivers/media/platform/qcom/camss/Makefile b/drivers/media/platform/qcom/camss/Makefile
-index 0d4389ab312d..28eba4bf3e38 100644
+index 28eba4bf3e38..c5fcd6eec0f2 100644
 --- a/drivers/media/platform/qcom/camss/Makefile
 +++ b/drivers/media/platform/qcom/camss/Makefile
-@@ -9,6 +9,7 @@ qcom-camss-objs += \
+@@ -7,6 +7,7 @@ qcom-camss-objs += \
+ 		camss-csid-4-1.o \
+ 		camss-csid-4-7.o \
  		camss-csid-gen2.o \
++		camss-csid-gen3.o \
  		camss-csiphy-2ph-1-0.o \
  		camss-csiphy-3ph-1-0.o \
-+		camss-csiphy-2-1-2.o \
- 		camss-csiphy.o \
- 		camss-ispif.o \
- 		camss-vfe-4-1.o \
-diff --git a/drivers/media/platform/qcom/camss/camss-csiphy-2-1-2.c b/drivers/media/platform/qcom/camss/camss-csiphy-2-1-2.c
+ 		camss-csiphy-2-1-2.o \
+diff --git a/drivers/media/platform/qcom/camss/camss-csid-gen3.c b/drivers/media/platform/qcom/camss/camss-csid-gen3.c
 new file mode 100644
-index 000000000000..df7860d7a4f4
+index 000000000000..b97005f7065d
 --- /dev/null
-+++ b/drivers/media/platform/qcom/camss/camss-csiphy-2-1-2.c
-@@ -0,0 +1,343 @@
++++ b/drivers/media/platform/qcom/camss/camss-csid-gen3.c
+@@ -0,0 +1,639 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * camss-csiphy-2-1-2.c
++ * camss-csid-gen3.c
 + *
-+ * Qualcomm MSM Camera Subsystem - CSIPHY Module 3phase v2.0
++ * Qualcomm MSM Camera Subsystem - CSID (CSI Decoder) Module
 + *
 + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
 + */
-+
-+#include "camss.h"
-+#include "camss-csiphy.h"
-+
-+#include <linux/delay.h>
++#include <linux/completion.h>
 +#include <linux/interrupt.h>
 +#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/of.h>
++#include <linux/delay.h>
 +
 +
-+#define CSIPHY_CMN_CSI_COMMON_CTRLn(n)	(0x1000 + 0x4 * (n))
-+#define CSIPHY_CMN_CSI_COMMON_CTRL5_CLK_ENABLE	BIT(7)
-+#define CSIPHY_CMN_CSI_COMMON_CTRL6_COMMON_PWRDN_B	BIT(0)
-+#define CSIPHY_CMN_CSI_COMMON_CTRL6_SHOW_REV_ID	BIT(1)
-+#define CSIPHY_CMN_CSI_COMMON_CTRL7_CONTROL	0x7A
-+#define CSIPHY_CMN_CSI_COMMON_CTRL0_PHY_SW_RESET	BIT(0)
-+#define CSIPHY_CMN_CSI_COMMON_CTRL0_SWI_ENABLE_LANESYNC	BIT(1)
-+#define CSIPHY_CMN_CSI_COMMON_STATUSn(n)	(0x10B0 + 0x4 * (n))
++#include "camss-csid.h"
++#include "camss-csid-gen3.h"
++#include "camss.h"
 +
-+#define CSIPHY_DEFAULT_PARAMS            0
-+#define CSIPHY_LANE_ENABLE               1
-+#define CSIPHY_SETTLE_CNT_LOWER_BYTE     2
-+#define CSIPHY_SETTLE_CNT_HIGHER_BYTE    3
-+#define CSIPHY_DNP_PARAMS                4
-+#define CSIPHY_2PH_REGS                  5
-+#define CSIPHY_3PH_REGS                  6
 +
-+struct csiphy_reg_t {
-+	s32 reg_addr;
-+	s32 reg_data;
-+	s32 delay;
-+	u32 csiphy_param_type;
-+};
++#define CSID_TOP_IO_PATH_CFG0(csid)	(0x4 * (csid))
++#define		OUTPUT_IFE_EN 0x100
++#define		INTERNAL_CSID 1
 +
-+/* 2.1.2 2PH */
-+static const struct
-+csiphy_reg_t lane_regs_sm8550[5][20] = {
-+	{
-+		{0x0E90, 0x0f, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0E98, 0x08, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0E94, 0x07, 0x01, CSIPHY_DEFAULT_PARAMS},
-+		{0x00A0, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0090, 0x0f, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0098, 0x08, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0094, 0x07, 0x01, CSIPHY_DEFAULT_PARAMS},
-+		{0x0494, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x04A0, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0490, 0x0f, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0498, 0x08, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0494, 0x07, 0x01, CSIPHY_DEFAULT_PARAMS},
-+		{0x0894, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x08A0, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0890, 0x0f, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0898, 0x08, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0894, 0x07, 0x01, CSIPHY_DEFAULT_PARAMS},
-+		{0x0C94, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0CA0, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0C90, 0x0f, 0x00, CSIPHY_DEFAULT_PARAMS},
-+	},
-+	{
-+		{0x0C98, 0x08, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0C94, 0x07, 0x01, CSIPHY_DEFAULT_PARAMS},
-+		{0x0E30, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0E28, 0x04, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0E00, 0x80, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0E0C, 0xFF, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0E38, 0x1F, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0E2C, 0x01, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0E34, 0x0F, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0E1C, 0x0A, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0E14, 0x60, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0E3C, 0xB8, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0E04, 0x0C, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0E20, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0E08, 0x10, 0x00, CSIPHY_SETTLE_CNT_LOWER_BYTE},
-+		{0x0E10, 0x52, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0030, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0000, 0x8E, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0038, 0xFE, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x002C, 0x01, 0x00, CSIPHY_DEFAULT_PARAMS},
-+	},
-+	{
-+		{0x0034, 0x0F, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x001C, 0x0A, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0014, 0x60, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x003C, 0xB8, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0004, 0x0C, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0020, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0008, 0x10, 0x00, CSIPHY_SETTLE_CNT_LOWER_BYTE},
-+		{0x0010, 0x52, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0430, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0400, 0x8E, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0438, 0xFE, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x042C, 0x01, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0434, 0x0F, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x041C, 0x0A, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0414, 0x60, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x043C, 0xB8, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0404, 0x0C, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0420, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0408, 0x10, 0x00, CSIPHY_SETTLE_CNT_LOWER_BYTE},
-+		{0x0410, 0x52, 0x00, CSIPHY_DEFAULT_PARAMS},
-+	},
-+	{
-+		{0x0830, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0800, 0x8E, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0838, 0xFE, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x082C, 0x01, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0834, 0x0F, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x081C, 0x0A, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0814, 0x60, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x083C, 0xB8, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0804, 0x0C, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0820, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0808, 0x10, 0x00, CSIPHY_SETTLE_CNT_LOWER_BYTE},
-+		{0x0810, 0x52, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0C30, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0C00, 0x8E, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0C38, 0xFE, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0C2C, 0x01, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0C34, 0x0F, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0C1C, 0x0A, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0C14, 0x60, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0C3C, 0xB8, 0x00, CSIPHY_DEFAULT_PARAMS},
-+	},
-+	{
-+		{0x0C04, 0x0C, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0C20, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0C08, 0x10, 0x00, CSIPHY_SETTLE_CNT_LOWER_BYTE},
-+		{0x0C10, 0x52, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0094, 0xD7, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x005C, 0x04, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0060, 0xBD, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0064, 0x7F, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0494, 0xD7, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x045C, 0x04, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0460, 0xBD, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0464, 0x7F, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0894, 0xD7, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x085C, 0x04, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0860, 0xBD, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0864, 0x7F, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0C94, 0xD7, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0C5C, 0x04, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0C60, 0xBD, 0x00, CSIPHY_DEFAULT_PARAMS},
-+		{0x0C64, 0x7F, 0x00, CSIPHY_DEFAULT_PARAMS},
-+	}
-+};
++#define CSID_HW_VERSION		0x0
++#define		HW_VERSION_STEPPING	0
++#define		HW_VERSION_REVISION	16
++#define		HW_VERSION_GENERATION	28
 +
-+static void csiphy_hw_version_read(struct csiphy_device *csiphy,
-+				   struct device *dev)
++#define CSID_RST_CFG	0xC
++#define		RST_MODE		0
++#define		RST_LOCATION	4
++
++#define CSID_RST_CMD	0x10
++#define		SELECT_HW_RST	0
++#define		SELECT_SW_RST	1
++#define		SELECT_IRQ_RST	2
++
++#define CSID_CSI2_RX_IRQ_STATUS	0x9C
++#define CSID_CSI2_RX_IRQ_MASK	0xA0
++#define CSID_CSI2_RX_IRQ_CLEAR	0xA4
++#define CSID_CSI2_RX_IRQ_SET	0xA8
++
++#define CSID_CSI2_RDIN_IRQ_STATUS(rdi)		(0xEC + 0x10 * (rdi))
++#define CSID_CSI2_RDIN_IRQ_MASK(rdi)		(0xF0 + 0x10 * (rdi))
++#define		CSID_CSI2_RDIN_INFO_FIFO_FULL 2
++#define		CSID_CSI2_RDIN_INFO_CAMIF_EOF 3
++#define		CSID_CSI2_RDIN_INFO_CAMIF_SOF 4
++#define		CSID_CSI2_RDIN_INFO_INPUT_EOF 9
++#define		CSID_CSI2_RDIN_INFO_INPUT_SOF 12
++#define		CSID_CSI2_RDIN_ERROR_REC_FRAME_DROP 18
++#define		CSID_CSI2_RDIN_ERROR_REC_OVERFLOW_IRQ 19
++#define		CSID_CSI2_RDIN_ERROR_REC_CCIF_VIOLATION 20
++#define		CSID_CSI2_RDIN_EPOCH0 21
++#define		CSID_CSI2_RDIN_EPOCH1 22
++#define		CSID_CSI2_RDIN_RUP_DONE 23
++#define		CSID_CSI2_RDIN_CCIF_VIOLATION 29
++
++#define CSID_CSI2_RDIN_IRQ_CLEAR(rdi)		(0xF4 + 0x10 * (rdi))
++#define CSID_CSI2_RDIN_IRQ_SET(rdi)			(0xF8 + 0x10 * (rdi))
++
++#define CSID_TOP_IRQ_STATUS	0x7C
++#define		TOP_IRQ_STATUS_RESET_DONE 0
++#define CSID_TOP_IRQ_MASK	0x80
++#define CSID_TOP_IRQ_CLEAR	0x84
++#define CSID_TOP_IRQ_SET	0x88
++#define CSID_IRQ_CMD		0x14
++#define		IRQ_CMD_CLEAR	0
++#define		IRQ_CMD_SET	4
++
++#define CSID_BUF_DONE_IRQ_STATUS	0x8C
++#define		BUF_DONE_IRQ_STATUS_RDI_OFFSET (csid_is_lite(csid) ? 1 : 14)
++#define CSID_BUF_DONE_IRQ_MASK	0x90
++#define CSID_BUF_DONE_IRQ_CLEAR	0x94
++#define CSID_BUF_DONE_IRQ_SET	0x98
++
++#define CSID_CSI2_RX_CFG0	0x200
++#define		CSI2_RX_CFG0_NUM_ACTIVE_LANES	0
++#define		CSI2_RX_CFG0_DL0_INPUT_SEL	4
++#define		CSI2_RX_CFG0_DL1_INPUT_SEL	8
++#define		CSI2_RX_CFG0_DL2_INPUT_SEL	12
++#define		CSI2_RX_CFG0_DL3_INPUT_SEL	16
++#define		CSI2_RX_CFG0_PHY_NUM_SEL	20
++#define			CSI2_RX_CFG0_PHY_SEL_BASE_IDX 1
++#define		CSI2_RX_CFG0_PHY_TYPE_SEL	24
++#define		CSI2_RX_CFG0_TPG_MUX_EN		27
++#define		CSI2_RX_CFG0_TPG_NUM_SEL	28
++
++#define CSID_CSI2_RX_CFG1	0x204
++#define		CSI2_RX_CFG1_PACKET_ECC_CORRECTION_EN		0
++#define		CSI2_RX_CFG1_DE_SCRAMBLE_EN			1
++#define		CSI2_RX_CFG1_VC_MODE				2
++#define		CSI2_RX_CFG1_COMPLETE_STREAM_EN			4
++#define		CSI2_RX_CFG1_COMPLETE_STREAM_FRAME_TIMING	5
++#define		CSI2_RX_CFG1_MISR_EN				6
++#define		CSI2_RX_CFG1_PHY_BIST_EN			7
++#define		CSI2_RX_CFG1_EPD_MODE				8
++#define		CSI2_RX_CFG1_EOTP_EN				9
++#define		CSI2_RX_CFG1_DYN_SWITCH_EN			10
++#define		CSI2_RX_CFG1_RUP_AUP_LATCH_DIS		11
++
++#define CSID_CSI2_RX_CAPTURE_CTRL	0x208
++#define		CSI2_RX_CAPTURE_CTRL_LONG_PKT_CAPTURE_EN	0
++#define		CSI2_RX_CAPTURE_CTRL_SHORT_PKT_CAPTURE_EN	1
++#define		CSI2_RX_CAPTURE_CTRL_CPHY_PKT_CAPTURE_EN	3
++#define		CSI2_RX_CAPTURE_CTRL_LONG_PKT_CAPTURE_DT		4
++#define		CSI2_RX_CAPTURE_CTRL_LONG_PKT_CAPTURE_VC		10
++#define		CSI2_RX_CAPTURE_CTRL_SHORT_PKT_CAPTURE_VC	15
++#define		CSI2_RX_CAPTURE_CTRL_CPHY_PKT_CAPTURE_DT		20
++#define		CSI2_RX_CAPTURE_CTRL_CPHY_PKT_CAPTURE_VC		26
++
++#define CSID_RDI_CFG0(rdi)			(0x500 + 0x100 * (rdi))
++#define		RDI_CFG0_VFR_EN				0
++#define		RDI_CFG0_FRAME_ID_DEC_EN	1
++#define		RDI_CFG0_RETIME_DIS			5
++#define		RDI_CFG0_TIMESTAMP_EN		6
++#define		RDI_CFG0_TIMESTAMP_STB_SEL	8
++#define		RDI_CFG0_DECODE_FORMAT		12
++#define		RDI_CFG0_DT					16
++#define		RDI_CFG0_VC					22
++#define		RDI_CFG0_DT_ID				27
++#define		RDI_CFG0_EN					31
++
++#define CSID_RDI_CFG1(rdi)			(0x510 + 0x100 * (rdi))
++#define		RDI_CFG1_BYTE_CNTR_EN	2
++#define		RDI_CFG1_DROP_H_EN	5
++#define		RDI_CFG1_DROP_V_EN	6
++#define		RDI_CFG1_CROP_H_EN	7
++#define		RDI_CFG1_CROP_V_EN	8
++#define		RDI_CFG1_MISR_EN	9
++#define		RDI_CFG1_PIX_STORE  10
++#define		RDI_CFG1_PLAIN_ALIGNMENT	11
++#define		RDI_CFG1_PLAIN_FORMAT	12
++#define		RDI_CFG1_EARLY_EOF_EN	14
++#define		RDI_CFG1_PACKING_FORMAT	15
++
++#define CSID_RDI_CTRL(rdi)			(0x504 + 0x100 * (rdi))
++#define		RDI_CTRL_START_CMD		0
++#define		RDI_CTRL_START_MODE		2
++
++#define CSID_RDI_EPOCH_IRQ_CFG(rdi) (0x52C + 0x100 * (rdi))
++
++#define CSID_RDI_FRM_DROP_PATTERN(rdi)			(0x540 + 0x100 * (rdi))
++#define CSID_RDI_FRM_DROP_PERIOD(rdi)			(0x544 + 0x100 * (rdi))
++#define CSID_RDI_IRQ_SUBSAMPLE_PATTERN(rdi)		(0x548 + 0x100 * (rdi))
++#define CSID_RDI_IRQ_SUBSAMPLE_PERIOD(rdi)		(0x54C + 0x100 * (rdi))
++#define CSID_RDI_RPP_PIX_DROP_PATTERN(rdi)		(0x558 + 0x100 * (rdi))
++#define CSID_RDI_RPP_PIX_DROP_PERIOD(rdi)		(0x55C + 0x100 * (rdi))
++#define CSID_RDI_RPP_LINE_DROP_PATTERN(rdi)		(0x560 + 0x100 * (rdi))
++#define CSID_RDI_RPP_LINE_DROP_PERIOD(rdi)		(0x564 + 0x100 * (rdi))
++
++#define CSID_RDI_RPP_HCROP(rdi)                 (0x550 + 0x100 * (rdi))
++#define CSID_RDI_RPP_VCROP(rdi)                 (0x554 + 0x100 * (rdi))
++
++#define CSID_RDI_ERROR_RECOVERY_CFG0(rdi)       (0x514 + 0x100 * (rdi))
++
++#define CSID_DISCARD_FRAMES 4
++
++#define CSID_REG_UPDATE_CMD		0x18
++static inline int reg_update_rdi(struct csid_device *csid, int n)
 +{
-+	u32 hw_version;
++	return BIT(n + 4) + BIT(20 + n);
++}
 +
-+	writel(CSIPHY_CMN_CSI_COMMON_CTRL6_SHOW_REV_ID,
-+	       csiphy->base + CSIPHY_CMN_CSI_COMMON_CTRLn(6));
++#define	    REG_UPDATE_RDI		reg_update_rdi
 +
-+	hw_version = readl_relaxed(csiphy->base +
-+				   CSIPHY_CMN_CSI_COMMON_STATUSn(12));
-+	hw_version |= readl_relaxed(csiphy->base +
-+				   CSIPHY_CMN_CSI_COMMON_STATUSn(13)) << 8;
-+	hw_version |= readl_relaxed(csiphy->base +
-+				   CSIPHY_CMN_CSI_COMMON_STATUSn(14)) << 16;
-+	hw_version |= readl_relaxed(csiphy->base +
-+				   CSIPHY_CMN_CSI_COMMON_STATUSn(15)) << 24;
++static const struct csid_format csid_formats[] = {
++	{
++		MEDIA_BUS_FMT_UYVY8_1X16,
++		DATA_TYPE_YUV422_8BIT,
++		DECODE_FORMAT_UNCOMPRESSED_8_BIT,
++		8,
++		2,
++	},
++	{
++		MEDIA_BUS_FMT_VYUY8_1X16,
++		DATA_TYPE_YUV422_8BIT,
++		DECODE_FORMAT_UNCOMPRESSED_8_BIT,
++		8,
++		2,
++	},
++	{
++		MEDIA_BUS_FMT_YUYV8_1X16,
++		DATA_TYPE_YUV422_8BIT,
++		DECODE_FORMAT_UNCOMPRESSED_8_BIT,
++		8,
++		2,
++	},
++	{
++		MEDIA_BUS_FMT_YVYU8_1X16,
++		DATA_TYPE_YUV422_8BIT,
++		DECODE_FORMAT_UNCOMPRESSED_8_BIT,
++		8,
++		2,
++	},
++	{
++		MEDIA_BUS_FMT_SBGGR8_1X8,
++		DATA_TYPE_RAW_8BIT,
++		DECODE_FORMAT_UNCOMPRESSED_8_BIT,
++		8,
++		1,
++	},
++	{
++		MEDIA_BUS_FMT_SGBRG8_1X8,
++		DATA_TYPE_RAW_8BIT,
++		DECODE_FORMAT_UNCOMPRESSED_8_BIT,
++		8,
++		1,
++	},
++	{
++		MEDIA_BUS_FMT_SGRBG8_1X8,
++		DATA_TYPE_RAW_8BIT,
++		DECODE_FORMAT_UNCOMPRESSED_8_BIT,
++		8,
++		1,
++	},
++	{
++		MEDIA_BUS_FMT_SRGGB8_1X8,
++		DATA_TYPE_RAW_8BIT,
++		DECODE_FORMAT_UNCOMPRESSED_8_BIT,
++		8,
++		1,
++	},
++	{
++		MEDIA_BUS_FMT_SBGGR10_1X10,
++		DATA_TYPE_RAW_10BIT,
++		DECODE_FORMAT_UNCOMPRESSED_10_BIT,
++		10,
++		1,
++	},
++	{
++		MEDIA_BUS_FMT_SGBRG10_1X10,
++		DATA_TYPE_RAW_10BIT,
++		DECODE_FORMAT_UNCOMPRESSED_10_BIT,
++		10,
++		1,
++	},
++	{
++		MEDIA_BUS_FMT_SGRBG10_1X10,
++		DATA_TYPE_RAW_10BIT,
++		DECODE_FORMAT_UNCOMPRESSED_10_BIT,
++		10,
++		1,
++	},
++	{
++		MEDIA_BUS_FMT_SRGGB10_1X10,
++		DATA_TYPE_RAW_10BIT,
++		DECODE_FORMAT_UNCOMPRESSED_10_BIT,
++		10,
++		1,
++	},
++	{
++		MEDIA_BUS_FMT_Y8_1X8,
++		DATA_TYPE_RAW_8BIT,
++		DECODE_FORMAT_UNCOMPRESSED_8_BIT,
++		8,
++		1,
++	},
++	{
++		MEDIA_BUS_FMT_Y10_1X10,
++		DATA_TYPE_RAW_10BIT,
++		DECODE_FORMAT_UNCOMPRESSED_10_BIT,
++		10,
++		1,
++	},
++	{
++		MEDIA_BUS_FMT_SBGGR12_1X12,
++		DATA_TYPE_RAW_12BIT,
++		DECODE_FORMAT_UNCOMPRESSED_12_BIT,
++		12,
++		1,
++	},
++	{
++		MEDIA_BUS_FMT_SGBRG12_1X12,
++		DATA_TYPE_RAW_12BIT,
++		DECODE_FORMAT_UNCOMPRESSED_12_BIT,
++		12,
++		1,
++	},
++	{
++		MEDIA_BUS_FMT_SGRBG12_1X12,
++		DATA_TYPE_RAW_12BIT,
++		DECODE_FORMAT_UNCOMPRESSED_12_BIT,
++		12,
++		1,
++	},
++	{
++		MEDIA_BUS_FMT_SRGGB12_1X12,
++		DATA_TYPE_RAW_12BIT,
++		DECODE_FORMAT_UNCOMPRESSED_12_BIT,
++		12,
++		1,
++	},
++	{
++		MEDIA_BUS_FMT_SBGGR14_1X14,
++		DATA_TYPE_RAW_14BIT,
++		DECODE_FORMAT_UNCOMPRESSED_14_BIT,
++		14,
++		1,
++	},
++	{
++		MEDIA_BUS_FMT_SGBRG14_1X14,
++		DATA_TYPE_RAW_14BIT,
++		DECODE_FORMAT_UNCOMPRESSED_14_BIT,
++		14,
++		1,
++	},
++	{
++		MEDIA_BUS_FMT_SGRBG14_1X14,
++		DATA_TYPE_RAW_14BIT,
++		DECODE_FORMAT_UNCOMPRESSED_14_BIT,
++		14,
++		1,
++	},
++	{
++		MEDIA_BUS_FMT_SRGGB14_1X14,
++		DATA_TYPE_RAW_14BIT,
++		DECODE_FORMAT_UNCOMPRESSED_14_BIT,
++		14,
++		1,
++	},
++};
 +
-+	dev_info(dev, "CSIPHY 3PH HW Version = 0x%08x\n", hw_version);
++static void __csid_configure_rx(struct csid_device *csid,
++				struct csid_phy_config *phy, int vc)
++{
++	int val;
++
++	val = (phy->lane_cnt - 1) << CSI2_RX_CFG0_NUM_ACTIVE_LANES;
++	val |= phy->lane_assign << CSI2_RX_CFG0_DL0_INPUT_SEL;
++	val |= (phy->csiphy_id + CSI2_RX_CFG0_PHY_SEL_BASE_IDX) << CSI2_RX_CFG0_PHY_NUM_SEL;
++
++	writel_relaxed(val, csid->base + CSID_CSI2_RX_CFG0);
++
++	val = 1 << CSI2_RX_CFG1_PACKET_ECC_CORRECTION_EN;
++	if (vc > 3)
++		val |= 1 << CSI2_RX_CFG1_VC_MODE;
++	writel_relaxed(val, csid->base + CSID_CSI2_RX_CFG1);
++}
++
++static void __csid_ctrl_rdi(struct csid_device *csid, int enable, u8 rdi)
++{
++	int val;
++
++	if (enable)
++		val = 1 << RDI_CTRL_START_CMD;
++	else
++		val = 0 << RDI_CTRL_START_CMD;
++	writel_relaxed(val, csid->base + CSID_RDI_CTRL(rdi));
++}
++
++static void __csid_configure_top(struct csid_device *csid)
++{
++	u32 val;
++
++	if (csid->top_base) {
++		val = OUTPUT_IFE_EN | INTERNAL_CSID;
++		writel_relaxed(val, csid->top_base + CSID_TOP_IO_PATH_CFG0(csid->id));
++	}
++}
++
++static void __csid_configure_rdi_stream(struct csid_device *csid, u8 enable, u8 vc)
++{
++	u32 val;
++	u8 lane_cnt = csid->phy.lane_cnt;
++	/* Source pads matching RDI channels on hardware. Pad 1 -> RDI0, Pad 2 -> RDI1, etc. */
++	struct v4l2_mbus_framefmt *input_format = &csid->fmt[MSM_CSID_PAD_FIRST_SRC + vc];
++	const struct csid_format *format = csid_get_fmt_entry(csid->formats, csid->nformats,
++							      input_format->code);
++
++	if (!lane_cnt)
++		lane_cnt = 4;
++
++	val = 0;
++	writel_relaxed(val, csid->base + CSID_RDI_FRM_DROP_PERIOD(vc));
++
++	/*
++	 * DT_ID is a two bit bitfield that is concatenated with
++	 * the four least significant bits of the five bit VC
++	 * bitfield to generate an internal CID value.
++	 *
++	 * CSID_RDI_CFG0(vc)
++	 * DT_ID : 28:27
++	 * VC    : 26:22
++	 * DT    : 21:16
++	 *
++	 * CID   : VC 3:0 << 2 | DT_ID 1:0
++	 */
++	u8 dt_id = vc & 0x03;
++
++	val = 1 << RDI_CFG0_TIMESTAMP_EN;
++	val |= 2 << RDI_CFG0_TIMESTAMP_STB_SEL;
++	/* note: for non-RDI path, this should be format->decode_format */
++	val |= DECODE_FORMAT_PAYLOAD_ONLY << RDI_CFG0_DECODE_FORMAT;
++	val |= vc << RDI_CFG0_VC;
++	val |= format->data_type << RDI_CFG0_DT;
++	val |= dt_id << RDI_CFG0_DT_ID;
++
++	writel_relaxed(val, csid->base + CSID_RDI_CFG0(vc));
++
++	val = 1 << RDI_CFG1_PACKING_FORMAT;
++	val |= 1 << RDI_CFG1_PIX_STORE;
++	val |= 1 << RDI_CFG1_DROP_H_EN;
++	val |= 1 << RDI_CFG1_DROP_V_EN;
++	val |= 1 << RDI_CFG1_CROP_H_EN;
++	val |= 1 << RDI_CFG1_CROP_V_EN;
++	val |= RDI_CFG1_EARLY_EOF_EN;
++
++	writel_relaxed(val, csid->base + CSID_RDI_CFG1(vc));
++
++	val = 0;
++	writel_relaxed(val, csid->base + CSID_RDI_IRQ_SUBSAMPLE_PERIOD(vc));
++
++	val = 1;
++	writel_relaxed(val, csid->base + CSID_RDI_IRQ_SUBSAMPLE_PATTERN(vc));
++
++	val = 0;
++	writel_relaxed(val, csid->base + CSID_RDI_CTRL(vc));
++
++	val = readl_relaxed(csid->base + CSID_RDI_CFG0(vc));
++	val |=  enable << RDI_CFG0_EN;
++	writel_relaxed(val, csid->base + CSID_RDI_CFG0(vc));
++}
++
++static void csid_configure_stream(struct csid_device *csid, u8 enable)
++{
++	u8 i;
++
++	/* Loop through all enabled VCs and configure stream for each */
++	for (i = 0; i < MSM_CSID_MAX_SRC_STREAMS; i++)
++		if (csid->phy.en_vc & BIT(i)) {
++			__csid_configure_top(csid);
++			__csid_configure_rdi_stream(csid, enable, i);
++			__csid_configure_rx(csid, &csid->phy, i);
++			__csid_ctrl_rdi(csid, enable, i);
++		}
++}
++
++static int csid_configure_testgen_pattern(struct csid_device *csid, s32 val)
++{
++	if (val > 0 && val <= csid->testgen.nmodes)
++		csid->testgen.mode = val;
++
++	return 0;
 +}
 +
 +/*
-+ * csiphy_reset - Perform software reset on CSIPHY module
-+ * @csiphy: CSIPHY device
++ * csid_hw_version - CSID hardware version query
++ * @csid: CSID device
++ *
++ * Return HW version or error
 + */
-+static void csiphy_reset(struct csiphy_device *csiphy)
++static u32 csid_hw_version(struct csid_device *csid)
 +{
-+	writel_relaxed(0x1, csiphy->base + CSIPHY_CMN_CSI_COMMON_CTRLn(0));
-+	usleep_range(5000, 8000);
-+	writel_relaxed(0x0, csiphy->base + CSIPHY_CMN_CSI_COMMON_CTRLn(0));
++	u32 hw_version;
++	u32 hw_gen;
++	u32 hw_rev;
++	u32 hw_step;
++
++	hw_version = readl_relaxed(csid->base + CSID_HW_VERSION);
++	hw_gen = (hw_version >> HW_VERSION_GENERATION) & 0xF;
++	hw_rev = (hw_version >> HW_VERSION_REVISION) & 0xFFF;
++	hw_step = (hw_version >> HW_VERSION_STEPPING) & 0xFFFF;
++	dev_info(csid->camss->dev, "CSID HW Version = %u.%u.%u\n",
++		hw_gen, hw_rev, hw_step);
++
++	return hw_version;
 +}
 +
-+static irqreturn_t csiphy_isr(int irq, void *dev)
++static void csid_reg_update(struct csid_device *csid, int port_id)
 +{
-+	struct csiphy_device *csiphy = dev;
++	csid->reg_update |= REG_UPDATE_RDI(csid, port_id);
++	writel_relaxed(csid->reg_update, csid->base + CSID_REG_UPDATE_CMD);
++}
++
++static inline void csid_reg_update_clear(struct csid_device *csid,
++					int port_id)
++{
++	csid->reg_update &= ~REG_UPDATE_RDI(csid, port_id);
++}
++
++
++/*
++ * csid_isr - CSID module interrupt service routine
++ * @irq: Interrupt line
++ * @dev: CSID device
++ *
++ * Return IRQ_HANDLED on success
++ */
++static irqreturn_t csid_isr(int irq, void *dev)
++{
++	struct csid_device *csid = dev;
++	u32 val, buf_done_val;
++	u8 reset_done;
 +	int i;
 +
-+	for (i = 0; i < 11; i++) {
-+		int c = i + 22;
-+		u8 val = readl_relaxed(csiphy->base +
-+				       CSIPHY_CMN_CSI_COMMON_STATUSn(i));
++	val = readl_relaxed(csid->base + CSID_TOP_IRQ_STATUS);
++	writel_relaxed(val, csid->base + CSID_TOP_IRQ_CLEAR);
++	reset_done = val & BIT(TOP_IRQ_STATUS_RESET_DONE);
 +
-+		writel_relaxed(val, csiphy->base +
-+				    CSIPHY_CMN_CSI_COMMON_CTRLn(c));
-+	}
++	val = readl_relaxed(csid->base + CSID_CSI2_RX_IRQ_STATUS);
++	writel_relaxed(val, csid->base + CSID_CSI2_RX_IRQ_CLEAR);
 +
-+	writel_relaxed(0x1, csiphy->base + CSIPHY_CMN_CSI_COMMON_CTRLn(10));
-+	writel_relaxed(0x0, csiphy->base + CSIPHY_CMN_CSI_COMMON_CTRLn(10));
++	buf_done_val = readl_relaxed(csid->base + CSID_BUF_DONE_IRQ_STATUS);
++	writel_relaxed(buf_done_val, csid->base + CSID_BUF_DONE_IRQ_CLEAR);
 +
-+	for (i = 22; i < 33; i++)
-+		writel_relaxed(0x0, csiphy->base +
-+				    CSIPHY_CMN_CSI_COMMON_CTRLn(i));
++	/* Read and clear IRQ status for each enabled RDI channel */
++	for (i = 0; i < MSM_CSID_MAX_SRC_STREAMS; i++)
++		if (csid->phy.en_vc & BIT(i)) {
++			val = readl_relaxed(csid->base + CSID_CSI2_RDIN_IRQ_STATUS(i));
++			writel_relaxed(val, csid->base + CSID_CSI2_RDIN_IRQ_CLEAR(i));
++
++			if (buf_done_val & BIT(BUF_DONE_IRQ_STATUS_RDI_OFFSET + i)) {
++				dev_dbg(csid->camss->dev, "RDI%d BUF DONE", i);
++				v4l2_subdev_notify(&csid->subdev, NOTIFY_BUF_DONE, (void *)&i);
++			}
++		}
++
++	val = 1 << IRQ_CMD_CLEAR;
++	writel_relaxed(val, csid->base + CSID_IRQ_CMD);
++
++	if (reset_done)
++		complete(&csid->reset_complete);
 +
 +	return IRQ_HANDLED;
 +}
 +
 +/*
-+ * csiphy_settle_cnt_calc - Calculate settle count value
++ * csid_reset - Trigger reset on CSID module and wait to complete
++ * @csid: CSID device
 + *
-+ * Helper function to calculate settle count value. This is
-+ * based on the CSI2 T_hs_settle parameter which in turn
-+ * is calculated based on the CSI2 transmitter link frequency.
-+ *
-+ * Return settle count value or 0 if the CSI2 link frequency
-+ * is not available
++ * Return 0 on success or a negative error code otherwise
 + */
-+static u8 csiphy_settle_cnt_calc(s64 link_freq, u32 timer_clk_rate)
++static int csid_reset(struct csid_device *csid)
 +{
-+	u32 ui; /* ps */
-+	u32 timer_period; /* ps */
-+	u32 t_hs_prepare_max; /* ps */
-+	u32 t_hs_settle; /* ps */
-+	u8 settle_cnt;
++	unsigned long time;
++	u32 val;
++	int i;
 +
-+	if (link_freq <= 0)
-+		return 0;
++	reinit_completion(&csid->reset_complete);
 +
-+	ui = div_u64(1000000000000LL, link_freq);
-+	ui /= 2;
-+	t_hs_prepare_max = 85000 + 6 * ui;
-+	t_hs_settle = t_hs_prepare_max;
++	writel_relaxed(1, csid->base + CSID_TOP_IRQ_CLEAR);
++	writel_relaxed(1, csid->base + CSID_IRQ_CMD);
++	writel_relaxed(1, csid->base + CSID_TOP_IRQ_MASK);
 +
-+	timer_period = div_u64(1000000000000LL, timer_clk_rate);
-+	settle_cnt = t_hs_settle / timer_period - 6;
++	for (i = 0; i < MSM_CSID_MAX_SRC_STREAMS; i++)
++		if (csid->phy.en_vc & BIT(i)) {
++			writel_relaxed(BIT(BUF_DONE_IRQ_STATUS_RDI_OFFSET + i),
++						csid->base + CSID_BUF_DONE_IRQ_CLEAR);
++			writel_relaxed(0x1 << IRQ_CMD_CLEAR, csid->base + CSID_IRQ_CMD);
++			writel_relaxed(BIT(BUF_DONE_IRQ_STATUS_RDI_OFFSET + i),
++						csid->base + CSID_BUF_DONE_IRQ_MASK);
++		}
 +
-+	return settle_cnt;
++	/* preserve registers */
++	val = (0x1 << RST_LOCATION) | (0x1 << RST_MODE);
++	writel_relaxed(val, csid->base + CSID_RST_CFG);
++
++	val = (0x1 << SELECT_HW_RST) | (0x1 << SELECT_IRQ_RST);
++	writel_relaxed(val, csid->base + CSID_RST_CMD);
++
++	time = wait_for_completion_timeout(&csid->reset_complete,
++					   msecs_to_jiffies(CSID_RESET_TIMEOUT_MS));
++	if (!time) {
++		dev_err(csid->camss->dev, "CSID reset timeout\n");
++		return -EIO;
++	}
++
++	return 0;
 +}
 +
-+static void csiphy_config_lanes(struct csiphy_device *csiphy,
-+				     u8 settle_cnt)
++static u32 csid_src_pad_code(struct csid_device *csid, u32 sink_code,
++			     unsigned int match_format_idx, u32 match_code)
 +{
-+	const struct csiphy_reg_t *r;
-+	int i, l, array_size;
-+	u32 val;
++	switch (sink_code) {
++	case MEDIA_BUS_FMT_SBGGR10_1X10:
++	{
++		u32 src_code[] = {
++			MEDIA_BUS_FMT_SBGGR10_1X10,
++			MEDIA_BUS_FMT_SBGGR10_2X8_PADHI_LE,
++		};
 +
-+	switch (csiphy->camss->res->version) {
-+	case CAMSS_8550:
-+		r = &lane_regs_sm8550[0][0];
-+		array_size = ARRAY_SIZE(lane_regs_sm8550[0]);
++		return csid_find_code(src_code, ARRAY_SIZE(src_code),
++				      match_format_idx, match_code);
++	}
++	case MEDIA_BUS_FMT_Y10_1X10:
++	{
++		u32 src_code[] = {
++			MEDIA_BUS_FMT_Y10_1X10,
++			MEDIA_BUS_FMT_Y10_2X8_PADHI_LE,
++		};
++
++		return csid_find_code(src_code, ARRAY_SIZE(src_code),
++				      match_format_idx, match_code);
++	}
++	default:
++		if (match_format_idx > 0)
++			return 0;
++
++		return sink_code;
++	}
++}
++
++static void csid_subdev_init(struct csid_device *csid)
++{
++	csid->formats = csid_formats;
++	csid->nformats = ARRAY_SIZE(csid_formats);
++	csid->testgen.modes = csid_testgen_modes;
++	csid->testgen.nmodes = CSID_PAYLOAD_MODE_NUM_SUPPORTED_GEN2;
++}
++
++static void csid_subdev_event(struct csid_device *csid, unsigned int evt_type, void *arg)
++{
++	int evt_data = *(int *)arg;
++
++	switch (evt_type) {
++	case NOTIFY_RUP:
++		csid_reg_update(csid, evt_data);
++		break;
++	case NOTIFY_RUP_CLEAR:
++		csid_reg_update_clear(csid, evt_data);
 +		break;
 +	default:
-+		WARN(1, "unknown csi version\n");
-+		return;
-+	}
-+
-+	for (l = 0; l < 5; l++) {
-+		for (i = 0; i < array_size; i++, r++) {
-+			switch (r->csiphy_param_type) {
-+			case CSIPHY_SETTLE_CNT_LOWER_BYTE:
-+				val = settle_cnt & 0xff;
-+				break;
-+			case CSIPHY_DNP_PARAMS:
-+				continue;
-+			default:
-+				val = r->reg_data;
-+				break;
-+			}
-+			writel_relaxed(val, csiphy->base + r->reg_addr);
-+
-+			if (r->delay > 0)
-+				udelay(r->delay);
-+		}
++		dev_err(csid->camss->dev, "NOT Supported EVT Type\n");
++		break;
 +	}
 +}
 +
-+static u8 csiphy_get_lane_mask(struct csiphy_lanes_cfg *lane_cfg)
-+{
-+	u8 lane_mask;
-+	int i;
-+
-+	for (i = 0; i < lane_cfg->num_data; i++)
-+		lane_mask |= 1 << lane_cfg->data[i].pos;
-+
-+	return lane_mask;
-+}
-+
-+static void csiphy_lanes_enable(struct csiphy_device *csiphy,
-+				struct csiphy_config *cfg,
-+				s64 link_freq, u8 lane_mask)
-+{
-+	struct csiphy_lanes_cfg *c = &cfg->csi2->lane_cfg;
-+	u8 settle_cnt;
-+	u8 val = 0;
-+	int i;
-+
-+	settle_cnt = csiphy_settle_cnt_calc(link_freq, csiphy->timer_clk_rate);
-+
-+	val = CSIPHY_CMN_CSI_COMMON_CTRL5_CLK_ENABLE;
-+	for (i = 0; i < c->num_data; i++)
-+		val |= BIT(c->data[i].pos * 2);
-+
-+	writel_relaxed(val, csiphy->base + CSIPHY_CMN_CSI_COMMON_CTRLn(5));
-+
-+	val = CSIPHY_CMN_CSI_COMMON_CTRL6_COMMON_PWRDN_B;
-+	writel_relaxed(val, csiphy->base + CSIPHY_CMN_CSI_COMMON_CTRLn(6));
-+
-+	val = 0x2;
-+	writel_relaxed(val, csiphy->base + CSIPHY_CMN_CSI_COMMON_CTRLn(7));
-+
-+	val = 0x0;
-+	writel_relaxed(val, csiphy->base + CSIPHY_CMN_CSI_COMMON_CTRLn(0));
-+
-+	csiphy_config_lanes(csiphy, settle_cnt);
-+
-+	/* IRQ_MASK registers - disable all interrupts */
-+	for (i = 11; i < 22; i++)
-+		writel_relaxed(0, csiphy->base + CSIPHY_CMN_CSI_COMMON_CTRLn(i));
-+}
-+
-+static void csiphy_lanes_disable(struct csiphy_device *csiphy,
-+				 struct csiphy_config *cfg)
-+{
-+	writel_relaxed(0, csiphy->base +
-+		CSIPHY_CMN_CSI_COMMON_CTRLn(5));
-+
-+	writel_relaxed(0, csiphy->base +
-+		CSIPHY_CMN_CSI_COMMON_CTRLn(6));
-+}
-+
-+const struct csiphy_hw_ops csiphy_ops_2_1_2 = {
-+	.get_lane_mask = csiphy_get_lane_mask,
-+	.hw_version_read = csiphy_hw_version_read,
-+	.reset = csiphy_reset,
-+	.lanes_enable = csiphy_lanes_enable,
-+	.lanes_disable = csiphy_lanes_disable,
-+	.isr = csiphy_isr,
-+	.event = NULL,
++const struct csid_hw_ops csid_ops_gen3 = {
++	.configure_stream = csid_configure_stream,
++	.configure_testgen_pattern = csid_configure_testgen_pattern,
++	.hw_version = csid_hw_version,
++	.isr = csid_isr,
++	.reset = csid_reset,
++	.src_pad_code = csid_src_pad_code,
++	.subdev_init = csid_subdev_init,
++	.event = csid_subdev_event,
 +};
-diff --git a/drivers/media/platform/qcom/camss/camss-csiphy.h b/drivers/media/platform/qcom/camss/camss-csiphy.h
-index ffe1b95eea98..286fdb9f4fdf 100644
---- a/drivers/media/platform/qcom/camss/camss-csiphy.h
-+++ b/drivers/media/platform/qcom/camss/camss-csiphy.h
-@@ -98,5 +98,6 @@ void msm_csiphy_unregister_entity(struct csiphy_device *csiphy);
+diff --git a/drivers/media/platform/qcom/camss/camss-csid-gen3.h b/drivers/media/platform/qcom/camss/camss-csid-gen3.h
+new file mode 100644
+index 000000000000..aa5bd5f2fec5
+--- /dev/null
++++ b/drivers/media/platform/qcom/camss/camss-csid-gen3.h
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * camss-csid-gen3.h
++ *
++ * Qualcomm MSM Camera Subsystem - CSID (CSI Decoder) Module Generation 1
++ *
++ * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++#ifndef QC_MSM_CAMSS_CSID_GEN3_H
++#define QC_MSM_CAMSS_CSID_GEN3_H
++
++#define DECODE_FORMAT_UNCOMPRESSED_8_BIT	0x1
++#define DECODE_FORMAT_UNCOMPRESSED_10_BIT	0x2
++#define DECODE_FORMAT_UNCOMPRESSED_12_BIT	0x3
++#define DECODE_FORMAT_UNCOMPRESSED_14_BIT	0x4
++#define DECODE_FORMAT_UNCOMPRESSED_16_BIT	0x5
++#define DECODE_FORMAT_UNCOMPRESSED_20_BIT	0x6
++#define DECODE_FORMAT_UNCOMPRESSED_24_BIT	0x7
++#define DECODE_FORMAT_PAYLOAD_ONLY		0xf
++
++
++#define PLAIN_FORMAT_PLAIN8	0x0 /* supports DPCM, UNCOMPRESSED_6/8_BIT */
++#define PLAIN_FORMAT_PLAIN16	0x1 /* supports DPCM, UNCOMPRESSED_10/16_BIT */
++#define PLAIN_FORMAT_PLAIN32	0x2 /* supports UNCOMPRESSED_20_BIT */
++
++#endif /* QC_MSM_CAMSS_CSID_GEN3_H */
+diff --git a/drivers/media/platform/qcom/camss/camss-csid.h b/drivers/media/platform/qcom/camss/camss-csid.h
+index ca654b007441..c1d061f91b78 100644
+--- a/drivers/media/platform/qcom/camss/camss-csid.h
++++ b/drivers/media/platform/qcom/camss/camss-csid.h
+@@ -223,6 +223,7 @@ extern const char * const csid_testgen_modes[];
+ extern const struct csid_hw_ops csid_ops_4_1;
+ extern const struct csid_hw_ops csid_ops_4_7;
+ extern const struct csid_hw_ops csid_ops_gen2;
++extern const struct csid_hw_ops csid_ops_gen3;
  
- extern const struct csiphy_hw_ops csiphy_ops_2ph_1_0;
- extern const struct csiphy_hw_ops csiphy_ops_3ph_1_0;
-+extern const struct csiphy_hw_ops csiphy_ops_2_1_2;
- 
- #endif /* QC_MSM_CAMSS_CSIPHY_H */
+ /*
+  * csid_is_lite - Check if CSID is CSID lite.
 -- 
 2.17.1
 
