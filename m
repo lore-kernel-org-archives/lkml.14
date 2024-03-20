@@ -1,99 +1,138 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 493483C47D;
-	Wed, 20 Mar 2024 10:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A80F3D54C
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 10:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710929953; cv=none; b=BL18FYRkwqMk2ZaH/uQOjm7QZXjSCnOQlb8xOa8aH3IGU8eRmgp5km0KCR0nHuRJrL80KxzoVgP84dN2c6n1CEG6osj/Ynn4nu/Z/5lxOBY6fsJogz2iRZ/QryTRlmP+q5n5/ptvIURZoogAwWHyj+y60673YRk9KCMsWUwIlug=
+	t=1710929954; cv=none; b=YiDO0PJsVsYX8XN7nh9SUrj2XxH2ywuZffFGkyd9weBEweKn1WuGa+3SA9DnK4MD06b3sRqGfNZqkECBCQ5n/ISvjo2OeB2HyjFB5xmD+AFIts6tKXPTSydxv6XcqQfNfoWAdDaowkyJUjP4/GjgU4G4p2/3APw78+3llA6RSkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710929953; c=relaxed/simple;
-	bh=XguMGdlSMAGPR3rW813ta3Q8khQXQn25r7ej7jRywJY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lbd1ZveqaKdUKuNeTXKSYnim9M1g5o9ci0qgxE5YaTWd8Ws0+8KYwimeq/hFGt5wZqB8AEayET9gXZJGooWnhEXkrWZjaWZeQ0BVpkZ3IKAMD2KQ9pnMhvTA2WVRjDGvgowWLcBOcH5yj6ecMacOGtrkK2ReocAmINL05wd2iqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-60cbcd04de9so62834537b3.2;
-        Wed, 20 Mar 2024 03:19:12 -0700 (PDT)
+	s=arc-20240116; t=1710929954; c=relaxed/simple;
+	bh=s/w9iCv68HNMLj67aGzBK977nbP9lfQGe1BaWia27tk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=lavvNerqv+F1sG01VegpnvDrntS+jHQ4/IpyrspkfYHV4qKLfy2FBOyUBL4lfWPlVcJ7XtrpGeRIO5FHyChWV+DpWfZI1nTH1mxvXRFUJgYxukWOCG1s3gary8UmI5gumcJJvOvISe9eivUBd0x6aEL1tYhPVZDzNZdCYNQzM+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--glider.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0olECfqL; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--glider.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0olECfqL"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dbf618042daso9967141276.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 03:19:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710929952; x=1711534752; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=m0vBJz04bRZVs+p5tf5O60PjHz2OHj3PY0354SOIqxk=;
+        b=0olECfqLcSe/nAe0AZRbn656dVOlwE1xVnZ6LzKAW+PxLyGnFfgZZdMh9bGAYdQ3q3
+         KSD1wSvdH31j0zubem12gZ0C/90Y6PoXJcgiHUWVlDNEoQ3noXhBaANZBml3E5hPZBJk
+         3ISlCh+SZAQs1EIyUH9EY/hKEwk1E49rKAS+xzu7Ui5V+12R9CTrKcZEOJLOt/1xh1w4
+         4W4lcV/TcRTtCHK+NHnNyZTItHpaW7uUjfMrnKtUof1samJl8urE32LyUTU/O2MvymWb
+         LR8G6S+gKAB+2L0Gfu0SCgLQnrJI1g/qBsE6teVj+UTulj+A4sdfyiZg4TPv4Wwt/tyH
+         Nd/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710929951; x=1711534751;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HdcM8od0fKihez6wVABy4EIvVWsKf76vtSIaBDoRYRA=;
-        b=gfQv3Nu4MQxMKJ9eOLc2NKiz7nGHqRqpfNX7U7TwYjUUGBWBZ6oT3xJUTmH5xpILEr
-         WjGBIgf8i45BJSbCrHBQ4L67hrm1cWbIQ1uBfHjDwHdQynEzPM3Bg3/ICwITP+J/gqCQ
-         Fvp6/QLm9uRLtPYE5GjtUyR90UHxDizSEZXWu0k42h8JqjFWcfDxaqh/PfFTogLsXwHO
-         zT6ZhqV98AyHbz48KwxHDqlGyoDojAJFpDvZHdRb0y/kD9HvqMyCjO8+clG5N0QDlsyL
-         Va+3rBt/07qlfxUZxveAn9Vkih/I8fJp/w4yAMexZgv0PAmYvdzHBxO6nSStHa/lICDV
-         wtSw==
-X-Forwarded-Encrypted: i=1; AJvYcCWhUPKqGb6d1x/Ch/B3R5N667NFgHCt4nZcoWdnDRhOlue3DvGDdb/xaDttTi9yW/vk8sYEAo+1FWXu/KTEuC6URd85VhksAAz3IS3TFH3DzufuXELzMT3eRuSFeJXs4q0BTmU7lscnQvqRySuie4LOWy2To9yRNfhaDGTgbBXg37JQIl5zStY/f2wH
-X-Gm-Message-State: AOJu0Yw4tq24waUqNgEQdqzTTYgFzZqEgH+BjC3V8yBJuZw4B8YDIdzl
-	vlq1R8H415uSuLvCfqo3BH2JBagvjpanODugSkcfLjvpNHxn3QgOZQKDYHCKBOg=
-X-Google-Smtp-Source: AGHT+IHFPD+Ci4c51tH1k/AyxFdBExyx48cBkHtfTpyCz+MZTIuTcGARHRBU4zN1uMRrV+vWhUaV1w==
-X-Received: by 2002:a81:ab53:0:b0:609:a55b:805c with SMTP id d19-20020a81ab53000000b00609a55b805cmr16277422ywk.46.1710929950901;
-        Wed, 20 Mar 2024 03:19:10 -0700 (PDT)
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com. [209.85.128.171])
-        by smtp.gmail.com with ESMTPSA id o1-20020a81ef01000000b0060a304ca3f4sm2687970ywm.19.2024.03.20.03.19.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Mar 2024 03:19:10 -0700 (PDT)
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-60fff981e2aso44194097b3.3;
-        Wed, 20 Mar 2024 03:19:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXoXMLJEntCPi9/HQGech03MqR7ipeVxVCB1bJ9g2Xrzfo+GRmLbBNsO0L+j5xtq+wkwo3+1nGCESYXd5qI9ItlrQEgQ1Bdl+54fHHF7VsgYuF8v8AY55XyU/YDiCXIuJKSirmwDTCcqdlarhnthur73XabB35Yv/+kqBeZSVAQhgZ1s7MuBEO6LlAB
-X-Received: by 2002:a81:9403:0:b0:60a:422e:c4 with SMTP id l3-20020a819403000000b0060a422e00c4mr18353503ywg.25.1710929950493;
- Wed, 20 Mar 2024 03:19:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710929952; x=1711534752;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=m0vBJz04bRZVs+p5tf5O60PjHz2OHj3PY0354SOIqxk=;
+        b=VvDkq6BWWigZ+884OYKDhawjeatyRI9nTkuHhyJBV2AmUmXbLOP3YzkoygyQxIBBmK
+         vfed0WRGn/5S1IftLjTlodeLQ9q5cQvZDCw8M+4IPNSeIFFfOHRbnh2azQ9nrQG4uayo
+         3tnWUyTGgSA5lFT1543eqlGKAxMpkmLEsOVZzupTRtsNcDbWNw9o4eesNks3rVNG9WrV
+         CPPR7U4pG//QTzQUlMdv7Ze4+DG4YSa48wAyfgSNd2y65wDjNXP9ut9aNaiuq2OjFc7G
+         3ftEnTGglNotuWsUqHhIw2N3Ge2H7teAIb8chp4/B4QGOKD/x/COp2c0WGUGJxVLCbf3
+         fuTw==
+X-Gm-Message-State: AOJu0Yw20+WlcmGxynzVJovBFk7A0x/5Sx6jg0m2hGsvwJbzPA6ZTJ8H
+	bD32RhlIHl10zXlbRgm4tbI4VcQrS/TujjFDvZP+uMPdCrRbi82bqsZZkPqenQA5M0Go/hR8eVu
+	08A==
+X-Google-Smtp-Source: AGHT+IFG8zJJFsZTjI1YIaNEwrks7akz88Yk5exPnSeBisyx550nfOfPmsTtY3RfUy1vhUp7VkINpS74JxE=
+X-Received: from glider.muc.corp.google.com ([2a00:79e0:9c:201:2234:4e4b:bcf0:406e])
+ (user=glider job=sendgmr) by 2002:a05:6902:2484:b0:dd9:1b94:edb5 with SMTP id
+ ds4-20020a056902248400b00dd91b94edb5mr625397ybb.10.1710929952333; Wed, 20 Mar
+ 2024 03:19:12 -0700 (PDT)
+Date: Wed, 20 Mar 2024 11:18:50 +0100
+In-Reply-To: <20240320101851.2589698-1-glider@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240318174345.46824-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240318174345.46824-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 20 Mar 2024 11:18:58 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVVVhYs3iQfLMwwBx6vYF3m9_C8n9gHkFPioBjFgqJPUA@mail.gmail.com>
-Message-ID: <CAMuHMdVVVhYs3iQfLMwwBx6vYF3m9_C8n9gHkFPioBjFgqJPUA@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: renesas: r7s72100: Add 'interrupt-names'
- property in SCIF nodes
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Mime-Version: 1.0
+References: <20240320101851.2589698-1-glider@google.com>
+X-Mailer: git-send-email 2.44.0.291.gc1ea87d7ee-goog
+Message-ID: <20240320101851.2589698-2-glider@google.com>
+Subject: [PATCH v2 2/3] instrumented.h: add instrument_memcpy_before, instrument_memcpy_after
+From: Alexander Potapenko <glider@google.com>
+To: glider@google.com, akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	kasan-dev@googlegroups.com, tglx@linutronix.de, x86@kernel.org, 
+	Dmitry Vyukov <dvyukov@google.com>, Marco Elver <elver@google.com>, 
+	Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>, 
+	Linus Torvalds <torvalds@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 18, 2024 at 6:44=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
-om> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add 'interrupt-names' property into SCIF nodes for clarity.
->
-> This allows us to update the DT binding to mark 'interrupt-names' propert=
-y
-> as required for all the SoCs which have multiple interrupts and also allo=
-w
-> us to validate the DT binding doc using dtbs_check.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Bug detection tools based on compiler instrumentation may miss memory
+accesses in custom memcpy implementations (such as copy_mc_to_kernel).
+Provide instrumentation hooks that tell KASAN, KCSAN, and KMSAN about
+such accesses.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.10.
+Link: https://lore.kernel.org/all/3b7dbd88-0861-4638-b2d2-911c97a4cadf@I-love.SAKURA.ne.jp/
+Signed-off-by: Alexander Potapenko <glider@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Marco Elver <elver@google.com>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 
-Gr{oetje,eeting}s,
+---
+ v2: fix a copypasto in a comment spotted by Linus
+---
+ include/linux/instrumented.h | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-                        Geert
+diff --git a/include/linux/instrumented.h b/include/linux/instrumented.h
+index 1b608e00290aa..711a1f0d1a735 100644
+--- a/include/linux/instrumented.h
++++ b/include/linux/instrumented.h
+@@ -147,6 +147,41 @@ instrument_copy_from_user_after(const void *to, const void __user *from,
+ 	kmsan_unpoison_memory(to, n - left);
+ }
+ 
++/**
++ * instrument_memcpy_before - add instrumentation before non-instrumented memcpy
++ * @to: destination address
++ * @from: source address
++ * @n: number of bytes to copy
++ *
++ * Instrument memory accesses that happen in custom memcpy implementations. The
++ * instrumentation should be inserted before the memcpy call.
++ */
++static __always_inline void instrument_memcpy_before(void *to, const void *from,
++						     unsigned long n)
++{
++	kasan_check_write(to, n);
++	kasan_check_read(from, n);
++	kcsan_check_write(to, n);
++	kcsan_check_read(from, n);
++}
++
++/**
++ * instrument_memcpy_after - add instrumentation after non-instrumented memcpy
++ * @to: destination address
++ * @from: source address
++ * @n: number of bytes to copy
++ * @left: number of bytes not copied (if known)
++ *
++ * Instrument memory accesses that happen in custom memcpy implementations. The
++ * instrumentation should be inserted after the memcpy call.
++ */
++static __always_inline void instrument_memcpy_after(void *to, const void *from,
++						    unsigned long n,
++						    unsigned long left)
++{
++	kmsan_memmove(to, from, n - left);
++}
++
+ /**
+  * instrument_get_user() - add instrumentation to get_user()-like macros
+  * @to: destination variable, may not be address-taken
+-- 
+2.44.0.291.gc1ea87d7ee-goog
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
