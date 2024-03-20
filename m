@@ -1,146 +1,121 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9540936AE4;
-	Wed, 20 Mar 2024 08:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC021642B;
+	Wed, 20 Mar 2024 08:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710922055; cv=none; b=AwpomJLlI3y44aR68fmUeyAjXw9/NbfSeOMP5loJmvHg5SfN42PkoZjMdCfCXZ8ZklmAMfBxVFv8JvcDOtPloTF4yO2uV55FCFp2vb0WQWfVJBRCfPgeEp2cyNrYl9my2hMrYsrKkEtOW9Cm1PqGrUJbgJEInamP8hB4RlU7G5Y=
+	t=1710922137; cv=none; b=XmXdtldK/cbSHIzOoqKPYqnIaalfFFlu9tRzrKIAVjEBZGYb7Sk+wkRC8z4Yb4T/ntTecc64hMnjcx1CPta5rSEvKjy86UMn6C2r4qlCpYAJCcDXP+I+Mh+VhySmaaibuDA63XXJAscUAcLgjGQJCRNwm3Pgz3p7GynNRxlv+CE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710922055; c=relaxed/simple;
-	bh=8s8XKGkGT4rwQeAawGzZEkGeS8AnzqsL4K//1R+zt5Q=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ah4pTubxMI3wIf5XoYR0a4LBB1wosag+zNUMJdvn5H3/IjtetmPIuKxQ2xyNwViNYSGNR+mXb1pibdpJ3bgDYDUzWbmUl8pIwL9TR88quXUEYHNthIdPJjlNrTyHJ5RMF0l1eyGrdnPJR2M3UbbDeoIL6NX67bvXzHOpA7m9Td8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=hHH5DxSY; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="hHH5DxSY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1710922054; x=1742458054;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8s8XKGkGT4rwQeAawGzZEkGeS8AnzqsL4K//1R+zt5Q=;
-  b=hHH5DxSY/R/+5ju6Tu8yndEmtunuKsBNmB260zQ3AYGzWDXV/7XBbvHP
-   Sy1oIN3vxCAEhRW/Nj1GWRpi/beHVw0bW3SHbvOzFtyUHxv3X/OjFvdff
-   0ra9jz4Zq9TIjNFUjz/Wh1SKTv44ZjToDiLBFKAksqGu7par804adSnnZ
-   FwcFP32gvuiGVgb0H7xHaRZ9vNcBABNHUZj9v+KuV417vuSTT8x2SQZvj
-   mUKn7QBMF+zP+2haC5OaXnGifBPBYqDx8SKIy7twNO+mwGb1uByJWVIt/
-   yz8fqyYXwU+Wd8p1LE2PlP6O5BctCQjYvpDjCB27AHQHTz0/ia9x5qBbF
-   Q==;
-X-CSE-ConnectionGUID: +2PKfpLTQGq2m0SEBNMVqQ==
-X-CSE-MsgGUID: eSxs2JbuTmyaJCQMbacMkA==
-X-IronPort-AV: E=Sophos;i="6.07,139,1708412400"; 
-   d="asc'?scan'208";a="248659095"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 20 Mar 2024 01:07:30 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 20 Mar 2024 01:07:10 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Wed, 20 Mar 2024 01:07:07 -0700
-Date: Wed, 20 Mar 2024 08:06:20 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Samuel Holland <samuel.holland@sifive.com>
-CC: Deepak Gupta <debug@rivosinc.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>, Catalin
- Marinas <catalin.marinas@arm.com>, <linux-kernel@vger.kernel.org>, Conor
- Dooley <conor@kernel.org>, <kasan-dev@googlegroups.com>, Evgenii Stepanov
-	<eugenis@google.com>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andrew
- Jones <ajones@ventanamicro.com>, Guo Ren <guoren@kernel.org>, Heiko Stuebner
-	<heiko@sntech.de>, Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [RISC-V] [tech-j-ext] [RFC PATCH 5/9] riscv: Split per-CPU and
- per-thread envcfg bits
-Message-ID: <20240320-fanfare-flick-3b38dde081d8@wendy>
-References: <20240319215915.832127-1-samuel.holland@sifive.com>
- <20240319215915.832127-6-samuel.holland@sifive.com>
- <CAKC1njSg9-hJo6hibcM9a-=FUmMWyR39QUYqQ1uwiWhpBZQb9A@mail.gmail.com>
- <40ab1ce5-8700-4a63-b182-1e864f6c9225@sifive.com>
+	s=arc-20240116; t=1710922137; c=relaxed/simple;
+	bh=YHYOadkmOipUMw5vHmVozyaiYQFe3Wgatl1WnyHvUMU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KZLpH1mVvxKvc8N3qDJ8xiuCksBVi+0Talor+EErEkzSIYrFH5CIlXiQ1Rok6z631IrE7oIohD49qGZD+c3XlImH2ejwv28RfB/+zHcxLxucxZ02VOtKKm1IWgmO7okaOwm7kaJjBuRoK55l18OPRd5vF3gdjg94d1se1kTerBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-609f359b7b1so75592957b3.1;
+        Wed, 20 Mar 2024 01:08:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710922134; x=1711526934;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UxAjfDS34SkaeqdOsAUG7ZjS13iVv3mgsYNBQbuG+9o=;
+        b=CTT35BJxGjG91jqMkN0Qlmvj17pcrdP6khHdiQuK5K0IfErFPZOY+SSshO3wPsMIIA
+         rjaD+ugB3Tp1v+9ZD/1Zi8B3tL+QATd6ngQAFv6M0Rhhi+fD/altqf4CwcmAFtZdnOYM
+         J1DbsW1aReZJhcgZK+EYPR8zrua9Vi9rItilg82X//Hgdi0Lf8XRmmZ75Jb9xF1BADB7
+         1cHVhJCvGsh3Mgw147U5fMK3oBNs8vjQvDyjehvBFe6Gi1Poa54dmswlI6CVDceXUAQo
+         a0Aul9Z3s79vHc5FmQqQIoyXshldaHxFXuaaDhy14kaGVa2jZwHjs1Pl23C5CQ7YJEWd
+         /wfg==
+X-Forwarded-Encrypted: i=1; AJvYcCWXHxvhYKAMSw7K34XRNChj61bIyZaUf1Sl6JljR6XwAiQLOc3p3CPZ395APJZZzreZMCb3oX3HRqt/JSXAj1+36Ukzq25x+1RDippgnoLSkhdOTTS2n/JMVgPbs+90gbAzPu7viXtEAg==
+X-Gm-Message-State: AOJu0Yze0QXTThUOlTqKmxQndok+5lwaCPv3kv1k79cGlZtrAcFV3rTd
+	RG6tqP/n9P/oBVJUnGcHNx3zzYioBMv6AiGm2j3Oi85SaAxNtbCWd11HQg5D0+0=
+X-Google-Smtp-Source: AGHT+IGasCsLKtbgBJzbK44zWI4+raapf2xsNEu4QsMmZWQ1hc1o3WHnw/x577Pc62k3/HA3LIbbCw==
+X-Received: by 2002:a81:b2c7:0:b0:610:e46c:18f6 with SMTP id q190-20020a81b2c7000000b00610e46c18f6mr3966229ywh.17.1710922134605;
+        Wed, 20 Mar 2024 01:08:54 -0700 (PDT)
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com. [209.85.128.171])
+        by smtp.gmail.com with ESMTPSA id p1-20020a81ca01000000b00610f3850e14sm249309ywi.131.2024.03.20.01.08.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Mar 2024 01:08:54 -0700 (PDT)
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-609f359b7b1so75592767b3.1;
+        Wed, 20 Mar 2024 01:08:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX/vIirLIYjDEH7xzHHiZtNMnZ9eO7W0YwOKX/uMLWWf6qx9lMzh8h2SDd675NBDHX3R4EFDARFr5AOfPydI07qLv49QnsYuIPtNog5beQzz7eIk2GZ9GBaL/CKIcQzGLRI4dgTsN7eZw==
+X-Received: by 2002:a0d:fb87:0:b0:609:fdf7:b443 with SMTP id
+ l129-20020a0dfb87000000b00609fdf7b443mr4533721ywf.52.1710922133920; Wed, 20
+ Mar 2024 01:08:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ZQuW/bL/DNtzlQCx"
-Content-Disposition: inline
-In-Reply-To: <40ab1ce5-8700-4a63-b182-1e864f6c9225@sifive.com>
-
---ZQuW/bL/DNtzlQCx
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <48ca5e827ca420bbdbabb1643e2179dc95c9e0b7.1710849638.git.geert@linux-m68k.org>
+ <d1a1b0b8-41f1-4ead-b393-d8d2f099b0c4@acm.org> <CAMuHMdWzD1OR8qj8oHfUgQ9GMtrD8y69G+A+ONdVm0vTCvYe=w@mail.gmail.com>
+ <0d41ae1a-f6aa-4377-b8a3-7fcf067f99ac@acm.org>
+In-Reply-To: <0d41ae1a-f6aa-4377-b8a3-7fcf067f99ac@acm.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 20 Mar 2024 09:08:42 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVig-cm7KPi76ow9-xyZ55z4YgYrx6QuO9V5A0ni7HxDA@mail.gmail.com>
+Message-ID: <CAMuHMdVig-cm7KPi76ow9-xyZ55z4YgYrx6QuO9V5A0ni7HxDA@mail.gmail.com>
+Subject: Re: [PATCH] scsi: core: Make scsi_lib KUnit tests modular for real
+To: Bart Van Assche <bvanassche@acm.org>
+Cc: Mike Christie <michael.christie@oracle.com>, 
+	"James E . J . Bottomley" <jejb@linux.ibm.com>, "Martin K . Petersen" <martin.petersen@oracle.com>, 
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>, linux-scsi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 19, 2024 at 09:20:59PM -0500, Samuel Holland wrote:
-> On 2024-03-19 6:55 PM, Deepak Gupta wrote:
-> > On Tue, Mar 19, 2024 at 2:59=E2=80=AFPM Samuel Holland via lists.riscv.=
-org
-> > <samuel.holland=3Dsifive.com@lists.riscv.org> wrote:
-> >>
-> >> Some envcfg bits need to be controlled on a per-thread basis, such as
-> >> the pointer masking mode. However, the envcfg CSR value cannot simply =
-be
-> >> stored in struct thread_struct, because some hardware may implement a
-> >> different subset of envcfg CSR bits is across CPUs. As a result, we ne=
-ed
-> >> to combine the per-CPU and per-thread bits whenever we switch threads.
-> >>
-> >=20
-> > Why not do something like this
-> >=20
-> > diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
-> > index b3400517b0a9..01ba87954da2 100644
-> > --- a/arch/riscv/include/asm/csr.h
-> > +++ b/arch/riscv/include/asm/csr.h
-> > @@ -202,6 +202,8 @@
-> >  #define ENVCFG_CBIE_FLUSH              _AC(0x1, UL)
-> >  #define ENVCFG_CBIE_INV                        _AC(0x3, UL)
-> >  #define ENVCFG_FIOM                    _AC(0x1, UL)
-> > +/* by default all threads should be able to zero cache */
-> > +#define ENVCFG_BASE                    ENVCFG_CBZE
->=20
-> Linux does not assume Sstrict, so without Zicboz being present in DT/ACPI=
-, we
-> have no idea what the CBZE bit does--there's no guarantee it has the stan=
-dard
-> meaning--so it's not safe to set the bit unconditionally. If that policy
-> changes, we could definitely simplify the code.
+Hoi Bart,
 
-The wording for that "extension", if two lines in the profiles doc makes
-something an extension is:
-"No non-conforming extensions are present. Attempts to execute unimplemented
-opcodes or access unimplemented CSRs in the standard or reserved encoding
-spaces raises an illegal instruction exception that results in a contained
-trap to the supervisor-mode trap handler."
+CC linux-kselftest@vger.kernel.org
 
-I know we have had new extensions come along and mark previously fair
-game interrupts for vendors as out of bounds. I wonder if there's a risk
-of that happening with CSRs or opcodes too (or maybe it has happened and
-I cannot recall).
+On Tue, Mar 19, 2024 at 6:01=E2=80=AFPM Bart Van Assche <bvanassche@acm.org=
+> wrote:
+> On 3/19/24 09:10, Geert Uytterhoeven wrote:
+> > On Tue, Mar 19, 2024 at 5:03=E2=80=AFPM Bart Van Assche <bvanassche@acm=
+.org> wrote:
+> >> On 3/19/24 05:02, Geert Uytterhoeven wrote:
+> >> kernel module? What are the advantages compared to the current approac=
+h?
+> >> That information is missing from the patch description.
+> >
+> > SCSI_LIB_KUNIT_TEST is already tristate, so the original author must
+> > have meant it to be modular.  Or perhaps he just copied it from
+> > (most/all) other tests ;-)
+> >
+> > Anyway, I find it very useful to be able to do "modprobe kunit" and
+> > "modprobe <test>" to run a test when I feel the need to do so.
+>
+> Why to run hardware-independent kunit tests on the target system instead
+> of on the host? Isn't it much more convenient when developing embedded
+> software to run kunit tests on the host using UML? The script I use to
 
-Going back to the interrupts - is the Andes PMU non-conforming because
-it uses an interrupt that was declared as vendor usable but is now part
-of the standard space because of AIA? If it is, then the meaning of
-Sstrict could vary wildly based on the set of extensions (and their
-versions for specs). That sounds like a lot of fun.
+Because test results may differ between target and host?
+It's not uncommon for supposedly hardware-independent tests to behave
+differently on different architectures and platforms, due to subtle
+differences in word size, endianness, alignment rules, CPU topology, ...
 
---ZQuW/bL/DNtzlQCx
-Content-Type: application/pgp-signature; name="signature.asc"
+> run SCSI kunit tests is available below. And if there is a desire to run
+> SCSI tests on the target system, how about adding triggers in sysfs for
+> running kunit tests? The (GPL v2) Samsung smartphone kernel supports
+> this but I have not yet checked whether their implementation is
+> appropriate for the upstream kernel.
 
------BEGIN PGP SIGNATURE-----
+That would require all tests to be built-in, reducing the amount of memory
+(if any remains at all) available to the real application.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZfqY/AAKCRB4tDGHoIJi
-0m4/AP0UYPz9RdNLmW6g7L1tf8w83wsWZfBkuwZqh3A3w0Jq9wEA7t8mWVQ1YVm2
-D9FdG5Y2+4p6MzgZJDv6xF67VncJZAU=
-=unOr
------END PGP SIGNATURE-----
+Gr{oetje,eeting}s,
 
---ZQuW/bL/DNtzlQCx--
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
