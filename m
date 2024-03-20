@@ -1,110 +1,65 @@
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.207])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B34585C58
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 22:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154091EB45
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 22:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710974172; cv=none; b=r6P34ycL74pcYpK+/m0xb+3f3xEqj7fgV2ow219VIDRhoYZerNuA8hGOoC32i8MFNB8THx7l56y2klqik49UsdCimUKvbmkXykTmdOuEJjMSpwLfAtVYlRwG226zYGk8hUNMdt44IJvhZrvwv5XwqMt34yh12Nlj7qtCsxvs5d0=
+	t=1710974185; cv=none; b=BM1iDYR0Gw7ez6fTeRN3WwRo9TRvews6Vi34xLggiBmTcKMBc0Exs2TT9qoo3s8eH56PGrofO9a92Szi4YT2fMNYDyMNfROr4w+ga3y9eWO478MtiR6l0IS8aKNIolLNVGkNVtsuEYvo5DtXowwnOVtZ1tfUACmf98NcZtnJ8kY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710974172; c=relaxed/simple;
-	bh=FrDJYOWwf0Ic6PWmCehY4eGVyxmoLrR6fV2hXhRI9/Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Hvq0SbpbA/Me3MYc1jnn0UXSnBRrUREgxDjHirapVYDHiHyzm8kMfJel/sa5nmVn8ZMazEOaI/U/5ot3qHMllxDHyQQbZSMcsd5F6WyBHC1bPRZiP+Q7pPf2c4Cxo0lYMVwADwnoJdaaWC8rM5bWlIEWIcgpRk0KgzM7PHggxks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=ER8oSDVy; arc=none smtp.client-ip=192.19.144.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1710974185; c=relaxed/simple;
+	bh=w4+WlveuzgqPZikAmvyx2NEP17PqNOHdzBDbDqmano0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JuF4PCSdjpFKfRDCLB29j1skWIFCzmCK1E8sehfelA3WndQ2W9DGbPlSO0ECk59wXbZoDudfeucEXQsULVsjq3x1EQ7zxy4YvTfcXr7VaaeRfJp5XYka5wq9bmTB1d6axbsnT3VF1vc/zMo8h5bL0PdmYCINTtYZPsnhne2qPAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FMMXw7e8; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ER8oSDVy"
-Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 2C1A3C0000F1;
-	Wed, 20 Mar 2024 15:27:11 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 2C1A3C0000F1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1710973631;
-	bh=FrDJYOWwf0Ic6PWmCehY4eGVyxmoLrR6fV2hXhRI9/Q=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ER8oSDVyI4SJemYdbsgNDwpfuVSQeWV7O2fsjUkexdgoUpfAYVJF0CsaG8zXRVHWv
-	 yCJ9ZAjuaYfFtblXku6S7QQS0lDWMKy7VFlC7wGmYO/ldblsPv0kekiCYfXob+yNZG
-	 qAAgxKj9kMvY0ep7wc4FbfKjEOwcJQ/l3QM3wXQc=
-Received: from bcacpedev-irv-3.lvn.broadcom.net (bcacpedev-irv-3.lvn.broadcom.net [10.173.232.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 6420918041CAC4;
-	Wed, 20 Mar 2024 15:27:09 -0700 (PDT)
-From: William Zhang <william.zhang@broadcom.com>
-To: Linux MTD List <linux-mtd@lists.infradead.org>
-Cc: Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
-	joel.peshkin@broadcom.com,
-	f.fainelli@gmail.com,
-	miquel.raynal@bootlin.com,
-	dregan@mail.com,
-	kamal.dasu@broadcom.com,
-	kursad.oney@broadcom.com,
-	William Zhang <william.zhang@broadcom.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	linux-kernel@vger.kernel.org,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Brian Norris <computersforpeace@gmail.com>,
-	Richard Weinberger <richard@nod.at>,
-	David Regan <dregan@broadcom.com>
-Subject: [PATCH] mtd: rawnand: brcmnand: Fix data access violation for STB chip
-Date: Wed, 20 Mar 2024 15:26:22 -0700
-Message-Id: <20240320222623.35604-1-william.zhang@broadcom.com>
-X-Mailer: git-send-email 2.37.3
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FMMXw7e8"
+Date: Wed, 20 Mar 2024 15:36:14 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1710974178;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w4+WlveuzgqPZikAmvyx2NEP17PqNOHdzBDbDqmano0=;
+	b=FMMXw7e8c2juESOCHR7WKcGaCYyV/ITXLNsnQa0XTJbQnxl2TkHAUJeu2ligkjUQ3RwMeS
+	YlqqsGfVch8wvfdBsjZm9OMOMD9AYqssFNi/JdT6S+CInwnJofJDTQ/9a4AP5DXALmCE2m
+	3DGM91uQKYDj4yFkIDNpnsXz49ecDhg=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: remove CONFIG_MEMCG_KMEM
+Message-ID: <Zftk3tzC2btb3Ine@P9FQF9L96D>
+References: <20240320202745.740843-1-hannes@cmpxchg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240320202745.740843-1-hannes@cmpxchg.org>
+X-Migadu-Flow: FLOW_OUT
 
-Florian reported the following kernel NULL pointer dereference issue on
-a BCM7250 board:
-[    2.829744] Unable to handle kernel NULL pointer dereference at virtual address 0000000c when read
-[    2.838740] [0000000c] *pgd=80000000004003, *pmd=00000000
-[    2.844178] Internal error: Oops: 206 [#1] SMP ARM
-[    2.848990] Modules linked in:
-[    2.852061] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.8.0-next-20240305-gd95fcdf4961d #66
-[    2.860436] Hardware name: Broadcom STB (Flattened Device Tree)
-[    2.866371] PC is at brcmnand_read_by_pio+0x180/0x278
-[    2.871449] LR is at __wait_for_common+0x9c/0x1b0
-[    2.876178] pc : [<c094b6cc>]    lr : [<c0e66310>]    psr: 60000053
-[    2.882460] sp : f0811a80  ip : 00000012  fp : 00000000
-[    2.887699] r10: 00000000  r9 : 00000000  r8 : c3790000
-[    2.892936] r7 : 00000000  r6 : 00000000  r5 : c35db440  r4 : ffe00000
-[    2.899479] r3 : f15cb814  r2 : 00000000  r1 : 00000000  r0 : 00000000
+On Wed, Mar 20, 2024 at 04:27:45PM -0400, Johannes Weiner wrote:
+> CONFIG_MEMCG_KMEM used to be a user-visible option for whether slab
+> tracking is enabled. It has been default-enabled and equivalent to
+> CONFIG_MEMCG for almost a decade. We've only grown more kernel memory
+> accounting sites since, and there is no imaginable cgroup usecase
+> going forward that wants to track user pages but not the multitude of
+> user-drivable kernel allocations.
 
-The issue only happens when dma mode is disabled or not supported on STB
-chip. The pio mode transfer calls brcmnand_read_data_bus function which
-dereferences ctrl->soc->read_data_bus. But the soc member in STB chip is
-NULL hence triggers the access violation. The function needs to check
-the soc pointer first.
+I totally support it. I believe one of the reasons for it to exist
+was SLOB, which hasn't been supporting the slab memory accounting.
+No such reasons anymore.
 
-Fixes: 546e42599120 ("mtd: rawnand: brcmnand: Add BCMBCA read data bus interface")
+Acked-by: Roman Gushchin <roman.gushchin@linux.dev>
 
-Reported-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Signed-off-by: William Zhang <william.zhang@broadcom.com>
-
----
-
- drivers/mtd/nand/raw/brcmnand/brcmnand.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-index a8d12c71f987..1b2ec0fec60c 100644
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -857,7 +857,7 @@ static inline void brcmnand_read_data_bus(struct brcmnand_controller *ctrl,
- 	struct brcmnand_soc *soc = ctrl->soc;
- 	int i;
- 
--	if (soc->read_data_bus) {
-+	if (soc && soc->read_data_bus) {
- 		soc->read_data_bus(soc, flash_cache, buffer, fc_words);
- 	} else {
- 		for (i = 0; i < fc_words; i++)
--- 
-2.37.3
-
+Thanks!
