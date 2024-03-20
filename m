@@ -1,100 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mailscanner05.zoner.fi (mailscanner05.zoner.fi [5.44.246.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246488527E;
-	Wed, 20 Mar 2024 19:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8073B8562D
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 19:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.44.246.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710962265; cv=none; b=e0f57i/ASd9w8QWiy7InUiE3YO2f4fquWB35nJ7tKXdoswFhHhZgiFISKEkB0zdXpOTuXamLIh2soVJWH1mcQfyPqpsiA8SWLR9burfpkvrOBV3iu/EDenaSO7bnUVlJFfm162fnSbisTEqyTtnoQK2uGZRpg/9GeRXWp3pTRik=
+	t=1710962267; cv=none; b=ZHFrDkKEhiIMqh6OXzMn3idIqOdUdb5nmKMIOD5H2lgU5Eb8x3zHA3h7UaN6Hl8rMerul4Mllhzuccz8sB/t80BKdSIvI0Z/45R+6Pcjsw27DoTs+ppAo3moPcwfYG7fuuuAoC3tBhuUvNh+m9+afTSxdkkd+GMGOcK+cXl1gUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710962265; c=relaxed/simple;
-	bh=Azjd7wwCn4XA8bLGPMLhdiQkH8JfOmigzXwu2vsa6kc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jt8OST4SW4EpajnGC+XDyy6ft4hhuRkhRp6XTdUGOgc4mWoAzZqHw2iPRa+9BhiSIUboVoPMXcf8LtSjTdp0OpHmwSUVhT7KsLCRx1Pu4c0EZW7oixOfAeS6D3HUr4zLxIUGqN0bG5A6xWa0d2q1H7tYbsTVwhascnM+GXnFZoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c5aN2eja; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c5aN2eja"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710962263; x=1742498263;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Azjd7wwCn4XA8bLGPMLhdiQkH8JfOmigzXwu2vsa6kc=;
-  b=c5aN2ejaIwMNiPweUONQVa7LDG2lTeKTB/aalqD/4s+2CR52Km7EMKOG
-   TzLINBCtsOUM0DLBpdez05eMSd2+wR1xI05MkhB22GHGmI81jx+P8cmct
-   yXXUZqn3JD5RMvMRrCGvcv9jD5aJvRepiVBu891dG6WDahZKWGKnTggjP
-   XmP3CHvmE5Dg/qaCO6rh8nP/MDeXsv3lkGGFlykEGuToTY1fJQ8pvOC6F
-   VNrcWIGXVvh0MX9gwbVh0Ku9o3/CJEEf5fQYmPxS08/k86a/jL7whIAhr
-   6S262tFlKVvikSI7LwoUNeAQDMObJg6+F6yXmP/YNK3+MKYr60RRP4/Sq
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="5760606"
-X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
-   d="scan'208";a="5760606"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 12:17:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
-   d="scan'208";a="18840236"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.72.188])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 12:17:40 -0700
-Date: Wed, 20 Mar 2024 12:17:38 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: TaheraFahimi <fahimitahera@gmail.com>
-Cc: Marc Dietrich <marvin24@gmx.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	ac100@lists.launchpad.net, linux-tegra@vger.kernel.org,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	outreachy@lists.linux.dev
-Subject: Re: [PATCH] staging: nvec: edit udelay comment
-Message-ID: <Zfs2Ug5INYKKyiDH@aschofie-mobl2>
-References: <ZfS+UaVyob+lFmmS@tahera-OptiPlex-5000>
+	s=arc-20240116; t=1710962267; c=relaxed/simple;
+	bh=1STaSSKFT9aWSutIcaXf5t9tigM61VZiBi4b8crf1L0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZmN9DiQpAin3kMEyS0OMvSXEaf+hGjkdFf910gbk0snFPzm/2gVtu8dqDn12wZem5PRY89UgKlo750rNSoh72mzGbMbcU3dRoEoZHoWJlO6FRPAtUEFO4d1KpaAIWIZ6DR21kRUcLI0SHE81QY8VOt06gH+9Cn2NMi/Bghjfcb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org; spf=pass smtp.mailfrom=tukaani.org; arc=none smtp.client-ip=5.44.246.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tukaani.org
+Received: from www25.zoner.fi (www25.zoner.fi [84.34.147.45])
+	by mailscanner05.zoner.fi (Postfix) with ESMTPS id 4D5E3211A4;
+	Wed, 20 Mar 2024 21:17:42 +0200 (EET)
+Received: from mail.zoner.fi ([84.34.147.244])
+	by www25.zoner.fi with esmtp (Exim 4.96.1-7-g79877b70e)
+	(envelope-from <lasse.collin@tukaani.org>)
+	id 1rn0qU-0001dW-2g;
+	Wed, 20 Mar 2024 20:39:26 +0200
+From: Lasse Collin <lasse.collin@tukaani.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Lasse Collin <lasse.collin@tukaani.org>,
+	Jia Tan <jiat0218@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 10/11] xz: Use 128 MiB dictionary and force single-threaded mode
+Date: Wed, 20 Mar 2024 20:38:43 +0200
+Message-ID: <20240320183846.19475-11-lasse.collin@tukaani.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240320183846.19475-1-lasse.collin@tukaani.org>
+References: <20240320183846.19475-1-lasse.collin@tukaani.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZfS+UaVyob+lFmmS@tahera-OptiPlex-5000>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 15, 2024 at 03:32:01PM -0600, TaheraFahimi wrote:
-> Signed-off-by: TaheraFahimi <fahimitahera@gmail.com>
+This only affects kernel image compression, not any other xz usage.
 
-Missing commit log.
+Desktop kernels on x86-64 are already around 60 MiB. Using a dictionary
+larger than 32 MiB should have no downsides nowadays as anyone building
+the kernel should have plenty of RAM. 128 MiB dictionary needs 1346 MiB
+of RAM with xz versions 5.0.x - 5.6.x in single-threaded mode. On archs
+that use xz_wrap.sh, kernel decompression is done in single-call mode so
+a larger dictionary doesn't affect boot-time memory requirements.
 
-Commit message would be clearer like: "correct a misspelled comment"
-because when you say you are editing a udelay comment, it made me
-think you were clarifying something about usage of udelay.
+xz >= 5.6.0 uses multithreaded mode by default which compresses slightly
+worse than single-threaded mode. Kernel compression rarely used more
+than one thread anyway because with 32 MiB dictionary size the default
+block size was 96 MiB in multithreaded mode. So only a single thread
+was used anyway unless the kernel was over 96 MiB.
 
-There are plenty of patches on this list with examples of how
-patches of spelling corrections are worded in both the commit
-message and log. Please take a look.
+Comparison to CONFIG_KERNEL_LZMA: It uses "lzma -9" which mapped to
+32 MiB dictionary in LZMA Utils 4.32.7 (the final release in 2008).
+Nowadays the lzma tool on most systems is from XZ Utils where -9 maps
+to 64 MiB dictionary. So using a 32 MiB dictionary with CONFIG_KERNEL_XZ
+may have compressed big kernels slightly worse than the old LZMA option.
 
-Thanks,
-Alison
+Comparison to CONFIG_KERNEL_ZSTD: zstd uses 128 MiB dictionary.
 
+Reviewed-by: Jia Tan <jiat0218@gmail.com>
+Signed-off-by: Lasse Collin <lasse.collin@tukaani.org>
+---
+ scripts/xz_wrap.sh | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-> ---
->  drivers/staging/nvec/nvec.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/nvec/nvec.c b/drivers/staging/nvec/nvec.c
-> index 282a664c9176..b4485b10beb8 100644
-> --- a/drivers/staging/nvec/nvec.c
-> +++ b/drivers/staging/nvec/nvec.c
-> @@ -712,7 +712,7 @@ static irqreturn_t nvec_interrupt(int irq, void *dev)
->  	 * TODO: replace the udelay with a read back after each writel above
->  	 * in order to work around a hardware issue, see i2c-tegra.c
->  	 *
-> -	 * Unfortunately, this change causes an intialisation issue with the
-> +	 * Unfortunately, this change causes an initialisation issue with the
->  	 * touchpad, which needs to be fixed first.
->  	 */
->  	udelay(100);
-> -- 
-> 2.34.1
-> 
-> 
+diff --git a/scripts/xz_wrap.sh b/scripts/xz_wrap.sh
+index bb760b721b2c..c8c36441ab70 100755
+--- a/scripts/xz_wrap.sh
++++ b/scripts/xz_wrap.sh
+@@ -16,4 +16,15 @@ case $SRCARCH in
+ 	sparc)          BCJ=--sparc ;;
+ esac
+ 
+-exec $XZ --check=crc32 $BCJ --lzma2=$LZMA2OPTS,dict=32MiB
++# Use single-threaded mode because it compresses a little better
++# (and uses less RAM) than multithreaded mode.
++#
++# For the best compression, the dictionary size shouldn't be
++# smaller than the uncompressed kernel. 128 MiB dictionary
++# needs less than 1400 MiB of RAM in single-threaded mode.
++#
++# On the archs that use this script to compress the kernel,
++# decompression in the preboot code is done in single-call mode.
++# Thus the dictionary size doesn't affect the memory requirements
++# of the preboot decompressor at all.
++exec $XZ --check=crc32 --threads=1 $BCJ --lzma2=$LZMA2OPTS,dict=128MiB
+-- 
+2.44.0
+
