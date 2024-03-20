@@ -1,79 +1,71 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A2E3BBFA;
-	Wed, 20 Mar 2024 11:08:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7F73B293
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 11:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710932934; cv=none; b=b4vunODEKQhwh3pBnwaE3cCvQWil0GpUJ9cb9F2YjhzR7IcTpOdzBuRqyjKws99SNCBeRk/Of8ASObuKOqhXN6RkfgLXU3Gou3rv7ZpjIAZ91U3fniTwo2a03NLfl5vNcdayhahlkpgk76y5yy1Ftpunz9fzivCfXGhWEnzfRr0=
+	t=1710932946; cv=none; b=t4HoG/jkGybzeZCnSqv2o4VkINQiTUbeX+R6S79Sxr5N0TLjiJQnZZqKbmAYHXvGyOZ/iHIUI4n0SPxIGo/gliUP1i1Oq+pr2Xd1I+v9YcDDtpWQ0gqlzgJevW3qpDOrmEaw3qKYbjjPR8+6KHrTUtS2zPF0jSwB87d+kT9Bu/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710932934; c=relaxed/simple;
-	bh=GVLutt18GQlJPG4WB2z9PrJepa+Hhk6WaYlpmouuWbo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bJdN8Jg2hvPkuOEstgUTl6ZAlU32JLnEIeAEgva18tjs0eBtUcCGDC6AiB1P/Y+fRp3084+K6l2LL/mHQfLRbhSDfJT+bvqBNvHO6ANq0SJY3paHMR1rXoJ5cazbDpdhKSlnt8usrYVndEja4KCMvRgylhB3HfqdcCpiAte055c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.96.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1rmtnv-00017k-0M;
-	Wed, 20 Mar 2024 11:08:19 +0000
-Date: Wed, 20 Mar 2024 11:08:12 +0000
-From: Daniel Golle <daniel@makrotopia.org>
-To: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-Cc: DENG Qingfang <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	=?iso-8859-1?Q?Ren=E9?= van Dorst <opensource@vdorst.com>,
-	Russell King <linux@armlinux.org.uk>,
-	SkyLake Huang <SkyLake.Huang@mediatek.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Bartel Eerdekens <bartel.eerdekens@constell8.be>,
-	mithat.guner@xeront.com, erkin.bozoglu@xeront.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH 0/3] Fix EEE support for MT7531 and MT7988 SoC switch
-Message-ID: <ZfrDnFyGay5YTTFg@makrotopia.org>
-References: <20240318-for-net-mt7530-fix-eee-for-mt7531-mt7988-v1-0-3f17226344e8@arinc9.com>
- <9d111cc9-c73a-4d3c-83f5-3f59e6c8841f@arinc9.com>
+	s=arc-20240116; t=1710932946; c=relaxed/simple;
+	bh=zyiVqRbQcvuPmGTEXSArdp75lxTjNAkJIY920NalIIQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=ZCc5vT6FUPJmTRp+SONuEx3nf56jRatUr016tns4jM/IoWKsxJz5N+ILK8oKElhd/HEE5BbYjceIlb4S6OvsdhOGj2RzHU8B8hODtY4J+0QrvKB21+mCL0N8ulTL+6bhYMcHIFObl09lZPDRgjsGi5JL0nO2j203JYLkuYhkkOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7cc0a422d43so414857039f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 04:09:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710932944; x=1711537744;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=C1ISRsAmjUNpkEXjyKomgTS3T0vnbCkCoAF6I44gYNU=;
+        b=E5LpX4gfGEIkk/xRK1M48AAhOyGgVEjT8jPAYG4rhaFcTmyR70mNUtoIEAeAaHcp3w
+         nB/Ihq66VVV++aSMqdjpnOqVga2GMoDVkCKn1lIBo6CHp8Rs7BGbFdub30oY+qfLhm/W
+         XXo8QW+XDXBhtvYNOZap/KfXpItCd7rMZbEFqHVW/sBqHVcl99sGvrm0vcB7K6m3aLJx
+         l+aEpMLpEiDTmzIXVA7m7xRNW3K+REH9z4LywrfQ76KhxslA+LLbs4FbGHEofkCn9jBm
+         Ae8KT8khod45U+r2LFzC1a8zqjAduMUQFx/hCeVfGaALCDa7Eb8ZV8SOPbDj2WTdRyO+
+         QvnA==
+X-Forwarded-Encrypted: i=1; AJvYcCWYxZKX3rVLanSMqtvmjlQ2KFztL4hVMj6EQsjwFcG2kxQjRjM0u5pnmeAjESl8P/uoSF8v9dtmQSuSAGfNNG1P26wQMVepgDKx9/j+
+X-Gm-Message-State: AOJu0Yw3NtPQi0UPePyIAyxSKUoRXPlPIf4MAdpcpTmGZzCapmKD+QCF
+	OIzOM9mvDedA22Y4hJ0t7Gqz4gVrnYS5pP2brxHAQqcY0jPox0nmRz31+e6sNHdFZZNlzY0hrAr
+	t75XPBIOXzlejiVSRl3U2rn7mlOTPoZJPwX9djYjvJHnL9h1jhJ74OjU=
+X-Google-Smtp-Source: AGHT+IH6jO4kXeXQBEiU9yCCDN8TRRVhGQgDcFgY74QR4i3qJcbVzU/58wPeVwBxNGaHwNkN8mwSl7Ulyr8+lRAnopUlxETxV/9H
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9d111cc9-c73a-4d3c-83f5-3f59e6c8841f@arinc9.com>
+X-Received: by 2002:a05:6638:24c3:b0:476:d09e:478 with SMTP id
+ y3-20020a05663824c300b00476d09e0478mr174847jat.5.1710932944308; Wed, 20 Mar
+ 2024 04:09:04 -0700 (PDT)
+Date: Wed, 20 Mar 2024 04:09:04 -0700
+In-Reply-To: <20240320104554.2181-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000615c760614159e03@google.com>
+Subject: Re: [syzbot] [mm?] possible deadlock in move_pages
+From: syzbot <syzbot+49056626fe41e01f2ba7@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Mar 20, 2024 at 11:10:19AM +0300, Arınç ÜNAL wrote:
-> On 18.03.2024 10:46, Arınç ÜNAL via B4 Relay wrote:
-> > Hi.
-> > 
-> > This patch series fixes EEE support for MT7531 and the switch on the MT7988
-> > SoC. EEE did not work on MT7531 on most boards before this, it is unclear
-> > what's the status on MT7988 SoC switch as I don't have the hardware.
-> > 
-> > Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-> 
-> I see the state of this patch series is deferred on patchwork. I see that I
-> forgot to delegate this to the net tree. As I don't see any objections in
-> this series, I'll send v2 with it tomorrow.
+Hello,
 
-Sorry, but imho it should go to net-next, and you might have overlook
-it but there have been some concerns.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-For sure it should not go to net tree as you are enabling a new feature
-and not fixing anything which is broken. EEE on MT7988 works fine as
-of now (see my reply), EEE on MT7531 was supposedly intentionally
-disabled for reasons we should ask MTK people about.
+Reported-and-tested-by: syzbot+49056626fe41e01f2ba7@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         e5eb28f6 Merge tag 'mm-nonmm-stable-2024-03-14-09-36' ..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=10b7afc1180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4ffb854606e658d
+dashboard link: https://syzkaller.appspot.com/bug?extid=49056626fe41e01f2ba7
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=17d44231180000
+
+Note: testing is done by a robot and is best-effort only.
