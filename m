@@ -1,84 +1,100 @@
-Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E674B3BBC6
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 09:51:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E38C3A1DD;
+	Wed, 20 Mar 2024 09:52:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710928284; cv=none; b=ENhhMZZRbPzC6xStQ+xoT7IBmm/aGUJoyyaV+2TzRmRwoLI7nCdHrO33b/sB+dObxDihz839yyBJU9+X3zRRREc19TARYokPk84xeOpEsWYLENGXz5EfrzoMTcDTDTamS1TrEbu8prYQARPXPIdfxfOIwqoSB3TaOQaEb6qxLFc=
+	t=1710928352; cv=none; b=c2x2rROwZxRQagYkHx7T7jsHnKPUbdI9LAY6Pkr9G0blIC4jGE/G3BWmRCCgbxP+7Mq8jJml5BQmGRRvGK16wLeBxW5xHCxT8GVcIU0yYKV3tte60F5fuJ4sAJtJxgl0c/F9oobxyiFwo80EOmjqYcdPv1YcbzLRUcLiYrz0amQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710928284; c=relaxed/simple;
-	bh=kmLizDXHgs/iBotX2XWt0DRN99WHQUwnu+ZiSdLsfi4=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=e8Yh3QvFohLbrK+QPvPtOAnbRwzq+B6ST9Ii9Uf3c9GJ74Xo6nRigB9BuZWDQpoFDPxZdfOtleAkvUZ59hpGz/Sqip4LI6U78YfDR5q+QZg7FeXcymGJlBYvP2httXP2CwTrCZl89RpA1bfUuyolTA/wOinNLVYlkg/dzMeXqv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=l04TrEHs; arc=none smtp.client-ip=162.62.57.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1710928352; c=relaxed/simple;
+	bh=xL/Cti2wD9PvualWZlfHsEhTv0Hvo2bjVwZkw7Orp2o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RsVXH6qf+3ESvTzsd1CN5HitWgGcZaTVe3JSQrCcrAUAUwTSILGYsGfYL6zBTZvudSxekhIAI1EVmvIkvjYORs8ap4NiC0ea0EGjYPG3Oe+0tk85SNydyQDpuJQwuktNJ6/rV4sKCsJqKNiXct3UjO9UktGA0HqESMlECsyzCAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FOGHfPBb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="l04TrEHs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1710927977; bh=cc72wCrojgeL0grxxVuvtCMAT1zZo13OV+rd4PAMkik=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=l04TrEHsvfA1zXAO1a0sSn6sN0TeKrchpH8f94uX8Jmd9kVL3/4YyseSuSjhXxFiV
-	 rctGkm/GY8sNl06LscZXvDOejbA0VNIu0N5WLG7n58Hic7gT2aK10mA/gpkzcdW8p1
-	 mQrBL/ydYoX2k2zdCl7tSAnAOgC42mT/XOiBrhI4=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
-	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
-	id A0511E1D; Wed, 20 Mar 2024 17:40:05 +0800
-X-QQ-mid: xmsmtpt1710927605tzis4koew
-Message-ID: <tencent_03A5CF0DA11232DDE15D9699184F920DD007@qq.com>
-X-QQ-XMAILINFO: OQhZ3T0tjf0ae1WvG5xAKJG6BAAIIU3xaJtk/pya7jjYQzKR7IMr5EjfVeYMr1
-	 ana2mqkJx4p+twGCdDiQnhqDOeb26Pq8EM0QjrrlCJeQQD4GaG4hMsKPhlm2wQEfiUOol6/mGB0h
-	 vC4ZWqI/ddc8clq8Vx6vuJnbsIIH43oSzIGv6/IOUgul7qMeRn3lJ9RoLBjMrwsZakhYTX0cgmh6
-	 oX/LOE0Z5wtqMSc7C0yoN3c3TEjk3Si7m70Hyi+vC3AAEOQij/bApoxarB7GW0vh3bVx7BMSRana
-	 MEWyKzP+vBbZTQCwSrHa3cunlFNokno/P8v1+OLCqxwoIwzrduOqs+iHeADtE/s+Hr2d7AxlN2RP
-	 3Y3mssstfuOMDQgnxBArcLthGxb0Uz/kDMBKaZynHsxlgeOfpZtV8RtvGhzAOaXY5aCT3EvQx2iz
-	 vOX0Hv32MPf3HwSVJ/KZnvxwmG2qLY/1AnyFkvLa73b2XESsixFpIhsb0fuVVZ4vTW72y4pmqFxO
-	 MNRioC3adFxW79yVRXe+6iuhWk/5G2SHvyh2Y4ZDGJ+XliVZXLyDnYMCQCRIzi0d3D87BHH0Xxoe
-	 tpgyNihGdb4vszeXdbrlV+HxeuFPe0wP7sA7bUCIJC0juqbawVKGXgW4VVF8g7MDV1b+I86ow0/z
-	 yKGXObRkDSBor9PGHnUtpbq8yFTzcRzbBkwFQMm2SC0/2u4SmUb3CiRR1XGCy44iQx4LRG6Eru/L
-	 UUz/cMXkoHZxNmqJCk5UVA15JvaujDLvOADSyoij4rFAHHquw6op56tp1OwPgWyzI8s3zWdbUif+
-	 xZFt2aQuG5pyN2YFBlYyQobZDTEV1LO+EOhtrbe+07rpMZDBkWxuykfvzaUpabHMuxeZJe4ZxNsq
-	 h/dl91F5swWQMaMMTA5ZZg4qozngiK7tE2HHAiRHPaLbyYq4IaUY85nm8/V4tVFC1zaNpMvGMHkR
-	 Jg651+T0U=
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+33f4297b5f927648741a@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [bpf?] UBSAN: array-index-out-of-bounds in check_stack_range_initialized
-Date: Wed, 20 Mar 2024 17:40:06 +0800
-X-OQ-MSGID: <20240320094005.1244716-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000003dc8e00614076ab6@google.com>
-References: <0000000000003dc8e00614076ab6@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FOGHfPBb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3B5CC433C7;
+	Wed, 20 Mar 2024 09:52:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710928350;
+	bh=xL/Cti2wD9PvualWZlfHsEhTv0Hvo2bjVwZkw7Orp2o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FOGHfPBbGfB2A9VwZ6/lkVr2qzrakEJSnm2UX4WKWqVr+YtCAzq9NVQeLEGnZOrpE
+	 9eLNt1FMoX/EFATPeRyzOcrqx5bBOH30SmYb05Odi/Ze2NOOEk61+pdnnPamFXjg45
+	 y/pKmHT11MiSDQp8MEO2btjKDS7+kJv8e4X4EkemumRyvA3uTEzXEqioSXWrHJ7mim
+	 ovOnHxhaaAjNtFHVyn4doyeCcqClkFvBbgLC0T5F9ZcI3HwZjtrbIQhUjkIZqCpnLU
+	 nzG1xvRx5lTqhf82FEJIGJGC/ZyYSF4+uZ3icMIv6Sn+eTo0iix7A64EmGYAySmr1Q
+	 ia+HiodvPjw3w==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rmsce-000000004Kr-3pt5;
+	Wed, 20 Mar 2024 10:52:37 +0100
+Date: Wed, 20 Mar 2024 10:52:36 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: (subset) [PATCH v4 0/5] arm64: dts: qcom: sc8280xp: PCIe fixes
+ and GICv3 ITS enable
+Message-ID: <Zfqx5IP__IV_hjoT@hovoldconsulting.com>
+References: <20240306095651.4551-1-johan+linaro@kernel.org>
+ <171081652637.198276.6219023769904423414.b4-ty@kernel.org>
+ <Zfk98hYPn7kiFGkt@hovoldconsulting.com>
+ <9b475e13-96b9-4bce-8041-e0d8e5a332a1@linaro.org>
+ <Zfqb8jPK50vlqu5Q@hovoldconsulting.com>
+ <baf9c1bd-84ef-4ecb-b229-51a83fe82c3f@linaro.org>
+ <ZfqhCKoEL4XGRs7T@hovoldconsulting.com>
+ <cc5d4fc1-14e7-4a73-80bf-6375e44162a3@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cc5d4fc1-14e7-4a73-80bf-6375e44162a3@linaro.org>
 
-please test oob in check_stack_range_initialized
+On Wed, Mar 20, 2024 at 10:16:16AM +0100, Krzysztof Kozlowski wrote:
+> On 20/03/2024 09:40, Johan Hovold wrote:
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git master
+> > At the time there was still hope that there may be an rc8, and the patch
+> > in question had been used by a large number of X13s users for several
+> > weeks, which is a lot more testing than the average Qualcomm patch
+> > receives, whether it's in linux-next or not.
+> 
+> OK, it does solve some parts of our discussion but does not solve my
+> earlier comment: Fixes should be separate series. Certain folks have
+> quite strict requirement on this. Try sending a fix with non-fix
+> (depending on fix somehow like here) to Mark Brown. He has even template
+> for such case...
 
+That's not a general rule at all.
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 1dd3b99d1bb9..ed0878f4373a 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -7177,6 +7177,11 @@ static int check_stack_range_initialized(
- 		return 0;
- 	}
- 
-+	if (INT_MIN - access_size > max_off) {
-+		verbose(env, "invalid access size\n");
-+		return -EACCES;
-+	}
-+
- 	for (i = min_off; i < max_off + access_size; i++) {
- 		u8 *stype;
- 
+> > And patch 5 depends on the earlier patches in the series so it belongs
+> > in the series, which was also initially posted long before the merge
+> > window.
+> 
+> The dependency is might not be good enough reason to combine fixes and
+> non-fixes into one series. Dependency should be explained (in 5th
+> patch), but it's maintainer's judgement and job to handle this.
 
+FFS, I'm posting a series adding a new feature, which depends on first
+addressing a few related bugs. I post everything together so that it can
+be evaluated and tested together. That's perfectly fine, and not that
+different from how we post driver and dts changes in one series to
+facilitate review. Some maintainers don't like that either, then we deal
+with that.
+
+Johan
