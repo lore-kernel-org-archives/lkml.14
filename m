@@ -1,35 +1,38 @@
 Received: from mailscanner01.zoner.fi (mailscanner01.zoner.fi [84.34.166.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E136A010
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 18:47:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E4E6A8A6
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 18:47:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.34.166.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710960468; cv=none; b=UNHlU+c2j/xEmFvaXXhdNtoEpS/WHsVl0nlustqjeTD9x24UYryZaitvHIlNyUQA//b8vl83bmxrAboaP60BKWX2FPOIuISEZJOqFj6xWygqtZF3rmy6ME4rjZnDBvHYvRXs8zSYbEdLjfsusgdt9RlurHjQd2KOccqWX6mLfLI=
+	t=1710960468; cv=none; b=pC/w6xI4u9zOmUh6L9bba2rRXPUdKVaOiLyHyRl4nTh2DmwFD9SEdoUFxBE0KFHLTmpSqhsx4OP4d9ZZF09M9QD9yhkrzx9s9p7HCVh51MbRrKD5CG35yj2bJ4xhiTK/X4oN/hdDG8wzCNMLmSuitjISRUCxTu6vUJfgi+qppcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710960468; c=relaxed/simple;
-	bh=1OOs8r+h8i7Ylbb/kUKr2qwIOyOexaU3NbJ614dRzRM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MgPmzw85VVg2CeHY84pPHP2f9RRpY8egf8R2BlJ3WltxLl7+u4PoKHIQJBKYWIsDgTJ3jo1e5IoFQqUTJqxk7+QP8LArFKYROn1sW5vaXpTqS5Ti9ECXaWAYN9HX/cMQ6uxriXZUrquoRrPvLcTCJbGMyIKPZNeqpwXWt9Ob9bo=
+	bh=3mhzjDEKYr5v5j74va0Zmjj1DohqL1K2cOtcr+XhpeQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=u8hEkEXOcyNVlj2tQVm9vQo0dy7lnrK0b3UDzNRQRe+erInWiqwS/w5Q3iyX3FZ3GJSFWTcxgjxvMo2qKqwTxQ7OD737YhMnhxq/0uC/GLEfZS3BrAMdgucYWcjf2noIhOIfnQeSmjy0b8Yq1AuYcG0HbEtL32xjevJUjHq/Vac=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org; spf=pass smtp.mailfrom=tukaani.org; arc=none smtp.client-ip=84.34.166.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tukaani.org
 Received: from www25.zoner.fi (www25.zoner.fi [84.34.147.45])
-	by mailscanner01.zoner.fi (Postfix) with ESMTPS id D9162421F3;
-	Wed, 20 Mar 2024 20:39:25 +0200 (EET)
+	by mailscanner01.zoner.fi (Postfix) with ESMTPS id 7BD364251A;
+	Wed, 20 Mar 2024 20:39:26 +0200 (EET)
 Received: from mail.zoner.fi ([84.34.147.244])
 	by www25.zoner.fi with esmtp (Exim 4.96.1-7-g79877b70e)
 	(envelope-from <lasse.collin@tukaani.org>)
-	id 1rn0qT-0001dW-2H;
-	Wed, 20 Mar 2024 20:39:25 +0200
+	id 1rn0qU-0001dW-0x;
+	Wed, 20 Mar 2024 20:39:26 +0200
 From: Lasse Collin <lasse.collin@tukaani.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Lasse Collin <lasse.collin@tukaani.org>,
 	Jia Tan <jiat0218@gmail.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 00/11] xz: Updates to license, filters, and compression options
-Date: Wed, 20 Mar 2024 20:38:33 +0200
-Message-ID: <20240320183846.19475-1-lasse.collin@tukaani.org>
+Subject: [PATCH 05/11] xz: Fix comments and coding style
+Date: Wed, 20 Mar 2024 20:38:38 +0200
+Message-ID: <20240320183846.19475-6-lasse.collin@tukaani.org>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240320183846.19475-1-lasse.collin@tukaani.org>
+References: <20240320183846.19475-1-lasse.collin@tukaani.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,53 +41,122 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-XZ Embedded, the upstream project, switched from public domain to the
-BSD Zero Clause License (0BSD). Now matching SPDX license identifiers
-can be added.
+- Update the URL of the .xz file format specification.
+- Fix comments that were no longer in sync with the code below them.
+- Fix language errors.
+- Fix coding style.
 
-The new ARM64 and RISC-V filters can be used by Squashfs.
+Reviewed-by: Jia Tan <jiat0218@gmail.com>
+Signed-off-by: Lasse Collin <lasse.collin@tukaani.org>
+---
+ lib/decompress_unxz.c | 20 ++++++++++----------
+ lib/xz/Kconfig        |  3 ++-
+ lib/xz/xz_stream.h    |  2 +-
+ scripts/Makefile.lib  | 13 ++++++++-----
+ 4 files changed, 21 insertions(+), 17 deletions(-)
 
-Account for the default threading change made in the xz command line
-tool version 5.6.0. Tweak kernel compression options for archs that
-support XZ compressed kernel.
-
-Documentation was revised. There are minor cleanups too.
-
-Lasse Collin (11):
-  MAINTAINERS: Add XZ Embedded maintainers
-  LICENSES: Add 0BSD license text
-  xz: Switch from public domain to BSD Zero Clause License (0BSD)
-  xz: Documentation/staging/xz.rst: Revise thoroughly
-  xz: Fix comments and coding style
-  xz: Cleanup CRC32 edits from 2018
-  xz: Optimize for-loop conditions in the BCJ decoders
-  xz: Add ARM64 BCJ filter
-  xz: Add RISC-V BCJ filter
-  xz: Use 128 MiB dictionary and force single-threaded mode
-  xz: Adjust arch-specific options for better kernel compression
-
- Documentation/staging/xz.rst    | 130 ++++++++---------------
- LICENSES/deprecated/0BSD        |  23 ++++
- MAINTAINERS                     |  14 +++
- include/linux/decompress/unxz.h |   5 +-
- include/linux/xz.h              |   5 +-
- init/Kconfig                    |   5 +-
- lib/decompress_unxz.c           |  39 ++++---
- lib/xz/Kconfig                  |  13 ++-
- lib/xz/xz_crc32.c               |   7 +-
- lib/xz/xz_dec_bcj.c             | 183 ++++++++++++++++++++++++++++++--
- lib/xz/xz_dec_lzma2.c           |   5 +-
- lib/xz/xz_dec_stream.c          |   5 +-
- lib/xz/xz_dec_syms.c            |  16 +--
- lib/xz/xz_dec_test.c            |  12 +--
- lib/xz/xz_lzma2.h               |   5 +-
- lib/xz/xz_private.h             |  20 ++--
- lib/xz/xz_stream.h              |   7 +-
- scripts/Makefile.lib            |  13 ++-
- scripts/xz_wrap.sh              | 157 +++++++++++++++++++++++++--
- 19 files changed, 487 insertions(+), 177 deletions(-)
- create mode 100644 LICENSES/deprecated/0BSD
-
+diff --git a/lib/decompress_unxz.c b/lib/decompress_unxz.c
+index 34bb7efc0412..46aa3be13fc5 100644
+--- a/lib/decompress_unxz.c
++++ b/lib/decompress_unxz.c
+@@ -102,7 +102,7 @@
+ #ifdef STATIC
+ #	define XZ_PREBOOT
+ #else
+-#include <linux/decompress/unxz.h>
++#	include <linux/decompress/unxz.h>
+ #endif
+ #ifdef __KERNEL__
+ #	include <linux/decompress/mm.h>
+@@ -219,7 +219,7 @@ void *memmove(void *dest, const void *src, size_t size)
+ #endif
+ 
+ /*
+- * Since we need memmove anyway, would use it as memcpy too.
++ * Since we need memmove anyway, we could use it as memcpy too.
+  * Commented out for now to avoid breaking things.
+  */
+ /*
+@@ -389,17 +389,17 @@ STATIC int INIT unxz(unsigned char *in, long in_size,
+ }
+ 
+ /*
+- * This macro is used by architecture-specific files to decompress
++ * This function is used by architecture-specific files to decompress
+  * the kernel image.
+  */
+ #ifdef XZ_PREBOOT
+-STATIC int INIT __decompress(unsigned char *buf, long len,
+-			   long (*fill)(void*, unsigned long),
+-			   long (*flush)(void*, unsigned long),
+-			   unsigned char *out_buf, long olen,
+-			   long *pos,
+-			   void (*error)(char *x))
++STATIC int INIT __decompress(unsigned char *in, long in_size,
++			     long (*fill)(void *dest, unsigned long size),
++			     long (*flush)(void *src, unsigned long size),
++			     unsigned char *out, long out_size,
++			     long *in_used,
++			     void (*error)(char *x))
+ {
+-	return unxz(buf, len, fill, flush, out_buf, pos, error);
++	return unxz(in, in_size, fill, flush, out, in_used, error);
+ }
+ #endif
+diff --git a/lib/xz/Kconfig b/lib/xz/Kconfig
+index aef086a6bf2f..6b80453d8f54 100644
+--- a/lib/xz/Kconfig
++++ b/lib/xz/Kconfig
+@@ -5,7 +5,8 @@ config XZ_DEC
+ 	help
+ 	  LZMA2 compression algorithm and BCJ filters are supported using
+ 	  the .xz file format as the container. For integrity checking,
+-	  CRC32 is supported. See Documentation/staging/xz.rst for more information.
++	  CRC32 is supported. See Documentation/staging/xz.rst for more
++	  information.
+ 
+ if XZ_DEC
+ 
+diff --git a/lib/xz/xz_stream.h b/lib/xz/xz_stream.h
+index 55f9f6f94b78..242500bd025d 100644
+--- a/lib/xz/xz_stream.h
++++ b/lib/xz/xz_stream.h
+@@ -18,7 +18,7 @@
+ 
+ /*
+  * See the .xz file format specification at
+- * https://tukaani.org/xz/xz-file-format.txt
++ * https://xz.tukaani.org/format/xz-file-format.txt
+  * to understand the container format.
+  */
+ 
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 1bd59b8db05f..986c79c5af89 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -500,14 +500,17 @@ quiet_cmd_uimage = UIMAGE  $@
+ 
+ # XZ
+ # ---------------------------------------------------------------------------
+-# Use xzkern to compress the kernel image and xzmisc to compress other things.
++# Use xzkern or xzkern_with_size to compress the kernel image and xzmisc to
++# compress other things.
+ #
+ # xzkern uses a big LZMA2 dictionary since it doesn't increase memory usage
+ # of the kernel decompressor. A BCJ filter is used if it is available for
+-# the target architecture. xzkern also appends uncompressed size of the data
+-# using size_append. The .xz format has the size information available at
+-# the end of the file too, but it's in more complex format and it's good to
+-# avoid changing the part of the boot code that reads the uncompressed size.
++# the target architecture.
++#
++# xzkern_with_size also appends uncompressed size of the data using
++# size_append. The .xz format has the size information available at the end
++# of the file too, but it's in more complex format and it's good to avoid
++# changing the part of the boot code that reads the uncompressed size.
+ # Note that the bytes added by size_append will make the xz tool think that
+ # the file is corrupt. This is expected.
+ #
 -- 
 2.44.0
 
