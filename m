@@ -1,120 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962DC52F82;
-	Wed, 20 Mar 2024 15:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133B14E1D5;
+	Wed, 20 Mar 2024 15:55:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710950128; cv=none; b=PPVL6hGPLiyGbbEGms+dTpCpEUT3kUyjruwLXSZjx2wzXKAujryJzII32MD+3OxZXe7TtbmntnXRiM9hwmDgfR5k/2kyHNqPWyrOmWbl63wI3voZG2p82dyvlLxIRXLt5lsURbj86LvCob/LNHGRdGQeWbD9vsf+fTo7oBjcrBM=
+	t=1710950130; cv=none; b=S++VMTfzJVinqOhZ3XoM/Po1hMIkyfbSqXJjbAqtTofNh7sTFF0uyKcY3mXJ7Wpgpytr2zaLgNX4PlVfKjTCyix0SAB7SmiImq9r8+u7x2X5fF4GJRaScCcNedaaXiQpktY12n7E1xNn9FM0Ob+/1yE0Da6hEc8lR6zAqNVKqr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710950128; c=relaxed/simple;
-	bh=zt6wZ2OGET3iETgFfPXGB4iwdVL/h5BwM/VWfexG4+c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cfa2xk5iHmU7olGTGs4iP4bNOnm0W191WvSUcsib2ExTwFGByMRwLFFld2EUK0Z5v1j1c5ncde905lZEzUQDvShsqyJWxtFUX41bqcdIM61R8KtY68zZqOEtK1F+FbOizVHvSU5hCDWFGU9uQptTzfNyBXBmb4z6OrT8YM0MqgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RjbXL+oq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710950130; c=relaxed/simple;
+	bh=uz5YSWprNfbLYOxKpYNHjtfMySvV4RFWv4ndcLCY5AM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WfWr37fbg1hrCPSo+BWvN2RbymK8CU5QHVbMX906e1cAQPGzmgFfTwohB4HJs1gHoXyvk8OFz1MBQLzlgNoVa7LUWy87d90mkP60dZXccFmQlaHwQr9napzHzN1uJrRlB1ChO+eqM6HIEOwtqWefvqjGC5AY/QrBPZSlzy00+Jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=XDydmRx5; arc=none smtp.client-ip=45.89.224.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RjbXL+oq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98DAEC433F1;
-	Wed, 20 Mar 2024 15:55:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710950128;
-	bh=zt6wZ2OGET3iETgFfPXGB4iwdVL/h5BwM/VWfexG4+c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RjbXL+oqdOsH5eqK3gQil+K3NKMM19Wjeyd6NywcaUfylGRliGiEU+oSyt8ie4mr/
-	 /XzoNX5wtVk4bkeT9AYVGVCQGg2/wHPCPbdtiROzDru63PFab4kb05koq7C1c4j7HO
-	 0K8qomlzT4+KIH3njD4urnox8fteYEfpBtAl5Uxt8QaWKa28BF16NW+auE18y9cP1T
-	 288K9kXsuhp9p+Ip0C+kaiK9h5hmtxshrL4PiFwK2J6H9U6Orc3HHz2RmYH+5AzP9p
-	 U5eJDSuKPUqUG7AvWDSfZVHqtugWzdtJP1S35W7glT0fdz1Zq8rsQI0KYLxuOxQuQK
-	 rJyPqWEU755tQ==
-Message-ID: <c712b575-c311-4253-9673-2a648f932488@kernel.org>
-Date: Wed, 20 Mar 2024 16:55:21 +0100
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="XDydmRx5"
+Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 0C270120015;
+	Wed, 20 Mar 2024 18:55:19 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 0C270120015
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1710950119;
+	bh=LsoQ3oF2kg2yK04bv75oYHFuvgq3Hd3YI9kmS9zzWiE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=XDydmRx53U4e4RBhlk3rasEQtc43OdENArhGOxnkb80H5xxbVbJv264GHZnQrNE52
+	 jhZbqmT+yk9H5HzRDmaYwzq6Ul5LJi5VA7DXxTqF8oE8mKowK6T33U2hjp7vqYqwlD
+	 yKmJ7mGPgdBwWhdLMqVjNofutV6RbKrCg982ivOv0xr6TrisyUKfZ3al6fe7qDK4PA
+	 Xp+H9fGda71a1R1OjE63WDhQE01uNQlLu6HSb3bxVJPZGaYiMdEVrwhciY+JLvL4Aa
+	 nsfAfgDdq5UvAR5AgiRFuy5bj9eJJ4Bx61fZn64YVj+pVQHX2Ih4aeZVibsEPSU553
+	 8tVbXtWfcC9Bg==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Wed, 20 Mar 2024 18:55:18 +0300 (MSK)
+Received: from CAB-WSD-L081021.sberdevices.ru (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Wed, 20 Mar 2024 18:55:18 +0300
+From: Dmitry Rokosov <ddrokosov@salutedevices.com>
+To: <neil.armstrong@linaro.org>, <jbrunet@baylibre.com>,
+	<mturquette@baylibre.com>, <khilman@baylibre.com>,
+	<martin.blumenstingl@googlemail.com>, <sboyd@kernel.org>
+CC: <kernel@salutedevices.com>, <rockosov@gmail.com>,
+	<linux-amlogic@lists.infradead.org>, <linux-clk@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	Dmitry Rokosov <ddrokosov@salutedevices.com>
+Subject: [PATCH v1 0/4] clk: meson: treewide: define maximum register in regmap config
+Date: Wed, 20 Mar 2024 18:54:44 +0300
+Message-ID: <20240320155512.3544-1-ddrokosov@salutedevices.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/8] media: qcom: camss: Add sm8550 support
-To: Depeng Shao <quic_depengs@quicinc.com>, rfoss@kernel.org,
- todor.too@gmail.com, bryan.odonoghue@linaro.org, andersson@kernel.org,
- konrad.dybcio@linaro.org, mchehab@kernel.org, quic_yon@quicinc.com
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org
-References: <20240320134227.16587-1-quic_depengs@quicinc.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240320134227.16587-1-quic_depengs@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184300 [Mar 20 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: ddrokosov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 10 0.3.10 53c821b925e16276b831986eabc71d60ab82ee60, {Tracking_from_domain_doesnt_match_to}, salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;100.64.160.123:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1;127.0.0.199:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/03/20 06:45:00 #24314254
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On 20/03/2024 14:42, Depeng Shao wrote:
-> SM8550 is a Qualcomm flagship SoC. This series adds support to
-> bring up the CSIPHY, CSID, VFE/RDI interfaces in SM8550.
-> 
-> SM8550 provides
-> 
-> - 3 x VFE, 3 RDI per VFE
-> - 2 x VFE Lite, 4 RDI per VFE
-> - 3 x CSID
-> - 2 x CSID Lite
-> - 8 x CSI PHY
-> 
-> This series is rebased based on：
-> https://patchew.org/linux/20240222-b4-camss-sc8280xp-v6-0-0e0e6a2f8962@linaro.org/
-> 
-> The changes are verified on SM8550 AIM300 board, the base dts for AIM300 is
-> https://patchew.org/linux/20231117101817.4401-1-quic._5Ftengfan@quicinc.com/
+The 'max_register' field in the regmap_config is an optional value that
+specifies the maximum valid register address. If this value is not
+determined, the regmap debugfs API will not show the full regmap dump,
+but only show the first register value.
 
-During normal development time, you are expected to post maximum 1
-bigger patchset per 24h, so reviewers have chance to review.
+Compare 'registers' debugfs file data on the A113L SoC-based board
+before the patch:
 
-It's merge window, so you are expected to give us more time. Posting v2
-30 minutes after v1 is too often.
+```
+~ # cat /sys/kernel/debug/regmap/fe007c80.pll-clock-controller/registers
+00: 14f10440
+```
 
-Best regards,
-Krzysztof
+and after the patch:
+
+```
+~ # cat /sys/kernel/debug/regmap/fe007c80.pll-clock-controller/registers
+00: 14f10440
+04: 01800000
+08: 00001100
+0c: 100a2300
+10: 00300000
+14: c000002b
+18: 00000000
+1c: 00000000
+20: 00000000
+24: 00000000
+28: 00000000
+2c: 00000000
+30: 00000000
+34: 00000000
+38: 00000000
+3c: 00000000
+40: 00000000
+44: 00000000
+48: 00000000
+4c: 00000000
+50: 00000000
+54: 00000000
+58: 00000000
+5c: 00000000
+60: 00000000
+64: 00000000
+68: 00000000
+6c: 00000000
+70: 00000000
+74: 00000000
+78: 00000000
+7c: 00000000
+80: 15f18432
+84: 01800000
+88: 00001100
+8c: 10022300
+90: 00300000
+94: c000001d
+98: 00000000
+9c: 00000000
+a0: 00000000
+a4: 00000000
+a8: 00000000
+ac: 00000000
+b0: 00000000
+b4: 00000000
+b8: 00000000
+bc: 00000000
+c0: 01f19480
+c4: 01800000
+c8: 00001100
+cc: 100a1100
+d0: 00302000
+d4: 00000020
+```
+
+Dmitry Rokosov (4):
+  clk: meson: a1: peripherals: determine maximum register in regmap
+    config
+  clk: meson: a1: pll: determine maximum register in regmap config
+  clk: meson: s4: peripherals: determine maximum register in regmap
+    config
+  clk: meson: s4: pll: determine maximum register in regmap config
+
+ drivers/clk/meson/a1-peripherals.c | 1 +
+ drivers/clk/meson/a1-pll.c         | 1 +
+ drivers/clk/meson/s4-peripherals.c | 1 +
+ drivers/clk/meson/s4-pll.c         | 1 +
+ 4 files changed, 4 insertions(+)
+
+-- 
+2.43.0
 
