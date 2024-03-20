@@ -1,49 +1,35 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93AB936AE4;
-	Wed, 20 Mar 2024 06:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FFD11C83
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 06:50:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710917404; cv=none; b=QafIlcjiI/O0nBA5KN5OBnKvS8Zr8SpPnKU22GE/JO0Q0boT1DEv3rMrfr3sEbF47FTYYmqlPohavuvLFAMops4YgZEUfe0EFjponnKQI5rPDOxOPVbWcuTBi6zKtuV6kawWsfXTfSGkbIrCxsEEomejDZaK7I1a/LPWFRZ2sh8=
+	t=1710917452; cv=none; b=mht6QqVhvxzPJPIidPikPXhbyiQCEn0eS6HfNtL1u0tiZy4529M+nJ5cE24V1bZuuG+7yysh7+yii1ONcpSVeuIMB8eHBBkqRVBEHp9+96TrIlU7HEYsq3mt8f+qSxah7t0aRCRIuqByoUl39O0hQGFoT0nU0hATjM+Flxo6MuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710917404; c=relaxed/simple;
-	bh=qXzaMmUjLgtfU6ksOSl/6Quc/HlC9r7F3efPpkAMX30=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TL2hF0fVxLJ6LdF+kyYYXX1lKhG9JFsmbtIGInVbArToJ2Y2UWp9Eiq+EX9IiUlPuDS65cIXB0LCtOrRdZ26bM+3JVM1AMK4O2vum90zGL1kM4nucjXH8BjUUDezNRwKX+tV9mfIDxnyD3GUwRtr21ihnf2H4iqnEjr9Wfsz+G4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: de7c52fd4db04ec0b22eddd14bf9b6b8-20240320
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:cf5866be-525f-4540-8c20-3d27b7a82ea4,IP:10,
-	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-10
-X-CID-INFO: VERSION:1.1.37,REQID:cf5866be-525f-4540-8c20-3d27b7a82ea4,IP:10,UR
-	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-10
-X-CID-META: VersionHash:6f543d0,CLOUDID:6b169d90-e2c0-40b0-a8fe-7c7e47299109,B
-	ulkID:2403201000570FJ81X2B,BulkQuantity:10,Recheck:0,SF:19|44|64|66|24|17|
-	102,TC:nil,Content:0,EDM:-3,IP:-2,URL:11|1,File:nil,RT:nil,Bulk:40,QS:nil,
-	BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_OBB,TF_CID_SPAM_ULN,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,
-	TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: de7c52fd4db04ec0b22eddd14bf9b6b8-20240320
-Received: from node2.com.cn [(39.156.73.10)] by mailgw
-	(envelope-from <mengfanhui@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 278497469; Wed, 20 Mar 2024 14:44:25 +0800
-Received: from node2.com.cn (localhost [127.0.0.1])
-	by node2.com.cn (NSMail) with SMTP id 0C9FCB80758A;
-	Wed, 20 Mar 2024 14:44:25 +0800 (CST)
-X-ns-mid: postfix-65FA85C8-997272164
-Received: from [172.30.60.81] (unknown [172.30.60.81])
-	by node2.com.cn (NSMail) with ESMTPA id BE370B80758A;
-	Wed, 20 Mar 2024 06:44:21 +0000 (UTC)
-Message-ID: <021efce7-1e40-43a6-9bfd-0d968bfcd5a8@kylinos.cn>
-Date: Wed, 20 Mar 2024 14:44:21 +0800
+	s=arc-20240116; t=1710917452; c=relaxed/simple;
+	bh=//3zWgFy2AqLTSr3DwKo1CdcWGf1L3AS2nPoVmnAlh0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=rXmQ2jAVhzAdOJJtX3qxJburz9pT8kx6m4NEQ9WC9xFJK+mRv7jQ9EWPSc/RcOZe++4Wn05fyjAFt3Q5I+yynJfzxc05YS3MsqYtKrQJ+6P/YW71eMTjvUyY1BFG6hKFGGweskdAIoqFf2q3MPhcnrUg+ROAXvNSJ5JlL8X8ELY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from fsav414.sakura.ne.jp (fsav414.sakura.ne.jp [133.242.250.113])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 42K6o3G8097265;
+	Wed, 20 Mar 2024 15:50:03 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav414.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav414.sakura.ne.jp);
+ Wed, 20 Mar 2024 15:50:03 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav414.sakura.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 42K6o2pu097261
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Wed, 20 Mar 2024 15:50:03 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <ab273ae2-80ec-45da-910a-e74298c71d50@I-love.SAKURA.ne.jp>
+Date: Wed, 20 Mar 2024 15:50:02 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,56 +37,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] config/mips: support zswap function
+Subject: Re: [syzbot] [kernel?] possible deadlock in console_flush_all (2)
 Content-Language: en-US
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: tsbogend@alpha.franken.de, geert+renesas@glider.be,
- linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@vger.kernel.org, hannes@cmpxchg.org, nphamcs@gmail.com,
- chengming.zhou@linux.dev
-References: <20240126075547.1521556-1-mengfanhui@kylinos.cn>
- <Zfp7Y9x2iOE_prpp@google.com>
-From: mengfanhui <mengfanhui@kylinos.cn>
-In-Reply-To: <Zfp7Y9x2iOE_prpp@google.com>
+To: syzbot <syzbot+f78380e4eae53c64125c@syzkaller.appspotmail.com>,
+        syzkaller-bugs@googlegroups.com, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness
+ <john.ogness@linutronix.de>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>
+References: <000000000000e40a2906072e9567@google.com>
+Cc: tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        bpf <bpf@vger.kernel.org>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <000000000000e40a2906072e9567@google.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Zswap and zsmalloc are compression methods, and kernel configuration can =
-be configured simultaneously.
-zbud is an algorithm, and users can use that method if they want to use i=
-t.It won't affect each other.
+Hello, bpf developers.
 
-=E5=9C=A8 2024/3/20 14:00, Yosry Ahmed =E5=86=99=E9=81=93:
-> On Fri, Jan 26, 2024 at 03:55:47PM +0800, mengfanhui wrote:
->> Solution /sys/module/zswap/parameters/enabled attribute node
->> does not exist issue=EF=BC=8Chandle zpool zbud initialization failed,
->> open CONFIG_ZSWAP CONFIG_ZPOOL CONFIG_ZBUD configuration,manual
->> zswap function by /sys/module/zswap/parameters/enabled file
->>
->> Signed-off-by: mengfanhui <mengfanhui@kylinos.cn>
->> ---
->>  arch/mips/configs/generic_defconfig | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/arch/mips/configs/generic_defconfig b/arch/mips/configs/g=
-eneric_defconfig
->> index 071e2205c7ed..14884df392f4 100644
->> --- a/arch/mips/configs/generic_defconfig
->> +++ b/arch/mips/configs/generic_defconfig
->> @@ -13,6 +13,9 @@ CONFIG_CGROUP_DEVICE=3Dy
->>  CONFIG_CGROUP_CPUACCT=3Dy
->>  CONFIG_NAMESPACES=3Dy
->>  CONFIG_USER_NS=3Dy
->> +CONFIG_ZSWAP=3Dy
->> +CONFIG_ZPOOL=3Dy
->> +CONFIG_ZBUD=3Dy
->=20
-> Any reason for choosing zbud over zsmalloc, the default zswap allocator=
-?
->=20
->>  CONFIG_SCHED_AUTOGROUP=3Dy
->>  CONFIG_BLK_DEV_INITRD=3Dy
->>  CONFIG_BPF_SYSCALL=3Dy
->> --=20
->> 2.25.1
->>
+syzbot is reporting circular locking dependency because bpf program is hitting
+printk() path. To avoid this dependency, something like
+https://syzkaller.appspot.com/text?tag=Patch&x=121c92fe180000 is needed.
+
+Is it possible to call printk_deferred_{enter,exit}() from the bpf side (e.g.
+bpf_prog_run()) so that we don't need to add overhead on the scheduler side
+when bpf programs are not registered?
+
+printk_deferred_{enter,exit}() requires that printk_deferred_exit() is called
+on a CPU which printk_deferred_enter() was called, for percpu counter is used.
+Is migrate_{disable,enable}() also needed around printk_deferred_{enter,exit}() ?
+
+On 2023/10/08 15:28, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    7d730f1bf6f3 Add linux-next specific files for 20231005
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=172d36e9680000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=f532286be4fff4b5
+> dashboard link: https://syzkaller.appspot.com/bug?extid=f78380e4eae53c64125c
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
