@@ -1,211 +1,326 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2297464;
-	Wed, 20 Mar 2024 02:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=60.244.123.138
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710900883; cv=fail; b=gQxrwL15K0hRf/OTuaQnSRgKDxi6xNbZ646/x9ic1rxEveKP8Go2AbMIVXgS2jv9TMbYe1BE8tD+6OG96nauJdwXxpViAESEmoEdR07/4x6TagEEtOT7/2PnsCz1ZBFTMzqy74SyuYlalr0v5rTZ+66JcOjelp96ePvwfABqQn0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710900883; c=relaxed/simple;
-	bh=kxEj6AOM/hXRU5BQl5D9tP538FqN1ZRCtQDV0KQ0yOg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=K0/7/hgEk17OxV25NhdU+j7jd31UQPPdrc9sX1auyHHUc+inOZYy0UjdvT8kYL5iYuofgPv8G3BTUFBjIeYEkOdk4/2fS8MOKQTmnJXach8lc+BqvtS1Xu7/Y+eGxMjYIainV1PJBgLcGwtRHJJYBzD1dVdRa0udUN3xpncqG9U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=RIgLd5xK; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=fbBb6U09; arc=fail smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="RIgLd5xK";
-	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="fbBb6U09"
-X-UUID: 98167b68e65f11eeb8927bc1f75efef4-20240320
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=kxEj6AOM/hXRU5BQl5D9tP538FqN1ZRCtQDV0KQ0yOg=;
-	b=RIgLd5xKKUgB2bAC5xzk8gx9EmvAmTiqpP3sCiyCaqWLjff4SzUBaN1gi7uvu9uGOsXILT07GlnL5UIisePKMh9pWh8fBz4xa0GBceAl4hDdqqU0lNenf2SdZIKxClUtnF1mtYkB1LbnuzJVjNdb/MCLDedkqzJDqvV1LBBHevE=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:c776f9f6-f48d-412a-bbeb-15ed16f5eeef,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6f543d0,CLOUDID:675e3385-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 98167b68e65f11eeb8927bc1f75efef4-20240320
-Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw01.mediatek.com
-	(envelope-from <ck.hu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1363683418; Wed, 20 Mar 2024 10:14:34 +0800
-Received: from mtkmbs10n1.mediatek.inc (172.21.101.34) by
- mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Wed, 20 Mar 2024 10:14:33 +0800
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (172.21.101.237)
- by mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Wed, 20 Mar 2024 10:14:32 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j4gzWyrPZn1sEtI52nsq3iKfviDAN3HrLmUEFaGrXAWnYDeHumdlcSep2DXNxt2ca9h1m653cL5Wj/9lKF3CU+1GUowJBchGFeBa2dbegaTiNoIsqzBC3zXkzVUQT4Z6EU0HMeY19Zat2phYHEaLS3CmZY5EyQgCxeH/6IjvVH1Nj/Gh2OSI8K0F1/e//yaDZi6UzBZ6gwCPZpF3ZvsNonQxvC2fTr/1ghL3sXDgz+rj3H1QoZNeG2beC0P5xvKHDtXPSz0Gi6ZDU07fXdMOAGwybgwcieKuh6+TL41a1gRhwzel5XJpM4thuCp8YE4tLGnd0eeQjSXonZyZunJytw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kxEj6AOM/hXRU5BQl5D9tP538FqN1ZRCtQDV0KQ0yOg=;
- b=aIRJqIm3fyVJCHS62aoZMmruiwIbaHoYWt4RQX+VLlJFxd8cLEi12McSAwL4fsQI466sKdCNAAQlvQXWD++KBwtlH43+ItQJL4/QKmC4nQwSLO86qPHomlHlF1chcDAnV2aeV9hm7wu9GMak/daXZTl1QtE/1lTTPRRQm2aKI+cawdkowyMm9nxU+yB6iKZpWajljjqlyGt94+XqFzMtMGDKxgA4uWG35hcrpphF9X4PskwdOrJqGsEmQAjTqT1TtsaCou+9mmQa7KECUzF+oZmjsV73oYm5Idt5Eetsf0ZdURh724DIuqz5xgziGqdLiGX7p3u/NFGC1/I+9G7xJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
- dkim=pass header.d=mediatek.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kxEj6AOM/hXRU5BQl5D9tP538FqN1ZRCtQDV0KQ0yOg=;
- b=fbBb6U09VEB9bivJLFnC22t7l1CgZr9heioSYsZ8tgmDM4p0xyFUpLc0/1cU3lmUb1zcO4EHuWXNpurbtn8SDr4QPLwWg05nxmTsO8vG5eBmiXrR8LhSM34xLySRucR3E2v8lGjr6YgpGO0sCdMXPoEk3Ib4GwbV5JZXj9DlrF0=
-Received: from TYZPR03MB6624.apcprd03.prod.outlook.com (2603:1096:400:1f4::13)
- by TYZPR03MB8167.apcprd03.prod.outlook.com (2603:1096:400:453::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.28; Wed, 20 Mar
- 2024 02:14:30 +0000
-Received: from TYZPR03MB6624.apcprd03.prod.outlook.com
- ([fe80::f3b6:91a7:e0fb:cb27]) by TYZPR03MB6624.apcprd03.prod.outlook.com
- ([fe80::f3b6:91a7:e0fb:cb27%7]) with mapi id 15.20.7386.025; Wed, 20 Mar 2024
- 02:14:29 +0000
-From: =?utf-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>
-To: =?utf-8?B?U2hhd24gU3VuZyAo5a6L5a2d6KyZKQ==?= <Shawn.Sung@mediatek.com>,
-	"chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>,
-	"angelogioacchino.delregno@collabora.com"
-	<angelogioacchino.delregno@collabora.com>
-CC: "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-	"christian.koenig@amd.com" <christian.koenig@amd.com>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"daniel@ffwll.ch" <daniel@ffwll.ch>, "p.zabel@pengutronix.de"
-	<p.zabel@pengutronix.de>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>,
-	"shawn.sung@mediatek.corp-partner.google.com"
-	<shawn.sung@mediatek.corp-partner.google.com>, "airlied@gmail.com"
-	<airlied@gmail.com>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "matthias.bgg@gmail.com"
-	<matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 12/14] drm/mediatek: Rename files "mtk_drm_gem.h" to
- "mtk_gem.h"
-Thread-Topic: [PATCH v2 12/14] drm/mediatek: Rename files "mtk_drm_gem.h" to
- "mtk_gem.h"
-Thread-Index: AQHaecu87RFDyRknmUebZdNYqMq4FrE/5RWA
-Date: Wed, 20 Mar 2024 02:14:29 +0000
-Message-ID: <6183bc80584eeb9a72b53f1c3ed3046a2541c0e2.camel@mediatek.com>
-References: <20240319070257.6443-1-shawn.sung@mediatek.com>
-	 <20240319070257.6443-13-shawn.sung@mediatek.com>
-In-Reply-To: <20240319070257.6443-13-shawn.sung@mediatek.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYZPR03MB6624:EE_|TYZPR03MB8167:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /eNtN/x3I8iBR6Gf7ZxKEGIICyGib0ippgzybqoow3suwtIOChXX2GuVw9zXgrdJKbnSHamkwpXK7Qrvo9GwdlWXuiGueKUHF9vl2MDhdeZLMo4he4nVHnzZUlGpLOlk5S3f5D33unS5U6tAv6r5HR/4UYC1sK/EIt8MFu0IyZp3RcDKpmKpPmqfHxRcbsFWHFfEZI+5BSDsgnZLLLUGL2m8NAKY7nJ2zB+F8cXkxWS+/eZzTY1u3hA74Qn9EsozdkoDfZzNG5iMeJ/RYoRxW1W+TMGS61oFTPT/QKoy3S9SqXtU81XbDT+Ni+YzF5aZuAAVBaZHXEafBzF7vrihUOtKPXrxHnoRWKcljXJtv2HOkNUOOcFSuurvoLNkG5v/Nl0jvEENlYb0HRwp/cHeXEPk4ke2nvu+LrIc4fE0PQVi8de6HZFPrph/jDTU8noXMUQFAvcHjfnlSGZmdcGIw5golXHYXICL4/ZenGLidSinzHsAS0HDFNLmguInKFS3hQU8giiNOWYjfSskemBmgjxOL3r1aR8fCjqLluzJyOwffO9l+guosnjEKBy79k6kw8CpHYzgf4iDcWrvwuE98yIWxd7oYxPfGV9T2kAUMQXeH2pP6Xk+EBuuaRHhKgfIaV2vm0+0UAnLiVBSxqggsBF+yaXshDhyQn0iWk+sccU=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6624.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(366007)(376005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?bWtKK0ljeTJtTUVTOWpsZnQ0bDZ6ckFiaForREJ4dXBZSUV4eTJjWDNjeVJs?=
- =?utf-8?B?bGFZQ0lHY1RyV3Y0cG9aRFJuL25JUk5mcThyM1VLMGpxQVZIc3NHVE45WGs1?=
- =?utf-8?B?WFBIYnkwc2lrN1RTL1BySjRnZTJHMnZBYTZyY3p2Y1MyNE56Y0ZOVk4za0lk?=
- =?utf-8?B?VkQxbmxibDd2TTdKeDYwblNMOS90dHNMeTVxWlVKcmJkb2xxVzZyYVNUdnVo?=
- =?utf-8?B?YmtieVpzWUxMVllwM2JNR1ExQWdMT2JTb3hmZXI4ejFZZENVU0Q0c3RLYS8x?=
- =?utf-8?B?OFRUN3JhMG83RzhTOTY4amNpREs4end0aEdoRUFGb0J4ZTZGbDJCZitydS92?=
- =?utf-8?B?SWJvSVBMTm5qOTZKMkdYNE84aWRhMFh0MG1UZnNTam50d3A2enpzSnFJVHlJ?=
- =?utf-8?B?NXR2ODAzSzU4ZGRtR2lkeU5RNVNUTldjMndFdllFZTZmWUJGSWVRLzE3V2Ri?=
- =?utf-8?B?aVh4alJUSFVuUWZ4TkdhNHJSUkVYdmxhZGh1NzBNenBINmNaN2tyL2tUZEJY?=
- =?utf-8?B?VVp0ejlyOHp1SlZrdjIwZGFSYjIwVloxUXVjZFQwR0F0ZWZ4My95cFJWcll3?=
- =?utf-8?B?U09uMGRYczFUQVh2OEFXWm5CUUtVM2FqcVUzODUwY3NoeGwzbFY4RDdvYXJm?=
- =?utf-8?B?SzJUSk5lZkducms2aTlPbVErbklST2ZjTldOS0RBVGJZY3hnZ3QyVWNpTy9R?=
- =?utf-8?B?VmV6SEZqYk83WEhwYkpUL2VtNVcxaTBDZ1N6czUxaGlFdDkyeVV0Qkx3N28w?=
- =?utf-8?B?bCtOQ2RvYzQvNDFhYXFSaFR5N09wUzA0UTh6VVRyZU1aZ0R2dXBtUXgxaWda?=
- =?utf-8?B?VGJ2emdyM1JvMTZuMVRMOC9yMzJ3TUFBc2RiTmJzMlQ3NnA3WkREUEF5OUow?=
- =?utf-8?B?bEdmMXN0ZzQ5ZWlmbkx5MU9TWm1WL1BuZDZ4SElQYkovRjVKWVd0U0VVeXcv?=
- =?utf-8?B?blJlV29yV2NBQklqYWlXdHE5YWh3TTFtV2JVVG1QRWVCWXp2VmFNcWxsVVhJ?=
- =?utf-8?B?RzZiUXdsSWF1M3R3QnMvQWRJU245SWlTRXdZT1lpQVZyelF1NVdUQnRlZ01F?=
- =?utf-8?B?b0FWaGJJUzZXbFNMMHBiSCtnL1ZncFd1NmIyejNkR3pYNlVJeWpFajlBWXVM?=
- =?utf-8?B?VUJhRjQ1dXlhK3VmNEpGeWgyclkveWRQalNEbjNUL1NvdWwxV2E0WDBDYTBa?=
- =?utf-8?B?ZXNmbFdYNDRQcUFtMmtkWXZKV0U3bXQvdEdONEtIRDM3Snhtbld4cHcrNDFj?=
- =?utf-8?B?ZFlET0M1V1FWdDkyZWMrWTV2azQ5M0hkZFNOWDBGcTVZbW5kUW1WSXA2b3ox?=
- =?utf-8?B?cjN3UW8wQ2NLMVU1TmErYlRTR2lSZlBxbThoR3ovVVQ3ZmF4OUt2VmNUTys1?=
- =?utf-8?B?RVYxYWxaU21jTjUxT2ZLOHBKcjM0ajJnVDZRU3lRVUlXZldIRHNQMjl0NGhC?=
- =?utf-8?B?T05ERGdVSHFWZ2EzekFtVlpHaGNvQTRweHZkNC8zcHBoZ3hnTnhzOWhOS09h?=
- =?utf-8?B?V1pLWVdDSUdHL0F5UitVOHVPVTF1ZDJUeklEY2N3SFdtdlNpTkRHUHR0MlNS?=
- =?utf-8?B?V093YVlnN1BmbEdYalJrNVZ6bWdtVmhrSjRKaXFvaG95MWZLNXJVa3JlRmE3?=
- =?utf-8?B?YjdmWFhuV2xKL29ibXJxeGQxUFF3S1hmRk5rSGUvZXB1YU15L0tFWEFsOFVz?=
- =?utf-8?B?WkpRZzlDdTExL1BicFVpZkU4SHVWeFdPSTh1aDVHZStPbGR2bExmbHZFeU0x?=
- =?utf-8?B?YWVtT2wvU3AxclJVUlk5RHgxZ2lPaG5zS2dsRGl6WGdrcHgvaWFMRWNCU2Vl?=
- =?utf-8?B?MzgvZXIrWklkV2gwY2hybWgrTzdnMzg0MkFISDhpU0tldlRsbTFTS1BQNk1L?=
- =?utf-8?B?a0hPcURXQkV4dWNGejFvQmhCYjZhNDNGb0JSZ3VsbHdGMVdsazEya1hwbnpZ?=
- =?utf-8?B?R2FvUDBFbVZWS3JJSk1UL3lnajIvT0Q4dmMzRUVNdE92ZTlSMGpYbTFEN3Mx?=
- =?utf-8?B?TkttWkdSSXZPN25scHVKdWZxbE5pbit0WE1tWGx5ZTNyYk9BSVRjWXVkZTFj?=
- =?utf-8?B?bGxFZXByQVYrZkNYL3dlR3RYUmFlNWlXUis1R1U4QjlZU1hycHFiZmFxSXFo?=
- =?utf-8?Q?bbSuqmKtxRD538UYNyS7tvvQq?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A636DE4408C42C47A699F0C5BA819A09@apcprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8FE79EA
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 02:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710901196; cv=none; b=GbOAofIWuSPVcagjlRNXharNGw1MnjO6WMxFfm6owO1xfz7gpx/33c/+EPi5vILXfrxJj7WW4Avpv7y/Z7UuHfnBnZm0kl9wp/sFX5TVOreMMFmU+DnBi4peQb2HGkh/IyMNGAyPov05AHZkggV4jicucm0Vo7wycQcgVy86dFU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710901196; c=relaxed/simple;
+	bh=vRXg445GfbKWTYTB9fRQrXl8N4c1mUKMW6+I4dnRlZ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iVZq0XkOCmsUiVPyZvjzbEcsreMCPjmFbcFdtdVdatbOtDfKUJIrhrDCF0Z29TJF9WAbQ34YuzGf9ZqVxV14vzt3ASjrLKfhD+/w0t4mGQ6aR5EFpfPQ5lz0Idh6jq5CZyE2VmmW9yzhf4F6Edx5BDjOfmRHJPUNAuwLiPetTto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=redhat.com; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-690c821e088so39423146d6.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 19:19:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710901192; x=1711505992;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rslxMkN67eukyzDXMF/hyjaCbVs6Hgx0cps6F0DAzFE=;
+        b=ffhveM8KbHOkVkZfg8BKXXXyrybDqxHP3r3z8cmB2Y6iIWl3IemdCZ1m444uQV4/oo
+         dZ5wRl4gqAUmH7hjhogOiBxZQ7y5mPyXa5hfViWYgfYWlUsM5hyyu/RAvDAw5sgIWZWf
+         3UZxXoHxi5K2uAYuPZ+Lv64gAYUDuR7ucSdRfxQvWJ6sIXVpiNKyjOUQ0pli3TNHWJdJ
+         vk2VDsJSOBWa2zQHHYZF3vPPGOUTTEhwHekwg1chvu8KYth3UkASBndp5SucqN6KWULG
+         uSuCskKfUTdYgCzhXG1AasM+YoLMgUX1W4yawxfLCqehLmJI/mAD3WJBeSC+AAjMd1r2
+         qk+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUCSG4Z4X3UNkyL1oErBzrQN4PHYOT9aU5RHSgxDSVcDRh6p3WF4jQn/jo0Y717Ec363eUNVVsUqIS9FjeBMr7Mmd/y39dXxu9eUgbe
+X-Gm-Message-State: AOJu0YwHC0QhzCszajVFWSAiaQ1KFmLE3hUCW2nOm/qk+b9UKBmsXRBT
+	wX/aV/VHZF+FayMYJDeelTZbTh3Tl8XAcE+E5rybbVfgOEBbw4OEUVnIiidFuw==
+X-Google-Smtp-Source: AGHT+IEA05HVYDsDIWdpmMWvM7gMWpxctsG28SD6IkpudKMk6z95MxKszxrHOnWKeLM0IzEx/noQVA==
+X-Received: by 2002:a0c:f5d4:0:b0:690:ba28:828a with SMTP id q20-20020a0cf5d4000000b00690ba28828amr17770049qvm.56.1710901192042;
+        Tue, 19 Mar 2024 19:19:52 -0700 (PDT)
+Received: from localhost (pool-68-160-141-91.bstnma.fios.verizon.net. [68.160.141.91])
+        by smtp.gmail.com with ESMTPSA id gm9-20020a056214268900b00691865eae7bsm5194446qvb.4.2024.03.19.19.19.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 19:19:51 -0700 (PDT)
+Date: Tue, 19 Mar 2024 22:19:50 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Fan Wu <wufan@linux.microsoft.com>, corbet@lwn.net, zohar@linux.ibm.com,
+	jmorris@namei.org, serge@hallyn.com, tytso@mit.edu,
+	ebiggers@kernel.org, axboe@kernel.dk, agk@redhat.com,
+	eparis@redhat.com, linux-doc@vger.kernel.org,
+	linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org, fsverity@lists.linux.dev,
+	linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
+	audit@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Deven Bowers <deven.desai@linux.microsoft.com>
+Subject: Re: [PATCH RFC v15 14/21] dm verity: consume root hash digest and
+ signature data via LSM hook
+Message-ID: <ZfpHxkmRy0oqxZVF@redhat.com>
+References: <1710560151-28904-15-git-send-email-wufan@linux.microsoft.com>
+ <657b73a0cf531fd4291a0f780d2fcf78@paul-moore.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6624.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 413d69f2-3ebc-4c82-4151-08dc488379af
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Mar 2024 02:14:29.9104
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PEySsdxs6/mxz0/kSRO1qT9SiP3y4a/ampXwBS0i8hF/kFl7bdo1999hVUcsFIwFCzCaaWOHC5IJomFD3sUZ8A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR03MB8167
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <657b73a0cf531fd4291a0f780d2fcf78@paul-moore.com>
 
-SGksIFNoYXduOg0KDQpPbiBUdWUsIDIwMjQtMDMtMTkgYXQgMTU6MDIgKzA4MDAsIFNoYXduIFN1
-bmcgd3JvdGU6DQo+IEZyb206IEhzaWFvIENoaWVuIFN1bmcgPHNoYXduLnN1bmdAbWVkaWF0ZWsu
-Y29ycC1wYXJ0bmVyLmdvb2dsZS5jb20+DQo+IA0KPiBSZW5hbWUgZmlsZXMgbXRrX2RybV9nZW0u
-aCB0byBtdGtfZ2VtLmguDQoNCkFmdGVyIG1vdmluZyByZXN0IHBhcnQgdG8gdGhpcyBwYXRjaCwN
-Cg0KUmV2aWV3ZWQtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+DQoNCj4gDQo+IFJldmll
-d2VkLWJ5OiBBbmdlbG9HaWFvY2NoaW5vIERlbCBSZWdubyA8DQo+IGFuZ2Vsb2dpb2FjY2hpbm8u
-ZGVscmVnbm9AY29sbGFib3JhLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogSHNpYW8gQ2hpZW4gU3Vu
-ZyA8DQo+IHNoYXduLnN1bmdAbWVkaWF0ZWsuY29ycC1wYXJ0bmVyLmdvb2dsZS5jb20+DQo+IC0t
-LQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19jcnRjLmMgICAgICAgICAgICAgICAg
-ICAgfCAyICstDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyAgICAg
-ICAgICAgICAgICB8IDIgKy0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2dl
-bS5jICAgICAgICAgICAgICAgIHwgMiArLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL3tt
-dGtfZHJtX2dlbS5oID0+IG10a19nZW0uaH0gfCAwDQo+ICA0IGZpbGVzIGNoYW5nZWQsIDMgaW5z
-ZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4gIHJlbmFtZSBkcml2ZXJzL2dwdS9kcm0vbWVk
-aWF0ZWsve210a19kcm1fZ2VtLmggPT4gbXRrX2dlbS5ofSAoMTAwJSkNCj4gDQo+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2NydGMuYw0KPiBiL2RyaXZlcnMvZ3B1
-L2RybS9tZWRpYXRlay9tdGtfY3J0Yy5jDQo+IGluZGV4IDFiYTQ3ZTY1YTMyZGEuLmQ1OTc0ZmMx
-YTcyOWEgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfY3J0Yy5j
-DQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfY3J0Yy5jDQo+IEBAIC0yMiw3
-ICsyMiw3IEBADQo+ICAjaW5jbHVkZSAibXRrX2NydGMuaCINCj4gICNpbmNsdWRlICJtdGtfZGRw
-X2NvbXAuaCINCj4gICNpbmNsdWRlICJtdGtfZHJtX2Rydi5oIg0KPiAtI2luY2x1ZGUgIm10a19k
-cm1fZ2VtLmgiDQo+ICsjaW5jbHVkZSAibXRrX2dlbS5oIg0KPiAgI2luY2x1ZGUgIm10a19wbGFu
-ZS5oIg0KPiAgDQo+ICAvKg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
-L210a19kcm1fZHJ2LmMNCj4gYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYu
-Yw0KPiBpbmRleCAxMTNmZGJhYWM1YTE0Li5iNjIzMjBmNjQ4ODI1IDEwMDY0NA0KPiAtLS0gYS9k
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYw0KPiArKysgYi9kcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYw0KPiBAQCAtMjcsNyArMjcsNyBAQA0KPiAgI2lu
-Y2x1ZGUgIm10a19jcnRjLmgiDQo+ICAjaW5jbHVkZSAibXRrX2RkcF9jb21wLmgiDQo+ICAjaW5j
-bHVkZSAibXRrX2RybV9kcnYuaCINCj4gLSNpbmNsdWRlICJtdGtfZHJtX2dlbS5oIg0KPiArI2lu
-Y2x1ZGUgIm10a19nZW0uaCINCj4gIA0KPiAgI2RlZmluZSBEUklWRVJfTkFNRSAibWVkaWF0ZWsi
-DQo+ICAjZGVmaW5lIERSSVZFUl9ERVNDICJNZWRpYXRlayBTb0MgRFJNIg0KPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZ2VtLmMNCj4gYi9kcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9nZW0uYw0KPiBpbmRleCA0NDVmZDhhOGI4OTg4Li4xNjZh
-NzFkYzQwODYwIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
-bV9nZW0uYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9nZW0uYw0K
-PiBAQCAtMTIsNyArMTIsNyBAQA0KPiAgI2luY2x1ZGUgPGRybS9kcm1fcHJpbWUuaD4NCj4gIA0K
-PiAgI2luY2x1ZGUgIm10a19kcm1fZHJ2LmgiDQo+IC0jaW5jbHVkZSAibXRrX2RybV9nZW0uaCIN
-Cj4gKyNpbmNsdWRlICJtdGtfZ2VtLmgiDQo+ICANCj4gIHN0YXRpYyBpbnQgbXRrX2dlbV9vYmpl
-Y3RfbW1hcChzdHJ1Y3QgZHJtX2dlbV9vYmplY3QgKm9iaiwgc3RydWN0DQo+IHZtX2FyZWFfc3Ry
-dWN0ICp2bWEpOw0KPiAgDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
-bXRrX2RybV9nZW0uaA0KPiBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZ2VtLmgNCj4g
-c2ltaWxhcml0eSBpbmRleCAxMDAlDQo+IHJlbmFtZSBmcm9tIGRyaXZlcnMvZ3B1L2RybS9tZWRp
-YXRlay9tdGtfZHJtX2dlbS5oDQo+IHJlbmFtZSB0byBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
-bXRrX2dlbS5oDQo=
+On Tue, Mar 19 2024 at  7:00P -0400,
+Paul Moore <paul@paul-moore.com> wrote:
+
+> On Mar 15, 2024 Fan Wu <wufan@linux.microsoft.com> wrote:
+> > 
+> > dm-verity provides a strong guarantee of a block device's integrity. As
+> > a generic way to check the integrity of a block device, it provides
+> > those integrity guarantees to its higher layers, including the filesystem
+> > level.
+> > 
+> > An LSM that control access to a resource on the system based on the
+> > available integrity claims can use this transitive property of
+> > dm-verity, by querying the underlying block_device of a particular
+> > file.
+> > 
+> > The digest and signature information need to be stored in the block
+> > device to fulfill the next requirement of authorization via LSM policy.
+> > This will enable the LSM to perform revocation of devices that are still
+> > mounted, prohibiting execution of files that are no longer authorized
+> > by the LSM in question.
+> > 
+> > This patch adds two security hook calls in dm-verity to save the
+> > dm-verity roothash and the roothash signature to the block device's
+> > LSM blobs. The hook calls are depended on CONFIG_IPE_PROP_DM_VERITY,
+> > which will be introduced in the next commit.
+> > 
+> > Signed-off-by: Deven Bowers <deven.desai@linux.microsoft.com>
+> > Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
+> > ---
+> > v2:
+> >   + No Changes
+> > 
+> > v3:
+> >   + No changes
+> > 
+> > v4:
+> >   + No changes
+> > 
+> > v5:
+> >   + No changes
+> > 
+> > v6:
+> >   + Fix an improper cleanup that can result in
+> >     a leak
+> > 
+> > v7:
+> >   + Squash patch 08/12, 10/12 to [11/16]
+> >   + Use part0 for block_device, to retrieve the block_device, when
+> >     calling security_bdev_setsecurity
+> > 
+> > v8:
+> >   + Undo squash of 08/12, 10/12 - separating drivers/md/ from
+> >     security/ & block/
+> >   + Use common-audit function for dmverity_signature.
+> >   + Change implementation for storing the dm-verity digest to use the
+> >     newly introduced dm_verity_digest structure introduced in patch
+> >     14/20.
+> >   + Create new structure, dm_verity_digest, containing digest algorithm,
+> >     size, and digest itself to pass to the LSM layer. V7 was missing the
+> >     algorithm.
+> >   + Create an associated public header containing this new structure and
+> >     the key values for the LSM hook, specific to dm-verity.
+> >   + Additional information added to commit, discussing the layering of
+> >     the changes and how the information passed will be used.
+> > 
+> > v9:
+> >   + No changes
+> > 
+> > v10:
+> >   + No changes
+> > 
+> > v11:
+> >   + Add an optional field to save signature
+> >   + Move the security hook call to the new finalize hook
+> > 
+> > v12:
+> >   + No changes
+> > 
+> > v13:
+> >   + No changes
+> > 
+> > v14:
+> >   + Correct code format
+> >   + Remove unnecessary header and switch to dm_disk()
+> > 
+> > v15:
+> >   + Refactor security_bdev_setsecurity() to security_bdev_setintegrity()
+> >   + Remove unnecessary headers
+> > ---
+> >  drivers/md/dm-verity-target.c | 73 +++++++++++++++++++++++++++++++++++
+> >  drivers/md/dm-verity.h        |  6 +++
+> >  include/linux/dm-verity.h     | 12 ++++++
+> >  include/linux/security.h      |  2 +
+> >  4 files changed, 93 insertions(+)
+> >  create mode 100644 include/linux/dm-verity.h
+> > 
+> > diff --git a/drivers/md/dm-verity-target.c b/drivers/md/dm-verity-target.c
+> > index bb5da66da4c1..e94cc6a755d5 100644
+> > --- a/drivers/md/dm-verity-target.c
+> > +++ b/drivers/md/dm-verity-target.c
+> > @@ -22,6 +22,8 @@
+> >  #include <linux/scatterlist.h>
+> >  #include <linux/string.h>
+> >  #include <linux/jump_label.h>
+> > +#include <linux/security.h>
+> > +#include <linux/dm-verity.h>
+> >  
+> >  #define DM_MSG_PREFIX			"verity"
+> >  
+> > @@ -1017,6 +1019,38 @@ static void verity_io_hints(struct dm_target *ti, struct queue_limits *limits)
+> >  	blk_limits_io_min(limits, limits->logical_block_size);
+> >  }
+> >  
+> > +#ifdef CONFIG_IPE_PROP_DM_VERITY
+> > +
+> > +static int verity_init_sig(struct dm_verity *v, const void *sig,
+> > +			   size_t sig_size)
+> > +{
+> > +	v->sig_size = sig_size;
+> > +	v->root_digest_sig = kmalloc(v->sig_size, GFP_KERNEL);
+> > +	if (!v->root_digest)
+> > +		return -ENOMEM;
+> 
+> Either you meant to copy @sig into @v->root_digest_sig and forgot to
+> add the code for that, or we don't need to include @sig as a parameter
+> to this function.  I'm guessing it is the former as it wouldn't make
+> sense to even have dm_verity::root_digest_sig if we weren't stashing
+> it here.
+> 
+> I'd also suggest looking at kmemdup() instead of a kmalloc()/memcpy()
+> combo.
+> 
+> > +	return 0;
+> > +}
+> > +
+> > +static void verity_free_sig(struct dm_verity *v)
+> > +{
+> > +	kfree(v->root_digest_sig);
+> > +}
+> > +#else
+> > +
+> > +static inline int verity_init_sig(struct dm_verity *v, const void *sig,
+> > +				  size_t sig_size)
+> > +{
+> > +	return 0;
+> > +}
+> > +
+> > +static inline void verity_free_sig(struct dm_verity *v)
+> > +{
+> > +}
+> > +
+> > +#endif /* CONFIG_IPE_PROP_DM_VERITY */
+> 
+> It's been a while since I looked at this patch in the patchset, so
+> maybe I'm missing something, but in general we don't want CONFIG_XXX
+> checks in the kernel, outside of security/, that are specific to a
+> particular LSM (what happens when multiple LSMs need this?).  Please
+> use CONFIG_SECURITY instead.
+> 
+> >  static void verity_dtr(struct dm_target *ti)
+> >  {
+> >  	struct dm_verity *v = ti->private;
+> > @@ -1035,6 +1069,7 @@ static void verity_dtr(struct dm_target *ti)
+> >  	kfree(v->salt);
+> >  	kfree(v->root_digest);
+> >  	kfree(v->zero_digest);
+> > +	verity_free_sig(v);
+> >  
+> >  	if (v->tfm)
+> >  		crypto_free_ahash(v->tfm);
+> > @@ -1434,6 +1469,13 @@ static int verity_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+> >  		ti->error = "Root hash verification failed";
+> >  		goto bad;
+> >  	}
+> > +
+> > +	r = verity_init_sig(v, verify_args.sig, verify_args.sig_size);
+> > +	if (r < 0) {
+> > +		ti->error = "Cannot allocate root digest signature";
+> > +		goto bad;
+> > +	}
+> > +
+> >  	v->hash_per_block_bits =
+> >  		__fls((1 << v->hash_dev_block_bits) / v->digest_size);
+> >  
+> > @@ -1584,6 +1626,34 @@ int dm_verity_get_root_digest(struct dm_target *ti, u8 **root_digest, unsigned i
+> >  	return 0;
+> >  }
+> >  
+> > +#ifdef CONFIG_IPE_PROP_DM_VERITY
+> > +
+> > +static int verity_finalize(struct dm_target *ti)
+> > +{
+> > +	struct block_device *bdev;
+> > +	struct dm_verity_digest root_digest;
+> > +	struct dm_verity *v;
+> > +	int r;
+> > +
+> > +	v = ti->private;
+> > +	bdev = dm_disk(dm_table_get_md(ti->table))->part0;
+> > +	root_digest.digest = v->root_digest;
+> > +	root_digest.digest_len = v->digest_size;
+> > +	root_digest.alg = v->alg_name;
+> > +
+> > +	r = security_bdev_setintegrity(bdev, LSM_INTGR_DMV_ROOTHASH, &root_digest,
+> > +				       sizeof(root_digest));
+> > +	if (r)
+> > +		return r;
+> > +
+> > +	return security_bdev_setintegrity(bdev,
+> > +					  LSM_INTGR_DMV_SIG,
+> > +					  v->root_digest_sig,
+> > +					  v->sig_size);
+> 
+> What happens if the second call fails, should we clear the
+> LSM_INTGR_DMV_ROOTHASH state in the LSM?
+> 
+> > +}
+> > +
+> > +#endif /* CONFIG_IPE_PROP_DM_VERITY */
+> 
+> See my comments about CONFIG_SECURITY above.  In fact, I would suggest
+> moving this up into that part of the file so you only need one #ifdef
+> block relating to CONFIG_SECURITY.
+> 
+> I would also recommend making a dummy function so we can get rid of
+> the conditional compilation in @verity_target below.  For example:
+> 
+>   #ifdef CONFIG_SECURITY
+>   static int verity_finalize(struct dm_target *ti)
+>   {
+>     /* real implementation */
+>   }
+>   #else
+>   static int verity_finalize(struct dm_target *ti)
+>   {
+>     return 0;
+>   }
+>   #endif /* CONFIG_SECURITY */
+> 
+> >  static struct target_type verity_target = {
+> >  	.name		= "verity",
+> >  	.features	= DM_TARGET_SINGLETON | DM_TARGET_IMMUTABLE,
+> > @@ -1596,6 +1666,9 @@ static struct target_type verity_target = {
+> >  	.prepare_ioctl	= verity_prepare_ioctl,
+> >  	.iterate_devices = verity_iterate_devices,
+> >  	.io_hints	= verity_io_hints,
+> > +#ifdef CONFIG_IPE_PROP_DM_VERITY
+> > +	.finalize	= verity_finalize,
+> > +#endif /* CONFIG_IPE_PROP_DM_VERITY */
+> >  };
+> >  module_dm(verity);
+> 
+> If you create a dummy verity_finalize() function like above you can
+> get rid of the #ifdef checks.
+
+Think it is better to leave it as-is, to avoid calling the .finalize
+hook if it isn't actually needed.
+
+Mike
