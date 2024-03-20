@@ -1,19 +1,19 @@
 Received: from cae.in-ulm.de (cae.in-ulm.de [217.10.14.231])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFAE722093;
-	Wed, 20 Mar 2024 07:40:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A8722C68A;
+	Wed, 20 Mar 2024 07:40:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.14.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710920416; cv=none; b=pDoe6djHr6jy2iYJQM2AzFcJhDmuhXzSGMKBxk++NR+tc3nGGbzX8Wblt+A3DUOQHoZdaY8nCIFVB23Pkzj81yPZfqf9Ktx0I1UfoBqQLq6OEQklSMzzU57IvllNTlTezioA3FmZwE5cD3rtP2J2/zfY8iWSTOOT12SejoKD3D4=
+	t=1710920421; cv=none; b=E7eRWAwDqGAxUWZBoJp5F+NXG5V6lUxhExWL+cLXSkXH5KOUc1Uk8xkDDicf+DxSsstZN9YbhO3wCzHX6jFt0YL5lQmjKV9j7lHWraIGEGicugOQsKMlHJM38+PnbZ2NKvXuwUZMLiOae9CQazXX7Z5FAOZ660tjAoH9LTB8Bdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710920416; c=relaxed/simple;
-	bh=TAgwJX9EFPn204jUDPo3aVHiPhT8JDQjDPaFSAM31yg=;
+	s=arc-20240116; t=1710920421; c=relaxed/simple;
+	bh=W6IONZrbhxB3/AZDCuJHc0iTpJjN/te0qxiwSJPPhN0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TEo2LvN83aSV6YO2/C9d+c1U8UrNIe9OkloaKtLRMm3EmAITCYgr+Q1uY9yWD/DZiKvuEmZz6iRsuQVNQWdInEjdHjbzFeiq/jomE2bxsI7fQy9TWrpAPpQ9vbQYbv5xIITd+J2XnYenByAlISOZvy8112nnYtW7pqFVM7nx6F8=
+	 MIME-Version; b=ikNsCQc4CvGmi9ZRpERCZHIKejQ6KAdh1m0hRbTFTyztR+7hnnJHOhix3Ir06If27qzw5bRgbw8gdVzLhJBL1QHJ/0p2CsVimppfWbDALuNYk7suekWzW3BxjAdaM619q6doqj1QBrGQyOzSJ1LWC7XtSfeYjph5DOhppkUxxCM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de; spf=pass smtp.mailfrom=c--e.de; arc=none smtp.client-ip=217.10.14.231
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=c--e.de
 Received: by cae.in-ulm.de (Postfix, from userid 1000)
-	id DF060140928; Wed, 20 Mar 2024 08:40:09 +0100 (CET)
+	id B12E8140935; Wed, 20 Mar 2024 08:40:16 +0100 (CET)
 From: "Christian A. Ehrhardt" <lk@c--e.de>
 To: linux-kernel@vger.kernel.org
 Cc: "Christian A. Ehrhardt" <lk@c--e.de>,
@@ -27,9 +27,9 @@ Cc: "Christian A. Ehrhardt" <lk@c--e.de>,
 	=?UTF-8?q?Samuel=20=C4=8Cavoj?= <samuel@cavoj.net>,
 	linux-usb@vger.kernel.org,
 	Kenneth Crudup <kenny@panix.com>
-Subject: [PATCH 3/5] usb: typec: ucsi: Ack unsupported commands
-Date: Wed, 20 Mar 2024 08:39:24 +0100
-Message-Id: <20240320073927.1641788-4-lk@c--e.de>
+Subject: [PATCH 5/5] usb: typec: ucsi: Clear UCSI_CCI_RESET_COMPLETE before reset
+Date: Wed, 20 Mar 2024 08:39:26 +0100
+Message-Id: <20240320073927.1641788-6-lk@c--e.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20240320073927.1641788-1-lk@c--e.de>
 References: <20240320073927.1641788-1-lk@c--e.de>
@@ -41,34 +41,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If a command completes the OPM must send an ack. This applies
-to unsupported commands, too.
-
-Send the required ACK for unsupported commands.
+Check the UCSI_CCI_RESET_COMPLETE complete flag before starting
+another reset. Use a UCSI_SET_NOTIFICATION_ENABLE command to clear
+the flag if it is set.
 
 Signed-off-by: Christian A. Ehrhardt <lk@c--e.de>
 ---
- drivers/usb/typec/ucsi/ucsi.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/usb/typec/ucsi/ucsi.c | 36 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 35 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-index dceeed207569..63f340dbd867 100644
+index 63f340dbd867..85e507df7fa8 100644
 --- a/drivers/usb/typec/ucsi/ucsi.c
 +++ b/drivers/usb/typec/ucsi/ucsi.c
-@@ -151,8 +151,12 @@ static int ucsi_exec_command(struct ucsi *ucsi, u64 cmd)
- 	if (!(cci & UCSI_CCI_COMMAND_COMPLETE))
- 		return -EIO;
+@@ -1264,13 +1264,47 @@ static int ucsi_reset_connector(struct ucsi_connector *con, bool hard)
  
--	if (cci & UCSI_CCI_NOT_SUPPORTED)
-+	if (cci & UCSI_CCI_NOT_SUPPORTED) {
-+		if (ucsi_acknowledge_command(ucsi) < 0)
-+			dev_err(ucsi->dev,
-+				"ACK of unsupported command failed\n");
- 		return -EOPNOTSUPP;
+ static int ucsi_reset_ppm(struct ucsi *ucsi)
+ {
+-	u64 command = UCSI_PPM_RESET;
++	u64 command;
+ 	unsigned long tmo;
+ 	u32 cci;
+ 	int ret;
+ 
+ 	mutex_lock(&ucsi->ppm_lock);
+ 
++	ret = ucsi->ops->read(ucsi, UCSI_CCI, &cci, sizeof(cci));
++	if (ret < 0)
++		goto out;
++
++	/*
++	 * If UCSI_CCI_RESET_COMPLETE is already set we must clear
++	 * the flag before we start another reset. Send a
++	 * UCSI_SET_NOTIFICATION_ENABLE command to achieve this.
++	 * Ignore a timeout and try the reset anyway if this fails.
++	 */
++	if (cci & UCSI_CCI_RESET_COMPLETE) {
++		command = UCSI_SET_NOTIFICATION_ENABLE;
++		ret = ucsi->ops->async_write(ucsi, UCSI_CONTROL, &command,
++					     sizeof(command));
++		if (ret < 0)
++			goto out;
++
++		tmo = jiffies + msecs_to_jiffies(UCSI_TIMEOUT_MS);
++		do {
++			ret = ucsi->ops->read(ucsi, UCSI_CCI,
++					      &cci, sizeof(cci));
++			if (ret < 0)
++				goto out;
++			if (cci & UCSI_CCI_COMMAND_COMPLETE)
++				break;
++			if (time_is_before_jiffies(tmo))
++				break;
++			msleep(20);
++		} while (1);
++
++		WARN_ON(cci & UCSI_CCI_RESET_COMPLETE);
 +	}
- 
- 	if (cci & UCSI_CCI_ERROR) {
- 		if (cmd == UCSI_GET_ERROR_STATUS)
++
++	command = UCSI_PPM_RESET;
+ 	ret = ucsi->ops->async_write(ucsi, UCSI_CONTROL, &command,
+ 				     sizeof(command));
+ 	if (ret < 0)
 -- 
 2.40.1
 
