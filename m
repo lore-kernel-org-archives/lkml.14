@@ -1,168 +1,134 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4A83C08F;
-	Wed, 20 Mar 2024 10:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DC703D970;
+	Wed, 20 Mar 2024 10:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710930530; cv=none; b=gQ3jI39tOfCtqUv1jUGIjUSDsj6EyGMcrU9sGEVIzeytXq57rt30KA6Sr8FhE+oSLZeZi0MG+KgAtA7dLwiHjdGTx34ATtbJl28BB/jBZNqPhNijK+IE0DlD6TKLAxD80RqhgDi00rMu5e9I78Hh4McL0+q23JAMmieTQCHS7f4=
+	t=1710930589; cv=none; b=cFiuzp4rUYxkmcy6u4lIWx75s/C8GnFTFfu8VZLfCvWj7KrI6gnZuZOkf4tdt2mhW72sEe396HNilUskZqhyKbCemafBDxR1QBoeF/5hzpmj0iIJ0kK9DsWDZkO8GS1DdETxb+8lBbP/NuakHJ+KdSmwCsjakqr6A1mDzzPvV3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710930530; c=relaxed/simple;
-	bh=xxIEdTnasZgNTkdCtFzo5Tk7qlLmnwHb0r66ABM2Ybs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iO7T6iaEIlH0zLCwg3FVeFT17KkG2PRtOvcKSMWALx3elrum/yW4bkXA0DfTXUD1bbx8LbRaaTXK3dq5+P2B5kTeFwI+hfLBFghCBja/4qhHXPDe5aXwOsPrT8h3529Df3fexVkQGS6hOGAI8zlKXH17twpJxP3AMsYa0pecQUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=pgcv9NHD; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=pgcv9NHD; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1710930589; c=relaxed/simple;
+	bh=JvItBV8S7Y31HMTBenjNqg15k1PnGv+HzKdN7fwkC+Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=oJy/ZspA7NMdBxojeqx7qtSIsmNOltxvNnFGf3KF1EPlH1cD/sbg3CF1b5WGGgbUxW7JL9Ed9qTgE2Lsm4mmlregxUY8wB+qjrpjd2zXvAKUGwtCcI+LV9NgME7w2mbIZ7ZYmYwWunOUeRWuQ5DgJQDb06siadFes26YVlvSC/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GZlTSItI; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="pgcv9NHD";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="pgcv9NHD"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B9C4420CBA;
-	Wed, 20 Mar 2024 10:28:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1710930526; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Uacu9M9JHXgrGZx8T4ZnA5/jeWUYi98hCKExLdiTswE=;
-	b=pgcv9NHDcsId4tPYUG4FIFTciGb+EEh9RedFqboNkGDN3oZfX4O17F7vUr+Exr73PvO/3A
-	YmiL9RnZSW5VqiIzHnLrbgaB7hYzXcH91Y4ilWlXDeBtRLyzHyR8/+JwmgJqWjo82PWrDq
-	tRq6H9CaowL2kWy+J1K82ZKXMK8a0DA=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1710930526; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Uacu9M9JHXgrGZx8T4ZnA5/jeWUYi98hCKExLdiTswE=;
-	b=pgcv9NHDcsId4tPYUG4FIFTciGb+EEh9RedFqboNkGDN3oZfX4O17F7vUr+Exr73PvO/3A
-	YmiL9RnZSW5VqiIzHnLrbgaB7hYzXcH91Y4ilWlXDeBtRLyzHyR8/+JwmgJqWjo82PWrDq
-	tRq6H9CaowL2kWy+J1K82ZKXMK8a0DA=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9BA68136D6;
-	Wed, 20 Mar 2024 10:28:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id TYuMI166+mW1agAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Wed, 20 Mar 2024 10:28:46 +0000
-Date: Wed, 20 Mar 2024 11:28:45 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vladimir Davydov <vdavydov.dev@gmail.com>, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, kernel@openvz.org
-Subject: Re: [PATCH] mm/memcontrol: stop resize loop if limit was changed
- again
-Message-ID: <Zfq6XaACmN2JssTW@tiehlicka>
-References: <20240320100556.463266-1-ptikhomirov@virtuozzo.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GZlTSItI"
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 0FB4420B74C1;
+	Wed, 20 Mar 2024 03:29:48 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0FB4420B74C1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1710930588;
+	bh=BtKE7O5OWVM7SyPdRoHlAAnjh2otvkVJidlO3O/WDfU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=GZlTSItIwWHGgMiPlUxG/3JoY7ecboMtleAyJDeOHnNeNygG5C+/0dyHdocD/qyOa
+	 /y64qEL1WttEJkk9kAY9uTDHnbg3mPQJqrMv0LRAs1oOq5+zYCd7U/NPVAjeDdNSCr
+	 bZv5t5hbLvmrfVu59RU6b94UXXrKOZZqp4Gz9TlY=
+From: Saurabh Sengar <ssengar@linux.microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org
+Cc: longli@microsoft.com,
+	ssengar@microsoft.com
+Subject: [PATCH v2 1/7] Drivers: hv: vmbus: Add utility function for querying ring size
+Date: Wed, 20 Mar 2024 03:29:38 -0700
+Message-Id: <1710930584-31180-2-git-send-email-ssengar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1710930584-31180-1-git-send-email-ssengar@linux.microsoft.com>
+References: <1710930584-31180-1-git-send-email-ssengar@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240320100556.463266-1-ptikhomirov@virtuozzo.com>
-X-Spam-Level: 
-X-Spamd-Bar: /
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=pgcv9NHD
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [0.48 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 TO_DN_SOME(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_TRACE(0.00)[suse.com:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[11];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 BAYES_HAM(-0.01)[45.04%];
-	 ARC_NA(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	 FROM_HAS_DN(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 FREEMAIL_CC(0.00)[cmpxchg.org,linux.dev,linux-foundation.org,gmail.com,vger.kernel.org,kvack.org,openvz.org];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Spam-Score: 0.48
-X-Rspamd-Queue-Id: B9C4420CBA
-X-Spam-Flag: NO
 
-On Wed 20-03-24 18:03:30, Pavel Tikhomirov wrote:
-> In memory_max_write() we first set memcg->memory.max and only then
-> try to enforce it in loop. What if while we are in loop someone else
-> have changed memcg->memory.max but we are still trying to enforce
-> the old value? I believe this can lead to nasty consequence like getting
-> an oom on perfectly fine cgroup within it's limits or excess reclaim.
+Add a function to query for the preferred ring buffer size of VMBus
+device. This will allow the drivers (eg. UIO) to allocate the most
+optimized ring buffer size for devices.
 
-I would argue that uncoordinated hard limit configuration can cause
-problems on their own. Beside how is this any different from changing
-the high limit while we are inside the reclaim loop?
+Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+Reviewed-by: Long Li <longli@microsoft.com>
+---
+[V2]
+- Added more details in commit message.
+- Added comments for preferred ring sizes and there values.
+- Added reviewed-by from Long Li.
 
-> We also have exactly the same thing in memory_high_write().
-> 
-> So let's stop enforcing old limits if we already have a new ones.
+ drivers/hv/channel_mgmt.c | 15 ++++++++++++---
+ drivers/hv/hyperv_vmbus.h |  5 +++++
+ include/linux/hyperv.h    |  2 ++
+ 3 files changed, 19 insertions(+), 3 deletions(-)
 
-I do see any reasons why this would be harmful I just do not see why
-this is a real thing or why the new behavior is any better for racing
-updaters as those are not deterministic anyway. If you have any actual
-usecase then more details would really help to justify this change.
-
-The existing behavior makes some sense as it enforces the given limit
-deterministically.
-
-> Signed-off-by: Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-> ---
->  mm/memcontrol.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 61932c9215e7..81b303728491 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -6769,6 +6769,9 @@ static ssize_t memory_high_write(struct kernfs_open_file *of,
->  		unsigned long nr_pages = page_counter_read(&memcg->memory);
->  		unsigned long reclaimed;
->  
-> +		if (memcg->memory.high != high)
-> +			break;
-> +
->  		if (nr_pages <= high)
->  			break;
->  
-> @@ -6817,6 +6820,9 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
->  	for (;;) {
->  		unsigned long nr_pages = page_counter_read(&memcg->memory);
->  
-> +		if (memcg->memory.max != max)
-> +			break;
-> +
->  		if (nr_pages <= max)
->  			break;
->  
-> -- 
-> 2.43.0
-
+diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+index 2f4d09ce027a..3c6011a48dab 100644
+--- a/drivers/hv/channel_mgmt.c
++++ b/drivers/hv/channel_mgmt.c
+@@ -120,7 +120,9 @@ const struct vmbus_device vmbus_devs[] = {
+ 	},
+ 
+ 	/* File copy */
+-	{ .dev_type = HV_FCOPY,
++	/* fcopy always uses 16KB ring buffer size and is working well for last many years */
++	{ .pref_ring_size = 0x4000,
++	  .dev_type = HV_FCOPY,
+ 	  HV_FCOPY_GUID,
+ 	  .perf_device = false,
+ 	  .allowed_in_isolated = false,
+@@ -140,12 +142,19 @@ const struct vmbus_device vmbus_devs[] = {
+ 	  .allowed_in_isolated = false,
+ 	},
+ 
+-	/* Unknown GUID */
+-	{ .dev_type = HV_UNKNOWN,
++	/*
++	 * Unknown GUID
++	 * 64 KB ring buffer + 4 KB header should be sufficient size for any Hyper-V device apart
++	 * from HV_NIC and HV_SCSI. This case avoid the fallback for unknown devices to allocate
++	 * much bigger (2 MB) of ring size.
++	 */
++	{ .pref_ring_size = 0x11000,
++	  .dev_type = HV_UNKNOWN,
+ 	  .perf_device = false,
+ 	  .allowed_in_isolated = false,
+ 	},
+ };
++EXPORT_SYMBOL_GPL(vmbus_devs);
+ 
+ static const struct {
+ 	guid_t guid;
+diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+index f6b1e710f805..76ac5185a01a 100644
+--- a/drivers/hv/hyperv_vmbus.h
++++ b/drivers/hv/hyperv_vmbus.h
+@@ -417,6 +417,11 @@ static inline bool hv_is_perf_channel(struct vmbus_channel *channel)
+ 	return vmbus_devs[channel->device_id].perf_device;
+ }
+ 
++static inline size_t hv_dev_ring_size(struct vmbus_channel *channel)
++{
++	return vmbus_devs[channel->device_id].pref_ring_size;
++}
++
+ static inline bool hv_is_allocated_cpu(unsigned int cpu)
+ {
+ 	struct vmbus_channel *channel, *sc;
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 6ef0557b4bff..7de9f90d3f95 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -820,6 +820,8 @@ struct vmbus_requestor {
+ #define VMBUS_RQST_RESET (U64_MAX - 3)
+ 
+ struct vmbus_device {
++	/* preferred ring buffer size in KB, 0 means no preferred size for this device */
++	size_t pref_ring_size;
+ 	u16  dev_type;
+ 	guid_t guid;
+ 	bool perf_device;
 -- 
-Michal Hocko
-SUSE Labs
+2.34.1
+
