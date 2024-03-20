@@ -1,88 +1,91 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA4B3A267
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 09:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE0411720
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 09:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710925248; cv=none; b=DExwKV53yJnBiw7YXJeyJlTtd5gVNPKpt225spRqvMm2Y+k1+8LWf3qENc2e/WoK+xpdx+W58EtS7KOwgcMkGuXKAzQCB2vaAR4oxezYDY+J+wrHf5eGSkglRVhSZKnIzwwVahCzoD6ct87FuJtilKBc+peC407Y700LtoF6G9Y=
+	t=1710925388; cv=none; b=K6VHLcDMbld5CurHfTelBf2L14a1M+4S8pOXgm3zZ9FqRcE2wrrZxZOK/e1jMbAlCz2OV96VPWPOFTB77jKPQPuLspkSK+IS+LNzN5VtSl+V2jyRF8Ky1PzUq/KPvz/AG6aL9+dJowCKELsDN+wG62pAtFJLFIdCEVNP6BoTfoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710925248; c=relaxed/simple;
-	bh=GxX4yjbT3GwdNMcd+Ct1bJeUSjEYV56Khz3rzfwa7t8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MIcRWkD2ooke4jxXkShTKgFU57B7i+UeIveAV9hPR1bb6VhRnAZ2gUTsvQ4/S1XwmzJkR/coFAb8Ec2/uotk9NPk+R/DZRE/SV8yprnLkaFydX7lbbAdW+BESDUY/f8R2/qj/g8ttA7EZYbbSUiKJ/Uq2JmOFSbvVXJU4uTWmgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RwKB+aGj; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1710925388; c=relaxed/simple;
+	bh=BZa6c0MGicxhcKWAIIPG4HIyh39wkSHV3YBPceFQLP0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NngcNgMW/RiwEq2oJCmliqwUqPzZUp3mcT/DI0BoZmQHHowhxHhxZ5Lj1VSTA8CDtLCQDsHF8pbXUGlfHCjCnk4Q/52scS3GxaELG1S3FGewB4ANf2shvyCxsPMTuEyRx/KeLv1qtvTtpluc46fHopP5hM/fN3Czl9ZGF+9W+6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk; spf=pass smtp.mailfrom=rasmusvillemoes.dk; dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b=IaS7zYhi; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rasmusvillemoes.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RwKB+aGj"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6918781a913so30439286d6.3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 02:00:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="IaS7zYhi"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a46ce2bd562so358478366b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 02:03:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710925244; x=1711530044; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X/kfxvi+pcqoUxKaQPTH3Bpr3S7uOGIOTjzRG7qFRLM=;
-        b=RwKB+aGjvpm7eBcuPr3Gnm865ospLRmCrVUBQG9ni39ylut7hbhl6nW2K81tLf8iaS
-         dl0uZtaXM7OQrAIfm54qSqggnPCL9v6pKBCd1nmOiBiFEBJeOA9YxbfdMIcY1E/zQTER
-         /sMlU75RseBNx38Nru1jLgrtZ6jBVhJVKKJ+q+yF1JYzAQc4XerRyvNZW5iMov4QEXW7
-         G9JsrIlyg7fFX4MzuxZF54vIWgdEPwr4XRxusM1lM0Q72m64v8v39Bu5ISVCbkbHAQqX
-         ilfW8HRPbLBtaaOSOTW5yKJq/1i91qPhPa5b3D9CzGSyj+qTaK/LDc7WKmjMj56DGLeY
-         P6hg==
+        d=rasmusvillemoes.dk; s=google; t=1710925384; x=1711530184; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=e853/CIeP1boPVzJEG82oNvtub+iVamjhYN4igRh6aQ=;
+        b=IaS7zYhiwdHxCCAlvqU905poz5kD2P4V9ol+h5yoNk8HHKjuJPSTmDYKh3P1x4qFkk
+         VP8MQO2jJlk6wa2jPq7KjTN1hFgmT5VOKoeZhHmTxmdd+wtG0hlZEnUbnOrJvmQ5WZV/
+         HaXsQTbgh9sdBDXlThO6PCVc+Z2wJ96qKyZls=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710925244; x=1711530044;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=X/kfxvi+pcqoUxKaQPTH3Bpr3S7uOGIOTjzRG7qFRLM=;
-        b=c3QS5arJQU0tTIgk6mInUpanknjaDP1rLOe5Cd0QHxT8DF343BNNWLq7XIAH1KIauH
-         vHpjc3kD0ED5NjXlYZELcdpyV1F0LJIkAczZ7SLrNXJVa7QIY6UAbSY7EGO4Kmg4/P4B
-         p7CYkubRLtp1x+zJyjuCuK0tMFR/j46OgrqiHEm1NFKJ5c5An8C3pgL6diruTq6opCz4
-         NZy2k8nWSL5u3h9xhc32iLuEgVmLYOCu9o1r+tBM+sNb1uiLmmlzFnj+Da4geKI8CoaI
-         7/9QTUyRGQ9JEgW6OF6uQBlYHuHoVgyohAhcwDznVk7QlHwTFk6FndcVdlFVAMf6VHp/
-         9EXA==
-X-Forwarded-Encrypted: i=1; AJvYcCUxWg87ZjsayXSMFC0+SM+CKFAn5PWMo9QriyEGZew9ywyeCyaD4c5ZOKfE74Rwxw+LSlE7ySX3FyjOoLQ2hCVELM2uolU7bcIt7TUJ
-X-Gm-Message-State: AOJu0YzSXrnzZifKZ1wyW1jdGcGFii8VE4MzG+bq7fL3drxz+hz9d0DG
-	PySNRLyOkTiv1hRPvx7RJmDa0OWu+nIfCUXcm1ElynPyW43bZ+hnWYUMnQZllJPnWyeylOtbu4g
-	HLkIMP74S25F6GyPMiLO2BCixpwFUQRhVWODY
-X-Google-Smtp-Source: AGHT+IFdknojmj33zo7DdapbICyB2mCQMV+kbQUUiXIDADNB7MmHbe6o+HzLDwjHbEm02dNXS2xHPqnBmETMecUgavw=
-X-Received: by 2002:a05:6214:183:b0:690:c334:a5ca with SMTP id
- q3-20020a056214018300b00690c334a5camr19018977qvr.59.1710925244501; Wed, 20
- Mar 2024 02:00:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710925384; x=1711530184;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=e853/CIeP1boPVzJEG82oNvtub+iVamjhYN4igRh6aQ=;
+        b=hU5Rh9qIq0SmgvrS/w6bg5TGQGshbZMfJvczKOMtHRJge8LH/SqlQqQw+c/unQQVtx
+         UKW6v1vUpMrUIMak12oStwcfhps3uLsmQ2CiBrb/IRu3iv5S9Cq59fqKACQ37WflXro6
+         solPlHWt77UFIeDmaJ0IUQ5PWaBCb78zQOpVMXRb9HDwwJEpmgRDuw1M8qrM6/qe70rA
+         MugjgWTc+ww1tPSOQsL40H9MIdL6NGwmYADFf3IxBF/A3EWNKgPSxbkUGH2vJYvw8A4+
+         e/8Z0gVuOGVKVKNcvKXceMfJY0zfC4Ws7pXSFzGXOE+1nyCkCPOu02PF6cqr2IpXRuiI
+         Gqcw==
+X-Gm-Message-State: AOJu0YwTdUKYnnVTy+TM8m/aBj0XGOG8mJjXk6VENMNYvKHMs0krmsob
+	TD4HS3CNjL9qP/3PUBnRbDEvImi5/SiK0J1VpFAvyIc8hh+7J5TUaoL20cJhOjU=
+X-Google-Smtp-Source: AGHT+IEzSIozknXdMtfg/ffmQAHJeKDwUz3ms35ZBf0kMM2VG2sU0KvBfz9FKgUnOf/x+b+e1GISkA==
+X-Received: by 2002:a17:906:264e:b0:a46:c11d:dd05 with SMTP id i14-20020a170906264e00b00a46c11ddd05mr3741140ejc.57.1710925384086;
+        Wed, 20 Mar 2024 02:03:04 -0700 (PDT)
+Received: from [172.16.11.116] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id g17-20020a17090670d100b00a46a04d7dc4sm5108801ejk.61.2024.03.20.02.03.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Mar 2024 02:03:03 -0700 (PDT)
+Message-ID: <5a6f58c5-40f3-4c89-8988-a9fee932e3ca@rasmusvillemoes.dk>
+Date: Wed, 20 Mar 2024 10:03:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240319163656.2100766-1-glider@google.com> <20240319163656.2100766-2-glider@google.com>
- <CAHk-=wh_L4gKHEo6JVZxTZ7Rppgz1b5pt2MJyJ2mZ-A8-Mp0Qg@mail.gmail.com>
-In-Reply-To: <CAHk-=wh_L4gKHEo6JVZxTZ7Rppgz1b5pt2MJyJ2mZ-A8-Mp0Qg@mail.gmail.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Wed, 20 Mar 2024 10:00:05 +0100
-Message-ID: <CAG_fn=Wms_wnbfFSD6YAmzBZKxh2anX1t=9ehPyoNE8JW-7MVw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] instrumented.h: add instrument_memcpy_before, instrument_memcpy_after
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, kasan-dev@googlegroups.com, tglx@linutronix.de, 
-	x86@kernel.org, Dmitry Vyukov <dvyukov@google.com>, Marco Elver <elver@google.com>, 
-	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cpumask: Create dedicated kmem cache for cpumask var
+Content-Language: en-US, da
+To: Dawei Li <dawei.li@shingroup.cn>, yury.norov@gmail.com,
+ andriy.shevchenko@linux.intel.com, akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org
+References: <20240319122400.399516-1-dawei.li@shingroup.cn>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+In-Reply-To: <20240319122400.399516-1-dawei.li@shingroup.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 19, 2024 at 6:52=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Tue, 19 Mar 2024 at 09:37, Alexander Potapenko <glider@google.com> wro=
-te:
-> >
-> > +/**
-> > + * instrument_memcpy_after - add instrumentation before non-instrument=
-ed memcpy
->
-> Spot the cut-and-paste.
->
->              Linus
+On 19/03/2024 13.24, Dawei Li wrote:
+> alloc_cpumask_var_node() and friends allocate cpumask var dynamically
+> for CONFIG_CPUMASK_OFFSTACK=y kernel. The allocated size of cpumask var
+> is cpumask_size(), which is runtime constant after nr_cpu_ids is
+> freezed.
+> 
+> Create a dedicated kmem cache for dynamic allocation of cpumask var.
 
-Nice catch, will fix.
+Why?
+
+> The window for creation of cache is somewhat narrow:
+> - After last update of nr_cpu_ids(via set_nr_cpu_ids())
+> - After kmem cache is available.
+> - Before any alloc_cpumask_var_node() invocations(sched_init() e.g).
+
+OK, so this sounds somewhat fragile. It's maybe correct, but I fail to
+see what is gained by this, and the commit message does not provide any
+hints.
+
+Rasmus
+
