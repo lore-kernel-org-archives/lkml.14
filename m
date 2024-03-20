@@ -1,71 +1,66 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436F212E52
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 05:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDAC11CA0
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 05:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710910918; cv=none; b=jNyogYTNUuhvTMasNvWpxKGfTn0Ysa2exUFW2DbazTCMv2piWDtPQ29vhPmeV1mRwLvoru8J8mnptKiXoliVsNSsAUWf6F9pUeOiWruIj3GqQWj0HC7PNHcwgw04C5ys9LLOFgariBQKubnbLdSywqO5bKpnHxrLYWnflsj2nKs=
+	t=1710911302; cv=none; b=dAc1/FnIufXGYOsLc6LonbpnmTypjcrW08CSF+bt4izOrm8izjEOq1D2OzWzN1dag3sJOZ/xsZlm+mg9nA6F22rAX7IgbVBrR6ZUyB6/9oHfJOaXyY0UsvnpswcQv3UPYs4vhsp3soGGlL/b+pv6raarUaJpaKG9lb+LWBBHbaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710910918; c=relaxed/simple;
-	bh=OY1yJiqGKNtzEHd+k+wwWigcHefXcqgg1Yu1bcQ78IU=;
+	s=arc-20240116; t=1710911302; c=relaxed/simple;
+	bh=A1dK1FDTClBBeiIDvehBrkcgKHtbJHgy2lmHel3n8Ls=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wn0/cMZEZnTrXDO2V5qJdoL67avQkbrZUsCA/DO0292K6sBGHgBHH5AUbzls7FKB/Gl3yscFtIs3lbmiX19Eo/FJMYRpczFm2wW1jPZuwX+d8eDsQv7H8T1dVI0g8waYEZIqoN+T5tMpIu6U3bcVzW2gjLExx4hxCpz9agctVvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c3+JZmgx; arc=none smtp.client-ip=209.85.128.47
+	 Content-Type:Content-Disposition:In-Reply-To; b=kBF2YDOje21/W9mGEzLFQHj+itS7h8rq3sJVUuvaW1ypVvsgeI8U0UZgVAiYc/k2KOB84iPjgyEUoGxv/bg0Hq8YIm7kEw6B35R3wJaTRY9fMDFKRz71AFSAL4B1Nn9MV4KLe2CF4JM8x4Zxd84phW0BKE6DLN5yPyZv6ohgzdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DuLHqj6W; arc=none smtp.client-ip=209.85.208.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c3+JZmgx"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-414676fe047so9031035e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 22:01:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DuLHqj6W"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d094bc2244so85689301fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 22:08:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710910914; x=1711515714; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1710911299; x=1711516099; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=S0B7vWKH9/N5Rr83D0ntmMC2zkFMIdP3Ld+bd82Q6BI=;
-        b=c3+JZmgxwOpNCkx47skUtLAwUXGnq6vf4ArrYKzGWhKlt3en5hwR53PjNQby5GVOJ9
-         BwYfmrS4CIygYv3hlFcUJzpNnTfXIc4vUi8srVQBpuGR6rJQPIHpaFarNYdsi9z96zfk
-         59pjkesvZXaqkJRhFA2wmRFOLkRxRoyZjr3Jxv+b0XeXr0DEaJTU9PzidsreC+yetJjG
-         JAfM6d90M1AuTHnL98Ix7p2/VSlnaKfYwvRPLsYAeyyFtNQwICOOHNbVhDWBck8CdfgO
-         rvoOHKU3M4/FA7NiDDbbatjWqzJ3yOKMtOaXdxDG2K3f8eCce6lNUcP6sEVeywJ9x2VC
-         wuOA==
+        bh=MDbezmp48NlomGRK//vO3jPNjuF0l+ROTMlkX7vEssc=;
+        b=DuLHqj6W1YbmyNs1g15iazEbCojzBV07d6eorjVbB/ca8Oc+Ju8bQj65li77j/8VKu
+         TrFotgday53zih+GRo0bq5746Y18XKfT9GEmD+pdu0yDsZtvNE0kFNsOXJwC1Osx16kL
+         FS3oVZbYuOuPtAq52ljQff4SHpA0QyYW7VnJtDR9aE3jnDuPBBeB0PK/hy15hZY00zzB
+         k449PxsDSXW2WYwgAUQlWo5USKzinkUB2UXqv1n3bCWfWcPu9nVX6lXAvlgOryqStodX
+         PecJ3cn0A//6c2inmfc309ng70/57weJoOqRl6tUqXW7q4Fj8r4+N7PJ6+JaVz9qyY5g
+         lsng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710910914; x=1711515714;
+        d=1e100.net; s=20230601; t=1710911299; x=1711516099;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=S0B7vWKH9/N5Rr83D0ntmMC2zkFMIdP3Ld+bd82Q6BI=;
-        b=qoajvC6oFIbFx7H1zq/ALHExERH7RNmLV1LrS3eaLAdueOZ+qtvI77S7nlWVzAakOG
-         cWHJt68TU80uPMToz8nWFMoUgUWa7Q6Mw2lU5c8CHcUSrbjZGFQj3U8VTlg8eo3ieZAM
-         C8Dt5l131PnuAeCoKDpnMYm2PDYpKgb90k2YPRimgP/9iDPH2yzbFtcOkMhl51RaxsMG
-         x1E9+1raSuudDMIxYndqjWSo/OTqX5Q6aE8IFT35awqIswgJLyIswbgxqYXKf8hpuBj9
-         QnexsJckJEvodRUG/RArtJKlHXZwpuYd4oXbsZzSNbjliKHunWiqZEWgCl2RSMm+JRvm
-         lQdA==
-X-Forwarded-Encrypted: i=1; AJvYcCU1eStZ2ShIimp8E++qfNM85lTQeqPGqC37OzY/D9l48wLXXs7b3l5FOeZZEligcTLgO71POow7O1lNyZ5QhdFXPM2yKvNPm7SbirBE
-X-Gm-Message-State: AOJu0YyW+Gs0Rqn1BEn7Mn+IIQdmjip+DyVA4I0hNEGP1y/CpIrf8crx
-	NteKxwOH/3gQ2J6kEjwlaOyFCio025/Pv8VtKxh+ufj+/tA9bcUgtLbLtsgPIuI=
-X-Google-Smtp-Source: AGHT+IFGGKSK87rcnJmgzexq+3rYiVKaJtZ99H0a3zsNHEKEaF3v2b0OfuXy/cpjUcYbMSTlWTKjgQ==
-X-Received: by 2002:a05:600c:3546:b0:414:ca1:6531 with SMTP id i6-20020a05600c354600b004140ca16531mr833716wmq.41.1710910914424;
-        Tue, 19 Mar 2024 22:01:54 -0700 (PDT)
+        bh=MDbezmp48NlomGRK//vO3jPNjuF0l+ROTMlkX7vEssc=;
+        b=slfDpkVcYQDEDeztasGrWtlR8f3ZLGlTDzWPKvJUw67Qd34iOJiXM2iMvVcbXksc9M
+         KqwfmHptl+WN8tWV93Rz0H9BgTTUrOjp92TJ9Rcf9wnBejd8FIsYTV8Z8su0ot0wqxnz
+         xh4Edmi1Ev+r/ATqYGSYysUkyQBQKvU92eCtxBOg1aC8ulz1R54wbdd0tZ3qF4SqYHiW
+         a8v6Mt77gDzCJJc2POoK1iG/pfWXB5+48v2gIz78hKqBdhs2ffg81leKd47e/vD8nvTg
+         Xxc6+QieSGx6IHlq+MpW5nfUD0FBmby4Dv2Cylq+WMAM+s91MeJ+fDJnMdKtG+gkxEh8
+         b7/g==
+X-Forwarded-Encrypted: i=1; AJvYcCV73KaKPZ5Se4ak0idneRgl1X7lKLBwCBZS9EmNPCemrJWYiY7/xuyyiqhp+AfRZWPTMJB4JrD9vMs5Qnpg92OwTU9jR5/BDwl79vGe
+X-Gm-Message-State: AOJu0YwK466VFdAcvb80DrqGbZpl96DsKvnJsARlbZ97NTNfJV1ZWKqu
+	aBQwi/fhUA8IvfoISP3UnOeG0T3+rJlcwSKTLIfSRLJBYfHvFW6CFvZHUPqjqII=
+X-Google-Smtp-Source: AGHT+IFHREE/lnhx8SjTOBAgPbDyrtU66YBCV4semN7SKN8NIdNLbGqeziR344GPCdUdj1AZEkyvFQ==
+X-Received: by 2002:a2e:a724:0:b0:2d5:9703:263c with SMTP id s36-20020a2ea724000000b002d59703263cmr2766745lje.4.1710911299145;
+        Tue, 19 Mar 2024 22:08:19 -0700 (PDT)
 Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id s14-20020a05600c45ce00b00414618bea7csm893210wmo.37.2024.03.19.22.01.53
+        by smtp.gmail.com with ESMTPSA id l13-20020a05600c4f0d00b0041409d4841dsm912164wmq.33.2024.03.19.22.08.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 22:01:53 -0700 (PDT)
-Date: Wed, 20 Mar 2024 08:01:49 +0300
+        Tue, 19 Mar 2024 22:08:18 -0700 (PDT)
+Date: Wed, 20 Mar 2024 08:08:15 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH net] ice: Fix freeing uninitialized pointers
-Message-ID: <facf5615-d7ac-4167-b23c-6bab7c123138@moroto.mountain>
-References: <77145930-e3df-4e77-a22d-04851cf3a426@moroto.mountain>
- <20240319124317.3c3f16cd@kernel.org>
+To: Chandra Pratap <chandrapratap3519@gmail.com>
+Cc: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
+	gregkh@linuxfoundation.org, linux-fbdev@vger.kernel.org,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	outreachy@lists.linux.dev
+Subject: Re: [PATCH] staging: sm750fb: Replace comparisons with NULL and 0
+Message-ID: <c4a5e9e8-214a-4ac0-b8ee-01a9e7a1e5f9@moroto.mountain>
+References: <20240319181735.366565-1-chandrapratap3519@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,31 +69,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240319124317.3c3f16cd@kernel.org>
+In-Reply-To: <20240319181735.366565-1-chandrapratap3519@gmail.com>
 
-On Tue, Mar 19, 2024 at 12:43:17PM -0700, Jakub Kicinski wrote:
-> On Sat, 16 Mar 2024 12:44:40 +0300 Dan Carpenter wrote:
-> > -	struct ice_aqc_get_phy_caps_data *pcaps __free(kfree);
-> > -	void *mac_buf __free(kfree);
-> > +	struct ice_aqc_get_phy_caps_data *pcaps __free(kfree) = NULL;
-> > +	void *mac_buf __free(kfree) = NULL;
+On Tue, Mar 19, 2024 at 11:47:35PM +0530, Chandra Pratap wrote:
+> Replace '(foo != NULL)' with '(foo)' and 'x != 0'
+> with 'x' to adhere to the coding standards.
 > 
-> This is just trading one kind of bug for another, and the __free()
-> magic is at a cost of readability.
-> 
-> I think we should ban the use of __free() in all of networking,
-> until / unless it cleanly handles the NULL init case.
 
-Free handles the NULL init case, it doesn't handle the uninitialized
-case.  I had previously argued that checkpatch should complain about
-every __free() pointer if the declaration doesn't have an assignment.
+In your commit message use "opt" and "*opt" instead of "foo" and "x".
 
-The = NULL assignment is unnecessary if the pointer is assigned to
-something else before the first return, so this might cause "unused
-assignment" warnings?  I don't know if there are any tools which
-complain about that in that situation.  I think probably we should just
-make that an exception and do the checkpatch thing because it's such a
-simple rule to implement.
+Removing the != NULL is fine, but the *opt != 0 should be changed to
+(*opt != '\0').  There are times where comparing against zero helps
+readability.  I wrote a blog about this, but I had forgotten the case
+with the NUL terminator...
+
+https://staticthinking.wordpress.com/2024/02/20/when-to-use-0/
 
 regards,
 dan carpenter
+
