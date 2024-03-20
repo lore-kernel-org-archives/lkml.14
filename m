@@ -1,114 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4CA54BDB;
-	Wed, 20 Mar 2024 16:15:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C35D5577E
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 16:15:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710951334; cv=none; b=UMU8Cnzfg/n2b6rDvzNpNUjoJvGUdZpnNCJef1sm86DdmbNCKDUZG9hyhxeIT3HaamJYllT9NkG0YMbT3gZO9yl09b81xKEmw+M2BOS8yQPuEEzJUX4VSaFEuyclr1lPdS1TIJ2hCjInvKOlaghhM8+ZoAM/Ly6vU7y/E1EaHKw=
+	t=1710951352; cv=none; b=QeWjVsp5Dwco3/bagTfUy+yPYWkdKC7DUWUQ+3pCNd6B3zuBeE38nWkJ+tfA0cVMKe72Lqfm9/YXVhf2Cpsrbsb3r4ga91vkE1Evs/v6F/RpgvWoJ1mlQCTXxQ0nKZJmra9zG0gAyZdpfkAzsqr029PA2PDrokvpXnirRSmdLXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710951334; c=relaxed/simple;
-	bh=ieuHVkiJ3mvxSTBYRy2oxHanwhxgK3q2OFoG5+yAQVQ=;
+	s=arc-20240116; t=1710951352; c=relaxed/simple;
+	bh=pNUTtnip1jZyKceBb2YKX7qImvQmdShebTlumYIYMq0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K95mmpF46yt9OzKCjdg+j0Oni9L92ieOwrlkSgGfoe23aRG6584ecqTspT5rXvr0g8elefCo5+xyPbaQmsRSi+aN6F71XrzDRITh34PnkHbQzmzHJudvORpJkWLdZYtI9tRXODNx/wOTXoyDQQwWYpm7O6w/YOTgCqHs4PajHYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C9PJ4h2R; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XO3JecxSkft6HcVhoBeurDS0ZNrmAMagzAARsbxkmpeI9/9f3Hz+EtxYUoUWAtoUsQ7xIPOfYAe1VbJZT2XOy8xXow+u08QX7nYvIgAqhIkYESvFChILUDnjjuWAcidX+/F83u/IGeSRYE52VSmqSLO9HOFFd3uLw4/lss3JWfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HKnqgjLg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C9PJ4h2R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 611FAC433C7;
-	Wed, 20 Mar 2024 16:15:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HKnqgjLg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53436C433C7;
+	Wed, 20 Mar 2024 16:15:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710951333;
-	bh=ieuHVkiJ3mvxSTBYRy2oxHanwhxgK3q2OFoG5+yAQVQ=;
+	s=k20201202; t=1710951351;
+	bh=pNUTtnip1jZyKceBb2YKX7qImvQmdShebTlumYIYMq0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C9PJ4h2RY6P99YTLQRRGAgHBuOSWlMhblYdFowfc+El6TXbIXtyDUKTGqG6OBwVCe
-	 Vcpb7I7GcpZKqZiujvrtk5NBa39AL6WCJVugX5zE1LHScxqtqQHlsx96fBG6qYd3VF
-	 a9aymwRdPN226FPrZqYAe2WhXFnfQMzz4SuZig7LigRlOy0BYdY6EuxoTPW3CHCc/0
-	 QfGBTg39m+l+Tkuh7uL7+xyCk7/mqFITmZPRBZl63Q3H+YomUXfQFa9qPd+htiEuiN
-	 /omcOBrFLrozCxhAqRzn0QwtnrSXhYLxT9EIOza3K8S4U9udr8EGm6ouoX/6A6rNZR
-	 jNfMsiYd3GtWg==
-Date: Wed, 20 Mar 2024 11:15:31 -0500
-From: Rob Herring <robh@kernel.org>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Sudan Landge <sudanl@amazon.com>, tytso@mit.edu, Jason@zx2c4.com,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	sathyanarayanan.kuppuswamy@linux.intel.com, thomas.lendacky@amd.com,
-	dan.j.williams@intel.com, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, graf@amazon.de, bchalios@amazon.es,
-	xmarcalx@amazon.co.uk, ardb@kernel.org,
-	benh <benh@kernel.crashing.org>
-Subject: Re: [PATCH v1 0/4] virt: vmgenid: Add devicetree bindings support
-Message-ID: <20240320161531.GA1810860-robh@kernel.org>
-References: <20240319143253.22317-1-sudanl@amazon.com>
- <23692c07-98bd-477d-b244-bba14c50352c@linaro.org>
- <38aad6c0e698c8e804694276d1762d61f2068ce8.camel@infradead.org>
+	b=HKnqgjLgUjxBUtdHMbNgQQWA8yFWDRpZxADCZYuaEvm5BIqmw1InJ6bT0ngZgN5mE
+	 OZn+OeDjrDCHp+AWtBgiCKwsdlnqkRzN4vQKtBPZ5/p1Bs0H8cQBeK3ScR6Z3Hl2wL
+	 J3zpCz4nBewVH+2s5fRGke/jRqcVs/NPlNNihN914eQA0/imPnu9NfoTqupsFjVSCZ
+	 z3eGq/O8MkIQUqO1NInI/sas+yX/NzKAX+TqXuxGeRrED1SQ/e0xnq92Jnbq8RlR+P
+	 iKTU1MW5c4uAHWtXoSO5t+DB8wGR1NZ+KeGhTDcjr0k/3FQcbq4Q2bJftOba4Xawx7
+	 D5BNqcq9ZK/XQ==
+Date: Wed, 20 Mar 2024 17:15:48 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>
+Subject: Re: [PATCH 2/2] timers: Fix removed self-IPI on global timer's
+ enqueue in nohz_full
+Message-ID: <ZfsLtMijRrNZfqh6@localhost.localdomain>
+References: <20240318230729.15497-1-frederic@kernel.org>
+ <20240318230729.15497-3-frederic@kernel.org>
+ <464f6be2-4a72-440d-be53-6a1035d56a4f@paulmck-laptop>
+ <1b5752c8-ef32-4ed4-b539-95d507ec99ce@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <38aad6c0e698c8e804694276d1762d61f2068ce8.camel@infradead.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1b5752c8-ef32-4ed4-b539-95d507ec99ce@paulmck-laptop>
 
-On Wed, Mar 20, 2024 at 01:50:43PM +0000, David Woodhouse wrote:
-> On Tue, 2024-03-19 at 16:24 +0100, Krzysztof Kozlowski wrote:
-> > On 19/03/2024 15:32, Sudan Landge wrote:
-> > > This small series of patches aims to add devicetree bindings support for
-> > > the Virtual Machine Generation ID (vmgenid) driver.
+Le Wed, Mar 20, 2024 at 04:14:24AM -0700, Paul E. McKenney a écrit :
+> On Tue, Mar 19, 2024 at 02:18:00AM -0700, Paul E. McKenney wrote:
+> > On Tue, Mar 19, 2024 at 12:07:29AM +0100, Frederic Weisbecker wrote:
+> > > While running in nohz_full mode, a task may enqueue a timer while the
+> > > tick is stopped. However the only places where the timer wheel,
+> > > alongside the timer migration machinery's decision, may reprogram the
+> > > next event accordingly with that new timer's expiry are the idle loop or
+> > > any IRQ tail.
 > > > 
-> > > Virtual Machine Generation ID driver was introduced in commit af6b54e2b5ba
-> > > ("virt: vmgenid: notify RNG of VM fork and supply generation ID") as an
-> > > ACPI only device.
-> > > We would like to extend vmgenid to support devicetree bindings because:
-> > > 1. A device should not be defined as an ACPI or DT only device.
-
-This (and the binding patch) tells me nothing about what "Virtual 
-Machine Generation ID driver" is and isn't really justification for 
-"why".
-
+> > > However neither the idle task nor an interrupt may run on the CPU if it
+> > > resumes busy work in userspace for a long while in full dynticks mode.
+> > > 
+> > > To solve this, the timer enqueue path raises a self-IPI that will
+> > > re-evaluate the timer wheel on its IRQ tail. This asynchronous solution
+> > > avoids potential locking inversion.
+> > > 
+> > > This is supposed to happen both for local and global timers but commit:
+> > > 
+> > > 	b2cf7507e186 ("timers: Always queue timers on the local CPU")
+> > > 
+> > > broke the global timers case with removing the ->is_idle field handling
+> > > for the global base. As a result, global timers enqueue may go unnoticed
+> > > in nohz_full.
+> > > 
+> > > Fix this with restoring the idle tracking of the global timer's base,
+> > > allowing self-IPIs again on enqueue time.
 > > 
-> > Virtual stuff is not a device, so your first assumption or rationale is
-> > not correct.
+> > Testing with the previous patch (1/2 in this series) reduced the number of
+> > problems by about an order of magnitude, down to two sched_tick_remote()
+> > instances and one enqueue_hrtimer() instance, very good!
 > > 
-> > Virtual stuff can be ACPI only, because DT is not for Virtual stuff.
+> > I have kicked off a test including this patch.  Here is hoping!  ;-)
 > 
-> I strongly disagree with this.
-> 
-> Discovering things is what the device-tree is *for*.
+> And 22*100 hours of TREE07 got me one run with a sched_tick_remote()
+> complaint and another run with a starved RCU grace-period kthread.
+> So this is definitely getting more reliable, but still a little ways
+> to go.
 
-DT/ACPI is for discovering what hardware folks failed to make 
-discoverable. But here, both sides are software. Can't the software 
-folks do better?
-
-This is just the latest in $hypervisor bindings[1][2][3]. The value add 
-must be hypervisors because every SoC vendor seems to be creating their 
-own with their own interfaces.
-
-
-> We don't want to add extra complexity and overhead on both host and
-> guest side to make things discoverable in a *less* efficient way.
-> 
-> The device-tree isn't just a last-resort for when we can't possibly do
-> things differently in a discoverable way. The device-tree is a first-
-> class citizen and perfectly valid choice as a way to discover things.
-> 
-> We shouldn't be forcing people to turn things into PCI devices just to
-> avoid adding DT bindings for them.
-> 
-> And we *certainly* shouldn't be directing people towards all the
-> awfulness of ACPI, and in-kernel bytecode interpreters, and all that
-> horridness, just because we don't want to use DT to... describe things.
-
-I assume you have other calls into the hypervisor and notifications from 
-the hypervisor? Are you going to add DT nodes for each one? I'd be more 
-comfortable with DT describing THE communication channel with the 
-hypervisor than what sounds like a singular function. Otherwise, what's 
-the next binding?
-
-Rob
-
-[1] https://lore.kernel.org/all/20240222-gunyah-v17-2-1e9da6763d38@quicinc.com/
-[2] https://lore.kernel.org/all/20240129083302.26044-4-yi-de.wu@mediatek.com/
-[3] https://lore.kernel.org/all/20240127004321.1902477-2-davidai@google.com/
+Right, there is clearly something else. Investigation continues...
