@@ -1,48 +1,46 @@
 Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F8276A014;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47CD6A02D;
 	Wed, 20 Mar 2024 17:20:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710955244; cv=none; b=Fs93PM3+VI4h3mx4o0ULlrDo6brBUptLO1yRjNydhbaen7a91HBZtI9VIWnfeKn0gmMH4PgnCySD65axL5m8wHIQ8yl96PvIZ4g/49SAXzx568Usf0p4+sdVqjVQA+BLXPI+6AwbwKYuQB0wY4eoVQTf0umLts7QYgO660ZbK/Y=
+	t=1710955245; cv=none; b=sMO+MstoXMj+S0cgV+MOr+XSICNHDOT3iEdYH8jgm0Jlbx+PQJ2A7dMSZgS4OAOvsLb/khPkGHZWVwl/5E91SMiLC+6VBdMfF6RCCfQi37mgQ6pX9nv8YFdv3BI8GCJFZD8Fsgi05Q7xG3weg0hidclsnpPnt0NKRk2F1cP90b8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710955244; c=relaxed/simple;
-	bh=/606eP2z2/2P76YRuiGFsmoave4pKqy70yn+c+cgOqs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Cu8Pux4HOQjMqylH16uYMdGHnuD18UtctQLdYzxPgRmaWKkF2+lyUsMd6lQ68/XqHlJ6NSSFDZS92WBzums21G8I056lY5bW9hYuad/oZ8WaygfmIt9Ov/7IQfICT55Zamen8Ia9V7SoxfHT3XX80v/gnMFwj5TqVJ1NVfi+AKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=none smtp.helo=mx0b-0016f401.pphosted.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=eu0CNpb6; arc=none smtp.client-ip=67.231.156.173
+	s=arc-20240116; t=1710955245; c=relaxed/simple;
+	bh=PXbY0Ox61cikah9PXRtM5Cq8s8wbozFkrP2zNiAE6Ag=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JF9Jk7/u+7w+x3RxVg75JcEiZOUj72U11/qtXeQbBd7q8PUjsI0JxxgzAOXQSgBRsHaVtnqgAJ/Qh6EdnBwN2W0Bvpr8rhAfc2scM9mNqr8dhXdgWknKtn8kTyN0tyKYLaAhbUQ7tyXfTzKKjLXAoTTy8Ihz+qGWPyJJVPfzY14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=none smtp.helo=mx0b-0016f401.pphosted.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=TLkdxO9Q; arc=none smtp.client-ip=67.231.156.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mx0b-0016f401.pphosted.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="eu0CNpb6"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="TLkdxO9Q"
 Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42KFAhqJ003418;
-	Wed, 20 Mar 2024 10:20:23 -0700
+	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42KFIWm8003494;
+	Wed, 20 Mar 2024 10:20:16 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type:content-transfer-encoding; s=
-	pfpt0220; bh=GuDypbNjlvBbfQVbDBTBAICh1XOtnfNIJ5il1Xye/So=; b=eu0
-	CNpb6iqhG/TDxX+fCy31mCWNYtGeXdfugbGAzF79IbC0TjSW6zt409cSoegEOBD7
-	scNsurnbA/MX847CosPw//+50v1zAjIhL+zHEBky38l+RgsSKXcek8O5jyDPbM5H
-	b5MYf0ldDHcqPIHayWdrVYzC4wWMV6Iiauk4aEu0ntTE2mRK9phqwBTaI4oS7+y+
-	dEhWLo6GGnQTkZxc4mJtTuT8oy90ftDOYMkWCxoHwYk+V3UoY2hrGRA6JnXOW2fv
-	W+EpHNf4L2UKB+CjliHEvUjwy/CYcGXWNgpdrdXSvAJqr16aL55zr9VVpNe19IbN
-	hYgoX5iUw6ZD43LPI/A==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3wxka52e38-1
+	from:to:cc:subject:date:message-id:mime-version:content-type
+	:content-transfer-encoding; s=pfpt0220; bh=gi7oWzeF3IUKlp7PFSXRd
+	A2MzG072PNShX+grViVOt8=; b=TLkdxO9Qg9o2wSxvCsvs/dxsAJHcjQpTF6R5/
+	hYhYcEYKd5RpJF0qEVGN8nFvGI79i1FKdMCZ1DKNnBwAvzoAjXUUxPbcfI3EGD4w
+	S4j1bfG3rwTSplIFQuJ1BCpQJWYmF4qflHVYUiTfbv+ab1u6lbktla3pp7fvilD8
+	jgkMiIB62WlAaY0CED9mf0GJOcOPgrpgNZ1mpIP5NovWg66e8KA2GmKuodOR9by6
+	+TJbs//Kz9s3yFWq5zYXstJPf/sh6am4i0VEjvYe2xdiHeX19uMydqpoiRAea5TM
+	i6s6WxzGjsy7C2LQNxskjyeDlOKpI8UsGyUjik+Br2JXDrSZA==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3wxka52e2y-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 Mar 2024 10:20:23 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+	Wed, 20 Mar 2024 10:20:16 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.32; Wed, 20 Mar 2024 10:20:22 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1258.32 via Frontend
- Transport; Wed, 20 Mar 2024 10:20:22 -0700
+ 15.2.1258.32; Wed, 20 Mar 2024 10:20:14 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1258.32 via Frontend
+ Transport; Wed, 20 Mar 2024 10:20:14 -0700
 Received: from dc3lp-swdev041.marvell.com (dc3lp-swdev041.marvell.com [10.6.60.191])
-	by maili.marvell.com (Postfix) with ESMTP id E007A3F7051;
-	Wed, 20 Mar 2024 10:20:18 -0700 (PDT)
+	by maili.marvell.com (Postfix) with ESMTP id 807B83F7051;
+	Wed, 20 Mar 2024 10:20:11 -0700 (PDT)
 From: Elad Nachman <enachman@marvell.com>
 To: <taras.chornyi@plvision.eu>, <davem@davemloft.net>, <edumazet@google.com>,
         <kuba@kernel.org>, <pabeni@redhat.com>, <andrew@lunn.ch>,
@@ -51,12 +49,10 @@ To: <taras.chornyi@plvision.eu>, <davem@davemloft.net>, <edumazet@google.com>,
         <dkirjanov@suse.de>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 CC: <enachman@marvell.com>
-Subject: [PATCH v2 2/5] net: marvell: prestera: enlarge fw restart time
-Date: Wed, 20 Mar 2024 19:20:05 +0200
-Message-ID: <20240320172008.2989693-3-enachman@marvell.com>
+Subject: [PATCH v2 0/5] Fix prestera driver fail to probe twice
+Date: Wed, 20 Mar 2024 19:20:03 +0200
+Message-ID: <20240320172008.2989693-1-enachman@marvell.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240320172008.2989693-1-enachman@marvell.com>
-References: <20240320172008.2989693-1-enachman@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,53 +61,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: mrIRt4thHQ8kevDmX95toSMu1m7rpiO4
-X-Proofpoint-ORIG-GUID: mrIRt4thHQ8kevDmX95toSMu1m7rpiO4
+X-Proofpoint-GUID: gXYJgsAoS-P74PUf3eptC7CpdzJKvQCG
+X-Proofpoint-ORIG-GUID: gXYJgsAoS-P74PUf3eptC7CpdzJKvQCG
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-03-20_10,2024-03-18_03,2023-05-22_02
 
 From: Elad Nachman <enachman@marvell.com>
 
-Increase firmware restart timeout, as current timeout value of 5 seconds
-was too small, in actual life it can take up to 30 seconds for firmware
-to shutdown and for the firmware loader to shift to the ready to receive
-firmware code state.
+Fix issues resulting from insmod, rmmod and insmod of the
+prestera driver:
 
-Reported-by: Köry Maincent <kory.maincent@bootlin.com>
-Closes: https://lore.kernel.org/netdev/20240208101005.29e8c7f3@kmaincent-XPS-13-7390/T/
-Fixes: 4c2703dfd7fa ("net: marvell: prestera: Add PCI interface support")
-Tested-by: Kory Maincent <kory.maincent@bootlin.com>
-Signed-off-by: Elad Nachman <enachman@marvell.com>
----
- drivers/net/ethernet/marvell/prestera/prestera_pci.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+1. Call of firmware switch HW reset was missing, and is required
+   in order to make the firmware loader shift to the correct state
+   needed for loading the next firmware.
+2. Time-out for waiting for firmware loader to be ready was too small.
+3. memory referencing after freeing
+4. MAC addresses wrapping
+5. Missing SFP unbind (phylink release) of a port during the port release.
 
-diff --git a/drivers/net/ethernet/marvell/prestera/prestera_pci.c b/drivers/net/ethernet/marvell/prestera/prestera_pci.c
-index 35857dc19542..2caa33d195ab 100644
---- a/drivers/net/ethernet/marvell/prestera/prestera_pci.c
-+++ b/drivers/net/ethernet/marvell/prestera/prestera_pci.c
-@@ -24,6 +24,11 @@
- #define PRESTERA_FW_ARM64_PATH_FMT "mrvl/prestera/mvsw_prestera_fw_arm64-v%u.%u.img"
- 
- #define PRESTERA_FW_HDR_MAGIC		0x351D9D06
-+/* Timeout waiting for firmware CPU to reboot and restart
-+ * the firmware loading software layer, hence becoming
-+ * ready for the next firmware downloading phase:
-+ */
-+#define PRESTERA_FW_READY_TIMEOUT_MS	30000
- #define PRESTERA_FW_DL_TIMEOUT_MS	50000
- #define PRESTERA_FW_BLK_SZ		1024
- 
-@@ -765,7 +770,7 @@ static int prestera_fw_load(struct prestera_fw *fw)
- 
- 	err = prestera_ldr_wait_reg32(fw, PRESTERA_LDR_READY_REG,
- 				      PRESTERA_LDR_READY_MAGIC,
--				      5 * MSEC_PER_SEC);
-+				      PRESTERA_FW_READY_TIMEOUT_MS);
- 	if (err) {
- 		dev_err(fw->dev.dev, "waiting for FW loader is timed out");
- 		return err;
+v2:
+  1) Split first patch to firmware call for switch HW reset and to
+     increasing of firmware loader wait to be ready timeout
+  2) Explain why is switch HW reset call to the firmware required
+     before shutdown in commit message, and fix wording
+  3) Use a simpler bitwise-and on the last byte of the base MAC address
+     instead of randomizing again the entire MAC address.
+     reflect that change in the commit message, and explain why it is
+     needed (switch HW implementation requirement).
+  4) Add Fixes Tags to all commits.
+  5) For timeout enlargement commit, fix wording in comment and move
+     timeout units to milliseconds.
+  6) Add Tested-By tags.
+  7) Add patch to call prestera_port_sfp_unbind() from
+     prestera_destroy_ports() in order to release phylink.
+
+Elad Nachman (5):
+  net: marvell: prestera: fix driver reload
+  net: marvell: prestera: enlarge fw restart time
+  net: marvell: prestera: fix memory use after free
+  net: marvell: prestera: force good base mac
+  net: marvell: prestera: unbind sfp port on exit
+
+ drivers/net/ethernet/marvell/prestera/prestera_hw.c       | 8 ++++++++
+ drivers/net/ethernet/marvell/prestera/prestera_hw.h       | 1 +
+ drivers/net/ethernet/marvell/prestera/prestera_main.c     | 5 ++++-
+ drivers/net/ethernet/marvell/prestera/prestera_pci.c      | 7 ++++++-
+ drivers/net/ethernet/marvell/prestera/prestera_router.c   | 1 -
+ .../net/ethernet/marvell/prestera/prestera_router_hw.c    | 1 -
+ 6 files changed, 19 insertions(+), 4 deletions(-)
+
 -- 
 2.25.1
 
