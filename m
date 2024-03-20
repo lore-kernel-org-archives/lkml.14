@@ -1,140 +1,110 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C2540866;
-	Wed, 20 Mar 2024 15:12:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220D6524B7;
+	Wed, 20 Mar 2024 15:12:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710947562; cv=none; b=rnOA2DUXrIFtlf5VeFloe1f887zWqh3WPYJ2KzVR2Mw8OCnJLqIo8T9JQgo1yusGwhYfp3aqpzeYcYRGHX+dtp8q9jJV+PlffRgNxGhwpysy5m2pgAQw4dZUgzjN3L8OEmVT7l2GX+lbQfqJf9NcT5pREkoUBQG4JdAkbHiMbfg=
+	t=1710947566; cv=none; b=KC0anEdz6P07IgA8alQM9ftOGYI9B4ZHorbQPzFDx6XQqRmXF42+BEI1Lxu9SBIoahveSllEKSOV/i8Jna3w+FcTig5OJcUQQPr37rR2RD5egUbBAmuSq2LNG6f3J4jrzI5i9vY1uZvyJnsAUeXusvduaZUf4LwVWskK9/JDBpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710947562; c=relaxed/simple;
-	bh=348HASSEk8QxvS/erlMJDq6aP8awionNlExKtmUlpmY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UFvvucAifK9uaauaQT0S0viXJTulvLtBE2U6ra/Ug7/8jl1mxMCYL71dg55WShZY1lMwYNfODshVrHQtMdobSXtWcESbMjAfi9FEhdxyNVr/OH9jelwzqJlpKK19sVmLsipqTXPyhQFX0VtCJad8rpWb57Sjih/wcDVRzdV1EuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hsSWeJj6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=m0sgJUSK; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1710947566; c=relaxed/simple;
+	bh=lujk9lU125wCesb290Yfcege4U2BvoIEq9CjFfIpdGo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PL9a9zllMnnt2qzZGeVYPlO/6kndWqAA2tqoeOcENlI5eVF1JXb1dcelq4tdp4swD7ejWOUVJjt9gFDlgg3k9MK+DY7ljxGuMiglLOY2AxIe3XEMvMMjgCPKa1IC4batwIh8ahmHVZRVnj+UmMc7trio52SGrdyuXp8tEscRHDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bd8HcGUC; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hsSWeJj6";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="m0sgJUSK"
-Date: Wed, 20 Mar 2024 16:12:35 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1710947557;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LqY42itfFZLfggmIMz0Q0EsnZ8t+OvYnRDCYFxlevL8=;
-	b=hsSWeJj6TrjiUW12brMWme8K6vVyTafHuy7VucCN2pHD7oP9IzsRSDYDbMRyKKiW+rpe0K
-	0lQTuaY8Gb0C0agF9+dqf19jbIktNHJdaOmSwN1z0PoH7lxCqSXYtzkONRDQr1sOv1ui1B
-	zl7O3qNhZ//OQ0iXLcHOW8uJtC7szpRnetpo3uoOMhOVhnoyIGU6vhsgIhytRz2hLI+dNC
-	2UWzyk8c3b+4QBNjt1fpE0ulqdZmzSEJI9E4du7A5tJEuNIZhhpzIAlHXvHZvqzWf+L71I
-	zVixRX82UFTkA/TWt2vANyOu/DUYUvfha8Eq6+0gdHdqm5+WoonfcpwUTy/+jw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1710947557;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LqY42itfFZLfggmIMz0Q0EsnZ8t+OvYnRDCYFxlevL8=;
-	b=m0sgJUSKkUfQ2JAu2rnH2dWsfJHsEXLemQ6lVHKz3ifzzl4lFVr09Cu4Pgzt9uE+JBxc9q
-	17j4Lrw6ww0J7KAg==
-From: Nam Cao <namcao@linutronix.de>
-To: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: tglx@linutronix.de, Paul Walmsley <paul.walmsley@sifive.com>,
- samuel@sholland.org, Marc Zyngier <maz@kernel.org>, guoren@kernel.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH v2] irqchip/sifive-plic: enable interrupt if needed
- before EOI
-Message-ID: <20240320161235.7e6916d9@namcao>
-In-Reply-To: <mhng-2ab049d5-bab9-4d62-8d68-a7159a987f12@palmer-ri-x1c9>
-References: <87wmr8hd7j.ffs@tglx>
-	<mhng-2ab049d5-bab9-4d62-8d68-a7159a987f12@palmer-ri-x1c9>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bd8HcGUC"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d29aad15a5so84005451fa.3;
+        Wed, 20 Mar 2024 08:12:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710947563; x=1711552363; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VKDCvcnWgS98kbw0fYidYmjqYC/LQ8RqbNoxwppD2oU=;
+        b=bd8HcGUCNjxPwF27y6YU5P4iKp7np6yt2qd3MfucgS0fAFj1TqD+w+ggkbx44VZhWX
+         Gs0sE7zy2D+9+p9+bV2q9O7sj55pMpIxxYpPfqOSeBfoTX9oqGxtf3X2k27nGL0EU96t
+         tAUb5l3erIUTMwcPcCn/x4pSGPAQi5cV+v0xB39pz8Jmhk3IaC03bAEWpmKBX7rnKiCu
+         qtyERWlHZ6eKAlaC5MHJ5m4ajDVwjktsHxlyRW60aQyzvakbbvNlcKAPoo2dftmM1jzK
+         tSOJDlUzzfZJjBJhwHjOtKU+jrhMrhVbPCz9t5ea9SM5dSP4WorvbzTp2wdqx54ilbz0
+         7c7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710947563; x=1711552363;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VKDCvcnWgS98kbw0fYidYmjqYC/LQ8RqbNoxwppD2oU=;
+        b=MaUeNkWmg1AgOMmNnucX/dXXnJuMAqlO3p0cYMf7TuTU550gvzPdVLNhm2ObWDVdx6
+         VK/jaBB26BDuR3a1CXSefFnzvwqVsdSa+3535ppaXUvpTfmoAT+NjR2CpyN0Mz4U3xB5
+         x/7M5KuE2kEXnQnm8sIyt8XWkOZ09LSf5zhCtrf4zNiD6YlNUJ8rAuOSndTLJ4YzcSFo
+         J/45zTAEPCFJhrmeDGS/lsh4uZblyBmCessxYOLwh5f21HYeL2sjoVNv83Emw2To+iFe
+         RbViFJvcd4oeWtl1ItFZeeKREA/sANUc41joUklaRik5Oyj+a35XqL+D0vPiFf6muJTM
+         XFTg==
+X-Forwarded-Encrypted: i=1; AJvYcCX+o3MWR+62eGWPBBO30G952fzM2NjjUx1+mfo6pfTBGu3FETXh3WW3Xgnr1ypu0NNp2VeA1jPn5e8Zmin0z//1VZ1tdZJtllaxBoWQwhJe/gBN5rshpxFl72oH/LsBEjztPVznJI0ozA==
+X-Gm-Message-State: AOJu0YyQAzf76AqrZDLladr1LRXgGgxfIw/Fff3Wa8MeP9WjCoZNI2Kv
+	tr9V5/LFYtrW8yz6oUkb+VgWuJUtJdT3Z08yqs2DyQBQUS9j6UI9
+X-Google-Smtp-Source: AGHT+IFT9VgVVUGrEsXx4hdX1Xure9Rf4dbvEDYWuckKrrAkroGtk3moQU6iBZ09MUSIgYCXGLSHqQ==
+X-Received: by 2002:a2e:be09:0:b0:2d3:f095:ff2a with SMTP id z9-20020a2ebe09000000b002d3f095ff2amr12648201ljq.47.1710947563034;
+        Wed, 20 Mar 2024 08:12:43 -0700 (PDT)
+Received: from ?IPV6:2001:999:708:5b57:30d6:2195:bb7b:bb94? ([2001:999:708:5b57:30d6:2195:bb7b:bb94])
+        by smtp.gmail.com with ESMTPSA id u22-20020a2e8456000000b002d51e0b73aesm825619ljh.25.2024.03.20.08.12.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Mar 2024 08:12:42 -0700 (PDT)
+Message-ID: <24792e21-afcf-489f-a47b-01f88721ea5a@gmail.com>
+Date: Wed, 20 Mar 2024 17:14:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 07/13] ASoC: ti: davinci-i2s: Add TDM support
+To: Bastien Curutchet <bastien.curutchet@bootlin.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, herve.codina@bootlin.com,
+ christophercordahi@nanometrics.ca
+References: <20240315112745.63230-1-bastien.curutchet@bootlin.com>
+ <20240315112745.63230-8-bastien.curutchet@bootlin.com>
+ <9d123584-1feb-404b-890f-2da694cf56d5@gmail.com>
+ <f2d8715d-a1ad-45a4-952f-a702b29740be@bootlin.com>
+Content-Language: en-US
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+In-Reply-To: <f2d8715d-a1ad-45a4-952f-a702b29740be@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 20/Mar/2024 Palmer Dabbelt wrote:
-> On Tue, 13 Feb 2024 02:26:40 PST (-0800), tglx@linutronix.de wrote:
-> > Nam!
-> >
-> > On Wed, Jan 31 2024 at 09:19, Nam Cao wrote:  
-> >> RISC-V PLIC cannot "end-of-interrupt" (EOI) disabled interrupts, as
-> >> explained in the description of Interrupt Completion in the PLIC spec:
-> >>
-> >> "The PLIC signals it has completed executing an interrupt handler by
-> >> writing the interrupt ID it received from the claim to the claim/complete
-> >> register. The PLIC does not check whether the completion ID is the same
-> >> as the last claim ID for that target. If the completion ID does not match
-> >> an interrupt source that *is currently enabled* for the target, the
-> >> completion is silently ignored."
-> >>
-> >> Commit 69ea463021be ("irqchip/sifive-plic: Fixup EOI failed when masked")
-> >> ensured that EOI is successful by enabling interrupt first, before EOI.
-> >>
-> >> Commit a1706a1c5062 ("irqchip/sifive-plic: Separate the enable and mask
-> >> operations") removed the interrupt enabling code from the previous
-> >> commit, because it assumes that interrupt should already be enabled at the
-> >> point of EOI. However, this is incorrect: there is a window after a hart
-> >> claiming an interrupt and before irq_desc->lock getting acquired,
-> >> interrupt can be disabled during this window. Thus, EOI can be invoked
-> >> while the interrupt is disabled, effectively nullify this EOI. This
-> >> results in the interrupt never gets asserted again, and the device who
-> >> uses this interrupt appears frozen.  
-> >
-> > Nice detective work!
-> >  
-> >> Make sure that interrupt is really enabled before EOI.
-> >>
-> >> Fixes: a1706a1c5062 ("irqchip/sifive-plic: Separate the enable and mask operations")
-> >> Cc: <stable@vger.kernel.org>
-> >> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> >> ---
-> >> v2:
-> >>   - add unlikely() for optimization
-> >>   - re-word commit message to make it clearer
-> >>
-> >>  drivers/irqchip/irq-sifive-plic.c | 8 +++++++-
-> >>  1 file changed, 7 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-> >> index e1484905b7bd..0a233e9d9607 100644
-> >> --- a/drivers/irqchip/irq-sifive-plic.c
-> >> +++ b/drivers/irqchip/irq-sifive-plic.c
-> >> @@ -148,7 +148,13 @@ static void plic_irq_eoi(struct irq_data *d)
-> >>  {
-> >>  	struct plic_handler *handler = this_cpu_ptr(&plic_handlers);
-> >>
-> >> -	writel(d->hwirq, handler->hart_base + CONTEXT_CLAIM);
-> >> +	if (unlikely(irqd_irq_disabled(d))) {
-> >> +		plic_toggle(handler, d->hwirq, 1);
-> >> +		writel(d->hwirq, handler->hart_base + CONTEXT_CLAIM);
-> >> +		plic_toggle(handler, d->hwirq, 0);  
-> >
-> > It's unfortunate to have this condition in the hotpath, though it should
-> > be cache hot, easy to predict and compared to the writel() completely in
-> > the noise.  
+HI Bastien,
+
+On 20/03/2024 09:31, Bastien Curutchet wrote:
+>>> +    if ((dev->tdm_slots || dev->slot_width) &&
+>>> +        ((fmt & SND_SOC_DAIFMT_CLOCK_PROVIDER_MASK) !=
+>>> SND_SOC_DAIFMT_BP_FC)) {
+>>> +        dev_err(dev->dev, "TDM is only supported for BP_FC format\n");
+>>> +        return -EINVAL;
+>>
+>> I think this is not a valid statement, Fsync can be generated internally
+>> or coming from external source in TDM mode also.
+>>
 > 
-> Ya, I think it's fine.
+> My hardware allow me to only test BP_FC so I wished to put some
+> 'barriers' in front of untested things.
+
+I don't see restrictions on the other changes affecting this to be lifted.
+I would allow TDM for full clock provider mode also.
+
 > 
-> I guess we could try and play some tricks.  Maybe hide the load latency 
-> with a relaxed writel and some explict fencing, or claim interrupts when 
-                                                     ^ you mean complete?
-> enabling them.  Those both seem somewhat race-prone, though, so I'm not 
-> even sure if they're sane.
+> 
+> Best regards,
+> Bastien
 
-The latter option is what I also have in mind. Just need to make sure the
-interrupt is masked and we should be safe. Though there is the question of
-whether it's worth the effort.
-
-I may do that one day when I stop being lazy.
-
-Best regards,
-Nam
-
+-- 
+Péter
