@@ -1,104 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7783FE23;
-	Wed, 20 Mar 2024 12:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797D940873;
+	Wed, 20 Mar 2024 12:46:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710938812; cv=none; b=fkvXVtgKvCkyEln0HpFkRitpIrFl8kZu8wmj0hIoC5mB64+HNdwfrMeVZ5BTBJxgvPKH9iXsxKWN3DAGkG0JJeu8QyYx0hQ1cK3dEVnzQ2HL3VG1Fa2R2L4yW3E3Ar3nlyZQcUpPxKk40Z5TZJFjavykrSsSyyNROCfuL3HPs8c=
+	t=1710938818; cv=none; b=bMoMf2O4tAYOISsa6133eTPCZ/B29OmYviizSoIR1MIhNeIvC33e+zEOF5s03Z9dUblPfh2ST1N5Meo9kEwINV4BOTtWvOQzKF6VnQ5nPVK3C6oq6o8g+TbjS+NVoeBTND5D0XNVh1gWPFN2As4+fBYL/hm0UPotHJM9e+1dXM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710938812; c=relaxed/simple;
-	bh=/7p8GXU57n2CqgDBwvg1L0/7Jk+R2NftaczecrTwYJE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=cE48WxAmVNXouTBm9GYzSMPcIIVAX3VQJRVg+oZLT0vwXQVgik/JzVyqBBfBGE37vPC67N231smizS6P2DaLDeJZnBqe7WxqoFDEqx4G+9dLWU/d+Jb3T/Mhkv0so9Fcc7o87Dm/B/auUOIKTPUTR2BaXN8Fo6FUuKQidX4VyiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C+pEt8aL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710938818; c=relaxed/simple;
+	bh=qG8vU2VNbKP5oWa019GPK79bBq9y97fVA9aDgoKPkbw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OAeGO6VEizePmcmMGRBtxhLzF4diQDvJ5Hux/QvCtW4B81eToE9sT6J3c3yXbETgidFAaofuz/Ui7xGbcmxNe5NjB0bwybxbJeYNN6W8HJJGMp+pta9w6ze0mQsPX/o3OhaT6RIS3s1lyJ/ob65vDDqQABPmke9OAIhM5W/TtmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=elDQzjL5; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C+pEt8aL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86D05C43390;
-	Wed, 20 Mar 2024 12:46:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710938812;
-	bh=/7p8GXU57n2CqgDBwvg1L0/7Jk+R2NftaczecrTwYJE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=C+pEt8aLs3Hd/KuKXxjjepyLmcPVeBXwPeOyFEfpDSc4joKEUKFzxoDelaOyP57pI
-	 lkh9HfHFERU2KT5PjtbjQ1l6wuIWu4/SoHtJ23jNau6FqFCLwGVBwlDB13wL8aGFdP
-	 WOvbeg4uK9IT4OZkihQ1/g7RXi6qqu6YIBM/EgbRhEKY3V71ANSV9kqWxlc8CY5bh1
-	 nmoZ7WrgHRmkowYxGlNHdt7RtsLr55Kse0/IEM/axjuwSItXcqD1tAKHlar/CTQMyc
-	 DwuiFwemIUk43lQixezmqQo0fumOV0ZoPjxwALGrCMPZfGmMgLo52XkcIdAVbIhELk
-	 /mWtzjPKbLq+g==
-Date: Wed, 20 Mar 2024 21:46:48 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Ye Bin <yebin10@huawei.com>
-Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
- <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 3/8] tracing/probes: support '%pd' type for fprobe
-Message-Id: <20240320214648.a805dbd31fef4452b87d70c1@kernel.org>
-In-Reply-To: <20240315065540.1181879-4-yebin10@huawei.com>
-References: <20240315065540.1181879-1-yebin10@huawei.com>
-	<20240315065540.1181879-4-yebin10@huawei.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="elDQzjL5"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e04ac4209eso14968205ad.1;
+        Wed, 20 Mar 2024 05:46:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710938817; x=1711543617; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gSN+FDXXyYc0p+FXZb4g9T/TuLHmj5IB4QRgcl+NvwM=;
+        b=elDQzjL528QB/K8rig1yfGrw/Uv9MNBjZX8/tH25ynCNklf+hlvIRReFQQ6lbTs9MN
+         /cyeL1AZF3ifTdCgdZqLZ+KnALE94flw0G+XzHYGVdm3bk9FjXvjrkuysp7NIj092h4O
+         GnVrONVJmLq2en1rU+UGR9INh2O1RAsHg8QpDLVHNwWTNA6jrNttDAAJ62rsnbUc8TXj
+         13/jThCsVzMSZm/MCzlf7Crryo7e+DGemPaOBb/OEj4PavAp/gJZ4R/aQdXrBw0qkdnT
+         tvDIAjeVueJCwe7QbgtMYhAp9HKUjPfE+z0cBwfXHDch2Krmm8JMUWJ2Po/7uorteAVo
+         J5/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710938817; x=1711543617;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gSN+FDXXyYc0p+FXZb4g9T/TuLHmj5IB4QRgcl+NvwM=;
+        b=VT7CxjTdYH9B3NApLmLcG84NsO5DDRS1ZZYrDbHjU5tLTEzfPfN329kg14vN73wObP
+         5NCku0Hkq/c9Yf9McC+VsBSeMvt+B985E/PJYXX6Ry/9fhfPSVIgRtmrlRMDibmI0NHk
+         AICIQij9n/T4DLGWwoNv1VkxQprw38kt2aJXtmUPpQPfBoSJBSzzWBWUHsVGpf1lJNdE
+         6IS1O0ZEUHzGX3Egq0FqaoqFGpOEnnkikXJaiPsCvRgsHIpPIiTQ7+pJxMFXptmtY9SC
+         1RkCNIReHLo8V0u9Amyi7c0wiZ692zoUkzDqerwsGdLQsR2CBe5CsJYpaeFYyOD3PwLY
+         jpSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW4MjhcX7DE5NJ/twuw3mwPRM1lrtUOnDg8JbS9TyHtX6qxx8kPepY62DdKa6LkwlO0VjfLKbawag0ckwiU4ZgmlJ0jXJsPx4AImXnnghG+tzGKTxMb38DF2X0OWl4NXPUMfG8m4igIAA==
+X-Gm-Message-State: AOJu0YxSooOwae+CVNmj/RIe3BvyFtt7HBSX3BMJAXDgl8/23oGT0gwv
+	+CeyW5IWVu4ceoRVhzFn4GEM94qOi9wzvb/1etlHxsY0NNBgN+4q
+X-Google-Smtp-Source: AGHT+IGBSLCxUJjMvyQEMyZhLnm6rU96mG5p6AlorUhB5IfhmOkGeiS+w67cbCMG3pv6iors13f0Bw==
+X-Received: by 2002:a17:902:cccd:b0:1e0:2a4b:e51b with SMTP id z13-20020a170902cccd00b001e02a4be51bmr10253211ple.32.1710938816881;
+        Wed, 20 Mar 2024 05:46:56 -0700 (PDT)
+Received: from localhost.localdomain (FL1-125-193-23-126.chb.mesh.ad.jp. [125.193.23.126])
+        by smtp.gmail.com with ESMTPSA id s14-20020a170902ea0e00b001dda32430b3sm13441004plg.89.2024.03.20.05.46.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Mar 2024 05:46:56 -0700 (PDT)
+From: INAGAKI Hiroshi <musashino.open@gmail.com>
+To: pavel@ucw.cz,
+	lee@kernel.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org
+Cc: linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	INAGAKI Hiroshi <musashino.open@gmail.com>
+Subject: [PATCH 0/2] dt-bindings: leds: add LED_FUNCTION_* mainly for router devices
+Date: Wed, 20 Mar 2024 21:43:15 +0900
+Message-ID: <20240320124431.221-1-musashino.open@gmail.com>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Ye,
+This patch series adds some LED_FUNCTION_* definitions mainly for router
+devices.
+Those definitions are useful for OpenWrt or something.
 
-BTW, if you have a chance, please squash [1/8] to [3/8] patches
-into 1 patch. There is no reason to split these since these are
-a local(= the same subsystem) function implementation and callers.
+INAGAKI Hiroshi (2):
+  dt-bindings: leds: add LED_FUNCTION_MOBILE for mobile network
+  dt-bindings: leds: add LED_FUNCTION_SPEED_* for link speed on LAN/WAN
 
-Thank you,
-
-On Fri, 15 Mar 2024 14:55:35 +0800
-Ye Bin <yebin10@huawei.com> wrote:
-
-> Support print type '%pd' for print dentry's or file's name.
-> 
-> Signed-off-by: Ye Bin <yebin10@huawei.com>
-> ---
->  kernel/trace/trace_fprobe.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-> index 7d2ddbcfa377..988d68e906ad 100644
-> --- a/kernel/trace/trace_fprobe.c
-> +++ b/kernel/trace/trace_fprobe.c
-> @@ -976,6 +976,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
->  	char gbuf[MAX_EVENT_NAME_LEN];
->  	char sbuf[KSYM_NAME_LEN];
->  	char abuf[MAX_BTF_ARGS_LEN];
-> +	char *dbuf = NULL;
->  	bool is_tracepoint = false;
->  	struct tracepoint *tpoint = NULL;
->  	struct traceprobe_parse_context ctx = {
-> @@ -1086,6 +1087,10 @@ static int __trace_fprobe_create(int argc, const char *argv[])
->  		argv = new_argv;
->  	}
->  
-> +	ret = traceprobe_expand_dentry_args(argc, argv, &dbuf);
-> +	if (ret)
-> +		goto out;
-> +
->  	/* setup a probe */
->  	tf = alloc_trace_fprobe(group, event, symbol, tpoint, maxactive,
->  				argc, is_return);
-> @@ -1131,6 +1136,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
->  	trace_probe_log_clear();
->  	kfree(new_argv);
->  	kfree(symbol);
-> +	kfree(dbuf);
->  	return ret;
->  
->  parse_error:
-> -- 
-> 2.31.1
-> 
-
+ include/dt-bindings/leds/common.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.25.1
+
