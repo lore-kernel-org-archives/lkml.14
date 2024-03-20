@@ -1,134 +1,110 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D747A381AA
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 22:35:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B34585C58
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 22:36:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710974142; cv=none; b=dCxZARgu1nqh1NIScFarHbMxVYBk6OQRDECyg9UpgoWAOF8Q1KpCyL8jQsyMJ/QJ5c1DhWw/gHOhg85AfUrtxXUXJ/yY58ijiAFVBBjA3ttoY6hRMQL06odmUasNtE0phB/3BJIOBhdHggAf5Vu8ohLATYWJvMofUGBHoZyRJh4=
+	t=1710974172; cv=none; b=r6P34ycL74pcYpK+/m0xb+3f3xEqj7fgV2ow219VIDRhoYZerNuA8hGOoC32i8MFNB8THx7l56y2klqik49UsdCimUKvbmkXykTmdOuEJjMSpwLfAtVYlRwG226zYGk8hUNMdt44IJvhZrvwv5XwqMt34yh12Nlj7qtCsxvs5d0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710974142; c=relaxed/simple;
-	bh=NMlbaJEt7YuPuHyd8puVAOBb7ZGjFfwrKm2bJ1oJU84=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QnjE9WS/JBYz7q+GgGRsB1UIfcY/zDSI2SY8O2IgewXLqiJlW7xRdC4YUr4rxqWg9Ci+q8frBUMeCXL9LLMdEvuSoZ5ABLjuyAAfc8iFbCPdSM3rBMZ5O4pJjNhOaeZYi26KsaB4haPeRvvF3u3amFx7wgZHQZgwiHIwqpf8izA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eV/obVnn; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1710974172; c=relaxed/simple;
+	bh=FrDJYOWwf0Ic6PWmCehY4eGVyxmoLrR6fV2hXhRI9/Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Hvq0SbpbA/Me3MYc1jnn0UXSnBRrUREgxDjHirapVYDHiHyzm8kMfJel/sa5nmVn8ZMazEOaI/U/5ot3qHMllxDHyQQbZSMcsd5F6WyBHC1bPRZiP+Q7pPf2c4Cxo0lYMVwADwnoJdaaWC8rM5bWlIEWIcgpRk0KgzM7PHggxks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=ER8oSDVy; arc=none smtp.client-ip=192.19.144.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eV/obVnn"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d4541bf57eso4974891fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 15:35:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710974139; x=1711578939; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n/Eqc8JOcHZY7IXZvTiJ/8bJTfQGWaXx+KUSs3MCDdw=;
-        b=eV/obVnn+pkRFC3DIHtOu5DiaFg9XNthy/K/L8aCgvXkkVDNtcfuWph3MLxuKV98UX
-         M0JYxVfXuG+JJokGK4wic7VpBuTRAZOWTbXrsPtAKPSUtBcw8TBRijyUyponujSD3QS2
-         +Z2nqUTZmEvsKLFJyNZoig9Vr/F5mxjH3UqxHkK+w0MUE5HqWbGoWGmVjZWB8gyKoLCi
-         lTXr6JXgp1RRCl7og/nEiCyZXQbkHWWGQvvUavvB5FvqthlhPN7NcPPCIL0oLeCvqx81
-         VsqJtBQXQE0v88j4tshpdM8NspKjyTVDY7oIIRJHurS42m2GpMGgXR8mx/Ry+Y+TpaZ/
-         XoEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710974139; x=1711578939;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=n/Eqc8JOcHZY7IXZvTiJ/8bJTfQGWaXx+KUSs3MCDdw=;
-        b=k7KRWzKR8TxlH1n1sZjr7aY4JLOumY0ZIq5k5kleezUfPJd9yXzVFRC7oZd2DunfX2
-         FzutCP6n7SuYc5cckrmzVO0ifXpsEtxPt8uEkLUkIlJI+YBxARHLVKbvKLX7zLCbV6B2
-         ZjuL7yqJGWYchZru/F/IFkLSU1fEmo1SvXtMzWslHVwTIBwd4wUR3AjyPWkBvwt3jA0D
-         bsqGgG99LZUX6jypj5JcvZDzh4gQszATE/k4vAckHI0wsJmRMqyXJIHv55Rbgmq+PQFG
-         /ufBLVmuONpHL5Bjmb1IkXTRu6e6xn6+qdKzh0FF3vHo39cG4ooc8H0zcz7UvUDYpBPb
-         o0Wg==
-X-Forwarded-Encrypted: i=1; AJvYcCWZVmi727X9FCpNGvegv6zRFogVk5BK0dzknhbo50/OzJA/2DVgvZhkHiDpB/W618G0fO0CwHkew/xWZcV1bkUDcXnBStkJlwVNnznj
-X-Gm-Message-State: AOJu0YyocdM9gMoU9WKfEbNy1957B15nHU19zDZB6hxKpIAU6+ABV1NP
-	3Rc/A3cHWV4tjbyveDtFdBXSRUpa1xTq1YvaRsuxkqNKeVTNgzFFXOd78XK8u6cUVpeNaXcVe2A
-	4Qo/P39UstvOqZxfsnK7LYEEUoDB4qTvsCNk+
-X-Google-Smtp-Source: AGHT+IEn5Owi2sPtfaUxycTRYFwNeKA+Pm2rq41oCVa8/UT2ciC5oEejXaO971X27DHZCT9SSJ+kpz2ClHcFLTEpRno=
-X-Received: by 2002:a19:431c:0:b0:513:e17d:cf3c with SMTP id
- q28-20020a19431c000000b00513e17dcf3cmr8896729lfa.1.1710974138867; Wed, 20 Mar
- 2024 15:35:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ER8oSDVy"
+Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 2C1A3C0000F1;
+	Wed, 20 Mar 2024 15:27:11 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 2C1A3C0000F1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1710973631;
+	bh=FrDJYOWwf0Ic6PWmCehY4eGVyxmoLrR6fV2hXhRI9/Q=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ER8oSDVyI4SJemYdbsgNDwpfuVSQeWV7O2fsjUkexdgoUpfAYVJF0CsaG8zXRVHWv
+	 yCJ9ZAjuaYfFtblXku6S7QQS0lDWMKy7VFlC7wGmYO/ldblsPv0kekiCYfXob+yNZG
+	 qAAgxKj9kMvY0ep7wc4FbfKjEOwcJQ/l3QM3wXQc=
+Received: from bcacpedev-irv-3.lvn.broadcom.net (bcacpedev-irv-3.lvn.broadcom.net [10.173.232.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 6420918041CAC4;
+	Wed, 20 Mar 2024 15:27:09 -0700 (PDT)
+From: William Zhang <william.zhang@broadcom.com>
+To: Linux MTD List <linux-mtd@lists.infradead.org>
+Cc: Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
+	joel.peshkin@broadcom.com,
+	f.fainelli@gmail.com,
+	miquel.raynal@bootlin.com,
+	dregan@mail.com,
+	kamal.dasu@broadcom.com,
+	kursad.oney@broadcom.com,
+	William Zhang <william.zhang@broadcom.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	linux-kernel@vger.kernel.org,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Brian Norris <computersforpeace@gmail.com>,
+	Richard Weinberger <richard@nod.at>,
+	David Regan <dregan@broadcom.com>
+Subject: [PATCH] mtd: rawnand: brcmnand: Fix data access violation for STB chip
+Date: Wed, 20 Mar 2024 15:26:22 -0700
+Message-Id: <20240320222623.35604-1-william.zhang@broadcom.com>
+X-Mailer: git-send-email 2.37.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240318-strncpy-drivers-video-fbdev-au1200fb-c-v1-1-680802a9f10a@google.com>
- <53670007-edbc-4762-9e57-0b3c29220d9e@gmx.de>
-In-Reply-To: <53670007-edbc-4762-9e57-0b3c29220d9e@gmx.de>
-From: Justin Stitt <justinstitt@google.com>
-Date: Wed, 20 Mar 2024 15:35:26 -0700
-Message-ID: <CAFhGd8ppVq9aGbfFLeL30jQ15KHS=FoLh0c1udXo=Z+pCfXL1g@mail.gmail.com>
-Subject: Re: [PATCH] video: fbdev: au1200fb: replace deprecated strncpy with strscpy
-To: Helge Deller <deller@gmx.de>
-Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Florian reported the following kernel NULL pointer dereference issue on
+a BCM7250 board:
+[    2.829744] Unable to handle kernel NULL pointer dereference at virtual address 0000000c when read
+[    2.838740] [0000000c] *pgd=80000000004003, *pmd=00000000
+[    2.844178] Internal error: Oops: 206 [#1] SMP ARM
+[    2.848990] Modules linked in:
+[    2.852061] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.8.0-next-20240305-gd95fcdf4961d #66
+[    2.860436] Hardware name: Broadcom STB (Flattened Device Tree)
+[    2.866371] PC is at brcmnand_read_by_pio+0x180/0x278
+[    2.871449] LR is at __wait_for_common+0x9c/0x1b0
+[    2.876178] pc : [<c094b6cc>]    lr : [<c0e66310>]    psr: 60000053
+[    2.882460] sp : f0811a80  ip : 00000012  fp : 00000000
+[    2.887699] r10: 00000000  r9 : 00000000  r8 : c3790000
+[    2.892936] r7 : 00000000  r6 : 00000000  r5 : c35db440  r4 : ffe00000
+[    2.899479] r3 : f15cb814  r2 : 00000000  r1 : 00000000  r0 : 00000000
 
-On Wed, Mar 20, 2024 at 12:56=E2=80=AFAM Helge Deller <deller@gmx.de> wrote=
-:
->
-> On 3/19/24 00:46, Justin Stitt wrote:
-> > strncpy() is deprecated for use on NUL-terminated destination strings
-> > [1] and as such we should prefer more robust and less ambiguous string
-> > interfaces.
-> >
-> > Let's use the new 2-argument strscpy() which guarantees NUL-termination
-> > on the destination buffer while also simplifying the syntax. Note that
-> > strscpy() will not NUL-pad the destination buffer like strncpy() does.
-> >
-> > However, the NUL-padding behavior of strncpy() is not required since
-> > fbdev is already NUL-allocated from au1200fb_drv_probe() ->
-> > frameuffer_alloc(), rendering any additional NUL-padding redundant.
-> > |     p =3D kzalloc(fb_info_size + size, GFP_KERNEL);
-> >
-> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#st=
-rncpy-on-nul-terminated-strings [1]
-> > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en=
-.html [2]
-> > Link: https://github.com/KSPP/linux/issues/90
-> > Cc: linux-hardening@vger.kernel.org
-> > Signed-off-by: Justin Stitt <justinstitt@google.com>
-> > ---
-> > Note: build-tested only.
-> >
-> > Found with: $ rg "strncpy\("
-> > ---
-> >   drivers/video/fbdev/au1200fb.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/video/fbdev/au1200fb.c b/drivers/video/fbdev/au120=
-0fb.c
-> > index 6f20efc663d7..e718fea63662 100644
-> > --- a/drivers/video/fbdev/au1200fb.c
-> > +++ b/drivers/video/fbdev/au1200fb.c
-> > @@ -1557,7 +1557,7 @@ static int au1200fb_init_fbinfo(struct au1200fb_d=
-evice *fbdev)
-> >               return ret;
-> >       }
-> >
-> > -     strncpy(fbi->fix.id, "AU1200", sizeof(fbi->fix.id));
-> > +     strscpy(fbi->fix.id, "AU1200");
->
-> I wonder if you really build-tested this, as this driver is for the mips =
-architecture...
-> And I don't see a strscpy() function which takes just 2 arguments.
-> But I might be wrong....
+The issue only happens when dma mode is disabled or not supported on STB
+chip. The pio mode transfer calls brcmnand_read_data_bus function which
+dereferences ctrl->soc->read_data_bus. But the soc member in STB chip is
+NULL hence triggers the access violation. The function needs to check
+the soc pointer first.
 
-I did build successfully :thumbs_up:
+Fixes: 546e42599120 ("mtd: rawnand: brcmnand: Add BCMBCA read data bus interface")
 
-Commit e6584c3964f2f ("string: Allow 2-argument strscpy()") introduced
-this new strscpy() form; it is present in string.h on Linus' tree.
+Reported-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Signed-off-by: William Zhang <william.zhang@broadcom.com>
 
->
-> Helge
+---
 
-Thanks
-Justin
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+index a8d12c71f987..1b2ec0fec60c 100644
+--- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+@@ -857,7 +857,7 @@ static inline void brcmnand_read_data_bus(struct brcmnand_controller *ctrl,
+ 	struct brcmnand_soc *soc = ctrl->soc;
+ 	int i;
+ 
+-	if (soc->read_data_bus) {
++	if (soc && soc->read_data_bus) {
+ 		soc->read_data_bus(soc, flash_cache, buffer, fc_words);
+ 	} else {
+ 		for (i = 0; i < fc_words; i++)
+-- 
+2.37.3
+
