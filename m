@@ -1,212 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 513FF10FA;
-	Wed, 20 Mar 2024 16:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23E54EB47;
+	Wed, 20 Mar 2024 17:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710953978; cv=none; b=r41G60QDTUf+eGIf06aIX0G5oaLJj3uozgvkwdUIXVPlkkfLKCywdWtP/zNWKtGKKU0C3zCE2V83WjNvUBT+yYA/5DWR5zoNuPrfvASPs/LpC5v4B7r1MxvlHF8zcHM5Rz4gc/BhYmZgFOAU9XNb5TgtT4FVkhrEOQhLY1pemoA=
+	t=1710954119; cv=none; b=QMwYa6O4OXXE5GRVR8fRrFm+p53exSwYOjo0CRzVnwp99ifW8ybyGM8rvrN04LXo69wcWjzlWv9ochARhAHAAEcFeIhFrBacRiDN8DWNK84l9F6Z3f3gl0lv5chlZsEsR3+XmSIeXd8FoB/VGAE0IEZoue8w/5XWP5VDkJd6xnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710953978; c=relaxed/simple;
-	bh=s0/aLoxKix13bsWvxqVqF3isscoD1oqKeSGeoPdxMM8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T1Y7cnLBBkCY5LJK7pMhjdgVWLXUwOs1C6w/+cqXI8gHRqsbm40fbyfrQsSHhyBRranFmCssjXoN7coq0ECQh8g7uFmsZh7M21XyH82hOJ4enZmj1AOVJnDSb7Um3paPNpxTeowyBm4NeGAN8QlLsgpLzO1flam/T1irqFxtgKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FE5rrJUs; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FE5rrJUs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710953976; x=1742489976;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=s0/aLoxKix13bsWvxqVqF3isscoD1oqKeSGeoPdxMM8=;
-  b=FE5rrJUsfFsTyR0Wrc901MqAI/Gl6Y0dakmJQWE20wDmgHLmRp3Le5qn
-   qa2okC2c8gZgf65wpbvyrKz8boN4EUtfu34yMIxJJd3Hmo3HV6I4S09et
-   LeqFWP3ZU1ajkapB3rTdkNmuh4GnMMMT//CxuDEuy3eSlGJY41rsywRYk
-   kjssQcnW/i5UDMDC8Q+b5Oh3g2rklOvhsFYj3I1qXfpF/QNNYNq9TPcs2
-   Ar2E9q+LAuM0VP4zZZ9hPJHSF6FKcOACqwBic5hZumCRfFnlEirUR/Nxq
-   Qv/t5eDNvYnBppBzCB3TC1v9Ms8cia3NtqlSR3CSXc/Jvw8cvJoUOES1y
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="6016995"
-X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
-   d="scan'208";a="6016995"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 09:59:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="937063900"
-X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
-   d="scan'208";a="937063900"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 20 Mar 2024 09:59:33 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 5204330D; Wed, 20 Mar 2024 18:59:32 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Stephen Boyd <swboyd@chromium.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Ferry Toth <ftoth@exalondelft.nl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v2 1/1] gpiolib: Fix debug messaging in gpiod_find_and_request()
-Date: Wed, 20 Mar 2024 18:58:47 +0200
-Message-ID: <20240320165930.1182653-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+	s=arc-20240116; t=1710954119; c=relaxed/simple;
+	bh=riDnAYASVcYCRvsE9up4IqXSn5APJJQ9Ae+rukBzFQo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EzZJMxwdBHtR/LCGHVRzqp6iIFDkES/UzS70C5uTWVimqWNZ2b4rqgKhjHtSYxp19Vn7qlzn+2pAWvw1uu3ou+71IZVrzI/Y0M9i+UgeikB9kTrfRRXV/yEncZcMBmI3pF7s1OKewmB//8E0FPV0zAlo7bUxuuaoP0elpRdBpKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-513d3746950so104578e87.1;
+        Wed, 20 Mar 2024 10:01:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710954116; x=1711558916;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wEfzL/x+HvKfKexpvwPECfkK5QWCbVSUpN9Cn9FEYTo=;
+        b=Yrvjc//77d6YrXWuejx0beLNRi0W4B6PLrQN/QHyTUZyDGyhDUwpCBT/ZLHHEhfKfy
+         4Qe0BMINwJW2pQK/hT3Bw6swCcYCbi8Bgw2VsYE8/8rX2z3X/XC/1hIlCCAcqNWSs0W8
+         43J/VMBWWraix0t50UsaUceYVkYVkpC9iwkpfcKiw8zK10PZ2kR2OOpCrWoXmVrpryf+
+         nIRPVR/xlu/s1eGFpqZodNiEOV6abwW3Qqz9M87n84a0XP+5JIZ8/EXmBtWVOrkqyTRq
+         Z5bau67UinQGOyxaM7LGXYd4pWKhSmsJTiyWhXsK4wL2C9yr+BXcVXGVAY2LHOrhYXYS
+         40NA==
+X-Forwarded-Encrypted: i=1; AJvYcCUJi30MyommHEx0q14Afow9l7trEN08hSyat91gebUKA/bjbMBL8MjbOmWaC+TbRP5DXuTkYHkkc8h4Ux9MOEv+oraKGAapn0dqlpAmPcY7q6Z5sSrSDDs+mQaCfgbI1qVjsNsnVibPquDLVLk=
+X-Gm-Message-State: AOJu0Yx1UUqKP58G2AqYvtZ8cWjbKA0HIWfj/0t87RN08Xjadw/ge982
+	m4vyRrL/fSF50SAUaqHqLrXKD8uLoIMOm1fcZj4nExuZBnmqAGQb
+X-Google-Smtp-Source: AGHT+IFshgPj3UMN4cJiNIVIXvG/10g68W2pa6RLfXGSEY8o7CaDgP1x0o/YnloMRnopMl5TdGmZIQ==
+X-Received: by 2002:a05:6512:3fa:b0:513:cf4e:941b with SMTP id n26-20020a05651203fa00b00513cf4e941bmr1681905lfq.19.1710954115798;
+        Wed, 20 Mar 2024 10:01:55 -0700 (PDT)
+Received: from gmail.com (fwdproxy-lla-001.fbsv.net. [2a03:2880:30ff:1::face:b00c])
+        by smtp.gmail.com with ESMTPSA id n18-20020a05640205d200b00568b6d731e1sm5798016edx.4.2024.03.20.10.01.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Mar 2024 10:01:55 -0700 (PDT)
+Date: Wed, 20 Mar 2024 10:01:53 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Jeff Johnson <jjohnson@kernel.org>, kuba@kernel.org,
+	keescook@chromium.org,
+	"open list:NETWORKING DRIVERS (WIRELESS)" <linux-wireless@vger.kernel.org>,
+	"open list:QUALCOMM ATHEROS ATH10K WIRELESS DRIVER" <ath10k@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ath10k: allocate dummy net_device dynamically
+Message-ID: <ZfsWgVeHJXMdh5bp@gmail.com>
+References: <20240319104754.2535294-1-leitao@debian.org>
+ <9fcdb857-da62-4832-ae11-043fe993e4ad@quicinc.com>
+ <87wmpwaprz.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87wmpwaprz.fsf@kernel.org>
 
-When consolidating GPIO lookups in ACPI code, the debug messaging
-had been reworked that the user may see
+On Wed, Mar 20, 2024 at 05:25:52PM +0200, Kalle Valo wrote:
+> Jeff Johnson <quic_jjohnson@quicinc.com> writes:
+> 
+> > On 3/19/2024 3:47 AM, Breno Leitao wrote:
+> >> Embedding net_device into structures prohibits the usage of flexible
+> >> arrays in the net_device structure. For more details, see the discussion
+> >> at [1].
+> >> 
+> >> Un-embed the net_device from struct ath10k by converting it
+> >> into a pointer. Then use the leverage alloc_netdev() to allocate the
+> >> net_device object at ath10k_core_create(). The free of the device occurs
+> >> at ath10k_core_destroy().
+> >> 
+> >> [1] https://lore.kernel.org/all/20240229225910.79e224cf@kernel.org/
+> >> 
+> >> Signed-off-by: Breno Leitao <leitao@debian.org>
+> >
+> > NAK this based upon the ath11k patch results.
+> >
+> > As suggested there we should just use kmalloc/kfree to match the existing logic.
+> 
+> BTW if the patch is not tested on a real device then it's good to
+> document that in the commit message with "Compile tested only" or
+> similar.
 
-  [   13.401147] (NULL device *): using ACPI '\_SB.LEDS.led-0' for '(null)' GPIO lookup
-  [   13.401378] gpio gpiochip0: Persistence not supported for GPIO 40
-  [   13.401402] gpio-40 (?): no flags found for (null)
-
-instead of
-
-  [   14.182962] gpio gpiochip0: Persistence not supported for GPIO 40
-  [   14.182994] gpio-40 (?): no flags found for gpios
-
-The '(null)' parts are less informative and likely scare the users.
-Replace them by '(default)' which can point out to the default connection
-IDs, such as 'gpios'.
-
-While at it, amend other places where con_id is used in the messages.
-
-Reported-by: Ferry Toth <ftoth@exalondelft.nl>
-Fixes: 8eb1f71e7acc ("gpiolib: consolidate GPIO lookups")
-Suggested-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v2: completele reworked solution of
-20231019173457.2445119-1-andriy.shevchenko@linux.intel.com
- drivers/gpio/gpiolib.c | 32 ++++++++++++++++++--------------
- 1 file changed, 18 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index e2e583b40207..7d26e5de0b44 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2401,6 +2401,11 @@ char *gpiochip_dup_line_label(struct gpio_chip *gc, unsigned int offset)
- }
- EXPORT_SYMBOL_GPL(gpiochip_dup_line_label);
- 
-+static inline const char *function_name_or_default(const char *con_id)
-+{
-+	return con_id ?: "(default)";
-+}
-+
- /**
-  * gpiochip_request_own_desc - Allow GPIO chip to request its own descriptor
-  * @gc: GPIO chip
-@@ -2429,10 +2434,11 @@ struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
- 					    enum gpiod_flags dflags)
- {
- 	struct gpio_desc *desc = gpiochip_get_desc(gc, hwnum);
-+	const char *name = function_name_or_default(label);
- 	int ret;
- 
- 	if (IS_ERR(desc)) {
--		chip_err(gc, "failed to get GPIO descriptor\n");
-+		chip_err(gc, "failed to get GPIO %s descriptor\n", name);
- 		return desc;
- 	}
- 
-@@ -2442,8 +2448,8 @@ struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
- 
- 	ret = gpiod_configure_flags(desc, label, lflags, dflags);
- 	if (ret) {
--		chip_err(gc, "setup of own GPIO %s failed\n", label);
- 		gpiod_free_commit(desc);
-+		chip_err(gc, "setup of own GPIO %s failed\n", name);
- 		return ERR_PTR(ret);
- 	}
- 
-@@ -4157,19 +4163,17 @@ static struct gpio_desc *gpiod_find_by_fwnode(struct fwnode_handle *fwnode,
- 					      enum gpiod_flags *flags,
- 					      unsigned long *lookupflags)
- {
-+	const char *name = function_name_or_default(con_id);
- 	struct gpio_desc *desc = ERR_PTR(-ENOENT);
- 
- 	if (is_of_node(fwnode)) {
--		dev_dbg(consumer, "using DT '%pfw' for '%s' GPIO lookup\n",
--			fwnode, con_id);
-+		dev_dbg(consumer, "using DT '%pfw' for '%s' GPIO lookup\n", fwnode, name);
- 		desc = of_find_gpio(to_of_node(fwnode), con_id, idx, lookupflags);
- 	} else if (is_acpi_node(fwnode)) {
--		dev_dbg(consumer, "using ACPI '%pfw' for '%s' GPIO lookup\n",
--			fwnode, con_id);
-+		dev_dbg(consumer, "using ACPI '%pfw' for '%s' GPIO lookup\n", fwnode, name);
- 		desc = acpi_find_gpio(fwnode, con_id, idx, flags, lookupflags);
- 	} else if (is_software_node(fwnode)) {
--		dev_dbg(consumer, "using swnode '%pfw' for '%s' GPIO lookup\n",
--			fwnode, con_id);
-+		dev_dbg(consumer, "using swnode '%pfw' for '%s' GPIO lookup\n", fwnode, name);
- 		desc = swnode_find_gpio(fwnode, con_id, idx, lookupflags);
- 	}
- 
-@@ -4185,6 +4189,7 @@ struct gpio_desc *gpiod_find_and_request(struct device *consumer,
- 					 bool platform_lookup_allowed)
- {
- 	unsigned long lookupflags = GPIO_LOOKUP_FLAGS_DEFAULT;
-+	const char *name = function_name_or_default(con_id);
- 	/*
- 	 * scoped_guard() is implemented as a for loop, meaning static
- 	 * analyzers will complain about these two not being initialized.
-@@ -4207,8 +4212,7 @@ struct gpio_desc *gpiod_find_and_request(struct device *consumer,
- 		}
- 
- 		if (IS_ERR(desc)) {
--			dev_dbg(consumer, "No GPIO consumer %s found\n",
--				con_id);
-+			dev_dbg(consumer, "No GPIO consumer %s found\n", name);
- 			return desc;
- 		}
- 
-@@ -4230,15 +4234,14 @@ struct gpio_desc *gpiod_find_and_request(struct device *consumer,
- 		 *
- 		 * FIXME: Make this more sane and safe.
- 		 */
--		dev_info(consumer,
--			 "nonexclusive access to GPIO for %s\n", con_id);
-+		dev_info(consumer, "nonexclusive access to GPIO for %s\n", name);
- 		return desc;
- 	}
- 
- 	ret = gpiod_configure_flags(desc, con_id, lookupflags, flags);
- 	if (ret < 0) {
--		dev_dbg(consumer, "setup of GPIO %s failed\n", con_id);
- 		gpiod_put(desc);
-+		dev_dbg(consumer, "setup of GPIO %s failed\n", name);
- 		return ERR_PTR(ret);
- 	}
- 
-@@ -4354,6 +4357,7 @@ EXPORT_SYMBOL_GPL(gpiod_get_optional);
- int gpiod_configure_flags(struct gpio_desc *desc, const char *con_id,
- 		unsigned long lflags, enum gpiod_flags dflags)
- {
-+	const char *name = function_name_or_default(con_id);
- 	int ret;
- 
- 	if (lflags & GPIO_ACTIVE_LOW)
-@@ -4397,7 +4401,7 @@ int gpiod_configure_flags(struct gpio_desc *desc, const char *con_id,
- 
- 	/* No particular flag request, return here... */
- 	if (!(dflags & GPIOD_FLAGS_BIT_DIR_SET)) {
--		gpiod_dbg(desc, "no flags found for %s\n", con_id);
-+		gpiod_dbg(desc, "no flags found for GPIO %s\n", name);
- 		return 0;
- 	}
- 
--- 
-2.43.0.rc1.1.gbec44491f096
-
+Good to know. Thanks. I will add it to the next patches.
