@@ -1,116 +1,116 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9932032C;
-	Wed, 20 Mar 2024 10:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2329B20DCC;
+	Wed, 20 Mar 2024 10:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710931052; cv=none; b=dDYO3E7ZzYNzylQe7m8dmO1s4LOFrDYTZ3vw7L2ri1Ikipa0/yN2KdCc28hJekJSRsLUALknqb5/TAfhA1ztajnSVYCyhEfIDGpDvHrCP8NAjY7GBC4u48uqSwPFPwXPHTN+l2p3pxt8Vjt2jwu4h+K9O2O8IsR+rhsD+kqD4Ys=
+	t=1710931180; cv=none; b=aGgxQzdA7UDVvbN3TdrpJ2Y7t0juvJqQpyS19biE8EnSCiueDUTLWASv6JnmH6UikqvYKmX0bZd5q8HziOD3Nx5/rSUGkusDZkfJwpSopIRojLCFoDkJHcTfrzcdejTOsDidFMgvn4F4HTkLDdJQ6dUG+Pq01LIgN2eeCrvk/gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710931052; c=relaxed/simple;
-	bh=oMcExfi3dY3kbb1sQnyyDLt0+nzIomwQcaxWzI7t2qk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dVpJpu5utDksS04uOkdWvE0oyr2gsOE5PR5Dc+1HGvNmgBBPxjse8wn5Eka9VEWZp/rkTZ+8DLjRwyW5fVhxnWHy/T0BgwQrmyDZAr8fUsSkZ6QHqy0/MCN3eGQFLp6o06/UTlQqu3KUW9sCAnRYzCjYFj4o+BaP4CCu2IHx+14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=msLXyRZm; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1710931180; c=relaxed/simple;
+	bh=NXyshRl6EibK8Fv9ThYhsEZH4LzWv/DjUpaMXHd7ofA=;
+	h=Date:From:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I8KWu1ariZFtOWeb0M1Aw8LvMqy46zUMUFSxXSCUZyeRIWmmv4s6l4Y+axHJlcuy9sQRHFXLJJaw77gJ2bFiC3o3LalAVmgvUfcyAm7Qi+ok0nh59kE3CIp+bbnnNnGPBZKNcF7gY82rJNK38R7eIdheum8jMU4fnkdFCpDSwIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eN6GOwGn; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="msLXyRZm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1710930453;
-	bh=oMcExfi3dY3kbb1sQnyyDLt0+nzIomwQcaxWzI7t2qk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=msLXyRZm3wWEhspe6etI170C6ugUOpgwoo8GpmrfFo1ZjZF8f9/yIqcpwlFXcxrtB
-	 7HMDws+TdWu9+7nRVYJvQQTCs60XeR+sJz48ZZ9tq+rCl7FFqgA2SEUjRSoLs3YY8O
-	 Drz1d2aFmIEOv1ZwQQIe7zrq6fMdn68HgV3URCmc=
-Received: from [192.168.124.9] (unknown [113.140.11.126])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id D09D166F79;
-	Wed, 20 Mar 2024 06:27:29 -0400 (EDT)
-Message-ID: <e8c4062df63f3e8bc8bb2d7209fa2a2a44bd7ed3.camel@xry111.site>
-Subject: Re: [PATCH] LoongArch: Change __my_cpu_offset definition to avoid
- mis-optimization
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
- Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org, Xuefeng Li
-	 <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, Xuerui Wang
-	 <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn, 
-	stable@vger.kernel.org, Xiaotian Wu <wuxiaotian@loongson.cn>, Miao Wang
-	 <shankerwangmiao@gmail.com>, Xing Li <lixing@loongson.cn>, Hongchen Zhang
-	 <zhanghongchen@loongson.cn>, Rui Wang <wangrui@loongson.cn>
-Date: Wed, 20 Mar 2024 18:27:26 +0800
-In-Reply-To: <20240315024526.394772-1-chenhuacai@loongson.cn>
-References: <20240315024526.394772-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.0 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eN6GOwGn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710931179; x=1742467179;
+  h=date:from:cc:subject:message-id:references:mime-version:
+   in-reply-to;
+  bh=NXyshRl6EibK8Fv9ThYhsEZH4LzWv/DjUpaMXHd7ofA=;
+  b=eN6GOwGnZJ+7ccX7zWvCBTdyRLeh3jAkhkuZrcKoWcSpdTMsTHuDSGqc
+   ezcDyoOR7o3G19zut3EDESalWrmQ/sSZSXEDlU4qXcdUmf+sDVAYxETAC
+   NGtstZd2yKMU4xNRX1ETNXbBtk8CnAMJRc5I9W4Y94nc35Nz4qXgdlVis
+   VBmOxfTccRzQLuFcsCk/jB2GyInBfFvQ5YWFRDyAMzluTdCHUpNWaTFob
+   iBv9vlnTQQSy89rkYWhsFkgUw26CWzBsnQqtw9IjKsCLaazvvgPrNK4We
+   zKp656cG7qzoTTOX0hM3nKeO2szlGx12HnFyVrJlvzI+CiK9zBFPYAby2
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11018"; a="23304768"
+X-IronPort-AV: E=Sophos;i="6.07,139,1708416000"; 
+   d="scan'208";a="23304768"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 03:39:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11018"; a="914662247"
+X-IronPort-AV: E=Sophos;i="6.07,139,1708416000"; 
+   d="scan'208";a="914662247"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 03:39:36 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rmtM5-0000000EXk2-2icX;
+	Wed, 20 Mar 2024 12:39:33 +0200
+Date: Wed, 20 Mar 2024 12:39:33 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-acpi@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] software node: Implement device_get_match_data fwnode
+ callback
+Message-ID: <Zfq85f-Dp1S3CKuG@smile.fi.intel.com>
+References: <20240318234222.1278882-1-sui.jingfeng@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240318234222.1278882-1-sui.jingfeng@linux.dev>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, 2024-03-15 at 10:45 +0800, Huacai Chen wrote:
-> From GCC commit 3f13154553f8546a ("df-scan: remove ad-hoc handling of
-> global regs in asms"), global registers will no longer be forced to add
-> to the def-use chain. Then current_thread_info(), current_stack_pointer
-> and __my_cpu_offset may be lifted out of the loop because they are no
-> longer treated as "volatile variables".
++Cc: Vladimir
 
-Ooops...  I'm wondering why this issue has not blown up our systems
-before.  The referred GCC commit is far before LoongArch CPUs are taped.
+On Tue, Mar 19, 2024 at 07:42:22AM +0800, Sui Jingfeng wrote:
+> This makes it possible to support (and/or test) a few drivers that
+> originates from DT World on the x86-64 platform. Originally, those
+> drivers using the of_device_get_match_data() function to get match
+> data. For example, drivers/gpu/drm/bridge/simple-bridge.c and
+> drivers/gpu/drm/bridge/display-connector.c. Those drivers works very
+> well in the DT world, however, there is no counterpart to
+> of_device_get_match_data() when porting them to the x86 platform,
+> because x86 CPUs lack DT support.
 
-> This optimization is still correct for the current_thread_info() and
-> current_stack_pointer usages because they are associated to a thread.
-> However it is wrong for __my_cpu_offset because it is associated to a
-> CPU rather than a thread: if the thread migrates to a different CPU in
-> the loop, __my_cpu_offset should be changed.
->=20
-> Change __my_cpu_offset definition to treat it as a "volatile variable",
-> in order to avoid such a mis-optimization.
->=20
-> Cc: stable@vger.kernel.org
+This is not true.
 
-I suppose we should add Fixes: 5b0b14e550a0 ("LoongArch: Add
-atomic/locking header") here.
+First of all, there is counter part that called device_get_match_data().
+Second, there *is* DT support for the _selected_ x86 based platforms.
 
-> Reported-by: Xiaotian Wu <wuxiaotian@loongson.cn>
-> Reported-by: Miao Wang <shankerwangmiao@gmail.com>
-> Signed-off-by: Xing Li <lixing@loongson.cn>
-> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
-> Signed-off-by: Rui Wang <wangrui@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
-> =C2=A0arch/loongarch/include/asm/percpu.h | 6 +++++-
-> =C2=A01 file changed, 5 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/loongarch/include/asm/percpu.h b/arch/loongarch/include=
-/asm/percpu.h
-> index 9b36ac003f89..03b98491d301 100644
-> --- a/arch/loongarch/include/asm/percpu.h
-> +++ b/arch/loongarch/include/asm/percpu.h
-> @@ -29,7 +29,12 @@ static inline void set_my_cpu_offset(unsigned long off=
-)
-> =C2=A0	__my_cpu_offset =3D off;
-> =C2=A0	csr_write64(off, PERCPU_BASE_KS);
-> =C2=A0}
-> -#define __my_cpu_offset __my_cpu_offset
-> +
-> +#define __my_cpu_offset					\
-> +({							\
-> +	__asm__ __volatile__("":"+r"(__my_cpu_offset));	\
-> +	__my_cpu_offset;				\
-> +})
-> =C2=A0
-> =C2=A0#define PERCPU_OP(op, asm_op, c_op)					\
-> =C2=A0static __always_inline unsigned long __percpu_##op(void *ptr,		\
+> By replacing it with device_get_match_data() and creating a software
+> graph that mimics the OF graph, everything else works fine, except that
+> there isn't an out-of-box replacement for the of_device_get_match_data()
+> function. Because the software node backend of the fwnode framework lacks
+> an implementation for the device_get_match_data callback.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+.device_get_match_data
+
+> Implement device_get_match_data fwnode callback fwnode callback to fill
+
+.device_get_match_data
+
+> this gap. Device drivers or platform setup codes are expected to provide
+> a "compatible" string property. The value of this string property is used
+> to match against the compatible entries in the of_device_id table. Which
+> is consistent with the original usage style.
+
+Why do you need to implement the graph in the board file?
+
+...
+
+Have you seen this discussion?
+https://lore.kernel.org/lkml/20230223203713.hcse3mkbq3m6sogb@skbuf/
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
