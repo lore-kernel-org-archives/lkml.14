@@ -1,119 +1,108 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01AE729409;
-	Wed, 20 Mar 2024 07:46:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7540D20DCC;
+	Wed, 20 Mar 2024 07:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710920792; cv=none; b=lOgovI0QOkeBQFVsEsh0PCHJvqDqymxQFFkAKwP0yAPcUIJmKgCCfIV0NsDkXWxThguRY6/1y3WH+AEU5XEkG7z2CGhCucWdr3WR2hXpt1GAtASLhBwGxOsh8w+MZsLcetFVJNuimE8JDuOFpKYpAE3JnRlOli/ucHq5tZAgFy4=
+	t=1710920808; cv=none; b=tw5PffJttBJ7Sn2j6OmYgy6NqciEhH8dowwrYiyo5vYmJ4aFFBGfceaPb1/o291HEX0CVehfBROPyVSqtfr37FuWUIA0O2OB6tqTy1lQB83jxcKpEJFqtWlSLmClgmbPKsyXwMofCzQtjEqIH4RfGyvOVa4XZVtOilHImIS8l18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710920792; c=relaxed/simple;
-	bh=Ib1YGi6+k7//xZhCELUHLMN5Yymzlzl+jC3TmZzQS9Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dBAeM9DHk0pFsUlk/BKeeuWN/0XG41FWt/577JcpQudrvurAyNAJC7SDtUs7TXpsfIduRR50pdtP56CkM9FdPJ0r+wJC5LRWdCMsscNk04IWl+LXvP2NpO74ztSxFsWju+CrMMKf6hye50hezajPjboSm/VAtokm/evYqYuvpww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CntIZw8p; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CntIZw8p"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 92281FF807;
-	Wed, 20 Mar 2024 07:46:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1710920781;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5e54mRdfjOEsN/nbRi2WZI4kTVdEISox3uake09K72s=;
-	b=CntIZw8pN/VwkZVAO2SKwwcoAtquLsqesAgaQpn/KPk1iEZfAC8HeTtQHdijlfn6YGgsSx
-	RQos6KXPFCJ4c+Xi5wqSS70s9jR4Zxwn5dareb5xQLoAPE3QoIrSICgKBVpvUdicaLz7tL
-	wIKiOyqdbu88jmtnChKDI3UnAImFTS9B0/OAy9UvC3GUyqh3zn31c+5JvDi0HKX2kPTeQS
-	7kalN+DfuBkBhSOnaZj3grj22/4vg70ATfphQ174JcteuOWhGa1BD317xg1aOTsUa0uI9O
-	+ak0xuplA037PBZYHBDJJhmMdYh6XEXakJ5DiuGKbgj0s4IakIvCwG1PAHS++g==
-Message-ID: <773cd098-0678-4edc-aea3-0418bedebc13@bootlin.com>
-Date: Wed, 20 Mar 2024 08:46:20 +0100
+	s=arc-20240116; t=1710920808; c=relaxed/simple;
+	bh=R8qWnT0pcFEIMIHAwgUqU6SjvSra2zMocjTcX/gqfSU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WTKaP8KOtuShYbg6SiC/TsjWw4dHYLe63VR2U+AFybE5iavlAfYnxC/iJoWz18PbC3PlvXp4Rw3vtYFYPRbCPBeqSPP+UxTBkF90Nwobw3FtKjiDE+p4gcRZDcr5PrKmkHmzjCWKnlXYR1APwQeaO+7bjZ82bs6tssu/C9sbf1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-03 (Coremail) with SMTP id rQCowACHZwBdkvplsfItBw--.36178S2;
+	Wed, 20 Mar 2024 15:38:06 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	grundler@chromium.org,
+	christian.riesch@omicron.at,
+	linux-usb@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH net] net: asix: Add check for usbnet_get_endpoints
+Date: Wed, 20 Mar 2024 07:37:15 +0000
+Message-Id: <20240320073715.2002973-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 12/13] ASoC: dt-bindings: davinic-mcbsp: Add the
- 'ti,drive-dx' property
-Content-Language: en-US
-To: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>
-Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, herve.codina@bootlin.com,
- christophercordahi@nanometrics.ca
-References: <20240315112745.63230-1-bastien.curutchet@bootlin.com>
- <20240315112745.63230-13-bastien.curutchet@bootlin.com>
- <6e120eee-5cec-460c-87d2-40ef776efc3d@gmail.com>
-From: Bastien Curutchet <bastien.curutchet@bootlin.com>
-In-Reply-To: <6e120eee-5cec-460c-87d2-40ef776efc3d@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: bastien.curutchet@bootlin.com
+X-CM-TRANSID:rQCowACHZwBdkvplsfItBw--.36178S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tFy3AFyDGr1DXr18Aw1fWFg_yoW8Wry5pF
+	48Ga98tr48JrW8G3yDtw48urW5ZFn2qa42kF92kw1a9Fy3AF93Gr10kw1Yy3s29FWfXa4q
+	yF4DGw4Yqr15WaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+	1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
+	8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
+	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUb
+	0D73UUUUU==
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-Hi Péter,
+Add check for usbnet_get_endpoints() and return the error if it fails
+in order to transfer the error.
 
+Fixes: b4cdae20ef95 ("asix: Rename asix.c to asix_devices.c")
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/net/usb/asix_devices.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-On 3/19/24 19:02, Péter Ujfalusi wrote:
-> 
-> 
-> On 15/03/2024 13:27, Bastien Curutchet wrote:
->> McBSP is able to handle capture and playback stream.
->> The McBSP's DX pins that outputs serial data during playback streams can
->> be used to output a chosen pattern during capture streams. For instance,
->> this can be useful to drive an active-low signal during capture streams
->> (by choosing <0> as pattern)
-> 
-> or configure the MCBSPx.DX pin as GPO and use it as a GPIO?
+diff --git a/drivers/net/usb/asix_devices.c b/drivers/net/usb/asix_devices.c
+index f7cff58fe044..4732a2951bf2 100644
+--- a/drivers/net/usb/asix_devices.c
++++ b/drivers/net/usb/asix_devices.c
+@@ -230,7 +230,9 @@ static int ax88172_bind(struct usbnet *dev, struct usb_interface *intf)
+ 	int i;
+ 	unsigned long gpio_bits = dev->driver_info->data;
+ 
+-	usbnet_get_endpoints(dev,intf);
++	ret = usbnet_get_endpoints(dev, intf);
++	if (ret < 0)
++		goto out;
+ 
+ 	/* Toggle the GPIOs in a manufacturer/model specific way */
+ 	for (i = 2; i >= 0; i--) {
+@@ -834,7 +836,9 @@ static int ax88772_bind(struct usbnet *dev, struct usb_interface *intf)
+ 
+ 	dev->driver_priv = priv;
+ 
+-	usbnet_get_endpoints(dev, intf);
++	ret = usbnet_get_endpoints(dev, intf);
++	if (ret < 0)
++		return ret;
+ 
+ 	/* Maybe the boot loader passed the MAC address via device tree */
+ 	if (!eth_platform_get_mac_address(&dev->udev->dev, buf)) {
+@@ -1258,7 +1262,9 @@ static int ax88178_bind(struct usbnet *dev, struct usb_interface *intf)
+ 	int ret;
+ 	u8 buf[ETH_ALEN] = {0};
+ 
+-	usbnet_get_endpoints(dev,intf);
++	ret = usbnet_get_endpoints(dev, intf);
++	if (ret < 0)
++		return ret;
+ 
+ 	/* Get the MAC address */
+ 	ret = asix_read_cmd(dev, AX_CMD_READ_NODE_ID, 0, 0, ETH_ALEN, buf, 0);
+-- 
+2.25.1
 
-In my use case, DX pin is connected to the ADC chip select pin so I want
-the DX pin to toggle the closest possible to capture's start. That's
-why I introduced this feature over configuring the pin as GPO.
-
-> 
-> Quite novel use of the hardware, no doubt about it. If you don't have
-> DMA servicing the TX, it will just re-transmit the word from from the
-> DXR register when the transmitter is pulled out of reset.
-> 
-> Interesting, but I'm not sure if this belongs to DT.
-> 
->> Add a 'ti,drive-dx' property that can be used to repeatedly output a
->> chosen pattern on DX pin while capture stream is ON.
->>
->> Signed-off-by: Bastien Curutchet <bastien.curutchet@bootlin.com>
->> ---
->>   Documentation/devicetree/bindings/sound/davinci-mcbsp.yaml | 7 +++++++
->>   1 file changed, 7 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/sound/davinci-mcbsp.yaml b/Documentation/devicetree/bindings/sound/davinci-mcbsp.yaml
->> index d8d4e7ea6e02..f4d1fc6bcd61 100644
->> --- a/Documentation/devicetree/bindings/sound/davinci-mcbsp.yaml
->> +++ b/Documentation/devicetree/bindings/sound/davinci-mcbsp.yaml
->> @@ -80,6 +80,13 @@ properties:
->>         Enable synchronisation error detections when an unexpected frame pulse is
->>         received. If not present, unexpected frame pulses are ignored.
->>   
->> +  ti,drive-dx:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      If the property is present, McBSP will repeatedly output the selected
->> +      value on DX pin during capture streams. For instance, if set to 0, this
->> +      can be used to drive an active-low signal.
->> +
->>   required:
->>     - "#sound-dai-cells"
->>     - compatible
-> 
-
-Best regards,
-Bastien
