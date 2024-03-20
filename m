@@ -1,98 +1,123 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C9D4D9E4;
-	Wed, 20 Mar 2024 15:15:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1568F4D9E4
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 15:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710947743; cv=none; b=du+7itM64xOifn8xtX5ALosLWLU/4J9baH7iKRQBpa/VRIm0rxKuy7o/6BaS0lEHwJ7dZOrDxUOMWNhqXSn/1yUxQaroZBN9vZKQR2FFdaGaRaBmYN3Qrgh8WhhoZdjKMf43yA1oa3R5j3wWk7iVL8LMJg6aRT/h2bjzdv9IT5s=
+	t=1710947991; cv=none; b=uW9ziolpSZ8J7dZlrE3I/g4WhmL1tWsb2EPF57W5iXvrzkTrFy5uXVo1igMcGLrFo+VcAK8rwdfsoXUot5uWVT2bGkTrKsW9DEVX2j+UUhdxvBAr+VILBe/FTVCu8eXlH62WhFgcBFZU37ak8Ao1XgEykM4I4/rFtT5zqkYv5xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710947743; c=relaxed/simple;
-	bh=bKpePcqzlga3/wYp4D1m1QXBs0CVLRHWadIpbuFQsog=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ejTmV24k8c8GDCSXXLa+3cCP5zm14wEqePhownjseapK+7cfDupZp1nR3/TUW8TneSdQhhtrci+Mbqs3kxeO5L3NPfW+pV8A8bnY8ZGM7Ok/cDpBB/gmXLSC8c9q4uF84V0NPsgZ4CV5LFcsTxS8BwZVSfDlpLutfRa+65q6hpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gmOVp/gq; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gmOVp/gq"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-60a0579a955so82012267b3.3;
-        Wed, 20 Mar 2024 08:15:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710947740; x=1711552540; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FOA1OkHSqNDNi7l6mSUoWp1Vti+dK8LMbsievLGAJJ0=;
-        b=gmOVp/gqb6UicLHmCIJOJxvsD766VQBc/cOlCBfLgEoYOTBXJ0A1qIdec28b9Pn96U
-         1YZTOM0eTtUUz4P1LfQtAdrdfQ1O6FcI4tGYlKy9PMXM1fB4M9oIjdTLDqx+PoRdCUnb
-         iRTJ/ljbxPsXYHe+8KPA20ufZ4WwHzbU9AyhRqL1gQqQHO8VljIl2OgpEihBSTQTtw9f
-         oM4ES/Tm/WlzBIXNl/PIHlGFRXsmYTxCQWi50ge4Kum78OPPRUj/ym/QlrLLFvc5/lT1
-         aFP4UIDT09HwzXeRwt5lJg+SM2nfh71q2//HjBnZTRaY7cjFbHWCsQ00ousbhai2D2k7
-         6gWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710947740; x=1711552540;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FOA1OkHSqNDNi7l6mSUoWp1Vti+dK8LMbsievLGAJJ0=;
-        b=OIDrzfG8lhAxsNio1umuWAoDBCcwjwHOyo/zna5t43W1PMiB3O8d5buhBT3P/q6vVJ
-         tYxVBqzdD/qM2WqVzx3DtqP26Bf3NIJ/32efW2fNNFs9C32CSswEfViK4jHeQUeb0kAY
-         /Q2GqfaO84mpNhhWjdGXCae/WioUCxs3iqawwUivMt1EbZ8mCYkifyNuAd5jA7lhm2kB
-         rhyAkvBWW2KVMTm3g2ClCjDo88KS21ILdqK5OrJPJwrOTMSaWSkTEeNrWqJhJ0VewmCQ
-         QLrkKZ3JxPItVJ/Jz6Ii39jy4KY6NgLsZVPdTSfTkfeEXnTw6zgWRHyIMEtjQ4yX7Uml
-         eofw==
-X-Forwarded-Encrypted: i=1; AJvYcCUZstXej4hfmu9biZCrNjal63R+bSNidyTxJjFiT9EqUaFiqyofQw9B4JtMR4Nv47um5FYjOBaNPsyo9ZXgOKJjgiJGSUNFG9FkT2P+8Tgt3uFvBaCLLudYgE72P7PIj/8KScToXX0wCuEuYQ==
-X-Gm-Message-State: AOJu0YzsSsOZn2/sN7Otja61pUEJk/XH13ZCpexhm+oELGrsw5phCV4J
-	ZGthd3PAqbrZk5oCNsKwuCuaU0V5L34qxTchfwuUre8rLYM34Vqy
-X-Google-Smtp-Source: AGHT+IGEIYVb+JrL1n5CezttcE9gCGyXAR4HdzsHEKu6QmAj4f10FkRx3+A/wujjQICo15f4K9DKnQ==
-X-Received: by 2002:a81:ab50:0:b0:60f:ed06:bee7 with SMTP id d16-20020a81ab50000000b0060fed06bee7mr6001464ywk.50.1710947740634;
-        Wed, 20 Mar 2024 08:15:40 -0700 (PDT)
-Received: from localhost ([2600:1700:2ec0:58c0::44])
-        by smtp.gmail.com with ESMTPSA id s3-20020a81c443000000b00610b532f8cbsm1798449ywj.36.2024.03.20.08.15.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Mar 2024 08:15:40 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Wed, 20 Mar 2024 08:15:39 -0700
-From: Tejun Heo <tj@kernel.org>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	willy@infradead.org, bfoster@redhat.com, jack@suse.cz,
-	dsterba@suse.com, mjguzik@gmail.com, dhowells@redhat.com,
-	peterz@infradead.org
-Subject: Re: [PATCH 6/6] writeback: remove unneeded GDTC_INIT_NO_WB
-Message-ID: <Zfr9my_tfxO-N6HS@mtj.duckdns.org>
-References: <20240320110222.6564-1-shikemeng@huaweicloud.com>
- <20240320110222.6564-7-shikemeng@huaweicloud.com>
+	s=arc-20240116; t=1710947991; c=relaxed/simple;
+	bh=w6Ct3C1JvPunEIqAGDEqVOnbhaD1962ZTtDotzWiW7w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=TzVTXEczcR5n7+R+k39j0QseiL144d7Lu0x04SBzHVDvi6JpA+cuNvJmJocqYonunGo9e4ZGbg3oAWZCLOzTjYW6AYhPwugiZBWYTz7MFSNr78h3xk03t93mJ1/QPZPv8lPdGXr5JQO29Fk+4OF/8TSSvkeNIo0uA0sMdO6Rlmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E012AC433F1;
+	Wed, 20 Mar 2024 15:19:49 +0000 (UTC)
+Date: Wed, 20 Mar 2024 11:22:14 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Daniel Bristot de Oliveira <bristot@kernel.org>
+Subject: [GIT PULL] tracing/tools: Updates for v6.9
+Message-ID: <20240320112214.01bc5339@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240320110222.6564-7-shikemeng@huaweicloud.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
 
-On Wed, Mar 20, 2024 at 07:02:22PM +0800, Kemeng Shi wrote:
-> We never use gdtc->dom set with GDTC_INIT_NO_WB, just remove unneeded
-> GDTC_INIT_NO_WB
-> 
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-...
->  void global_dirty_limits(unsigned long *pbackground, unsigned long *pdirty)
->  {
-> -	struct dirty_throttle_control gdtc = { GDTC_INIT_NO_WB };
-> +	struct dirty_throttle_control gdtc = { };
+Linus,
 
-Even if it's currently not referenced, wouldn't it still be better to always
-guarantee that a dtc's dom is always initialized? I'm not sure what we get
-by removing this.
+[
+  Note, the biggest change here is the restructuring of the Makefiles to
+  warn about missing libraries that you asked us to do last merge window.
+  It follows perf in which you don't have the libraries, you now get:
 
-Thanks.
+  Auto-detecting system features:
+  ...                           libtraceevent: [ OFF ]
+  ...                              libtracefs: [ OFF ]
 
--- 
-tejun
+  libtraceevent is missing. Please install libtraceevent-dev/libtraceevent-devel
+  libtracefs is missing. Please install libtracefs-dev/libtracefs-devel
+]
+
+Updates to tools/tracing and verification for 6.9:
+
+Tracing:
+
+- Update makefiles for latency-collector and RTLA, using tools/build/
+  makefiles like perf does, inheriting its benefits. For example, having a
+  proper way to handle library dependencies.
+
+- The timerlat tracer has an interface for any tool to use.  rtla timerlat
+  tool uses this interface dispatching its own threads as workload. But,
+  rtla timerlat could also be used for any other process. So, add 'rtla
+  timerlat -U' option, allowing the timerlat tool to measure the latency of
+  any task using the timerlat tracer interface.
+
+Verification:
+
+- Update makefiles for verification/rv, using tools/build/ makefiles like
+  perf does, inheriting its benefits.  For example, having a proper way to
+  handle dependencies.
+
+
+Please pull the latest trace-tools-v6.9 tree, which can be found at:
+
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+trace-tools-v6.9
+
+Tag SHA1: 8f0b372605bfba01ab03a1201f93e655bc401fc5
+Head SHA1: a23c05fd76cf4ad27e0c74f7a93e7b089e94a55c
+
+
+Daniel Bristot de Oliveira (4):
+      tools/tracing: Use tools/build makefiles on latency-collector
+      tools/rtla: Use tools/build makefiles to build rtla
+      tools/verification: Use tools/build makefiles on rv
+      tools/rtla: Add -U/--user-load option to timerlat
+
+----
+ .../tools/rtla/common_timerlat_options.rst         |   6 +
+ tools/tracing/latency/.gitignore                   |   5 +-
+ tools/tracing/latency/Build                        |   1 +
+ tools/tracing/latency/Makefile                     | 105 ++++++++--
+ tools/tracing/latency/Makefile.config              |  30 +++
+ tools/tracing/rtla/.gitignore                      |   7 +-
+ tools/tracing/rtla/Build                           |   1 +
+ tools/tracing/rtla/Makefile                        | 217 +++++++--------------
+ tools/tracing/rtla/Makefile.config                 |  47 +++++
+ tools/tracing/rtla/Makefile.rtla                   |  80 ++++++++
+ tools/tracing/rtla/Makefile.standalone             |  26 +++
+ tools/tracing/rtla/sample/timerlat_load.py         |  74 +++++++
+ tools/tracing/rtla/src/Build                       |  11 ++
+ tools/tracing/rtla/src/timerlat_hist.c             |  16 +-
+ tools/tracing/rtla/src/timerlat_top.c              |  14 +-
+ tools/verification/rv/.gitignore                   |   6 +
+ tools/verification/rv/Build                        |   1 +
+ tools/verification/rv/Makefile                     | 207 +++++++-------------
+ tools/verification/rv/Makefile.config              |  47 +++++
+ tools/verification/rv/Makefile.rv                  |  51 +++++
+ tools/verification/rv/src/Build                    |   4 +
+ 21 files changed, 650 insertions(+), 306 deletions(-)
+ create mode 100644 tools/tracing/latency/Build
+ create mode 100644 tools/tracing/latency/Makefile.config
+ create mode 100644 tools/tracing/rtla/Build
+ create mode 100644 tools/tracing/rtla/Makefile.config
+ create mode 100644 tools/tracing/rtla/Makefile.rtla
+ create mode 100644 tools/tracing/rtla/Makefile.standalone
+ create mode 100644 tools/tracing/rtla/sample/timerlat_load.py
+ create mode 100644 tools/tracing/rtla/src/Build
+ create mode 100644 tools/verification/rv/.gitignore
+ create mode 100644 tools/verification/rv/Build
+ create mode 100644 tools/verification/rv/Makefile.config
+ create mode 100644 tools/verification/rv/Makefile.rv
+ create mode 100644 tools/verification/rv/src/Build
+---------------------------
