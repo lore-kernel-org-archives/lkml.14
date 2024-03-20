@@ -1,81 +1,158 @@
-Received: from mailscanner05.zoner.fi (mailscanner05.zoner.fi [5.44.246.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726EC85620
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 18:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.44.246.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2B86A010;
+	Wed, 20 Mar 2024 18:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710960532; cv=none; b=kMeq2qeekBlF7mSD2B81RGg14OAjWrRE5spMoquinY19gLjhXrAjmnVxp2qoyJhZAX64A0tzC/A8uL5cWoANfRi8m7BQX/2scV/saPVSGX/w+vuJ+9BI5s8BdQLF2NYQ4bSMvWzW2KmNkR7kTqZxHpvQxgoz5BhGqX/Yi6ZL+gM=
+	t=1710960530; cv=none; b=Mp+kS9aqUt1qZUi9Y5FSk4MBFKRaYBNq4RveJs6NE0GqEpmg/jQdp3aM6ZeHWA2c5uPROVysy1a8v0WcZpEPJn2Fr3KYdDNj1trUo6YPsnDs+hG/KHpI49zXCkdiVOEiZ6uhpDRphjODqimSiyTtsyDuWJgKIJyE9JVeqJ2uB24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710960532; c=relaxed/simple;
-	bh=/SCw4biXcQwxbS8rB0xZT7OMJzC9utywPDK96DZ5Xao=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SN0HllpqZ3Uil7pSXaN0U4oAhKpJ0pc0wiI4+fX0S7VMssRp/w4KU6dhHKKSVCN5JXr5OA5YajZhnWjlwS7UjNRaOgbYXOhigBlo8qiYD1JI0/lMdipfMHRSDC2hDTuI82igatBDKg+1cp4eBKK1HspiigvHwu4z0d3iiUduE7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org; spf=pass smtp.mailfrom=tukaani.org; arc=none smtp.client-ip=5.44.246.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tukaani.org
-Received: from www25.zoner.fi (www25.zoner.fi [84.34.147.45])
-	by mailscanner05.zoner.fi (Postfix) with ESMTPS id F269E21235;
-	Wed, 20 Mar 2024 20:39:25 +0200 (EET)
-Received: from mail.zoner.fi ([84.34.147.244])
-	by www25.zoner.fi with esmtp (Exim 4.96.1-7-g79877b70e)
-	(envelope-from <lasse.collin@tukaani.org>)
-	id 1rn0qT-0001dW-2Y;
-	Wed, 20 Mar 2024 20:39:25 +0200
-From: Lasse Collin <lasse.collin@tukaani.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Lasse Collin <lasse.collin@tukaani.org>,
-	Jia Tan <jiat0218@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 01/11] MAINTAINERS: Add XZ Embedded maintainers
-Date: Wed, 20 Mar 2024 20:38:34 +0200
-Message-ID: <20240320183846.19475-2-lasse.collin@tukaani.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240320183846.19475-1-lasse.collin@tukaani.org>
-References: <20240320183846.19475-1-lasse.collin@tukaani.org>
+	s=arc-20240116; t=1710960530; c=relaxed/simple;
+	bh=tFJOpb0JvoYIf7/Tb9EQ8IlbJJno9k0nno8TrWoX04Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Oat1Rq/3kuXM8zxhVcXb+/E0ZNh1oBK27EkkXSTxqEFbgYoKiA1ZUunKU/vtGmyERs5oveZHCDQ9Y7jRQg0wqqYJtkhI1EzEhtq6EY+K9JXv4/POY18fX//jUE7L0sqqwmzss9bkut43AkAEQA8WirXpxe0AuHrmdqTb/U6ZOwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MD8kXSbR; arc=none smtp.client-ip=209.85.217.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MD8kXSbR"
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4739b6ddc94so16549137.0;
+        Wed, 20 Mar 2024 11:48:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710960528; x=1711565328; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C3kc8hzKgebH+x6vGwYL+8FHBw8RQ3nELQdeZk5vZEA=;
+        b=MD8kXSbRL7KfUEPUqYik4hN498aH7h6N4z7V6TNXQg1KFzu1qDT7VEm5lIW8WpD+LB
+         lPzdFWGsY/43kzmgZAkGu3GISR06lqVDhNjBANSQXvF3NAyfv9ph7vFiIhqdcZtShM98
+         XXLhmEuGEoKufOascVK8SrwgxX/6CiMAEKmtjgdrPh5+tErvPIBlsZ5gEtLVm1FS4x53
+         uQl7VF6Z/u9sASLUIhGyCPMyYzrG7OwIccWKmYhnv4pnHBxot66RPnTyth8uoOgt1e7q
+         fXGgRW+h2AlHjevjfnteIDRElJGmXEGBZsfMA8GDZXV4Tnb7HHtgPjednxyNGUdDvfG1
+         mm8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710960528; x=1711565328;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=C3kc8hzKgebH+x6vGwYL+8FHBw8RQ3nELQdeZk5vZEA=;
+        b=YoLSuZjb3BInM4yva/i0Lju4EdT8uJLVtr/9Rug3hvi6/LJAIga0H/s/2IcTo+nwAk
+         1BhxFTDwMTN5KtuvnbbAxHRNbxq7FvnoV7XjOBWWDwGg9cvatHEAKiva3DQmAuR94chI
+         jtMKdI+A7FBxrBBq5btkYzWePbGfBTVAQCExAzwqhsRmA+8PQKX90jHVmmVGGZ47B7Vg
+         dIFbK219z59H4ay0/wiGDCnQzQIC77npx/2sY3COkEtIW7YB3WoBiGjRnscHpEuusJVI
+         4xL6zq5Cvkb5ZeNALxqzpDs4lISlWQsilcbRfrULzdOmEbVEsQa0QvWhdde4Q0EMmYr+
+         dqWA==
+X-Forwarded-Encrypted: i=1; AJvYcCUELNLuzLYaBAdbTx/5VZUcEVjw30dboEnR1E7i+SWOd2ihA2sxGEQHLjyP07zY9VXsRkH6fzJBRykPJdiR1IIv/ZBaDKSRxmRrzVnRbblAVHkfC86igo0CocnrHfZPQLxN2+hAdzu+Z/cYAco8mco/2a/ydR6QiKxHb5rMi1zWXgze
+X-Gm-Message-State: AOJu0YzWNQWZOC8ECVSRoKNRG3ktf0qoFOrdpBI15b08MtCrlX4g1g0j
+	Wuw5TRXi2tIJqm2mFANQF8Db/Cxuqb/pPFhX1Gnifr6upYdTD22fcm2h3oypQNwytVV7zSOqhCD
+	iCE3oVwPOSqMlxtk1qxOoqH10VutZqBw+bpw=
+X-Google-Smtp-Source: AGHT+IHHMBzJxvqxFSVFgSTPKSJn7ba2A2kXEEjNVmqdH0a0PCDskoseFwovKGJtH7rif3zQaet5AETl1OVj1yNlRL4=
+X-Received: by 2002:a05:6102:4c10:b0:476:76d8:49b with SMTP id
+ jy16-20020a0561024c1000b0047676d8049bmr9593457vsb.11.1710960527098; Wed, 20
+ Mar 2024 11:48:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240320001656.10075-1-21cnbao@gmail.com> <20240320124207.0c127947@canb.auug.org.au>
+ <CAGsJ_4zpXwVEhsdffoZVBVWiwT4Lw2qEMrW-X92ib=kv=9Yx9g@mail.gmail.com> <20240320084919.8e18adb418347feed6bfc8ae@linux-foundation.org>
+In-Reply-To: <20240320084919.8e18adb418347feed6bfc8ae@linux-foundation.org>
+From: Barry Song <21cnbao@gmail.com>
+Date: Thu, 21 Mar 2024 07:48:36 +1300
+Message-ID: <CAGsJ_4y+1HovQ52HPis8NBDqp4-fiGRwehX+NH0New0HoEU5GQ@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: coding-style: ask function-like macros to
+ evaluate parameters
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, corbet@lwn.net, workflows@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Barry Song <v-songbaohua@oppo.com>, Chris Zankel <chris@zankel.net>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Guenter Roeck <linux@roeck-us.net>, Max Filippov <jcmvbkbc@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I have been the maintainer of the upstream project since I submitted
-the code to Linux in 2010 but I forgot to add myself to MAINTAINERS.
-Nowadays Jia Tan is the other maintainer.
+On Thu, Mar 21, 2024 at 4:49=E2=80=AFAM Andrew Morton <akpm@linux-foundatio=
+n.org> wrote:
+>
+> On Wed, 20 Mar 2024 16:24:30 +1300 Barry Song <21cnbao@gmail.com> wrote:
+>
+> > Hi Stephen,
+> > Thanks for reviewing.
+> >
+> > On Wed, Mar 20, 2024 at 2:42=E2=80=AFPM Stephen Rothwell <sfr@canb.auug=
+.org.au> wrote:
+> > >
+> > > Hi Barry,
+> > >
+> > > On Wed, 20 Mar 2024 13:16:56 +1300 Barry Song <21cnbao@gmail.com> wro=
+te:
+> > > >
+> > > > diff --git a/Documentation/process/coding-style.rst b/Documentation=
+/process/coding-style.rst
+> > > > index 9c7cf7347394..8065747fddff 100644
+> > > > --- a/Documentation/process/coding-style.rst
+> > > > +++ b/Documentation/process/coding-style.rst
+> > > > @@ -827,6 +827,13 @@ Macros with multiple statements should be encl=
+osed in a do - while block:
+> > > >                               do_this(b, c);          \
+> > > >               } while (0)
+> > > >
+> > > > +Function-like macros should evaluate their parameters, for unused =
+parameters,
+> > > > +cast them to void:
+> > > > +
+> > > > +.. code-block:: c
+> > > > +
+> > > > +     #define macrofun(a) do { (void) (a); } while (0)
+> > > > +
+> > >
+> > > Maybe add some comment about using a static inline function for these
+> > > simple versions instead, if at all possible, (it is suggested just
+> > > above this section) since that will still type check arguments.
+> >
+> > right, what about adding the below section together with the above (voi=
+d) cast?
+> >
+> > +Another approach could involve utilizing a static inline function to r=
+eplace
+> > +the macro.:
+> > +
+> > +.. code-block:: c
+> > +
+> > +       static inline void fun(struct foo *foo)
+> > +       {
+> > +       }
+> > +
+>
+> Stronger than that please.  Just tell people not to use macros in such
+> situations.  Always code it in C.
 
-Reviewed-by: Jia Tan <jiat0218@gmail.com>
-Signed-off-by: Lasse Collin <lasse.collin@tukaani.org>
----
- MAINTAINERS | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+While I appreciate the consistency of always using "static inline"
+instead of macros,
+I've noticed numerous instances of (void) macros throughout the kernel.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 43b39956694a..35f4ee968626 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -24371,6 +24371,20 @@ S:	Maintained
- F:	drivers/spi/spi-xtensa-xtfpga.c
- F:	sound/soc/xtensa/xtfpga-i2s.c
- 
-+XZ EMBEDDED
-+M:	Lasse Collin <lasse.collin@tukaani.org>
-+M:	Jia Tan <jiat0218@gmail.com>
-+S:	Maintained
-+W:	https://xz.tukaani.org/xz-embedded/
-+B:	https://github.com/tukaani-project/xz-embedded/issues
-+C:	irc://irc.libera.chat/tukaani
-+F:	Documentation/staging/xz.rst
-+F:	include/linux/decompress/unxz.h
-+F:	include/linux/xz.h
-+F:	lib/decompress_unxz.c
-+F:	lib/xz/
-+F:	scripts/xz_wrap.sh
-+
- YAM DRIVER FOR AX.25
- M:	Jean-Paul Roubelat <jpr@f6fbb.org>
- L:	linux-hams@vger.kernel.org
--- 
-2.44.0
+arch/arm64/include/asm/cpuidle.h:#define arm_cpuidle_save_irq_context(c) (v=
+oid)c
+arch/arm64/include/asm/cpuidle.h:#define
+arm_cpuidle_restore_irq_context(c) (void)c
+arch/loongarch/include/asm/io.h:#define iounmap(addr) ((void)(addr))
+arch/mips/include/asm/cop2.h:#define cop2_save(r) do { (void)(r); } while (=
+0)
+arch/mips/include/asm/cop2.h:#define cop2_restore(r) do { (void)(r); } whil=
+e (0)
+arch/mips/include/asm/cop2.h:#define cop2_save(r) do { (void)(r); } while (=
+0)
+arch/mips/include/asm/cop2.h:#define cop2_restore(r) do { (void)(r); } whil=
+e (0)
+....
 
+I'm uncertain whether people would find it disconcerting if they completely
+deviate from the current approach.
+
+If you believe it won't pose an issue, I can proceed with v3 to eliminate
+the first option, casting to (void).
+
+Thanks
+Barry
