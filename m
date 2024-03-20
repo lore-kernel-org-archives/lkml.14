@@ -1,118 +1,136 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392ED4F8B2
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 21:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+Received: from smtpfb2-g21.free.fr (smtpfb2-g21.free.fr [212.27.42.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD1524F8B2
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 21:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710968908; cv=none; b=qNt5oc3sGUSB7Ru91abZ6EZ2nyWMa0GqlvSbMetSoLREEyofPzUKQ+xyib7FvXZMsGfRwRfWU2lfh/AZ4O9C1GdDPR0KAL1d31w+cbqn+4fvTmBHWMIkzj63HxmkMprRK6u+w77urAKBh2yKoOTTTKy96goG7v8JIx0bajy3TyE=
+	t=1710969106; cv=none; b=rscGwokSVQWnx9z4PtMJ4vQymO0lIR4pzzoqPQefCnpzwXKTG9H1tpweyh6Coj0AVUIyC6NkHZqiZll1LnUu+eK9UU+nvbJl/QGQOfl2rmXE543X86uTP+WVDB//nZr+YAsN+4BotajKVds6RT5AxapMC5MeYgz19eBOKAS8kiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710968908; c=relaxed/simple;
-	bh=db/Uh8o+Uvv9bXpTbGsPMPU7PW4//znxao0XLAMAxy4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ddl0kWZqc4vPqrv3N2pCA2lLrY/rOzGvDBRgngeQAYtbrdO8OEvWT4Hff0UOwdyVmPjeIU6YI4IgU8TNtN3jvVXaZZko8xULPTWRsbSyoLuRYTZIWxTBBG2K/1kc58Bj7YoOUWQLty0hq2LNkWc4lp+PMIh/gY/HNgPCTeuqkyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PVwV55cb; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1710969106; c=relaxed/simple;
+	bh=i+5N/ZS/XeI5GzfDGnArxcE+rOdWbgceO5yJiYCBRJM=;
+	h=Date:From:To:Message-ID:In-Reply-To:Subject:MIME-Version:
+	 Content-Type; b=jOXwu65bBu2K3vNuCG3WGgGPRERezaTxoetM9B/adARPpWL+WMZR8g4Z14WYl1C5yjEamaCVo9gxNhyIDKYdWrSnjzdYer+uiCC/1tsGirjzvrQ3NzoO/zBrv00Apvn5XfcqU7YJsigA1i3rujL9uq9KajlQA6jYZ/Bst0BhOVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b=YYQQ23Hh; arc=none smtp.client-ip=212.27.42.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PVwV55cb"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-29fb12a22afso266784a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 14:08:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1710968906; x=1711573706; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uLkYzB5+ZTvWOiX3IvyY6oP/ICYdTVuS+z29/pPznQ8=;
-        b=PVwV55cbRtFAZ3MWedsyRPclwDtF1bC0f7ltXBBRNGuHFdeGr09/CIGUu4SsxBFOww
-         gdAVz09zlRnl57bQ2Wxz+dQrBWonObKm/cnbZK/Jqe/wI63yukUIjW8C7MxZ3cdhKPvZ
-         cpBKtG42Gcsw/kTn2AoF7aofX/c79zkWm79AU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710968906; x=1711573706;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uLkYzB5+ZTvWOiX3IvyY6oP/ICYdTVuS+z29/pPznQ8=;
-        b=VeguJLbWILGMKRFkOZnosPbOmZrKBttpZXHOuxoyf3RCg961O1kruudrWcd716wQls
-         MKNW6dfqpMfMDe+0rSBApRU/UiUzHFUaG1+c5OXUQyuDqAcmHu26deQE/cvXJOPSntAd
-         0VV3Wh8zv1Zv6iTRgx4I9JMDZbAt/ZZOEQsq+mv97VRXg09zFDdeToyWVJlpoVBhnw0K
-         Xp+6pYQfQq7xajjZt1/I9FN5gLhdl4pJtoMgzLvXHa5f5cpe1iA3LS6GSUBjVRLRb4mM
-         e5km3zA6cZ379Mqy4yfTKret+ekInrXB7xpzRrOQQbmGButewoDyBqYQJ7hGuNVfMulh
-         r0oA==
-X-Forwarded-Encrypted: i=1; AJvYcCXVAWmMlw880qwV6PYEAK1LZHlVvOySr+Wp15xXrrOPJGQmRfr0TOSoShbKuPojknnI1cYDcru4VtJvA4+xK330oZeWSnWpSriwPFhj
-X-Gm-Message-State: AOJu0Yw9wQ7oGgm00clFXRYyAGs9ej/hl/3D9SgdIUttua0ak/8Id44c
-	etDkk/hcmMJ++jJI6o69hNnT09xlz1rnv8smeiCXj7XcSwAUap8EOlnMoWyK0A==
-X-Google-Smtp-Source: AGHT+IFltwN6J3gvzQbI/NEeVt7wOISvzFFbommwSsWSGAWyfbnUCH2tsn1YPIhLgukC979AFUKfHQ==
-X-Received: by 2002:a17:90b:2c8d:b0:29f:b0a6:3c5 with SMTP id sw13-20020a17090b2c8d00b0029fb0a603c5mr206050pjb.49.1710968906551;
-        Wed, 20 Mar 2024 14:08:26 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id so15-20020a17090b1f8f00b002a0187d84f0sm162906pjb.20.2024.03.20.14.08.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Mar 2024 14:08:26 -0700 (PDT)
-Date: Wed, 20 Mar 2024 14:08:25 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vdso: use CONFIG_PAGE_SHIFT in vdso/datapage.h
-Message-ID: <202403201408.48C8AC89A@keescook>
-References: <20240320180228.136371-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b="YYQQ23Hh"
+Received: from smtp4-g21.free.fr (smtp4-g21.free.fr [212.27.42.4])
+	by smtpfb2-g21.free.fr (Postfix) with ESMTP id 5E2A54CD00
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 22:05:41 +0100 (CET)
+Received: from zimbra54-e10.priv.proxad.net (unknown [172.20.243.204])
+	by smtp4-g21.free.fr (Postfix) with ESMTP id 54D0C19F5A5
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 22:05:34 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=free.fr;
+	s=smtp-20201208; t=1710968734;
+	bh=i+5N/ZS/XeI5GzfDGnArxcE+rOdWbgceO5yJiYCBRJM=;
+	h=Date:From:To:In-Reply-To:Subject:From;
+	b=YYQQ23HhSFF0XdkZoLjOLsE/p37shF0bCAqbBfs+ZcTSIIQGNH6AIWMDl9rPpzxmJ
+	 r/KyQheePWtQRE2AViSYf0+cwcr998VhyOSVwivAtP8CQnDSOcM6KXesS23+MYT4g/
+	 POXgLlgOCjAfXx6TcUMy3ZYIZi2jabC4ApyR4O/+ay1mbaiMwLRGrqaCOMCsMVDS0G
+	 eW/O9DLC680P1rOlWdMQI/bV6VLDHfDhpuhS2lgB+iTnuCclzs14c9QruyNpUNExMx
+	 /a+JqI/Lz2IhfAULTgp/stZA80pNPLGlI4DriB4xiSlMkz75O2TGpv9PYY6vFcL5xg
+	 Qn5v7tffbs/lw==
+Date: Wed, 20 Mar 2024 22:05:34 +0100 (CET)
+From: vincentdelor@free.fr
+To: linux-kernel@vger.kernel.org
+Message-ID: <566168554.272637693.1710968734203.JavaMail.root@zimbra54-e10.priv.proxad.net>
+In-Reply-To: <978241829.272633099.1710968583886.JavaMail.root@zimbra54-e10.priv.proxad.net>
+Subject: Increase Default vm_max_map_count to Improve Compatibility with
+ Modern Games
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240320180228.136371-1-arnd@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 7.2.0-GA2598 (ZimbraWebClient - GC122 (Win)/7.2.0-GA2598)
+X-Authenticated-User: vincentdelor@free.fr
 
-On Wed, Mar 20, 2024 at 07:02:15PM +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> Both the vdso rework and the CONFIG_PAGE_SHIFT changes were merged during
-> the v6.9 merge window, so it is now possible to use CONFIG_PAGE_SHIFT
-> instead of including asm/page.h in the vdso.
-> 
-> This avoids the workaround for arm64 and addresses a build warning
-> for powerpc64:
-> 
-> In file included from <built-in>:4:
-> In file included from /home/arnd/arm-soc/arm-soc/lib/vdso/gettimeofday.c:5:
-> In file included from ../include/vdso/datapage.h:25:
-> arch/powerpc/include/asm/page.h:230:9: error: result of comparison of constant 13835058055282163712 with expression of type 'unsigned long' is always true [-Werror,-Wtautological-constant-out-of-range-compare]
->   230 |         return __pa(kaddr) >> PAGE_SHIFT;
->       |                ^~~~~~~~~~~
-> arch/powerpc/include/asm/page.h:217:37: note: expanded from macro '__pa'
->   217 |         VIRTUAL_WARN_ON((unsigned long)(x) < PAGE_OFFSET);              \
->       |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
-> arch/powerpc/include/asm/page.h:202:73: note: expanded from macro 'VIRTUAL_WARN_ON'
->   202 | #define VIRTUAL_WARN_ON(x)      WARN_ON(IS_ENABLED(CONFIG_DEBUG_VIRTUAL) && (x))
->       |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
-> arch/powerpc/include/asm/bug.h:88:25: note: expanded from macro 'WARN_ON'
->    88 |         int __ret_warn_on = !!(x);                              \
->       |                                ^
-> 
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
-> See-also: 8b3843ae3634 ("vdso/datapage: Quick fix - use asm/page-def.h for ARM64")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Hello,
 
-Thanks for tracking this!
+I am writing to highlight an issue impacting many Linux users, especially t=
+hose who enjoy modern gaming. The current default setting of `vm_max_map_co=
+unt` at 65530 has been linked to crashes or launch failures in several cont=
+emporary games.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+To address this, I have opened a detailed bug report (218616 =E2=80=93 Incr=
+ease Default vm_max_map_count to Improve Gaming Experience on Linux) availa=
+ble at: 218616 =E2=80=93 Increase Default vm_max_map_count to Improve Gamin=
+g Experience on Linux (kernel.org) .
 
--- 
-Kees Cook
+
+We have identified that several modern games such as Hogwarts Legacy, Star =
+Citizen, and others experience crashes or fail to start on Linux due to the=
+ default `vm_max_map_count` being set to 65530. These issues can be mitigat=
+ed by increasing the `vm_max_map_count` value to over 1048576, which has be=
+en confirmed to resolve the crashes without introducing additional bugs rel=
+ated to map handling.
+
+This issue affects a wide range of users and has been noted in distribution=
+s like Fedora and Pop!_OS, which have already adjusted this value to accomm=
+odate modern gaming requirements.
+
+For reference, here is the change for Fedora:
+https://fedoraproject.org/wiki/Changes/IncreaseVmMaxMapCount
+
+Here is a list of games affected by this low value in vm_max_map_count as r=
+eported to Valve:
+
+THE FINALS
+https://github.com/ValveSoftware/Proton/issues/7317#issuecomment-1974837850
+
+Hogwarts Legacy
+https://github.com/ValveSoftware/Proton/issues/6510#issuecomment-1422781100
+
+DayZ
+https://github.com/ValveSoftware/Proton/issues/3899#issuecomment-1304397069
+
+Counter-Strike 2
+https://github.com/ValveSoftware/Proton/issues/2704#issuecomment-1705199788
+
+
+**Steps to Reproduce:**
+1. Install Ubuntu or other distribution with `vm_max_map_count` being set t=
+o 65530 and attempt to run affected games such as Hogwarts Legacy or Star C=
+itizen.
+2. Observe that the games crash or fail to start with the default `vm_max_m=
+ap_count` setting.
+3. Modify `/etc/sysctl.conf` to include `vm.max_map_count=3D1048576` (or an=
+other sufficiently high value).
+4. Reboot the system and observe that the games now run without issue.
+
+**Expected Result:**
+Games should run without crashing or failing to start due to `vm_max_map_co=
+unt` limitations.
+
+**Actual Result:**
+Games crash or fail to start unless `vm_max_map_count` is manually increase=
+d.
+
+**Suggested Fix:**
+Increase the default `vm_max_map_count` value in Linux to a value greater t=
+han 1048576 to accommodate modern gaming software requirements.
+
+**Affected Games:**
+- Hogwarts Legacy
+- Star Citizen
+- THE FINALS
+- DayZ
+- Counter-Strike 2
+- Payday 2
+- (and potentially others)
+
+**References:**
+- Fedora's change documentation: https://fedoraproject.org/wiki/Changes/Inc=
+reaseVmMaxMapCount
+- Various user reports and confirmations on gaming performance improvement =
+with increased `vm_max_map_count`.
+
+I appreciate your time and consideration and welcome any feedback or sugges=
+tions on this matter.
+
+Best regards,
+
+Vincent DELOR
