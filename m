@@ -1,124 +1,156 @@
-Received: from smtpcmd0641.aruba.it (smtpcmd0641.aruba.it [62.149.156.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1AB54FBB
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 16:21:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081F754BFD;
+	Wed, 20 Mar 2024 16:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710951683; cv=none; b=PDg7JdslJ6UNaZmO6bAog3KnV867JdIHfa6XNUNb2bFxQJAOz451eVKlJL36saSaaSAz8awDwN9uibNZet6AzTKzVZVQSpsXn4lXyVpcvt5ne+F2Fgn7EqblvvcT4jJKFM1DsAdPgtfe/igXytUntwTpti5KYsOp18YAiMOFUaI=
+	t=1710951716; cv=none; b=gSpy9NnFdV2MCxoUKcsGLwnDmjQ00jUh0zWePc994zC/pI7/Aq/peIKigdWQ45ykDBVEwbsLaZCbWlCsiktJojXVUYIy27mMAfZ+6JyZMJ/3vzA5JSowT2RUG3TXr7MSf1rfy07c7Aol60MbKtDCMWjZJ2aVUY1S7VV++iIqxKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710951683; c=relaxed/simple;
-	bh=gyvF1IOsSNtV7DoTvXZKG2k2ZhsNRKW2d7JqAyYwi1M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fRdC4HzWphaAVysQup/ISnNxFvZD1ZEs0uRFXLxFEuLMvAa8Xwno1kaDFi8+XB2cKcPiRFpbKqK1TuavUxLw7zHvW4NHlzeK6Hf5SGXGgJOY1RUoVRWsTaCrQFhDJfne7yXUK+3iyjqpXRvVXXnc7FNdgbH1Y5QAFo13feHhou8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=Cb+pOU2J; arc=none smtp.client-ip=62.149.156.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
+	s=arc-20240116; t=1710951716; c=relaxed/simple;
+	bh=ZmXcOT2M7y1OmxH/SEp9ytHnYcwwQWvq2UwG3089PQU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tI7I/EE+OEjwglGlKl/FvrCeq6jUrJV3mDHfoalaXDYvHoNwmZrVGk8ph2+9DqqjB0FVmGLoSeeS5k0m2LMeuFkF9IqOlMNQVSW+dtq4PlCOL9A5ALaETxtRZiDFMFiLDvxmwqX+cqk/z/VkPAnR8xclgKv+NCxHKPqZdXGem6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bF5heiU9; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=McsXNZ/m; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=JDIcfAXn; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZQHvRJC6; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="Cb+pOU2J"
-Received: from [192.168.1.59] ([79.0.204.227])
-	by Aruba Outgoing Smtp  with ESMTPSA
-	id mydRrZKfJABX0myduraZxG; Wed, 20 Mar 2024 17:18:19 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-	t=1710951499; bh=gyvF1IOsSNtV7DoTvXZKG2k2ZhsNRKW2d7JqAyYwi1M=;
-	h=Date:MIME-Version:Subject:To:From:Content-Type;
-	b=Cb+pOU2J8Aw6MULICnHrsOP4Vu0ugOjgLhTyHPXNblEf+7luegmZJ40Upu4t+CxQa
-	 a2P+bCjmnHch7OOZXS7xrWRxcooWiR9PxobAwft9jpGtZMoepArg5ziguejvHr3Km0
-	 0icQ8k2W+Ys9xMHFQu2a2OkHtYHSQx2RL+38AoXS+sfCZBltGpw9eHTMj9RGxcSc45
-	 dYgJxkk2qBUCEzzMJIgSzfpeSmsXvmhEp752r6wYG++cA09OzG3wiOJJ3Ir5PHA7Ur
-	 CzetCyMinj18glk7HPxfB3ZBQiQc9aNtbHQ1F0/utudyYZPrkGDiQakzZQ7AzqaXgS
-	 xgSftN5+/rHKw==
-Message-ID: <7e268aa0-f999-48af-8188-9158fc61a8c2@enneenne.com>
-Date: Wed, 20 Mar 2024 17:18:18 +0100
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bF5heiU9";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="McsXNZ/m";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="JDIcfAXn";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZQHvRJC6"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BD1BF5BF34;
+	Wed, 20 Mar 2024 16:21:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710951712;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ulbF0+b/Gh4h1bLzsnJVEAgXjbVqI/QZ2p0fDeGTGWc=;
+	b=bF5heiU9lZlOxJ7sb27QO9chlKb3kbhK7em6NtYKoN7YBYVxitQCBUUh36OYpm3pmjGcnF
+	3waG4fSEVrUyNMY3+9Zxn4z260/sd1qo1jBfjyJ4OSOCyAjDy8GPH3rPEwUfwRm2MUwqhJ
+	gzCcHCr/x0HzFdGKMF0KVFBuf/sZJZQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710951712;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ulbF0+b/Gh4h1bLzsnJVEAgXjbVqI/QZ2p0fDeGTGWc=;
+	b=McsXNZ/mbf8MeBIaJemGCPCpS4SUFpZLu87Gl5brQVnG8obcHAecuE99YzRQk7DM78ZxyK
+	rwfO4KfVQ8oeAHBQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710951711;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ulbF0+b/Gh4h1bLzsnJVEAgXjbVqI/QZ2p0fDeGTGWc=;
+	b=JDIcfAXnDteeFPv+o9oBlO1bHyYU0fRPgMQ5j7Htgnz0KLdk4TLUa0tnRv3I1POz+O4tXl
+	T6ciwjBmFIV32CwBSfcUm8w+TpDuPK2/1H1Ks9lHO3ZOg98+SsZCMWzOuq4pJGn6jxj4mv
+	Pq/uzGDP6fHruG5ikDHmVWzyRrsWBPY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710951711;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ulbF0+b/Gh4h1bLzsnJVEAgXjbVqI/QZ2p0fDeGTGWc=;
+	b=ZQHvRJC6fn4T+b6WK/fikmf2EAXzHJWDlsbn0Ym/bnnWofpPtSjM8OIolzNG5rFMNTPWBr
+	38hXFWq+fPpU9zBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9922C136D6;
+	Wed, 20 Mar 2024 16:21:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id m4YzJR8N+2WdZgAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Wed, 20 Mar 2024 16:21:51 +0000
+Date: Wed, 20 Mar 2024 17:14:33 +0100
+From: David Sterba <dsterba@suse.cz>
+To: Maximilian Heyne <mheyne@amazon.de>
+Cc: Goldwyn Rodrigues <rgoldwyn@suse.com>,
+	Anand Jain <anand.jain@oracle.com>, David Sterba <dsterba@suse.com>,
+	stable@vger.kernel.org, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: allocate btrfs_ioctl_defrag_range_args on stack
+Message-ID: <20240320161433.GF14596@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <20240320113156.22283-1-mheyne@amazon.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 10/11] Documentation: driver-api: pps: Add Intel Timed
- I/O PPS generator
-Content-Language: en-US
-To: lakshmi.sowjanya.d@intel.com, tglx@linutronix.de, jstultz@google.com,
- corbet@lwn.net, linux-kernel@vger.kernel.org
-Cc: x86@kernel.org, netdev@vger.kernel.org, linux-doc@vger.kernel.org,
- intel-wired-lan@lists.osuosl.org, andriy.shevchenko@linux.intel.com,
- eddie.dong@intel.com, christopher.s.hall@intel.com,
- jesse.brandeburg@intel.com, davem@davemloft.net,
- alexandre.torgue@foss.st.com, joabreu@synopsys.com,
- mcoquelin.stm32@gmail.com, perex@perex.cz, linux-sound@vger.kernel.org,
- anthony.l.nguyen@intel.com, peter.hilber@opensynergy.com,
- pandith.n@intel.com, mallikarjunappa.sangannavar@intel.com,
- subramanian.mohan@intel.com, basavaraj.goudar@intel.com,
- thejesh.reddy.t.r@intel.com
-References: <20240319130547.4195-1-lakshmi.sowjanya.d@intel.com>
- <20240319130547.4195-11-lakshmi.sowjanya.d@intel.com>
-From: Rodolfo Giometti <giometti@enneenne.com>
-In-Reply-To: <20240319130547.4195-11-lakshmi.sowjanya.d@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4xfNi53SUDrigdbafA9GBsqTqvM52X7RdKb2VN1nxiFbtXbh5YcINBQR4rU5BXna+feDNynxbJcMJajiRI4vbed/FlpHFMA77WSAOYTX6AQjR/ta1DYJOn
- dDdNiSOWoAraOsufMMsPfo69B+uZQhAa6QMeVlBNZFEQIRtiJKAO4cTXKT51M2LIazKucN8o3A6GZo2ETtp30EjTcXvd/GCrlv/7p12EFmFHmGGn6uOGiGsS
- Jmcp76+bagWjvobBkHEYc/WGGUsMif5iRwohuL5hbEOvwtnE4mxiywkQ21yn7Ugx/t7DU5GRRrGdKqhV5w8Z6JnrGaNElKGhm0dmiIKmi3PfuOTwaSFBiBzi
- /Y8ACyFN2gA4+iPyMoeUi0EyawZhqIDD7pD/tvnCHb6jM1DvqUoydiUtWUdVSC9EkgW+5+eUHxc3gyTGcK0zJTLLzRrbruSbQsth3wZj7pkwUzpGScNyJxSt
- ONcgOtr36HwTuEkvuIhkJcEjJ4ODHCBumXEGy+svEpDkQcHtclO1lNVMbHT7iXAVwcJ4T8mYLNOlXrxAPY3YXthLXY1QGR9tHKo0NlybiGeYAt+68ZSIfSWc
- 9AHGKUbe+hnOG0IIUThIn1sWZpBGRxYwDF3QEHToJvkTrxa0fEM26jolw86JqyayKedzPS4boZV21w2rFDi5/Hqpc8G/sx26ripVyAzpjFOKuNuJnvzW2rL3
- gD6M9yqR7qWvTsTCuh+6HC7EghcTuwtoBMVpwk+g0pwAo675NdySZDh2Hl04azaOlP76skXrOoxJplHvf+pJAkOmQ1PTyOjq2eUkMqnADsr9VIiIO5SPkNmx
- NzVmpIOqVuzdReEkHEHlNHZquccMTi5kNFmppGtPvFuBnSxRxSXkD86OBef2YoH1APKk4wGg6GQFlNHIwozbgkwm1p7c7l3uUKINUD+tJdUqbpOnSInQQ6rX
- KES82y59243FOS6wLChS2E2pfTMu1brxzhDlHyoRwMMMBIeA7rnSTYsl/WriEcL3L8PI2SY031EKgxOxqECjp7uKTOqABX/oCM9Q8saGrdr9OBMTVpXpIENh
- eRrRat2V+cAvFNapga5vhiMSQOtj5gmfJea9OTxiYl4nSm5shfzhIUMudLBxydoyclthvQYPVipznQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240320113156.22283-1-mheyne@amazon.de>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=JDIcfAXn;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=ZQHvRJC6
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-1.31 / 50.00];
+	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 TO_DN_SOME(0.00)[];
+	 REPLYTO_ADDR_EQ_FROM(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[9];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 BAYES_HAM(-0.10)[65.31%];
+	 ARC_NA(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 FROM_HAS_DN(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.com:email,oracle.com:email,amazon.de:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 RCVD_TLS_ALL(0.00)[]
+X-Spam-Score: -1.31
+X-Rspamd-Queue-Id: BD1BF5BF34
+X-Spam-Flag: NO
 
-On 19/03/24 14:05, lakshmi.sowjanya.d@intel.com wrote:
-> From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
+On Wed, Mar 20, 2024 at 11:31:56AM +0000, Maximilian Heyne wrote:
+> From: Goldwyn Rodrigues <rgoldwyn@suse.com>
 > 
-> Add Intel Timed I/O PPS usage instructions.
+> commit c853a5783ebe123847886d432354931874367292 upstream.
 > 
-> Co-developed-by: Pandith N <pandith.n@intel.com>
-> Signed-off-by: Pandith N <pandith.n@intel.com>
-> Signed-off-by: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Acked-by: Rodolfo Giometti <giometti@enneenne.com>
-
-> ---
->   Documentation/driver-api/pps.rst | 22 ++++++++++++++++++++++
->   1 file changed, 22 insertions(+)
+> Instead of using kmalloc() to allocate btrfs_ioctl_defrag_range_args,
+> allocate btrfs_ioctl_defrag_range_args on stack, the size is reasonably
+> small and ioctls are called in process context.
 > 
-> diff --git a/Documentation/driver-api/pps.rst b/Documentation/driver-api/pps.rst
-> index 78dded03e5d8..52a6d5faf885 100644
-> --- a/Documentation/driver-api/pps.rst
-> +++ b/Documentation/driver-api/pps.rst
-> @@ -246,3 +246,25 @@ delay between assert and clear edge as small as possible to reduce system
->   latencies. But if it is too small slave won't be able to capture clear edge
->   transition. The default of 30us should be good enough in most situations.
->   The delay can be selected using 'delay' pps_gen_parport module parameter.
-> +
-> +
-> +Intel Timed I/O PPS signal generator
-> +------------------------------------
-> +
-> +Intel Timed I/O is a high precision device, present on 2019 and newer Intel
-> +CPUs, that can generate PPS signals.
-> +
-> +Timed I/O and system time are both driven by same hardware clock. The signal
-> +is generated with a precision of ~20 nanoseconds. The generated PPS signal
-> +is used to synchronize an external device with system clock. For example,
-> +share your clock with a device that receives PPS signal, generated by
-> +Timed I/O device. There are dedicated Timed I/O pins to deliver the PPS signal
-> +to an external device.
-> +
-> +Usage of Intel Timed I/O as PPS generator:
-> +
-> +Start generating PPS signal::
-> +        $echo 1 > /sys/devices/platform/INTCxxxx\:00/enable
-> +
-> +Stop generating PPS signal::
-> +        $echo 0 > /sys/devices/platform/INTCxxxx\:00/enable
+> sizeof(btrfs_ioctl_defrag_range_args) = 48
+> 
+> Reviewed-by: Anand Jain <anand.jain@oracle.com>
+> Signed-off-by: Goldwyn Rodrigues <rgoldwyn@suse.com>
+> Reviewed-by: David Sterba <dsterba@suse.com>
+> Signed-off-by: David Sterba <dsterba@suse.com>
+> CC: stable@vger.kernel.org # 4.14+
+> [ This patch is needed to fix a memory leak of "range" that was
+> introduced when commit 173431b274a9 ("btrfs: defrag: reject unknown
+> flags of btrfs_ioctl_defrag_range_args") was backported to kernels
+> lacking this patch. Now with these two patches applied in reverse order,
+> range->flags needed to change back to range.flags.
+> This bug was discovered and resolved using Coverity Static Analysis
+> Security Testing (SAST) by Synopsys, Inc.]
+> Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
 
--- 
-GNU/Linux Solutions                  e-mail: giometti@enneenne.com
-Linux Device Driver                          giometti@linux.it
-Embedded Systems                     phone:  +39 349 2432127
-UNIX programming
+Acked-by: David Sterba <dsterba@suse.com>
 
+for backport to stable as a prerequisite for 173431b274a9a5 ("btrfs:
+defrag: reject unknown flags of btrfs_ioctl_defrag_range_args").
