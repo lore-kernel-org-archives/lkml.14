@@ -1,77 +1,140 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602ED41C93
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 13:13:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0265446DD
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 13:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710940385; cv=none; b=Eh1sOawW2C2N7L5uuuPC8jlNKebfH6EZTzKtlWejCxl1yIfEf55qQkIXLzpIlRNqPveg07N1QlHHSToyomZovP5c4YyfQDVM1xXcMG2GIqlnQoNcSB25lVioHmo3nU/svBAQ6AATM30iI319GrWGxW8Eg7pGPsfgaRZ4qyfk6NI=
+	t=1710940388; cv=none; b=mMUq3fbsPxpOywc3J+2trEsPjsPuuxKtFi/mEvGbxA8rI0lf/uyG4UzdcICQoNcZwBbb9W0Tgoxl5VJCupQWiB2XRDkRRG4bbtF4y/0iccMMPbrm3PjeB0nqZrNWubFkZO4Bj3yMzXUUW0nVKJJ9SaAGlq1xnlTdDbvhRUl1pbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710940385; c=relaxed/simple;
-	bh=wL+k2OP7ETsdiy+7aOWTaXP+awLCKPX6VEzfPjiZ/2k=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=f+SyxVMkk5JAkdTmCWC/uCuN3Q8BxnxLqUhNTWqRUI65PWwzhbPYiugXM2xGODON5ZWT6v76v7ZemsK+qVpd6Z2007f4BuUKPxL/y5jmctbChTAci2S9Wr7k3OIg3r+FyX+FT1SvGpdlpfDMJtbWuyCbGvI2RBkFLvGAAcp1wfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from [194.95.143.137] (helo=phil.dip.tu-dresden.de)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1rmvkA-0001W6-Ny; Wed, 20 Mar 2024 14:12:34 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: neil.armstrong@linaro.org,
-	quic_jesszhan@quicinc.com,
-	sam@ravnborg.org
-Cc: maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	quentin.schulz@theobroma-systems.com,
-	klaus.goger@theobroma-systems.com,
-	heiko@sntech.de,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Heiko Stuebner <heiko.stuebner@cherry.de>
-Subject: [PATCH 1/2] drm/panel: ltk050h3146w: add MIPI_DSI_MODE_VIDEO to LTK050H3148W flags
-Date: Wed, 20 Mar 2024 14:12:31 +0100
-Message-Id: <20240320131232.327196-1-heiko@sntech.de>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1710940388; c=relaxed/simple;
+	bh=2YDNxT0fhZocPvNupmzUSE6JHPXKV+e0KiJYW7C14PE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u9RoWSHeZ3REM02CxWu6Dqftcf9UK4YvYt7kWTdVN/JzlmQ/Zq+XZ1ms+S+RxQkiGb8nfMj+TZv32pcXiISklzggkkf495A51dYedmp5WjgdlQrMHsw/nuaZZFBkgkQBzTmFFF2WhHo4kE/k/oGTDOuk0Af/j9qYvMuyr2wjP+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=RH6tDIoq; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="RH6tDIoq"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-33ecb04e018so3754649f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 06:13:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1710940384; x=1711545184; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uVomIyPH9mjZgwPoEk9ARj2Eibh5eoevRCgdrcw3zEs=;
+        b=RH6tDIoqFk2GlSkPb4LZxoH5sjs5R0xVeBhqL2B7okGgmo8bUeAYJ532yYqZcfHyGJ
+         sNMuIXV3Y0j4OidmhzynnEHLXMKIPu0hslFgbZrRoYViHy3bKYY6cSzcKjeg02hYj3S5
+         Bl50X69E1uDoJT1WDyHPfHcI/KxQHj8CQJ/6QCxnTzbbOJvRAhFbp2cdzNm64M3c84yZ
+         1ZVaBsbg4x5lQlt2kEZfhCc04wOT4NCRXHuQZX7neaC6R1D62D7s4oRA0wm2sM5KD5Rp
+         nPDCakKzK/t8u9C8kS0N48vrbUdReJtsSS3cBCid5UC9EdKF2ZIdIVdIqmjsYZUurHlz
+         P8dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710940384; x=1711545184;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uVomIyPH9mjZgwPoEk9ARj2Eibh5eoevRCgdrcw3zEs=;
+        b=aeYzUCUCM7rScEA3HFyw9ICkrb4tb1GbVBDQ1Dm74X1nrKmp7be/yiCR+ZV+ZjsSWw
+         qfwkSSI7haFeDzHFrCR9rB9DoIfxIg04JcWL5xZoT6+s6zUe4mRmP/18C5aiybCfqEqZ
+         eOTYUuoxaDTiyA+/X5zA+5p93eYy5ZDfHSIHNaVp6XNBKenFVrp9TjHbHyIXjO1spxWn
+         CNU8bpmxHq5NdcB0XrIG9QKm0jj9s7fScBGijQEveuWUDsVzCLpmgjEWM790ozekPU4W
+         PtuMAnGgapa/EuhqZiiDjRSwVSR9lKH13q5ZSP7Kje+0W6lb8ueFVCKUPBfgFkNljEq4
+         33Qw==
+X-Forwarded-Encrypted: i=1; AJvYcCUVXg6yZNXQmBnKFxkJZiNSdtl1s/9g/ouYSBx5LqzsnaiWMN2YFA2hoNUGHkBkTBZcjS2Et+K3MJet6FLeybHhnBwzHhROiagMeqj7
+X-Gm-Message-State: AOJu0YyDsklME7KOJSqZiFaZojqa8y17cHBNEXvNdYoZ2zFZJ+7e4bId
+	rd/h5a9Cz3QSdeY65Wyi6xPAG5/Avs81L08Q8f9Ex4cbtKudJjk6pQYEoXm30Uo=
+X-Google-Smtp-Source: AGHT+IEKYx4D63ZHfOm4QFPXok7m8sXPR0OBPYwXLg4wRMPrUAqEwyfylZFpXVcd5ndRm06b2vV/BQ==
+X-Received: by 2002:a5d:4747:0:b0:33e:7f65:e4f4 with SMTP id o7-20020a5d4747000000b0033e7f65e4f4mr12573236wrs.56.1710940384083;
+        Wed, 20 Mar 2024 06:13:04 -0700 (PDT)
+Received: from localhost ([86.61.181.4])
+        by smtp.gmail.com with ESMTPSA id o23-20020a5d58d7000000b0033ec5ca5665sm14657545wrf.95.2024.03.20.06.13.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Mar 2024 06:13:03 -0700 (PDT)
+Date: Wed, 20 Mar 2024 14:13:02 +0100
+From: Jiri Pirko <jiri@resnulli.us>
+To: Ryosuke Yasuoka <ryasuoka@redhat.com>
+Cc: krzysztof.kozlowski@linaro.org, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	horms@kernel.org, jeremy@jcline.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, syoshida@redhat.com,
+	syzbot+7ea9413ea6749baf5574@syzkaller.appspotmail.com,
+	syzbot+29b5ca705d2e0f4a44d2@syzkaller.appspotmail.com
+Subject: Re: [PATCH net v2] nfc: nci: Fix uninit-value in nci_dev_up and
+ nci_ntf_packet
+Message-ID: <Zfrg3iIw6Z1JS7sA@nanopsycho>
+References: <20240320005412.905060-1-ryasuoka@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240320005412.905060-1-ryasuoka@redhat.com>
 
-From: Heiko Stuebner <heiko.stuebner@cherry.de>
+Wed, Mar 20, 2024 at 01:54:10AM CET, ryasuoka@redhat.com wrote:
+>syzbot reported the following uninit-value access issue [1][2]:
+>
+>nci_rx_work() parses and processes received packet. When the payload
+>length is zero, each message type handler reads uninitialized payload
+>and KMSAN detects this issue. The receipt of a packet with a zero-size
+>payload is considered unexpected, and therefore, such packets should be
+>silently discarded.
+>
+>This patch resolved this issue by checking payload size before calling
+>each message type handler codes.
 
-Similar to other variants, the LTK050H3148W wants to run in video mode
-when displaying data. So far only the Synopsis DSI driver was using this
-panel and it is always switching to video mode, independent of this flag
-being set.
+Nit. Instead of talking about "this patch" in this patch description,
+you should use imperative mood to tell the codebase what to do.
 
-Other DSI drivers might handle this differently, so add the flag.
+https://www.kernel.org/doc/html/v6.6/process/submitting-patches.html#describe-your-changes
 
-Fixes: e5f9d543419c ("drm/panel: ltk050h3146w: add support for Leadtek LTK050H3148W-CTA6 variant")
-Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
----
- drivers/gpu/drm/panel/panel-leadtek-ltk050h3146w.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-leadtek-ltk050h3146w.c b/drivers/gpu/drm/panel/panel-leadtek-ltk050h3146w.c
-index 30919c872ac8..a50f5330a661 100644
---- a/drivers/gpu/drm/panel/panel-leadtek-ltk050h3146w.c
-+++ b/drivers/gpu/drm/panel/panel-leadtek-ltk050h3146w.c
-@@ -326,7 +326,8 @@ static const struct drm_display_mode ltk050h3148w_mode = {
- static const struct ltk050h3146w_desc ltk050h3148w_data = {
- 	.mode = &ltk050h3148w_mode,
- 	.init = ltk050h3148w_init_sequence,
--	.mode_flags = MIPI_DSI_MODE_VIDEO_SYNC_PULSE | MIPI_DSI_MODE_VIDEO_BURST,
-+	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
-+		      MIPI_DSI_MODE_VIDEO_BURST,
- };
- 
- static int ltk050h3146w_init_sequence(struct ltk050h3146w *ctx)
--- 
-2.39.2
+Patch looks ok.
 
+
+>
+>Fixes: 6a2968aaf50c ("NFC: basic NCI protocol implementation")
+>Reported-and-tested-by: syzbot+7ea9413ea6749baf5574@syzkaller.appspotmail.com
+>Reported-and-tested-by: syzbot+29b5ca705d2e0f4a44d2@syzkaller.appspotmail.com
+>Closes: https://syzkaller.appspot.com/bug?extid=7ea9413ea6749baf5574 [1]
+>Closes: https://syzkaller.appspot.com/bug?extid=29b5ca705d2e0f4a44d2 [2]
+>Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
+>---
+>
+>v2
+>- Fix typo in commit message
+>- Remove Call Trace from commit message that syzbot reported. Make it
+>  shorter than the previous version.
+>- Check the payload length in earlier code path. And it can address
+>  another reported syzbot bug too. [2]
+>
+>v1
+>https://lore.kernel.org/all/20240312145658.417288-1-ryasuoka@redhat.com/
+>
+>
+> net/nfc/nci/core.c | 5 +++++
+> 1 file changed, 5 insertions(+)
+>
+>diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
+>index 6c9592d05120..f471fc54c6a1 100644
+>--- a/net/nfc/nci/core.c
+>+++ b/net/nfc/nci/core.c
+>@@ -1512,6 +1512,11 @@ static void nci_rx_work(struct work_struct *work)
+> 		nfc_send_to_raw_sock(ndev->nfc_dev, skb,
+> 				     RAW_PAYLOAD_NCI, NFC_DIRECTION_RX);
+> 
+>+		if (!nci_plen(skb->data)) {
+>+			kfree_skb(skb);
+>+			break;
+>+		}
+>+
+> 		/* Process frame */
+> 		switch (nci_mt(skb->data)) {
+> 		case NCI_MT_RSP_PKT:
+>-- 
+>2.44.0
+>
+>
