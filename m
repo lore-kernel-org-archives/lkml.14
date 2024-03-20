@@ -1,191 +1,143 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1748540BE2
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 13:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF99C41C86
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 13:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710940762; cv=none; b=ADOghIhGWCPlvY9Z3te2IDCCgS5nJgHIQ5OrlQQJKyyAv36xDm3DUKq9TthaaWx3YSRRqP+FteykJ/JCcQHBqk4a+LT52C+VhdHTSr8VscVFKAqYcYTjtBwEtlQQfInptCkTkKbobQiM2Ag3CDoE+WdrgYOA7HJSKOiPh8JVSvw=
+	t=1710940766; cv=none; b=juDqgWC+S7ftnTEZAXhq7Mum9jIr/zW12paygV4BErwRK6zVr29AvcyB/eeiZalhWB5WanTAmEAtAoADiTVEe32iDANOGGYQ7NQC85RMQ9qdTeVuKouou/gBmkrIPi0yuVmpkn7TkDZKWtK4AKqA8oWg6QoTSPbY2OOvuQoQ8ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710940762; c=relaxed/simple;
-	bh=smAQyH3fzoArbGL/EJf370uyvQE26iHCwiLZs0Htze8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E1MkvXGw1T9YlQcdfXgQZdX3hqi0pQtahXqXbVZUti/+AZ0lyy4lzpcuEriCAgvoXG/KBK+DYrlaHjrU95XDYel/3vApP8kMV3sLwSIjoJ2jalUJuTCi7NSPhiNaCp1suFm55XcpU0YO7pjU4oKuFOvRmFZRMrCVE4oChutE89g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OkRx9DhZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710940766; c=relaxed/simple;
+	bh=46dNB/AFBsS+m6jYDD1tTDQYOLBdYupp4znM+rbsSCM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qC8v+7yZ/9ykXjvQXWrl3Bna29ehuV/iDdDjPlL8c5ZDlnZ/sJH4gf3ZxSuYDVZ6uT4vYeiY0jmV5dw/0XmaJRCKhNpkiySNfq6bEZzXbTM5iKwVb/sKJS7Hdvc3Q1uMaHNhzpNbWXYSkjHhn7OU//a0RMMgrJ88nOIS1Scm4cM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lK3dsLlX; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OkRx9DhZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710940760;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NpmVP7TeXED0UIOg2IhouFjCmnaB0b7XL3z6nYN+g5c=;
-	b=OkRx9DhZdNCL0W8F7nfgsbxaYabqNZOCHZe7CDsQGCW+ga6l3PMHw7F6PEMXWwE1K5Vo0b
-	qUC3PnJPiIyv2YuLp3lbPR2ZWxuuCNocAQ/G+/pxMu7DAXBTtwS7PY2j3+OaR8GqJhpvZP
-	Jm7LjYZE0CXmhPqu0z+mD2QNHe8cAts=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-225-wbANGGN0OhS4SocgmX5KQQ-1; Wed, 20 Mar 2024 09:19:12 -0400
-X-MC-Unique: wbANGGN0OhS4SocgmX5KQQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DF861800266;
-	Wed, 20 Mar 2024 13:19:11 +0000 (UTC)
-Received: from bfoster (unknown [10.22.16.57])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 5F7E22166B34;
-	Wed, 20 Mar 2024 13:19:11 +0000 (UTC)
-Date: Wed, 20 Mar 2024 09:21:05 -0400
-From: Brian Foster <bfoster@redhat.com>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: akpm@linux-foundation.org, tj@kernel.org, linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	willy@infradead.org, jack@suse.cz, dsterba@suse.com,
-	mjguzik@gmail.com, dhowells@redhat.com, peterz@infradead.org
-Subject: Re: [PATCH 1/6] writeback: collect stats of all wb of bdi in
- bdi_debug_stats_show
-Message-ID: <Zfriwb03HCRWJ24q@bfoster>
-References: <20240320110222.6564-1-shikemeng@huaweicloud.com>
- <20240320110222.6564-2-shikemeng@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lK3dsLlX"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d46dd8b0b8so88694611fa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 06:19:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710940763; x=1711545563; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vdmni8v/fiLq2S38Vs7HUTQOMeaRwPQFb6CJwmyxdo4=;
+        b=lK3dsLlXwuoXXU8FxUsbmx9lIoI7vUnDR2Yp1OyYCXrYg2sK45xRfYLJQ/bfkPoseK
+         t3aJRcZ85ajlkp4PYEzYNUK6pOmfkNz4ZFjuSax1Kv7i/6BGRdWZl5AS8nVq4zwXLvCE
+         d/Rn7T0hDKn5+f6/+XPPqaBjPNg+2BbsyPw/suGm28Pz9+nERjnnTIsyI+VHufV4S1m6
+         1r30BAEXqYSIYj6zTA4rvNfjl8yFWwDG+AHXqB8H5AF0iKbkH6Aa/O3Pa8CWrd9sNVhq
+         7pYJXBdyQNSlhv7UKO3tuSmGdU0x7wLiCZAszoWkSoGCnKXh1J9rpGqpYNN0uZRzEQ4o
+         z4Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710940763; x=1711545563;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vdmni8v/fiLq2S38Vs7HUTQOMeaRwPQFb6CJwmyxdo4=;
+        b=s5AbmnYeJXgGq9ZFCtypMNnqgEgSagWj/rzemXxYcahM43qoiCA1O0fTm2sEr2Icb2
+         oZiP2zL/9YPMexPz375l5QKCerC/vsQaGzIJ6uuMfqLJczHBuFgbBnVtkr3alDz97GDT
+         /wGjIHgN7NMZRHOsSk1vJFNxB9eAn3TviqMAZUGNsRTpMmLhTYwcNSlK2r5oX1Pb/0Lf
+         YIFMk/YQwmwwia3rzOfk6LzEfEUxJhqzefTxpahwsDFRFewzQZ09/IUrQniSA77rujwY
+         UNkuWYmK8aX84c+UmD+NnSreezT0LTW/xJtmWzoMxZwi1y+hzV5MUsFbSYgH/yvOwrTl
+         DuQg==
+X-Gm-Message-State: AOJu0Yyafd2CKfI1SuLKSfJH5l6dUD9w/GOFAg96xWvCWB3ddc8dLF9B
+	HPqScz9KudCa+qFCXmbGAnV/pw32W1vvxrDUcJuaeVjxkFUyp4up98q35O8Yu/I=
+X-Google-Smtp-Source: AGHT+IHyY2goIAolrzwmAmncl2glE7mWYpX4ZL5Ski56TxoEEnjEhyWfKondsnzwZ+EIhjUM3YCS9g==
+X-Received: by 2002:a05:651c:10c9:b0:2d2:2ce1:1196 with SMTP id l9-20020a05651c10c900b002d22ce11196mr11973803ljn.53.1710940762412;
+        Wed, 20 Mar 2024 06:19:22 -0700 (PDT)
+Received: from kepler.redhat.com (1F2EF04C.nat.pool.telekom.hu. [31.46.240.76])
+        by smtp.gmail.com with ESMTPSA id h9-20020a05600c350900b00414621c77f9sm2247072wmq.1.2024.03.20.06.19.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Mar 2024 06:19:22 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+From: Ingo Molnar <mingo@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Andy Lutomirski <luto@amacapital.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Dave Hansen <dave@sr71.net>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Borislav Petkov <bp@alien8.de>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uros Bizjak <ubizjak@gmail.com>
+Subject: [PATCH 0/1] Fast headers: Make task_struct::thread constant size
+Date: Wed, 20 Mar 2024 14:19:07 +0100
+Message-Id: <20240320131908.2708438-1-mingo@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240320110222.6564-2-shikemeng@huaweicloud.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 20, 2024 at 07:02:17PM +0800, Kemeng Shi wrote:
-> /sys/kernel/debug/bdi/xxx/stats is supposed to show writeback information
-> of whole bdi, but only writeback information of bdi in root cgroup is
-> collected. So writeback information in non-root cgroup are missing now.
-> To be more specific, considering following case:
-> 
-> /* create writeback cgroup */
-> cd /sys/fs/cgroup
-> echo "+memory +io" > cgroup.subtree_control
-> mkdir group1
-> cd group1
-> echo $$ > cgroup.procs
-> /* do writeback in cgroup */
-> fio -name test -filename=/dev/vdb ...
-> /* get writeback info of bdi */
-> cat /sys/kernel/debug/bdi/xxx/stats
-> The cat result unexpectedly implies that there is no writeback on target
-> bdi.
-> 
-> Fix this by collecting stats of all wb in bdi instead of only wb in
-> root cgroup.
-> 
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-> ---
->  mm/backing-dev.c | 93 ++++++++++++++++++++++++++++++++++++------------
->  1 file changed, 70 insertions(+), 23 deletions(-)
-> 
-> diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-> index 5f2be8c8df11..788702b6c5dd 100644
-> --- a/mm/backing-dev.c
-> +++ b/mm/backing-dev.c
-...
-> @@ -46,31 +59,65 @@ static void bdi_debug_init(void)
->  	bdi_debug_root = debugfs_create_dir("bdi", NULL);
->  }
->  
-...
-> +#ifdef CONFIG_CGROUP_WRITEBACK
-> +static void bdi_collect_stats(struct backing_dev_info *bdi,
-> +			      struct wb_stats *stats)
-> +{
-> +	struct bdi_writeback *wb;
-> +
-> +	/* protect wb from release */
-> +	mutex_lock(&bdi->cgwb_release_mutex);
-> +	list_for_each_entry(wb, &bdi->wb_list, bdi_node)
-> +		collect_wb_stats(stats, wb);
-> +	mutex_unlock(&bdi->cgwb_release_mutex);
-> +}
-> +#else
-> +static void bdi_collect_stats(struct backing_dev_info *bdi,
-> +			      struct wb_stats *stats)
-> +{
-> +	collect_wb_stats(stats, &bdi->wb);
-> +}
-> +#endif
-> +
+Turn thread.fpu into a pointer. Since most FPU code internals work by passing
+around the FPU pointer already, the code generation impact is small.
 
-I'm not familiar enough with the cgwb code to say for sure (and I'd
-probably wait for more high level feedback before worrying too much
-about this), but do we need the ifdef here just to iterate ->wb_list?
-From looking at the code, it appears bdi->wb ends up on the list while
-the bdi is registered for both cases, so that distinction seems
-unnecessary. WRT to wb release protection, I wonder if this could use a
-combination of rcu_read_lock()/list_for_each_safe() and wb_tryget() on
-each wb before collecting its stats..? See how bdi_split_work_to_wbs()
-works, for example.
+This allows us to remove the old kludge of task_struct being variable size:
 
-Also I see a patch conflict/compile error on patch 2 due to
-__wb_calc_thresh() only taking one parameter in my tree. What's the
-baseline commit for this series?
+  struct task_struct {
 
-Brian
+       ...
+       /*
+        * New fields for task_struct should be added above here, so that
+        * they are included in the randomized portion of task_struct.
+        */
+       randomized_struct_fields_end
 
-> +static int bdi_debug_stats_show(struct seq_file *m, void *v)
-> +{
-> +	struct backing_dev_info *bdi = m->private;
-> +	unsigned long background_thresh;
-> +	unsigned long dirty_thresh;
-> +	struct wb_stats stats;
-> +	unsigned long tot_bw;
-> +
->  	global_dirty_limits(&background_thresh, &dirty_thresh);
-> -	wb_thresh = wb_calc_thresh(wb, dirty_thresh);
-> +
-> +	memset(&stats, 0, sizeof(stats));
-> +	stats.dirty_thresh = dirty_thresh;
-> +	bdi_collect_stats(bdi, &stats);
-> +
-> +	tot_bw = atomic_long_read(&bdi->tot_write_bandwidth);
->  
->  	seq_printf(m,
->  		   "BdiWriteback:       %10lu kB\n"
-> @@ -87,18 +134,18 @@ static int bdi_debug_stats_show(struct seq_file *m, void *v)
->  		   "b_dirty_time:       %10lu\n"
->  		   "bdi_list:           %10u\n"
->  		   "state:              %10lx\n",
-> -		   (unsigned long) K(wb_stat(wb, WB_WRITEBACK)),
-> -		   (unsigned long) K(wb_stat(wb, WB_RECLAIMABLE)),
-> -		   K(wb_thresh),
-> +		   K(stats.nr_writeback),
-> +		   K(stats.nr_reclaimable),
-> +		   K(stats.wb_thresh),
->  		   K(dirty_thresh),
->  		   K(background_thresh),
-> -		   (unsigned long) K(wb_stat(wb, WB_DIRTIED)),
-> -		   (unsigned long) K(wb_stat(wb, WB_WRITTEN)),
-> -		   (unsigned long) K(wb->write_bandwidth),
-> -		   nr_dirty,
-> -		   nr_io,
-> -		   nr_more_io,
-> -		   nr_dirty_time,
-> +		   K(stats.nr_dirtied),
-> +		   K(stats.nr_written),
-> +		   K(tot_bw),
-> +		   stats.nr_dirty,
-> +		   stats.nr_io,
-> +		   stats.nr_more_io,
-> +		   stats.nr_dirty_time,
->  		   !list_empty(&bdi->bdi_list), bdi->wb.state);
->  
->  	return 0;
-> -- 
-> 2.30.0
-> 
-> 
+       /* CPU-specific state of this task: */
+       struct thread_struct            thread;
+
+       /*
+        * WARNING: on x86, 'thread_struct' contains a variable-sized
+        * structure.  It *MUST* be at the end of 'task_struct'.
+        *
+        * Do not put anything below here!
+        */
+  };
+
+... which creates a number of problems, such as requiring thread_struct to be
+the last member of the struct - not allowing it to be struct-randomized, etc.
+
+But the primary motivation is to allow the decoupling of task_struct from
+hardware details (<asm/processor.h> in particular), and to eventually allow
+the per-task infrastructure:
+
+   DECLARE_PER_TASK(type, name);
+   ...
+   per_task(current, name) = val;
+
+... which requires task_struct to be a constant size struct.
+
+The fpu_thread_struct_whitelist() quirk to hardened usercopy can be removed,
+now that the FPU structure is not embedded in the task struct anymore, which
+reduces text footprint a bit.
+
+Ingo Molnar (1):
+  headers/deps: x86/fpu: Make task_struct::thread constant size
+
+ arch/x86/include/asm/fpu/sched.h |  2 +-
+ arch/x86/include/asm/processor.h | 14 ++++++--------
+ arch/x86/kernel/fpu/context.h    |  4 ++--
+ arch/x86/kernel/fpu/core.c       | 51 ++++++++++++++++++++++++++-------------------------
+ arch/x86/kernel/fpu/init.c       | 28 ++++++++++++++++++----------
+ arch/x86/kernel/fpu/regset.c     | 22 +++++++++++-----------
+ arch/x86/kernel/fpu/signal.c     | 18 +++++++++---------
+ arch/x86/kernel/fpu/xstate.c     | 22 +++++++++++-----------
+ arch/x86/kernel/fpu/xstate.h     |  6 +++---
+ arch/x86/kernel/process.c        |  6 +++---
+ arch/x86/kernel/signal.c         |  6 +++---
+ arch/x86/kernel/traps.c          |  2 +-
+ arch/x86/math-emu/fpu_aux.c      |  2 +-
+ arch/x86/math-emu/fpu_entry.c    |  4 ++--
+ arch/x86/math-emu/fpu_system.h   |  2 +-
+ arch/x86/mm/extable.c            |  2 +-
+ include/linux/sched.h            | 13 +++----------
+ 17 files changed, 102 insertions(+), 102 deletions(-)
+
+-- 
+2.40.1
 
