@@ -1,61 +1,134 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AD117562;
-	Wed, 20 Mar 2024 22:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D747A381AA
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 22:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710974113; cv=none; b=kTGxFSNPnfDIGu1WCT5/DtQPQsuTjJZlX5U1HBMkv6ZCwBAGt5A3koGNRPfXUo8f0J33D4I61TT/V6cI/w69y0AyHF9qFhA+ZLEU8nLsdNa/6V8Ai1LUFgSV7wUzomXLzNMyevi41M4dcekswi1vnFs9lAh5DBzHn/SPA+d8ARw=
+	t=1710974142; cv=none; b=dCxZARgu1nqh1NIScFarHbMxVYBk6OQRDECyg9UpgoWAOF8Q1KpCyL8jQsyMJ/QJ5c1DhWw/gHOhg85AfUrtxXUXJ/yY58ijiAFVBBjA3ttoY6hRMQL06odmUasNtE0phB/3BJIOBhdHggAf5Vu8ohLATYWJvMofUGBHoZyRJh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710974113; c=relaxed/simple;
-	bh=rQ9ayU8h3vbhmp2fjgE+N6j3VApmNmtzYBgCEM8r62Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QqB6OMyIORn/aqqftkj/iz7rdCY5yM4oVpJasWgWSeFHwyQ5tJCyu8p4dFUNwDlDgl2QAYGUOdmPrJ+SM8Tp09scIhMICqPWlcJI5OKggICDgNr2ypal+UUUe0KUvjWVEjbqTHG+Yi02LFwOVuibISOJ8BuCrJGUTJ86uuemwjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=uAZ8jKkL; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1710974142; c=relaxed/simple;
+	bh=NMlbaJEt7YuPuHyd8puVAOBb7ZGjFfwrKm2bJ1oJU84=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QnjE9WS/JBYz7q+GgGRsB1UIfcY/zDSI2SY8O2IgewXLqiJlW7xRdC4YUr4rxqWg9Ci+q8frBUMeCXL9LLMdEvuSoZ5ABLjuyAAfc8iFbCPdSM3rBMZ5O4pJjNhOaeZYi26KsaB4haPeRvvF3u3amFx7wgZHQZgwiHIwqpf8izA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eV/obVnn; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uAZ8jKkL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=E7i4Ih95/AYaHh8sYn8scPJ9xcj4zGqhtLHoX6z4xCk=; b=uAZ8jKkLhRdROnRWFFtuTTT+y4
-	ABPZrO+Senebtu53YCh8jhIGFSGhz50P90JAEtcdvup+f2UPvpsoKkP6IeaSPOkMuwXrLNnFzRF7P
-	XwPJEvFao/H5w8AXsF33gfVt34ItfGhJbtKdp2gC4TkCQKOzZ3ltGBJaizeRkp8SHhRs=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rn4WO-00Aop5-Rj; Wed, 20 Mar 2024 23:34:56 +0100
-Date: Wed, 20 Mar 2024 23:34:56 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: David Thompson <davthompson@nvidia.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, u.kleine-koenig@pengutronix.de, leon@kernel.org,
-	asmaa@nvidia.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v1] mlxbf_gige: stop PHY during open() error paths
-Message-ID: <9e21ceae-e889-4177-8397-9df250ba558d@lunn.ch>
-References: <20240320193117.3232-1-davthompson@nvidia.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eV/obVnn"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d4541bf57eso4974891fa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 15:35:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710974139; x=1711578939; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n/Eqc8JOcHZY7IXZvTiJ/8bJTfQGWaXx+KUSs3MCDdw=;
+        b=eV/obVnn+pkRFC3DIHtOu5DiaFg9XNthy/K/L8aCgvXkkVDNtcfuWph3MLxuKV98UX
+         M0JYxVfXuG+JJokGK4wic7VpBuTRAZOWTbXrsPtAKPSUtBcw8TBRijyUyponujSD3QS2
+         +Z2nqUTZmEvsKLFJyNZoig9Vr/F5mxjH3UqxHkK+w0MUE5HqWbGoWGmVjZWB8gyKoLCi
+         lTXr6JXgp1RRCl7og/nEiCyZXQbkHWWGQvvUavvB5FvqthlhPN7NcPPCIL0oLeCvqx81
+         VsqJtBQXQE0v88j4tshpdM8NspKjyTVDY7oIIRJHurS42m2GpMGgXR8mx/Ry+Y+TpaZ/
+         XoEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710974139; x=1711578939;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=n/Eqc8JOcHZY7IXZvTiJ/8bJTfQGWaXx+KUSs3MCDdw=;
+        b=k7KRWzKR8TxlH1n1sZjr7aY4JLOumY0ZIq5k5kleezUfPJd9yXzVFRC7oZd2DunfX2
+         FzutCP6n7SuYc5cckrmzVO0ifXpsEtxPt8uEkLUkIlJI+YBxARHLVKbvKLX7zLCbV6B2
+         ZjuL7yqJGWYchZru/F/IFkLSU1fEmo1SvXtMzWslHVwTIBwd4wUR3AjyPWkBvwt3jA0D
+         bsqGgG99LZUX6jypj5JcvZDzh4gQszATE/k4vAckHI0wsJmRMqyXJIHv55Rbgmq+PQFG
+         /ufBLVmuONpHL5Bjmb1IkXTRu6e6xn6+qdKzh0FF3vHo39cG4ooc8H0zcz7UvUDYpBPb
+         o0Wg==
+X-Forwarded-Encrypted: i=1; AJvYcCWZVmi727X9FCpNGvegv6zRFogVk5BK0dzknhbo50/OzJA/2DVgvZhkHiDpB/W618G0fO0CwHkew/xWZcV1bkUDcXnBStkJlwVNnznj
+X-Gm-Message-State: AOJu0YyocdM9gMoU9WKfEbNy1957B15nHU19zDZB6hxKpIAU6+ABV1NP
+	3Rc/A3cHWV4tjbyveDtFdBXSRUpa1xTq1YvaRsuxkqNKeVTNgzFFXOd78XK8u6cUVpeNaXcVe2A
+	4Qo/P39UstvOqZxfsnK7LYEEUoDB4qTvsCNk+
+X-Google-Smtp-Source: AGHT+IEn5Owi2sPtfaUxycTRYFwNeKA+Pm2rq41oCVa8/UT2ciC5oEejXaO971X27DHZCT9SSJ+kpz2ClHcFLTEpRno=
+X-Received: by 2002:a19:431c:0:b0:513:e17d:cf3c with SMTP id
+ q28-20020a19431c000000b00513e17dcf3cmr8896729lfa.1.1710974138867; Wed, 20 Mar
+ 2024 15:35:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240320193117.3232-1-davthompson@nvidia.com>
+References: <20240318-strncpy-drivers-video-fbdev-au1200fb-c-v1-1-680802a9f10a@google.com>
+ <53670007-edbc-4762-9e57-0b3c29220d9e@gmx.de>
+In-Reply-To: <53670007-edbc-4762-9e57-0b3c29220d9e@gmx.de>
+From: Justin Stitt <justinstitt@google.com>
+Date: Wed, 20 Mar 2024 15:35:26 -0700
+Message-ID: <CAFhGd8ppVq9aGbfFLeL30jQ15KHS=FoLh0c1udXo=Z+pCfXL1g@mail.gmail.com>
+Subject: Re: [PATCH] video: fbdev: au1200fb: replace deprecated strncpy with strscpy
+To: Helge Deller <deller@gmx.de>
+Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 20, 2024 at 03:31:17PM -0400, David Thompson wrote:
-> The mlxbf_gige_open() routine starts the PHY as part of normal
-> initialization.  The mlxbf_gige_open() routine must stop the
-> PHY during its error paths.
-> 
-> Fixes: f92e1869d74e ("Add Mellanox BlueField Gigabit Ethernet driver")
-> Signed-off-by: David Thompson <davthompson@nvidia.com>
-> Reviewed-by: Asmaa Mnebhi <asmaa@nvidia.com>
+Hi,
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+On Wed, Mar 20, 2024 at 12:56=E2=80=AFAM Helge Deller <deller@gmx.de> wrote=
+:
+>
+> On 3/19/24 00:46, Justin Stitt wrote:
+> > strncpy() is deprecated for use on NUL-terminated destination strings
+> > [1] and as such we should prefer more robust and less ambiguous string
+> > interfaces.
+> >
+> > Let's use the new 2-argument strscpy() which guarantees NUL-termination
+> > on the destination buffer while also simplifying the syntax. Note that
+> > strscpy() will not NUL-pad the destination buffer like strncpy() does.
+> >
+> > However, the NUL-padding behavior of strncpy() is not required since
+> > fbdev is already NUL-allocated from au1200fb_drv_probe() ->
+> > frameuffer_alloc(), rendering any additional NUL-padding redundant.
+> > |     p =3D kzalloc(fb_info_size + size, GFP_KERNEL);
+> >
+> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#st=
+rncpy-on-nul-terminated-strings [1]
+> > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en=
+.html [2]
+> > Link: https://github.com/KSPP/linux/issues/90
+> > Cc: linux-hardening@vger.kernel.org
+> > Signed-off-by: Justin Stitt <justinstitt@google.com>
+> > ---
+> > Note: build-tested only.
+> >
+> > Found with: $ rg "strncpy\("
+> > ---
+> >   drivers/video/fbdev/au1200fb.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/video/fbdev/au1200fb.c b/drivers/video/fbdev/au120=
+0fb.c
+> > index 6f20efc663d7..e718fea63662 100644
+> > --- a/drivers/video/fbdev/au1200fb.c
+> > +++ b/drivers/video/fbdev/au1200fb.c
+> > @@ -1557,7 +1557,7 @@ static int au1200fb_init_fbinfo(struct au1200fb_d=
+evice *fbdev)
+> >               return ret;
+> >       }
+> >
+> > -     strncpy(fbi->fix.id, "AU1200", sizeof(fbi->fix.id));
+> > +     strscpy(fbi->fix.id, "AU1200");
+>
+> I wonder if you really build-tested this, as this driver is for the mips =
+architecture...
+> And I don't see a strscpy() function which takes just 2 arguments.
+> But I might be wrong....
 
-    Andrew
+I did build successfully :thumbs_up:
+
+Commit e6584c3964f2f ("string: Allow 2-argument strscpy()") introduced
+this new strscpy() form; it is present in string.h on Linus' tree.
+
+>
+> Helge
+
+Thanks
+Justin
