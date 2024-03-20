@@ -1,102 +1,86 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22871E87E;
-	Wed, 20 Mar 2024 23:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0C86BFDB;
+	Wed, 20 Mar 2024 23:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710975609; cv=none; b=XTQu0CzlKC+R1+9KJe8773Ds2VHs/y+YPZz+sH3s1Bqbl64OgkomEkmG3uXBIC150klr+iDq+0nODOXUunc/yz6T30QCYFqEkRRE6gJJS7Whan9UbCnGtbWusnz0W6GNcmWALc9C6pB+wTk8l8YtmkpWAlkMa2Gins/n9Xm8w/c=
+	t=1710975846; cv=none; b=DAq3SX9H0wksFV4h/Q45bC3GxJkZuM2nNK3lJ63/IKAfO1f9Xf98zwYHkycNGRy8mUAPSN5gbVVnyjWDYxt6VSzBe6mq9ZzySWZ1yVUZkyW+QXI9o/fUB3+Oul5WySaO8JDUG+jMh4Su4xUWTnJqxUXVz/4vs+M3JhF92sJ0ZJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710975609; c=relaxed/simple;
-	bh=XnbPtg+O2IYA+qWONEybl7Qhpn7SsiI2acn8i+RwEFg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PM2aMOOHDHXR/56qQe5RKbTMWXpI29607LbLsTKZKJVLbc6zQD5ZB8bZkq0OCHrnBnOnTgXK0iDRwCV3P2Zrad9FOYNb/D4P467yBvkhP0K4D6hp8LdfeKOjotj34P9OYQBA4LyaN5m3oEALKbchYc7xJCm7xXuy5D98r4QlMhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EWD6at8M; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710975846; c=relaxed/simple;
+	bh=TAatzuWm2HqdQG4JY+l9UJF3GxwuF/jivevfBscvcfo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kHGlG6Ec7KepFlH6jsLH14g8k2j7/SuUUZoY71Z5kUg6ISj6kcDsBf6HsUssOTcyWkoXJU8iUBFFrPHLPmRbgcNLRLtDa31VhLkov4tIg8kdqvoOlKZbMV8mPckjvEwoXmYtsB3SBuJbiXU6vbe2G4544qgw9mtl1Xj2nHoyJkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=roc24Lvw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWD6at8M"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-42e323a2e39so3955801cf.1;
-        Wed, 20 Mar 2024 16:00:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710975607; x=1711580407; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=B6v8eA1cPx7sUw+dmQFSGsW4h/lZzNvuLTYyd3ImSWM=;
-        b=EWD6at8MQLH3XdwqupvpEpVqMPlN+ap/F99lrUiJarzYYINJin+KIxgDv+azz6hPx7
-         oC3JY5fjePyixStUAHJictFncJEbtof/DnTlr1fg4d3kZsA3wljhczfOLdelbi8eMn3j
-         D4gQq/asqecbCNXPrJtWzOwOblhCncXT69e9F3PKb0jfr53Rt63SK86LFZnZoyZNGMdY
-         aC0eQhUsBEFRjmse7xKzKg17GJnSlJfxGJ4+Zhi2rJCRH51juWXRjfrtQno76WlfVjir
-         vIDNELZ6rjtmwsgVAE+GPGZyuurLIj22Q5aHxJb6/yq4yGLq8MBSZvOH37eJTo6PXXf9
-         s+MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710975607; x=1711580407;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B6v8eA1cPx7sUw+dmQFSGsW4h/lZzNvuLTYyd3ImSWM=;
-        b=Ob0vwVd4a5fK6sz9hfEoVkabnlv/REqrFAgvRpTmjzVyvs+hQgV44Psy5cjjAUrzp3
-         XpIba+JatXA5bZYFInvZ0sASRtv1i/3kNTGw7zYZn9I4ZWQ7/jKI/0OoNeooQ892QDZ8
-         kOJzquEK6Na46xYQQOw9i3NBG3mY4s90G/RzOObxvsYU4Ek7w10AmO/KdckQqnRM08Ll
-         kz/eII9+6wqQf9vFWk1d315Ouv6ooC0QCQECROHHz1LYRFYh16wMxqGSraWwwRWR3q8C
-         QySMefrLkHhzitAebD7EdeFuD9ppNd921RYzH+X9wH9FWi4NoUZl4Pj/CTgcXX5y/AID
-         6+OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVD9EuFDRw0ZZ8vaaHmqcLZshg7X9Y2tda6MRgi6MCYtg8C6je79uZEaUC4HiIYKi9/GjYYQtnTSu3E8u90KFyg+AiwiBjkmPAMKnk5
-X-Gm-Message-State: AOJu0YyFqMyVJw/qHeorTn/h3STRpXWYQBDdKZqgrtCVEGVltfzBFpqW
-	QMdEwNTSjQwZnkJTAqRzSxbTSJiXhuy28g34rBHmnKvSafnzUdZ5
-X-Google-Smtp-Source: AGHT+IFzdVkgFVucq+ZP1v8OpUIXwkxjGJR9OB5Tn+7GHhqMBG8/1E9dagmdQZXN7zOjwbPCjYaFAQ==
-X-Received: by 2002:ac8:7e89:0:b0:431:1d8d:9229 with SMTP id w9-20020ac87e89000000b004311d8d9229mr1897432qtj.24.1710975605218;
-        Wed, 20 Mar 2024 16:00:05 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id d4-20020ac85344000000b00430ac082732sm7169592qto.70.2024.03.20.16.00.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Mar 2024 16:00:03 -0700 (PDT)
-Message-ID: <6059f7e5-fd2c-493f-a1dd-acfc7e9e7701@gmail.com>
-Date: Wed, 20 Mar 2024 15:59:59 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="roc24Lvw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB7FAC433C7;
+	Wed, 20 Mar 2024 23:04:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710975845;
+	bh=TAatzuWm2HqdQG4JY+l9UJF3GxwuF/jivevfBscvcfo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=roc24LvwLgx0Gqc1wJS8R1OwkBVs4boegh5+XPMJyOSDy3nA0AVEjTf6WduCcgia5
+	 TNW9ZfHGtlNNVV/bA41xqcYh0cfu+1eZZVP7adotwqzDypRwE6Uuwfhl3FVFj+k4Oc
+	 NyN0x4Zi4Bk02+i8YNGOUww/CK0h+xJMHjO3z9Qjx32T669GrYEirhD5eqE4LsYFBf
+	 2Xw/UQfdc+tntAecpHbeEECqqSOWv8BTes3Qv8NM5zfblDt2J0UmR4+yKQjAD1ylJp
+	 +nr70e+N/N26LWZeXr6AiSpFFc++gYedARii3oRUGw4mq9KNmR3nsvS0PxsmKQYC9Z
+	 bCaebnnTILsQA==
+Date: Wed, 20 Mar 2024 18:12:46 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: Pavel Machek <pavel@denx.de>
+Cc: josef@toxicpanda.com, dsterba@suse.com, gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org
+Subject: Re: btrfs fix missing in 5.10-stable was Re: [PATCH 5.10 00/73]
+ 5.10.213-rc1 review
+Message-ID: <ZftfXuwvpNVggouB@sashalap>
+References: <20240313164640.616049-1-sashal@kernel.org>
+ <ZfroJoVIz3dBrO1t@duo.ucw.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net V2 2/2] net: lan743x: support WOL in MAC even when PHY
- does not
-Content-Language: en-US
-To: Andrew Lunn <andrew@lunn.ch>,
- Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com, linux-kernel@vger.kernel.org,
- bryan.whitehead@microchip.com, UNGLinuxDriver@microchip.com
-References: <20240320042107.903051-1-Raju.Lakkaraju@microchip.com>
- <20240320042107.903051-3-Raju.Lakkaraju@microchip.com>
- <22089299-a3e2-4cbd-942a-65ea070657b8@lunn.ch>
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <22089299-a3e2-4cbd-942a-65ea070657b8@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <ZfroJoVIz3dBrO1t@duo.ucw.cz>
 
-On 3/20/24 15:53, Andrew Lunn wrote:
->> +	if (netdev->phydev) {
->> +		ret = phy_ethtool_set_wol(netdev->phydev, wol);
->> +		if (ret != -EOPNOTSUPP && ret != 0)
->> +			return ret;
-> 
-> I'm not sure this condition is correct.
-> 
-> If there is an error, and the error is not EOPNOTSUPP, you want to
-> report that error. However, if the PHY can support the WoL
-> configuration, it will return 0, and this function should exit, WoL in
-> the MAC is not needed. And doing WoL in the PHY consumes less power
-> since you can suspend the MAC.
-> 
-> So i think it should simply be:
-> 
->> +		if (ret != -EOPNOTSUPP)
->> +			return ret;
+On Wed, Mar 20, 2024 at 02:44:06PM +0100, Pavel Machek wrote:
+>Hi!
+>
+>> This is the start of the stable review cycle for the 5.10.213 release.
+>> There are 73 patches in this series, all will be posted as a response
+>> to this one.  If anyone has any issues with these being applied, please
+>> let me know.
+>
+>While debugging "search for known-bad commit" script, I noticed:
+>
+>We have
+>
+>41b3cc57d626d c2e39305299f0 btrfs: clear extent buffer uptodate when
+>we fail to write it
+>
+>commit in 5.10, which is fixed by this, but we don't have that one:
+>
+>651740a502411 btrfs: check WRITE_ERR when trying to read an extent
+>buffer
 
-Agreed, that's what I did for bcmgenet_wol.c.
+Hey Pavel,
+
+There are two reasons it didn't make it into 5.10 or 5.4:
+
+1. It doesn't build on any of those kernels, and we haven't gotten a
+backport we could apply.
+
+2. There's a follow-up fix that happened soon after ( 40cdc509877b
+("btrfs: skip reserved bytes warning on unmount after log cleanup
+failure") ) which needs a backport on it's own.
+
+
 -- 
-Florian
-
+Thanks,
+Sasha
