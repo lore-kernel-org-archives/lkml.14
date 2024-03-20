@@ -1,131 +1,227 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD84E3D54C;
-	Wed, 20 Mar 2024 14:12:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD503EA98;
+	Wed, 20 Mar 2024 14:12:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710943927; cv=none; b=mijRua6RVuapXqhaSVNSOrdtVcY+JTr2uVea06zIb6nW7S4LyfGew49DllMr5vY2D428hSvdggZI8x6BwHx92/RHe6oyC84gnjEl9ivHTTaUUOu83JmpOPEPcGMATDP5zsXY1bgvKnlsYkf8w2V4788x7qG6fSQTMKMUHR1ulXc=
+	t=1710943927; cv=none; b=OFfTMw4NQ+NcZlgSxYg/q6joMjd8KYAS1CojYoMo9AP8AM18AJMebC+ivpTKCzUa3xYOqO/DGJl65b+qVb/mcc3uNu4I1YpRs1vOfKOlGKXHceQz6WdGMbPLII3c+P+vXaS0Nnfvdsdzmd0ZjG/J5rR/K8uOgGwwC6bbea1xHiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710943927; c=relaxed/simple;
-	bh=/wW9qV6LAOXG8LnFEJPA92NidE+3pnPBB81s5eFrFNc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mQDyQ4vdpFJqln2AsZa2kK9Reac0sE3wovdPpCzgZWd6UXfDGINKjt902XSSJxTIvwBc6be+zVuVCFRKd7c9GI8foGP/d4jyTJ4LlcDq+EWAomiVB8A+lt58VKodSRSUmXpdTutpGp3hJiO9rGgMsx4+ZSDg8LyHW4qndGQ9ZoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ALC9CsWd; arc=none smtp.client-ip=205.220.168.131
+	bh=s2/vULG5iS+dEBSt33YSQwB7/yLX65wOU1yR3yAm0aY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Mn+Jtup6+SjJ8rl1rBseS2n1z8KztQtlbBxHPRqa3+36JSozrswm/05UT0MVCXCzSvFSfD4BIAm5dMtKegBwXJKY+LYbeImNjc7kT//8DyDsBKP7Ahp9hQOpi/arMnBkw3x/VU2/iYRMz+LH8ZFtD6Id97AtfFwXL1wN+oy+K3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=E2VJrVZZ; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ALC9CsWd"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="E2VJrVZZ"
 Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42KBiL0n023907;
-	Wed, 20 Mar 2024 14:11:56 GMT
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42K7ek7m000798;
+	Wed, 20 Mar 2024 14:12:01 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type
-	:content-transfer-encoding; s=qcppdkim1; bh=uun1x6wlhePjdPPNDRFv
-	nmrO5PRMdYD+vhZxiorrl3M=; b=ALC9CsWd+r6PGesaJNlJxuk+0sG4nxk6QYh9
-	arOnlqJhCDWjopobaCrk2LzzaYT81O8/cTjojuajxUNi0hG39PIwSMMtRg/Ta1KA
-	Sn/cz15Yj0mlQPOoomg73V7Sng9YoFflS9OACMf6134ezAMCywFEo3MA5nK2v4LT
-	5UYN+LN1J4NOYk9flChWsF2kQSevwvo2L14yQiK/7Jdw6FpsOCla2fHnv26joTxE
-	nsg490eh1MnawGJdKhc9ZruaeQGIRadsDOFA346zFA/UQLzqVJRnuDEwBrk571Ew
-	6sONU/JkSqHH2a9gg0gQSqovG39hAZUukffnMZzB5SJavD0I9Q==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wyqh61ar0-1
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-type; s=qcppdkim1; bh=zXa8AY6dgeHMO6qUp4Hm
+	rmjqvg1owoNbUEMfj2Pg8i8=; b=E2VJrVZZjFdFjUR7bPVr1knm4OgfJHvfQSFb
+	ik9CK5VTCennEbPjiemn354+q4HzKdonHswGJ7RV8PXteXgbmH8JPkHjy8ef62PI
+	goCTi6oHy6X0zn2qtnDiAeDNn/tK91sghpekjI9jdoro1GV1yv0MKV0ZUSFoZfGM
+	D3OFbCQ3Dsf89ApoHrho2UsSiaXXP94PXBIpeBOb5OEu4JmM15ws2U2qB+jNtICV
+	l8+7AY7nvI3OstsZY+cuFhjf9uET/Ynu9HjpygvF4l5VruVeXtA5eEaCwktX9OgM
+	gxu92WN3pRCCbYs71G+U99iVcIr4WNHg56GRFtA5JLorwqSw6g==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wyqh61ar9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 Mar 2024 14:11:55 +0000 (GMT)
+	Wed, 20 Mar 2024 14:12:01 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42KEBtNO021036
+	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42KEC0F7022290
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 Mar 2024 14:11:55 GMT
+	Wed, 20 Mar 2024 14:12:00 GMT
 Received: from hu-depengs-sha.qualcomm.com (10.80.80.8) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 20 Mar 2024 07:11:52 -0700
+ 15.2.1118.40; Wed, 20 Mar 2024 07:11:58 -0700
 From: Depeng Shao <quic_depengs@quicinc.com>
 To: <rfoss@kernel.org>, <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
         <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
         <mchehab@kernel.org>, <quic_yon@quicinc.com>
 CC: <quic_depengs@quicinc.com>, <linux-kernel@vger.kernel.org>,
         <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
-Subject: [PATCH v2 0/8] media: qcom: camss: Add sm8550 support
-Date: Wed, 20 Mar 2024 19:41:28 +0530
-Message-ID: <20240320141136.26827-1-quic_depengs@quicinc.com>
+Subject: [PATCH v2 2/8] media: qcom: camss: Add subdev notify support
+Date: Wed, 20 Mar 2024 19:41:30 +0530
+Message-ID: <20240320141136.26827-3-quic_depengs@quicinc.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240320141136.26827-1-quic_depengs@quicinc.com>
+References: <20240320141136.26827-1-quic_depengs@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: fagcg5QOGsoQwjwSCe13vQMrWKUl7-0F
-X-Proofpoint-GUID: fagcg5QOGsoQwjwSCe13vQMrWKUl7-0F
+X-Proofpoint-ORIG-GUID: SEN65laiMssUQ5vPcjKMc2e2YwEBeBXx
+X-Proofpoint-GUID: SEN65laiMssUQ5vPcjKMc2e2YwEBeBXx
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-03-20_09,2024-03-18_03,2023-05-22_02
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- mlxlogscore=846 malwarescore=0 spamscore=0 clxscore=1015
+ mlxlogscore=999 malwarescore=0 spamscore=0 clxscore=1015
  priorityscore=1501 lowpriorityscore=0 adultscore=0 phishscore=0
  impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2403140001 definitions=main-2403200112
 
-V2:
-- Update some commit messages
-Link to V1: https://lore.kernel.org/all/20240320134227.16587-1-quic_depengs@quicinc.com/
+From: Yongsheng Li <quic_yon@quicinc.com>
 
-V1:
-SM8550 is a Qualcomm flagship SoC. This series adds support to
-bring up the CSIPHY, CSID, VFE/RDI interfaces in SM8550.
+The buf done irq and register update register are moved
+to CSID in SM8550, so but the write master configuration
+in VFE, in case adapt existing code logic. So add buf
+done and register related subdev event, and use the notify
+interface in the v4l2_device structure to communicate
+between CSID and VFE driver.
 
-SM8550 provides
+Signed-off-by: Yongsheng Li <quic_yon@quicinc.com>
+---
+ .../media/platform/qcom/camss/camss-csid.h    |  7 +++
+ .../media/platform/qcom/camss/camss-csiphy.h  |  2 +
+ drivers/media/platform/qcom/camss/camss-vfe.h |  2 +
+ drivers/media/platform/qcom/camss/camss.c     | 50 +++++++++++++++++++
+ drivers/media/platform/qcom/camss/camss.h     |  7 +++
+ 5 files changed, 68 insertions(+)
 
-- 3 x VFE, 3 RDI per VFE
-- 2 x VFE Lite, 4 RDI per VFE
-- 3 x CSID
-- 2 x CSID Lite
-- 8 x CSI PHY
-
-This series is rebased based on：
-https://patchew.org/linux/20240222-b4-camss-sc8280xp-v6-0-0e0e6a2f8962@linaro.org/
-
-The changes are verified on SM8550 AIM300 board, the base dts for AIM300 is:
-https://patchew.org/linux/20231117101817.4401-1-quic._5Ftengfan@quicinc.com/
-
-Depeng Shao (3):
-  media: qcom: camss: Add new params for csid_device
-  media: qcom: camss: Add CSID gen3 driver
-  media: qcom: camss: Add sm8550 support
-
-Yongsheng Li (5):
-  media: qcom: camss: Add CAMSS_8550 enum
-  media: qcom: camss: Add subdev notify support
-  media: qcom: camss: Add new csiphy driver 2-1-2
-  media: qcom: camss: Add new VFE driver for SM8550
-  media: qcom: camss: Add sm8550 resources
-
- drivers/media/platform/qcom/camss/Makefile    |   3 +
- .../platform/qcom/camss/camss-csid-gen3.c     | 639 ++++++++++++++++++
- .../platform/qcom/camss/camss-csid-gen3.h     |  26 +
- .../media/platform/qcom/camss/camss-csid.c    |  19 +
- .../media/platform/qcom/camss/camss-csid.h    |  10 +
- .../platform/qcom/camss/camss-csiphy-2-1-2.c  | 343 ++++++++++
- .../media/platform/qcom/camss/camss-csiphy.c  |   1 +
- .../media/platform/qcom/camss/camss-csiphy.h  |   3 +
- .../media/platform/qcom/camss/camss-vfe-780.c | 455 +++++++++++++
- drivers/media/platform/qcom/camss/camss-vfe.c |   7 +
- drivers/media/platform/qcom/camss/camss-vfe.h |   3 +
- .../media/platform/qcom/camss/camss-video.c   |   1 +
- drivers/media/platform/qcom/camss/camss.c     | 395 +++++++++++
- drivers/media/platform/qcom/camss/camss.h     |   8 +
- 14 files changed, 1913 insertions(+)
- create mode 100644 drivers/media/platform/qcom/camss/camss-csid-gen3.c
- create mode 100644 drivers/media/platform/qcom/camss/camss-csid-gen3.h
- create mode 100644 drivers/media/platform/qcom/camss/camss-csiphy-2-1-2.c
- create mode 100644 drivers/media/platform/qcom/camss/camss-vfe-780.c
-
+diff --git a/drivers/media/platform/qcom/camss/camss-csid.h b/drivers/media/platform/qcom/camss/camss-csid.h
+index fddccb69da13..4a9e5a2d1f92 100644
+--- a/drivers/media/platform/qcom/camss/camss-csid.h
++++ b/drivers/media/platform/qcom/camss/camss-csid.h
+@@ -147,6 +147,13 @@ struct csid_hw_ops {
+ 	 * @csid: CSID device
+ 	 */
+ 	void (*subdev_init)(struct csid_device *csid);
++
++	/*
++	 * event - receive event from parent v4l2 device
++	 * @csid: CSID device
++	 */
++	void (*event)(struct csid_device *csid,
++			unsigned int evt_type, void *arg);
+ };
+ 
+ struct csid_device {
+diff --git a/drivers/media/platform/qcom/camss/camss-csiphy.h b/drivers/media/platform/qcom/camss/camss-csiphy.h
+index c9b7fe82b1f0..ffe1b95eea98 100644
+--- a/drivers/media/platform/qcom/camss/camss-csiphy.h
++++ b/drivers/media/platform/qcom/camss/camss-csiphy.h
+@@ -61,6 +61,8 @@ struct csiphy_hw_ops {
+ 	void (*lanes_disable)(struct csiphy_device *csiphy,
+ 			      struct csiphy_config *cfg);
+ 	irqreturn_t (*isr)(int irq, void *dev);
++	void (*event)(struct csiphy_device *csiphy,
++			unsigned int evt_type, void *arg);
+ };
+ 
+ struct csiphy_device {
+diff --git a/drivers/media/platform/qcom/camss/camss-vfe.h b/drivers/media/platform/qcom/camss/camss-vfe.h
+index 0572c9b08e11..9919fe0ff101 100644
+--- a/drivers/media/platform/qcom/camss/camss-vfe.h
++++ b/drivers/media/platform/qcom/camss/camss-vfe.h
+@@ -115,6 +115,8 @@ struct vfe_hw_ops {
+ 	int (*vfe_halt)(struct vfe_device *vfe);
+ 	void (*violation_read)(struct vfe_device *vfe);
+ 	void (*vfe_wm_stop)(struct vfe_device *vfe, u8 wm);
++	void (*event)(struct vfe_device *vfe,
++			unsigned int evt_type, void *arg);
+ };
+ 
+ struct vfe_isr_ops {
+diff --git a/drivers/media/platform/qcom/camss/camss.c b/drivers/media/platform/qcom/camss/camss.c
+index 1923615f0eea..b57cd25bf6c7 100644
+--- a/drivers/media/platform/qcom/camss/camss.c
++++ b/drivers/media/platform/qcom/camss/camss.c
+@@ -1904,6 +1904,55 @@ static void camss_genpd_cleanup(struct camss *camss)
+ 	dev_pm_domain_detach(camss->genpd, true);
+ }
+ 
++static void camss_v4l2_subdev_notify(struct v4l2_subdev *sd,
++			unsigned int cmd, void *arg)
++{
++	struct v4l2_device *v4l2_dev = sd->v4l2_dev;
++	struct camss *camss = to_camss(v4l2_dev);
++	struct vfe_device *vfe;
++	struct vfe_line *vfe_line;
++	struct csid_device *csid;
++	int evt_data = *(int *)arg;
++
++	if (camss->res->version != CAMSS_8550)
++		return;
++
++	switch (cmd) {
++	case NOTIFY_BUF_DONE:
++		csid = v4l2_get_subdevdata(sd);
++		vfe = &(camss->vfe[csid->id]);
++		if (vfe->ops->event)
++			vfe->ops->event(vfe,
++				NOTIFY_BUF_DONE, (void *)&evt_data);
++		break;
++
++	case NOTIFY_RUP:
++		vfe_line = v4l2_get_subdevdata(sd);
++		vfe = to_vfe(vfe_line);
++		csid = &(camss->csid[vfe->id]);
++
++		if (csid->ops->event)
++			csid->ops->event(csid,
++				NOTIFY_RUP, (void *)&evt_data);
++		break;
++
++	case NOTIFY_RUP_CLEAR:
++		vfe_line = v4l2_get_subdevdata(sd);
++		vfe = to_vfe(vfe_line);
++		csid = &(camss->csid[vfe->id]);
++
++		if (csid->ops->event)
++			csid->ops->event(csid,
++				NOTIFY_RUP_CLEAR, (void *)&evt_data);
++
++		break;
++
++	default:
++		dev_err(camss->dev, "Not supported evt type\n");
++		break;
++	}
++}
++
+ /*
+  * camss_probe - Probe CAMSS platform device
+  * @pdev: Pointer to CAMSS platform device
+@@ -1974,6 +2023,7 @@ static int camss_probe(struct platform_device *pdev)
+ 	media_device_init(&camss->media_dev);
+ 
+ 	camss->v4l2_dev.mdev = &camss->media_dev;
++	camss->v4l2_dev.notify = camss_v4l2_subdev_notify;
+ 	ret = v4l2_device_register(camss->dev, &camss->v4l2_dev);
+ 	if (ret < 0) {
+ 		dev_err(dev, "Failed to register V4L2 device: %d\n", ret);
+diff --git a/drivers/media/platform/qcom/camss/camss.h b/drivers/media/platform/qcom/camss/camss.h
+index 2f63206a8463..f1fe68dedd9e 100644
+--- a/drivers/media/platform/qcom/camss/camss.h
++++ b/drivers/media/platform/qcom/camss/camss.h
+@@ -86,6 +86,13 @@ enum icc_count {
+ 	ICC_SM8250_COUNT = 4,
+ };
+ 
++enum subdev_notify_evt {
++	NOTIFY_BUF_DONE = 0,
++	NOTIFY_RUP,
++	NOTIFY_RUP_CLEAR,
++	NOTIFY_MAX,
++};
++
+ struct camss_resources {
+ 	enum camss_version version;
+ 	const char *pd_name;
 -- 
 2.17.1
 
