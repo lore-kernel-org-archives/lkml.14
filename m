@@ -1,256 +1,228 @@
-Received: from mailscanner01.zoner.fi (mailscanner01.zoner.fi [84.34.166.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A3C6A8A6
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 18:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.34.166.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01914F214;
+	Wed, 20 Mar 2024 18:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710959979; cv=none; b=lpPQDWlbB0XW4OwEZBa3OzSMDbKatceJJYQOK7JX/W+S36Jx1G2ezUgnDs32flLl+LD+pk8v2bLmKLCxDSpG3LMsZ3bvboEtbuz1t2zLd9hV9/bbpsEY1z52oiWXH1GZHyhOWbdzLkqXW4J9znLLR1yWvIxxVqBFkDy21VIslDI=
+	t=1710959994; cv=none; b=PyCxHCSWDy0BGa2VEIjTV+88YoMj+URjARyaWAWr6aK2LGiVE+Aeg9TIiLhcS37u/RtZDY8oKSWpoO7iiPoyAuUBtEcCz9qrIx/uIuZeYx+LtmEnCde031l0+RxxPnNRI1V/AnhqJdIlxENCXGMn/hou3QR+CcG+p9Scs7ZnOeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710959979; c=relaxed/simple;
-	bh=aVTXMepemamYIgEqhcZaCqWZdKxJee31zHLwpcDfTPM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Onkh/z4DLnXcxtrZnsYnVWCw5NocFF+gWdmLOtU1MNbgZbknOEEh3oPk1tzCXCm2Yzd57GZihoeKizWCcQFjW4jQq3R5c8iW2is9RZtKLoRA/P/KCfbbI2oSGMKZnvDmJTlZI462KCnUiR+MBHKZRSO0BPZb5IW9FPjWMh7XLLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org; spf=pass smtp.mailfrom=tukaani.org; arc=none smtp.client-ip=84.34.166.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tukaani.org
-Received: from www25.zoner.fi (www25.zoner.fi [84.34.147.45])
-	by mailscanner01.zoner.fi (Postfix) with ESMTPS id E55284254A;
-	Wed, 20 Mar 2024 20:39:26 +0200 (EET)
-Received: from mail.zoner.fi ([84.34.147.244])
-	by www25.zoner.fi with esmtp (Exim 4.96.1-7-g79877b70e)
-	(envelope-from <lasse.collin@tukaani.org>)
-	id 1rn0qU-0001dW-2N;
-	Wed, 20 Mar 2024 20:39:26 +0200
-From: Lasse Collin <lasse.collin@tukaani.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Lasse Collin <lasse.collin@tukaani.org>,
-	Jia Tan <jiat0218@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 09/11] xz: Add RISC-V BCJ filter
-Date: Wed, 20 Mar 2024 20:38:42 +0200
-Message-ID: <20240320183846.19475-10-lasse.collin@tukaani.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240320183846.19475-1-lasse.collin@tukaani.org>
-References: <20240320183846.19475-1-lasse.collin@tukaani.org>
+	s=arc-20240116; t=1710959994; c=relaxed/simple;
+	bh=S/sytZTQ/V3fEb3RY0qv+twoobr9IaTxQMa2BQaJYzQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kR87SUe8BFHuxu8IeZ1h1n9c1iAHqqsaYU32d3Xa7Bjb8Ghhb1gED4ylLXO8q9yhGibHNEpJEVIuMXcEbfK9dPVaau1EJItzri11rUv+GX3zlLMU9IBXi49wy49VWsHL3VaYfzljACjMReSHLbjKnf52u7nk0jQi3UaFD13zjaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H5TIoIGo; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H5TIoIGo"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-430a7497700so1302031cf.1;
+        Wed, 20 Mar 2024 11:39:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710959992; x=1711564792; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xWRvU83WE/XxBo1v/F0X5t/KDOzdzaHYVuEHQEDHtYc=;
+        b=H5TIoIGoevzaoQUUJ+xBevuzfXysfgwcWqbsiNERd84oyEwpTiggF3ODIjjfSnku9x
+         zeLO1EFpufEHDvUMe0rrcR/EzbhdJa0ELd2rdHdi93/2u8yzsFcEySyCh3kEqEElq+uh
+         wbk7JPlkNnGfiOfIb3ugNeEIeSTaBVwPGf6O+fb3WSwQFyghxs1x8MFedogloiygajfW
+         XjTSpKW0+IULbjPtWXk344XscuCrOLpa/qBM7xmWpuQflye1A+EMsFeQ5fA71noPeCBA
+         tBBaBKzgP2HVhjfRJK4kD7nI6i7dMH2s8hrDfk9tMrgrifCRsREZISXQP8NKGlpYY99z
+         43mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710959992; x=1711564792;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xWRvU83WE/XxBo1v/F0X5t/KDOzdzaHYVuEHQEDHtYc=;
+        b=HykhJh5t95OQ2GZ7ERhhXkYTiH29PXEXz2sNV0/Rk5a6o7huCzWsUCRumaqgpRC41M
+         caQb0yWcXha+cop0aTAADFD94YY6VfD2WPQ65EHHO1AM7pDI1qPpgoeOv+hvIL03TQBt
+         43RKLlp6mZxFt8S1Htmetf8TscKxuEjUwYaCO3PzGXS+2cQfdD8m3Ie6EnvisuJIuJCT
+         yD0I9NctKnFYQsw2R57MS7npSPoQyqNJAZ81g65gZccsmddnoIJcwburKdZwH6DfdnY4
+         qTV7e563+yh/0Bby8GxQFTp20S41S7KFZySSeDNoeBh1+m9omoxNj6YE4PhKWo+QyMRk
+         Kztg==
+X-Forwarded-Encrypted: i=1; AJvYcCV6CikpnL5frIs1ZCzTeqnfiwMee0LmZcZx889YNPY5rX9stALf+mYvAJKKupykTyy60STjbp7ExzDlDFKNxUZZT43uwoNN8581VCSGJsnUxualKhJJ5R9q/XeEgvCKcxQYTgDWa8024SV4E+s=
+X-Gm-Message-State: AOJu0YzsamEDoGKCfVAZACsGcA/ol+c6BZhsLfdY9g2hTsLWp3niNX8b
+	4FrdH8xrnyKJiwKgonWo4fMw17D/QkMt7mvIEz14VhPTXyKiVfli
+X-Google-Smtp-Source: AGHT+IFS9uSNLSBh1XOFh0ALtqPOKyEM9BMZXRgz5Y/IEkIql9atTB8xsItHCTfp9JxRAMGj2zrWjg==
+X-Received: by 2002:a05:622a:1804:b0:430:ba7a:fe7b with SMTP id t4-20020a05622a180400b00430ba7afe7bmr14742759qtc.44.1710959991779;
+        Wed, 20 Mar 2024 11:39:51 -0700 (PDT)
+Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id fb19-20020a05622a481300b004309cf16815sm4019519qtb.39.2024.03.20.11.39.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Mar 2024 11:39:51 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id A2C461200066;
+	Wed, 20 Mar 2024 14:39:50 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Wed, 20 Mar 2024 14:39:50 -0400
+X-ME-Sender: <xms:dS37ZTNLe09Fb7QwOs_4Cujp7ENOGs-njgdpGennczPhcTwd-YgdVA>
+    <xme:dS37Zd_yCHIJFuLvi_TKJu0-dPELv3Bf73eEmduVhXvuhQqRo3maMfitV-R9wWc7U
+    K3GCxI41HRCDwCd8g>
+X-ME-Received: <xmr:dS37ZSQb-NYnQ1yYjHx8GtzVqhXmtY62C6woSsHouHuE-My41hy_g5xYvGimWg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrleeggdduudegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhu
+    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
+    htthgvrhhnpeejiefhtdeuvdegvddtudffgfegfeehgfdtiedvveevleevhfekhefftdek
+    ieehvdenucffohhmrghinheprhhushhtqdhlrghnghdrohhrghenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgr
+    uhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsoh
+    hquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:di37ZXtSGfJ4RJiEyvT6nQBMtYNjN417sebdNcahW2VJ27hGoq8NOQ>
+    <xmx:di37ZbdkisSEkTyCzfdzGZ3luAiBYSGNElPGLy-tvk3l1XEbmSY17g>
+    <xmx:di37ZT3oAxGEE_yQp_rk9e19dg15LESFaPP63oZOqs8wlqSPmjq1Sw>
+    <xmx:di37ZX9BKjIVQXbhRVtudAZ7rGPrcTvVNMWRjmCPbiox5G5ke6bugQ>
+    <xmx:di37ZemxcpF3Eo5mHsgVJRWuSxWUfQnKBdLyruG4jkKOjg6lIA-c8yOIHF4>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 20 Mar 2024 14:39:49 -0400 (EDT)
+Date: Wed, 20 Mar 2024 11:39:33 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kees Cook <keescook@chromium.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Carlos Llamas <cmllamas@google.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH v3 1/4] rust: uaccess: add userspace pointers
+Message-ID: <ZfstZZbagFLj7dqq@boqun-archlinux>
+References: <20240311-alice-mm-v3-0-cdf7b3a2049c@google.com>
+ <20240311-alice-mm-v3-1-cdf7b3a2049c@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240311-alice-mm-v3-1-cdf7b3a2049c@google.com>
 
-This filter can be used by Squashfs without modifications to the Squashfs
-kernel code (only needs support in userspace Squashfs-tools).
+On Mon, Mar 11, 2024 at 10:47:13AM +0000, Alice Ryhl wrote:
+> From: Wedson Almeida Filho <wedsonaf@gmail.com>
+> 
+[...]
+> +/// # Examples
+> +///
+> +/// Takes a region of userspace memory from the current process, and modify it
+> +/// by adding one to every byte in the region.
+> +///
+> +/// ```no_run
+> +/// use alloc::vec::Vec;
+> +/// use core::ffi::c_void;
+> +/// use kernel::error::Result;
+> +/// use kernel::uaccess::UserSlice;
+> +///
+> +/// pub fn bytes_add_one(uptr: *mut c_void, len: usize) -> Result<()> {
 
-Co-developed-by: Jia Tan <jiat0218@gmail.com>
-Signed-off-by: Jia Tan <jiat0218@gmail.com>
-Signed-off-by: Lasse Collin <lasse.collin@tukaani.org>
----
- lib/xz/Kconfig       |   5 +++
- lib/xz/xz_dec_bcj.c  | 105 ++++++++++++++++++++++++++++++++++++++++++-
- lib/xz/xz_dec_syms.c |   4 +-
- lib/xz/xz_private.h  |   6 ++-
- 4 files changed, 116 insertions(+), 4 deletions(-)
+I hit the following compile error when trying to run kunit test:
 
-diff --git a/lib/xz/Kconfig b/lib/xz/Kconfig
-index 1166627a87dc..20aa459bfb3e 100644
---- a/lib/xz/Kconfig
-+++ b/lib/xz/Kconfig
-@@ -40,6 +40,11 @@ config XZ_DEC_SPARC
- 	default y
- 	select XZ_DEC_BCJ
- 
-+config XZ_DEC_RISCV
-+	bool "RISC-V BCJ filter decoder" if EXPERT
-+	default y
-+	select XZ_DEC_BCJ
-+
- config XZ_DEC_MICROLZMA
- 	bool "MicroLZMA decoder"
- 	default n
-diff --git a/lib/xz/xz_dec_bcj.c b/lib/xz/xz_dec_bcj.c
-index 941198a8a55b..c04767d357bd 100644
---- a/lib/xz/xz_dec_bcj.c
-+++ b/lib/xz/xz_dec_bcj.c
-@@ -5,6 +5,7 @@
-  *
-  * Authors: Lasse Collin <lasse.collin@tukaani.org>
-  *          Igor Pavlov <https://7-zip.org/>
-+ *          Jia Tan <jiat0218@gmail.com>
-  */
- 
- #include "xz_private.h"
-@@ -24,7 +25,8 @@ struct xz_dec_bcj {
- 		BCJ_ARM = 7,        /* Little endian only */
- 		BCJ_ARMTHUMB = 8,   /* Little endian only */
- 		BCJ_SPARC = 9,      /* Big or little endian */
--		BCJ_ARM64 = 10      /* AArch64 */
-+		BCJ_ARM64 = 10,     /* AArch64 */
-+		BCJ_RISCV = 11      /* RV32GQC_Zfh, RV64GQC_Zfh */
- 	} type;
- 
- 	/*
-@@ -388,6 +390,99 @@ static size_t bcj_arm64(struct xz_dec_bcj *s, uint8_t *buf, size_t size)
- }
- #endif
- 
-+#ifdef XZ_DEC_RISCV
-+static size_t bcj_riscv(struct xz_dec_bcj *s, uint8_t *buf, size_t size)
-+{
-+	size_t i;
-+	uint32_t b1;
-+	uint32_t b2;
-+	uint32_t b3;
-+	uint32_t instr;
-+	uint32_t instr2;
-+	uint32_t instr2_rs1;
-+	uint32_t addr;
-+
-+	if (size < 8)
-+		return 0;
-+
-+	size -= 8;
-+
-+	for (i = 0; i <= size; i += 2) {
-+		instr = buf[i];
-+
-+		if (instr == 0xEF) {
-+			/* JAL */
-+			b1 = buf[i + 1];
-+			if ((b1 & 0x0D) != 0)
-+				continue;
-+
-+			b2 = buf[i + 2];
-+			b3 = buf[i + 3];
-+
-+			addr = ((b1 & 0xF0) << 13) | (b2 << 9) | (b3 << 1);
-+			addr -= s->pos + (uint32_t)i;
-+
-+			buf[i + 1] = (uint8_t)((b1 & 0x0F)
-+					| ((addr >> 8) & 0xF0));
-+
-+			buf[i + 2] = (uint8_t)(((addr >> 16) & 0x0F)
-+					| ((addr >> 7) & 0x10)
-+					| ((addr << 4) & 0xE0));
-+
-+			buf[i + 3] = (uint8_t)(((addr >> 4) & 0x7F)
-+					| ((addr >> 13) & 0x80));
-+
-+			i += 4 - 2;
-+
-+		} else if ((instr & 0x7F) == 0x17) {
-+			/* AUIPC */
-+			instr |= (uint32_t)buf[i + 1] << 8;
-+			instr |= (uint32_t)buf[i + 2] << 16;
-+			instr |= (uint32_t)buf[i + 3] << 24;
-+
-+			if (instr & 0xE80) {
-+				/* AUIPC's rd doesn't equal x0 or x2. */
-+				instr2 = get_unaligned_le32(buf + i + 4);
-+
-+				if (((instr << 8) ^ (instr2 - 3)) & 0xF8003) {
-+					i += 6 - 2;
-+					continue;
-+				}
-+
-+				addr = (instr & 0xFFFFF000) + (instr2 >> 20);
-+
-+				instr = 0x17 | (2 << 7) | (instr2 << 12);
-+				instr2 = addr;
-+			} else {
-+				/* AUIPC's rd equals x0 or x2. */
-+				instr2_rs1 = instr >> 27;
-+
-+				if ((uint32_t)((instr - 0x3117) << 18)
-+						>= (instr2_rs1 & 0x1D)) {
-+					i += 4 - 2;
-+					continue;
-+				}
-+
-+				addr = get_unaligned_be32(buf + i + 4);
-+				addr -= s->pos + (uint32_t)i;
-+
-+				instr2 = (instr >> 12) | (addr << 20);
-+
-+				instr = 0x17 | (instr2_rs1 << 7)
-+					| ((addr + 0x800) & 0xFFFFF000);
-+			}
-+
-+			put_unaligned_le32(instr, buf + i);
-+			put_unaligned_le32(instr2, buf + i + 4);
-+
-+			i += 8 - 2;
-+		}
-+	}
-+
-+	return i;
-+}
-+#endif
-+
- /*
-  * Apply the selected BCJ filter. Update *pos and s->pos to match the amount
-  * of data that got filtered.
-@@ -439,6 +534,11 @@ static void bcj_apply(struct xz_dec_bcj *s,
- 	case BCJ_ARM64:
- 		filtered = bcj_arm64(s, buf, size);
- 		break;
-+#endif
-+#ifdef XZ_DEC_RISCV
-+	case BCJ_RISCV:
-+		filtered = bcj_riscv(s, buf, size);
-+		break;
- #endif
- 	default:
- 		/* Never reached but silence compiler warnings. */
-@@ -615,6 +715,9 @@ XZ_EXTERN enum xz_ret xz_dec_bcj_reset(struct xz_dec_bcj *s, uint8_t id)
- #endif
- #ifdef XZ_DEC_ARM64
- 	case BCJ_ARM64:
-+#endif
-+#ifdef XZ_DEC_RISCV
-+	case BCJ_RISCV:
- #endif
- 		break;
- 
-diff --git a/lib/xz/xz_dec_syms.c b/lib/xz/xz_dec_syms.c
-index 495d2cc2e6e8..8f4925af9737 100644
---- a/lib/xz/xz_dec_syms.c
-+++ b/lib/xz/xz_dec_syms.c
-@@ -22,6 +22,6 @@ EXPORT_SYMBOL(xz_dec_microlzma_end);
- #endif
- 
- MODULE_DESCRIPTION("XZ decompressor");
--MODULE_VERSION("1.1");
--MODULE_AUTHOR("Lasse Collin <lasse.collin@tukaani.org> and Igor Pavlov");
-+MODULE_VERSION("1.2");
-+MODULE_AUTHOR("Lasse Collin, Igor Pavlov, Jia Tan");
- MODULE_LICENSE("Dual BSD/GPL");
-diff --git a/lib/xz/xz_private.h b/lib/xz/xz_private.h
-index 307e0de8c260..a8b1cbe8d21d 100644
---- a/lib/xz/xz_private.h
-+++ b/lib/xz/xz_private.h
-@@ -39,6 +39,9 @@
- #		ifdef CONFIG_XZ_DEC_ARM64
- #			define XZ_DEC_ARM64
- #		endif
-+#		ifdef CONFIG_XZ_DEC_RISCV
-+#			define XZ_DEC_RISCV
-+#		endif
- #		ifdef CONFIG_XZ_DEC_MICROLZMA
- #			define XZ_DEC_MICROLZMA
- #		endif
-@@ -102,7 +105,8 @@
- #	if defined(XZ_DEC_X86) || defined(XZ_DEC_POWERPC) \
- 			|| defined(XZ_DEC_IA64) \
- 			|| defined(XZ_DEC_ARM) || defined(XZ_DEC_ARMTHUMB) \
--			|| defined(XZ_DEC_SPARC) || defined(XZ_DEC_ARM64)
-+			|| defined(XZ_DEC_SPARC) || defined(XZ_DEC_ARM64) \
-+			|| defined(XZ_DEC_RISCV)
- #		define XZ_DEC_BCJ
- #	endif
- #endif
--- 
-2.44.0
+	ERROR:root:error: unreachable `pub` item
+	    --> rust/doctests_kernel_generated.rs:4167:1
+	     |
+	4167 | pub fn bytes_add_one(uptr: *mut c_void, len: usize) -> Result<()> {
+	     | ---^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+	     | |
+	     | help: consider restricting its visibility: `pub(crate)`
+	     |
+	     = help: or consider exporting it for use by other crates
+	     = note: requested on the command line with `-D unreachable-pub`
 
+	error: unreachable `pub` item
+	    --> rust/doctests_kernel_generated.rs:4243:1
+	     |
+	4243 | pub fn get_bytes_if_valid(uptr: *mut c_void, len: usize) -> Result<Vec<u8>> {
+	     | ---^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+	     | |
+	     | help: consider restricting its visibility: `pub(crate)`
+	     |
+	     = help: or consider exporting it for use by other crates
+
+	error: aborting due to 2 previous errors
+
+, which should be fixed if we make the function in the example not
+`pub`.
+
+> +///     let (read, mut write) = UserSlice::new(uptr, len).reader_writer();
+> +///
+> +///     let mut buf = Vec::new();
+> +///     read.read_all(&mut buf)?;
+> +///
+> +///     for b in &mut buf {
+> +///         *b = b.wrapping_add(1);
+> +///     }
+> +///
+> +///     write.write_slice(&buf)?;
+> +///     Ok(())
+> +/// }
+> +/// ```
+> +///
+> +/// Example illustrating a TOCTOU (time-of-check to time-of-use) bug.
+> +///
+> +/// ```no_run
+> +/// use alloc::vec::Vec;
+> +/// use core::ffi::c_void;
+> +/// use kernel::error::{code::EINVAL, Result};
+> +/// use kernel::uaccess::UserSlice;
+> +///
+> +/// /// Returns whether the data in this region is valid.
+> +/// fn is_valid(uptr: *mut c_void, len: usize) -> Result<bool> {
+> +///     let read = UserSlice::new(uptr, len).reader();
+> +///
+> +///     let mut buf = Vec::new();
+> +///     read.read_all(&mut buf)?;
+> +///
+> +///     todo!()
+> +/// }
+> +///
+> +/// /// Returns the bytes behind this user pointer if they are valid.
+> +/// pub fn get_bytes_if_valid(uptr: *mut c_void, len: usize) -> Result<Vec<u8>> {
+
+Ditto here.
+
+> +///     if !is_valid(uptr, len)? {
+> +///         return Err(EINVAL);
+> +///     }
+> +///
+> +///     let read = UserSlice::new(uptr, len).reader();
+> +///
+> +///     let mut buf = Vec::new();
+> +///     read.read_all(&mut buf)?;
+> +///
+> +///     // THIS IS A BUG! The bytes could have changed since we checked them.
+> +///     //
+> +///     // To avoid this kind of bug, don't call `UserSlice::new` multiple
+> +///     // times with the same address.
+> +///     Ok(buf)
+> +/// }
+> +/// ```
+> +///
+> +/// [`std::io`]: https://doc.rust-lang.org/std/io/index.html
+> +/// [`clone_reader`]: UserSliceReader::clone_reader
+> +pub struct UserSlice {
+> +    ptr: *mut c_void,
+> +    length: usize,
+> +}
+> +
+
+Regards,
+Boqun
+
+[...]
