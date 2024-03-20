@@ -1,104 +1,195 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2E039FED
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 10:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B322D05C;
+	Wed, 20 Mar 2024 10:40:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710931195; cv=none; b=BZvIvC04wuZLvpQlmw5lqNywToOs+tZl8BjjdnuyVJF9oZu9wVdH5CdgZHwWRWAgmGp8vZBuZxMQmDeoCrvEzvRWKaFKy749yT4dUwQuGfyu+4vQAbqE15UhFh4xtu9Xt7OhT5JN8lLdmcFmNFlyvWqlTaUHAIuVtpdwVuwA4ic=
+	t=1710931226; cv=none; b=CHspoaCntpQ14HsODLA02zbbKghRsd3V3QNk8xYA880Q9aQJvQ5Z+aJR5MkFQKVfVMJKIu5oACICfjpqTwxZxUP3ZlBxKVxwR+JlIacbGxJYDtM0Gr5i6ZcSHDjlH6qX2k//dSOaQSbgirBMe0km47kGfayIOkMBByVBC50RCe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710931195; c=relaxed/simple;
-	bh=/YnmHjebPsYji+772rQDw2SVKaxnY04yaSAvNkDGeak=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aHMYOFr1T//EZn83oDWMKNXGYo6rGM/xtomiDvXi3UzikacIL5FCnWe1PEzMJM2vIJrOaiQX1Chby4+SnCX4J42iEXdYo+DuATghSbZ8KXA00yNQcLMWvAinqXxifLk4nYU2RKyd+v731FPJpJWWmzEWWzufYRkBCzxzRnV6Zhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from fsav313.sakura.ne.jp (fsav313.sakura.ne.jp [153.120.85.144])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 42KAdo0k048716;
-	Wed, 20 Mar 2024 19:39:50 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav313.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav313.sakura.ne.jp);
- Wed, 20 Mar 2024 19:39:50 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav313.sakura.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 42KAdoUV048713
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Wed, 20 Mar 2024 19:39:50 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <dce41a35-aa2a-4e34-944b-7a6879f07448@I-love.SAKURA.ne.jp>
-Date: Wed, 20 Mar 2024 19:39:49 +0900
+	s=arc-20240116; t=1710931226; c=relaxed/simple;
+	bh=Y32T7gZW4IggfhZ5kFlo81B/FTCzi9qFSwHVweW2rNM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CszHR/ZXtudI196gxQD/iR3nIUhTnM1QFKR4oNsl36Hub0hFfkdM96SB+TL4neheuTnzhwhDM2FLS+/boxXBEteY4ivB+T3G73akYBX6z/FUBnk8At5QjVeEFo7EjdsE4TJmivZrEEJkQsV7TrASEMGRpn5rQum2VBJ397k8E5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=UD3/huH2; arc=none smtp.client-ip=46.19.9.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="UD3/huH2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
+	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=iMhNhe+tcxLmuyKOOZrdE9LpgvkjJPJ2ncK9B+m2l1Q=; b=UD3/huH2xJxpLYmHVUVdrpRcfg
+	hM/Tcu5hF3lVsE2Tgl7+6R8mn9eOmqWtGGlCg9Z7s1Jyh72IJEDUIrcXhqk4B6a5hlTzQrqN5EboQ
+	7L8lL8vNP2PKWjQs1WX57MuIpRtF2eWPZnCrqqZMiGxf1Qxs8GULRB6JtK0XaMzcQXttibccLW8k2
+	FKOazelzUm9QVJDXqOSBb3X3U2dQ8lsaMPFGEx5yHmAEYUKcMAXO2QMbkYcduxeg9acsVJjIleYQv
+	1iiH/HxvMEjAy0cHmsKL3tWtlLXZbIB0uyyXb5uPLDd7pDgCeLLNtpA++7qIn03yHA/U/3F/JvScg
+	2uczQZCw==;
+Received: from [89.212.21.243] (port=57750 helo=localhost.localdomain)
+	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <andrej.picej@norik.com>)
+	id 1rmsnx-005Tm8-10;
+	Wed, 20 Mar 2024 11:04:17 +0100
+From: Andrej Picej <andrej.picej@norik.com>
+To: haibo.chen@nxp.com,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org
+Cc: jic23@kernel.org,
+	lars@metafoo.de,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	upstream@lists.phytec.de
+Subject: [PATCH 1/2] iio: adc: imx93: Make calibration properties configurable
+Date: Wed, 20 Mar 2024 11:04:05 +0100
+Message-Id: <20240320100407.1639082-2-andrej.picej@norik.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240320100407.1639082-1-andrej.picej@norik.com>
+References: <20240320100407.1639082-1-andrej.picej@norik.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/3] x86: call instrumentation hooks from copy_mc.c
-Content-Language: en-US
-To: Alexander Potapenko <glider@google.com>
-Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, kasan-dev@googlegroups.com, tglx@linutronix.de,
-        x86@kernel.org, Linus Torvalds <torvalds@linux-foundation.org>,
-        Dmitry Vyukov <dvyukov@google.com>, Marco Elver <elver@google.com>
-References: <20240319163656.2100766-1-glider@google.com>
- <20240319163656.2100766-3-glider@google.com>
- <f9a8a442-0ff2-4da9-af4d-3d0e2805c4a7@I-love.SAKURA.ne.jp>
- <CAG_fn=UAsTnuZb+p17X+_LN+wY7Anh3OzjHxMEw9Z-A=sJV0UQ@mail.gmail.com>
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <CAG_fn=UAsTnuZb+p17X+_LN+wY7Anh3OzjHxMEw9Z-A=sJV0UQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel.siel.si
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - norik.com
+X-Get-Message-Sender-Via: cpanel.siel.si: authenticated_id: andrej.picej@norik.com
+X-Authenticated-Sender: cpanel.siel.si: andrej.picej@norik.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On 2024/03/20 18:29, Alexander Potapenko wrote:
-> But for KASAN/KCSAN we can afford more aggressive checks.
-> First, if we postpone them after the actual memory accesses happen,
-> the kernel may panic on the invalid access without a decent error
-> report.
-> Second, even if in a particular case only `len-ret` bytes were copied,
-> the caller probably expected both `src` and `dst` to have `len`
-> addressable bytes.
-> Checking for the whole length in this case is more likely to detect a
-> real error than produce a false positive.
+Make calibration properties:
+ - AVGEN: allow averaging of calibration time,
+ - NRSMPL: select the number of averaging samples during calibration and
+ - TSAMP: specifies the sample time of calibration conversions
 
-KASAN/KCSAN care about whether the requested address range is accessible but
-do not care about whether the requested address range was actually accessed?
+configurable with device tree properties:
+ - nxp,calib-avg-en,
+ - nxp,calib-nr-samples and
+ - nxp,calib-t-samples.
 
-By the way, we have the same problem for copy_page() and I was thinking about
-https://lkml.kernel.org/r/1a817eb5-7cd8-44d6-b409-b3bc3f377cb9@I-love.SAKURA.ne.jp .
-But given that instrument_memcpy_{before,after} are added,
-how do we want to use instrument_memcpy_{before,after} for copy_page() ?
-Should we rename assembly version of copy_page() so that we don't need to use
-tricky wrapping like below?
+Signed-off-by: Andrej Picej <andrej.picej@norik.com>
+---
+ drivers/iio/adc/imx93_adc.c | 66 ++++++++++++++++++++++++++++++++++---
+ 1 file changed, 61 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/include/asm/page_64.h b/arch/x86/include/asm/page_64.h
-index cc6b8e087192..b9b794656880 100644
---- a/arch/x86/include/asm/page_64.h
-+++ b/arch/x86/include/asm/page_64.h
-@@ -9,6 +9,7 @@
- #include <asm/alternative.h>
+diff --git a/drivers/iio/adc/imx93_adc.c b/drivers/iio/adc/imx93_adc.c
+index 4ccf4819f1f1..ad24105761ab 100644
+--- a/drivers/iio/adc/imx93_adc.c
++++ b/drivers/iio/adc/imx93_adc.c
+@@ -18,6 +18,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/regulator/consumer.h>
++#include <linux/property.h>
  
- #include <linux/kmsan-checks.h>
-+#include <linux/instrumented.h>
+ #define IMX93_ADC_DRIVER_NAME	"imx93-adc"
  
- /* duplicated to the one in bootmem.h */
- extern unsigned long max_pfn;
-@@ -59,6 +60,13 @@ static inline void clear_page(void *page)
- }
+@@ -43,6 +44,9 @@
+ #define IMX93_ADC_MCR_MODE_MASK			BIT(29)
+ #define IMX93_ADC_MCR_NSTART_MASK		BIT(24)
+ #define IMX93_ADC_MCR_CALSTART_MASK		BIT(14)
++#define IMX93_ADC_MCR_AVGEN_MASK		BIT(13)
++#define IMX93_ADC_MCR_NRSMPL_MASK		GENMASK(12, 11)
++#define IMX93_ADC_MCR_TSAMP_MASK		GENMASK(10, 9)
+ #define IMX93_ADC_MCR_ADCLKSE_MASK		BIT(8)
+ #define IMX93_ADC_MCR_PWDN_MASK			BIT(0)
+ #define IMX93_ADC_MSR_CALFAIL_MASK		BIT(30)
+@@ -145,7 +149,7 @@ static void imx93_adc_config_ad_clk(struct imx93_adc *adc)
  
- void copy_page(void *to, void *from);
-+#define copy_page(to, from) do {				\
-+	void *_to = (to);					\
-+	void *_from = (from);					\
-+	instrument_memcpy_before(_to, _from, PAGE_SIZE);	\
-+	copy_page(_to, _from);					\
-+	instrument_memcpy_after(_to, _from, PAGE_SIZE, 0);	\
-+} while (0)
+ static int imx93_adc_calibration(struct imx93_adc *adc)
+ {
+-	u32 mcr, msr;
++	u32 mcr, msr, value;
+ 	int ret;
  
- #ifdef CONFIG_X86_5LEVEL
- /*
-
+ 	/* make sure ADC in power down mode */
+@@ -156,12 +160,64 @@ static int imx93_adc_calibration(struct imx93_adc *adc)
+ 	mcr &= ~FIELD_PREP(IMX93_ADC_MCR_ADCLKSE_MASK, 1);
+ 	writel(mcr, adc->regs + IMX93_ADC_MCR);
+ 
+-	imx93_adc_power_up(adc);
+-
+ 	/*
+-	 * TODO: we use the default TSAMP/NRSMPL/AVGEN in MCR,
+-	 * can add the setting of these bit if need in future.
++	 * Set calibration settings:
++	 * - AVGEN: allow averaging of calibration time,
++	 * - NRSMPL: select the number of averaging samples during calibration,
++	 * - TSAMP: specifies the sample time of calibration conversions.
+ 	 */
++	if (!device_property_read_u32(adc->dev, "nxp,calib-avg-en", &value)) {
++		mcr &= ~IMX93_ADC_MCR_AVGEN_MASK;
++		mcr |= FIELD_PREP(IMX93_ADC_MCR_AVGEN_MASK, value);
++	}
++
++	if (!device_property_read_u32(adc->dev, "nxp,calib-nr-samples", &value)) {
++		switch (value) {
++		case 16:
++			value = 0x0;
++			break;
++		case 32:
++			value = 0x1;
++			break;
++		case 128:
++			value = 0x2;
++			break;
++		case 512:
++			value = 0x3;
++			break;
++		default:
++			dev_warn(adc->dev, "NRSMPL: wrong value, using default: 512\n");
++			value = 0x3;
++		}
++		mcr &= ~IMX93_ADC_MCR_NRSMPL_MASK;
++		mcr |= FIELD_PREP(IMX93_ADC_MCR_NRSMPL_MASK, value);
++	}
++
++	if (!device_property_read_u32(adc->dev, "nxp,calib-t-samples", &value)) {
++		switch (value) {
++		case 8:
++			value = 0x1;
++			break;
++		case 16:
++			value = 0x2;
++			break;
++		case 22:
++			value = 0x0;
++			break;
++		case 32:
++			value = 0x3;
++			break;
++		default:
++			dev_warn(adc->dev, "TSAMP: wrong value, using default: 22\n");
++			value = 0x0;
++		}
++		mcr &= ~IMX93_ADC_MCR_TSAMP_MASK;
++		mcr |= FIELD_PREP(IMX93_ADC_MCR_TSAMP_MASK, value);
++	}
++
++	writel(mcr, adc->regs + IMX93_ADC_MCR);
++
++	imx93_adc_power_up(adc);
+ 
+ 	/* run calibration */
+ 	mcr = readl(adc->regs + IMX93_ADC_MCR);
+-- 
+2.25.1
 
