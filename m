@@ -1,122 +1,162 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E57D441C84;
-	Wed, 20 Mar 2024 14:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FAB43ADC
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 14:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710944333; cv=none; b=CJ3tVQCUX5g9mjX3eV/tOpy/62zvaC7T+fNmigz8vpN7IazA04OndL0hdvKEI0KRV7eksy0gZss6TwmPukHdnea3NLvRiSS85C2JDTiP9YyMTLEJNXLpZ3ctPFFbNjfzObfv0R4+YDB+HAco6xWzemZEXk9DrCpJ3/sfOY+CuCg=
+	t=1710944381; cv=none; b=MtBKA9j1IRZl7EmAnkkh4MiUZimSjRhKKI0a8/1trAtiJXkK/eDbIyCnhM4KNH9nphSBjclmJJYTSku+Pz3dI3NPeA5q1+JN4vpoOGBQ7K6BPkUWUY25Q503a7WXbQxrSUgquouIUzpwpk88W6xbvjgouweA8SE25uHw1GSwaMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710944333; c=relaxed/simple;
-	bh=xmbyWobTD3RpSNLREBva1eUC9VLaDy7wqoqKn/PRejE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dBgKnOlnK4DJO4uifxKkt4ak+4RnA+Ege+o3eu9EJMHjbTl8zDhZBX9cFoIyA2LEl9jYxmGPhp+CU53C0K8/ZT/OwFBL5D349yCFnksErOUu/LQSOjewGegWl0DDpSPLndbQLUC9H07x1h3gfortN7Oyj9rk+peszvIGAfPk7PE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFD591007;
-	Wed, 20 Mar 2024 07:19:25 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8F3253F64C;
-	Wed, 20 Mar 2024 07:18:49 -0700 (PDT)
-From: Mark Rutland <mark.rutland@arm.com>
-To: linux-kernel@vger.kernel.org
-Cc: aishwarya.tcv@arm.com,
-	linux-kselftest@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	rostedt@goodmis.org,
-	shuah@kernel.org
-Subject: [PATCH] selftests/ftrace: Fix event filter target_func selection
-Date: Wed, 20 Mar 2024 14:18:44 +0000
-Message-Id: <20240320141844.1779984-1-mark.rutland@arm.com>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1710944381; c=relaxed/simple;
+	bh=UaT7k2gmjmJuDNmAFWziVqd0sZYoQPO1VA3qLt/9T0U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=bAZEmAxvwKT14JB4Qktk5C1ptVcA4WZlPy9XhCSlgo9ocQ+wOwI/+ANljm12e69a4CRWa3kiIr2Dr/OPkQbU59McBDKVyt9F4R+jgvLIeEjTzBSlBgvjYHXW1dV6zSdlG90kgnlqhLXKS41oKAM/Ut1HRdfbM+ec8wBT9XAGcGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uSUFxJ2+; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uSUFxJ2+"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-513e6777af4so6380882e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 07:19:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710944378; x=1711549178; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=tseffhcRc/A55FYIKavHDEB4t/Se1FCTP2ao/3daC3o=;
+        b=uSUFxJ2+zyfIay03554aAvcBT57UCM0iV6tLjQ6+eWx8HxBkeOQ1sMpQlse3gJqRI7
+         KnCsAyD/1glHjXXiZHzeW6SZFmML01J7UVxSpK5ZAdfQt+aJ5LUetm4xbR4oKSSm2edS
+         2OrYlysBJ+ksxdKUY8zmr3koHLC8qQ9z9erDVhZ/HoACFmvCijsRbYt1TxB2O22QkgRo
+         xuHWNFCOzDbLSPqx0opG7CDEiy6wUaxW5gkbnydTtvSfada7xqXAnNc23e+kBbhdZJ5G
+         6K3ll3ET7xM03M5I5vTEI4w7UaoXwFTWV0xNk0Y4GJycPYy2asjVFDWAUzqgaNWpcJOY
+         +34Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710944378; x=1711549178;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tseffhcRc/A55FYIKavHDEB4t/Se1FCTP2ao/3daC3o=;
+        b=i1HL4eZCKFMED01nNeun2FGWbEbTZghVbHyNmPAg2M3HIPfOuaVRfbRJKUgs50p+VQ
+         RRQR9n+WktmMlSwod61KtjedfV5pKGnp2rvz8Js0x2mXpxSkZ8lFaUfND81hcqfGDLGQ
+         DMfF5dx3vIS2I7nw7wa88kA5KnbhZmUqsR8iJNdqC0zjhcuzwtr8Ty3S8kG3OPqz8Gbm
+         eDI2FUdjlKdZVMTx7yqEkLxKWF4INFOmGiHXu+WAUyf6OCC7iMH1ruMfBtUgjAXLCXo4
+         0d0SaQ9ElNZ6pXcSehJd7VvSnkQQtzbgBC+DQOA4Nc4+OMyAm66JP1WXnQelJkMBU5YP
+         KrgA==
+X-Forwarded-Encrypted: i=1; AJvYcCXvvcCqKZEnBytZ9f4cjXdPtOnbw0B1gXXV8BK8Qgj9Sd4N1RFGxzORzfh8AuLqR0qzIXvpG4ObBBXVjh3OOe0kzq1oHgJAZxaxipcH
+X-Gm-Message-State: AOJu0Yyx5ePIdW4ogUF9Lbgu3gK9sj281R1oeqWRr7fn8aZd2nT+Osx2
+	Wmy00k5FNR3cdU+MhDKOfQPoTQClNwWqccqb1JvXdPgslKodcU04RsnOOPELinE=
+X-Google-Smtp-Source: AGHT+IGtS32g4S/JY+nQ/oVfpwIz8FRauqjVpODUlS55OFGiMLqGNfr7SgqN3YLuHXNyce8tweEH/w==
+X-Received: by 2002:a19:381b:0:b0:513:26e7:440c with SMTP id f27-20020a19381b000000b0051326e7440cmr9710194lfa.61.1710944377695;
+        Wed, 20 Mar 2024 07:19:37 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id bp14-20020a17090726ce00b00a46bdc6278csm3709043ejc.71.2024.03.20.07.19.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Mar 2024 07:19:37 -0700 (PDT)
+Message-ID: <473a833c-b166-4002-823c-a71e5aaa784a@linaro.org>
+Date: Wed, 20 Mar 2024 15:19:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] dt-bindings: hwmon: pmbus: adp1050: add bindings
+To: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>,
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Delphine CC Chiu <Delphine_CC_Chiu@Wiwynn.com>,
+ "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+ "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+References: <20240320125727.5615-1-radu.sabau@analog.com>
+ <SA1PR03MB6499527C7BEE83A3E4EE6AFBF7332@SA1PR03MB6499.namprd03.prod.outlook.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <SA1PR03MB6499527C7BEE83A3E4EE6AFBF7332@SA1PR03MB6499.namprd03.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The event filter function test has been failing in our internal test
-farm:
+On 20/03/2024 14:05, Sabau, Radu bogdan wrote:
 
-| # not ok 33 event filter function - test event filtering on functions
+>> +examples:
+>> +  - |
+>> +    i2c {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +        clock-frequency = <100000>;
+>> +
+>> +        hwmon@70 {
+>> +            compatible = "adi,adp1050";
+>> +            reg = <0x70>;
+>> +            vcc-supply = <&vcc>;
+>> +        };
+>> +    };
+>> +...
+> 
+> Results of bindings testing :
+> 
 
-Running the test in verbose mode indicates that this is because the test
-erroneously determines that kmem_cache_free() is the most common caller
-of kmem_cache_free():
+Yeah... please do not send patches which contain knowingly wrong code.
+Code is wrong if you perform testing and result is some sort of FAILURE,
+build error, warning message, static checker/linter warning message or
+error.
 
-  # # + cut -d: -f3 trace
-  # # + sed s/call_site=([^+]*)+0x.*/1/
-  # # + sort
-  # # + uniq -c
-  # # + sort
-  # # + tail -n 1
-  # # + sed s/^[ 0-9]*//
-  # # + target_func=kmem_cache_free
+If something is not clear, ask via email or IRC, but sending code which
+does not work could cause wasted reviewer's effort.
 
-... and as kmem_cache_free() doesn't call itself, setting this as the
-filter function for kmem_cache_free() results in no hits, and
-consequently the test fails:
+About your warning, please start your bindings from example-schema or
+latest reviewed bindings.
 
-  # # + grep kmem_cache_free trace
-  # # + grep kmem_cache_free
-  # # + wc -l
-  # # + hitcnt=0
-  # # + grep kmem_cache_free trace
-  # # + grep -v kmem_cache_free
-  # # + wc -l
-  # # + misscnt=0
-  # # + [ 0 -eq 0 ]
-  # # + exit_fail
-
-This seems to be because the system in question has tasks with ':' in
-their name (which a number of kernel worker threads have). These show up
-in the trace, e.g.
-
-  test:.sh-1299    [004] .....  2886.040608: kmem_cache_free: call_site=putname+0xa4/0xc8 ptr=000000000f4d22f4 name=names_cache
-
-... and so when we try to extact the call_site with:
-
-  cut -d: -f3 trace | sed 's/call_site=\([^+]*\)+0x.*/\1/'
-
-... the 'cut' command will extrace the column containing
-'kmem_cache_free' rather than the column containing 'call_site=...', and
-the 'sed' command will leave this unchanged. Consequently, the test will
-decide to use 'kmem_cache_free' as the filter function, resulting in the
-failure seen above.
-
-Fix this by matching the 'call_site=<func>' part specifically to extract
-the function name.
-
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-kselftest@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org
----
- .../selftests/ftrace/test.d/filter/event-filter-function.tc     | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-index 2de7c61d1ae3..3f74c09c56b6 100644
---- a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-+++ b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-@@ -24,7 +24,7 @@ echo 0 > events/enable
- echo "Get the most frequently calling function"
- sample_events
- 
--target_func=`cut -d: -f3 trace | sed 's/call_site=\([^+]*\)+0x.*/\1/' | sort | uniq -c | sort | tail -n 1 | sed 's/^[ 0-9]*//'`
-+target_func=`cat trace | grep -o 'call_site=\([^+]*\)' | sed 's/call_site=//' | sort | uniq -c | sort | tail -n 1 | sed 's/^[ 0-9]*//'`
- if [ -z "$target_func" ]; then
-     exit_fail
- fi
--- 
-2.39.2
+Best regards,
+Krzysztof
 
