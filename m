@@ -1,151 +1,188 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250153FB3E
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 10:19:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.219])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5E673D0A1;
+	Wed, 20 Mar 2024 10:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710929957; cv=none; b=HhOPD/Ye2rQo/CmA6nzdHDz3z5NZ7FDiyB5hW4EhaQB9dHffsINiFxgiZ732Gyw4RqKb3U+0jdwSwXo2jMj66+/bUVO9BiGn4b3W7F7WqP5sWCaU+NmOLmfun683FWSbBlx3ozr4Pv6eGKfz8z8FckI0K5PKfYirKfpnOfUxlC8=
+	t=1710929989; cv=none; b=hAcLq6bPCiQMlSbvdq8EGJayaz/XVOCdxwVMJo6wvsB76zuNOVtf1WqUIH1hL+uO+GUNqwv3hCsJaNRqLZi09tyYLvz5HlgTz2TauV63oLo4op3X9KqNZgdBsyi/NMIc9plx0ytjWxx2zaUMC1+3DlqU3gm9EAFkFUV6qB11J20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710929957; c=relaxed/simple;
-	bh=1EIpz4yJ9MkmGLF66k9fV/vMpELprPghjdX4s9eLzt4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Y1JHlSyFbpP5lNV+IlJL/wsFsdIQBQ+izWzhU6VAci+mMldg0qXZc4/IvA2nl+He/5rgRgDDvH6PcnTxijAttVtgUY4Kgz4+mURlXTvoHcHWfNwFDnzlq33kIR3wYE5jRYZ2aFgyevRxkQjeenE+PauE5Aktdd7YUOrNIldTpMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--glider.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C2pZTFNp; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--glider.bounces.google.com
+	s=arc-20240116; t=1710929989; c=relaxed/simple;
+	bh=xIi+cW4w2WN3sLl/pWDZi4mIfB8RX4auWJofB6sJ99c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GJNGjiFsBvUb/s1yBIroNt4Fi7dp5saPBfkCzxXv/3DFUKuNEZqcsRP17VdfNIdzc7CP/+DxDhpK9YEYQp5E18aUX7qx+Nl+O0ZBpYiXhzjzpuIkD4/NLLT/ur3nXvp2Wq/7nX8Y3FmcfW/hkyc3aWekgeUpYcLsvQRTNhz9I5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ortV1WbK; arc=none smtp.client-ip=45.254.50.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C2pZTFNp"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dccc49ef73eso8490341276.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 03:19:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710929955; x=1711534755; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=r71MCuDGNYKDimxiIJKs3mOhEvECUDV+QG0xkV6mxh0=;
-        b=C2pZTFNpMa2RVlBYnp3u2ImzjvWhPs4R5cYh+VwooiVG6PDYZZmeHkjVZh7i3Mg8fU
-         P7TD+bx+iO5onztxEQu0sA2r5AlbyTMcIL+P0NOuUa7FC+SPOAaHWtbTwnvnBFSUaE1r
-         GhVdz+16qDTJbjOt6ZgPsPiUWf+HGSNegcgq+EZf8rc3h2SGwyBuVhlUPRTKZkifsmYY
-         8YPsSAMut38aJGpYbHpYU6vSymO0nCDHRfSFscxiGWizpyyNKUADiIPePw+yfwRw54DH
-         XAVGNy2d4+IhA75bmHUDRaszrH8yfwU6m9jKiUx87+s4WAuP2yxwkfqkTVewpX0YVvW4
-         QKFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710929955; x=1711534755;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=r71MCuDGNYKDimxiIJKs3mOhEvECUDV+QG0xkV6mxh0=;
-        b=uTlxwIck9gVWuynz+yTko2ukS4uN1Ep1pQ5Qv3GDow04oUCqKhHfvHc4dJ4hqIacld
-         SUc1ap3DkByBbgdKjgvBcrhHa1TuouckZeEu7+p1PtyK20hFRaAc6rDItys02+UzhWLS
-         er4ETrR0Hr6uwwTIQtc/yVwk8YHIzhCHHyWuezlKG63iDx2dKHyfpDlvkGBC06d2Zj5N
-         XmOSK/Kp3tnCGfCso0WUPClZCitD7ZaDc4ZNhln7Ni+8z5w/Kn1eQmyd0Fj+WMXT6Y9J
-         2TeWoID5SgWnsVrKK+LlDhgWuE2/JnugdGydYrQ5WFA+k9ZY0GjYnSVSDQ9WpwtKWimX
-         LcOg==
-X-Gm-Message-State: AOJu0YzDGw+OoOOJaSAlzy92bmMnVwMu+036rOzElKiweTxukBkjoPz2
-	fwTWWcgxdCpwKXmKyEvnCYXMUnnpFWNgNLq2NnqLSX2NV8c1HXwqTBRdajMlc7ibRjgIlQdQ+vJ
-	gaw==
-X-Google-Smtp-Source: AGHT+IGiFjO7C+gTehD6m6WxUP0v54ngFYmvEURPJrqbwSTJrYhYcYDkQLRaGgYDZMxUmBfW4tcHUqyzYLs=
-X-Received: from glider.muc.corp.google.com ([2a00:79e0:9c:201:2234:4e4b:bcf0:406e])
- (user=glider job=sendgmr) by 2002:a05:6902:1b85:b0:dc2:2ace:860 with SMTP id
- ei5-20020a0569021b8500b00dc22ace0860mr915079ybb.2.1710929955165; Wed, 20 Mar
- 2024 03:19:15 -0700 (PDT)
-Date: Wed, 20 Mar 2024 11:18:51 +0100
-In-Reply-To: <20240320101851.2589698-1-glider@google.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ortV1WbK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=1oeuD
+	vFn2YDBckFkO47Q7YRsJ8OZ8rJl2dHg14vkSuw=; b=ortV1WbKJzj6lpEmSXyvL
+	h2kbUcPWGRGzjC/OzoXLMd2R/kn/a3AECnO54dT5Gq5+sHqK9C55X1p6IrN79kuD
+	SH3Bm3bQ1FnuFM7BFtMCtCQk2JjuLKXunHn3WNmamQZ3xhRDni5/ZMi9BQjcrEPy
+	5YYJ3UwTBQ+DRSamx0eAHs=
+Received: from localhost.localdomain (unknown [39.144.124.65])
+	by gzga-smtp-mta-g0-4 (Coremail) with SMTP id _____wDnL5ciuPpliawpBA--.38680S2;
+	Wed, 20 Mar 2024 18:19:15 +0800 (CST)
+From: Wang Rong <w_angrong@163.com>
+To: mst@redhat.com,
+	jasowang@redhat.com
+Cc: kvm@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Rong Wang <w_angrong@163.com>
+Subject: [PATCH v3] vhost/vdpa: Add MSI translation tables to iommu for software-managed MSI
+Date: Wed, 20 Mar 2024 18:19:12 +0800
+Message-Id: <20240320101912.28210-1-w_angrong@163.com>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240320101851.2589698-1-glider@google.com>
-X-Mailer: git-send-email 2.44.0.291.gc1ea87d7ee-goog
-Message-ID: <20240320101851.2589698-3-glider@google.com>
-Subject: [PATCH v2 3/3] x86: call instrumentation hooks from copy_mc.c
-From: Alexander Potapenko <glider@google.com>
-To: glider@google.com, akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	kasan-dev@googlegroups.com, tglx@linutronix.de, x86@kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Dmitry Vyukov <dvyukov@google.com>, 
-	Marco Elver <elver@google.com>, Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDnL5ciuPpliawpBA--.38680S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxWrWkGF4ftw1DJF45Jr18Xwb_yoWrXry7pF
+	ZrCFy5Gr4UJw4xWrsxAF4DZFnYk3s2y3y8Caya9anakr1Utr90kaykGa4jyF15AFWrJF17
+	XF42kr18uw4UJ37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEb18DUUUUU=
+X-CM-SenderInfo: xzbd0wpurqwqqrwthudrp/1tbiNgSniGXAkngAPAAAsu
 
-Memory accesses in copy_mc_to_kernel() and copy_mc_to_user() are performed
-by assembly routines and are invisible to KASAN, KCSAN, and KMSAN.
-Add hooks from instrumentation.h to tell the tools these functions have
-memcpy/copy_from_user semantics.
+From: Rong Wang <w_angrong@163.com>
 
-The call to copy_mc_fragile() in copy_mc_fragile_handle_tail() is left
-intact, because the latter is only called from the assembly implementation
-of copy_mc_fragile(), so the memory accesses in it are covered by the
-instrumentation in copy_mc_to_kernel() and copy_mc_to_user().
+Once enable iommu domain for one device, the MSI
+translation tables have to be there for software-managed MSI.
+Otherwise, platform with software-managed MSI without an
+irq bypass function, can not get a correct memory write event
+from pcie, will not get irqs.
+The solution is to obtain the MSI phy base address from
+iommu reserved region, and set it to iommu MSI cookie,
+then translation tables will be created while request irq.
 
-Link: https://lore.kernel.org/all/3b7dbd88-0861-4638-b2d2-911c97a4cadf@I-love.SAKURA.ne.jp/
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Alexander Potapenko <glider@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Marco Elver <elver@google.com>
-Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Change log
+----------
 
+v1->v2:
+- add resv iotlb to avoid overlap mapping.
+v2->v3:
+- there is no need to export the iommu symbol anymore.
+
+Signed-off-by: Rong Wang <w_angrong@163.com>
 ---
-v2:
- - as requested by Linus Torvalds, move the instrumentation outside the
-   uaccess section
----
- arch/x86/lib/copy_mc.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ drivers/vhost/vdpa.c | 59 +++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 56 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/lib/copy_mc.c b/arch/x86/lib/copy_mc.c
-index 6e8b7e600def5..97e88e58567bf 100644
---- a/arch/x86/lib/copy_mc.c
-+++ b/arch/x86/lib/copy_mc.c
-@@ -4,6 +4,7 @@
- #include <linux/jump_label.h>
- #include <linux/uaccess.h>
- #include <linux/export.h>
-+#include <linux/instrumented.h>
- #include <linux/string.h>
- #include <linux/types.h>
- 
-@@ -61,10 +62,20 @@ unsigned long copy_mc_enhanced_fast_string(void *dst, const void *src, unsigned
-  */
- unsigned long __must_check copy_mc_to_kernel(void *dst, const void *src, unsigned len)
+diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
+index ba52d128aeb7..28b56b10372b 100644
+--- a/drivers/vhost/vdpa.c
++++ b/drivers/vhost/vdpa.c
+@@ -49,6 +49,7 @@ struct vhost_vdpa {
+ 	struct completion completion;
+ 	struct vdpa_device *vdpa;
+ 	struct hlist_head as[VHOST_VDPA_IOTLB_BUCKETS];
++	struct vhost_iotlb resv_iotlb;
+ 	struct device dev;
+ 	struct cdev cdev;
+ 	atomic_t opened;
+@@ -247,6 +248,7 @@ static int _compat_vdpa_reset(struct vhost_vdpa *v)
+ static int vhost_vdpa_reset(struct vhost_vdpa *v)
  {
--	if (copy_mc_fragile_enabled)
--		return copy_mc_fragile(dst, src, len);
--	if (static_cpu_has(X86_FEATURE_ERMS))
--		return copy_mc_enhanced_fast_string(dst, src, len);
-+	unsigned long ret;
-+
-+	if (copy_mc_fragile_enabled) {
-+		instrument_memcpy_before(dst, src, len);
-+		ret = copy_mc_fragile(dst, src, len);
-+		instrument_memcpy_after(dst, src, len, ret);
-+		return ret;
-+	}
-+	if (static_cpu_has(X86_FEATURE_ERMS)) {
-+		instrument_memcpy_before(dst, src, len);
-+		ret = copy_mc_enhanced_fast_string(dst, src, len);
-+		instrument_memcpy_after(dst, src, len, ret);
-+		return ret;
-+	}
- 	memcpy(dst, src, len);
- 	return 0;
+ 	v->in_batch = 0;
++	vhost_iotlb_reset(&v->resv_iotlb);
+ 	return _compat_vdpa_reset(v);
  }
-@@ -75,6 +86,7 @@ unsigned long __must_check copy_mc_to_user(void __user *dst, const void *src, un
- 	unsigned long ret;
  
- 	if (copy_mc_fragile_enabled) {
-+		instrument_copy_to_user(dst, src, len);
- 		__uaccess_begin();
- 		ret = copy_mc_fragile((__force void *)dst, src, len);
- 		__uaccess_end();
-@@ -82,6 +94,7 @@ unsigned long __must_check copy_mc_to_user(void __user *dst, const void *src, un
+@@ -1219,10 +1221,15 @@ static int vhost_vdpa_process_iotlb_update(struct vhost_vdpa *v,
+ 	    msg->iova + msg->size - 1 > v->range.last)
+ 		return -EINVAL;
+ 
++	if (vhost_iotlb_itree_first(&v->resv_iotlb, msg->iova,
++					msg->iova + msg->size - 1))
++		return -EINVAL;
++
+ 	if (vhost_iotlb_itree_first(iotlb, msg->iova,
+ 				    msg->iova + msg->size - 1))
+ 		return -EEXIST;
+ 
++
+ 	if (vdpa->use_va)
+ 		return vhost_vdpa_va_map(v, iotlb, msg->iova, msg->size,
+ 					 msg->uaddr, msg->perm);
+@@ -1307,6 +1314,45 @@ static ssize_t vhost_vdpa_chr_write_iter(struct kiocb *iocb,
+ 	return vhost_chr_write_iter(dev, from);
+ }
+ 
++static int vhost_vdpa_resv_iommu_region(struct iommu_domain *domain, struct device *dma_dev,
++	struct vhost_iotlb *resv_iotlb)
++{
++	struct list_head dev_resv_regions;
++	phys_addr_t resv_msi_base = 0;
++	struct iommu_resv_region *region;
++	int ret = 0;
++	bool with_sw_msi = false;
++	bool with_hw_msi = false;
++
++	INIT_LIST_HEAD(&dev_resv_regions);
++	iommu_get_resv_regions(dma_dev, &dev_resv_regions);
++
++	list_for_each_entry(region, &dev_resv_regions, list) {
++		ret = vhost_iotlb_add_range_ctx(resv_iotlb, region->start,
++				region->start + region->length - 1,
++				0, 0, NULL);
++		if (ret) {
++			vhost_iotlb_reset(resv_iotlb);
++			break;
++		}
++
++		if (region->type == IOMMU_RESV_MSI)
++			with_hw_msi = true;
++
++		if (region->type == IOMMU_RESV_SW_MSI) {
++			resv_msi_base = region->start;
++			with_sw_msi = true;
++		}
++	}
++
++	if (!ret && !with_hw_msi && with_sw_msi)
++		ret = iommu_get_msi_cookie(domain, resv_msi_base);
++
++	iommu_put_resv_regions(dma_dev, &dev_resv_regions);
++
++	return ret;
++}
++
+ static int vhost_vdpa_alloc_domain(struct vhost_vdpa *v)
+ {
+ 	struct vdpa_device *vdpa = v->vdpa;
+@@ -1335,11 +1381,16 @@ static int vhost_vdpa_alloc_domain(struct vhost_vdpa *v)
+ 
+ 	ret = iommu_attach_device(v->domain, dma_dev);
+ 	if (ret)
+-		goto err_attach;
++		goto err_alloc_domain;
+ 
+-	return 0;
++	ret = vhost_vdpa_resv_iommu_region(v->domain, dma_dev, &v->resv_iotlb);
++	if (ret)
++		goto err_attach_device;
+ 
+-err_attach:
++	return 0;
++err_attach_device:
++	iommu_detach_device(v->domain, dma_dev);
++err_alloc_domain:
+ 	iommu_domain_free(v->domain);
+ 	v->domain = NULL;
+ 	return ret;
+@@ -1595,6 +1646,8 @@ static int vhost_vdpa_probe(struct vdpa_device *vdpa)
+ 		goto err;
  	}
  
- 	if (static_cpu_has(X86_FEATURE_ERMS)) {
-+		instrument_copy_to_user(dst, src, len);
- 		__uaccess_begin();
- 		ret = copy_mc_enhanced_fast_string((__force void *)dst, src, len);
- 		__uaccess_end();
++	vhost_iotlb_init(&v->resv_iotlb, 0, 0);
++
+ 	r = dev_set_name(&v->dev, "vhost-vdpa-%u", minor);
+ 	if (r)
+ 		goto err;
 -- 
-2.44.0.291.gc1ea87d7ee-goog
+2.27.0
 
