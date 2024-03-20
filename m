@@ -1,18 +1,19 @@
 Received: from cae.in-ulm.de (cae.in-ulm.de [217.10.14.231])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E310E2231C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E313C22F07;
 	Wed, 20 Mar 2024 07:48:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.14.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710920918; cv=none; b=JhSuh/VrFFrtsP5QBJZiXyj7tW9u3EbwSw72SKlM5X8IPktHymibfIIH3ZBDHe9K9Do5WFLlNRGF9Ro3ldPWEl1Hf6GbPbK+ugDoUVXFKsgTQ87TughLLVzux8HsusUa9gnSnDqnOw50DsCXYIwbRb1SICv73OHDSjwfmVY8wI4=
+	t=1710920919; cv=none; b=qAhiOCELr0b9l7frhWRYKJDsukzS4+bAaMHOkOwj0DBBSTrEfwO7jmQCPFJTNd+PUCa7mEXRk3RtAHSqSgJdHv0j3nVhAmr8HAEdkyz3JQLOsOML16AF9NXhfWU+QDM314xBcXTG2fWQZ0+YpfL8A3w3PSGkHRU+DyKAVO2sGJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710920918; c=relaxed/simple;
-	bh=6v51l2BaV+t4HJloO9qBHphewQnPu0qnDnrMTLpEHjk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g9+s4TYPJCI9lPEyEGZfLBrmWbgKAV7/FEB5EYkzKhVuSuNqZ8tQDf+A/DeAh+h//VnXBrItehVIFc8Tjgdu5wGYbj2vTx8zXlkSYNQhEH4BTohhzYl1a2HeM4+LnGMOpKnSoGQjdQNpBwd1OfkCsGssUE6j7o0TpiIYJMVxQ/M=
+	s=arc-20240116; t=1710920919; c=relaxed/simple;
+	bh=mdgMqfsJqx6yP6KG7NUVhitkX5wgR7Ijn/LGX47PJFA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=qE14jRNUQrh9+Fgj2FZk3+Tgp/fqNugibF+bx7VRmIJ5DAUpVHKomBGSiTIV0qFP8jWXZ87gmNMs/ID12hkpqqZX6Azk7Soknzf24ot8ibtXw5YyLPxrs9D43S+FjIzZU2S/3tl+Cf3x0S9mBmhYw0Tgzi04Uy3s0IeOp0CjppY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de; spf=pass smtp.mailfrom=c--e.de; arc=none smtp.client-ip=217.10.14.231
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=c--e.de
 Received: by cae.in-ulm.de (Postfix, from userid 1000)
-	id EBA5E140551; Wed, 20 Mar 2024 08:40:01 +0100 (CET)
+	id BE028140583; Wed, 20 Mar 2024 08:40:06 +0100 (CET)
 From: "Christian A. Ehrhardt" <lk@c--e.de>
 To: linux-kernel@vger.kernel.org
 Cc: "Christian A. Ehrhardt" <lk@c--e.de>,
@@ -26,10 +27,12 @@ Cc: "Christian A. Ehrhardt" <lk@c--e.de>,
 	=?UTF-8?q?Samuel=20=C4=8Cavoj?= <samuel@cavoj.net>,
 	linux-usb@vger.kernel.org,
 	Kenneth Crudup <kenny@panix.com>
-Subject: [PATCH 0/5] Fix various races in UCSI
-Date: Wed, 20 Mar 2024 08:39:21 +0100
-Message-Id: <20240320073927.1641788-1-lk@c--e.de>
+Subject: [PATCH 2/5] usb: typec: ucsi: Check for notifications after init
+Date: Wed, 20 Mar 2024 08:39:23 +0100
+Message-Id: <20240320073927.1641788-3-lk@c--e.de>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20240320073927.1641788-1-lk@c--e.de>
+References: <20240320073927.1641788-1-lk@c--e.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,45 +41,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fix various races in UCSI code:
-- The EVENT_PENDING bit should be cleared under the PPM lock to
-  avoid spurious re-checking of the connector status.
-- The initial connector change notification during init may be
-  lost which can cause a stuck UCSI controller. Observed by me
-  and others during resume or after module reload.
-- Unsupported commands must be ACKed. This was uncovered by the
-  recent change from Jameson Thies that did sent unsupported commands.
-- The DELL quirk still isn't quite complete and I've found a more
-  elegant way to handle this. A connector change ack _is_ accepted
-  on affected systems if it is bundled with a command ack.
-- If we do two consecutive resets or the controller is already
-  reset at boog the second reset might complete early because the
-  reset complete bit is already set. ucsi_ccg.c has a work around
-  for this but it looks like an more general issue to me.
+The completion notification for the final SET_NOTIFICATION_ENABLE
+command during initialization can include a connector change
+notification.  However, at the time this completion notification is
+processed, the ucsi struct is not ready to handle this notification.
+As a result the notification is ignored and the controller
+never sends an interrupt again.
 
-NOTE:
-As a result of these individual fixes we could think about the
-question if there are additional cases where we send some type
-of command to the PPM while the bit that indicates its completion
-is already set in CCI. And in fact there is one more case where
-this can happen: The ack command that clears the connector change
-is sent directly after the ack command for the previous command.
-It might be possible to simply ack the connector change along with
-the first command ucsi_handle_connector_change() and not at the
-end. AFAICS the connector lock should protect us from races that
-might arise out of this.
+Re-check CCI for a pending connector state change after
+initialization is complete. Adjust the corresponding debug
+message accordingly.
 
-Christian A. Ehrhardt (5):
-  usb: typec: ucsi: Clear EVENT_PENDING under PPM lock
-  usb: typec: ucsi: Check for notifications after init
-  usb: typec: ucsi: Ack unsupported commands
-  usb: typec: ucsi_acpi: Refactor and fix DELL quirk
-  usb: typec: ucsi: Clear UCSI_CCI_RESET_COMPLETE before reset
+Fixes: 71a1fa0df2a3 ("usb: typec: ucsi: Store the notification mask")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christian A. Ehrhardt <lk@c--e.de>
+---
+ drivers/usb/typec/ucsi/ucsi.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
- drivers/usb/typec/ucsi/ucsi.c      | 56 ++++++++++++++++++++--
- drivers/usb/typec/ucsi/ucsi_acpi.c | 75 +++++++++++++-----------------
- 2 files changed, 84 insertions(+), 47 deletions(-)
-
+diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
+index 8a6645ffd938..dceeed207569 100644
+--- a/drivers/usb/typec/ucsi/ucsi.c
++++ b/drivers/usb/typec/ucsi/ucsi.c
+@@ -1237,7 +1237,7 @@ void ucsi_connector_change(struct ucsi *ucsi, u8 num)
+ 	struct ucsi_connector *con = &ucsi->connector[num - 1];
+ 
+ 	if (!(ucsi->ntfy & UCSI_ENABLE_NTFY_CONNECTOR_CHANGE)) {
+-		dev_dbg(ucsi->dev, "Bogus connector change event\n");
++		dev_dbg(ucsi->dev, "Early connector change event\n");
+ 		return;
+ 	}
+ 
+@@ -1636,6 +1636,7 @@ static int ucsi_init(struct ucsi *ucsi)
+ {
+ 	struct ucsi_connector *con, *connector;
+ 	u64 command, ntfy;
++	u32 cci;
+ 	int ret;
+ 	int i;
+ 
+@@ -1688,6 +1689,13 @@ static int ucsi_init(struct ucsi *ucsi)
+ 
+ 	ucsi->connector = connector;
+ 	ucsi->ntfy = ntfy;
++
++	ret = ucsi->ops->read(ucsi, UCSI_CCI, &cci, sizeof(cci));
++	if (ret)
++		return ret;
++	if (UCSI_CCI_CONNECTOR(READ_ONCE(cci)))
++		ucsi_connector_change(ucsi, cci);
++
+ 	return 0;
+ 
+ err_unregister:
 -- 
 2.40.1
 
