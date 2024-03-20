@@ -1,116 +1,72 @@
-Received: from fhigh1-smtp.messagingengine.com (fhigh1-smtp.messagingengine.com [103.168.172.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40FE485952;
-	Wed, 20 Mar 2024 20:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9328592D;
+	Wed, 20 Mar 2024 20:11:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710965291; cv=none; b=D23kV8qBFk0p4I+1JnaT3xYACWWQtGRaumVD54Kx8hyMHe2Wx/DRXLcLS0crOUIBcbnHyzblGNIcPnQIY7L//4XK4E8IsBQ5lfqeR4yl+o5hg05VSQE1XcYi7yij5ZOzA73zwJPHOoej6o/gZivSORFgOkCODv1ho5Gos7ZN5is=
+	t=1710965498; cv=none; b=pEC+Lyg6DZejdl9u/2QS4/WGa3ZsrkLsFhLBTr+QoRrsMCOBx/nSWoanQAwOm/75+wvMtGAq0Tk6JxA/UIzPakrtRxi0J+Y4mHEwSTrfsYwzE6rD7iP8+1oCN2adqqA0kBDFNISn/yeuLA3Cc+XLfrMJn48XA5SStcDR9gltuBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710965291; c=relaxed/simple;
-	bh=uONFlkAf6NBbm48RNzUO1h/HcHk6fi3wX72Wz4wzAhk=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=IkgGyAihfgO82Xhp0yhFOVY592AXZ5QqWCsRtly3cLZ5t2OAmg8necYSHjKIFEytRDFaB935Rs/6cpMEqQMwMD0MwPa0i0D0oPfqalkemLZMH2LAUGg4OAlYCm+rmwxFd7tial/ieMB36ebzm7A0k8B+uWKA1veYpkbVpl3sPTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=EuqsUOuU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Ya89ljFO; arc=none smtp.client-ip=103.168.172.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1710965498; c=relaxed/simple;
+	bh=1QTJYF/WVBiUpPd9h01Zak4bCyOARoYPEAdW5+RbQ0c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cAXKY4ITsti2seT23K2l309G4u6BDrH/Z0BF6uk+qp8pSZof7gcTB0thjjy3C+VJo8kOCHpa9O9lxZI+qnzxeDV2XhBrKMaG1vPGV+I8Ed7lBy3JRh1ab2qSCO010kTxbMuVaDgPQx/KiCQmepyLwqPPjAadyFNmgVstz6AvUfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=F0FP0imW; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="EuqsUOuU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ya89ljFO"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 2F9451140098;
-	Wed, 20 Mar 2024 16:08:08 -0400 (EDT)
-Received: from imap41 ([10.202.2.91])
-  by compute2.internal (MEProxy); Wed, 20 Mar 2024 16:08:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1710965288;
-	 x=1711051688; bh=uONFlkAf6NBbm48RNzUO1h/HcHk6fi3wX72Wz4wzAhk=; b=
-	EuqsUOuU9FQ3x/IbzxAeBnzrg/Ij+p01vhB05ZZzq24tsLgniogK5saaRf0CeOIY
-	bHRUGfyo4wv0A+uQiSirqmDrvnykKEvnRA+vgFI9gWFAqtNusRmLBtlhxqB/vp1f
-	OWg1lic044URU1SIrsz6giy/gbXdehZqFaZkYEoe1JzVRhsB1IjKMrgmV38g5oax
-	AGaUEDI0s08jXT+2Ca1en8cX7x7g72O0wFDArt8QUOch4qeZCSlU4+LldfyTzU1T
-	iDxztnfevEqek87svITDdN/3UOpyRtOwXG0BxjMoSud58kdqrJ0k0Knu8W3XfyHz
-	S76kTswbG6OC6Dvkwh5S/g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1710965288; x=
-	1711051688; bh=uONFlkAf6NBbm48RNzUO1h/HcHk6fi3wX72Wz4wzAhk=; b=Y
-	a89ljFOmZUUpg6LjdS4ILN1TQ8qxcffWlosQ/JPkmuLZxpwdCvF4qkrAYcMm6wCY
-	2tKlKHN4l8u6mN8U4JdukKZA7C6jdJZ24BhpBwnBLkALxmtwn3sFdaU3ieE+CzBe
-	58CcafdnonlZX1sN7tL1TiMO5q1s+L2SJOretP9jnGBrjOjuKfIFTMDwZLzw3LIW
-	NbFhyLSbH01PFlyYtlY2PJESsAGNBv+mJymz3bddNh8Q+t+iyrNzXLrxMA7tw9uA
-	aBDF8klGYD//51LpjUxYeR1ybb7NdZZpaHF/t/Q7QbdIwAm5k4KoZ52VZh82cNVz
-	EvsjDk4ihFYwXFT5NfyQg==
-X-ME-Sender: <xms:J0L7ZZZMdjTpa2aWe1B1ZOcYLJ7CYe4_xakWA5R5EJbup5O15RyeHg>
-    <xme:J0L7ZQZ8a5XyN7TcLTm-sPxnGnWmpxt8YWC-8z2mrPefFQoeN6WKqQxBsAmCYDb43
-    jiL1Nlw2FqXxzHeIjM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrleeggddufedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfn
-    uhhkvgculfhonhgvshdfuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrth
-    htvghrnhepfeeugffhvdeufeehieelvdegfeffveegleehtddvheegkeetueegtdegueeh
-    vdelnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhhomheplh
-    hukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:J0L7Zb-KGbFyOEg2ItUHEeFcb059W5D9s46YbWI3xlcJLX6CJk5FPQ>
-    <xmx:J0L7ZXoZfylDo6-bOMTg_DZ-LkfvA533g4RhptRryRdBwei_qRV2Ww>
-    <xmx:J0L7ZUo5vWA9DESUUHhHWs0tG-3AfScrGIIWNli-Sefn-p6zr4DusQ>
-    <xmx:J0L7ZdR8KK-4p7xGymxBi_raN7Bt-AgDwJ1N0VftwimCw0CHSBkizQ>
-    <xmx:KEL7ZfUoDFbj_3oZmFvufqlt6f2vWR6qxGyOuSFLJY48HGmyPArUaQ>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 874562340081; Wed, 20 Mar 2024 16:08:07 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-332-gdeb4194079-fm-20240319.002-gdeb41940
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="F0FP0imW"
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id E5C3387F52;
+	Wed, 20 Mar 2024 21:11:29 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1710965493;
+	bh=qKi5o7N4Mo7W2yDJ2JzF88gBa6ndwUAwavGM4+FFst4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=F0FP0imWKQL5JoKWuRNOIPk7FUIJFO1MsE7vvD+lu/BoIVAEsqnba5tOzOZmhp+Cc
+	 YQoPNNEreLSzRnbBytgkkINuPefTM6y2xSr8qXvW/izW3RQW7jEQGMZzU8znNnxMxX
+	 zSfkoTR1AN2cPVgFGPBi0X/GSvayn91fP6WP2vgMbJRnMWaBp/gPQs1lXJnbp+kDSt
+	 CjDYa8ybHmZMl0EqNpGis2UGZhoJQJ3C0kBz3AqD4WnqEFcE1GpNY3IoV6W3DfT2qn
+	 LIVlyUWh19cXkMKrqys4ocDohGyQLVzc3Dc4s/AnmjKvcNA0w0xU9EJSXEzLb2oWib
+	 gMdj2glYN/ppA==
+Message-ID: <21fce6d1-fadb-4175-9539-73d4cbdad452@denx.de>
+Date: Wed, 20 Mar 2024 21:03:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <33a380bd-e3fd-4022-a707-1d14319f202a@app.fastmail.com>
-In-Reply-To: <c7e375df-e709-a348-a240-0d6d8bde1840@linux.intel.com>
-References: <20240310055312.11293-1-luke@ljones.dev>
- <20240310055312.11293-2-luke@ljones.dev>
- <0f35beb8-5453-63cb-0570-752b2693f6ec@linux.intel.com>
- <fbd2dc65-33d9-447e-9edb-78df370778be@app.fastmail.com>
- <c7e375df-e709-a348-a240-0d6d8bde1840@linux.intel.com>
-Date: Thu, 21 Mar 2024 09:07:41 +1300
-From: "Luke Jones" <luke@ljones.dev>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
- "Hans de Goede" <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/1] platform/x86: asus-wmi: add support for Vivobook GPU MUX
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5.10 00/73] 5.10.213-rc1 review
+Content-Language: en-US
+To: Pavel Machek <pavel@denx.de>, Sasha Levin <sashal@kernel.org>,
+ broonie@kernel.org, tzimmermann@suse.de, omosnace@redhat.com,
+ paul@paul-moore.com, yi.zhang@huawei.com, jack@suse.cz, tytso@mit.edu
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org
+References: <20240313164640.616049-1-sashal@kernel.org>
+ <ZfrngHBf1hbHohFa@duo.ucw.cz>
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <ZfrngHBf1hbHohFa@duo.ucw.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-On Thu, 21 Mar 2024, at 1:02 AM, Ilpo J=C3=A4rvinen wrote:
-> On Wed, 20 Mar 2024, Luke Jones wrote:
->=20
-> > On Wed, 20 Mar 2024, at 1:26 AM, Ilpo J=C3=A4rvinen wrote:
-> > > On Sun, 10 Mar 2024, Luke D. Jones wrote:
-> > >=20
-> > > > Adjust existing MUX support to select whichever MUX support is a=
-vailable
-> > > > so that ASUS Vivobook MUX can also be used if detected.
-> > >=20
-> > > This description is a bit on the short side. It wouldn't have hurt=
- to=20
-> > > first state that Vivobooks come with a GPU MUX WMI that has a diff=
-erent=20
-> > > WMI device ID. I can infer that after reading the diff but the des=
-cription=20
-> > > should not require reading the patch.
-> >=20
-> > Would you prefer I changed the commit message?
->=20
-> I kind of tried to give some leeway for you and not sound like I'm=20
-> enforcing you to do it but yes,
+On 3/20/24 2:41 PM, Pavel Machek wrote:
 
-Hey it's not a problem at all. Part of the review and all feedback is va=
-luable :)
+>> Marek Vasut (1):
+>>    regmap: Add bulk read/write callbacks into regmap_config
+> 
+> This one quite intrusive for the stable. Plus, at least "regmap: Add
+> missing map->bus check" is marked as fixing this one.
+
+If there is no very good reason to include that regmap patch in stable 
+backports, I would skip it, it is a feature patch. Does any backport 
+depend on it ?
