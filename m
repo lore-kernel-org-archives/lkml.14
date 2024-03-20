@@ -1,115 +1,253 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFDC585C43
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 22:02:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4092CA6;
+	Wed, 20 Mar 2024 22:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710972142; cv=none; b=NBjyWj8ebonxS1hnq0oMmvWbrfUGsQpcwigqkWabJFRPSwQXXJkPEFmkkC/HOmhsvOgS0TqdXJgv+nb8dLaBbTDjsFF+zHktpqxIxV057W4wh57ybE+IgAlRXDFLm8lNzjqPBlaYyjqjsj8UgrcEoz7wBkSUgJs0/BTgY+Zq3CE=
+	t=1710972289; cv=none; b=S0u+j9uzfdymzL/5ANgiZX4ffsDeG74L0HIKfgn9NtnwR11wvdfrgv4YzJsKcpWnd7h/rN5G4zGLjWaNGg4oeegCoGpC631/doAcR5Na8kE2/PYF3wcpSe7+CWEmwvINLQclV3RRqPfzw9Auv7ZGC7zI0bIOxLyqmPbRSpvFFRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710972142; c=relaxed/simple;
-	bh=wFy2ocajmQzl18h5nhYUNHbZaRyAmobqSM9VgYVPkIo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q0/f1mXC8mgEA59j/IUJ1cduMCYqud0KvQt4fMfRvlgsb/IWCOHp5AivEY81usExDex3BLlHlNnMr4BWTjylvTa2qdZRcrD9f5XlvIKVUcH13xCL4UtcvuoAJyMzTxo35tCi+wc3j47d09NH/LElxmA489Bam37rRuVlC3ozO6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=z8dn7H6U; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1710972289; c=relaxed/simple;
+	bh=rQSedZF7x5w5CBcWQj3ApLjCKzMLnQMFwdN5vVIHFxg=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=Od6DV6y8yx7GFq+8Gv94MInIWxiyA0Y5jn5qxpuqevS5s/Z9cpllTkYNMeKJt9qK6HLjESfXeIlJ9BfzTHZDWdkbQFbdBPAtiEqHUQDvlTMTptvwGGaECglrY+KBoKDExj4jLAmk2WDw19PXJTTXHx8bsaIejrm9G6hShUHGf/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RusWDa4P; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="z8dn7H6U"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a3fb8b0b7acso35068566b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 15:02:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1710972139; x=1711576939; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sS8wc5N06+O63hK3jDZunVFBSBF3m9X5f2cGi7eyqww=;
-        b=z8dn7H6U4n+xs6Oo06q11x+n9JklLRd0+ztcXhgq5d/v+gS4h6uZrrLTJOiMSsYQdo
-         dOCz9FqOlyvp1D2+ysRfsvzvTaOlhwkybUzS1NDckuCuADkq27OW8xWl7jFS5xTPoCce
-         vH/do+uEK1+2ZoCIMiMTe0PdAsJVzNjl0FcfD0A/KUyhdbmW81hRq6JCRUU5sU7bqdKq
-         0Jzzq6bX21eFfodM5IgcG9v9Hwi+44V9l27+iICqxXp2N4cX00HsOtn800xZfWZPh1Fj
-         PyknQFuWzI4zhRS2FOYwtfEColZRyUzf4kH8VDR8T4NOCdv5VKDmFoCThhCAW0ercLly
-         Zhew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710972139; x=1711576939;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sS8wc5N06+O63hK3jDZunVFBSBF3m9X5f2cGi7eyqww=;
-        b=nOux7FKVV5eZLUMgMk+V/LHZST+EzNfRlO5KaTPhWWQloNI2Uui3A1GzUcgYLL8M6T
-         xFAe1nDffC2r0SzEnnOzyNw27VjJy6bKSKEaJA1/85tfSpbR0N8Nvrox5zEi4DtCPu6W
-         K7Sc8JihnPBHxDJ5e9AjseF3HRwlrz7XwIrCsaRpcNlS7GqZd3F/Z6ozJyl/UjbeD60A
-         +9aB8jv7GOnf2wBzvi7ppqZyBOJ12togKNK0Ms0P5k65UgOBZ0gFNn/qRMDaazjgrt/I
-         HDBSKyieTyujYf1tmHnTRpossFP80xaaM72T9MjQI63Kytut7NDAj1sEAE57HoL9Bvur
-         RpPg==
-X-Gm-Message-State: AOJu0Yy435B8F1LhqsFDuOWlnhgfyh8WyYxPXj5CF7wMv+/QZ1baT2ev
-	WrKeY1poY6XA8b4mGhFiEXk2WlJ+qYBohMJd5wM/+mUoGG97dkW0HtQ+Iues29g=
-X-Google-Smtp-Source: AGHT+IF8q+53jr2wCVMtAUloZJcedvijn/XpjSctXFuZBU9YRFJpLtrKHJpT0WDihxI53TIyF1jTwQ==
-X-Received: by 2002:a17:906:3e4e:b0:a46:df38:6d4b with SMTP id t14-20020a1709063e4e00b00a46df386d4bmr95646eji.66.1710972138794;
-        Wed, 20 Mar 2024 15:02:18 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-82-135-80-212.dynamic.mnet-online.de. [82.135.80.212])
-        by smtp.gmail.com with ESMTPSA id an14-20020a17090656ce00b00a465b72a1f3sm5239507ejc.85.2024.03.20.15.02.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Mar 2024 15:02:18 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: thorsten.blum@toblux.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	rostedt@goodmis.org
-Subject: [PATCH v2] tracing: Improve performance by using do_div()
-Date: Wed, 20 Mar 2024 22:55:41 +0100
-Message-ID: <20240320215537.71034-5-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <4E5A47C3-E9DD-4FD2-BDC4-BED67EF791F2@toblux.com>
-References: <4E5A47C3-E9DD-4FD2-BDC4-BED67EF791F2@toblux.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RusWDa4P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710972282; x=1742508282;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=rQSedZF7x5w5CBcWQj3ApLjCKzMLnQMFwdN5vVIHFxg=;
+  b=RusWDa4PBBNDzpD6mNTwgATAuC0HHCEv4y4+OHw80Sz1/M1olG0qqFJe
+   Wlf9xhLlAEaiSfx8lEur58EDWXEwUsSMVBMNS7mKZXktBSyPF+wjsptyO
+   WtDgUI9i6tQJDuRQo3t6EdUp6CDKYH8Gcld93ACPVMkRdHPtY078Qf0TD
+   k0I3cx7gNgoWuRoBn+MwaynJ6rX4bC5hYrGvKyBUDkxDg8vXmzHFJM/hd
+   HVUsD+nxrJfKmA+808+JEYx2mY28SF/gFHLlTYiNRMiKqWcKRSskEXfyd
+   VWn84Z1dU6ZRYBmmulDvxgMcFgqKFgXk6bBNydnvmBoca0BGUrO648i8o
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="5799992"
+X-IronPort-AV: E=Sophos;i="6.07,141,1708416000"; 
+   d="scan'208";a="5799992"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 15:04:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,141,1708416000"; 
+   d="scan'208";a="14686157"
+Received: from sunkaras-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.79.95])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 15:04:41 -0700
+Subject: [PATCH] cleanup: Add usage and style documentation
+From: Dan Williams <dan.j.williams@intel.com>
+To: peterz@infradead.org, torvalds@linux-foundation.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Ira Weiny <ira.weiny@intel.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Jesse Brandeburg <jesse.brandeburg@intel.com>,
+ Ilpo =?utf-8?b?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+ Lukas Wunner <lukas.wunner@intel.com>, Jonathan Corbet <corbet@lwn.net>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ gregkh@linuxfoundation.org, linux-doc@vger.kernel.org
+Date: Wed, 20 Mar 2024 15:04:41 -0700
+Message-ID: <171097196970.1011049.9726486429680041876.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: StGit/0.18-3-g996c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Partially revert commit d6cb38e10810 ("tracing: Use div64_u64() instead
-of do_div()") and use do_div() again to utilize its faster 64-by-32
-division compared to the 64-by-64 division done by div64_u64().
+When proposing that PCI grow some new cleanup helpers for pci_dev_put()
+and pci_dev_{lock,unlock} [1], Bjorn had some fundamental questions
+about expectations and best practices. Upon reviewing an updated
+changelog with those details he recommended adding them to documentation
+in the header file itself.
 
-Explicitly cast the divisor bm_cnt to u32 to prevent a Coccinelle
-warning reported by do_div.cocci. The warning was removed with commit
-d6cb38e10810 ("tracing: Use div64_u64() instead of do_div()").
+Add that documentation and link it into the rendering for
+Documentation/core-api/.
 
-Using the faster 64-by-32 division and casting bm_cnt to u32 is safe
-because we return early from trace_do_benchmark() if bm_cnt > UINT_MAX.
-This approach is already used twice in trace_do_benchmark() when
-calculating the standard deviation:
-
-	do_div(stddev, (u32)bm_cnt);
-	do_div(stddev, (u32)bm_cnt - 1);
-
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+Link: http://lore.kernel.org/r/20240104183218.GA1820872@bhelgaas [1]
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
+Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Cc: Lukas Wunner <lukas.wunner@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
-Changes in v2:
-- Update patch with latest changes from master
-- Update patch title and description
----
- kernel/trace/trace_benchmark.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Peter, Linus,
 
-diff --git a/kernel/trace/trace_benchmark.c b/kernel/trace/trace_benchmark.c
-index 811b08439406..e19c32f2a938 100644
---- a/kernel/trace/trace_benchmark.c
-+++ b/kernel/trace/trace_benchmark.c
-@@ -104,7 +104,7 @@ static void trace_do_benchmark(void)
- 		stddev = 0;
+I am starting to see more usage of the cleanup helpers and some
+style confusion or misunderstanding on best practices on how to use
+them. As I mention above, Bjorn found the writeup I did for justifying
+__free(pci_dev_put) and guard(pci_dev) useful, so here is an attempt to
+uplevel and centralize those notes.
+
+Linus, I include you directly since you have expressed some opinions on
+how these helpers are used and want to capture that in a central
+location.
+
+This patch stops short of updating coding-style or checkpatch, but I
+expect that it can later be used as a reference for that work.
+
+ Documentation/core-api/cleanup.rst |    8 +++
+ Documentation/core-api/index.rst   |    1 
+ include/linux/cleanup.h            |  112 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 121 insertions(+)
+ create mode 100644 Documentation/core-api/cleanup.rst
+
+diff --git a/Documentation/core-api/cleanup.rst b/Documentation/core-api/cleanup.rst
+new file mode 100644
+index 000000000000..527eb2f8ec6e
+--- /dev/null
++++ b/Documentation/core-api/cleanup.rst
+@@ -0,0 +1,8 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++===========================
++Scope-based Cleanup Helpers
++===========================
++
++.. kernel-doc:: include/linux/cleanup.h
++   :doc: scope-based cleanup helpers
+diff --git a/Documentation/core-api/index.rst b/Documentation/core-api/index.rst
+index 7a3a08d81f11..845fbd54948f 100644
+--- a/Documentation/core-api/index.rst
++++ b/Documentation/core-api/index.rst
+@@ -36,6 +36,7 @@ Library functionality that is used throughout the kernel.
+    kobject
+    kref
+    assoc_array
++   cleanup
+    xarray
+    maple_tree
+    idr
+diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
+index c2d09bc4f976..4620a475faee 100644
+--- a/include/linux/cleanup.h
++++ b/include/linux/cleanup.h
+@@ -4,6 +4,118 @@
  
- 	delta = bm_total;
--	delta = div64_u64(delta, bm_cnt);
-+	do_div(delta, (u32)bm_cnt);
- 	avg = delta;
+ #include <linux/compiler.h>
  
- 	if (stddev > 0) {
--- 
-2.44.0
++/**
++ * DOC: scope-based cleanup helpers
++ *
++ * The "goto error" pattern is notorious for introducing subtle resource
++ * leaks. It is tedious and error prone to add new resource acquisition
++ * constraints into code paths that already have several unwind
++ * conditions. The "cleanup" helpers enable the compiler to help with
++ * this tedium and can aid in maintaining FILO (first in last out)
++ * unwind ordering to avoid unintentional leaks.
++ *
++ * As drivers make up the majority of the kernel code base lets describe
++ * the Theory of Operation, Coding Style implications, and motivation
++ * for using these helpers through the example of cleaning up PCI
++ * drivers with DEFINE_FREE() and DEFINE_GUARD(), e.g.:
++ *
++ * .. code-block:: c
++ *
++ *	DEFINE_FREE(pci_dev_put, struct pci_dev *, if (_T) pci_dev_put(_T))
++ *	DEFINE_GUARD(pci_dev, struct pci_dev *, pci_dev_lock(_T), pci_dev_unlock(_T))
++ *
++ * The DEFINE_FREE(pci_dev_put, ...) definition allows for declaring
++ * variables like this:
++ *
++ * .. code-block:: c
++ *
++ *	struct pci_dev *dev __free(pci_dev_put) =
++ *		pci_get_slot(parent, PCI_DEVFN(0, 0));
++ *
++ * The above will automatically call pci_dev_put() if @pdev is non-NULL
++ * when @pdev goes out of scope (automatic variable scope). If a
++ * function wants to invoke pci_dev_put() on error, but return @pdev
++ * (i.e. without freeing it) on success, it can do:
++ *
++ * .. code-block:: c
++ *
++ *	return no_free_ptr(pdev);
++ *
++ * ...or:
++ *
++ * .. code-block:: c
++ *
++ *	return_ptr(pdev);
++ *
++ * Note that unwind order is dictated by declaration order. That
++ * contraindicates a pattern like the following:
++ *
++ * .. code-block:: c
++ *
++ *	int num, ret = 0;
++ *	struct pci_dev *bridge = ctrl->pcie->port;
++ *	struct pci_bus *parent = bridge->subordinate;
++ *	struct pci_dev *dev __free(pci_dev_put) = NULL;
++ *
++ *	pci_lock_rescan_remove();
++ *
++ *	dev = pci_get_slot(parent, PCI_DEVFN(0, 0));
++ *
++ * In this case @dev is declared in x-mas tree style in a preamble
++ * declaration block. That is problematic because it destroys the
++ * compiler's ability to infer proper unwind order. If other cleanup
++ * helpers appeared in such a function that depended on @dev being live
++ * to complete their unwind then using the "struct obj_type *obj
++ * __free(...) = NULL" style is an anti-pattern that potentially causes
++ * a use-after-free bug. Instead, the expectation is this conversion:
++ *
++ * .. code-block:: c
++ *
++ *	int num, ret = 0;
++ *	struct pci_dev *bridge = ctrl->pcie->port;
++ *	struct pci_bus *parent = bridge->subordinate;
++ *
++ *	pci_lock_rescan_remove();
++ *
++ *	struct pci_dev *dev __free(pci_dev_put) =
++ *		pci_get_slot(parent, PCI_DEVFN(0, 0));
++ *
++ * ...which implies that declaring variables in mid-function scope is
++ * not only allowed, but expected.
++ *
++ * The motivation for deploying DEFINE_FREE(pci_dev_put, ...) is that at
++ * the time of writing of this documentation there are ~590 instances of
++ * pci_dev_put(), ~70 of them with 10 lines of a goto implying that a
++ * significant number of gotos might be cleaned up for incremental
++ * maintenance burden relief.
++ *
++ * The guard() helper holds the associated lock for the remainder of the
++ * current scope in which it was invoked. So, for example:
++ *
++ * .. code-block:: c
++ *
++ *	func(...)
++ *	{
++ *		if (...) {
++ *			...
++ *			guard(pci_dev); // pci_dev_lock() invoked here
++ *			...
++ *		} // <- implied pci_dev_unlock() triggered here
++ *	}
++ *
++ * ...in other words, the lock is held for the remainder of the current
++ * scope not the remainder of "func()".
++ *
++ * At the time of writing there are 15 invocations of pci_dev_unlock() in
++ * the kernel with 5 within 10 lines of a goto.
++ *
++ * Conversions of existing code to use cleanup helpers should convert
++ * all resources so that no "goto" unwind statements remain. If not all
++ * resources are amenable to cleanup then additional refactoring is
++ * needed to build helper functions, or the function is simply not a
++ * good candidate for conversion.
++ */
++
+ /*
+  * DEFINE_FREE(name, type, free):
+  *	simple helper macro that defines the required wrapper for a __free()
 
