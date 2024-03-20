@@ -1,354 +1,185 @@
-Received: from mx0b-00128a01.pphosted.com (mx0b-00128a01.pphosted.com [148.163.139.77])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2120.outbound.protection.outlook.com [40.107.22.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C47339AF4;
-	Wed, 20 Mar 2024 13:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.139.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356353D54C;
+	Wed, 20 Mar 2024 13:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.120
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710942264; cv=fail; b=ai2p98JCCLo9HABaCycR/uOkCsu1GPmKXLyv/bFZ1zwPslaX9OBRasFRxAn7s4FWDA+oQ3TjKyEhPtFzObch7d+tTxkj4DkU/wwfM4EH1zjaf4UafcXZZ3shAv7ZPosHTHCTvNPZ4jtcL1NKfDVPGIXFoA5KQj4Pu6z7ZwYxb2w=
+	t=1710942550; cv=fail; b=WRUmw9VNB0qV/VXnyDhJzJqUeHAUjLZdS+m9xR0nbKRAeJTgOSQOvMRjlfKWYyXL1gkfvDzjj0/wNr260xgFaHdn4gZmbuhEjxuuEfApPucU18SLDyh4Hyb+evHgnYEKYDYShCe4kTCk5JVSZsLrv3F0ep1yO5rBWMdI7lK+cpU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710942264; c=relaxed/simple;
-	bh=8j/G1HZRBB1QlmcSjneHncCKP/TQRAeNzQpSDwUDAYw=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=jUed8cG/je6Ngi4yETBhYlVY7xSHP2YK+bKQuhX84HMCro1bP1UDP+QLCE601iHBaGdD1gvLU6Wlb0zCHf0PWE1XVus6g7SMjNnH+R8FQtCAX+EzIPlz8X9nBgnuNYOQrlgb5vdo/ONIKgy7cemNwBQKaIRuFFX/T/tDZxn/tsc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=Z9WCJCnN; arc=fail smtp.client-ip=148.163.139.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1710942550; c=relaxed/simple;
+	bh=B+RIQPytx/JWG+eU4gRyoRAlqW1Wsd4Kk2ksvKdhIdM=;
+	h=From:Date:Subject:Content-Type:Message-Id:To:Cc:MIME-Version; b=NtSIdq0NoL/df9aud83OvYSPAOYw173+B+bNKBC4eBKQJaBAotbUplgJcVWtUpmt4mNN6pFVexv7xMfgz8Vei7SlCELjf0kVkcEhzq5ujVYn/dpHE1/4H/YsqhvS5kX5fA7deN85rQIxkEB4cjuymHR7/+a+1+7s8rR5aoEoRNw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=solid-run.com; spf=pass smtp.mailfrom=solid-run.com; dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b=NE/4A4uB; arc=fail smtp.client-ip=40.107.22.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=solid-run.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=solid-run.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="Z9WCJCnN"
-Received: from pps.filterd (m0375854.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42KC2ZQt024287;
-	Wed, 20 Mar 2024 09:05:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
-	from:to:subject:date:message-id:references:in-reply-to
-	:content-type:content-transfer-encoding:mime-version; s=DKIM;
-	 bh=ytpGb+naXW3DvEieU50CJn9v+yTZ/zVBH7wPK0HWNRE=; b=Z9WCJCnNhYCO
-	zmLwyzp06cp23r/BHeCwE9QCET984ARS9G7WLUN2ELl/loNlYqj2ynjfk/mBljH7
-	UUwiUweFzrdgov3AeYIYZNVJsAp0h+aE7kcpG/hLJKGOFfT56vemVKd5zavAvnT7
-	ZKdFvFp1hUFjiQ6vDPivb6m4VQ4mDEJk8nID4zd5ZP0OLuFSqMKpxLf5EbSaZrYi
-	zDZLt2SrcIXD2tvlKtMqGf18HeVl2UNaLOHL1VAKpADNPrKhQTvbHGY3OmBPtXrT
-	Hai7XiNbIxE7J7ReYCcm95Yq6xKqI0I4/kfn9o3HTIFaIrKPVcI9Ydalim/jHg7k
-	h9sU72FSDA==
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2101.outbound.protection.outlook.com [104.47.70.101])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 3wyyf5g689-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 Mar 2024 09:05:08 -0400 (EDT)
+	dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b="NE/4A4uB"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UrC1p4mYSzLxHEPXofTLrNFBUxzImuqlr51HLPoo6aU8STm87aWqdzfPsj9AqYONcWSHKrnuEUqF7AEQO1l9BBIfq9oaOwh5Gm7t7sG+YprdgvzPLVaRD7/cMpn6dP8StkOutvPh7E6NCqf/iLKNGkl1kNvz0psOLjU26iBveDANCw71bQUu2WQ8LwKkFKhN9Z0XGtJ+5OB2BBo8x9ofDeQH6ScD+EyJORNr0J4G2HRmH+69MLtW2/PFdZXr+8s15HMicPcyRYN0ta462kSjNtePXMwRbsdCdxYM+Oa1ZICBkf6BNTtQDI5bwB/pEXIxctzlvH2VL/9SoSMTr4ZW9g==
+ b=nyc0eOeUlLAokTPRvP5ykldr14AwGMX3TorW4fgU23LZ7QZuDrOqLWbqe44/Gxp8iqJ/gl2v/CaKS7yklwz3Wm9oyRdQSFo31GQsLikxs4dEI0ImuSvmKbHqnZMJOtdJYJvLNkfOz5wXHakWbwh8nAadDn80X8VL0swcSkahwMQB0LciINGRAGlF9YQURVhuSXXe4ivMHVS7MHBamMxGL6/7dGjsthzQkf7hUrOTD9wFsEDAsYlhB7bOu2BXRFmzPPrb2TPYFSjQhDkjByNRk36h5TLw0/NP8JRgipUt2j1bwfXH5o/HkFKh0FSrH4NjiWMl45QjyS28T/I9gqnX7w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ytpGb+naXW3DvEieU50CJn9v+yTZ/zVBH7wPK0HWNRE=;
- b=Zmj/XHWWLAzcA8TNpOF/9ZnXM8SOmX+1Y7vI5NBz3OoooJ4KJFggN9L6PPof/SE+0sJIoj72sBlzv/VPINJwVAxJnj1ppQ3cm8htxsVSxv7xiK7HtZy9NbRa0GG/IAl5z30+OlEkZhNTLsUXWNiNTmvjmz5FDf2tL7A/VdVVxoBF8lpBVxG5lRWKdJAq30EJGTfpcT4Up15Gqzgc7p7Bkmy3Q5Jh8jspIpeFRB9F3MVYUuBxUd9c9lN4wxqoNytseFvy3TzqLkXeuKKYVkynU7JozSOS2yXo1u75Ev2Bj7USh4bllFJgKuB3itUx9k1vdRlWc6Wd2KWYFo0PJDpluw==
+ bh=D65vTd25yGuzGMP1mg33QcvuFPHoXwCZ2y2acfRmARY=;
+ b=aLV2O+CB9Emw8u5Dxrg013PttQwccdQnAy8rZQIv4Gb2pCs43beyjI4EuRcu3qvFiCf68LHanwQTFqgpUgoH+Xs0mJRqcr5PkSmoaKiniKC3HVXCoQPrOhLKtqkOO2lMxjhzCgq294RHgnD9hJlfxfaYQ7nrBCi+/Xn+fA7WSXmzZILiDMuuG9lK8efTq+I0wQj8AiEkKoEYW5SEUZdRvr8ouf3hy9DSRKd8b26tGp39inOFkXgKBtWXj6hz42RbOTkNU1gzBsX/+OUdWBcYtySvYwKFLi4flfVn700wUDcR4+9oAtbqIO12zTyi+NCQKezGN7eMXrJ6j9jkCEguWA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-Received: from SA1PR03MB6499.namprd03.prod.outlook.com (2603:10b6:806:1c6::8)
- by PH0PR03MB6740.namprd03.prod.outlook.com (2603:10b6:510:117::19) with
+ smtp.mailfrom=solid-run.com; dmarc=pass action=none
+ header.from=solid-run.com; dkim=pass header.d=solid-run.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=solidrn.onmicrosoft.com; s=selector1-solidrn-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D65vTd25yGuzGMP1mg33QcvuFPHoXwCZ2y2acfRmARY=;
+ b=NE/4A4uBAqJoquF6ZytTTNkpIWddJWknFJweogZ16ax/RENbeEdBjxwzMgE3XLhKWLfTH/9AdwoYWsZ5zFn6VY3mMEzGaKn0lxBvGsN30psw0VM+CGj8E6J6TpPIbaL7UnjesPg0O5nFg/BYQlOGl5pmP2QLNPHMEljJJ3KS1zQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=solid-run.com;
+Received: from AM9PR04MB7586.eurprd04.prod.outlook.com (2603:10a6:20b:2d5::17)
+ by GV1PR04MB9199.eurprd04.prod.outlook.com (2603:10a6:150:2a::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.34; Wed, 20 Mar
- 2024 13:05:05 +0000
-Received: from SA1PR03MB6499.namprd03.prod.outlook.com
- ([fe80::44:7752:4ad:9382]) by SA1PR03MB6499.namprd03.prod.outlook.com
- ([fe80::44:7752:4ad:9382%4]) with mapi id 15.20.7386.031; Wed, 20 Mar 2024
- 13:05:05 +0000
-From: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>
-To: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>,
-        Jean Delvare
-	<jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Delphine CC Chiu <Delphine_CC_Chiu@Wiwynn.com>,
-        "linux-hwmon@vger.kernel.org"
-	<linux-hwmon@vger.kernel.org>,
-        "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org"
-	<linux-i2c@vger.kernel.org>
-Subject: RE: [PATCH v3 1/2] dt-bindings: hwmon: pmbus: adp1050: add bindings
-Thread-Topic: [PATCH v3 1/2] dt-bindings: hwmon: pmbus: adp1050: add bindings
-Thread-Index: AQHaesZY8/L4JyPv/0i6z0YwzuVy6rFAmCIw
-Date: Wed, 20 Mar 2024 13:05:05 +0000
-Message-ID: 
- <SA1PR03MB6499527C7BEE83A3E4EE6AFBF7332@SA1PR03MB6499.namprd03.prod.outlook.com>
-References: <20240320125727.5615-1-radu.sabau@analog.com>
-In-Reply-To: <20240320125727.5615-1-radu.sabau@analog.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: 
- =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNccnNhYnUyXGFw?=
- =?us-ascii?Q?cGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEy?=
- =?us-ascii?Q?OWUzNWJcbXNnc1xtc2ctNzY5YmJjMzctZTZiYS0xMWVlLWE1YTEtOGMwNGJh?=
- =?us-ascii?Q?ODVkZjE2XGFtZS10ZXN0XDc2OWJiYzM5LWU2YmEtMTFlZS1hNWExLThjMDRi?=
- =?us-ascii?Q?YTg1ZGYxNmJvZHkudHh0IiBzej0iMTI1NjIiIHQ9IjEzMzU1NDEzNTAzMzUx?=
- =?us-ascii?Q?MTk4MSIgaD0iL0x6dklSWS9pZU9GZzRkeWR6bHV5VDBGYnRnPSIgaWQ9IiIg?=
- =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBRW9DQUFB?=
- =?us-ascii?Q?dEFQVTR4M3JhQVE5WU5yMjhjYjV1RDFnMnZieHh2bTREQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBRGFBUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUVBQVFBQkFBQUFsR1RHVmdBQUFBQUFBQUFBQUFBQUFKNEFBQUJoQUdRQWFR?=
- =?us-ascii?Q?QmZBSE1BWlFCakFIVUFjZ0JsQUY4QWNBQnlBRzhBYWdCbEFHTUFkQUJ6QUY4?=
- =?us-ascii?Q?QVpnQmhBR3dBY3dCbEFGOEFaZ0J2QUhNQWFRQjBBR2tBZGdCbEFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHRUFaQUJwQUY4QWN3QmxBR01BZFFC?=
- =?us-ascii?Q?eUFHVUFYd0J3QUhJQWJ3QnFBR1VBWXdCMEFITUFYd0IwQUdrQVpRQnlBREVB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
- =?us-ascii?Q?QUFBQ2VBQUFBWVFCa0FHa0FYd0J6QUdVQVl3QjFBSElBWlFCZkFIQUFjZ0J2?=
- =?us-ascii?Q?QUdvQVpRQmpBSFFBY3dCZkFIUUFhUUJsQUhJQU1nQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUE9PSIvPjwvbWV0?=
- =?us-ascii?Q?YT4=3D?=
-x-dg-rorf: true
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR03MB6499:EE_|PH0PR03MB6740:EE_
-x-ms-office365-filtering-correlation-id: ac187ea9-4de8-432d-7dc2-08dc48de5cb4
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- iIZE6+o9tStEbijv+03XQcjEYCZgkKMGd4u8FOrbpnBE29orRIHqLUagItNEOqAU+FUJFaFVpoFqUi/1J4KRvOrPEoG+2JaJuvRRP9V5MYHnpvK2yyzc8WANdRz4mLT8lYUOB0SS/ug8rbY+nTpzNiBEk7OLjE7YD/TgaFZYotaScwIDt7XfD6RCdhYNLsDfxem+8SUGm8re5IlebSqSYY8akfJgLx8ThijQlJ/zuz/mpHjQt4eVVaFH4Fbe6rj2KlrkvJx9VjW3i+XCo6Mg9CCfMPD7pQ8srVgWWx4fpr00rzXGxqB0xW3jras5bbQ5dRYlHt3FKghpgPHGkdMvd2ghKpnL5w1X6V1APOI40IFGUqUwbqqe34txP1FnTEVAu+dWXzWmHsrc/1sI6AOf+CQZOp02XQk1j1UTBn9dsHF0IPaOJFLH2hAMQLGAIgA2sVJw9PE8BgMKw9l/YYyCdBrHbXWxIDFkj6N0/ReMFdEWLlc19o8P2OVzwH1dO/P04D1jmijIv2+7OHtM9PZYDRaU+VSiMNmDtJBx1XxKi4eAOQGvScQ9UT/XCA7VTDoIC3FLOEoIGvrNITtMi4vvzZH6gAfaCqxb7A2dajqamStyjs9emSvFZEybq+ICmjvA+RAczLTQrlxmNHL6m7AB9cV88W8ZbqfBQqpATHJock3xUzGkpr7gO3RwImwfh/jE
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR03MB6499.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(1800799015)(366007)(38070700009)(921011);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?PjwWx+ddBAA1IHDZaUV10n+3JfgFwPaPlYi6FTFbavYk7Rj6vmUqbUk7Ru48?=
- =?us-ascii?Q?t6Vor/AFHFBBAWS6kSXqdvJO44yv5GYv6jkuUKV91cvQcTTEi0B0WLLJ2hsv?=
- =?us-ascii?Q?vmYmQEljBsvXAgEbJA8Qlc5uabVjxl0rDcLtlh9EmZyUBSdEMMlCWqy4fv9y?=
- =?us-ascii?Q?zZ8FLPmko0fxgXodRG9+JhXiO0Q/sjqJ/GnGEm09tnNxpPdvmnC1U55ZRE9t?=
- =?us-ascii?Q?uc5TEzpir2ZgFzNhMghG5i9ZAwFgF8DX1W7lNRgwa3ATtYEZG6JQUVaeEabr?=
- =?us-ascii?Q?W8AIoBFsD5Frjghf0q5zI6pv6g5If4vptyyL8jRxbuwuuUKC9xMWAnmPb80/?=
- =?us-ascii?Q?XG+MrYk/SzAl+vSvRt1pkSbhiJ95rCcW2mwGx2fGkPTD0MRU2sJ1Ztjn3B8l?=
- =?us-ascii?Q?go8hEnNcCcdV+X3yYVLR6YvhZ9rq74nt33zUgQ8D+yVAOML2XJVElQfnvKKi?=
- =?us-ascii?Q?7MR7/1+0rpa+SUCi4BLTtzCEUGor7Ti551UTIixEUoRWOJW+G1vmbBbMZpW6?=
- =?us-ascii?Q?73qvC4Cfh0kDUOEl7ndATiHYsJrRBG4ZzJT9xO7vgk9mBVwxf+fALKKv1M2u?=
- =?us-ascii?Q?SoqeAwlj+h7gDXwVCW4cCZ6ATf9wLJSHMRsjsvcAXbgR5BMzBseTPCqK/u7k?=
- =?us-ascii?Q?bb5xtlk0S3slemZcAqrKpITf/qOAlhxgG3HYljBs/5tZhLfS4FK4T/RXquEE?=
- =?us-ascii?Q?D8IElb4aR+/e6tY3t0/US3Iig4B84OhpKaBArjRbdZoCM5sRz0fj5rU2iMlf?=
- =?us-ascii?Q?0p7jrZ0o42fkn7qxvfbFNZrwQ6IliEqcltPz9lUSXUuTXMlzx8SEit8eKh2C?=
- =?us-ascii?Q?AZxz2/Tg+LdZ1TOnzsywVZLoeVMzgwoscvrozzsP2ubLii7gBfolFdlwKl85?=
- =?us-ascii?Q?tcuUTSN6s7aiTl3xl1S8TxN8wUaOUvqz/0mMcVFLRPkasDkJLasFKOHp8Tb2?=
- =?us-ascii?Q?EStszrLVsVqdDvvNC/NOhK0MfF6Q8qLUvQXYFFbxIl+1Og4jDGgGUys/Cqbv?=
- =?us-ascii?Q?VSIECJW1g1P84vR1VfD9/PO+hr7rQfbFg2RNsdqMhA9suMXkDtnUcR1RpGHw?=
- =?us-ascii?Q?MU7J2tu97vSIJp/t+7FXW6158sN0zRz3I6Uq0o9je8ZiM+Jl/Yn8ddcpWpRi?=
- =?us-ascii?Q?PSdgqDBHy2nljzxZ+kYOEK484nM4FMRYbQJC9VSAGyYNcEXErJ58IHQMVCoq?=
- =?us-ascii?Q?Y+LlyjZmj8l2f9UWyKE8Vtnf2tKM2SnklzHPRIgP+BaZO0TCiBOjGJ+kmJtd?=
- =?us-ascii?Q?ZDX1w20ENeVsbWJ0uOxeG+kes1KvesgGxfPN1dwH6g3ofE2l8dhKGsoHfMAM?=
- =?us-ascii?Q?UPTTbIiX/M8Z5ai3gXsOo6Ve4XmJxc7ju8JUF5gDur7S6i2rRqFrYhSPIMs3?=
- =?us-ascii?Q?TMjHryvLgz0BqNzglHgaHbGq3myrAsvmP1qwAs+eiYV03W0voWAipSSmOIzi?=
- =?us-ascii?Q?tjnD4aUpyaBE9us8lMjAhyYt2oXST7M23dUwfVXQO24zYHkFHRax4BiR9GWZ?=
- =?us-ascii?Q?NevzsrJbNecQ8xVfETWnd0JNudjt5HhhtIJitdRh7EZ5/fIbJUvlyNquc7sI?=
- =?us-ascii?Q?mwwq5yRzj9JUVgtWPoTfpZLJNIivLctDvZJk6Me2?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.30; Wed, 20 Mar
+ 2024 13:49:03 +0000
+Received: from AM9PR04MB7586.eurprd04.prod.outlook.com
+ ([fe80::57e1:e1cb:74e2:2e9d]) by AM9PR04MB7586.eurprd04.prod.outlook.com
+ ([fe80::57e1:e1cb:74e2:2e9d%5]) with mapi id 15.20.7386.031; Wed, 20 Mar 2024
+ 13:49:03 +0000
+From: Josua Mayer <josua@solid-run.com>
+Date: Wed, 20 Mar 2024 14:48:55 +0100
+Subject: [PATCH] net: dsa: mv88e6xxx: add warning for truncated mdio bus id
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240320-mv88e6xxx-truncate-busid-v1-1-cface50b2efb@solid-run.com>
+X-B4-Tracking: v=1; b=H4sIAEbp+mUC/x3MTQqAIBBA4avErBswE/u5SrTQnGoWWWiFEN09a
+ fkt3nsgUmCK0BcPBLo58u4zqrKAaTV+IWSXDVJIJWopcLvblnRKCc9w+cmchPaK7LBWpnKy0Z2
+ 1M+T8CDRz+tfD+L4fe5gpVmoAAAA=
+To: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, 
+ Vladimir Oltean <olteanv@gmail.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Josua Mayer <josua@solid-run.com>
+X-Mailer: b4 0.12.4
+X-ClientProxiedBy: FR0P281CA0225.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:ac::13) To AM9PR04MB7586.eurprd04.prod.outlook.com
+ (2603:10a6:20b:2d5::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM9PR04MB7586:EE_|GV1PR04MB9199:EE_
+X-MS-Office365-Filtering-Correlation-Id: 73094d20-567d-4f15-63e3-08dc48e48090
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	53RCeotlmZeaOuapYD/oqoFsFd8tcJ/rNzDFO16ITsS3EboyjQ5arZW7nhrf3ysV+ZWAfiWwzcVmIzCY6hBeiTuliG6vsD3MAMpNIQzoqHFdbsxEwKF1i773T6q7Xt3xiUhkuQczQ7ba6z1u9xnWWcNOhBouGyTrYEgVgvKXr7UTfxBOodTV0UTZlswfP0q7RoN07VqdZhblxl2yadEMeN3EdujftlOsU4efWbEdhQDH9k9vPRvSvf07dgoWe5WyehknISOEhotnWTeBrXPHkYRwClv4Uc1GSvzfbzVwwVfExALtX/8SYYQRjrbO15PzHJf54Q+YLx0Me/SdSpPwPeIa7BuUemc9AcX5OpmAULsuvINwlhNJFcZa2Nak3uY2S7KPbdjYgDfdl94O0qe3qUFv2dXXLoNsPDB0F/NqUilZmDhqzyqsz5LY0gEV5jyZFFC10asU/B3ILIzYERJS1grEEjyTKcsmwcL4Gu9/3l6ULpNe75+IDHTsbySQfeYm40ka14dOWpKjH8ML2lkMOYB/Bb2xOzY0dwSWzI2RkuDb+wru15bykAstdF+LNFxdhjT1oNJ3E+e/53/3LduafZeLozVebkcFiD+lU7rmgStaMv60UWmVAkJWIUFiwGekdZ7FlJoFYDB0TzhUmjQtP22YstZrOdCdhtDR9uQkOmlu7pcfXk91nT92+sis8TY9TxcfIhwbN8+LIi11h6TirMbpvV2pCOboUu7oGqugrik=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB7586.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(52116005)(366007)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UkZWZzFJd3pGZ3hIcS9VOVpUa282UCs4NXZLcDd3V042WXQ4aEF2ZWZTdnNl?=
+ =?utf-8?B?VnlWa1NURUd1WGZlTTBaZEI4SllKZUdIUmxsVVRBZFB4dTZZN3VITXo4cXI3?=
+ =?utf-8?B?UGNNd2p6STd1ck1XNUxkenZsT2hHZCttM283Rk1BWldROFExdkxQUlpBdXR4?=
+ =?utf-8?B?QWtzdlovZktTQm1BcVI3cEtpalpISy9vWkNhYmJrSS9ieWJaK2Z2ZURWNEVF?=
+ =?utf-8?B?cTErTlpuQ1ozbWV3Q1Z3RVpRdjJpMVNGanRyUEhFWithYkZUbm5teEFQT0w4?=
+ =?utf-8?B?WWVRZHpUcTdjNjg4VGxXNXpSY2VIRFNscm93TmRFY3MrMUxrc1hqTmlLMmNM?=
+ =?utf-8?B?bXc2TTVhUXVjVEtQQTJDUzlCQ0NSYURaVlRWN0NEYWhnSWx2V01GSVBMNUlo?=
+ =?utf-8?B?OXFrZlByZlVoZE1lWDg2c1JjVGNwT21Sa2h1c2hUc1lvaE5ORXlFd0Nya3Qz?=
+ =?utf-8?B?UGtKSWlOVkU2eDBaTlhzcTB3SUtqUGxCSW13TEx3OXJFdHlBOStJSTMxc2pU?=
+ =?utf-8?B?OXNuM1pKWFZhYkFqUE5DYTdjSTFTLzZIMTJyZVdSRk1RZVRIMjlNSDlubEYz?=
+ =?utf-8?B?QnVzYjFUaXhzUk13WDZNZldlR2FYenpzQTJDcUFWVG9TQ3BDVisyMk9Icndq?=
+ =?utf-8?B?a3dxSndzVGo1cUl4YXpQMXBVdE5ITmlZeTlBWmJWcWhnc2djZlRFY25pM2VX?=
+ =?utf-8?B?N3RKdFVEb29kZ2JDajFTc3NBeTBOd1pLekRuZStCaWQxK1c0blpYYUpVK1VW?=
+ =?utf-8?B?eWdjNzVwMHVMMElRRDFqRjh2VWxuMnFHakgybDE1QXdScGR4L2plTG5CbEty?=
+ =?utf-8?B?eXZHSjE3TmtOZVBGTVJMTUc0aGxYQmJjS3NJcGdwdmp5cjJuSXFrS2dIcDFL?=
+ =?utf-8?B?Mjd5emhtREdEK1A3K2xMcGlsY28rNWNBV05QS1lVWGlSdmFpYjVQem8vSWo2?=
+ =?utf-8?B?V3FQMkYwbjl2clg3K3AxUU1MKzBudjluVGIvTTgyaFJGMmcrOUJ3ZzRSTFNZ?=
+ =?utf-8?B?bGhRNS96dFdaYU9iVS9JY3pMM1lwdHNIYythN2RoQm1xZUhCeXdMT3l0RTUy?=
+ =?utf-8?B?QkJkclNhcTJ5N2RZbzNMNEVYSkR1UTdJQkx4QlZ2RFRkRW8yaEhUZE5qeTZ3?=
+ =?utf-8?B?UzM4aVJtRmx2OVV0a1UvK3B0L3RPK25pV3M2dmxzM1pIRnJBSHBqUkw5alo1?=
+ =?utf-8?B?eXVSWlcyTUlPNzk5d2R4cWZwSXBseXZrWnczMjBpaVRXa0hReFpKc2sxeE5W?=
+ =?utf-8?B?UzVFZkFicFBTS2RVVUpNVFJDQVRmSHhJSDFNYzQ3MVpzc01ibURGYUhlVG15?=
+ =?utf-8?B?ZE9xN2xuVGVDT0tHdFYwRyttTFZOc00rMVM2S3kyUGdGWk9qK05qUG83MjFr?=
+ =?utf-8?B?U1hVVHJsK3RkRUxmS2dYN29PRXdSZUsyWkxmZm5XckNmUmVuNVVhZ3dncnpC?=
+ =?utf-8?B?R28xdVlnVUx4eXdaYTRxd2ZYSmhwdllqSCtLRCs5SzBjM0lVa3RYcnZJcEJj?=
+ =?utf-8?B?LzhaSWk0bkxwRFBZdmhnejhVZHl4dW5PNXg2RFZzODNmWnk0TDlwVmg3dWVk?=
+ =?utf-8?B?dzhNbEZoN0JYYzEyem4rUUF1ckthczdDak9vTFBndmlZRUR1MGI0S3l1VStz?=
+ =?utf-8?B?azNxWnlmNWRVK09CREU3NVZNRngrL2dmUUhTTDNocDE0K2hHMHNOVWxBTmc2?=
+ =?utf-8?B?ajZLZ2NkclFRaTZwSVowcXE0UHcwdjAyRFVWL25ka3V1ejM1TnY1bzdDUnhr?=
+ =?utf-8?B?RTBjR3ZKSFJrejA2L0VLNXpwODZqcmFRcXFGQUwwZjVJd3F6cHZFcCtveEVR?=
+ =?utf-8?B?dCtTcmw2Z3U5SlQ3WW1rRXdnL1dZeUs0b3Y0SnhXbWJLUzJHVzVabDh3THBh?=
+ =?utf-8?B?aEFkdjkrMU1la2dqSEI5SENCNmlpUytyMHpYTUtwTDErb0tldTZodkhWS0dK?=
+ =?utf-8?B?ME5qZlF0aWRFbWUxQkFERUxyQnd1UFBhTXBxYmpZL1lqRHlreWNhcE9MR2ZK?=
+ =?utf-8?B?Rm40T29jYlNjc1ZtZEkxdkR1NWRxWjYrV3BGdU40M0JIblhWa0pkWUZiS2NY?=
+ =?utf-8?B?d2g0VkYxSlhmMnJaaVl0MDY3cHpzN3l4WFJOSU1OUUtUQXB1bVk1VDcrSU10?=
+ =?utf-8?Q?Agu2TtKysmrYF2EO2FH4tNxiQ?=
+X-OriginatorOrg: solid-run.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73094d20-567d-4f15-63e3-08dc48e48090
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB7586.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR03MB6499.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac187ea9-4de8-432d-7dc2-08dc48de5cb4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Mar 2024 13:05:05.4940
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2024 13:49:03.4973
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TJ5o4O/eBKJo3/MHmNX964c2RGVMTQxMskLUj/crXFNcTBSt39zzcZ1xk5lmIgqP9xpFu1IAaZg0eZgrOINwtQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR03MB6740
-X-Proofpoint-GUID: NPX75es52fE7nJb4LJEetVXCW8t-8zzo
-X-Proofpoint-ORIG-GUID: NPX75es52fE7nJb4LJEetVXCW8t-8zzo
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-20_08,2024-03-18_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 impostorscore=0 adultscore=0 phishscore=0 clxscore=1015
- mlxscore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2403140001 definitions=main-2403200103
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a4a8aaf3-fd27-4e27-add2-604707ce5b82
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2RsZzsXQVSX4Ql+v3i1Yru/VqsRiRnt4IWX1wM6Ry6HpXeBpUO26MpceyEhaPEeIdzM9H3RUatSCHi6XaF+VWg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB9199
 
+mv88e6xxx supports multiple mdio buses as children, e.g. to model both
+internal and external phys. If the child buses mdio ids are truncated,
+they might collide which each other leading to an obscure error from
+kobject_add.
 
+The maximum length of bus id is currently defined as 61
+(MII_BUS_ID_SIZE). Truncation can occur on platforms with long node
+names and multiple levels before the parent bus on whiich the dsa switch
+sits such as on CN9130 [1].
 
-> -----Original Message-----
-> From: Radu Sabau <radu.sabau@analog.com>
-> Sent: Wednesday, March 20, 2024 2:57 PM
-> To: Jean Delvare <jdelvare@suse.com>; Guenter Roeck <linux@roeck-us.net>;=
- Rob Herring <robh@kernel.org>; Krzysztof Kozlowski
-> <krzysztof.kozlowski+dt@linaro.org>; Conor Dooley <conor+dt@kernel.org>; =
-Jonathan Corbet <corbet@lwn.net>; Delphine CC Chiu
-> <Delphine_CC_Chiu@Wiwynn.com>; Sabau, Radu bogdan <Radu.Sabau@analog.com>=
-; linux-hwmon@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-doc@vger.=
-kernel.org; linux-i2c@vger.kernel.org
-> Subject: [PATCH v3 1/2] dt-bindings: hwmon: pmbus: adp1050: add bindings
->=20
-> Add dt-bindings for adp1050 digital controller for isolated power supply
-> with pmbus interface voltage, current and temperature monitor.
->=20
-> Signed-off-by: Radu Sabau <radu.sabau@analog.com>
-> ---
-> v3:
->  *Remove extra line before '$id'.
->  *Remove 'address-cells' and 'size-cells' from adp1050 node.
->  *Rename adp1050 node to generic name.
->  *Fix typo from 'adress-cells' to 'address-cells' causing errors in the
->   dt-bindings build.
-> v2:
->  *Fix identation for example.
->  *Remove 'adi,vin-scale-monitor' and 'iin-scale-monitor' since they are n=
-ot used
->   anymore.
->  *Fix typo for 'compatbile' to 'compatible'.
->  *Add blank line under datasheet link.
-> ---
->  .../bindings/hwmon/pmbus/adi,adp1050.yaml     | 49 +++++++++++++++++++
->  MAINTAINERS                                   |  7 +++
->  2 files changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/pmbus/adi,adp=
-1050.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/hwmon/pmbus/adi,adp1050.ya=
-ml
-> b/Documentation/devicetree/bindings/hwmon/pmbus/adi,adp1050.yaml
-> new file mode 100644
-> index 000000000000..42cafd8fec25
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/pmbus/adi,adp1050.yaml
-> @@ -0,0 +1,49 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: https://devicetree.org/schemas/hwmon/pmbus/adi,adp1050.yaml#
-> +$schema: https://devicetree.org/meta-schemes/core.yaml#
-> +
-> +title: Analog Devices ADP1050 digital controller with PMBus interface
-> +
-> +maintainers:
-> +  - Radu Sabau <radu.sabau@analog.com>
-> +
-> +description: |
-> +   The ADP1050 is used to monitor system voltages, currents and temperat=
-ures.
-> +   Through the PMBus interface, the ADP1050 targets isolated power suppl=
-ies
-> +   and has four individual monitors for input/output voltage, input curr=
-ent
-> +   and temperature.
-> +   Datasheet:
-> +     https://www.analog.com/en/products/adp1050.html
-> +
-> +properties:
-> +  compatible:
-> +    const: adi,adp1050
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  vcc-supply: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - vcc-supply
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +        #address-cells =3D <1>;
-> +        #size-cells =3D <0>;
-> +        clock-frequency =3D <100000>;
-> +
-> +        hwmon@70 {
-> +            compatible =3D "adi,adp1050";
-> +            reg =3D <0x70>;
-> +            vcc-supply =3D <&vcc>;
-> +        };
-> +    };
-> +...
+Test whether the return value of snprintf exceeds the maximum bus id
+length and print a warning.
 
-Results of bindings testing :
+[1]
+[    8.324631] mv88e6085 f212a200.mdio-mii:04: switch 0x1760 detected: Marvell 88E6176, revision 1
+[    8.389516] mv88e6085 f212a200.mdio-mii:04: Truncated bus-id may collide.
+[    8.592367] mv88e6085 f212a200.mdio-mii:04: Truncated bus-id may collide.
+[    8.623593] sysfs: cannot create duplicate filename '/devices/platform/cp0/cp0:config-space@f2000000/f212a200.mdio/mdio_bus/f212a200.mdio-mii/f212a200.mdio-mii:04/mdio_bus/!cp0!config-space@f2000000!mdio@12a200!ethernet-switch@4!mdi'
+[    8.785480] kobject: kobject_add_internal failed for !cp0!config-space@f2000000!mdio@12a200!ethernet-switch@4!mdi with -EEXIST, don't try to register things with the same name in the same directory.
+[    8.936514] libphy: mii_bus /cp0/config-space@f2000000/mdio@12a200/ethernet-switch@4/mdi failed to register
+[    8.946300] mdio_bus !cp0!config-space@f2000000!mdio@12a200!ethernet-switch@4!mdi: __mdiobus_register: -22
+[    8.956003] mv88e6085 f212a200.mdio-mii:04: Cannot register MDIO bus (-22)
+[    8.965329] mv88e6085: probe of f212a200.mdio-mii:04 failed with error -22
 
-  DTEX    Documentation/devicetree/bindings/hwmon/pmbus/adi,adp1050.example=
-.dts
-  LINT    Documentation/devicetree/bindings
-  CHKDT   Documentation/devicetree/bindings/processed-schema.json
-Traceback (most recent call last):
-  File "/home/radu/.local/lib/python3.10/site-packages/jsonschema/validator=
-s.py", line 912, in resolve_from_url
-    document =3D self.resolve_remote(url)
-  File "/home/radu/.local/lib/python3.10/site-packages/jsonschema/validator=
-s.py", line 1015, in resolve_remote
-    result =3D requests.get(uri).json()
-  File "/usr/lib/python3/dist-packages/requests/models.py", line 900, in js=
-on
-    return complexjson.loads(self.text, **kwargs)
-  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
-    return _default_decoder.decode(s)
-  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
-    obj, end =3D self.raw_decode(s, idx=3D_w(s, 0).end())
-  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
-    raise JSONDecodeError("Expecting value", s, err.value) from None
-json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+Signed-off-by: Josua Mayer <josua@solid-run.com>
+---
+ drivers/net/dsa/mv88e6xxx/chip.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+index 614cabb5c1b0..1c40f7631ab1 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -3731,10 +3731,12 @@ static int mv88e6xxx_mdio_register(struct mv88e6xxx_chip *chip,
+ 
+ 	if (np) {
+ 		bus->name = np->full_name;
+-		snprintf(bus->id, MII_BUS_ID_SIZE, "%pOF", np);
++		if (snprintf(bus->id, MII_BUS_ID_SIZE, "%pOF", np) >= MII_BUS_ID_SIZE)
++			dev_warn(chip->dev, "Truncated bus-id may collide.\n");
+ 	} else {
+ 		bus->name = "mv88e6xxx SMI";
+-		snprintf(bus->id, MII_BUS_ID_SIZE, "mv88e6xxx-%d", index++);
++		if (snprintf(bus->id, MII_BUS_ID_SIZE, "mv88e6xxx-%d", index++) >= MII_BUS_ID_SIZE)
++			dev_warn(chip->dev, "Truncated bus-id may collide.\n");
+ 	}
+ 
+ 	bus->read = mv88e6xxx_mdio_read;
 
-During handling of the above exception, another exception occurred:
+---
+base-commit: e8f897f4afef0031fe618a8e94127a0934896aba
+change-id: 20240320-mv88e6xxx-truncate-busid-34a1d2769bbf
 
-
-Traceback (most recent call last):
-  File "/home/radu/.local/bin/dt-doc-validate", line 8, in <module>
-    sys.exit(main())
-  File "/home/radu/.local/lib/python3.10/site-packages/dtschema/doc_validat=
-e.py", line 66, in main
-    ret |=3D check_doc(f)
-  File "/home/radu/.local/lib/python3.10/site-packages/dtschema/doc_validat=
-e.py", line 29, in check_doc
-    for error in sorted(dtsch.iter_errors(), key=3Dlambda e: e.linecol):
-  File "/home/radu/.local/lib/python3.10/site-packages/dtschema/schema.py",=
- line 120, in iter_errors
-    meta_schema =3D self.resolver.resolve_from_url(self['$schema'])
-  File "/home/radu/.local/lib/python3.10/site-packages/jsonschema/validator=
-s.py", line 914, in resolve_from_url
-    raise exceptions.RefResolutionError(exc)
-jsonschema.exceptions.RefResolutionError: Expecting value: line 1 column 1 =
-(char 0)
-  SCHEMA  Documentation/devicetree/bindings/processed-schema.json
-/home/radu/torvalds/linux/Documentation/devicetree/bindings/net/snps,dwmac.=
-yaml: mac-mode: missing type definition
-  DTC_CHK Documentation/devicetree/bindings/hwmon/pmbus/adi,adp1050.example=
-.dtb
-
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 43b39956694a..b45753e94756 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -479,6 +479,13 @@ L:	linux-wireless@vger.kernel.org
->  S:	Orphan
->  F:	drivers/net/wireless/admtek/adm8211.*
->=20
-> +ADP1050 HARDWARE MONITOR DRIVER
-> +M:	Radu Sabau <radu.sabau@analog.com>
-> +L:	linux-hwmon@vger.kernel.org
-> +S:	Supported
-> +W:	https://ez.analog.com/linux-software-drivers
-> +F:	Dcumentation/devicetree/bindings/hwmon/pmbus/adi,adp1050.yaml
-> +
->  ADP1653 FLASH CONTROLLER DRIVER
->  M:	Sakari Ailus <sakari.ailus@iki.fi>
->  L:	linux-media@vger.kernel.org
-> --
-> 2.34.1
+Sincerely,
+-- 
+Josua Mayer <josua@solid-run.com>
 
