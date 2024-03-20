@@ -1,94 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A77F8101E8;
-	Wed, 20 Mar 2024 08:28:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B846438FB6;
+	Wed, 20 Mar 2024 08:28:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710923324; cv=none; b=mP+rjU8eXFLkZ3PIRENSQgpk8Mmft8SPu4cTYFp3AcRdNCFEPG9/AT9dBMDqrWZSKnINDEgCQQuRFKJ1zulwBEout/J8e6q3eoLWlXUJDjDJstyy0h1PahiS2w1TcYd5Yg/bVEiVS2s96cPeBUV9l/jklPpeAAyTGCeu4z+88Qw=
+	t=1710923334; cv=none; b=p4vbiYfNluc6YB6dKqQN2SuGa6xrutZt0SjjzvG6KZJVkR5OjiAimskCO3eRg79GpFQWpsi0zEVc8aP2W/0LcEeRufmmvUmG1V7dlsZGgSEKKuym8danXqXXLQ9kI19FEq3OIQJKL/Dsat3j7S2VnFMjWM+Eei4GLNXnVI+V1TA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710923324; c=relaxed/simple;
-	bh=BWNgmr1UI8Ez2Yk8JxGhv2jILFoV7E237Mqwin2G1xU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=hausd+UiYuHv5zj3MO1oKJcxcj9MmB8HjeZhHTURzzK62v7C6JdVhjwTU5YAiw0KTxhLoAPcf45rfVnkFQ6GnQgwxfLbSGYAlqOxubsE7fNBchFVpJ8f431dBqzJ9jeeO4/Xy6Cr/UcovTvCOJFC/PEtmyAbEois4CoGHoquSBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z+rqknd1; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z+rqknd1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49DB8C433F1;
-	Wed, 20 Mar 2024 08:28:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710923324;
-	bh=BWNgmr1UI8Ez2Yk8JxGhv2jILFoV7E237Mqwin2G1xU=;
-	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
-	b=Z+rqknd11Xq+RxpQ3lOa2Uc20j2piizrSxUqNkCmdP1FQ39nD+481V0wtS5iKppBt
-	 dhwwp+ZhJKG90Z7IQFnHeG7lKyvY56576olFr+46vsI3SBRIE3fafp6AS7fneglF8l
-	 pEd+7SjXv8owZkIWAuebthTIB0bmCwtSGLN1itKiNkN8l8DaPkrqchOS/F8OE3nH7Q
-	 wJYYPVpRX7L/78U68unPdvDX8prEnKpuR7XXUVHzHn20sdQtl+wGK5mFrfdRLZJtto
-	 mZHoJKW9S3zezgO/5IIN2p3bK6WAyc69ODlVC/LLzP2RNdqhHxuXwaM+jMyGnpzyVI
-	 drRgIQTjnw8qA==
+	s=arc-20240116; t=1710923334; c=relaxed/simple;
+	bh=O86kC/nBu+0ytMYN2Z0A3TlwR/TL+tNc4Uu3IXZHekY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IsAdLOGqjNAZh2E6pGjDrmIXyZ0dCNXXOnwkDpPRk993esIMyrHhSyuZUClCynO2Ed/RSr0Dun1EslFv3mFMZhm85izUssbsIpVAIElyM4Yi5VZJPWi3+WIgYIg0qMG/3uoIp2fE1QKn99ieullJp4lt/grenO72m1pg04eCMho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-IronPort-AV: E=Sophos;i="6.07,139,1708354800"; 
+   d="scan'208";a="198441850"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 20 Mar 2024 17:28:50 +0900
+Received: from renesas-deb12.cephei.uk (unknown [10.226.93.11])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 808BB417039C;
+	Wed, 20 Mar 2024 17:28:47 +0900 (JST)
+From: Paul Barker <paul.barker.ct@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>
+Cc: Paul Barker <paul.barker.ct@bp.renesas.com>,
+	linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] clk: renesas: r9a07g043: Mark mod_clks and resets arrays as const
+Date: Wed, 20 Mar 2024 08:28:30 +0000
+Message-Id: <20240320082831.9666-1-paul.barker.ct@bp.renesas.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 20 Mar 2024 10:28:38 +0200
-Message-Id: <CZYFP5S04YTK.23AJMKWQWVCR8@kernel.org>
-To: "Paul Moore" <paul@paul-moore.com>, "Fan Wu"
- <wufan@linux.microsoft.com>, <corbet@lwn.net>, <zohar@linux.ibm.com>,
- <jmorris@namei.org>, <serge@hallyn.com>, <tytso@mit.edu>,
- <ebiggers@kernel.org>, <axboe@kernel.dk>, <agk@redhat.com>,
- <snitzer@kernel.org>, <eparis@redhat.com>
-Cc: <linux-doc@vger.kernel.org>, <linux-integrity@vger.kernel.org>,
- <linux-security-module@vger.kernel.org>, <fsverity@lists.linux.dev>,
- <linux-block@vger.kernel.org>, <dm-devel@lists.linux.dev>,
- <audit@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v15 12/21] security: add
- security_bdev_setintegrity() hook
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-X-Mailer: aerc 0.15.2
-References: <1710560151-28904-13-git-send-email-wufan@linux.microsoft.com>
- <f5cf9d285bd5f09bbc3f79b0800d37fc@paul-moore.com>
-In-Reply-To: <f5cf9d285bd5f09bbc3f79b0800d37fc@paul-moore.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed Mar 20, 2024 at 1:00 AM EET, Paul Moore wrote:
-> On Mar 15, 2024 Fan Wu <wufan@linux.microsoft.com> wrote:
-> >=20
-> > This patch introduces a new hook to save block device's integrity
-> > data. For example, for dm-verity, LSMs can use this hook to save
-> > the roothash signature of a dm-verity into the security blob,
-> > and LSMs can make access decisions based on the data inside
-> > the signature, like the signer certificate.
-> >=20
-> > Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
-> >=20
-> > --
-> > v1-v14:
-> >   + Not present
-> >=20
-> > v15:
-> >   + Introduced
-> >=20
-> > ---
-> >  include/linux/lsm_hook_defs.h |  2 ++
-> >  include/linux/security.h      | 14 ++++++++++++++
-> >  security/security.c           | 28 ++++++++++++++++++++++++++++
-> >  3 files changed, 44 insertions(+)
->
-> I'm not sure why you made this a separate patch, help?  If there is
-> no significant reason why this is separate, please squash it together
-> with patch 11/21.
+The r9a07g043_mod_clks and r9a07g043_resets arrays describe the module
+clocks and reset signals (respectively) in this SoC and do not change at
+runtime.
 
-Off-topic: it is weird to have *RFC* patch set at v15.
+Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+---
+ drivers/clk/renesas/r9a07g043-cpg.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-RFC by de-facto is something that can be safely ignored if you don't
-have bandwidth. 15 versions of anything that can be safely ignored
-is by definition spamming :-) I mean just conceptually.
+diff --git a/drivers/clk/renesas/r9a07g043-cpg.c b/drivers/clk/renesas/r9a07g043-cpg.c
+index 33532673d25d..e36d2ec2c0f5 100644
+--- a/drivers/clk/renesas/r9a07g043-cpg.c
++++ b/drivers/clk/renesas/r9a07g043-cpg.c
+@@ -149,7 +149,7 @@ static const struct cpg_core_clk r9a07g043_core_clks[] __initconst = {
+ #endif
+ };
+ 
+-static struct rzg2l_mod_clk r9a07g043_mod_clks[] = {
++static const struct rzg2l_mod_clk r9a07g043_mod_clks[] = {
+ #ifdef CONFIG_ARM64
+ 	DEF_MOD("gic",		R9A07G043_GIC600_GICCLK, R9A07G043_CLK_P1,
+ 				0x514, 0),
+@@ -282,7 +282,7 @@ static struct rzg2l_mod_clk r9a07g043_mod_clks[] = {
+ 				0x5ac, 0),
+ };
+ 
+-static struct rzg2l_reset r9a07g043_resets[] = {
++static const struct rzg2l_reset r9a07g043_resets[] = {
+ #ifdef CONFIG_ARM64
+ 	DEF_RST(R9A07G043_GIC600_GICRESET_N, 0x814, 0),
+ 	DEF_RST(R9A07G043_GIC600_DBG_GICRESET_N, 0x814, 1),
+-- 
+2.44.0
 
-So does the RFC still hold or what the heck is going on with this one?
-
-Haven't followed for some time now...
-
-BR, Jarkko
