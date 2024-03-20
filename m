@@ -1,67 +1,50 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from esa1.ltts.com (unknown [118.185.121.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53313FBBD;
-	Wed, 20 Mar 2024 10:26:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F0344377;
+	Wed, 20 Mar 2024 10:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.185.121.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710930385; cv=none; b=Fpft5F8Q0DamVtjRyTZyVUrQ0Sr/5YSP2b5oS1/TaDF2i8Z9Ak9v5c6J2xf/3EiSLNcTGDvhHL5GbTSPvzmRckdg4ltFIjDiaFu0iKWwqwW80I2LrCPlK3gOxgYMI8uUih228h3rnc2+oz7qzLKJYCaRR+Z1FRVcstwekzfa+5I=
+	t=1710930389; cv=none; b=jRUsaexRRdZ9ClrZEDlYuW4wpERV/QJa+07+MveJ8/su2VHJbXjSWT/vLPSk1Z0OcspW/LWc9iwE2u0oOOHZt1gMZJjgvUXQguegdKg/kXTS7PbzpA/Yy9Af+D4S+4RprfgfkAiEHJ/PvCqHiXTvY2dUWz2c4xXQ+PJm84Zz37E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710930385; c=relaxed/simple;
-	bh=S8bzl/MQ5n2SlKIYxmVXTQUrEGkVsyoNaNQTpYUoR/U=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=H8Iobjhwh1U4mPYwhsHvTumYoKpgsaVTfEcgdj/y/KWnijBDugD+difeMRyK1Ot99DuHsoAhHYLVJ1xrkEb1yh2cxZrFiEp4kN2MfDN5KM09jqxMxmqTYYOC1O/z5zW3pKc9M/vTXPT879D+mCgV4A4u6+dtALYVw/QaaXP1W1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=cw3KvZyV; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cw3KvZyV"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42KAQ3Yv027449;
-	Wed, 20 Mar 2024 05:26:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1710930363;
-	bh=+dlByXerH0MDlkGZ92z12sZjnGAVCmNzQrHw/gbQNJo=;
-	h=From:To:CC:Subject:Date;
-	b=cw3KvZyV3AMUhTB2plI79z+AOel4DQvaEXWLWRQHlyg4N2OD/HHvW28U0o5MLAGGj
-	 VlgtSvFLfbJQr9Gdq4IM6Zb+RW0bwqchZlALnDoNPamCdyJgfV4pkzIBCm4BQoZzEG
-	 PliCpThc+dnhAC9JDBcfAfoZChSiDiliuA78wWLk=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42KAQ3Ii032423
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 20 Mar 2024 05:26:03 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 20
- Mar 2024 05:26:03 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 20 Mar 2024 05:26:03 -0500
-Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42KAQ28a036653;
-	Wed, 20 Mar 2024 05:26:03 -0500
-From: Chintan Vankar <c-vankar@ti.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>,
-        Siddharth Vadapalli
-	<s-vadapalli@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "Heiner
- Kallweit" <hkallweit1@gmail.com>,
-        Chintan Vankar <c-vankar@ti.com>,
-        "Vladimir
- Oltean" <vladimir.oltean@nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>, Roger
- Quadros <rogerq@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
-        Eric
- Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
-Subject: [PATCH net-next v3 1/3] net: ethernet: ti: am65-cpts: Enable PTP RX HW timestamp using CPTS FIFO
-Date: Wed, 20 Mar 2024 15:55:58 +0530
-Message-ID: <20240320102600.3418248-1-c-vankar@ti.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1710930389; c=relaxed/simple;
+	bh=rR36l+HbAkxuwygrZ7h0SMEBzbS84LHP6mXAk0U3GqE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=D/twElZH7vyDoY9Bk7z2nZ3Wmu13RII74TlG2aHCQYw+OirmErHRk03xQx04po7Q8tZdpzWTGpH+jctWfiUJgWg4fjQDvr9GpKUMjGby61kjyFXjWQiIp+U4DOEKK5eaPgMGd+3VT7UkuRkHE81L+xCj+DjJNsERpQJ/PioDokA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=118.185.121.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
+IronPort-SDR: KVTJjYLS7YK4bwHvmsqnlERMgsjqi5NylK4r7+330iZ3LCeaB9YQWVzgUpUtPIRF0PLELNLEcv
+ QnR6gGNbt1pw==
+Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
+  by esa1.ltts.com with ESMTP; 20 Mar 2024 15:56:19 +0530
+From: Bhargav Raviprakash <bhargav.r@ltts.com>
+To: linux-kernel@vger.kernel.org
+Cc: m.nirmaladevi@ltts.com,
+	lee@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	jpanis@baylibre.com,
+	devicetree@vger.kernel.org,
+	arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	linus.walleij@linaro.org,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	nm@ti.com,
+	vigneshr@ti.com,
+	kristo@kernel.org,
+	eblanc@baylibre.com,
+	Bhargav Raviprakash <bhargav.r@ltts.com>
+Subject: [PATCH v4 08/11] misc: tps6594-pfsm: Add TI TPS65224 PMIC PFSM
+Date: Wed, 20 Mar 2024 15:55:56 +0530
+Message-Id: <20240320102559.464981-9-bhargav.r@ltts.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240320102559.464981-1-bhargav.r@ltts.com>
+References: <20240320102559.464981-1-bhargav.r@ltts.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,131 +52,132 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-CPTS module supports capturing timestamp for every packet it receives,
-add a new function named "am65_cpts_find_rx_ts()" to get the timestamp
-of received packets from CPTS FIFO.
+Add support for TPS65224 PFSM in the TPS6594 PFSM driver as they share
+significant functionality.
 
-Add another function named "am65_cpts_rx_timestamp()" which internally
-calls "am65_cpts_find_rx_ts()" function and timestamps the received
-PTP packets.
-
-Signed-off-by: Chintan Vankar <c-vankar@ti.com>
+Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+Acked-by: Julien Panis <jpanis@baylibre.com>
 ---
+ drivers/misc/tps6594-pfsm.c | 48 +++++++++++++++++++++++++++----------
+ 1 file changed, 35 insertions(+), 13 deletions(-)
 
-Changes from v2 to v3:
-- Updated the patch by moving removal of "am65_cpts_rx_enable" function
-  part to the next patch to avoid transient build break.
-
-Link to v2:
-https://lore.kernel.org/r/20240312100233.941763-1-c-vankar@ti.com/
-
- drivers/net/ethernet/ti/am65-cpts.c | 65 +++++++++++++++++++++++++++++
- drivers/net/ethernet/ti/am65-cpts.h |  6 +++
- 2 files changed, 71 insertions(+)
-
-diff --git a/drivers/net/ethernet/ti/am65-cpts.c b/drivers/net/ethernet/ti/am65-cpts.c
-index c66618d91c28..040953ea8cc2 100644
---- a/drivers/net/ethernet/ti/am65-cpts.c
-+++ b/drivers/net/ethernet/ti/am65-cpts.c
-@@ -906,6 +906,71 @@ static int am65_skb_get_mtype_seqid(struct sk_buff *skb, u32 *mtype_seqid)
- 	return 1;
- }
+diff --git a/drivers/misc/tps6594-pfsm.c b/drivers/misc/tps6594-pfsm.c
+index 88dcac814..9bcca1856 100644
+--- a/drivers/misc/tps6594-pfsm.c
++++ b/drivers/misc/tps6594-pfsm.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * PFSM (Pre-configurable Finite State Machine) driver for TI TPS6594/TPS6593/LP8764 PMICs
++ * PFSM (Pre-configurable Finite State Machine) driver for TI TPS65224/TPS6594/TPS6593/LP8764 PMICs
+  *
+  * Copyright (C) 2023 BayLibre Incorporated - https://www.baylibre.com/
+  */
+@@ -39,10 +39,12 @@
+  *
+  * @miscdev: misc device infos
+  * @regmap:  regmap for accessing the device registers
++ * @chip_id: chip identifier of the device
+  */
+ struct tps6594_pfsm {
+ 	struct miscdevice miscdev;
+ 	struct regmap *regmap;
++	unsigned long chip_id;
+ };
  
-+static u64 am65_cpts_find_rx_ts(struct am65_cpts *cpts, u32 skb_mtype_seqid)
-+{
-+	struct list_head *this, *next;
-+	struct am65_cpts_event *event;
-+	unsigned long flags;
-+	u32 mtype_seqid;
-+	u64 ns = 0;
+ static ssize_t tps6594_pfsm_read(struct file *f, char __user *buf,
+@@ -133,21 +135,29 @@ static long tps6594_pfsm_ioctl(struct file *f, unsigned int cmd, unsigned long a
+ 	struct tps6594_pfsm *pfsm = TPS6594_FILE_TO_PFSM(f);
+ 	struct pmic_state_opt state_opt;
+ 	void __user *argp = (void __user *)arg;
++	unsigned int regmap_reg, mask;
+ 	int ret = -ENOIOCTLCMD;
+ 
+ 	switch (cmd) {
+ 	case PMIC_GOTO_STANDBY:
+-		/* Disable LP mode */
+-		ret = regmap_clear_bits(pfsm->regmap, TPS6594_REG_RTC_CTRL_2,
+-					TPS6594_BIT_LP_STANDBY_SEL);
+-		if (ret)
+-			return ret;
++		/* Disable LP mode on TPS6594 Family PMIC */
++		if (pfsm->chip_id != TPS65224) {
++			ret = regmap_clear_bits(pfsm->regmap, TPS6594_REG_RTC_CTRL_2,
++						TPS6594_BIT_LP_STANDBY_SEL);
 +
-+	am65_cpts_fifo_read(cpts);
-+	spin_lock_irqsave(&cpts->lock, flags);
-+	list_for_each_safe(this, next, &cpts->events) {
-+		event = list_entry(this, struct am65_cpts_event, list);
-+		if (time_after(jiffies, event->tmo)) {
-+			list_del_init(&event->list);
-+			list_add(&event->list, &cpts->pool);
-+			continue;
++			if (ret)
++				return ret;
++		}
+ 
+ 		/* Force trigger */
+ 		ret = regmap_write_bits(pfsm->regmap, TPS6594_REG_FSM_I2C_TRIGGERS,
+ 					TPS6594_BIT_TRIGGER_I2C(0), TPS6594_BIT_TRIGGER_I2C(0));
+ 		break;
+ 	case PMIC_GOTO_LP_STANDBY:
++		/* TPS65224 does not support LP STANDBY */
++		if (pfsm->chip_id == TPS65224)
++			return ret;
++
+ 		/* Enable LP mode */
+ 		ret = regmap_set_bits(pfsm->regmap, TPS6594_REG_RTC_CTRL_2,
+ 				      TPS6594_BIT_LP_STANDBY_SEL);
+@@ -169,6 +179,10 @@ static long tps6594_pfsm_ioctl(struct file *f, unsigned int cmd, unsigned long a
+ 				      TPS6594_BIT_NSLEEP1B | TPS6594_BIT_NSLEEP2B);
+ 		break;
+ 	case PMIC_SET_MCU_ONLY_STATE:
++		/* TPS65224 does not support MCU_ONLY_STATE */
++		if (pfsm->chip_id == TPS65224)
++			return ret;
++
+ 		if (copy_from_user(&state_opt, argp, sizeof(state_opt)))
+ 			return -EFAULT;
+ 
+@@ -192,14 +206,20 @@ static long tps6594_pfsm_ioctl(struct file *f, unsigned int cmd, unsigned long a
+ 			return -EFAULT;
+ 
+ 		/* Configure wake-up destination */
++		if (pfsm->chip_id == TPS65224) {
++			regmap_reg = TPS65224_REG_STARTUP_CTRL;
++			mask = TPS65224_MASK_STARTUP_DEST;
++		} else {
++			regmap_reg = TPS6594_REG_RTC_CTRL_2;
++			mask = TPS6594_MASK_STARTUP_DEST;
 +		}
 +
-+		mtype_seqid = event->event1 &
-+			      (AM65_CPTS_EVENT_1_MESSAGE_TYPE_MASK |
-+			       AM65_CPTS_EVENT_1_SEQUENCE_ID_MASK |
-+			       AM65_CPTS_EVENT_1_EVENT_TYPE_MASK);
-+
-+		if (mtype_seqid == skb_mtype_seqid) {
-+			ns = event->timestamp;
-+			list_del_init(&event->list);
-+			list_add(&event->list, &cpts->pool);
-+			break;
-+		}
-+	}
-+	spin_unlock_irqrestore(&cpts->lock, flags);
-+
-+	return ns;
-+}
-+
-+void am65_cpts_rx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb)
-+{
-+	struct am65_cpts_skb_cb_data *skb_cb = (struct am65_cpts_skb_cb_data *)skb->cb;
-+	struct skb_shared_hwtstamps *ssh;
-+	int ret;
-+	u64 ns;
-+
-+	/* am65_cpts_rx_timestamp() is called before eth_type_trans(), so
-+	 * skb MAC Hdr properties are not configured yet. Hence need to
-+	 * reset skb MAC header here
-+	 */
-+	skb_reset_mac_header(skb);
-+	ret = am65_skb_get_mtype_seqid(skb, &skb_cb->skb_mtype_seqid);
-+	if (!ret)
-+		return; /* if not PTP class packet */
-+
-+	skb_cb->skb_mtype_seqid |= (AM65_CPTS_EV_RX << AM65_CPTS_EVENT_1_EVENT_TYPE_SHIFT);
-+
-+	dev_dbg(cpts->dev, "%s mtype seqid %08x\n", __func__, skb_cb->skb_mtype_seqid);
-+
-+	ns = am65_cpts_find_rx_ts(cpts, skb_cb->skb_mtype_seqid);
-+	if (!ns)
-+		return;
-+
-+	ssh = skb_hwtstamps(skb);
-+	memset(ssh, 0, sizeof(*ssh));
-+	ssh->hwtstamp = ns_to_ktime(ns);
-+}
-+EXPORT_SYMBOL_GPL(am65_cpts_rx_timestamp);
-+
- /**
-  * am65_cpts_tx_timestamp - save tx packet for timestamping
-  * @cpts: cpts handle
-diff --git a/drivers/net/ethernet/ti/am65-cpts.h b/drivers/net/ethernet/ti/am65-cpts.h
-index 6e14df0be113..90296968a75c 100644
---- a/drivers/net/ethernet/ti/am65-cpts.h
-+++ b/drivers/net/ethernet/ti/am65-cpts.h
-@@ -22,6 +22,7 @@ void am65_cpts_release(struct am65_cpts *cpts);
- struct am65_cpts *am65_cpts_create(struct device *dev, void __iomem *regs,
- 				   struct device_node *node);
- int am65_cpts_phc_index(struct am65_cpts *cpts);
-+void am65_cpts_rx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb);
- void am65_cpts_tx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb);
- void am65_cpts_prep_tx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb);
- void am65_cpts_rx_enable(struct am65_cpts *cpts, bool en);
-@@ -48,6 +49,11 @@ static inline int am65_cpts_phc_index(struct am65_cpts *cpts)
- 	return -1;
- }
+ 		if (state_opt.mcu_only_startup_dest)
+-			ret = regmap_write_bits(pfsm->regmap, TPS6594_REG_RTC_CTRL_2,
+-						TPS6594_MASK_STARTUP_DEST,
+-						TPS6594_STARTUP_DEST_MCU_ONLY);
++			ret = regmap_write_bits(pfsm->regmap, regmap_reg,
++						mask, TPS6594_STARTUP_DEST_MCU_ONLY);
+ 		else
+-			ret = regmap_write_bits(pfsm->regmap, TPS6594_REG_RTC_CTRL_2,
+-						TPS6594_MASK_STARTUP_DEST,
+-						TPS6594_STARTUP_DEST_ACTIVE);
++			ret = regmap_write_bits(pfsm->regmap, regmap_reg,
++						mask, TPS6594_STARTUP_DEST_ACTIVE);
+ 		if (ret)
+ 			return ret;
  
-+static inline void am65_cpts_rx_timestamp(struct am65_cpts *cpts,
-+					  struct sk_buff *skb)
-+{
-+}
-+
- static inline void am65_cpts_tx_timestamp(struct am65_cpts *cpts,
- 					  struct sk_buff *skb)
- {
+@@ -211,7 +231,8 @@ static long tps6594_pfsm_ioctl(struct file *f, unsigned int cmd, unsigned long a
+ 
+ 		/* Modify NSLEEP1-2 bits */
+ 		ret = regmap_clear_bits(pfsm->regmap, TPS6594_REG_FSM_NSLEEP_TRIGGERS,
+-					TPS6594_BIT_NSLEEP2B);
++					pfsm->chip_id == TPS65224 ?
++					TPS6594_BIT_NSLEEP1B : TPS6594_BIT_NSLEEP2B);
+ 		break;
+ 	}
+ 
+@@ -262,6 +283,7 @@ static int tps6594_pfsm_probe(struct platform_device *pdev)
+ 					    tps->chip_id, tps->reg);
+ 	pfsm->miscdev.fops = &tps6594_pfsm_fops;
+ 	pfsm->miscdev.parent = dev->parent;
++	pfsm->chip_id = tps->chip_id;
+ 
+ 	for (i = 0 ; i < pdev->num_resources ; i++) {
+ 		irq = platform_get_irq_byname(pdev, pdev->resource[i].name);
 -- 
-2.34.1
+2.25.1
 
