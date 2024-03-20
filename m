@@ -1,36 +1,35 @@
 Received: from mailscanner01.zoner.fi (mailscanner01.zoner.fi [84.34.166.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B9185297;
-	Wed, 20 Mar 2024 18:47:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB0785282
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 18:47:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.34.166.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710960468; cv=none; b=BVwFY6ISKgwpJEBIPVbbdAxuf9CecGshCoxZ9ppn//6YfbbSy5i1fArYZEaionpCKqW0MyAqcuauKSq4xbLeIhqqWNmfsugntvZDqpzTe0j/C9ll0JyCRXiTvMJK3AJHo8hukXEldw62ol6ZOL39+GtH32xKqgLTDwQR0DNFnWY=
+	t=1710960470; cv=none; b=eQ+UR/b+pEx396LgvvfrCPH8VBLrxpkOSan5UOhyfYKLgXSJwYlUHNfWdOERU0SEayJ7sGknd6Mn/7NYhXRptbwczYpfU+tfCcmucqHek4e10+kzMSo/tc8hyUKETBXLATC+nAxG1e8TPcBtr6YJsbpmmwoXiU9m3Kbx/16iRWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710960468; c=relaxed/simple;
-	bh=k/qt7fuT3VtOc5fsjebM1i2URNOFtuXnd0jQK+GfIy0=;
+	s=arc-20240116; t=1710960470; c=relaxed/simple;
+	bh=wEjY393WFSzEeWiwjkl/GFZDH84R1QcgM4sHjnLfaQY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NulNXVON2bbbiJN+hISqcngBvVEv3zZiAaA2/yF6TJ3/bGUbWSniafif0f7yymwKtWB3QVy/d3+qcaBUYydrCuTG3v/vh+45d6ixfqqeSx338OF9VrU3aFp4m1Ivp/rBnuoZBf5LN+WDTP1LSM6On/IaZWNG3Sgv9rLlBlQ4hZ8=
+	 MIME-Version; b=caZm1KAOF35LbhftrX+mXNtGpNMAjz6IPw5HpqiYSNMuWKp+LtdWC6/WyngW4XY+TAutoM8zzsg+O350J+/lzlCEtypule4EJbeVZ/Gqetb3IJs2oT/YCF+c5UlJOPqn+uFN7CBIrBunQsC5Mb1CNWDKjimkmaqAqlnOsTmXTA4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org; spf=pass smtp.mailfrom=tukaani.org; arc=none smtp.client-ip=84.34.166.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tukaani.org
 Received: from www25.zoner.fi (www25.zoner.fi [84.34.147.45])
-	by mailscanner01.zoner.fi (Postfix) with ESMTPS id 4724C42243;
+	by mailscanner01.zoner.fi (Postfix) with ESMTPS id B7686402D4;
 	Wed, 20 Mar 2024 20:39:26 +0200 (EET)
 Received: from mail.zoner.fi ([84.34.147.244])
 	by www25.zoner.fi with esmtp (Exim 4.96.1-7-g79877b70e)
 	(envelope-from <lasse.collin@tukaani.org>)
-	id 1rn0qU-0001dW-06;
+	id 1rn0qU-0001dW-1Z;
 	Wed, 20 Mar 2024 20:39:26 +0200
 From: Lasse Collin <lasse.collin@tukaani.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Lasse Collin <lasse.collin@tukaani.org>,
 	Jia Tan <jiat0218@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-spdx@vger.kernel.org
-Subject: [PATCH 03/11] xz: Switch from public domain to BSD Zero Clause License (0BSD)
-Date: Wed, 20 Mar 2024 20:38:36 +0200
-Message-ID: <20240320183846.19475-4-lasse.collin@tukaani.org>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 07/11] xz: Optimize for-loop conditions in the BCJ decoders
+Date: Wed, 20 Mar 2024 20:38:40 +0200
+Message-ID: <20240320183846.19475-8-lasse.collin@tukaani.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240320183846.19475-1-lasse.collin@tukaani.org>
 References: <20240320183846.19475-1-lasse.collin@tukaani.org>
@@ -42,282 +41,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove the public domain notices and add SPDX license identifiers.
-
-Change MODULE_LICENSE from "GPL" to "Dual BSD/GPL" because 0BSD should
-count as a BSD license variant here.
-
-The switch to 0BSD was done in the upstream XZ Embedded project because
-public domain has (real or perceived) legal issues in some jurisdictions.
+Compilers cannot optimize the addition "i + 4" away since theoretically
+it could overflow.
 
 Reviewed-by: Jia Tan <jiat0218@gmail.com>
 Signed-off-by: Lasse Collin <lasse.collin@tukaani.org>
 ---
- include/linux/decompress/unxz.h |  5 ++---
- include/linux/xz.h              |  5 ++---
- lib/decompress_unxz.c           |  5 ++---
- lib/xz/xz_crc32.c               |  5 ++---
- lib/xz/xz_dec_bcj.c             |  5 ++---
- lib/xz/xz_dec_lzma2.c           |  5 ++---
- lib/xz/xz_dec_stream.c          |  5 ++---
- lib/xz/xz_dec_syms.c            | 12 +++---------
- lib/xz/xz_dec_test.c            | 12 +++---------
- lib/xz/xz_lzma2.h               |  5 ++---
- lib/xz/xz_private.h             |  5 ++---
- lib/xz/xz_stream.h              |  5 ++---
- scripts/xz_wrap.sh              |  5 +----
- 13 files changed, 27 insertions(+), 52 deletions(-)
+ lib/xz/xz_dec_bcj.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/decompress/unxz.h b/include/linux/decompress/unxz.h
-index f764e2a7201e..3dd2658a9dab 100644
---- a/include/linux/decompress/unxz.h
-+++ b/include/linux/decompress/unxz.h
-@@ -1,10 +1,9 @@
-+/* SPDX-License-Identifier: 0BSD */
-+
- /*
-  * Wrapper for decompressing XZ-compressed kernel, initramfs, and initrd
-  *
-  * Author: Lasse Collin <lasse.collin@tukaani.org>
-- *
-- * This file has been put into the public domain.
-- * You can do whatever you want with this file.
-  */
- 
- #ifndef DECOMPRESS_UNXZ_H
-diff --git a/include/linux/xz.h b/include/linux/xz.h
-index 7285ca5d56e9..5728d57aecc0 100644
---- a/include/linux/xz.h
-+++ b/include/linux/xz.h
-@@ -1,11 +1,10 @@
-+/* SPDX-License-Identifier: 0BSD */
-+
- /*
-  * XZ decompressor
-  *
-  * Authors: Lasse Collin <lasse.collin@tukaani.org>
-  *          Igor Pavlov <https://7-zip.org/>
-- *
-- * This file has been put into the public domain.
-- * You can do whatever you want with this file.
-  */
- 
- #ifndef XZ_H
-diff --git a/lib/decompress_unxz.c b/lib/decompress_unxz.c
-index 842894158944..34bb7efc0412 100644
---- a/lib/decompress_unxz.c
-+++ b/lib/decompress_unxz.c
-@@ -1,10 +1,9 @@
-+// SPDX-License-Identifier: 0BSD
-+
- /*
-  * Wrapper for decompressing XZ-compressed kernel, initramfs, and initrd
-  *
-  * Author: Lasse Collin <lasse.collin@tukaani.org>
-- *
-- * This file has been put into the public domain.
-- * You can do whatever you want with this file.
-  */
- 
- /*
-diff --git a/lib/xz/xz_crc32.c b/lib/xz/xz_crc32.c
-index 88a2c35e1b59..30b8a27110b1 100644
---- a/lib/xz/xz_crc32.c
-+++ b/lib/xz/xz_crc32.c
-@@ -1,11 +1,10 @@
-+// SPDX-License-Identifier: 0BSD
-+
- /*
-  * CRC32 using the polynomial from IEEE-802.3
-  *
-  * Authors: Lasse Collin <lasse.collin@tukaani.org>
-  *          Igor Pavlov <https://7-zip.org/>
-- *
-- * This file has been put into the public domain.
-- * You can do whatever you want with this file.
-  */
- 
- /*
 diff --git a/lib/xz/xz_dec_bcj.c b/lib/xz/xz_dec_bcj.c
-index ef449e97d1a1..ab9237ed6db8 100644
+index ab9237ed6db8..e0b4bf4999c0 100644
 --- a/lib/xz/xz_dec_bcj.c
 +++ b/lib/xz/xz_dec_bcj.c
-@@ -1,11 +1,10 @@
-+// SPDX-License-Identifier: 0BSD
+@@ -161,7 +161,9 @@ static size_t bcj_powerpc(struct xz_dec_bcj *s, uint8_t *buf, size_t size)
+ 	size_t i;
+ 	uint32_t instr;
+ 
+-	for (i = 0; i + 4 <= size; i += 4) {
++	size &= ~(size_t)3;
 +
- /*
-  * Branch/Call/Jump (BCJ) filter decoders
-  *
-  * Authors: Lasse Collin <lasse.collin@tukaani.org>
-  *          Igor Pavlov <https://7-zip.org/>
-- *
-- * This file has been put into the public domain.
-- * You can do whatever you want with this file.
-  */
++	for (i = 0; i < size; i += 4) {
+ 		instr = get_unaligned_be32(buf + i);
+ 		if ((instr & 0xFC000003) == 0x48000001) {
+ 			instr &= 0x03FFFFFC;
+@@ -218,7 +220,9 @@ static size_t bcj_ia64(struct xz_dec_bcj *s, uint8_t *buf, size_t size)
+ 	/* Instruction normalized with bit_res for easier manipulation */
+ 	uint64_t norm;
  
- #include "xz_private.h"
-diff --git a/lib/xz/xz_dec_lzma2.c b/lib/xz/xz_dec_lzma2.c
-index 27ce34520e78..613939f5dd6c 100644
---- a/lib/xz/xz_dec_lzma2.c
-+++ b/lib/xz/xz_dec_lzma2.c
-@@ -1,11 +1,10 @@
-+// SPDX-License-Identifier: 0BSD
+-	for (i = 0; i + 16 <= size; i += 16) {
++	size &= ~(size_t)15;
 +
- /*
-  * LZMA2 decoder
-  *
-  * Authors: Lasse Collin <lasse.collin@tukaani.org>
-  *          Igor Pavlov <https://7-zip.org/>
-- *
-- * This file has been put into the public domain.
-- * You can do whatever you want with this file.
-  */
++	for (i = 0; i < size; i += 16) {
+ 		mask = branch_table[buf[i] & 0x1F];
+ 		for (slot = 0, bit_pos = 5; slot < 3; ++slot, bit_pos += 41) {
+ 			if (((mask >> slot) & 1) == 0)
+@@ -266,7 +270,9 @@ static size_t bcj_arm(struct xz_dec_bcj *s, uint8_t *buf, size_t size)
+ 	size_t i;
+ 	uint32_t addr;
  
- #include "xz_private.h"
-diff --git a/lib/xz/xz_dec_stream.c b/lib/xz/xz_dec_stream.c
-index 683570b93a8c..0058406ccd17 100644
---- a/lib/xz/xz_dec_stream.c
-+++ b/lib/xz/xz_dec_stream.c
-@@ -1,10 +1,9 @@
-+// SPDX-License-Identifier: 0BSD
+-	for (i = 0; i + 4 <= size; i += 4) {
++	size &= ~(size_t)3;
 +
- /*
-  * .xz Stream decoder
-  *
-  * Author: Lasse Collin <lasse.collin@tukaani.org>
-- *
-- * This file has been put into the public domain.
-- * You can do whatever you want with this file.
-  */
++	for (i = 0; i < size; i += 4) {
+ 		if (buf[i + 3] == 0xEB) {
+ 			addr = (uint32_t)buf[i] | ((uint32_t)buf[i + 1] << 8)
+ 					| ((uint32_t)buf[i + 2] << 16);
+@@ -289,7 +295,12 @@ static size_t bcj_armthumb(struct xz_dec_bcj *s, uint8_t *buf, size_t size)
+ 	size_t i;
+ 	uint32_t addr;
  
- #include "xz_private.h"
-diff --git a/lib/xz/xz_dec_syms.c b/lib/xz/xz_dec_syms.c
-index 61098c67a413..495d2cc2e6e8 100644
---- a/lib/xz/xz_dec_syms.c
-+++ b/lib/xz/xz_dec_syms.c
-@@ -1,10 +1,9 @@
-+// SPDX-License-Identifier: 0BSD
+-	for (i = 0; i + 4 <= size; i += 2) {
++	if (size < 4)
++		return 0;
 +
- /*
-  * XZ decoder module information
-  *
-  * Author: Lasse Collin <lasse.collin@tukaani.org>
-- *
-- * This file has been put into the public domain.
-- * You can do whatever you want with this file.
-  */
- 
- #include <linux/module.h>
-@@ -25,9 +24,4 @@ EXPORT_SYMBOL(xz_dec_microlzma_end);
- MODULE_DESCRIPTION("XZ decompressor");
- MODULE_VERSION("1.1");
- MODULE_AUTHOR("Lasse Collin <lasse.collin@tukaani.org> and Igor Pavlov");
--
--/*
-- * This code is in the public domain, but in Linux it's simplest to just
-- * say it's GPL and consider the authors as the copyright holders.
-- */
--MODULE_LICENSE("GPL");
-+MODULE_LICENSE("Dual BSD/GPL");
-diff --git a/lib/xz/xz_dec_test.c b/lib/xz/xz_dec_test.c
-index da28a19d6c98..53d3600f2ddb 100644
---- a/lib/xz/xz_dec_test.c
-+++ b/lib/xz/xz_dec_test.c
-@@ -1,10 +1,9 @@
-+// SPDX-License-Identifier: 0BSD
++	size -= 4;
 +
- /*
-  * XZ decoder tester
-  *
-  * Author: Lasse Collin <lasse.collin@tukaani.org>
-- *
-- * This file has been put into the public domain.
-- * You can do whatever you want with this file.
-  */
++	for (i = 0; i <= size; i += 2) {
+ 		if ((buf[i + 1] & 0xF8) == 0xF0
+ 				&& (buf[i + 3] & 0xF8) == 0xF8) {
+ 			addr = (((uint32_t)buf[i + 1] & 0x07) << 19)
+@@ -317,7 +328,9 @@ static size_t bcj_sparc(struct xz_dec_bcj *s, uint8_t *buf, size_t size)
+ 	size_t i;
+ 	uint32_t instr;
  
- #include <linux/kernel.h>
-@@ -212,9 +211,4 @@ module_exit(xz_dec_test_exit);
- MODULE_DESCRIPTION("XZ decompressor tester");
- MODULE_VERSION("1.0");
- MODULE_AUTHOR("Lasse Collin <lasse.collin@tukaani.org>");
--
--/*
-- * This code is in the public domain, but in Linux it's simplest to just
-- * say it's GPL and consider the authors as the copyright holders.
-- */
--MODULE_LICENSE("GPL");
-+MODULE_LICENSE("Dual BSD/GPL");
-diff --git a/lib/xz/xz_lzma2.h b/lib/xz/xz_lzma2.h
-index 92d852d4f87a..d2632b7dfb9c 100644
---- a/lib/xz/xz_lzma2.h
-+++ b/lib/xz/xz_lzma2.h
-@@ -1,11 +1,10 @@
-+/* SPDX-License-Identifier: 0BSD */
+-	for (i = 0; i + 4 <= size; i += 4) {
++	size &= ~(size_t)3;
 +
- /*
-  * LZMA2 definitions
-  *
-  * Authors: Lasse Collin <lasse.collin@tukaani.org>
-  *          Igor Pavlov <https://7-zip.org/>
-- *
-- * This file has been put into the public domain.
-- * You can do whatever you want with this file.
-  */
- 
- #ifndef XZ_LZMA2_H
-diff --git a/lib/xz/xz_private.h b/lib/xz/xz_private.h
-index bf1e94ec7873..2412a5d54801 100644
---- a/lib/xz/xz_private.h
-+++ b/lib/xz/xz_private.h
-@@ -1,10 +1,9 @@
-+/* SPDX-License-Identifier: 0BSD */
-+
- /*
-  * Private includes and definitions
-  *
-  * Author: Lasse Collin <lasse.collin@tukaani.org>
-- *
-- * This file has been put into the public domain.
-- * You can do whatever you want with this file.
-  */
- 
- #ifndef XZ_PRIVATE_H
-diff --git a/lib/xz/xz_stream.h b/lib/xz/xz_stream.h
-index 430bb3a0d195..55f9f6f94b78 100644
---- a/lib/xz/xz_stream.h
-+++ b/lib/xz/xz_stream.h
-@@ -1,10 +1,9 @@
-+/* SPDX-License-Identifier: 0BSD */
-+
- /*
-  * Definitions for handling the .xz file format
-  *
-  * Author: Lasse Collin <lasse.collin@tukaani.org>
-- *
-- * This file has been put into the public domain.
-- * You can do whatever you want with this file.
-  */
- 
- #ifndef XZ_STREAM_H
-diff --git a/scripts/xz_wrap.sh b/scripts/xz_wrap.sh
-index d06baf626abe..bb760b721b2c 100755
---- a/scripts/xz_wrap.sh
-+++ b/scripts/xz_wrap.sh
-@@ -1,13 +1,10 @@
- #!/bin/sh
-+# SPDX-License-Identifier: 0BSD
- #
- # This is a wrapper for xz to compress the kernel image using appropriate
- # compression options depending on the architecture.
- #
- # Author: Lasse Collin <lasse.collin@tukaani.org>
--#
--# This file has been put into the public domain.
--# You can do whatever you want with this file.
--#
- 
- BCJ=
- LZMA2OPTS=
++	for (i = 0; i < size; i += 4) {
+ 		instr = get_unaligned_be32(buf + i);
+ 		if ((instr >> 22) == 0x100 || (instr >> 22) == 0x1FF) {
+ 			instr <<= 2;
 -- 
 2.44.0
 
