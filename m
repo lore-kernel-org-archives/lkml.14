@@ -1,113 +1,68 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3495414A96;
-	Wed, 20 Mar 2024 15:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFD7482C8;
+	Wed, 20 Mar 2024 15:05:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710947076; cv=none; b=pycuaz93X5tbYIxwTxq+SeZ758fHhypJzxkTpFRWSItwft8Ej2D5ctyKmGcTWgbNvwOow85nskyp2RbTT1Q/CmYyD4kCjExu/B8wekcHVhqs3VmULBY3OdxePLiDWEdYVmofeijarxRvJRp6b4Dqg+tTuBrjMfKXH91w7jGjmqQ=
+	t=1710947124; cv=none; b=oVnjxEw6b8paUNbT4NSAMPp46ExbZFZFjg3qhOG/96EW2H5e+M3Yja+jZPi2OVpnrhfgr+AqucN4L9UD/zUGe91/Wk7814EFiQyvx3JsyjHPWRvPdtO/sIaJ0X1H8lSErgwCV/TPTYDCXkD4yEbOklBVIWLTZN913UgN6R5R/g0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710947076; c=relaxed/simple;
-	bh=r4qoU7caFTXFSMlxngYHYAdTz9WvdriqwGcpKPfwAew=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Si8kDR0CxLKDgzPf+XOztJgX+Q9r7/cAGEodJGrmJ2M4uObQ5l+jAIm53rGjtCs2gCW5CA3lqNePTug5WNEbtP2Zu45DnU4tzGRa629xR1NLALIt8KBorz3sMcU0Q7fcAUtW9k7vfXyN0EqJxciPJ15qZLD6InObQi0tDCd+Dns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=RfSA+UhG; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+	s=arc-20240116; t=1710947124; c=relaxed/simple;
+	bh=0XLgUOOYOmd4r9qokLq/rbrSX8VMdpDGUVyTEoy0noY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mbBzGqjDP6MQ5srFsMam/od1BSMHXOXlFu2CqSTso4vXEVLZKo3i+iulc7V5+gU2k7/i6gVVx+/+15auO17YP2dg3nsNLLmfYz+PqYoEbL9s7jfO/zgPmhQXtwF5fWb5R7kSlVRHzY+5xpS5vP+6bBeTQtCkydybkcqOqhcjJJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=Cl+l9JvG; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="RfSA+UhG"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 58E531BF20E;
-	Wed, 20 Mar 2024 15:04:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-	t=1710947064;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EPnVyRoNctObdniIj1LYajBfdJ4KCDXA+i1lA4eN1Ok=;
-	b=RfSA+UhG2CCvT8s3keKol+jqb3t/l0Vw21Xp4Ejm+XNwtdyVT4kjlB4XEFKVcqv5bzcEc6
-	wX2fJI42+LksHzhgi+T8TAmfla9hnLdU+63L5FqEOR4RrIYVfXmtUA/3sJowNB6/+arSRJ
-	3dFMAdGdEzNXaiy8FAEvb8FtIzrr5Vxb9YQ7bKsxPoC8ZgCMnQnAxL22vjNo5Fq3DMpZUm
-	Kke1u5XpWYxbbu46BlExMVGZnIoUjRccIf7WwxCtnHn+6L53zQ+ApgAEm+geG9ansi2ZK8
-	+CmSUNTM/kXi9eyCtDL/HRfWUApIC3Ffp4N1/L3Y20iQ+oCjVqfw8FzG3GvelQ==
-Message-ID: <3ee60bfe-1283-46b3-9b7e-07526912f763@arinc9.com>
-Date: Wed, 20 Mar 2024 18:03:57 +0300
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="Cl+l9JvG"
+Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 1A5A21FA94;
+	Wed, 20 Mar 2024 15:47:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1710946058;
+	bh=N6dHreDxYiI/LsRMSZ272Q5m0H4lIeHxrk9p+czNgzs=; h=From:To:Subject;
+	b=Cl+l9JvGRYIC6/G3iJWLeUVMSneZSVYDcHjlyVTJi48/PngzvW8LTiWyoACKogTpt
+	 2wjuLneuB5cfOGwfTbblWr25WkZdG7OM14BpuPNZ4YW4dX93JaHEK1xfkMsboQ4xW8
+	 rXd8whSv7RWN/tL0rsS1lPfPD6vdFXEP1XkcXTxkMeKiVrEywEUZ3Yb7pBV04F+yD2
+	 cLLwLd+aDoCF5BZfDXesPRHRDbs9Wy/jQ245BkCbzcfwLOEHXlyfsjCwHZetKPcvue
+	 6hShUiQpz8CZ5VKkf9Lqt14MOgDFNwGKk52lTHcDBPFtV/pNR3eGgrAvSdLERsQ4sp
+	 6DM+2IRCiF7SQ==
+Date: Wed, 20 Mar 2024 15:47:33 +0100
+From: Francesco Dolcini <francesco@dolcini.it>
+To: max.oss.09@gmail.com
+Cc: max.krummenacher@toradex.com, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, francesco.dolcini@toradex.com,
+	kristo@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	nm@ti.com, robh+dt@kernel.org, vigneshr@ti.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: ti: verdin-am62: Set memory size to 2gb
+Message-ID: <20240320144733.GA16176@francesco-nb>
+References: <20240320142937.2028707-1-max.oss.09@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Fix EEE support for MT7531 and MT7988 SoC switch
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: DENG Qingfang <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>,
- Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
- Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- =?UTF-8?Q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>,
- Russell King <linux@armlinux.org.uk>,
- SkyLake Huang <SkyLake.Huang@mediatek.com>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- Bartel Eerdekens <bartel.eerdekens@constell8.be>, mithat.guner@xeront.com,
- erkin.bozoglu@xeront.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20240318-for-net-mt7530-fix-eee-for-mt7531-mt7988-v1-0-3f17226344e8@arinc9.com>
- <9d111cc9-c73a-4d3c-83f5-3f59e6c8841f@arinc9.com>
- <ZfrDnFyGay5YTTFg@makrotopia.org>
-Content-Language: en-US
-From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <ZfrDnFyGay5YTTFg@makrotopia.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: yes
-X-Spam-Level: **************************
-X-GND-Spam-Score: 400
-X-GND-Status: SPAM
-X-GND-Sasl: arinc.unal@arinc9.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240320142937.2028707-1-max.oss.09@gmail.com>
 
-On 20.03.2024 14:08, Daniel Golle wrote:
-> On Wed, Mar 20, 2024 at 11:10:19AM +0300, Arınç ÜNAL wrote:
->> On 18.03.2024 10:46, Arınç ÜNAL via B4 Relay wrote:
->>> Hi.
->>>
->>> This patch series fixes EEE support for MT7531 and the switch on the MT7988
->>> SoC. EEE did not work on MT7531 on most boards before this, it is unclear
->>> what's the status on MT7988 SoC switch as I don't have the hardware.
->>>
->>> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
->>
->> I see the state of this patch series is deferred on patchwork. I see that I
->> forgot to delegate this to the net tree. As I don't see any objections in
->> this series, I'll send v2 with it tomorrow.
+Hello Max,
+
+On Wed, Mar 20, 2024 at 03:29:37PM +0100, max.oss.09@gmail.com wrote:
+> From: Max Krummenacher <max.krummenacher@toradex.com>
 > 
-> Sorry, but imho it should go to net-next, and you might have overlook
-> it but there have been some concerns.
-
-I don't believe I overlooked anything. I've come to this conclusion after
-reading every response in this thread.
-
+> The maximum DDR RAM size stuffed on the Verdin AM62 is 2GB,
+> correct the memory node accordingly.
 > 
-> For sure it should not go to net tree as you are enabling a new feature
-> and not fixing anything which is broken. EEE on MT7988 works fine as
+> Fixes: 316b80246b16 ("arm64: dts: ti: add verdin am62")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
 
-EEE support exists since the commit which I've mentioned on my patches
-here. I am fixing it. I thought I had explained this clearly on the
-patches.
+Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
 
-> of now (see my reply), EEE on MT7531 was supposedly intentionally
-> disabled for reasons we should ask MTK people about.
+Francesco
 
-Are you talking about the EEE_DIS bit on the trap? There's no default
-setting there, it's up to the board vendor to enable/disable EEE by pulling
-the affine pin low or high. So there's no intentional disabling by MediaTek
-there. I see no need to ask the corporate regarding this.
-
-This patch series does not in any way enable EEE on the switch PHYs and
-MACs when it's disabled by default.
-
-Arınç
