@@ -1,75 +1,100 @@
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038193EA98
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 14:09:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.40.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C2D3A267;
+	Wed, 20 Mar 2024 14:12:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710943784; cv=none; b=UBAfLncNcMad+BNZ3502gzUQV+3KrYjH/2lIDRtIlZ0A3z1KVIY7aBp3ndTjmOAP63hJwtvi5Dv6HkXumkZ9wPyzg+ZLDurNkSQJv1hf+Q0E7p9Cfr+iRb27GEoSCU4ge8iV2vgV0XJRExT1SceoojxqD028CTztc8ygG1IdAxU=
+	t=1710943926; cv=none; b=qxKcQsyjY9xNAv1nqtY1ZPyoEW3MirECHU3eE6wxM2KUQEeVX/DQWlyNPlTnB/pkAaT0dbElcwywqVzLF9F/O0duVsa1ftmKRFzMUn1tjcMWHZvT9/LTCHPk7vSO5i5yiQ3uHqImGaYQ/2i5E+An0mAw2ZP17M+TSjpNhFbKj8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710943784; c=relaxed/simple;
-	bh=cUeoLhqhxAO/gfIfl0ulk6l/PXX+VNYlpSZYXY02GiY=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=hYsy3T+MQeff5wqnzdMh8r1TtP/ZgFvrKfiCyp/lycoO0efUznO7+Nx9S/Q38uZHZ2QzepQaVuvhGDcfdcQ6VdCfvnDqfe3+rEejkvl/ckZ0V0UTpPaNXL2y4X2oyBndeLPiLVvOELjI7BSKvbvbA6exc2QZgfOVHQVEGREpDSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=195.201.40.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id A464A6451633;
-	Wed, 20 Mar 2024 15:09:38 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id ZShp3J1YnL-t; Wed, 20 Mar 2024 15:09:38 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 1E08D6451635;
-	Wed, 20 Mar 2024 15:09:38 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 6KDg9rbOOcsf; Wed, 20 Mar 2024 15:09:38 +0100 (CET)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	by lithops.sigma-star.at (Postfix) with ESMTP id ED774645162C;
-	Wed, 20 Mar 2024 15:09:37 +0100 (CET)
-Date: Wed, 20 Mar 2024 15:09:37 +0100 (CET)
-From: Richard Weinberger <richard@nod.at>
-To: Petr Tesarik <petrtesarik@huaweicloud.com>
-Cc: anton ivanov <anton.ivanov@cambridgegreys.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, 
-	linux-um <linux-um@lists.infradead.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	Roberto Sassu <roberto.sassu@huaweicloud.com>, 
-	petr <petr@tesarici.cz>
-Message-ID: <156343757.79841.1710943777684.JavaMail.zimbra@nod.at>
-In-Reply-To: <6a62f534-463f-45c4-a5ea-2c1021cf45d4@huaweicloud.com>
-References: <20240223140435.1240-1-petrtesarik@huaweicloud.com> <9284cda7-d7e3-4390-bf62-58092e97d1c8@huaweicloud.com> <8d45f94c-bce1-4327-9573-cec254a4e9c3@huaweicloud.com> <1418379493.78340.1710886685735.JavaMail.zimbra@nod.at> <6a62f534-463f-45c4-a5ea-2c1021cf45d4@huaweicloud.com>
-Subject: Re: [PATCH RESEND 1/1] um: oops on accessing a non-present page in
- the vmalloc area
+	s=arc-20240116; t=1710943926; c=relaxed/simple;
+	bh=Va03ZUxbbz51yCWnpPZsPDEwDl8kD420jlyH6swzV+o=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nNO8+18eo0QEtvcjRSFO9L0+ZvzyykZA5c08Rwr2VBX8aPQ/nDCxH3ZeIJvH7//h2K9Z4oDLETLKl6LBD/UWxB5zX3NRMZgNPZfAy4zN40tcn76h7NElQhtVy+Es7kGM+zUMdEFd+2eXIEXDvXagRF2SXNulx+sPVHi3L5i3sOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=c6ZSdohP; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="c6ZSdohP"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42KDAd7A014690;
+	Wed, 20 Mar 2024 14:11:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-type; s=qcppdkim1; bh=v6pNyRmUfU9+7OKzKGP0
+	wgRaZBJdk/SqtsxZ7zd1x6A=; b=c6ZSdohPfWYwExiHisXfaHdBRbCNovWsasL4
+	Y5t6iA9lTobUX5561ZPLPBV3KIY7se5BJj6utJ0rYIOOK4qIEuZk8W9rFySKnEk2
+	/Y2fTN6pMeTFS3gC5v5ahxz0HI+VxWDzjDsiLspuR006KzcCQzyqYnAdMeDZxo1U
+	6E3K48WC/fRjHzAts+IwDqnklqalT7nWkzBKse9GSrDDVwJSBvwsJeKM4I7fJTo3
+	Cf9X3HuUgtdYUQOzRJZsrYTOvJLP1CE2KbaZ+dDnfXvTrfUziabt8B8+FHcBjQzR
+	noOiCO6g0BhqoqJXzSQosRjRdJYVm12HJHt/56jq0VFQlY1jiQ==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wyq60sasx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 20 Mar 2024 14:11:58 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42KEBwTX021057
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 20 Mar 2024 14:11:58 GMT
+Received: from hu-depengs-sha.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Wed, 20 Mar 2024 07:11:55 -0700
+From: Depeng Shao <quic_depengs@quicinc.com>
+To: <rfoss@kernel.org>, <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
+        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <mchehab@kernel.org>, <quic_yon@quicinc.com>
+CC: <quic_depengs@quicinc.com>, <linux-kernel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
+Subject: [PATCH v2 1/8] media: qcom: camss: Add CAMSS_8550 enum
+Date: Wed, 20 Mar 2024 19:41:29 +0530
+Message-ID: <20240320141136.26827-2-quic_depengs@quicinc.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240320141136.26827-1-quic_depengs@quicinc.com>
+References: <20240320141136.26827-1-quic_depengs@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF97 (Linux)/8.8.12_GA_3809)
-Thread-Topic: oops on accessing a non-present page in the vmalloc area
-Thread-Index: pOp1mjFQTnV9/3sqj8nu+xKmKml6Lw==
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: ffW9N3FpZ_K9dH_CgBgZW47oCFRT_sJb
+X-Proofpoint-GUID: ffW9N3FpZ_K9dH_CgBgZW47oCFRT_sJb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-20_09,2024-03-18_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ impostorscore=0 priorityscore=1501 malwarescore=0 spamscore=0
+ clxscore=1015 phishscore=0 lowpriorityscore=0 mlxlogscore=856
+ suspectscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2403140001 definitions=main-2403200112
 
------ Urspr=C3=BCngliche Mail -----
-> Von: "Petr Tesarik" <petrtesarik@huaweicloud.com>
->> Yes. I'm just way behind my maintainer schedule. :-/
->=20
-> Understood. Thank you for your reply.
->=20
-> By the way, are you looking for more people to help with the amount of wo=
-rk?
+From: Yongsheng Li <quic_yon@quicinc.com>
 
-Yes, help is always welcome!
-Johannes and Anton do already a great job but more maintenance power is alw=
-ays good.
-You could help with reviewing patches, testing stuff, etc. :-)
-It's not that UML itself is a lot of work, it's just that $dayjob is not UM=
-L related at all...
+Adds a CAMSS SoC identifier for the sm8550.
 
-Thanks,
-//richard
+Signed-off-by: Yongsheng Li <quic_yon@quicinc.com>
+---
+ drivers/media/platform/qcom/camss/camss.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/media/platform/qcom/camss/camss.h b/drivers/media/platform/qcom/camss/camss.h
+index ac15fe23a702..2f63206a8463 100644
+--- a/drivers/media/platform/qcom/camss/camss.h
++++ b/drivers/media/platform/qcom/camss/camss.h
+@@ -78,6 +78,7 @@ enum camss_version {
+ 	CAMSS_845,
+ 	CAMSS_8250,
+ 	CAMSS_8280XP,
++	CAMSS_8550,
+ };
+ 
+ enum icc_count {
+-- 
+2.17.1
+
