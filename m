@@ -1,110 +1,56 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01914F214;
-	Wed, 20 Mar 2024 18:39:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281497E761
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 18:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710959994; cv=none; b=PyCxHCSWDy0BGa2VEIjTV+88YoMj+URjARyaWAWr6aK2LGiVE+Aeg9TIiLhcS37u/RtZDY8oKSWpoO7iiPoyAuUBtEcCz9qrIx/uIuZeYx+LtmEnCde031l0+RxxPnNRI1V/AnhqJdIlxENCXGMn/hou3QR+CcG+p9Scs7ZnOeQ=
+	t=1710960041; cv=none; b=Hu6NMp7+jOPbRwUKARqw5B8wHvQhA5kUk9TZCi8IM15PfyhmfJkbv6UJ5UesT4b4TF0NORtBoBBJAbu26PCdZBJapFVM3qNa9oj9N8oIoMjt35f2CaoExNBu2+ulOfz3dT2wWAcxR5llSFxyX3ImZM60bdDHLwSchurjYwzf0P4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710959994; c=relaxed/simple;
-	bh=S/sytZTQ/V3fEb3RY0qv+twoobr9IaTxQMa2BQaJYzQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kR87SUe8BFHuxu8IeZ1h1n9c1iAHqqsaYU32d3Xa7Bjb8Ghhb1gED4ylLXO8q9yhGibHNEpJEVIuMXcEbfK9dPVaau1EJItzri11rUv+GX3zlLMU9IBXi49wy49VWsHL3VaYfzljACjMReSHLbjKnf52u7nk0jQi3UaFD13zjaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H5TIoIGo; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710960041; c=relaxed/simple;
+	bh=Xs4PBq6qNCG3M1b/48Y2i69dxtc4czrZRuoQL2YN7VY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=hYXV7ibcvk3frNM0psAZk/cauH/p13VPUjyMaZafar4nozGxBriWTH+3BGxSYgzVGs9fxsT782cLTRxGW46eMCMXRF+y9bV+geRBZAq4YNInYhuorqWwtPbT8TBUxlvK7OUrxQsxv93qCvdvM/d8ZBGryMR2tCBGIvmvXbuVg7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yre7rij2; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H5TIoIGo"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-430a7497700so1302031cf.1;
-        Wed, 20 Mar 2024 11:39:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710959992; x=1711564792; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xWRvU83WE/XxBo1v/F0X5t/KDOzdzaHYVuEHQEDHtYc=;
-        b=H5TIoIGoevzaoQUUJ+xBevuzfXysfgwcWqbsiNERd84oyEwpTiggF3ODIjjfSnku9x
-         zeLO1EFpufEHDvUMe0rrcR/EzbhdJa0ELd2rdHdi93/2u8yzsFcEySyCh3kEqEElq+uh
-         wbk7JPlkNnGfiOfIb3ugNeEIeSTaBVwPGf6O+fb3WSwQFyghxs1x8MFedogloiygajfW
-         XjTSpKW0+IULbjPtWXk344XscuCrOLpa/qBM7xmWpuQflye1A+EMsFeQ5fA71noPeCBA
-         tBBaBKzgP2HVhjfRJK4kD7nI6i7dMH2s8hrDfk9tMrgrifCRsREZISXQP8NKGlpYY99z
-         43mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710959992; x=1711564792;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xWRvU83WE/XxBo1v/F0X5t/KDOzdzaHYVuEHQEDHtYc=;
-        b=HykhJh5t95OQ2GZ7ERhhXkYTiH29PXEXz2sNV0/Rk5a6o7huCzWsUCRumaqgpRC41M
-         caQb0yWcXha+cop0aTAADFD94YY6VfD2WPQ65EHHO1AM7pDI1qPpgoeOv+hvIL03TQBt
-         43RKLlp6mZxFt8S1Htmetf8TscKxuEjUwYaCO3PzGXS+2cQfdD8m3Ie6EnvisuJIuJCT
-         yD0I9NctKnFYQsw2R57MS7npSPoQyqNJAZ81g65gZccsmddnoIJcwburKdZwH6DfdnY4
-         qTV7e563+yh/0Bby8GxQFTp20S41S7KFZySSeDNoeBh1+m9omoxNj6YE4PhKWo+QyMRk
-         Kztg==
-X-Forwarded-Encrypted: i=1; AJvYcCV6CikpnL5frIs1ZCzTeqnfiwMee0LmZcZx889YNPY5rX9stALf+mYvAJKKupykTyy60STjbp7ExzDlDFKNxUZZT43uwoNN8581VCSGJsnUxualKhJJ5R9q/XeEgvCKcxQYTgDWa8024SV4E+s=
-X-Gm-Message-State: AOJu0YzsamEDoGKCfVAZACsGcA/ol+c6BZhsLfdY9g2hTsLWp3niNX8b
-	4FrdH8xrnyKJiwKgonWo4fMw17D/QkMt7mvIEz14VhPTXyKiVfli
-X-Google-Smtp-Source: AGHT+IFS9uSNLSBh1XOFh0ALtqPOKyEM9BMZXRgz5Y/IEkIql9atTB8xsItHCTfp9JxRAMGj2zrWjg==
-X-Received: by 2002:a05:622a:1804:b0:430:ba7a:fe7b with SMTP id t4-20020a05622a180400b00430ba7afe7bmr14742759qtc.44.1710959991779;
-        Wed, 20 Mar 2024 11:39:51 -0700 (PDT)
-Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id fb19-20020a05622a481300b004309cf16815sm4019519qtb.39.2024.03.20.11.39.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Mar 2024 11:39:51 -0700 (PDT)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id A2C461200066;
-	Wed, 20 Mar 2024 14:39:50 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Wed, 20 Mar 2024 14:39:50 -0400
-X-ME-Sender: <xms:dS37ZTNLe09Fb7QwOs_4Cujp7ENOGs-njgdpGennczPhcTwd-YgdVA>
-    <xme:dS37Zd_yCHIJFuLvi_TKJu0-dPELv3Bf73eEmduVhXvuhQqRo3maMfitV-R9wWc7U
-    K3GCxI41HRCDwCd8g>
-X-ME-Received: <xmr:dS37ZSQb-NYnQ1yYjHx8GtzVqhXmtY62C6woSsHouHuE-My41hy_g5xYvGimWg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrleeggdduudegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhu
-    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
-    htthgvrhhnpeejiefhtdeuvdegvddtudffgfegfeehgfdtiedvveevleevhfekhefftdek
-    ieehvdenucffohhmrghinheprhhushhtqdhlrghnghdrohhrghenucevlhhushhtvghruf
-    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgr
-    uhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsoh
-    hquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:di37ZXtSGfJ4RJiEyvT6nQBMtYNjN417sebdNcahW2VJ27hGoq8NOQ>
-    <xmx:di37ZbdkisSEkTyCzfdzGZ3luAiBYSGNElPGLy-tvk3l1XEbmSY17g>
-    <xmx:di37ZT3oAxGEE_yQp_rk9e19dg15LESFaPP63oZOqs8wlqSPmjq1Sw>
-    <xmx:di37ZX9BKjIVQXbhRVtudAZ7rGPrcTvVNMWRjmCPbiox5G5ke6bugQ>
-    <xmx:di37ZemxcpF3Eo5mHsgVJRWuSxWUfQnKBdLyruG4jkKOjg6lIA-c8yOIHF4>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 20 Mar 2024 14:39:49 -0400 (EDT)
-Date: Wed, 20 Mar 2024 11:39:33 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kees Cook <keescook@chromium.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Carlos Llamas <cmllamas@google.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	Christian Brauner <brauner@kernel.org>
-Subject: Re: [PATCH v3 1/4] rust: uaccess: add userspace pointers
-Message-ID: <ZfstZZbagFLj7dqq@boqun-archlinux>
-References: <20240311-alice-mm-v3-0-cdf7b3a2049c@google.com>
- <20240311-alice-mm-v3-1-cdf7b3a2049c@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yre7rij2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710960040; x=1742496040;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=Xs4PBq6qNCG3M1b/48Y2i69dxtc4czrZRuoQL2YN7VY=;
+  b=Yre7rij2l+gap+jCCaHlQMej9TnE9XOacqdS8Kcety+9DofksuvZ9LZP
+   QxNIcrXg9ZXX/oyBpvMRK0E8c1RL2d7e6it6QSFM6CHrgICKAiFLEtY56
+   AseFg26w8aKEd3w98qrHe3mxKrYz5VUt7/UJprSoD9Vbf1tZNOAKii0mB
+   YyC7VXkfTXcryD7n22TZswM+aN8jNio+jSpR667JSY9z9G4iZ3VPVnxG/
+   NhJu2AMWvJ2/EM0l++noVmVaHQoxHCZu75v6e/61G0DOr2YDVx3Zw/ENK
+   Ovfz8h2cqXHQ5mpldWylfSt+wDgPanbWoGn26YfSxUMlq2e6fNd31uL6+
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="5787714"
+X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
+   d="scan'208";a="5787714"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 11:38:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
+   d="scan'208";a="18966972"
+Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 20 Mar 2024 11:38:21 -0700
+Received: from kbuild by b21307750695 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rn0pO-000Iqj-0h;
+	Wed, 20 Mar 2024 18:38:18 +0000
+Date: Thu, 21 Mar 2024 02:38:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Chinner <dchinner@redhat.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Chandan Babu R <chandanbabu@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>
+Subject: fs/xfs/libxfs/xfs_attr_leaf.c:1061:13-20: WARNING opportunity for
+ kmemdup
+Message-ID: <202403210204.LPPBJMhf-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -113,116 +59,117 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240311-alice-mm-v3-1-cdf7b3a2049c@google.com>
 
-On Mon, Mar 11, 2024 at 10:47:13AM +0000, Alice Ryhl wrote:
-> From: Wedson Almeida Filho <wedsonaf@gmail.com>
-> 
-[...]
-> +/// # Examples
-> +///
-> +/// Takes a region of userspace memory from the current process, and modify it
-> +/// by adding one to every byte in the region.
-> +///
-> +/// ```no_run
-> +/// use alloc::vec::Vec;
-> +/// use core::ffi::c_void;
-> +/// use kernel::error::Result;
-> +/// use kernel::uaccess::UserSlice;
-> +///
-> +/// pub fn bytes_add_one(uptr: *mut c_void, len: usize) -> Result<()> {
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   a4145ce1e7bc247fd6f2846e8699473448717b37
+commit: f078d4ea827607867d42fb3b2ef907caf86ce49d xfs: convert kmem_alloc() to kmalloc()
+date:   5 weeks ago
+config: x86_64-randconfig-104-20240320 (https://download.01.org/0day-ci/archive/20240321/202403210204.LPPBJMhf-lkp@intel.com/config)
+compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
 
-I hit the following compile error when trying to run kunit test:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403210204.LPPBJMhf-lkp@intel.com/
 
-	ERROR:root:error: unreachable `pub` item
-	    --> rust/doctests_kernel_generated.rs:4167:1
-	     |
-	4167 | pub fn bytes_add_one(uptr: *mut c_void, len: usize) -> Result<()> {
-	     | ---^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-	     | |
-	     | help: consider restricting its visibility: `pub(crate)`
-	     |
-	     = help: or consider exporting it for use by other crates
-	     = note: requested on the command line with `-D unreachable-pub`
+cocci warnings: (new ones prefixed by >>)
+>> fs/xfs/libxfs/xfs_attr_leaf.c:1061:13-20: WARNING opportunity for kmemdup
 
-	error: unreachable `pub` item
-	    --> rust/doctests_kernel_generated.rs:4243:1
-	     |
-	4243 | pub fn get_bytes_if_valid(uptr: *mut c_void, len: usize) -> Result<Vec<u8>> {
-	     | ---^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-	     | |
-	     | help: consider restricting its visibility: `pub(crate)`
-	     |
-	     = help: or consider exporting it for use by other crates
+vim +1061 fs/xfs/libxfs/xfs_attr_leaf.c
 
-	error: aborting due to 2 previous errors
+  1039	
+  1040	/*
+  1041	 * Convert a leaf attribute list to shortform attribute list
+  1042	 */
+  1043	int
+  1044	xfs_attr3_leaf_to_shortform(
+  1045		struct xfs_buf		*bp,
+  1046		struct xfs_da_args	*args,
+  1047		int			forkoff)
+  1048	{
+  1049		struct xfs_attr_leafblock *leaf;
+  1050		struct xfs_attr3_icleaf_hdr ichdr;
+  1051		struct xfs_attr_leaf_entry *entry;
+  1052		struct xfs_attr_leaf_name_local *name_loc;
+  1053		struct xfs_da_args	nargs;
+  1054		struct xfs_inode	*dp = args->dp;
+  1055		char			*tmpbuffer;
+  1056		int			error;
+  1057		int			i;
+  1058	
+  1059		trace_xfs_attr_leaf_to_sf(args);
+  1060	
+> 1061		tmpbuffer = kmalloc(args->geo->blksize, GFP_KERNEL | __GFP_NOFAIL);
+  1062		if (!tmpbuffer)
+  1063			return -ENOMEM;
+  1064	
+  1065		memcpy(tmpbuffer, bp->b_addr, args->geo->blksize);
+  1066	
+  1067		leaf = (xfs_attr_leafblock_t *)tmpbuffer;
+  1068		xfs_attr3_leaf_hdr_from_disk(args->geo, &ichdr, leaf);
+  1069		entry = xfs_attr3_leaf_entryp(leaf);
+  1070	
+  1071		/* XXX (dgc): buffer is about to be marked stale - why zero it? */
+  1072		memset(bp->b_addr, 0, args->geo->blksize);
+  1073	
+  1074		/*
+  1075		 * Clean out the prior contents of the attribute list.
+  1076		 */
+  1077		error = xfs_da_shrink_inode(args, 0, bp);
+  1078		if (error)
+  1079			goto out;
+  1080	
+  1081		if (forkoff == -1) {
+  1082			/*
+  1083			 * Don't remove the attr fork if this operation is the first
+  1084			 * part of a attr replace operations. We're going to add a new
+  1085			 * attr immediately, so we need to keep the attr fork around in
+  1086			 * this case.
+  1087			 */
+  1088			if (!(args->op_flags & XFS_DA_OP_REPLACE)) {
+  1089				ASSERT(xfs_has_attr2(dp->i_mount));
+  1090				ASSERT(dp->i_df.if_format != XFS_DINODE_FMT_BTREE);
+  1091				xfs_attr_fork_remove(dp, args->trans);
+  1092			}
+  1093			goto out;
+  1094		}
+  1095	
+  1096		xfs_attr_shortform_create(args);
+  1097	
+  1098		/*
+  1099		 * Copy the attributes
+  1100		 */
+  1101		memset((char *)&nargs, 0, sizeof(nargs));
+  1102		nargs.geo = args->geo;
+  1103		nargs.dp = dp;
+  1104		nargs.total = args->total;
+  1105		nargs.whichfork = XFS_ATTR_FORK;
+  1106		nargs.trans = args->trans;
+  1107		nargs.op_flags = XFS_DA_OP_OKNOENT;
+  1108	
+  1109		for (i = 0; i < ichdr.count; entry++, i++) {
+  1110			if (entry->flags & XFS_ATTR_INCOMPLETE)
+  1111				continue;	/* don't copy partial entries */
+  1112			if (!entry->nameidx)
+  1113				continue;
+  1114			ASSERT(entry->flags & XFS_ATTR_LOCAL);
+  1115			name_loc = xfs_attr3_leaf_name_local(leaf, i);
+  1116			nargs.name = name_loc->nameval;
+  1117			nargs.namelen = name_loc->namelen;
+  1118			nargs.value = &name_loc->nameval[nargs.namelen];
+  1119			nargs.valuelen = be16_to_cpu(name_loc->valuelen);
+  1120			nargs.hashval = be32_to_cpu(entry->hashval);
+  1121			nargs.attr_filter = entry->flags & XFS_ATTR_NSP_ONDISK_MASK;
+  1122			xfs_attr_shortform_add(&nargs, forkoff);
+  1123		}
+  1124		error = 0;
+  1125	
+  1126	out:
+  1127		kmem_free(tmpbuffer);
+  1128		return error;
+  1129	}
+  1130	
 
-, which should be fixed if we make the function in the example not
-`pub`.
-
-> +///     let (read, mut write) = UserSlice::new(uptr, len).reader_writer();
-> +///
-> +///     let mut buf = Vec::new();
-> +///     read.read_all(&mut buf)?;
-> +///
-> +///     for b in &mut buf {
-> +///         *b = b.wrapping_add(1);
-> +///     }
-> +///
-> +///     write.write_slice(&buf)?;
-> +///     Ok(())
-> +/// }
-> +/// ```
-> +///
-> +/// Example illustrating a TOCTOU (time-of-check to time-of-use) bug.
-> +///
-> +/// ```no_run
-> +/// use alloc::vec::Vec;
-> +/// use core::ffi::c_void;
-> +/// use kernel::error::{code::EINVAL, Result};
-> +/// use kernel::uaccess::UserSlice;
-> +///
-> +/// /// Returns whether the data in this region is valid.
-> +/// fn is_valid(uptr: *mut c_void, len: usize) -> Result<bool> {
-> +///     let read = UserSlice::new(uptr, len).reader();
-> +///
-> +///     let mut buf = Vec::new();
-> +///     read.read_all(&mut buf)?;
-> +///
-> +///     todo!()
-> +/// }
-> +///
-> +/// /// Returns the bytes behind this user pointer if they are valid.
-> +/// pub fn get_bytes_if_valid(uptr: *mut c_void, len: usize) -> Result<Vec<u8>> {
-
-Ditto here.
-
-> +///     if !is_valid(uptr, len)? {
-> +///         return Err(EINVAL);
-> +///     }
-> +///
-> +///     let read = UserSlice::new(uptr, len).reader();
-> +///
-> +///     let mut buf = Vec::new();
-> +///     read.read_all(&mut buf)?;
-> +///
-> +///     // THIS IS A BUG! The bytes could have changed since we checked them.
-> +///     //
-> +///     // To avoid this kind of bug, don't call `UserSlice::new` multiple
-> +///     // times with the same address.
-> +///     Ok(buf)
-> +/// }
-> +/// ```
-> +///
-> +/// [`std::io`]: https://doc.rust-lang.org/std/io/index.html
-> +/// [`clone_reader`]: UserSliceReader::clone_reader
-> +pub struct UserSlice {
-> +    ptr: *mut c_void,
-> +    length: usize,
-> +}
-> +
-
-Regards,
-Boqun
-
-[...]
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
