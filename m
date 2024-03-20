@@ -1,108 +1,120 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9996A34D;
-	Wed, 20 Mar 2024 18:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED946A35B;
+	Wed, 20 Mar 2024 18:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710957679; cv=none; b=iU+FVvNRbf3x4KKUuAIzJlqPmRJvTkFy+j2fMZwThx3VeBy5nW1EOZKyhuouusjeY+3Ul+zB+Djrnx9a5mUMnJ/RPtEO9PdbUx0+Wm6yG5Ra5ZLoiZaDLdubNnScUMKssLLLuWDvkfMQUBlyoqHP3UFPaZAGu7de0gW0YuAKNB4=
+	t=1710957699; cv=none; b=kZpmBy2Hg5te9c3hx/1ox4ZitV/ygas0LZ042ibp9bNHj1HAV6oPLPXRB9uXDukCGsljRAPbVEKbPXMsmY2LAh5B1cdF7G6iUafpZJS5ajHK1HDubVtCIdjB5Jw5UChcpSy5/+i/IDMYzeNics5OnCnTw3iuvYJgm7FE5bqGXWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710957679; c=relaxed/simple;
-	bh=ymr1f2mMkgEncrgAlT2WiV0Xxzk7YqhUaIfael4pJrw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kDkw5yCizjGxSsnQsxVA+a5gmxl9mlhSOGtQqmzUVxCxIYLoPgJ87zhTJm7H+GT6OvS8bf7hpT4kDkK+/W0HrYOQHUJ9Ccoxhr0l4JbwaytnxNMwNhDVqY2+EAsZBBPk/42xo02QTbNRu4m0+EejuLdUMRwtu7sHAgECLMm+Q2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kuEoqUvI; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710957699; c=relaxed/simple;
+	bh=llIBXk76Yuad8T3alnGEbUTLVx756v+KmjcXU9Ak8MA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m8WBTCLHzLzwbsS5ufjDzjqmJW6hDrniRZAwElLx8m5/SeQVXzkMCn2vWeLjC/kPk8zJRlU0P1Un0UWILkJRXtOqGMmG/9zwja08Y/sIweWk2uTRDrMZPjuP0B8xsJ+5SKcePrQALbk3RBvUc+vpprqNrwA4Y1SQ0/oLWygxfzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gwPoVxfw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kuEoqUvI"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dd955753edso578275ad.1;
-        Wed, 20 Mar 2024 11:01:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710957677; x=1711562477; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=j+EPj9HeAGH/gl0oSvfO1IUhtpAie7DUc9DIX8DS5vA=;
-        b=kuEoqUvIMVVis+xh3nFAnU0VLwysKTSOERCciUEU9D0Dy1CEsGao/FJ9JGi7JbspsD
-         uFuUAsEcXhBOGRDEKMA2x914uUQsnmwCFEarTxzcUZvj80/18wOQnRzgZPthG7aN64rX
-         BANv402shKTDngQdWb+W9jOBLY3eRSz9K3GnXOzs0b1kC3hDWrBy2WER/FzGNbmJgT87
-         lw59syFGwkF3bE8WjOX6vUFdK9jiiwYA0iYX4ucSqrIgfMfvCu4co1dT6EeHrR3y8bNq
-         hZkGva/aQHyExuBp7CHpbgp83G8/yW2xTfpC510uWz43MbrE28Tvp5cc+mM+6IRhpQlB
-         NaxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710957677; x=1711562477;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j+EPj9HeAGH/gl0oSvfO1IUhtpAie7DUc9DIX8DS5vA=;
-        b=Ypg9GpsP8Rpo8n6ggtq2mehpT3ohE8Zi1f8eutaasdwF1EtrQWz/XqYLdVAy1/rDGn
-         by6NGx/EZ6r1kTkDclTF9EPXisNeptXO1iu0u9AauKXQtdSX5ScEr/GYBC1nsD24ZO/o
-         Rd2bJkYS2TnxFS8Jjk9rYQNJzj5/Dxd0AtWPgAoNp4PI9diE/DvZaiEmKhSe5hUqMkUM
-         gsIQYoXc+L+RD29kSj+SDBvBdyKAJZmG3Me5E9KGLWmZ9nVy6lLSsYeV56pt1Ljjyf5p
-         nkHg+N3cUcF6S6KpfsrSxr/7A0rROwJ5hl3LStkKJOcoONeRqj1Bf+573/QWQpN+D3nt
-         LvFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVhMRov3l/c1IygqKQaJYYZ1451GrOxk4lDl5uZPtrlSy0ZG6TRDurv7FuEAYkqGGRVj5i0T0hDipZy8nviQlf7bd+6PCDYJasrh2bnjWjoJCMrRa7EgoPu9kWwmy6H39p7pDiMst4CMMVdGed7u3t342ZtFDsqp6/W0JF1aUFrEZxoui34
-X-Gm-Message-State: AOJu0YzBT/yniyY8O0fuQwRwHgkdse/ECQLkXadCqJQs3lfJqlv3KRli
-	2OC+QL2Y1q47jQIW6TGyuAcq+yaGe5Q3PnZKuvmBYijQsrBhSRxo
-X-Google-Smtp-Source: AGHT+IHM2XTem3JgVQP0IEX99GUflswwZbPvHTBC/KXEXyhYYIawJfvzbVQn5Y611HdY+Vb1VCov5g==
-X-Received: by 2002:a17:902:7790:b0:1dd:8daf:99b2 with SMTP id o16-20020a170902779000b001dd8daf99b2mr14382250pll.13.1710957677502;
-        Wed, 20 Mar 2024 11:01:17 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id jc14-20020a17090325ce00b001dd707d5fe6sm13937024plb.158.2024.03.20.11.01.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Mar 2024 11:01:17 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Wed, 20 Mar 2024 11:01:15 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: rafael@kernel.org, lenb@kernel.org, jdelvare@suse.com,
-	robert.moore@intel.com, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	acpica-devel@lists.linux.dev
-Subject: Re: [PATCH v5 2/2] hwmon: (acpi_power_meter) Ensure IPMI space
- handler is ready on Dell systems
-Message-ID: <9f6ee66e-f76d-46f3-8de2-516bad47311d@roeck-us.net>
-References: <20240320084317.366853-1-kai.heng.feng@canonical.com>
- <20240320084317.366853-2-kai.heng.feng@canonical.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gwPoVxfw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15A32C433C7;
+	Wed, 20 Mar 2024 18:01:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710957699;
+	bh=llIBXk76Yuad8T3alnGEbUTLVx756v+KmjcXU9Ak8MA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gwPoVxfwRZjCBKMju8mA83r6FEoT8PmuO0bob0NvMR2jWn/xwGFZZV4uEV9mG9rh9
+	 dSphKTn11rgn/UyOJ0FZYKqS9Xzh4No/BlfvkbzqaNaXlsLDFn/WuR5ZghgWyWx8PI
+	 08UkSDQGGtwXwJTukevbXDLZyQo58se/7m4N6U3klbycY1A/ukx9ubUYWehVePimC3
+	 LkIUC8IxgydlIEL138wzx6G0IezxFVc+c50zzoyGgprPF47KQok/fArXghUFejLgF0
+	 6gB1EkNtKPlDxf8pgEIaLDEAswHWYrw62VFrl101YqgzGCvvUNSo77+VBdje65XrJV
+	 4MsqNcq4ItQqg==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Tony Finch <dot@dotat.at>,
+	Sam Ravnborg <sam@ravnborg.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	linux-kbuild@vger.kernel.org,
+	Michal Marek <mmarek@suse.cz>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] scripts/unifdef: avoid constexpr keyword
+Date: Wed, 20 Mar 2024 18:59:25 +0100
+Message-Id: <20240320180134.100863-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240320084317.366853-2-kai.heng.feng@canonical.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 20, 2024 at 04:43:17PM +0800, Kai-Heng Feng wrote:
-> The following error can be observed at boot:
-> [    3.717920] ACPI Error: No handler for Region [SYSI] (00000000ab9e62c5) [IPMI] (20230628/evregion-130)
-> [    3.717928] ACPI Error: Region IPMI (ID=7) has no handler (20230628/exfldio-261)
-> 
-> [    3.717936] No Local Variables are initialized for Method [_GHL]
-> 
-> [    3.717938] No Arguments are initialized for method [_GHL]
-> 
-> [    3.717940] ACPI Error: Aborting method \_SB.PMI0._GHL due to previous error (AE_NOT_EXIST) (20230628/psparse-529)
-> [    3.717949] ACPI Error: Aborting method \_SB.PMI0._PMC due to previous error (AE_NOT_EXIST) (20230628/psparse-529)
-> [    3.717957] ACPI: \_SB_.PMI0: _PMC evaluation failed: AE_NOT_EXIST
-> 
-> On Dell systems several methods of acpi_power_meter access variables in
-> IPMI region [0], so wait until IPMI space handler is installed by
-> acpi_ipmi and also wait until SMI is selected to make the space handler
-> fully functional.
-> 
-> Since the dependency is inside BIOS's ASL code and it's not
-> discoverable, so use this fixup is a hack to workaround BIOS issue.
-> 
-> [0] https://www.dell.com/support/manuals/en-us/redhat-enterprise-linux-v8.0/rhel8_rn_pub/advanced-configuration-and-power-interface-acpi-error-messages-displayed-in-dmesg?guid=guid-0d5ae482-1977-42cf-b417-3ed5c3f5ee62
-> 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-Applied to hwmon-next.
+Starting with c23, 'constexpr' is a keyword in C like in C++ and cannot
+be used as an identifier:
 
-Please note that I'll push the branch after the commit window closed.
+scripts/unifdef.c:206:25: error: 'constexpr' can only be used in variable declarations
+  206 | static bool             constexpr;              /* constant #if expression */
+      |                         ^
+scripts/unifdef.c:880:13: error: expected identifier or '('
+  880 |                 constexpr = false;
+      |                           ^
 
-Thanks,
-Guenter
+Rename this instance to allow changing to C23 at some point in the future.
+
+Fixes: d8379ab1dde3 ("unifdef: update to upstream revision 1.190")
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nicolas Schier <nicolas@fjasle.eu>
+Cc: linux-kbuild@vger.kernel.org
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ scripts/unifdef.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/scripts/unifdef.c b/scripts/unifdef.c
+index db00e3e30a59..1cc31448fd10 100644
+--- a/scripts/unifdef.c
++++ b/scripts/unifdef.c
+@@ -203,7 +203,7 @@ static int              depth;			/* current #if nesting */
+ static int              delcount;		/* count of deleted lines */
+ static unsigned         blankcount;		/* count of blank lines */
+ static unsigned         blankmax;		/* maximum recent blankcount */
+-static bool             constexpr;		/* constant #if expression */
++static bool             constexpression;	/* constant #if expression */
+ static bool             zerosyms = true;	/* to format symdepth output */
+ static bool             firstsym;		/* ditto */
+ 
+@@ -877,7 +877,7 @@ eval_unary(const struct ops *ops, int *valp, const char **cpp)
+ 		cp = skipcomment(cp);
+ 		if (defparen && *cp++ != ')')
+ 			return (LT_ERROR);
+-		constexpr = false;
++		constexpression = false;
+ 	} else if (!endsym(*cp)) {
+ 		debug("eval%d symbol", ops - eval_ops);
+ 		sym = findsym(cp);
+@@ -895,7 +895,7 @@ eval_unary(const struct ops *ops, int *valp, const char **cpp)
+ 			lt = *valp ? LT_TRUE : LT_FALSE;
+ 			cp = skipargs(cp);
+ 		}
+-		constexpr = false;
++		constexpression = false;
+ 	} else {
+ 		debug("eval%d bad expr", ops - eval_ops);
+ 		return (LT_ERROR);
+@@ -955,10 +955,10 @@ ifeval(const char **cpp)
+ 	int val = 0;
+ 
+ 	debug("eval %s", *cpp);
+-	constexpr = killconsts ? false : true;
++	constexpression = killconsts ? false : true;
+ 	ret = eval_table(eval_ops, &val, cpp);
+ 	debug("eval = %d", val);
+-	return (constexpr ? LT_IF : ret == LT_ERROR ? LT_IF : ret);
++	return (constexpression ? LT_IF : ret == LT_ERROR ? LT_IF : ret);
+ }
+ 
+ /*
+-- 
+2.39.2
+
