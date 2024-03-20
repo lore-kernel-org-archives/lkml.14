@@ -1,76 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916AA85655;
-	Wed, 20 Mar 2024 20:06:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7084E8592B
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 20:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710965192; cv=none; b=f+7mZe55AUMJgKX1CwoA/HG54c9rqrIWVkPe8m/Fi6w/e+m/BXVlj61rz//9eE19HG2/EjVur3O1uU8P4kuzlvam4sPLFfBdz0jAgxTr8OxHp4IxU/5zv63v/EUOhX/au+6knn6nCQSBlowd+2msskxIB/rglP7dNF9n/GP0Go4=
+	t=1710965284; cv=none; b=i5QfKHtF6NOBs9qNI8Q2Zgu0d/ueW5kVFKuM7A2FK0yg2RejEnAmvvxlVhAzKO/duraZxK0f258HNa/Kpqly9gTutM3/rI2fhe0G58aFCsG4FZxRQI8isrlO7cWoIBh2k3NZEVDGJOazAn7bnylMb29mO36RfSkxQX1vHqO+Etc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710965192; c=relaxed/simple;
-	bh=AfBIQbAOtxbWlNuWHqgq4zXf9lgF4bMQpKxq3regi2Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VV3Rw7zbZLhyQe72FxUZN8knBeOp6xOEDeV1NMuxsvJSkJGSRnuc8Pa3+LNe98H9jc4AMNhs/0ttfGK6fvO7ywU9APINMnJgPQtPG0c9v0qMgeAFfI4O2MrNMykdNa/4SDmKteVM2As4LHcq4vYMtTkFfEhpsbI2CHU6k4vVaws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJNMlgKF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJNMlgKF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 064A4C43390;
-	Wed, 20 Mar 2024 20:06:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710965192;
-	bh=AfBIQbAOtxbWlNuWHqgq4zXf9lgF4bMQpKxq3regi2Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EJNMlgKF1qsochRYrEB6+rz6KJN0QNeNCMYOVFGbJpkmw9AvfyGSbydlLD/5Zbw52
-	 aNp2YZ5BP3eVBZQoRnBvG1ywxXgNHhcKXhQGErpdwy+fniYQCo4GMQGRC5E2LEI9ho
-	 tF97s8pey3LmzIC2HhkCqQQh4xA9vHFw2k8krbmc42qOhGnQGE3MRBfue5BU0tadFs
-	 BKkLvhLVUvUgTTUyne9ro5ooVKaxC3/eVNwlehNvXNNxrX6lwb45j5Nzln3CFzGQQV
-	 IxQYBY7i3bbl11KNSpaqqMtbP2fgyJBF1BbvPfcJkgtyjPh9P0OTbG3lk5lhZzxq/V
-	 vLkIkvokb8i9A==
-Date: Wed, 20 Mar 2024 13:06:30 -0700
-From: Jaegeuk Kim <jaegeuk@kernel.org>
-To: Light Hsieh =?utf-8?B?KOisneaYjueHiCk=?= <Light.Hsieh@mediatek.com>
-Cc: Ed Tsai =?utf-8?B?KOiUoeWul+i7kik=?= <Ed.Tsai@mediatek.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-f2fs-devel@lists.sourceforge.net" <linux-f2fs-devel@lists.sourceforge.net>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	Chun-Hung Wu =?utf-8?B?KOW3q+mnv+Wujyk=?= <Chun-hung.Wu@mediatek.com>
-Subject: Re: f2fs F2FS_IOC_SHUTDOWN hang issue
-Message-ID: <ZftBxmBFmGCFg35I@google.com>
-References: <0000000000000b4e27060ef8694c@google.com>
- <20240115120535.850-1-hdanton@sina.com>
- <4bbab168407600a07e1a0921a1569c96e4a1df31.camel@mediatek.com>
- <SI2PR03MB52600BD4AFAD1E324FD0430584332@SI2PR03MB5260.apcprd03.prod.outlook.com>
+	s=arc-20240116; t=1710965284; c=relaxed/simple;
+	bh=U+UVKAt/Bq8p2XJNRPjZNvXZ6YosjOH7xSAmcPxwOps=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=iy/l+Hty+X1zov6v6Pks3iBb/lrYh/AIZhQFhplBBUK4meVnwFQpdg5GEkXqvHjAOXPoTkZL7apHsNNrFTylaJNiybTjv0PSyo37WRJA8fOyMX3LtiDeNTw22YeYs6PHxb4b1dDktuabEfpnsArjQA+cdUm5XcJ3lm10zv/Z0yE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-36860170307so2687955ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 13:08:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710965282; x=1711570082;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=90ngouxeClPqd2Uy/VEUTMh551N/5NtUq2TP2nVIm+Q=;
+        b=MX2SW5ISpXjNlZZtbhaT4l7Mn4ZGigUY3VrUUA9KEHvT6iFKK7C1rhXa1P0LoDi/3A
+         OED70jVOf3xTe9F99NUbHF0exFkbSOpFzMVZN72zszRShh/Lj/HwgWLp4Lpm6lZk4VRY
+         suSVNe7Zh3QHgY1WztVLG/X0I2eeeLVrROrOiR4S8eDmkoubPunKnBtYVyGnaRLMaSvx
+         exXZezJU6MuCyo2t5zQkv+rvNkM4jRPtIkwH7jZJ2gWHsrENl9XCUS6TAHTOYXKKyFF5
+         bhtXEvVbit3mTN2fMZCcGeJBctmYy8819ccGELcf0dICLURh1AqfO7CuTd3WlIeg194y
+         ew6g==
+X-Forwarded-Encrypted: i=1; AJvYcCX3ED/27P5/B1yKcuHsod0Lg8mn+jx57kBx+QGTOok1e1uPM5zNWZ1UHBwyQvXoKR5mkGkUoYrFNrY9uU+/kdU4SydoHrqz3tuVI1KQ
+X-Gm-Message-State: AOJu0Yw1aeBYGAc2B/DbPYRJqUN8GiRrg6jKm4WOLR0hBjYukFZbSH1h
+	C49wtOlpM33sKvvinPvwB0gihaoqmnt3K1lCi9Unwp4swM6dAyO44iXmXw+9eeyQIWBnr6LSAYQ
+	AUQHLaBVGDZogVmR9z1DGQXqIj3dn1kcPE1c1L5EGOlDJqxwZwMC1cx0=
+X-Google-Smtp-Source: AGHT+IFRSgFMkgU5w4crMUDJ7kthxDKNL9C7Z1syq/rB6BCaRhzrzbNaiH9JCERgVxC0vDcoLAhfCgoOJW3SIHdDAfFpp7CxCPQn
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <SI2PR03MB52600BD4AFAD1E324FD0430584332@SI2PR03MB5260.apcprd03.prod.outlook.com>
+X-Received: by 2002:a92:c56f:0:b0:368:5b92:cfd8 with SMTP id
+ b15-20020a92c56f000000b003685b92cfd8mr67313ilj.2.1710965282612; Wed, 20 Mar
+ 2024 13:08:02 -0700 (PDT)
+Date: Wed, 20 Mar 2024 13:08:02 -0700
+In-Reply-To: <20240320113002.GA1178948@fedora>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e4b57b06141d250c@google.com>
+Subject: Re: [syzbot] [virtualization?] upstream boot error: WARNING: refcount
+ bug in __free_pages_ok
+From: syzbot <syzbot+70f57d8a3ae84934c003@syzkaller.appspotmail.com>
+To: jasowang@redhat.com, linux-kernel@vger.kernel.org, 
+	michael.christie@oracle.com, mst@redhat.com, osalvador@suse.de, 
+	pbonzini@redhat.com, stefanha@redhat.com, syzkaller-bugs@googlegroups.com, 
+	virtualization@lists.linux.dev, xuanzhuo@linux.alibaba.com
+Content-Type: text/plain; charset="UTF-8"
 
-Can you try this?
+Hello,
 
-https://patchwork.kernel.org/project/f2fs/patch/20240320001442.497813-1-jaegeuk@kernel.org/
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-On 03/20, Light Hsieh (謝明燈) wrote:
-> Hi Jaegeuk:
-> 
-> We encounter a deadlock issue when Android is going to poweroff.
-> Please help check.
-> 
-> When unmounting of  f2fs partition fail in Android poweroff procedure, init thread (pid = 1) invoke F2FS_IOC_SHUTDOWN  ioctl with arg F2FS_GOING_DOWN_FULLSYNC.
-> This ioctl cause down_write of a semaphore in the following call sequence:
->         f2fs_ioc_shutdown() --> freeze_bdev() --> freeze_super() --> sb_wait_write(sb, SB_FREEZE_FS) --> ... ->percpu_down_write().
-> 
-> f2fs_ioc_shutdown() will later invoke f2fs_stop_discard_thread() and wait for stopping of f2fs_discard thread in the following call sequence:
->         f2fs_ioc_shutdown() -->f2fs_stop_discard_thread() -->kthread_stop(discard_thread) --> wait_for_completion().
-> That is, init thread go sleep with a write semaphore.
-> 
-> f2fs_discard thread is then waken up to process f2fs discard.
-> However, f2fs_discard threshold may then hang because failing to get the semaphore aleady obtained by the slept init thread:
->         issue_discard_thread() --> sb_start_intwrite() -->sb_start_write(sb, SB_FREEZE_FS) --> percpu_down_read()
-> 
-> Light
+Reported-and-tested-by: syzbot+70f57d8a3ae84934c003@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         4bedfb31 mm,page_owner: maintain own list of stack_rec..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=527195e149aa3091
+dashboard link: https://syzkaller.appspot.com/bug?extid=70f57d8a3ae84934c003
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Note: no patches were applied.
+Note: testing is done by a robot and is best-effort only.
