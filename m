@@ -1,114 +1,149 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2078.outbound.protection.outlook.com [40.107.6.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BE81EEE0
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 07:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710919473; cv=none; b=uSMjj+u9SrLKsrndR46g1ppXOKxQCBn4wbdYlEQsDexn3HYvkTPPKwxLaOqMcKBKUndpE4QZNTFG/t1Lv/W3NhYwjobDdduNNfiIaNpsSU0rDZpCjlnp5woJ7+KhNT8PkVwrE3Jb8VB9glZgcIhC7uDAqsfiSMsPGXKw4xHPMr0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710919473; c=relaxed/simple;
-	bh=28P57Ke0dbK+IeJ0axzZcEs9sf1skvjRGuluIRciE+8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=h3zFg12uSL4SDW79/nbOUbPHRQIKBGMBaz1wqJ88lwf7R3uu0bUuzK33dKTI4JaeVovmcYHiWKVA5eoDOceFgZUs7QAPh7XGWu0MLam0tYaASKz+7q1JF1SNwYNdpCUTLBwWAeTClR5//K9SJsH5ZM21u3KOc9lmnbYxcmF323g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BoLHUiKV; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C1D1DA52;
+	Wed, 20 Mar 2024 07:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710919545; cv=fail; b=QkkPBmaILO9N7geUI6HtHaeLBCfhyAuTaW7+KVh6nyPNrmjceWg6ZPdM1/lL+CtCLE4Vg5pfM2RLILnaN9r5Fe/vNiYVk872qLfGd77v1ynmxk6Cw2oBML2HiGgtgaaQn9D3BPTuYIhvw/CW02xq9DF4Tri6BTw9Q+UvFkNPEtc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710919545; c=relaxed/simple;
+	bh=Um/r8MknPez7aM61iNWInogMj4nRNUtHBG8Bz5D+FIM=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=kVWcKQLY2Jw6Q5OooRSeRtZvo6H5He9aTfHlbRuO02u2zDuMu/kD+LyY22yFm1rmWGkhdeN1ARN6oi6X1JqatH5wKs0fR9OzoQnd3Qkxu+BnEXdi5B99rRkdAbB+Zv7GflgHg43FAOMevLOnGKmIwJJiEg14Ti2wZdRpVhn2Q4w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=fEUfB3p0; arc=fail smtp.client-ip=40.107.6.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BoLHUiKV"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcbfe1a42a4so11346240276.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 00:24:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710919470; x=1711524270; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bdxVN0VZOTjmFNJigRO9F2rl5jmImdVJnsiuxriNi0Y=;
-        b=BoLHUiKVbI13VdVfl9qbwJ4R2ynvZBitxHrALui6NzdSWYxi/xOS65ZhdmPiVPNqIS
-         gP4wPz70I76X2tWqyhml9QpX1y/unMC2QA2wLpcY40fn/sqBwc9WMm6PiiyMS3a+QyYG
-         Hyw7K7CjudWbsp9ux0sYcDjTUiTlg5gf89l3rkuHSDJnoV+N+5PATMAdZls/Ksrn8F0T
-         Ld71iIQMfIOnDD3hH5AZIn209dGEzAhoo5oTT2UTAfj3X+AQl4dgEpZG3FNUrE3Tr3l2
-         9VlAqqhELmvGk+sonEcOaLQjZOaXKhf9IV3U+mCWDGSlWDxlY6YJgklVZx3Gb1Xd8XSQ
-         rnHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710919470; x=1711524270;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bdxVN0VZOTjmFNJigRO9F2rl5jmImdVJnsiuxriNi0Y=;
-        b=bu8NwstF/xM/NZi/Pm1rjvIe4i3ndXEejsO3hy/snlehHV9UdSWdj9Iuz9ZoCDtMsY
-         ntqu0PvdmktIYb/jAVR2wMhLj/kQOKSZZyhZys6F65dw3x++iI7BjFVZqtlrA9Qni33n
-         T7JlZHJTP2ZxppbTXFJ98UgBllw07us8d07vySJNkFMdasQYVDBUfmrcBi8GSr5nAsjx
-         vYZi7mxOtF3+u3QGvZJCMlWP+k035drnPJERyjckSZdDnhfh3D2oAjpCZDDCn7jg0OB9
-         Lrgd5XKd8Re8uqyox67v0Ea41YpuSC8LxIGnYHlHdGM3enk8ZsmQlFBwA1/+oNOuf22K
-         B6CQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWv0nG00MSKOtiVBPyXmVCHNKlJMUBLqTT7rHcBfEY0ZL1cbx++SFx/gyEj9i7Wfsd1mysYvzjdGQuhIJ5JF+ob8Jtv1YWC4iH/ov+R
-X-Gm-Message-State: AOJu0YzQHkL7DLOrV0c4Qbw6EqeHIXXp0qn7nk2pdKeTmAK8/dYQl8di
-	cYWMwfae45oZDMCSUHlzVj/nlbhGIwD/V4+6w0eLEHAqHC1TPLd3WvdLgteyUN4SMOJADRYyN6j
-	+u2ADuvYkDZ2cfESotg==
-X-Google-Smtp-Source: AGHT+IFAjPaqqQcKbeydP6MHZQdihePR91rwKuw9/CirPYjLnwS1+VvZ7x1qZMlGNReEhNYJtzqSLF4ZeO8jzrSt
-X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
- (user=yosryahmed job=sendgmr) by 2002:a05:6902:100e:b0:dc9:5ef8:2b2d with
- SMTP id w14-20020a056902100e00b00dc95ef82b2dmr4326404ybt.4.1710919470153;
- Wed, 20 Mar 2024 00:24:30 -0700 (PDT)
-Date: Wed, 20 Mar 2024 07:24:27 +0000
-In-Reply-To: <CANeU7Q=yxf0dnerTOZfe_ioeCbjnZd2Fpb-szvW7-Q1BzCUpOw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="fEUfB3p0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lpaDLVxmN1ZmZGOsZdO8FHijeBOYqwt0iovkBdMiFhbt8tTDESdG/DyxUTEWAk8MX5wXZf7Pcazkz+c+sqWQczJQZZ979sd4Se1LYPN/xWsstapcOrzTjI6XcLpP4NC85PLd0TTPviC6/Y9OYRVe014Pl3eu0lpmMsHIq+CFRsTNq6jQ63h92unPkrvrxw/eXpYEf8UjpBrqVoaVvznTkFgDDBC5LNwdIgbUh4HsD0ALeSoipeppj2/9Enzm0i3vwFymD+sYSak/bHkca8Aae9I3PIPxTuM7RCyFqoZKpGGhnyzDfeA5yiJu/rg2reCn5DBOL5hyifVSegph5ZBJ1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bmi7PaoJXslA/Tr/W4aXut8MnEAB5rC7JmKve1KfteQ=;
+ b=nMH7R4tyDyRmIR+hafRUOG6H/nOZhbv5t3ZYhYEIbeUOs4dWgSw3lq2/EUDcmhBCjFoFPyVz3TyF3EU8ezv9Byxw597vctAaWX5TYjs/qOCNIpKbJWy/jZVC7rzQs6EfE/vb6aqj9YzTFLlEq0N2Zue8xeUgnGaMbIfMC5gb3Euzt4KPMvRXoGDtev3XK90k+zw1HC2WcnU+w0iBH/wU/ErYbXyYJtwf3f3IuQQcPi1uLYU2JjrQFNqUATOKKpcNcjqBz53m7L7eYS0qEKhXA5ot41W1hmZfsS63CsW3LdnlO8ztkLFd/g346omurVsG9uUT1iC70TQuXEVTia6i+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bmi7PaoJXslA/Tr/W4aXut8MnEAB5rC7JmKve1KfteQ=;
+ b=fEUfB3p0XbTg1yQN20stDgawUT/i+yhH/jGEsM/Lo5frg2dXpyeKYLiAveH2iR25DqLHRTTXdu8jL9c9FQEBFHzN54hp5ULL+8xgwNvJ95ZWuiYHcLHSm42Hb4sDbLRjIG0CGGgfvVnq/NRcoM/VU0w1AH3iMlHetwP/W+1h2Mg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
+ by PA2PR04MB10157.eurprd04.prod.outlook.com (2603:10a6:102:409::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.28; Wed, 20 Mar
+ 2024 07:25:40 +0000
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::d30b:44e7:e78e:662d]) by DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7386.017; Wed, 20 Mar 2024
+ 07:25:40 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+To: linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	andy@kernel.org
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V2] gpiolib: use dev_err() when gpiod_configure_flags failed
+Date: Wed, 20 Mar 2024 15:33:44 +0800
+Message-Id: <20240320073344.1563102-1-peng.fan@oss.nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR01CA0010.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:191::12) To DU0PR04MB9417.eurprd04.prod.outlook.com
+ (2603:10a6:10:358::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240319-zswap-xarray-v7-1-e9a03a049e86@kernel.org>
- <Zfp-iWaDfqeCOElt@google.com> <CANeU7Q=yxf0dnerTOZfe_ioeCbjnZd2Fpb-szvW7-Q1BzCUpOw@mail.gmail.com>
-Message-ID: <ZfqPK7AVunq2SC1l@google.com>
-Subject: Re: [PATCH v7] zswap: replace RB tree with xarray
-From: Yosry Ahmed <yosryahmed@google.com>
-To: Chris Li <chrisl@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, Nhat Pham <nphamcs@gmail.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Chengming Zhou <zhouchengming@bytedance.com>, Barry Song <v-songbaohua@oppo.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|PA2PR04MB10157:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4a4c2a12-a10f-4549-cb4c-08dc48aef13f
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	8/KWr3YHereSTi/g62fptLOxI8mHHWiZ8kUgvLEvMXX62Y7BAnQHJ7ifrRgnrZRxUHUVQQNvB75BJTFlJBNhOxHc89WPyyoD5tcHPcMKNJs5vXvelSx/5nOcMuufZvQxLX2GJ7AfCaWF1dlPrSbGAE9NjSJ3SMMBTyjXCW2hUNqaE4u2fKmtDkplY1Bkwq92WNFu22q65Nko7faziCtHUJBt36F4bHU+PyWN8K/r/CURqnB3JN/DLCWeuLHL50/p2D0ow0fe3Ta0+ZRiwUeAbZrdLC/6dX9qnXorq8DjYitbdKQUDjLEGlh0vzt6ma44d7N9hVG4E4Rk9lN4+G+msnRBY1rpfnWgfouWifYHoTcNyFWd10TbieLdvCOLMX2ok6LJsHw3yI6QoLs9Ik7+N64/EQy3Zreoy3zEy8ecZlr1KlSUrliAGx1DFpEX5rnhmizpPuFSItdNQGvCg64yHFR7xF8eZYm7jAW0tklCIa7JYC0iUvztTkSj+4GEg4eVA7KOA+3eAJ6Emtu5po22LzVR+B2dQELIYMBkRx/CaWgJyFT2VRfdrcJMIFZ9bFWZhXu4lKhFdbgBba7sjyTz+bt+5JPUEdomE3oJ1mrNyAlcIQtRbYtxMs0hLEIvA4YzSlI2QRd3BTE1+FvZWW+WQqs0MvnXEPQBnWOYS4YEcaEXzBMGK9g45kSCbE/+tmHuElxTpcjKK4YwqgrEJMyFpO2/O7SRIMMwi7HlrabTK2k=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(52116005)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?bCG+ewoV4W7RwzHDwcGWgTkirK50ak0BcMJELJ+GXDnv5vcFZNV0QDtt3WiF?=
+ =?us-ascii?Q?uKaKLy3avxd1lBvkEzCUYf8Y65PHrWYAHyzY99KFpDU2NG+LfZMmPbULeI6v?=
+ =?us-ascii?Q?G0V34Tg7PPyp0p7gXjNsTgGjNWHXNBbSgbJt1Vto3Tf8KcPU0FOA5l5wOZ8h?=
+ =?us-ascii?Q?7P2QYcfEV7P3+J7os7np1xXno89/tkc6rUu/HsUwWgTdaFbea9Yza4EFxE/8?=
+ =?us-ascii?Q?ybXtVeotG/KIPNpTkY8E/bbQwZxsQE9E7GhsJP4h2OFoe+FwuDfGjHA0HYI3?=
+ =?us-ascii?Q?tvdsY8HptxiVXoSs3wQnzgis/IX+U8yRJXCbEZbaus52NTJIxaIBmHlI+o/R?=
+ =?us-ascii?Q?8t8BGBc4OVFJSLvOdwUwJ0FWWtmNLGo/ctsFxwrLIxRQIAUVx5zp20bfObbU?=
+ =?us-ascii?Q?U6VMX/29kyYUdkfAW4rKrtkuOYc9ZdWMNEqKVzlJaEEFO9qYPStGRjBfugEp?=
+ =?us-ascii?Q?dvUBGhx5FzhKUNNEqYIOwlDwT3g4ZLVk3v5HDPu8lSXOojtWPDBuLaBq2R6l?=
+ =?us-ascii?Q?FVWfkz+yS//F6UZWDcsbh/RDO48bdNIGd/IVP6rv372vi71ryKEhDNFzYX/W?=
+ =?us-ascii?Q?Nz+5T5I/O75r+nsS/tL7zoLKgpwUbCUyXfu62eHYF/ZEk5YwwQ51fbkhxkEL?=
+ =?us-ascii?Q?DS9+dxrA71dTCykGJEgl1liHJLZa2ZRu9umgWOP3F6b1189JIShujcZRHANz?=
+ =?us-ascii?Q?yVffH2TMS9OwEo5e6GgajQK50KsTAtG+mXBLGGz3PG06C8mdqlpBZ0KK9ALW?=
+ =?us-ascii?Q?Qm94WeU/O8YskmKLLCOKOrE1CyJmar3PEoVWp9JdWfgSKkdWZVuJHRXZ9F3X?=
+ =?us-ascii?Q?1BOVBmP1Pp4FylMSB9Zv19KdqPjdRiYJDbPXl2J7UA6c2RAxS9h/aalH0RL8?=
+ =?us-ascii?Q?2NYwIAvjcqE4JbcIoJRYGVCdZIRm0bSijhZrM1PwqucrC+6IJo0kig2VPphX?=
+ =?us-ascii?Q?JAmaw2MDLhaYsP1Npi/jnjxar/HbQRQZKj58cCOtqnQ7aZiPFnt8qVZg1ZjM?=
+ =?us-ascii?Q?2P/sWYSnvJL44PqWUFxUDaZIWu+63op/5ziOazOJvTc/iwjyj7xnfPK/HTz7?=
+ =?us-ascii?Q?pJPQjtHO/0RDuBySyqvnlybIs2cawiEVVLMEi4IRo7RF3tvigcokSEK2J1iY?=
+ =?us-ascii?Q?4svvIz3zez627OX0jpN7sdcu5cfpBYlR9h9INzxSqEaG346PLaHNmxS1Pcnd?=
+ =?us-ascii?Q?vning4vI4mwSK4GwriNT6guD90dHqR9v8+j9Ut1FNZOwWMk4OoiE1B/NEcrK?=
+ =?us-ascii?Q?L3FnXioY8X7anemD709D2yTG2mrk0mN8LtfwT0ZwZRJ0XjtIJQFuFFLdSmQS?=
+ =?us-ascii?Q?bNw57VXNPpp2Se2Pd9Gsno7sHGJ/7vifYWl50i0YMMl6KyeiWvh2lDulXG8Q?=
+ =?us-ascii?Q?qbP1WqJfg0knypdQvJaRi1yCis8AXwZgHvSlp6NFcJqnnGZwbtDpAr8DF5ga?=
+ =?us-ascii?Q?be2iwpGLwbZmiAYxC4zcRGKXad6Gce+sL5UkX02EkETK7TDymqsKg0tTe2J8?=
+ =?us-ascii?Q?QIY8yoNAlO6pHefENUhICm9+zeFa4+gFS1nheo78H6Klz8xYxBHMXa4akLa+?=
+ =?us-ascii?Q?jpF48avZQXihd6jOqgzI9SQUxqkg0parSuF4vJt0?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4a4c2a12-a10f-4549-cb4c-08dc48aef13f
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2024 07:25:40.6357
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FOrC2gUb3BP+yk/6Rby/ejZ8zwb/jAXwlh61u1HFJ7sZLfdVho87LNP0N9eEbdxe3AzktAdAfGwGNxVJVGBvdg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA2PR04MB10157
 
-[..]
-> > > -     /* map */
-> > > -     spin_lock(&tree->lock);
-> > >       /*
-> > > -      * The folio may have been dirtied again, invalidate the
-> > > -      * possibly stale entry before inserting the new entry.
-> > > +      * We finish initializing the entry while it's already in xarray.
-> > > +      * This is safe because:
-> > > +      *
-> > > +      * 1. Concurrent stores and invalidations are excluded by folio lock.
-> > > +      *
-> > > +      * 2. Writeback is excluded by the entry not being on the LRU yet.
-> > > +      *    The publishing order matters to prevent writeback from seeing
-> > > +      *    an incoherent entry.
-> >
-> > As I mentioned before, writeback is also protected by the folio lock.
-> > Concurrent writeback will find the folio in the swapcache and abort. The
-> > fact that the entry is not on the LRU yet is just additional protection,
-> > so I don't think the publishing order actually matters here. Right?
-> 
-> Right. This comment is explaining why this publishing order does not
-> matter. I think we are talking about the same thing here?
+From: Peng Fan <peng.fan@nxp.com>
 
-The comment literally says "the publishing order matters.." :)
+When gpio-ranges property was missed to be added in the gpio node,
+using dev_err() to show an error message will helping to locate issues
+easier.
 
-I believe Johannes meant that we should only publish the entry to the
-LRU once it is fully initialized, to prevent writeback from using a
-partially initialized entry.
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
 
-What I am saying is that, even if we add a partially initialized entry
-to the zswap LRU, writeback will skip it anyway because the folio is
-locked in the swapcache.
+V2:
+ Update commit log
 
-So basically I think the comment should say:
+ drivers/gpio/gpiolib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	/*
-	 * We finish initializing the entry while it's already in the
-	 * xarray. This is safe because the folio is locked in the swap
-	 * cache, which should protect against concurrent stores,
-	 * invalidations, and writeback.
-	 */
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index ce94e37bcbee..37fe9db0bd74 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -4233,7 +4233,7 @@ struct gpio_desc *gpiod_find_and_request(struct device *consumer,
+ 
+ 	ret = gpiod_configure_flags(desc, con_id, lookupflags, flags);
+ 	if (ret < 0) {
+-		dev_dbg(consumer, "setup of GPIO %s failed\n", con_id);
++		dev_err(consumer, "setup of GPIO %s failed: %d\n", con_id, ret);
+ 		gpiod_put(desc);
+ 		return ERR_PTR(ret);
+ 	}
+-- 
+2.37.1
 
-Johannes, what do you think?
