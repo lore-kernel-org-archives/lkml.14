@@ -1,81 +1,89 @@
-Received: from out203-205-251-72.mail.qq.com (out203-205-251-72.mail.qq.com [203.205.251.72])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97180EBE
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 00:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212EA4C7E;
+	Wed, 20 Mar 2024 00:41:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710895295; cv=none; b=CmKgcoTfJSEkcSn0YJilQ46b+BOmFn8u4OiX+LIynehV/2BUZwBQy+GKuzHHxntob5sWY9N4sWPlcdbVBz8q1wlhWJB5bn7C0Zc9eCDCwUF5ca5yHHpt1tOB20w/bD+3DCLJdcvScKQ3EOanvELy6EY2H0yxLV6RZGpzBbeT1BI=
+	t=1710895310; cv=none; b=aPuzcQqELS4/8bxoerH/piexXK28VNweC5ooAoAw4ptT2/Da7axFQLfnIePoj5vCMx5H+pwvsNNNj6c2Nkqn6mEJ7HRCzgkgSGgpj5sYyMcSjPdkHaf5GWm1X/ue02O2LHaJku6QBK2baGkhVhVQFJbX5LAKxzjqqJH9F6a6QeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710895295; c=relaxed/simple;
-	bh=5V1/VssmcY3cCOU4PToAPUGg5p5+EYYrTBDp+PGh2Qs=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=OoDXEaAaECkIV4CWvaUdkQnIAztUDeo116XaohCrj1MCUbGOhSxdqy4h55eotUPq+OGIFqnVnVaB8K7VqnA36r6lOBEo9XcxNO3LKfuEy79TQvWYNfFxUrBI1zxDgPJemntgs/CL1Q/yYUSiefJg4ocw3RKBbs3iLypzc+54XZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=AN1Ed0fD; arc=none smtp.client-ip=203.205.251.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="AN1Ed0fD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1710895284; bh=jVXsIxDLw/0EGcYMXHwp/WKStgKTPad0I05nXur1XDE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=AN1Ed0fD8zXk0FyhAvauXixTnNdlqfvNe5vYYYRePt+QFSUTs5HsdQh4HRDIwM9fH
-	 pIXjvV2EiJDPkREnQ18JfXmIAClYXKEDm0LIUIUC7YVzfK8o1lrLfPui1kL/S5SXZ4
-	 Nq/5rwX2kpz6HL8w/3HhfW3uR3ZCL+m0bFCjrVGo=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
-	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
-	id 84DAAA74; Wed, 20 Mar 2024 08:33:13 +0800
-X-QQ-mid: xmsmtpt1710894793t523ocv8i
-Message-ID: <tencent_79DD6EEACCA727D846F212CE8679C998EE06@qq.com>
-X-QQ-XMAILINFO: MFdGPHhuqhNojI959x8ksgENUloCkhtjVpaQmhHzjH9oSX2g0pwB1r35zcsIdM
-	 Qiq8TxUimp7zwvupuUyby4rfRIYD/+zTdGLrmJGXqjno860myUxaNriS+psRDZQYgmCex6WQtn1r
-	 eOsRok19B0dlGwj0yanPxtGiGYYRGvw7epUo6DgKpzP8dVAsv6yVUpAktNcZ0rTis6E/M9EnsOMG
-	 imsPuppp6+q0/DnHVa8pdTHe2d6F6ZHfSeXzXsSX7sSo43WQhV50qr+fVjZiXXi+Ac51YyibVwXs
-	 8FM6D2BxVetdgT2AlFnrlkKhTAeihWnRG16U5kJq55o0vph7bRxiEPo/lBHJZQPfX7A8jaiuhNra
-	 +TT6BGefCVd097L6b4TZrveC6RXQDwCKZwa/ogyJn7eCAn5/FNfLxCwJb9Ce58qwgj3JbGPWVR+d
-	 DWA885yY7w9F+utg/VAvHq+ED+QdQiKd6T6/gbUsXbJ5gspmlJ9a/zPMbLIrN3ZMVCjK9Q8PQsLb
-	 /q6ZTbl3wm7yFD96Oazm2jHxYPRxIbW8BrUvpmuhTrif3KCKZRAqfygOJbImuWlKeTJjqRZS5cZm
-	 4T6+TyqM5mj7vmRZGAqFEzBCb1jmnZt9J6T/s2fvgeaAHInJ4syh9rbe3nXzEv+JFdGE72zsPF5p
-	 SKD8GQKbdXdtWi2ZANtZIPIMpyLMX9aFE4DsS1d8Xu7Zmv4I1gXs2/qsV2pVlrhz4/PpooYw5Kyo
-	 vseY7PVhQyRkAwl+QdjD55AJpQw61N1/rAYrUvOm/9LA1svlNNA84gv8Czq9q2BMTQUlbP5ISBLi
-	 vl8Oxrzroe1zo+aLk4XWUoI1u8bUihu3p4w1IbqneH+7EiGz+f+f8Qq2XxYTbOwN9PGGwDvxYdvz
-	 kAGuowIC3b8oO+qFqrv0KuTEe13hFJJJ4tewbxwkZWOq3kPZ345EUHlLZjyOEXpsRyFKgQxiA7wG
-	 E3996MhKk=
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+33f4297b5f927648741a@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [bpf?] UBSAN: array-index-out-of-bounds in check_stack_range_initialized
-Date: Wed, 20 Mar 2024 08:33:14 +0800
-X-OQ-MSGID: <20240320003313.618186-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000003dc8e00614076ab6@google.com>
-References: <0000000000003dc8e00614076ab6@google.com>
+	s=arc-20240116; t=1710895310; c=relaxed/simple;
+	bh=ajojewtS5GOwYcGGsxv3U2sYM7eoNoLJkIimpLEMk7k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LT2hN8FjCHqGayNtmxp2lqAfmDDEMQrIwWq46tjLrFjECqj+HmNqf3Aj/YqprObr0DYuL+Hn+eE0oZq88tROdFZcGY+Vo0y7kcn1IKaWfxaXJujRc0zZZzC2upAmv7+voyRd4xRbpgLagYD9mUZBOoyjuxhamDiPG5ebWI0UsWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A464C433F1;
+	Wed, 20 Mar 2024 00:41:47 +0000 (UTC)
+Date: Tue, 19 Mar 2024 20:44:10 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Joel
+ Fernandes <joel@joelfernandes.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>,
+ Daniel Bristot de Oliveira <bristot@redhat.com>, Ingo Molnar
+ <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ suleiman@google.com, Thomas Gleixner <tglx@linutronix.de>, Vineeth Pillai
+ <vineeth@bitbyteword.org>, Youssef Esmat <youssefesmat@google.com>, Beau
+ Belgrave <beaub@linux.microsoft.com>, Alexander Graf <graf@amazon.com>,
+ Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>, "Paul E.
+ McKenney" <paulmck@kernel.org>, David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH 0/8] tracing: Persistent traces across a reboot or crash
+Message-ID: <20240319204410.6cb9842b@gandalf.local.home>
+In-Reply-To: <202403091234.DE25C77028@keescook>
+References: <20240306015910.766510873@goodmis.org>
+ <202403091016.5CDF0E2EE@keescook>
+ <20240309135116.40f65cee@rorschach.local.home>
+ <202403091234.DE25C77028@keescook>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-please test oob in check_stack_range_initialized
+On Sat, 9 Mar 2024 12:40:51 -0800
+Kees Cook <keescook@chromium.org> wrote:
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git master
+> The part I'd like to get wired up sanely is having pstore find the
+> nvdimm area automatically, but it never quite happened:
+> https://lore.kernel.org/lkml/CAGXu5jLtmb3qinZnX3rScUJLUFdf+pRDVPjy=CS4KUtW9tLHtw@mail.gmail.com/
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 1dd3b99d1bb9..358a90c88905 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -7177,6 +7177,9 @@ static int check_stack_range_initialized(
- 		return 0;
- 	}
- 
-+	printk("mio: %d, mao: %d, as: %d, %s\n", min_off, max_off, access_size, __func__);
-+	if (!min_off)
-+		min_off = 1;
- 	for (i = min_off; i < max_off + access_size; i++) {
- 		u8 *stype;
- 
+The automatic detection is what I'm looking for.
 
+> 
+> > Thanks for the info. We use pstore on ChromeOS, but it is currently
+> > restricted to 1MB which is too small for the tracing buffers. From what
+> > I understand, it's also in a specific location where there's only 1MB
+> > available for contiguous memory.  
+> 
+> That's the area that is specifically hardware backed with persistent
+> RAM.
+> 
+> > I'm looking at finding a way to get consistent memory outside that
+> > range. That's what I'll be doing next week ;-)
+> > 
+> > But this code was just to see if I could get a single contiguous range
+> > of memory mapped to ftrace, and this patch set does exactly that.  
+> 
+> Well, please take a look at pstore. It should be able to do everything
+> you mention already; it just needs a way to define multiple regions if
+> you want to use an area outside of the persistent ram area defined by
+> Chrome OS's platform driver.
+
+I'm not exactly sure how to use pstore here. At boot up I just need some
+consistent memory reserved for the tracing buffer. It just needs to be the
+same location at every boot up.
+
+I don't need a front end. If you mean a way to access it from user space.
+The front end is the tracefs directory, as I need all the features that the
+tracefs directory gives.
+
+I'm going to look to see how pstore is set up in ChromeOS and see if I can
+use whatever it does to allocate another location.
+
+-- Steve
