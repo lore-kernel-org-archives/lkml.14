@@ -1,45 +1,55 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFD7482C8;
-	Wed, 20 Mar 2024 15:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3955342044;
+	Wed, 20 Mar 2024 15:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710947124; cv=none; b=oVnjxEw6b8paUNbT4NSAMPp46ExbZFZFjg3qhOG/96EW2H5e+M3Yja+jZPi2OVpnrhfgr+AqucN4L9UD/zUGe91/Wk7814EFiQyvx3JsyjHPWRvPdtO/sIaJ0X1H8lSErgwCV/TPTYDCXkD4yEbOklBVIWLTZN913UgN6R5R/g0=
+	t=1710947154; cv=none; b=Yw/LfFErt/EGrZgSwhK0U0SrNFgegcaMNQtLm8HppsfPZWO2Pb00IVk+uOz5EtzSKk2HmWIQ+S4ecvd+Yiwfuv96SFoYkNEWQexh0JJeigllFjoyADUu7YrKWo3Day4m6aivCXas9V51SwSEVlhjHOIR8kQ5UpFr3vaeLPtckBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710947124; c=relaxed/simple;
-	bh=0XLgUOOYOmd4r9qokLq/rbrSX8VMdpDGUVyTEoy0noY=;
+	s=arc-20240116; t=1710947154; c=relaxed/simple;
+	bh=d/cSt3fSGUqWXRJWnG+U0v3qY/qL1KyLp83SUbSo5X0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mbBzGqjDP6MQ5srFsMam/od1BSMHXOXlFu2CqSTso4vXEVLZKo3i+iulc7V5+gU2k7/i6gVVx+/+15auO17YP2dg3nsNLLmfYz+PqYoEbL9s7jfO/zgPmhQXtwF5fWb5R7kSlVRHzY+5xpS5vP+6bBeTQtCkydybkcqOqhcjJJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=Cl+l9JvG; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="Cl+l9JvG"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 1A5A21FA94;
-	Wed, 20 Mar 2024 15:47:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1710946058;
-	bh=N6dHreDxYiI/LsRMSZ272Q5m0H4lIeHxrk9p+czNgzs=; h=From:To:Subject;
-	b=Cl+l9JvGRYIC6/G3iJWLeUVMSneZSVYDcHjlyVTJi48/PngzvW8LTiWyoACKogTpt
-	 2wjuLneuB5cfOGwfTbblWr25WkZdG7OM14BpuPNZ4YW4dX93JaHEK1xfkMsboQ4xW8
-	 rXd8whSv7RWN/tL0rsS1lPfPD6vdFXEP1XkcXTxkMeKiVrEywEUZ3Yb7pBV04F+yD2
-	 cLLwLd+aDoCF5BZfDXesPRHRDbs9Wy/jQ245BkCbzcfwLOEHXlyfsjCwHZetKPcvue
-	 6hShUiQpz8CZ5VKkf9Lqt14MOgDFNwGKk52lTHcDBPFtV/pNR3eGgrAvSdLERsQ4sp
-	 6DM+2IRCiF7SQ==
-Date: Wed, 20 Mar 2024 15:47:33 +0100
-From: Francesco Dolcini <francesco@dolcini.it>
-To: max.oss.09@gmail.com
-Cc: max.krummenacher@toradex.com, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, francesco.dolcini@toradex.com,
-	kristo@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	nm@ti.com, robh+dt@kernel.org, vigneshr@ti.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: ti: verdin-am62: Set memory size to 2gb
-Message-ID: <20240320144733.GA16176@francesco-nb>
-References: <20240320142937.2028707-1-max.oss.09@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=RfZ7hZmBxdSGWBXq5rhxyyT+ihpREXkwn69dWNxYhKOk6ampAJ+36ChQ9MsJRP9AUk5TXAmbM1pPZXVUNykOHqOCf0g0s/luLU5kFBgr89bEO8QOb4oskvMjtzubsvwBvLAV7JJw1n2QarjPRRmty7XHe0a8zV1qS/Wy5h2fPis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="23333147"
+X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
+   d="scan'208";a="23333147"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 08:05:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="914670597"
+X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
+   d="scan'208";a="914670597"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 08:05:49 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy.shevchenko@gmail.com>)
+	id 1rmxVj-0000000EbEb-0Cg7;
+	Wed, 20 Mar 2024 17:05:47 +0200
+Date: Wed, 20 Mar 2024 17:05:46 +0200
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ferry Toth <ftoth@exalondelft.nl>
+Subject: Re: [PATCH v1 2/3] gpiolib: Fix debug messaging in
+ gpiod_find_and_request()
+Message-ID: <Zfr7Sut9G0x14lDN@smile.fi.intel.com>
+References: <20231019173457.2445119-1-andriy.shevchenko@linux.intel.com>
+ <20231019173457.2445119-3-andriy.shevchenko@linux.intel.com>
+ <ZTGBqEUzgGCcZP1B@google.com>
+ <ZVOSd62yCz4lFIP1@smile.fi.intel.com>
+ <ZVPkIOk6gvnwkp9F@google.com>
+ <ZVQg9hTQwGtNwIhv@surfacebook.localdomain>
+ <ZVTcQnH_BEEFJ2Ut@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,21 +58,115 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240320142937.2028707-1-max.oss.09@gmail.com>
+In-Reply-To: <ZVTcQnH_BEEFJ2Ut@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hello Max,
+On Wed, Nov 15, 2023 at 02:57:06PM +0000, Dmitry Torokhov wrote:
+> On Wed, Nov 15, 2023 at 03:37:58AM +0200, andy.shevchenko@gmail.com wrote:
+> > Tue, Nov 14, 2023 at 09:18:24PM +0000, Dmitry Torokhov kirjoitti:
+> > > On Tue, Nov 14, 2023 at 05:29:59PM +0200, Andy Shevchenko wrote:
+> > > > On Thu, Oct 19, 2023 at 12:21:12PM -0700, Dmitry Torokhov wrote:
+> > > > > On Thu, Oct 19, 2023 at 08:34:56PM +0300, Andy Shevchenko wrote:
 
-On Wed, Mar 20, 2024 at 03:29:37PM +0100, max.oss.09@gmail.com wrote:
-> From: Max Krummenacher <max.krummenacher@toradex.com>
+Sorry for the late reply. Took me a bit to go through other things first.
+
+...
+
+> > > > > > When consolidating GPIO lookups in ACPI code, the debug messaging
+> > > > > > had been broken and hence lost a bit of sense. Restore debug
+> > > > > > messaging in gpiod_find_and_request() when configuring the GPIO
+> > > > > > line via gpiod_configure_flags().
+> > > > > 
+> > > > > Could you give an example of the before/after messages to show exavtly
+> > > > > what is being improved?
+> > > > 
+> > > > Before your patch:
+> > > > 
+> > > > [    5.266823] gpio-96 (ACPI:OpRegion): no flags found for ACPI:OpRegion
+> > > > [   14.182994] gpio-40 (?): no flags found for gpios
+> > > > 
+> > > > After your patch:
+> > > > 
+> > > > [    5.085048] gpio-96 (ACPI:OpRegion): no flags found for ACPI:OpRegion
+> > > > [   13.401402] gpio-40 (?): no flags found for (null)
+> > > > 
+> > > > After this patch:
+> > > > 
+> > > > [    3.871185] gpio-96 (ACPI:OpRegion): no flags found for ACPI:OpRegion
+> > > > [   12.491998] gpio-40 (?): no flags found for gpios
+> > > > 
+> > > > ...
+> > > > 
+> > > > Looking at this it's definitely a fix.
+> > > 
+> > > If this ("(null)" vs static "gpios" string) is important, can we reduce
+> > > the patch to:
+> > > 
+> > > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > > index 76e0c38026c3..b868c016a9be 100644
+> > > --- a/drivers/gpio/gpiolib.c
+> > > +++ b/drivers/gpio/gpiolib.c
+> > > @@ -4151,7 +4151,7 @@ int gpiod_configure_flags(struct gpio_desc *desc, const char *con_id,
+> > >  
+> > >  	/* No particular flag request, return here... */
+> > >  	if (!(dflags & GPIOD_FLAGS_BIT_DIR_SET)) {
+> > > -		gpiod_dbg(desc, "no flags found for %s\n", con_id);
+> > > +		gpiod_dbg(desc, "no flags found for %s\n", con_id ?: "gpios");
+> > >  		return 0;
+> > >  	}
+> > >  
+> > > 
+> > > instead of plumbing the names through?
+> > 
+> > Definitely no, because how can you guess that this is "gpios" and not "gpio"?
+> > 
+> > > Although this (and the original fix patch) are losing information, in
+> > > the sense that "(null)" explicitly communicates that caller used
+> > > default/NULL conn_id, and not something like "gpios-gpios".
+> > 
+> > This is not true, there was no such information before your patch and NULL
+> > pointer printing is simply a bad style programming. We already had the cases
+> > when users were scary by "NULL device *" and other similar stuff when it's
+> > practically no problems in the flow. This has to be fixed anyway.
+> > 
+> > And what's the practical meaning of gpios-gpios / gpio-gpios / gpios-gpio /
+> > gpio-gpio? I believe they are so weird that thinking about them would be lowest
+> > priority over the issues with the messaging there.
 > 
-> The maximum DDR RAM size stuffed on the Verdin AM62 is 2GB,
-> correct the memory node accordingly.
+> Well, I think we should try to communicate better what it is that we are
+> printing. Consider your example:
 > 
-> Fixes: 316b80246b16 ("arm64: dts: ti: add verdin am62")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
+> 	"gpio-40 (?): no flags found for gpios"
+> 
+> what gpios mean here? You need to go into the code to figure out that it
+> is connection id (whatever it is for a person who is not ultimately
+> familiar with gpio subsystem) and not "gpios" in a generic sense. Plus
+> with your patch you need to ascend a couple of layers up to figure out
+> that it is connection id and not something else. With "(null)" we at
+> least did not obfuscate things just so they are visually pleasing to a
+> random user.
+> 
+> How about we change a message a bit:
+> 
+> 	gpiod_dbg(desc, "no flags found for %s gpios\n",
+> 		  con_id ?: "default");
+> 
+> We can argue if "default" should be "unnamed" or "unspecified" or
+> something else.
 
-Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+We can use something with a space that would definitely may not be a connection
+ID (in the DT/ACPI/swnode[?]).
 
-Francesco
+Let me figure out, but yes, can be a workaround as a quickfix.
+
+> And finally what would help most is having a consumer device for which
+> we are carrying out the operation. You can figure it out from the
+> sequence of debug messages, but having it right here would be better.
+
+Maybe, but it's out of scope of this fix.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
