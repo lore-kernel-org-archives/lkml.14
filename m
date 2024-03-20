@@ -1,142 +1,150 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2044.outbound.protection.outlook.com [40.107.244.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77C685644;
-	Wed, 20 Mar 2024 19:31:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710963112; cv=fail; b=sN3emWszZp3LURtO+pX69JaUvU/5X+8WVq+uJHp+OTiA7ty88LNG3k/u89HhJQA5/8I9rzzadE884fUfO87IZgEEomA26gmg3pmA2cr/EM998vCvNoe7yJxYw6aNc6LcMP9sOMrN6LV+dl3GOgIdNfArGGrCDp+HlFWU4ckHMOo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710963112; c=relaxed/simple;
-	bh=xWXjlSjhAg9puhse486/gje6nu32JX1/whTUx2GPzLM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=N6yFVHvfgIxkeJieZ4hWWfdIOvugQ9tvvbtK0Sxrv06CyoWcexWzK1G817eRo1AGkcFBdGKiIH18ogUr/2VtdXiYShqV477mRMtYOHLHigEdiZUglLWeHLCcjIfPOS9PSGClApqNVzjv5r+yx4cjKisyUsE4OAjalKvL2P1X5ms=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ahd7pGwv; arc=fail smtp.client-ip=40.107.244.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5EA6A02A
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 19:32:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710963157; cv=none; b=O6eJ0bYLrCz2sj5rL5Y7HoT9SeXMUGppxJgm2ON739gpaMD8GTEmuFuNMjQVHn9nDZ7iLibrGMpWuTN7H4YiF0hlphI0WgTL2XAdPPdZJz/lUwOmn7tSkhhVCzvQ8AkMotgO2PpgGQrRVx4d75XImigAyVtaJMoEMDfy5o2e3EI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710963157; c=relaxed/simple;
+	bh=zU6HfdEt0n6J7E0KRf9O2/4bM68psIyCtb53kHS3Ps4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=B1l4jRuRmmubz2WdxsXLvJBWpQ4DA4cZABG8S6E/73OYxah+0eU+rZg5gaHtQhsrlckb+P37xITuYaIJ8FhyyKUhuI30LM4/I+1GJvEijghInONeC8CDENCh5/SZXYZh+v4u2J2nO+4YNjSVTLWKwUzGCxGcjxr7fZIw9YvzYjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RqQWYs5c; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ahd7pGwv"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ElEBcDGRD4vsRZh6pAV8vGgYaphUron60fQQCZ8eozPXSI4D6Wz26cgt32vEcFbUzqd4+vIilm+yHQoB4mQ1DpM5G0Z63jz8xLpi8/q/IAwSd2g1F6SWyKOLjdYsCeMHLWTzdCF+WXND7KpaTO6lWPr764ADmBZ2U66x33KeBOL78u+KGro/l0np9TV2YUabD31dim74mor+dbkqbsnB8mR6+JGW1aCGwTlWxiyGOF9Mib5ZulzEdYnymVaHJykH2jVbTPhSsZUtSePuiDrfkF32TY1l9H+WbI0zrvPCI83Btqy4exgoLyIvaIwjAtO8cmNcRgukZctHaddswhc8UA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vGEetMG4nh7DH2ZZmC/qyyrjf7JXEYuLurapMu+YEB4=;
- b=AmlPmXtfAhlH/+p1FEJfZENgU8GJlhim7glO++Avt0UZX1yLvukg6RX3eKA/mMzFSQBhkiFESn5AAEiVNoBEdj+/jdBx18mn2FO7SRL7T/voUfreh5EQM3C8iRKBMRhOi0MGufsPd9KWY8kwPTdPK/M1JH0nEX1fMvF2i24xmt+CHloY91nju6UrBeeU6qAE8QmEgaLMkvjqKPG7aD0T8imheVnnrVAdMSM76pdyFtzBBfXqQ2QpzNQk/okyMwwl24dJ8gX0Y+hQ6CX9OPSgR3AqfPAfH7iYCGZgxTSakmIZyjqjzTF4DeBr0L5AeZnKpkUR6P6wxFG3BlsuOY6O0w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vGEetMG4nh7DH2ZZmC/qyyrjf7JXEYuLurapMu+YEB4=;
- b=ahd7pGwvHjhwxyD45MgBO5DIU9Qn7y3xJB/SvnjyWI/L0F9en6W9EVZGabLHjbqceCwSNU2zl/8+mOx4aYGEjhte6sdRaNG2yvcWL5sX/SBO8QKY3PD2n6dqf6W6T2AbdSFrc53Ikr4M7K+hdsdn4cdpUHefPTGyz/UXw1F6VWcGzqy6d986DF33gkHsXi/NHwL9ErffWar4YjGVKNFfWExVn89hPKpHjDX8mCJXAC2NFYrgUFTLlpeLpPQ/SvOWi1eEEZL80C90RdZjzkaVezO8eZyYhPsfEFOxikxUxluvgm+xLwcdIhQlNn7KbEYsx5LJqRDNrxGhjUY09sEmLA==
-Received: from BN9PR03CA0635.namprd03.prod.outlook.com (2603:10b6:408:13b::10)
- by CH3PR12MB8210.namprd12.prod.outlook.com (2603:10b6:610:129::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.34; Wed, 20 Mar
- 2024 19:31:47 +0000
-Received: from BN1PEPF00004681.namprd03.prod.outlook.com
- (2603:10b6:408:13b:cafe::bc) by BN9PR03CA0635.outlook.office365.com
- (2603:10b6:408:13b::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.35 via Frontend
- Transport; Wed, 20 Mar 2024 19:31:47 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- BN1PEPF00004681.mail.protection.outlook.com (10.167.243.87) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7409.10 via Frontend Transport; Wed, 20 Mar 2024 19:31:46 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Wed, 20 Mar
- 2024 12:31:23 -0700
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Wed, 20 Mar
- 2024 12:31:23 -0700
-Received: from vdi.nvidia.com (10.127.8.9) by mail.nvidia.com (10.129.68.7)
- with Microsoft SMTP Server id 15.2.1258.12 via Frontend Transport; Wed, 20
- Mar 2024 12:31:21 -0700
-From: David Thompson <davthompson@nvidia.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <u.kleine-koenig@pengutronix.de>, <leon@kernel.org>
-CC: <asmaa@nvidia.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, David Thompson <davthompson@nvidia.com>
-Subject: [PATCH net v1] mlxbf_gige: stop PHY during open() error paths
-Date: Wed, 20 Mar 2024 15:31:17 -0400
-Message-ID: <20240320193117.3232-1-davthompson@nvidia.com>
-X-Mailer: git-send-email 2.30.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RqQWYs5c"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61100c749afso2707627b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 12:32:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710963155; x=1711567955; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zU6HfdEt0n6J7E0KRf9O2/4bM68psIyCtb53kHS3Ps4=;
+        b=RqQWYs5czrKpr4st+xGkUhbxB37jRwL/T8GVxRmVj96Nt2hmim1u9FrSUJ6w3E3l0P
+         wCH3sTYg/hvGfGQhLAd9rINpjyeO7pqGIFd/q8pHU+ojPKF8beIq3oWMs9Ipx5JAv29J
+         j3IqtUdfwekYAyMR3HSWExGMMCD5i9TqAk0NmTedIZwiE3b+HKfuwrLfJKeiqUtRfCu3
+         qTDD34R9+29k0MUOyUg12sDr1nXBSO1JJegBKGReulw5VP/YReJ5YiQ0l97QCDL65hFc
+         PhkimOPY/66hoHQXzgHK0qtJuqHhAoBhjpcGuLyS0Vz8ZcVmKIkOq/NY9jWJYp/TaHU9
+         cNig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710963155; x=1711567955;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zU6HfdEt0n6J7E0KRf9O2/4bM68psIyCtb53kHS3Ps4=;
+        b=kFEZFnjeLNLYz+nXT2tLeZfRWHdpj7iN07I38KYp71o3b03lavOsPeb2gzBZieENI2
+         wtgKQe8kW4Tkeeao6ug40TNrbtMH/5P/QAfLfm9Tc56M5EGlTuL4GD3We1022orDrsTS
+         zBIFK4ph0qpl/Bq1VaSNxnrgToNDTt3qSHUK1aJzXBx2lFnrdk3BfkfsrEIjzgMTrEPR
+         piIwVEqeqdOW/S7m0nZERwVYe/hlZLKX9WepbNpXoYJBh7xjVnGLJlljms32GmvIPBIa
+         w98jW1wb0pQfRE9Xad+WXcVMHSwVrsoXVn5/hsmM+QjeVLEDCPAaSC4qxEgL+y5GxxWf
+         LiPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX79nWrzUK7MJkL1BSgbR7ntY22LDpgYIYGO0HQLo5qN57dJBsOqdHhy8AkTas+NTTDHvNL5b7C9fHPLGU7YZqGexyYIbZeDMVlfQoG
+X-Gm-Message-State: AOJu0YzMxwbjZ4KpWOms59lXpj6G2jEFbaEaUTmDzPyX/nKQlVhrlPN0
+	g9q819ViCoXc2Ysu2XzltpEMuHygQjnAWVEGbGSnXhUZl0yDbjsVg0kuOPeqqGNKIxHCZJlTj30
+	gmfRG6f6qNZWgWouEdQ==
+X-Google-Smtp-Source: AGHT+IHe0JLeXDle0EC2yBifL9imMy9PxVYfZirzbgToNKkjp+aG6E6OD+MSxTTdsJT8QB/n17787kHK9ZX0Fh6o
+X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
+ (user=yosryahmed job=sendgmr) by 2002:a81:a0c1:0:b0:609:f088:cf9c with SMTP
+ id x184-20020a81a0c1000000b00609f088cf9cmr4267979ywg.1.1710963155237; Wed, 20
+ Mar 2024 12:32:35 -0700 (PDT)
+Date: Wed, 20 Mar 2024 19:32:33 +0000
+In-Reply-To: <CAKEwX=ODDeetg_iv2kcds_DziJ5og2F6STsLSXE85qufYET=eg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00004681:EE_|CH3PR12MB8210:EE_
-X-MS-Office365-Filtering-Correlation-Id: 365b900f-2784-46f7-74e9-08dc491461ba
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	rj+d6/LtqiKZzVqIv0V04/qpaadfY/Fheg7h0o3yWqk6eW+UZAzhuSJqO+GwGnY90FK6Wa1CQXkkLn1skqAcFHdOY9zA+iGq5fwMsmY4hJv7b4p2lA2DbRpLH1nPMSai5Fqauje2L7pL1ygLFlv4xpD6fDnn/4hQ6FOFbJzyAoN77MnXnpKu5jlH0E9IusADO41qFkIuqpMbRMiFY/jQEOlPTv4CXdRim5ZhKYKSVYBj9Rcf2X4+Hrs6A4g8Og5sGPkbeeTRA1Iz4iwmEaxaQJyH0Pr3AFSzNei9HCDO9yLUk4Rmc54rPz8PgS9pEXCsdaYtZOhg5XSJHYXtJt2PBgxOIQCvKSZaQ29ohAQ1OA5tlzE7g/3lnZ0BCcSW+Ag67BH8UeD+TBX5Vl7y8qa/M1L7oyyb+ZuYz90jkq1TbOrPWt5zsToxBAeP7h3t6NxkwIsM5RxMMcDcSFr2Xdzk5WtlfHVwX3MKAEhk/mRYh22lnVh8ZPal4+V/K9niL2Iry1QJC5TT7/oasXIQQOGHqGNrWw89LncOPZOBSRjunaRVZGTLIsO0oT9WDVHJzeX/MfweCSdatNYeIJhjS9n5CGKVRRYcOCUGjnNr1tW4X+RoNV8bFPWMYSUwLCCsAb1rIMueUjLckA+HE8KGpXf4PXlrGtZeiR3/rC1ofmcNVJLK4B6hOpQN/tmTo5dfhx4chfPS9cwfBIIIpcCWUCfHANEw/vtfG2S157plFRulenu3hje65W8hZEtWu0mdyAZf
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(376005)(36860700004)(82310400014)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2024 19:31:46.5675
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 365b900f-2784-46f7-74e9-08dc491461ba
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00004681.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8210
+Mime-Version: 1.0
+References: <20240320020823.337644-1-yosryahmed@google.com>
+ <20240320095053.GA294822@cmpxchg.org> <CAKEwX=ODDeetg_iv2kcds_DziJ5og2F6STsLSXE85qufYET=eg@mail.gmail.com>
+Message-ID: <Zfs50cdvcOpvnd8F@google.com>
+Subject: Re: [PATCH 1/2] mm: zswap: increase shrinking protection for zswap
+ swapins only
+From: Yosry Ahmed <yosryahmed@google.com>
+To: Nhat Pham <nphamcs@gmail.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-The mlxbf_gige_open() routine starts the PHY as part of normal
-initialization.  The mlxbf_gige_open() routine must stop the
-PHY during its error paths.
+On Wed, Mar 20, 2024 at 07:48:13AM -0700, Nhat Pham wrote:
+> On Wed, Mar 20, 2024 at 2:51=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.o=
+rg> wrote:
+> >
+> > On Wed, Mar 20, 2024 at 02:08:22AM +0000, Yosry Ahmed wrote:
+> > > Currently, the number of protected zswap entries corresponding to an
+> > > lruvec are incremented every time we swapin a page.
+> >
+> > Correct. This is the primary signal that the shrinker is being too
+> > aggressive in moving entries to disk and should slow down...?
+>=20
+> Yup. Currently, there are two scenarios in which we increase zswap
+> protection area:
+>=20
+> 1. zswap lru movement - for instance, if a page for some reasons is
+> rotated in the LRU. When this happens, we increment the protection
+> size, so that the page at the tail end of the protected area does not
+> lose its protection because of (potentially) spurious LRU churnings.
 
-Fixes: f92e1869d74e ("Add Mellanox BlueField Gigabit Ethernet driver")
-Signed-off-by: David Thompson <davthompson@nvidia.com>
-Reviewed-by: Asmaa Mnebhi <asmaa@nvidia.com>
----
- drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+I don't think we update the protected area during rotations anymore,
+only when a new entry is added to the LRU (with potential decay).
 
-diff --git a/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c b/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c
-index 3d09fa54598f..cef0e2d3f1a7 100644
---- a/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c
-+++ b/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c
-@@ -157,7 +157,7 @@ static int mlxbf_gige_open(struct net_device *netdev)
- 
- 	err = mlxbf_gige_tx_init(priv);
- 	if (err)
--		goto free_irqs;
-+		goto phy_deinit;
- 	err = mlxbf_gige_rx_init(priv);
- 	if (err)
- 		goto tx_deinit;
-@@ -185,6 +185,9 @@ static int mlxbf_gige_open(struct net_device *netdev)
- tx_deinit:
- 	mlxbf_gige_tx_deinit(priv);
- 
-+phy_deinit:
-+	phy_stop(phydev);
-+
- free_irqs:
- 	mlxbf_gige_free_irqs(priv);
- 	return err;
--- 
-2.30.1
+> 2. swapin - when this happens, it is a signal that the shrinker is
+> being too... enthusiastic in its reclaiming action. We should be more
+> conservative, hence the increase in protection.
+>=20
+> I think there's some confusion around this, because we use the
+> same-ish mechanism for two different events. Maybe I should have put
+> yet another fat comment at the callsites of zswap_folio_swapin() too
+> :)
 
+I think it makes sense. The confusion was mostly around the
+interpretation of finding a page on disk. I was focused on pages that
+skip zswap, but the main intention was for pages that were written back,
+as I explained in my response to Johannes.
+
+>=20
+> >
+> > > This happens regardless of whether or not the page originated in
+> > > zswap. Hence, swapins from disk will lead to increasing protection
+> > > on potentially stale zswap entries. Furthermore, the increased
+>=20
+> Hmmm my original thinking was that, had we protected the swapped-in
+> page back when it was still in zswap, we would have prevented this IO.
+> And since the pages in zswap are (at least conceptually) "warmer" than
+> the swapped in page, it is appropriate to increase the zswap
+> protection.
+>=20
+> In fact, I was toying with the idea to max out the protection on
+> swap-in to temporarily cease all zswap shrinking, but that is perhaps
+> overkill :)
+
+This would be problematic for pages that skip zswap IIUC, we'd want more
+shrinking in this case.
+
+>=20
+> > > shrinking protection can lead to more pages skipping zswap and going
+>=20
+> I think this can only happen when the protection is so strong that the
+> zswap pool is full, right?
+
+Yeah that's what I had in mind.=20
+
+>=20
+> In practice I have never seen this happen though. Did you observe it?
+> We have a fairly aggressive lru-size-based protection decaying as
+> well, so that should not happen...
+
+No this was all code inspection as I mentioned :)
+
+>=20
+> Also technically the protection only applies to the dynamic shrinker -
+> the capacity-driven shrinking is not affected (although it's not very
+> effective - perhaps we can rework this?)
+
+That logic is flawed anyway imo due to the acceptance threshold. We
+should really get rid of that as we discussed before.
