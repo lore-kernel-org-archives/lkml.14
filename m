@@ -1,57 +1,57 @@
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A644BF9F5
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 02:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57ABA101C6
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 02:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710902547; cv=none; b=XHOqP0huvLTKcAzgUuyjFod0i51YO71RUq4fSgo1JrMQzmuHQ3b/nvLlTXoJtx8vn3g1yMbGcGLcHjKZ1yNdQPXOS0ztJMwQl4j39bVM9zTTmvaYyydaM4Dmn51v6dknP1B5xrWcjMvU98/atwP2xcT0PeNNvX2xHQ5J/V2qDGo=
+	t=1710902548; cv=none; b=u9Bi6eaLLY87fM7mR14vUFOS1dX5MMm8eB1FIumNxU/THtdmKMZiFZiz0ejD6ZfYUiRaBbslOP6WOGHiMNpNdmfsnBMlIFjBS5oaoLpoCnC43z4jLQKeD0bvsOKYjyIHtb5/qMiR1/e7cBlREiPB3mdKXAtLv5RKjdNQklclFMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710902547; c=relaxed/simple;
-	bh=l52JrmiqoXyGIuFFDgBlXrC/zh8TWuGP8g41ayonsYU=;
+	s=arc-20240116; t=1710902548; c=relaxed/simple;
+	bh=W7Eye2Q63n7l9RaClb+x2PjywYvN68crJrLesJ3QC3g=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qPHhUzG4y9+v7R0aXPuQkXSC1Jg3yr9Z6wq3uYK48klPWbIh19YLPGOR7Cu6UUN2qFYu7jBzaTaN2w6RlaCTTgm9WRdRtubEtXeWdVSWmcsNUyVjItz+GGfha08N9DGbV+53zNYpWlhZaWL4GeEAzwti+uarvEcOPfTINXg0oP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cs.cmu.edu; spf=pass smtp.mailfrom=andrew.cmu.edu; dkim=pass (2048-bit key) header.d=cs.cmu.edu header.i=@cs.cmu.edu header.b=b26ysJaW; arc=none smtp.client-ip=209.85.210.51
+	 MIME-Version; b=L96r5QY5dydSLfRumZbeyq+GqqgszkxQt+dVoOqiO27/9o2OYYnH8JzyjlfPSG0+37ey28P91fc22Gu3E5sPOYJuVC0DZzKDnm3RHjnkxeXor59URe+AjKzyQGuu1X9nkQwYrLtBlqPfe7RUOtrWoisjqtCLhZ/cAxxe4Rg57/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cs.cmu.edu; spf=pass smtp.mailfrom=andrew.cmu.edu; dkim=pass (2048-bit key) header.d=cs.cmu.edu header.i=@cs.cmu.edu header.b=iKNDCQVA; arc=none smtp.client-ip=209.85.219.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cs.cmu.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andrew.cmu.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cs.cmu.edu header.i=@cs.cmu.edu header.b="b26ysJaW"
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6e6969855c8so1602626a34.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 19:42:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cs.cmu.edu header.i=@cs.cmu.edu header.b="iKNDCQVA"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-690b24973beso4583096d6.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 19:42:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cs.cmu.edu; s=google-2021; t=1710902542; x=1711507342; darn=vger.kernel.org;
+        d=cs.cmu.edu; s=google-2021; t=1710902544; x=1711507344; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=UljsMw4YXxvG2im1vY4a6XAU2ZaTJQdUEua3lUBpIog=;
-        b=b26ysJaWaMFF1aefAi/9HdyoC665IxctzqD06rPgFth8PFOfayGvSVkUNd3BEyXVLv
-         8j+dRLDyKWXzkRO1SZuWmr6xDhoEp+8p5eNB4qyVYbLdYIFRk/DiOgGOCRq8xCBMqkTD
-         7mXnKZJOWYN48M8/ME8or95lUrtslfKAgVr1oHmFmiHwBLAY9reVwsUje1eTDs0PVTx3
-         TuV1CVy0kg3fXinS24JYVCg1LE+4xl2AE/29XCIP7iQQJNQ8pozlZNnhTm7DXC2TSxGo
-         xbVOrxsnTBQ0SBuGLrG4tsQ55E+ktcbgpYvzOgxkYoXIGOt+lP+97+TjSjFbrRjOEcqD
-         nsrg==
+        bh=Yh8JatHXgZIgb1eyxT1DhEdr2aiRbmcRrkpZMUB4hHw=;
+        b=iKNDCQVAyB1+2Ye6Ok08YuQqqrwWagYHyynu6U5cYTtME+gYNa6qzbjctbI6p4knP0
+         kDO8fsBkCHlX4xEHUuC1CGokI/VCgHfK37SSPkTrT//2GIkDR7GqBip3rr5cqQXzA7Nz
+         Qa8Wmk7XVeEGmBOk1Lht1g6m2t7Bx6nuEqPDFpIm1ad+j7MwzI8ow1GLV0LjRWNgN6BC
+         J48/unZRZj4LQKAlErgRoit7MztuTOU3ZZAK2JxnQcuDtZVc4o3YyxBsA6JxAR8jEO6T
+         EQWskq2Kfa3Q+6fLdyOH4H9jCeU3xrvBr7p1tjECJC4/8ulI6HxIwlxSfa9LXtU3FCt6
+         nJAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710902542; x=1711507342;
+        d=1e100.net; s=20230601; t=1710902544; x=1711507344;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=UljsMw4YXxvG2im1vY4a6XAU2ZaTJQdUEua3lUBpIog=;
-        b=c3h9iN0GweR7/L5Ke9/CJP2sDFiK6yGRlxsZbzTaIntoFl1f0q9wwOcnDCI+Pyl0pD
-         vdajrmox/DZMAcF8YKs3Tut69+SG3Hx7AeJLY0CME9jajLlS0nzyDFmA1/kNAD6DMuPk
-         yXVP2rZOJ22kiXmZMZ2RC/YEEHlq30/Q6eIRy9hfgUOLUzmqVlHIWPb5pIYsWsk/61Tv
-         EjIlPp0Vvt2nBhlZoH8BAtOb2uWFdxrKx6MX0UI7fEvUwi2XbxTF6hWa2lf167geDygO
-         sPSewBHewTH7mPK0Deozq0WF8TWpSYH/uvmtbSm9RZfsGpDEeHekTo48jxcU0NlF9x8Q
-         4rgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWgbdrlMntLKFwmp+Q/GVCoMtibJHDSHJ7BxUZ0rnnLc8DTmqpWGIBENF0xCrBoOakIlbxrR1Op51iWGnLO+fDUYSmLPukiBCYXKaho
-X-Gm-Message-State: AOJu0Yyxe0k63aKwlQ89sHnrtQ/lGJWBIYWwyijHMRwnde6K9Ii708/n
-	CtU8wHrVKFtfeBXKGFKV3qvpQiHoyAvE+7huEl3A8qMK+ftSbdLL4yY44roCag==
-X-Google-Smtp-Source: AGHT+IESptNQKDLD8MOe2hQxpKnyZd4H1raJLsnnYtjWGvQGBbhnaHWmiZ6IFtzpyT4LI3UuB+xfsg==
-X-Received: by 2002:a9d:74c5:0:b0:6e4:f961:e444 with SMTP id a5-20020a9d74c5000000b006e4f961e444mr5504940otl.4.1710902542503;
-        Tue, 19 Mar 2024 19:42:22 -0700 (PDT)
+        bh=Yh8JatHXgZIgb1eyxT1DhEdr2aiRbmcRrkpZMUB4hHw=;
+        b=YJnSwrPvyUxhKJiG/Y/wzuy2+oN9UzA89xpHVdC6ugyNhhS/XrIv79FyfM6dF3ruBV
+         I4WsTDspkhMcAZf+xa7Mb1mB+OgZGr4y0UOwc3/RlzyTq18w5DFC6MJ+rcKEZo7r/Dow
+         0WC60xyaSfHXfp0qdL1j0Cenz48KVcS7cMsSzbIvCBrYfvhxXb6tGFKHA4BAYXctT9JU
+         rxhSBOmLnmwE4vB+EU1WOJvmFGpfc1vcAVkZJDhT1ZdazZWuxePIzmW+Fndgf9uLbvHz
+         TWRxisPrbag/wgHIKNsOJRY5iZzca68h4yG8mhTPwuDEPdjvZqbL2RGxn8dnb9NnBB4a
+         pnMg==
+X-Forwarded-Encrypted: i=1; AJvYcCWfC+VWcU2a1lxZ/yRdP05gjcaIruKWteY/d1vbG5cjV9w85ZjxGQopKTWaExgOoLZlsUBFiiqi9G2ldWkLwPNX6Hp0c/PQ8KqTrCkB
+X-Gm-Message-State: AOJu0Yzi9bNM5bxMvox7H48XOW+gTAjwv/bMWlNUqveHm9prcGVr0dG2
+	8FiAoATqbP9QMUShec1pu0Ri6RNfFYDGtUEspRzf40KlS/lEGD6kwiINhFFPNw==
+X-Google-Smtp-Source: AGHT+IGR8vrTWY1WaI5oE4IRdj4GRFNX5p3VLQAJ1dsWkq6eebPZOQskjAK08wq1ThkjZxRjS5rZPw==
+X-Received: by 2002:ad4:430b:0:b0:691:4d1f:6a65 with SMTP id c11-20020ad4430b000000b006914d1f6a65mr2449565qvs.27.1710902544204;
+        Tue, 19 Mar 2024 19:42:24 -0700 (PDT)
 Received: from localhost (pool-74-98-221-57.pitbpa.fios.verizon.net. [74.98.221.57])
-        by smtp.gmail.com with UTF8SMTPSA id y27-20020a05620a09db00b00789f0d9e6dcsm3560797qky.93.2024.03.19.19.42.22
+        by smtp.gmail.com with UTF8SMTPSA id k12-20020ad45bec000000b006961199b96asm3707324qvc.13.2024.03.19.19.42.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Mar 2024 19:42:22 -0700 (PDT)
+        Tue, 19 Mar 2024 19:42:23 -0700 (PDT)
 From: kaiyang2@cs.cmu.edu
 To: linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
@@ -59,9 +59,9 @@ Cc: Kaiyang Zhao <kaiyang2@cs.cmu.edu>,
 	hannes@cmpxchg.org,
 	ziy@nvidia.com,
 	dskarlat@cs.cmu.edu
-Subject: [RFC PATCH 3/7] compaction accepts a destination zone
-Date: Wed, 20 Mar 2024 02:42:14 +0000
-Message-Id: <20240320024218.203491-4-kaiyang2@cs.cmu.edu>
+Subject: [RFC PATCH 5/7] proactively move pages out of unmovable zones in kcompactd
+Date: Wed, 20 Mar 2024 02:42:16 +0000
+Message-Id: <20240320024218.203491-6-kaiyang2@cs.cmu.edu>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240320024218.203491-1-kaiyang2@cs.cmu.edu>
 References: <20240320024218.203491-1-kaiyang2@cs.cmu.edu>
@@ -76,425 +76,275 @@ Content-Transfer-Encoding: 8bit
 
 From: Kaiyang Zhao <kaiyang2@cs.cmu.edu>
 
-Distinguishes the source and destination zones in compaction
+Proactively move pages out of unmovable zones in kcompactd
+Debug only: zone start and end pfn printed in vmstat
+Added counters for cross zone compaction start and scan
 
 Signed-off-by: Kaiyang Zhao <zh_kaiyang@hotmail.com>
 ---
- include/linux/compaction.h |   4 +-
- mm/compaction.c            | 106 +++++++++++++++++++++++--------------
- mm/internal.h              |   1 +
- mm/vmscan.c                |   4 +-
- 4 files changed, 70 insertions(+), 45 deletions(-)
+ include/linux/vm_event_item.h |   3 +
+ mm/compaction.c               | 101 +++++++++++++++++++++++++++++++---
+ mm/vmstat.c                   |  11 +++-
+ 3 files changed, 104 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/compaction.h b/include/linux/compaction.h
-index a6e512cfb670..11f5a1a83abb 100644
---- a/include/linux/compaction.h
-+++ b/include/linux/compaction.h
-@@ -90,7 +90,7 @@ extern enum compact_result try_to_compact_pages(gfp_t gfp_mask,
- 		struct page **page);
- extern void reset_isolation_suitable(pg_data_t *pgdat);
- extern enum compact_result compaction_suitable(struct zone *zone, int order,
--		unsigned int alloc_flags, int highest_zoneidx);
-+		unsigned int alloc_flags, int highest_zoneidx, struct zone *dst_zone);
- 
- extern void compaction_defer_reset(struct zone *zone, int order,
- 				bool alloc_success);
-@@ -180,7 +180,7 @@ static inline void reset_isolation_suitable(pg_data_t *pgdat)
- }
- 
- static inline enum compact_result compaction_suitable(struct zone *zone, int order,
--					int alloc_flags, int highest_zoneidx)
-+					int alloc_flags, int highest_zoneidx, struct zone *dst_zone)
- {
- 	return COMPACT_SKIPPED;
- }
+diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
+index be88819085b6..c9183117c8f7 100644
+--- a/include/linux/vm_event_item.h
++++ b/include/linux/vm_event_item.h
+@@ -80,6 +80,9 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
+ 		KCOMPACTD_WAKE,
+ 		KCOMPACTD_MIGRATE_SCANNED, KCOMPACTD_FREE_SCANNED,
+ 		COMPACT_CROSS_ZONE_MIGRATED,
++		KCOMPACTD_CROSS_ZONE_START,
++		COMPACT_CROSS_ZONE_MIGRATE_SCANNED,
++		COMPACT_CROSS_ZONE_FREE_SCANNED,
+ #endif
+ #ifdef CONFIG_HUGETLB_PAGE
+ 		HTLB_BUDDY_PGALLOC, HTLB_BUDDY_PGALLOC_FAIL,
 diff --git a/mm/compaction.c b/mm/compaction.c
-index c8bcdea15f5f..03b5c4debc17 100644
+index dea10ad8ec64..94ce1282f17b 100644
 --- a/mm/compaction.c
 +++ b/mm/compaction.c
-@@ -435,7 +435,7 @@ static void update_cached_migrate(struct compact_control *cc, unsigned long pfn)
- static void update_pageblock_skip(struct compact_control *cc,
- 			struct page *page, unsigned long pfn)
- {
--	struct zone *zone = cc->zone;
-+	struct zone *dst_zone = cc->dst_zone ? cc->dst_zone : cc->zone;
+@@ -1436,7 +1436,10 @@ fast_isolate_freepages(struct compact_control *cc)
+ 	 * Preferred point is in the top quarter of the scan space but take
+ 	 * a pfn from the top half if the search is problematic.
+ 	 */
+-	distance = (cc->free_pfn - cc->migrate_pfn);
++	if (cc->zone != dst_zone)
++		distance = (cc->free_pfn - dst_zone->zone_start_pfn) >> 1;
++	else
++		distance = (cc->free_pfn - cc->migrate_pfn);
+ 	low_pfn = pageblock_start_pfn(cc->free_pfn - (distance >> 2));
+ 	min_pfn = pageblock_start_pfn(cc->free_pfn - (distance >> 1));
  
- 	if (cc->no_set_skip_hint)
- 		return;
-@@ -446,8 +446,8 @@ static void update_pageblock_skip(struct compact_control *cc,
- 	set_pageblock_skip(page);
- 
- 	/* Update where async and sync compaction should restart */
--	if (pfn < zone->compact_cached_free_pfn)
--		zone->compact_cached_free_pfn = pfn;
-+	if (pfn < dst_zone->compact_cached_free_pfn)
-+		dst_zone->compact_cached_free_pfn = pfn;
- }
- #else
- static inline bool isolation_suitable(struct compact_control *cc,
-@@ -550,6 +550,7 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
- 	bool locked = false;
- 	unsigned long blockpfn = *start_pfn;
- 	unsigned int order;
-+	struct zone *dst_zone = cc->dst_zone ? cc->dst_zone : cc->zone;
- 
- 	/* Strict mode is for isolation, speed is secondary */
- 	if (strict)
-@@ -568,7 +569,7 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
- 		 * pending.
- 		 */
- 		if (!(blockpfn % COMPACT_CLUSTER_MAX)
--		    && compact_unlock_should_abort(&cc->zone->lock, flags,
-+		    && compact_unlock_should_abort(&dst_zone->lock, flags,
- 								&locked, cc))
- 			break;
- 
-@@ -596,7 +597,7 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
- 
- 		/* If we already hold the lock, we can skip some rechecking. */
- 		if (!locked) {
--			locked = compact_lock_irqsave(&cc->zone->lock,
-+			locked = compact_lock_irqsave(&dst_zone->lock,
- 								&flags, cc);
- 
- 			/* Recheck this is a buddy page under lock */
-@@ -634,7 +635,7 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
- 	}
- 
- 	if (locked)
--		spin_unlock_irqrestore(&cc->zone->lock, flags);
-+		spin_unlock_irqrestore(&dst_zone->lock, flags);
+@@ -1602,7 +1605,10 @@ static void isolate_freepages(struct compact_control *cc)
+ 	block_start_pfn = pageblock_start_pfn(isolate_start_pfn);
+ 	block_end_pfn = min(block_start_pfn + pageblock_nr_pages,
+ 						zone_end_pfn(zone));
+-	low_pfn = pageblock_end_pfn(cc->migrate_pfn);
++	if (cc->dst_zone && cc->zone != cc->dst_zone)
++		low_pfn = pageblock_end_pfn(cc->dst_zone->zone_start_pfn);
++	else
++		low_pfn = pageblock_end_pfn(cc->migrate_pfn);
+ 	stride = cc->mode == MIGRATE_ASYNC ? COMPACT_CLUSTER_MAX : 1;
  
  	/*
- 	 * There is a tiny chance that we have read bogus compound_order(),
-@@ -683,11 +684,12 @@ isolate_freepages_range(struct compact_control *cc,
- {
- 	unsigned long isolated, pfn, block_start_pfn, block_end_pfn;
- 	LIST_HEAD(freelist);
-+	struct zone *dst_zone = cc->dst_zone ? cc->dst_zone : cc->zone;
- 
- 	pfn = start_pfn;
- 	block_start_pfn = pageblock_start_pfn(pfn);
--	if (block_start_pfn < cc->zone->zone_start_pfn)
--		block_start_pfn = cc->zone->zone_start_pfn;
-+	if (block_start_pfn < dst_zone->zone_start_pfn)
-+		block_start_pfn = dst_zone->zone_start_pfn;
- 	block_end_pfn = pageblock_end_pfn(pfn);
- 
- 	for (; pfn < end_pfn; pfn += isolated,
-@@ -710,7 +712,7 @@ isolate_freepages_range(struct compact_control *cc,
- 		}
- 
- 		if (!pageblock_pfn_to_page(block_start_pfn,
--					block_end_pfn, cc->zone))
-+					block_end_pfn, dst_zone))
- 			break;
- 
- 		isolated = isolate_freepages_block(cc, &isolate_start_pfn,
-@@ -1359,6 +1361,7 @@ fast_isolate_around(struct compact_control *cc, unsigned long pfn)
- {
- 	unsigned long start_pfn, end_pfn;
- 	struct page *page;
-+	struct zone *dst_zone = cc->dst_zone ? cc->dst_zone : cc->zone;
- 
- 	/* Do not search around if there are enough pages already */
- 	if (cc->nr_freepages >= cc->nr_migratepages)
-@@ -1369,10 +1372,10 @@ fast_isolate_around(struct compact_control *cc, unsigned long pfn)
- 		return;
- 
- 	/* Pageblock boundaries */
--	start_pfn = max(pageblock_start_pfn(pfn), cc->zone->zone_start_pfn);
--	end_pfn = min(pageblock_end_pfn(pfn), zone_end_pfn(cc->zone));
-+	start_pfn = max(pageblock_start_pfn(pfn), dst_zone->zone_start_pfn);
-+	end_pfn = min(pageblock_end_pfn(pfn), zone_end_pfn(dst_zone));
- 
--	page = pageblock_pfn_to_page(start_pfn, end_pfn, cc->zone);
-+	page = pageblock_pfn_to_page(start_pfn, end_pfn, dst_zone);
- 	if (!page)
- 		return;
- 
-@@ -1414,6 +1417,7 @@ fast_isolate_freepages(struct compact_control *cc)
- 	struct page *page = NULL;
- 	bool scan_start = false;
- 	int order;
-+	struct zone *dst_zone = cc->dst_zone ? cc->dst_zone : cc->zone;
- 
- 	/* Full compaction passes in a negative order */
- 	if (cc->order <= 0)
-@@ -1423,7 +1427,7 @@ fast_isolate_freepages(struct compact_control *cc)
- 	 * If starting the scan, use a deeper search and use the highest
- 	 * PFN found if a suitable one is not found.
+@@ -1822,7 +1828,11 @@ static unsigned long fast_find_migrateblock(struct compact_control *cc)
+ 	 * within the first eighth to reduce the chances that a migration
+ 	 * target later becomes a source.
  	 */
--	if (cc->free_pfn >= cc->zone->compact_init_free_pfn) {
-+	if (cc->free_pfn >= dst_zone->compact_init_free_pfn) {
- 		limit = pageblock_nr_pages >> 1;
- 		scan_start = true;
- 	}
-@@ -1448,7 +1452,7 @@ fast_isolate_freepages(struct compact_control *cc)
- 	for (order = cc->search_order;
- 	     !page && order >= 0;
- 	     order = next_search_order(cc, order)) {
--		struct free_area *area = &cc->zone->free_area[order];
-+		struct free_area *area = &dst_zone->free_area[order];
- 		struct list_head *freelist;
- 		struct page *freepage;
- 		unsigned long flags;
-@@ -1458,7 +1462,7 @@ fast_isolate_freepages(struct compact_control *cc)
- 		if (!area->nr_free)
- 			continue;
- 
--		spin_lock_irqsave(&cc->zone->lock, flags);
-+		spin_lock_irqsave(&dst_zone->lock, flags);
- 		freelist = &area->free_list[MIGRATE_MOVABLE];
- 		list_for_each_entry_reverse(freepage, freelist, lru) {
- 			unsigned long pfn;
-@@ -1469,7 +1473,7 @@ fast_isolate_freepages(struct compact_control *cc)
- 
- 			if (pfn >= highest)
- 				highest = max(pageblock_start_pfn(pfn),
--					      cc->zone->zone_start_pfn);
-+					      dst_zone->zone_start_pfn);
- 
- 			if (pfn >= low_pfn) {
- 				cc->fast_search_fail = 0;
-@@ -1516,7 +1520,7 @@ fast_isolate_freepages(struct compact_control *cc)
- 			}
- 		}
- 
--		spin_unlock_irqrestore(&cc->zone->lock, flags);
-+		spin_unlock_irqrestore(&dst_zone->lock, flags);
- 
- 		/*
- 		 * Smaller scan on next order so the total scan is related
-@@ -1541,17 +1545,17 @@ fast_isolate_freepages(struct compact_control *cc)
- 				if (cc->direct_compaction && pfn_valid(min_pfn)) {
- 					page = pageblock_pfn_to_page(min_pfn,
- 						min(pageblock_end_pfn(min_pfn),
--						    zone_end_pfn(cc->zone)),
--						cc->zone);
-+						    zone_end_pfn(dst_zone)),
-+						dst_zone);
- 					cc->free_pfn = min_pfn;
- 				}
- 			}
- 		}
- 	}
- 
--	if (highest && highest >= cc->zone->compact_cached_free_pfn) {
-+	if (highest && highest >= dst_zone->compact_cached_free_pfn) {
- 		highest -= pageblock_nr_pages;
--		cc->zone->compact_cached_free_pfn = highest;
-+		dst_zone->compact_cached_free_pfn = highest;
- 	}
- 
- 	cc->total_free_scanned += nr_scanned;
-@@ -1569,7 +1573,7 @@ fast_isolate_freepages(struct compact_control *cc)
-  */
- static void isolate_freepages(struct compact_control *cc)
- {
--	struct zone *zone = cc->zone;
-+	struct zone *zone = cc->dst_zone ? cc->dst_zone : cc->zone;
- 	struct page *page;
- 	unsigned long block_start_pfn;	/* start of current pageblock */
- 	unsigned long isolate_start_pfn; /* exact pfn we start at */
-@@ -2089,11 +2093,19 @@ static enum compact_result __compact_finished(struct compact_control *cc)
- 	unsigned int order;
- 	const int migratetype = cc->migratetype;
- 	int ret;
-+	struct zone *dst_zone = cc->dst_zone ? cc->dst_zone : cc->zone;
- 
--	/* Compaction run completes if the migrate and free scanner meet */
--	if (compact_scanners_met(cc)) {
-+	/*
-+	 * Compaction run completes if the migrate and free scanner meet
-+	 * or when either the src or dst zone has been completely scanned
-+	 */
-+	if (compact_scanners_met(cc) ||
-+			cc->migrate_pfn >= zone_end_pfn(cc->zone) ||
-+			cc->free_pfn < dst_zone->zone_start_pfn) {
- 		/* Let the next compaction start anew. */
- 		reset_cached_positions(cc->zone);
-+		if (cc->dst_zone)
-+			reset_cached_positions(cc->dst_zone);
- 
- 		/*
- 		 * Mark that the PG_migrate_skip information should be cleared
-@@ -2196,10 +2208,13 @@ static enum compact_result compact_finished(struct compact_control *cc)
- static enum compact_result __compaction_suitable(struct zone *zone, int order,
- 					unsigned int alloc_flags,
- 					int highest_zoneidx,
--					unsigned long wmark_target)
-+					unsigned long wmark_target, struct zone *dst_zone)
- {
- 	unsigned long watermark;
- 
-+	if (!dst_zone)
-+		dst_zone = zone;
+-	distance = (cc->free_pfn - cc->migrate_pfn) >> 1;
++	if (cc->dst_zone && cc->zone != cc->dst_zone)
++		distance = (zone_end_pfn(cc->zone) - cc->migrate_pfn) >> 1;
++	else
++		distance = (cc->free_pfn - cc->migrate_pfn) >> 1;
 +
- 	if (is_via_compact_memory(order))
+ 	if (cc->migrate_pfn != cc->zone->zone_start_pfn)
+ 		distance >>= 2;
+ 	high_pfn = pageblock_start_pfn(cc->migrate_pfn + distance);
+@@ -1897,7 +1907,7 @@ static isolate_migrate_t isolate_migratepages(struct compact_control *cc)
+ {
+ 	unsigned long block_start_pfn;
+ 	unsigned long block_end_pfn;
+-	unsigned long low_pfn;
++	unsigned long low_pfn, high_pfn;
+ 	struct page *page;
+ 	const isolate_mode_t isolate_mode =
+ 		(sysctl_compact_unevictable_allowed ? ISOLATE_UNEVICTABLE : 0) |
+@@ -1924,11 +1934,16 @@ static isolate_migrate_t isolate_migratepages(struct compact_control *cc)
+ 	/* Only scan within a pageblock boundary */
+ 	block_end_pfn = pageblock_end_pfn(low_pfn);
+ 
++	if (cc->dst_zone && cc->zone != cc->dst_zone)
++		high_pfn = zone_end_pfn(cc->zone);
++	else
++		high_pfn = cc->free_pfn;
++
+ 	/*
+ 	 * Iterate over whole pageblocks until we find the first suitable.
+ 	 * Do not cross the free scanner.
+ 	 */
+-	for (; block_end_pfn <= cc->free_pfn;
++	for (; block_end_pfn <= high_pfn;
+ 			fast_find_block = false,
+ 			cc->migrate_pfn = low_pfn = block_end_pfn,
+ 			block_start_pfn = block_end_pfn,
+@@ -1954,6 +1969,7 @@ static isolate_migrate_t isolate_migratepages(struct compact_control *cc)
+ 		 * before making it "skip" so other compaction instances do
+ 		 * not scan the same block.
+ 		 */
++
+ 		if (pageblock_aligned(low_pfn) &&
+ 		    !fast_find_block && !isolation_suitable(cc, page))
+ 			continue;
+@@ -1976,6 +1992,10 @@ static isolate_migrate_t isolate_migratepages(struct compact_control *cc)
+ 						isolate_mode))
+ 			return ISOLATE_ABORT;
+ 
++		/* free_pfn may have changed. update high_pfn. */
++		if (!cc->dst_zone || cc->zone == cc->dst_zone)
++			high_pfn = cc->free_pfn;
++
+ 		/*
+ 		 * Either we isolated something and proceed with migration. Or
+ 		 * we failed and compact_zone should decide if we should
+@@ -2141,7 +2161,9 @@ static enum compact_result __compact_finished(struct compact_control *cc)
+ 		goto out;
+ 	}
+ 
+-	if (is_via_compact_memory(cc->order))
++	/* Don't check if a suitable page is free if doing cross zone compaction. */
++	if (is_via_compact_memory(cc->order) ||
++			(cc->dst_zone && cc->dst_zone != cc->zone))
  		return COMPACT_CONTINUE;
  
-@@ -2227,9 +2242,9 @@ static enum compact_result __compaction_suitable(struct zone *zone, int order,
- 	 * suitable migration targets
+ 	/*
+@@ -2224,7 +2246,8 @@ static enum compact_result __compaction_suitable(struct zone *zone, int order,
+ 	 * should be no need for compaction at all.
  	 */
- 	watermark = (order > PAGE_ALLOC_COSTLY_ORDER) ?
--				low_wmark_pages(zone) : min_wmark_pages(zone);
-+				low_wmark_pages(dst_zone) : min_wmark_pages(dst_zone);
- 	watermark += compact_gap(order);
--	if (!__zone_watermark_ok(zone, 0, watermark, highest_zoneidx,
-+	if (!__zone_watermark_ok(dst_zone, 0, watermark, highest_zoneidx,
- 						ALLOC_CMA, wmark_target))
- 		return COMPACT_SKIPPED;
+ 	if (zone_watermark_ok(zone, order, watermark, highest_zoneidx,
+-								alloc_flags))
++								alloc_flags) &&
++							dst_zone == zone)
+ 		return COMPACT_SUCCESS;
  
-@@ -2245,13 +2260,16 @@ static enum compact_result __compaction_suitable(struct zone *zone, int order,
-  */
- enum compact_result compaction_suitable(struct zone *zone, int order,
- 					unsigned int alloc_flags,
--					int highest_zoneidx)
-+					int highest_zoneidx, struct zone *dst_zone)
- {
- 	enum compact_result ret;
- 	int fragindex;
+ 	/*
+@@ -2270,6 +2293,11 @@ enum compact_result compaction_suitable(struct zone *zone, int order,
  
-+	if (!dst_zone)
-+		dst_zone = zone;
-+
  	ret = __compaction_suitable(zone, order, alloc_flags, highest_zoneidx,
--				    zone_page_state(zone, NR_FREE_PAGES));
-+				    zone_page_state(dst_zone, NR_FREE_PAGES), dst_zone);
+ 				    zone_page_state(dst_zone, NR_FREE_PAGES), dst_zone);
++
++	/* Allow migrating movable pages to ZONE_MOVABLE regardless of frag index */
++	if (ret == COMPACT_CONTINUE && dst_zone != zone)
++		return ret;
++
  	/*
  	 * fragmentation index determines if allocation failures are due to
  	 * low memory or external fragmentation
-@@ -2305,7 +2323,7 @@ bool compaction_zonelist_suitable(struct alloc_context *ac, int order,
- 		available = zone_reclaimable_pages(zone) / order;
- 		available += zone_page_state_snapshot(zone, NR_FREE_PAGES);
- 		compact_result = __compaction_suitable(zone, order, alloc_flags,
--				ac->highest_zoneidx, available);
-+				ac->highest_zoneidx, available, NULL);
- 		if (compact_result == COMPACT_CONTINUE)
- 			return true;
- 	}
-@@ -2317,8 +2335,9 @@ static enum compact_result
- compact_zone(struct compact_control *cc, struct capture_control *capc)
+@@ -2841,6 +2869,14 @@ void compaction_unregister_node(struct node *node)
+ }
+ #endif /* CONFIG_SYSFS && CONFIG_NUMA */
+ 
++static inline bool should_compact_unmovable_zones(pg_data_t *pgdat)
++{
++	if (populated_zone(&pgdat->node_zones[ZONE_MOVABLE]))
++		return true;
++	else
++		return false;
++}
++
+ static inline bool kcompactd_work_requested(pg_data_t *pgdat)
  {
- 	enum compact_result ret;
-+	struct zone *dst_zone = cc->dst_zone ? cc->dst_zone : cc->zone;
- 	unsigned long start_pfn = cc->zone->zone_start_pfn;
--	unsigned long end_pfn = zone_end_pfn(cc->zone);
-+	unsigned long end_pfn = zone_end_pfn(dst_zone);
- 	unsigned long last_migrated_pfn;
- 	const bool sync = cc->mode != MIGRATE_ASYNC;
- 	bool update_cached;
-@@ -2337,7 +2356,7 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
+ 	return pgdat->kcompactd_max_order > 0 || kthread_should_stop() ||
+@@ -2942,6 +2978,48 @@ static void kcompactd_do_work(pg_data_t *pgdat)
+ 		pgdat->kcompactd_highest_zoneidx = pgdat->nr_zones - 1;
+ }
  
- 	cc->migratetype = gfp_migratetype(cc->gfp_mask);
- 	ret = compaction_suitable(cc->zone, cc->order, cc->alloc_flags,
--							cc->highest_zoneidx);
-+							cc->highest_zoneidx, dst_zone);
- 	/* Compaction is likely to fail */
- 	if (ret == COMPACT_SUCCESS || ret == COMPACT_SKIPPED)
- 		return ret;
-@@ -2346,14 +2365,19 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
- 	 * Clear pageblock skip if there were failures recently and compaction
- 	 * is about to be retried after being deferred.
- 	 */
--	if (compaction_restarting(cc->zone, cc->order))
-+	if (compaction_restarting(cc->zone, cc->order)) {
- 		__reset_isolation_suitable(cc->zone);
-+		if (dst_zone != cc->zone)
-+			__reset_isolation_suitable(dst_zone);
++static void kcompactd_clean_unmovable_zones(pg_data_t *pgdat)
++{
++	int zoneid;
++	struct zone *zone;
++	struct compact_control cc = {
++		.order = 0,
++		.search_order = 0,
++		.highest_zoneidx = ZONE_MOVABLE,
++		.mode = MIGRATE_SYNC,
++		.ignore_skip_hint = true,
++		.gfp_mask = GFP_KERNEL,
++		.dst_zone = &pgdat->node_zones[ZONE_MOVABLE],
++		.whole_zone = true
++	};
++	count_compact_event(KCOMPACTD_CROSS_ZONE_START);
++
++	for (zoneid = 0; zoneid < ZONE_MOVABLE; zoneid++) {
++		int status;
++
++		zone = &pgdat->node_zones[zoneid];
++		if (!populated_zone(zone))
++			continue;
++
++		if (compaction_suitable(zone, cc.order, 0, zoneid, cc.dst_zone) !=
++							COMPACT_CONTINUE)
++			continue;
++
++		if (kthread_should_stop())
++			return;
++
++		/* Not participating in compaction defer. */
++
++		cc.zone = zone;
++		status = compact_zone(&cc, NULL);
++
++		count_compact_events(COMPACT_CROSS_ZONE_MIGRATE_SCANNED,
++				     cc.total_migrate_scanned);
++		count_compact_events(COMPACT_CROSS_ZONE_FREE_SCANNED,
++				     cc.total_free_scanned);
 +	}
++}
++
+ void wakeup_kcompactd(pg_data_t *pgdat, int order, int highest_zoneidx)
+ {
+ 	if (!order)
+@@ -2994,9 +3072,10 @@ static int kcompactd(void *p)
  
- 	/*
- 	 * Setup to move all movable pages to the end of the zone. Used cached
- 	 * information on where the scanners should start (unless we explicitly
- 	 * want to compact the whole zone), but check that it is initialised
- 	 * by ensuring the values are within zone boundaries.
-+	 *
-+	 * If a destination zone is provided, use it for free pages.
- 	 */
- 	cc->fast_start_pfn = 0;
- 	if (cc->whole_zone) {
-@@ -2361,12 +2385,12 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
- 		cc->free_pfn = pageblock_start_pfn(end_pfn - 1);
- 	} else {
- 		cc->migrate_pfn = cc->zone->compact_cached_migrate_pfn[sync];
--		cc->free_pfn = cc->zone->compact_cached_free_pfn;
--		if (cc->free_pfn < start_pfn || cc->free_pfn >= end_pfn) {
-+		cc->free_pfn = dst_zone->compact_cached_free_pfn;
-+		if (cc->free_pfn < dst_zone->zone_start_pfn || cc->free_pfn >= end_pfn) {
- 			cc->free_pfn = pageblock_start_pfn(end_pfn - 1);
--			cc->zone->compact_cached_free_pfn = cc->free_pfn;
-+			dst_zone->compact_cached_free_pfn = cc->free_pfn;
- 		}
--		if (cc->migrate_pfn < start_pfn || cc->migrate_pfn >= end_pfn) {
-+		if (cc->migrate_pfn < start_pfn || cc->migrate_pfn >= zone_end_pfn(cc->zone)) {
- 			cc->migrate_pfn = start_pfn;
- 			cc->zone->compact_cached_migrate_pfn[0] = cc->migrate_pfn;
- 			cc->zone->compact_cached_migrate_pfn[1] = cc->migrate_pfn;
-@@ -2522,8 +2546,8 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
- 		 * Only go back, not forward. The cached pfn might have been
- 		 * already reset to zone end in compact_finished()
+ 		/*
+ 		 * Avoid the unnecessary wakeup for proactive compaction
+-		 * when it is disabled.
++		 * and cleanup of unmovable zones
++		 * when they are disabled.
  		 */
--		if (free_pfn > cc->zone->compact_cached_free_pfn)
--			cc->zone->compact_cached_free_pfn = free_pfn;
-+		if (free_pfn > dst_zone->compact_cached_free_pfn)
-+			dst_zone->compact_cached_free_pfn = free_pfn;
- 	}
- 
- 	count_compact_events(COMPACTMIGRATE_SCANNED, cc->total_migrate_scanned);
-@@ -2834,7 +2858,7 @@ static bool kcompactd_node_suitable(pg_data_t *pgdat)
+-		if (!sysctl_compaction_proactiveness)
++		if (!sysctl_compaction_proactiveness && !should_compact_unmovable_zones(pgdat))
+ 			timeout = MAX_SCHEDULE_TIMEOUT;
+ 		trace_mm_compaction_kcompactd_sleep(pgdat->node_id);
+ 		if (wait_event_freezable_timeout(pgdat->kcompactd_wait,
+@@ -3017,6 +3096,10 @@ static int kcompactd(void *p)
  			continue;
+ 		}
  
- 		if (compaction_suitable(zone, pgdat->kcompactd_max_order, 0,
--					highest_zoneidx) == COMPACT_CONTINUE)
-+					highest_zoneidx, NULL) == COMPACT_CONTINUE)
- 			return true;
- 	}
++		/* Migrates movable pages out of unmovable zones if ZONE_MOVABLE exists */
++		if (should_compact_unmovable_zones(pgdat))
++			kcompactd_clean_unmovable_zones(pgdat);
++
+ 		/*
+ 		 * Start the proactive work with default timeout. Based
+ 		 * on the fragmentation score, this timeout is updated.
+diff --git a/mm/vmstat.c b/mm/vmstat.c
+index 98af82e65ad9..444740605f2f 100644
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -1325,6 +1325,9 @@ const char * const vmstat_text[] = {
+ 	"compact_daemon_migrate_scanned",
+ 	"compact_daemon_free_scanned",
+ 	"compact_cross_zone_migrated",
++	"compact_cross_zone_start",
++	"compact_cross_zone_migrate_scanned",
++	"compact_cross_zone_free_scanned",
+ #endif
  
-@@ -2871,7 +2895,7 @@ static void kcompactd_do_work(pg_data_t *pgdat)
- 		if (compaction_deferred(zone, cc.order))
- 			continue;
+ #ifdef CONFIG_HUGETLB_PAGE
+@@ -1692,7 +1695,9 @@ static void zoneinfo_show_print(struct seq_file *m, pg_data_t *pgdat,
+ 		   "\n        spanned  %lu"
+ 		   "\n        present  %lu"
+ 		   "\n        managed  %lu"
+-		   "\n        cma      %lu",
++		   "\n        cma      %lu"
++		   "\n        start    %lu"
++		   "\n        end      %lu",
+ 		   zone_page_state(zone, NR_FREE_PAGES),
+ 		   zone->watermark_boost,
+ 		   min_wmark_pages(zone),
+@@ -1701,7 +1706,9 @@ static void zoneinfo_show_print(struct seq_file *m, pg_data_t *pgdat,
+ 		   zone->spanned_pages,
+ 		   zone->present_pages,
+ 		   zone_managed_pages(zone),
+-		   zone_cma_pages(zone));
++		   zone_cma_pages(zone),
++		   zone->zone_start_pfn,
++		   zone_end_pfn(zone));
  
--		if (compaction_suitable(zone, cc.order, 0, zoneid) !=
-+		if (compaction_suitable(zone, cc.order, 0, zoneid, NULL) !=
- 							COMPACT_CONTINUE)
- 			continue;
- 
-diff --git a/mm/internal.h b/mm/internal.h
-index 68410c6d97ac..349223cc0359 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -465,6 +465,7 @@ struct compact_control {
- 	unsigned long migrate_pfn;
- 	unsigned long fast_start_pfn;	/* a pfn to start linear scan from */
- 	struct zone *zone;
-+	struct zone *dst_zone;			/* use another zone as the destination */
- 	unsigned long total_migrate_scanned;
- 	unsigned long total_free_scanned;
- 	unsigned short fast_search_fail;/* failures to use free list searches */
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 5bf98d0a22c9..aa21da983804 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -6383,7 +6383,7 @@ static inline bool should_continue_reclaim(struct pglist_data *pgdat,
- 		if (!managed_zone(zone))
- 			continue;
- 
--		switch (compaction_suitable(zone, sc->order, 0, sc->reclaim_idx)) {
-+		switch (compaction_suitable(zone, sc->order, 0, sc->reclaim_idx, NULL)) {
- 		case COMPACT_SUCCESS:
- 		case COMPACT_CONTINUE:
- 			return false;
-@@ -6580,7 +6580,7 @@ static inline bool compaction_ready(struct zone *zone, struct scan_control *sc)
- 	unsigned long watermark;
- 	enum compact_result suitable;
- 
--	suitable = compaction_suitable(zone, sc->order, 0, sc->reclaim_idx);
-+	suitable = compaction_suitable(zone, sc->order, 0, sc->reclaim_idx, NULL);
- 	if (suitable == COMPACT_SUCCESS)
- 		/* Allocation should succeed already. Don't reclaim. */
- 		return true;
+ 	seq_printf(m,
+ 		   "\n        protection: (%ld",
 -- 
 2.40.1
 
