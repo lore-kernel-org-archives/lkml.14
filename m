@@ -1,56 +1,69 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281497E761
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 18:40:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A7C52F78;
+	Wed, 20 Mar 2024 18:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710960041; cv=none; b=Hu6NMp7+jOPbRwUKARqw5B8wHvQhA5kUk9TZCi8IM15PfyhmfJkbv6UJ5UesT4b4TF0NORtBoBBJAbu26PCdZBJapFVM3qNa9oj9N8oIoMjt35f2CaoExNBu2+ulOfz3dT2wWAcxR5llSFxyX3ImZM60bdDHLwSchurjYwzf0P4=
+	t=1710960154; cv=none; b=K3sRIjGrU8XhSj91Ayt7S/Z0OP+1Z6WAiD7tblMSc93Up7S+VCvgVGP9VLosF3pVpo6jFtzJVuS3nLrAbsbhZrkSYJMT8RQQ4LD/qbw2bo3B3aii5JzLML1tuHhNRhdJ1sgkz28JB4fJY74uRWhGAX8w39DvRoLzwtcDqggbeyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710960041; c=relaxed/simple;
-	bh=Xs4PBq6qNCG3M1b/48Y2i69dxtc4czrZRuoQL2YN7VY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=hYXV7ibcvk3frNM0psAZk/cauH/p13VPUjyMaZafar4nozGxBriWTH+3BGxSYgzVGs9fxsT782cLTRxGW46eMCMXRF+y9bV+geRBZAq4YNInYhuorqWwtPbT8TBUxlvK7OUrxQsxv93qCvdvM/d8ZBGryMR2tCBGIvmvXbuVg7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yre7rij2; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1710960154; c=relaxed/simple;
+	bh=OvDWzf5QI11nP6xn7V6BvV75EVnGelLYBI+80MwL2kM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M1CN5GShQH3ale5KdlOxbaJqp3YAjVGX1IjXpeSnJyPtdC15oI2MJZXObxVzCcKwj+PR3Pe8LGMpG8eXLPgYfcUbpj3SZYTZykL/8xTssadX7LzhKXkdR6JdPuZk5MrLpgprRZXd7YoIyxCVl1zlWQ2pVQNrA6imeqPKYx1fMTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V0PNjJQj; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yre7rij2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710960040; x=1742496040;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=Xs4PBq6qNCG3M1b/48Y2i69dxtc4czrZRuoQL2YN7VY=;
-  b=Yre7rij2l+gap+jCCaHlQMej9TnE9XOacqdS8Kcety+9DofksuvZ9LZP
-   QxNIcrXg9ZXX/oyBpvMRK0E8c1RL2d7e6it6QSFM6CHrgICKAiFLEtY56
-   AseFg26w8aKEd3w98qrHe3mxKrYz5VUt7/UJprSoD9Vbf1tZNOAKii0mB
-   YyC7VXkfTXcryD7n22TZswM+aN8jNio+jSpR667JSY9z9G4iZ3VPVnxG/
-   NhJu2AMWvJ2/EM0l++noVmVaHQoxHCZu75v6e/61G0DOr2YDVx3Zw/ENK
-   Ovfz8h2cqXHQ5mpldWylfSt+wDgPanbWoGn26YfSxUMlq2e6fNd31uL6+
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="5787714"
-X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
-   d="scan'208";a="5787714"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 11:38:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
-   d="scan'208";a="18966972"
-Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 20 Mar 2024 11:38:21 -0700
-Received: from kbuild by b21307750695 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rn0pO-000Iqj-0h;
-	Wed, 20 Mar 2024 18:38:18 +0000
-Date: Thu, 21 Mar 2024 02:38:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Chinner <dchinner@redhat.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Chandan Babu R <chandanbabu@kernel.org>,
-	"Darrick J. Wong" <djwong@kernel.org>
-Subject: fs/xfs/libxfs/xfs_attr_leaf.c:1061:13-20: WARNING opportunity for
- kmemdup
-Message-ID: <202403210204.LPPBJMhf-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V0PNjJQj"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dddbeac9f9so583035ad.3;
+        Wed, 20 Mar 2024 11:42:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710960152; x=1711564952; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LpVGt7eapRMQ5PJBsTrUq3TIxfCzxXLVn/uEUHsdaK4=;
+        b=V0PNjJQje1r4M2vkmihN3QsStJdDHpCsl9giaaDhMSHt43SaEOHyZna+HNFHPSjnsn
+         jUw4yESxHcsf5y7mWHiNS7l6d8s1HxraF2exj9DkQtyN+uMqKRH6LS8AjfVqydt0m5MU
+         Sp8DTGHZZ61q66HJTTkUutHROEE6DJJLPe28zAUw8yIZ0NrLKTG5JPGVTEjFJhKJktza
+         /6sxLooKivKyjrKs87wo/JC5UP8OvX+NI9pshl9zoF4e9FkMCeFufEAF1A8jtPI+Td2t
+         J5Hamf2oJvNmaZuiiIIy1Ix65MsiKgZUz+D0hBDQXSy+lMhCecLwrqpNhT4J+v0+oPD8
+         g2tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710960152; x=1711564952;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LpVGt7eapRMQ5PJBsTrUq3TIxfCzxXLVn/uEUHsdaK4=;
+        b=GSoD5GrM2SuBA76SsxVxBAS+/AEO9G18CaqqD7dDjhKVWZAjWFzpovyoJNM58EQ94e
+         3lLJdwgW0Hx1ookWPBz0xZraP5weJQKS80uIsZGW6jQSc3NQVjIMgeEpDeZ8n3+bdCme
+         leT+zrS57r7MS5lnlOebA4F4ckFPXFbh3QAsQmP57slsyr3ZxIQ5c+WRskjhhLW+IvSk
+         sch1lubcVvaSLbjOlNtCmN1oDDM1BmljOFkpbgmfcf1qtan8urHnDeLvGcBohknVg3pm
+         uph/DZxls/7m+iKJxmq/DhBtZsmcsUAp2vShhUs6nwAGlGny4dPd9unHNADMfEWVg1BZ
+         8LYg==
+X-Forwarded-Encrypted: i=1; AJvYcCXFjlhD8cc/pvJKEKeZVH/s9SH08ADP/oR/JEQXosnNkRbXGRgihm8po5ugBq/4VIxItkvdGsF2ADrksPva8CPeefPbLNP+gwgEkY2VmEduNQIfjsxbswGuSpArZRsDHIogZvBGvUqFEQ==
+X-Gm-Message-State: AOJu0YxKxaUPCey1EI2xPogMbqomsB9OavGj/emTZ5feFFa7xxOPVGdJ
+	Vn8dvz2jmGWlSmk5YxDpE+IYuux4jLE4vom8oPGR5w3TuTAxkBMDuNfrGTcU
+X-Google-Smtp-Source: AGHT+IGAV8kfrE1TushQq2bRjeOsJwkTc6VrsiuidrOOybNSfh6ZRjlKJ0xGxxnuN3ztg9H4PEqcSA==
+X-Received: by 2002:a17:903:11c3:b0:1dd:7d6a:d6c8 with SMTP id q3-20020a17090311c300b001dd7d6ad6c8mr22060937plh.14.1710960151967;
+        Wed, 20 Mar 2024 11:42:31 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b16-20020a170902d51000b001dd091a4224sm11466752plg.61.2024.03.20.11.42.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Mar 2024 11:42:30 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Wed, 20 Mar 2024 11:42:29 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Kemeng Shi <shikemeng@huaweicloud.com>
+Cc: tytso@mit.edu, adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org, daniel.diaz@linaro.org,
+	vmartensson@google.com
+Subject: Re: [PATCH v2 2/5] ext4: Add unit test of ext4_mb_generate_buddy
+Message-ID: <b814135f-83cb-4e8b-8b9e-c1be8a7ac597@roeck-us.net>
+References: <20240103104900.464789-1-shikemeng@huaweicloud.com>
+ <20240103104900.464789-3-shikemeng@huaweicloud.com>
+ <30a8ce01-84d1-48ef-a93d-d14cc61723e3@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,117 +72,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <30a8ce01-84d1-48ef-a93d-d14cc61723e3@roeck-us.net>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   a4145ce1e7bc247fd6f2846e8699473448717b37
-commit: f078d4ea827607867d42fb3b2ef907caf86ce49d xfs: convert kmem_alloc() to kmalloc()
-date:   5 weeks ago
-config: x86_64-randconfig-104-20240320 (https://download.01.org/0day-ci/archive/20240321/202403210204.LPPBJMhf-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+[ Adding more interested parties]
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403210204.LPPBJMhf-lkp@intel.com/
-
-cocci warnings: (new ones prefixed by >>)
->> fs/xfs/libxfs/xfs_attr_leaf.c:1061:13-20: WARNING opportunity for kmemdup
-
-vim +1061 fs/xfs/libxfs/xfs_attr_leaf.c
-
-  1039	
-  1040	/*
-  1041	 * Convert a leaf attribute list to shortform attribute list
-  1042	 */
-  1043	int
-  1044	xfs_attr3_leaf_to_shortform(
-  1045		struct xfs_buf		*bp,
-  1046		struct xfs_da_args	*args,
-  1047		int			forkoff)
-  1048	{
-  1049		struct xfs_attr_leafblock *leaf;
-  1050		struct xfs_attr3_icleaf_hdr ichdr;
-  1051		struct xfs_attr_leaf_entry *entry;
-  1052		struct xfs_attr_leaf_name_local *name_loc;
-  1053		struct xfs_da_args	nargs;
-  1054		struct xfs_inode	*dp = args->dp;
-  1055		char			*tmpbuffer;
-  1056		int			error;
-  1057		int			i;
-  1058	
-  1059		trace_xfs_attr_leaf_to_sf(args);
-  1060	
-> 1061		tmpbuffer = kmalloc(args->geo->blksize, GFP_KERNEL | __GFP_NOFAIL);
-  1062		if (!tmpbuffer)
-  1063			return -ENOMEM;
-  1064	
-  1065		memcpy(tmpbuffer, bp->b_addr, args->geo->blksize);
-  1066	
-  1067		leaf = (xfs_attr_leafblock_t *)tmpbuffer;
-  1068		xfs_attr3_leaf_hdr_from_disk(args->geo, &ichdr, leaf);
-  1069		entry = xfs_attr3_leaf_entryp(leaf);
-  1070	
-  1071		/* XXX (dgc): buffer is about to be marked stale - why zero it? */
-  1072		memset(bp->b_addr, 0, args->geo->blksize);
-  1073	
-  1074		/*
-  1075		 * Clean out the prior contents of the attribute list.
-  1076		 */
-  1077		error = xfs_da_shrink_inode(args, 0, bp);
-  1078		if (error)
-  1079			goto out;
-  1080	
-  1081		if (forkoff == -1) {
-  1082			/*
-  1083			 * Don't remove the attr fork if this operation is the first
-  1084			 * part of a attr replace operations. We're going to add a new
-  1085			 * attr immediately, so we need to keep the attr fork around in
-  1086			 * this case.
-  1087			 */
-  1088			if (!(args->op_flags & XFS_DA_OP_REPLACE)) {
-  1089				ASSERT(xfs_has_attr2(dp->i_mount));
-  1090				ASSERT(dp->i_df.if_format != XFS_DINODE_FMT_BTREE);
-  1091				xfs_attr_fork_remove(dp, args->trans);
-  1092			}
-  1093			goto out;
-  1094		}
-  1095	
-  1096		xfs_attr_shortform_create(args);
-  1097	
-  1098		/*
-  1099		 * Copy the attributes
-  1100		 */
-  1101		memset((char *)&nargs, 0, sizeof(nargs));
-  1102		nargs.geo = args->geo;
-  1103		nargs.dp = dp;
-  1104		nargs.total = args->total;
-  1105		nargs.whichfork = XFS_ATTR_FORK;
-  1106		nargs.trans = args->trans;
-  1107		nargs.op_flags = XFS_DA_OP_OKNOENT;
-  1108	
-  1109		for (i = 0; i < ichdr.count; entry++, i++) {
-  1110			if (entry->flags & XFS_ATTR_INCOMPLETE)
-  1111				continue;	/* don't copy partial entries */
-  1112			if (!entry->nameidx)
-  1113				continue;
-  1114			ASSERT(entry->flags & XFS_ATTR_LOCAL);
-  1115			name_loc = xfs_attr3_leaf_name_local(leaf, i);
-  1116			nargs.name = name_loc->nameval;
-  1117			nargs.namelen = name_loc->namelen;
-  1118			nargs.value = &name_loc->nameval[nargs.namelen];
-  1119			nargs.valuelen = be16_to_cpu(name_loc->valuelen);
-  1120			nargs.hashval = be32_to_cpu(entry->hashval);
-  1121			nargs.attr_filter = entry->flags & XFS_ATTR_NSP_ONDISK_MASK;
-  1122			xfs_attr_shortform_add(&nargs, forkoff);
-  1123		}
-  1124		error = 0;
-  1125	
-  1126	out:
-  1127		kmem_free(tmpbuffer);
-  1128		return error;
-  1129	}
-  1130	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On Wed, Mar 20, 2024 at 09:23:24AM -0700, Guenter Roeck wrote:
+> Hi,
+> 
+> On Wed, Jan 03, 2024 at 06:48:57PM +0800, Kemeng Shi wrote:
+> > Add unit test of ext4_mb_generate_buddy
+> > 
+> > Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+> 
+> With this and other new ext4 tests test in the tree, I see a variety
+> of backtraces in the upstream kernel if debug options are enabled.
+> An example is
+> 
+> [    6.821447]         KTAP version 1
+> [    6.821769]         # Subtest: test_mb_generate_buddy
+> [    6.824787] =============================================================================
+> [    6.825568] BUG inode_cache (Tainted: G                 N): Padding overwritten. 0xfffff80006223f68-0xfffff80006223f6f @offset=16232
+> ...
+> [    6.894341] ok 7 ext4_inode_test
+> [    6.895411] =============================================================================
+> [    6.895777] BUG inode_cache (Tainted: G    B            N): Padding overwritten. 0xfffff80006223f68-0xfffff80006223f6f @offset=16232
+> 
+> Another example, from another test run, is
+> 
+> [    3.938551]         # Subtest: test_new_blocks_simple
+> [    3.947171]         ok 1 block_bits=10 cluster_bits=3 blocks_per_group=8192 group_count=4 desc_size=64
+> [    3.952988]         ok 2 block_bits=12 cluster_bits=3 blocks_per_group=8192 group_count=4 desc_size=64
+> [    3.958403]         ok 3 block_bits=16 cluster_bits=3 blocks_per_group=8192 group_count=4 desc_size=64
+> [    3.958890] =============================================================================
+> [    3.959159] BUG inode_cache (Tainted: G                 N): Padding overwritten. 0xffff8de881adbf68-0xffff8de881adbf6f @offset=16232
+> 
+> Another one:
+> 
+> [   18.730473]         # Subtest: test_new_blocks_simple
+> [   18.760547]         ok 1 block_bits=10 cluster_bits=3 blocks_per_group=8192 group_count=4 desc_size=64
+> [   18.778477] ==================================================================
+> [   18.778950] BUG: KFENCE: out-of-bounds write in ext4_mb_init+0x5d7/0xa60
+> 
+> This is just a sample, taken from a quick look at test results.
+> 
+> Are those backtraces expected ? If so, would it be possible to execute the
+> tests without generating such backtraces ? The backtraces, if intentional,
+> hide real problems in the noise.
+> 
+> Thanks,
+> Guenter
