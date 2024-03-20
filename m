@@ -1,90 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C837D320B;
-	Wed, 20 Mar 2024 18:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37D2D6A8A4;
+	Wed, 20 Mar 2024 18:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710957819; cv=none; b=kRW7aSGvFe+X5ZbQGSbLFCe/p/I9a/fzjkl/OZYzH3ghpcCw6dIXx43yGnDCJVYTlGvAqWPgkXI5b29Lw9w5mBoRNCroBk5fdXWVjX2YuyCA7E0vxAXfjlb8hxdOjS6ULunEk9sRXg4BW95CUwOhQ5hkmKA51qKo9HZakC2f6U0=
+	t=1710957838; cv=none; b=WpU9yinbiA6UKETQfGubQ2OHfS0EdsA/NJqY0z6FbiWB2F6ux36C4uM9SrCr9gS5R7hDxNFpGnGciS1AQ+penVFMqE+9Mq1dYmmoQLA6k4E0YmfidXx2KCj/MIL210Ch9fUYvKJH67t3OlnyrZr2dHLk/bGIZPfO+a5p1oGfjHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710957819; c=relaxed/simple;
-	bh=rtNpxUvHf2jH9+p/WX4OSE0NIMCFyZPxBNfrQ4XJKF0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Urh3mnpdedsIMAlVVneZ3zmKqwNuD5qtz0iUUM9YRk4tyrPP3RHZ8E2NFt3YqNZGhPPHuzmb398kxhAdUBEUZzY8ocYvjG547d33Uyx1hlR3spz/wQJKpz8BRxedXMgX2v+xuhQ6ulco03A2BTfuVZ3TfJtg1dzUA2oKx2BR6ZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KT2XkyjS; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KT2XkyjS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EB2AC433F1;
-	Wed, 20 Mar 2024 18:03:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710957819;
-	bh=rtNpxUvHf2jH9+p/WX4OSE0NIMCFyZPxBNfrQ4XJKF0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=KT2XkyjSLxo+ONcnO2ZQba1NcVrBFuY3cN/I5oHrVScqmqp8rPKW1u4eVhfpYX+F0
-	 MxiguZiKMdh6jhNQEV7wP9JabdOCN1N/2j5jjzezYGu63fgCmy4mU5O6xFh4G6BQbU
-	 va//epIxZCHyAy+IRRin8Cpmr8NioOUq2C21SYOY5eG93+mK1RqJGeRUWfd6wqiGV/
-	 3d1ySDWIE1fDQi7X/ypZcbBpI0oDjIxot0d0VFB9pDmtc9VLnh7f5C3LinVoMOGuZQ
-	 FNB+moL3NNlpOV+v0ZV77opjIS9FwIfQGo/xRiyxMTPqPBPzmePxT1KgCvE41Ov88H
-	 G9CIrwyLNFDBw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Geoff Levand <geoff@infradead.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Paul Mackerras <paulus@ozlabs.org>,
-	Geert Uytterhoeven <Geert.Uytterhoeven@sonycom.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Kevin Hao <haokexin@gmail.com>,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] powerpc: ps3: mark ps3_notification_device static for stack usage
-Date: Wed, 20 Mar 2024 19:03:21 +0100
-Message-Id: <20240320180333.151043-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1710957838; c=relaxed/simple;
+	bh=afr0MOAqLqtv3YfQ4k+Meq+aEdBVU04DiUCM/8TGLhU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qluEXuNpcyfKdrOsa3hmnb13RvvfmI93eX8wVlZwvo6iijYBkS8+uDY76L8JaZl2ks77Rm2RjaSsvH6xUMiyLHjGy4J+Da+LaB6ca+8PqNfy4lCZGgnPF9qWvdOFwkz0kswV5R2uvW+FBMLA+nuEjmP/AG7Zs44TT+02fJSqM8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D6E01007;
+	Wed, 20 Mar 2024 11:04:27 -0700 (PDT)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.34.144])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 19D053F762;
+	Wed, 20 Mar 2024 11:03:49 -0700 (PDT)
+Date: Wed, 20 Mar 2024 18:03:45 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: =?us-ascii?Q?Bj=22orn_T=22opel?= <bjorn@kernel.org>
+Cc: Puranjay Mohan <puranjay12@gmail.com>, Andy Chiu <andy.chiu@sifive.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Guo Ren <guoren@kernel.org>,
+	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+	Deepak Gupta <debug@rivosinc.com>,
+	Sia Jee Heng <jeeheng.sia@starfivetech.com>,
+	Bjorn Topel <bjorn@rivosinc.com>,
+	Song Shuai <suagrfillet@gmail.com>,
+	Cl'ement L'eger <cleger@rivosinc.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Jisheng Zhang <jszhang@kernel.org>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Robbin Ehn <rehn@rivosinc.com>
+Subject: Re: [RFC PATCH] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
+Message-ID: <ZfslAb_W0Gk-0pmR@FVFF77S0Q05N.cambridge.arm.com>
+References: <20240306165904.108141-1-puranjay12@gmail.com>
+ <87ttlhdeqb.fsf@all.your.base.are.belong.to.us>
+ <ZfBbxPDd0rz6FN2T@FVFF77S0Q05N>
+ <8734suqsth.fsf@all.your.base.are.belong.to.us>
+ <mb61pplvw6grf.fsf@gmail.com>
+ <87zfv0onre.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zfv0onre.fsf@all.your.base.are.belong.to.us>
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Thu, Mar 14, 2024 at 04:07:33PM +0100, Bj"orn T"opel wrote:
+> After reading Mark's reply, and discussing with OpenJDK folks (who does
+> the most crazy text patching on all platforms), having to patch multiple
+> instructions (where the address materialization is split over multiple
+> instructions) is a no-go. It's just a too big can of worms. So, if we
+> can only patch one insn, it's CALL_OPS.
+> 
+> A couple of options (in addition to Andy's), and all require a
+> per-function landing address ala CALL_OPS) tweaking what Mark is doing
+> on Arm (given the poor branch range).
+> 
+> ..and maybe we'll get RISC-V rainbows/unicorns in the future getting
+> better reach (full 64b! ;-)).
+> 
+> A) Use auipc/jalr, only patch jalr to take us to a common
+>    dispatcher/trampoline
+>   
+>  | <func_trace_target_data_8B> # probably on a data cache-line != func .text to avoid ping-pong
+>  | ...
+>  | func:
+>  |   ...make sure ra isn't messed up...
+>  |   aupic
+>  |   nop <=> jalr # Text patch point -> common_dispatch
+>  |   ACTUAL_FUNC
+>  | 
+>  | common_dispatch:
+>  |   load <func_trace_target_data_8B> based on ra
+>  |   jalr
+>  |   ...
+> 
+> The auipc is never touched, and will be overhead. Also, we need a mv to
+> store ra in a scratch register as well -- like Arm. We'll have two insn
+> per-caller overhead for a disabled caller.
 
-The device is way too large to be on the stack, causing a warning for
-an allmodconfig build with clang:
+Is the AUIPC a significant overhead? IIUC that's similar to Arm's ADRP, and I'd
+have expected that to be pretty cheap.
 
-arch/powerpc/platforms/ps3/device-init.c:771:12: error: stack frame size (2064) exceeds limit (2048) in 'ps3_probe_thread' [-Werror,-Wframe-larger-than]
-  771 | static int ps3_probe_thread(void *data)
+IIUC your JALR can choose which destination register to store the return
+address in, and if so, you could leave the original ra untouched (and recover
+that in the common trampoline). Have I misunderstood that?
 
-There is only a single thread that ever accesses this, so it's fine to
-make it static, which avoids the warning.
+Maybe that doesn't play nicely with something else?
 
-Fixes: b4cb2941f855 ("[POWERPC] PS3: Use the HVs storage device notification mechanism properly")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/powerpc/platforms/ps3/device-init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> B) Use jal, which can only take us +/-1M, and requires multiple
+>    dispatchers (and tracking which one to use, and properly distribute
+>    them. Ick.)
+> 
+>  | <func_trace_target_data_8B> # probably on a data cache-line != func .text to avoid ping-pong
+>  | ...
+>  | func:
+>  |   ...make sure ra isn't messed up...
+>  |   nop <=> jal # Text patch point -> within_1M_to_func_dispatch
+>  |   ACTUAL_FUNC
+>  | 
+>  | within_1M_to_func_dispatch:
+>  |   load <func_trace_target_data_8B> based on ra
+>  |   jalr
+> 
+> C) Use jal, which can only take us +/-1M, and use a per-function
+>    trampoline requires multiple dispatchers (and tracking which one to
+>    use). Blows up text size A LOT.
+> 
+>  | <func_trace_target_data_8B> # somewhere, but probably on a different cacheline than the .text to avoid ping-ongs
+>  | ...
+>  | per_func_dispatch
+>  |   load <func_trace_target_data_8B> based on ra
+>  |   jalr
+>  | func:
+>  |   ...make sure ra isn't messed up...
+>  |   nop <=> jal # Text patch point -> per_func_dispatch
+>  |   ACTUAL_FUNC
 
-diff --git a/arch/powerpc/platforms/ps3/device-init.c b/arch/powerpc/platforms/ps3/device-init.c
-index 878bc160246e..ce99f06698a9 100644
---- a/arch/powerpc/platforms/ps3/device-init.c
-+++ b/arch/powerpc/platforms/ps3/device-init.c
-@@ -770,7 +770,7 @@ static struct task_struct *probe_task;
- 
- static int ps3_probe_thread(void *data)
- {
--	struct ps3_notification_device dev;
-+	static struct ps3_notification_device dev;
- 	int res;
- 	unsigned int irq;
- 	u64 lpar;
--- 
-2.39.2
+Beware that with option (C) you'll need to handle that in your unwinder for
+RELIABLE_STACKTRACE. If you don't have a symbol for per_func_dispatch (or
+func_trace_target_data_8B), PC values within per_func_dispatch would be
+symbolized as the prior function/data.
 
+> It's a bit sad that we'll always have to have a dispatcher/trampoline,
+> but it's still better than stop_machine(). (And we'll need a fencei IPI
+> as well, but only one. ;-))
+> 
+> Today, I'm leaning towards A (which is what Mark suggested, and also
+> Robbin).. Any other options?
+
+Assuming my understanding of JALR above is correct, I reckon A is the nicest
+option out of A/B/C.
+
+Mark.
