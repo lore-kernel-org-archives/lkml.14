@@ -1,222 +1,112 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A961364;
-	Wed, 20 Mar 2024 04:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B90D411CBE
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 04:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710907705; cv=none; b=r2W8TGbVVCfHFdxvL7i0Reb4/DJWnTDXiIeCXeW3tYFQlSUrS/jDDPfWcy7OWI9LNO5S6yt7jDR19VUSfIHsI9nP+Z15L1yZ9voy5UN3o2EdEzUXBC9DkxiGsYbkHIHNDfRy6D11PA80y1EvGXcj71EhdvSEVkm6eTmWGPejt08=
+	t=1710908406; cv=none; b=YOn5C2FqgEAyVn90kOF2ol0S+7yJAGpX5EbGjnlQ5UJK6h8wlc3tvxbcqIk2UPLRr4LFI7pjP7GCyS7Vjl+sRriz1qkSZG0anz5h2OjkDFtrA7nC9SYMWVm7Wy4U178HTqEIc9FETEWBdM3H2HipkVTmtm+yOuTjUq27qwQrBzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710907705; c=relaxed/simple;
-	bh=cLqbwSMUR6EGM782YW5lunwcL5bIT0HNyZmKiRKN2os=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W9xWDCZROUZvBUonf42kvV/k31L7fEJRTQo1jNq/oeWkyUyrK/pm67Tb0Ec8mGDM81wDTe7Acq4Jqr0bI3izHtq5pX3CTJwvbTg4mggMXIxTK35trowlVoFGauI/0BkccT6o+3DbbG9YKhaGWIth7UCtB9zgIg+70AKbOkDYzSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Tzw4z1lcYz1xs2C;
-	Wed, 20 Mar 2024 12:06:27 +0800 (CST)
-Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id C9E441405A2;
-	Wed, 20 Mar 2024 12:08:19 +0800 (CST)
-Received: from huawei.com (10.67.189.167) by canpemm500010.china.huawei.com
- (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 20 Mar
- 2024 12:08:19 +0800
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-To: <linux@armlinux.org.uk>, <arnd@arndb.de>, <keescook@chromium.org>,
-	<rmk+kernel@armlinux.org.uk>, <haibo.li@mediatek.com>,
-	<angelogioacchino.delregno@collabora.com>, <amergnat@baylibre.com>,
-	<xiaojiangfeng@huawei.com>
-CC: <akpm@linux-foundation.org>, <dave.hansen@linux.intel.com>,
-	<douzhaolei@huawei.com>, <gustavoars@kernel.org>, <jpoimboe@kernel.org>,
-	<kepler.chenxin@huawei.com>, <kirill.shutemov@linux.intel.com>,
-	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-arm-kernel@lists.infradead.org>,
-	<nixiaoming@huawei.com>, <peterz@infradead.org>, <wangbing6@huawei.com>,
-	<wangfangpeng1@huawei.com>, <jannh@google.com>, <willy@infradead.org>,
-	<David.Laight@ACULAB.COM>
-Subject: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
-Date: Wed, 20 Mar 2024 11:44:38 +0800
-Message-ID: <1710906278-23851-1-git-send-email-xiaojiangfeng@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
-In-Reply-To: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
-References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
+	s=arc-20240116; t=1710908406; c=relaxed/simple;
+	bh=a+lyfj6zeTwlOIWPD4BenCcLHO+vHC6TPolOl4FzFoM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=tWc0TNva1iGqhp75vnY4kVPS3eLrpTEsT5SrMVqKvUOKTWZt/GygKfuYLO9h4aDNX51vOylHygG4Ip2h17KMC+tvwS814GIL9j6todbE7BUr7PUFgYv8Xih3dOPxzNFjt50y12RXnZWBkjckr3mET5pn7Mr83wGB7VSdHRO9rKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=turingpi.com; spf=pass smtp.mailfrom=turingpi.com; dkim=pass (2048-bit key) header.d=turingpi.com header.i=@turingpi.com header.b=eSacToBk; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=turingpi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=turingpi.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=turingpi.com header.i=@turingpi.com header.b="eSacToBk"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6e74bd85f26so909254b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 21:20:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=turingpi.com; s=google; t=1710908404; x=1711513204; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=guY2KM4DsbdsXz5uu7iJDnaLW29Dahcuc+xgvO6JLxI=;
+        b=eSacToBkG7M5Fh7SSvrJR8m/Y04obM0pOhhwymQRm/PXLUHuDhLkXgKN69uVUmjCVs
+         niPzeyANZ7cRGRPspkeLkoLXa93N9zNYUt6FTDG0r9GbDmTU/mADkFKJ/CQo/AllQmoM
+         AuTkWweiNwaan8sRpkArF9yb6fqaQ/aQsDU9HroEBL+TkRMRm/6yLA8/5lrg1WKhrmfb
+         eByrECt3HfHqbBW42IaO3SJ60+IBDAWBdUo9M54uHlk+f7BZlz0ekd6xHhGt+RTpIH5x
+         BR9J5NvkCEmz2wzKK8VOPCCSiL2wbnZpOgAINelcNNRi2sI6HY8jKU8pSyXc7R+KV1Ti
+         W1Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710908404; x=1711513204;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=guY2KM4DsbdsXz5uu7iJDnaLW29Dahcuc+xgvO6JLxI=;
+        b=eNO58RteGkm4vVbzMuAXCcSIcEJsqK5RsRm5dU0PLZQRP5zzmQjQUEwjGBuPSJcHR3
+         EhSZ1zdnU8oWoNvB11Jw5joKsbP9V9RBB8F7LEzQC6f53Okl1M9B7TgXMyu2oii96UO/
+         yBGnqIDfZ/AaZ0GGxn4F/CgxM/Rm9ZJujeaYfiz6IJx0DQMYVDfgmZCNPOzkRhIgdOvk
+         QguJpwhf8jXnLqD9Gl/l28/OEtCEWdMJYLDzM7513MbqxTY0PosRtbR+8aE6bxN/RSAf
+         gk71y6iJyfi7a4pLZ7BJjLHgXBa/leKIIChDOTpXvdOuyC6x73CRN7kZ0m7w1dq45rGA
+         /TWA==
+X-Forwarded-Encrypted: i=1; AJvYcCVHBZmwHvMQCTKbN7DXWMzI1PSOW2WXSBruWrXZcDU3sSHPvsDX1TFdYFAaHkefYRZFafrCQJ6kCxyAU0A8ANnH0dxzNL7pXNpCer9z
+X-Gm-Message-State: AOJu0YyoggRXe5HFEN+okpY7kgzDU7XwS84N7aeUUUCsSxu27qFx9jc+
+	FMaIOc7gMz3EyFb5HyqhTjwkLmy4yHNjC0hquLLFrCzCuTsB/cGZpyZYgHroCQnQrg+1eIgPNju
+	iuhtcIcnjY1xTr3FrsEBdE+djje9TFGA/MuFxLQ==
+X-Google-Smtp-Source: AGHT+IGW0qUS/trpEAYa3MLlIWx9ApWjKgdJY2CL/NKVnVVBCvEDzMxShnrhHLrfqbVQSeTeRCdxn7LkBAh/+5qxRe8=
+X-Received: by 2002:a05:6a21:1798:b0:1a3:6fe9:4060 with SMTP id
+ nx24-20020a056a21179800b001a36fe94060mr5194683pzb.17.1710908403659; Tue, 19
+ Mar 2024 21:20:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- canpemm500010.china.huawei.com (7.192.105.118)
+From: Sam Edwards <sam@turingpi.com>
+Date: Tue, 19 Mar 2024 22:19:53 -0600
+Message-ID: <CAF8uH3tYaUwhkkeFuY+PdsnSPqeTtWtOsB_hy9oOjF=f-2Hdaw@mail.gmail.com>
+Subject: [RESEND RFC PATCH 0/5] Enhancements for mv64xxx I2C driver
+To: Gregory CLEMENT <gregory.clement@bootlin.com>, Andi Shyti <andi.shyti@kernel.org>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-This is an off-by-one bug which is common in unwinders,
-due to the fact that the address on the stack points
-to the return address rather than the call address.
+Salutations, Linux I2C team!
 
-So, for example, when the last instruction of a function
-is a function call (e.g., to a noreturn function), it can
-cause the unwinder to incorrectly try to unwind from
-the function after the callee.
+Sorry about the resend; it seems my mail client "helpfully" swallowed the
+newlines on any line consisting only of whitespace, garbling the patches.
 
-foo:
-...
-	bl	bar
-... end of function and thus next function ...
+I am working with an Allwinner T113-s3 based board; the internal I2C bus of
+which has a Realtek RTL8370MB-CG Ethernet switch coexisting with other I2C
+devices. The RTL8370MB-CG deviates from "conventional" I2C read operations
+in that it expects the hardware register after the addr+read byte before it
+turns around the bus to send the value. For this reason, the `realtek-smi`
+driver currently implements the protocol via bit-banging. However, I am in the
+process of developing a separate patch series to promote this driver to a
+"full" I2C driver, leveraging I2C_M_NOSTART to support this odd read operation.
 
-which results in LR pointing into the next function.
+In anticipation of that, I am preparing this series comprising five patches to
+improve the functionality and reliability of the I2C adapter enough to support
+this kind of device. I have heavily tested these changes on the Allwinner-style
+mv64xxx core, but not the Marvell-style, and have not been able to test 10-bit
+addressing. I would greatly appreciate if anyone here could test this series,
+especially on non-Allwinner boards and/or boards with 10-bit devices.
 
-Fixed this by subtracting 1 from frmae->pc in the call frame
-(but not exception frames) like ORC on x86 does.
+I'm a bit skeptical of using I2C_M_NOSTART for this purpose. The driver does
+not (and cannot) support "just any" use of I2C_M_NOSTART, so it may be
+inappropriate to claim the I2C_FUNC_NOSTART capability. On the other hand, I
+searched high and low and couldn't find any use of I2C_M_NOSTART that
+*wouldn't* be supported by this change, so this could very well be exactly what
+clients understand I2C_FUNC_NOSTART to mean. Given that the alternative would
+be inventing a new flag ("I2C_M_READEXTRA"?) and figuring out how to supply
+input bytes and output bytes in the same i2c_msg, I opted for the NOSTART
+route instead.
 
-Refer to the unwind_next_frame function in the unwind_orc.c
+I look forward to any feedback, bug reports, test results, questions, concerns,
+commentary, or discussion that you can offer!
 
-Suggested-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Link: https://lkml.kernel.org/lkml/20240305175846.qnyiru7uaa7itqba@treble/
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
----
-ChangeLog v1->v2
-- stay printk("%s...", loglvl, ...)
----
- arch/arm/include/asm/stacktrace.h |  4 ----
- arch/arm/kernel/stacktrace.c      |  2 --
- arch/arm/kernel/traps.c           |  4 ++--
- arch/arm/kernel/unwind.c          | 18 +++++++++++++++---
- 4 files changed, 17 insertions(+), 11 deletions(-)
+Best regards,
+Sam
 
-diff --git a/arch/arm/include/asm/stacktrace.h b/arch/arm/include/asm/stacktrace.h
-index 360f0d2..07e4c16 100644
---- a/arch/arm/include/asm/stacktrace.h
-+++ b/arch/arm/include/asm/stacktrace.h
-@@ -21,9 +21,7 @@ struct stackframe {
- 	struct llist_node *kr_cur;
- 	struct task_struct *tsk;
- #endif
--#ifdef CONFIG_UNWINDER_FRAME_POINTER
- 	bool ex_frame;
--#endif
- };
- 
- static __always_inline
-@@ -37,9 +35,7 @@ void arm_get_current_stackframe(struct pt_regs *regs, struct stackframe *frame)
- 		frame->kr_cur = NULL;
- 		frame->tsk = current;
- #endif
--#ifdef CONFIG_UNWINDER_FRAME_POINTER
- 		frame->ex_frame = in_entry_text(frame->pc);
--#endif
- }
- 
- extern int unwind_frame(struct stackframe *frame);
-diff --git a/arch/arm/kernel/stacktrace.c b/arch/arm/kernel/stacktrace.c
-index 620aa82..1abd4f9 100644
---- a/arch/arm/kernel/stacktrace.c
-+++ b/arch/arm/kernel/stacktrace.c
-@@ -154,9 +154,7 @@ static void start_stack_trace(struct stackframe *frame, struct task_struct *task
- 	frame->kr_cur = NULL;
- 	frame->tsk = task;
- #endif
--#ifdef CONFIG_UNWINDER_FRAME_POINTER
- 	frame->ex_frame = in_entry_text(frame->pc);
--#endif
- }
- 
- void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
-diff --git a/arch/arm/kernel/traps.c b/arch/arm/kernel/traps.c
-index 3bad79d..46a5b1e 100644
---- a/arch/arm/kernel/traps.c
-+++ b/arch/arm/kernel/traps.c
-@@ -84,10 +84,10 @@ void dump_backtrace_entry(unsigned long where, unsigned long from,
- 	printk("%sFunction entered at [<%08lx>] from [<%08lx>]\n",
- 		loglvl, where, from);
- #elif defined CONFIG_BACKTRACE_VERBOSE
--	printk("%s[<%08lx>] (%ps) from [<%08lx>] (%pS)\n",
-+	printk("%s[<%08lx>] (%ps) from [<%08lx>] (%pB)\n",
- 		loglvl, where, (void *)where, from, (void *)from);
- #else
--	printk("%s %ps from %pS\n", loglvl, (void *)where, (void *)from);
-+	printk("%s %ps from %pB\n", loglvl, (void *)where, (void *)from);
- #endif
- 
- 	if (in_entry_text(from) && end <= ALIGN(frame, THREAD_SIZE))
-diff --git a/arch/arm/kernel/unwind.c b/arch/arm/kernel/unwind.c
-index 9d21921..f2baf92 100644
---- a/arch/arm/kernel/unwind.c
-+++ b/arch/arm/kernel/unwind.c
-@@ -30,6 +30,7 @@
- #include <linux/list.h>
- #include <linux/module.h>
- 
-+#include <asm/sections.h>
- #include <asm/stacktrace.h>
- #include <asm/traps.h>
- #include <asm/unwind.h>
-@@ -416,8 +417,14 @@ int unwind_frame(struct stackframe *frame)
- 
- 	pr_debug("%s(pc = %08lx lr = %08lx sp = %08lx)\n", __func__,
- 		 frame->pc, frame->lr, frame->sp);
--
--	idx = unwind_find_idx(frame->pc);
-+	/*
-+	 * For a call frame (as opposed to a exception frame), when the last
-+	 * instruction of a function is a function call (e.g., to a noreturn
-+	 * function), it can cause the unwinder incorrectly try to unwind
-+	 * from the function after the callee, fixed this by subtracting 1
-+	 * from frame->pc in the call frame like ORC on x86 does.
-+	 */
-+	idx = unwind_find_idx(frame->ex_frame ? frame->pc : frame->pc - 1);
- 	if (!idx) {
- 		if (frame->pc && kernel_text_address(frame->pc)) {
- 			if (in_module_plt(frame->pc) && frame->pc != frame->lr) {
-@@ -427,6 +434,7 @@ int unwind_frame(struct stackframe *frame)
- 				 * the state of the stack or the register file
- 				 */
- 				frame->pc = frame->lr;
-+				frame->ex_frame = in_entry_text(frame->pc);
- 				return URC_OK;
- 			}
- 			pr_warn("unwind: Index not found %08lx\n", frame->pc);
-@@ -454,6 +462,7 @@ int unwind_frame(struct stackframe *frame)
- 		if (frame->pc == frame->lr)
- 			return -URC_FAILURE;
- 		frame->pc = frame->lr;
-+		frame->ex_frame = in_entry_text(frame->pc);
- 		return URC_OK;
- 	} else if ((idx->insn & 0x80000000) == 0)
- 		/* prel31 to the unwind table */
-@@ -515,6 +524,7 @@ int unwind_frame(struct stackframe *frame)
- 	frame->lr = ctrl.vrs[LR];
- 	frame->pc = ctrl.vrs[PC];
- 	frame->lr_addr = ctrl.lr_addr;
-+	frame->ex_frame = in_entry_text(frame->pc);
- 
- 	return URC_OK;
- }
-@@ -544,6 +554,7 @@ void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk,
- 		 */
- here:
- 		frame.pc = (unsigned long)&&here;
-+		frame.ex_frame = false;
- 	} else {
- 		/* task blocked in __switch_to */
- 		frame.fp = thread_saved_fp(tsk);
-@@ -554,11 +565,12 @@ void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk,
- 		 */
- 		frame.lr = 0;
- 		frame.pc = thread_saved_pc(tsk);
-+		frame.ex_frame = false;
- 	}
- 
- 	while (1) {
- 		int urc;
--		unsigned long where = frame.pc;
-+		unsigned long where = frame.ex_frame ? frame.pc : frame.pc - 1;
- 
- 		urc = unwind_frame(&frame);
- 		if (urc < 0)
--- 
-1.8.5.6
+Sam Edwards (5):
+  i2c: mv64xxx: Clear bus errors before transfer
+  i2c: mv64xxx: Clean up the private data struct
+  i2c: mv64xxx: Refactor FSM
+  i2c: mv64xxx: Allow continuing after read
+  i2c: mv64xxx: Implement I2C_FUNC_NOSTART
 
+ drivers/i2c/busses/i2c-mv64xxx.c | 430 ++++++++++++++++++++++---------
+ 1 file changed, 302 insertions(+), 128 deletions(-)
+
+--
+2.43.2
