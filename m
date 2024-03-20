@@ -1,121 +1,170 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8152E2BB0C;
-	Wed, 20 Mar 2024 02:06:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A520F519
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 02:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710900378; cv=none; b=aSoFfZZ89ZmsULm+h2S+IV2vkG25oseQuZLgtN01/YQYiupZbJHjdXvetWVOJ3NhQ+JTAcwZIRCIhnomZ+1gC7L4IYJueqx8z3ydUXsBV8c82ijD5DWoSDUspmySS+Q9V2muWUaggEDWqKAxm05WtAF7AOpXYtiw+zRL/eWl5e8=
+	t=1710900509; cv=none; b=bSInn0I/wSxK5GyuoNtUDJ+zTm2EMMED889O/tG1zRDzhWYOCK6ME0LFbpUodR8h4dLoMobXoqQNjBqyG5PDgli1D5JvaqIBaN/P1TtXu3BPuBmeMr62f16b83GtzN4TRg/irFaER/KCr2ApamLOswgy86hOi2BfeX5gMShmj2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710900378; c=relaxed/simple;
-	bh=Z8+wiNGtDIToSwps2ZuWbC29SNBtJ0uiL3GiMA5SDxw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lSdHLZYyJ+LOS1vNeD50BKBIcxZrEQMobt/9MxwywiDJfcYXAlrmigml+33hOOeYSSgICr12kZn64jpXdkx/EMCQZKGAZbF/erzWgtgrUKYik1t4Am4nUQN5VDz/JF+kuPBAWSmwr/Bo/Ey4hU5gLk7C9r30RLkWkrWmClIUUXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4TzsQ15DZ3z4f3kFW;
-	Wed, 20 Mar 2024 10:06:01 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id B0C7A1A01A7;
-	Wed, 20 Mar 2024 10:06:07 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.101.6])
-	by APP3 (Coremail) with SMTP id _Ch0CgAHFZ2KRPplVj2CHQ--.18626S8;
-	Wed, 20 Mar 2024 10:06:07 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: akpm@linux-foundation.org,
-	tj@kernel.org,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: willy@infradead.org,
-	bfoster@redhat.com,
-	jack@suse.cz,
-	dsterba@suse.com,
-	mjguzik@gmail.com,
-	dhowells@redhat.com,
-	peterz@infradead.org
-Subject: [PATCH 6/6] writeback: remove unneeded GDTC_INIT_NO_WB
-Date: Wed, 20 Mar 2024 19:02:22 +0800
-Message-Id: <20240320110222.6564-7-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20240320110222.6564-1-shikemeng@huaweicloud.com>
-References: <20240320110222.6564-1-shikemeng@huaweicloud.com>
+	s=arc-20240116; t=1710900509; c=relaxed/simple;
+	bh=FIzuKYDAkoINuSiIZV6ZsNqzCJaExKmuCjePFZHvsVA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=bOjehchW10WAz9YPQDF6DXfNOJgjR7mis33aAOIlIgtKn1UfrksMRBts3J7dLS/i1j5v9zUt6sK0JSwfI6ctl0cLWbO7R8ObvLdKUENIeHsnMo9Qi9vF8/4LR9UID4efyjcZBoqdT+aL8zGdYnqZ0HZd8OmVP48UsNzU9u/ClRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Yvh0fv4N; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yvh0fv4N"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60f9d800a29so76023287b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 19:08:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710900505; x=1711505305; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yYVHze7eFk58oRqMFdcZXvqqb2SqrJB7jmdU82oAHB0=;
+        b=Yvh0fv4NLxpxGJ2REGUxH9m52EIPIO8KubKCeRsqV1X7nE+UwlKYNKJpbJPBmgWlV0
+         DxfhEB9TNFtrHkrEgiHqIQziLyASNTizxyUEy1Fafx7hwmwzlKfLEY1yV9xUUIessvGt
+         3Ns2SHTve4Fti3k17jLBuu/bm6Vpx1xU+GOvqvlhRCs+dqOoDc21KdKjcOsA8xWYIwBZ
+         kTzGOlofUUHKt9Vcnz8BFjFF0WhpbJsT2ufiqjs2bAkJ4MsaGZw8aKiIrHi1aHI1BiHi
+         IHD5LiXXYUwLyNGPjKF0J9ta0T6tNbXKW4GzVY6idJERjInCQW3Uhxdv4nnW4fpEBKn0
+         aLJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710900505; x=1711505305;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yYVHze7eFk58oRqMFdcZXvqqb2SqrJB7jmdU82oAHB0=;
+        b=pLZVug/UJcmSFdV48qafGheVdkQlUO9TrgzPi7tG6aGKYvDcuX/eG3wBtPat837Grz
+         IDGghsb43znBuY2bodYwur5WnoeUm2f+v4avk5eHae2/XzS6dkZNjOJXOUDeU6GFKs+j
+         Bfnml6+00Oc2JKHi4m0lYM69yANRs5lgN2fSnusuNrG56ArqThdPsZx9g4Etfyi0Ty8X
+         DRWE8jZAQ3unQtTXZWAD48kMF7DIPKUjy7EsNFq2ZoLSdoVsJj7wIJfkZthChvJzfpvR
+         zxdm+EaVxE7TrReH67+FVWlm9HK4B7QK3IA7Awo5S/Cxkp5qzWztwrN+rQD7pxPXnipV
+         x02g==
+X-Forwarded-Encrypted: i=1; AJvYcCWEdfKyJjEqigUiNUFtF9AXDwbmeDb5e5sLoCFqmOHt8AUTtuEzkaBV6ffkGSV71nrVDzvbpcnDsFfPXv/BEtoa7GpMxL2yQey9MIBj
+X-Gm-Message-State: AOJu0YzVP51HoK399wLBQs+Rhzs3rD6M+yZAsGseqlYxEZri6/YWqSMo
+	JA3bS0xMUUN/GbE0on/EePaacNFP9XamTt6uiL+WVo6VC9ijuy3W41qteCBR4jcGtuhKgz5mtkO
+	Ks/KQvejmeS011DuqRg==
+X-Google-Smtp-Source: AGHT+IHmnbH7OIFT3vXCgDBMNN/LSpOqXUQlqADVGRo/DP6oT7pIALKkMG8DtSLjyTbflgHEateyR8upPPsuWMd6
+X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
+ (user=yosryahmed job=sendgmr) by 2002:a05:6902:70e:b0:dcc:6bf0:2eb6 with SMTP
+ id k14-20020a056902070e00b00dcc6bf02eb6mr966645ybt.6.1710900505416; Tue, 19
+ Mar 2024 19:08:25 -0700 (PDT)
+Date: Wed, 20 Mar 2024 02:08:22 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgAHFZ2KRPplVj2CHQ--.18626S8
-X-Coremail-Antispam: 1UD129KBjvJXoW7WF1xJrWxtF1rZw4xXFWxCrg_yoW8Aw1UpF
-	W3Cw1UKF4UArsFgFnxCasrXrnIqrZ7tFW7K3sxCw4ayF1xG3W8WFyjkw10yr4UAr93try7
-	ArWxtFyxZF40yrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPmb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
-	8IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAv
-	FVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3w
-	A2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE
-	3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr2
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7
-	CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2Iq
-	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
-	1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY
-	6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aV
-	AFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZE
-	Xa7IU0TqcUUUUUU==
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.291.gc1ea87d7ee-goog
+Message-ID: <20240320020823.337644-1-yosryahmed@google.com>
+Subject: [PATCH 1/2] mm: zswap: increase shrinking protection for zswap
+ swapins only
+From: Yosry Ahmed <yosryahmed@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Yosry Ahmed <yosryahmed@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-We never use gdtc->dom set with GDTC_INIT_NO_WB, just remove unneeded
-GDTC_INIT_NO_WB
+Currently, the number of protected zswap entries corresponding to an
+lruvec are incremented every time we swapin a page. This happens
+regardless of whether or not the page originated in zswap. Hence,
+swapins from disk will lead to increasing protection on potentially
+stale zswap entries. Furthermore, the increased shrinking protection can
+lead to more pages skipping zswap and going to disk, eventually leading
+to even more swapins from disk and starting a vicious circle.
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+Instead, only increase the protection when pages are loaded from zswap.
+This also has a nice side effect of removing zswap_folio_swapin() and
+replacing it with a static helper that is only called from zswap_load().
+
+No problems were observed in practice, this was found through code
+inspection.
+
+Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
 ---
- mm/page-writeback.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ include/linux/zswap.h |  2 --
+ mm/swap_state.c       |  8 ++------
+ mm/zswap.c            | 10 +++-------
+ 3 files changed, 5 insertions(+), 15 deletions(-)
 
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index 481b6bf34c21..09b2b0754cc5 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -154,8 +154,6 @@ struct dirty_throttle_control {
- 				.dom = &global_wb_domain,		\
- 				.wb_completions = &(__wb)->completions
+diff --git a/include/linux/zswap.h b/include/linux/zswap.h
+index 2a85b941db975..1f020b5427e3d 100644
+--- a/include/linux/zswap.h
++++ b/include/linux/zswap.h
+@@ -34,7 +34,6 @@ int zswap_swapon(int type, unsigned long nr_pages);
+ void zswap_swapoff(int type);
+ void zswap_memcg_offline_cleanup(struct mem_cgroup *memcg);
+ void zswap_lruvec_state_init(struct lruvec *lruvec);
+-void zswap_folio_swapin(struct folio *folio);
+ bool is_zswap_enabled(void);
+ #else
  
--#define GDTC_INIT_NO_WB		.dom = &global_wb_domain
+@@ -58,7 +57,6 @@ static inline int zswap_swapon(int type, unsigned long nr_pages)
+ static inline void zswap_swapoff(int type) {}
+ static inline void zswap_memcg_offline_cleanup(struct mem_cgroup *memcg) {}
+ static inline void zswap_lruvec_state_init(struct lruvec *lruvec) {}
+-static inline void zswap_folio_swapin(struct folio *folio) {}
+ 
+ static inline bool is_zswap_enabled(void)
+ {
+diff --git a/mm/swap_state.c b/mm/swap_state.c
+index bfc7e8c58a6d3..32e151054ec47 100644
+--- a/mm/swap_state.c
++++ b/mm/swap_state.c
+@@ -696,10 +696,8 @@ struct folio *swap_cluster_readahead(swp_entry_t entry, gfp_t gfp_mask,
+ 	/* The page was likely read above, so no need for plugging here */
+ 	folio = __read_swap_cache_async(entry, gfp_mask, mpol, ilx,
+ 					&page_allocated, false);
+-	if (unlikely(page_allocated)) {
+-		zswap_folio_swapin(folio);
++	if (unlikely(page_allocated))
+ 		swap_read_folio(folio, false, NULL);
+-	}
+ 	return folio;
+ }
+ 
+@@ -872,10 +870,8 @@ static struct folio *swap_vma_readahead(swp_entry_t targ_entry, gfp_t gfp_mask,
+ 	/* The folio was likely read above, so no need for plugging here */
+ 	folio = __read_swap_cache_async(targ_entry, gfp_mask, mpol, targ_ilx,
+ 					&page_allocated, false);
+-	if (unlikely(page_allocated)) {
+-		zswap_folio_swapin(folio);
++	if (unlikely(page_allocated))
+ 		swap_read_folio(folio, false, NULL);
+-	}
+ 	return folio;
+ }
+ 
+diff --git a/mm/zswap.c b/mm/zswap.c
+index b31c977f53e9c..323f1dea43d22 100644
+--- a/mm/zswap.c
++++ b/mm/zswap.c
+@@ -773,14 +773,9 @@ void zswap_lruvec_state_init(struct lruvec *lruvec)
+ 	atomic_long_set(&lruvec->zswap_lruvec_state.nr_zswap_protected, 0);
+ }
+ 
+-void zswap_folio_swapin(struct folio *folio)
++static void zswap_lruvec_inc_protected(struct lruvec *lruvec)
+ {
+-	struct lruvec *lruvec;
 -
- #define MDTC_INIT(__wb, __gdtc)	.wb = (__wb),				\
- 				.dom = mem_cgroup_wb_domain(__wb),	\
- 				.wb_completions = &(__wb)->memcg_completions, \
-@@ -210,7 +208,6 @@ static void wb_min_max_ratio(struct bdi_writeback *wb,
+-	if (folio) {
+-		lruvec = folio_lruvec(folio);
+-		atomic_long_inc(&lruvec->zswap_lruvec_state.nr_zswap_protected);
+-	}
++	atomic_long_inc(&lruvec->zswap_lruvec_state.nr_zswap_protected);
+ }
  
- #define GDTC_INIT(__wb)		.wb = (__wb),                           \
- 				.wb_completions = &(__wb)->completions
--#define GDTC_INIT_NO_WB
- #define MDTC_INIT(__wb, __gdtc)
+ void zswap_memcg_offline_cleanup(struct mem_cgroup *memcg)
+@@ -1644,6 +1639,7 @@ bool zswap_load(struct folio *folio)
+ 	zswap_entry_free(entry);
  
- static bool mdtc_valid(struct dirty_throttle_control *dtc)
-@@ -438,7 +435,7 @@ static void domain_dirty_limits(struct dirty_throttle_control *dtc)
-  */
- void global_dirty_limits(unsigned long *pbackground, unsigned long *pdirty)
- {
--	struct dirty_throttle_control gdtc = { GDTC_INIT_NO_WB };
-+	struct dirty_throttle_control gdtc = { };
+ 	folio_mark_dirty(folio);
++	zswap_lruvec_inc_protected(folio_lruvec(folio));
  
- 	gdtc.avail = global_dirtyable_memory();
- 	domain_dirty_limits(&gdtc);
-@@ -895,7 +892,7 @@ unsigned long wb_calc_thresh(struct bdi_writeback *wb, unsigned long thresh)
- 
- unsigned long wb_calc_cg_thresh(struct bdi_writeback *wb)
- {
--	struct dirty_throttle_control gdtc = { GDTC_INIT_NO_WB };
-+	struct dirty_throttle_control gdtc = { };
- 	struct dirty_throttle_control mdtc = { MDTC_INIT(wb, &gdtc) };
- 	unsigned long filepages, headroom, writeback;
- 
+ 	return true;
+ }
 -- 
-2.30.0
+2.44.0.291.gc1ea87d7ee-goog
 
