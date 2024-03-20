@@ -1,244 +1,114 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199BB23B0
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 16:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4CA54BDB;
+	Wed, 20 Mar 2024 16:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710951160; cv=none; b=hyk0anaH0tWPiwT2OrkQAgs2GX7y+pbqWmYTWIRNK8zokL6te/Q/J80uQp5N+HvVj3ZyIhsG5/uwo3coZQK1gZDhAWBFOotgV3lHyd4KRUp5NntflfbDcerxNGH4lFYyK5d0xGMl3/uwalD28mHMTqjrfqNN8kcSudSBhvG4zFA=
+	t=1710951334; cv=none; b=UMU8Cnzfg/n2b6rDvzNpNUjoJvGUdZpnNCJef1sm86DdmbNCKDUZG9hyhxeIT3HaamJYllT9NkG0YMbT3gZO9yl09b81xKEmw+M2BOS8yQPuEEzJUX4VSaFEuyclr1lPdS1TIJ2hCjInvKOlaghhM8+ZoAM/Ly6vU7y/E1EaHKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710951160; c=relaxed/simple;
-	bh=91XMpLG2akQ92yHfsX86vnzQBDTtg0DrCMSJa/o9yO4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ZmmrUTP1/VuCLn62ql+Qu63HdZFoexb33jTsmXLE6DTxtQFVBXqCxakO4I4H7MRdHvvnvHcP84U6MpaA2/GQVHydbcUAVxs6g7H/zxuNtOUeJnxXrsxw4EvH3fGxpdeDvQQlLcnqQgbzZxfrDbl4DgNQSkLbmEvE1pt3n+IKvDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZWeTSntZ; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1710951334; c=relaxed/simple;
+	bh=ieuHVkiJ3mvxSTBYRy2oxHanwhxgK3q2OFoG5+yAQVQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K95mmpF46yt9OzKCjdg+j0Oni9L92ieOwrlkSgGfoe23aRG6584ecqTspT5rXvr0g8elefCo5+xyPbaQmsRSi+aN6F71XrzDRITh34PnkHbQzmzHJudvORpJkWLdZYtI9tRXODNx/wOTXoyDQQwWYpm7O6w/YOTgCqHs4PajHYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C9PJ4h2R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZWeTSntZ"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-414618e6820so19993615e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 09:12:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710951157; x=1711555957; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OHaerxnf+Io0STbXSxPOeYL0uihrNa0TldEwjw3BQgY=;
-        b=ZWeTSntZ3C9eDoRi9NgKZjAgmPAHzY6+rinN5GPISYIEw6hya3n6aW1P3tRR6a6qAb
-         FRdCwz87hnV52HKD2YHOwiOekplp/BjbBReBHjx7y8eYpcmnZKu/kwaGNelMbeRY52Ga
-         sfoeBvpFsutZ1PfyjoVEkr/xAbcTnhUzywvxzv2MW/siM+SFwOkx0WBiejUhLzLcgH2m
-         /2dCengCm6jP/WSwS5NTTCENZ0z/zt6QKT0qSQNTZ68lYXEczyxn9QgIbCbbKPk+LR12
-         5+Sb0khCuRE/8lE3IofBAxOQzjMBNq2rIzJ7SXTvyVAuna/9koHt7z9G4ex38xcKcUYl
-         pjzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710951157; x=1711555957;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OHaerxnf+Io0STbXSxPOeYL0uihrNa0TldEwjw3BQgY=;
-        b=HYhFBGAkeYNH4EO8vG/iOMXz+bR87WK20Y5vLgzHwAxoT2PMb0u/ife4Bn6zPWg0ah
-         xnI3K0RK92KfRwh/tbsCn1AafzVXSox2AC+FrPOG7s7yvwvW0uEbiBmwrIC3y1lsDsOu
-         erUlYy9COFqc1oOuFNxSp8HSGUNVB27aC+4/Bq01cK8ubSzX4h0Z59umdRMaxAigOAdp
-         TXpMTyoKBV7fhF4V2S02GiSqi1gt/dteq1KXjHI11SYhUJLYT+eXxni1D/F9xZgMHNam
-         C+UU9Eyu06CwgoZZZtCsHtEa0h/U6Kvr9vNiE2sX2617QY4Jyq2XJT20bDv81RNzhgA7
-         EjCQ==
-X-Gm-Message-State: AOJu0YwsQWeZzNZ3ATi3/JNSQAJNWJUF2x7nufPcJ3AhGU7SEgi3B+kC
-	rWK3zP9Clc/ZBQxyUNC4Wx31SW4QnVapQIpCFTbAsU1YebaTpxoSAXCrZekNeZnsJmB3arLAR2l
-	7
-X-Google-Smtp-Source: AGHT+IGUmqwc0fjYKojLrdrN0jIAX9AbIj172jwSl+A63IlFH6oYl/Bmn8K+Tv5YFkUwdiy9Xj10ig==
-X-Received: by 2002:a05:600c:4fc8:b0:414:6172:8366 with SMTP id o8-20020a05600c4fc800b0041461728366mr5260918wmq.15.1710951157618;
-        Wed, 20 Mar 2024 09:12:37 -0700 (PDT)
-Received: from [192.168.0.102] ([176.61.106.68])
-        by smtp.gmail.com with ESMTPSA id by19-20020a056000099300b0034174875850sm7821180wrb.70.2024.03.20.09.12.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Mar 2024 09:12:37 -0700 (PDT)
-Message-ID: <bbbb5983-f870-48ce-ab7d-c424266e78d9@linaro.org>
-Date: Wed, 20 Mar 2024 16:12:36 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C9PJ4h2R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 611FAC433C7;
+	Wed, 20 Mar 2024 16:15:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710951333;
+	bh=ieuHVkiJ3mvxSTBYRy2oxHanwhxgK3q2OFoG5+yAQVQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C9PJ4h2RY6P99YTLQRRGAgHBuOSWlMhblYdFowfc+El6TXbIXtyDUKTGqG6OBwVCe
+	 Vcpb7I7GcpZKqZiujvrtk5NBa39AL6WCJVugX5zE1LHScxqtqQHlsx96fBG6qYd3VF
+	 a9aymwRdPN226FPrZqYAe2WhXFnfQMzz4SuZig7LigRlOy0BYdY6EuxoTPW3CHCc/0
+	 QfGBTg39m+l+Tkuh7uL7+xyCk7/mqFITmZPRBZl63Q3H+YomUXfQFa9qPd+htiEuiN
+	 /omcOBrFLrozCxhAqRzn0QwtnrSXhYLxT9EIOza3K8S4U9udr8EGm6ouoX/6A6rNZR
+	 jNfMsiYd3GtWg==
+Date: Wed, 20 Mar 2024 11:15:31 -0500
+From: Rob Herring <robh@kernel.org>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Sudan Landge <sudanl@amazon.com>, tytso@mit.edu, Jason@zx2c4.com,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	sathyanarayanan.kuppuswamy@linux.intel.com, thomas.lendacky@amd.com,
+	dan.j.williams@intel.com, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, graf@amazon.de, bchalios@amazon.es,
+	xmarcalx@amazon.co.uk, ardb@kernel.org,
+	benh <benh@kernel.crashing.org>
+Subject: Re: [PATCH v1 0/4] virt: vmgenid: Add devicetree bindings support
+Message-ID: <20240320161531.GA1810860-robh@kernel.org>
+References: <20240319143253.22317-1-sudanl@amazon.com>
+ <23692c07-98bd-477d-b244-bba14c50352c@linaro.org>
+ <38aad6c0e698c8e804694276d1762d61f2068ce8.camel@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/8] media: qcom: camss: Add CSID gen3 driver
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-To: Depeng Shao <quic_depengs@quicinc.com>, rfoss@kernel.org,
- todor.too@gmail.com, andersson@kernel.org, konrad.dybcio@linaro.org,
- mchehab@kernel.org, quic_yon@quicinc.com
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org,
- Gjorgji Rosikopulos <quic_grosikop@quicinc.com>
-References: <20240320141136.26827-1-quic_depengs@quicinc.com>
- <20240320141136.26827-6-quic_depengs@quicinc.com>
- <b542f9a1-2053-4431-832e-5510e8d8220e@linaro.org>
-In-Reply-To: <b542f9a1-2053-4431-832e-5510e8d8220e@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <38aad6c0e698c8e804694276d1762d61f2068ce8.camel@infradead.org>
 
-On 20/03/2024 15:40, Bryan O'Donoghue wrote:
-> +static const struct csid_format csid_formats[] = {
-> +    {
-> +        MEDIA_BUS_FMT_UYVY8_1X16,
-> +        DATA_TYPE_YUV422_8BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_8_BIT,
-> +        8,
-> +        2,
-> +    },
-> +    {
-> +        MEDIA_BUS_FMT_VYUY8_1X16,
-> +        DATA_TYPE_YUV422_8BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_8_BIT,
-> +        8,
-> +        2,
-> +    },
-> +    {
-> +        MEDIA_BUS_FMT_YUYV8_1X16,
-> +        DATA_TYPE_YUV422_8BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_8_BIT,
-> +        8,
-> +        2,
-> +    },
-> +    {
-> +        MEDIA_BUS_FMT_YVYU8_1X16,
-> +        DATA_TYPE_YUV422_8BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_8_BIT,
-> +        8,
-> +        2,
-> +    },
-> +    {
-> +        MEDIA_BUS_FMT_SBGGR8_1X8,
-> +        DATA_TYPE_RAW_8BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_8_BIT,
-> +        8,
-> +        1,
-> +    },
-> +    {
-> +        MEDIA_BUS_FMT_SGBRG8_1X8,
-> +        DATA_TYPE_RAW_8BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_8_BIT,
-> +        8,
-> +        1,
-> +    },
-> +    {
-> +        MEDIA_BUS_FMT_SGRBG8_1X8,
-> +        DATA_TYPE_RAW_8BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_8_BIT,
-> +        8,
-> +        1,
-> +    },
-> +    {
-> +        MEDIA_BUS_FMT_SRGGB8_1X8,
-> +        DATA_TYPE_RAW_8BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_8_BIT,
-> +        8,
-> +        1,
-> +    },
-> +    {
-> +        MEDIA_BUS_FMT_SBGGR10_1X10,
-> +        DATA_TYPE_RAW_10BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_10_BIT,
-> +        10,
-> +        1,
-> +    },
-> +    {
-> +        MEDIA_BUS_FMT_SGBRG10_1X10,
-> +        DATA_TYPE_RAW_10BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_10_BIT,
-> +        10,
-> +        1,
-> +    },
-> +    {
-> +        MEDIA_BUS_FMT_SGRBG10_1X10,
-> +        DATA_TYPE_RAW_10BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_10_BIT,
-> +        10,
-> +        1,
-> +    },
-> +    {
-> +        MEDIA_BUS_FMT_SRGGB10_1X10,
-> +        DATA_TYPE_RAW_10BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_10_BIT,
-> +        10,
-> +        1,
-> +    },
-> +    {
-> +        MEDIA_BUS_FMT_Y8_1X8,
-> +        DATA_TYPE_RAW_8BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_8_BIT,
-> +        8,
-> +        1,
-> +    },
-> +    {
-> +        MEDIA_BUS_FMT_Y10_1X10,
-> +        DATA_TYPE_RAW_10BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_10_BIT,
-> +        10,
-> +        1,
-> +    },
-> +    {
-> +        MEDIA_BUS_FMT_SBGGR12_1X12,
-> +        DATA_TYPE_RAW_12BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_12_BIT,
-> +        12,
-> +        1,
-> +    },
-> +    {
-> +        MEDIA_BUS_FMT_SGBRG12_1X12,
-> +        DATA_TYPE_RAW_12BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_12_BIT,
-> +        12,
-> +        1,
-> +    },
-> +    {
-> +        MEDIA_BUS_FMT_SGRBG12_1X12,
-> +        DATA_TYPE_RAW_12BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_12_BIT,
-> +        12,
-> +        1,
-> +    },
-> +    {
-> +        MEDIA_BUS_FMT_SRGGB12_1X12,
-> +        DATA_TYPE_RAW_12BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_12_BIT,
-> +        12,
-> +        1,
-> +    },
-> +    {
-> +        MEDIA_BUS_FMT_SBGGR14_1X14,
-> +        DATA_TYPE_RAW_14BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_14_BIT,
-> +        14,
-> +        1,
-> +    },
-> +    {
-> +        MEDIA_BUS_FMT_SGBRG14_1X14,
-> +        DATA_TYPE_RAW_14BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_14_BIT,
-> +        14,
-> +        1,
-> +    },
-> +    {
-> +        MEDIA_BUS_FMT_SGRBG14_1X14,
-> +        DATA_TYPE_RAW_14BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_14_BIT,
-> +        14,
-> +        1,
-> +    },
-> +    {
-> +        MEDIA_BUS_FMT_SRGGB14_1X14,
-> +        DATA_TYPE_RAW_14BIT,
-> +        DECODE_FORMAT_UNCOMPRESSED_14_BIT,
-> +        14,
-> +        1,
-> +    },
-> +};
+On Wed, Mar 20, 2024 at 01:50:43PM +0000, David Woodhouse wrote:
+> On Tue, 2024-03-19 at 16:24 +0100, Krzysztof Kozlowski wrote:
+> > On 19/03/2024 15:32, Sudan Landge wrote:
+> > > This small series of patches aims to add devicetree bindings support for
+> > > the Virtual Machine Generation ID (vmgenid) driver.
+> > > 
+> > > Virtual Machine Generation ID driver was introduced in commit af6b54e2b5ba
+> > > ("virt: vmgenid: notify RNG of VM fork and supply generation ID") as an
+> > > ACPI only device.
+> > > We would like to extend vmgenid to support devicetree bindings because:
+> > > 1. A device should not be defined as an ACPI or DT only device.
 
-Also please consider including/reviewing Gjorgji's patchset which 
-reworks the declaration of resources.
+This (and the binding patch) tells me nothing about what "Virtual 
+Machine Generation ID driver" is and isn't really justification for 
+"why".
 
-https://lore.kernel.org/lkml/20240319173935.481-4-quic_grosikop@quicinc.com/T/
+> > 
+> > Virtual stuff is not a device, so your first assumption or rationale is
+> > not correct.
+> > 
+> > Virtual stuff can be ACPI only, because DT is not for Virtual stuff.
+> 
+> I strongly disagree with this.
+> 
+> Discovering things is what the device-tree is *for*.
 
----
-bod
+DT/ACPI is for discovering what hardware folks failed to make 
+discoverable. But here, both sides are software. Can't the software 
+folks do better?
+
+This is just the latest in $hypervisor bindings[1][2][3]. The value add 
+must be hypervisors because every SoC vendor seems to be creating their 
+own with their own interfaces.
+
+
+> We don't want to add extra complexity and overhead on both host and
+> guest side to make things discoverable in a *less* efficient way.
+> 
+> The device-tree isn't just a last-resort for when we can't possibly do
+> things differently in a discoverable way. The device-tree is a first-
+> class citizen and perfectly valid choice as a way to discover things.
+> 
+> We shouldn't be forcing people to turn things into PCI devices just to
+> avoid adding DT bindings for them.
+> 
+> And we *certainly* shouldn't be directing people towards all the
+> awfulness of ACPI, and in-kernel bytecode interpreters, and all that
+> horridness, just because we don't want to use DT to... describe things.
+
+I assume you have other calls into the hypervisor and notifications from 
+the hypervisor? Are you going to add DT nodes for each one? I'd be more 
+comfortable with DT describing THE communication channel with the 
+hypervisor than what sounds like a singular function. Otherwise, what's 
+the next binding?
+
+Rob
+
+[1] https://lore.kernel.org/all/20240222-gunyah-v17-2-1e9da6763d38@quicinc.com/
+[2] https://lore.kernel.org/all/20240129083302.26044-4-yi-de.wu@mediatek.com/
+[3] https://lore.kernel.org/all/20240127004321.1902477-2-davidai@google.com/
