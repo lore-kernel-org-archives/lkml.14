@@ -1,118 +1,117 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7356B1DFC6;
-	Wed, 20 Mar 2024 21:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C361838F96;
+	Wed, 20 Mar 2024 21:33:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710970305; cv=none; b=ED0F3SkjTX+0RBrsdVm3ZAHqX6muZSRDkztIJSBpayMblsEdCtsAI9HkHyd63g495DgNFDqxYUt80LvhWuQfI7WQALCEmfV0W6EZNAwRcb9ZteHdhqWiO8oa8tX/4W+wp7MfCNAWzj/lLJmu5VN+DkVwd58JjA42RmxrFOxj1kU=
+	t=1710970437; cv=none; b=ZXaWxcF03oBqsBDzx3PwjqWrATrYLH2MI0PkCxsCHFEd33ZQEbbm2pxzbn/23Hph96Cmw9ftbC6WgZtTJe8d/mQK62Oa79bFRoLde82n/hGVjnPhF1vjhrWr8zvSMvl40Cs+z8QtJtc0DNJSWYpcO0A75/pI9VMKaTjXLjXmfrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710970305; c=relaxed/simple;
-	bh=zZkPNzov1U+2g3d3e8PS0S63IwHAgOpyM3LsJwAUW4M=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o+AkXQK/f0PFOSQDuH31sNn9szpIaQNGCtLEoA2qj5or5bwe/zqtKSCoJ0QHqAMPofL718CnLvHNjXzn+IiyR+372SncaHBbkAKj9YGnVyFfdhJWn3X4ApiCthLk4ZVJgDWgICRa95qegvSudqsLZFuxh3uR41U9dOGYcblDYvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aHDL3pog; arc=none smtp.client-ip=209.85.208.46
+	s=arc-20240116; t=1710970437; c=relaxed/simple;
+	bh=9po42VtNCWVTAdVKwkrdxiRN/cLeeuxRg1UjTd9aWEE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=lGSplyps4tZWCi49pgsNTH5o1vIF65qALOBHTz6qing/E4nWkBnhHqWX3SSy/RecQoWTVO6NjkFygCNbMSKGZsOzoKphEvSn4x3w1GPusn8bVqQDzK16JVlTs3laxKL+35q9QN29EAo8inEFsM6oUdJAekUgsA/UH3pD4+NqTwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N6WEZKGi; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aHDL3pog"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56b85146589so620043a12.0;
-        Wed, 20 Mar 2024 14:31:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N6WEZKGi"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4146fe16a1aso2332805e9.1;
+        Wed, 20 Mar 2024 14:33:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710970301; x=1711575101; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YkXNsWFyS9IroqdDegvv78No9qBhWM69YWkvvWKZWwc=;
-        b=aHDL3pogjfF7PHFtc/yEuyJKnhugPFOSWNXh3099/AVbrfoBX8QV0/UMdwjxaDqU+9
-         mX9MStVHal+HXK6pX2uUwdo/knwAdKC1EB9qs0Xnx4VT0MrHeourB3Tg28rxOaLI/6yB
-         1GqFBP6Fzb6TTCLbm9uPpuETkES6gXpHuRkaPvVTxGQF6liC/c7Ogix4QkvgIEhVp3xx
-         7+wpEEsxa3Qegc8RgW5xzuUa5zbLEy7ZDNYDa2DYSGusvTGYUgH8XSfoShi4QQSPKDMX
-         2rfbmM7kv3nHfpwk4Di9YSQGp6UfDvXuchlYL0vTk0lLxB6OPSDy9xOA9x2QT7eLLg1h
-         LPnA==
+        d=gmail.com; s=20230601; t=1710970434; x=1711575234; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HpG5/QJ7+7xCTiH5bZDPq7O3h3XOgm2ds8JyykvemFs=;
+        b=N6WEZKGiVbNB0MDFGOgy3naqGhTvinBRYbcd5P/6zxRQaIkBVC9hw2BXSZBEpPSosu
+         kL018LXHZzUFSGHazu1aJ91NfOmcUcoXbDvutqlfL2/ysrq36AEogTN4XR0VxFAwkrwW
+         RkoN0pQeexYzOjZFtk5cvzQ+ZycQFBZozYXdbGRnpQ3W8uHhYgsB2iGnJgpRPH/jISxL
+         Clir8eW2vExc3VxhFnn/UfAUu5hjhel6jzVFvmwXP0tlatj6boFRdf6av+OgnX37MJrs
+         R7W+FLDRU3OHeh5Z6WFrfL8qLYqm2fo0QM8MazsH1Qg6ImaddcSFuFWjJ3XwslHjpxv3
+         R0qA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710970301; x=1711575101;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YkXNsWFyS9IroqdDegvv78No9qBhWM69YWkvvWKZWwc=;
-        b=UoH000rFJuGcoDWDv+muQahJZL64odn9C1uEeq/pDEsqydVNeMQe9suWn5XdanvNQV
-         1IQDVPZddGXDLie0vmABvrn2EhKxaV+iOP4wL6pI9P5rcK8U/4hmP8uUm8dbTSBlyGXk
-         anReYzPNdSfXOWTvftNE5ROMwjCuAiRA48AzYH89lRKz6bYWtM7KVwlGHu01TbYaX0Pq
-         M/VhJtJOaOVS2kX3zPydlkKBwJJbd2AV/XoMh/vimIiMzR/Xy/qg1Ez+S1PVd95O5sWY
-         FhB4IUY4UePkjrhYQoOc/U862lUljN928/PwwxgMXv1k7uT6sTFwqzN8+k9uBPlXjEVf
-         v20w==
-X-Forwarded-Encrypted: i=1; AJvYcCUKXkqJ+bRXxj+SlrV+NTkhSk11XhdRi2hbq2fUj03lcp2h9jUsUCv1ju23LCwVF8msT6LnamCybsAazVNeZCG/AzlAN37EA79/mMYqztVwvN8SFxxLPH1sdkMEnW8zFT7hvY1hjGK1
-X-Gm-Message-State: AOJu0Yyj9CqVKjpLhuz4aJ/XRPmQ9t38hKVEgyAebByaGDHZcx3Dg4sK
-	DxTwgWNeZGD9K7PFYaf0V1KNTn6pczD1+cNgrzvOBCMOpv7rzMl+
-X-Google-Smtp-Source: AGHT+IGJARAIaj/QFlDOhPInMMiZr7TxIYCf173dV4SXkMAh9bXCeF5fke/WV0h4Cqs55mY9jawm0w==
-X-Received: by 2002:a50:d5d3:0:b0:568:d6a2:716 with SMTP id g19-20020a50d5d3000000b00568d6a20716mr772925edj.7.1710970301353;
-        Wed, 20 Mar 2024 14:31:41 -0700 (PDT)
-Received: from vamoiridPC ([2a04:ee41:82:7577:9be1:7bef:ff5c:57fc])
-        by smtp.gmail.com with ESMTPSA id l8-20020aa7c308000000b0056b7ed75a46sm3263658edq.27.2024.03.20.14.31.40
+        d=1e100.net; s=20230601; t=1710970434; x=1711575234;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HpG5/QJ7+7xCTiH5bZDPq7O3h3XOgm2ds8JyykvemFs=;
+        b=gm8baI2r2flnXMPV7r2d1I6Uo29H6h735hctNgYqIr8WereUMuhiYUV3J7zUfnKEFk
+         gEfbLDV0VDOVui+iSSj2iO9j4JC8WHVErGIrEnV482Zgz4Wgx0n64f7OxAXto0cnPmy5
+         VzUDx8fedAlvUH834hOmviWm4aEUxYE2o0JKQoLOOaOSWzWS7duXZXV8pC6rqRLIUqSd
+         ypxI5xnzIl8gWUi+g9qTCSRAqqtNHczuu9EO5qFNiyuhnWAKZG4NR3cG4hc0q1vJelEU
+         loWKFXFyNLwJ5lsNy2yNjk8B/sNTTS4TU7QEWtIgo9cZNKe4scj2aaNIx2fWGsQIT/DC
+         ZhyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXZApGQm0PA4t4ks50z2ifU698n2fPLe9KuDcTUIW0WdzGbwO3RYrEX9/4mlNZYrGRrX8wA2Tf4yeoFyixoMmvrtNNX2chXPuEaDTvrkfLFxk8lacNQznpvE/GTegSGnAwMXQr+XSyV+w==
+X-Gm-Message-State: AOJu0YyHnGSpUsl/V/wJD4MILIX472r6ieEZJl8fTMn9MBicvoaP/1Nd
+	bXJe/umZZ215K2n5C7l4vI4do7SAYhYTqVxkVSPdcTT8gbanvMVeLRTpqgbh3d0=
+X-Google-Smtp-Source: AGHT+IFqti5ujR7izI6EPODMNsE+CcVGLz8/Sy9EupnoDTQlcmoQlIEmGAk1SrNIwgECdX0USwoRiw==
+X-Received: by 2002:a05:600c:1c19:b0:414:63c6:8665 with SMTP id j25-20020a05600c1c1900b0041463c68665mr5470547wms.2.1710970433959;
+        Wed, 20 Mar 2024 14:33:53 -0700 (PDT)
+Received: from localhost ([2001:861:3385:e20:6384:4cf:52c5:3194])
+        by smtp.gmail.com with ESMTPSA id t12-20020a05600c450c00b00414688af147sm3416429wmo.20.2024.03.20.14.33.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Mar 2024 14:31:40 -0700 (PDT)
-From: Vasileios Amoiridis <vassilisamir@gmail.com>
-X-Google-Original-From: Vasileios Amoiridis <vamoirid@vamoiridPC>
-Date: Wed, 20 Mar 2024 22:31:39 +0100
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Vasileios Amoiridis <vassilisamir@gmail.com>, jic23@kernel.org,
-	lars@metafoo.de, ang.iglesiasg@gmail.com, mazziesaccount@gmail.com,
-	ak@it-klinger.de, petre.rodan@subdimension.ro, phil@raspberrypi.com,
-	579lpy@gmail.com, linus.walleij@linaro.org,
-	semen.protsenko@linaro.org, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] iio: pressure: Add timestamp and scan_masks for
- BMP280 driver
-Message-ID: <20240320213139.GA52721@vamoiridPC>
-References: <20240319002925.2121016-1-vassilisamir@gmail.com>
- <20240319002925.2121016-6-vassilisamir@gmail.com>
- <ZfrDW1ESxnFg__od@smile.fi.intel.com>
- <20240320184516.GB36450@vamoiridPC>
- <ZftJK3cqFNU9-dCG@smile.fi.intel.com>
+        Wed, 20 Mar 2024 14:33:53 -0700 (PDT)
+From: Raphael Gallais-Pou <rgallaispou@gmail.com>
+Subject: [PATCH v3 0/2] Update st,stih407-thermal device
+Date: Wed, 20 Mar 2024 22:33:47 +0100
+Message-Id: <20240320-thermal-v3-0-700296694c4a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZftJK3cqFNU9-dCG@smile.fi.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADtW+2UC/02MzQ6CMBAGX4X0bE27pYKefA/joS0LNOEvLWk0h
+ Hd3IVE8zu43s7CIwWNkt2xhAZOPfhwI1CljrjVDg9xXxAwE5AJA87nF0JuOl64S1hR1rsEyWk8
+ Ba//aS48ncevjPIb3Hk5yu34bl18jSS54aYXS5RUdFure9MZ3Zzf2bGskODwl5OEBedIqKDT9S
+ P331nX9ANOgGMrWAAAA
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Patrice Chotard <patrice.chotard@foss.st.com>, Lee Jones <lee@kernel.org>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+X-Mailer: b4 0.13.0
 
-On Wed, Mar 20, 2024 at 10:38:03PM +0200, Andy Shevchenko wrote:
-> On Wed, Mar 20, 2024 at 07:45:16PM +0100, Vasileios Amoiridis wrote:
-> > On Wed, Mar 20, 2024 at 01:07:07PM +0200, Andy Shevchenko wrote:
-> > > On Tue, Mar 19, 2024 at 01:29:24AM +0100, Vasileios Amoiridis wrote:
-> 
-> ...
-> 
-> > > > +enum bmp280_scan {
-> > > > +	BMP280_TEMP,
-> > > > +	BMP280_PRESS,
-> > > > +	BME280_HUMID
-> > > 
-> > > The last is not a terminator, please leave trailing comma.
-> > > 
-> > > > +};
-> > 
-> > What do you mean it is not a terminator? In general with the enum
-> > variables I would write:
-> > 
-> > 	enum var { a, b, c };
-> 
-> This example is different to what you used. I.o.w. _this_ example is okay.
-> 
-> > Why in this case there is a comma needed after the BME280_HUMID element?
-> 
-> It's pure style issue that helps to avoid the unneeded churn in the future in
-> case the list is getting expanded. You can easily imagine what I mean.
-> 
+Those two patches update the thermal device by converting the deprecated
+txt documentation file to DT schema, and adding a required property in
+the device tree where it is needed.
 
-Ok, that definitely makes sense, thank you! In general, should this be applied
-to structs as well?
+Signed-off-by: Raphael Gallais-Pou <rgallaispou@gmail.com>
+---
+Changes in v3:
+- [1/2] Specify const value for '#thermal-sensor-cells'
+- [1/2] Add 'maxItems' for 'interrupts' property
+- [1/2] Change commit log accordingly
+- Did not add Krzysztof's r-b since patch [1/2] was modified
 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+Changes in v2:
+- [1/2] Change commit log to use imperative
+- [1/2] Drop description
+- [1/2] Drop 'clocks' description
+- [1/2] Add 'reg' property
+- [1/2] Add '#thermal-sensor-cells'
+- [1/2] Make node name generic in example
+- [1/2] Fix YAML style
+
+---
+Raphael Gallais-Pou (2):
+      dt-bindings: thermal: convert st,stih407-thermal to DT schema
+      ARM: dts: st: add thermal property on stih410.dtsi and stih418.dtsi
+
+ .../bindings/thermal/st,stih407-thermal.yaml       | 58 ++++++++++++++++++++++
+ .../devicetree/bindings/thermal/st-thermal.txt     | 32 ------------
+ arch/arm/boot/dts/st/stih410.dtsi                  |  1 +
+ arch/arm/boot/dts/st/stih418.dtsi                  |  1 +
+ 4 files changed, 60 insertions(+), 32 deletions(-)
+---
+base-commit: b6d69282db550689ab5980e06eedd23b64584a73
+change-id: 20240225-thermal-8cd0ba7f452b
+
+Best regards,
+-- 
+Raphael Gallais-Pou <rgallaispou@gmail.com>
+
