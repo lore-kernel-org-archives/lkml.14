@@ -1,81 +1,106 @@
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.124.171])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67B82C68A
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 06:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.124.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93AB936AE4;
+	Wed, 20 Mar 2024 06:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710917365; cv=none; b=JJ+0ZuEefV/ldGM+CedwxGoEJh8AR1O/O+kqzFaRwnXtl3PXL11OnicaUCw3n7IOyyolHdgMCHB5DCkJx4uxrjD/0IvizdTFtAKSqPC3qVQC+bddJ31Ed5oRU9kBgIR2JOMfuVuS1cwH0A6Pg591e40BhC8q7Ply4dzTw6Ai43Q=
+	t=1710917404; cv=none; b=QafIlcjiI/O0nBA5KN5OBnKvS8Zr8SpPnKU22GE/JO0Q0boT1DEv3rMrfr3sEbF47FTYYmqlPohavuvLFAMops4YgZEUfe0EFjponnKQI5rPDOxOPVbWcuTBi6zKtuV6kawWsfXTfSGkbIrCxsEEomejDZaK7I1a/LPWFRZ2sh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710917365; c=relaxed/simple;
-	bh=J87JP8CX4Jo2DMgSu/NbJaDHl2NWz8uYCmpt/5mZC34=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TojA3sxACVvMl+o/k9YIsbIV5UmzZoPMe8IGLfEe6PEc8lPuBnPTN64XotrLf5Imzfhi13x+N+nDfg3pYzaUJ6sn5FU7k8gPmYz1d7rWb4srkMeYMY+4tBzGfeqoisLikey/w9wlWVYMQu1PjYVgwEMsmJ/7WMEI7Ha56Skf0oA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=114.132.124.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp64t1710917293tzxbl7od
-X-QQ-Originating-IP: ohUIX+NpasMm5o4CUkl2cU8VjUo3qXs7Ck8cstz7sb4=
-Received: from localhost ( [112.0.147.175])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 20 Mar 2024 14:48:12 +0800 (CST)
-X-QQ-SSF: 01400000000000704000000A0001000
-X-QQ-FEAT: 7jw2iSiCazp7OdgV2kHlLVP94HvjWqFTqFF7HjO8HPsCdrjz1HxdrCZMLFDQu
-	Bv9LlqAGVSsV55LkGOHaFjJgUFzl/9cZoG9fzy2Ymr6Qk2Pq8nOt+TPtqojYEGG20eJkYBq
-	jf4HTiIJGpdJCFjgxXm9ry9InHiIhGxI8QELXyxXP5uKPDk9c3Xxqh5BvX4broJfj9We0l+
-	VnEs/hkWSLX4cwzAXufnWVF5N3Q9lwOw8Dgae+WdJuXxdknNjuPtYUBSxING0mpqkAjEy4j
-	FyRMYdiiQzOIDFHP+MJyyucGR1xI5nYhrUbKgH/1VWu31IPAKd9Nm2ej+Gs4l/QbEAIWlLR
-	q3DHQZ7TfxlCMXXX6i/YvzXJd8xm3BA7PUkRFPXDUCghT3QOmiEV3l1UhBS1OUbVgEE6BvA
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 6662747842115867711
-From: Dawei Li <dawei.li@shingroup.cn>
-To: paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu
-Cc: alexghiti@rivosinc.com,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Dawei Li <dawei.li@shingroup.cn>
-Subject: [PATCH 2/2] riscv: Annotate pgtable_l{4,5}_enabled with __ro_after_init
-Date: Wed, 20 Mar 2024 14:47:12 +0800
-Message-Id: <20240320064712.442579-3-dawei.li@shingroup.cn>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20240320064712.442579-1-dawei.li@shingroup.cn>
-References: <20240320064712.442579-1-dawei.li@shingroup.cn>
+	s=arc-20240116; t=1710917404; c=relaxed/simple;
+	bh=qXzaMmUjLgtfU6ksOSl/6Quc/HlC9r7F3efPpkAMX30=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TL2hF0fVxLJ6LdF+kyYYXX1lKhG9JFsmbtIGInVbArToJ2Y2UWp9Eiq+EX9IiUlPuDS65cIXB0LCtOrRdZ26bM+3JVM1AMK4O2vum90zGL1kM4nucjXH8BjUUDezNRwKX+tV9mfIDxnyD3GUwRtr21ihnf2H4iqnEjr9Wfsz+G4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: de7c52fd4db04ec0b22eddd14bf9b6b8-20240320
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:cf5866be-525f-4540-8c20-3d27b7a82ea4,IP:10,
+	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:-10
+X-CID-INFO: VERSION:1.1.37,REQID:cf5866be-525f-4540-8c20-3d27b7a82ea4,IP:10,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-10
+X-CID-META: VersionHash:6f543d0,CLOUDID:6b169d90-e2c0-40b0-a8fe-7c7e47299109,B
+	ulkID:2403201000570FJ81X2B,BulkQuantity:10,Recheck:0,SF:19|44|64|66|24|17|
+	102,TC:nil,Content:0,EDM:-3,IP:-2,URL:11|1,File:nil,RT:nil,Bulk:40,QS:nil,
+	BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_OBB,TF_CID_SPAM_ULN,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,
+	TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: de7c52fd4db04ec0b22eddd14bf9b6b8-20240320
+Received: from node2.com.cn [(39.156.73.10)] by mailgw
+	(envelope-from <mengfanhui@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 278497469; Wed, 20 Mar 2024 14:44:25 +0800
+Received: from node2.com.cn (localhost [127.0.0.1])
+	by node2.com.cn (NSMail) with SMTP id 0C9FCB80758A;
+	Wed, 20 Mar 2024 14:44:25 +0800 (CST)
+X-ns-mid: postfix-65FA85C8-997272164
+Received: from [172.30.60.81] (unknown [172.30.60.81])
+	by node2.com.cn (NSMail) with ESMTPA id BE370B80758A;
+	Wed, 20 Mar 2024 06:44:21 +0000 (UTC)
+Message-ID: <021efce7-1e40-43a6-9bfd-0d968bfcd5a8@kylinos.cn>
+Date: Wed, 20 Mar 2024 14:44:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] config/mips: support zswap function
+Content-Language: en-US
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: tsbogend@alpha.franken.de, geert+renesas@glider.be,
+ linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@vger.kernel.org, hannes@cmpxchg.org, nphamcs@gmail.com,
+ chengming.zhou@linux.dev
+References: <20240126075547.1521556-1-mengfanhui@kylinos.cn>
+ <Zfp7Y9x2iOE_prpp@google.com>
+From: mengfanhui <mengfanhui@kylinos.cn>
+In-Reply-To: <Zfp7Y9x2iOE_prpp@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-pgtable_l{4,5}_enabled are read only after initialization, make explicit
-annotation of __ro_after_init on them.
+Zswap and zsmalloc are compression methods, and kernel configuration can =
+be configured simultaneously.
+zbud is an algorithm, and users can use that method if they want to use i=
+t.It won't affect each other.
 
-Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/riscv/mm/init.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index bab3e9943bb5..204cdf5b829d 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -50,8 +50,8 @@ u64 satp_mode __ro_after_init = SATP_MODE_32;
- EXPORT_SYMBOL(satp_mode);
- 
- #ifdef CONFIG_64BIT
--bool pgtable_l4_enabled = !IS_ENABLED(CONFIG_XIP_KERNEL);
--bool pgtable_l5_enabled = !IS_ENABLED(CONFIG_XIP_KERNEL);
-+bool pgtable_l4_enabled __ro_after_init = !IS_ENABLED(CONFIG_XIP_KERNEL);
-+bool pgtable_l5_enabled __ro_after_init = !IS_ENABLED(CONFIG_XIP_KERNEL);
- EXPORT_SYMBOL(pgtable_l4_enabled);
- EXPORT_SYMBOL(pgtable_l5_enabled);
- #endif
--- 
-2.27.0
-
+=E5=9C=A8 2024/3/20 14:00, Yosry Ahmed =E5=86=99=E9=81=93:
+> On Fri, Jan 26, 2024 at 03:55:47PM +0800, mengfanhui wrote:
+>> Solution /sys/module/zswap/parameters/enabled attribute node
+>> does not exist issue=EF=BC=8Chandle zpool zbud initialization failed,
+>> open CONFIG_ZSWAP CONFIG_ZPOOL CONFIG_ZBUD configuration,manual
+>> zswap function by /sys/module/zswap/parameters/enabled file
+>>
+>> Signed-off-by: mengfanhui <mengfanhui@kylinos.cn>
+>> ---
+>>  arch/mips/configs/generic_defconfig | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/arch/mips/configs/generic_defconfig b/arch/mips/configs/g=
+eneric_defconfig
+>> index 071e2205c7ed..14884df392f4 100644
+>> --- a/arch/mips/configs/generic_defconfig
+>> +++ b/arch/mips/configs/generic_defconfig
+>> @@ -13,6 +13,9 @@ CONFIG_CGROUP_DEVICE=3Dy
+>>  CONFIG_CGROUP_CPUACCT=3Dy
+>>  CONFIG_NAMESPACES=3Dy
+>>  CONFIG_USER_NS=3Dy
+>> +CONFIG_ZSWAP=3Dy
+>> +CONFIG_ZPOOL=3Dy
+>> +CONFIG_ZBUD=3Dy
+>=20
+> Any reason for choosing zbud over zsmalloc, the default zswap allocator=
+?
+>=20
+>>  CONFIG_SCHED_AUTOGROUP=3Dy
+>>  CONFIG_BLK_DEV_INITRD=3Dy
+>>  CONFIG_BPF_SYSCALL=3Dy
+>> --=20
+>> 2.25.1
+>>
