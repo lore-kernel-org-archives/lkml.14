@@ -1,137 +1,106 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.actia.se (mail.actia.se [212.181.117.226])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B8F53E12;
-	Wed, 20 Mar 2024 15:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD74453E31;
+	Wed, 20 Mar 2024 15:26:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710948362; cv=none; b=BTZfgIcUZwoy9YJ8T5A56tj5YS2adKrhHAxJzOUrq2ldtt5rs1Z1rdN3Th8ZoCDNxEYa8RD6+45H4IZVVDv6/KBO29kQUTjo6RCGztHU+Wdh4u5u0lJfLxui47YEORznjd44XyncOAWofgu6qs+7P1APOksbfYqP1arflu1Lx4U=
+	t=1710948369; cv=none; b=DAkcayd1hNomYtsyBeb93SX8RuYPs2VvV77rHDLo3VJfEV4NgfVUQoxcwqBPLRTGrBOnS4N6U6qsAXxynMcl2t30rX+QVjHv+ZhGlHVP8ZMHKaZm5Gt/FWh/XGVWA9daA9U6Lgfpg89XA1fT00fV+C2zTBZ41O/dB2DSODVUk9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710948362; c=relaxed/simple;
-	bh=zR+ah/AZybH8jZSLZxrEDknNvOMLtHTgIU4u4ltErhk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nid56izkehyOkBKHVyGdGQdse8boxtpmm+REBOzJN6nLYH+9IoTsWujaTzYJI4Wwh9mmqprZjuipNsGa18q3zH/Yt/xvg6MURuJVcT4r7H+j3QMlgviOqfrqqeUN38jrcYSrul+FAP87n1oS9jL4FrdYqs0tT1FE4+WdQgnStxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=aEEEM0p7; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="aEEEM0p7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=/EpaCQTpGqGU5ULt8qAmE+s8SSReKSogNzvd/au7Mjs=;
-	t=1710948359; x=1711380359; b=aEEEM0p7s17EwmLjSOM6aJGjCpI3t4WfBnkIqt0HSK1doXv
-	FJdYNQgIkX3PfQQhw5p/zKZet62Vejar9cEv8dfDfHDaZpkWW0MwFgG2nyuq25KqcgdUq1v0jp8pu
-	9SZ2sAH7N63C/Jy67R2y1PNev3BZjK2nniABPOlbypWZg935cspcVqjGytErp2b9BdkMlB+TR62Z7
-	dWAR/Rdm8z61S7p+UPs6TxwaeI2wjtpIEPxd9A1Id2HSkb1f7lmptlp1HiYLqvPwFhq66U0NGLvR4
-	mIJGa4HUTVXCW44ZMXzM7Dlxa3dvZRrxi64zEE131NtEg2Obh018gjTuWSWQ70dw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rmxp7-0004iK-29; Wed, 20 Mar 2024 16:25:49 +0100
-Message-ID: <db4c8e74-5c79-49be-9781-a5d8669eccc1@leemhuis.info>
-Date: Wed, 20 Mar 2024 16:25:48 +0100
+	s=arc-20240116; t=1710948369; c=relaxed/simple;
+	bh=+uAsyfOj24pfCzz6PstZDCpbRt+0wQJHGildU+NO1X0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Wfu3xuusSxUgd1pG09cwX8HhIZkr8LMOqWdU9YIfLNR6EzQ4JaZYd6MN3oyAvwjUXHTdGpYxJDIM13UdP5eZJ4TfyQ4U8IVUkeCBCfvnxWbs+BC4s8HjI5qIyr0n5J54Y9IsPr9N0xU+zNyyDDw0gPyAtXAYijazDqsLjCL52AA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=actia.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
+Received: from S036ANL.actianordic.se (10.12.31.117) by S036ANL.actianordic.se
+ (10.12.31.117) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Wed, 20 Mar
+ 2024 16:25:54 +0100
+Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
+ S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%4]) with mapi id
+ 15.01.2507.037; Wed, 20 Mar 2024 16:25:54 +0100
+From: John Ernberg <john.ernberg@actia.se>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+CC: Maxime Chevallier <maxime.chevallier@bootlin.com>, Wei Fang
+	<wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>, Clark Wang
+	<xiaoning.wang@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
+ Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Heiner Kallweit
+	<hkallweit1@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrew Lunn
+	<andrew@lunn.ch>
+Subject: Re: [PATCH net v3 2/2] net: fec: Suspend the PHY on probe
+Thread-Topic: [PATCH net v3 2/2] net: fec: Suspend the PHY on probe
+Thread-Index: AQHab8t46xO1JP3Hxke5Lu7SCFbkbbEq8XCAgBPPogCAAAPagIACAISA
+Date: Wed, 20 Mar 2024 15:25:54 +0000
+Message-ID: <f89bec78-0dae-4518-a461-2e64a3dfb9fc@actia.se>
+References: <20240306133734.4144808-1-john.ernberg@actia.se>
+ <20240306133734.4144808-3-john.ernberg@actia.se>
+ <20240306190539.4ab9f369@device-28.home>
+ <9490ed31-dede-4a14-9c62-5ef83e30593a@actia.se>
+ <ZflSE8AaYLE3Ri8L@shell.armlinux.org.uk>
+In-Reply-To: <ZflSE8AaYLE3Ri8L@shell.armlinux.org.uk>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-esetresult: clean, is OK
+x-esetid: 37303A2958D729556D7C66
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2BB5AB19795F52459FDDF45DB426B3FB@actia.se>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] drm/qxl: fixes qxl_fence_wait
-Content-Language: en-US, de-DE
-To: Alex Constantino <dreaming.about.electric.sheep@gmail.com>
-Cc: 1054514@bugs.debian.org, airlied@redhat.com, carnil@debian.org,
- daniel@ffwll.ch, dri-devel@lists.freedesktop.org, kraxel@redhat.com,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
- spice-devel@lists.freedesktop.org, timo.lindfors@iki.fi,
- tzimmermann@suse.de, virtualization@lists.linux-foundation.org,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>
-References: <fb0fda6a-3750-4e1b-893f-97a3e402b9af@leemhuis.info>
- <20240308010851.17104-1-dreaming.about.electric.sheep@gmail.com>
- <20240308010851.17104-2-dreaming.about.electric.sheep@gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20240308010851.17104-2-dreaming.about.electric.sheep@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1710948359;70f82cbe;
-X-HE-SMSGID: 1rmxp7-0004iK-29
 
-On 08.03.24 02:08, Alex Constantino wrote:
-> Fix OOM scenario by doing multiple notifications to the OOM handler through
-> a busy wait logic.
-> Changes from commit 5a838e5d5825 ("drm/qxl: simplify qxl_fence_wait") would
-> result in a '[TTM] Buffer eviction failed' exception whenever it reached a
-> timeout.
-> 
-> Fixes: 5a838e5d5825 ("drm/qxl: simplify qxl_fence_wait")
-> Link: https://lore.kernel.org/regressions/fb0fda6a-3750-4e1b-893f-97a3e402b9af@leemhuis.info
-> Reported-by: Timo Lindfors <timo.lindfors@iki.fi>
-> Closes: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1054514
-> Signed-off-by: Alex Constantino <dreaming.about.electric.sheep@gmail.com>
-> ---
->  drivers/gpu/drm/qxl/qxl_release.c | 20 ++++++++++++++------
->  1 file changed, 14 insertions(+), 6 deletions(-)
-
-Hey Dave and Gerd as well as Thomas, Maarten and Maxime (the latter two
-I just added to the CC), it seems to me this regression fix did not
-maybe any progress since it was posted. Did I miss something, is it just
-"we are busy with the merge window", or is there some other a reason?
-Just wondering, I just saw someone on a Fedora IRC channel complaining
-about the regression, that's why I'm asking. Would be really good to
-finally get this resolved...
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
-
-> diff --git a/drivers/gpu/drm/qxl/qxl_release.c b/drivers/gpu/drm/qxl/qxl_release.c
-> index 368d26da0d6a..51c22e7f9647 100644
-> --- a/drivers/gpu/drm/qxl/qxl_release.c
-> +++ b/drivers/gpu/drm/qxl/qxl_release.c
-> @@ -20,8 +20,6 @@
->   * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
->   */
->  
-> -#include <linux/delay.h>
-> -
->  #include <trace/events/dma_fence.h>
->  
->  #include "qxl_drv.h"
-> @@ -59,14 +57,24 @@ static long qxl_fence_wait(struct dma_fence *fence, bool intr,
->  {
->  	struct qxl_device *qdev;
->  	unsigned long cur, end = jiffies + timeout;
-> +	signed long iterations = 1;
-> +	signed long timeout_fraction = timeout;
->  
->  	qdev = container_of(fence->lock, struct qxl_device, release_lock);
->  
-> -	if (!wait_event_timeout(qdev->release_event,
-> +	// using HZ as a factor since it is used in ttm_bo_wait_ctx too
-> +	if (timeout_fraction > HZ) {
-> +		iterations = timeout_fraction / HZ;
-> +		timeout_fraction = HZ;
-> +	}
-> +	for (int i = 0; i < iterations; i++) {
-> +		if (wait_event_timeout(
-> +				qdev->release_event,
->  				(dma_fence_is_signaled(fence) ||
-> -				 (qxl_io_notify_oom(qdev), 0)),
-> -				timeout))
-> -		return 0;
-> +					(qxl_io_notify_oom(qdev), 0)),
-> +				timeout_fraction))
-> +			break;
-> +	}
->  
->  	cur = jiffies;
->  	if (time_after(cur, end))
+SGkgUnVzc2VsLA0KDQpPbiAzLzE5LzI0IDA5OjUxLCBSdXNzZWxsIEtpbmcgKE9yYWNsZSkgd3Jv
+dGU6DQo+IE9uIFR1ZSwgTWFyIDE5LCAyMDI0IGF0IDA4OjM3OjQ0QU0gKzAwMDAsIEpvaG4gRXJu
+YmVyZyB3cm90ZToNCj4+IFRoZXJlIGlzIGFsc28gYSBjYXNlIHdoZXJlIHRoZSBwaHkgZHJpdmVy
+IG1vZHVsZSBpcyBub3QgYXV0b21hdGljYWxseQ0KPj4gbG9hZGVkLCBpbiBjYXNlcyB3aGVyZSBy
+ZXF1ZXN0X21vZHVsZSgpIGZhaWxzLCBlaXRoZXIgZHVlIHRvIHRoZQ0KPj4gdXNlcnNwYWNlIGhl
+bHBlciBmZWF0dXJlIGJlaW5nIGNvbXBpbGVkIG91dCBvciBvdGhlciByZWFzb25zLCBhbmQgdGhl
+DQo+PiBtb2R1bGUgaXMgbG9hZGVkIG1hbnVhbGx5IGxhdGVyLiBJIHN1c3BlY3QgZm9yIHJlYXNv
+bnMgbGlrZSB0aGVzZSB0aGUNCj4+IGdlbnBoeSBwcm9iZSBoYXBwZW5zIHNvIGxhdGUuIE15IHNv
+bHV0aW9uIGhlcmUgZG9lc24ndCBjb3ZlciBub24tbG9hZGVkDQo+PiBtb2R1bGVzIGVpdGhlciwg
+YnV0IHRoaXMgY291bGQgbWF5YmUgYmUgY292ZXJlZCBieSBtb3ZpbmcgcGh5X3N1c3BlbmQoKQ0K
+Pj4gdG8gcGh5X3Byb2JlKCkuIFVubGVzcyB0aGVyZSBpcyBhbiBldmVuIG1vcmUgY2xldmVyIHdh
+eSB0byBnbyBhYm91dCBpdA0KPj4gd2hpY2ggSSBjYW4ndCBzZWUgZnJvbSBpbmV4cGVyaWVuY2Uu
+DQo+IA0KPiBOb3RlIHRoYXQgaW4gdGhlIGNhc2Ugd2hlcmUgdGhlIFBIWSBkcml2ZXIgbW9kdWxl
+IGlzIGxvYWRlZCBsYXRlLA0KPiBwaHlfcHJvYmUoKSB3b24ndCBiZSBjYWxsZWQgZm9yIHRoZSBQ
+SFkgdW50aWwgdGhhdCBoYXBwZW5zLg0KPiANCj4gSSB3b3VsZCBzYXkgaWYgb25lIHdhbnRzIGEg
+cGxhdGZvcm0gdG8gYmVoYXZlIHdpdGggbWluaW1hbCBwb3dlcg0KPiBjb25zdW1wdGlvbiwgdGhh
+dCBpcyBzb21ldGhpbmcgdGhhdCBoYXMgdG8gYmUgZG9uZSBhY3Jvc3MgdGhlDQo+IHNvZnR3YXJl
+IHN0YWNrLCBhbmQgdGhhdCBpbmNsdWRlcyB0aGUgYm9vdCBmaXJtd2FyZS4gU28sIGlmIG9uZQ0K
+PiB3YW50cyB0aGUgUEhZIHRvIGJlIGluIGEgbG93IHBvd2VyIHN0YXRlIGF0IGJvb3QgdGltZSwg
+dGhlbg0KPiBmaXJtd2FyZSBuZWVkcyB0byBlbnN1cmUgdGhhdCBoYXBwZW5zLg0KPiANCj4gVHJ5
+aW5nIHRvIHNob2UtaG9ybiB0aGF0IGludG8gdGhlIGtlcm5lbCBpc24ndCBnb2luZyB0byB3b3Jr
+DQo+IGJlY2F1c2Ugd2UgZ2V0IHRvIGRlY2lkZSB3aGF0IHRvIGRvIHdpdGggdGhlIFBIWSB3YXkg
+dG9vIGxhdGUNCj4gKGR1ZSB0byBQSFkgZHJpdmVycyBiZWluZyBtb2R1bGFyIGFuZCBvbiB0aGUg
+cm9vdGZzLikNCj4gDQoNCldoYXQgd2UgcmVhbGx5IHdhbnQgaXMgdGhlIFBIWSB0byBiZSBzdXNw
+ZW5kZWQgb24gc3VzcGVuZCB0byBSQU0gDQpyZWdhcmRsZXNzIG9mDQp1cyBoYXZpbmcgaGFkIGFu
+IGluaXRpYWwgbGluayB1cCBvciBub3QuDQoNClRoaXMgd29ya2VkIHByaW9yIHRvIDRjMGQyZTk2
+YmEwNSAoIm5ldDogcGh5OiBjb25zaWRlciB0aGF0IHN1c3BlbmQycmFtIA0KbWF5IGN1dA0Kb2Zm
+IFBIWSBwb3dlciIpIHdoaWNoIHdhcyBhZGRlZCBpbiBMaW51eCA1LjExLCBhbmQgNTU3ZDVkYzgz
+ZjY4ICgibmV0OiANCmZlYzogdXNlDQptYWMtbWFuYWdlZCBQSFkgUE0iKSB3aGljaCB3YXMgYWRk
+ZWQgaW4gTGludXggNS4xMi4NCg0KU2luY2UgRkVDIHJlcXVpcmVzIG1hY19tYW5hZ2VkX3BtIHRo
+ZSBnZW5lcmljIFBNIHN1c3BlbmQtcmVzdW1lIHBhdGhzIA0KYXJlIG5vdA0KdGFrZW4uIFRoZSBy
+ZXN1bWUgc2VxdWVuY2luZyB3aXRoIGdlbmVyaWMgUE0gaGFzIGJlZW4gYnJva2VuIHdpdGggdGhl
+IA0KRkVDIHNpbmNlDQpnZW5lcmljIFBNIG9mIHRoZSBtZGlvIGJ1cyB3YXMgYWRkZWQsIGFzIHRo
+ZSBGRUMgd2lsbCBkbyBwaHlfc3RhcnQoKSANCih2aWEgRkVDDQpyZXN1bWUpIGFuZCB0aGVuIGdl
+bmVyaWMgUE0gcnVucyBwaHlfaW5pdF9odygpIHZpYSBtZGlvIGJ1cyByZXN1bWUgDQoocHJldmlv
+dXNseToNCmxlc3MgZGFtYWdpbmcgcGh5X3Jlc3VtZSgpKSBkdWUgdG8gaG93IHRoZSBGRUMgSVAg
+YmxvY2sgd29ya3MuDQoNClNvbWUgYmFja2dyb3VuZCBjb250ZXh0IHRvIG91ciB1c2VjYXNlIHdo
+aWNoIG1pZ2h0IGhhdmUgYmVlbiBsb3N0IGlzIA0KdGhhdCBvdXINCnN5c3RlbSBicmluZyB0aGUg
+bGluayB1cCBiYXNlZCBvbiBvdXRzaWRlIGlucHV0IGFuZCB0byBjb25zZXJ2ZSBwb3dlciB3ZSAN
+CnN1c3BlbmQNCnJlZ3VsYXJseSwgYW5kIHRoaXMgaXMgdGhlIG9ubHkgc2l0dWF0aW9uIHdoZXJl
+IHdlIGNhcmUgYWJvdXQgdGhlIHBvd2VyDQpjb25zdW1wdGlvbi4gU2luY2Ugd2UgY2Fubm90IGRl
+Y2lkZSBpZiBsaW5rIHNoYWxsIGJlIHVwIG91cnNlbHZlcyB3ZSBjYW4gZ28NCnRocm91Z2ggbnVt
+ZXJvdXMgc3VzcGVuZCBjeWNsZXMgYmVmb3JlIHRoZSBmaXJzdCBsaW5rIHVwLiBXZSBjb3VsZCBp
+biB0aGVvcnkNCndvcmsgYXJvdW5kIGl0IGluIHVzZXJzcGFjZSBieSBkb2luZyAiaXAgbGluayBz
+ZXQgPGV0aD4gdXAgJiYgaXAgbGluayANCnNldCA8ZXRoPg0KZG93biIsIGJ1dCBpdCB3YXNuJ3Qg
+cmVxdWlyZWQgYmVmb3JlLg0KDQpUaGFua3MhIC8vIEpvaG4gRXJuYmVyZw==
