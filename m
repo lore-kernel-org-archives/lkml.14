@@ -1,40 +1,45 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9276539870;
-	Wed, 20 Mar 2024 09:09:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D094038F94
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 09:11:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710925752; cv=none; b=uCvP+VOpzEgZljrGOLXp9IGLfZ1EecD1qYCKcMk0Yb6KxLE9PHwVx6JvLvF/F82KF9p5Y6ZE+3oKuxV8a94gJP2mWFn23VBanuHW2RHqSA8aOLmoEW/PSFcc3twfuHd3XS60d5yH0eS/IafBU7RUSjsm3Ed9oCCAR4U/Gd/S2zw=
+	t=1710925881; cv=none; b=QDSln9pj6eT4DKOSCKYhOvnYja50lB7w3Uai5+WPxFII6/OYD198JWmIEYLXN+JFI6JoB8VrSWHpBAAC8EhIVOqNgW7P+H8b3W+N7+NP3xxGnxC2bn6v9QCcWk2EbG6i3zNnisSljjYYrKMWsD/ce16IxN7aYmJ76kyJDYFlA7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710925752; c=relaxed/simple;
-	bh=WL++lSiQWnN695SrxzJhseXDuycH02PQhHRdBX9Zm3c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lXVfR64J64ya6puAyw74P8uPwmCsG1Fqx4v/gGsY1dRu1yv4vs17eZb9bA0zpIERSUpNcxiFMbhvRGS0v1VK6B/z2SS2sguzU+llqH3Vx4n5UHcErb2cl3vCioLPrUT+JH2RzgglGzJpWioU+wxw5/2Rk2P5z965OSp9VDWmdlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=1cicMcx3; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="1cicMcx3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1710925748;
-	bh=WL++lSiQWnN695SrxzJhseXDuycH02PQhHRdBX9Zm3c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=1cicMcx3GHSFdlgc4r0/Nix5DLRLaFVACMk05mRRdZKAbxS5nSRXiKiGA4MG7Lp4b
-	 Er4sL+Jpu1KpJtf0c3OHDrZdiVuUuK/I0sADlM1/2KSvy9g1HQq53bTpEoxmUaxcF4
-	 qDTT9gfNWqpFLlX4fwyKOJW9dgP5VsvMhEAmcvgpt8UvOeNDxKWiOSbMTGLzgzu7N3
-	 az+QNeyMsn2HJbWgA9TS/skPXJhDSJ/V6qtL8WTipHpawktrmzwtgVH8TdgeUp3qpq
-	 iDfihMUMIIMJk4LqJ8KB1pwH4sUO9X0fhyPCxTuFCc0DPzrHKjXKNzsmMf1BIdbSB0
-	 aiRpukMe0KDzQ==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id A713D37813C4;
-	Wed, 20 Mar 2024 09:09:07 +0000 (UTC)
-Message-ID: <1bc3e804-50c4-45b4-b227-1099e50f4fc6@collabora.com>
-Date: Wed, 20 Mar 2024 10:09:07 +0100
+	s=arc-20240116; t=1710925881; c=relaxed/simple;
+	bh=5vMlbOGBj9xsefyKotdnBYkTfFPfx6qag6aKEmZ1brg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=cW529cFDbVs4BIdU9ZNGWMhk0kysmZVMTc9ybkaXbVJxFR9spVIvz4xeop8fVPxWFlQxUQH6aiGVTJQIBBo/Z85HotBSLZoH4YFNMR/VeIcE6C9xze7kQEhhBGK4aR1KgCP9ShCUV2aFFzyJSeqR0/YuK2VuIAKW2crryD31jg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d49871732fso10600131fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 02:11:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710925878; x=1711530678;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ic1nLAZlOIEz8qJZURNZoS0hfHmBW2vxO0Mxv1zSKM4=;
+        b=DXcFFWYhAouH76IdwKVnPLYUgp1wbblZZGzkb/7Dum+8Xzj1KanfeKM/JERi+NoFOg
+         3CV9dPoDidgmlNGtkRpEDfXb9i2OUX0ZvALJz3mGUIsRxpxW1HaK7yKrSqHxTmhUY6+j
+         hn/twRyFmpPbvTAFfHQm4XUlV/edb1Hfrzyay3gZZDoEMeWfxlbkFU1VWFPeQVK2CcEe
+         5+I9Ph9GZ8pB/3+gUS1TZM100/CbIiAAS0mFL7ZO05fedcND/fIbEHzLf7lYCGCfenme
+         eWxrPf0owZbhGN/ZtQRuW2g66UF75c9/pb2d0pWojShKFr/j44nzXtf+dPitTxUgF/BV
+         tuXw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZTElFPxSrmpeTa5F+jba3P/ipn8FrZf6LbXb7QL7ASptVRbqvQDhWvF9OCc61RwIsYe/cIk3o9pgwNYt++szVzWfE+48l4+fblMD8
+X-Gm-Message-State: AOJu0YyMS22Sh3jFGF2Nxv1J4K8QMu0EMmP8bjcAH+3HeBRRJbaYvzTr
+	f1+bkqcCSYnycgbPhIiXZQBvqtxGijxy79SqFFjX2TGB5MCzMDhx
+X-Google-Smtp-Source: AGHT+IHuIGZmvxQyYFiZryw0Ofph5rR4aa1Rc8TH0jQHfwdyjSFp9UHdVF7zdFnNwwSVwQHZ+8j4qw==
+X-Received: by 2002:a2e:b1c5:0:b0:2d4:7458:b65 with SMTP id e5-20020a2eb1c5000000b002d474580b65mr3346780lja.2.1710925877737;
+        Wed, 20 Mar 2024 02:11:17 -0700 (PDT)
+Received: from [10.50.4.153] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
+        by smtp.gmail.com with ESMTPSA id p31-20020a05600c1d9f00b00414109c66f7sm1572006wms.38.2024.03.20.02.11.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Mar 2024 02:11:17 -0700 (PDT)
+Message-ID: <c4057654-97bd-4721-9bed-9dd5ef8b3f8d@grimberg.me>
+Date: Wed, 20 Mar 2024 11:11:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,34 +47,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 09/14] drm/mediatek: Rename files "mtk_drm_ddp_comp.c"
- to "mtk_ddp_comp.c"
-Content-Language: en-US
-To: Shawn Sung <shawn.sung@mediatek.com>,
- Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
- Hsiao Chien Sung <shawn.sung@mediatek.corp-partner.google.com>
-References: <20240320024222.14234-1-shawn.sung@mediatek.com>
- <20240320024222.14234-10-shawn.sung@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240320024222.14234-10-shawn.sung@mediatek.com>
+Subject: Re: WQ_UNBOUND workqueue warnings from multiple drivers
+Content-Language: he-IL, en-US
+To: Kamaljit Singh <Kamaljit.Singh1@wdc.com>,
+ "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "kbusch@kernel.org" <kbusch@kernel.org>
+References: <BYAPR04MB41513F04DB2ECDC3601CC36ABC2D2@BYAPR04MB4151.namprd04.prod.outlook.com>
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <BYAPR04MB41513F04DB2ECDC3601CC36ABC2D2@BYAPR04MB4151.namprd04.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Il 20/03/24 03:42, Shawn Sung ha scritto:
-> From: Hsiao Chien Sung <shawn.sung@mediatek.corp-partner.google.com>
-> 
-> Rename files mtk_drm_ddp_comp.c to mtk_ddp_comp.c and
-> modify the Makefile accordingly.
-> 
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.corp-partner.google.com>
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
+On 19/03/2024 0:33, Kamaljit Singh wrote:
+> Hello,
+>
+> After switching from Kernel v6.6.2 to v6.6.21 we're now seeing these workqueue
+> warnings. I found a discussion thread about the the Intel drm driver here
+> https://lore.kernel.org/lkml/ZO-BkaGuVCgdr3wc@slm.duckdns.org/T/
+>
+> and this related bug report https://gitlab.freedesktop.org/drm/intel/-/issues/9245
+> but that that drm fix isn't merged into v6.6.21. It appears that we may need the same
+> WQ_UNBOUND change to the nvme host tcp driver among others.
+>   
+> [Fri Mar 15 22:30:06 2024] workqueue: nvme_tcp_io_work [nvme_tcp] hogged CPU for >10000us 4 times, consider switching to WQ_UNBOUND
+> [Fri Mar 15 23:44:58 2024] workqueue: drain_vmap_area_work hogged CPU for >10000us 4 times, consider switching to WQ_UNBOUND
+> [Sat Mar 16 09:55:27 2024] workqueue: drain_vmap_area_work hogged CPU for >10000us 8 times, consider switching to WQ_UNBOUND
+> [Sat Mar 16 17:51:18 2024] workqueue: nvme_tcp_io_work [nvme_tcp] hogged CPU for >10000us 8 times, consider switching to WQ_UNBOUND
+> [Sat Mar 16 23:04:14 2024] workqueue: nvme_tcp_io_work [nvme_tcp] hogged CPU for >10000us 16 times, consider switching to WQ_UNBOUND
+> [Sun Mar 17 21:35:46 2024] perf: interrupt took too long (2707 > 2500), lowering kernel.perf_event_max_sample_rate to 73750
+> [Sun Mar 17 21:49:34 2024] workqueue: drain_vmap_area_work hogged CPU for >10000us 16 times, consider switching to WQ_UNBOUND
+> ...
+> workqueue: drm_fb_helper_damage_work [drm_kms_helper] hogged CPU for >10000us 32 times, consider switching to WQ_UNBOUND
+
+Hey Kamaljit,
+
+Its interesting that this happens because nvme_tcp_io_work is bound to 1 
+jiffie.
+Although in theory we do not stop receiving from a socket once we 
+started, so
+I guess this can happen in some extreme cases. Was the test you were running
+read-heavy?
+
+I was thinking that we may want to optionally move the recv path to 
+softirq instead to
+get some latency improvements, although I don't know if that would 
+improve the situation
+if we end up spending a lot of time in soft-irq...
+
+>   
+>   
+> Thanks,
+> Kamaljit Singh
 
