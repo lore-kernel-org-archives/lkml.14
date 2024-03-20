@@ -1,325 +1,404 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB2022F07
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 07:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3685E2C85A;
+	Wed, 20 Mar 2024 07:15:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710918903; cv=none; b=I1aU0wMw3mbHZz7yHTcar7as11KAVX1mZ3ZlQm9IZWan7rd3panF5o4HA/BoeB2OashHAuDb3kBxtWqvLOSnNtd6EY7LdYxgisSOiUJQ9Kr9AlNPQzqGST2LHuD5SVAW61AKFlVVLfL1ndjumQhZxUQMqdWhJ6Zs46O9gVmhSsU=
+	t=1710918924; cv=none; b=CpAcoiE2OjyprinrhdZDlp/Jx51c4CfsO1mDiswNK3O9BdZ3lcfewNlbkeLOEMkHgHYBk9/pexp9AtqpHzRx6ccb5q8kSFhDeD7KyEvB536OXzGx3RVAj96g0DljX10/dSKa52rKEJB2aY3d3j+QqQ8wmzVc7t8m0v0Xx82mn00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710918903; c=relaxed/simple;
-	bh=JdWtJIJrAVzoAqgk1SP0pQuB/E61e1S1atpKQ3fAHfo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hu5Cq2RYe8wgE75Os9pbxaxRpnG/RR1lfm5Qlrd4VIMIPY5Hj7MHRSt3ztFebUULJb0rWQRDl9CLCo5s1wbgi4LrTdUKv8m3Cu/WpahGsqdyqoFN1P6a4sTn5kfq2YtCtTDAj2JA3lY8USZB7QpS5QPMNPfDURR91qus4H91W80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ES0PZWAs; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710918924; c=relaxed/simple;
+	bh=dGANDLcgpPUgVShpcdJEWJFjwNSJyHiL6/yYzMvvXG8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Gf9dz4M9qE3CmmPYD19AudCx2tamRKJ+fX5ubrOgEjTKN0uUq75GFwlmDiXPU0HWklD+KN39BYTn+bisKAaR46dbi6SvtkOxUN0rxqat5aptt+UC/dyaiUqYBuzO9FZiVotp7o3TZBFJVvS972h+c4E9OisL0kKwBfAbwXYOtBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d+BNSo1Y; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ES0PZWAs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710918900;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Njq0yEyKBRcrvnVgNGH/spn65v7UciN8KbaIQu5L7ZE=;
-	b=ES0PZWAscFh+c/Q3F7MmCIm37XQZmxjPLeWPqW9ko1Zyu4QfmGBYBIfnB9SBPDqpce+IFZ
-	N0//JLQAumXEkSmCDlfLRDBHUgFTLLkH0JEnN6xKNVpvnfllwLhhCNAjAhB3nR0dySSIpm
-	pNWX9s5XgvkJmKA/nRdGwsf3ECmGcr8=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-314-5AVnc72cNWSR4onqZb_C_w-1; Wed, 20 Mar 2024 03:14:58 -0400
-X-MC-Unique: 5AVnc72cNWSR4onqZb_C_w-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-33eb8721b64so3439087f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 00:14:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710918897; x=1711523697;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Njq0yEyKBRcrvnVgNGH/spn65v7UciN8KbaIQu5L7ZE=;
-        b=tKXD5ogFa6uhnFqPkWVQ8YNF77R8sqSdB1Dqr7OrSjpTqnnloEObHypL5FNjs1m24Z
-         lrJEDZe8OZQVgdZ2EvnzHcZZavaSVK6aXA074mWHvit1KQHVkAsTsne3cI3qM5xG8/ue
-         fi8uQL5XJajcMiESxPSM7VVH3bPDy1KvxdY8zjkBrA8SCRKUNZ8nxh3z4E7X58y3/2oi
-         qtpkjMXKx0shzE6umZOsVRZeCKH5u96MepTcZhcjvq56ayrz+iktcL1aZe8d9pJj+sUW
-         Huc3Xl1mXKvhggNScXmRTQVKIIddHuGdQLoF4cb1eXY9LWeo4z1Z2W1UfaVjG/rpoPmK
-         DjKA==
-X-Forwarded-Encrypted: i=1; AJvYcCULhOktQN52FdQeir0hBMYb7mvpyDtHOut0iJcaAD63nBnM2cSk9f3hxBngnaxDVK3HeGHsKkTLeiIcJbDOWf6VR7ZGvEumO1+IgU/k
-X-Gm-Message-State: AOJu0Yxh7MftVgR8pTaOSl6Iw2UqhNT6nMd2gdGsYpTd+XOos72Kx8FT
-	A0gWf8JwdHqZjdC4i1ytMJCyIp1XSAxl7gBCZJBhJzWl/UYzny0thJP3L5hAUNNIPRnpX8GdEwb
-	Jl90Rq+wCVF6oDP9MweefCVYlAczxqfvumP+8tib0JSZ6P8ZNYSgMp1RPHUyEOA==
-X-Received: by 2002:adf:f9cf:0:b0:33d:579e:f462 with SMTP id w15-20020adff9cf000000b0033d579ef462mr3333358wrr.36.1710918897559;
-        Wed, 20 Mar 2024 00:14:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFujaGn+6/sZ8mCjSdKUkwZwZgH1kNHVb5niYMglJWfWBSGt1ESNUy6R4YkPD6nmkgTnBzLQg==
-X-Received: by 2002:adf:f9cf:0:b0:33d:579e:f462 with SMTP id w15-20020adff9cf000000b0033d579ef462mr3333340wrr.36.1710918896915;
-        Wed, 20 Mar 2024 00:14:56 -0700 (PDT)
-Received: from redhat.com ([2.52.6.254])
-        by smtp.gmail.com with ESMTPSA id n8-20020a5d6608000000b0033e45930f35sm14070360wru.6.2024.03.20.00.14.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Mar 2024 00:14:56 -0700 (PDT)
-Date: Wed, 20 Mar 2024 03:14:52 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Gavin Shan <gshan@redhat.com>
-Cc: Will Deacon <will@kernel.org>, virtualization@lists.linux.dev,
-	linux-kernel@vger.kernel.org, jasowang@redhat.com,
-	xuanzhuo@linux.alibaba.com, yihyu@redhat.com, shan.gavin@gmail.com,
-	linux-arm-kernel@lists.infradead.org,
-	Catalin Marinas <catalin.marinas@arm.com>, mochs@nvidia.com
-Subject: Re: [PATCH] virtio_ring: Fix the stale index in available ring
-Message-ID: <20240320030215-mutt-send-email-mst@kernel.org>
-References: <20240314074923.426688-1-gshan@redhat.com>
- <20240318165924.GA1824@willie-the-truck>
- <35a6bcef-27cf-4626-a41d-9ec0a338fe28@redhat.com>
- <20240319182251.GB3121@willie-the-truck>
- <9500adaf-0075-4ae9-92db-7e310b6598b0@redhat.com>
- <20240319203540-mutt-send-email-mst@kernel.org>
- <3a6c8b23-af9c-47a7-8c22-8e0a78154bd3@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d+BNSo1Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710918922; x=1742454922;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=dGANDLcgpPUgVShpcdJEWJFjwNSJyHiL6/yYzMvvXG8=;
+  b=d+BNSo1Y1ztmgwVFE4PG6xRww3hzXUWgRMnGyHS8erXPzxr3Kh8hQHKC
+   LD/pjxzxRaiLqvGqmp98i2TwsS60Et+XgCnZAklXX1/dlPC2KCMtnL/B9
+   7UEvVg3hV2HaddXDcpT2ET0vpRnQJeEWFKwkFHpVKlISYZNOWw1jnN7wf
+   XFsoJmvY4/3xoc5I6XG2wArofb8b12+4ed9WMnDhnfBnKNiImHJLRqFdm
+   9chjjd54Lx55jX47mx0qgA1G5FHjRgDSbLsItDsehF4Ch+Pg0rXDr/iiB
+   m5+MCdYylF8ukxUKbZzmrk1vkZanoxtZ2ezIyoC1ln8iNHE/+6vszgtYk
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11018"; a="5675053"
+X-IronPort-AV: E=Sophos;i="6.07,139,1708416000"; 
+   d="scan'208";a="5675053"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 00:15:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,139,1708416000"; 
+   d="scan'208";a="18528664"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 00:15:10 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
+Cc: "Gregory Price" <gourry.memverge@gmail.com>,
+  aneesh.kumar@linux.ibm.com,  mhocko@suse.com,  tj@kernel.org,
+  john@jagalactic.com,  "Eishan Mirakhur" <emirakhur@micron.com>,
+  "Vinicius Tavares Petrucci" <vtavarespetr@micron.com>,  "Ravis OpenSrc"
+ <Ravis.OpenSrc@micron.com>,  "Alistair Popple" <apopple@nvidia.com>,
+  "Srinivasulu Thanneeru" <sthanneeru@micron.com>,  Dan Williams
+ <dan.j.williams@intel.com>,  Vishal Verma <vishal.l.verma@intel.com>,
+  Dave Jiang <dave.jiang@intel.com>,  Andrew Morton
+ <akpm@linux-foundation.org>,  nvdimm@lists.linux.dev,
+  linux-cxl@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-mm@kvack.org,  "Ho-Ren (Jack) Chuang" <horenc@vt.edu>,  "Ho-Ren
+ (Jack) Chuang" <horenchuang@gmail.com>,  qemu-devel@nongnu.org,  Hao Xiang
+ <hao.xiang@bytedance.com>
+Subject: Re: [PATCH v3 1/2] memory tier: dax/kmem: create CPUless memory
+ tiers after obtaining HMAT info
+In-Reply-To: <20240320061041.3246828-2-horenchuang@bytedance.com> (Ho-Ren
+	Chuang's message of "Wed, 20 Mar 2024 06:10:39 +0000")
+References: <20240320061041.3246828-1-horenchuang@bytedance.com>
+	<20240320061041.3246828-2-horenchuang@bytedance.com>
+Date: Wed, 20 Mar 2024 15:13:17 +0800
+Message-ID: <87edc5s7ea.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3a6c8b23-af9c-47a7-8c22-8e0a78154bd3@redhat.com>
+Content-Type: text/plain; charset=ascii
 
-On Wed, Mar 20, 2024 at 03:24:16PM +1000, Gavin Shan wrote:
-> On 3/20/24 10:49, Michael S. Tsirkin wrote:>
-> > I think you are wasting the time with these tests. Even if it helps what
-> > does this tell us? Try setting a flag as I suggested elsewhere.
-> > Then check it in vhost.
-> > Or here's another idea - possibly easier. Copy the high bits from index
-> > into ring itself. Then vhost can check that head is synchronized with
-> > index.
-> > 
-> > Warning: completely untested, not even compiled. But should give you
-> > the idea. If this works btw we should consider making this official in
-> > the spec.
-> > 
-> > 
-> >   static inline int vhost_get_avail_flags(struct vhost_virtqueue *vq,
-> > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-> > index 6f7e5010a673..79456706d0bd 100644
-> > --- a/drivers/virtio/virtio_ring.c
-> > +++ b/drivers/virtio/virtio_ring.c
-> > @@ -685,7 +685,8 @@ static inline int virtqueue_add_split(struct virtqueue *_vq,
-> >   	/* Put entry in available array (but don't update avail->idx until they
-> >   	 * do sync). */
-> >   	avail = vq->split.avail_idx_shadow & (vq->split.vring.num - 1);
-> > -	vq->split.vring.avail->ring[avail] = cpu_to_virtio16(_vq->vdev, head);
-> > +	u16 headwithflag = head | (q->split.avail_idx_shadow & ~(vq->split.vring.num - 1));
-> > +	vq->split.vring.avail->ring[avail] = cpu_to_virtio16(_vq->vdev, headwithflag);
-> >   	/* Descriptors and available array need to be set before we expose the
-> >   	 * new available array entries. */
-> > 
-> > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> > index 045f666b4f12..bd8f7c763caa 100644
-> > --- a/drivers/vhost/vhost.c
-> > +++ b/drivers/vhost/vhost.c
-> > @@ -1299,8 +1299,15 @@ static inline int vhost_get_avail_idx(struct vhost_virtqueue *vq,
-> >   static inline int vhost_get_avail_head(struct vhost_virtqueue *vq,
-> >   				       __virtio16 *head, int idx)
-> >   {
-> > -	return vhost_get_avail(vq, *head,
-> > +	unsigned i = idx;
-> > +	unsigned flag = i & ~(vq->num - 1);
-> > +	unsigned val = vhost_get_avail(vq, *head,
-> >   			       &vq->avail->ring[idx & (vq->num - 1)]);
-> > +	unsigned valflag = val & ~(vq->num - 1);
-> > +
-> > +	WARN_ON(valflag != flag);
-> > +
-> > +	return val & (vq->num - 1);
-> >   }
-> 
-> Thanks, Michael. The code is already self-explanatory.
+"Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> writes:
 
-Apparently not. See below.
+> The current implementation treats emulated memory devices, such as
+> CXL1.1 type3 memory, as normal DRAM when they are emulated as normal memory
+> (E820_TYPE_RAM). However, these emulated devices have different
+> characteristics than traditional DRAM, making it important to
+> distinguish them. Thus, we modify the tiered memory initialization process
+> to introduce a delay specifically for CPUless NUMA nodes. This delay
+> ensures that the memory tier initialization for these nodes is deferred
+> until HMAT information is obtained during the boot process. Finally,
+> demotion tables are recalculated at the end.
+>
+> More details:
 
-> Since vq->num is 256, I just
-> squeezed the last_avail_idx to the high byte. Unfortunately, I'm unable to hit
-> the WARN_ON(). Does it mean the low byte is stale (or corrupted) while the high
-> byte is still correct and valid?
+You have done several stuff in one patch.  So you need "more details".
+You may separate them into multiple patches.  One for echo "*" below.
+But I have no strong opinion on that.
 
+> * late_initcall(memory_tier_late_init);
+> Some device drivers may have initialized memory tiers between
+> `memory_tier_init()` and `memory_tier_late_init()`, potentially bringing
+> online memory nodes and configuring memory tiers. They should be excluded
+> in the late init.
+>
+> * Abstract common functions into `mt_find_alloc_memory_type()`
+> Since different memory devices require finding or allocating a memory type,
+> these common steps are abstracted into a single function,
+> `mt_find_alloc_memory_type()`, enhancing code scalability and conciseness.
+>
+> * Handle cases where there is no HMAT when creating memory tiers
+> There is a scenario where a CPUless node does not provide HMAT information.
+> If no HMAT is specified, it falls back to using the default DRAM tier.
+>
+> * Change adist calculation code to use another new lock, `mt_perf_lock`.
+> In the current implementation, iterating through CPUlist nodes requires
+> holding the `memory_tier_lock`. However, `mt_calc_adistance()` will end up
+> trying to acquire the same lock, leading to a potential deadlock.
+> Therefore, we propose introducing a standalone `mt_perf_lock` to protect
+> `default_dram_perf`. This approach not only avoids deadlock but also
+> prevents holding a large lock simultaneously.
+>
+> * Upgrade `set_node_memory_tier` to support additional cases, including
+>   default DRAM, late CPUless, and hot-plugged initializations.
+> To cover hot-plugged memory nodes, `mt_calc_adistance()` and
+> `mt_find_alloc_memory_type()` are moved into `set_node_memory_tier()` to
+> handle cases where memtype is not initialized and where HMAT information is
+> available.
+>
+> * Introduce `default_memory_types` for those memory types that are not
+>   initialized by device drivers.
+> Because late initialized memory and default DRAM memory need to be managed,
+> a default memory type is created for storing all memory types that are
+> not initialized by device drivers and as a fallback.
+>
+> Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
+> Signed-off-by: Hao Xiang <hao.xiang@bytedance.com>
+> ---
+>  drivers/dax/kmem.c           | 13 +----
+>  include/linux/memory-tiers.h |  7 +++
+>  mm/memory-tiers.c            | 94 +++++++++++++++++++++++++++++++++---
+>  3 files changed, 95 insertions(+), 19 deletions(-)
+>
+> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+> index 42ee360cf4e3..de1333aa7b3e 100644
+> --- a/drivers/dax/kmem.c
+> +++ b/drivers/dax/kmem.c
+> @@ -55,21 +55,10 @@ static LIST_HEAD(kmem_memory_types);
+>  
+>  static struct memory_dev_type *kmem_find_alloc_memory_type(int adist)
+>  {
+> -	bool found = false;
+>  	struct memory_dev_type *mtype;
+>  
+>  	mutex_lock(&kmem_memory_type_lock);
+> -	list_for_each_entry(mtype, &kmem_memory_types, list) {
+> -		if (mtype->adistance == adist) {
+> -			found = true;
+> -			break;
+> -		}
+> -	}
+> -	if (!found) {
+> -		mtype = alloc_memory_type(adist);
+> -		if (!IS_ERR(mtype))
+> -			list_add(&mtype->list, &kmem_memory_types);
+> -	}
+> +	mtype = mt_find_alloc_memory_type(adist, &kmem_memory_types);
+>  	mutex_unlock(&kmem_memory_type_lock);
+>  
+>  	return mtype;
 
-I would find this very surprising.
+It seems that there's some miscommunication about my previous comments
+about this.  What I suggested is to create one separate patch, which
+moves mt_find_alloc_memory_type() and mt_put_memory_types() into
+memory-tiers.c.  And make this patch the first one of the series.
 
->         avail = vq->split.avail_idx_shadow & (vq->split.vring.num - 1);
->         vq->split.vring.avail->ring[avail] =
->                 cpu_to_virtio16(_vq->vdev, head | (avail << 8));
-> 
-> 
->         head = vhost16_to_cpu(vq, ring_head);
->         WARN_ON((head >> 8) != (vq->last_avail_idx % vq->num));
->         head = head & 0xff;
+> diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
+> index 69e781900082..b2135334ac18 100644
+> --- a/include/linux/memory-tiers.h
+> +++ b/include/linux/memory-tiers.h
+> @@ -48,6 +48,8 @@ int mt_calc_adistance(int node, int *adist);
+>  int mt_set_default_dram_perf(int nid, struct access_coordinate *perf,
+>  			     const char *source);
+>  int mt_perf_to_adistance(struct access_coordinate *perf, int *adist);
+> +struct memory_dev_type *mt_find_alloc_memory_type(int adist,
+> +							struct list_head *memory_types);
+>  #ifdef CONFIG_MIGRATION
+>  int next_demotion_node(int node);
+>  void node_get_allowed_targets(pg_data_t *pgdat, nodemask_t *targets);
+> @@ -136,5 +138,10 @@ static inline int mt_perf_to_adistance(struct access_coordinate *perf, int *adis
+>  {
+>  	return -EIO;
+>  }
+> +
+> +struct memory_dev_type *mt_find_alloc_memory_type(int adist, struct list_head *memory_types)
+> +{
+> +	return NULL;
+> +}
+>  #endif	/* CONFIG_NUMA */
+>  #endif  /* _LINUX_MEMORY_TIERS_H */
+> diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
+> index 0537664620e5..d9b96b21b65a 100644
+> --- a/mm/memory-tiers.c
+> +++ b/mm/memory-tiers.c
+> @@ -6,6 +6,7 @@
+>  #include <linux/memory.h>
+>  #include <linux/memory-tiers.h>
+>  #include <linux/notifier.h>
+> +#include <linux/acpi.h>
 
-This code misses the point of the test.
-The high value you store now is exactly the same each time you
-go around the ring. E.g. at beginning of ring you now always
-store 0 as high byte. So a stale value will not be detected/
-The high value you store now is exactly the same each time you
-go around the ring. E.g. at beginning of ring you now always
-store 0 as high byte. So a stale value will not be detected.
+We don't need this anymore.
 
-The value you are interested in should change
-each time you go around the ring a full circle.
-Thus you want exactly the *high byte* of avail idx -
-this is what my patch did - your patch instead
-stored and compared the low byte.
+>  #include "internal.h"
+>  
+> @@ -36,6 +37,11 @@ struct node_memory_type_map {
+>  
+>  static DEFINE_MUTEX(memory_tier_lock);
+>  static LIST_HEAD(memory_tiers);
+> +/*
+> + * The list is used to store all memory types that are not created
+> + * by a device driver.
+> + */
+> +static LIST_HEAD(default_memory_types);
+>  static struct node_memory_type_map node_memory_types[MAX_NUMNODES];
+>  struct memory_dev_type *default_dram_type;
+>  
+> @@ -505,7 +511,8 @@ static inline void __init_node_memory_type(int node, struct memory_dev_type *mem
+>  static struct memory_tier *set_node_memory_tier(int node)
+>  {
+>  	struct memory_tier *memtier;
+> -	struct memory_dev_type *memtype;
+> +	struct memory_dev_type *memtype, *mtype = NULL;
 
+It seems unnecessary to introduce another variable, just use memtype?
 
-The advantage of this debugging patch is that it will detect the issue immediately
-not after guest detected the problem in the used ring.
-For example, you can add code to re-read the value, or dump the whole
-ring.
+> +	int adist = MEMTIER_ADISTANCE_DRAM;
+>  	pg_data_t *pgdat = NODE_DATA(node);
+>  
+>  
+> @@ -514,7 +521,18 @@ static struct memory_tier *set_node_memory_tier(int node)
+>  	if (!node_state(node, N_MEMORY))
+>  		return ERR_PTR(-EINVAL);
+>  
+> -	__init_node_memory_type(node, default_dram_type);
+> +	mt_calc_adistance(node, &adist);
+> +	if (adist != MEMTIER_ADISTANCE_DRAM &&
+> +			node_memory_types[node].memtype == NULL) {
+> +		mtype = mt_find_alloc_memory_type(adist, &default_memory_types);
+> +		if (IS_ERR(mtype)) {
+> +			mtype = default_dram_type;
+> +			pr_info("Failed to allocate a memory type. Fall back.\n");
+> +		}
+> +	} else
+> +		mtype = default_dram_type;
 
-> One question: Does QEMU has any chance writing data to the available queue when
-> vhost is enabled? My previous understanding is no, the queue is totally owned by
-> vhost instead of QEMU.
+This can be simplified to
 
-It shouldn't do it normally.
+	mt_calc_adistance(node, &adist);
+	if (node_memory_types[node].memtype == NULL) {
+		mtype = mt_find_alloc_memory_type(adist, &default_memory_types);
+		if (IS_ERR(mtype)) {
+			mtype = default_dram_type;
+			pr_info("Failed to allocate a memory type. Fall back.\n");
+		}
+	}
 
-> Before this patch was posted, I had debugging code to record last 16 transactions
-> to the available and used queue from guest and host side. It did reveal the wrong
-> head was fetched from the available queue.
+> +	__init_node_memory_type(node, mtype);
+>  
+>  	memtype = node_memory_types[node].memtype;
+>  	node_set(node, memtype->nodes);
+> @@ -623,6 +641,55 @@ void clear_node_memory_type(int node, struct memory_dev_type *memtype)
+>  }
+>  EXPORT_SYMBOL_GPL(clear_node_memory_type);
+>  
+> +struct memory_dev_type *mt_find_alloc_memory_type(int adist, struct list_head *memory_types)
+> +{
+> +	bool found = false;
+> +	struct memory_dev_type *mtype;
+> +
+> +	list_for_each_entry(mtype, memory_types, list) {
+> +		if (mtype->adistance == adist) {
+> +			found = true;
+> +			break;
+> +		}
+> +	}
+> +	if (!found) {
+> +		mtype = alloc_memory_type(adist);
+> +		if (!IS_ERR(mtype))
+> +			list_add(&mtype->list, memory_types);
+> +	}
+> +
+> +	return mtype;
+> +}
+> +EXPORT_SYMBOL_GPL(mt_find_alloc_memory_type);
+> +
+> +/*
+> + * This is invoked via late_initcall() to create
+> + * CPUless memory tiers after HMAT info is ready or
+> + * when there is no HMAT.
 
-Oh nice that's a very good hint. And is this still reproducible?
+Better to avoid HMAT in general code.  How about something as below?
 
-> [   11.785745] ================ virtqueue_get_buf_ctx_split ================
-> [   11.786238] virtio_net virtio0: output.0:id 74 is not a head!
-> [   11.786655] head to be released: 036 077
-> [   11.786952]
-> [   11.786952] avail_idx:
-> [   11.787234] 000  63985  <--
-> [   11.787237] 001  63986
-> [   11.787444] 002  63987
-> [   11.787632] 003  63988
-> [   11.787821] 004  63989
-> [   11.788006] 005  63990
-> [   11.788194] 006  63991
-> [   11.788381] 007  63992
-> [   11.788567] 008  63993
-> [   11.788772] 009  63994
-> [   11.788957] 010  63995
-> [   11.789141] 011  63996
-> [   11.789327] 012  63997
-> [   11.789515] 013  63998
-> [   11.789701] 014  63999
-> [   11.789886] 015  64000
-> [   11.790068]
-> [   11.790068] avail_head:
-> [   11.790529] 000  075  <--
-> [   11.790718] 001  036
-> [   11.790890] 002  077
-> [   11.791061] 003  129
-> [   11.791231] 004  072
-> [   11.791400] 005  130
-> [   11.791574] 006  015
-> [   11.791748] 007  074
-> [   11.791918] 008  130
-> [   11.792094] 009  130
-> [   11.792263] 010  074
-> [   11.792437] 011  015
-> [   11.792617] 012  072
-> [   11.792788] 013  129
-> [   11.792961] 014  077    // The last two heads from guest to host: 077, 036
-> [   11.793134] 015  036
+This is invoked via late_initcall() to initialize memory tiers for
+CPU-less memory nodes after drivers initialization.  Which is
+expect to provide adistance algorithms.
 
-Maybe dump the avail ring from guest to make sure
-it matches the expected contents?
+> + */
+> +static int __init memory_tier_late_init(void)
+> +{
+> +	int nid;
+> +
+> +	mutex_lock(&memory_tier_lock);
+> +	for_each_node_state(nid, N_MEMORY)
+> +		if (!node_state(nid, N_CPU) &&
+> +			node_memory_types[nid].memtype == NULL)
+> +			/*
+> +			 * Some device drivers may have initialized memory tiers
+> +			 * between `memory_tier_init()` and `memory_tier_late_init()`,
+> +			 * potentially bringing online memory nodes and
+> +			 * configuring memory tiers. Exclude them here.
+> +			 */
+> +			set_node_memory_tier(nid);
+> +
+> +	establish_demotion_targets();
+> +	mutex_unlock(&memory_tier_lock);
+> +
+> +	return 0;
+> +}
+> +late_initcall(memory_tier_late_init);
+> +
+>  static void dump_hmem_attrs(struct access_coordinate *coord, const char *prefix)
+>  {
+>  	pr_info(
+> @@ -631,12 +698,16 @@ static void dump_hmem_attrs(struct access_coordinate *coord, const char *prefix)
+>  		coord->read_bandwidth, coord->write_bandwidth);
+>  }
+>  
+> +/*
+> + * The lock is used to protect the default_dram_perf.
+> + */
+> +static DEFINE_MUTEX(mt_perf_lock);
 
-> [root@nvidia-grace-hopper-05 qemu.main]# cat /proc/vhost
-> 
-> avail_idx
-> 000  63998
-> 001  64000
-> 002  63954  <---
-> 003  63955
-> 004  63956
-> 005  63974
-> 006  63981
-> 007  63984
-> 008  63986
-> 009  63987
-> 010  63988
-> 011  63989
-> 012  63992
-> 013  63993
-> 014  63995
-> 015  63997
-> 
-> avail_head
-> 000  074
-> 001  015
-> 002  072
-> 003  129
-> 004  074            // The last two heads seen by vhost is: 074, 036
-> 005  036
-> 006  075  <---
+Miscommunication here too.  Should be moved to near the
+"default_dram_perf" definition.  And it protects not only
+default_dram_perf.
 
+>  int mt_set_default_dram_perf(int nid, struct access_coordinate *perf,
+>  			     const char *source)
+>  {
+>  	int rc = 0;
+>  
+> -	mutex_lock(&memory_tier_lock);
+> +	mutex_lock(&mt_perf_lock);
+>  	if (default_dram_perf_error) {
+>  		rc = -EIO;
+>  		goto out;
+> @@ -684,7 +755,7 @@ int mt_set_default_dram_perf(int nid, struct access_coordinate *perf,
+>  	}
+>  
+>  out:
+> -	mutex_unlock(&memory_tier_lock);
+> +	mutex_unlock(&mt_perf_lock);
+>  	return rc;
+>  }
+>  
+> @@ -700,7 +771,7 @@ int mt_perf_to_adistance(struct access_coordinate *perf, int *adist)
+>  	    perf->read_bandwidth + perf->write_bandwidth == 0)
+>  		return -EINVAL;
+>  
+> -	mutex_lock(&memory_tier_lock);
+> +	mutex_lock(&mt_perf_lock);
+>  	/*
+>  	 * The abstract distance of a memory node is in direct proportion to
+>  	 * its memory latency (read + write) and inversely proportional to its
+> @@ -713,7 +784,7 @@ int mt_perf_to_adistance(struct access_coordinate *perf, int *adist)
+>  		(default_dram_perf.read_latency + default_dram_perf.write_latency) *
+>  		(default_dram_perf.read_bandwidth + default_dram_perf.write_bandwidth) /
+>  		(perf->read_bandwidth + perf->write_bandwidth);
+> -	mutex_unlock(&memory_tier_lock);
+> +	mutex_unlock(&mt_perf_lock);
+>  
+>  	return 0;
+>  }
+> @@ -826,7 +897,8 @@ static int __init memory_tier_init(void)
+>  	 * For now we can have 4 faster memory tiers with smaller adistance
+>  	 * than default DRAM tier.
+>  	 */
+> -	default_dram_type = alloc_memory_type(MEMTIER_ADISTANCE_DRAM);
+> +	default_dram_type = mt_find_alloc_memory_type(
+> +					MEMTIER_ADISTANCE_DRAM, &default_memory_types);
+>  	if (IS_ERR(default_dram_type))
+>  		panic("%s() failed to allocate default DRAM tier\n", __func__);
+>  
+> @@ -836,6 +908,14 @@ static int __init memory_tier_init(void)
+>  	 * types assigned.
+>  	 */
+>  	for_each_node_state(node, N_MEMORY) {
+> +		if (!node_state(node, N_CPU))
+> +			/*
+> +			 * Defer memory tier initialization on CPUless numa nodes.
+> +			 * These will be initialized after firmware and devices are
+> +			 * initialized.
+> +			 */
+> +			continue;
+> +
+>  		memtier = set_node_memory_tier(node);
+>  		if (IS_ERR(memtier))
+>  			/*
 
-And is 074 the previous (stale) value in the ring?
-
-
-> 007  036
-> 008  077
-> 009  129
-> 010  072
-> 011  130
-> 012  015
-> 013  074
-> 014  130
-> 015  130
-
-
-
-> used_idx
-> 000  64000
-> 001  63882  <---
-> 002  63889
-> 003  63891
-> 004  63898
-> 005  63936
-> 006  63942
-> 007  63946
-> 008  63949
-> 009  63953
-> 010  63957
-> 011  63981
-> 012  63990
-> 013  63992
-> 014  63993
-> 015  63999
-> 
-> used_head
-> 000  072
-> 001  129
-> 002  074          // The last two heads published to guest is: 074, 036
-> 003  036
-> 004  075  <---
-> 005  036
-> 006  077
-> 007  129
-> 008  072
-> 009  130
-> 010  015
-> 011  074
-> 012  130
-> 013  130
-> 014  074
-> 015  015
-> 
-> Thanks,
-> Gavin
-
-I like this debugging patch, it might make sense to
-polish it up and include in production. We'll want it in
-debugfs naturally not /proc/vhost.
-
-But all in good time.
-
-
-> 
-> 
-
+--
+Best Regards,
+Huang, Ying
