@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88CC64F8B2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88CFB5026C
 	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 20:50:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710967839; cv=none; b=KMB9QXzuz9con6iRHSJ/1mCScDYCXuQui8fk52KkLy/1+1srWVViVZSRv/BR1pQmuf28Ps+Ci3GTbgDMcEzSJFJlZaW7AG4wJcSN0B5IaOvOkzG97lnXZY5MfvsrogCVLXeAVfffpBZqLKsjW8mN0O5TO5YWXTQY5mLe5JjP5nQ=
+	t=1710967839; cv=none; b=iDLF2BVJabUxHXQ2sdB97HhoEbHzTpTeq3ij3N1qxdo7J/0CRWqmN7ws9yq8ae5LCpneSYNW+Wxal58boUlUHMHm43lDvDvogrvk+EGhxGQFYWrD8F38BI0mfi8+im6K4WQPIJC3ldcM8QqE1F3WsjUFuto8MdJDRjak9mklidI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710967839; c=relaxed/simple;
-	bh=EzEXn434C3owX412vSu+v4rWnWZ62rkj4t68PC+Dsko=;
+	bh=WctFVZC3uzOKg3omygLLq58GK6rmac3ruk/bV/eUe4E=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=uZjKHxaefWg1L6I61E2ELCoOWzKYA9+6MIRFqwRZPn6Y2H6Enpv6J0zkElphnS8shCh3/rQF6kWrUu0piphZ1y1iqJ2ZvZpwato3eN1DZvVDh2W86hx5m5c8UCBUFZTKIPEHSVFNKc4sO+I2FXrJPl7v7dgLC+2uRzFvRtxopSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p2SZ4abI; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=bx2ydF7rr7WogFHkze7ZsqrnJkVTpEJzBeFmjyxi3m9Bq229Tc15Wfwe17FSrypfG8G+RFWeh+achcRSlg7Khn5Ek0OW8vLJWGqSfdhfG5o/QWgSDrz+tXTWs8zzix65UYJoHnw98RuXkF1uNjiKVMvYvUuQJSh8j6r6m/0ps1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oGPR/WNr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p2SZ4abI"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 363CBC43399;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oGPR/WNr"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2A4FFC43394;
 	Wed, 20 Mar 2024 20:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1710967839;
-	bh=EzEXn434C3owX412vSu+v4rWnWZ62rkj4t68PC+Dsko=;
+	bh=WctFVZC3uzOKg3omygLLq58GK6rmac3ruk/bV/eUe4E=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=p2SZ4abIHqa0sX56hiq9Oa4dlfTRGDjvfk8Y8fyToXrUFH6p70eIBYMXbv6BXfzJD
-	 ma2JVua77H0tlR3uDlAg34AZYLeRJn1+Cw8WdB6LA0JpQW7evERiJwnV2rtpc/6rjx
-	 uxbI6cJGRHKkHun9R3uzF/c3gbVDfOz6JFFu3S5AHHDjj7ZfAV7N49SBnurBkfxOVX
-	 lvO2zh6x5QIcjYfxjBY98dWjAht4n6ACGf3efE6DYsH5rGKPn4eFvJx8Q9HmYrSFe7
-	 ffLL983k/ZXiKYX41v8dhlDJyiB9/GamYg9e8kxBRGCg2MhFiaLKLyZMpBjrcz6TQ0
-	 LeH0kSGFIls3A==
+	b=oGPR/WNrpVEAj8cDjoABAs5QUae39b+h27Kte/8WwnRrufEGZbpJMKKX//IBXuV23
+	 ut2CISiKtazHqXYKxQOueZ70YZeT/d0jnqmKE3vYBw7BFg3ml3QpvCM1udzAJXubNY
+	 Q6idir5BZLH1XLrRXsZrLWA/8UD/mq4q29SYQ0VxQcp2+e9P2iWHunpPVNh/6b3hhO
+	 BhDDVmYBXtOcDkTmTt5PJbH6tzuwDL0//jHHpyRrneX22pvXhYgxHLH04fN8RiGYut
+	 KEyxQ31kxLr1yoTrso8e7u5kz2kt7EE77EW5AOQ1cWScaHZDxiEOl8+hIcSPFPpPQ6
+	 UR7sqqbmYEtug==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2569DD95060;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1BDD8D982E4;
 	Wed, 20 Mar 2024 20:50:39 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,44 +37,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v6 0/4] riscv/barrier: tidying up barrier-related macro
+Subject: Re: [PATCH v1 0/5] riscv: Introduce compat-mode helpers & improve
+ arch_get_mmap_end()
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <171096783915.6804.16329473999832420687.git-patchwork-notify@kernel.org>
+ <171096783911.6804.6652711937507464203.git-patchwork-notify@kernel.org>
 Date: Wed, 20 Mar 2024 20:50:39 +0000
-References: <20240217131206.3667544-1-ericchancf@google.com>
-In-Reply-To: <20240217131206.3667544-1-ericchancf@google.com>
-To: Eric Chan <ericchancf@google.com>
+References: <20240103160024.70305-2-leobras@redhat.com>
+In-Reply-To: <20240103160024.70305-2-leobras@redhat.com>
+To: Leonardo Bras <leobras@redhat.com>
 Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org,
- conor.dooley@microchip.com, parri.andrea@gmail.com,
- emil.renner.berthing@canonical.com, samuel.holland@sifive.com
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, ebiederm@xmission.com,
+ keescook@chromium.org, oleg@redhat.com, guoren@kernel.org,
+ andy.chiu@sifive.com, conor.dooley@microchip.com, xiao.w.wang@intel.com,
+ vincent.chen@sifive.com, charlie@rivosinc.com, gerg@kernel.org,
+ akpm@linux-foundation.org, shikemeng@huaweicloud.com, alexghiti@rivosinc.com,
+ david@redhat.com, willy@infradead.org, panqinglin2020@iscas.ac.cn,
+ greentime.hu@sifive.com, bhe@redhat.com, cleger@rivosinc.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org
 
 Hello:
 
 This series was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Sat, 17 Feb 2024 13:12:06 +0000 you wrote:
-> This series makes barrier-related macro more neat and clear.
-> This is a follow-up to [0-3], change to multiple patches,
-> for readability, create new message thread.
+On Wed,  3 Jan 2024 13:00:18 -0300 you wrote:
+> I just saw the opportunity of optimizing the helper is_compat_task() by
+> introducing a compile-time test, and it made possible to remove some
+> #ifdef's without any loss of performance.
 > 
-> v5 -> v6: [PATCH 1/4] let this change to pass review by checkpatch.pl
-> instead of overwriting again in [PATCH 4/4]. for [PATCH 4/4] change
-> the error message example in commit message to make it more relevant
+> I also saw the possibility of removing the direct check of task flags from
+> general code, and concentrated it in asm/compat.h by creating a few more
+> helpers, which in the end helped optimize code.
 > 
 > [...]
 
 Here is the summary with links:
-  - [v6,1/4] riscv/barrier: Define __{mb,rmb,wmb}
-    https://git.kernel.org/riscv/c/89f4fd7b1ab7
-  - [v6,2/4] riscv/barrier: Define RISCV_FULL_BARRIER
-    https://git.kernel.org/riscv/c/b3c8064ccc44
-  - [v6,3/4] riscv/barrier: Consolidate fence definitions
-    https://git.kernel.org/riscv/c/c85688e2b0f0
-  - [v6,4/4] riscv/barrier: Add missing space after ','
-    https://git.kernel.org/riscv/c/9133e6e6908d
+  - [v1,1/5] riscv: Improve arch_get_mmap_end() macro
+    https://git.kernel.org/riscv/c/6be7ee4bebd1
+  - [v1,2/5] riscv: Replace direct thread flag check with is_compat_task()
+    https://git.kernel.org/riscv/c/9dc30419248f
+  - [v1,3/5] riscv: add compile-time test into is_compat_task()
+    https://git.kernel.org/riscv/c/4c0b5a451675
+  - [v1,4/5] riscv: Introduce is_compat_thread() into compat.h
+    https://git.kernel.org/riscv/c/5917ea17ad07
+  - [v1,5/5] riscv: Introduce set_compat_task() in asm/compat.h
+    https://git.kernel.org/riscv/c/2a8986fc5e1c
 
 You are awesome, thank you!
 -- 
