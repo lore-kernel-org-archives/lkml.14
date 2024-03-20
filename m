@@ -1,34 +1,34 @@
 Received: from ssh248.corpemail.net (ssh248.corpemail.net [210.51.61.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CF241211
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 08:58:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFEB44C92
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 08:58:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710925085; cv=none; b=kf+gQPISlpxsqjmRdrxgl6xLj+ugzWyagnuzQG2NMmYg8aMEcXSSgByag1ilXWENrNetj1rmcQ9TgU9Fqkd3uhh8B6PaThmDxh1dTcZv6YNoE6gLa+S6j7ari4H/bsdZD3g6AH0e2AgnTYOTBUJ9/x+a57DbdEq/m2Dc4pIXrBQ=
+	t=1710925088; cv=none; b=FROuzJCm4hqyeVaozsSEtUE7Cw8rKTPBv+ZQl1ZeFIJN2f8sf9SkPVAnW3CKLPFuOCjQhnPNVfGAOr/JGfCH8AythFk/sbpGDF8cfrmO6n3xlVTAex4/pMyxnMi39YIj5zqNAwLI7JRlcsoOeerAYqIJ4k/LytG3GNHZrnqfY9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710925085; c=relaxed/simple;
-	bh=sA9KN4gZJ9Q7fq569FG0ETO5QmmIlqo/42j1o9boRng=;
+	s=arc-20240116; t=1710925088; c=relaxed/simple;
+	bh=po8nGs/QX+OygQoV6swHooAskwzfSgOE/HJMqFrbV/E=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LXxZbaeUpo/MoVn81aiFzKBnwsZevYrqJwJ/aaKYw18B/b5hg/gQ/vqeSR2K8zlt2boSGPUI9ERBL6TZV/vyCZWmnj18n9yuNjQYsKPl6V4y770dVceK3miOT09Tta+IEf860R+4uMnreSUBBmNEpOGAuQW6sI9qo2oCjMzQv04=
+	 MIME-Version:Content-Type; b=kbramVMudQN6OHO2X2k0j2HzXjNQgYAlqpqCjYPn6wW4o/8Nyea4S/9maimjqaI49ZKphypzSZmqCwdf9qGXz548qGyYckGM1yjuO1CCppYJlcAK6/WLVlz++sXXozPV8BS9vCp6Bc9H5ArbRgK11pPhQboT4bEOiEWpK9wHOcE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.248
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
 Received: from ssh248.corpemail.net
-        by ssh248.corpemail.net ((D)) with ASMTP (SSL) id RDA00157;
-        Wed, 20 Mar 2024 16:57:57 +0800
+        by ssh248.corpemail.net ((D)) with ASMTP (SSL) id RDB00100;
+        Wed, 20 Mar 2024 16:58:00 +0800
 Received: from localhost.localdomain (10.94.17.92) by
  jtjnmail201610.home.langchao.com (10.100.2.10) with Microsoft SMTP Server id
- 15.1.2507.35; Wed, 20 Mar 2024 16:57:58 +0800
+ 15.1.2507.35; Wed, 20 Mar 2024 16:58:00 +0800
 From: Bo Liu <liubo03@inspur.com>
 To: <support.opensource@diasemi.com>, <lgirdwood@gmail.com>,
 	<broonie@kernel.org>, <matthias.bgg@gmail.com>,
 	<angelogioacchino.delregno@collabora.com>, <jagan@amarulasolutions.com>
 CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-mediatek@lists.infradead.org>, Bo Liu <liubo03@inspur.com>
-Subject: [PATCH v1 11/13] regulator: tps51632: convert to use maple tree register cache
-Date: Wed, 20 Mar 2024 04:57:38 -0400
-Message-ID: <20240320085740.4604-12-liubo03@inspur.com>
+Subject: [PATCH v1 13/13] regulator: rpi-panel-attiny: convert to use maple tree register cache
+Date: Wed, 20 Mar 2024 04:57:40 -0400
+Message-ID: <20240320085740.4604-14-liubo03@inspur.com>
 X-Mailer: git-send-email 2.18.2
 In-Reply-To: <20240320085740.4604-1-liubo03@inspur.com>
 References: <20240320085740.4604-1-liubo03@inspur.com>
@@ -39,7 +39,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
-tUid: 2024320165757743a7b7d53ec78d719e9f0bb659cce6a
+tUid: 20243201658003ea40bb9b9dfda1388c23940ac561bf7
 X-Abuse-Reports-To: service@corp-email.com
 Abuse-Reports-To: service@corp-email.com
 X-Complaints-To: service@corp-email.com
@@ -51,22 +51,22 @@ more appropriate for modern systems than those made by the rbtree cache.
 
 Signed-off-by: Bo Liu <liubo03@inspur.com>
 ---
- drivers/regulator/tps51632-regulator.c | 2 +-
+ drivers/regulator/rpi-panel-attiny-regulator.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/tps51632-regulator.c b/drivers/regulator/tps51632-regulator.c
-index 5199e0437388..3a384bf9d2c5 100644
---- a/drivers/regulator/tps51632-regulator.c
-+++ b/drivers/regulator/tps51632-regulator.c
-@@ -199,7 +199,7 @@ static const struct regmap_config tps51632_regmap_config = {
- 	.readable_reg		= is_read_reg,
- 	.volatile_reg		= is_volatile_reg,
- 	.max_register		= TPS51632_MAX_REG - 1,
--	.cache_type		= REGCACHE_RBTREE,
-+	.cache_type		= REGCACHE_MAPLE,
+diff --git a/drivers/regulator/rpi-panel-attiny-regulator.c b/drivers/regulator/rpi-panel-attiny-regulator.c
+index f52c3d47ecea..6c3b6bfac961 100644
+--- a/drivers/regulator/rpi-panel-attiny-regulator.c
++++ b/drivers/regulator/rpi-panel-attiny-regulator.c
+@@ -75,7 +75,7 @@ static const struct regmap_config attiny_regmap_config = {
+ 	.val_bits = 8,
+ 	.disable_locking = 1,
+ 	.max_register = REG_WRITE_DATA_L,
+-	.cache_type = REGCACHE_RBTREE,
++	.cache_type = REGCACHE_MAPLE,
  };
  
- #if defined(CONFIG_OF)
+ static int attiny_set_port_state(struct attiny_lcd *state, int reg, u8 val)
 -- 
 2.18.2
 
