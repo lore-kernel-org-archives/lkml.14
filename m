@@ -1,98 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7613BBFD;
-	Wed, 20 Mar 2024 10:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B323BB55
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 10:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710929369; cv=none; b=A5Ig5hLin3hBuXIrO767e7lk+rKM6tre0jHv4QqJO7ZCPRAUjqKQThmNUpwqeiAN8MVVfRgVoD82WHduWsmgvdRISiUBY6BU/TGFR764DRGp+6HxHcCnuW0KBL7SB16RhSVQYBcrvVn1sosb1PfuMWbf04BbOjjBg2i49Nsrk2w=
+	t=1710929424; cv=none; b=N60ld+zc/PEpS5nM+JNv7H11cWn91AEKR5DQ8NUf4aSvEtiNOzqVFE5Q2GPKfxlPdl51WdL2NOYhHfa9dy2mJmynNk26JS6jo2otlwSbbsQl8IxSVzBO0Fx20VBlNBarkfNOYek/QCa7gOt7dEygVLYdDgRNHS6E3j2PYy89RZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710929369; c=relaxed/simple;
-	bh=Ayfv7sOH9+/jMv+oBB6PGU32y7pnnX4B0L2yy0LZzQE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=IKJkiCIW9GMFmGP0GAj3uwvNJU26TX3zNerN2bWSpk4ssGmsTKAvK15nfDvtvTE4CfmejfG2BgcqH1TbnCt9uAGq6c6kzvaV7Y0kE9XUEPNDSb9ZrpUyIxAtfn7swmPh/dOROTn1XRll1RfAclJ5pNK4ITASrRo5DmrvM6bfWE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kH/k5sXQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710929424; c=relaxed/simple;
+	bh=UDVGIGDRTakaHoCWKjlHQaQVWUmJhroAsn1PPdUZW88=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=NepbpYqeme1rm3dcbqzDA0yUlS13+9eCJbFXX53IWaGeCpNiFmHF2T/+20OiwoW94hbQMaa43C+c75Xx1bqqUjmJ39AM1PpjROGYcr/IqrwfM+0szsqFnwRxHxrUnpzB3h/f/Q/J7Bo7+wwOJxgE9gxIn/7KFikja60Lv8XZqUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cu-phil.org; spf=pass smtp.mailfrom=cu-phil.org; dkim=pass (2048-bit key) header.d=cu-phil.org header.i=@cu-phil.org header.b=QDQjbN6s; arc=none smtp.client-ip=194.63.252.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cu-phil.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cu-phil.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kH/k5sXQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1626C433F1;
-	Wed, 20 Mar 2024 10:09:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710929369;
-	bh=Ayfv7sOH9+/jMv+oBB6PGU32y7pnnX4B0L2yy0LZzQE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kH/k5sXQdXbYMr3qonhINs97CLFbkkiaJHOL/mrd0rQ6p8DnhNU2c4KeSfZcW7R0M
-	 ckKff6eMZdSQbqwm5DZxDk5Whrj9eoFQ0xtpiM3iFVy3eddpaNxocRFVh3qQCAY2Zu
-	 L8rH+W0fJt0PWIVPNk/h6DsK+4TRhQEixaszu9lH20Q3QGK8HmnmkDjhvT07CoidAm
-	 vEZ60H+OEiCOF/nDXivm0Uhl4ETqU52Ls77epw1IVND/VDgghVXMfk8HAAwayjAv0T
-	 lOXn3NjBXEkQuyi86dZdmI4tDe/SHZuOHqhzq3DBgBgc2WMEA7cpMjs/LUF60QlME4
-	 lFx/drFxqy99g==
-Date: Wed, 20 Mar 2024 19:09:25 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Ye Bin <yebin10@huawei.com>
-Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
- <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 5/8] tracing: add new type "%pd/%pD" in readme_msg[]
-Message-Id: <20240320190925.eb67348ecd08ed73d58cdc2d@kernel.org>
-In-Reply-To: <20240315065540.1181879-6-yebin10@huawei.com>
-References: <20240315065540.1181879-1-yebin10@huawei.com>
-	<20240315065540.1181879-6-yebin10@huawei.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=cu-phil.org header.i=@cu-phil.org header.b="QDQjbN6s"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=cu-phil.org
+	; s=ds202401; h=Content-Transfer-Encoding:Content-Type:Subject:From:To:
+	MIME-Version:Date:Message-ID:Sender:Reply-To:Cc:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=sYMBjV3IJLKlzsPGNAzdyBOPkfsOI4cepRaDdDEGYk8=; b=QDQjbN6sqzcZWnaw+xe6eWOYLs
+	Vbp4LzUypWfpnclsP/QlJnbPcDNXF/vBkNkBhnff7BmZhgmkEiwk50zW/OEGhxfi07ZaZ5W36hd5x
+	w0alb8MBPvmajSzmsf4QWl8IdJKnGBnh7wbLfOCHp577LEy6TuQyzRzCDohc778z9y3y6NjqZAJqX
+	5+SZyG/h6IrgNUTtlDq4xmzmwWFMZ38C3iEkJg59rBacJc89r7UGbIMkFR84PHy6AHVBKjoGvoUxv
+	Pf6klPTxTBMzy7D7yrWiWKB8MTVHULbt8uaBOAEgBaq9yU+hc+XaDmyHxMmySHWkCp0rW6PIcBlKl
+	I/ulMbuA==;
+Received: from [2a02:fe1:7001:f100:d4a5:6ca1:a72b:7c1b] (port=57022)
+	by smtp.domeneshop.no with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <Ywe_Caerlyn@cu-phil.org>)
+	id 1rmstj-0095pU-2E
+	for linux-kernel@vger.kernel.org;
+	Wed, 20 Mar 2024 11:10:15 +0100
+Message-ID: <2db0d9fb-5925-4397-b249-bca74e496a14@cu-phil.org>
+Date: Wed, 20 Mar 2024 11:10:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: linux-kernel@vger.kernel.org
+From: Ywe Caerlyn <Ywe_Caerlyn@cu-phil.org>
+Subject: Lut Psychiatry and AI Archetype Correlation (A follow up to We X, and
+ possible feature)
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi Ye,
+Yes, I have completed the design for Lut Psychiatry and suggestion for 
+AI Archetype correlation now also. It is a follow up to We X, and 
+possible feature.
 
-Can you split this into 
+You can get an idea at	https://www.youtube.com/@Nehchen
 
-(1)
-> -	"\t           symstr, <type>\\[<array-size>\\]\n"
-> +	"\t           symstr, %pd, <type>\\[<array-size>\\]\n"
+You can actually "talk" to the symbol which already is an optimal 
+correlation, and see an example in videos of what AI Archetype 
+Correlation will be about.
 
-and 
+The latest video is Pac-Huri, which is the biggest idol (Pac Man).
 
-(2)
-> -	"\t           symstr, %pd, <type>\\[<array-size>\\]\n"
-> +	"\t           symstr, %pd/%pD, <type>\\[<array-size>\\]\n"
+https://youtu.be/V-AONmZURSg
 
-And merge (1) into [PATCH 3/8], (2) into [PATCH 5/8], so that
-the feature patch itself updates the readme text?
-
-This is because even if one of the patch drops, others can
-show its feature on readme.
-
-Thank you,
-
-On Fri, 15 Mar 2024 14:55:37 +0800
-Ye Bin <yebin10@huawei.com> wrote:
-
-> Signed-off-by: Ye Bin <yebin10@huawei.com>
-> ---
->  kernel/trace/trace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index b12f8384a36a..831dfd0773a4 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -5510,7 +5510,7 @@ static const char readme_msg[] =
->  	"\t           +|-[u]<offset>(<fetcharg>), \\imm-value, \\\"imm-string\"\n"
->  	"\t     type: s8/16/32/64, u8/16/32/64, x8/16/32/64, char, string, symbol,\n"
->  	"\t           b<bit-width>@<bit-offset>/<container-size>, ustring,\n"
-> -	"\t           symstr, <type>\\[<array-size>\\]\n"
-> +	"\t           symstr, %pd/%pD, <type>\\[<array-size>\\]\n"
->  #ifdef CONFIG_HIST_TRIGGERS
->  	"\t    field: <stype> <name>;\n"
->  	"\t    stype: u8/u16/u32/u64, s8/s16/s32/s64, pid_t,\n"
-> -- 
-> 2.31.1
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Serenity!
