@@ -1,152 +1,248 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76A6522F;
-	Wed, 20 Mar 2024 16:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 500F015C3
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 16:42:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710952905; cv=none; b=tCBfyR7UMA2x3Y2AqfP551oxrj0HkRHlzdgz16lC9mjOy/dJFl/Zw5T6otiKNLJjdB0SdMF1f8fHbjmlI8L16M4mmv6ndwV9UsOByjTS/Z3D2OvZPxmwBN0JBcz1BkKLQbGpSVnsqH8R2dkrzosSqi2FzH9mhIQ8wvyh87y7/Yg=
+	t=1710952945; cv=none; b=G1wFfP3MUTSpNOh3m3g+BYeRvVa7GrkgXys3ZVXCmFJRS2TOkqfosU0E2H5Z+4YzkD1cU8OzTsh9c3FASUJD9EZLloCbKly7g9ocsGKwY6S+B/YjIDIHHfN60jF+nLCXEDGkk1ITxCqn3kDuHcgJweiaw7R2SpVnhAr38TnVTnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710952905; c=relaxed/simple;
-	bh=h9EePanYJCjU+5awKtHjb+P8VEkK1Dd+2tmFtrEfLXA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SvHcxxHcCk5H50wBYv1u0vLfTAHa3Ld3SpqOK2LHFpk00KJYPLmdqwBjdy0wAi6y4o1XICtLX6K8jMfNUTwe8k6uS3HpLaoohYlV797+P323TomQqbObCOh2XcfRGc4skUiD7k+5dT2YXq3cn1mgfRbx5yEQ1n6UVBdiNSVPYnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=EeA4rQl3; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1710952945; c=relaxed/simple;
+	bh=n/qBSqnoCDaEZUwEdc6nE4mkAewNmm2ZujXyWNcmjVM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J5ifqvh1n2j4zrR/WhrvyDWxRdualUX4onKCwKpiZGSr0OMAXdalpmAtBXv+XY9fCmA0e+RzU0tS9Ua00CUtNZZSmfWNsKJs7wL2cK91NX9Ou3xk5vOwc6mXDyQgC+GmQKUWU8p7qTHeN2ZPowhIJMquomYAeAqNa0QVW3EXUOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=TmtgrB8q; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="EeA4rQl3"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42KEjfKT018922;
-	Wed, 20 Mar 2024 16:41:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=ZRPw8Xlah0NCXTfcYmJ5cZjvfxE3sPSCdds+KCoFvME=; b=Ee
-	A4rQl3Y+IFM7lk3I2ORDmw4cT7OqFLMd6U/9irknMHMHLACf9v6XE765jOcvMmBV
-	6juQp+g+k3x1mjUKeQCDrh4Ro0cFzQpV5qImLM1p3vRlzR5cccislk/+oNK3BsAT
-	88NHdVrYzNxYZm6IBGOjJlyScFeSMdyZ1ZQMFfZUDR5EiIwqXtoMrEIif5JdiPMr
-	+XQqQMp+OMzBz/+5F3RYC5ZFGPBdbbuaYWVOss5FsfXfDLb4e4uTceTV8Q3ToiTw
-	Tc39lJrwbLY2oajvF2+qJhQAXb0DkL7B26DZyQiHe6UFhxJI+33ovbAqrfdEBAmo
-	nyIyuxNLJzedWfaDoVwg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wyvrms1h0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 Mar 2024 16:41:23 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42KGfNRI031218
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 Mar 2024 16:41:23 GMT
-Received: from [10.251.44.126] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 20 Mar
- 2024 09:41:20 -0700
-Message-ID: <2f2a8047-d885-4c65-9b07-23b79f1ca2a8@quicinc.com>
-Date: Wed, 20 Mar 2024 18:41:17 +0200
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="TmtgrB8q"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-60a0579a955so83350557b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 09:42:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1710952942; x=1711557742; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/C0go5GeoUF1aqwd5WJWdc0gTbFG3QELgzX8R+DzOuI=;
+        b=TmtgrB8qSmdhSIUJJmtXLRW8gm5340i+fgOoGBz8u+wZP7w+hm/8WtrBVwzcunYKFS
+         FnHeMbICSdBxLiVrwGudi4+B4C6lETQf1OnpfwlhS9ny+iFaUdlbjpNeDcV//aAoQVoa
+         3i0yzoux+iZChf5s3W24yPuvHZzxKBf4KVO9Z/TeXRN/36wKZPCPAueak45fuGwP76SR
+         x6pimA/KaYPNMMglSNoTxcAeQTn/b1vyN3IP+Q7l8motqWKYADKeZXmbn1kgFYrS86yZ
+         JhGvQeyzeUMzBEHDY7ptlW9yMZwDBtRMMrph8cGkEcxn28J7KT8xH4PhTTLv5IodGqUR
+         VLJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710952942; x=1711557742;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/C0go5GeoUF1aqwd5WJWdc0gTbFG3QELgzX8R+DzOuI=;
+        b=ehGFVjUycROifuWFCvZlU98HI4pPLFwh0ifgUVwOBrYNZy1zGbbxt42GziUjUGkTGL
+         a10dTL0wOLVdXXLFNgv+cNS7AU3S5HGoAc+2JXzRKyndppM3GV6nHEBkIJsYG9FvqGZD
+         r7/+HQW14FeXAacmvVXUqxBvjXcR4nLyG4eggBX0cM8sGFWGizVi1ruI6zzImLltWg1v
+         rwE2nV11jVpc7AQrl3ucxnoa+BrWVomIHYCijrtOzBI7SpEtmQsDUiNtWgzeApclO9mE
+         etd7+Bbra2nfejxL01usLUXpJAYjGc87y2uEUSiL4JvJc29i8N6bOcrBf2QBiPIyX3i3
+         Rtdg==
+X-Forwarded-Encrypted: i=1; AJvYcCU191e12z+/fQEuPHJ28SrdUKeotpV+IYtld6pROw04qKOFyWtmPEo7iiF5iWTHFu5scigcfk5TvO6QknXfgqchpPCOquh9Ul7wWpZr
+X-Gm-Message-State: AOJu0Yz9ocF9h5q7rpftrGki0CbFhvQKvsw2ydr1lZ08lWoWTibl8pmP
+	GtadqWmc9hgRkFboO+K1SyRhSjJ1Oln1Cho4aNf0zicWMB73mBQb6sYPm87U06so/aQa5yJqrxH
+	tC4o5OM9gvIw/IoqKyT53hScpb4C4ayBnmPSqYinzjqVWYfA63YY=
+X-Google-Smtp-Source: AGHT+IGYNdFruVqknweeMZibIxK5wVlRKsW3ccyqWtS2kmgKboBe+PUMsfNihhXKHZf27wB2CGJ+gDtjeYC6VWYGmH8=
+X-Received: by 2002:a81:ab50:0:b0:60f:ed06:bee7 with SMTP id
+ d16-20020a81ab50000000b0060fed06bee7mr6253031ywk.50.1710952942198; Wed, 20
+ Mar 2024 09:42:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/8] media: qcom: camss: Add subdev notify support
-Content-Language: en-US
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Depeng Shao
-	<quic_depengs@quicinc.com>, <rfoss@kernel.org>,
-        <todor.too@gmail.com>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <mchehab@kernel.org>,
-        <quic_yon@quicinc.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>
-References: <20240320141136.26827-1-quic_depengs@quicinc.com>
- <20240320141136.26827-3-quic_depengs@quicinc.com>
- <21d2139f-8547-466a-9be1-fbeae1194869@linaro.org>
-From: "Gjorgji Rosikopulos (Consultant)" <quic_grosikop@quicinc.com>
-In-Reply-To: <21d2139f-8547-466a-9be1-fbeae1194869@linaro.org>
+References: <20240306165904.108141-1-puranjay12@gmail.com> <87ttlhdeqb.fsf@all.your.base.are.belong.to.us>
+ <ZfBbxPDd0rz6FN2T@FVFF77S0Q05N> <8734suqsth.fsf@all.your.base.are.belong.to.us>
+ <mb61pplvw6grf.fsf@gmail.com> <87zfv0onre.fsf@all.your.base.are.belong.to.us> <87il1oedx8.fsf@all.your.base.are.belong.to.us>
+In-Reply-To: <87il1oedx8.fsf@all.your.base.are.belong.to.us>
+From: Andy Chiu <andy.chiu@sifive.com>
+Date: Thu, 21 Mar 2024 00:41:00 +0800
+Message-ID: <CABgGipWPuvwi43v1+60-=0_MN_q_CD0ZGasxHHVWJ37cig5MmA@mail.gmail.com>
+Subject: Re: [RFC PATCH] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
+To: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+Cc: Puranjay Mohan <puranjay12@gmail.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	Guo Ren <guoren@kernel.org>, Ley Foon Tan <leyfoon.tan@starfivetech.com>, 
+	Deepak Gupta <debug@rivosinc.com>, Sia Jee Heng <jeeheng.sia@starfivetech.com>, 
+	Bjorn Topel <bjorn@rivosinc.com>, Song Shuai <suagrfillet@gmail.com>, 
+	"Cl'ement L'eger" <cleger@rivosinc.com>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Jisheng Zhang <jszhang@kernel.org>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Robbin Ehn <rehn@rivosinc.com>, Brendan Sweeney <brs@rivosinc.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: g2LAgO8VsWYBj4AO1qFpgmVMj3jwzEis
-X-Proofpoint-GUID: g2LAgO8VsWYBj4AO1qFpgmVMj3jwzEis
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-20_10,2024-03-18_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=999
- mlxscore=0 phishscore=0 clxscore=1011 lowpriorityscore=0 suspectscore=0
- bulkscore=0 adultscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2403140001
- definitions=main-2403200133
+Content-Transfer-Encoding: quoted-printable
 
-Hi Bryan,
+Hi Bj=C3=B6rn,
 
-On 3/20/2024 6:08 PM, Bryan O'Donoghue wrote:
-> On 20/03/2024 14:11, Depeng Shao wrote:
->> From: Yongsheng Li <quic_yon@quicinc.com>
->>
->> The buf done irq and register update register are moved
->> to CSID in SM8550, so but the write master configuration
->> in VFE, in case adapt existing code logic. So add buf
->> done and register related subdev event, and use the notify
->> interface in the v4l2_device structure to communicate
->> between CSID and VFE driver.
-> 
-> 
-> Shouldn't it be possible to just have a function to write internally ?
-> 
-> You know the indexes of the CSID -> VFE connection.
-> 
-> The subdev notify is I think not the right fit for this purpose within
-> our driver.
-> 
+On Fri, Mar 15, 2024 at 4:50=E2=80=AFAM Bj=C3=B6rn T=C3=B6pel <bjorn@kernel=
+.org> wrote:
+>
+> Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> writes:
+>
+> > Puranjay Mohan <puranjay12@gmail.com> writes:
+> >
+> >> Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> writes:
+> >>
+> >>>
+> >>> Hmm, depending on RISC-V's CMODX path, the pro/cons CALL_OPS vs dynam=
+ic
+> >>> trampolines changes quite a bit.
+> >>>
+> >>> The more I look at the pains of patching two instruction ("split
+> >>> immediates"), the better "patch data" + one insn patching look.
+> >>
+> >> I was looking at how dynamic trampolines would be implemented for RISC=
+-V.
+> >>
+> >> With CALL-OPS we need to patch the auipc+jalr at function entry only, =
+the
+> >> ops pointer above the function can be patched atomically.
+> >>
+> >> With a dynamic trampoline we need a auipc+jalr pair at function entry =
+to jump
+> >> to the trampoline and then another auipc+jalr pair to jump from trampo=
+line to
+> >> ops->func. When the ops->func is modified, we would need to update the
+> >> auipc+jalr at in the trampoline.
+> >>
+> >> So, I am not sure how to move forward here, CALL-OPS or Dynamic trampo=
+lines?
+> >
+> > Yeah. Honestly, we need to figure out the patching story prior
+> > choosing the path, so let's start there.
+> >
+> > After reading Mark's reply, and discussing with OpenJDK folks (who does
+> > the most crazy text patching on all platforms), having to patch multipl=
+e
+> > instructions (where the address materialization is split over multiple
+> > instructions) is a no-go. It's just a too big can of worms. So, if we
+> > can only patch one insn, it's CALL_OPS.
+> >
+> > A couple of options (in addition to Andy's), and all require a
+> > per-function landing address ala CALL_OPS) tweaking what Mark is doing
+> > on Arm (given the poor branch range).
+> >
+> > ...and maybe we'll get RISC-V rainbows/unicorns in the future getting
+> > better reach (full 64b! ;-)).
+> >
+> > A) Use auipc/jalr, only patch jalr to take us to a common
+> >    dispatcher/trampoline
+> >
+> >  | <func_trace_target_data_8B> # probably on a data cache-line !=3D fun=
+c .text to avoid ping-pong
+> >  | ...
+> >  | func:
+> >  |   ...make sure ra isn't messed up...
+> >  |   aupic
+> >  |   nop <=3D> jalr # Text patch point -> common_dispatch
+> >  |   ACTUAL_FUNC
+> >  |
+> >  | common_dispatch:
+> >  |   load <func_trace_target_data_8B> based on ra
+> >  |   jalr
+> >  |   ...
+> >
+> > The auipc is never touched, and will be overhead. Also, we need a mv to
+> > store ra in a scratch register as well -- like Arm. We'll have two insn
+> > per-caller overhead for a disabled caller.
+> >
+> > B) Use jal, which can only take us +/-1M, and requires multiple
+> >    dispatchers (and tracking which one to use, and properly distribute
+> >    them. Ick.)
+> >
+> >  | <func_trace_target_data_8B> # probably on a data cache-line !=3D fun=
+c .text to avoid ping-pong
+> >  | ...
+> >  | func:
+> >  |   ...make sure ra isn't messed up...
+> >  |   nop <=3D> jal # Text patch point -> within_1M_to_func_dispatch
+> >  |   ACTUAL_FUNC
+> >  |
+> >  | within_1M_to_func_dispatch:
+> >  |   load <func_trace_target_data_8B> based on ra
+> >  |   jalr
+> >
+> > C) Use jal, which can only take us +/-1M, and use a per-function
+> >    trampoline requires multiple dispatchers (and tracking which one to
+> >    use). Blows up text size A LOT.
+> >
+> >  | <func_trace_target_data_8B> # somewhere, but probably on a different=
+ cacheline than the .text to avoid ping-ongs
+> >  | ...
+> >  | per_func_dispatch
+> >  |   load <func_trace_target_data_8B> based on ra
+> >  |   jalr
+> >  | func:
+> >  |   ...make sure ra isn't messed up...
+> >  |   nop <=3D> jal # Text patch point -> per_func_dispatch
+> >  |   ACTUAL_FUNC
+>
+> Brendan proposed yet another option, "in-function dispatch":
+>
+> D)
+>   | <func_trace_target_data_8B_per_function> # idk somewhere
+>   | ...
+>   | func:
+>   |    mv tmp1, ra
+>   |    aupic tmp2, <func_trace_target_data_8B_per_function:upper>
+>   |    mv tmp3, zero <=3D> ld tmp3, tmp2<func_trace_target_data_8B_per_fu=
+nction:lower>
+>   |    nop <=3D> jalr ra, tmp3
+>   |    ACTUAL_FUNC
 
-<snip>
+My patch series takes a similar "in-function dispatch" approach. A
+difference is that the <func_trace_target_data_8B_per_function> is
+embedded within each function entry. I'd like to have it moved to a
+run-time allocated array to reduce total text size.
 
-> 
-> I'm really not sure I see a good reason for this.
-> 
-> Why can't we just define calls between vfe and csid similar to
-> 
-> drivers/media/platform/qcom/camss/camss-csid.c:        ret = vfe_get(vfe);
+Another difference is that my series changes the first instruction to
+"j ACTUAL_FUNC" for the "ftrace disable" case. As long as the
+architecture guarantees the atomicity of the first instruction, then
+we are safe. For example, we are safe if the first instruction could
+only be "mv tmp, ra" or "j ACTUAL_FUNC". And since the loaded address is
+always valid, we can fix "mv + jalr" down so we don't have to
+play with the exception handler trick. The guarantee from arch would
+require ziccif (in RVA22) though, but I think it is the same for us
+(unless with stop_machine). For ziccif, I would rather call that out
+during boot than blindly assume.
 
+However, one thing I am not very sure is: do we need a destination
+address in a "per-function" manner? It seems like most of the time the
+destination address can only be ftrace_call, or ftrace_regs_call. If
+the number of destination addresses is very few, then we could
+potentially reduce the size of
+<func_trace_target_data_8B_per_function>.
 
-Maybe we need to rethink and redesign this part of the driver.
+>
+> There are 4 CMODX possiblities:
+>    mv, nop:  fully disabled, no problems
+>    mv, jalr: We will jump to zero. We would need to have the inst
+>              page/access fault handler take care of this case. Especially
+>              if we align the instructions so that they can be patched
+>              together, being interrupted in the middle and taking this
+>              path will be rare.
+>   ld, nop:   no problems
+>   ld, jalr:  fully enabled, no problems
+>
+> Patching is a 64b store/sd, and we only need a fence.i at the end, since
+> we can handle all 4 possibilities.
+>
+> For the disabled case we'll have:
+> A) mv, aupic, nop
+> D) mv, aupic, mv, nop.
+>
+> Puranjay, I've flipped. Let's go Mark's CALL_OPS together with a new
+> text patch mechanism w/o stop_machine().
+>
+>
+> Bj=C3=B6rn
 
-In the initial version when this driver was introduced the CSID was
-independent device from hw perspective,
-and represented as separate sub-device.
-
-With the newer architectures CSID was part of IFE hw (handled by the VFE
-sub-device in this driver)
-and vfe_get was introduced, but i believe it was not an issue because
-the CISD still was kind of independent.
-
-In the patch series:
-"https://lore.kernel.org/lkml/20240319173935.481-4-quic_grosikop@quicinc.com/T/"
-
-We try to decouple CSID from VFE and remove direct dependency
-introducing parent_dev_ops,
-where depending of the topology and parent device (VFE in this case or
-other parent in future chipsets which contain CSID)
-can reuse the code.
-
-I am not sure if introducing parent_dev_ops is right way to go but we
-can discuss further and see how to extend the driver
-in proper way.
-
-Just to add i am not saying that adding direct calls to VFE is not
-proper but just close the door for other sub-device contain CSID to use
-the code. :-)
-
-
-Regards,
-~Gjorgji
-
-> 
-> ---
-> bod
-> 
+Cheers,
+Andy
