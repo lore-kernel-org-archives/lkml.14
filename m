@@ -1,119 +1,89 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58688565B;
-	Wed, 20 Mar 2024 21:05:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4605D224F2
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 21:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710968728; cv=none; b=DIOHo3I1ZWDuulWLN7mTFEmajfOcSAPOCdHGiXpULAzsKn+5+s9Ux/EsN0xpra2Au/4zjtvNFRs8BOa7HiuHIxOx0frkANJXcifHhLIzxmQCr3zyJ3Ldzz6FqUN+9GjJLlB83N8RTEPMdCdlgJ1udbNaeiVVHDGVEa4ltDGTYIM=
+	t=1710968800; cv=none; b=sjGd/wtHnw1/o7lEZT7ZRPmZcivyZvDu9EnDMjuAFvD1xOGd3QE/tUWPtQ/9yCNvG8K9aRIlieXbUxRAjb7zKVqnVQdbRf9fxGlJT7t3kWb+7rR3V5BiGPXvsZ7+G9araUdklpXCj2sfPtFAc7fmgRp3YI8vFf57au/yo24lD14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710968728; c=relaxed/simple;
-	bh=2fuJvgCp/TQfwxtVb1Kj0pQKhEPlbMyqXlkRbqCIatk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ouvT3Kxjs//2Su3C5SETPU00ltttVeSVCVyq77unXbeTKvErm75r4w+jW5h5Qiq+E+ZHNhZPZi5Fo5gz6kbj5wgf45R++q7V0dYr5j9KAf3moCsgDDCb2k7rszMsIUvLBzFnVx9ZAyyzZAEOzdNhAlXTF72gxQS6HHQHABeLqjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=JuoJStpP; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+	s=arc-20240116; t=1710968800; c=relaxed/simple;
+	bh=xHT2mJUikQBWxwfcnyuehvD0idGqcSySVCcH2lBZWSE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FTHQHoQd/MLOVe6nb62RVMbBgW6gmXcehJKBr/pxrPj3jFJkO4WvioUusBvYdNpmR6U3WajZgqVLVnjguok8xb1FMKcgQ9y78haiL11UG4yvgo58nNSiYhgHhUE6mdiwZ2NXIEbZv6b6gOsEuDSNkR5c8GiV6qEH2Ad1lgZKddg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Oxrk86Pw; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="JuoJStpP"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1939E1C0004;
-	Wed, 20 Mar 2024 21:05:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-	t=1710968717;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=u+eA4poe7YhKyyg6S2zgB/KMMtaqy46s40/9yE4njUg=;
-	b=JuoJStpPp45vWbK9MnkL1uOhTmNJiyG2ZlZsMk0v5ZWHIETQDf8hVwpIWGRJX8ZBwkMDo0
-	wytv9+y/VJJMh9NTSqO8LXurlX8T81aySSDJTWyqCaNceHNP/SNrTAG8dhJgvVo8BnZu/7
-	aOp+j16m4940s+7uik7lxvDcmFTA7w9HCP2asUiDZUg2k/RTprEhAL4F/a5LTGuTj4klcf
-	psNinjH1BMvNlbXZhtCtmrX9i8OQTy8juOVOCVJVYYaAa4vwmkWT+Z57je5orX65jGZuwT
-	ZQd079JYQiGDOwFGxHi4rM4YRFo/QjB9ublP+8iMj40zmM310fmmvAxLwXQn4g==
-Message-ID: <dc487e20-7d6c-48b7-a590-cb3bd815cd21@arinc9.com>
-Date: Thu, 21 Mar 2024 00:04:50 +0300
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Oxrk86Pw"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1dfff641d10so1532495ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 14:06:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1710968798; x=1711573598; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=z8OHmSo8mnldqqxe1ApYKcq7AJyQHeRjSnZYaTYyZgI=;
+        b=Oxrk86Pw1FP4yOgpCREIxSj4VJ3EeylJQSkxZn6O7j2sG9qbfW1/gmIbyaXGczcehn
+         WtxkHz1vGHWA+oD+tjSz34rZe9n96f54bjf43vWbnyrBXjQRvSkLi2jQUB0FmRBtf8Az
+         4PEcV03yywFPKRUf+MMWxZBeXNrjqNaxsyYHA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710968798; x=1711573598;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z8OHmSo8mnldqqxe1ApYKcq7AJyQHeRjSnZYaTYyZgI=;
+        b=cSfAKcltysy8skE7FmaMMaOE556KGWUJZyWzG3E0La+spm33IcJ3C9ITVayChn8JKS
+         qQfjE/XXUPPdTwOIxrx+wrUHu8FQIgYQZalOwvENOf2YGkY9CX2du9GiCrqd2W0FH+jN
+         teRkpG6B+Yn+3pu+bdK/z6eq5xLBLD1ostU1HeMwNcDj7pW+rT3h+wJCbyP3InEnLGLI
+         3uVjtWCMbJOGIoYMChG6Gf8KNdrKr2QX1SRfSh6YgolWG2l4qQLw3hPas3bPWPyAXTCJ
+         WV5pX/vb2nAGIoPWGBUs49txPyMBqALQVGmvUNjndzqxv4KFcgcv3lQO90ZgRXFYayCj
+         YUSw==
+X-Forwarded-Encrypted: i=1; AJvYcCW+fAzKZjrrivCE/7qQSExdU4zzXURnDAqGQ/whKmsbWAs+P0kNioPSiOlN7n4SASwJn2mr4U8BVQ8ySEHeS59mWKJFzH1B4ksP5ryN
+X-Gm-Message-State: AOJu0Yxo0MZPwqwtHLe9rk7Bzh1tZKrOJ1WVD0Ev1asddSUelr0jaEw7
+	IB3AKy5QGyV8+GsDLKWMflSoiEoFzHGj5zm2H7AbJlM59txtR3cfahDUUVl/hA==
+X-Google-Smtp-Source: AGHT+IEnM+E+5cJ8PZohe3BjkCVeINoIlu7tNP0iTAAE/cwQX3VrPVEvBUjOnOy2qN9MeSySn63+Rw==
+X-Received: by 2002:a17:902:ea92:b0:1dd:a134:5699 with SMTP id x18-20020a170902ea9200b001dda1345699mr18366782plb.28.1710968798579;
+        Wed, 20 Mar 2024 14:06:38 -0700 (PDT)
+Received: from localhost ([2620:15c:9d:2:8598:2b3d:6e11:4163])
+        by smtp.gmail.com with UTF8SMTPSA id u16-20020a170902e5d000b001e00ae60396sm8276018plf.91.2024.03.20.14.06.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Mar 2024 14:06:37 -0700 (PDT)
+Date: Wed, 20 Mar 2024 14:06:36 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: Francesco Dolcini <francesco@dolcini.it>,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	David Lin <yu-hao.lin@nxp.com>, tsung-hsien.hsieh@nxp.com,
+	rafael.beims@toradex.com,
+	Francesco Dolcini <francesco.dolcini@toradex.com>
+Subject: Re: [PATCH v9 0/2] wifi: mwifiex: add code to support host mlme
+Message-ID: <ZftP3EKiQFra5fPw@google.com>
+References: <20240306020053.18054-1-yu-hao.lin@nxp.com>
+ <20240315094927.GA6624@francesco-nb>
+ <ZfTg1xKT-Mxmpf9w@google.com>
+ <20240318112830.GA9565@francesco-nb>
+ <87r0g6bje4.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] net: phy: mediatek-ge: do not disable EEE
- advertisement
-Content-Language: en-US
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>,
- Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
- Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean
- <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- =?UTF-8?Q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>,
- SkyLake Huang <SkyLake.Huang@mediatek.com>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- Bartel Eerdekens <bartel.eerdekens@constell8.be>, mithat.guner@xeront.com,
- erkin.bozoglu@xeront.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20240318-for-net-mt7530-fix-eee-for-mt7531-mt7988-v1-0-3f17226344e8@arinc9.com>
- <20240318-for-net-mt7530-fix-eee-for-mt7531-mt7988-v1-3-3f17226344e8@arinc9.com>
- <3698b522-d6dc-46c1-bab2-d5ee3bed1fce@arinc9.com>
- <ZftM2vDYQ2+5nSRV@shell.armlinux.org.uk>
-From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <ZftM2vDYQ2+5nSRV@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: yes
-X-Spam-Level: **************************
-X-GND-Spam-Score: 400
-X-GND-Status: SPAM
-X-GND-Sasl: arinc.unal@arinc9.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87r0g6bje4.fsf@kernel.org>
 
-On 20.03.2024 23:53, Russell King (Oracle) wrote:
-> On Wed, Mar 20, 2024 at 11:40:56PM +0300, Arınç ÜNAL wrote:
->> On 18.03.2024 10:46, Arınç ÜNAL via B4 Relay wrote:
->> Can I get an opinion on this? Is it actually possible that the PHY driver
->> would start probing after the DSA subdriver? On the console logs for the
->> DSA subdriver, I can see that the name of the PHY driver will appear, which
->> makes me believe the PHY driver would actually never probe after the DSA
->> subdriver.
->>
->> [    4.402641] mt7530-mdio mdio-bus:1f wan (uninitialized): PHY [mt7530-0:00] driver [MediaTek MT7530 PHY] (irq=POLL)
->> [    4.420392] mt7530-mdio mdio-bus:1f lan0 (uninitialized): PHY [mt7530-0:01] driver [MediaTek MT7530 PHY] (irq=POLL)
->> [    4.437791] mt7530-mdio mdio-bus:1f lan1 (uninitialized): PHY [mt7530-0:02] driver [MediaTek MT7530 PHY] (irq=POLL)
->> [    4.455096] mt7530-mdio mdio-bus:1f lan2 (uninitialized): PHY [mt7530-0:03] driver [MediaTek MT7530 PHY] (irq=POLL)
->> [    4.472422] mt7530-mdio mdio-bus:1f lan3 (uninitialized): PHY [mt7530-0:04] driver [MediaTek MT7530 PHY] (irq=POLL)
->>
->> I don't want to submit a bugfix to the net tree if the bug won't ever
->> happen in real life.
+On Tue, Mar 19, 2024 at 12:33:55PM +0200, Kalle Valo wrote:
+> Francesco Dolcini <francesco@dolcini.it> writes:
+> > Brian/Kalle, would be ok for you to add myself as reviewer for mwifiex?
+> > The patch flow on the driver is pretty limited, but I care about it
+> > and I am happy to help out if needed (and I have some hardware available
+> > for testing).
+> >
+> > If you agree I'll send a patch to the MAINTAINERS file.
 > 
-> It would be really great if you could tell us which bug fixes you're
-> submitting are for a real problem that you or a user have encountered,
-> and which are down to essentially code inspection and things that
-> "aren't correct". Basically, don't do this.
+> At least from my point of view that sounds like a good idea, you have
+> provided good review comments for this driver. But let's wait what Brian
+> says.
 
-I agree. Patch 1 fixes a real problem, patch 2 "fixes" a problem found with
-code inspection. Though, it would be great if you could review patch 2.
-
-> 
-> It isn't true that the PHY specific driver will be probed before DSA
-> initialises - consider the case where the DSA driver is built-in but
-> the PHY specific driver is modular and on the not-yet-mounted rootfs.
-> That would result in the generic PHY driver being used even when the
-> PHY specific driver were to be loaded later - and thus only basic
-> standard 802.3 PHY behaviour will be supported.
-> 
-> That's not specific to mt7530, it applies to everything that uses
-> phylib. It isn't something that really warrants "bug fixing" in each
-> and every driver.
-
-That makes sense. But there's a special case with the MT7530 DSA subdriver
-and mediatek-ge driver. The PHY driver is needed for the PHYs to function
-properly. So the DSA subdriver forces mediatek-ge to be selected [1]. So
-the PHY driver could only be compiled as a module when the DSA subdriver is
-also compiled so. And that designates mediatek-ge as a dependency for the
-DSA subdriver, if I understand correctly.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/commit/?id=fb4bb62aaac715e50c7c007714af19a2698db88b
+That's totally fine with me.
