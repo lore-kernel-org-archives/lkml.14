@@ -1,103 +1,84 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED66B3C08F
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 09:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E674B3BBC6
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 09:51:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710928265; cv=none; b=EewCwJ+0Yrbqpv96NB1NkrqLH91LsTplAz4Q6ZkfLhLj1QvcjbJLa1FvHWU3VDrnqAWnOzHzC73FBSO35PPp39656MpeUZkzyiI4kE39HY2zzi60i8zHEjZyiUeCkjaHCeREzjUAfuBHOHM/OXz1rPKHEnu6yalndRJbbF+zhEM=
+	t=1710928284; cv=none; b=ENhhMZZRbPzC6xStQ+xoT7IBmm/aGUJoyyaV+2TzRmRwoLI7nCdHrO33b/sB+dObxDihz839yyBJU9+X3zRRREc19TARYokPk84xeOpEsWYLENGXz5EfrzoMTcDTDTamS1TrEbu8prYQARPXPIdfxfOIwqoSB3TaOQaEb6qxLFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710928265; c=relaxed/simple;
-	bh=aYvUqauW3XAIBf8VauVB+YWLGD5kYr5o2CXhUs1LuqE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dGQImUtPC2kSGpq6pzIq8YnayPzBLozILCmMisaDcYLpZe7K32jZ0dIgTkbLIW9HT9SUuSBL9zgLtWZm9Qxk6/zUD5AjEfDf1C78AzXIO9dEIQTx6LH+DSgFJ7vc8WzcjzYTQP5AlEyQ5+lWKqSAR+ztboaAZV18fvt09eJbzBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=af8FPEnj; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1710928284; c=relaxed/simple;
+	bh=kmLizDXHgs/iBotX2XWt0DRN99WHQUwnu+ZiSdLsfi4=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=e8Yh3QvFohLbrK+QPvPtOAnbRwzq+B6ST9Ii9Uf3c9GJ74Xo6nRigB9BuZWDQpoFDPxZdfOtleAkvUZ59hpGz/Sqip4LI6U78YfDR5q+QZg7FeXcymGJlBYvP2httXP2CwTrCZl89RpA1bfUuyolTA/wOinNLVYlkg/dzMeXqv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=l04TrEHs; arc=none smtp.client-ip=162.62.57.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="af8FPEnj"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-78850ab4075so262993285a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 02:51:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1710928260; x=1711533060; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zjhq1PEVAhGZ2kdB4HfNLj6p/IGSV1YaiQEcKC9VuRs=;
-        b=af8FPEnjpJHDPR//+n5dPfAQ4owOylqJsR4qmlIO6ztQE4UmL1VvnIlPYiFaAk/TEH
-         bS+FtONd1jOZ5XmOOE+EZnbpZ+ut+ZruOp+O9kKN/DhctmYMQoOEdZhXdZ6lWLNhdIiI
-         kok+k8YvuhXzVWdxRfEiRErNeS3g0cjEiifWeO0+qPYu0NxSmxUPh81E9N1ccpR+tino
-         711IqB12kYzH5dYYmmTgSxuStEkdoISTPBFQx0chqyM3eDG0dGy/EPTQMY7veeU9xRpB
-         R815831rpV+E2c6IuKNs+nK5dteRmoi6Ksyid2dW7AoL55mWh89kiT4h9Qrgxt4jQRjM
-         /CAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710928260; x=1711533060;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zjhq1PEVAhGZ2kdB4HfNLj6p/IGSV1YaiQEcKC9VuRs=;
-        b=wQzWdJaLDyt91e7AG8oUTrLsCSyzUfrwCLHlfPKtXCmC9DgrhkVGu0/+dxGXFhwIkr
-         8yn1AuYhaqAYB9UyYB4V9yCSOi1aFdzL4dxATUu66PbAkjDo5hRKBbthY1E3NzQ/pQEu
-         JRL1HYvl6Yj8A1chmjm3B3cq36NnNYdYBgTSDzNICvt8JRj67zkrPVWBWa5kfSURwQLq
-         67+9OixJI0Rm9LCF6yo5lCHvar99Z5nM6KBGOUqOA/8ub95m4z4fuhfphguhpSsQo/27
-         l1254DwnbO7FvY2k45UW6KuKfJnkmgWqBypdwAEAXYgQbhyvpP7oma9vEGLk2CE6om7m
-         q29A==
-X-Forwarded-Encrypted: i=1; AJvYcCULIgg96ftIXe2Duce3EvZSWfDahEgXhGsOzKoTshQ7xnsSTdnCzcawGtIIyCr1eOMprpzH5N/SobvotuXLV6MnmJhodKb+Kk8XoAxo
-X-Gm-Message-State: AOJu0YyL46SLSv22uSGlvQyQ0kkiQBLH4F1at7EgZMeoXuKNbazQiZH9
-	+HPgfZ1WZqmaiga1ragWfTqMTxjatYjX9KX+wYuN2gYhFrYk0YPqjRNVtT/w01I=
-X-Google-Smtp-Source: AGHT+IGej3yUPKo0x6NaIzUJ6vdFXjvt7+s9BDm07QL7zkuqPVDB+G2T+cMn8qgZ1RdyhjYEJasuxA==
-X-Received: by 2002:a0c:ef86:0:b0:696:48a2:9cd9 with SMTP id w6-20020a0cef86000000b0069648a29cd9mr453563qvr.33.1710928260485;
-        Wed, 20 Mar 2024 02:51:00 -0700 (PDT)
-Received: from localhost (2603-7000-0c01-2716-da5e-d3ff-fee7-26e7.res6.spectrum.com. [2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with ESMTPSA id q13-20020ad4574d000000b00692bd4905c9sm4943884qvx.15.2024.03.20.02.50.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Mar 2024 02:51:00 -0700 (PDT)
-Date: Wed, 20 Mar 2024 05:50:53 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Nhat Pham <nphamcs@gmail.com>,
-	Chengming Zhou <chengming.zhou@linux.dev>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm: zswap: increase shrinking protection for zswap
- swapins only
-Message-ID: <20240320095053.GA294822@cmpxchg.org>
-References: <20240320020823.337644-1-yosryahmed@google.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="l04TrEHs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1710927977; bh=cc72wCrojgeL0grxxVuvtCMAT1zZo13OV+rd4PAMkik=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=l04TrEHsvfA1zXAO1a0sSn6sN0TeKrchpH8f94uX8Jmd9kVL3/4YyseSuSjhXxFiV
+	 rctGkm/GY8sNl06LscZXvDOejbA0VNIu0N5WLG7n58Hic7gT2aK10mA/gpkzcdW8p1
+	 mQrBL/ydYoX2k2zdCl7tSAnAOgC42mT/XOiBrhI4=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
+	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
+	id A0511E1D; Wed, 20 Mar 2024 17:40:05 +0800
+X-QQ-mid: xmsmtpt1710927605tzis4koew
+Message-ID: <tencent_03A5CF0DA11232DDE15D9699184F920DD007@qq.com>
+X-QQ-XMAILINFO: OQhZ3T0tjf0ae1WvG5xAKJG6BAAIIU3xaJtk/pya7jjYQzKR7IMr5EjfVeYMr1
+	 ana2mqkJx4p+twGCdDiQnhqDOeb26Pq8EM0QjrrlCJeQQD4GaG4hMsKPhlm2wQEfiUOol6/mGB0h
+	 vC4ZWqI/ddc8clq8Vx6vuJnbsIIH43oSzIGv6/IOUgul7qMeRn3lJ9RoLBjMrwsZakhYTX0cgmh6
+	 oX/LOE0Z5wtqMSc7C0yoN3c3TEjk3Si7m70Hyi+vC3AAEOQij/bApoxarB7GW0vh3bVx7BMSRana
+	 MEWyKzP+vBbZTQCwSrHa3cunlFNokno/P8v1+OLCqxwoIwzrduOqs+iHeADtE/s+Hr2d7AxlN2RP
+	 3Y3mssstfuOMDQgnxBArcLthGxb0Uz/kDMBKaZynHsxlgeOfpZtV8RtvGhzAOaXY5aCT3EvQx2iz
+	 vOX0Hv32MPf3HwSVJ/KZnvxwmG2qLY/1AnyFkvLa73b2XESsixFpIhsb0fuVVZ4vTW72y4pmqFxO
+	 MNRioC3adFxW79yVRXe+6iuhWk/5G2SHvyh2Y4ZDGJ+XliVZXLyDnYMCQCRIzi0d3D87BHH0Xxoe
+	 tpgyNihGdb4vszeXdbrlV+HxeuFPe0wP7sA7bUCIJC0juqbawVKGXgW4VVF8g7MDV1b+I86ow0/z
+	 yKGXObRkDSBor9PGHnUtpbq8yFTzcRzbBkwFQMm2SC0/2u4SmUb3CiRR1XGCy44iQx4LRG6Eru/L
+	 UUz/cMXkoHZxNmqJCk5UVA15JvaujDLvOADSyoij4rFAHHquw6op56tp1OwPgWyzI8s3zWdbUif+
+	 xZFt2aQuG5pyN2YFBlYyQobZDTEV1LO+EOhtrbe+07rpMZDBkWxuykfvzaUpabHMuxeZJe4ZxNsq
+	 h/dl91F5swWQMaMMTA5ZZg4qozngiK7tE2HHAiRHPaLbyYq4IaUY85nm8/V4tVFC1zaNpMvGMHkR
+	 Jg651+T0U=
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+33f4297b5f927648741a@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [bpf?] UBSAN: array-index-out-of-bounds in check_stack_range_initialized
+Date: Wed, 20 Mar 2024 17:40:06 +0800
+X-OQ-MSGID: <20240320094005.1244716-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000003dc8e00614076ab6@google.com>
+References: <0000000000003dc8e00614076ab6@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240320020823.337644-1-yosryahmed@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 20, 2024 at 02:08:22AM +0000, Yosry Ahmed wrote:
-> Currently, the number of protected zswap entries corresponding to an
-> lruvec are incremented every time we swapin a page.
+please test oob in check_stack_range_initialized
 
-Correct. This is the primary signal that the shrinker is being too
-aggressive in moving entries to disk and should slow down...?
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git master
 
-> This happens regardless of whether or not the page originated in
-> zswap. Hence, swapins from disk will lead to increasing protection
-> on potentially stale zswap entries. Furthermore, the increased
-> shrinking protection can lead to more pages skipping zswap and going
-> to disk, eventually leading to even more swapins from disk and
-> starting a vicious circle.
 
-How does shrinker protection affect zswap stores?
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 1dd3b99d1bb9..ed0878f4373a 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -7177,6 +7177,11 @@ static int check_stack_range_initialized(
+ 		return 0;
+ 	}
+ 
++	if (INT_MIN - access_size > max_off) {
++		verbose(env, "invalid access size\n");
++		return -EACCES;
++	}
++
+ 	for (i = min_off; i < max_off + access_size; i++) {
+ 		u8 *stype;
+ 
 
-On the contrary, I would expect this patch to create a runaway
-shrinker. The more aggressively it moves entries out to disk, the
-lower the rate of zswap loads, the more aggressively it moves more
-entries out to disk.
-
-> Instead, only increase the protection when pages are loaded from zswap.
-> This also has a nice side effect of removing zswap_folio_swapin() and
-> replacing it with a static helper that is only called from zswap_load().
-> 
-> No problems were observed in practice, this was found through code
-> inspection.
-
-This is missing test results :)
