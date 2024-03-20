@@ -1,64 +1,110 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48AFE749F
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 02:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFCF37489;
+	Wed, 20 Mar 2024 02:27:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710901427; cv=none; b=qh/aXFuMZWt+T0r4b70ZV8LJx3UnsDLbd9LQTSTGalmMbrDQC7zQ3pQK4ummID32gn7K9Eo/EUlJEYL/dFAoyIcHDgJ59/f72H0JmEIVkU3SCMaVjBmctCB4Yr0XOvk4X7F6k2XDGS1+S1OklbFztIKzBy64ZVSaJPgx+vKBW74=
+	t=1710901677; cv=none; b=f44dXxfESXyoAdpC0gpFcb0jS4tQofw4tsNVMFCHkrnOn4SIds2GkvaKg0JcpMGu/WIuzAj7BeP4kx9dHqxwJzp9a5xQiJ0ZVlAwvQdiCJ64AjIoA8wUKHeFYucS6xsDBfnq4iOUPy2CgeZiHzTUdUbDwqMiNvOfzuxXXhxipAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710901427; c=relaxed/simple;
-	bh=CrQnqMvDrnyVSQPS+ineAuhvgXfu0NjUynu4z2aN4AE=;
+	s=arc-20240116; t=1710901677; c=relaxed/simple;
+	bh=6CJWoFb4kvUK4ntLfUsptms1BUN5l+ymtlBqPsp9uoA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hPzo/oJaHgwJFwtFAeB/BlCbxBVk/cBCEeiAZ3+f0h+Yr6+No3LnQfHgXOqD/ar6nq90GiTHHyqYKXr7arLqL+JS4ZEABMy4iRA1aco+Jzj1MT5+XdvobqgAetUoUDJO/tf3x1gs4MbJC8ZrG58lRi4OSEE4nLg/v3ZVwDEdlBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=K7CsGyc3; arc=none smtp.client-ip=209.85.167.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=DDGlHiDvv//MCa9igrUe5zQjtGewVZWcaLLgxDboloEM3ZlARiJxHIob0duLmkUazme086Iaxy/6ZpDR1HHWblFpHTAwxwIir22ezkcV0PAQtW9p6DchVpFMHXCOInOKj6BlGtmNDfSN1Qs8yXyFpe+Jd90kfSCuilSHjsfqP8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F2ndfG3c; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K7CsGyc3"
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3c39177fea4so1332871b6e.2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 19:23:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F2ndfG3c"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-789e4a4d3a5so302130185a.1;
+        Tue, 19 Mar 2024 19:27:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1710901425; x=1711506225; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1710901675; x=1711506475; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kSoI/pMAjXfzjKvOOwcZSweV3DuyNeX7z58Nwuw7Wpw=;
-        b=K7CsGyc3aYxi0sOmgM/BWzDnZeGgeV9gh5fpahqhAhzr1XOiy/j8CM89T/mbV2SZwt
-         LpM0PBMuzXaw6bA5Alw6J69PS5s7BBbTdKgfySoVSG8cupZCj6JXhz9kEqsC/ANwgURj
-         fgLUraLgdF0BmNRt7/Y/CKcwq8ABNUHzArcmE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710901425; x=1711506225;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kSoI/pMAjXfzjKvOOwcZSweV3DuyNeX7z58Nwuw7Wpw=;
-        b=lJI33tSq2Uoi9vxTxNAB48Wu3FRghZMfjqaPZzMbf6xb3Gwy0HFXJXfHvvw7GIK/IF
-         BYvBFMKqcLmPKl8OfZ6rqKR+KOcZsdXIfoLiI6/DIXD08Yea0A6Z5hlrfrIJhobzuHvE
-         2Bjd4CMpWAc0Nyp6Y1Jm2lyvkbZlpwOY8W/D+mMZY6Dr31MXstUfX8UGnunTitCLIqql
-         FzSCX/Hmo2X22KoWJ2bYPvB9N+DSalwmZYhcJ7RraW7p0Sk9N6T93f1oMqeQji/aKsxT
-         h1wkTlmE0ZHza6JqpzPPzwgk3Zn7zaaxNKh3xgTyV9va3K2NOpee6Haq3yXZO4OqICfh
-         Sq/A==
-X-Forwarded-Encrypted: i=1; AJvYcCXn5dU/eSUp8cVNIiWLiIF9gBDPx7tJAdWyiIs+kb5fRCRxLRML+RdD2bnMirfL8NrmdKQ72mB3/baHepkq+wkEzIkzVSZY43iI6kvr
-X-Gm-Message-State: AOJu0Yy3d1PH2u+ALLR00f5CnH2pueiP+jcFkEKEp+VuC/ZiMGjmi9wM
-	CJYuKsKfNUvqK0R5SOD2yLH6zssTVmsCG9ql06HeoAkhb2LIc+ew9zLVmqHLJyURrDfkmyZj9Us
-	=
-X-Google-Smtp-Source: AGHT+IGfIzj94Z+izVHNRIFrqtFeuAGI7P+/V72cDrVR393SoALZgULeL61JOX8n8bdJC1wE8P/cYQ==
-X-Received: by 2002:a05:6808:3998:b0:3c3:84a5:468c with SMTP id gq24-20020a056808399800b003c384a5468cmr1296827oib.33.1710901425362;
-        Tue, 19 Mar 2024 19:23:45 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x28-20020a056a000bdc00b006e78124ad83sm401940pfu.110.2024.03.19.19.23.43
+        bh=BoYH80sJnhdliON/wfQAq4dWt7OAKJu6XRvbeyVwYo0=;
+        b=F2ndfG3calznTzI4/X6AkGWT7gD4WyYCuOMOlAZEsURNRsemM2OQ+STQuUrLd13FtD
+         jXJeltP+cJAzHjkazP95GQ/ECEaK076uXk5AF3ffDx/y3ZVTgb2pRqRCFt+VlV3duXS7
+         lVoBxxKEAuFstgdJDJn8FyBgKgecUGxK8q2jRDa5hgHD+kIU9/TlokrmD9Bkz8Fi6akR
+         K74vRdgKcQYEfixmM8vZOfPs0sICTJ5OhWm68G4XK2fe8Lsr8RxA7rczgpemoDESmCMe
+         pechVgiGdcm+sN/7S1TXx6m+RB0m1VDFX4q5bpIWMeobqksQ9SmA0f5GmsPnyGfo4Pvu
+         UHOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710901675; x=1711506475;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BoYH80sJnhdliON/wfQAq4dWt7OAKJu6XRvbeyVwYo0=;
+        b=vvegdtu8woptZQrvurhrF4J9i11oWSAGtEPGut4J9uBOq8Kh7QM5HjN5CnkY/q6Mi3
+         JcquKPvvWRzLutkh6OUtcD4JFAot4MBowFcqha3l/hqAQGPlTorAD4e6y/HDM8VcKDAR
+         0MU2Z4TzBZSdTx0mnh79N+RwUneD8jFduDa2Zjf3/tiP8ZGIjZkiXhqQLSssf91nHW1W
+         pYD9vef14r8bUf7vikRGnQT16144AoOmWkhwk665JBBTPXHWr4uv1NSiK2kSmXSPlygm
+         Z2GJO+/kHbiWeQD7U7PF/7q6lw3yLWDLMOtshSE0wDpR4E1Ce7yuO++AjxMv4ijHhveR
+         d2Zg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/kVe8/J+LitZmZF53eQ8JyV0n3LsF0kxEM5mkCSQYy8liIAV6TKil3KoUDfYNHNd3kmyltB7YcYV/4/XmLuR5nJkYINnJ2NJySxXpkGMQ2K1PdpEgxfz4nZL9jPRTjowxLY+qASxVNA/00qs=
+X-Gm-Message-State: AOJu0YzEKuVXmpJt9o+1WSs8wKcWFB68bOnCw33nNrnlvcJtPFlG2q2D
+	JD1mhG/3X6Ei+KqlqQlAekBN7rQeGZK3Vm9zORs9D5/G4VSS/4yv
+X-Google-Smtp-Source: AGHT+IHkAo9eiqZEBwRiPx6Er0DVaobmgBZ9GU8BbZoe5uwTFIH5mrJndnxU84N5b4b+Ka9j6hodbw==
+X-Received: by 2002:a05:6214:5188:b0:690:bdd5:f25e with SMTP id kl8-20020a056214518800b00690bdd5f25emr618855qvb.59.1710901674843;
+        Tue, 19 Mar 2024 19:27:54 -0700 (PDT)
+Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id j10-20020a0cf30a000000b006915cc2f655sm7167436qvl.30.2024.03.19.19.27.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 19:23:44 -0700 (PDT)
-Date: Tue, 19 Mar 2024 19:23:43 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: target: core: replace deprecated strncpy with
- strscpy
-Message-ID: <202403191908.1B6BBA3@keescook>
-References: <20240318-strncpy-drivers-target-target_core_transport-c-v1-1-a086b9a0d639@google.com>
+        Tue, 19 Mar 2024 19:27:54 -0700 (PDT)
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id A9CAF1200032;
+	Tue, 19 Mar 2024 22:27:53 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Tue, 19 Mar 2024 22:27:53 -0400
+X-ME-Sender: <xms:qUn6ZZusapBKdG8mib9oUwmKQcnjaqz7jBvHqEEWkk9Cs5CjOpqJkA>
+    <xme:qUn6ZSfcWCVnKoBJVQigrM5uMEth7blFIFn6pJqzA73sDcGvZ9SwJ-6r80w2QMQo4
+    Mu5I0Momtt_8nPY9g>
+X-ME-Received: <xmr:qUn6Zcwe9XmQw1XNJ2fOCI3WJjW9nQQr6fwck-Syfl1NBxma9lPL0OEhXU31IQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrledvgddujecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
+    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
+    htvghrnhepvefhueduudehhedtffehffdutddugefgteeihfdvvddvhfdufefggefgfefg
+    vdelnecuffhomhgrihhnpehrvggrshhonhdrthhopdduqddvtddtuddrshhonecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgv
+    shhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehhe
+    ehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:qUn6ZQPR_Lf5Y75aF5eYaCwaKfOihzuNyMLk04eiZOrJYaq4ocVhNQ>
+    <xmx:qUn6ZZ90df_frOZRY8I8YvX3Kl8FwAL-9pK5w7FifxEGy8LzFP4nNQ>
+    <xmx:qUn6ZQUeRDGu4gQd8f7pn-TXeFGni2QBy63EQAWYNPa7SwRxMAV85Q>
+    <xmx:qUn6ZafXMqIrzwu8_ERu4cE8_c8DM6gsdAO2ZySMinCFIQgiheioxA>
+    <xmx:qUn6ZXEU4IIpQn_FyLvxltU7RZTQwslvH9GxisGWZvXtUELgmMp3uD9UJKI>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 19 Mar 2024 22:27:52 -0400 (EDT)
+Date: Tue, 19 Mar 2024 19:27:38 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kees Cook <keescook@chromium.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Carlos Llamas <cmllamas@google.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH v3 1/4] rust: uaccess: add userspace pointers
+Message-ID: <ZfpJmmO2h4PxGshH@boqun-archlinux>
+References: <20240311-alice-mm-v3-0-cdf7b3a2049c@google.com>
+ <20240311-alice-mm-v3-1-cdf7b3a2049c@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,145 +113,121 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240318-strncpy-drivers-target-target_core_transport-c-v1-1-a086b9a0d639@google.com>
+In-Reply-To: <20240311-alice-mm-v3-1-cdf7b3a2049c@google.com>
 
-On Mon, Mar 18, 2024 at 10:07:50PM +0000, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
-> 
-> We expect p_buf to be NUL-terminated based on the callsites using these
-> transport_dump_* methods because they use the destination buf with C-string
-> APIs like strlen() and sprintf().
-> 
-> 		memset(buf, 0, VPD_TMP_BUF_SIZE);			\
-> 		transport_dump_vpd_ident_type(vpd, buf, VPD_TMP_BUF_SIZE); \
-> 		if (len + strlen(buf) >= PAGE_SIZE)			\
-> 			break;						\
-> 		len += sprintf(page+len, "%s", buf);			\
-> 
-> We also do not require the NUL-padding behavior that strncpy() provides
-> because we are manually setting the entire buffer to NUL, rendering any
-> future padding redundant.
-> 
-> Let's use strscpy() as it guarantees NUL-termination and doesn't
-> NUL-pad ( and isn't deprecated :>] ). Note that we can't use the more
-> idiomatic strscpy() usage of strscpy(dest, src, sizeof(dest)) because
-> the size of the destination buffer is not known to the compiler. We also
-> can't use the new 2-arg version of strscpy() from Commit e6584c3964f2f
-> ("string: Allow 2-argument strscpy()")
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+Hi Alice,
 
-Hm, this actually fixes potential over-reads and potential memory content
-exposures (in the face of malicious/weird hardware) since p_buf_len
-appears to always be sizeof(p_buf) in callers, which means the old use
-of strncpy() could have left the string unterminated.
+I was trying to work on a patch for UserSlice::read_slice(), and I found
+a few place that may need some documentation improvements. Please see
+below:
 
-In practice I would assume it's not a problem, but, for example, here's
-a place where the 254 p_buf_len could run out when doing the sprintf:
+On Mon, Mar 11, 2024 at 10:47:13AM +0000, Alice Ryhl wrote:
+[...]
+> diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
+> new file mode 100644
+> index 000000000000..020f3847683f
+> --- /dev/null
+> +++ b/rust/kernel/uaccess.rs
+> @@ -0,0 +1,315 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! User pointers.
 
-#define VPD_TMP_BUF_SIZE                      254
-...
-#define INQUIRY_VPD_DEVICE_IDENTIFIER_LEN       254
-...
-struct t10_vpd {
-        unsigned char device_identifier[INQUIRY_VPD_DEVICE_IDENTIFIER_LEN];
-	...
-};
-...
-int transport_dump_vpd_ident(..., unsigned char *p_buf, int p_buf_len)
-{
-	...
-        unsigned char buf[VPD_TMP_BUF_SIZE];
-	...
-                snprintf(buf, sizeof(buf),
-                        "T10 VPD ASCII Device Identifier: %s\n",
-                        &vpd->device_identifier[0]);
-	...
-        if (p_buf)
-                strncpy(p_buf, buf, p_buf_len);	// may write 254 chars and no NUL
-	...
-}
-...
-        unsigned char buf[VPD_TMP_BUF_SIZE];
-	...
-	memset(buf, 0, VPD_TMP_BUF_SIZE);
-        transport_dump_vpd_ident_type(vpd, buf, VPD_TMP_BUF_SIZE);
-        if (len + strlen(buf) >= PAGE_SIZE)
-		break;
-	len += sprintf(page+len, "%s", buf);	// may expose stack memory following "buf"
+Since the type is renamed as UserSlice, maybe:
 
+//! Slices to user space memory regions.
 
-So, yes, please!
+?
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+> +//!
+> +//! C header: [`include/linux/uaccess.h`](srctree/include/linux/uaccess.h)
+> +
+> +use crate::{bindings, error::code::*, error::Result};
+> +use alloc::vec::Vec;
+> +use core::ffi::{c_ulong, c_void};
+> +
+> +/// A pointer to an area in userspace memory, which can be either read-only or
+> +/// read-write.
+> +///
+> +/// All methods on this struct are safe: attempting to read or write invalid
+> +/// pointers will return `EFAULT`. Concurrent access, *including data races
 
--Kees
+Probably reword this a little bit:
 
-> ---
-> Note: build-tested only.
-> 
-> Found with: $ rg "strncpy\("
-> ---
->  drivers/target/target_core_transport.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/target/target_core_transport.c b/drivers/target/target_core_transport.c
-> index 73d0d6133ac8..3311eb87df6d 100644
-> --- a/drivers/target/target_core_transport.c
-> +++ b/drivers/target/target_core_transport.c
-> @@ -1112,7 +1112,7 @@ void transport_dump_vpd_proto_id(
->  	}
->  
->  	if (p_buf)
-> -		strncpy(p_buf, buf, p_buf_len);
-> +		strscpy(p_buf, buf, p_buf_len);
->  	else
->  		pr_debug("%s", buf);
->  }
-> @@ -1162,7 +1162,7 @@ int transport_dump_vpd_assoc(
->  	}
->  
->  	if (p_buf)
-> -		strncpy(p_buf, buf, p_buf_len);
-> +		strscpy(p_buf, buf, p_buf_len);
->  	else
->  		pr_debug("%s", buf);
->  
-> @@ -1222,7 +1222,7 @@ int transport_dump_vpd_ident_type(
->  	if (p_buf) {
->  		if (p_buf_len < strlen(buf)+1)
->  			return -EINVAL;
-> -		strncpy(p_buf, buf, p_buf_len);
-> +		strscpy(p_buf, buf, p_buf_len);
+"All methods on this struct are safe: attempting to read or write on bad
+addresses (either out of the bound of the slice or unmapped addresses)
+will return `EFAULT`."
 
->  	} else {
->  		pr_debug("%s", buf);
->  	}
-> @@ -1276,7 +1276,7 @@ int transport_dump_vpd_ident(
->  	}
->  
->  	if (p_buf)
-> -		strncpy(p_buf, buf, p_buf_len);
-> +		strscpy(p_buf, buf, p_buf_len);
->  	else
->  		pr_debug("%s", buf);
->  
-> 
-> ---
-> base-commit: bf3a69c6861ff4dc7892d895c87074af7bc1c400
-> change-id: 20240318-strncpy-drivers-target-target_core_transport-c-1950554ec04e
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
-> 
+, please see below for the reason.
 
--- 
-Kees Cook
+> +/// to/from userspace memory*, is permitted, because fundamentally another
+> +/// userspace thread/process could always be modifying memory at the same time
+> +/// (in the same way that userspace Rust's [`std::io`] permits data races with
+> +/// the contents of files on disk). In the presence of a race, the exact byte
+> +/// values read/written are unspecified but the operation is well-defined.
+> +/// Kernelspace code should validate its copy of data after completing a read,
+> +/// and not expect that multiple reads of the same address will return the same
+> +/// value.
+> +///
+> +/// These APIs are designed to make it difficult to accidentally write TOCTOU
+> +/// (time-of-check to time-of-use) bugs. Every time a memory location is read,
+> +/// the reader's position is advanced by the read length and the next read will
+> +/// start from there. This helps prevent accidentally reading the same location
+> +/// twice and causing a TOCTOU bug.
+> +///
+> +/// Creating a [`UserSliceReader`] and/or [`UserSliceWriter`] consumes the
+> +/// `UserSlice`, helping ensure that there aren't multiple readers or writers to
+> +/// the same location.
+> +///
+> +/// If double-fetching a memory location is necessary for some reason, then that
+> +/// is done by creating multiple readers to the same memory location, e.g. using
+> +/// [`clone_reader`].
+> +///
+
+[...]
+
+> +    /// Reads raw data from the user slice into a raw kernel buffer.
+> +    ///
+> +    /// Fails with `EFAULT` if the read encounters a page fault.
+
+Technically, this is not correct, since normal page faults can happen
+during copy_from_user() (for example, userspace memory gets swapped). So
+returning `EFAULT` really means the read happens on a bad address, which
+also matches `EFAULT`'s definition:
+
+	EFAULT          Bad address (POSIX.1-2001).
+
+so maybe reword this and the similar ones below into something like:
+
+	/// Fails with `EFAULT` if the read happens on a bad address.
+
+Otherwise, people may think that this function just abort whenever there
+is a page fault. Thoughts?
+
+Regards,
+Boqun
+
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// The `out` pointer must be valid for writing `len` bytes.
+> +    pub unsafe fn read_raw(&mut self, out: *mut u8, len: usize) -> Result {
+> +        if len > self.length {
+> +            return Err(EFAULT);
+> +        }
+> +        let Ok(len_ulong) = c_ulong::try_from(len) else {
+> +            return Err(EFAULT);
+> +        };
+> +        // SAFETY: The caller promises that `out` is valid for writing `len` bytes.
+> +        let res = unsafe { bindings::copy_from_user(out.cast::<c_void>(), self.ptr, len_ulong) };
+> +        if res != 0 {
+> +            return Err(EFAULT);
+> +        }
+> +        // Userspace pointers are not directly dereferencable by the kernel, so
+> +        // we cannot use `add`, which has C-style rules for defined behavior.
+> +        self.ptr = self.ptr.wrapping_byte_add(len);
+> +        self.length -= len;
+> +        Ok(())
+> +    }
+> +
+[...]
