@@ -1,123 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1568F4D9E4
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 15:19:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EBBF50A7C;
+	Wed, 20 Mar 2024 15:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710947991; cv=none; b=uW9ziolpSZ8J7dZlrE3I/g4WhmL1tWsb2EPF57W5iXvrzkTrFy5uXVo1igMcGLrFo+VcAK8rwdfsoXUot5uWVT2bGkTrKsW9DEVX2j+UUhdxvBAr+VILBe/FTVCu8eXlH62WhFgcBFZU37ak8Ao1XgEykM4I4/rFtT5zqkYv5xc=
+	t=1710948016; cv=none; b=BVHPK41rwnt26ZXdvpxaz4Ay+TofbfDKqaA8Swd5ga49RVOmHtyqSHK+X29MCcTMzs8seixDkb7umV7FQS59bUHyhgAuCo6i6NgkICyrtud9ResQoFC5qi7uelsgy46zZbngOMlh501Xzh04/qNv0X1fdyj/fkEAwyLc+z2WCZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710947991; c=relaxed/simple;
-	bh=w6Ct3C1JvPunEIqAGDEqVOnbhaD1962ZTtDotzWiW7w=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=TzVTXEczcR5n7+R+k39j0QseiL144d7Lu0x04SBzHVDvi6JpA+cuNvJmJocqYonunGo9e4ZGbg3oAWZCLOzTjYW6AYhPwugiZBWYTz7MFSNr78h3xk03t93mJ1/QPZPv8lPdGXr5JQO29Fk+4OF/8TSSvkeNIo0uA0sMdO6Rlmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E012AC433F1;
-	Wed, 20 Mar 2024 15:19:49 +0000 (UTC)
-Date: Wed, 20 Mar 2024 11:22:14 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Daniel Bristot de Oliveira <bristot@kernel.org>
-Subject: [GIT PULL] tracing/tools: Updates for v6.9
-Message-ID: <20240320112214.01bc5339@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1710948016; c=relaxed/simple;
+	bh=jbAviVdG5PYU68VheCEt3+P0Ti55y9JXBqGzLplMOd0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OMX3sKuorBVDzlv8EEcNyiM0GSeqKL24EGhJQKKbdFEABAI+oOwXOmRo7KxeV3XCror+TSmvhjmrlfSQIsxDS3ZAdxv65VAH89Y5oNNkCOLhrDS07L6sUH0G2BVgnmyolHBmp0DACSc1AYuypkZhiv0u0TS473PmQrqXU7YtwWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GMDjmRV4; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GMDjmRV4"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-609f4155b76so71725837b3.1;
+        Wed, 20 Mar 2024 08:20:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710948014; x=1711552814; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fkCsEo4Bf7snePHiuEg/lPMrLlUywl5gBYIKxRVm4qE=;
+        b=GMDjmRV4trfl1zWad40gmwKzxPcq+G89Dpr1h34IGOYccjgkk/ULHRyZy7TrfBQe0o
+         2luhwhCO4IA+LsQO+2EuPT50OgDDNFAM8xBVDMNrIBaxv8O3itDAlJPpPKcuNqz/bcrj
+         AdChJTc+kXdtic+pXsdwPWMs7oJR5t3/BzR/jlgyfCAWgh9Q+6jQVUA1myazgmG3ANld
+         bSfEnW6CAHZOQNlVnwK6FcVuMHoOfR3RzsYe8/dNUQVhDe/I2r+1pxK9ZoI0E/JcWMUk
+         e1DSXsJXppIJWkwYqBiaAS+CpDVSoaaPECXRvX+OrJ+RkOKzY30di0ecgS7XMb96v0hi
+         lmTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710948014; x=1711552814;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fkCsEo4Bf7snePHiuEg/lPMrLlUywl5gBYIKxRVm4qE=;
+        b=kATt1O0HFtIp7mkyh32odZhN8Ivtm3c3srXycnXa6ISsbtrx0kxU3UDrDxhkWNTaf8
+         TqjNp5Wm88IyHgrQjcmDvxkoRowpZbXKcxXcnQmR5Dy7EoKJxkIpr78GInLuXstPrt2Q
+         NRUW+Gv2mDYNhBoob0UMAVQDL6cDD5df62odATaQiQ32mMGP3iRPMfaY6FRLL8wEI9qE
+         U2kor83qq1H7DFzZJZf1Olt6ili45YcM9XfRa7XRLx1TNNsGC7Vgyjwo4i28b16D3jiN
+         +uFWHRWWd9Ni/ITioxvWDfWpGMl3Ou3pzi0zkXR+a+onse1NCe4Uv2mWkoocYEewZ2Zl
+         b63Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXFivLaeFTWhApzc2fMiDGzVW/HJBAD8Tx0yUK+YFShJmm8lZ+RLVaSJMd+dhHnkxEIoXyQdX87YP1W5+Uz9cXteDL6HglQXKfuBjSxzg2beuQdUc0CW9S+GM+qGlxkUwc9EwD5dNvPNJfbpQ==
+X-Gm-Message-State: AOJu0Yxv64O+0OiQjJLye29VGUHu1NeZ/z5vEhdK6lDtBl6C9glLHUEw
+	0K6TmE27a8ywIvIG1JqxMNDMWq4N/Zrm2DqO+Jvsc7nuTIvLtbzo
+X-Google-Smtp-Source: AGHT+IHanjX8/lQ8OxvojHk6r0sfMoxcnrCz64hpQd43RbD8WGd14eKvB9R6pdt3kBfrQOp21ELD9Q==
+X-Received: by 2002:a0d:dd12:0:b0:60c:f1b0:1eb1 with SMTP id g18-20020a0ddd12000000b0060cf1b01eb1mr5934741ywe.43.1710948014198;
+        Wed, 20 Mar 2024 08:20:14 -0700 (PDT)
+Received: from localhost ([2600:1700:2ec0:58c0::44])
+        by smtp.gmail.com with ESMTPSA id v3-20020a81b703000000b00610cfeb2718sm1226060ywh.80.2024.03.20.08.20.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Mar 2024 08:20:13 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Wed, 20 Mar 2024 08:20:12 -0700
+From: Tejun Heo <tj@kernel.org>
+To: Kemeng Shi <shikemeng@huaweicloud.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	willy@infradead.org, bfoster@redhat.com, jack@suse.cz,
+	dsterba@suse.com, mjguzik@gmail.com, dhowells@redhat.com,
+	peterz@infradead.org
+Subject: Re: [PATCH 0/6] Improve visibility of writeback
+Message-ID: <Zfr-rFdN6v87ZDmT@mtj.duckdns.org>
+References: <20240320110222.6564-1-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240320110222.6564-1-shikemeng@huaweicloud.com>
 
+Hello,
 
-Linus,
+On Wed, Mar 20, 2024 at 07:02:16PM +0800, Kemeng Shi wrote:
+> /* all writeback info of bdi is successfully collected */
+> # cat /sys/kernel/debug/bdi/252:16/stats:
+> BdiWriteback:              448 kB
+...
+> 
+> /* per wb writeback info is collected */
+> # cat /sys/kernel/debug/bdi/252:16/wb_stats:
+> cat wb_stats
+> WbCgIno:                    1
+...
+> 
+> /* monitor writeback info */
+> # ./wb_monitor.py 252:16 -c
+>                   writeback  reclaimable   dirtied   written    avg_bw
+> 252:16_1                  0            0         0         0    102400
+> 252:16_4284             672       820064   9230368   8410304    685612
+> 252:16_4325             896       819840  10491264   9671648    652348
+> 252:16                 1568      1639904  19721632  18081952   1440360
+> 
+> 
+>                   writeback  reclaimable   dirtied   written    avg_bw
+> 252:16_1                  0            0         0         0    102400
+> 252:16_4284             672       820064   9230368   8410304    685612
+> 252:16_4325             896       819840  10491264   9671648    652348
+> 252:16                 1568      1639904  19721632  18081952   1440360
+> ...
 
-[
-  Note, the biggest change here is the restructuring of the Makefiles to
-  warn about missing libraries that you asked us to do last merge window.
-  It follows perf in which you don't have the libraries, you now get:
+Ah you have the example outputs here. It'd be nice to have these in the
+commit messages too.
 
-  Auto-detecting system features:
-  ...                           libtraceevent: [ OFF ]
-  ...                              libtracefs: [ OFF ]
+I'm not sure about the last patch but patchset looks good to me otherwise. I
+don't feel particularly enthusiastic about adding more debugfs files
+especially given that some distros disable debugfs completely, but no harm
+in adding them either.
 
-  libtraceevent is missing. Please install libtraceevent-dev/libtraceevent-devel
-  libtracefs is missing. Please install libtracefs-dev/libtracefs-devel
-]
+Thanks.
 
-Updates to tools/tracing and verification for 6.9:
-
-Tracing:
-
-- Update makefiles for latency-collector and RTLA, using tools/build/
-  makefiles like perf does, inheriting its benefits. For example, having a
-  proper way to handle library dependencies.
-
-- The timerlat tracer has an interface for any tool to use.  rtla timerlat
-  tool uses this interface dispatching its own threads as workload. But,
-  rtla timerlat could also be used for any other process. So, add 'rtla
-  timerlat -U' option, allowing the timerlat tool to measure the latency of
-  any task using the timerlat tracer interface.
-
-Verification:
-
-- Update makefiles for verification/rv, using tools/build/ makefiles like
-  perf does, inheriting its benefits.  For example, having a proper way to
-  handle dependencies.
-
-
-Please pull the latest trace-tools-v6.9 tree, which can be found at:
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-trace-tools-v6.9
-
-Tag SHA1: 8f0b372605bfba01ab03a1201f93e655bc401fc5
-Head SHA1: a23c05fd76cf4ad27e0c74f7a93e7b089e94a55c
-
-
-Daniel Bristot de Oliveira (4):
-      tools/tracing: Use tools/build makefiles on latency-collector
-      tools/rtla: Use tools/build makefiles to build rtla
-      tools/verification: Use tools/build makefiles on rv
-      tools/rtla: Add -U/--user-load option to timerlat
-
-----
- .../tools/rtla/common_timerlat_options.rst         |   6 +
- tools/tracing/latency/.gitignore                   |   5 +-
- tools/tracing/latency/Build                        |   1 +
- tools/tracing/latency/Makefile                     | 105 ++++++++--
- tools/tracing/latency/Makefile.config              |  30 +++
- tools/tracing/rtla/.gitignore                      |   7 +-
- tools/tracing/rtla/Build                           |   1 +
- tools/tracing/rtla/Makefile                        | 217 +++++++--------------
- tools/tracing/rtla/Makefile.config                 |  47 +++++
- tools/tracing/rtla/Makefile.rtla                   |  80 ++++++++
- tools/tracing/rtla/Makefile.standalone             |  26 +++
- tools/tracing/rtla/sample/timerlat_load.py         |  74 +++++++
- tools/tracing/rtla/src/Build                       |  11 ++
- tools/tracing/rtla/src/timerlat_hist.c             |  16 +-
- tools/tracing/rtla/src/timerlat_top.c              |  14 +-
- tools/verification/rv/.gitignore                   |   6 +
- tools/verification/rv/Build                        |   1 +
- tools/verification/rv/Makefile                     | 207 +++++++-------------
- tools/verification/rv/Makefile.config              |  47 +++++
- tools/verification/rv/Makefile.rv                  |  51 +++++
- tools/verification/rv/src/Build                    |   4 +
- 21 files changed, 650 insertions(+), 306 deletions(-)
- create mode 100644 tools/tracing/latency/Build
- create mode 100644 tools/tracing/latency/Makefile.config
- create mode 100644 tools/tracing/rtla/Build
- create mode 100644 tools/tracing/rtla/Makefile.config
- create mode 100644 tools/tracing/rtla/Makefile.rtla
- create mode 100644 tools/tracing/rtla/Makefile.standalone
- create mode 100644 tools/tracing/rtla/sample/timerlat_load.py
- create mode 100644 tools/tracing/rtla/src/Build
- create mode 100644 tools/verification/rv/.gitignore
- create mode 100644 tools/verification/rv/Build
- create mode 100644 tools/verification/rv/Makefile.config
- create mode 100644 tools/verification/rv/Makefile.rv
- create mode 100644 tools/verification/rv/src/Build
----------------------------
+-- 
+tejun
