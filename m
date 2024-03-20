@@ -1,111 +1,111 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB1E22F0A;
-	Wed, 20 Mar 2024 02:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4976229D05
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 02:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710902554; cv=none; b=MgEeepaY2JmEKx259K4yOotjXFfkZA+em1LYQaED/wmcUvkg8B9ezxWW7CXIXOJ4HAmI3y5IKF+qUJA9ebzEhxu4+pZiy4JSZ3xX9mI1/nYoPg3ofckTYnqzYlVLZL8RUDgfugsuSnrMF1MGqwEhbKptONhEe/kBPUTgXz3LlE8=
+	t=1710902555; cv=none; b=t79aIRx5XpiuHuzcpjJ0LbAcdaTZM4STxkVfxGCsZst1VzdyngbjW/B4g39Udgf6pYFaDgPxePtYCOUa+LJBUNqwjIMMzyGzLYJTvdHOXch5lwZt1dnD75SjdcN8EBa8mVCqTZQX49GFPAdX8nzK+KHyrCPMEuE4P5Rfq+QZx98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710902554; c=relaxed/simple;
-	bh=MPllQIqTnkopYdBEjoinh9WMZ5nxfWwCb4wdlSkYl4Y=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=vCZr7gQbyFdiJ15MRbdpyHcewqfQoE3TrT/1caWDjluhYVvv03e/jaZdbsOPcgutlcQ/qHRj0eANsuUCCcM/A5SOa0W62GoNWMZLZE3Rcjax6k9kvVMA3XlJRDkDm5CdyD5anr0JhaRDEy75a4OIZy93w8J7V8s43JD2ZLfzvi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=tMN9xvJ9; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1710902555; c=relaxed/simple;
+	bh=s7xt3J/x1P5iR0tIyAeOfFanpdd7tKxd4ngYLSRwbIA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f+b9xI1UWN+RFUikBR8HVjXyBuCrzemwXKPaxe4Xi7LL4HkbGi7UzM3zN3P1UTQ4N3FNLszuPcJyipMNy2frNEEH/sCOSeEjWx+NQRbJtli8ARp8QnLrATL10zKMgbkoUAwS38+5bTWgDlqbLgwHoidemnDwjz0JkRhiSJqIGrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FpK80cf2; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="tMN9xvJ9"
-X-UUID: 7c992f58e66311ee935d6952f98a51a9-20240320
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=L4wIjJjGf0swJVl62co4wgMlC4/a0Q7gGxPi5eINvzg=;
-	b=tMN9xvJ9LtXYIYIdD48ze/LlfH3qgRsOcyqg5/zL51bH9ddPk0K1UqlcP682sfzP0NonenYXpiO8zqEeZQpWnLfEjrEJ8fTIB4yNJ6al2gT6zJ/IuTvn5LBAfMM/t/9WuJopHIEWjm7whBBbXdZ1pvOWMLQzRQ1WCShupmqcepU=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:887d91a3-c4e0-4a58-927a-f04634105867,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6f543d0,CLOUDID:5a7f9a90-e2c0-40b0-a8fe-7c7e47299109,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 7c992f58e66311ee935d6952f98a51a9-20240320
-Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw02.mediatek.com
-	(envelope-from <shawn.sung@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1746623168; Wed, 20 Mar 2024 10:42:26 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Wed, 20 Mar 2024 10:42:25 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Wed, 20 Mar 2024 10:42:25 +0800
-From: Shawn Sung <shawn.sung@mediatek.com>
-To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>
-CC: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?q?Christian=20K=C3=B6nig?=
-	<christian.koenig@amd.com>, <dri-devel@lists.freedesktop.org>,
-	<linux-mediatek@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-media@vger.kernel.org>,
-	<linaro-mm-sig@lists.linaro.org>, Hsiao Chien Sung
-	<shawn.sung@mediatek.corp-partner.google.com>
-Subject: [PATCH v3 09/14] drm/mediatek: Rename files "mtk_drm_ddp_comp.c" to "mtk_ddp_comp.c"
-Date: Wed, 20 Mar 2024 10:42:17 +0800
-Message-ID: <20240320024222.14234-10-shawn.sung@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20240320024222.14234-1-shawn.sung@mediatek.com>
-References: <20240320024222.14234-1-shawn.sung@mediatek.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FpK80cf2"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e88e4c8500so49265b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Mar 2024 19:42:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1710902552; x=1711507352; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=o2Ii+qg5LzdQ72UpZAw1asNIZXswSUTe3sjnBVEowPI=;
+        b=FpK80cf2hM+7NsrMo3H6/99ZxSX+fOtbFEkSaWi8p3DN2NqOxOHPtTOkYEavLFkjT5
+         YXJaHKy6FKA12ArFyKOD9WEx+X6Z3d+QJbdN6O6TvYVK3+E1BnOTYovb9pY3ngHxO6Jc
+         Fc16DNvtVH5bddpkenEerj37o+ETzsWjyW4dg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710902552; x=1711507352;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o2Ii+qg5LzdQ72UpZAw1asNIZXswSUTe3sjnBVEowPI=;
+        b=gXrBtsm3PayZMuvFU4Pedp91nfDziR6BtRZIrU+ye2RS8wlLzD2z2+LVOHoAGJXySe
+         aqg7KVU8K0I5m+kFy9YeRlKeEdQdO2UVwAoWAE14dFinSVyUv0VaXaISN6R5NKcKnVGo
+         D88YD6LlHsMjleRT8Co5zql6UVV1+85ob2Mwim1ONafZDNwhIeRlIhgEZFmdouP81T3k
+         aFitn07XeyIoFVMPwgnm1TdVB0L9DYi4CoabOZ2cbz0CH/QGiXnaRsjnivR+UmS7LiOH
+         ov5BWFliRz7+5UwxT+/d7K8JMRhuVh24NHkYQO7QLPRKJWjpLc3xWBQrJf+W3gAFPmSG
+         DY+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUIFcYVkAEbn9cIVmxGRyZEFD5adog6leHWi/H8Al4zaRiC/LOGBo8dESK/J9UJzh098599fWkU2LHgGjGNozEAclvxy87aJp142EO8
+X-Gm-Message-State: AOJu0YxtfEQZHBfGSQ9KUe2T0ikFmc4qXE114uMjzkNPKA4RcQnO8tbb
+	HhzbBHlgLyVA+N7MX7TV2Gl7TxbfKXNUcBCT2996Pss4Exczhf1VZmOqabYopw==
+X-Google-Smtp-Source: AGHT+IFJ3mimqhyXJl6uZ2iBD7JX313NaQ7js3fa+uG7RNJZ8WFe7D0jn4BJmpYU7bSd6VfpiwLGDg==
+X-Received: by 2002:a05:6a00:21cc:b0:6e7:20a7:9fc0 with SMTP id t12-20020a056a0021cc00b006e720a79fc0mr9982708pfj.34.1710902552625;
+        Tue, 19 Mar 2024 19:42:32 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id r10-20020a056a00216a00b006e6eb8e07edsm10032341pff.50.2024.03.19.19.42.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 19:42:31 -0700 (PDT)
+Date: Tue, 19 Mar 2024 19:42:31 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] scsi: target: core: replace deprecated strncpy with
+ strscpy
+Message-ID: <202403191941.D2818DB@keescook>
+References: <20240318-strncpy-drivers-target-target_core_transport-c-v1-1-a086b9a0d639@google.com>
+ <202403191908.1B6BBA3@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK: N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202403191908.1B6BBA3@keescook>
 
-From: Hsiao Chien Sung <shawn.sung@mediatek.corp-partner.google.com>
+On Tue, Mar 19, 2024 at 07:23:43PM -0700, Kees Cook wrote:
+> Hm, this actually fixes potential over-reads and potential memory content
+> exposures (in the face of malicious/weird hardware) since p_buf_len
+> appears to always be sizeof(p_buf) in callers, which means the old use
+> of strncpy() could have left the string unterminated.
+> 
+> In practice I would assume it's not a problem, but, for example, here's
+> a place where the 254 p_buf_len could run out when doing the sprintf:
+> 
+> #define VPD_TMP_BUF_SIZE                      254
+> ...
+> #define INQUIRY_VPD_DEVICE_IDENTIFIER_LEN       254
+> ...
+> struct t10_vpd {
+>         unsigned char device_identifier[INQUIRY_VPD_DEVICE_IDENTIFIER_LEN];
+> 	...
+> };
+> ...
+> int transport_dump_vpd_ident(..., unsigned char *p_buf, int p_buf_len)
+> {
+> 	...
+>         unsigned char buf[VPD_TMP_BUF_SIZE];
+> 	...
+>                 snprintf(buf, sizeof(buf),
+>                         "T10 VPD ASCII Device Identifier: %s\n",
+>                         &vpd->device_identifier[0]);
+> 	...
+>         if (p_buf)
+>                 strncpy(p_buf, buf, p_buf_len);	// may write 254 chars and no NUL
 
-Rename files mtk_drm_ddp_comp.c to mtk_ddp_comp.c and
-modify the Makefile accordingly.
+Wait, no, it's safe; I got confused by the double buffers. The
+snprintf() will always NUL-terminate, so "buf" copied into p_buf will
+always be NUL terminated.
 
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.corp-partner.google.com>
----
- drivers/gpu/drm/mediatek/Makefile                               | 2 +-
- drivers/gpu/drm/mediatek/{mtk_drm_ddp_comp.c => mtk_ddp_comp.c} | 0
- 2 files changed, 1 insertion(+), 1 deletion(-)
- rename drivers/gpu/drm/mediatek/{mtk_drm_ddp_comp.c => mtk_ddp_comp.c} (100%)
+So, nevermind! Regardless, still a good conversion. Thank you!
 
-diff --git a/drivers/gpu/drm/mediatek/Makefile b/drivers/gpu/drm/mediatek/Makefile
-index 0198b50820d4c..bdb71738e1f31 100644
---- a/drivers/gpu/drm/mediatek/Makefile
-+++ b/drivers/gpu/drm/mediatek/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- 
- mediatek-drm-y := mtk_crtc.o \
-+		  mtk_ddp_comp.o \
- 		  mtk_disp_aal.o \
- 		  mtk_disp_ccorr.o \
- 		  mtk_disp_color.o \
-@@ -9,7 +10,6 @@ mediatek-drm-y := mtk_crtc.o \
- 		  mtk_disp_ovl.o \
- 		  mtk_disp_ovl_adaptor.o \
- 		  mtk_disp_rdma.o \
--		  mtk_drm_ddp_comp.o \
- 		  mtk_drm_drv.o \
- 		  mtk_drm_gem.o \
- 		  mtk_drm_plane.o \
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_ddp_comp.c
-similarity index 100%
-rename from drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-rename to drivers/gpu/drm/mediatek/mtk_ddp_comp.c
+-Kees
+
 -- 
-2.18.0
-
+Kees Cook
