@@ -1,169 +1,91 @@
-Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F633EA62;
-	Wed, 20 Mar 2024 11:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258493D986;
+	Wed, 20 Mar 2024 11:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710934355; cv=none; b=H2RFjkYPzNIS3vJQj4KH157hYBylLTLDjl6eMUKySNNTiFkYRHlv8rphhgsAry9rLrBF/FVcYhrlSkBA5PZWnH9Ko7Wo65kUXO7GKxTLLb23huP97xuxaQOSc8iuEGQMZO/+1htMoWho6lUN9mm16rPhVtoyVQqIcrF+HIrFoWA=
+	t=1710934408; cv=none; b=IFpMaOwaNDXgvTQKq/A+95zpmnXQ3xuwnKTnBphSOV83MCNJA5J1+2zukXaXhYbtkp9mXIuncWztESctBL2Kr7w3rGPLVi2YJMR5FH14xx5gELAZ2L9pqcBIPn/1p5celSpLC3+FvOMUfFpLy7pwFhPhKaFsNQDz4oi+i5Nc7BE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710934355; c=relaxed/simple;
-	bh=nvuYKgMQZ2dOzH1kP01A+m3+SU8aRkQ0BxBOYVMusPI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MsYZnjMaUoraGE/a3a7lQyfcuUr7bjTR5jctYU9pOZzQVggsaAFQCRJHoxONF8OKdUlpoh/+v/djGVhxshMBd6Xzn8zjHE7f+QDSErU1okCCLVbuNJchcMBT6ehTo5sydhLcmSRsLHrGUmMrIjvkLa8LHtp7ufaenrChqzZK91I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=lLCDBYZu; arc=none smtp.client-ip=52.119.213.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="lLCDBYZu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1710934354; x=1742470354;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=SagNweem8Fra24984SKbM6xuTks7v+vVjcZ5YAq9KuE=;
-  b=lLCDBYZuMBcREtL3Nt8Q7AfgvJ7wfFgk1RAiCVTW7ehB26Lmz8tGjVNF
-   DpHCwVAahV4ZLMgVMhKB7iLz+pGPlGBftpHJESKMicjvFiM/eEDekesmd
-   htsfHqTUoTaCR5TyKo31c4IBGnhH//wb77cvTdyvmGHwdNnbF2m7LqAbt
-   E=;
-X-IronPort-AV: E=Sophos;i="6.07,140,1708387200"; 
-   d="scan'208";a="192899703"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 11:32:30 +0000
-Received: from EX19MTAEUA001.ant.amazon.com [10.0.43.254:38524]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.45.10:2525] with esmtp (Farcaster)
- id ff41ffb3-822d-4040-8907-e5fea2025741; Wed, 20 Mar 2024 11:32:28 +0000 (UTC)
-X-Farcaster-Flow-ID: ff41ffb3-822d-4040-8907-e5fea2025741
-Received: from EX19D008EUA004.ant.amazon.com (10.252.50.158) by
- EX19MTAEUA001.ant.amazon.com (10.252.50.223) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Wed, 20 Mar 2024 11:32:27 +0000
-Received: from EX19MTAUWB001.ant.amazon.com (10.250.64.248) by
- EX19D008EUA004.ant.amazon.com (10.252.50.158) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Wed, 20 Mar 2024 11:32:27 +0000
-Received: from dev-dsk-mheyne-1b-c1362c4d.eu-west-1.amazon.com (10.15.57.183)
- by mail-relay.amazon.com (10.250.64.254) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Wed, 20 Mar 2024 11:32:26 +0000
-Received: by dev-dsk-mheyne-1b-c1362c4d.eu-west-1.amazon.com (Postfix, from userid 5466572)
-	id 65438A9F; Wed, 20 Mar 2024 11:32:26 +0000 (UTC)
-From: Maximilian Heyne <mheyne@amazon.de>
-To: 
-CC: Goldwyn Rodrigues <rgoldwyn@suse.com>, Anand Jain <anand.jain@oracle.com>,
-	David Sterba <dsterba@suse.com>, <stable@vger.kernel.org>, Maximilian Heyne
-	<mheyne@amazon.de>, Chris Mason <clm@fb.com>, Josef Bacik
-	<josef@toxicpanda.com>, <linux-btrfs@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH] btrfs: allocate btrfs_ioctl_defrag_range_args on stack
-Date: Wed, 20 Mar 2024 11:31:56 +0000
-Message-ID: <20240320113156.22283-1-mheyne@amazon.de>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1710934408; c=relaxed/simple;
+	bh=rJMET6qf9TuxPqMoog5+maGYHy5m/5MkJzg8nUH9IA0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rZPi8hy9wOsfgKFvBaVPGcsKdhDC0FkyRee3i9lpNSIlUq7hkvBY806B4i2aa6tVtBBvIgMKXcujMlTjZ7Nl2TnHDAO8pXDKoHKU/PkbdTUGTumPoEbMrfozPSGoz6K/H6jpAw0r9HoG6q3G0bnkUqQhlMoUqLL+ZSeaq0q0BGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-609f1b77728so71372157b3.3;
+        Wed, 20 Mar 2024 04:33:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710934405; x=1711539205;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yZH7jIIDBiOD+mK/BbEEI+HYtRGY/Yq/9fLqXNr82KA=;
+        b=goXiCBM7Z3/N/yihSjRnzQzJW6UURpOH+iIkneWxGMo5uqtXGNJ4SRLcTxHhU5+mZh
+         hThhdHJ3RA73M8DV/ZwRZji2VZv3eih96bAoMbOCIHvCHbwPPpx2RHOXjzt7sdlh4ylg
+         Z4TpDlS42oGAZv2XV6WRWaNjJtaRdCleiInkOTAqb3PkcF7JOT34ug5gcdxzk9IWTkKi
+         Ro0ztOdHx+C5YuH1ohrRDG8oy9FjI/EWjpfY3AMyVlO9sp2d29jSgr5CFvlhyDZ5LDsS
+         BJp0l/C91YtpOOvlb7vj5KT2p3C4Hh8bQ5GyRXLA3umBdQbIA8hrefrACw5jZ3a60q5g
+         lvLg==
+X-Forwarded-Encrypted: i=1; AJvYcCVJ9KWXynv1lAMjvIsM9FQLZX1JgIPU41EgiET/elcWTzEmDoK/PTp2ClxMOQaAw4jZYDeEkFz3dczV1LudAWaALmVFFdiRhfDSIHxqUwW30qFU+s+NqBj8HqOs7WQ9X/hpYQdhD25ebcceWA8mOxNWt1BOTvL2sh2yS70ilDReu1P9KGUayg5d83E=
+X-Gm-Message-State: AOJu0YygzLLZDUYdS92ubyxNr52JUG0yLM3qY5iBBVtxQ2mhadh10y/G
+	01YIGEX2YBf6mtgbsZifYcm2tFfS6CWRSPxANN6qaqFpu86CLtskNCOfzqsxjdA=
+X-Google-Smtp-Source: AGHT+IH3svJCewtagxYd0TnoV/23qwbZ2L5MNDXFP4ZBj4XcTo5nD9vhgrtkOPs/gi9HraOta8ZoTg==
+X-Received: by 2002:a0d:fc45:0:b0:609:fbc6:340 with SMTP id m66-20020a0dfc45000000b00609fbc60340mr5853515ywf.40.1710934404822;
+        Wed, 20 Mar 2024 04:33:24 -0700 (PDT)
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com. [209.85.219.178])
+        by smtp.gmail.com with ESMTPSA id p186-20020a0de6c3000000b0060ccac7cae1sm2757835ywe.47.2024.03.20.04.33.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Mar 2024 04:33:24 -0700 (PDT)
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dd045349d42so5745426276.2;
+        Wed, 20 Mar 2024 04:33:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXw5W/AvvkBhm5HAy/C503Ybh2OpRs+bdErE0cZ8pUWrRT5cH6HQLk8K2R8hl1LTjQ6KZ//MeeRb7Vj1f6DjRV/Ppp9J2tCufiujwhKR+ynaJm08bhyEmug4lev8x+QZVGvX/8wW170NWwq/bTEgYG18qSOJqYWFo9an/0X1AE7+fnB5goMBxOdq7k=
+X-Received: by 2002:a05:6902:1b85:b0:dd1:5194:13e5 with SMTP id
+ ei5-20020a0569021b8500b00dd1519413e5mr5147238ybb.22.1710934404494; Wed, 20
+ Mar 2024 04:33:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+References: <20240320082831.9666-1-paul.barker.ct@bp.renesas.com>
+In-Reply-To: <20240320082831.9666-1-paul.barker.ct@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 20 Mar 2024 12:33:12 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVKe2bLjMRXN-yr0SvGRMcv_93OWAgy9C-yL7UA9-LcDA@mail.gmail.com>
+Message-ID: <CAMuHMdVKe2bLjMRXN-yr0SvGRMcv_93OWAgy9C-yL7UA9-LcDA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] clk: renesas: r9a07g043: Mark mod_clks and resets
+ arrays as const
+To: Paul Barker <paul.barker.ct@bp.renesas.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Goldwyn Rodrigues <rgoldwyn@suse.com>
+On Wed, Mar 20, 2024 at 9:28=E2=80=AFAM Paul Barker
+<paul.barker.ct@bp.renesas.com> wrote:
+> The r9a07g043_mod_clks and r9a07g043_resets arrays describe the module
+> clocks and reset signals (respectively) in this SoC and do not change at
+> runtime.
+>
+> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
 
-commit c853a5783ebe123847886d432354931874367292 upstream.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-clk for v6.10.
 
-Instead of using kmalloc() to allocate btrfs_ioctl_defrag_range_args,
-allocate btrfs_ioctl_defrag_range_args on stack, the size is reasonably
-small and ioctls are called in process context.
+Gr{oetje,eeting}s,
 
-sizeof(btrfs_ioctl_defrag_range_args) = 48
+                        Geert
 
-Reviewed-by: Anand Jain <anand.jain@oracle.com>
-Signed-off-by: Goldwyn Rodrigues <rgoldwyn@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-CC: stable@vger.kernel.org # 4.14+
-[ This patch is needed to fix a memory leak of "range" that was
-introduced when commit 173431b274a9 ("btrfs: defrag: reject unknown
-flags of btrfs_ioctl_defrag_range_args") was backported to kernels
-lacking this patch. Now with these two patches applied in reverse order,
-range->flags needed to change back to range.flags.
-This bug was discovered and resolved using Coverity Static Analysis
-Security Testing (SAST) by Synopsys, Inc.]
-Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
----
- fs/btrfs/ioctl.c | 25 ++++++++-----------------
- 1 file changed, 8 insertions(+), 17 deletions(-)
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
-index 049b837934e5..ab8ed187746e 100644
---- a/fs/btrfs/ioctl.c
-+++ b/fs/btrfs/ioctl.c
-@@ -3148,7 +3148,7 @@ static int btrfs_ioctl_defrag(struct file *file, void __user *argp)
- {
- 	struct inode *inode = file_inode(file);
- 	struct btrfs_root *root = BTRFS_I(inode)->root;
--	struct btrfs_ioctl_defrag_range_args *range;
-+	struct btrfs_ioctl_defrag_range_args range = {0};
- 	int ret;
- 
- 	ret = mnt_want_write_file(file);
-@@ -3180,37 +3180,28 @@ static int btrfs_ioctl_defrag(struct file *file, void __user *argp)
- 			goto out;
- 		}
- 
--		range = kzalloc(sizeof(*range), GFP_KERNEL);
--		if (!range) {
--			ret = -ENOMEM;
--			goto out;
--		}
--
- 		if (argp) {
--			if (copy_from_user(range, argp,
--					   sizeof(*range))) {
-+			if (copy_from_user(&range, argp, sizeof(range))) {
- 				ret = -EFAULT;
--				kfree(range);
- 				goto out;
- 			}
--			if (range->flags & ~BTRFS_DEFRAG_RANGE_FLAGS_SUPP) {
-+			if (range.flags & ~BTRFS_DEFRAG_RANGE_FLAGS_SUPP) {
- 				ret = -EOPNOTSUPP;
- 				goto out;
- 			}
- 			/* compression requires us to start the IO */
--			if ((range->flags & BTRFS_DEFRAG_RANGE_COMPRESS)) {
--				range->flags |= BTRFS_DEFRAG_RANGE_START_IO;
--				range->extent_thresh = (u32)-1;
-+			if ((range.flags & BTRFS_DEFRAG_RANGE_COMPRESS)) {
-+				range.flags |= BTRFS_DEFRAG_RANGE_START_IO;
-+				range.extent_thresh = (u32)-1;
- 			}
- 		} else {
- 			/* the rest are all set to zero by kzalloc */
--			range->len = (u64)-1;
-+			range.len = (u64)-1;
- 		}
- 		ret = btrfs_defrag_file(file_inode(file), file,
--					range, BTRFS_OLDEST_GENERATION, 0);
-+					&range, BTRFS_OLDEST_GENERATION, 0);
- 		if (ret > 0)
- 			ret = 0;
--		kfree(range);
- 		break;
- 	default:
- 		ret = -EINVAL;
--- 
-2.40.1
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
