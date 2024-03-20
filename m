@@ -1,35 +1,35 @@
-Received: from mailscanner01.zoner.fi (mailscanner01.zoner.fi [84.34.166.10])
+Received: from mailscanner05.zoner.fi (mailscanner05.zoner.fi [5.44.246.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB0785282
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 18:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.34.166.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726EC85620
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 18:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.44.246.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710960470; cv=none; b=eQ+UR/b+pEx396LgvvfrCPH8VBLrxpkOSan5UOhyfYKLgXSJwYlUHNfWdOERU0SEayJ7sGknd6Mn/7NYhXRptbwczYpfU+tfCcmucqHek4e10+kzMSo/tc8hyUKETBXLATC+nAxG1e8TPcBtr6YJsbpmmwoXiU9m3Kbx/16iRWU=
+	t=1710960532; cv=none; b=kMeq2qeekBlF7mSD2B81RGg14OAjWrRE5spMoquinY19gLjhXrAjmnVxp2qoyJhZAX64A0tzC/A8uL5cWoANfRi8m7BQX/2scV/saPVSGX/w+vuJ+9BI5s8BdQLF2NYQ4bSMvWzW2KmNkR7kTqZxHpvQxgoz5BhGqX/Yi6ZL+gM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710960470; c=relaxed/simple;
-	bh=wEjY393WFSzEeWiwjkl/GFZDH84R1QcgM4sHjnLfaQY=;
+	s=arc-20240116; t=1710960532; c=relaxed/simple;
+	bh=/SCw4biXcQwxbS8rB0xZT7OMJzC9utywPDK96DZ5Xao=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=caZm1KAOF35LbhftrX+mXNtGpNMAjz6IPw5HpqiYSNMuWKp+LtdWC6/WyngW4XY+TAutoM8zzsg+O350J+/lzlCEtypule4EJbeVZ/Gqetb3IJs2oT/YCF+c5UlJOPqn+uFN7CBIrBunQsC5Mb1CNWDKjimkmaqAqlnOsTmXTA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org; spf=pass smtp.mailfrom=tukaani.org; arc=none smtp.client-ip=84.34.166.10
+	 MIME-Version; b=SN0HllpqZ3Uil7pSXaN0U4oAhKpJ0pc0wiI4+fX0S7VMssRp/w4KU6dhHKKSVCN5JXr5OA5YajZhnWjlwS7UjNRaOgbYXOhigBlo8qiYD1JI0/lMdipfMHRSDC2hDTuI82igatBDKg+1cp4eBKK1HspiigvHwu4z0d3iiUduE7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org; spf=pass smtp.mailfrom=tukaani.org; arc=none smtp.client-ip=5.44.246.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tukaani.org
 Received: from www25.zoner.fi (www25.zoner.fi [84.34.147.45])
-	by mailscanner01.zoner.fi (Postfix) with ESMTPS id B7686402D4;
-	Wed, 20 Mar 2024 20:39:26 +0200 (EET)
+	by mailscanner05.zoner.fi (Postfix) with ESMTPS id F269E21235;
+	Wed, 20 Mar 2024 20:39:25 +0200 (EET)
 Received: from mail.zoner.fi ([84.34.147.244])
 	by www25.zoner.fi with esmtp (Exim 4.96.1-7-g79877b70e)
 	(envelope-from <lasse.collin@tukaani.org>)
-	id 1rn0qU-0001dW-1Z;
-	Wed, 20 Mar 2024 20:39:26 +0200
+	id 1rn0qT-0001dW-2Y;
+	Wed, 20 Mar 2024 20:39:25 +0200
 From: Lasse Collin <lasse.collin@tukaani.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Lasse Collin <lasse.collin@tukaani.org>,
 	Jia Tan <jiat0218@gmail.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 07/11] xz: Optimize for-loop conditions in the BCJ decoders
-Date: Wed, 20 Mar 2024 20:38:40 +0200
-Message-ID: <20240320183846.19475-8-lasse.collin@tukaani.org>
+Subject: [PATCH 01/11] MAINTAINERS: Add XZ Embedded maintainers
+Date: Wed, 20 Mar 2024 20:38:34 +0200
+Message-ID: <20240320183846.19475-2-lasse.collin@tukaani.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240320183846.19475-1-lasse.collin@tukaani.org>
 References: <20240320183846.19475-1-lasse.collin@tukaani.org>
@@ -41,77 +41,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Compilers cannot optimize the addition "i + 4" away since theoretically
-it could overflow.
+I have been the maintainer of the upstream project since I submitted
+the code to Linux in 2010 but I forgot to add myself to MAINTAINERS.
+Nowadays Jia Tan is the other maintainer.
 
 Reviewed-by: Jia Tan <jiat0218@gmail.com>
 Signed-off-by: Lasse Collin <lasse.collin@tukaani.org>
 ---
- lib/xz/xz_dec_bcj.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+ MAINTAINERS | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/lib/xz/xz_dec_bcj.c b/lib/xz/xz_dec_bcj.c
-index ab9237ed6db8..e0b4bf4999c0 100644
---- a/lib/xz/xz_dec_bcj.c
-+++ b/lib/xz/xz_dec_bcj.c
-@@ -161,7 +161,9 @@ static size_t bcj_powerpc(struct xz_dec_bcj *s, uint8_t *buf, size_t size)
- 	size_t i;
- 	uint32_t instr;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 43b39956694a..35f4ee968626 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -24371,6 +24371,20 @@ S:	Maintained
+ F:	drivers/spi/spi-xtensa-xtfpga.c
+ F:	sound/soc/xtensa/xtfpga-i2s.c
  
--	for (i = 0; i + 4 <= size; i += 4) {
-+	size &= ~(size_t)3;
++XZ EMBEDDED
++M:	Lasse Collin <lasse.collin@tukaani.org>
++M:	Jia Tan <jiat0218@gmail.com>
++S:	Maintained
++W:	https://xz.tukaani.org/xz-embedded/
++B:	https://github.com/tukaani-project/xz-embedded/issues
++C:	irc://irc.libera.chat/tukaani
++F:	Documentation/staging/xz.rst
++F:	include/linux/decompress/unxz.h
++F:	include/linux/xz.h
++F:	lib/decompress_unxz.c
++F:	lib/xz/
++F:	scripts/xz_wrap.sh
 +
-+	for (i = 0; i < size; i += 4) {
- 		instr = get_unaligned_be32(buf + i);
- 		if ((instr & 0xFC000003) == 0x48000001) {
- 			instr &= 0x03FFFFFC;
-@@ -218,7 +220,9 @@ static size_t bcj_ia64(struct xz_dec_bcj *s, uint8_t *buf, size_t size)
- 	/* Instruction normalized with bit_res for easier manipulation */
- 	uint64_t norm;
- 
--	for (i = 0; i + 16 <= size; i += 16) {
-+	size &= ~(size_t)15;
-+
-+	for (i = 0; i < size; i += 16) {
- 		mask = branch_table[buf[i] & 0x1F];
- 		for (slot = 0, bit_pos = 5; slot < 3; ++slot, bit_pos += 41) {
- 			if (((mask >> slot) & 1) == 0)
-@@ -266,7 +270,9 @@ static size_t bcj_arm(struct xz_dec_bcj *s, uint8_t *buf, size_t size)
- 	size_t i;
- 	uint32_t addr;
- 
--	for (i = 0; i + 4 <= size; i += 4) {
-+	size &= ~(size_t)3;
-+
-+	for (i = 0; i < size; i += 4) {
- 		if (buf[i + 3] == 0xEB) {
- 			addr = (uint32_t)buf[i] | ((uint32_t)buf[i + 1] << 8)
- 					| ((uint32_t)buf[i + 2] << 16);
-@@ -289,7 +295,12 @@ static size_t bcj_armthumb(struct xz_dec_bcj *s, uint8_t *buf, size_t size)
- 	size_t i;
- 	uint32_t addr;
- 
--	for (i = 0; i + 4 <= size; i += 2) {
-+	if (size < 4)
-+		return 0;
-+
-+	size -= 4;
-+
-+	for (i = 0; i <= size; i += 2) {
- 		if ((buf[i + 1] & 0xF8) == 0xF0
- 				&& (buf[i + 3] & 0xF8) == 0xF8) {
- 			addr = (((uint32_t)buf[i + 1] & 0x07) << 19)
-@@ -317,7 +328,9 @@ static size_t bcj_sparc(struct xz_dec_bcj *s, uint8_t *buf, size_t size)
- 	size_t i;
- 	uint32_t instr;
- 
--	for (i = 0; i + 4 <= size; i += 4) {
-+	size &= ~(size_t)3;
-+
-+	for (i = 0; i < size; i += 4) {
- 		instr = get_unaligned_be32(buf + i);
- 		if ((instr >> 22) == 0x100 || (instr >> 22) == 0x1FF) {
- 			instr <<= 2;
+ YAM DRIVER FOR AX.25
+ M:	Jean-Paul Roubelat <jpr@f6fbb.org>
+ L:	linux-hams@vger.kernel.org
 -- 
 2.44.0
 
