@@ -1,216 +1,229 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D2039AFE
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 08:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE3AA3BB36;
+	Wed, 20 Mar 2024 08:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710924396; cv=none; b=Z/DB4uG/7fJ1jwdQm0yHTacGrMcL5r9IC8qonFfOpkGXMyWGHgYyOwNS0p0CmrXvY9CljIO2OvbBcEijLu/T2N72mH8HS0ErOyvmmyhA9uHNFe8/k0d32nyJ+NnyWwuJWpBo33Zprj93MAHNVy73ojfKAaSQxqXg8+p3iVMssz0=
+	t=1710924399; cv=none; b=Naj0p9oObWdn1OMFMW2qUIspHHREg2EwqY08MP5jA3VfrA8EqnK1CFXa7XH/DChNeUDVQRUy7YWIQFj7MiLBhWMsNzQT0N2XidQuLUDfX3RqxDzqWaLI+b+caKnrQGEww2kf5ztR34LWlRKm3xRLozbr2H7AFnB6h1hz4SQjT4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710924396; c=relaxed/simple;
-	bh=Q4ONw+59Vbz8TiQ9wHPgnNATdK0mtXhgpFJ6lJ0jOhM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=iam70jvSEaYT+4Ym2yeq2u4YD+IUQTuOhqNZ2rU9I3GJh3w1/4HUiGxAp7oP0PTC3hBjfl6yq3Lhji+w6UECtBB6z9ZBu0BjDgY47p5EMFufn0jucL7sCha65X1CM8j42wQib/62lviE5OUoRtV+/61GVfP/t13h7hVdeL0ZptE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4vaqqdUZ; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1710924399; c=relaxed/simple;
+	bh=xSyEV4LtFGP/kO7x7ObAfwPN8BqJBTpWs53KUvMRUNM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=nSXmQmdRRBulTMz7gdaJDGRj+fZD5eCMdnnLbeEes9FbrA0CLglBf0xYPfHZdxzPg9tOqRREeeg7x6GnkHF8eWgX7mRyP6RMUaR3xqi89MRoZrd8MHkfY4M2XDHjhk28rexMbB1ZQUJSrTGzsBBZkqtH9UQtONHxNUE5cmN8MSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=l2sZrfgm; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4vaqqdUZ"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60cbba6f571so123837637b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 01:46:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710924393; x=1711529193; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UK1n2ZUFasdNJS4tL/dUBZ9HzwBNAKoJUXbp2GIlPGA=;
-        b=4vaqqdUZnGKFg+6XPkgEheNFHBlx5J/Q2SqcMubHub38gB9tO+l9OyOs6Q2uUtEYI+
-         v4Xer7mgjPGEUWNw+q7AcfufydzBRIdPNgQ53z+Pofx3QFniRWIQpg5RehVdBT0tOrqM
-         4LMESATryICogY53F6aY/oayfQmhOFAj9XqgidE1EMFoLAQV0NLfa4l6CqNAGtH8e3yx
-         M3KW/SNsA+HTRVAPS8nIO18veKNf9SPpYiMmUCd/OKk3/HY6qCeklkqqaOXcLh9KBmCR
-         vB1MgAlBaDO3zwIzP7jFM1APIcnRLzM+uDa+Oao1fZUsEvTECFkSP9JOrhQkU50VLDwX
-         SG/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710924393; x=1711529193;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UK1n2ZUFasdNJS4tL/dUBZ9HzwBNAKoJUXbp2GIlPGA=;
-        b=Aj1HWbNqUrXcH+iHjxbh63E+jNtios2cPyMdc3R5WqiR1VjW0YoT6phxB7BHI+WWy5
-         SsCwD4EoPxgmFBna3DNx2O17tTOfD9VKCeEvR2XqXiBuDuVGz1WtB6yZtFRWJdh80Bp8
-         tbLEydpIbuphiufQAZI03AqOXV7mWwYbeJ/JUEIHVymP/l3gEMyRVoGBaScoXhsE0YCE
-         JJxHQg2xD/46MF+coWoGxtbtJODQEim4l0/seZnSD1YiAn9DAxZdEJ3g4JXI8O6HwPhd
-         KurtX3UuuUMTqVBfljW1fPV0sDdGHbAwCdA4E51IYw8/8dYO+cZQbWYvr4RTFfsHdH8n
-         mkjg==
-X-Forwarded-Encrypted: i=1; AJvYcCU2kJkDFBbIowuodW+NQkKk9D1u+qyh7HgzceM4v2s3v5aaFh0qui6Nov5kiiJU+bKa9HefZUz64Meu4vOAG5Ezb4bcTp1p/BHpzPmn
-X-Gm-Message-State: AOJu0YzP2nymTuAPf1thjtbkonM6xRg3kz0xiRX5dvk4qvB+HuW6f7PM
-	mZoZkQQ9Do28CwvLqKdMhTMTrzACdSqiEbY+dI7HAvkJGkbLDa3H51pWXomCz8C+aKZWNHkG0nh
-	50nhjryUgfUEktw==
-X-Google-Smtp-Source: AGHT+IHhO69PTaN4boKOvVHCOJk+p5noJ7sGfzArQ8mOhKPuKZfczEJL2sh4BtJrZ5uOiOp76ApjmtaKNMUWfnM=
-X-Received: from aliceryhl2.c.googlers.com ([fda3:e722:ac3:cc00:68:949d:c0a8:572])
- (user=aliceryhl job=sendgmr) by 2002:a05:6902:124b:b0:dc2:398d:a671 with SMTP
- id t11-20020a056902124b00b00dc2398da671mr4614173ybu.10.1710924393527; Wed, 20
- Mar 2024 01:46:33 -0700 (PDT)
-Date: Wed, 20 Mar 2024 08:46:30 +0000
-In-Reply-To: <baee63d9-273a-48aa-b3cc-f15e3782156b@proton.me>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="l2sZrfgm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1710924396;
+	bh=xSyEV4LtFGP/kO7x7ObAfwPN8BqJBTpWs53KUvMRUNM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=l2sZrfgmTDB4lit83fQi7OLxm0I3RBVAVktEAeYfV+WK0BjFRViTdPrtGxnRySb61
+	 3k8Dv0fuoRSGda30H++pT52hlsoiIktASBQ1uc8UPHmkbaOecww8L37/Ix9kVxxAW6
+	 kzTeBCsdWicp2Hv4BrHEZ4p68zS89k9Fo/wP+NIwpgQtff5VfTfevmpbeSkC96TYLY
+	 jIMGcM9tiJ3e1eKxYhnAQfG49/vQAeeeIVrwjRcuc8mYE/ca7U+wOYVGUMS6lMrbS6
+	 i7Z8eqRU2r6yE4vI7/vC9BxjYtoXsLwhlwozP3burTtk1q04NCK4aMhvFadtm6gLfS
+	 Bsap7zHEIlF3g==
+Received: from eugen-station.. (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: ehristev)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 1126437820F9;
+	Wed, 20 Mar 2024 08:46:32 +0000 (UTC)
+From: Eugen Hristev <eugen.hristev@collabora.com>
+To: tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org,
+	jaegeuk@kernel.org,
+	chao@kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-fsdevel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	kernel@collabora.com,
+	eugen.hristev@collabora.com,
+	viro@zeniv.linux.org.uk,
+	brauner@kernel.org,
+	jack@suse.cz,
+	krisman@suse.de,
+	Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: [PATCH v14 2/9] f2fs: Simplify the handling of cached insensitive names
+Date: Wed, 20 Mar 2024 10:46:15 +0200
+Message-Id: <20240320084622.46643-3-eugen.hristev@collabora.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240320084622.46643-1-eugen.hristev@collabora.com>
+References: <20240320084622.46643-1-eugen.hristev@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <baee63d9-273a-48aa-b3cc-f15e3782156b@proton.me>
-X-Mailer: git-send-email 2.44.0.291.gc1ea87d7ee-goog
-Message-ID: <20240320084630.2727355-1-aliceryhl@google.com>
-Subject: Re: [PATCH v3 4/4] rust: add abstraction for `struct page`
-From: Alice Ryhl <aliceryhl@google.com>
-To: benno.lossin@proton.me
-Cc: a.hindborg@samsung.com, akpm@linux-foundation.org, alex.gaynor@gmail.com, 
-	aliceryhl@google.com, arnd@arndb.de, arve@android.com, 
-	bjorn3_gh@protonmail.com, boqun.feng@gmail.com, brauner@kernel.org, 
-	cmllamas@google.com, gary@garyguo.net, gregkh@linuxfoundation.org, 
-	joel@joelfernandes.org, keescook@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, maco@android.com, ojeda@kernel.org, 
-	rust-for-linux@vger.kernel.org, surenb@google.com, tkjos@android.com, 
-	viro@zeniv.linux.org.uk, wedsonaf@gmail.com, willy@infradead.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-> On 3/11/24 11:47, Alice Ryhl wrote:
-> > +/// A pointer to a page that owns the page allocation.
-> > +///
-> > +/// # Invariants
-> > +///
-> > +/// The pointer points at a page, and has ownership over the page.
-> 
-> Why not "`page` is valid"?
-> Do you mean by ownership of the page that `page` has ownership of the
-> allocation, or does that entail any other property/privilege?
+From: Gabriel Krisman Bertazi <krisman@collabora.com>
 
-I can add "at a valid page".
+Keeping it as qstr avoids the unnecessary conversion in f2fs_match
 
-By ownership I mean that we are allowed to pass it to __free_page and
-that until we do, we can access the page. If you want me to reword this,
-please tell me what you want it to say.
+Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+[eugen.hristev@collabora.com: port to 6.8-rc3 and minor changes]
+Signed-off-by: Eugen Hristev <eugen.hristev@collabora.com>
+---
+ fs/f2fs/dir.c      | 53 ++++++++++++++++++++++++++--------------------
+ fs/f2fs/f2fs.h     | 16 +++++++++++++-
+ fs/f2fs/recovery.c |  5 +----
+ 3 files changed, 46 insertions(+), 28 deletions(-)
 
-> > +// SAFETY: It is safe to transfer page allocations between threads.
-> 
-> Why?
-> 
-> > +unsafe impl Send for Page {}
+diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+index 042593aed1ec..3b454f355f15 100644
+--- a/fs/f2fs/dir.c
++++ b/fs/f2fs/dir.c
+@@ -42,35 +42,49 @@ static unsigned int bucket_blocks(unsigned int level)
+ 		return 4;
+ }
+ 
++#if IS_ENABLED(CONFIG_UNICODE)
+ /* If @dir is casefolded, initialize @fname->cf_name from @fname->usr_fname. */
+ int f2fs_init_casefolded_name(const struct inode *dir,
+ 			      struct f2fs_filename *fname)
+ {
+-#if IS_ENABLED(CONFIG_UNICODE)
+ 	struct super_block *sb = dir->i_sb;
++	unsigned char *buf;
++	int len;
+ 
+ 	if (IS_CASEFOLDED(dir) &&
+ 	    !is_dot_dotdot(fname->usr_fname->name, fname->usr_fname->len)) {
+-		fname->cf_name.name = f2fs_kmem_cache_alloc(f2fs_cf_name_slab,
+-					GFP_NOFS, false, F2FS_SB(sb));
+-		if (!fname->cf_name.name)
++		buf = f2fs_kmem_cache_alloc(f2fs_cf_name_slab,
++					    GFP_NOFS, false, F2FS_SB(sb));
++		if (!buf)
+ 			return -ENOMEM;
+-		fname->cf_name.len = utf8_casefold(sb->s_encoding,
+-						   fname->usr_fname,
+-						   fname->cf_name.name,
+-						   F2FS_NAME_LEN);
+-		if ((int)fname->cf_name.len <= 0) {
+-			kmem_cache_free(f2fs_cf_name_slab, fname->cf_name.name);
+-			fname->cf_name.name = NULL;
++
++		len = utf8_casefold(sb->s_encoding, fname->usr_fname,
++				    buf, F2FS_NAME_LEN);
++		if (len <= 0) {
++			kmem_cache_free(f2fs_cf_name_slab, buf);
+ 			if (sb_has_strict_encoding(sb))
+ 				return -EINVAL;
+ 			/* fall back to treating name as opaque byte sequence */
++			return 0;
+ 		}
++		fname->cf_name.name = buf;
++		fname->cf_name.len = len;
+ 	}
+-#endif
++
+ 	return 0;
+ }
+ 
++void f2fs_free_casefolded_name(struct f2fs_filename *fname)
++{
++	unsigned char *buf = (unsigned char *)fname->cf_name.name;
++
++	if (buf) {
++		kmem_cache_free(f2fs_cf_name_slab, buf);
++		fname->cf_name.name = NULL;
++	}
++}
++#endif /* CONFIG_UNICODE */
++
+ static int __f2fs_setup_filename(const struct inode *dir,
+ 				 const struct fscrypt_name *crypt_name,
+ 				 struct f2fs_filename *fname)
+@@ -142,12 +156,7 @@ void f2fs_free_filename(struct f2fs_filename *fname)
+ 	kfree(fname->crypto_buf.name);
+ 	fname->crypto_buf.name = NULL;
+ #endif
+-#if IS_ENABLED(CONFIG_UNICODE)
+-	if (fname->cf_name.name) {
+-		kmem_cache_free(f2fs_cf_name_slab, fname->cf_name.name);
+-		fname->cf_name.name = NULL;
+-	}
+-#endif
++	f2fs_free_casefolded_name(fname);
+ }
+ 
+ static unsigned long dir_block_index(unsigned int level,
+@@ -235,11 +244,9 @@ static inline int f2fs_match_name(const struct inode *dir,
+ 	struct fscrypt_name f;
+ 
+ #if IS_ENABLED(CONFIG_UNICODE)
+-	if (fname->cf_name.name) {
+-		struct qstr cf = FSTR_TO_QSTR(&fname->cf_name);
+-
+-		return f2fs_match_ci_name(dir, &cf, de_name, de_name_len);
+-	}
++	if (fname->cf_name.name)
++		return f2fs_match_ci_name(dir, &fname->cf_name,
++					  de_name, de_name_len);
+ #endif
+ 	f.usr_fname = fname->usr_fname;
+ 	f.disk_name = fname->disk_name;
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 65294e3b0bef..4f68c58718fb 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -524,7 +524,7 @@ struct f2fs_filename {
+ 	 * internal operation where usr_fname is also NULL.  In all these cases
+ 	 * we fall back to treating the name as an opaque byte sequence.
+ 	 */
+-	struct fscrypt_str cf_name;
++	struct qstr cf_name;
+ #endif
+ };
+ 
+@@ -3528,8 +3528,22 @@ int f2fs_get_tmpfile(struct mnt_idmap *idmap, struct inode *dir,
+ /*
+  * dir.c
+  */
++#if IS_ENABLED(CONFIG_UNICODE)
+ int f2fs_init_casefolded_name(const struct inode *dir,
+ 			      struct f2fs_filename *fname);
++void f2fs_free_casefolded_name(struct f2fs_filename *fname);
++#else
++static inline int f2fs_init_casefolded_name(const struct inode *dir,
++					    struct f2fs_filename *fname)
++{
++	return 0;
++}
++
++static inline void f2fs_free_casefolded_name(struct f2fs_filename *fname)
++{
++}
++#endif /* CONFIG_UNICODE */
++
+ int f2fs_setup_filename(struct inode *dir, const struct qstr *iname,
+ 			int lookup, struct f2fs_filename *fname);
+ int f2fs_prepare_lookup(struct inode *dir, struct dentry *dentry,
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index d0f24ccbd1ac..7e53abf6d216 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -153,11 +153,8 @@ static int init_recovered_filename(const struct inode *dir,
+ 		if (err)
+ 			return err;
+ 		f2fs_hash_filename(dir, fname);
+-#if IS_ENABLED(CONFIG_UNICODE)
+ 		/* Case-sensitive match is fine for recovery */
+-		kmem_cache_free(f2fs_cf_name_slab, fname->cf_name.name);
+-		fname->cf_name.name = NULL;
+-#endif
++		f2fs_free_casefolded_name(fname);
+ 	} else {
+ 		f2fs_hash_filename(dir, fname);
+ 	}
+-- 
+2.34.1
 
-How about:
-
-// SAFETY: Pages have no logic that relies on them staying on a given
-// thread, so moving them across threads is safe.
-
-> > +// SAFETY: As long as the safety requirements for `&self` methods on this type
-> > +// are followed, there is no problem with calling them in parallel.
-> 
-> Why?
-> 
-> > +unsafe impl Sync for Page {}
-
-How about:
-
-// SAFETY: Pages have no logic that relies on them not being accessed
-// concurrently, so accessing them concurrently is safe.
-
-> > +        // SAFETY: The specified order is zero and we want one page.
-> 
-> This doesn't explain why it is sound to call the function. I expect that
-> it is always sound to call this function with valid arguments.
-> 
-> > +        let page = unsafe { bindings::alloc_pages(gfp_flags, 0) };
-
-How about:
-
-// SAFETY: Depending on the value of `gfp_flags`, this call may sleep.
-// Other than that, it is always safe to call this method.
-
-> > +        // INVARIANT: We checked that the allocation succeeded.
-> 
-> Doesn't mention ownership.
-> 
-> > +        Ok(Self { page })
-
-How about:
-
-// INVARIANT: We just successfully allocated a page, so we now have
-// ownership of the newly allocated page. We transfer that ownership to
-// the new `Page` object.
-
-> > +    /// Runs a piece of code with this page mapped to an address.
-> > +    ///
-> > +    /// The page is unmapped when this call returns.
-> > +    ///
-> > +    /// It is up to the caller to use the provided raw pointer correctly.
-> 
-> This says nothing about what 'correctly' means. What I gathered from the
-> implementation is that the supplied pointer is valid for the execution
-> of `f` for `PAGE_SIZE` bytes.
-> What other things are you allowed to rely upon?
-> 
-> Is it really OK for this function to be called from multiple threads?
-> Could that not result in the same page being mapped multiple times? If
-> that is fine, what about potential data races when two threads write to
-> the pointer given to `f`?
-> 
-> > +    pub fn with_page_mapped<T>(&self, f: impl FnOnce(*mut u8) -> T) -> T {
-
-I will say:
-
-/// It is up to the caller to use the provided raw pointer correctly.
-/// The pointer is valid for `PAGE_SIZE` bytes and for the duration in
-/// which the closure is called. Depending on the gfp flags and kernel
-/// configuration, the pointer may only be mapped on the current thread,
-/// and in those cases, dereferencing it on other threads is UB. Other
-/// than that, the usual rules for dereferencing a raw pointer apply.
-/// (E.g., don't cause data races, the memory may be uninitialized, and
-/// so on.)
-
-It's okay to map it multiple times from different threads.
-
-> > +        // SAFETY: This unmaps the page mapped above.
-> 
-> This doesn't explain why it is sound.
-> 
-> > +        //
-> > +        // Since this API takes the user code as a closure, it can only be used
-> > +        // in a manner where the pages are unmapped in reverse order. This is as
-> > +        // required by `kunmap_local`.
-> > +        //
-> > +        // In other words, if this call to `kunmap_local` happens when a
-> > +        // different page should be unmapped first, then there must necessarily
-> > +        // be a call to `kmap_local_page` other than the call just above in
-> > +        // `with_page_mapped` that made that possible. In this case, it is the
-> > +        // unsafe block that wraps that other call that is incorrect.
-> > +        unsafe { bindings::kunmap_local(mapped_addr) };
-
-Why do you say that? The kunmap_local method requires that the address
-being unmapped is currently mapped, and that pages are unmapped in
-reverse order. The safety comment explains that the page is currently
-mapped and that this method cannot be used to unmap them in anything
-other than reverse order.
-
-> > +    /// Runs a piece of code with a raw pointer to a slice of this page, with
-> > +    /// bounds checking.
-> > +    ///
-> > +    /// If `f` is called, then it will be called with a pointer that points at
-> > +    /// `off` bytes into the page, and the pointer will be valid for at least
-> > +    /// `len` bytes. The pointer is only valid on this task, as this method uses
-> > +    /// a local mapping.
-> 
-> This information about the pointer only being valid on this task should
-> also apply to `with_page_mapped`, right?
-> 
-> > +    ///
-> > +    /// If `off` and `len` refers to a region outside of this page, then this
-> > +    /// method returns `EINVAL` and does not call `f`.
-> > +    ///
-> > +    /// It is up to the caller to use the provided raw pointer correctly.
-> 
-> Again, please specify what 'correctly' means.
-
-I will remove the "The pointer is only valid on this task, as this
-method uses a local mapping." sentence and copy the same paragraph as
-previously (without the `PAGE_SIZE` remark).
-
-Alice
