@@ -1,101 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B38A4374D1;
-	Wed, 20 Mar 2024 08:31:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF5839AC7
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 08:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710923487; cv=none; b=kAhXX2VgJ5N2XeI+u7raujJISqegPsM2XumTnGuTK00HElmotvgTYPvDGGmqlPv+ILe6l0HRoIynh2QJDBmfiK05yb1yHaUnq7Q7cJw1uxsLzx1tdaLNFgWC71Dx7HmzYGNEAJx6EawVfCtD9s9aA/WSbqfqbo9uK6CqWgAVHeA=
+	t=1710923495; cv=none; b=iuMzxYSOP1NQrR6eSKkLwcaxtjFU4gOJzYrMSKUG5tIVX6V+Gt4D7B9Zn9OA7UMFNv8wkk/RiYS0wtMgLG0Hv2ToizQBOyZh750GxyIXpEB1IGvPWL5xIxOOfWfaetHkjjz4QgqQoQQ//QujF8ZxzC/wHQciNnHm/Goib3BqcNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710923487; c=relaxed/simple;
-	bh=uYuOLvaXC5zSq3rbHgQsBek5irtHYbjs7ZmCE5k/uss=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=gVa19b7jQc023Q3T8xaD8kRSecTfXwrkxmBT5fUL7zItTBBxVzvfduegmp1mLGJ/bKwGLrg8HDQWHOvAfTXuVK2GuuPN5lQWtRIMxSNSJQ8gTe4ZpFau5SQX2IOEfHlb/av9+5Qey/QC+rnXvxX6alwtCJAe5jR7ROwi/Xhcr5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKpWsAr4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710923495; c=relaxed/simple;
+	bh=2gItDXZJGQHo8Mg0E3k4W+lrWdFzWtPXNUkvUUIfVRI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MSWy0W35xcQZbwJ8zDWdHlOZ4Z5IU6RRpxenQPbh+wn2uDf5blw1HNmAiKxvWrrwqOLiSv4+z7uuBT7KeB+QVjkdgFyfQMHG5M2hR6q8S/eP54pvY7wcXTD9ZtBbWo/Q2OuQwSe+ufDIrWh1f2avFKSflUtJMShEuTZf8D0NALo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jzc2zfi4; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKpWsAr4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00C74C43390;
-	Wed, 20 Mar 2024 08:31:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710923487;
-	bh=uYuOLvaXC5zSq3rbHgQsBek5irtHYbjs7ZmCE5k/uss=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=sKpWsAr4TQ5rJV1WPhGCeqlhhUwoMVPpLdKthHy3bJrVYHFHZts4lMprouJz0I6eG
-	 WSGIgnXJVxT2yfrbfqjWJwR1xQEMd2bfzn/sDtwPtTcRYCpsC/4aSdhmgqdmtuXSUP
-	 RjYeeVQPvPM6kmVEPMwynycGLfB/KvylQNpUeg+wYzGwmk+nRJGdtS7P2hSeh1Mksa
-	 Qc/GE9Gl9vV/KQf1tCmkv6fplFpS1ArvtJEcwM/jiuI6DZdG96JI9uu2n+cBbZcDkH
-	 TdC5SArIBmgJEFk1ouTq9JnFB5BNeXKwDSPGREG7Mi92MVJy0RomdjJKSOuaX7IqOt
-	 CE+j33cNYxpbw==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jzc2zfi4"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a46ba1a05e0so424307966b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 01:31:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710923491; x=1711528291; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8x6eiY7ZcIzOZGBmPdvL8XgY7mCZT6eT1G6y3XtGvPo=;
+        b=jzc2zfi4jBeYkwg/WZajpnoC2+LZiMGUxB2gjI39ZurioIJ7ePbeBhIUw3fhPkxVr8
+         ATnZWSRBS+7dM+Q3U8WdeVW+uG2q5QPqCwtic0eELFSBmBE2+H1pl3wbXYHHEv+mJ1OV
+         YAY6QNzLcWjeNzY0pVagvHEJrb375IvLbibqnWUld9X5ERt5kHKU53ptmSOzasLqmRgx
+         TCyfC5xVmyEW7+/MdCx1hhghvQKC6TDObTDi/NYaQl4DvPXZhZRC5nRTz1p+yxrTG77D
+         JUOjtfQqlNYfCcG7UKJ8PsjUO43IRgYNhfjwJW4DSAENON1FUbmvFoylySgyiRzO1hyC
+         Stwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710923491; x=1711528291;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8x6eiY7ZcIzOZGBmPdvL8XgY7mCZT6eT1G6y3XtGvPo=;
+        b=kfqMVdrZ4OasnKsTn38F7H4v1YsZ1nRJnw09onzN+QSJOb5ijpQ1rfOtDjxolLt4Mx
+         73MFAxgxr0JFjPohdqQFHYjXowc4TTL3PQS/4PcBR/jPiOkv1WolRpk5kYVgrj9AE+cM
+         BW96OzTTlXlAKMbSpcP4Ss/+YCMdgeN7uNKbadnANoIkihcenXrOSaGQGGsskopr0FJq
+         wtmhN1LRnL9jppLzB2MBRa/Lk4M95oeiXAVSOQ6fYoeCBC5b7ZyhPulFRdIn4nVS9SKS
+         S7UGamhE2GjIA4NqRRkk4+FV++L51DwMD9IPDcbYcDw+xkjqvxjMuMKxWDs9lTq3Yu6x
+         RkPg==
+X-Forwarded-Encrypted: i=1; AJvYcCXbd0CC3ITJ8fgBZVyUFX4zAzFC4c3rRTza1GsM2O+DmXrsqJwVWClPYJNR6Z9ljHCSOuWfMGiP0fc3i/zPGND9bYSZ5V0zISHjLBg2
+X-Gm-Message-State: AOJu0Yzhdj+/WNlA2dyokV5d1O/ffnkQI8byQYQvwk7SleiYjI/mfgQ/
+	AQ9ULYZCfPkDgJxer0dNXWxjJJrkQ6V8s+/B2Lcfya4OhGzSSYih
+X-Google-Smtp-Source: AGHT+IHzXa8bZzz1mi+t3E6yuzkgZm3Yz9/2/q65ioQfQC/xnLXkWcYHB7r6ux/Q2Rk321cq8ZuzYA==
+X-Received: by 2002:a17:906:79c9:b0:a45:f705:777c with SMTP id m9-20020a17090679c900b00a45f705777cmr2864659ejo.40.1710923491208;
+        Wed, 20 Mar 2024 01:31:31 -0700 (PDT)
+Received: from 123000256IE.iskraemeco.si ([193.77.86.250])
+        by smtp.gmail.com with ESMTPSA id ci20-20020a170906c35400b00a46e92e583bsm1170769ejb.149.2024.03.20.01.31.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Mar 2024 01:31:30 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH 1/2] x86/percpu: Define this_percpu_xchg_op()
+Date: Wed, 20 Mar 2024 09:30:40 +0100
+Message-ID: <20240320083127.493250-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 20 Mar 2024 10:31:21 +0200
-Message-Id: <CZYFR8LEEQB1.8C0J9KCTF8CB@kernel.org>
-Cc: <linux-doc@vger.kernel.org>, <linux-integrity@vger.kernel.org>,
- <linux-security-module@vger.kernel.org>, <fsverity@lists.linux.dev>,
- <linux-block@vger.kernel.org>, <dm-devel@lists.linux.dev>,
- <audit@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v15 12/21] security: add
- security_bdev_setintegrity() hook
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Paul Moore"
- <paul@paul-moore.com>, "Fan Wu" <wufan@linux.microsoft.com>,
- <corbet@lwn.net>, <zohar@linux.ibm.com>, <jmorris@namei.org>,
- <serge@hallyn.com>, <tytso@mit.edu>, <ebiggers@kernel.org>,
- <axboe@kernel.dk>, <agk@redhat.com>, <snitzer@kernel.org>,
- <eparis@redhat.com>
-X-Mailer: aerc 0.15.2
-References: <1710560151-28904-13-git-send-email-wufan@linux.microsoft.com>
- <f5cf9d285bd5f09bbc3f79b0800d37fc@paul-moore.com>
- <CZYFP5S04YTK.23AJMKWQWVCR8@kernel.org>
-In-Reply-To: <CZYFP5S04YTK.23AJMKWQWVCR8@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed Mar 20, 2024 at 10:28 AM EET, Jarkko Sakkinen wrote:
-> On Wed Mar 20, 2024 at 1:00 AM EET, Paul Moore wrote:
-> > On Mar 15, 2024 Fan Wu <wufan@linux.microsoft.com> wrote:
-> > >=20
-> > > This patch introduces a new hook to save block device's integrity
-> > > data. For example, for dm-verity, LSMs can use this hook to save
-> > > the roothash signature of a dm-verity into the security blob,
-> > > and LSMs can make access decisions based on the data inside
-> > > the signature, like the signer certificate.
-> > >=20
-> > > Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
-> > >=20
-> > > --
-> > > v1-v14:
-> > >   + Not present
-> > >=20
-> > > v15:
-> > >   + Introduced
-> > >=20
-> > > ---
-> > >  include/linux/lsm_hook_defs.h |  2 ++
-> > >  include/linux/security.h      | 14 ++++++++++++++
-> > >  security/security.c           | 28 ++++++++++++++++++++++++++++
-> > >  3 files changed, 44 insertions(+)
-> >
-> > I'm not sure why you made this a separate patch, help?  If there is
-> > no significant reason why this is separate, please squash it together
-> > with patch 11/21.
->
-> Off-topic: it is weird to have *RFC* patch set at v15.
->
-> RFC by de-facto is something that can be safely ignored if you don't
-> have bandwidth. 15 versions of anything that can be safely ignored
-> is by definition spamming :-) I mean just conceptually.
->
-> So does the RFC still hold or what the heck is going on with this one?
->
-> Haven't followed for some time now...
+Rewrite percpu_xchg_op() using generic percpu primitives instead
+of using asm. The new implementation is similar to local_xchg() and
+allows the compiler to perform various optimizations (e.g. the
+compiler is able to create fast path through the loop, according
+to likely/unlikely annotations in percpu_try_cmpxchg_op).
 
-I mean if this RFC trend continues I'll just put auto-filter for this
-thread to put straight to the bin.  There's enough non-RFC patch sets
-to review.
+No functional changes intended.
 
-BR, Jarkko
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+---
+ arch/x86/include/asm/percpu.h | 32 +++++++++++---------------------
+ 1 file changed, 11 insertions(+), 21 deletions(-)
+
+diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
+index 44958ebaf626..de991e6d050a 100644
+--- a/arch/x86/include/asm/percpu.h
++++ b/arch/x86/include/asm/percpu.h
+@@ -230,25 +230,15 @@ do {									\
+ })
+ 
+ /*
+- * xchg is implemented using cmpxchg without a lock prefix. xchg is
+- * expensive due to the implied lock prefix.  The processor cannot prefetch
+- * cachelines if xchg is used.
++ * this_cpu_xchg() is implemented using cmpxchg without a lock prefix.
++ * xchg is expensive due to the implied lock prefix. The processor
++ * cannot prefetch cachelines if xchg is used.
+  */
+-#define percpu_xchg_op(size, qual, _var, _nval)				\
++#define this_percpu_xchg_op(_var, _nval)				\
+ ({									\
+-	__pcpu_type_##size pxo_old__;					\
+-	__pcpu_type_##size pxo_new__ = __pcpu_cast_##size(_nval);	\
+-	asm qual (__pcpu_op2_##size("mov", __percpu_arg([var]),		\
+-				    "%[oval]")				\
+-		  "\n1:\t"						\
+-		  __pcpu_op2_##size("cmpxchg", "%[nval]",		\
+-				    __percpu_arg([var]))		\
+-		  "\n\tjnz 1b"						\
+-		  : [oval] "=&a" (pxo_old__),				\
+-		    [var] "+m" (__my_cpu_var(_var))			\
+-		  : [nval] __pcpu_reg_##size(, pxo_new__)		\
+-		  : "memory");						\
+-	(typeof(_var))(unsigned long) pxo_old__;			\
++	typeof(_var) pxo_old__ = this_cpu_read(_var);			\
++	do { } while (!this_cpu_try_cmpxchg(_var, &pxo_old__, _nval));	\
++	pxo_old__;							\
+ })
+ 
+ /*
+@@ -534,9 +524,9 @@ do {									\
+ #define this_cpu_or_1(pcp, val)		percpu_to_op(1, volatile, "or", (pcp), val)
+ #define this_cpu_or_2(pcp, val)		percpu_to_op(2, volatile, "or", (pcp), val)
+ #define this_cpu_or_4(pcp, val)		percpu_to_op(4, volatile, "or", (pcp), val)
+-#define this_cpu_xchg_1(pcp, nval)	percpu_xchg_op(1, volatile, pcp, nval)
+-#define this_cpu_xchg_2(pcp, nval)	percpu_xchg_op(2, volatile, pcp, nval)
+-#define this_cpu_xchg_4(pcp, nval)	percpu_xchg_op(4, volatile, pcp, nval)
++#define this_cpu_xchg_1(pcp, nval)	this_percpu_xchg_op(pcp, nval)
++#define this_cpu_xchg_2(pcp, nval)	this_percpu_xchg_op(pcp, nval)
++#define this_cpu_xchg_4(pcp, nval)	this_percpu_xchg_op(pcp, nval)
+ 
+ #define raw_cpu_add_return_1(pcp, val)		percpu_add_return_op(1, , pcp, val)
+ #define raw_cpu_add_return_2(pcp, val)		percpu_add_return_op(2, , pcp, val)
+@@ -575,7 +565,7 @@ do {									\
+ #define this_cpu_and_8(pcp, val)		percpu_to_op(8, volatile, "and", (pcp), val)
+ #define this_cpu_or_8(pcp, val)			percpu_to_op(8, volatile, "or", (pcp), val)
+ #define this_cpu_add_return_8(pcp, val)		percpu_add_return_op(8, volatile, pcp, val)
+-#define this_cpu_xchg_8(pcp, nval)		percpu_xchg_op(8, volatile, pcp, nval)
++#define this_cpu_xchg_8(pcp, nval)		this_percpu_xchg_op(pcp, nval)
+ #define this_cpu_cmpxchg_8(pcp, oval, nval)	percpu_cmpxchg_op(8, volatile, pcp, oval, nval)
+ #define this_cpu_try_cmpxchg_8(pcp, ovalp, nval)	percpu_try_cmpxchg_op(8, volatile, pcp, ovalp, nval)
+ #endif
+-- 
+2.44.0
+
