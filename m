@@ -1,44 +1,44 @@
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A71B524D7;
-	Wed, 20 Mar 2024 15:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1AA154BE8;
+	Wed, 20 Mar 2024 15:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710950132; cv=none; b=EHGSSu2xzkVIposvgn6kjf/trtx6QbaXBF6TqPIsN578k6G2X8XhjLx4dCPqsaPOrOXkErch5G2TT97qh0jH7tYc/VE5Kjy6ImTrY53bAKJFQeLHrGU6LL/8UG/r6HNUpyk+Bqmak8e3zfEDs2nMEQVjryvmTvUfwCrNVJMMkWs=
+	t=1710950132; cv=none; b=OLykB0nQUQ3K73Ny9N3dcuGLjXtM1REtlfwOIlAmw82TrXkOAyfu2h97y4FZ8M0INI2j/eckYq9eMuMKj3AWwnFuBsOSCO5eBddKvRhkBLS8ptKsEFLjyaAd2vaiATIhuBN89ljTKU6yP1YxTsPQTUkj9Loe0AznCJzXCjvG8K4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710950132; c=relaxed/simple;
-	bh=/5XpSmpOtu3Gyn/58hMv8Oc+cA0wcAwlwOnm0kwsue4=;
+	bh=8nv0tn4HIeB7HB1FESi0CfuRQaOlHuLrZ0i5SbSRDDE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dASZ+G9UismiTqVVpXiEnKcNKTerrblibPlJ4YtimAmZiREesMsEN72P59aSnDJHtdM69kdnfyYsrcS/bjY5olTBYX5XGjJODKiu1wo8JXpjJ+N2SJOhPToHL6s8Aw71QJ8Bmz7UFUdA1APGC+laLzOB7xroLl7KmHdmIJ4fk68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=IYKSHbW9; arc=none smtp.client-ip=37.18.73.165
+	 MIME-Version:Content-Type; b=mQt8X1rNBRfZOP4Y0CIGZQOnnwS/SBjB3g3OqUxTOsSkswFsj/C16rT1tgtEUeBxSGjGWzL5kwk8PjOQfKsl86Ap24pIc2sSBSrPIqAUDn/9K3Cvgjjkct/w0uR8no1mmzyZ6hRDxhG557oQOGvkzi7zIOEQHkPDQTAKRoEXGmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=pyKwTt2F; arc=none smtp.client-ip=45.89.224.132
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="IYKSHbW9"
-Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 85D6F10001B;
-	Wed, 20 Mar 2024 18:55:20 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 85D6F10001B
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="pyKwTt2F"
+Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id F2125120017;
+	Wed, 20 Mar 2024 18:55:22 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru F2125120017
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1710950120;
-	bh=0Fa4Y34XfUVQyedPaiuMQc4mBGz6JmwcoPWvUkgtW24=;
+	s=mail; t=1710950122;
+	bh=ceIFnAOWsBblkZzy/XyE6Bc8LfMdtHX18HrHp7Jy4ZE=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=IYKSHbW9O4ZzTIfYmM0ds1tK7elpYzLGJXSTvOMinLQxGNhLZXqjRqyk/mbcQRkJm
-	 B8pEFqoZJsd1rfSoi+2nWSsZeTYPBnipwp/I5KND5Fnf/ZCDmFw9xXCcjQjUZM+nLG
-	 mUtp1cwvv3cxQS8v9vagWlEYW/gFFSxsHPeQijBEWjhnbWzCTKm93ZMr+aBIfUXH4Y
-	 vLWBZhlNZO+SswVpobLQKwF/6fn6O+MY9fhauUIVWVG8im9Cz3MBwyb7dPJZp2tnv3
-	 WnY2L6Q7c1/jjyi0Se5FiLXKDIaI8ObinK2jrsSIkz6f30BDy47zqRJTEZT37h0sT+
-	 lfRCoBT858RCg==
+	b=pyKwTt2F0tYG0W9D873xLtoFe+JOzaeHGRgDxsQew8CvWcxS7LmbjA9X399LdbTof
+	 OPdPQPSx3MFUwYCmVH1qdjd4RbsYzKwwqkZ3ed09NcsdrvcTSUxVyqlvrxm3+wHPPQ
+	 2MD9ig9O6JdOtJxUaxJaztAOr4UipKaCOyAqifDkf3ArrnAaYAAiz8Z5OfXXdKqjmi
+	 WJS/sXjOXR9I8AXAoTgmkmUXulm5yK4FnrpeIS/BGDeiruLwC0IwpyFtAhG2Q5R5M2
+	 BURa7Dx7TNJigIaByxHKWDwY728qUSxhkS+fUDoKQUtc996PrTq4hTPQfRQ6VhCbUu
+	 YVfW0oEJohDIg==
 Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Wed, 20 Mar 2024 18:55:20 +0300 (MSK)
+	Wed, 20 Mar 2024 18:55:22 +0300 (MSK)
 Received: from CAB-WSD-L081021.sberdevices.ru (100.64.160.123) by
  p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 20 Mar 2024 18:55:19 +0300
+ 15.2.1118.40; Wed, 20 Mar 2024 18:55:22 +0300
 From: Dmitry Rokosov <ddrokosov@salutedevices.com>
 To: <neil.armstrong@linaro.org>, <jbrunet@baylibre.com>,
 	<mturquette@baylibre.com>, <khilman@baylibre.com>,
@@ -47,9 +47,9 @@ CC: <kernel@salutedevices.com>, <rockosov@gmail.com>,
 	<linux-amlogic@lists.infradead.org>, <linux-clk@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	Dmitry Rokosov <ddrokosov@salutedevices.com>
-Subject: [PATCH v1 1/4] clk: meson: a1: peripherals: determine maximum register in regmap config
-Date: Wed, 20 Mar 2024 18:54:45 +0300
-Message-ID: <20240320155512.3544-2-ddrokosov@salutedevices.com>
+Subject: [PATCH v1 4/4] clk: meson: s4: pll: determine maximum register in regmap config
+Date: Wed, 20 Mar 2024 18:54:48 +0300
+Message-ID: <20240320155512.3544-5-ddrokosov@salutedevices.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240320155512.3544-1-ddrokosov@salutedevices.com>
 References: <20240320155512.3544-1-ddrokosov@salutedevices.com>
@@ -65,14 +65,14 @@ X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
  p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
 X-KSMG-Rule-ID: 10
 X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184302 [Mar 20 2024]
+X-KSMG-AntiSpam-Lua-Profiles: 184300 [Mar 20 2024]
 X-KSMG-AntiSpam-Version: 6.1.0.4
 X-KSMG-AntiSpam-Envelope-From: ddrokosov@salutedevices.com
 X-KSMG-AntiSpam-Rate: 0
 X-KSMG-AntiSpam-Status: not_detected
 X-KSMG-AntiSpam-Method: none
 X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 10 0.3.10 53c821b925e16276b831986eabc71d60ab82ee60, {Tracking_from_domain_doesnt_match_to}, smtp.sberdevices.ru:7.1.1,5.0.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;100.64.160.123:7.1.2;salutedevices.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-KSMG-AntiSpam-Info: LuaCore: 10 0.3.10 53c821b925e16276b831986eabc71d60ab82ee60, {Tracking_from_domain_doesnt_match_to}, salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;100.64.160.123:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1;127.0.0.199:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
 X-MS-Exchange-Organization-SCL: -1
 X-KSMG-AntiSpam-Interceptor-Info: scan successful
 X-KSMG-AntiPhishing: Clean
@@ -85,21 +85,21 @@ file does not display the entire range of the regmap.
 
 Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
 ---
- drivers/clk/meson/a1-peripherals.c | 1 +
+ drivers/clk/meson/s4-pll.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/meson/a1-peripherals.c b/drivers/clk/meson/a1-peripherals.c
-index e2a1f12f9175..621af1e6e4b2 100644
---- a/drivers/clk/meson/a1-peripherals.c
-+++ b/drivers/clk/meson/a1-peripherals.c
-@@ -2187,6 +2187,7 @@ static struct regmap_config a1_periphs_regmap_cfg = {
- 	.reg_bits   = 32,
- 	.val_bits   = 32,
- 	.reg_stride = 4,
-+	.max_register = DMC_CLK_CTRL,
+diff --git a/drivers/clk/meson/s4-pll.c b/drivers/clk/meson/s4-pll.c
+index 8dfaeccaadc2..c8a95842b14c 100644
+--- a/drivers/clk/meson/s4-pll.c
++++ b/drivers/clk/meson/s4-pll.c
+@@ -798,6 +798,7 @@ static struct regmap_config clkc_regmap_config = {
+ 	.reg_bits       = 32,
+ 	.val_bits       = 32,
+ 	.reg_stride     = 4,
++	.max_register   = ANACTRL_HDMIPLL_CTRL0,
  };
  
- static struct meson_clk_hw_data a1_periphs_clks = {
+ static struct meson_clk_hw_data s4_pll_clks = {
 -- 
 2.43.0
 
