@@ -1,140 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F3732C88;
-	Wed, 20 Mar 2024 08:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415BB2DF7D;
+	Wed, 20 Mar 2024 08:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710922533; cv=none; b=jo9wKnP4Sk6ofEnabzhy7Kuxyst3dY16s4Kx6tlKKtIxw6Iut2DKU7g6YimxC5kJxJLXKDuu7yP1DipQG/x+LvwAv6up55aDNybm21dVgVkSN8U4unxpTSJyiTeeXYrtFoXM7i86bkZp4KrFloN9tlNwHvEJRmjOW5hG0q1jIGE=
+	t=1710922694; cv=none; b=nTftO7V3ZBKI36QVXvEGYTHk3eZKCPpX/UdSzxuJllt9ePBQpDKGklgwp7481d7HuSikCthSoD3hL/u6x6m5E0xT9N63mjCHiF6a8I7YTGLbEKKHWyaR28ObCJ5Rk2IALJWw2FuJBUloim/T3RQaBJC7ndYAfPrUY23DrqRizks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710922533; c=relaxed/simple;
-	bh=h9HIO8VuvpI1WqTJ4Bhe68D/lm3eG/5STtea5dda5jE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=huMVciMSJioMO2E5I0VGoP7joHd1CYNDcMJwTsqpV5OIBf5IK2Y5TOf3DSCGxSv+DbEeeLWeumzFCSmSCDp3S667ZPvtdMzHUOxnDvUoiaaiqgCbXGRp/DH0zTfXyPLd1sCeZV/ZAXbKmEoGtWJjxjZLMDHluy34WrzckbDVXPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aSR1T30Y; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aSR1T30Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710922532; x=1742458532;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=h9HIO8VuvpI1WqTJ4Bhe68D/lm3eG/5STtea5dda5jE=;
-  b=aSR1T30YLubItPjT7CfUGwM8GHgTfPTU/47qvbtg6vJuX82sB/AJhlZB
-   MI+pED+gS9gz5s+Gn8trSBA57U+hti0D6HXZL9prff6BVDlabeK46FVIT
-   gH03QwKZ2IuHw7DpCXZiVXtwdII2o60JS19Tun5yYBtBWX7Enwx4b4lZK
-   Y4LFvf+7qsawmpYS5l2bOdSNJ33cRmiG4Ce3zwU6SOfypoZgZEB6hSIEQ
-   CxhbTVe4Fm4CwiUxrt5mNeyfdIidXoL0xKZG+anW42pvZu9Bwv+ReSxDx
-   6V7UEI4ujkB+d3h424g6j7T00bZQyhiQ5Y8B4b97+juga7oFl1r84ahYw
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11018"; a="16976023"
-X-IronPort-AV: E=Sophos;i="6.07,139,1708416000"; 
-   d="scan'208";a="16976023"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 01:15:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,139,1708416000"; 
-   d="scan'208";a="45046185"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.242.48]) ([10.124.242.48])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 01:15:26 -0700
-Message-ID: <5702443b-510e-4ce5-823f-999582a6aced@intel.com>
-Date: Wed, 20 Mar 2024 16:15:23 +0800
+	s=arc-20240116; t=1710922694; c=relaxed/simple;
+	bh=60sKjZFMDkIGBZ34PBAlSHbXPnG2diZASmVrBzUBnok=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NvsK+x7n3Llla4xM6zMmvLz9pjBx+LW8Z+cIvt+E0CcrBap2cWTw9TfxCBW/VgRBVysNb55ZVvUOj+8tyEiIPG3SN1FStM2RVxyhnrlkBBu7GpTXgM/m6Lep6j91AjpecglGg+Dmtn/nMs4HZU+nh42tJRqJb9dLw/2eSVcUq2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4V01gH1LT4z4f3kK1;
+	Wed, 20 Mar 2024 16:18:03 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 1085A1A0172;
+	Wed, 20 Mar 2024 16:18:07 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.101.6])
+	by APP3 (Coremail) with SMTP id _Ch0CgDnpZ29m_plVnGcHQ--.12753S2;
+	Wed, 20 Mar 2024 16:18:06 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: brendan.higgins@linux.dev,
+	davidgow@google.com,
+	rmoar@google.com,
+	corbet@lwn.net
+Cc: linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] Documentation: kunit: correct KUNIT_VERY_SLOW to KUNIT_SPEED_VERY_SLOW
+Date: Thu, 21 Mar 2024 01:14:24 +0800
+Message-Id: <20240320171424.6536-1-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 039/130] KVM: TDX: initialize VM with TDX specific
- parameters
-Content-Language: en-US
-To: isaku.yamahata@intel.com, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
- erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
- Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
- chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <5eca97e6a3978cf4dcf1cff21be6ec8b639a66b9.1708933498.git.isaku.yamahata@intel.com>
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <5eca97e6a3978cf4dcf1cff21be6ec8b639a66b9.1708933498.git.isaku.yamahata@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgDnpZ29m_plVnGcHQ--.12753S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jry5Zry3XFyDtr4kArWxCrg_yoWDtFXEva
+	4rZFn3CFW3tr9aqr4jyF1SyFn3GFW8Cr48Wr4DKF98Cr1SyasrKFyDJ3sF9r1Uur1S9a4f
+	tan7ur1jvwn7AjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb28YFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JFv_Gryl8c
+	AvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq
+	3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gc
+	CE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxI
+	r21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87
+	Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IY
+	c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
+	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF
+	0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
+	vE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
+	jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jIGQDUUUUU=
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-On 2/26/2024 4:25 PM, isaku.yamahata@intel.com wrote:
+There is no KUNIT_VERY_SLOW, I guess we mean KUNIT_SPEED_VERY_SLOW.
 
-...
+Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+---
+ Documentation/dev-tools/kunit/running_tips.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> +static int setup_tdparams_xfam(struct kvm_cpuid2 *cpuid, struct td_params *td_params)
-> +{
-> +	const struct kvm_cpuid_entry2 *entry;
-> +	u64 guest_supported_xcr0;
-> +	u64 guest_supported_xss;
-> +
-> +	/* Setup td_params.xfam */
-> +	entry = kvm_find_cpuid_entry2(cpuid->entries, cpuid->nent, 0xd, 0);
-> +	if (entry)
-> +		guest_supported_xcr0 = (entry->eax | ((u64)entry->edx << 32));
-> +	else
-> +		guest_supported_xcr0 = 0;
-> +	guest_supported_xcr0 &= kvm_caps.supported_xcr0;
-> +
-> +	entry = kvm_find_cpuid_entry2(cpuid->entries, cpuid->nent, 0xd, 1);
-> +	if (entry)
-> +		guest_supported_xss = (entry->ecx | ((u64)entry->edx << 32));
-> +	else
-> +		guest_supported_xss = 0;
-> +
-> +	/*
-> +	 * PT and CET can be exposed to TD guest regardless of KVM's XSS, PT
-> +	 * and, CET support.
-> +	 */
-> +	guest_supported_xss &=
-> +		(kvm_caps.supported_xss | XFEATURE_MASK_PT | TDX_TD_XFAM_CET);
-> +
-> +	td_params->xfam = guest_supported_xcr0 | guest_supported_xss;
-> +	if (td_params->xfam & XFEATURE_MASK_LBR) {
-> +		/*
-> +		 * TODO: once KVM supports LBR(save/restore LBR related
-> +		 * registers around TDENTER), remove this guard.
-> +		 */
-> +#define MSG_LBR	"TD doesn't support LBR yet. KVM needs to save/restore IA32_LBR_DEPTH properly.\n"
-> +		pr_warn(MSG_LBR);
-> +		return -EOPNOTSUPP;
-
-This unsupported behavior is totally decided by KVM even if TDX module 
-supports it. I think we need to reflect it in tdx_info->xfam_fixed0, 
-which gets reported to userspace via KVM_TDX_CAPABILITIES. So userspace 
-will aware that LBR is not supported for TDs.
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int setup_tdparams(struct kvm *kvm, struct td_params *td_params,
-> +			struct kvm_tdx_init_vm *init_vm)
-> +{
-> +	struct kvm_cpuid2 *cpuid = &init_vm->cpuid;
-> +	int ret;
-> +
-> +	if (kvm->created_vcpus)
-> +		return -EBUSY;
-> +
-> +	if (init_vm->attributes & TDX_TD_ATTRIBUTE_PERFMON) {
-> +		/*
-> +		 * TODO: save/restore PMU related registers around TDENTER.
-> +		 * Once it's done, remove this guard.
-> +		 */
-> +#define MSG_PERFMON	"TD doesn't support perfmon yet. KVM needs to save/restore host perf registers properly.\n"
-> +		pr_warn(MSG_PERFMON);
-> +		return -EOPNOTSUPP;
-
-similar as above, we need reflect it in tdx_info->attributes_fixed0
-
-> +	}
-> +
+diff --git a/Documentation/dev-tools/kunit/running_tips.rst b/Documentation/dev-tools/kunit/running_tips.rst
+index bd689db6fdd2..482f598d141c 100644
+--- a/Documentation/dev-tools/kunit/running_tips.rst
++++ b/Documentation/dev-tools/kunit/running_tips.rst
+@@ -294,7 +294,7 @@ macro to define the test case instead of ``KUNIT_CASE(test_name)``.
+ .. code-block:: c
+ 
+ 	static const struct kunit_attributes example_attr = {
+-		.speed = KUNIT_VERY_SLOW,
++		.speed = KUNIT_SPEED_VERY_SLOW,
+ 	};
+ 
+ 	static struct kunit_case example_test_cases[] = {
+@@ -311,7 +311,7 @@ suite definition.
+ .. code-block:: c
+ 
+ 	static const struct kunit_attributes example_attr = {
+-		.speed = KUNIT_VERY_SLOW,
++		.speed = KUNIT_SPEED_VERY_SLOW,
+ 	};
+ 
+ 	static struct kunit_suite example_test_suite = {
+-- 
+2.30.0
 
