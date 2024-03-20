@@ -1,200 +1,133 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCAFA55792;
-	Wed, 20 Mar 2024 16:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5DC5474D;
+	Wed, 20 Mar 2024 16:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710951393; cv=none; b=eNMOFRqo6eF+apXO/iEtiQn941+4tXAAG2cgY5zqlG4JAZtQ5ciyMK8ZnUtlssof7GbQ1ap+zo9PVodkr+IwORac4SjN1+1BX+g7NvFKTuGtZKclxxEg0BeA7vVGFjq9kn5TELEdJOV6a+4NwYPm7YkOxGckyt3zVlwrXz4EaKo=
+	t=1710951470; cv=none; b=KjpmVHTYbvEsxE1e3y4qyG9IhbM9Km88TJ7ebwRyveKw18AP4YvgQBMyqj05dD+RMuVq5Yj/J74c9r9eE8wSrbLHMgTaLiQHg1NQ4lKUA1E9P9CPOOc9Irazr02wwuXXJsQbO2WkdjNv7jv0YNndlPUVSWojBX9BOSAkfVACKsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710951393; c=relaxed/simple;
-	bh=0RvBV5HPHCypiG8/1C2bPVwFxUctq8TGU6kkO100MJQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZzuUDm/HAHDIn5uiIQ2sJNNb2GZVn3HZRsEIiOpYkXVe1Kc+DlDRPQ+PGCDROcq+cf9hw0TR+ffhfjHu7pSPRhxiLB1HtOrAvApNz+nvo09n9BE8vawMSH2iGMTknmFjNkQM/HchQZ6rp1uWWE1x9IKAaEPf82NQNcgCyQtQFLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Yas7dPUI; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Yas7dPUI"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42KG0ATk020257;
-	Wed, 20 Mar 2024 16:16:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=HfuSXD61T3jEkncOiw8gApr3+P2Z8+cmNdGxNiRWng0=;
- b=Yas7dPUI7lofd074WfRo3wi04lnUOmlek1xutDTWtXuumYq7/0q4W/wuhxUeBJIA+Ime
- F50/+zSAVt87cOCp19vpzy9iU/4M41QrBQ1wY9GYeR5dNGsgCuXyayqYkCEesPlY9Qj0
- hP5TWJFESbXp9NPtaFNdLPP35suFIRFkG2CYUn2BbREmVcmpmLlbeVN/6rk+pBhxyunM
- nJyfNbxgjwNtOF7mhf6NdJ8Z9VBh93VvaQcansoUehkl8hc7NUcws+dC0HAPmpgjpcl+
- ZumydteDpUz7MfBt0bToYqif3oIV9qoyNPL0SsP+SK0Phd/FF+H6b0bba5gLW3jNtPc+ Wg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x008rgg24-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 Mar 2024 16:16:05 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42KGG5rQ012184;
-	Wed, 20 Mar 2024 16:16:05 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x008rgg21-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 Mar 2024 16:16:05 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42KE9wci017231;
-	Wed, 20 Mar 2024 16:16:04 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wwnrtfhps-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 Mar 2024 16:16:04 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42KGG1Vd40174240
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 20 Mar 2024 16:16:03 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C0F795805B;
-	Wed, 20 Mar 2024 16:15:59 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BE40F58065;
-	Wed, 20 Mar 2024 16:15:58 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 20 Mar 2024 16:15:58 +0000 (GMT)
-Message-ID: <afc9471c-1c28-4384-82c1-29464ca1fb1f@linux.ibm.com>
-Date: Wed, 20 Mar 2024 12:15:56 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Documentation: tpm_tis
-Content-Language: en-US
-To: Jarkko Sakkinen <jarkko@kernel.org>, linux-integrity@vger.kernel.org
-Cc: Jonathan Corbet <corbet@lwn.net>,
-        "Daniel P . Smith" <dpsmith@apertussolutions.com>,
-        Lino Sanfilippo <l.sanfilippo@kunbus.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Peter Huewe <peterhuewe@gmx.de>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>,
-        keyrings@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
-References: <20240320085601.40450-1-jarkko@kernel.org>
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <20240320085601.40450-1-jarkko@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: G6cDu7hnCJlnPlQMBwAxaYs3jmZHVtef
-X-Proofpoint-GUID: 0WxVBd-OTimkKLLzsWkImZ5r7x7NwVMt
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	s=arc-20240116; t=1710951470; c=relaxed/simple;
+	bh=MjsTErL++3mNSNQUdfMEPoHEWuqAralTC+D1xVnk5Gg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=SPqDanPLWdnW0ZHFV2yXkG6HQExKHIOUdmjT9nxHM8N0Kr4Arzpf9AsNvQsQnt79QP6Jz2aDWzIWQNEGGS/3Eq1Sth1QxhOSLbqByl4fk+Z2Zc5DtYF/ow9A9Dqa7PH7CsqrmGkIKc663mXrjeT5di3km/DPeBmVmA/YsxZ4214=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38AC6C433F1;
+	Wed, 20 Mar 2024 16:17:48 +0000 (UTC)
+Date: Wed, 20 Mar 2024 12:20:12 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Daniel Bristot de Oliveira
+ <bristot@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Will Deacon
+ <will@kernel.org>, Waiman Long <longman@redhat.com>, Boqun Feng
+ <boqun.feng@gmail.com>, linux-rt-users <linux-rt-users@vger.kernel.org>
+Subject: [RFC][PATCH] tracing: Introduce restart_critical_timings()
+Message-ID: <20240320122012.2c1f461f@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-20_10,2024-03-18_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
- phishscore=0 impostorscore=0 adultscore=0 lowpriorityscore=0 spamscore=0
- malwarescore=0 mlxlogscore=999 priorityscore=1501 mlxscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2403140000
- definitions=main-2403200130
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+From: Steven Rostedt (Google) <rostedt@goodmis.org>
 
+I'm debugging some latency issues on a Chromebook and the preemptirqsoff
+tracer hit this:
 
-On 3/20/24 04:56, Jarkko Sakkinen wrote:
-> Based recent discussions on LKML, provide preliminary bits of tpm_tis_core
-> dependent drivers. Includes only bare essentials but can be extended later
-> on case by case. This way some people may even want to read it later on.
-> 
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> CC: Daniel P. Smith <dpsmith@apertussolutions.com>
-> Cc: Lino Sanfilippo <l.sanfilippo@kunbus.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Peter Huewe <peterhuewe@gmx.de>
-> Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
-> Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
-> Cc: keyrings@vger.kernel.org
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-integrity@vger.kernel.org
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-> ---
-> v2:
-> - Fixed errors reported by Randy:
->    https://lore.kernel.org/all/aed28265-d677-491a-a045-24b351854b24@infradead.org/
-> - Improved the text a bit to have a better presentation.
-> ---
->   Documentation/security/tpm/index.rst   |  1 +
->   Documentation/security/tpm/tpm_tis.rst | 30 ++++++++++++++++++++++++++
->   2 files changed, 31 insertions(+)
->   create mode 100644 Documentation/security/tpm/tpm_tis.rst
-> 
-> diff --git a/Documentation/security/tpm/index.rst b/Documentation/security/tpm/index.rst
-> index fc40e9f23c85..f27a17f60a96 100644
-> --- a/Documentation/security/tpm/index.rst
-> +++ b/Documentation/security/tpm/index.rst
-> @@ -5,6 +5,7 @@ Trusted Platform Module documentation
->   .. toctree::
->   
->      tpm_event_log
-> +   tpm_tis
->      tpm_vtpm_proxy
->      xen-tpmfront
->      tpm_ftpm_tee
-> diff --git a/Documentation/security/tpm/tpm_tis.rst b/Documentation/security/tpm/tpm_tis.rst
-> new file mode 100644
-> index 000000000000..b331813b3c45
-> --- /dev/null
-> +++ b/Documentation/security/tpm/tpm_tis.rst
-> @@ -0,0 +1,30 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=========================
-> +TPM FIFO interface Driver
-> +=========================
-> +
-> +FIFO (First-In-First-Out) is the name of the hardware interface used by the
+# tracer: preemptirqsoff
+#
+# preemptirqsoff latency trace v1.1.5 on 5.15.148-21853-g165fd2387469-dirty
+# --------------------------------------------------------------------
+# latency: 7813 us, #60/60, CPU#1 | (M:preempt VP:0, KP:0, SP:0 HP:0 #P:2)
+#    -----------------
+#    | task: init-1 (uid:0 nice:0 policy:0 rt_prio:0)
+#    -----------------
+#  => started at: rwsem_optimistic_spin
+#  => ended at:   rwsem_optimistic_spin
+#
+#
+#                    _------=> CPU#            
+#                   / _-----=> irqs-off        
+#                  | / _----=> need-resched    
+#                  || / _---=> hardirq/softirq 
+#                  ||| / _--=> preempt-depth   
+#                  |||| / _-=> migrate-disable 
+#                  ||||| /     delay           
+#  cmd     pid     |||||| time  |   caller     
+#     \   /        ||||||  \    |    /       
+   <...>-1         1...1.    0us!: rwsem_optimistic_spin+0x20/0x194 <-rwsem_optimistic_spin+0x20/0x194
+   <...>-1         1.N.1. 7813us : rwsem_optimistic_spin+0x140/0x194 <-rwsem_optimistic_spin+0x140/0x194
+   <...>-1         1.N.1. 7814us+: tracer_preempt_on+0x4c/0x6a <-rwsem_optimistic_spin+0x140/0x194
+   <...>-1         1.N.1. 7824us : <stack trace>
+ => rwsem_optimistic_spin+0x140/0x194
+ => rwsem_down_write_slowpath+0xc9/0x3fe
+ => copy_process+0xd08/0x1b8a
+ => kernel_clone+0x94/0x256
+ => __x64_sys_clone+0x7a/0x9a
+ => do_syscall_64+0x51/0xa1
+ => entry_SYSCALL_64_after_hwframe+0x5c/0xc6
 
-FIFO is the type. I am surprised you call it a 'name'. I would say TIS 
-is the 'name'.
+Which isn't a real issue, as it's in the rwsem_optimistic_spin() code that
+spins with interrupts enabled, preempt disabled, and checks for
+need_resched(). If it is true, it breaks out and schedules.
 
-> +tpm_tis_core dependent drivers. The prefix "tis" comes from the TPM Interface
+Hence, it's hiding real issues, because it can spin for a very long time
+and this is not the source of the latency I'm tracking down.
 
-tis is a tla -- a three letter *acronym*. You aren't using it as a 'prefix'.
+I would like to introduce restart_critical_timings() and place it in
+locations that have this behavior.
 
-> +Specification, which is the hardware interface specification for TPM 1.x chips.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-It's also available for TPM2.
-
-> +
-> +Communication is based on a 5 KiB buffer shared by the TPM chip through a
-
-I thought it was typically 4 KiB.
-
-> +hardware bus or memory map, depending on the physical wiring. The buffer is
-> +further split into five equal-size buffers, which provide equivalent sets of
-
-equal-sized MMIO regions?
-
-> +registers for communication between the CPU and TPM. These communication
-> +endpoints are called localities in the TCG terminology.
-> +
-> +When the kernel wants to send commands to the TPM chip, it first reserves
-> +locality 0 by setting the requestUse bit in the TPM_ACCESS register. The bit is
-> +cleared by the chip when the access is granted. Once it completes its
-> +communication, the kernel writes the TPM_ACCESS.activeLocality bit. This
-> +informs the chip that the locality has been relinquished.
-> +
-> +Pending localities are served in order by the chip in descending order, one at
-> +a time:
-
-I think I know what pending localities are because I have worked with 
-this device but I am not sure whether the user can deduce this from the 
-paragraph above. Also, why this particular detail when the driver only 
-uses locality 0 and nobody is competing about access to localities?
-
-> +
-> +- Locality 0 has the lowest priority.
-> +- Locality 5 has the highest priority.
-> +
-> +Further information on the purpose and meaning of the localities can be found
-> +in section 3.2 of the TCG PC Client Platform TPM Profile Specification.
+diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
+index 147feebd508c..e9f97f60bfc0 100644
+--- a/include/linux/irqflags.h
++++ b/include/linux/irqflags.h
+@@ -145,6 +145,13 @@ do {						\
+ # define start_critical_timings() do { } while (0)
+ #endif
+ 
++/* Used in spins that check need_resched() with preemption disabled */
++static inline void restart_critical_timings(void)
++{
++	stop_critical_timings();
++	start_critical_timings();
++}
++
+ #ifdef CONFIG_DEBUG_IRQFLAGS
+ extern void warn_bogus_irq_restore(void);
+ #define raw_check_bogus_irq_restore()			\
+diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+index 2340b6d90ec6..fa7b43e53d20 100644
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -27,6 +27,7 @@
+ #include <linux/export.h>
+ #include <linux/rwsem.h>
+ #include <linux/atomic.h>
++#include <linux/irqflags.h>
+ #include <trace/events/lock.h>
+ 
+ #ifndef CONFIG_PREEMPT_RT
+@@ -780,6 +781,7 @@ rwsem_spin_on_owner(struct rw_semaphore *sem)
+ 		 */
+ 		barrier();
+ 
++		restart_critical_timings();
+ 		if (need_resched() || !owner_on_cpu(owner)) {
+ 			state = OWNER_NONSPINNABLE;
+ 			break;
+@@ -912,6 +914,7 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
+ 		 * a writer, need_resched() check needs to be done here.
+ 		 */
+ 		if (owner_state != OWNER_WRITER) {
++			restart_critical_timings();
+ 			if (need_resched())
+ 				break;
+ 			if (rt_task(current) &&
