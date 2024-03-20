@@ -1,166 +1,327 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A853FB93;
-	Wed, 20 Mar 2024 11:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D2CA3BB3D;
+	Wed, 20 Mar 2024 11:17:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710933408; cv=none; b=cHI4JnrVbheUOlRxhHnbcbcl4I7FSFXUA2e6edNH7OZTSq5cflpP1P6O8G3OXoOIkyV6RVsohXELONDT+0/vU88g3J/jOJWeqmAsPtwKUoolkwIBlp2NXOlC4GxO0dnpyMBj+aHfFi1Pd362b6rLjAH2O7v3HAj9Dzd06U+JNWg=
+	t=1710933454; cv=none; b=YT8n8/3Uvjv/aK+TUITg6CTyuI76kD84NQ7xgf9qnRV3dkWiwBIL88uszndGp17ZwcS4SnjZ5uLAxlqVff9tNjEO5xhSrQ5xacZ4ZzAXCrYKuZJqK3ilfRIEPgNOV9A92c4RapF6J6ioDiQviIycnIfpDChu7miwVmhS2rN77kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710933408; c=relaxed/simple;
-	bh=jZITW5F1LPSEX35Sne0hsGdLz3H++JJ4tnzWy/SgkTg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=s0Ha10noQrFlDb/AWQ89gOAAVhRQB9ocjam9yjXblrN2OMffgVoP0gHqT9NlhBHLEH0BByLiD2caED26D/YvHxIb2mr5QK7tdS5dFOWsZm0kuJZMFc8JZ56wcB5agz/W9lsuZyPGKL3rkfHqsyAtM8p0WY8JENgvt3cL1sXZDt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=NTznYoqz; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1710933454; c=relaxed/simple;
+	bh=G08oD3Z49wArGuljMx/EjSy0XiLoWdlnVjqTATC9B08=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=Z/WPKBl8+kAYV4DjfeQOonjU8Gdi7eCLK1LQmWD1wYvJJW1KTj1c0ZKLbKaL5C3+JayQuRmp+uU4gljJFhJaN4bwccMuZoWuCdJ9wivS5Ck1sekAiqeRDTgCR7AtpbUhrOkZgCRdayXhwT1jlZRyp7Yh2BJlQH818xqIsa+URPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=n1/+jpI3; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="NTznYoqz"
-Received: from [192.168.42.20] (pd9e59c8a.dip0.t-ipconnect.de [217.229.156.138])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 00EFF2FC0057;
-	Wed, 20 Mar 2024 12:16:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1710933401;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+4zpNEIVjjhVbRfRyLCxzzJG4yUwU/PAPb8l9mzJcKI=;
-	b=NTznYoqzURRGHcbjAz6JNcN5eRJt3vLTjWwpy2AXYT5bl8Pz40YzpjhtiaIE1T7PiS1Bsk
-	spa6NzUOryF8o76qC74LsyrHfzYvd7ffScqzi7bVzJoCAnBj9itHKwKRoyEIwR7TYaxTuv
-	WS5n+eUeyBOgHcHd0tyrrKX/yZFKCvI=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <1fb08a74-62c7-4d0c-ba5d-648e23082dcb@tuxedocomputers.com>
-Date: Wed, 20 Mar 2024 12:16:40 +0100
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="n1/+jpI3"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 0DF4520B74C0; Wed, 20 Mar 2024 04:17:32 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0DF4520B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1710933452;
+	bh=ToCqVGJ9qsoOL9pg19mG+XRuSbpqCQMxtAL+wYSMZc0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=n1/+jpI3oKnn/UwqaCd9tExCtGJ5DyhKZplTlnNEiSwio4XvIClR30TE2Pd1LBEaX
+	 KN94d7s9nMzc22K/SQilyfKoFXgus8fk3MRBRS8Bw+5cx5tApNvDCeNvBF0L4NOlAI
+	 9dYu+3WCneL812r1lnD50T8ZKogsV9LMF68zc680=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Olaf Hering <olaf@aepfle.de>,
+	Ani Sinha <anisinha@redhat.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH v4] hv/hv_kvp_daemon: Handle IPv4 and Ipv6 combination for keyfile format
+Date: Wed, 20 Mar 2024 04:17:31 -0700
+Message-Id: <1710933451-6312-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Future handling of complex RGB devices on Linux v3
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Lee Jones <lee@kernel.org>, jikos@kernel.org,
- linux-kernel@vger.kernel.org, Jelle van der Waa <jelle@vdwaa.nl>,
- Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- linux-input@vger.kernel.org, ojeda@kernel.org, linux-leds@vger.kernel.org,
- Pavel Machek <pavel@ucw.cz>, Gregor Riepl <onitake@gmail.com>
-References: <0cdb78b1-7763-4bb6-9582-d70577781e61@tuxedocomputers.com>
- <7228f2c6-fbdd-4e19-b703-103b8535d77d@redhat.com>
- <730bead8-6e1d-4d21-90d2-4ee73155887a@tuxedocomputers.com>
- <952409e1-2f0e-4d7a-a7a9-3b78f2eafec7@redhat.com>
- <9851a06d-956e-4b57-be63-e10ff1fce8b4@tuxedocomputers.com>
- <1bc6d6f0-a13d-4148-80cb-9c13dec7ed32@redhat.com>
- <b70b2ea8-abfd-4d41-b336-3e34e5bdb8c6@tuxedocomputers.com>
- <477d30ee-247e-47e6-bc74-515fd87fdc13@redhat.com>
- <e21a7d87-3059-4a51-af04-1062dac977d2@tuxedocomputers.com>
- <247b5dcd-fda8-45a7-9896-eabc46568281@tuxedocomputers.com>
- <ZdZ2kMASawJ9wdZj@duo.ucw.cz>
- <b6d79727-ae94-44b1-aa88-069416435c14@redhat.com>
- <a21f6c49-2c05-4496-965c-a7524ed38634@gmail.com>
- <825129ea-d389-4c6c-8a23-39f05572e4b4@redhat.com>
- <adbfdf6c-fb59-4fae-a472-17b04dd8a3f6@tuxedocomputers.com>
-In-Reply-To: <adbfdf6c-fb59-4fae-a472-17b04dd8a3f6@tuxedocomputers.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-Hi Hans and the others,
+If the network configuration strings are passed as a combination of IPv4
+and IPv6 addresses, the current KVP daemon does not handle processing for
+the keyfile configuration format.
+With these changes, the keyfile config generation logic scans through the
+list twice to generate IPv4 and IPv6 sections for the configuration files
+to handle this support.
 
-Am 22.02.24 um 14:14 schrieb Werner Sembach:
-> Hi,
->
-> Thanks everyone for the exhaustive feedback. And at least this thread is a 
-> good comprehesive reference for the future ^^.
->
-> To recap the hopefully final UAPI for complex RGB lighting devices:
->
-> - By default there is a singular /sys/class/leds/* entry that treats the 
-> device as if it was a single zone RGB keyboard backlight with no special effects.
->
-> - There is an accompanying misc device with the sysfs attributes "name", 
-> "device_type",  "firmware_version_string", "serial_number" for device 
-> identification and "use_leds_uapi" that defaults to 1.
->
->     - If set to 0 the /sys/class/leds/* entry disappears. The driver should 
-> keep the last state the backlight was in active if possible.
->
->     - If set 1 it appears again. The driver should bring it back to a static 1 
-> zone setting while avoiding flicker if possible.
->
-> - If the device is not controllable by for example hidraw, the misc device 
-> might also implement additional ioctls or sysfs attributes to allow a more 
-> complex low level control for the keyboard backlight. This is will be a highly 
-> vendor specific UAPI.
-So in the OpenRGB issue thread 
-https://learn.microsoft.com/en-us/windows-hardware/design/component-guidelines/dynamic-lighting-devices 
-aka HID LampArray was mentioned. I did dismiss it because I thought that is only 
-relevant for firmware, but I now stumbled upon the Virtual HID Framework (VHF) 
-https://learn.microsoft.com/en-us/windows-hardware/drivers/hid/virtual-hid-framework--vhf- 
-and now I wonder if an equivalent exists for Linux? A quick search did not yield 
-any results for me.
+Testcases ran:Rhel 9, Hyper-V VMs
+              (IPv4 only, IPv6 only, IPv4 and IPv6 combination)
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+---
+ Changes in v4
+ * Removed the unnecessary memset for addr in the start
+ * Added a comment to describe how we erase the last comma character
+ * Fixed some typos in the commit description
+ * While using strncat, skip copying the '\0' character.
+---
+ tools/hv/hv_kvp_daemon.c | 181 ++++++++++++++++++++++++++++++---------
+ 1 file changed, 140 insertions(+), 41 deletions(-)
 
-If a virtual HID device is possible and the WMI interface can reasonably be 
-mapped to the LampArray API this might be the best starting point:
+diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+index 318e2dad27e0..d64d548a802f 100644
+--- a/tools/hv/hv_kvp_daemon.c
++++ b/tools/hv/hv_kvp_daemon.c
+@@ -76,6 +76,12 @@ enum {
+ 	DNS
+ };
+ 
++enum {
++	IPV4 = 1,
++	IPV6,
++	IP_TYPE_MAX
++};
++
+ static int in_hand_shake;
+ 
+ static char *os_name = "";
+@@ -102,6 +108,11 @@ static struct utsname uts_buf;
+ 
+ #define MAX_FILE_NAME 100
+ #define ENTRIES_PER_BLOCK 50
++/*
++ * Change this entry if the number of addresses increases in future
++ */
++#define MAX_IP_ENTRIES 64
++#define OUTSTR_BUF_SIZE ((INET6_ADDRSTRLEN + 1) * MAX_IP_ENTRIES)
+ 
+ struct kvp_record {
+ 	char key[HV_KVP_EXCHANGE_MAX_KEY_SIZE];
+@@ -1171,6 +1182,18 @@ static int process_ip_string(FILE *f, char *ip_string, int type)
+ 	return 0;
+ }
+ 
++int ip_version_check(const char *input_addr)
++{
++	struct in6_addr addr;
++
++	if (inet_pton(AF_INET, input_addr, &addr))
++		return IPV4;
++	else if (inet_pton(AF_INET6, input_addr, &addr))
++		return IPV6;
++
++	return -EINVAL;
++}
++
+ /*
+  * Only IPv4 subnet strings needs to be converted to plen
+  * For IPv6 the subnet is already privided in plen format
+@@ -1197,14 +1220,75 @@ static int kvp_subnet_to_plen(char *subnet_addr_str)
+ 	return plen;
+ }
+ 
++static int process_dns_gateway_nm(FILE *f, char *ip_string, int type,
++				  int ip_sec)
++{
++	char addr[INET6_ADDRSTRLEN], *output_str;
++	int ip_offset = 0, error = 0, ip_ver;
++	char *param_name;
++
++	if (type == DNS)
++		param_name = "dns";
++	else if (type == GATEWAY)
++		param_name = "gateway";
++	else
++		return -EINVAL;
++
++	output_str = (char *)calloc(OUTSTR_BUF_SIZE, sizeof(char));
++	if (!output_str)
++		return -ENOMEM;
++
++	while (1) {
++		memset(addr, 0, sizeof(addr));
++
++		if (!parse_ip_val_buffer(ip_string, &ip_offset, addr,
++					 (MAX_IP_ADDR_SIZE * 2)))
++			break;
++
++		ip_ver = ip_version_check(addr);
++		if (ip_ver < 0)
++			continue;
++
++		if ((ip_ver == IPV4 && ip_sec == IPV4) ||
++		    (ip_ver == IPV6 && ip_sec == IPV6)) {
++			/*
++			 * do a bound check to avoid out-of bound writes
++			 */
++			if ((OUTSTR_BUF_SIZE - strlen(output_str)) >
++			    (strlen(addr) + 1)) {
++				strncat(output_str, addr,
++					OUTSTR_BUF_SIZE -
++					strlen(output_str) - 1);
++				strncat(output_str, ",",
++					OUTSTR_BUF_SIZE -
++					strlen(output_str) - 1);
++			}
++		} else {
++			continue;
++		}
++	}
++
++	if (strlen(output_str)) {
++		/*
++		 * This is to get rid of that extra comma character
++		 * in the end of the string
++		 */
++		output_str[strlen(output_str) - 1] = '\0';
++		error = fprintf(f, "%s=%s\n", param_name, output_str);
++	}
++
++	free(output_str);
++	return error;
++}
++
+ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
+-				int is_ipv6)
++				int ip_sec)
+ {
+ 	char addr[INET6_ADDRSTRLEN];
+ 	char subnet_addr[INET6_ADDRSTRLEN];
+ 	int error, i = 0;
+ 	int ip_offset = 0, subnet_offset = 0;
+-	int plen;
++	int plen, ip_ver;
+ 
+ 	memset(addr, 0, sizeof(addr));
+ 	memset(subnet_addr, 0, sizeof(subnet_addr));
+@@ -1216,10 +1300,16 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
+ 						       subnet_addr,
+ 						       (MAX_IP_ADDR_SIZE *
+ 							2))) {
+-		if (!is_ipv6)
++		ip_ver = ip_version_check(addr);
++		if (ip_ver < 0)
++			continue;
++
++		if (ip_ver == IPV4 && ip_sec == IPV4)
+ 			plen = kvp_subnet_to_plen((char *)subnet_addr);
+-		else
++		else if (ip_ver == IPV6 && ip_sec == IPV6)
+ 			plen = atoi(subnet_addr);
++		else
++			continue;
+ 
+ 		if (plen < 0)
+ 			return plen;
+@@ -1238,12 +1328,11 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
+ 
+ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
+ {
+-	int error = 0;
++	int error = 0, ip_ver;
+ 	char if_filename[PATH_MAX];
+ 	char nm_filename[PATH_MAX];
+ 	FILE *ifcfg_file, *nmfile;
+ 	char cmd[PATH_MAX];
+-	int is_ipv6 = 0;
+ 	char *mac_addr;
+ 	int str_len;
+ 
+@@ -1421,52 +1510,62 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
+ 	if (error)
+ 		goto setval_error;
+ 
+-	if (new_val->addr_family & ADDR_FAMILY_IPV6) {
+-		error = fprintf(nmfile, "\n[ipv6]\n");
+-		if (error < 0)
+-			goto setval_error;
+-		is_ipv6 = 1;
+-	} else {
+-		error = fprintf(nmfile, "\n[ipv4]\n");
+-		if (error < 0)
+-			goto setval_error;
+-	}
+-
+ 	/*
+-	 * Now we populate the keyfile format
++	 * The keyfile format expects the IPv6 and IPv4 configuration in
++	 * different sections. Therefore we iterate through the list twice,
++	 * once to populate the IPv4 section and the next time for IPv6
+ 	 */
++	ip_ver = IPV4;
++	do {
++		if (ip_ver == IPV4) {
++			error = fprintf(nmfile, "\n[ipv4]\n");
++			if (error < 0)
++				goto setval_error;
++		} else {
++			error = fprintf(nmfile, "\n[ipv6]\n");
++			if (error < 0)
++				goto setval_error;
++		}
+ 
+-	if (new_val->dhcp_enabled) {
+-		error = kvp_write_file(nmfile, "method", "", "auto");
+-		if (error < 0)
+-			goto setval_error;
+-	} else {
+-		error = kvp_write_file(nmfile, "method", "", "manual");
++		/*
++		 * Now we populate the keyfile format
++		 */
++
++		if (new_val->dhcp_enabled) {
++			error = kvp_write_file(nmfile, "method", "", "auto");
++			if (error < 0)
++				goto setval_error;
++		} else {
++			error = kvp_write_file(nmfile, "method", "", "manual");
++			if (error < 0)
++				goto setval_error;
++		}
++
++		/*
++		 * Write the configuration for ipaddress, netmask, gateway and
++		 * name services
++		 */
++		error = process_ip_string_nm(nmfile, (char *)new_val->ip_addr,
++					     (char *)new_val->sub_net,
++					     ip_ver);
+ 		if (error < 0)
+ 			goto setval_error;
+-	}
+ 
+-	/*
+-	 * Write the configuration for ipaddress, netmask, gateway and
+-	 * name services
+-	 */
+-	error = process_ip_string_nm(nmfile, (char *)new_val->ip_addr,
+-				     (char *)new_val->sub_net, is_ipv6);
+-	if (error < 0)
+-		goto setval_error;
+-
+-	/* we do not want ipv4 addresses in ipv6 section and vice versa */
+-	if (is_ipv6 != is_ipv4((char *)new_val->gate_way)) {
+-		error = fprintf(nmfile, "gateway=%s\n", (char *)new_val->gate_way);
++		error = process_dns_gateway_nm(nmfile,
++					       (char *)new_val->gate_way,
++					       GATEWAY, ip_ver);
+ 		if (error < 0)
+ 			goto setval_error;
+-	}
+ 
+-	if (is_ipv6 != is_ipv4((char *)new_val->dns_addr)) {
+-		error = fprintf(nmfile, "dns=%s\n", (char *)new_val->dns_addr);
++		error = process_dns_gateway_nm(nmfile,
++					       (char *)new_val->dns_addr, DNS,
++					       ip_ver);
+ 		if (error < 0)
+ 			goto setval_error;
+-	}
++
++		ip_ver++;
++	} while (ip_ver < IP_TYPE_MAX);
++
+ 	fclose(nmfile);
+ 	fclose(ifcfg_file);
+ 
+-- 
+2.34.1
 
-- Implement a Virtual HID device with LampArray
-
-- Implement LampArray in OpenRGB
-
-- (Optional) Implement a generic LampArray leds subsystem driver that maps to 
-the single zone control and ads the use_leds_uapi sysfs switch to the virtual 
-HID device
-
-- (Optional) Implement vendor specific controls for 
-AutonomousMode/built-in-firmware-effects via custom HID commands
-
-- (Optional) Implement Virtual HID devices for actual HID devices that don't 
-support LampArray in firmware (Open question: How to prevent userspace/OpenRGB 
-from interacting with original HID when the virtual HID device is not in 
-AutonomousMode? How to associate the original and virtual HID device to each 
-other that userspace can easily recognize this relation? Or is it possible to 
-add virtual HID commands on top of a real HID device, making it look exactly 
-like the pure virtual devices for userspace?)
-
-The LampArray API hereby is made with the intention to be used for multi leds 
-devices, like per-key-backlight keyboards, unlike the leds UAPI. And it is 
-coming anyway with new RGB devices soon. So it would not conflict with a "don't 
-introduce unnecessary UAPI interfaces" principle. Are there any plans already of 
-Wrapping LampArray in some kind ioctl/sysfs API? Or just have it used via 
-hidraw? Or was there no discussion about it till now?
-
-Regards,
-
-Werner
-
->
->     - The actual logic interacting with this low level UAPI is implemented by 
-> a userspace driver
->
-> Implementation wise: For the creation of the misc device with the 
-> use_leds_uapi switch a helper function/macro might be useful? Wonder if it 
-> should go into leds.h, led-class-multicolor.h, or a new header file?
->
-> - Out of my head it would look something like this:
->
-> led_classdev_add_optional_misc_control(
->     struct led_classdev *led_cdev,
->     char* name,
->     char* device_type,
->     char* firmware_version_string,
->     char* serial_number,
->     void (*deregister_led)(struct led_classdev *led_cdev),
->     void (*reregister_led)(struct led_classdev *led_cdev))
->
-> Let me know your thoughts and hopefully I can start implementing it soon for 
-> one of our devices.
->
-> Kind regards,
->
-> Werner Sembach
->
