@@ -1,132 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ssh248.corpemail.net (ssh248.corpemail.net [210.51.61.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2113BB35;
-	Wed, 20 Mar 2024 08:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17137747F
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 08:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710924966; cv=none; b=qpxnyAyD/C4aylWnwPZR8fEtcKttWMEDwTunLdqv7UpcjV0myUuYWpPb2hpODmkWEdYrL3OXiZHmyT/wMyJoDWAMg1m89TR0C+dnoQK/5IvhZXKr7kZAcBgR7AfrdAWVe5oX3krz69cJIqh+kHCN0SkgOXT4ETNq0tqlLXdp0Hk=
+	t=1710925075; cv=none; b=P+yuDHDbNNexXSKHYbbMTnae4sklGFEbKtKzIpa1V0flqgsO4pjx6hUm4AAnh9UEJ/oZn2lzO7IUQB/LC6t96tqBcYYIvc2L33xRpqWTBJeJJt/3HhJqELBKfkZelyBk+GSW/G4PO5tFxLeWiodJhxmE+vB4MAgYDnzFStAcyEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710924966; c=relaxed/simple;
-	bh=LGyKYM8XcN8nBnrxBDrb0mYgitWNCQAUDnZ3X2WeWo8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K/kN/j2pNY5PYFjcIYqUTSmVTk9TnB//XlqkIHUvM1moNUk5T0dewB+VWom3VginEdYfb8ITV/Zdx13oihkPQFu+gZT53LCNocPvsfH6ZYy2gGKxi0gckArNZQ+FEQWh4l6JjuQ2lhXZcR5xNzcU9RFxiDBna6UGAHRKogw7SR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LDzu7bX+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LDzu7bX+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D61EBC433F1;
-	Wed, 20 Mar 2024 08:56:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710924966;
-	bh=LGyKYM8XcN8nBnrxBDrb0mYgitWNCQAUDnZ3X2WeWo8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=LDzu7bX+x9PSrTH6Xd7JrdDYEcfYLME/QLFo1J+0xPMv1zNhFevPQCPqnFR9nv8p6
-	 pYlxrN1Ua9lqNZOrbuqcybpYY+DZyMZ2QJM2eny/cWSGT0NCr8ch6Z/yeW8XZ926VK
-	 e/iyuMLZyuy113N3ksFxYvrYulgE/baZWZNXi54QFIERh8b7I/LN4Fho2GZ4n0fsQv
-	 7TI9FByBBJ5jo6k+SRty5qb9gQ6cdYZ3LcJM2wWlT5jps1tzc6uu12swfzlwIm9atN
-	 m54GlPIVXAJEh4iFU0V9uZ4aZee8AUBymlPH44qBB5mKnqAOAg6YT/z9/8fK22sQ0x
-	 PVQ2dDa7BgSiQ==
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: linux-integrity@vger.kernel.org
-Cc: Jarkko Sakkinen <jarkko@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Daniel P . Smith" <dpsmith@apertussolutions.com>,
-	Lino Sanfilippo <l.sanfilippo@kunbus.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Peter Huewe <peterhuewe@gmx.de>,
-	James Bottomley <James.Bottomley@HansenPartnership.com>,
-	Alexander Steffen <Alexander.Steffen@infineon.com>,
-	keyrings@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v2] Documentation: tpm_tis
-Date: Wed, 20 Mar 2024 10:56:01 +0200
-Message-ID: <20240320085601.40450-1-jarkko@kernel.org>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1710925075; c=relaxed/simple;
+	bh=hvv7cHcVQra5jm9gAhsdjQ+/tc7OHDMp6x6QbS699pg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Qdw5fW/5F0Ak4B8fbov2Ez0IFRxtNSaNPDy0+T5FRUG+SaPP0X4D0Su/7MSgE8wD+MdGTF7twFZS6gTA0VUmtCH5B18B3+y8HtMhgnk0pnPKbDSYIKkrHw5d6hOLMl8eHsW0r7/ZvLRWrQC/7oaXRcX0k9M8LIqt25+VxoP0J8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from ssh248.corpemail.net
+        by ssh248.corpemail.net ((D)) with ASMTP (SSL) id RDA00047;
+        Wed, 20 Mar 2024 16:57:47 +0800
+Received: from localhost.localdomain (10.94.17.92) by
+ jtjnmail201610.home.langchao.com (10.100.2.10) with Microsoft SMTP Server id
+ 15.1.2507.35; Wed, 20 Mar 2024 16:57:48 +0800
+From: Bo Liu <liubo03@inspur.com>
+To: <support.opensource@diasemi.com>, <lgirdwood@gmail.com>,
+	<broonie@kernel.org>, <matthias.bgg@gmail.com>,
+	<angelogioacchino.delregno@collabora.com>, <jagan@amarulasolutions.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, Bo Liu <liubo03@inspur.com>
+Subject: [PATCH v1 02/13] regulator: da9211: convert to use maple tree register cache
+Date: Wed, 20 Mar 2024 04:57:29 -0400
+Message-ID: <20240320085740.4604-3-liubo03@inspur.com>
+X-Mailer: git-send-email 2.18.2
+In-Reply-To: <20240320085740.4604-1-liubo03@inspur.com>
+References: <20240320085740.4604-1-liubo03@inspur.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+tUid: 20243201657470351910969c524b14ca9b88b663cdbe8
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-Based recent discussions on LKML, provide preliminary bits of tpm_tis_core
-dependent drivers. Includes only bare essentials but can be extended later
-on case by case. This way some people may even want to read it later on.
+The maple tree register cache is based on a much more modern data structure
+than the rbtree cache and makes optimisation choices which are probably
+more appropriate for modern systems than those made by the rbtree cache.
 
-Cc: Jonathan Corbet <corbet@lwn.net>
-CC: Daniel P. Smith <dpsmith@apertussolutions.com>
-Cc: Lino Sanfilippo <l.sanfilippo@kunbus.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Peter Huewe <peterhuewe@gmx.de>
-Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
-Cc: keyrings@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-integrity@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+Signed-off-by: Bo Liu <liubo03@inspur.com>
 ---
-v2:
-- Fixed errors reported by Randy:
-  https://lore.kernel.org/all/aed28265-d677-491a-a045-24b351854b24@infradead.org/
-- Improved the text a bit to have a better presentation.
----
- Documentation/security/tpm/index.rst   |  1 +
- Documentation/security/tpm/tpm_tis.rst | 30 ++++++++++++++++++++++++++
- 2 files changed, 31 insertions(+)
- create mode 100644 Documentation/security/tpm/tpm_tis.rst
+ drivers/regulator/da9211-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/security/tpm/index.rst b/Documentation/security/tpm/index.rst
-index fc40e9f23c85..f27a17f60a96 100644
---- a/Documentation/security/tpm/index.rst
-+++ b/Documentation/security/tpm/index.rst
-@@ -5,6 +5,7 @@ Trusted Platform Module documentation
- .. toctree::
- 
-    tpm_event_log
-+   tpm_tis
-    tpm_vtpm_proxy
-    xen-tpmfront
-    tpm_ftpm_tee
-diff --git a/Documentation/security/tpm/tpm_tis.rst b/Documentation/security/tpm/tpm_tis.rst
-new file mode 100644
-index 000000000000..b331813b3c45
---- /dev/null
-+++ b/Documentation/security/tpm/tpm_tis.rst
-@@ -0,0 +1,30 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=========================
-+TPM FIFO interface Driver
-+=========================
-+
-+FIFO (First-In-First-Out) is the name of the hardware interface used by the
-+tpm_tis_core dependent drivers. The prefix "tis" comes from the TPM Interface
-+Specification, which is the hardware interface specification for TPM 1.x chips.
-+
-+Communication is based on a 5 KiB buffer shared by the TPM chip through a
-+hardware bus or memory map, depending on the physical wiring. The buffer is
-+further split into five equal-size buffers, which provide equivalent sets of
-+registers for communication between the CPU and TPM. These communication
-+endpoints are called localities in the TCG terminology.
-+
-+When the kernel wants to send commands to the TPM chip, it first reserves
-+locality 0 by setting the requestUse bit in the TPM_ACCESS register. The bit is
-+cleared by the chip when the access is granted. Once it completes its
-+communication, the kernel writes the TPM_ACCESS.activeLocality bit. This
-+informs the chip that the locality has been relinquished.
-+
-+Pending localities are served in order by the chip in descending order, one at
-+a time:
-+
-+- Locality 0 has the lowest priority.
-+- Locality 5 has the highest priority.
-+
-+Further information on the purpose and meaning of the localities can be found
-+in section 3.2 of the TCG PC Client Platform TPM Profile Specification.
+diff --git a/drivers/regulator/da9211-regulator.c b/drivers/regulator/da9211-regulator.c
+index af383ff0fe57..d8b39ea3de0e 100644
+--- a/drivers/regulator/da9211-regulator.c
++++ b/drivers/regulator/da9211-regulator.c
+@@ -68,7 +68,7 @@ static const struct regmap_config da9211_regmap_config = {
+ 	.val_bits = 8,
+ 	.max_register = 5 * 128,
+ 	.volatile_reg = da9211_volatile_reg,
+-	.cache_type = REGCACHE_RBTREE,
++	.cache_type = REGCACHE_MAPLE,
+ 	.ranges = da9211_regmap_range,
+ 	.num_ranges = ARRAY_SIZE(da9211_regmap_range),
+ };
 -- 
-2.44.0
+2.18.2
 
