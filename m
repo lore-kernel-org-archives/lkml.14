@@ -1,54 +1,54 @@
 Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A80F3D54C
-	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 10:19:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250153FB3E
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 10:19:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710929954; cv=none; b=YiDO0PJsVsYX8XN7nh9SUrj2XxH2ywuZffFGkyd9weBEweKn1WuGa+3SA9DnK4MD06b3sRqGfNZqkECBCQ5n/ISvjo2OeB2HyjFB5xmD+AFIts6tKXPTSydxv6XcqQfNfoWAdDaowkyJUjP4/GjgU4G4p2/3APw78+3llA6RSkY=
+	t=1710929957; cv=none; b=HhOPD/Ye2rQo/CmA6nzdHDz3z5NZ7FDiyB5hW4EhaQB9dHffsINiFxgiZ732Gyw4RqKb3U+0jdwSwXo2jMj66+/bUVO9BiGn4b3W7F7WqP5sWCaU+NmOLmfun683FWSbBlx3ozr4Pv6eGKfz8z8FckI0K5PKfYirKfpnOfUxlC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710929954; c=relaxed/simple;
-	bh=s/w9iCv68HNMLj67aGzBK977nbP9lfQGe1BaWia27tk=;
+	s=arc-20240116; t=1710929957; c=relaxed/simple;
+	bh=1EIpz4yJ9MkmGLF66k9fV/vMpELprPghjdX4s9eLzt4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lavvNerqv+F1sG01VegpnvDrntS+jHQ4/IpyrspkfYHV4qKLfy2FBOyUBL4lfWPlVcJ7XtrpGeRIO5FHyChWV+DpWfZI1nTH1mxvXRFUJgYxukWOCG1s3gary8UmI5gumcJJvOvISe9eivUBd0x6aEL1tYhPVZDzNZdCYNQzM+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--glider.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0olECfqL; arc=none smtp.client-ip=209.85.219.202
+	 To:Cc:Content-Type; b=Y1JHlSyFbpP5lNV+IlJL/wsFsdIQBQ+izWzhU6VAci+mMldg0qXZc4/IvA2nl+He/5rgRgDDvH6PcnTxijAttVtgUY4Kgz4+mURlXTvoHcHWfNwFDnzlq33kIR3wYE5jRYZ2aFgyevRxkQjeenE+PauE5Aktdd7YUOrNIldTpMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--glider.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C2pZTFNp; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--glider.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0olECfqL"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dbf618042daso9967141276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 03:19:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C2pZTFNp"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dccc49ef73eso8490341276.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 03:19:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710929952; x=1711534752; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710929955; x=1711534755; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=m0vBJz04bRZVs+p5tf5O60PjHz2OHj3PY0354SOIqxk=;
-        b=0olECfqLcSe/nAe0AZRbn656dVOlwE1xVnZ6LzKAW+PxLyGnFfgZZdMh9bGAYdQ3q3
-         KSD1wSvdH31j0zubem12gZ0C/90Y6PoXJcgiHUWVlDNEoQ3noXhBaANZBml3E5hPZBJk
-         3ISlCh+SZAQs1EIyUH9EY/hKEwk1E49rKAS+xzu7Ui5V+12R9CTrKcZEOJLOt/1xh1w4
-         4W4lcV/TcRTtCHK+NHnNyZTItHpaW7uUjfMrnKtUof1samJl8urE32LyUTU/O2MvymWb
-         LR8G6S+gKAB+2L0Gfu0SCgLQnrJI1g/qBsE6teVj+UTulj+A4sdfyiZg4TPv4Wwt/tyH
-         Nd/w==
+        bh=r71MCuDGNYKDimxiIJKs3mOhEvECUDV+QG0xkV6mxh0=;
+        b=C2pZTFNpMa2RVlBYnp3u2ImzjvWhPs4R5cYh+VwooiVG6PDYZZmeHkjVZh7i3Mg8fU
+         P7TD+bx+iO5onztxEQu0sA2r5AlbyTMcIL+P0NOuUa7FC+SPOAaHWtbTwnvnBFSUaE1r
+         GhVdz+16qDTJbjOt6ZgPsPiUWf+HGSNegcgq+EZf8rc3h2SGwyBuVhlUPRTKZkifsmYY
+         8YPsSAMut38aJGpYbHpYU6vSymO0nCDHRfSFscxiGWizpyyNKUADiIPePw+yfwRw54DH
+         XAVGNy2d4+IhA75bmHUDRaszrH8yfwU6m9jKiUx87+s4WAuP2yxwkfqkTVewpX0YVvW4
+         QKFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710929952; x=1711534752;
+        d=1e100.net; s=20230601; t=1710929955; x=1711534755;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m0vBJz04bRZVs+p5tf5O60PjHz2OHj3PY0354SOIqxk=;
-        b=VvDkq6BWWigZ+884OYKDhawjeatyRI9nTkuHhyJBV2AmUmXbLOP3YzkoygyQxIBBmK
-         vfed0WRGn/5S1IftLjTlodeLQ9q5cQvZDCw8M+4IPNSeIFFfOHRbnh2azQ9nrQG4uayo
-         3tnWUyTGgSA5lFT1543eqlGKAxMpkmLEsOVZzupTRtsNcDbWNw9o4eesNks3rVNG9WrV
-         CPPR7U4pG//QTzQUlMdv7Ze4+DG4YSa48wAyfgSNd2y65wDjNXP9ut9aNaiuq2OjFc7G
-         3ftEnTGglNotuWsUqHhIw2N3Ge2H7teAIb8chp4/B4QGOKD/x/COp2c0WGUGJxVLCbf3
-         fuTw==
-X-Gm-Message-State: AOJu0Yw20+WlcmGxynzVJovBFk7A0x/5Sx6jg0m2hGsvwJbzPA6ZTJ8H
-	bD32RhlIHl10zXlbRgm4tbI4VcQrS/TujjFDvZP+uMPdCrRbi82bqsZZkPqenQA5M0Go/hR8eVu
-	08A==
-X-Google-Smtp-Source: AGHT+IFG8zJJFsZTjI1YIaNEwrks7akz88Yk5exPnSeBisyx550nfOfPmsTtY3RfUy1vhUp7VkINpS74JxE=
+        bh=r71MCuDGNYKDimxiIJKs3mOhEvECUDV+QG0xkV6mxh0=;
+        b=uTlxwIck9gVWuynz+yTko2ukS4uN1Ep1pQ5Qv3GDow04oUCqKhHfvHc4dJ4hqIacld
+         SUc1ap3DkByBbgdKjgvBcrhHa1TuouckZeEu7+p1PtyK20hFRaAc6rDItys02+UzhWLS
+         er4ETrR0Hr6uwwTIQtc/yVwk8YHIzhCHHyWuezlKG63iDx2dKHyfpDlvkGBC06d2Zj5N
+         XmOSK/Kp3tnCGfCso0WUPClZCitD7ZaDc4ZNhln7Ni+8z5w/Kn1eQmyd0Fj+WMXT6Y9J
+         2TeWoID5SgWnsVrKK+LlDhgWuE2/JnugdGydYrQ5WFA+k9ZY0GjYnSVSDQ9WpwtKWimX
+         LcOg==
+X-Gm-Message-State: AOJu0YzDGw+OoOOJaSAlzy92bmMnVwMu+036rOzElKiweTxukBkjoPz2
+	fwTWWcgxdCpwKXmKyEvnCYXMUnnpFWNgNLq2NnqLSX2NV8c1HXwqTBRdajMlc7ibRjgIlQdQ+vJ
+	gaw==
+X-Google-Smtp-Source: AGHT+IGiFjO7C+gTehD6m6WxUP0v54ngFYmvEURPJrqbwSTJrYhYcYDkQLRaGgYDZMxUmBfW4tcHUqyzYLs=
 X-Received: from glider.muc.corp.google.com ([2a00:79e0:9c:201:2234:4e4b:bcf0:406e])
- (user=glider job=sendgmr) by 2002:a05:6902:2484:b0:dd9:1b94:edb5 with SMTP id
- ds4-20020a056902248400b00dd91b94edb5mr625397ybb.10.1710929952333; Wed, 20 Mar
- 2024 03:19:12 -0700 (PDT)
-Date: Wed, 20 Mar 2024 11:18:50 +0100
+ (user=glider job=sendgmr) by 2002:a05:6902:1b85:b0:dc2:2ace:860 with SMTP id
+ ei5-20020a0569021b8500b00dc22ace0860mr915079ybb.2.1710929955165; Wed, 20 Mar
+ 2024 03:19:15 -0700 (PDT)
+Date: Wed, 20 Mar 2024 11:18:51 +0100
 In-Reply-To: <20240320101851.2589698-1-glider@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,81 +58,94 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240320101851.2589698-1-glider@google.com>
 X-Mailer: git-send-email 2.44.0.291.gc1ea87d7ee-goog
-Message-ID: <20240320101851.2589698-2-glider@google.com>
-Subject: [PATCH v2 2/3] instrumented.h: add instrument_memcpy_before, instrument_memcpy_after
+Message-ID: <20240320101851.2589698-3-glider@google.com>
+Subject: [PATCH v2 3/3] x86: call instrumentation hooks from copy_mc.c
 From: Alexander Potapenko <glider@google.com>
 To: glider@google.com, akpm@linux-foundation.org
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
 	kasan-dev@googlegroups.com, tglx@linutronix.de, x86@kernel.org, 
-	Dmitry Vyukov <dvyukov@google.com>, Marco Elver <elver@google.com>, 
-	Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>, 
-	Linus Torvalds <torvalds@linux-foundation.org>
+	Linus Torvalds <torvalds@linux-foundation.org>, Dmitry Vyukov <dvyukov@google.com>, 
+	Marco Elver <elver@google.com>, Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 Content-Type: text/plain; charset="UTF-8"
 
-Bug detection tools based on compiler instrumentation may miss memory
-accesses in custom memcpy implementations (such as copy_mc_to_kernel).
-Provide instrumentation hooks that tell KASAN, KCSAN, and KMSAN about
-such accesses.
+Memory accesses in copy_mc_to_kernel() and copy_mc_to_user() are performed
+by assembly routines and are invisible to KASAN, KCSAN, and KMSAN.
+Add hooks from instrumentation.h to tell the tools these functions have
+memcpy/copy_from_user semantics.
+
+The call to copy_mc_fragile() in copy_mc_fragile_handle_tail() is left
+intact, because the latter is only called from the assembly implementation
+of copy_mc_fragile(), so the memory accesses in it are covered by the
+instrumentation in copy_mc_to_kernel() and copy_mc_to_user().
 
 Link: https://lore.kernel.org/all/3b7dbd88-0861-4638-b2d2-911c97a4cadf@I-love.SAKURA.ne.jp/
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Alexander Potapenko <glider@google.com>
 Cc: Dmitry Vyukov <dvyukov@google.com>
 Cc: Marco Elver <elver@google.com>
 Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
 
 ---
- v2: fix a copypasto in a comment spotted by Linus
+v2:
+ - as requested by Linus Torvalds, move the instrumentation outside the
+   uaccess section
 ---
- include/linux/instrumented.h | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ arch/x86/lib/copy_mc.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/instrumented.h b/include/linux/instrumented.h
-index 1b608e00290aa..711a1f0d1a735 100644
---- a/include/linux/instrumented.h
-+++ b/include/linux/instrumented.h
-@@ -147,6 +147,41 @@ instrument_copy_from_user_after(const void *to, const void __user *from,
- 	kmsan_unpoison_memory(to, n - left);
- }
+diff --git a/arch/x86/lib/copy_mc.c b/arch/x86/lib/copy_mc.c
+index 6e8b7e600def5..97e88e58567bf 100644
+--- a/arch/x86/lib/copy_mc.c
++++ b/arch/x86/lib/copy_mc.c
+@@ -4,6 +4,7 @@
+ #include <linux/jump_label.h>
+ #include <linux/uaccess.h>
+ #include <linux/export.h>
++#include <linux/instrumented.h>
+ #include <linux/string.h>
+ #include <linux/types.h>
  
-+/**
-+ * instrument_memcpy_before - add instrumentation before non-instrumented memcpy
-+ * @to: destination address
-+ * @from: source address
-+ * @n: number of bytes to copy
-+ *
-+ * Instrument memory accesses that happen in custom memcpy implementations. The
-+ * instrumentation should be inserted before the memcpy call.
-+ */
-+static __always_inline void instrument_memcpy_before(void *to, const void *from,
-+						     unsigned long n)
-+{
-+	kasan_check_write(to, n);
-+	kasan_check_read(from, n);
-+	kcsan_check_write(to, n);
-+	kcsan_check_read(from, n);
-+}
+@@ -61,10 +62,20 @@ unsigned long copy_mc_enhanced_fast_string(void *dst, const void *src, unsigned
+  */
+ unsigned long __must_check copy_mc_to_kernel(void *dst, const void *src, unsigned len)
+ {
+-	if (copy_mc_fragile_enabled)
+-		return copy_mc_fragile(dst, src, len);
+-	if (static_cpu_has(X86_FEATURE_ERMS))
+-		return copy_mc_enhanced_fast_string(dst, src, len);
++	unsigned long ret;
 +
-+/**
-+ * instrument_memcpy_after - add instrumentation after non-instrumented memcpy
-+ * @to: destination address
-+ * @from: source address
-+ * @n: number of bytes to copy
-+ * @left: number of bytes not copied (if known)
-+ *
-+ * Instrument memory accesses that happen in custom memcpy implementations. The
-+ * instrumentation should be inserted after the memcpy call.
-+ */
-+static __always_inline void instrument_memcpy_after(void *to, const void *from,
-+						    unsigned long n,
-+						    unsigned long left)
-+{
-+	kmsan_memmove(to, from, n - left);
-+}
-+
- /**
-  * instrument_get_user() - add instrumentation to get_user()-like macros
-  * @to: destination variable, may not be address-taken
++	if (copy_mc_fragile_enabled) {
++		instrument_memcpy_before(dst, src, len);
++		ret = copy_mc_fragile(dst, src, len);
++		instrument_memcpy_after(dst, src, len, ret);
++		return ret;
++	}
++	if (static_cpu_has(X86_FEATURE_ERMS)) {
++		instrument_memcpy_before(dst, src, len);
++		ret = copy_mc_enhanced_fast_string(dst, src, len);
++		instrument_memcpy_after(dst, src, len, ret);
++		return ret;
++	}
+ 	memcpy(dst, src, len);
+ 	return 0;
+ }
+@@ -75,6 +86,7 @@ unsigned long __must_check copy_mc_to_user(void __user *dst, const void *src, un
+ 	unsigned long ret;
+ 
+ 	if (copy_mc_fragile_enabled) {
++		instrument_copy_to_user(dst, src, len);
+ 		__uaccess_begin();
+ 		ret = copy_mc_fragile((__force void *)dst, src, len);
+ 		__uaccess_end();
+@@ -82,6 +94,7 @@ unsigned long __must_check copy_mc_to_user(void __user *dst, const void *src, un
+ 	}
+ 
+ 	if (static_cpu_has(X86_FEATURE_ERMS)) {
++		instrument_copy_to_user(dst, src, len);
+ 		__uaccess_begin();
+ 		ret = copy_mc_enhanced_fast_string((__force void *)dst, src, len);
+ 		__uaccess_end();
 -- 
 2.44.0.291.gc1ea87d7ee-goog
 
