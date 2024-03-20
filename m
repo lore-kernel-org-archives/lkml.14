@@ -1,43 +1,43 @@
 Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB883BBE3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFA73A1AC;
 	Wed, 20 Mar 2024 02:42:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710902560; cv=none; b=MxMv5olbdajRIt2CuG4Bb5zWTB9ks85ZvuRSMTC4X0p+3RPwY/dn9+iTLvlwWWhaL2Rbfvy6dEBc83uXjnMGNps/KAFFQc+6QvZN7YFXuzk8fcxdIqDWK8nybkQarhUTita+1n1wBrRu+cl3V9eujvAODPMi1mYCTUEN0WK669w=
+	t=1710902560; cv=none; b=ukJ/2wI25cY1XefWwfbMoL+5UGEb27gQlIc6QTqeYoXjcs2XCZf9JyTB7Xj1woNdI5Qjw7o1/dz7DG1Az/goAKezHKv+ecSiYzWOikdeo1KX+9B5VKbpTsvtG9LPXxykb9v2NDoRuI4Yyy/65BRO6IQ635Zs0T5YTJJ6gdZadI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710902560; c=relaxed/simple;
-	bh=CZ5ILMbRx8DWoO1IAhjeqxa7klCavhOGH8bBiBe8Pr8=;
+	bh=MrK8nKtfSj3ZZ7tjHtVBisYsTWhV0zuX5smDu4fmEsY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EcUzqnxG+ASV1uRCyIrSK2L79GXz8QBg5gyoWgHGRpshwKW9IyKtKfewtU+vuZM+E+PLkcS5V89im9ubZLvlT+7Vnw4xi0xop+wpMqSXVFkPNIfcTz1egQLDszjWbzFD7aaO8fPj7mK+GJ6OiLffTu0H1wgOxCaQ6zYGwWDMRkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=eKnUODcV; arc=none smtp.client-ip=60.244.123.138
+	 MIME-Version:Content-Type; b=HmCQ2JEWyMTFnMB8HetJO1Sna7t0vkdLcnhJFUu0XYZ65pocfL6NT6Tq65whotlgmFrhbxm7DbxC9mgYb68Wq05upuHyy9JX7nbyQf+tsPBPFKYqfnSFyMmO1VdFHKSHM8RnTi+muc/zoUzPly+KaE1zcBqsoDWglI5bPAQkSbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=YVogd8Fg; arc=none smtp.client-ip=60.244.123.138
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="eKnUODcV"
-X-UUID: 7c5b436ee66311eeb8927bc1f75efef4-20240320
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YVogd8Fg"
+X-UUID: 7c98f89ee66311eeb8927bc1f75efef4-20240320
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=+Y7pDLy2z70oqV69Qv4vjpLNsRfJ8vJYpMU0Qdno7FQ=;
-	b=eKnUODcVsoR3TpfC3IP11bfThoG9xpiTOvAryUWJGfSBsL3zmfwTduB7kYEMourqhFI+H/YQ5/kn2QaaLTDVe4WVgO2MxH/dTIJ2/STyKLmN6x8jPKs5yceYTITHYFwl4YQ3QHQVI6/hHhzb48xxb/ER8NyEG7EdGWFQ5jc7/uQ=;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=DL3blgHQSTtsfXvi71JKhOEMa14NqKxz9dXT47Vbyt0=;
+	b=YVogd8FgQ4/BwNWju2NWYgKlwlh0lUNkJTh4ofpxWfPdRhZal583h0OOk+GVXrAyyCkcXCsHYCbyUdUa21+E9uAkq310g5Yje1uj2fL+XzrDRJlBTGlqmae6lyJaqXP9+Pfp8cHzSB9RMQgdNGPNDkgWjYj+w2YWDG8OqzR4cQQ=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:f76d76c1-a820-4bdd-97e1-257da3b2e5bb,IP:0,U
+X-CID-O-INFO: VERSION:1.1.37,REQID:047097bd-088d-45de-a619-c44bc2bc9f26,IP:0,U
 	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
 	:release,TS:-5
-X-CID-META: VersionHash:6f543d0,CLOUDID:894e1800-c26b-4159-a099-3b9d0558e447,B
+X-CID-META: VersionHash:6f543d0,CLOUDID:8c4e1800-c26b-4159-a099-3b9d0558e447,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
 	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
 	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 7c5b436ee66311eeb8927bc1f75efef4-20240320
-Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw01.mediatek.com
+X-UUID: 7c98f89ee66311eeb8927bc1f75efef4-20240320
+Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw01.mediatek.com
 	(envelope-from <shawn.sung@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 2076849067; Wed, 20 Mar 2024 10:42:25 +0800
+	with ESMTP id 1458643114; Wed, 20 Mar 2024 10:42:26 +0800
 Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
  15.2.1118.26; Wed, 20 Mar 2024 10:42:24 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
@@ -54,9 +54,9 @@ CC: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-media@vger.kernel.org>,
 	<linaro-mm-sig@lists.linaro.org>, Hsiao Chien Sung
 	<shawn.sung@mediatek.corp-partner.google.com>
-Subject: [PATCH v3 04/14] drm/mediatek: Rename "mtk_drm_gem" to "mtk_gem"
-Date: Wed, 20 Mar 2024 10:42:12 +0800
-Message-ID: <20240320024222.14234-5-shawn.sung@mediatek.com>
+Subject: [PATCH v3 01/14] drm/mediatek: Rename "mtk_drm_crtc" to "mtk_crtc"
+Date: Wed, 20 Mar 2024 10:42:09 +0800
+Message-ID: <20240320024222.14234-2-shawn.sung@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20240320024222.14234-1-shawn.sung@mediatek.com>
 References: <20240320024222.14234-1-shawn.sung@mediatek.com>
@@ -67,292 +67,720 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--9.145300-8.000000
+X-TMASE-MatchedRID: RU9rxMEUAW64pD9RIlWSGjl/LoO+pjoA1cuIRwt/4Mg+gR+s21UkWHbd
+	ZY3kvmGS2NayXdUm5pA08pEC5ylFugEzlKcqjzGcDB+ErBr0bAPpJe7BSAYfSKmHdZcXDuA+vFf
+	PytWHA2nT01A2vEikVn/RPVYI5XEWxz6opuAAUJIxKOWR6zQpr2KaLwu81+avnQqircTOm4c1kG
+	04xhtJrdo7Z/B21w3fEjn365FSniTSuXLpNqOJSULEoH0ynuZVWjWsWQUWzVrU5PPxhayDlLo8P
+	QV15rjgImtQNDYxn2q2JFdhGpav65cLewwAa76fAoNa2r+Edw24vBuE2X0HlU8vg1FXaj1oS8FR
+	hpoGD36Ehf3X/HcpFbDa4CBemFDqmOB2bikpqTCQOktEo73GFD7LjRDJhZilGiOJBwDiZ/l5bBi
+	V7e/VjNgaY+lpi94mnNsLn7daNeDcx97ZZVZcMrrbxxduc6FPOkDbNlgmO/Xz2m/olXhpzY/r0a
+	3KJIPlmQhRhGb/uyWAMuqetGVetnyef22ep6XYsjvNV98mpPMMk9gaK0YRIWkweh7PCZQuAzv/x
+	M7D9KHD+SQeJO9FS7cdcq3JpoaaftwZ3X11IV0=
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--9.145300-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP:
+	B5F88439C8E883455640D6B9559D61994FF9F497AC52A0B7E08693B8F26C78C62000:8
 X-MTK: N
 
 From: Hsiao Chien Sung <shawn.sung@mediatek.corp-partner.google.com>
 
-Rename all "mtk_drm_gem" to "mtk_gem":
-- To align the naming rule
-- To reduce the code size
+Rename all "mtk_drm_crtc" to "mtk_crtc" due to the following benefits:
+- Lower the matches when searching the native drm_crtc* codes
+- Reduce the code size
 
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Reviewed-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.corp-partner.google.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c   |  8 +--
- drivers/gpu/drm/mediatek/mtk_drm_gem.c   | 63 ++++++++++++------------
- drivers/gpu/drm/mediatek/mtk_drm_gem.h   | 23 +++++----
- drivers/gpu/drm/mediatek/mtk_drm_plane.c |  2 +-
- 4 files changed, 47 insertions(+), 49 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c  | 189 +++++++++++------------
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.h  |  28 ++--
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c   |  18 +--
+ drivers/gpu/drm/mediatek/mtk_drm_drv.h   |   2 +-
+ drivers/gpu/drm/mediatek/mtk_drm_plane.c |  10 +-
+ drivers/gpu/drm/mediatek/mtk_dsi.c       |   2 +-
+ 6 files changed, 119 insertions(+), 130 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index c46773569b3c9..81e8aa65abd6d 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -576,8 +576,8 @@ DEFINE_DRM_GEM_FOPS(mtk_drm_fops);
-  * We need to override this because the device used to import the memory is
-  * not dev->dev, as drm_gem_prime_import() expects.
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+index a04499c4f9ca2..8a4b68898c601 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+@@ -26,7 +26,7 @@
+ #include "mtk_drm_plane.h"
+
+ /*
+- * struct mtk_drm_crtc - MediaTek specific crtc structure.
++ * struct mtk_crtc - MediaTek specific crtc structure.
+  * @base: crtc object.
+  * @enabled: records whether crtc_enable succeeded
+  * @planes: array of 4 drm_plane structures, one for each overlay plane
+@@ -38,7 +38,7 @@
+  *
+  * TODO: Needs update: this header is missing a bunch of member descriptions.
   */
--static struct drm_gem_object *mtk_drm_gem_prime_import(struct drm_device *dev,
--						       struct dma_buf *dma_buf)
-+static struct drm_gem_object *mtk_gem_prime_import(struct drm_device *dev,
-+						   struct dma_buf *dma_buf)
- {
- 	struct mtk_drm_private *private = dev->dev_private;
+-struct mtk_drm_crtc {
++struct mtk_crtc {
+ 	struct drm_crtc			base;
+ 	bool				enabled;
 
-@@ -587,9 +587,9 @@ static struct drm_gem_object *mtk_drm_gem_prime_import(struct drm_device *dev,
- static const struct drm_driver mtk_drm_driver = {
- 	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_ATOMIC,
-
--	.dumb_create = mtk_drm_gem_dumb_create,
-+	.dumb_create = mtk_gem_dumb_create,
-
--	.gem_prime_import = mtk_drm_gem_prime_import,
-+	.gem_prime_import = mtk_gem_prime_import,
- 	.gem_prime_import_sg_table = mtk_gem_prime_import_sg_table,
- 	.fops = &mtk_drm_fops,
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_gem.c b/drivers/gpu/drm/mediatek/mtk_drm_gem.c
-index 4f2e3feabc0f8..445fd8a8b8988 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_gem.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_gem.c
-@@ -14,26 +14,26 @@
- #include "mtk_drm_drv.h"
- #include "mtk_drm_gem.h"
-
--static int mtk_drm_gem_object_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma);
-+static int mtk_gem_object_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma);
-
- static const struct vm_operations_struct vm_ops = {
- 	.open = drm_gem_vm_open,
- 	.close = drm_gem_vm_close,
+@@ -80,9 +80,9 @@ struct mtk_crtc_state {
+ 	unsigned int			pending_vrefresh;
  };
 
--static const struct drm_gem_object_funcs mtk_drm_gem_object_funcs = {
--	.free = mtk_drm_gem_free_object,
-+static const struct drm_gem_object_funcs mtk_gem_object_funcs = {
-+	.free = mtk_gem_free_object,
- 	.get_sg_table = mtk_gem_prime_get_sg_table,
--	.vmap = mtk_drm_gem_prime_vmap,
--	.vunmap = mtk_drm_gem_prime_vunmap,
--	.mmap = mtk_drm_gem_object_mmap,
-+	.vmap = mtk_gem_prime_vmap,
-+	.vunmap = mtk_gem_prime_vunmap,
-+	.mmap = mtk_gem_object_mmap,
- 	.vm_ops = &vm_ops,
- };
-
--static struct mtk_drm_gem_obj *mtk_drm_gem_init(struct drm_device *dev,
--						unsigned long size)
-+static struct mtk_gem_obj *mtk_gem_init(struct drm_device *dev,
-+					unsigned long size)
+-static inline struct mtk_drm_crtc *to_mtk_crtc(struct drm_crtc *c)
++static inline struct mtk_crtc *to_mtk_crtc(struct drm_crtc *c)
  {
--	struct mtk_drm_gem_obj *mtk_gem_obj;
-+	struct mtk_gem_obj *mtk_gem_obj;
- 	int ret;
-
- 	size = round_up(size, PAGE_SIZE);
-@@ -42,7 +42,7 @@ static struct mtk_drm_gem_obj *mtk_drm_gem_init(struct drm_device *dev,
- 	if (!mtk_gem_obj)
- 		return ERR_PTR(-ENOMEM);
-
--	mtk_gem_obj->base.funcs = &mtk_drm_gem_object_funcs;
-+	mtk_gem_obj->base.funcs = &mtk_gem_object_funcs;
-
- 	ret = drm_gem_object_init(dev, &mtk_gem_obj->base, size);
- 	if (ret < 0) {
-@@ -54,15 +54,15 @@ static struct mtk_drm_gem_obj *mtk_drm_gem_init(struct drm_device *dev,
- 	return mtk_gem_obj;
+-	return container_of(c, struct mtk_drm_crtc, base);
++	return container_of(c, struct mtk_crtc, base);
  }
 
--struct mtk_drm_gem_obj *mtk_drm_gem_create(struct drm_device *dev,
--					   size_t size, bool alloc_kmap)
-+struct mtk_gem_obj *mtk_gem_create(struct drm_device *dev,
-+				   size_t size, bool alloc_kmap)
- {
- 	struct mtk_drm_private *priv = dev->dev_private;
--	struct mtk_drm_gem_obj *mtk_gem;
-+	struct mtk_gem_obj *mtk_gem;
- 	struct drm_gem_object *obj;
- 	int ret;
-
--	mtk_gem = mtk_drm_gem_init(dev, size);
-+	mtk_gem = mtk_gem_init(dev, size);
- 	if (IS_ERR(mtk_gem))
- 		return ERR_CAST(mtk_gem);
-
-@@ -97,9 +97,9 @@ struct mtk_drm_gem_obj *mtk_drm_gem_create(struct drm_device *dev,
- 	return ERR_PTR(ret);
+ static inline struct mtk_crtc_state *to_mtk_crtc_state(struct drm_crtc_state *s)
+@@ -90,7 +90,7 @@ static inline struct mtk_crtc_state *to_mtk_crtc_state(struct drm_crtc_state *s)
+ 	return container_of(s, struct mtk_crtc_state, base);
  }
 
--void mtk_drm_gem_free_object(struct drm_gem_object *obj)
-+void mtk_gem_free_object(struct drm_gem_object *obj)
+-static void mtk_drm_crtc_finish_page_flip(struct mtk_drm_crtc *mtk_crtc)
++static void mtk_crtc_finish_page_flip(struct mtk_crtc *mtk_crtc)
  {
--	struct mtk_drm_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
-+	struct mtk_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
- 	struct mtk_drm_private *priv = obj->dev->dev_private;
-
- 	if (mtk_gem->sg)
-@@ -114,10 +114,10 @@ void mtk_drm_gem_free_object(struct drm_gem_object *obj)
- 	kfree(mtk_gem);
+ 	struct drm_crtc *crtc = &mtk_crtc->base;
+ 	unsigned long flags;
+@@ -104,11 +104,11 @@ static void mtk_drm_crtc_finish_page_flip(struct mtk_drm_crtc *mtk_crtc)
+ 	}
  }
 
--int mtk_drm_gem_dumb_create(struct drm_file *file_priv, struct drm_device *dev,
--			    struct drm_mode_create_dumb *args)
-+int mtk_gem_dumb_create(struct drm_file *file_priv, struct drm_device *dev,
-+			struct drm_mode_create_dumb *args)
+-static void mtk_drm_finish_page_flip(struct mtk_drm_crtc *mtk_crtc)
++static void mtk_drm_finish_page_flip(struct mtk_crtc *mtk_crtc)
  {
--	struct mtk_drm_gem_obj *mtk_gem;
-+	struct mtk_gem_obj *mtk_gem;
+ 	drm_crtc_handle_vblank(&mtk_crtc->base);
+ 	if (!mtk_crtc->config_updating && mtk_crtc->pending_needs_vblank) {
+-		mtk_drm_crtc_finish_page_flip(mtk_crtc);
++		mtk_crtc_finish_page_flip(mtk_crtc);
+ 		mtk_crtc->pending_needs_vblank = false;
+ 	}
+ }
+@@ -151,9 +151,9 @@ static void mtk_drm_cmdq_pkt_destroy(struct cmdq_pkt *pkt)
+ }
+ #endif
+
+-static void mtk_drm_crtc_destroy(struct drm_crtc *crtc)
++static void mtk_crtc_destroy(struct drm_crtc *crtc)
+ {
+-	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
++	struct mtk_crtc *mtk_crtc = to_mtk_crtc(crtc);
+ 	int i;
+
+ 	mtk_mutex_put(mtk_crtc->mutex);
+@@ -176,7 +176,7 @@ static void mtk_drm_crtc_destroy(struct drm_crtc *crtc)
+ 	drm_crtc_cleanup(crtc);
+ }
+
+-static void mtk_drm_crtc_reset(struct drm_crtc *crtc)
++static void mtk_crtc_reset(struct drm_crtc *crtc)
+ {
+ 	struct mtk_crtc_state *state;
+
+@@ -191,7 +191,7 @@ static void mtk_drm_crtc_reset(struct drm_crtc *crtc)
+ 		__drm_atomic_helper_crtc_reset(crtc, &state->base);
+ }
+
+-static struct drm_crtc_state *mtk_drm_crtc_duplicate_state(struct drm_crtc *crtc)
++static struct drm_crtc_state *mtk_crtc_duplicate_state(struct drm_crtc *crtc)
+ {
+ 	struct mtk_crtc_state *state;
+
+@@ -208,18 +208,17 @@ static struct drm_crtc_state *mtk_drm_crtc_duplicate_state(struct drm_crtc *crtc
+ 	return &state->base;
+ }
+
+-static void mtk_drm_crtc_destroy_state(struct drm_crtc *crtc,
+-				       struct drm_crtc_state *state)
++static void mtk_crtc_destroy_state(struct drm_crtc *crtc,
++				   struct drm_crtc_state *state)
+ {
+ 	__drm_atomic_helper_crtc_destroy_state(state);
+ 	kfree(to_mtk_crtc_state(state));
+ }
+
+ static enum drm_mode_status
+-mtk_drm_crtc_mode_valid(struct drm_crtc *crtc,
+-			const struct drm_display_mode *mode)
++mtk_crtc_mode_valid(struct drm_crtc *crtc, const struct drm_display_mode *mode)
+ {
+-	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
++	struct mtk_crtc *mtk_crtc = to_mtk_crtc(crtc);
+ 	enum drm_mode_status status = MODE_OK;
+ 	int i;
+
+@@ -231,15 +230,15 @@ mtk_drm_crtc_mode_valid(struct drm_crtc *crtc,
+ 	return status;
+ }
+
+-static bool mtk_drm_crtc_mode_fixup(struct drm_crtc *crtc,
+-				    const struct drm_display_mode *mode,
+-				    struct drm_display_mode *adjusted_mode)
++static bool mtk_crtc_mode_fixup(struct drm_crtc *crtc,
++				const struct drm_display_mode *mode,
++				struct drm_display_mode *adjusted_mode)
+ {
+ 	/* Nothing to do here, but this callback is mandatory. */
+ 	return true;
+ }
+
+-static void mtk_drm_crtc_mode_set_nofb(struct drm_crtc *crtc)
++static void mtk_crtc_mode_set_nofb(struct drm_crtc *crtc)
+ {
+ 	struct mtk_crtc_state *state = to_mtk_crtc_state(crtc->state);
+
+@@ -250,7 +249,7 @@ static void mtk_drm_crtc_mode_set_nofb(struct drm_crtc *crtc)
+ 	state->pending_config = true;
+ }
+
+-static int mtk_crtc_ddp_clk_enable(struct mtk_drm_crtc *mtk_crtc)
++static int mtk_crtc_ddp_clk_enable(struct mtk_crtc *mtk_crtc)
+ {
  	int ret;
-
- 	args->pitch = DIV_ROUND_UP(args->width * args->bpp, 8);
-@@ -130,7 +130,7 @@ int mtk_drm_gem_dumb_create(struct drm_file *file_priv, struct drm_device *dev,
- 	args->size = args->pitch;
- 	args->size *= args->height;
-
--	mtk_gem = mtk_drm_gem_create(dev, args->size, false);
-+	mtk_gem = mtk_gem_create(dev, args->size, false);
- 	if (IS_ERR(mtk_gem))
- 		return PTR_ERR(mtk_gem);
-
-@@ -148,16 +148,16 @@ int mtk_drm_gem_dumb_create(struct drm_file *file_priv, struct drm_device *dev,
- 	return 0;
-
- err_handle_create:
--	mtk_drm_gem_free_object(&mtk_gem->base);
-+	mtk_gem_free_object(&mtk_gem->base);
+ 	int i;
+@@ -270,7 +269,7 @@ static int mtk_crtc_ddp_clk_enable(struct mtk_drm_crtc *mtk_crtc)
  	return ret;
  }
 
--static int mtk_drm_gem_object_mmap(struct drm_gem_object *obj,
--				   struct vm_area_struct *vma)
-+static int mtk_gem_object_mmap(struct drm_gem_object *obj,
-+			       struct vm_area_struct *vma)
-
+-static void mtk_crtc_ddp_clk_disable(struct mtk_drm_crtc *mtk_crtc)
++static void mtk_crtc_ddp_clk_disable(struct mtk_crtc *mtk_crtc)
  {
- 	int ret;
--	struct mtk_drm_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
-+	struct mtk_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
- 	struct mtk_drm_private *priv = obj->dev->dev_private;
+ 	int i;
 
- 	/*
-@@ -188,7 +188,7 @@ static int mtk_drm_gem_object_mmap(struct drm_gem_object *obj,
-  */
- struct sg_table *mtk_gem_prime_get_sg_table(struct drm_gem_object *obj)
+@@ -283,7 +282,7 @@ struct mtk_ddp_comp *mtk_drm_ddp_comp_for_plane(struct drm_crtc *crtc,
+ 						struct drm_plane *plane,
+ 						unsigned int *local_layer)
  {
--	struct mtk_drm_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
-+	struct mtk_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
- 	struct mtk_drm_private *priv = obj->dev->dev_private;
- 	struct sg_table *sgt;
- 	int ret;
-@@ -212,7 +212,7 @@ struct sg_table *mtk_gem_prime_get_sg_table(struct drm_gem_object *obj)
- struct drm_gem_object *mtk_gem_prime_import_sg_table(struct drm_device *dev,
- 			struct dma_buf_attachment *attach, struct sg_table *sg)
+-	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
++	struct mtk_crtc *mtk_crtc = to_mtk_crtc(crtc);
+ 	struct mtk_ddp_comp *comp;
+ 	int i, count = 0;
+ 	unsigned int local_index = plane - mtk_crtc->planes;
+@@ -306,7 +305,7 @@ static void ddp_cmdq_cb(struct mbox_client *cl, void *mssg)
  {
--	struct mtk_drm_gem_obj *mtk_gem;
-+	struct mtk_gem_obj *mtk_gem;
+ 	struct cmdq_cb_data *data = mssg;
+ 	struct cmdq_client *cmdq_cl = container_of(cl, struct cmdq_client, client);
+-	struct mtk_drm_crtc *mtk_crtc = container_of(cmdq_cl, struct mtk_drm_crtc, cmdq_client);
++	struct mtk_crtc *mtk_crtc = container_of(cmdq_cl, struct mtk_crtc, cmdq_client);
+ 	struct mtk_crtc_state *state;
+ 	unsigned int i;
 
- 	/* check if the entries in the sg_table are contiguous */
- 	if (drm_prime_get_contiguous_size(sg) < attach->dmabuf->size) {
-@@ -220,7 +220,7 @@ struct drm_gem_object *mtk_gem_prime_import_sg_table(struct drm_device *dev,
- 		return ERR_PTR(-EINVAL);
- 	}
+@@ -346,7 +345,7 @@ static void ddp_cmdq_cb(struct mbox_client *cl, void *mssg)
+ }
+ #endif
 
--	mtk_gem = mtk_drm_gem_init(dev, attach->dmabuf->size);
-+	mtk_gem = mtk_gem_init(dev, attach->dmabuf->size);
- 	if (IS_ERR(mtk_gem))
- 		return ERR_CAST(mtk_gem);
-
-@@ -230,9 +230,9 @@ struct drm_gem_object *mtk_gem_prime_import_sg_table(struct drm_device *dev,
- 	return &mtk_gem->base;
+-static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
++static int mtk_crtc_ddp_hw_init(struct mtk_crtc *mtk_crtc)
+ {
+ 	struct drm_crtc *crtc = &mtk_crtc->base;
+ 	struct drm_connector *connector;
+@@ -446,7 +445,7 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+ 	return ret;
  }
 
--int mtk_drm_gem_prime_vmap(struct drm_gem_object *obj, struct iosys_map *map)
-+int mtk_gem_prime_vmap(struct drm_gem_object *obj, struct iosys_map *map)
+-static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
++static void mtk_crtc_ddp_hw_fini(struct mtk_crtc *mtk_crtc)
  {
--	struct mtk_drm_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
-+	struct mtk_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
- 	struct sg_table *sgt = NULL;
- 	unsigned int npages;
+ 	struct drm_device *drm = mtk_crtc->base.dev;
+ 	struct drm_crtc *crtc = &mtk_crtc->base;
+@@ -491,7 +490,7 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
+ static void mtk_crtc_ddp_config(struct drm_crtc *crtc,
+ 				struct cmdq_pkt *cmdq_handle)
+ {
+-	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
++	struct mtk_crtc *mtk_crtc = to_mtk_crtc(crtc);
+ 	struct mtk_crtc_state *state = to_mtk_crtc_state(mtk_crtc->base.state);
+ 	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
+ 	unsigned int i;
+@@ -563,8 +562,7 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc,
+ 	}
+ }
 
-@@ -270,10 +270,9 @@ int mtk_drm_gem_prime_vmap(struct drm_gem_object *obj, struct iosys_map *map)
+-static void mtk_drm_crtc_update_config(struct mtk_drm_crtc *mtk_crtc,
+-				       bool needs_vblank)
++static void mtk_crtc_update_config(struct mtk_crtc *mtk_crtc, bool needs_vblank)
+ {
+ #if IS_REACHABLE(CONFIG_MTK_CMDQ)
+ 	struct cmdq_pkt *cmdq_handle = &mtk_crtc->cmdq_handle;
+@@ -636,7 +634,7 @@ static void mtk_drm_crtc_update_config(struct mtk_drm_crtc *mtk_crtc,
+ static void mtk_crtc_ddp_irq(void *data)
+ {
+ 	struct drm_crtc *crtc = data;
+-	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
++	struct mtk_crtc *mtk_crtc = to_mtk_crtc(crtc);
+ 	struct mtk_drm_private *priv = crtc->dev->dev_private;
+
+ #if IS_REACHABLE(CONFIG_MTK_CMDQ)
+@@ -652,9 +650,9 @@ static void mtk_crtc_ddp_irq(void *data)
+ 	mtk_drm_finish_page_flip(mtk_crtc);
+ }
+
+-static int mtk_drm_crtc_enable_vblank(struct drm_crtc *crtc)
++static int mtk_crtc_enable_vblank(struct drm_crtc *crtc)
+ {
+-	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
++	struct mtk_crtc *mtk_crtc = to_mtk_crtc(crtc);
+ 	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
+
+ 	mtk_ddp_comp_enable_vblank(comp);
+@@ -662,22 +660,22 @@ static int mtk_drm_crtc_enable_vblank(struct drm_crtc *crtc)
  	return 0;
  }
 
--void mtk_drm_gem_prime_vunmap(struct drm_gem_object *obj,
--			      struct iosys_map *map)
-+void mtk_gem_prime_vunmap(struct drm_gem_object *obj, struct iosys_map *map)
+-static void mtk_drm_crtc_disable_vblank(struct drm_crtc *crtc)
++static void mtk_crtc_disable_vblank(struct drm_crtc *crtc)
  {
--	struct mtk_drm_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
-+	struct mtk_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
- 	void *vaddr = map->vaddr;
+-	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
++	struct mtk_crtc *mtk_crtc = to_mtk_crtc(crtc);
+ 	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
 
- 	if (!mtk_gem->pages)
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_gem.h b/drivers/gpu/drm/mediatek/mtk_drm_gem.h
-index 78f23b07a02e2..66e5f154f6980 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_gem.h
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_gem.h
+ 	mtk_ddp_comp_disable_vblank(comp);
+ }
+
+-static void mtk_drm_crtc_update_output(struct drm_crtc *crtc,
+-				       struct drm_atomic_state *state)
++static void mtk_crtc_update_output(struct drm_crtc *crtc,
++				   struct drm_atomic_state *state)
+ {
+ 	int crtc_index = drm_crtc_index(crtc);
+ 	int i;
+ 	struct device *dev;
+ 	struct drm_crtc_state *crtc_state = state->crtcs[crtc_index].new_state;
+-	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
++	struct mtk_crtc *mtk_crtc = to_mtk_crtc(crtc);
+ 	struct mtk_drm_private *priv;
+ 	unsigned int encoder_mask = crtc_state->encoder_mask;
+
+@@ -707,8 +705,8 @@ static void mtk_drm_crtc_update_output(struct drm_crtc *crtc,
+ 	}
+ }
+
+-int mtk_drm_crtc_plane_check(struct drm_crtc *crtc, struct drm_plane *plane,
+-			     struct mtk_plane_state *state)
++int mtk_crtc_plane_check(struct drm_crtc *crtc, struct drm_plane *plane,
++			 struct mtk_plane_state *state)
+ {
+ 	unsigned int local_layer;
+ 	struct mtk_ddp_comp *comp;
+@@ -719,21 +717,21 @@ int mtk_drm_crtc_plane_check(struct drm_crtc *crtc, struct drm_plane *plane,
+ 	return 0;
+ }
+
+-void mtk_drm_crtc_async_update(struct drm_crtc *crtc, struct drm_plane *plane,
+-			       struct drm_atomic_state *state)
++void mtk_crtc_async_update(struct drm_crtc *crtc, struct drm_plane *plane,
++			   struct drm_atomic_state *state)
+ {
+-	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
++	struct mtk_crtc *mtk_crtc = to_mtk_crtc(crtc);
+
+ 	if (!mtk_crtc->enabled)
+ 		return;
+
+-	mtk_drm_crtc_update_config(mtk_crtc, false);
++	mtk_crtc_update_config(mtk_crtc, false);
+ }
+
+-static void mtk_drm_crtc_atomic_enable(struct drm_crtc *crtc,
+-				       struct drm_atomic_state *state)
++static void mtk_crtc_atomic_enable(struct drm_crtc *crtc,
++				   struct drm_atomic_state *state)
+ {
+-	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
++	struct mtk_crtc *mtk_crtc = to_mtk_crtc(crtc);
+ 	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
+ 	int ret;
+
+@@ -745,7 +743,7 @@ static void mtk_drm_crtc_atomic_enable(struct drm_crtc *crtc,
+ 		return;
+ 	}
+
+-	mtk_drm_crtc_update_output(crtc, state);
++	mtk_crtc_update_output(crtc, state);
+
+ 	ret = mtk_crtc_ddp_hw_init(mtk_crtc);
+ 	if (ret) {
+@@ -757,15 +755,12 @@ static void mtk_drm_crtc_atomic_enable(struct drm_crtc *crtc,
+ 	mtk_crtc->enabled = true;
+ }
+
+-static void mtk_drm_crtc_atomic_disable(struct drm_crtc *crtc,
+-					struct drm_atomic_state *state)
++static void mtk_crtc_atomic_disable(struct drm_crtc *crtc,
++				    struct drm_atomic_state *state)
+ {
+-	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
++	struct mtk_crtc *mtk_crtc = to_mtk_crtc(crtc);
+ 	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
+ 	int i;
+-
+-	DRM_DEBUG_DRIVER("%s %d\n", __func__, crtc->base.id);
+-	if (!mtk_crtc->enabled)
+ 		return;
+
+ 	/* Set all pending plane state to disabled */
+@@ -779,7 +774,7 @@ static void mtk_drm_crtc_atomic_disable(struct drm_crtc *crtc,
+ 	}
+ 	mtk_crtc->pending_planes = true;
+
+-	mtk_drm_crtc_update_config(mtk_crtc, false);
++	mtk_crtc_update_config(mtk_crtc, false);
+ #if IS_REACHABLE(CONFIG_MTK_CMDQ)
+ 	/* Wait for planes to be disabled by cmdq */
+ 	if (mtk_crtc->cmdq_client.chan)
+@@ -797,13 +792,13 @@ static void mtk_drm_crtc_atomic_disable(struct drm_crtc *crtc,
+ 	mtk_crtc->enabled = false;
+ }
+
+-static void mtk_drm_crtc_atomic_begin(struct drm_crtc *crtc,
+-				      struct drm_atomic_state *state)
++static void mtk_crtc_atomic_begin(struct drm_crtc *crtc,
++				  struct drm_atomic_state *state)
+ {
+ 	struct drm_crtc_state *crtc_state = drm_atomic_get_new_crtc_state(state,
+ 									  crtc);
+ 	struct mtk_crtc_state *mtk_crtc_state = to_mtk_crtc_state(crtc_state);
+-	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
++	struct mtk_crtc *mtk_crtc = to_mtk_crtc(crtc);
+ 	unsigned long flags;
+
+ 	if (mtk_crtc->event && mtk_crtc_state->base.event)
+@@ -821,10 +816,10 @@ static void mtk_drm_crtc_atomic_begin(struct drm_crtc *crtc,
+ 	}
+ }
+
+-static void mtk_drm_crtc_atomic_flush(struct drm_crtc *crtc,
+-				      struct drm_atomic_state *state)
++static void mtk_crtc_atomic_flush(struct drm_crtc *crtc,
++				  struct drm_atomic_state *state)
+ {
+-	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
++	struct mtk_crtc *mtk_crtc = to_mtk_crtc(crtc);
+ 	int i;
+
+ 	if (crtc->state->color_mgmt_changed)
+@@ -832,33 +827,32 @@ static void mtk_drm_crtc_atomic_flush(struct drm_crtc *crtc,
+ 			mtk_ddp_gamma_set(mtk_crtc->ddp_comp[i], crtc->state);
+ 			mtk_ddp_ctm_set(mtk_crtc->ddp_comp[i], crtc->state);
+ 		}
+-	mtk_drm_crtc_update_config(mtk_crtc, !!mtk_crtc->event);
++	mtk_crtc_update_config(mtk_crtc, !!mtk_crtc->event);
+ }
+
+ static const struct drm_crtc_funcs mtk_crtc_funcs = {
+ 	.set_config		= drm_atomic_helper_set_config,
+ 	.page_flip		= drm_atomic_helper_page_flip,
+-	.destroy		= mtk_drm_crtc_destroy,
+-	.reset			= mtk_drm_crtc_reset,
+-	.atomic_duplicate_state	= mtk_drm_crtc_duplicate_state,
+-	.atomic_destroy_state	= mtk_drm_crtc_destroy_state,
+-	.enable_vblank		= mtk_drm_crtc_enable_vblank,
+-	.disable_vblank		= mtk_drm_crtc_disable_vblank,
++	.destroy		= mtk_crtc_destroy,
++	.reset			= mtk_crtc_reset,
++	.atomic_duplicate_state	= mtk_crtc_duplicate_state,
++	.atomic_destroy_state	= mtk_crtc_destroy_state,
++	.enable_vblank		= mtk_crtc_enable_vblank,
++	.disable_vblank		= mtk_crtc_disable_vblank,
+ };
+
+ static const struct drm_crtc_helper_funcs mtk_crtc_helper_funcs = {
+-	.mode_fixup	= mtk_drm_crtc_mode_fixup,
+-	.mode_set_nofb	= mtk_drm_crtc_mode_set_nofb,
+-	.mode_valid	= mtk_drm_crtc_mode_valid,
+-	.atomic_begin	= mtk_drm_crtc_atomic_begin,
+-	.atomic_flush	= mtk_drm_crtc_atomic_flush,
+-	.atomic_enable	= mtk_drm_crtc_atomic_enable,
+-	.atomic_disable	= mtk_drm_crtc_atomic_disable,
++	.mode_fixup	= mtk_crtc_mode_fixup,
++	.mode_set_nofb	= mtk_crtc_mode_set_nofb,
++	.mode_valid	= mtk_crtc_mode_valid,
++	.atomic_begin	= mtk_crtc_atomic_begin,
++	.atomic_flush	= mtk_crtc_atomic_flush,
++	.atomic_enable	= mtk_crtc_atomic_enable,
++	.atomic_disable	= mtk_crtc_atomic_disable,
+ };
+
+-static int mtk_drm_crtc_init(struct drm_device *drm,
+-			     struct mtk_drm_crtc *mtk_crtc,
+-			     unsigned int pipe)
++static int mtk_crtc_init(struct drm_device *drm, struct mtk_crtc *mtk_crtc,
++			 unsigned int pipe)
+ {
+ 	struct drm_plane *primary = NULL;
+ 	struct drm_plane *cursor = NULL;
+@@ -885,8 +879,7 @@ static int mtk_drm_crtc_init(struct drm_device *drm,
+ 	return ret;
+ }
+
+-static int mtk_drm_crtc_num_comp_planes(struct mtk_drm_crtc *mtk_crtc,
+-					int comp_idx)
++static int mtk_crtc_num_comp_planes(struct mtk_crtc *mtk_crtc, int comp_idx)
+ {
+ 	struct mtk_ddp_comp *comp;
+
+@@ -904,8 +897,8 @@ static int mtk_drm_crtc_num_comp_planes(struct mtk_drm_crtc *mtk_crtc,
+ }
+
+ static inline
+-enum drm_plane_type mtk_drm_crtc_plane_type(unsigned int plane_idx,
+-					    unsigned int num_planes)
++enum drm_plane_type mtk_crtc_plane_type(unsigned int plane_idx,
++					unsigned int num_planes)
+ {
+ 	if (plane_idx == 0)
+ 		return DRM_PLANE_TYPE_PRIMARY;
+@@ -916,11 +909,11 @@ enum drm_plane_type mtk_drm_crtc_plane_type(unsigned int plane_idx,
+
+ }
+
+-static int mtk_drm_crtc_init_comp_planes(struct drm_device *drm_dev,
+-					 struct mtk_drm_crtc *mtk_crtc,
+-					 int comp_idx, int pipe)
++static int mtk_crtc_init_comp_planes(struct drm_device *drm_dev,
++				     struct mtk_crtc *mtk_crtc,
++				     int comp_idx, int pipe)
+ {
+-	int num_planes = mtk_drm_crtc_num_comp_planes(mtk_crtc, comp_idx);
++	int num_planes = mtk_crtc_num_comp_planes(mtk_crtc, comp_idx);
+ 	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[comp_idx];
+ 	int i, ret;
+
+@@ -928,8 +921,7 @@ static int mtk_drm_crtc_init_comp_planes(struct drm_device *drm_dev,
+ 		ret = mtk_plane_init(drm_dev,
+ 				&mtk_crtc->planes[mtk_crtc->layer_nr],
+ 				BIT(pipe),
+-				mtk_drm_crtc_plane_type(mtk_crtc->layer_nr,
+-							num_planes),
++				mtk_crtc_plane_type(mtk_crtc->layer_nr, num_planes),
+ 				mtk_ddp_comp_supported_rotations(comp),
+ 				mtk_ddp_comp_get_formats(comp),
+ 				mtk_ddp_comp_get_num_formats(comp));
+@@ -941,9 +933,9 @@ static int mtk_drm_crtc_init_comp_planes(struct drm_device *drm_dev,
+ 	return 0;
+ }
+
+-struct device *mtk_drm_crtc_dma_dev_get(struct drm_crtc *crtc)
++struct device *mtk_crtc_dma_dev_get(struct drm_crtc *crtc)
+ {
+-	struct mtk_drm_crtc *mtk_crtc = NULL;
++	struct mtk_crtc *mtk_crtc = NULL;
+
+ 	if (!crtc)
+ 		return NULL;
+@@ -955,14 +947,14 @@ struct device *mtk_drm_crtc_dma_dev_get(struct drm_crtc *crtc)
+ 	return mtk_crtc->dma_dev;
+ }
+
+-int mtk_drm_crtc_create(struct drm_device *drm_dev,
+-			const unsigned int *path, unsigned int path_len,
+-			int priv_data_index, const struct mtk_drm_route *conn_routes,
+-			unsigned int num_conn_routes)
++int mtk_crtc_create(struct drm_device *drm_dev, const unsigned int *path,
++		    unsigned int path_len, int priv_data_index,
++		    const struct mtk_drm_route *conn_routes,
++		    unsigned int num_conn_routes)
+ {
+ 	struct mtk_drm_private *priv = drm_dev->dev_private;
+ 	struct device *dev = drm_dev->dev;
+-	struct mtk_drm_crtc *mtk_crtc;
++	struct mtk_crtc *mtk_crtc;
+ 	unsigned int num_comp_planes = 0;
+ 	int ret;
+ 	int i;
+@@ -1047,7 +1039,7 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+ 	}
+
+ 	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++)
+-		num_comp_planes += mtk_drm_crtc_num_comp_planes(mtk_crtc, i);
++		num_comp_planes += mtk_crtc_num_comp_planes(mtk_crtc, i);
+
+ 	mtk_crtc->planes = devm_kcalloc(dev, num_comp_planes,
+ 					sizeof(struct drm_plane), GFP_KERNEL);
+@@ -1055,8 +1047,7 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+ 		return -ENOMEM;
+
+ 	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++) {
+-		ret = mtk_drm_crtc_init_comp_planes(drm_dev, mtk_crtc, i,
+-						    crtc_i);
++		ret = mtk_crtc_init_comp_planes(drm_dev, mtk_crtc, i, crtc_i);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -1068,7 +1059,7 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+ 	 */
+ 	mtk_crtc->dma_dev = mtk_ddp_comp_dma_dev_get(&priv->ddp_comp[path[0]]);
+
+-	ret = mtk_drm_crtc_init(drm_dev, mtk_crtc, crtc_i);
++	ret = mtk_crtc_init(drm_dev, mtk_crtc, crtc_i);
+ 	if (ret < 0)
+ 		return ret;
+
+@@ -1138,7 +1129,7 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+ 		mtk_crtc->num_conn_routes = num_conn_routes;
+ 		mtk_crtc->conn_routes = conn_routes;
+
+-		/* increase ddp_comp_nr at the end of mtk_drm_crtc_create */
++		/* increase ddp_comp_nr at the end of mtk_crtc_create */
+ 		mtk_crtc->ddp_comp_nr++;
+ 	}
+
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.h b/drivers/gpu/drm/mediatek/mtk_drm_crtc.h
+index 1f988ff1bf9fd..2d9f28f436aea 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.h
++++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.h
 @@ -3,8 +3,8 @@
   * Copyright (c) 2015 MediaTek Inc.
   */
 
--#ifndef _MTK_DRM_GEM_H_
--#define _MTK_DRM_GEM_H_
-+#ifndef _MTK_GEM_H_
-+#define _MTK_GEM_H_
+-#ifndef MTK_DRM_CRTC_H
+-#define MTK_DRM_CRTC_H
++#ifndef MTK_CRTC_H
++#define MTK_CRTC_H
 
- #include <drm/drm_gem.h>
+ #include <drm/drm_crtc.h>
+ #include "mtk_drm_ddp_comp.h"
+@@ -14,17 +14,15 @@
+ #define MTK_MAX_BPC	10
+ #define MTK_MIN_BPC	3
 
-@@ -22,7 +22,7 @@
-  * P.S. this object would be transferred to user as kms_bo.handle so
-  *	user can access the buffer through kms_bo.handle.
-  */
--struct mtk_drm_gem_obj {
-+struct mtk_gem_obj {
- 	struct drm_gem_object	base;
- 	void			*cookie;
- 	void			*kvaddr;
-@@ -32,18 +32,17 @@ struct mtk_drm_gem_obj {
- 	struct page		**pages;
- };
+-void mtk_drm_crtc_commit(struct drm_crtc *crtc);
+-int mtk_drm_crtc_create(struct drm_device *drm_dev,
+-			const unsigned int *path,
+-			unsigned int path_len,
+-			int priv_data_index,
+-			const struct mtk_drm_route *conn_routes,
+-			unsigned int num_conn_routes);
+-int mtk_drm_crtc_plane_check(struct drm_crtc *crtc, struct drm_plane *plane,
+-			     struct mtk_plane_state *state);
+-void mtk_drm_crtc_async_update(struct drm_crtc *crtc, struct drm_plane *plane,
+-			       struct drm_atomic_state *plane_state);
+-struct device *mtk_drm_crtc_dma_dev_get(struct drm_crtc *crtc);
++void mtk_crtc_commit(struct drm_crtc *crtc);
++int mtk_crtc_create(struct drm_device *drm_dev, const unsigned int *path,
++		    unsigned int path_len, int priv_data_index,
++		    const struct mtk_drm_route *conn_routes,
++		    unsigned int num_conn_routes);
++int mtk_crtc_plane_check(struct drm_crtc *crtc, struct drm_plane *plane,
++			 struct mtk_plane_state *state);
++void mtk_crtc_async_update(struct drm_crtc *crtc, struct drm_plane *plane,
++			   struct drm_atomic_state *plane_state);
++struct device *mtk_crtc_dma_dev_get(struct drm_crtc *crtc);
 
--#define to_mtk_gem_obj(x)	container_of(x, struct mtk_drm_gem_obj, base)
-+#define to_mtk_gem_obj(x) container_of(x, struct mtk_gem_obj, base)
+-#endif /* MTK_DRM_CRTC_H */
++#endif /* MTK_CRTC_H */
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+index 74832c2130921..c46773569b3c9 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+@@ -494,24 +494,24 @@ static int mtk_drm_kms_init(struct drm_device *drm)
+ 			priv_n = private->all_drm_private[j];
 
--void mtk_drm_gem_free_object(struct drm_gem_object *gem);
--struct mtk_drm_gem_obj *mtk_drm_gem_create(struct drm_device *dev, size_t size,
--					   bool alloc_kmap);
--int mtk_drm_gem_dumb_create(struct drm_file *file_priv, struct drm_device *dev,
--			    struct drm_mode_create_dumb *args);
-+void mtk_gem_free_object(struct drm_gem_object *gem);
-+struct mtk_gem_obj *mtk_gem_create(struct drm_device *dev, size_t size,
-+				   bool alloc_kmap);
-+int mtk_gem_dumb_create(struct drm_file *file_priv, struct drm_device *dev,
-+			struct drm_mode_create_dumb *args);
- struct sg_table *mtk_gem_prime_get_sg_table(struct drm_gem_object *obj);
- struct drm_gem_object *mtk_gem_prime_import_sg_table(struct drm_device *dev,
- 			struct dma_buf_attachment *attach, struct sg_table *sg);
--int mtk_drm_gem_prime_vmap(struct drm_gem_object *obj, struct iosys_map *map);
--void mtk_drm_gem_prime_vunmap(struct drm_gem_object *obj,
--			      struct iosys_map *map);
-+int mtk_gem_prime_vmap(struct drm_gem_object *obj, struct iosys_map *map);
-+void mtk_gem_prime_vunmap(struct drm_gem_object *obj, struct iosys_map *map);
+ 			if (i == CRTC_MAIN && priv_n->data->main_len) {
+-				ret = mtk_drm_crtc_create(drm, priv_n->data->main_path,
+-							  priv_n->data->main_len, j,
+-							  priv_n->data->conn_routes,
+-							  priv_n->data->num_conn_routes);
++				ret = mtk_crtc_create(drm, priv_n->data->main_path,
++						      priv_n->data->main_len, j,
++						      priv_n->data->conn_routes,
++						      priv_n->data->num_conn_routes);
+ 				if (ret)
+ 					goto err_component_unbind;
 
- #endif
+ 				continue;
+ 			} else if (i == CRTC_EXT && priv_n->data->ext_len) {
+-				ret = mtk_drm_crtc_create(drm, priv_n->data->ext_path,
+-							  priv_n->data->ext_len, j, NULL, 0);
++				ret = mtk_crtc_create(drm, priv_n->data->ext_path,
++						      priv_n->data->ext_len, j, NULL, 0);
+ 				if (ret)
+ 					goto err_component_unbind;
+
+ 				continue;
+ 			} else if (i == CRTC_THIRD && priv_n->data->third_len) {
+-				ret = mtk_drm_crtc_create(drm, priv_n->data->third_path,
+-							  priv_n->data->third_len, j, NULL, 0);
++				ret = mtk_crtc_create(drm, priv_n->data->third_path,
++						      priv_n->data->third_len, j, NULL, 0);
+ 				if (ret)
+ 					goto err_component_unbind;
+
+@@ -523,7 +523,7 @@ static int mtk_drm_kms_init(struct drm_device *drm)
+ 	/* Use OVL device for all DMA memory allocations */
+ 	crtc = drm_crtc_from_index(drm, 0);
+ 	if (crtc)
+-		dma_dev = mtk_drm_crtc_dma_dev_get(crtc);
++		dma_dev = mtk_crtc_dma_dev_get(crtc);
+ 	if (!dma_dev) {
+ 		ret = -ENODEV;
+ 		dev_err(drm->dev, "Need at least one OVL device\n");
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+index 33fadb08dc1c7..24c4d59085bd6 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+@@ -13,7 +13,7 @@
+ #define DDP_COMPONENT_DRM_OVL_ADAPTOR (DDP_COMPONENT_ID_MAX + 1)
+ #define DDP_COMPONENT_DRM_ID_MAX (DDP_COMPONENT_DRM_OVL_ADAPTOR + 1)
+
+-enum mtk_drm_crtc_path {
++enum mtk_crtc_path {
+ 	CRTC_MAIN,
+ 	CRTC_EXT,
+ 	CRTC_THIRD,
 diff --git a/drivers/gpu/drm/mediatek/mtk_drm_plane.c b/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-index 43137c46fc148..db63a32c407e3 100644
+index ddc9355b06d51..cbdb70677d305 100644
 --- a/drivers/gpu/drm/mediatek/mtk_drm_plane.c
 +++ b/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-@@ -135,7 +135,7 @@ static void mtk_plane_update_new_state(struct drm_plane_state *new_state,
- {
- 	struct drm_framebuffer *fb = new_state->fb;
- 	struct drm_gem_object *gem;
--	struct mtk_drm_gem_obj *mtk_gem;
-+	struct mtk_gem_obj *mtk_gem;
- 	unsigned int pitch, format;
- 	u64 modifier;
- 	dma_addr_t addr;
+@@ -117,8 +117,8 @@ static int mtk_plane_atomic_async_check(struct drm_plane *plane,
+ 	if (!plane->state->fb)
+ 		return -EINVAL;
+
+-	ret = mtk_drm_crtc_plane_check(new_plane_state->crtc, plane,
+-				       to_mtk_plane_state(new_plane_state));
++	ret = mtk_crtc_plane_check(new_plane_state->crtc, plane,
++				   to_mtk_plane_state(new_plane_state));
+ 	if (ret)
+ 		return ret;
+
+@@ -232,7 +232,7 @@ static void mtk_plane_atomic_async_update(struct drm_plane *plane,
+ 	swap(plane->state->fb, new_state->fb);
+ 	wmb(); /* Make sure the above parameters are set before update */
+ 	new_plane_state->pending.async_dirty = true;
+-	mtk_drm_crtc_async_update(new_state->crtc, plane, state);
++	mtk_crtc_async_update(new_state->crtc, plane, state);
+ }
+
+ static const struct drm_plane_funcs mtk_plane_funcs = {
+@@ -260,8 +260,8 @@ static int mtk_plane_atomic_check(struct drm_plane *plane,
+ 	if (WARN_ON(!new_plane_state->crtc))
+ 		return 0;
+
+-	ret = mtk_drm_crtc_plane_check(new_plane_state->crtc, plane,
+-				       to_mtk_plane_state(new_plane_state));
++	ret = mtk_crtc_plane_check(new_plane_state->crtc, plane,
++				   to_mtk_plane_state(new_plane_state));
+ 	if (ret)
+ 		return ret;
+
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index 9501f40191990..ec9d96396d7b2 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -662,7 +662,7 @@ static void mtk_dsi_poweroff(struct mtk_dsi *dsi)
+
+ 	/*
+ 	 * mtk_dsi_stop() and mtk_dsi_start() is asymmetric, since
+-	 * mtk_dsi_stop() should be called after mtk_drm_crtc_atomic_disable(),
++	 * mtk_dsi_stop() should be called after mtk_crtc_atomic_disable(),
+ 	 * which needs irq for vblank, and mtk_dsi_stop() will disable irq.
+ 	 * mtk_dsi_start() needs to be called in mtk_output_dsi_enable(),
+ 	 * after dsi is fully set.
 --
 2.18.0
 
