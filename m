@@ -1,133 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5DC5474D;
-	Wed, 20 Mar 2024 16:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20F747F77
+	for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 16:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710951470; cv=none; b=KjpmVHTYbvEsxE1e3y4qyG9IhbM9Km88TJ7ebwRyveKw18AP4YvgQBMyqj05dD+RMuVq5Yj/J74c9r9eE8wSrbLHMgTaLiQHg1NQ4lKUA1E9P9CPOOc9Irazr02wwuXXJsQbO2WkdjNv7jv0YNndlPUVSWojBX9BOSAkfVACKsI=
+	t=1710951496; cv=none; b=uRFJT759BNSSU6laElNEFrGQqa9P5U/8s/QnCY1W4NBZlu8EDfB6fkDBeDsfPa5LRVD0pKw6wLzmXYGyEYQAzl2pWI5LEQY6nnGSq2UI/XDpnywXAi3e/6hPmggPDQ8cvRhcE86ch1TwFOAhDkKJ5jE5iElTuLgo7c7FD0Yfayg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710951470; c=relaxed/simple;
-	bh=MjsTErL++3mNSNQUdfMEPoHEWuqAralTC+D1xVnk5Gg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=SPqDanPLWdnW0ZHFV2yXkG6HQExKHIOUdmjT9nxHM8N0Kr4Arzpf9AsNvQsQnt79QP6Jz2aDWzIWQNEGGS/3Eq1Sth1QxhOSLbqByl4fk+Z2Zc5DtYF/ow9A9Dqa7PH7CsqrmGkIKc663mXrjeT5di3km/DPeBmVmA/YsxZ4214=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38AC6C433F1;
-	Wed, 20 Mar 2024 16:17:48 +0000 (UTC)
-Date: Wed, 20 Mar 2024 12:20:12 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Daniel Bristot de Oliveira
- <bristot@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Will Deacon
- <will@kernel.org>, Waiman Long <longman@redhat.com>, Boqun Feng
- <boqun.feng@gmail.com>, linux-rt-users <linux-rt-users@vger.kernel.org>
-Subject: [RFC][PATCH] tracing: Introduce restart_critical_timings()
-Message-ID: <20240320122012.2c1f461f@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1710951496; c=relaxed/simple;
+	bh=AA0UbQWWMDspRIn9QaELn/NgyElXsCyXOzsAvqZsR5Q=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=SkWe1Yay7eHZkXg2yAMQZD3dTTTP3ja3hMPGVgE6Zf4Y+vrx+45YYaIVjUe7RfXWgIoQ6KJODUYSBMNLvW0Lda8scfuxb9u5lKLijXin4h6plgVSkU63WaIJahUoxHCvxDy07TYyD+3gAcebGArjuEi6lJ2zs1/pVQaWJWfdwsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V0DJX73Pzz6K6Sy;
+	Thu, 21 Mar 2024 00:17:32 +0800 (CST)
+Received: from lhrpeml500006.china.huawei.com (unknown [7.191.161.198])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7E5E7140B3C;
+	Thu, 21 Mar 2024 00:18:05 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 20 Mar 2024 16:18:05 +0000
+Received: from lhrpeml500005.china.huawei.com ([7.191.163.240]) by
+ lhrpeml500005.china.huawei.com ([7.191.163.240]) with mapi id 15.01.2507.035;
+ Wed, 20 Mar 2024 16:18:05 +0000
+From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+To: Lu Baolu <baolu.lu@linux.intel.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	"Kevin Tian" <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>, Will
+ Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Nicolin Chen <nicolinc@nvidia.com>, Yi
+ Liu <yi.l.liu@intel.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>, "Joel
+ Granados" <j.granados@samsung.com>
+CC: "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"virtualization@lists.linux-foundation.org"
+	<virtualization@lists.linux-foundation.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 4/8] iommufd: Add iommufd fault object
+Thread-Topic: [PATCH v3 4/8] iommufd: Add iommufd fault object
+Thread-Index: AQHaTQcNFocLBOqngUqDZu3K/gB7pbFBJJkw
+Date: Wed, 20 Mar 2024 16:18:05 +0000
+Message-ID: <ad4575588dd247fa8beae60963f36404@huawei.com>
+References: <20240122073903.24406-1-baolu.lu@linux.intel.com>
+ <20240122073903.24406-5-baolu.lu@linux.intel.com>
+In-Reply-To: <20240122073903.24406-5-baolu.lu@linux.intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-From: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-I'm debugging some latency issues on a Chromebook and the preemptirqsoff
-tracer hit this:
 
-# tracer: preemptirqsoff
-#
-# preemptirqsoff latency trace v1.1.5 on 5.15.148-21853-g165fd2387469-dirty
-# --------------------------------------------------------------------
-# latency: 7813 us, #60/60, CPU#1 | (M:preempt VP:0, KP:0, SP:0 HP:0 #P:2)
-#    -----------------
-#    | task: init-1 (uid:0 nice:0 policy:0 rt_prio:0)
-#    -----------------
-#  => started at: rwsem_optimistic_spin
-#  => ended at:   rwsem_optimistic_spin
-#
-#
-#                    _------=> CPU#            
-#                   / _-----=> irqs-off        
-#                  | / _----=> need-resched    
-#                  || / _---=> hardirq/softirq 
-#                  ||| / _--=> preempt-depth   
-#                  |||| / _-=> migrate-disable 
-#                  ||||| /     delay           
-#  cmd     pid     |||||| time  |   caller     
-#     \   /        ||||||  \    |    /       
-   <...>-1         1...1.    0us!: rwsem_optimistic_spin+0x20/0x194 <-rwsem_optimistic_spin+0x20/0x194
-   <...>-1         1.N.1. 7813us : rwsem_optimistic_spin+0x140/0x194 <-rwsem_optimistic_spin+0x140/0x194
-   <...>-1         1.N.1. 7814us+: tracer_preempt_on+0x4c/0x6a <-rwsem_optimistic_spin+0x140/0x194
-   <...>-1         1.N.1. 7824us : <stack trace>
- => rwsem_optimistic_spin+0x140/0x194
- => rwsem_down_write_slowpath+0xc9/0x3fe
- => copy_process+0xd08/0x1b8a
- => kernel_clone+0x94/0x256
- => __x64_sys_clone+0x7a/0x9a
- => do_syscall_64+0x51/0xa1
- => entry_SYSCALL_64_after_hwframe+0x5c/0xc6
+> -----Original Message-----
+> From: Lu Baolu <baolu.lu@linux.intel.com>
+> Sent: Monday, January 22, 2024 7:39 AM
+> To: Jason Gunthorpe <jgg@ziepe.ca>; Kevin Tian <kevin.tian@intel.com>; Jo=
+erg
+> Roedel <joro@8bytes.org>; Will Deacon <will@kernel.org>; Robin Murphy
+> <robin.murphy@arm.com>; Jean-Philippe Brucker <jean-philippe@linaro.org>;
+> Nicolin Chen <nicolinc@nvidia.com>; Yi Liu <yi.l.liu@intel.com>; Jacob Pa=
+n
+> <jacob.jun.pan@linux.intel.com>; Joel Granados <j.granados@samsung.com>
+> Cc: iommu@lists.linux.dev; virtualization@lists.linux-foundation.org; lin=
+ux-
+> kernel@vger.kernel.org; Lu Baolu <baolu.lu@linux.intel.com>
+> Subject: [PATCH v3 4/8] iommufd: Add iommufd fault object
+>=20
+> An iommufd fault object provides an interface for delivering I/O page
+> faults to user space. These objects are created and destroyed by user
+> space, and they can be associated with or dissociated from hardware page
+> table objects during page table allocation or destruction.
+>=20
+> User space interacts with the fault object through a file interface. This
+> interface offers a straightforward and efficient way for user space to
+> handle page faults. It allows user space to read fault messages
+> sequentially and respond to them by writing to the same file. The file
+> interface supports reading messages in poll mode, so it's recommended tha=
+t
+> user space applications use io_uring to enhance read and write efficiency=
+.
+>=20
+> A fault object can be associated with any iopf-capable iommufd_hw_pgtable
+> during the pgtable's allocation. All I/O page faults triggered by devices
+> when accessing the I/O addresses of an iommufd_hw_pgtable are routed
+> through the fault object to user space. Similarly, user space's responses
+> to these page faults are routed back to the iommu device driver through
+> the same fault object.
+>=20
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
 
-Which isn't a real issue, as it's in the rwsem_optimistic_spin() code that
-spins with interrupts enabled, preempt disabled, and checks for
-need_resched(). If it is true, it breaks out and schedules.
+[...]
 
-Hence, it's hiding real issues, because it can spin for a very long time
-and this is not the source of the latency I'm tracking down.
+> +static __poll_t iommufd_fault_fops_poll(struct file *filep,
+> +					struct poll_table_struct *wait)
+> +{
+> +	struct iommufd_fault *fault =3D filep->private_data;
+> +	__poll_t pollflags =3D 0;
+> +
+> +	poll_wait(filep, &fault->wait_queue, wait);
+> +	mutex_lock(&fault->mutex);
+> +	if (!list_empty(&fault->deliver))
+> +		pollflags =3D EPOLLIN | EPOLLRDNORM;
+> +	mutex_unlock(&fault->mutex);
+> +
+> +	return pollflags;
+> +}
+> +
+> +static const struct file_operations iommufd_fault_fops =3D {
+> +	.owner		=3D THIS_MODULE,
+> +	.open		=3D nonseekable_open,
+> +	.read		=3D iommufd_fault_fops_read,
+> +	.write		=3D iommufd_fault_fops_write,
+> +	.poll		=3D iommufd_fault_fops_poll,
+> +	.llseek		=3D no_llseek,
+> +};
 
-I would like to introduce restart_critical_timings() and place it in
-locations that have this behavior.
+Hi
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+I am trying to enable Qemu vSVA support on ARM with this series.
+I am using io_uring APIs with the fault fd to handle the page fault
+in the Qemu.
 
-diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
-index 147feebd508c..e9f97f60bfc0 100644
---- a/include/linux/irqflags.h
-+++ b/include/linux/irqflags.h
-@@ -145,6 +145,13 @@ do {						\
- # define start_critical_timings() do { } while (0)
- #endif
- 
-+/* Used in spins that check need_resched() with preemption disabled */
-+static inline void restart_critical_timings(void)
-+{
-+	stop_critical_timings();
-+	start_critical_timings();
-+}
-+
- #ifdef CONFIG_DEBUG_IRQFLAGS
- extern void warn_bogus_irq_restore(void);
- #define raw_check_bogus_irq_restore()			\
-diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index 2340b6d90ec6..fa7b43e53d20 100644
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -27,6 +27,7 @@
- #include <linux/export.h>
- #include <linux/rwsem.h>
- #include <linux/atomic.h>
-+#include <linux/irqflags.h>
- #include <trace/events/lock.h>
- 
- #ifndef CONFIG_PREEMPT_RT
-@@ -780,6 +781,7 @@ rwsem_spin_on_owner(struct rw_semaphore *sem)
- 		 */
- 		barrier();
- 
-+		restart_critical_timings();
- 		if (need_resched() || !owner_on_cpu(owner)) {
- 			state = OWNER_NONSPINNABLE;
- 			break;
-@@ -912,6 +914,7 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
- 		 * a writer, need_resched() check needs to be done here.
- 		 */
- 		if (owner_state != OWNER_WRITER) {
-+			restart_critical_timings();
- 			if (need_resched())
- 				break;
- 			if (rt_task(current) &&
+Please find the implementation here[1]. This is still a work in progress=20
+and is based on Nicolin's latest nested Qemu branch.
+
+And I am running into a problem when we have the poll interface added
+for the fault fd in kernel.
+
+What I have noticed is that,
+-read interface works fine and I can receive struct tiommu_hwpt_pgfault dat=
+a.
+-But once Guest handles the page faults and returns the page response,
+ the write to fault fd never reaches the kernel. The sequence is like below=
+,
+=20
+  sqe =3D io_uring_get_sqe(ring);
+  io_uring_prep_write(sqe, hwpt->fault_fd, resp, sizeof(*resp), 0);
+  io_uring_sqe_set_data(sqe, resp);
+  io_uring_submit(ring);
+  ret =3D io_uring_wait_cqe(ring, &cqe);=20
+  ....
+Please find the function here[2]
+
+The above cqe wait never returns and hardware times out without receiving
+page response. My understanding of io_uring default op is that it tries to=
+=20
+issue an sqe as non-blocking first. But it looks like the above write seque=
+nce
+ends up in kernel poll_wait() as well.Not sure how we can avoid that for
+write.
+
+All works fine if I comment out the poll for the fault_fd from the kernel.
+But then of course Qemu ends up repeatedly reading the ring Queue for
+any pending page fault.
+
+It might be something I am missing in my understanding of io_uring APIs.
+Just thought of checking with you if you have any Qemu implementation
+using io_uring APIs to test this.
+
+Also appreciate any pointers in resolving this.
+
+Thanks,
+Shameer
+[1] https://github.com/hisilicon/qemu/tree/iommufd_vsmmu-02292024-vsva-wip
+[2] https://github.com/hisilicon/qemu/blob/2b984fb5c692a03e6f5463d005670d2e=
+2a2c7304/hw/arm/smmuv3.c#L1310
+
