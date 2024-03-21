@@ -1,55 +1,55 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9897140380
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 16:38:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8E914291A
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 16:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711039097; cv=none; b=E2ZBBOri9eh62YPqCXVZv2HRuNV93R7w0QYqZSQu5s55ftumWIHvkN/D1WFAeCKOQfHeq3gZxHA/fq2gNblz28HKwBWXUK7bMulNoaZVx3u9KCoJ5fqP5FWD6MWKjNjVEylbLRbI1ui6WlCkYg4ERXgyjfR/vTxVnMebGwzwb/8=
+	t=1711039101; cv=none; b=nij27/GJG5Vv2lsOQ2Q94zjc0EOwcc/HVAWkXV/oEataLAQIPQMZckM8cFNxtaIc08VzQkyyegb0welH9Eop043xYjqfiunaXmiXZqukDZhui1PyDbvW5D8GiJxrb3bUZy5l1SYDGRHSuUl3cAUgpuO7hjN0fV1CznqxW2s1A7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711039097; c=relaxed/simple;
-	bh=+rk7yZUSWOGHDX0mrmq7q5rPH06+Gd8vsMk4q87rLEE=;
+	s=arc-20240116; t=1711039101; c=relaxed/simple;
+	bh=dLP/xEKvAlFy0CEGgcN9QUf+tNZYc143hgSrqnBpNn8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=r5PROW2hJDb1VN2yYZ1dZLunjtnRA+64eBDx3V0GdCuJhJETcRZc8ucHrR/+GKxYgZgK6W/Wa16qTta/wO1HP4Y6/G0v50jyzs6jXvbB+bG3qFBQqKyt9cZ6IsVYj4CSS6CshUSPKd4Eqv9NqxIueERbQV9jG5Ec+VUztRKUO3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FNLsC8Qe; arc=none smtp.client-ip=209.85.128.202
+	 To:Cc:Content-Type; b=XG92xhZ2lPFrUSi8ccVhCeOAX2yPRcYdih9o+VqbElVjaKT7Hu2LOnzyLMmLhY678jj3abD/YJiHlAsg/2XZl78xDTKtzzwKuHwEJRS/suSx/80iGSW4k+yjJqiaFSx+/UyH2YVbJyCgyU2dlf92yM/g+H9mp83mV/9nz7ftJgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=drOoDhgj; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FNLsC8Qe"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60cc00203faso19216817b3.2
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 09:38:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="drOoDhgj"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dcbee93a3e1so1862211276.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 09:38:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711039093; x=1711643893; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1711039097; x=1711643897; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TkCDMNHfK5xLLlYY223eXbm7c73NL7RFva1BQ3rh7WM=;
-        b=FNLsC8Qefze4WFvDfgy8PNRrY/W+MAfFUq/pqmCvAeEWpFdUkXyoG6rG/GTVkanCio
-         oKkpTN58YUyWCzaQDSQly3SjFhNPv7EiwGpOFUvdRsg5i/b+Q20ONZ67ZBbTmabe7E5X
-         BbCWhyWvXozSZXWrAMSdb3NFnsoiIj7kxk56ion4m94p88OEZTqE2MxXZIbP96LfgzOe
-         Th5l5EaPCh8FgQGtu0LW1n82Bp6tfoW538Npd8ie/Up3mWsjgKjOyAB46lrnkDAvDEyu
-         G7CCKRtx+d5a3RjAcJ2VKIxAAO+TpCdyQzPH7OfSuC1OUZ+gjKlwBOr9dVRVWjqafYNM
-         0VJQ==
+        bh=XaC6gpRUGM+qkcKqV2c0VBwhZNh1AuaCpOBKo907lO0=;
+        b=drOoDhgjvFnVXBEZpJ/03O6mvbFcUBd1qWIMYHrNYMiMNLtpsb3SgquUQ5BAt88tek
+         v0R+UPjT7SJ071wL7FgdPBFRHu+QgIA7zC3CmZN8BZl/TO23d8h7Wb+sICJnJQIJ0y7I
+         m/1+bZJ+hHTfHonk+GDZo4j5J1pX3Q9kmZQtd1el31dIG3ICMtgyxYLv91gwJQIUarD0
+         aPAORrE5K21K5QO6BOSnAjrFv2EJL0i6sg/nOi6uptNsz8S3+wCOIrAisJn4DCRRs+2d
+         Mzu6FUR3x6eZAnpwBEH402H5smA2SIpOaLpLGP82Lq2Hnti7ocu1ZnXq4zoISST13jOA
+         siAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711039093; x=1711643893;
+        d=1e100.net; s=20230601; t=1711039097; x=1711643897;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TkCDMNHfK5xLLlYY223eXbm7c73NL7RFva1BQ3rh7WM=;
-        b=AdPsXxZkym4xKS4fuZG4WFoTrmVC1uFVwfPIOnaIMHhNitW9Y/sBuSpXhWK7An0aIq
-         ccQfP4nq6G3ByU87+KU8rbuk1w0E9q+4mTmLB70nhcMHdg5qtRj0fG4m4Fc3Zw3HVKQw
-         8TjKyPffIrSXFAQVUe+t+THk4mvSw3dAoz2uKvUL5oFwBwEzq264YT3T6CLsfyMbV6rC
-         nZkAZj8OiHKHC1fV3xPUZ2wpwSdWUDlexMEImEtJ7piv+11nwI1/1QKirAiaP73sqVaT
-         lxFEGt43n2KXBP9emLBAXwZc9RBzQogWvjrUdqAVFsI4qUaczBpI09Qdm3PKZXtpCXF7
-         vcqA==
-X-Forwarded-Encrypted: i=1; AJvYcCWN85WIcer7pvvmR2Jh0914e6SLjAO/Z8GAHHLbUDM+/htlCnxvwH8l7vowoCNLNGV6PLAAODarJG8nFCkRixgRJ2HYzjGfV/9T38ma
-X-Gm-Message-State: AOJu0Yye92Y3sK7sFJ1bhyoRxRarg/E1FdUsZ1Viz61j8YYx57IynJCq
-	O/z+I0dSENqS3kdBONf1KNDkXior6Oqi2gypaecfWJ0bK2RLcuRYaHRKvkrLH8z3yW52LB8bJm6
-	h+A==
-X-Google-Smtp-Source: AGHT+IGzAh9FXKpWdDvxkKjPGrkTEo4AMtUaoBAWJZd0ISNFCDPA2abbhqSo0+lrHGU23eGRJRqbHufH5vQ=
+        bh=XaC6gpRUGM+qkcKqV2c0VBwhZNh1AuaCpOBKo907lO0=;
+        b=ue79KjFQ4LzAdUswQQj/WA/LB7sgOJ2b2p8gch07mD1zEeLMtMan9md3FGjyYSqIFg
+         jOr+OdE7HOnafQmVdK9mUG1RaSZqMthDk4AbEr5o7BmJQTFBKG8WaNBPTgIX/CF+n/6t
+         /3331kqezDwRe29rI/5Xn4AYDfH3VvT0la5KCaIidc+w/UDoh0lbAt8jOu7VFn/C92Xq
+         RXrgewH7bZf6vM4icroM9JVamXZ0ktEwqmhfVo+LmlezvNe578ampty3nlFYM++rVRX5
+         tfzR60cN5AAOMxmYGDViFDDcrPc7H56EtK944vbLgugeYp3KaV1jlPwamUynLdkXjMPT
+         dpsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVC9jwnFygT3JaeNg4tjta8rKUyBxeC5NBESTRar+l/fkusXw7z/7mIIJUGXUFRqOaOo7QUVb/80g6Hn/q+KF+DYeb15z4RiILT3H6h
+X-Gm-Message-State: AOJu0Yx5vmspfWCw2nFLBBUV5N41aktpc0zeOVyrk62hdJuOHr6RqCBF
+	ZhaNx1bSAn3gnuAYbDkMHbEez8HD8UmloA1z6PK+nCA+CtdAcp8WrHufbyQAOmokoAhVQIN2oDt
+	OQg==
+X-Google-Smtp-Source: AGHT+IFJZSHudCuIglXlIopkXnNLMb9lH1yhVoF6leBD0jJ9ERT3JCkQE6hJAbySj4mxb56Bo4c8jp1OowQ=
 X-Received: from surenb-desktop.mtv.corp.google.com ([2620:15c:211:201:a489:6433:be5d:e639])
- (user=surenb job=sendgmr) by 2002:a05:6902:1a48:b0:dcc:8be2:7cb0 with SMTP id
- cy8-20020a0569021a4800b00dcc8be27cb0mr1175240ybb.0.1711039092976; Thu, 21 Mar
- 2024 09:38:12 -0700 (PDT)
-Date: Thu, 21 Mar 2024 09:36:51 -0700
+ (user=surenb job=sendgmr) by 2002:a05:6902:1502:b0:dc6:e823:9edb with SMTP id
+ q2-20020a056902150200b00dc6e8239edbmr1143317ybu.12.1711039097346; Thu, 21 Mar
+ 2024 09:38:17 -0700 (PDT)
+Date: Thu, 21 Mar 2024 09:36:53 -0700
 In-Reply-To: <20240321163705.3067592-1-surenb@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240321163705.3067592-1-surenb@google.com>
 X-Mailer: git-send-email 2.44.0.291.gc1ea87d7ee-goog
-Message-ID: <20240321163705.3067592-30-surenb@google.com>
-Subject: [PATCH v6 29/37] mm: percpu: enable per-cpu allocation tagging
+Message-ID: <20240321163705.3067592-32-surenb@google.com>
+Subject: [PATCH v6 31/37] rhashtable: Plumb through alloc tag
 From: Suren Baghdasaryan <surenb@google.com>
 To: akpm@linux-foundation.org
 Cc: kent.overstreet@linux.dev, mhocko@suse.com, vbabka@suse.cz, 
@@ -90,183 +90,173 @@ Cc: kent.overstreet@linux.dev, mhocko@suse.com, vbabka@suse.cz,
 	cgroups@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Redefine __alloc_percpu, __alloc_percpu_gfp and __alloc_reserved_percpu
-to record allocations and deallocations done by these functions.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+
+This gives better memory allocation profiling results; rhashtable
+allocations will be accounted to the code that initialized the
+rhashtable.
 
 Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
 Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 ---
- include/linux/percpu.h | 23 ++++++++++-----
- mm/percpu.c            | 64 +++++-------------------------------------
- 2 files changed, 23 insertions(+), 64 deletions(-)
+ include/linux/alloc_tag.h        |  3 +++
+ include/linux/rhashtable-types.h | 11 +++++++++--
+ lib/rhashtable.c                 | 28 +++++++++++++++++-----------
+ 3 files changed, 29 insertions(+), 13 deletions(-)
 
-diff --git a/include/linux/percpu.h b/include/linux/percpu.h
-index 62b5eb45bd89..e54921c79c9a 100644
---- a/include/linux/percpu.h
-+++ b/include/linux/percpu.h
-@@ -2,6 +2,7 @@
- #ifndef __LINUX_PERCPU_H
- #define __LINUX_PERCPU_H
+diff --git a/include/linux/alloc_tag.h b/include/linux/alloc_tag.h
+index bc9b1b99a55b..cf69e037f645 100644
+--- a/include/linux/alloc_tag.h
++++ b/include/linux/alloc_tag.h
+@@ -141,6 +141,8 @@ static inline void alloc_tag_sub(union codetag_ref *ref, size_t bytes)
+ 	ref->ct = NULL;
+ }
+ 
++#define alloc_tag_record(p)	((p) = current->alloc_tag)
++
+ #else /* CONFIG_MEM_ALLOC_PROFILING */
+ 
+ #define DEFINE_ALLOC_TAG(_alloc_tag)
+@@ -148,6 +150,7 @@ static inline bool mem_alloc_profiling_enabled(void) { return false; }
+ static inline void alloc_tag_add(union codetag_ref *ref, struct alloc_tag *tag,
+ 				 size_t bytes) {}
+ static inline void alloc_tag_sub(union codetag_ref *ref, size_t bytes) {}
++#define alloc_tag_record(p)	do {} while (0)
+ 
+ #endif /* CONFIG_MEM_ALLOC_PROFILING */
+ 
+diff --git a/include/linux/rhashtable-types.h b/include/linux/rhashtable-types.h
+index b6f3797277ff..015c8298bebc 100644
+--- a/include/linux/rhashtable-types.h
++++ b/include/linux/rhashtable-types.h
+@@ -9,6 +9,7 @@
+ #ifndef _LINUX_RHASHTABLE_TYPES_H
+ #define _LINUX_RHASHTABLE_TYPES_H
  
 +#include <linux/alloc_tag.h>
- #include <linux/mmdebug.h>
- #include <linux/preempt.h>
- #include <linux/smp.h>
-@@ -9,6 +10,7 @@
- #include <linux/pfn.h>
- #include <linux/init.h>
- #include <linux/cleanup.h>
-+#include <linux/sched.h>
- 
- #include <asm/percpu.h>
- 
-@@ -125,7 +127,6 @@ extern int __init pcpu_page_first_chunk(size_t reserved_size,
- 				pcpu_fc_cpu_to_node_fn_t cpu_to_nd_fn);
- #endif
- 
--extern void __percpu *__alloc_reserved_percpu(size_t size, size_t align) __alloc_size(1);
- extern bool __is_kernel_percpu_address(unsigned long addr, unsigned long *can_addr);
- extern bool is_kernel_percpu_address(unsigned long addr);
- 
-@@ -133,14 +134,16 @@ extern bool is_kernel_percpu_address(unsigned long addr);
- extern void __init setup_per_cpu_areas(void);
- #endif
- 
--extern void __percpu *__alloc_percpu_gfp(size_t size, size_t align, gfp_t gfp) __alloc_size(1);
--extern void __percpu *__alloc_percpu(size_t size, size_t align) __alloc_size(1);
--extern void free_percpu(void __percpu *__pdata);
-+extern void __percpu *pcpu_alloc_noprof(size_t size, size_t align, bool reserved,
-+				   gfp_t gfp) __alloc_size(1);
- extern size_t pcpu_alloc_size(void __percpu *__pdata);
- 
--DEFINE_FREE(free_percpu, void __percpu *, free_percpu(_T))
--
--extern phys_addr_t per_cpu_ptr_to_phys(void *addr);
-+#define __alloc_percpu_gfp(_size, _align, _gfp)				\
-+	alloc_hooks(pcpu_alloc_noprof(_size, _align, false, _gfp))
-+#define __alloc_percpu(_size, _align)					\
-+	alloc_hooks(pcpu_alloc_noprof(_size, _align, false, GFP_KERNEL))
-+#define __alloc_reserved_percpu(_size, _align)				\
-+	alloc_hooks(pcpu_alloc_noprof(_size, _align, true, GFP_KERNEL))
- 
- #define alloc_percpu_gfp(type, gfp)					\
- 	(typeof(type) __percpu *)__alloc_percpu_gfp(sizeof(type),	\
-@@ -149,6 +152,12 @@ extern phys_addr_t per_cpu_ptr_to_phys(void *addr);
- 	(typeof(type) __percpu *)__alloc_percpu(sizeof(type),		\
- 						__alignof__(type))
- 
-+extern void free_percpu(void __percpu *__pdata);
-+
-+DEFINE_FREE(free_percpu, void __percpu *, free_percpu(_T))
-+
-+extern phys_addr_t per_cpu_ptr_to_phys(void *addr);
-+
- extern unsigned long pcpu_nr_pages(void);
- 
- #endif /* __LINUX_PERCPU_H */
-diff --git a/mm/percpu.c b/mm/percpu.c
-index 90e9e4004ac9..dd7eeb370134 100644
---- a/mm/percpu.c
-+++ b/mm/percpu.c
-@@ -1726,7 +1726,7 @@ static void pcpu_alloc_tag_free_hook(struct pcpu_chunk *chunk, int off, size_t s
- #endif
+ #include <linux/atomic.h>
+ #include <linux/compiler.h>
+ #include <linux/mutex.h>
+@@ -88,6 +89,9 @@ struct rhashtable {
+ 	struct mutex                    mutex;
+ 	spinlock_t			lock;
+ 	atomic_t			nelems;
++#ifdef CONFIG_MEM_ALLOC_PROFILING
++	struct alloc_tag		*alloc_tag;
++#endif
+ };
  
  /**
-- * pcpu_alloc - the percpu allocator
-+ * pcpu_alloc_noprof - the percpu allocator
-  * @size: size of area to allocate in bytes
-  * @align: alignment of area (max PAGE_SIZE)
-  * @reserved: allocate from the reserved chunk if available
-@@ -1740,7 +1740,7 @@ static void pcpu_alloc_tag_free_hook(struct pcpu_chunk *chunk, int off, size_t s
-  * RETURNS:
-  * Percpu pointer to the allocated area on success, NULL on failure.
-  */
--static void __percpu *pcpu_alloc(size_t size, size_t align, bool reserved,
-+void __percpu *pcpu_alloc_noprof(size_t size, size_t align, bool reserved,
- 				 gfp_t gfp)
- {
- 	gfp_t pcpu_gfp;
-@@ -1907,6 +1907,8 @@ static void __percpu *pcpu_alloc(size_t size, size_t align, bool reserved,
+@@ -127,9 +131,12 @@ struct rhashtable_iter {
+ 	bool end_of_table;
+ };
  
- 	pcpu_memcg_post_alloc_hook(objcg, chunk, off, size);
- 
-+	pcpu_alloc_tag_alloc_hook(chunk, off, size);
+-int rhashtable_init(struct rhashtable *ht,
++int rhashtable_init_noprof(struct rhashtable *ht,
+ 		    const struct rhashtable_params *params);
+-int rhltable_init(struct rhltable *hlt,
++#define rhashtable_init(...)	alloc_hooks(rhashtable_init_noprof(__VA_ARGS__))
 +
- 	return ptr;
++int rhltable_init_noprof(struct rhltable *hlt,
+ 		  const struct rhashtable_params *params);
++#define rhltable_init(...)	alloc_hooks(rhltable_init_noprof(__VA_ARGS__))
  
- fail_unlock:
-@@ -1935,61 +1937,7 @@ static void __percpu *pcpu_alloc(size_t size, size_t align, bool reserved,
+ #endif /* _LINUX_RHASHTABLE_TYPES_H */
+diff --git a/lib/rhashtable.c b/lib/rhashtable.c
+index 6ae2ba8e06a2..35d841cf2b43 100644
+--- a/lib/rhashtable.c
++++ b/lib/rhashtable.c
+@@ -130,7 +130,8 @@ static union nested_table *nested_table_alloc(struct rhashtable *ht,
+ 	if (ntbl)
+ 		return ntbl;
  
- 	return NULL;
+-	ntbl = kzalloc(PAGE_SIZE, GFP_ATOMIC);
++	ntbl = alloc_hooks_tag(ht->alloc_tag,
++			kmalloc_noprof(PAGE_SIZE, GFP_ATOMIC|__GFP_ZERO));
+ 
+ 	if (ntbl && leaf) {
+ 		for (i = 0; i < PAGE_SIZE / sizeof(ntbl[0]); i++)
+@@ -157,7 +158,8 @@ static struct bucket_table *nested_bucket_table_alloc(struct rhashtable *ht,
+ 
+ 	size = sizeof(*tbl) + sizeof(tbl->buckets[0]);
+ 
+-	tbl = kzalloc(size, gfp);
++	tbl = alloc_hooks_tag(ht->alloc_tag,
++			kmalloc_noprof(size, gfp|__GFP_ZERO));
+ 	if (!tbl)
+ 		return NULL;
+ 
+@@ -181,7 +183,9 @@ static struct bucket_table *bucket_table_alloc(struct rhashtable *ht,
+ 	int i;
+ 	static struct lock_class_key __key;
+ 
+-	tbl = kvzalloc(struct_size(tbl, buckets, nbuckets), gfp);
++	tbl = alloc_hooks_tag(ht->alloc_tag,
++			kvmalloc_node_noprof(struct_size(tbl, buckets, nbuckets),
++					     gfp|__GFP_ZERO, NUMA_NO_NODE));
+ 
+ 	size = nbuckets;
+ 
+@@ -975,7 +979,7 @@ static u32 rhashtable_jhash2(const void *key, u32 length, u32 seed)
  }
--
--/**
-- * __alloc_percpu_gfp - allocate dynamic percpu area
-- * @size: size of area to allocate in bytes
-- * @align: alignment of area (max PAGE_SIZE)
-- * @gfp: allocation flags
-- *
-- * Allocate zero-filled percpu area of @size bytes aligned at @align.  If
-- * @gfp doesn't contain %GFP_KERNEL, the allocation doesn't block and can
-- * be called from any context but is a lot more likely to fail. If @gfp
-- * has __GFP_NOWARN then no warning will be triggered on invalid or failed
-- * allocation requests.
-- *
-- * RETURNS:
-- * Percpu pointer to the allocated area on success, NULL on failure.
-- */
--void __percpu *__alloc_percpu_gfp(size_t size, size_t align, gfp_t gfp)
--{
--	return pcpu_alloc(size, align, false, gfp);
--}
--EXPORT_SYMBOL_GPL(__alloc_percpu_gfp);
--
--/**
-- * __alloc_percpu - allocate dynamic percpu area
-- * @size: size of area to allocate in bytes
-- * @align: alignment of area (max PAGE_SIZE)
-- *
-- * Equivalent to __alloc_percpu_gfp(size, align, %GFP_KERNEL).
-- */
--void __percpu *__alloc_percpu(size_t size, size_t align)
--{
--	return pcpu_alloc(size, align, false, GFP_KERNEL);
--}
--EXPORT_SYMBOL_GPL(__alloc_percpu);
--
--/**
-- * __alloc_reserved_percpu - allocate reserved percpu area
-- * @size: size of area to allocate in bytes
-- * @align: alignment of area (max PAGE_SIZE)
-- *
-- * Allocate zero-filled percpu area of @size bytes aligned at @align
-- * from reserved percpu area if arch has set it up; otherwise,
-- * allocation is served from the same dynamic area.  Might sleep.
-- * Might trigger writeouts.
-- *
-- * CONTEXT:
-- * Does GFP_KERNEL allocation.
-- *
-- * RETURNS:
-- * Percpu pointer to the allocated area on success, NULL on failure.
-- */
--void __percpu *__alloc_reserved_percpu(size_t size, size_t align)
--{
--	return pcpu_alloc(size, align, true, GFP_KERNEL);
--}
-+EXPORT_SYMBOL_GPL(pcpu_alloc_noprof);
  
  /**
-  * pcpu_balance_free - manage the amount of free chunks
-@@ -2328,6 +2276,8 @@ void free_percpu(void __percpu *ptr)
- 	spin_lock_irqsave(&pcpu_lock, flags);
- 	size = pcpu_free_area(chunk, off);
+- * rhashtable_init - initialize a new hash table
++ * rhashtable_init_noprof - initialize a new hash table
+  * @ht:		hash table to be initialized
+  * @params:	configuration parameters
+  *
+@@ -1016,7 +1020,7 @@ static u32 rhashtable_jhash2(const void *key, u32 length, u32 seed)
+  *	.obj_hashfn = my_hash_fn,
+  * };
+  */
+-int rhashtable_init(struct rhashtable *ht,
++int rhashtable_init_noprof(struct rhashtable *ht,
+ 		    const struct rhashtable_params *params)
+ {
+ 	struct bucket_table *tbl;
+@@ -1031,6 +1035,8 @@ int rhashtable_init(struct rhashtable *ht,
+ 	spin_lock_init(&ht->lock);
+ 	memcpy(&ht->p, params, sizeof(*params));
  
-+	pcpu_alloc_tag_free_hook(chunk, off, size);
++	alloc_tag_record(ht->alloc_tag);
 +
- 	pcpu_memcg_free_hook(chunk, off, size);
+ 	if (params->min_size)
+ 		ht->p.min_size = roundup_pow_of_two(params->min_size);
  
- 	/*
+@@ -1076,26 +1082,26 @@ int rhashtable_init(struct rhashtable *ht,
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(rhashtable_init);
++EXPORT_SYMBOL_GPL(rhashtable_init_noprof);
+ 
+ /**
+- * rhltable_init - initialize a new hash list table
++ * rhltable_init_noprof - initialize a new hash list table
+  * @hlt:	hash list table to be initialized
+  * @params:	configuration parameters
+  *
+  * Initializes a new hash list table.
+  *
+- * See documentation for rhashtable_init.
++ * See documentation for rhashtable_init_noprof.
+  */
+-int rhltable_init(struct rhltable *hlt, const struct rhashtable_params *params)
++int rhltable_init_noprof(struct rhltable *hlt, const struct rhashtable_params *params)
+ {
+ 	int err;
+ 
+-	err = rhashtable_init(&hlt->ht, params);
++	err = rhashtable_init_noprof(&hlt->ht, params);
+ 	hlt->ht.rhlist = true;
+ 	return err;
+ }
+-EXPORT_SYMBOL_GPL(rhltable_init);
++EXPORT_SYMBOL_GPL(rhltable_init_noprof);
+ 
+ static void rhashtable_free_one(struct rhashtable *ht, struct rhash_head *obj,
+ 				void (*free_fn)(void *ptr, void *arg),
 -- 
 2.44.0.291.gc1ea87d7ee-goog
 
