@@ -1,139 +1,100 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2176FBF
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 06:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEA3381AA
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 06:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711001117; cv=none; b=AFvS52++Hlj8gA8qnrsazUlkSs8kWSTL3mEqxj5PnRS1dE6UaRO9Iqhtz9BcvCrL+e0g5keXbiYEejc3e6J9ijHfUX0GzRktU2ZJLyhZS9vvPi9SinCK05VuaWJ0JfyXoL7dgPeZcZx/PRZDP+0hyolDQG6q0bI1oWUMXs/mKAY=
+	t=1711001297; cv=none; b=r1pm//d6Leu2BGpjwUZFLZWxSR31bqtGetKyhH6r0DXHPqf/CDRbuLhcLKGZtztczCEZzuM1cmjvjIXe4OEl0eEkJfk9BY0S1TYUZUQ27l/J9+XYdPGuXFXlJ/feVr3+gFySHemTiJkwXDz1v6sgbTF0FULkHD8ACv9ID+h2vcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711001117; c=relaxed/simple;
-	bh=StZmMs66SfWq8CwwIVYc++zjL8fZH2/JsVrrOJRAohg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MTNiouMOnOmS6Dx//mEj4TQ9CFYbg1i1vp7qC7WRZI/gHi9TdEdI6RGGcwgFWm/GxGiwdBtFf6xT7PqtGIQFYPysogJs58qTmRMmmW0JrkY94tQzvGtWe9eRPaok4Ju99+IMbsk4H1zqVjyIaNCYNUrbRMobB8KTyrbbKd4BlKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org; spf=none smtp.mailfrom=jookia.org; dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b=Yy0wI8oX; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=jookia.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b="Yy0wI8oX"
-Date: Thu, 21 Mar 2024 17:04:22 +1100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jookia.org; s=key1;
-	t=1711001111;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=d79X7C80TteblSlj5M4NQLdb1p8hYHeGek74AtPCLrY=;
-	b=Yy0wI8oXHAZDzgmXzyemOn349vpfVjQx6VWtdNgzmMnfMG5N9/pVUyym2gvg3oik5Y/kVP
-	ae+xfNgqI5gX4f9LvTEylvgfCajCDnO8oXoajS6D60z+ViT/3u4f2/R17x6jYFTpv3xsEp
-	f8YJfS2PMDpFy7+Z56h6k7CQBRKwvG7tlgoykc5OuQ0sYqfQqoIAmaGBl+U8hBStp2AsTN
-	yCvd3J6+PY1VNRBUFur6b8dtPVWWzrLRfmFoCInQnx3758M/N8huOtJMGhJUbfoi3IAmEp
-	RTjxzAl61hdi8f7Esmt3LcjLVhF2kofj9v49Czn9CGI5GVXhXyWflj9baAkjiw==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: John Watts <contact@jookia.org>
-To: Saravana Kannan <saravanak@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
-	=?iso-8859-1?Q?Herv=E9?= Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>, kernel-team@android.com,
-	Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+	s=arc-20240116; t=1711001297; c=relaxed/simple;
+	bh=niE9a21M2fG8af9wfgYRU3gIVnddd4hp8Zph3fA39zg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DbpiUsbTcq6GA14uz1NP3M6Bz3XCw418k7jaQNrG5wZptKIJsf+it0WlaWQmiXdomcwxOXWhdb2qq7PnkDxLql5s2/69dEwDnb6ETEw4Pc8jWBcU1bsKGfmnDdHZs0IxbmiAXQjG81GkEf6iP5djzJljXnwfbgE+CL8yCqkK5DA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4V0Zkp0QQFz4f3jkC
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 14:08:02 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id EBCD01A016E
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 14:08:05 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.101.6])
+	by APP4 (Coremail) with SMTP id gCh0CgDHGWzCzvtlvfnzHg--.10900S2;
+	Thu, 21 Mar 2024 14:08:03 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: tj@kernel.org
+Cc: peterz@infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] of: property: fw_devlink: Fix stupid bug in
- remote-endpoint parsing
-Message-ID: <ZfvN5jDrftG-YRG4@titan>
-References: <20240224052436.3552333-1-saravanak@google.com>
+Subject: [PATCH] workqueue: remove unnecessary import and function in wq_monitor.py
+Date: Thu, 21 Mar 2024 23:04:20 +0800
+Message-Id: <20240321150420.37648-1-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240224052436.3552333-1-saravanak@google.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDHGWzCzvtlvfnzHg--.10900S2
+X-Coremail-Antispam: 1UD129KBjvJXoWrtr1Dtw1xCF15Xr4rXw47Jwb_yoW8Jr15pF
+	sakF47G3yfXryUX3Z5W343AFyfWrWDAF1qgayrXr1avrs8Xr9Ig34xK398Jr95Xa4DXFW0
+	9a9rWrZ0qr4DZF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
+	8lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E
+	3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r
+	xl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv
+	0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z2
+	80aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28I
+	cxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
+	IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI
+	42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
+	IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
+	87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUsBMNUUUUU
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-On Fri, Feb 23, 2024 at 09:24:35PM -0800, Saravana Kannan wrote:
-> Introduced a stupid bug in commit 782bfd03c3ae ("of: property: Improve
-> finding the supplier of a remote-endpoint property") due to a last minute
-> incorrect edit of "index !=0" into "!index". This patch fixes it to be
-> "index > 0" to match the comment right next to it.
-> 
-> Reported-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> Link: https://lore.kernel.org/lkml/20240223171849.10f9901d@booty/
-> Fixes: 782bfd03c3ae ("of: property: Improve finding the supplier of a remote-endpoint property")
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
-> Using Link: instead of Closes: because Luca reported two separate issues.
-> 
-> Sorry about introducing a stupid bug in an -rcX Rob.
-> 
-> -Saravana
+Remove unnecessary import and function in wq_monitor.py
 
-Hi there,
+Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+---
+ tools/workqueue/wq_monitor.py | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-Could this be reverted? It breaks my audio-graph-card2 setup:
+diff --git a/tools/workqueue/wq_monitor.py b/tools/workqueue/wq_monitor.py
+index a8856a9c45dc..9e964c5be40c 100644
+--- a/tools/workqueue/wq_monitor.py
++++ b/tools/workqueue/wq_monitor.py
+@@ -32,16 +32,13 @@ https://github.com/osandov/drgn.
+   rescued  The number of work items executed by the rescuer.
+ """
+ 
+-import sys
+ import signal
+-import os
+ import re
+ import time
+ import json
+ 
+ import drgn
+-from drgn.helpers.linux.list import list_for_each_entry,list_empty
+-from drgn.helpers.linux.cpumask import for_each_possible_cpu
++from drgn.helpers.linux.list import list_for_each_entry
+ 
+ import argparse
+ parser = argparse.ArgumentParser(description=desc,
+@@ -54,10 +51,6 @@ parser.add_argument('-j', '--json', action='store_true',
+                     help='Output in json')
+ args = parser.parse_args()
+ 
+-def err(s):
+-    print(s, file=sys.stderr, flush=True)
+-    sys.exit(1)
+-
+ workqueues              = prog['workqueues']
+ 
+ WQ_UNBOUND              = prog['WQ_UNBOUND']
+-- 
+2.30.0
 
-[   17.116290] platform 2034000.i2s: deferred probe pending: platform: wait for supplier /sound/multi
-[   17.125370] platform test_codec: deferred probe pending: platform: wait for supplier /sound/multi
-[   17.134257] platform sound: deferred probe pending: asoc-audio-graph-card2: parse error
-
-/ {
-	...
-
-
-	test_codec {
-		compatible = "test-codec";
-		prefix = "Test codec";
-		#sound-dai-cells = <0>;
-		port {
-			test_ep: endpoint {
-				remote-endpoint = <&card_ep_2>;
-			};
-		};
-	};
-
-	sound {
-		compatible = "audio-graph-card2";
-		label = "CS5368";
-		links = <&i2s2_port>;
-		multi {
-			#address-cells = <1>;
-			#size-cells = <0>;
-			convert-channels = <16>;
-			port@0 {
-				reg = <0>;
-				card_ep_0: endpoint {
-					remote-endpoint = <&i2s2_ep>;
-				};
-			};
-			//port@1 {
-			//	reg = <1>;
-			//	card_ep_1: endpoint {
-			//		remote-endpoint = <&cs5368_ep>;
-			//	};
-			//};
-			port@1 {
-				reg = <1>;
-				card_ep_2: endpoint {
-					remote-endpoint = <&test_ep>;
-				};
-			};
-		};
-	};
-};
-
-
-&i2s2 {
-	pinctrl-0 = <&i2s2_pins>, <&i2s2_din_pins>;
-	pinctrl-names = "default";
-	status = "okay";
-	i2s2_port: port {
-		i2s2_ep: endpoint {
-			format = "dsp_a";
-			bitclock-master;
-			frame-master;
-			remote-endpoint = <&card_ep_0>;
-		};
-	};
-};
-
-John.
