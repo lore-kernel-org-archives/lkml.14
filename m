@@ -1,136 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130378613B;
-	Thu, 21 Mar 2024 18:03:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1211912BF3E;
+	Thu, 21 Mar 2024 18:04:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711044206; cv=none; b=VOzrD3NdudN3N8+jcyx92uB6THQUqj6fY1KSeKb3zoUKTmMhIJuK7YpMF1GbtaLIOSbnUNVj789NJ7q1SUwgEjXW8FlSMaCoye3y3JsQOYsLh6FK1GfIsXL/dyYJSU29CJQmH2IgU852DxNNdOhFhta7ROOk8REhjWP42k14ITs=
+	t=1711044284; cv=none; b=BziGoHFysCerx1KdTS2+t9avwweV+kfh92EprcQWRSim/czyvFFDRO+HNTnRBJW3x1UFneTN3op2fCG4X6VHjrCUpWHr4dlIdY9iIOo+uEvHm4jbQeUATS+nuW7BbC4eCwn5sOD2fHrZSNZ5IF+CzHdRx8eCv8tab4YjiWgyhs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711044206; c=relaxed/simple;
-	bh=sCdLXz2FGoLIYbxZ6Ggaxi6+JlxzyXAOAvvDKudzdu0=;
+	s=arc-20240116; t=1711044284; c=relaxed/simple;
+	bh=J80hw9KyCX9opqR+XEOMaH/He6vXKIOqs0CbuKC20xA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jmXJUSJQ03uL+rCij7PeVQgl6rJSpoAxFv5LJzsPvEQ9/zSS49JKCvZT8mqFrc5QhPGD0JaxPMGt1wAXdduA+XtCmmBcNqSqY2fwRWRem+glTdEEmZsfocoDcdd+4dhIB1rBKqN1ejhuKBZo6oFBFEM1QV5yoZ0tdRvrfLLxCE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SxSiIFgl; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=aiMrKWSS2Iegp66fMSFNGw3/LQSTzU7vJlcXPakDgWh2XnBoW5dqJ0kW4VWfIq32VqiMv2HuBdd2qkICWF0TkzhMI6RFBSCRu23HXmCPTMyrXWSto1ArhlXXd8V+of4tR3NQwWgK3se3Lh07DyPBAE0uNWn3unk/0DsBiK+A4RQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oFhpGpTd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SxSiIFgl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A910CC433C7;
-	Thu, 21 Mar 2024 18:03:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oFhpGpTd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 453F7C433C7;
+	Thu, 21 Mar 2024 18:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711044205;
-	bh=sCdLXz2FGoLIYbxZ6Ggaxi6+JlxzyXAOAvvDKudzdu0=;
+	s=k20201202; t=1711044283;
+	bh=J80hw9KyCX9opqR+XEOMaH/He6vXKIOqs0CbuKC20xA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SxSiIFgly+OkYViveqUiMzJ2xWwvoS+z9vzxkK4K4SZ9gLpnlrElKDt1xXlSXoTil
-	 9o644uhspGUGlBY1JjiHTr4lkFAdyHvUa3zfQn917aA8r+zC48Lmg3/VLdL6ni9l7g
-	 dhRGYoHaV3yLYN+DYuFOBd6l0+DEa3vHAjTpUinaPJNAnjgpkfBIsNxtdi0vr+3ONQ
-	 z3CWv5ORPZ7Tey2roNPv/yKBVPMNvCkWN4VLoH6CT3TdFGMbT6r2HUjBagm1iv1VWd
-	 aHeWePNyeWxQArVxZfpR1pTn9bSNMr5MMfrE15jBwTRYA9WZaxEpiv4pluzNHTkFHH
-	 rBizgE2hR1Z1w==
-Date: Thu, 21 Mar 2024 11:08:19 -0700
-From: Bjorn Andersson <andersson@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Andrew Davis <afd@ti.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Sibi Sankar <quic_sibis@quicinc.com>, Abel Vesa <abel.vesa@linaro.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Joakim Zhang <joakim.zhang@cixtech.com>, 
-	Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [GIT PULL] remoteproc updates for v6.9
-Message-ID: <yniwjzjynmyndzqglfmwpy2th3vtadmms6ifxqs2ojo7wr66ne@ydnr3rltaddn>
-References: <20240321125518.1675903-1-andersson@kernel.org>
+	b=oFhpGpTdoER41EnaleJXCKlOCWbfnWqrs7uW3RUUBTJPsqV/V8T0nlPVJJ8m4itIQ
+	 MjNThyJMqmzOwJYctzZSMUqGkGbrV/hexI7izxOiExiQSgs9YFzvWU4CLUp2uXCCWP
+	 x+77dJWpw0QvetCYbEHS1aehIej4HaHki7KAYpn8DapTNTL0LuLqbuXjuhS/ANKyBH
+	 0KrNAlBFPg0Ceojnl7wQydbJZ+zQCEZjN9FvVAGKjXDV6nIuCzax6zWr7emxC4NDDB
+	 iOyCeCI410WdXe5QI0c59RbgM0oYALw56Dzp+gw/smhvf754x9NvlWRy9lnzQA0BB7
+	 9/Hxj3RYPJVIw==
+Date: Thu, 21 Mar 2024 18:04:39 +0000
+From: Lee Jones <lee@kernel.org>
+To: Min Li <lnimi@hotmail.com>
+Cc: richardcochran@gmail.com, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, Min Li <min.li.xe@renesas.com>
+Subject: Re: [PATCH net-next v7 0/5] ptp: clockmatrix: support 32-bit address
+ space
+Message-ID: <20240321180439.GF13211@google.com>
+References: <LV3P220MB1202C9E9B0C5CE022F78CA5DA02D2@LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240321125518.1675903-1-andersson@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <LV3P220MB1202C9E9B0C5CE022F78CA5DA02D2@LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM>
 
-On Thu, Mar 21, 2024 at 05:55:13AM -0700, Bjorn Andersson wrote:
-> I'm sorry for the late pull request, I apparently had managed to get git
-> send-email to only deliver my mail to /dev/null on the machine where I prepared
-> this.
+On Mon, 18 Mar 2024, Min Li wrote:
+
+> From: Min Li <min.li.xe@renesas.com>
 > 
+> The main porpose of this series is [PATCH 1/5], which is to support read/write
+> to the whole 32-bit address space. Other changes are increamental since
+> [PATCH 1/5].
+>  
+> 
+> Min Li (5):
+>   ptp: clockmatrix: support 32-bit address space
+>   ptp: clockmatrix: set write phase timer to 0 when not in PCW mode
+>   ptp: clockmatrix: dco input-to-output delay is 20 FOD cycles + 8ns
+>   ptp: clockmatrix: Fix caps.max_adj to reflect
+>     DPLL_MAX_FREQ_OFFSET[MAX_FFO]
+>   ptp: clockmatrix: move register and firmware related definition to
+>     idt8a340_reg.h
+> 
+>  drivers/ptp/ptp_clockmatrix.c    | 120 ++++--
+>  drivers/ptp/ptp_clockmatrix.h    |  66 +--
 
-I was further notified that this conflicts with your tree, Linus. Below
-is the resolution for this conflict.
+>  include/linux/mfd/idt8a340_reg.h | 664 ++++++++++++++++++-------------
 
-Please let me know if you'd like me to create some form of merge commit
-for this.
+Acked-by: Lee Jones <lee@kernel.org>
 
-Regards,
-Bjorn
+>  3 files changed, 482 insertions(+), 368 deletions(-)
 
-diff --cc drivers/remoteproc/imx_dsp_rproc.c
-index d73727a5828a,56a799cb8b36..087506e21508
---- a/drivers/remoteproc/imx_dsp_rproc.c
-+++ b/drivers/remoteproc/imx_dsp_rproc.c
-@@@ -1090,9 -1154,7 +1090,7 @@@ static int imx_dsp_rproc_probe(struct p
-  	return 0;
-  
-  err_detach_domains:
- -	imx_dsp_detach_pm_domains(priv);
- +	dev_pm_domain_detach_list(priv->pd_list);
-- err_put_rproc:
-- 	rproc_free(rproc);
-  
-  	return ret;
-  }
-@@@ -1104,8 -1166,7 +1102,7 @@@ static void imx_dsp_rproc_remove(struc
-  
-  	pm_runtime_disable(&pdev->dev);
-  	rproc_del(rproc);
- -	imx_dsp_detach_pm_domains(priv);
- +	dev_pm_domain_detach_list(priv->pd_list);
-- 	rproc_free(rproc);
-  }
-  
-  /* pm runtime functions */
-diff --cc drivers/remoteproc/qcom_q6v5_adsp.c
-index 93f9a1537ec6,34ac996a93b2..1d24c9b656a8
---- a/drivers/remoteproc/qcom_q6v5_adsp.c
-+++ b/drivers/remoteproc/qcom_q6v5_adsp.c
-@@@ -704,13 -713,15 +704,13 @@@ static int adsp_probe(struct platform_d
-  
-  	ret = adsp_init_clock(adsp, desc->clk_ids);
-  	if (ret)
-- 		goto free_rproc;
-+ 		return ret;
-  
- -	ret = qcom_rproc_pds_attach(adsp->dev, adsp,
- -				    desc->proxy_pd_names);
- +	ret = qcom_rproc_pds_attach(adsp, desc->pd_names, desc->num_pds);
-  	if (ret < 0) {
-  		dev_err(&pdev->dev, "Failed to attach proxy power domains\n");
-- 		goto free_rproc;
-+ 		return ret;
-  	}
- -	adsp->proxy_pd_count = ret;
-  
-  	ret = adsp_init_reset(adsp);
-  	if (ret)
-@@@ -742,11 -753,8 +742,8 @@@
-  	return 0;
-  
-  disable_pm:
- -	qcom_rproc_pds_detach(adsp, adsp->proxy_pds, adsp->proxy_pd_count);
- +	qcom_rproc_pds_detach(adsp);
-  
-- free_rproc:
-- 	rproc_free(rproc);
-- 
-  	return ret;
-  }
-  
-@@@ -760,8 -768,7 +757,7 @@@ static void adsp_remove(struct platform
-  	qcom_remove_glink_subdev(adsp->rproc, &adsp->glink_subdev);
-  	qcom_remove_sysmon_subdev(adsp->sysmon);
-  	qcom_remove_ssr_subdev(adsp->rproc, &adsp->ssr_subdev);
- -	qcom_rproc_pds_detach(adsp, adsp->proxy_pds, adsp->proxy_pd_count);
- +	qcom_rproc_pds_detach(adsp);
-- 	rproc_free(adsp->rproc);
-  }
-  
-  static const struct adsp_pil_data adsp_resource_init = {
+-- 
+Lee Jones [李琼斯]
