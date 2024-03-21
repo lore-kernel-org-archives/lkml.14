@@ -1,140 +1,322 @@
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D0B53E12
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 08:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CF0BE6E;
+	Thu, 21 Mar 2024 08:53:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711011068; cv=none; b=pUwBeGGLxUQLejr7lgQTfU8d4KwANZpSXOi6nVZXITgj5OQLLkBlh3fvzVTcSxXWx00YHR+Ogd/ZEHIq8FL1VJGhOS3qKQvJMYViD3RC7sUGGWYMPKVmPv1NDl1dbskit3PsAyLFQX0859aY6PtqBij3g6nAUvr3inVUiF0BgkM=
+	t=1711011216; cv=none; b=ok4HMlaS+uv9a/4gcuDBY1vRZUyK/or3bZa2+0Hj/aP3PSn8H8GohVRrqfl5C3Vble2r0oksqOgnwEAOi+D7XW9Ab4ilm+9igrzY2Rph0/u/4hTUA+tp9XN2y5/QjAfStdJXoCLTyIlAMp2FnCpdpK+GHQLvr7oOb85kj15huqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711011068; c=relaxed/simple;
-	bh=Qv0uJqFhMtAx1X6+XG2ureaXkoHplsppJbmPG09HXsM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LNU2PLvKk0TVmTTPR5uh3va8x09hjL/+3/X4Dvcv33Tttv3El/Tzposq67pF/ZtQfcGR4TAEaj0HdHepJA4E/aSJEKqgu0ULyKwEDs8izw2ulVQqeaxH7APIXR+ROKkFjwx+j6NBx/JHFI0cJzlJM5q0JZk8PT6JHN76KBULlIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=CNUJSkW5; arc=none smtp.client-ip=209.85.167.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="CNUJSkW5"
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3c38eced701so462398b6e.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 01:51:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1711011065; x=1711615865; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aqNG2RpJPlr1g6cb+Y3gz6tpiaBtzhG+qVD6/FBVn0g=;
-        b=CNUJSkW5GE0NLx2WDDlZa5mENellXTjS28tHso8Setqg/Oq/YJXk3DHFbdX52mel+Z
-         C7JLamXfQdHk0/0jSnMFPsfia+ZaUzDZcQFfWwajSSUrhgrhI8OBoAWtPgA6tVqEzov3
-         /z0/FPFMzefB1RZ7Owy7Z1nD0M4WelocyCpcR9zRbwcE2HFcqYYnty/vXmQ3veW+aPJv
-         xwjybwou5bQeqz8KrUm6U3Pq1PLUkin9j1q1pVpqqbeCa3vl5LDVCzwI1/DZ6EKEYgNS
-         BH+exQUu0Zpj5tdJ24/g2jMml80h0tQ383DCOmigJ1earr98MO7es4wfuOb8+8MKWAyx
-         hO1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711011065; x=1711615865;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aqNG2RpJPlr1g6cb+Y3gz6tpiaBtzhG+qVD6/FBVn0g=;
-        b=MqjrONFxRQrp12CPPucQuQ0XqJU7eF1jwWOVFFKwx+rgqh/OLbtyz3La/7lKisnhij
-         Yl3WsS8N22FXbJk5jS2Rp82hxYkYYiIIeKpMK0aKkkeihQvbD4mttn4wxy27vFTqu/kf
-         kmLup3WglSH1J5BPCVKSIOrvo+ZQ9CgdPUWG0kg6M56nQzmFv1zgSkF9uAWERi9ZalfD
-         tU2nq1YPMDjwvSj+3QaNVurzve9FTY+lL6mWVLaoEScNBcLv6UdDWUXf2aAVGSlesEk9
-         dCYc3C9uu27LdKl88BGQtH0VmNwi2ruoelV4p3wLEfCHLiOkXjAAiDdDd6JvAWc6TYzz
-         1G6A==
-X-Forwarded-Encrypted: i=1; AJvYcCV8OC1e7VTfCqmE46nv3bAI+Owj8MlQ/xFMUDahqyKY/ivRuqTows3ePX19Mlj8wXm+gjrrhUlc0fDsDupDR31HDBq5pRKsxYi2T2gh
-X-Gm-Message-State: AOJu0YyGexr8mZp3ba3sJ6FjjMAIhiUNFv/bR94NBhApoT2mxwFzjAf0
-	nPDbfH4zNPZKfi8EuHUnWVLOcmhpLbZQ8OjC+MmQ/hsxoWjdeEkoBaYYQKGSNKc=
-X-Google-Smtp-Source: AGHT+IHwDM9ixAq9INkO3i418iZWmEpmXTd0fk8UuLCRGi37vLFEzQGRGixGXgfcb4sMkROFJd9img==
-X-Received: by 2002:a05:6808:2102:b0:3c3:980d:3700 with SMTP id r2-20020a056808210200b003c3980d3700mr1825504oiw.8.1711011065475;
-        Thu, 21 Mar 2024 01:51:05 -0700 (PDT)
-Received: from anup-ubuntu-vm.localdomain ([103.97.165.210])
-        by smtp.gmail.com with ESMTPSA id x3-20020a544003000000b003c3753dd869sm2275409oie.58.2024.03.21.01.51.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 01:51:05 -0700 (PDT)
-From: Anup Patel <apatel@ventanamicro.com>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Atish Patra <atishp@atishpatra.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Anup Patel <anup@brainfault.org>,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH 2/2] RISC-V: KVM: Fix APLIC in_clrip[x] read emulation
-Date: Thu, 21 Mar 2024 14:20:41 +0530
-Message-Id: <20240321085041.1955293-3-apatel@ventanamicro.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240321085041.1955293-1-apatel@ventanamicro.com>
-References: <20240321085041.1955293-1-apatel@ventanamicro.com>
+	s=arc-20240116; t=1711011216; c=relaxed/simple;
+	bh=b924mGehVaz7RM1Ell0G0QnlUCZl3Tnwtr/AfmvR5Z0=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=k4W+pcNi1dvRkwaB64Jxj6NOkKGj3fJnpcVyjl6Kv6X/qD4ZDH+ejDsqdEOLHIMCCqD1w/EP2tkzvGu+HrN9B34TGNrK2SGwovJ10parjGr/6mxICqw7Rfv/tUutXlim2j6h8kx9oviGfOm4VQp3jGRV8NtV2/m59Zc8h08wDn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 356611A2438;
+	Thu, 21 Mar 2024 09:53:32 +0100 (CET)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D07D71A0DED;
+	Thu, 21 Mar 2024 09:53:31 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 650AC180222D;
+	Thu, 21 Mar 2024 16:53:30 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: abelvesa@kernel.org,
+	peng.fan@nxp.com,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	linux-imx@nxp.com,
+	shengjiu.wang@gmail.com
+Cc: linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] clk: imx: imx8mp: Add pm_runtime support for power saving
+Date: Thu, 21 Mar 2024 16:36:51 +0800
+Message-Id: <1711010211-6825-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-The reads to APLIC in_clrip[x] registers returns rectified input values
-of the interrupt sources.
+Add pm_runtime support for power saving. In pm runtime suspend
+state the registers will be reseted, so add registers save
+in pm runtime suspend and restore them in pm runtime resume.
 
-A rectified input value of an interrupt source is defined by the section
-"4.5.2 Source configurations (sourcecfg[1]–sourcecfg[1023])" of the
-RISC-V AIA specification as:
-
-    rectified input value = (incoming wire value) XOR (source is inverted)
-
-Update the riscv_aplic_input() implementation to match the above.
-
-Fixes: 74967aa208e2 ("RISC-V: KVM: Add in-kernel emulation of AIA APLIC")
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
 ---
- arch/riscv/kvm/aia_aplic.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+changes in v3:
+- remove REGS_NUM, use the ARRAY_SIZE
+- merge clk_imx8mp_audiomix_drvdata and clk_hw_onecell_data together.
 
-diff --git a/arch/riscv/kvm/aia_aplic.c b/arch/riscv/kvm/aia_aplic.c
-index 5e842b92dc46..b467ba5ed910 100644
---- a/arch/riscv/kvm/aia_aplic.c
-+++ b/arch/riscv/kvm/aia_aplic.c
-@@ -197,16 +197,31 @@ static void aplic_write_enabled(struct aplic *aplic, u32 irq, bool enabled)
+changes in v2:
+- move pm_runtime_enable before the clk register
+
+ drivers/clk/imx/clk-imx8mp-audiomix.c | 157 ++++++++++++++++++++++----
+ 1 file changed, 136 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
+index 55ed211a5e0b..5ae33bce8ad8 100644
+--- a/drivers/clk/imx/clk-imx8mp-audiomix.c
++++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
+@@ -7,10 +7,12 @@
  
- static bool aplic_read_input(struct aplic *aplic, u32 irq)
+ #include <linux/clk-provider.h>
+ #include <linux/device.h>
++#include <linux/io.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
+ 
+ #include <dt-bindings/clock/imx8mp-clock.h>
+ 
+@@ -18,6 +20,7 @@
+ 
+ #define CLKEN0			0x000
+ #define CLKEN1			0x004
++#define EARC			0x200
+ #define SAI1_MCLK_SEL		0x300
+ #define SAI2_MCLK_SEL		0x304
+ #define SAI3_MCLK_SEL		0x308
+@@ -26,6 +29,11 @@
+ #define SAI7_MCLK_SEL		0x314
+ #define PDM_SEL			0x318
+ #define SAI_PLL_GNRL_CTL	0x400
++#define SAI_PLL_FDIVL_CTL0	0x404
++#define SAI_PLL_FDIVL_CTL1	0x408
++#define SAI_PLL_SSCG_CTL	0x40C
++#define SAI_PLL_MNIT_CTL	0x410
++#define IPG_LP_CTRL		0x504
+ 
+ #define SAIn_MCLK1_PARENT(n)						\
+ static const struct clk_parent_data					\
+@@ -182,26 +190,82 @@ static struct clk_imx8mp_audiomix_sel sels[] = {
+ 	CLK_SAIn(7)
+ };
+ 
++static const u16 audiomix_regs[] = {
++	CLKEN0,
++	CLKEN1,
++	EARC,
++	SAI1_MCLK_SEL,
++	SAI2_MCLK_SEL,
++	SAI3_MCLK_SEL,
++	SAI5_MCLK_SEL,
++	SAI6_MCLK_SEL,
++	SAI7_MCLK_SEL,
++	PDM_SEL,
++	SAI_PLL_GNRL_CTL,
++	SAI_PLL_FDIVL_CTL0,
++	SAI_PLL_FDIVL_CTL1,
++	SAI_PLL_SSCG_CTL,
++	SAI_PLL_MNIT_CTL,
++	IPG_LP_CTRL,
++};
++
++struct clk_imx8mp_audiomix_priv {
++	void __iomem *base;
++	struct clk_hw_onecell_data *clk_hw_data;
++	u32 regs_save[ARRAY_SIZE(audiomix_regs)];
++};
++
++static void clk_imx8mp_audiomix_save_restore(struct device *dev, bool save)
++{
++	struct clk_imx8mp_audiomix_priv *priv = dev_get_drvdata(dev);
++	void __iomem *base = priv->base;
++	int i;
++
++	if (save) {
++		for (i = 0; i < ARRAY_SIZE(audiomix_regs); i++)
++			priv->regs_save[i] = readl(base + audiomix_regs[i]);
++	} else {
++		for (i = 0; i < ARRAY_SIZE(audiomix_regs); i++)
++			writel(priv->regs_save[i], base + audiomix_regs[i]);
++	}
++}
++
+ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
  {
--	bool ret;
--	unsigned long flags;
-+	u32 sourcecfg, sm, raw_input, irq_inverted;
- 	struct aplic_irq *irqd;
-+	unsigned long flags;
-+	bool ret = false;
+-	struct clk_hw_onecell_data *priv;
++	struct clk_imx8mp_audiomix_priv *priv;
++	struct clk_hw_onecell_data *clk_hw_data;
+ 	struct device *dev = &pdev->dev;
+ 	void __iomem *base;
+ 	struct clk_hw *hw;
+-	int i;
++	int i, ret;
  
- 	if (!irq || aplic->nr_irqs <= irq)
- 		return false;
- 	irqd = &aplic->irqs[irq];
+ 	priv = devm_kzalloc(dev,
+-			    struct_size(priv, hws, IMX8MP_CLK_AUDIOMIX_END),
++			    sizeof(*priv) + struct_size(clk_hw_data, hws, IMX8MP_CLK_AUDIOMIX_END),
+ 			    GFP_KERNEL);
+ 	if (!priv)
+ 		return -ENOMEM;
  
- 	raw_spin_lock_irqsave(&irqd->lock, flags);
--	ret = (irqd->state & APLIC_IRQ_STATE_INPUT) ? true : false;
+-	priv->num = IMX8MP_CLK_AUDIOMIX_END;
++	priv->clk_hw_data = (struct clk_hw_onecell_data *)((void *)priv + sizeof(*priv));
 +
-+	sourcecfg = irqd->sourcecfg;
-+	if (sourcecfg & APLIC_SOURCECFG_D)
-+		goto skip;
-+
-+	sm = sourcecfg & APLIC_SOURCECFG_SM_MASK;
-+	if (sm == APLIC_SOURCECFG_SM_INACTIVE)
-+		goto skip;
-+
-+	raw_input = (irqd->state & APLIC_IRQ_STATE_INPUT) ? 1 : 0;
-+	irq_inverted = (sm == APLIC_SOURCECFG_SM_LEVEL_LOW ||
-+			sm == APLIC_SOURCECFG_SM_EDGE_FALL) ? 1 : 0;
-+	ret = !!(raw_input ^ irq_inverted);
-+
-+skip:
- 	raw_spin_unlock_irqrestore(&irqd->lock, flags);
++	clk_hw_data = priv->clk_hw_data;
++	clk_hw_data->num = IMX8MP_CLK_AUDIOMIX_END;
  
- 	return ret;
+ 	base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
+ 
++	priv->base = base;
++	dev_set_drvdata(dev, priv);
++
++	/*
++	 * pm_runtime_enable needs to be called before clk register.
++	 * That is to make core->rpm_enabled to be true for clock
++	 * usage.
++	 */
++	pm_runtime_get_noresume(dev);
++	pm_runtime_set_active(dev);
++	pm_runtime_enable(dev);
++
+ 	for (i = 0; i < ARRAY_SIZE(sels); i++) {
+ 		if (sels[i].num_parents == 1) {
+ 			hw = devm_clk_hw_register_gate_parent_data(dev,
+@@ -216,10 +280,12 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
+ 				0, NULL, NULL);
+ 		}
+ 
+-		if (IS_ERR(hw))
+-			return PTR_ERR(hw);
++		if (IS_ERR(hw)) {
++			ret = PTR_ERR(hw);
++			goto err_clk_register;
++		}
+ 
+-		priv->hws[sels[i].clkid] = hw;
++		clk_hw_data->hws[sels[i].clkid] = hw;
+ 	}
+ 
+ 	/* SAI PLL */
+@@ -228,39 +294,86 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
+ 		ARRAY_SIZE(clk_imx8mp_audiomix_pll_parents),
+ 		CLK_SET_RATE_NO_REPARENT, base + SAI_PLL_GNRL_CTL,
+ 		0, 2, 0, NULL, NULL);
+-	priv->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_REF_SEL] = hw;
++	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_REF_SEL] = hw;
+ 
+ 	hw = imx_dev_clk_hw_pll14xx(dev, "sai_pll", "sai_pll_ref_sel",
+ 				    base + 0x400, &imx_1443x_pll);
+-	if (IS_ERR(hw))
+-		return PTR_ERR(hw);
+-	priv->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL] = hw;
++	if (IS_ERR(hw)) {
++		ret = PTR_ERR(hw);
++		goto err_clk_register;
++	}
++	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL] = hw;
+ 
+ 	hw = devm_clk_hw_register_mux_parent_data_table(dev,
+ 		"sai_pll_bypass", clk_imx8mp_audiomix_pll_bypass_sels,
+ 		ARRAY_SIZE(clk_imx8mp_audiomix_pll_bypass_sels),
+ 		CLK_SET_RATE_NO_REPARENT | CLK_SET_RATE_PARENT,
+ 		base + SAI_PLL_GNRL_CTL, 16, 1, 0, NULL, NULL);
+-	if (IS_ERR(hw))
+-		return PTR_ERR(hw);
+-	priv->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_BYPASS] = hw;
++	if (IS_ERR(hw)) {
++		ret = PTR_ERR(hw);
++		goto err_clk_register;
++	}
++
++	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_BYPASS] = hw;
+ 
+ 	hw = devm_clk_hw_register_gate(dev, "sai_pll_out", "sai_pll_bypass",
+ 				       0, base + SAI_PLL_GNRL_CTL, 13,
+ 				       0, NULL);
+-	if (IS_ERR(hw))
+-		return PTR_ERR(hw);
+-	priv->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_OUT] = hw;
++	if (IS_ERR(hw)) {
++		ret = PTR_ERR(hw);
++		goto err_clk_register;
++	}
++	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_OUT] = hw;
+ 
+ 	hw = devm_clk_hw_register_fixed_factor(dev, "sai_pll_out_div2",
+ 					       "sai_pll_out", 0, 1, 2);
+-	if (IS_ERR(hw))
+-		return PTR_ERR(hw);
++	if (IS_ERR(hw)) {
++		ret = PTR_ERR(hw);
++		goto err_clk_register;
++	}
++
++	ret = devm_of_clk_add_hw_provider(&pdev->dev, of_clk_hw_onecell_get,
++					  clk_hw_data);
++	if (ret)
++		goto err_clk_register;
++
++	pm_runtime_put_sync(dev);
++	return 0;
++
++err_clk_register:
++	pm_runtime_put_sync(dev);
++	pm_runtime_disable(dev);
++	return ret;
++}
++
++static int clk_imx8mp_audiomix_remove(struct platform_device *pdev)
++{
++	pm_runtime_disable(&pdev->dev);
++
++	return 0;
++}
++
++static int clk_imx8mp_audiomix_runtime_suspend(struct device *dev)
++{
++	clk_imx8mp_audiomix_save_restore(dev, true);
+ 
+-	return devm_of_clk_add_hw_provider(&pdev->dev, of_clk_hw_onecell_get,
+-					   priv);
++	return 0;
+ }
+ 
++static int clk_imx8mp_audiomix_runtime_resume(struct device *dev)
++{
++	clk_imx8mp_audiomix_save_restore(dev, false);
++
++	return 0;
++}
++
++static const struct dev_pm_ops clk_imx8mp_audiomix_pm_ops = {
++	SET_RUNTIME_PM_OPS(clk_imx8mp_audiomix_runtime_suspend,
++			   clk_imx8mp_audiomix_runtime_resume, NULL)
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++				      pm_runtime_force_resume)
++};
++
+ static const struct of_device_id clk_imx8mp_audiomix_of_match[] = {
+ 	{ .compatible = "fsl,imx8mp-audio-blk-ctrl" },
+ 	{ /* sentinel */ }
+@@ -269,9 +382,11 @@ MODULE_DEVICE_TABLE(of, clk_imx8mp_audiomix_of_match);
+ 
+ static struct platform_driver clk_imx8mp_audiomix_driver = {
+ 	.probe	= clk_imx8mp_audiomix_probe,
++	.remove = clk_imx8mp_audiomix_remove,
+ 	.driver = {
+ 		.name = "imx8mp-audio-blk-ctrl",
+ 		.of_match_table = clk_imx8mp_audiomix_of_match,
++		.pm = &clk_imx8mp_audiomix_pm_ops,
+ 	},
+ };
+ 
 -- 
 2.34.1
 
