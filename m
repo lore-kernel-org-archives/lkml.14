@@ -1,185 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-251-72.mail.qq.com (out203-205-251-72.mail.qq.com [203.205.251.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A360723778;
-	Thu, 21 Mar 2024 15:47:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C058A1E879
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 15:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711036027; cv=none; b=MKZNQXRtCB6ChqsCZOv7tVj3GdWEX2XBoZEfdlAoGybVSOOgNZ+taEIS/BlxSs4e14+GEAuSOivo+px8hytsZUhz9xE8uE4g1KS45Ru5Zk4/ZSOz37lPMbyDFh4WTK5HGNQmwPYGG6f8DLhTKpMlqmxOu+fqeIrVkIbg+2Ko+NI=
+	t=1711036076; cv=none; b=PIPWgG/AEKwkUrYx6ZiJUyrwUsNFDp619Ipojqw5r2cJsWem2sLeBYXy33xIiKHoki9lViSBbVSRyjSdWluUGIOhBGLBGnBZGqsZS9aeOHEEe7rKR7+Oi9LEcmENgVOt95T8wUz8QZkBwqYBhJ3X3neX2FjOEHNNj0o9aNF8rug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711036027; c=relaxed/simple;
-	bh=thSvwB8rR3BM2oBG9DuRpKkR95kWQmdAazTxYk9K/a8=;
+	s=arc-20240116; t=1711036076; c=relaxed/simple;
+	bh=jeeFGFpFQcMeiPnqG1XhNR17H2LPGzyB/MVHRtQ7nxA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pmTr6xREPn5W0ciPF2w2T5nfTU0IU7jI/HSZKBET3QQvriCwQ7CkvEiSCoad4sGqLEFVF2+viXzaEj3BrrD1tmZdcmBICWoH16+D8Ejl2ncWQOpWvKMk0pJUZIR08XrQ/B8tXZi2G4wYzucJ3aXcH+RIZpDfgRHIKaqXSOfqnhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E823FC433C7;
-	Thu, 21 Mar 2024 15:47:04 +0000 (UTC)
-Message-ID: <e4b2fc02-977f-4eb6-be7a-a4493a5a3931@xs4all.nl>
-Date: Thu, 21 Mar 2024 16:47:03 +0100
+	 In-Reply-To:Content-Type; b=jY10qaRPTMcivkGCBt9+8q4QsRO1a3Myk8PnYyNdIycei+Eq7M2AgQZCpFkWL7eh+wG2fZwCoB5Io4ip+KlSXE3UZrDoQSW3kMWLTkVcPiG/BW1Mb7eRm/GXcGLKD+tYc/83jdX/AIOXEUf5gw8Ddh4KTL8cn00Yp7QW5jUV5a4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=HhUFPzpk; arc=none smtp.client-ip=203.205.251.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="HhUFPzpk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1711036064;
+	bh=eFb5mGkBNhSImhI4kWEKhUE6z0crGzcN6/hptGkBZi0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=HhUFPzpknp/Nrd9zQtSJBBPC9/4ryBOd+sXJEUVmFTs5iKC2r9XvANoNn/zXpSFza
+	 yFNdePCAlbDjjLWNNpSsi3Y59dv1N+cslmejn2l3BDWrmSl9wb3glyj5xMwdyH6uaf
+	 m/7+XyEaQj5wxS30vkJ59AI39dW69CImwNMtGAmY=
+Received: from [IPV6:2409:8961:2b17:549c:98ce:49d:c167:4134] ([2409:8961:2b17:549c:98ce:49d:c167:4134])
+	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
+	id 9CAAC4C3; Thu, 21 Mar 2024 23:39:10 +0800
+X-QQ-mid: xmsmtpt1711035550tfx2v8zko
+Message-ID: <tencent_583360D51D354010FEE44A3A3B739D5FF506@qq.com>
+X-QQ-XMAILINFO: OFXVMg8LeyWMW6CuZuhrlYUls5evNkZeZR7IwrVp+YzTm/M0xFaWG9TSeMujhq
+	 ZYZacY2WgZPrUfRq9J48NYt9QMpF0t3jHP3nbRBfVyODkrj5TRPTsFxvQxRGa2U/2ZMAfxbEUved
+	 n4cCty2V7pz/3H+FPgaa78YlATHLAY2MYX6GkdHfvUEAr/TK2o9h1gYxNVJc4N3w9aVi+FqVn5Nm
+	 SMQvPUIn0y86TcW6L7KZfnpY8ngdWQclZL5xW1IG5cPHFFnkIwR0eatJp/1AAaZ4YG8U/nwrPGLN
+	 YDgexG5/zHls93yYpuAwh0j2a1DYBiad/I7fQGHhFCj87gZwXm1LGISg5XifO5wH2qcUPXmVN0hg
+	 s8jn2aYTQ+8X1mkLrY2qUy05ydf08ODrhU5cNFJY5uaswuHDyZy67Yj0MXuj/dooDuye1LMQ5+tm
+	 4sNFNtzuiX0ayYuu2OfzoIKJoV1pBQOefajgN6UvNoVFFOkT0lrG8vTZAyaIYjZqf4FRC5N5jzC0
+	 hRf/35jdUYG1joN94Jhuq2D8K8yx7+dYa+HUhraep1j7ktUil7QnJhQUWF799i+5VOYOjIZq3FYP
+	 R3ax4bgNvw90VTM4gmIQCAj3mRsvuFoDMHEaty6IFcJKlza0ikrzmMsCiWw6OQ875xs+LdkaEcuT
+	 f5EYyIaLKMHKX+d2vlUPtMC7Y+EDuQOH1OySDr1jvgKmepi/CGyEtUOBpTyBmKWkpbQ0ietds0OV
+	 X6z4wyxs4CT6LnYR/wkI4OhHdZE14gQigHmr5dJeSzXKg8+EqznXqwZB3KEmW8afV1xlDXtvOC34
+	 qJp+1kVZIxW1T5qxfK0wlmx2MTbzkpz8j8SJbcH9kDgnVlYzgrfTk3Y6wrpQhWNU3viy04tZxC9t
+	 REV6KPuFlYHSB7DEb86IghR8zL24BRfBXysXlA0ezGIgGxiSJ6xh1sVS+aK5e+/MyT5MVaExIWSX
+	 HMGb9kkEg+hW/mVL4CrO24LOBsrMk1HPB/MJuPB74bKg/nT9W5yxKr941bA9UTAtbacZv4CLfoxa
+	 JVp4pTVrq4eaqnSVdZA/98J6duxOV58asZ9D2hsq0AgDubeSDDwPXtNFhiPnvEpoRjkaptSgfi5z
+	 5B5j/9XJuGchNE4gQYhr/9Sxr01OiPA4Zw+t0d
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-OQ-MSGID: <d82d69fb-0e2c-8a11-94b9-14763b411fd7@foxmail.com>
+Date: Thu, 21 Mar 2024 23:39:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/3] media: uvcvideo: Lock video streams and queues
- while unregistering
-Content-Language: en-US, nl
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, Tomasz Figa <tfiga@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Alan Stern <stern@rowland.harvard.edu>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, Sean Paul <seanpaul@chromium.org>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Sergey Senozhatsky <senozhatsky@chromium.org>
-References: <20231122-guenter-mini-v5-0-15d8cd8ed74f@chromium.org>
- <20231122-guenter-mini-v5-1-15d8cd8ed74f@chromium.org>
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-In-Reply-To: <20231122-guenter-mini-v5-1-15d8cd8ed74f@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v2 0/9] encode the values directly in the table entry
+Content-Language: en-US
+To: Joel Granados <j.granados@samsung.com>
+Cc: "Eric W . Biederman" <ebiederm@xmission.com>,
+ Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>,
+ Christian Brauner <brauner@kernel.org>, linux-kernel@vger.kernel.org
+References: <CGME20240309103209eucas1p25311b485e321e701eeacbdb3e2ba8758@eucas1p2.samsung.com>
+ <tencent_C5E6023F97E7CC2A046AAEA09BC9ACF43907@qq.com>
+ <20240321152143.yxoonjy3m6bdddkf@joelS2.panther.com>
+From: Wen Yang <wenyang.linux@foxmail.com>
+In-Reply-To: <20240321152143.yxoonjy3m6bdddkf@joelS2.panther.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Ricardo,
 
-On 22/11/2023 12:45 pm, Ricardo Ribalda wrote:
-> From: Guenter Roeck <linux@roeck-us.net>
+
+On 2024/3/21 23:21, Joel Granados wrote:
+> On Sat, Mar 09, 2024 at 06:31:17PM +0800, wenyang.linux@foxmail.com wrote:
+>> From: Wen Yang <wenyang.linux@foxmail.com>
+>>
+>> The boundary check of multiple modules uses these static variables (such as
+>> two_five_five, n_65535, ue_int_max, etc), and they are also not changed.
+> This message is a bit cryptic. I had to do a fair amount of research to
+> get what you meant here. Having the context in front is OK with me, but
+> I would add a bit more information so the reader does not have to go to
+> the code and grep for the variables that you mean. Something like this:
+> "When using a sysctl proc_handler that requires a boundary check (like
+> proce_dointvec_minmax) it is common to use a const variable like n_65535
+> in net/rxrpc/sysctl.c or OTHER EXAMPLES...). This is suboptimal because
+> YOUR REASONS HERE"
 > 
-> The call to uvc_disconnect() is not protected by any mutex.
-> This means it can and will be called while other accesses to the video
-> device are in progress. This can cause all kinds of race conditions,
-> including crashes such as the following.
 > 
-> usb 1-4: USB disconnect, device number 3
-> BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-> PGD 0 P4D 0
-> Oops: 0000 [#1] PREEMPT SMP PTI
-> CPU: 0 PID: 5633 Comm: V4L2CaptureThre Not tainted 4.19.113-08536-g5d29ca36db06 #1
-> Hardware name: GOOGLE Edgar, BIOS Google_Edgar.7287.167.156 03/25/2019
-> RIP: 0010:usb_ifnum_to_if+0x29/0x40
-> Code: <...>
-> RSP: 0018:ffffa46f42a47a80 EFLAGS: 00010246
-> RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff904a396c9000
-> RDX: ffff904a39641320 RSI: 0000000000000001 RDI: 0000000000000000
-> RBP: ffffa46f42a47a80 R08: 0000000000000002 R09: 0000000000000000
-> R10: 0000000000009975 R11: 0000000000000009 R12: 0000000000000000
-> R13: ffff904a396b3800 R14: ffff904a39e88000 R15: 0000000000000000
-> FS: 00007f396448e700(0000) GS:ffff904a3ba00000(0000) knlGS:0000000000000000
-> CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000000000 CR3: 000000016cb46000 CR4: 00000000001006f0
-> Call Trace:
->  usb_hcd_alloc_bandwidth+0x1ee/0x30f
->  usb_set_interface+0x1a3/0x2b7
->  uvc_video_start_transfer+0x29b/0x4b8 [uvcvideo]
->  uvc_video_start_streaming+0x91/0xdd [uvcvideo]
->  uvc_start_streaming+0x28/0x5d [uvcvideo]
->  vb2_start_streaming+0x61/0x143 [videobuf2_common]
->  vb2_core_streamon+0xf7/0x10f [videobuf2_common]
->  uvc_queue_streamon+0x2e/0x41 [uvcvideo]
->  uvc_ioctl_streamon+0x42/0x5c [uvcvideo]
->  __video_do_ioctl+0x33d/0x42a
->  video_usercopy+0x34e/0x5ff
->  ? video_ioctl2+0x16/0x16
->  v4l2_ioctl+0x46/0x53
->  do_vfs_ioctl+0x50a/0x76f
->  ksys_ioctl+0x58/0x83
->  __x64_sys_ioctl+0x1a/0x1e
->  do_syscall_64+0x54/0xde
+
+Thanks a lot for your very considerate input – this is highly 
+appreciated. We will revise the change message and send v3 later.
+
+--
+Best wishes,
+Wen
+
+
+>>
+>> Eric points out: "by turning .extra1 and .extra2 into longs instead of
+>> keeping them as pointers and needing constants to be pointed at somewhere
+>> ... The only people I can see who find a significant benefit by
+>> consolidating all of the constants into one place are people who know how
+>> to stomp kernel memory."
+> I think it would be better to just link to the lore discussion.
 > 
-> usb_set_interface() should not be called after the USB device has been
-> unregistered. However, in the above case the disconnect happened after
-> v4l2_ioctl() was called, but before the call to usb_ifnum_to_if().
+>>
+>> This patch series achieves direct encoding values in table entries and still
+>> maintains compatibility with existing extra1/extra2 pointers.
+>> Afterwards, we can remove these unnecessary static variables progressively and
+>> also gradually kill the shared const array.
+> Two things:
+> 1. Please name the const array: sysctl_vals
+> 2. What is missing from this patchset to completely kill sysctl_vals?
 > 
-> Acquire various mutexes in uvc_unregister_video() to fix the majority
-> (maybe all) of the observed race conditions.
-> 
-> The uvc_device lock prevents races against suspend and resume calls
-> and the poll function.
-> 
-> The uvc_streaming lock prevents races against stream related functions;
-> for the most part, those are ioctls. This lock also requires other
-> functions using this lock to check if a video device is still registered
-> after acquiring it. For example, it was observed that the video device
-> was already unregistered by the time the stream lock was acquired in
-> uvc_ioctl_streamon().
-> 
-> The uvc_queue lock prevents races against queue functions, Most of
-> those are already protected by the uvc_streaming lock, but some
-> are called directly. This is done as added protection; an actual race
-> was not (yet) observed.
-> 
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Alan Stern <stern@rowland.harvard.edu>
-> Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-> Reviewed-by: Sean Paul <seanpaul@chromium.org>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->  drivers/media/usb/uvc/uvc_driver.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-> index 08fcd2ffa727..ded2cb6ce14f 100644
-> --- a/drivers/media/usb/uvc/uvc_driver.c
-> +++ b/drivers/media/usb/uvc/uvc_driver.c
-> @@ -1907,14 +1907,22 @@ static void uvc_unregister_video(struct uvc_device *dev)
->  {
->  	struct uvc_streaming *stream;
->  
-> +	mutex_lock(&dev->lock);
-> +
->  	list_for_each_entry(stream, &dev->streams, list) {
->  		if (!video_is_registered(&stream->vdev))
->  			continue;
->  
-> +		mutex_lock(&stream->mutex);
-> +		mutex_lock(&stream->queue.mutex);
-> +
->  		video_unregister_device(&stream->vdev);
->  		video_unregister_device(&stream->meta.vdev);
->  
->  		uvc_debugfs_cleanup_stream(stream);
-> +
-> +		mutex_unlock(&stream->queue.mutex);
-> +		mutex_unlock(&stream->mutex);
-
-Part of the problem here is that video_unregister_device does not stop streaming.
-
-For 'normal' drivers that leave most of the locking to the core framework and
-that use the standard vb2_fop_* and vb2_ioctl_* helpers, instead of calling
-video_unregister_device, they call vb2_video_unregister_device(). This will
-safely unregister the device and stop streaming at the same time.
-
-Since after the device is unregistered the only file operation that is accepted
-is close(), it will be impossible to restart streaming.
-
-In other words, this guarantees that when the disconnect function exits there
-is nothing streaming anymore.
-
-This makes it much easier to deal with disconnects, and I think this should
-happen here as well. I wonder if this will obsolete patch 3/3 and perhaps
-2/3.
-
-I don't think taking the queue.mutex is needed, especially if you stop
-streaming here.
-
-Regards,
-
-	Hans
-
->  	}
->  
->  	uvc_status_unregister(dev);
-> @@ -1925,6 +1933,7 @@ static void uvc_unregister_video(struct uvc_device *dev)
->  	if (media_devnode_is_registered(dev->mdev.devnode))
->  		media_device_unregister(&dev->mdev);
->  #endif
-> +	mutex_unlock(&dev->lock);
->  }
->  
->  int uvc_register_video_device(struct uvc_device *dev,
+>>
+>> Wen Yang (9):
+>>    sysctl: support encoding values directly in the table entry
+>>    kernel/sysctl-test: add some kunit test cases for min/max detection
+>>    rxrpc: delete these unnecessary static variables n_65535, four,
+>>      max_500, etc
+>>    net: ipv6: delete these unnecessary static variables two_five_five and
+>>      minus_one
+>>    svcrdma: delete these unnecessary static variables min_ord, max_ord,
+>>      etc
+>>    sysctl: delete these unnecessary static variables i_zero and
+>>      i_one_hundred
+>>    epoll: delete these unnecessary static variables long_zero and
+>>      long_max
+>>    fs: inotify: delete these unnecessary static variables it_zero and
+>>      it_int_max
+>>    ucounts: delete these unnecessary static variables ue_zero and
+>>      ue_int_max
+>>
+>>   fs/eventpoll.c                   |  19 +-
+>>   fs/notify/inotify/inotify_user.c |  49 +++--
+>>   include/linux/sysctl.h           | 108 ++++++++++-
+>>   kernel/sysctl-test.c             | 300 +++++++++++++++++++++++++++++++
+>>   kernel/sysctl.c                  |  61 +++++--
+>>   kernel/ucount.c                  |   8 +-
+>>   lib/test_sysctl.c                |  12 +-
+>>   net/ipv6/addrconf.c              |  15 +-
+>>   net/rxrpc/sysctl.c               | 169 ++++++++---------
+>>   net/sunrpc/xprtrdma/svc_rdma.c   |  21 +--
+>>   10 files changed, 571 insertions(+), 191 deletions(-)
+>>
+>> Cc: Eric W. Biederman <ebiederm@xmission.com>
+>> Cc: Luis Chamberlain <mcgrof@kernel.org>
+>> Cc: Kees Cook <keescook@chromium.org>
+>> Cc: Joel Granados <j.granados@samsung.com>
+>> Cc: Christian Brauner <brauner@kernel.org>
+>> Cc: linux-kernel@vger.kernel.org
+>>
+>> -- 
+>> 2.25.1
+>>
 > 
 
