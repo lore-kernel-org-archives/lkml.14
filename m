@@ -1,103 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5CC1332A6;
-	Thu, 21 Mar 2024 18:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C08C85938
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 18:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711044454; cv=none; b=UNPWmesNqp+gpAmZ1LCVzNd8w9x/u/FaHuxhiArQtiejVzR63YdHuRWC3SNCqMZyJQXODgHXLI9frfLMhz2kBT6gO8E0C1s6q6YTQZNqB8Wj9q81HkbRgs/N/Rg3fDF2yWBfI55PV4yzv1M/MXmLYjdk0Er1cI3BH1BUKFONCWg=
+	t=1711044612; cv=none; b=jbQ6yyyOJgYs6zI+1jJuiW7o6M7TSWTxYEldAFt8MTzMTYI52PvnG+A/0hxy7/9X3JD+1DIz9pHMcZuFpM+9JoQ6iMZZPv3vKjLcFiC8D29yarZhvCJ+QEfBmH9TOosu9LsIzr9vy+8T3k0V6aa6cQpRxTtjPJ+1LudEsmLTWEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711044454; c=relaxed/simple;
-	bh=Vre0bbpj/RHcM0b8xIt3T8ZHT/uKOL2/xho9jNKOy7I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=qZ+yyuSn4m/hcoORSrvY7QiXwtfiZh+25PavHOxZN1Bc9BrjUHK7o51X2kKXx6oGg39MDly7lzUuiR1/x0S/J5Ed5EO4+F2NIpMx7k8U4sscbSqSjQAGds8Q6IF7fv/BbudPCM4KbxBwjkNIHAGkOlu83L0UZ0keKJJzB+xhQYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bZwHZa4D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711044612; c=relaxed/simple;
+	bh=J5T69WFQ9USHQjLVUN1osaWhJDJNI4GDdeUlvKQfx7M=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=feQ1pQPntagyQc5ECKgeZzpdnlzZFnB+Oh79K+euTfhcP/Rox06L7zcltrSuGR3PXrXdoxrh4sMHHS3y9mg929r2HHxkrOjV8qjvPnbdfRx2imOVskc11TvDJS3DmRvJseA0B5t7cCGUHYDtnQ0s1RKrSEW0ULnAR0jtjE4bXcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xGVPHQbV; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bZwHZa4D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 600ECC433F1;
-	Thu, 21 Mar 2024 18:07:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711044454;
-	bh=Vre0bbpj/RHcM0b8xIt3T8ZHT/uKOL2/xho9jNKOy7I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=bZwHZa4DGdc1+POLrg1fU5cxYlcVXhNYn2Q8g7wr0BHoyw7DlTGMU9Si9QxGJrezN
-	 0N1NXNbHW7h19po3hbpHk5A9b66DFGlyRzCh84lo/BLGpIO0AiwD2ETbAMvhV8pK2s
-	 T1ZSXNGLmLdKt9Qz+YsiI+yrgOogPxYs/L0wdJ8FZ4jFl4+9paHHZMFfgPyDjQqkqn
-	 D3LWXMWloKiEwsU8yx8OjQr6PEUI9XHHgkvLh3u3DrDg8GrMmu2u5innfjvE+3sDQQ
-	 MsqzEVTEN0gLMrQOW+jVKjOrfUkgfruSZLqK2WTwLnuLNTGbOcTtO54Hifq7eV0FJI
-	 9OFEWmR2jJXvw==
-Date: Thu, 21 Mar 2024 13:07:32 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Frank Li <Frank.Li@nxp.com>, niklas.cassel@wdc.com, bhelgaas@google.com,
-	gustavo.pimentel@synopsys.com, imx@lists.linux.dev,
-	jdmason@kudzu.us, jingoohan1@gmail.com, kw@linux.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org, robh@kernel.org
-Subject: Re: [PATCH v2 1/1] PCI: dwc: Fix index 0 incorrectly being
- interpreted as a free ATU slot
-Message-ID: <20240321180732.GA1329092@bhelgaas>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xGVPHQbV"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-6ea8084133aso37306b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 11:10:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711044611; x=1711649411; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PbnhbS3nC1f/Uw+2QJySA42Qs2PFTt6bDMzEjk8k/Mc=;
+        b=xGVPHQbVVuZwyQMxHksHdcprJy3/Npu36CDbaK4ztx4gIy0oCxQKI7yeEXolCTn9sd
+         5c9/lkHiBYL77zMqpffFuy747oKDvTBQE3NTHFwvg0CTz4ZoG0j9/C3bU3DPVbOJhEM8
+         +4zY2sQJYI+Ma2+eqUcWfOWB9TAtVxwHs2/tXRcJtOcD6W3MEpvS0pMAoRe0962DZ6fT
+         i0QyiMXZqYZvBldXn2CFaXmKikV7iXzLM07xBE4yrVBOdEL7v+5/3rTF5ZHRxeOLuI6h
+         ZN8Apj32cpwQU4mVSjM8UUue0r4g2E0f1x2Kj6UwCY5M24YuQiPc3S5IKO2i+28z91b3
+         Cd4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711044611; x=1711649411;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PbnhbS3nC1f/Uw+2QJySA42Qs2PFTt6bDMzEjk8k/Mc=;
+        b=QydVMivCQajRB7QUVbBioNNMghBHZYZvTP7RBV0+5oCJwISDNQN5sslB4e71rOjDqJ
+         SRizo4dM0LdfOF/GfDF36/69L6LmG99gjNMdGdrQScBf9WjzSSIKG/BNSHxi3Rds1vig
+         Ws8z1rVeW1uI2crAkVvE1pzeUVmt1pxdQxuRRC3BSiTO4AUM74GgNkXa5gXDTu079edE
+         gYQE9xSL5tjl0D1huUIHiutK82+Fo7BEkw6XoLy7rNQlzPBSUDpKTAq68fOY2zlhX2CC
+         Lkzw6X8mQFfvGt7s/0HaRnLc84nnaRkf+58zhIVNMukFOhScXxuGPC2e/yqFqLY41Ekm
+         G6+Q==
+X-Gm-Message-State: AOJu0YyjPOo7UHQeniScGg/GopID2pIu0vRH8kGfJZCYbuQ9sXLzTSsQ
+	fL1HV9ReUtISGm2+HZkImy8UEmt47jzvjsnmbdHqkkm2Gy7skeUUedl8BshEoEAZp2DvDQVTCd+
+	GyYZ6ABMtY7+UMMLiDMHCPsXqT7YjgJvoUIzrwg7shVLsHtqRBMj38PFqBLEh1t/NaiH1AD/rwv
+	uN06NnC3vzChCHbwcv3oFo5+vbI7KJqWZYVFLUH0pb
+X-Google-Smtp-Source: AGHT+IFYni3VvlWRaTmYz+82jv0WpYU31SYMq2cohi3G9fHRYPBqE7DFoZnmZbyg80iXWTMzj1CSpz2vwMs=
+X-Received: from edliaw.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:305d])
+ (user=edliaw job=sendgmr) by 2002:a05:6a00:938b:b0:6e7:3fcb:38ba with SMTP id
+ ka11-20020a056a00938b00b006e73fcb38bamr10155pfb.6.1711044610507; Thu, 21 Mar
+ 2024 11:10:10 -0700 (PDT)
+Date: Thu, 21 Mar 2024 18:09:28 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240321171345.GA2385@thinkpad>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
+Message-ID: <20240321180933.1029746-1-edliaw@google.com>
+Subject: [PATCH v1] uffd-unit-tests: Fix ARM related issue with fork after pthread_create
+From: Edward Liaw <edliaw@google.com>
+To: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Shuah Khan <shuah@kernel.org>
+Cc: linux-kselftest@vger.kernel.org, kernel-team@android.com, 
+	Edward Liaw <edliaw@google.com>, Lokesh Gidra <lokeshgidra@google.com>, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Mar 21, 2024 at 10:43:45PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Mar 04, 2024 at 05:46:16PM -0500, Frank Li wrote:
-> > dw_pcie_ep_inbound_atu()
-> > {
-> > 	...
-> > 	if (!ep->bar_to_atu[bar])
-> > 		free_win = find_first_zero_bit(ep->ib_window_map, pci->num_ib_windows);
-> > 	else
-> > 		free_win = ep->bar_to_atu[bar];
-> > 	...
-> > }
-> > 
-> > The atu index 0 is valid case for atu number. The find_first_zero_bit()
-> > will return 6 when second time call into this function if atu is 0. Suppose
-> > it should use branch 'free_win = ep->bar_to_atu[bar]'.
-> > 
-> > Change 'bar_to_atu' to free_win + 1. Initialize bar_to_atu as 0 to indicate
-> > it have not allocate atu to the bar.
-> 
-> I'd rewrite the commit message as below:
-> 
-> "The mapping between PCI BAR and iATU inbound window are maintained in the
-> dw_pcie_ep::bar_to_atu[] array. While allocating a new inbound iATU map for a
-> BAR, dw_pcie_ep_inbound_atu() API will first check for the availability of the
-> existing mapping in the array and if it is not found (i.e., value in the array
-> indexed by the BAR is found to be 0), then it will allocate a new map value
-> using find_first_zero_bit().
-> 
-> The issue here is, the existing logic failed to consider the fact that the map
-> value '0' is a valid value for BAR0. Because, find_first_zero_bit() will return
-> '0' as the map value for BAR0 (note that it returns the first zero bit
-> position).
-> 
-> Due to this, when PERST# assert + deassert happens on the PERST# supported
-> platforms, the inbound window allocation restarts from BAR0 and the existing
-> logic to find the BAR mapping will return '6' for BAR0 instead of '0' due to the
-> fact that it considers '0' as an invalid map value.
-> 
-> So fix this issue by always incrementing the map value before assigning to
-> bar_to_atu[] array and then decrementing it while fetching. This will make sure
-> that the map value '0' always represents the invalid mapping."
+Following issue was observed while running the uffd-unit-tests selftest
+on ARM devices. On x86_64 no issues were detected:
 
-This translates C code to English in great detail, but still doesn't
-tell me what's broken from a user's point of view, how urgent the fix
-is, or how it should be handled.
+pthread_create followed by fork caused deadlock in certain cases
+wherein fork required some work to be completed by the created thread.
+Used synchronization to ensure that created thread's start function has
+started before invoking fork.
 
-DMA doesn't work because ATU setup is wrong?  Driver MMIO access to
-the device doesn't work?  OS crashes?  How?  Incorrectly routed access
-causes UR response?  Happens on every boot?  Only after a reboot or
-controller reset?  What platforms are affected?  "PERST# supported
-platforms" is not actionable without a lot of research or pre-existing
-knowledge.  Should this be backported to -stable?
+Signed-off-by: Lokesh Gidra <lokeshgidra@google.com>
+[edliaw: Refactored to use atomic_bool]
+Signed-off-by: Edward Liaw <edliaw@google.com>
+---
+ tools/testing/selftests/mm/uffd-common.c     |  4 +++-
+ tools/testing/selftests/mm/uffd-common.h     |  2 ++
+ tools/testing/selftests/mm/uffd-unit-tests.c | 10 ++++++++++
+ 3 files changed, 15 insertions(+), 1 deletion(-)
 
-Bjorn
+diff --git a/tools/testing/selftests/mm/uffd-common.c b/tools/testing/selftests/mm/uffd-common.c
+index b0ac0ec2356d..14ed98c3a389 100644
+--- a/tools/testing/selftests/mm/uffd-common.c
++++ b/tools/testing/selftests/mm/uffd-common.c
+@@ -17,7 +17,7 @@ bool map_shared;
+ bool test_uffdio_wp = true;
+ unsigned long long *count_verify;
+ uffd_test_ops_t *uffd_test_ops;
+-uffd_test_case_ops_t *uffd_test_case_ops;
++atomic_bool ready_for_fork;
+ 
+ static int uffd_mem_fd_create(off_t mem_size, bool hugetlb)
+ {
+@@ -518,6 +518,8 @@ void *uffd_poll_thread(void *arg)
+ 	pollfd[1].fd = pipefd[cpu*2];
+ 	pollfd[1].events = POLLIN;
+ 
++	ready_for_fork = true;
++
+ 	for (;;) {
+ 		ret = poll(pollfd, 2, -1);
+ 		if (ret <= 0) {
+diff --git a/tools/testing/selftests/mm/uffd-common.h b/tools/testing/selftests/mm/uffd-common.h
+index cb055282c89c..cc5629c3d2aa 100644
+--- a/tools/testing/selftests/mm/uffd-common.h
++++ b/tools/testing/selftests/mm/uffd-common.h
+@@ -32,6 +32,7 @@
+ #include <inttypes.h>
+ #include <stdint.h>
+ #include <sys/random.h>
++#include <stdatomic.h>
+ 
+ #include "../kselftest.h"
+ #include "vm_util.h"
+@@ -103,6 +104,7 @@ extern bool map_shared;
+ extern bool test_uffdio_wp;
+ extern unsigned long long *count_verify;
+ extern volatile bool test_uffdio_copy_eexist;
++extern atomic_bool ready_for_fork;
+ 
+ extern uffd_test_ops_t anon_uffd_test_ops;
+ extern uffd_test_ops_t shmem_uffd_test_ops;
+diff --git a/tools/testing/selftests/mm/uffd-unit-tests.c b/tools/testing/selftests/mm/uffd-unit-tests.c
+index 2b9f8cc52639..4a48dc617c6b 100644
+--- a/tools/testing/selftests/mm/uffd-unit-tests.c
++++ b/tools/testing/selftests/mm/uffd-unit-tests.c
+@@ -775,6 +775,8 @@ static void uffd_sigbus_test_common(bool wp)
+ 	char c;
+ 	struct uffd_args args = { 0 };
+ 
++	ready_for_fork = false;
++
+ 	fcntl(uffd, F_SETFL, uffd_flags | O_NONBLOCK);
+ 
+ 	if (uffd_register(uffd, area_dst, nr_pages * page_size,
+@@ -790,6 +792,9 @@ static void uffd_sigbus_test_common(bool wp)
+ 	if (pthread_create(&uffd_mon, NULL, uffd_poll_thread, &args))
+ 		err("uffd_poll_thread create");
+ 
++	while (!ready_for_fork)
++		; /* Wait for the poll_thread to start executing before forking */
++
+ 	pid = fork();
+ 	if (pid < 0)
+ 		err("fork");
+@@ -829,6 +834,8 @@ static void uffd_events_test_common(bool wp)
+ 	char c;
+ 	struct uffd_args args = { 0 };
+ 
++	ready_for_fork = false;
++
+ 	fcntl(uffd, F_SETFL, uffd_flags | O_NONBLOCK);
+ 	if (uffd_register(uffd, area_dst, nr_pages * page_size,
+ 			  true, wp, false))
+@@ -838,6 +845,9 @@ static void uffd_events_test_common(bool wp)
+ 	if (pthread_create(&uffd_mon, NULL, uffd_poll_thread, &args))
+ 		err("uffd_poll_thread create");
+ 
++	while (!ready_for_fork)
++		; /* Wait for the poll_thread to start executing before forking */
++
+ 	pid = fork();
+ 	if (pid < 0)
+ 		err("fork");
+-- 
+2.44.0.396.g6e790dbe36-goog
+
