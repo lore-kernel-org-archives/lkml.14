@@ -1,232 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FFE6E602
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 12:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F967604D
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 12:08:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711022904; cv=none; b=ALmwwvSwe2i7b3eG/rzRNYE8qeD2QuV4q8tOWB5cHa+inbBAfLev3OgmLo9ZqwlKsk33luO689TFM/AF/KFpG/oD/uUnsuqSIjim0L/JsNqSgpqQ78+7S1zZ2glvnxlmxbZ93tOl0PrOgZL2llw0gv1B3m6jgduOzJepNmua/uI=
+	t=1711022911; cv=none; b=uxt23jcQqKDDlrCpHkj65Sr+Esu4b2XsE5B3shbAyvjBcE2zFzI/VW4hi70Jk2nrJl8J6/sUKa5jDbJMaGsVDKjn5wE01Ege/36DcjxTsaQ1dcfLP7ybj23VFX9goEySu3OJkc/gu92KBL0c44DtnkIhHq8t+hlxA+lGHxE2q28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711022904; c=relaxed/simple;
-	bh=ICgmSwq62FV99FLN/Bgv1O4hgSkfe7+nnwVC1W6Ggt0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZkFiutZs5VCSLeV+PmJ8qRaBAQ0uc0Ux7BeELY4t+Ns48FwdMPElFkzxJcISMw4/EqnXC3tKVooGVOrqSmfROb41dHROgOZmnGM8Ag47k18B6EGycl1KPwofC8wWZiCoNcoRSz+5pitcYwcIVQCRRT3npKKoiWAoNPs0XMXKP6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CS1aaWaD; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CS1aaWaD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711022902;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZmCkXKKBMdn7q3ZGi77a1ZwDnFVVsMns2EKsafaBcTk=;
-	b=CS1aaWaD6bQ2y31l3ZhM16VgjyiUPf48NAZVlEM0baAsEpGbf8CGiATpAYSXoxk2jOaPa9
-	tNpnrKv8QfpYwaabsYP2P7XRD8uPBNLY2sW312UfLv7YJt5ZoO/5PrTPdkC29UT8FzH+80
-	58cNBAzf4UNydjQiDpbqtiXs+dG8a50=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-467-XYKpxY26OWGyZ1_q7N7kEA-1; Thu,
- 21 Mar 2024 08:08:18 -0400
-X-MC-Unique: XYKpxY26OWGyZ1_q7N7kEA-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E7D2F3C0E44C;
-	Thu, 21 Mar 2024 12:08:17 +0000 (UTC)
-Received: from bfoster (unknown [10.22.16.57])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4E71E492BCA;
-	Thu, 21 Mar 2024 12:08:17 +0000 (UTC)
-Date: Thu, 21 Mar 2024 08:10:11 -0400
-From: Brian Foster <bfoster@redhat.com>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: akpm@linux-foundation.org, tj@kernel.org, linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	willy@infradead.org, jack@suse.cz, dsterba@suse.com,
-	mjguzik@gmail.com, dhowells@redhat.com, peterz@infradead.org
-Subject: Re: [PATCH 1/6] writeback: collect stats of all wb of bdi in
- bdi_debug_stats_show
-Message-ID: <Zfwjo_ZQH_LFZ1Rc@bfoster>
-References: <20240320110222.6564-1-shikemeng@huaweicloud.com>
- <20240320110222.6564-2-shikemeng@huaweicloud.com>
- <Zfriwb03HCRWJ24q@bfoster>
- <3d08c249-1b12-f82b-2662-a6fa2b888011@huaweicloud.com>
+	s=arc-20240116; t=1711022911; c=relaxed/simple;
+	bh=GqyvfRUi6RfErn9zYplQfeZe7bnkSZoOo+d9kCUvcWM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=Z+hVxErj1A1utKbGclUXe7saf3PJa5EcOuh96itCjKzogjPY4zpfkIs6QmTuR90qrOW080gTFqnTtip9mG2TOpeslc0Q7UYgA9luPZWhZczbkA2SZ1LfO36fTNJluvrDOXgWqlyr4ZiLxOb2/mfEx9kJctd4xOBfQgbxYSB2SNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-71-oIAj6dgUOY2gPCXUAXYLDg-1; Thu, 21 Mar 2024 12:08:17 +0000
+X-MC-Unique: oIAj6dgUOY2gPCXUAXYLDg-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 21 Mar
+ 2024 12:07:51 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Thu, 21 Mar 2024 12:07:51 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Russell King' <linux@armlinux.org.uk>, Ard Biesheuvel <ardb@kernel.org>
+CC: 'Jiangfeng Xiao' <xiaojiangfeng@huawei.com>, "arnd@arndb.de"
+	<arnd@arndb.de>, "keescook@chromium.org" <keescook@chromium.org>,
+	"haibo.li@mediatek.com" <haibo.li@mediatek.com>,
+	"angelogioacchino.delregno@collabora.com"
+	<angelogioacchino.delregno@collabora.com>, "amergnat@baylibre.com"
+	<amergnat@baylibre.com>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "douzhaolei@huawei.com"
+	<douzhaolei@huawei.com>, "gustavoars@kernel.org" <gustavoars@kernel.org>,
+	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, "kepler.chenxin@huawei.com"
+	<kepler.chenxin@huawei.com>, "kirill.shutemov@linux.intel.com"
+	<kirill.shutemov@linux.intel.com>, "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "nixiaoming@huawei.com"
+	<nixiaoming@huawei.com>, "peterz@infradead.org" <peterz@infradead.org>,
+	"wangbing6@huawei.com" <wangbing6@huawei.com>, "wangfangpeng1@huawei.com"
+	<wangfangpeng1@huawei.com>, "jannh@google.com" <jannh@google.com>,
+	"willy@infradead.org" <willy@infradead.org>
+Subject: RE: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
+Thread-Topic: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
+Thread-Index: AQHae3ROEuI+AaCprEesIWGaAOB7ebFB9uHAgAAWtoCAAAVW8A==
+Date: Thu, 21 Mar 2024 12:07:51 +0000
+Message-ID: <db930076c837456f999daee5cb76735f@AcuMS.aculab.com>
+References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
+ <1710906278-23851-1-git-send-email-xiaojiangfeng@huawei.com>
+ <ZfqiD8Yw0oOVHW/p@shell.armlinux.org.uk>
+ <84a57ca8-8963-ca24-8bd1-ddc5c33bf4da@huawei.com>
+ <Zfs7sT6Pxy5yjnPC@shell.armlinux.org.uk>
+ <bad25937-fc98-8e11-4279-ab6b3a727c1f@huawei.com>
+ <bbcca1e205384cf0b42236e17f3969f7@AcuMS.aculab.com>
+ <ZfwYx/8k8FVONg6+@shell.armlinux.org.uk>
+In-Reply-To: <ZfwYx/8k8FVONg6+@shell.armlinux.org.uk>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3d08c249-1b12-f82b-2662-a6fa2b888011@huaweicloud.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 21, 2024 at 11:44:40AM +0800, Kemeng Shi wrote:
-> 
-> 
-> on 3/20/2024 9:21 PM, Brian Foster wrote:
-> > On Wed, Mar 20, 2024 at 07:02:17PM +0800, Kemeng Shi wrote:
-> >> /sys/kernel/debug/bdi/xxx/stats is supposed to show writeback information
-> >> of whole bdi, but only writeback information of bdi in root cgroup is
-> >> collected. So writeback information in non-root cgroup are missing now.
-> >> To be more specific, considering following case:
-> >>
-> >> /* create writeback cgroup */
-> >> cd /sys/fs/cgroup
-> >> echo "+memory +io" > cgroup.subtree_control
-> >> mkdir group1
-> >> cd group1
-> >> echo $$ > cgroup.procs
-> >> /* do writeback in cgroup */
-> >> fio -name test -filename=/dev/vdb ...
-> >> /* get writeback info of bdi */
-> >> cat /sys/kernel/debug/bdi/xxx/stats
-> >> The cat result unexpectedly implies that there is no writeback on target
-> >> bdi.
-> >>
-> >> Fix this by collecting stats of all wb in bdi instead of only wb in
-> >> root cgroup.
-> >>
-> >> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-> >> ---
-> >>  mm/backing-dev.c | 93 ++++++++++++++++++++++++++++++++++++------------
-> >>  1 file changed, 70 insertions(+), 23 deletions(-)
-> >>
-> >> diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-> >> index 5f2be8c8df11..788702b6c5dd 100644
-> >> --- a/mm/backing-dev.c
-> >> +++ b/mm/backing-dev.c
-> > ...
-> >> @@ -46,31 +59,65 @@ static void bdi_debug_init(void)
-> >>  	bdi_debug_root = debugfs_create_dir("bdi", NULL);
-> >>  }
-> >>  
-> > ...
-> >> +#ifdef CONFIG_CGROUP_WRITEBACK
-> >> +static void bdi_collect_stats(struct backing_dev_info *bdi,
-> >> +			      struct wb_stats *stats)
-> >> +{
-> >> +	struct bdi_writeback *wb;
-> >> +
-> >> +	/* protect wb from release */
-> >> +	mutex_lock(&bdi->cgwb_release_mutex);
-> >> +	list_for_each_entry(wb, &bdi->wb_list, bdi_node)
-> >> +		collect_wb_stats(stats, wb);
-> >> +	mutex_unlock(&bdi->cgwb_release_mutex);
-> >> +}
-> >> +#else
-> >> +static void bdi_collect_stats(struct backing_dev_info *bdi,
-> >> +			      struct wb_stats *stats)
-> >> +{
-> >> +	collect_wb_stats(stats, &bdi->wb);
-> >> +}
-> >> +#endif
-> >> +
-> > 
-> > I'm not familiar enough with the cgwb code to say for sure (and I'd
-> > probably wait for more high level feedback before worrying too much
-> > about this), but do we need the ifdef here just to iterate ->wb_list?
-> >>From looking at the code, it appears bdi->wb ends up on the list while
-> > the bdi is registered for both cases, so that distinction seems
-> > unnecessary. WRT to wb release protection, I wonder if this could use a
-> Currently, we have ifdef trying to remove unnecessary cost when
-> CONFIG_CGROUP_WRITEBACK is not enabled, see defination of cgwb_bdi_register
-> and cgwb_remove_from_bdi_list for example. So I try to define bdi_collect_stats
-> in similar way.
-> > combination of rcu_read_lock()/list_for_each_safe() and wb_tryget() on
-> > each wb before collecting its stats..? See how bdi_split_work_to_wbs()
-> > works, for example.
-> The combination of rcu_read_lock()/list_for_each_safe() and wb_tryget()
-> should work fine.
-> With ifdef, bdi_collect_stats takes no extra cost when CONFIG_CGROUP_WRITEBACK
-> is not enabled and is consistent with existing code style, so I still prefer
-> this way. Yes, The extra cost is not a big deal as it only exists in debug mode,
-> so it's acceptable to use the suggested combination in next version if you are
-> still strongly aganst this.
-> 
+From: Russell King
+> Sent: 21 March 2024 11:24
+>=20
+> On Thu, Mar 21, 2024 at 10:22:30AM +0000, David Laight wrote:
+> > How aggressively does the compiler optimise 'noreturn' functions?
+>=20
+> I've seen cases where the compiler emits a BL instruction as the very
+> last thing in the function, and nothing after it.
 
-Ok. I also previously missed that there are two implementations of
-bdi_split_work_to_wbs() based on CGROUP_WRITEBACK. It seems reasonable
-enough to me to follow that precedent for the !CGROUP_WRITEBACK case.
+I've also seen the compiler defer generating a stack frame until
+after an initial conditional.
+That might mean you can get the BL in the middle of a function
+but where the following instruction is for the 'no stack frame'
+side of the branch.
+That is very likely to break any stack offset calculations.=20
 
-It still seems to make more sense to me to walk the list similar to how
-bdi_split_work_to_wbs() does for the CGROUP_WRITEBACK enabled case. Do
-you agree?
+> This is where the problem lies - because the link register value
+> created by the BL instruction will point to the instruction after the
+> BL which will _not_ part of the function that invoked the BL. That
+> will probably cause issues for the ELF unwinder, which means this
+> issue probably goes beyond _just_ printing the function name.
 
-Brian
+Isn't this already in the unwinder?
+A BL itself isn't going to fault with PC =3D next-instruction.
 
-> > 
-> > Also I see a patch conflict/compile error on patch 2 due to
-> > __wb_calc_thresh() only taking one parameter in my tree. What's the
-> > baseline commit for this series?
-> > 
-> Sorry for missing this, this seris is based on another patchset [1] which is still
-> under review.
-> Look forward to your reply!
-> 
-> Thansk
-> Kemeng
-> 
-> [1] https://lore.kernel.org/lkml/20240123183332.876854-1-shikemeng@huaweicloud.com/T/#mc6455784a63d0f8aa1a2f5aff325abcdf9336b76
-> 
-> > Brian
-> > 
-> >> +static int bdi_debug_stats_show(struct seq_file *m, void *v)
-> >> +{
-> >> +	struct backing_dev_info *bdi = m->private;
-> >> +	unsigned long background_thresh;
-> >> +	unsigned long dirty_thresh;
-> >> +	struct wb_stats stats;
-> >> +	unsigned long tot_bw;
-> >> +
-> >>  	global_dirty_limits(&background_thresh, &dirty_thresh);
-> >> -	wb_thresh = wb_calc_thresh(wb, dirty_thresh);
-> >> +
-> >> +	memset(&stats, 0, sizeof(stats));
-> >> +	stats.dirty_thresh = dirty_thresh;
-> >> +	bdi_collect_stats(bdi, &stats);
-> >> +
-> >> +	tot_bw = atomic_long_read(&bdi->tot_write_bandwidth);
-> >>  
-> >>  	seq_printf(m,
-> >>  		   "BdiWriteback:       %10lu kB\n"
-> >> @@ -87,18 +134,18 @@ static int bdi_debug_stats_show(struct seq_file *m, void *v)
-> >>  		   "b_dirty_time:       %10lu\n"
-> >>  		   "bdi_list:           %10u\n"
-> >>  		   "state:              %10lx\n",
-> >> -		   (unsigned long) K(wb_stat(wb, WB_WRITEBACK)),
-> >> -		   (unsigned long) K(wb_stat(wb, WB_RECLAIMABLE)),
-> >> -		   K(wb_thresh),
-> >> +		   K(stats.nr_writeback),
-> >> +		   K(stats.nr_reclaimable),
-> >> +		   K(stats.wb_thresh),
-> >>  		   K(dirty_thresh),
-> >>  		   K(background_thresh),
-> >> -		   (unsigned long) K(wb_stat(wb, WB_DIRTIED)),
-> >> -		   (unsigned long) K(wb_stat(wb, WB_WRITTEN)),
-> >> -		   (unsigned long) K(wb->write_bandwidth),
-> >> -		   nr_dirty,
-> >> -		   nr_io,
-> >> -		   nr_more_io,
-> >> -		   nr_dirty_time,
-> >> +		   K(stats.nr_dirtied),
-> >> +		   K(stats.nr_written),
-> >> +		   K(tot_bw),
-> >> +		   stats.nr_dirty,
-> >> +		   stats.nr_io,
-> >> +		   stats.nr_more_io,
-> >> +		   stats.nr_dirty_time,
-> >>  		   !list_empty(&bdi->bdi_list), bdi->wb.state);
-> >>  
-> >>  	return 0;
-> >> -- 
-> >> 2.30.0
-> >>
-> >>
-> > 
-> > 
-> 
+For pretty much all code isn't *(LR-4) going to be BL?
+On arm that is probably testable.
+(It is pretty much impossible to detect a ACLL on x86.)
+If it is a direct BL then you'd normally expect to the be
+a call the function containing the current 'PC'.
+The obvious exception is if there was a tail call, and printing
+the called address would then be useful.
+(It might help with leaf functions that don't generate a stack frame.)
+
+I remember issues with the solaris sparc backtrace that used to
+get confused by leaf functions...
+
+> I have vague memories that Ard has been involved in the unwinder,
+> maybe he could comment on this problem? Maybe we need the unwinder
+> itself to do the correction? I also wonder whether we should only
+> do the correction if we detect that we're pointing at the first
+> instruction of a function, and the previous instruction in the
+> text segment was a BL.
+
+It might be enough to depend on whether the address is that of a
+fault (where the instruction could be retried) or from a call/trap
+instruction where it will be the following instruction.
+
+=09David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
 
