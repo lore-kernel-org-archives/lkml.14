@@ -1,37 +1,47 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C705579A;
-	Thu, 21 Mar 2024 09:32:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636074E1D5
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 09:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711013587; cv=none; b=mtxOuKzP0dl8u8GQ0/gTzB+bHJjmXZZDMFAJMfHeh+tlPLL2S1TnSIsfPuM19IKkoxSa3vSW0yLWfp8y5RkI+rLnZyG9BUYbOggc86zYl73s7EUkvMvsD9NdoH5V0P5cIAHqlBrmcXqmnoTTe3KuHp9OR9cpou3PfiZ9B0PqZEE=
+	t=1711013613; cv=none; b=dK9Zihm4s594iY2oI1ohHfxc/oQNZejd6OIjv6cnNjW42hDInUySHFcMsQYUKz0BHfpimv5c4hd5B5mqaDIZZWP/hA24d99VqzC/nbEf7v/r0DjLfFNbv7dwVnKdvjzep6hnw3fzmMU6GMfkRjdeGjw1Y0SSB0GWr+VPFTKjLNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711013587; c=relaxed/simple;
-	bh=XicOA/rd5rXSwjpSJrCdlLs6Mlqt1T3aAFaf41e77ks=;
+	s=arc-20240116; t=1711013613; c=relaxed/simple;
+	bh=yqdjQVNbcauOFxaogP8b3/2502Vi0LT+CvmPhASCPlU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oDq/k2sMdK5GJtCrrkcFfc49inkcxmBXQEwqaHHfuWF73+bR9q2JGAf/D1T0QrAKYuKCDqNOJpTwnloV/tMj8jvlO5rT+ghCWA+Cvi5q9bVicrZ3GJzH0kFdKGXTusMhFtd8cumM2AlqP9KU0wvKVgJpGr6izypu1wuj3qCqMNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Oc2UNrB6; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 In-Reply-To:Content-Type; b=rph0E65QltD/5O2tbzUigeyt4BEunQgtqOQ3qwBj0Q0AtNRqkiyNDR8yCj5+ozMmItl6DU9p3p9qKdfsRXWIxXidKMx2t06+FICXVdLEVL2wB9TwKuTH9qEICDxJPasVaysClIPBQzXSPWqMuT1tbuHsDu4Sw/d3RQSK333/hLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ql67lD25; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Oc2UNrB6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=webeErP71bGrCtrnKMl3CyhYpAF0y0SlAUiPvCaWPVw=; b=Oc2UNrB6E4lFSOnZpA7d1IatjG
-	W6hsUIFRGF6ZFdsUcV+Adz6oXUqJdPj+7cEAaWcSBjDWNgoRuI2o27QS02PykktSaeAZdv749sCRa
-	GdhddvtLxLuV4PC7ecOpTa1Y/35qamO+DvRbrZCenbBNBj3ZolBVbDPH/6oOyDG9UQpmYYsgMTitk
-	keK7SpcRac5G2tKjYbEz4qh0FgAbUW/zsobZ/WBh/npQDKa63ho3GLNifaGtQM7cc1/VHRA70bpV0
-	wrvzKP3/QqHx02S0Azo0b9GZC6bYxv2ww0qOEcALXPKWsZBEKrHBF6rbKfJCMZt3IeZ48LE5HcH0T
-	OTZF9h8g==;
-Received: from fpd2fa7e2a.ap.nuro.jp ([210.250.126.42] helo=[192.168.1.8])
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rnEmp-00000006Qam-3O3a;
-	Thu, 21 Mar 2024 09:32:36 +0000
-Message-ID: <ec1b6bdf-1676-48fb-99f0-a8cc2a99dd17@infradead.org>
-Date: Thu, 21 Mar 2024 18:32:25 +0900
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ql67lD25"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711013611;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rs6XYbBWQxRBg0YMTrNuobAVa9pvsnukIpqnddxJZbc=;
+	b=Ql67lD25mjYGPiGx5fcGug7MFFT+p1AXSGgULTZASu5MgCtecDhpjJOf8J921qasdEaD1B
+	AW+ccmGe5gKX9/gTTjnGeN/zKro309MoENq3S9ooVDg3tzDBWJK47jilbeP+NXGzmy9/LC
+	Xt87SXMuykEml3suAWs6JeoSb7nvVlY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-173-Dob_UXorNx2b4J-k8THHIg-1; Thu, 21 Mar 2024 05:33:27 -0400
+X-MC-Unique: Dob_UXorNx2b4J-k8THHIg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4759D89C661;
+	Thu, 21 Mar 2024 09:33:27 +0000 (UTC)
+Received: from [10.45.225.240] (unknown [10.45.225.240])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 0B6331D091;
+	Thu, 21 Mar 2024 09:33:25 +0000 (UTC)
+Message-ID: <3540c6da-edbd-48e8-8bcb-effe64470ca0@redhat.com>
+Date: Thu, 21 Mar 2024 10:33:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,46 +49,64 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] powerpc: ps3: mark ps3_notification_device static for
- stack usage
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Arnd Bergmann <arnd@kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
- Nathan Chancellor <nathan@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
- Geert Uytterhoeven <Geert.Uytterhoeven@sonycom.com>,
- Arnd Bergmann <arnd@arndb.de>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Kevin Hao <haokexin@gmail.com>, linuxppc-dev@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-References: <20240320180333.151043-1-arnd@kernel.org>
- <CAMuHMdW41e+DSBKBgugTkjoLy6bXfji-KWmB_d9EstEv01eC6w@mail.gmail.com>
+Subject: Re: [PATCH iwl-next 5/7] i40e: Consolidate checks whether given VSI
+ is main
+To: Paolo Abeni <pabeni@redhat.com>, intel-wired-lan@lists.osuosl.org
+Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>,
+ "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20240318143058.287014-1-ivecera@redhat.com>
+ <20240318143058.287014-6-ivecera@redhat.com>
+ <557e819bc6acdfc2311fe2254b1f382bad8368fc.camel@redhat.com>
 Content-Language: en-US
-From: Geoff Levand <geoff@infradead.org>
-In-Reply-To: <CAMuHMdW41e+DSBKBgugTkjoLy6bXfji-KWmB_d9EstEv01eC6w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <557e819bc6acdfc2311fe2254b1f382bad8368fc.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-Hi Geert,
 
-On 3/21/24 17:32, Geert Uytterhoeven wrote:
->>  static int ps3_probe_thread(void *data)
->>  {
->> -       struct ps3_notification_device dev;
->> +       static struct ps3_notification_device dev;
->>         int res;
->>         unsigned int irq;
->>         u64 lpar;
+
+On 19. 03. 24 11:17, Paolo Abeni wrote:
+> On Mon, 2024-03-18 at 15:30 +0100, Ivan Vecera wrote:
+>> In the driver code there are 3 types of checks whether given
+>> VSI is main or not:
+>> 1. vsi->type ==/!= I40E_VSI_MAIN
+>> 2. vsi ==/!= pf->vsi[pf->lan_vsi]
+>> 3. vsi->seid ==/!= pf->vsi[pf->lan_vsi]->seid
+>>
+>> All of them are equivalent and can be consolidated. Convert cases
+>> 2 and 3 to case 1.
 > 
-> Making it static increases kernel size for everyone.  So I'd rather
-> allocate it dynamically. The thread already allocates a buffer, which
-> can be replaced at no cost by allocating a structure containing both
-> the ps3_notification_device and the buffer.
+> Minor nit: while at it, what about introducing an helper for such
+> check?
+> Reordering the patches you could use it also in i40e_pf_get_main_vsi()
 
-This seems like a much better solution.
+No, I couldn't, that helper does not check vsi->type value:
 
--Geoff
+/**
+  * i40e_pf_get_main_vsi - get pointer to main VSI
+  * @pf: pointer to a PF
+  *
+  * Return pointer to main VSI or NULL if it does not exist
+  **/
+static inline struct i40e_vsi *i40e_pf_get_main_vsi(struct i40e_pf *pf)
+{
+	return (pf->lan_vsi != I40E_NO_VSI) ? pf->vsi[pf->lan_vsi] : NULL;
+}
 
+I had an idea with helper like:
+static inline bool i40e_is_main_vsi(struct i40e_vsi *vsi)
+{
+	struct i40e_pf *pf = vsi->back;
+	return (pf->vsi[pf->lan_vsi] == vsi);
+}
+
+but I think that `vsi->type == I40E_VSI_MAIN` is simple enough.
+
+Thanks,
+Ivan
 
