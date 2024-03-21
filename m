@@ -1,134 +1,120 @@
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2087.outbound.protection.outlook.com [40.107.117.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523C07829B;
-	Thu, 21 Mar 2024 02:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710987228; cv=fail; b=bAYNlK8xiAbxVJfv99K3XTDj6kchJ1AdepQvqGpFv/bRLVX2IcotVAlmcsSyfqOSU7zPn/BMq6QPACOMuESFgi7pqjf6PEF1Jj2RnqPhorvb5fqKngYImIK0aTMvDvwPAmfzw1O8+NMSzTm4BJen8q1PDYWNJ42LxuP46kcV6u8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710987228; c=relaxed/simple;
-	bh=7bu4fiM3JqRHKHBGWNtfMyWtlWgsJfjtbcknI+NpnbE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O+epxg4qQmSxnMNIktfVTb1wpjJucN15w8NPvyMCjU9LNjg9Q84bdUTPV2FvXVnLjFVuuo4Y+w8zvUfdvM/SHPk55Mvqs9NWk6UJRFtPCBufMoFU7kEw1xxpJQTWEVf52wBts8E+kTMpCgS/dYzNFygHLxVBa8uzXKRQ1rW1T5g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com; spf=pass smtp.mailfrom=wiwynn.com; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=rpP5cYlm; arc=fail smtp.client-ip=40.107.117.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wiwynn.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AAB76FBF
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 02:14:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710987262; cv=none; b=XOahO8DRQN8mI/U0nxnfNAdgf5z1of91+yOCuA2LwTaz+KdQvF9eoRKWMuhK5cA14n0JYAC6qPrq3s7zST20er/U+KiyYhX3CNWSFBLEegOAjgZksp4QrtWW1bS1PH63836rjZarATEgt43Q9cfXWiAwPepJuTZnvos7T9h4oD0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710987262; c=relaxed/simple;
+	bh=YnNPWvuEyLBYDEcjFH8hQxrrb4E8nb6FVTMwWf4qx3s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c6v+cYtqdFdxypkzwyD36nAHKPHI1ja/voH0JlS2nEb1YKHGlOgPQd/XqTEpAfjq27o+u0JX+NpLbH6yDUrnHMaqZHHqym7jK4SIuFRn2+Mx2IFAaKQg9fkzfGKaOj9iy81d082TfSr9TtBDsQWpJbIw/EWEX6kGnoB+JC784UA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gTJPgzbT; arc=none smtp.client-ip=209.85.167.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="rpP5cYlm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JxgnMfxXGXjDat5IYoPgd5E1NLwxUsUxm1IVGhVqxLF4n0DblfxATUql+QrT7ZDvfRDnw7RJqyOlBzVFktusc2VQUy/2VKuowR/kb9JXAHZzhYae6720dZc6kZYorY7RNcHbbyhzFSxJVTCxagZuTyBqMHin1X4RqDESLPpx28K5L4iCHYUEo+fJHi6YYPzSseFHD0vX5+Poog2QNYQyie0Ceg1TV93SEPoJkxeV6cxjznELMMPcJMlKB8d+dzbw8q/quO+3Y9MtHzaXWdDCmbBbosNQ3NMxP/9xfOGiLSnwSG/Z8gfoFin4mqOVdps7IFZ0WDjswTT7mSl9Ay8+Yg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=D6wbCZNYz8PSgbwkRuo0n/x8giBmR3OtNMKieVl27+I=;
- b=kzseLaczq/Vb9MMFhZNtfjoXptD9MCtzzrW4XeCFHWK2WD2nbFQXpcb0Q9jdpXYTJY3B/2zdJOGFTYA+rZRP3RjMQ3CPx38+WBD0NH7bGngysgof3DwBrCu/1oL7A5GS2TdIl/VeM5Xby8AX7zYl6JtY+Ytz0lJV4ENB+Ub0EbgHWxbCB/3dmyKvQpEQotFtN+DzhDcfkoWNqXioV1xI+HH27h6pil5gWIWMd79pHw4lPzvdQUs/koHK8OEFAc8ikrtOToDAt72HHtAjoTcRZXD5OkBD2hwfNFFp/AIeVvH5kL4PFWnnIQ3aQx/daTf11nFRYO7/HtfNeSVnSosTuQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 211.20.1.79) smtp.rcpttodomain=stwcx.xyz smtp.mailfrom=wiwynn.com; dmarc=fail
- (p=quarantine sp=quarantine pct=100) action=quarantine
- header.from=wiwynn.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D6wbCZNYz8PSgbwkRuo0n/x8giBmR3OtNMKieVl27+I=;
- b=rpP5cYlmFaWOcOkDSryHbdRcKQqe0uWGi4cHuXBwpLPlX+BuOsjkj0IxkCxjG7JbhdXhsFYr1R5OV0oZW4nBBpnXMI7Jk0lMAonsg+/I9TFFArI7vvg56KQQW8T+8WX/pWJTE2HoDilOGx+4zYEjraI6ncNOh2mtXZEEVVV1mSoSEyCluMahn4H7BFY3uR0ODtho/IjMd++PxHkE4Ob4qEYLwQJBVuUrEs8XhvWu12mmDlyu14lCLP5mfsceMzAw1tVWX8bh8h4RK6JwxVzsG1KRT5HoMbflKEP0Aj1VK7qivM2IXaQQkjgWedzbO5DVMvVwnN83GTEEg+nUCosTlw==
-Received: from PU1PR01CA0001.apcprd01.prod.exchangelabs.com
- (2603:1096:803:15::13) by TY0PR04MB5741.apcprd04.prod.outlook.com
- (2603:1096:400:21f::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.30; Thu, 21 Mar
- 2024 02:13:44 +0000
-Received: from HK3PEPF0000021F.apcprd03.prod.outlook.com
- (2603:1096:803:15:cafe::cd) by PU1PR01CA0001.outlook.office365.com
- (2603:1096:803:15::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.13 via Frontend
- Transport; Thu, 21 Mar 2024 02:13:44 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 211.20.1.79)
- smtp.mailfrom=wiwynn.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=wiwynn.com;
-Received-SPF: Fail (protection.outlook.com: domain of wiwynn.com does not
- designate 211.20.1.79 as permitted sender) receiver=protection.outlook.com;
- client-ip=211.20.1.79; helo=localhost.localdomain;
-Received: from localhost.localdomain (211.20.1.79) by
- HK3PEPF0000021F.mail.protection.outlook.com (10.167.8.41) with Microsoft SMTP
- Server id 15.20.7409.10 via Frontend Transport; Thu, 21 Mar 2024 02:13:44
- +0000
-From: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
-To: patrick@stwcx.xyz,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v7 22/22] ARM: dts: aspeed: yosemite4: Revise i2c duty-cycle
-Date: Thu, 21 Mar 2024 10:12:34 +0800
-Message-Id: <20240321021236.1823693-23-Delphine_CC_Chiu@wiwynn.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240321021236.1823693-1-Delphine_CC_Chiu@wiwynn.com>
-References: <20240321021236.1823693-1-Delphine_CC_Chiu@wiwynn.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gTJPgzbT"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3bbbc6e51d0so332459b6e.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 19:14:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710987259; x=1711592059; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lZZ0eBF1nVodLuO+Mf6tnyhoW2fNmSS0bAvLpCiGBQs=;
+        b=gTJPgzbTLlircu+XeIliL3MGJCg6KUh/wbx3Hx8V63qzZv8BsXaLhizDpl6TMFINF8
+         yYH76EuYpV2A6fh3mND9gyJRf1YCCTWXhXVPs8gc95RlFPlIGDd08eM3KaE9Ifyv9/7D
+         DMIZ/avva2LaGuP0kueZJxqCzWtsqizMSUqPaMWsSEb3XtKqIrmswJ0AYPcupYDoS/tn
+         rwEl4JE25mihGDgHuw1ea7mJ/3H81+Dp2PNU8Rgch0L9sL42+43wl7XIRcPiAFZkgmA5
+         bzTN71TpxsdIqI0i4/UbBaVYkxbALjgwKF4gGRM79yYKNrRnPtgKq418fKgFge288qG1
+         QD9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710987259; x=1711592059;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lZZ0eBF1nVodLuO+Mf6tnyhoW2fNmSS0bAvLpCiGBQs=;
+        b=U9wU3CM5MsZ8v2ilQ3ybHQK82R6JTh0NinI/JFDEH0Hsx+jL130ajSpqxmlbjmqqxb
+         7Pl6gFU70r7FwxXpypqtbc+rPQ4OHccD+o3LwWsMn7O+Fa1zY0GOI44vaXfs9P4T8Scw
+         705EMT0H8cHXXhz76QRIZ2pBywV3xITrMI3P3tYSxtJ45r1ScBkRSom/mWliTZGdwevI
+         B5ezwUDTNIAk7sORg2D7l7Y86hW9C4lzK23Q4UwYEmE51a3tiHduo9hUR0pqLzH8AAmQ
+         xHzU/womZ6lW1J/AnljPBVq2xW2En87IIQlKsJSHa60UR8ObzDAjYwjdungm3N+2MZ5r
+         8qBw==
+X-Forwarded-Encrypted: i=1; AJvYcCXYAm4e+fhpWcNs1FfSgp7tVJToGcbgsg/ZP0t4lhTog0CnBadVB7Bd67mcV2PCVDhS6g0DUsT4DL6SiHA15AlJhkvAYkKHuG3HYln1
+X-Gm-Message-State: AOJu0Yz5jsqqaWnQXjkXozwf1JLnGr9wV3bx0xQOyfHk0JnSIiNk7JRk
+	Rb2ExlTtr8QjLerk1XK13GdiPgf9d4WyYGjsQRSvCRaFlWue/MwEv3irJ9IM
+X-Google-Smtp-Source: AGHT+IGX9Hf4aM8VLWNa/s52FKlPfTb0CfuKELwn7sB6KrWJ9G2rS7tuQj9ARTH3dU1o8nyF9AlDNw==
+X-Received: by 2002:a05:6a21:9102:b0:1a3:1246:c43e with SMTP id tn2-20020a056a21910200b001a31246c43emr873720pzb.28.1710986882260;
+        Wed, 20 Mar 2024 19:08:02 -0700 (PDT)
+Received: from [192.168.255.10] ([43.132.141.25])
+        by smtp.gmail.com with ESMTPSA id q2-20020a17090a178200b0029bacd0f271sm2564887pja.31.2024.03.20.19.07.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Mar 2024 19:08:01 -0700 (PDT)
+Message-ID: <1499f4f3-db06-4330-b2d6-fde57a3fbe04@gmail.com>
+Date: Thu, 21 Mar 2024 10:07:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HK3PEPF0000021F:EE_|TY0PR04MB5741:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 7930f744-6f85-4e81-35c2-08dc494c88f7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	JanbFoDmNXynttnmgn3MZj6HrkG5Lere0pjOhDhH5k4l5QbNXmxC0PvSH6UkEy4HAMCG8qbiOsiLiWXWOMoOFXL9ZQOJj6VeGnZqPtmg3VA99xmqMu2x5m98Eobjp7yNCiYyhv5aA200TBDWdDOe0jmJ/jUNhAfySrGknVMXCGiF5/AujThGOKC974NwTuJINM+vu38+2P5FRw8IwB6j813vmidUny7KqOse1jHjiXCxw+o/3UX2q1hEtc4ZCJadzFFakfIhtONfsb017KdarNVA8gE47kJU0onoA9qVFLcSe8dv8AnSH8nEVPsce/cHPy3L52g6XCt4Q/pFY+GpPX+SfF4fb7SkuSH46RUA9K251ziIqWipgLLg44H3y+0ECNkBOQnqJfECn4HTtrYlUHQNReqwkOKwMhkm+uqDWlYjBD6SV9gWnJ4K0aTOWeTwu8OQvT7SeaeDQItfBvQKLqS+d1YTuTWYX2e+hhfeTtM9izRRjaiLuBlpJKUZQrPVjUtfAS5YVM3Jfm5P+EuxFVXi1dshFQeTsAFGKwUAzcMVMVX+Wzrcch0sH6emRo7eTVOoic/bfw3yLWYgRL34nHHlU7l4AYdoV6VnSHNWkJAMjbEhkTB/jF9CH3Rkb/NlO2FqgruK+Diqmxcv9WDTaY/DOUt19x4WlC4tc3ZPGXhgZ+27vC1RhQUgmwCQMCF+L2Yv1q8xC35yvhcqdGcleA3yleGl3iQhHtMZpIl5Mkr8uoYy5Rqe+SH/H0Oo3IaI
-X-Forefront-Antispam-Report:
-	CIP:211.20.1.79;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:localhost.localdomain;PTR:211-20-1-79.hinet-ip.hinet.net;CAT:NONE;SFS:(13230031)(36860700004)(376005)(1800799015)(82310400014)(7416005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: wiwynn.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2024 02:13:44.1824
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7930f744-6f85-4e81-35c2-08dc494c88f7
-X-MS-Exchange-CrossTenant-Id: da6e0628-fc83-4caf-9dd2-73061cbab167
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=da6e0628-fc83-4caf-9dd2-73061cbab167;Ip=[211.20.1.79];Helo=[localhost.localdomain]
-X-MS-Exchange-CrossTenant-AuthSource:
-	HK3PEPF0000021F.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY0PR04MB5741
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/11] mm/ksm: Convert get_ksm_page to return a folio
+Content-Language: en-US
+To: Matthew Wilcox <willy@infradead.org>, alexs@kernel.org
+Cc: Izik Eidus <izik.eidus@ravellosystems.com>,
+ Andrea Arcangeli <aarcange@redhat.com>, Hugh Dickins <hughd@google.com>,
+ Chris Wright <chrisw@sous-sol.org>, kasong@tencent.com,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20240320074049.4130552-1-alexs@kernel.org>
+ <20240320074049.4130552-2-alexs@kernel.org>
+ <ZfrcihNz74lDDg1J@casper.infradead.org>
+From: Alex Shi <seakeel@gmail.com>
+In-Reply-To: <ZfrcihNz74lDDg1J@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Revise duty cycle SMB11 and SMB16 to high: 40%, low: 60%,
-to meet 400kHz-i2c clock low time spec (> 1.3 us) from EE request
 
-Signed-off-by: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
----
- arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-index c7bba7d68ce1..3a4da189f2c3 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-@@ -761,6 +761,7 @@ eeprom@54 {
- &i2c10 {
- 	status = "okay";
- 	bus-frequency = <400000>;
-+	i2c-clk-high-min-percent = <40>;
- 	i2c-mux@74 {
- 		compatible = "nxp,pca9544";
- 		i2c-mux-idle-disconnect;
-@@ -1306,6 +1307,7 @@ &i2c15 {
- 	mctp-controller;
- 	multi-master;
- 	bus-frequency = <400000>;
-+	i2c-clk-high-min-percent = <40>;
- 
- 	mctp@10 {
- 		compatible = "mctp-i2c-controller";
--- 
-2.25.1
+On 3/20/24 8:54 PM, Matthew Wilcox wrote:
+> On Wed, Mar 20, 2024 at 03:40:37PM +0800, alexs@kernel.org wrote:
+>> -static struct page *get_ksm_page(struct ksm_stable_node *stable_node,
+>> +static void *get_ksm_page(struct ksm_stable_node *stable_node,
+>>  				 enum get_ksm_page_flags flags)
+> 
+> I am really not a fan of returning void * instead of a page or a
+> folio.  Particularly since you rename this function at the end anyway!
+> 
+> You should do it like this:
+> 
+> In this patch, convert get_ksm_page() to get_ksm_folio() and add:
+> 
+> static struct page *get_ksm_page(struct ksm_stable_node *stable_node,
+> 		enum get_ksm_page_flags flags)
+> {
+> 	struct folio *folio = get_ksm_folio(node, flags);
+> 	return &folio->page;
+> }
+> 
+> Then convert each call-site to get_ksm_folio(), and finally delete
+> get_ksm_page().  That way you're always converting each caller to
+> the exact code you want it to look like, and your reiewrs don't have to
+> keep three patches in their head at once as they review each place.
+> 
+> Also, I think this should be ksm_get_folio(), not get_ksm_folio().
+> Seems to fit better.
+> 
+>> @@ -949,32 +949,32 @@ static struct page *get_ksm_page(struct ksm_stable_node *stable_node,
+>>  		 * in the ref_freeze section of __remove_mapping(); but Anon
+>>  		 * page->mapping reset to NULL later, in free_pages_prepare().
+> 
+> Could you fix page->mapping to folio->mapping in the comment?
+> 
 
+Thanks for comment! I will take your suggestion and resend soon. 
+
+Best regards!
