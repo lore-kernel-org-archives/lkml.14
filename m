@@ -1,168 +1,131 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9898132494
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 18:01:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14C38613B;
+	Thu, 21 Mar 2024 18:03:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711044121; cv=none; b=cQ060moUm0miHk01NsJx4/hWb7fLvEa5cl3HVbFp+OCIzqhqO+VoH6XbUCRckXOAZAQ1yxEGHqqQqwBb4gypN4tL/s+IVThd0mPULNtHQpXe5O2sYWK/wjuzGQkTABs1ZhekfBLRdrzq+R4zdRYLEv/fXJJWvMKRo9dfw7ptUoI=
+	t=1711044191; cv=none; b=L57npTFC1/kvL3zKJXmSIDc+tb8TA7PGUMQYZEYZs2gg9NealoUK8Jax71jYsFkNRgwhqU88zCudTnhSmeK2bJFOEhObgRVuf91a1QRjm322kWIeF/vrOvz6xrmeu0aE+NSN51zIy03q7+9wHbqMD+rK2/1mG6cGH0Xt9EPaIxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711044121; c=relaxed/simple;
-	bh=m1MjhtWa4UWUwb9sG7uRiAQZpvAYE3Vza3Fdhtf29gQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cq8Qb44o8Ca44uA1ZYD/vq+vReKzRWueOvFdtwK95yCgVkapPiDgYD0SfXsu5hNohlrUu0DBKY4GwBUq+vv4vE9L4wOvRyzbAlWNLKKnlCjTC/FSB5rr5DVYVmUEIre7vJ5gTlvnXh8+AQ94Qo5tv+6E2JlrDeyxkn88blBtAvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DnkRB0aQ; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1711044191; c=relaxed/simple;
+	bh=cpK068KVvFXrGJJCmc7jXbXiOVvPQ+oU7A4+RLoU+Qw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=foUGVIkfuTXwfNxmBI+ipS6iM8H2Seev4DCEe8ToO6SPXMb9eUKWmG3rXARWEel2JLFO3KQxmeRtuSn1sUcfWhVkXNhZor7NyegkizecCY+iTRSlQwieSRclzUwsEUMdNxRyyRMLAwHn9EcEPu/qIjxFLicBWEbxvxrYb00rVR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LjblWkn4; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DnkRB0aQ"
-Message-ID: <16ccf678-270c-4770-8cc9-f676b4fabf09@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1711044116;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3jCNE51iIDU7D8f4vJ8vC3wJ5igSMaQyRWOs6SDcoc4=;
-	b=DnkRB0aQO1YjTp7DlSavLOZxGJXRzWuU8HJ42U3HPopVHMQ9zrMXGIYX7e+glDubg9JRzS
-	qJZ+IUKyH3mwMSrhtObV1SeUA8P7BN3be7BtJddsA5wuZ4WkN1/+T/XiBkVeIrpYZJKFdb
-	Im6loUb5p/Hl88rmdvY7nw/cIkhg4/o=
-Date: Thu, 21 Mar 2024 14:01:52 -0400
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LjblWkn4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711044190; x=1742580190;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=cpK068KVvFXrGJJCmc7jXbXiOVvPQ+oU7A4+RLoU+Qw=;
+  b=LjblWkn46DoJ4D30T1Q4+Xd2HPvwa1M93IlbrFEIGc4mVKHokGBICI3L
+   k1DV7xeY8QPHGYUMy0tVVOBiZnxjfeftq4YU77n1MWAnsZ/BEAMIY9/M7
+   oaH4WY8SApKWwNspi8MOYAtUd9IKT4dY70kznKAf2nW1rZ7r8tAImk8ik
+   xwyoD0fAxtGAxRseivGItDo6DzvJ2ee3HGygKUfqQaF5KYv+fX1soZP5k
+   nyhCpxkMqF8PNDNd0LYoU3ljR1uGPC8/2x0idbHxZNPJ7G/ykfxpeVyNh
+   Bn02mls4QgT04iL1Cs6qIjrvVbGU323Or3xdjJBpT8/070h2lmqx61438
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="6180634"
+X-IronPort-AV: E=Sophos;i="6.07,143,1708416000"; 
+   d="scan'208";a="6180634"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 11:03:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="914717075"
+X-IronPort-AV: E=Sophos;i="6.07,143,1708416000"; 
+   d="scan'208";a="914717075"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 11:03:04 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rnMkm-0000000ExcL-2Dkx;
+	Thu, 21 Mar 2024 20:03:00 +0200
+Date: Thu, 21 Mar 2024 20:03:00 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+	kernel-janitors@vger.kernel.org, netdev@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	David Laight <David.Laight@aculab.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>, Jonathan Cameron <jic23@kernel.org>,
+	Julia Lawall <julia.lawall@inria.fr>,
+	Kees Cook <keescook@chromium.org>,
+	Lukasz Czapnik <lukasz.czapnik@intel.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Pucha Himasekhar Reddy <himasekharx.reddy.pucha@intel.com>
+Subject: Re: [PATCH net] ice: Fix freeing uninitialized pointers
+Message-ID: <Zfx2VL7xnj4rQoV8@smile.fi.intel.com>
+References: <77145930-e3df-4e77-a22d-04851cf3a426@moroto.mountain>
+ <d2b1f3bd-42f1-483b-916e-3735b39a30e1@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 5/8] drm: zynqmp_dp: Don't retrain the link in our IRQ
-Content-Language: en-US
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Michal Simek <michal.simek@amd.com>, David Airlie <airlied@gmail.com>,
- linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
- linux-arm-kernel@lists.infradead.org,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- dri-devel@lists.freedesktop.org
-References: <20240319225122.3048400-1-sean.anderson@linux.dev>
- <20240319225122.3048400-6-sean.anderson@linux.dev>
- <ca4de45b-302c-4eea-bd6b-8c04e2ed89cb@ideasonboard.com>
- <53b2df23-d5ea-498b-a501-b64f753c0074@linux.dev>
- <0514ef71-5baa-4989-9b7d-8bd9526c4d8d@ideasonboard.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <0514ef71-5baa-4989-9b7d-8bd9526c4d8d@ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <d2b1f3bd-42f1-483b-916e-3735b39a30e1@web.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 3/21/24 13:25, Tomi Valkeinen wrote:
-> On 21/03/2024 17:52, Sean Anderson wrote:
->> On 3/20/24 02:53, Tomi Valkeinen wrote:
->>> On 20/03/2024 00:51, Sean Anderson wrote:
->>>> Retraining the link can take a while, and might involve waiting for
->>>> DPCD reads/writes to complete. This is inappropriate for an IRQ handler.
->>>> Just schedule this work for later completion. This is racy, but will be
->>>> fixed in the next commit.
->>>
->>> You should add the locks first, and use them here, rather than first
->>> adding a buggy commit and fixing it in the next one.
->>
->> I didn't think I could add the locks first since I only noticed the IRQ
->> was threaded right before sending out this series. So yeah, we could add
->> locking, add the workqueue, and then unthread the IRQ.
->>
->>>> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
->>>> ---
->>>> Actually, on second look this IRQ is threaded. So why do we have a
->>>> workqueue for HPD events? Maybe we should make it unthreaded?
->>>
->>> Indeed, there's not much work being done in the IRQ handler. I don't know why it's threaded.
->>>
->>> We could move the queued work to be inside the threaded irq handler,
->>> but with a quick look, the HPD work has lines like "msleep(100)" (and
->>> that's inside a for loop...), which is probably not a good thing to do
->>> even in threaded irq handler.
->>>
->>> Although I'm not sure if that code is good to have anywhere. Why do we
->>> even have such code in the HPD work path... We already got the HPD
->>> interrupt. What does "It takes some delay (ex, 100 ~ 500 msec) to get
->>> the HPD signal with some monitors" even mean...
->>
->> The documentation for this bit is
->>
->> | HPD_STATE    0    ro    0x0    Contains the raw state of the HPD pin on the DisplayPort connector.
->>
->> So I think the idea is to perform some debouncing.
+On Thu, Mar 21, 2024 at 06:59:00PM +0100, Markus Elfring wrote:
+
+…
+
+> > +++ b/drivers/net/ethernet/intel/ice/ice_ethtool.c
+> > @@ -941,11 +941,11 @@ static u64 ice_loopback_test(struct net_device *netdev)
+> >  	struct ice_netdev_priv *np = netdev_priv(netdev);
+> >  	struct ice_vsi *orig_vsi = np->vsi, *test_vsi;
+> >  	struct ice_pf *pf = orig_vsi->back;
+> > +	u8 *tx_frame __free(kfree) = NULL;
+> >  	u8 broadcast[ETH_ALEN], ret = 0;
+> >  	int num_frames, valid_frames;
+> >  	struct ice_tx_ring *tx_ring;
+> >  	struct ice_rx_ring *rx_ring;
+> > -	u8 *tx_frame __free(kfree);
+> >  	int i;
+> >
+> >  	netdev_info(netdev, "loopback test\n");
 > 
-> Hmm, it just looks a bit odd to me. It can sleep for a second. And the wording "It takes some delay (ex, 100 ~ 500 msec) to get the HPD signal with some monitors" makes it sound like some kind of a hack...
+> How do you think about to reduce the scope for the affected local variable instead
+> with the help of a small script (like the following) for the semantic patch language?
 > 
-> The docs mention debounce once:
-> 
-> https://docs.amd.com/r/en-US/pg299-v-dp-txss1/Hot-Plug-Detection
+> @movement@
+> attribute name __free;
+> @@
+> -u8 *tx_frame __free(kfree);
+>  int i;
+>  ... when any
+>  if (ice_fltr_add_mac(test_vsi, ...))
+>  { ... }
+> +
+> +{
+> +u8 *tx_frame __free(kfree) = NULL;
+>  if (ice_lbtest_create_frame(pf, &tx_frame, ...))
+>  { ... }
+>  ... when any
+> +}
+> +
+>  valid_frames = ice_lbtest_receive_frames(...);
 
-Are you sure this is the right document? This seems to be documentation for [1]. Is that instantiated as a hard block on the ZynqMP?
+I believe you don't understand what the scope of the above can be.
 
-[1] https://www.xilinx.com/products/intellectual-property/ef-di-displayport.html
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> But it's not immediately obvious what the SW must do and what's done by the HW. Debounce is not mentioned later, e.g. in the HPD Event Handling. But if debounce is needed, wouldn't it be perhaps in a few milliseconds, instead of hundreds of milliseconds...
 
-Well, the DP spec says
-
-| If the HPD is the result of a new device being connected, either
-| directly to the Source device (signaled by a long HPD), –or– downstream
-| of a Branch device (indicated by incrementing the DFP_COUNT field value
-| in the DOWN_STREAM_PORT_COUNT register (DPCD 00007h[3:0]) and signaled
-| by an IRQ_HPD pulse), the Source device shall read the new DisplayID or
-| legacy EDID that has been made available to it to ensure that content
-| being transmitted over the link is able to be properly received and
-| rendered.
-|
-| Informative Note: If the HPD signal toggling (or bouncing) is the
-|                   result of the Hot Unplug followed by Hot Plug of a
-|                   cable-connector assembly, the HPD signal is likely
-|                   to remain unstable during the de-bouncing period,
-|                   which is in the order of tens of milliseconds. The
-|                   Source device may either check the HPD signal’s
-|                   stability before initiating an AUX read transaction,
-|                   –or– immediately initiate the AUX read transaction
-|                   after each HPD rising edge.
-
-So a 100 ms delay seems plausible for some monitors.
-
-That said, maybe we can just skip this and always read the DPCD.
-
-> zynqmp_dp_bridge_detect() is used for drm_bridge_funcs.detect(), and if the cable is not connected, it'll sleep for 1 second (probably more) until returning not connected. It just doesn't sound correct to me.
-> 
-> Well, it's not part of this patch as such, but related to the amount of time we spend in the interrupt handler (and also the detect()).
-> 
->>> Would it be possible to clean up the work funcs a bit (I haven't
->>> looked a the new work func yet), to remove the worst extra sleeps, and
->>> just do all that inside the threaded irq handler?
->>
->> Probably not, since a HPD IRQ results in link retraining, which can take a while.
-> 
-> But is it any different if you have a workqueue? Isn't a threaded interrupt handler basically the same thing?
-> 
-> Probably at least the zynqmp_dp_hpd_work_func() could be done in the threaded irq just fine, if the insane 1s sleep can be dropped.
-
-Anything involving AUX shouldn't been in an IRQ, since
-zynqmp_dp_aux_transfer will retry for up to 50ms by default.
-
->>> Do we need to handle interrupts while either delayed work is being done?
->>
->> Probably not.
->>
->>> If we do need a delayed work, would just one work be enough which
->>> handles both HPD_EVENT and HPD_IRQ, instead of two?
->>
->> Maybe, but then we need to determine which pending events we need to
->> handle. I think since we have only two events it will be easier to just
->> have separate workqueues.
-> 
-> The less concurrency, the better...Which is why it would be nice to do it all in the threaded irq.
-
-Yeah, but we can use a mutex for this which means there is not too much
-interesting going on.
-
---Sean
