@@ -1,126 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B641C84A5A;
-	Thu, 21 Mar 2024 14:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BEA134CD
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 14:14:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711030401; cv=none; b=L7F4efJwQvybyLQ1o+SrZr/4equKZXMmBzPFrAriG3f9Fc50/gCEKEov31lNjgQ2udI4HZqebkpPNcKoE8VtvBQoljliNb200rk5GLzZHsVpBvnBGfhEBes3RuMsw3NnbqeLCq5LhpULfWew2jvGUmF7ljtKO3VyIb93EyYtni4=
+	t=1711030444; cv=none; b=pq+eEl6bHp3BGfP8qunskDyI+98fMuMUahb8/FVs6KWdYJOC8vujnkOalcXkdDWEASuZq3bH9yZBxplcM2ivUbRbQUrB73LONgLeGfMga1TY+bU6o9TP+9K6GH1AEaXR9GPRSaycixPRChsU87iMLPvMvfhxjlOxmEXYdjtdDI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711030401; c=relaxed/simple;
-	bh=5XWZpp84Md97q2RdzbDfViuKErGJMi5GiaAplCQD0Ac=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bt52+XgTUbDrSR8Zpep1RhePhKjgltUtwPGx1z/bAwoU6XTxfy4JoETA3sWfEloryxdKbYOGJ9MiOM22zPWqRKDArlZ4eO2813WoElrgUpvIJ1SsiC3yT69IjcdiRNPfYs1VoHrhccZNiu4tANxjdyd5l5DRY+vg4hpV+v3qJlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3547C433F1;
-	Thu, 21 Mar 2024 14:13:20 +0000 (UTC)
-Date: Thu, 21 Mar 2024 10:15:47 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ye Bin <yebin10@huawei.com>
-Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
- <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 1/5] tracing/probes: support '%pd' type for print
- struct dentry's name
-Message-ID: <20240321101547.1f4e68ab@gandalf.local.home>
-In-Reply-To: <20240320132924.2802187-2-yebin10@huawei.com>
-References: <20240320132924.2802187-1-yebin10@huawei.com>
-	<20240320132924.2802187-2-yebin10@huawei.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1711030444; c=relaxed/simple;
+	bh=4XbNPAh8Z3zYRb0BBUiZXNrWwOXuGI8uIImGV9mr0yU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=c1Hclmq7k7cqJlVsm72F9nxgeg/f4kpyHk+XHXytojbCmM2U78z41Yjjf7HoNbrM1MXrGtY2OtN9kt4d5LMFBYgI1UkpDTEwvQoSQz8eRxyvy/SZaHTkgfI7jmws+x1weoKebxbDwIgGMoRPicMCfh3Z0x2Eae1d419kmvA8DTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7cbdcfcd458so102717639f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 07:14:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711030442; x=1711635242;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jc78VNLNqYB3IsM9jGxysd2/w7v6sV62o3Q3Q/Kwm+s=;
+        b=s8sZhxvF9Fw/i4YCnaKsusuDqdvJBQID20IDlauTVXDz/44I5R73EkJS5FeWONM4qK
+         cScqr6CUbd8FmHckZ+aJIIsnHcvmDxiYWMf9aBondruqZvIFg1HfjZ7cyQh7+piF7Bmr
+         o/ri3k9D1lFjuGuQXm6vL4akCRsmJCNZGaraMHafeb1pf+LxJNjODfz8cru7q5pxjl1J
+         4QjLJ+OoODpj9+DAaKlbfObTi8oSxfI8Lq+HmygUL/3bbrdZWLm++/3letZtFszNpG2A
+         LmBTKB3Yq88bHIn0q9mCiz5jEJhAsST6ItWT2unSHO+MGgIjbRa22smpfQs9QszEGBiD
+         Rkuw==
+X-Forwarded-Encrypted: i=1; AJvYcCUw9wEuL1JaPNm1x7YU7/tXT1hj2nS3IqX4WoSfJP8ShR5qlZs8j7u/9hjDaFeEy3Ku4L+L/H/1IpekuTERDO43W3v3TbMU+wv8hXIn
+X-Gm-Message-State: AOJu0YwUmBXKjIFU8ayE0JbI0pDiuHH8bW3lNjGiB/Pvv4Tvx4giDYdb
+	OXAocOsY3TSk5L3V5ZP/C8AXYO06fqMPZPorxKPwmQNsFbAUW0a1dj93zz9ThjO2PCWJ1ZraXa2
+	5TF50Cb38S25Z50+ojVtD9h1hgl9O0dC6Ha78Mb71wDEuE1M3ShLQhfY=
+X-Google-Smtp-Source: AGHT+IFMFoFO1vF/KO/qfZofAJHvAiJm6WUY2AWIKYkAq9+OI3ZvcoxEgpzXxAtHk9hzPp8012o+uJj/gjvHfa36G7rlqXzlf1vB
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6638:1501:b0:474:f25a:6fb with SMTP id
+ b1-20020a056638150100b00474f25a06fbmr539463jat.3.1711030442153; Thu, 21 Mar
+ 2024 07:14:02 -0700 (PDT)
+Date: Thu, 21 Mar 2024 07:14:02 -0700
+In-Reply-To: <20240320234741.2355-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b4680106142c5155@google.com>
+Subject: Re: [syzbot] [bpf?] [net?] possible deadlock in wq_worker_tick
+From: syzbot <syzbot+8627369462e8429d7cd6@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 20 Mar 2024 21:29:20 +0800
-Ye Bin <yebin10@huawei.com> wrote:
+Hello,
 
-> Support print type '%pd' for print dentry's  name.
-> 
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-The above is not a very detailed change log. A change log should state not
-only what the change is doing, but also why.
+Reported-and-tested-by: syzbot+8627369462e8429d7cd6@syzkaller.appspotmail.com
 
-Having examples of before and after would be useful in the change log.
+Tested on:
 
-> Signed-off-by: Ye Bin <yebin10@huawei.com>
-> ---
->  kernel/trace/trace.c        |  2 +-
->  kernel/trace/trace_fprobe.c |  6 +++++
->  kernel/trace/trace_kprobe.c |  6 +++++
->  kernel/trace/trace_probe.c  | 50 +++++++++++++++++++++++++++++++++++++
->  kernel/trace/trace_probe.h  |  2 ++
->  5 files changed, 65 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index b12f8384a36a..ac26b8446337 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
+commit:         ea80e3ed net: ethernet: mtk_eth_soc: fix PPE hanging i..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=12324231180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
+dashboard link: https://syzkaller.appspot.com/bug?extid=8627369462e8429d7cd6
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=15812546180000
 
-
-> +/* @buf: *buf must be equal to NULL. Caller must to free *buf */
-> +int traceprobe_expand_dentry_args(int argc, const char *argv[], char **buf)
-> +{
-> +	int i, used, ret;
-> +	const int bufsize = MAX_DENTRY_ARGS_LEN;
-> +	char *tmpbuf = NULL;
-> +
-> +	if (*buf)
-> +		return -EINVAL;
-> +
-> +	used = 0;
-> +	for (i = 0; i < argc; i++) {
-> +		if (glob_match("*:%pd", argv[i])) {
-> +			char *tmp;
-> +			char *equal;
-> +
-> +			if (!tmpbuf) {
-> +				tmpbuf = kmalloc(bufsize, GFP_KERNEL);
-> +				if (!tmpbuf)
-> +					return -ENOMEM;
-> +			}
-> +
-> +			tmp = kstrdup(argv[i], GFP_KERNEL);
-> +			if (!tmp)
-> +				goto nomem;
-> +
-> +			equal = strchr(tmp, '=');
-> +			if (equal)
-> +				*equal = '\0';
-> +			tmp[strlen(argv[i]) - 4] = '\0';
-> +			ret = snprintf(tmpbuf + used, bufsize - used,
-> +				       "%s%s+0x0(+0x%zx(%s)):string",
-> +				       equal ? tmp : "", equal ? "=" : "",
-> +				       offsetof(struct dentry, d_name.name),
-> +				       equal ? equal + 1 : tmp);
-
-What would be really useful is if we had a way to expose BTF here. Something like:
-
- "%pB:<struct>:<field>"
-
-The "%pB" would mean to look up the struct/field offsets and types via BTF,
-and create the appropriate command to find and print it.
-
-That would be much more flexible and useful as it would allow reading any
-field from any structure without having to use gdb.
-
--- Steve
-
-
-> +			kfree(tmp);
-> +			if (ret >= bufsize - used)
-> +				goto nomem;
-> +			argv[i] = tmpbuf + used;
-> +			used += ret + 1;
-> +		}
-> +	}
-> +
-> +	*buf = tmpbuf;
-> +	return 0;
-> +nomem:
-> +	kfree(tmpbuf);
-> +	return -ENOMEM;
-> +}
+Note: testing is done by a robot and is best-effort only.
