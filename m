@@ -1,55 +1,55 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E998F13342E
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 16:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA6B134751
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 16:37:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711039044; cv=none; b=enaNHLcFwrm5lbzxaE9KiwpsVkaZyQ7rr2PTpAUyGBBBWHY1yHnwYcgiXw/AM1+rDdC3pCNvgwocWaiWitS4rSVPGFj/G6/xi64ZtzFrOINljrfJNQoE1tBThJMxRAXNxGX/AgE0Jc3yuffdIMeGjCJ3vkV1PQdBNLqMfOL2wNY=
+	t=1711039048; cv=none; b=Lqd4VNT0RIDYjTrmmOZcebZtQxS+oQ2iKUsG1YRpJiiu4L0fVeHx57Y1SAlez8i3NftR0ewIvY3EcHFdMY20bTm8QKimpEKor+OA9pxF+Y6CUy9WxN15fboTjF2ieI0TORbDNWGs6wMJuoBep1NUCZVbxASt4Z9M5YHAjfKXUXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711039044; c=relaxed/simple;
-	bh=nBNRzF0Iut6QyhQOmkq9JBSnSgGXOLqouFUVdOAZ0nY=;
+	s=arc-20240116; t=1711039048; c=relaxed/simple;
+	bh=FTfpkMz7knxr9PqAm/DqbYAED2rQQG3uETEf+9W7BLc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=X+ExiVRADV66tUR84oqTuLiRjADDNbyv880jSvTB82lusGTDLz1f8+ucZ9LcQNYpp+9W9bmR8RRMNzY8tNbTZ/81l+ucnKZcGE5UnK+iMpB2e2mQRyjQW2opEeV0upChcdLv+Uq+QjyFUkiVgrIzis9oS0eRyIrOzp381J85vPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o4FHCXL7; arc=none smtp.client-ip=209.85.219.202
+	 To:Cc:Content-Type; b=r98bUnccqnogpvq+m625KMTrQOz92UwawRNQQFROa1cIzjXrq8Qh/lpfkpkE/GtAsU+MQXDTWUrvLaqb0HwR3wZI7lwgKX8HgdEnQpDO1/AB3evEFEldbbLIiFwrI/VbnkaJzOPZgzWsUWXjOavZpnCiC4rQZTgKZTLU9Z9M1Rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XbIJR/q8; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o4FHCXL7"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcc4563611cso1782256276.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 09:37:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XbIJR/q8"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-610c23abd1fso22995787b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 09:37:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711039041; x=1711643841; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1711039045; x=1711643845; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jDSqL7VR8RZR1D2YCsFy3ymp62hocq5f4M4VfhBDRaA=;
-        b=o4FHCXL7S1XHVpQeOSbpxUdy4YHwNEpft+EDbDIoPSWXtf/r/lOzMIv9MiqSZsubPp
-         B7BMfZ37Tkr83ngidLd9d+yDPAB2EC2xHg/3kbzNBCzgaavx0VLaIbfJWyA2CEFlpCqX
-         guXwBJpagmhzdDQwyYNVo48OsDSgIpE/cVwyq/LyVR0RftfLYSLjYSbOa7oimju7809f
-         NxieKkMoVisF8cEuSJKRgC4dK3N1KTq9XfHBEJsZh3bSVyCNX605LIuGblPOuAabh3v0
-         6zryspl0ofJtkD7kyXHzmqRLPsHg56xr40T2IR07tHgOHw7HMOZTB9v/Qf138HX0qxKX
-         sTcw==
+        bh=WOYiJPoOo6EZ1v2aVMfBUZhNa7dlHF73f/fDRlekI3w=;
+        b=XbIJR/q88u883eJMWJlL9qorr4Q5+ewvfriJb0VMGeF91tlbGowBNb/0+1qYjCsaFF
+         GjQ/MBJsA+YbgJWQhVVmylNbzrEAwwcZzyh+C9Cp0pDfWCCw9cU4ktJ74FB4gbKpJqPL
+         EaGfYdjXMbCQLtCLafzicbvOrWPi7ka5REbzp4QNgHVgHcNsGGvLLOK69BKx1WzGa8Nr
+         gslz3I5UqWwSoXkMzMUTn4kR7O7ySZ2RdxMleVSUijvDybPWHSCz7Y6xQaziC6PJFhL5
+         H7jBpKmIXFO22iUk/EMazdQodpUDTDVRh4VsiMfy1/sRqq0xAnSONI9oCUzeWH+ocbZC
+         1i1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711039041; x=1711643841;
+        d=1e100.net; s=20230601; t=1711039045; x=1711643845;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jDSqL7VR8RZR1D2YCsFy3ymp62hocq5f4M4VfhBDRaA=;
-        b=WDcU0+V9AskGXjQDIeSGRkI1jKnSlx90OeVaS475HluERFhSXAwcAv0z5SjCoBFZXb
-         aLmbDMcJd+AxNz96mj8+OaMn6wU3XgTq5xMLZPiIhfbj4SSgGZ6dMA8OVic+4gYmS62e
-         x1aUgcQGpuTHFeRxysR+Ivl90CVw1lEzSmHx6omgmjniLP8e5+q02kNr+BmIY84DzXQ6
-         gPdWa/3LapCtUjF39db0XQUC2q9yKG3c2MhaY6HjdjtarQm7NlE6ETmKBtXP9f5XNn+1
-         NWrB3eX6lf7rS86cO/wRDL+8Oc4LFcrz49wKeeKUJWER31U36lgAWxAGlG5YaVmMqCxl
-         JFCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUr2BRoePEh+GLC1zgvB9bFImqHW7XRgeTUouz8kZvGvY4Zbv2Konyh8pDzpVT3SffG9hqZB1wxMflEqm9SiOHwK0ybRhWy9JTv/rIl
-X-Gm-Message-State: AOJu0YwKai5SFdILZWvIRNUd/h1+tCH8+UILDfKTeZnLVSuo9nLMLGgC
-	jKE5g/dytFlRLIdJbVSfd+wvhWZcQz+2tzqHHL7KBrnKymJKPOlzGrq2HUsqzW1/aAmiACtzDVg
-	3Lg==
-X-Google-Smtp-Source: AGHT+IGraxwr8LJ1oKM13+l6GlQVbxX2plMlllQyHlZ1hTZW8w83otTqaTPIW9YmGt7R4YAvcGIgF556yuY=
+        bh=WOYiJPoOo6EZ1v2aVMfBUZhNa7dlHF73f/fDRlekI3w=;
+        b=bUpCb7k+jTv5oydKYugpXg0LRtAgfF7nldaITd/poOJzohbghn9p9dqOsgiuvbQrPR
+         o6F+1DHZQ0PY8OGvwpOOm6RDK3YvpM+2TdZ/BwyOLLbCMqelrLdplQuHnikKy93bvo3U
+         A0LT2dxgUtLPMvP148bOQ0ZSGbaYEXeDpEWahEY8/xLjJ1vxBA7+QCJ3T6ds5Vue7Rt4
+         g9tCNVwqMCP2fjKod0dzmgBqv5/cLnVt2luxWKQVrsorcqnygZ7sXklgvh6lubFgDF9T
+         pteqKK7nOIh624S2oSwfBrWr1iilvQu8jk33um/uC0ikMdcMitJTVA3gTG/c8HGYf3yn
+         j8SQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWrA+NPbRRXPoGaSLtJVSth7AYIl8vpH5t08wDgP/x8KNksy7T8Wyolmwn6aWeiJTmcI3J9Qb2uPObY8AloS0iC/XbAJbUEkmt2dHjG
+X-Gm-Message-State: AOJu0YxNm05q8uVwcbK8zDAAM7OB7pwG3xof5WCbY90aD5M9XDh0lZc/
+	i+VXBqUbLX3QylWsC2usO0G7TdsbonRq2W5Ndt8/VVMeJ+qdjaqJ3YNywOXotWhisZYfDpIwK4c
+	Hvg==
+X-Google-Smtp-Source: AGHT+IEAhjSJyNICBFt8fC07FMUXAIv3JTrEOHUKD0VuV0TBcrEbM/VY7SJ2rrR05OxGMObTDGwgaQeFx3s=
 X-Received: from surenb-desktop.mtv.corp.google.com ([2620:15c:211:201:a489:6433:be5d:e639])
- (user=surenb job=sendgmr) by 2002:a05:6902:703:b0:dc2:550b:a4f4 with SMTP id
- k3-20020a056902070300b00dc2550ba4f4mr5784120ybt.1.1711039040945; Thu, 21 Mar
- 2024 09:37:20 -0700 (PDT)
-Date: Thu, 21 Mar 2024 09:36:27 -0700
+ (user=surenb job=sendgmr) by 2002:a05:6902:72f:b0:dc6:eea0:1578 with SMTP id
+ l15-20020a056902072f00b00dc6eea01578mr2412289ybt.13.1711039045315; Thu, 21
+ Mar 2024 09:37:25 -0700 (PDT)
+Date: Thu, 21 Mar 2024 09:36:29 -0700
 In-Reply-To: <20240321163705.3067592-1-surenb@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240321163705.3067592-1-surenb@google.com>
 X-Mailer: git-send-email 2.44.0.291.gc1ea87d7ee-goog
-Message-ID: <20240321163705.3067592-6-surenb@google.com>
-Subject: [PATCH v6 05/37] fs: Convert alloc_inode_sb() to a macro
+Message-ID: <20240321163705.3067592-8-surenb@google.com>
+Subject: [PATCH v6 07/37] mm: introduce __GFP_NO_OBJ_EXT flag to selectively
+ prevent slabobj_ext creation
 From: Suren Baghdasaryan <surenb@google.com>
 To: akpm@linux-foundation.org
 Cc: kent.overstreet@linux.dev, mhocko@suse.com, vbabka@suse.cz, 
@@ -87,41 +88,76 @@ Cc: kent.overstreet@linux.dev, mhocko@suse.com, vbabka@suse.cz,
 	linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
 	linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
 	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
-	cgroups@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>
+	cgroups@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-From: Kent Overstreet <kent.overstreet@linux.dev>
+Introduce __GFP_NO_OBJ_EXT flag in order to prevent recursive allocations
+when allocating slabobj_ext on a slab.
 
-We're introducing alloc tagging, which tracks memory allocations by
-callsite. Converting alloc_inode_sb() to a macro means allocations will
-be tracked by its caller, which is a bit more useful.
-
-Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
 Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- include/linux/fs.h | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ include/linux/gfp_types.h | 11 +++++++++++
+ mm/slub.c                 |  2 ++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 00fc429b0af0..034f0c918eea 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3083,11 +3083,7 @@ int setattr_should_drop_sgid(struct mnt_idmap *idmap,
-  * This must be used for allocating filesystems specific inodes to set
-  * up the inode reclaim context correctly.
-  */
--static inline void *
--alloc_inode_sb(struct super_block *sb, struct kmem_cache *cache, gfp_t gfp)
--{
--	return kmem_cache_alloc_lru(cache, &sb->s_inode_lru, gfp);
--}
-+#define alloc_inode_sb(_sb, _cache, _gfp) kmem_cache_alloc_lru(_cache, &_sb->s_inode_lru, _gfp)
+diff --git a/include/linux/gfp_types.h b/include/linux/gfp_types.h
+index 868c8fb1bbc1..e36e168d8cfd 100644
+--- a/include/linux/gfp_types.h
++++ b/include/linux/gfp_types.h
+@@ -52,6 +52,9 @@ enum {
+ #endif
+ #ifdef CONFIG_LOCKDEP
+ 	___GFP_NOLOCKDEP_BIT,
++#endif
++#ifdef CONFIG_SLAB_OBJ_EXT
++	___GFP_NO_OBJ_EXT_BIT,
+ #endif
+ 	___GFP_LAST_BIT
+ };
+@@ -93,6 +96,11 @@ enum {
+ #else
+ #define ___GFP_NOLOCKDEP	0
+ #endif
++#ifdef CONFIG_SLAB_OBJ_EXT
++#define ___GFP_NO_OBJ_EXT       BIT(___GFP_NO_OBJ_EXT_BIT)
++#else
++#define ___GFP_NO_OBJ_EXT       0
++#endif
  
- extern void __insert_inode_hash(struct inode *, unsigned long hashval);
- static inline void insert_inode_hash(struct inode *inode)
+ /*
+  * Physical address zone modifiers (see linux/mmzone.h - low four bits)
+@@ -133,12 +141,15 @@ enum {
+  * node with no fallbacks or placement policy enforcements.
+  *
+  * %__GFP_ACCOUNT causes the allocation to be accounted to kmemcg.
++ *
++ * %__GFP_NO_OBJ_EXT causes slab allocation to have no object extension.
+  */
+ #define __GFP_RECLAIMABLE ((__force gfp_t)___GFP_RECLAIMABLE)
+ #define __GFP_WRITE	((__force gfp_t)___GFP_WRITE)
+ #define __GFP_HARDWALL   ((__force gfp_t)___GFP_HARDWALL)
+ #define __GFP_THISNODE	((__force gfp_t)___GFP_THISNODE)
+ #define __GFP_ACCOUNT	((__force gfp_t)___GFP_ACCOUNT)
++#define __GFP_NO_OBJ_EXT   ((__force gfp_t)___GFP_NO_OBJ_EXT)
+ 
+ /**
+  * DOC: Watermark modifiers
+diff --git a/mm/slub.c b/mm/slub.c
+index 5c896c76812d..2cb53642a091 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -1889,6 +1889,8 @@ static int alloc_slab_obj_exts(struct slab *slab, struct kmem_cache *s,
+ 	void *vec;
+ 
+ 	gfp &= ~OBJCGS_CLEAR_MASK;
++	/* Prevent recursive extension vector allocation */
++	gfp |= __GFP_NO_OBJ_EXT;
+ 	vec = kcalloc_node(objects, sizeof(struct slabobj_ext), gfp,
+ 			   slab_nid(slab));
+ 	if (!vec)
 -- 
 2.44.0.291.gc1ea87d7ee-goog
 
