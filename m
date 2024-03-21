@@ -1,151 +1,112 @@
-Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2100.outbound.protection.outlook.com [40.107.104.100])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FB6A947
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 14:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.100
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711032081; cv=fail; b=HSebwqKKLTHrgQ2sWNyyIIZWQd/4jNlzOyn3kXM8ioBnzihB9D/kG/bOWK5qA2u4vJiob3rmnW3IQrJW0KMMAbI3ACkHI4YcTdVRIyzTJ4RW3DbxF1xGAKnLP124UtpfkWuc4SIqocJWDPamAYW77QAZWvp6VBFkLX8zPOlf7Sg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711032081; c=relaxed/simple;
-	bh=S1p4fkfpZMEBGx9QTVYJ1RWPlGXznTk+NcRftXrqhRQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Dg+/ZTgXNcxjEBsrxIYym6HofpPigrR2bKz/56xEKShz/zSudNagDUSvAQTxmP7hiLSIHuMh0s6GneA5PguibkIsSp2ll/6ZU0knoB3q+Z2Iu0mfR02pdbwjKoRoSLHx2J83kCJJ+OcxXZI0mAs6pOMd7Rl6ZW0pYFsznHbBEm8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=theobroma-systems.com; spf=pass smtp.mailfrom=theobroma-systems.com; dkim=pass (2048-bit key) header.d=theobroma-systems.com header.i=@theobroma-systems.com header.b=TsGSE+hZ; arc=fail smtp.client-ip=40.107.104.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=theobroma-systems.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=theobroma-systems.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 594401E876;
+	Thu, 21 Mar 2024 14:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711032117; cv=none; b=A2KOrU4Bj2Bp2F5Oqj9PwWcWg9O5Ndk4el1dO92cePBZWWmn7GPisp/tAfZEGk3Ntxkp80EC/CP5hbvVd6BAhgYl48c4dbwTDaHbOsW5GauCEs6QXiZCvFo5r0t3NQopXLeizOavCNCkmz9Lk033LjPQiK1ikFGd9qqSflD56ik=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711032117; c=relaxed/simple;
+	bh=5c0e1gE1hGMRlizHU23/mf1df5lXbfw7eMJyT/uu+XU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sjxMMSUQ2Qx5P1ioRX7buJEztBy+BjCTLXmh+HELD965YZIIxeu5TF9rFsNU9astr1CFwCTtRZyv4nSnPfBGCXUqq/Iw8FPFlNkUtn59xA+jzyQTXMbhI5CFSmP3lO99JvdrrbQQacbaFOIctQMVu6NE10nOrb49Ty52FCKV7FI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AlwEQxo6; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=theobroma-systems.com header.i=@theobroma-systems.com header.b="TsGSE+hZ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LaUWcymaPgvSBrZw54H2+CO0QjVha6jiMtyJrC52IHpVBqGU0kKp6fEkN2xmPmt9LmeHIcCbz23D10G4hHAAJmVUhhYipEJC5jYZ0DG6rgp/6Ds3JRgz1fj7QByd+/w09CnsEFrS0hcyukQNaoshBiWoIHa+5jYNPD8Faz74jJ9TJYSAnBWArF2EjCxsxW9pJVMD3EHzy79/lCsqwSuSJX6CgAoyJx3AVVO4Ey0juR2AcftSqf7XrxzXUC/azZgosov54zjWL2tHxxSbMriZAkJPGq4/o9efL62jD0ibUfR1BOGebxwJ6IDYjrqQp2+dTIUArQW25PWbqSOfwbxDKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9XMqoIj56jSj2i0ioqWVbMSBEZD4mRgyJuzHCEjLU/0=;
- b=VaxC3WTkPdMo+Grb3l/fqZfmCYckXqwzAbybnsK/SAp8Ex5vxF6SMgLFpZajtVutTPVZGSz7aaq7LSN/uoZyhTkk1uke64LV3wJ3sJ+OoPdMzFs0g/L7Nn+bl9VdtqucrEgW1S0q/SPg++fBoOJu9iD0TPP2LoXEVek+RFTVjH0PPk0cQ5n1rebmex5aS8ew5RvkitT/Bt0jpwnhsawgiUM9N/IZDkUwp0ghfcOMyY+yeocjwV6Rbgl6LH2YGcTDIZFyrpQOcEEb2+XpAOozHIbXEuz67xyi4rWrB2M/Glj6Wa1t4NWmoF7yWrxiLr/QW7isbGxQ/+PwsAPZ3A4/AQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=theobroma-systems.com; dmarc=pass action=none
- header.from=theobroma-systems.com; dkim=pass header.d=theobroma-systems.com;
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=theobroma-systems.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9XMqoIj56jSj2i0ioqWVbMSBEZD4mRgyJuzHCEjLU/0=;
- b=TsGSE+hZ3COQ54bsJ6PIpu+hhT7rxY55338StjVygayfHwS77aCOgBvkgMi3jM61vjPbHAb553053gf3+kaL0LOMAo2dxP0Vv7pGLoqaFuf6C0JW4N88Ig/4/kvao/unvR8HKMAsE8ZlXqWIhgRgM2yU0cj/bdtMwkFLveFr3iWSFcyjXuThZx/e48xyJFv76teZ3NWmdsYrdzGHlI5PnLEGzklCEDfrOIw7YWChtTzThg79ozx7K5f/Ev40gxSBe1db81jlQ+ZrKl7+fohemCrvHmGPnRqwXpFh4wlMlw8b+5zl1ktQVmC7tYkXzQYYVHiJJVup6Fpf9XTEQLquJQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=theobroma-systems.com;
-Received: from DU2PR04MB8536.eurprd04.prod.outlook.com (2603:10a6:10:2d7::10)
- by VI2PR04MB10219.eurprd04.prod.outlook.com (2603:10a6:800:22c::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.26; Thu, 21 Mar
- 2024 14:41:15 +0000
-Received: from DU2PR04MB8536.eurprd04.prod.outlook.com
- ([fe80::23:4118:ae4a:8dda]) by DU2PR04MB8536.eurprd04.prod.outlook.com
- ([fe80::23:4118:ae4a:8dda%5]) with mapi id 15.20.7386.025; Thu, 21 Mar 2024
- 14:41:15 +0000
-Message-ID: <5ac99bda-930d-4f7b-850a-560b76c39bc6@theobroma-systems.com>
-Date: Thu, 21 Mar 2024 15:41:07 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] drm/panel: ltk050h3146w: add MIPI_DSI_MODE_VIDEO to
- LTK050H3148W flags
-Content-Language: en-US
-To: Heiko Stuebner <heiko@sntech.de>, neil.armstrong@linaro.org,
- quic_jesszhan@quicinc.com, sam@ravnborg.org
-Cc: maarten.lankhorst@linux.intel.com, mripard@kernel.org,
- tzimmermann@suse.de, klaus.goger@theobroma-systems.com,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- Heiko Stuebner <heiko.stuebner@cherry.de>
-References: <20240320131232.327196-1-heiko@sntech.de>
-From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
-In-Reply-To: <20240320131232.327196-1-heiko@sntech.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR4P281CA0157.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:ba::12) To DU2PR04MB8536.eurprd04.prod.outlook.com
- (2603:10a6:10:2d7::10)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AlwEQxo6"
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42LDp75e019628;
+	Thu, 21 Mar 2024 14:41:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=pp1;
+ bh=IpG8mJMwkfTbkB0zhSurrzy99dnKtzM5MxtyjDVwNG4=;
+ b=AlwEQxo61lG2qjxm1TZYGcIDYlzcdMtapt4MyvZMfGae4L4Prws5AM/twrMgYbhUeibQ
+ x8qLW6Ec07dit+qKMHpECRnsFBDVbHT2tV+s/f0clfgUNpbT+fQ8lLaPL3zpxj5aA8ge
+ f/LCNsQECVy8heUl6wNftQrksy1BRdOc4HZscEkis7OCAT1pcP550JbRognjMiwqPGD4
+ yrKgFOCwyx3yZVDHtYRL1KtfDM2z7Og4peef6uwmzAEl1JaLSynO1iNri74Hs1iuUAr/
+ 3TUykUkPHibxlHW+MQljf3mjmNTXHLozmllsCWJ6vumHr9Ezkj6rXJwoCpgGJ3SEfA+/ eQ== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x0ne0r8ys-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Mar 2024 14:41:53 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42LDGY1f011582;
+	Thu, 21 Mar 2024 14:41:52 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wwq8mdpwp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Mar 2024 14:41:49 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42LEfhFj52101464
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 21 Mar 2024 14:41:45 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B91862004B;
+	Thu, 21 Mar 2024 14:41:43 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 96C8420040;
+	Thu, 21 Mar 2024 14:41:43 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.60])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 21 Mar 2024 14:41:43 +0000 (GMT)
+Date: Thu, 21 Mar 2024 15:41:41 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+To: "Jason J. Herne" <jjherne@linux.ibm.com>
+Cc: Anthony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
+        borntraeger@de.ibm.com, agordeev@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v3 0/5] s390/vfio-ap: ap_config sysfs attribute for
+ mdevctl automation
+Message-ID: <20240321144141.6215-A-hca@linux.ibm.com>
+References: <20240313205807.30554-1-jjherne@linux.ibm.com>
+ <48d70b2c-788c-4ff0-9a03-c063aabdec07@linux.ibm.com>
+ <20240319111233.23303-D-hca@linux.ibm.com>
+ <7307842e-769e-92df-800a-0bf78fe0b70b@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8536:EE_|VI2PR04MB10219:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1b15f27e-c638-4af0-71b8-08dc49b4f5d5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	ERTakDI5hMcHN5Pb/ZLbjH6XB+iIKdgUY2JrJwpAbstREej/wBI4nzyuPmrnz0Tt7aUyUAo07IbeLqJszu9weX7gTcvWv5ZbphgsdaUTtxylB74P5rVjszg6fe6ClIXNLFObAfkjOI9peHJkaF4l3pEtH3+l3Ulspgqms6YLGVkQlT6MS5v/+5rJjox+yTKH8SaJNdlGR1pq+rSvG/pOHzffKjAuUq0Yb9EAH161+m+buu4NIw6cjbWmPHFWUeHX9Kx93HJTOVl1Sat1C+24EYKv+bGWZm0eIqMaJcjE13eSNbgVRQDHWnIZxqCe+jbG7oYyp+r0acEshfZI8vxY59DTN6wa2qI2bH0efscWiM9a55v+N7lTXDaM79RpcxeI1/HsoY4miY6gDPbIUbaBMM6stX7Pn+RJcDuTPfgP5SVbUYkRj1FBlhAlWF8xj4QbHFpTmWW+J81/GvWlYIokGxb7yLUDlTxDLFO80zOizG7Yw2AT1r0f4JOJHVoR9JzB1b8k3+cEyoCpTCNloXnE3DfYH8z5Mk+ZcAwh8nv/Am1Bp2IjSiMD3nhMjB/RvoqqzCN2IcByw04czoaX0OEri1Uo5RSt0Ouy0Z5OYHbGxVKC8BARM9+b+YC00blriyj5+w6Vu3Ni8/M4haYUTrXLf3bMUrKm9RQhqgwICfARsYY=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8536.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?a3p5MCsveVVBTGlsV1RZTlpWMGJDZmFRdmpJeThDdTJDRjd3cFJqSDZKNEZP?=
- =?utf-8?B?L25hRURCZnhLTDcrdnkxYXBoSWdDZ0s1aWp5TzExYXlsRVVCS01iYzNySTFh?=
- =?utf-8?B?alZuUjJBR29uS3NYYmdNUS81aHV6R2UrYkNpWnZuRlBXQm56Z1YwRE93NjJC?=
- =?utf-8?B?T050TDlicWIzRGVnZS9QU0ZBQmg5N3VXMGtHT3lvanhGbEp3QUhlNVhQRUMz?=
- =?utf-8?B?K09jbEo1OTgzMWFkZE1NWmRTRDVzVjFVQWk3VlBIb1dpd2ZLUkpsbG41dXZX?=
- =?utf-8?B?UEpsZVREUC9PSjdQZzA0WWNuWXZmVnFUNndvZUlDL1lDUUkwWjQxSlJhOVhw?=
- =?utf-8?B?c1BFTnp4Yk53ZTNBRVFJZmowZmIvbXRQem1VcGVHU1FzcnFSd0hnWWpaMXUx?=
- =?utf-8?B?QXFPc2dqWnVzWHYvaGtobUI3TTNLTnFoRUxWR2R3UFpyOFhNNnZHUE9WL3Qz?=
- =?utf-8?B?RnhtT3IvbHpjUmU4NmhpQjZKNWNzeHlsUmhBa09TVG9xWHY4RHgvMlBsajBy?=
- =?utf-8?B?ZnVBVFcya1p5VjNmWnphRVFWMHZQZGpDNThtU055TDJVdGF6WS9GQXgvTSt3?=
- =?utf-8?B?S0hFZlNBd3NteHMyK3VSdDlxL1QzRTMxdjhBVlM4NjkweVNTNExkL2hRa0RR?=
- =?utf-8?B?RjZsQmcxckJrcWtRVGw4UGlQVDZ1VktVSzNnaU9HWlR1QnhManp1WVdjbFdk?=
- =?utf-8?B?dmRjazJ0L0p0c1BqQmN2RkV5aXA2YjVQMTVnM283UFZOSmUvekI3U1dGN2pX?=
- =?utf-8?B?YUZ4a1NDTDRjQ3cvTkZLMTE1aG9PNU5QcVVVYmhTVW1RZ25oSmx3alk1UmFR?=
- =?utf-8?B?dklGdGl5MXVnYis3WU40MW5QdjdaTTQ1Y01QNVhNUXFkR3JkbFRhU3BQaTg2?=
- =?utf-8?B?WDVhaWxMUk9XSDZyTkRRUmlIMkEySERoRk84VE1tU1lDUmFUdjhZWlFtWDJK?=
- =?utf-8?B?dHg5QkRTaUFPN1VIVXQybjRmeWQrRlZHNWltRXFWM21TTVR2aXlkc0E5a2h3?=
- =?utf-8?B?Qk1PRkYvbHNNS203anJ1QzFsVXFOWDgzMVFobDVEZkVZaFF5RzI0UGd2MXFQ?=
- =?utf-8?B?UTgzOFRLYjdwOWxBQXJ5ejhTUEYxWStLQzJZcC9jZnROK2Q0YWoyZERKUU05?=
- =?utf-8?B?NGx5K0tFNi90azBJUjFCd29KR2NrSFlScjNwNFFNcVczUStNbElzTWZmQjFN?=
- =?utf-8?B?NExLYlhNSkxYODlQS1BCVW1EenRyL2FxeDg3RFA3cjRIUzZmcFI0Q0ptMkd3?=
- =?utf-8?B?Z05OWEhEazh0c1dpV3dwR3dJYWNMT0hKc1VaU2U2T0htU3FrQkl5R2tGYVAw?=
- =?utf-8?B?aGxwTTVtTkZDVTMwOUllNUdHcDk2eDJDZUYyTXZiSjQxVEhBSmVUU21JNE1m?=
- =?utf-8?B?Q05ONDdyV3RmandPS3RZZFNWS2p0VEJQeXhzaWRTVVJaZ3ROd252OFpUWWxv?=
- =?utf-8?B?YkZLRGt4ZlhtN1FXWExvRDZGL0dvUU9ORkhiNEFwZTgrTFo1RFZpdzZDb2hU?=
- =?utf-8?B?MXVQbTdSdS8vcVNEbUI1bUdpdllqTTlBcmJtM3BPVWFKZTVGRkdDd2pGc0N6?=
- =?utf-8?B?VTQ5azArTERsS3htYkg0ZVNVS09OdVJoYU1ka0xZTWNpNW15WlMyVWpqSnJx?=
- =?utf-8?B?cXRwNXdKNW5GamlhdFA3TUpnRHBEODF2T0VBK2Vwc2ZRenltb0pKZDY2ajli?=
- =?utf-8?B?Q1E5c3RIQkpYV2N1WXhmZnovdEdFd2NmVzJRaUZjNjlOcFhKSjBJZk50azcz?=
- =?utf-8?B?SFlUWmMrU2ZnNjlicmVFM3MrVUsxQnhUUkhXeXpXR1F4ZnZpd1JUSzIxZlk5?=
- =?utf-8?B?Zm1LRHBpK1hwcFJoV3NHRldOQWRBb2RUQUZPSWwvd2xOSzJiTlpZQU8zNGor?=
- =?utf-8?B?VFJueUx5VEN0TmM2aGlHVzkxUkNSeGorTExGK2VNN2RpTTdpUCsyc0dpYXRS?=
- =?utf-8?B?Z0RmWHpYbEVyTXVOVjk2MUdHTXRyUWM3NFA2QWlWNU0yem50eTVDOFo2d3hq?=
- =?utf-8?B?WU1MTlNzOFFNM2N3Z1U4c3RVdWx4NlVzeHpLa05vcXJCd3JGdFZMaklzc3Jz?=
- =?utf-8?B?d0FzdVN0Q3czNUVXV1dWN0JnSkJJU05ZMEJuRy9pZldIVmlYR05qbXZDZEN6?=
- =?utf-8?B?UnphOHVrcTJLNXQ4ZVBMWVo2VU5ud2c1YzRiakVUL25rbDBST2F4YThsYWt6?=
- =?utf-8?Q?+J4uZrTNPStZZztXN/eh/iY=3D?=
-X-OriginatorOrg: theobroma-systems.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b15f27e-c638-4af0-71b8-08dc49b4f5d5
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8536.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2024 14:41:14.9619
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9y6JZ3x3STRZ2Mp0RgqV5LQvSxWTbfbiNCiVUzizon3yWkVxxnDQ7K9f4klGUc5fk+4dFZmfk/a2G9qrQo18JHpjq6cWIc96ksTQBpFKSeLCUFqR//foxOC0zDhlX6lz
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB10219
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7307842e-769e-92df-800a-0bf78fe0b70b@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: _LZCa5j9iQd2y1n883_FOPog967_dO8b
+X-Proofpoint-ORIG-GUID: _LZCa5j9iQd2y1n883_FOPog967_dO8b
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-21_10,2024-03-21_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 spamscore=0 impostorscore=0 phishscore=0 priorityscore=1501
+ adultscore=0 clxscore=1015 mlxscore=0 bulkscore=0 suspectscore=0
+ mlxlogscore=519 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403140000 definitions=main-2403210105
 
-Hi Heiko,
+Hi Jason,
 
-On 3/20/24 14:12, Heiko Stuebner wrote:
-> From: Heiko Stuebner <heiko.stuebner@cherry.de>
+> > In function ‘bitmap_copy’,
+> >      inlined from ‘ap_matrix_copy’ at drivers/s390/crypto/vfio_ap_ops.c:1674:2,
+> >      inlined from ‘ap_config_store’ at drivers/s390/crypto/vfio_ap_ops.c:1696:2:
+> > ./include/linux/bitmap.h:253:17: warning: ‘memcpy’ reading 32 bytes from a region of size 0 [-Wstringop-overread]
+> >    253 |                 memcpy(dst, src, len);
+> >        |                 ^~~~~~~~~~~~~~~~~~~~~
+> > In function ‘ap_config_store’:
+> > cc1: note: source object is likely at address zero
 > 
-> Similar to other variants, the LTK050H3148W wants to run in video mode
-> when displaying data. So far only the Synopsis DSI driver was using this
-> panel and it is always switching to video mode, independent of this flag
-> being set.
+> I believe that this is a bogus compiler warning. I cannot reproduce it,
+> fwiw.
 > 
-> Other DSI drivers might handle this differently, so add the flag.
-> 
-> Fixes: e5f9d543419c ("drm/panel: ltk050h3146w: add support for Leadtek LTK050H3148W-CTA6 variant")
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
+> gcc:     gcc (GCC) 13.2.1 20231205 (Red Hat 13.2.1-6)
+> binutls  binutils-2.40-14.fc39
+...
+> A quick web search seems to indicate gcc throws quite a few
+> Wstringop-overread warnings for valid code. I suspect this is
+> another example of that.
 
-Reviewed-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
-
-Thanks!
-Quentin
+This might be the case, however the code has to compile without
+warnings also with plain gcc 13.2.0 (built from source).
