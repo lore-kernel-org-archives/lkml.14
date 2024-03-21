@@ -1,138 +1,131 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-192.mail.qq.com (out203-205-221-192.mail.qq.com [203.205.221.192])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA258528F;
-	Thu, 21 Mar 2024 14:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE4A1E53F
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 14:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.192
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711032365; cv=none; b=tLvNXTxAQHzNmPKUCQoKEoPLs/2ejx3uzzghQ2MNKw0SIVU0WZYAqdUTot/8e+v0bIqeoxhQgJ+mZTU4rqK7h2oFxwfkdwwrsDL6E7LaDo9Z0+X937QDHhODZTScxaO7M7c8pyqFTOLdLAm/STfi7G20wSYjYUfBZt2qs4ISwVg=
+	t=1711032406; cv=none; b=ONPvw5l50gGR6+RyxyVB2qbvWtt9o9XY1gWmwC+hEtGQvxZbkfmsy6DEc4xYtc3y4vWwk3UvNtgJoxJTqNu1eJ2JKbD5YJEIOkdK4pTxM8Q74OqhiDFBC0gN0i4pDVr7tqCCt+215ek9ecTNAWp5XdAjY1mX92lBzFxOi0OAq4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711032365; c=relaxed/simple;
-	bh=aGM/BjIMhOpdAbKdAUNV6UdCyMRiKpIXa6CNByFD57w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gGntbWYqz7kcaApg8pltxvAALYmOHyXLO3pPD87oc15rhSufBF99JTGQPSHHdQnLuOhH2KmnPXvZ9jRymyDKrit7x28AzGlwYSBF+SUluspRQRq52peJjXOWs/QvQTDRbVCBNGeek5pbOtYwNZkg/OEqctievMuUKb3Xfj7+Ceo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lqezg+lF; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711032406; c=relaxed/simple;
+	bh=zxhRwOsFyhVRegkN33+YoEjELQmIBtiaTY2brmh+8B8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j1WyKe0GzzppSQ4R3rPkSt6IIwiZKfgmFwnKsi9FFI2D/d+9VqHxOkq4vZ0RNXCS5LPCQpgsacPIxe686k/llEfVVkhmXtKUHMegitszzrv/a88GJE92s4+Z4OFMiHrOPIn1t9UfOP1z38keXAR/vMET9a5MxtuOTjECKUjCIoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=U+wC312y; arc=none smtp.client-ip=203.205.221.192
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lqezg+lF"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-41477211086so3520505e9.1;
-        Thu, 21 Mar 2024 07:46:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711032362; x=1711637162; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5kmM1IqHsbIpNzWg9iW5UOYS59eD3JNfeSOGpqW3Bng=;
-        b=lqezg+lFWft8mW0zITtCGmSPjwi5XEJ8JHupQXSBePMM2iRY/PjhLCDVoAttSbdwUS
-         BfiEJ2zOL36usDjd+NtJ0vhnRV9d1DH/4djVJHlr40zg3n3ZEa1B+WhWth21E5ZxsJAG
-         wWLa5weTNnEOq2ZnIAmIbPbR7boDVy3ZV+IADyE9VRHgUTSG04DmRMSPK1lilcWgtRg9
-         p+PUHDirjU5wNcRbLh4ursIV6APhC2sjRf/H7rFz19SDQgatSYODbk7HJtPaUnuKIvAT
-         FPj7iLtNfORDzbab5Z7IMo6PgE9/is17mZ32KrImqhiWrUF8E/ZyBsrBgnZzSusVn8WN
-         FNXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711032362; x=1711637162;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5kmM1IqHsbIpNzWg9iW5UOYS59eD3JNfeSOGpqW3Bng=;
-        b=YG2T/Bk6X7z/XSOSLFqwoqRR9ZtWDTV0aZRCdleY4txJVzqYVGhwGQAfSEFki+LyaH
-         kxqb5KQbTe881S5yVzu3K2Ngt7ZnyA7rkM6JMrguVyOwhFnOuMBBsLJ5WqflqFVWoAH+
-         IAMYIYslfOL6Jli5tbskdq3O9A7rH6n7yZgvf0DqP8J06dUw+7hAV6lwgiJSezumlAc/
-         NSfBf17YnO3EZB2ZQ7KILhD9qmU4FovuptmL9Y3Qs/tSnHZjyczQRQMz1MstucDCyPVG
-         6YdXL9u20V+rJYUoFpGKsOwbWUdhK5GRMha+zIxZYIW2/JiDM1+qLWKe7Lr2xip4zPvB
-         MtYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWnRDJKbN+wT2b6ULT6p0Mk+C+miLLiJm9yB4g6qRoNfKIgaTYTBjS3K0ZfylBDbTPsEKKiQVO4pGV3zR2mo6gd0CFqlsM13FDw0PeUu6kIlvq6Nsdr1QBhqxo7cap7LroacsSWZvuvGDU=
-X-Gm-Message-State: AOJu0YxBv3YvHgs7sODn/mc7UPAnZbc4Hx9Z0kUmxBBMgUp53cskdqr5
-	WrcyUpXRznxgZZgpqsuXbNUrlS++YYnF/zuWSRpgy7jV3AG3PYPgU6/hMfUj
-X-Google-Smtp-Source: AGHT+IGPx/PP/oaB4TGS5GkIshYADiFWEg06SznTyDFb9IQ3swToDyMfqMoNnAzvfiAJhGPTDTfIGQ==
-X-Received: by 2002:a05:600c:19d2:b0:413:ee55:8bba with SMTP id u18-20020a05600c19d200b00413ee558bbamr2135209wmq.4.1711032362170;
-        Thu, 21 Mar 2024 07:46:02 -0700 (PDT)
-Received: from fedora.. ([94.73.33.46])
-        by smtp.gmail.com with ESMTPSA id h13-20020a05600c314d00b004146d736fcdsm5253378wmo.36.2024.03.21.07.46.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 07:46:00 -0700 (PDT)
-From: =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-To: jikos@kernel.org
-Cc: benjamin.tissoires@redhat.com,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-Subject: [PATCH 2/2] HID: uclogic: Expose firmware name via sysfs
-Date: Thu, 21 Mar 2024 15:38:05 +0100
-Message-ID: <20240321144553.262409-3-jose.exposito89@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240321144553.262409-1-jose.exposito89@gmail.com>
-References: <20240321144553.262409-1-jose.exposito89@gmail.com>
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="U+wC312y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1711032091;
+	bh=vTWFz+Pw5yojbV5cXwUOynQbY7P0Q2w1AOEzaUfmi8Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=U+wC312yV1bY1vcDpjuQ/Q00ABWcsVAtIef/eZQAzUWPTagUtJwkpubNvmeXjFwOr
+	 Ape42FyHLqleUB5Da2OPCQu1IYcEMx9UUZ1qFaQzC5nt2kTABPFTAj7K5lIErMPIJJ
+	 /0v0TAvRF8jqT3oGzfxpl6X54o5VNPpCZN0fyicE=
+Received: from [IPV6:2409:8961:2b17:549c:98ce:49d:c167:4134] ([2409:8961:2b17:549c:98ce:49d:c167:4134])
+	by newxmesmtplogicsvrszb6-0.qq.com (NewEsmtp) with SMTP
+	id A5B91E86; Thu, 21 Mar 2024 22:41:27 +0800
+X-QQ-mid: xmsmtpt1711032087tw819upuw
+Message-ID: <tencent_5C3A21886D522B5D9DF9CAAFF499AB6A9805@qq.com>
+X-QQ-XMAILINFO: MIOa0ndEC0Bb5qTuuc2aknIKy4bUopvlJvEGPl3FLQhh+gjZDoBz/giuHq6feo
+	 8aHsrCVwfjESp5ZjDonDzpFWBudu5KCBdIl5s6wOTS9Zq8E4s0wJnVn6JUOly6QbFA3Y5uQAnYzj
+	 9Uh4AotqTzWSIScJD4DQQBxOXHdgEVnTt7lleiOzq9FW74QmvWXuBZPJS8lBXB9W1jYrCTw+YnBT
+	 2xB0+vhlX3lhObu+7sYWamOCzMzkUJr5ilI7ISGg3ddsjTh764teJaZfEfDcGk6db0f2k4cxOdFh
+	 B2mj9YG4eAlzOp4YUL2k4StxA9Y3fwvb0MsKRvy242kO1gxn0GCTQdLn7L5u+1kAfYjUzzabff0A
+	 WgRrSLH8Fwpn4+ByJfj9jy3UAp6t28XxA3SW2YLbOsiLGbEB7bpiDCSLRTZeyMkllyi1LFM8lJvA
+	 cEf7d2vV83iKQJs18SBRCBNuQMaBRs1nMVOnULtf/HtHJozUPvbA+cGS93v4HnjFeYBMI1l3Mixt
+	 ks92K4g3UU2ZzaQ/rKEu9ZoNo19Hlk2wRNEKQEFWkzTn2RQZG9ckB3U7Igs6loTEoa2ymh73RJH7
+	 0PR/Vxsb2/afN2hDLhK9PBAG1p+VvNF0ckk1gGS4na7INLQQRlHpCcephKHTbo+rf78Izj5mByYB
+	 mRa6MZqrzLLgogdBSvsQeJbRAI9W7nXEW+Q+yavHy5bfRru/bzObWnBMIUeumlt2ajTH9g+xu17T
+	 pb5qhhq1Nzu8kkmBlSZqz/L6wqI3GRYoy2T1UgHXQrF3NYJbLQPtqKK3L/0KAtiMxzvZl8JgqP3B
+	 s956vHvbOutb4YB5UKBZgNj8htif2A1ynjwODKKhWwPkwOwL+eOqATpiWkMaRX498ZvBWgmto7+m
+	 f7EfZQjG5qDfRjn4NxjvvjmiLQEifg9rUkPwkwGjgz5JhQF8x44uoc56H3ngOxPGX8lx4B6HU4KT
+	 CL87+1LGydJ+Qd+IGSBBk8AIkvGv37oQMbvZircHqB1gO7upilWFS/giydX6kgNIW+16PYF+p8m6
+	 sag3FF42xfmeGV2MHzovL7jK9vC10=
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-OQ-MSGID: <2b1414b1-b5ac-58cc-185f-19bb4f47d76a@foxmail.com>
+Date: Thu, 21 Mar 2024 22:41:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [RESEND PATCH v2 8/9] fs: inotify: delete these unnecessary
+ static variables it_zero and it_int_max
+Content-Language: en-US
+To: Jan Kara <jack@suse.cz>, Joel Granados <j.granados@samsung.com>
+Cc: "Eric W . Biederman" <ebiederm@xmission.com>,
+ Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>,
+ Christian Brauner <brauner@kernel.org>, Dave Young <dyoung@redhat.com>,
+ "Darrick J. Wong" <djwong@kernel.org>, linux-kernel@vger.kernel.org
+References: <26c450f6467b4cbaf94cdb10f047abc6ab0c2a5d.1710863674.git.wenyang.linux@foxmail.com>
+ <tencent_3066A7AB308FF9F53E3B5639514306914D0A@qq.com>
+ <CGME20240320103608eucas1p235f843330beda0c826ab3cc1709c65e6@eucas1p2.samsung.com>
+ <20240320103603.u6uqhk6viu4qkaht@quack3>
+ <20240321105555.f4qg5g3wbe57mzzx@joelS2.panther.com>
+ <20240321113849.hfzmnz6p3cjbmmwt@quack3>
+From: Wen Yang <wenyang.linux@foxmail.com>
+In-Reply-To: <20240321113849.hfzmnz6p3cjbmmwt@quack3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Some vendors reuse the same product ID for different tablets, making it
-difficult for userspace to figure out which table is connected.
-While matching the device name has been used in the past by userspace to
-workaround this limitation, some devices have shown that this is not
-always a valid approach [1].
 
-However, if userspace could access the firmware version name, it would
-be possible to know which tablet is actually connected by matching it
-against a list of known firmware names [2].
 
-This patch exposes the firmware version name via sysfs attribute.
+On 2024/3/21 19:38, Jan Kara wrote:
+> On Thu 21-03-24 11:55:55, Joel Granados wrote:
+>> On Wed, Mar 20, 2024 at 11:36:03AM +0100, Jan Kara wrote:
+>>> On Tue 19-03-24 23:57:49, wenyang.linux@foxmail.com wrote:
+>>>> From: Wen Yang <wenyang.linux@foxmail.com>
+>>>>
+>>>> Delete unnecessary static variables (it_zero and it_int_max)
+>>>> and encode them directly in the table entry.
+>>>>
+>>>> Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
+>>>> Cc: Eric W. Biederman <ebiederm@xmission.com>
+>>>> Cc: Luis Chamberlain <mcgrof@kernel.org>
+>>>> Cc: Kees Cook <keescook@chromium.org>
+>>>> Cc: Joel Granados <j.granados@samsung.com>
+>>>> Cc: Christian Brauner <brauner@kernel.org>
+>>>> Cc: Jan Kara <jack@suse.cz>
+>>>> Cc: "Darrick J. Wong" <djwong@kernel.org>
+>>>> Cc: linux-kernel@vger.kernel.org
+>>>
+>>> This looks as a sensible cleanup but I don't see the first patch in the
+>>> series (and neither it is archived at lore.kernel.org) so I cannot really
+>>> verify whether your conversion is correct...
+>> This was my original comment. If you want to see the cover letter
+>> look for this mail ID tencent_06797E65CFC655DCD4F0414B9380E95ECC08@qq.com
+>>
+>> Not sure why it separates the cover letter from the rest of the patches.
+> 
+> No, that is actually a different email :) Based on lore the message ID
+> should be:
+> 26c450f6467b4cbaf94cdb10f047abc6ab0c2a5d.1710863674.git.wenyang.linux@foxmail.com
+> 
+> but the email is not in the archive...
+> 
+> 								Honza
 
-Link: https://github.com/linuxwacom/libwacom/issues/609  [1]
-Link: https://github.com/linuxwacom/libwacom/issues/610  [2]
-Signed-off-by: José Expósito <jose.exposito89@gmail.com>
----
- drivers/hid/hid-uclogic-core.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Sorry, my email box changed the message ID when sending, but it can be 
+found in lcore:
 
-diff --git a/drivers/hid/hid-uclogic-core.c b/drivers/hid/hid-uclogic-core.c
-index ad74cbc9a0aa..1862ca5805a7 100644
---- a/drivers/hid/hid-uclogic-core.c
-+++ b/drivers/hid/hid-uclogic-core.c
-@@ -50,6 +50,17 @@ static void uclogic_inrange_timeout(struct timer_list *t)
- 	input_sync(input);
- }
- 
-+static ssize_t fw_name_show(struct device *dev, struct device_attribute *attr,
-+			    char *buf)
-+{
-+	struct hid_device *hdev = to_hid_device(dev);
-+	struct uclogic_drvdata *drvdata = hid_get_drvdata(hdev);
-+
-+	return sysfs_emit(buf, "%s\n", drvdata->params.fw_name);
-+}
-+
-+static DEVICE_ATTR_RO(fw_name);
-+
- static __u8 *uclogic_report_fixup(struct hid_device *hdev, __u8 *rdesc,
- 					unsigned int *rsize)
- {
-@@ -217,6 +228,10 @@ static int uclogic_probe(struct hid_device *hdev,
- 		goto failure;
- 	}
- 
-+	rc = device_create_file(&hdev->dev, &dev_attr_fw_name);
-+	if (rc)
-+		hid_warn(hdev, "Unable to create sysfs attribute \"fw_name\", errno %d\n", rc);
-+
- 	return 0;
- failure:
- 	/* Assume "remove" might not be called if "probe" failed */
-@@ -477,6 +492,7 @@ static void uclogic_remove(struct hid_device *hdev)
- 	del_timer_sync(&drvdata->inrange_timer);
- 	hid_hw_stop(hdev);
- 	kfree(drvdata->desc_ptr);
-+	device_remove_file(&hdev->dev, &dev_attr_fw_name);
- 	uclogic_params_cleanup(&drvdata->params);
- }
- 
--- 
-2.44.0
+
+or
+https://lore.kernel.org/all/tencent_0D6ABA209A4980742DE6003FBFE7FE2A3207@qq.com/
+
+
+If it causes any inconvenience to you, I can resend it. After some 
+experiments, I have finally found a way to send them in a thread.
+
+--
+Best wishes,
+Wen
+
+
+
+
 
