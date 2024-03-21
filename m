@@ -1,115 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3D313441F;
-	Thu, 21 Mar 2024 19:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7DBCE57B;
+	Thu, 21 Mar 2024 19:01:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711047630; cv=none; b=gIbuVphFbQWOsX64BSDKJR1iVb5vzlcflCAyXrdMsnJjSNDp1PX+LhGvqR4P3IWJpj2uHEXlJgpEveqnPnqAiCHjG8KaX05iJB+BL82W0FuTiA/FmshKItJy4d5X00YvNWYRlxe4RI/yfG0TCpYEnZHzVr5/d8VF1LFMwgk0mqU=
+	t=1711047665; cv=none; b=CQmbEkUK7f66tm6URqvpbyd4UdJDUNVn9HMXhoo+R8LVibrU30xCosVlr0s63YaKNeBMzBu/gpAgFJ9KGR0Z+4CWYw4OUGiIftgbWTXky8yUdhVwm84pcyH9TTTrzHEDkntbx+HiztBwagh26IbC2/jfm8qQXtgIV2qe6+M2Hp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711047630; c=relaxed/simple;
-	bh=NKpYyk60LjaAd7OWbS0rM8uQY8YQPxQLQGojBHAkF/0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sey1Xrjxu49RVPJWFgahsCi1YBTy/20SBeVp5BXkPgygCCAwMNc2zmAfbM+aqz188V2jJMCoh41EFUnEx6mG3iCDgO0BmyqgyaAF1pAfA3v58AslI3gurZzsxJDnnVp+DXcie340lQn7rYZE0DGviV9PtTvMrzEfzF6toWh7MKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Phmga02j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711047665; c=relaxed/simple;
+	bh=YUX9RxKkWXgLUlg1ZO2OrjKycS8zeiDnhjRiRetu/Zo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EaFJQw+diSTe2Bm6Rnm3H2EtsxrxEa8b95YckPik4RlBXgdYIpc6WwLNvbaiqjNbgTmH/V5UEvijMuap4mVe/fLkY8lkOGRt8ebtTPJBOkDKxqVD9TpkOCGUdCv0jT5AB/xjhLxLEXkiSbfScoqxTfMYFDqfTskbwYp37HcG3jM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kWoEaLmI; arc=none smtp.client-ip=209.85.167.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Phmga02j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DA69C433C7;
-	Thu, 21 Mar 2024 19:00:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711047629;
-	bh=NKpYyk60LjaAd7OWbS0rM8uQY8YQPxQLQGojBHAkF/0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Phmga02jpgMaMNeJxfMTrszhuv3XUrSCJNXAAU9OGQnjAeV2F8ifR8pVFmCCWwm9v
-	 nu0FzTIibnyLaB0/pPUVlisT+Fw55J881XeIGOuXAUNUyL0gZs5UR4gNaNl98g7+9Y
-	 x+SXnXd6dWsNUlngYoEJyxOE4PgTS0xgVxCnrPjpTVIVYCLyljuQ9e9o4SMHh4Jfot
-	 BtaL4t7a2h5BLxkjNbdFQb6bJlzeik/GLqf+QhBtxKBihaOtQvf5KSb8J3acCMh50V
-	 vl4sEbvvhEKUQ7oq9gwdxwyDnRYD+GFiTklf/A2UY2OhZGPRMDMRaTlPjExsjr2A8O
-	 g5dXREB1fVWvg==
-Date: Thu, 21 Mar 2024 19:00:24 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Karel Balej <balejk@matfyz.cz>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-	Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org
-Subject: Re: [RFC PATCH v4 2/5] mfd: add driver for Marvell 88PM886 PMIC
-Message-ID: <bd4e96b9-1026-469b-9884-073cde1f39dc@sirena.org.uk>
-References: <20240321154211.GA13211@google.com>
- <CZZK759UU6G7.MFPYOI0HBB6I@matfyz.cz>
- <20240321162045.GC13211@google.com>
- <CZZL3MNOT0QG.2WDSNX9XD2RET@matfyz.cz>
- <879296b4-5186-4170-af3f-971787d28514@sirena.org.uk>
- <CZZLDK79D5VK.2VK3X59OHIY2Z@matfyz.cz>
- <45079e37-dde9-4310-a112-7af49f35ac77@sirena.org.uk>
- <CZZLVS3T3QIS.223XHI5OZ7UBG@matfyz.cz>
- <e9c7bd38-49cd-44c2-8842-292bc0b4205f@sirena.org.uk>
- <CZZMTZBZ5S7B.2HR8A6LEY08D4@matfyz.cz>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kWoEaLmI"
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3bd72353d9fso788428b6e.3;
+        Thu, 21 Mar 2024 12:01:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711047662; x=1711652462; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m9LMHhAil+e1DwoMOsUUxTokSN39rbYNgoUrrRrbF2I=;
+        b=kWoEaLmIXiGjmFQK3GsB6EU58NUz7N61bcM7ctc2naO3BuqiY0v6tGpWyA9qDeoN6O
+         Nvg3PAIkYenyqiqjsc0wKzABFuJnmGEsRekO/Qek0+jErRSDpovz1u/603R06890f1iq
+         o8ffRb0/C/FRxj/fOaMMC4KUYIqr5GwP8lc9oQocycJZTE0ZthcfxV+Y7Toj0GQ3L9jY
+         wDYwGyHPzjiYbXRCJVL0IlGgnygxqT4m3ruYSHnHsTqc55GME8yS9/Xz1NWBMNyLZ+v4
+         qJI29ieRxV87EVg3pw79OEDjBubg7kBPb4NfP002gGpGt7mSeetm6kvRofNw28CxbIdL
+         k5ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711047662; x=1711652462;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=m9LMHhAil+e1DwoMOsUUxTokSN39rbYNgoUrrRrbF2I=;
+        b=cWmqU/J07Gq90aTr8tMVcgZ1BFmBzvFWLCQQO2p8Mhd2X8IhK5/pVt0Yk/A41vcM5X
+         F+b+KGGTlKsddcmZ5+W7L2AMmD1KzzGlvCGO2uhYjTfeIXmXBMnsMyQokp7Omadzc7i/
+         Tt7XDASVHCGQt1uDL5MXk9hX0PNB6hDpxTA54hDC46QWhIWMCMC1qsaNLe/aS28u0eXk
+         MjPfz4v6oeOzS2VUzLH2KFsbGxnzXkdat7tV3lSO1ExPsns8o2t/W3MHeZtraUyiluSA
+         4F3DTx4W0cSoacUhxmcBjYN/aBhl4bkNf42JwtgCP2t50j52wBsfhecO8yeBZhx2YZJX
+         hZjg==
+X-Forwarded-Encrypted: i=1; AJvYcCWyaCAIsdhtFZ5sXkXod7nZByg0RYl1mxT+gmh8s2BdWYHeDzU0+uPmjdvtZcgtSxAVpd+XpykCYMeepx0YbalYRWsDS8cZuMlFIWM/YJf5+I55tSbzpwepn9rZN1y1nCEh
+X-Gm-Message-State: AOJu0YyKHSgNrfUrMxhpY7eGBNV8LRNa12fkKuTV6ooKAi7h6F3PEBBi
+	+SsXwtOl6uuy4YndyhOVWcKyLLDaLCNVv+JKMS2B95jQEAQScncgGkw29GesP0IjjyecVnvPAmu
+	oMt1oNCAE6oUAw2//+uhsGg+NFXhH5W6zcXA=
+X-Google-Smtp-Source: AGHT+IFgzxgAPRHvuLr0wrtOjzi8zMJYI0ETlh7IR0JuYFGwPrOAo/6WwU9MifXa5daKL6je4JiBoOkXEMF3UnHuLRQ=
+X-Received: by 2002:a05:6a20:4394:b0:1a3:6e5c:46f4 with SMTP id
+ i20-20020a056a20439400b001a36e5c46f4mr625119pzl.7.1711047166738; Thu, 21 Mar
+ 2024 11:52:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gbeioFqnXp7Lrcpb"
-Content-Disposition: inline
-In-Reply-To: <CZZMTZBZ5S7B.2HR8A6LEY08D4@matfyz.cz>
-X-Cookie: MIT:
+References: <20240321170444.388225-1-chen.dylane@gmail.com>
+In-Reply-To: <20240321170444.388225-1-chen.dylane@gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 21 Mar 2024 11:52:34 -0700
+Message-ID: <CAEf4BzYJeEViQaRJb6u06GJSLa6uBmykRZa4JnWJ9VXw+WoX2g@mail.gmail.com>
+Subject: Re: [PATCH] libbpf: add specific btf name info when do core
+To: Tao Chen <chen.dylane@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Mar 21, 2024 at 10:04=E2=80=AFAM Tao Chen <chen.dylane@gmail.com> w=
+rote:
+>
+> No logic changed, just add specific btf name when core info
+> print, maybe it seems more understandable.
+>
+> Signed-off-by: Tao Chen <chen.dylane@gmail.com>
+> ---
+>  tools/lib/bpf/libbpf.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+>
+
+Can you elaborate on what problem you are trying to solve?
+Conceptually libbpf does look for types in vmlinux (meaning main
+kernel BTF), even if user overrides BTF location (presumably because
+of old kernel). So even when we emit "vmlinux" in logs, it seems
+correct.
+
+pw-bot: cr
 
 
---gbeioFqnXp7Lrcpb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Mar 21, 2024 at 07:16:43PM +0100, Karel Balej wrote:
-> Mark Brown, 2024-03-21T17:48:28+00:00:
-
-> > > They do according to the downstream driver which is my only reference.
-> > > In fact, there the driver defines the configs separately for each regmap
-> > > but with the same values.
-
-> > This is a downstream driver - are you sure it's got the best code
-> > quality?
-
-> No, that is why I have rewritten it and tried to improve on this. But
-> like I said, it is my only reference. Is there some other way to verify
-> this value (besides perhaps the datasheet)?
-
-The maximum register is whatever the maximum register we know about for
-the device is, the datasheet is generally a good reference there.
-
-> > I'm not seeing any references to registers with numbers as high as the
-> > maximum register that's there in your driver for example.
-
-> Indeed, I have performed the same check with the same findings. But that
-> doesn't necessarily mean that the maximum should be lower, no?
-
-> Do you have some specific modifications of my code in mind regarding
-> this?
-
-I would expect that if you have two separate register maps they would
-have separate configurations that describe the corresponding physical
-register maps, as far as I can tell this driver is just making up a
-maximum register number.
-
---gbeioFqnXp7Lrcpb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmX8g8cACgkQJNaLcl1U
-h9AxBQgAgjcW+ImZ11bySq1bHwmyQL3Ncx+yP1+3gBzqnuQjU8YLtueCjwMzPOlK
-DbH6rty6I5az2zxFLRGUn0iF10RlH2GsTNMKvsaO4VkkpGg6q9M7l1bI/EwPmmx3
-DTYt2m4HSfa3Rxx3C4LuwyC+RXuN960pv3Vf07QREno2432fAYdoa+dpC0Uw71fO
-jgvvr73JuQ+xEJmibUrfOO98Fq4wXKrS93vKNMWDoA+ANoAZX+jeQat5CA/Z3cQV
-S7Xt7nhAAxLYwlYfehh6WTLGNWHhPA6g+nb4x8yd+GjinffbDRB9cQPfMuMPSR1M
-W/9QuiLVtbR3MSk0SbqfseCTjlmf8w==
-=houc
------END PGP SIGNATURE-----
-
---gbeioFqnXp7Lrcpb--
+> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> index afd09571c482..b32154288b4a 100644
+> --- a/tools/lib/bpf/libbpf.c
+> +++ b/tools/lib/bpf/libbpf.c
+> @@ -5653,7 +5653,8 @@ static int load_module_btfs(struct bpf_object *obj)
+>  }
+>
+>  static struct bpf_core_cand_list *
+> -bpf_core_find_cands(struct bpf_object *obj, const struct btf *local_btf,=
+ __u32 local_type_id)
+> +bpf_core_find_cands(struct bpf_object *obj, const struct btf *local_btf,=
+ __u32 local_type_id,
+> +                   const char *targ_btf_path)
+>  {
+>         struct bpf_core_cand local_cand =3D {};
+>         struct bpf_core_cand_list *cands;
+> @@ -5680,7 +5681,8 @@ bpf_core_find_cands(struct bpf_object *obj, const s=
+truct btf *local_btf, __u32 l
+>
+>         /* Attempt to find target candidates in vmlinux BTF first */
+>         main_btf =3D obj->btf_vmlinux_override ?: obj->btf_vmlinux;
+> -       err =3D bpf_core_add_cands(&local_cand, local_essent_len, main_bt=
+f, "vmlinux", 1, cands);
+> +       err =3D bpf_core_add_cands(&local_cand, local_essent_len, main_bt=
+f,
+> +                                targ_btf_path ?: "vmlinux", 1, cands);
+>         if (err)
+>                 goto err_out;
+>
+> @@ -5793,7 +5795,8 @@ static int bpf_core_resolve_relo(struct bpf_program=
+ *prog,
+>                                  int relo_idx,
+>                                  const struct btf *local_btf,
+>                                  struct hashmap *cand_cache,
+> -                                struct bpf_core_relo_res *targ_res)
+> +                                struct bpf_core_relo_res *targ_res,
+> +                                const char *targ_btf_path)
+>  {
+>         struct bpf_core_spec specs_scratch[3] =3D {};
+>         struct bpf_core_cand_list *cands =3D NULL;
+> @@ -5813,7 +5816,7 @@ static int bpf_core_resolve_relo(struct bpf_program=
+ *prog,
+>
+>         if (relo->kind !=3D BPF_CORE_TYPE_ID_LOCAL &&
+>             !hashmap__find(cand_cache, local_id, &cands)) {
+> -               cands =3D bpf_core_find_cands(prog->obj, local_btf, local=
+_id);
+> +               cands =3D bpf_core_find_cands(prog->obj, local_btf, local=
+_id, targ_btf_path);
+>                 if (IS_ERR(cands)) {
+>                         pr_warn("prog '%s': relo #%d: target candidate se=
+arch failed for [%d] %s %s: %ld\n",
+>                                 prog_name, relo_idx, local_id, btf_kind_s=
+tr(local_type),
+> @@ -5920,7 +5923,8 @@ bpf_object__relocate_core(struct bpf_object *obj, c=
+onst char *targ_btf_path)
+>                         if (prog->obj->gen_loader)
+>                                 continue;
+>
+> -                       err =3D bpf_core_resolve_relo(prog, rec, i, obj->=
+btf, cand_cache, &targ_res);
+> +                       err =3D bpf_core_resolve_relo(prog, rec, i, obj->=
+btf, cand_cache, &targ_res,
+> +                                                   targ_btf_path);
+>                         if (err) {
+>                                 pr_warn("prog '%s': relo #%d: failed to r=
+elocate: %d\n",
+>                                         prog->name, i, err);
+> --
+> 2.34.1
+>
