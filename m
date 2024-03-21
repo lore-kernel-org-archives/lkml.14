@@ -1,72 +1,109 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F4F1851
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 01:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5EC1877;
+	Thu, 21 Mar 2024 01:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710986045; cv=none; b=hvtXQUwUhMwuxf5UoXgmJ88M44D0Ro/rEwbqDbTKhS/8vLWWn/x7INHg6H70UZhMx2CtkKn+3iV1+s1zJELcoATsDx3PvBuy33usRjO5GFivuZ3ICT0djKBMRfPZHmQG/2poIO44MsA8kY4hxAPExwXEr8diQFx/gQE1gGGuyF4=
+	t=1710986051; cv=none; b=YyB8JhzIofVz97AVX+mYri6SKgxRWSLD1+ZFQ6+d+MjUxPohkfx455ulhctQWujUh74UnaN2DvMKA/lx7ov0Nm5kZIOWDtKSjIS8XPaZLGtdk78NZotXjmyWAhATlaVwb1DiF6PPa5sin8V6v7J1dKY/Iw1sHfEP4llT8sXeF8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710986045; c=relaxed/simple;
-	bh=tk2FEpeIIFWyfveyU74wr/FUXwuQLrVtmrZ2u8VkTdw=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=ZUZAtkXKvrJeZHaLrmidjloCpqg7Kn/pbqtZweX3kb9yQfgxefbIzI/3Ydc4E9Lc28nan+1ReAnPHfOHpWvuwUnvMy1AxMcBOjM1SGSPayLDZM9GoauYZp/hcnZCSaR1viEeO5PqBjY6325O0ZvMtyDxXTh0UlkKBJ3x16gxPWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3663022a5bdso6184375ab.3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 18:54:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710986043; x=1711590843;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MxiohCLy0VRBU3p0ZMz5/eIklbAClJeKe2l9L1dHV98=;
-        b=K66X3Nx9RjQ+lee8WhZVrd/ML+Y6v+goX6QFTVLt3U0WKm6r+21BPL9/sWh+s4K2aH
-         6vD9AM4PhzVDeWn63TlKlLZuq5uSepO+/ZL/7bHWJ0rud4wvrKZqAypX+IF1ybYU5ntd
-         8dj21/+SnxFTFsTmvIuoTBzjgKtJVscrL1HFc3IthNpO0ulHhQ9hoLtOdfo98u6lJUKL
-         6lfrZx3v0Lg0Z/Yc/ZyWrZrwaGOmKgRSoUDgD1F7uQPss654H/p1ErrF224IIZXYcsSj
-         5UgJF+H1GtfwvbYgGrAz+fSeY/3VJS7cBsyk60szw0Q5g7xrYMFmPoavmjdO6ooaoxZz
-         ZEoA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZW9+L3+/yAcIsfg+W6on6q7TOZ9Af2e/rGV+/lVVKJ7m4jULCSC4E1A6eaz/SU3RB7AqFbubgBJxqilhtgSjbAxMCswLidyir0uja
-X-Gm-Message-State: AOJu0YzP9v2+PO3SQ6fRmYyM5y3uKB6e/+RYzOQeJ40FqL/HKO2RHrjx
-	NnKXH1mIOu8kYBSedTY/UpOYcRu2GfIB+m1dSbBfH4DkYaGDYY7kxdOPpWLr9FkHcDm8tXVRWtE
-	LO8aswQfXeWp1AkqMFQq37MArNqDcG/uSYAQ0505FiwEPc5jY7rGTqNY=
-X-Google-Smtp-Source: AGHT+IEFDZRU7cJZhu7OqB8rcrJ1a8ByYA2BCE3WRLMvS6OxS83VUT0YmieKlJGDoZ65hzytvVChYUMPJdrviqkqBQMoySHUFKUD
+	s=arc-20240116; t=1710986051; c=relaxed/simple;
+	bh=OAXe9PQlq17asOfDjShl9e6DBsvArHfVr7liqKH+XE4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ikd+8rlxoQpEm4Scw90CIqfNPgS8vEH7ClQIRrg/TgvCXJTqQdQc1IhWIDRPFJkznvYbUvuLz4i1ucl3SUpQcBYMPAvhl8CqwK9YSR0DyvaFk+WAkQG/UoTu++FsEkrs2V9EHtOiNfAdUkUqPl+Kfzunz2nc75PyP0uDnwdFwZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-swift.com; spf=pass smtp.mailfrom=net-swift.com; arc=none smtp.client-ip=18.169.211.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-swift.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=net-swift.com
+X-QQ-mid: bizesmtp81t1710985960ta4oe8mn
+X-QQ-Originating-IP: K4MtTSgi3savbGAI3VMA7OWxK9HTgOYQ4VuiXRtMf1I=
+Received: from localhost.trustnetic.com ( [36.20.53.11])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 21 Mar 2024 09:52:38 +0800 (CST)
+X-QQ-SSF: 01400000000000E0E000000A0000000
+X-QQ-FEAT: C46Rb8GPIEchRFcWlJ3D+/pMFI1tYLcQ65M7g5F56loHd2jqUJPGDlT9j4vlG
+	I07JNSdxYIPUXeDUVAGtFih0CdL1XYmCwMoNyFnaJrI9AZazMcAue/USHZF3qZGkqZC2QY1
+	RbJDIPSmSXtqOcqjGTM93OGHambdSVfZ2biOJxSQOrMeAuL3S9m1eoOZbkS0drwHgMgOC8M
+	Vfda0gpGhlT5BFLzcaKTP95wcY+8NgsMSkQSzzz6eaFlhcm0ku9dRRg7YJGRV1PXxbsqJBM
+	Qo12YmPsmhc/r2+vngTLaYVMEWcJyMYs752Zx5Db+07ktsHZ1EcYQHffKxABQQ3KEAwqo7G
+	0gK4Jf7CBBB1+ovcNN2Jn3WOneuh+dI5otp6icXYa7WJDBDipLN9kQAlm0Z2o17vg4ffsnu
+	Ukqwoor4Elc=
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 11865926464332669648
+From: Duanqiang Wen <duanqiangwen@net-swift.com>
+To: netdev@vger.kernel.org,
+	jiawenwu@trustnetic.com,
+	mengyuanlou@net-swift.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	maciej.fijalkowski@intel.com,
+	andrew@lunn.ch,
+	wangxiongfeng2@huawei.com,
+	linux-kernel@vger.kernel.org
+Cc: Duanqiang Wen <duanqiangwen@net-swift.com>
+Subject: [PATCH net v2] net: txgbe: fix i2c dev name cannot match clkdev
+Date: Thu, 21 Mar 2024 09:51:39 +0800
+Message-Id: <20240321015139.437376-1-duanqiangwen@net-swift.com>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a89:b0:366:c679:e5d8 with SMTP id
- k9-20020a056e021a8900b00366c679e5d8mr424582ilv.6.1710986043364; Wed, 20 Mar
- 2024 18:54:03 -0700 (PDT)
-Date: Wed, 20 Mar 2024 18:54:03 -0700
-In-Reply-To: <tencent_164B6A74DD764D66063CFF36AE96A2372609@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000054ad49061421fbf1@google.com>
-Subject: Re: [syzbot] [sound?] possible deadlock in _snd_pcm_stream_lock_irqsave
- (4)
-From: syzbot <syzbot+18840ef96e57b83b7fea@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:net-swift.com:qybglogicsvrsz:qybglogicsvrsz3a-1
 
-Hello,
+txgbe clkdev shortened clk_name, so i2c_dev info_name
+also need to shorten. Otherwise, i2c_dev cannot initialize
+clock. And had "i2c_dw" string in a define.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Fixes: e30cef001da2 ("net: txgbe: fix clk_name exceed MAX_DEV_ID limits")
 
-Reported-and-tested-by: syzbot+18840ef96e57b83b7fea@syzkaller.appspotmail.com
+Signed-off-by: Duanqiang Wen <duanqiangwen@net-swift.com>
+---
+ drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c | 6 +++---
+ drivers/net/ethernet/wangxun/txgbe/txgbe_phy.h | 2 ++
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-Tested on:
+diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
+index 5b5d5e4310d1..3f61f161f1ed 100644
+--- a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
++++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
+@@ -571,8 +571,8 @@ static int txgbe_clock_register(struct txgbe *txgbe)
+ 	char clk_name[32];
+ 	struct clk *clk;
+ 
+-	snprintf(clk_name, sizeof(clk_name), "i2c_dw.%d",
+-		 pci_dev_id(pdev));
++	snprintf(clk_name, sizeof(clk_name), "%s.%d",
++		 TXGBE_I2C_CLK_DEV_NAME, pci_dev_id(pdev));
+ 
+ 	clk = clk_register_fixed_rate(NULL, clk_name, NULL, 0, 156250000);
+ 	if (IS_ERR(clk))
+@@ -634,7 +634,7 @@ static int txgbe_i2c_register(struct txgbe *txgbe)
+ 
+ 	info.parent = &pdev->dev;
+ 	info.fwnode = software_node_fwnode(txgbe->nodes.group[SWNODE_I2C]);
+-	info.name = "i2c_designware";
++	info.name = TXGBE_I2C_CLK_DEV_NAME;
+ 	info.id = pci_dev_id(pdev);
+ 
+ 	info.res = &DEFINE_RES_IRQ(pdev->irq);
+diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.h b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.h
+index 8a026d804fe2..c7f2157f3d95 100644
+--- a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.h
++++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.h
+@@ -4,6 +4,8 @@
+ #ifndef _TXGBE_PHY_H_
+ #define _TXGBE_PHY_H_
+ 
++#define TXGBE_I2C_CLK_DEV_NAME "i2c_dw"
++
+ irqreturn_t txgbe_gpio_irq_handler(int irq, void *data);
+ void txgbe_reinit_gpio_intr(struct wx *wx);
+ irqreturn_t txgbe_link_irq_handler(int irq, void *data);
+-- 
+2.27.0
 
-commit:         fe46a7dd Merge tag 'sound-6.9-rc1' of git://git.kernel..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=1268783a180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=aef2a55903e5791c
-dashboard link: https://syzkaller.appspot.com/bug?extid=18840ef96e57b83b7fea
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=10928f15180000
-
-Note: testing is done by a robot and is best-effort only.
