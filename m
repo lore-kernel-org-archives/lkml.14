@@ -1,171 +1,175 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04B158229;
-	Thu, 21 Mar 2024 11:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25A758AA3
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 11:25:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711020298; cv=none; b=kGfQ0pe+ZR6RE6qw4WR5XRgDfzOwzc6N+U37z/4RFgtdIwxsHHdstfYCkqQkISumPDjQPkyEKhQ3r4QJwSVjfUqzkrwDBvuz6I+qYW4Yg/Yi8GwdXHmQaYmGjgnmwmhOEXKdLS4KKmo1DOSCyIgVR3/5fa61mzufGIdpuNSOEko=
+	t=1711020313; cv=none; b=PrGDtMv9gSNamJ0T+oANT2n2bvgJJNUiPUj6a4qEzBGwlg/pSwoUxzHcHeYYn8gdSyvkzc64l/EduzFjBzu0mCSfm8b8/s9+4wcBKrFSGnLSb3jufGMitjgIKePtaM1oyx3/oICb7WMwUSO1vsYqrD20OhFu12we7TdrD8NvaTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711020298; c=relaxed/simple;
-	bh=gst+oXGb/4n8bIDsyLM0AG1Y3wMsVD9IZ4qrzg7eWkE=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=dxRzn2Xw1QD8+kCramEW5M0KC1XdwEJhQ/afSr1dbPsmUVhxQKSkku8lZznlm8Zw7JI3kmrg2r02OFBqyMprPmLOEqGlk+lMIBjnXAzfnVOYH5piYQNf9iBH0Y5l8sq4JJAWPLvz4GFNV2I3rlgLU+/LQtdlzxUXoU7Q9SZDavQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QiDTb8t6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3jZnZioC; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1711020313; c=relaxed/simple;
+	bh=KMWylqW711t7MACsRbN1TvhF6nbAcTz/VLJbxkHR4gI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=srjnqNBjT2RfMDCinmfdPwztMC/Xsc7v7VK55/sQGbqVwZBixUzZfyr/3FtmqHZ+J59bjgkNl6uIYoaKEjkWx6JWEz5+2lSuA0pR3AlnjtzUzPyeKtGZPQHV9c9MJPUb1RocDCPGUujlsHhfz5g2Dd49pZXF0s+FaLjziqepHtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s8kaxpsL; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QiDTb8t6";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3jZnZioC"
-Date: Thu, 21 Mar 2024 11:24:54 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1711020295;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gvgV9uRQ5mokoL+CWA1BFsXEAKiRYoaGZVn2rpFo8oc=;
-	b=QiDTb8t6rcTwfdDayxmhLU6lL9U8sgtxRaFjC0bJI03zZXhylD0Aoz9lWyxGUM++S1iaRu
-	2MLBzF/8f10tsvk2Tv8R525fcGB4LUlQstbkd4g25QyHULBqXY8QunBTWEkLLzfLERd2KT
-	3L0hkQJ3Hni44TBkyfspO71DMxSs202JVNltQDSxhgMIHwbGQMyPDgs42QxRlga8T15lgb
-	Za5ryDiAJjkQbX9AaO8b389M/Hy8Coo2tVLl26irNVkcEMWGz6Yfxo4cu4CobtAgfLXiF2
-	Uiht+/uuMQwe4No6NcdtNLMDTaB0RSLGfogcjU3qFYgDtSbarwR5Ew7QRMY3xA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1711020295;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gvgV9uRQ5mokoL+CWA1BFsXEAKiRYoaGZVn2rpFo8oc=;
-	b=3jZnZioCScL1heQGmCqA89Lxn1TCLZ3x9/mJI1CRz+ade8upFhXqv0duESZHmHkYt4zQuB
-	IwcQjPsGQfuK5eDg==
-From: "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] timers/migration: Fix endless timer requeue
- after idle interrupts
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
- Frederic Weisbecker <frederic@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240318230729.15497-2-frederic@kernel.org>
-References: <20240318230729.15497-2-frederic@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s8kaxpsL"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-78a2a97c296so56709285a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 04:25:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711020311; x=1711625111; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KYDoji15P5HsiN/P0wTyX60zAfAmG6vlj4lO2mZaCqk=;
+        b=s8kaxpsLTOexlJz3JoL0NX0gr2h/mmG1/qAPqItTbKxpC7nBoh3YLPcl/AkcttUyx9
+         k6FnLgWUIhgakBHmI7tHBZNPB42CnvNveWxv+yVxD6YlMi5vJPnnqU3hWhHax7M1TAL9
+         Ifhv+ZGDi+yM+het1myRcCnp8Emhq0rX3VXIKjL2ayv7n/GkWyOt/SPwFnoJr94Kt15h
+         VGfr/Afxi4Sswoy327x3m2Q93dUK82aURaiImdkg5BLmuxbGkEFrty4mxvpBFOSt+iZz
+         uwg+130a7Vhjm5MyYGGXrioXVXQLdNldZOJ1f0aYsFGwq9EDecL7eH+XqqCSNzYGa5yj
+         cdvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711020311; x=1711625111;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KYDoji15P5HsiN/P0wTyX60zAfAmG6vlj4lO2mZaCqk=;
+        b=NlyFQzqbRPkILyrLs5moVsFPVkflqj1XVUK5WPYmlyRSw+6HGc7EwNuEvvfBrk72CW
+         WKl7XyeAwcQ/e2bcQfxTOUnmgGV93NnRrbfxYcLtn6DS1audn0Pw2473HDH9aVlXQEIS
+         s6plmwRAjfaV/LI39v/qksaSvvz5jbOMxeJLLqVRNli6Xu5vx1LZuixMix1B6baCJrYr
+         x8KUp7PW82y4nqyo+ixaK4643Yjx0SiH47RBZ4AHl0INiPkzkW6z8H1BKw+XxPUYV20J
+         nJkUqHBOjjeo3Z4dNsga6b6HOnLUh9gkblBE1HHRdoOsaQi+NfNIsjm8m1MIsK+jK2oT
+         8yRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXLxWWnQHvKYJAQb6yvYpYcnXw67KejtJmmJ5ajH188NNZVjSo7qzVkV1XtaBUBjRo1pGrhqog6GqRfoH9XyuxC1xMVnBz2vquiCneg
+X-Gm-Message-State: AOJu0YzQF65rN5GZZe34VAmzoHvIbgnSD1OCU0sGU6MTXr+kqQ8FDHn6
+	vl75bgPLKU0M3E9KMhWnz9zOC+/Qt0ELYvV7eVz/YkgAiPAIK8iDj2VIUkOjOp0aV2Bxk0PHEHc
+	=
+X-Google-Smtp-Source: AGHT+IEPtkF9qX1leYPHNRDsFpttA8FXZ0PmY8cLC2e9jIid7J3TwoC8DsN/sCK7Xx/HgMkb1KyXkQ==
+X-Received: by 2002:a05:6a20:1582:b0:1a3:64e1:b6d with SMTP id h2-20020a056a20158200b001a364e10b6dmr10529382pzj.46.1711019852932;
+        Thu, 21 Mar 2024 04:17:32 -0700 (PDT)
+Received: from [127.0.1.1] ([2409:40f4:102b:a64b:d832:a82a:837c:6d3])
+        by smtp.gmail.com with ESMTPSA id ka6-20020a056a00938600b006e7324d32bbsm5531120pfb.122.2024.03.21.04.17.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Mar 2024 04:17:32 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Date: Thu, 21 Mar 2024 16:46:33 +0530
+Subject: [PATCH v2 13/21] arm64: dts: qcom: sc8180x: Add PCIe bridge node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171102029421.10875.6095806684976626047.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240321-pcie-qcom-bridge-dts-v2-13-1eb790c53e43@linaro.org>
+References: <20240321-pcie-qcom-bridge-dts-v2-0-1eb790c53e43@linaro.org>
+In-Reply-To: <20240321-pcie-qcom-bridge-dts-v2-0-1eb790c53e43@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
+ Rob Herring <robh@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1867;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=KMWylqW711t7MACsRbN1TvhF6nbAcTz/VLJbxkHR4gI=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBl/BcMSC6ZcFxTragSwKQJPd9VtucfQCSDZDiMq
+ 0b5lht1HT2JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZfwXDAAKCRBVnxHm/pHO
+ 9dz2B/4zFUeB8rvtM8DzqBQbkRT4yKNFxGHi9RQpnuQYpw3H0Fov8cSnLGpDWf3zAm0ABaWuQ8u
+ NitXa72HXSjRF/bxpamNtgy8nKgiRMCDbihGnAhjE8dV4AF623fSqLdEs2lzan0FFIE0LJ3C/UC
+ sXH/e+NA8EVwgbYBhXRcBMkV5uS8oZEV8rlnwBcTZ5gKnWoehT56HCm/wXEAJIN+4I4MefHhbcu
+ CMgssacecJIjBQDYJIfRlogjrJ4vn619b3iS0juhFtJ9pNUb947AaKoQ+7BRo7i14Uc5b7ey67n
+ 8f8vkhufueWHl+NKrCQbLucTx1cZgWgRvrwv20v0kpjIJGoQ
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
 
-The following commit has been merged into the timers/urgent branch of tip:
+On Qcom SoCs, the PCIe host bridge is connected to a single PCIe bridge
+for each controller instance. Hence, add a node to represent the bridge.
 
-Commit-ID:     f55acb1e44f3d4bf1ca7926d777895a67d4ec606
-Gitweb:        https://git.kernel.org/tip/f55acb1e44f3d4bf1ca7926d777895a67d4ec606
-Author:        Frederic Weisbecker <frederic@kernel.org>
-AuthorDate:    Tue, 19 Mar 2024 00:07:28 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 19 Mar 2024 10:14:55 +01:00
-
-timers/migration: Fix endless timer requeue after idle interrupts
-
-When a CPU is an idle migrator, but another CPU wakes up before it,
-becomes an active migrator and handles the queue, the initial idle
-migrator may end up endlessly reprogramming its clockevent, chasing ghost
-timers forever such as in the following scenario:
-
-               [GRP0:0]
-             migrator = 0
-             active   = 0
-             nextevt  = T1
-              /         \
-             0           1
-          active        idle (T1)
-
-0) CPU 1 is idle and has a timer queued (T1), CPU 0 is active and is
-the active migrator.
-
-               [GRP0:0]
-             migrator = NONE
-             active   = NONE
-             nextevt  = T1
-              /         \
-             0           1
-          idle        idle (T1)
-          wakeup = T1
-
-1) CPU 0 is now idle and is therefore the idle migrator. It has
-programmed its next timer interrupt to handle T1.
-
-                [GRP0:0]
-             migrator = 1
-             active   = 1
-             nextevt  = KTIME_MAX
-              /         \
-             0           1
-          idle        active
-          wakeup = T1
-
-2) CPU 1 has woken up, it is now active and it has just handled its own
-timer T1.
-
-3) CPU 0 gets a timer interrupt to handle T1 but tmigr_handle_remote()
-realize it is not the migrator anymore. So it early returns without
-observing that T1 has been expired already and therefore without
-updating its ->wakeup value.
-
-4) CPU 0 goes into tmigr_cpu_new_timer() which also early returns
-because it doesn't queue a timer of its own. So ->wakeup is left
-unchanged and the next timer is programmed to fire now.
-
-5) goto 3) forever
-
-This results in timer interrupt storms in idle and also in nohz_full (as
-observed in rcutorture's TREE07 scenario).
-
-Fix this with forcing a re-evaluation of tmc->wakeup while trying
-remote timer handling when the CPU isn't the migrator anymmore. The
-check is inherently racy but in the worst case the CPU just races setting
-the KTIME_MAX value that a remote expiry also tries to set.
-
-Fixes: 7ee988770326 ("timers: Implement the hierarchical pull model")
-Reported-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20240318230729.15497-2-frederic@kernel.org
-
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- kernel/time/timer_migration.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/sc8180x.dtsi | 40 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
-index 611cd90..c63a0af 100644
---- a/kernel/time/timer_migration.c
-+++ b/kernel/time/timer_migration.c
-@@ -1038,8 +1038,15 @@ void tmigr_handle_remote(void)
- 	 * in tmigr_handle_remote_up() anyway. Keep this check to speed up the
- 	 * return when nothing has to be done.
- 	 */
--	if (!tmigr_check_migrator(tmc->tmgroup, tmc->childmask))
--		return;
-+	if (!tmigr_check_migrator(tmc->tmgroup, tmc->childmask)) {
-+		/*
-+		 * If this CPU was an idle migrator, make sure to clear its wakeup
-+		 * value so it won't chase timers that have already expired elsewhere.
-+		 * This avoids endless requeue from tmigr_new_timer().
-+		 */
-+		if (READ_ONCE(tmc->wakeup) == KTIME_MAX)
-+			return;
-+	}
+diff --git a/arch/arm64/boot/dts/qcom/sc8180x.dtsi b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
+index 32afc78d5b76..322ead0389c9 100644
+--- a/arch/arm64/boot/dts/qcom/sc8180x.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
+@@ -1777,6 +1777,16 @@ pcie0: pcie@1c00000 {
+ 			dma-coherent;
  
- 	data.now = get_jiffies_update(&data.basej);
+ 			status = "disabled";
++
++			pcie@0 {
++				device_type = "pci";
++				reg = <0x0 0x0 0x0 0x0 0x0>;
++				bus-range = <0x01 0xff>;
++
++				#address-cells = <3>;
++				#size-cells = <2>;
++				ranges;
++			};
+ 		};
  
+ 		pcie0_phy: phy@1c06000 {
+@@ -1888,6 +1898,16 @@ pcie3: pcie@1c08000 {
+ 			dma-coherent;
+ 
+ 			status = "disabled";
++
++			pcie@0 {
++				device_type = "pci";
++				reg = <0x0 0x0 0x0 0x0 0x0>;
++				bus-range = <0x01 0xff>;
++
++				#address-cells = <3>;
++				#size-cells = <2>;
++				ranges;
++			};
+ 		};
+ 
+ 		pcie3_phy: phy@1c0c000 {
+@@ -2000,6 +2020,16 @@ pcie1: pcie@1c10000 {
+ 			dma-coherent;
+ 
+ 			status = "disabled";
++
++			pcie@0 {
++				device_type = "pci";
++				reg = <0x0 0x0 0x0 0x0 0x0>;
++				bus-range = <0x01 0xff>;
++
++				#address-cells = <3>;
++				#size-cells = <2>;
++				ranges;
++			};
+ 		};
+ 
+ 		pcie1_phy: phy@1c16000 {
+@@ -2112,6 +2142,16 @@ pcie2: pcie@1c18000 {
+ 			dma-coherent;
+ 
+ 			status = "disabled";
++
++			pcie@0 {
++				device_type = "pci";
++				reg = <0x0 0x0 0x0 0x0 0x0>;
++				bus-range = <0x01 0xff>;
++
++				#address-cells = <3>;
++				#size-cells = <2>;
++				ranges;
++			};
+ 		};
+ 
+ 		pcie2_phy: phy@1c1c000 {
+
+-- 
+2.25.1
+
