@@ -1,135 +1,169 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9AE134CEF
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 21:33:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E57135A7A
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 21:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711056799; cv=none; b=ibh9KAPPa+lVESZTQKnmPSQpQjrqNN82+H9O211llL43A5rBnFBxX3ReFAj6bJ+vsGWboJGxnrRpb69+P7DMqPf6h5ZC8vDEcWSw4bd7iCCJPVLO8J83ekwllWVo9dVm+q7Hf3x6YepIWXyJkgiwh8r8wtHqOXAyGlXx5kHwxiM=
+	t=1711057066; cv=none; b=ZXgUBBxAfRS7EGBjzuMl97QGWppnJmYldchs5+EQzuquRr608Li0FJU8W7QaFWsrJcEGXbN4L+g/Uc14NN+F6432rXId1st+h/Y/fwS9U7Ay/89yOiEQYghRdA2qxPjvalGRCc8b+qEdNTmsN534fB/qeifaUP3CNutrsgAhSXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711056799; c=relaxed/simple;
-	bh=yGZvNwp287SyuaKFmJmvxYqUmwCVUfZhZ91KnQ36oYQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Q4KHeUtbfwfhlPwpjYjgPVo01mIvhUEHW2MugHnIzS87sy9T+nRT+6CSJUJJjtzwmq51NcddFxiiCWEQ+ICjFPNYbghiZT/aQhJFSZHNGmhgO/fE664fRlK70nZKCkljac3gJY2L2k69pO/jwUKLUespU2AihMMzNDMmEwQlli0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rnQ28-0000OQ-Gw; Thu, 21 Mar 2024 22:33:08 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rnQ27-007iyB-Ju; Thu, 21 Mar 2024 22:33:07 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rnQ27-009QLa-1i;
-	Thu, 21 Mar 2024 22:33:07 +0100
-Date: Thu, 21 Mar 2024 22:33:07 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	linux-kernel@vger.kernel.org, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Thorsten Scherer <t.scherer@eckelmann.de>
-Subject: [GIT PULL] siox: Changes for v6.9-rc1
-Message-ID: <7elhkk6kzp7dnx47j5dwmljgzoeefey27qecvkyp7y76jxc4th@k44dxrl3x6fp>
+	s=arc-20240116; t=1711057066; c=relaxed/simple;
+	bh=17nLr5++Gj5gPnA/3LVk7GlcT9/oObVsxL2RNm5//ng=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=sLrlPEynDbLhUnvZJkg4DQdt/bU3FRakjTuYZ0wDdn6EzdxWyCg6EHskf8OGdRVD7yvBIE7+wmEzg0ZZcJwfYh6N/JjOzk29usTr+7v7dp9xvkKzEbnMeyjAEcWLZy9r4xdwUUGbVgNmLq2yohnryMu9KSJ1YDdCvNOUFl+uoaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q/iNqgs4; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q/iNqgs4"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5c6245bc7caso808031a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 14:37:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711057064; x=1711661864; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wOtrT19asMXEr0TwJpVFoh7wEKo99GZ26en2SG6Gpmk=;
+        b=Q/iNqgs4gw6lX/aGYhbdqFjzv2Zp4SvBhyy/Dhmv61Nz0VUXGys7OgTSKGFv5bHggf
+         5aaMe6tide4/m0qheZ6hMgoLqat3gCjHbmix6aJHTfg2rrKl0g2j/c19kFpcjzg55FTA
+         71Bk5VAwbqSHWu6FBNEK8L6OOp2/PVSecyUEbwxQySJLFJDV9t8urTQydvlIrdsPUPrR
+         fED4EmoB32ADBfasfNVYFvE6eVogrfQG9VWS0o25XMXHTrDHHkXjerPcRmiUFWJcyLw+
+         vZKpMq85kQEGDJKJh1UyIgVesA8MOA/m7oLo54+8YgNBo2nfUT5rT0tXAIGMyObp+ogH
+         slVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711057064; x=1711661864;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wOtrT19asMXEr0TwJpVFoh7wEKo99GZ26en2SG6Gpmk=;
+        b=fWxDmL0W58LZ4uih1Vu+nBqksqLLgHvjvHIaT5WYZanCK58/9zPXdy9UwaeG8i6wry
+         T1R0ozsskr4GDjO1kQbUioOIyubtOIcXXzKn3TTEA6GMRdSovhzWRV1LGv1o28KZhxAx
+         tPjuQOsJn+vUHbVSoXUfxJ3uVhcMXaIXb9txZ3L70iZo3iUXQITRoAQ6IQFqUMYvo71D
+         LeQxBqlrswATonl6pindvImvicVZ0WcBTAdQBLtxIZi5FhcPTM9qSPHWioiAcprQ76Be
+         R3GgSMyVyems+MupDUI7zgeaEO0h3FGniKxvJdpTAPpKQqP5WVF+WZFmYyy7Fb/UmiVb
+         SUXw==
+X-Gm-Message-State: AOJu0Yy4trmHiM3guZWh8P5+uMT087j6EsFMXRjZ3G004FBRyd9OVDsS
+	H0DmD0trGyMAsQYzOFGJOFHTExkZ5lCHvG72jNjrWZE/LX7xUZaN989vnYJ67w52vXLG+CPBR/5
+	WEx3gIHaJIRvrhncobBN/LgK8239iIBzBZmLj2u4OALoS/DuELJmVL9338ynVj0Nz/Xn0Jqnsoc
+	bOCrx5bEpWB/AJxgcNz8O8vj6ssZaL0hxxytMl3W+F
+X-Google-Smtp-Source: AGHT+IFG44GRpyLSoCdzTAgGOvr+Ykn7xEnNSiVaxpdqGc3Wa47XGjUxz3BVE+W4nqXyifeoqem9jdAgDIM=
+X-Received: from edliaw.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:305d])
+ (user=edliaw job=sendgmr) by 2002:a63:f1e:0:b0:5d5:1e4d:c845 with SMTP id
+ e30-20020a630f1e000000b005d51e4dc845mr1288pgl.10.1711057063490; Thu, 21 Mar
+ 2024 14:37:43 -0700 (PDT)
+Date: Thu, 21 Mar 2024 21:37:38 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="534r6pisrbqnipcc"
-Content-Disposition: inline
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
+Message-ID: <20240321213738.1705396-1-edliaw@google.com>
+Subject: [PATCH v2] uffd-unit-tests: Fix ARM related issue with fork after pthread_create
+From: Edward Liaw <edliaw@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org, kernel-team@android.com, 
+	Edward Liaw <edliaw@google.com>, Lokesh Gidra <lokeshgidra@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
+Following issue was observed while running the uffd-unit-tests selftest
+on ARM devices. On x86_64 no issues were detected:
 
---534r6pisrbqnipcc
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+pthread_create followed by fork caused deadlock in certain cases
+wherein fork required some work to be completed by the created thread.
+Used synchronization to ensure that created thread's start function has
+started before invoking fork.
 
-Hello Linus,
+Signed-off-by: Lokesh Gidra <lokeshgidra@google.com>
+[edliaw: Refactored to use atomic_bool]
+Signed-off-by: Edward Liaw <edliaw@google.com>
+---
+ tools/testing/selftests/mm/uffd-common.c     |  3 +++
+ tools/testing/selftests/mm/uffd-common.h     |  2 ++
+ tools/testing/selftests/mm/uffd-unit-tests.c | 10 ++++++++++
+ 3 files changed, 15 insertions(+)
 
-I hoped these changes will reach you via Greg's char-misc pull request
-but with Greg being mostly away from keyboard currently this fell
-through the cracks. See
-https://lore.kernel.org/lkml/k7pd3oar3e3mogaokjl7mykqy3w3cifl4dgbukmnsynyqg=
-k5ze@ch5mn5xln2j7
-for the conversation leading to my initial pull request to Greg. Now
-that he sent his pull request for char-misc, I guess it's official that
-these changes won't make it in via this path.
+diff --git a/tools/testing/selftests/mm/uffd-common.c b/tools/testing/selftests/mm/uffd-common.c
+index b0ac0ec2356d..7ad6ba660c7d 100644
+--- a/tools/testing/selftests/mm/uffd-common.c
++++ b/tools/testing/selftests/mm/uffd-common.c
+@@ -18,6 +18,7 @@ bool test_uffdio_wp = true;
+ unsigned long long *count_verify;
+ uffd_test_ops_t *uffd_test_ops;
+ uffd_test_case_ops_t *uffd_test_case_ops;
++atomic_bool ready_for_fork;
+ 
+ static int uffd_mem_fd_create(off_t mem_size, bool hugetlb)
+ {
+@@ -518,6 +519,8 @@ void *uffd_poll_thread(void *arg)
+ 	pollfd[1].fd = pipefd[cpu*2];
+ 	pollfd[1].events = POLLIN;
+ 
++	ready_for_fork = true;
++
+ 	for (;;) {
+ 		ret = poll(pollfd, 2, -1);
+ 		if (ret <= 0) {
+diff --git a/tools/testing/selftests/mm/uffd-common.h b/tools/testing/selftests/mm/uffd-common.h
+index cb055282c89c..cc5629c3d2aa 100644
+--- a/tools/testing/selftests/mm/uffd-common.h
++++ b/tools/testing/selftests/mm/uffd-common.h
+@@ -32,6 +32,7 @@
+ #include <inttypes.h>
+ #include <stdint.h>
+ #include <sys/random.h>
++#include <stdatomic.h>
+ 
+ #include "../kselftest.h"
+ #include "vm_util.h"
+@@ -103,6 +104,7 @@ extern bool map_shared;
+ extern bool test_uffdio_wp;
+ extern unsigned long long *count_verify;
+ extern volatile bool test_uffdio_copy_eexist;
++extern atomic_bool ready_for_fork;
+ 
+ extern uffd_test_ops_t anon_uffd_test_ops;
+ extern uffd_test_ops_t shmem_uffd_test_ops;
+diff --git a/tools/testing/selftests/mm/uffd-unit-tests.c b/tools/testing/selftests/mm/uffd-unit-tests.c
+index 2b9f8cc52639..4a48dc617c6b 100644
+--- a/tools/testing/selftests/mm/uffd-unit-tests.c
++++ b/tools/testing/selftests/mm/uffd-unit-tests.c
+@@ -775,6 +775,8 @@ static void uffd_sigbus_test_common(bool wp)
+ 	char c;
+ 	struct uffd_args args = { 0 };
+ 
++	ready_for_fork = false;
++
+ 	fcntl(uffd, F_SETFL, uffd_flags | O_NONBLOCK);
+ 
+ 	if (uffd_register(uffd, area_dst, nr_pages * page_size,
+@@ -790,6 +792,9 @@ static void uffd_sigbus_test_common(bool wp)
+ 	if (pthread_create(&uffd_mon, NULL, uffd_poll_thread, &args))
+ 		err("uffd_poll_thread create");
+ 
++	while (!ready_for_fork)
++		; /* Wait for the poll_thread to start executing before forking */
++
+ 	pid = fork();
+ 	if (pid < 0)
+ 		err("fork");
+@@ -829,6 +834,8 @@ static void uffd_events_test_common(bool wp)
+ 	char c;
+ 	struct uffd_args args = { 0 };
+ 
++	ready_for_fork = false;
++
+ 	fcntl(uffd, F_SETFL, uffd_flags | O_NONBLOCK);
+ 	if (uffd_register(uffd, area_dst, nr_pages * page_size,
+ 			  true, wp, false))
+@@ -838,6 +845,9 @@ static void uffd_events_test_common(bool wp)
+ 	if (pthread_create(&uffd_mon, NULL, uffd_poll_thread, &args))
+ 		err("uffd_poll_thread create");
+ 
++	while (!ready_for_fork)
++		; /* Wait for the poll_thread to start executing before forking */
++
+ 	pid = fork();
+ 	if (pid < 0)
+ 		err("fork");
+-- 
+2.44.0.396.g6e790dbe36-goog
 
-So I ask you directly to pull these changes for 6.9-rc1. The commits I
-ask you to pull are in next since next-20240312. The changes were
-already in next/20240308 leading to
-4ab973203404e2b2499ddea62dac60ea34d4c572, I rebased these to drop two
-patches that are part of Greg's char-misc PR. Git gets merging Greg's
-char-misc branch and my branch right without problems even though both
-change drivers/siox/siox-core.c.
-
-The following changes since commit 6613476e225e090cc9aad49be7fa504e290dd33d:
-
-  Linux 6.8-rc1 (2024-01-21 14:11:32 -0800)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/s=
-iox/for-6.9-rc1
-
-for you to fetch changes up to db418d5f1ca5b7bafc8eaa9393ea18a7901bb0ed:
-
-  siox: bus-gpio: Simplify using devm_siox_* functions (2024-03-08 22:01:10=
- +0100)
-
-I'd be glad if these made it into v6.9-rc1.
-
-Thanks
-Uwe
-
-----------------------------------------------------------------
-SIOX changes for 6.9-rc1
-
-These patches rework how siox device registration works yielding a saner
-API. This allows to simplify the gpio bus driver using two new devm
-functions.
-
-----------------------------------------------------------------
-Uwe Kleine-K=F6nig (4):
-      siox: Don't pass the reference on a master in siox_master_register()
-      siox: Provide a devm variant of siox_master_alloc()
-      siox: Provide a devm variant of siox_master_register()
-      siox: bus-gpio: Simplify using devm_siox_* functions
-
- drivers/siox/siox-bus-gpio.c | 62 ++++++++++++++--------------------------=
-----
- drivers/siox/siox-core.c     | 46 ++++++++++++++++++++++++++++++++
- drivers/siox/siox.h          |  4 +++
- 3 files changed, 70 insertions(+), 42 deletions(-)
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---534r6pisrbqnipcc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmX8p5IACgkQj4D7WH0S
-/k6rIggAs5jSoHJNKVm+1DGVAo2p7iRbacSd5Z473AUzJ/C8S+TfQjw82o/oldSY
-kR1KUvLxvkRpX/Jb9sUrCraXEqKNZxUhtvCOqKrhIH04o+XaIKzmJOjVeBXIo39O
-6e7oQWSzAcAoDT+bczj8oIHXYLXMznpdehXi2aYL+R9YKocHGof4km+C6E0FR9be
-9zhw0oNBrjiaV3Udlrlori+mCQyf0PR7ir1n/j0o6BCRpwrwCreIFoaWUQB3NsJG
-/SQGBvS8I2pHNWNn0TrHkgrvHC27FB83bqxRlsdUdYEIaVynp/mrLKLVSWVaT0G5
-qO1IoXI6dTuDUyVEHyLqsdA++JjMyw==
-=48b/
------END PGP SIGNATURE-----
-
---534r6pisrbqnipcc--
