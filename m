@@ -1,141 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707C684A4E;
-	Thu, 21 Mar 2024 13:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B13784A52;
+	Thu, 21 Mar 2024 13:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711028998; cv=none; b=TcgJdDQcONcztISMrdEu5QTs+x+o7KdGFw43lsbwe/NvFQS7dHjlKmnLR58+LRh38x2QFGRBQ/bOveJpzTmvhS4IG+32Lf0wWNfZETFZCD0liOPYg8EkQZjn5a6boXSsMgbryjtCgowdAlVIpvLJ+bn1Zh2o2uotlsFefhoL8lU=
+	t=1711029029; cv=none; b=RI3UNaRCyOVLaOTKQ9yqyNmF4DfzJku6LLznuBwsd7v50ky8s0fsbl6SaddgJ+WpMenHcO+teNjp/ms07l3aLyLavZMI5uAHjYpKzfdbvuvOLeNYssPrRKmtIT1QvNPkuesKmymKSW8Zi6o8mJPqOub9Sn+Dn0ZWW5XzdHNKaXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711028998; c=relaxed/simple;
-	bh=SnT+trnOBIgAFkauK2EJaaxNT18qG8zwDsEmbwHz2AM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KT6buRtZCHKgaevtdDmu6hlikS0ytTvw/6g8fxdJVEOlyWBkhNCRF1Gs08+FDFS98lLgEzKyBPL3igeteKHaf0D6IBnVnEA1nEBPFDTgykk3JqigolZ/EwhVDgiTtCNyGyivbpbd3/UHOu0UGLuD0zHbJq8ImEkETpaChC2ZpCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hIk4gRGx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711029029; c=relaxed/simple;
+	bh=K7pzVG0ipu+htF5tFIS19IL9/9ziycsmhQ1w6zOu4RA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jNsKfmofglTYKUDiJuTE948/1GvEchwHCY/i/NcLXC1BAqRXRvjjx2ANpYSTMfvOvOPMik33mt+OYXHNsba8uGhvkeJeD2dxMJ4h1XlPaIQlW4vDY1ws0luGbIR5xfHoimHiFoTFNgynRbQN4huFPTAphRDIrcUhHhQhoqKR1kM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CYbTPVOQ; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hIk4gRGx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E471CC433F1;
-	Thu, 21 Mar 2024 13:49:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711028998;
-	bh=SnT+trnOBIgAFkauK2EJaaxNT18qG8zwDsEmbwHz2AM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hIk4gRGxGxuB0x7UWZqPKMUDZb+S0UZr3oI2rzKyebKATj6NbvEHzGfG7G6hAKGJb
-	 2NGOGrOrrptzH8Usy/P7BSCippt8KendICagbmwtw88RKYD5P88WwFHqUiSE5OuiRx
-	 npsvSICctvPB/GbalRrxJVngfzwigvQum0wucaYi3uMY+zrp3Bw0Atpd/BWkAm/8/K
-	 DbfOj3fqzxmhnGSaXUNUi8aLNA8G+t01acvH+NEnraLLfDBLs7X+bX6IThYp/6IeEv
-	 aVtrpWoTsLfqe2RcQnves32RsgS8ZSrzmt9LoBmax8miFKjDZC7y5ZzNIpwEy0bTw3
-	 c3EbnC0TWyBFw==
-Date: Thu, 21 Mar 2024 14:49:52 +0100
-From: Mauro Carvalho Chehab <mchehab@kernel.org>
-To: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-Cc: tfiga@chromium.org, m.szyprowski@samsung.com,
- ezequiel@vanguardiasur.com.ar, p.zabel@pengutronix.de,
- hverkuil-cisco@xs4all.nl, nicolas@ndufresne.ca,
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org, kernel@collabora.com
-Subject: Re: [PATCH v21 1/9] media: videobuf2: Update vb2_is_busy() logic
-Message-ID: <20240321144952.5effcb82@coco.lan>
-In-Reply-To: <20240314153226.197445-2-benjamin.gaignard@collabora.com>
-References: <20240314153226.197445-1-benjamin.gaignard@collabora.com>
-	<20240314153226.197445-2-benjamin.gaignard@collabora.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CYbTPVOQ"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6e88e4c8500so754294b3a.2;
+        Thu, 21 Mar 2024 06:50:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711029026; x=1711633826; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bgk+J1XRvDjj/VZHGvqG6xQJJdsshosVOSvgWdd4L4Q=;
+        b=CYbTPVOQoi7CrbrdQT2jvBWo2G8M47SUXq6jdnzMkq4dSFHa+ncxFGYZfTqXenZCnm
+         JD9FXoKzZSVI4PKegKQuuLdFMG9rKxx+w9o8X/iecreVgREEKtmSnjz9FKWkDsll2/OA
+         Wnaenoq4VSmRqOhGWTXxfT9pcRhjZFbFwY8kVLbSYU+T3TLXXl6LZ3mZFXFSE6HiXuHE
+         +rrX55DMHjHGSg5tvzlZbva5pZZ1U/pwHmeu9RrldY6zVAfBPRGSi1IKZDc08pUP2eoT
+         xohS74kvJ8tORoOrouU28TtIJSUk+Z00pWpdygkDkwJe9zPc+ucO9a4QVv2IwS3z5KWF
+         8Bvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711029026; x=1711633826;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Bgk+J1XRvDjj/VZHGvqG6xQJJdsshosVOSvgWdd4L4Q=;
+        b=aOYHVCWxdVbZMVE7jSupbyq/EnFb2WJ3N5Ac1iHBVHXIc0vEE2bYUKmH/DpW/xa8VH
+         jnoCvPPgMWFI3jJDRB8HheCuu7dqOnRLyO5pThdukmq64MkIgBfzKHjNi6CMMd571ZZC
+         xFhxekL95+rzBHlIhQpNTns5pYQ/T55sx8BeriMuxuGJKd6ODfBaI9PSdiAfM+luEEbA
+         5ZduDOeicM4OpSUQC94cHHQ7RWHMWM5sjSEY11EMSFF6QjsEJJHaPPx5qPC6C+WK38rH
+         LXmOTIz6dYnPjt0B7qS2Fkja69ddHq2nZiFsHrzzQKjJOqvpk77LtKU78ghnefvsxkhx
+         507A==
+X-Forwarded-Encrypted: i=1; AJvYcCXUpx1Xb54c97cofInSUDJnUFaVCnzK5YTjh2LIMMa6IvALg0e4Uxg+oG2G3w6paQe0PP88cOMOyECBCGo56q3XUDifA3BoGM4e
+X-Gm-Message-State: AOJu0Yxf74fXXRavPn5HEb7RP7RgSTjfBanZYgOb8ktsOAyhZ/aT55MS
+	49tb1eDt6//I/dS5sWXt0uvYvuSXXngMIWAn4ZoHryX/A/iA7/U+FnArdMkNazo=
+X-Google-Smtp-Source: AGHT+IEmykCE6285kFS1OeJHpoDZ5UFbWUS3isPjkSzMuVzk5m7M9UTn4WKu2qMgQcTWueDKcJOz7g==
+X-Received: by 2002:a05:6a00:398a:b0:6e6:b155:b9a3 with SMTP id fi10-20020a056a00398a00b006e6b155b9a3mr20695503pfb.11.1711029026298;
+        Thu, 21 Mar 2024 06:50:26 -0700 (PDT)
+Received: from kousik.local ([2405:201:c006:31f8:c75d:3405:7d77:21ac])
+        by smtp.gmail.com with ESMTPSA id s36-20020a056a0017a400b006e6adfb8897sm13473344pfg.156.2024.03.21.06.50.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Mar 2024 06:50:26 -0700 (PDT)
+From: Kousik Sanagavarapu <five231003@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org,
+	linux-spi@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Mark Brown <broonie@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Kousik Sanagavarapu <five231003@gmail.com>
+Subject: [PATCH] dt-bindings: spi: convert spi-jcore to dtschema
+Date: Thu, 21 Mar 2024 19:17:14 +0530
+Message-ID: <20240321134956.7731-1-five231003@gmail.com>
+X-Mailer: git-send-email 2.44.0.273.g4bc5b65358.dirty
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Em Thu, 14 Mar 2024 16:32:18 +0100
-Benjamin Gaignard <benjamin.gaignard@collabora.com> escreveu:
+Convert existing bindings of J-Core spi2 to dtschema.  No new properties
+are added.
 
-> Do not rely on the number of allocated buffers to know if the
-> queue is busy but on a flag set when at least one buffer has been allocated
-> by REQBUFS or CREATE_BUFS ioctl.
-> The flag is reset when REQBUFS is called with count = 0 or the file
-> handle is closed.
-> This is needed because remove buffers feature will be able to remove
-> all the buffers from a queue while streaming so relying on the number
-> of allocated buffers in the queue won't be possible.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-Reviewed-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Signed-off-by: Kousik Sanagavarapu <five231003@gmail.com>
+---
+ .../devicetree/bindings/spi/jcore,spi.txt     | 34 -----------
+ .../devicetree/bindings/spi/jcore,spi.yaml    | 60 +++++++++++++++++++
+ 2 files changed, 60 insertions(+), 34 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/jcore,spi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/jcore,spi.yaml
 
-> ---
->  drivers/media/common/videobuf2/videobuf2-core.c | 4 ++++
->  include/media/videobuf2-core.h                  | 4 +++-
->  2 files changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
-> index b6bf8f232f48..d8b3c04cb3b5 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-core.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-core.c
-> @@ -854,6 +854,7 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
->  		__vb2_queue_free(q, q_num_bufs);
->  		mutex_unlock(&q->mmap_lock);
->  
-> +		q->is_busy = 0;
->  		/*
->  		 * In case of REQBUFS(0) return immediately without calling
->  		 * driver's queue_setup() callback and allocating resources.
-> @@ -966,6 +967,7 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
->  	 */
->  	*count = allocated_buffers;
->  	q->waiting_for_buffers = !q->is_output;
-> +	q->is_busy = 1;
->  
->  	return 0;
->  
-> @@ -1091,6 +1093,7 @@ int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
->  	 * to the userspace.
->  	 */
->  	*count = allocated_buffers;
-> +	q->is_busy = 1;
->  
->  	return 0;
->  
-> @@ -2555,6 +2558,7 @@ void vb2_core_queue_release(struct vb2_queue *q)
->  	__vb2_queue_free(q, vb2_get_num_buffers(q));
->  	kfree(q->bufs);
->  	q->bufs = NULL;
-> +	q->is_busy = 0;
->  	mutex_unlock(&q->mmap_lock);
->  }
->  EXPORT_SYMBOL_GPL(vb2_core_queue_release);
-> diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
-> index 8b86996b2719..667bf9ee1101 100644
-> --- a/include/media/videobuf2-core.h
-> +++ b/include/media/videobuf2-core.h
-> @@ -582,6 +582,7 @@ struct vb2_buf_ops {
->   *		released. Used to prevent destroying the queue by other threads.
->   * @is_multiplanar: set if buffer type is multiplanar
->   * @is_output:	set if buffer type is output
-> + * @is_busy:	set if at least one buffer has been allocated at some time.
->   * @copy_timestamp: set if vb2-core should set timestamps
->   * @last_buffer_dequeued: used in poll() and DQBUF to immediately return if the
->   *		last decoded buffer was already dequeued. Set for capture queues
-> @@ -647,6 +648,7 @@ struct vb2_queue {
->  	unsigned int			waiting_in_dqbuf:1;
->  	unsigned int			is_multiplanar:1;
->  	unsigned int			is_output:1;
-> +	unsigned int			is_busy:1;
->  	unsigned int			copy_timestamp:1;
->  	unsigned int			last_buffer_dequeued:1;
->  
-> @@ -1166,7 +1168,7 @@ static inline unsigned int vb2_get_num_buffers(struct vb2_queue *q)
->   */
->  static inline bool vb2_is_busy(struct vb2_queue *q)
->  {
-> -	return vb2_get_num_buffers(q) > 0;
-> +	return !!q->is_busy;
->  }
->  
->  /**
+diff --git a/Documentation/devicetree/bindings/spi/jcore,spi.txt b/Documentation/devicetree/bindings/spi/jcore,spi.txt
+deleted file mode 100644
+index 93936d16e139..000000000000
+--- a/Documentation/devicetree/bindings/spi/jcore,spi.txt
++++ /dev/null
+@@ -1,34 +0,0 @@
+-J-Core SPI master
+-
+-Required properties:
+-
+-- compatible: Must be "jcore,spi2".
+-
+-- reg: Memory region for registers.
+-
+-- #address-cells: Must be 1.
+-
+-- #size-cells: Must be 0.
+-
+-Optional properties:
+-
+-- clocks: If a phandle named "ref_clk" is present, SPI clock speed
+-  programming is relative to the frequency of the indicated clock.
+-  Necessary only if the input clock rate is something other than a
+-  fixed 50 MHz.
+-
+-- clock-names: Clock names, one for each phandle in clocks.
+-
+-See spi-bus.txt for additional properties not specific to this device.
+-
+-Example:
+-
+-spi@40 {
+-	compatible = "jcore,spi2";
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-	reg = <0x40 0x8>;
+-	spi-max-frequency = <25000000>;
+-	clocks = <&bus_clk>;
+-	clock-names = "ref_clk";
+-}
+diff --git a/Documentation/devicetree/bindings/spi/jcore,spi.yaml b/Documentation/devicetree/bindings/spi/jcore,spi.yaml
+new file mode 100644
+index 000000000000..e76775bb68d4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/jcore,spi.yaml
+@@ -0,0 +1,60 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++
++$id: http://devicetree.org/schemas/spi/jcore,spi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: J-Core SPI controller
++
++description: |
++  The J-Core "spi2" device is a PIO-based SPI controller which used to
++  perform byte-at-a-time transfers between the CPU and itself.
++
++maintainers:
++  - Kousik Sanagavarapu <five231003@gmail.com>
++
++allOf:
++  - $ref: spi-controller.yaml#
++
++properties:
++  compatible:
++    const: jcore,spi2
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    description:
++      If a phandle named "ref_clk" is present, SPI clock speed
++      programming is relative to the frequency of the indicated clock.
++      Necessary only if the input clock rate is something other than a
++      fixed 50 MHz.
++
++  clock-names:
++    description:
++      Clock names, one for each phandle in clocks.
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: true
++
++examples:
++  - |
++    spi@40 {
++      compatible = "jcore,spi2";
++      #address-cells = <1>;
++      #size-cells = <0>;
++      reg = <0x40 0x8>;
++      spi-max-frequency = <25000000>;
++      clocks = <&bus_clk>;
++      clock-names = "ref_clk";
++    };
+-- 
+2.44.0.273.g4bc5b65358.dirty
 
-
-
-Thanks,
-Mauro
