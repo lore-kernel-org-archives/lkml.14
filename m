@@ -1,265 +1,238 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2080.outbound.protection.outlook.com [40.107.243.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7857D12CD89;
-	Thu, 21 Mar 2024 20:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711053828; cv=none; b=S4qpzLEsJ1+XsraLPLzVUPgT6g36SYZHZktXWT3omEwLS/aUtNjsJvTa9ml05LDDb/lwEBoiX+LquJx0QAdcokGuH3gWdUcbefMYGTUR8k3S/GRXAEXe09x8rMVEWoCK1Yx1faT7k1N0nYiKe+g6wSEMQQp2zZMWFUEKEqzdG68=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711053828; c=relaxed/simple;
-	bh=FDLJrtlyM9+tF+ndIBWA6li6OsU/NkF+XdC3UObSUQE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eBvkVN+eCAx42Vg1MWuBqZrwwD/r24XSAMYa8ehU/V8ew+hMtc5YiZWxFerSO+2u+4bn5vFmQLZoIJPC57Yk7ho/3/olC0T0KF34ZWis8qnuESt1s600Wn6mdFaYk7EZEsuTKeNA6rI8fnGE37BB0ytC5szfGUPmHth0ApdYnHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=REzcuhgs; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DF613540B;
+	Thu, 21 Mar 2024 20:44:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711053844; cv=fail; b=FJBE34MffMXs05cqSfnrfmHH2qvsnuCK15eftRcwcqkfeaaxCH2g6b8b3lyouwvaD316t6Qkp8G4Sita+AaLGqmY/ACqdU5elsOHZUKfYrbOiCYkGrsUYEHnSYv/uowbV8hV31jz45OZYoNL+koJgnvvrih5O9shK8Qfx3kmqQk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711053844; c=relaxed/simple;
+	bh=GxH2hYokxC9hMdXYhXBvPLIe/yKn4vDy1ll/na3b1T4=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=KbgltH7GXApLrEsQuI+V4mwfb2AOMebFvvXnORmRvFzNlHB90APRjfLxFSoJ5NWdxXDnT+vPg+jInmhLUQX5pqQ5bkh9de4Oig2BAAasCsQ43nQEzrtM/kMNSbSa78yGPPsGD66lwZR0M8YXA04UzvSR9cc6S+z//5H3bgGdzo4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ttZcs6Hn; arc=fail smtp.client-ip=40.107.243.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="REzcuhgs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711053827; x=1742589827;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FDLJrtlyM9+tF+ndIBWA6li6OsU/NkF+XdC3UObSUQE=;
-  b=REzcuhgs4ppgq5guUewn1Nmmll6wtJL8Cfk6Eyq+ZeBefXxtnkgYY7gl
-   aQgXFFXXC6AwgTWOi83ygd6gaggMxcH6gVtCv8o4UDLLadham3KEaenbi
-   OudfEYjPcDS+9tFUW7KRAP7h05BDJLttWND9EKIzbRtMey2pu1XNFneWV
-   GNZsOXdSEyN4z2Xv8DD0jDvr9eufxtBYtwUE0vqsnrBaufm8SNoX7Fvdn
-   BmSzKLAvHLLSGkzgUkXNCDVkAgKRJvu2CjE3pFym2Rr4xukMEsjmQRPf3
-   c7ZN3tsuUMO7HR5tscK8lFbcey4sHQrK5RxXsoznDjRVYKY6CiV0e4tgJ
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="6203257"
-X-IronPort-AV: E=Sophos;i="6.07,143,1708416000"; 
-   d="scan'208";a="6203257"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 13:43:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,143,1708416000"; 
-   d="scan'208";a="14619224"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 13:43:45 -0700
-Date: Thu, 21 Mar 2024 13:43:45 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: Chao Gao <chao.gao@intel.com>
-Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
-	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com,
-	Sean Christopherson <seanjc@google.com>,
-	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
-	chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
-	Sean Christopherson <sean.j.christopherson@intel.com>,
-	isaku.yamahata@linux.intel.com
-Subject: Re: [PATCH v19 044/130] KVM: TDX: Do TDX specific vcpu initialization
-Message-ID: <20240321204345.GQ1994522@ls.amr.corp.intel.com>
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <d6a21fe6ea9eb53c24b6527ef8e5a07f0c2e8806.1708933498.git.isaku.yamahata@intel.com>
- <ZfvI8t7SlfIsxbmT@chao-email>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ttZcs6Hn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aLVkF0jxL5ab1kkExkrutgp+nnZ5zoRWDhzNDQrE4fuy4bvtJ059MMG7VCg3WADqFIqHrV1r6mnYt+CpHgLfalftmjCGPapRuKcDlO10EbiOXhEj5lPt+4af0bm5lVccvPQimOCtNmr6cncm0TC4Ejr7NqwfE+HzhXGwVaSUZimWFpnREGuC7IHt+IUSeq0dafyEOy/3SV5nnJBWuzshqlLfrApNKYm1Z+zKjs0O4ZTEybMWiq/WBL27HjnSYDFJU92mpsZQ2ZEKC2c13QTPP412o5p/OPzGcavCQsdyZs88HltMTpCNE/3w9uuNBCLB4VEwVNHPNJsHZVjllwYnvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=P7GmaPQc8cB3nmmi+u9VgQ5j9rUoOGbwUFhhTMAJynQ=;
+ b=bQbtOYJP/J3a6A5m5RlA/5EQfFPceX3Z9D/NRXEZD60FWk8mji7i15kEe4bbx6hyewLYhEEdf377/NUOoXR4RheNLcavsDAVpHxa4iaE5RjGFlH5wU4FHWjWWVgq2A77nvf5l/suQK5T5Zqf/i97d51cNknceyPDpfYWsBEs3DYHRXOABDkdHJaxCqPMVJypCAdvwUQtb9/GY7GKe5d5mZUBfANqh5QOcYnZqqDQelUAgL6Pq9KLzKm7S84ADzo54O2EWItWc05/vRwgAxlyDwkA/eYbI/UUVKJkANgJq9dNsw6mAeObzftJM5ZPQzvua15whUKaBTu0geMmFfoftA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P7GmaPQc8cB3nmmi+u9VgQ5j9rUoOGbwUFhhTMAJynQ=;
+ b=ttZcs6Hn5XPebLB80KsUrGspBi7+HYcMjDEqH95K1+mhDm9pZyZUfgA+OWd2yn+JE/7FwKDpEbcHAJwnZfACPZUI5YP91wsWhRqWwqp++vFaAC4d8pTvm+Qp3Rz3Q6q8v6uK1d5S8osdLDMVovHHNr+eoK1WWfgtStfaBo3m40c=
+Received: from BN9P220CA0014.NAMP220.PROD.OUTLOOK.COM (2603:10b6:408:13e::19)
+ by MW6PR12MB8999.namprd12.prod.outlook.com (2603:10b6:303:247::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.31; Thu, 21 Mar
+ 2024 20:43:58 +0000
+Received: from BN3PEPF0000B36E.namprd21.prod.outlook.com
+ (2603:10b6:408:13e:cafe::74) by BN9P220CA0014.outlook.office365.com
+ (2603:10b6:408:13e::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.27 via Frontend
+ Transport; Thu, 21 Mar 2024 20:43:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ BN3PEPF0000B36E.mail.protection.outlook.com (10.167.243.165) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7430.0 via Frontend Transport; Thu, 21 Mar 2024 20:43:57 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 21 Mar
+ 2024 15:43:56 -0500
+Received: from xsjanatoliy50.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Thu, 21 Mar 2024 15:43:55 -0500
+From: Anatoliy Klymenko <anatoliy.klymenko@amd.com>
+Subject: [PATCH v3 0/9] Setting live video input format for ZynqMP DPSUB
+Date: Thu, 21 Mar 2024 13:43:38 -0700
+Message-ID: <20240321-dp-live-fmt-v3-0-d5090d796b7e@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZfvI8t7SlfIsxbmT@chao-email>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPqb/GUC/23MSwrCMBSF4a1Ixl5Jbpq0deQ+xEF6k9qAfZCUo
+ JTu3bSTIjg8B75/YdEF7yK7nhYWXPLRj0Me8nxi1Jnh6cDbvBlyLDiiBjvByycHbT+DLoQqS9k
+ ooyuWxRRc69977f7Iu/NxHsNnjyexvf87SQCHpqxItrqm2lY309sLjT3bKgkPKQX+SszS1CSVJ
+ UWK20Ou6/oFMWEU994AAAA=
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>, Michal Simek <michal.simek@amd.com>,
+	"Andrzej Hajda" <andrzej.hajda@intel.com>, Neil Armstrong
+	<neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Jonas Karlman
+	<jonas@kwiboo.se>, "Jernej Skrabec" <jernej.skrabec@gmail.com>, Rob Herring
+	<robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+CC: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	<dri-devel@lists.freedesktop.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-media@vger.kernel.org>, Anatoliy Klymenko <anatoliy.klymenko@amd.com>
+X-Mailer: b4 0.13.0
+Received-SPF: None (SATLEXMB03.amd.com: anatoliy.klymenko@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B36E:EE_|MW6PR12MB8999:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5f52e4c1-26d7-4b40-e1cd-08dc49e7a1bb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	IVzFjiTgSspAib4ThmmDTsFBYvRWoTkqz/2fUGOOUNyEx02ujAkoW1aFnHSO/bu37KAR6Zu0zpy6QyBu6D7/9rIuBVibW2ZMVs3ya90bNrRkydbWc5N6oOlDjH4gGidRRFjoUw1JuDg5FUU2bkkKqAPeXHXwa8wA6/7a1frpoAXe/+79CIvfrEFGwflB6wc8SGlShUqgnGQYDf6GNNrNoj22ZOE6qnBsf19h/jofG0539u6BEqVNJtKeg4+20Fjb6N4658dJsnq0xgFhEJ1rwArQ+DAzjWeNZ6INGe/rPfRX16o0oeuIiOYd6SHJ1gugaKWOaaEY98WxkXNnfYAoP6VLsokRJh0ndb2sqp0N8uBi+Duu3MrNwe+PF2NVcTLYoSyBqj6BqL/nAB5oHiX2KB2tIag7vAi72cucshzuVYCb6K/KvWbcaVuxrWGRE+W3Gi/yg3BcwpBwJFQWswHoomOMMhGp3cr5PdhhbTGUxYTzOkV7dCdIElNmHys1kei6CcM6/5IY9n9mNCjunh5GGt/ZjFjVV5g3G970bDirSjSKZFJKKkJchodnQ7jfUIMdp7oDOZADEVD9oR13GtMqD2qQDGv/If/cwWavrOReEFW0sLE2gHhbXSR0n2ixzIySddR+RveMoNSswaQIhuX+aAEVU/Df1jIhRBZkfm+/CYFcHLhgKHav2Pz+D/6Y13KeAFkIWYA1I1eQsajxkddE/PTY9y3BZBEwhAfdKb14zWw=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(36860700004)(1800799015)(7416005)(376005)(921011);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2024 20:43:57.7454
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f52e4c1-26d7-4b40-e1cd-08dc49e7a1bb
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B36E.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8999
 
-On Thu, Mar 21, 2024 at 01:43:14PM +0800,
-Chao Gao <chao.gao@intel.com> wrote:
+Implement live video input format setting for ZynqMP DPSUB.
 
-> >+/* VMM can pass one 64bit auxiliary data to vcpu via RCX for guest BIOS. */
-> >+static int tdx_td_vcpu_init(struct kvm_vcpu *vcpu, u64 vcpu_rcx)
-> >+{
-> >+	struct kvm_tdx *kvm_tdx = to_kvm_tdx(vcpu->kvm);
-> >+	struct vcpu_tdx *tdx = to_tdx(vcpu);
-> >+	unsigned long *tdvpx_pa = NULL;
-> >+	unsigned long tdvpr_pa;
-> >+	unsigned long va;
-> >+	int ret, i;
-> >+	u64 err;
-> >+
-> >+	if (is_td_vcpu_created(tdx))
-> >+		return -EINVAL;
-> >+
-> >+	/*
-> >+	 * vcpu_free method frees allocated pages.  Avoid partial setup so
-> >+	 * that the method can't handle it.
-> >+	 */
-> >+	va = __get_free_page(GFP_KERNEL_ACCOUNT);
-> >+	if (!va)
-> >+		return -ENOMEM;
-> >+	tdvpr_pa = __pa(va);
-> >+
-> >+	tdvpx_pa = kcalloc(tdx_info->nr_tdvpx_pages, sizeof(*tdx->tdvpx_pa),
-> >+			   GFP_KERNEL_ACCOUNT);
-> >+	if (!tdvpx_pa) {
-> >+		ret = -ENOMEM;
-> >+		goto free_tdvpr;
-> >+	}
-> >+	for (i = 0; i < tdx_info->nr_tdvpx_pages; i++) {
-> >+		va = __get_free_page(GFP_KERNEL_ACCOUNT);
-> >+		if (!va) {
-> >+			ret = -ENOMEM;
-> >+			goto free_tdvpx;
-> >+		}
-> >+		tdvpx_pa[i] = __pa(va);
-> >+	}
-> >+
-> >+	err = tdh_vp_create(kvm_tdx->tdr_pa, tdvpr_pa);
-> >+	if (KVM_BUG_ON(err, vcpu->kvm)) {
-> >+		ret = -EIO;
-> >+		pr_tdx_error(TDH_VP_CREATE, err, NULL);
-> >+		goto free_tdvpx;
-> >+	}
-> >+	tdx->tdvpr_pa = tdvpr_pa;
-> >+
-> >+	tdx->tdvpx_pa = tdvpx_pa;
-> >+	for (i = 0; i < tdx_info->nr_tdvpx_pages; i++) {
-> 
-> Can you merge the for-loop above into this one? then ...
-> 
-> >+		err = tdh_vp_addcx(tdx->tdvpr_pa, tdvpx_pa[i]);
-> >+		if (KVM_BUG_ON(err, vcpu->kvm)) {
-> >+			pr_tdx_error(TDH_VP_ADDCX, err, NULL);
-> 
-> >+			for (; i < tdx_info->nr_tdvpx_pages; i++) {
-> >+				free_page((unsigned long)__va(tdvpx_pa[i]));
-> >+				tdvpx_pa[i] = 0;
-> >+			}
-> 
-> ... no need to free remaining pages.
+ZynqMP DPSUB can operate in 2 modes: DMA-based and live.
 
-Makes sense. Let me clean up this.
+In the live mode, DPSUB receives a live video signal from FPGA-based CRTC.
+DPSUB acts as a DRM encoder bridge in such a scenario. To properly tune
+into the incoming video signal, DPSUB should be programmed with the proper
+media bus format. This patch series addresses this task.
 
+Patch 1/9: Set the DPSUB layer mode of operation prior to enabling the
+layer. Allows to use layer operational mode before its enablement.
 
-> >+			/* vcpu_free method frees TDVPX and TDR donated to TDX */
-> >+			return -EIO;
-> >+		}
-> >+	}
-> >+
-> >+	err = tdh_vp_init(tdx->tdvpr_pa, vcpu_rcx);
-> >+	if (KVM_BUG_ON(err, vcpu->kvm)) {
-> >+		pr_tdx_error(TDH_VP_INIT, err, NULL);
-> >+		return -EIO;
-> >+	}
-> >+
-> >+	vcpu->arch.mp_state = KVM_MP_STATE_RUNNABLE;
-> >+	tdx->td_vcpu_created = true;
-> >+	return 0;
-> >+
-> >+free_tdvpx:
-> >+	for (i = 0; i < tdx_info->nr_tdvpx_pages; i++) {
-> >+		if (tdvpx_pa[i])
-> >+			free_page((unsigned long)__va(tdvpx_pa[i]));
-> >+		tdvpx_pa[i] = 0;
-> >+	}
-> >+	kfree(tdvpx_pa);
-> >+	tdx->tdvpx_pa = NULL;
-> >+free_tdvpr:
-> >+	if (tdvpr_pa)
-> >+		free_page((unsigned long)__va(tdvpr_pa));
-> >+	tdx->tdvpr_pa = 0;
-> >+
-> >+	return ret;
-> >+}
-> >+
-> >+int tdx_vcpu_ioctl(struct kvm_vcpu *vcpu, void __user *argp)
-> >+{
-> >+	struct msr_data apic_base_msr;
-> >+	struct kvm_tdx *kvm_tdx = to_kvm_tdx(vcpu->kvm);
-> >+	struct vcpu_tdx *tdx = to_tdx(vcpu);
-> >+	struct kvm_tdx_cmd cmd;
-> >+	int ret;
-> >+
-> >+	if (tdx->initialized)
-> >+		return -EINVAL;
-> >+
-> >+	if (!is_hkid_assigned(kvm_tdx) || is_td_finalized(kvm_tdx))
-> 
-> These checks look random e.g., I am not sure why is_td_created() isn't check here.
-> 
-> A few helper functions and boolean variables are added to track which stage the
-> TD or TD vCPU is in. e.g.,
-> 
-> is_hkid_assigned()
-> is_td_finalized()
-> is_td_created()
-> tdx->initialized
-> td_vcpu_created
-> 
-> Insteading of doing this, I am wondering if adding two state machines for
-> TD and TD vCPU would make the implementation clear and easy to extend.
+Patch 2/9: Update some IP register defines.
 
-Let me look into the state machine. Originally I hoped we don't need it, but
-it seems to deserve the state machine..
+Patch 3/9: Factor out some code into a helper function.
 
+Patch 4/9: Announce supported input media bus formats via
+drm_bridge_funcs.atomic_get_input_bus_fmts callback.
 
-> >+		return -EINVAL;
-> >+
-> >+	if (copy_from_user(&cmd, argp, sizeof(cmd)))
-> >+		return -EFAULT;
-> >+
-> >+	if (cmd.error)
-> >+		return -EINVAL;
-> >+
-> >+	/* Currently only KVM_TDX_INTI_VCPU is defined for vcpu operation. */
-> >+	if (cmd.flags || cmd.id != KVM_TDX_INIT_VCPU)
-> >+		return -EINVAL;
-> 
-> Even though KVM_TD_INIT_VCPU is the only supported command, it is worthwhile to
-> use a switch-case statement. New commands can be added easily without the need
-> to refactor this function first.
+Patch 5/9: Minimize usage of a global flag. Minor improvement.
 
-Yes. For KVM_MAP_MEMORY, I will make KVM_TDX_INIT_MEM_REGION vcpu ioctl instead
-of vm ioctl because it is consistent and scalable.  We'll have switch statement
-in the next respin.
+Patch 6/9: Program DPSUB live video input format based on selected bus
+config in the new atomic bridge state.
 
-> >+
-> >+	/*
-> >+	 * As TDX requires X2APIC, set local apic mode to X2APIC.  User space
-> >+	 * VMM, e.g. qemu, is required to set CPUID[0x1].ecx.X2APIC=1 by
-> >+	 * KVM_SET_CPUID2.  Otherwise kvm_set_apic_base() will fail.
-> >+	 */
-> >+	apic_base_msr = (struct msr_data) {
-> >+		.host_initiated = true,
-> >+		.data = APIC_DEFAULT_PHYS_BASE | LAPIC_MODE_X2APIC |
-> >+		(kvm_vcpu_is_reset_bsp(vcpu) ? MSR_IA32_APICBASE_BSP : 0),
-> >+	};
-> >+	if (kvm_set_apic_base(vcpu, &apic_base_msr))
-> >+		return -EINVAL;
-> 
-> Exporting kvm_vcpu_is_reset_bsp() and kvm_set_apic_base() should be done
-> here (rather than in a previous patch).
+Patch 7/9: New optional CRTC atomic helper proposal that will allow CRTC
+to participate in DRM bridge chain format negotiation and impose format
+restrictions. Incorporate this callback into the DRM bridge format
+negotiation process.
 
-Sure.
+Patch 8/9: DT bindings documentation for Video Timing Controller and Test
+Pattern Generator IPs.
 
+Patch 9/9: Reference FPGA CRTC driver based on AMD/Xilinx Test Pattern
+Generator (TPG) IP. Add driver for the AMD/Xilinx Video Timing Controller
+(VTC), which supplements TPG.
 
-> >+
-> >+	ret = tdx_td_vcpu_init(vcpu, (u64)cmd.data);
-> >+	if (ret)
-> >+		return ret;
-> >+
-> >+	tdx->initialized = true;
-> >+	return 0;
-> >+}
-> >+
-> 
-> >diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> >index c002761bb662..2bd4b7c8fa51 100644
-> >--- a/arch/x86/kvm/x86.c
-> >+++ b/arch/x86/kvm/x86.c
-> >@@ -6274,6 +6274,12 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
-> > 	case KVM_SET_DEVICE_ATTR:
-> > 		r = kvm_vcpu_ioctl_device_attr(vcpu, ioctl, argp);
-> > 		break;
-> >+	case KVM_MEMORY_ENCRYPT_OP:
-> >+		r = -ENOTTY;
-> 
-> Maybe -EINVAL is better. Because previously trying to call this on vCPU fd
-> failed with -EINVAL given ...
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+To: Maxime Ripard <mripard@kernel.org>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+To: David Airlie <airlied@gmail.com>
+To: Daniel Vetter <daniel@ffwll.ch>
+To: Michal Simek <michal.simek@amd.com>
+To: Andrzej Hajda <andrzej.hajda@intel.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>
+To: Robert Foss <rfoss@kernel.org>
+To: Jonas Karlman <jonas@kwiboo.se>
+To: Jernej Skrabec <jernej.skrabec@gmail.com>
+To: Rob Herring <robh+dt@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+To: Conor Dooley <conor+dt@kernel.org>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-media@vger.kernel.org
+Signed-off-by: Anatoliy Klymenko <anatoliy.klymenko@amd.com>
 
-Oh, ok. Will change it.  I followed VM ioctl case as default value. But vcpu
-ioctl seems to have -EINVAL as default value.
+Changes in v3:
+- Add connected live layer helper
+- Include reference DRM format in zynqmp_disp_format for live layerss.
+- Add default bus format list for non-live case.
+- Explain removal of redundant checks in the commit message.
+- Minor fixes and improvements from review comments.
+
+Link to v2: https://lore.kernel.org/r/20240312-dp-live-fmt-v2-0-a9c35dc5c50d@amd.com
+
+Changes in v2:
+- Factor out register defines update into separate patch.
+- Add some improvements minimizing ithe usage of a global flag.
+- Reuse existing format setting API instead of introducing new versions.
+- Add warning around NULL check on new bridge state within atomic enable
+  callback.
+- Add drm_helper_crtc_select_output_bus_format() that wraps
+  drm_crtc_helper_funcs.select_output_bus_format().
+- Update API comments per review recommendations.
+- Address some minor review comments.
+- Add reference CRTC driver that demonstrates the usage of the proposed
+  drm_crtc_helper_funcs.select_output_bus_format() API.
+
+- Link to v1: https://lore.kernel.org/r/20240226-dp-live-fmt-v1-0-b78c3f69c9d8@amd.com
+
+---
+Anatoliy Klymenko (9):
+      drm: xlnx: zynqmp_dpsub: Set layer mode during creation
+      drm: xlnx: zynqmp_dpsub: Update live format defines
+      drm: xlnx: zynqmp_dpsub: Add connected live layer helper
+      drm: xlnx: zynqmp_dpsub: Anounce supported input formats
+      drm: xlnx: zynqmp_dpsub: Minimize usage of global flag
+      drm: xlnx: zynqmp_dpsub: Set input live format
+      drm/atomic-helper: Add select_output_bus_format callback
+      dt-bindings: xlnx: Add VTC and TPG bindings
+      drm: xlnx: Intoduce TPG CRTC driver
+
+ .../bindings/display/xlnx/xlnx,v-tpg.yaml          |  87 +++
+ .../devicetree/bindings/display/xlnx/xlnx,vtc.yaml |  65 ++
+ drivers/gpu/drm/drm_bridge.c                       |  14 +-
+ drivers/gpu/drm/drm_crtc_helper.c                  |  36 +
+ drivers/gpu/drm/xlnx/Kconfig                       |  21 +
+ drivers/gpu/drm/xlnx/Makefile                      |   4 +
+ drivers/gpu/drm/xlnx/xlnx_tpg.c                    | 846 +++++++++++++++++++++
+ drivers/gpu/drm/xlnx/xlnx_vtc.c                    | 452 +++++++++++
+ drivers/gpu/drm/xlnx/xlnx_vtc.h                    | 101 +++
+ drivers/gpu/drm/xlnx/xlnx_vtc_list.c               | 160 ++++
+ drivers/gpu/drm/xlnx/zynqmp_disp.c                 | 170 ++++-
+ drivers/gpu/drm/xlnx/zynqmp_disp.h                 |  19 +-
+ drivers/gpu/drm/xlnx/zynqmp_disp_regs.h            |   8 +-
+ drivers/gpu/drm/xlnx/zynqmp_dp.c                   |  81 +-
+ drivers/gpu/drm/xlnx/zynqmp_kms.c                  |   6 +-
+ include/drm/drm_crtc_helper.h                      |   5 +
+ include/drm/drm_modeset_helper_vtables.h           |  30 +
+ include/dt-bindings/media/media-bus-format.h       | 177 +++++
+ 18 files changed, 2198 insertions(+), 84 deletions(-)
+---
+base-commit: bfa4437fd3938ae2e186e7664b2db65bb8775670
+change-id: 20240226-dp-live-fmt-6415773b5a68
+
+Best regards,
 -- 
-Isaku Yamahata <isaku.yamahata@intel.com>
+Anatoliy Klymenko <anatoliy.klymenko@amd.com>
+
