@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B02C85650;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A4A86249;
 	Thu, 21 Mar 2024 16:29:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711038580; cv=none; b=JPncBgG85xpyMOocVH+xCp5Y/Ov3iqVgb5TcfCuWjBcMbuxvc9xmQZSBNicR3J7ohNk03pjnmfLlMe2m6Br6KC4zgH5W0VlrAfQPAdmeQYN+kkLuupX0BhY8Y9THjywy/TxPj3Ya5VqbmpAi8uPl7nlxYNLgb5I3wT2EMylZggQ=
+	t=1711038580; cv=none; b=rKG9NI/nkFB5SHS3oiIT1Q7Y0UIX4AtKUDltZyjnwzddrWVPDkVwPmq3oW2/ScPXoq3Un5fEVjFDFFmqUwABd1wI3eM3Izo9ASoyweWgPwuVyF+rJNYGHEZR7do0D3s/+vS2JBeN9P+Z2zW5v1DR3B7DjU7a4BqzG6zSW7+2ECA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711038580; c=relaxed/simple;
-	bh=f2s9m94GQMqwkep6RHvJkC24pYKjgeZXaB8gUvBmMLU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=TCL/IBJcbffNAsjE2J9yMIvJTp6zNUdq7wJnwtUQOtDhnJMN+nLNHLcNSvk/3bqLbnZzL9wI1d/m/ZnFjdr2gWi9DsN6xGLkK3+Z1sxSFBSFPGk1hBOXEk0dC2qJC0VNYFS4st//lNuA31+FJXa4SkZmzUdmDzDF/TioJhGmsz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S5oA0Gq0; arc=none smtp.client-ip=10.30.226.201
+	bh=yqJggufrP1i89wxFjM8Tt9txIjYYksGH/+vHGN6ns3E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=SebUMi00dRO+PpPT+LSpJKT/iFQ1t6fL/g5q75prMIwYxQICYevCSqu/9qBqOBzcJnuTYnszTM1RQzyVkHbCkcdL+NomIN66m6ekUBN2zFYZd2iDDucDEBu4T+cIjRqfNkLnjmM80yHPWyJ8rFnrAgJz52MP47JYOU2dlSFWUJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LYJ9/HV+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S5oA0Gq0"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D5B48C433F1;
-	Thu, 21 Mar 2024 16:29:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LYJ9/HV+"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 05EFBC43390;
+	Thu, 21 Mar 2024 16:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711038579;
-	bh=f2s9m94GQMqwkep6RHvJkC24pYKjgeZXaB8gUvBmMLU=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=S5oA0Gq0eAVWR+Pej9Urae3ZTdKr/uoodQAKanMLWoqSGrkIqXlLs/hepKk0eUoqN
-	 Oa1MYLr309GZvyybpJ17qKscdQpjG2sN23tP8ER4+PDSl3Rn9w8sahfYYloVlZSnGy
-	 XFYcoiec8Np3A+9ckzEtLWP4ZNPU16S/gjn6FP4+io41DNnaTFXba6rXtxglzqcEp6
-	 488l/HawOH1bQtg56NA8+A6DYQ3X/I/1sAhofg8JEWVFQj0uldD/3L2TDCzoW4wn19
-	 +rP9tz+ArcXHzv8SdgT7bInOHgOB4lOLyQblesMhbRsI5OieV/pAgu4y8cG5b74U+o
-	 2ybU7cPO9FZpg==
+	s=k20201202; t=1711038580;
+	bh=yqJggufrP1i89wxFjM8Tt9txIjYYksGH/+vHGN6ns3E=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=LYJ9/HV+39Y7te7sja2d7kBc5OIodn3VAoSiWqcK2J5rjzi/3XGBLpjAQRzbegsoK
+	 L6G9TVYtsqbLO2dX2HzqOFkTSItY4nXYVPNJcC/U4zqhcwCN/R0cyiY8FH8X2VKyKe
+	 Vv0E6Ir8DN9lXN45HM81UCaZz3j25Tjz+7+vuKQwOz0Y0IMFfW9E24/afhMpsDM93d
+	 Mcw4qkd5kZmP71Pm+i6ZwYMeS+RPXjWedRc7n2V1di1TtPIBFcdCMHQz7A+PKVw4GY
+	 4Ifk0zfWANkEC3/TxZm+orsBYwzhUqxYHcRmHIgDFsyaOsQ4met3yIvN6VMRUDaPOR
+	 dbK53Vy7+c2Tw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93A0C6FD1F;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9C5C54E58;
 	Thu, 21 Mar 2024 16:29:39 +0000 (UTC)
 From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL_via_B4_Relay?= <devnull+arinc.unal.arinc9.com@kernel.org>
-Subject: [PATCH net v2 0/2] Fix EEE support for MT7531 and MT7988 SoC
- switch
-Date: Thu, 21 Mar 2024 19:29:12 +0300
-Message-Id: <20240321-for-net-mt7530-fix-eee-for-mt7531-mt7988-v2-0-9af9d5041bfe@arinc9.com>
+Date: Thu, 21 Mar 2024 19:29:14 +0300
+Subject: [PATCH net v2 2/2] net: dsa: mt7530: fix disabling EEE on failure
+ on MT7531 and MT7988
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,10 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAFhg/GUC/42NTQ6CMBCFr0Jm7Zj+SmHlPQwLUgeZBa1pCdEQ7
- m5tPICryfve5H07ZEpMGfpmh0QbZ46hBHVqwM9jeBDyvWRQQhmhZYtTTBhoxWVtrRY48QuJqOK
- K5Pd0zuFovTVWey/IQZl7JirPVXWDsgBDgTPnNaZ31W+yVj+T+9+0SRSoJ9kqddHGkLuOiYPvz
- j4uMBzH8QGfp2+35gAAAA==
+Message-Id: <20240321-for-net-mt7530-fix-eee-for-mt7531-mt7988-v2-2-9af9d5041bfe@arinc9.com>
+References: <20240321-for-net-mt7530-fix-eee-for-mt7531-mt7988-v2-0-9af9d5041bfe@arinc9.com>
+In-Reply-To: <20240321-for-net-mt7530-fix-eee-for-mt7531-mt7988-v2-0-9af9d5041bfe@arinc9.com>
 To: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
  Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, 
  Florian Fainelli <f.fainelli@gmail.com>, 
@@ -61,14 +60,13 @@ Cc: Bartel Eerdekens <bartel.eerdekens@constell8.be>,
  mithat.guner@xeront.com, erkin.bozoglu@xeront.com, netdev@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  linux-mediatek@lists.infradead.org, 
- =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>, 
- Florian Fainelli <florian.fainelli@broadcom.com>
+ =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711038558; l=1342;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711038558; l=1925;
  i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=f2s9m94GQMqwkep6RHvJkC24pYKjgeZXaB8gUvBmMLU=;
- b=/6PP6fK764ZhfuLKywgjtgj/pSH6Pl3WLUSpeldm0cf8TIM2N7wD6Nyxiz1esoC3fNTmSwYep
- kfWBjAIgHnnDt+DUNRcOtb3r9KceZ8aeSscFgEEeQTFI+SDR9nOGJli
+ bh=DsZ4XshfmuCrCshjsgaop6WdjUbPqTHmbY230mILEL4=;
+ b=G2zxEWZRPd7T5UKeb3EAgsPQG9cW8YK9hK0H++LcTnAJNjhhJgyhrSeiqfRJhNLEsGOYGv3YL
+ Xz5cm9hMjd9D4wjOKTWIi8jOtYCQjRFlvYMfzdA2Qu+EhTkWIamreOF
 X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
  pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
 X-Endpoint-Received: by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt
@@ -76,39 +74,52 @@ X-Endpoint-Received: by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt
 X-Original-From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 Reply-To: arinc.unal@arinc9.com
 
-Hi.
+From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-This patch series fixes EEE support for MT7531 and the switch on the MT7988
-SoC. EEE could not be enabled on MT7531 on most boards using ethtool before
-this. On MT7988 SoC switch, EEE is disabled by default but can be turned on
-normally using ethtool. EEE is enabled by default on MT7530 and there's no
-need to make changes on the DSA subdriver for it. This patch series
-disables EEE by default on MT7531 but makes it possible to enable it using
-ethtool.
+The MT7531_FORCE_EEE1G and MT7531_FORCE_EEE100 bits let the
+PMCR_FORCE_EEE1G and PMCR_FORCE_EEE100 bits determine the 1G/100 EEE
+abilities of the MAC. If MT7531_FORCE_EEE1G and MT7531_FORCE_EEE100 are
+unset, the abilities are left to be determined by PHY auto polling.
 
+The commit 40b5d2f15c09 ("net: dsa: mt7530: Add support for EEE features")
+made it so that the PMCR_FORCE_EEE1G and PMCR_FORCE_EEE100 bits are set on
+mt753x_phylink_mac_link_up(). But it did not set the MT7531_FORCE_EEE1G and
+MT7531_FORCE_EEE100 bits. Because of this, EEE will be enabled on the
+switch MACs by polling the PHY, regardless of the result of phy_init_eee().
+
+Define these bits and add them to MT7531_FORCE_MODE which is being used by
+the subdriver. With this, EEE will be prevented from being enabled on the
+switch MACs when phy_init_eee() fails.
+
+Fixes: 40b5d2f15c09 ("net: dsa: mt7530: Add support for EEE features")
 Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
 ---
-Changes in v2:
-- Delegate the patch to the net tree.
-- Remove patch 3, it was revealed that it doesn't fix a bug.
-- Patch 1
-  - Disable EEE advertisement on MT7531 by default.
-- Link to v1: https://lore.kernel.org/r/20240318-for-net-mt7530-fix-eee-for-mt7531-mt7988-v1-0-3f17226344e8@arinc9.com
+ drivers/net/dsa/mt7530.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
----
-Arınç ÜNAL (2):
-      net: dsa: mt7530: fix enabling EEE on MT7531 switch on all boards
-      net: dsa: mt7530: fix disabling EEE on failure on MT7531 and MT7988
+diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
+index 509ed5362236..5b99aeca34b4 100644
+--- a/drivers/net/dsa/mt7530.h
++++ b/drivers/net/dsa/mt7530.h
+@@ -299,11 +299,15 @@ enum mt7530_vlan_port_acc_frm {
+ #define  MT7531_FORCE_DPX		BIT(29)
+ #define  MT7531_FORCE_RX_FC		BIT(28)
+ #define  MT7531_FORCE_TX_FC		BIT(27)
++#define  MT7531_FORCE_EEE100		BIT(26)
++#define  MT7531_FORCE_EEE1G		BIT(25)
+ #define  MT7531_FORCE_MODE		(MT7531_FORCE_LNK | \
+ 					 MT7531_FORCE_SPD | \
+ 					 MT7531_FORCE_DPX | \
+ 					 MT7531_FORCE_RX_FC | \
+-					 MT7531_FORCE_TX_FC)
++					 MT7531_FORCE_TX_FC | \
++					 MT7531_FORCE_EEE100 | \
++					 MT7531_FORCE_EEE1G)
+ #define  PMCR_LINK_SETTINGS_MASK	(PMCR_TX_EN | PMCR_FORCE_SPEED_1000 | \
+ 					 PMCR_RX_EN | PMCR_FORCE_SPEED_100 | \
+ 					 PMCR_TX_FC_EN | PMCR_RX_FC_EN | \
 
- drivers/net/dsa/mt7530.c | 14 ++++++++++++++
- drivers/net/dsa/mt7530.h |  7 ++++++-
- 2 files changed, 20 insertions(+), 1 deletion(-)
----
-base-commit: ea80e3ed09ab2c2b75724faf5484721753e92c31
-change-id: 20240317-for-net-mt7530-fix-eee-for-mt7531-mt7988-a5c5453cc0e8
-
-Best regards,
 -- 
-Arınç ÜNAL <arinc.unal@arinc9.com>
+2.40.1
 
 
