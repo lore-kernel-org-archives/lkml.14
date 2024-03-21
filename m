@@ -1,164 +1,207 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8545628E7;
-	Thu, 21 Mar 2024 03:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060A9946C;
+	Thu, 21 Mar 2024 03:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710990556; cv=none; b=UsgNtos1jk/z/faKwhG1N86FCX0s0if/afOD0prMsBqvngVL0LVKG3K3jz4YCpVLgOwQ/84mI2rP0d9jzLuObaJw+kSBIeC4NJ5Tn1qjNg6J8Pghl54NLnAz7/yG0zMibBC8F6nsVM2YGBlkRJlR4zxQYXPrfxCaVlcWE8JfyEY=
+	t=1710990567; cv=none; b=G/rOwbCZJdXU+wFYR32J26qpTLoUJN0Lh8BKMcBr7FHzKw1f59SBO760VubFT07lA7HkAczm3zdhLzmHXECyKhHpSngCs3p8jrEYdNkuRkudugxnUpRLQ6jWeF8ekpacGwBIk65YzTv2gKplsO4Ruqd/sS1VWWQ/nv41a+S1RFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710990556; c=relaxed/simple;
-	bh=mzfiid32YSbmqYcxux49boWhPKNOTxWoErBl3AzifI0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=k6d6GN3k+bpXl6PKFg60MQBNZQ/RZwWN3X5SLHdYqvY8Y33hTr0+eW6yVMeVqeYXn+pHxHaEku5KTfrCNk7m6oxIB2JkI0U3hK4or0cAAsqCLnt4I1Jzn/npLn1YNxGqgRqIIsUzM2SNiHS+G0L+tuzKBeVf5QCA9TGgm3uIf00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=v72j28c+; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="v72j28c+"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1710990550; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=anz3MwjVTqaEAr814YVWwtLwOjciPBCCWi+hggJe6sk=;
-	b=v72j28c+SLVntuQ1mxreusoisXGja4xK3fHtJeth4NWhkc39flgyKltukHzLsIXB31S7ZsIQHblvta/lrmvuImTfFykh3au0fN8UZngsuivkl2fclXXsgD7P918b6ISTMqWeJ62drOR5Itv0/9O0YnvGKpTnyfEadSuj1gXeGlw=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=tianruidong@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0W2zEwDe_1710989607;
-Received: from localhost(mailfrom:tianruidong@linux.alibaba.com fp:SMTPD_---0W2zEwDe_1710989607)
-          by smtp.aliyun-inc.com;
-          Thu, 21 Mar 2024 10:53:28 +0800
-From: Ruidong Tian <tianruidong@linux.alibaba.com>
-To: catalin.marinas@arm.com,
-	will@kernel.org,
-	lpieralisi@kernel.org,
-	guohanjun@huawei.com,
-	sudeep.holla@arm.com,
-	xueshuai@linux.alibaba.com,
-	baolin.wang@linux.alibaba.com,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	tony.luck@intel.com,
-	bp@alien8.de,
-	linux-edac@vger.kernel.org
-Cc: tianruidond@linux.alibaba.com,
-	Tyler Baicar <baicar@os.amperecomputing.com>,
-	Ruidong Tian <tianruidong@linux.alibaba.com>
-Subject: [PATCH v2 2/2] trace, ras: add ARM RAS extension trace event
-Date: Thu, 21 Mar 2024 10:53:17 +0800
-Message-Id: <20240321025317.114621-3-tianruidong@linux.alibaba.com>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <20240321025317.114621-1-tianruidong@linux.alibaba.com>
-References: <20240321025317.114621-1-tianruidong@linux.alibaba.com>
+	s=arc-20240116; t=1710990567; c=relaxed/simple;
+	bh=O37AkEh3VEhX6lELbcsvVrZW33kunT6ttBnG8jK11l4=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=mtap1TSiP19/DHL3/C8lhY7257W9kOeAiQkxPROZb1ENiehNYzpX5woPlFxyJGBPgIt7iSsSkYzyvhQknBWC90ic9ocztptq2hYcyJsVP0XRqJQxQa5nId/uE7m7hzxBZRj3/j53vd88ySST6ISjhXhss2ngzOIaE8joZnODzy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4V0Vmd1CGZz8XrRJ;
+	Thu, 21 Mar 2024 11:09:21 +0800 (CST)
+Received: from xaxapp01.zte.com.cn ([10.88.99.176])
+	by mse-fl2.zte.com.cn with SMTP id 42L39H6U072154;
+	Thu, 21 Mar 2024 11:09:17 +0800 (+08)
+	(envelope-from xu.xin16@zte.com.cn)
+Received: from mapi (xaxapp02[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Thu, 21 Mar 2024 11:09:18 +0800 (CST)
+Date: Thu, 21 Mar 2024 11:09:18 +0800 (CST)
+X-Zmail-TransId: 2afa65fba4de4d4-798fc
+X-Mailer: Zmail v1.0
+Message-ID: <202403211109183894466@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+From: <xu.xin16@zte.com.cn>
+To: <edumazet@google.com>, <davem@davemloft.net>
+Cc: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <dsahern@kernel.org>,
+        <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <yang.yang29@zte.com.cn>, <xu.xin16@zte.com.cn>,
+        <he.peilin@zte.com.cn>, <liu.chun2@zte.com.cn>,
+        <jiang.xuexin@zte.com.cn>, <zhang.yunkai@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIHYzIHJlc2VuZF0gbmV0L2lwdjQ6IGFkZCB0cmFjZXBvaW50IGZvciBpY21wX3NlbmQ=?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 42L39H6U072154
+X-Fangmail-Gw-Spam-Type: 0
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 65FBA4E1.000/4V0Vmd1CGZz8XrRJ
 
-From: Tyler Baicar <baicar@os.amperecomputing.com>
+From: he peilin <he.peilin@zte.com.cn>
 
-Add a trace event for hardware errors reported by the ARMv8
-RAS extension registers.
+Introduce a tracepoint for icmp_send, which can help users to get more
+detail information conveniently when icmp abnormal events happen.
 
-Signed-off-by: Tyler Baicar <baicar@os.amperecomputing.com>
-Signed-off-by: Ruidong Tian <tianruidong@linux.alibaba.com>
+1. Giving an usecase example:
+=============================
+When an application experiences packet loss due to an unreachable UDP
+destination port, the kernel will send an exception message through the
+icmp_send function. By adding a trace point for icmp_send, developers or
+system administrators can obtain detailed information about the UDP
+packet loss, including the type, code, source address, destination address,
+source port, and destination port. This facilitates the trouble-shooting
+of UDP packet loss issues especially for those network-service
+applications.
+
+2. Operation Instructions:
+==========================
+Switch to the tracing directory.
+        cd /sys/kernel/tracing
+Filter for destination port unreachable.
+        echo "type==3 && code==3" > events/icmp/icmp_send/filter
+Enable trace event.
+        echo 1 > events/icmp/icmp_send/enable
+
+3. Result View:
+================
+ udp_client_erro-11370   [002] ...s.12   124.728002:
+ icmp_send: icmp_send: type=3, code=3.
+ From 127.0.0.1:41895 to 127.0.0.1:6666 ulen=23
+ skbaddr=00000000589b167a
+
+Changelog
+---------
+v2->v3:
+Some fixes according to
+https://lore.kernel.org/all/20240319102549.7f7f6f53@gandalf.local.home/
+1. Change the tracking directory to/sys/kernel/tracking.
+2. Adjust the layout of the TP-STRUCT_entry parameter structure.
+
+v1->v2:
+Some fixes according to
+https://lore.kernel.org/all/CANn89iL-y9e_VFpdw=sZtRnKRu_tnUwqHuFQTJvJsv-nz1xPDw@mail.gmail.com/
+1. adjust the trace_icmp_send() to more protocols than UDP.
+2. move the calling of trace_icmp_send after sanity checks
+in __icmp_send().
+
+Signed-off-by: Peilin He<he.peilin@zte.com.cn>
+Reviewed-by: xu xin <xu.xin16@zte.com.cn>
+Reviewed-by: Yunkai Zhang <zhang.yunkai@zte.com.cn>
+Cc: Yang Yang <yang.yang29@zte.com.cn>
+Cc: Liu Chun <liu.chun2@zte.com.cn>
+Cc: Xuexin Jiang <jiang.xuexin@zte.com.cn>
 ---
- drivers/acpi/arm64/aest.c |  5 ++++
- include/ras/ras_event.h   | 55 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
+ include/trace/events/icmp.h | 64 +++++++++++++++++++++++++++++++++++++
+ net/ipv4/icmp.c             |  4 +++
+ 2 files changed, 68 insertions(+)
+ create mode 100644 include/trace/events/icmp.h
 
-diff --git a/drivers/acpi/arm64/aest.c b/drivers/acpi/arm64/aest.c
-index ab17aa5f5997..0cfe7fb9d4b9 100644
---- a/drivers/acpi/arm64/aest.c
-+++ b/drivers/acpi/arm64/aest.c
-@@ -15,6 +15,8 @@
- #include <acpi/actbl.h>
- #include <asm/ras.h>
- 
-+#include <ras/ras_event.h>
+diff --git a/include/trace/events/icmp.h b/include/trace/events/icmp.h
+new file mode 100644
+index 000000000000..2098d4b1b12e
+--- /dev/null
++++ b/include/trace/events/icmp.h
+@@ -0,0 +1,64 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM icmp
 +
- #undef pr_fmt
- #define pr_fmt(fmt) "ACPI AEST: " fmt
- 
-@@ -153,6 +155,9 @@ static void aest_print(struct aest_node_llist *lnode)
- 		pr_err("%s  ERR%uMISC2: 0x%llx\n", pfx_seq, index, regs->err_misc[2]);
- 		pr_err("%s  ERR%uMISC3: 0x%llx\n", pfx_seq, index, regs->err_misc[3]);
- 	}
++#if !defined(_TRACE_ICMP_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_ICMP_H
 +
-+	trace_arm_ras_ext_event(lnode->type, lnode->id0, lnode->id1, index,
-+					lnode->regs);
- }
- 
- static void aest_handle_memory_failure(struct aest_node_llist *lnode)
-diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
-index cbd3ddd7c33d..6003cab65ae4 100644
---- a/include/ras/ras_event.h
-+++ b/include/ras/ras_event.h
-@@ -338,6 +338,61 @@ TRACE_EVENT(aer_event,
- 			"Not available")
- );
- 
-+/*
-+ * ARM RAS Extension Events Report
-+ *
-+ * This event is generated when an error reported by the ARM RAS extension
-+ * hardware is detected.
-+ */
++#include <linux/icmp.h>
++#include <linux/tracepoint.h>
 +
-+#ifdef CONFIG_ARM64_RAS_EXTN
-+#include <asm/ras.h>
-+TRACE_EVENT(arm_ras_ext_event,
++TRACE_EVENT(icmp_send,
 +
-+	TP_PROTO(u8 type, u32 id0, u32 id1, u32 index, struct ras_ext_regs *regs),
++		TP_PROTO(const struct sk_buff *skb, int type, int code),
 +
-+	TP_ARGS(type, id0, id1, index, regs),
++		TP_ARGS(skb, type, code),
 +
-+	TP_STRUCT__entry(
-+		__field(u8,  type)
-+		__field(u32, id0)
-+		__field(u32, id1)
-+		__field(u32, index)
-+		__field(u64, err_fr)
-+		__field(u64, err_ctlr)
-+		__field(u64, err_status)
-+		__field(u64, err_addr)
-+		__field(u64, err_misc0)
-+		__field(u64, err_misc1)
-+		__field(u64, err_misc2)
-+		__field(u64, err_misc3)
-+	),
++		TP_STRUCT__entry(
++			__field(const void *, skbaddr)
++			__field(int, type)
++			__field(int, code)
++			__array(__u8, saddr, 4)
++			__array(__u8, daddr, 4)
++			__field(__u16, sport)
++			__field(__u16, dport)
++			__field(unsigned short, ulen)
++		),
 +
-+	TP_fast_assign(
-+		__entry->type = type;
-+		__entry->id0 = id0;
-+		__entry->id1 = id1;
-+		__entry->index = index;
-+		__entry->err_fr = regs->err_fr;
-+		__entry->err_ctlr = regs->err_ctlr;
-+		__entry->err_status = regs->err_status;
-+		__entry->err_addr = regs->err_addr;
-+		__entry->err_misc0 = regs->err_misc[0];
-+		__entry->err_misc1 = regs->err_misc[1];
-+		__entry->err_misc2 = regs->err_misc[2];
-+		__entry->err_misc3 = regs->err_misc[3];
-+	),
++		TP_fast_assign(
++			struct iphdr *iph = ip_hdr(skb);
++			int proto_4 = iph->protocol;
++			__be32 *p32;
 +
-+	TP_printk("type: %d; id0: %d; id1: %d; index: %d; ERR_FR: %llx; ERR_CTLR: %llx; "
-+		  "ERR_STATUS: %llx; ERR_ADDR: %llx; ERR_MISC0: %llx; ERR_MISC1: %llx; "
-+		  "ERR_MISC2: %llx; ERR_MISC3: %llx",
-+		  __entry->type, __entry->id0, __entry->id1, __entry->index, __entry->err_fr,
-+		  __entry->err_ctlr, __entry->err_status, __entry->err_addr,
-+		  __entry->err_misc0, __entry->err_misc1, __entry->err_misc2,
-+		  __entry->err_misc3)
++			__entry->skbaddr = skb;
++			__entry->type = type;
++			__entry->code = code;
++
++			if (proto_4 == IPPROTO_UDP) {
++				struct udphdr *uh = udp_hdr(skb);
++				__entry->sport = ntohs(uh->source);
++				__entry->dport = ntohs(uh->dest);
++				__entry->ulen = ntohs(uh->len);
++			} else {
++				__entry->sport = 0;
++				__entry->dport = 0;
++				__entry->ulen = 0;
++			}
++
++			p32 = (__be32 *) __entry->saddr;
++			*p32 = iph->saddr;
++
++			p32 = (__be32 *) __entry->daddr;
++			*p32 = iph->daddr;
++		),
++
++		TP_printk("icmp_send: type=%d, code=%d. From %pI4:%u to %pI4:%u ulen=%d skbaddr=%p",
++			__entry->type, __entry->code,
++			__entry->saddr, __entry->sport, __entry->daddr,
++			__entry->dport, __entry->ulen, __entry->skbaddr)
 +);
-+#endif
 +
- /*
-  * memory-failure recovery action result event
-  *
--- 
-2.33.1
++#endif /* _TRACE_ICMP_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+\ No newline at end of file
+diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
+index e63a3bf99617..21fb41257fe9 100644
+--- a/net/ipv4/icmp.c
++++ b/net/ipv4/icmp.c
+@@ -92,6 +92,8 @@
+ #include <net/inet_common.h>
+ #include <net/ip_fib.h>
+ #include <net/l3mdev.h>
++#define CREATE_TRACE_POINTS
++#include <trace/events/icmp.h>
 
+ /*
+  *	Build xmit assembly blocks
+@@ -672,6 +674,8 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
+ 		}
+ 	}
+
++	trace_icmp_send(skb_in, type, code);
++
+ 	/* Needed by both icmp_global_allow and icmp_xmit_lock */
+ 	local_bh_disable();
+
+-- 
+2.44.0
