@@ -1,123 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E40133413;
-	Thu, 21 Mar 2024 17:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D5685280
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 17:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711041587; cv=none; b=mLjO/xm7CBDsBZSwUOUzpISAkk2iHKMORHdkSNMykzabstFuTvkHxP5SgiOZlfaJ01O6p3M6ZtJmDNvn2vjvWoNLAnEdVMhtAFPdyM8DNlt+BpvkWNmCYyR4y9urBoWjEgEAfvrTrldgubGbgDukXeRaJ3xr6jnQoeKlKhcPLnQ=
+	t=1711041595; cv=none; b=f0kCg1M2SDPlmCU8uevHr6A4EqkHxGe5hcOg7Zka1AUPRWNlze91O09FzjCAIzePlf9ti0sBu0RTbbeJvX6dj/YUtibwyQBrkSM1TCOdF2m7C0zfuVbDMU3IoOXlNqOEQSr4GtkpbAxSwmxaT9OoLicJbA0PjC2TXF+9vo+Ev1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711041587; c=relaxed/simple;
-	bh=q5Ux1I1rh/WfHaHpnSuErVTSeCb6Au9flA++b+omwdA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=iwc94ECD1SmgxXj+nfcbunrR1fYMw/6HwLcf3VVn/K8OGe037exkqqGF2FSWRrnwKTmIkWQWRDuI/p08hSyPQ75zaJM8VxpqCbFvhHpqZn+BeSGUjafEEm0iOAElyopbAA1R/ERDHxB/hup9ge1hF/eBgiOJjjHkZHoTJ/szbMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NNUPr/Li; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NNUPr/Li"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E985C433C7;
-	Thu, 21 Mar 2024 17:19:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711041587;
-	bh=q5Ux1I1rh/WfHaHpnSuErVTSeCb6Au9flA++b+omwdA=;
-	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
-	b=NNUPr/LiWrA6Ry3kVWBnVqEzBXSm+kP20MHO20hbPF1whkfJb47I04sNczYUTezxc
-	 uuu0O+Kw3BtAke6EG2gzp1OhBGuzsDAd86XliztJVE0E5YqqjPYJRws13HvicYcray
-	 cvPyz+n06iwnEZ8kkwDuxAfwGlnRs+csp4B1lqZNrjxkd0csJehD0l8gj3H4hkz4dj
-	 rsVifdBtwnObaWKihuRApL+io1FIea25abQbevHYi4BDW91yQMuySHeUzAUBd5Q/bZ
-	 1kbcYMo6CmB9Zzbj6f8r7bSN3ZbVDOKCp6jehQABEqOkdZIHUtmN/+fa0Nq1oJ0FJA
-	 /QJQ/EkitE39g==
+	s=arc-20240116; t=1711041595; c=relaxed/simple;
+	bh=u1+YL1chG1fDzrnBGltFxRHMEuYiPqoh/58IrrzbAxE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ah6xIMvExd8uOwUXZr9VqflCQ0Mm9N0DdzWvCvOhN9L4b6lErBFj2HPGWCHOMYAgnsadPZrkzFcyiTK8/9aDLCiCnKA68+BtlO41ojrBGgbOhS4Wj+FmNl7XD0PqJWNyYyCX9wQ6h5SMnG0M2gQv0DhU0W5/Exb/liHgaZCvLOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.29])
+	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4V0sHP02Mtz9xqpf
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 01:03:45 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id 53797140390
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 01:19:39 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.81.213.73])
+	by APP1 (Coremail) with SMTP id LxC2BwAH_BQNbPxlII6+BA--.51964S4;
+	Thu, 21 Mar 2024 18:19:38 +0100 (CET)
+From: Petr Tesarik <petrtesarik@huaweicloud.com>
+To: Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Petr Tesarik <petr.tesarik1@huawei-partners.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Will Deacon <will@kernel.org>,
+	linux-kernel@vger.kernel.org (open list),
+	iommu@lists.linux.dev (open list:DMA MAPPING HELPERS)
+Cc: Roberto Sassu <roberto.sassu@huaweicloud.com>,
+	Petr Tesarik <petr@tesarici.cz>
+Subject: [PATCH v3 2/2] bug: introduce ASSERT_VAR_CAN_HOLD()
+Date: Thu, 21 Mar 2024 18:19:02 +0100
+Message-Id: <20240321171902.85-3-petrtesarik@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240321171902.85-1-petrtesarik@huaweicloud.com>
+References: <20240321171902.85-1-petrtesarik@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 21 Mar 2024 19:19:43 +0200
-Message-Id: <CZZLMBXQ5DWK.3GZSP0HDMMUY7@kernel.org>
-To: "Stefan Berger" <stefanb@linux.ibm.com>, <keyrings@vger.kernel.org>,
- <linux-crypto@vger.kernel.org>, <herbert@gondor.apana.org.au>,
- <davem@davemloft.net>
-Cc: <linux-kernel@vger.kernel.org>, <saulo.alessandre@tse.jus.br>,
- <lukas@wunner.de>, <bbhushan2@marvell.com>
-Subject: Re: [PATCH v7 10/13] crypto: ecdsa - Rename keylen to bufsize where
- necessary
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-X-Mailer: aerc 0.17.0
-References: <20240320114725.1644921-1-stefanb@linux.ibm.com>
- <20240320114725.1644921-11-stefanb@linux.ibm.com>
-In-Reply-To: <20240320114725.1644921-11-stefanb@linux.ibm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:LxC2BwAH_BQNbPxlII6+BA--.51964S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kw1DWF1xKw4ktr45GrW8tFb_yoW8WFy7pF
+	9xArn5KF4jqFyxZF12k3srCF1fK34v9347Cas0gryYvr17tF9aqFWDKrW3Wa4qqr4vgF4a
+	kw1FgrWYyw1UArDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUm014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
+	ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
+	v7MxkF7I0Ew4C26cxK6c8Ij28IcwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
+	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
+	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVj
+	vjDU0xZFpf9x0JUzWlgUUUUU=
+X-CM-SenderInfo: hshw23xhvd2x3n6k3tpzhluzxrxghudrp/
 
-On Wed Mar 20, 2024 at 1:47 PM EET, Stefan Berger wrote:
-> In cases where 'keylen' was referring to the size of the buffer used by
-> a curve's digits, it does not reflect the purpose of the variable anymore
-> once NIST P521 is used. What it refers to then is the size of the buffer,
-> which may be a few bytes larger than the size a coordinate of a key.
-> Therefore, rename keylen to bufsize where appropriate.
->
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> Tested-by: Lukas Wunner <lukas@wunner.de>
-> ---
->  crypto/ecdsa.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/crypto/ecdsa.c b/crypto/ecdsa.c
-> index 4daefb40c37a..4e847b59622a 100644
-> --- a/crypto/ecdsa.c
-> +++ b/crypto/ecdsa.c
-> @@ -35,8 +35,8 @@ struct ecdsa_signature_ctx {
->  static int ecdsa_get_signature_rs(u64 *dest, size_t hdrlen, unsigned cha=
-r tag,
->  				  const void *value, size_t vlen, unsigned int ndigits)
->  {
-> -	size_t keylen =3D ndigits * sizeof(u64);
-> -	ssize_t diff =3D vlen - keylen;
-> +	size_t bufsize =3D ndigits * sizeof(u64);
-> +	ssize_t diff =3D vlen - bufsize;
->  	const char *d =3D value;
->  	u8 rs[ECC_MAX_BYTES];
-> =20
-> @@ -58,7 +58,7 @@ static int ecdsa_get_signature_rs(u64 *dest, size_t hdr=
-len, unsigned char tag,
->  		if (diff)
->  			return -EINVAL;
->  	}
-> -	if (-diff >=3D keylen)
-> +	if (-diff >=3D bufsize)
->  		return -EINVAL;
-> =20
->  	if (diff) {
-> @@ -138,7 +138,7 @@ static int ecdsa_verify(struct akcipher_request *req)
->  {
->  	struct crypto_akcipher *tfm =3D crypto_akcipher_reqtfm(req);
->  	struct ecc_ctx *ctx =3D akcipher_tfm_ctx(tfm);
-> -	size_t keylen =3D ctx->curve->g.ndigits * sizeof(u64);
-> +	size_t bufsize =3D ctx->curve->g.ndigits * sizeof(u64);
->  	struct ecdsa_signature_ctx sig_ctx =3D {
->  		.curve =3D ctx->curve,
->  	};
-> @@ -165,14 +165,14 @@ static int ecdsa_verify(struct akcipher_request *re=
-q)
->  		goto error;
-> =20
->  	/* if the hash is shorter then we will add leading zeros to fit to ndig=
-its */
-> -	diff =3D keylen - req->dst_len;
-> +	diff =3D bufsize - req->dst_len;
->  	if (diff >=3D 0) {
->  		if (diff)
->  			memset(rawhash, 0, diff);
->  		memcpy(&rawhash[diff], buffer + req->src_len, req->dst_len);
->  	} else if (diff < 0) {
->  		/* given hash is longer, we take the left-most bytes */
-> -		memcpy(&rawhash, buffer + req->src_len, keylen);
-> +		memcpy(&rawhash, buffer + req->src_len, bufsize);
->  	}
-> =20
->  	ecc_swap_digits((u64 *)rawhash, hash, ctx->curve->g.ndigits);
+From: Petr Tesarik <petr.tesarik1@huawei-partners.com>
 
+Introduce an ASSERT_VAR_CAN_HOLD() macro to check at build time that a
+variable can hold the given value.
 
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Use this macro in swiotlb to make sure that the list and pad_slots fields
+of struct io_tlb_slot are big enough to hold the maximum possible value of
+IO_TLB_SEGSIZE.
 
-BR, Jarkko
+Signed-off-by: Petr Tesarik <petr.tesarik1@huawei-partners.com>
+---
+ include/linux/build_bug.h | 10 ++++++++++
+ kernel/dma/swiotlb.c      |  2 ++
+ 2 files changed, 12 insertions(+)
+
+diff --git a/include/linux/build_bug.h b/include/linux/build_bug.h
+index 3aa3640f8c18..6e2486508af0 100644
+--- a/include/linux/build_bug.h
++++ b/include/linux/build_bug.h
+@@ -86,4 +86,14 @@
+ 		"Offset of " #field " in " #type " has changed.")
+ 
+ 
++/*
++ * Compile time check that a variable can hold the given value
++ */
++#define ASSERT_VAR_CAN_HOLD(var, value) ({		\
++	typeof(value) __val = (value);			\
++	typeof(var) __tmp = __val;			\
++	BUILD_BUG_ON_MSG(__tmp != __val,		\
++		#var " cannot hold " #value ".");	\
++})
++
+ #endif	/* _LINUX_BUILD_BUG_H */
+diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+index 3779a48eec9b..8256fcdc0cf6 100644
+--- a/kernel/dma/swiotlb.c
++++ b/kernel/dma/swiotlb.c
+@@ -285,6 +285,8 @@ static void swiotlb_init_io_tlb_pool(struct io_tlb_pool *mem, phys_addr_t start,
+ 		mem->areas[i].used = 0;
+ 	}
+ 
++	ASSERT_VAR_CAN_HOLD(mem->slots[0].list, IO_TLB_SEGSIZE);
++	ASSERT_VAR_CAN_HOLD(mem->slots[0].pad_slots, IO_TLB_SEGSIZE);
+ 	for (i = 0; i < mem->nslabs; i++) {
+ 		mem->slots[i].list = min(IO_TLB_SEGSIZE - io_tlb_offset(i),
+ 					 mem->nslabs - i);
+-- 
+2.34.1
+
