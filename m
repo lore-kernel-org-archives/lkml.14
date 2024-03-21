@@ -1,239 +1,195 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2763485938;
-	Thu, 21 Mar 2024 18:06:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CEE133425;
+	Thu, 21 Mar 2024 18:06:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711044392; cv=none; b=N2YA6iLanCiKco8XQPbT3E8IB30aGeCWUppjWhwzUWu/zQ/LcIP/Yv+l+1A4SBRPublPuotPBMFDaaZp10YGrz0vPUuZfaP3r8YzJ033tlAM9XokvZGygPV2uNdWBnoPAlQ7qMH+ctMgpIRBaO+oYou4KZZrmek2/cJeMYARpds=
+	t=1711044397; cv=none; b=mqvmHZ39Mg4pVIgvoW2+sBh/yD4rbTXkCTC7RJT5Ngtdjk42sHEFuEyHhNvBxDW1zo+Tsky+B3+KNco3DlTG/mxGD5P6tRHK7ee7np7bgFwj16Mz9JBPXEFFjcb2QWFuACl0I8RiWLjI5dsU0ar+RE7I6JRHMOJYpzJYDYvUzHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711044392; c=relaxed/simple;
-	bh=kJrZ3FrkwvsIEAdYklwK2BTz9nTXtGc86+l16KyBOEs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yim4OGkhf1pLAW9LHVdSQYCsqm1CE6O9SMgwgHiliX0NXUAYMdMaXzxbYPAn4DwSIKUivyWRhprVvilnbqmVE+3q786eUo71GUob5TDFgigNp2PFCt81J0RftaN6JkMOyYhai8ReNMMd8dNQ3g/330IXYCdIHtDooD+fhaLcSew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=w7lT68Oz; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=MYtuAGMa; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=w7lT68Oz; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=MYtuAGMa; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1711044397; c=relaxed/simple;
+	bh=hQM+nEBr+O+KT4m95MZF4EIGf62D1EFTUg7Imq+8K4M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tFOw/MOjHpzz8uUbw8wMVjdvqUQwcd4Q3/bMdFLCXOpftC+8evC/kcFeq7PdqazSPh+RNXS3c20gucy7vZu3FG2mdM7T2NIf5iXEwP6rNwxcy5OO/Mdg9vn7HpxJx/GoctYdFpqgnA3eCkyAr/jtkyM85vYK+7dNWzDzHpV05Mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KCBomulw; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="w7lT68Oz";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="MYtuAGMa";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="w7lT68Oz";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="MYtuAGMa"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 9059421E83;
-	Thu, 21 Mar 2024 18:06:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1711044385; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CGVHmTaTp8V9BZmoFhStOl7fyzif6q6m2j5KQberDvI=;
-	b=w7lT68OzRPoxfG/hfxpofqN8QxlCEI72WnQVD/otuPit/xsQS3kknF0DZcO31LBzqy4B5l
-	ZKCw+9zyq50FVn2Y9QxS2C0mBmUNUyz1TJF1aFzethOvkk9y7tmxVS4Tju4Qtdb3SGUiga
-	9U31koKDRrrb07uPZW4g5wnW4MpM62Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1711044385;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CGVHmTaTp8V9BZmoFhStOl7fyzif6q6m2j5KQberDvI=;
-	b=MYtuAGMaNl8DwPSPn6WffLO7cvdpC1k+t9LxlY0JUkXnuc53PR8ZW9ZbehMg9bgaQigS2y
-	ZuRsp7pPd7CwpDDw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1711044385; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CGVHmTaTp8V9BZmoFhStOl7fyzif6q6m2j5KQberDvI=;
-	b=w7lT68OzRPoxfG/hfxpofqN8QxlCEI72WnQVD/otuPit/xsQS3kknF0DZcO31LBzqy4B5l
-	ZKCw+9zyq50FVn2Y9QxS2C0mBmUNUyz1TJF1aFzethOvkk9y7tmxVS4Tju4Qtdb3SGUiga
-	9U31koKDRrrb07uPZW4g5wnW4MpM62Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1711044385;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CGVHmTaTp8V9BZmoFhStOl7fyzif6q6m2j5KQberDvI=;
-	b=MYtuAGMaNl8DwPSPn6WffLO7cvdpC1k+t9LxlY0JUkXnuc53PR8ZW9ZbehMg9bgaQigS2y
-	ZuRsp7pPd7CwpDDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7B675138A1;
-	Thu, 21 Mar 2024 18:06:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id eV3cHSF3/GWVOQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 21 Mar 2024 18:06:25 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id DA2D0A0806; Thu, 21 Mar 2024 19:06:20 +0100 (CET)
-Date: Thu, 21 Mar 2024 19:06:20 +0100
-From: Jan Kara <jack@suse.cz>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: akpm@linux-foundation.org, tj@kernel.org, linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	willy@infradead.org, bfoster@redhat.com, jack@suse.cz,
-	dsterba@suse.com, mjguzik@gmail.com, dhowells@redhat.com,
-	peterz@infradead.org
-Subject: Re: [PATCH 1/6] writeback: collect stats of all wb of bdi in
- bdi_debug_stats_show
-Message-ID: <20240321180620.mbint45pbyc74vpg@quack3>
-References: <20240320110222.6564-1-shikemeng@huaweicloud.com>
- <20240320110222.6564-2-shikemeng@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KCBomulw"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dddbe47ac1so15991155ad.1;
+        Thu, 21 Mar 2024 11:06:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711044395; x=1711649195; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=G//XJEaui3S1uJSf5fZpwyOF3s2VA1vZvh2pajUHYgo=;
+        b=KCBomulwTZfx8oyQuz2P4LNbrLhT3dYVzh1yxYv1JKA7AY+1dviS6s1gF6uLXFCHTZ
+         MvZJCrUwg/H6utUme7PGUTYy57uaAYHRn3ys/JxFuEyGkBbSyK/IrW0QzlVppwgJQ0+i
+         qVeM/vGwGJz+8t1Sk0xEuAxBRHxmYf8L95SsigaVQEMsIF3VNVgFsHjWIA83R+eMKYgU
+         eY03zwBMm0ajc/Jfl1n8tesYpY3XStsHj30cMXrydDBeyjEQfpksGAXYwMoTsdXXd4Q3
+         B/Bg5bWv6VLG1ySaJCsSiby+SbaBAIRnLSFuEehGc5ddEwlVI03magzFun7gVXEJeDy/
+         KKKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711044395; x=1711649195;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G//XJEaui3S1uJSf5fZpwyOF3s2VA1vZvh2pajUHYgo=;
+        b=W0wxNsOJsF62+QzwNtmgfq0C+CkGIxDtFzthB6ZykDvQks/9MoEHVOP9ymKZecc1Nk
+         ukBeDrgDZrJj9XXTB12zAsugR+CMMI46MGYxzkSUCedsk4UYEswGaaFoXa9F8JOL1GXp
+         dpqpbpV9i7n+S8TRe0IeeW6FCY3WtBa/gla9r7ogW1SIFI20DyI0SGHaOJAeUvmegkVw
+         QCUX7hG8zYM34yk7g1XpU2w7iEpeoo7S2oW29L3lradADNPMTjANVaWAZdiixQDv/F+5
+         E926OcW3C17g64wyU2BksmnWcdeMq3sk8odZ8EFHyqhCzg657kgEQNM9l5CmOt4fKPWi
+         CLvw==
+X-Forwarded-Encrypted: i=1; AJvYcCWLO0n0h6AMjeOLM4gjauhzc10S3aeC88uvGCTs+aG23mmRIZbn3Zh64Aa++s12TMBpo3VSCJRJihANl7uD5hw0dkjXvIFsw72v
+X-Gm-Message-State: AOJu0Yy6xASRnwRLhY/AL1UcNvlEnBfgBoP6lL0Ou9LWtE2TEj2RGczR
+	3sHi1bk8HX0tgl0E2aGBjChLLXO7TTeRbuXs25vLiegoha06kiSvZlFs2E8zNQE=
+X-Google-Smtp-Source: AGHT+IFZn8qaLfdXSa3CE3FQVelBZA6AVVe4cZl7T1P9bIjqzR1zI0z8rzLd8E1+oaRXeYXWiPC+kQ==
+X-Received: by 2002:a17:903:1c5:b0:1e0:137e:cd66 with SMTP id e5-20020a17090301c500b001e0137ecd66mr305347plh.30.1711044394893;
+        Thu, 21 Mar 2024 11:06:34 -0700 (PDT)
+Received: from kousik.local ([2405:201:c006:31f8:c75d:3405:7d77:21ac])
+        by smtp.gmail.com with ESMTPSA id d13-20020a170903230d00b001dd7de61656sm129033plh.37.2024.03.21.11.06.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Mar 2024 11:06:34 -0700 (PDT)
+From: Kousik Sanagavarapu <five231003@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org,
+	linux-spi@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Mark Brown <broonie@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Kousik Sanagavarapu <five231003@gmail.com>
+Subject: [PATCH v2] spi: dt-bindings: jcore,spi: convert spi-jcore to dtschema
+Date: Thu, 21 Mar 2024 23:32:28 +0530
+Message-ID: <20240321180617.35390-1-five231003@gmail.com>
+X-Mailer: git-send-email 2.44.0.273.g4bc5b65358.dirty
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240320110222.6564-2-shikemeng@huaweicloud.com>
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_TWELVE(0.00)[13];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 FREEMAIL_CC(0.00)[linux-foundation.org,kernel.org,kvack.org,vger.kernel.org,infradead.org,redhat.com,suse.cz,suse.com,gmail.com];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
 
-On Wed 20-03-24 19:02:17, Kemeng Shi wrote:
-> /sys/kernel/debug/bdi/xxx/stats is supposed to show writeback information
-> of whole bdi, but only writeback information of bdi in root cgroup is
-> collected. So writeback information in non-root cgroup are missing now.
-> To be more specific, considering following case:
-> 
-> /* create writeback cgroup */
-> cd /sys/fs/cgroup
-> echo "+memory +io" > cgroup.subtree_control
-> mkdir group1
-> cd group1
-> echo $$ > cgroup.procs
-> /* do writeback in cgroup */
-> fio -name test -filename=/dev/vdb ...
-> /* get writeback info of bdi */
-> cat /sys/kernel/debug/bdi/xxx/stats
-> The cat result unexpectedly implies that there is no writeback on target
-> bdi.
-> 
-> Fix this by collecting stats of all wb in bdi instead of only wb in
-> root cgroup.
-> 
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+Convert existing bindings of J-Core spi2 to dtschema.
 
-Looks mostly good, one comment below:
+No new properties are added.
 
-> ---
->  mm/backing-dev.c | 93 ++++++++++++++++++++++++++++++++++++------------
->  1 file changed, 70 insertions(+), 23 deletions(-)
-> 
-> diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-> index 5f2be8c8df11..788702b6c5dd 100644
-> --- a/mm/backing-dev.c
-> +++ b/mm/backing-dev.c
-> @@ -39,6 +39,19 @@ struct workqueue_struct *bdi_wq;
->  #include <linux/debugfs.h>
->  #include <linux/seq_file.h>
->  
-> +struct wb_stats {
-> +	unsigned long nr_dirty;
-> +	unsigned long nr_io;
-> +	unsigned long nr_more_io;
-> +	unsigned long nr_dirty_time;
-> +	unsigned long nr_writeback;
-> +	unsigned long nr_reclaimable;
-> +	unsigned long nr_dirtied;
-> +	unsigned long nr_written;
-> +	unsigned long dirty_thresh;
-> +	unsigned long wb_thresh;
-> +};
-> +
->  static struct dentry *bdi_debug_root;
->  
->  static void bdi_debug_init(void)
-> @@ -46,31 +59,65 @@ static void bdi_debug_init(void)
->  	bdi_debug_root = debugfs_create_dir("bdi", NULL);
->  }
->  
-> -static int bdi_debug_stats_show(struct seq_file *m, void *v)
-> +static void collect_wb_stats(struct wb_stats *stats,
-> +			     struct bdi_writeback *wb)
->  {
-> -	struct backing_dev_info *bdi = m->private;
-> -	struct bdi_writeback *wb = &bdi->wb;
-> -	unsigned long background_thresh;
-> -	unsigned long dirty_thresh;
-> -	unsigned long wb_thresh;
-> -	unsigned long nr_dirty, nr_io, nr_more_io, nr_dirty_time;
->  	struct inode *inode;
->  
-> -	nr_dirty = nr_io = nr_more_io = nr_dirty_time = 0;
->  	spin_lock(&wb->list_lock);
->  	list_for_each_entry(inode, &wb->b_dirty, i_io_list)
-> -		nr_dirty++;
-> +		stats->nr_dirty++;
->  	list_for_each_entry(inode, &wb->b_io, i_io_list)
-> -		nr_io++;
-> +		stats->nr_io++;
->  	list_for_each_entry(inode, &wb->b_more_io, i_io_list)
-> -		nr_more_io++;
-> +		stats->nr_more_io++;
->  	list_for_each_entry(inode, &wb->b_dirty_time, i_io_list)
->  		if (inode->i_state & I_DIRTY_TIME)
-> -			nr_dirty_time++;
-> +			stats->nr_dirty_time++;
->  	spin_unlock(&wb->list_lock);
->  
-> +	stats->nr_writeback += wb_stat(wb, WB_WRITEBACK);
-> +	stats->nr_reclaimable += wb_stat(wb, WB_RECLAIMABLE);
-> +	stats->nr_dirtied += wb_stat(wb, WB_DIRTIED);
-> +	stats->nr_written += wb_stat(wb, WB_WRITTEN);
-> +	stats->wb_thresh += wb_calc_thresh(wb, stats->dirty_thresh);
-> +}
-> +
-> +#ifdef CONFIG_CGROUP_WRITEBACK
-> +static void bdi_collect_stats(struct backing_dev_info *bdi,
-> +			      struct wb_stats *stats)
-> +{
-> +	struct bdi_writeback *wb;
-> +
-> +	/* protect wb from release */
-> +	mutex_lock(&bdi->cgwb_release_mutex);
-> +	list_for_each_entry(wb, &bdi->wb_list, bdi_node)
-> +		collect_wb_stats(stats, wb);
-> +	mutex_unlock(&bdi->cgwb_release_mutex);
-> +}
+Signed-off-by: Kousik Sanagavarapu <five231003@gmail.com>
+---
+Changes since v1:
+- changed the subject line to conform.
+- dropped desc for "clock" and "clock-names" properties.
+- cleaned up stuff.
 
-So AFAICT this function can race against
-  bdi_unregister() -> wb_shutdown(&bdi->wb)
+Thanks for the review Krzysztof.
 
-because that doesn't take the cgwb_release_mutex. So we either need the RCU
-protection as Brian suggested or cgwb_lock or something. But given
-collect_wb_stats() can take a significant amount of time (traversing all
-the lists etc.) I think we'll need something more clever.
+ .../devicetree/bindings/spi/jcore,spi.txt     | 34 ------------
+ .../devicetree/bindings/spi/jcore,spi.yaml    | 53 +++++++++++++++++++
+ 2 files changed, 53 insertions(+), 34 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/jcore,spi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/jcore,spi.yaml
 
-								Honza
+diff --git a/Documentation/devicetree/bindings/spi/jcore,spi.txt b/Documentation/devicetree/bindings/spi/jcore,spi.txt
+deleted file mode 100644
+index 93936d16e139..000000000000
+--- a/Documentation/devicetree/bindings/spi/jcore,spi.txt
++++ /dev/null
+@@ -1,34 +0,0 @@
+-J-Core SPI master
+-
+-Required properties:
+-
+-- compatible: Must be "jcore,spi2".
+-
+-- reg: Memory region for registers.
+-
+-- #address-cells: Must be 1.
+-
+-- #size-cells: Must be 0.
+-
+-Optional properties:
+-
+-- clocks: If a phandle named "ref_clk" is present, SPI clock speed
+-  programming is relative to the frequency of the indicated clock.
+-  Necessary only if the input clock rate is something other than a
+-  fixed 50 MHz.
+-
+-- clock-names: Clock names, one for each phandle in clocks.
+-
+-See spi-bus.txt for additional properties not specific to this device.
+-
+-Example:
+-
+-spi@40 {
+-	compatible = "jcore,spi2";
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-	reg = <0x40 0x8>;
+-	spi-max-frequency = <25000000>;
+-	clocks = <&bus_clk>;
+-	clock-names = "ref_clk";
+-}
+diff --git a/Documentation/devicetree/bindings/spi/jcore,spi.yaml b/Documentation/devicetree/bindings/spi/jcore,spi.yaml
+new file mode 100644
+index 000000000000..b8ec3adaac8d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/jcore,spi.yaml
+@@ -0,0 +1,53 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++
++$id: http://devicetree.org/schemas/spi/jcore,spi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: J-Core SPI controller
++
++description:
++  The J-Core "spi2" device is a PIO-based SPI controller which used to
++  perform byte-at-a-time transfers between the CPU and itself.
++
++maintainers:
++  - Kousik Sanagavarapu <five231003@gmail.com>
++
++allOf:
++  - $ref: spi-controller.yaml#
++
++properties:
++  compatible:
++    const: jcore,spi2
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: ref_clk
++
++  spi-max-frequency:
++    $ref: /schemas/types.yaml#/definitions/uint32
++
++required:
++  - compatible
++  - reg
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    spi@40 {
++        compatible = "jcore,spi2";
++        reg = <0x40 0x8>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++        spi-max-frequency = <25000000>;
++        clocks = <&bus_clk>;
++        clock-names = "ref_clk";
++    };
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.44.0.273.g4bc5b65358.dirty
+
