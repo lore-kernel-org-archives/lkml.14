@@ -1,59 +1,59 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03EB38FA0
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 06:00:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9AB3D961
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 06:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711000828; cv=none; b=nEzLGyLKfEXutFweh5FUVpcqW29uCEG052kRPRWcMMElJ/Vk4i6e+pA5P0GfSbAkzXvLvlmPIoUcY0YkQ6xGldsjb3+APiw3NhmV3TNskz0p25a2LMYJfGrCsYI67Ym1fgb3pRmKbxZPYait/E5cGzrbp3G9jI0ct02VLGZ2Lrk=
+	t=1711000833; cv=none; b=bnR3jJYVUZ1BLUlZgsZ+4OTPFhgNTCi9AFReh5dzN6BVUHfolwsr059Js/TXduq6cyo1oJbcbaqlgoMEnqDRpJ6SiCPxab51O73hKQ32K7F3V/HEN8F6gWKog90RqiTWCbaoClH8otSICYVeXB4lissO1eQD5xsPpYFc40ZG50Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711000828; c=relaxed/simple;
-	bh=VLVml4Kn32DHcUw6yH3DhBensbZOr8TEd5AqmCvRMew=;
+	s=arc-20240116; t=1711000833; c=relaxed/simple;
+	bh=b+7RrbVDfD1wv8mqd+Fe26jyrKveVzTWetI4bC9tOvc=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=AeRi/ncrd9FCsz/cb15Bkm9WM9w56Lu2cFM/qV9lfvW7eKBuBiKhl+pzvK7VmZLK8ijC3DrCaPeJfxUb4dU0tAKOrsdiiPGh5zqykN4ItUhqAxgKYVI6wTM7taf+WHiY4CciOFEOU8sNU9nyEaxCSJ1jkzYz0iD9ZgmiXk1FN4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ReFFgWuA; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=Ah6yfgubgjr1Q6i2fBjSzyPDH6bG5vlOLFohuUy+jcU+3Krhss+ZCXLPfOjUrlNTwj9fJI/6wJgxVP+Kf1ZBICNO/qxdee+oIM73KlJ1FKKm+ZiaYBDyQUdIzGmI7P75KDD7df6uoG6HdUMP2YZLaVNrx8FhhTCxBDopTfRvGV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xHM5bXYu; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ReFFgWuA"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60a0b18e52dso8563417b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 23:00:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xHM5bXYu"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b26783b4so700567276.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 23:00:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711000826; x=1711605626; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1711000830; x=1711605630; darn=vger.kernel.org;
         h=content-transfer-encoding:to:from:subject:references:mime-version
          :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=o96QFSJF+sjvhNIgQJyH9qTpFePN3J+QpgdIZNuruzU=;
-        b=ReFFgWuAHNVAvUkecaXcuYXdTFB3YO38wrQ+7JXB59+uAtdxkYcrM6UWeufDbtYxgY
-         kMFkwP2ICrO4Ym0JcS+6R6lTSJ6Q83EUQlbiByQ2rFjImP1nE140aAdeuSoOaJt+GsTE
-         u4+B0E2vvW15Z9nqMyxdqt0zrhSqSvZvps16eVMW7l+napt0ayKh24BEHWEwcPwPDL2u
-         gurdNMvhz7UgAqsEFecJ51dxfl3aIIFz7H9PROioWTq3EYGwmVLU+WgXG7VSfIXUHaM1
-         tacge7vLPadkuOv+dAGI4tLy533vfzTJhAL1GrFnmRI6ukcBWobQWYhz8JFlyYkgBvbX
-         gxNQ==
+        bh=aq5QHB0Bma/gpqnZwoZL+nXfSxp7CToAwLY7zcNQ7BA=;
+        b=xHM5bXYuJBXyTDKbS3VaMAqHCqo8UN2HL21gn9vt02e/H57TQn7lBolMuhIn4muWY3
+         lRM/uYrmPzr6Ja6rmiHmnyBioZDo/GSpn4xoHpXaTJNjFlYCvDlbKpdRqMLXvoEkFgYc
+         Qb3vQ5YudXLMbIlOeOkKESO1oelM95tVY32YiU2bq97lU30nCuB3/Y/02aCz4mF2wrVq
+         ta8dWwb0S4lyTwe1/GpVpK+FrtL8s4yXJc+4s2W2DzVD7eheg3AXbzNSjOZ57GIGYGjO
+         wGrxNyyFpQQb4IzkNxweddkUbseIVIor7o00HJF1Def2wyeyInY9b8EDUcOCMSEf80GH
+         +kGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711000826; x=1711605626;
+        d=1e100.net; s=20230601; t=1711000830; x=1711605630;
         h=content-transfer-encoding:to:from:subject:references:mime-version
          :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=o96QFSJF+sjvhNIgQJyH9qTpFePN3J+QpgdIZNuruzU=;
-        b=qiFcj3ajvtYx8KAvBS923DgFEkdhmhTwdVz+GlMp1eckxV0H8UjmlCSHJnUH/nqUcj
-         VJXpceV6bxxymzOeZ0C5B2fcKqn57B9gG6QGZCiHSvMEAmxJChhQJYaUBs4jvPO8ZZWs
-         Z7gJmN2TiR2BYtqrC1EnO2HzCmICHf0VmnJCT0f9AIHngboQIC5p788NccrY8IHyh+8y
-         oMnDE6RdYzMSOowQwKnvwqNshkZHtxcOS35KZkyZ+B5cP4bxTDpRjNDQaGfYsehp/vwG
-         1a1rpkYeSfznN6PAOlVSiqyc2u7k+I8mObvf2xmAoMnvnvBeZhGmbfZWfuPh329ogXt+
-         Qljw==
-X-Forwarded-Encrypted: i=1; AJvYcCXJoA+32jOGJE8GJxvyPkUB8FpO9frSvuvnUHsLjxnmld1VZczGcczGshx+EULxpQGixPSjtKTcb/9uyt2EmcoCIxzQU0UtZvbHoIu+
-X-Gm-Message-State: AOJu0Yy7XWPD5dfasvuBYRaGkV8Xwur6zoNcvTlW2S9FQ/j6Ot5KreCn
-	yzbHgKvhUtcuvd9LJyL6GVGaxKxEuIZVLekEbFj+qJOeGCi7LZ/8FPMb7sROP+dnNOSGPNXQYoF
-	z8FzujA==
-X-Google-Smtp-Source: AGHT+IGNClv/ADWET4Bc5IOkWHqBsgLPtqL7LhaPii+QaSxeFfmIhDYtV+w29lr2NsY0nfmu9b+Nv19lpg2q
+        bh=aq5QHB0Bma/gpqnZwoZL+nXfSxp7CToAwLY7zcNQ7BA=;
+        b=DaL6pj0bmCFukb3L8m4+OIkwIwZXrPaOtc57P06FuHIXGAxk10sKcTSDgMAId3VOG3
+         SF15IWgV3zZW1GhWE4RD/WqFgPkE3cQc4DoVMAjbT46O0zVzliHkTVqfhQbblbMl8BTV
+         yTsd1txxTo/CZoiM1fs7PT+s8aQK3ofUqxEJAJxmPWIoCk4WaNhKGX7Wgd61Y+kDZdIg
+         cxK+hWzBTfWub77WBjdPLUSZNxl1RYhq+tUyO1fH4LLmSaVMBEOuYAO6vSOhoMt/juVF
+         TmqZNqfk0JrVpuMskKqaXGgY8kmjh3lhNErPDT9Zemy+ANhLWALrbUN5Mqpi+U2SMaDB
+         J5aw==
+X-Forwarded-Encrypted: i=1; AJvYcCWx1SSFWRKfWKmeU28dq67PFZ8pF70oxzCpEXe33HP+kZTmaFaI10zkURw2NcoBfeFhjG/k6V06zsApx0Jr1UjESwBL75cL1Spb0feY
+X-Gm-Message-State: AOJu0YwMIZhr+pVCn9Pi6BlPJUolRkwPvG4ZKrZz/EaYwuG6A3A7Ekx/
+	KP2tN0diAITo3R67Z+jwkGMTOqflNTvUQAZ1I/UunmzASYb/O0yu4uAnl4fky8uPJwgAN62BCi2
+	GoTI9uA==
+X-Google-Smtp-Source: AGHT+IFGpsaXg6OyBmvyWZMl9nd726SjWYZ8fw/8neentyGEL1EcmB8iV+x8KBlbLLkHkxnVrJSrD0HFX3by
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:7f3:cf74:42c4:c0a])
- (user=irogers job=sendgmr) by 2002:a0d:e6c7:0:b0:610:fb7b:da18 with SMTP id
- p190-20020a0de6c7000000b00610fb7bda18mr492148ywe.4.1711000825839; Wed, 20 Mar
- 2024 23:00:25 -0700 (PDT)
-Date: Wed, 20 Mar 2024 23:00:05 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:2843:b0:dc7:82ba:ba6e with SMTP
+ id ee3-20020a056902284300b00dc782baba6emr1120181ybb.7.1711000830276; Wed, 20
+ Mar 2024 23:00:30 -0700 (PDT)
+Date: Wed, 20 Mar 2024 23:00:07 -0700
 In-Reply-To: <20240321060016.1464787-1-irogers@google.com>
-Message-Id: <20240321060016.1464787-2-irogers@google.com>
+Message-Id: <20240321060016.1464787-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,7 +62,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240321060016.1464787-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
-Subject: [PATCH v1 01/12] perf vendor events intel: Update cascadelakex to 1.21
+Subject: [PATCH v1 03/12] perf vendor events intel: Update grandridge to 1.02
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,264 +76,263 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Update events from 1.20 to 1.21 as released in:
-https://github.com/intel/perfmon/commit/fcfdba3be8f3be81ad6b509fdebf953ead9=
-2dc2c
+Update events from 1.01 to 1.02 as released in:
+https://github.com/intel/perfmon/commit/b2a81e803add1ba0af68a442c975683d226=
+d868c
 
-Largely fixes spelling and descriptions.
+Fixes spelling and descriptions. Adds topdown events and uncore cache
+UNC_CHA_TOR_OCCUPANCY.IA_HIT_DRD_OPT,
+UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD_OPT,
+UNC_CHA_TOR_OCCUPANCY.IA_DRD_OPT.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../pmu-events/arch/x86/cascadelakex/frontend.json | 10 +++++-----
- .../pmu-events/arch/x86/cascadelakex/memory.json   |  2 +-
- .../pmu-events/arch/x86/cascadelakex/other.json    |  2 +-
- .../pmu-events/arch/x86/cascadelakex/pipeline.json |  2 +-
- .../arch/x86/cascadelakex/uncore-interconnect.json | 14 +++++++-------
- .../arch/x86/cascadelakex/virtual-memory.json      |  2 +-
- tools/perf/pmu-events/arch/x86/mapfile.csv         |  2 +-
- 7 files changed, 17 insertions(+), 17 deletions(-)
+ .../arch/x86/grandridge/pipeline.json         | 43 ++++++++++++++++---
+ .../arch/x86/grandridge/uncore-cache.json     | 28 +++++++++++-
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
+ 3 files changed, 66 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/frontend.json b/to=
-ols/perf/pmu-events/arch/x86/cascadelakex/frontend.json
-index 095904c77001..d6f543471b24 100644
---- a/tools/perf/pmu-events/arch/x86/cascadelakex/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/cascadelakex/frontend.json
-@@ -19,7 +19,7 @@
-         "BriefDescription": "Decode Stream Buffer (DSB)-to-MITE switches",
-         "EventCode": "0xAB",
-         "EventName": "DSB2MITE_SWITCHES.COUNT",
--        "PublicDescription": "This event counts the number of the Decode S=
-tream Buffer (DSB)-to-MITE switches including all misses because of missing=
- Decode Stream Buffer (DSB) cache and u-arch forced misses.\nNote: Invoking=
- MITE requires two or three cycles delay.",
-+        "PublicDescription": "This event counts the number of the Decode S=
-tream Buffer (DSB)-to-MITE switches including all misses because of missing=
- Decode Stream Buffer (DSB) cache and u-arch forced misses. Note: Invoking =
-MITE requires two or three cycles delay.",
-         "SampleAfterValue": "2000003",
+diff --git a/tools/perf/pmu-events/arch/x86/grandridge/pipeline.json b/tool=
+s/perf/pmu-events/arch/x86/grandridge/pipeline.json
+index daa0639bb1ca..90292dc03d33 100644
+--- a/tools/perf/pmu-events/arch/x86/grandridge/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/grandridge/pipeline.json
+@@ -249,10 +249,17 @@
          "UMask": "0x1"
      },
-@@ -267,11 +267,11 @@
-         "UMask": "0x4"
+     {
+-        "BriefDescription": "Counts the number of issue slots that were no=
+t consumed by the backend because allocation is stalled due to a mispredict=
+ed jump or a machine clear.",
++        "BriefDescription": "Counts the number of issue slots that were no=
+t consumed by the backend because allocation is stalled due to a mispredict=
+ed jump or a machine clear. [This event is alias to TOPDOWN_BAD_SPECULATION=
+.ALL_P]",
+         "EventCode": "0x73",
+         "EventName": "TOPDOWN_BAD_SPECULATION.ALL",
+-        "PublicDescription": "Counts the total number of issue slots that =
+were not consumed by the backend because allocation is stalled due to a mis=
+predicted jump or a machine clear. Only issue slots wasted due to fast nuke=
+s such as memory ordering nukes are counted. Other nukes are not accounted =
+for. Counts all issue slots blocked during this recovery window, including =
+relevant microcode flows, and while uops are not yet available in the instr=
+uction queue (IQ) or until an FE_BOUND event occurs besides OTHER and CISC.=
+ Also includes the issue slots that were consumed by the backend but were t=
+hrown away because they were younger than the mispredict or machine clear."=
+,
++        "PublicDescription": "Counts the total number of issue slots that =
+were not consumed by the backend because allocation is stalled due to a mis=
+predicted jump or a machine clear. Only issue slots wasted due to fast nuke=
+s such as memory ordering nukes are counted. Other nukes are not accounted =
+for. Counts all issue slots blocked during this recovery window, including =
+relevant microcode flows, and while uops are not yet available in the instr=
+uction queue (IQ) or until an FE_BOUND event occurs besides OTHER and CISC.=
+ Also includes the issue slots that were consumed by the backend but were t=
+hrown away because they were younger than the mispredict or machine clear. =
+[This event is alias to TOPDOWN_BAD_SPECULATION.ALL_P]",
++        "SampleAfterValue": "1000003"
++    },
++    {
++        "BriefDescription": "Counts the number of issue slots that were no=
+t consumed by the backend because allocation is stalled due to a mispredict=
+ed jump or a machine clear. [This event is alias to TOPDOWN_BAD_SPECULATION=
+.ALL]",
++        "EventCode": "0x73",
++        "EventName": "TOPDOWN_BAD_SPECULATION.ALL_P",
++        "PublicDescription": "Counts the total number of issue slots that =
+were not consumed by the backend because allocation is stalled due to a mis=
+predicted jump or a machine clear. Only issue slots wasted due to fast nuke=
+s such as memory ordering nukes are counted. Other nukes are not accounted =
+for. Counts all issue slots blocked during this recovery window, including =
+relevant microcode flows, and while uops are not yet available in the instr=
+uction queue (IQ) or until an FE_BOUND event occurs besides OTHER and CISC.=
+ Also includes the issue slots that were consumed by the backend but were t=
+hrown away because they were younger than the mispredict or machine clear. =
+[This event is alias to TOPDOWN_BAD_SPECULATION.ALL]",
+         "SampleAfterValue": "1000003"
      },
      {
--        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
-ng 4 Uops [This event is alias to IDQ.DSB_CYCLES_OK]",
-+        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
-ng 4 or more Uops [This event is alias to IDQ.DSB_CYCLES_OK]",
-         "CounterMask": "4",
-         "EventCode": "0x79",
-         "EventName": "IDQ.ALL_DSB_CYCLES_4_UOPS",
--        "PublicDescription": "Counts the number of cycles 4 uops were deli=
-vered to Instruction Decode Queue (IDQ) from the Decode Stream Buffer (DSB)=
- path. Count includes uops that may 'bypass' the IDQ. [This event is alias =
-to IDQ.DSB_CYCLES_OK]",
-+        "PublicDescription": "Counts the number of cycles 4 or more uops w=
-ere delivered to Instruction Decode Queue (IDQ) from the Decode Stream Buff=
-er (DSB) path. Count includes uops that may 'bypass' the IDQ. [This event i=
-s alias to IDQ.DSB_CYCLES_OK]",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x18"
-     },
-@@ -321,11 +321,11 @@
-         "UMask": "0x18"
+@@ -284,7 +291,7 @@
+         "UMask": "0x1"
      },
      {
--        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
-ng 4 Uops [This event is alias to IDQ.ALL_DSB_CYCLES_4_UOPS]",
-+        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
-ng 4 or more Uops [This event is alias to IDQ.ALL_DSB_CYCLES_4_UOPS]",
-         "CounterMask": "4",
-         "EventCode": "0x79",
-         "EventName": "IDQ.DSB_CYCLES_OK",
--        "PublicDescription": "Counts the number of cycles 4 uops were deli=
-vered to Instruction Decode Queue (IDQ) from the Decode Stream Buffer (DSB)=
- path. Count includes uops that may 'bypass' the IDQ. [This event is alias =
-to IDQ.ALL_DSB_CYCLES_4_UOPS]",
-+        "PublicDescription": "Counts the number of cycles 4 or more uops w=
-ere delivered to Instruction Decode Queue (IDQ) from the Decode Stream Buff=
-er (DSB) path. Count includes uops that may 'bypass' the IDQ. [This event i=
-s alias to IDQ.ALL_DSB_CYCLES_4_UOPS]",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x18"
+-        "BriefDescription": "Counts the number of retirement slots not con=
+sumed due to backend stalls",
++        "BriefDescription": "Counts the number of retirement slots not con=
+sumed due to backend stalls [This event is alias to TOPDOWN_BE_BOUND.ALL_P]=
+",
+         "EventCode": "0x74",
+         "EventName": "TOPDOWN_BE_BOUND.ALL",
+         "SampleAfterValue": "1000003"
+@@ -296,6 +303,12 @@
+         "SampleAfterValue": "1000003",
+         "UMask": "0x1"
      },
-diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/memory.json b/tool=
-s/perf/pmu-events/arch/x86/cascadelakex/memory.json
-index a00ad0aaf1ba..c69b2c33334b 100644
---- a/tools/perf/pmu-events/arch/x86/cascadelakex/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/cascadelakex/memory.json
-@@ -6866,7 +6866,7 @@
-         "BriefDescription": "Number of times an RTM execution aborted due =
-to any reasons (multiple categories may count as one).",
-         "EventCode": "0xC9",
-         "EventName": "RTM_RETIRED.ABORTED",
--        "PEBS": "1",
-+        "PEBS": "2",
-         "PublicDescription": "Number of times RTM abort was triggered.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x4"
-diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/other.json b/tools=
-/perf/pmu-events/arch/x86/cascadelakex/other.json
-index 3ab5e91a4c1c..95d42ac36717 100644
---- a/tools/perf/pmu-events/arch/x86/cascadelakex/other.json
-+++ b/tools/perf/pmu-events/arch/x86/cascadelakex/other.json
-@@ -19,7 +19,7 @@
-         "BriefDescription": "Core cycles where the core was running in a m=
-anner where Turbo may be clipped to the AVX512 turbo schedule.",
-         "EventCode": "0x28",
-         "EventName": "CORE_POWER.LVL2_TURBO_LICENSE",
--        "PublicDescription": "Core cycles where the core was running with =
-power-delivery for license level 2 (introduced in Skylake Server michroarch=
-tecture).  This includes high current AVX 512-bit instructions.",
-+        "PublicDescription": "Core cycles where the core was running with =
-power-delivery for license level 2 (introduced in Skylake Server microarchi=
-tecture).  This includes high current AVX 512-bit instructions.",
-         "SampleAfterValue": "200003",
++    {
++        "BriefDescription": "Counts the number of retirement slots not con=
+sumed due to backend stalls [This event is alias to TOPDOWN_BE_BOUND.ALL]",
++        "EventCode": "0x74",
++        "EventName": "TOPDOWN_BE_BOUND.ALL_P",
++        "SampleAfterValue": "1000003"
++    },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not consumed by the backend due to memory reservation stall (sche=
+duler not being able to accept another uop).  This could be caused by RSV f=
+ull or load/store buffer block.",
+         "EventCode": "0x74",
+@@ -317,6 +330,13 @@
+         "SampleAfterValue": "1000003",
          "UMask": "0x20"
      },
-diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/pipeline.json b/to=
-ols/perf/pmu-events/arch/x86/cascadelakex/pipeline.json
-index 66d686cc933e..c50ddf5b40dd 100644
---- a/tools/perf/pmu-events/arch/x86/cascadelakex/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/cascadelakex/pipeline.json
-@@ -396,7 +396,7 @@
-         "Errata": "SKL091, SKL044",
-         "EventCode": "0xC0",
-         "EventName": "INST_RETIRED.NOP",
--        "PEBS": "1",
-+        "PEBS": "2",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x2"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-interconnec=
-t.json b/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-interconnect.js=
-on
-index 1a342dff1503..3fe9ce483bbe 100644
---- a/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-interconnect.json
-+++ b/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-interconnect.json
-@@ -38,7 +38,7 @@
-         "EventCode": "0x10",
-         "EventName": "UNC_I_COHERENT_OPS.CLFLUSH",
-         "PerPkg": "1",
--        "PublicDescription": "Counts the number of coherency related opera=
-tions servied by the IRP",
-+        "PublicDescription": "Counts the number of coherency related opera=
-tions serviced by the IRP",
-         "UMask": "0x80",
-         "Unit": "IRP"
-     },
-@@ -47,7 +47,7 @@
-         "EventCode": "0x10",
-         "EventName": "UNC_I_COHERENT_OPS.CRD",
-         "PerPkg": "1",
--        "PublicDescription": "Counts the number of coherency related opera=
-tions servied by the IRP",
-+        "PublicDescription": "Counts the number of coherency related opera=
-tions serviced by the IRP",
-         "UMask": "0x2",
-         "Unit": "IRP"
-     },
-@@ -56,7 +56,7 @@
-         "EventCode": "0x10",
-         "EventName": "UNC_I_COHERENT_OPS.DRD",
-         "PerPkg": "1",
--        "PublicDescription": "Counts the number of coherency related opera=
-tions servied by the IRP",
-+        "PublicDescription": "Counts the number of coherency related opera=
-tions serviced by the IRP",
-         "UMask": "0x4",
-         "Unit": "IRP"
-     },
-@@ -65,7 +65,7 @@
-         "EventCode": "0x10",
-         "EventName": "UNC_I_COHERENT_OPS.PCIDCAHINT",
-         "PerPkg": "1",
--        "PublicDescription": "Counts the number of coherency related opera=
-tions servied by the IRP",
-+        "PublicDescription": "Counts the number of coherency related opera=
-tions serviced by the IRP",
-         "UMask": "0x20",
-         "Unit": "IRP"
-     },
-@@ -74,7 +74,7 @@
-         "EventCode": "0x10",
-         "EventName": "UNC_I_COHERENT_OPS.PCIRDCUR",
-         "PerPkg": "1",
--        "PublicDescription": "Counts the number of coherency related opera=
-tions servied by the IRP",
-+        "PublicDescription": "Counts the number of coherency related opera=
-tions serviced by the IRP",
-         "UMask": "0x1",
-         "Unit": "IRP"
-     },
-@@ -101,7 +101,7 @@
-         "EventCode": "0x10",
-         "EventName": "UNC_I_COHERENT_OPS.WBMTOI",
-         "PerPkg": "1",
--        "PublicDescription": "Counts the number of coherency related opera=
-tions servied by the IRP",
-+        "PublicDescription": "Counts the number of coherency related opera=
-tions serviced by the IRP",
-         "UMask": "0x40",
-         "Unit": "IRP"
-     },
-@@ -500,7 +500,7 @@
-         "EventCode": "0x11",
-         "EventName": "UNC_I_TRANSACTIONS.WRITES",
-         "PerPkg": "1",
--        "PublicDescription": "Counts the number of Inbound transactions fr=
-om the IRP to the Uncore.  This can be filtered based on request type in ad=
-dition to the source queue.  Note the special filtering equation.  We do OR=
--reduction on the request type.  If the SOURCE bit is set, then we also do =
-AND qualification based on the source portID.; Trackes only write requests.=
-  Each write request should have a prefetch, so there is no need to explici=
-tly track these requests.  For writes that are tickled and have to retry, t=
-he counter will be incremented for each retry.",
-+        "PublicDescription": "Counts the number of Inbound transactions fr=
-om the IRP to the Uncore.  This can be filtered based on request type in ad=
-dition to the source queue.  Note the special filtering equation.  We do OR=
--reduction on the request type.  If the SOURCE bit is set, then we also do =
-AND qualification based on the source portID.; Tracks only write requests. =
- Each write request should have a prefetch, so there is no need to explicit=
-ly track these requests.  For writes that are tickled and have to retry, th=
-e counter will be incremented for each retry.",
-         "UMask": "0x2",
-         "Unit": "IRP"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/virtual-memory.jso=
-n b/tools/perf/pmu-events/arch/x86/cascadelakex/virtual-memory.json
-index f59405877ae8..73feadaf7674 100644
---- a/tools/perf/pmu-events/arch/x86/cascadelakex/virtual-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/cascadelakex/virtual-memory.json
-@@ -205,7 +205,7 @@
-         "BriefDescription": "Counts 1 per cycle for each PMH that is busy =
-with a page walk for an instruction fetch request. EPT page walk duration a=
-re excluded in Skylake.",
-         "EventCode": "0x85",
-         "EventName": "ITLB_MISSES.WALK_PENDING",
--        "PublicDescription": "Counts 1 per cycle for each PMH (Page Miss H=
-andler) that is busy with a page walk for an instruction fetch request. EPT=
- page walk duration are excluded in Skylake michroarchitecture.",
-+        "PublicDescription": "Counts 1 per cycle for each PMH (Page Miss H=
-andler) that is busy with a page walk for an instruction fetch request. EPT=
- page walk duration are excluded in Skylake microarchitecture.",
-         "SampleAfterValue": "100003",
++    {
++        "BriefDescription": "Counts the number of issue slots every cycle =
+that were not consumed by the backend due to ROB full",
++        "EventCode": "0x74",
++        "EventName": "TOPDOWN_BE_BOUND.REORDER_BUFFER",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x40"
++    },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not consumed by the backend due to iq/jeu scoreboards or ms scb",
+         "EventCode": "0x74",
+@@ -325,11 +345,17 @@
          "UMask": "0x10"
      },
+     {
+-        "BriefDescription": "Counts the number of retirement slots not con=
+sumed due to front end stalls",
++        "BriefDescription": "Counts the number of retirement slots not con=
+sumed due to front end stalls [This event is alias to TOPDOWN_FE_BOUND.ALL_=
+P]",
+         "EventCode": "0x71",
+         "EventName": "TOPDOWN_FE_BOUND.ALL",
+         "SampleAfterValue": "1000003"
+     },
++    {
++        "BriefDescription": "Counts the number of retirement slots not con=
+sumed due to front end stalls [This event is alias to TOPDOWN_FE_BOUND.ALL]=
+",
++        "EventCode": "0x71",
++        "EventName": "TOPDOWN_FE_BOUND.ALL_P",
++        "SampleAfterValue": "1000003"
++    },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not delivered by the frontend due to BAClear",
+         "EventCode": "0x71",
+@@ -402,12 +428,19 @@
+         "UMask": "0x4"
+     },
+     {
+-        "BriefDescription": "Counts the number of consumed retirement slot=
+s.  Similar to UOPS_RETIRED.ALL",
++        "BriefDescription": "Counts the number of consumed retirement slot=
+s.  Similar to UOPS_RETIRED.ALL [This event is alias to TOPDOWN_RETIRING.AL=
+L_P]",
+         "EventCode": "0x72",
+         "EventName": "TOPDOWN_RETIRING.ALL",
+         "PEBS": "1",
+         "SampleAfterValue": "1000003"
+     },
++    {
++        "BriefDescription": "Counts the number of consumed retirement slot=
+s.  Similar to UOPS_RETIRED.ALL [This event is alias to TOPDOWN_RETIRING.AL=
+L]",
++        "EventCode": "0x72",
++        "EventName": "TOPDOWN_RETIRING.ALL_P",
++        "PEBS": "1",
++        "SampleAfterValue": "1000003"
++    },
+     {
+         "BriefDescription": "Counts the number of uops issued by the front=
+ end every cycle.",
+         "EventCode": "0x0e",
+diff --git a/tools/perf/pmu-events/arch/x86/grandridge/uncore-cache.json b/=
+tools/perf/pmu-events/arch/x86/grandridge/uncore-cache.json
+index 74dfd9272cef..36614429dd72 100644
+--- a/tools/perf/pmu-events/arch/x86/grandridge/uncore-cache.json
++++ b/tools/perf/pmu-events/arch/x86/grandridge/uncore-cache.json
+@@ -5,7 +5,6 @@
+         "EventName": "UNC_CHACMS_CLOCKTICKS",
+         "PerPkg": "1",
+         "PortMask": "0x000",
+-        "PublicDescription": "UNC_CHACMS_CLOCKTICKS",
+         "Unit": "CHACMS"
+     },
+     {
+@@ -1216,6 +1215,15 @@
+         "UMask": "0xc88fff01",
+         "Unit": "CHA"
+     },
++    {
++        "BriefDescription": "TOR Occupancy for Data read opt from local IA=
+ that miss the cache",
++        "EventCode": "0x36",
++        "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_DRD_OPT",
++        "PerPkg": "1",
++        "PublicDescription": "TOR Occupancy : DRd_Opts issued by iA Cores"=
+,
++        "UMask": "0xc827ff01",
++        "Unit": "CHA"
++    },
+     {
+         "BriefDescription": "TOR Occupancy for Data read opt prefetch from=
+ local IA that miss the cache",
+         "EventCode": "0x36",
+@@ -1252,6 +1260,15 @@
+         "UMask": "0xc88ffd01",
+         "Unit": "CHA"
+     },
++    {
++        "BriefDescription": "TOR Occupancy for Data read opt from local IA=
+ that hit the cache",
++        "EventCode": "0x36",
++        "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_HIT_DRD_OPT",
++        "PerPkg": "1",
++        "PublicDescription": "TOR Occupancy : DRd_Opts issued by iA Cores =
+that hit the LLC",
++        "UMask": "0xc827fd01",
++        "Unit": "CHA"
++    },
+     {
+         "BriefDescription": "TOR Occupancy for Data read opt prefetch from=
+ local IA that hit the cache",
+         "EventCode": "0x36",
+@@ -1405,6 +1422,15 @@
+         "UMask": "0xc88efe01",
+         "Unit": "CHA"
+     },
++    {
++        "BriefDescription": "TOR Occupancy for Data read opt from local IA=
+ that miss the cache",
++        "EventCode": "0x36",
++        "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD_OPT",
++        "PerPkg": "1",
++        "PublicDescription": "TOR Occupancy : DRd_Opt issued by iA Cores t=
+hat missed the LLC",
++        "UMask": "0xc827fe01",
++        "Unit": "CHA"
++    },
+     {
+         "BriefDescription": "TOR Occupancy for Data read opt prefetch from=
+ local IA that miss the cache",
+         "EventCode": "0x36",
 diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
 ents/arch/x86/mapfile.csv
-index 5297d25f4e03..281419d2edeb 100644
+index 85b89b1098cf..650c28574576 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -5,7 +5,7 @@ GenuineIntel-6-(1C|26|27|35|36),v5,bonnell,core
- GenuineIntel-6-(3D|47),v29,broadwell,core
- GenuineIntel-6-56,v11,broadwellde,core
- GenuineIntel-6-4F,v22,broadwellx,core
--GenuineIntel-6-55-[56789ABCDEF],v1.20,cascadelakex,core
-+GenuineIntel-6-55-[56789ABCDEF],v1.21,cascadelakex,core
- GenuineIntel-6-9[6C],v1.04,elkhartlake,core
- GenuineIntel-6-CF,v1.03,emeraldrapids,core
+@@ -10,7 +10,7 @@ GenuineIntel-6-9[6C],v1.04,elkhartlake,core
+ GenuineIntel-6-CF,v1.06,emeraldrapids,core
  GenuineIntel-6-5[CF],v13,goldmont,core
+ GenuineIntel-6-7A,v1.01,goldmontplus,core
+-GenuineIntel-6-B6,v1.01,grandridge,core
++GenuineIntel-6-B6,v1.02,grandridge,core
+ GenuineIntel-6-A[DE],v1.01,graniterapids,core
+ GenuineIntel-6-(3C|45|46),v35,haswell,core
+ GenuineIntel-6-3F,v28,haswellx,core
 --=20
 2.44.0.396.g6e790dbe36-goog
 
