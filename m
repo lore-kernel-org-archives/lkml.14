@@ -1,104 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C7826FBE;
-	Thu, 21 Mar 2024 22:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C2D79EA
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 23:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711061954; cv=none; b=ovlrDgtfQ5/1bkL0+mhDEl9qGSzhClsutNo7LhuMEp34GESLHQea0ZUu9bTwXKw0vgmOxkArKLNABKb8Xk6jVRp9SEINL89yshTj71umH3ohA8jueJt1C+0QJUqzVzV8+DPHp2fBywEQP/vtgQT54PY69GcwPE2DztXnwu29UZE=
+	t=1711062546; cv=none; b=WanosBI0rmuaxyeY9TrF4bWYR1e9wuWjlTSCJS0w2OnG2BQyEK3pxh0lc9Ygz/U3TLue3lc/a4pAqpmeC3dyYRtZUc8qh5TYcl6zlIARRUOtLwveh++1vdi3QJJUGGXZgROUnXRwGCZBgh3SrGK+zXvzMLNHLOFAjuciZzZIM30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711061954; c=relaxed/simple;
-	bh=GI3K64J7vLiN3bPpcKnL62DXpmEjzOMkcBmiGh2A8ZM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HjFnbJDKX8Aa0xegJ8OlbjPiagRiqQddSfRy4RJ/zsHxiC51uEA9ZQ+QGTarxauzcYunxI5GK/Ol8mQK4WeIZgocQJ3YYtENJoCM89JVGt68aej8+VnHAzqE2Tr6YTRvhFPitMn3OiZ0s77btlu9Hg8HAl37Cg0R5tCWkfyUbN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VXbSVTN8; arc=none smtp.client-ip=192.198.163.13
+	s=arc-20240116; t=1711062546; c=relaxed/simple;
+	bh=VC3pbG80ztHyTQTavsPSO9OC8/VLuzg2xJ41/Q0N3oI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Abczt3E4QdbPc9W4woSNqsDH4UFnXlUV1JUPr8ZWtssXdqqTzba1kS4DsohtI/WvKhoBRn2FsvJbjgI3Ow0r/220m89haMEYegu977wjfaUv0RRed6WougCnHthCY/HFvAFwTs45vvk/Pb9qHY9F5ivu1mtkWfG5+i88qaZUB+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NR/TkZOY; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VXbSVTN8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NR/TkZOY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711061953; x=1742597953;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GI3K64J7vLiN3bPpcKnL62DXpmEjzOMkcBmiGh2A8ZM=;
-  b=VXbSVTN80KYk1vCchnmz63X4C67QczuTmKPVNGP7aTAlxHaK456CXDYS
-   QnR9WZj2/jQOiaSFNFSLMmoxLePr6iO7L07kv99aj5yyaJ4pN5L3nOP/Q
-   QpYSnzOkbynCPxKvUH2720a1Ub81Ka+ySnr4PooJiq+sMHgrrvDDT8/9L
-   LSIBMRWtvfEDzIrAiCbKzygh0gadlWVL6h3Ajl6O26i3HU6RQCEGjy0yj
-   KcyBjxY17oeRTq6E6VA8Wx9OqZpV/J2ANfz30SJNudgNxzch8r59eUOs2
-   BwDgGSVsWpbpUM8CytkClkd4AletsXqBh/eu28FcVMWO/imJCZ72xGnKh
+  t=1711062545; x=1742598545;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=VC3pbG80ztHyTQTavsPSO9OC8/VLuzg2xJ41/Q0N3oI=;
+  b=NR/TkZOY9buz5xzOVHwBn35cFYo8t+x14B9yDiiFuD9gQ0RCv2OTSmdO
+   BDQKPn7Rkgvvik6PYn/fU/OvfTVWnpKWxQwch48o/eRf2egHKrQx9aDIY
+   eeUU7E0PoBSiqY3jZB47+np4Hr8fCjIw9jDM477UOJx4f3stBKy/JM8xc
+   aIPywv9EjgRD8tRfZYaW4bHKcqN9Q2Q06TqL9NvNpIOWwyclb6f33M9oh
+   +gEkguC3IYQ0Yaq3ozC7id0JBru9xhWWCOAeCRTYKqNVjUsgw7d1T+h4t
+   /maHdYkDTUOa7cc2I2funTDGuJpUE1xZhoabU77c4/33Z5YcKMjQlZoNb
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="9041316"
+X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="28563992"
 X-IronPort-AV: E=Sophos;i="6.07,144,1708416000"; 
-   d="scan'208";a="9041316"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 15:59:11 -0700
+   d="scan'208";a="28563992"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 16:09:05 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,144,1708416000"; 
-   d="scan'208";a="14729348"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 15:59:10 -0700
-Date: Thu, 21 Mar 2024 15:59:10 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Cc: "Yamahata, Isaku" <isaku.yamahata@intel.com>,
-	"Zhang, Tina" <tina.zhang@intel.com>,
-	"isaku.yamahata@linux.intel.com" <isaku.yamahata@linux.intel.com>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>,
-	"sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-	"Chen, Bo2" <chen.bo@intel.com>,
-	"sagis@google.com" <sagis@google.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Yuan, Hang" <hang.yuan@intel.com>,
-	"Aktas, Erdem" <erdemaktas@google.com>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>
-Subject: Re: [PATCH v19 059/130] KVM: x86/tdp_mmu: Don't zap private pages
- for unsupported cases
-Message-ID: <20240321225910.GU1994522@ls.amr.corp.intel.com>
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <1ed955a44cd81738b498fe52823766622d8ad57f.1708933498.git.isaku.yamahata@intel.com>
- <618614fa6c62a232d95da55546137251e1847f48.camel@intel.com>
- <20240319235654.GC1994522@ls.amr.corp.intel.com>
- <1c2283aab681bd882111d14e8e71b4b35549e345.camel@intel.com>
- <f63d19a8fe6d14186aecc8fcf777284879441ef6.camel@intel.com>
+   d="scan'208";a="14654702"
+Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 21 Mar 2024 16:09:03 -0700
+Received: from kbuild by b21307750695 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rnRWu-000JqV-2b;
+	Thu, 21 Mar 2024 23:09:00 +0000
+Date: Fri, 22 Mar 2024 07:08:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: WARNING: modpost: vmlinux: section mismatch in reference:
+ run_tracer_selftest+0x2c0 (section: .text.unlikely) -> initcall_level_names
+ (section: .init.data)
+Message-ID: <202403220757.MP0We5ui-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f63d19a8fe6d14186aecc8fcf777284879441ef6.camel@intel.com>
 
-On Thu, Mar 21, 2024 at 01:17:35AM +0000,
-"Edgecombe, Rick P" <rick.p.edgecombe@intel.com> wrote:
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   ebc9bee8814d12ec247de117aa2f7fd39ff11127
+commit: 481461f5109919babbb393d6f68002936b8e2493 linux/export.h: make <linux/export.h> independent of CONFIG_MODULES
+date:   8 months ago
+config: xtensa-randconfig-r024-20220805 (https://download.01.org/0day-ci/archive/20240322/202403220757.MP0We5ui-lkp@intel.com/config)
+compiler: xtensa-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240322/202403220757.MP0We5ui-lkp@intel.com/reproduce)
 
-> On Tue, 2024-03-19 at 17:56 -0700, Rick Edgecombe wrote:
-> > > Because TDX supports only WB, we
-> > > ignore the request for MTRR and lapic page change to not zap
-> > > private
-> > > pages on unmapping for those two cases
-> > 
-> > Hmm. I need to go back and look at this again. It's not clear from
-> > the
-> > description why it is safe for the host to not zap pages if requested
-> > to. I see why the guest wouldn't want them to be zapped.
-> 
-> Ok, I see now how this works. MTRRs and APIC zapping happen to use the
-> same function: kvm_zap_gfn_range(). So restricting that function from
-> zapping private pages has the desired affect. I think it's not ideal
-> that kvm_zap_gfn_range() silently skips zapping some ranges. I wonder
-> if we could pass something in, so it's more clear to the caller.
-> 
-> But can these code paths even get reaches in TDX? It sounded like MTRRs
-> basically weren't supported.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403220757.MP0We5ui-lkp@intel.com/
 
-We can make the code paths so with the (new) assumption that guest MTRR can
-be disabled cleanly.
+All warnings (new ones prefixed by >>, old ones prefixed by <<):
+
+WARNING: modpost: missing MODULE_DESCRIPTION() in vmlinux.o
+>> WARNING: modpost: vmlinux: section mismatch in reference: run_tracer_selftest+0x2c0 (section: .text.unlikely) -> initcall_level_names (section: .init.data)
+
 -- 
-Isaku Yamahata <isaku.yamahata@intel.com>
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
