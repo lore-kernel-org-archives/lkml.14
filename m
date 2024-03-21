@@ -1,71 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 911898062A;
-	Thu, 21 Mar 2024 12:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253F3134CD;
+	Thu, 21 Mar 2024 12:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711025557; cv=none; b=KsdUeuVChLwUVqdV4rb8NRSnxxrSzEEBjpGQo55qH9j+uPfbzgxT6Np4yS94ibLDfrSo3Gav6+CR8LdcD4s3BipcjffqVBCYKKtfPO1sZoBMp4EO0y025JBEOHHHD/8KuerdvE3LBbRDHIguifalDdD6rYzN275pAGv3B83criw=
+	t=1711025782; cv=none; b=ZiUBM2JS5gLj/8MQDUSz/xDoAhkXXKVNOG7yqWMYeaXTM5e/12ZXZCBjrqdhmDNZ0NvY5C91DBQiWHEtZtNxJvzPt5eFEgTXKBYmIen4+LDSFERPPhhcFPK6bPtmBRXwplApmmTPNwhZxPgEGguB/iPD+Z+3GaXWS705CpokcqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711025557; c=relaxed/simple;
-	bh=+1MLeFvybcEalYGQKL++8f/M5U9YN7gmE4KskSqtg2E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PysxAHW63ZhvMYvrYPuC2HVCdOh0H4T5EKFw3Jp+WkhAb1NPz/KqcBbXqQ8caz/7WaieeV7aems+XQAEieqffYRQSajzAH4KgCvDOe3NjJMfA6FbEJdVS1fE52PRgKlshN05wv45t6GljN78N58aWpU/QTxa+GztPInHnX302Vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QSkxeRJ5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711025782; c=relaxed/simple;
+	bh=BxiWdf4/7BU0N7jaavO3/onZ7Kj2pPXj4FUIl3z2O1s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hmd9cH8U+x5mrnEUT8oVP6O9Czzv8FLz/ve5zlp1K267JhVeiYylGgJn9bz9Nu2GCSRXbikMKVE09ohlXGk1gCt7+pesR2DQPyacD3TRYldQd1+3ojR0VEV1V46OQvXRGXbU+9QUsUcdMIGO+p+i2ZLkO9FbkoPMypfbO2JdUa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=KNYi/Ufs; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QSkxeRJ5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFF5FC433C7;
-	Thu, 21 Mar 2024 12:52:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711025557;
-	bh=+1MLeFvybcEalYGQKL++8f/M5U9YN7gmE4KskSqtg2E=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QSkxeRJ5kKk16+tgclhMuYgOAU+Gn2Y/V/1f1I3oTlYFgGDDXMgBmdPGEh/gdSWjV
-	 BhWR/88VmsnDlXEx2txoVNWASVcj/NDczzVhH0Nb+YzLg8oDrC4LBm4ob1h/NTcqtk
-	 CDVdlwe2ylwO9f70wPfnQBMZ8kLjNpLN3OstoxsPV3Zescf9Wig3UI/hBbYF6FJLJr
-	 sS0JUuun8FoMFFeEMJ5P2B+l8HxTK5WnFW61djd1YUWzEvyne5fH4GynILz3yzo63M
-	 IbZl76crkPg0/26LZx4SUmW5AibNTT6N7LmgeISWDLq8HMXFpY3VUx/6vU7xvzTP4F
-	 Rb+1yBB0AFckg==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-remoteproc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andrew Davis <afd@ti.com>
-Subject: [GIT PULL] hwspinlock updates for v6.9
-Date: Thu, 21 Mar 2024 05:57:28 -0700
-Message-ID: <20240321125730.1676568-1-andersson@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="KNYi/Ufs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=/VkiJjn/Ujsmq+U16JaWHWXV190NKV6cULGPu225XxU=; b=KNYi/UfsvbbcIhqHWGMXIBUscE
+	0NUwAsju2opk5jzCII3uqEkHR38PO9RlU5fEkVlNiKk6G/xRsfJT95BBpVXuicO7xdAiJj2zANZVH
+	b3cNy9k8i9zEFRfFL/mszQHX62S3jxZ+AaOcjMQvO2euRivm6dUzLycyLG+9z5r7rO+s=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rnHxe-00AsKQ-Pb; Thu, 21 Mar 2024 13:55:58 +0100
+Date: Thu, 21 Mar 2024 13:55:58 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Vaishnav Achath <vaishnav.a@ti.com>
+Cc: Michael Walle <mwalle@kernel.org>,
+	"Russell King (Oracle)" <linux@armlinux.org.uk>,
+	Ayush Singh <ayushdevel1325@gmail.com>,
+	open list <linux-kernel@vger.kernel.org>, jkridner@beagleboard.org,
+	robertcnelson@beagleboard.org, lorforlinux@beagleboard.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Mark Brown <broonie@kernel.org>, Johan Hovold <johan@kernel.org>,
+	Alex Elder <elder@kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	"moderated list:ARM/TEXAS INSTRUMENTS K3 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	"open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+	"moderated list:GREYBUS SUBSYSTEM" <greybus-dev@lists.linaro.org>,
+	Vaishnav M A <vaishnav@beagleboard.org>
+Subject: Re: [PATCH v4 1/5] dt-bindings: misc: Add mikrobus-connector
+Message-ID: <3904c7eb-c179-4596-ba42-d6b545a562a6@lunn.ch>
+References: <20240317193714.403132-1-ayushdevel1325@gmail.com>
+ <20240317193714.403132-2-ayushdevel1325@gmail.com>
+ <CZWVF90JJO98.2M7ARQ9WMGC94@kernel.org>
+ <d4dc4d94-d323-4158-8c08-b7d37d8750d3@gmail.com>
+ <b62915ca-c151-4e37-bb03-c92c569c84ff@lunn.ch>
+ <4b319264-bff7-48e5-85e8-201ca0bafec6@ti.com>
+ <4c299d42-84c7-46fc-952f-292cef1bb4b4@lunn.ch>
+ <ded6c350-4c70-4a26-8b18-6605dcc6e084@ti.com>
+ <CZZBT3ZMDCVI.40UX5MB6LY4I@kernel.org>
+ <ef6a1c28-70dc-4077-b644-2704ac3cf30f@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ef6a1c28-70dc-4077-b644-2704ac3cf30f@ti.com>
 
+> > How will the ethernet boards ([1], [2]) work? Where do they get
+> > their MAC address from, for example. The DT has some nice properties
+> > for that, but I doubt that will be possible with the manifest files.
+> > I've looked at the manifest file for the w5500 board [3] and to me
+> > it looks like that board will come up with a random MAC address on
+> > each start. Thus, even today, you have some boards which require
+> > a more complex description.
+> > 
+> 
+> Agreed, this is a limitation, unless the corresponding drivers/subsystems
+> use device_property_read_* helper to fetch properties, it will not work and
+> net/core/of_net.c only implements of_get_* helpers even though the
+> underlying functions can be implemented with equivalent
+> device_property_read_* equivalent as well.
 
-The following changes since commit 6613476e225e090cc9aad49be7fa504e290dd33d:
+I think this is a good example of the limitations. For an Ethernet
+NIC, you often want to describe properties of both the MAC and the
+PHY. What phy-mode should be used, what delays on the RGMII bus, what
+LEDs are there etc. This is a pretty much solved problem with DT, we
+have a well defined sub tree to represent the MAC, the MDIO bus and
+the PHY on the bus.
 
-  Linux 6.8-rc1 (2024-01-21 14:11:32 -0800)
+But we do have two classes of properties here. The MAC address is
+unique to a board. So that does need to be stored in the EEPROM, and
+cannot be in a one time converted manifest to DT file stored in
+/lib/firmware. However, to some extent, this is a solved problem. We
+have a DT representation of how to look in an EEPROM to find the MAC
+address. So the DT just needs to point to some bytes in the manifest
+in the EEPROM.
 
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/remoteproc/linux.git tags/hwlock-v6.9
-
-for you to fetch changes up to cebaa386d5ee1a44a58c12f1d220f62cc567fdb0:
-
-  hwspinlock: omap: Use index to get hwspinlock pointer (2024-03-05 20:01:14 -0800)
-
-----------------------------------------------------------------
-hwspinlock updates for v6.9
-
-This provides some code cleanup for the OMAP hwspinlock driver.
-
-----------------------------------------------------------------
-Andrew Davis (4):
-      hwspinlock: omap: Remove unneeded check for OF node
-      hwspinlock: omap: Use devm_pm_runtime_enable() helper
-      hwspinlock: omap: Use devm_hwspin_lock_register() helper
-      hwspinlock: omap: Use index to get hwspinlock pointer
-
- drivers/hwspinlock/omap_hwspinlock.c | 57 +++++++-----------------------------
- 1 file changed, 10 insertions(+), 47 deletions(-)
+	Andrew
