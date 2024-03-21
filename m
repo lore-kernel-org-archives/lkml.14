@@ -1,108 +1,151 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A4B58228;
-	Thu, 21 Mar 2024 11:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1F958129;
+	Thu, 21 Mar 2024 11:24:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711020278; cv=none; b=DqdoqsmPZX8AEG55T29y3qqsU/yNyr6TNBUjOKDLbp/S87LGp7OQI3DytqW/3Z7zgOG1/IymVdS2eMzpiErvOXFZT2Njxfkh5yONZzVLehPx2mnZ5ny7NbOMjUm8iLkBURpD6neluPfpjiw3Z4CKre+4Ixh4Uts1f2SN5X6tAA4=
+	t=1711020297; cv=none; b=Q3z9pOzGdUa08lCdMDRao0WvyqPvTtNz+3hmqxeDpD4n8RsaWy0JWE2NyLqChO8US0xlLYhtGyC+xBn7XXCRGDBsTZktlvTXZwSE8yPeGWBboOlq9pAx3kCOrA91TpQmT/1y4D2YYeABqn/gBywYXkFAgmkpWHYTaN8jqFg78fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711020278; c=relaxed/simple;
-	bh=2xmJIUpAnX0WoR/2adOWV/CSntMFENrOlMHHKXNqdjQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fED/qPVSN663kh3X01UD4mHGXbN1+s2GuOFYFw1oC09Azgh2t34Ri9IHvKZL0N2is1gi5CY+HsUCkU98AJnVKAbMaP4da3oTul/Qm3sfWMI79DDR7gCHmp0SYCkzNSwr0U/dLrvzneUmg3cLX+6EXuZ2Zzcr1H6LK8qOiAOySLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=W99tkOqB; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1711020297; c=relaxed/simple;
+	bh=3ILvGA3dlGIwDdBbVnww9/UjWTQFT0UfP6FD0k71DxY=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=AHPGtsiqumqt4iJhUwCvcV+DsZNaK1V485oNyTnpCfKmi8X/hvFwE2/ciLed1Q/7l0QBESrBn8KzU9HM914mVdC3av6BryUWSvqxJthXUOaaf3uOrBUBj841Z4RbT+j3xcpqTX4PK1XoBsue7gtrvqX9SzgRpOnQkrHZ5ovP+5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gKqs2UKr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0IediqO2; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="W99tkOqB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=/68CR4f0azvzcAmAfC291AOl4wS99r8FrcRejyLq6xM=; b=W99tkOqBejY893YpC1mtzh9mSp
-	gSa43/zdRcQpaebucrIyVrHxRsSIDRvVgZnItXAPDixGHUB5u4//H27eDTOTj5newSQixHC6+jynm
-	r5qETHV1Ogr4iSiXWxS3zADgqkER/fq/MSBqvSy/GOvGWWlzeV+SY1pG5MjPt9mOY5lligJmN3UIf
-	yDp2jMybyFbaLB866k7EJlMFVUhcd0byz9JSyy+ds6mo4HUA1IBkeXoaAVNobNqzOepGc56fHbhct
-	zKUDDEkpK0iAbRYRuCslUcOC/6KBZycr2Okkdz1t+aI3TOKfG5SePHOuDK5s5Tw7nf21CYpdbDkyk
-	AQVn5l7g==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46498)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rnGWd-0007UH-2y;
-	Thu, 21 Mar 2024 11:24:01 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rnGWW-0003bL-0S; Thu, 21 Mar 2024 11:23:52 +0000
-Date: Thu, 21 Mar 2024 11:23:51 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: David Laight <David.Laight@aculab.com>,
-	Ard Biesheuvel <ardb@kernel.org>
-Cc: 'Jiangfeng Xiao' <xiaojiangfeng@huawei.com>,
-	"arnd@arndb.de" <arnd@arndb.de>,
-	"keescook@chromium.org" <keescook@chromium.org>,
-	"haibo.li@mediatek.com" <haibo.li@mediatek.com>,
-	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>,
-	"amergnat@baylibre.com" <amergnat@baylibre.com>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"douzhaolei@huawei.com" <douzhaolei@huawei.com>,
-	"gustavoars@kernel.org" <gustavoars@kernel.org>,
-	"jpoimboe@kernel.org" <jpoimboe@kernel.org>,
-	"kepler.chenxin@huawei.com" <kepler.chenxin@huawei.com>,
-	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"nixiaoming@huawei.com" <nixiaoming@huawei.com>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"wangbing6@huawei.com" <wangbing6@huawei.com>,
-	"wangfangpeng1@huawei.com" <wangfangpeng1@huawei.com>,
-	"jannh@google.com" <jannh@google.com>,
-	"willy@infradead.org" <willy@infradead.org>
-Subject: Re: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
-Message-ID: <ZfwYx/8k8FVONg6+@shell.armlinux.org.uk>
-References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
- <1710906278-23851-1-git-send-email-xiaojiangfeng@huawei.com>
- <ZfqiD8Yw0oOVHW/p@shell.armlinux.org.uk>
- <84a57ca8-8963-ca24-8bd1-ddc5c33bf4da@huawei.com>
- <Zfs7sT6Pxy5yjnPC@shell.armlinux.org.uk>
- <bad25937-fc98-8e11-4279-ab6b3a727c1f@huawei.com>
- <bbcca1e205384cf0b42236e17f3969f7@AcuMS.aculab.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gKqs2UKr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0IediqO2"
+Date: Thu, 21 Mar 2024 11:24:53 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1711020294;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DB3NZ8/yiTaLUxCgKAXvKDAwe8/HCjA6a2zA8+1znnM=;
+	b=gKqs2UKrCIylI+dIm1SULPrulvoxlsBckxEzczWPpmyt/gYqLz1WTAwIkO7XRCPWgOwg17
+	U3ztddeKcRx4BMubgNZ637zcBvNAxEf9xo/h3aPY62nbbydAppv2rV60Dbm6ndTeY0E55R
+	xyPdjTxKljU34JWqMlwJHELKYF812cC+fMXvp/RWNzhfMa65VHVHvlnUsTE7lXZxeE1NN6
+	QCccgJ8ktwz3YSsSt3Zg7H/kSvHMqds7xvwby6Di4roAImi4Y4pzkxLWIVj6o8ZRQLdJ7p
+	AVMhabEXsobzAUV5ZYPD18ZDfftkZ3H10LCc7yRhJgRsRopGQvxJrxtjvATx3g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1711020294;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DB3NZ8/yiTaLUxCgKAXvKDAwe8/HCjA6a2zA8+1znnM=;
+	b=0IediqO2vzc8U9VHATBsHFn4Ut+0XpvBNsLzp+sNPkIhnmSIY51Q+jfzgV/QI2iNypxpDO
+	jYfbpWCguTJ6gaCg==
+From: "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/urgent] timers: Fix removed self-IPI on global timer's
+ enqueue in nohz_full
+Cc: "Paul E. McKenney" <paulmck@kernel.org>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240318230729.15497-3-frederic@kernel.org>
+References: <20240318230729.15497-3-frederic@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bbcca1e205384cf0b42236e17f3969f7@AcuMS.aculab.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Message-ID: <171102029326.10875.6622636119030507753.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 21, 2024 at 10:22:30AM +0000, David Laight wrote:
-> How aggressively does the compiler optimise 'noreturn' functions?
+The following commit has been merged into the timers/urgent branch of tip:
 
-I've seen cases where the compiler emits a BL instruction as the very
-last thing in the function, and nothing after it.
+Commit-ID:     03877039863be021a19fda307136657bb6d61f75
+Gitweb:        https://git.kernel.org/tip/03877039863be021a19fda307136657bb6d61f75
+Author:        Frederic Weisbecker <frederic@kernel.org>
+AuthorDate:    Tue, 19 Mar 2024 00:07:29 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 19 Mar 2024 10:14:55 +01:00
 
-This is where the problem lies - because the link register value
-created by the BL instruction will point to the instruction after the
-BL which will _not_ part of the function that invoked the BL. That
-will probably cause issues for the ELF unwinder, which means this
-issue probably goes beyond _just_ printing the function name.
+timers: Fix removed self-IPI on global timer's enqueue in nohz_full
 
-I have vague memories that Ard has been involved in the unwinder,
-maybe he could comment on this problem? Maybe we need the unwinder
-itself to do the correction? I also wonder whether we should only
-do the correction if we detect that we're pointing at the first
-instruction of a function, and the previous instruction in the
-text segment was a BL.
+While running in nohz_full mode, a task may enqueue a timer while the
+tick is stopped. However the only places where the timer wheel,
+alongside the timer migration machinery's decision, may reprogram the
+next event accordingly with that new timer's expiry are the idle loop or
+any IRQ tail.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+However neither the idle task nor an interrupt may run on the CPU if it
+resumes busy work in userspace for a long while in full dynticks mode.
+
+To solve this, the timer enqueue path raises a self-IPI that will
+re-evaluate the timer wheel on its IRQ tail. This asynchronous solution
+avoids potential locking inversion.
+
+This is supposed to happen both for local and global timers but commit:
+
+	b2cf7507e186 ("timers: Always queue timers on the local CPU")
+
+broke the global timers case with removing the ->is_idle field handling
+for the global base. As a result, global timers enqueue may go unnoticed
+in nohz_full.
+
+Fix this with restoring the idle tracking of the global timer's base,
+allowing self-IPIs again on enqueue time.
+
+Fixes: b2cf7507e186 ("timers: Always queue timers on the local CPU")
+Reported-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20240318230729.15497-3-frederic@kernel.org
+
+---
+ kernel/time/timer.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index e69e75d..dee29f1 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -642,7 +642,8 @@ trigger_dyntick_cpu(struct timer_base *base, struct timer_list *timer)
+ 	 * the base lock:
+ 	 */
+ 	if (base->is_idle) {
+-		WARN_ON_ONCE(!(timer->flags & TIMER_PINNED));
++		WARN_ON_ONCE(!(timer->flags & TIMER_PINNED ||
++			       tick_nohz_full_cpu(base->cpu)));
+ 		wake_up_nohz_cpu(base->cpu);
+ 	}
+ }
+@@ -2292,6 +2293,13 @@ static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem,
+ 		 */
+ 		if (!base_local->is_idle && time_after(nextevt, basej + 1)) {
+ 			base_local->is_idle = true;
++			/*
++			 * Global timers queued locally while running in a task
++			 * in nohz_full mode need a self-IPI to kick reprogramming
++			 * in IRQ tail.
++			 */
++			if (tick_nohz_full_cpu(base_local->cpu))
++				base_global->is_idle = true;
+ 			trace_timer_base_idle(true, base_local->cpu);
+ 		}
+ 		*idle = base_local->is_idle;
+@@ -2364,6 +2372,8 @@ void timer_clear_idle(void)
+ 	 * path. Required for BASE_LOCAL only.
+ 	 */
+ 	__this_cpu_write(timer_bases[BASE_LOCAL].is_idle, false);
++	if (tick_nohz_full_cpu(smp_processor_id()))
++		__this_cpu_write(timer_bases[BASE_GLOBAL].is_idle, false);
+ 	trace_timer_base_idle(false, smp_processor_id());
+ 
+ 	/* Activate without holding the timer_base->lock */
