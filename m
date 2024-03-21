@@ -1,258 +1,507 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2056.outbound.protection.outlook.com [40.107.94.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F84686134
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 15:04:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711033448; cv=fail; b=t97qYBiNZXxftU7jHnpBHaUfzd7OJ1T9iCbcI4Y5He+gj+Q8PqxWWfVPhw8tXN4m0H3hmiJOP7kvsHpK30JYBe+rcYhShvIDqnhJe7NYoo2LgwF/rlJppk7cIDSALDm77wW7WzjrkYspLbiSFU28Tou/RkNcTVmqvJ6wqJhxpok=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711033448; c=relaxed/simple;
-	bh=17/NNdRarRwtrXlmo9kIDthtApG3yiOHYcds+zEI7UA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uCli186IvjNjU/ctobrS9hsBmfbRsCqFKrOKAkxBiNlDOtCHw8QoFVLk9ad6jBtKploXK5t0kxyhmNKxnZyvcMaE3mfXxUa1W8x/OJXmXHd/k6iRp+3mrBC1IjQ/6ib0fi9RJuSuCo6DQXxD660NaFSB57QVlw+cJKA7UzB2VE8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=GiCoy3WU; arc=fail smtp.client-ip=40.107.94.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="GiCoy3WU"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=O0YTc5y+65v1FCjzrJCnki2Dy3ZTNuacJd+dibOZ+LTZCZdHvP/+S40EM7xemRplZ2ySEwFi+0cERvF8uzD8LM9NMKG3O+1834qqcFYlGlTzKCJ79mpjUBj6+hdSphONVBZtwM4G381PNILOef6B68qhp5CYexPAGctE1TTDCXZ9WSIn5BVmEtLMjGsDJ6HgqoLQHcF6AUNnlD2SMq85ILbXwEqisIl0Cs/LwxO1pTKmtV6eoLPOJV72foCGrbk9Upy/58d84KbeN/rahfJOB8chI+P3Hm5zjlhhJ9oWcZMuHFKRZy+QeDx/YoFN9SP09uc4wd7w8uM8+wmysPyLzQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TLVEXZ1Qwgspmb5Eeay8qRhig9wvLWVCOiLPwnI0FoU=;
- b=Ylyb9fGLiqv0IVIuaQOSA/Xrh2pf3OTMZ8R4yAlGDny71h07KanAVvRZ/C4uVo4o4AOzTguFU1Lsa68r0NBRWTlzz8zZS+H39Q0CcuXQaHC1cPNEuILBtTSGYl5XeDEhthOVw8WtEjpJoxsCBuixSwHFXC+2IYlMFSolq770ZqAzHOvaQ1jQe2KqeJ1cOR6aUjpu1CCt3RqGRheMZwtCrNEpfMEtzXW+1newn8ycwvUeoJYJWCoMi/jASbf8olGFNNur1bVniaCl+wcj+NRUG9ab0LNJ3kRRz1ee6z4Ddb9v42u50HoAlJso6Qhz09h1ZEwYL/OeSZuPp58rXk61/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TLVEXZ1Qwgspmb5Eeay8qRhig9wvLWVCOiLPwnI0FoU=;
- b=GiCoy3WUzg5PlkMKhwhQkx3T5nuYXYXzP9MTyxub5uSpzTYR+KZSNyNo5RLIBRBUF9mzLKwH8rVvfBu2Ymvl/3pM84S+Z54utNenn9RJ+fMdi3a8DPhatxz1M80JHyo8ceRGCgbS3QvE1eufNE9LFeiaFlAYuGt5HIR68b/rlfoxNHLTvImUl44xs+FLTS2ss5j3dMnuVoxfIZ7CeM2RTvVcJbDqwhDi8Fcl4zjGdHlwdRMfnU9Vr7+dca6jy4kFsLNr1xR/OKUyMO7y+WeF5XfWPinB0PQ5E8pdtyYu+15d5/X5Wovy2tui18mD/p/Oyvl+zmr2IpDdvTnQuUBr7w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB5744.namprd12.prod.outlook.com (2603:10b6:8:73::18) by
- IA1PR12MB6236.namprd12.prod.outlook.com (2603:10b6:208:3e4::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.31; Thu, 21 Mar
- 2024 15:04:01 +0000
-Received: from DS7PR12MB5744.namprd12.prod.outlook.com
- ([fe80::dc5c:2cf1:d5f5:9753]) by DS7PR12MB5744.namprd12.prod.outlook.com
- ([fe80::dc5c:2cf1:d5f5:9753%6]) with mapi id 15.20.7386.031; Thu, 21 Mar 2024
- 15:04:00 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: kernel test robot <lkp@intel.com>,
- Andrew Morton <akpm@linux-foundation.org>, oe-kbuild-all@lists.linux.dev,
- Linux Memory Management List <linux-mm@kvack.org>,
- Vlastimil Babka <vbabka@suse.cz>, Mel Gorman <mgorman@suse.de>,
- "\"Huang, Ying\"" <ying.huang@intel.com>,
- David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/10] mm: page_isolation: prepare for hygienic freelists
-Date: Thu, 21 Mar 2024 11:03:58 -0400
-X-Mailer: MailMate (1.14r6018)
-Message-ID: <419F2502-507B-4228-860B-217EE74C45B6@nvidia.com>
-In-Reply-To: <20240321142426.GB777580@cmpxchg.org>
-References: <20240320180429.678181-10-hannes@cmpxchg.org>
- <202403212118.ye7lcKjD-lkp@intel.com> <20240321142426.GB777580@cmpxchg.org>
-Content-Type: multipart/signed;
- boundary="=_MailMate_BE5DCAED-0F87-4ACF-A8B5-DB176F96BC63_=";
- micalg=pgp-sha512; protocol="application/pgp-signature"
-X-ClientProxiedBy: MN2PR06CA0025.namprd06.prod.outlook.com
- (2603:10b6:208:23d::30) To DS7PR12MB5744.namprd12.prod.outlook.com
- (2603:10b6:8:73::18)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A8A8565C
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 15:04:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711033447; cv=none; b=p7XNrXP/Uac+SwnB25UBSKUDSIy96EphhDzUa6eQ5UqFBUc3IMB+jreWHfC+PTAzMOnZeqimKSVqskYwvgOXy4ET1P75OiCIf39uqy28H3qQ1D6N9UC9iM/Lkm2CZ25Kfg8+HkWrCOG16al3JoawwKqcrGtBiDcB+dmZinE97pA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711033447; c=relaxed/simple;
+	bh=9oMXf/1vXtIyiyUedrD3DUM3qt8Oncs3AJLV6K7yESE=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=bpN/isw++HLyT58FDDWS8nFfG6SpNgWwWWTTb2PU7tLja/bXjcncWGNcrcnCBW6trwM9UPZBzp2s6rtjCsYLxhh0BZM9orNzsabBBfJ0db0OSf2bbTSI4lm7jbJRQ9bKABbEwT/ZRLFqZsJ00VTBg3SvdbXrxBqqS9a2kb8d7Rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7cc74ea8606so103628639f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 08:04:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711033444; x=1711638244;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tD8PyLq0PUsTuPRXHviH68ygNKPgjNhHZ49XGGTuN90=;
+        b=FDr2hUKXlKtErKjzyEOw9EV8JqpUkfOE6Sp++b/eWwzxMEdh2oMt9PLYwGRNUJeF4l
+         Dh2sHX9inTh7m1zm1EyemruS4D2EoY3EqLjkvNLBcz5bG19cNiJwH5hBYKXvANrBkfWH
+         Lh13HRd1OQfpyJgoEBsinvK8WT/3nzwasr36MFmOHDnhAHDBVH7iciQhn1plBD/YOh1O
+         UTSyWQP+bxZ9TS8WGKzMV0GGowYUQ0zNwvvCnDHKbogFkJEp5FioE60DM4wYfUxlx95z
+         T1iJBV6iui0Eg7WWmAhYzvuhWjofipkNkhS5NQH5SEIA4135RmBA1NoCni3McpsqW4Id
+         r2vA==
+X-Forwarded-Encrypted: i=1; AJvYcCXtfyreu56HI1pnd+QYra2d9flEQYJFkctsJOjAo7YjcYFtD+icAHrD0WsOCvAGMrpoGskkbKNk1T5Po8NU7XWafdFDvWKna2Nd/8At
+X-Gm-Message-State: AOJu0YyKDfOIQXjv7+G4u72MOEYqUYTom/97IIP4CQvWamqG2HMf8q/F
+	V4zaxWqFNcg92TX5920Ufz+pAAy5G+Bl+S2XRQsZaeqk4rmvsObM/IzPo0nncouV4tZq2VMuvNT
+	O33BOhve83knp/jtnelKFJtZsqj+frTOGqWnr9RmdH0J71aBMlzvcg3k=
+X-Google-Smtp-Source: AGHT+IEjXrik8ORbsbJjBwRzpAnhcmgGgjjkGGsthxctStwy5FnFG3gb4pw5LxpbaoDT4YRw20p3+u0tXLZ7LG9hfwCimn1NBfRD
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB5744:EE_|IA1PR12MB6236:EE_
-X-MS-Office365-Filtering-Correlation-Id: a356a583-060b-4b9a-c39d-08dc49b82401
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	7al0dhwcM9FbB4MnYcXutQv4GkKXVNL94l2CWvRwL6iHHvlGkJYoSgdbfOH05HLOfMzOpZhBevx4YqhXLepaoSGSG/smFjz320e3wjKUrt65MEvz21vfyOtozGnoSfYwYY/B97ckszTUkGHI2O10/q+Ssj8vo4skcFbY+35ACjdeZ6+bjM1xWOuzDJX8HrVIYCa6xcouzS/CqlannenAKDG5rjDVS3oGpEvx0Kx1SGwMS58Nje6xc4dfdECsYFDhBeJ57SYy2FjCbZFLW+sJbqO9dty6CxEW4z67fJBn/v2pDkL3Rpaijb1/PJ67BfaIMZYt7Zf6GJ6XlT2Ll0cxjlhf0g2AVI4bZxvq1mXX1Bsy+p0ZnuoWR4VgneKpEGa3yZmdNgJzRTKRLKy0+hhH0niDxnp15/GDMXigY5zha8Xg+aVggWKf2WiWoTsCw2ujq+n+ubq0866m++GbnJ1Z7YpdOjdfIBcihGmtH1N6+h/r4W5SXja2+xwecx2xvNR9sSeEtnuGZkSeVKMMOD2BmpwqdKE87UG5AZ3p+v4XkdsBMBktH8wStytnSA2/w7A/xLsfFblsvSx0w2pIp8+lGllw0W1V+Vvk3KZ0p33t//gpeIvhwM0eCsSVKQ6iVHPqnm3GIjmJFZ7QnZ9vBf7bXnJGPbRdPt6QrZH7qYJq2ZY=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB5744.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(7416005)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?DVPFlNBifzwDE7NvyEnr/MmVFhkab9sp4ygXwte7p+h1DYZdbUkbJ2nCE+Rb?=
- =?us-ascii?Q?DzpmCjACcP0mpKtc5GrOsJdf4fYSk0LgaXl49M+rG3cz/i8qrY6dFKfJr7CD?=
- =?us-ascii?Q?+HwdXqQnTXKVDsP0+s4e6PfGRMV2/NtyEWikZRvMBOd5+QdDVyRaya3fwJ47?=
- =?us-ascii?Q?S2RUDDZpHFLYv+mdrtY15DV6YZ8Bu1BifuebgUsgOaTR+zgzzuDAPSCvbJB3?=
- =?us-ascii?Q?TgFcTGO7uG/iDiKwCZzJrnBN8cFZ9Zu8GIowkGUKrfWHH95CG1SPNfYuHrqT?=
- =?us-ascii?Q?s8D84/iZ5vqZVFb8vB9viRArA+Lb6BUYIcBg9aFaeIOrm83guJlSZ07/WVbX?=
- =?us-ascii?Q?11/yOxQKN91YyzgHM3URxTs3bdXwEV01P3Oh9pWSniYhCy9QzXVP1muo/Ttt?=
- =?us-ascii?Q?qjpu0dpimYwGNMYxRXmORQkYKbkml+adb0W9P0qgvh/44KejI3w395/9aJuH?=
- =?us-ascii?Q?vIJPpWFW/MBj4h3mjxFOMvci4NAGKyhIkisi9etlaP9Nk3XCXdgsdJ4RgpS7?=
- =?us-ascii?Q?UB4N0wuWqPKgYMZmgtp8fXBb24I9umvy0CRgY0mTrQd8iB4KWMcZJuKOxyu3?=
- =?us-ascii?Q?FIGgMVLjx7RaeT+xxt3bzdTRnmyym+HhfGT9CZSoX2u4IbDywQmHvxEnEgAm?=
- =?us-ascii?Q?vxuNYykv1wO66npDE5Vv8Iw8yGc2qJiQnEXN7aFUPh0xlePzr9vAdCz942OF?=
- =?us-ascii?Q?2B2yo2F/OgdA/KYdn+DsVoMQF2xzVQlhWRvuyyB2p7rFh+IwDj7MWrCfv4Ky?=
- =?us-ascii?Q?p9mD4Y88fjsBY/JZy9d+0bdUzRUXN4fSzcawoqa2yPwF+k5vrqf/U4udAFIR?=
- =?us-ascii?Q?YIwY/PMtGwyIJ1kw5DsxC3654aSpcDtRKBoLtjtkk59b8GyckCaYJPL+SWrF?=
- =?us-ascii?Q?l/TVXP8Nv40tpXgAl2G+Y6FOn2Y+WtGH2gMJ8RJdCPkjcqr0RjQLsQyXIFqK?=
- =?us-ascii?Q?tyVFmqsBCkvIdf2XUstEecZXaoZ84LaoZFl8ng1c5VMOwrnv5YC3eUMtXD8R?=
- =?us-ascii?Q?HVxbO14f9bN9Vz7whrIEP8T91HABgF/EE1XkMrJvhGu/MwgbAepdi8BXLsFe?=
- =?us-ascii?Q?axdzY3pUKGl29GmpqHQ1YMvhuJCvs73R9IwjlcpT9bPx6je1hu5kmupAuooS?=
- =?us-ascii?Q?5YnZUvZAPVTlvgQZ5jswbzwxqikidpvp6w2exA3tvvE7Dr4ryR7psn7yI8aa?=
- =?us-ascii?Q?vbyH6BRvV6YF+1I1oWOwSzPKTHitVTq5sn5TOIkAUPRgZ22LlK2LdJdAFlqc?=
- =?us-ascii?Q?RGq3XtuAqLRCRhAQRNr+SD760avL+OB8WQvN427s8yv0Yle0C7eYFQRVNBMm?=
- =?us-ascii?Q?A9kM5/GhlKN+r0MfFaU8N9qXu4M/PqpOuuXklzCDYSZMwhlUlcZRepehbSQa?=
- =?us-ascii?Q?tSxnqoQkUMmNZHIFjqtEBbb2u0AaCxN+BdJD/hd+MYSUnBkrq6Fw4PaQrR2t?=
- =?us-ascii?Q?UzbBr/gp1pOxKj5i5TbSaM5kTXHJQSd4bAWeQbg8sJd+y45ZmZO9eQzlakxx?=
- =?us-ascii?Q?SbJpbUbmMTHwVrVq+C5jlD5+K05JdvgKfRG1T4emcOWEt3MU2IpeM8SCXhoJ?=
- =?us-ascii?Q?MqYxVpLG3F0PMVqWbPw=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a356a583-060b-4b9a-c39d-08dc49b82401
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB5744.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2024 15:04:00.8573
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mB1ml7qxvlTQtjgG6mvkJc1qYAb9xe6rFaQDc37OGYmurDQh9oJxMgHj662qjSp4
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6236
+X-Received: by 2002:a92:360a:0:b0:366:9ead:645b with SMTP id
+ d10-20020a92360a000000b003669ead645bmr449259ila.1.1711033444453; Thu, 21 Mar
+ 2024 08:04:04 -0700 (PDT)
+Date: Thu, 21 Mar 2024 08:04:04 -0700
+In-Reply-To: <tencent_C086D8D2CB0650C9932EECAECC0CBFE7EB06@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a7e4fe06142d048c@google.com>
+Subject: Re: [syzbot] [bpf?] [net?] possible deadlock in rcu_report_exp_cpu_mult
+From: syzbot <syzbot+c4f4d25859c2e5859988@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
---=_MailMate_BE5DCAED-0F87-4ACF-A8B5-DB176F96BC63_=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-On 21 Mar 2024, at 10:24, Johannes Weiner wrote:
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+possible deadlock in add_timer_on
 
-> On Thu, Mar 21, 2024 at 09:13:57PM +0800, kernel test robot wrote:
->> Hi Johannes,
->>
->> kernel test robot noticed the following build warnings:
->>
->> [auto build test WARNING on akpm-mm/mm-everything]
->>
->> url:    https://github.com/intel-lab-lkp/linux/commits/Johannes-Weiner=
-/mm-page_alloc-remove-pcppage-migratetype-caching/20240321-020814
->> base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm=
--everything
->> patch link:    https://lore.kernel.org/r/20240320180429.678181-10-hann=
-es%40cmpxchg.org
->> patch subject: [PATCH 09/10] mm: page_isolation: prepare for hygienic =
-freelists
->> config: i386-randconfig-003-20240321 (https://download.01.org/0day-ci/=
-archive/20240321/202403212118.ye7lcKjD-lkp@intel.com/config)
->> compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
->> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/ar=
-chive/20240321/202403212118.ye7lcKjD-lkp@intel.com/reproduce)
->>
->> If you fix the issue in a separate patch/commit (i.e. not just a new v=
-ersion of
->> the same patch/commit), kindly add following tags
->> | Reported-by: kernel test robot <lkp@intel.com>
->> | Closes: https://lore.kernel.org/oe-kbuild-all/202403212118.ye7lcKjD-=
-lkp@intel.com/
->>
->> All warnings (new ones prefixed by >>):
->>
->>    mm/page_alloc.c: In function 'move_freepages_block_isolate':
->>>> mm/page_alloc.c:688:17: warning: array subscript 11 is above array b=
-ounds of 'struct free_area[11]' [-Warray-bounds]
->>      688 |  zone->free_area[order].nr_free--;
->>          |  ~~~~~~~~~~~~~~~^~~~~~~
->>>> mm/page_alloc.c:688:17: warning: array subscript 11 is above array b=
-ounds of 'struct free_area[11]' [-Warray-bounds]
->
-> I think this is a bug in the old gcc.
->
-> We have this in move_freepages_block_isolate():
->
-> 	/* We're the starting block of a larger buddy */
-> 	if (PageBuddy(page) && buddy_order(page) > pageblock_order) {
-> 		int mt =3D get_pfnblock_migratetype(page, pfn);
-> 		int order =3D buddy_order(page);
->
-> 		if (!is_migrate_isolate(mt))
-> 			__mod_zone_freepage_state(zone, -(1UL << order), mt);
-> 		del_page_from_free_list(page, zone, order);
->
-> And this config doesn't have hugetlb enabled, so:
->
-> /* If huge pages are not used, group by MAX_ORDER_NR_PAGES */
-> #define pageblock_order         MAX_PAGE_ORDER
->
-> If buddies were indeed >MAX_PAGE_ORDER, this would be an out-of-bounds
-> access when delete updates the freelist count. Of course, buddies per
-> definition cannot be larger than MAX_PAGE_ORDER. But the older gcc
-> doesn't seem to realize this branch in this configuration is dead.
->
-> Maybe we can help it out and make the impossible scenario a bit more
-> explicit? Does this fixlet silence the warning?
->
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index efb2581ac142..4cdc356e73f6 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -1698,6 +1698,10 @@ bool move_freepages_block_isolate(struct zone *z=
-one, struct page *page,
->  				       NULL, NULL))
->  		return false;
->
-> +	/* No splits needed if buddies can't span multiple blocks */
-> +	if (pageblock_order =3D=3D MAX_PAGE_ORDER)
-> +		goto move;
-> +
->  	/* We're a tail block in a larger buddy */
->  	pfn =3D find_large_buddy(start_pfn);
->  	if (pfn !=3D start_pfn) {
-> @@ -1725,7 +1729,7 @@ bool move_freepages_block_isolate(struct zone *zo=
-ne, struct page *page,
->  		split_large_buddy(zone, page, pfn, order);
->  		return true;
->  	}
-> -
-> +move:
->  	mt =3D get_pfnblock_migratetype(page, start_pfn);
->  	nr_moved =3D move_freepages(zone, start_pfn, end_pfn, migratetype);
->  	if (!is_migrate_isolate(mt))
->
-> Zi Yan, does this look sane to you as well?
-Yes. This and patch 9 look good to me. Thanks.
+=====================================================
+WARNING: HARDIRQ-safe -> HARDIRQ-unsafe lock order detected
+6.8.0-syzkaller-05231-ga51cd6bf8e10-dirty #0 Not tainted
+-----------------------------------------------------
+udevd/5417 [HC0[0]:SC1[1]:HE0:SE0] is trying to acquire:
+ffff88806c3c9020 (&htab->buckets[i].lock){+.-.}-{2:2}, at: sock_hash_delete_elem+0xb1/0x2f0 net/core/sock_map.c:940
 
-For both, Reviewed-by: Zi Yan <ziy@nvidia.com>
+and this task is already holding:
+ffffffff94697d58 (&obj_hash[i].lock){-.-.}-{2:2}, at: debug_object_active_state+0x15d/0x360 lib/debugobjects.c:936
+which would create a new lock dependency:
+ (&obj_hash[i].lock){-.-.}-{2:2} -> (&htab->buckets[i].lock){+.-.}-{2:2}
 
-I also tested them locally and confirm it is a gcc bug and this fix
-works for gcc-9.3:
-1. gcc-13.2 does not give any warning for the original patch 9
-2. gcc-9.3 gives the warning for the origin patch, but the warning goes
-away with this patch applied.
+but this new dependency connects a HARDIRQ-irq-safe lock:
+ (&obj_hash[i].lock){-.-.}-{2:2}
 
---
-Best Regards,
-Yan, Zi
+... which became HARDIRQ-irq-safe at:
+  lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+  _raw_spin_lock_irqsave+0xd5/0x120 kernel/locking/spinlock.c:162
+  debug_object_assert_init+0x164/0x440 lib/debugobjects.c:897
+  debug_timer_assert_init kernel/time/timer.c:846 [inline]
+  debug_assert_init kernel/time/timer.c:891 [inline]
+  add_timer_on+0xc3/0x5c0 kernel/time/timer.c:1351
+  handle_irq_event_percpu kernel/irq/handle.c:195 [inline]
+  handle_irq_event+0xad/0x1f0 kernel/irq/handle.c:210
+  handle_level_irq+0x3c5/0x6e0 kernel/irq/chip.c:648
+  generic_handle_irq_desc include/linux/irqdesc.h:161 [inline]
+  handle_irq arch/x86/kernel/irq.c:238 [inline]
+  __common_interrupt+0x13a/0x230 arch/x86/kernel/irq.c:257
+  common_interrupt+0xa5/0xd0 arch/x86/kernel/irq.c:247
+  asm_common_interrupt+0x26/0x40 arch/x86/include/asm/idtentry.h:693
+  __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152 [inline]
+  _raw_spin_unlock_irqrestore+0xd8/0x140 kernel/locking/spinlock.c:194
+  __setup_irq+0x1277/0x1cf0 kernel/irq/manage.c:1818
+  request_threaded_irq+0x2ab/0x380 kernel/irq/manage.c:2202
+  request_irq include/linux/interrupt.h:168 [inline]
+  setup_default_timer_irq+0x25/0x60 arch/x86/kernel/time.c:70
+  x86_late_time_init+0x66/0xc0 arch/x86/kernel/time.c:94
+  start_kernel+0x3f3/0x500 init/main.c:1039
+  x86_64_start_reservations+0x2a/0x30 arch/x86/kernel/head64.c:509
+  x86_64_start_kernel+0x99/0xa0 arch/x86/kernel/head64.c:490
+  common_startup_64+0x13e/0x147
 
---=_MailMate_BE5DCAED-0F87-4ACF-A8B5-DB176F96BC63_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename=signature.asc
-Content-Type: application/pgp-signature; name=signature.asc
+to a HARDIRQ-irq-unsafe lock:
+ (&htab->buckets[i].lock){+.-.}-{2:2}
 
------BEGIN PGP SIGNATURE-----
+... which became HARDIRQ-irq-unsafe at:
+...
+  lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:126 [inline]
+  _raw_spin_lock_bh+0x35/0x50 kernel/locking/spinlock.c:178
+  spin_lock_bh include/linux/spinlock.h:356 [inline]
+  sock_hash_free+0x164/0x820 net/core/sock_map.c:1155
+  bpf_map_free_deferred+0xe6/0x110 kernel/bpf/syscall.c:734
+  process_one_work kernel/workqueue.c:3254 [inline]
+  process_scheduled_works+0xa00/0x1770 kernel/workqueue.c:3335
+  worker_thread+0x86d/0xd70 kernel/workqueue.c:3416
+  kthread+0x2f0/0x390 kernel/kthread.c:388
+  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
 
-iQJDBAEBCgAtFiEE6rR4j8RuQ2XmaZol4n+egRQHKFQFAmX8TF4PHHppeUBudmlk
-aWEuY29tAAoJEOJ/noEUByhUtjQQAKMU2OSx5GRDea5w6s3QLgnTlccTtu5IkcWh
-cra/wCSnHXz/VCRSLYo6he2nWFy0qBq8jcFZdgMPPu7MwloClboFlmzanB1qxkal
-AiALGBk16zWEZoHFiOV2jVEmsa2GLOJ/TUymlpc8DePdbY+fyayPJy/rZEVVjZVc
-reqi2mpWsyxqcR4891SJMgeJsBfbrv4D72IOb+mTEP8GKumulXASIS3lrfYH48EJ
-sJJqms66Cvt6D6owof/qXHITt9zMpNjK6Bu7WcL8MWrdaUTGszuo9fpSeUOu5h5Z
-MfGTc41mUOs1WLMvHZrbDvLwt0oOUdAC7QRt9UmPcz+Ljw8mBtpMW70EhnIBr9CK
-EiKP3HrOxMohk0aSV7qTWLe0U0DpZ1Sp4eob1pugQ6IhJTfWnHgYvh/jwjisDSVp
-/0a8igp0cJidw0rULPTh7qpMyuMo1H5he/dxUaskF+qfKte9WqB2eu5MlpOWR+mn
-WIV5g5S+jTw2V53XO3NVOQVOcuHAxjJz7VhDv6aYDpkLtr476wYNLV8w1+Kr++VA
-s0Ta6ew6mJOYgR1nHjKtxDj0GYtHgdSi8oikd4nxTOEiDeWFyW4w9DC0VZwEeyWR
-MeXwpaPI1u8TVEsIN9UKO+dtSGeY1lsDhJOvVQU6N2gXS0RP9Hch5ajeU40fofKK
-Ep4IKSZj
-=X7nu
------END PGP SIGNATURE-----
+other info that might help us debug this:
 
---=_MailMate_BE5DCAED-0F87-4ACF-A8B5-DB176F96BC63_=--
+ Possible interrupt unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&htab->buckets[i].lock);
+                               local_irq_disable();
+                               lock(&obj_hash[i].lock);
+                               lock(&htab->buckets[i].lock);
+  <Interrupt>
+    lock(&obj_hash[i].lock);
+
+ *** DEADLOCK ***
+
+5 locks held by udevd/5417:
+ #0: ffff88802a208420 (sb_writers#5){.+.+}-{0:0}, at: mnt_want_write+0x3f/0x90 fs/namespace.c:409
+ #1: ffff8880758002d0 (&type->i_mutex_dir_key#5){++++}-{3:3}, at: inode_lock include/linux/fs.h:793 [inline]
+ #1: ffff8880758002d0 (&type->i_mutex_dir_key#5){++++}-{3:3}, at: open_last_lookups fs/namei.c:3564 [inline]
+ #1: ffff8880758002d0 (&type->i_mutex_dir_key#5){++++}-{3:3}, at: path_openat+0x7d3/0x3240 fs/namei.c:3797
+ #2: ffffffff8e236790 (remove_cache_srcu){.+.+}-{0:0}, at: srcu_lock_acquire include/linux/srcu.h:116 [inline]
+ #2: ffffffff8e236790 (remove_cache_srcu){.+.+}-{0:0}, at: srcu_read_lock+0x24/0x50 include/linux/srcu.h:215
+ #3: ffffffff94697d58 (&obj_hash[i].lock){-.-.}-{2:2}, at: debug_object_active_state+0x15d/0x360 lib/debugobjects.c:936
+ #4: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:298 [inline]
+ #4: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:750 [inline]
+ #4: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: __bpf_trace_run kernel/trace/bpf_trace.c:2380 [inline]
+ #4: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: bpf_trace_run2+0x114/0x420 kernel/trace/bpf_trace.c:2420
+
+the dependencies between HARDIRQ-irq-safe lock and the holding lock:
+-> (&obj_hash[i].lock){-.-.}-{2:2} {
+   IN-HARDIRQ-W at:
+                    lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+                    __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+                    _raw_spin_lock_irqsave+0xd5/0x120 kernel/locking/spinlock.c:162
+                    debug_object_assert_init+0x164/0x440 lib/debugobjects.c:897
+                    debug_timer_assert_init kernel/time/timer.c:846 [inline]
+                    debug_assert_init kernel/time/timer.c:891 [inline]
+                    add_timer_on+0xc3/0x5c0 kernel/time/timer.c:1351
+                    handle_irq_event_percpu kernel/irq/handle.c:195 [inline]
+                    handle_irq_event+0xad/0x1f0 kernel/irq/handle.c:210
+                    handle_level_irq+0x3c5/0x6e0 kernel/irq/chip.c:648
+                    generic_handle_irq_desc include/linux/irqdesc.h:161 [inline]
+                    handle_irq arch/x86/kernel/irq.c:238 [inline]
+                    __common_interrupt+0x13a/0x230 arch/x86/kernel/irq.c:257
+                    common_interrupt+0xa5/0xd0 arch/x86/kernel/irq.c:247
+                    asm_common_interrupt+0x26/0x40 arch/x86/include/asm/idtentry.h:693
+                    __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152 [inline]
+                    _raw_spin_unlock_irqrestore+0xd8/0x140 kernel/locking/spinlock.c:194
+                    __setup_irq+0x1277/0x1cf0 kernel/irq/manage.c:1818
+                    request_threaded_irq+0x2ab/0x380 kernel/irq/manage.c:2202
+                    request_irq include/linux/interrupt.h:168 [inline]
+                    setup_default_timer_irq+0x25/0x60 arch/x86/kernel/time.c:70
+                    x86_late_time_init+0x66/0xc0 arch/x86/kernel/time.c:94
+                    start_kernel+0x3f3/0x500 init/main.c:1039
+                    x86_64_start_reservations+0x2a/0x30 arch/x86/kernel/head64.c:509
+                    x86_64_start_kernel+0x99/0xa0 arch/x86/kernel/head64.c:490
+                    common_startup_64+0x13e/0x147
+   IN-SOFTIRQ-W at:
+                    lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+                    __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+                    _raw_spin_lock_irqsave+0xd5/0x120 kernel/locking/spinlock.c:162
+                    debug_object_deactivate+0x158/0x390 lib/debugobjects.c:763
+                    debug_timer_deactivate kernel/time/timer.c:841 [inline]
+                    debug_deactivate kernel/time/timer.c:885 [inline]
+                    detach_timer+0x24/0x300 kernel/time/timer.c:932
+                    expire_timers kernel/time/timer.c:1826 [inline]
+                    __run_timers kernel/time/timer.c:2408 [inline]
+                    __run_timer_base+0x5ef/0x8e0 kernel/time/timer.c:2419
+                    run_timer_base kernel/time/timer.c:2428 [inline]
+                    run_timer_softirq+0x67/0x170 kernel/time/timer.c:2436
+                    __do_softirq+0x2be/0x943 kernel/softirq.c:554
+                    invoke_softirq kernel/softirq.c:428 [inline]
+                    __irq_exit_rcu+0xf2/0x1c0 kernel/softirq.c:633
+                    irq_exit_rcu+0x9/0x30 kernel/softirq.c:645
+                    common_interrupt+0xaa/0xd0 arch/x86/kernel/irq.c:247
+                    asm_common_interrupt+0x26/0x40 arch/x86/include/asm/idtentry.h:693
+                    console_flush_all+0x9cd/0xec0
+                    console_unlock+0x13b/0x4d0 kernel/printk/printk.c:3025
+                    vprintk_emit+0x509/0x720 kernel/printk/printk.c:2292
+                    _printk+0xd5/0x120 kernel/printk/printk.c:2317
+                    calibrate_delay+0x1597/0x16b0 init/calibrate.c:308
+                    start_kernel+0x3fd/0x500 init/main.c:1041
+                    x86_64_start_reservations+0x2a/0x30 arch/x86/kernel/head64.c:509
+                    x86_64_start_kernel+0x99/0xa0 arch/x86/kernel/head64.c:490
+                    common_startup_64+0x13e/0x147
+   INITIAL USE at:
+ }
+ ... key      at: [<ffffffff9466d4c0>] debug_objects_early_init.__key+0x0/0x20
+
+the dependencies between the lock to be acquired
+ and HARDIRQ-irq-unsafe lock:
+-> (&htab->buckets[i].lock){+.-.}-{2:2} {
+   HARDIRQ-ON-W at:
+                    lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+                    __raw_spin_lock_bh include/linux/spinlock_api_smp.h:126 [inline]
+                    _raw_spin_lock_bh+0x35/0x50 kernel/locking/spinlock.c:178
+                    spin_lock_bh include/linux/spinlock.h:356 [inline]
+                    sock_hash_free+0x164/0x820 net/core/sock_map.c:1155
+                    bpf_map_free_deferred+0xe6/0x110 kernel/bpf/syscall.c:734
+                    process_one_work kernel/workqueue.c:3254 [inline]
+                    process_scheduled_works+0xa00/0x1770 kernel/workqueue.c:3335
+                    worker_thread+0x86d/0xd70 kernel/workqueue.c:3416
+                    kthread+0x2f0/0x390 kernel/kthread.c:388
+                    ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+                    ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
+   IN-SOFTIRQ-W at:
+                    lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+                    __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+                    _raw_spin_lock_irqsave+0xd5/0x120 kernel/locking/spinlock.c:162
+                    sock_hash_delete_elem+0xb1/0x2f0 net/core/sock_map.c:940
+                    bpf_prog_43221478a22f23b5+0x42/0x46
+                    bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
+                    __bpf_prog_run include/linux/filter.h:657 [inline]
+                    bpf_prog_run include/linux/filter.h:664 [inline]
+                    __bpf_trace_run kernel/trace/bpf_trace.c:2381 [inline]
+                    bpf_trace_run2+0x204/0x420 kernel/trace/bpf_trace.c:2420
+                    trace_contention_end+0xf6/0x120 include/trace/events/lock.h:122
+                    __pv_queued_spin_lock_slowpath+0x939/0xc60 kernel/locking/qspinlock.c:560
+                    pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:584 [inline]
+                    queued_spin_lock_slowpath+0x42/0x50 arch/x86/include/asm/qspinlock.h:51
+                    queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
+                    do_raw_spin_lock+0x272/0x370 kernel/locking/spinlock_debug.c:116
+                    __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:111 [inline]
+                    _raw_spin_lock_irqsave+0xe1/0x120 kernel/locking/spinlock.c:162
+                    debug_object_active_state+0x15d/0x360 lib/debugobjects.c:936
+                    debug_rcu_head_unqueue kernel/rcu/rcu.h:236 [inline]
+                    rcu_do_batch kernel/rcu/tree.c:2188 [inline]
+                    rcu_core+0xa70/0x1830 kernel/rcu/tree.c:2471
+                    __do_softirq+0x2bc/0x943 kernel/softirq.c:554
+                    invoke_softirq kernel/softirq.c:428 [inline]
+                    __irq_exit_rcu+0xf2/0x1c0 kernel/softirq.c:633
+                    irq_exit_rcu+0x9/0x30 kernel/softirq.c:645
+                    instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1043 [inline]
+                    sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1043
+                    asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+                    _compound_head include/linux/page-flags.h:247 [inline]
+                    virt_to_folio include/linux/mm.h:1294 [inline]
+                    virt_to_slab mm/kasan/../slab.h:204 [inline]
+                    qlink_to_cache+0x1c/0xb0 mm/kasan/quarantine.c:131
+                    qlist_free_all+0x2e/0xc0 mm/kasan/quarantine.c:176
+                    kasan_quarantine_reduce+0x14f/0x170 mm/kasan/quarantine.c:286
+                    __kasan_slab_alloc+0x23/0x80 mm/kasan/common.c:322
+                    kasan_slab_alloc include/linux/kasan.h:201 [inline]
+                    slab_post_alloc_hook mm/slub.c:3813 [inline]
+                    slab_alloc_node mm/slub.c:3860 [inline]
+                    kmem_cache_alloc_lru+0x175/0x350 mm/slub.c:3879
+                    alloc_inode_sb include/linux/fs.h:3088 [inline]
+                    shmem_alloc_inode+0x28/0x40 mm/shmem.c:4425
+                    alloc_inode fs/inode.c:261 [inline]
+                    new_inode_pseudo+0x69/0x1e0 fs/inode.c:1007
+                    new_inode+0x22/0x1d0 fs/inode.c:1033
+                    __shmem_get_inode mm/shmem.c:2477 [inline]
+                    shmem_get_inode+0x34a/0xd40 mm/shmem.c:2548
+                    shmem_mknod+0x5f/0x1d0 mm/shmem.c:3242
+                    lookup_open fs/namei.c:3498 [inline]
+                    open_last_lookups fs/namei.c:3567 [inline]
+                    path_openat+0x1425/0x3240 fs/namei.c:3797
+                    do_filp_open+0x235/0x490 fs/namei.c:3827
+                    do_sys_openat2+0x13e/0x1d0 fs/open.c:1407
+                    do_sys_open fs/open.c:1422 [inline]
+                    __do_sys_openat fs/open.c:1438 [inline]
+                    __se_sys_openat fs/open.c:1433 [inline]
+                    __x64_sys_openat+0x247/0x2a0 fs/open.c:1433
+                    do_syscall_64+0xfb/0x240
+                    entry_SYSCALL_64_after_hwframe+0x6d/0x75
+   INITIAL USE at:
+                   lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+                   __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+                   _raw_spin_lock_irqsave+0xd5/0x120 kernel/locking/spinlock.c:162
+                   sock_hash_delete_elem+0xb1/0x2f0 net/core/sock_map.c:940
+                   0xffffffffa000556a
+                   bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
+                   __bpf_prog_run include/linux/filter.h:657 [inline]
+                   bpf_prog_run include/linux/filter.h:664 [inline]
+                   __bpf_trace_run kernel/trace/bpf_trace.c:2381 [inline]
+                   bpf_trace_run2+0x204/0x420 kernel/trace/bpf_trace.c:2420
+                   trace_contention_end+0xd7/0x100 include/trace/events/lock.h:122
+                   __mutex_lock_common kernel/locking/mutex.c:617 [inline]
+                   __mutex_lock+0x2e5/0xd70 kernel/locking/mutex.c:752
+                   tracepoint_probe_unregister+0x32/0x990 kernel/tracepoint.c:548
+                   bpf_raw_tp_link_release+0x63/0x90 kernel/bpf/syscall.c:3482
+                   bpf_link_free kernel/bpf/syscall.c:3033 [inline]
+                   bpf_link_put_direct+0x123/0x1b0 kernel/bpf/syscall.c:3064
+                   bpf_link_release+0x3b/0x50 kernel/bpf/syscall.c:3071
+                   __fput+0x429/0x8a0 fs/file_table.c:423
+                   __do_sys_close fs/open.c:1557 [inline]
+                   __se_sys_close fs/open.c:1542 [inline]
+                   __x64_sys_close+0x7f/0x110 fs/open.c:1542
+                   do_syscall_64+0xfb/0x240
+                   entry_SYSCALL_64_after_hwframe+0x6d/0x75
+ }
+ ... key      at: [<ffffffff94882300>] sock_hash_alloc.__key+0x0/0x20
+ ... acquired at:
+   lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+   __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+   _raw_spin_lock_irqsave+0xd5/0x120 kernel/locking/spinlock.c:162
+   sock_hash_delete_elem+0xb1/0x2f0 net/core/sock_map.c:940
+   bpf_prog_43221478a22f23b5+0x42/0x46
+   bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
+   __bpf_prog_run include/linux/filter.h:657 [inline]
+   bpf_prog_run include/linux/filter.h:664 [inline]
+   __bpf_trace_run kernel/trace/bpf_trace.c:2381 [inline]
+   bpf_trace_run2+0x204/0x420 kernel/trace/bpf_trace.c:2420
+   trace_contention_end+0xf6/0x120 include/trace/events/lock.h:122
+   __pv_queued_spin_lock_slowpath+0x939/0xc60 kernel/locking/qspinlock.c:560
+   pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:584 [inline]
+   queued_spin_lock_slowpath+0x42/0x50 arch/x86/include/asm/qspinlock.h:51
+   queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
+   do_raw_spin_lock+0x272/0x370 kernel/locking/spinlock_debug.c:116
+   __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:111 [inline]
+   _raw_spin_lock_irqsave+0xe1/0x120 kernel/locking/spinlock.c:162
+   debug_object_active_state+0x15d/0x360 lib/debugobjects.c:936
+   debug_rcu_head_unqueue kernel/rcu/rcu.h:236 [inline]
+   rcu_do_batch kernel/rcu/tree.c:2188 [inline]
+   rcu_core+0xa70/0x1830 kernel/rcu/tree.c:2471
+   __do_softirq+0x2bc/0x943 kernel/softirq.c:554
+   invoke_softirq kernel/softirq.c:428 [inline]
+   __irq_exit_rcu+0xf2/0x1c0 kernel/softirq.c:633
+   irq_exit_rcu+0x9/0x30 kernel/softirq.c:645
+   instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1043 [inline]
+   sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1043
+   asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+   _compound_head include/linux/page-flags.h:247 [inline]
+   virt_to_folio include/linux/mm.h:1294 [inline]
+   virt_to_slab mm/kasan/../slab.h:204 [inline]
+   qlink_to_cache+0x1c/0xb0 mm/kasan/quarantine.c:131
+   qlist_free_all+0x2e/0xc0 mm/kasan/quarantine.c:176
+   kasan_quarantine_reduce+0x14f/0x170 mm/kasan/quarantine.c:286
+   __kasan_slab_alloc+0x23/0x80 mm/kasan/common.c:322
+   kasan_slab_alloc include/linux/kasan.h:201 [inline]
+   slab_post_alloc_hook mm/slub.c:3813 [inline]
+   slab_alloc_node mm/slub.c:3860 [inline]
+   kmem_cache_alloc_lru+0x175/0x350 mm/slub.c:3879
+   alloc_inode_sb include/linux/fs.h:3088 [inline]
+   shmem_alloc_inode+0x28/0x40 mm/shmem.c:4425
+   alloc_inode fs/inode.c:261 [inline]
+   new_inode_pseudo+0x69/0x1e0 fs/inode.c:1007
+   new_inode+0x22/0x1d0 fs/inode.c:1033
+   __shmem_get_inode mm/shmem.c:2477 [inline]
+   shmem_get_inode+0x34a/0xd40 mm/shmem.c:2548
+   shmem_mknod+0x5f/0x1d0 mm/shmem.c:3242
+   lookup_open fs/namei.c:3498 [inline]
+   open_last_lookups fs/namei.c:3567 [inline]
+   path_openat+0x1425/0x3240 fs/namei.c:3797
+   do_filp_open+0x235/0x490 fs/namei.c:3827
+   do_sys_openat2+0x13e/0x1d0 fs/open.c:1407
+   do_sys_open fs/open.c:1422 [inline]
+   __do_sys_openat fs/open.c:1438 [inline]
+   __se_sys_openat fs/open.c:1433 [inline]
+   __x64_sys_openat+0x247/0x2a0 fs/open.c:1433
+   do_syscall_64+0xfb/0x240
+   entry_SYSCALL_64_after_hwframe+0x6d/0x75
+
+
+stack backtrace:
+CPU: 1 PID: 5417 Comm: udevd Not tainted 6.8.0-syzkaller-05231-ga51cd6bf8e10-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
+ print_bad_irq_dependency kernel/locking/lockdep.c:2626 [inline]
+ check_irq_usage kernel/locking/lockdep.c:2865 [inline]
+ check_prev_add kernel/locking/lockdep.c:3138 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3253 [inline]
+ validate_chain+0x4dc7/0x58e0 kernel/locking/lockdep.c:3869
+ __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
+ lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0xd5/0x120 kernel/locking/spinlock.c:162
+ sock_hash_delete_elem+0xb1/0x2f0 net/core/sock_map.c:940
+ bpf_prog_43221478a22f23b5+0x42/0x46
+ bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
+ __bpf_prog_run include/linux/filter.h:657 [inline]
+ bpf_prog_run include/linux/filter.h:664 [inline]
+ __bpf_trace_run kernel/trace/bpf_trace.c:2381 [inline]
+ bpf_trace_run2+0x204/0x420 kernel/trace/bpf_trace.c:2420
+ trace_contention_end+0xf6/0x120 include/trace/events/lock.h:122
+ __pv_queued_spin_lock_slowpath+0x939/0xc60 kernel/locking/qspinlock.c:560
+ pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:584 [inline]
+ queued_spin_lock_slowpath+0x42/0x50 arch/x86/include/asm/qspinlock.h:51
+ queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
+ do_raw_spin_lock+0x272/0x370 kernel/locking/spinlock_debug.c:116
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:111 [inline]
+ _raw_spin_lock_irqsave+0xe1/0x120 kernel/locking/spinlock.c:162
+ debug_object_active_state+0x15d/0x360 lib/debugobjects.c:936
+ debug_rcu_head_unqueue kernel/rcu/rcu.h:236 [inline]
+ rcu_do_batch kernel/rcu/tree.c:2188 [inline]
+ rcu_core+0xa70/0x1830 kernel/rcu/tree.c:2471
+ __do_softirq+0x2bc/0x943 kernel/softirq.c:554
+ invoke_softirq kernel/softirq.c:428 [inline]
+ __irq_exit_rcu+0xf2/0x1c0 kernel/softirq.c:633
+ irq_exit_rcu+0x9/0x30 kernel/softirq.c:645
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1043 [inline]
+ sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1043
+ </IRQ>
+ <TASK>
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+RIP: 0010:_compound_head include/linux/page-flags.h:249 [inline]
+RIP: 0010:virt_to_folio include/linux/mm.h:1294 [inline]
+RIP: 0010:virt_to_slab mm/kasan/../slab.h:204 [inline]
+RIP: 0010:qlink_to_cache+0x1c/0xb0 mm/kasan/quarantine.c:131
+Code: 90 90 90 90 90 90 90 90 90 90 90 90 90 90 e8 ab a3 49 ff 48 c1 e8 06 48 83 e0 c0 48 ba 00 00 00 00 00 ea ff ff 48 8b 4c 10 08 <f6> c1 01 75 44 48 01 d0 66 90 48 8b 48 08 f6 c1 01 75 65 66 90 48
+RSP: 0018:ffffc90004c1f6d0 EFLAGS: 00000206
+RAX: 0000000000ba42c0 RBX: ffff88802e90b300 RCX: ffffea0000ba4201
+RDX: ffffea0000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffff88801caa0780 R08: ffffffff8141ef1c R09: 1ffffffff2598ea5
+R10: dffffc0000000000 R11: fffffbfff2598ea6 R12: 0000000000000000
+R13: ffff88802e90b300 R14: ffffc90004c1f708 R15: 0000000000000000
+ qlist_free_all+0x2e/0xc0 mm/kasan/quarantine.c:176
+ kasan_quarantine_reduce+0x14f/0x170 mm/kasan/quarantine.c:286
+ __kasan_slab_alloc+0x23/0x80 mm/kasan/common.c:322
+ kasan_slab_alloc include/linux/kasan.h:201 [inline]
+ slab_post_alloc_hook mm/slub.c:3813 [inline]
+ slab_alloc_node mm/slub.c:3860 [inline]
+ kmem_cache_alloc_lru+0x175/0x350 mm/slub.c:3879
+ alloc_inode_sb include/linux/fs.h:3088 [inline]
+ shmem_alloc_inode+0x28/0x40 mm/shmem.c:4425
+ alloc_inode fs/inode.c:261 [inline]
+ new_inode_pseudo+0x69/0x1e0 fs/inode.c:1007
+ new_inode+0x22/0x1d0 fs/inode.c:1033
+ __shmem_get_inode mm/shmem.c:2477 [inline]
+ shmem_get_inode+0x34a/0xd40 mm/shmem.c:2548
+ shmem_mknod+0x5f/0x1d0 mm/shmem.c:3242
+ lookup_open fs/namei.c:3498 [inline]
+ open_last_lookups fs/namei.c:3567 [inline]
+ path_openat+0x1425/0x3240 fs/namei.c:3797
+ do_filp_open+0x235/0x490 fs/namei.c:3827
+ do_sys_openat2+0x13e/0x1d0 fs/open.c:1407
+ do_sys_open fs/open.c:1422 [inline]
+ __do_sys_openat fs/open.c:1438 [inline]
+ __se_sys_openat fs/open.c:1433 [inline]
+ __x64_sys_openat+0x247/0x2a0 fs/open.c:1433
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+RIP: 0033:0x7f2bc89169a4
+Code: 24 20 48 8d 44 24 30 48 89 44 24 28 64 8b 04 25 18 00 00 00 85 c0 75 2c 44 89 e2 48 89 ee bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d 00 f0 ff ff 76 60 48 8b 15 55 a4 0d 00 f7 d8 64 89 02 48 83
+RSP: 002b:00007ffcd2db6460 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00007f2bc89169a4
+RDX: 0000000000080241 RSI: 00007ffcd2db69a8 RDI: 00000000ffffff9c
+RBP: 00007ffcd2db69a8 R08: 0000000000000004 R09: 0000000000000001
+R10: 00000000000001b6 R11: 0000000000000246 R12: 0000000000080241
+R13: 000055cf24a9672e R14: 0000000000000001 R15: 000055cf24ab1160
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	90                   	nop
+   1:	90                   	nop
+   2:	90                   	nop
+   3:	90                   	nop
+   4:	90                   	nop
+   5:	90                   	nop
+   6:	90                   	nop
+   7:	90                   	nop
+   8:	90                   	nop
+   9:	90                   	nop
+   a:	90                   	nop
+   b:	90                   	nop
+   c:	90                   	nop
+   d:	90                   	nop
+   e:	e8 ab a3 49 ff       	call   0xff49a3be
+  13:	48 c1 e8 06          	shr    $0x6,%rax
+  17:	48 83 e0 c0          	and    $0xffffffffffffffc0,%rax
+  1b:	48 ba 00 00 00 00 00 	movabs $0xffffea0000000000,%rdx
+  22:	ea ff ff
+  25:	48 8b 4c 10 08       	mov    0x8(%rax,%rdx,1),%rcx
+* 2a:	f6 c1 01             	test   $0x1,%cl <-- trapping instruction
+  2d:	75 44                	jne    0x73
+  2f:	48 01 d0             	add    %rdx,%rax
+  32:	66 90                	xchg   %ax,%ax
+  34:	48 8b 48 08          	mov    0x8(%rax),%rcx
+  38:	f6 c1 01             	test   $0x1,%cl
+  3b:	75 65                	jne    0xa2
+  3d:	66 90                	xchg   %ax,%ax
+  3f:	48                   	rex.W
+
+
+Tested on:
+
+commit:         a51cd6bf arm64: bpf: fix 32bit unconditional bswap
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=1797ba81180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
+dashboard link: https://syzkaller.appspot.com/bug?extid=c4f4d25859c2e5859988
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=100f1d66180000
+
