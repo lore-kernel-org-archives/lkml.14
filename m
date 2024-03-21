@@ -1,126 +1,93 @@
-Received: from mx0.infotecs.ru (mx0.infotecs.ru [91.244.183.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F2A208C8;
-	Thu, 21 Mar 2024 09:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.244.183.115
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90A612B81;
+	Thu, 21 Mar 2024 09:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711012384; cv=none; b=J3NBAn31D2HtOQJbFqUBkH3YUpDM38iVmijXOk1+ZjT1agsMlsveV48FhkUF9Q3C2/sxDIwPN2BbcanW6XRzViWF+m4KIDx3PkWtQVGTe6zGZsf8Y1lAG1GKnSZQ7qGZn3QrjM/o/TF7NHKFUJgDgwZxYy1lFv1/WDF8LsV00Vo=
+	t=1711012418; cv=none; b=APGqdi39imQx1BZ57f85YSMZGY3d7jFaxyjfaDuUQ73JtjTTiKoDPcUJanJO/TFDlwCyZqsHsbpqHvpOtX1RS5KLCR/aX6oQJ1MVBx9Cv6mMaTR/AitxJ1LZwWvwMY7iU1+rzpEZ9y0WCf4XaVpyhl9a/WM3uyBae7zWoFEziJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711012384; c=relaxed/simple;
-	bh=2wY+bMrhSAAxlCEVaRSYx2ODKkeCgDYZXns76CRJxZE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=RNUPNWVrN+UMRfx99iZl4t9rZDiP9T2IWGQZjr1N77HFFQfYuSrS0LwbuzYi/A00x3MvfL5EzbhK3RXuyxRhc/hZTVNfqhPDFn1dMfkbYQlpKMdCw4gHnKuhDfycaOZwovHbutg2IIz6gTWOoCya9ENwa/MtN/XHRr80mv3x9uY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=infotecs.ru; spf=pass smtp.mailfrom=infotecs.ru; dkim=pass (1024-bit key) header.d=infotecs.ru header.i=@infotecs.ru header.b=VlavWTCC; arc=none smtp.client-ip=91.244.183.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=infotecs.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infotecs.ru
+	s=arc-20240116; t=1711012418; c=relaxed/simple;
+	bh=0WGf5ZBm03nwzd9rinCCaBGVduGXtNXEkarX6ZlpYsY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pYivrOH/ocwVsQUo/dWPxIn+jpwgxz6d2NqaIL+nFkrpijIUt9H3ElesOvBMSOCvDUZkpx22Zjgh4dkmb5G8FJ7F6y1wKB4ZaXuOdVf+pYCajF7d6AcxTM1h11Wkx00Z+VnenMv0t/CDU5CrECZz/wa2hkdFsUDG247LGNvQKII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UT83Ttyj; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=infotecs.ru header.i=@infotecs.ru header.b="VlavWTCC"
-Received: from mx0.infotecs-nt (localhost [127.0.0.1])
-	by mx0.infotecs.ru (Postfix) with ESMTP id C09DC10762CC;
-	Thu, 21 Mar 2024 12:12:57 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx0.infotecs.ru C09DC10762CC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=infotecs.ru; s=mx;
-	t=1711012378; bh=2wY+bMrhSAAxlCEVaRSYx2ODKkeCgDYZXns76CRJxZE=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-	b=VlavWTCCJlCA3IZHSKNP4/ya2hCWQ3DrPA4CdKngZMbfBY90VyQEBEAfwuGM6HddN
-	 ePFVbTJJCPIXrfQ118qDdWCFXGtkv72+b/1N7KQ56XYgvXbprtYMuJTOYwbMbVnQdO
-	 pFjWMwBTU+lqy0qEn72UP4JwsvkxJcl85/ilJ+84=
-Received: from msk-exch-02.infotecs-nt (msk-exch-02.infotecs-nt [10.0.7.192])
-	by mx0.infotecs-nt (Postfix) with ESMTP id BCDA53196647;
-	Thu, 21 Mar 2024 12:12:57 +0300 (MSK)
-From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
-To: "stable@vger.kernel.org" <stable@vger.kernel.org>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>
-CC: Michal Ostrowski <mostrows@earthlink.net>, Guillaume Nault
-	<gnault@redhat.com>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>,
-	"syzbot+6bdfd184eac7709e5cc9@syzkaller.appspotmail.com"
-	<syzbot+6bdfd184eac7709e5cc9@syzkaller.appspotmail.com>
-Subject: [PATCH 5.15/5.10/5.4/4.19 1/1] pppoe: Fix memory leak in
- pppoe_sendmsg()
-Thread-Topic: [PATCH 5.15/5.10/5.4/4.19 1/1] pppoe: Fix memory leak in
- pppoe_sendmsg()
-Thread-Index: AQHae2/2R+13FIKrokmi6T+8fsvlew==
-Date: Thu, 21 Mar 2024 09:12:57 +0000
-Message-ID: <20240321091256.467553-2-Ilia.Gavrilov@infotecs.ru>
-References: <20240321091256.467553-1-Ilia.Gavrilov@infotecs.ru>
-In-Reply-To: <20240321091256.467553-1-Ilia.Gavrilov@infotecs.ru>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-exclaimer-md-config: 208ac3cd-1ed4-4982-a353-bdefac89ac0a
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UT83Ttyj"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e034607879so5476835ad.0;
+        Thu, 21 Mar 2024 02:13:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711012416; x=1711617216; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nes78up99EiE9h0M639AFK21t634+dlUJNnADmOZ5TM=;
+        b=UT83TtyjVihMppn+U+hVg3eHjgo2a+DCmTc4K18BMkWkAmxfCFOhHbapSnkVTM5BsV
+         bnutWjpU9edei97AJKMDWCmVseBF2vaFvBRDWzFo60PJwVrHcZddwCVk/ONuP9JqHajN
+         1brqIan4PJLeLG3vwY7F6qTzXzZz51emvE4CRra/wkt2fHT7AW9Cs0ctYS48M+v/Ta4P
+         PFqvAPPVDziYDCI7PAix2rAIa7ZODi75+NksZpm31Gzb+8RH614IOSmzT+BhhWzfr51S
+         ZvGe604hrmpjXYf2yya45e5o61aT6dnUqp0x7Ja6tziDfBzM9VFABP8LFVh33BlsjjxH
+         eLsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711012416; x=1711617216;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Nes78up99EiE9h0M639AFK21t634+dlUJNnADmOZ5TM=;
+        b=F2qHimGZoTz3P5V2//6nwShYxt5G5oN7qPd/1IhZSeLXt2ODSfnHyeU7WTDiOhDN7b
+         8zdi8O6E4C/Mt6EsKckSK259l4zVxL3dw41CXlCXxrRKz01Vy00lKXpUnWmPiW/CrnHR
+         Ottgjg+qw4P2xh9chEuik/BzaoPYk/TctPXgN9VQgkXQ+FN658uiw3TZPH/kxl0kr5YL
+         zdykBFUjRUcXpblq7qUJc7FAb3IYybnJhyYDwbcUbvO/PjRd1ieCjxm02Nq7fRyTAffz
+         n0GhPh01xaWmRYhceWQ6rkzNSdCXbRCaG9BoRHeNRO7edle5663R7OlI1nTkU5yn5tVI
+         FRjA==
+X-Forwarded-Encrypted: i=1; AJvYcCUflFWDiMBH5iIB67nREGoBMgK0Utfu2NubsGIz8N1f4xip+MXSczVXyatVWNv2VSBbhn/wGz5SrAW9pWear3vqjRiIBC7T/Df/HttPMnmAeSJ0MYgEJ6fVKN7YCfQyUtV1nrrwW3Ww8egb54mdt0PBOW/dyQ6GTLDpEzWK2zYkzE1zdII=
+X-Gm-Message-State: AOJu0YwKRk5/wiGpzqIt9EG+QJRJ800D0+X+6Dd9iCLlCs0HYBdPdT3i
+	7dWAlL4y3VVu41jocZM9WqQj0GSPQheXJ0xM1cP6zxQjDaHqoaHfNrPR3tQOlRwb/YBNDBdR+nj
+	OWbyt5CCm+Ags/gKzFpGir1U3D6rttDipznYB8g==
+X-Google-Smtp-Source: AGHT+IEc3sbuxLIEXLcNo9hvlvsrCEfAQbe8858Zyh5kZvdTHTT+txNlarkGx3oYaQLqT3cV8SP642r7siWWZIPoOdM=
+X-Received: by 2002:a05:6a21:a5a4:b0:1a3:53ae:80c7 with SMTP id
+ gd36-20020a056a21a5a400b001a353ae80c7mr10352067pzc.7.1711012052876; Thu, 21
+ Mar 2024 02:07:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KLMS-Rule-ID: 5
-X-KLMS-Message-Action: clean
-X-KLMS-AntiSpam-Status: not scanned, disabled by settings
-X-KLMS-AntiSpam-Interceptor-Info: not scanned
-X-KLMS-AntiPhishing: Clean, bases: 2024/03/21 07:23:00
-X-KLMS-AntiVirus: Kaspersky Security for Linux Mail Server, version 8.0.3.30, bases: 2024/03/21 04:23:00 #24331522
-X-KLMS-AntiVirus-Status: Clean, skipped
+References: <20240313230713.987124-1-benno.lossin@proton.me>
+ <Zfh5DYkxNAm-mY_9@boqun-archlinux> <93FD9491-7E2D-4324-8443-0884B7CFC6EF@me.com>
+ <ZfkW8rwpdRc_hJBU@Boquns-Mac-mini.home> <3FBC841A-968E-4AC5-83F0-E906C7EE85C3@me.com>
+ <6857bb37-c4ee-4817-9b6a-e40e549b6402@proton.me> <F1F3C985-9CAE-4286-B236-4AF6C0918DB5@me.com>
+In-Reply-To: <F1F3C985-9CAE-4286-B236-4AF6C0918DB5@me.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 21 Mar 2024 10:07:09 +0100
+Message-ID: <CANiq72mAA0d41arVo6q2S6gk2sRMfAyW1FOHhUMytMQeYtNjhQ@mail.gmail.com>
+Subject: Re: [PATCH] rust: init: remove impl Zeroable for Infallible
+To: Laine Taffin Altman <alexanderaltman@me.com>
+Cc: Benno Lossin <benno.lossin@proton.me>, Boqun Feng <boqun.feng@gmail.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, 
+	Martin Rodriguez Reboredo <yakoyoku@gmail.com>, stable@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-DQpGcm9tOiBHYXZyaWxvdiBJbGlhIDxJbGlhLkdhdnJpbG92QGluZm90ZWNzLnJ1Pg0KDQpjb21t
-aXQgZGMzNGViZDVjMDE4YjBlZGY0N2YzOWQxMTA4M2FkODMxMjczMzAzNCB1cHN0cmVhbS4NCg0K
-c3l6Ym90IHJlcG9ydHMgYSBtZW1vcnkgbGVhayBpbiBwcHBvZV9zZW5kbXNnIFsxXS4NCg0KVGhl
-IHByb2JsZW0gaXMgaW4gdGhlIHBwcG9lX3JlY3Ztc2coKSBmdW5jdGlvbiB0aGF0IGhhbmRsZXMg
-ZXJyb3JzDQppbiB0aGUgd3Jvbmcgb3JkZXIuIEZvciB0aGUgc2tiX3JlY3ZfZGF0YWdyYW0oKSBm
-dW5jdGlvbiwgY2hlY2sNCnRoZSBwb2ludGVyIHRvIHNrYiBmb3IgTlVMTCBmaXJzdCwgYW5kIHRo
-ZW4gY2hlY2sgdGhlICdlcnJvcicgdmFyaWFibGUsDQpiZWNhdXNlIHRoZSBza2JfcmVjdl9kYXRh
-Z3JhbSgpIGZ1bmN0aW9uIGNhbiBzZXQgJ2Vycm9yJw0KdG8gLUVBR0FJTiBpbiBhIGxvb3AgYnV0
-IHJldHVybiBhIGNvcnJlY3QgcG9pbnRlciB0byBzb2NrZXQgYnVmZmVyDQphZnRlciBhIG51bWJl
-ciBvZiBhdHRlbXB0cywgdGhvdWdoICdlcnJvcicgcmVtYWlucyBzZXQgdG8gLUVBR0FJTi4NCg0K
-c2tiX3JlY3ZfZGF0YWdyYW0NCiAgICAgIF9fc2tiX3JlY3ZfZGF0YWdyYW0gICAgICAgICAgLy8g
-TG9vcC4gaWYgKGVyciA9PSAtRUFHQUlOKSB0aGVuDQogICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIC8vIGdvIHRvIHRoZSBuZXh0IGxvb3AgaXRlcmF0aW9uDQogICAgICAgICAgX19z
-a2JfdHJ5X3JlY3ZfZGF0YWdyYW0gIC8vIGlmIChza2IgIT0gTlVMTCkgdGhlbiByZXR1cm4gJ3Nr
-YicNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLy8gZWxzZSBpZiBhIHNpZ25h
-bCBpcyByZWNlaXZlZCB0aGVuDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8v
-IHJldHVybiAtRUFHQUlODQoNCkZvdW5kIGJ5IEluZm9UZUNTIG9uIGJlaGFsZiBvZiBMaW51eCBW
-ZXJpZmljYXRpb24gQ2VudGVyDQoobGludXh0ZXN0aW5nLm9yZykgd2l0aCBTeXprYWxsZXIuDQoN
-Ckxpbms6IGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL2J1Zz9leHRpZD02YmRmZDE4NGVh
-Yzc3MDllNWNjOSBbMV0NCg0KRml4ZXM6IDFkYTE3N2U0YzNmNCAoIkxpbnV4LTIuNi4xMi1yYzIi
-KQ0KUmVwb3J0ZWQtYnk6IHN5emJvdCs2YmRmZDE4NGVhYzc3MDllNWNjOUBzeXprYWxsZXIuYXBw
-c3BvdG1haWwuY29tDQpDbG9zZXM6IGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL2J1Zz9l
-eHRpZD02YmRmZDE4NGVhYzc3MDllNWNjOQ0KU2lnbmVkLW9mZi1ieTogR2F2cmlsb3YgSWxpYSA8
-SWxpYS5HYXZyaWxvdkBpbmZvdGVjcy5ydT4NClJldmlld2VkLWJ5OiBHdWlsbGF1bWUgTmF1bHQg
-PGduYXVsdEByZWRoYXQuY29tPg0KTGluazogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvci8yMDI0
-MDIxNDA4NTgxNC4zODk0OTE3LTEtSWxpYS5HYXZyaWxvdkBpbmZvdGVjcy5ydQ0KU2lnbmVkLW9m
-Zi1ieTogSmFrdWIgS2ljaW5za2kgPGt1YmFAa2VybmVsLm9yZz4NCi0tLQ0KIGRyaXZlcnMvbmV0
-L3BwcC9wcHBvZS5jIHwgMjMgKysrKysrKysrLS0tLS0tLS0tLS0tLS0NCiAxIGZpbGUgY2hhbmdl
-ZCwgOSBpbnNlcnRpb25zKCspLCAxNCBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvbmV0L3BwcC9wcHBvZS5jIGIvZHJpdmVycy9uZXQvcHBwL3BwcG9lLmMNCmluZGV4IGQ3ZjUw
-YjgzNTA1MC4uNzBlMjllMWFjNGM4IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9uZXQvcHBwL3BwcG9l
-LmMNCisrKyBiL2RyaXZlcnMvbmV0L3BwcC9wcHBvZS5jDQpAQCAtOTgzLDI3ICs5ODMsMjIgQEAg
-c3RhdGljIGludCBwcHBvZV9yZWN2bXNnKHN0cnVjdCBzb2NrZXQgKnNvY2ssIHN0cnVjdCBtc2do
-ZHIgKm0sDQogc3RydWN0IHNrX2J1ZmYgKnNrYjsNCiBpbnQgZXJyb3IgPSAwOw0KDQotaWYgKHNr
-LT5za19zdGF0ZSAmIFBQUE9YX0JPVU5EKSB7DQotZXJyb3IgPSAtRUlPOw0KLWdvdG8gZW5kOw0K
-LX0NCitpZiAoc2stPnNrX3N0YXRlICYgUFBQT1hfQk9VTkQpDQorcmV0dXJuIC1FSU87DQoNCiBz
-a2IgPSBza2JfcmVjdl9kYXRhZ3JhbShzaywgZmxhZ3MgJiB+TVNHX0RPTlRXQUlULA0KIGZsYWdz
-ICYgTVNHX0RPTlRXQUlULCAmZXJyb3IpOw0KLWlmIChlcnJvciA8IDApDQotZ290byBlbmQ7DQor
-aWYgKCFza2IpDQorcmV0dXJuIGVycm9yOw0KDQotaWYgKHNrYikgew0KLXRvdGFsX2xlbiA9IG1p
-bl90KHNpemVfdCwgdG90YWxfbGVuLCBza2ItPmxlbik7DQotZXJyb3IgPSBza2JfY29weV9kYXRh
-Z3JhbV9tc2coc2tiLCAwLCBtLCB0b3RhbF9sZW4pOw0KLWlmIChlcnJvciA9PSAwKSB7DQotY29u
-c3VtZV9za2Ioc2tiKTsNCi1yZXR1cm4gdG90YWxfbGVuOw0KLX0NCit0b3RhbF9sZW4gPSBtaW5f
-dChzaXplX3QsIHRvdGFsX2xlbiwgc2tiLT5sZW4pOw0KK2Vycm9yID0gc2tiX2NvcHlfZGF0YWdy
-YW1fbXNnKHNrYiwgMCwgbSwgdG90YWxfbGVuKTsNCitpZiAoZXJyb3IgPT0gMCkgew0KK2NvbnN1
-bWVfc2tiKHNrYik7DQorcmV0dXJuIHRvdGFsX2xlbjsNCiB9DQoNCiBrZnJlZV9za2Ioc2tiKTsN
-Ci1lbmQ6DQogcmV0dXJuIGVycm9yOw0KIH0NCg0KLS0NCjIuMzkuMg0KDQoNCtChINGD0LLQsNC2
-0LXQvdC40LXQvCwNCtCY0LvRjNGPINCT0LDQstGA0LjQu9C+0LINCtCS0LXQtNGD0YnQuNC5INC/
-0YDQvtCz0YDQsNC80LzQuNGB0YINCtCe0YLQtNC10Lsg0YDQsNC30YDQsNCx0L7RgtC60LgNCtCQ
-0J4gItCY0L3RhNC+0KLQtdCa0KEiINCyINCzLiDQodCw0L3QutGCLdCf0LXRgtC10YDQsdGD0YDQ
-sw0KMTI3Mjg3LCDQsy4g0JzQvtGB0LrQstCwLCDQodGC0LDRgNGL0Lkg0J/QtdGC0YDQvtCy0YHQ
-utC+LdCg0LDQt9GD0LzQvtCy0YHQutC40Lkg0L/RgNC+0LXQt9C0LCDQtNC+0LwgMS8yMywg0YHR
-gtGALiAxDQpUOiArNyA0OTUgNzM3LTYxLTkyICgg0LTQvtCxLiA0OTIxKQ0K0KQ6ICs3IDQ5NSA3
-MzctNzItNzgNCg0KDQpJbGlhLkdhdnJpbG92QGluZm90ZWNzLnJ1DQp3d3cuaW5mb3RlY3MucnUN
-Cg0KDQo=
+On Thu, Mar 21, 2024 at 5:53=E2=80=AFAM Laine Taffin Altman
+<alexanderaltman@me.com> wrote:
+>
+> I=E2=80=99ll try and do it myself; thank you for sending the first round =
+for me and illustrating procedures!  What Reviewed-By=E2=80=99s/Signed-Off-=
+By's should I retain?
+
+For the Signed-off-by, only yours is OK. For the Reviewed-by, it
+depends on how much you have changed, i.e. whether you consider their
+review does not apply anymore -- please see
+https://docs.kernel.org/process/submitting-patches.html#reviewer-s-statemen=
+t-of-oversight
+
+Cheers,
+Miguel
