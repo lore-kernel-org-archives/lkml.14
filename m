@@ -1,389 +1,153 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A31BE17FD;
-	Thu, 21 Mar 2024 02:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 355C01877;
+	Thu, 21 Mar 2024 02:51:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710989141; cv=none; b=FYFIpJ3T8l6HnGueq1K4FpGkp+j6Hq3QopLcAo8Uae4hFuJPM21QVRzoudlHWEJpHWJPC2XHyF5cvMKVNvxjecHp4EyQVFLAE7eytenFpEDQX4EsY8ZR8NErN6SZXohwxS+jvQHy7Yw0sc+576HBl0tJfnwrMHRRpFKU5YdkDdg=
+	t=1710989482; cv=none; b=jxyyEmIWN9BJiXBAXaHpSBs4l3eSM/rk27rG2elWo5ZN4n0yK7aARu9qwqa66tU0iNGpjPX1hEgv3TQSxzU6EvFPZoP1g7mtMYWryaCxHLEPxSscQBdkUAy+Mm5fJGnLE6vOxqDCiOwJTL/r3ZY02kNLRYIbUVBilAFEKJDnyuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710989141; c=relaxed/simple;
-	bh=N/5e6Wo2NvNUp6BkAhcewLwS9AaNyGsynBAZFyDdAvk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PkZ5CvlAL+t2Et+vggLOLc65cjKyON511zxKKnfV3Nu7GpAJo1eLsqpH2ToT89dr/X6Ut2B+RpnVzCtFjUVx2t6NjXcDyKiic/QeoPfVg6msAXDblBtjdEE9zJ2ZxkI33OnFwtxBk6mo/sMUVoGAzZKPNZRBHYPnJBheV/3pg4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g6Q6UHtS; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710989482; c=relaxed/simple;
+	bh=UkaKNP/Yhok+8Dk9yuAn6gQNijSE+esjTeI0rYkJC/Q=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DRhQRtyu1XPKb1ZoSuG0g0W24leHyamjybf62K6ewPls9iVTCa4J1QbIaOE3xrRgKy/Dixe93tzL+RUYmw6QXDS9AS77MgsAYg/zv/HnDK7R+CmMNP+S+EbHv2RX4hFxwbDR74LYMPhKgUki6s7xChyGZls6A1MjycZKeDAuqrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=R+0B1VjN; arc=none smtp.client-ip=52.95.49.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g6Q6UHtS"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-513dc99b709so669389e87.1;
-        Wed, 20 Mar 2024 19:45:39 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="R+0B1VjN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710989138; x=1711593938; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/N1nqPevCl9m3t5cemtmMWTvFAKvP6o30UTDsDnLhYY=;
-        b=g6Q6UHtSyaPxOe7YD/QcVL7xzOmssXWaGNWtNLL3aCm9t/uPzcwsTVTja2xEdwpK69
-         hgtKWmzJZZFI8slESoiU54UlVzapHEURNNrf1XdYgNsWGURbvGKcgDh0n4tsY6egeTnN
-         ovcXT9unlo0NRbqoWR9Ycd5eMkZcUkFCme/ys40WpC0WMI5wEGyD9sl2a7x1FJmWTk/l
-         vhxiUC8vnOc5fEZg9h7H3i+yV5GON9a2kAX19G5IV8gFvZjyghhCv1xNDY3W9Wi4lugU
-         3nCIZb+32WJ8+WkAsE8rEZ8zIfPCkIYclrSObcU8FVWStSQYu36Gycac8cHm+VusoiNl
-         snZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710989138; x=1711593938;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/N1nqPevCl9m3t5cemtmMWTvFAKvP6o30UTDsDnLhYY=;
-        b=POv+4iSoq8qQqBAy/wyBT+tDOi7STW8lIEXqfsnNolZ7Sd33n1Kmv2iamHNUB6gZ4X
-         Or1nCVaE16Sd2wf0YXiyBzX6zaC93mIt+D4pDMzM7cvBmNcc7LdtVdp2CiZ9gK6iWEZE
-         vkwsPj05cGWOH9tw+TZGuak9E24rnhwPOSy3ocBRMilDolkuqejxHqY5Auw73D5OMk2U
-         z5qWcBqhtI73YvUp09oHTzjE+AbX28buw4ONMRWYenS+NWKDvgX8UBhlnL/ixTFOOj2x
-         xyhS7+v6iqW1/tu/Gjw9pCY0wlUZJbIB2GaCJXxvw7Dy3GWNH0b8YyKcjx0oFPjCcsNZ
-         SQTA==
-X-Forwarded-Encrypted: i=1; AJvYcCXFlgPOXsviLzS20dfVnCNJbvQgpWW90icNVA+qVe/x28Evw7EfF7OuUaifu7soWPvzYXsZKNszTAlCGKWYyzCo4BegJJxVWbqXi4OR1bmOQOcNEVC+/GZ05uf+9zhO7Y4oGwXfl0HWQpGU0HBHBvnvCYi+XELsFdOTAPYXYFg3F1bPKnhN/Ke+
-X-Gm-Message-State: AOJu0YxQSB/PPK3t8XA3n6JSmFE37niJlvtORu/c5+KdGmFqZ9ZnhLAS
-	l1EmqA3tPBEVv9sVHA93GWsnejK+XyW86IKqM7D2cTnPkW3PT4LMTG2/QO2F6/6YBZLyqm0Ckzj
-	j54+CcSrsxmBVbo+CnPKlNgxXNXn1ZKft
-X-Google-Smtp-Source: AGHT+IF8BG8VC7B4QycQ5j6G55em6ar8SVHTiw4TNt5ZOoYm+HDKyXzhZWC8seECEPIrTyK8pB1UsUhXbqTXGhfzV2g=
-X-Received: by 2002:a05:6512:ba3:b0:513:4705:a4f3 with SMTP id
- b35-20020a0565120ba300b005134705a4f3mr6870348lfv.65.1710989137570; Wed, 20
- Mar 2024 19:45:37 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1710989480; x=1742525480;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=aK+mBYOeuvNnlpvnK9xFKFMLFZ99a08ThnoYjo6ECAM=;
+  b=R+0B1VjNYDtaSxf/HO+O0iXf0UZaFTpD4MwDlvGvAQm8HL7fc39Y6nbe
+   ZjiRMg+szDXr8WXUoiUx6YqYeqdiSTbe800Ci0Ma7g1k+S1e8pVYSn6KD
+   Ig9356nebjazMs5T/QE9qVGvcm+gC0oY2g17fJusFa5dJ+jnIJbmJH7ZY
+   0=;
+X-IronPort-AV: E=Sophos;i="6.07,141,1708387200"; 
+   d="scan'208";a="394817777"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 02:51:18 +0000
+Received: from EX19MTAEUC001.ant.amazon.com [10.0.17.79:51099]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.23.112:2525] with esmtp (Farcaster)
+ id d1488962-2002-42b2-9e7f-8f3520408f03; Thu, 21 Mar 2024 02:51:17 +0000 (UTC)
+X-Farcaster-Flow-ID: d1488962-2002-42b2-9e7f-8f3520408f03
+Received: from EX19D036EUC002.ant.amazon.com (10.252.61.191) by
+ EX19MTAEUC001.ant.amazon.com (10.252.51.155) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Thu, 21 Mar 2024 02:51:16 +0000
+Received: from bcd074994f7f.amazon.com (10.106.82.23) by
+ EX19D036EUC002.ant.amazon.com (10.252.61.191) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Thu, 21 Mar 2024 02:51:12 +0000
+From: Sudan Landge <sudanl@amazon.com>
+To: <tytso@mit.edu>, <Jason@zx2c4.com>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+	<sudanl@amazon.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	<thomas.lendacky@amd.com>, <dan.j.williams@intel.com>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <graf@amazon.de>, <dwmw@amazon.co.uk>, <bchalios@amazon.es>,
+	<xmarcalx@amazon.co.uk>
+Subject: [PATCH v2 0/4] virt: vmgenid: Add devicetree bindings support
+Date: Thu, 21 Mar 2024 02:51:01 +0000
+Message-ID: <20240321025105.53210-1-sudanl@amazon.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202403211010443485000@zte.com.cn>
-In-Reply-To: <202403211010443485000@zte.com.cn>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Thu, 21 Mar 2024 10:45:00 +0800
-Message-ID: <CAL+tcoAdZOKnHTbRnmrjtrhJynGfDy4xXvus1hh_UTbh5eSMTA@mail.gmail.com>
-Subject: Re:  [PATCH v3] net/ipv4: add tracepoint for icmp_send
-To: xu.xin16@zte.com.cn
-Cc: edumazet@google.com, davem@davemloft.net, rostedt@goodmis.org, 
-	mhiramat@kernel.org, dsahern@kernel.org, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, yang.yang29@zte.com.cn, he.peilin@zte.com.cn, 
-	liu.chun2@zte.com.cn, jiang.xuexin@zte.com.cn, zhang.yunkai@zte.com.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D043UWA002.ant.amazon.com (10.13.139.53) To
+ EX19D036EUC002.ant.amazon.com (10.252.61.191)
 
-On Thu, Mar 21, 2024 at 10:12=E2=80=AFAM <xu.xin16@zte.com.cn> wrote:
->
-> From: he peilin <he.peilin@zte.com.cn>
->
->
-> Introduce a tracepoint for icmp_send, which can help users to get more
->
-> detail information conveniently when icmp abnormal events happen.
->
->
-> 1. Giving an usecase example:
->
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
->
-> When an application experiences packet loss due to an unreachable UDP
->
-> destination port, the kernel will send an exception message through the
->
-> icmp_send function. By adding a trace point for icmp_send, developers or
->
-> system administrators can obtain detailed information about the UDP
->
-> packet loss, including the type, code, source address, destination addres=
-s,
->
-> source port, and destination port. This facilitates the trouble-shooting
->
-> of UDP packet loss issues especially for those network-service
->
-> applications.
->
->
-> 2. Operation Instructions:
->
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
->
-> Switch to the tracing directory.
->
->         cd /sys/kernel/tracing
->
-> Filter for destination port unreachable.
->
->         echo "type=3D=3D3 && code=3D=3D3" > events/icmp/icmp_send/filter
->
-> Enable trace event.
->
->         echo 1 > events/icmp/icmp_send/enable
->
->
-> 3. Result View:
->
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
->  udp_client_erro-11370   [002] ...s.12   124.728002:
->
->  icmp_send: icmp_send: type=3D3, code=3D3.
->
->  From 127.0.0.1:41895 to 127.0.0.1:6666 ulen=3D23
->
->  skbaddr=3D00000000589b167a
->
->
-> Changelog
->
-> ---------
->
-> v2->v3:
->
-> Some fixes according to
->
-> https://lore.kernel.org/all/20240319102549.7f7f6f53@gandalf.local.home/
->
-> 1. Change the tracking directory to/sys/kernel/tracking.
->
-> 2. Adjust the layout of the TP-STRUCT_entry parameter structure.
->
->
-> v1->v2:
->
-> Some fixes according to
->
-> https://lore.kernel.org/all/CANn89iL-y9e_VFpdw=3DsZtRnKRu_tnUwqHuFQTJvJsv=
--nz1xPDw@mail.gmail.com/
->
-> 1. adjust the trace_icmp_send() to more protocols than UDP.
->
-> 2. move the calling of trace_icmp_send after sanity checks
->
-> in __icmp_send().
->
->
-> Signed-off-by: Peilin He<he.peilin@zte.com.cn>
->
-> Reviewed-by: xu xin <xu.xin16@zte.com.cn>
->
-> Reviewed-by: Yunkai Zhang <zhang.yunkai@zte.com.cn>
->
-> Cc: Yang Yang <yang.yang29@zte.com.cn>
->
-> Cc: Liu Chun <liu.chun2@zte.com.cn>
->
-> Cc: Xuexin Jiang <jiang.xuexin@zte.com.cn>
+This small series of patches aims to add devicetree bindings support for
+the Virtual Machine Generation ID (vmgenid).
 
-The format of the whole patch looks strange... Did you send this patch
-by using 'git send-email' instead of pasting the text and sending?
+Virtual Machine Generation ID was introduced in commit af6b54e2b5ba
+("virt: vmgenid: notify RNG of VM fork and supply generation ID") as an
+ACPI only device.
 
->
-> ---
->
->  include/trace/events/icmp.h | 64 +++++++++++++++++++++++++++++++++++++
->
->  net/ipv4/icmp.c             |  4 +++
->
->  2 files changed, 68 insertions(+)
->
->  create mode 100644 include/trace/events/icmp.h
->
->
-> diff --git a/include/trace/events/icmp.h b/include/trace/events/icmp.h
->
-> new file mode 100644
->
-> index 000000000000..2098d4b1b12e
->
-> --- /dev/null
->
-> +++ b/include/trace/events/icmp.h
->
-> @@ -0,0 +1,64 @@
->
-> +/* SPDX-License-Identifier: GPL-2.0 */
->
-> +#undef TRACE_SYSTEM
->
-> +#define TRACE_SYSTEM icmp
->
-> +
->
-> +#if !defined(_TRACE_ICMP_H) || defined(TRACE_HEADER_MULTI_READ)
->
-> +#define _TRACE_ICMP_H
->
-> +
->
-> +#include <linux/icmp.h>
->
-> +#include <linux/tracepoint.h>
->
-> +
->
-> +TRACE_EVENT(icmp_send,
->
-> +
->
-> + TP_PROTO(const struct sk_buff *skb, int type, int code),
->
-> +
->
-> + TP_ARGS(skb, type, code),
->
-> +
->
-> + TP_STRUCT__entry(
->
-> + __field(const void *, skbaddr)
->
-> + __field(int, type)
->
-> + __field(int, code)
->
-> + __array(__u8, saddr, 4)
->
-> + __array(__u8, daddr, 4)
->
-> + __field(__u16, sport)
->
-> + __field(__u16, dport)
->
-> + __field(unsigned short, ulen)
->
-> + ),
->
-> +
->
-> + TP_fast_assign(
->
-> + struct iphdr *iph =3D ip_hdr(skb);
->
-> + int proto_4 =3D iph->protocol;
->
-> + __be32 *p32;
->
-> +
->
-> + __entry->skbaddr =3D skb;
->
-> + __entry->type =3D type;
->
-> + __entry->code =3D code;
->
-> +
->
-> + if (proto_4 =3D=3D IPPROTO_UDP) {
->
-> + struct udphdr *uh =3D udp_hdr(skb);
->
-> + __entry->sport =3D ntohs(uh->source);
->
-> + __entry->dport =3D ntohs(uh->dest);
->
-> + __entry->ulen =3D ntohs(uh->len);
->
-> + } else {
->
-> + __entry->sport =3D 0;
->
-> + __entry->dport =3D 0;
->
-> + __entry->ulen =3D 0;
->
-> + }
->
-> +
->
-> + p32 =3D (__be32 *) __entry->saddr;
->
-> + *p32 =3D iph->saddr;
->
-> +
->
-> + p32 =3D (__be32 *) __entry->daddr;
->
-> + *p32 =3D iph->daddr;
->
-> + ),
->
-> +
->
-> + TP_printk("icmp_send: type=3D%d, code=3D%d. From %pI4:%u to %pI4:%u ule=
-n=3D%d skbaddr=3D%p",
->
-> + __entry->type, __entry->code,
->
-> + __entry->saddr, __entry->sport, __entry->daddr,
->
-> + __entry->dport, __entry->ulen, __entry->skbaddr)
->
-> +);
->
-> +
->
-> +#endif /* _TRACE_ICMP_H */
->
-> +
->
-> +/* This part must be outside protection */
->
-> +#include <trace/define_trace.h>
->
-> \ No newline at end of file
->
-> diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
->
-> index e63a3bf99617..21fb41257fe9 100644
->
-> --- a/net/ipv4/icmp.c
->
-> +++ b/net/ipv4/icmp.c
->
-> @@ -92,6 +92,8 @@
->
->  #include <net/inet_common.h>
->
->  #include <net/ip_fib.h>
->
->  #include <net/l3mdev.h>
->
-> +#define CREATE_TRACE_POINTS
->
-> +#include <trace/events/icmp.h>
->
->
->
->  /*
->
->   * Build xmit assembly blocks
->
-> @@ -672,6 +674,8 @@ void __icmp_send(struct sk_buff *skb_in, int type, in=
-t code, __be32 info,
->
->   }
->
->   }
->
->
->
-> + trace_icmp_send(skb_in, type, code);
->
-> +
->
->   /* Needed by both icmp_global_allow and icmp_xmit_lock */
->
->   local_bh_disable();
->
->
->
-> --
->
-> 2.44.0
->
->
->
->
->
+VMGenID specification http://go.microsoft.com/fwlink/?LinkId=260709 defines
+a mechanism for the BIOS/hypervisors to communicate to the virtual machine
+that it is executed with a different configuration (e.g. snapshot execution
+or creation from a template).
+The guest operating system can use the notification for various purposes
+such as re-initializing its random number generator etc.
+
+More references to vmgenid specs:
+ - https://www.qemu.org/docs/master/specs/vmgenid.html
+ - https://learn.microsoft.com/en-us/windows/win32/hyperv_v2/virtual-machine-generation-identifier
+
+*Reason for this change*:
+Chosing ACPI or devicetree is an intrinsic part of an hypervisor design.
+Without going into details of why a hypervisor would chose DT over ACPI,
+we would like to highlight that the hypervisors that have chose devicetree
+and now want to make use of the vmgenid functionality cannot do so today
+because vmgenid is an ACPI only device.
+This forces these hypervisors to change their design which could have
+undesirable impacts on their use-cases, test-scenarios etc.
+
+The point of vmgenid is to provide a mechanism to discover a GUID when
+the execution state of a virtual machine changes and the simplest
+way to do it is pass a memory location and an interrupt via devicetree.
+It would complicate things unnecessarily if instead of using devicetree,
+we try to implement a new protocol or modify other protocols to somehow
+provide the same functionility.
+
+We believe that adding a devicetree binding for vmgenid is a simpler,
+better alternative to provide the same functionality and will allow
+such hypervisors as mentioned above to continue using devicetree.
+
+Addtional notes:
+While adding the devicetree support we considered re-using existing
+structures/code to avoid duplication code and reduce maintenance; so,
+we used the same driver to be configured either by ACPI or by DT.
+This also meant reimplementing the existing vmgenid ACPI bus driver as a
+platform driver and making it discoverable using `driver.of_match_table`
+and `driver.acpi_match_table`.
+
+There is no user impact or change in vmgenid functionality when used
+with ACPI. We verified ACPI support of these patches on X86 and DT
+support on ARM using Firecracker hypervisor
+https://github.com/firecracker-microvm/firecracker.
+
+To check schema and syntax errors, the bindings file is verified with:
+```
+  make dt_binding_check \
+  DT_SCHEMA_FILES=Documentation/devicetree/bindings/vmgenid/vmgenid.yaml
+```
+and the patches were verified with:
+`scripts/checkpatch.pl --strict v1-000*`.
+
+Changelog with respect to version 1:
+- Moved vmgenid.yaml bindings to the more related "rng" folder.
+- Removed `vmgenid_remove` to since it is unrelated to the
+  current goal of the patch.
+- Updated the cover letter and bindings commit
+  "[PATCH v2 3/4] dt-bindings: rng: Add vmgenid support" to
+  provide more information on vmgenid.
+- Compiled with and without CONFIG_OF/CONFIG_ACPI and fixed
+  compilers errors/warnings.
+
+Sudan Landge (4):
+  virt: vmgenid: rearrange code to make review easier
+  virt: vmgenid: change implementation to use a platform driver
+  dt-bindings: rng: Add vmgenid support
+  virt: vmgenid: add support for devicetree bindings
+
+ .../devicetree/bindings/rng/vmgenid.yaml      |  57 +++++
+ MAINTAINERS                                   |   1 +
+ drivers/virt/Kconfig                          |   2 +-
+ drivers/virt/vmgenid.c                        | 215 +++++++++++++++---
+ 4 files changed, 237 insertions(+), 38 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rng/vmgenid.yaml
+
+
+base-commit: a4145ce1e7bc247fd6f2846e8699473448717b37
+-- 
+2.40.1
+
