@@ -1,116 +1,107 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4DF79C8;
-	Thu, 21 Mar 2024 18:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D66379C3;
+	Thu, 21 Mar 2024 18:24:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711045206; cv=none; b=E/HIZsC9Z0TcysghIKeQLNSYFKGFLzGB9CPJHvcbisdRIvKk1ei9ZN8ewQzGWXpaNuOUNqcU3iFOClzG2OHTt46dd+izVbU0sVQLGU+uMUVWSpHjU+6We9pk5DyuiTIhhY8k6bC5i2+m8PhQGAlnbrSuSdDU8JBqCOjqIjEpEe4=
+	t=1711045473; cv=none; b=XXhyxR25tQ6TV6/E73Vr2FLQa9nfzt1kFomoKLXLWRlVLSg5iZ2gG0gW52enFO3Kg/i3+MBHz8x9E+pdv3iqPnGqBmd+j/sIMapfZWD8m7C9+SlDQwzU4KkQ9Jmdax3jc1FpN0PnPl+8JKjJ49ApqpMR1IHlQYgL1w43tTFtIks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711045206; c=relaxed/simple;
-	bh=8fW3dhh9hYG5Y1ZObjvWtGoPkBZ9p9ImMfwLnxDrke0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EHz3w6RixgA1Zm1WKlAEuO89YpPI1mEqTVcDUhMxlKfJdIJmtVno+LGEFSmo6txAUFta/xK9R6+Xks1nipUipPbP45z4bZIR6skbc6VKLYlMLLfXd/CW6fUpUqz5W+4CWMOeaaFik1QQpdKeXohBxnYyc5XgbyZrJaBTv6kZ6wM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=imqIXKmB; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1711045473; c=relaxed/simple;
+	bh=6XDm0H7ukgWK62f8uLvS2K0zAt4z5bHjRTxNVSBu7FU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=giDvePGzZcjP7GJUHhYmxnLi25gryZotNusl4ynlbi1AdIDweeTldlUxhbFa7UZOckdT/Rqc0yBhtzr/iNq+GjvcKWhJTQ685GrcQPcU/D3kVhH4b7te8UNX2ZcXyqizOZHETDvH8qw/EDF3QOwFqE0TEOUFEVWrAEX57TByBy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l0EQyOKG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="imqIXKmB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1711045201; x=1711650001; i=markus.elfring@web.de;
-	bh=HgrbIRE7VEvNM/7O+kRv8lnP7tFYK9W1rOWWA2jQum4=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=imqIXKmB46uAN+rH9XXuN6v+H6/1USJchXf21JZZfoDez/vI50B/Krg5G8vJlTRB
-	 rqLlISWCkSHkVJ+PtHNFiZqXOLZ+edi2sYwDSr0aH580tKVhR/z/3d0G6EtpztHPI
-	 yzmQktctnT6Z2/wceX+H0y7/ILWYKs5t6cHsKQPkb5EA7fwKwbUkYdhWu7SmjslT+
-	 fYFNe1tSNIBH9vLBgiBVV7UAvTG+gVhBhCG7SpPHsUXrNxiIPw/TWz9Z1hfXk7XV2
-	 tujXbiQ3hIGJpoZlDQsyIM3CyOYHKwL78y5jBZEEhXnxL1nx49uH49vfphKQdqo09
-	 IX8NweSGATuKTL8m0A==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.90.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N5lnT-1qi0cQ3Muh-00sdt1; Thu, 21
- Mar 2024 19:14:13 +0100
-Message-ID: <e5172afb-427b-423e-877a-10352cf4a007@web.de>
-Date: Thu, 21 Mar 2024 19:14:11 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l0EQyOKG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E949C433F1;
+	Thu, 21 Mar 2024 18:24:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711045472;
+	bh=6XDm0H7ukgWK62f8uLvS2K0zAt4z5bHjRTxNVSBu7FU=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=l0EQyOKGlSqTAnbBIdyevJIWPpZnrVnPa3Y0y3Z5RlyshAt52oVRZPMfLjqK+PcfD
+	 7sHFf4AyhqH+80XW6vhex7Zav9GuzAIaD1aPG7NGNNobWOx7BpZl+OtMmVFXL4kk4l
+	 YZOM0VbcOrraIPYwN+JfmfS4w8bnuyAB7UnEcJzvDpzEiJVUKk+T9XywBSogUjxgUl
+	 +VSCZC+YLqL/rkaF2rhhnNkIUGbmC3nqkcI8zkDRmuadYe52u33ZXLsgCxHI7dSxwl
+	 mCtqtWCvm4rCktdJ97xjRo0qTvTNUdPqF2YHsBTiHeYvw0rs4o8pIIuvK1DMej6x2a
+	 Z8RbdXpTWjRnA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] ice: Fix freeing uninitialized pointers
-Content-Language: en-GB
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Dan Carpenter <dan.carpenter@linaro.org>, kernel-janitors@vger.kernel.org,
- netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
- Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Alexander Lobakin <aleksander.lobakin@intel.com>,
- David Laight <David.Laight@aculab.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>, Jiri Pirko
- <jiri@resnulli.us>, Jonathan Cameron <jic23@kernel.org>,
- Julia Lawall <julia.lawall@inria.fr>, Kees Cook <keescook@chromium.org>,
- Lukasz Czapnik <lukasz.czapnik@intel.com>, Paolo Abeni <pabeni@redhat.com>,
- Pucha Himasekhar Reddy <himasekharx.reddy.pucha@intel.com>
-References: <77145930-e3df-4e77-a22d-04851cf3a426@moroto.mountain>
- <d2b1f3bd-42f1-483b-916e-3735b39a30e1@web.de>
- <Zfx2VL7xnj4rQoV8@smile.fi.intel.com>
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <Zfx2VL7xnj4rQoV8@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:sgi560zt2vi0QRILaOf8Dno1paTZMF0JEueGv8qFTmpY2UfKHsL
- 7YAth+4h13SGVefnGT3MdnvQlXK2uzciuQAvypP075NmJwH+S1f5f2BOQ79WNEYzGNYW9gQ
- yz0royLM51YEA7NL75PeQ8OuPHo/abXi7N/DUbBLsSMqyhUaUrXgvBCO1neaNLoBXEkxfq2
- wtnF/rBwxxzKrMKDBHRhg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:vB8mFuwR+dI=;qdq3to6uVb96t9XCtTO/xTNQNBA
- 3vFin/ZvWWkItGHHjrW/mWM2bguPoLo5sndULVGKvZiQEensFDzpaHrh/upGXHGqoXRC1g3aR
- N4rqgZWS5CCS8eh1/O4esq+ktaet89gS7lvDZ9mwy5416tk/sredsdR59l0TmmRjoPOEurYAv
- CdFX2mNx4VZNFTXlS32DFH4sl2xib4YB7IF52pavgztyhC3dvKrB+PE156FP5LwIZth7Ufv4m
- X0/6RAQiKdW8GYN1XrhBtQ8Zi0Gv0IJAQvyiHkOQHo8Z7h4txtQfLQ78ZUbErNEXPK7t9IVb2
- 125/sOLjtTnnqWxhFkRuusB/yaWba8cehhn/qJgM3gGoks1JpOWoR4oRZsufZNk/V0hKvKiJ6
- T8gKk9BYpmZ2rdD6RL0F2roH/TWpC/d06Hp/juOqx5GQ1RvxIdXdokbRcOmbE1J0lUsPS8e+o
- 9nexNQ9gvw1kMZfZI2Dl68cus4HkwwnKagrCljYSP1c2wOgbaa2WEf9X6OU6J7ofvwwb9yKgn
- Xgcdk4twUBx8m5t72T/0CX1Ud0RRYPUwlrT7zg2mjwycLBVx8O5F1bq15hVX0O2HvwovrhDzM
- jcozV9lFf6WRf2VPsgwXMCgIrNQwAVAgQs4UzeH9MIQrZ6pW2L+f31pWYFnZdHn5ebltufL1C
- yqF6N3uDqQx0PcBayqL5F4aaGZe6O7m5yDuvBLFeSWz83ObmaYwJ7gxZn+bSc+PqwHXQoKwEH
- q3NwV6Lgxw8EpowwLl0qPGOZZ4KJFQypcMWNs8F7IyTq0DWlZsXI5RfNFpv9nyoi3sIsEpygf
- brnjCROtc9T7cwDCoGZcrfM9SRIswXVGWeVjOrFTRGZNM=
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 21 Mar 2024 20:24:28 +0200
+Message-Id: <CZZMZWQE3AKZ.3O07JH2ZNJC9V@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>, <saulo.alessandre@tse.jus.br>,
+ <lukas@wunner.de>, <bbhushan2@marvell.com>
+Subject: Re: [PATCH v7 05/13] crypto: ecc - Add nbits field to ecc_curve
+ structure
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Stefan Berger" <stefanb@linux.ibm.com>, <keyrings@vger.kernel.org>,
+ <linux-crypto@vger.kernel.org>, <herbert@gondor.apana.org.au>,
+ <davem@davemloft.net>
+X-Mailer: aerc 0.17.0
+References: <20240320114725.1644921-1-stefanb@linux.ibm.com>
+ <20240320114725.1644921-6-stefanb@linux.ibm.com>
+ <CZZLKGMM0B9E.7J1CGE8EIGQX@kernel.org>
+ <58166047-b339-4234-832b-a1aad6bf49de@linux.ibm.com>
+In-Reply-To: <58166047-b339-4234-832b-a1aad6bf49de@linux.ibm.com>
 
->> How do you think about to reduce the scope for the affected local varia=
-ble instead
->> with the help of a small script (like the following) for the semantic p=
-atch language?
->>
->> @movement@
->> attribute name __free;
->> @@
->> -u8 *tx_frame __free(kfree);
->>  int i;
->>  ... when any
->>  if (ice_fltr_add_mac(test_vsi, ...))
->>  { ... }
->> +
->> +{
->> +u8 *tx_frame __free(kfree) =3D NULL;
->>  if (ice_lbtest_create_frame(pf, &tx_frame, ...))
->>  { ... }
->>  ... when any
->> +}
->> +
->>  valid_frames =3D ice_lbtest_receive_frames(...);
+On Thu Mar 21, 2024 at 7:42 PM EET, Stefan Berger wrote:
 >
-> I believe you don't understand what the scope of the above can be.
+>
+> On 3/21/24 13:17, Jarkko Sakkinen wrote:
+> > On Wed Mar 20, 2024 at 1:47 PM EET, Stefan Berger wrote:
+> >> Add the number of bits a curve has to the ecc_curve definition to be a=
+ble
+> >> to derive the number of bytes a curve requires for its coordinates fro=
+m it.
+> >> It also allows one to identify a curve by its particular size. Set the
+> >> number of bits on all curve definitions.
+> >>
+> >> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> >> Tested-by: Lukas Wunner <lukas@wunner.de>
+> >> ---
+>
+> >>   		.y =3D tc512b_g_y,
+> >> diff --git a/include/crypto/ecc_curve.h b/include/crypto/ecc_curve.h
+> >> index 70964781eb68..63d5754e7614 100644
+> >> --- a/include/crypto/ecc_curve.h
+> >> +++ b/include/crypto/ecc_curve.h
+> >> @@ -23,6 +23,7 @@ struct ecc_point {
+> >>    * struct ecc_curve - definition of elliptic curve
+> >>    *
+> >>    * @name:	Short name of the curve.
+> >> + * @nbits:	The number of bits of a curve.
+> >>    * @g:		Generator point of the curve.
+> >>    * @p:		Prime number, if Barrett's reduction is used for this curve
+> >>    *		pre-calculated value 'mu' is appended to the @p after ndigits.
+> >> @@ -34,6 +35,7 @@ struct ecc_point {
+> >>    */
+> >>   struct ecc_curve {
+> >>   	char *name;
+> >> +	unsigned int nbits;
+> >=20
+> > Nit:
+> >=20
+> > Hmm not strongly opionated here but wouldn't it be more consistent to
+> > use u32 here as the types below are also exact bitsize types?
+>
+> I will change this for v8. I will probably delay v8 until this patch=20
+> here has been queued for upstreaming because 11/13 will need a similar=20
+> module alias.
+>
+> https://lore.kernel.org/linux-crypto/20240321144433.1671394-1-stefanb@lin=
+ux.ibm.com/T/#u
 
-Will the understanding improve for the proposed source code transformation=
-?
+Right for this:
 
-Regards,
-Markus
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+
+... given that I don't have strong opinion on the choice :-)
+
+BR, Jarkko
