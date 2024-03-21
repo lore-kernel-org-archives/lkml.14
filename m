@@ -1,71 +1,107 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12038624D
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 15:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43AC58624E;
+	Thu, 21 Mar 2024 15:24:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711034645; cv=none; b=kSb7uPHWXlVKImMoxJes3rtp6DKo3X7Z3Klq+E1nTJ7M0h6fSWBsRAkt0bkEzLz3czn6sRcPms0lrAlyw2T1fA+IJJ05YleQ3CrXTUj9EAx7/s4FTtb0b+pQPNloOxM9A8AxtkoKsh4mmQ3K9PWVFuCuu6Eq+B0u1UE0+3PYsIw=
+	t=1711034663; cv=none; b=s8URNSulFUk3wW5qVjnu8LED7FjkFmiqKl9C9+kswnzHj+gfvM+vHqCenAdssj363Il8nZNxlpHudoNFvaKaNs2wgHO+MYezNtHEOkLY8J8BuG+0YGEpu83aPvyhDAa2aLv67lxhuug1ysHyW0XTp8A/Vhn3wJrBETgAK5izvfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711034645; c=relaxed/simple;
-	bh=yGybokzJd+yg72sbXROHX6ZYxfcEdLlx8fW8rxaYUuo=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=g2JSurF1I0sftaPq76DRlVUT4vQr3IplR5kDyBArztzgQ+Gq0E/JqQrixo0PW2clYreKcSsa7OKmX43kY9Qo6Tk65ostUgihrRVZLcaFnasIvJHHVAuS7uRz7i/7iY8VYFyC8q/9jfGvKXNWswOm8fFy5ZfVQzKNeT7ln3RrJRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7cbf2ff0e33so107453239f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 08:24:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711034643; x=1711639443;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wb9cL8kWLHvuPt4ouPjlxwVs15/UE+6d6/NnUxfn/G4=;
-        b=USRsayWlK6fdibCUCDyT5rJOZjUcDi+PWJao+fJPc2G0iOeq0aUWONLzFRGZxb+KVB
-         zSl0rvX+l0cHGYAPhIEabX3X/uxUdhFw3vvD9w7WaZFgKNG6ePPTTgHoZ4K4J56yqzve
-         ZM51rRIPtQMpUW3Bu2iKJEg9WikS6FBE1A0fvpTGiOH0O4YUieyZ85om5y9hLF4I4oYX
-         qqsU+0kE2padqMgFfZuOTQJTNWwyFO1m3N63Dr+m7MsrHFa4I7uMTeGmUwp7cjyh/WLG
-         6fTPa88PWXktxls7vz9zDMfKAm5RTGS2bVsxndI19jIJiS5ccOLkkFXzL7ijMvay+Nt3
-         Vmfw==
-X-Forwarded-Encrypted: i=1; AJvYcCULg71W4gCibBJudwcuEy9GYULMvS9FUjDMsRNC867sKqxpz8Y2sjuwjSudXrfPY88/NBp+GmntZL3Z0F/zGpQny0w2FFYIXOHiZtGk
-X-Gm-Message-State: AOJu0YyodoZXklUoi2GV2bWQi7nMogk/BSRi70KPTIJvXsjJcZHewPKL
-	3pcvcR/JoJMbuuJK3ZNwy8fvpZJd2/hOrtca6Oe47M9e9yFjrMo/yLIJp5Q+3wg/NWlaVIdJi39
-	94ifm3NeSLIPc/ix/uVII5auIVSzcBol3RO1RAf1j9Jv92elH9wPhjpY=
-X-Google-Smtp-Source: AGHT+IFiwwlCLIdcfJ+9kF4A18z2YILu8/ybxBF4kM6VsEWLcytJN5ZOhzK9vK+8CpP4FK4nOHQKK26abfvoE5rxpJJO6BsflEPi
+	s=arc-20240116; t=1711034663; c=relaxed/simple;
+	bh=cIwf5+ODApnp9dDmGy58vm92m0RCRPL1X+s9JLtUT3E=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Tm9l32gnST3ueegvlf4cBhpe4vAP1MBtLqyzbZ9KZ0QLar9Ly+mi8Ngvu7Bymxs6Cqrp3YxCH8ARi9tlvn2iUQFK25GKIVrQjxDXbMvPcIQh86sJQ8lX8tv2hgF4R9A0/SYfTvmxugpaMyR2zqQ7fLP7Ywm4yqpze/iUyd/GbSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PSFeJn+3; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PSFeJn+3"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42LAdwbM029392;
+	Thu, 21 Mar 2024 15:24:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version:content-type; s=
+	qcppdkim1; bh=cG0lVyb2TamI2l+l0k2oVPo2ORBpTsuCykTEHklUfxs=; b=PS
+	FeJn+3koptauJaocB6xCzn3xPmKJl4i+ocNFfDyrxqfir2hI5af1Wv/nHuA+U1cL
+	NcMe//eFgmq11DaNAezJ/8Z42Xupi9X57CrVEpYyTVHFy197rjMrV9iY9crpU/ZI
+	L1A1p6vSleQwU3Ncq7GdlTpBcv8TnHyOSQguMoY7Sw8qxrU7zGM/mZ4wCqqlIYfN
+	eZeG1VVs83cIP8zgb4KbMbmfr1j6uHKar5ZWzrvgwYT/eAUXa+pL1Al54e2jHcnq
+	u/H5oXPP1LHTNGlSvn7PA3GAGqbI3ot7M4D7tsu4eEYnVyx4c3SMt+sQPi4vdvaq
+	lq3d53P/+1vyrfEeOSug==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x0ka60r8k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Mar 2024 15:24:16 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42LFOFIa027598
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Mar 2024 15:24:15 GMT
+Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 21 Mar 2024 08:24:13 -0700
+From: Mukesh Ojha <quic_mojha@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Mukesh
+ Ojha" <quic_mojha@quicinc.com>
+Subject: [PATCH v2 1/4] firmware: qcom: scm: Remove log reporting memory allocation failure
+Date: Thu, 21 Mar 2024 20:53:59 +0530
+Message-ID: <1711034642-22860-1-git-send-email-quic_mojha@quicinc.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:1646:b0:7cc:838:7f3a with SMTP id
- y6-20020a056602164600b007cc08387f3amr464694iow.1.1711034643097; Thu, 21 Mar
- 2024 08:24:03 -0700 (PDT)
-Date: Thu, 21 Mar 2024 08:24:03 -0700
-In-Reply-To: <tencent_9E7A866D382C796FF8943CE8A6ED26CF1C0A@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000019c0cd06142d4cb7@google.com>
-Subject: Re: [syzbot] [sound?] inconsistent lock state in snd_timer_interrupt
-From: syzbot <syzbot+d832e7bb0f8bf47217f1@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: ELKtj7zOupBOlmaCklLVrHxleRGZxuvw
+X-Proofpoint-GUID: ELKtj7zOupBOlmaCklLVrHxleRGZxuvw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-21_10,2024-03-21_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 suspectscore=0 malwarescore=0 bulkscore=0
+ priorityscore=1501 mlxscore=0 phishscore=0 spamscore=0 impostorscore=0
+ clxscore=1015 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2403140001 definitions=main-2403210110
 
-Hello,
+Remove redundant memory allocation failure.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+WARNING: Possible unnecessary 'out of memory' message
++       if (!mdata_buf) {
++               dev_err(__scm->dev, "Allocation of metadata buffer failed.\n");
 
-Reported-and-tested-by: syzbot+d832e7bb0f8bf47217f1@syzkaller.appspotmail.com
+Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+---
+Changes in v2: https://lore.kernel.org/lkml/20240227155308.18395-7-quic_mojha@quicinc.com/
+ - Added R-by tag
 
-Tested on:
+ drivers/firmware/qcom/qcom_scm.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-commit:         fe46a7dd Merge tag 'sound-6.9-rc1' of git://git.kernel..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=161b6dc9180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=aef2a55903e5791c
-dashboard link: https://syzkaller.appspot.com/bug?extid=d832e7bb0f8bf47217f1
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=11e7dd85180000
+diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
+index 49ddbcab0680..a11fb063cc67 100644
+--- a/drivers/firmware/qcom/qcom_scm.c
++++ b/drivers/firmware/qcom/qcom_scm.c
+@@ -554,10 +554,9 @@ int qcom_scm_pas_init_image(u32 peripheral, const void *metadata, size_t size,
+ 	 */
+ 	mdata_buf = dma_alloc_coherent(__scm->dev, size, &mdata_phys,
+ 				       GFP_KERNEL);
+-	if (!mdata_buf) {
+-		dev_err(__scm->dev, "Allocation of metadata buffer failed.\n");
++	if (!mdata_buf)
+ 		return -ENOMEM;
+-	}
++
+ 	memcpy(mdata_buf, metadata, size);
+ 
+ 	ret = qcom_scm_clk_enable();
+-- 
+2.7.4
 
-Note: testing is done by a robot and is best-effort only.
