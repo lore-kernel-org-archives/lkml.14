@@ -1,130 +1,185 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C895186271
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 15:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A360723778;
+	Thu, 21 Mar 2024 15:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711035973; cv=none; b=cgu8yVcxdpu486ZdsCbqeEHgcrvKinojzD9hBul/FnkUR2kPy893gJUvsjoXyFdheChKv1JO2XYYX9rIg4DpyHKO9d6U0loNtLdCUQP/asf0g9EUnS/irE/J2x7euu7v4HP6VdklaIqzfTfXZqwgZAjDaE49PErS5DiQIFR2kjU=
+	t=1711036027; cv=none; b=MKZNQXRtCB6ChqsCZOv7tVj3GdWEX2XBoZEfdlAoGybVSOOgNZ+taEIS/BlxSs4e14+GEAuSOivo+px8hytsZUhz9xE8uE4g1KS45Ru5Zk4/ZSOz37lPMbyDFh4WTK5HGNQmwPYGG6f8DLhTKpMlqmxOu+fqeIrVkIbg+2Ko+NI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711035973; c=relaxed/simple;
-	bh=gFqBYv79Oe4VWuydL3wkXy7M4uX3TlLt/bVmuJvy/j4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kF76bkFaia9Qyidb80SIMxvc/FrBMe0NA0evsIWYnYzKtIDVTS6q2E/U/PdtgB7S/tFe5s/G4kUpyW6a7iqgwDek9YEhltKVlOcf1TLSWyjIdl5t/SG+TkGUS/3KETLBiu5gJ9KvOGbB7p90PzGoAS0KtnXRf+7hmOK5A8E82wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bU3csa5r; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bU3csa5r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711035970;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9u/bDAxkRhGNaI63WaSFbPk3WuTeCpBeNP/DPNnUuVA=;
-	b=bU3csa5raTKYsRkDjcTokctANzOJueo3SP9GB7lEu4VDrLOwIbB1A2WCODG1zSD4ndjTgo
-	Otp1TLt5o8UDEjhOKfrvowFM9IkWdZ5GJ14+0luEO7mu/huUY+y8p+1ZtB1WaasIOBB/ma
-	bFBuhyvWeC7/QL7Cdm/E+42M0OiaNMM=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-425-rFkgBk9gMweys7YTAlh1pA-1; Thu, 21 Mar 2024 11:46:09 -0400
-X-MC-Unique: rFkgBk9gMweys7YTAlh1pA-1
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-56bced2bc99so584767a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 08:46:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711035968; x=1711640768;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9u/bDAxkRhGNaI63WaSFbPk3WuTeCpBeNP/DPNnUuVA=;
-        b=vUDQ67FLjNOJNE8yS964+aoI3V4oOElZeB+YSFIpMkrQQmW0PZmRVzpLxrNWLx2+/W
-         0FSLnUHe3LatAfXYE21QVv4F+691w95hn4SBT9UT3EtyfPT2Nm8qiLll4QZ2IXBpCRSJ
-         /f2Ug3ePM3RRY3tCA+4mzL50w07VuQ48Z2R4FHdnTk0yxxRpvTmORsijZRkGthhDW2Kq
-         FTNTJUJ1hdcIeeRe5KubtiBPOur3EYzHwBLUr+pNrUvvyWk1H2FAgq6DdQ7L7SvWN6T+
-         OlDTrHOTL116Qwz3Ot/9f4ALbujt2Y40OTkWaxpUULdgNvK2JZvlkQ2uygxgwJ+ydnPY
-         k8HQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWzsLEf0DA9ezUPbMWRSlkZQI97r9K49rCgMJ4Dqv6Qh4mGxam6sPyiskCNXsyWW9+Zu6jVgL1BbdD3uyoQZx6GSLuP4mdSNKfG9kDg
-X-Gm-Message-State: AOJu0YxOmP0v+eYrCNDJNhZNWP2ryFZeeGW2guXiSSWocMoLLF94ZaBf
-	R6BR+DoHV10m1XxRi7s7v/pZW3IpLCCiOZYJLuSDDd5byBwrQ/jAgKNAXzn7TcVmSqkoyZUPsBd
-	FdXxutY+qNToK/9zTdUveOtQgTld1h8Rf3C9a5DbwnlLwpze94iq2wsxregxt69vJXapTPIn01i
-	LiA841BeBWy0n8ZeQKyiiYCkKi3of21pQ06I8s
-X-Received: by 2002:a50:d74f:0:b0:568:c4ca:987a with SMTP id i15-20020a50d74f000000b00568c4ca987amr1882699edj.13.1711035968300;
-        Thu, 21 Mar 2024 08:46:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFyoGZJ6qMf3KzVRErhXAnVH5+F4wxjV53GrawrpT4L1asy0FRr1gT8G4TR9rt+kUD4VoEMGruWjRF4VmAhHqY=
-X-Received: by 2002:a50:d74f:0:b0:568:c4ca:987a with SMTP id
- i15-20020a50d74f000000b00568c4ca987amr1882679edj.13.1711035967938; Thu, 21
- Mar 2024 08:46:07 -0700 (PDT)
+	s=arc-20240116; t=1711036027; c=relaxed/simple;
+	bh=thSvwB8rR3BM2oBG9DuRpKkR95kWQmdAazTxYk9K/a8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pmTr6xREPn5W0ciPF2w2T5nfTU0IU7jI/HSZKBET3QQvriCwQ7CkvEiSCoad4sGqLEFVF2+viXzaEj3BrrD1tmZdcmBICWoH16+D8Ejl2ncWQOpWvKMk0pJUZIR08XrQ/B8tXZi2G4wYzucJ3aXcH+RIZpDfgRHIKaqXSOfqnhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E823FC433C7;
+	Thu, 21 Mar 2024 15:47:04 +0000 (UTC)
+Message-ID: <e4b2fc02-977f-4eb6-be7a-a4493a5a3931@xs4all.nl>
+Date: Thu, 21 Mar 2024 16:47:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240315-hid-bpf-sleepable-v4-0-5658f2540564@kernel.org>
- <20240315-hid-bpf-sleepable-v4-6-5658f2540564@kernel.org> <89e76fa5834bd34ef94761bcbc987a1be245b261.camel@gmail.com>
-In-Reply-To: <89e76fa5834bd34ef94761bcbc987a1be245b261.camel@gmail.com>
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date: Thu, 21 Mar 2024 16:45:56 +0100
-Message-ID: <CAO-hwJKvK+QYig8jM2MsqB_WSCP7VQGt5NSWXJUZR2=_5+Y1RA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 6/6] selftests/bpf: add sleepable timer tests
-To: Eduard Zingerman <eddyz87@gmail.com>
-Cc: Benjamin Tissoires <bentiss@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/3] media: uvcvideo: Lock video streams and queues
+ while unregistering
+Content-Language: en-US, nl
+To: Ricardo Ribalda <ribalda@chromium.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, Tomasz Figa <tfiga@chromium.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Alan Stern <stern@rowland.harvard.edu>, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Sean Paul <seanpaul@chromium.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>
+References: <20231122-guenter-mini-v5-0-15d8cd8ed74f@chromium.org>
+ <20231122-guenter-mini-v5-1-15d8cd8ed74f@chromium.org>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+In-Reply-To: <20231122-guenter-mini-v5-1-15d8cd8ed74f@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 19, 2024 at 1:20=E2=80=AFAM Eduard Zingerman <eddyz87@gmail.com=
-> wrote:
->
-> On Fri, 2024-03-15 at 15:29 +0100, Benjamin Tissoires wrote:
-> > bpf_experimental.h and ../bpf_testmod/bpf_testmod_kfunc.h are both
-> > including vmlinux.h, which is not compatible with including time.h
-> > or bpf_tcp_helpers.h.
-> >
-> > So prevent vmlinux.h to be included, and override the few missing
-> > types.
-> >
-> > Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
->
-> [...]
->
-> > @@ -6,6 +6,14 @@
-> >  #include <bpf/bpf_helpers.h>
-> >  #include "bpf_tcp_helpers.h"
-> >
-> > +#define __VMLINUX_H__
-> > +#define u32 __u32
-> > +#define u64 __u64
-> > +#include "bpf_experimental.h"
-> > +struct prog_test_member1;
-> > +#include "../bpf_testmod/bpf_testmod_kfunc.h"
-> > +#undef __VMLINUX_H__
->
-> Tbh, this looks very ugly.
+Hi Ricardo,
 
-heh :)
+On 22/11/2023 12:45 pm, Ricardo Ribalda wrote:
+> From: Guenter Roeck <linux@roeck-us.net>
+> 
+> The call to uvc_disconnect() is not protected by any mutex.
+> This means it can and will be called while other accesses to the video
+> device are in progress. This can cause all kinds of race conditions,
+> including crashes such as the following.
+> 
+> usb 1-4: USB disconnect, device number 3
+> BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+> PGD 0 P4D 0
+> Oops: 0000 [#1] PREEMPT SMP PTI
+> CPU: 0 PID: 5633 Comm: V4L2CaptureThre Not tainted 4.19.113-08536-g5d29ca36db06 #1
+> Hardware name: GOOGLE Edgar, BIOS Google_Edgar.7287.167.156 03/25/2019
+> RIP: 0010:usb_ifnum_to_if+0x29/0x40
+> Code: <...>
+> RSP: 0018:ffffa46f42a47a80 EFLAGS: 00010246
+> RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff904a396c9000
+> RDX: ffff904a39641320 RSI: 0000000000000001 RDI: 0000000000000000
+> RBP: ffffa46f42a47a80 R08: 0000000000000002 R09: 0000000000000000
+> R10: 0000000000009975 R11: 0000000000000009 R12: 0000000000000000
+> R13: ffff904a396b3800 R14: ffff904a39e88000 R15: 0000000000000000
+> FS: 00007f396448e700(0000) GS:ffff904a3ba00000(0000) knlGS:0000000000000000
+> CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000000000000 CR3: 000000016cb46000 CR4: 00000000001006f0
+> Call Trace:
+>  usb_hcd_alloc_bandwidth+0x1ee/0x30f
+>  usb_set_interface+0x1a3/0x2b7
+>  uvc_video_start_transfer+0x29b/0x4b8 [uvcvideo]
+>  uvc_video_start_streaming+0x91/0xdd [uvcvideo]
+>  uvc_start_streaming+0x28/0x5d [uvcvideo]
+>  vb2_start_streaming+0x61/0x143 [videobuf2_common]
+>  vb2_core_streamon+0xf7/0x10f [videobuf2_common]
+>  uvc_queue_streamon+0x2e/0x41 [uvcvideo]
+>  uvc_ioctl_streamon+0x42/0x5c [uvcvideo]
+>  __video_do_ioctl+0x33d/0x42a
+>  video_usercopy+0x34e/0x5ff
+>  ? video_ioctl2+0x16/0x16
+>  v4l2_ioctl+0x46/0x53
+>  do_vfs_ioctl+0x50a/0x76f
+>  ksys_ioctl+0x58/0x83
+>  __x64_sys_ioctl+0x1a/0x1e
+>  do_syscall_64+0x54/0xde
+> 
+> usb_set_interface() should not be called after the USB device has been
+> unregistered. However, in the above case the disconnect happened after
+> v4l2_ioctl() was called, but before the call to usb_ifnum_to_if().
+> 
+> Acquire various mutexes in uvc_unregister_video() to fix the majority
+> (maybe all) of the observed race conditions.
+> 
+> The uvc_device lock prevents races against suspend and resume calls
+> and the poll function.
+> 
+> The uvc_streaming lock prevents races against stream related functions;
+> for the most part, those are ioctls. This lock also requires other
+> functions using this lock to check if a video device is still registered
+> after acquiring it. For example, it was observed that the video device
+> was already unregistered by the time the stream lock was acquired in
+> uvc_ioctl_streamon().
+> 
+> The uvc_queue lock prevents races against queue functions, Most of
+> those are already protected by the uvc_streaming lock, but some
+> are called directly. This is done as added protection; an actual race
+> was not (yet) observed.
+> 
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Alan Stern <stern@rowland.harvard.edu>
+> Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+> Reviewed-by: Sean Paul <seanpaul@chromium.org>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+>  drivers/media/usb/uvc/uvc_driver.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+> index 08fcd2ffa727..ded2cb6ce14f 100644
+> --- a/drivers/media/usb/uvc/uvc_driver.c
+> +++ b/drivers/media/usb/uvc/uvc_driver.c
+> @@ -1907,14 +1907,22 @@ static void uvc_unregister_video(struct uvc_device *dev)
+>  {
+>  	struct uvc_streaming *stream;
+>  
+> +	mutex_lock(&dev->lock);
+> +
+>  	list_for_each_entry(stream, &dev->streams, list) {
+>  		if (!video_is_registered(&stream->vdev))
+>  			continue;
+>  
+> +		mutex_lock(&stream->mutex);
+> +		mutex_lock(&stream->queue.mutex);
+> +
+>  		video_unregister_device(&stream->vdev);
+>  		video_unregister_device(&stream->meta.vdev);
+>  
+>  		uvc_debugfs_cleanup_stream(stream);
+> +
+> +		mutex_unlock(&stream->queue.mutex);
+> +		mutex_unlock(&stream->mutex);
 
-> Would it be possible to create a new tests file sleepable_timer.c
-> and include bpf_experimental.h there, skipping time.h?
+Part of the problem here is that video_unregister_device does not stop streaming.
 
-Sounds like an option, yeah :)
+For 'normal' drivers that leave most of the locking to the core framework and
+that use the standard vb2_fop_* and vb2_ioctl_* helpers, instead of calling
+video_unregister_device, they call vb2_video_unregister_device(). This will
+safely unregister the device and stop streaming at the same time.
 
-> It appears that for the new tests the only necessary definition from
-> time.h is CLOCK_MONOTONIC.
->
+Since after the device is unregistered the only file operation that is accepted
+is close(), it will be impossible to restart streaming.
 
-Yeah, that #define should be the only one missing.
+In other words, this guarantees that when the disconnect function exits there
+is nothing streaming anymore.
 
-I'll try to come up with better tests in v5 :)
+This makes it much easier to deal with disconnects, and I think this should
+happen here as well. I wonder if this will obsolete patch 3/3 and perhaps
+2/3.
 
-Cheers,
-Benjamin
+I don't think taking the queue.mutex is needed, especially if you stop
+streaming here.
+
+Regards,
+
+	Hans
+
+>  	}
+>  
+>  	uvc_status_unregister(dev);
+> @@ -1925,6 +1933,7 @@ static void uvc_unregister_video(struct uvc_device *dev)
+>  	if (media_devnode_is_registered(dev->mdev.devnode))
+>  		media_device_unregister(&dev->mdev);
+>  #endif
+> +	mutex_unlock(&dev->lock);
+>  }
+>  
+>  int uvc_register_video_device(struct uvc_device *dev,
+> 
 
