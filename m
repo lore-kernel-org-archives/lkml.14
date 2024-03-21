@@ -1,383 +1,197 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E6429A9;
-	Thu, 21 Mar 2024 23:40:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C1029A9;
+	Thu, 21 Mar 2024 23:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711064448; cv=none; b=Tlp6T6YLczJ5HshqE22WJFsIGDgiVgvFF3CfXMemXa7mVdwsSNwuu9N2kZuMPhwVv1lofb35qbOlZQOiMIjXU4U1/3/+dYusQHJNWBQlOhmCfQbcMO8rKSORA0pwfOrzloADpnvr8dRGha/O4uVl7Uy9vXy1hqmSd34HlHfrVEI=
+	t=1711064681; cv=none; b=hAnAW/crD0bpSg3hVpKspVSCaQypY2mjOrO80vWpmnLtrWAkLcX6Wh+UgUflDhh/fozwceItyerdp5GeJcanfPp5RYr6BS5UawiMtrLOtAymOi+64Ts3dTZlkeTkkEVux/iYiBW8DUXaRMczdYyTw/uxvEYPoZyRYdp0Crg//go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711064448; c=relaxed/simple;
-	bh=lmPYeGS+4lUFLmzt/61FUNZFXKxXzVkv+EU4SNg+F+g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q0N9nIAdX5aI3wFyAjMpC17FIGAb+fE6DlofD1mM4/k4Ohm9Mw6s4RH5smg0XKGMY0IwyMOBIWufjiFeoqjPnoWfesa4lQq/tL/+GjEsVuWmb5GbksWLvJ5BFQftZZhJBRKmQ1jSTUoBsEgN8i6MGjWgwCAmInJ0A2cID2hNihg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AZKnDe2D; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711064681; c=relaxed/simple;
+	bh=vi3VgwEPLVWNlHS9byb7LzKzryG68oasOkwzi2W6T/E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MjIbj0eCVl4+WxYioS08UEqD05RUdW3qAMiXRMuFUArpUIGAa1cS731PvY6ESp+ABkvFgx7cT0XvAkzrsnvGUjvoFPFDHTgXhM1A06Pb131YZi23ysOXXX0UmrcjP0g0azTvqSYFH5CLv+lQI4Q+tvCqJYvn5ZTibbcpDxjnLiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=i+41FxcM; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AZKnDe2D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711064447; x=1742600447;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=lmPYeGS+4lUFLmzt/61FUNZFXKxXzVkv+EU4SNg+F+g=;
-  b=AZKnDe2DieGG8J6ZApWUqLTt6SHb0EiMY3PhwJ3wmVnqhGZXcJ4twPkA
-   3gue6gJpHIdATrJ8IahQLnvgkGQ6nNjmTSBSRVh3s2SlUvRwN/XJMxrfI
-   hV9I0aUGU3SXiW1uHEM6TYIFY7wvYctLkesPkz1Z/AjtQS/+e60Cffu9O
-   fPeL7TzZSazEeHYOM8HWaCgQvuFeiklkFfxa2JE45q+ZtJfX0vlE8lFfG
-   dQ8Xc4SYmt0SmxObnDcjie5Ev1rKN3ptpSGD7agCPxw+pFm2FTvYgqQE8
-   wuxVqW/vG/GTDBfgob7J/qrZgOg2d4yR8Whi997kQYLS1RPvqTuFr0pdX
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="5989913"
-X-IronPort-AV: E=Sophos;i="6.07,144,1708416000"; 
-   d="scan'208";a="5989913"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 16:40:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,144,1708416000"; 
-   d="scan'208";a="14687751"
-Received: from dongshen-mobl1.amr.corp.intel.com (HELO [10.212.116.150]) ([10.212.116.150])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 16:40:45 -0700
-Message-ID: <c919e42a-01db-4969-9aa7-d0ae1792a6c9@intel.com>
-Date: Thu, 21 Mar 2024 16:40:44 -0700
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="i+41FxcM"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1D5E8BEB;
+	Fri, 22 Mar 2024 00:44:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1711064649;
+	bh=vi3VgwEPLVWNlHS9byb7LzKzryG68oasOkwzi2W6T/E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i+41FxcMbJv7FjzALvLMSa+WX1G5ohLHzO1BUsLa7mRFdjOyYGlhpWm4yUQaJ52DH
+	 6yySld8FpuVC2w7SZoMKrtMLaKmnKG2a3hsKsf8Qf+9Ja2SwTyeIxq0TnwdcMD86wn
+	 omNu+1QjPf9WdTCpqGaIlFqHSXbPEb4A+SI9mpB0=
+Date: Fri, 22 Mar 2024 01:44:34 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	linux-kernel@vger.kernel.org, "hn.chen" <hn.chen@sunplusit.com>,
+	linux-media@vger.kernel.org
+Subject: Re: [PATCH v9 3/6] media: uvcvideo: Quirk for invalid dev_sof in
+ Logitech C922
+Message-ID: <20240321234434.GC20938@pendragon.ideasonboard.com>
+References: <20220920-resend-hwtimestamp-v9-0-55a89f46f6be@chromium.org>
+ <20220920-resend-hwtimestamp-v9-3-55a89f46f6be@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v5 15/29] KVM: selftests: TDX: Add TDX MSR read/write
- tests
-To: Sagi Shahar <sagis@google.com>, linux-kselftest@vger.kernel.org,
- Ackerley Tng <ackerleytng@google.com>, Ryan Afranji <afranji@google.com>,
- Erdem Aktas <erdemaktas@google.com>,
- Isaku Yamahata <isaku.yamahata@intel.com>
-Cc: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
- Peter Gonda <pgonda@google.com>, Haibo Xu <haibo1.xu@intel.com>,
- Chao Peng <chao.p.peng@linux.intel.com>,
- Vishal Annapurve <vannapurve@google.com>, Roger Wang <runanwang@google.com>,
- Vipin Sharma <vipinsh@google.com>, jmattson@google.com, dmatlack@google.com,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org
-References: <20231212204647.2170650-1-sagis@google.com>
- <20231212204647.2170650-16-sagis@google.com>
-Content-Language: en-US
-From: "Zhang, Dongsheng X" <dongsheng.x.zhang@intel.com>
-In-Reply-To: <20231212204647.2170650-16-sagis@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20220920-resend-hwtimestamp-v9-3-55a89f46f6be@chromium.org>
 
+Hi Ricardo,
 
+Thank you for the patch.
 
-On 12/12/2023 12:46 PM, Sagi Shahar wrote:
-> The test verifies reads and writes for MSR registers with different access
-> level.
+On Wed, Mar 15, 2023 at 02:30:14PM +0100, Ricardo Ribalda wrote:
+> Logitech C922 internal SOF does not increases at a stable rate of 1kHz.
+
+The next thing you know they will redefine to value of pi to be 3.
+
+> This causes that the device_sof and the host_sof run at different rates,
+> breaking the clock domain conversion algorithm. Eg:
 > 
-> Signed-off-by: Sagi Shahar <sagis@google.com>
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> Signed-off-by: Ryan Afranji <afranji@google.com>
+> 30 (6) [-] none 30 614400 B 21.245557 21.395214 34.133 fps ts mono/SoE
+> 31 (7) [-] none 31 614400 B 21.275327 21.427246 33.591 fps ts mono/SoE
+> 32 (0) [-] none 32 614400 B 21.304739 21.459256 34.000 fps ts mono/SoE
+> 33 (1) [-] none 33 614400 B 21.334324 21.495274 33.801 fps ts mono/SoE
+> * 34 (2) [-] none 34 614400 B 21.529237 21.527297 5.130 fps ts mono/SoE
+> * 35 (3) [-] none 35 614400 B 21.649416 21.559306 8.321 fps ts mono/SoE
+> 36 (4) [-] none 36 614400 B 21.678789 21.595320 34.045 fps ts mono/SoE
+> ...
+> 99 (3) [-] none 99 614400 B 23.542226 23.696352 33.541 fps ts mono/SoE
+> 100 (4) [-] none 100 614400 B 23.571578 23.728404 34.069 fps ts mono/SoE
+> 101 (5) [-] none 101 614400 B 23.601425 23.760420 33.504 fps ts mono/SoE
+> * 102 (6) [-] none 102 614400 B 23.798324 23.796428 5.079 fps ts mono/SoE
+> * 103 (7) [-] none 103 614400 B 23.916271 23.828450 8.478 fps ts mono/SoE
+> 104 (0) [-] none 104 614400 B 23.945720 23.860479 33.957 fps ts mono/SoE
+> 
+> Instead of disabling completely the hardware timestamping for such
+> hardware we take the assumption that the packet handling jitter is
+> under 2ms and use the host_sof as dev_sof.
+> 
+> We can think of the UVC hardware clock as a system with a coarse clock
+> (the SOF) and a fine clock (the PTS). The coarse clock can be replaced
+> with a clock on the same frequency, if the jitter of such clock is
+> smaller than its sampling rate. That way we can save some of the
+> precision of the fine clock.
+> 
+> To probe this point we have run three experiments on the Logitech C922.
+> On that experiment we run the camera at 33fps and we analyse the
+> difference in msec between a frame and its predecessor. If we display
+> the histogram of that value, a thinner histogram will mean a better
+> meassurement. The results for:
+> - original hw timestamp: https://ibb.co/D1HJJ4x
+> - pure software timestamp: https://ibb.co/QC9MgVK
+> - modified hw timestamp: https://ibb.co/8s9dBdk
+> 
+> This bug in the camera firmware has been confirmed by the vendor.
+> 
+> lsusb -v
+> 
+> Bus 001 Device 044: ID 046d:085c Logitech, Inc. C922 Pro Stream Webcam
+> Device Descriptor:
+>   bLength                18
+>   bDescriptorType         1
+>   bcdUSB               2.00
+>   bDeviceClass          239 Miscellaneous Device
+>   bDeviceSubClass         2
+>   bDeviceProtocol         1 Interface Association
+>   bMaxPacketSize0        64
+>   idVendor           0x046d Logitech, Inc.
+>   idProduct          0x085c C922 Pro Stream Webcam
+>   bcdDevice            0.16
+>   iManufacturer           0
+>   iProduct                2 C922 Pro Stream Webcam
+>   iSerial                 1 80B912DF
+>   bNumConfigurations      1
+> 
+> Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 > ---
->  .../selftests/kvm/include/x86_64/tdx/tdx.h    |   5 +
->  .../selftests/kvm/lib/x86_64/tdx/tdx.c        |  27 +++
->  .../selftests/kvm/x86_64/tdx_vm_tests.c       | 209 ++++++++++++++++++
->  3 files changed, 241 insertions(+)
+>  drivers/media/usb/uvc/uvc_driver.c | 9 +++++++++
+>  drivers/media/usb/uvc/uvc_video.c  | 8 ++++++++
+>  drivers/media/usb/uvc/uvcvideo.h   | 1 +
+>  3 files changed, 18 insertions(+)
 > 
-> diff --git a/tools/testing/selftests/kvm/include/x86_64/tdx/tdx.h b/tools/testing/selftests/kvm/include/x86_64/tdx/tdx.h
-> index 63788012bf94..85ba6aab79a7 100644
-> --- a/tools/testing/selftests/kvm/include/x86_64/tdx/tdx.h
-> +++ b/tools/testing/selftests/kvm/include/x86_64/tdx/tdx.h
-> @@ -9,11 +9,16 @@
->  #define TDG_VP_VMCALL_REPORT_FATAL_ERROR 0x10003
+> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+> index 7aefa76a42b3..678a5736c9df 100644
+> --- a/drivers/media/usb/uvc/uvc_driver.c
+> +++ b/drivers/media/usb/uvc/uvc_driver.c
+> @@ -2549,6 +2549,15 @@ static const struct usb_device_id uvc_ids[] = {
+>  	  .bInterfaceSubClass	= 1,
+>  	  .bInterfaceProtocol	= 0,
+>  	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_RESTORE_CTRLS_ON_INIT) },
+> +	/* Logitech HD Pro Webcam C922 */
+> +	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+> +				| USB_DEVICE_ID_MATCH_INT_INFO,
+> +	  .idVendor		= 0x046d,
+> +	  .idProduct		= 0x085c,
+> +	  .bInterfaceClass	= USB_CLASS_VIDEO,
+> +	  .bInterfaceSubClass	= 1,
+> +	  .bInterfaceProtocol	= 0,
+> +	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_INVALID_DEVICE_SOF) },
+>  	/* Chicony CNF7129 (Asus EEE 100HE) */
+>  	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+>  				| USB_DEVICE_ID_MATCH_INT_INFO,
+> diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
+> index 1f416c494acc..4d566edb73e7 100644
+> --- a/drivers/media/usb/uvc/uvc_video.c
+> +++ b/drivers/media/usb/uvc/uvc_video.c
+> @@ -547,6 +547,14 @@ uvc_video_clock_decode(struct uvc_streaming *stream, struct uvc_buffer *buf,
+>  	stream->clock.last_sof = dev_sof;
 >  
->  #define TDG_VP_VMCALL_INSTRUCTION_IO 30
-> +#define TDG_VP_VMCALL_INSTRUCTION_RDMSR 31
-> +#define TDG_VP_VMCALL_INSTRUCTION_WRMSR 32
-
-Nit:
-"arch/x86/include/uapi/asm/vmx.h" already defined the following defs:
-#define EXIT_REASON_IO_INSTRUCTION      30
-#define EXIT_REASON_MSR_READ            31
-#define EXIT_REASON_MSR_WRITE           32
-
-
-> +
->  void handle_userspace_tdg_vp_vmcall_exit(struct kvm_vcpu *vcpu);
->  uint64_t tdg_vp_vmcall_instruction_io(uint64_t port, uint64_t size,
->  				      uint64_t write, uint64_t *data);
->  void tdg_vp_vmcall_report_fatal_error(uint64_t error_code, uint64_t data_gpa);
->  uint64_t tdg_vp_vmcall_get_td_vmcall_info(uint64_t *r11, uint64_t *r12,
->  					uint64_t *r13, uint64_t *r14);
-> +uint64_t tdg_vp_vmcall_instruction_rdmsr(uint64_t index, uint64_t *ret_value);
-> +uint64_t tdg_vp_vmcall_instruction_wrmsr(uint64_t index, uint64_t value);
->  
->  #endif // SELFTEST_TDX_TDX_H
-> diff --git a/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx.c b/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx.c
-> index e5a9e13c62e2..88ea6f2a6469 100644
-> --- a/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx.c
-> +++ b/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx.c
-> @@ -87,3 +87,30 @@ uint64_t tdg_vp_vmcall_get_td_vmcall_info(uint64_t *r11, uint64_t *r12,
->  
->  	return ret;
->  }
-> +
-> +uint64_t tdg_vp_vmcall_instruction_rdmsr(uint64_t index, uint64_t *ret_value)
-> +{
-> +	uint64_t ret;
-> +	struct tdx_hypercall_args args = {
-> +		.r11 = TDG_VP_VMCALL_INSTRUCTION_RDMSR,
-> +		.r12 = index,
-> +	};
-> +
-> +	ret = __tdx_hypercall(&args, TDX_HCALL_HAS_OUTPUT);
-> +
-> +	if (ret_value)
-> +		*ret_value = args.r11;
-> +
-> +	return ret;
-> +}
-> +
-> +uint64_t tdg_vp_vmcall_instruction_wrmsr(uint64_t index, uint64_t value)
-> +{
-> +	struct tdx_hypercall_args args = {
-> +		.r11 = TDG_VP_VMCALL_INSTRUCTION_WRMSR,
-> +		.r12 = index,
-> +		.r13 = value,
-> +	};
-> +
-> +	return __tdx_hypercall(&args, 0);
-> +}
-> diff --git a/tools/testing/selftests/kvm/x86_64/tdx_vm_tests.c b/tools/testing/selftests/kvm/x86_64/tdx_vm_tests.c
-> index 699cba36e9ce..5db3701cc6d9 100644
-> --- a/tools/testing/selftests/kvm/x86_64/tdx_vm_tests.c
-> +++ b/tools/testing/selftests/kvm/x86_64/tdx_vm_tests.c
-> @@ -515,6 +515,213 @@ void verify_guest_reads(void)
->  	printf("\t ... PASSED\n");
->  }
->  
-> +/*
-> + * Define a filter which denies all MSR access except the following:
-> + * MSR_X2APIC_APIC_ICR: Allow read/write access (allowed by default)
-> + * MSR_IA32_MISC_ENABLE: Allow read access
-> + * MSR_IA32_POWER_CTL: Allow write access
-> + */
-> +#define MSR_X2APIC_APIC_ICR 0x830
-> +static u64 tdx_msr_test_allow_bits = 0xFFFFFFFFFFFFFFFF;
-
-Nit:
-0xFFFFFFFFFFFFFFFF is error prone to define? the following?
-static u64 tdx_msr_test_allow_bits = ~0ULL;
-
-
-> +struct kvm_msr_filter tdx_msr_test_filter = {
-> +	.flags = KVM_MSR_FILTER_DEFAULT_DENY,
-> +	.ranges = {
-> +		{
-> +			.flags = KVM_MSR_FILTER_READ,
-> +			.nmsrs = 1,
-> +			.base = MSR_IA32_MISC_ENABLE,
-> +			.bitmap = (uint8_t *)&tdx_msr_test_allow_bits,
-> +		}, {
-> +			.flags = KVM_MSR_FILTER_WRITE,
-> +			.nmsrs = 1,
-> +			.base = MSR_IA32_POWER_CTL,
-> +			.bitmap = (uint8_t *)&tdx_msr_test_allow_bits,
-> +		},
-> +	},
-> +};
-> +
-> +/*
-> + * Verifies MSR read functionality.
-> + */
-> +void guest_msr_read(void)
-> +{
-> +	uint64_t data;
-> +	uint64_t ret;
-> +
-> +	ret = tdg_vp_vmcall_instruction_rdmsr(MSR_X2APIC_APIC_ICR, &data);
-> +	if (ret)
-> +		tdx_test_fatal(ret);
-> +
-> +	ret = tdx_test_report_64bit_to_user_space(data);
-> +	if (ret)
-> +		tdx_test_fatal(ret);
-> +
-> +	ret = tdg_vp_vmcall_instruction_rdmsr(MSR_IA32_MISC_ENABLE, &data);
-> +	if (ret)
-> +		tdx_test_fatal(ret);
-> +
-> +	ret = tdx_test_report_64bit_to_user_space(data);
-> +	if (ret)
-> +		tdx_test_fatal(ret);
-> +
-> +	/* We expect this call to fail since MSR_IA32_POWER_CTL is write only */
-> +	ret = tdg_vp_vmcall_instruction_rdmsr(MSR_IA32_POWER_CTL, &data);
-> +	if (ret) {
-> +		ret = tdx_test_report_64bit_to_user_space(ret);
-> +		if (ret)
-> +			tdx_test_fatal(ret);
-> +	} else {
-> +		tdx_test_fatal(-99);
-> +	}
-> +
-> +	tdx_test_success();
-> +}
-> +
-> +void verify_guest_msr_reads(void)
-> +{
-> +	struct kvm_vm *vm;
-> +	struct kvm_vcpu *vcpu;
-> +
-> +	uint64_t data;
-> +	int ret;
-> +
-> +	vm = td_create();
-> +	td_initialize(vm, VM_MEM_SRC_ANONYMOUS, 0);
+>  	host_sof = usb_get_current_frame_number(stream->dev->udev);
 > +
 > +	/*
-> +	 * Set explicit MSR filter map to control access to the MSR registers
-> +	 * used in the test.
+> +	 * On some devices, like the Logitech C922, the device SOF does not run
+> +	 * at a stable rate of 1kHz. For those devices use the host SOF instead.
+
+I'm still not very convinced, as without a formal proof I think there's
+some luck involved, and it may break later. This being said, given that
+this is gated by a quirk, it won't impact other devices, and we can deal
+with regressions when they happen. Could we record it here:
+
+	 * On some devices, like the Logitech C922, the device SOF does not run
+	 * at a stable rate of 1kHz. For those devices use the host SOF instead.
+	 * This improves the timestamp precision in the tests performed so far,
+	 * even if the exact reason hasn't been fully determined.
+
+or something along those lines ?
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
 > +	 */
-> +	printf("\t ... Setting test MSR filter\n");
-> +	ret = kvm_check_cap(KVM_CAP_X86_USER_SPACE_MSR);
-> +	TEST_ASSERT(ret, "KVM_CAP_X86_USER_SPACE_MSR is unavailable");
-> +	vm_enable_cap(vm, KVM_CAP_X86_USER_SPACE_MSR, KVM_MSR_EXIT_REASON_FILTER);
+> +	if (stream->dev->quirks & UVC_QUIRK_INVALID_DEVICE_SOF)
+> +		dev_sof = host_sof;
 > +
-> +	ret = kvm_check_cap(KVM_CAP_X86_MSR_FILTER);
-> +	TEST_ASSERT(ret, "KVM_CAP_X86_MSR_FILTER is unavailable");
-> +
-> +	ret = ioctl(vm->fd, KVM_X86_SET_MSR_FILTER, &tdx_msr_test_filter);
-> +	TEST_ASSERT(ret == 0,
-> +		    "KVM_X86_SET_MSR_FILTER failed, ret: %i errno: %i (%s)",
-> +		    ret, errno, strerror(errno));
-> +
-> +	vcpu = td_vcpu_add(vm, 0, guest_msr_read);
-> +	td_finalize(vm);
-> +
-> +	printf("Verifying guest msr reads:\n");
-> +
-> +	printf("\t ... Setting test MSR values\n");
-> +	/* Write arbitrary to the MSRs. */
-> +	vcpu_set_msr(vcpu, MSR_X2APIC_APIC_ICR, 4);
-> +	vcpu_set_msr(vcpu, MSR_IA32_MISC_ENABLE, 5);
-> +	vcpu_set_msr(vcpu, MSR_IA32_POWER_CTL, 6);
-> +
-> +	printf("\t ... Running guest\n");
-> +	td_vcpu_run(vcpu);
-> +	TDX_TEST_CHECK_GUEST_FAILURE(vcpu);
-> +	data = tdx_test_read_64bit_report_from_guest(vcpu);
-> +	TEST_ASSERT_EQ(data, 4);
-> +
-> +	td_vcpu_run(vcpu);
-> +	TDX_TEST_CHECK_GUEST_FAILURE(vcpu);
-> +	data = tdx_test_read_64bit_report_from_guest(vcpu);
-> +	TEST_ASSERT_EQ(data, 5);
-> +
-> +	td_vcpu_run(vcpu);
-> +	TDX_TEST_CHECK_GUEST_FAILURE(vcpu);
-> +	data = tdx_test_read_64bit_report_from_guest(vcpu);
-> +	TEST_ASSERT_EQ(data, TDG_VP_VMCALL_INVALID_OPERAND);
-> +
-> +	td_vcpu_run(vcpu);
-> +	TDX_TEST_ASSERT_SUCCESS(vcpu);
-> +
-> +	kvm_vm_free(vm);
-> +	printf("\t ... PASSED\n");
-> +}
-> +
-> +/*
-> + * Verifies MSR write functionality.
-> + */
-> +void guest_msr_write(void)
-> +{
-> +	uint64_t ret;
-> +
-> +	ret = tdg_vp_vmcall_instruction_wrmsr(MSR_X2APIC_APIC_ICR, 4);
-> +	if (ret)
-> +		tdx_test_fatal(ret);
-> +
-> +	/* We expect this call to fail since MSR_IA32_MISC_ENABLE is read only */
-> +	ret = tdg_vp_vmcall_instruction_wrmsr(MSR_IA32_MISC_ENABLE, 5);
-> +	if (ret) {
-> +		ret = tdx_test_report_64bit_to_user_space(ret);
-> +		if (ret)
-> +			tdx_test_fatal(ret);
-> +	} else {
-> +		tdx_test_fatal(-99);
-> +	}
-> +
-> +
-> +	ret = tdg_vp_vmcall_instruction_wrmsr(MSR_IA32_POWER_CTL, 6);
-> +	if (ret)
-> +		tdx_test_fatal(ret);
-> +
-> +	tdx_test_success();
-> +}
-> +
-> +void verify_guest_msr_writes(void)
-> +{
-> +	struct kvm_vcpu *vcpu;
-> +	struct kvm_vm *vm;
-> +
-> +	uint64_t data;
-> +	int ret;
-> +
-> +	vm = td_create();
-> +	td_initialize(vm, VM_MEM_SRC_ANONYMOUS, 0);
-> +
-> +	/*
-> +	 * Set explicit MSR filter map to control access to the MSR registers
-> +	 * used in the test.
-> +	 */
-> +	printf("\t ... Setting test MSR filter\n");
-> +	ret = kvm_check_cap(KVM_CAP_X86_USER_SPACE_MSR);
-> +	TEST_ASSERT(ret, "KVM_CAP_X86_USER_SPACE_MSR is unavailable");
-> +	vm_enable_cap(vm, KVM_CAP_X86_USER_SPACE_MSR, KVM_MSR_EXIT_REASON_FILTER);
-> +
-> +	ret = kvm_check_cap(KVM_CAP_X86_MSR_FILTER);
-> +	TEST_ASSERT(ret, "KVM_CAP_X86_MSR_FILTER is unavailable");
-> +
-> +	ret = ioctl(vm->fd, KVM_X86_SET_MSR_FILTER, &tdx_msr_test_filter);
-> +	TEST_ASSERT(ret == 0,
-> +		    "KVM_X86_SET_MSR_FILTER failed, ret: %i errno: %i (%s)",
-> +		    ret, errno, strerror(errno));
-> +
-> +	vcpu = td_vcpu_add(vm, 0, guest_msr_write);
-> +	td_finalize(vm);
-> +
-> +	printf("Verifying guest msr writes:\n");
-> +
-> +	printf("\t ... Running guest\n");
-> +	/* Only the write to MSR_IA32_MISC_ENABLE should trigger an exit */
-> +	td_vcpu_run(vcpu);
-> +	TDX_TEST_CHECK_GUEST_FAILURE(vcpu);
-> +	data = tdx_test_read_64bit_report_from_guest(vcpu);
-> +	TEST_ASSERT_EQ(data, TDG_VP_VMCALL_INVALID_OPERAND);
-> +
-> +	td_vcpu_run(vcpu);
-> +	TDX_TEST_ASSERT_SUCCESS(vcpu);
-> +
-> +	printf("\t ... Verifying MSR values writen by guest\n");
-> +
-> +	TEST_ASSERT_EQ(vcpu_get_msr(vcpu, MSR_X2APIC_APIC_ICR), 4);
-> +	TEST_ASSERT_EQ(vcpu_get_msr(vcpu, MSR_IA32_MISC_ENABLE), 0x1800);
-> +	TEST_ASSERT_EQ(vcpu_get_msr(vcpu, MSR_IA32_POWER_CTL), 6);
-> +
-> +	kvm_vm_free(vm);
-> +	printf("\t ... PASSED\n");
-> +}
-> +
-> +
->  int main(int argc, char **argv)
->  {
->  	setbuf(stdout, NULL);
-> @@ -531,6 +738,8 @@ int main(int argc, char **argv)
->  	run_in_new_process(&verify_get_td_vmcall_info);
->  	run_in_new_process(&verify_guest_writes);
->  	run_in_new_process(&verify_guest_reads);
-> +	run_in_new_process(&verify_guest_msr_writes);
-> +	run_in_new_process(&verify_guest_msr_reads);
+>  	time = uvc_video_get_time();
 >  
->  	return 0;
->  }
+>  	/*
+> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+> index 9a596c8d894a..07b2fdb80adf 100644
+> --- a/drivers/media/usb/uvc/uvcvideo.h
+> +++ b/drivers/media/usb/uvc/uvcvideo.h
+> @@ -73,6 +73,7 @@
+>  #define UVC_QUIRK_FORCE_Y8		0x00000800
+>  #define UVC_QUIRK_FORCE_BPP		0x00001000
+>  #define UVC_QUIRK_WAKE_AUTOSUSPEND	0x00002000
+> +#define UVC_QUIRK_INVALID_DEVICE_SOF	0x00004000
+>  
+>  /* Format flags */
+>  #define UVC_FMT_FLAG_COMPRESSED		0x00000001
+> 
+
+-- 
+Regards,
+
+Laurent Pinchart
