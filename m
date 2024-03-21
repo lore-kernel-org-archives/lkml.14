@@ -1,266 +1,378 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F56C85266
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 14:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DBAD84FCC;
+	Thu, 21 Mar 2024 14:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711030580; cv=none; b=f3HPGJOhNa2g+lJmMQ282iE0JxuTqRQZI65QZqhV8KxmGbvH6KlKaRUBLEGKFx0QVn+2NWvuthqnaL0k6JGpxopgW8lDylx45upHCvaNjVGFTQ/B01c0jNqqgFUdJa5ZrBhKXqHbR8tV5nEsdriZH0Z73VV8dXasAkLKBucftOY=
+	t=1711030633; cv=none; b=LzUy+RNAqhaj2WbarG1YF8DSq3HIvHgtBuVcI+A5ZnrTr0/nbL2d85aMbMVoA4f2s8nkQxHXSRzW3O4+1on9o7sEy/yKTEk8YYIJTc4pIA31xYqvMeXsF3IhCji0C9X4ar+J81jUk7D82JHOarwi+txRZdKnk8HApnUuA1wRrtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711030580; c=relaxed/simple;
-	bh=4JpfyFYi13F0eeoXOWgJCB2zwugzgo3FJPnG58UQB0w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G9bLeD0NLSFveEbiaLRgq9aowOP0F905vbpMrZY3JPqJjZdrA7NrifjLmTq+p3dZKQWpdAcgRSJ0zkRXGHLrEJW4Z9h8Mx3WZ1CfKQeohT7Iyuc6CeD8oeGO7/AIB4FKlvLMZAWqF/iqA2ilOWY1s40IRT/REy22/wY193Fhedg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AHLGL+X9; arc=none smtp.client-ip=209.85.167.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1711030633; c=relaxed/simple;
+	bh=9XQwFo1aUQ9b/EM6QySTpjS4eXrihk6w1KvM2UgC27A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c/EL/EaARJ8+rqNn0PByzue+D6N1hRImideJpde31OlfMLBLm8KNIyGO8RttXF/Z/8j1XC2bY+s/K4olfcxIQGdjCXabcemGcY3pdpTsScGpDUpNGHzglqn+BWNFmbvq3svqyJ0AEPGMUsv4Kzkdp1Vy1Dj9e2czNylBBWZW/pI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T5l5yva/; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AHLGL+X9"
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3c3a4101721so650892b6e.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 07:16:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711030578; x=1711635378; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9PbBzEMEXXAeq4LLgNricDK4jILoebAZr7BEjc950wk=;
-        b=AHLGL+X9gIL1tBMKihOLkdE82qvJKGQdEUcP6lsEGJv+pW1pf5pvv2pSNrODs4F8C7
-         KUjK1O4rTn6ka/sY5S2fsMWv8GZncznh0/Q/TlCZAFWd1ICqdef6pzWSM6A7aEAErDnt
-         cMZozOdbcydU5FHkLc/WLKbLXlrY1e87YVohjNLsLPyRy8zoKivmuGQqpkJIf1Wcdp/l
-         VOMWVLjDR7TaqFirw6Rvq3Ef4tyBmb36IJmafwDaVzl+Y7D2CtBK59SvdALi82XzuHFn
-         4LxB0v7p39LuMV4SoH22HxVBiILdJX3cQ66Gc8u7Lc09mAEuZmILW06kwHDvS2WuevSB
-         uNEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711030578; x=1711635378;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9PbBzEMEXXAeq4LLgNricDK4jILoebAZr7BEjc950wk=;
-        b=sd8y7ihyfk01/ScO8IgFYIGWImY72LYPHwZysEQiiOLj8ehKBjssTLHhlDLyjsQ150
-         0DceI/LDxccb3kYaEUW2ddFM58zIePK6YeskjCjG4pNljEZ/wokasA3F1+gR0xgV/6PM
-         ez2UnfM0501fge/nIF5oCJUCLhHyFBRUNdqXrvCiJ3DqCqQJe51DK4lsqnr6OFdvYiA9
-         UVIEmTGXaC5zhN96XzKHR4kTmFlYrimI6nkuPHin6qqnWkm3gOFjGQRm6gv6DfJouPrW
-         owJgTZHRp1YThDy9DWrKOVsEjmbYkGZQ7fURBr5qWN0heoNuzgpnJ6Iyw3gJ/UNN9Xvo
-         Ku4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUuX/9lkbrpC7SpPIzn/vvq9f7+Qnryyla3X7kLMmIvGRSTUOv8v+eN7snKNBsRash/qM7iUOIS5f8mZDeIEvWOXAoRl4LKxyuCL3hd
-X-Gm-Message-State: AOJu0YyEumMOo9EpZ4o6jhKSBBYj1oevaV4gVZFs83WawNpNtEMvesIN
-	w82j7JMNcHsNKiSDhg8V/XLsEuvDFboniRkmdnCdo7A+7l723DuKdyWLw8KdjDl2OkijjECOO0W
-	gE111bFtoY4LskQDLe0m6NxYCPLUy5jJMjkdY
-X-Google-Smtp-Source: AGHT+IH4TEVVFQK/YJPG19j7ZpbabVGsjRX1xScFkHE3KNMxeLkKxELqwdZFyKY+cYQcAqD1S7so3f6XqUodsJZwoyk=
-X-Received: by 2002:a05:6808:1292:b0:3c3:865b:5311 with SMTP id
- a18-20020a056808129200b003c3865b5311mr11092810oiw.48.1711030577997; Thu, 21
- Mar 2024 07:16:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T5l5yva/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711030631; x=1742566631;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9XQwFo1aUQ9b/EM6QySTpjS4eXrihk6w1KvM2UgC27A=;
+  b=T5l5yva/PfSpyDNiX9ACAL8I156wzo9Yp0oij8eqhfMpEr0lEsqCXvMv
+   Y0zQ1FmXm8/sgKM4XqtevcAxuRv/JDcSM3pFgPvqtTuVt8KwTefLyVG/w
+   icKkPdbyX4O1LaQyXqk9gCCcwcQfJhYRYOGL2o58dazJXHMJq29GHcjWJ
+   0/POkXGxXHyquK4COCoMO/qOcmSBKFjgYy+vxN6YWR5CRuMcCn289sFKp
+   ENQAVLxjD8H/ROC+fv0AbYXdfIWE4XlQlg6fdd1IMmcd8JBshBPlUEH96
+   VxnGR341I6Jyz4je6/iydyL/dMrOwn0jeaZFV3GDLWY+upV6aF36mvAqk
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="5963243"
+X-IronPort-AV: E=Sophos;i="6.07,143,1708416000"; 
+   d="scan'208";a="5963243"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 07:17:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,143,1708416000"; 
+   d="scan'208";a="15164123"
+Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 07:17:10 -0700
+Date: Thu, 21 Mar 2024 07:17:09 -0700
+From: Isaku Yamahata <isaku.yamahata@intel.com>
+To: Chao Gao <chao.gao@intel.com>
+Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
+	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com,
+	Sean Christopherson <seanjc@google.com>,
+	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
+	chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
+	Sean Christopherson <sean.j.christopherson@intel.com>,
+	isaku.yamahata@linux.intel.com
+Subject: Re: [PATCH v19 038/130] KVM: TDX: create/destroy VM structure
+Message-ID: <20240321141709.GK1994522@ls.amr.corp.intel.com>
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <7a508f88e8c8b5199da85b7a9959882ddf390796.1708933498.git.isaku.yamahata@intel.com>
+ <ZfpwIespKy8qxWWE@chao-email>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <baee63d9-273a-48aa-b3cc-f15e3782156b@proton.me>
- <20240320084630.2727355-1-aliceryhl@google.com> <9ed03148-5ceb-40f2-9c2d-31e2b8918888@proton.me>
- <CAH5fLgj_vmhCV-Ptfbjbq=FZOuVSLOEsatELaPmz=BuDuemghw@mail.gmail.com>
- <e088f9a2-c0aa-41b6-993b-01adb5fba929@proton.me> <CAH5fLggy1ci+gu2eVzjo0nHtNzT=+NgaaU5WAwq8qHrhu1QCYw@mail.gmail.com>
-In-Reply-To: <CAH5fLggy1ci+gu2eVzjo0nHtNzT=+NgaaU5WAwq8qHrhu1QCYw@mail.gmail.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 21 Mar 2024 15:16:07 +0100
-Message-ID: <CAH5fLgiHcru2uFmfwSvTnZvcnxh5Av-UWx1EEvttA0OyzhXSVQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] rust: add abstraction for `struct page`
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: a.hindborg@samsung.com, akpm@linux-foundation.org, alex.gaynor@gmail.com, 
-	arnd@arndb.de, arve@android.com, bjorn3_gh@protonmail.com, 
-	boqun.feng@gmail.com, brauner@kernel.org, cmllamas@google.com, 
-	gary@garyguo.net, gregkh@linuxfoundation.org, joel@joelfernandes.org, 
-	keescook@chromium.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	maco@android.com, ojeda@kernel.org, rust-for-linux@vger.kernel.org, 
-	surenb@google.com, tkjos@android.com, viro@zeniv.linux.org.uk, 
-	wedsonaf@gmail.com, willy@infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZfpwIespKy8qxWWE@chao-email>
 
-On Thu, Mar 21, 2024 at 3:11=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> On Thu, Mar 21, 2024 at 2:56=E2=80=AFPM Benno Lossin <benno.lossin@proton=
-.me> wrote:
-> >
-> > On 3/21/24 14:42, Alice Ryhl wrote:
-> > > On Thu, Mar 21, 2024 at 2:16=E2=80=AFPM Benno Lossin <benno.lossin@pr=
-oton.me> wrote:
-> > >>
-> > >> On 3/20/24 09:46, Alice Ryhl wrote:
-> > >>>> On 3/11/24 11:47, Alice Ryhl wrote:
-> > >>>>> +/// A pointer to a page that owns the page allocation.
-> > >>>>> +///
-> > >>>>> +/// # Invariants
-> > >>>>> +///
-> > >>>>> +/// The pointer points at a page, and has ownership over the pag=
-e.
-> > >>>>
-> > >>>> Why not "`page` is valid"?
-> > >>>> Do you mean by ownership of the page that `page` has ownership of =
-the
-> > >>>> allocation, or does that entail any other property/privilege?
-> > >>>
-> > >>> I can add "at a valid page".
-> > >>
-> > >> I don't think that helps, what you need as an invariant is that the
-> > >> pointer is valid.
-> > >
-> > > To me "points at a page" implies that the pointer is valid. I mean, i=
-f
-> > > it was dangling, it would not point at a page?
-> > >
-> > > But I can reword to something else if you have a preferred phrasing.
-> >
-> > I would just say "`page` is valid" or "`self.page` is valid".
-> >
-> > >>>>> +    /// Runs a piece of code with this page mapped to an address=
-.
-> > >>>>> +    ///
-> > >>>>> +    /// The page is unmapped when this call returns.
-> > >>>>> +    ///
-> > >>>>> +    /// It is up to the caller to use the provided raw pointer c=
-orrectly.
-> > >>>>
-> > >>>> This says nothing about what 'correctly' means. What I gathered fr=
-om the
-> > >>>> implementation is that the supplied pointer is valid for the execu=
-tion
-> > >>>> of `f` for `PAGE_SIZE` bytes.
-> > >>>> What other things are you allowed to rely upon?
-> > >>>>
-> > >>>> Is it really OK for this function to be called from multiple threa=
-ds?
-> > >>>> Could that not result in the same page being mapped multiple times=
-? If
-> > >>>> that is fine, what about potential data races when two threads wri=
-te to
-> > >>>> the pointer given to `f`?
-> > >>>>
-> > >>>>> +    pub fn with_page_mapped<T>(&self, f: impl FnOnce(*mut u8) ->=
- T) -> T {
-> > >>>
-> > >>> I will say:
-> > >>>
-> > >>> /// It is up to the caller to use the provided raw pointer correctl=
-y.
-> > >>> /// The pointer is valid for `PAGE_SIZE` bytes and for the duration=
- in
-> > >>> /// which the closure is called. Depending on the gfp flags and ker=
-nel
-> > >>> /// configuration, the pointer may only be mapped on the current th=
-read,
-> > >>> /// and in those cases, dereferencing it on other threads is UB. Ot=
-her
-> > >>> /// than that, the usual rules for dereferencing a raw pointer appl=
-y.
-> > >>> /// (E.g., don't cause data races, the memory may be uninitialized,=
- and
-> > >>> /// so on.)
-> > >>
-> > >> I would simplify and drop "depending on the gfp flags and kernel..."=
- and
-> > >> just say that the pointer is only valid on the current thread.
-> > >
-> > > Sure, that works for me.
-> > >
-> > >> Also would it make sense to make the pointer type *mut [u8; PAGE_SIZ=
-E]?
-> > >
-> > > I think it's a trade-off. That makes the code more error-prone, since
-> > > `pointer::add` now doesn't move by a number of bytes, but a number of
-> > > pages.
-> >
-> > Yeah. As long as you document that the pointer is valid for r/w with
-> > offsets in `0..PAGE_SIZE` bytes, leaving the type as is, is fine by me.
-> >
-> >
-> > >>> It's okay to map it multiple times from different threads.
-> > >>
-> > >> Do you still need to take care of data races?
-> > >> So would it be fine to execute this code on two threads in parallel?
-> > >>
-> > >>       static PAGE: Page =3D ...; // assume we have a page accessible=
- by both threads
-> > >>
-> > >>       PAGE.with_page_mapped(|ptr| {
-> > >>           loop {
-> > >>               unsafe { ptr.write(0) };
-> > >>               pr_info!("{}", unsafe { ptr.read() });
-> > >>           }
-> > >>       });
-> > >
-> > > Like I said, the usual pointer rules apply. Two threads can access it
-> > > in parallel as long as one of the following are satisfied:
-> > >
-> > > * Both accesses are reads.
-> > > * Both accesses are atomic.
-> > > * They access disjoint byte ranges.
-> > >
-> > > Other than the fact that it uses a thread-local mapping on machines
-> > > that can't address all of their memory at the same time, it's
-> > > completely normal memory. It's literally just a PAGE_SIZE-aligned
-> > > allocation of PAGE_SIZE bytes.
-> >
-> > Thanks for the info, what do you think of this?:
-> >
-> > /// It is up to the caller to use the provided raw pointer correctly. T=
-he pointer is valid for reads
-> > /// and writes for `PAGE_SIZE` bytes and for the duration in which the =
-closure is called. The
-> > /// pointer must only be used on the current thread. The caller must al=
-so ensure that no data races
-> > /// occur: when mapping the same page on two threads accesses to memory=
- with the same offset must be
-> > /// synchronized.
->
-> I would much rather phrase it in terms of "the usual pointer" rules. I
-> mean, the memory could also be uninitialized if you don't pass
-> __GFP_ZERO when you create it, so you also have to make sure to follow
-> the rules about uninitialized memory. I don't want to be in the
-> business of listing all requirements for accessing memory here.
->
-> > >> If this is not allowed, I don't really like the API. As a raw versio=
-n it
-> > >> would be fine, but I think we should have a safer version (eg by tak=
-ing
-> > >> `&mut self`).
-> > >
-> > > I don't understand what you mean. It is the *most* raw API that `Page=
-`
-> > > has. I can make them private if you want me to. The API cannot take
-> > > `&mut self` because I need to be able to unsafely perform concurrent
-> > > writes to disjoint byte ranges.
-> >
-> > If you don't need these functions to be public, I think we should
-> > definitely make them private.
-> > Also we could add a `raw` suffix to the functions to make it clear that
-> > it is a primitive API. If you think that it is highly unlikely that we
-> > get a safer version, then I don't think there is value in adding the
-> > suffix.
->
-> The old code on the Rust branch didn't have these functions, but
-> that's because the old `read_raw` and `write_raw` methods did all of
-> these things directly in their implementation:
->
-> * Map the memory so we can get a pointer.
-> * Get a pointer to a subslice (with bounds checks!)
-> * Do the actual read/write.
->
-> I thought that doing this many things in a single function was
-> convoluted, so I decided to refactor the code by extracting the "get a
-> pointer to the page" logic into `with_page_mapped` and the "point to
-> subslice with bounds check" logic into `with_pointer_into_page`. That
-> way, each function has only one responsibility, instead of mixing
-> three responsibilities into one.
->
-> So even if we get a safer version, I would not want to get rid of this
-> method. I don't want to inline its implementation into more
-> complicated functions. The safer method would call the raw method, and
-> then do whatever additional logic it wants to do on top of that.
+On Wed, Mar 20, 2024 at 01:12:01PM +0800,
+Chao Gao <chao.gao@intel.com> wrote:
 
-Adding to this: To me, we *do* already have safer versions of this
-method. Those are the read_raw and write_raw and fill_zero and
-copy_from_user_slice methods.
+> > config KVM_SW_PROTECTED_VM
+> > 	bool "Enable support for KVM software-protected VMs"
+> >-	depends on EXPERT
+> > 	depends on KVM && X86_64
+> > 	select KVM_GENERIC_PRIVATE_MEM
+> > 	help
+> >@@ -89,6 +88,8 @@ config KVM_SW_PROTECTED_VM
+> > config KVM_INTEL
+> > 	tristate "KVM for Intel (and compatible) processors support"
+> > 	depends on KVM && IA32_FEAT_CTL
+> >+	select KVM_SW_PROTECTED_VM if INTEL_TDX_HOST
+> 
+> why does INTEL_TDX_HOST select KVM_SW_PROTECTED_VM?
 
-Alice
+I wanted KVM_GENERIC_PRIVATE_MEM.  Ah, we should do
+
+        select KKVM_GENERIC_PRIVATE_MEM if INTEL_TDX_HOST
+
+
+> >+	select KVM_GENERIC_MEMORY_ATTRIBUTES if INTEL_TDX_HOST
+> > 	help
+> > 	.vcpu_precreate = vmx_vcpu_precreate,
+> > 	.vcpu_create = vmx_vcpu_create,
+> 
+> >--- a/arch/x86/kvm/vmx/tdx.c
+> >+++ b/arch/x86/kvm/vmx/tdx.c
+> >@@ -5,10 +5,11 @@
+> > 
+> > #include "capabilities.h"
+> > #include "x86_ops.h"
+> >-#include "x86.h"
+> > #include "mmu.h"
+> > #include "tdx_arch.h"
+> > #include "tdx.h"
+> >+#include "tdx_ops.h"
+> >+#include "x86.h"
+> 
+> any reason to reorder x86.h?
+
+No, I think it's accidental during rebase.
+Will fix.
+
+
+
+> >+static void tdx_do_tdh_phymem_cache_wb(void *unused)
+> >+{
+> >+	u64 err = 0;
+> >+
+> >+	do {
+> >+		err = tdh_phymem_cache_wb(!!err);
+> >+	} while (err == TDX_INTERRUPTED_RESUMABLE);
+> >+
+> >+	/* Other thread may have done for us. */
+> >+	if (err == TDX_NO_HKID_READY_TO_WBCACHE)
+> >+		err = TDX_SUCCESS;
+> >+	if (WARN_ON_ONCE(err))
+> >+		pr_tdx_error(TDH_PHYMEM_CACHE_WB, err, NULL);
+> >+}
+> >+
+> >+void tdx_mmu_release_hkid(struct kvm *kvm)
+> >+{
+> >+	bool packages_allocated, targets_allocated;
+> >+	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
+> >+	cpumask_var_t packages, targets;
+> >+	u64 err;
+> >+	int i;
+> >+
+> >+	if (!is_hkid_assigned(kvm_tdx))
+> >+		return;
+> >+
+> >+	if (!is_td_created(kvm_tdx)) {
+> >+		tdx_hkid_free(kvm_tdx);
+> >+		return;
+> >+	}
+> >+
+> >+	packages_allocated = zalloc_cpumask_var(&packages, GFP_KERNEL);
+> >+	targets_allocated = zalloc_cpumask_var(&targets, GFP_KERNEL);
+> >+	cpus_read_lock();
+> >+
+> >+	/*
+> >+	 * We can destroy multiple guest TDs simultaneously.  Prevent
+> >+	 * tdh_phymem_cache_wb from returning TDX_BUSY by serialization.
+> >+	 */
+> >+	mutex_lock(&tdx_lock);
+> >+
+> >+	/*
+> >+	 * Go through multiple TDX HKID state transitions with three SEAMCALLs
+> >+	 * to make TDH.PHYMEM.PAGE.RECLAIM() usable.  Make the transition atomic
+> >+	 * to other functions to operate private pages and Secure-EPT pages.
+> >+	 *
+> >+	 * Avoid race for kvm_gmem_release() to call kvm_mmu_unmap_gfn_range().
+> >+	 * This function is called via mmu notifier, mmu_release().
+> >+	 * kvm_gmem_release() is called via fput() on process exit.
+> >+	 */
+> >+	write_lock(&kvm->mmu_lock);
+> >+
+> >+	for_each_online_cpu(i) {
+> >+		if (packages_allocated &&
+> >+		    cpumask_test_and_set_cpu(topology_physical_package_id(i),
+> >+					     packages))
+> >+			continue;
+> >+		if (targets_allocated)
+> >+			cpumask_set_cpu(i, targets);
+> >+	}
+> >+	if (targets_allocated)
+> >+		on_each_cpu_mask(targets, tdx_do_tdh_phymem_cache_wb, NULL, true);
+> >+	else
+> >+		on_each_cpu(tdx_do_tdh_phymem_cache_wb, NULL, true);
+> 
+> This tries flush cache on all CPUs when we run out of memory. I am not sure if
+> it is the best solution. A simple solution is just use two global bitmaps.
+> 
+> And current logic isn't optimal. e.g., if packages_allocated is true while
+> targets_allocated is false, then we will fill in the packages bitmap but don't
+> use it at all.
+> 
+> That said, I prefer to optimize the rare case in a separate patch. We can just use
+> two global bitmaps or let the flush fail here just as you are doing below on
+> seamcall failure.
+
+Makes sense. We can allocate cpumasks on hardware_setup/unsetup() and update them
+on hardware_enable/disable().
+
+...
+
+> >+static int __tdx_td_init(struct kvm *kvm)
+> >+{
+> >+	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
+> >+	cpumask_var_t packages;
+> >+	unsigned long *tdcs_pa = NULL;
+> >+	unsigned long tdr_pa = 0;
+> >+	unsigned long va;
+> >+	int ret, i;
+> >+	u64 err;
+> >+
+> >+	ret = tdx_guest_keyid_alloc();
+> >+	if (ret < 0)
+> >+		return ret;
+> >+	kvm_tdx->hkid = ret;
+> >+
+> >+	va = __get_free_page(GFP_KERNEL_ACCOUNT);
+> >+	if (!va)
+> >+		goto free_hkid;
+> >+	tdr_pa = __pa(va);
+> >+
+> >+	tdcs_pa = kcalloc(tdx_info->nr_tdcs_pages, sizeof(*kvm_tdx->tdcs_pa),
+> >+			  GFP_KERNEL_ACCOUNT | __GFP_ZERO);
+> >+	if (!tdcs_pa)
+> >+		goto free_tdr;
+> >+	for (i = 0; i < tdx_info->nr_tdcs_pages; i++) {
+> >+		va = __get_free_page(GFP_KERNEL_ACCOUNT);
+> >+		if (!va)
+> >+			goto free_tdcs;
+> >+		tdcs_pa[i] = __pa(va);
+> >+	}
+> >+
+> >+	if (!zalloc_cpumask_var(&packages, GFP_KERNEL)) {
+> >+		ret = -ENOMEM;
+> >+		goto free_tdcs;
+> >+	}
+> >+	cpus_read_lock();
+> >+	/*
+> >+	 * Need at least one CPU of the package to be online in order to
+> >+	 * program all packages for host key id.  Check it.
+> >+	 */
+> >+	for_each_present_cpu(i)
+> >+		cpumask_set_cpu(topology_physical_package_id(i), packages);
+> >+	for_each_online_cpu(i)
+> >+		cpumask_clear_cpu(topology_physical_package_id(i), packages);
+> >+	if (!cpumask_empty(packages)) {
+> >+		ret = -EIO;
+> >+		/*
+> >+		 * Because it's hard for human operator to figure out the
+> >+		 * reason, warn it.
+> >+		 */
+> >+#define MSG_ALLPKG	"All packages need to have online CPU to create TD. Online CPU and retry.\n"
+> >+		pr_warn_ratelimited(MSG_ALLPKG);
+> >+		goto free_packages;
+> >+	}
+> >+
+> >+	/*
+> >+	 * Acquire global lock to avoid TDX_OPERAND_BUSY:
+> >+	 * TDH.MNG.CREATE and other APIs try to lock the global Key Owner
+> >+	 * Table (KOT) to track the assigned TDX private HKID.  It doesn't spin
+> >+	 * to acquire the lock, returns TDX_OPERAND_BUSY instead, and let the
+> >+	 * caller to handle the contention.  This is because of time limitation
+> >+	 * usable inside the TDX module and OS/VMM knows better about process
+> >+	 * scheduling.
+> >+	 *
+> >+	 * APIs to acquire the lock of KOT:
+> >+	 * TDH.MNG.CREATE, TDH.MNG.KEY.FREEID, TDH.MNG.VPFLUSHDONE, and
+> >+	 * TDH.PHYMEM.CACHE.WB.
+> >+	 */
+> >+	mutex_lock(&tdx_lock);
+> >+	err = tdh_mng_create(tdr_pa, kvm_tdx->hkid);
+> >+	mutex_unlock(&tdx_lock);
+> >+	if (err == TDX_RND_NO_ENTROPY) {
+> >+		ret = -EAGAIN;
+> >+		goto free_packages;
+> >+	}
+> >+	if (WARN_ON_ONCE(err)) {
+> >+		pr_tdx_error(TDH_MNG_CREATE, err, NULL);
+> >+		ret = -EIO;
+> >+		goto free_packages;
+> >+	}
+> >+	kvm_tdx->tdr_pa = tdr_pa;
+> >+
+> >+	for_each_online_cpu(i) {
+> >+		int pkg = topology_physical_package_id(i);
+> >+
+> >+		if (cpumask_test_and_set_cpu(pkg, packages))
+> >+			continue;
+> >+
+> >+		/*
+> >+		 * Program the memory controller in the package with an
+> >+		 * encryption key associated to a TDX private host key id
+> >+		 * assigned to this TDR.  Concurrent operations on same memory
+> >+		 * controller results in TDX_OPERAND_BUSY.  Avoid this race by
+> >+		 * mutex.
+> >+		 */
+> >+		mutex_lock(&tdx_mng_key_config_lock[pkg]);
+> 
+> the lock is superfluous to me. with cpu lock held, even if multiple CPUs try to
+> create TDs, the same set of CPUs (the first online CPU of each package) will be
+> selected to configure the key because of the cpumask_test_and_set_cpu() above.
+> it means, we never have two CPUs in the same socket trying to program the key,
+> i.e., no concurrent calls.
+
+Makes sense. Will drop the lock.
+
+
+> >+		ret = smp_call_on_cpu(i, tdx_do_tdh_mng_key_config,
+> >+				      &kvm_tdx->tdr_pa, true);
+> >+		mutex_unlock(&tdx_mng_key_config_lock[pkg]);
+> >+		if (ret)
+> >+			break;
+> >+	}
+> >+	cpus_read_unlock();
+> >+	free_cpumask_var(packages);
+> >+	if (ret) {
+> >+		i = 0;
+> >+		goto teardown;
+> >+	}
+> >+
+> >+	kvm_tdx->tdcs_pa = tdcs_pa;
+> >+	for (i = 0; i < tdx_info->nr_tdcs_pages; i++) {
+> >+		err = tdh_mng_addcx(kvm_tdx->tdr_pa, tdcs_pa[i]);
+> >+		if (err == TDX_RND_NO_ENTROPY) {
+> >+			/* Here it's hard to allow userspace to retry. */
+> >+			ret = -EBUSY;
+> >+			goto teardown;
+> >+		}
+> >+		if (WARN_ON_ONCE(err)) {
+> >+			pr_tdx_error(TDH_MNG_ADDCX, err, NULL);
+> >+			ret = -EIO;
+> >+			goto teardown;
+> >+		}
+> >+	}
+> >+
+> >+	/*
+> >+	 * Note, TDH_MNG_INIT cannot be invoked here.  TDH_MNG_INIT requires a dedicated
+> >+	 * ioctl() to define the configure CPUID values for the TD.
+> >+	 */
+> >+	return 0;
+> >+
+> >+	/*
+> >+	 * The sequence for freeing resources from a partially initialized TD
+> >+	 * varies based on where in the initialization flow failure occurred.
+> >+	 * Simply use the full teardown and destroy, which naturally play nice
+> >+	 * with partial initialization.
+> >+	 */
+> >+teardown:
+> >+	for (; i < tdx_info->nr_tdcs_pages; i++) {
+> >+		if (tdcs_pa[i]) {
+> >+			free_page((unsigned long)__va(tdcs_pa[i]));
+> >+			tdcs_pa[i] = 0;
+> >+		}
+> >+	}
+> >+	if (!kvm_tdx->tdcs_pa)
+> >+		kfree(tdcs_pa);
+> >+	tdx_mmu_release_hkid(kvm);
+> >+	tdx_vm_free(kvm);
+> >+	return ret;
+> >+
+> >+free_packages:
+> >+	cpus_read_unlock();
+> >+	free_cpumask_var(packages);
+> >+free_tdcs:
+> >+	for (i = 0; i < tdx_info->nr_tdcs_pages; i++) {
+> >+		if (tdcs_pa[i])
+> >+			free_page((unsigned long)__va(tdcs_pa[i]));
+> >+	}
+> >+	kfree(tdcs_pa);
+> >+	kvm_tdx->tdcs_pa = NULL;
+> >+
+> >+free_tdr:
+> >+	if (tdr_pa)
+> >+		free_page((unsigned long)__va(tdr_pa));
+> >+	kvm_tdx->tdr_pa = 0;
+> >+free_hkid:
+> >+	if (is_hkid_assigned(kvm_tdx))
+> 
+> IIUC, this is always true because you just return if keyid
+> allocation fails.
+
+You're right. Will fix
+-- 
+Isaku Yamahata <isaku.yamahata@intel.com>
