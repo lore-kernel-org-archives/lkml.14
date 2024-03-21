@@ -1,481 +1,179 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3401183CAA;
-	Thu, 21 Mar 2024 12:46:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BCCB83CB4
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 12:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711025211; cv=none; b=NWQtZMYjuK/Uob5hx4F1ZfQwiCFqAIMARMsJ6DLG8lnQN3ow09ttRFlTIOsQGxHmGFNYPz6G+ev1lSN7o2l+NnrCaCrSErKeOLBQtvN7/+QSvjwISZq1gqBjLxVYS0e6L1Vi9gvtZTIsv1q9A+c4uIwC7vSpiVyZcaxTuGzaF0k=
+	t=1711025282; cv=none; b=eVaR/ohywn6fP/NH9DZX6ShBnhbEWfrLYbr2G5ftbFrq+KRYTZj8Aii0Ka18wArj1Ad9/0zpKQgs7mgomJJsLn9WMxEJwAooAyI6zkNoIYbjt25i/iHLbP/SsUibfg0MiWjJsgWQ9hdK3v6GbmxE6Db2jQMxJB0iP0ueqOjNCzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711025211; c=relaxed/simple;
-	bh=H1MMAdCPhar9gXNz90u/PAuWzVl6CuM3vhnqd/TkPuw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FJ3O8GXAXv2O8c27zgRnMlfDPDJRF1S2BUW/BalvUtwdKRrIH1pVYdcVIjIJGCyAe2stu3Lf1KehBdtiAUJGHxXYPGUnod9HZrx0CWsvq/i+/zI5OCg5oTpdyM8p7e4WHH3bcLp/YNbBUhcxSQSCvjToFWmF1o8B0CN9xBEvrNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h3HpHfdL; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711025282; c=relaxed/simple;
+	bh=JsZYot1fWnRjbpWGZrt4rlGYKJXjiK3HdEc1worcLYc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mkmY107gsUpMs/YPzfdYiWDUU42mrLmpjVNFPmZ3ia7MH29yJK6gOGcOASzBd9gn1arzZ32N3Cd6LgH26oW2OmYd5r4KzsHIdZpwVh1tP46C9YK3/CcQiHkQt0k87y1lum8sScSvmvR+ehSlHyavdSvva88g2myLywK2jIKg5QM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H81E0HtB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h3HpHfdL"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d68c6a4630so12148131fa.3;
-        Thu, 21 Mar 2024 05:46:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711025207; x=1711630007; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=I/SgFGO2MqdHqwExgwk8KY7oTptbTpFN7suTzX47MqE=;
-        b=h3HpHfdLhr1wvmEsLKdYvWd0ReXWJozr9pZNniNoTKwFyCELOiU2OZCXMWB+Y2/+iO
-         m7TObTAdA7MOeR0lVIZBucyvCJ9yMsMjz+s4yTZknenxW6wIaQibh7aDw6Tk2T5rYwai
-         3spqknmqB9p+DehdJ9VbqlI1yf3V5gzOnZ3ADMm8Ls5DzbbNL2iMpZ4LdNU+GiiYX6pc
-         R6IJnCGSM+MjK+ILOeFoULIuLnjzB1XJEV+FiTvnXbhUEcROM5nx19bOxeDZJMAgOQRa
-         66c33N7Tb1Dzf6+5H7B81h2bsqzd9ijbmApjZ5ZEWgS1JK4Hht9otfmARv2A/8duXgrO
-         28AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711025207; x=1711630007;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=I/SgFGO2MqdHqwExgwk8KY7oTptbTpFN7suTzX47MqE=;
-        b=foIESnIKb5vbUnO3YNhLDemHXH6B3qL9HGl9euekLQgW8TDNmVvY2glL7lXoV/7k0/
-         xIGVqzp3YUr8QpEfE6G3WcqWP3h0lIAB5evpOeW0b9GrB65tlPNjaLfd4iFvAFXR7cmF
-         5YHEELuivKJgP3oLrp0uVzKSz+uqXaxTyDFPk+oHjWpWNjsn+6h2l6sUZUmOKS1h14Gz
-         PhPMEyPBD5B+4Z04saBNSG0Jmd7tMXV9QnHG5U/kahRVr/T9VIIaDIzzbhAZKjXEjMuI
-         9OABKdyoi7oc4D+sJhNvKrPrVU1M4MYER38UdQr/tpeYdzqP+LfJL4Ef3jT6h2zAWXuX
-         f5ow==
-X-Forwarded-Encrypted: i=1; AJvYcCWTztZ5V6LvcLRun7u9wnRNT6H89XBapp65vulVPIdhaPNEm9sk8LrMbzKZbeddRK/Y8aUMUXAieU99sMu4sFuNuEYfHTOvFQSUOtqap44njkfLbFtd8ANFnuwrSwKnKJirvDMIJQ2GFJFPf58+I/+PIZl0DtVXKYZC
-X-Gm-Message-State: AOJu0Yy9Om4uBn7OzRUL8eYgR5/BJJuPq7E1ixwn0zRlPB2/bV2mdFLV
-	tnYlAMcFMNZ909oonecpYDKBBGke70Yub4sGIFAMwZ3Y9wyrRJKz
-X-Google-Smtp-Source: AGHT+IGLBCGUqDCmTWPGXRDUKebS7w81yY1QauACQh/eo7G5MW+JDI714tqjCv2YdsXFqiBBvptplw==
-X-Received: by 2002:a05:651c:1049:b0:2d4:aae0:1d71 with SMTP id x9-20020a05651c104900b002d4aae01d71mr6010167ljm.43.1711025207052;
-        Thu, 21 Mar 2024 05:46:47 -0700 (PDT)
-Received: from localhost (54-240-197-231.amazon.com. [54.240.197.231])
-        by smtp.gmail.com with ESMTPSA id m2-20020a05600c3b0200b0041463c2c6ccsm5567314wms.4.2024.03.21.05.46.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Mar 2024 05:46:46 -0700 (PDT)
-From: Puranjay Mohan <puranjay12@gmail.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	netdev@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: puranjay12@gmail.com
-Subject: [PATCH bpf v4] bpf: verifier: prevent userspace memory access
-Date: Thu, 21 Mar 2024 12:46:40 +0000
-Message-Id: <20240321124640.8870-1-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H81E0HtB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A402C433F1;
+	Thu, 21 Mar 2024 12:48:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711025282;
+	bh=JsZYot1fWnRjbpWGZrt4rlGYKJXjiK3HdEc1worcLYc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=H81E0HtBaSA/Dxa6l0afpEgLCumcSC0+6ondIvpXdPiMCrg7QZAs2TI/cfzCnWtzg
+	 ERda5Eov/heg4l415Sdp9Vfawatm5OdEQ9jNFGQn71X00MQVHuZYTnLQAu/kg5gY4i
+	 Qgfvmt/6Dh29gvuKOIK5ZPxrccaeeEMz3Nj0O4tWUmMbw7Ef5FxzMidLwXBW2tZf8h
+	 G+xOGG76RM85cjk6sZoSXsrK1zwTg8RA4jHoiT3CqlHJNbpk4ckwdNkyamVFZilRFi
+	 +hLQgrhO/RH/zIkCVg+G44LY50JzOWxeQvT2on/H9ZqsqoKl9BoSfB08rbZTgZrirs
+	 7od7OTlgX3IFg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 1A721CE0F1D; Thu, 21 Mar 2024 05:47:59 -0700 (PDT)
+Date: Thu, 21 Mar 2024 05:47:59 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>
+Subject: Re: [PATCH 2/2] timers: Fix removed self-IPI on global timer's
+ enqueue in nohz_full
+Message-ID: <bf8689c2-0749-47cb-9535-53cf66e34f5e@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240318230729.15497-1-frederic@kernel.org>
+ <20240318230729.15497-3-frederic@kernel.org>
+ <464f6be2-4a72-440d-be53-6a1035d56a4f@paulmck-laptop>
+ <1b5752c8-ef32-4ed4-b539-95d507ec99ce@paulmck-laptop>
+ <ZfsLtMijRrNZfqh6@localhost.localdomain>
+ <6a95b6ac-6681-4492-b155-e30c19bb3341@paulmck-laptop>
+ <ZfwdEROGFFmIbkCM@lothringen>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZfwdEROGFFmIbkCM@lothringen>
 
-With BPF_PROBE_MEM, BPF allows de-referencing an untrusted pointer. To
-thwart invalid memory accesses, the JITs add an exception table entry
-for all such accesses. But in case the src_reg + offset overflows and
-turns into a userspace address, the BPF program might read that memory if
-the user has mapped it.
+On Thu, Mar 21, 2024 at 12:42:09PM +0100, Frederic Weisbecker wrote:
+> On Wed, Mar 20, 2024 at 03:55:17PM -0700, Paul E. McKenney wrote:
+> > On Wed, Mar 20, 2024 at 05:15:48PM +0100, Frederic Weisbecker wrote:
+> > > Le Wed, Mar 20, 2024 at 04:14:24AM -0700, Paul E. McKenney a écrit :
+> > > > On Tue, Mar 19, 2024 at 02:18:00AM -0700, Paul E. McKenney wrote:
+> > > > > On Tue, Mar 19, 2024 at 12:07:29AM +0100, Frederic Weisbecker wrote:
+> > > > > > While running in nohz_full mode, a task may enqueue a timer while the
+> > > > > > tick is stopped. However the only places where the timer wheel,
+> > > > > > alongside the timer migration machinery's decision, may reprogram the
+> > > > > > next event accordingly with that new timer's expiry are the idle loop or
+> > > > > > any IRQ tail.
+> > > > > > 
+> > > > > > However neither the idle task nor an interrupt may run on the CPU if it
+> > > > > > resumes busy work in userspace for a long while in full dynticks mode.
+> > > > > > 
+> > > > > > To solve this, the timer enqueue path raises a self-IPI that will
+> > > > > > re-evaluate the timer wheel on its IRQ tail. This asynchronous solution
+> > > > > > avoids potential locking inversion.
+> > > > > > 
+> > > > > > This is supposed to happen both for local and global timers but commit:
+> > > > > > 
+> > > > > > 	b2cf7507e186 ("timers: Always queue timers on the local CPU")
+> > > > > > 
+> > > > > > broke the global timers case with removing the ->is_idle field handling
+> > > > > > for the global base. As a result, global timers enqueue may go unnoticed
+> > > > > > in nohz_full.
+> > > > > > 
+> > > > > > Fix this with restoring the idle tracking of the global timer's base,
+> > > > > > allowing self-IPIs again on enqueue time.
+> > > > > 
+> > > > > Testing with the previous patch (1/2 in this series) reduced the number of
+> > > > > problems by about an order of magnitude, down to two sched_tick_remote()
+> > > > > instances and one enqueue_hrtimer() instance, very good!
+> > > > > 
+> > > > > I have kicked off a test including this patch.  Here is hoping!  ;-)
+> > > > 
+> > > > And 22*100 hours of TREE07 got me one run with a sched_tick_remote()
+> > 
+> > Sigh.  s/22/12/
+> > 
+> > > > complaint and another run with a starved RCU grace-period kthread.
+> > > > So this is definitely getting more reliable, but still a little ways
+> > > > to go.
+> > 
+> > An additional eight hours got anohtre sched_tick_remote().
+> > 
+> > > Right, there is clearly something else. Investigation continues...
+> > 
+> > Please let me know if there is a debug patch that I could apply.
+> 
+> So there are three things:
+> 
+> _ The sched_tick_remote() warning. I can easily trigger this one and while
+>   trying a bisection, I realize it actually also triggers on v6.8
+>   I'm not really tempted to investigate further because the warning doesn't make
+>   much sense to me. This computes the delta between the time the kworker got
+>   scheduled and the time it reaches the middle of the work. It happens to be
+>   ~3s but isn't it something to be expected with jitter and all involved into
+>   rcutorture?
+> 
+>   We should probably just remove this warning. This remote tick is my most horrible
+>   hackery anyway.
 
-There are architectural features that prevent the kernel from accessing
-userspace memory, like Privileged Access Never (PAN) on ARM64,
-Supervisor Mode Access Prevention (SMAP) on x86-64, Supervisor User
-Memory access (SUM) on RISC-V, etc. But BPF should not rely on the
-existence of these features.
+Would it make sense to increase it to somewhere around the timeout for
+RCU CPU stall warnings, softlockup, and so on?
 
-Make the verifier add guard instructions around such memory accesses and
-skip the load if the address falls into the userspace region.
+> _ The hrtimer enqueue to an offline CPU warning:
+> 
+> 	[ 1054.265335] WARNING: CPU: 8 PID: 150 at kernel/time/hrtimer.c:1091 enqueue_hrtimer+0x6f/0x80
+> 	[ 1054.269166] Modules linked in:
+> 	[ 1054.270077] CPU: 8 PID: 150 Comm: rcu_torture_rea Not tainted 6.8.0-11407-ge990136580ab-dirty #21
+> 	[ 1054.272768] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.2-3-gd478f380-rebuilt.opensuse.org 04/01/2014
+> 	[ 1054.275893] RIP: 0010:enqueue_hrtimer+0x6f/0x80
+> 	[ 1054.277252] Code: a3 05 b5 ff b7 01 73 bd 48 8b 05 44 c5 b5 01 48 85 c0 74 0c 48 8b 78 08 48 89 ee e8 7b b5 ff ff 48 8b 03 f6 40 10 10 75 a5 90 <0f> 0b 90 eb 9f 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90
+> 	[ 1054.282448] RSP: 0000:ffffb1480056fd70 EFLAGS: 00010046
+> 	[ 1054.283931] RAX: ffff95b7df2616c0 RBX: ffff95b7df261700 RCX: ffff95b7df2616c0
+> 	[ 1054.286091] RDX: 0000000000000001 RSI: ffff95b7df261700 RDI: ffffb1480056fde0
+> 	[ 1054.288095] RBP: ffffb1480056fde0 R08: 0000000000000001 R09: 000000000000fc03
+> 	[ 1054.290189] R10: 0000000000000001 R11: ffff95b7c1271c80 R12: 0000000000000040
+> 	[ 1054.292592] R13: ffff95b7df261700 R14: ffff95b7df261700 R15: ffff95b7df2616c0
+> 	[ 1054.294622] FS:  0000000000000000(0000) GS:ffff95b7df400000(0000) knlGS:0000000000000000
+> 	[ 1054.296884] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> 	[ 1054.298497] CR2: 0000000000000000 CR3: 000000001822c000 CR4: 00000000000006f0
+> 	[ 1054.300475] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> 	[ 1054.302516] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> 	[ 1054.304580] Call Trace:
+> 	[ 1054.305354]  <TASK>
+> 	[ 1054.306009]  ? __warn+0x77/0x120
+> 	[ 1054.306973]  ? enqueue_hrtimer+0x6f/0x80
+> 	[ 1054.308177]  ? report_bug+0xf1/0x1d0
+> 	[ 1054.310200]  ? handle_bug+0x40/0x70
+> 	[ 1054.311252]  ? exc_invalid_op+0x13/0x70
+> 	[ 1054.312437]  ? asm_exc_invalid_op+0x16/0x20
+> 	[ 1054.313738]  ? enqueue_hrtimer+0x6f/0x80
+> 	[ 1054.314994]  hrtimer_start_range_ns+0x258/0x2f0
+> 	[ 1054.316531]  ? __pfx_rcu_torture_reader+0x10/0x10
+> 	[ 1054.317983]  schedule_hrtimeout_range_clock+0x95/0x120
+> 	[ 1054.319604]  ? __pfx_hrtimer_wakeup+0x10/0x10
+> 	[ 1054.320957]  torture_hrtimeout_ns+0x50/0x70
+> 	[ 1054.322211]  rcu_torture_reader+0x1be/0x280
+> 	[ 1054.323455]  ? __pfx_rcu_torture_timer+0x10/0x10
+> 	[ 1054.329888]  ? kthread+0xc4/0xf0
+> 	[ 1054.330880]  ? __pfx_rcu_torture_reader+0x10/0x10
+> 	[ 1054.332334]  kthread+0xc4/0xf0
+> 	[ 1054.333305]  ? __pfx_kthread+0x10/0x10
+> 	[ 1054.334466]  ret_from_fork+0x2b/0x40
+> 	[ 1054.335551]  ? __pfx_kthread+0x10/0x10
+> 	[ 1054.336690]  ret_from_fork_asm+0x1a/0x30
+> 	[ 1054.337878]  </TASK>
+> 
+>   I don't know how it happened. This is where I'm investigating now.
 
-The JITs need to implement bpf_arch_uaddress_limit() to define where
-the userspace addresses end for that architecture or TASK_SIZE is taken
-as default.
+It seems that rcutorture is the gift that keeps on giving?  ;-)
 
-The implementation is as follows:
+> _ The RCU CPU Stall report. I strongly suspect the cause is the hrtimer
+>   enqueue to an offline CPU. Let's solve that and we'll see if it still
+>   triggers.
 
-REG_AX =  SRC_REG
-if(offset)
-	REG_AX += offset;
-REG_AX >>= 32;
-if (REG_AX <= (uaddress_limit >> 32))
-	DST_REG = 0;
-else
-	DST_REG = *(size *)(SRC_REG + offset);
+Sounds like a plan!
 
-Comparing just the upper 32 bits of the load address with the upper
-32 bits of uaddress_limit implies that the values are being aligned down
-to a 4GB boundary before comparison.
-
-The above means that all loads with address <= uaddress_limit + 4GB are
-skipped. This is acceptable because there is a large hole (much larger
-than 4GB) between userspace and kernel space memory, therefore a
-correctly functioning BPF program should not access this 4GB memory
-above the userspace.
-
-Let's analyze what this patch does to the following fentry program
-dereferencing an untrusted pointer:
-
-  SEC("fentry/tcp_v4_connect")
-  int BPF_PROG(fentry_tcp_v4_connect, struct sock *sk)
-  {
-                *(volatile long *)sk;
-                return 0;
-  }
-
-    BPF Program before              |           BPF Program after
-    ------------------              |           -----------------
-
-  0: (79) r1 = *(u64 *)(r1 +0)          0: (79) r1 = *(u64 *)(r1 +0)
-  -----------------------------------------------------------------------
-  1: (79) r1 = *(u64 *)(r1 +0) --\      1: (bf) r11 = r1
-  ----------------------------\   \     2: (77) r11 >>= 32
-  2: (b7) r0 = 0               \   \    3: (b5) if r11 <= 0x8000 goto pc+2
-  3: (95) exit                  \   \-> 4: (79) r1 = *(u64 *)(r1 +0)
-                                 \      5: (05) goto pc+1
-                                  \     6: (b7) r1 = 0
-                                   \--------------------------------------
-                                        7: (b7) r0 = 0
-                                        8: (95) exit
-
-As you can see from above, in the best case (off=0), 5 extra instructions
-are emitted.
-
-Now, we analyse the same program after it has gone through the JITs of
-X86-64, ARM64, and RISC-V architectures. We follow the single load
-instruction that has the untrusted pointer and see what instrumentation
-has been added around it.
-
-                                x86-64 JIT
-                                ==========
-     JIT's Instrumentation                  Verifier's Instrumentation
-          (upstream)                               (This patch)
-     ---------------------                  --------------------------
-
-   0:   nopl   0x0(%rax,%rax,1)             0:   nopl   0x0(%rax,%rax,1)
-   5:   xchg   %ax,%ax                      5:   xchg   %ax,%ax
-   7:   push   %rbp                         7:   push   %rbp
-   8:   mov    %rsp,%rbp                    8:   mov    %rsp,%rbp
-   b:   mov    0x0(%rdi),%rdi               b:   mov    0x0(%rdi),%rdi
-  ------------------------------------------------------------------------
-   f:   movabs $0x800000000000,%r11         f:   mov    %rdi,%r10
-  19:   cmp    %r11,%rdi                   12:   shr    $0x20,%r10
-  1c:   jb     0x000000000000002a          16:   cmp    $0x8000,%r10
-  1e:   mov    %rdi,%r11                   1d:   jbe    0x0000000000000025
-  21:   add    $0x0,%r11              /--> 1f:   mov    0x0(%rdi),%rdi
-  28:   jae    0x000000000000002e    /     23:   jmp    0x0000000000000027
-  2a:   xor    %edi,%edi            /      25:   xor    %edi,%edi
-  2c:   jmp    0x0000000000000032  / /------------------------------------
-  2e:   mov    0x0(%rdi),%rdi  ---/ /      27:   xor    %eax,%eax
-  ---------------------------------/       29:   leave
-  32:   xor    %eax,%eax                   2a:   ret
-  34:   leave
-  35:   ret
-
-The x86-64 JIT already emits some instructions to protect against user
-memory access. The implementation in this patch leads to a smaller
-number of instructions being emitted. In the worst case the JIT will
-emit 9 extra instructions and this patch decreases it to 7.
-
-                                  ARM64 JIT
-                                  =========
-
-        No Intrumentation                       Verifier's Instrumentation
-           (upstream)                                  (This patch)
-        -----------------                       --------------------------
-
-   0:   add     x9, x30, #0x0                0:   add     x9, x30, #0x0
-   4:   nop                                  4:   nop
-   8:   paciasp                              8:   paciasp
-   c:   stp     x29, x30, [sp, #-16]!        c:   stp     x29, x30, [sp, #-16]!
-  10:   mov     x29, sp                     10:   mov     x29, sp
-  14:   stp     x19, x20, [sp, #-16]!       14:   stp     x19, x20, [sp, #-16]!
-  18:   stp     x21, x22, [sp, #-16]!       18:   stp     x21, x22, [sp, #-16]!
-  1c:   stp     x25, x26, [sp, #-16]!       1c:   stp     x25, x26, [sp, #-16]!
-  20:   stp     x27, x28, [sp, #-16]!       20:   stp     x27, x28, [sp, #-16]!
-  24:   mov     x25, sp                     24:   mov     x25, sp
-  28:   mov     x26, #0x0                   28:   mov     x26, #0x0
-  2c:   sub     x27, x25, #0x0              2c:   sub     x27, x25, #0x0
-  30:   sub     sp, sp, #0x0                30:   sub     sp, sp, #0x0
-  34:   ldr     x0, [x0]                    34:   ldr     x0, [x0]
---------------------------------------------------------------------------------
-  38:   ldr     x0, [x0] ----------\        38:   add     x9, x0, #0x0
------------------------------------\\       3c:   lsr     x9, x9, #32
-  3c:   mov     x7, #0x0            \\      40:   cmp     x9, #0x10, lsl #12
-  40:   mov     sp, sp               \\     44:   b.ls    0x0000000000000050
-  44:   ldp     x27, x28, [sp], #16   \\--> 48:   ldr     x0, [x0]
-  48:   ldp     x25, x26, [sp], #16    \    4c:   b       0x0000000000000054
-  4c:   ldp     x21, x22, [sp], #16     \   50:   mov     x0, #0x0
-  50:   ldp     x19, x20, [sp], #16      \---------------------------------------
-  54:   ldp     x29, x30, [sp], #16         54:   mov     x7, #0x0
-  58:   add     x0, x7, #0x0                58:   mov     sp, sp
-  5c:   autiasp                             5c:   ldp     x27, x28, [sp], #16
-  60:   ret                                 60:   ldp     x25, x26, [sp], #16
-  64:   nop                                 64:   ldp     x21, x22, [sp], #16
-  68:   ldr     x10, 0x0000000000000070     68:   ldp     x19, x20, [sp], #16
-  6c:   br      x10                         6c:   ldp     x29, x30, [sp], #16
-                                            70:   add     x0, x7, #0x0
-                                            74:   autiasp
-                                            78:   ret
-                                            7c:   nop
-                                            80:   ldr     x10, 0x0000000000000088
-                                            84:   br      x10
-
-There are 6 extra instructions added in ARM64 in the best case. This will
-become 7 in the worst case (off != 0).
-
-                           RISC-V JIT (RISCV_ISA_C Disabled)
-                           ==========
-
-        No Intrumentation           Verifier's Instrumentation
-           (upstream)                      (This patch)
-        -----------------           --------------------------
-
-   0:   nop                            0:   nop
-   4:   nop                            4:   nop
-   8:   li      a6, 33                 8:   li      a6, 33
-   c:   addi    sp, sp, -16            c:   addi    sp, sp, -16
-  10:   sd      s0, 8(sp)             10:   sd      s0, 8(sp)
-  14:   addi    s0, sp, 16            14:   addi    s0, sp, 16
-  18:   ld      a0, 0(a0)             18:   ld      a0, 0(a0)
----------------------------------------------------------------
-  1c:   ld      a0, 0(a0) --\         1c:   mv      t0, a0
---------------------------\  \        20:   srli    t0, t0, 32
-  20:   li      a5, 0      \  \       24:   lui     t1, 4096
-  24:   ld      s0, 8(sp)   \  \      28:   sext.w  t1, t1
-  28:   addi    sp, sp, 16   \  \     2c:   bgeu    t1, t0, 12
-  2c:   sext.w  a0, a5        \  \--> 30:   ld      a0, 0(a0)
-  30:   ret                    \      34:   j       8
-                                \     38:   li      a0, 0
-                                 \------------------------------
-                                      3c:   li      a5, 0
-                                      40:   ld      s0, 8(sp)
-                                      44:   addi    sp, sp, 16
-                                      48:   sext.w  a0, a5
-                                      4c:   ret
-
-There are 7 extra instructions added in RISC-V.
-
-Fixes: 800834285361 ("bpf, arm64: Add BPF exception tables")
-Reported-by: Breno Leitao <leitao@debian.org>
-Suggested-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
----
-V3: https://lore.kernel.org/bpf/20240321120842.78983-1-puranjay12@gmail.com/
-Changes in V4:
-- Disable this feature on architectures that don't define
-  CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE.
-- By doing the above, we don't need anything explicitly for s390x.
-
-V2: https://lore.kernel.org/bpf/20240321101058.68530-1-puranjay12@gmail.com/
-Changes in V3:
-- Return 0 from bpf_arch_uaddress_limit() in disabled case because it
-  returns u64.
-- Modify the check in verifier to no do instrumentation when uaddress_limit
-  is 0.
-
-V1: https://lore.kernel.org/bpf/20240320105436.4781-1-puranjay12@gmail.com/
-Changes in V2:
-- Disable this feature on s390x.
----
- arch/x86/net/bpf_jit_comp.c | 72 +++++--------------------------------
- include/linux/filter.h      |  1 +
- kernel/bpf/core.c           |  9 +++++
- kernel/bpf/verifier.c       | 30 ++++++++++++++++
- 4 files changed, 48 insertions(+), 64 deletions(-)
-
-diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-index 4900b1ee019f..9b3136187938 100644
---- a/arch/x86/net/bpf_jit_comp.c
-+++ b/arch/x86/net/bpf_jit_comp.c
-@@ -1327,7 +1327,6 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image, u8 *rw_image
- 		u8 b2 = 0, b3 = 0;
- 		u8 *start_of_ldx;
- 		s64 jmp_offset;
--		s16 insn_off;
- 		u8 jmp_cond;
- 		u8 *func;
- 		int nops;
-@@ -1802,78 +1801,18 @@ st:			if (is_imm8(insn->off))
- 		case BPF_LDX | BPF_PROBE_MEMSX | BPF_B:
- 		case BPF_LDX | BPF_PROBE_MEMSX | BPF_H:
- 		case BPF_LDX | BPF_PROBE_MEMSX | BPF_W:
--			insn_off = insn->off;
--
--			if (BPF_MODE(insn->code) == BPF_PROBE_MEM ||
--			    BPF_MODE(insn->code) == BPF_PROBE_MEMSX) {
--				/* Conservatively check that src_reg + insn->off is a kernel address:
--				 *   src_reg + insn->off >= TASK_SIZE_MAX + PAGE_SIZE
--				 * src_reg is used as scratch for src_reg += insn->off and restored
--				 * after emit_ldx if necessary
--				 */
--
--				u64 limit = TASK_SIZE_MAX + PAGE_SIZE;
--				u8 *end_of_jmp;
--
--				/* At end of these emitted checks, insn->off will have been added
--				 * to src_reg, so no need to do relative load with insn->off offset
--				 */
--				insn_off = 0;
--
--				/* movabsq r11, limit */
--				EMIT2(add_1mod(0x48, AUX_REG), add_1reg(0xB8, AUX_REG));
--				EMIT((u32)limit, 4);
--				EMIT(limit >> 32, 4);
--
--				if (insn->off) {
--					/* add src_reg, insn->off */
--					maybe_emit_1mod(&prog, src_reg, true);
--					EMIT2_off32(0x81, add_1reg(0xC0, src_reg), insn->off);
--				}
--
--				/* cmp src_reg, r11 */
--				maybe_emit_mod(&prog, src_reg, AUX_REG, true);
--				EMIT2(0x39, add_2reg(0xC0, src_reg, AUX_REG));
--
--				/* if unsigned '>=', goto load */
--				EMIT2(X86_JAE, 0);
--				end_of_jmp = prog;
--
--				/* xor dst_reg, dst_reg */
--				emit_mov_imm32(&prog, false, dst_reg, 0);
--				/* jmp byte_after_ldx */
--				EMIT2(0xEB, 0);
--
--				/* populate jmp_offset for JAE above to jump to start_of_ldx */
--				start_of_ldx = prog;
--				end_of_jmp[-1] = start_of_ldx - end_of_jmp;
--			}
-+			start_of_ldx = prog;
- 			if (BPF_MODE(insn->code) == BPF_PROBE_MEMSX ||
- 			    BPF_MODE(insn->code) == BPF_MEMSX)
--				emit_ldsx(&prog, BPF_SIZE(insn->code), dst_reg, src_reg, insn_off);
-+				emit_ldsx(&prog, BPF_SIZE(insn->code), dst_reg, src_reg, insn->off);
- 			else
--				emit_ldx(&prog, BPF_SIZE(insn->code), dst_reg, src_reg, insn_off);
-+				emit_ldx(&prog, BPF_SIZE(insn->code), dst_reg, src_reg, insn->off);
- 			if (BPF_MODE(insn->code) == BPF_PROBE_MEM ||
- 			    BPF_MODE(insn->code) == BPF_PROBE_MEMSX) {
- 				struct exception_table_entry *ex;
- 				u8 *_insn = image + proglen + (start_of_ldx - temp);
- 				s64 delta;
- 
--				/* populate jmp_offset for JMP above */
--				start_of_ldx[-1] = prog - start_of_ldx;
--
--				if (insn->off && src_reg != dst_reg) {
--					/* sub src_reg, insn->off
--					 * Restore src_reg after "add src_reg, insn->off" in prev
--					 * if statement. But if src_reg == dst_reg, emit_ldx
--					 * above already clobbered src_reg, so no need to restore.
--					 * If add src_reg, insn->off was unnecessary, no need to
--					 * restore either.
--					 */
--					maybe_emit_1mod(&prog, src_reg, true);
--					EMIT2_off32(0x81, add_1reg(0xE8, src_reg), insn->off);
--				}
--
- 				if (!bpf_prog->aux->extable)
- 					break;
- 
-@@ -3473,3 +3412,8 @@ bool bpf_jit_supports_ptr_xchg(void)
- {
- 	return true;
- }
-+
-+u64 bpf_arch_uaddress_limit(void)
-+{
-+	return TASK_SIZE_MAX + PAGE_SIZE;
-+}
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index c0d51bff8f96..cf12bfa2a78c 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -965,6 +965,7 @@ bool bpf_jit_supports_far_kfunc_call(void);
- bool bpf_jit_supports_exceptions(void);
- bool bpf_jit_supports_ptr_xchg(void);
- bool bpf_jit_supports_arena(void);
-+u64 bpf_arch_uaddress_limit(void);
- void arch_bpf_stack_walk(bool (*consume_fn)(void *cookie, u64 ip, u64 sp, u64 bp), void *cookie);
- bool bpf_helper_changes_pkt_data(void *func);
- 
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 5aacb1d3c4cc..a04695ca82b9 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -2958,6 +2958,15 @@ bool __weak bpf_jit_supports_arena(void)
- 	return false;
- }
- 
-+u64 __weak bpf_arch_uaddress_limit(void)
-+{
-+#if defined(CONFIG_64BIT) && defined(CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE)
-+	return TASK_SIZE;
-+#else
-+	return 0;
-+#endif
-+}
-+
- /* Return TRUE if the JIT backend satisfies the following two conditions:
-  * 1) JIT backend supports atomic_xchg() on pointer-sized words.
-  * 2) Under the specific arch, the implementation of xchg() is the same
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index de7813947981..7ce56da6cfa4 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -19657,6 +19657,36 @@ static int do_misc_fixups(struct bpf_verifier_env *env)
- 			goto next_insn;
- 		}
- 
-+		/* Make it impossible to de-reference a userspace address */
-+		if (BPF_CLASS(insn->code) == BPF_LDX &&
-+		    (BPF_MODE(insn->code) == BPF_PROBE_MEM ||
-+		     BPF_MODE(insn->code) == BPF_PROBE_MEMSX)) {
-+			struct bpf_insn *patch = &insn_buf[0];
-+			u64 uaddress_limit = bpf_arch_uaddress_limit();
-+
-+			if (!uaddress_limit)
-+				goto next_insn;
-+
-+			*patch++ = BPF_MOV64_REG(BPF_REG_AX, insn->src_reg);
-+			if (insn->off)
-+				*patch++ = BPF_ALU64_IMM(BPF_ADD, BPF_REG_AX, insn->off);
-+			*patch++ = BPF_ALU64_IMM(BPF_RSH, BPF_REG_AX, 32);
-+			*patch++ = BPF_JMP_IMM(BPF_JLE, BPF_REG_AX, uaddress_limit >> 32, 2);
-+			*patch++ = *insn;
-+			*patch++ = BPF_JMP_IMM(BPF_JA, 0, 0, 1);
-+			*patch++ = BPF_MOV64_IMM(insn->dst_reg, 0);
-+
-+			cnt = patch - insn_buf;
-+			new_prog = bpf_patch_insn_data(env, i + delta, insn_buf, cnt);
-+			if (!new_prog)
-+				return -ENOMEM;
-+
-+			delta    += cnt - 1;
-+			env->prog = prog = new_prog;
-+			insn      = new_prog->insnsi + i + delta;
-+			goto next_insn;
-+		}
-+
- 		/* Implement LD_ABS and LD_IND with a rewrite, if supported by the program type. */
- 		if (BPF_CLASS(insn->code) == BPF_LD &&
- 		    (BPF_MODE(insn->code) == BPF_ABS ||
--- 
-2.40.1
-
+							Thanx, Paul
