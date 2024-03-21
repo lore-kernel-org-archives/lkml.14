@@ -1,80 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B07CB79E0;
-	Thu, 21 Mar 2024 17:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF350E57B
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 17:19:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711041563; cv=none; b=MfrdG3sYGnQ889QkONiuwD79wwt3pl/OhZwgQ2EgzgjEmKu5l1cupXlm3752IXfrDzwdvI2JmU7KKy3jonBgZyx4sVbhZ0JKfHUW4/Fr3pzKTo/gDM97IhE7XN/s/ulV5hcDwixIP4ycuNDvIeBljmd3tQbcWnvB+XRDXlF74VI=
+	t=1711041576; cv=none; b=Blo+KKcNSVYw2IkYFrqfEi7MHVmp+smLa3hTVNEFj6W+7mFuoM6ii9jFlJVHZTDsml9MO6FHAqBAyv1nM70xCpLzZLtAzrTpRgusL8u9rtFZvE3nM9dipSVVl5MJkBYsHeO/qlt29iAyJJfgAWAkwSdZ1r1ci3u1j/Kp+C93B8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711041563; c=relaxed/simple;
-	bh=e9QuUBFXFc8Wyy/GNM5FNS29OFCC+SFfSjmFYLP2fno=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=ja+ftCZrqcwycM5LI5yz+PyZw+CtorD0Ilqv+OV35zycWK45sHB2zCeoTyVS2Dq/Mbs4KL0hQaBAJKO42Hbqso6fiBYPxVeBeUKHJxWUjPBdkLdJuC3U6VrdYQP5o1R4v81h9EDyKrZ37k6A0kdgwmfh2ab2JC0t6O9Sno3XUIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IOv9vGLj; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IOv9vGLj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB0F0C433F1;
-	Thu, 21 Mar 2024 17:19:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711041563;
-	bh=e9QuUBFXFc8Wyy/GNM5FNS29OFCC+SFfSjmFYLP2fno=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=IOv9vGLjMeR3MvY8Vzj+ClFKnODJDn5UeWSa1KBet3xlZjuno6nHcjjUrFh+H8zWw
-	 7u6RXZoZ+WaoPGhIYpJYvEoEQSY4Dqcl3uvX/0a1VC2kLcnx0cWPOeF5VzGhMQuURC
-	 Iu0RzdP3Sm1PdLJblarYt01eS7GoyZ4LZVcdT6yXvN1W7pXO369OvKhr8uE5TmnyEX
-	 //fMstz3YdK1LddLowxS7HyuVQHwn8gLc+BGpHoJUnt9pF0hORKJDaYG/B1Bz2CmKW
-	 zsNb8ybdYzk3SyOXmMzw705og+oDk7mJNpJvNAttV3T9WZuVnrl0oRd2YIb9HyO+jb
-	 9s3Z7Vi5Uvwqw==
+	s=arc-20240116; t=1711041576; c=relaxed/simple;
+	bh=tT7Pu2AbBqZlCMFsrLV5KGeueELYK6ealvMjWZht8/I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kbBZ8l0PIlvECFm1fOPUQomOVThtYoFFPIV3mdG3UANiAseoz2xYo+Wp0btOzomckoLx9tMRaV1EqWRltqWH3i2SfkOFt/TkhG0gAaHEQrRx86/DolfD9PHNENUf8S0TcT007hNX8C5QgXBcIs26rQsVMEDwkGHObuzHCPydPRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.51])
+	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4V0sBC2j1Lz9xGWb
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 00:59:15 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id 3020914040F
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 01:19:20 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.81.213.73])
+	by APP1 (Coremail) with SMTP id LxC2BwAH_BQNbPxlII6+BA--.51964S2;
+	Thu, 21 Mar 2024 18:19:19 +0100 (CET)
+From: Petr Tesarik <petrtesarik@huaweicloud.com>
+To: Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Petr Tesarik <petr.tesarik1@huawei-partners.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Will Deacon <will@kernel.org>,
+	linux-kernel@vger.kernel.org (open list),
+	iommu@lists.linux.dev (open list:DMA MAPPING HELPERS)
+Cc: Roberto Sassu <roberto.sassu@huaweicloud.com>,
+	Petr Tesarik <petr@tesarici.cz>
+Subject: [PATCH v3 0/2] swiotlb: allocate padding slots if necessary
+Date: Thu, 21 Mar 2024 18:19:00 +0100
+Message-Id: <20240321171902.85-1-petrtesarik@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 21 Mar 2024 19:19:20 +0200
-Message-Id: <CZZLM1BW7UAS.2K5EI7YU6TI3L@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>, <saulo.alessandre@tse.jus.br>,
- <lukas@wunner.de>, <bbhushan2@marvell.com>
-Subject: Re: [PATCH v7 09/13] crypto: ecdsa - Replace ndigits with nbits
- where precision is needed
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Stefan Berger" <stefanb@linux.ibm.com>, <keyrings@vger.kernel.org>,
- <linux-crypto@vger.kernel.org>, <herbert@gondor.apana.org.au>,
- <davem@davemloft.net>
-X-Mailer: aerc 0.17.0
-References: <20240320114725.1644921-1-stefanb@linux.ibm.com>
- <20240320114725.1644921-10-stefanb@linux.ibm.com>
-In-Reply-To: <20240320114725.1644921-10-stefanb@linux.ibm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:LxC2BwAH_BQNbPxlII6+BA--.51964S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xr45JFWkJr4DZr18GrW7Jwb_yoWkuFg_AF
+	W8Ja45Ar4DZF1vyas2gFsrArWUtr42yr1xAa98Xr43JF13Aw13Z3ZrtFW8Xr1UWan8CFn2
+	yr93WryxCr17KjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUba8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr
+	1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
+	n2IY04v7MxkF7I0Ew4C26cxK6c8Ij28IcwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
+	3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
+	sGvfC2KfnxnUUI43ZEXa7VUj0JPtUUUUU==
+X-CM-SenderInfo: hshw23xhvd2x3n6k3tpzhluzxrxghudrp/
 
-On Wed Mar 20, 2024 at 1:47 PM EET, Stefan Berger wrote:
-> Replace the usage of ndigits with nbits where precise space calculations
-> are needed, such as in ecdsa_max_size where the length of a coordinate is
-> determined.
->
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> Tested-by: Lukas Wunner <lukas@wunner.de>
-> ---
->  crypto/ecdsa.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/crypto/ecdsa.c b/crypto/ecdsa.c
-> index 1814f009f971..4daefb40c37a 100644
-> --- a/crypto/ecdsa.c
-> +++ b/crypto/ecdsa.c
-> @@ -266,7 +266,7 @@ static unsigned int ecdsa_max_size(struct crypto_akci=
-pher *tfm)
->  {
->  	struct ecc_ctx *ctx =3D akcipher_tfm_ctx(tfm);
-> =20
-> -	return ctx->pub_key.ndigits << ECC_DIGITS_TO_BYTES_SHIFT;
-> +	return DIV_ROUND_UP(ctx->curve->nbits, 8);
->  }
-> =20
->  static int ecdsa_nist_p384_init_tfm(struct crypto_akcipher *tfm)
+From: Petr Tesarik <petr.tesarik1@huawei-partners.com>
 
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+If the allocation alignment is bigger than IO_TLB_SIZE and min_align_mask
+covers some bits in the original address between IO_TLB_SIZE and
+alloc_align_mask, preserve these bits by allocating additional padding
+slots before the actual swiotlb buffer.
 
-BR, Jarkko
+Changes from v2
+---------------
+* Fix assignment of an uninitialized variable to pad_slots.
+* Improve commit message wrt INVALID_PHYS_ADDR.
+
+Changes from v1
+---------------
+* Rename padding to pad_slots.
+* Set pad_slots only for the first allocated non-padding slot.
+* Do not bother initializing orig_addr to INVALID_PHYS_ADDR.
+* Change list and pad_slots to unsigned short to avoid growing
+  struct io_tlb_slot on 32-bit targets.
+* Add build-time check that list and pad_slots can hold the maximum
+  allowed value of IO_TLB_SEGSIZE.
+
+Petr Tesarik (2):
+  swiotlb: extend buffer pre-padding to alloc_align_mask if necessary
+  bug: introduce ASSERT_VAR_CAN_HOLD()
+
+ include/linux/build_bug.h | 10 ++++++++++
+ kernel/dma/swiotlb.c      | 37 +++++++++++++++++++++++++++++++------
+ 2 files changed, 41 insertions(+), 6 deletions(-)
+
+-- 
+2.34.1
+
