@@ -1,162 +1,100 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2449613441F
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 19:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9301F13442D;
+	Thu, 21 Mar 2024 20:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711051194; cv=none; b=atkUaQ5BJiVxPZKQgDqNWgU27ddIswvhh7m3pcabCwADosUUZuPgP5OFp4VQkKJklCXVbD7rQa8+iAVz5LZYvtIzaK5SS5wxb8rFZcIdwq49H/1ME4SwcHMeAXyO7k6cf7VlA3trFay+nwvVLQ3DXgFO21wQOCbtO3792cepsNs=
+	t=1711051221; cv=none; b=q42QORF/wlBoIDnmXFS61tWX/j4eMzGra9ChkqmvAPvBaWKWwBD0elS9efmqoUPCAaN2wjJ50vA/7ehYWRqLK95AcEQr9JWwhT94HqlQx7JaTd71X++vJwI56HP/UM8GWM6mTIihh8p4ZEoz+6jfcxyOkPpuuwJ9DOofLfX4e+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711051194; c=relaxed/simple;
-	bh=z0wA0KLIzdreobgSK4RcmRycyOJQ6P5PXTREgfAUx3U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VPaEunieX/QVrlNtx4VL7qAB8pt42SmwSpmVPydYI7fXQOnsxDbf9DnVP+x8Hx5P9B+mlJE+znAwn8xFGX9B8LzVKMoNugcMlJIgL2oUQKpqv9Yti9Z+o/QuRsfsoyHHQQzsXpUTv8VbdVuJRzE2Krjnlp3wJi+ovf0CXAi8Vvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Ff7/4oH4; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ff7/4oH4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=BYPwtyCYd5a4JYAUK9MQluNVapG0iz3U/+Y3po5f7DY=; b=Ff7/4oH45A2jTNadCdQVtTteKx
-	GvDjUzmbI7lEkAktx9oWHQ81RLamkG6ExAICJUUhg155LXm0ylzDEHKTR9u0rI3DAEpkBIVGyZr4P
-	NJe28imfM7bV3S2h8MfNysnm3habPiFSxr5enFrID713fhv8sUVVroA2OKSIsUQ7tsezkJK0d+gtp
-	F3tPZwVPVxo7QQahLjompHhMnHd8jHkNjYGbg/X5c1QvJZT7EdNGzBkKXHBQ8XWs7ISCJKpY5vIiW
-	ALjGJNPK+9zDOdGzkqj0fAtug+lqv9JTolICvWh99R/7Q4GE3vWl1bCP4GCXJSjcKFPT7ZSgHRadF
-	NcIql1Ng==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rnOZn-00000007Tdd-1WHx;
-	Thu, 21 Mar 2024 19:59:47 +0000
-Date: Thu, 21 Mar 2024 19:59:47 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Svetly Todorov <svetly.todorov@memverge.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	gregory.price@memverge.com, wangkefeng.wang@huawei.com,
-	akpm@linux-foundation.org, david@redhat.com, vbabka@suse.cz,
-	naoya.horiguchi@linux.dev
-Subject: Re: [PATCH v3] kpageflags: respect folio head-page flag placement
-Message-ID: <ZfyRsyq03aYVcZ13@casper.infradead.org>
-References: <20240320-kpageflags-svetly-v3-1-b6725843bfa7@memverge.com>
- <Zfs33TNtHvnjDX3J@casper.infradead.org>
- <c1425f97-0d9b-441e-a06b-ea00d75a2e73@memverge.com>
- <ZfxaZa8f0UUY0dCZ@casper.infradead.org>
- <c2df31dc-185f-4bd1-9e58-b32e024241c3@memverge.com>
+	s=arc-20240116; t=1711051221; c=relaxed/simple;
+	bh=CtdoVQnUUB1yzk4xQkmuGvVDOzJhQ5TBfb/YgqcA5hk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VElpFQL2kbp6IJFTEPVw3ggQoYhVY+Hl4jfJy4MVtaXPu+rYqOZNnrtHw4zp8wXUNXCoslDjdH+BREjdnpLPngNkKJtLACcGWjXUDTudDu7jK3l2SUxQfhmef/oUySABPjjsySobgxXUJzgv7ohSnJDc9JIiIQIiwEV0D5hX4vA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1219CC433C7;
+	Thu, 21 Mar 2024 20:00:18 +0000 (UTC)
+Date: Thu, 21 Mar 2024 16:02:46 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "Bj\"orn T\"opel" <bjorn@kernel.org>, Puranjay Mohan
+ <puranjay12@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Sami Tolvanen <samitolvanen@google.com>,
+ Guo Ren <guoren@kernel.org>, Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+ Deepak Gupta <debug@rivosinc.com>, Sia Jee Heng
+ <jeeheng.sia@starfivetech.com>, "Bj\"orn T\"opel" <bjorn@rivosinc.com>,
+ Song Shuai <suagrfillet@gmail.com>, Cl'ement L'eger <cleger@rivosinc.com>,
+ Al Viro <viro@zeniv.linux.org.uk>, Jisheng Zhang <jszhang@kernel.org>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
+Message-ID: <20240321160246.2e28cf9d@gandalf.local.home>
+In-Reply-To: <ZfBbxPDd0rz6FN2T@FVFF77S0Q05N>
+References: <20240306165904.108141-1-puranjay12@gmail.com>
+	<87ttlhdeqb.fsf@all.your.base.are.belong.to.us>
+	<ZfBbxPDd0rz6FN2T@FVFF77S0Q05N>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c2df31dc-185f-4bd1-9e58-b32e024241c3@memverge.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 21, 2024 at 12:08:01PM -0700, Svetly Todorov wrote:
-> > > > -	if (PageKsm(page))
-> > > > +	if (mapping & PAGE_MAPPING_KSM)
-> > > >    		u |= 1 << KPF_KSM;
-> > > This might need an #ifdef?
-> > > Say mapping is movable and anon -- then (mapping & PAGE_MAPPING_KSM) is
-> > > true. Before, we called PageKsm, which falls through to a PG_ksm check.
-> > > If !CONFIG_KSM then that flag is always false. But now, we're liable to
-> > > report KPF_KSM even if !CONFIG_KSM.
-> > 
-> > I'm not sure where you see a PG_ksm check:
-> > 
-> > static __always_inline bool folio_test_ksm(const struct folio *folio)
-> > {
-> >          return ((unsigned long)folio->mapping & PAGE_MAPPING_FLAGS) ==
-> >                                  PAGE_MAPPING_KSM;
-> > }
-> > 
-> > static __always_inline bool PageKsm(const struct page *page)
-> > {
-> >          return folio_test_ksm(page_folio(page));
-> > }
-> My bad. What I meant was, if CONFIG_KSM is undefined, then
+On Tue, 12 Mar 2024 13:42:28 +0000
+Mark Rutland <mark.rutland@arm.com> wrote:
+
+> There are ways around that, but they're complicated and/or expensive, e.g.
 > 
-> > #ifdef CONFIG_KSM
-> > ...
-> > static __always_inline bool PageKsm(struct page *page)
-> > {
-> > 	return folio_test_ksm(page_folio(page));
-> > }
-> 
-> will fall through to
-> 
-> > # else
-> > TESTPAGEFLAG_FALSE(Ksm, ksm)
-> > #endif
-> 
-> And you're right -- there is no PG_ksm comparison --
-> but the autogenerated PageKsm will always return false:
+> * Use a sequence of multiple patches, starting with replacing the JALR with an
+>   exception-generating instruction with a fixup handler, which is sort-of what
+>   x86 does with UD2. This may require multiple passes with
+>   synchronize_rcu_tasks() to make sure all threads have seen the latest
+>   instructions, and that cannot be done under stop_machine(), so if you need
+>   stop_machine() for CMODx reasons, you may need to use that several times with
+>   intervening calls to synchronize_rcu_tasks().
 
-Yes, that's true.  Usually we care about this because we can optimise
-out large chunks of code if a config option (eg CONFIG_KSM) is disabled.
-In this case, we're talking about a couple of instructions, and it's
-generally not worth optimising those out in order to add an ifdef in
-the code.  We've got quite a long way with Linux without it becoming
-overrun with ifdefs (compare, eg, the Mach source code), and long may
-that continue ;-)
+Just for clarification. x86 doesn't use UD2 for updating the call sites. It
+uses the breakpoint (0xcc) operation. This is because x86 instructions are
+not a fixed size and can cross cache boundaries, making updates to text
+sections dangerous as another CPU may get half the old instruction and half
+the new one!
 
-> > 00	file (or NULL)
-> > 01	anon
-> > 10	movable
-> > 11	KSM
-> > 
-> > Perhaps it might be clearer to say that anon pages are inherently
-> > movable; the movable type really means that the reset of the mapping
-> > pointer refers to a movable_operations instead of a mapping or anon_vma.
-> I see. I misunderstood how the flags are applied.
-> I thought that 11 == (01 | 10) -- i.e. that KSM was an intersection of
-> MOVABLE and ANON. But they're more like mutually-exclusive states. And
-> I doubt that a page will end up in the KSM "state" if CONFIG_KSM is
-> disabled. So we don't need to rely on PageKsm() for the CONFIG_KSM
-> check.
-> 
-> That said, won't
-> 
-> 	if (mapping & PAGE_MAPPING_KSM)
-> 
-> return true even if a mapping is ANON (01) or MOVABLE (10)
-> but not KSM (11)? Shouldn't this at least be
-> 
-> 	if (mapping & PAGE_MAPPING_KSM == PAGE_MAPPING_KSM)
+Thus, when we have:
 
-Uh, yeah, that was a mistake.  This should do the trick:
+	0f 1f 44 00 00		nop
 
-        if (is_anon) {
-                u |= 1 << KPF_ANON;
-                if (mapping & PAGE_MAPPING_KSM)
-                        u |= 1 << KPF_KSM;
-        }
+and want to convert it to:
 
-(all KSM pages are reported as anon pages as well, both before and after
-this patch; see how folio_test_anon() only checks the bottom bit)
+	e8 e7 57 07 00		call ftrace_caller
 
-> > I see your confusion.  We have three cases; head, tail and neither
-> > (obviously a page is never both head & tail).  If a page is neither,
-> > it's order-0 and it is the only page in the folio.  So we handle head
-> > or neither in the first leg of the 'if' where we set KPF_COMPOUND_HEAD
-> > if PG_head is set, and tail in the 'else' leg.
-> 
-> Dumb mistake on my part. For some reason, I thought that every
-> folio->page had its PG_head set.
+We have to first add a breakpoint:
 
-At this point, it's bad naming, but it's not worth the churn of fixing
-it; we have a better destination in mind, and we'll get there soon enough.
+	cc 17 44 00 00
 
-> Cool! Thanks for bearing with me. Beyond the KSM stuff, my only
-> hangup is that this patch doesn't account for the handful of
-> remaining per-page flags (KPF_HWPOISON, KPF_ARCH_*). Should I
-> take this diff, tack those on in a second commit, and then put
-> up a v4? Forgive me, I'm very green to the kernel dev process...
+Send an IPI to all CPUs so that they see the breakpoint (IPI is equivalent
+to a memory barrier).
 
-Oh, yes, that's a bug on my part.  HWPOISON is definitely per-page,
-not per-folio (although the handling of it differs for hugetlb)
-and I haven't looked at the PG_arch gunk yet.  We are trying to
-sliminate the per-page flags, because there's no space for them in the
-future (we'll have special handling for hwpoison because that really is
-very special)
+We have a ftrace breakpoint handler that will look at the function that the
+breakpoint happened on. If it was a nop, it will just skip over the rest of
+the instruction, and return from the break point handler just after the
+"cc 17 44 00 00". If it's supposed to be a function, it will push the
+return to after the instruction onto the stack, and return from the break
+point handler to ftrace_caller. (Although things changed a little since
+this update is now handled by text_poke_bp_batch()).
+
+Then it changes the rest of the instruction:
+
+	cc e7 57 07 00
+
+Sends out another IPI to all CPUs and removes the break point with the new
+instruction op.
+
+	e8 e7 57 07 00
+
+and now all the callers of this function will call the ftrace_caller.
+
+-- Steve
