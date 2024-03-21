@@ -1,213 +1,483 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2052.outbound.protection.outlook.com [40.107.223.52])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7FD1757FB;
-	Thu, 21 Mar 2024 12:09:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711022959; cv=fail; b=B7Q3GmIGtpO4Lc4N/aJlJfnuW6mAD/Zpgwy+dOOAG9wnwO0MWTTGXOFqmuITvl/4zlGlTa6fYFf03Vt+zPvlFqZeg2V3Zx1rGJ5ZOUsjU5TucN9XVcwff0u5Hu5YG/u6SBZfe5cKthvR6ExlVsZG11zGwRb6oKJ7mJcngyD2Zd4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711022959; c=relaxed/simple;
-	bh=Ru9MkZwIg4lBkLu9MFJrre7ZWKfwqYdU3+jDs2VaWAI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=CnTvm8Z7hozgSdSFasFiLHapp5p7CZ/4MADsG8bnnbK23/GQ6fF7t58x3iv/av4qI0sIBWsH+6ipR1eO9HOogNnR765tBQA5xbJMLtiTfxL1LZ9kUXABPK43kAKVnqvTTlQv5+8F3l0Lu/3wCZZtaakYDPn8/o7p0m9RlIEOKUs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=frjpWqK+; arc=fail smtp.client-ip=40.107.223.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFFB58AAF
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 12:13:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711023184; cv=none; b=O7DzTdFvyMwXjyg9vhKzJuZlfDemStEiL0PQcWLid7mfbgVRnYvEkcbWu3UC02c64+RvtPES/0VAwc8ntdrUnxTMDh2+F8bWhUwrX5lXsS55YLC/y4U2HGGHF1VCsVtFWls9MMbhanVNlAjhlHO1nqXfKWtNgWCuBjOTfXPcSeI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711023184; c=relaxed/simple;
+	bh=4Igbt/oi4WxkJRaoy6eHX4cTgTkeBFORb6mCsFIAH7c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZUXkh08BYfEOWV4dZPwGoGrvH9onhUt2+Sn5uekYvlO0d7hcaD9sfZnPhRGSHTUAZMXmeN5BZ11K7X/+iaQVE56c2hgkA0TQwNN2uI84y1EFr1Fb3+dJB8yg7uy0rs4IoESpbjxIqQBMcD8k+vF4mRv5G+JKPEXsjFRVP1jMwOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mE8rWLos; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="frjpWqK+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ASPuDPdHO7KnUSzGOg9wEsIXeZsyV5dHEongShV3DfEIPgqDdj1NOxomDA1z7ifpsNr0cMN3cCfAq21G7XMfwzBdbov5MnJFnkgfx89KG1LNmfxZf4yxdgwZqwtn4XsjCLv01lgbbmM0/CoJ/DH0dGVDrCG7LrVcB7pLsCM2bAqNngj+ONoG2nMQKD0nNxzegm9+E3mu32mQs5Am1NHQFW57oOqb/bmPWxBs6YcM+0AUkSwyIB78MDvhiVQYc3f26NuOX+fQyO8dLK8w1OHiC5c/hcqyPkTSa1uTB+9o7SiK4SCMJSQf3/QBpx/1Ey62Tgxk8Y1dB2L8yMFkyxrk4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4n9HLlAZ3B0iZ5ez1w9PTvbH/PyuWPzVmwA1/x5Be1M=;
- b=GJxxvVSnI5otDeDeJ9ehtHjzp336tulWe1KDAe7wJL3w749avvP3/+n8waaDj4s2y41E3AhUdmg8axSxGBpHJkUevbiTCOd6LftlgV4/CAU/ebZ7625hkYR3upDeyB0ckSAW9tvPepx7FmtQuVrFuNEmetq2YZT4yLiGvXS4EsBdqo2mJSmEJp3T2wWLb7rmez+cZG5sP5XoNDOGcp1aT74LjB0kIEVbXnIjMxfL0hoUeaR1EFwp2/67PXgss40zMweeu7znOGCIuUOmQlHm8oXJtT38UtPiel9bNbvA9Zwu9aluKwzWAr2Lt8pXEZLuu8Xu18iCo3cr6baQ6VI9fg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4n9HLlAZ3B0iZ5ez1w9PTvbH/PyuWPzVmwA1/x5Be1M=;
- b=frjpWqK+zFAXWf2hsRD1dfmNhKUfqX/m196KhNhSYgg1sZFMwZAvb91hVthB2A6uGquluZ+e6NIrmX9Q3CTuPZkvzj+saBduCgHJc2ACDv76z/6ov0KIfeB4rhbQG+IDAZpZCfGH6jKj7W9EVpEHZysnvjDlCCEOcrXsrhecuks=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by PH7PR12MB6468.namprd12.prod.outlook.com (2603:10b6:510:1f4::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.31; Thu, 21 Mar
- 2024 12:09:15 +0000
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::9d:17f1:8b3b:1958]) by CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::9d:17f1:8b3b:1958%4]) with mapi id 15.20.7409.010; Thu, 21 Mar 2024
- 12:09:15 +0000
-Date: Thu, 21 Mar 2024 13:09:08 +0100
-From: Robert Richter <rrichter@amd.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, Derick Marks <derick.w.marks@intel.com>,
-	Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH] cxl: Fix use of phys_to_target_node() outside of init
- section
-Message-ID: <ZfwjZMJMNUpWXZN8@rric.localdomain>
-References: <20240318210904.2188120-1-rrichter@amd.com>
- <20240318210904.2188120-2-rrichter@amd.com>
- <65f8b191c0422_aa222941b@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <Zfl9Efxe7DwuU_i3@rric.localdomain>
- <65fa2c219548f_aa2229499@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <65fa2c219548f_aa2229499@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-ClientProxiedBy: FR4P281CA0074.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:ce::11) To CYYPR12MB8750.namprd12.prod.outlook.com
- (2603:10b6:930:be::18)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mE8rWLos"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42LBUT5F020926;
+	Thu, 21 Mar 2024 12:12:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=ojpW2Gzz1CfdzsktsbrIUMF/M1oCTQ95Q3z5RXQZ8+I=;
+ b=mE8rWLoszLmLUBqnl6Wwqnz3mGW1ksOLtmXAHgwh/+jxDTOqPhs4lcRu8HEtM5hTwHC6
+ nm7f7lbd/Xw0fBGT70+Hg66LZFVrfb7i1YSsmv93RvzC51DMVt1Rv+3CLcW2rGKkNwvd
+ Kv4kwIE+CGPhoWpq1s6Y+Y8eb2dIu4z17bjAbOGslCgEGFZaBAtd3m4pJ00zj0TijYQC
+ YNSuK1w+fKaYQPcfSere/ruB/lo8JA6XC8f9fmeqoyLPPo6fUNJiSp/JyfMAKwdgo2wm
+ R5TFALScIerzFYLtzVLDI0I+YF5eliwtZsnDKGGUNHwO8Jwyhe8cK06X5brn76UTywZ1 VA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x0m2u83h1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Mar 2024 12:12:42 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42LCCfS8023130;
+	Thu, 21 Mar 2024 12:12:41 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x0m2u83gw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Mar 2024 12:12:41 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42LBB3Mf002765;
+	Thu, 21 Mar 2024 12:12:40 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wwrf2vfbb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Mar 2024 12:12:40 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42LCCcZD13763306
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 21 Mar 2024 12:12:40 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1AE5F58053;
+	Thu, 21 Mar 2024 12:12:38 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3224058061;
+	Thu, 21 Mar 2024 12:12:33 +0000 (GMT)
+Received: from [9.79.184.193] (unknown [9.79.184.193])
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 21 Mar 2024 12:12:32 +0000 (GMT)
+Message-ID: <1e43e783-55e7-417f-a1a7-503229eb163a@linux.ibm.com>
+Date: Thu, 21 Mar 2024 17:42:31 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|PH7PR12MB6468:EE_
-X-MS-Office365-Filtering-Correlation-Id: f2d24bc5-0eef-4aa8-7927-08dc499fb9f6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	0K5sNq7D+0bAJU7UuK2EHmOYmNyDlGpTpbIr1iQtj0po2a0AD+SfevHeLTmJe1V4Ic4y3Mid3DX3m1Ei019wcpyKUOPs24pyG+BQZD74iNZ3oYJhpQudz6vDeYt4Lypq0IUXvpLg/SsGclP8Cogn6pRuvHSLuBezTjn4x7tYuIpPdb5Udou3hXjcrHesbQnsHa5bV/wnXyHxPdJ6P36NtAI31IU2N6K1yVOtOacs9sMukotKGLUaBD+50xcT3RTsVE6qysZ94CEEsRYEkl7fIds2KugJeRm0Wq532rq3PABsB2xC5h0JAw3SmAfF3VPcZBEXlYs07o6GIG099W8iTSpziR1ElwXZCnTGUYpL4DluwyXkuSTklIzLJ6RFjzwIuuj6VINXhPXEGz+zn8k3DBYfRpu+vSI3x5hnaHJgXe3+VnWdHlaqQNbyNH728tHh18qSqfopm7fP3EQh/2sa6v3tOeD10ywXbfFIhSGP14O1jvghiAmQXXAbbIkc73TOG00Gi4anY2MpxKpc7GRqlXvClKnHt0RIqsRZSPQOAe1KOpOMs/xTuw/hVr5kRJUfWNanD3pzBxwI0Cs477Myi6IDNQtECRTM6+ZhzS3eKJ9vi8yLkeXNTTOdzPr/PuxhTxw0Vkfvs3ow9CfCEHQg60XGhQtGoMWaTPkZMw9fGz0=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?o/IqBz3iH8m59jzBje4GlfIy60V0slJpbH1NwFLVSrl3Syux9Hka8yL0+Ndt?=
- =?us-ascii?Q?JLLSqlIPAGnqdFpXqBgrZu7Vz7tsNptLX3gu3NOXOnO0ah3oSPDTjjHNN7xO?=
- =?us-ascii?Q?gA+/7yA79JiuZlWVXmxENHszf17Oh1heaZ1HB+KoLlejAAoqDIUc7T9fwyE1?=
- =?us-ascii?Q?a6iYVnzu4ZFjYeYz2xU+JsxwpHBUn8WPgH56VMafCa1fMWuG8HyPlcNTwR+8?=
- =?us-ascii?Q?zq322rhA9X6oEh/wKR7daL+TSoFwvBbmyMLg4DExgnoBYcWdGz5SYLLQjR9B?=
- =?us-ascii?Q?09DB60ViFTQAiTS9mYrk2g0ZZ5Tr5J/N1G+UHaNDDJzTa3hveKwXRZKCTRHr?=
- =?us-ascii?Q?NSBX1DREM4Ik2RTiMx8E+jpWgosdYxF/bv2XsPSeLvsdD5Za5KdhatxSUIF8?=
- =?us-ascii?Q?ye++LyUsiro5s1/NyLvyaKfnkbHvEqiY/0zVS73XbtRI15OQCHm8ARfzQ1M3?=
- =?us-ascii?Q?beOxnDcBwx42wqlaSE5zGg0M3/l60TsOhEeYbEh76SBNBRdkMKVAOXpS0pxj?=
- =?us-ascii?Q?f/dEgctiPUuZCvcL6ice5j0HXqGNdRCTDrfVKYctfebRQEuCyrTp2UJunsF7?=
- =?us-ascii?Q?NH0mUDPE/ygkwNLFhH/j3MNc7TriS99bjV9xz1ExQycj7uOdf5VxZm4cjIZ4?=
- =?us-ascii?Q?OAp1S6gT0DTZc1rK4lf/iBYunPzmtB+ZjQOo7EJp17JUURlb3FHc7FGkck8L?=
- =?us-ascii?Q?mkb4MYagYbrIIFNspY9DEyDNNWui0eQQH7hiSjJ3TiWRCOOdQiIjP0Y9XwMZ?=
- =?us-ascii?Q?sMTT91pETpRnktg+n4wyJBYD36O+XJcms0t6mZ0X4WXmF73WfQuKtR4COqBt?=
- =?us-ascii?Q?SCa5k/EUcrzmVdkzpf1JyNvf95KJeEPPCj2R46/e61hfb2wc2mSP8UFpdpaJ?=
- =?us-ascii?Q?XqrOelyt6402mpeb3QbCrwOj8AsQMsz5oLYiqNm5hdV5gwq7R7k52uMNvXoU?=
- =?us-ascii?Q?A0CSVXGD2KuV8/L0qAc3tJ78DWx8zCjL22QH+L+Zvlkoyd6f7qOxlBJwtjf0?=
- =?us-ascii?Q?SiPpGyExDQZ76C2xjl3gwm0QjhX6U50lJPBqs0RFNIC37WQSgAetQEb/Uc+8?=
- =?us-ascii?Q?NSCD85W92uKoTAsIw2RKwMp5zKWhhL3urnsndODcA95J6y82Hnm0Usej8Y38?=
- =?us-ascii?Q?ZUYvvj5Zy1XWgB5e+tSkCn84cVM6q+OUKMpQqOUxzbm1W41djPXQc1h2riag?=
- =?us-ascii?Q?6NX5h3IoXW6rnYxuUaTMTG7SNWBJcQ29ar2tR5yts2W1EevCxtSZ/mVMWKd2?=
- =?us-ascii?Q?l51h4eATCWMclX8AwubHl3LUVBcONUOJH0sRmEFToOqt2j9PZXqeN1MRtU6+?=
- =?us-ascii?Q?9czhWQ7iL1XPVVOXYXnWh0erfV0E9DjoJkpdfjlrXtIOmuFzfRTbaLbqG6Ne?=
- =?us-ascii?Q?sBkfVqiEYlL1YVs1jMZ6ThBrfc90Cw9BKkUhrQ3UCRuAyRqbDXgn7qqrnVtk?=
- =?us-ascii?Q?MyDEc5DXjAxUXcDmcSYrDX8niaejEuACIVOz7u4CQRf2t0ANCYcbcyT+APrk?=
- =?us-ascii?Q?OXQf48QPAF3KYBNjnCp1EUxI6b433yklwG6mpC3GAvhYskowGe/Pc/8ixFA2?=
- =?us-ascii?Q?CYB72py0+G+Mn6ZztvrYxt5bsry0098RWsZ/Aq6b?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f2d24bc5-0eef-4aa8-7927-08dc499fb9f6
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2024 12:09:14.9480
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Y41Sf8aV9rXDeJfSuyX2dy/forSTkEWtNMRwEarORvrZm5i7AFsIkr8saOk1VQjSGtLRlkrbNM+kZSy6YsfS9A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6468
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/9] sched/balancing: Switch the
+ 'DEFINE_SPINLOCK(balancing)' spinlock into an 'atomic_t
+ sched_balance_running' flag
+To: Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, Dietmar Eggemann
+ <dietmar.eggemann@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Valentin Schneider <vschneid@redhat.com>
+References: <20240304094831.3639338-1-mingo@kernel.org>
+ <20240304094831.3639338-2-mingo@kernel.org>
+ <bf612672-f7c3-4585-ac31-e02a1ebf614c@linux.ibm.com>
+ <Zer1Hkxh/UMxs3xs@gmail.com>
+ <41e11090-a100-48a7-a0dd-c989772822d7@linux.ibm.com>
+ <ZfA1LRq1d2ueoSRm@gmail.com>
+Content-Language: en-US
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+In-Reply-To: <ZfA1LRq1d2ueoSRm@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: cnqtfVuvZu-XaVhY1TC5QnX986hHVv_b
+X-Proofpoint-GUID: 9X6pSaHM2WpmGl5IIYsJiL-8ZQHQa6VY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-21_08,2024-03-18_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 adultscore=0 impostorscore=0 bulkscore=0 mlxlogscore=999
+ phishscore=0 suspectscore=0 clxscore=1015 malwarescore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403140000 definitions=main-2403210086
 
-On 19.03.24 17:21:53, Dan Williams wrote:
-> Robert Richter wrote:
-> > Hi Dan,
-> > 
-> > patch below. I have not included it into v2 of the SRAT/CEDT changes
-> > as it is cxl specific and can be applied separately.
-> > 
-> > Thanks,
-> > 
-> > -Robert
-> > 
-> > 
-> > On 18.03.24 14:26:41, Dan Williams wrote:
-> > > It should also be the case that cxl_acpi needs this:
-> > > 
-> > > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> > > index 67998dbd1d46..1bf25185c35b 100644
-> > > --- a/drivers/cxl/Kconfig
-> > > +++ b/drivers/cxl/Kconfig
-> > > @@ -6,6 +6,7 @@ menuconfig CXL_BUS
-> > >         select FW_UPLOAD
-> > >         select PCI_DOE
-> > >         select FIRMWARE_TABLE
-> > > +       select NUMA_KEEP_MEMINFO if NUMA
-> > >         help
-> > >           CXL is a bus that is electrically compatible with PCI Express, but
-> > >           layers three protocols on that signalling (CXL.io, CXL.cache, and
-> > 
-> > From be5b495980bae41d879909212db02dac0fba978e Mon Sep 17 00:00:00 2001
-> 
-> Hi Robert,
-> 
-> When you send inline patches like this can you remember to include a
-> scissors line? That way tools like "b4 am" automatically know where to
-> trim things. So add a line like the following:
-> 
-> -- >8 --
-> 
-> ...see "git mailinfo --help" for details.
 
-Thanks for the inside on your patch processing. Will use that in the
-future.
+
+On 3/12/24 4:27 PM, Ingo Molnar wrote:
+> 
+> * Shrikanth Hegde <sshegde@linux.ibm.com> wrote:
+> 
+>> I have been thinking would it be right to move this balancing 
+>> trylock/atomic after should_we_balance(swb). This does reduce the number 
+>> of times this checked/updated significantly. Contention is still present. 
+>> That's possible at higher utilization when there are multiple NUMA 
+>> domains. one CPU in each NUMA domain can contend if their invocation is 
+>> aligned.
+> 
+> Note that it's not true contention: it simply means there's overlapping 
+> requests for the highest domains to be balanced, for which we only have a 
+> single thread of execution at a time, system-wide.
+> 
+
+Hi Ingo, Vincent, Peter,
+
+I did some more experiments and collected quite a bit of data. 
+Some interesting observations.
+
+tl;dr
+
+1. For BUSY and IDLE type load balancing, contention arises since multiple CPU's
+are trying to set the flag at the same time. Only one succeeds and tries to do 
+load balance. Whether it can do load balance or not is decided later in should_we_balance(swb). 
+contention increases with system utilization. Why contention happens is simpler for BUSY, if their 
+SOFTIRQ's are aligned. If the busy is invoked(but may prefer idle) while an IDLE CPU is trying is 
+scenario when utilization is low. 
+
+2. NEWIDLE does not even check for sched_balance_running and it does not honor 
+continue_balancing flag either. should_we_balance for NEWIDLE is mostly return true anyway. 
+So NEWIDLE balance doesn't honor the SD_SERIALIZE flag. It does go through all the rq even at the 
+highest NUMA Domains often, and pulls task opportunistically. cost of balancing at NUMA is costly 
+as it would need to fetch all rq.
+
+>> That makes sense since, Right now a CPU takes lock, checks if it can 
+>>  balance, do balance if yes and then releases the lock. If the lock is 
+>>  taken after swb then also, CPU checks if it can balance,
+>> tries to take the lock and releases the lock if it did. If lock is 
+>> contended, it bails out of load_balance. That is the current behaviour as 
+>> well, or I am completely wrong.
+>>
+>> Perf probes at spin_trylock and spin_unlock codepoints on the same 224CPU, 6 NUMA node system. 
+>> 6.8-rc6                                                                         
+>> -----------------------------------------                                       
+>> idle system:                                                                    
+>> 449 probe:rebalance_domains_L37                                                 
+>> 377 probe:rebalance_domains_L55                                                 
+>> stress-ng --cpu=$(nproc) -l 51     << 51% load                                               
+>> 88K probe:rebalance_domains_L37                                                 
+>> 77K probe:rebalance_domains_L55                                                 
+>> stress-ng --cpu=$(nproc) -l 100    << 100% load                                             
+>> 41K probe:rebalance_domains_L37                                                 
+>> 10K probe:rebalance_domains_L55                                                 
+>>                                                                                 
+>> +below patch                                                                          
+>> ----------------------------------------                                        
+>> idle system:                                                                    
+>> 462 probe:load_balance_L35                                                      
+>> 394 probe:load_balance_L274                                                     
+>> stress-ng --cpu=$(nproc) -l 51      << 51% load                                            
+>> 5K probe:load_balance_L35                       	<<-- almost 15x less                                
+>> 4K probe:load_balance_L274                                                      
+>> stress-ng --cpu=$(nproc) -l 100     << 100% load                                            
+>> 8K probe:load_balance_L35                                                       
+>> 3K probe:load_balance_L274 				<<-- almost 4x less
+> 
+> That's nice.
+> 
+
+These numbers completely go crazy for schbench or hackbench if we move the sched_balance_running 
+after should_we_balance due to NEWIDLE. we could add a idle type check before doing operations on
+sched_balance_running.   
+
+
+>> +static DEFINE_SPINLOCK(balancing);
+>>  /*
+>>   * Check this_cpu to ensure it is balanced within domain. Attempt to move
+>>   * tasks if there is an imbalance.
+>> @@ -11286,6 +11287,7 @@ static int load_balance(int this_cpu, struct rq *this_rq,
+>>  	struct rq *busiest;
+>>  	struct rq_flags rf;
+>>  	struct cpumask *cpus = this_cpu_cpumask_var_ptr(load_balance_mask);
+>> +	int need_serialize;
+>>  	struct lb_env env = {
+>>  		.sd		= sd,
+>>  		.dst_cpu	= this_cpu,
+>> @@ -11308,6 +11310,12 @@ static int load_balance(int this_cpu, struct rq *this_rq,
+>>  		goto out_balanced;
+>>  	}
+>>
+>> +	need_serialize = sd->flags & SD_SERIALIZE;
+>> +	if (need_serialize) {
+>> +		if (!spin_trylock(&balancing))
+>> +			goto lockout;
+>> +	}
+>> +
+>>  	group = find_busiest_group(&env);
+> 
+> So if I'm reading your patch right, the main difference appears to be that 
+> it allows the should_we_balance() check to be executed in parallel, and 
+> will only try to take the NUMA-balancing flag if that function indicates an 
+> imbalance.
+
+Yes for BUSY and IDLE balancing. 
 
 > 
-> Also note that if you reply with an updated patch in a series include
-> the "vX NN/MM" suffix, like "Subject: [PATCH v3 2/3] ..." so that b4 am
-> knows to perform a "partial reroll".
+> Since should_we_balance() isn't taking any locks AFAICS, this might be a 
+> valid approach. What might make sense is to instrument the percentage of 
+> NUMA-balancing flag-taking 'failures' vs. successful attempts - not 
+> necessarily the 'contention percentage'.
 
-This patch is in addition to the other SRAT patches and can be applied
-directly to the cxl tree. That is why there is no version update here.
-But I replied to this series for reference. I saw the b4 shazam
---no-parent option, would that help here?
+So i put a bunch of trace_printk and added a hacky check similar to swb if taking flag fails. 
+I will put the numbers for schebench, hackbench and stress-ng -l 100 for initial reference. 
 
-Thanks,
+I ran these a slightly larger system this time.  I have two NUMA levels. domain 3 has two groups 0-159, 160-319.
+Sorry in case the data isnt easy to read. I couldnt find a better way. some rounding errors are there, but mostly 
+sum where applicable is close. trace is collected for 5 seconds.
 
--Robert
+  NUMA node(s):           4
+  NUMA node0 CPU(s):      0-79
+  NUMA node1 CPU(s):      80-159
+  NUMA node6 CPU(s):      160-239
+  NUMA node7 CPU(s):      240-319
+
+more domain*/flags | cat
+::::::::::::::
+domain0/flags
+::::::::::::::
+SD_BALANCE_NEWIDLE SD_BALANCE_EXEC SD_BALANCE_FORK SD_WAKE_AFFINE SD_SHARE_CPUCAPACITY SD_SHARE_LLC SD_PREFER_SIBLING 
+::::::::::::::
+domain1/flags
+::::::::::::::
+SD_BALANCE_NEWIDLE SD_BALANCE_EXEC SD_BALANCE_FORK SD_WAKE_AFFINE SD_PREFER_SIBLING 
+::::::::::::::
+domain2/flags
+::::::::::::::
+SD_BALANCE_NEWIDLE SD_BALANCE_EXEC SD_BALANCE_FORK SD_WAKE_AFFINE SD_PREFER_SIBLING 
+::::::::::::::
+domain3/flags
+::::::::::::::
+SD_BALANCE_NEWIDLE SD_SERIALIZE SD_OVERLAP SD_NUMA 
+::::::::::::::
+domain4/flags
+::::::::::::::
+SD_BALANCE_NEWIDLE SD_SERIALIZE SD_OVERLAP SD_NUMA 
+
+================================================================= BUSY balancing ===============================================
+		   tried_access_to	|	  	failed			|		aquired(number of sched_balance_rq)  <<-- aquired need not call sched_balance_rq due to time check.
+		sched_balance_running	|		to_aquire 		|
+					|     swb true?		swb_false?    	|      swb_true?    swb_false?
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+					|    					|	
+hackbench   	       254727		|		236268			|		18508(170)		
+10 groups 				|	38     <--|-->	236230		| 	0	<--|-->	170      
+					|					|
+schbench	       217794		|		207117			|		10683(659)
+320 groups				| 	1059   <--|-->  206058 		|	1	<--|-->  658
+					|					|
+stress-ng 		31646		|		 27430			|		4216(523)	
+-l100					|	272	<--|-->	 27158		|	6	<--|-->	517
+					|					|
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Observations: 
+  * When the flag was not aquired it was mostly that CPU wouldnt have done the balancing. Good.
+  * When the flag was aquired, mostly that CPU didn't do load balancing. It bailed out since swb was false. Bad. 
+
+
+=============================================================== IDLE Balancing ==================================================
+		   tried_access_to	|	  	failed			|		aquired(number of sched_balance_rq)  <<-- aquired need not call sched_balance_rq due to time check.
+		sched_balance_running	|		to_aquire 		|
+					|     swb true?		swb_false?    	|      swb_true?    swb_false?
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+hackbench		11022		| 		7309			|		 3664(2635)
+10 groups				|	1322   <--|-->  5987		| 	753	<--|-->	1882 
+					|					|
+schbench		 3018		|		2305			|		  707(632)
+320 groups				|	1036   <--|-->	1269		|	268     <--|--> 364
+					|					|
+stress-ng 		    0		|		   0			|		    0
+-l 100					|					|
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Observations: 
+ * When the flag was not aquired, it was good chance that CPU would have done the balance.  bad
+ * When the flag is taken, many times it didnt do balance since swb was false.  bad. 
 
 > 
-> > From: Robert Richter <rrichter@amd.com>
-> > Date: Tue, 19 Mar 2024 09:28:33 +0100
-> > Subject: [PATCH] cxl: Fix use of phys_to_target_node() outside of init section
-> > 
-> > The CXL driver uses both functions phys_to_target_node() and
-> > memory_add_physaddr_to_nid(). The x86 architecture relies on the
-> > NUMA_KEEP_MEMINFO kernel option to be set. Enable the option for the
-> > driver accordingly.
-> > 
-> > Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> > Signed-off-by: Robert Richter <rrichter@amd.com>
-> > ---
-> >  drivers/cxl/Kconfig | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> > index 67998dbd1d46..6140b3529a29 100644
-> > --- a/drivers/cxl/Kconfig
-> > +++ b/drivers/cxl/Kconfig
-> > @@ -6,6 +6,7 @@ menuconfig CXL_BUS
-> >  	select FW_UPLOAD
-> >  	select PCI_DOE
-> >  	select FIRMWARE_TABLE
-> > +	select NUMA_KEEP_MEMINFO if (NUMA && X86)
-> >  	help
-> >  	  CXL is a bus that is electrically compatible with PCI Express, but
-> >  	  layers three protocols on that signalling (CXL.io, CXL.cache, and
-> > -- 
-> > 2.39.2
-> > 
+> But another question is, why do we get here so frequently, so that the 
+> cumulative execution time of these SD_SERIAL rebalance passes exceeds that 
+> of 100% of single CPU time? Ie. a single CPU is basically continuously 
+> scanning the scheduler data structures for imbalances, right? That doesn't 
+> seem natural even with just ~224 CPUs.
 > 
+
+SD_SERIALIZE passes are costly. Doing a pass through 0-319 takes 20-30us and Doing 
+a pass through 0-159 takes around 10-20us.  NEWIDLE can be called very often and it 
+doesnt serialize and loops through all domains aggressively.  NEWIDLE balancing 
+successfully pull a task around 3-5% of the time. 
+
+
+For reference, the running the same hackbench, Combined it would take 12 seconds on 320 CPU system 
+where trace is collected for 5 seconds. Thats approx 0.7% cycles. 
+domain_cost avg: 33031.77 times: 172991  
+domain_cost avg: 15615.21 times: 211783
+domain_cost avg: 15359.40 times: 208164
+
+Similarly while running schbench, it takes approx 0.12% of total time. 
+
+> Alternatively, is perhaps the execution time of the SD_SERIAL pass so large 
+> that we exceed 100% CPU time?
 > 
+
+So Main questions i have are: 
+1. Should NEWIDLE honor SD_SERIALIZE ? This would make SD_SERIALIZE defined correctly, 
+all three types honor it. Currenly on BUSY,IDLE honors it.
+2. Should we move taking sched_balance_running after swb atleast for BUSY, IDLE? 
+
+================================================================================================
+
+
+debug patch used: 
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index c8e50fbac345..cb824c327ab6 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -11172,6 +11172,56 @@ static int need_active_balance(struct lb_env *env)
+ 
+ static int active_load_balance_cpu_stop(void *data);
+ 
++static int hack_check_if_i_can_balance(struct sched_domain *sd, int this_cpu) {
++	struct cpumask *swb_cpus = this_cpu_cpumask_var_ptr(should_we_balance_tmpmask);
++	struct sched_group *sg = sd->groups;
++	int cpu, idle_smt = -1;
++	struct cpumask *cpus = this_cpu_cpumask_var_ptr(load_balance_mask);
++
++	cpumask_and(cpus, sched_domain_span(sd), cpu_active_mask);
++	if (!cpumask_test_cpu(this_cpu, cpus))
++		return 0;
++
++	cpumask_copy(swb_cpus, group_balance_mask(sg));
++	for_each_cpu_and(cpu, swb_cpus, cpus) {
++		if (!idle_cpu(cpu))
++			continue;
++
++		/*
++		 * Don't balance to idle SMT in busy core right away when
++		 * balancing cores, but remember the first idle SMT CPU for
++		 * later consideration.  Find CPU on an idle core first.
++		 */
++		if (!(sd->flags & SD_SHARE_CPUCAPACITY) && !is_core_idle(cpu)) {
++			if (idle_smt == -1)
++				idle_smt = cpu;
++			/*
++			 * If the core is not idle, and first SMT sibling which is
++			 * idle has been found, then its not needed to check other
++			 * SMT siblings for idleness:
++			 */
++#ifdef CONFIG_SCHED_SMT
++			cpumask_andnot(swb_cpus, swb_cpus, cpu_smt_mask(cpu));
++#endif
++			continue;
++		}
++
++		/*
++		 * Are we the first idle core in a non-SMT domain or higher,
++		 * or the first idle CPU in a SMT domain?
++		 */
++		return cpu == this_cpu;
++	}
++
++	/* Are we the first idle CPU with busy siblings? */
++	if (idle_smt != -1)
++		return idle_smt == this_cpu;
++
++	/* Are we the first CPU of this group ? */
++	return group_balance_cpu(sg) == this_cpu;
++}
++
++
+ static int should_we_balance(struct lb_env *env)
+ {
+ 	struct cpumask *swb_cpus = this_cpu_cpumask_var_ptr(should_we_balance_tmpmask);
+@@ -11267,13 +11317,22 @@ static int sched_balance_rq(int this_cpu, struct rq *this_rq,
+ 	cpumask_and(cpus, sched_domain_span(sd), cpu_active_mask);
+ 
+ 	schedstat_inc(sd->lb_count[idle]);
++	if (sd->flags & SD_SERIALIZE)
++		trace_printk("Trying load_balance_rq for idle: %d span: %*pbl\n", idle,cpumask_pr_args(sched_domain_span(sd)));
+ 
+ redo:
+ 	if (!should_we_balance(&env)) {
+ 		*continue_balancing = 0;
++		if (sd->flags & SD_SERIALIZE) {
++			trace_printk("swb says this cpu doesnt need to balance idle: %d span: %*pbl\n", idle, cpumask_pr_args(sched_domain_span(sd)));
++		}
+ 		goto out_balanced;
+ 	}
+ 
++	if (sd->flags & SD_SERIALIZE) {
++		trace_printk("This cpu would try balance idle: %d span: %*pbl\n", idle, cpumask_pr_args(sched_domain_span(sd)));
++	}
++
+ 	group = sched_balance_find_src_group(&env);
+ 	if (!group) {
+ 		schedstat_inc(sd->lb_nobusyg[idle]);
+@@ -11288,6 +11347,9 @@ static int sched_balance_rq(int this_cpu, struct rq *this_rq,
+ 
+ 	WARN_ON_ONCE(busiest == env.dst_rq);
+ 
++	if (sd->flags & SD_SERIALIZE) {
++		trace_printk("There is some imbalance idle: %d span: %*pbl\n", idle, cpumask_pr_args(sched_domain_span(sd)));
++	}
+ 	schedstat_add(sd->lb_imbalance[idle], env.imbalance);
+ 
+ 	env.src_cpu = busiest->cpu;
+@@ -11507,6 +11569,8 @@ static int sched_balance_rq(int this_cpu, struct rq *this_rq,
+ 	    sd->balance_interval < sd->max_interval)
+ 		sd->balance_interval *= 2;
+ out:
++	if ((sd->flags & SD_SERIALIZE) && ld_moved)
++		trace_printk("load balance was successful idle: %d span: %*pbl\n", idle, cpumask_pr_args(sched_domain_span(sd)));
+ 	return ld_moved;
+ }
+ 
+@@ -11722,8 +11786,13 @@ static void sched_balance_domains(struct rq *rq, enum cpu_idle_type idle)
+ 
+ 		need_serialize = sd->flags & SD_SERIALIZE;
+ 		if (need_serialize) {
+-			if (atomic_cmpxchg_acquire(&sched_balance_running, 0, 1))
++			int result;
++			trace_printk("try to set sched_balance_running idle: %d\n", idle);
++			if (atomic_cmpxchg_acquire(&sched_balance_running, 0, 1)) {
++				result = hack_check_if_i_can_balance(sd, cpu);
++				trace_printk("sched_balance_running  was not aquird idle: %d was_swb: %d\n", idle, result);
+ 				goto out;
++			}
+ 		}
+ 
+ 		if (time_after_eq(jiffies, sd->last_balance + interval)) {
+@@ -11739,8 +11808,10 @@ static void sched_balance_domains(struct rq *rq, enum cpu_idle_type idle)
+ 			sd->last_balance = jiffies;
+ 			interval = get_sd_balance_interval(sd, busy);
+ 		}
+-		if (need_serialize)
++		if (need_serialize) {
++			trace_printk("Release sched_balance_running idle: %d\n", idle);
+ 			atomic_set_release(&sched_balance_running, 0);
++		}
+ out:
+ 		if (time_after(next_balance, sd->last_balance + interval)) {
+ 			next_balance = sd->last_balance + interval;
+@@ -12347,6 +12418,10 @@ static int sched_balance_newidle(struct rq *this_rq, struct rq_flags *rf)
+ 		u64 domain_cost;
+ 
+ 		update_next_balance(sd, &next_balance);
++		if (sd->flags & SD_SERIALIZE) {
++			trace_printk("newidle balance called span: %*pbl,  rq_avg: %llu, curr_cost: %llu, max_idle_cost: %llu\n",
++					cpumask_pr_args(sched_domain_span(sd)), this_rq->avg_idle, curr_cost, sd->max_newidle_lb_cost);
++		}
+ 
+ 		if (this_rq->avg_idle < curr_cost + sd->max_newidle_lb_cost)
+ 			break;
+@@ -12360,6 +12435,9 @@ static int sched_balance_newidle(struct rq *this_rq, struct rq_flags *rf)
+ 			t1 = sched_clock_cpu(this_cpu);
+ 			domain_cost = t1 - t0;
+ 			update_newidle_cost(sd, domain_cost);
++			if (sd->flags & SD_SERIALIZE)
++				trace_printk("cost of load balance,span: %*pbl,  pulled_task: %d, domain_cost: %llu\n",
++						cpumask_pr_args(sched_domain_span(sd)), pulled_task, domain_cost);
+ 
+ 			curr_cost += domain_cost;
+ 			t0 = t1;
+
+
+
