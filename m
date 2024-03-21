@@ -1,119 +1,111 @@
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D5685280
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 17:19:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE04D85280;
+	Thu, 21 Mar 2024 17:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711041595; cv=none; b=f0kCg1M2SDPlmCU8uevHr6A4EqkHxGe5hcOg7Zka1AUPRWNlze91O09FzjCAIzePlf9ti0sBu0RTbbeJvX6dj/YUtibwyQBrkSM1TCOdF2m7C0zfuVbDMU3IoOXlNqOEQSr4GtkpbAxSwmxaT9OoLicJbA0PjC2TXF+9vo+Ev1c=
+	t=1711041617; cv=none; b=Ft8S2uKLWh2u6FKq3CDgebfJj7TN5hQiSPPuiwfM9iZld0kpFtPhp5bOM2TOzg51YEB2zQq470NUiwfi6tk+PPzIW5K0zkz+KDslL5H6gv2gTiZB4/XTFdjJ3vL7NkLhle0lLq54xZ/AlkOGSEMDtM8EaPYIiagJ1/lqFzDZu6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711041595; c=relaxed/simple;
-	bh=u1+YL1chG1fDzrnBGltFxRHMEuYiPqoh/58IrrzbAxE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ah6xIMvExd8uOwUXZr9VqflCQ0Mm9N0DdzWvCvOhN9L4b6lErBFj2HPGWCHOMYAgnsadPZrkzFcyiTK8/9aDLCiCnKA68+BtlO41ojrBGgbOhS4Wj+FmNl7XD0PqJWNyYyCX9wQ6h5SMnG0M2gQv0DhU0W5/Exb/liHgaZCvLOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4V0sHP02Mtz9xqpf
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 01:03:45 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id 53797140390
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 01:19:39 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.81.213.73])
-	by APP1 (Coremail) with SMTP id LxC2BwAH_BQNbPxlII6+BA--.51964S4;
-	Thu, 21 Mar 2024 18:19:38 +0100 (CET)
-From: Petr Tesarik <petrtesarik@huaweicloud.com>
-To: Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Petr Tesarik <petr.tesarik1@huawei-partners.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Will Deacon <will@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	iommu@lists.linux.dev (open list:DMA MAPPING HELPERS)
-Cc: Roberto Sassu <roberto.sassu@huaweicloud.com>,
-	Petr Tesarik <petr@tesarici.cz>
-Subject: [PATCH v3 2/2] bug: introduce ASSERT_VAR_CAN_HOLD()
-Date: Thu, 21 Mar 2024 18:19:02 +0100
-Message-Id: <20240321171902.85-3-petrtesarik@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240321171902.85-1-petrtesarik@huaweicloud.com>
-References: <20240321171902.85-1-petrtesarik@huaweicloud.com>
+	s=arc-20240116; t=1711041617; c=relaxed/simple;
+	bh=Vj/5Yl+z5s3UA4RQbwv//rB26XvH0TYZKSq7+tq/WqI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=uUyQCf1Qlirequ3KdtoRWEJQUQWSHY+kI0iL+JhM0sXwj8QVoT6TbAIXtvJ/O7HoWi59W2THytbJ7sMl0xoFIxQCgCwjpz7++AprRXURyV40SYFnnWTZTpTH1FfI3vsh+rheJjuGQcbK2zWDtVd2ot9kyOwHwWe9wL9FMAcICYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dp0TmQM6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dp0TmQM6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99FD3C433C7;
+	Thu, 21 Mar 2024 17:20:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711041617;
+	bh=Vj/5Yl+z5s3UA4RQbwv//rB26XvH0TYZKSq7+tq/WqI=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=dp0TmQM6sGVnei19KsodX/gXAc96xd6wMNV0Hpf2IdrCbzIxKAzxXxE/LAtXs5BA6
+	 NF0/jTg+Mp1RAA8wdVJP53ylcFGPWIKRKhhWyJpH9YXhtyLZ8SJyIyeXlPabnNyhOS
+	 pa9CKHtQs353LaE3LArA8N1Zwt0CajjCUv0gCAQidRH9dNe1CfzS2D3Jn7b3u2TxEZ
+	 JxP/h9BzBE1aA2QQ8FTPhbQwatJqvxytFJvRPI2EHss9WFBWl8DoUvQVQ5jVrkQKGI
+	 0blyEjaOgwkGKnBQ/KSkttbGxWvrHU5UI2dH+cb7m0e8+nH4KkQNgw0UGGwJyzMZVX
+	 xG6L25RhDMVbw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:LxC2BwAH_BQNbPxlII6+BA--.51964S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kw1DWF1xKw4ktr45GrW8tFb_yoW8WFy7pF
-	9xArn5KF4jqFyxZF12k3srCF1fK34v9347Cas0gryYvr17tF9aqFWDKrW3Wa4qqr4vgF4a
-	kw1FgrWYyw1UArDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUm014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
-	ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
-	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
-	v7MxkF7I0Ew4C26cxK6c8Ij28IcwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
-	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
-	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
-	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVj
-	vjDU0xZFpf9x0JUzWlgUUUUU=
-X-CM-SenderInfo: hshw23xhvd2x3n6k3tpzhluzxrxghudrp/
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 21 Mar 2024 19:20:13 +0200
+Message-Id: <CZZLMPZQ8WUX.3CI7OZIGEYIXX@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>, <saulo.alessandre@tse.jus.br>,
+ <lukas@wunner.de>, <bbhushan2@marvell.com>
+Subject: Re: [PATCH v7 12/13] crypto: asymmetric_keys - Adjust signature
+ size calculation for NIST P521
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Stefan Berger" <stefanb@linux.ibm.com>, <keyrings@vger.kernel.org>,
+ <linux-crypto@vger.kernel.org>, <herbert@gondor.apana.org.au>,
+ <davem@davemloft.net>
+X-Mailer: aerc 0.17.0
+References: <20240320114725.1644921-1-stefanb@linux.ibm.com>
+ <20240320114725.1644921-13-stefanb@linux.ibm.com>
+In-Reply-To: <20240320114725.1644921-13-stefanb@linux.ibm.com>
 
-From: Petr Tesarik <petr.tesarik1@huawei-partners.com>
+On Wed Mar 20, 2024 at 1:47 PM EET, Stefan Berger wrote:
+> Adjust the calculation of the maximum signature size for support of
+> NIST P521. While existing curves may prepend a 0 byte to their coordinate=
+s
+> (to make the number positive), NIST P521 will not do this since only the
+> first bit in the most significant byte is used.
+>
+> If the encoding of the x & y coordinates requires at least 128 bytes then
+> an additional byte is needed for the encoding of the length. Take this in=
+to
+> account when calculating the maximum signature size.
+>
+> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+> Tested-by: Lukas Wunner <lukas@wunner.de>
+> ---
+>  crypto/asymmetric_keys/public_key.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+>
+> diff --git a/crypto/asymmetric_keys/public_key.c b/crypto/asymmetric_keys=
+/public_key.c
+> index e5f22691febd..16cc0be28929 100644
+> --- a/crypto/asymmetric_keys/public_key.c
+> +++ b/crypto/asymmetric_keys/public_key.c
+> @@ -233,6 +233,7 @@ static int software_key_query(const struct kernel_pke=
+y_params *params,
+>  	info->key_size =3D len * 8;
+> =20
+>  	if (strncmp(pkey->pkey_algo, "ecdsa", 5) =3D=3D 0) {
+> +		int slen =3D len;
+>  		/*
+>  		 * ECDSA key sizes are much smaller than RSA, and thus could
+>  		 * operate on (hashed) inputs that are larger than key size.
+> @@ -246,8 +247,19 @@ static int software_key_query(const struct kernel_pk=
+ey_params *params,
+>  		 * Verify takes ECDSA-Sig (described in RFC 5480) as input,
+>  		 * which is actually 2 'key_size'-bit integers encoded in
+>  		 * ASN.1.  Account for the ASN.1 encoding overhead here.
+> +		 *
+> +		 * NIST P192/256/384 may prepend a '0' to a coordinate to
+> +		 * indicate a positive integer. NIST P521 never needs it.
+>  		 */
+> -		info->max_sig_size =3D 2 * (len + 3) + 2;
+> +		if (strcmp(pkey->pkey_algo, "ecdsa-nist-p521") !=3D 0)
+> +			slen +=3D 1;
+> +		/* Length of encoding the x & y coordinates */
+> +		slen =3D 2 * (slen + 2);
+> +		/*
+> +		 * If coordinate encoding takes at least 128 bytes then an
+> +		 * additional byte for length encoding is needed.
+> +		 */
+> +		info->max_sig_size =3D 1 + (slen >=3D 128) + 1 + slen;
+>  	} else {
+>  		info->max_data_size =3D len;
+>  		info->max_sig_size =3D len;
 
-Introduce an ASSERT_VAR_CAN_HOLD() macro to check at build time that a
-variable can hold the given value.
 
-Use this macro in swiotlb to make sure that the list and pad_slots fields
-of struct io_tlb_slot are big enough to hold the maximum possible value of
-IO_TLB_SEGSIZE.
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
 
-Signed-off-by: Petr Tesarik <petr.tesarik1@huawei-partners.com>
----
- include/linux/build_bug.h | 10 ++++++++++
- kernel/dma/swiotlb.c      |  2 ++
- 2 files changed, 12 insertions(+)
-
-diff --git a/include/linux/build_bug.h b/include/linux/build_bug.h
-index 3aa3640f8c18..6e2486508af0 100644
---- a/include/linux/build_bug.h
-+++ b/include/linux/build_bug.h
-@@ -86,4 +86,14 @@
- 		"Offset of " #field " in " #type " has changed.")
- 
- 
-+/*
-+ * Compile time check that a variable can hold the given value
-+ */
-+#define ASSERT_VAR_CAN_HOLD(var, value) ({		\
-+	typeof(value) __val = (value);			\
-+	typeof(var) __tmp = __val;			\
-+	BUILD_BUG_ON_MSG(__tmp != __val,		\
-+		#var " cannot hold " #value ".");	\
-+})
-+
- #endif	/* _LINUX_BUILD_BUG_H */
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index 3779a48eec9b..8256fcdc0cf6 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -285,6 +285,8 @@ static void swiotlb_init_io_tlb_pool(struct io_tlb_pool *mem, phys_addr_t start,
- 		mem->areas[i].used = 0;
- 	}
- 
-+	ASSERT_VAR_CAN_HOLD(mem->slots[0].list, IO_TLB_SEGSIZE);
-+	ASSERT_VAR_CAN_HOLD(mem->slots[0].pad_slots, IO_TLB_SEGSIZE);
- 	for (i = 0; i < mem->nslabs; i++) {
- 		mem->slots[i].list = min(IO_TLB_SEGSIZE - io_tlb_offset(i),
- 					 mem->nslabs - i);
--- 
-2.34.1
-
+BR, Jarkko
