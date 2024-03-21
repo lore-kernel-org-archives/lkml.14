@@ -1,164 +1,184 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3844DA10
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 07:25:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D4D50249;
+	Thu, 21 Mar 2024 07:33:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711005921; cv=none; b=P+VVzK3PXTEO0vVF/vHwO5dH+2VjgV+OdqdvrlSs7DKdjjWy/QfzMd9TLzyE3cZ8MNGIhp+MRxTdiICu80J6shP1iIU+pQWGp+gLMwXPtKusGcHwsT1Qkd/+ZerSzmCKRdbs6u7ObSLoOGhSHbWXmmZPOiC34tI73RNq6X1K2Ro=
+	t=1711006396; cv=none; b=G58VLFwVswb3bAr8bfX6O2ktQiLgDaKKFlcdnyVeNdQRXUGGDueyeiVBt8a3cGicIWuy1xt5o0E/gysuRlMfDcvQXLQWcp2k1rX7CtNv/1W4tjhSLhYSi8iswlEuBipG57QRmksjeSAwXcaSAQpYPDP7AaAu+7UpDd1DIva71Ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711005921; c=relaxed/simple;
-	bh=SQYENTXYS/IBQjccIXgLfwO104lv0QCzfCjn0Q0BqZU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=D3N2sbRGXr1HNqHiRB+VqwnK52Jrt72r4O39bCHz0+uYBqkfzPEZEWp0Gc86Ne2AxFwp3XqX0vYwiuyiVMwJ552Lpv4gKpVbjvZxWkvAVnXOQjjMUgSRvk66bS3wghXdegIij0AqTFCRaq+0PoKsfSnFOQZ+dUsQljrYLemuq/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CEC1ytEu; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711006396; c=relaxed/simple;
+	bh=lfzYv1h/czzT9o64k4FnzumtWG84f3GYHXjhGITWGuk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ULDBPT+9SIu7dxDAZqehQCWtjNrrpYqHM3o4CKG0lVWRKJs6HynHxYleugqQPGTWugpf0X3eoEgPiJxqg6DIfb+ItsMcOppad2/tpurSjeMVTbfOeAinu1S/hlAA9uwMD4PFJgRryRLjO6R1BJR7BybVBO87/ETuHJpVhg1etn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H5iu9dpJ; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CEC1ytEu"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-56b85146589so1180407a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 00:25:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H5iu9dpJ"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-512e39226efso556020e87.0;
+        Thu, 21 Mar 2024 00:33:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711005918; x=1711610718; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=dW/DVr6H9lxXs8kj3uemHI4cq9jKqtvmA1r7vUJK6aQ=;
-        b=CEC1ytEu7SS2BPDZYPJMOdzoU7nwGASq0KL5485UxTcAsVKR4OHVwctE88JphJghc0
-         0qx9nkxz+WqIkwZRW66oH8XaPxixHaGJL4qzWQTmNvfhN+Jcx6ykqnPc4yR2q5J1rJmp
-         e+YsmfNLwQIPi0YrhxVkMrOGb9OcFOtd5kfObrfmInsVf6DuUd7FjCMvmoUSls86iVoa
-         aJ9in6HL6VYbVOR27p6L/LCpNv9psMSlXE38JEgDZ9BdUmwOUKJTcqMdsKd1fEZfED6c
-         VA5dMTN+EJziuv8M1wsizMIMIat4H02Xg1sjNu65DD13BfN3K30qPpOLL64HSMY8Xcsd
-         TaLg==
+        d=gmail.com; s=20230601; t=1711006392; x=1711611192; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tG8H4iDFAc1t3qHbj1kNsgeA823fPcekBzV63RYaF6Y=;
+        b=H5iu9dpJIKM4W0dQ1UDl4PQiT+epi4Pv9u8lY/B7zQg/2tMabFqNaYvM7aVktEcz0q
+         4EkPppBs3G0wN5AH12LqoXbvpRaQIf6JHW1+w3uBCJJ5D2gLJ+sLRKIHYoFaVm8qPC6Q
+         dH6jipdhjTUP+EPDcFGJpvW+uJQ3jY8n7x3BgkEXPsCo43OLgSXxXT8+HAkvLjXR5u2Y
+         va7XeaBY83ZT1UhJvYCy7AMyeUtIw2uM/rINP1bFwfS/nQ07Knb9MdSJiyhKpeTE4MDA
+         C/K4KZmkyBxIKHCQPKZbdpQoxHwJxNiDp66QthCCzNxP826wuE2ypcAXSXiogPOafd3c
+         a7RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711005918; x=1711610718;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dW/DVr6H9lxXs8kj3uemHI4cq9jKqtvmA1r7vUJK6aQ=;
-        b=l8R/MpFwtxp5ICTOQ0HsVLHd4tzlm0P0n2TubKrQdKqzepdo9SgtUGxKlMM4MSlmXA
-         1oedTDuHVFxbhKklN+tWVPNC6V3Cy0UrCm2zwKMpfTY3KVBKPq66l4ypeRzZ8TsmhlS0
-         JzcmgOjz4t7Eqm8n6tWCqV3wupXMTM2Y2G4qn1nZaklQmmsU4HZ3hrikKu2/eShZbQEV
-         +d03eVawkae/Tp1UJ+tBw9VPS9tj9M+Wc6nyXkJsKuYoSzEZU1XR4fJny1B/iQLCMYBh
-         Y68dLdrpmGui/cSMdOhfW4Vp1tiNvjUPI9Or2Q7EzYPsspIu9kxPAp080mxbKsfjcyNj
-         cpaA==
-X-Forwarded-Encrypted: i=1; AJvYcCX9k5yKVmv3+2Gp2nSrC9aRCmJGydy79Bb7XAfETCgdcRa6l0T9wsdE5CSZ4ghMp+90tve3imQOCk9OlFvGqz35wo1RmQ68g/gRgKtc
-X-Gm-Message-State: AOJu0YwVmRT5g5PW2AFu4fdEsITinYo1mGQZt5rZ3sOWVSwLD6fyggSw
-	otds34NLUoeIHaPgWZ4pSC7a4XPDrAql2wzMhLw3GnULSvhpf9+zTFJWRb96Yrw=
-X-Google-Smtp-Source: AGHT+IHWwIH8of0S0V3kJihlWI36GOZcqY3zh8uiP8wMtrqpKL4zCWfNie8voIhlde61btxAhfckMA==
-X-Received: by 2002:a50:9b4c:0:b0:567:efec:6d81 with SMTP id a12-20020a509b4c000000b00567efec6d81mr1755502edj.11.1711005917779;
-        Thu, 21 Mar 2024 00:25:17 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id fe4-20020a056402390400b00567e27c72c4sm7707124edb.62.2024.03.21.00.25.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Mar 2024 00:25:17 -0700 (PDT)
-Message-ID: <4079ddcf-425d-4194-93b8-ee113864541e@linaro.org>
-Date: Thu, 21 Mar 2024 08:25:15 +0100
+        d=1e100.net; s=20230601; t=1711006392; x=1711611192;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tG8H4iDFAc1t3qHbj1kNsgeA823fPcekBzV63RYaF6Y=;
+        b=LpMSPJKCT3LdLqKWpQevQng6nJeqNnDDrJxlPRu41cAHA0oWEZuqnJkKa3YOjg9p8R
+         SOezB00xo9eBm3d+xXJn1Whe+nsZwQCIwYn3KdGE7ffseAcoC6Z0RN5IrnECDYty+dmP
+         KxOcn7IcgkoxobDwaNf1kmRpYGYHJf4YaD0m1eO65pliEbAGMzgN2PaV3WlpLUmsXsg8
+         eqLZ0aWrNMbsCi4w6LXTTi7zOh26npaiMx+fLZrZR3622nUFbkTipUTWiojsh9JQzxVl
+         31wYisfOt2g1fRjkqUyL9rR1NHqPwY37//JE1eeA2GgW3sxl2YZk1MFLsGwCwhTdEDf9
+         5ZNg==
+X-Forwarded-Encrypted: i=1; AJvYcCUYy8feWioiBS2lv49ptXT8y0kZsE3ETHWzZatG7s+jVEjgLv3c5yBERrnt3Bi7agOMLb1PHV/9FbCZuQlc25CID+hKtJjB/cLfevFpbhowMyKwei8v70QyfagE5G3YVv4SGINe164K7v/BfCgQk1QuOvUK2AQpl+WS
+X-Gm-Message-State: AOJu0Yx/U1x1YQiL178qfjUoV8guYLeJAlmaTG0nfwCNpxIUzcOud5NC
+	b8QWvma73FTdusNBgouvV3MeYkK2MCWfAvno5ScZDoub00mhAx7m6RS+vydS7FtrmZ0JU2R+qzV
+	ivWUtfj1qaVgHRMPxo/aTBxPgNds=
+X-Google-Smtp-Source: AGHT+IEApP00m/eNqfI3dQObKbZkEHXNDVuDCg5UQNMFtE5SgkvyNvn3H5REA2w2PUA2mgku3Cb75eMAOS/VazJuZLQ=
+X-Received: by 2002:a19:8c5d:0:b0:513:a1eb:c084 with SMTP id
+ i29-20020a198c5d000000b00513a1ebc084mr2105258lfj.7.1711006391935; Thu, 21 Mar
+ 2024 00:33:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] clk: qcom: add IPQ9574 interconnect clocks support
-To: Varadarajan Narayanan <quic_varada@quicinc.com>, andersson@kernel.org,
- konrad.dybcio@linaro.org, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- mturquette@baylibre.com, sboyd@kernel.org, djakov@kernel.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-pm@vger.kernel.org
-References: <20240321043149.2739204-1-quic_varada@quicinc.com>
- <20240321043149.2739204-3-quic_varada@quicinc.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
- m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
- HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
- XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
- mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
- v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
- cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
- rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
- qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
- aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
- gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
- dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
- NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
- hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
- oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
- H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
- yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
- 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
- 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
- +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
- FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
- 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
- DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
- oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
- 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
- Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
- qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
- /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
- qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
- EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
- KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
- fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240321043149.2739204-3-quic_varada@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <0000000000003dc8e00614076ab6@google.com>
+In-Reply-To: <0000000000003dc8e00614076ab6@google.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Thu, 21 Mar 2024 00:33:00 -0700
+Message-ID: <CAADnVQLORV5PT0iTAhRER+iLBTkByCYNBYyvBSgjN1T31K+gOw@mail.gmail.com>
+Subject: stack access issue. Re: [syzbot] [bpf?] UBSAN: array-index-out-of-bounds
+ in check_stack_range_initialized
+To: Andrei Matei <andreimatei1@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Eddy Z <eddyz87@gmail.com>, Hao Luo <haoluo@google.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Jiri Olsa <jolsa@kernel.org>, 
+	KP Singh <kpsingh@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Network Development <netdev@vger.kernel.org>, 
+	Stanislav Fomichev <sdf@google.com>, Song Liu <song@kernel.org>, 
+	syzkaller-bugs <syzkaller-bugs@googlegroups.com>, Yonghong Song <yonghong.song@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 21/03/2024 05:31, Varadarajan Narayanan wrote:
-> Unlike MSM platforms that manage NoC related clocks and scaling
-> from RPM, IPQ SoCs dont involve RPM in managing NoC related
-> clocks and there is no NoC scaling.
+Hi Andrei,
 
-If these are clocks, expose them as clocks, not as interconnects.
+looks like the refactoring of stack access introduced a bug.
+See the reproducer below.
+positive offsets are not caught by check_stack_access_within_bounds().
+So both slot and spi become negative and access
+stack[spi].slot_type[slot % BPF_REG_SIZE]
+returns garbage.
 
-> 
-> However, there is a requirement to enable some NoC interface
-> clocks for accessing the peripheral controllers present on
-> these NoCs.
-> 
-> Hence adding a minimalistic interconnect driver that can enable
-> the relevant clocks. This is similar to msm8996-cbf's usage of
-> icc-clk framework.
-> 
-> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+On Tue, Mar 19, 2024 at 11:12=E2=80=AFAM syzbot
+<syzbot+33f4297b5f927648741a@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    0740b6427e90 Merge branch 'bpf-arena-followups'
+> git tree:       bpf
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D12fed76918000=
+0
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D6fb1be60a193d=
+440
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3D33f4297b5f92764=
+8741a
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Deb=
+ian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D1763a479180=
+000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D15c3871118000=
+0
+>
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/c9e6e9f97566/dis=
+k-0740b642.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/78476a588b62/vmlinu=
+x-0740b642.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/50cd6fab9ead/b=
+zImage-0740b642.xz
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the comm=
+it:
+> Reported-by: syzbot+33f4297b5f927648741a@syzkaller.appspotmail.com
+>
+> ------------[ cut here ]------------
+> UBSAN: array-index-out-of-bounds in kernel/bpf/verifier.c:7190:12
+> index -1 is out of range for type 'u8[8]' (aka 'unsigned char[8]')
+> CPU: 0 PID: 5071 Comm: syz-executor474 Not tainted 6.8.0-syzkaller-05226-=
+g0740b6427e90 #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
+oogle 02/29/2024
+> Call Trace:
+>  <TASK>
+>  __dump_stack lib/dump_stack.c:88 [inline]
+>  dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
+>  ubsan_epilogue lib/ubsan.c:217 [inline]
+>  __ubsan_handle_out_of_bounds+0x121/0x150 lib/ubsan.c:415
+>  check_stack_range_initialized+0x1668/0x19a0 kernel/bpf/verifier.c:7190
+>  check_helper_mem_access+0x2eb/0xfa0 kernel/bpf/verifier.c:7294
+>  check_helper_call+0x263c/0x7220 kernel/bpf/verifier.c:10252
+>  do_check+0x9e29/0x10530 kernel/bpf/verifier.c:17801
+>  do_check_common+0x14bd/0x1dd0 kernel/bpf/verifier.c:20500
+>  do_check_main kernel/bpf/verifier.c:20591 [inline]
+>  bpf_check+0x136ab/0x19010 kernel/bpf/verifier.c:21261
+>  bpf_prog_load+0x1667/0x20f0 kernel/bpf/syscall.c:2895
+>  __sys_bpf+0x4ee/0x810 kernel/bpf/syscall.c:5631
+>  __do_sys_bpf kernel/bpf/syscall.c:5738 [inline]
+>  __se_sys_bpf kernel/bpf/syscall.c:5736 [inline]
+>  __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5736
+>  do_syscall_64+0xfb/0x240
+>  entry_SYSCALL_64_after_hwframe+0x6d/0x75
+> RIP: 0033:0x7f8416194629
+> Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f=
+7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff=
+ ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007ffdc6f0fdb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+> RAX: ffffffffffffffda RBX: 00007ffdc6f0ff88 RCX: 00007f8416194629
+> RDX: 0000000000000090 RSI: 00000000200000c0 RDI: 0000000000000005
+> RBP: 00007f8416207610 R08: 0000000000000000 R09: 00007ffdc6f0ff88
+> R10: 00000000fffffff8 R11: 0000000000000246 R12: 0000000000000001
+> R13: 00007ffdc6f0ff78 R14: 0000000000000001 R15: 0000000000000001
+>  </TASK>
+> ---[ end trace ]---
+>
+>
 > ---
->  arch/arm64/boot/dts/qcom/ipq9574.dtsi |  2 +
-
-DTS is always, ALWAYS, separate.
-
->  drivers/clk/qcom/gcc-ipq9574.c        | 75 ++++++++++++++++++++++++++-
->  2 files changed, 76 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-> index 7f2e5cbf3bbb..efffbd085715 100644
-> --- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-> @@ -11,6 +11,7 @@
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/reset/qcom,ipq9574-gcc.h>
->  #include <dt-bindings/thermal/thermal.h>
-> +#include <dt-bindings/interconnect/qcom,ipq9574.h>
-
-Keep the order,
-
-Best regards,
-Krzysztof
-
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+>
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
+>
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+>
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+>
+> If you want to undo deduplication, reply with:
+> #syz undup
