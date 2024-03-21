@@ -1,125 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB56C2E6;
-	Thu, 21 Mar 2024 08:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505B7C2E6
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 08:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711010911; cv=none; b=POkeegujKDJefQwtBXXOKE92IFqx8jXe3BcdF1rksGqYf/BrZ2LA00T4v61GETlSo9/7DhDn3C9xnUTuX4u+lYBdXxEI41Artw8siklMNr3RBxCtTPersmXEeEXSdqVJ/bOtKwfMzib29hcuNtj3ZrIK1Wffk6NnrYjyvILvjhk=
+	t=1711011008; cv=none; b=dWV0PCjS0zq+9LIvLfSj/ExrJURYDny/vu2CkcZ90p1J1fMcXmJQZWrrb1luT4qlkIzX3nA7gDtVNJv18irCMJ+jOpGvdpJA34A84IOnRZqCRe8pV0jkabD9ez2k29vK/iIcUTUxSd8mmTMzP1MkXfvY2BxOUYrYIimbTc6arAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711010911; c=relaxed/simple;
-	bh=15ZtzjY1fNYkJ0k0FnRr+bctv3Yg6O2wYPUdrRw1jU4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=M2vQxA5NaM9Nx2pQQmOpN9211CHDnpr2XPDzo8FBU19OLBLSj7bfRbAH5HmEzi2w4eG+rrafw7KVVyCMGQdj5d2UaARLdGMDhRV6SsDfMegTCPbySHnRrLdMl0TlY71j7xmlW0glVNhB3XxAOS4dkROYizMpldLc/cxQggdoipE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gmijaw2Q; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gmijaw2Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7DD6C433C7;
-	Thu, 21 Mar 2024 08:48:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711010911;
-	bh=15ZtzjY1fNYkJ0k0FnRr+bctv3Yg6O2wYPUdrRw1jU4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Gmijaw2QPhHATpi68Owc0NGfwiqqzkpz2elHJSZbXKXUtlFJaiMVN25OSGx/pyYsx
-	 CZ3kVp43itxG2hgscjbik/tkL8uZt3tSxsi+IPsN7Ba2XGwFTfC5uohzxBijORayQ9
-	 n7Pgt7AeV1UUBPYTjeKHvYoOxeaTy6llr4/LY+l1nrprWsOPmriJOk+3172fXQ/Ju6
-	 7OPpeamnaOUlwa8S0taZC5fBwzPqk9tv/NEb+TNeCZUUsms2jmV871Vo1WF4ExCJbK
-	 H7RV8eaovOIrHEuRjj9rLqqA3jpYLvK3ND9HQwNKifeA7kF+8TmQmFrTtg1E/urVUR
-	 obBYTsqsWcF7g==
-From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-To: Andy Chiu <andy.chiu@sifive.com>
-Cc: Puranjay Mohan <puranjay12@gmail.com>, Mark Rutland
- <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Sami Tolvanen <samitolvanen@google.com>, Guo Ren <guoren@kernel.org>, Ley
- Foon Tan <leyfoon.tan@starfivetech.com>, Deepak Gupta
- <debug@rivosinc.com>, Sia Jee Heng <jeeheng.sia@starfivetech.com>, Bjorn
- Topel <bjorn@rivosinc.com>, Song Shuai <suagrfillet@gmail.com>, Cl'ement
- L'eger <cleger@rivosinc.com>, Al Viro <viro@zeniv.linux.org.uk>, Jisheng
- Zhang <jszhang@kernel.org>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Robbin
- Ehn <rehn@rivosinc.com>, Brendan Sweeney <brs@rivosinc.com>
-Subject: Re: [RFC PATCH] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
-In-Reply-To: <CABgGipWPuvwi43v1+60-=0_MN_q_CD0ZGasxHHVWJ37cig5MmA@mail.gmail.com>
-References: <20240306165904.108141-1-puranjay12@gmail.com>
- <87ttlhdeqb.fsf@all.your.base.are.belong.to.us>
- <ZfBbxPDd0rz6FN2T@FVFF77S0Q05N>
- <8734suqsth.fsf@all.your.base.are.belong.to.us>
- <mb61pplvw6grf.fsf@gmail.com>
- <87zfv0onre.fsf@all.your.base.are.belong.to.us>
- <87il1oedx8.fsf@all.your.base.are.belong.to.us>
- <CABgGipWPuvwi43v1+60-=0_MN_q_CD0ZGasxHHVWJ37cig5MmA@mail.gmail.com>
-Date: Thu, 21 Mar 2024 09:48:27 +0100
-Message-ID: <87msqsotr8.fsf@all.your.base.are.belong.to.us>
+	s=arc-20240116; t=1711011008; c=relaxed/simple;
+	bh=fMjckmYYP6yV0RLO6xlSO3RUi89pYPoswTVP0dlylrc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VINcTlVwh87yzz8wDR3Ze20HVdwMrWtpG/RdiVglXcvQkbapejFWEVkoGA1zh1nCK2N7F7knc3KdrmcMQfoqcSKn3rAnoV/wt77of2rhET4m4gSMaeVblLE5i3IjUkUHpj5VUV/qLN/GRaRhecBOPTzznMcfYmktUsF2v4mupus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4V0fKX5QwLz4f3mHg
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 16:49:52 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id B12C61A1153
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 16:50:00 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.67.174.26])
+	by APP1 (Coremail) with SMTP id cCh0CgAX6RG49Ptl_QV8Hg--.35067S4;
+	Thu, 21 Mar 2024 16:50:00 +0800 (CST)
+From: Xiu Jianfeng <xiujianfeng@huaweicloud.com>
+To: cl@linux.com,
+	penberg@kernel.org,
+	rientjes@google.com,
+	iamjoonsoo.kim@lge.com,
+	akpm@linux-foundation.org,
+	vbabka@suse.cz,
+	roman.gushchin@linux.dev,
+	42.hyeyoo@gmail.com
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	xiujianfeng@huawei.com
+Subject: [PATCH -next] mm/slub: remove dummy slabinfo functions
+Date: Thu, 21 Mar 2024 08:44:15 +0000
+Message-Id: <20240321084415.265643-1-xiujianfeng@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAX6RG49Ptl_QV8Hg--.35067S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7tryxJw4fWw1kZw1rWF1xKrg_yoW8uF1xpF
+	4fGw1fJa48Kr10gr4DGF48ZrySv3ZIkFW5GrZ2qasavr1UJw1vgrn5t3ykZ398WF95u397
+	Xw4v9FyrX34DJrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkIb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28I
+	cxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
+	IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI
+	42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42
+	IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2
+	z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU189N3UUUUU==
+X-CM-SenderInfo: x0lxyxpdqiv03j6k3tpzhluzxrxghudrp/
 
-Andy,
+From: Xiu Jianfeng <xiujianfeng@huawei.com>
 
-Pulling out the A option:
+Slab has been removed since 6.5, so there is no other versions of
+slabinfo_show_stats() and slabinfo_write(), then we can remove these
+two dummy functions.
 
->> > A) Use auipc/jalr, only patch jalr to take us to a common
->> >    dispatcher/trampoline
->> >
->> >  | <func_trace_target_data_8B> # probably on a data cache-line !=3D fu=
-nc .text to avoid ping-pong
->> >  | ...
->> >  | func:
->> >  |   ...make sure ra isn't messed up...
->> >  |   aupic
->> >  |   nop <=3D> jalr # Text patch point -> common_dispatch
->> >  |   ACTUAL_FUNC
->> >  |
->> >  | common_dispatch:
->> >  |   load <func_trace_target_data_8B> based on ra
->> >  |   jalr
->> >  |   ...
->> >
->> > The auipc is never touched, and will be overhead. Also, we need a mv to
->> > store ra in a scratch register as well -- like Arm. We'll have two insn
->> > per-caller overhead for a disabled caller.
->
-> My patch series takes a similar "in-function dispatch" approach. A
-> difference is that the <func_trace_target_data_8B_per_function> is
-> embedded within each function entry. I'd like to have it moved to a
-> run-time allocated array to reduce total text size.
+Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+---
+ mm/slab.h        |  3 ---
+ mm/slab_common.c |  2 --
+ mm/slub.c        | 10 ----------
+ 3 files changed, 15 deletions(-)
 
-This is what arm64 has as well. It's a 8B + 1-2 dirt cheap movish like
-instructions (save ra, prepare jump with auipc). I think that's a
-reasonable overhead.
+diff --git a/mm/slab.h b/mm/slab.h
+index d2bc9b191222..78e205b46e19 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -496,9 +496,6 @@ struct slabinfo {
+ };
+ 
+ void get_slabinfo(struct kmem_cache *s, struct slabinfo *sinfo);
+-void slabinfo_show_stats(struct seq_file *m, struct kmem_cache *s);
+-ssize_t slabinfo_write(struct file *file, const char __user *buffer,
+-		       size_t count, loff_t *ppos);
+ 
+ #ifdef CONFIG_SLUB_DEBUG
+ #ifdef CONFIG_SLUB_DEBUG_ON
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index f5234672f03c..67c03d6bd26c 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -1078,7 +1078,6 @@ static void cache_show(struct kmem_cache *s, struct seq_file *m)
+ 		   sinfo.limit, sinfo.batchcount, sinfo.shared);
+ 	seq_printf(m, " : slabdata %6lu %6lu %6lu",
+ 		   sinfo.active_slabs, sinfo.num_slabs, sinfo.shared_avail);
+-	slabinfo_show_stats(m, s);
+ 	seq_putc(m, '\n');
+ }
+ 
+@@ -1155,7 +1154,6 @@ static const struct proc_ops slabinfo_proc_ops = {
+ 	.proc_flags	= PROC_ENTRY_PERMANENT,
+ 	.proc_open	= slabinfo_open,
+ 	.proc_read	= seq_read,
+-	.proc_write	= slabinfo_write,
+ 	.proc_lseek	= seq_lseek,
+ 	.proc_release	= seq_release,
+ };
+diff --git a/mm/slub.c b/mm/slub.c
+index 1bb2a93cf7b6..cc7e68fbdbba 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -7099,14 +7099,4 @@ void get_slabinfo(struct kmem_cache *s, struct slabinfo *sinfo)
+ 	sinfo->objects_per_slab = oo_objects(s->oo);
+ 	sinfo->cache_order = oo_order(s->oo);
+ }
+-
+-void slabinfo_show_stats(struct seq_file *m, struct kmem_cache *s)
+-{
+-}
+-
+-ssize_t slabinfo_write(struct file *file, const char __user *buffer,
+-		       size_t count, loff_t *ppos)
+-{
+-	return -EIO;
+-}
+ #endif /* CONFIG_SLUB_DEBUG */
+-- 
+2.34.1
 
-> Another difference is that my series changes the first instruction to
-> "j ACTUAL_FUNC" for the "ftrace disable" case. As long as the
-> architecture guarantees the atomicity of the first instruction, then
-> we are safe. For example, we are safe if the first instruction could
-> only be "mv tmp, ra" or "j ACTUAL_FUNC". And since the loaded address is
-> always valid, we can fix "mv + jalr" down so we don't have to
-> play with the exception handler trick. The guarantee from arch would
-> require ziccif (in RVA22) though, but I think it is the same for us
-> (unless with stop_machine). For ziccif, I would rather call that out
-> during boot than blindly assume.
-
-I'm maybe biased, but I'd prefer the A) over your version with the
-unconditional jump. A) has the overhead of two, I'd say, free
-instructions (again "Meten is Weten!" ;-)).
-
-> However, one thing I am not very sure is: do we need a destination
-> address in a "per-function" manner? It seems like most of the time the
-> destination address can only be ftrace_call, or ftrace_regs_call. If
-> the number of destination addresses is very few, then we could
-> potentially reduce the size of
-> <func_trace_target_data_8B_per_function>.
-
-Yes, we do need a per-function manner. BPF, e.g., uses
-dynamically/JIT:ed trampolines/targets.
-
-
-
-Bj=C3=B6rn
