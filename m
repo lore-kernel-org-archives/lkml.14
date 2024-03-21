@@ -1,143 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 651F658AA6;
-	Thu, 21 Mar 2024 11:24:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CAD15821C
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 11:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711020247; cv=none; b=ESgjal+5VbUUwE0D/0Ok8Zl6eeDutoH+K48uWb6TVyr81EfDzznaCdukeF8sxAgej34JB6B4pwWLzDWaqziaWQe/QOgn0XP6qLdT6QbRMATQdC2uPWPJY8XlKgKRDQFyxKmeT4oYoz8TJxeNrQ6u5EC8ojyAF0e1mqFqxFvMYYw=
+	t=1711020264; cv=none; b=GzBoNikLdF9cNnYcyPJKMFq47lpkcjAj0/vqk6jgMXSCRaOfz4+7EiZvBFEd+OPEFnnraXdLErYvwUXVvnucFbHkeHQN5EzhE8Y7jwY5CxMiIqOJdMqdDBDY2VkKaszzesXU6K0HaudUfLbyfXYaR+Du6+1fIWr+JjUcph4wowI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711020247; c=relaxed/simple;
-	bh=KygQcTYzy0e/Wu1RvdlKwFFGHESw3IH6K2dNI06TR0s=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tr5oRew1m0PM5Bwxb+pnsCXegHCLip2/w8fBclHf3FEAv1gac9SnBo3g+F+Fu4ifh0MxGU9MlSfEdmphLiifrTz6AKgv0bB58yBS+YSgk4AGUmhNeFMRZaWSA8XEhkg82gRLXV3Jd3OLGgK8iB5aKJtAUlzU3oB4yfI0crHntLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nZFp7utj; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1711020264; c=relaxed/simple;
+	bh=zv9KKqUc9fAa+niST3PvZen5PrPnTLP0uZp7en464NE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=GOmhVNeUwPMc0cEhNpjrHL6DnQxEq1D3lo+UQw7P4uuq8JAeP0PDTTfKVfiZusPw4jxQUhqEJVsHEErJz5IDgfuygXTDrJIKG7fR4p0VmDqZro9DiYjVqmZNqRulLo3BNiF571cqyJ+IhA1U/qxMYnhGatxNAp+t+7WdG65r9aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YajVz8m6; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nZFp7utj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711020246; x=1742556246;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=KygQcTYzy0e/Wu1RvdlKwFFGHESw3IH6K2dNI06TR0s=;
-  b=nZFp7utjaKmMLZdrisq5h1YZNmq68nJJfm5UHVXPphwMFXu9dv36Rf3R
-   LNJFbxgqVtZnEQQ5jnBNTLf4ACSEif9AOQsQlWyqPdwxMdN7lsoBiQrt0
-   dlwg4mR+xzGB16Oh3LYuXrbbRVwKWMQoJnsENO8DNniKdB22p6L5Vto80
-   nD7y4jeqOHDOTF/jUd/FI1s2H7FR+KiDUh4rp6ffMGYzTF0iWLl8h9U4T
-   nW/g9g/p/hB6bqeSXz4QwR6VO4vpv2G5aL/3Ol2J+BqJvkh0K/1xKPh6I
-   eB6NvlS/6Y8gP+MxXPlac5LrjyOabZ2d9VeI+PSiwVetxYcsUeO73zwUW
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="17449097"
-X-IronPort-AV: E=Sophos;i="6.07,142,1708416000"; 
-   d="scan'208";a="17449097"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 04:24:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,142,1708416000"; 
-   d="scan'208";a="18955599"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.17])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 04:24:03 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 21 Mar 2024 13:23:59 +0200 (EET)
-To: Luke Jones <luke@ljones.dev>
-cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: asus-wmi: store a min default for ppt
- options
-In-Reply-To: <1006a1d3-86f2-4770-9cf2-4f7e3e12a787@app.fastmail.com>
-Message-ID: <954e6e5c-dfeb-68b7-6e02-af26ef92c572@linux.intel.com>
-References: <20240310233722.30884-1-luke@ljones.dev> <ebe48668-dfca-775c-880e-dfa333b7e562@linux.intel.com> <1006a1d3-86f2-4770-9cf2-4f7e3e12a787@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YajVz8m6"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1e00d1e13acso5090665ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 04:24:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711020262; x=1711625062; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AoHRZqUApoexBQclJ0SEIArATxYn4nvqO1XMi4tAf/I=;
+        b=YajVz8m6scWj5E7qeB0VO9himA1qNCZSejsszeSlbdpJ7yqYEEPnRoVnYjuSTwbs9w
+         R99mjCDF1HuNE00n6c8r/9PRusDV844h8IiK2j+9eNTxm0XONnHX8RPE3SmDWBafvZhm
+         XDkqoa2h7n/tKd8E7znDGC/jozmj4CzNwSktctZfhlwWeFm/iW7KD5S5oSYAhUrHrhPB
+         0U5iTrFxNo7gmp9i1jXOwArOfwJ0YVVQLYsiFJJKv+bOgq4NOSyrOmbwbC0RbBHNaNdm
+         2TRlGOSYzUGBPIBx/VV2lFNN3uiMvUCQJ2kajH6w0rPIIQx9yTZmQl+iclNgBYe0yp7Y
+         nJtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711020262; x=1711625062;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AoHRZqUApoexBQclJ0SEIArATxYn4nvqO1XMi4tAf/I=;
+        b=DdDxIZ27Q4EvbquOx788DOe8u9Fq1Gk3HjJ2VrCmjpbOljCLy5iXmojcMB8sAXwqD3
+         4SJ1shYprxMcNG8CEruhfrqlVM8NJG9QGwKEh1PpRFV+/7JtFjPPfAcS3wu/N7sOHqFc
+         iDFXJrrxPUqjvbyV+26NrzvjVKKTpjyXbJCzUPMpC5jjyEe8ZTlN7ja3oOzgv86rLs24
+         QRyTA+UK19EQuB/O9NFn0KEtgXbOaUsBcjlZhrVYPRf8hB6UTW8J4ncWAdcP5h03WfEE
+         4gYUHHap14rBINjukwZ7+yAgPyt4DR0RCYAtcbh6yMo6+j4hX+gA7I68Qd0hBbk0dJrU
+         z0sg==
+X-Forwarded-Encrypted: i=1; AJvYcCUMRzpqVQcXgHhXJqJiAOAaZxLs6wsBjiWyQHukYQMW6k6Hk2EY4K1/K/wxfZUewwjkFXbw8EWjUyC8gyaX4z5TBdujHLJPd7KVt+P+
+X-Gm-Message-State: AOJu0YyXrhoZtIH1DLNhD4R+W8ev/6g3iALac7GiuOogbCJ9zhJEH1ur
+	zGfgP0bNoB3ConkTJrwTWaAqqys8l+9cG2CP5ZfsW7NGKJpeH0Hs/i2LX/yKSD+0RSsY36lOFow
+	=
+X-Google-Smtp-Source: AGHT+IFJsLv0LKyhdDZ4hWi1GEWRRF4DiaqFe0j7aUXHYQSeixrjn3jVZLnWa1Vb9aLvT3uBlbwP/Q==
+X-Received: by 2002:a05:6a21:3a84:b0:1a3:5d70:1828 with SMTP id zv4-20020a056a213a8400b001a35d701828mr4489419pzb.48.1711019795777;
+        Thu, 21 Mar 2024 04:16:35 -0700 (PDT)
+Received: from [127.0.1.1] ([2409:40f4:102b:a64b:d832:a82a:837c:6d3])
+        by smtp.gmail.com with ESMTPSA id ka6-20020a056a00938600b006e7324d32bbsm5531120pfb.122.2024.03.21.04.16.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Mar 2024 04:16:35 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 00/21] Add PCIe bridge node in DT for Qcom SoCs
+Date: Thu, 21 Mar 2024 16:46:20 +0530
+Message-Id: <20240321-pcie-qcom-bridge-dts-v2-0-1eb790c53e43@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-648248580-1711020239=:1077"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAUX/GUC/4WNTQ6CMBCFr0Jm7Zh2rERdeQ/Dgv4AkyiFKSEa0
+ rtbuYDL7728722QgnBIcKs2kLBy4jgWoEMFbmjHPiD7wkCKjCLSODkOOLv4QivsS++XhPZycsp
+ rWxuyUKaThI7fu/bRFB44LVE++8uqf+kf4apRYe1q36nuas7K3588thKPUXpocs5fLDKHybkAA
+ AA=
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
+ Rob Herring <robh@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3620;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=zv9KKqUc9fAa+niST3PvZen5PrPnTLP0uZp7en464NE=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBl/BcI0ubzqSFwVpxkGZjd+njegKvBWv5lTO3O4
+ FkM6u/CmWaJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZfwXCAAKCRBVnxHm/pHO
+ 9aYkCACWDEgfPJUitECHdt0chIpNj4kwVLqbDXVmOr8c8MxzTZESFZKLUCfNyPhr3jqiWN23u1V
+ sC+vVz0hVomQUcsf1ZsuTk7422nRScDN+DTf0GxIcmP3Z3ZDd1b47Ybe7KyxempGzW/GmHWLp1+
+ qZGi3nODxg/B4/Fk/+JplaqckHupMvIFuyAb4SgYf+AYBhuGCEJwhQBUhEhEEoAASIU1/0/4fRr
+ cbHqnOCu3bLxtQrknVHa8Y6nEWFwNSVE9EvXlPJ+guuQp6mGECJdRqYNTvE5js81RzxVP88ciLD
+ aViBc1H73jdbgEBnEB377dkzsv5PXV9cHKjsjNIj6an4kIT3
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Qcom SoCs, the PCIe host bridge is connected to a single PCIe bridge
+for each controller instance. Hence, this series adds a DT node for the
+PCIe bridges across all SoCs.
 
---8323328-648248580-1711020239=:1077
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+There is no functionality change with this series, but the PCIe bridge
+representation in DT will be necessary to add the DT node for the client
+devices like the one proposed in power sequencing series [1].
 
-On Thu, 21 Mar 2024, Luke Jones wrote:
+- Mani
 
->=20
->=20
-> On Thu, 21 Mar 2024, at 2:13 AM, Ilpo J=C3=A4rvinen wrote:
-> > On Mon, 11 Mar 2024, Luke D. Jones wrote:
-> >=20
-> > > Laptops with any of the ppt or nv tunables default to the minimum set=
-ting
-> > > on boot so we can safely assume a stored value is correct.
-> > >=20
-> > > This patch adds storing of those values in the local struct, and enab=
-les
-> > > reading of those values back.
-> > >=20
-> > > Secondary to the above it renames some internal variables to be more
-> > > consistent (which makes code grepping show all related parts)
-> > >=20
-> > > Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> > > ---
-> > >  drivers/platform/x86/asus-wmi.c | 141 +++++++++++++++++++++++++-----=
---
-> > >  1 file changed, 111 insertions(+), 30 deletions(-)
-> > >=20
-> > > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/a=
-sus-wmi.c
-> > > index e4341abb71e0..482e23b55e1e 100644
-> > > --- a/drivers/platform/x86/asus-wmi.c
-> > > +++ b/drivers/platform/x86/asus-wmi.c
-> > > @@ -272,12 +272,19 @@ struct asus_wmi {
-> > > =20
-> > >  /* Tunables provided by ASUS for gaming laptops */
-> > >  bool ppt_pl2_sppt_available;
-> > > + u32 ppt_pl2_sppt;
-> > >  bool ppt_pl1_spl_available;
-> > > + u32 ppt_pl1_spl;
-> > >  bool ppt_apu_sppt_available;
-> > > - bool ppt_plat_sppt_available;
-> > > + u32 ppt_apu_sppt;
-> > > + bool ppt_platform_sppt_available;
-> > > + u32 ppt_platform_sppt;
-> > >  bool ppt_fppt_available;
-> > > - bool nv_dyn_boost_available;
-> > > - bool nv_temp_tgt_available;
-> > > + u32 ppt_fppt;
-> > > + bool nv_dynamic_boost_available;
-> > > + u32 nv_dynamic_boost;
-> > > + bool nv_temp_target_available;
-> > > + u32 nv_temp_target;
-> > > =20
-> > >  bool kbd_rgb_mode_available;
-> > >  u32 kbd_rgb_dev;
-> >=20
-> > Can you check with pahole if this structure is now full of 31-bit holes=
-?
-> >=20
-> > The benefit of keeping bool & u32 doesn't seem that big to begin with=
-=20
-> > (in visual sense because of the 1 char variation in column).
->=20
-> I don't really understand what you mean here. I do most of this stuff=20
-> when I have time, so because my time is limited I usually don't have=20
-> opportunity to learn much more than the minimum.
+[1] https://lore.kernel.org/linux-arm-msm/20240216203215.40870-8-brgl@bgdev.pl/
 
-pahole is a tool with which you can look into struct layout. Compile the=20
-driver with debug info on, and run pahole on the object file, then check=20
-the layout of the members of that struct (mainly holes in this case).
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+Changes in v2:
+- Added label for bridges in sc8280xp
+- Collected reviews
+- Link to v1: https://lore.kernel.org/r/20240221-pcie-qcom-bridge-dts-v1-0-6c6df0f9450d@linaro.org
 
-So enable the debug info in .config if not yet enabled and then run:
+---
+Manivannan Sadhasivam (21):
+      arm64: dts: qcom: sm8250: Add PCIe bridge node
+      arm64: dts: qcom: sdm845: Add PCIe bridge node
+      arm64: dts: qcom: sm8150: Add PCIe bridge node
+      arm64: dts: qcom: sm8350: Add PCIe bridge node
+      arm64: dts: qcom: sm8450: Add PCIe bridge node
+      arm64: dts: qcom: sm8550: Add PCIe bridge node
+      arm64: dts: qcom: sm8650: Add PCIe bridge node
+      arm64: dts: qcom: sa8775p: Add PCIe bridge node
+      arm64: dts: qcom: sc8280xp: Add PCIe bridge node
+      arm64: dts: qcom: msm8998: Add PCIe bridge node
+      arm64: dts: qcom: sc7280: Add PCIe bridge node
+      arm64: dts: qcom: qcs404: Add PCIe bridge node
+      arm64: dts: qcom: sc8180x: Add PCIe bridge node
+      arm64: dts: qcom: msm8996: Add PCIe bridge node
+      arm64: dts: qcom: ipq8074: Add PCIe bridge node
+      arm64: dts: qcom: ipq6018: Add PCIe bridge node
+      ARM: dts: qcom: ipq8064: Add PCIe bridge node
+      ARM: dts: qcom: ipq4019: Add PCIe bridge node
+      ARM: dts: qcom: apq8064: Add PCIe bridge node
+      ARM: dts: qcom: sdx55: Add PCIe bridge node
+      arm64: dts: qcom: sm8650: Use "pcie" as the node name instead of "pci"
 
-$ make drivers/platform/x86/asus-wmi.o
-$ pahole -C asus_wmi drivers/platform/x86/asus-wmi.o
+ arch/arm/boot/dts/qcom/qcom-apq8064.dtsi           | 10 +++++
+ arch/arm/boot/dts/qcom/qcom-ipq4019.dtsi           | 10 +++++
+ arch/arm/boot/dts/qcom/qcom-ipq8064.dtsi           | 30 +++++++++++++
+ arch/arm/boot/dts/qcom/qcom-sdx55.dtsi             | 10 +++++
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi              | 10 +++++
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 20 +++++++++
+ arch/arm64/boot/dts/qcom/msm8996.dtsi              | 30 +++++++++++++
+ arch/arm64/boot/dts/qcom/msm8998.dtsi              | 10 +++++
+ arch/arm64/boot/dts/qcom/qcs404.dtsi               | 10 +++++
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi              | 20 +++++++++
+ arch/arm64/boot/dts/qcom/sc7280.dtsi               | 10 +++++
+ arch/arm64/boot/dts/qcom/sc8180x.dtsi              | 40 +++++++++++++++++
+ .../dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts     | 20 +++------
+ arch/arm64/boot/dts/qcom/sc8280xp.dtsi             | 50 ++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               | 20 +++++++++
+ arch/arm64/boot/dts/qcom/sm8150.dtsi               | 20 +++++++++
+ arch/arm64/boot/dts/qcom/sm8250.dtsi               | 30 +++++++++++++
+ arch/arm64/boot/dts/qcom/sm8350.dtsi               | 20 +++++++++
+ arch/arm64/boot/dts/qcom/sm8450.dtsi               | 20 +++++++++
+ arch/arm64/boot/dts/qcom/sm8550.dtsi               | 20 +++++++++
+ arch/arm64/boot/dts/qcom/sm8650.dtsi               | 24 ++++++++++-
+ 21 files changed, 418 insertions(+), 16 deletions(-)
+---
+base-commit: 10569bb9fb9732cec670faa38cf1460cabeffa09
+change-id: 20240221-pcie-qcom-bridge-dts-b83c0d1b642b
 
---=20
- i.
+Best regards,
+-- 
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
---8323328-648248580-1711020239=:1077--
