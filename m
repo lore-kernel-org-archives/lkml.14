@@ -1,171 +1,151 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C08C85938
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 18:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AD31332B6;
+	Thu, 21 Mar 2024 18:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711044612; cv=none; b=jbQ6yyyOJgYs6zI+1jJuiW7o6M7TSWTxYEldAFt8MTzMTYI52PvnG+A/0hxy7/9X3JD+1DIz9pHMcZuFpM+9JoQ6iMZZPv3vKjLcFiC8D29yarZhvCJ+QEfBmH9TOosu9LsIzr9vy+8T3k0V6aa6cQpRxTtjPJ+1LudEsmLTWEM=
+	t=1711044631; cv=none; b=oDfDYmWPP4dc6/H2EZ02pz1DMutbOcs1G8llYim36rBBUMKUlNdJJglHlOnui25PALEglk+D+50ABsa4ZKJtCUqt/7iR5xlzhBPXB3A+cTQB6zMFJot+Vjd04HT2t66squ82dvCSgcXLEDCLE4XbrHmivkaUh5zTQt6Di/nuvXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711044612; c=relaxed/simple;
-	bh=J5T69WFQ9USHQjLVUN1osaWhJDJNI4GDdeUlvKQfx7M=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=feQ1pQPntagyQc5ECKgeZzpdnlzZFnB+Oh79K+euTfhcP/Rox06L7zcltrSuGR3PXrXdoxrh4sMHHS3y9mg929r2HHxkrOjV8qjvPnbdfRx2imOVskc11TvDJS3DmRvJseA0B5t7cCGUHYDtnQ0s1RKrSEW0ULnAR0jtjE4bXcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xGVPHQbV; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com
+	s=arc-20240116; t=1711044631; c=relaxed/simple;
+	bh=C/Xs/YhoEIKUB5a72gt+BlmWEN/hpBUi8RqVqzQGdU8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=W1vfNfJbxg3VHP/Akv2zsIzVCZbeU7NcTGH51/QJIlLxwyNkpivPf4DIKLUB52iUhw3gIqskCoaxbDAizU+7uMtUs5Kz+hMMvYP8A5utUf6QAZR3ZJpmTp/nQL6cHLVS4NLBAyjzFJ49idgJ5LzguAm9lXD6AW7hTqtGsLzTcH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l5or/Xz8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xGVPHQbV"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-6ea8084133aso37306b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 11:10:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711044611; x=1711649411; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=PbnhbS3nC1f/Uw+2QJySA42Qs2PFTt6bDMzEjk8k/Mc=;
-        b=xGVPHQbVVuZwyQMxHksHdcprJy3/Npu36CDbaK4ztx4gIy0oCxQKI7yeEXolCTn9sd
-         5c9/lkHiBYL77zMqpffFuy747oKDvTBQE3NTHFwvg0CTz4ZoG0j9/C3bU3DPVbOJhEM8
-         +4zY2sQJYI+Ma2+eqUcWfOWB9TAtVxwHs2/tXRcJtOcD6W3MEpvS0pMAoRe0962DZ6fT
-         i0QyiMXZqYZvBldXn2CFaXmKikV7iXzLM07xBE4yrVBOdEL7v+5/3rTF5ZHRxeOLuI6h
-         ZN8Apj32cpwQU4mVSjM8UUue0r4g2E0f1x2Kj6UwCY5M24YuQiPc3S5IKO2i+28z91b3
-         Cd4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711044611; x=1711649411;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PbnhbS3nC1f/Uw+2QJySA42Qs2PFTt6bDMzEjk8k/Mc=;
-        b=QydVMivCQajRB7QUVbBioNNMghBHZYZvTP7RBV0+5oCJwISDNQN5sslB4e71rOjDqJ
-         SRizo4dM0LdfOF/GfDF36/69L6LmG99gjNMdGdrQScBf9WjzSSIKG/BNSHxi3Rds1vig
-         Ws8z1rVeW1uI2crAkVvE1pzeUVmt1pxdQxuRRC3BSiTO4AUM74GgNkXa5gXDTu079edE
-         gYQE9xSL5tjl0D1huUIHiutK82+Fo7BEkw6XoLy7rNQlzPBSUDpKTAq68fOY2zlhX2CC
-         Lkzw6X8mQFfvGt7s/0HaRnLc84nnaRkf+58zhIVNMukFOhScXxuGPC2e/yqFqLY41Ekm
-         G6+Q==
-X-Gm-Message-State: AOJu0YyjPOo7UHQeniScGg/GopID2pIu0vRH8kGfJZCYbuQ9sXLzTSsQ
-	fL1HV9ReUtISGm2+HZkImy8UEmt47jzvjsnmbdHqkkm2Gy7skeUUedl8BshEoEAZp2DvDQVTCd+
-	GyYZ6ABMtY7+UMMLiDMHCPsXqT7YjgJvoUIzrwg7shVLsHtqRBMj38PFqBLEh1t/NaiH1AD/rwv
-	uN06NnC3vzChCHbwcv3oFo5+vbI7KJqWZYVFLUH0pb
-X-Google-Smtp-Source: AGHT+IFYni3VvlWRaTmYz+82jv0WpYU31SYMq2cohi3G9fHRYPBqE7DFoZnmZbyg80iXWTMzj1CSpz2vwMs=
-X-Received: from edliaw.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:305d])
- (user=edliaw job=sendgmr) by 2002:a05:6a00:938b:b0:6e7:3fcb:38ba with SMTP id
- ka11-20020a056a00938b00b006e73fcb38bamr10155pfb.6.1711044610507; Thu, 21 Mar
- 2024 11:10:10 -0700 (PDT)
-Date: Thu, 21 Mar 2024 18:09:28 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l5or/Xz8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D638C433F1;
+	Thu, 21 Mar 2024 18:10:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711044631;
+	bh=C/Xs/YhoEIKUB5a72gt+BlmWEN/hpBUi8RqVqzQGdU8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=l5or/Xz8OLwlWXFIJwiS/LM+xBUv08OZl7NI8BcUn11G6kr2g19+W6IZDamAVCltX
+	 FB+b4repBxbi+qcbU+0/JDZaRRK9T+mbMEXgADHgiMsug52fR0QVHEO4BOc164YyIG
+	 aHTN83CBjUQfikXkDeL2GbukbHhbV0za8vyFT/fgMX9Jt28RPxkfDfeqm6UwIc8un/
+	 PP336dtMGRpO9sSaGq5gEvCKBr64/AmUM6FcQu+1bF/pzY3/LJU0ZUXRJGKuQooSbh
+	 r6AflhHkBoyfYMdGjoj4NVcVsgA/hlpucNs/JZ6Bfo8pY7msEj4VucSue+UbfMTnoU
+	 HD46/kGFj+nEg==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Andy Chiu <andy.chiu@sifive.com>
+Cc: Puranjay Mohan <puranjay12@gmail.com>, Mark Rutland
+ <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Sami Tolvanen <samitolvanen@google.com>, Guo Ren <guoren@kernel.org>, Ley
+ Foon Tan <leyfoon.tan@starfivetech.com>, Deepak Gupta
+ <debug@rivosinc.com>, Sia Jee Heng <jeeheng.sia@starfivetech.com>, Bjorn
+ Topel <bjorn@rivosinc.com>, Song Shuai <suagrfillet@gmail.com>, Cl'ement
+ L'eger <cleger@rivosinc.com>, Al Viro <viro@zeniv.linux.org.uk>, Jisheng
+ Zhang <jszhang@kernel.org>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Robbin
+ Ehn <rehn@rivosinc.com>, Brendan Sweeney <brs@rivosinc.com>
+Subject: Re: [RFC PATCH] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
+In-Reply-To: <CABgGipUayONdvaH0nexBJUai=qT3yqURhinTbDWxORfMDQ_5pw@mail.gmail.com>
+References: <20240306165904.108141-1-puranjay12@gmail.com>
+ <87ttlhdeqb.fsf@all.your.base.are.belong.to.us>
+ <ZfBbxPDd0rz6FN2T@FVFF77S0Q05N>
+ <8734suqsth.fsf@all.your.base.are.belong.to.us>
+ <mb61pplvw6grf.fsf@gmail.com>
+ <87zfv0onre.fsf@all.your.base.are.belong.to.us>
+ <87il1oedx8.fsf@all.your.base.are.belong.to.us>
+ <CABgGipWPuvwi43v1+60-=0_MN_q_CD0ZGasxHHVWJ37cig5MmA@mail.gmail.com>
+ <87msqsotr8.fsf@all.your.base.are.belong.to.us>
+ <CABgGipUayONdvaH0nexBJUai=qT3yqURhinTbDWxORfMDQ_5pw@mail.gmail.com>
+Date: Thu, 21 Mar 2024 19:10:27 +0100
+Message-ID: <877chve9rg.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
-Message-ID: <20240321180933.1029746-1-edliaw@google.com>
-Subject: [PATCH v1] uffd-unit-tests: Fix ARM related issue with fork after pthread_create
-From: Edward Liaw <edliaw@google.com>
-To: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Shuah Khan <shuah@kernel.org>
-Cc: linux-kselftest@vger.kernel.org, kernel-team@android.com, 
-	Edward Liaw <edliaw@google.com>, Lokesh Gidra <lokeshgidra@google.com>, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Following issue was observed while running the uffd-unit-tests selftest
-on ARM devices. On x86_64 no issues were detected:
+Andy Chiu <andy.chiu@sifive.com> writes:
 
-pthread_create followed by fork caused deadlock in certain cases
-wherein fork required some work to be completed by the created thread.
-Used synchronization to ensure that created thread's start function has
-started before invoking fork.
+> On Thu, Mar 21, 2024 at 4:48=E2=80=AFPM Bj=C3=B6rn T=C3=B6pel <bjorn@kern=
+el.org> wrote:
+>>
+>> Andy,
+>>
+>> Pulling out the A option:
+>>
+>> >> > A) Use auipc/jalr, only patch jalr to take us to a common
+>> >> >    dispatcher/trampoline
+>> >> >
+>> >> >  | <func_trace_target_data_8B> # probably on a data cache-line !=3D=
+ func .text to avoid ping-pong
+>> >> >  | ...
+>> >> >  | func:
+>> >> >  |   ...make sure ra isn't messed up...
+>> >> >  |   aupic
+>> >> >  |   nop <=3D> jalr # Text patch point -> common_dispatch
+>> >> >  |   ACTUAL_FUNC
+>> >> >  |
+>> >> >  | common_dispatch:
+>> >> >  |   load <func_trace_target_data_8B> based on ra
+>> >> >  |   jalr
+>> >> >  |   ...
+>> >> >
+>> >> > The auipc is never touched, and will be overhead. Also, we need a m=
+v to
+>> >> > store ra in a scratch register as well -- like Arm. We'll have two =
+insn
+>> >> > per-caller overhead for a disabled caller.
+>> >
+>> > My patch series takes a similar "in-function dispatch" approach. A
+>> > difference is that the <func_trace_target_data_8B_per_function> is
+>> > embedded within each function entry. I'd like to have it moved to a
+>> > run-time allocated array to reduce total text size.
+>>
+>> This is what arm64 has as well. It's a 8B + 1-2 dirt cheap movish like
+>> instructions (save ra, prepare jump with auipc). I think that's a
+>> reasonable overhead.
+>>
+>> > Another difference is that my series changes the first instruction to
+>> > "j ACTUAL_FUNC" for the "ftrace disable" case. As long as the
+>> > architecture guarantees the atomicity of the first instruction, then
+>> > we are safe. For example, we are safe if the first instruction could
+>> > only be "mv tmp, ra" or "j ACTUAL_FUNC". And since the loaded address =
+is
+>> > always valid, we can fix "mv + jalr" down so we don't have to
+>> > play with the exception handler trick. The guarantee from arch would
+>> > require ziccif (in RVA22) though, but I think it is the same for us
+>> > (unless with stop_machine). For ziccif, I would rather call that out
+>> > during boot than blindly assume.
+>>
+>> I'm maybe biased, but I'd prefer the A) over your version with the
+>> unconditional jump. A) has the overhead of two, I'd say, free
+>> instructions (again "Meten is Weten!" ;-)).
+>
+> Yes, I'd also prefer A for less overall patch size. We can also
+> optimize the overhead with a direct jump if that makes sense. Though,
+> we need to sort out a way to map functions to corresponding
+> trampolines. A direct way I could image is CALL_OPS'ish patching
+> style, if the ftrace destination has to be patched in a per-function
+> manner. For example:
+>
+> <index-in-dispatch-list>
+> func_symbol:
+> auipc t0, common_dispatch:high <=3D> j actual_func:
+> jalr t0, common_dispatch:low(t0)
+>
+> common_dispatch:
+> load t1, index + dispatch-list
+> ld t1, 0(t1)
+> jr t1
 
-Signed-off-by: Lokesh Gidra <lokeshgidra@google.com>
-[edliaw: Refactored to use atomic_bool]
-Signed-off-by: Edward Liaw <edliaw@google.com>
----
- tools/testing/selftests/mm/uffd-common.c     |  4 +++-
- tools/testing/selftests/mm/uffd-common.h     |  2 ++
- tools/testing/selftests/mm/uffd-unit-tests.c | 10 ++++++++++
- 3 files changed, 15 insertions(+), 1 deletion(-)
+Yup, exactly like that (but I'd put the acutal target ptr in there,
+instead of an additional indirection. Exactly what Mark does for arm64).
 
-diff --git a/tools/testing/selftests/mm/uffd-common.c b/tools/testing/selftests/mm/uffd-common.c
-index b0ac0ec2356d..14ed98c3a389 100644
---- a/tools/testing/selftests/mm/uffd-common.c
-+++ b/tools/testing/selftests/mm/uffd-common.c
-@@ -17,7 +17,7 @@ bool map_shared;
- bool test_uffdio_wp = true;
- unsigned long long *count_verify;
- uffd_test_ops_t *uffd_test_ops;
--uffd_test_case_ops_t *uffd_test_case_ops;
-+atomic_bool ready_for_fork;
- 
- static int uffd_mem_fd_create(off_t mem_size, bool hugetlb)
- {
-@@ -518,6 +518,8 @@ void *uffd_poll_thread(void *arg)
- 	pollfd[1].fd = pipefd[cpu*2];
- 	pollfd[1].events = POLLIN;
- 
-+	ready_for_fork = true;
-+
- 	for (;;) {
- 		ret = poll(pollfd, 2, -1);
- 		if (ret <= 0) {
-diff --git a/tools/testing/selftests/mm/uffd-common.h b/tools/testing/selftests/mm/uffd-common.h
-index cb055282c89c..cc5629c3d2aa 100644
---- a/tools/testing/selftests/mm/uffd-common.h
-+++ b/tools/testing/selftests/mm/uffd-common.h
-@@ -32,6 +32,7 @@
- #include <inttypes.h>
- #include <stdint.h>
- #include <sys/random.h>
-+#include <stdatomic.h>
- 
- #include "../kselftest.h"
- #include "vm_util.h"
-@@ -103,6 +104,7 @@ extern bool map_shared;
- extern bool test_uffdio_wp;
- extern unsigned long long *count_verify;
- extern volatile bool test_uffdio_copy_eexist;
-+extern atomic_bool ready_for_fork;
- 
- extern uffd_test_ops_t anon_uffd_test_ops;
- extern uffd_test_ops_t shmem_uffd_test_ops;
-diff --git a/tools/testing/selftests/mm/uffd-unit-tests.c b/tools/testing/selftests/mm/uffd-unit-tests.c
-index 2b9f8cc52639..4a48dc617c6b 100644
---- a/tools/testing/selftests/mm/uffd-unit-tests.c
-+++ b/tools/testing/selftests/mm/uffd-unit-tests.c
-@@ -775,6 +775,8 @@ static void uffd_sigbus_test_common(bool wp)
- 	char c;
- 	struct uffd_args args = { 0 };
- 
-+	ready_for_fork = false;
-+
- 	fcntl(uffd, F_SETFL, uffd_flags | O_NONBLOCK);
- 
- 	if (uffd_register(uffd, area_dst, nr_pages * page_size,
-@@ -790,6 +792,9 @@ static void uffd_sigbus_test_common(bool wp)
- 	if (pthread_create(&uffd_mon, NULL, uffd_poll_thread, &args))
- 		err("uffd_poll_thread create");
- 
-+	while (!ready_for_fork)
-+		; /* Wait for the poll_thread to start executing before forking */
-+
- 	pid = fork();
- 	if (pid < 0)
- 		err("fork");
-@@ -829,6 +834,8 @@ static void uffd_events_test_common(bool wp)
- 	char c;
- 	struct uffd_args args = { 0 };
- 
-+	ready_for_fork = false;
-+
- 	fcntl(uffd, F_SETFL, uffd_flags | O_NONBLOCK);
- 	if (uffd_register(uffd, area_dst, nr_pages * page_size,
- 			  true, wp, false))
-@@ -838,6 +845,9 @@ static void uffd_events_test_common(bool wp)
- 	if (pthread_create(&uffd_mon, NULL, uffd_poll_thread, &args))
- 		err("uffd_poll_thread create");
- 
-+	while (!ready_for_fork)
-+		; /* Wait for the poll_thread to start executing before forking */
-+
- 	pid = fork();
- 	if (pid < 0)
- 		err("fork");
--- 
-2.44.0.396.g6e790dbe36-goog
+When we enter the common_dispatch, the ptr <index-in-dispatch-list>
+would be -12(t0).
 
+As for patching auipc or jalr, I guess we need to measure what's best.
+My knee-jerk would be always auipc is better than jump -- but let's
+measure. ;-)
+
+
+Bj=C3=B6rn
