@@ -1,83 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C74457311;
-	Thu, 21 Mar 2024 11:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CC5954FB7;
+	Thu, 21 Mar 2024 11:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711018827; cv=none; b=QpAActWO2fXOsN9VdkokJSeEjAuzMGn2GdzbE7CVRRgZdiE/0QPpPgY0EliDopADnLCmdVNu7D2qUh/HVStyDhBLPok/I4lMpmYcJE4kuUn1yGj41+OzW5uC8/UhBIo7no2ido4tGV945xPHHWCUMGqjMrwlNbjRBDR2SrLgQpA=
+	t=1711019007; cv=none; b=VJd7lO5zrdepwD+BimCyquN4NsGfZwM7Kp/KffiGAPbDHYvaO2UVUFYqWKLQcdnDh8QwvIC6Rkk+lAFL/3tyi49a8NCT4JbXoJ/lU1+qF0vCSE79kbx8eHnsoUSC8E1CiWFwJepTg7oxtRmyV8DRSCKZZQatP74ttUn1eq7fO1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711018827; c=relaxed/simple;
-	bh=JZ/uFKf0RYrnnxw9jJlX5wLrQamwRfdSTn6ZmoyBLug=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=oiKE2ea628i8Yf6Yre7GJFrEw3OSSfiR52/j9t2ypOf+K4FZ9cbBV31EdX3D6VBoIn4HN4TBbSSuPW9L+ABcMOHR65eT1seSovQ4mxNr8K44jquRpjw3rMnvvnTjJha0TrxFkbLFpEHF+T7CDzhwwdJZaoNZyOqSXfEHgblcRNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ut7WX7Cx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711019007; c=relaxed/simple;
+	bh=9wK2K43cRuiqRx7FuDm4G45EzjSKz7jVZM0dDOD9C9M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xs9mmmxBeJTm1HRbjvRcK+MDlT/FZTpmhiRHKbKUcZ9IpkcWeX/y2S5FNjef0h7MXpJFUzbknyQWY9EdBrEDY4W7JkR7XQsquj4VTz8N0nHAcYH0mrvKBi3yogAteto/Nfl/rTU5ZRRPS6+YXRW+rX+sHLVGqR7yKJoIpCGPkFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PX3tBLGT; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ut7WX7Cx"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D58ACC433F1;
-	Thu, 21 Mar 2024 11:00:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711018826;
-	bh=JZ/uFKf0RYrnnxw9jJlX5wLrQamwRfdSTn6ZmoyBLug=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Ut7WX7CxUr7mAOvAi8yA1jqWL8pgL9mqvy6e6+Pd4AGyf9nqdcGO+9FYFn6BDEzFX
-	 mJ/y8qj7sYpI7R6pYKFE34hE7CaVyufzNGty5bJK4Y44w3qPfwEDM3+NXKaAXMjsou
-	 JQ6fUN3130aq6ZiiYQHenZOOeERvYhalEoWHlVAzLiV8DqzQyguOKN4iHcBHp/skVs
-	 TQj/tD8EXUiYjLYcyYMuP07upJkT/PbauP1OoVzH0dCCie0tBvLbz+JIvFzSGXwVHN
-	 p3ACx7X2nDmcdlDYwg9oWDNoJ2TD9W/Y4wtT77L6E1bMiXHyZPJPu7WaHLqUc6IiWT
-	 v5FBEGf93o4KA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C3726D84BA6;
-	Thu, 21 Mar 2024 11:00:26 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PX3tBLGT"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d21cdbc85bso13599391fa.2;
+        Thu, 21 Mar 2024 04:03:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711019004; x=1711623804; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZT0UhNpGDPoNyLRvJypE7r2h5AAoACQ2X91BMbmvyVM=;
+        b=PX3tBLGTTRpfQcxWnnLWbOw10v9aHKFjVGRcjeds9JEkFZG7/o2gHwczoQueYdxI5m
+         3h9EXhwJNZFW3D4TfvuXYqkLoYxf0DWGiOqZZn3lpO+ebikBdL1VsV3Ka2rSiq1ksozQ
+         M5lPOMWp4Cq1ozgixLMR1xnIrFU1zl0q5QfPjJX0TD5tcQlaK1tFMqtdSWxWj8+ObZuJ
+         jyIf9iC4viITucFbpSzo4wASuW2+eM2xUbN0an74XrSjwC9cLLNnJkGiuLW1UBOtoE1N
+         wY3i6bGLj3XmNCmvdsndY/nan10KEXF3/bJbchxkkuPcJO51tICQqAPPu/NHo3MLNDCE
+         x+lA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711019004; x=1711623804;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZT0UhNpGDPoNyLRvJypE7r2h5AAoACQ2X91BMbmvyVM=;
+        b=AMA7G+k4tvBNeT24ls2ftR6T0+ykJlbhUTVaP664bDAZmb6BspOOMIkKPNWQ0sTFFu
+         SX0LpO/hwdH4xJxLhZkK1lI2UxdUkxE66mjXgWkiil6hkbcDsAdzE+RBlhyL9YqPUq82
+         ZRe3SqmZDzQm3QvMC6tg/0kZsGmq1QExNZGh3ZSk66hKV9rcfs9K4JJpU7JUpdy5pWzp
+         4BaWphh8oMZ/xgFPZGdScST4c+6Va1sSCSlLFNDY6P/lQgVHU5XOM8a030ZPP4PfIWvX
+         UvQIt9Nq3HSzqYffBCCAx0trM/PLWdVgHTkykc4ndZpTfGv2aLijgROzTqFjKvy7lh2h
+         672A==
+X-Forwarded-Encrypted: i=1; AJvYcCU1XjWBT8kZpulnXl804e6YDMT0WExWojuIYjaZmaeb5HiXIRW7ixJJeof19+Cigsc0n6Z0L4flgtUWv+Pd6OZikKqpZZgys1sLx8D2haK7Gh8mKqpnLApE2kuH4oeHtbIOOb5qL99qzCFqx/lsDeBa5j73foj5e/8cd+Lw8/UWVct8FBuH
+X-Gm-Message-State: AOJu0YwTNAPrOB/7B/0n6t0R2KXyGfDa+WrN7LAnuqQHUaK6K5TiZLwn
+	x+HK1FH9GTAu4Y2QuXo8XtwyAA/0IIcsZy2x6ku7RlIkWSEomNLC
+X-Google-Smtp-Source: AGHT+IFBAAv1s69tHA7UUCCGycmG2dMXcvO3vaRNPikbG0TYdCU7n7qeQNQs6HEN36YcV+g/bPFlCw==
+X-Received: by 2002:a2e:a274:0:b0:2d3:1bd0:6bcf with SMTP id k20-20020a2ea274000000b002d31bd06bcfmr2790438ljm.8.1711019003547;
+        Thu, 21 Mar 2024 04:03:23 -0700 (PDT)
+Received: from localhost.localdomain ([178.70.43.28])
+        by smtp.gmail.com with ESMTPSA id z7-20020a2e8e87000000b002d434d11402sm2390630ljk.15.2024.03.21.04.03.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Mar 2024 04:03:23 -0700 (PDT)
+Date: Thu, 21 Mar 2024 14:03:21 +0300
+From: Ivan Bornyakov <brnkv.i1@gmail.com>
+To: Nas Chung <nas.chung@chipsnmedia.com>
+Cc: Brandon Brnich <b-brnich@ti.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jackson.lee" <jackson.lee@chipsnmedia.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: Re: RE: [PATCH 5/6] media: chips-media: wave5: refine SRAM usage
+Message-ID: <i6m7svnr6zutg57leeamepj67ajgddwe2phs6rluyozeg3m37p@jfkrlqss26rz>
+References: <20240318144225.30835-1-brnkv.i1@gmail.com>
+ <20240318144225.30835-6-brnkv.i1@gmail.com>
+ <SL2P216MB1246F7FA7E95896AA2409C90FB2C2@SL2P216MB1246.KORP216.PROD.OUTLOOK.COM>
+ <hpqhbksvyfbqjumopk2k2drxri2ycb6j2dbdo74cfymcd7blgx@kzomazfosfwg>
+ <20240319210106.awn33cm7ex33g65b@udba0500997>
+ <SL2P216MB12468C7256CE2468EE088E7CFB322@SL2P216MB1246.KORP216.PROD.OUTLOOK.COM>
+ <tg32tsfnj3pmboaaeslvrmf7wtvznagio3vtqot42iflz5lvh7@25s5ykv3dfuz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v2] arm64: bpf: fix 32bit unconditional bswap
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171101882679.21551.11136604027550877391.git-patchwork-notify@kernel.org>
-Date: Thu, 21 Mar 2024 11:00:26 +0000
-References: <20240321081809.158803-1-asavkov@redhat.com>
-In-Reply-To: <20240321081809.158803-1-asavkov@redhat.com>
-To: Artem Savkov <asavkov@redhat.com>
-Cc: xukuohai@huawei.com, xi.wang@gmail.com, ast@kernel.org,
- daniel@iogearbox.net, andrii@kernel.org, bpf@vger.kernel.org,
- netdev@vger.kernel.org, catalin.marinas@arm.com,
- linux-kernel@vger.kernel.org, puranjay12@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tg32tsfnj3pmboaaeslvrmf7wtvznagio3vtqot42iflz5lvh7@25s5ykv3dfuz>
 
-Hello:
-
-This patch was applied to bpf/bpf.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
-
-On Thu, 21 Mar 2024 09:18:09 +0100 you wrote:
-> In case when is64 == 1 in emit(A64_REV32(is64, dst, dst), ctx) the
-> generated insn reverses byte order for both high and low 32-bit words,
-> resuling in an incorrect swap as indicated by the jit test:
+On Thu, Mar 21, 2024 at 01:52:03PM +0300, Ivan Bornyakov wrote:
+> Hi!
 > 
-> [ 9757.262607] test_bpf: #312 BSWAP 16: 0x0123456789abcdef -> 0xefcd jited:1 8 PASS
-> [ 9757.264435] test_bpf: #313 BSWAP 32: 0x0123456789abcdef -> 0xefcdab89 jited:1 ret 1460850314 != -271733879 (0x5712ce8a != 0xefcdab89)FAIL (1 times)
-> [ 9757.266260] test_bpf: #314 BSWAP 64: 0x0123456789abcdef -> 0x67452301 jited:1 8 PASS
-> [ 9757.268000] test_bpf: #315 BSWAP 64: 0x0123456789abcdef >> 32 -> 0xefcdab89 jited:1 8 PASS
-> [ 9757.269686] test_bpf: #316 BSWAP 16: 0xfedcba9876543210 -> 0x1032 jited:1 8 PASS
-> [ 9757.271380] test_bpf: #317 BSWAP 32: 0xfedcba9876543210 -> 0x10325476 jited:1 ret -1460850316 != 271733878 (0xa8ed3174 != 0x10325476)FAIL (1 times)
-> [ 9757.273022] test_bpf: #318 BSWAP 64: 0xfedcba9876543210 -> 0x98badcfe jited:1 7 PASS
-> [ 9757.274721] test_bpf: #319 BSWAP 64: 0xfedcba9876543210 >> 32 -> 0x10325476 jited:1 9 PASS
+> To sum up, there is 2 favourable approaches:
 > 
-> [...]
+> 1) to have dedicated SRAM partition for Wave5 VPU as suggested in this
+> patchset. In this approach SoC vendor can setup address range of said
+> partition to their needs, but other devices won't be able to use SRAM
+> memory reserved for Wave5 VPU, unless other device's SRAM memory needs
+> don't exceed the size of reserved partition.
+> 
+> Therefore it is sensible to substitute alloc/free on open/close with
+> alloc/free on open/close.
+> 
+> Advantages: driver code is simpler, no need for platform-specific defines
+> or DT properties. Wave5 is guaranteed to get SRAM memory.
+> 
+> Disadvantage: waste of SRAM memory while VPU is not in use
+> 
+> 2) allocate all available SRAM memory on open (free on close) from the
+> common SRAM pool, but limit maximum amount with SoC-specific define.
+> 
+> Advantage: less memory waste
+> 
+> Disadvantages: still need SoC-specific define or DT property, not much
+> differ from current state. Wave5 is not guaranteed to get SRAM memory.
+> 
+> Which of these approaches would be preferable?
+> 
 
-Here is the summary with links:
-  - [bpf-next,v2] arm64: bpf: fix 32bit unconditional bswap
-    https://git.kernel.org/bpf/bpf/c/a51cd6bf8e10
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Personaly I would say, let's stick with simpler code while there are not
+too much mainline users. When someone runs into SRAM insufficiency
+because of Wave5 VPU driver, their patches will be welcomed :)
