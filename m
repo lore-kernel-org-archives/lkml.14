@@ -1,63 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F0F1384A8
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 21:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4221369B2
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 21:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711055412; cv=none; b=N+MGDuIUOjsJ2ZBsxPYlz/IzgtPpj0SU/0pQ0i8mOxmH9PKUG2G6BNzDNzydo/BhKUHyHWTmRVmVLHyAj5+kxeOcojbY96Jpc7cOpu82hIBB/dYBuc0h+NZQQKecGG6g30naxjc7QzdvCbSearQQYtQunmaN0LC9Lv/XGyK8o00=
+	t=1711055598; cv=none; b=Vu9mSi/wOwvxEceXR7TEADgKQSGZlcVWu2hHjUN+l/qRsV5iaSCcvhXp3TEnc1fguAFjAvt5S2QagihWECyWUjUgHJ18ExxApogMKiTADzDldgnRWUa/7t/GPjOVlM8aaYAXRtCRqPCqObbNIz9KwL5BCPLtojOnP5nZHd6Kj2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711055412; c=relaxed/simple;
-	bh=s6MhBKvH/xClF8aMGDp/voXgERFIfoTmw+VDFzBg49o=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=XMbYHy7LP0zRfq1eUQruTT+E/A4Wd0Y/A/yEuExxUmrpbB8sBz2EzUFUEYl+rIYlMjU0eQJXDl3+dzPpRxcBc0RZ3dmXuqFIjKHlVGORTscmLaVA79ixVK8mWfMnUV5d7J81lafBmDd+LAAceIx12TVfRFFoDIfjQnn8d6CR1Xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=svvgJfAi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711055598; c=relaxed/simple;
+	bh=QdWLuurPKKnAKd/0efIBlHX1KMwle2RKzlVXv6YtTy4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cVB/joNuyVPyX46FvCjuM2JEImZx8UWRMCp2l2q24PLOAc91jBT/lLWlYXg3g0vNflIhiiC5UYAcydQIKrUdTEFfhpvkzNw6QBuyhDrH8GoqUELEGRNYKDYWZClCzBRDgOIG9XAHdIZoe8L7Q2xOZNjU6MtXVz85S+zGcZTh93A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pL1V3BNr; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="svvgJfAi"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7839DC43399;
-	Thu, 21 Mar 2024 21:10:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711055412;
-	bh=s6MhBKvH/xClF8aMGDp/voXgERFIfoTmw+VDFzBg49o=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=svvgJfAik5MZ9RhzacYEbEEQP+yIda80PXx+OjXOvEk/WCZyyDA1gNBKP+DxCRywX
-	 seWVIZebvwr5/d5yNuYd5b8vNBIZTXOayA6JksIqFbaCzzrwKdhfV5F+CttZk5rDY8
-	 xdI2GS3WA4uINyYuteOWciMql3TFwb3OFADH7QIwztiD81t9+MPm7Abn3lXCzU22XA
-	 zi+sMq5aayK/DxJ2k3TXXoO2Tm9reXBA68jIhhEvaztnnoYyu/Pn7bkfqsJVMkmQvy
-	 5Sx1OKeog9h+92rV1NHOIF8AlysmJo0E+i7WGTkBpsRmuCfMNtgCnDe+DCiTumKaVW
-	 JdV9k8U+SQVNw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6C48DD8C722;
-	Thu, 21 Mar 2024 21:10:12 +0000 (UTC)
-Subject: Re: [GIT PULL] Char/Misc driver changes for 6.9-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <Zfwv2y7P7BneKqMZ@kroah.com>
-References: <Zfwv2y7P7BneKqMZ@kroah.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <Zfwv2y7P7BneKqMZ@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-6.9-rc1
-X-PR-Tracked-Commit-Id: 367b3560e10bbae3660d8ba4d0a7cc92170d8398
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: bb41fe35dce709ea8f91d313c558ee6c68f705ef
-Message-Id: <171105541243.8284.6945957849027268942.pr-tracker-bot@kernel.org>
-Date: Thu, 21 Mar 2024 21:10:12 +0000
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pL1V3BNr"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-60a0579a955so17262617b3.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 14:13:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711055595; x=1711660395; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ebQxy1c2E58rfYFrtDF0LlwrADqhUaZL+Ah6PQaZrV4=;
+        b=pL1V3BNroI1V+L0QVJtIF2Bfjxr9u0dSM7FcbmtcSrpqf8cfuKeIV6bglX3Zapnm4Q
+         lW74BtRppnFUHzxeT+5zkNdcUymSOJwC6PJyUlISyZAmiTOVNcQHrl5bjQmLke0jshL1
+         NoaQWgozgUIQKha6dpdZ7wLH1e3jUE1eGUBvvmjb8xf1hF+7Oy9NY0D0WqoNKwlbp/VX
+         6WAstCHbwWZ9PX8I92qnHu+6mLPu3GOt2TbuZf5ASnUY8jDx1iYIiyLJJbVGDDDfMO9R
+         SqxgQ5eQzWaKNUGvvJElpFJYTzu21KbktvnRr5gy36fzXVTf6Xmz6rgFuQFcDbZ7UXWI
+         Qt0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711055595; x=1711660395;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ebQxy1c2E58rfYFrtDF0LlwrADqhUaZL+Ah6PQaZrV4=;
+        b=C+j9A5Gvfe6Hu/5SzWSv68QPImkfr2b6crwOJkiVvyjltzIgUW5QA2p3TuLWkdocf7
+         oO34mmS8nrij6Wo6Vf9JKvTpJhSioAMJKRTcOwNZm5TSq6Q+KejYE/RVPEUbM9LClAYX
+         s3gmiBDjxGOKo9IcJ9q2v0VO1pL52TF9/h2tg79iStHFNkMVD6+s42vPYiFA8Fti/x+5
+         lV63t4qdWcaHigs24AIGGilRzKL7wkGbtEwAePt7lDY1F3gOBRLdi7/s31tOUmlfitxe
+         ITpFdJW3Vx6La7b2uJYjG99fWeDSZgFd2ZrArScm2C1Vs/JPXv+Q9j0LjgoUBHutT7ND
+         5hxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZleaV5ZorcJk294pE7WLt1U4ueEussy6fhiZGnakSLD3/JiAE20U8RC5kfM3m5jkaQBYCMIgtAUbmPIdroIF1knaRhrWzGT5htc1e
+X-Gm-Message-State: AOJu0YylKpOPLr4J8w8Etuy0vtYHuB65+00srEKDt7nhq427RgxVSx+e
+	nSLC7rjFhyZFP2zSNDflCUQjOdkrzZq9Gb08axk6PIzye89YsE/ag65lK91WWWCthf6iAzWU93Q
+	86IdKW7OWdCYVB72A75Blix2xa67f1qIpZFpN
+X-Google-Smtp-Source: AGHT+IGpQFVT0N1V6MSTPFGK3hczVIPcNsqNEuin7eWXL8IMpmHm2qxsutqSmIFxZ5BpkxVe8WmaXZz7+fehjNgm2MU=
+X-Received: by 2002:a25:f40f:0:b0:dc7:4367:2527 with SMTP id
+ q15-20020a25f40f000000b00dc743672527mr366083ybd.49.1711055594451; Thu, 21 Mar
+ 2024 14:13:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240321163705.3067592-1-surenb@google.com> <20240321163705.3067592-6-surenb@google.com>
+ <20240321133147.6d05af5744f9d4da88234fb4@linux-foundation.org>
+In-Reply-To: <20240321133147.6d05af5744f9d4da88234fb4@linux-foundation.org>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Thu, 21 Mar 2024 14:13:03 -0700
+Message-ID: <CAJuCfpFtXx=NH-Zykh+dfO2fAASV8eObLLxC4Fu_Zu2Y=idZuw@mail.gmail.com>
+Subject: Re: [PATCH v6 05/37] fs: Convert alloc_inode_sb() to a macro
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: kent.overstreet@linux.dev, mhocko@suse.com, vbabka@suse.cz, 
+	hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
+	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
+	penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com, 
+	peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com, 
+	will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
+	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
+	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
+	nathan@kernel.org, dennis@kernel.org, jhubbard@nvidia.com, tj@kernel.org, 
+	muchun.song@linux.dev, rppt@kernel.org, paulmck@kernel.org, 
+	pasha.tatashin@soleen.com, yosryahmed@google.com, yuzhao@google.com, 
+	dhowells@redhat.com, hughd@google.com, andreyknvl@gmail.com, 
+	keescook@chromium.org, ndesaulniers@google.com, vvvvvv@google.com, 
+	gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com, 
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
+	bsegall@google.com, bristot@redhat.com, vschneid@redhat.com, cl@linux.com, 
+	penberg@kernel.org, iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, 
+	glider@google.com, elver@google.com, dvyukov@google.com, 
+	songmuchun@bytedance.com, jbaron@akamai.com, aliceryhl@google.com, 
+	rientjes@google.com, minchan@google.com, kaleshsingh@google.com, 
+	kernel-team@android.com, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
+	linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
+	cgroups@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The pull request you sent on Thu, 21 Mar 2024 14:02:19 +0100:
+On Thu, Mar 21, 2024 at 1:31=E2=80=AFPM Andrew Morton <akpm@linux-foundatio=
+n.org> wrote:
+>
+> On Thu, 21 Mar 2024 09:36:27 -0700 Suren Baghdasaryan <surenb@google.com>=
+ wrote:
+>
+> > From: Kent Overstreet <kent.overstreet@linux.dev>
+> >
+> > We're introducing alloc tagging, which tracks memory allocations by
+> > callsite. Converting alloc_inode_sb() to a macro means allocations will
+> > be tracked by its caller, which is a bit more useful.
+>
+> I'd have thought that there would be many similar
+> inlines-which-allocate-memory.  Such as, I dunno, jbd2_alloc_inode().
+> Do we have to go converting things to macros as people report
+> misleading or less useful results, or is there some more general
+> solution to this?
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-6.9-rc1
+Yeah, that's unfortunately inevitable. Even if we had compiler support
+we would have to add annotations for such inlined functions.
+For the given example of jbd2_alloc_inode() it's not so bad since it's
+used only from one location but in general yes, that's something we
+will have to improve as we find more such cases.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/bb41fe35dce709ea8f91d313c558ee6c68f705ef
+>
+> > --- a/include/linux/fs.h
+> > +++ b/include/linux/fs.h
+> > @@ -3083,11 +3083,7 @@ int setattr_should_drop_sgid(struct mnt_idmap *i=
+dmap,
+> >   * This must be used for allocating filesystems specific inodes to set
+> >   * up the inode reclaim context correctly.
+> >   */
+> > -static inline void *
+> > -alloc_inode_sb(struct super_block *sb, struct kmem_cache *cache, gfp_t=
+ gfp)
+> > -{
+> > -     return kmem_cache_alloc_lru(cache, &sb->s_inode_lru, gfp);
+> > -}
+> > +#define alloc_inode_sb(_sb, _cache, _gfp) kmem_cache_alloc_lru(_cache,=
+ &_sb->s_inode_lru, _gfp)
+>
+> Parenthesizing __sb seems sensible here?
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Ack.
+Let's wait for more comments and then I'll post fixes.
+Thanks!
