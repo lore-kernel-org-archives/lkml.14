@@ -1,563 +1,498 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF515660
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 02:59:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D118D6FB6
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 03:08:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710989960; cv=none; b=ZG94TNXn5tKkBSE65VUzLVQUR6YWXFlJjaPmPs0klp2fyiJoFVanRvDX5IE31hJKMKybHIFQFsnLrICOWLGUleSXkXCpiCBMJKSOsofVjwazua56ZlilTSVYimu9Em2j2bMr+GXq4NhJ8wazBerwj/KZ6Asb/ik4Niq25a4ZBxE=
+	t=1710990485; cv=none; b=ofRccHHISI+0KRA5/QsItiKlegyIGgkEokxmkXSuKyNlzTjqI5WUsubmvq6jyAnZ6Nsx+0ChN2kga41r9WFD4WyxRGXcuvzPuK1N80pyOgwF2+M6oAsGR4jflMuU0ZWKix14Spy9ExJCEEb+6GoV/9d3BPGwgeKAMvo97gLKcyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710989960; c=relaxed/simple;
-	bh=EjRrdnSlSqLeRHzJerJ26z8jXsiR5lW18G484JLGgFU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=tMcWtPSHxlgXzv4dOuadNWe8Jv43E7iClvZSYC10dm/6eaCg19zb2GWYb1LMKlh0W3vj5mt1GcwnDKTYvHqiUhe8ghzMAf+pVuiRYlrHNlyoTe9RhFGGjd0nr8mCd5o/VGLagskS9UOmY8zPZQsNDTP0s5Uvl/AT7Aa2UfPFgmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ryjpc9G2; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1710990485; c=relaxed/simple;
+	bh=N9Y1ItphTqgNwflMr+8yERST5uFGhuxbVi3DpJPx8so=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oX5FQ0FwKrhxLqwuaXl3B6EwkziJUtXo6ksJPuMAFFGVF2llRiqovKt2prUWJhqtpQlE+BRdMy+rKZt0B9h+fy13X/dex1Wd/503G9cn0a4LeLYuys3ELQBHqJaZ74QW7ILjBcf6z3MfgEDGsglaTQUFJdxmg3akEu3INhDJx6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=C5ThTTZ3; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ryjpc9G2"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1deddb82b43so91795ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 19:59:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710989958; x=1711594758; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eOCWhX/Y1Zj3mfL1r+Yvr+Ag8M+NipZNhGY0tYQmAso=;
-        b=Ryjpc9G216SVusEkBmGYkDcHo9C21XixDq4TlFlkkbgYc7g4yxdbWGbhOExuX4E1Gw
-         DuWlynUB3KC29ZqZYa3dEMWrmkiH6y34Blg0YAD0s7A/Hmja55HFVhAQY5rWHuW8c+U1
-         XQUzwUK0+JXgOUmdi1PHWyglMi7G8HyIodM5c3F8+gC8FmFVAO1SLT/kH3Z+Bqn3PP2o
-         RuonLxiSjSaylQhcpL3sk2gqiuIZfwPr84B69ok9/G2gvuzYgC2bCQei/bCVQDVQOjxv
-         xE5ozJfS1/QG7t8Eg0cm5++A/Ts7QOD+luoDLc6ed7fn5agU+hQs6G++CQSm1yiKmROU
-         ODIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710989958; x=1711594758;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eOCWhX/Y1Zj3mfL1r+Yvr+Ag8M+NipZNhGY0tYQmAso=;
-        b=V2yREKIyiEDojiF7sDA1zTj3DZ5Ig4FMdsEUsqS1Fu38CfuYGVTbtTd4sfmEMV+KWI
-         JJO8sJmKfu6vOFzdVkgDJ9zpoMwU8QWC++/6rW0QeGxb1WaduO1xyVX38y8kLQDo4BOy
-         ooGffLUY/ysojjvrbV5z2aP5BzF+SGwmq8MLhQC34v8Xzrq9ITzARCh0+0hhjKKSD5Ck
-         OlbJiOymR+3CPBC2rUOaYVgrNZYGzUKjiMGNEf1v6dafujGH5A7iPZZy/Kn9v3GsecI9
-         veN1QBtAcNtx43w1URTN5JJUmKHQRnEA4jWqDeYgofbkjYSnlgXHw3KRQ23ssh0ffcdM
-         tWlw==
-X-Forwarded-Encrypted: i=1; AJvYcCXHk6nt7KbhNnwhlPaSIfR+BVVXA//6+btKgnEL+wG5qxdLC6sWvCIDeNcE+Lif6dgiT3P8W6cI47YfPSA3OyO4f7qn+XzztwNv6JUX
-X-Gm-Message-State: AOJu0YxMeR8LnZmorSsNfUIqbdNvRnaQJDs9CYE0iQSrGMhHP4lSqHKk
-	nt08aHTDRr1JdVU1GuflcI7kB3DH1/VHi6mw+hhEiBD+nViqBR+77tdqsqAhvhzhDDyJaRu871s
-	Oo5/Xlz/9knjnpievLyoCuEfdTB3OnqWTbBrJ
-X-Google-Smtp-Source: AGHT+IGFajvD9r3TtnhkoyDDj5ngVjHitTWx2l6VCzb021jVwYrKUvapXg4Hs8AYUApFp56SG/1y855GzgIoc89B9Lg=
-X-Received: by 2002:a17:902:e750:b0:1de:ed50:41f8 with SMTP id
- p16-20020a170902e75000b001deed5041f8mr133357plf.22.1710989957442; Wed, 20 Mar
- 2024 19:59:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="C5ThTTZ3"
+Message-ID: <37243db7-41e3-4d07-a715-6957a0c15912@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1710990479;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I4yvMLSyJ52YXPPQpMAAR395HKgpjyDA2W9HqIEfUS0=;
+	b=C5ThTTZ3MpwzELGp2auc6YdvOdgRVj62zL2R3y0OVucEQK8/UlUIxJpgOXeuE4eIPXmOQ6
+	wHMAX7nivouQ58wJUzIXUI4ixRZIbCFTmlq8urGNR/AWI0OH84cFEz3D8p70+OeHC4Rlku
+	hASh6hHFMDvOZjmwAFIOcmGttc7ZoOU=
+Date: Thu, 21 Mar 2024 11:07:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240308001915.4060155-1-irogers@google.com> <20240308001915.4060155-5-irogers@google.com>
-In-Reply-To: <20240308001915.4060155-5-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 20 Mar 2024 19:59:06 -0700
-Message-ID: <CAP-5=fVE3f-Q3Zcdi2qWb5EJSadp5c7xbhzWeq8PFw2NOZEEJw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/6] perf list: Give more details about raw event encodings
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v8] zswap: replace RB tree with xarray
+To: Chris Li <chrisl@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Yosry Ahmed <yosryahmed@google.com>, Nhat Pham <nphamcs@gmail.com>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Chengming Zhou <zhouchengming@bytedance.com>,
+ Barry Song <v-songbaohua@oppo.com>
+References: <20240320-zswap-xarray-v8-1-dc08ee9f8744@kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+In-Reply-To: <20240320-zswap-xarray-v8-1-dc08ee9f8744@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Mar 7, 2024 at 4:19=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> List all the PMUs, not just the first core one, and list real format
-> specifiers with value ranges.
->
-> Before:
-> ```
-> $ perf list
-> ...
->   rNNN                                               [Raw hardware event =
-descriptor]
->   cpu/t1=3Dv1[,t2=3Dv2,t3 ...]/modifier                  [Raw hardware ev=
-ent descriptor]
->        [(see 'man perf-list' on how to encode it)]
->   mem:<addr>[/len][:access]                          [Hardware breakpoint=
-]
-> ...
-> ```
->
-> After:
-> ```
-> $ perf list
-> ...
->   rNNN                                               [Raw event descripto=
-r]
->   cpu/event=3D0..255,pc,edge,.../modifier              [Raw event descrip=
-tor]
->        [(see 'man perf-list' or 'man perf-record' on how to encode it)]
->   breakpoint//modifier                               [Raw event descripto=
-r]
->   cstate_core/event=3D0..0xffffffffffffffff/modifier   [Raw event descrip=
-tor]
->   cstate_pkg/event=3D0..0xffffffffffffffff/modifier    [Raw event descrip=
-tor]
->   i915/i915_eventid=3D0..0x1fffff/modifier             [Raw event descrip=
-tor]
->   intel_bts//modifier                                [Raw event descripto=
-r]
->   intel_pt/ptw,event,cyc_thresh=3D0..15,.../modifier   [Raw event descrip=
-tor]
->   kprobe/retprobe/modifier                           [Raw event descripto=
-r]
->   msr/event=3D0..0xffffffffffffffff/modifier           [Raw event descrip=
-tor]
->   power/event=3D0..255/modifier                        [Raw event descrip=
-tor]
->   software//modifier                                 [Raw event descripto=
-r]
->   tracepoint//modifier                               [Raw event descripto=
-r]
->   uncore_arb/event=3D0..255,edge,inv,.../modifier      [Raw event descrip=
-tor]
->   uncore_cbox/event=3D0..255,edge,inv,.../modifier     [Raw event descrip=
-tor]
->   uncore_clock/event=3D0..255/modifier                 [Raw event descrip=
-tor]
->   uncore_imc_free_running/event=3D0..255,umask=3D0..255/modifier[Raw even=
-t descriptor]
->   uprobe/ref_ctr_offset=3D0..0xffffffff,retprobe/modifier[Raw event descr=
-iptor]
->   mem:<addr>[/len][:access]                          [Hardware breakpoint=
-]
-> ...
-> ```
->
-> With '--details' provide more details on the formats encoding:
-> ```
->   cpu/event=3D0..255,pc,edge,.../modifier              [Raw event descrip=
-tor]
->        [(see 'man perf-list' or 'man perf-record' on how to encode it)]
->         cpu/event=3D0..255,pc,edge,offcore_rsp=3D0..0xffffffffffffffff,ld=
-lat=3D0..0xffff,inv,
->         umask=3D0..255,frontend=3D0..0xffffff,cmask=3D0..255,config=3D0..=
-0xffffffffffffffff,
->         config1=3D0..0xffffffffffffffff,config2=3D0..0xffffffffffffffff,c=
-onfig3=3D0..0xffffffffffffffff,
->         name=3Dstring,period=3Dnumber,freq=3Dnumber,branch_type=3D(u|k|hv=
-|any|...),time,
->         call-graph=3D(fp|dwarf|lbr),stack-size=3Dnumber,max-stack=3Dnumbe=
-r,nr=3Dnumber,inherit,no-inherit,
->         overwrite,no-overwrite,percore,aux-output,aux-sample-size=3Dnumbe=
-r/modifier
->   breakpoint//modifier                               [Raw event descripto=
-r]
->         breakpoint//modifier
->   cstate_core/event=3D0..0xffffffffffffffff/modifier   [Raw event descrip=
-tor]
->         cstate_core/event=3D0..0xffffffffffffffff/modifier
->   cstate_pkg/event=3D0..0xffffffffffffffff/modifier    [Raw event descrip=
-tor]
->         cstate_pkg/event=3D0..0xffffffffffffffff/modifier
->   i915/i915_eventid=3D0..0x1fffff/modifier             [Raw event descrip=
-tor]
->         i915/i915_eventid=3D0..0x1fffff/modifier
->   intel_bts//modifier                                [Raw event descripto=
-r]
->         intel_bts//modifier
->   intel_pt/ptw,event,cyc_thresh=3D0..15,.../modifier   [Raw event descrip=
-tor]
->         intel_pt/ptw,event,cyc_thresh=3D0..15,pt,notnt,branch,tsc,pwr_evt=
-,fup_on_ptw,cyc,noretcomp,
->         mtc,psb_period=3D0..15,mtc_period=3D0..15/modifier
->   kprobe/retprobe/modifier                           [Raw event descripto=
-r]
->         kprobe/retprobe/modifier
->   msr/event=3D0..0xffffffffffffffff/modifier           [Raw event descrip=
-tor]
->         msr/event=3D0..0xffffffffffffffff/modifier
->   power/event=3D0..255/modifier                        [Raw event descrip=
-tor]
->         power/event=3D0..255/modifier
->   software//modifier                                 [Raw event descripto=
-r]
->         software//modifier
->   tracepoint//modifier                               [Raw event descripto=
-r]
->         tracepoint//modifier
->   uncore_arb/event=3D0..255,edge,inv,.../modifier      [Raw event descrip=
-tor]
->         uncore_arb/event=3D0..255,edge,inv,umask=3D0..255,cmask=3D0..31/m=
-odifier
->   uncore_cbox/event=3D0..255,edge,inv,.../modifier     [Raw event descrip=
-tor]
->         uncore_cbox/event=3D0..255,edge,inv,umask=3D0..255,cmask=3D0..31/=
-modifier
->   uncore_clock/event=3D0..255/modifier                 [Raw event descrip=
-tor]
->         uncore_clock/event=3D0..255/modifier
->   uncore_imc_free_running/event=3D0..255,umask=3D0..255/modifier[Raw even=
-t descriptor]
->         uncore_imc_free_running/event=3D0..255,umask=3D0..255/modifier
->   uprobe/ref_ctr_offset=3D0..0xffffffff,retprobe/modifier[Raw event descr=
-iptor]
->         uprobe/ref_ctr_offset=3D0..0xffffffff,retprobe/modifier
-> ```
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+On 2024/3/21 03:31, Chris Li wrote:
+> Very deep RB tree requires rebalance at times. That
+> contributes to the zswap fault latencies. Xarray does not
+> need to perform tree rebalance. Replacing RB tree to xarray
+> can have some small performance gain.
+> 
+> One small difference is that xarray insert might fail with
+> ENOMEM, while RB tree insert does not allocate additional
+> memory.
+> 
+> The zswap_entry size will reduce a bit due to removing the
+> RB node, which has two pointers and a color field. Xarray
+> store the pointer in the xarray tree rather than the
+> zswap_entry. Every entry has one pointer from the xarray
+> tree. Overall, switching to xarray should save some memory,
+> if the swap entries are densely packed.
+> 
+> Notice the zswap_rb_search and zswap_rb_insert always
+> followed by zswap_rb_erase. Use xa_erase and xa_store
+> directly. That saves one tree lookup as well.
+> 
+> Remove zswap_invalidate_entry due to no need to call
+> zswap_rb_erase any more. Use zswap_free_entry instead.
+> 
+> The "struct zswap_tree" has been replaced by "struct xarray".
+> The tree spin lock has transferred to the xarray lock.
+> 
+> Run the kernel build testing 10 times for each version, averages:
+> (memory.max=2GB, zswap shrinker and writeback enabled,
+> one 50GB swapfile, 24 HT core, 32 jobs)
+> 
+>            mm-unstable-a824831a082f     xarray v7
+> user       3547.264			3541.509
+> sys        531.176                      526.111
+> real       200.752                      201.334
+> 
+> Reviewed-by: Nhat Pham <nphamcs@gmail.com>
+> Acked-by: Yosry Ahmed <yosryahmed@google.com>
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Chris Li <chrisl@kernel.org>
+
+Very nice!
+
+Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
+
+Thanks.
+
 > ---
->  tools/perf/util/pmu.c          | 61 +++++++++++++++++++++-
->  tools/perf/util/pmu.h          |  3 ++
->  tools/perf/util/pmus.c         | 94 ++++++++++++++++++++++++++++++++++
->  tools/perf/util/pmus.h         |  1 +
->  tools/perf/util/print-events.c | 20 +-------
->  5 files changed, 160 insertions(+), 19 deletions(-)
->
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 24be587e3537..e24bc3b8f696 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -1603,6 +1603,61 @@ bool perf_pmu__has_format(const struct perf_pmu *p=
-mu, const char *name)
->         return false;
->  }
->
-> +int perf_pmu__for_each_format(struct perf_pmu *pmu, void *state, pmu_for=
-mat_callback cb)
-> +{
-> +       static const char *const terms[] =3D {
-> +               "config=3D0..0xffffffffffffffff",
-> +               "config1=3D0..0xffffffffffffffff",
-> +               "config2=3D0..0xffffffffffffffff",
-> +               "config3=3D0..0xffffffffffffffff",
-> +               "name=3Dstring",
-> +               "period=3Dnumber",
-> +               "freq=3Dnumber",
-> +               "branch_type=3D(u|k|hv|any|...)",
-> +               "time",
-> +               "call-graph=3D(fp|dwarf|lbr)",
-> +               "stack-size=3Dnumber",
-> +               "max-stack=3Dnumber",
-> +               "nr=3Dnumber",
-> +               "inherit",
-> +               "no-inherit",
-> +               "overwrite",
-> +               "no-overwrite",
-> +               "percore",
-> +               "aux-output",
-> +               "aux-sample-size=3Dnumber",
-> +       };
-> +       struct perf_pmu_format *format;
-> +       int ret;
-> +
-> +       /*
-> +        * max-events and driver-config are missing above as are the inte=
-rnal
-> +        * types user, metric-id, raw, legacy cache and hardware. Assert =
-against
-> +        * the enum parse_events__term_type so they are kept in sync.
-> +        */
-> +       _Static_assert(ARRAY_SIZE(terms) =3D=3D __PARSE_EVENTS__TERM_TYPE=
-_NR - 6);
-
-For C11 it is required that a 2nd message argument be passed:
-https://en.cppreference.com/w/c/language/_Static_assert
-
-This line needs to be something like:
-_Static_assert(ARRAY_SIZE(terms) =3D=3D __PARSE_EVENTS__TERM_TYPE_NR - 6,
-"Unexpected array size");
-
-Let me know if we I should send a fix, resend all the patches or if
-you can fix in tmp.perf-tools-next.
-
-Thanks,
-Ian
-
-> +       list_for_each_entry(format, &pmu->format, list) {
-> +               perf_pmu_format__load(pmu, format);
-> +               ret =3D cb(state, format->name, (int)format->value, forma=
-t->bits);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +       if (!pmu->is_core)
-> +               return 0;
-> +
-> +       for (size_t i =3D 0; i < ARRAY_SIZE(terms); i++) {
-> +               int config =3D PERF_PMU_FORMAT_VALUE_CONFIG;
-> +
-> +               if (i < PERF_PMU_FORMAT_VALUE_CONFIG_END)
-> +                       config =3D i;
-> +
-> +               ret =3D cb(state, terms[i], config, /*bits=3D*/NULL);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +       return 0;
-> +}
-> +
->  bool is_pmu_core(const char *name)
->  {
->         return !strcmp(name, "cpu") || !strcmp(name, "cpum_cf") || is_sys=
-fs_pmu_core(name);
-> @@ -1697,8 +1752,12 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu,=
- bool skip_duplicate_pmus,
->         pmu_add_cpu_aliases(pmu);
->         list_for_each_entry(event, &pmu->aliases, list) {
->                 size_t buf_used;
-> +               int pmu_name_len;
->
->                 info.pmu_name =3D event->pmu_name ?: pmu->name;
-> +               pmu_name_len =3D skip_duplicate_pmus
-> +                       ? pmu_name_len_no_suffix(info.pmu_name, /*num=3D*=
-/NULL)
-> +                       : (int)strlen(info.pmu_name);
->                 info.alias =3D NULL;
->                 if (event->desc) {
->                         info.name =3D event->name;
-> @@ -1723,7 +1782,7 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, =
-bool skip_duplicate_pmus,
->                 info.encoding_desc =3D buf + buf_used;
->                 parse_events_terms__to_strbuf(&event->terms, &sb);
->                 buf_used +=3D snprintf(buf + buf_used, sizeof(buf) - buf_=
-used,
-> -                               "%s/%s/", info.pmu_name, sb.buf) + 1;
-> +                               "%.*s/%s/", pmu_name_len, info.pmu_name, =
-sb.buf) + 1;
->                 info.topic =3D event->topic;
->                 info.str =3D sb.buf;
->                 info.deprecated =3D event->deprecated;
-> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> index e35d985206db..9f5284b29ecf 100644
-> --- a/tools/perf/util/pmu.h
-> +++ b/tools/perf/util/pmu.h
-> @@ -196,6 +196,8 @@ struct pmu_event_info {
->  };
->
->  typedef int (*pmu_event_callback)(void *state, struct pmu_event_info *in=
-fo);
-> +typedef int (*pmu_format_callback)(void *state, const char *name, int co=
-nfig,
-> +                                  const unsigned long *bits);
->
->  void pmu_add_sys_aliases(struct perf_pmu *pmu);
->  int perf_pmu__config(struct perf_pmu *pmu, struct perf_event_attr *attr,
-> @@ -215,6 +217,7 @@ int perf_pmu__find_event(struct perf_pmu *pmu, const =
-char *event, void *state, p
->  int perf_pmu__format_parse(struct perf_pmu *pmu, int dirfd, bool eager_l=
-oad);
->  void perf_pmu_format__set_value(void *format, int config, unsigned long =
-*bits);
->  bool perf_pmu__has_format(const struct perf_pmu *pmu, const char *name);
-> +int perf_pmu__for_each_format(struct perf_pmu *pmu, void *state, pmu_for=
-mat_callback cb);
->
->  bool is_pmu_core(const char *name);
->  bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu);
-> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> index 16505071d362..2fd369e45832 100644
-> --- a/tools/perf/util/pmus.c
-> +++ b/tools/perf/util/pmus.c
-> @@ -16,6 +16,7 @@
->  #include "pmus.h"
->  #include "pmu.h"
->  #include "print-events.h"
-> +#include "strbuf.h"
->
->  /*
->   * core_pmus:  A PMU belongs to core_pmus if it's name is "cpu" or it's =
-sysfs
-> @@ -503,6 +504,99 @@ void perf_pmus__print_pmu_events(const struct print_=
-callbacks *print_cb, void *p
->         zfree(&aliases);
->  }
->
-> +struct build_format_string_args {
-> +       struct strbuf short_string;
-> +       struct strbuf long_string;
-> +       int num_formats;
-> +};
-> +
-> +static int build_format_string(void *state, const char *name, int config=
-,
-> +                              const unsigned long *bits)
-> +{
-> +       struct build_format_string_args *args =3D state;
-> +       unsigned int num_bits;
-> +       int ret1, ret2 =3D 0;
-> +
-> +       (void)config;
-> +       args->num_formats++;
-> +       if (args->num_formats > 1) {
-> +               strbuf_addch(&args->long_string, ',');
-> +               if (args->num_formats < 4)
-> +                       strbuf_addch(&args->short_string, ',');
-> +       }
-> +       num_bits =3D bits ? bitmap_weight(bits, PERF_PMU_FORMAT_BITS) : 0=
-;
-> +       if (num_bits <=3D 1) {
-> +               ret1 =3D strbuf_addf(&args->long_string, "%s", name);
-> +               if (args->num_formats < 4)
-> +                       ret2 =3D strbuf_addf(&args->short_string, "%s", n=
-ame);
-> +       } else if (num_bits > 8) {
-> +               ret1 =3D strbuf_addf(&args->long_string, "%s=3D0..0x%llx"=
-, name,
-> +                                  ULLONG_MAX >> (64 - num_bits));
-> +               if (args->num_formats < 4) {
-> +                       ret2 =3D strbuf_addf(&args->short_string, "%s=3D0=
-..0x%llx", name,
-> +                                          ULLONG_MAX >> (64 - num_bits))=
-;
-> +               }
-> +       } else {
-> +               ret1 =3D strbuf_addf(&args->long_string, "%s=3D0..%llu", =
-name,
-> +                                 ULLONG_MAX >> (64 - num_bits));
-> +               if (args->num_formats < 4) {
-> +                       ret2 =3D strbuf_addf(&args->short_string, "%s=3D0=
-..%llu", name,
-> +                                          ULLONG_MAX >> (64 - num_bits))=
-;
-> +               }
-> +       }
-> +       return ret1 < 0 ? ret1 : (ret2 < 0 ? ret2 : 0);
-> +}
-> +
-> +void perf_pmus__print_raw_pmu_events(const struct print_callbacks *print=
-_cb, void *print_state)
-> +{
-> +       bool skip_duplicate_pmus =3D print_cb->skip_duplicate_pmus(print_=
-state);
-> +       struct perf_pmu *(*scan_fn)(struct perf_pmu *);
-> +       struct perf_pmu *pmu =3D NULL;
-> +
-> +       if (skip_duplicate_pmus)
-> +               scan_fn =3D perf_pmus__scan_skip_duplicates;
-> +       else
-> +               scan_fn =3D perf_pmus__scan;
-> +
-> +       while ((pmu =3D scan_fn(pmu)) !=3D NULL) {
-> +               struct build_format_string_args format_args =3D {
-> +                       .short_string =3D STRBUF_INIT,
-> +                       .long_string =3D STRBUF_INIT,
-> +                       .num_formats =3D 0,
-> +               };
-> +               int len =3D pmu_name_len_no_suffix(pmu->name, /*num=3D*/N=
-ULL);
-> +               const char *desc =3D "(see 'man perf-list' or 'man perf-r=
-ecord' on how to encode it)";
-> +
-> +               if (!pmu->is_core)
-> +                       desc =3D NULL;
-> +
-> +               strbuf_addf(&format_args.short_string, "%.*s/", len, pmu-=
->name);
-> +               strbuf_addf(&format_args.long_string, "%.*s/", len, pmu->=
-name);
-> +               perf_pmu__for_each_format(pmu, &format_args, build_format=
-_string);
-> +
-> +               if (format_args.num_formats > 3)
-> +                       strbuf_addf(&format_args.short_string, ",.../modi=
-fier");
-> +               else
-> +                       strbuf_addf(&format_args.short_string, "/modifier=
-");
-> +
-> +               strbuf_addf(&format_args.long_string, "/modifier");
-> +               print_cb->print_event(print_state,
-> +                               /*topic=3D*/NULL,
-> +                               /*pmu_name=3D*/NULL,
-> +                               format_args.short_string.buf,
-> +                               /*event_alias=3D*/NULL,
-> +                               /*scale_unit=3D*/NULL,
-> +                               /*deprecated=3D*/false,
-> +                               "Raw event descriptor",
-> +                               desc,
-> +                               /*long_desc=3D*/NULL,
-> +                               format_args.long_string.buf);
-> +
-> +               strbuf_release(&format_args.short_string);
-> +               strbuf_release(&format_args.long_string);
-> +       }
-> +}
-> +
->  bool perf_pmus__have_event(const char *pname, const char *name)
->  {
->         struct perf_pmu *pmu =3D perf_pmus__find(pname);
-> diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-> index 94d2a08d894b..eec599d8aebd 100644
-> --- a/tools/perf/util/pmus.h
-> +++ b/tools/perf/util/pmus.h
-> @@ -18,6 +18,7 @@ struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *=
-pmu);
->  const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str);
->
->  void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb,=
- void *print_state);
-> +void perf_pmus__print_raw_pmu_events(const struct print_callbacks *print=
-_cb, void *print_state);
->  bool perf_pmus__have_event(const char *pname, const char *name);
->  int perf_pmus__num_core_pmus(void);
->  bool perf_pmus__supports_extended_type(void);
-> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-event=
-s.c
-> index e0d2b49bab66..3f38c27f0157 100644
-> --- a/tools/perf/util/print-events.c
-> +++ b/tools/perf/util/print-events.c
-> @@ -39,7 +39,7 @@ static const char * const event_type_descriptors[] =3D =
-{
->         "Software event",
->         "Tracepoint event",
->         "Hardware cache event",
-> -       "Raw hardware event descriptor",
-> +       "Raw event descriptor",
->         "Hardware breakpoint",
->  };
->
-> @@ -416,8 +416,6 @@ void print_symbol_events(const struct print_callbacks=
- *print_cb, void *print_sta
+> Changes in v8:
+> - Fix some white space damage discovered by Yosry. No actual code change.
+> - Collect review tags.
+> - Link to v7: https://lore.kernel.org/r/20240319-zswap-xarray-v7-1-e9a03a049e86@kernel.org
+> 
+> Changes in v7:
+> - update comment suggested by Johannes and Yosry
+> - Simplify some error handling code, suggested by Johannes.
+> - Link to v6: https://lore.kernel.org/r/20240312-zswap-xarray-v6-1-1b82027d7082@kernel.org
+> 
+> Changes in v6:
+> - Add WARN_ONCE() for xa_store failed other than -ENOMEM.
+> - Collect review tags.
+> - Link to v5: https://lore.kernel.org/r/20240311-zswap-xarray-v5-1-a3031feb9c85@kernel.org
+> 
+> Changes in v5:
+> - Remove zswap_xa_insert(), call xa_store and xa_erase directly.
+> - Remove zswap_reject_xarray_fail. 
+> - Link to v4: https://lore.kernel.org/r/20240304-zswap-xarray-v4-1-c4b45670cc30@kernel.org
+> 
+> Changes in v4:
+> - Remove zswap_xa_search_and_earse, use xa_erase directly.
+> - Move charge of objcg after zswap_xa_insert.
+> - Avoid erase old entry on insert fail error path.
+> - Remove not needed swap_zswap_tree change
+> - Link to v3: https://lore.kernel.org/r/20240302-zswap-xarray-v3-1-5900252f2302@kernel.org
+> 
+> Changes in v3:
+> - Use xa_cmpxchg instead of zswap_xa_search_and_delete in zswap_writeback_entry.
+> - Use xa_store in zswap_xa_insert directly. Reduce the scope of spinlock.
+> - Fix xa_store error handling for same page fill case.
+> - Link to v2: https://lore.kernel.org/r/20240229-zswap-xarray-v2-1-e50284dfcdb1@kernel.org
+> 
+> Changes in v2:
+> - Replace struct zswap_tree with struct xarray.
+> - Remove zswap_tree spinlock, use xarray lock instead.
+> - Fold zswap_rb_erase() into zswap_xa_search_and_delete() and zswap_xa_insert().
+> - Delete zswap_invalidate_entry(), use zswap_free_entry() instead.
+> - Link to v1: https://lore.kernel.org/r/20240117-zswap-xarray-v1-0-6daa86c08fae@kernel.org
+> ---
+>  mm/zswap.c | 178 ++++++++++++++++++-------------------------------------------
+>  1 file changed, 53 insertions(+), 125 deletions(-)
+> 
+> diff --git a/mm/zswap.c b/mm/zswap.c
+> index b31c977f53e9..a97de9e547df 100644
+> --- a/mm/zswap.c
+> +++ b/mm/zswap.c
+> @@ -20,7 +20,6 @@
+>  #include <linux/spinlock.h>
+>  #include <linux/types.h>
+>  #include <linux/atomic.h>
+> -#include <linux/rbtree.h>
+>  #include <linux/swap.h>
+>  #include <linux/crypto.h>
+>  #include <linux/scatterlist.h>
+> @@ -196,7 +195,6 @@ static struct shrinker *zswap_shrinker;
+>   * This structure contains the metadata for tracking a single compressed
+>   * page within zswap.
+>   *
+> - * rbnode - links the entry into red-black tree for the appropriate swap type
+>   * swpentry - associated swap entry, the offset indexes into the red-black tree
+>   * length - the length in bytes of the compressed page data.  Needed during
+>   *          decompression. For a same value filled page length is 0, and both
+> @@ -208,7 +206,6 @@ static struct shrinker *zswap_shrinker;
+>   * lru - handle to the pool's lru used to evict pages.
 >   */
->  void print_events(const struct print_callbacks *print_cb, void *print_st=
-ate)
->  {
-> -       char *tmp;
+>  struct zswap_entry {
+> -	struct rb_node rbnode;
+>  	swp_entry_t swpentry;
+>  	unsigned int length;
+>  	struct zswap_pool *pool;
+> @@ -220,12 +217,7 @@ struct zswap_entry {
+>  	struct list_head lru;
+>  };
+>  
+> -struct zswap_tree {
+> -	struct rb_root rbroot;
+> -	spinlock_t lock;
+> -};
 > -
->         print_symbol_events(print_cb, print_state, PERF_TYPE_HARDWARE,
->                         event_symbols_hw, PERF_COUNT_HW_MAX);
->         print_symbol_events(print_cb, print_state, PERF_TYPE_SOFTWARE,
-> @@ -441,21 +439,7 @@ void print_events(const struct print_callbacks *prin=
-t_cb, void *print_state)
->                         /*long_desc=3D*/NULL,
->                         /*encoding_desc=3D*/NULL);
->
-> -       if (asprintf(&tmp, "%s/t1=3Dv1[,t2=3Dv2,t3 ...]/modifier",
-> -                    perf_pmus__scan_core(/*pmu=3D*/NULL)->name) > 0) {
-> -               print_cb->print_event(print_state,
-> -                               /*topic=3D*/NULL,
-> -                               /*pmu_name=3D*/NULL,
-> -                               tmp,
-> -                               /*event_alias=3D*/NULL,
-> -                               /*scale_unit=3D*/NULL,
-> -                               /*deprecated=3D*/false,
-> -                               event_type_descriptors[PERF_TYPE_RAW],
-> -                               "(see 'man perf-list' on how to encode it=
-)",
-> -                               /*long_desc=3D*/NULL,
-> -                               /*encoding_desc=3D*/NULL);
-> -               free(tmp);
-> -       }
-> +       perf_pmus__print_raw_pmu_events(print_cb, print_state);
->
->         print_cb->print_event(print_state,
->                         /*topic=3D*/NULL,
-> --
-> 2.44.0.278.ge034bb2e1d-goog
->
+> -static struct zswap_tree *zswap_trees[MAX_SWAPFILES];
+> +static struct xarray *zswap_trees[MAX_SWAPFILES];
+>  static unsigned int nr_zswap_trees[MAX_SWAPFILES];
+>  
+>  /* RCU-protected iteration */
+> @@ -253,7 +245,7 @@ static bool zswap_has_pool;
+>  * helpers and fwd declarations
+>  **********************************/
+>  
+> -static inline struct zswap_tree *swap_zswap_tree(swp_entry_t swp)
+> +static inline struct xarray *swap_zswap_tree(swp_entry_t swp)
+>  {
+>  	return &zswap_trees[swp_type(swp)][swp_offset(swp)
+>  		>> SWAP_ADDRESS_SPACE_SHIFT];
+> @@ -792,63 +784,6 @@ void zswap_memcg_offline_cleanup(struct mem_cgroup *memcg)
+>  	spin_unlock(&zswap_shrink_lock);
+>  }
+>  
+> -/*********************************
+> -* rbtree functions
+> -**********************************/
+> -static struct zswap_entry *zswap_rb_search(struct rb_root *root, pgoff_t offset)
+> -{
+> -	struct rb_node *node = root->rb_node;
+> -	struct zswap_entry *entry;
+> -	pgoff_t entry_offset;
+> -
+> -	while (node) {
+> -		entry = rb_entry(node, struct zswap_entry, rbnode);
+> -		entry_offset = swp_offset(entry->swpentry);
+> -		if (entry_offset > offset)
+> -			node = node->rb_left;
+> -		else if (entry_offset < offset)
+> -			node = node->rb_right;
+> -		else
+> -			return entry;
+> -	}
+> -	return NULL;
+> -}
+> -
+> -/*
+> - * In the case that a entry with the same offset is found, a pointer to
+> - * the existing entry is stored in dupentry and the function returns -EEXIST
+> - */
+> -static int zswap_rb_insert(struct rb_root *root, struct zswap_entry *entry,
+> -			struct zswap_entry **dupentry)
+> -{
+> -	struct rb_node **link = &root->rb_node, *parent = NULL;
+> -	struct zswap_entry *myentry;
+> -	pgoff_t myentry_offset, entry_offset = swp_offset(entry->swpentry);
+> -
+> -	while (*link) {
+> -		parent = *link;
+> -		myentry = rb_entry(parent, struct zswap_entry, rbnode);
+> -		myentry_offset = swp_offset(myentry->swpentry);
+> -		if (myentry_offset > entry_offset)
+> -			link = &(*link)->rb_left;
+> -		else if (myentry_offset < entry_offset)
+> -			link = &(*link)->rb_right;
+> -		else {
+> -			*dupentry = myentry;
+> -			return -EEXIST;
+> -		}
+> -	}
+> -	rb_link_node(&entry->rbnode, parent, link);
+> -	rb_insert_color(&entry->rbnode, root);
+> -	return 0;
+> -}
+> -
+> -static void zswap_rb_erase(struct rb_root *root, struct zswap_entry *entry)
+> -{
+> -	rb_erase(&entry->rbnode, root);
+> -	RB_CLEAR_NODE(&entry->rbnode);
+> -}
+> -
+>  /*********************************
+>  * zswap entry functions
+>  **********************************/
+> @@ -860,7 +795,6 @@ static struct zswap_entry *zswap_entry_cache_alloc(gfp_t gfp, int nid)
+>  	entry = kmem_cache_alloc_node(zswap_entry_cache, gfp, nid);
+>  	if (!entry)
+>  		return NULL;
+> -	RB_CLEAR_NODE(&entry->rbnode);
+>  	return entry;
+>  }
+>  
+> @@ -896,17 +830,6 @@ static void zswap_entry_free(struct zswap_entry *entry)
+>  	atomic_dec(&zswap_stored_pages);
+>  }
+>  
+> -/*
+> - * The caller hold the tree lock and search the entry from the tree,
+> - * so it must be on the tree, remove it from the tree and free it.
+> - */
+> -static void zswap_invalidate_entry(struct zswap_tree *tree,
+> -				   struct zswap_entry *entry)
+> -{
+> -	zswap_rb_erase(&tree->rbroot, entry);
+> -	zswap_entry_free(entry);
+> -}
+> -
+>  /*********************************
+>  * compressed storage functions
+>  **********************************/
+> @@ -1106,7 +1029,8 @@ static void zswap_decompress(struct zswap_entry *entry, struct page *page)
+>  static int zswap_writeback_entry(struct zswap_entry *entry,
+>  				 swp_entry_t swpentry)
+>  {
+> -	struct zswap_tree *tree;
+> +	struct xarray *tree;
+> +	pgoff_t offset = swp_offset(swpentry);
+>  	struct folio *folio;
+>  	struct mempolicy *mpol;
+>  	bool folio_was_allocated;
+> @@ -1143,19 +1067,13 @@ static int zswap_writeback_entry(struct zswap_entry *entry,
+>  	 * be dereferenced.
+>  	 */
+>  	tree = swap_zswap_tree(swpentry);
+> -	spin_lock(&tree->lock);
+> -	if (zswap_rb_search(&tree->rbroot, swp_offset(swpentry)) != entry) {
+> -		spin_unlock(&tree->lock);
+> +	if (entry != xa_cmpxchg(tree, offset, entry, NULL, GFP_KERNEL)) {
+>  		delete_from_swap_cache(folio);
+>  		folio_unlock(folio);
+>  		folio_put(folio);
+>  		return -ENOMEM;
+>  	}
+>  
+> -	/* Safe to deref entry after the entry is verified above. */
+> -	zswap_rb_erase(&tree->rbroot, entry);
+> -	spin_unlock(&tree->lock);
+> -
+>  	zswap_decompress(entry, &folio->page);
+>  
+>  	count_vm_event(ZSWPWB);
+> @@ -1467,8 +1385,8 @@ bool zswap_store(struct folio *folio)
+>  {
+>  	swp_entry_t swp = folio->swap;
+>  	pgoff_t offset = swp_offset(swp);
+> -	struct zswap_tree *tree = swap_zswap_tree(swp);
+> -	struct zswap_entry *entry, *dupentry;
+> +	struct xarray *tree = swap_zswap_tree(swp);
+> +	struct zswap_entry *entry, *old;
+>  	struct obj_cgroup *objcg = NULL;
+>  	struct mem_cgroup *memcg = NULL;
+>  	unsigned long max_pages, cur_pages;
+> @@ -1556,28 +1474,44 @@ bool zswap_store(struct folio *folio)
+>  insert_entry:
+>  	entry->swpentry = swp;
+>  	entry->objcg = objcg;
+> +
+> +	old = xa_store(tree, offset, entry, GFP_KERNEL);
+> +	if (xa_is_err(old)) {
+> +		int err = xa_err(old);
+> +
+> +		WARN_ONCE(err != -ENOMEM, "unexpected xarray error: %d\n", err);
+> +		zswap_reject_alloc_fail++;
+> +		goto store_failed;
+> +	}
+> +
+> +	/*
+> +	 * We may have had an existing entry that became stale when
+> +	 * the folio was redirtied and now the new version is being
+> +	 * swapped out. Get rid of the old.
+> +	 */
+> +	if (old)
+> +		zswap_entry_free(old);
+> +
+>  	if (objcg) {
+>  		obj_cgroup_charge_zswap(objcg, entry->length);
+> -		/* Account before objcg ref is moved to tree */
+>  		count_objcg_event(objcg, ZSWPOUT);
+>  	}
+>  
+> -	/* map */
+> -	spin_lock(&tree->lock);
+>  	/*
+> -	 * The folio may have been dirtied again, invalidate the
+> -	 * possibly stale entry before inserting the new entry.
+> +	 * We finish initializing the entry while it's already in xarray.
+> +	 * This is safe because:
+> +	 *
+> +	 * 1. Concurrent stores and invalidations are excluded by folio lock.
+> +	 *
+> +	 * 2. Writeback is excluded by the entry not being on the LRU yet.
+> +	 *    The publishing order matters to prevent writeback from seeing
+> +	 *    an incoherent entry.
+>  	 */
+> -	if (zswap_rb_insert(&tree->rbroot, entry, &dupentry) == -EEXIST) {
+> -		zswap_invalidate_entry(tree, dupentry);
+> -		WARN_ON(zswap_rb_insert(&tree->rbroot, entry, &dupentry));
+> -	}
+>  	if (entry->length) {
+>  		INIT_LIST_HEAD(&entry->lru);
+>  		zswap_lru_add(&zswap_list_lru, entry);
+>  		atomic_inc(&zswap_nr_stored);
+>  	}
+> -	spin_unlock(&tree->lock);
+>  
+>  	/* update stats */
+>  	atomic_inc(&zswap_stored_pages);
+> @@ -1585,8 +1519,14 @@ bool zswap_store(struct folio *folio)
+>  
+>  	return true;
+>  
+> +store_failed:
+> +	if (!entry->length)
+> +		atomic_dec(&zswap_same_filled_pages);
+> +	else {
+> +		zpool_free(zswap_find_zpool(entry), entry->handle);
+>  put_pool:
+> -	zswap_pool_put(entry->pool);
+> +		zswap_pool_put(entry->pool);
+> +	}
+>  freepage:
+>  	zswap_entry_cache_free(entry);
+>  reject:
+> @@ -1597,11 +1537,9 @@ bool zswap_store(struct folio *folio)
+>  	 * possibly stale entry which was previously stored at this offset.
+>  	 * Otherwise, writeback could overwrite the new data in the swapfile.
+>  	 */
+> -	spin_lock(&tree->lock);
+> -	entry = zswap_rb_search(&tree->rbroot, offset);
+> +	entry = xa_erase(tree, offset);
+>  	if (entry)
+> -		zswap_invalidate_entry(tree, entry);
+> -	spin_unlock(&tree->lock);
+> +		zswap_entry_free(entry);
+>  	return false;
+>  
+>  shrink:
+> @@ -1614,20 +1552,15 @@ bool zswap_load(struct folio *folio)
+>  	swp_entry_t swp = folio->swap;
+>  	pgoff_t offset = swp_offset(swp);
+>  	struct page *page = &folio->page;
+> -	struct zswap_tree *tree = swap_zswap_tree(swp);
+> +	struct xarray *tree = swap_zswap_tree(swp);
+>  	struct zswap_entry *entry;
+>  	u8 *dst;
+>  
+>  	VM_WARN_ON_ONCE(!folio_test_locked(folio));
+>  
+> -	spin_lock(&tree->lock);
+> -	entry = zswap_rb_search(&tree->rbroot, offset);
+> -	if (!entry) {
+> -		spin_unlock(&tree->lock);
+> +	entry = xa_erase(tree, offset);
+> +	if (!entry)
+>  		return false;
+> -	}
+> -	zswap_rb_erase(&tree->rbroot, entry);
+> -	spin_unlock(&tree->lock);
+>  
+>  	if (entry->length)
+>  		zswap_decompress(entry, page);
+> @@ -1651,19 +1584,17 @@ bool zswap_load(struct folio *folio)
+>  void zswap_invalidate(swp_entry_t swp)
+>  {
+>  	pgoff_t offset = swp_offset(swp);
+> -	struct zswap_tree *tree = swap_zswap_tree(swp);
+> +	struct xarray *tree = swap_zswap_tree(swp);
+>  	struct zswap_entry *entry;
+>  
+> -	spin_lock(&tree->lock);
+> -	entry = zswap_rb_search(&tree->rbroot, offset);
+> +	entry = xa_erase(tree, offset);
+>  	if (entry)
+> -		zswap_invalidate_entry(tree, entry);
+> -	spin_unlock(&tree->lock);
+> +		zswap_entry_free(entry);
+>  }
+>  
+>  int zswap_swapon(int type, unsigned long nr_pages)
+>  {
+> -	struct zswap_tree *trees, *tree;
+> +	struct xarray *trees, *tree;
+>  	unsigned int nr, i;
+>  
+>  	nr = DIV_ROUND_UP(nr_pages, SWAP_ADDRESS_SPACE_PAGES);
+> @@ -1673,11 +1604,8 @@ int zswap_swapon(int type, unsigned long nr_pages)
+>  		return -ENOMEM;
+>  	}
+>  
+> -	for (i = 0; i < nr; i++) {
+> -		tree = trees + i;
+> -		tree->rbroot = RB_ROOT;
+> -		spin_lock_init(&tree->lock);
+> -	}
+> +	for (i = 0; i < nr; i++)
+> +		xa_init(trees + i);
+>  
+>  	nr_zswap_trees[type] = nr;
+>  	zswap_trees[type] = trees;
+> @@ -1686,7 +1614,7 @@ int zswap_swapon(int type, unsigned long nr_pages)
+>  
+>  void zswap_swapoff(int type)
+>  {
+> -	struct zswap_tree *trees = zswap_trees[type];
+> +	struct xarray *trees = zswap_trees[type];
+>  	unsigned int i;
+>  
+>  	if (!trees)
+> @@ -1694,7 +1622,7 @@ void zswap_swapoff(int type)
+>  
+>  	/* try_to_unuse() invalidated all the entries already */
+>  	for (i = 0; i < nr_zswap_trees[type]; i++)
+> -		WARN_ON_ONCE(!RB_EMPTY_ROOT(&trees[i].rbroot));
+> +		WARN_ON_ONCE(!xa_empty(trees + i));
+>  
+>  	kvfree(trees);
+>  	nr_zswap_trees[type] = 0;
+> 
+> ---
+> base-commit: a824831a082f1d8f9b51a4c0598e633d38555fcf
+> change-id: 20240104-zswap-xarray-716260e541e3
+> 
+> Best regards,
