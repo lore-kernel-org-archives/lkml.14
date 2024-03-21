@@ -1,107 +1,100 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A3F3770D
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 07:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6E7381AA;
+	Thu, 21 Mar 2024 07:12:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711004990; cv=none; b=foeDZjElLJ/l1WdpK0nr9xtEG8fBbj74K1ygJWlG++vTa17sYuO3O4jSDiWdsHgibamINIwElZ9iCeHOdpRA1UDXucama7jOdXKdblmLYXyKYFUChc+bg59N5Z+khwWorBg7ZWXJRBWtb6GnzANQU27z3hs2XrIMDJ7L7hEwB7c=
+	t=1711005150; cv=none; b=Rbqt2myq3igPvjiKmEM6PK3qETEyYJXWl7FZfn2bM1oB8Po1/bwDbLJOpz05IIVrCumxCfMx3Rdv1SScewH1NLcKb2J1UOZWpoo9Rn/SRvl2U6xaCRBYVrBZv8RrLytIoD6EYzoK7w8Llf11VTAKzpui0QoL8vkp5rPvsrni660=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711004990; c=relaxed/simple;
-	bh=q5R/sV0oThhoaTn7BNDCxLdWwVMl9Bypnpb1bNRWY5o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ep7qu6WYdnr9QSOX7esFjn6cWrVb4RkLfYR+gnEHm2+lx+zBnsCPgQZkNaGpgc6k4wiu3Y56TaOR7zCVVxcvl8CuhbXJybbsSRNE3nL+X40t869KOLY5RbCeIgeLcFS4q4iI5CwJ+rME66iSmDlKf8CEpG6byuf41YVESZaBJRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lgwLZfty; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lgwLZfty"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1e00d1e13acso3942815ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 00:09:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711004988; x=1711609788; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dRY0pVFx5hvWyvGusyC9aLcoBfDJnjCMV4j0O5N7/aM=;
-        b=lgwLZftyzQK3+Xj/2ldXhMLsI1FSk/rzrcoOXrazDuvI9q+U5+nnsEe96G6gMeg0MU
-         hQGGTvWOHEhVSZwQiRoPaq6MCI8UbaE5FfRoEzGWsCoeOfQQ3qJlX5RGOcHI0eVSStbs
-         IKyYJDNN+LMN9KQomn/4AcaWkxW5qMKD7KupE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711004988; x=1711609788;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dRY0pVFx5hvWyvGusyC9aLcoBfDJnjCMV4j0O5N7/aM=;
-        b=eW8ccQjx5laOh/ZKcEafZ+gZRM2Nchl11Yshk/W+NPA0jD4+2bX2Qtcc1onMoLHY1r
-         PjsHTDO40uj9wG+OWl/EES9WazBDk2I8/+vG0727Tl6OTA6VvvMS7Dkw8ihMBkRAvleO
-         s8LDBjXwPVsrmpOy713uHa1NCYd/p5bY1UEaglstnTlpQGhoWu9SNhTICm+uBGU7MdYE
-         KkrVBAUeqM54ZmHb9Z4YCaIrXpqKCsjRVMiYbs8Eg8nVikc91Wrd/WbQ7+BpBvn/mhfL
-         0UjheUdANpE56aqc254DhdBPAFKTYUQEG16GrUKK0sVRUfrsynSLZo/nP8O8dEOxv49z
-         r2NQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUbtlXRSKAIMiwfsQYa2Qs5AAWbQEhA/iFYRT4zyoAn1U43xFfy45iGakneI715g7kws/tMCGZHPa4pzx7gWfDRfE8oI6dRYLqXCqbb
-X-Gm-Message-State: AOJu0YwEWfl6YkKBUEaxCo+zwfZfcVh3Z+0qFyPauUF5KeBnwodt8lGg
-	k0xnRKm0wIz+uDoMBn92fHvQxx/ZlQTAUINReLCsa0plZd1gar6k/RIoijY2Ow==
-X-Google-Smtp-Source: AGHT+IH57yxJiEyp3oRKr8txV8M/DfsK8WHQOpuCYRXilXXDGc8rC+frhVE/5DbrWBUAwhTudJ3yqg==
-X-Received: by 2002:a17:903:13c7:b0:1e0:11a4:30e0 with SMTP id kd7-20020a17090313c700b001e011a430e0mr5267687plb.19.1711004988238;
-        Thu, 21 Mar 2024 00:09:48 -0700 (PDT)
-Received: from fshao-p620.tpe.corp.google.com ([2401:fa00:1:10:c1ff:a4cf:ac35:8df6])
-        by smtp.gmail.com with ESMTPSA id o1-20020a170902d4c100b001dbcfb4766csm8705582plg.226.2024.03.21.00.09.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 00:09:47 -0700 (PDT)
-From: Fei Shao <fshao@chromium.org>
-To: Mark Brown <broonie@kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Fei Shao <fshao@chromium.org>,
-	Daniel Kurtz <djkurtz@chromium.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-spi@vger.kernel.org
-Subject: [PATCH v2 0/2] Fixes NULL pointer access in spi-mt65xx.c
-Date: Thu, 21 Mar 2024 15:08:56 +0800
-Message-ID: <20240321070942.1587146-1-fshao@chromium.org>
-X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
+	s=arc-20240116; t=1711005150; c=relaxed/simple;
+	bh=mzMLKiw5MQzxQS21Hp1Kb386ukYGSQSd0ad2KKmfIrg=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=s5YXMa/P86qS9VFEY/u2tzasOABQDL1Jnd6uJeCBAFl02sbyJfaNpsJQQafKYNNIyProZGJXNQte1r8xN4MT0Ht0XaJmofaWNlezEE9xHdBpkT0QqIfazzcGeSY8VoXEi2UtLJHJW8WKc8ArmwXYX4vW/MmvHZzQXEqDx0YyQhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4V0c8x3B9rz4f3jsn;
+	Thu, 21 Mar 2024 15:12:17 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 756BB1A016E;
+	Thu, 21 Mar 2024 15:12:23 +0800 (CST)
+Received: from [10.174.178.129] (unknown [10.174.178.129])
+	by APP1 (Coremail) with SMTP id cCh0CgAnRQ7V3ftldCd1Hg--.33160S2;
+	Thu, 21 Mar 2024 15:12:23 +0800 (CST)
+Subject: Re: [PATCH 6/6] writeback: remove unneeded GDTC_INIT_NO_WB
+To: Tejun Heo <tj@kernel.org>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ willy@infradead.org, bfoster@redhat.com, jack@suse.cz, dsterba@suse.com,
+ mjguzik@gmail.com, dhowells@redhat.com, peterz@infradead.org
+References: <20240320110222.6564-1-shikemeng@huaweicloud.com>
+ <20240320110222.6564-7-shikemeng@huaweicloud.com>
+ <Zfr9my_tfxO-N6HS@mtj.duckdns.org>
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+Message-ID: <becdb16b-a318-ec05-61d2-d190541ae997@huaweicloud.com>
+Date: Thu, 21 Mar 2024 15:12:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zfr9my_tfxO-N6HS@mtj.duckdns.org>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:cCh0CgAnRQ7V3ftldCd1Hg--.33160S2
+X-Coremail-Antispam: 1UD129KBjvJXoWrZr4rtw1fWrW3Zw1UZF1UJrb_yoW8JF1rpF
+	4fWa1UKFW5Ja9a9rnrCw4xXr90grZ7Ka9xJ3s8CwsxZa1fG3Z3Gr1qq3yFqF47Ar1fGr9x
+	Z3yIq3Z7AFWUCFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvab4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
+	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
+	67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
+	uYvjxUrR6zUUUUU
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-Hi,
 
-This series contains two patches for spi-mt65xx.c, both focusing on its
-interrupt handler mtk_spi_interrupt().
 
-The first patch is to fix a NULL pointer access in the interrupt
-handler, which is first found on a MT8186 Chromebook device when the
-system tries to establish host communication with its embedded
-controller.
+on 3/20/2024 11:15 PM, Tejun Heo wrote:
+> Hello,
+> 
+> On Wed, Mar 20, 2024 at 07:02:22PM +0800, Kemeng Shi wrote:
+>> We never use gdtc->dom set with GDTC_INIT_NO_WB, just remove unneeded
+>> GDTC_INIT_NO_WB
+>>
+>> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+> ...
+>>  void global_dirty_limits(unsigned long *pbackground, unsigned long *pdirty)
+>>  {
+>> -	struct dirty_throttle_control gdtc = { GDTC_INIT_NO_WB };
+>> +	struct dirty_throttle_control gdtc = { };
+> 
+> Even if it's currently not referenced, wouldn't it still be better to always
+> guarantee that a dtc's dom is always initialized? I'm not sure what we get
+> by removing this.
+As we explicitly use GDTC_INIT_NO_WB to set global_wb_domain before
+calculating dirty limit with domain_dirty_limits, I intuitively think the dirty
+limit calculation in domain_dirty_limits is related to global_wb_domain when
+CONFIG_WRITEBACK_CGROUP is enabled while the truth is not. So this is a little
+confusing to me.
+Would it be acceptable to you that we keep useing GDTC_INIT_NO_WB but
+define GDTC_INIT_NO_WB to null fow now and redefine GDTC_INIT_NO_WB when some
+member of gdtc is really needed.
+Of couse I'm not insistent on this. Would like to hear you suggestion. Thanks!
 
-The second one is a decorative clean-up when I'm working on the first
-patch, which simply renames a variable to better follow the rest of the
-code.
-I put this after the first fix because I think that will make
-maintainers and users slightly easier to only backport the fix if
-needed.
-
-Looking forward to any feedback, thank you.
-
-Regards,
-Fei
-
-Changes in v2:
-- Restore a missing curly brace being dropped during rebase
-- Fix a typo in commit message (trans, not xfer)
-
-Fei Shao (2):
-  spi: spi-mt65xx: Fix NULL pointer access in interrupt handler
-  spi: spi-mt65xx: Rename a variable in interrupt handler
-
- drivers/spi/spi-mt65xx.c | 48 ++++++++++++++++++++--------------------
- 1 file changed, 24 insertions(+), 24 deletions(-)
-
--- 
-2.44.0.396.g6e790dbe36-goog
+> 
+> Thanks.
+> 
 
