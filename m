@@ -1,106 +1,150 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from box.trvn.ru (box.trvn.ru [194.87.146.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85EE586277
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 14:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777391E53F;
+	Thu, 21 Mar 2024 14:44:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.87.146.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711032153; cv=none; b=e99Fx01IVSJW3CEMHy4qfZuDLvDbbC49AGnIdNDo2EKf2f5CogB4euu5N+BNWJsBFbEnb4LtvHLeKR+cAYa/yzlhAZkKRHRS9Ti+YJfM/f7XsCBUIRWgtFUgy3hvt+yGkMQN3XkWplRnO9aiYlPDJHbDxgAgy0EEf8GcTaamDfk=
+	t=1711032285; cv=none; b=iCotV9aeoTOXX39OdIuzftpvzHDGUMRe7u1LVwOY0xdC/wA2QpIqXFrEAmreSBTcHkANYSK7+0wb3t/L/tTPOXpA/ps+MxJBAvopuIPdRxMoeORgB+IF11cWMaYVKaOFzkvWbJ90jjb9tenAvlHZ944snp/6ikgiiwyjMR2Clp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711032153; c=relaxed/simple;
-	bh=mvVCHoV3WyhbYPzYm8+AWnGsZAbyA7SkY5eLDIVysB0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=nt55dGqn6m6f3ttEvTJG/QZr4qNiCWdPiyXaRPZNKce32pTMtCNhfBP4g+eDcy15tsxqAHn3h77F4faEpWgh/b2V9hWSvtGVJwKwUZSgpDP1JiNO2Xf6BDIh0SoMV88K4oEF/+ScHbMwVkgD0T3AGg/3fS8j+x5JphlNRik5z7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=a7uRLLfM; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711032285; c=relaxed/simple;
+	bh=W52VFO6+JoxAJcY1nLZaHrx+1XLbKPfE+RhNuXYMyCY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=JKE+PxnUt5cYkjqR4CGTI6fNRuV5sDTzrnbWN5leyyY2pNeMHapDfFSpBxDxUCCn/Krj8yVHKyCk7kIC9UOQPs+Cf1DMiILy2bPuosP/PjlAUGNJBX9UA+8pL+c8OA8fuOlsW9z7rezHB4DYV5qlpzbugdld20oU3az7rGScJs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=UaOftfse; arc=none smtp.client-ip=194.87.146.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a7uRLLfM"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-33ed5b6bf59so647820f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 07:42:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711032149; x=1711636949; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vlpyW/qJGkbtizkhGO1yqBNzqS2/ma5JoZfKsAcPkIM=;
-        b=a7uRLLfMM756YNW7mB9hZUcZK9H0LXBDzI49/OUWjPnCAakg88BNKpfTCizCsg/qxf
-         OEkQwJ/0TM+U74XsOE+D03WO/0T+FDamWGrPHQ1gYWvbeBUIkNfg08oeaAutfzEdMJkS
-         gb2IerjjfMMKCGuUY8qJA/nbLt5GIc1u1Cdf6HO3m0LJfVYzBGvE1fXBS7jZqVUi9bCx
-         A4UkKC0ElWyyi2FtwLtHJAMl52HtslA/8QOCT8bMxQ2W0Yw5ZXQuWijYjKT9oR+7J2GJ
-         e2x8PEudnqwOqQrKB+ZE+7Q3mBLwcqya1KYIiM3vGJuulmsX2umlcIdt60SCvB6h/jZn
-         cbKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711032149; x=1711636949;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vlpyW/qJGkbtizkhGO1yqBNzqS2/ma5JoZfKsAcPkIM=;
-        b=HZjOhwoP9duX6CwS3ZpaJguHanwRQVOXY8EhD4VLO4qWrZXXUkvIP2MxC3s2QZGEXE
-         LNmvdgdpSaJcrq8ZVPZCABsGkJf+JBmz6s2CAhu9OlrxNJYfKA+er6RBQmlIzB8WR0tE
-         YBsjx0XUhLXNMC77NlOW52YsdVsxFBIy19LHezNAHy8qzqvaDIehM4h0Raap9TLQ4dZF
-         OX5O8SstTHOaoAM7S/2DlCs2w+Y41RRm6rsFmdzaEmj8K3SobE18qbKWrjWvWTjlTzdM
-         0ojV4+NWbNcNWKgRAoAQXC7COtOH8uR1cNM8s36X2+jQC7fUHKaHXpnxz0tEnJy6P5ku
-         xrdg==
-X-Forwarded-Encrypted: i=1; AJvYcCX62G/d2ilrCgzwD+YtOUK+TMJjoVy56P7tXDh3o4uzzwlGpwJq+G1FdnkhIEYsYv+Sd6s5MWxRlYz45UK5MU2Q+ygHR2O/tYzkj1gh
-X-Gm-Message-State: AOJu0YwSuGIvqnF4gjYclxst4/XvoWrXSZjTkvsBkwt5oW+Ef0+fu8zu
-	utoYsRzWsI6edB+Q1xVXYuISm8b2rmGo0r4cceW4vSW0WbiIYSUEJB0wHtyYtS0=
-X-Google-Smtp-Source: AGHT+IGqM5LRTTAcA+6N8Hep2ZWFfY82O2I9PKGnkuA08prM+u9q7FCVn8y1OgI4tWJo9PIjBFq0MQ==
-X-Received: by 2002:adf:fd0d:0:b0:33e:a29d:9672 with SMTP id e13-20020adffd0d000000b0033ea29d9672mr15509211wrr.51.1711032148752;
-        Thu, 21 Mar 2024 07:42:28 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id z18-20020adfec92000000b0033e7de97214sm17328972wrn.40.2024.03.21.07.42.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 07:42:28 -0700 (PDT)
-Date: Thu, 21 Mar 2024 17:42:18 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Ido Schimmel <idosch@nvidia.com>
-Cc: David Ahern <dsahern@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Petr Machata <petrm@nvidia.com>, Kees Cook <keescook@chromium.org>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH v2 net] nexthop: fix uninitialized variable in
- nla_put_nh_group_stats()
-Message-ID: <f08ac289-d57f-4a1a-830f-cf9a0563cb9c@moroto.mountain>
+	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="UaOftfse"
+Received: from authenticated-user (box.trvn.ru [194.87.146.52])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	(No client certificate requested)
+	by box.trvn.ru (Postfix) with ESMTPSA id 0FEF7401B8;
+	Thu, 21 Mar 2024 19:44:32 +0500 (+05)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
+	t=1711032273; bh=W52VFO6+JoxAJcY1nLZaHrx+1XLbKPfE+RhNuXYMyCY=;
+	h=From:Date:Subject:To:Cc:From;
+	b=UaOftfseQHH5gfPllLsKaUKfRyro7UlsT52/OPWeX5fk+y34RlT8P3ZePCS+CKZRj
+	 dVv+WAKoid5anohBTEg5ZQe3MlYZteMBi3j8Pa6l7L7MovwkGJSa7XBUXPnnEzTj9L
+	 r1qfuxTB70fScs2vHHL3xR8d9T1Rds1Vm+lky1Hw1UUEpB1nLW205AgUJVs33jcQ1t
+	 +6+P5KNXPFgazMjhlQCKy2LVfmBFCN/xJwVKJDi2LjQoKwzvBOaFtQCHWUE0sOUYR0
+	 CMo5sZ9VGC72NY6xsNpls8WSI5VW0I7kUFV2ngOVTF1V4VOfhGNLgl/9aJR/k0rJ0J
+	 FwlvF5yHXVjvg==
+From: Nikita Travkin <nikita@trvn.ru>
+Date: Thu, 21 Mar 2024 19:44:13 +0500
+Subject: [PATCH] thermal: gov_power_allocator: Allow binding without
+ cooling devices
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240321-gpa-no-cooling-devs-v1-1-5c9e0ef2062e@trvn.ru>
+X-B4-Tracking: v=1; b=H4sIAL1H/GUC/x3MQQqAIBBA0avErBuwsci6SrQInWwgNBQiCO+et
+ HyL/1/InIQzzM0LiW/JEkNF1zZgjy14RnHVQIp6palDf20YItoYTwkeHd8Z7TgxazJG0wC1vBL
+ v8vzXZS3lA2efe/BlAAAA
+To: Lukasz Luba <lukasz.luba@arm.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Nikita Travkin <nikita@trvn.ru>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3118; i=nikita@trvn.ru;
+ h=from:subject:message-id; bh=W52VFO6+JoxAJcY1nLZaHrx+1XLbKPfE+RhNuXYMyCY=;
+ b=owEBbQKS/ZANAwAIAUMc7O4oGb91AcsmYgBl/EfOdmOMHxpTbs4VadDGYduboR6lXbm5aVPLU
+ d36f6ZXZs6JAjMEAAEIAB0WIQTAhK9UUj+qg34uxUdDHOzuKBm/dQUCZfxHzgAKCRBDHOzuKBm/
+ dYaiD/9NB6CUpKVlW+cza/WT7F1ywt8KRiuCT8sKxzGPwzwtZcwFdTPx+kvA8UdlQrtxfjAEJ2l
+ pVw5trNqTe+mtmp96XCjMmReWz4OkX6yOKlnf4vBFqDjmTHykpXz5uvqWPqK+v/CcAZBk0ZZgYR
+ nTbuTwVs+rT9rfvY9a4e8h3QIn1UaUAsJzSCN2tfqTQpZQPxispxYW9dbvrtPVYqxipRWWi7hNo
+ nUfWJEhwfK3aofkc9ZU74fsg8PD9JdZYIYoZISBP15SUOpSe+UOSdYqMdD0ibLUDqYXzlFWNDDe
+ YA15Bg/iXRoqa54moUovawv/6aMe+g0YTGyruk5ld4Wpek1vWcOBExCpOCha2xyLJ+RNihQKdzE
+ tExxd3PCFRbHmtYpGs39n/2Pf6PS9NSdGMRX4pViXz6mtd7CpueDNVvV74WuWmEhHUTcn6WGqR9
+ fljGjozsBcYwHFV55Dpm81YQ5MS5ZEmqMJTRgmkGpMS1gNwFrTQD9WSaSwS6PdsZBB8OvGVhEeO
+ iGe5wD6wKiE6drdYexIZurbXA2jtJfKZ2eEMgoBu3OtNwZSk9pqqO1jgCBuZUFl3ArU3kpo2c3a
+ uegg1OdUmwQiuv9mR8QKhUdWp+McY1N5nbAsSkFI4RfMhtBLElgTadKG+s1ZxwVWgnZ0ouHNjHy
+ s2rc6BJQ5AGwyXQ==
+X-Developer-Key: i=nikita@trvn.ru; a=openpgp;
+ fpr=C084AF54523FAA837E2EC547431CECEE2819BF75
 
-The "*hw_stats_used" value needs to be set on the success paths to prevent
-an uninitialized variable bug in the caller, nla_put_nh_group_stats().
+Commit e83747c2f8e3 ("thermal: gov_power_allocator: Set up trip points earlier")
+added a check that would fail binding the governer if there is no
+cooling devices bound to the thermal zone. Unfortunately this causes
+issues in cases when the TZ is bound to the governer before the cooling
+devices are attached to it. (I.e. when the tz is registered using
+thermal_zone_device_register_with_trips().)
 
-Fixes: 5072ae00aea4 ("net: nexthop: Expose nexthop group HW stats to user space")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Additionally, the documentation across gov_power_allocator suggests it's
+intended to allow it to be bound to thermal zones without cooling
+devices (and thus without passive/active trip points), however the same
+change added a check for the trip point to be present, causing those TZ
+to fail probing.
+
+Those changes cause all thermal zones to fail on some devices (such as
+sc7180-acer-aspire1) and prevent the kernel from controlling the cpu/gpu
+frequency based on the temperature, as well as losing all the other
+"informational" thermal zones if power_allocator is set as default.
+
+This commit partially reverts the referenced one by dropping the trip
+point check and by allowing the TZ to probe even if no actor buffer was
+allocated to allow those TZ to probe again.
+
+Fixes: e83747c2f8e3 ("thermal: gov_power_allocator: Set up trip points earlier")
+Signed-off-by: Nikita Travkin <nikita@trvn.ru>
 ---
-v2: Set the variable in nh_grp_hw_stats_update() instead of
-    nla_put_nh_group_stats().
+I've noticed that all thermal zones fail probing with -EINVAL on my
+sc7180 based Acer Aspire 1 since 6.8. This commit allows me to bring
+them back.
+---
+ drivers/thermal/gov_power_allocator.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
- net/ipv4/nexthop.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+diff --git a/drivers/thermal/gov_power_allocator.c b/drivers/thermal/gov_power_allocator.c
+index 1b17dc4c219c..4f2d7f3b7508 100644
+--- a/drivers/thermal/gov_power_allocator.c
++++ b/drivers/thermal/gov_power_allocator.c
+@@ -679,11 +679,6 @@ static int power_allocator_bind(struct thermal_zone_device *tz)
+ 		return -ENOMEM;
+ 
+ 	get_governor_trips(tz, params);
+-	if (!params->trip_max) {
+-		dev_warn(&tz->device, "power_allocator: missing trip_max\n");
+-		kfree(params);
+-		return -EINVAL;
+-	}
+ 
+ 	ret = check_power_actors(tz, params);
+ 	if (ret < 0) {
+@@ -693,7 +688,7 @@ static int power_allocator_bind(struct thermal_zone_device *tz)
+ 	}
+ 
+ 	ret = allocate_actors_buffer(params, ret);
+-	if (ret) {
++	if (ret && ret != -EINVAL) {
+ 		dev_warn(&tz->device, "power_allocator: allocation failed\n");
+ 		kfree(params);
+ 		return ret;
+@@ -714,9 +709,10 @@ static int power_allocator_bind(struct thermal_zone_device *tz)
+ 	else
+ 		params->sustainable_power = tz->tzp->sustainable_power;
+ 
+-	estimate_pid_constants(tz, tz->tzp->sustainable_power,
+-			       params->trip_switch_on,
+-			       params->trip_max->temperature);
++	if (params->trip_max)
++		estimate_pid_constants(tz, tz->tzp->sustainable_power,
++				       params->trip_switch_on,
++				       params->trip_max->temperature);
+ 
+ 	reset_pid_controller(params);
+ 
 
-diff --git a/net/ipv4/nexthop.c b/net/ipv4/nexthop.c
-index 74928a9d1aa4..535856b0f0ed 100644
---- a/net/ipv4/nexthop.c
-+++ b/net/ipv4/nexthop.c
-@@ -768,8 +768,10 @@ static int nh_grp_hw_stats_update(struct nexthop *nh, bool *hw_stats_used)
- 	struct net *net = nh->net;
- 	int err;
- 
--	if (nexthop_notifiers_is_empty(net))
-+	if (nexthop_notifiers_is_empty(net)) {
-+		*hw_stats_used = false;
- 		return 0;
-+	}
- 
- 	err = nh_notifier_grp_hw_stats_init(&info, nh);
- 	if (err)
+---
+base-commit: e7528c088874326d3060a46f572252be43755a86
+change-id: 20240321-gpa-no-cooling-devs-c79ee3288325
+
+Best regards,
 -- 
-2.43.0
+Nikita Travkin <nikita@trvn.ru>
 
