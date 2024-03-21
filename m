@@ -1,117 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87BDB56B9C;
-	Thu, 21 Mar 2024 11:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCAE57302
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 11:22:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711020154; cv=none; b=n5BM3NV0HvAOED7rv6WvrM04sB/H1q7el5Qc1/fsxQdjqwIGG6TqhTi7FqvT+nMaoi09Vlhjhz2BPvlQb2IombEfbn2TxMLxiqYXQ79pGQQODVIvtlnrBwg4xOaYHUeprFyTXMQZoaIX5l8hGXU9M3GrO8uO8yq6hkr98hZgZLc=
+	t=1711020180; cv=none; b=WmxBLcofc9uYOi4QJlDn5FzoGPWVJL3r0A+s+rsDh/MfOr0NNlBLvRdaGWzIWEdbq3QnwKGrm1Gaf+8payP3fzghbo7lGR7EnZDonnFdLloSv3k7vdtKhmjNd5QG/99IARUXNqRWwe8UshV+aZ9LDvf1b/JEsjsty/NVCEZS7F0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711020154; c=relaxed/simple;
-	bh=B5hYVgV8ybe0NDF3WjWOs8927InHswBxtTUnOsK0Th8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y5XiQlarvdLxToBD2w3GX2PYVMAay8C/Q9P6I320RkEfweLBMkTKYCu5PekjaqMQag++wswvub7VvzHU/gpZ09XSdFSgByXq3cKHJaTjebaC1vvB3F6Jrp/3TO6/UGfuOE79uSh9rEYIa4d8pZnO6UuAffVpnALRBTG4RECPemE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QjUcB880; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1711020180; c=relaxed/simple;
+	bh=YRWj7tUuWaozGIBwXID8VtXGQiJ2rzifS+2Bco4hG08=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=cfyqM9OaaYChSZNWhYLYawhumQdKYYPzVKuWtznUCohUxuVh93HPhYmqHwJVdDuxhKE2kBN1A+IIoW4poqdUN+hZmGLZvMnqEn2dnjfyVDhz1NPTd714QOOhGOWs8rsUMcT1/+lbG04Go9rGOLoYtGvZtKTexQLN9aIRTN6yJHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C+X4YClq; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QjUcB880"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711020153; x=1742556153;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=B5hYVgV8ybe0NDF3WjWOs8927InHswBxtTUnOsK0Th8=;
-  b=QjUcB880CM66JXIepPu7tgzU9DGQGmxziQZ+UnSyaYHPB+H2h6MQ3UZV
-   23KdZg3eQki6n/HJTD20GcFWbU3zicjApCeluh7pyQ7BZaSnZC13kx2Eq
-   NGA+DznE8sJUoBGmmcXRrbL7D8yYyYBLxDFn+YitADSON9NxobvNZHQAD
-   Ozs+zsxG3ZCUTVUcW/FX4764zva0Q/cIT7Qr9omABkV3nq8FQvEYM4Ch6
-   GSzX9j/FekQkuE5wQPEJoyiL0N5ZuintXdGHRdCxFg+UTwKKWJ0C0IN6c
-   asJEzPQUFH8h6BojkeB402OF9Wiq3Tm9lfIhld1t7gtOxI5GDYpfmlEiN
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="6115754"
-X-IronPort-AV: E=Sophos;i="6.07,142,1708416000"; 
-   d="scan'208";a="6115754"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 04:22:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="914704304"
-X-IronPort-AV: E=Sophos;i="6.07,142,1708416000"; 
-   d="scan'208";a="914704304"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 04:22:28 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rnGV7-0000000Eqax-42sD;
-	Thu, 21 Mar 2024 13:22:25 +0200
-Date: Thu, 21 Mar 2024 13:22:25 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Vasileios Amoiridis <vassilisamir@gmail.com>
-Cc: jic23@kernel.org, lars@metafoo.de, ang.iglesiasg@gmail.com,
-	mazziesaccount@gmail.com, ak@it-klinger.de,
-	petre.rodan@subdimension.ro, phil@raspberrypi.com, 579lpy@gmail.com,
-	linus.walleij@linaro.org, semen.protsenko@linaro.org,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] iio: pressure: Add timestamp and scan_masks for
- BMP280 driver
-Message-ID: <ZfwYcSB2B2WtlFgM@smile.fi.intel.com>
-References: <20240319002925.2121016-1-vassilisamir@gmail.com>
- <20240319002925.2121016-6-vassilisamir@gmail.com>
- <ZfrDW1ESxnFg__od@smile.fi.intel.com>
- <20240320184516.GB36450@vamoiridPC>
- <ZftJK3cqFNU9-dCG@smile.fi.intel.com>
- <20240320213139.GA52721@vamoiridPC>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C+X4YClq"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-789f3bbe3d6so62506285a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 04:22:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711020178; x=1711624978; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MKov5O1lFAGwk/wL55gxbWjBq9FqkMhV/kf6YNRLDok=;
+        b=C+X4YClqh55IiflZ73VUmNNhgsGr0yAAuZAizIbo7kHR7b2iULzTmECQYr8kO2ttkp
+         SHJSCmkqwPGjqvJnszFHDFqW6YdyQ2A9XvvdF2bWO1ekw9htFYZnOI0UOeAidSwYoPcd
+         OMdkXQk7BX7zwbiQPDqwciIdCNUzSovc/nUBM7Q0ofSncyqAFW8BtX8krDrrNTT6mK40
+         XV/lVpq+WVGYb4mIBgF/oMu/oH5a4j4i5yz7mncMvgYWs9S1u4/Mgq4JOd9H1Zvq6qZ5
+         ToSkKBCEvu+7mstWgDXSaSLNxknUOOo+/cawiVIbafwwUesgFEfZNbUU9epvOMqj+CTd
+         nIjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711020178; x=1711624978;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MKov5O1lFAGwk/wL55gxbWjBq9FqkMhV/kf6YNRLDok=;
+        b=Ubjoqg30tRbPt6Icp4aKMTbc7OwWXe3mwwST3WBZRWEHbCFmvmlWONH8iJpJvBkz8g
+         UefI7GunIRr454HL9623u+7Jyr1gAlUnhvtFwdRevTthu0+Ar7v8u2tE0MiM0F7l27ys
+         MSwAuuP7pRg0v92mNhiHQQWpBmp/hNS/SaGKnd+L/7PcSPWzcID5evEFlJUOkAufosTr
+         mcVLZFnK5XzrpDOMMGk171xX0YmmDz+kf5k2WrVBB39Arag9haMRzzYDAVmF9aemqQzL
+         bUwYW51OrSsifEHZ/3qAWSnjeLKrrERFeR3fb1XShjAo6jnMDYqwcjGSeJTLOzZ7ZAxW
+         VKHg==
+X-Forwarded-Encrypted: i=1; AJvYcCWt3RCDIExrDQVSFQoL/N0qoZTdJjIgiKX6fj5yKXbrP71tuy4MWQK/OzR2HCy52Z9jWHjsWWtNi9Mmn1tu/r3TqBHeC+AX/fg6IqdN
+X-Gm-Message-State: AOJu0YxhqURlHHJvPCw+mAkwdIh4HvwfY2Rj7kOoDYKS+COBmffDQMVY
+	DJMqVkoZoCvB1XMbit5gPzKli1cS/IPpAZuZZhyyCZfWyqNjkDcm8rnYX9lLyoORAq6N7tTUk94
+	=
+X-Google-Smtp-Source: AGHT+IFEF9zGB/LdeZhJbbnFlyxqqaJFUZ7TW2VrIUFAnJy5wTVwAoPqE1PhloEVUkpQfD6YLYxRjA==
+X-Received: by 2002:a05:6a20:4e28:b0:1a3:50be:b3bb with SMTP id gk40-20020a056a204e2800b001a350beb3bbmr3542415pzb.53.1711019809214;
+        Thu, 21 Mar 2024 04:16:49 -0700 (PDT)
+Received: from [127.0.1.1] ([2409:40f4:102b:a64b:d832:a82a:837c:6d3])
+        by smtp.gmail.com with ESMTPSA id ka6-20020a056a00938600b006e7324d32bbsm5531120pfb.122.2024.03.21.04.16.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Mar 2024 04:16:48 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Date: Thu, 21 Mar 2024 16:46:23 +0530
+Subject: [PATCH v2 03/21] arm64: dts: qcom: sm8150: Add PCIe bridge node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240320213139.GA52721@vamoiridPC>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240321-pcie-qcom-bridge-dts-v2-3-1eb790c53e43@linaro.org>
+References: <20240321-pcie-qcom-bridge-dts-v2-0-1eb790c53e43@linaro.org>
+In-Reply-To: <20240321-pcie-qcom-bridge-dts-v2-0-1eb790c53e43@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
+ Rob Herring <robh@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1249;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=YRWj7tUuWaozGIBwXID8VtXGQiJ2rzifS+2Bco4hG08=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBl/BcJJxAyVnzVSonO4oMAUO+Ag2f2+i0I0Vglr
+ D3M3ea0HX+JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZfwXCQAKCRBVnxHm/pHO
+ 9dFSCACSscUDSAGMxHspwNenzJ2yAY3/YhnjNqPcuON1yIn5KEMU4NcL85gsz5ggk1DmBND5arp
+ QnsacCfTvv8ouytMnA212VVS785S8U4vfNepNYiRyu/sU0pPGf+FNyGucNr6+N3DqeArGAQElXk
+ K1JKIfDKiR/PLo+2pi2GSoPefirnf+ihJlV+ZEQe/l8QJJdbfV3LsmvW9RgXtSaVkJS3V7z9F5Q
+ 1cc6NSQcDbL0dSewn5GvYENeBluWKlL3OGjwPacgL2GoUyrosu2i210TQT3EAbjVsDSSkfGrHeK
+ ETFVXUv/Zkiczln/g4rNtXe79CaE09LIGMpQfUL3Ftu9UDzq
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
 
-On Wed, Mar 20, 2024 at 10:31:39PM +0100, Vasileios Amoiridis wrote:
-> On Wed, Mar 20, 2024 at 10:38:03PM +0200, Andy Shevchenko wrote:
-> > On Wed, Mar 20, 2024 at 07:45:16PM +0100, Vasileios Amoiridis wrote:
-> > > On Wed, Mar 20, 2024 at 01:07:07PM +0200, Andy Shevchenko wrote:
-> > > > On Tue, Mar 19, 2024 at 01:29:24AM +0100, Vasileios Amoiridis wrote:
+On Qcom SoCs, the PCIe host bridge is connected to a single PCIe bridge
+for each controller instance. Hence, add a node to represent the bridge.
 
-...
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sm8150.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-> > > > > +enum bmp280_scan {
-> > > > > +	BMP280_TEMP,
-> > > > > +	BMP280_PRESS,
-> > > > > +	BME280_HUMID
-> > > > 
-> > > > The last is not a terminator, please leave trailing comma.
-> > > > 
-> > > > > +};
-> > > 
-> > > What do you mean it is not a terminator? In general with the enum
-> > > variables I would write:
-> > > 
-> > > 	enum var { a, b, c };
-> > 
-> > This example is different to what you used. I.o.w. _this_ example is okay.
-> > 
-> > > Why in this case there is a comma needed after the BME280_HUMID element?
-> > 
-> > It's pure style issue that helps to avoid the unneeded churn in the future in
-> > case the list is getting expanded. You can easily imagine what I mean.
-> > 
-> 
-> Ok, that definitely makes sense, thank you! In general, should this be applied
-> to structs as well?
-
-Yes, to structs and/or arrays initializers when the list has a potential
-expanding. We don't have trailing comma when:
-1) it's a terminator entry (nothing must be after);
-2) it's on the one line (as in your above example).
+diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+index a35c0852b5a1..ff22e4346660 100644
+--- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+@@ -1901,6 +1901,16 @@ pcie0: pcie@1c00000 {
+ 			pinctrl-0 = <&pcie0_default_state>;
+ 
+ 			status = "disabled";
++
++			pcie@0 {
++				device_type = "pci";
++				reg = <0x0 0x0 0x0 0x0 0x0>;
++				bus-range = <0x01 0xff>;
++
++				#address-cells = <3>;
++				#size-cells = <2>;
++				ranges;
++			};
+ 		};
+ 
+ 		pcie0_phy: phy@1c06000 {
+@@ -2011,6 +2021,16 @@ pcie1: pcie@1c08000 {
+ 			pinctrl-0 = <&pcie1_default_state>;
+ 
+ 			status = "disabled";
++
++			pcie@0 {
++				device_type = "pci";
++				reg = <0x0 0x0 0x0 0x0 0x0>;
++				bus-range = <0x01 0xff>;
++
++				#address-cells = <3>;
++				#size-cells = <2>;
++				ranges;
++			};
+ 		};
+ 
+ 		pcie1_phy: phy@1c0e000 {
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.25.1
 
