@@ -1,152 +1,85 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.6])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 828556FBF;
-	Thu, 21 Mar 2024 04:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.6
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E046FBF;
+	Thu, 21 Mar 2024 04:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710995992; cv=none; b=h8vwEZKP+rjX/bmFkI+vptKI0oVS6g5v/f1ha+lsiCLnBkcf+LD7qqIO2P18QNhucr6BwLR7kxGE8zXrobborQwTBJKolUSQ3LPn9oJeYtr2Jy0iUnfsLWKpGX/hHRBgKjAYTCd3q0E66SBjcHdBjd97yxD58Q9cHdBhwKgLxrM=
+	t=1710996028; cv=none; b=Rnu8GrJcvaS8M+KuapW45OW3yHwIlvvydVFnbQsXad60/84DnLFFLdZ1b3K+IrVnV23no39+EiwGHJmWdPH12l+qzKcoRfW4ZTdfRhaI/kwhA9PbF3ipZNJA7QnPBLXc3UhdfB4Jw5dxDZCRFdmMIpkUSFsOIEv2Z9eTsGks7ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710995992; c=relaxed/simple;
-	bh=bXH3LTZQb0BcQowVSX+dlyGGDO6k3bqGTWcs3BYwsMI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NdYZRGO7LhFILG4Dns5GLvjwMXolnNKHwXTsddkxO56T73yqJYxUkJ8ppasFPQGmPDQCIB6uurNPcy3o+29/26A6OLcZK4SZy6ta3TZ7K+zRgLuZCWhSEPh0YmNP4whr/GEqEpsV8Is//IrKTaXytar5u+QXQEXdzaPY7k16ye4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=N3++ZyRR; arc=none smtp.client-ip=220.197.31.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1710996028; c=relaxed/simple;
+	bh=Stz/LtxZ0oNUWGPAkL2Gm2OiNn6QXW8wUeEfkZyKsoU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=nZPFDJnWVY65/wDXyFkQTCQmIEw2jlxOCflq2EiRewrclWCkNls8fBgpmsB0mcr1qDPCNXyID4+HQQBZ47Mwi82wTPAiJwb8vY/sIUh8J2gja5FPEsZhN3SJstJHKolAom8lIU51k3CxNkq2plVeBllDdZ1OTejjWGUH7anp7Q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O+zbZA2p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="N3++ZyRR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=TG/kojo4MfR9m2ePLKKNRYbP9JmFRG/HMKZR9UCfC9s=;
-	b=N3++ZyRRTyMlHyQkyMQiBet3n/ePSBCvlu2eJHmX4Hgsak+IepfElFKTQ+SeGH
-	01gUuO5A6fJkfrTngIEA6jW1vUqg5vAl1R7qJhHd5TyqX9igokEe10u7VfJXdRis
-	EOKdhXVgCHTCf9UBygMj5iRz+sRBDfbwqN/as43Hq/C/c=
-Received: from [192.168.101.252] (unknown [14.21.70.188])
-	by gzga-smtp-mta-g1-3 (Coremail) with SMTP id _____wDXvx3NuftlxJ7sAA--.37307S2;
-	Thu, 21 Mar 2024 12:38:37 +0800 (CST)
-Message-ID: <7bdc4d24-adfd-4a8c-b824-6833149f5636@126.com>
-Date: Thu, 21 Mar 2024 12:38:36 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O+zbZA2p"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 032DBC433F1;
+	Thu, 21 Mar 2024 04:40:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710996028;
+	bh=Stz/LtxZ0oNUWGPAkL2Gm2OiNn6QXW8wUeEfkZyKsoU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=O+zbZA2pqkmYFD/+/+lpoOlvB35mFNlw9t+ZWFMewtPpQMLzIXXtiMjV77SIowIQJ
+	 52zBlYz3bQbRL2I0vYZbVkDofZ477Pzs/ymzi2XUB/UKMrXA+dxoM+DINL/ZefSwSF
+	 sIT4pHnAIV6csAHBZEYfWIhpXhBTGe1SpFMuD1uoSWheIxSK/oKUxtYAduNylxNiDK
+	 VNWH6cUQfZCMTF2lZrxO5goILCMy14m4Q4DFy4D22LCQdzpjerGYwSTg5bHff8SzfY
+	 HZWbPCDmZWrfV49pEn06fnBOaPcdTCPozuSbw6tXeQtMJB7jio9FmRTFYPuYY+0TUM
+	 poAoYMWUGqFMg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E5818D982E3;
+	Thu, 21 Mar 2024 04:40:27 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Documentation: coding-style: ask function-like macros to
- evaluate parameters
-To: Barry Song <21cnbao@gmail.com>
-Cc: corbet@lwn.net, workflows@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>,
- Andrew Morton <akpm@linux-foundation.org>, Chris Zankel <chris@zankel.net>,
- Huacai Chen <chenhuacai@loongson.cn>,
- Herbert Xu <herbert@gondor.apana.org.au>, Guenter Roeck
- <linux@roeck-us.net>, Max Filippov <jcmvbkbc@gmail.com>
-References: <20240320001656.10075-1-21cnbao@gmail.com>
- <EFB48F08-F0B5-47C0-8C47-00A542344AC9@126.com>
- <CAGsJ_4xJsqOO-NXs3OWVA47vcK-zUpcrMxCbnY7x5khRH0dnxA@mail.gmail.com>
-From: Meiyong Yu <meiyong.yu@126.com>
-In-Reply-To: <CAGsJ_4xJsqOO-NXs3OWVA47vcK-zUpcrMxCbnY7x5khRH0dnxA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDXvx3NuftlxJ7sAA--.37307S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxJF4UCFWUZr4UJFWxXrWUurg_yoW5uw18pF
-	W5JF42qa1kXryUAr1qvw1SyFy7trW5CFW7WrsxtryUuFs0yFn3Kr47tr15uFs7Ar48CayU
-	ua1jg3sxuFyayaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jtVysUUUUU=
-X-CM-SenderInfo: 5phl501qjo53a6rslhhfrp/1tbijhKohmVLZvaPiwAAsI
+Subject: Re: [PATCH v5 net 0/3] Report RCU QS for busy network kthreads
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171099602793.26207.3374009714899466289.git-patchwork-notify@kernel.org>
+Date: Thu, 21 Mar 2024 04:40:27 +0000
+References: <cover.1710877680.git.yan@cloudflare.com>
+In-Reply-To: <cover.1710877680.git.yan@cloudflare.com>
+To: Yan Zhai <yan@cloudflare.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, jiri@resnulli.us, horms@kernel.org,
+ daniel@iogearbox.net, lorenzo@kernel.org, lixiaoyan@google.com,
+ weiwan@google.com, alexanderduyck@fb.com, linux-kernel@vger.kernel.org,
+ rcu@vger.kernel.org, bpf@vger.kernel.org, kernel-team@cloudflare.com,
+ joel@joelfernandes.org, paulmck@kernel.org, toke@redhat.com,
+ alexei.starovoitov@gmail.com, rostedt@goodmis.org, mark.rutland@arm.com,
+ hawk@kernel.org, bigeasy@linutronix.de
 
+Hello:
 
-在 2024/3/21 8:11, Barry Song 写道:
-> On Thu, Mar 21, 2024 at 12:39 PM Meiyong Yu <meiyong.yu@126.com> wrote:
->>
->>> On Mar 20, 2024, at 08:17, Barry Song <21cnbao@gmail.com> wrote:
->>>
->>> ﻿From: Barry Song <v-songbaohua@oppo.com>
->>>
->>> Recent commit 77292bb8ca69c80 ("crypto: scomp - remove memcpy if
->>> sg_nents is 1 and pages are lowmem") leads to warnings on xtensa
->>> and loongarch,
->>>    In file included from crypto/scompress.c:12:
->>>    include/crypto/scatterwalk.h: In function 'scatterwalk_pagedone':
->>>    include/crypto/scatterwalk.h:76:30: warning: variable 'page' set but not used [-Wunused-but-set-variable]
->>>       76 |                 struct page *page;
->>>          |                              ^~~~
->>>    crypto/scompress.c: In function 'scomp_acomp_comp_decomp':
->>>>> crypto/scompress.c:174:38: warning: unused variable 'dst_page' [-Wunused-variable]
->>>      174 |                         struct page *dst_page = sg_page(req->dst);
->>>          |
->>>
->>> The reason is that flush_dcache_page() is implemented as a noop
->>> macro on these platforms as below,
->>>
->>> #define flush_dcache_page(page) do { } while (0)
->>>
->>> The driver code, for itself, seems be quite innocent and placing
->>> maybe_unused seems pointless,
->>>
->>> struct page *dst_page = sg_page(req->dst);
->>>
->>> for (i = 0; i < nr_pages; i++)
->>>     flush_dcache_page(dst_page + i);
->>>
->>> And it should be independent of architectural implementation
->>> differences.
->>>
->>> Let's have a guidance in codingstyle to ask for the evaluation
->>> of parameters.
->>>
->>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>> Cc: Chris Zankel <chris@zankel.net>
->>> Cc: Huacai Chen <chenhuacai@loongson.cn>
->>> Cc: Herbert Xu <herbert@gondor.apana.org.au>
->>> Cc: Guenter Roeck <linux@roeck-us.net>
->>> Suggested-by: Max Filippov <jcmvbkbc@gmail.com>
->>> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
->>> ---
->>> Documentation/process/coding-style.rst | 7 +++++++
->>> 1 file changed, 7 insertions(+)
->>>
->>> diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
->>> index 9c7cf7347394..8065747fddff 100644
->>> --- a/Documentation/process/coding-style.rst
->>> +++ b/Documentation/process/coding-style.rst
->>> @@ -827,6 +827,13 @@ Macros with multiple statements should be enclosed in a do - while block:
->>>                 do_this(b, c);        \
->>>         } while (0)
->>>
->>
->>> +Function-like macros should evaluate their parameters, for unused parameters,
->> I do not support this point, if the parameter is unused, why not to remove it.
->>
-> Linux boasts support for numerous architectures, striving for
-> independence in its
-> drivers and core code implementation across these architectures. Consequently,
-> certain architectures may utilize parameters for the same APIs, while others may
-> not.
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-So the probem is  designed api is not reasonable,  it use not essential 
-paramter,
+On Tue, 19 Mar 2024 13:44:30 -0700 you wrote:
+> This changeset fixes a common problem for busy networking kthreads.
+> These threads, e.g. NAPI threads, typically will do:
+> 
+> * polling a batch of packets
+> * if there are more work, call cond_resched() to allow scheduling
+> * continue to poll more packets when rx queue is not empty
+> 
+> [...]
 
-you can change the api, but not avoid it.
+Here is the summary with links:
+  - [v5,net,1/3] rcu: add a helper to report consolidated flavor QS
+    https://git.kernel.org/netdev/net/c/1a77557d48cf
+  - [v5,net,2/3] net: report RCU QS on threaded NAPI repolling
+    https://git.kernel.org/netdev/net/c/d6dbbb11247c
+  - [v5,net,3/3] bpf: report RCU QS in cpumap kthread
+    https://git.kernel.org/netdev/net/c/00bf63122459
 
-Anthor question, why you do not use the parameter, if not use it,  will 
-trigger function/feature dismiss problem ?
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
->> about the warning,  is  tool misreport,  the tool must make better
->>
-> no. This is not the case.
->
->>> +cast them to void:
->>> +
->>> +.. code-block:: c
->>> +
->>> +    #define macrofun(a) do { (void) (a); } while (0)
->>> +
->>> Things to avoid when using macros:
->>>
->>> 1) macros that affect control flow:
->>> --
->>> 2.34.1
->>>
->>
 
