@@ -1,165 +1,229 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F02A58129
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 11:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F74358129
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 11:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711021332; cv=none; b=Kqg+zn9sEazI+SWzwlx6fAoahMKy8ok7q4lI2OQsnCf7IFOIrMfmovBRQ+xKH9X9vQSpQ+SAgxZKL/ru4muoqI0lls3EX1rYAQQps45tR6mkn7nQhx4p7v7OuPLRY/Bp1ZMFrpZ0xusRx69pkEBish4+6XM+F2502SoWENHds1g=
+	t=1711021338; cv=none; b=kINA5+Y/5H7tP3ApokVubtebwmljGhl5XOv/ks8CDRZFnwA/hDzCSxcPw9/aU+/Iw8Fc04d+BEMh5CHpPqbaSatB8/2IegLVSG0g/OAsptbey8g/S9CsoyM6b+LD5QSmAHVgF6PDsJyXkzIaoevyKWUtvMU9Bi2bY8uogNTC3lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711021332; c=relaxed/simple;
-	bh=b1LgRGy46/HQQubHp2BueoSWXLCXk4IUdc+OkS8AmOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZNczvE3TCugETE64XnapH58pu4azoWGnDIxqU0jiar4MLOiA55IqbqilR6zYW3uHIAEVaaEKqJg/3W9oCV86EwXMwlKznG4bOr/q5yLv+eyVBZMVecpZnnhBoMjWCpfibJR7DnBbL5rCmv2eBsR9hlTnA4XJc3urS3QsT5ZPmXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EIe2AU2o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711021338; c=relaxed/simple;
+	bh=xm+jWg3BgMqQCkkC5ZHr8tW7UJ1z5Sx/tGZleR1ATvE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=g2xM2IUw+4ka0XMZ/Z2uwD5NQW4pgdIhNxjlGRpYc3ng/skqLONm5U/4CvrbhBgkOg+UYRzMG5uWYx/TNV7Uvhb/oj4DZgxcJcnar/502oi+rs9R4OtI3I9OlxFI6ogvxRbdsOIUyPn35+Xr9sUM9e4UfUu5cJZIda2jj6H57ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ojX7rSwP; arc=none smtp.client-ip=209.85.161.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EIe2AU2o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07696C433C7;
-	Thu, 21 Mar 2024 11:42:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711021332;
-	bh=b1LgRGy46/HQQubHp2BueoSWXLCXk4IUdc+OkS8AmOY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EIe2AU2odNvFKOfnZVcQta7jhL0EeYVAhEOumbTrS+ybOu1DV5R3wxqlBOdlSAyFW
-	 7gn5ruzFbb8rm+NzcmNemlIuZAlpPiBLkjZ7lnxD4qcHKXkHJdxVBTcNGf9luz+Tit
-	 ZbKW19HANSJ4JDAG3O270+1j2n6nfL9+kl8tHXMAmU+0skoqLNn5I+Mc0KlIyzWiPH
-	 2h1S+zqVrwQr9COZS9PWfvGb3Cs8pZcE5l6/zHUDcxK2U3PW7EFq7ih3/SWKLZi3nn
-	 pLS6ZbiJfq0Q9tce8m6m7cwYyhLsgZIwjiHZT1C+y73Z3ICvCCS9OKTbbxyjcxhHx5
-	 uE3GVHp8e733A==
-Date: Thu, 21 Mar 2024 12:42:09 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: Re: [PATCH 2/2] timers: Fix removed self-IPI on global timer's
- enqueue in nohz_full
-Message-ID: <ZfwdEROGFFmIbkCM@lothringen>
-References: <20240318230729.15497-1-frederic@kernel.org>
- <20240318230729.15497-3-frederic@kernel.org>
- <464f6be2-4a72-440d-be53-6a1035d56a4f@paulmck-laptop>
- <1b5752c8-ef32-4ed4-b539-95d507ec99ce@paulmck-laptop>
- <ZfsLtMijRrNZfqh6@localhost.localdomain>
- <6a95b6ac-6681-4492-b155-e30c19bb3341@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ojX7rSwP"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5a47cecb98bso511666eaf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 04:42:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711021336; x=1711626136; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OQs2ciOH27/qJex0Nmnn+loYNUnMaA6AX6ZBILiraFg=;
+        b=ojX7rSwPlpxPfQSANKEEWqRr8xKTlIBCtAEdapUXgwufEa5EE4JeL45q0xqGuaK4cX
+         C39De+oAy52K7sb1i5TEdzAc9ltGpGDSF5X2AU25i8UaNQcFVHvxkV7+eW3QajlNrnd7
+         Ahr21K08q91OmCy1tyXOrsTvkgUrII+KkBCkjVf3cFxwPHDa6gt8p3/UwMYsnLQBm3uo
+         7FjXOhOfM5HDvvfTx5czJqSGzoiMmbpxLcrwm+r5d2fRvrowJNYQwBlFET2p4BHqOExs
+         2/RtyIscLFz7i6dRPxpCtglEe69FuzN8OAkL7D1FLO7URgcS9Ynrt4yU1XDuG+GQ8QGT
+         15Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711021336; x=1711626136;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OQs2ciOH27/qJex0Nmnn+loYNUnMaA6AX6ZBILiraFg=;
+        b=AGrQiX+kp3xgyNrNnvuPv1KblAeThBqJIRjvkW4JtskvrMZt/wX4tMo/Xz8Gna9aoL
+         KS6vA3yj5bCGzcl8NC7NIbZAwBJ33Q92T3lZ/5t0n+o/WTn/2BIyB+I+w87BjJiI5dAR
+         qhObCGi0xtMeI8X1aSTR4RUkWC+cu/+dxDnROcBll1WdKoJKh2Mje5Vyh9WOAjrLMtml
+         yvqE3q6rN7jvUNt2vmG4iXTfyxiWndgtzjtfpgih9r1QEQNTGFrjevYqvL4vy2Dfem02
+         Wf+B2mEMLwo89Ikp2V1K4TnABs7rR2B6vap53Zn2e9SfkRLkwvP84wKd2+6bFNMb1i9Z
+         RJuw==
+X-Forwarded-Encrypted: i=1; AJvYcCXhKbTvX928T/CcmZINHpsADbRcx0R6QifVXc2kNmNcFMY8kA9/09MQUI2DtQye8iOFTM12Zrcf5giAWuOODgWpV21xeFp3AySIoPUl
+X-Gm-Message-State: AOJu0Yx5eaDNx+T+k/ALX3aL+/OzZR2sO2qDP81bAe/AEDexP2zUM24R
+	7i+qxHUOeqexPxg4idxcZoO7QqjJ11tiDBKNaRQ/cjk83hc4eciggIQSGVbOOxhp1fIVN+qlp4M
+	=
+X-Google-Smtp-Source: AGHT+IHd9bOVmfAL6GhnFMkXfn/qEq/L4zTHm4jeKk1ql8LKHfn+bVeVVgkcnjMPV5Ys2JjlLUFbiw==
+X-Received: by 2002:a05:6a20:3d23:b0:1a3:8793:8840 with SMTP id y35-20020a056a203d2300b001a387938840mr4450005pzi.33.1711019836249;
+        Thu, 21 Mar 2024 04:17:16 -0700 (PDT)
+Received: from [127.0.1.1] ([2409:40f4:102b:a64b:d832:a82a:837c:6d3])
+        by smtp.gmail.com with ESMTPSA id ka6-20020a056a00938600b006e7324d32bbsm5531120pfb.122.2024.03.21.04.17.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Mar 2024 04:17:15 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Date: Thu, 21 Mar 2024 16:46:29 +0530
+Subject: [PATCH v2 09/21] arm64: dts: qcom: sc8280xp: Add PCIe bridge node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6a95b6ac-6681-4492-b155-e30c19bb3341@paulmck-laptop>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240321-pcie-qcom-bridge-dts-v2-9-1eb790c53e43@linaro.org>
+References: <20240321-pcie-qcom-bridge-dts-v2-0-1eb790c53e43@linaro.org>
+In-Reply-To: <20240321-pcie-qcom-bridge-dts-v2-0-1eb790c53e43@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
+ Rob Herring <robh@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3370;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=xm+jWg3BgMqQCkkC5ZHr8tW7UJ1z5Sx/tGZleR1ATvE=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBl/BcL1+Vnkfwh+YBo40ZqpcGU2fjgvQ30/12dm
+ asb8ZOvofKJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZfwXCwAKCRBVnxHm/pHO
+ 9TY1B/9WeLAXW+OaaT824XlTb276fkWKMEenfw0+X+0fmDRWIkEq8FN3zl2VsT4L0pc/Z+F4jPY
+ HwNobpUhR20Vd/QsgCjO2LEMgosGWAQ3mNkraRpH64xuxh+a+EL8+GilybSRWRlds9nYBqQ4pH8
+ kVMAe3ozmVc8g8B/bcusILRnPMcjkQche0EV3EBlwLOaV/Z+NmZO+P3w9boTyaZl9xzrLY/s1QV
+ M+VRQpWGdXCj/fc11xeVhPOhqVA6Rec6Ay8aU0QtUD1ImCof8C7t1Mmz2+7JnTfqJxpF627+/Z6
+ jxzUGCkZukPcEi+bI83OomX+XP49wxM9qD75hWNmBAE/nqoM
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
 
-On Wed, Mar 20, 2024 at 03:55:17PM -0700, Paul E. McKenney wrote:
-> On Wed, Mar 20, 2024 at 05:15:48PM +0100, Frederic Weisbecker wrote:
-> > Le Wed, Mar 20, 2024 at 04:14:24AM -0700, Paul E. McKenney a écrit :
-> > > On Tue, Mar 19, 2024 at 02:18:00AM -0700, Paul E. McKenney wrote:
-> > > > On Tue, Mar 19, 2024 at 12:07:29AM +0100, Frederic Weisbecker wrote:
-> > > > > While running in nohz_full mode, a task may enqueue a timer while the
-> > > > > tick is stopped. However the only places where the timer wheel,
-> > > > > alongside the timer migration machinery's decision, may reprogram the
-> > > > > next event accordingly with that new timer's expiry are the idle loop or
-> > > > > any IRQ tail.
-> > > > > 
-> > > > > However neither the idle task nor an interrupt may run on the CPU if it
-> > > > > resumes busy work in userspace for a long while in full dynticks mode.
-> > > > > 
-> > > > > To solve this, the timer enqueue path raises a self-IPI that will
-> > > > > re-evaluate the timer wheel on its IRQ tail. This asynchronous solution
-> > > > > avoids potential locking inversion.
-> > > > > 
-> > > > > This is supposed to happen both for local and global timers but commit:
-> > > > > 
-> > > > > 	b2cf7507e186 ("timers: Always queue timers on the local CPU")
-> > > > > 
-> > > > > broke the global timers case with removing the ->is_idle field handling
-> > > > > for the global base. As a result, global timers enqueue may go unnoticed
-> > > > > in nohz_full.
-> > > > > 
-> > > > > Fix this with restoring the idle tracking of the global timer's base,
-> > > > > allowing self-IPIs again on enqueue time.
-> > > > 
-> > > > Testing with the previous patch (1/2 in this series) reduced the number of
-> > > > problems by about an order of magnitude, down to two sched_tick_remote()
-> > > > instances and one enqueue_hrtimer() instance, very good!
-> > > > 
-> > > > I have kicked off a test including this patch.  Here is hoping!  ;-)
-> > > 
-> > > And 22*100 hours of TREE07 got me one run with a sched_tick_remote()
-> 
-> Sigh.  s/22/12/
-> 
-> > > complaint and another run with a starved RCU grace-period kthread.
-> > > So this is definitely getting more reliable, but still a little ways
-> > > to go.
-> 
-> An additional eight hours got anohtre sched_tick_remote().
-> 
-> > Right, there is clearly something else. Investigation continues...
-> 
-> Please let me know if there is a debug patch that I could apply.
+On Qcom SoCs, the PCIe host bridge is connected to a single PCIe bridge
+for each controller instance. Hence, add a node to represent the bridge.
 
-So there are three things:
+While at it, let's remove the bridge properties from board dts as they are
+now redundant.
 
-_ The sched_tick_remote() warning. I can easily trigger this one and while
-  trying a bisection, I realize it actually also triggers on v6.8
-  I'm not really tempted to investigate further because the warning doesn't make
-  much sense to me. This computes the delta between the time the kworker got
-  scheduled and the time it reaches the middle of the work. It happens to be
-  ~3s but isn't it something to be expected with jitter and all involved into
-  rcutorture?
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ .../dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts     | 20 +++------
+ arch/arm64/boot/dts/qcom/sc8280xp.dtsi             | 50 ++++++++++++++++++++++
+ 2 files changed, 56 insertions(+), 14 deletions(-)
 
-  We should probably just remove this warning. This remote tick is my most horrible
-  hackery anyway.
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
+index 15ae94c1602d..caf7dff446a6 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
++++ b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
+@@ -731,22 +731,14 @@ &pcie4 {
+ 	pinctrl-0 = <&pcie4_default>;
+ 
+ 	status = "okay";
++};
+ 
+-	pcie@0 {
+-		device_type = "pci";
+-		reg = <0x0 0x0 0x0 0x0 0x0>;
+-		#address-cells = <3>;
+-		#size-cells = <2>;
+-		ranges;
+-
+-		bus-range = <0x01 0xff>;
+-
+-		wifi@0 {
+-			compatible = "pci17cb,1103";
+-			reg = <0x10000 0x0 0x0 0x0 0x0>;
++&pcie4_port0 {
++	wifi@0 {
++		compatible = "pci17cb,1103";
++		reg = <0x10000 0x0 0x0 0x0 0x0>;
+ 
+-			qcom,ath11k-calibration-variant = "LE_X13S";
+-		};
++		qcom,ath11k-calibration-variant = "LE_X13S";
+ 	};
+ };
+ 
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
+index a5b194813079..c7feebcb28b9 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
+@@ -1779,6 +1779,16 @@ pcie4: pcie@1c00000 {
+ 			phy-names = "pciephy";
+ 
+ 			status = "disabled";
++
++			pcie4_port0: pcie@0 {
++				device_type = "pci";
++				reg = <0x0 0x0 0x0 0x0 0x0>;
++				bus-range = <0x01 0xff>;
++
++				#address-cells = <3>;
++				#size-cells = <2>;
++				ranges;
++			};
+ 		};
+ 
+ 		pcie4_phy: phy@1c06000 {
+@@ -1877,6 +1887,16 @@ pcie3b: pcie@1c08000 {
+ 			phy-names = "pciephy";
+ 
+ 			status = "disabled";
++
++			pcie3b_port0: pcie@0 {
++				device_type = "pci";
++				reg = <0x0 0x0 0x0 0x0 0x0>;
++				bus-range = <0x01 0xff>;
++
++				#address-cells = <3>;
++				#size-cells = <2>;
++				ranges;
++			};
+ 		};
+ 
+ 		pcie3b_phy: phy@1c0e000 {
+@@ -1975,6 +1995,16 @@ pcie3a: pcie@1c10000 {
+ 			phy-names = "pciephy";
+ 
+ 			status = "disabled";
++
++			pcie3a_port0: pcie@0 {
++				device_type = "pci";
++				reg = <0x0 0x0 0x0 0x0 0x0>;
++				bus-range = <0x01 0xff>;
++
++				#address-cells = <3>;
++				#size-cells = <2>;
++				ranges;
++			};
+ 		};
+ 
+ 		pcie3a_phy: phy@1c14000 {
+@@ -2076,6 +2106,16 @@ pcie2b: pcie@1c18000 {
+ 			phy-names = "pciephy";
+ 
+ 			status = "disabled";
++
++			pcie2b_port0: pcie@0 {
++				device_type = "pci";
++				reg = <0x0 0x0 0x0 0x0 0x0>;
++				bus-range = <0x01 0xff>;
++
++				#address-cells = <3>;
++				#size-cells = <2>;
++				ranges;
++			};
+ 		};
+ 
+ 		pcie2b_phy: phy@1c1e000 {
+@@ -2174,6 +2214,16 @@ pcie2a: pcie@1c20000 {
+ 			phy-names = "pciephy";
+ 
+ 			status = "disabled";
++
++			pcie2a_port0: pcie@0 {
++				device_type = "pci";
++				reg = <0x0 0x0 0x0 0x0 0x0>;
++				bus-range = <0x01 0xff>;
++
++				#address-cells = <3>;
++				#size-cells = <2>;
++				ranges;
++			};
+ 		};
+ 
+ 		pcie2a_phy: phy@1c24000 {
 
-_ The hrtimer enqueue to an offline CPU warning:
+-- 
+2.25.1
 
-	[ 1054.265335] WARNING: CPU: 8 PID: 150 at kernel/time/hrtimer.c:1091 enqueue_hrtimer+0x6f/0x80
-	[ 1054.269166] Modules linked in:
-	[ 1054.270077] CPU: 8 PID: 150 Comm: rcu_torture_rea Not tainted 6.8.0-11407-ge990136580ab-dirty #21
-	[ 1054.272768] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.2-3-gd478f380-rebuilt.opensuse.org 04/01/2014
-	[ 1054.275893] RIP: 0010:enqueue_hrtimer+0x6f/0x80
-	[ 1054.277252] Code: a3 05 b5 ff b7 01 73 bd 48 8b 05 44 c5 b5 01 48 85 c0 74 0c 48 8b 78 08 48 89 ee e8 7b b5 ff ff 48 8b 03 f6 40 10 10 75 a5 90 <0f> 0b 90 eb 9f 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90
-	[ 1054.282448] RSP: 0000:ffffb1480056fd70 EFLAGS: 00010046
-	[ 1054.283931] RAX: ffff95b7df2616c0 RBX: ffff95b7df261700 RCX: ffff95b7df2616c0
-	[ 1054.286091] RDX: 0000000000000001 RSI: ffff95b7df261700 RDI: ffffb1480056fde0
-	[ 1054.288095] RBP: ffffb1480056fde0 R08: 0000000000000001 R09: 000000000000fc03
-	[ 1054.290189] R10: 0000000000000001 R11: ffff95b7c1271c80 R12: 0000000000000040
-	[ 1054.292592] R13: ffff95b7df261700 R14: ffff95b7df261700 R15: ffff95b7df2616c0
-	[ 1054.294622] FS:  0000000000000000(0000) GS:ffff95b7df400000(0000) knlGS:0000000000000000
-	[ 1054.296884] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-	[ 1054.298497] CR2: 0000000000000000 CR3: 000000001822c000 CR4: 00000000000006f0
-	[ 1054.300475] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-	[ 1054.302516] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-	[ 1054.304580] Call Trace:
-	[ 1054.305354]  <TASK>
-	[ 1054.306009]  ? __warn+0x77/0x120
-	[ 1054.306973]  ? enqueue_hrtimer+0x6f/0x80
-	[ 1054.308177]  ? report_bug+0xf1/0x1d0
-	[ 1054.310200]  ? handle_bug+0x40/0x70
-	[ 1054.311252]  ? exc_invalid_op+0x13/0x70
-	[ 1054.312437]  ? asm_exc_invalid_op+0x16/0x20
-	[ 1054.313738]  ? enqueue_hrtimer+0x6f/0x80
-	[ 1054.314994]  hrtimer_start_range_ns+0x258/0x2f0
-	[ 1054.316531]  ? __pfx_rcu_torture_reader+0x10/0x10
-	[ 1054.317983]  schedule_hrtimeout_range_clock+0x95/0x120
-	[ 1054.319604]  ? __pfx_hrtimer_wakeup+0x10/0x10
-	[ 1054.320957]  torture_hrtimeout_ns+0x50/0x70
-	[ 1054.322211]  rcu_torture_reader+0x1be/0x280
-	[ 1054.323455]  ? __pfx_rcu_torture_timer+0x10/0x10
-	[ 1054.329888]  ? kthread+0xc4/0xf0
-	[ 1054.330880]  ? __pfx_rcu_torture_reader+0x10/0x10
-	[ 1054.332334]  kthread+0xc4/0xf0
-	[ 1054.333305]  ? __pfx_kthread+0x10/0x10
-	[ 1054.334466]  ret_from_fork+0x2b/0x40
-	[ 1054.335551]  ? __pfx_kthread+0x10/0x10
-	[ 1054.336690]  ret_from_fork_asm+0x1a/0x30
-	[ 1054.337878]  </TASK>
-
-  I don't know how it happened. This is where I'm investigating now.
-
-_ The RCU CPU Stall report. I strongly suspect the cause is the hrtimer
-  enqueue to an offline CPU. Let's solve that and we'll see if it still
-  triggers.
