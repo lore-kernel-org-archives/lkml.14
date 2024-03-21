@@ -1,670 +1,211 @@
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F7F136653;
-	Thu, 21 Mar 2024 22:06:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C165931758
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 22:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711058777; cv=none; b=pwxcnc3L5IJeYC+oFus0vnADa/N+mZThgd97Yw5cT57tkq3yjoc5ut67yPstBNv7sugih+jpKueYnG+i3AtMe7OMC26KSwvLNTGFFm4ApJRSDUvW+57fcA8wc9EYFfCE2JhX+VY0UsdFAU6TmxbM5PCar0IxbN95LQOJjusRe8o=
+	t=1711058890; cv=none; b=r2ZzpNUj1+w0uyVB9uSvssUCwoNWtmHwbSzRVKkjXUpPIDbwpT0OjCbXvqeA6g9XPBprWoxVjcF9CCOo9Kbg7TrPcofTkpcV2NlnRSrCnlQmESd/tR5yqjhTMH3sgEKltjBZVxrH3rRa3qL/vXWmqWtqq/GAoQB3MhHf9USh5iI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711058777; c=relaxed/simple;
-	bh=G0l1LegEvzUxD0vIATC3/k4zLmJoiRZCPSORlj4m2Do=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EnY2N8We98G/rdJOHOwxIrJ/9KfMJGnavW9lGe6C/6J1YuVHSDH1oJgK8ag4l94+elNEEua8i0uz+69sDpFVmZatVd7S0XuQtgKtCQN46IS7OK+hIdNcoB1U8SKZtNBVbmmbt5orFISzHAlpXByx+iAg3V/r/rI0gdp8WGvgEt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=Wz9v25hy; arc=none smtp.client-ip=208.88.110.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
+	s=arc-20240116; t=1711058890; c=relaxed/simple;
+	bh=ec65ezZ8jhnTY6xgmdhM4W5H8+OlNPqUocdNhS4LT48=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=A95uATUu4oRctKE0RzD8VEsLQCv07WGYuHzT5y9q6aXR7Xt2tLb8QdPApI67Y7iXjI0wjbC2dSrqF2FTVYYsZTqXqhwNCCyNn0wFPEaaxINxq0TdUf0qbJXHHrBRZd5ix1t6VvDarMzZwR/tDV97nbr0h22CyIJrFcxu9P0mzWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hQFPxs5I; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="Wz9v25hy"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id BD6179C544D;
-	Thu, 21 Mar 2024 18:06:07 -0400 (EDT)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id 9PcAXmg800xb; Thu, 21 Mar 2024 18:06:04 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 9518C9C52F1;
-	Thu, 21 Mar 2024 18:06:04 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 9518C9C52F1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1711058764; bh=Z6jjfPtCv1XhfjLOv7Tkv0VLdhGhouGKiAMp1BmTjlk=;
-	h=From:To:Date:Message-ID:MIME-Version;
-	b=Wz9v25hyKh/FL22mEicv9vBFQAy8XI2DOjaM0zuahqWZWdfHAJcl0MRoKJvAoOQtO
-	 T7na5ozAf4B0J/Hx/UWNqFD6H2qJZNSSHJR/qGjgl/lZuIww+fqjYd91y73hr/J2uL
-	 Ldn6v9/m3FfeJw9SVtstJWG7BGHG3LQWMs0L+lyTKUD0P5nbl5PXb0OgxNEE+GAPjt
-	 OcYe/V1+mMELwUzDvX7U/hm2EcFzEku/mLa6LTwd7MrTpE0/UZjSDCMp329ipcn1Yj
-	 fguNW+L+5ECNud11jARK5yRZRapJUoXXM0z/bAk29SjVjfqJvRVUxaoz2NIYMz58J0
-	 IpNjRrpcTdZIg==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id jsxnB7T5IcmO; Thu, 21 Mar 2024 18:06:04 -0400 (EDT)
-Received: from pcperry.mtl.sfl (unknown [192.168.51.254])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 6E6EA9C52E9;
-	Thu, 21 Mar 2024 18:06:04 -0400 (EDT)
-From: Charles Perry <charles.perry@savoirfairelinux.com>
-To: mdf@kernel.org
-Cc: avandiver@markem-imaje.com,
-	bcody@markem-imaje.com,
-	Charles Perry <charles.perry@savoirfairelinux.com>,
-	Wu Hao <hao.wu@intel.com>,
-	Xu Yilun <yilun.xu@intel.com>,
-	Tom Rix <trix@redhat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Michal Simek <michal.simek@amd.com>,
-	linux-fpga@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v6 1/4] fpga: xilinx-spi: extract a common driver core
-Date: Thu, 21 Mar 2024 18:04:33 -0400
-Message-ID: <20240321220447.3260065-2-charles.perry@savoirfairelinux.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240321220447.3260065-1-charles.perry@savoirfairelinux.com>
-References: <20240321220447.3260065-1-charles.perry@savoirfairelinux.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hQFPxs5I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711058887;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qBwIOGN4e8d3gKHF9DSbgwYKpkkiYBwtwtMI0MG6X/U=;
+	b=hQFPxs5Iqa8oOYU8tRI2nlJB0QOmVFUok4HpsJXkFgyakHkcrZTS/NKYw+xy2UuwBsHRX8
+	BRGTwRqrNPHGYwzEqGl/EHCdIbmWh0tkIKbxRIM3JTQR6dhRCjC6t6cjlIZm8Os3r5Ci/p
+	ivIlWX1DQekKCR1MHNFekxacTkFnb4w=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-27-bAd0ZgQ4PYCy6tEt_kBcTA-1; Thu, 21 Mar 2024 18:08:06 -0400
+X-MC-Unique: bAd0ZgQ4PYCy6tEt_kBcTA-1
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-69152af7760so3924486d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 15:08:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711058886; x=1711663686;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qBwIOGN4e8d3gKHF9DSbgwYKpkkiYBwtwtMI0MG6X/U=;
+        b=SWQVoz0N7dEU3JsojXOh0+sUobaBkB+rFAIX92LOI/9Vk/jV4uQZDd9V4hx7cYeM1R
+         IYcAra1e63vmjHVFsuJzLqQNEIInOY5+NeJL1NpSkI/NZw3kastHbG0EA/Z0Gnue4Y7E
+         fq3Ddow2LLeCKPUfxMmNpztLryCOv4Gh+B/j5KOUml9dUinvkWVQ9EqlDUN4Ew6VR8aD
+         cFV9qKvjWaiuziEqHRuYE26vKs6dQdMaVF3IITTEY7Zqw+rxn2N6aiiE4ysZWvCj3GnZ
+         qsIxSNigCR+tLnrLjwyR1aELMCBWc9bdnDVhaj3bMSohZY7fpGcF8YatJBywp4QwGrkL
+         8W0g==
+X-Forwarded-Encrypted: i=1; AJvYcCUrmW2CmDP0ZnNQaXahWTuHu8b4CojYDo8un40RR1ofV7xRPz9AWZbqdCt7E6Q13WorVCdzK23k6oVUR9r+Ut9qaxGfgN4G1R9yk85z
+X-Gm-Message-State: AOJu0YyJhv6/UT/VZDWKKTTL3n306VznGJxZMhT79+Yxe3ukndyVrToG
+	1hTHqhz/u7UsPfMr3XyzEz/jnSxuPKwELqRMVZLFgsLkrxUPzJ/2HIDDDaOx1wlTljqoxHY7HBl
+	W9A0STVnA4tp01AFTXozTgh2dTgDreqGZa9E2G1i8G2B8jgF6ZvSoUBklJ8jHjQ==
+X-Received: by 2002:a05:6214:4198:b0:695:c55d:fdf8 with SMTP id ld24-20020a056214419800b00695c55dfdf8mr219303qvb.1.1711058885669;
+        Thu, 21 Mar 2024 15:08:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEjJcDDJC7HZiortxxZHWVHGJUJGwG79NEWr9Sr06E8nvFXSb1um5gXNtJQjx6vxfyzbm5MLg==
+X-Received: by 2002:a05:6214:4198:b0:695:c55d:fdf8 with SMTP id ld24-20020a056214419800b00695c55dfdf8mr219273qvb.1.1711058885190;
+        Thu, 21 Mar 2024 15:08:05 -0700 (PDT)
+Received: from x1n.redhat.com ([99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id o6-20020a0562140e4600b00690baf5cde9sm351663qvc.118.2024.03.21.15.08.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Mar 2024 15:08:04 -0700 (PDT)
+From: peterx@redhat.com
+To: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Matthew Wilcox <willy@infradead.org>,
+	Rik van Riel <riel@surriel.com>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	peterx@redhat.com,
+	Yang Shi <shy828301@gmail.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	linux-arm-kernel@lists.infradead.org,
+	"Kirill A . Shutemov" <kirill@shutemov.name>,
+	Andrew Jones <andrew.jones@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Christoph Hellwig <hch@infradead.org>,
+	linux-riscv@lists.infradead.org,
+	James Houghton <jthoughton@google.com>,
+	David Hildenbrand <david@redhat.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+	Mike Kravetz <mike.kravetz@oracle.com>
+Subject: [PATCH v3 00/12] mm/gup: Unify hugetlb, part 2
+Date: Thu, 21 Mar 2024 18:07:50 -0400
+Message-ID: <20240321220802.679544-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.44.0
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Factor out the gpio handshaking (using PROGRAM_B, INIT_B and DONE)
-protocol in xilinx-core so that it can be reused for another driver.
-This commit does not change anything functionally to xilinx-spi.
+From: Peter Xu <peterx@redhat.com>
 
-xilinx-core expects drivers to provide a write(const char* buf,
-size_t count) function that performs the actual write to the device,
-as well as a struct device* for resource management.
+v3:
+- Rebased to latest mm-unstalbe (a824831a082f, of March 21th)
+- Dropped patch to introduce pmd_thp_or_huge(), replace such uses (and also
+  pXd_huge() users) with pXd_leaf() [Jason]
+- Add a comment for CONFIG_PGTABLE_HAS_HUGE_LEAVES [Jason]
+- Use IS_ENABLED() in follow_huge_pud() [Jason]
+- Remove redundant none pud check in follow_pud_mask() [Jason]
 
-Signed-off-by: Charles Perry <charles.perry@savoirfairelinux.com>
----
-Changes since v5: (from Yilun review)
- * xilinx-core.h: remove private fields kernel-doc
- * xilinx-spi.c: rename conf into core in xilinx_spi_probe
+rfc: https://lore.kernel.org/r/20231116012908.392077-1-peterx@redhat.com
+v1:  https://lore.kernel.org/r/20231219075538.414708-1-peterx@redhat.com
+v2:  https://lore.kernel.org/r/20240103091423.400294-1-peterx@redhat.com
 
-Changes since v4: (from Yilun review)
- * xilinx-core: use sizeof() instead of hardcoded immediate
- * xilinx-core: fix module compilation (EXPORT_SYMBOL_GPL, MODULE_LICENSE=
-,
-   MODULE_AUTHOR, MODULE_DESCRIPTION)
- * xilinx-core: add private/public qualifiers for struct xilinx_fpga_core
- * xilinx-spi: remove struct xilinx_spi_conf. This struct isn't needed as
-   the struct spi_device* can be retrieved from the struct device*.
+The series removes the hugetlb slow gup path after a previous refactor work
+[1], so that slow gup now uses the exact same path to process all kinds of
+memory including hugetlb.
 
- drivers/fpga/Kconfig       |   4 +
- drivers/fpga/Makefile      |   1 +
- drivers/fpga/xilinx-core.c | 213 +++++++++++++++++++++++++++++++++++
- drivers/fpga/xilinx-core.h |  27 +++++
- drivers/fpga/xilinx-spi.c  | 224 +++----------------------------------
- 5 files changed, 260 insertions(+), 209 deletions(-)
- create mode 100644 drivers/fpga/xilinx-core.c
- create mode 100644 drivers/fpga/xilinx-core.h
+For the long term, we may want to remove most, if not all, call sites of
+huge_pte_offset().  It'll be ideal if that API can be completely dropped
+from arch hugetlb API.  This series is one small step towards merging
+hugetlb specific codes into generic mm paths.  From that POV, this series
+removes one reference to huge_pte_offset() out of many others.
 
-diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-index 2f689ac4ba3a3..d27a1ebf40838 100644
---- a/drivers/fpga/Kconfig
-+++ b/drivers/fpga/Kconfig
-@@ -64,9 +64,13 @@ config FPGA_MGR_STRATIX10_SOC
- 	help
- 	  FPGA manager driver support for the Intel Stratix10 SoC.
+One goal of such a route is that we can reconsider merging hugetlb features
+like High Granularity Mapping (HGM).  It was not accepted in the past
+because it may add lots of hugetlb specific codes and make the mm code even
+harder to maintain.  With a merged codeset, features like HGM can hopefully
+share some code with THP, legacy (PMD+) or modern (continuous PTEs).
 
-+config FPGA_MGR_XILINX_CORE
-+	tristate
-+
- config FPGA_MGR_XILINX_SPI
- 	tristate "Xilinx Configuration over Slave Serial (SPI)"
- 	depends on SPI
-+	select FPGA_MGR_XILINX_CORE
- 	help
- 	  FPGA manager driver support for Xilinx FPGA configuration
- 	  over slave serial interface.
-diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-index 352a2612623e0..7ec795b6a5a70 100644
---- a/drivers/fpga/Makefile
-+++ b/drivers/fpga/Makefile
-@@ -15,6 +15,7 @@ obj-$(CONFIG_FPGA_MGR_SOCFPGA)		+=3D socfpga.o
- obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)	+=3D socfpga-a10.o
- obj-$(CONFIG_FPGA_MGR_STRATIX10_SOC)	+=3D stratix10-soc.o
- obj-$(CONFIG_FPGA_MGR_TS73XX)		+=3D ts73xx-fpga.o
-+obj-$(CONFIG_FPGA_MGR_XILINX_CORE)	+=3D xilinx-core.o
- obj-$(CONFIG_FPGA_MGR_XILINX_SPI)	+=3D xilinx-spi.o
- obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+=3D zynq-fpga.o
- obj-$(CONFIG_FPGA_MGR_ZYNQMP_FPGA)	+=3D zynqmp-fpga.o
-diff --git a/drivers/fpga/xilinx-core.c b/drivers/fpga/xilinx-core.c
-new file mode 100644
-index 0000000000000..a35c43382dd5f
---- /dev/null
-+++ b/drivers/fpga/xilinx-core.c
-@@ -0,0 +1,213 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Common parts of the Xilinx Spartan6 and 7 Series FPGA manager drivers=
-.
-+ *
-+ * Copyright (C) 2017 DENX Software Engineering
-+ *
-+ * Anatolij Gustschin <agust@denx.de>
-+ */
-+
-+#include "xilinx-core.h"
-+
-+#include <linux/delay.h>
-+#include <linux/fpga/fpga-mgr.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/of.h>
-+
-+static int get_done_gpio(struct fpga_manager *mgr)
-+{
-+	struct xilinx_fpga_core *core =3D mgr->priv;
-+	int ret;
-+
-+	ret =3D gpiod_get_value(core->done);
-+	if (ret < 0)
-+		dev_err(&mgr->dev, "Error reading DONE (%d)\n", ret);
-+
-+	return ret;
-+}
-+
-+static enum fpga_mgr_states xilinx_core_state(struct fpga_manager *mgr)
-+{
-+	if (!get_done_gpio(mgr))
-+		return FPGA_MGR_STATE_RESET;
-+
-+	return FPGA_MGR_STATE_UNKNOWN;
-+}
-+
-+/**
-+ * wait_for_init_b - wait for the INIT_B pin to have a given state, or w=
-ait
-+ * a given delay if the pin is unavailable
-+ *
-+ * @mgr:        The FPGA manager object
-+ * @value:      Value INIT_B to wait for (1 =3D asserted =3D low)
-+ * @alt_udelay: Delay to wait if the INIT_B GPIO is not available
-+ *
-+ * Returns 0 when the INIT_B GPIO reached the given state or -ETIMEDOUT =
-if
-+ * too much time passed waiting for that. If no INIT_B GPIO is available
-+ * then always return 0.
-+ */
-+static int wait_for_init_b(struct fpga_manager *mgr, int value,
-+			   unsigned long alt_udelay)
-+{
-+	struct xilinx_fpga_core *core =3D mgr->priv;
-+	unsigned long timeout =3D jiffies + msecs_to_jiffies(1000);
-+
-+	if (core->init_b) {
-+		while (time_before(jiffies, timeout)) {
-+			int ret =3D gpiod_get_value(core->init_b);
-+
-+			if (ret =3D=3D value)
-+				return 0;
-+
-+			if (ret < 0) {
-+				dev_err(&mgr->dev,
-+					"Error reading INIT_B (%d)\n", ret);
-+				return ret;
-+			}
-+
-+			usleep_range(100, 400);
-+		}
-+
-+		dev_err(&mgr->dev, "Timeout waiting for INIT_B to %s\n",
-+			value ? "assert" : "deassert");
-+		return -ETIMEDOUT;
-+	}
-+
-+	udelay(alt_udelay);
-+
-+	return 0;
-+}
-+
-+static int xilinx_core_write_init(struct fpga_manager *mgr,
-+				  struct fpga_image_info *info, const char *buf,
-+				  size_t count)
-+{
-+	struct xilinx_fpga_core *core =3D mgr->priv;
-+	int err;
-+
-+	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
-+		dev_err(&mgr->dev, "Partial reconfiguration not supported\n");
-+		return -EINVAL;
-+	}
-+
-+	gpiod_set_value(core->prog_b, 1);
-+
-+	err =3D wait_for_init_b(mgr, 1, 1); /* min is 500 ns */
-+	if (err) {
-+		gpiod_set_value(core->prog_b, 0);
-+		return err;
-+	}
-+
-+	gpiod_set_value(core->prog_b, 0);
-+
-+	err =3D wait_for_init_b(mgr, 0, 0);
-+	if (err)
-+		return err;
-+
-+	if (get_done_gpio(mgr)) {
-+		dev_err(&mgr->dev, "Unexpected DONE pin state...\n");
-+		return -EIO;
-+	}
-+
-+	/* program latency */
-+	usleep_range(7500, 7600);
-+	return 0;
-+}
-+
-+static int xilinx_core_write(struct fpga_manager *mgr, const char *buf,
-+			     size_t count)
-+{
-+	struct xilinx_fpga_core *core =3D mgr->priv;
-+
-+	return core->write(core, buf, count);
-+}
-+
-+static int xilinx_core_write_complete(struct fpga_manager *mgr,
-+				      struct fpga_image_info *info)
-+{
-+	struct xilinx_fpga_core *core =3D mgr->priv;
-+	unsigned long timeout =3D
-+		jiffies + usecs_to_jiffies(info->config_complete_timeout_us);
-+	bool expired =3D false;
-+	int done;
-+	int ret;
-+	const char padding[1] =3D { 0xff };
-+
-+	/*
-+	 * This loop is carefully written such that if the driver is
-+	 * scheduled out for more than 'timeout', we still check for DONE
-+	 * before giving up and we apply 8 extra CCLK cycles in all cases.
-+	 */
-+	while (!expired) {
-+		expired =3D time_after(jiffies, timeout);
-+
-+		done =3D get_done_gpio(mgr);
-+		if (done < 0)
-+			return done;
-+
-+		ret =3D core->write(core, padding, sizeof(padding));
-+		if (ret)
-+			return ret;
-+
-+		if (done)
-+			return 0;
-+	}
-+
-+	if (core->init_b) {
-+		ret =3D gpiod_get_value(core->init_b);
-+
-+		if (ret < 0) {
-+			dev_err(&mgr->dev, "Error reading INIT_B (%d)\n", ret);
-+			return ret;
-+		}
-+
-+		dev_err(&mgr->dev,
-+			ret ? "CRC error or invalid device\n" :
-+			      "Missing sync word or incomplete bitstream\n");
-+	} else {
-+		dev_err(&mgr->dev, "Timeout after config data transfer\n");
-+	}
-+
-+	return -ETIMEDOUT;
-+}
-+
-+static const struct fpga_manager_ops xilinx_core_ops =3D {
-+	.state =3D xilinx_core_state,
-+	.write_init =3D xilinx_core_write_init,
-+	.write =3D xilinx_core_write,
-+	.write_complete =3D xilinx_core_write_complete,
-+};
-+
-+int xilinx_core_probe(struct xilinx_fpga_core *core)
-+{
-+	struct fpga_manager *mgr;
-+
-+	if (!core || !core->dev || !core->write)
-+		return -EINVAL;
-+
-+	/* PROGRAM_B is active low */
-+	core->prog_b =3D devm_gpiod_get(core->dev, "prog_b", GPIOD_OUT_LOW);
-+	if (IS_ERR(core->prog_b))
-+		return dev_err_probe(core->dev, PTR_ERR(core->prog_b),
-+				     "Failed to get PROGRAM_B gpio\n");
-+
-+	core->init_b =3D devm_gpiod_get_optional(core->dev, "init-b", GPIOD_IN)=
-;
-+	if (IS_ERR(core->init_b))
-+		return dev_err_probe(core->dev, PTR_ERR(core->init_b),
-+				     "Failed to get INIT_B gpio\n");
-+
-+	core->done =3D devm_gpiod_get(core->dev, "done", GPIOD_IN);
-+	if (IS_ERR(core->done))
-+		return dev_err_probe(core->dev, PTR_ERR(core->done),
-+				     "Failed to get DONE gpio\n");
-+
-+	mgr =3D devm_fpga_mgr_register(core->dev,
-+				     "Xilinx Slave Serial FPGA Manager",
-+				     &xilinx_core_ops, core);
-+	return PTR_ERR_OR_ZERO(mgr);
-+}
-+EXPORT_SYMBOL_GPL(xilinx_core_probe);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Anatolij Gustschin <agust@denx.de>");
-+MODULE_DESCRIPTION("Xilinx 7 Series FPGA manager core");
-diff --git a/drivers/fpga/xilinx-core.h b/drivers/fpga/xilinx-core.h
-new file mode 100644
-index 0000000000000..f02ac67fce7ba
---- /dev/null
-+++ b/drivers/fpga/xilinx-core.h
-@@ -0,0 +1,27 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+#ifndef __XILINX_CORE_H
-+#define __XILINX_CORE_H
-+
-+#include <linux/device.h>
-+
-+/**
-+ * struct xilinx_fpga_core - interface between the driver and the core m=
-anager
-+ *                           of Xilinx 7 Series FPGA manager
-+ * @dev:       device node
-+ * @write:     write callback of the driver
-+ */
-+struct xilinx_fpga_core {
-+/* public: */
-+	struct device *dev;
-+	int (*write)(struct xilinx_fpga_core *core, const char *buf,
-+		     size_t count);
-+/* private: handled by xilinx-core */
-+	struct gpio_desc *prog_b;
-+	struct gpio_desc *init_b;
-+	struct gpio_desc *done;
-+};
-+
-+int xilinx_core_probe(struct xilinx_fpga_core *core);
-+
-+#endif /* __XILINX_CORE_H */
-diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
-index e1a227e7ff2ae..8756504340ded 100644
---- a/drivers/fpga/xilinx-spi.c
-+++ b/drivers/fpga/xilinx-spi.c
-@@ -10,127 +10,17 @@
-  * the slave serial configuration interface.
-  */
+To make it work, the generic slow gup code will need to at least understand
+hugepd, which is already done like so in fast-gup.  Due to the specialty of
+hugepd to be software-only solution (no hardware recognizes the hugepd
+format, so it's purely artificial structures), there's chance we can merge
+some or all hugepd formats with cont_pte in the future.  That question is
+yet unsettled from Power side to have an acknowledgement.  As of now for
+this series, I kept the hugepd handling because we may still need to do so
+before getting a clearer picture of the future of hugepd.  The other reason
+is simply that we did it already for fast-gup and most codes are still
+around to be reused.  It'll make more sense to keep slow/fast gup behave
+the same before a decision is made to remove hugepd.
 
--#include <linux/delay.h>
--#include <linux/device.h>
--#include <linux/fpga/fpga-mgr.h>
--#include <linux/gpio/consumer.h>
-+#include "xilinx-core.h"
-+
- #include <linux/module.h>
- #include <linux/mod_devicetable.h>
- #include <linux/of.h>
- #include <linux/spi/spi.h>
--#include <linux/sizes.h>
--
--struct xilinx_spi_conf {
--	struct spi_device *spi;
--	struct gpio_desc *prog_b;
--	struct gpio_desc *init_b;
--	struct gpio_desc *done;
--};
--
--static int get_done_gpio(struct fpga_manager *mgr)
--{
--	struct xilinx_spi_conf *conf =3D mgr->priv;
--	int ret;
--
--	ret =3D gpiod_get_value(conf->done);
--
--	if (ret < 0)
--		dev_err(&mgr->dev, "Error reading DONE (%d)\n", ret);
--
--	return ret;
--}
--
--static enum fpga_mgr_states xilinx_spi_state(struct fpga_manager *mgr)
--{
--	if (!get_done_gpio(mgr))
--		return FPGA_MGR_STATE_RESET;
--
--	return FPGA_MGR_STATE_UNKNOWN;
--}
--
--/**
-- * wait_for_init_b - wait for the INIT_B pin to have a given state, or w=
-ait
-- * a given delay if the pin is unavailable
-- *
-- * @mgr:        The FPGA manager object
-- * @value:      Value INIT_B to wait for (1 =3D asserted =3D low)
-- * @alt_udelay: Delay to wait if the INIT_B GPIO is not available
-- *
-- * Returns 0 when the INIT_B GPIO reached the given state or -ETIMEDOUT =
-if
-- * too much time passed waiting for that. If no INIT_B GPIO is available
-- * then always return 0.
-- */
--static int wait_for_init_b(struct fpga_manager *mgr, int value,
--			   unsigned long alt_udelay)
--{
--	struct xilinx_spi_conf *conf =3D mgr->priv;
--	unsigned long timeout =3D jiffies + msecs_to_jiffies(1000);
--
--	if (conf->init_b) {
--		while (time_before(jiffies, timeout)) {
--			int ret =3D gpiod_get_value(conf->init_b);
--
--			if (ret =3D=3D value)
--				return 0;
--
--			if (ret < 0) {
--				dev_err(&mgr->dev, "Error reading INIT_B (%d)\n", ret);
--				return ret;
--			}
--
--			usleep_range(100, 400);
--		}
--
--		dev_err(&mgr->dev, "Timeout waiting for INIT_B to %s\n",
--			value ? "assert" : "deassert");
--		return -ETIMEDOUT;
--	}
--
--	udelay(alt_udelay);
--
--	return 0;
--}
--
--static int xilinx_spi_write_init(struct fpga_manager *mgr,
--				 struct fpga_image_info *info,
--				 const char *buf, size_t count)
--{
--	struct xilinx_spi_conf *conf =3D mgr->priv;
--	int err;
--
--	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
--		dev_err(&mgr->dev, "Partial reconfiguration not supported\n");
--		return -EINVAL;
--	}
--
--	gpiod_set_value(conf->prog_b, 1);
--
--	err =3D wait_for_init_b(mgr, 1, 1); /* min is 500 ns */
--	if (err) {
--		gpiod_set_value(conf->prog_b, 0);
--		return err;
--	}
--
--	gpiod_set_value(conf->prog_b, 0);
--
--	err =3D wait_for_init_b(mgr, 0, 0);
--	if (err)
--		return err;
--
--	if (get_done_gpio(mgr)) {
--		dev_err(&mgr->dev, "Unexpected DONE pin state...\n");
--		return -EIO;
--	}
+There's one major difference for slow-gup on cont_pte / cont_pmd handling,
+currently supported on three architectures (aarch64, riscv, ppc).  Before
+the series, slow gup will be able to recognize e.g. cont_pte entries with
+the help of huge_pte_offset() when hstate is around.  Now it's gone but
+still working, by looking up pgtable entries one by one.
 
--	/* program latency */
--	usleep_range(7500, 7600);
--	return 0;
--}
--
--static int xilinx_spi_write(struct fpga_manager *mgr, const char *buf,
-+static int xilinx_spi_write(struct xilinx_fpga_core *core, const char *b=
-uf,
- 			    size_t count)
- {
--	struct xilinx_spi_conf *conf =3D mgr->priv;
-+	struct spi_device *spi =3D to_spi_device(core->dev);
- 	const char *fw_data =3D buf;
- 	const char *fw_data_end =3D fw_data + count;
+It's not ideal, but hopefully this change should not affect yet on major
+workloads.  There's some more information in the commit message of the last
+patch.  If this would be a concern, we can consider teaching slow gup to
+recognize cont pte/pmd entries, and that should recover the lost
+performance.  But I doubt its necessity for now, so I kept it as simple as
+it can be.
 
-@@ -141,9 +31,9 @@ static int xilinx_spi_write(struct fpga_manager *mgr, =
-const char *buf,
- 		remaining =3D fw_data_end - fw_data;
- 		stride =3D min_t(size_t, remaining, SZ_4K);
+Test Done
+=========
 
--		ret =3D spi_write(conf->spi, fw_data, stride);
-+		ret =3D spi_write(spi, fw_data, stride);
- 		if (ret) {
--			dev_err(&mgr->dev, "SPI error in firmware write: %d\n",
-+			dev_err(core->dev, "SPI error in firmware write: %d\n",
- 				ret);
- 			return ret;
- 		}
-@@ -153,109 +43,25 @@ static int xilinx_spi_write(struct fpga_manager *mg=
-r, const char *buf,
- 	return 0;
- }
+For x86_64, tested full gup_test matrix over 2MB huge pages. For aarch64,
+tested the same over 64KB cont_pte huge pages.
 
--static int xilinx_spi_apply_cclk_cycles(struct xilinx_spi_conf *conf)
--{
--	struct spi_device *spi =3D conf->spi;
--	const u8 din_data[1] =3D { 0xff };
--	int ret;
--
--	ret =3D spi_write(conf->spi, din_data, sizeof(din_data));
--	if (ret)
--		dev_err(&spi->dev, "applying CCLK cycles failed: %d\n", ret);
--
--	return ret;
--}
--
--static int xilinx_spi_write_complete(struct fpga_manager *mgr,
--				     struct fpga_image_info *info)
--{
--	struct xilinx_spi_conf *conf =3D mgr->priv;
--	unsigned long timeout =3D jiffies + usecs_to_jiffies(info->config_compl=
-ete_timeout_us);
--	bool expired =3D false;
--	int done;
--	int ret;
--
--	/*
--	 * This loop is carefully written such that if the driver is
--	 * scheduled out for more than 'timeout', we still check for DONE
--	 * before giving up and we apply 8 extra CCLK cycles in all cases.
--	 */
--	while (!expired) {
--		expired =3D time_after(jiffies, timeout);
--
--		done =3D get_done_gpio(mgr);
--		if (done < 0)
--			return done;
--
--		ret =3D xilinx_spi_apply_cclk_cycles(conf);
--		if (ret)
--			return ret;
--
--		if (done)
--			return 0;
--	}
--
--	if (conf->init_b) {
--		ret =3D gpiod_get_value(conf->init_b);
--
--		if (ret < 0) {
--			dev_err(&mgr->dev, "Error reading INIT_B (%d)\n", ret);
--			return ret;
--		}
--
--		dev_err(&mgr->dev,
--			ret ? "CRC error or invalid device\n"
--			: "Missing sync word or incomplete bitstream\n");
--	} else {
--		dev_err(&mgr->dev, "Timeout after config data transfer\n");
--	}
--
--	return -ETIMEDOUT;
--}
--
--static const struct fpga_manager_ops xilinx_spi_ops =3D {
--	.state =3D xilinx_spi_state,
--	.write_init =3D xilinx_spi_write_init,
--	.write =3D xilinx_spi_write,
--	.write_complete =3D xilinx_spi_write_complete,
--};
--
- static int xilinx_spi_probe(struct spi_device *spi)
- {
--	struct xilinx_spi_conf *conf;
--	struct fpga_manager *mgr;
-+	struct xilinx_fpga_core *core;
+One note is that this v3 didn't go through any ppc test anymore, as finding
+such system can always take time.  It's based on the fact that it was
+tested in previous versions, and this version should have zero change
+regarding to hugepd sections.
 
--	conf =3D devm_kzalloc(&spi->dev, sizeof(*conf), GFP_KERNEL);
--	if (!conf)
-+	core =3D devm_kzalloc(&spi->dev, sizeof(*core), GFP_KERNEL);
-+	if (!core)
- 		return -ENOMEM;
+If anyone (Christophe?) wants to give it a shot on PowerPC, please do and I
+would appreciate it: "./run_vmtests.sh -a -t gup_test" should do well
+enough (please consider [2] applied if hugepd is <1MB), as long as we're
+sure the hugepd pages are touched as expected.
 
--	conf->spi =3D spi;
-+	core->dev =3D &spi->dev;
-+	core->write =3D xilinx_spi_write;
+Patch layout
+=============
 
--	/* PROGRAM_B is active low */
--	conf->prog_b =3D devm_gpiod_get(&spi->dev, "prog_b", GPIOD_OUT_LOW);
--	if (IS_ERR(conf->prog_b))
--		return dev_err_probe(&spi->dev, PTR_ERR(conf->prog_b),
--				     "Failed to get PROGRAM_B gpio\n");
--
--	conf->init_b =3D devm_gpiod_get_optional(&spi->dev, "init-b", GPIOD_IN)=
-;
--	if (IS_ERR(conf->init_b))
--		return dev_err_probe(&spi->dev, PTR_ERR(conf->init_b),
--				     "Failed to get INIT_B gpio\n");
--
--	conf->done =3D devm_gpiod_get(&spi->dev, "done", GPIOD_IN);
--	if (IS_ERR(conf->done))
--		return dev_err_probe(&spi->dev, PTR_ERR(conf->done),
--				     "Failed to get DONE gpio\n");
--
--	mgr =3D devm_fpga_mgr_register(&spi->dev,
--				     "Xilinx Slave Serial FPGA Manager",
--				     &xilinx_spi_ops, conf);
--	return PTR_ERR_OR_ZERO(mgr);
-+	return xilinx_core_probe(core);
- }
+Patch 1-8:    Preparation works, or cleanups in relevant code paths
+Patch 9-11:   Teach slow gup with all kinds of huge entries (pXd, hugepd)
+Patch 12:     Drop hugetlb_follow_page_mask()
 
- #ifdef CONFIG_OF
- static const struct of_device_id xlnx_spi_of_match[] =3D {
--	{ .compatible =3D "xlnx,fpga-slave-serial", },
-+	{
-+		.compatible =3D "xlnx,fpga-slave-serial",
-+	},
- 	{}
- };
- MODULE_DEVICE_TABLE(of, xlnx_spi_of_match);
---
-2.43.0
+More information can be found in the commit messages of each patch.  Any
+comment will be welcomed.  Thanks.
+
+[1] https://lore.kernel.org/all/20230628215310.73782-1-peterx@redhat.com
+[2] https://lore.kernel.org/r/20240321215047.678172-1-peterx@redhat.com
+
+Peter Xu (12):
+  mm/Kconfig: CONFIG_PGTABLE_HAS_HUGE_LEAVES
+  mm/hugetlb: Declare hugetlbfs_pagecache_present() non-static
+  mm: Make HPAGE_PXD_* macros even if !THP
+  mm: Introduce vma_pgtable_walk_{begin|end}()
+  mm/gup: Drop folio_fast_pin_allowed() in hugepd processing
+  mm/gup: Refactor record_subpages() to find 1st small page
+  mm/gup: Handle hugetlb for no_page_table()
+  mm/gup: Cache *pudp in follow_pud_mask()
+  mm/gup: Handle huge pud for follow_pud_mask()
+  mm/gup: Handle huge pmd for follow_pmd_mask()
+  mm/gup: Handle hugepd for follow_page()
+  mm/gup: Handle hugetlb in the generic follow_page_mask code
+
+ include/linux/huge_mm.h |  25 +--
+ include/linux/hugetlb.h |  16 +-
+ include/linux/mm.h      |   3 +
+ mm/Kconfig              |   6 +
+ mm/gup.c                | 354 +++++++++++++++++++++++++++++++++-------
+ mm/huge_memory.c        | 133 +--------------
+ mm/hugetlb.c            |  75 +--------
+ mm/internal.h           |   7 +-
+ mm/memory.c             |  12 ++
+ 9 files changed, 337 insertions(+), 294 deletions(-)
+
+-- 
+2.44.0
+
