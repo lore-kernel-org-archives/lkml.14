@@ -1,108 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D30446DC;
-	Thu, 21 Mar 2024 09:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E7F1CAA7;
+	Thu, 21 Mar 2024 09:22:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711012949; cv=none; b=VcJOKCcXHtOyYWraAs3pR3VrPaFcylzmTC8MWjPrrfl6UQYyD0xmSYAixagow6RmtPtL4rP5WTRYTHl8HKANmUNjN2AZ7KYoa8rZqjLdcx3EVQ+DhSuflAbcze1zp33wLnaQ8fzGpQ2GSfLD/gQRbEnU+IlX0yjSRUDVOsl/cas=
+	t=1711012977; cv=none; b=MvKVGTlSkNgCIwPnsBQsUg0iSJv2fzWggv35Y56WdwYEz7sOv5G5zQNuVN9oAcaDxiY0K1XYX+b2TFBc0HidsCLgc+NoQ16fzvvyi6LF8uUStPLCdyfwD19t8Q3XC8XeX21p28opn3pwZWfU0yWiuk6NE+on35fpJCUDP50fn8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711012949; c=relaxed/simple;
-	bh=UeP78wcePkB4Mdcub1yYcZ92w8+JN0YhyH/xS6fOg38=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=IFEgPid+lMuYbY6YrOR/OxBs+0H6i7Ax56o124ljhVwCeROs/dw49HOkFyc8x/N/ig/ZeXz+DcC2rCLVQjcJ3BJoNVGU9IHH5s7VGx72R99iGP0BmcpKUbvYJ5xxatp5eSIDpq1bsR7PLkGR/B6VRt5HG82uUYlKhzaZjusoybY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K+VAzNbE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711012977; c=relaxed/simple;
+	bh=4p8wMshJ+yFtLneYfyNPTV/9zomFZv8Ksa7T6N1ajNA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VVUQigjv229zRdQBtI8pGGT9CtUgjG/k5wfHeadfWUYLtcqKTKQO5saOtOqOreCdaqGZQLvgiiSYIQ1tutOGv0gNXh/sFHcUTppBPoD54UMdNrjEamUJMVbwiGCar077bBL9MXUAMZZ/WTqrYn5Q/qYLhV8crCXLJirXangY2mM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=PHMDHZm7; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K+VAzNbE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0F34C433F1;
-	Thu, 21 Mar 2024 09:22:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711012949;
-	bh=UeP78wcePkB4Mdcub1yYcZ92w8+JN0YhyH/xS6fOg38=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=K+VAzNbEGS0PF+tB82MlrkdIMhVpzfiqu8KEAXGCDcjJ1x1C15CL3ifaOwEo8JaF9
-	 qfTYb4eqVtGS68e2wbEwbm7DHyc/yHNTq7Wb9vKwQs130LnwOinQBqkwgvsnHRPMyj
-	 tkoJKKD+bOrCnvt6rRxhvWfFPrBmZpgdoKgMp5FhRVDgO8apkO+gX2Y916KoA2Nj+v
-	 Ksq1tutl4Ldb2704vq1ztB6bSWnBaqzfCGe68uOAcqbC+VvoRDI4zts+7dquZ6hpdI
-	 RpCohGrSkyeUI1IJSyiPfi/qznEvoCNWYVCmL2/8+LvVNlS9+v3Pfxqli2bPMsIZ3/
-	 W4I+XTLqnC8qw==
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="PHMDHZm7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1711012937; x=1711617737; i=markus.elfring@web.de;
+	bh=ZDWpGRxuuXgMIGkCgrRV72gdMtBdi3nUH8g5ZUwjpqQ=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=PHMDHZm7S927K7Qa8DQ+uCFScscGlaUIHhr/7xkui+QCQ81H5pPwUFUCfs+vaNMB
+	 MsiXT8C+FwHPhDw93c0YRfFMmUOxKJwFL3lZjwwt1LWgfFA85b0kXYv47ebKidABi
+	 09i7WHKy1ZDLG4yVelJTeJIL6YFj+46fOsG6bz9ug8Ahut3/uNSJa16OwISPN16tL
+	 YhL9T8rrDGwLr7j4D1BsnX601ZgmWQ9zM3YXAdVJW4w23pComl58rqsVThDnQmRAf
+	 EXptKin8Pt/RXzyxngklTYMTiWpbVuFOR4NX5E8Il1e2bv2RlHcWfHLti+Ji5SPVe
+	 Be9sdM4MzRMlVLtjKA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.90.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mdf8F-1rDctM2YfR-00ZLW4; Thu, 21
+ Mar 2024 10:22:17 +0100
+Message-ID: <ec90ffc0-fb26-462a-b470-4368c2f7dc68@web.de>
+Date: Thu, 21 Mar 2024 10:22:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ata: ahci_ceva: return of_property_read_u8_array() error
+ code
+To: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+ linux-ide@vger.kernel.org, kernel-janitors@vger.kernel.org, git@amd.com,
+ Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ Michal Simek <michal.simek@amd.com>, Peter Zijlstra <peterz@infradead.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>
+References: <1710960665-1391654-1-git-send-email-radhey.shyam.pandey@amd.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <1710960665-1391654-1-git-send-email-radhey.shyam.pandey@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CANn89iKnOzz_Bs_ygLWZGjsTw=266p8KALv=QWheTanoHYj+nw@mail.gmail.com>
-References: <0000000000009485160613eda067@google.com> <CANn89iKnOzz_Bs_ygLWZGjsTw=266p8KALv=QWheTanoHYj+nw@mail.gmail.com>
-Subject: Re: [syzbot] [net?] INFO: task hung in register_nexthop_notifier (3)
-From: Antoine Tenart <atenart@kernel.org>
-Cc: davem@davemloft.net, dsahern@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-To: Eric Dumazet <edumazet@google.com>, syzbot <syzbot+99b8125966713aa4b0c3@syzkaller.appspotmail.com>
-Date: Thu, 21 Mar 2024 10:22:25 +0100
-Message-ID: <171101294595.5492.6904692183666798713@kwain>
+X-Provags-ID: V03:K1:pipZzMvsbhfDIdkh+8UmrM+TkbMt+xc7WylFo0K8wbWJaR2rcO3
+ ItPimyGFYS8dSqvywXTZ5nqYeL/ljIeKw6XnMPVxy7BIYWk5drYBgH7i7Rt/pelhRHd2ggm
+ s4HrQYY+0kvUBAljekmxlm0XDhbcund9qPj+rMyZ/46gO2OTm3Xm1ftqJxp27C+IFTCadKl
+ Vpqb75X+Zbjvhz7FAkRaA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Ufm26KgmjH8=;9RXnCeCBa9ORaL9WpPo4oCLJqyG
+ goRIVR7XQ64Lnmm47XjtB+FxGM5DWwVq7gveB50DEkMgB3iBunD2K2JFwOYEm/KoSnoKhKmSz
+ S7Hj2Ob2Gu2/zIltClPmgVcbEGiLA6I4gGGIoDwl6yQnllKirXjm0bAmFyymEwFvB5QEyED9t
+ 1iKj9BiVEJiq6KiaM/kfsK/DILIEl/73bjSFLTLckavN8go+ogUu7oprF3wSKAeWbYrqeB9nZ
+ d5/ags1rH4uPYd7wrIBRtfzF5shFTUBoKOBlBdzf1VlHM9Tw/uZ9zq7pKkMyarPQdXxIkDSoo
+ r0yyQXkglSrJNSKaRrwi+eozHN59oR09j6F9ft/qixY1Dh/Uh653H+Vyy1TdX+W2UrUh4XXz0
+ iMu8/FTQmMsRQwUZmQRMoVQYmMzoMZBqqwYPZL8QUMJjITkZN45DgDpKdZp2Gp+jgTw3ikfOT
+ RAeqpyQLEBqIS1NFVwfS5+T4e+SlAHq5Om3y/nC4Df4Uo5HUK9C4YWugMIHRMqUypZb0mSk3t
+ XocnSGIFqZekbYRVlKy52RK5vhPpcbx8RAhkxTa0H0pQN4Onn1MTqK6sOA/HIzw6suZ5bkIBF
+ cleFVFp/tR29gZ3Ve3B0QW9x9Z2zPMf48ncdp7UU6B42qCfkpGKlfOKrm0oUNb8dSXRrlgRWP
+ yURRryRPbQaw4+g2j4RASgRG0BpGFaiZxTb6bDpuQW2untnLZGvbITj/qK0aOdI1i8OF1ujVx
+ hBUmXjm1guVOYUPICBClmia3jXsViiXeNmnpDZmkUkpVzsf0gSJ+ae7gQOPtlmqFhhrPll97Y
+ TZWhXHVuL+AYAE4sFu112kUP5sRnq6tLx8QSsQXWrzZeQ=
 
-Quoting Eric Dumazet (2024-03-18 15:46:37)
-> On Mon, Mar 18, 2024 at 12:26=E2=80=AFPM syzbot
-> <syzbot+99b8125966713aa4b0c3@syzkaller.appspotmail.com> wrote:
-> >
-> > INFO: task syz-executor.3:6975 blocked for more than 143 seconds.
-> >       Not tainted 6.8.0-rc7-syzkaller-02500-g76839e2f1fde #0
-> > "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this messag=
-e.
-> > task:syz-executor.3  state:D stack:20920 pid:6975  tgid:6975  ppid:1   =
-   flags:0x00004006
-> > Call Trace:
-> >  <TASK>
-> >  context_switch kernel/sched/core.c:5400 [inline]
-> >  __schedule+0x17d1/0x49f0 kernel/sched/core.c:6727
-> >  __schedule_loop kernel/sched/core.c:6802 [inline]
-> >  schedule+0x149/0x260 kernel/sched/core.c:6817
-> >  schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6874
-> >  __mutex_lock_common kernel/locking/mutex.c:684 [inline]
-> >  __mutex_lock+0x6a3/0xd70 kernel/locking/mutex.c:752
-> >  register_nexthop_notifier+0x84/0x290 net/ipv4/nexthop.c:3863
-> >  nsim_fib_create+0x8a6/0xa70 drivers/net/netdevsim/fib.c:1587
-> >  nsim_drv_probe+0x747/0xb80 drivers/net/netdevsim/dev.c:1582
-> >  really_probe+0x29e/0xc50 drivers/base/dd.c:658
-> >  __driver_probe_device+0x1a2/0x3e0 drivers/base/dd.c:800
-> >  driver_probe_device+0x50/0x430 drivers/base/dd.c:830
-> >  __device_attach_driver+0x2d6/0x530 drivers/base/dd.c:958
-> >  bus_for_each_drv+0x24e/0x2e0 drivers/base/bus.c:457
-> >  __device_attach+0x333/0x520 drivers/base/dd.c:1030
-> >  bus_probe_device+0x189/0x260 drivers/base/bus.c:532
-> >  device_add+0x8ff/0xca0 drivers/base/core.c:3639
-> >  nsim_bus_dev_new drivers/net/netdevsim/bus.c:442 [inline]
-> >  new_device_store+0x3f2/0x890 drivers/net/netdevsim/bus.c:173
-> >  kernfs_fop_write_iter+0x3a4/0x500 fs/kernfs/file.c:334
->=20
-> So we have a sysfs handler ultimately calling register_nexthop_notifier()=
- or any
-> other network control path requiring RTNL.
->=20
-> Note that we have rtnl_trylock() for a reason...
+> In the ahci_ceva_probe() error path instead of returning -EINVAL for all
+> of_property_read_u8_array() failure types return the actual error code.
+> It removes the redundant -EINVAL assignment at multiple places and
+> improves the error handling path.
 
-Mentioning the below in case that gives some ideas; feel free to
-disregard.
+A) Would a change description be more desirable with a corresponding imper=
+ative wording?
 
-When I looked at similar issues a while ago the rtnl deadlock actually
-happened with the kernfs_node refcount; haven't looked at this one in
-details though. The mutex in there was just preventing concurrent
-writers.
+   See also:
+   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/Documentation/process/submitting-patches.rst?h=3Dv6.8#n94
 
-> Or maybe the reason is wrong, if we could change kernfs_fop_write_iter()
-> to no longer hold a mutex...
 
-At the time I found a way to safely drop the refcount of those
-kernfs_node which then allowed to call rtnl_lock from sysfs handlers,
-https://lore.kernel.org/all/20231018154804.420823-1-atenart@kernel.org/T/
+B) Can it be helpful to specify the hint =E2=80=9Cin ceva_ahci_probe()=E2=
+=80=9D at the end
+   of the patch subject?
 
-Note that this relied on how net device are unregistered (calling
-device_del under rtnl and later waiting for refs on the netdev to drop
-outside of the lock; and a few other things), so extra modifications
-would be needed to generalize the approach. Also it's a tradeoff between
-fixing those deadlocks without rtnl_trylock and maintaining a quite
-complex logic...
 
-Antoine
+C) How do you think about to extend the application of scope-based resourc=
+e management here?
+
+   See also:
+   Article by Jonathan Corbet
+   2023-06-15
+   https://lwn.net/Articles/934679/
+
+
+Regards,
+Markus
