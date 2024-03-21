@@ -1,97 +1,102 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BEDA86254
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 19:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64403134422;
+	Thu, 21 Mar 2024 19:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711051057; cv=none; b=oTtmi2fLteEfLnKXA6QMUWc6X5kOpVPQdJ6vbd+1PjOStzprKf3lMK4+S1+itrEbVQYPPKiT2ePbM7AEb+f6Do8KuZwKNgWg8tQWy/+wziQL20hOiE4O0793L995lW246tiYeZejm2wnas3/N1qzUbMzIQsNUDtHL17qwtV6S6E=
+	t=1711051092; cv=none; b=HI0RkLwtuJcgn4SByP6wMD1P1cJ25lCV6+gauRWRWYf7TyifY9bUD2uRqk7YC7S2/neIwg3Z4lo9sTrRM7Sf5ipZRFQmrnYx1+uqPRrXNMOF88aqhj2YkTMwyKWryeZk7qjQr5Nt1VDRpLCK2eB3BUpYrD0VTMQKFAWJ8Q41bcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711051057; c=relaxed/simple;
-	bh=ACQEgjHXrHrKmVUN1e84w9K08GUoD7rvTF7AzK/2oLU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cMeHaGdMZ074F1jUJYTPwGabvTNAi+mno/+CPknJQE1MZmGQp2yk6LHKluH+fi7EPBK1niTNqw57A8T+eqS0nz73c814xEiOxXsO16mhE3kyUT+fhFT6mqFXOWb6oW0IO63MiS7OssFujlGbSyPdImJIRmrMsWr8JruWT5rAurw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EUKc5GZ0; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1711051092; c=relaxed/simple;
+	bh=wIJ+KoMAFPGnOWz5mM3Dq9a7rmOXRTwxGoBU1sVmoL4=;
+	h=Message-ID:Date:MIME-Version:From:To:Subject:Content-Type; b=aK+SZF6qnZXffVS8N1nezyr0HSTC2yKir2G4c+9MO1q6M3JPxcfWdrl54+jvJsU/yKP2zHBgD9RyjSlhZA5zxSQBf/YzlKRlI+EODsgUGoUVFH+2hROmE/znu5Ecmz3pp4WFzWtLbIYceYPCsMdmJBTWULS2Y5/Rpj3Bc4S3CjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=WK54Qvh1; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EUKc5GZ0"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5101cd91017so1583629e87.2
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 12:57:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711051054; x=1711655854; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ck9XtKTBgRiwFDSQngG8cInr2uoxIAAWioBX8TmAnyo=;
-        b=EUKc5GZ0tCVMydYn4Zjgc59pIQW6FtI3oUrKP4tTiXmoc4Wf7NYzII4ZrHP4zdeKJP
-         4ztu6DX4lhWEeF9WTMioGrhUhtLIhYI/UZNeSY4V1BsqVecn881JdG71Cw1ORYnXx7Fw
-         oozS2IzoiNesxe8stXlvIE93EKHi8/yS//19piK1S62M5nZQzuU3dBLCTxQSDez193lH
-         zvsmtvlnqsMAjDRwaLkV/PKjSmPuGJgvGip9fV1lw+tkxMPjyqJuhViNWrureVqF/B1p
-         BuGryC1FS8bW+O2zzKxHesVlgNNFZFKur3Z/HSI8JAPbbVxYnSeEPQnkMabrmvCrn+aN
-         txOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711051054; x=1711655854;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ck9XtKTBgRiwFDSQngG8cInr2uoxIAAWioBX8TmAnyo=;
-        b=JI+X/vLr4rdZIdcxmpqyoIbT4GV4W5G0T9TYeSPMX6nog79S15Zh7x5A0t5ZLhmZ0c
-         wB/YYZF6LpwtJVxo7lJKp8Mk7rccxZgWH6Q0EoYcxUCXWLurIrwMALx6yRvk11LkKlF+
-         0l32LxEFmaWarE+o0KPd9lgIl1wbQTxHLTqvUpSWBq/2dRF7trfZgb11ddWXUv8eWZGw
-         06TB8M+l/Ti52+mwwCUEkT81ZnlHk+fzjKLlB0e1pcdfgKmPPrKAwiEEr+ycUAkAVL7T
-         4hNyVEIkyIdwx0MTS/2AVyxWKqQ0BiYgRuZuBTQDbVO247UMD4/iilvwRoFKcWwrNmug
-         iT0w==
-X-Forwarded-Encrypted: i=1; AJvYcCXElDw6S3NYjQ8S722APHxnm1ewBHBx2miYD1Bn1311EbS0uTtx712BcIhjUpKAbf4NW2wEKzEqL0PNKNIkfl1j6fQ7aS6X7SMJan14
-X-Gm-Message-State: AOJu0YzDPxezKoEYKibvVaKAt+WgBcbcpGxpHZVe7olaQDg5I6gS2a18
-	LVdgDu8OnmKYATxgyOHnC2JoBWQocEYSVWEf6V+j7g6GklVY97DHXQtwmJNEO/MD2BqTFjiC19C
-	bJEqkTA63WS7ry/hG4yFUybzaVAuTTPDL0j8Y
-X-Google-Smtp-Source: AGHT+IEm3LB16hV2ttktwzI7uFI9wHrobF/GyRBvFlFKy38e078SgRE+nrCXL99kg0aKWSlsYgwHdwgeQSI3HPnhMyQ=
-X-Received: by 2002:a19:ca13:0:b0:513:da24:fc0b with SMTP id
- a19-20020a19ca13000000b00513da24fc0bmr247849lfg.33.1711051053968; Thu, 21 Mar
- 2024 12:57:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="WK54Qvh1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1711051082;
+	bh=wIJ+KoMAFPGnOWz5mM3Dq9a7rmOXRTwxGoBU1sVmoL4=;
+	h=Date:From:To:Subject:From;
+	b=WK54Qvh1bgK7dT+NGgBXVvwdpHWgQ/wyYWqJ3k6KU2r8dbrWB8L4wVDHZ6ah6Sz/2
+	 WPqojASp201H8wu40iEmI1DnHEbrIAlQIZJ4OtxokQpw7EpHTIRjR2Mp0ryEOWrlvR
+	 3Hd3bGK6RCgoB4CcHa8gpsTeRseussEa2PZuQScZtRhHCvBmRltPy/rTU0/5Ci/3yU
+	 TfOWALeQ0OHezT9OIc7Wn613GQVILk3U6a9wgPG5bE3eHBCv3zNpo14KW4PSpgKOM6
+	 sf9kFti6bEp34H0A1oZWJemci+RSWxxKcKoDlkRlyhSa03ei5pzcZbPLrE6vSt2e/p
+	 3j4PvfSkWV9oQ==
+Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4V0x8V1C3tzlr8;
+	Thu, 21 Mar 2024 15:58:02 -0400 (EDT)
+Message-ID: <b0c3b8ec-90fe-4813-8df5-92168f621808@efficios.com>
+Date: Thu, 21 Mar 2024 15:58:22 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240321-strncpy-fs-binfmt_elf_fdpic-c-v1-1-fdde26c8989e@google.com>
- <871q83eepl.fsf@email.froward.int.ebiederm.org>
-In-Reply-To: <871q83eepl.fsf@email.froward.int.ebiederm.org>
-From: Justin Stitt <justinstitt@google.com>
-Date: Thu, 21 Mar 2024 12:57:21 -0700
-Message-ID: <CAFhGd8r_Z2m4akKTBvxy7s8Nwc1HLUE+uKu31mAya5QQyhBhig@mail.gmail.com>
-Subject: Re: [PATCH] binfmt: replace deprecated strncpy with strscpy_pad
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Kees Cook <keescook@chromium.org>, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: lttng-dev <lttng-dev@lists.lttng.org>,
+ Diamon discuss <diamon-discuss@lists.linuxfoundation.org>,
+ linux-trace-users <linux-trace-users@vger.kernel.org>,
+ linux-kernel <linux-kernel@vger.kernel.org>
+Subject: [RELEASE] LTTng-modules 2.12.16 and 2.13.12 (Linux kernel tracer)
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 Hi,
 
-On Thu, Mar 21, 2024 at 9:23=E2=80=AFAM Eric W. Biederman <ebiederm@xmissio=
-n.com> wrote:
->
-> I am perplexed.  Why not use get_task_comm fill_psinfo like binfmt_elf
-> does?
->
-> It seems very silly to copy half the function without locking and then
-> not copy it's locking as well.
->
-> Given that the more highly tested binfmt_elf uses get_task_comm I can't
-> imagine a reason why binfmt_elf_fdpic can't use it as well.
+This is a release announcement for the currently maintained
+LTTng-modules Linux kernel tracer stables branches.
 
-I am not sure why the original opted for strncpy over get_task_comm
-but I made the replacement without being aware of the literally
-identical code present in binfmt_elf.c
+* New and noteworthy in these releases:
 
-I'll send a v2.
+Linux kernel v6.8 is now supported by LTTng modules 2.13.12. If you need
+support for recent kernels (v5.18+), you will need to upgrade to a
+recent LTTng-modules 2.13.x.
 
->
-> Eric
+Both releases correct issues with SLE kernel version ranges detection.
 
-Thanks
-Justin
+A compilation fix for RHEL 9.3 kernel is present in v2.13.12.
+
+Feedback is welcome!
+
+Thanks,
+
+Mathieu
+
+Project website: https://lttng.org
+Documentation: https://lttng.org/docs
+Download link: https://lttng.org/download
+
+Detailed change logs:
+
+2024-03-21 (National Common Courtesy Day) LTTng modules 2.13.12
+         * docs: Add supported versions and fix-backport policy
+         * docs: Add links to project resources
+         * Fix: Correct minimum version in jbd2 SLE kernel range
+         * Fix: Handle recent SLE major version codes
+         * Fix: build on sles15sp4
+         * Compile fixes for RHEL 9.3 kernels
+         * Fix: ext4_discard_preallocations changed in linux 6.8.0-rc3
+         * Fix: btrfs_get_extent flags and compress_type changed in linux 6.8.0-rc1
+         * Fix: btrfs_chunk tracepoints changed in linux 6.8.0-rc1
+         * Fix: strlcpy removed in linux 6.8.0-rc1
+         * Fix: timer_start changed in linux 6.8.0-rc1
+         * Fix: sched_stat_runtime changed in linux 6.8.0-rc1
+
+2024-03-21 (National Common Courtesy Day) 2.12.16
+         * fix: lttng-probe-kvm-x86-mmu build with linux 6.6
+         * docs: Add supported versions and fix-backport policy
+         * docs: Add links to project resources
+         * Fix: Correct minimum version in jbd2 SLE kernel range
+         * Fix: Handle recent SLE major version codes
+         * Fix: build on sles15sp4
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
