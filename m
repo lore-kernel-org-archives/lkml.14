@@ -1,165 +1,209 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9953CB65F
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 04:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8598883C
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 04:44:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710996096; cv=none; b=XZGfBtBOoENlV9r5UyuxX0RA+oeqRF7wQjRk3bwHuWVfiAKuuLe6IHdQIXzT8XL5CJ/XmeKlJuG8UaMgJcgEg80DKw4jluynS2HQmGlFQ4ld3JHivyr97Oxhn0S2KjxM4jjf+gzEXfyKrd19DwzVyxouCMpjlEa+T5Q2KciuSd4=
+	t=1710996299; cv=none; b=f2zW4R96KUdr/Za+MLGmxc0cnYh2x02yD6O/UOgZt7Iqjd8sGuLXLH1A7a4KONqwuB9q6cdbmmxoO5eSVZwpHRl0u6XzujNggaOpAeE4p9/zh5ku7pF86UOph6v9xzc0uJPmWhfZY6jFsOl/CwcXmg0LQMI/d5ylApIsB4JMSuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710996096; c=relaxed/simple;
-	bh=QEydSPBqt/QCL6B+mc4yp2WGTbDT5hEdcQk6+KWkD4Y=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=VokLbFNp04chWuABdHJY+wa44IVRmwVZjkml+Nj8fm7tRQDdSM2qhGUevX/ROxsm++K/5NwfhXQTtkJtB+Y7gieBk8oobJYoUxWLxDogCcy2k+xDRIGL9sP7+Q0/JxLpAZ+/aTLSyMsnhfkbHpbtWbktxz2IPnHD0gi2YeUQwPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=We/BiDAW; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1710996299; c=relaxed/simple;
+	bh=QN5rVYeJQgkCYln+XGEHIWkMGDsj4aShLtoFlAn/Xz0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qOzNOM5h7c3puh5r1LC7q3hWCs6s499lBKaiKJIfyHP37EwHyEWm5xmtI3nc/oye88grHhX/JZnC7fRqAF9GMnV1gyc8abnJVk+fl4Y4kp8KMo9qKJd2fYAakQJu9IxNaiOTGG69BGJQZQSNDI6rfp+eBbCenPSY9CZM6HQijbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FVs6b1XZ; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="We/BiDAW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710996095; x=1742532095;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=QEydSPBqt/QCL6B+mc4yp2WGTbDT5hEdcQk6+KWkD4Y=;
-  b=We/BiDAWE4WUa3Pn2MzkX9gBtczDaieaNOq2lm9JgN+AgLw4edP5Mwdt
-   dkZV2qu9Z0gxCd1dK6OpEvp6KWVce3N1lPqJClMUlhgfSeduCF+5Oky9I
-   7s5zJqMb6NZwCuN/Xm3GkE+iEP4WwG+EJNvPnoPjbAH0kjglExCNT8AB6
-   PZzR+VyL0QA9/N5ciXmr1H1h8yUcxYXzywQPl15K/TEQSv948S7V5qncJ
-   j41H+0T3ilMt/c8cqUmeDKAL+OotvVHwYDTkf6GsHCgXNEO5s/gdNLpDC
-   n/dlz3PoIhBWyJRmW+K/TCq2h0GfGnc6LM1s7kMoNsCLtrf/56nTCi9Lw
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="5902329"
-X-IronPort-AV: E=Sophos;i="6.07,141,1708416000"; 
-   d="scan'208";a="5902329"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 21:41:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,141,1708416000"; 
-   d="scan'208";a="18850240"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 21:41:30 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,  David Hildenbrand
- <david@redhat.com>,  Matthew Wilcox <willy@infradead.org>,  Gao Xiang
- <xiang@kernel.org>,  Yu Zhao <yuzhao@google.com>,  Yang Shi
- <shy828301@gmail.com>,  Michal Hocko <mhocko@suse.com>,  Kefeng Wang
- <wangkefeng.wang@huawei.com>,  Barry Song <21cnbao@gmail.com>,  Chris Li
- <chrisl@kernel.org>,  <linux-mm@kvack.org>,
-  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 4/6] mm: swap: Allow storage of all mTHP orders
-In-Reply-To: <d6ac1097-2ca3-4e6d-902d-1b942cacf0fb@arm.com> (Ryan Roberts's
-	message of "Wed, 20 Mar 2024 12:22:18 +0000")
-References: <20240311150058.1122862-1-ryan.roberts@arm.com>
-	<20240311150058.1122862-5-ryan.roberts@arm.com>
-	<87jzm751n3.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<d6ac1097-2ca3-4e6d-902d-1b942cacf0fb@arm.com>
-Date: Thu, 21 Mar 2024 12:39:36 +0800
-Message-ID: <8734skryev.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FVs6b1XZ"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-56b98e59018so8715a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 21:44:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710996296; x=1711601096; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=rp/x+gEdRoeXoR76EHtjtTfIyYIjYWzVuUsIkiDyEH4=;
+        b=FVs6b1XZrKabSWIY9nTLJxi0e7kJSrrcluBPRRlj1iWEHHADPiM3W5jQ2w9s37owi3
+         gCvQBFZv/+5O8WwXEaiSxALjLvk3AV1J0IB/s7czRs/66hNVb+SqlrtYj/RaowlcJPQu
+         bk8Dn8G2CFWap+F9yCS0sG2YBhqh2SrXFe25fVjGUMIwY6m785xJFwtT1Y1Q/ta+rGMR
+         fevA12d/ZO/GTeqPUKjxH1rYlmkaY5g0MB4wv3uzXwcbYURZBTB5BNNj7kaa6R2KPjEZ
+         4Mgh6V05glsuzI9uSX/mtkcNCIU66k+4UeEPVp0+R1b4rV2dla+1vVvCMTeBDkRLfuMz
+         mPow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710996296; x=1711601096;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rp/x+gEdRoeXoR76EHtjtTfIyYIjYWzVuUsIkiDyEH4=;
+        b=apqQbEIPvKade1jKDKxlVuyw8yUk/MNf71CM1x47jzXpxkMECzXV9MPZFkZMgKuGI4
+         XAAn0UbREvzTu5cZxBcgbIJlvJzR55OXg7WhB5BtGnPkpfGlXCEoZ2TSwaBmG1023MTL
+         r8tVXnSY4yQXSmN9B42nPKBGDf8NBqNMrRtSdYlfXcEhuPPKeonA0yKX6pSKQ3PJopeS
+         Hefk1esggS80S7ohX3HP2ZMe1+BQCko1kJWYb+RG2AqAiSzh4QAIu5YJqn37WqlVdVhA
+         k9UYWAsm9YZTgYZFzHS1SiQrt6NjUG3U80cvGPdAZblGAKcQhqKvfkTnwY2NaVRjmHge
+         53gA==
+X-Forwarded-Encrypted: i=1; AJvYcCWbC62O4w0p42FuLsYIpxEKLtgkFc/W7I5H92xxIK1tJi0nwEZbJAicVpoP2hOX8Tc4oDfsFp6NQ0/6c+4//3RJcDj1WOQCoztJ2JRm
+X-Gm-Message-State: AOJu0Yx7Z03IQSaPCQSf74cFYJtlKmhJrSgQuP7NRPFkC5LLjSMvn4FV
+	SeWPGF6hsAh1UqYngZqp55NZXOcZ+SJjGAaWB7+ezqfNHxuFpNCGVMELPoxTzReR8d6Kie20+zR
+	pwXI9ABY7/jfyCyBFBnIeILiMOG0f4dfoVo4v
+X-Google-Smtp-Source: AGHT+IHesn7qSfEB7TXcVlmCgNUBgETncAdDFxHKgSDImUR+X1aXP2XSU1L5thiOrete5cF9u50Ggl9wStXEybQCbqA=
+X-Received: by 2002:aa7:d487:0:b0:56b:b472:205a with SMTP id
+ b7-20020aa7d487000000b0056bb472205amr97185edr.6.1710996295878; Wed, 20 Mar
+ 2024 21:44:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+References: <20240223140435.1240-1-petrtesarik@huaweicloud.com>
+In-Reply-To: <20240223140435.1240-1-petrtesarik@huaweicloud.com>
+From: David Gow <davidgow@google.com>
+Date: Thu, 21 Mar 2024 12:44:42 +0800
+Message-ID: <CABVgOSmNbBzR=QV4RDSdBPzBU=8mP5r0gVf5wqADm_9e9htM2g@mail.gmail.com>
+Subject: Re: [PATCH RESEND 1/1] um: oops on accessing a non-present page in
+ the vmalloc area
+To: Petr Tesarik <petrtesarik@huaweicloud.com>
+Cc: Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, 
+	"open list:USER-MODE LINUX (UML)" <linux-um@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, 
+	Roberto Sassu <roberto.sassu@huaweicloud.com>, 
+	Petr Tesarik <petr.tesarik1@huawei-partners.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="00000000000076daf80614245ea6"
 
-Ryan Roberts <ryan.roberts@arm.com> writes:
+--00000000000076daf80614245ea6
+Content-Type: text/plain; charset="UTF-8"
 
-> Hi Huang, Ying,
+On Fri, 23 Feb 2024 at 22:07, Petr Tesarik <petrtesarik@huaweicloud.com> wrote:
 >
+> From: Petr Tesarik <petr.tesarik1@huawei-partners.com>
 >
-> On 12/03/2024 07:51, Huang, Ying wrote:
->> Ryan Roberts <ryan.roberts@arm.com> writes:
->> 
->>> Multi-size THP enables performance improvements by allocating large,
->>> pte-mapped folios for anonymous memory. However I've observed that on an
->>> arm64 system running a parallel workload (e.g. kernel compilation)
->>> across many cores, under high memory pressure, the speed regresses. This
->>> is due to bottlenecking on the increased number of TLBIs added due to
->>> all the extra folio splitting when the large folios are swapped out.
->>>
->>> Therefore, solve this regression by adding support for swapping out mTHP
->>> without needing to split the folio, just like is already done for
->>> PMD-sized THP. This change only applies when CONFIG_THP_SWAP is enabled,
->>> and when the swap backing store is a non-rotating block device. These
->>> are the same constraints as for the existing PMD-sized THP swap-out
->>> support.
->>>
->>> Note that no attempt is made to swap-in (m)THP here - this is still done
->>> page-by-page, like for PMD-sized THP. But swapping-out mTHP is a
->>> prerequisite for swapping-in mTHP.
->>>
->>> The main change here is to improve the swap entry allocator so that it
->>> can allocate any power-of-2 number of contiguous entries between [1, (1
->>> << PMD_ORDER)]. This is done by allocating a cluster for each distinct
->>> order and allocating sequentially from it until the cluster is full.
->>> This ensures that we don't need to search the map and we get no
->>> fragmentation due to alignment padding for different orders in the
->>> cluster. If there is no current cluster for a given order, we attempt to
->>> allocate a free cluster from the list. If there are no free clusters, we
->>> fail the allocation and the caller can fall back to splitting the folio
->>> and allocates individual entries (as per existing PMD-sized THP
->>> fallback).
->>>
->>> The per-order current clusters are maintained per-cpu using the existing
->>> infrastructure. This is done to avoid interleving pages from different
->>> tasks, which would prevent IO being batched. This is already done for
->>> the order-0 allocations so we follow the same pattern.
->>>
->>> As is done for order-0 per-cpu clusters, the scanner now can steal
->>> order-0 entries from any per-cpu-per-order reserved cluster. This
->>> ensures that when the swap file is getting full, space doesn't get tied
->>> up in the per-cpu reserves.
->>>
->>> This change only modifies swap to be able to accept any order mTHP. It
->>> doesn't change the callers to elide doing the actual split. That will be
->>> done in separate changes.
+> If a segmentation fault is caused by accessing an address in the vmalloc
+> area, check that the target page is present.
 >
-> [...]
+> Currently, if the kernel hits a guard page in the vmalloc area, UML blindly
+> assumes that the fault is caused by a stale mapping and will be fixed by
+> flush_tlb_kernel_vm(). Unsurprisingly, if the fault is caused by accessing
+> a guard page, no mapping is created, and when the faulting instruction is
+> restarted, it will cause exactly the same fault again, effectively creating
+> an infinite loop.
 >
->>> @@ -905,17 +961,18 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
->>>  	}
->>>  
->>>  	if (si->swap_map[offset]) {
->>> +		VM_WARN_ON(order > 0);
->>>  		unlock_cluster(ci);
->>>  		if (!n_ret)
->>>  			goto scan;
->>>  		else
->>>  			goto done;
->>>  	}
->>> -	WRITE_ONCE(si->swap_map[offset], usage);
->>> -	inc_cluster_info_page(si, si->cluster_info, offset);
->>> +	memset(si->swap_map + offset, usage, nr_pages);
->> 
->> Add barrier() here corresponds to original WRITE_ONCE()?
->> unlock_cluster(ci) may be NOP for some swap devices.
+> Signed-off-by: Petr Tesarik <petr.tesarik1@huawei-partners.com>
+> ---
+>  arch/um/kernel/trap.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 >
-> Looking at this a bit more closely, I'm not sure this is needed. Even if there
-> is no cluster, the swap_info is still locked, so unlocking that will act as a
-> barrier. There are a number of other callsites that memset(si->swap_map) without
-> an explicit barrier and with the swap_info locked.
+> diff --git a/arch/um/kernel/trap.c b/arch/um/kernel/trap.c
+> index 6d8ae86ae978..d5b85f1bfe33 100644
+> --- a/arch/um/kernel/trap.c
+> +++ b/arch/um/kernel/trap.c
+> @@ -206,11 +206,15 @@ unsigned long segv(struct faultinfo fi, unsigned long ip, int is_user,
+>         int err;
+>         int is_write = FAULT_WRITE(fi);
+>         unsigned long address = FAULT_ADDRESS(fi);
+> +       pte_t *pte;
 >
-> Looking at the original commit that added the WRITE_ONCE() it was worried about
-> a race with reading swap_map in _swap_info_get(). But that site is now annotated
-> with a data_race(), which will suppress the warning. And I don't believe there
-> are any places that read swap_map locklessly and depend upon observing ordering
-> between it and other state? So I think the si unlock is sufficient?
+>         if (!is_user && regs)
+>                 current->thread.segv_regs = container_of(regs, struct pt_regs, regs);
 >
-> I'm not planning to add barrier() here. Let me know if you disagree.
+>         if (!is_user && (address >= start_vm) && (address < end_vm)) {
+> +               pte = virt_to_pte(&init_mm, address);
+> +               if (!pte_present(*pte))
+> +                       page_fault_oops(regs, address, ip);
 
-swap_map[] may be read locklessly in swap_offset_available_and_locked()
-in parallel.  IIUC, WRITE_ONCE() here is to make the writing take effect
-as early as possible there.
+page_fault_oops() appears to be private to arch/x86/mm/fault.c, so
+can't be used here?
+Also, it accepts struct pt_regs*, not struct uml_pt_regs*, so would
+need to at least handle the type difference here.
 
->
->> 
->>> +	add_cluster_info_page(si, si->cluster_info, offset, nr_pages);
->>>  	unlock_cluster(ci);
+Could we equally avoid the infinite loop here by putting the
+'flush_tlb_kernel_vm();goto out;' behind a if (pte_present(...))
+check, and let the rest of the UML checks panic or oops if required.
+(Actually OOPSing where we can under UML would be nice to do at some
+point anyway, but is a bigger issue than just fixing a bug, IMO.)
 
---
-Best Regards,
-Huang, Ying
+Or am I lacking a prerequisite patch or applying this to the wrong
+version (or otherwise missing something), as it definitely doesn't
+build here.
+
+Cheers,
+-- David
+
+--00000000000076daf80614245ea6
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIIPqgYJKoZIhvcNAQcCoIIPmzCCD5cCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+gg0EMIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
+VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
+AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
+AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
+IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
+dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
+6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
+c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
+I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
+AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
+BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
+CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
+AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
+MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
+My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
+LmNybDBMBgNVHSAERTBDMEEGCSsGAQQBoDIBKDA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3dy5n
+bG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzANBgkqhkiG9w0BAQsFAAOCAQEANyYcO+9JZYyqQt41
+TMwvFWAw3vLoLOQIfIn48/yea/ekOcParTb0mbhsvVSZ6sGn+txYAZb33wIb1f4wK4xQ7+RUYBfI
+TuTPL7olF9hDpojC2F6Eu8nuEf1XD9qNI8zFd4kfjg4rb+AME0L81WaCL/WhP2kDCnRU4jm6TryB
+CHhZqtxkIvXGPGHjwJJazJBnX5NayIce4fGuUEJ7HkuCthVZ3Rws0UyHSAXesT/0tXATND4mNr1X
+El6adiSQy619ybVERnRi5aDe1PTwE+qNiotEEaeujz1a/+yYaaTY+k+qJcVxi7tbyQ0hi0UB3myM
+A/z2HmGEwO8hx7hDjKmKbDCCA18wggJHoAMCAQICCwQAAAAAASFYUwiiMA0GCSqGSIb3DQEBCwUA
+MEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9vdCBDQSAtIFIzMRMwEQYDVQQKEwpHbG9iYWxTaWdu
+MRMwEQYDVQQDEwpHbG9iYWxTaWduMB4XDTA5MDMxODEwMDAwMFoXDTI5MDMxODEwMDAwMFowTDEg
+MB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENBIC0gUjMxEzARBgNVBAoTCkdsb2JhbFNpZ24xEzAR
+BgNVBAMTCkdsb2JhbFNpZ24wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDMJXaQeQZ4
+Ihb1wIO2hMoonv0FdhHFrYhy/EYCQ8eyip0EXyTLLkvhYIJG4VKrDIFHcGzdZNHr9SyjD4I9DCuu
+l9e2FIYQebs7E4B3jAjhSdJqYi8fXvqWaN+JJ5U4nwbXPsnLJlkNc96wyOkmDoMVxu9bi9IEYMpJ
+pij2aTv2y8gokeWdimFXN6x0FNx04Druci8unPvQu7/1PQDhBjPogiuuU6Y6FnOM3UEOIDrAtKeh
+6bJPkC4yYOlXy7kEkmho5TgmYHWyn3f/kRTvriBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti
++w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8E
+BTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5NUPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEA
+S0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigHM8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9u
+bG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmUY/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaM
+ld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88
+q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcya5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/f
+hO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/XzCCBOMwggPLoAMCAQICEAHS+TgZvH/tCq5FcDC0
+n9IwDQYJKoZIhvcNAQELBQAwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYt
+c2ExKjAoBgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjMgU01JTUUgQ0EgMjAyMDAeFw0yNDAxMDcx
+MDQ5MDJaFw0yNDA3MDUxMDQ5MDJaMCQxIjAgBgkqhkiG9w0BCQEWE2RhdmlkZ293QGdvb2dsZS5j
+b20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDY2jJMFqnyVx9tBZhkuJguTnM4nHJI
+ZGdQAt5hic4KMUR2KbYKHuTQpTNJz6gZ54lsH26D/RS1fawr64fewddmUIPOuRxaecSFexpzGf3J
+Igkjzu54wULNQzFLp1SdF+mPjBSrcULSHBgrsFJqilQcudqXr6wMQsdRHyaEr3orDL9QFYBegYec
+fn7dqwoXKByjhyvs/juYwxoeAiLNR2hGWt4+URursrD4DJXaf13j/c4N+dTMLO3eCwykTBDufzyC
+t6G+O3dSXDzZ2OarW/miZvN/y+QD2ZRe+wl39x2HMo3Fc6Dhz2IWawh7E8p2FvbFSosBxRZyJH38
+84Qr8NSHAgMBAAGjggHfMIIB2zAeBgNVHREEFzAVgRNkYXZpZGdvd0Bnb29nbGUuY29tMA4GA1Ud
+DwEB/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwHQYDVR0OBBYEFC+LS03D
+7xDrOPfX3COqq162RFg/MFcGA1UdIARQME4wCQYHZ4EMAQUBATBBBgkrBgEEAaAyASgwNDAyBggr
+BgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wDAYDVR0TAQH/
+BAIwADCBmgYIKwYBBQUHAQEEgY0wgYowPgYIKwYBBQUHMAGGMmh0dHA6Ly9vY3NwLmdsb2JhbHNp
+Z24uY29tL2NhL2dzYXRsYXNyM3NtaW1lY2EyMDIwMEgGCCsGAQUFBzAChjxodHRwOi8vc2VjdXJl
+Lmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcnQwHwYDVR0jBBgw
+FoAUfMwKaNei6x4schvRzV2Vb4378mMwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0cDovL2NybC5nbG9i
+YWxzaWduLmNvbS9jYS9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcmwwDQYJKoZIhvcNAQELBQADggEB
+AK0lDd6/eSh3qHmXaw1YUfIFy07B25BEcTvWgOdla99gF1O7sOsdYaTz/DFkZI5ghjgaPJCovgla
+mRMfNcxZCfoBtsB7mAS6iOYjuwFOZxi9cv6jhfiON6b89QWdMaPeDddg/F2Q0bxZ9Z2ZEBxyT34G
+wlDp+1p6RAqlDpHifQJW16h5jWIIwYisvm5QyfxQEVc+XH1lt+taSzCfiBT0ZLgjB9Sg+zAo8ys6
+5PHxFaT2a5Td/fj5yJ5hRSrqy/nj/hjT14w3/ZdX5uWg+cus6VjiiR/5qGSZRjHt8JoApD6t6/tg
+ITv8ZEy6ByumbU23nkHTMOzzQSxczHkT+0q10/MxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJF
+MRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIz
+IFNNSU1FIENBIDIwMjACEAHS+TgZvH/tCq5FcDC0n9IwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZI
+hvcNAQkEMSIEIEPCKOZW5Q0pn0dDn8fB0Mo26dbP0mF3LzF/XY4ibw27MBgGCSqGSIb3DQEJAzEL
+BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDMyMTA0NDQ1NlowaQYJKoZIhvcNAQkPMVww
+WjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkq
+hkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQDOJz1t
+ydgg1WFpIzPw4lczlVQVyAvSV9QHBIbrDAfEMHdti5+O1BFy1V3O0L1lYzewkWa83cbA0gCZbcrs
+AdUjpQzIACd1Tx90x0cxSoB45VpdBIh9neKTFgDZz0px6U2nsIsBZ+ltdTgHYZkd6r7yG8Yj/BWY
+wmf0UaAIGhmkPJY+8l0IZW+i9eHGxwImi1G9sLnjWpgXShl1F7Fp8Hy7jtaPLf5jXPLehPnAyGJn
+us31cwXRaQaSwF+3YEVOdCalcbvD2NGf6U7bf+YeJDYu2K+SGHC/SFa7/WbI0mgPMTwt804bK7gp
+WhOnDDDrC9bW8LG0mKuIJoYsK9E8EVul
+--00000000000076daf80614245ea6--
