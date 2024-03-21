@@ -1,195 +1,231 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CEE133425;
-	Thu, 21 Mar 2024 18:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833311332AD;
+	Thu, 21 Mar 2024 18:07:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711044397; cv=none; b=mqvmHZ39Mg4pVIgvoW2+sBh/yD4rbTXkCTC7RJT5Ngtdjk42sHEFuEyHhNvBxDW1zo+Tsky+B3+KNco3DlTG/mxGD5P6tRHK7ee7np7bgFwj16Mz9JBPXEFFjcb2QWFuACl0I8RiWLjI5dsU0ar+RE7I6JRHMOJYpzJYDYvUzHg=
+	t=1711044428; cv=none; b=VXuR9U4HVodBJEenByiiYAmq6UT+vwYpkWm+Mc1oeFYJBYwZ70N8K9qAMKeFBw19akDpsOwEGAPUrfrTteV9l4odp4vK0fdIlmqeKjZOLnflpDHYyjM7KveM00/ICddpO1IYGGt7mjVXGZQDnIly6bu4B/a6nha9/Fp57LZEDfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711044397; c=relaxed/simple;
-	bh=hQM+nEBr+O+KT4m95MZF4EIGf62D1EFTUg7Imq+8K4M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tFOw/MOjHpzz8uUbw8wMVjdvqUQwcd4Q3/bMdFLCXOpftC+8evC/kcFeq7PdqazSPh+RNXS3c20gucy7vZu3FG2mdM7T2NIf5iXEwP6rNwxcy5OO/Mdg9vn7HpxJx/GoctYdFpqgnA3eCkyAr/jtkyM85vYK+7dNWzDzHpV05Mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KCBomulw; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711044428; c=relaxed/simple;
+	bh=FwyV5G5T8xNWHin0iIxpU0FjYvWou7GfBsp3wgr/t4c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rmim6XYy+fyUDDINfrTCjq2yPLHWkJ7Gy+YEt83sjLBZvDn1OewMgCj51vOVXZmcBoTc+tL+etVHEuljBEypdsTAtKIlfEV0yWnZuS8luR+k98D7+A5jg+fyIcnLLtpouJsdC4QZeItq108LanRTGEKtoY6+y+Anxp84KtHS0Cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qSTXFzpH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=jyrZiQTK; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qSTXFzpH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=jyrZiQTK; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KCBomulw"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dddbe47ac1so15991155ad.1;
-        Thu, 21 Mar 2024 11:06:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711044395; x=1711649195; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=G//XJEaui3S1uJSf5fZpwyOF3s2VA1vZvh2pajUHYgo=;
-        b=KCBomulwTZfx8oyQuz2P4LNbrLhT3dYVzh1yxYv1JKA7AY+1dviS6s1gF6uLXFCHTZ
-         MvZJCrUwg/H6utUme7PGUTYy57uaAYHRn3ys/JxFuEyGkBbSyK/IrW0QzlVppwgJQ0+i
-         qVeM/vGwGJz+8t1Sk0xEuAxBRHxmYf8L95SsigaVQEMsIF3VNVgFsHjWIA83R+eMKYgU
-         eY03zwBMm0ajc/Jfl1n8tesYpY3XStsHj30cMXrydDBeyjEQfpksGAXYwMoTsdXXd4Q3
-         B/Bg5bWv6VLG1ySaJCsSiby+SbaBAIRnLSFuEehGc5ddEwlVI03magzFun7gVXEJeDy/
-         KKKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711044395; x=1711649195;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=G//XJEaui3S1uJSf5fZpwyOF3s2VA1vZvh2pajUHYgo=;
-        b=W0wxNsOJsF62+QzwNtmgfq0C+CkGIxDtFzthB6ZykDvQks/9MoEHVOP9ymKZecc1Nk
-         ukBeDrgDZrJj9XXTB12zAsugR+CMMI46MGYxzkSUCedsk4UYEswGaaFoXa9F8JOL1GXp
-         dpqpbpV9i7n+S8TRe0IeeW6FCY3WtBa/gla9r7ogW1SIFI20DyI0SGHaOJAeUvmegkVw
-         QCUX7hG8zYM34yk7g1XpU2w7iEpeoo7S2oW29L3lradADNPMTjANVaWAZdiixQDv/F+5
-         E926OcW3C17g64wyU2BksmnWcdeMq3sk8odZ8EFHyqhCzg657kgEQNM9l5CmOt4fKPWi
-         CLvw==
-X-Forwarded-Encrypted: i=1; AJvYcCWLO0n0h6AMjeOLM4gjauhzc10S3aeC88uvGCTs+aG23mmRIZbn3Zh64Aa++s12TMBpo3VSCJRJihANl7uD5hw0dkjXvIFsw72v
-X-Gm-Message-State: AOJu0Yy6xASRnwRLhY/AL1UcNvlEnBfgBoP6lL0Ou9LWtE2TEj2RGczR
-	3sHi1bk8HX0tgl0E2aGBjChLLXO7TTeRbuXs25vLiegoha06kiSvZlFs2E8zNQE=
-X-Google-Smtp-Source: AGHT+IFZn8qaLfdXSa3CE3FQVelBZA6AVVe4cZl7T1P9bIjqzR1zI0z8rzLd8E1+oaRXeYXWiPC+kQ==
-X-Received: by 2002:a17:903:1c5:b0:1e0:137e:cd66 with SMTP id e5-20020a17090301c500b001e0137ecd66mr305347plh.30.1711044394893;
-        Thu, 21 Mar 2024 11:06:34 -0700 (PDT)
-Received: from kousik.local ([2405:201:c006:31f8:c75d:3405:7d77:21ac])
-        by smtp.gmail.com with ESMTPSA id d13-20020a170903230d00b001dd7de61656sm129033plh.37.2024.03.21.11.06.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 11:06:34 -0700 (PDT)
-From: Kousik Sanagavarapu <five231003@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Kousik Sanagavarapu <five231003@gmail.com>
-Subject: [PATCH v2] spi: dt-bindings: jcore,spi: convert spi-jcore to dtschema
-Date: Thu, 21 Mar 2024 23:32:28 +0530
-Message-ID: <20240321180617.35390-1-five231003@gmail.com>
-X-Mailer: git-send-email 2.44.0.273.g4bc5b65358.dirty
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qSTXFzpH";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="jyrZiQTK";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qSTXFzpH";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="jyrZiQTK"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A5EA35D2A6;
+	Thu, 21 Mar 2024 18:07:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711044424; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Er0BQY9yyhShKISjQxXgJJ4fPACRuENnuK7t6pwKzT4=;
+	b=qSTXFzpHwuoVCvOZ3GNS+UgUHoMukzlTJ1tfGZc9Jr7tJURCmH13hi3dn0E7x5zdcIphWo
+	qE0h5rGLe4h4RhuHex8TtU2gAEUO3Wa444zNqNphBj4BbfFOpbQYGSna8jPdk4+pzaKzR7
+	O0Bny7FMVslcvK0cQBh18/xXp7z+ffU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711044424;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Er0BQY9yyhShKISjQxXgJJ4fPACRuENnuK7t6pwKzT4=;
+	b=jyrZiQTKOf1qUFHF6itTgEhgh9ek+6yvFInS0FE2apXbvmFgIRXstV9T5cToIhWeLvF5YV
+	m7lzsrlNrV0o78AA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711044424; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Er0BQY9yyhShKISjQxXgJJ4fPACRuENnuK7t6pwKzT4=;
+	b=qSTXFzpHwuoVCvOZ3GNS+UgUHoMukzlTJ1tfGZc9Jr7tJURCmH13hi3dn0E7x5zdcIphWo
+	qE0h5rGLe4h4RhuHex8TtU2gAEUO3Wa444zNqNphBj4BbfFOpbQYGSna8jPdk4+pzaKzR7
+	O0Bny7FMVslcvK0cQBh18/xXp7z+ffU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711044424;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Er0BQY9yyhShKISjQxXgJJ4fPACRuENnuK7t6pwKzT4=;
+	b=jyrZiQTKOf1qUFHF6itTgEhgh9ek+6yvFInS0FE2apXbvmFgIRXstV9T5cToIhWeLvF5YV
+	m7lzsrlNrV0o78AA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9B7D5138A1;
+	Thu, 21 Mar 2024 18:07:04 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id rgb8JUh3/GXaOQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 21 Mar 2024 18:07:04 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 422C6A0806; Thu, 21 Mar 2024 19:07:04 +0100 (CET)
+Date: Thu, 21 Mar 2024 19:07:04 +0100
+From: Jan Kara <jack@suse.cz>
+To: Kemeng Shi <shikemeng@huaweicloud.com>
+Cc: Jan Kara <jack@suse.cz>, akpm@linux-foundation.org, tj@kernel.org,
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, willy@infradead.org,
+	bfoster@redhat.com, dsterba@suse.com, mjguzik@gmail.com,
+	dhowells@redhat.com, peterz@infradead.org
+Subject: Re: [PATCH 0/6] Improve visibility of writeback
+Message-ID: <20240321180704.lqmtdmd5tzsbuyyu@quack3>
+References: <20240320110222.6564-1-shikemeng@huaweicloud.com>
+ <20240320172240.7buswiv7zj2m5odg@quack3>
+ <44e3b910-8b52-5583-f8a9-37105bf5e5b6@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <44e3b910-8b52-5583-f8a9-37105bf5e5b6@huaweicloud.com>
+X-Spam-Score: 4.30
+X-Spamd-Result: default: False [4.30 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 BAYES_SPAM(5.10)[100.00%];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_TWELVE(0.00)[13];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[suse.cz,linux-foundation.org,kernel.org,kvack.org,vger.kernel.org,infradead.org,redhat.com,suse.com,gmail.com];
+	 RCVD_TLS_ALL(0.00)[]
+X-Spam-Level: ****
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Flag: NO
 
-Convert existing bindings of J-Core spi2 to dtschema.
+On Thu 21-03-24 16:12:52, Kemeng Shi wrote:
+> on 3/21/2024 1:22 AM, Jan Kara wrote:
+> > On Wed 20-03-24 19:02:16, Kemeng Shi wrote:
+> >> This series tries to improve visilibity of writeback. Patch 1 make
+> >> /sys/kernel/debug/bdi/xxx/stats show writeback info of whole bdi
+> >> instead of only writeback info in root cgroup. Patch 2 add a new
+> >> debug file /sys/kernel/debug/bdi/xxx/wb_stats to show per wb writeback
+> >> info. Patch 4 add wb_monitor.py to monitor basic writeback info
+> >> of running system, more info could be added on demand. Rest patches
+> >> are some random cleanups. More details can be found in respective
+> >> patches. Thanks!
+> >>
+> >> Following domain hierarchy is tested:
+> >>                 global domain (320G)
+> >>                 /                 \
+> >>         cgroup domain1(10G)     cgroup domain2(10G)
+> >>                 |                 |
+> >> bdi            wb1               wb2
+> >>
+> >> /* all writeback info of bdi is successfully collected */
+> >> # cat /sys/kernel/debug/bdi/252:16/stats:
+> >> BdiWriteback:              448 kB
+> >> BdiReclaimable:        1303904 kB
+> >> BdiDirtyThresh:      189914124 kB
+> >> DirtyThresh:         195337564 kB
+> >> BackgroundThresh:     32516508 kB
+> >> BdiDirtied:            3591392 kB
+> >> BdiWritten:            2287488 kB
+> >> BdiWriteBandwidth:      322248 kBps
+> >> b_dirty:                     0
+> >> b_io:                        0
+> >> b_more_io:                   2
+> >> b_dirty_time:                0
+> >> bdi_list:                    1
+> >> state:                       1
+> >>
+> >> /* per wb writeback info is collected */
+> >> # cat /sys/kernel/debug/bdi/252:16/wb_stats:
+> >> cat wb_stats
+> >> WbCgIno:                    1
+> >> WbWriteback:                0 kB
+> >> WbReclaimable:              0 kB
+> >> WbDirtyThresh:              0 kB
+> >> WbDirtied:                  0 kB
+> >> WbWritten:                  0 kB
+> >> WbWriteBandwidth:      102400 kBps
+> >> b_dirty:                    0
+> >> b_io:                       0
+> >> b_more_io:                  0
+> >> b_dirty_time:               0
+> >> state:                      1
+> >> WbCgIno:                 4284
+> >> WbWriteback:              448 kB
+> >> WbReclaimable:         818944 kB
+> >> WbDirtyThresh:        3096524 kB
+> >> WbDirtied:            2266880 kB
+> >> WbWritten:            1447936 kB
+> >> WbWriteBandwidth:      214036 kBps
+> >> b_dirty:                    0
+> >> b_io:                       0
+> >> b_more_io:                  1
+> >> b_dirty_time:               0
+> >> state:                      5
+> >> WbCgIno:                 4325
+> >> WbWriteback:              224 kB
+> >> WbReclaimable:         819392 kB
+> >> WbDirtyThresh:        2920088 kB
+> >> WbDirtied:            2551808 kB
+> >> WbWritten:            1732416 kB
+> >> WbWriteBandwidth:      201832 kBps
+> >> b_dirty:                    0
+> >> b_io:                       0
+> >> b_more_io:                  1
+> >> b_dirty_time:               0
+> >> state:                      5
+> >>
+> >> /* monitor writeback info */
+> >> # ./wb_monitor.py 252:16 -c
+> >>                   writeback  reclaimable   dirtied   written    avg_bw
+> >> 252:16_1                  0            0         0         0    102400
+> >> 252:16_4284             672       820064   9230368   8410304    685612
+> >> 252:16_4325             896       819840  10491264   9671648    652348
+> >> 252:16                 1568      1639904  19721632  18081952   1440360
+> >>
+> >>
+> >>                   writeback  reclaimable   dirtied   written    avg_bw
+> >> 252:16_1                  0            0         0         0    102400
+> >> 252:16_4284             672       820064   9230368   8410304    685612
+> >> 252:16_4325             896       819840  10491264   9671648    652348
+> >> 252:16                 1568      1639904  19721632  18081952   1440360
+> >> ...
+> > 
+> > So I'm wondering: Are you implementing this just because this looks
+> > interesting or do you have a real need for the functionality? Why?
+> Hi Jan, I added debug files to test change in [1] which changes the way how
+> dirty background threshold of wb is calculated. Without debug files, we could
+> only monitor writeback to imply that threshold is corrected.
+> In current patchset, debug info has not included dirty background threshold yet,
+> I will add it when discution of calculation of dirty background threshold in [1]
+> is done.
+> The wb_monitor.py is suggested by Tejun in [2] to improve visibility of writeback.
+> The script is more convenient than trace to monitor writeback behavior of the running
+> system.
 
-No new properties are added.
+Thanks for the pointer. OK, I agree this is useful so let's have a look
+into the code :)
 
-Signed-off-by: Kousik Sanagavarapu <five231003@gmail.com>
----
-Changes since v1:
-- changed the subject line to conform.
-- dropped desc for "clock" and "clock-names" properties.
-- cleaned up stuff.
-
-Thanks for the review Krzysztof.
-
- .../devicetree/bindings/spi/jcore,spi.txt     | 34 ------------
- .../devicetree/bindings/spi/jcore,spi.yaml    | 53 +++++++++++++++++++
- 2 files changed, 53 insertions(+), 34 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/spi/jcore,spi.txt
- create mode 100644 Documentation/devicetree/bindings/spi/jcore,spi.yaml
-
-diff --git a/Documentation/devicetree/bindings/spi/jcore,spi.txt b/Documentation/devicetree/bindings/spi/jcore,spi.txt
-deleted file mode 100644
-index 93936d16e139..000000000000
---- a/Documentation/devicetree/bindings/spi/jcore,spi.txt
-+++ /dev/null
-@@ -1,34 +0,0 @@
--J-Core SPI master
--
--Required properties:
--
--- compatible: Must be "jcore,spi2".
--
--- reg: Memory region for registers.
--
--- #address-cells: Must be 1.
--
--- #size-cells: Must be 0.
--
--Optional properties:
--
--- clocks: If a phandle named "ref_clk" is present, SPI clock speed
--  programming is relative to the frequency of the indicated clock.
--  Necessary only if the input clock rate is something other than a
--  fixed 50 MHz.
--
--- clock-names: Clock names, one for each phandle in clocks.
--
--See spi-bus.txt for additional properties not specific to this device.
--
--Example:
--
--spi@40 {
--	compatible = "jcore,spi2";
--	#address-cells = <1>;
--	#size-cells = <0>;
--	reg = <0x40 0x8>;
--	spi-max-frequency = <25000000>;
--	clocks = <&bus_clk>;
--	clock-names = "ref_clk";
--}
-diff --git a/Documentation/devicetree/bindings/spi/jcore,spi.yaml b/Documentation/devicetree/bindings/spi/jcore,spi.yaml
-new file mode 100644
-index 000000000000..b8ec3adaac8d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/jcore,spi.yaml
-@@ -0,0 +1,53 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+
-+$id: http://devicetree.org/schemas/spi/jcore,spi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: J-Core SPI controller
-+
-+description:
-+  The J-Core "spi2" device is a PIO-based SPI controller which used to
-+  perform byte-at-a-time transfers between the CPU and itself.
-+
-+maintainers:
-+  - Kousik Sanagavarapu <five231003@gmail.com>
-+
-+allOf:
-+  - $ref: spi-controller.yaml#
-+
-+properties:
-+  compatible:
-+    const: jcore,spi2
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: ref_clk
-+
-+  spi-max-frequency:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+required:
-+  - compatible
-+  - reg
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    spi@40 {
-+        compatible = "jcore,spi2";
-+        reg = <0x40 0x8>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        spi-max-frequency = <25000000>;
-+        clocks = <&bus_clk>;
-+        clock-names = "ref_clk";
-+    };
+								Honza
 -- 
-2.44.0.273.g4bc5b65358.dirty
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
