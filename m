@@ -1,158 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A8F12C532;
-	Thu, 21 Mar 2024 16:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B28E132493
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 16:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711038580; cv=none; b=UuN0bXXz+JuFmM/Yox6NAGXY5P/9sFJF0wWGxnstXPlP2wnzDE6G8cv8CjRjePaMcQKqr6vJxekVPh4jsxR6fOZUsKZaecos8qDoEM7byiltMUVpIi15Wij9q5s46WXc9eps8rN2x8FCUNY9UQO+BQk1YAQGbmgY91LT9uNxde0=
+	t=1711038678; cv=none; b=kV8a+/UHj0GbSwI2nEF5rW3SnW92RFS2BeMUDLHEuZ+KORTGwO97nQ9tiCzL2D/MlpL9nTg7Cq0mn78P8rqKKb6m/HRyJMCyTUa/GQJQ0dqNfQQLqd569YQI/XpTh4wGBtiJFQv/4VMvN3caOgpMEN6rfYSRNRL8J2K/dpf1adY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711038580; c=relaxed/simple;
-	bh=Dm1PpESmKUiBkJ+3cICRSDiBnf/1JiIG6XDigLGXMlQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AROueQ8VfxrhV3v12Odb4QcyWZrV8IJToXoM4Da0QE+ttk9MWoIGRAmhU2WpMxgd6Rq+7BaDBtD0ixZtc/PN4cImlvBuy3PVwziHEHbCNDZFKrkeEHg4og7SFRh4QshXBP8+7BbbytDjgbrrfCin5y1Ru9UiX4FV69RrS9K4wzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FbmFLEAR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711038678; c=relaxed/simple;
+	bh=lXo1rQc6MtQsZ+k/JkJu9FHmX1nIfKfYoOVOD3ov3ws=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nfL+YddKMSBP2yJ4iuxm8CX4tWlHmHlefDri3iLLxenpD0a/W6ivG19gnzbh9aIa+qJeTLaizJPQdJEE//EiWasWcVMDMPkcF0C5HxDX3qOFFG4nzywGUvWn1BjTfkewTm8jAf+xUdiKaqP0d7EIYHFRUIxz/uXvUIq0PPSIGbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=odhXariL; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FbmFLEAR"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F12EBC433C7;
-	Thu, 21 Mar 2024 16:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711038580;
-	bh=Dm1PpESmKUiBkJ+3cICRSDiBnf/1JiIG6XDigLGXMlQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=FbmFLEAR2OjkUz89fFAGbWQaIBm7VPp+wrODGf3cgpaW90dcMMuLPUIBy4ru/hhLb
-	 zfgNOMoZT4E2PAniw6E7a3cgj69iN8oHRRILIap1aZb7vlU72m1BtedZcv0Ia+qf9T
-	 vuAP8YSIFtNAijVsMjR9CQ8nG8mT4zlWwoYDf19CkpQDwdS7pbWPG585rZI/KUoNIm
-	 AVyj7tERnH4WO6w+4cFron94YQimE9rxVXrTVVp+Ge8/M9SV6CstakFSIFlInqNC+k
-	 YN6FSt43taTpm3dvkiUPLu4r8exbptcplSQC7tDyKaEKHjZXtxMq7aDLz35zQTva21
-	 c6h466+5AOmww==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD1ECD11C2;
-	Thu, 21 Mar 2024 16:29:39 +0000 (UTC)
-From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL_via_B4_Relay?= <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Thu, 21 Mar 2024 19:29:13 +0300
-Subject: [PATCH net v2 1/2] net: dsa: mt7530: fix enabling EEE on MT7531
- switch on all boards
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="odhXariL"
+Received: from [192.168.88.20] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 945BE7E9;
+	Thu, 21 Mar 2024 17:30:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1711038646;
+	bh=lXo1rQc6MtQsZ+k/JkJu9FHmX1nIfKfYoOVOD3ov3ws=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=odhXariLwUyoW+4tIZ/DzRQ9V67ESMFriO9QE7P6DoQAcSsl3PO6iJrxzZceDJZiw
+	 GrnSL7yjlGlfl1E8jKnx8FheYYK/SgS1W2BGFKWc1XKyWMu0JQKoZ3DmRwLJiH0MfG
+	 5liA4+EgVWaeki/y6MM/L9zlXIHU7ngTops/OeO8=
+Message-ID: <aa559c02-b8df-41f8-9439-d7182ac55ffe@ideasonboard.com>
+Date: Thu, 21 Mar 2024 18:31:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240321-for-net-mt7530-fix-eee-for-mt7531-mt7988-v2-1-9af9d5041bfe@arinc9.com>
-References: <20240321-for-net-mt7530-fix-eee-for-mt7531-mt7988-v2-0-9af9d5041bfe@arinc9.com>
-In-Reply-To: <20240321-for-net-mt7530-fix-eee-for-mt7531-mt7988-v2-0-9af9d5041bfe@arinc9.com>
-To: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
- Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, 
- Florian Fainelli <f.fainelli@gmail.com>, 
- Vladimir Oltean <olteanv@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- =?utf-8?q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>, 
- Russell King <linux@armlinux.org.uk>, 
- SkyLake Huang <SkyLake.Huang@mediatek.com>, 
- Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Bartel Eerdekens <bartel.eerdekens@constell8.be>, 
- mithat.guner@xeront.com, erkin.bozoglu@xeront.com, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, 
- =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>, 
- Florian Fainelli <florian.fainelli@broadcom.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711038558; l=3102;
- i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=jPUSZ3Gz1HwFE6kGrRuGpoudPKmyUngv0UO3D4WqCPk=;
- b=PDdYcDWLl5PpsAn992chSxQxfWJGD18RI8e2IpPDL4UEksOruuIlksuJkAwm3bSzIZepdQ05O
- Pv6HZ7ZaNQkBAN7PxMeFnwusBGvksLdTarcCSmntqk+/6dnQ1ijKJO6
-X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
- pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
-X-Endpoint-Received: by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt
- with auth_id=115
-X-Original-From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
-Reply-To: arinc.unal@arinc9.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 8/8] drm: zynqmp_dp: Add debugfs interface for
+ compliance testing
+Content-Language: en-US
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Michal Simek <michal.simek@amd.com>, David Airlie <airlied@gmail.com>,
+ linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+ linux-arm-kernel@lists.infradead.org,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ dri-devel@lists.freedesktop.org
+References: <20240319225122.3048400-1-sean.anderson@linux.dev>
+ <20240319225122.3048400-9-sean.anderson@linux.dev>
+ <7aa16340-6a87-4110-8114-c1b863b100c9@ideasonboard.com>
+ <76831c1e-216f-430b-bacd-2d50f352e61f@linux.dev>
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <76831c1e-216f-430b-bacd-2d50f352e61f@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Arınç ÜNAL <arinc.unal@arinc9.com>
+On 21/03/2024 18:08, Sean Anderson wrote:
+> On 3/20/24 03:49, Tomi Valkeinen wrote:
+>> On 20/03/2024 00:51, Sean Anderson wrote:
+>>
+>>> +/**
+>>> + * enum test_pattern - Test patterns for test testing
+>>
+>> "for test testing"? =)
+>>
+>>> @@ -1655,6 +2321,9 @@ static void zynqmp_dp_hpd_irq_work_func(struct work_struct *work)
+>>>        u8 status[DP_LINK_STATUS_SIZE + 2];
+>>>        int err;
+>>>    +    if (READ_ONCE(dp->ignore_hpd))
+>>> +        return;
+>>> +
+>>>        mutex_lock(&dp->lock);
+>>>        err = drm_dp_dpcd_read(&dp->aux, DP_SINK_COUNT, status,
+>>>                       DP_LINK_STATUS_SIZE + 2);
+>>
+>> Why do you need READ/WRITE_ONCE() for ignore_hpd?
+> 
+> It's not protected by dp->lock so we don't have to take it for
+> zynqmp_dp_hpd_work_func. Although maybe we should make a version of
+> zynqmp_dp_bridge_detect which assumes we already hold the lock.
 
-The commit 40b5d2f15c09 ("net: dsa: mt7530: Add support for EEE features")
-brought EEE support but did not enable EEE on MT7531 switch MACs. EEE is
-enabled on MT7531 switch MACs either by pulling the LAN2LED0 pin low on the
-board (bootstrapping), or unsetting the EEE_DIS bit on the trap register.
+Does using the macros solve some potential issue, or is it just for 
+documenting that this variable is accessed without lock?
 
-There are existing boards that were not designed to pull the pin low.
-Therefore, unset the EEE_DIS bit on the trap register.
-
-Unlike MT7530, the modifiable trap register won't be populated identical to
-the trap status register after reset. Therefore, read from the trap status
-register, modify the bits, then write to the modifiable trap register.
-
-My testing on MT7531 shows a certain amount of traffic loss when EEE is
-enabled. That said, I haven't come across a board that enables EEE. So
-enable EEE on the switch MACs but disable EEE advertisement on the switch
-PHYs. This way, we don't change the behaviour of the majority of the boards
-that have this switch.
-
-With this change, EEE can now be enabled using ethtool.
-
-The disable EEE bit on the trap pertains to the LAN2LED0 pin which is
-usually used to control an LED. Once the bit is unset, the pin will be low.
-That will make the active low LED turn on.
-
-The pin is controlled by the switch PHY. It seems that the PHY controls the
-pin in the way that it inverts the pin state. That means depending on the
-wiring of the LED connected to LAN2LED0 on the board, the LED may be on
-without an active link.
-
-Fixes: 40b5d2f15c09 ("net: dsa: mt7530: Add support for EEE features")
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
----
- drivers/net/dsa/mt7530.c | 14 ++++++++++++++
- drivers/net/dsa/mt7530.h |  1 +
- 2 files changed, 15 insertions(+)
-
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 678b51f9cea6..6aa99b590329 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -2458,6 +2458,20 @@ mt7531_setup(struct dsa_switch *ds)
- 	/* Reset the switch through internal reset */
- 	mt7530_write(priv, MT7530_SYS_CTRL, SYS_CTRL_SW_RST | SYS_CTRL_REG_RST);
- 
-+	/* Allow modifying the trap and enable Energy-Efficient Ethernet (EEE).
-+	 */
-+	val = mt7530_read(priv, MT7531_HWTRAP);
-+	val |= CHG_STRAP;
-+	val &= ~EEE_DIS;
-+	mt7530_write(priv, MT7530_MHWTRAP, val);
-+
-+	/* Disable EEE advertisement on the switch PHYs. */
-+	for (i = MT753X_CTRL_PHY_ADDR;
-+	     i < MT753X_CTRL_PHY_ADDR + MT7530_NUM_PHYS; i++) {
-+		mt7531_ind_c45_phy_write(priv, i, MDIO_MMD_AN, MDIO_AN_EEE_ADV,
-+					 0);
-+	}
-+
- 	if (!priv->p5_sgmii) {
- 		mt7531_pll_setup(priv);
- 	} else {
-diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
-index a71166e0a7fc..509ed5362236 100644
---- a/drivers/net/dsa/mt7530.h
-+++ b/drivers/net/dsa/mt7530.h
-@@ -457,6 +457,7 @@ enum mt7531_clk_skew {
- #define  XTAL_FSEL_M			BIT(7)
- #define  PHY_EN				BIT(6)
- #define  CHG_STRAP			BIT(8)
-+#define  EEE_DIS			BIT(4)
- 
- /* Register for hw trap modification */
- #define MT7530_MHWTRAP			0x7804
-
--- 
-2.40.1
-
+  Tomi
 
