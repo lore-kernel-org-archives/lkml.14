@@ -1,78 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E925810B;
-	Thu, 21 Mar 2024 13:35:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693F3134CD;
+	Thu, 21 Mar 2024 13:36:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711028151; cv=none; b=o0jYGmLChB8zhsFlUKvFMN4It2Y7gGVQss0r6rTAMilPZYucKBM7zJej64O+mc4nJ4F1EEhDEJm7xaL0U6Yl5Kw4pebhLvnrWZFR8Rj0UdlV7e3k7NaSSKVgLB6/eMkl7hX2Ifhw7B0scdTZsaT9lUq9qH4nEk7YTEHMkcdSLRQ=
+	t=1711028199; cv=none; b=kStpAIsYqVa0ch9BLt84SNr9PcoMRV+Tx7hK+SCj6Tspqa8YQ5RMM1hnJtxxMxkqlyQO+v7CcCmJWWbdm641FukMVfUd5j1o5ZCegVjawHTth0lqNVBz0yT23k0Ll3cyQjZyl08vmk1BmcMJJ86WD0vY+VOHTayZGHvP4zKlDME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711028151; c=relaxed/simple;
-	bh=fYG4E4wFakwbj3fhrxbqt2XkujIXeIIfV+EnH3hriVw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B6Qydh7+v7Fx5AH1lT/R45qHTAZ65btKYUILK2yV6YRjNUV37FAcCWE7HaVuPdzXAPbea+XhwNLVGjxTA53x7vpZAlscP9KZtzQTsT1lpRlFagXkWCbcDCcMDtzaTSqMHOgESq/cVeOD0zC+Ip56vZp7cWie8GLErKVyxeN8c7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aWL3OMvA; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aWL3OMvA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33725C433F1;
-	Thu, 21 Mar 2024 13:35:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711028148;
-	bh=fYG4E4wFakwbj3fhrxbqt2XkujIXeIIfV+EnH3hriVw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aWL3OMvAh+ElF/VUhZ0KMxI0c3OGNrXWdU89Qndzm30HdLttjDBbytGBGm+ZKGGxr
-	 /ZDjPlJ2b3WgNPNl2kNDpOPl7sYsFHqjBL4EeH+4QG0BTxmH99DhLwtoE8XeDYxD5H
-	 Xje8VqXOhHjlI+o1tODEpGtBtJM2lQ5ydgHn1BRur3eDQgd3fEEvw4hDdiK6FNu042
-	 E4PoAN6lcZoSfw4Zmre3F+ovsfU/pRAlbP8lW4l2Y0UggQthuxlFUkPBrK6rum6PfG
-	 uebbkN6Db7OL2XKiFa8sSqWpMd+/vsixn5BsyzJD+kb56iazj2t6GvQ/WzqeOiAU0R
-	 DuuqNKMOb7dXw==
-Date: Thu, 21 Mar 2024 10:35:45 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 1/5] perf beauty: Introduce scrape script for various fs
- syscalls 'flags' arguments
-Message-ID: <Zfw3sRGespUx-qQ4@x1>
-References: <20240320193115.811899-1-acme@kernel.org>
- <20240320193115.811899-2-acme@kernel.org>
- <CAP-5=fWXCL0AAdp4bSQHPo_XR1iiF8KY4=Bo4756XC1tE0PDUw@mail.gmail.com>
+	s=arc-20240116; t=1711028199; c=relaxed/simple;
+	bh=ra8zoPHUNwWfEZK3+SNr/xeXhA/VoCBJ9K+j+pIxJ2o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Vi3Am+pUDhSQS7pxgOLvs599zA3czrm4Oa8tZlHWW1hofoNvUdVku1RXxlV125Eez9QqWp3fWtYyCe+kxZ+kmyjyM2IvO6R53fsL4SrThbdzTAtA5bms9PfUTJJ8gA2tqbe1Hk20GuD92KGeH07KEBxwR3Y0RdAhH/DoQihGVs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7566DC433F1;
+	Thu, 21 Mar 2024 13:36:37 +0000 (UTC)
+Date: Thu, 21 Mar 2024 09:39:04 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: xu.xin16@zte.com.cn, edumazet@google.com, davem@davemloft.net,
+ mhiramat@kernel.org, dsahern@kernel.org, kuba@kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, yang.yang29@zte.com.cn, he.peilin@zte.com.cn,
+ liu.chun2@zte.com.cn, jiang.xuexin@zte.com.cn, zhang.yunkai@zte.com.cn
+Subject: Re:  [PATCH v3] net/ipv4: add tracepoint for icmp_send
+Message-ID: <20240321093904.65f91d10@gandalf.local.home>
+In-Reply-To: <CAL+tcoAdZOKnHTbRnmrjtrhJynGfDy4xXvus1hh_UTbh5eSMTA@mail.gmail.com>
+References: <202403211010443485000@zte.com.cn>
+	<CAL+tcoAdZOKnHTbRnmrjtrhJynGfDy4xXvus1hh_UTbh5eSMTA@mail.gmail.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWXCL0AAdp4bSQHPo_XR1iiF8KY4=Bo4756XC1tE0PDUw@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 20, 2024 at 06:47:28PM -0700, Ian Rogers wrote:
-> On Wed, Mar 20, 2024 at 12:31 PM Arnaldo Carvalho de Melo
-> > +++ b/tools/perf/Makefile.perf
-> > @@ -489,6 +489,12 @@ beauty_ioctl_outdir := $(beauty_outdir)/ioctl
-> >  # Create output directory if not already present
-> >  $(shell [ -d '$(beauty_ioctl_outdir)' ] || mkdir -p '$(beauty_ioctl_outdir)')
-> >
-> > +fs_at_flags_array := $(beauty_outdir)/fs_at_flags_array.c
-> > +fs_at_flags_tbl := $(srctree)/tools/perf/trace/beauty/fs_at_flags.sh
-> > +
-> > +$(fs_at_flags_array): $(beauty_uapi_linux_dir)/fcntl.h $(fs_at_flags_tbl)
-> > +       $(Q)$(SHELL) '$(fs_at_flags_tbl)' $(beauty_uapi_linux_dir) > $@
-> > +
-> 
-> I wonder if rather than update Makefile.perf, we could push more of
-> the logic into tools/perf/trace/beauty/Build. It would also be nice to
-> add there the shellcheck logic:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/Build?h=perf-tools-next#n81
+On Thu, 21 Mar 2024 10:45:00 +0800
+Jason Xing <kerneljasonxing@gmail.com> wrote:
 
-Sure, I thought about consolidating lots of boilerplate there and also
-to move it to tools/perf/trace/beauty/Build. Will see if I can do it in
-this series at some point.
+> The format of the whole patch looks strange... Did you send this patch
+> by using 'git send-email' instead of pasting the text and sending?
 
-Thanks for reviewing the patches,
+Yeah, it's uuencoded.
 
-- Arnaldo
+Subject: =?UTF-8?B?wqBbUEFUQ0ggdjNdIG5ldC9pcHY0OiBhZGQgdHJhY2Vwb2ludCBmb3IgaWNtcF9zZW5k?=
+Content-Type: multipart/mixed;
+	boundary="=====_001_next====="
+X-MAIL:mse-fl2.zte.com.cn 42L2Ahm2097008
+X-Fangmail-Gw-Spam-Type: 0
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 65FB975E.000/4V0TV60kJlz8XrRb
+
+
+
+--=====_001_next=====
+Content-Type: multipart/related;
+	boundary="=====_002_next====="
+
+
+--=====_002_next=====
+Content-Type: multipart/alternative;
+	boundary="=====_003_next====="
+
+
+--=====_003_next=====
+Content-Type: text/plain;
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+-- Steve
