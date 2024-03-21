@@ -1,37 +1,59 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1C278662F;
-	Thu, 21 Mar 2024 16:09:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B74588662F;
+	Thu, 21 Mar 2024 16:11:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711037401; cv=none; b=AUhy8u0T7IfhwrJ1h0goVFHqEuydb/WzxIbInmEhXYwdKdkBzHqyDQ6XlN6vokPY78cqABgZ0MCLMIzMIKZgvwXG3vc4DI7xv3OOOFJaX4leN9uN9HNvhIqUrixIi5pVX2v1iZpxWBg7rhDkv1dMioE38Nv3vSCCj07rGxdDy4g=
+	t=1711037484; cv=none; b=tC94yyyvx6GrDye1GB+qICR72k5YWkYiFen/ZwzDClnrULgAADT6jtjTNCBm11V3R7G1TeFfZFitzSidN5Tc6KAsTCSLGflno4N+s8H78KdJi+uK0AqK8Icxx+Que0hJOEhzI8xq8xpgKGpWWLzG9loe5QJMWTKiiX4Hfz5bbN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711037401; c=relaxed/simple;
-	bh=/COouxoyd/nzT49ztSHw7buRXFW3G2DZYDfUjusNGhQ=;
+	s=arc-20240116; t=1711037484; c=relaxed/simple;
+	bh=LAQZ4ZLWmBUyE62rnU+861jDb9FZB7bhHoZ+WNbwthI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qsgUONZqueW/o7Sw88YWo4DU9PsIIMJf2EzTToM7cSRBNmhG94EQqQEMHj0BpY5UjkmZHD0fhKd+2/pe58IyIzYUyNxEWnGDZ8x6pO+QaMyqdx7le+gZ3rdN+s3Rl61VVdielCEzQZZhJPiz2dbfYd09n9PBpAENmqXXxIFgjPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=UIyozjzi; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+	 In-Reply-To:Content-Type; b=k/AZmNC+05MeWMgNmDqctZZh1995We/i1mr+/PqRX2j5Zt7J8lHVbPcG5w9cXESYn0zhMX0G6qQZTTuQ7zBYkFxx/Mn97fHIakoElpctUnR/C1ZVWRqHwem3TIJfwJI4DBbsmgwK27fP9sMoFLJuJ5SV3UwmDYICpJLyiBjk+iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=huqyANyA; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="UIyozjzi"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 458D240008;
-	Thu, 21 Mar 2024 16:09:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-	t=1711037391;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZrChM2bMyOZ06ublb4gFN2AgR2OzWBbSVut/5tc1iQ8=;
-	b=UIyozjziieWmwYdBiKJK/bXdSKQEvgtMNVegmQmAe4mwYJCgXOAcMxQvzG/DPZ+XWLySwG
-	pNYm2J+wW5gZocJM+aMbHexmQsarqcic1FreLWeSQcv/adAf1+zEBm9morWBlpBTtjmzaM
-	jEyUrtNPdC/7tmq/ZMpdzYUbmUVhrVIHvtYvbl0OQTMlEf/BCKEymvLVx74RI3wAp7kzPW
-	HamM2GmpYUIWzXrZHsiovGBhJ0C/Qa3osDjZwLWmXEx0n81f1ncu5iW/T9W+Zif/uoHtAG
-	8HcSm9MGLTbFzIa88JkwITb5Ur/PiTQ5p1VUbReXCsxWNOxvua0UyZY8/IR9qQ==
-Message-ID: <0fbe7ba2-6529-4118-b050-8ea76d28b712@arinc9.com>
-Date: Thu, 21 Mar 2024 19:09:25 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="huqyANyA"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-55a179f5fa1so1680074a12.0;
+        Thu, 21 Mar 2024 09:11:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711037481; x=1711642281; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=j4TbJuGZPf1PxibNME+z5tQkWAHrehGe5LkiCxqU6ik=;
+        b=huqyANyAhtWUhkKHop+7ua2FUccWY7UCxyw4tdZuIlLA0uWiB4PJgNMnlJfbX6EoV9
+         XIDajsQs0kmLvyjDXObAX4cpB/LaBwd/YMYtFBR2GdeK5i4ED284vHJkJAj2soPTswX2
+         XxS48NIWK7xiLZHTxglWcu+OtOmrCSDYTRlC5wyMoTrXi1RXtx0esDHY58W3LdpmncDM
+         3Idj/SkGBUlOvyeXqBs6UyXSfToeQ2JqXV+KlVVo5A43xxp0pALisbE90mpIwLtqj/Ps
+         m+rUVzWpJgUqD6+N/h/BwqA3GXvsW3x3Tu1xlBveneaLocpIDiIgj5tBTVXwjnJ2ZKE9
+         xxHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711037481; x=1711642281;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j4TbJuGZPf1PxibNME+z5tQkWAHrehGe5LkiCxqU6ik=;
+        b=rYUf9HXM+v1YoMfYExjoggon6lQJuR6sDG2+sng5RyyosVcw3oEqtWgvEBAJFWvgiQ
+         SPttNYBVXpIX4wzOnYjIv0qZo1ohq2CfeNLNQm/CGRNNOFtk/c/qnAeI62NVrPb7okH4
+         wZ+1g4arVOSuS9D27QNaxricXU5lkM2Pgah8IkIxpnG4EI7KSVMI8bziD4gXJQDHfW7h
+         S5Nfy1UTlNLcehtMDCrViGFO0SyUx6DRk3l5ltD+VA+CBMZzmAIOlkeN1jQVxJH4n8g7
+         gOWlP3FU913V1fhbbKFWJfc6136Y42/dg0ixStvWgaXkwEmko7d2H9m7Du/u4SLOUojF
+         0hjA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQ7IIHRJeknQPA+teGivFc7BYV86sUrzpi2bDQQbprMw/uNKZwmjN+MpiltnoPFJiN0UquVmPW0aRAyd5PqZhJ9S0e03ZBY+9gxddR
+X-Gm-Message-State: AOJu0YwwfZJmc71Pr+i8SULq9VGUibVKKLeo9hQlz7Tveof1ljQh2326
+	wbdly4AegjlPSU57v9z/Rno+FHhfeUYaBGRCqyrW88lQPZeyA5Mv
+X-Google-Smtp-Source: AGHT+IHphC7/sIkGBVNLXbe7tRTyFazgJWF3pN4v5m1MheZTRe6KwUTvCZzUmRXHKoB2xtFdUWB8qA==
+X-Received: by 2002:a05:6402:1cc9:b0:565:6c72:40a9 with SMTP id ds9-20020a0564021cc900b005656c7240a9mr4685582edb.28.1711037480685;
+        Thu, 21 Mar 2024 09:11:20 -0700 (PDT)
+Received: from ?IPV6:2a01:c22:7b76:3a00:1c23:60d1:b92b:f2e7? (dynamic-2a01-0c22-7b76-3a00-1c23-60d1-b92b-f2e7.c22.pool.telefonica.de. [2a01:c22:7b76:3a00:1c23:60d1:b92b:f2e7])
+        by smtp.googlemail.com with ESMTPSA id e13-20020a056402104d00b0056bbf8898e7sm32883edu.54.2024.03.21.09.11.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Mar 2024 09:11:20 -0700 (PDT)
+Message-ID: <c87a9702-07c3-412f-a9a9-0e32b8aab668@gmail.com>
+Date: Thu, 21 Mar 2024 17:11:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,165 +61,103 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Fix EEE support for MT7531 and MT7988 SoC switch
-To: Florian Fainelli <f.fainelli@gmail.com>,
- Daniel Golle <daniel@makrotopia.org>, Andrew Lunn <andrew@lunn.ch>
-Cc: DENG Qingfang <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>,
- Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- =?UTF-8?Q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>,
- Russell King <linux@armlinux.org.uk>,
- SkyLake Huang <SkyLake.Huang@mediatek.com>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- Bartel Eerdekens <bartel.eerdekens@constell8.be>, mithat.guner@xeront.com,
- erkin.bozoglu@xeront.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20240318-for-net-mt7530-fix-eee-for-mt7531-mt7988-v>
- <ZfnYkuzuvwLepIfC@makrotopia.org>
- <00ec9779-19ce-4005-83f0-f4abf37350fc@arinc9.com>
- <6cb585f6-6da8-45a2-a28b-2fb556f95672@lunn.ch>
- <Zfn1DxkEa3u-f7l2@makrotopia.org>
- <38798882-c033-4949-9446-4c6f15c25ebe@gmail.com>
+Subject: Re: [PATCH] i2c: i801: Fix a refactoring that broke a touchpad on
+ Lenovo P1
 Content-Language: en-US
-From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <38798882-c033-4949-9446-4c6f15c25ebe@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: yes
-X-Spam-Level: **************************
-X-GND-Spam-Score: 400
-X-GND-Status: SPAM
-X-GND-Sasl: arinc.unal@arinc9.com
+To: Maxim Levitsky <mlevitsk@redhat.com>, Jean Delvare <jdelvare@suse.com>,
+ Andi Shyti <andi.shyti@kernel.org>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240321141919.26844-1-mlevitsk@redhat.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Autocrypt: addr=hkallweit1@gmail.com; keydata=
+ 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
+In-Reply-To: <20240321141919.26844-1-mlevitsk@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 20.03.2024 00:31, Florian Fainelli wrote:
-> On 3/19/24 13:26, Daniel Golle wrote:
->> On Tue, Mar 19, 2024 at 08:38:03PM +0100, Andrew Lunn wrote:
->>>> I would argue that EEE advertisement on the PHY should be enabled by
->>>> default.
->>>
->>> That is an open question at the moment. For some use cases, it can add
->>> extra delay and jitter which can cause problems. I've heard people
->>> doing PTP don't like EEE for example.
->>
->> MediaTek consumer-grade hardware doesn't support PTP and hence that
->> quite certainly won't ever be an issue with all switch ICs supported
->> by the mt7530 driver.
->>
->> I'd rather first change the (configuration) default in OpenWrt (which
->> is arguable the way most people are using this hardware), also because
->> that will be more visible/obvious for users. Or even just make EEE
->> configurable in the LuCI web-UI as a first step so users start playing
->> with it.
->>
->> After all, I also have a hard time imagining that MediaTek disabled
->> EEE in their downstream driver for no reason:
->>
->> https://git01.mediatek.com/plugins/gitiles/openwrt/feeds/mtk-openwrt-feeds/+/24091177a18ba7f2dd8d928a8f5b27b14df46b16
+On 21.03.2024 15:19, Maxim Levitsky wrote:
+> Commit 857cc04cdf50 ("i2c: i801: Add helper i801_get_block_len")
+> introduced a slight functional change: the status variable is now
+> overwritten with the length of an SMBUS tranasaction,
+> even in case of success.
 > 
-> EEE tends to be an interoperability trap and typically results in unexplained link drops with different link partners which are difficult to debug and root cause. It would be great to have more context as to why it was disabled in the downstream tree to know what we are up against, though I would not be surprised if there had been a number of issues reported.
-
-I have started testing MT7531 with EEE enabled and immediately experienced
-frames that wouldn't egress the switch or improperly received on the link
-partner.
-
-SoC MAC       <-EEE off-> MT7531 P6 MAC (acting as PHY)
-MT7531 P0 MAC <-EEE on -> MT7531 P0 PHY
-MT7531 P0 PHY <-EEE on -> Computer connected with twisted pair
-
-I've tested pinging from the SoC's CPU. Packet capturing on the twisted
-pair computer showed very few frames were being received.
-
-# ping 192.168.2.2
-PING 192.168.2.2 (192.168.2.2): 56 data bytes
-64 bytes from 192.168.2.2: seq=36 ttl=64 time=0.486 ms
-^C
---- 192.168.2.2 ping statistics ---
-64 packets transmitted, 1 packets received, 98% packet loss
-round-trip min/avg/max = 0.486/0.486/0.486 ms
-
-It seems there's less loss when frames are passed more frequently.
-
-# ping 192.168.2.2 -i 0.06
-PING 192.168.2.2 (192.168.2.2): 56 data bytes
-64 bytes from 192.168.2.2: seq=5 ttl=64 time=0.285 ms
-64 bytes from 192.168.2.2: seq=6 ttl=64 time=0.155 ms
-64 bytes from 192.168.2.2: seq=7 ttl=64 time=0.243 ms
-64 bytes from 192.168.2.2: seq=8 ttl=64 time=0.139 ms
-64 bytes from 192.168.2.2: seq=9 ttl=64 time=0.224 ms
-64 bytes from 192.168.2.2: seq=68 ttl=64 time=0.350 ms
-64 bytes from 192.168.2.2: seq=69 ttl=64 time=0.242 ms
-64 bytes from 192.168.2.2: seq=70 ttl=64 time=0.230 ms
-64 bytes from 192.168.2.2: seq=71 ttl=64 time=0.242 ms
-64 bytes from 192.168.2.2: seq=72 ttl=64 time=0.276 ms
-64 bytes from 192.168.2.2: seq=101 ttl=64 time=0.224 ms
-64 bytes from 192.168.2.2: seq=102 ttl=64 time=0.238 ms
-64 bytes from 192.168.2.2: seq=103 ttl=64 time=0.240 ms
-...
---- 192.168.2.2 ping statistics ---
-214 packets transmitted, 32 packets received, 85% packet loss
-round-trip min/avg/max = 0.099/0.225/0.350 ms
-
-# ping 192.168.2.2 -i 0.05
-PING 192.168.2.2 (192.168.2.2): 56 data bytes
-64 bytes from 192.168.2.2: seq=1 ttl=64 time=0.277 ms
-64 bytes from 192.168.2.2: seq=2 ttl=64 time=0.240 ms
-64 bytes from 192.168.2.2: seq=3 ttl=64 time=0.133 ms
-64 bytes from 192.168.2.2: seq=4 ttl=64 time=0.233 ms
-64 bytes from 192.168.2.2: seq=5 ttl=64 time=0.223 ms
-64 bytes from 192.168.2.2: seq=6 ttl=64 time=0.228 ms
-64 bytes from 192.168.2.2: seq=7 ttl=64 time=0.236 ms
-64 bytes from 192.168.2.2: seq=8 ttl=64 time=0.150 ms
-...
---- 192.168.2.2 ping statistics ---
-41 packets transmitted, 40 packets received, 2% packet loss
-round-trip min/avg/max = 0.112/0.206/0.277 ms
-
+> This breaks the touchpad on at least my Lenovo P1:
 > 
-> That said as an user, if someone has a well controlled environment, they should absolutely be able to turn on EEE and see how stable it holds in their environment.
+> rmi4_physical rmi4-00: Read PDT entry at 0x00e9 failed, code: -6.
+> rmi4_physical rmi4-00: RMI initial reset failed! Continuing in spite of this.
+> rmi4_physical rmi4-00: Read PDT entry at 0x00e9 failed, code: -6.
+> rmi4_physical rmi4-00: IRQ counting failed with code -6.
+> 
+> Fixes: 857cc04cdf50 ("i2c: i801: Add helper i801_get_block_len")
+> 
+> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> ---
+>  drivers/i2c/busses/i2c-i801.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+> index a6861660cb8c..79870dd7a014 100644
+> --- a/drivers/i2c/busses/i2c-i801.c
+> +++ b/drivers/i2c/busses/i2c-i801.c
+> @@ -536,11 +536,12 @@ static int i801_block_transaction_by_block(struct i801_priv *priv,
+>  
+>  	if (read_write == I2C_SMBUS_READ ||
+>  	    command == I2C_SMBUS_BLOCK_PROC_CALL) {
+> -		status = i801_get_block_len(priv);
+> -		if (status < 0)
+> +		len = i801_get_block_len(priv);
+> +		if (len < 0) {
+> +			status = len;
+>  			goto out;
+> +		}
+>  
+> -		len = status;
+>  		data->block[0] = len;
+>  		inb_p(SMBHSTCNT(priv));	/* reset the data buffer index */
+>  		for (i = 0; i < len; i++)
 
-Looks like this is the way to go. I'm planning to submit v2 with patch 1
-as:
+Indeed, my bad.
 
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 678b51f9cea6..6aa99b590329 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -2458,6 +2458,20 @@ mt7531_setup(struct dsa_switch *ds)
-  	/* Reset the switch through internal reset */
-  	mt7530_write(priv, MT7530_SYS_CTRL, SYS_CTRL_SW_RST | SYS_CTRL_REG_RST);
-  
-+	/* Allow modifying the trap and enable Energy-Efficient Ethernet (EEE).
-+	 */
-+	val = mt7530_read(priv, MT7531_HWTRAP);
-+	val |= CHG_STRAP;
-+	val &= ~EEE_DIS;
-+	mt7530_write(priv, MT7530_MHWTRAP, val);
-+
-+	/* Disable EEE advertisement on the switch PHYs. */
-+	for (i = MT753X_CTRL_PHY_ADDR;
-+	     i < MT753X_CTRL_PHY_ADDR + MT7530_NUM_PHYS; i++) {
-+		mt7531_ind_c45_phy_write(priv, i, MDIO_MMD_AN, MDIO_AN_EEE_ADV,
-+					 0);
-+	}
-+
-  	if (!priv->p5_sgmii) {
-  		mt7531_pll_setup(priv);
-  	} else {
-diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
-index a71166e0a7fc..509ed5362236 100644
---- a/drivers/net/dsa/mt7530.h
-+++ b/drivers/net/dsa/mt7530.h
-@@ -457,6 +457,7 @@ enum mt7531_clk_skew {
-  #define  XTAL_FSEL_M			BIT(7)
-  #define  PHY_EN				BIT(6)
-  #define  CHG_STRAP			BIT(8)
-+#define  EEE_DIS			BIT(4)
-  
-  /* Register for hw trap modification */
-  #define MT7530_MHWTRAP			0x7804
+Reviewed-by: Heiner Kallweit <hkallweit1@gmail.com>
 
-Arınç
