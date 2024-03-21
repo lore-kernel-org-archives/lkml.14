@@ -1,55 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB6684FBE;
-	Thu, 21 Mar 2024 14:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85EE586277
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 14:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711032149; cv=none; b=erpnzKoKp5x8H3tTNmdTDobXcG7vW8X7sINgTh78mHmtdNKZjXJRK4M+9qMCogGHaJVneN6N1+S8Jm12X1UkZphZ4j+CwAovseb8MqYJ2ZdMONS2DjquzJvMFM3u88njHi9CatKj6M9dlK3KTgYnLJpws9PIikZl1axgo2rqVFM=
+	t=1711032153; cv=none; b=e99Fx01IVSJW3CEMHy4qfZuDLvDbbC49AGnIdNDo2EKf2f5CogB4euu5N+BNWJsBFbEnb4LtvHLeKR+cAYa/yzlhAZkKRHRS9Ti+YJfM/f7XsCBUIRWgtFUgy3hvt+yGkMQN3XkWplRnO9aiYlPDJHbDxgAgy0EEf8GcTaamDfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711032149; c=relaxed/simple;
-	bh=eCmOsrWn0vFoPh2l6bOYyx1AWFAxo0BkYpUu5K+u20o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mor0FCcO7rGhlV4ggF32008TvS6zsaNtKz3017alokPoEXzGHYNirHeSEqMnVos6ePnoKIObq2pOA/f+3JDma1FsmVNoTDNR5Nmhv4vnP9324KhHgCCZDPFAXR9BizkdBS3Bs5zWu/JsTktS98DOsLlbeE8B3Zfzw8Q7sWJIdVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X2KAZ0D3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711032153; c=relaxed/simple;
+	bh=mvVCHoV3WyhbYPzYm8+AWnGsZAbyA7SkY5eLDIVysB0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=nt55dGqn6m6f3ttEvTJG/QZr4qNiCWdPiyXaRPZNKce32pTMtCNhfBP4g+eDcy15tsxqAHn3h77F4faEpWgh/b2V9hWSvtGVJwKwUZSgpDP1JiNO2Xf6BDIh0SoMV88K4oEF/+ScHbMwVkgD0T3AGg/3fS8j+x5JphlNRik5z7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=a7uRLLfM; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X2KAZ0D3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A08D5C43330;
-	Thu, 21 Mar 2024 14:42:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711032148;
-	bh=eCmOsrWn0vFoPh2l6bOYyx1AWFAxo0BkYpUu5K+u20o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X2KAZ0D3Xtxnv8OsYsVu202OprZWKYS6nVtp75NTuw2qtG5JG7OdKdlb+mvYvOpYJ
-	 2MKgxqYMC8QT1D+DnlVkvA/BnK26R6JFhtlknlsKgRtO9W3DgyGk1pUFCF1VyRPApE
-	 ugFxgtieTtv7vJFX8tmzOBTBmKO/r+PuWT3atzqg6rXtzoixTbJIzPlDPj7XSgRDuw
-	 gVHsTreKozoPmoROAQSD4Vz1XZzR1Nybo6yTLD2gT14qDB5b7MSwVUh9yA4k+pGuRQ
-	 TEoFYmySo5HXc6pzc2sfQYV74BK6XXCJ4+mlEEvoT828OKhxAYjQGF/s+p01Agagwm
-	 Kyb3v+2RKO4zg==
-Date: Thu, 21 Mar 2024 09:42:26 -0500
-From: Rob Herring <robh@kernel.org>
-To: Tao Zhang <quic_taozha@quicinc.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Konrad Dybcio <konradybcio@gmail.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Jinlong Mao <quic_jinlmao@quicinc.com>,
-	Leo Yan <leo.yan@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	Tingwei Zhang <quic_tingweiz@quicinc.com>,
-	Yuanfang Zhang <quic_yuanfang@quicinc.com>,
-	Trilok Soni <quic_tsoni@quicinc.com>,
-	Song Chai <quic_songchai@quicinc.com>,
-	linux-arm-msm@vger.kernel.org, andersson@kernel.org
-Subject: Re: [PATCH 1/4] dt-bindings: arm: qcom,coresight-funnel: Add label
- for multi-ouput
-Message-ID: <20240321144226.GA1689544-robh@kernel.org>
-References: <1711009927-17873-1-git-send-email-quic_taozha@quicinc.com>
- <1711009927-17873-2-git-send-email-quic_taozha@quicinc.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a7uRLLfM"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-33ed5b6bf59so647820f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 07:42:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711032149; x=1711636949; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vlpyW/qJGkbtizkhGO1yqBNzqS2/ma5JoZfKsAcPkIM=;
+        b=a7uRLLfMM756YNW7mB9hZUcZK9H0LXBDzI49/OUWjPnCAakg88BNKpfTCizCsg/qxf
+         OEkQwJ/0TM+U74XsOE+D03WO/0T+FDamWGrPHQ1gYWvbeBUIkNfg08oeaAutfzEdMJkS
+         gb2IerjjfMMKCGuUY8qJA/nbLt5GIc1u1Cdf6HO3m0LJfVYzBGvE1fXBS7jZqVUi9bCx
+         A4UkKC0ElWyyi2FtwLtHJAMl52HtslA/8QOCT8bMxQ2W0Yw5ZXQuWijYjKT9oR+7J2GJ
+         e2x8PEudnqwOqQrKB+ZE+7Q3mBLwcqya1KYIiM3vGJuulmsX2umlcIdt60SCvB6h/jZn
+         cbKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711032149; x=1711636949;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vlpyW/qJGkbtizkhGO1yqBNzqS2/ma5JoZfKsAcPkIM=;
+        b=HZjOhwoP9duX6CwS3ZpaJguHanwRQVOXY8EhD4VLO4qWrZXXUkvIP2MxC3s2QZGEXE
+         LNmvdgdpSaJcrq8ZVPZCABsGkJf+JBmz6s2CAhu9OlrxNJYfKA+er6RBQmlIzB8WR0tE
+         YBsjx0XUhLXNMC77NlOW52YsdVsxFBIy19LHezNAHy8qzqvaDIehM4h0Raap9TLQ4dZF
+         OX5O8SstTHOaoAM7S/2DlCs2w+Y41RRm6rsFmdzaEmj8K3SobE18qbKWrjWvWTjlTzdM
+         0ojV4+NWbNcNWKgRAoAQXC7COtOH8uR1cNM8s36X2+jQC7fUHKaHXpnxz0tEnJy6P5ku
+         xrdg==
+X-Forwarded-Encrypted: i=1; AJvYcCX62G/d2ilrCgzwD+YtOUK+TMJjoVy56P7tXDh3o4uzzwlGpwJq+G1FdnkhIEYsYv+Sd6s5MWxRlYz45UK5MU2Q+ygHR2O/tYzkj1gh
+X-Gm-Message-State: AOJu0YwSuGIvqnF4gjYclxst4/XvoWrXSZjTkvsBkwt5oW+Ef0+fu8zu
+	utoYsRzWsI6edB+Q1xVXYuISm8b2rmGo0r4cceW4vSW0WbiIYSUEJB0wHtyYtS0=
+X-Google-Smtp-Source: AGHT+IGqM5LRTTAcA+6N8Hep2ZWFfY82O2I9PKGnkuA08prM+u9q7FCVn8y1OgI4tWJo9PIjBFq0MQ==
+X-Received: by 2002:adf:fd0d:0:b0:33e:a29d:9672 with SMTP id e13-20020adffd0d000000b0033ea29d9672mr15509211wrr.51.1711032148752;
+        Thu, 21 Mar 2024 07:42:28 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id z18-20020adfec92000000b0033e7de97214sm17328972wrn.40.2024.03.21.07.42.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Mar 2024 07:42:28 -0700 (PDT)
+Date: Thu, 21 Mar 2024 17:42:18 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Ido Schimmel <idosch@nvidia.com>
+Cc: David Ahern <dsahern@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Petr Machata <petrm@nvidia.com>, Kees Cook <keescook@chromium.org>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH v2 net] nexthop: fix uninitialized variable in
+ nla_put_nh_group_stats()
+Message-ID: <f08ac289-d57f-4a1a-830f-cf9a0563cb9c@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,81 +71,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1711009927-17873-2-git-send-email-quic_taozha@quicinc.com>
+X-Mailer: git-send-email haha only kidding
 
-On Thu, Mar 21, 2024 at 04:32:04PM +0800, Tao Zhang wrote:
-> Add new property "label" to label the source corresponding to the
-> output connection. When the funnel supports multi-output, this
-> property needs to be introduced to mark which source component a
-> certain output connection corresponds to.
-> 
-> Signed-off-by: Tao Zhang <quic_taozha@quicinc.com>
-> ---
->  .../arm/arm,coresight-dynamic-funnel.yaml     | 34 ++++++++++++++++---
->  1 file changed, 30 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-dynamic-funnel.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-dynamic-funnel.yaml
-> index 44a1041cb0fc..cde62c286d29 100644
-> --- a/Documentation/devicetree/bindings/arm/arm,coresight-dynamic-funnel.yaml
-> +++ b/Documentation/devicetree/bindings/arm/arm,coresight-dynamic-funnel.yaml
-> @@ -66,13 +66,39 @@ properties:
->          $ref: /schemas/graph.yaml#/properties/port
->  
->    out-ports:
-> -    $ref: /schemas/graph.yaml#/properties/ports
-> -    additionalProperties: false
-> -
-> +    type: object
->      properties:
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
->        port:
-> +        type: object
-> +
-> +    patternProperties:
-> +      '^port(@[0-7])?$':
-> +        type: object
->          description: Output connection to CoreSight Trace bus
-> -        $ref: /schemas/graph.yaml#/properties/port
+The "*hw_stats_used" value needs to be set on the success paths to prevent
+an uninitialized variable bug in the caller, nla_put_nh_group_stats().
 
-Nope, now you have no constraints on port node properties. Please look 
-at how other bindings are done to add properties on endpoint node.
+Fixes: 5072ae00aea4 ("net: nexthop: Expose nexthop group HW stats to user space")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+v2: Set the variable in nh_grp_hw_stats_update() instead of
+    nla_put_nh_group_stats().
 
-> +
-> +        patternProperties:
-> +          "^endpoint(@[0-9a-f]+)?$":
-> +            type: object
-> +            properties:
-> +              remote-endpoint:
-> +                description: |
-> +                  phandle to an 'endpoint' subnode of a remote device node.
-> +                  $ref: /schemas/types.yaml#/definitions/phandle
+ net/ipv4/nexthop.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Don't need this.
+diff --git a/net/ipv4/nexthop.c b/net/ipv4/nexthop.c
+index 74928a9d1aa4..535856b0f0ed 100644
+--- a/net/ipv4/nexthop.c
++++ b/net/ipv4/nexthop.c
+@@ -768,8 +768,10 @@ static int nh_grp_hw_stats_update(struct nexthop *nh, bool *hw_stats_used)
+ 	struct net *net = nh->net;
+ 	int err;
+ 
+-	if (nexthop_notifiers_is_empty(net))
++	if (nexthop_notifiers_is_empty(net)) {
++		*hw_stats_used = false;
+ 		return 0;
++	}
+ 
+ 	err = nh_notifier_grp_hw_stats_init(&info, nh);
+ 	if (err)
+-- 
+2.43.0
 
-> +              label:
-> +                description: Label the source corresponding to the output connection
-> +                $ref: /schemas/types.yaml#/definitions/string
-
-label already has a type.
-
-As this node is an output, aren't you labeling what the destination is, 
-not the "source"?
-
-Why can't you look at the remote connection to identify what it is?
-
-
-> +    oneOf:
-> +      - required:
-> +          - port
-> +      - required:
-> +          - "#address-cells"
-> +          - "#size-cells"
-
-The common schema that you removed handles this.
-
-Rob
