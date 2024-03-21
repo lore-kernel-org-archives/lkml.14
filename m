@@ -1,105 +1,90 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forward103c.mail.yandex.net (forward103c.mail.yandex.net [178.154.239.214])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D16B57311
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 11:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A678358213;
+	Thu, 21 Mar 2024 11:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.214
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711019145; cv=none; b=AWZj8gkNGXyT63Ua7f1JLCKzB+1oG838qEJQUMdN8SpO/VoK1H1nE0G4EBl0PsIZUD+6gHKj7eqtTLhFx5yRPcE3fc0FpLD9/toh+Jrtr/mh/xPawCd6F6Gh/NxaFPQpQigwBAikFW/EY/2TODE685wvg8l/jDI/tjeGVrchHl8=
+	t=1711019154; cv=none; b=RYjOQg9Gt989MEZzg/WmKvB4Hx9ObSYasz15Gu74LoJb8ONFpnNJE+mwB8/LTwok/suCG0iFia/S19ccUDvvOcL/SRTIfb9LNx0CMdZ1EtXEwkqvFkPPx3J6h6dJapu88r/vlfrJMnSwaY6SGY/D8Ne8sd66gm1P98w9agRgJN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711019145; c=relaxed/simple;
-	bh=slbxlN2nSei3VCKDGLMiugztkO4zWq96JKaboOhSAAU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f0/CeZEFBLLoyVHuMhJkyM7J+oTEWVgMLIctGyx28MRu4Gujpg1rSBP/3DU/yJiUDXdFZFQge5FOENqFzTYIkHjH7HClDBAkYqAzp8uQ5jYwutaWDp/lGbKB+KoYPDbcQTnT4oicDcKprAsEB2e5aKCz9H71tCH8gdCys7jHGiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 6973B37268;
-	Thu, 21 Mar 2024 11:05:37 +0000 (UTC)
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D1123136AD;
-	Thu, 21 Mar 2024 11:05:36 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 8LM4MIAU/GUXKwAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Thu, 21 Mar 2024 11:05:36 +0000
-Date: Thu, 21 Mar 2024 12:07:02 +0100
-From: Oscar Salvador <osalvador@suse.de>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Matthew Wilcox <willy@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Michal Hocko <mhocko@suse.com>, Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Subject: Re: [PATCH v2 2/2] mm,page_owner: Fix accounting of pages when
- migrating
-Message-ID: <ZfwU1mGQKejNaKIk@localhost.localdomain>
-References: <20240319183212.17156-1-osalvador@suse.de>
- <20240319183212.17156-3-osalvador@suse.de>
- <Zfnd_w0ZLOVhgACt@casper.infradead.org>
- <ZfptWDsfdxBltN6T@localhost.localdomain>
- <ed41d5cf-d068-412d-b7bb-5468df2fefb7@suse.cz>
+	s=arc-20240116; t=1711019154; c=relaxed/simple;
+	bh=Rz/7QeGwGWVQ23cVl//CoUspDWwVdJjOPTplV8dC39E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NgIkSseUpjJu3QdLf9EQToCKpzfrAMe2YnhktU/Q1HQF+91W7H2WnyRT1cl/1K+EzqFAXC6btvHNQgLbcliGhvO026Oj+mEvYM7kig6+AzWZehCqWLkKmlemWDoTbk8AJ+Zmrrg8XsR76GrmBagHKVCT9YMXbwRuh6R3tihrKaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=dcr67GiT; arc=none smtp.client-ip=178.154.239.214
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="dcr67GiT"
+Received: from mail-nwsmtp-smtp-production-main-38.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-38.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:4619:0:640:d09:0])
+	by forward103c.mail.yandex.net (Yandex) with ESMTPS id 78E3C60A8A;
+	Thu, 21 Mar 2024 14:05:42 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-38.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id D5EwJf8ZnW20-cjVk97x4;
+	Thu, 21 Mar 2024 14:05:41 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1711019141; bh=si9CmxfbTTi+fzS7ZgV1gg2/IENW5eLorkGc5P/t0aU=;
+	h=Message-Id:Date:Cc:Subject:To:From;
+	b=dcr67GiTKWsuoYVCZRSpl/qun0eAAaOuBKZKzi2EHDixj9XLJRPUeDgpyPvExYdKg
+	 VZHmGVfmvFhFeAoMUPEvWv6g+SeSk0hClHp5O3Ty4qC/Z1+i3w8i/laOqXOnRVfOYS
+	 denliSur7IfAyXRY3cRJa76KOekeR/6P57HDnUew=
+Authentication-Results: mail-nwsmtp-smtp-production-main-38.myt.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Mikhail Ukhin <mish.uxin2012@yandex.ru>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Mikhail Ukhin <mish.uxin2012@yandex.ru>,
+	linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	Pavel Koshutin <koshutin.pavel@yandex.ru>,
+	Artem Sadovnikov <ancowi69@gmail.com>,
+	Mikhail Ivanov <iwanov-23@bk.ru>
+Subject: [PATCH 5.10/5.15] scsi: add a length check for VARIABLE_LENGTH_CMD commands
+Date: Thu, 21 Mar 2024 14:02:29 +0300
+Message-Id: <20240321110229.9534-1-mish.uxin2012@yandex.ru>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ed41d5cf-d068-412d-b7bb-5468df2fefb7@suse.cz>
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	 REPLY(-4.00)[]
-X-Spam-Score: -4.00
-X-Rspamd-Queue-Id: 6973B37268
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 21, 2024 at 11:50:36AM +0100, Vlastimil Babka wrote:
-> Yeah I think we could keep that logic.
+Fuzzing of 5.10 stable branch reports a slab-out-of-bounds error in
+ata_scsi_pass_thru.
 
-I am all for keeping it.
+The error is fixed in 5.18 by commit
+ce70fd9a551af7424a7dace2a1ba05a7de8eae27.
+Backporting this commit would require significant changes to the code so
+it is bettter to use a simple fix for that particular error.
 
-> But we could also simply subtract the refcount of the old handle (the
-> "allocated for migration") in __folio_copy_owner() no? Then we wouldn't need
-> the extra migrate_handle.
+The problem is that the length of the received SCSI command is not
+validated if scsi_op == VARIABLE_LENGTH_CMD. It can lead to out-of-bounds
+reading if the user sends a request with SCSI command of length less than
+32.
 
-Since new_page will have the old handle pointing to the old stack after
-the call, we
-could uncharge the old_page to the migrate_stack, which new_page->_handle holds
-before it gets changed.
+Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
 
-So we basically swap it.
+Signed-off-by: Artem Sadovnikov <ancowi69@gmail.com>
+Signed-off-by: Mikhail Ivanov <iwanov-23@bk.ru>
+---
+ drivers/ata/libata-scsi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-It could work, but I kinda have a bittersweet feeling here.
-I am trying to work towards to reduce the number of lookups in the
-hlist, but for the approach described above I would need to lookup
-the stack for new_page->handle in order to substract the page.
-
-OTHO, I understand that adding migrate_handle kinda wasted memory.
-16MB for 16GB of memory.
-
-> Also we might have more issues here. Most page owner code takes care to set
-> everything for all pages within a folio, but __folio_copy_owner() and
-> __set_page_owner_migrate_reason() don't.
-
-I did not check deeply but do not we split the folio upon migration
-in case it is large?
-Which means we should reach split_page_owner() before the copy takes
-place. Do I get it right?
-
+diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+index dfa090ccd21c..77589e911d3d 100644
+--- a/drivers/ata/libata-scsi.c
++++ b/drivers/ata/libata-scsi.c
+@@ -4065,6 +4065,9 @@ int __ata_scsi_queuecmd(struct scsi_cmnd *scmd, struct ata_device *dev)
+ 
+ 	if (unlikely(!scmd->cmd_len))
+ 		goto bad_cdb_len;
++
++	if (scsi_op == VARIABLE_LENGTH_CMD && scmd->cmd_len < 32)
++		goto bad_cdb_len;
+ 
+ 	if (dev->class == ATA_DEV_ATA || dev->class == ATA_DEV_ZAC) {
+ 		if (unlikely(scmd->cmd_len > dev->cdb_len))
 -- 
-Oscar Salvador
-SUSE Labs
+2.25.1
+
