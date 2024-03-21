@@ -1,136 +1,143 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from fout8-smtp.messagingengine.com (fout8-smtp.messagingengine.com [103.168.172.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC92758AA8
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 13:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70F783CD8
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 13:25:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711027408; cv=none; b=hzWu2xnNTgWhqCZd1jwe2KPYxXMfCTiYRKI2xj6IyNNrowPSxbRkSJv0G9nhBD6Q2+PTkTpb5BaCmhGbZcIScCjXlDL41Oyl4PYc/Tf4rlTNN8CEfHoLqEt2u7tSE/kP23VJjiiJMgyXgWGYaFgihYaM0FhIwbPMjOKxml8QZO0=
+	t=1711027525; cv=none; b=EF8kX8d11v4YBYBYeQzjCEx1bBi/UNcpZK56BcuU81Jx2thDUqGs7tCZUTZpf7PXvMd7Qs4tnSVnK29sWR18/7bhQAbmUPJfzlu4NpazU7qeS4wv0MJ5xRxxn6HC6bFdUtLcCLFsXszR4RLwtLNEpHweKaH9/ZoiBHrNFc1e9dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711027408; c=relaxed/simple;
-	bh=q7+HFeVPV5wCPZnCZJ1tlU5gT8zKONBd02F6Aa8xQY4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rV/ZGWQi81vmPFDDLrl/z4Ot/VSpUEnw5XXVkiUTpoiXHAW9edjBdeFvdkxA99M5agBY8CWI/X7S8sMd8YCYyPHGmXy655JcYxBBrdHJZpaEOTnLgIuP7+uGmpwF4pdp5vkqP2BsBZWGDhoClDYeJxhABhha+ECf8ugBXc7C29o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4V0mNx3ShVz4f3mJM
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 21:23:13 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 6FD881A0175
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 21:23:21 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.67.174.26])
-	by APP1 (Coremail) with SMTP id cCh0CgBHGBHINPxlPY+PHg--.33576S4;
-	Thu, 21 Mar 2024 21:23:21 +0800 (CST)
-From: Xiu Jianfeng <xiujianfeng@huaweicloud.com>
-To: cl@linux.com,
-	penberg@kernel.org,
-	rientjes@google.com,
-	iamjoonsoo.kim@lge.com,
-	akpm@linux-foundation.org,
-	vbabka@suse.cz,
-	roman.gushchin@linux.dev,
-	42.hyeyoo@gmail.com
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	xiujianfeng@huawei.com
-Subject: [PATCH v2 -next] mm/slub: remove dummy slabinfo functions
-Date: Thu, 21 Mar 2024 13:17:33 +0000
-Message-Id: <20240321131733.268615-1-xiujianfeng@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1711027525; c=relaxed/simple;
+	bh=h8ZifEKnaXUc0zdI/qG1xC3K4ax198OvtVaNLxqSPnE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NiHjzCFf3CVl8Jt7nIrg1Tz/P4ZbUmmoyP/zxLBLmRSUEPnVLs9tgnVdzjUqnsBGIan7fA7ExprBudD6vYd6otzlJKx1z3oFObGVAp5GPprz8ECRgtTFZ3BWmxNVejz1vAPCXcPicjlN4A7dNuQc9j4f+zFykk0OPrm160qIufY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=AJ1LL4Wk; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=wBT6STPA; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="AJ1LL4Wk";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wBT6STPA"
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailfout.nyi.internal (Postfix) with ESMTP id AEA3D1380145;
+	Thu, 21 Mar 2024 09:25:22 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Thu, 21 Mar 2024 09:25:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1711027522; x=
+	1711113922; bh=FM/ekE5Io3Dn3mqf5BFQ86JSx+WgTpNVAU55ps3Oaaw=; b=A
+	J1LL4WkrTHGGRRuuF1b19nf0CmG1HZ6LoQHlAIazSOyySlaC9YTzVBAIDeC3+CLH
+	jkY+57QV7JfyoFDZzB9mqGxcz6cpfwRa3EnBi4w5p4y4b/oYusJxPovdGobPUgL8
+	LNb65Lwlelenkr67uqqYXL8ZVDE8c4RUlpP/anIoat+H0/O1oXhIFGq9fhT5fkqB
+	/oxcbkyk2yrnCm3xJPSk2xC5UNYJiMw25Evnw+agtiUlk9p3PvEsiEr3Ozsg4w2A
+	Hv02HN6wCqZlnTd/Sz8Jge2stAGSWaNvW79LZm7Z15gfVSr/T1AE2P/EVZkbgZw3
+	dWowOphxEvvDIzIJTES/Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1711027522; x=1711113922; bh=FM/ekE5Io3Dn3mqf5BFQ86JSx+Wg
+	TpNVAU55ps3Oaaw=; b=wBT6STPA6NUULLuiubLxlYogt1j0trDR5RA/e/Pq3y8F
+	5db8Kf0RPC4OUHU9jXiK6lN41kF7JrR7dApdaGUQ8LWScliPTGHC2fm1Fgpc/fht
+	GSojYrctzRTWSD5do/Bm4GHHV0zTgLiYiTB1H2U+wkXix6S0/zHjKXMrjOfM6E8n
+	N1m5jVXD8qsvOjmq1Q9oNlNvnFmwQs8SowGXaRpCId9f9A3xwqxlmDnU8SbctFEl
+	5IyOWwCrlLPrIfZW56ypRJPKNqgGftN253/3Ul3LeQMPRVy6c9O30tb1JcRx+NB3
+	GmLVRXtNFFzcdMYZyylzgEeR+x1tVnQ8qPgR0OgUQA==
+X-ME-Sender: <xms:QjX8ZWjZN8onfLLl89haiixGZ7FwKE-7gztpNNCWToQS6cnRsR_XOA>
+    <xme:QjX8ZXAd8SqWbTes42rL52NvYrKUnUIQYf5_fi9x_c-wrH8DQyaQVD5-URTz772hL
+    jOV1Uz5YoTW9HMPqxo>
+X-ME-Received: <xmr:QjX8ZeGAvCOSyaiLjP-og5EWfgMCQ1dHL0TC4MAC8fpZ5f4U42uJn1AkYbdapOzGOD4VXZNMB_YRuR97Pc6GwINbUJjIHDX8N60>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrleeigdehvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefvrghkrghs
+    hhhiucfurghkrghmohhtohcuoehoqdhtrghkrghshhhisehsrghkrghmohgttghhihdrjh
+    hpqeenucggtffrrghtthgvrhhnpeevieelhfdukeffheekffduudevvdefudelleefgeei
+    leejheejuedvgefhteevvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepohdqthgrkhgrshhh
+    ihesshgrkhgrmhhotggthhhirdhjph
+X-ME-Proxy: <xmx:QjX8ZfRxXMUx7FvFj7vqGM4i7V8_9x0QVAa5cW65Lg-bhRqaxYSBPg>
+    <xmx:QjX8ZTyB8fcFdJ78f35DXwFsVt7ZiYgsNsSbC6dELt39_znJVyZvUA>
+    <xmx:QjX8Zd6KJjiT1_3eOSM68Idx1ug8w_pvcDhZTZIML9iyS5yaBGqOcQ>
+    <xmx:QjX8ZQwmcoTQoDEp78AR-rGDNSXV1BEMazoUHeCAKktT9JkwNPs0Jg>
+    <xmx:QjX8ZVvqBUGrh8LIDyypRKFhmMRl1Hbl5NXkIZ2xAmFy2V3WMomDsg>
+Feedback-ID: ie8e14432:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 21 Mar 2024 09:25:20 -0400 (EDT)
+Date: Thu, 21 Mar 2024 22:25:18 +0900
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To: Adam Goldman <adamg@pobox.com>
+Cc: linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] firewire: core: use long bus reset on gap count error
+Message-ID: <20240321132518.GA755964@workstation.local>
+Mail-Followup-To: Adam Goldman <adamg@pobox.com>,
+	linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+References: <ZdxH-mjmd09jmYZN@iguana.24-8.net>
+ <20240228004144.GA72391@workstation.local>
+ <ZfqufddlPhxzcDCN@iguana.24-8.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBHGBHINPxlPY+PHg--.33576S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7tFyrCrW3Wr43Gw4UWw47twb_yoW8uw1DpF
-	4fKw1fGa48Kr1vgr4DGF48Z34Sg3ZFkFW5GrZ2qasavr1UJw1vgrn5t3ykZ3y5WFyku397
-	Xw4v9FyrX34DJrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2
-	j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7x
-	kEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY
-	0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I
-	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
-	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcV
-	CF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
-	aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1zuWJUUUUU==
-X-CM-SenderInfo: x0lxyxpdqiv03j6k3tpzhluzxrxghudrp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZfqufddlPhxzcDCN@iguana.24-8.net>
 
-From: Xiu Jianfeng <xiujianfeng@huawei.com>
+Hi Adam,
 
-The SLAB implementation has been removed since 6.8, so there is no
-other version of slabinfo_show_stats() and slabinfo_write(), then we
-can remove these two dummy functions.
+Thanks for the patches to improve the subsystem.
 
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
----
-v2: correct removed version
----
- mm/slab.h        |  3 ---
- mm/slab_common.c |  2 --
- mm/slub.c        | 10 ----------
- 3 files changed, 15 deletions(-)
+Inconveniently to you , we are now just at the merge window for v6.9
+kernel, thus I would not put any changes except for the changes to
+Linus. I'd like you to wait until the next week, sorry.
 
-diff --git a/mm/slab.h b/mm/slab.h
-index d2bc9b191222..78e205b46e19 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -496,9 +496,6 @@ struct slabinfo {
- };
- 
- void get_slabinfo(struct kmem_cache *s, struct slabinfo *sinfo);
--void slabinfo_show_stats(struct seq_file *m, struct kmem_cache *s);
--ssize_t slabinfo_write(struct file *file, const char __user *buffer,
--		       size_t count, loff_t *ppos);
- 
- #ifdef CONFIG_SLUB_DEBUG
- #ifdef CONFIG_SLUB_DEBUG_ON
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index f5234672f03c..67c03d6bd26c 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -1078,7 +1078,6 @@ static void cache_show(struct kmem_cache *s, struct seq_file *m)
- 		   sinfo.limit, sinfo.batchcount, sinfo.shared);
- 	seq_printf(m, " : slabdata %6lu %6lu %6lu",
- 		   sinfo.active_slabs, sinfo.num_slabs, sinfo.shared_avail);
--	slabinfo_show_stats(m, s);
- 	seq_putc(m, '\n');
- }
- 
-@@ -1155,7 +1154,6 @@ static const struct proc_ops slabinfo_proc_ops = {
- 	.proc_flags	= PROC_ENTRY_PERMANENT,
- 	.proc_open	= slabinfo_open,
- 	.proc_read	= seq_read,
--	.proc_write	= slabinfo_write,
- 	.proc_lseek	= seq_lseek,
- 	.proc_release	= seq_release,
- };
-diff --git a/mm/slub.c b/mm/slub.c
-index 1bb2a93cf7b6..cc7e68fbdbba 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -7099,14 +7099,4 @@ void get_slabinfo(struct kmem_cache *s, struct slabinfo *sinfo)
- 	sinfo->objects_per_slab = oo_objects(s->oo);
- 	sinfo->cache_order = oo_order(s->oo);
- }
--
--void slabinfo_show_stats(struct seq_file *m, struct kmem_cache *s)
--{
--}
--
--ssize_t slabinfo_write(struct file *file, const char __user *buffer,
--		       size_t count, loff_t *ppos)
--{
--	return -EIO;
--}
- #endif /* CONFIG_SLUB_DEBUG */
--- 
-2.34.1
+However, in the topic of logging PHY register, I have an idea to utilize
+the Linux kernel tracepoints framework[1]. It is tangled to program with
+the provided macros, and it is available just with the relevant tools[2],
+but it would be helpful in the case, I think.
 
+[1] https://docs.kernel.org/trace/tracepoints.html
+[2] https://docs.kernel.org/trace/tracepoint-analysis.html
+
+On Wed, Mar 20, 2024 at 02:38:05AM -0700, Adam Goldman wrote:
+> Hi Takashi,
+> 
+> On Wed, Feb 28, 2024 at 09:41:44AM +0900, Takashi Sakamoto wrote:
+> > Additionally, for your investigation, you added the debug print to get the
+> > timing of bus reset scheduling. I think it useful for this kind of issue.
+> > Would I ask you to write another patch to add it? In my opinion, the case
+> > of mixed versions of 1394 PHYs in the same bus has more quirks and the
+> > debug print is helpful to investigate it further.
+> 
+> I'm sorry for my delay in preparing a patch.
+> 
+> I've submitted a patch to linux1394-devel to log when we schedule or 
+> initiate a bus reset. This is enabled with a new parameter to the 
+> firewire-core module. It provides logging similar to the debug print I 
+> used to investigate the reset loop.
+> 
+> Also, there is already logging for bus reset interrupts in 
+> firewire-ohci. This logs all bus resets and does not indicate whether we 
+> initiated the reset or some other node on the bus initiated it. However, 
+> the logging in firewire-ohci always froze my computer when I enabled it. 
+> I've submitted a separate patch to fix the firewire-ohci logging.
+> 
+> I believe both forms of logging can be useful. firewire-ohci logs all 
+> bus resets, but it doesn't tell where the resets came from. firewire-core 
+> only logs bus resets we initiate.
+> 
+> I also considered adding an option to firewire-ohci to log PHY register 
+> access. This would include writes to IBR and ISBR, so it would log when 
+> we initiate resets. However, this logging would be more complicated to 
+> add, so I didn't do it.
+> 
+> -- Adam
+
+
+Thanks
+
+Takashi Sakamoto
