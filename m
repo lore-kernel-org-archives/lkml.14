@@ -1,63 +1,64 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1164AA947;
-	Thu, 21 Mar 2024 14:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE4DA947;
+	Thu, 21 Mar 2024 14:46:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711032300; cv=none; b=u56xXdErDJZ2qWcUJYZOkwF/OqX7FhY8x7IplQBVZCIqTLihU34Ruex8wTnR0RJDk6fKrGYNbwwum1FHgj7gXek1q906wmFhfYBnhBOM0jAhrVRxSC4TmYXCe3qAxMvG2dNBSBObJq6MhQMPi1i5vh/onDIc3tHm8osBdPaBhSk=
+	t=1711032363; cv=none; b=A+mEno+F6v2v3SdHhD3ymoeDHla5d04grVdNiG5lG4iSuSCV9Z2k+V1LHncL4/ZCn9Ix7kD6PSZXMPo1AUEEgWd/dMG4ATQ6oyYgp92v0+HIXUYTpFwjuAEgqruaNdhakUgGqS/k0Ievg97bY8BA8E3eX4CZSl0UyydDBYVfO+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711032300; c=relaxed/simple;
-	bh=qCkstqJlVs//3pE+siPC+9D8P8S6p2B+jJLD0515TgM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DLsT+2o6ogI6lzDZpHe09Slhtu1TOJ4tYriRNMz6wscdon9zLpabzVYAx4SGdSTUfcvTJv0IQTCWxeMP4vvtPI3YlfVFMaxEI/QDeZmS6u3qjN9Wgszp5gMGC+5pE43hWQmB38mtvzrB7ct7xT52kOD6/vKx3i3OqUi6YVbhU1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jMnsfJvm; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1711032363; c=relaxed/simple;
+	bh=hmFR+A1emygyeDkPd3cRDw5F7A9p/5ewMxdwGilktg4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bI/m/BqNB1FxH1b/+90dWQH4hpo3s0ugOXY+/PvNEsXvww+FU5zSMp5EP0kLBLh0lUnhIjjUb1Z+HsHaj36JYKId0gvKSz+L7HRWJXVuxcQSlZjINu6W/i2yLJ/qAMtIcwJhwC7cmjK33/kUd4EVexw8Q8Xd5A7V5TJgowemJ48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bL5cFI7r; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jMnsfJvm"
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42LDRHeU016087;
-	Thu, 21 Mar 2024 14:44:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=PQ5xY6ei81TW6VOKWM3ATzHUAb2g3AKdT/Rp3F1kRYk=;
- b=jMnsfJvmVssVcQY9Hk4zfoDgeM9/S7EOy/rabSo3i60VPp83fgxmLAzl6vRAE2s50vfs
- W4vtW9+W+gZDQUJTXF1S6V0LlU0RnQEhv5cN31Rr35H5HNYsPB8pL9VfYU5/kYskUzS7
- LaeJoA/u0BTaHoB2LyZcBWQmTxk6XBC/46FXjl6Bf95n8QWikdBrTdWKNUzy4kH/JBKB
- 02a+282ZqzQoFCBzAtm5piZO2Cn/yV45I8xgAendQ5BvnLyxd4Dg7Nw++m+tDbK3hGyZ
- bCXA7/sR0rU0Fhnsmg7pap1THk47qGk4AK7YyOpw7ko1PkUiFmEm0C11dQ9iIA858UYA dg== 
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x0hve8wn3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 21 Mar 2024 14:44:44 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42LEWI0W015807;
-	Thu, 21 Mar 2024 14:44:43 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wwp50e0kf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 21 Mar 2024 14:44:43 +0000
-Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42LEiedj27918724
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 21 Mar 2024 14:44:43 GMT
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C109E5805E;
-	Thu, 21 Mar 2024 14:44:40 +0000 (GMT)
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4751D5805C;
-	Thu, 21 Mar 2024 14:44:40 +0000 (GMT)
-Received: from sbct-3.bos2.lab (unknown [9.47.158.153])
-	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 21 Mar 2024 14:44:40 +0000 (GMT)
-From: Stefan Berger <stefanb@linux.ibm.com>
-To: linux-crypto@vger.kernel.org, herbert@gondor.apana.org.au,
-        davem@davemloft.net
-Cc: linux-kernel@vger.kernel.org, saulo.alessandre@tse.jus.br, vt@altlinux.org,
-        Stefan Berger <stefanb@linux.ibm.com>, stable@vger.kernel.org
-Subject: [PATCH] crypto: ecdsa - Fix module auto-load on add-key
-Date: Thu, 21 Mar 2024 10:44:33 -0400
-Message-ID: <20240321144433.1671394-1-stefanb@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bL5cFI7r"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-41464711dc8so8842435e9.1;
+        Thu, 21 Mar 2024 07:46:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711032360; x=1711637160; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fb6fGfxlkuJOz49c8nIlvUqhq4r8FWilTvBwvl4ZbcQ=;
+        b=bL5cFI7rf1tnNgeGnqCnumumdGlPBxGopBUG7z+pBmhPM1mqCKXT2IQkG+JgHWTvse
+         ll94QPvkgThLu0zpeoC6N3p+yrzNbdX8sbpMleZTb2QcwQhWjklchqlaNriBCnBXpgFz
+         tGWCF55Jah87Y1o2Ez52FyAXR6LFAbktHk29bY1Mq8vvn+mg73Xc4I3fTuxxF5AVDsOz
+         eskNpZs+A4EOjD1uzPDktJm2f6yYmZH+TRE5LPqKozjkegEqT4B3b83jb/qcLtquUNKK
+         GvDGfJMWMlKQJUyq9X/8HlJcXnqitNkF3G/t2fWAhesKIeeuyoz8FuCSmMgyuIlmjx+8
+         K5+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711032360; x=1711637160;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fb6fGfxlkuJOz49c8nIlvUqhq4r8FWilTvBwvl4ZbcQ=;
+        b=txGvVfz08bBwis2Bb+RZ2JqQgZvgrsRs++fCDsrh3cH+owz/45tc9tOJ3d95HMOq7f
+         38JxGpn1YpdJ3Zs78YTDj86qKZXeCFvFLxqDnE82Se3CQWmAK7jmHxlcx0wKP/s9239S
+         HFsU4tRNSCWicGmgEDWdp61PJ11SK9/TbUp+k0l9QMZdFMv/G+4hCA0ijK7zk66CVlLj
+         stGrL8UXb9PS4dQnNLTX0ilzy0om8usPz3O1uQXOI2qRcOwLp/G/Ik5J0DaJV2uuD62J
+         ULtFAD6VoQlBdv9ZqbUzc6K9ktSBHJ/ZGsLhNqbxhfmxBb6KcxwJvdYmzHmcAFLcnl5D
+         //PA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlXcLDh7qex0S0LsI1BTym/JTXZcj+iRjyW7d0oWfpXzXREsINuYFX2x54QvaaQ3O0t0hJMoIQFIoAWGDXl8u4H+XT1CJgWkTKCThc97Rel8ZNflRC4VLhxU+6KOa8icQoIK+BYNYxjnY=
+X-Gm-Message-State: AOJu0YywI5WyH/PcUyUE9AhsMqXEMRaue58G1z/xxOEWD9+B/DEQa2Lm
+	jDuFyGtKFil+Tqt954069Cr1Jmx2WhrCuAiGjUCMTqSAiTTYEs2H
+X-Google-Smtp-Source: AGHT+IGOnpTSDTXcx2YzcYG1iGrfHlL5tUyK4tl9tQ+b3d2DT1+yOy/4J3eUUxg5Q0xXnmjv2XZ9Cg==
+X-Received: by 2002:a05:600c:4f0e:b0:413:f3f0:c591 with SMTP id l14-20020a05600c4f0e00b00413f3f0c591mr4896762wmq.41.1711032359784;
+        Thu, 21 Mar 2024 07:45:59 -0700 (PDT)
+Received: from fedora.. ([94.73.33.46])
+        by smtp.gmail.com with ESMTPSA id h13-20020a05600c314d00b004146d736fcdsm5253378wmo.36.2024.03.21.07.45.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Mar 2024 07:45:59 -0700 (PDT)
+From: =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+To: jikos@kernel.org
+Cc: benjamin.tissoires@redhat.com,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+Subject: [PATCH 0/2] Expose firmware name to identify tablets in libwacom
+Date: Thu, 21 Mar 2024 15:38:03 +0100
+Message-ID: <20240321144553.262409-1-jose.exposito89@gmail.com>
 X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -65,65 +66,36 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: P6JNfM7pNRBercAoahdfaTZDGok4O-dq
-X-Proofpoint-ORIG-GUID: P6JNfM7pNRBercAoahdfaTZDGok4O-dq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-21_10,2024-03-21_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- lowpriorityscore=0 clxscore=1011 bulkscore=0 malwarescore=0 suspectscore=0
- impostorscore=0 priorityscore=1501 mlxscore=0 spamscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2403140000
- definitions=main-2403210105
 
-Add module alias with the algorithm cra_name similar to what we have for
-RSA-related and other algorithms.
+Hi everyone,
 
-The kernel attempts to modprobe asymmetric algorithms using the names
-"crypto-$cra_name" and "crypto-$cra_name-all." However, since these
-aliases are currently missing, the modules are not loaded. For instance,
-when using the `add_key` function, the hash algorithm is typically
-loaded automatically, but the asymmetric algorithm is not.
+This series exposes the UCLogic tablets firmware name to user userspace
+via sysfs.
 
-Steps to test:
+libwacom can use it to identify this family of tablets, which has been
+very difficult until now because vendor keep reusing the same VIP/PID.
 
-1. Create certificate
+This is the PR consuming the new interface:
+https://github.com/linuxwacom/libwacom/pull/620
 
-  openssl req -x509 -sha256 -newkey ec \
-  -pkeyopt "ec_paramgen_curve:secp384r1" -keyout key.pem -days 365 \
-  -subj '/CN=test' -nodes -outform der -out nist-p384.der
+Finally, I created a tool to generate a list of firmware name <-> table
+model for UCLogic-like drawing tablets:
+https://github.com/JoseExposito/uclogic-firmware-names
 
-2. Optionally, trace module requests with: trace-cmd stream -e module &
+Best wishes,
+José Expósito
 
-3. Trigger add_key call for the cert:
+José Expósito (2):
+  HID: uclogic: Store firmware name in params
+  HID: uclogic: Expose firmware name via sysfs
 
-   # keyctl padd asymmetric "" @u < nist-p384.der
-   641069229
-   # lsmod | head -2
-   Module                  Size  Used by
-   ecdsa_generic          16384  0
+ drivers/hid/hid-uclogic-core.c   | 16 ++++++++++++++++
+ drivers/hid/hid-uclogic-params.c | 14 +++++++-------
+ drivers/hid/hid-uclogic-params.h |  5 +++++
+ 3 files changed, 28 insertions(+), 7 deletions(-)
 
-Fixes: c12d448ba939 ("crypto: ecdsa - Register NIST P384 and extend test suite")
-Cc: stable@vger.kernel.org
-Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
----
- crypto/ecdsa.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/crypto/ecdsa.c b/crypto/ecdsa.c
-index fbd76498aba8..3f9ec273a121 100644
---- a/crypto/ecdsa.c
-+++ b/crypto/ecdsa.c
-@@ -373,4 +373,7 @@ module_exit(ecdsa_exit);
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Stefan Berger <stefanb@linux.ibm.com>");
- MODULE_DESCRIPTION("ECDSA generic algorithm");
-+MODULE_ALIAS_CRYPTO("ecdsa-nist-p192");
-+MODULE_ALIAS_CRYPTO("ecdsa-nist-p256");
-+MODULE_ALIAS_CRYPTO("ecdsa-nist-p384");
- MODULE_ALIAS_CRYPTO("ecdsa-generic");
 -- 
-2.43.0
+2.44.0
 
