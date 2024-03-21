@@ -1,257 +1,253 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF35513AA23
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 16:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F7613AA49;
+	Thu, 21 Mar 2024 16:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711039084; cv=none; b=EXPaPYvrY226s5EiEhzdJw3BmNya8eeeqfZ+0dbrQPHGG4kRy0+Bgm6OfH5EajpjIavnfnuYRa0XdVbJNzTyRwZbpup837mMlzhXXrddc2QbqE6ONDU50G8ZLA1HOPuZnWPUDnBdFFvLiFBOI8dYPYQ1FnzsbX11IFjAdqVjePE=
+	t=1711039084; cv=none; b=DsEgRSraJ3i95KTZnbpsyiOMOpGbu1g8YRP6hT1xuDJ/rJiyVppqvAMgVZa5S4iSrSbbkgw0bXG33jDS8b8CUzGHsFAqW2q9ZrD7RsZGrUVl5cfKxUkTP/s+peyBvPLumawPArBYKI68gVTmAnnGbBJ3kj3j+BZlWMvDLCyrvVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711039084; c=relaxed/simple;
-	bh=GMoeKKgr6ForvCg3pCNgoGVRhZa/k6YjjT689wI9LjU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Ew5vZladz0LhHJGa6ENwtRC2SGSySJjt9l9fV3x228yEEX6AYzpoU7rvQ7MELAZd+bw985Z/aGAM5ZgXeNR0RLh2zPXAePwrARptKFkmZ2c8u4dxhPEvF5UKZ9ishQ8ADe+XcngfY2IlyKX9DaF2DoblwKt9XrZeTU2pPjRaDdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GYz/1lmV; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
+	bh=8AdmA6WLGzVJeXFetHajr1m1fAWE+3O39+dkqh6tYOg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dj9LVtPUuLQnCAZvbzKH+qYHgWWsHh17Q3UYXWTLlbSkIPF5sNaox1w1EyfulWerIgBQrC5c2OD0gl+IMDby3TTQTuqb9q5eLgWcJhX2e/FjS5XXq7na1m4gAWiCBPsPZ4a2WnfMurppI7ZrsJ8ekCAi6xbxiEqb/jkxE+fuRVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hot843HW; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GYz/1lmV"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dd933a044baso2906089276.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 09:38:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711039080; x=1711643880; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qDb8iz8I8QS6d+rOBOAu9Y4ek6cz/wlqKmX9e9H3T5g=;
-        b=GYz/1lmVMk8aUi02+B95MjtDSjZXmFMDcwn7+9fDDSk0bueWyNzvB6uRJlnPGW+30L
-         lNWp/t6t6ilh8CnjyaqClEDXJ3EVJPs40b3TbVMM3+NerYl+b5WrNNPCTPE5WsoPI4W+
-         i+rXscCfD639qoXaVjTPiQBZyovE5VdiTtiUon0jMxxXegZ20CNty8GAVbjottvMUqhs
-         rE48ueKG6WAWCYu9Kj4NPVjMfTMeMOzMhcQ42TGmIPQUmb7fpRXJQ6iU3BTD/HichLyB
-         /ogzvvDvjrMaR9mSR5bwa6cgL3QjIOLOJQoA+tu7NycJCOTB9MN1zlBi/CcYJm4t1n2a
-         61/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711039080; x=1711643880;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qDb8iz8I8QS6d+rOBOAu9Y4ek6cz/wlqKmX9e9H3T5g=;
-        b=PERFA8zfDvcM3TBi98xqBPSZZ/Qs2BbIxWiqpMrlPv6mMtG7xBXW0WDA1Th1pkgjIc
-         t9RywTSWr4BVB4akQibRhhF8GFgx1VNPwVFuHgeXcasJ04jPyPQmEAd86fHQUu/Ue9U7
-         WqCOsE3wYSeBC5w8ahN0TSuVyi+ymjt5pTcC4xIdAwbtPF6C5hnEI6ptUEuFPfu5sJ7J
-         xvwS3bJzfkUFQSw42V6TdT1hcPbhTX9PFpuTybACzqZpfPxLVF4shEdTQpYD90p9tyKs
-         Hnigt7q5xDKAZxhSuPFl5XKcJsk+qY7FEpnNQOb4abTjcSqbIeesulLE1rvGdvVXzgJ6
-         1M9g==
-X-Forwarded-Encrypted: i=1; AJvYcCUD64IktFz2v24ZIUBHTQwCOZH9eylBt22lCyNCydX9KSDRyphFje+/Jzpq/US33JXRohy08g3xbj/zR4XzpUoo15q8rpTYyuq+6Nt9
-X-Gm-Message-State: AOJu0Yw0+qqGco3cjKdqSyP7z1QDQMzMyqZ6FldLUt6VBbapnibPRx4/
-	wnQ955aSAFq/5lm7J3jAjNMPhdM0YrTdDMmAWErsS8IiQ9oTlVMR1B0y7CTJ1JejOoDGjpWfnSU
-	mmA==
-X-Google-Smtp-Source: AGHT+IHDeZBFlJ0NtCqkUUNT0gfkHkrQ10cEoA8CJOTWwHwDSwKuqC04Vl0uLsTIeS1kWMwDWt3A7ZdyM4A=
-X-Received: from surenb-desktop.mtv.corp.google.com ([2620:15c:211:201:a489:6433:be5d:e639])
- (user=surenb job=sendgmr) by 2002:a05:6902:1604:b0:dd9:2782:d1c6 with SMTP id
- bw4-20020a056902160400b00dd92782d1c6mr9210ybb.1.1711039079759; Thu, 21 Mar
- 2024 09:37:59 -0700 (PDT)
-Date: Thu, 21 Mar 2024 09:36:45 -0700
-In-Reply-To: <20240321163705.3067592-1-surenb@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hot843HW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711039082; x=1742575082;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=8AdmA6WLGzVJeXFetHajr1m1fAWE+3O39+dkqh6tYOg=;
+  b=Hot843HW+2fx9jIsxzIiXkQU6rIa/TGYwm/oqIiTtr+oDT/xBtaBgF/p
+   HId33TBTN6BrokYjMaFa9u3k9S3axIpkXWcZuu5c737cXZvjlp4ICvOD3
+   BlPz6gf4RfPjnGyQPRiIwTKCi5Ct+68EZ8T1Q686gJdmx54w+e+hp0GX4
+   XkxlkLV6ijGZ6uUtO6MO9birFCRu+wXWaRbMzpRIA3a59acljIdQgXKW2
+   7Z+EM2fW7mzyFeAxR0MRiNHFKMmtmBytxZtBIa2sPNOXhxWVUmJGjfLkq
+   hQGIJv5XSnMJhj0+STAY5+DHSayQ7z4OOyKByaU9zk9LarQm4T6L+WPrI
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="31477558"
+X-IronPort-AV: E=Sophos;i="6.07,143,1708416000"; 
+   d="scan'208";a="31477558"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 09:37:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,143,1708416000"; 
+   d="scan'208";a="19280016"
+Received: from rchatre-ws.ostc.intel.com ([10.54.69.144])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 09:37:58 -0700
+From: Reinette Chatre <reinette.chatre@intel.com>
+To: isaku.yamahata@intel.com,
+	pbonzini@redhat.com,
+	erdemaktas@google.com,
+	vkuznets@redhat.com,
+	seanjc@google.com,
+	vannapurve@google.com,
+	jmattson@google.com,
+	mlevitsk@redhat.com,
+	xiaoyao.li@intel.com,
+	chao.gao@intel.com,
+	rick.p.edgecombe@intel.com
+Cc: reinette.chatre@intel.com,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V4 3/4] KVM: x86: Add a capability to configure bus frequency for APIC timer
+Date: Thu, 21 Mar 2024 09:37:43 -0700
+Message-Id: <6146ef9f9e5a17a1940b0efb571c5143b0e9ef8f.1711035400.git.reinette.chatre@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1711035400.git.reinette.chatre@intel.com>
+References: <cover.1711035400.git.reinette.chatre@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240321163705.3067592-1-surenb@google.com>
-X-Mailer: git-send-email 2.44.0.291.gc1ea87d7ee-goog
-Message-ID: <20240321163705.3067592-24-surenb@google.com>
-Subject: [PATCH v6 23/37] mm/slab: add allocation accounting into slab
- allocation and free paths
-From: Suren Baghdasaryan <surenb@google.com>
-To: akpm@linux-foundation.org
-Cc: kent.overstreet@linux.dev, mhocko@suse.com, vbabka@suse.cz, 
-	hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
-	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
-	penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com, 
-	peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com, 
-	will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
-	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
-	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
-	nathan@kernel.org, dennis@kernel.org, jhubbard@nvidia.com, tj@kernel.org, 
-	muchun.song@linux.dev, rppt@kernel.org, paulmck@kernel.org, 
-	pasha.tatashin@soleen.com, yosryahmed@google.com, yuzhao@google.com, 
-	dhowells@redhat.com, hughd@google.com, andreyknvl@gmail.com, 
-	keescook@chromium.org, ndesaulniers@google.com, vvvvvv@google.com, 
-	gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com, 
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
-	bsegall@google.com, bristot@redhat.com, vschneid@redhat.com, cl@linux.com, 
-	penberg@kernel.org, iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, 
-	glider@google.com, elver@google.com, dvyukov@google.com, 
-	songmuchun@bytedance.com, jbaron@akamai.com, aliceryhl@google.com, 
-	rientjes@google.com, minchan@google.com, kaleshsingh@google.com, 
-	surenb@google.com, kernel-team@android.com, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
-	linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
-	cgroups@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Account slab allocations using codetag reference embedded into slabobj_ext.
+From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-Co-developed-by: Kent Overstreet <kent.overstreet@linux.dev>
-Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Add KVM_CAP_X86_APIC_BUS_FREQUENCY capability to configure the APIC
+bus clock frequency for APIC timer emulation.
+Allow KVM_ENABLE_CAPABILITY(KVM_CAP_X86_APIC_BUS_FREQUENCY) to set the
+frequency in nanoseconds. When using this capability, the user space
+VMM should configure CPUID leaf 0x15 to advertise the frequency.
+
+Vishal reported that the TDX guest kernel expects a 25MHz APIC bus
+frequency but ends up getting interrupts at a significantly higher rate.
+
+The TDX architecture hard-codes the core crystal clock frequency to
+25MHz and mandates exposing it via CPUID leaf 0x15. The TDX architecture
+does not allow the VMM to override the value.
+
+In addition, per Intel SDM:
+    "The APIC timer frequency will be the processor’s bus clock or core
+     crystal clock frequency (when TSC/core crystal clock ratio is
+     enumerated in CPUID leaf 0x15) divided by the value specified in
+     the divide configuration register."
+
+The resulting 25MHz APIC bus frequency conflicts with the KVM hardcoded
+APIC bus frequency of 1GHz.
+
+The KVM doesn't enumerate CPUID leaf 0x15 to the guest unless the user
+space VMM sets it using KVM_SET_CPUID. If the CPUID leaf 0x15 is
+enumerated, the guest kernel uses it as the APIC bus frequency. If not,
+the guest kernel measures the frequency based on other known timers like
+the ACPI timer or the legacy PIT. As reported by Vishal the TDX guest
+kernel expects a 25MHz timer frequency but gets timer interrupt more
+frequently due to the 1GHz frequency used by KVM.
+
+To ensure that the guest doesn't have a conflicting view of the APIC bus
+frequency, allow the userspace to tell KVM to use the same frequency that
+TDX mandates instead of the default 1Ghz.
+
+There are several options to address this:
+1. Make the KVM able to configure APIC bus frequency (this series).
+   Pro: It resembles the existing hardware.  The recent Intel CPUs
+        adapts 25MHz.
+   Con: Require the VMM to emulate the APIC timer at 25MHz.
+2. Make the TDX architecture enumerate CPUID leaf 0x15 to configurable
+   frequency or not enumerate it.
+   Pro: Any APIC bus frequency is allowed.
+   Con: Deviates from TDX architecture.
+3. Make the TDX guest kernel use 1GHz when it's running on KVM.
+   Con: The kernel ignores CPUID leaf 0x15.
+4. Change CPUID leaf 0x15 under TDX to report the crystal clock frequency
+   as 1 GHz.
+   Pro: This has been the virtual APIC frequency for KVM guests for 13
+        years.
+   Pro: This requires changing only one hard-coded constant in TDX.
+   Con: It doesn't work with other VMMs as TDX isn't specific to KVM.
+   Con: Core crystal clock frequency is also used to calculate TSC
+        frequency.
+   Con: If it is configured to value different from hardware, it will
+        break the correctness of INTEL-PT Mini Time Count (MTC) packets
+        in TDs.
+
+Reported-by: Vishal Annapurve <vannapurve@google.com>
+Closes: https://lore.kernel.org/lkml/20231006011255.4163884-1-vannapurve@google.com/
+Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+Co-developed-by: Reinette Chatre <reinette.chatre@intel.com>
+Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
 ---
- mm/slub.c | 96 ++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 95 insertions(+), 1 deletion(-)
 
-diff --git a/mm/slub.c b/mm/slub.c
-index 666dcc3b8a26..5840ab963319 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -1932,7 +1932,68 @@ static inline void free_slab_obj_exts(struct slab *slab)
- 	kfree(obj_exts);
- 	slab->obj_exts = 0;
- }
+Changes v4:
+- Rework implementation following Sean's guidance in:
+  https://lore.kernel.org/all/ZdjzIgS6EAeCsUue@google.com/
+- Reword con #2 to acknowledge feedback. (Sean)
+- Add the "con" information from Xiaoyao during earlier review of v2.
+- Rework changelog to address comments related to "bus clock" vs
+  "core crystal clock" frequency. (Xiaoyao)
+- Drop snippet about impact on TSC deadline timer emulation. (Maxim)
+- Drop Maxim Levitsky's "Reviewed-by" tag due to many changes to patch
+  since tag received.
+- Switch "Subject:" to match custom "KVM: X86:" -> "KVM: x86:"
+
+Changes v3:
+- Added reviewed-by Maxim Levitsky.
+- Minor update of the commit message.
+
+Changes v2:
+- Add check if vcpu isn't created.
+- Add check if lapic chip is in-kernel emulation.
+- Fix build error for i386.
+- Add document to api.rst.
+- Typo in the commit message.
+
+ Documentation/virt/kvm/api.rst | 17 +++++++++++++++++
+ arch/x86/kvm/x86.c             | 27 +++++++++++++++++++++++++++
+ include/uapi/linux/kvm.h       |  1 +
+ 3 files changed, 45 insertions(+)
+
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index 0b5a33ee71ee..20080fe4b8ee 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -8063,6 +8063,23 @@ error/annotated fault.
+ 
+ See KVM_EXIT_MEMORY_FAULT for more information.
+ 
++7.35 KVM_CAP_X86_APIC_BUS_FREQUENCY
++-----------------------------------
 +
-+static inline bool need_slab_obj_ext(void)
-+{
-+	if (mem_alloc_profiling_enabled())
-+		return true;
++:Architectures: x86
++:Target: VM
++:Parameters: args[0] is the desired APIC bus clock rate, in nanoseconds
++:Returns: 0 on success, -EINVAL if args[0] contains an invalid value for the
++          frequency or if any vCPUs have been created, -ENXIO if a virtual
++          local APIC has not been created using KVM_CREATE_IRQCHIP.
 +
-+	/*
-+	 * CONFIG_MEMCG_KMEM creates vector of obj_cgroup objects conditionally
-+	 * inside memcg_slab_post_alloc_hook. No other users for now.
-+	 */
-+	return false;
-+}
++This capability sets VM's APIC bus clock frequency, used by KVM's in-kernel
++virtual APIC when emulating APIC timers.  KVM's default value can be retrieved
++by KVM_CHECK_EXTENSION.
 +
-+static inline struct slabobj_ext *
-+prepare_slab_obj_exts_hook(struct kmem_cache *s, gfp_t flags, void *p)
-+{
-+	struct slab *slab;
++Note: Userspace is responsible for correctly configuring CPUID 0x15, a.k.a. the
++core crystal clock frequency, if a non-zero CPUID 0x15 is exposed to the guest.
 +
-+	if (!p)
-+		return NULL;
+ 8. Other capabilities.
+ ======================
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 23f25799c760..bf52c0ca7a56 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -4713,6 +4713,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	case KVM_CAP_MEMORY_FAULT_INFO:
+ 		r = 1;
+ 		break;
++	case KVM_CAP_X86_APIC_BUS_FREQUENCY:
++		r = APIC_BUS_CYCLE_NS_DEFAULT;
++		break;
+ 	case KVM_CAP_EXIT_HYPERCALL:
+ 		r = KVM_EXIT_HYPERCALL_VALID_MASK;
+ 		break;
+@@ -6726,6 +6729,30 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+ 		}
+ 		mutex_unlock(&kvm->lock);
+ 		break;
++	case KVM_CAP_X86_APIC_BUS_FREQUENCY: {
++		u64 bus_cycle_ns = cap->args[0];
++		u64 unused;
 +
-+	if (s->flags & SLAB_NO_OBJ_EXT)
-+		return NULL;
++		r = -EINVAL;
++		/*
++		 * Guard against overflow in tmict_to_ns(). 128 is the highest
++		 * divide value that can be programmed in APIC_TDCR.
++		 */
++		if (!bus_cycle_ns ||
++		    check_mul_overflow((u64)U32_MAX * 128, bus_cycle_ns, &unused))
++			break;
 +
-+	if (flags & __GFP_NO_OBJ_EXT)
-+		return NULL;
-+
-+	slab = virt_to_slab(p);
-+	if (!slab_obj_exts(slab) &&
-+	    WARN(alloc_slab_obj_exts(slab, s, flags, false),
-+		 "%s, %s: Failed to create slab extension vector!\n",
-+		 __func__, s->name))
-+		return NULL;
-+
-+	return slab_obj_exts(slab) + obj_to_index(s, slab, p);
-+}
-+
-+static inline void
-+alloc_tagging_slab_free_hook(struct kmem_cache *s, struct slab *slab, void **p,
-+			     int objects)
-+{
-+#ifdef CONFIG_MEM_ALLOC_PROFILING
-+	struct slabobj_ext *obj_exts;
-+	int i;
-+
-+	if (!mem_alloc_profiling_enabled())
-+		return;
-+
-+	obj_exts = slab_obj_exts(slab);
-+	if (!obj_exts)
-+		return;
-+
-+	for (i = 0; i < objects; i++) {
-+		unsigned int off = obj_to_index(s, slab, p[i]);
-+
-+		alloc_tag_sub(&obj_exts[off].ref, s->size);
++		r = 0;
++		mutex_lock(&kvm->lock);
++		if (!irqchip_in_kernel(kvm))
++			r = -ENXIO;
++		else if (kvm->created_vcpus)
++			r = -EINVAL;
++		else
++			kvm->arch.apic_bus_cycle_ns = bus_cycle_ns;
++		mutex_unlock(&kvm->lock);
++		break;
 +	}
-+#endif
-+}
-+
- #else /* CONFIG_SLAB_OBJ_EXT */
-+
- static int alloc_slab_obj_exts(struct slab *slab, struct kmem_cache *s,
- 			       gfp_t gfp, bool new_slab)
- {
-@@ -1942,6 +2003,24 @@ static int alloc_slab_obj_exts(struct slab *slab, struct kmem_cache *s,
- static inline void free_slab_obj_exts(struct slab *slab)
- {
- }
-+
-+static inline bool need_slab_obj_ext(void)
-+{
-+	return false;
-+}
-+
-+static inline struct slabobj_ext *
-+prepare_slab_obj_exts_hook(struct kmem_cache *s, gfp_t flags, void *p)
-+{
-+	return NULL;
-+}
-+
-+static inline void
-+alloc_tagging_slab_free_hook(struct kmem_cache *s, struct slab *slab, void **p,
-+			     int objects)
-+{
-+}
-+
- #endif /* CONFIG_SLAB_OBJ_EXT */
+ 	default:
+ 		r = -EINVAL;
+ 		break;
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 2190adbe3002..49da7ec97bd5 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -917,6 +917,7 @@ struct kvm_enable_cap {
+ #define KVM_CAP_MEMORY_ATTRIBUTES 233
+ #define KVM_CAP_GUEST_MEMFD 234
+ #define KVM_CAP_VM_TYPES 235
++#define KVM_CAP_X86_APIC_BUS_FREQUENCY 236
  
- #ifdef CONFIG_MEMCG_KMEM
-@@ -2370,7 +2449,7 @@ static __always_inline void account_slab(struct slab *slab, int order,
- static __always_inline void unaccount_slab(struct slab *slab, int order,
- 					   struct kmem_cache *s)
- {
--	if (memcg_kmem_online())
-+	if (memcg_kmem_online() || need_slab_obj_ext())
- 		free_slab_obj_exts(slab);
- 
- 	mod_node_page_state(slab_pgdat(slab), cache_vmstat_idx(s),
-@@ -3823,6 +3902,7 @@ void slab_post_alloc_hook(struct kmem_cache *s,	struct obj_cgroup *objcg,
- 			  unsigned int orig_size)
- {
- 	unsigned int zero_size = s->object_size;
-+	struct slabobj_ext *obj_exts;
- 	bool kasan_init = init;
- 	size_t i;
- 	gfp_t init_flags = flags & gfp_allowed_mask;
-@@ -3865,6 +3945,18 @@ void slab_post_alloc_hook(struct kmem_cache *s,	struct obj_cgroup *objcg,
- 		kmemleak_alloc_recursive(p[i], s->object_size, 1,
- 					 s->flags, init_flags);
- 		kmsan_slab_alloc(s, p[i], init_flags);
-+		if (need_slab_obj_ext()) {
-+			obj_exts = prepare_slab_obj_exts_hook(s, flags, p[i]);
-+#ifdef CONFIG_MEM_ALLOC_PROFILING
-+			/*
-+			 * Currently obj_exts is used only for allocation profiling.
-+			 * If other users appear then mem_alloc_profiling_enabled()
-+			 * check should be added before alloc_tag_add().
-+			 */
-+			if (likely(obj_exts))
-+				alloc_tag_add(&obj_exts->ref, current->alloc_tag, s->size);
-+#endif
-+		}
- 	}
- 
- 	memcg_slab_post_alloc_hook(s, objcg, flags, size, p);
-@@ -4339,6 +4431,7 @@ void slab_free(struct kmem_cache *s, struct slab *slab, void *object,
- 	       unsigned long addr)
- {
- 	memcg_slab_free_hook(s, slab, &object, 1);
-+	alloc_tagging_slab_free_hook(s, slab, &object, 1);
- 
- 	if (likely(slab_free_hook(s, object, slab_want_init_on_free(s))))
- 		do_slab_free(s, slab, object, object, 1, addr);
-@@ -4349,6 +4442,7 @@ void slab_free_bulk(struct kmem_cache *s, struct slab *slab, void *head,
- 		    void *tail, void **p, int cnt, unsigned long addr)
- {
- 	memcg_slab_free_hook(s, slab, p, cnt);
-+	alloc_tagging_slab_free_hook(s, slab, p, cnt);
- 	/*
- 	 * With KASAN enabled slab_free_freelist_hook modifies the freelist
- 	 * to remove objects, whose reuse must be delayed.
+ struct kvm_irq_routing_irqchip {
+ 	__u32 irqchip;
 -- 
-2.44.0.291.gc1ea87d7ee-goog
+2.34.1
 
