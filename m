@@ -1,156 +1,147 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46C51EB3B
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 14:37:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF681E489;
+	Thu, 21 Mar 2024 14:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711031879; cv=none; b=Bax/xhBJqZCSpp4jvY4XOAM65KVlJRmHCuiByHiPgZzSF+Lh31q2jnrBy2P6Ac0h26Ozk6l6BkOf7auIpFCztAfzdImGnL+ARaaOcZMzA6QYjMMPvNhqzU0N5MLXZ/8IPJ9qKcOFB2v0/2mdi1pHAEOrrlQmtOCqpcaLgW4MV9k=
+	t=1711031913; cv=none; b=XxRmfa3Bz38NcCfwN4VAU+vsxN6p2A83p8BzKWOXl3ZXnj8+cIealZzR5x3JLvM4rHLJV2xU0Q0Fsbqkp5jka5iVoucUQvsqz0ikiiKFlLwTCnStuzmnN60qnQ7r20GzKpxpd4sLCFTAItysRfoiHLEg/tXlsuFtGGlWm8V01uM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711031879; c=relaxed/simple;
-	bh=LP3FeeZH4nKE2ePG3cz0fkEKsYcfyJbnepgga50dUlM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=tZqTjto6N0i5M3AltxsEnn2ebdJrmosJjDCwgP2vAq32vstjthfv9quO/7EMPuCcOCroAq0ggBzjwXANm+kQNI9HUsWT5FSdMj2cdHt/RJRvHdBlgvYYxn5X+1EMQFpUURPPdsj9MbCpXGCNTH8cHOYrewukWhV4YP3hUnSXENk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-187-6fRfpWVCPDm3cO9Kixse_g-1; Thu, 21 Mar 2024 14:37:54 +0000
-X-MC-Unique: 6fRfpWVCPDm3cO9Kixse_g-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 21 Mar
- 2024 14:37:28 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Thu, 21 Mar 2024 14:37:28 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Russell King' <linux@armlinux.org.uk>
-CC: Ard Biesheuvel <ardb@kernel.org>, 'Jiangfeng Xiao'
-	<xiaojiangfeng@huawei.com>, "arnd@arndb.de" <arnd@arndb.de>,
-	"keescook@chromium.org" <keescook@chromium.org>, "haibo.li@mediatek.com"
-	<haibo.li@mediatek.com>, "angelogioacchino.delregno@collabora.com"
-	<angelogioacchino.delregno@collabora.com>, "amergnat@baylibre.com"
-	<amergnat@baylibre.com>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "douzhaolei@huawei.com"
-	<douzhaolei@huawei.com>, "gustavoars@kernel.org" <gustavoars@kernel.org>,
-	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, "kepler.chenxin@huawei.com"
-	<kepler.chenxin@huawei.com>, "kirill.shutemov@linux.intel.com"
-	<kirill.shutemov@linux.intel.com>, "linux-hardening@vger.kernel.org"
-	<linux-hardening@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "nixiaoming@huawei.com"
-	<nixiaoming@huawei.com>, "peterz@infradead.org" <peterz@infradead.org>,
-	"wangbing6@huawei.com" <wangbing6@huawei.com>, "wangfangpeng1@huawei.com"
-	<wangfangpeng1@huawei.com>, "jannh@google.com" <jannh@google.com>,
-	"willy@infradead.org" <willy@infradead.org>
-Subject: RE: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
-Thread-Topic: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
-Thread-Index: AQHae3ROEuI+AaCprEesIWGaAOB7ebFB9uHAgAAWtoCAAAVW8IAACy4AgAADrmCAAAjqAIAAC+ng
-Date: Thu, 21 Mar 2024 14:37:28 +0000
-Message-ID: <9d6057b110034c04b6b590522c8c69cc@AcuMS.aculab.com>
-References: <1710906278-23851-1-git-send-email-xiaojiangfeng@huawei.com>
- <ZfqiD8Yw0oOVHW/p@shell.armlinux.org.uk>
- <84a57ca8-8963-ca24-8bd1-ddc5c33bf4da@huawei.com>
- <Zfs7sT6Pxy5yjnPC@shell.armlinux.org.uk>
- <bad25937-fc98-8e11-4279-ab6b3a727c1f@huawei.com>
- <bbcca1e205384cf0b42236e17f3969f7@AcuMS.aculab.com>
- <ZfwYx/8k8FVONg6+@shell.armlinux.org.uk>
- <db930076c837456f999daee5cb76735f@AcuMS.aculab.com>
- <ZfwmomjUwQdCefzh@shell.armlinux.org.uk>
- <0fd55e156195440bb1d815dd8300894b@AcuMS.aculab.com>
- <ZfwxMuPflqlVyCDd@shell.armlinux.org.uk>
-In-Reply-To: <ZfwxMuPflqlVyCDd@shell.armlinux.org.uk>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1711031913; c=relaxed/simple;
+	bh=RAQ520Hii3irGnjwDHNU7yDztGgwPSbcqoKrMeg0w4g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M6gwnDNhdfgrUYdD8aXlHIscGtSinXb2ZvGnXXdHTg+G5bOEzXdiKIZN63a3FLF+grWJhRiRiLZCk8VAwp8DeDICFfYcg1y78RQ0uuaMhrHO4iGpbz88P3otdMv5eMZDWe4DecYTPsXPvtV7C5VhqjJ1WN6R+rW2VRKpL5iLmtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Mya7w6N0; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Mya7w6N0"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42LEZZqm029685;
+	Thu, 21 Mar 2024 14:38:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=gpJiJIbsLQEj0SH7oUtsPYbzPyoaC3a2bGY1xXzVpAk=;
+ b=Mya7w6N0V0qpC5UW3GfgIMF/p9VlO2rs8zLtq3bORPyBXSgt2sK5vAyFkhThDevHU6CT
+ enTTJVu2v7v6i220QyB0EhELicTdN9/Ced1mh5FOkjhsTd0C7Ya+YDxjdsivpsELmNEb
+ HTyCrguQ/dbzpaU5niHtQBLuHTA54Pr5+S2rQGzpSZh+2bQvYoTL4VQHvsOUR7ado+SX
+ +jUQlRtE4N54yzJbG+BNT110upUBqvH79d9j8EQZ6jvlT1Jg5Hwpb7gowKIBMU6D2nvs
+ z8aokhbt7af5SDS87UryQ6IdR3dF+HGYUbvno8JRQfiDd4fff4I/LgqcOa3F8pszjUmC cA== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x0nnng9n1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Mar 2024 14:38:23 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42LD1Fpk011539;
+	Thu, 21 Mar 2024 14:38:22 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wwq8mdpc8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Mar 2024 14:38:22 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42LEcK1N24576636
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 21 Mar 2024 14:38:22 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 10C8558070;
+	Thu, 21 Mar 2024 14:38:20 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 757615806C;
+	Thu, 21 Mar 2024 14:38:19 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 21 Mar 2024 14:38:19 +0000 (GMT)
+Message-ID: <fd0c6728-91f5-4de8-963c-bb7c4d00dbb5@linux.ibm.com>
+Date: Thu, 21 Mar 2024 10:38:18 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] crypto: ecrdsa - Fix module auto-load on add_key
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-From: Russell King
-> Sent: 21 March 2024 13:08
->=20
-> On Thu, Mar 21, 2024 at 12:57:07PM +0000, David Laight wrote:
-> > From: Russell King
-> > > Sent: 21 March 2024 12:23
-> > ...
-> > > > That might mean you can get the BL in the middle of a function
-> > > > but where the following instruction is for the 'no stack frame'
-> > > > side of the branch.
-> > > > That is very likely to break any stack offset calculations.
-> > >
-> > > No it can't. At any one point in the function, the stack has to be in
-> > > a well defined state, so that access to local variables can work, and
-> > > also the stack can be correctly unwound. If there exists a point in
-> > > the function body which can be reached where the stack could be in tw=
-o
-> > > different states, then the stack can't be restored to the parent
-> > > context.
-> >
-> > Actually you can get there with a function that has a lot of args.
-> > So you can have:
-> > =09if (...) {
-> > =09=09push x
-> > =09=09bl func
-> > =09=09add %sp, #8
-> > =09}
-> > =09code;
-> > which is fine.
->=20
-> No you can't.... and that isn't even Arm code. Arm doesn't use %sp.
-> Moreover, that "bl" will stomp over the link register, meaning this
-> function can not return.
-
-With 9+ arguments they spill to see https://godbolt.org/z/Yj3ovd8bY
-
-Where the compiler generates:
-f9:
-        cmp     w0, 0
-        ble     .L2
-        sub     sp, sp, #32
-        mov     w7, w0
-        mov     w6, w0
-        mov     w5, w0
-        mov     w4, w0
-        mov     w3, w0
-        stp     x29, x30, [sp, 16]
-        add     x29, sp, 16
-        mov     w2, w0
-        mov     w1, w0
-        str     w0, [sp]
-        bl      f
-.L2:
-        ret
+To: Vitaly Chikunov <vt@altlinux.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: Paul Wolneykien <manowar@altlinux.org>,
+        "David S. Miller" <davem@davemloft.net>
+References: <20240318004241.2925876-1-vt@altlinux.org>
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <20240318004241.2925876-1-vt@altlinux.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 8UwHRqbJLSe8gp1P0MCTWVfXQN9lHs7g
+X-Proofpoint-ORIG-GUID: 8UwHRqbJLSe8gp1P0MCTWVfXQN9lHs7g
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-21_10,2024-03-21_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 lowpriorityscore=0 impostorscore=0 clxscore=1011
+ suspectscore=0 mlxscore=0 malwarescore=0 adultscore=0 phishscore=0
+ bulkscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2403140000 definitions=main-2403210105
 
 
-A traceback from inside f() definitely needs to use LR-4
-for the stack offset.
 
-(arm64 doesn't seem to support -mno-sched-prolog).
+On 3/17/24 20:42, Vitaly Chikunov wrote:
+> Add module alias with the algorithm cra_name similar to what we have for
+> RSA-related and other algorithms.
+> 
+> The kernel attempts to modprobe asymmetric algorithms using the names
+> "crypto-$cra_name" and "crypto-$cra_name-all." However, since these
+> aliases are currently missing, the modules are not loaded. For instance,
+> when using the `add_key` function, the hash algorithm is typically
+> loaded automatically, but the asymmetric algorithm is not.
+> 
+> Steps to test:
+> 
+> 1. Cert is generated usings ima-evm-utils test suite with
+>     `gen-keys.sh`, example cert is provided below:
+> 
+>    $ base64 -d >test-gost2012_512-A.cer <<EOF
+>    MIIB/DCCAWagAwIBAgIUK8+whWevr3FFkSdU9GLDAM7ure8wDAYIKoUDBwEBAwMFADARMQ8wDQYD
+>    VQQDDAZDQSBLZXkwIBcNMjIwMjAxMjIwOTQxWhgPMjA4MjEyMDUyMjA5NDFaMBExDzANBgNVBAMM
+>    BkNBIEtleTCBoDAXBggqhQMHAQEBAjALBgkqhQMHAQIBAgEDgYQABIGALXNrTJGgeErBUOov3Cfo
+>    IrHF9fcj8UjzwGeKCkbCcINzVUbdPmCopeJRHDJEvQBX1CQUPtlwDv6ANjTTRoq5nCk9L5PPFP1H
+>    z73JIXHT0eRBDVoWy0cWDRz1mmQlCnN2HThMtEloaQI81nTlKZOcEYDtDpi5WODmjEeRNQJMdqCj
+>    UDBOMAwGA1UdEwQFMAMBAf8wHQYDVR0OBBYEFCwfOITMbE9VisW1i2TYeu1tAo5QMB8GA1UdIwQY
+>    MBaAFCwfOITMbE9VisW1i2TYeu1tAo5QMAwGCCqFAwcBAQMDBQADgYEAmBfJCMTdC0/NSjz4BBiQ
+>    qDIEjomO7FEHYlkX5NGulcF8FaJW2jeyyXXtbpnub1IQ8af1KFIpwoS2e93LaaofxpWlpQLlju6m
+>    KYLOcO4xK3Whwa2hBAz9YbpUSFjvxnkS2/jpH2MsOSXuUEeCruG/RkHHB3ACef9umG6HCNQuAPY=
+>    EOF
+> 
+> 2. Optionally, trace module requests with: trace-cmd stream -e module &
+> 
+> 3. Trigger add_key call for the cert:
+> 
+>    # keyctl padd asymmetric "" @u <test-gost2012_512-A.cer
+>    939910969
+>    # lsmod | head -3
+>    Module                  Size  Used by
+>    ecrdsa_generic         16384  0
+>    streebog_generic       28672  0
+> 
+> Repored-by: Paul Wolneykien <manowar@altlinux.org>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
 
-I've failed to get different sized stack frames for the true/false
-sides of the branch.
-The compiler seems to pre-allocate the space for extra args rather
-than using 'push' type instructions.
-This was certainly better for some x86 cpu (p-pro?) but has now
-gone out of fashion.
+Tested-by: Stefan Berger <stefanb@linux.ibm.com>
 
-=09David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
-
+> ---
+>   crypto/ecrdsa.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/crypto/ecrdsa.c b/crypto/ecrdsa.c
+> index f3c6b5e15e75..3811f3805b5d 100644
+> --- a/crypto/ecrdsa.c
+> +++ b/crypto/ecrdsa.c
+> @@ -294,4 +294,5 @@ module_exit(ecrdsa_mod_fini);
+>   MODULE_LICENSE("GPL");
+>   MODULE_AUTHOR("Vitaly Chikunov <vt@altlinux.org>");
+>   MODULE_DESCRIPTION("EC-RDSA generic algorithm");
+> +MODULE_ALIAS_CRYPTO("ecrdsa");
+>   MODULE_ALIAS_CRYPTO("ecrdsa-generic");
