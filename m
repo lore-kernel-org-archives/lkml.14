@@ -1,66 +1,59 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7028C79E0
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 17:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D77913175D
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 17:25:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711041933; cv=none; b=GEbarcR3eb3xDxeYNxpOTt6NZS6TvDBuaVBzK+LfpuHv3VYQRcNOsyJSqGX4HU40WwQ01Wjzoesg4nAQNZ+wursc/F3AdkV7+wlTilSPFxqWWH+eytKWixd6ZVoZyedd7muNklHhiieqcZjrua2jb6Qyn6WlmgSwgzOBYKvHYho=
+	t=1711041936; cv=none; b=cHyWKyGc9aG5DpcsUwwKeh9GKezue6FMOgvUBiQY5y9qV0TqQuTtfpjnve5AS0cC/uKKC+oBPPWtlUaUPuPCr0bfTBfWlnrHbwcllnzyt0bSdsPwMq2isfwtH4CI4Y1cfQtJBILaxwoNjRq7rIHRsJ8TbC1WstR4CQWF6UR0FzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711041933; c=relaxed/simple;
-	bh=hkLPwTMMFdiiz0ywMQWoV1nqWL8v5pnhugmlgNrrXj8=;
+	s=arc-20240116; t=1711041936; c=relaxed/simple;
+	bh=tzLyvs7HcITvZy2SLeDlzKPKDAvxzPz3QeAl0srd2kM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iYhXY/nbxkoZ0BoQoz2ZHr+Z+WfDKs12HbPHvHnR3nXBZlXTrRkD8nqVvSxl9oAc8wWDOsLPJumzvP1atcN5XwNrfovGpMfGFV8jxO7afiLJ4pZtMhRfqWa0cS6cz3CuvA894kdXwlgkqZ13t9ySpIc/KmX91fuDWGbq/ptDlrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dhDoeoDd; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=GO9tzB2omqDH6TbG7xrDtcPKJm+zxVkHsbkDXAb+XI3ytmky7qKbv6MBRf7Jh8HZPHCmOEv4OFf4frfy7fA71FkXqJNNVqElcBY/VsFwnoDHHiZwBxFvc+oFfZff2KGmzuCSmGWgrBdAA5fXanM6Ak5SH2pfpwHJg955zjnaDGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Q5fmhoDq; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dhDoeoDd"
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42LGxQFR029400;
-	Thu, 21 Mar 2024 17:25:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=dakpi6GEZNYaA8Q32rcvx519IBjv3W2P5eLAKQKq9Kc=;
- b=dhDoeoDd0hnC9gH/NfqwFSuUmXnUNhnLVcXpF2QY3OF/jXjgxFzOlTFLTyTPhn5lTzEL
- P5cxkLFLBsDMTuXRMSYPC4JZqgLv5QaSBwESvnGnRh2ea4gf61ANva2ruaBPjKaQq4g4
- ZX82P+ACdDTU8sjfBibdLSxnUOBkQBbHwfwNn/wK0zSY8Lt+mXxxSkIaYOyE4REUvGss
- CSnTrOTlky28/LnpOiCQTpaWp3HwYedTxO741xWUPoUwkloSgxIwD/o937rXNy+Ad+3f
- v4Ngb5cfZRKPXiQOFvWVtVC5DTKCed+FGLte30BN4VQZSZ3k/qxi5RvmWiztY8XgzkcP Wg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x0ne0rnu5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 21 Mar 2024 17:25:08 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42LHP8ro010456;
-	Thu, 21 Mar 2024 17:25:08 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x0ne0rns1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 21 Mar 2024 17:25:08 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42LGZnhN010067;
-	Thu, 21 Mar 2024 17:21:27 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wxvavbp9x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 21 Mar 2024 17:21:27 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42LHLOKj30408978
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 21 Mar 2024 17:21:26 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EBD9F58060;
-	Thu, 21 Mar 2024 17:21:23 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 926585805C;
-	Thu, 21 Mar 2024 17:21:20 +0000 (GMT)
-Received: from [9.195.40.222] (unknown [9.195.40.222])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 21 Mar 2024 17:21:20 +0000 (GMT)
-Message-ID: <7080aa6d-34e4-4d25-9f1b-95ba07f0e6bb@linux.ibm.com>
-Date: Thu, 21 Mar 2024 22:51:14 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q5fmhoDq"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d46c2e8dd7so15020771fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 10:25:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711041932; x=1711646732; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tRBkydo4iL6GNIo9VuK+sRcHXGRAdy7FiD0d40q49mA=;
+        b=Q5fmhoDq1p7ZKB4byx+fxOQBu64C4ohyu5MfzDHeytchUE8sGzOIkWaTDhLt+oIXCu
+         vzjve0oFRgvKiaGHlxcIFmrmSaERKHNHnNLJjzChH0lR5d65c/lkFQbPuxCh6CeV8G2r
+         avbvhd2sn1YZxLJsFxtO1uYr9HYPYq9xseJy09QMMwo1suE/iNZzXZgCHjfBCKa/QeUA
+         KspEPUY1quCgYq5JXAMv5Uvsu1AMhZ0d285QADx6TcSVe377nPwhq1QvG3NGNx3yWePd
+         pB/PAWMA4zS0cE8u8pFs8WmTIr2DB7WNjYpe77AwPKDqzppcihw2XW9jB5EnzZm3Bcmd
+         U1+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711041932; x=1711646732;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tRBkydo4iL6GNIo9VuK+sRcHXGRAdy7FiD0d40q49mA=;
+        b=DT/kETg0Hd1jvU7W4RnQRubg5fs33r/OKxcLrtBT2/b6rq+n4BDI2e/PG2lyRvdZCe
+         NC1sgArkc7auTqBiQr6g/UtfgmKHbCc5WN2XGkn1ZKHKmMZwRf4Cdiv0iSeemalRWE22
+         WvS4ItV/Xf+DCdKE6cr/eBSTHtCIgmepXNqvlzpWMRqK21cdKqnACDxGMEkip7cVMkJk
+         kgi5hLrZY+IW5w6bk6gPRyRzS17HOP81XQNtoa1xVejexwC8wftH8Dfa41CkSvaOxpqF
+         92UqvTys2x2NNh5uhsRO4QVtweHdzEBE4cf/o82VvpV7AdduD1Ti5aXIKrnw7EcWEXWf
+         Ktpg==
+X-Forwarded-Encrypted: i=1; AJvYcCWtW1tczDxOyNKfVCgxHrjY9C17PufkndKgwSiRmrIO+ztgcicAbvnbBlsxPiSHDlL41Z4dTqMIolR7OQ8F9cGr8UQAcAUruTPcNM/L
+X-Gm-Message-State: AOJu0YymsYJaS2WnJ8/OgmjY8Oqi5GhDyAeHqWHeHybt7b8rGoBy7LrQ
+	LsH3ipaxxBb7idg/dO3T0o7r7K9DAKFYe8YfrX8yVLbY/l+oCdoGNjuMvM13Kk4=
+X-Google-Smtp-Source: AGHT+IHrN9hd+5miWuYAgdozoiw3KTFiep55MuLkXG8T+NijirFPCwjWqLRb4mVSGYXrrzSiJ5bWMw==
+X-Received: by 2002:a05:651c:2ca:b0:2d4:6d12:71f7 with SMTP id f10-20020a05651c02ca00b002d46d1271f7mr117412ljo.15.1711041932431;
+        Thu, 21 Mar 2024 10:25:32 -0700 (PDT)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id i2-20020a05600c354200b0041464451c81sm385263wmq.20.2024.03.21.10.25.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Mar 2024 10:25:31 -0700 (PDT)
+Message-ID: <ebdeceae-62b6-4674-ab19-a3252d52f296@linaro.org>
+Date: Thu, 21 Mar 2024 18:25:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,88 +61,53 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] sched/fair: Check rd->overload value before update
+Subject: Re: [PATCH 00/31] Clean up thermal zone polling-delay
 Content-Language: en-US
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: mingo@kernel.org, peterz@infradead.org, dietmar.eggemann@arm.com,
-        qyousef@layalina.io, linux-kernel@vger.kernel.org, vschneid@redhat.com,
-        qperret@google.com, yu.c.chen@intel.com, srikar@linux.ibm.com,
-        pierre.gondois@arm.com
-References: <20240313150133.1182298-1-sshegde@linux.ibm.com>
- <20240313150133.1182298-2-sshegde@linux.ibm.com>
- <CAKfTPtBYAibCdsPumTAPDKBwNfLP9nr5577MSNKffV_VDmHDgA@mail.gmail.com>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-In-Reply-To: <CAKfTPtBYAibCdsPumTAPDKBwNfLP9nr5577MSNKffV_VDmHDgA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Rh_QWxJeDi_jTQ8EMFUi-bpsE4NcICLv
-X-Proofpoint-ORIG-GUID: e5OSyYjDv6KF8sNpS4Ewz-UQJtLe5xCd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-21_10,2024-03-21_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 spamscore=0 impostorscore=0 phishscore=0 priorityscore=1501
- adultscore=0 clxscore=1015 mlxscore=0 bulkscore=0 suspectscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403140000 definitions=main-2403210126
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240319-topic-msm-polling-cleanup-v1-0-e0aee1dbcd78@linaro.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <20240319-topic-msm-polling-cleanup-v1-0-e0aee1dbcd78@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-
-
-On 3/21/24 1:14 PM, Vincent Guittot wrote:
-> On Wed, 13 Mar 2024 at 16:02, Shrikanth Hegde <sshegde@linux.ibm.com> wrote:
->>
-
-Hi Vincent. Thanks for taking a look and review it. 
-
->>
->> Perf probes prove that actual change in value is less often. So it would
->> be better to check the value before updating it. Detailed perf probes
->> and annotation can be found in the cover letter. CPU bus traffic reduces
+On 19/03/2024 17:13, Konrad Dybcio wrote:
+> A trivial follow-up on the changes introduced in Commit 488164006a28
+> ("thermal/of: Assume polling-delay(-passive) 0 when absent").
 > 
-> the cover letter will not be merged. It's better to put the figures
-> here if you want to mention them
-
-ok. yes, since it was long i didnt put here. maybe i can put hackbench results 
-here in the changelog. rest can be found in cover-letter if one is interested. 
-
+> Should probably wait until v6.9-rc1 so that the patch in question is
+> in the base tree, otherwise TZs will fail to register.
 > 
->> with the patch.
->>
->> Fixes: 630246a06ae2 ("sched/fair: Clean-up update_sg_lb_stats parameters")
+> FWIW, Compile-tested only (except 8280).
 > 
-> I don't think it's worth a Fixes tag. This is an improvement more than
-> a fix as the current code works fine but generates more bus traffic
-> 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> ---
 
-got it. will remove it. I wasn't sure if I have to put it.
+Are you sure these changes are correct. They are not related to commit 
+488164006a28.
 
-> With these minor changes in the commit message:
-> 
-> Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-> 
+If the sensor has interrupt support, then it can specify:
 
-Thank you!  I will send out v2 with these minor edits. 
+	polling-delay = <0>;
 
->> Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
->> ---
->>  kernel/sched/fair.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->> index 02d4d224b436..eeebadd7d9ae 100644
->> --- a/kernel/sched/fair.c
->> +++ b/kernel/sched/fair.c
->> @@ -10621,7 +10621,8 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
->>
->>         if (!env->sd->parent) {
->>                 /* update overload indicator if we are at root domain */
->> -               WRITE_ONCE(env->dst_rq->rd->overload, sg_status & SG_OVERLOAD);
->> +               if (READ_ONCE(env->dst_rq->rd->overload) != (sg_status & SG_OVERLOAD))
->> +                       WRITE_ONCE(env->dst_rq->rd->overload, sg_status & SG_OVERLOAD);
->>
->>                 /* Update over-utilization (tipping point, U >= 0) indicator */
->>                 set_rd_overutilized_status(env->dst_rq->rd,
->> --
->> 2.39.3
->>
+As a zero polling value can be omitted in the DT then it can be removed.
+
+
+Then when a trip point is crossed, the interrupt fires but then it must 
+sample the temperature of the thermal zone to do the mitigation.
+
+I doubt polling-delay-passive must be removed. The changes you 
+introduced just disable the mitigation and that will lead to board wild 
+reboots.
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
