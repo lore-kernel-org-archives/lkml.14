@@ -1,115 +1,99 @@
-Received: from new-mail.astralinux.ru (new-mail.astralinux.ru [51.250.53.164])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2CA26E602;
-	Thu, 21 Mar 2024 12:05:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.250.53.164
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AACAF56B68
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 12:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711022723; cv=none; b=IE5kjOkDepMKJfxnetrE505ghhovp+xeogmlUyMx2gM2WKIn1531SYyF1UMnZjFxLXIV36T84fOrFngZWCTxsx2Xr5KjDPCB6rdeLWy2/BWkp1MdDyYCrw+GSJlbzGq1h7Heq4ChK/AU87X9UHoU3UXIY6ThhBRaRY/0yVMd/0I=
+	t=1711022769; cv=none; b=lT7ifZrrhYAy/a1dvLbwy8gjsEt4X7nUvzVt4do57CA6cFpdi/1ZBTI1BfahdOYfI7yYmNuMXpqHVqwCfNiSW0GKFFZrdwsPu5d4Nz6qZiP+QGga/UcCoIpnNyiIUMei4tx18QAXOr8Nk7lqd10AdgBkYB9o78jKieG3gwygu58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711022723; c=relaxed/simple;
-	bh=EERyoR1JLibpqXpHBJIxplkz5PbGSchJCH8HqFMz73k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z4c2UBBedDp6QWnx+83vH7ULKK9xUqnND0B8p1NMJYbJexzE7Uzhk758NAlHGUT7A9mMnpK6cDMGoHXvsS0XKAzPCYAKACrCQ5Dg7ZsKTTBbpwd26gWwEhkHIi0EhsTX2y5CLzzYd8V1NM8U7z2YdZElQ3C1iTuYxrGilxnDyD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=51.250.53.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
-Received: from [172.20.10.9] (unknown [176.59.168.90])
-	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4V0kfq1c5wzqSPm;
-	Thu, 21 Mar 2024 15:05:07 +0300 (MSK)
-Message-ID: <bec13e5c-0632-4841-adf9-38a47d290ffd@astralinux.ru>
-Date: Thu, 21 Mar 2024 15:04:22 +0300
+	s=arc-20240116; t=1711022769; c=relaxed/simple;
+	bh=ZyAdqdskwCoKpdggbTyuX1Rx1MltvRYgT73WGu7q/ZA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ye+4oh+ezEa9xwgqX9cCYgUx8u/CxIpWwJwfBqRnuFcsZVNC3/yngYdW77kyIAJvhcdIYHvkgsulHx2COLyLfHZ5Z4bbLBwNmpIFaUrzoMgVN/t0jzkpNzkOqLtGUdJUkBepPtRXkMMg9jB5eQXWGUFNIlLT+bpurXxF6cYWw8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TgeI9k/i; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TgeI9k/i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A113C433C7;
+	Thu, 21 Mar 2024 12:06:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711022769;
+	bh=ZyAdqdskwCoKpdggbTyuX1Rx1MltvRYgT73WGu7q/ZA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TgeI9k/iPIk7tGuznR+w8Hm2Pi+FAvJhIuQTEl28m+dVCLBU6NWKhSys4zXsEdd1Y
+	 9m7q1tHEsv3apkfkoAVJQYz5Mbap15xDz5s5mX6FxcEfrPMMclAgO4dcu3cBoNkqw2
+	 xmmTfzRz0MdUPiMuBmyJJBVa8nP4zQXp7cf8clu4clHtZghwlSM6rJ9MR5vz2tshfp
+	 5eGRcphDNLTpkfqjZjgyDRztTTkmo+V13elqpekWCNDVCcxrX0jETWhrRFcR77YdIe
+	 N9xS3qL1mHKzSP8gH+D0gzXGX4nSdlz6f6udPGoNh/Nye+IeOWbndKjgJETyjuRYmH
+	 hUnv0dOCc6/3Q==
+Date: Thu, 21 Mar 2024 12:06:05 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] reset: gpio: Fix missing gpiolib dependency for GPIO
+ reset controller
+Message-ID: <d88c05cf-168e-4a0a-90dc-1cb5cb21f120@sirena.org.uk>
+References: <20240320-reset-gpiolib-deps-v1-1-eaf5d30fa647@kernel.org>
+ <3c5efec9-cb29-4226-8701-2917ce3c2876@linaro.org>
+ <94f51c4d-d954-45f6-b222-18ff3be5b5d1@sirena.org.uk>
+ <93a6fb3d-b96b-4640-8194-7f778a70fdbe@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: RuPost Desktop
-Subject: Re: [PATCH] flow_dissector: prevent NULL pointer dereference in
- __skb_flow_dissect
-Content-Language: ru
-To: Jiri Pirko <jiri@resnulli.us>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- lvc-project@linuxtesting.org
-References: <20240320125635.1444-1-abelova@astralinux.ru>
- <Zfrmv4u0tVcYGS5n@nanopsycho>
- <b67f3efb-509e-4280-90f2-729d217c20c7@astralinux.ru>
- <ZfwSmlZ-Ie1dFlue@nanopsycho>
-From: Anastasia Belova <abelova@astralinux.ru>
-In-Reply-To: <ZfwSmlZ-Ie1dFlue@nanopsycho>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-DrWeb-SpamScore: -100
-X-DrWeb-SpamState: legit
-X-DrWeb-SpamDetail: gggruggvucftvghtrhhoucdtuddrgedvfedrvdehuddgtddvucetufdoteggodetrfcurfhrohhfihhlvgemucfftfghgfeunecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttderjeenucfhrhhomheptehnrghsthgrshhirgcuuegvlhhovhgruceorggsvghlohhvrgesrghsthhrrghlihhnuhigrdhruheqnecuggftrfgrthhtvghrnhepkeetkefhhedugfekfeevteefuedufffggedvheetgedtgefhleeghfeghfekledtnecuffhomhgrihhnpehlihhnuhigthgvshhtihhnghdrohhrghdpkhgvrhhnvghlrdhorhhgnecukfhppedujeeirdehledrudeikedrledtnecurfgrrhgrmhephhgvlhhopegludejvddrvddtrddutddrlegnpdhinhgvthepudejiedrheelrdduieekrdeltdemgeehfeefvddpmhgrihhlfhhrohhmpegrsggvlhhovhgrsegrshhtrhgrlhhinhhugidrrhhupdhnsggprhgtphhtthhopeejpdhrtghpthhtohepjhhirhhisehrvghsnhhulhhlihdruhhspdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlih
- hnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvhgtqdhprhhojhgvtghtsehlihhnuhigthgvshhtihhnghdrohhrgh
-X-DrWeb-SpamVersion: Vade Retro 01.423.251#02 AS+AV+AP Profile: DRWEB; Bailout: 300
-X-AntiVirus: Checked by Dr.Web [MailD: 11.1.19.2307031128, SE: 11.1.12.2210241838, Core engine: 7.00.62.01180, Virus records: 12528151, Updated: 2024-Mar-21 09:51:42 UTC]
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zu/YR1y9t6mpBvdK"
+Content-Disposition: inline
+In-Reply-To: <93a6fb3d-b96b-4640-8194-7f778a70fdbe@linaro.org>
+X-Cookie: MIT:
 
 
+--zu/YR1y9t6mpBvdK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-21/03/24 13:57, Jiri Pirko пишет:
-> Thu, Mar 21, 2024 at 10:36:53AM CET, abelova@astralinux.ru wrote:
->>
->> 20/03/24 16:38, Jiri Pirko пишет:
->>> Wed, Mar 20, 2024 at 01:56:35PM CET, abelova@astralinux.ru wrote:
->>>> skb is an optional parameter, so it may be NULL.
->>>> Add check defore dereference in eth_hdr.
->>>>
->>>> Found by Linux Verification Center (linuxtesting.org) with SVACE.
->>> Either drop this line which provides no value, or attach a link to the
->>> actual report.
->>>
->> It is an established practice for our project. You can find 700+ applied
->> patches with similar line:
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?qt=grep&q=linuxtesting.org
-> Okay. So would it be possible to attach a link to the actual report?
+On Thu, Mar 21, 2024 at 12:38:16PM +0100, Krzysztof Kozlowski wrote:
+> On 21/03/2024 11:59, Mark Brown wrote:
 
-Unfortunately no as far as results of the SVACE static analysis tool are
-not available publicly at the moment.
+> > In general the stubs do make sense however in this specific case given
+> > that the driver is specifically to control a GPIO rather than using a
+> > GPIO along with controlling some other thing a dependency does seem like
+> > it makes sense.
 
+> Then you add dependency in wrong place. The warning you have is in:
+> drivers/reset/core.o
 
-Also I agree that this is quite a minor fix, but I still insist
-that it would be better to add a check.
+Note that this isn't a warning but rather a link failure.
 
->
->>
->>>> Fixes: 67a900cc0436 ("flow_dissector: introduce support for Ethernet addresses")
->>> This looks incorrect. I believe that this is the offending commit:
->>> commit 690e36e726d00d2528bc569809048adf61550d80
->>> Author: David S. Miller <davem@davemloft.net>
->>> Date:   Sat Aug 23 12:13:41 2014 -0700
->>>
->>>       net: Allow raw buffers to be passed into the flow dissector.
->>>
->> Got it.
->>
->>>> Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
->>>> ---
->>>> net/core/flow_dissector.c | 2 +-
->>>> 1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c
->>>> index 272f09251343..05db3a8aa771 100644
->>>> --- a/net/core/flow_dissector.c
->>>> +++ b/net/core/flow_dissector.c
->>>> @@ -1137,7 +1137,7 @@ bool __skb_flow_dissect(const struct net *net,
->>>> 		rcu_read_unlock();
->>>> 	}
->>>>
->>>> -	if (dissector_uses_key(flow_dissector,
->>>> +	if (skb && dissector_uses_key(flow_dissector,
->>>> 			       FLOW_DISSECTOR_KEY_ETH_ADDRS)) {
->>>> 		struct ethhdr *eth = eth_hdr(skb);
->>>> 		struct flow_dissector_key_eth_addrs *key_eth_addrs;
->>> Looks like FLOW_DISSECT_RET_OUT_BAD should be returned in case the
->>> FLOW_DISSECTOR_KEY_ETH_ADDRS are selected and there is no skb, no?
->> I agree, I'll send the second version.
->>
->> Anastasia Belova
->>
+> But the dependency you add is in RESET_GPIO, which is a separate driver.
+> While the driver indeed wants GPIO, this won't solve the original
+> problem. You still can have RESET_GPIO disabled and core still has the
+> gpiolib call to missing stub.
 
+That's true, though it does happen to fix the immediate issue and seems
+to make sense anyway given that the driver does actually rely on gpiolib
+for functionality - it seems clear that there should be a dependency
+there independently of the build failure.  Like I say I do agree that a
+stub is sensible and you're right that it will fix the underlying issue
+behind the build failure.
 
+--zu/YR1y9t6mpBvdK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmX8IqwACgkQJNaLcl1U
+h9DMJAf7BUtbKl/N/uvzvV5XOOoE4HWpqVGjkM9IM2rmSi0Ry8+MQC9QhhmQpIfR
+B8krqtJkxLK13zMCn076LZ2T9P0RqRlNvsaePGiJFnp/4toJCL3sB3wdfRl2gR2h
+3eefkKiTYTUonmr5oLFSCOcj71Q7O+9jNkR04evYpikxjB4lb+i5xPrDXrPrbXFR
+KhgCAcKacPibLagKncIGd/yMu0wtKwFlJmzYerWuphl4rHIdw00RWdRVykc6LPqw
+9phE4tFm5iUrr5hCscl2ljlJEFe+vCUOM/gY/08tINrj1lDeeK8r/RRHTFo0xoK1
+Q80OfgvlhlqlC1NVAlHsV53lcqTj0w==
+=AHvw
+-----END PGP SIGNATURE-----
+
+--zu/YR1y9t6mpBvdK--
