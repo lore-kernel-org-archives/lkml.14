@@ -1,93 +1,113 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90A612B81;
-	Thu, 21 Mar 2024 09:13:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F756883C;
+	Thu, 21 Mar 2024 09:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711012418; cv=none; b=APGqdi39imQx1BZ57f85YSMZGY3d7jFaxyjfaDuUQ73JtjTTiKoDPcUJanJO/TFDlwCyZqsHsbpqHvpOtX1RS5KLCR/aX6oQJ1MVBx9Cv6mMaTR/AitxJ1LZwWvwMY7iU1+rzpEZ9y0WCf4XaVpyhl9a/WM3uyBae7zWoFEziJ8=
+	t=1711012532; cv=none; b=asKNnE2SuoxLd8RmREd4luL3KqUjputuAz7YjKrfR01m+SgS5tqOVcm9N4Ia91TmzqD7Ss08xtTdlXAWOcMQxGspI4KMcszVsaJVISiyfxpZ2p6SAlmkp6h2m9LvTsxzwgSWOSnYbP0qiKLQ/2qCoTd5GLu0IBWlHrUasCUOYfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711012418; c=relaxed/simple;
-	bh=0WGf5ZBm03nwzd9rinCCaBGVduGXtNXEkarX6ZlpYsY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pYivrOH/ocwVsQUo/dWPxIn+jpwgxz6d2NqaIL+nFkrpijIUt9H3ElesOvBMSOCvDUZkpx22Zjgh4dkmb5G8FJ7F6y1wKB4ZaXuOdVf+pYCajF7d6AcxTM1h11Wkx00Z+VnenMv0t/CDU5CrECZz/wa2hkdFsUDG247LGNvQKII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UT83Ttyj; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UT83Ttyj"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e034607879so5476835ad.0;
-        Thu, 21 Mar 2024 02:13:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711012416; x=1711617216; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Nes78up99EiE9h0M639AFK21t634+dlUJNnADmOZ5TM=;
-        b=UT83TtyjVihMppn+U+hVg3eHjgo2a+DCmTc4K18BMkWkAmxfCFOhHbapSnkVTM5BsV
-         bnutWjpU9edei97AJKMDWCmVseBF2vaFvBRDWzFo60PJwVrHcZddwCVk/ONuP9JqHajN
-         1brqIan4PJLeLG3vwY7F6qTzXzZz51emvE4CRra/wkt2fHT7AW9Cs0ctYS48M+v/Ta4P
-         PFqvAPPVDziYDCI7PAix2rAIa7ZODi75+NksZpm31Gzb+8RH614IOSmzT+BhhWzfr51S
-         ZvGe604hrmpjXYf2yya45e5o61aT6dnUqp0x7Ja6tziDfBzM9VFABP8LFVh33BlsjjxH
-         eLsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711012416; x=1711617216;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Nes78up99EiE9h0M639AFK21t634+dlUJNnADmOZ5TM=;
-        b=F2qHimGZoTz3P5V2//6nwShYxt5G5oN7qPd/1IhZSeLXt2ODSfnHyeU7WTDiOhDN7b
-         8zdi8O6E4C/Mt6EsKckSK259l4zVxL3dw41CXlCXxrRKz01Vy00lKXpUnWmPiW/CrnHR
-         Ottgjg+qw4P2xh9chEuik/BzaoPYk/TctPXgN9VQgkXQ+FN658uiw3TZPH/kxl0kr5YL
-         zdykBFUjRUcXpblq7qUJc7FAb3IYybnJhyYDwbcUbvO/PjRd1ieCjxm02Nq7fRyTAffz
-         n0GhPh01xaWmRYhceWQ6rkzNSdCXbRCaG9BoRHeNRO7edle5663R7OlI1nTkU5yn5tVI
-         FRjA==
-X-Forwarded-Encrypted: i=1; AJvYcCUflFWDiMBH5iIB67nREGoBMgK0Utfu2NubsGIz8N1f4xip+MXSczVXyatVWNv2VSBbhn/wGz5SrAW9pWear3vqjRiIBC7T/Df/HttPMnmAeSJ0MYgEJ6fVKN7YCfQyUtV1nrrwW3Ww8egb54mdt0PBOW/dyQ6GTLDpEzWK2zYkzE1zdII=
-X-Gm-Message-State: AOJu0YwKRk5/wiGpzqIt9EG+QJRJ800D0+X+6Dd9iCLlCs0HYBdPdT3i
-	7dWAlL4y3VVu41jocZM9WqQj0GSPQheXJ0xM1cP6zxQjDaHqoaHfNrPR3tQOlRwb/YBNDBdR+nj
-	OWbyt5CCm+Ags/gKzFpGir1U3D6rttDipznYB8g==
-X-Google-Smtp-Source: AGHT+IEc3sbuxLIEXLcNo9hvlvsrCEfAQbe8858Zyh5kZvdTHTT+txNlarkGx3oYaQLqT3cV8SP642r7siWWZIPoOdM=
-X-Received: by 2002:a05:6a21:a5a4:b0:1a3:53ae:80c7 with SMTP id
- gd36-20020a056a21a5a400b001a353ae80c7mr10352067pzc.7.1711012052876; Thu, 21
- Mar 2024 02:07:32 -0700 (PDT)
+	s=arc-20240116; t=1711012532; c=relaxed/simple;
+	bh=7mZ+Ap7YfWnxtKv8WqQRdUUF6tDAryF5ikk9T8xbk1E=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=n/A+F1PirkPd1+Mq1A5hFTJgd1Wd1rv8aqA+73776Yju7pTa8bPvCiuQBH4q8CWx0GbGQqeyUXhnLYQ5NBxShl4yBm6tdwFJ9CB1vbhLeB0/Nuo5Zmm0XsrsK5gI0qmzEF0sFsHT+AWXuLjuiU+A+kutRjslR24FwzdyFBgDafk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [141.14.31.7] (theinternet.molgen.mpg.de [141.14.31.7])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: buczek)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 7E94061E5FE0A;
+	Thu, 21 Mar 2024 10:15:05 +0100 (CET)
+Message-ID: <6e010dbb-f125-4f44-9b1a-9e6ac9bb66ff@molgen.mpg.de>
+Date: Thu, 21 Mar 2024 10:15:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240313230713.987124-1-benno.lossin@proton.me>
- <Zfh5DYkxNAm-mY_9@boqun-archlinux> <93FD9491-7E2D-4324-8443-0884B7CFC6EF@me.com>
- <ZfkW8rwpdRc_hJBU@Boquns-Mac-mini.home> <3FBC841A-968E-4AC5-83F0-E906C7EE85C3@me.com>
- <6857bb37-c4ee-4817-9b6a-e40e549b6402@proton.me> <F1F3C985-9CAE-4286-B236-4AF6C0918DB5@me.com>
-In-Reply-To: <F1F3C985-9CAE-4286-B236-4AF6C0918DB5@me.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 21 Mar 2024 10:07:09 +0100
-Message-ID: <CANiq72mAA0d41arVo6q2S6gk2sRMfAyW1FOHhUMytMQeYtNjhQ@mail.gmail.com>
-Subject: Re: [PATCH] rust: init: remove impl Zeroable for Infallible
-To: Laine Taffin Altman <alexanderaltman@me.com>
-Cc: Benno Lossin <benno.lossin@proton.me>, Boqun Feng <boqun.feng@gmail.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, 
-	Martin Rodriguez Reboredo <yakoyoku@gmail.com>, stable@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, it+linux@molgen.mpg.de
+From: Donald Buczek <buczek@molgen.mpg.de>
+Subject: possible 6.6 regression: Deadlock involving super_lock()
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 21, 2024 at 5:53=E2=80=AFAM Laine Taffin Altman
-<alexanderaltman@me.com> wrote:
->
-> I=E2=80=99ll try and do it myself; thank you for sending the first round =
-for me and illustrating procedures!  What Reviewed-By=E2=80=99s/Signed-Off-=
-By's should I retain?
+Hi,
 
-For the Signed-off-by, only yours is OK. For the Reviewed-by, it
-depends on how much you have changed, i.e. whether you consider their
-review does not apply anymore -- please see
-https://docs.kernel.org/process/submitting-patches.html#reviewer-s-statemen=
-t-of-oversight
+we have a set of 6 systems with similar usage patterns which ran on 5.15 kernels for over a year.  Only two weeks after we've switched one of the systems from a 5.15 kernel to a 6.6 kernel, it went into a deadlock. I'm aware that I don't have enough information that this could be analyzed, but I though I drop it here anyway, because the deadlock seems to involve the locking of a superblock and I've seen that some changes in that area went into 6.6. Maybe someone has an idea or suggestions for further inspection if this happens the next time.
 
-Cheers,
-Miguel
+These systems
+
+- use automounter a lot (many mount/umount events)
+- use nfs a lot (most data is on remote filesystems over nfs)
+- are used interactively (users occasionally overload any resource like memory, cores or network)
+
+When we've noticed the problem, several processes were blocked, including the automounter which waited for a mount that didn't complete:
+
+# # /proc/73777/task/73777: mount.nfs : /sbin/mount.nfs rabies:/amd/rabies/M/MG009/project/avitidata /project/avitidata -s -o rw,nosuid,sec=mariux
+# cat /proc/73777/task/73777/stack
+
+[<0>] super_lock+0x40/0x140
+[<0>] grab_super+0x29/0xc0
+[<0>] grab_super_dead+0x2e/0x140
+[<0>] sget_fc+0x1e1/0x2d0
+[<0>] nfs_get_tree_common+0x86/0x520 [nfs]
+[<0>] vfs_get_tree+0x21/0xb0
+[<0>] nfs_do_submount+0x128/0x180 [nfs]
+[<0>] nfs4_submount+0x566/0x6d0 [nfsv4]
+[<0>] nfs_d_automount+0x16b/0x230 [nfs]
+[<0>] __traverse_mounts+0x8f/0x210
+[<0>] step_into+0x32a/0x740
+[<0>] link_path_walk.part.0.constprop.0+0x246/0x380
+[<0>] path_lookupat+0x3e/0x190
+[<0>] filename_lookup+0xe8/0x1f0
+[<0>] vfs_path_lookup+0x52/0x80
+[<0>] mount_subtree+0xa0/0x150
+[<0>] do_nfs4_mount+0x269/0x360 [nfsv4]
+[<0>] nfs4_try_get_tree+0x48/0xd0 [nfsv4]
+[<0>] vfs_get_tree+0x21/0xb0
+[<0>] path_mount+0x79e/0xa50
+[<0>] __x64_sys_mount+0x11a/0x150
+[<0>] do_syscall_64+0x46/0x90
+[<0>] entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+
+
+Also, one writeback thread was blocked. I mention that, because I don't get how these these two threads could depend on each other:
+
+# # /proc/39359/task/39359: kworker/u268:5+flush-0:58 : 
+# cat /proc/39359/task/39359/stack
+
+[<0>] folio_wait_bit_common+0x135/0x350
+[<0>] write_cache_pages+0x1a0/0x3a0
+[<0>] nfs_writepages+0x12a/0x1e0 [nfs]
+[<0>] do_writepages+0xcf/0x1e0
+[<0>] __writeback_single_inode+0x46/0x3a0
+[<0>] writeback_sb_inodes+0x1f5/0x4d0
+[<0>] __writeback_inodes_wb+0x4c/0xf0
+[<0>] wb_writeback+0x1f5/0x320
+[<0>] wb_workfn+0x350/0x4f0
+[<0>] process_one_work+0x142/0x300
+[<0>] worker_thread+0x2f5/0x410
+[<0>] kthread+0xe8/0x120
+[<0>] ret_from_fork+0x34/0x50
+[<0>] ret_from_fork_asm+0x1b/0x30
+
+As a result, of course, more and more processes were blocked. A full list of all stack traces and some more info from the system in the blocked state is at https://owww.molgen.mpg.de/~buczek/2024-03-18_mount/info.log
+
+dmesg not included in that file, but I've reviewed it and there was nothing unusual in it.
+
+
+Thanks
+
+  Donald
+
+-- 
+Donald Buczek
+buczek@molgen.mpg.de
+Tel: +49 30 8413 14  
