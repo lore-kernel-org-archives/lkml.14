@@ -1,121 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3FD79E0;
-	Thu, 21 Mar 2024 17:25:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7028C79E0
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 17:25:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711041927; cv=none; b=MDqT6UoiLqk/wN1WQ1KdpMdhqihyZOGCtNURRbC83n2Q3vmmL6QofefPZPh+UFGJ2E+WeZmF/031n0ALV9+x7uLZSvQrxzkw7GcTlXSNGbN0XNCaOw8RBERjEbWcJ/Oa01qlvBdKpU+947CK04FYlvaS4f62VO/amVhSjM2hp4A=
+	t=1711041933; cv=none; b=GEbarcR3eb3xDxeYNxpOTt6NZS6TvDBuaVBzK+LfpuHv3VYQRcNOsyJSqGX4HU40WwQ01Wjzoesg4nAQNZ+wursc/F3AdkV7+wlTilSPFxqWWH+eytKWixd6ZVoZyedd7muNklHhiieqcZjrua2jb6Qyn6WlmgSwgzOBYKvHYho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711041927; c=relaxed/simple;
-	bh=iNXaAGwm6iS6DNKISF6dlrJY5wNVKnpnm8REwy4rDho=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=ZlrxG4ckuZ8goLtQ3Em9Yp1/x2MZLfQKcZBNJJRM1Mb3vNory2jOJCXysSu0vJiZhxeJA0sblwHWyEal53rf1STgifO0GY5glb7rHOIhY0wEzcByhjLfmSBat936BVoHSNLC+bg6+vk5KVlv6Cm5OI7VSc+5oY2gGUDKiB9Amaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uQevDAax; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711041933; c=relaxed/simple;
+	bh=hkLPwTMMFdiiz0ywMQWoV1nqWL8v5pnhugmlgNrrXj8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iYhXY/nbxkoZ0BoQoz2ZHr+Z+WfDKs12HbPHvHnR3nXBZlXTrRkD8nqVvSxl9oAc8wWDOsLPJumzvP1atcN5XwNrfovGpMfGFV8jxO7afiLJ4pZtMhRfqWa0cS6cz3CuvA894kdXwlgkqZ13t9ySpIc/KmX91fuDWGbq/ptDlrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dhDoeoDd; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uQevDAax"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 073E2C433C7;
-	Thu, 21 Mar 2024 17:25:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711041927;
-	bh=iNXaAGwm6iS6DNKISF6dlrJY5wNVKnpnm8REwy4rDho=;
-	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
-	b=uQevDAaxSvs1weuPxAVtTq79oE8xNAAlm00KgUZtg+SF0ZCpdazoYqldu4ms40wTI
-	 KdBcq8uWAD47/rKzsT59SMSEtZvXIWGj+5CJdnbpCRBT7JEP/03D/qAdLGr6V1WR1O
-	 tKmQl20Xe9j84FJNztEGGULdS8/DLACS1ZZirVT9+YuBlMkeNH6yshOtZFYcoGOQ7c
-	 I87pEcsouNJ2soJeKDqyYmUarFAbdb9NjQvdlnXKq82l4NPh+I1KSlj5wGFMn4Ze0w
-	 1SfpgXrWpNJ2W3SvSXv2vZ0wLvpr77vGmkJjpJhw4mdXecJniydVNE2PwYSrO+l75f
-	 cX/eY3iu0uHhg==
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dhDoeoDd"
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42LGxQFR029400;
+	Thu, 21 Mar 2024 17:25:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=dakpi6GEZNYaA8Q32rcvx519IBjv3W2P5eLAKQKq9Kc=;
+ b=dhDoeoDd0hnC9gH/NfqwFSuUmXnUNhnLVcXpF2QY3OF/jXjgxFzOlTFLTyTPhn5lTzEL
+ P5cxkLFLBsDMTuXRMSYPC4JZqgLv5QaSBwESvnGnRh2ea4gf61ANva2ruaBPjKaQq4g4
+ ZX82P+ACdDTU8sjfBibdLSxnUOBkQBbHwfwNn/wK0zSY8Lt+mXxxSkIaYOyE4REUvGss
+ CSnTrOTlky28/LnpOiCQTpaWp3HwYedTxO741xWUPoUwkloSgxIwD/o937rXNy+Ad+3f
+ v4Ngb5cfZRKPXiQOFvWVtVC5DTKCed+FGLte30BN4VQZSZ3k/qxi5RvmWiztY8XgzkcP Wg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x0ne0rnu5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Mar 2024 17:25:08 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42LHP8ro010456;
+	Thu, 21 Mar 2024 17:25:08 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x0ne0rns1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Mar 2024 17:25:08 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42LGZnhN010067;
+	Thu, 21 Mar 2024 17:21:27 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wxvavbp9x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Mar 2024 17:21:27 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42LHLOKj30408978
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 21 Mar 2024 17:21:26 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EBD9F58060;
+	Thu, 21 Mar 2024 17:21:23 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 926585805C;
+	Thu, 21 Mar 2024 17:21:20 +0000 (GMT)
+Received: from [9.195.40.222] (unknown [9.195.40.222])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 21 Mar 2024 17:21:20 +0000 (GMT)
+Message-ID: <7080aa6d-34e4-4d25-9f1b-95ba07f0e6bb@linux.ibm.com>
+Date: Thu, 21 Mar 2024 22:51:14 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] sched/fair: Check rd->overload value before update
+Content-Language: en-US
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: mingo@kernel.org, peterz@infradead.org, dietmar.eggemann@arm.com,
+        qyousef@layalina.io, linux-kernel@vger.kernel.org, vschneid@redhat.com,
+        qperret@google.com, yu.c.chen@intel.com, srikar@linux.ibm.com,
+        pierre.gondois@arm.com
+References: <20240313150133.1182298-1-sshegde@linux.ibm.com>
+ <20240313150133.1182298-2-sshegde@linux.ibm.com>
+ <CAKfTPtBYAibCdsPumTAPDKBwNfLP9nr5577MSNKffV_VDmHDgA@mail.gmail.com>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+In-Reply-To: <CAKfTPtBYAibCdsPumTAPDKBwNfLP9nr5577MSNKffV_VDmHDgA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Date: Thu, 21 Mar 2024 19:25:21 +0200
-Message-Id: <CZZLQN9CUN2E.5PNZ0C2JHP42@kernel.org>
-To: "Fan Wu" <wufan@linux.microsoft.com>, "Paul Moore"
- <paul@paul-moore.com>, <corbet@lwn.net>, <zohar@linux.ibm.com>,
- <jmorris@namei.org>, <serge@hallyn.com>, <tytso@mit.edu>,
- <ebiggers@kernel.org>, <axboe@kernel.dk>, <agk@redhat.com>,
- <snitzer@kernel.org>, <eparis@redhat.com>
-Cc: <linux-doc@vger.kernel.org>, <linux-integrity@vger.kernel.org>,
- <linux-security-module@vger.kernel.org>, <fsverity@lists.linux.dev>,
- <linux-block@vger.kernel.org>, <dm-devel@lists.linux.dev>,
- <audit@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v15 12/21] security: add
- security_bdev_setintegrity() hook
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-X-Mailer: aerc 0.17.0
-References: <1710560151-28904-13-git-send-email-wufan@linux.microsoft.com>
- <f5cf9d285bd5f09bbc3f79b0800d37fc@paul-moore.com>
- <CZYFP5S04YTK.23AJMKWQWVCR8@kernel.org>
- <CZYFR8LEEQB1.8C0J9KCTF8CB@kernel.org>
- <a69805c7-7b8a-44ee-9b32-f9314b5a9763@linux.microsoft.com>
-In-Reply-To: <a69805c7-7b8a-44ee-9b32-f9314b5a9763@linux.microsoft.com>
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Rh_QWxJeDi_jTQ8EMFUi-bpsE4NcICLv
+X-Proofpoint-ORIG-GUID: e5OSyYjDv6KF8sNpS4Ewz-UQJtLe5xCd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-21_10,2024-03-21_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 spamscore=0 impostorscore=0 phishscore=0 priorityscore=1501
+ adultscore=0 clxscore=1015 mlxscore=0 bulkscore=0 suspectscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403140000 definitions=main-2403210126
 
-On Wed Mar 20, 2024 at 10:31 PM EET, Fan Wu wrote:
->
->
-> On 3/20/2024 1:31 AM, Jarkko Sakkinen wrote:
-> > On Wed Mar 20, 2024 at 10:28 AM EET, Jarkko Sakkinen wrote:
-> >> On Wed Mar 20, 2024 at 1:00 AM EET, Paul Moore wrote:
-> >>> On Mar 15, 2024 Fan Wu <wufan@linux.microsoft.com> wrote:
-> >>>>
-> >>>> This patch introduces a new hook to save block device's integrity
-> >>>> data. For example, for dm-verity, LSMs can use this hook to save
-> >>>> the roothash signature of a dm-verity into the security blob,
-> >>>> and LSMs can make access decisions based on the data inside
-> >>>> the signature, like the signer certificate.
-> >>>>
-> >>>> Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
-> >>>>
-> >>>> --
-> >>>> v1-v14:
-> >>>>    + Not present
-> >>>>
-> >>>> v15:
-> >>>>    + Introduced
-> >>>>
-> >>>> ---
-> >>>>   include/linux/lsm_hook_defs.h |  2 ++
-> >>>>   include/linux/security.h      | 14 ++++++++++++++
-> >>>>   security/security.c           | 28 ++++++++++++++++++++++++++++
-> >>>>   3 files changed, 44 insertions(+)
-> >>>
-> >>> I'm not sure why you made this a separate patch, help?  If there is
-> >>> no significant reason why this is separate, please squash it together
-> >>> with patch 11/21.
-> >>
-> >> Off-topic: it is weird to have *RFC* patch set at v15.
-> >>
-> >> RFC by de-facto is something that can be safely ignored if you don't
-> >> have bandwidth. 15 versions of anything that can be safely ignored
-> >> is by definition spamming :-) I mean just conceptually.
-> >>
-> >> So does the RFC still hold or what the heck is going on with this one?
-> >>
-> >> Haven't followed for some time now...
-> >=20
-> > I mean if this RFC trend continues I'll just put auto-filter for this
-> > thread to put straight to the bin.  There's enough non-RFC patch sets
-> > to review.
-> >=20
-> > BR, Jarkko
->
-> Sorry about the confusion with the RFC tag =E2=80=93 I wasn't fully aware=
- of its=20
-> conventional meaning and how it's perceived in terms of importance and=20
-> urgency. Point taken, and I'll make sure to remove the RFC tag for=20
-> future submissions. Definitely not my intention to clog up the workflow=
-=20
-> or seem like I'm spamming.
 
-OK cool! Just wanted to point this out also because it already looks
-good enough not to be considered as RFC in my eyes :-) If you keep RFC
-it is by definition "look into if you have the bandwidth but please
-do not take this to mainline". No means to nitpick here...
 
-BR, Jarkko
+On 3/21/24 1:14 PM, Vincent Guittot wrote:
+> On Wed, 13 Mar 2024 at 16:02, Shrikanth Hegde <sshegde@linux.ibm.com> wrote:
+>>
+
+Hi Vincent. Thanks for taking a look and review it. 
+
+>>
+>> Perf probes prove that actual change in value is less often. So it would
+>> be better to check the value before updating it. Detailed perf probes
+>> and annotation can be found in the cover letter. CPU bus traffic reduces
+> 
+> the cover letter will not be merged. It's better to put the figures
+> here if you want to mention them
+
+ok. yes, since it was long i didnt put here. maybe i can put hackbench results 
+here in the changelog. rest can be found in cover-letter if one is interested. 
+
+> 
+>> with the patch.
+>>
+>> Fixes: 630246a06ae2 ("sched/fair: Clean-up update_sg_lb_stats parameters")
+> 
+> I don't think it's worth a Fixes tag. This is an improvement more than
+> a fix as the current code works fine but generates more bus traffic
+> 
+
+got it. will remove it. I wasn't sure if I have to put it.
+
+> With these minor changes in the commit message:
+> 
+> Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+> 
+
+Thank you!  I will send out v2 with these minor edits. 
+
+>> Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+>> ---
+>>  kernel/sched/fair.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index 02d4d224b436..eeebadd7d9ae 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -10621,7 +10621,8 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
+>>
+>>         if (!env->sd->parent) {
+>>                 /* update overload indicator if we are at root domain */
+>> -               WRITE_ONCE(env->dst_rq->rd->overload, sg_status & SG_OVERLOAD);
+>> +               if (READ_ONCE(env->dst_rq->rd->overload) != (sg_status & SG_OVERLOAD))
+>> +                       WRITE_ONCE(env->dst_rq->rd->overload, sg_status & SG_OVERLOAD);
+>>
+>>                 /* Update over-utilization (tipping point, U >= 0) indicator */
+>>                 set_rd_overutilized_status(env->dst_rq->rd,
+>> --
+>> 2.39.3
+>>
