@@ -1,59 +1,59 @@
 Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8163FE4B
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 06:00:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD1A57873
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 06:00:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711000837; cv=none; b=VF80BeNFcOdSaAa15bQmI+lrG+f7Q4FEpDB5kI9jslcUTSZZc2CHCfau4bGRIAJis4iL33/c3peijckk06X0am7oRVdzlOISaaRWpkNb6sgFo+2sj+NqUkGfwqc2PVQo1Y7Q3RDi1gcQU1nhFBBZHnzoES2dmad/6sWRXyQbWfE=
+	t=1711000847; cv=none; b=rCBb7Vg2rCkOuKs2cAcj2bpIie84C1mgCAB0HNIlGY1PJKGEZeBTyMRs0B26oN+N/Dv2stblyQ67nUVTwdmI0N9yM672hwVE07kF818SuxRiLxCDt9cYa57ykyG2efVKjbVgETEl1iDVXJ8ViSnVRypzqL9I0aN1CpWLcWXB+sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711000837; c=relaxed/simple;
-	bh=oRRr9HO2AV3synONSCw4+OBh566OUixFlJFvCqVgim4=;
+	s=arc-20240116; t=1711000847; c=relaxed/simple;
+	bh=6m0KZRRJflU5tJ8OGjhibHJSv5U59NbYKp/Jo7HCkXA=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=dohCVhvDOQVibnSh9ip8dxyiE3Zoa2GgqYZxaEESdd06rhi76bxEUhyR5sqiQx7Ca0Y2dw27mAR6R96y5DfnO4/pO0zfzFgqA4XL0hoKHCjv7DReajcq7/d0mpJa43YOq7J3VrRg/FIi25H8PtLcrYs8V4A6twk9SIvXq8cyYFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K9KvdsPR; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=fJ9jsMfweoNR/+6yyfeGjOzTcL2xtbyJxrkgDhPUHSYJjSbMfnRFa9AAllk/iWJpM/Ho8li0Uz0D5LZ3U7lv0WwzAsZozSjkzuahOo+gxe1srPc7YQhgMB6KcbScsTgjquyYStdUcBi0YwFYxAyrRg6lD9YpBoALiGIyjIHXZAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3ymIyrUo; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K9KvdsPR"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dd0ae66422fso1405430276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 23:00:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3ymIyrUo"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dd8e82dd47eso825811276.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 23:00:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711000833; x=1711605633; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1711000845; x=1711605645; darn=vger.kernel.org;
         h=content-transfer-encoding:to:from:subject:references:mime-version
          :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=PtyqXatU3IKgpUYh/CKI++KW2zFgicWRyxErwKPQI6k=;
-        b=K9KvdsPRQOUlpPHqrHTeTiWFVBfFLgQoWt0W4avzeIhDfXu9uj2CtNfPj9+L9aRVRR
-         jbvGmA9BevhGbLE2MLVtCTXYWX/63VGGQ2/0mIokotESp2ACOOA3FWr6Z5BQ9Ub8mx+X
-         z/7ezZV+uu6U9vE/uuGIet/Yhlx62WKbTFJ1XRSsJNJCXE7ae0yl9L/GsUryStMOj0Ib
-         7vg0dZS62huHyOjezcQV3LoJAyWfvkAfbbvmTZb1XFgVlvzkHdIF4sAiE2lBoRnjxOfj
-         aBgi62DLWRfO72NoIb76wA/7zQhlBmpT6ivcZajTJxIbQlYHG4BLRDaUG/Bs1fAERWjQ
-         fFUg==
+        bh=zRnFA9pfHXZ9RNQTcmi2ijnTiZS/iti8+cu2PF/551A=;
+        b=3ymIyrUo2uKiiLvknycpL37ZKsczHYUdVJgMpp6G7QXODBdw4M80ZIoSqEcZK7IzTh
+         1za8V7JgKwyQ7+LJzOpssWdXKAjvXxyxdQd8W576pNL7kLoMaCTy4di3XEJdiKJYIODZ
+         mKugSmxuC02RtQ1TetxiX25Yw4/iqd8PTpYVvD8CqAIcLY18Y5phVNy+MsMLzBvLyBDy
+         1/QwXr32itnfaTrZWQouWViVsOr6ryN1xHrWigcRTjCMSSZu/19qKOCoyYki2qNOmyaQ
+         sLanOKeowoByClk64DmAQcrMwQ6dFo8iJNUKJo1OX9xumMSpyFzuDxzqIC7yN9jHiyyM
+         5duQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711000833; x=1711605633;
+        d=1e100.net; s=20230601; t=1711000845; x=1711605645;
         h=content-transfer-encoding:to:from:subject:references:mime-version
          :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=PtyqXatU3IKgpUYh/CKI++KW2zFgicWRyxErwKPQI6k=;
-        b=mNIXZ2UN4/C6I+su8FsskvuMlFC18/BzoXBfC0jXy5eNlc0hQ/WyNIw9xQ3snPIq9W
-         qu/nWyGyekrtjbpw91nCVFRshYqKLOj86Nowh+AIP6qsxx/3IwCDx/P24iMkt4QgHk8y
-         Tn5U9wdo5QVy4oKUTbO6A0lMkWiJo4X+sZ4U2LKeVX4vV444ZFnJIWQ9kfREBTKAmd83
-         1u5VOqt12bEKfY5S+kNguNQ2cQdeEx0vPXYSK4mMHKLVpiB+V0IpvrAFbj492OH2CkD9
-         /FWzBc8RUYAMBenxCLAhIlOf8QQGUJ9COFUxyMkf3uCC/CV/YiOv4on2CltgSd1gR/zK
-         fweQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXfuYnSZRxoYpM/EZsrbNYc3aFlLWYKRgHVCMYomzzLRuC0Da1TGUYIAVHgZazXzaZkA6kgbZrySxqtqlyTisAvEvufcfZ0a0OWdJJP
-X-Gm-Message-State: AOJu0YyH1zQCk9Jl6Q0DvIBkZi7d1CIbgl5RQNOetAuEMjj5XMUE9mT2
-	sro1/xDhSsE0/iuGd+MsyUZVwD2rt2K2oBUh/WNFnkMErrQl9891oRBeJZetI0TInZ+s7gaJuer
-	9UYSDbg==
-X-Google-Smtp-Source: AGHT+IEwb2WnONnxZQU7XOyHS5WwbeI15LbCXLpjdrkFoInmHF2AwbbP1GArMXU6K7MckAR9ZVcczcD09sby
+        bh=zRnFA9pfHXZ9RNQTcmi2ijnTiZS/iti8+cu2PF/551A=;
+        b=W6aQ76WI7i9F/z6OTCtw9oIKXrqCzL1LEUfEJCAeu+qdyuJnhFELppz7GMMv/Lq7vw
+         cR689mr/3VZ5b5vM0PmkdHLjr0T2WYQVdDKwhUcDKi6aYiGyDZ5J6LJEL3+x7ucZXPYO
+         IQwMujpXtZ9UYzze1vXF7yaKKhyeCTVJo3BbcXXcjk3g2opgfizUPoaTdk+bSNNmxNB/
+         o4JODrlSVrEE5S7H9EGUsmGN8wLKT63nhGG3H8pyia7xiiBVyOeGAJ0Zax8Co4LMCbme
+         PcjsTIPjhzYfq0mRBnIjzY5Rsdsb3PDCeikS7LXawvRethrc55f1eE2uBKvKSWUtTL/r
+         P9kw==
+X-Forwarded-Encrypted: i=1; AJvYcCWgQpTnYZ/QkI2XDavaROg8fy/fpwq8uIih2/XPuR0DIRj5ziDVsaLLcr7OZ6w0A4OA8lIOLZN526fRjsKN5Twxeq45wDmMQzu3x3h9
+X-Gm-Message-State: AOJu0YzCJOGwR2DmwA8w8xrSfyFJ1+89WZWSWL0OfunEKRVQaGU5ac6L
+	xTUu6zRf/uFtXkaVnEsDc/qMK8oK7GTSrBchO3ldDFJsNJyyaOxY7GXUuVMVGZm7SF+p8fQe5lv
+	OltQLKg==
+X-Google-Smtp-Source: AGHT+IH7dLwVAgKevoQ4rNxLbtZHJaCXA6L6vZg0WcTg8hlz2pjhVnbpYqXUMudcz+f+HPRyPvXAO94ks4CC
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:7f3:cf74:42c4:c0a])
- (user=irogers job=sendgmr) by 2002:a25:694b:0:b0:dd3:f55f:ff02 with SMTP id
- e72-20020a25694b000000b00dd3f55fff02mr343476ybc.1.1711000833121; Wed, 20 Mar
- 2024 23:00:33 -0700 (PDT)
-Date: Wed, 20 Mar 2024 23:00:08 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:1b85:b0:dbe:30cd:8fcb with SMTP
+ id ei5-20020a0569021b8500b00dbe30cd8fcbmr1126034ybb.0.1711000844811; Wed, 20
+ Mar 2024 23:00:44 -0700 (PDT)
+Date: Wed, 20 Mar 2024 23:00:13 -0700
 In-Reply-To: <20240321060016.1464787-1-irogers@google.com>
-Message-Id: <20240321060016.1464787-5-irogers@google.com>
+Message-Id: <20240321060016.1464787-10-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,7 +62,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240321060016.1464787-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
-Subject: [PATCH v1 04/12] perf vendor events intel: Update icelakex to 1.24
+Subject: [PATCH v1 09/12] perf vendor events intel: Update skylakex to 1.33
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,918 +76,307 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Update events from 1.23 to 1.24 as released in:
-https://github.com/intel/perfmon/commit/d883888ae60882028e387b6fe1ebf683beb=
-693fa
+Update events from 1.32 to 1.33 as released in:
+https://github.com/intel/perfmon/commit/3fe7390dd18496c35ec3a9cf17de0473fd5=
+485cb
 
-Fixes spelling and descriptions. Adds the uncore events
-UNC_CHA_TOR_INSERTS.IO_PCIRDCUR_LOCAL and
-UNC_CHA_TOR_INSERTS.IO_PCIRDCUR_REMOTE, while removing
-UNC_IIO_NUM_REQ_FROM_CPU.IRP.
+Various description updates. Adds the event
+OFFCORE_RESPONSE.ALL_READS.L3_HIT.HIT_OTHER_CORE_FWD.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../arch/x86/icelakex/frontend.json           |  2 +-
- .../pmu-events/arch/x86/icelakex/memory.json  |  1 +
- .../arch/x86/icelakex/uncore-cache.json       | 22 ++++++-
- .../x86/icelakex/uncore-interconnect.json     | 64 +++++++++----------
- .../arch/x86/icelakex/uncore-io.json          | 11 ----
- tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
- 6 files changed, 55 insertions(+), 47 deletions(-)
+ tools/perf/pmu-events/arch/x86/mapfile.csv         |  2 +-
+ tools/perf/pmu-events/arch/x86/skylakex/cache.json |  9 +++++++++
+ .../pmu-events/arch/x86/skylakex/frontend.json     | 10 +++++-----
+ .../perf/pmu-events/arch/x86/skylakex/memory.json  |  2 +-
+ tools/perf/pmu-events/arch/x86/skylakex/other.json |  2 +-
+ .../pmu-events/arch/x86/skylakex/pipeline.json     |  2 +-
+ .../arch/x86/skylakex/uncore-interconnect.json     | 14 +++++++-------
+ .../pmu-events/arch/x86/skylakex/uncore-io.json    |  2 +-
+ .../arch/x86/skylakex/virtual-memory.json          |  2 +-
+ 9 files changed, 27 insertions(+), 18 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/icelakex/frontend.json b/tools/=
-perf/pmu-events/arch/x86/icelakex/frontend.json
-index f6edc4222f42..66669d062e68 100644
---- a/tools/perf/pmu-events/arch/x86/icelakex/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/icelakex/frontend.json
-@@ -282,7 +282,7 @@
-         "CounterMask": "5",
-         "EventCode": "0x79",
-         "EventName": "IDQ.DSB_CYCLES_OK",
--        "PublicDescription": "Counts the number of cycles where optimal nu=
-mber of uops was delivered to the Instruction Decode Queue (IDQ) from the M=
-ITE (legacy decode pipeline) path. During these cycles uops are not being d=
-elivered from the Decode Stream Buffer (DSB).",
-+        "PublicDescription": "Counts the number of cycles where optimal nu=
-mber of uops was delivered to the Instruction Decode Queue (IDQ) from the D=
-SB (Decode Stream Buffer) path. Count includes uops that may 'bypass' the I=
-DQ.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x8"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/icelakex/memory.json b/tools/pe=
-rf/pmu-events/arch/x86/icelakex/memory.json
-index f36ac04f8d76..875b584b8443 100644
---- a/tools/perf/pmu-events/arch/x86/icelakex/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/icelakex/memory.json
-@@ -319,6 +319,7 @@
-         "BriefDescription": "Number of times an RTM execution aborted.",
-         "EventCode": "0xc9",
-         "EventName": "RTM_RETIRED.ABORTED",
-+        "PEBS": "1",
-         "PublicDescription": "Counts the number of times RTM abort was tri=
-ggered.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x4"
-diff --git a/tools/perf/pmu-events/arch/x86/icelakex/uncore-cache.json b/to=
-ols/perf/pmu-events/arch/x86/icelakex/uncore-cache.json
-index b6ce14ebf844..a950ba3ddcb4 100644
---- a/tools/perf/pmu-events/arch/x86/icelakex/uncore-cache.json
-+++ b/tools/perf/pmu-events/arch/x86/icelakex/uncore-cache.json
-@@ -1580,7 +1580,7 @@
-         "Unit": "CHA"
-     },
-     {
--        "BriefDescription": "This event is deprecated. Refer to new event =
-UNC_CHA_LLC_LOOKUP.CODE_READ",
-+        "BriefDescription": "This event is deprecated.",
-         "Deprecated": "1",
-         "EventCode": "0x34",
-         "EventName": "UNC_CHA_LLC_LOOKUP.CODE",
-@@ -1677,7 +1677,7 @@
-         "Unit": "CHA"
-     },
-     {
--        "BriefDescription": "This event is deprecated. Refer to new event =
-UNC_CHA_LLC_LOOKUP.DATA_READ",
-+        "BriefDescription": "This event is deprecated.",
-         "Deprecated": "1",
-         "EventCode": "0x34",
-         "EventName": "UNC_CHA_LLC_LOOKUP.DATA_READ_ALL",
-@@ -6782,6 +6782,24 @@
-         "UMask": "0xc8f3ff04",
-         "Unit": "CHA"
-     },
-+    {
-+        "BriefDescription": "PCIRDCUR (read) transactions from an IO devic=
-e that addresses memory on the local socket",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.IO_PCIRDCUR_LOCAL",
-+        "PerPkg": "1",
-+        "PublicDescription": "TOR Inserts : PCIRdCurs issued by IO Devices=
- and targets local memory : Counts the number of entries successfully inser=
-ted into the TOR that match qualifications specified by the subevent.   Doe=
-s not include addressless requests such as locks and interrupts.",
-+        "UMask": "0xc8f2ff04",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "PCIRDCUR (read) transactions from an IO devic=
-e that addresses memory on a remote socket",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.IO_PCIRDCUR_REMOTE",
-+        "PerPkg": "1",
-+        "PublicDescription": "TOR Inserts : PCIRdCurs issued by IO Devices=
- and targets remote memory : Counts the number of entries successfully inse=
-rted into the TOR that match qualifications specified by the subevent.   Do=
-es not include addressless requests such as locks and interrupts.",
-+        "UMask": "0xc8f37f04",
-+        "Unit": "CHA"
-+    },
-     {
-         "BriefDescription": "TOR Inserts : RFOs issued by IO Devices",
-         "EventCode": "0x35",
-diff --git a/tools/perf/pmu-events/arch/x86/icelakex/uncore-interconnect.js=
-on b/tools/perf/pmu-events/arch/x86/icelakex/uncore-interconnect.json
-index a066a009c511..6997e6f7d366 100644
---- a/tools/perf/pmu-events/arch/x86/icelakex/uncore-interconnect.json
-+++ b/tools/perf/pmu-events/arch/x86/icelakex/uncore-interconnect.json
-@@ -13523,7 +13523,7 @@
-         "EventCode": "0x05",
-         "EventName": "UNC_UPI_RxL_BASIC_HDR_MATCH.NCB",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Receive path of a UPI Port : Non-=
-Coherent Bypass : Matches on Receive path of a UPI port.\r\nMatch based on =
-UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enable=
-\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote E=
-nable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr E=
-nable\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are excluded=
- (LL CTRL, slot NULL, LLCRD) even under specific opcode match_en cases.\r\n=
-Note: If Message Class is disabled, we expect opcode to also be disabled.",
-+        "PublicDescription": "Matches on Receive path of a UPI Port : Non-=
-Coherent Bypass : Matches on Receive path of a UPI port. Match based on UMa=
-sk specific bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opcod=
-e (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr Ena=
-ble R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Enabl=
-e Link Layer control types are excluded (LL CTRL, slot NULL, LLCRD) even un=
-der specific opcode match_en cases. Note: If Message Class is disabled, we =
-expect opcode to also be disabled.",
-         "UMask": "0xe",
-         "Unit": "UPI"
-     },
-@@ -13532,7 +13532,7 @@
-         "EventCode": "0x05",
-         "EventName": "UNC_UPI_RxL_BASIC_HDR_MATCH.NCB_OPC",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Receive path of a UPI Port : Non-=
-Coherent Bypass, Match Opcode : Matches on Receive path of a UPI port.\r\nM=
-atch based on UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Messag=
-e Class Enable\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\=
-r\nT: Remote Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: D=
-ual Slot Hdr Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control type=
-s are excluded (LL CTRL, slot NULL, LLCRD) even under specific opcode match=
-_en cases.\r\nNote: If Message Class is disabled, we expect opcode to also =
-be disabled.",
-+        "PublicDescription": "Matches on Receive path of a UPI Port : Non-=
-Coherent Bypass, Match Opcode : Matches on Receive path of a UPI port. Matc=
-h based on UMask specific bits: Z: Message Class (3-bit) Y: Message Class E=
-nable W: Opcode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S=
-: Data Hdr Enable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single =
-Slot Hdr Enable Link Layer control types are excluded (LL CTRL, slot NULL, =
-LLCRD) even under specific opcode match_en cases. Note: If Message Class is=
- disabled, we expect opcode to also be disabled.",
-         "UMask": "0x10e",
-         "Unit": "UPI"
-     },
-@@ -13541,7 +13541,7 @@
-         "EventCode": "0x05",
-         "EventName": "UNC_UPI_RxL_BASIC_HDR_MATCH.NCS",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Receive path of a UPI Port : Non-=
-Coherent Standard : Matches on Receive path of a UPI port.\r\nMatch based o=
-n UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enab=
-le\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote=
- Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr=
- Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are exclud=
-ed (LL CTRL, slot NULL, LLCRD) even under specific opcode match_en cases.\r=
-\nNote: If Message Class is disabled, we expect opcode to also be disabled.=
-",
-+        "PublicDescription": "Matches on Receive path of a UPI Port : Non-=
-Coherent Standard : Matches on Receive path of a UPI port. Match based on U=
-Mask specific bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opc=
-ode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr E=
-nable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Ena=
-ble Link Layer control types are excluded (LL CTRL, slot NULL, LLCRD) even =
-under specific opcode match_en cases. Note: If Message Class is disabled, w=
-e expect opcode to also be disabled.",
-         "UMask": "0xf",
-         "Unit": "UPI"
-     },
-@@ -13550,7 +13550,7 @@
-         "EventCode": "0x05",
-         "EventName": "UNC_UPI_RxL_BASIC_HDR_MATCH.NCS_OPC",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Receive path of a UPI Port : Non-=
-Coherent Standard, Match Opcode : Matches on Receive path of a UPI port.\r\=
-nMatch based on UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Mess=
-age Class Enable\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enabl=
-e\r\nT: Remote Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ:=
- Dual Slot Hdr Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control ty=
-pes are excluded (LL CTRL, slot NULL, LLCRD) even under specific opcode mat=
-ch_en cases.\r\nNote: If Message Class is disabled, we expect opcode to als=
-o be disabled.",
-+        "PublicDescription": "Matches on Receive path of a UPI Port : Non-=
-Coherent Standard, Match Opcode : Matches on Receive path of a UPI port. Ma=
-tch based on UMask specific bits: Z: Message Class (3-bit) Y: Message Class=
- Enable W: Opcode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable=
- S: Data Hdr Enable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Singl=
-e Slot Hdr Enable Link Layer control types are excluded (LL CTRL, slot NULL=
-, LLCRD) even under specific opcode match_en cases. Note: If Message Class =
-is disabled, we expect opcode to also be disabled.",
-         "UMask": "0x10f",
-         "Unit": "UPI"
-     },
-@@ -13559,7 +13559,7 @@
-         "EventCode": "0x05",
-         "EventName": "UNC_UPI_RxL_BASIC_HDR_MATCH.REQ",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Receive path of a UPI Port : Requ=
-est : Matches on Receive path of a UPI port.\r\nMatch based on UMask specif=
-ic bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enable\r\nW: Opcod=
-e (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote Enable\r\nS: =
-Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr Enable\r\nP: =
-Single Slot Hdr Enable\r\nLink Layer control types are excluded (LL CTRL, s=
-lot NULL, LLCRD) even under specific opcode match_en cases.\r\nNote: If Mes=
-sage Class is disabled, we expect opcode to also be disabled.",
-+        "PublicDescription": "Matches on Receive path of a UPI Port : Requ=
-est : Matches on Receive path of a UPI port. Match based on UMask specific =
-bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opcode (4-bit) V:=
- Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr Enable R: Non-D=
-ata Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Enable Link Layer=
- control types are excluded (LL CTRL, slot NULL, LLCRD) even under specific=
- opcode match_en cases. Note: If Message Class is disabled, we expect opcod=
-e to also be disabled.",
-         "UMask": "0x8",
-         "Unit": "UPI"
-     },
-@@ -13568,7 +13568,7 @@
-         "EventCode": "0x05",
-         "EventName": "UNC_UPI_RxL_BASIC_HDR_MATCH.REQ_OPC",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Receive path of a UPI Port : Requ=
-est, Match Opcode : Matches on Receive path of a UPI port.\r\nMatch based o=
-n UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enab=
-le\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote=
- Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr=
- Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are exclud=
-ed (LL CTRL, slot NULL, LLCRD) even under specific opcode match_en cases.\r=
-\nNote: If Message Class is disabled, we expect opcode to also be disabled.=
-",
-+        "PublicDescription": "Matches on Receive path of a UPI Port : Requ=
-est, Match Opcode : Matches on Receive path of a UPI port. Match based on U=
-Mask specific bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opc=
-ode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr E=
-nable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Ena=
-ble Link Layer control types are excluded (LL CTRL, slot NULL, LLCRD) even =
-under specific opcode match_en cases. Note: If Message Class is disabled, w=
-e expect opcode to also be disabled.",
-         "UMask": "0x108",
-         "Unit": "UPI"
-     },
-@@ -13577,7 +13577,7 @@
-         "EventCode": "0x05",
-         "EventName": "UNC_UPI_RxL_BASIC_HDR_MATCH.RSPCNFLT",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Receive path of a UPI Port : Resp=
-onse - Conflict : Matches on Receive path of a UPI port.\r\nMatch based on =
-UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enable=
-\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote E=
-nable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr E=
-nable\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are excluded=
- (LL CTRL, slot NULL, LLCRD) even under specific opcode match_en cases.\r\n=
-Note: If Message Class is disabled, we expect opcode to also be disabled.",
-+        "PublicDescription": "Matches on Receive path of a UPI Port : Resp=
-onse - Conflict : Matches on Receive path of a UPI port. Match based on UMa=
-sk specific bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opcod=
-e (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr Ena=
-ble R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Enabl=
-e Link Layer control types are excluded (LL CTRL, slot NULL, LLCRD) even un=
-der specific opcode match_en cases. Note: If Message Class is disabled, we =
-expect opcode to also be disabled.",
-         "UMask": "0x1aa",
-         "Unit": "UPI"
-     },
-@@ -13586,7 +13586,7 @@
-         "EventCode": "0x05",
-         "EventName": "UNC_UPI_RxL_BASIC_HDR_MATCH.RSPI",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Receive path of a UPI Port : Resp=
-onse - Invalid : Matches on Receive path of a UPI port.\r\nMatch based on U=
-Mask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enable\=
-r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote En=
-able\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr En=
-able\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are excluded =
-(LL CTRL, slot NULL, LLCRD) even under specific opcode match_en cases.\r\nN=
-ote: If Message Class is disabled, we expect opcode to also be disabled.",
-+        "PublicDescription": "Matches on Receive path of a UPI Port : Resp=
-onse - Invalid : Matches on Receive path of a UPI port. Match based on UMas=
-k specific bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opcode=
- (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr Enab=
-le R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Enable=
- Link Layer control types are excluded (LL CTRL, slot NULL, LLCRD) even und=
-er specific opcode match_en cases. Note: If Message Class is disabled, we e=
-xpect opcode to also be disabled.",
-         "UMask": "0x12a",
-         "Unit": "UPI"
-     },
-@@ -13595,7 +13595,7 @@
-         "EventCode": "0x05",
-         "EventName": "UNC_UPI_RxL_BASIC_HDR_MATCH.RSP_DATA",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Receive path of a UPI Port : Resp=
-onse - Data : Matches on Receive path of a UPI port.\r\nMatch based on UMas=
-k specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enable\r\n=
-W: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote Enabl=
-e\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr Enabl=
-e\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are excluded (LL=
- CTRL, slot NULL, LLCRD) even under specific opcode match_en cases.\r\nNote=
-: If Message Class is disabled, we expect opcode to also be disabled.",
-+        "PublicDescription": "Matches on Receive path of a UPI Port : Resp=
-onse - Data : Matches on Receive path of a UPI port. Match based on UMask s=
-pecific bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opcode (4=
--bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr Enable =
-R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Enable Li=
-nk Layer control types are excluded (LL CTRL, slot NULL, LLCRD) even under =
-specific opcode match_en cases. Note: If Message Class is disabled, we expe=
-ct opcode to also be disabled.",
-         "UMask": "0xc",
-         "Unit": "UPI"
-     },
-@@ -13604,7 +13604,7 @@
-         "EventCode": "0x05",
-         "EventName": "UNC_UPI_RxL_BASIC_HDR_MATCH.RSP_DATA_OPC",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Receive path of a UPI Port : Resp=
-onse - Data, Match Opcode : Matches on Receive path of a UPI port.\r\nMatch=
- based on UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Cl=
-ass Enable\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT=
-: Remote Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual =
-Slot Hdr Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control types ar=
-e excluded (LL CTRL, slot NULL, LLCRD) even under specific opcode match_en =
-cases.\r\nNote: If Message Class is disabled, we expect opcode to also be d=
-isabled.",
-+        "PublicDescription": "Matches on Receive path of a UPI Port : Resp=
-onse - Data, Match Opcode : Matches on Receive path of a UPI port. Match ba=
-sed on UMask specific bits: Z: Message Class (3-bit) Y: Message Class Enabl=
-e W: Opcode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Da=
-ta Hdr Enable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot=
- Hdr Enable Link Layer control types are excluded (LL CTRL, slot NULL, LLCR=
-D) even under specific opcode match_en cases. Note: If Message Class is dis=
-abled, we expect opcode to also be disabled.",
-         "UMask": "0x10c",
-         "Unit": "UPI"
-     },
-@@ -13613,7 +13613,7 @@
-         "EventCode": "0x05",
-         "EventName": "UNC_UPI_RxL_BASIC_HDR_MATCH.RSP_NODATA",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Receive path of a UPI Port : Resp=
-onse - No Data : Matches on Receive path of a UPI port.\r\nMatch based on U=
-Mask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enable\=
-r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote En=
-able\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr En=
-able\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are excluded =
-(LL CTRL, slot NULL, LLCRD) even under specific opcode match_en cases.\r\nN=
-ote: If Message Class is disabled, we expect opcode to also be disabled.",
-+        "PublicDescription": "Matches on Receive path of a UPI Port : Resp=
-onse - No Data : Matches on Receive path of a UPI port. Match based on UMas=
-k specific bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opcode=
- (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr Enab=
-le R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Enable=
- Link Layer control types are excluded (LL CTRL, slot NULL, LLCRD) even und=
-er specific opcode match_en cases. Note: If Message Class is disabled, we e=
-xpect opcode to also be disabled.",
-         "UMask": "0xa",
-         "Unit": "UPI"
-     },
-@@ -13622,7 +13622,7 @@
-         "EventCode": "0x05",
-         "EventName": "UNC_UPI_RxL_BASIC_HDR_MATCH.RSP_NODATA_OPC",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Receive path of a UPI Port : Resp=
-onse - No Data, Match Opcode : Matches on Receive path of a UPI port.\r\nMa=
-tch based on UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message=
- Class Enable\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r=
-\nT: Remote Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Du=
-al Slot Hdr Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control types=
- are excluded (LL CTRL, slot NULL, LLCRD) even under specific opcode match_=
-en cases.\r\nNote: If Message Class is disabled, we expect opcode to also b=
-e disabled.",
-+        "PublicDescription": "Matches on Receive path of a UPI Port : Resp=
-onse - No Data, Match Opcode : Matches on Receive path of a UPI port. Match=
- based on UMask specific bits: Z: Message Class (3-bit) Y: Message Class En=
-able W: Opcode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S:=
- Data Hdr Enable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single S=
-lot Hdr Enable Link Layer control types are excluded (LL CTRL, slot NULL, L=
-LCRD) even under specific opcode match_en cases. Note: If Message Class is =
-disabled, we expect opcode to also be disabled.",
-         "UMask": "0x10a",
-         "Unit": "UPI"
-     },
-@@ -13631,7 +13631,7 @@
-         "EventCode": "0x05",
-         "EventName": "UNC_UPI_RxL_BASIC_HDR_MATCH.SNP",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Receive path of a UPI Port : Snoo=
-p : Matches on Receive path of a UPI port.\r\nMatch based on UMask specific=
- bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enable\r\nW: Opcode =
-(4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote Enable\r\nS: Da=
-ta Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr Enable\r\nP: Si=
-ngle Slot Hdr Enable\r\nLink Layer control types are excluded (LL CTRL, slo=
-t NULL, LLCRD) even under specific opcode match_en cases.\r\nNote: If Messa=
-ge Class is disabled, we expect opcode to also be disabled.",
-+        "PublicDescription": "Matches on Receive path of a UPI Port : Snoo=
-p : Matches on Receive path of a UPI port. Match based on UMask specific bi=
-ts: Z: Message Class (3-bit) Y: Message Class Enable W: Opcode (4-bit) V: O=
-pcode Enable U: Local Enable T: Remote Enable S: Data Hdr Enable R: Non-Dat=
-a Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Enable Link Layer c=
-ontrol types are excluded (LL CTRL, slot NULL, LLCRD) even under specific o=
-pcode match_en cases. Note: If Message Class is disabled, we expect opcode =
-to also be disabled.",
-         "UMask": "0x9",
-         "Unit": "UPI"
-     },
-@@ -13640,7 +13640,7 @@
-         "EventCode": "0x05",
-         "EventName": "UNC_UPI_RxL_BASIC_HDR_MATCH.SNP_OPC",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Receive path of a UPI Port : Snoo=
-p, Match Opcode : Matches on Receive path of a UPI port.\r\nMatch based on =
-UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enable=
-\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote E=
-nable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr E=
-nable\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are excluded=
- (LL CTRL, slot NULL, LLCRD) even under specific opcode match_en cases.\r\n=
-Note: If Message Class is disabled, we expect opcode to also be disabled.",
-+        "PublicDescription": "Matches on Receive path of a UPI Port : Snoo=
-p, Match Opcode : Matches on Receive path of a UPI port. Match based on UMa=
-sk specific bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opcod=
-e (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr Ena=
-ble R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Enabl=
-e Link Layer control types are excluded (LL CTRL, slot NULL, LLCRD) even un=
-der specific opcode match_en cases. Note: If Message Class is disabled, we =
-expect opcode to also be disabled.",
-         "UMask": "0x109",
-         "Unit": "UPI"
-     },
-@@ -13649,7 +13649,7 @@
-         "EventCode": "0x05",
-         "EventName": "UNC_UPI_RxL_BASIC_HDR_MATCH.WB",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Receive path of a UPI Port : Writ=
-eback : Matches on Receive path of a UPI port.\r\nMatch based on UMask spec=
-ific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enable\r\nW: Opc=
-ode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote Enable\r\nS=
-: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr Enable\r\nP=
-: Single Slot Hdr Enable\r\nLink Layer control types are excluded (LL CTRL,=
- slot NULL, LLCRD) even under specific opcode match_en cases.\r\nNote: If M=
-essage Class is disabled, we expect opcode to also be disabled.",
-+        "PublicDescription": "Matches on Receive path of a UPI Port : Writ=
-eback : Matches on Receive path of a UPI port. Match based on UMask specifi=
-c bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opcode (4-bit) =
-V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr Enable R: Non=
--Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Enable Link Lay=
-er control types are excluded (LL CTRL, slot NULL, LLCRD) even under specif=
-ic opcode match_en cases. Note: If Message Class is disabled, we expect opc=
-ode to also be disabled.",
-         "UMask": "0xd",
-         "Unit": "UPI"
-     },
-@@ -13658,7 +13658,7 @@
-         "EventCode": "0x05",
-         "EventName": "UNC_UPI_RxL_BASIC_HDR_MATCH.WB_OPC",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Receive path of a UPI Port : Writ=
-eback, Match Opcode : Matches on Receive path of a UPI port.\r\nMatch based=
- on UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class En=
-able\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remo=
-te Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot H=
-dr Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are excl=
-uded (LL CTRL, slot NULL, LLCRD) even under specific opcode match_en cases.=
-\r\nNote: If Message Class is disabled, we expect opcode to also be disable=
-d.",
-+        "PublicDescription": "Matches on Receive path of a UPI Port : Writ=
-eback, Match Opcode : Matches on Receive path of a UPI port. Match based on=
- UMask specific bits: Z: Message Class (3-bit) Y: Message Class Enable W: O=
-pcode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr=
- Enable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr E=
-nable Link Layer control types are excluded (LL CTRL, slot NULL, LLCRD) eve=
-n under specific opcode match_en cases. Note: If Message Class is disabled,=
- we expect opcode to also be disabled.",
-         "UMask": "0x10d",
-         "Unit": "UPI"
-     },
-@@ -14038,7 +14038,7 @@
-         "EventCode": "0x04",
-         "EventName": "UNC_UPI_TxL_BASIC_HDR_MATCH.NCB",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Transmit path of a UPI Port : Non=
--Coherent Bypass : Matches on Transmit path of a UPI port.\r\nMatch based o=
-n UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enab=
-le\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote=
- Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr=
- Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are exclud=
-ed (LL CTRL, slot NULL, LLCRD) even under specific opcode match_en cases.\r=
-\nNote: If Message Class is disabled, we expect opcode to also be disabled.=
-",
-+        "PublicDescription": "Matches on Transmit path of a UPI Port : Non=
--Coherent Bypass : Matches on Transmit path of a UPI port. Match based on U=
-Mask specific bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opc=
-ode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr E=
-nable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Ena=
-ble Link Layer control types are excluded (LL CTRL, slot NULL, LLCRD) even =
-under specific opcode match_en cases. Note: If Message Class is disabled, w=
-e expect opcode to also be disabled.",
-         "UMask": "0xe",
-         "Unit": "UPI"
-     },
-@@ -14047,7 +14047,7 @@
-         "EventCode": "0x04",
-         "EventName": "UNC_UPI_TxL_BASIC_HDR_MATCH.NCB_OPC",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Transmit path of a UPI Port : Non=
--Coherent Bypass, Match Opcode : Matches on Transmit path of a UPI port.\r\=
-nMatch based on UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Mess=
-age Class Enable\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enabl=
-e\r\nT: Remote Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ:=
- Dual Slot Hdr Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control ty=
-pes are excluded (LL CTRL, slot NULL, LLCRD) even under specific opcode mat=
-ch_en cases.\r\nNote: If Message Class is disabled, we expect opcode to als=
-o be disabled.",
-+        "PublicDescription": "Matches on Transmit path of a UPI Port : Non=
--Coherent Bypass, Match Opcode : Matches on Transmit path of a UPI port. Ma=
-tch based on UMask specific bits: Z: Message Class (3-bit) Y: Message Class=
- Enable W: Opcode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable=
- S: Data Hdr Enable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Singl=
-e Slot Hdr Enable Link Layer control types are excluded (LL CTRL, slot NULL=
-, LLCRD) even under specific opcode match_en cases. Note: If Message Class =
-is disabled, we expect opcode to also be disabled.",
-         "UMask": "0x10e",
-         "Unit": "UPI"
-     },
-@@ -14056,7 +14056,7 @@
-         "EventCode": "0x04",
-         "EventName": "UNC_UPI_TxL_BASIC_HDR_MATCH.NCS",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Transmit path of a UPI Port : Non=
--Coherent Standard : Matches on Transmit path of a UPI port.\r\nMatch based=
- on UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class En=
-able\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remo=
-te Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot H=
-dr Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are excl=
-uded (LL CTRL, slot NULL, LLCRD) even under specific opcode match_en cases.=
-\r\nNote: If Message Class is disabled, we expect opcode to also be disable=
-d.",
-+        "PublicDescription": "Matches on Transmit path of a UPI Port : Non=
--Coherent Standard : Matches on Transmit path of a UPI port. Match based on=
- UMask specific bits: Z: Message Class (3-bit) Y: Message Class Enable W: O=
-pcode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr=
- Enable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr E=
-nable Link Layer control types are excluded (LL CTRL, slot NULL, LLCRD) eve=
-n under specific opcode match_en cases. Note: If Message Class is disabled,=
- we expect opcode to also be disabled.",
-         "UMask": "0xf",
-         "Unit": "UPI"
-     },
-@@ -14065,7 +14065,7 @@
-         "EventCode": "0x04",
-         "EventName": "UNC_UPI_TxL_BASIC_HDR_MATCH.NCS_OPC",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Transmit path of a UPI Port : Non=
--Coherent Standard, Match Opcode : Matches on Transmit path of a UPI port.\=
-r\nMatch based on UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Me=
-ssage Class Enable\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Ena=
-ble\r\nT: Remote Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\n=
-Q: Dual Slot Hdr Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control =
-types are excluded (LL CTRL, slot NULL, LLCRD) even under specific opcode m=
-atch_en cases.\r\nNote: If Message Class is disabled, we expect opcode to a=
-lso be disabled.",
-+        "PublicDescription": "Matches on Transmit path of a UPI Port : Non=
--Coherent Standard, Match Opcode : Matches on Transmit path of a UPI port. =
-Match based on UMask specific bits: Z: Message Class (3-bit) Y: Message Cla=
-ss Enable W: Opcode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enab=
-le S: Data Hdr Enable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Sin=
-gle Slot Hdr Enable Link Layer control types are excluded (LL CTRL, slot NU=
-LL, LLCRD) even under specific opcode match_en cases. Note: If Message Clas=
-s is disabled, we expect opcode to also be disabled.",
-         "UMask": "0x10f",
-         "Unit": "UPI"
-     },
-@@ -14074,7 +14074,7 @@
-         "EventCode": "0x04",
-         "EventName": "UNC_UPI_TxL_BASIC_HDR_MATCH.REQ",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Transmit path of a UPI Port : Req=
-uest : Matches on Transmit path of a UPI port.\r\nMatch based on UMask spec=
-ific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enable\r\nW: Opc=
-ode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote Enable\r\nS=
-: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr Enable\r\nP=
-: Single Slot Hdr Enable\r\nLink Layer control types are excluded (LL CTRL,=
- slot NULL, LLCRD) even under specific opcode match_en cases.\r\nNote: If M=
-essage Class is disabled, we expect opcode to also be disabled.",
-+        "PublicDescription": "Matches on Transmit path of a UPI Port : Req=
-uest : Matches on Transmit path of a UPI port. Match based on UMask specifi=
-c bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opcode (4-bit) =
-V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr Enable R: Non=
--Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Enable Link Lay=
-er control types are excluded (LL CTRL, slot NULL, LLCRD) even under specif=
-ic opcode match_en cases. Note: If Message Class is disabled, we expect opc=
-ode to also be disabled.",
-         "UMask": "0x8",
-         "Unit": "UPI"
-     },
-@@ -14083,7 +14083,7 @@
-         "EventCode": "0x04",
-         "EventName": "UNC_UPI_TxL_BASIC_HDR_MATCH.REQ_OPC",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Transmit path of a UPI Port : Req=
-uest, Match Opcode : Matches on Transmit path of a UPI port.\r\nMatch based=
- on UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class En=
-able\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remo=
-te Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot H=
-dr Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are excl=
-uded (LL CTRL, slot NULL, LLCRD) even under specific opcode match_en cases.=
-\r\nNote: If Message Class is disabled, we expect opcode to also be disable=
-d.",
-+        "PublicDescription": "Matches on Transmit path of a UPI Port : Req=
-uest, Match Opcode : Matches on Transmit path of a UPI port. Match based on=
- UMask specific bits: Z: Message Class (3-bit) Y: Message Class Enable W: O=
-pcode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr=
- Enable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr E=
-nable Link Layer control types are excluded (LL CTRL, slot NULL, LLCRD) eve=
-n under specific opcode match_en cases. Note: If Message Class is disabled,=
- we expect opcode to also be disabled.",
-         "UMask": "0x108",
-         "Unit": "UPI"
-     },
-@@ -14092,7 +14092,7 @@
-         "EventCode": "0x04",
-         "EventName": "UNC_UPI_TxL_BASIC_HDR_MATCH.RSPCNFLT",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Transmit path of a UPI Port : Res=
-ponse - Conflict : Matches on Transmit path of a UPI port.\r\nMatch based o=
-n UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enab=
-le\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote=
- Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr=
- Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are exclud=
-ed (LL CTRL, slot NULL, LLCRD) even under specific opcode match_en cases.\r=
-\nNote: If Message Class is disabled, we expect opcode to also be disabled.=
-",
-+        "PublicDescription": "Matches on Transmit path of a UPI Port : Res=
-ponse - Conflict : Matches on Transmit path of a UPI port. Match based on U=
-Mask specific bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opc=
-ode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr E=
-nable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Ena=
-ble Link Layer control types are excluded (LL CTRL, slot NULL, LLCRD) even =
-under specific opcode match_en cases. Note: If Message Class is disabled, w=
-e expect opcode to also be disabled.",
-         "UMask": "0x1aa",
-         "Unit": "UPI"
-     },
-@@ -14101,7 +14101,7 @@
-         "EventCode": "0x04",
-         "EventName": "UNC_UPI_TxL_BASIC_HDR_MATCH.RSPI",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Transmit path of a UPI Port : Res=
-ponse - Invalid : Matches on Transmit path of a UPI port.\r\nMatch based on=
- UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enabl=
-e\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote =
-Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr =
-Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are exclude=
-d (LL CTRL, slot NULL, LLCRD) even under specific opcode match_en cases.\r\=
-nNote: If Message Class is disabled, we expect opcode to also be disabled."=
-,
-+        "PublicDescription": "Matches on Transmit path of a UPI Port : Res=
-ponse - Invalid : Matches on Transmit path of a UPI port. Match based on UM=
-ask specific bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opco=
-de (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr En=
-able R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Enab=
-le Link Layer control types are excluded (LL CTRL, slot NULL, LLCRD) even u=
-nder specific opcode match_en cases. Note: If Message Class is disabled, we=
- expect opcode to also be disabled.",
-         "UMask": "0x12a",
-         "Unit": "UPI"
-     },
-@@ -14110,7 +14110,7 @@
-         "EventCode": "0x04",
-         "EventName": "UNC_UPI_TxL_BASIC_HDR_MATCH.RSP_DATA",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Transmit path of a UPI Port : Res=
-ponse - Data : Matches on Transmit path of a UPI port.\r\nMatch based on UM=
-ask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enable\r=
-\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote Ena=
-ble\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr Ena=
-ble\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are excluded (=
-LL CTRL, slot NULL, LLCRD) even under specific opcode match_en cases.\r\nNo=
-te: If Message Class is disabled, we expect opcode to also be disabled.",
-+        "PublicDescription": "Matches on Transmit path of a UPI Port : Res=
-ponse - Data : Matches on Transmit path of a UPI port. Match based on UMask=
- specific bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opcode =
-(4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr Enabl=
-e R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Enable =
-Link Layer control types are excluded (LL CTRL, slot NULL, LLCRD) even unde=
-r specific opcode match_en cases. Note: If Message Class is disabled, we ex=
-pect opcode to also be disabled.",
-         "UMask": "0xc",
-         "Unit": "UPI"
-     },
-@@ -14119,7 +14119,7 @@
-         "EventCode": "0x04",
-         "EventName": "UNC_UPI_TxL_BASIC_HDR_MATCH.RSP_DATA_OPC",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Transmit path of a UPI Port : Res=
-ponse - Data, Match Opcode : Matches on Transmit path of a UPI port.\r\nMat=
-ch based on UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message =
-Class Enable\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\=
-nT: Remote Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dua=
-l Slot Hdr Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control types =
-are excluded (LL CTRL, slot NULL, LLCRD) even under specific opcode match_e=
-n cases.\r\nNote: If Message Class is disabled, we expect opcode to also be=
- disabled.",
-+        "PublicDescription": "Matches on Transmit path of a UPI Port : Res=
-ponse - Data, Match Opcode : Matches on Transmit path of a UPI port. Match =
-based on UMask specific bits: Z: Message Class (3-bit) Y: Message Class Ena=
-ble W: Opcode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: =
-Data Hdr Enable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Sl=
-ot Hdr Enable Link Layer control types are excluded (LL CTRL, slot NULL, LL=
-CRD) even under specific opcode match_en cases. Note: If Message Class is d=
-isabled, we expect opcode to also be disabled.",
-         "UMask": "0x10c",
-         "Unit": "UPI"
-     },
-@@ -14128,7 +14128,7 @@
-         "EventCode": "0x04",
-         "EventName": "UNC_UPI_TxL_BASIC_HDR_MATCH.RSP_NODATA",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Transmit path of a UPI Port : Res=
-ponse - No Data : Matches on Transmit path of a UPI port.\r\nMatch based on=
- UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enabl=
-e\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote =
-Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr =
-Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are exclude=
-d (LL CTRL, slot NULL, LLCRD) even under specific opcode match_en cases.\r\=
-nNote: If Message Class is disabled, we expect opcode to also be disabled."=
-,
-+        "PublicDescription": "Matches on Transmit path of a UPI Port : Res=
-ponse - No Data : Matches on Transmit path of a UPI port. Match based on UM=
-ask specific bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opco=
-de (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr En=
-able R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Enab=
-le Link Layer control types are excluded (LL CTRL, slot NULL, LLCRD) even u=
-nder specific opcode match_en cases. Note: If Message Class is disabled, we=
- expect opcode to also be disabled.",
-         "UMask": "0xa",
-         "Unit": "UPI"
-     },
-@@ -14137,7 +14137,7 @@
-         "EventCode": "0x04",
-         "EventName": "UNC_UPI_TxL_BASIC_HDR_MATCH.RSP_NODATA_OPC",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Transmit path of a UPI Port : Res=
-ponse - No Data, Match Opcode : Matches on Transmit path of a UPI port.\r\n=
-Match based on UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Messa=
-ge Class Enable\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable=
-\r\nT: Remote Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: =
-Dual Slot Hdr Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control typ=
-es are excluded (LL CTRL, slot NULL, LLCRD) even under specific opcode matc=
-h_en cases.\r\nNote: If Message Class is disabled, we expect opcode to also=
- be disabled.",
-+        "PublicDescription": "Matches on Transmit path of a UPI Port : Res=
-ponse - No Data, Match Opcode : Matches on Transmit path of a UPI port. Mat=
-ch based on UMask specific bits: Z: Message Class (3-bit) Y: Message Class =
-Enable W: Opcode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable =
-S: Data Hdr Enable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single=
- Slot Hdr Enable Link Layer control types are excluded (LL CTRL, slot NULL,=
- LLCRD) even under specific opcode match_en cases. Note: If Message Class i=
-s disabled, we expect opcode to also be disabled.",
-         "UMask": "0x10a",
-         "Unit": "UPI"
-     },
-@@ -14146,7 +14146,7 @@
-         "EventCode": "0x04",
-         "EventName": "UNC_UPI_TxL_BASIC_HDR_MATCH.SNP",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Transmit path of a UPI Port : Sno=
-op : Matches on Transmit path of a UPI port.\r\nMatch based on UMask specif=
-ic bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enable\r\nW: Opcod=
-e (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote Enable\r\nS: =
-Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr Enable\r\nP: =
-Single Slot Hdr Enable\r\nLink Layer control types are excluded (LL CTRL, s=
-lot NULL, LLCRD) even under specific opcode match_en cases.\r\nNote: If Mes=
-sage Class is disabled, we expect opcode to also be disabled.",
-+        "PublicDescription": "Matches on Transmit path of a UPI Port : Sno=
-op : Matches on Transmit path of a UPI port. Match based on UMask specific =
-bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opcode (4-bit) V:=
- Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr Enable R: Non-D=
-ata Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Enable Link Layer=
- control types are excluded (LL CTRL, slot NULL, LLCRD) even under specific=
- opcode match_en cases. Note: If Message Class is disabled, we expect opcod=
-e to also be disabled.",
-         "UMask": "0x9",
-         "Unit": "UPI"
-     },
-@@ -14155,7 +14155,7 @@
-         "EventCode": "0x04",
-         "EventName": "UNC_UPI_TxL_BASIC_HDR_MATCH.SNP_OPC",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Transmit path of a UPI Port : Sno=
-op, Match Opcode : Matches on Transmit path of a UPI port.\r\nMatch based o=
-n UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enab=
-le\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote=
- Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr=
- Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are exclud=
-ed (LL CTRL, slot NULL, LLCRD) even under specific opcode match_en cases.\r=
-\nNote: If Message Class is disabled, we expect opcode to also be disabled.=
-",
-+        "PublicDescription": "Matches on Transmit path of a UPI Port : Sno=
-op, Match Opcode : Matches on Transmit path of a UPI port. Match based on U=
-Mask specific bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opc=
-ode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr E=
-nable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Ena=
-ble Link Layer control types are excluded (LL CTRL, slot NULL, LLCRD) even =
-under specific opcode match_en cases. Note: If Message Class is disabled, w=
-e expect opcode to also be disabled.",
-         "UMask": "0x109",
-         "Unit": "UPI"
-     },
-@@ -14164,7 +14164,7 @@
-         "EventCode": "0x04",
-         "EventName": "UNC_UPI_TxL_BASIC_HDR_MATCH.WB",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Transmit path of a UPI Port : Wri=
-teback : Matches on Transmit path of a UPI port.\r\nMatch based on UMask sp=
-ecific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enable\r\nW: O=
-pcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote Enable\r\=
-nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr Enable\r\=
-nP: Single Slot Hdr Enable\r\nLink Layer control types are excluded (LL CTR=
-L, slot NULL, LLCRD) even under specific opcode match_en cases.\r\nNote: If=
- Message Class is disabled, we expect opcode to also be disabled.",
-+        "PublicDescription": "Matches on Transmit path of a UPI Port : Wri=
-teback : Matches on Transmit path of a UPI port. Match based on UMask speci=
-fic bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opcode (4-bit=
-) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr Enable R: N=
-on-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Enable Link L=
-ayer control types are excluded (LL CTRL, slot NULL, LLCRD) even under spec=
-ific opcode match_en cases. Note: If Message Class is disabled, we expect o=
-pcode to also be disabled.",
-         "UMask": "0xd",
-         "Unit": "UPI"
-     },
-@@ -14173,7 +14173,7 @@
-         "EventCode": "0x04",
-         "EventName": "UNC_UPI_TxL_BASIC_HDR_MATCH.WB_OPC",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Transmit path of a UPI Port : Wri=
-teback, Match Opcode : Matches on Transmit path of a UPI port.\r\nMatch bas=
-ed on UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class =
-Enable\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Re=
-mote Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot=
- Hdr Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are ex=
-cluded (LL CTRL, slot NULL, LLCRD) even under specific opcode match_en case=
-s.\r\nNote: If Message Class is disabled, we expect opcode to also be disab=
-led.",
-+        "PublicDescription": "Matches on Transmit path of a UPI Port : Wri=
-teback, Match Opcode : Matches on Transmit path of a UPI port. Match based =
-on UMask specific bits: Z: Message Class (3-bit) Y: Message Class Enable W:=
- Opcode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data H=
-dr Enable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr=
- Enable Link Layer control types are excluded (LL CTRL, slot NULL, LLCRD) e=
-ven under specific opcode match_en cases. Note: If Message Class is disable=
-d, we expect opcode to also be disabled.",
-         "UMask": "0x10d",
-         "Unit": "UPI"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/icelakex/uncore-io.json b/tools=
-/perf/pmu-events/arch/x86/icelakex/uncore-io.json
-index 9cef8862c428..1b8a719b81a5 100644
---- a/tools/perf/pmu-events/arch/x86/icelakex/uncore-io.json
-+++ b/tools/perf/pmu-events/arch/x86/icelakex/uncore-io.json
-@@ -2476,17 +2476,6 @@
-         "UMask": "0x10",
-         "Unit": "IIO"
-     },
--    {
--        "BriefDescription": "Number requests sent to PCIe from main die : =
-From IRP",
--        "EventCode": "0xC2",
--        "EventName": "UNC_IIO_NUM_REQ_FROM_CPU.IRP",
--        "FCMask": "0x07",
--        "PerPkg": "1",
--        "PortMask": "0xFF",
--        "PublicDescription": "Number requests sent to PCIe from main die :=
- From IRP : Captures Posted/Non-posted allocations from IRP. i.e. either no=
-n-confined P2P traffic or from the CPU",
--        "UMask": "0x1",
--        "Unit": "IIO"
--    },
-     {
-         "BriefDescription": "Number requests sent to PCIe from main die : =
-From ITC",
-         "EventCode": "0xC2",
 diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
 ents/arch/x86/mapfile.csv
-index 650c28574576..a219dc3bd1ef 100644
+index ac32377ab01a..e67e7906b2cf 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -15,7 +15,7 @@ GenuineIntel-6-A[DE],v1.01,graniterapids,core
- GenuineIntel-6-(3C|45|46),v35,haswell,core
- GenuineIntel-6-3F,v28,haswellx,core
- GenuineIntel-6-7[DE],v1.21,icelake,core
--GenuineIntel-6-6[AC],v1.23,icelakex,core
-+GenuineIntel-6-6[AC],v1.24,icelakex,core
- GenuineIntel-6-3A,v24,ivybridge,core
- GenuineIntel-6-3E,v24,ivytown,core
- GenuineIntel-6-2D,v24,jaketown,core
+@@ -30,7 +30,7 @@ GenuineIntel-6-8F,v1.20,sapphirerapids,core
+ GenuineIntel-6-AF,v1.02,sierraforest,core
+ GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
+ GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v58,skylake,core
+-GenuineIntel-6-55-[01234],v1.32,skylakex,core
++GenuineIntel-6-55-[01234],v1.33,skylakex,core
+ GenuineIntel-6-86,v1.21,snowridgex,core
+ GenuineIntel-6-8[CD],v1.15,tigerlake,core
+ GenuineIntel-6-2C,v5,westmereep-dp,core
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/cache.json b/tools/per=
+f/pmu-events/arch/x86/skylakex/cache.json
+index d28d8822a51a..14229f4b29d8 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/cache.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/cache.json
+@@ -763,6 +763,15 @@
+         "SampleAfterValue": "100003",
+         "UMask": "0x1"
+     },
++    {
++        "BriefDescription": "OFFCORE_RESPONSE.ALL_READS.L3_HIT.HIT_OTHER_C=
+ORE_FWD hit in the L3 and the snoop to one of the sibling cores hits the li=
+ne in E/S/F state and the line is forwarded.",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OFFCORE_RESPONSE.ALL_READS.L3_HIT.HIT_OTHER_CORE_FWD=
+",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x8003C07F7",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    },
+     {
+         "BriefDescription": "Counts all demand & prefetch RFOs that have a=
+ny response type.",
+         "EventCode": "0xB7, 0xBB",
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/frontend.json b/tools/=
+perf/pmu-events/arch/x86/skylakex/frontend.json
+index 095904c77001..d6f543471b24 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/frontend.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/frontend.json
+@@ -19,7 +19,7 @@
+         "BriefDescription": "Decode Stream Buffer (DSB)-to-MITE switches",
+         "EventCode": "0xAB",
+         "EventName": "DSB2MITE_SWITCHES.COUNT",
+-        "PublicDescription": "This event counts the number of the Decode S=
+tream Buffer (DSB)-to-MITE switches including all misses because of missing=
+ Decode Stream Buffer (DSB) cache and u-arch forced misses.\nNote: Invoking=
+ MITE requires two or three cycles delay.",
++        "PublicDescription": "This event counts the number of the Decode S=
+tream Buffer (DSB)-to-MITE switches including all misses because of missing=
+ Decode Stream Buffer (DSB) cache and u-arch forced misses. Note: Invoking =
+MITE requires two or three cycles delay.",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x1"
+     },
+@@ -267,11 +267,11 @@
+         "UMask": "0x4"
+     },
+     {
+-        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
+ng 4 Uops [This event is alias to IDQ.DSB_CYCLES_OK]",
++        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
+ng 4 or more Uops [This event is alias to IDQ.DSB_CYCLES_OK]",
+         "CounterMask": "4",
+         "EventCode": "0x79",
+         "EventName": "IDQ.ALL_DSB_CYCLES_4_UOPS",
+-        "PublicDescription": "Counts the number of cycles 4 uops were deli=
+vered to Instruction Decode Queue (IDQ) from the Decode Stream Buffer (DSB)=
+ path. Count includes uops that may 'bypass' the IDQ. [This event is alias =
+to IDQ.DSB_CYCLES_OK]",
++        "PublicDescription": "Counts the number of cycles 4 or more uops w=
+ere delivered to Instruction Decode Queue (IDQ) from the Decode Stream Buff=
+er (DSB) path. Count includes uops that may 'bypass' the IDQ. [This event i=
+s alias to IDQ.DSB_CYCLES_OK]",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x18"
+     },
+@@ -321,11 +321,11 @@
+         "UMask": "0x18"
+     },
+     {
+-        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
+ng 4 Uops [This event is alias to IDQ.ALL_DSB_CYCLES_4_UOPS]",
++        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
+ng 4 or more Uops [This event is alias to IDQ.ALL_DSB_CYCLES_4_UOPS]",
+         "CounterMask": "4",
+         "EventCode": "0x79",
+         "EventName": "IDQ.DSB_CYCLES_OK",
+-        "PublicDescription": "Counts the number of cycles 4 uops were deli=
+vered to Instruction Decode Queue (IDQ) from the Decode Stream Buffer (DSB)=
+ path. Count includes uops that may 'bypass' the IDQ. [This event is alias =
+to IDQ.ALL_DSB_CYCLES_4_UOPS]",
++        "PublicDescription": "Counts the number of cycles 4 or more uops w=
+ere delivered to Instruction Decode Queue (IDQ) from the Decode Stream Buff=
+er (DSB) path. Count includes uops that may 'bypass' the IDQ. [This event i=
+s alias to IDQ.ALL_DSB_CYCLES_4_UOPS]",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x18"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/memory.json b/tools/pe=
+rf/pmu-events/arch/x86/skylakex/memory.json
+index 2b797dbc75fe..dba3cd6b3690 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/memory.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/memory.json
+@@ -864,7 +864,7 @@
+         "BriefDescription": "Number of times an RTM execution aborted due =
+to any reasons (multiple categories may count as one).",
+         "EventCode": "0xC9",
+         "EventName": "RTM_RETIRED.ABORTED",
+-        "PEBS": "1",
++        "PEBS": "2",
+         "PublicDescription": "Number of times RTM abort was triggered.",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x4"
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/other.json b/tools/per=
+f/pmu-events/arch/x86/skylakex/other.json
+index cda8a7a45f0c..2511d722327a 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/other.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/other.json
+@@ -19,7 +19,7 @@
+         "BriefDescription": "Core cycles where the core was running in a m=
+anner where Turbo may be clipped to the AVX512 turbo schedule.",
+         "EventCode": "0x28",
+         "EventName": "CORE_POWER.LVL2_TURBO_LICENSE",
+-        "PublicDescription": "Core cycles where the core was running with =
+power-delivery for license level 2 (introduced in Skylake Server michroarch=
+tecture).  This includes high current AVX 512-bit instructions.",
++        "PublicDescription": "Core cycles where the core was running with =
+power-delivery for license level 2 (introduced in Skylake Server microarchi=
+tecture).  This includes high current AVX 512-bit instructions.",
+         "SampleAfterValue": "200003",
+         "UMask": "0x20"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/pipeline.json b/tools/=
+perf/pmu-events/arch/x86/skylakex/pipeline.json
+index 66d686cc933e..c50ddf5b40dd 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/pipeline.json
+@@ -396,7 +396,7 @@
+         "Errata": "SKL091, SKL044",
+         "EventCode": "0xC0",
+         "EventName": "INST_RETIRED.NOP",
+-        "PEBS": "1",
++        "PEBS": "2",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x2"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/uncore-interconnect.js=
+on b/tools/perf/pmu-events/arch/x86/skylakex/uncore-interconnect.json
+index 3eece8a728b5..f32d4d9d283a 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/uncore-interconnect.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/uncore-interconnect.json
+@@ -38,7 +38,7 @@
+         "EventCode": "0x10",
+         "EventName": "UNC_I_COHERENT_OPS.CLFLUSH",
+         "PerPkg": "1",
+-        "PublicDescription": "Counts the number of coherency related opera=
+tions servied by the IRP",
++        "PublicDescription": "Counts the number of coherency related opera=
+tions serviced by the IRP",
+         "UMask": "0x80",
+         "Unit": "IRP"
+     },
+@@ -47,7 +47,7 @@
+         "EventCode": "0x10",
+         "EventName": "UNC_I_COHERENT_OPS.CRD",
+         "PerPkg": "1",
+-        "PublicDescription": "Counts the number of coherency related opera=
+tions servied by the IRP",
++        "PublicDescription": "Counts the number of coherency related opera=
+tions serviced by the IRP",
+         "UMask": "0x2",
+         "Unit": "IRP"
+     },
+@@ -56,7 +56,7 @@
+         "EventCode": "0x10",
+         "EventName": "UNC_I_COHERENT_OPS.DRD",
+         "PerPkg": "1",
+-        "PublicDescription": "Counts the number of coherency related opera=
+tions servied by the IRP",
++        "PublicDescription": "Counts the number of coherency related opera=
+tions serviced by the IRP",
+         "UMask": "0x4",
+         "Unit": "IRP"
+     },
+@@ -65,7 +65,7 @@
+         "EventCode": "0x10",
+         "EventName": "UNC_I_COHERENT_OPS.PCIDCAHINT",
+         "PerPkg": "1",
+-        "PublicDescription": "Counts the number of coherency related opera=
+tions servied by the IRP",
++        "PublicDescription": "Counts the number of coherency related opera=
+tions serviced by the IRP",
+         "UMask": "0x20",
+         "Unit": "IRP"
+     },
+@@ -74,7 +74,7 @@
+         "EventCode": "0x10",
+         "EventName": "UNC_I_COHERENT_OPS.PCIRDCUR",
+         "PerPkg": "1",
+-        "PublicDescription": "Counts the number of coherency related opera=
+tions servied by the IRP",
++        "PublicDescription": "Counts the number of coherency related opera=
+tions serviced by the IRP",
+         "UMask": "0x1",
+         "Unit": "IRP"
+     },
+@@ -101,7 +101,7 @@
+         "EventCode": "0x10",
+         "EventName": "UNC_I_COHERENT_OPS.WBMTOI",
+         "PerPkg": "1",
+-        "PublicDescription": "Counts the number of coherency related opera=
+tions servied by the IRP",
++        "PublicDescription": "Counts the number of coherency related opera=
+tions serviced by the IRP",
+         "UMask": "0x40",
+         "Unit": "IRP"
+     },
+@@ -500,7 +500,7 @@
+         "EventCode": "0x11",
+         "EventName": "UNC_I_TRANSACTIONS.WRITES",
+         "PerPkg": "1",
+-        "PublicDescription": "Counts the number of Inbound transactions fr=
+om the IRP to the Uncore.  This can be filtered based on request type in ad=
+dition to the source queue.  Note the special filtering equation.  We do OR=
+-reduction on the request type.  If the SOURCE bit is set, then we also do =
+AND qualification based on the source portID.; Trackes only write requests.=
+  Each write request should have a prefetch, so there is no need to explici=
+tly track these requests.  For writes that are tickled and have to retry, t=
+he counter will be incremented for each retry.",
++        "PublicDescription": "Counts the number of Inbound transactions fr=
+om the IRP to the Uncore.  This can be filtered based on request type in ad=
+dition to the source queue.  Note the special filtering equation.  We do OR=
+-reduction on the request type.  If the SOURCE bit is set, then we also do =
+AND qualification based on the source portID.; Tracks only write requests. =
+ Each write request should have a prefetch, so there is no need to explicit=
+ly track these requests.  For writes that are tickled and have to retry, th=
+e counter will be incremented for each retry.",
+         "UMask": "0x2",
+         "Unit": "IRP"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/uncore-io.json b/tools=
+/perf/pmu-events/arch/x86/skylakex/uncore-io.json
+index 2a3a709018bb..743c91f3d2f0 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/uncore-io.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/uncore-io.json
+@@ -34,7 +34,7 @@
+         "EventCode": "0x1",
+         "EventName": "UNC_IIO_CLOCKTICKS",
+         "PerPkg": "1",
+-        "PublicDescription": "Counts clockticks of the 1GHz trafiic contro=
+ller clock in the IIO unit.",
++        "PublicDescription": "Counts clockticks of the 1GHz traffic contro=
+ller clock in the IIO unit.",
+         "Unit": "IIO"
+     },
+     {
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/virtual-memory.json b/=
+tools/perf/pmu-events/arch/x86/skylakex/virtual-memory.json
+index f59405877ae8..73feadaf7674 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/virtual-memory.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/virtual-memory.json
+@@ -205,7 +205,7 @@
+         "BriefDescription": "Counts 1 per cycle for each PMH that is busy =
+with a page walk for an instruction fetch request. EPT page walk duration a=
+re excluded in Skylake.",
+         "EventCode": "0x85",
+         "EventName": "ITLB_MISSES.WALK_PENDING",
+-        "PublicDescription": "Counts 1 per cycle for each PMH (Page Miss H=
+andler) that is busy with a page walk for an instruction fetch request. EPT=
+ page walk duration are excluded in Skylake michroarchitecture.",
++        "PublicDescription": "Counts 1 per cycle for each PMH (Page Miss H=
+andler) that is busy with a page walk for an instruction fetch request. EPT=
+ page walk duration are excluded in Skylake microarchitecture.",
+         "SampleAfterValue": "100003",
+         "UMask": "0x10"
+     },
 --=20
 2.44.0.396.g6e790dbe36-goog
 
