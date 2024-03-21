@@ -1,172 +1,136 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536B4811;
-	Thu, 21 Mar 2024 01:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B50A23
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 01:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710984007; cv=none; b=XaSatWESCGqXeba/VytSZpdoqeJZEtjQr2G1A65AoC2XzHQ2zjhRsTlOB5XsMjIu0xO8GbQKV4hTMOgGB7jQuNTqTVYBxSQ57DYiAlfVdCh6InvYHGvEwKp4sULgd4yloElFmWndzYq5VGo79q7FZnBgNQPEpCFlH8HHUPezJfQ=
+	t=1710984302; cv=none; b=OdZxmq7aL5XDbZjKwjXFum2SVaxKFB5Dpb1AOVGT8O7R91VJ7Fv4atZ6/qYp6v0TptuBzsLdB2WMH2gA67YpjnUiTDIwlRA8kVmWKey/cf9eKMazptegfyTYC2JFDAjWDKhf6bUJKmSfPOpGt1Zb2MqoaRDXh+62/4zvXNK+zuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710984007; c=relaxed/simple;
-	bh=RsNA/5JZKebCm6fRja9FmKgCaXXHLp5WhpCmkZu+xNw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:Mime-Version; b=jHxY4m3on7JRxyMzb9aLB+X+orG0yzTnwQLjsLSO/HEYo22ecunrxNZZhh/b0p6uMxSL9Ov8Ux9PQJsNy0qYrG+C3/T3FEEBLBBki2PtToCrx4o7pVreh+ncD0VyLB990JVAqr8CCrukTvyb8BRwpp/wSanZNlGT5QHzk+mpXUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=d0MBLGU9; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1710984302; c=relaxed/simple;
+	bh=9qViWAiTCFIgFNI104sEmf2/03Isba6KDxtepjBz+As=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=X+58foXntgmMzdQgevxkQxwVa+pOt6S/WkZPo/CrlMuy21BKwaInmO7KDLw9Qu2TzMcQGe0SuPQAE7J1hR7ox0DXX28pwWlsphPaQmVgWTiX+U/7qSyGWBWDok2KdOYVOqWwVsBdw6jxfhyaqHhriuXjXrNuqkaHfXNpCzgZtpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NPsYVdv5; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="d0MBLGU9"
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42L0Ym7b006617;
-	Thu, 21 Mar 2024 01:19:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=KqJFUYVMHiOldIb0TF5vITt6dEK34rJkS96KxpU6txs=;
- b=d0MBLGU93kXYjugHUEUli3MmgToKh6lc1NA7DaLB0N0G+fcRbT5lMx4GHwOzcSiCflDs
- avVE6ME9Dem6Ixn6wlSmVSAIYrPYTuZ2OZLbsIdO6De1+0thioyy0+5sp5llgzEGgkuG
- nlv81a+ajzI3u5BoJvIvPujdj3Hskbrw6cJUAmFXMzPFSakJLZzHo42tpM4CEWz69Q1W
- r+MNDmZTnXMxYQoHV9cXo3e9W5uOs5rlW8OJwQRk4rxjsL7yuccWjpLopMGC7h2f8h1k
- C+l2EgQaNzJCRXK0leJfbvN4yOVeFS+YzMYol4/WUVi5F2tlTMr39P3Gb8rwnKyCZvNH KA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x05ts8kg8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 21 Mar 2024 01:19:42 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42L1JfTt015814;
-	Thu, 21 Mar 2024 01:19:41 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x05ts8kg6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 21 Mar 2024 01:19:41 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42L0N4cV011582;
-	Thu, 21 Mar 2024 01:19:40 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wwq8m9tyt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 21 Mar 2024 01:19:40 +0000
-Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
-	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42L1JbYH45220162
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 21 Mar 2024 01:19:39 GMT
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 679525805C;
-	Thu, 21 Mar 2024 01:19:37 +0000 (GMT)
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B3C9F58051;
-	Thu, 21 Mar 2024 01:19:36 +0000 (GMT)
-Received: from li-5cd3c5cc-21f9-11b2-a85c-a4381f30c2f3.ibm.com (unknown [9.61.94.57])
-	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 21 Mar 2024 01:19:36 +0000 (GMT)
-Message-ID: <bbae0060d6ed7a0b033dc07e8d26c9d68585080b.camel@linux.ibm.com>
-Subject: Re: [PATCH][next] integrity: Avoid -Wflex-array-member-not-at-end
- warnings
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Roberto Sassu
- <roberto.sassu@huawei.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Eric Snowberg <eric.snowberg@oracle.com>,
-        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc: linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Kees Cook
-	 <keescook@chromium.org>
-Date: Wed, 20 Mar 2024 21:19:36 -0400
-In-Reply-To: <ZeYKWrXvACBBrAP8@neat>
-References: <ZeYKWrXvACBBrAP8@neat>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-23.el8_9) 
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NPsYVdv5"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-29c71c6e20cso397714a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 18:25:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1710984300; x=1711589100; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LKMmiCHffcx2ZBQ5QrgfnTfmU8fHpt/uWul6SXcgwsw=;
+        b=NPsYVdv5ewrNjIeTuHT/9oE5j9Vr8nNZ8FDWIJNoXRaDE13ceyha6MJ/NwA1evtWgr
+         +6aX+zgDXftSSrnjC4AMAQwl0dWx/vUxGlAFcvFQENvIS2Slkk0KPkMPAIDSknXr2wnm
+         4WbayPlxxcmIzSX27TVtrOCGkjeuC6YsDf6cY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710984300; x=1711589100;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LKMmiCHffcx2ZBQ5QrgfnTfmU8fHpt/uWul6SXcgwsw=;
+        b=E2NDvx0RLWmtxRIWOyLbRBRFgb4kwV+m+ZXuj079MCqvHFhrMG/xwry/QP9H0tPpgx
+         WetRkVvJosASJTyHu2WfZ5G+nnZ7cS76qVjan/NxzCBtdnPif3vgzb4Ar+IYkSljdoLv
+         Dk5qvuSwWvSVCdH8fIIcyLUZ1Z1qm3LQhU7PYnJdLk8MQ1Z9B4DACq1QDRQD3YnpePw3
+         xpghuqxADy474aUo6rDWQ+P4kBnPsWl/y0G+8Ei1siW9M6TOJyo8dvN24QHajLTgWJ16
+         ErUDoQdNwbgijl5cKrVzuW9w+KC53hGjWx8l59Y7Ln23P2BT2DvebP+iR68hPCI9DmgK
+         trOw==
+X-Forwarded-Encrypted: i=1; AJvYcCXCL0YWyKFjDygWwwvRoewOk9aSfa7v6LhXX5uGtKdk9gIla2FtW9/Nj/cFjmBMsizmHJvHk+zO8ryEEFF9AKfKtwSqQUJ4hG5WrYjr
+X-Gm-Message-State: AOJu0YyR00pmBIc5vGJBD84hX5LTlm+eTQ1cH2Yhoiy8fM8D2TTRnqjm
+	arlnC9izEErQDo7xNucZIOfdFLMx+zP05tHS8218i6oGaczcUTYa/olDwlbdIA==
+X-Google-Smtp-Source: AGHT+IFblfDsuIjIHTVJCb0dAYrbnIzAn8PgVyToCqQbTiekWIhtFt694PRGUKrwdZCzQZU0XxixSQ==
+X-Received: by 2002:a17:90b:4cc3:b0:29c:7620:6fde with SMTP id nd3-20020a17090b4cc300b0029c76206fdemr746531pjb.36.1710984300365;
+        Wed, 20 Mar 2024 18:25:00 -0700 (PDT)
+Received: from localhost ([2401:fa00:8f:203:d837:1d3e:d3cd:7674])
+        by smtp.gmail.com with UTF8SMTPSA id sw15-20020a17090b2c8f00b0029bc2b845c4sm2309353pjb.11.2024.03.20.18.24.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Mar 2024 18:25:00 -0700 (PDT)
+From: David Stevens <stevensd@chromium.org>
+X-Google-Original-From: David Stevens <stevensd@google.com>
+To: "Michael S . Tsirkin" <mst@redhat.com>,
+	David Hildenbrand <david@redhat.com>
+Cc: virtualization@lists.linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	David Stevens <stevensd@chromium.org>
+Subject: [PATCH v2 1/2] virtio_balloon: Give the balloon its own wakeup source
+Date: Thu, 21 Mar 2024 10:24:44 +0900
+Message-ID: <20240321012445.1593685-2-stevensd@google.com>
+X-Mailer: git-send-email 2.44.0.291.gc1ea87d7ee-goog
+In-Reply-To: <20240321012445.1593685-1-stevensd@google.com>
+References: <20240321012445.1593685-1-stevensd@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: _y9Apma0B-Un1vvdG49kx4BrQis0celO
-X-Proofpoint-ORIG-GUID: 4-rXkoYoiEkQ1CnyscYFsfX3nWOJ-4rL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-20_14,2024-03-18_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- phishscore=0 adultscore=0 mlxscore=0 spamscore=0 mlxlogscore=956
- impostorscore=0 priorityscore=1501 clxscore=1011 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403140000 definitions=main-2403210007
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Gustavo,
+From: David Stevens <stevensd@chromium.org>
 
-Sorry for the delay...
+Wakeup sources don't support nesting multiple events, so sharing a
+single object between multiple drivers can result in one driver
+overriding the wakeup event processing period specified by another
+driver. Have the virtio balloon driver use the wakeup source of the
+device it is bound to rather than the wakeup source of the parent
+device, to avoid conflicts with the transport layer.
 
-On Mon, 2024-03-04 at 11:52 -0600, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
-> ready to enable it globally.
-> 
-> There is currently an object (`hdr)` in `struct ima_max_digest_data`
-> that contains a flexible structure (`struct ima_digest_data`):
-> 
->  struct ima_max_digest_data {
-> 	struct ima_digest_data hdr;
->         u8 digest[HASH_MAX_DIGESTSIZE];
->  } __packed;
-> 
-> So, in order to avoid ending up with a flexible-array member in the
-> middle of another struct, we use the `struct_group_tagged()` helper to
-> separate the flexible array from the rest of the members in the flexible
-> structure:
-> 
-> struct ima_digest_data {
->         struct_group_tagged(ima_digest_data_hdr, hdr,
-> 
-> 	... the rest of the members
-> 
->         );
->         u8 digest[];
-> } __packed;
-> 
-> With the change described above, we can now declare an object of the
-> type of the tagged struct, without embedding the flexible array in the
-> middle of another struct:
-> 
->  struct ima_max_digest_data {
->         struct ima_digest_data_hdr hdr;
->         u8 digest[HASH_MAX_DIGESTSIZE];
->  } __packed;
-> 
-> We also use `container_of()` whenever we need to retrieve a pointer to
-> the flexible structure.
+Note that although the virtio balloon's virtio_device itself isn't what
+actually wakes up the device, it is responsible for processing wakeup
+events. In the same way that EPOLLWAKEUP uses a dedicated wakeup_source
+to prevent suspend when userspace is processing wakeup events, a
+dedicated wakeup_source is necessary when processing wakeup events in a
+higher layer in the kernel.
 
-Nice!
+Fixes: b12fbc3f787e ("virtio_balloon: stay awake while adjusting balloon")
+Signed-off-by: David Stevens <stevensd@chromium.org>
+Acked-by: David Hildenbrand <david@redhat.com>
+---
+ drivers/virtio/virtio_balloon.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-> 
-> So, with these changes, fix the following warnings:
-> 
-> security/integrity/evm/evm.h:45:32: warning: structure containing a flexible
-> array member is not at the end of another structure [-Wflex-array-member-not-
-> at-end]
-> security/integrity/evm/evm.h:45:32: warning: structure containing a flexible
-> array member is not at the end of another structure [-Wflex-array-member-not-
-> at-end]
-> security/integrity/evm/evm.h:45:32: warning: structure containing a flexible
-> array member is not at the end of another structure [-Wflex-array-member-not-
-> at-end]
-
-A similar change would need to be made to struct evm_digest:
-
-struct evm_digest {
-        struct ima_digest_data hdr;
-        char digest[IMA_MAX_DIGEST_SIZE];
-} __packed;
-
-Is there are another patch?
-
-Mimi
-
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
+diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+index 1f5b3dd31fcf..89bc8da80519 100644
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -450,7 +450,7 @@ static void start_update_balloon_size(struct virtio_balloon *vb)
+ 	vb->adjustment_signal_pending = true;
+ 	if (!vb->adjustment_in_progress) {
+ 		vb->adjustment_in_progress = true;
+-		pm_stay_awake(vb->vdev->dev.parent);
++		pm_stay_awake(&vb->vdev->dev);
+ 	}
+ 	spin_unlock_irqrestore(&vb->adjustment_lock, flags);
+ 
+@@ -462,7 +462,7 @@ static void end_update_balloon_size(struct virtio_balloon *vb)
+ 	spin_lock_irq(&vb->adjustment_lock);
+ 	if (!vb->adjustment_signal_pending && vb->adjustment_in_progress) {
+ 		vb->adjustment_in_progress = false;
+-		pm_relax(vb->vdev->dev.parent);
++		pm_relax(&vb->vdev->dev);
+ 	}
+ 	spin_unlock_irq(&vb->adjustment_lock);
+ }
+@@ -1029,6 +1029,15 @@ static int virtballoon_probe(struct virtio_device *vdev)
+ 
+ 	spin_lock_init(&vb->adjustment_lock);
+ 
++	/*
++	 * The virtio balloon itself can't wake up the device, but it is
++	 * responsible for processing wakeup events passed up from the transport
++	 * layer. Wakeup sources don't support nesting/chaining calls, so we use
++	 * our own wakeup source to ensure wakeup events are properly handled
++	 * without trampling on the transport layer's wakeup source.
++	 */
++	device_set_wakeup_capable(&vb->vdev->dev, true);
++
+ 	virtio_device_ready(vdev);
+ 
+ 	if (towards_target(vb))
+-- 
+2.44.0.291.gc1ea87d7ee-goog
 
