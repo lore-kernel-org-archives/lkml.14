@@ -1,116 +1,105 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D51B125CB;
-	Thu, 21 Mar 2024 09:31:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8382220326;
+	Thu, 21 Mar 2024 09:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711013485; cv=none; b=pIUjEfrZRK4jyzaAlHY5VuutL9vqdo5YQdDBXmWKIBl5ilyuAcfLFSbfnCXYg6pN76+2U9jWLB7naBkzlBCC4CMtkFut0xBrWtTMTB9JWgPCpLiCT/+CwdQQdGEhmffvq2C7sZkc5Kk7UZAhltOylaYH208jUSJLezj6oNBFU9s=
+	t=1711013579; cv=none; b=ssPSOnfnYG9oJHo2G2VNJtChKa1zIX8Mt0iDonsFp34d3bzKNyMZlj1js4WQS1ldSlsuh/3DBNWTfAN8F9r9UqoE36dAcAD95FI6f8JPv+HkcVf84AX5Q+paBpFJsfU2EoYumxQPmon2XYatxKxJ2qMR1ulkI5ab6DMuhHKYesQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711013485; c=relaxed/simple;
-	bh=TzFlFyBicWglBuM6+5UuyMfMcNrvW9nqeLaEKUhN0Uo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RW3dXDXijshiar+KW0N8Ulnmk+uC+m1F53YmTxHmFL996iZkaqLYoIvEdb6o+rn4YR87uzqukbFVdC19joOk7fc6RJ21sHzyjAANRX4+7LmPaCabbLzf5taWOdWnuwLPHwtWipkeysqnyphkr1K4mr+rlZUHxXo7TPBrXJyisBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=wsOg9C2n; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="wsOg9C2n"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=gn3aXvf5VTogYoFCNQ+hze3URTCA0KPJcqB9uzyTWx8=;
-	t=1711013483; x=1711445483; b=wsOg9C2nMK1CryZat1gIgOb3nBUBNq/sOtpmFvIT9mCjUfa
-	CdSG6CfCjbXRepKqxzHUtjFXE7XjwwNaB7+e75HivQA/1gHxAqrcC8uDK5jan4CytAWo/GNNczrYM
-	vchwN4Sw/+NkoNSECrWL1jPFZm/2lGvVppaCTuSP6KeDZocjY2rBoblyYzN15K/+odi2GNT3cJmwN
-	I9k9W0iK+F+r3cicWXS5KFhNlFUTomltpjEVoHZbF1J5X8VyC1kRwr4t0ji5/bXyKZMxuV/tVUM4j
-	coM45dqxwPncaO5e4iv0PemIRogq/izRBKd+qenlQIlqyGnd8T2kIewOzhVVo/qg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rnElb-0005Vn-2F; Thu, 21 Mar 2024 10:31:19 +0100
-Message-ID: <7ed15eea-24f9-4c75-abf0-f120c7f5b09a@leemhuis.info>
-Date: Thu, 21 Mar 2024 10:31:18 +0100
+	s=arc-20240116; t=1711013579; c=relaxed/simple;
+	bh=iHMWBPP9KJVog54ihelmxgv7C4JSysp6R4W5sOgY3zQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t/bcW0wIkQDw44q7AfysNHqQMFwPDFBnAqYdbKKPrLX5EwKuK144pCi/zL9u4lmZbAJPg1YLIb5W90CQGPdjokZEcw0ytYOhe+itHJt9AZIKGHwrsZ2d+U3A3WD0PjrX4BTJFDzHcaeTbIS5podsMzYPY23zP6rcwzqmSASm2eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i53875a9e.versanet.de ([83.135.90.158] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1rnEmn-000801-MU; Thu, 21 Mar 2024 10:32:33 +0100
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To: Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>,
+ linux-kernel@vger.kernel.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+ Dragan Simic <dsimic@manjaro.org>,
+ Shreeya Patel <shreeya.patel@collabora.com>,
+ Chris Morgan <macromorgan@hotmail.com>, Andy Yan <andy.yan@rock-chips.com>,
+ Nicolas Frattaroli <frattaroli.nicolas@gmail.com>,
+ linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ iommu@lists.linux.dev
+Subject:
+ Re: [PATCH 2/4] media: dt-binding: media: Document
+ =?UTF-8?B?cmszNTg44oCZcw==?= vepu121
+Date: Thu, 21 Mar 2024 10:32:32 +0100
+Message-ID: <2798331.BEx9A2HvPv@diego>
+In-Reply-To: <70439a01-7949-46bf-a701-c82ba961171a@linaro.org>
+References:
+ <20240320173736.2720778-1-linkmauve@linkmauve.fr>
+ <855507987.0ifERbkFSE@diego>
+ <70439a01-7949-46bf-a701-c82ba961171a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/1] Failure to hibernate on Dell Latitude 7430
-Content-Language: en-US, de-DE
-To: David McFarland <corngood@gmail.com>
-Cc: "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Chris Feng <chris.feng@mediatek.com>, linux-pm@vger.kernel.org,
- Alex Hung <alexhung@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <20240318191153.6978-1-corngood@gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20240318191153.6978-1-corngood@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711013483;97f36e79;
-X-HE-SMSGID: 1rnElb-0005Vn-2F
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-On 18.03.24 20:11, David McFarland wrote:
-> I have a Dell Latitude 7430, and recently whenever I hibernate with
-> `systemctl hibernate`, the machine would immediately wake.
+Am Donnerstag, 21. M=E4rz 2024, 10:19:54 CET schrieb Krzysztof Kozlowski:
+> On 21/03/2024 09:47, Heiko St=FCbner wrote:
+> >>>      enum:
+> >>>        - rockchip,rk3568-vepu
+> >>> +      - rockchip,rk3588-vepu121
+> >>
+> >> What is 121?
+> >=20
+> > That is the strange naming of the ip block inside the soc.
+> >=20
+> > I.e. the rk3588 TRM lists a number of different video encoders and deco=
+ders:
+> > - VDPU121 is decoding h.263 and mpeg1,2,4
+> > - VDPU381 is decoding h.265, h.264 and some more
+> > - VDPU720 is decoding jpeg
+> > - VDPU981 decodes AV1
+> > - VEPU121 is the jpeg encoder above
+> > - VEPU580 encodes h.264 and h.265
+> >=20
+> > Each of those are separate IP blocks with their own io-memory, their own
+> > interrupts and their own iommus, etc.
+>=20
+> Thanks for explanation. Short introduction in commit msg would be nice
+> (e.g. VEPU121, one of two VEPU encoders). OTOH, why not documenting all
+> of them? Bindings are supposed to be as complete as possible.
 
-Thanks for the report and the proposed patch.
+We have a concurrent series for the vdpu121 running at
+  https://lore.kernel.org/all/20240316071100.2419369-1-liujianfeng1994@gmai=
+l.com
 
-> I bisected it to:
-> 
-> 0c4cae1bc00d PM: hibernate: Avoid missing wakeup events during hibernation
+I think not all of those encoders/decoders are based on the Hantro IP
+or at least at the moment we don't know this yet.
+Hence people adding compatibles for the blocks they have actually
+managed to run on their hardware.
 
-I CCed the author of that change, which should at least be aware of this
-any maybe help out.
+Bindings are supposed to be as complete as possible, but revising a wrong
+binding later is very hard. And the whole media part is full of binary libr=
+aries
+in the vendor kernel and has not the best documentation.
 
-Also CCed the people that take care of the code your patch modifies,
-they should be the best to judge what should be done here.
+So I guess people are just cautious ;-)
 
-FWIW, the start of the thread and the proposed patch can be found here:
-https://lore.kernel.org/all/20240318191153.6978-1-corngood@gmail.com/
 
-Ciao, Thorsten
+Heiko
 
-> However, the underlying problem seems to be that during hibernation, my
-> system gets a 0xcf (power button release) event, and the above change
-> causes it to abort hibernation correctly.
-> 
-> I also noticed that holding the power button down (when it's configured
-> to suspend) causes the system to suspend and then wake upon release, if
-> it's held long enough.
-> 
-> I'm attaching a patch which fixes the problem for me, by skipping the
-> wake on any of the release events.  These events are all marked
-> KEY_IGNORE, so think this is a reasonable thing to do.
-> 
-> I'm a little worried about the consequences of doing this
-> unconditionally in intel-hid.  Perhaps it should be a quirk?
-> 
-> David McFarland (1):
->   platform/x86/intel/hid: Don't wake on 5-button releases
-> 
->  drivers/platform/x86/intel/hid.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-
-P.S.: To be sure the issue doesn't fall through the cracks unnoticed,
-I'm adding it to regzbot, the Linux kernel regression tracking bot:
-
-#regzbot ^introduced 0c4cae1bc00d
-#regzbot title PM: hibernate: & platform/x86/intel/hid: hibernate on
-Dell Latitude 7430 fails
-#regzbot ignore-activity
-
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
 
