@@ -1,82 +1,140 @@
-Received: from out-176.mta0.migadu.com (out-176.mta0.migadu.com [91.218.175.176])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433748662F
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 16:08:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB83812BF1A
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 16:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711037336; cv=none; b=EHnEHExKu7SS1Thq0gcncGDD2UL6WdP1U96logzkIgCYqeZimLc9HNy68V9DdGiScLu80OjeK+RTmP+HZqXTv3nehX/aPUrqmhM/eHbGVnVn1aYtXNN9auZmK9/hcb9xXy0dQVaoJkqIgjMRACOMqhyjAfi+rtvTObBHLVRMSf8=
+	t=1711037391; cv=none; b=ralrvxS2jrB8SRTSEgs96aDQ0imcN4b/GVjgIasUFBQRpHMtKAEaEyfYJ/zGhzhGwE45eBUHHWqQbaPj/ZroAZ+K+RpUz6huFlhegwzoz3gBVhsq3sGMX32a7ZPB4o0vXIxGEm0cQjlOxvYpUl42cBtxmGLSI4Lh5qJYeYV2yGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711037336; c=relaxed/simple;
-	bh=Q9gMT2+hbazlKA/kuIHmYSPxFl1qWt7jCrvNYESr4l0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gOxtzlJlJLXeLWFqtODFKs+nmJ/TZEm0XvrEpVQeLvH/u5IOmQVW/0Njk6uxwHSr6rozkNJarQ52VsIPYHkHl0tJ4ZbRyM/mWk0JLsU02+I70OkGvVJqsq6cMWbGTHvMkRTa0mFFgdmcnC93gR4xd3R5xOeDbyGmysZX0nycPKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TGlqxFn8; arc=none smtp.client-ip=91.218.175.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1711037391; c=relaxed/simple;
+	bh=Efa9pooFtZFexc8t2FHAlDSOT6+OQH2tDlvcl4EcU6s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s1h25r17iK47SGGHSoDiRrKin6j9dSadjUneAqSdi5Ev3Dweu02SH1a3jlNhg0zCFHQfoI3PNBvEGZLzozyH3rKMQu4LGSwPjZM0kw8gNLQ0k98z2a7f9IxuCSNA3fwIqst47PYv2vohuo0RAIjDVzrMhLd/Gn3bglsDQapkX6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zoo3Siob; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TGlqxFn8"
-Message-ID: <76831c1e-216f-430b-bacd-2d50f352e61f@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1711037331;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zoo3Siob"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711037388;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nYGs6j1CcJBZpXqqpvnZVExRCl/iMQ6GtORK4GaVepw=;
-	b=TGlqxFn8rv4WjNNL+kr5zeS2uvA9xjrL/AHHaAsiK+u4aCpDCFl/lLQwqqfKew/PAgKd6i
-	h2BG1OVzI3HWvHRBnzpGgGbl7a2NFHZbuZDP/SUhcfBZxardWlIVB5JgFmrue+WtCjvcwm
-	KAII2X78oz7JI4lt6vzOWy7op1WzAyU=
-Date: Thu, 21 Mar 2024 12:08:44 -0400
+	bh=4cR8GpDLO+4FVgHiOEVtV5NgNDutqCmPeOvWuL5WwZo=;
+	b=Zoo3Sioby/zzX/878P7HZKdxDD+j4mIoD+9EIxeWxYvtR/dKD5BjX3ok8d+iZOHChTSyUH
+	fz6xu5F0Os8/xK5EeQTaRZHEui7wi6YCU3AD/pjR03Q6ClsadrbQ9pCtH6b0rMkPofWc+r
+	LBcnaMwmKbixhlRnFsbiV5ErE58DR/I=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-16-2VBo6QdyOTG6Bbg179lG2g-1; Thu, 21 Mar 2024 12:09:46 -0400
+X-MC-Unique: 2VBo6QdyOTG6Bbg179lG2g-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-568728e521bso1060678a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 09:09:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711037385; x=1711642185;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4cR8GpDLO+4FVgHiOEVtV5NgNDutqCmPeOvWuL5WwZo=;
+        b=WitsCJJ52EiSvGsrRgcoPD2uE25sxdnJqoLPG4I5WlOqA4OLX077bJUwpD7LYhPn2p
+         hbns5QfEGxOBv/SjQ6GhZ35gvAxQ4Kt9ikcq7NjMIQPvwaVkfbOFV/5x0xIWFF7QOhce
+         y5dneNOwb6Qj03PSjePI985IwqyecpzjvPL/3sfvHlNfjssk5bEegtrbDBpwNmt+MBRY
+         VeRnsXd6OKK4YKOjsltgVorYjpXcwEr1OfB2Bd/QcRiiirS73vCLSuf6dQIaiPBUm289
+         Tsvb2uK+DPuDDKn/Z4PYbGPeTD3j1002YsmbNPtfXJ6g/cYkvbUjaDHOVndbhH6VWzSV
+         SN6A==
+X-Forwarded-Encrypted: i=1; AJvYcCXlBHyt+1dqmvkW1x5D3hg2qDFaz7bUTBuCe7MNKEEybKnNS6kNZ7C/fxz6JuWzNAuZIKerbkKGh2tXBTV8j1CINlGyyES83tLbbWO8
+X-Gm-Message-State: AOJu0YycLiuC6ku9wd0E3cpg+hjZUlFnAD0GoDExDiAhWNFkYjwkvJ4Q
+	GyfQ718z6W0zvlnVZcD68vkPmqqQHRAh3vCjPb7D/QrYufKjMk1GsuE8mFesf6JiUoasy9zurKP
+	zdNsEHxXP/fuVgJOP6pIJXuniBDYD5FWdRvYqR5L3Z9j4mXUbNOTsZjPna2z6R+ffK4+SE5+KP3
+	fYLQ1HvmXpUATZVJfwFt5aV7xMgizhx1B1StjL
+X-Received: by 2002:a05:6402:2421:b0:566:f5d6:4b4 with SMTP id t33-20020a056402242100b00566f5d604b4mr6854709eda.12.1711037385197;
+        Thu, 21 Mar 2024 09:09:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFJczUOKWHiXnEN5u0YPmmuAnhgkpGir9OOZXAH68RtsDs3o/mdfwXGaEp7tIlIBwPP814Hb6KspJCMPCXLbDI=
+X-Received: by 2002:a05:6402:2421:b0:566:f5d6:4b4 with SMTP id
+ t33-20020a056402242100b00566f5d604b4mr6854684eda.12.1711037384888; Thu, 21
+ Mar 2024 09:09:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 8/8] drm: zynqmp_dp: Add debugfs interface for
- compliance testing
-Content-Language: en-US
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Michal Simek <michal.simek@amd.com>, David Airlie <airlied@gmail.com>,
- linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
- linux-arm-kernel@lists.infradead.org,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- dri-devel@lists.freedesktop.org
-References: <20240319225122.3048400-1-sean.anderson@linux.dev>
- <20240319225122.3048400-9-sean.anderson@linux.dev>
- <7aa16340-6a87-4110-8114-c1b863b100c9@ideasonboard.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <7aa16340-6a87-4110-8114-c1b863b100c9@ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+References: <20240315-hid-bpf-sleepable-v4-0-5658f2540564@kernel.org>
+ <20240315-hid-bpf-sleepable-v4-4-5658f2540564@kernel.org> <bee98dce6c5bf59fb1ad06855f0a1740b8195d45.camel@gmail.com>
+In-Reply-To: <bee98dce6c5bf59fb1ad06855f0a1740b8195d45.camel@gmail.com>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date: Thu, 21 Mar 2024 17:09:32 +0100
+Message-ID: <CAO-hwJLh00--9AbS=7z4+W7FgA+hLA8hViMmaMMfz2mERcMwhQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 4/6] bpf/helpers: mark the callback of
+ bpf_timer_set_sleepable_cb() as sleepable
+To: Eduard Zingerman <eddyz87@gmail.com>
+Cc: Benjamin Tissoires <bentiss@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/20/24 03:49, Tomi Valkeinen wrote:
-> On 20/03/2024 00:51, Sean Anderson wrote:
-> 
->> +/**
->> + * enum test_pattern - Test patterns for test testing
-> 
-> "for test testing"? =)
-> 
->> @@ -1655,6 +2321,9 @@ static void zynqmp_dp_hpd_irq_work_func(struct work_struct *work)
->>       u8 status[DP_LINK_STATUS_SIZE + 2];
->>       int err;
->>   +    if (READ_ONCE(dp->ignore_hpd))
->> +        return;
->> +
->>       mutex_lock(&dp->lock);
->>       err = drm_dp_dpcd_read(&dp->aux, DP_SINK_COUNT, status,
->>                      DP_LINK_STATUS_SIZE + 2);
-> 
-> Why do you need READ/WRITE_ONCE() for ignore_hpd?
+On Tue, Mar 19, 2024 at 12:54=E2=80=AFAM Eduard Zingerman <eddyz87@gmail.co=
+m> wrote:
+>
+> On Fri, 2024-03-15 at 15:29 +0100, Benjamin Tissoires wrote:
+> [...]
+>
+> > @@ -5279,7 +5281,8 @@ static int map_kptr_match_type(struct bpf_verifie=
+r_env *env,
+> >
+> >  static bool in_sleepable(struct bpf_verifier_env *env)
+> >  {
+> > -     return env->prog->sleepable;
+> > +     return env->prog->sleepable ||
+> > +            (env->cur_state && env->cur_state->in_sleepable);
+> >  }
+>
+> I was curious why 'env->cur_state &&' check was needed and found that
+> removing it caused an error in the following fragment:
+>
+> static int do_misc_fixups(struct bpf_verifier_env *env)
+> {
+>                 ...
+>                 if (is_storage_get_function(insn->imm)) {
+>                         if (!in_sleepable(env) ||
+>                             env->insn_aux_data[i + delta].storage_get_fun=
+c_atomic)
+>                                 insn_buf[0] =3D BPF_MOV64_IMM(BPF_REG_5, =
+(__force __s32)GFP_ATOMIC);
+>                         else
+>                                 insn_buf[0] =3D BPF_MOV64_IMM(BPF_REG_5, =
+(__force __s32)GFP_KERNEL);
+>                         ...
+>                 }
+>                 ...
+> }
+>
+> When do_misc_fixups() is done env->cur_state is NULL.
+> Current implementation would use GFP_ATOMIC allocation even for
+> sleepable callbacks, where GFP_KERNEL is sufficient.
+> Is this is something we want to address?
 
-It's not protected by dp->lock so we don't have to take it for
-zynqmp_dp_hpd_work_func. Although maybe we should make a version of
-zynqmp_dp_bridge_detect which assumes we already hold the lock.
+I honestly have no idea of the impact there.
 
---Sean
+AFAICT, if env->cur_state is not set, we don't even know if the
+callback will be sleepable or not, so if there is a small penalty,
+then it's the safest option, no?
+
+Cheers,
+Benjamin
+
+>
+> >
+> >  /* The non-sleepable programs and sleepable programs with explicit bpf=
+_rcu_read_lock()
+>
+
