@@ -1,76 +1,219 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71076FB6;
-	Thu, 21 Mar 2024 01:50:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC05979F0
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 01:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710985829; cv=none; b=WodaHJx9E202Jnj8/oN8uyjH3aLCWCl39aM6YO0VupCi1CB4LgMZyq4iPyTHVZodK5JYD5UxK1QQNZtc5YEHRP/D6vEC2YNW9TPBOFCrBPRtFtgKHkXEyKzAvfZ8bIEvqgNLAspec2xbVKY4h0OIZbQMQZYm+qoecRQhC6Nkc5s=
+	t=1710985833; cv=none; b=csb9NYrNAJrtqoNP44zyH2gi0db8vRMuCpwBRlXNDimR1qQ6pxOLqUyVjTyYbswmijYP+Tk9szUfejxMgBOXEr1+pzA6pq99hA6bgbgXwf/fLtYPOelpGfa2SknzM+IKY5NR3cmOnAaEnnrnexU4YmKjbtQHCSk6kCiw2uq7Ok4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710985829; c=relaxed/simple;
-	bh=9QAmHWjXpCP5yazUkb4ulnyleTCzmdF6cKhVhuhzJV4=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=bYFlZaKP1E7w6RzBOx1MbtxrBAwNOxUmRxnB+7Nc0aRy7aldgJHYjR2FE8EOmtvRoZnpfs5TUsEq0zXhGlP5e45nTZ7Lglwo6+2WtowIKdgJDq6Ld0MIp9/B3R9z0rEBQe1TmQjxbPOCBSubzMp0CNgfGv0z1wOCyO02bEW++J4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=McXJZvbU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710985833; c=relaxed/simple;
+	bh=Ify3JB9EiCvpobMYjGD+B4BJzZVL5gLo7wB87X7Vv6I=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=GWS8CE6UjHB5FgJ7OQ+8DrCC7MwHE6aYCx/cKTDzbwM1VRYvEUPJiup2R2dqfj+88udJ2Y+kaPCze9yMV3lx8Heyrms8SUZZIb76ylpg4+TS68LTUmJHv7QhIENNdJxrFBErDm+erPKXG8S0cBy+8uNXIX7ZH9or1XlUI0QzFnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DZtG1rk8; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="McXJZvbU"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 48563C43390;
-	Thu, 21 Mar 2024 01:50:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710985829;
-	bh=9QAmHWjXpCP5yazUkb4ulnyleTCzmdF6cKhVhuhzJV4=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=McXJZvbUsvNhxJhepixjJImLBuTcbrqbYLgnIzSXo+BQaKs1wyjDrSRyajLrQn5YP
-	 ya3GSnJUr98K+mW+Rjt1AtzLgmdlo0bscKgPqrBUXoKZtMYRM6bBPN292EUOUX/U3y
-	 K41Oyv2IWRDmLLYfxZNsnBurScIRGHZMgxyPDQLpsiVVSjF9KnHlMmEf1JmEdys1VJ
-	 fgoQAWQJxX5EriabdQD6XTSaySv/VGDI/WD7FUgNZn07PI3Pow6F2UXj65yGBxTGTT
-	 aSXFbOdi8AWXY4iiYMuxMv19f+rwqe83kPk7PE3hShtii9v6i9CsfNgMo7Xq8N/cM3
-	 COUeC3BhY72Tg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2F285D84BB0;
-	Thu, 21 Mar 2024 01:50:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DZtG1rk8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710985831; x=1742521831;
+  h=date:from:to:cc:subject:message-id;
+  bh=Ify3JB9EiCvpobMYjGD+B4BJzZVL5gLo7wB87X7Vv6I=;
+  b=DZtG1rk8c/+BjaL+NBTmNAHlkTMGiFE2DY1MbcEbGKUjwLcWNpU+aJ9L
+   z2en4S0+F9JwWN1syn097SVmEp9IIYx38Rh1iANO8gitZl0jl0pcPifkC
+   ansNqD/+XCWqQxK/uTAMmZ/KpoFdGVrVUOqoz7I3O0YYhU7tUtsqCDroq
+   YQzXqqBMQ3k1tm+baQBkHu0N3tIHgxSHHxj1VZHK7ia+0RsRGXfQra5eR
+   jc2GKDhNTp1bbS35ZQy1mUqtniULNSppS1nTn3SNydAX4260BrNP2jDub
+   iEXKnjBEyOMveRv/vkh9PWnBErsWlkPpkSUKHGMpwcrUlV4LjFa12dxuB
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="16589192"
+X-IronPort-AV: E=Sophos;i="6.07,141,1708416000"; 
+   d="scan'208";a="16589192"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 18:50:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,141,1708416000"; 
+   d="scan'208";a="18917219"
+Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 20 Mar 2024 18:50:29 -0700
+Received: from kbuild by b21307750695 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rn7Zb-000J59-2F;
+	Thu, 21 Mar 2024 01:50:27 +0000
+Date: Thu, 21 Mar 2024 09:49:34 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ e1826833c3a9abb9d1fe4b938eca0e25eeafb39f
+Message-ID: <202403210930.YW4BRuvF-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv: Fix syscall wrapper for >word-size arguments
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <171098582918.5796.14005594073931825434.git-patchwork-notify@kernel.org>
-Date: Thu, 21 Mar 2024 01:50:29 +0000
-References: <20240311193143.2981310-2-samitolvanen@google.com>
-In-Reply-To: <20240311193143.2981310-2-samitolvanen@google.com>
-To: Sami Tolvanen <samitolvanen@google.com>
-Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, keescook@chromium.org,
- llvm@lists.linux.dev, linux-kernel@vger.kernel.org, raj.khem@gmail.com
 
-Hello:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
+branch HEAD: e1826833c3a9abb9d1fe4b938eca0e25eeafb39f  Merge branch into tip/master: 'x86/percpu'
 
-This patch was applied to riscv/linux.git (for-next)
-by Palmer Dabbelt <palmer@rivosinc.com>:
+elapsed time: 735m
 
-On Mon, 11 Mar 2024 19:31:44 +0000 you wrote:
-> The current syscall wrapper macros break 64-bit arguments on
-> rv32 because they only guarantee the first N input registers are
-> passed to syscalls that accept N arguments. According to the
-> calling convention, values twice the word size reside in register
-> pairs and as a result, syscall arguments don't always have a
-> direct register mapping on rv32.
-> 
-> [...]
+configs tested: 146
+configs skipped: 3
 
-Here is the summary with links:
-  - riscv: Fix syscall wrapper for >word-size arguments
-    https://git.kernel.org/riscv/c/a9ad73295cc1
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-You are awesome, thank you!
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240320   gcc  
+arc                   randconfig-002-20240320   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                         bcm2835_defconfig   clang
+arm                                 defconfig   clang
+arm                       imx_v6_v7_defconfig   clang
+arm                         orion5x_defconfig   clang
+arm                          pxa3xx_defconfig   clang
+arm                   randconfig-001-20240320   gcc  
+arm                   randconfig-002-20240320   gcc  
+arm                   randconfig-003-20240320   gcc  
+arm                   randconfig-004-20240320   gcc  
+arm                           u8500_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240320   clang
+arm64                 randconfig-002-20240320   gcc  
+arm64                 randconfig-003-20240320   clang
+arm64                 randconfig-004-20240320   clang
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240320   gcc  
+csky                  randconfig-002-20240320   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240320   clang
+hexagon               randconfig-002-20240320   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240320   clang
+i386         buildonly-randconfig-002-20240320   gcc  
+i386         buildonly-randconfig-003-20240320   gcc  
+i386         buildonly-randconfig-004-20240320   clang
+i386         buildonly-randconfig-005-20240320   gcc  
+i386         buildonly-randconfig-006-20240320   gcc  
+i386                                defconfig   clang
+i386                  randconfig-001-20240320   clang
+i386                  randconfig-002-20240320   clang
+i386                  randconfig-003-20240320   clang
+i386                  randconfig-005-20240320   clang
+i386                  randconfig-006-20240320   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240320   gcc  
+loongarch             randconfig-002-20240320   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                           ci20_defconfig   clang
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240320   gcc  
+nios2                 randconfig-002-20240320   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240320   gcc  
+parisc                randconfig-002-20240320   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                       eiger_defconfig   clang
+powerpc                          g5_defconfig   gcc  
+powerpc                     mpc5200_defconfig   clang
+powerpc                      ppc6xx_defconfig   gcc  
+powerpc                     rainier_defconfig   gcc  
+powerpc               randconfig-001-20240320   gcc  
+powerpc               randconfig-002-20240320   clang
+powerpc               randconfig-003-20240320   gcc  
+powerpc64             randconfig-001-20240320   gcc  
+powerpc64             randconfig-002-20240320   gcc  
+powerpc64             randconfig-003-20240320   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240320   clang
+riscv                 randconfig-002-20240320   gcc  
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240320   clang
+s390                  randconfig-002-20240320   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                        dreamcast_defconfig   gcc  
+sh                               j2_defconfig   gcc  
+sh                    randconfig-001-20240320   gcc  
+sh                    randconfig-002-20240320   gcc  
+sh                        sh7757lcr_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240320   gcc  
+sparc64               randconfig-002-20240320   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240320   gcc  
+um                    randconfig-002-20240320   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64                              defconfig   gcc  
+x86_64                          rhel-8.3-rust   clang
+xtensa                           alldefconfig   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                       common_defconfig   gcc  
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
