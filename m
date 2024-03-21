@@ -1,165 +1,108 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CAD15821C
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 11:24:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A4B58228;
+	Thu, 21 Mar 2024 11:24:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711020264; cv=none; b=GzBoNikLdF9cNnYcyPJKMFq47lpkcjAj0/vqk6jgMXSCRaOfz4+7EiZvBFEd+OPEFnnraXdLErYvwUXVvnucFbHkeHQN5EzhE8Y7jwY5CxMiIqOJdMqdDBDY2VkKaszzesXU6K0HaudUfLbyfXYaR+Du6+1fIWr+JjUcph4wowI=
+	t=1711020278; cv=none; b=DqdoqsmPZX8AEG55T29y3qqsU/yNyr6TNBUjOKDLbp/S87LGp7OQI3DytqW/3Z7zgOG1/IymVdS2eMzpiErvOXFZT2Njxfkh5yONZzVLehPx2mnZ5ny7NbOMjUm8iLkBURpD6neluPfpjiw3Z4CKre+4Ixh4Uts1f2SN5X6tAA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711020264; c=relaxed/simple;
-	bh=zv9KKqUc9fAa+niST3PvZen5PrPnTLP0uZp7en464NE=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=GOmhVNeUwPMc0cEhNpjrHL6DnQxEq1D3lo+UQw7P4uuq8JAeP0PDTTfKVfiZusPw4jxQUhqEJVsHEErJz5IDgfuygXTDrJIKG7fR4p0VmDqZro9DiYjVqmZNqRulLo3BNiF571cqyJ+IhA1U/qxMYnhGatxNAp+t+7WdG65r9aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YajVz8m6; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711020278; c=relaxed/simple;
+	bh=2xmJIUpAnX0WoR/2adOWV/CSntMFENrOlMHHKXNqdjQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fED/qPVSN663kh3X01UD4mHGXbN1+s2GuOFYFw1oC09Azgh2t34Ri9IHvKZL0N2is1gi5CY+HsUCkU98AJnVKAbMaP4da3oTul/Qm3sfWMI79DDR7gCHmp0SYCkzNSwr0U/dLrvzneUmg3cLX+6EXuZ2Zzcr1H6LK8qOiAOySLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=W99tkOqB; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YajVz8m6"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1e00d1e13acso5090665ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 04:24:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711020262; x=1711625062; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AoHRZqUApoexBQclJ0SEIArATxYn4nvqO1XMi4tAf/I=;
-        b=YajVz8m6scWj5E7qeB0VO9himA1qNCZSejsszeSlbdpJ7yqYEEPnRoVnYjuSTwbs9w
-         R99mjCDF1HuNE00n6c8r/9PRusDV844h8IiK2j+9eNTxm0XONnHX8RPE3SmDWBafvZhm
-         XDkqoa2h7n/tKd8E7znDGC/jozmj4CzNwSktctZfhlwWeFm/iW7KD5S5oSYAhUrHrhPB
-         0U5iTrFxNo7gmp9i1jXOwArOfwJ0YVVQLYsiFJJKv+bOgq4NOSyrOmbwbC0RbBHNaNdm
-         2TRlGOSYzUGBPIBx/VV2lFNN3uiMvUCQJ2kajH6w0rPIIQx9yTZmQl+iclNgBYe0yp7Y
-         nJtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711020262; x=1711625062;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AoHRZqUApoexBQclJ0SEIArATxYn4nvqO1XMi4tAf/I=;
-        b=DdDxIZ27Q4EvbquOx788DOe8u9Fq1Gk3HjJ2VrCmjpbOljCLy5iXmojcMB8sAXwqD3
-         4SJ1shYprxMcNG8CEruhfrqlVM8NJG9QGwKEh1PpRFV+/7JtFjPPfAcS3wu/N7sOHqFc
-         iDFXJrrxPUqjvbyV+26NrzvjVKKTpjyXbJCzUPMpC5jjyEe8ZTlN7ja3oOzgv86rLs24
-         QRyTA+UK19EQuB/O9NFn0KEtgXbOaUsBcjlZhrVYPRf8hB6UTW8J4ncWAdcP5h03WfEE
-         4gYUHHap14rBINjukwZ7+yAgPyt4DR0RCYAtcbh6yMo6+j4hX+gA7I68Qd0hBbk0dJrU
-         z0sg==
-X-Forwarded-Encrypted: i=1; AJvYcCUMRzpqVQcXgHhXJqJiAOAaZxLs6wsBjiWyQHukYQMW6k6Hk2EY4K1/K/wxfZUewwjkFXbw8EWjUyC8gyaX4z5TBdujHLJPd7KVt+P+
-X-Gm-Message-State: AOJu0YyXrhoZtIH1DLNhD4R+W8ev/6g3iALac7GiuOogbCJ9zhJEH1ur
-	zGfgP0bNoB3ConkTJrwTWaAqqys8l+9cG2CP5ZfsW7NGKJpeH0Hs/i2LX/yKSD+0RSsY36lOFow
-	=
-X-Google-Smtp-Source: AGHT+IFJsLv0LKyhdDZ4hWi1GEWRRF4DiaqFe0j7aUXHYQSeixrjn3jVZLnWa1Vb9aLvT3uBlbwP/Q==
-X-Received: by 2002:a05:6a21:3a84:b0:1a3:5d70:1828 with SMTP id zv4-20020a056a213a8400b001a35d701828mr4489419pzb.48.1711019795777;
-        Thu, 21 Mar 2024 04:16:35 -0700 (PDT)
-Received: from [127.0.1.1] ([2409:40f4:102b:a64b:d832:a82a:837c:6d3])
-        by smtp.gmail.com with ESMTPSA id ka6-20020a056a00938600b006e7324d32bbsm5531120pfb.122.2024.03.21.04.16.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 04:16:35 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 00/21] Add PCIe bridge node in DT for Qcom SoCs
-Date: Thu, 21 Mar 2024 16:46:20 +0530
-Message-Id: <20240321-pcie-qcom-bridge-dts-v2-0-1eb790c53e43@linaro.org>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="W99tkOqB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=/68CR4f0azvzcAmAfC291AOl4wS99r8FrcRejyLq6xM=; b=W99tkOqBejY893YpC1mtzh9mSp
+	gSa43/zdRcQpaebucrIyVrHxRsSIDRvVgZnItXAPDixGHUB5u4//H27eDTOTj5newSQixHC6+jynm
+	r5qETHV1Ogr4iSiXWxS3zADgqkER/fq/MSBqvSy/GOvGWWlzeV+SY1pG5MjPt9mOY5lligJmN3UIf
+	yDp2jMybyFbaLB866k7EJlMFVUhcd0byz9JSyy+ds6mo4HUA1IBkeXoaAVNobNqzOepGc56fHbhct
+	zKUDDEkpK0iAbRYRuCslUcOC/6KBZycr2Okkdz1t+aI3TOKfG5SePHOuDK5s5Tw7nf21CYpdbDkyk
+	AQVn5l7g==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46498)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rnGWd-0007UH-2y;
+	Thu, 21 Mar 2024 11:24:01 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rnGWW-0003bL-0S; Thu, 21 Mar 2024 11:23:52 +0000
+Date: Thu, 21 Mar 2024 11:23:51 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: David Laight <David.Laight@aculab.com>,
+	Ard Biesheuvel <ardb@kernel.org>
+Cc: 'Jiangfeng Xiao' <xiaojiangfeng@huawei.com>,
+	"arnd@arndb.de" <arnd@arndb.de>,
+	"keescook@chromium.org" <keescook@chromium.org>,
+	"haibo.li@mediatek.com" <haibo.li@mediatek.com>,
+	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>,
+	"amergnat@baylibre.com" <amergnat@baylibre.com>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"douzhaolei@huawei.com" <douzhaolei@huawei.com>,
+	"gustavoars@kernel.org" <gustavoars@kernel.org>,
+	"jpoimboe@kernel.org" <jpoimboe@kernel.org>,
+	"kepler.chenxin@huawei.com" <kepler.chenxin@huawei.com>,
+	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"nixiaoming@huawei.com" <nixiaoming@huawei.com>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"wangbing6@huawei.com" <wangbing6@huawei.com>,
+	"wangfangpeng1@huawei.com" <wangfangpeng1@huawei.com>,
+	"jannh@google.com" <jannh@google.com>,
+	"willy@infradead.org" <willy@infradead.org>
+Subject: Re: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
+Message-ID: <ZfwYx/8k8FVONg6+@shell.armlinux.org.uk>
+References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
+ <1710906278-23851-1-git-send-email-xiaojiangfeng@huawei.com>
+ <ZfqiD8Yw0oOVHW/p@shell.armlinux.org.uk>
+ <84a57ca8-8963-ca24-8bd1-ddc5c33bf4da@huawei.com>
+ <Zfs7sT6Pxy5yjnPC@shell.armlinux.org.uk>
+ <bad25937-fc98-8e11-4279-ab6b3a727c1f@huawei.com>
+ <bbcca1e205384cf0b42236e17f3969f7@AcuMS.aculab.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAUX/GUC/4WNTQ6CMBCFr0Jm7Zh2rERdeQ/Dgv4AkyiFKSEa0
- rtbuYDL7728722QgnBIcKs2kLBy4jgWoEMFbmjHPiD7wkCKjCLSODkOOLv4QivsS++XhPZycsp
- rWxuyUKaThI7fu/bRFB44LVE++8uqf+kf4apRYe1q36nuas7K3588thKPUXpocs5fLDKHybkAA
- AA=
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
- Rob Herring <robh@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3620;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=zv9KKqUc9fAa+niST3PvZen5PrPnTLP0uZp7en464NE=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBl/BcI0ubzqSFwVpxkGZjd+njegKvBWv5lTO3O4
- FkM6u/CmWaJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZfwXCAAKCRBVnxHm/pHO
- 9aYkCACWDEgfPJUitECHdt0chIpNj4kwVLqbDXVmOr8c8MxzTZESFZKLUCfNyPhr3jqiWN23u1V
- sC+vVz0hVomQUcsf1ZsuTk7422nRScDN+DTf0GxIcmP3Z3ZDd1b47Ybe7KyxempGzW/GmHWLp1+
- qZGi3nODxg/B4/Fk/+JplaqckHupMvIFuyAb4SgYf+AYBhuGCEJwhQBUhEhEEoAASIU1/0/4fRr
- cbHqnOCu3bLxtQrknVHa8Y6nEWFwNSVE9EvXlPJ+guuQp6mGECJdRqYNTvE5js81RzxVP88ciLD
- aViBc1H73jdbgEBnEB377dkzsv5PXV9cHKjsjNIj6an4kIT3
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bbcca1e205384cf0b42236e17f3969f7@AcuMS.aculab.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Qcom SoCs, the PCIe host bridge is connected to a single PCIe bridge
-for each controller instance. Hence, this series adds a DT node for the
-PCIe bridges across all SoCs.
+On Thu, Mar 21, 2024 at 10:22:30AM +0000, David Laight wrote:
+> How aggressively does the compiler optimise 'noreturn' functions?
 
-There is no functionality change with this series, but the PCIe bridge
-representation in DT will be necessary to add the DT node for the client
-devices like the one proposed in power sequencing series [1].
+I've seen cases where the compiler emits a BL instruction as the very
+last thing in the function, and nothing after it.
 
-- Mani
+This is where the problem lies - because the link register value
+created by the BL instruction will point to the instruction after the
+BL which will _not_ part of the function that invoked the BL. That
+will probably cause issues for the ELF unwinder, which means this
+issue probably goes beyond _just_ printing the function name.
 
-[1] https://lore.kernel.org/linux-arm-msm/20240216203215.40870-8-brgl@bgdev.pl/
+I have vague memories that Ard has been involved in the unwinder,
+maybe he could comment on this problem? Maybe we need the unwinder
+itself to do the correction? I also wonder whether we should only
+do the correction if we detect that we're pointing at the first
+instruction of a function, and the previous instruction in the
+text segment was a BL.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
-Changes in v2:
-- Added label for bridges in sc8280xp
-- Collected reviews
-- Link to v1: https://lore.kernel.org/r/20240221-pcie-qcom-bridge-dts-v1-0-6c6df0f9450d@linaro.org
-
----
-Manivannan Sadhasivam (21):
-      arm64: dts: qcom: sm8250: Add PCIe bridge node
-      arm64: dts: qcom: sdm845: Add PCIe bridge node
-      arm64: dts: qcom: sm8150: Add PCIe bridge node
-      arm64: dts: qcom: sm8350: Add PCIe bridge node
-      arm64: dts: qcom: sm8450: Add PCIe bridge node
-      arm64: dts: qcom: sm8550: Add PCIe bridge node
-      arm64: dts: qcom: sm8650: Add PCIe bridge node
-      arm64: dts: qcom: sa8775p: Add PCIe bridge node
-      arm64: dts: qcom: sc8280xp: Add PCIe bridge node
-      arm64: dts: qcom: msm8998: Add PCIe bridge node
-      arm64: dts: qcom: sc7280: Add PCIe bridge node
-      arm64: dts: qcom: qcs404: Add PCIe bridge node
-      arm64: dts: qcom: sc8180x: Add PCIe bridge node
-      arm64: dts: qcom: msm8996: Add PCIe bridge node
-      arm64: dts: qcom: ipq8074: Add PCIe bridge node
-      arm64: dts: qcom: ipq6018: Add PCIe bridge node
-      ARM: dts: qcom: ipq8064: Add PCIe bridge node
-      ARM: dts: qcom: ipq4019: Add PCIe bridge node
-      ARM: dts: qcom: apq8064: Add PCIe bridge node
-      ARM: dts: qcom: sdx55: Add PCIe bridge node
-      arm64: dts: qcom: sm8650: Use "pcie" as the node name instead of "pci"
-
- arch/arm/boot/dts/qcom/qcom-apq8064.dtsi           | 10 +++++
- arch/arm/boot/dts/qcom/qcom-ipq4019.dtsi           | 10 +++++
- arch/arm/boot/dts/qcom/qcom-ipq8064.dtsi           | 30 +++++++++++++
- arch/arm/boot/dts/qcom/qcom-sdx55.dtsi             | 10 +++++
- arch/arm64/boot/dts/qcom/ipq6018.dtsi              | 10 +++++
- arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 20 +++++++++
- arch/arm64/boot/dts/qcom/msm8996.dtsi              | 30 +++++++++++++
- arch/arm64/boot/dts/qcom/msm8998.dtsi              | 10 +++++
- arch/arm64/boot/dts/qcom/qcs404.dtsi               | 10 +++++
- arch/arm64/boot/dts/qcom/sa8775p.dtsi              | 20 +++++++++
- arch/arm64/boot/dts/qcom/sc7280.dtsi               | 10 +++++
- arch/arm64/boot/dts/qcom/sc8180x.dtsi              | 40 +++++++++++++++++
- .../dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts     | 20 +++------
- arch/arm64/boot/dts/qcom/sc8280xp.dtsi             | 50 ++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/sdm845.dtsi               | 20 +++++++++
- arch/arm64/boot/dts/qcom/sm8150.dtsi               | 20 +++++++++
- arch/arm64/boot/dts/qcom/sm8250.dtsi               | 30 +++++++++++++
- arch/arm64/boot/dts/qcom/sm8350.dtsi               | 20 +++++++++
- arch/arm64/boot/dts/qcom/sm8450.dtsi               | 20 +++++++++
- arch/arm64/boot/dts/qcom/sm8550.dtsi               | 20 +++++++++
- arch/arm64/boot/dts/qcom/sm8650.dtsi               | 24 ++++++++++-
- 21 files changed, 418 insertions(+), 16 deletions(-)
----
-base-commit: 10569bb9fb9732cec670faa38cf1460cabeffa09
-change-id: 20240221-pcie-qcom-bridge-dts-b83c0d1b642b
-
-Best regards,
 -- 
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
