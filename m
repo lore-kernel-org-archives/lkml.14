@@ -1,88 +1,70 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE552135416
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 16:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8162C18AE8;
+	Thu, 21 Mar 2024 16:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711039667; cv=none; b=bSESpuSCCwT8Ne9TYyC2cxyJCYE09w7rRysTpxeqOZExGEwmVxA3YKIMrVEhd7MRixdnbjbyvWgqKgMxHr7/xwV4Sb0bZALmYspOOULuMSsHu8eSEfjBWiUWUDo2GqK8CmyZ9q0VI1QdihiJyIpdteLQVAYXHeqCbADga1Wl79Q=
+	t=1711039742; cv=none; b=rkh+WYrkucBkDftiarySg61Qw2SWvUloH2oMuU8u9CYtJAbgB/VTuAIe4IzIF/vbzU+aeBeNu40whTAZC5MTTl6LraEmmo8O5/bNz6VuhjzcJ4MYnVvyzoRsUOppZF6S3lJfz3pGJKZ4FPjXh2FG/hnLRK/FpqvQYjayX62U6oU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711039667; c=relaxed/simple;
-	bh=ObSkPqFRupEoH5y/NCq6OrbSWOqqf4R3pFWwnS4ji9A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=htbpHary3wd00AskKzaG77eeToBx/uZXumQJzYXmSN7VDp7QrxeyLOuYWGJ6mcoTc5/6AS2huJ5zkxm9GDMnLIjrVvZDcigP9Q3OZ233gKmuPpYEQJQuKBNN/8j9JXolPjt4zQk963mX2Gu7xlnEHpVS0F4VTek4lqE8At50B2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=BDfOSsfV; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1711039742; c=relaxed/simple;
+	bh=g9UN7Rio7nv92BBowv6hN57VwZQYyjCoB6anDBSAi6U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tnTRnvKvN0YHbFr97Nykv2AKPR2GZIoxRs/2PbivwuoE39OQoCVJHg7ex5a+Lz21kt55k9uZGcKDuhmMT1KBdn3S7674qU43xZ6MQpsdqWgnhprpo77ECJfjlfOdyveuLx957Mm83NlftoETPQQIdeYdyXQ4zoTsVvoyaf9F3M4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nULhEJkA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="BDfOSsfV"
-Received: from tundra.lovozera (unknown [83.149.199.65])
-	by mail.ispras.ru (Postfix) with ESMTPSA id F250040762DC;
-	Thu, 21 Mar 2024 16:47:34 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru F250040762DC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1711039655;
-	bh=rS+8oI4jnnlG0/QZtTc1eLuWcBGGVJJauaKM2Qw7ri8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=BDfOSsfVeGPh5T+R82Aje3euP6f6ftZ+CKtxP5L1EhePArHYJkbCD9gA2hcrC/x74
-	 nvlTSpqLefevcP/JPjm1V6SXYEel4zVaC9vA16bWILz4ml+/B6l/JMTJumfCgSb4fh
-	 R7c4xUg2F+danH1/bxbOgILAFnr4LcrIHnvh+7cM=
-From: Mikhail Kobuk <m.kobuk@ispras.ru>
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mikhail Kobuk <m.kobuk@ispras.ru>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-	linux-phy@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	Alexey Khoroshilov <khoroshilov@ispras.ru>
-Subject: [PATCH 1/2] phy: marvell: a3700-comphy: Fix out of bounds read
-Date: Thu, 21 Mar 2024 19:47:30 +0300
-Message-ID: <20240321164734.49273-1-m.kobuk@ispras.ru>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nULhEJkA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D09DCC433F1;
+	Thu, 21 Mar 2024 16:49:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711039742;
+	bh=g9UN7Rio7nv92BBowv6hN57VwZQYyjCoB6anDBSAi6U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nULhEJkAn/C4DVanxi36af3Ykh1XxD7NqJg3wTWR6lt1mq9UcUfOo5vffu63I2Itl
+	 ooKPRAsDdPEMD44wHFLN9eKMsbJXUwbMd6q/WogSDYz++/IytULSb7IJk72aprExWx
+	 67wyngUgwzymK0VgUrC4kn6bTln7NHuwiOaShqKa0ZiDveVPHs4hukTzYwqe3+VOUh
+	 j1w6KL0icOFQe4nI3xWF146mjzFdLp/PUoBSFFS0sCQtHAO6FjgC69+vGrNKdIgVvC
+	 OUkP/wEI4ZdGm0h+ijcfbmNoDveF7ePV+3RCjNrfm2qVpX/f1M+T+jIeeFJX6gBLRz
+	 4OcRHTBeFki5w==
+Date: Thu, 21 Mar 2024 11:48:59 -0500
+From: Rob Herring <robh@kernel.org>
+To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, peiyu li <579lpy@gmail.com>,
+	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] dt-bindings: hwmon: convert lm87 and max6650 to
+ dtschema
+Message-ID: <20240321164859.GA2085432-robh@kernel.org>
+References: <20240321-hwmon_yaml-v2-0-74fa8eb60ec9@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240321-hwmon_yaml-v2-0-74fa8eb60ec9@gmail.com>
 
-There is an out of bounds read access of 'gbe_phy_init_fix[fix_idx].addr'
-every iteration after 'fix_idx' reaches 'ARRAY_SIZE(gbe_phy_init_fix)'.
+On Thu, Mar 21, 2024 at 05:33:16PM +0100, Javier Carrasco wrote:
+> This series converts the existing lm87.txt and max6650.txt bindings to
+> dtschema. Both are direct conversions with no additional properties.
+> 
+> There has been an attempt to convert the bindings of the lm87 before
+> [1], but the author (added to recipients) has confirmed that no further
+> versions will be submitted, and no acknowledgment is desired.
+> 
+> Link: https://lore.kernel.org/linux-hwmon/20231030125221.12974-1-579lpy@gmail.com [1]
+> 
+> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+> ---
+> Changes in v2:
+> - max6650: add property constraints and commit message indentation.
+> - lm87: No changes, already applied to hwmon-next.
 
-Make sure 'gbe_phy_init[addr]' is used when all elements of
-'gbe_phy_init_fix' array are handled.
+Then you should not have sent it again. And you forgot Conor's 
+Reviewed-by.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Fixes: 934337080c6c ("phy: marvell: phy-mvebu-a3700-comphy: Add native kernel implementation")
-Signed-off-by: Mikhail Kobuk <m.kobuk@ispras.ru>
----
- drivers/phy/marvell/phy-mvebu-a3700-comphy.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/phy/marvell/phy-mvebu-a3700-comphy.c b/drivers/phy/marvell/phy-mvebu-a3700-comphy.c
-index 15bf10710de0..1d1db1737422 100644
---- a/drivers/phy/marvell/phy-mvebu-a3700-comphy.c
-+++ b/drivers/phy/marvell/phy-mvebu-a3700-comphy.c
-@@ -611,11 +611,12 @@ static void comphy_gbe_phy_init(struct mvebu_a3700_comphy_lane *lane,
- 		 * comparison to 3.125 Gbps values. These register values are
- 		 * stored in "gbe_phy_init_fix" array.
- 		 */
--		if (!is_1gbps && gbe_phy_init_fix[fix_idx].addr == addr) {
-+		if (!is_1gbps &&
-+		    fix_idx < ARRAY_SIZE(gbe_phy_init_fix) &&
-+		    gbe_phy_init_fix[fix_idx].addr == addr) {
- 			/* Use new value */
- 			val = gbe_phy_init_fix[fix_idx].value;
--			if (fix_idx < ARRAY_SIZE(gbe_phy_init_fix))
--				fix_idx++;
-+			fix_idx++;
- 		} else {
- 			val = gbe_phy_init[addr];
- 		}
--- 
-2.44.0
-
+Rob
