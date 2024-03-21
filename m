@@ -1,131 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14C38613B;
-	Thu, 21 Mar 2024 18:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130378613B;
+	Thu, 21 Mar 2024 18:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711044191; cv=none; b=L57npTFC1/kvL3zKJXmSIDc+tb8TA7PGUMQYZEYZs2gg9NealoUK8Jax71jYsFkNRgwhqU88zCudTnhSmeK2bJFOEhObgRVuf91a1QRjm322kWIeF/vrOvz6xrmeu0aE+NSN51zIy03q7+9wHbqMD+rK2/1mG6cGH0Xt9EPaIxY=
+	t=1711044206; cv=none; b=VOzrD3NdudN3N8+jcyx92uB6THQUqj6fY1KSeKb3zoUKTmMhIJuK7YpMF1GbtaLIOSbnUNVj789NJ7q1SUwgEjXW8FlSMaCoye3y3JsQOYsLh6FK1GfIsXL/dyYJSU29CJQmH2IgU852DxNNdOhFhta7ROOk8REhjWP42k14ITs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711044191; c=relaxed/simple;
-	bh=cpK068KVvFXrGJJCmc7jXbXiOVvPQ+oU7A4+RLoU+Qw=;
+	s=arc-20240116; t=1711044206; c=relaxed/simple;
+	bh=sCdLXz2FGoLIYbxZ6Ggaxi6+JlxzyXAOAvvDKudzdu0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=foUGVIkfuTXwfNxmBI+ipS6iM8H2Seev4DCEe8ToO6SPXMb9eUKWmG3rXARWEel2JLFO3KQxmeRtuSn1sUcfWhVkXNhZor7NyegkizecCY+iTRSlQwieSRclzUwsEUMdNxRyyRMLAwHn9EcEPu/qIjxFLicBWEbxvxrYb00rVR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LjblWkn4; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jmXJUSJQ03uL+rCij7PeVQgl6rJSpoAxFv5LJzsPvEQ9/zSS49JKCvZT8mqFrc5QhPGD0JaxPMGt1wAXdduA+XtCmmBcNqSqY2fwRWRem+glTdEEmZsfocoDcdd+4dhIB1rBKqN1ejhuKBZo6oFBFEM1QV5yoZ0tdRvrfLLxCE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SxSiIFgl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LjblWkn4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711044190; x=1742580190;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=cpK068KVvFXrGJJCmc7jXbXiOVvPQ+oU7A4+RLoU+Qw=;
-  b=LjblWkn46DoJ4D30T1Q4+Xd2HPvwa1M93IlbrFEIGc4mVKHokGBICI3L
-   k1DV7xeY8QPHGYUMy0tVVOBiZnxjfeftq4YU77n1MWAnsZ/BEAMIY9/M7
-   oaH4WY8SApKWwNspi8MOYAtUd9IKT4dY70kznKAf2nW1rZ7r8tAImk8ik
-   xwyoD0fAxtGAxRseivGItDo6DzvJ2ee3HGygKUfqQaF5KYv+fX1soZP5k
-   nyhCpxkMqF8PNDNd0LYoU3ljR1uGPC8/2x0idbHxZNPJ7G/ykfxpeVyNh
-   Bn02mls4QgT04iL1Cs6qIjrvVbGU323Or3xdjJBpT8/070h2lmqx61438
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="6180634"
-X-IronPort-AV: E=Sophos;i="6.07,143,1708416000"; 
-   d="scan'208";a="6180634"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 11:03:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="914717075"
-X-IronPort-AV: E=Sophos;i="6.07,143,1708416000"; 
-   d="scan'208";a="914717075"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 11:03:04 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rnMkm-0000000ExcL-2Dkx;
-	Thu, 21 Mar 2024 20:03:00 +0200
-Date: Thu, 21 Mar 2024 20:03:00 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>,
-	kernel-janitors@vger.kernel.org, netdev@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	David Laight <David.Laight@aculab.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>, Jonathan Cameron <jic23@kernel.org>,
-	Julia Lawall <julia.lawall@inria.fr>,
-	Kees Cook <keescook@chromium.org>,
-	Lukasz Czapnik <lukasz.czapnik@intel.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Pucha Himasekhar Reddy <himasekharx.reddy.pucha@intel.com>
-Subject: Re: [PATCH net] ice: Fix freeing uninitialized pointers
-Message-ID: <Zfx2VL7xnj4rQoV8@smile.fi.intel.com>
-References: <77145930-e3df-4e77-a22d-04851cf3a426@moroto.mountain>
- <d2b1f3bd-42f1-483b-916e-3735b39a30e1@web.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SxSiIFgl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A910CC433C7;
+	Thu, 21 Mar 2024 18:03:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711044205;
+	bh=sCdLXz2FGoLIYbxZ6Ggaxi6+JlxzyXAOAvvDKudzdu0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SxSiIFgly+OkYViveqUiMzJ2xWwvoS+z9vzxkK4K4SZ9gLpnlrElKDt1xXlSXoTil
+	 9o644uhspGUGlBY1JjiHTr4lkFAdyHvUa3zfQn917aA8r+zC48Lmg3/VLdL6ni9l7g
+	 dhRGYoHaV3yLYN+DYuFOBd6l0+DEa3vHAjTpUinaPJNAnjgpkfBIsNxtdi0vr+3ONQ
+	 z3CWv5ORPZ7Tey2roNPv/yKBVPMNvCkWN4VLoH6CT3TdFGMbT6r2HUjBagm1iv1VWd
+	 aHeWePNyeWxQArVxZfpR1pTn9bSNMr5MMfrE15jBwTRYA9WZaxEpiv4pluzNHTkFHH
+	 rBizgE2hR1Z1w==
+Date: Thu, 21 Mar 2024 11:08:19 -0700
+From: Bjorn Andersson <andersson@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andrew Davis <afd@ti.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Sibi Sankar <quic_sibis@quicinc.com>, Abel Vesa <abel.vesa@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Joakim Zhang <joakim.zhang@cixtech.com>, 
+	Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [GIT PULL] remoteproc updates for v6.9
+Message-ID: <yniwjzjynmyndzqglfmwpy2th3vtadmms6ifxqs2ojo7wr66ne@ydnr3rltaddn>
+References: <20240321125518.1675903-1-andersson@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d2b1f3bd-42f1-483b-916e-3735b39a30e1@web.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20240321125518.1675903-1-andersson@kernel.org>
 
-On Thu, Mar 21, 2024 at 06:59:00PM +0100, Markus Elfring wrote:
-
-…
-
-> > +++ b/drivers/net/ethernet/intel/ice/ice_ethtool.c
-> > @@ -941,11 +941,11 @@ static u64 ice_loopback_test(struct net_device *netdev)
-> >  	struct ice_netdev_priv *np = netdev_priv(netdev);
-> >  	struct ice_vsi *orig_vsi = np->vsi, *test_vsi;
-> >  	struct ice_pf *pf = orig_vsi->back;
-> > +	u8 *tx_frame __free(kfree) = NULL;
-> >  	u8 broadcast[ETH_ALEN], ret = 0;
-> >  	int num_frames, valid_frames;
-> >  	struct ice_tx_ring *tx_ring;
-> >  	struct ice_rx_ring *rx_ring;
-> > -	u8 *tx_frame __free(kfree);
-> >  	int i;
-> >
-> >  	netdev_info(netdev, "loopback test\n");
+On Thu, Mar 21, 2024 at 05:55:13AM -0700, Bjorn Andersson wrote:
+> I'm sorry for the late pull request, I apparently had managed to get git
+> send-email to only deliver my mail to /dev/null on the machine where I prepared
+> this.
 > 
-> How do you think about to reduce the scope for the affected local variable instead
-> with the help of a small script (like the following) for the semantic patch language?
-> 
-> @movement@
-> attribute name __free;
-> @@
-> -u8 *tx_frame __free(kfree);
->  int i;
->  ... when any
->  if (ice_fltr_add_mac(test_vsi, ...))
->  { ... }
-> +
-> +{
-> +u8 *tx_frame __free(kfree) = NULL;
->  if (ice_lbtest_create_frame(pf, &tx_frame, ...))
->  { ... }
->  ... when any
-> +}
-> +
->  valid_frames = ice_lbtest_receive_frames(...);
 
-I believe you don't understand what the scope of the above can be.
+I was further notified that this conflicts with your tree, Linus. Below
+is the resolution for this conflict.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Please let me know if you'd like me to create some form of merge commit
+for this.
 
+Regards,
+Bjorn
 
+diff --cc drivers/remoteproc/imx_dsp_rproc.c
+index d73727a5828a,56a799cb8b36..087506e21508
+--- a/drivers/remoteproc/imx_dsp_rproc.c
++++ b/drivers/remoteproc/imx_dsp_rproc.c
+@@@ -1090,9 -1154,7 +1090,7 @@@ static int imx_dsp_rproc_probe(struct p
+  	return 0;
+  
+  err_detach_domains:
+ -	imx_dsp_detach_pm_domains(priv);
+ +	dev_pm_domain_detach_list(priv->pd_list);
+- err_put_rproc:
+- 	rproc_free(rproc);
+  
+  	return ret;
+  }
+@@@ -1104,8 -1166,7 +1102,7 @@@ static void imx_dsp_rproc_remove(struc
+  
+  	pm_runtime_disable(&pdev->dev);
+  	rproc_del(rproc);
+ -	imx_dsp_detach_pm_domains(priv);
+ +	dev_pm_domain_detach_list(priv->pd_list);
+- 	rproc_free(rproc);
+  }
+  
+  /* pm runtime functions */
+diff --cc drivers/remoteproc/qcom_q6v5_adsp.c
+index 93f9a1537ec6,34ac996a93b2..1d24c9b656a8
+--- a/drivers/remoteproc/qcom_q6v5_adsp.c
++++ b/drivers/remoteproc/qcom_q6v5_adsp.c
+@@@ -704,13 -713,15 +704,13 @@@ static int adsp_probe(struct platform_d
+  
+  	ret = adsp_init_clock(adsp, desc->clk_ids);
+  	if (ret)
+- 		goto free_rproc;
++ 		return ret;
+  
+ -	ret = qcom_rproc_pds_attach(adsp->dev, adsp,
+ -				    desc->proxy_pd_names);
+ +	ret = qcom_rproc_pds_attach(adsp, desc->pd_names, desc->num_pds);
+  	if (ret < 0) {
+  		dev_err(&pdev->dev, "Failed to attach proxy power domains\n");
+- 		goto free_rproc;
++ 		return ret;
+  	}
+ -	adsp->proxy_pd_count = ret;
+  
+  	ret = adsp_init_reset(adsp);
+  	if (ret)
+@@@ -742,11 -753,8 +742,8 @@@
+  	return 0;
+  
+  disable_pm:
+ -	qcom_rproc_pds_detach(adsp, adsp->proxy_pds, adsp->proxy_pd_count);
+ +	qcom_rproc_pds_detach(adsp);
+  
+- free_rproc:
+- 	rproc_free(rproc);
+- 
+  	return ret;
+  }
+  
+@@@ -760,8 -768,7 +757,7 @@@ static void adsp_remove(struct platform
+  	qcom_remove_glink_subdev(adsp->rproc, &adsp->glink_subdev);
+  	qcom_remove_sysmon_subdev(adsp->sysmon);
+  	qcom_remove_ssr_subdev(adsp->rproc, &adsp->ssr_subdev);
+ -	qcom_rproc_pds_detach(adsp, adsp->proxy_pds, adsp->proxy_pd_count);
+ +	qcom_rproc_pds_detach(adsp);
+- 	rproc_free(adsp->rproc);
+  }
+  
+  static const struct adsp_pil_data adsp_resource_init = {
