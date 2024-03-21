@@ -1,90 +1,110 @@
-Received: from forward103c.mail.yandex.net (forward103c.mail.yandex.net [178.154.239.214])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A678358213;
-	Thu, 21 Mar 2024 11:05:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.214
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485631CA9A;
+	Thu, 21 Mar 2024 11:07:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711019154; cv=none; b=RYjOQg9Gt989MEZzg/WmKvB4Hx9ObSYasz15Gu74LoJb8ONFpnNJE+mwB8/LTwok/suCG0iFia/S19ccUDvvOcL/SRTIfb9LNx0CMdZ1EtXEwkqvFkPPx3J6h6dJapu88r/vlfrJMnSwaY6SGY/D8Ne8sd66gm1P98w9agRgJN4=
+	t=1711019275; cv=none; b=cPa7QE5juU3NtJhfaNlmSDj+6z8ecUswQKdxuMUrXC07opl4buvbySeBE52zZe0uRtunelvWaM32l/idNrVEiPXBqz3Eq/+TBbHXNeRFTL5/bX1qd5ob/hPXHCauN8AaKf4amSqIT5MfUylYupEO8Qa0ZryiQPBIjKLXBIGDMmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711019154; c=relaxed/simple;
-	bh=Rz/7QeGwGWVQ23cVl//CoUspDWwVdJjOPTplV8dC39E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NgIkSseUpjJu3QdLf9EQToCKpzfrAMe2YnhktU/Q1HQF+91W7H2WnyRT1cl/1K+EzqFAXC6btvHNQgLbcliGhvO026Oj+mEvYM7kig6+AzWZehCqWLkKmlemWDoTbk8AJ+Zmrrg8XsR76GrmBagHKVCT9YMXbwRuh6R3tihrKaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=dcr67GiT; arc=none smtp.client-ip=178.154.239.214
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+	s=arc-20240116; t=1711019275; c=relaxed/simple;
+	bh=991r5jVPabzsSiBI/2AWFmPQe3N0Culave2SmDvtwig=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=q153jhm3EaJw46qKo/b44ulqCTLAJQIA+oZgo6+6WQTgi7D2D9bEAmCMg/3V9oAq8T556RH230X7lFfXI1rkqxdtZTrhSiBt+wIE3EkJV4tm3Q+hb9plNtUscx7fBmChoJ0xZy90vGjSPwnGBycY75BjKYIE1GOf4y88XdWXzjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IQgnc9nP; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="dcr67GiT"
-Received: from mail-nwsmtp-smtp-production-main-38.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-38.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:4619:0:640:d09:0])
-	by forward103c.mail.yandex.net (Yandex) with ESMTPS id 78E3C60A8A;
-	Thu, 21 Mar 2024 14:05:42 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-38.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id D5EwJf8ZnW20-cjVk97x4;
-	Thu, 21 Mar 2024 14:05:41 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1711019141; bh=si9CmxfbTTi+fzS7ZgV1gg2/IENW5eLorkGc5P/t0aU=;
-	h=Message-Id:Date:Cc:Subject:To:From;
-	b=dcr67GiTKWsuoYVCZRSpl/qun0eAAaOuBKZKzi2EHDixj9XLJRPUeDgpyPvExYdKg
-	 VZHmGVfmvFhFeAoMUPEvWv6g+SeSk0hClHp5O3Ty4qC/Z1+i3w8i/laOqXOnRVfOYS
-	 denliSur7IfAyXRY3cRJa76KOekeR/6P57HDnUew=
-Authentication-Results: mail-nwsmtp-smtp-production-main-38.myt.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-From: Mikhail Ukhin <mish.uxin2012@yandex.ru>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Mikhail Ukhin <mish.uxin2012@yandex.ru>,
-	linux-ide@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	Pavel Koshutin <koshutin.pavel@yandex.ru>,
-	Artem Sadovnikov <ancowi69@gmail.com>,
-	Mikhail Ivanov <iwanov-23@bk.ru>
-Subject: [PATCH 5.10/5.15] scsi: add a length check for VARIABLE_LENGTH_CMD commands
-Date: Thu, 21 Mar 2024 14:02:29 +0300
-Message-Id: <20240321110229.9534-1-mish.uxin2012@yandex.ru>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQgnc9nP"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2d094bc2244so11870011fa.1;
+        Thu, 21 Mar 2024 04:07:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711019272; x=1711624072; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LBA/ZrsdEP2mJDzZKy68MDsPNZzNplR+dVmyq9Un4qk=;
+        b=IQgnc9nPvZVfyR95ZgpmAoguW5Kus9Rg1ze2NIGHaAwAAQ5Z1SrIzC9Bj/QRpAxjQJ
+         75CEwsRwdBJpVxVsUj18f6vVcpE1wwXK7oL3IOSG8VOl8DFbQDiGzuaGqbPFRUDcvlXo
+         9vtXcyk6KLD7RFImYSzT8eQFMjiGzvdGbKPw+mdxx5I6LoIhCfHHwM2OxgqgXfaM3UHL
+         yWy6n5wOJruhsIEhbWMBxpsS5RjvUiPgYAvC5MTdcp3lSuK2+DIYoiFzrWX3auzVuVWp
+         zlJXX5OUGA6GhlRIoHiVStKbVOR0rIAdAfz/nTCDObKz1NgAKOE1yzQaZRyarRYupLez
+         GPvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711019272; x=1711624072;
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LBA/ZrsdEP2mJDzZKy68MDsPNZzNplR+dVmyq9Un4qk=;
+        b=A6C5ynnEyW+7dE4LjoC704hFNOe0dC2yN3H9/hNqj1WXVoBQgphua5Kjy320obqUWK
+         dzbhdyDHF4LwzyKbnGYkQdv1xRnsfpv0bXyZkemm0JlfBh0iqovXf2Nz+3IgQoQtDA0O
+         27YwpmN8dKi0/i9Kr9nrNk31eWD3np068orgAfiqY80GG+w1tqFnnY/HG1Xy/Zahft0P
+         65tNvivuSMqGRqAQckVIQ08edMxB+OX+F6XNZPmAY/K0g8TAEwP4lnUz/TSEaRHUfLmP
+         l+i+8T7vw/n+m0PXAcBF08iu3fv+FGCMVapVK4n76TX+B1MmFcc/AbrVT5w0NPXqpwCo
+         lhRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU4Wk8Pq7ADK/4JF6YyQG2kmIAbx66dkcoapX9PaYA4otHmAeZP3nsgPQT0WV0YjWAya8NjXB1cnUSxn3XRLS3t01t6SbD8ZIcYySYa
+X-Gm-Message-State: AOJu0Yza3QwigmT36pUqKYwvp7Sm/ajnGgvDwnZ8l9F2SgfBY7T5HnOt
+	jeupy3qm1VUVi3OtVU78qoI09IpAnwzyu9KytCwJfn7/7HiraxCf
+X-Google-Smtp-Source: AGHT+IGX1IDugtt7aqvnV1u2P6JH4LDutUHs6obm/B1+3FHLV5PEVN89PYCsimtbkvZmRut8Tc1Rbw==
+X-Received: by 2002:ac2:54b5:0:b0:513:426e:625 with SMTP id w21-20020ac254b5000000b00513426e0625mr5007201lfk.22.1711019272230;
+        Thu, 21 Mar 2024 04:07:52 -0700 (PDT)
+Received: from [192.168.16.136] (54-240-197-226.amazon.com. [54.240.197.226])
+        by smtp.gmail.com with ESMTPSA id fl25-20020a05600c0b9900b00414778ca80fsm122464wmb.16.2024.03.21.04.07.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Mar 2024 04:07:51 -0700 (PDT)
+From: Paul Durrant <xadimgnik@gmail.com>
+X-Google-Original-From: Paul Durrant <paul@xen.org>
+Message-ID: <a80b46a2-d07a-466e-b2b3-bed685292e47@xen.org>
+Date: Thu, 21 Mar 2024 11:07:50 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Reply-To: paul@xen.org
+Subject: Re: [PATCH 1/3] KVM: Add helpers to consolidate gfn_to_pfn_cache's
+ page split check
+Content-Language: en-US
+To: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ syzbot+106a4f72b0474e1d1b33@syzkaller.appspotmail.com,
+ David Woodhouse <dwmw2@infradead.org>
+References: <20240320001542.3203871-1-seanjc@google.com>
+ <20240320001542.3203871-2-seanjc@google.com>
+Organization: Xen Project
+In-Reply-To: <20240320001542.3203871-2-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Fuzzing of 5.10 stable branch reports a slab-out-of-bounds error in
-ata_scsi_pass_thru.
+On 20/03/2024 00:15, Sean Christopherson wrote:
+> Add a helper to check that the incoming length for a gfn_to_pfn_cache is
+> valid with respect to the cache's GPA and/or HVA.  To avoid activating a
+> cache with a bogus GPA, a future fix will fork the page split check in
+> the inner refresh path into activate() and the public rerfresh() APIs, at
 
-The error is fixed in 5.18 by commit
-ce70fd9a551af7424a7dace2a1ba05a7de8eae27.
-Backporting this commit would require significant changes to the code so
-it is bettter to use a simple fix for that particular error.
+nit: typo
 
-The problem is that the length of the received SCSI command is not
-validated if scsi_op == VARIABLE_LENGTH_CMD. It can lead to out-of-bounds
-reading if the user sends a request with SCSI command of length less than
-32.
+> which point KVM will check the length in three separate places.
+> 
+> Deliberately keep the "page offset" logic open coded, as the only other
+> path that consumes the offset, __kvm_gpc_refresh(), already needs to
+> differentiate between GPA-based and HVA-based caches, and it's not obvious
+> that using a helper is a net positive in overall code readability.
+> 
+> Note, for GPA-based caches, this has a subtle side effect of using the GPA
+> instead of the resolved HVA in the check() path, but that should be a nop
+> as the HVA offset is derived from the GPA, i.e. the two offsets are
+> identical, barring a KVM bug.
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   virt/kvm/pfncache.c | 27 +++++++++++++++++++--------
+>   1 file changed, 19 insertions(+), 8 deletions(-)
+> 
 
-Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
-
-Signed-off-by: Artem Sadovnikov <ancowi69@gmail.com>
-Signed-off-by: Mikhail Ivanov <iwanov-23@bk.ru>
----
- drivers/ata/libata-scsi.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index dfa090ccd21c..77589e911d3d 100644
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -4065,6 +4065,9 @@ int __ata_scsi_queuecmd(struct scsi_cmnd *scmd, struct ata_device *dev)
- 
- 	if (unlikely(!scmd->cmd_len))
- 		goto bad_cdb_len;
-+
-+	if (scsi_op == VARIABLE_LENGTH_CMD && scmd->cmd_len < 32)
-+		goto bad_cdb_len;
- 
- 	if (dev->class == ATA_DEV_ATA || dev->class == ATA_DEV_ZAC) {
- 		if (unlikely(scmd->cmd_len > dev->cdb_len))
--- 
-2.25.1
+Reviewed-by: Paul Durrant <paul@xen.org>
 
