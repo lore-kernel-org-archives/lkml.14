@@ -1,225 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFDAAF516;
-	Thu, 21 Mar 2024 23:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BAC1DDDB;
+	Thu, 21 Mar 2024 23:47:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711064803; cv=none; b=pIj7hwB2+avjxVcNON2Lxz7F70t7WRj0VjaoTEGqR7RquGM8QKnhHsCNM6D564gHJIx4OMfzvm6gVx6x42gNEVR5qJe/i5D1qRf1A+wSIGRfpTERyHYdVPQIQx1rG+6lvVpSl0RdhYyEwLCc9X4Dx/m3CVii8t/PDEGIK+zsiNw=
+	t=1711064872; cv=none; b=beWWKdffOZNlisWUHxmykuWm1oh6aZ9i4ZtBnnNxpCwVwl5yDKGQhXdxn1Ong6Ay73cGjDJNsQJmceYcvb0+mu9RA1RUAt5Qs51muavs7sw+RSFcbNYJYAzQcWrXDlP2ljEyTvm+MLi7sdReYINXt6sVO77AQY4cewm+43zSVrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711064803; c=relaxed/simple;
-	bh=Rf0D+K+jXTiwLuIvY9ASPK++sStp3YNUIenDwHbEEGc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HbZnHa2XLULXBSqeuNEVO/Cv2f5vXW7Pd1jH4774Wruhhpc3d3RFVZ8nwRC3LMETfyp+ReIDzbSaaZ+hedSV6ixVutMsQUvJCTrTctaY1lFjYEEyIrUdGmbzPMvuE1VOYHDtHDcX3CU3fRSgtT3vx+GBDx9Dp4IRRY/+IsqHfC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mTRD+iss; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711064872; c=relaxed/simple;
+	bh=faRVErYt8G5qNQLWd1m+LPMGBy4BwrP+Drj5J/gyN4w=;
+	h=From:Date:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XSEQ2hV4aP5bGhg5ssDupJFppV36YqMABB8TlrZ1aj5YMbDbB43y97zhrjNlrKe+wm72G48mJug3eskoznAXeeNpQHEjpEN4nSoUXuaLjL0Ax7RtZU0gzs7gUXEcPF8aWEJXkCXTgB4VoJ5CdVxGNaki2iHfXhpwC4gyFNsbcmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HjhjhBrt; arc=none smtp.client-ip=209.85.160.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mTRD+iss"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711064802; x=1742600802;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Rf0D+K+jXTiwLuIvY9ASPK++sStp3YNUIenDwHbEEGc=;
-  b=mTRD+issoPwPt62huIs+jmt09WPGAJ1SqJZyQ9mJfH57D1df0ps4LzaM
-   iouJRINmqh/TsLWtvmcUYifID4AfsOWwcsTy4uVE7is0uZ9sEv8m4zSYb
-   uCm3va9/fbutRq1zQ8v856Vh5eSTkRwUZWiPiVgEpSC07JLq0FJV2BfwJ
-   wqG7U3LemYbCPrNthnMVtk0JotoaAKjBT+gZ5O6oNABTQpC60TOBVWie9
-   TEjM9U4sHmYl1fXuklGMpsk4hbaeeMeja0xEwbfE7NpoNovahC2v87ve4
-   muD2o2PX1GFSm+U8GrayiFyhVeW6G8iHTkts7uAn1cLJVzBbzAtoQY6jf
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="17246134"
-X-IronPort-AV: E=Sophos;i="6.07,144,1708416000"; 
-   d="scan'208";a="17246134"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 16:46:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,144,1708416000"; 
-   d="scan'208";a="15107183"
-Received: from dongshen-mobl1.amr.corp.intel.com (HELO [10.212.116.150]) ([10.212.116.150])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 16:46:40 -0700
-Message-ID: <4e93f167-8a90-4046-9f43-2366556b1e89@intel.com>
-Date: Thu, 21 Mar 2024 16:46:39 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HjhjhBrt"
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-221816e3ab9so724613fac.2;
+        Thu, 21 Mar 2024 16:47:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711064869; x=1711669669; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9ytKgvW58PsSJu3xpljogczDg2wQaBHBKuWrvcBzPeM=;
+        b=HjhjhBrt7Ed7UtZBmQr3Ny/3mme6wTKFWNNltzfcK/puqQeXlvtXpJBqxNqy4tWgyx
+         jeIclNnMEs3XHfw4UfCWUhr3f9AWbb4DT2DlAU9D9E3NccVc7tnFLWrAlTUFEF7Cm2MK
+         gFqbcakzHV0cztoa94sONEQZ41zv/33knAgOqkLCG7rx9nig6Z+FKPp17cu8gJWGNkhh
+         sqTdC50Jy5ngJcAWF8G2i17kOuRTizskeA/DXJ8StaQu7UM2Ta0Rc8aEltk13JgOtF2Z
+         pbYMPdUUr8EjPOh456RBnOwKlsxxzAVya+UbIRTCbMvUfYVYry81523ez/VHJfzdFHii
+         075w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711064869; x=1711669669;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9ytKgvW58PsSJu3xpljogczDg2wQaBHBKuWrvcBzPeM=;
+        b=As5JNHKFGAHFBynByUDKAHCiRrqCMrCirxZjaHjoyYOwii37dAG+/mZhoj8keGyQB2
+         PyBZNtKrN3hqrS8XemVr3wMXifgAf6QlmW6EwHWRPDyDmDG2bFmox5uvEtGIGKKYPiyh
+         fno7yb1yS5xKv0AkGl3x9/Ppd62EhcyG/ULewKVtVwviu8LKAmPdYxcPkBpdvG2RK26s
+         OsGj2LjMwgGK5xEM9riKxVK52YadnmQqGBf9R2VypA6aCiUi9GgN/GqbYaspEul4BXTw
+         w2XqrEHsE2F5MGWv1AJ+0oy4gyFqk2y1Qc1sUvVOULZwl3J9z2FthX19XBUgPYT1RqW/
+         dOcw==
+X-Forwarded-Encrypted: i=1; AJvYcCXYGHdI4QrzVzwvG2hElzlTQt4QNIh9NtxB4rbedb+BTFbE4A04YPPRoY5aDGyea5TetQLRUgDo9Bs1CDZSFDVwQc1SSeiaQtggLksrN9k2+uy4sJVzuHMzNwXC6/HiopkyCfF9uup3TA==
+X-Gm-Message-State: AOJu0Ywz1FVHG2Mif0PMcjajmN7vuUsW66JXzTDQSjl1Xc80U6aCpbbg
+	g0drBt8Ds5H0It1dNQwZdUuQyXwb7Or+KNiLx63kZ3gxBIQEIL7Hzp4W8F58
+X-Google-Smtp-Source: AGHT+IFgks42I/VWGJfBMCxEwZHDGNfOpG1w49iQQGKkprKCpyXNQzghz0QMgyV5Fy5/sbA741urZg==
+X-Received: by 2002:a05:6a20:8f1a:b0:1a3:67cd:bed5 with SMTP id b26-20020a056a208f1a00b001a367cdbed5mr1307883pzk.36.1711064463180;
+        Thu, 21 Mar 2024 16:41:03 -0700 (PDT)
+Received: from localhost ([187.19.173.237])
+        by smtp.gmail.com with ESMTPSA id a10-20020aa780ca000000b006e68b422850sm402876pfn.81.2024.03.21.16.41.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Mar 2024 16:41:02 -0700 (PDT)
+From: arnaldo.melo@gmail.com
+Date: Thu, 21 Mar 2024 20:40:59 -0300
+Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the perf tree
+Message-ID: <ZfzFiyKWAZqTovT7@x1>
+References: <20240322084131.2316eb8f@canb.auug.org.au>
+ <ZfzAKMlYY7IkWXUg@x1>
+ <20240322103636.020aa9d2@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v5 18/29] KVM: selftests: TDX: Add TDX MMIO writes
- test
-To: Sagi Shahar <sagis@google.com>, linux-kselftest@vger.kernel.org,
- Ackerley Tng <ackerleytng@google.com>, Ryan Afranji <afranji@google.com>,
- Erdem Aktas <erdemaktas@google.com>,
- Isaku Yamahata <isaku.yamahata@intel.com>
-Cc: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
- Peter Gonda <pgonda@google.com>, Haibo Xu <haibo1.xu@intel.com>,
- Chao Peng <chao.p.peng@linux.intel.com>,
- Vishal Annapurve <vannapurve@google.com>, Roger Wang <runanwang@google.com>,
- Vipin Sharma <vipinsh@google.com>, jmattson@google.com, dmatlack@google.com,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org
-References: <20231212204647.2170650-1-sagis@google.com>
- <20231212204647.2170650-19-sagis@google.com>
-Content-Language: en-US
-From: "Zhang, Dongsheng X" <dongsheng.x.zhang@intel.com>
-In-Reply-To: <20231212204647.2170650-19-sagis@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240322103636.020aa9d2@canb.auug.org.au>
 
-
-
-On 12/12/2023 12:46 PM, Sagi Shahar wrote:
-> The test verifies MMIO writes of various sizes from the guest to the host.
+On Fri, Mar 22, 2024 at 10:36:36AM +1100, Stephen Rothwell wrote:
+> Hi Arnaldo,
 > 
-> Signed-off-by: Sagi Shahar <sagis@google.com>
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> Signed-off-by: Ryan Afranji <afranji@google.com>
-> ---
->  .../selftests/kvm/include/x86_64/tdx/tdx.h    |  2 +
->  .../selftests/kvm/lib/x86_64/tdx/tdx.c        | 14 +++
->  .../selftests/kvm/x86_64/tdx_vm_tests.c       | 85 +++++++++++++++++++
->  3 files changed, 101 insertions(+)
+> On Thu, 21 Mar 2024 20:18:00 -0300 Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >
+> > Ok, maybe I opened perf-tools-next for the next merge window too early?
 > 
-> diff --git a/tools/testing/selftests/kvm/include/x86_64/tdx/tdx.h b/tools/testing/selftests/kvm/include/x86_64/tdx/tdx.h
-> index 13ce60df5684..502b670ea699 100644
-> --- a/tools/testing/selftests/kvm/include/x86_64/tdx/tdx.h
-> +++ b/tools/testing/selftests/kvm/include/x86_64/tdx/tdx.h
-> @@ -25,5 +25,7 @@ uint64_t tdg_vp_vmcall_instruction_wrmsr(uint64_t index, uint64_t value);
->  uint64_t tdg_vp_vmcall_instruction_hlt(uint64_t interrupt_blocked_flag);
->  uint64_t tdg_vp_vmcall_ve_request_mmio_read(uint64_t address, uint64_t size,
->  					uint64_t *data_out);
-> +uint64_t tdg_vp_vmcall_ve_request_mmio_write(uint64_t address, uint64_t size,
-> +					uint64_t data_in);
->  
->  #endif // SELFTEST_TDX_TDX_H
-> diff --git a/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx.c b/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx.c
-> index b19f07ebc0e7..f4afa09f7e3d 100644
-> --- a/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx.c
-> +++ b/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx.c
-> @@ -143,3 +143,17 @@ uint64_t tdg_vp_vmcall_ve_request_mmio_read(uint64_t address, uint64_t size,
->  
->  	return ret;
->  }
-> +
-> +uint64_t tdg_vp_vmcall_ve_request_mmio_write(uint64_t address, uint64_t size,
-> +					uint64_t data_in)
-> +{
-> +	struct tdx_hypercall_args args = {
-> +		.r11 = TDG_VP_VMCALL_VE_REQUEST_MMIO,
-> +		.r12 = size,
-> +		.r13 = TDG_VP_VMCALL_VE_REQUEST_MMIO_WRITE,
-> +		.r14 = address,
-> +		.r15 = data_in,
-> +	};
-> +
-> +	return __tdx_hypercall(&args, 0);
-> +}
-> diff --git a/tools/testing/selftests/kvm/x86_64/tdx_vm_tests.c b/tools/testing/selftests/kvm/x86_64/tdx_vm_tests.c
-> index 48902b69d13e..5e28ba828a92 100644
-> --- a/tools/testing/selftests/kvm/x86_64/tdx_vm_tests.c
-> +++ b/tools/testing/selftests/kvm/x86_64/tdx_vm_tests.c
-> @@ -885,6 +885,90 @@ void verify_mmio_reads(void)
->  	printf("\t ... PASSED\n");
->  }
->  
-> +void guest_mmio_writes(void)
-> +{
-> +	uint64_t ret;
-> +
-> +	ret = tdg_vp_vmcall_ve_request_mmio_write(TDX_MMIO_TEST_ADDR, 1, 0x12);
-> +	if (ret)
-> +		tdx_test_fatal(ret);
-> +
-> +	ret = tdg_vp_vmcall_ve_request_mmio_write(TDX_MMIO_TEST_ADDR, 2, 0x1234);
-> +	if (ret)
-> +		tdx_test_fatal(ret);
-> +
-> +	ret = tdg_vp_vmcall_ve_request_mmio_write(TDX_MMIO_TEST_ADDR, 4, 0x12345678);
-> +	if (ret)
-> +		tdx_test_fatal(ret);
-> +
-> +	ret = tdg_vp_vmcall_ve_request_mmio_write(TDX_MMIO_TEST_ADDR, 8, 0x1234567890ABCDEF);
-> +	if (ret)
-> +		tdx_test_fatal(ret);
-> +
-> +	// Write across page boundary.
-> +	ret = tdg_vp_vmcall_ve_request_mmio_write(PAGE_SIZE - 1, 8, 0);
-> +	if (ret)
-> +		tdx_test_fatal(ret);
-> +
-> +	tdx_test_success();
-> +}
-> +
-> +/*
-> + * Varifies guest MMIO writes.
-> + */
+> Yeah.
 
-Nit: typo?  Varifies ==> Verifies
+Ok, I'm rewinding perf-tools-next to the point where Linus merged
+Namhyung's first, and only so far, pull request, sorry for the noise.
+ 
+> > For this merge window I think Namhyung is switching to perf-tools,
+> > right?
+ 
+> Hopefully.  That branch is for bugs fixes, I think.
 
-> +void verify_mmio_writes(void)
-> +{
-> +	struct kvm_vm *vm;
-> +	struct kvm_vcpu *vcpu;
-> +
-> +	uint8_t byte_1;
-> +	uint16_t byte_2;
-> +	uint32_t byte_4;
-> +	uint64_t byte_8;
-> +
-> +	vm = td_create();
-> +	td_initialize(vm, VM_MEM_SRC_ANONYMOUS, 0);
-> +	vcpu = td_vcpu_add(vm, 0, guest_mmio_writes);
-> +	td_finalize(vm);
-> +
-> +	printf("Verifying TD MMIO writes:\n");
-> +
-> +	td_vcpu_run(vcpu);
-> +	TDX_TEST_CHECK_GUEST_FAILURE(vcpu);
-> +	TDX_TEST_ASSERT_MMIO(vcpu, TDX_MMIO_TEST_ADDR, 1, TDG_VP_VMCALL_VE_REQUEST_MMIO_WRITE);
-> +	byte_1 = *(uint8_t *)(vcpu->run->mmio.data);
-> +
-> +	td_vcpu_run(vcpu);
-> +	TDX_TEST_CHECK_GUEST_FAILURE(vcpu);
-> +	TDX_TEST_ASSERT_MMIO(vcpu, TDX_MMIO_TEST_ADDR, 2, TDG_VP_VMCALL_VE_REQUEST_MMIO_WRITE);
-> +	byte_2 = *(uint16_t *)(vcpu->run->mmio.data);
-> +
-> +	td_vcpu_run(vcpu);
-> +	TDX_TEST_CHECK_GUEST_FAILURE(vcpu);
-> +	TDX_TEST_ASSERT_MMIO(vcpu, TDX_MMIO_TEST_ADDR, 4, TDG_VP_VMCALL_VE_REQUEST_MMIO_WRITE);
-> +	byte_4 = *(uint32_t *)(vcpu->run->mmio.data);
-> +
-> +	td_vcpu_run(vcpu);
-> +	TDX_TEST_CHECK_GUEST_FAILURE(vcpu);
-> +	TDX_TEST_ASSERT_MMIO(vcpu, TDX_MMIO_TEST_ADDR, 8, TDG_VP_VMCALL_VE_REQUEST_MMIO_WRITE);
-> +	byte_8 = *(uint64_t *)(vcpu->run->mmio.data);
-> +
-> +	TEST_ASSERT_EQ(byte_1, 0x12);
-> +	TEST_ASSERT_EQ(byte_2, 0x1234);
-> +	TEST_ASSERT_EQ(byte_4, 0x12345678);
-> +	TEST_ASSERT_EQ(byte_8, 0x1234567890ABCDEF);
-> +
-> +	td_vcpu_run(vcpu);
-> +	TEST_ASSERT_EQ(vcpu->run->exit_reason, KVM_EXIT_SYSTEM_EVENT);
-> +	TEST_ASSERT_EQ(vcpu->run->system_event.data[1], TDG_VP_VMCALL_INVALID_OPERAND);
-> +
-> +	td_vcpu_run(vcpu);
-> +	TDX_TEST_ASSERT_SUCCESS(vcpu);
-> +
-> +	kvm_vm_free(vm);
-> +	printf("\t ... PASSED\n");
-> +}
-> +
->  int main(int argc, char **argv)
->  {
->  	setbuf(stdout, NULL);
-> @@ -905,6 +989,7 @@ int main(int argc, char **argv)
->  	run_in_new_process(&verify_guest_msr_reads);
->  	run_in_new_process(&verify_guest_hlt);
->  	run_in_new_process(&verify_mmio_reads);
-> +	run_in_new_process(&verify_mmio_writes);
->  
->  	return 0;
->  }
+Right, that will start at rc1, ok.
+ 
+> > From your reaction I think I made a mistake and should have opened
+> > perf-tools-next for v6.10 stuff only when the v6.9-rc1 gets released...
+> 
+> The top of my daily linux-next release report says
+> 
+> "Please do not add any v6.10 material to your linux-next included branches
+> until after v6.9-rc1 has been released."
+> 
+> (I did forget this message for few days this merge window, sorry).
+
+Ok,
+
+- Arnaldo
