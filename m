@@ -1,68 +1,129 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A3F3A1DE;
-	Thu, 21 Mar 2024 07:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDA34D5B0
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 07:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711005248; cv=none; b=LMtbgHxEcLx2iZmOnTPvjFXwBJI72EtRJ/p1jaOqdWc2MMo1U/xZ3HBIcOBJpBNqSy0PsBLrgUN5aYfZxy/Cm1VR5PotlkO+WJsYnzbXMa4RUtbgZqBya8gTlUbu0fmzXOygdM+2YH72o0h0AFiAhfOalMPZKqFRA4A4hAZPI3o=
+	t=1711005321; cv=none; b=Tfglhdp2LBptjUc0wZKeHvecYfd6MTJxv1Z11hhl8Rpo7BvZAxfMd4GCcRxSL1j4dHwhFtW2KLAQwrVTUi0aYknmQmaZSmpcUXt/FRU8WLVwioipHzxXDGvVD7vJF+fohrXFrgD2/q5RlKnZtqiS86wK9MM8t4PYK2bRH0erV/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711005248; c=relaxed/simple;
-	bh=KgoN7d/huuivjXDa9NWFgxIMNU+AtxtDserTx7cspME=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=edmafqZWgqMX+Zbx0K4dcNuaDafgI+4K67yHdGfNrwNxsmPHcOCSApfnf2suy9lg/hm0UM+QDP66Qbaf/mnuUf6OewvRNX3aZwq/mzvmZB37gKrBrfwJZ8e6AgtIYVzpBOEcl+LHaV70dMUYggnqhjlXr/P2iwxqD/cJ+tVkIPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TVFKWnd1; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1711005321; c=relaxed/simple;
+	bh=uNiHv/0x28H2TbSD8m20i2P9eIK+XRcz2b97ymNsEbI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ijb9NOYecEYg7HHtdywGI35621qCW+LHkqzZX0+HDQOOJCcKhHUmEQWQYmKgKMRp8AaAK2ioJH9NQcCD4Q+jg+BK5vcxsLS5gyBC8HZSo9ZX4P/qXjLPn/xrvOvzByFdfA0x/Kn/r6N9p+wkDyNqJjnQskS1W15rzso2JlQH8y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cgPpJYWJ; arc=none smtp.client-ip=209.85.166.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TVFKWnd1"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 00415C0003;
-	Thu, 21 Mar 2024 07:13:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1711005238;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KgoN7d/huuivjXDa9NWFgxIMNU+AtxtDserTx7cspME=;
-	b=TVFKWnd1TH6TXiXnZb40Wffd3GJaz3Q7DDa77DS11yaBXk73a67W0xt5bpKjsUthHgzbsB
-	ifvpBb+PSwvEzGF2BgVwNhI7iBl2VZadMbCwuRX+IPmDcr0dDLjG9aJBLSOA+WSLonnFoO
-	DI/R+x59kVDFCSDUB/lyIrufT+FS1KlskbgSkwnDFuzzOZPnkSEKuU1+fEMtcyB5Uxw7dC
-	ab3fE5gOyrxFOxTe0uJz4FVORrT/B0WcjWW0RxInlwtOa9cmVvgMDQWE6W9JiGcSZ7WDEF
-	1gk9+2FWN+Nmb+7Isjs7GhsJSumfqEDuaecWv927RDSn2Y0WsQLb4q091BDKIw==
-Date: Thu, 21 Mar 2024 08:13:56 +0100
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano
- <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Lukasz Luba
- <lukasz.luba@arm.com>, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] thermal: armada: simplify name sanitization
-Message-ID: <20240321081356.7c08fce1@xps-13>
-In-Reply-To: <20240320104940.65031-1-linux@rasmusvillemoes.dk>
-References: <20240320104940.65031-1-linux@rasmusvillemoes.dk>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cgPpJYWJ"
+Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7cc0b35b75bso20523539f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 00:15:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711005319; x=1711610119; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ci7BHkTK1iOIEG1KH5AhFPZm3PHh1Xr8+22AEHjA27s=;
+        b=cgPpJYWJ6Pmh7tzviwQFjzxK7PxCd1FuT9cZGAijfdxoVvSZ2ENYLSvsgQttAzNKRH
+         zYPkBGig/cIaL9QJ9vS4k8ogBb8tn/VmAgzfaLvk0taNFYz5wILL0+5ZJSc73hOVdmvX
+         qAEcI0cEdtSwmksmSzM9lMT0DBbasAXPosoHM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711005319; x=1711610119;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ci7BHkTK1iOIEG1KH5AhFPZm3PHh1Xr8+22AEHjA27s=;
+        b=RREmLIh+Viub4KxBnq829h+tX9CaXbOBJhzPp94VTUuNP82jkzE7FalUC5y74VS8By
+         m9OUzSRHLklZqZfd/1ZuFpWokZvcmtI2DLeTxKkDlqLVsgeBbesuUlFs7z2mdFSNMeB/
+         ftq+co86mEeYcguQRQv0KXlN1GGNKSbB0tRVmy8/R1vbkqwsHgyndVYmUszMCrxJXw1E
+         qY748NdeZW82vZr/0/lDPp1IMxvHH99QsJx02lzc8iaRuQIyHnDGRLaOTYUykaLuvYSB
+         axzLtgBFhb8cgyLCFoSVMov/O9ztqoWbKeXZsMBn1EuEPamcGNfhUvbNhyH7xfuTDteW
+         KeYg==
+X-Forwarded-Encrypted: i=1; AJvYcCUm66BWngoPxdQglyi2e/dpixizVsDZ1Sw1nSmwlvzAChGS9H5+hd72sReymPxPqvkq/XbWBM7WrchkObrtHORToi7Vje8gbIgSSfij
+X-Gm-Message-State: AOJu0YyaEzwjmKnFTB2oY+BU/ogJvwX8NWd3+KDYZ34PmuLugKi1Uyh7
+	HblSTsMCUKdL9LtsPUbMr6K1QlwLByT3CXF9pbAR5GKwqbbu6u0/UE+SUpf85caZOfeloJ3GQIC
+	PmA==
+X-Google-Smtp-Source: AGHT+IEjYPnHZWGzrzuctWTDZl3/WbtAl14yb32XRq028RUvicCO/g54v3a+VeurCXvyrMfQTJ0ZCw==
+X-Received: by 2002:a05:6a20:6716:b0:1a3:6378:1e8f with SMTP id q22-20020a056a20671600b001a363781e8fmr7149948pzh.32.1711004990595;
+        Thu, 21 Mar 2024 00:09:50 -0700 (PDT)
+Received: from fshao-p620.tpe.corp.google.com ([2401:fa00:1:10:c1ff:a4cf:ac35:8df6])
+        by smtp.gmail.com with ESMTPSA id o1-20020a170902d4c100b001dbcfb4766csm8705582plg.226.2024.03.21.00.09.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Mar 2024 00:09:50 -0700 (PDT)
+From: Fei Shao <fshao@chromium.org>
+To: Mark Brown <broonie@kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Fei Shao <fshao@chromium.org>,
+	Daniel Kurtz <djkurtz@chromium.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-spi@vger.kernel.org
+Subject: [PATCH v2 1/2] spi: spi-mt65xx: Fix NULL pointer access in interrupt handler
+Date: Thu, 21 Mar 2024 15:08:57 +0800
+Message-ID: <20240321070942.1587146-2-fshao@chromium.org>
+X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
+In-Reply-To: <20240321070942.1587146-1-fshao@chromium.org>
+References: <20240321070942.1587146-1-fshao@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-Hi Rasmus,
+The TX buffer in spi_transfer can be a NULL pointer, so the interrupt
+handler may end up writing to the invalid memory and cause crashes.
 
-linux@rasmusvillemoes.dk wrote on Wed, 20 Mar 2024 11:49:39 +0100:
+Add a check to trans->tx_buf before using it.
 
-> Simplify the code by using the helper we have for doing exactly this.
->=20
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Fixes: 1ce24864bff4 ("spi: mediatek: Only do dma for 4-byte aligned buffers")
+Signed-off-by: Fei Shao <fshao@chromium.org>
+---
 
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Changes in v2:
+- Restore a missing curly brace being dropped during rebase
+- Fix a typo in commit message (trans, not xfer)
 
+ drivers/spi/spi-mt65xx.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-Thanks,
-Miqu=C3=A8l
+diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+index 8d4633b353ee..e4cb22fe0075 100644
+--- a/drivers/spi/spi-mt65xx.c
++++ b/drivers/spi/spi-mt65xx.c
+@@ -788,17 +788,19 @@ static irqreturn_t mtk_spi_interrupt(int irq, void *dev_id)
+ 		mdata->xfer_len = min(MTK_SPI_MAX_FIFO_SIZE, len);
+ 		mtk_spi_setup_packet(host);
+ 
+-		cnt = mdata->xfer_len / 4;
+-		iowrite32_rep(mdata->base + SPI_TX_DATA_REG,
+-				trans->tx_buf + mdata->num_xfered, cnt);
++		if (trans->tx_buf) {
++			cnt = mdata->xfer_len / 4;
++			iowrite32_rep(mdata->base + SPI_TX_DATA_REG,
++					trans->tx_buf + mdata->num_xfered, cnt);
+ 
+-		remainder = mdata->xfer_len % 4;
+-		if (remainder > 0) {
+-			reg_val = 0;
+-			memcpy(&reg_val,
+-				trans->tx_buf + (cnt * 4) + mdata->num_xfered,
+-				remainder);
+-			writel(reg_val, mdata->base + SPI_TX_DATA_REG);
++			remainder = mdata->xfer_len % 4;
++			if (remainder > 0) {
++				reg_val = 0;
++				memcpy(&reg_val,
++					trans->tx_buf + (cnt * 4) + mdata->num_xfered,
++					remainder);
++				writel(reg_val, mdata->base + SPI_TX_DATA_REG);
++			}
+ 		}
+ 
+ 		mtk_spi_enable_transfer(host);
+-- 
+2.44.0.396.g6e790dbe36-goog
+
