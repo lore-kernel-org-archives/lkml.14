@@ -1,105 +1,191 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2968B41E4E
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 06:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81974D9EF
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 06:49:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711003725; cv=none; b=WYw/h+dxAxo6ZBpVhDBGK84KiGrXmv5UAYgLKFqV8JbYKxOrbaQ+vEwWb+gYKXCzCbAQnxAvnj7/mLd0goXHpeNOuynublVJBdfjEkxi+SllEujsn9J7L4ntBnjAyw9VAkZykFiWAj1nssBnxZ3SQZHo82seUB1bhE0425fZAvc=
+	t=1711003752; cv=none; b=I2yNcE0tfe5opoi60Fzs1Mg67bIAn4n4dI5Im3Ge6zGjKXCT5NL2Gq0dTmrHoy3CttE0vXGSy2RsPAJkkQE6RJBlkPWsgjwSoQ024TrxzgjLAMZ7tPigiXKYVjAUkS32y76NMGAL8+sLQ++zP6enpzGxg4w6Gs2XslIWjZNGvsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711003725; c=relaxed/simple;
-	bh=IgovOM9KUeWENwA/mJE5Ljvl53JZKmY38SkL4KVY3lQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dm0N9AChBPDnrd+JymeqYVjelq90zcApj9jPR5ygKTCMmLsoLMorZ+cxfFhAfHKj2t7dcqymZTSTBgaTZSpMJLYbFLYRlufE2h4752+4z3bMjPT4NatN4zMGzp4CT30BWct/FXhvGYpusUu054FTZKG5U9+/B/QiWnY8HknLZXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kNq2h+D5; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kNq2h+D5"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6962a97752eso5111776d6.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 23:48:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711003723; x=1711608523; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XtvNQiaw+2/IaxnmzdGoLxqPTPX+iJkSvUz6nFXt6OU=;
-        b=kNq2h+D5pU/x+HKQkFXMruHAdEi60RdaLJgIsqkA1OoAEE9wf+pt8SABbzYtFN7oLy
-         6Ggo+4fJzWQpvYbJS3vhZ5iJh0PdwGIl70qV9TW1onpdctfH0VYc/y8jiUpAdihUq2Kr
-         7uvtmsvFEZp9Dps0RQ/n+UeFg2pCARgVMSmPE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711003723; x=1711608523;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XtvNQiaw+2/IaxnmzdGoLxqPTPX+iJkSvUz6nFXt6OU=;
-        b=ZOUgEQjFLp2PZ3Vjl/fVt4uII11l/McXWUKM7mf3xIGgzcGcRdxWgPVmb1XFvfgwcD
-         gz3HKiSueOd9uWxvAbymKRrzlwhiK53LPD7SmkL2FkbjAy0CTcrvW7GVjIM4N2qNV7Rs
-         nPCH/2QL4f+v7HGml+BIJAj1IBHrmOv2/1nV49kGyyH8OUAiC7L48I43xaQ6VVier4bw
-         KlekJiq2wzwH/nPV3FtNRtlksGke6QZmr/B8IrocLVdxqxTZkKynfGm4jmk1iMwKJxJw
-         5SZvCq9lKhoHJX6czSMcK/0hA4HnU5IfAc1r96wMo/myV/P3ZEort+277PJlcP2hJqXL
-         FRyg==
-X-Forwarded-Encrypted: i=1; AJvYcCWk6baLkQ3yHY1SUHdVDkEfhD7HSsVygn9mPWJUeUS6s46517QgxLFFtSEo2jdYO8HxHQ542Mv0+SHPjWmyTNaILcsK5ZFdmePVKpFP
-X-Gm-Message-State: AOJu0YyntU81ky77fqFFlD5/UjMrt4kM3Y0RditsZznM9biwtwq3NuMR
-	jXVU4PHlc0wZwkomRJGXA6N2P94Szf+ZdEnQZSnPBser26brkIXvP0HvGqCcH3cK8//5MLeNubQ
-	=
-X-Google-Smtp-Source: AGHT+IHWd5hWPmT05m/dMO6abQe1VIjaPIiKOk2TwZu/GsKoXdSkfitV4XwZzfzNFOrPnEs3/o8wrg==
-X-Received: by 2002:a05:6a20:4907:b0:1a3:4469:5967 with SMTP id ft7-20020a056a20490700b001a344695967mr7091773pzb.57.1711003407287;
-        Wed, 20 Mar 2024 23:43:27 -0700 (PDT)
-Received: from fshao-p620.tpe.corp.google.com ([2401:fa00:1:10:c1ff:a4cf:ac35:8df6])
-        by smtp.gmail.com with ESMTPSA id lb3-20020a056a004f0300b006e664031f10sm12874938pfb.51.2024.03.20.23.43.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Mar 2024 23:43:26 -0700 (PDT)
-From: Fei Shao <fshao@chromium.org>
-To: Mark Brown <broonie@kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Fei Shao <fshao@chromium.org>,
-	Daniel Kurtz <djkurtz@chromium.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-spi@vger.kernel.org
-Subject: [PATCH 0/2] Fixes NULL pointer access in spi-mt65xx.c
-Date: Thu, 21 Mar 2024 14:41:00 +0800
-Message-ID: <20240321064313.1385316-1-fshao@chromium.org>
-X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
+	s=arc-20240116; t=1711003752; c=relaxed/simple;
+	bh=gC9fiWVkRdQtTz7S4SM6sTWzeEQ6v/EMb/TX4NV3sp0=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=sKHHxBT1vxYL/kVW9RxGMZnooNSPOD8oQN6SJrRhH332dSQsRb5NA9ToyctEnVFoVJzs8lbFtfGEGQzD8QC5xmYN4CJb+hagPESNIiHu2/tdJ9Oz/3QM6X5Xm+XnScHV4JRogFBvyKUcfwD64kuY9FcIbtXT7KzwGLt06Kw5CBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4V0bbY5bvpz1QB33;
+	Thu, 21 Mar 2024 14:46:49 +0800 (CST)
+Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
+	by mail.maildlp.com (Postfix) with ESMTPS id DAA3D140414;
+	Thu, 21 Mar 2024 14:49:06 +0800 (CST)
+Received: from [10.174.178.46] (10.174.178.46) by
+ kwepemm600013.china.huawei.com (7.193.23.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 21 Mar 2024 14:49:06 +0800
+Subject: Re: [RFC PATCH 4/5] ubifs: Introduce ACLs mount options
+To: Li Zetao <lizetao1@huawei.com>, <richard@nod.at>
+CC: <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>
+References: <20240319161646.2153867-1-lizetao1@huawei.com>
+ <20240319161646.2153867-5-lizetao1@huawei.com>
+From: Zhihao Cheng <chengzhihao1@huawei.com>
+Message-ID: <c3d5f06e-bdc4-4312-19a1-17a7a64e8795@huawei.com>
+Date: Thu, 21 Mar 2024 14:49:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <20240319161646.2153867-5-lizetao1@huawei.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600013.china.huawei.com (7.193.23.68)
 
-Hi,
+ÔÚ 2024/3/20 0:16, Li Zetao Ð´µÀ:
+> Implement the ability to enable or disable the ACLs feature through
+> mount options. "-o acl" option means enable and "-o noacl" means disable
+> and it is enable by default.
+> 
+> Signed-off-by: Li Zetao <lizetao1@huawei.com>
+> ---
+>   fs/ubifs/super.c | 40 ++++++++++++++++++++++++++++++++++++++++
+>   fs/ubifs/ubifs.h |  2 ++
+>   2 files changed, 42 insertions(+)
+> 
+> diff --git a/fs/ubifs/super.c b/fs/ubifs/super.c
+> index 7f4031a15f4d..ed03bf11e51d 100644
+> --- a/fs/ubifs/super.c
+> +++ b/fs/ubifs/super.c
+> @@ -457,6 +457,13 @@ static int ubifs_show_options(struct seq_file *s, struct dentry *root)
+>   	seq_printf(s, ",assert=%s", ubifs_assert_action_name(c));
+>   	seq_printf(s, ",ubi=%d,vol=%d", c->vi.ubi_num, c->vi.vol_id);
+>   
+> +#ifdef CONFIG_UBIFS_FS_POSIX_ACL
 
-This series contains two patches for spi-mt65xx.c, both focusing on its
-interrupt handler mtk_spi_interrupt().
+This config is introduced in pacth 5, we cannot use it in patch 4.
+> +	if (c->mount_opts.acl == 2)
+> +		seq_puts(s, ",acl");
+> +	else if (c->mount_opts.acl == 1)
+> +		seq_puts(s, ",noacl");
+> +#endif
+> +
+>   	return 0;
+>   }
+>   
+> @@ -967,6 +974,8 @@ static int check_volume_empty(struct ubifs_info *c)
+>    * Opt_assert: set ubifs_assert() action
+>    * Opt_auth_key: The key name used for authentication
+>    * Opt_auth_hash_name: The hash type used for authentication
+> + * Opt_acl: enable posix acl
+> + * Opt_noacl: disable posix acl
+>    * Opt_err: just end of array marker
+>    */
+>   enum {
+> @@ -981,6 +990,8 @@ enum {
+>   	Opt_auth_key,
+>   	Opt_auth_hash_name,
+>   	Opt_ignore,
+> +	Opt_acl,
+> +	Opt_noacl,
+It would be better to update Documentation/filesystems/ubifs.rst to 
+describe new mount options
+>   	Opt_err,
+>   };
+>   
+> @@ -997,6 +1008,8 @@ static const match_table_t tokens = {
+>   	{Opt_ignore, "ubi=%s"},
+>   	{Opt_ignore, "vol=%s"},
+>   	{Opt_assert, "assert=%s"},
+> +	{Opt_acl, "acl"},
+> +	{Opt_noacl, "noacl"},
+>   	{Opt_err, NULL},
+>   };
+>   
+> @@ -1137,6 +1150,23 @@ static int ubifs_parse_options(struct ubifs_info *c, char *options,
+>   			break;
+>   		case Opt_ignore:
+>   			break;
+> +#ifdef CONFIG_UBIFS_FS_POSIX_ACL
+> +		case Opt_acl:
+> +			c->mount_opts.acl = 2;
+> +			c->vfs_sb->s_flags |= SB_POSIXACL;
+> +			break;
+> +		case Opt_noacl:
+> +			c->mount_opts.acl = 1;
+> +			c->vfs_sb->s_flags &= ~SB_POSIXACL;
+> +			break;
+> +#else
+> +		case Opt_acl:
+> +			ubifs_err(c, "acl options not supported");
+> +			return -EINVAL;
+> +		case Opt_noacl:
+> +			ubifs_err(c, "noacl options not supported");
+> +			return -EINVAL;
+> +#endif
+>   		default:
+>   		{
+>   			unsigned long flag;
+> @@ -2011,12 +2041,17 @@ static int ubifs_remount_fs(struct super_block *sb, int *flags, char *data)
+>   	sync_filesystem(sb);
+>   	dbg_gen("old flags %#lx, new flags %#x", sb->s_flags, *flags);
+>   
+> +	c->mount_opts.acl = 0;
+>   	err = ubifs_parse_options(c, data, 1);
 
-The first patch is to fix a NULL pointer access in the interrupt
-handler, which is first found on a MT8186 Chromebook device when the
-system tries to establish host communication with its embedded
-controller.
-
-The second one is a decorative clean-up when I'm working on the first
-patch, which simply renames a variable to better follow the rest of the
-code.
-I put this after the first fix because I think that will make
-maintainers and users slightly easier to only backport the fix if
-needed.
-
-Looking forward to any feedback, thank you.
-
-Regards,
-Fei
-
-
-Fei Shao (2):
-  spi: spi-mt65xx: Fix NULL pointer access in interrupt handler
-  spi: spi-mt65xx: Rename a variable in interrupt handler
-
- drivers/spi/spi-mt65xx.c | 47 ++++++++++++++++++++--------------------
- 1 file changed, 23 insertions(+), 24 deletions(-)
-
--- 
-2.44.0.396.g6e790dbe36-goog
+1. mount -onoacl /dev/ubi0_0 /mnt # After that, mount will show 'noacl' 
+option
+2. mount -oremount,xxx /dev/ubi0_0 /mnt
+If 'xxx' has nothing to do with acl, c->mount_opts.acl is set as '0'. 
+Then superblock flag is assigned with 'SB_POSIXACL' and mount will not 
+display 'nocal'. Will it make user confused?
+>   	if (err) {
+>   		ubifs_err(c, "invalid or unknown remount parameter");
+>   		return err;
+>   	}
+>   
+> +#ifdef CONFIG_UBIFS_FS_POSIX_ACL
+> +	if (!c->mount_opts.acl)
+> +		c->vfs_sb->s_flags |= SB_POSIXACL;
+> +#endif
+>   	if (c->ro_mount && !(*flags & SB_RDONLY)) {
+>   		if (c->ro_error) {
+>   			ubifs_msg(c, "cannot re-mount R/W due to prior errors");
+> @@ -2197,6 +2232,11 @@ static int ubifs_fill_super(struct super_block *sb, void *data, int silent)
+>   	if (err)
+>   		goto out_close;
+>   
+> +#ifdef CONFIG_UBIFS_FS_POSIX_ACL
+> +	if (!c->mount_opts.acl)
+> +		c->vfs_sb->s_flags |= SB_POSIXACL;
+> +#endif
+> +
+>   	/*
+>   	 * UBIFS provides 'backing_dev_info' in order to disable read-ahead. For
+>   	 * UBIFS, I/O is not deferred, it is done immediately in read_folio,
+> diff --git a/fs/ubifs/ubifs.h b/fs/ubifs/ubifs.h
+> index b0d3b076290d..4a6078cbb2f5 100644
+> --- a/fs/ubifs/ubifs.h
+> +++ b/fs/ubifs/ubifs.h
+> @@ -956,6 +956,7 @@ struct ubifs_orphan {
+>    *                  specified in @compr_type)
+>    * @compr_type: compressor type to override the superblock compressor with
+>    *              (%UBIFS_COMPR_NONE, etc)
+> + * @acl: enable/disable posix acl (%0 default, %1 disable, %2 enable)
+>    */
+>   struct ubifs_mount_opts {
+>   	unsigned int unmount_mode:2;
+> @@ -963,6 +964,7 @@ struct ubifs_mount_opts {
+>   	unsigned int chk_data_crc:2;
+>   	unsigned int override_compr:1;
+>   	unsigned int compr_type:2;
+> +	unsigned int acl:2;
+>   };
+>   
+>   /**
+> 
 
