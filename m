@@ -1,122 +1,111 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from domac.alu.hr (domac.alu.unizg.hr [161.53.235.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3968413441F
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 20:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C2F56B98;
+	Thu, 21 Mar 2024 20:08:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.235.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711051453; cv=none; b=TkDhmEtxsM1p5NdlxOlcwJDMcQN6sE/kGHITqv7jyGdCsq6BP5Why5SpQveBuUlefqqcmutQk1yNzWoLhpUkdIYHt3+VO4+jahHmhqLm1eDaPpXdWXbks24tfBEjQQZvQTLulUzj40FTEYkX5mPwoaR2430Rojvr6NgeFgHWMX4=
+	t=1711051721; cv=none; b=QwAAxv4RGyIaM1M4tsOiwka8PFoNxs3eaYAszOqTD+roQKNUyOEjMSuWUY5CEVLgps92BTXU0U9f5nm/l7Uv5FoEldmOzX0ypQMOZxEuV3Xv75qX6BegQN8ylAVih7VEMUQk8S2R34DSmlNQuG+sTn3V/d7u+2GiWb00lggtZi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711051453; c=relaxed/simple;
-	bh=S6RP6uWmLdlEXkKQny/wqkGVsqJcl1gAUGPqZ6bCYiM=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ndf7hhnGoOPE3FJqSYoF04gy5hBtAu68sUbt6QdoSH1W2zgahkQ+gF5ksOJXdyzjLUghvjAsFNo55nXbsLV8ZwtyIBuAgtq/ztIc1wcnZSTzK8CEEX2Lwd7YQJXEIo5JQrXDOpoKo1UkOTEtoT8SLqYBMl43QaeO20sRVSNh6pM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t9UBmgHd; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	s=arc-20240116; t=1711051721; c=relaxed/simple;
+	bh=QMqBRt3qEO8LJ5O3+VuzCT6Y+LAtdZG1pvlw1Zc6YBA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DZDhWXcaFe33w92Aot7Ogg2xMAqDi/bgVgrWEJ0n0514OB1AhsnctrXFD6f9h+Wekf3mQ8sqXrXPPW8ynRzz3k1FrmJR8BWPaqe1NGTwKHYwe8llJvUE2JAkCBoQxuCdC2uVuqZkVudxQgYbnMdUvwHkuqCV6k8rD/AI6Gj3Rfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alu.unizg.hr; spf=pass smtp.mailfrom=alu.unizg.hr; dkim=pass (2048-bit key) header.d=alu.unizg.hr header.i=@alu.unizg.hr header.b=NhgpRkmp; dkim=pass (2048-bit key) header.d=alu.unizg.hr header.i=@alu.unizg.hr header.b=J11aJGIJ; arc=none smtp.client-ip=161.53.235.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alu.unizg.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alu.unizg.hr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t9UBmgHd"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b26845cdso1905828276.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 13:04:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711051449; x=1711656249; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=TCBKqThFKtYqhjiY4RMqU+IuZ1w6cv8EE0k+cJlDNnk=;
-        b=t9UBmgHd/q5utv6qWZdP7eKjHmnVZeNPsHJMDwPYc4VzSykPCFSN7CTgGuWTVhHh+a
-         aKYy3oo4FCmLVj+XEkYF67gVoWr+EGVpoDy9KDhU+KV1z8h0vybFigUzJVjuqcBcQVDi
-         9UmqlsMy2iJRkUHNR8I9EdPTQxdvTqqtsFqsliQ7cuFrF7hYiNguxgHqbnR4oDDOHWj+
-         FPJxBjH6zXp5rlwhy0fpxHw6jCbrbESsqvo5Ky7MZSvoDJz7FjZyvxMnyPP53mO65s3h
-         AWBYcWP74+R9YGP7LJSclVyEpCt5zYHP+H8lumtOK1/34k4CFGACNJ5Ja89dzoaPxFV4
-         U8lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711051449; x=1711656249;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TCBKqThFKtYqhjiY4RMqU+IuZ1w6cv8EE0k+cJlDNnk=;
-        b=MKWa+X4znWJ63lqhXmWrMaQoIR73Z0RqWOkT+dd8d9CEPzfu/qAtL8UCnbCghTl8Hm
-         B+DNVVfJvryXKB85VGRUUl+9cOK709dWs1zO0ifCveFbd6/YSGe6KF76GNrbluH8+z7i
-         umeKKQadPwNToCnipQvqI28oe8/3NTR7x12IUeDvKFlJAsL8B7ZyXNkDKgvhS7RYfcOy
-         rGIpz3doSJaEFj5vdWTxlZwVfnbtc0rB8RqPZ6U/fzXJLyz8NKKh7jvBXH1rhvMXGKnc
-         k66YsgUJQUzkp7KnyXgCuPXLCnPjREreX5cIoO9JyvL9nBTIflsi5zuvHmvPIZHgwSzh
-         lqzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVMYUj5dpK5+Vy0bqbhukZVuxu8D3IzTSSvOl/8GyrYDDpifOmIU7KMGCkUWdhOLZJ/Sz6hPMKBFu6uwZlsLQsZs8dznMYG8dWfd8gA
-X-Gm-Message-State: AOJu0YymG0P1Kkz3+JiePTkhVkAUrCyJNN0W63C0RP8nVpxndIwBj9eW
-	zNWWExtXejMwU67UtBF5Ses5phpYIH2rchBa5Xxjpiv5PHwbw6KGsu1uP2DIMhScm6WRXWz6auu
-	umi06loLiW0oxfqd4XZ293w==
-X-Google-Smtp-Source: AGHT+IE5VBN/+0LV/WPi06J13PSBodS0OdOu9MsbtLw0uhdLxrW4h4oP0M2VfdY/eM1a/8qsQNDCacEmRg4kGkc2ng==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:2484:b0:dbd:b165:441 with
- SMTP id ds4-20020a056902248400b00dbdb1650441mr74857ybb.0.1711051449209; Thu,
- 21 Mar 2024 13:04:09 -0700 (PDT)
-Date: Thu, 21 Mar 2024 20:04:08 +0000
+	dkim=pass (2048-bit key) header.d=alu.unizg.hr header.i=@alu.unizg.hr header.b="NhgpRkmp";
+	dkim=pass (2048-bit key) header.d=alu.unizg.hr header.i=@alu.unizg.hr header.b="J11aJGIJ"
+Received: from localhost (localhost [127.0.0.1])
+	by domac.alu.hr (Postfix) with ESMTP id 522E660177;
+	Thu, 21 Mar 2024 21:08:31 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1711051711; bh=QMqBRt3qEO8LJ5O3+VuzCT6Y+LAtdZG1pvlw1Zc6YBA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NhgpRkmpaELC3IgHFCQSNu7fqQEPrvN5IsFBw9UTqN0QeoDPNZOgJes0i7r8MkFPA
+	 7CFDdj+rDmrasfbKNl4yAoRKFKD/JkA0IZnxbVuvlY+KkPz+boZD3vIS5d5HPOWcrD
+	 5ie23M+5Ct9qLSHgqrFP7h8J+goIRqAnVFvsQZ8PsdGxSl3YeyypBVCNzXa9mTFx/C
+	 2hMgT3vTgo7QOz/TaVEzS09KbdQldMD0R7s4MLxgDoEwfLAGIqCISwGsw9J87tA9zr
+	 vwc68SPtkqUu9RGhuAO2AoFxq4uNkrJA3HMNsBBKy7LcGDlKYL9+kdqqDSuJIYV01v
+	 MGTxhPNg549YA==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id K_VLVDRACGJo; Thu, 21 Mar 2024 21:08:21 +0100 (CET)
+Received: from [192.168.178.20] (dh207-43-75.xnet.hr [88.207.43.75])
+	by domac.alu.hr (Postfix) with ESMTPSA id 52A9760171;
+	Thu, 21 Mar 2024 21:08:20 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1711051701; bh=QMqBRt3qEO8LJ5O3+VuzCT6Y+LAtdZG1pvlw1Zc6YBA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=J11aJGIJN7evfjv67dCMlKaaKGTR1GoGMvraFsn/F1yw7zaGMAVxH/uXWjf4x3dwX
+	 KUTy+0hCuMjJT+fTx8LlNhi5ZR5hb4UccsNHhkuN+yppcAgxgNdYFjkaZB5VuJArUB
+	 UH29WEoryFs/lXzDS4YwYj/lGoeYM3mhjN3lnloT9+N/MY6wQVJp+rwCqnf6wA0yBS
+	 qPqlEvf7I7oQzFIuPdQ75/GauwTQMMXcsvAWu4Qp1JGGjMz7rOzeixOAuWY6NPjSDr
+	 +a21v3PcEKzHgbEA20ttLZUm+AqPR2xosM39deK6PizCBIUJJc6phwUZ4IrZgkVd1j
+	 utctc85mSBFCg==
+Message-ID: <88bef146-bc24-4b6f-8f84-09b818061372@alu.unizg.hr>
+Date: Thu, 21 Mar 2024 21:08:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIALeS/GUC/4XNQQqDMBCF4avIrDslicVqV71HEWmTiQ5oEhKRi
- nj3pkLXZVb/LL63QaLIlOBWbBBp4cTe5VCnAvTwdD0hm9yghLqIUglMc3Q6rGgTvtjZae5otJ0
- 1gTVqrFW+ylyrUgrIRohk+X34jzb3wGn2cT3mFvn9/mT5R14kSrTGkKp03dQN3Xvv+5HO2k/Q7 vv+AbD0yg3LAAAA
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711051448; l=1634;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=S6RP6uWmLdlEXkKQny/wqkGVsqJcl1gAUGPqZ6bCYiM=; b=ltUxZ2cpj94pnvyIBEzmfBEHQXiRRLeDTlLyWbffUabFpLWPDEAtsiKsRij39k9phe/VyFBxJ
- 50r/4jHF4KlATUMzXLzQG9U+LPWH6633/Y5LV4uwnne1EeG7KX+npD1
-X-Mailer: b4 0.12.3
-Message-ID: <20240321-strncpy-fs-binfmt_elf_fdpic-c-v2-1-0b6daec6cc56@google.com>
-Subject: [PATCH v2] binfmt: replace deprecated strncpy
-From: Justin Stitt <justinstitt@google.com>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Eric Biederman <ebiederm@xmission.com>, Kees Cook <keescook@chromium.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] selftests/net: test_vxlan_mdb.sh: 84 out of 642 tests
+ [FAIL]
+To: Ido Schimmel <idosch@nvidia.com>
+Cc: Hangbin Liu <liuhangbin@gmail.com>, netdev@vger.kernel.org,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <5bb50349-196d-4892-8ed2-f37543aa863f@alu.unizg.hr>
+ <Zfe2cGv_EWFAZXAJ@Laptop-X1>
+ <f005453c-c7cf-4e1d-b266-ffe1cf8fc79e@alu.unizg.hr>
+ <ZfmgdVUmy-DgNklu@shredder>
+ <87634afb-d14b-42ce-be25-1000591ee57c@alu.unizg.hr>
+ <ZfrB7hATyOcl4RSy@shredder>
+Content-Language: en-US
+From: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
+In-Reply-To: <ZfrB7hATyOcl4RSy@shredder>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
 
-There is a _nearly_ identical implementation of fill_psinfo present in
-binfmt_elf.c -- except that one uses get_task_comm over strncpy(). Let's
-mirror that in binfmt_elf_fdpic.c
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Changes in v2:
-- use get_task_comm (thanks Eric)
-- Link to v1: https://lore.kernel.org/r/20240321-strncpy-fs-binfmt_elf_fdpic-c-v1-1-fdde26c8989e@google.com
----
-Note: build-tested only.
+On 3/20/24 12:01, Ido Schimmel wrote:
+> On Wed, Mar 20, 2024 at 01:47:36AM +0100, Mirsad Todorovac wrote:
+>> On 3/19/24 15:25, Ido Schimmel wrote:
+>>> Will look into it today or later this week.
+>>
+>> Thank you for considering this.
+> 
+> Can you please try the following patch?
+> 
+> https://github.com/idosch/linux/commit/58f25dd8766dbe9ac50c76b44f9ba92350ebb5c6.patch
 
-Found with: $ rg "strncpy\("
----
- fs/binfmt_elf_fdpic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Congratulations, apparently, your patch had fixed them all:
 
-diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-index 1920ed69279b..3314249e8674 100644
---- a/fs/binfmt_elf_fdpic.c
-+++ b/fs/binfmt_elf_fdpic.c
-@@ -1359,7 +1359,7 @@ static int fill_psinfo(struct elf_prpsinfo *psinfo, struct task_struct *p,
- 	SET_UID(psinfo->pr_uid, from_kuid_munged(cred->user_ns, cred->uid));
- 	SET_GID(psinfo->pr_gid, from_kgid_munged(cred->user_ns, cred->gid));
- 	rcu_read_unlock();
--	strncpy(psinfo->pr_fname, p->comm, sizeof(psinfo->pr_fname));
-+	get_task_comm(psinfo->pr_fname, p);
- 
- 	return 0;
- }
+# TEST: Torture test                                                  [ OK ]
+#
+# Data path: MDB torture test - IPv6 overlay / IPv6 underlay
+# ----------------------------------------------------------
+# TEST: Torture test                                                  [ OK ]
+#
+# Tests passed: 642
+# Tests failed:   0
+ok 90 selftests: net: test_vxlan_mdb.sh
 
----
-base-commit: a4145ce1e7bc247fd6f2846e8699473448717b37
-change-id: 20240320-strncpy-fs-binfmt_elf_fdpic-c-828286d76310
+Please consider adding:
+
+Tested-by: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
+
+at your convenience.
+
+Shalom, and have a great evening!
 
 Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+Mirsad Todorovac
