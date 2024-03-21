@@ -1,114 +1,91 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1271E522;
-	Thu, 21 Mar 2024 15:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFFD21E522;
+	Thu, 21 Mar 2024 15:01:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711033272; cv=none; b=vA4GGGRc2+gjxD+aLLEsPfYFwikGcJTMfuqjt8K6lkTmRzYxJhnHgNFHeA21Y/dfuTsyfxI9qdeDwwnbPOoapV7Kw/0MM4H14cE17uGKtosMHy1n+86f3nx8V4xjWqtv+xagENmXAClauHm7s5FZ/uU/x0CWN7fuesMPh5lAD4Y=
+	t=1711033319; cv=none; b=VDHYo5P0gsSwSMEALbyka+ltC7M49eCUXOUwrmT90XvAQ/vxwj/dycV94aQLmsGfaEzuovW0RW/d9fyjsvv/hC9F6o7w7/B2d3um775r7AI+3cmXKsTnWKVHJXc7V1+2w8y3zXEc7aAyhtU8D33jl5gxZmEzZkDXwoFwZDxX2NE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711033272; c=relaxed/simple;
-	bh=MeHpHFngmGDIRw0t6x3fj84LYp7O6nC0DGzx+CxZmLk=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=BMoW3imUhQOjEQHXshOfk9vlZcv9Xg3pFo5Y+P+mcZ4wZ76rUxrgzJQgc/zSeARzJoo+xZqHVEOv4g0NuJSEeqOmc0mOluupG127/0OsgunKGN2rWQhYBAYZL97FvqZhrh6fIPrj3bYWsx3ag6O4iOf+SApzE9/c0REyEvR0Dls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=SiD/LbjN; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	s=arc-20240116; t=1711033319; c=relaxed/simple;
+	bh=kmMw7UrxyYm+FrW2p/kXhJw0xpkOp6iNmX0mZMs6h10=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=CknHHaSmFcnQZbWAPUXBPBvQfNPtsT2wjoe/PFkQd3OYgT4vSdwzLamztvKy/MChjNUucC5+k+I3l2VSIkRWnElSLnV+/BO53B19qOr7IfwCywL+LotzTtpooVlZMugl4INyGB75R55NVzyGTX2Zp8srKsjs6JPnbVNk0I7+GYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rBS3hh6a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="SiD/LbjN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rBS3hh6a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDA1CC433F1;
+	Thu, 21 Mar 2024 15:01:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711033319;
+	bh=kmMw7UrxyYm+FrW2p/kXhJw0xpkOp6iNmX0mZMs6h10=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=rBS3hh6a7XnbPCyETgHuyP4Gzi5T8ulrzuCZY+NwYdZDihY0vZO3F5Mjz7RHz3+fT
+	 LMjOby+wmiv4ooIDcbTGjMopnVv9ktbF7vA0sbV5mymIByAjdI0VH45ZIxILykinyn
+	 Vwjmre3d4jdgMUY7Zwj/otTwNTOB9/TJrDCgDcOjye4EiEDXn6l+yvfj3bXa1gshLG
+	 Jwxv9UHOk60VLQatPPF3B93u2lR+AWnYxCfx8I9qirKVjQ3iRsSHR1cHg/isw8jZ6g
+	 RDYqlvFNBoUj50Au2d5INpAkMPtMcqDpp7kbDDw+6Tu1N9f9ziHSejrBzjSTrVSUZU
+	 rWnd+1I9UpKlA==
+From: Mark Brown <broonie@kernel.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Fei Shao <fshao@chromium.org>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org
+In-Reply-To: <20240321070942.1587146-1-fshao@chromium.org>
+References: <20240321070942.1587146-1-fshao@chromium.org>
+Subject: Re: [PATCH v2 0/2] Fixes NULL pointer access in spi-mt65xx.c
+Message-Id: <171103331749.114773.10634941088175436463.b4-ty@kernel.org>
+Date: Thu, 21 Mar 2024 15:01:57 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1711033265;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Sft1JFZk5skzUoNvqsIk2m0oGI7tbYzzfxLI3ZVhHZo=;
-	b=SiD/LbjNKb4AO6tgV6/Tnd6/ux2gXYJ3AEfGypJAFLS34zSNhV4XKCSvE/81nMKXYNQhF7
-	ts3F5nJiVETb0Sah0NxVllHxkf0/7k++xFSPaPaC7CisDQOwvahcKSqR+5faVYq+aLzZ3i
-	bhNuRVjzJ6AriEpWFupgQFXvoVcfflf7f8IoYBpyFrU3eeLF8F91W0VAw7ajiONOZ+Q1Tw
-	+6hFdXCd9duHSvBucRVIIOkJRpiB4fNzECssiiTWd+kd6EntvPe6HtfiB9Eukv/iM0z1p1
-	mlpiDY1iM7rkx9N6ildz9N+ILdA31tAOirTTM2GfwPibJYUnLgQ7MU6dw1ai4A==
-Date: Thu, 21 Mar 2024 16:01:04 +0100
-From: Dragan Simic <dsimic@manjaro.org>
-To: Alex Bee <knaerzche@gmail.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Linus Walleij
- <linus.walleij@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
- <broonie@kernel.org>, Chris Zhong <zyw@rock-chips.com>, Zhang Qing
- <zhangqing@rock-chips.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 0/5] Add RK816 PMIC support
-In-Reply-To: <20240321143911.90210-2-knaerzche@gmail.com>
-References: <20240321143911.90210-2-knaerzche@gmail.com>
-Message-ID: <9a79e319d671b6a257f13ff945ee87e5@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+X-Mailer: b4 0.13-dev-a684c
 
-Hello Alex,
-
-On 2024-03-21 15:39, Alex Bee wrote:
-> This series aims to add support for Rockchip RK816 PMIC series. As per
-> datasheet it's targeted for RK3126/RK3128 (RK816-1), RK1108 (RK816-2) 
-> and
-> PX3-SE (RK816-3) but might be used for other SoCs as well. The mfd 
-> consists
-> of an integrated RTC, a GPIO controller, two 32k clock outputs, a power 
-> key
-> (output), 4 buck- and 5 ldo regulators, 3 regulator-switches, and 
-> charger
-> with integrated fuel gauge. Charger and fuel gauge are not part of this
-> series. Two of the switches (otg/boost) are part of the binding, but 
-> not of
-> the driver. They must only ever by enabled if no battery charging is
-> happening, but it will be enabled automatically if a battery is 
-> attached.
-> Thus they need some incorporation of a yet to be added charger driver.
-> Integration in the existing rk8xx-infrastructure was pretty 
-> straightforward
-> and only needed very little tweaking. In order to not further bloat the
-> driver(s) too much with additional definitions I tried to re-use 
-> existing
-> ones wherever possible.
+On Thu, 21 Mar 2024 15:08:56 +0800, Fei Shao wrote:
+> This series contains two patches for spi-mt65xx.c, both focusing on its
+> interrupt handler mtk_spi_interrupt().
 > 
-> The patches are loosely based on the vendor's implementation, verified
-> against the datasheet and tested/measured on RK3126 board. As they are
-> touching several subsystems I'm sending them (very) early for the
-> 6.10-cycle.
-
-I went quickly through all patches in the series except the one that 
-adds
-the bindings, and I've spotted no glaring issues.  My main focus was on
-ensuring there should be no regressions.
-
-Thus, not worth a Reviewed-by tag, but still counting as a review.
-
-> Alex Bee (5):
->   dt-bindings: mfd: Add rk816 binding
->   mfd: rk8xx: Add RK816 support
->   pinctrl: rk805: Add rk816 pinctrl support
->   regulator: rk808: Support apply_bit for
->     rk808_set_suspend_voltage_range
->   regulator: rk808: Add RK816 support
+> The first patch is to fix a NULL pointer access in the interrupt
+> handler, which is first found on a MT8186 Chromebook device when the
+> system tries to establish host communication with its embedded
+> controller.
 > 
->  .../bindings/mfd/rockchip,rk816.yaml          | 259 ++++++++++++++++++
->  drivers/mfd/Kconfig                           |   4 +-
->  drivers/mfd/rk8xx-core.c                      | 103 +++++++
->  drivers/mfd/rk8xx-i2c.c                       |  45 ++-
->  drivers/pinctrl/pinctrl-rk805.c               |  68 +++++
->  drivers/regulator/rk808-regulator.c           | 218 ++++++++++++++-
->  include/linux/mfd/rk808.h                     | 141 ++++++++++
->  7 files changed, 831 insertions(+), 7 deletions(-)
->  create mode 100644 
-> Documentation/devicetree/bindings/mfd/rockchip,rk816.yaml
+> [...]
+
+Applied to
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+
+Thanks!
+
+[1/2] spi: spi-mt65xx: Fix NULL pointer access in interrupt handler
+      commit: a20ad45008a7c82f1184dc6dee280096009ece55
+[2/2] spi: spi-mt65xx: Rename a variable in interrupt handler
+      (no commit info)
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
