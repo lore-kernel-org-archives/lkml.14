@@ -1,122 +1,112 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99DE113442E
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 19:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCB358AC0;
+	Thu, 21 Mar 2024 19:54:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711050806; cv=none; b=didTQI+GrfZHjv4n9jpce694ESy7hoYmzDgxY7XGGc4Qu+/hNi5I+HZhs/6ZJfKDEguXaimPV0pyWNg4f3nrxPQ3fzq9NpdpDvaYek1alaBsolrykKTgW3b+qeHTbqlpFwpn7EfXUBG33x2cN60w7dcMMloJQ95RtL/49Fr8rjo=
+	t=1711050883; cv=none; b=tcbYGovT8HKatAHBOf9SKu/0PMYm1tCU4sLknsONDhDWaQZ+UpUKKJVqRwmsYim25FTjC7+QAonarrvx8RQ9CMsGZUediTgkaV7ASWQx8TlKvNRCZoTV8ss22n0OR2Km95SP//yII3APQpyyY1xM/duA0aVrsVfjBV24wGQF3QA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711050806; c=relaxed/simple;
-	bh=nD8cOpq49+66zTur5Rx14smVkvFzE0T/lc1mTbbANIo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BYqgtlHucBpjxgYdB5M966X59wKx7CNWo23GxPye+/+Ia4TEEEoR0D9Nce8STumrP51LVhbYB7FHmt+7yXC7Rj2XcwQI8VNSWtccccT4wWqx34++hJrpgwe9AZCHiK/EBcllE7PAbKgQV1sgb4ZZHb+MK39TQG2r/n3ZpYPoAY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DbC2UZpu; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1711050883; c=relaxed/simple;
+	bh=OiYdnSL+AKG5nj3ekBU6CFDhM4MmswGCM84UgPCDb8c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TPW1FBabJ4tZvD1DEr/v6EVXtXwILahXNyHiI9xQvBOXma8gj2aC8RzKmKn0F4yxBrkinEQZqX5+6ixn5za83jaEG5DYdx22bclOTNfgsrh4tmclvr5UGfcpT4/uSJ9zrdqH08KWjdHMTnWHfqxrWl7Gepe7EE56YuLb3uhRc/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lYthmPnI; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DbC2UZpu"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4146f2bf8ecso9818195e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 12:53:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lYthmPnI"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3416df43cabso749057f8f.3;
+        Thu, 21 Mar 2024 12:54:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711050802; x=1711655602; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZWCv4bEtMtvoPMEGevXwNgVJxevtU1V2OzneMTeW1s0=;
-        b=DbC2UZpuMxbYX7kx+3QwVSFzBBiKD655onNOe7GtsuZsdLDVD3lnooxrUFZlwrnKZF
-         6gKtIXeVJZyIFW++sxG62nV6ulhsmzDwW0GRbH5zJrIgmUnTCUAJXTa7dbOjDz/5SdDj
-         m0f7KmPeI1opxUJHPcXX9HNDmBPlysGuB6iZogCv+jg9a+Hrcbl7vU+BbSq2B2rQsR0Z
-         C1z/INajr1y+noCWG4suwq1DSicCnTzopLQyihb6t4Xu01OBAFqLFv6PAgaJz3Tio1/h
-         w8SEk5qQFOPHyWYiJ7xt93TyvGeWup/D8RMB0S4i5PNv9NmgVchqoEyeD5ImZNGuLY6Q
-         pXsg==
+        d=gmail.com; s=20230601; t=1711050880; x=1711655680; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jDZlJEtHFIm6Gl+7kSgG5qWF5bEblRoSU2T4MYJXNV8=;
+        b=lYthmPnIETj1G3Uw4oo14IE3LnJcUTgdxvxhQaQwHekUi7qW5DdOUJj8CflXQiqbRg
+         DM8TyQYh1R8p1gsBSYclTcGz13q7QhClqC6AaqKVYIZETIIK4PfvEQ6k1RZmqYo60cwn
+         p2ytlMXkS9uIYiuCU6qgcORBngQ6SsCnu0G/jDp6oKt5pzlyhXDvvMCiUTGI856qcppz
+         xXvg96zmDYjAtUJw/npDUI+itjLTnKV0jhNFGHxZ4IoZvVjVTRZ8ZsqyIUi/kjvvYz80
+         G7nKSvzxqlqtp/1W8SShJKE6sZYf4fdXDkyeD+murUcxJmaqDBUFs9AspWWRFrlYW9Sj
+         TwIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711050802; x=1711655602;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZWCv4bEtMtvoPMEGevXwNgVJxevtU1V2OzneMTeW1s0=;
-        b=eUTNlswkR5Fi72ebSjWCr8BgtKOjk2C7s35hS2busuuIkNVAma4dy9Uoz63Q0PSrP+
-         TLkW3p0K8AF20uMU7uZfi66vctn33LKp6dMRkriu6LqAFj3k3fnfpW6MY9yb5d5w3WE1
-         Llx0k2SJe8u5LcetnDhhfhXX/y9BoQNWRL7L+1Mx5SKCegDMTFmlwP34tM+LXrcGU121
-         WQZMFbImyjwQtvfAZk5dH2yELeuCAFSHuuRtv5H3GA6/JyCwaRwTcAv1kfcCpRxPwA6z
-         jCObsWfSevH0zwnV1KX7/9dSxElgcqFXjIjNzFqkoXZofA4mhgsePkufhB7fIhIaE6lS
-         i04g==
-X-Gm-Message-State: AOJu0YxR8Jz/bQadDEyxPwtpp4uJd4xjNljDhxnpLpgABXn2mC7vFoMY
-	oWwc+utWRYMMPvIzqiirDf7hvPlx0RfUGi3V/JsE46mhwm8nyO+93W+oRlRo
-X-Google-Smtp-Source: AGHT+IEUs5lD9yNsBYQVWu4tJ6B7NxF6YLFedFsTLMUPYCnNirduu3mjEFZEDMun2hXs79+v+oY4VA==
-X-Received: by 2002:adf:e391:0:b0:33e:737f:9363 with SMTP id e17-20020adfe391000000b0033e737f9363mr85099wrm.70.1711050801793;
-        Thu, 21 Mar 2024 12:53:21 -0700 (PDT)
-Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id dj9-20020a0560000b0900b0033ec812ee0esm339613wrb.71.2024.03.21.12.53.20
+        d=1e100.net; s=20230601; t=1711050880; x=1711655680;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jDZlJEtHFIm6Gl+7kSgG5qWF5bEblRoSU2T4MYJXNV8=;
+        b=PnZ2+9wxotgPnENB7k7p8MPO4mdHyKX0+jB47yRsJ91Pp5ZTz6fibqm87z4bjZizV1
+         QJUiOdiDyIXxngLFHq7npWFVjODuPFY+PBl8E2i0G6C3O4gHYh7i+3CrNpm/M1NK6WSd
+         8AmKOYD4T0vDZe7UbORgKACzb90ZXC8nRQqUuXwPz5gwNwV6+Xsw0UMISzGDOuGoTl5f
+         8dheTVhK3nziTYISrCOckKNfIYaCdFZCLA5I8fb9syYBBXwBv03FQP+bo5ap/JJz3Ev4
+         vbL5ISByw8VP1wQt249vAw3iS64WdntII4SlUv8b8bE6BF77S1LJx9wGtnPIpPlw4vUR
+         nPvg==
+X-Forwarded-Encrypted: i=1; AJvYcCWz2YxioEEBgsGBwWeVqXKYhPTl6+yPSqpYxJT6S4S06YYEx7rJKfa+OhZ9MzqDb6Rle//4TY4hgkz6PZP8bZUYqdn9VUIEkPBLhA==
+X-Gm-Message-State: AOJu0Yx2xlQAP5xwtxFTJNHJIgUFmy4gxtaz5DOmItjQjpYsWUQDoVAQ
+	n/XNrP/XheFqrcTkmxX9p5aTCo1FiazZQOlRFUhtyNjjRrQG3f3k
+X-Google-Smtp-Source: AGHT+IEOclJy/CKjgZg3kBSaqvyZWV4BNEYGoWmUbWBMk90pFzsmw4VkSdit7UdC6gAJ/ZWAiox1gg==
+X-Received: by 2002:a05:6000:1843:b0:33d:c657:6ae3 with SMTP id c3-20020a056000184300b0033dc6576ae3mr125312wri.7.1711050879879;
+        Thu, 21 Mar 2024 12:54:39 -0700 (PDT)
+Received: from gmail.com (1F2EF04C.nat.pool.telekom.hu. [31.46.240.76])
+        by smtp.gmail.com with ESMTPSA id r29-20020adfa15d000000b0033e79eca6dfsm355492wrr.50.2024.03.21.12.54.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 12:53:21 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>
-Subject: [PATCH] locking/qspinlock: Use atomic_try_cmpxchg_relaxed() in xchg_tail()
-Date: Thu, 21 Mar 2024 20:52:47 +0100
-Message-ID: <20240321195309.484275-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.42.0
+        Thu, 21 Mar 2024 12:54:39 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Thu, 21 Mar 2024 20:54:37 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: "Xin Li (Intel)" <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+	linux-arch@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, jgross@suse.com, boris.ostrovsky@oracle.com,
+	arnd@arndb.de, Brian Gerst <brgerst@gmail.com>
+Subject: Re: [PATCH v2 1/1] x86: Rename __{start,end}_init_task to
+ __{start,end}_init_stack
+Message-ID: <ZfyQfQrluph6GxLS@gmail.com>
+References: <20240318071429.910454-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240318071429.910454-1-xin@zytor.com>
 
-Use atomic_try_cmpxchg_relaxed(*ptr, &old, new) instead of
-atomic_cmpxchg_relaxed (*ptr, old, new) == old in xchg_tail().
-x86 CMPXCHG instruction returns success in ZF flag,
-so this change saves a compare after cmpxchg.
 
-No functional change intended.
+* Xin Li (Intel) <xin@zytor.com> wrote:
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>
----
- kernel/locking/qspinlock.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+> The stack of a task has been separated from the memory of a task_struct
+> struture for a long time on x86, as a result __{start,end}_init_task no
+> longer mark the start and end of the init_task structure, but its stack
+> only.
+> 
+> Rename __{start,end}_init_task to __{start,end}_init_stack.
+> 
+> Note other architectures are not affected because __{start,end}_init_task
+> are used on x86 only.
+> 
+> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+> ---
+> 
+> Change since v1:
+> * Revert an accident insane change, init_task to init_stack (Jürgen Groß).
+> ---
+>  arch/x86/include/asm/processor.h  | 4 ++--
+>  arch/x86/kernel/head_64.S         | 2 +-
+>  arch/x86/xen/xen-head.S           | 2 +-
+>  include/asm-generic/vmlinux.lds.h | 6 +++---
+>  4 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
-index ebe6b8ec7cb3..1df5fef8a656 100644
---- a/kernel/locking/qspinlock.c
-+++ b/kernel/locking/qspinlock.c
-@@ -220,21 +220,18 @@ static __always_inline void clear_pending_set_locked(struct qspinlock *lock)
-  */
- static __always_inline u32 xchg_tail(struct qspinlock *lock, u32 tail)
- {
--	u32 old, new, val = atomic_read(&lock->val);
-+	u32 old, new;
- 
--	for (;;) {
--		new = (val & _Q_LOCKED_PENDING_MASK) | tail;
-+	old = atomic_read(&lock->val);
-+	do {
-+		new = (old & _Q_LOCKED_PENDING_MASK) | tail;
- 		/*
- 		 * We can use relaxed semantics since the caller ensures that
- 		 * the MCS node is properly initialized before updating the
- 		 * tail.
- 		 */
--		old = atomic_cmpxchg_relaxed(&lock->val, val, new);
--		if (old == val)
--			break;
-+	} while (!atomic_try_cmpxchg_relaxed(&lock->val, &old, new));
- 
--		val = old;
--	}
- 	return old;
- }
- #endif /* _Q_PENDING_BITS == 8 */
--- 
-2.42.0
+Note that this is now in conflict with this cleanup by Brian Gerst:
 
+   2cb16181a1d1 x86/boot: Simplify boot stack setup
+
+... which removed __end_init_task[] entirely.
+
+Thanks,
+
+	Ingo
