@@ -1,57 +1,57 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B035A947;
-	Thu, 21 Mar 2024 14:39:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC1A8624D;
+	Thu, 21 Mar 2024 14:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711031979; cv=none; b=l+Uu3PzL56dje+wId9Lr50EHWRVXi8hIKK2dkYonaOGeuLF0XYjKKnO9M3OZJvJm7tCb84Nrq2Q5ZSv+FE2rXjgtzPCaeuwwZxuBuyfQhwai9qXXqgjehZHm7uIJyCd6OwAe5bpolZX8GDMuY+re2El0Whl56ZSa09FMQUBaDt0=
+	t=1711031986; cv=none; b=AsFY4D9Uly3TTDCGJKoBP6RUgpw/6Fc2CV9nUQLGJppaZOC55ZdQOrW05UVNt6mjzdgXKDGWtz7GYLbxdA6qcIOf4oPafGP8zQzjuffIXLKE4X/33wE29HXCiSRVDKl1JygsjpvU3HAooLvq++4zZWDd7aYgPhVvH/D3yDbZdmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711031979; c=relaxed/simple;
-	bh=+NpUKQ5iB0YePuDf7WiBAzzLkKvERDjDBLGFEo9274o=;
+	s=arc-20240116; t=1711031986; c=relaxed/simple;
+	bh=tJ9hbQiysGyoAPEFuwDReWE+Dwbl9fkBDGOp/9MxoTM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tYGcvL56DQ4yI0BHp0IXKbjSsMtj2QqoMtLhPLfIS1U78jJhdSPIaXvf1tbrT7B3ji6Gdxp63PhGEqxZ2wg+Yf/E9Hw8+YmEjIgIdEUYOEP7b0QyZvziqBGcmG05g6AuoTuZSwnhpO7QSk0gFxnwXB8re5TAJnLKRkIcX+6Y77g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nRkfBUNz; arc=none smtp.client-ip=209.85.208.53
+	 MIME-Version; b=rTGH6J9KT9YOuTc3Pl4/FDGT5fvi5LZnCKeNU582xMx4i93d5Vs3TD4tppM729OJQtU3jrvwtyTsQYXF8r3YZwQKnKbnhteKFKU3Zpzy8LPYl5pxcATELeElsOzwUseae13VT56fsqpgjfxlUIslv2GW0rqJKhdu1isJoTr5hZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YKeQjSbp; arc=none smtp.client-ip=209.85.218.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nRkfBUNz"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-55a179f5fa1so1496092a12.0;
-        Thu, 21 Mar 2024 07:39:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YKeQjSbp"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a4675aaa2e8so145886266b.0;
+        Thu, 21 Mar 2024 07:39:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711031975; x=1711636775; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1711031983; x=1711636783; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lt8p4RY6k043MwULpqhdmkYzdtutmtSYnRG7ixAL6cQ=;
-        b=nRkfBUNzfNPBYlT9stuiyIVuC36nM8CMJBG3TKNTNLy08HB5BQZT2iWfyiOhT6kH1b
-         sSpDAKUtDukktnv34mqhHft6nb/E3lPM7AJIn8B0hbnTIV/d3IVpzdjDk9kP5x0egNGo
-         qdg0jUwRwWjaTUI9nMiG4x6ldgtH5QArhlb70KXmqXtCCfuTKvtjYfwvDpXhz8ZdvZsi
-         71GifZ1ITndsFyz8lcUmVTHlYyBl2V4NpvZS+VwL1hAYEppb1DRM350hhjwnO595BqYo
-         Eq1um3x3lr+LLjropu/drnjMu9fh58UV8We0uAo72TymKVa55In8iO0w8a+94CaufQWD
-         sWtA==
+        bh=twALFnMM+Yr/AtveAMdUdW9D1Ib6MBFOTxAn/sC1EOM=;
+        b=YKeQjSbpOMZlreBG9l2p9JGZx7HKsdNL+I4K1b6sgp9ZJXfvchoqcw0ghqEViYWKsZ
+         R148gHGorZVL2Oq3XWiwChqDC4cbmGHYOMTJAF525V7lf2VDH7wyeTMg21lLFvw4rOPW
+         An4hGH5os0R4Ucm4xAE1Ne7BSh7KxGE5eAaIjhiNftG2CdKBZaJqW3BdADmr3qozO1pL
+         LPiQ9K+2SozQ3XunJRxtQThm89x2pD5pQqYmZ6D0FRWb/isV+DQhXfqUCllYnJq7oURD
+         1Lfy269imRpDWpZk0qQRFAymPmtP1eFS8XCP35MoyuLU/3zfVW39PEhCboEOSpIfBHSr
+         S9eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711031975; x=1711636775;
+        d=1e100.net; s=20230601; t=1711031983; x=1711636783;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lt8p4RY6k043MwULpqhdmkYzdtutmtSYnRG7ixAL6cQ=;
-        b=FxOrWFspf/UXFICmiUtS80QG9ORRin+VQi6z91zthsUE/NWB30DWi45sEMUTnUjYpr
-         bPD5Ctr30yybFt+sS9EmO3JFS81ICJFs6Jm1Jn/Dbp/htk04EDIV7ORwj33p1lWSEWi/
-         K5GdkmgfBNv0DYtKWQTbwuIfEl78n7p8fcEJ7zz1nY7kllDZaRBUsn4bSvUu+89G8WDP
-         5ZKzOlSv7bfJG3bkCBYbuZHjRPPaKnt1TXGRaHbaWVtVghy/mb2GKAUCRQxswjk+0McO
-         rGm14vaUgNxZ3bAiWDxGxMVGe5CvPUgTf9W34zbHuDQ6JkLfbc9X9LZEzq0FNeL6VoeL
-         Q2iA==
-X-Forwarded-Encrypted: i=1; AJvYcCVc733oj+no8dDja5iEy1HW9Q9wdfn8ztkIjc1t29yxEp1FeKAAeUYWB0I3wZbCnmsl2b1bIGU1SDZk7U9P4HW419zgBVkJAjBmwNsBbfRlObhKSIzU/wea2knX2vkXcYrzuKKWyfQqmzrS1j7qoyr3GH5s22gYTG1GZH3l12kP7TCJ7Hg=
-X-Gm-Message-State: AOJu0YyCZ9uTJCDXjB2RfKgwB2JnrqBSlJA6TabaFBJFU7qFXLP1EEm5
-	s2dzycigERb9sVk56YVGFlu1TiKudYzL358XDIH271JIY2nRDuE=
-X-Google-Smtp-Source: AGHT+IGjKKL/8jQHlXcH90JXlNKIhdKLi9UJuSrfaawd5b8R4sBEFnY1PIvJdbq4+rqf2e0WmemiTA==
-X-Received: by 2002:a17:906:254b:b0:a46:cf63:d96b with SMTP id j11-20020a170906254b00b00a46cf63d96bmr3819163ejb.51.1711031975555;
-        Thu, 21 Mar 2024 07:39:35 -0700 (PDT)
+        bh=twALFnMM+Yr/AtveAMdUdW9D1Ib6MBFOTxAn/sC1EOM=;
+        b=Vv4/PsdayYiTQdyDkPrnQ1WZOBYODk/X1K9n5w7EQE66n+l7YuW301fkat+Hx3x8ec
+         7OcyjzL+NniS3g8c4cKFRMnqaNyxslSqmACXBtMhHTZs0asu/J6MO+M0lXoFG2Eap6Af
+         NdENI5+9nMsgbV9yeg4gRlG0CGwS37/ILjX6LY/D/iynNVlNqBls4BJ7RulHaNKZWf1s
+         mqYJcm+cdKIYe79bqG5Yjjs4F2EmrIq60suY8PXxCP7Ocm8OoMI9ypNWxZZxonNvWCM2
+         3BM8X4JxTUWJ3SsBrlHHOd8C2eJXbidpwcLtqf/LPlyn0vQcoFJ0tHxmoFS/4g7Vjwst
+         zgUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWcjyf64ZOoUrGYhIZvgP3hvMcfKPkL2PFUzHBQfkXQP0xH6dXnOe7DS4PbLNzcxw64mysaNZkhc2svQAscFBLADZS+4z/NAVE9eZ4JTUaRaMIShCI+gfU4QKeOsASZNcQjp7/qVyp/JdulPi5JK2O2tN71/UHt6YMer8U2QY1BoPRRGEw=
+X-Gm-Message-State: AOJu0YwoMjJ8Sk9JhTRqECOAJ6nKrS3Vsrqkj6qRwcCiiTc9Um3WkpmA
+	ktznULucJati/jpbQco9XjhAbs9EwIo3iCqWR4vG2CV+o3z1u1w=
+X-Google-Smtp-Source: AGHT+IHHA5j+8Uv6vMC1shrAnIAOqjVLHuTxodIzbNrCfwgHuprghUuMvhHuxk7nkEZPu7NmVb//+A==
+X-Received: by 2002:a17:906:ca54:b0:a46:f564:ff80 with SMTP id jx20-20020a170906ca5400b00a46f564ff80mr1568277ejb.68.1711031982941;
+        Thu, 21 Mar 2024 07:39:42 -0700 (PDT)
 Received: from U4.lan ([2a02:810b:f40:4600:b39:dab4:8e20:e918])
-        by smtp.gmail.com with ESMTPSA id e3-20020a170906248300b00a46abaeeb1csm6147923ejb.104.2024.03.21.07.39.34
+        by smtp.gmail.com with ESMTPSA id e3-20020a170906248300b00a46abaeeb1csm6147923ejb.104.2024.03.21.07.39.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 07:39:35 -0700 (PDT)
+        Thu, 21 Mar 2024 07:39:42 -0700 (PDT)
 From: Alex Bee <knaerzche@gmail.com>
 To: Lee Jones <lee@kernel.org>,
 	Rob Herring <robh@kernel.org>,
@@ -69,9 +69,9 @@ Cc: Chris Zhong <zyw@rock-chips.com>,
 	linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	Alex Bee <knaerzche@gmail.com>
-Subject: [PATCH 1/5] dt-bindings: mfd: Add rk816 binding
-Date: Thu, 21 Mar 2024 15:39:09 +0100
-Message-ID: <20240321143911.90210-4-knaerzche@gmail.com>
+Subject: [PATCH 3/5] pinctrl: rk805: Add rk816 pinctrl support
+Date: Thu, 21 Mar 2024 15:39:11 +0100
+Message-ID: <20240321143911.90210-6-knaerzche@gmail.com>
 X-Mailer: git-send-email 2.43.2
 In-Reply-To: <20240321143911.90210-2-knaerzche@gmail.com>
 References: <20240321143911.90210-2-knaerzche@gmail.com>
@@ -83,279 +83,151 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add DT binding document for Rockchip's RK816 PMIC
+This adds support for RK816 to the exising rk805 pinctrl driver
+
+It has a single pin which can be configured as input from a thermistor (for
+instance in an attached battery) or as a gpio.
 
 Signed-off-by: Alex Bee <knaerzche@gmail.com>
 ---
- .../bindings/mfd/rockchip,rk816.yaml          | 259 ++++++++++++++++++
- 1 file changed, 259 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/rockchip,rk816.yaml
+ drivers/pinctrl/pinctrl-rk805.c | 68 +++++++++++++++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/rockchip,rk816.yaml b/Documentation/devicetree/bindings/mfd/rockchip,rk816.yaml
-new file mode 100644
-index 000000000000..b46de99f60ff
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/rockchip,rk816.yaml
-@@ -0,0 +1,259 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/rockchip,rk816.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/pinctrl/pinctrl-rk805.c b/drivers/pinctrl/pinctrl-rk805.c
+index 56d916f2cee6..cf0305477e7a 100644
+--- a/drivers/pinctrl/pinctrl-rk805.c
++++ b/drivers/pinctrl/pinctrl-rk805.c
+@@ -93,6 +93,11 @@ enum rk806_pinmux_option {
+ 	RK806_PINMUX_FUN5,
+ };
+ 
++enum rk816_pinmux_option {
++	RK816_PINMUX_GPIO,
++	RK816_PINMUX_TS,
++};
 +
-+title: RK816 Power Management Integrated Circuit
+ enum {
+ 	RK805_GPIO0,
+ 	RK805_GPIO1,
+@@ -104,6 +109,10 @@ enum {
+ 	RK806_GPIO_DVS3
+ };
+ 
++enum {
++	RK816_GPIO0,
++};
 +
-+maintainers:
-+  - Chris Zhong <zyw@rock-chips.com>
-+  - Zhang Qing <zhangqing@rock-chips.com>
+ static const char *const rk805_gpio_groups[] = {
+ 	"gpio0",
+ 	"gpio1",
+@@ -115,6 +124,10 @@ static const char *const rk806_gpio_groups[] = {
+ 	"gpio_pwrctrl3",
+ };
+ 
++static const char *const rk816_gpio_groups[] = {
++	"gpio0",
++};
 +
-+description: |
-+  Rockchip RK816 series PMIC. This device consists of an i2c controlled MFD
-+  that includes regulators, a RTC, a gpio controller, and a power button.
+ /* RK805: 2 output only GPIOs */
+ static const struct pinctrl_pin_desc rk805_pins_desc[] = {
+ 	PINCTRL_PIN(RK805_GPIO0, "gpio0"),
+@@ -128,6 +141,11 @@ static const struct pinctrl_pin_desc rk806_pins_desc[] = {
+ 	PINCTRL_PIN(RK806_GPIO_DVS3, "gpio_pwrctrl3"),
+ };
+ 
++/* RK816 */
++static const struct pinctrl_pin_desc rk816_pins_desc[] = {
++	PINCTRL_PIN(RK816_GPIO0, "gpio0"),
++};
 +
-+properties:
-+  compatible:
-+    enum:
-+      - rockchip,rk816
+ static const struct rk805_pin_function rk805_pin_functions[] = {
+ 	{
+ 		.name = "gpio",
+@@ -176,6 +194,21 @@ static const struct rk805_pin_function rk806_pin_functions[] = {
+ 	},
+ };
+ 
++static const struct rk805_pin_function rk816_pin_functions[] = {
++	{
++		.name = "gpio",
++		.groups = rk816_gpio_groups,
++		.ngroups = ARRAY_SIZE(rk816_gpio_groups),
++		.mux_option = RK816_PINMUX_GPIO,
++	},
++	{
++		.name = "ts",
++		.groups = rk816_gpio_groups,
++		.ngroups = ARRAY_SIZE(rk816_gpio_groups),
++		.mux_option = RK816_PINMUX_TS,
++	},
++};
 +
-+  reg:
-+    maxItems: 1
+ static const struct rk805_pin_group rk805_pin_groups[] = {
+ 	{
+ 		.name = "gpio0",
+@@ -207,6 +240,14 @@ static const struct rk805_pin_group rk806_pin_groups[] = {
+ 	}
+ };
+ 
++static const struct rk805_pin_group rk816_pin_groups[] = {
++	{
++		.name = "gpio0",
++		.pins = { RK816_GPIO0 },
++		.npins = 1,
++	},
++};
 +
-+  interrupts:
-+    maxItems: 1
+ #define RK805_GPIO0_VAL_MSK	BIT(0)
+ #define RK805_GPIO1_VAL_MSK	BIT(1)
+ 
+@@ -255,6 +296,19 @@ static struct rk805_pin_config rk806_gpio_cfgs[] = {
+ 	}
+ };
+ 
++#define RK816_FUN_MASK		BIT(2)
++#define RK816_VAL_MASK		BIT(3)
++#define RK816_DIR_MASK		BIT(4)
 +
-+  '#clock-cells':
-+    description: |
-+      See <dt-bindings/clock/rockchip,rk808.h> for clock IDs.
-+    const: 1
++static struct rk805_pin_config rk816_gpio_cfgs[] = {
++	{
++		.reg = RK818_IO_POL_REG,
++		.val_msk = RK816_VAL_MASK,
++		.fun_msk = RK816_FUN_MASK,
++		.dir_msk = RK816_DIR_MASK,
++	},
++};
 +
-+  clock-output-names:
-+    description:
-+      From common clock binding to override the default output clock name.
-+    maxItems: 2
-+
-+  gpio-controller: true
-+
-+  '#gpio-cells':
-+    const: 2
-+
-+  system-power-controller:
-+    type: boolean
-+    description:
-+      Telling whether or not this PMIC is controlling the system power.
-+
-+  wakeup-source:
-+    type: boolean
-+    description:
-+      Device can be used as a wakeup source.
-+
-+  vcc1-supply:
-+    description:
-+      The input supply for DCDC_REG1.
-+
-+  vcc2-supply:
-+    description:
-+      The input supply for DCDC_REG2.
-+
-+  vcc3-supply:
-+    description:
-+      The input supply for DCDC_REG3.
-+
-+  vcc4-supply:
-+    description:
-+      The input supply for DCDC_REG4.
-+
-+  vcc5-supply:
-+    description:
-+      The input supply for LDO_REG1, LDO_REG2, and LDO_REG3.
-+
-+  vcc6-supply:
-+    description:
-+      The input supply for LDO_REG4, LDO_REG5, and LDO_REG6.
-+
-+  vcc7-supply:
-+    description:
-+      The input supply for BOOST.
-+
-+  vcc8-supply:
-+    description:
-+      The input supply for OTG_SWITCH.
-+
-+  regulators:
-+    type: object
-+    patternProperties:
-+      "^(DCDC_REG[1-4]|LDO_REG[1-6]|BOOST|OTG_SWITCH)$":
-+        type: object
-+        $ref: ../regulator/regulator.yaml#
-+        unevaluatedProperties: false
-+    unevaluatedProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - "#clock-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/pinctrl/rockchip.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        rk816: pmic@1a {
-+            compatible = "rockchip,rk816";
-+            reg = <0x1a>;
-+            interrupt-parent = <&gpio0>;
-+            interrupts = <RK_PA2 IRQ_TYPE_LEVEL_LOW>;
-+
-+            clock-output-names = "xin32k", "rk816-clkout2";
-+            pinctrl-names = "default";
-+            pinctrl-0 = <&pmic_int_l>;
-+            gpio-controller;
-+            system-power-controller;
-+            wakeup-source;
-+            #clock-cells = <1>;
-+            #gpio-cells = <2>;
-+
-+            vcc1-supply = <&vcc_sys>;
-+            vcc2-supply = <&vcc_sys>;
-+            vcc3-supply = <&vcc_sys>;
-+            vcc4-supply = <&vcc_sys>;
-+            vcc5-supply = <&vcc33_io>;
-+            vcc6-supply = <&vcc_sys>;
-+
-+            regulators {
-+                vdd_cpu: DCDC_REG1 {
-+                    regulator-name = "vdd_cpu";
-+                    regulator-min-microvolt = <750000>;
-+                    regulator-max-microvolt = <1450000>;
-+                    regulator-ramp-delay = <6001>;
-+                    regulator-initial-mode = <1>;
-+                    regulator-always-on;
-+                    regulator-boot-on;
-+
-+                    regulator-state-mem {
-+                        regulator-off-in-suspend;
-+                    };
-+                };
-+
-+                vdd_logic: DCDC_REG2 {
-+                    regulator-name = "vdd_logic";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <1250000>;
-+                    regulator-ramp-delay = <6001>;
-+                    regulator-initial-mode = <1>;
-+                    regulator-always-on;
-+                    regulator-boot-on;
-+
-+                    regulator-state-mem {
-+                        regulator-on-in-suspend;
-+                        regulator-suspend-microvolt = <1000000>;
-+                    };
-+                };
-+
-+                vcc_ddr: DCDC_REG3 {
-+                    regulator-name = "vcc_ddr";
-+                    regulator-initial-mode = <1>;
-+                    regulator-always-on;
-+                    regulator-boot-on;
-+
-+                    regulator-state-mem {
-+                        regulator-on-in-suspend;
-+                    };
-+                };
-+
-+                vcc33_io: DCDC_REG4 {
-+                    regulator-min-microvolt = <3300000>;
-+                    regulator-max-microvolt = <3300000>;
-+                    regulator-name = "vcc33_io";
-+                    regulator-initial-mode = <1>;
-+                    regulator-always-on;
-+                    regulator-boot-on;
-+
-+                    regulator-state-mem {
-+                        regulator-on-in-suspend;
-+                        regulator-suspend-microvolt = <3300000>;
-+                    };
-+                };
-+
-+                vccio_pmu: LDO_REG1 {
-+                    regulator-min-microvolt = <3300000>;
-+                    regulator-max-microvolt = <3300000>;
-+                    regulator-name = "vccio_pmu";
-+                    regulator-always-on;
-+                    regulator-boot-on;
-+
-+                    regulator-state-mem {
-+                        regulator-on-in-suspend;
-+                        regulator-suspend-microvolt = <3300000>;
-+                    };
-+                };
-+
-+                vcc_tp: LDO_REG2 {
-+                    regulator-min-microvolt = <3300000>;
-+                    regulator-max-microvolt = <3300000>;
-+                    regulator-name = "vcc_tp";
-+
-+                    regulator-state-mem {
-+                        regulator-off-in-suspend;
-+                    };
-+                };
-+
-+                vdd_10: LDO_REG3 {
-+                    regulator-min-microvolt = <1000000>;
-+                    regulator-max-microvolt = <1000000>;
-+                    regulator-name = "vdd_10";
-+                    regulator-always-on;
-+                    regulator-boot-on;
-+
-+                    regulator-state-mem {
-+                        regulator-on-in-suspend;
-+                        regulator-suspend-microvolt = <1000000>;
-+                    };
-+                };
-+
-+                vcc18_lcd: LDO_REG4 {
-+                    regulator-min-microvolt = <1800000>;
-+                    regulator-max-microvolt = <1800000>;
-+                    regulator-name = "vcc18_lcd";
-+
-+                    regulator-state-mem {
-+                        regulator-on-in-suspend;
-+                        regulator-suspend-microvolt = <1800000>;
-+                    };
-+                };
-+
-+                vccio_sd: LDO_REG5 {
-+                    regulator-min-microvolt = <1800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                    regulator-name = "vccio_sd";
-+
-+                    regulator-state-mem {
-+                        regulator-on-in-suspend;
-+                        regulator-suspend-microvolt = <3300000>;
-+                    };
-+                };
-+
-+                vdd10_lcd: LDO_REG6 {
-+                    regulator-min-microvolt = <1000000>;
-+                    regulator-max-microvolt = <1000000>;
-+                    regulator-name = "vdd10_lcd";
-+
-+                    regulator-state-mem {
-+                        regulator-on-in-suspend;
-+                        regulator-suspend-microvolt = <1000000>;
-+                    };
-+                };
-+            };
-+        };
-+    };
+ /* generic gpio chip */
+ static int rk805_gpio_get(struct gpio_chip *chip, unsigned int offset)
+ {
+@@ -439,6 +493,8 @@ static int rk805_pinctrl_gpio_request_enable(struct pinctrl_dev *pctldev,
+ 		return _rk805_pinctrl_set_mux(pctldev, offset, RK805_PINMUX_GPIO);
+ 	case RK806_ID:
+ 		return _rk805_pinctrl_set_mux(pctldev, offset, RK806_PINMUX_FUN5);
++	case RK816_ID:
++		return _rk805_pinctrl_set_mux(pctldev, offset, RK816_PINMUX_GPIO);
+ 	}
+ 
+ 	return -ENOTSUPP;
+@@ -588,6 +644,18 @@ static int rk805_pinctrl_probe(struct platform_device *pdev)
+ 		pci->pin_cfg = rk806_gpio_cfgs;
+ 		pci->gpio_chip.ngpio = ARRAY_SIZE(rk806_gpio_cfgs);
+ 		break;
++	case RK816_ID:
++		pci->pins = rk816_pins_desc;
++		pci->num_pins = ARRAY_SIZE(rk816_pins_desc);
++		pci->functions = rk816_pin_functions;
++		pci->num_functions = ARRAY_SIZE(rk816_pin_functions);
++		pci->groups = rk816_pin_groups;
++		pci->num_pin_groups = ARRAY_SIZE(rk816_pin_groups);
++		pci->pinctrl_desc.pins = rk816_pins_desc;
++		pci->pinctrl_desc.npins = ARRAY_SIZE(rk816_pins_desc);
++		pci->pin_cfg = rk816_gpio_cfgs;
++		pci->gpio_chip.ngpio = ARRAY_SIZE(rk816_gpio_cfgs);
++		break;
+ 	default:
+ 		dev_err(&pdev->dev, "unsupported RK805 ID %lu\n",
+ 			pci->rk808->variant);
 -- 
 2.43.2
 
