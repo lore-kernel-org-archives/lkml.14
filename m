@@ -1,101 +1,92 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3FE112BF29
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 16:20:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E7912CD8A
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 16:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711038054; cv=none; b=f8yiYyHedmYPTwcDOlM0UpqM/lwJe6WRa+/Kar3eEzDlYqWOPLDKRFIPqohxf6AolK37VoIueBywi1TlcW1pNhPYkSNlgNDpieDFOQbuYOI2ej5ph56gjgiJty90OCdgKo8rsIeIVT3JxwkQXjjp/eErJfijwipwRCGevfrxaQk=
+	t=1711038093; cv=none; b=kW3rViApniTfD6BIlkFFk7WRrFn6w+AJOwlpjvMinAxkRaki5to6FTYzJN+aPiOx0SIQOWj0c5Djm48uKGPzkzQ8NsPf70JLWGLzJYbf++k+2QhNX+wJVXlrmXuNnsxJ9EJEo6T0hF9zZ34Vs8H2VsFrZSAtOcnFOReUuJp/jIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711038054; c=relaxed/simple;
-	bh=D4jSbAa5qDyRtjvFkBpdVOFtA4/fqkK9tzVFMkXQBnM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JyQD88AjHuq+1h6Y66R4Qogr/a4nafXLd5ub5P4g0CT07y0VZ5QU7fQGxrgT5D5Ds2Ad5w3hMeTotG92KBe3TfoNwGNoxJ+DOOSHEwvBOuw5YkmWbx+BfFHivWRYwIk70CyPQ0LShV07VDE2QfkZyEVLiGKdWsaVItZyY6/+C9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=KdFetqKA; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1711038093; c=relaxed/simple;
+	bh=vl4aNEvlWuyu599jEe9MzAKTAEMe6P8IA55VDrn32vk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BLzeuioQOu+0VvWHQDnV4jTcL/0RXfugh64yZAI5A0mCeTEUD73YsiJgvwM+XKkx31PQdN1A1CgSiOpuhj6BVN7YU7fisC/eYde7TeQg3oZ7avillUnsBGY7tpUBu0qN+Q6lp61C0z1cRQEvmUIUjpGGIf5Q1fJtCOkJQDRBof8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bG/dSIXF; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="KdFetqKA"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-69664c7f716so170996d6.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 09:20:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1711038052; x=1711642852; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=it17QbxuEQq2A73zBdTC8BNNGib79KppL7WF83RYbZE=;
-        b=KdFetqKA8Kl++F0NjEegAiLMSydkkc9DEtUei+uZCZ5hZFRxu/MjpW6xgV0npzKPne
-         VeSlbDnHO4ZqnhKNxyqgTBCYH5oh14UDNlJsIB83BrMGIaxkQPWRXFvYuKcnup1sf/Js
-         0NbmUAKiI+z6oSUTME7z+bwXC7yucP++DLJ85txMVWO6BT54eLsEvQHfdlDRipirpGrm
-         CgZsiMjN/yR7hgTIBAbtQfzaeRWlNGz7vqeRFPtotF677uObySqSEd7BfFs7VsH6mAId
-         1TiWQhjQpt6Cu4rBXZojUXP4g5nVC+0Xv98uPFblaaKHBl9Lgju2EfcKghY+/sU0wdLe
-         +VfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711038052; x=1711642852;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=it17QbxuEQq2A73zBdTC8BNNGib79KppL7WF83RYbZE=;
-        b=qiJElCeNXMo8517Ge3wES/yHoqDz8yMhaClThV3JRfv4UCL00343z2+7yRUpae61sW
-         nBBXPgFwapa8HQLHtsbh6yw6ehtFYcNdkNZijPPytzaMTaDJazisyMVD56dTf9XEjSYL
-         we/DRyPxKguOcjdJtqcEKuU5FYuj6unGX1W8vVcaieKMBwzsToWGk+vkVJOI+ebXd6gi
-         4z5GhRZvrKZJBJ4B2Vo77M7ZLxyrTFJl34W1USNdunbp0S+mSfTrWs9Bn+xJCcVl2qN5
-         MfAQiXAb/lUri4u7LkCzNBY6pRAtqkxif5PV/jb/OJGOf62HboPtqZISmi3RCr5ZJIV5
-         /VBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEHtzaReVonpu7elDJxhZI1NlMk2BKhCGT/Gy3AKgJElGGwltjSy2Y/0CHCgL9oFLRs5kBwPSkGY/3oxZABHi7D9ptNkR1tZALNDpY
-X-Gm-Message-State: AOJu0YykLU9HuKZs7PriRnMwgcJPO1vjmGZcIDgQVIF5NTF4iHVJkSHI
-	kiLhZcCTPbzOj2oxOWlW0N6QhRAqLRC5FfeSVY4FMVj6hwXDg3MJdofR6UVYPE8=
-X-Google-Smtp-Source: AGHT+IG1k7G5G+Z3OJ5q+BW7ZYSU8X/25UCC4pKS1DVD0DbYAJnhDPD/YdY/eD/wzMDuseFNnZWYew==
-X-Received: by 2002:a05:6214:486:b0:690:dc3b:179d with SMTP id pt6-20020a056214048600b00690dc3b179dmr5090647qvb.20.1711038051785;
-        Thu, 21 Mar 2024 09:20:51 -0700 (PDT)
-Received: from localhost (2603-7000-0c01-2716-da5e-d3ff-fee7-26e7.res6.spectrum.com. [2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with ESMTPSA id ke7-20020a056214300700b00692bd4905c9sm49822qvb.15.2024.03.21.09.20.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 09:20:50 -0700 (PDT)
-Date: Thu, 21 Mar 2024 12:20:49 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Takashi Iwai <tiwai@suse.com>
-Cc: Jaroslav Kysela <perex@perex.cz>, linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: control: fix memory leak in
- snd_ctl_elem_read_user()
-Message-ID: <20240321162049.GA3379@cmpxchg.org>
-References: <20240321161700.2926-1-hannes@cmpxchg.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bG/dSIXF"
+Message-ID: <d947cb15-aafc-487e-8bbd-54d786683470@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1711038089;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FQil3W2KQkB/aoa0J/1WAVBzi/uloXdl4lywi9s0CFA=;
+	b=bG/dSIXFjDiAzLH18CJVeVC4EOBVmZjZoitp0gw7FOrhBFow5YBNvdf8ZH9/OQamar62l6
+	E+JmLmdxw2VP4EBJi1i5xbFyJYqwVaeT2J8+a0lme613nooki1/9OQgtZLrb+JeTnPTx1w
+	/zPARpFkdbRTYhwiFh4JzN6wPEX+3ns=
+Date: Thu, 21 Mar 2024 12:21:27 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240321161700.2926-1-hannes@cmpxchg.org>
+Subject: Re: [PATCH 1/2] dt-bindings: nvmem: Remove fsl,t1023-sfp in favor of
+ fsl,layerscape-sfp
+Content-Language: en-US
+To: Conor Dooley <conor@kernel.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+ Richard Alpe <richard@bit42.se>, linux-kernel@vger.kernel.org,
+ =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+ Michael Walle <michael@walle.cc>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+References: <20240316002026.1808336-1-sean.anderson@linux.dev>
+ <20240317-starved-pager-7a81c5045cfc@spud>
+ <9daf9c8f-6606-4ff6-8065-6a32fa0d152c@linux.dev>
+ <20240318-scarf-startup-64088b1d8d35@spud>
+ <fa047914-da03-4234-b48f-eebdf350795e@linux.dev>
+ <20240319-fondling-implode-322a9cb570b8@spud>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20240319-fondling-implode-322a9cb570b8@spud>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Mar 21, 2024 at 12:17:00PM -0400, Johannes Weiner wrote:
-> With 6.9, I noticed kmalloc-2k blowing up to tens of gigabytes over
-> several days. Kmemleak shows a long string of these:
+On 3/19/24 13:55, Conor Dooley wrote:
+> On Mon, Mar 18, 2024 at 11:48:06AM -0400, Sean Anderson wrote:
+>> On 3/18/24 11:40, Conor Dooley wrote:
+>> > On Mon, Mar 18, 2024 at 11:08:00AM -0400, Sean Anderson wrote:
+>> >> On 3/17/24 11:10, Conor Dooley wrote:
+>> > 
+>> >> > Additionally, should
+>> >> > they fall back to t1023-sfp? I see that there's already some dts files
+>> >> > with these compatibles in them but seemingly no driver support as there
+>> >> > is for the t1023-sfp.
+>> >> 
+>> >> I checked the reference manuals for these processors, and all of them use TA 2.0.
+>> > 
+>> > Sounds like a fallback is suitable then, although that will require
+>> > updating the various dts files.
+>> 
+>> Yes, a fallback (like what is done for the T-series) would be suitable,
+>> but given that these devicetrees have been in-tree for eight years I
+>> think it would be preferable to support the existing bindings for
+>> compatibility purposes.
 > 
-> unreferenced object 0xffff8f1bddbce800 (size 2048):
->   comm "wireplumber", pid 1058, jiffies 4294690193
->   hex dump (first 32 bytes):
->     14 00 00 00 02 00 00 00 00 00 00 00 00 00 00 00  ................
->     4d 61 73 74 65 72 20 50 6c 61 79 62 61 63 6b 20  Master Playback
->   backtrace (crc bd965d91):
->     [<ffffffff85ac328b>] __kmalloc_node_track_caller+0x25b/0x370
->     [<ffffffff85a79375>] memdup_user+0x25/0x80
->     [<ffffffff85fa5d63>] snd_ctl_ioctl+0x753/0x880
->     [<ffffffff85b18119>] __x64_sys_ioctl+0x89/0xb0
->     [<ffffffff861ee190>] do_syscall_64+0x80/0x170
->     [<ffffffff862000ab>] entry_SYSCALL_64_after_hwframe+0x46/0x4e
-> 
-> When 1052d9882269 ("ALSA: control: Use automatic cleanup of kfree()")
-> converted a few sites to automatic freeing, it removed the kfree from
-> snd_ctl_elem_read_user() but forgot to add the __free hook.
-> 
-> Fixes: 1052d9882269 ("ALSA: control: Use automatic cleanup of kfree()")
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> Just cos stuff snuck into the tree in dts files doesn't make it right
+> though, I'd rather the bindings were done correctly. I don't care if you
+> want to support all of the compatibles in the driver so that it works
+> with the existing devicetrees though, as long as you mention the
+> rationale in the commit message.
 
-Oh, I just noticed there is a pending fix at
+It doesn't really matter what the schema has as long as the driver supports
+existing device trees.
 
-https://lore.kernel.org/linux-sound/20240320062722.31325-1-tiwai@suse.de/
-
-Sorry about the noise!
+--Sean
