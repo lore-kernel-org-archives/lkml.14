@@ -1,103 +1,201 @@
-Received: from new-mail.astralinux.ru (new-mail.astralinux.ru [51.250.53.164])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63430C2E6;
-	Thu, 21 Mar 2024 09:43:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.250.53.164
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948FE53384;
+	Thu, 21 Mar 2024 09:44:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711014241; cv=none; b=iL4sELiYtmgOWw48/3cAYxIJRollGp6QYP1aDY2NIpvd4oY9lSiFkcAWwxbbD5bOWSxpRpDf/peOqk/3RzlsGCD9l8zwP3I9y+T/yCtWrLHtY0QV1uv0UBJta5fHhw8jSw+0ibG5oLWhGF/uKWflU32uwytET3XslyPO0BEO7NE=
+	t=1711014259; cv=none; b=fERYQJks0jZCzMtOQrf359UofY84YgAIW5FFAkdCWb6Osg0MMHwR8wSTw7/IHhH3NMQiVCNekZSLNd1vRCjODYaYHQd7TkUjCIhX/bn1oUT6g+UaXqb+RvMbIIPgops8IBHtpgeDfwHrTKJYD1RlIse/2iRnV8j0Jg4hFJNlJTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711014241; c=relaxed/simple;
-	bh=pE1D1CwmKJCNu/grzQTR/2Ua4Iq0YHN5QiyjUaPNT0Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Efk/XtfFITAdm/WZVGicVNgtNp3j6txK4QjApza5iqngxU8O2XZU9bozEsNKuI4B1jnuYeaNM4ZC1xxiCM7EQ3nNI2cKzOL3O/0HUtIcWRu/dYlzdmkalK+sElLErXV7HSBSjP6hwpEfUktqvBUeAEfA9qhFhmJ5jV4mxPxKvQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=51.250.53.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
-Received: from [172.20.10.9] (unknown [176.59.43.255])
-	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4V0gNc0YG3zqSPj;
-	Thu, 21 Mar 2024 12:37:35 +0300 (MSK)
-Message-ID: <b67f3efb-509e-4280-90f2-729d217c20c7@astralinux.ru>
-Date: Thu, 21 Mar 2024 12:36:53 +0300
+	s=arc-20240116; t=1711014259; c=relaxed/simple;
+	bh=nC4zC/ekvm31nkrj1AOh27fmuR8c5ikECCO9VZEASp4=;
+	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Q+sIBKMBhheq52xcBM/pTNdV8qW0Cx8/vy3+Txk/ldBRgcysthnOON6UyBDoLpym6ofCO3CCPe8Y0wUggefk8BUaAIOaBUDlY+yij29lxJRyx1V/GahFxq/QJYV+Mi/8xyRDduP94AhSvu1F3Uapu+uqj2dX5nsIifDZ+Iuhvug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4V0gTH1hZzz1R7hs;
+	Thu, 21 Mar 2024 17:41:39 +0800 (CST)
+Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
+	by mail.maildlp.com (Postfix) with ESMTPS id CD0C81A0188;
+	Thu, 21 Mar 2024 17:44:13 +0800 (CST)
+Received: from [10.67.111.82] (10.67.111.82) by canpemm500010.china.huawei.com
+ (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 21 Mar
+ 2024 17:44:13 +0800
+Subject: Re: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
+ <1710906278-23851-1-git-send-email-xiaojiangfeng@huawei.com>
+ <ZfqiD8Yw0oOVHW/p@shell.armlinux.org.uk>
+ <84a57ca8-8963-ca24-8bd1-ddc5c33bf4da@huawei.com>
+ <Zfs7sT6Pxy5yjnPC@shell.armlinux.org.uk>
+CC: <arnd@arndb.de>, <keescook@chromium.org>, <haibo.li@mediatek.com>,
+	<angelogioacchino.delregno@collabora.com>, <amergnat@baylibre.com>,
+	<akpm@linux-foundation.org>, <dave.hansen@linux.intel.com>,
+	<douzhaolei@huawei.com>, <gustavoars@kernel.org>, <jpoimboe@kernel.org>,
+	<kepler.chenxin@huawei.com>, <kirill.shutemov@linux.intel.com>,
+	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-arm-kernel@lists.infradead.org>,
+	<nixiaoming@huawei.com>, <peterz@infradead.org>, <wangbing6@huawei.com>,
+	<wangfangpeng1@huawei.com>, <jannh@google.com>, <willy@infradead.org>,
+	<David.Laight@aculab.com>
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Message-ID: <bad25937-fc98-8e11-4279-ab6b3a727c1f@huawei.com>
+Date: Thu, 21 Mar 2024 17:44:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: RuPost Desktop
-Subject: Re: [PATCH] flow_dissector: prevent NULL pointer dereference in
- __skb_flow_dissect
-To: Jiri Pirko <jiri@resnulli.us>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- lvc-project@linuxtesting.org
-References: <20240320125635.1444-1-abelova@astralinux.ru>
- <Zfrmv4u0tVcYGS5n@nanopsycho>
-Content-Language: ru
-From: Anastasia Belova <abelova@astralinux.ru>
-In-Reply-To: <Zfrmv4u0tVcYGS5n@nanopsycho>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-DrWeb-SpamScore: -100
-X-DrWeb-SpamState: legit
-X-DrWeb-SpamDetail: gggruggvucftvghtrhhoucdtuddrgedvfedrvdehuddgtddvucetufdoteggodetrfcurfhrohhfihhlvgemucfftfghgfeunecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttderjeenucfhrhhomheptehnrghsthgrshhirgcuuegvlhhovhgruceorggsvghlohhvrgesrghsthhrrghlihhnuhigrdhruheqnecuggftrfgrthhtvghrnhepkeetkefhhedugfekfeevteefuedufffggedvheetgedtgefhleeghfeghfekledtnecuffhomhgrihhnpehlihhnuhigthgvshhtihhnghdrohhrghdpkhgvrhhnvghlrdhorhhgnecukfhppedujeeirdehledrgeefrddvheehnecurfgrrhgrmhephhgvlhhopegludejvddrvddtrddutddrlegnpdhinhgvthepudejiedrheelrdegfedrvdehheemheekieekvddpmhgrihhlfhhrohhmpegrsggvlhhovhgrsegrshhtrhgrlhhinhhugidrrhhupdhnsggprhgtphhtthhopeejpdhrtghpthhtohepjhhirhhisehrvghsnhhulhhlihdruhhspdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlih
- hnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvhgtqdhprhhojhgvtghtsehlihhnuhigthgvshhtihhnghdrohhrgh
-X-DrWeb-SpamVersion: Vade Retro 01.423.251#02 AS+AV+AP Profile: DRWEB; Bailout: 300
-X-AntiVirus: Checked by Dr.Web [MailD: 11.1.19.2307031128, SE: 11.1.12.2210241838, Core engine: 7.00.62.01180, Virus records: 12528093, Updated: 2024-Mar-21 08:02:36 UTC]
+In-Reply-To: <Zfs7sT6Pxy5yjnPC@shell.armlinux.org.uk>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ canpemm500010.china.huawei.com (7.192.105.118)
 
 
 
-20/03/24 16:38, Jiri Pirko пишет:
-> Wed, Mar 20, 2024 at 01:56:35PM CET, abelova@astralinux.ru wrote:
->> skb is an optional parameter, so it may be NULL.
->> Add check defore dereference in eth_hdr.
+On 2024/3/21 3:40, Russell King (Oracle) wrote:
+> On Wed, Mar 20, 2024 at 11:30:05PM +0800, Jiangfeng Xiao wrote:
 >>
->> Found by Linux Verification Center (linuxtesting.org) with SVACE.
-> Either drop this line which provides no value, or attach a link to the
-> actual report.
->
-
-It is an established practice for our project. You can find 700+ applied
-patches with similar line:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?qt=grep&q=linuxtesting.org
-
-
->> Fixes: 67a900cc0436 ("flow_dissector: introduce support for Ethernet addresses")
-> This looks incorrect. I believe that this is the offending commit:
-> commit 690e36e726d00d2528bc569809048adf61550d80
-> Author: David S. Miller <davem@davemloft.net>
-> Date:   Sat Aug 23 12:13:41 2014 -0700
->
->      net: Allow raw buffers to be passed into the flow dissector.
->
-
-Got it.
-
->
->> Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
->> ---
->> net/core/flow_dissector.c | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->> diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c
->> index 272f09251343..05db3a8aa771 100644
->> --- a/net/core/flow_dissector.c
->> +++ b/net/core/flow_dissector.c
->> @@ -1137,7 +1137,7 @@ bool __skb_flow_dissect(const struct net *net,
->> 		rcu_read_unlock();
->> 	}
+>> On 2024/3/20 16:45, Russell King (Oracle) wrote:
+>>> On Wed, Mar 20, 2024 at 11:44:38AM +0800, Jiangfeng Xiao wrote:
+>>>> This is an off-by-one bug which is common in unwinders,
+>>>> due to the fact that the address on the stack points
+>>>> to the return address rather than the call address.
+>>>>
+>>>> So, for example, when the last instruction of a function
+>>>> is a function call (e.g., to a noreturn function), it can
+>>>> cause the unwinder to incorrectly try to unwind from
+>>>> the function after the callee.
+>>>>
+>>>> foo:
+>>>> ...
+>>>> 	bl	bar
+>>>> ... end of function and thus next function ...
+>>>>
+>>>> which results in LR pointing into the next function.
+>>>>
+>>>> Fixed this by subtracting 1 from frmae->pc in the call frame
+>>>> (but not exception frames) like ORC on x86 does.
+>>>
+>>> The reason that I'm not accepting this patch is because the above says
+>>> that it fixes it by subtracting 1 from the PC value, but the patch is
+>>> *way* more complicated than that and there's no explanation why.
+>>>
+>>> For example, the following are unexplained:
+>>>
+>>> - Why do we always need ex_frame
 >>
->> -	if (dissector_uses_key(flow_dissector,
->> +	if (skb && dissector_uses_key(flow_dissector,
->> 			       FLOW_DISSECTOR_KEY_ETH_ADDRS)) {
->> 		struct ethhdr *eth = eth_hdr(skb);
->> 		struct flow_dissector_key_eth_addrs *key_eth_addrs;
-> Looks like FLOW_DISSECT_RET_OUT_BAD should be returned in case the
-> FLOW_DISSECTOR_KEY_ETH_ADDRS are selected and there is no skb, no?
+>> ```
+>> bar:
+>> ...
+>> ... end of function bar ...
+>>
+>> foo:
+>>     BUG();
+>> ... end of function foo ...
+>> ```
+>>
+>> For example, when the first instruction of function 'foo'
+>> is a undefined instruction, after function 'foo' is executed
+>> to trigger an exception, 'arm_get_current_stackframe' assigns
+>> 'regs->ARM_pc' to 'frame.pc'.
+>>
+>> If we always decrement frame.pc by 1, unwinder will incorrectly
+>> try to unwind from the function 'bar' before the function 'foo'.
+>>
+>> So we need to 'ext_frame' to distinguish this case
+>> where we don't need to subtract 1.
+> 
+> This just sounds wrong to me. We have two different cases:
+> 
+> 1) we're unwinding a frame where PC points at the offending instruction.
+>    This may or may not be in the exception text.
+> 2) we're unwinding a frame that has been created because of a branch,
+>    where the PC points at the next instruction _after_ that callsite.
+> 
+> While we're unwinding, we will mostly hit the second type of frames, but
+> we'll only hit the first type on the initial frame. Some exception
+> entries will have the PC pointing at the next instruction to be
+> executed, others will have it pointing at the offending instruction
+> (e.g. if it needs to be retried.)
 
-I agree, I'll send the second version.
 
-Anastasia Belova
+Thank you for your summary.
+
+Now we try to enumerate all cases:
+
+1) When we hit the first type of frames
+
+1.1) If the pc pointing at the next instruction
+     of the offending instruction
+
+1.1.1) If the offending instruction is the first instruction
+       of the function
+       pc:   cause to unwind from current function
+       pc-1: casue to unwind from current function
+
+1.1.2) If the offending instruction is neither the first
+       instruction nor the last instruction of the function
+       pc:   cause to unwind from current function
+       pc-1: casue to unwind from current function
+
+1.1.3) If the offending instruction is the last instruction
+       of the function
+       pc:   cause to unwind from next    function
+       pc-1: casue to unwind from current function
+
+1.2) If the pc pointing at the offending instruction
+
+1.2.1) If the offending instruction is the first instruction
+       of the function
+       pc:   cause to unwind from current  function
+       pc-1: casue to unwind from previous function
+
+1.2.2) If the offending instruction is neither the first
+       instruction nor the last instruction of the function
+       pc:   cause to unwind from current function
+       pc-1: casue to unwind from current function
+
+1.2.3) If the offending instruction is the last instruction
+       of the function
+       pc:   cause to unwind from current function
+       pc-1: casue to unwind from current function
+
+2) When we hit the second type of frames
+2.1) pc always pointing at the next instruction after that callsite
+2.1.1) If the callsite is the first instruction
+       pc:   cause to unwind from current function
+       pc-1: casue to unwind from current function
+
+2.1.2) If the callsite is neither the first nor last instruction
+       pc:   cause to unwind from current function
+       pc-1: casue to unwind from current function
+
+2.1.3) If the callsite is the last instruction
+       pc:   cause to unwind from next    function
+       pc-1: casue to unwind from current function
+
+
+All in all, I think you are right.
+
+In case 2), We can always unwind by 'pc-1'.
+
+In case 1), If we unwind by 'pc', case 1.1.3) is problematic.
+If we unwind by 'pc-1', 1.2.1) is problematic.
+
+
+> 
+> So, I don't see what being in the exception/entry text really has much
+> to do with any decision making here. I think you've found that it works
+> for your case, but it won't _always_ work and you're just shifting the
+> "bug" with how these traces work from one issue to a different but
+> similar issue.
 
