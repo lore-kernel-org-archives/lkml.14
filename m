@@ -1,87 +1,92 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377BC132C37;
-	Thu, 21 Mar 2024 19:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0A513442F;
+	Thu, 21 Mar 2024 19:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711049658; cv=none; b=MTIRbaIyGguKAZ5EZFxDNsHbz1lx3nvwhZYllMR4edrXciTEv0yIwXmmNxqtGU/AKgF7hezkBWXi436Yog91lCGiOx0PpNlCa75MiiHirYJHAXR0vjP7ZSLN8dCPGEmZ6aEwKuar84OVOdvQJzYykxJWrCIW+ENO8wDqf5QMPds=
+	t=1711049664; cv=none; b=pjyYd4xvsZKFxRnA3+jbIaMzlmdh8XQ55zv66wzJwx42UgNOrH77XhLM7UrmT4CIreU1F3qkjlYV0PqkGyefREZTaiPO+U3jNy/d9X2Dr9hFL3vFYcngbR/VCZ6b+lzCnJEITrrLqozkqPq7CkBPMkg+bINRZlpY4VWEdpOrgKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711049658; c=relaxed/simple;
-	bh=riNJOLS1PDkHeYFfgxlyU2hpU4+11KYkJC8sj8wJoVw=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rBnRT1fSOg6UQFuQwR6lXwuJ9EDf6VqJr6afi62135KFoDK7KzdcMkO7W+gnkci/9dneScer+LWGqUmQ5p+vSA+4SOg+J3nKPQKl2zOB8+Ec4Q4sOtN88uZBlubNfRorSpLpa/UwfRaV5epfS0UpQrXyGMHOqdWAMJNCcRNcvRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.96.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1rnOAj-0000Ex-2q;
-	Thu, 21 Mar 2024 19:33:54 +0000
-Date: Thu, 21 Mar 2024 19:33:49 +0000
-From: Daniel Golle <daniel@makrotopia.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>, Jens Axboe <axboe@kernel.dk>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Dave Chinner <dchinner@redhat.com>, Jan Kara <jack@suse.cz>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Li Lingfeng <lilingfeng3@huawei.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Christian Heusel <christian@heusel.eu>,
-	Min Li <min15.li@samsung.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Avri Altman <avri.altman@wdc.com>, Hannes Reinecke <hare@suse.de>,
-	Christian Loehle <CLoehle@hyperstone.com>,
-	Bean Huo <beanhuo@micron.com>, Yeqi Fu <asuk4.q@gmail.com>,
-	Victor Shih <victor.shih@genesyslogic.com.tw>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Dominique Martinet <dominique.martinet@atmark-techno.com>,
-	"Ricardo B. Marliere" <ricardo@marliere.net>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mmc@vger.kernel.org, linux-block@vger.kernel.org
-Subject: [PATCH 3/8] block: add new genhd flag GENHD_FL_NVMEM
-Message-ID: <89abd9ab93783da0e8934ebc03d66559f78f6060.1711048433.git.daniel@makrotopia.org>
-References: <cover.1711048433.git.daniel@makrotopia.org>
+	s=arc-20240116; t=1711049664; c=relaxed/simple;
+	bh=HdVPAGPeWYrzxVmTi5wEQzoohLlmdDTL9D8CQkDRM7E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D8gzRz0Y/XNug7q3oWmytUOaGuYVkI6usIe/FAhkM81JXcWvKqcFMxtNFWKTcn5fqCzsJp1QrRV47O19TZoPap3Fx6rh1/Qfki6tQnHproLDJV+r2g3hCSm2keD0167Nl360sXu8bfWk+Y2lZV7RjQw0nTlRSMTw0A2A8fRcx7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=htCm/ieb reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="htCm/ieb"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.4.0)
+ id b53c8d51296cc07e; Thu, 21 Mar 2024 20:34:13 +0100
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 3ABDC66B8D7;
+	Thu, 21 Mar 2024 20:34:13 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1711049653;
+	bh=HdVPAGPeWYrzxVmTi5wEQzoohLlmdDTL9D8CQkDRM7E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=htCm/iebY6c7itmQkuu390V9w8w59432s5iVHp6krlEAT/0lyEro8X3TiM5pu8tvV
+	 Ofcoo8At1dQzYdcYgTK13kD4J4TuGpCz8nZkxc/4PVDPeFGt6Eg3kg5Qgp4ihrFTyo
+	 fmVKe8S2P9jt9EQQiL+qXfsg64ROKSwmagJTipp2SWckQ0assnWlonqcfbCna14rMh
+	 ZzrnfpIJqEEl8DRZu7bqpexJL6FWOh2mGxX2hQWuxN3uTuXL58XqPW7uGouGcD5vbh
+	 CIiLrHMaAcrB7Od3FPe1GxZDYaJK4y/r8fFBM+ILpFFP7TONBxsV4WzBqIW28GPbzb
+	 hO6QzOhh7uosg==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject:
+ [PATCH v1 5/5] cpufreq: intel_pstate: Use __ro_after_init for three variables
+Date: Thu, 21 Mar 2024 20:34:06 +0100
+Message-ID: <2935621.e9J7NaK4W3@kreacher>
+In-Reply-To: <12409658.O9o76ZdvQC@kreacher>
+References: <12409658.O9o76ZdvQC@kreacher>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1711048433.git.daniel@makrotopia.org>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrleejgdeihecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedvffeuiedtgfdvtddugeeujedtffetteegfeekffdvfedttddtuefhgeefvdejhfenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeefpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhrihhnihhvrghsrdhprghnughruhhvrggurgeslhhinhhugidrihhnthgvlhdrtghomh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=3 Fuz1=3 Fuz2=3
 
-Add new flag to destinguish block devices which may act as an NVMEM
-provider.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+There are at least 3 variables in intel_pstate that do not get updated
+after they have been initialized, so annotate them with __ro_after_init.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- include/linux/blkdev.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/cpufreq/intel_pstate.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index c3e8f7cf96be9..f2c4f280d7619 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -81,11 +81,13 @@ struct partition_meta_info {
-  * ``GENHD_FL_NO_PART``: partition support is disabled.  The kernel will not
-  * scan for partitions from add_disk, and users can't add partitions manually.
-  *
-+ * ``GENHD_FL_NVMEM``: the block device should be considered as NVMEM provider.
-  */
- enum {
- 	GENHD_FL_REMOVABLE			= 1 << 0,
- 	GENHD_FL_HIDDEN				= 1 << 1,
- 	GENHD_FL_NO_PART			= 1 << 2,
-+	GENHD_FL_NVMEM				= 1 << 3,
- };
+Index: linux-pm/drivers/cpufreq/intel_pstate.c
+===================================================================
+--- linux-pm.orig/drivers/cpufreq/intel_pstate.c
++++ linux-pm/drivers/cpufreq/intel_pstate.c
+@@ -293,10 +293,10 @@ struct pstate_funcs {
+ static struct pstate_funcs pstate_funcs __read_mostly;
  
- enum {
--- 
-2.44.0
+ static bool hwp_active __ro_after_init;
+-static int hwp_mode_bdw __read_mostly;
+-static bool per_cpu_limits __read_mostly;
++static int hwp_mode_bdw __ro_after_init;
++static bool per_cpu_limits __ro_after_init;
++static bool hwp_forced __ro_after_init;
+ static bool hwp_boost __read_mostly;
+-static bool hwp_forced __read_mostly;
+ 
+ static struct cpufreq_driver *intel_pstate_driver __read_mostly;
+ 
+
+
+
