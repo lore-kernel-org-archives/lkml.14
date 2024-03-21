@@ -1,53 +1,54 @@
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40FC4133998;
-	Thu, 21 Mar 2024 22:06:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF7D13664F;
+	Thu, 21 Mar 2024 22:06:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711058774; cv=none; b=anffCRPGdEg61SPxTy5QzrxTg364SsMg6YNBBjLnOkhfceBq67oOQZuLyt12uCJhX5M2TBKDJdGL/ulVUXJE470HH0L/0exVuq8kerZ4TfS5YrWhWUHPCQ63zi41EhzilHW8sp7bshCvQJH8m/bJun86ojqnqi+mOXaMdwDUmss=
+	t=1711058775; cv=none; b=Kuyubp7hJ5uah+wQJOWSHoKXAi7TMY7j1KBoQej910vaqgD/0SOvuedjcBh/S+lGfinjb9LElQceFg+kPLczFphcy1BR2Yw/6iHn/Yn2Qf55J1NSNq/60cMlebRsJi4srqBC6qCelq7Jg/7jLetl+acj2nf0ri+6EafZEA4FFUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711058774; c=relaxed/simple;
-	bh=TIQnoZwJq4qDV5cDowLeR4WsNNtBuDa7FQIqcE3Y5wM=;
+	s=arc-20240116; t=1711058775; c=relaxed/simple;
+	bh=3jLKTcczzZnzhXLnlDgNt6ZDQuVI3dx0MeE/oTV0g00=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hpy65wh6h4MYyApgQeLOcQDZ8Ptz5sGUCStrxGHnSJaTdfkKuP4fOzJk4CpbvbjhxgU+taZjUMK08xpzdc8XQF0bPeXwNNvRnyL+oFeMzgMK3cFa5PEA/zbO6s/GDikucP2g5dB9WdqXJtRF8pM/E4y6NbqyxxKgv7IoeUqhGk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=T5uniTGB; arc=none smtp.client-ip=208.88.110.44
+	 MIME-Version; b=dvExwYthdsRJiF59st736gWqMlz/7e50b1GGKGNlNlWRay1uZ7VfK42GMR9T2A8mMZ8N4WiAtI2gDCbhAegf/63cRLUKUag0akQDLNbqkskX/eteTNwJPxjj52jHlj5OGMTSdpTQpsGPzwN/HvyGtVEq91MgiB5jMYi7aFoADjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=yIi5zWEa; arc=none smtp.client-ip=208.88.110.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="T5uniTGB"
+	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="yIi5zWEa"
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 096639C5431;
-	Thu, 21 Mar 2024 18:06:11 -0400 (EDT)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 8029E9C52E9;
+	Thu, 21 Mar 2024 18:06:07 -0400 (EDT)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id MV2G5OsxunWi; Thu, 21 Mar 2024 18:06:10 -0400 (EDT)
+ with ESMTP id h54AjYVSvKKB; Thu, 21 Mar 2024 18:06:06 -0400 (EDT)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 5CB399C5485;
-	Thu, 21 Mar 2024 18:06:10 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 5CB399C5485
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 7E15F9C544D;
+	Thu, 21 Mar 2024 18:06:06 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 7E15F9C544D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1711058770; bh=//jzrul5/etI5HJYv4rf3hRGSryC23BhON2Tv1y72Hc=;
+	t=1711058766; bh=MS/CSI1DQm+VcI/nbTmPkuznJvo8jK4CQm3471DDMa0=;
 	h=From:To:Date:Message-ID:MIME-Version;
-	b=T5uniTGBmvD8LX14fBd2OlCRPvba5J3pH1vN0P9VlkNjSgE40kuovUZ27K0X9vPMn
-	 e1fAvNB24jTKTgskz7fQCj1PvqdO3DpfYG52PuFSMPUnux/r0JXWMg+SNXNSzdx0x5
-	 ePQScX9L8vlWCgNz891db+MEXYLlxN8Qt8B5GXz0GwK3UiDuzCQ8JedKJZVaqAYfv/
-	 0Cd+DtdmlG1BjeIiv9Mf6WbyDZ5eyypCB5RbENlG86Tkrclf6G9BHIShLosqrQgn8F
-	 nx/osgfLH91TFIo2HJ8OGCB9nloSWtSnN2Xuhb2TpKy7dPNvJ0KmRCgUrnGqgU5WXK
-	 iFAjlu1JFKPIw==
+	b=yIi5zWEaHjGMh04NmmTsOxht0wZxJHjdMXp3lvUhOdm449lmr5PMHX/Q3CkWi0Tju
+	 ArfDJAgfcUIkS96wlEiUOj0PuOOZyGaXeeT4zSFV3e8jqJr9H5UJBB6URoru6s8O+T
+	 rPDSMcuj9LHVxLheMjoHGNaye8pIehco4cJpw5oMCkzlxb/ASzM/5I94otiUcPyaH+
+	 bRC1KwLUicnS99hdGKb6MdRYI4x607cM0o/tBAg1gTeK8vRfrah3XR3EucYvB2EUOk
+	 6euVZJtauhtPjPxSUWCMxhtHm3KTVRqzqRzltlGAS1xd+KK81Typr2/PzvRWd4rjyW
+	 FL+EhdCIpu1xg==
 X-Virus-Scanned: amavis at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id Jg8QBSn7EGNf; Thu, 21 Mar 2024 18:06:10 -0400 (EDT)
+ with ESMTP id kqGEY5JAyOp5; Thu, 21 Mar 2024 18:06:06 -0400 (EDT)
 Received: from pcperry.mtl.sfl (unknown [192.168.51.254])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 33CD79C5431;
-	Thu, 21 Mar 2024 18:06:10 -0400 (EDT)
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 583259C52E9;
+	Thu, 21 Mar 2024 18:06:06 -0400 (EDT)
 From: Charles Perry <charles.perry@savoirfairelinux.com>
 To: mdf@kernel.org
 Cc: avandiver@markem-imaje.com,
 	bcody@markem-imaje.com,
 	Charles Perry <charles.perry@savoirfairelinux.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Wu Hao <hao.wu@intel.com>,
 	Xu Yilun <yilun.xu@intel.com>,
 	Tom Rix <trix@redhat.com>,
@@ -59,9 +60,9 @@ Cc: avandiver@markem-imaje.com,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v6 4/4] fpga: xilinx-core: add new gpio names for prog and init
-Date: Thu, 21 Mar 2024 18:04:36 -0400
-Message-ID: <20240321220447.3260065-5-charles.perry@savoirfairelinux.com>
+Subject: [PATCH v6 2/4] dt-bindings: fpga: xlnx,fpga-selectmap: add DT schema
+Date: Thu, 21 Mar 2024 18:04:34 -0400
+Message-ID: <20240321220447.3260065-3-charles.perry@savoirfairelinux.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240321220447.3260065-1-charles.perry@savoirfairelinux.com>
 References: <20240321220447.3260065-1-charles.perry@savoirfairelinux.com>
@@ -73,60 +74,112 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Old names (prog_b and init-b) are used as a fallback for hardware
-compatible with the "xlnx,fpga-slave-serial" string.
+Document the SelectMAP interface of Xilinx 7 series FPGA.
 
 Signed-off-by: Charles Perry <charles.perry@savoirfairelinux.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- drivers/fpga/xilinx-core.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ .../bindings/fpga/xlnx,fpga-selectmap.yaml    | 86 +++++++++++++++++++
+ 1 file changed, 86 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,fpga-sele=
+ctmap.yaml
 
-diff --git a/drivers/fpga/xilinx-core.c b/drivers/fpga/xilinx-core.c
-index a35c43382dd5f..39aeacf2e4f17 100644
---- a/drivers/fpga/xilinx-core.c
-+++ b/drivers/fpga/xilinx-core.c
-@@ -171,6 +171,20 @@ static int xilinx_core_write_complete(struct fpga_ma=
-nager *mgr,
- 	return -ETIMEDOUT;
- }
-
-+static inline struct gpio_desc *
-+xilinx_core_devm_gpiod_get(struct device *dev, const char *con_id,
-+			   const char *legacy_con_id, enum gpiod_flags flags)
-+{
-+	struct gpio_desc *desc;
+diff --git a/Documentation/devicetree/bindings/fpga/xlnx,fpga-selectmap.y=
+aml b/Documentation/devicetree/bindings/fpga/xlnx,fpga-selectmap.yaml
+new file mode 100644
+index 0000000000000..05775746fd706
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fpga/xlnx,fpga-selectmap.yaml
+@@ -0,0 +1,86 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/fpga/xlnx,fpga-selectmap.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	desc =3D devm_gpiod_get(dev, con_id, flags);
-+	if (IS_ERR(desc) && PTR_ERR(desc) =3D=3D -ENOENT &&
-+	    of_device_is_compatible(dev->of_node, "xlnx,fpga-slave-serial"))
-+		desc =3D devm_gpiod_get(dev, legacy_con_id, flags);
++title: Xilinx SelectMAP FPGA interface
 +
-+	return desc;
-+}
++maintainers:
++  - Charles Perry <charles.perry@savoirfairelinux.com>
 +
- static const struct fpga_manager_ops xilinx_core_ops =3D {
- 	.state =3D xilinx_core_state,
- 	.write_init =3D xilinx_core_write_init,
-@@ -186,12 +200,14 @@ int xilinx_core_probe(struct xilinx_fpga_core *core=
-)
- 		return -EINVAL;
-
- 	/* PROGRAM_B is active low */
--	core->prog_b =3D devm_gpiod_get(core->dev, "prog_b", GPIOD_OUT_LOW);
-+	core->prog_b =3D xilinx_core_devm_gpiod_get(core->dev, "prog", "prog_b"=
-,
-+						  GPIOD_OUT_LOW);
- 	if (IS_ERR(core->prog_b))
- 		return dev_err_probe(core->dev, PTR_ERR(core->prog_b),
- 				     "Failed to get PROGRAM_B gpio\n");
-
--	core->init_b =3D devm_gpiod_get_optional(core->dev, "init-b", GPIOD_IN)=
-;
-+	core->init_b =3D xilinx_core_devm_gpiod_get(core->dev, "init", "init-b"=
-,
-+						  GPIOD_IN);
- 	if (IS_ERR(core->init_b))
- 		return dev_err_probe(core->dev, PTR_ERR(core->init_b),
- 				     "Failed to get INIT_B gpio\n");
---
++description: |
++  Xilinx 7 Series FPGAs support a method of loading the bitstream over a
++  parallel port named the SelectMAP interface in the documentation. Only
++  the x8 mode is supported where data is loaded at one byte per rising e=
+dge of
++  the clock, with the MSB of each byte presented to the D0 pin.
++
++  Datasheets:
++    https://www.xilinx.com/support/documentation/user_guides/ug470_7Seri=
+es_Config.pdf
++
++allOf:
++  - $ref: /schemas/memory-controllers/mc-peripheral-props.yaml#
++
++properties:
++  compatible:
++    enum:
++      - xlnx,fpga-xc7s-selectmap
++      - xlnx,fpga-xc7a-selectmap
++      - xlnx,fpga-xc7k-selectmap
++      - xlnx,fpga-xc7v-selectmap
++
++  reg:
++    description:
++      At least 1 byte of memory mapped IO
++    maxItems: 1
++
++  prog-gpios:
++    description:
++      config pin (referred to as PROGRAM_B in the manual)
++    maxItems: 1
++
++  done-gpios:
++    description:
++      config status pin (referred to as DONE in the manual)
++    maxItems: 1
++
++  init-gpios:
++    description:
++      initialization status and configuration error pin
++      (referred to as INIT_B in the manual)
++    maxItems: 1
++
++  csi-gpios:
++    description:
++      chip select pin (referred to as CSI_B in the manual)
++      Optional gpio for if the bus controller does not provide a chip se=
+lect.
++    maxItems: 1
++
++  rdwr-gpios:
++    description:
++      read/write select pin (referred to as RDWR_B in the manual)
++      Optional gpio for if the bus controller does not provide this pin.
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - prog-gpios
++  - done-gpios
++  - init-gpios
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    fpga-mgr@8000000 {
++      compatible =3D "xlnx,fpga-xc7s-selectmap";
++      reg =3D <0x8000000 0x4>;
++      prog-gpios =3D <&gpio5 5 GPIO_ACTIVE_LOW>;
++      init-gpios =3D <&gpio5 8 GPIO_ACTIVE_LOW>;
++      done-gpios =3D <&gpio2 30 GPIO_ACTIVE_HIGH>;
++      csi-gpios =3D <&gpio3 19 GPIO_ACTIVE_LOW>;
++      rdwr-gpios =3D <&gpio3 10 GPIO_ACTIVE_LOW>;
++    };
++...
+--=20
 2.43.0
+
