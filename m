@@ -1,107 +1,106 @@
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6293FBAC
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 06:38:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B11481D3
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 06:38:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711003093; cv=none; b=aPVcLuWFqaYH5e17KiH/XCuX7Kxy/GkY/CZXjU7a6mHyWpUxvpaD3qkEYqwxnVrgMRq5dCjOJ0lLczN/PkWbxFIMIGW1M2gVVREUhOp90uag83D4Z754Ssi2LVZK4sP6YAObn1H4L/j4d1s+3nailjny+zcNFe5bchueyBhc5C0=
+	t=1711003127; cv=none; b=RK5ZlYA4s6iM1ywU1ZC+ecZ3rujhvZXprPXTxykJUzghcVyHJba5l76Haht66ZgERZh1Nqt1/pkTN4T5rMRjNBrfc6DMhhUL0Xf9H7XMB9XqqADbSqohL2pfT9FT7D9rFr3p+YRuqbnNYjX4HMNJg3NAt6mdmlYpW13KfxB7dgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711003093; c=relaxed/simple;
-	bh=IWzoRyiIq34RmhOn0iDV7qym3hPufd8Mn7S0DjBmBYA=;
-	h=From:To:Subject:Message-ID:Date:MIME-Version:Content-Type; b=nfBzNvaYc5aQ1CPWLAsiAkYpVEv7Cu9QXtDUqWdP6MhLFwyM1Y82X0PM/d7t1plcbxEUNj4GAYrlCuEb7vafjfbYBe0zE0AxeRJ570LLbwifQ11o2M3v5HT1CJxE2Vq164n2pkItxAV9Fp1H3rZCtY/BeKCkJf4ouS3PlhXS2BE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iu60oAlW; arc=none smtp.client-ip=209.85.222.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711003127; c=relaxed/simple;
+	bh=YbgeCnjIUVi5GtTDPEGswB6RMCMBOV39XcZrT3taDIM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=mo0/95IxDjPl7BFsAASnplZ0Y2vPAa0B3Qe+l963+lk7LEcjuwGXZHnP6xszZQ0aughiJCvxuisdHxu8eDwiYoSZBYBjkwjRK68iLemq321V+0Zv8/nDQXSrWQQdGVnKLIoBhx4vFhQIiuvbAQ/2u3DZW6RZnHYCg9cXrLQUg/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Xnhe1zhW; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iu60oAlW"
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-7e0cfda8e00so61503241.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 23:38:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xnhe1zhW"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4141156f245so4221465e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 23:38:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711003088; x=1711607888; darn=vger.kernel.org;
-        h=content-language:content-transfer-encoding:mime-version:user-agent
-         :date:message-id:subject:to:from:reply-to:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pUEt2Z97b8lEWwJktqHAAwXS3vj2uI9IohvvSbiYwx0=;
-        b=iu60oAlWbtiAGfjnnNOjCAOpa5mHTEx8ARY0uHgcXAugmPtlf0vMt7ITXJx5mcUtua
-         217vQEEfBUkuIyGzMu53zsjvHpBarVTQB/i55mRpX7JBnRQmRTAJTYHBMz9SGOCjbq2y
-         osmvV43WlePyzgYQ0QgIGhLbRYYz7OrlufKkGIjvGUwthpljNonA59v7LHAaaDq6jcEd
-         VyvOphAgCfzP5bqb7dbCdW7f6ipoeCUkk8AxDiy3PhqFeuz+FRaQi0x6Xwcqwy0d3UjS
-         cuLbRqRH7mC5TbxhkpUtTMT/OBti6BfJvAGdzneue3xMDcPrXIVMuhOmvObdyB2RDyG2
-         HA0g==
+        d=linaro.org; s=google; t=1711003123; x=1711607923; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=P4hwGF+QXFX1Vxi6snkUitGB1YN98VjNP9St3h6PXDQ=;
+        b=Xnhe1zhWr/ctT4VSATHHth64Y1oyivJsUpq0Klfm7KMmAYWqhD76eqWtnTtikXm/+E
+         dQ0gRymXH6wWm9TrNUBQL4bBG+KPOTrr0s9V+ytgOvN30ED/2KnThPTse6F0YuM75KsB
+         0FFVYUwg40Bq5MRsyvTp7XtjMkBpoc8jb1SMWAKzsP/buuhd+qMMMQw5WND8737LIUf3
+         prSeMSTJl9mu0beZTotT2yvuAMlyKjs3yvC4G/afBklIAG2JsopDogIcVJrfdKiqr34m
+         jy/71hz2/p1k1B5LCNC9WzXdcNGCCHhfu/hOx+rQmhmI2CwfZvB2qGcFReNK30/hUPi2
+         8Ygg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711003088; x=1711607888;
-        h=content-language:content-transfer-encoding:mime-version:user-agent
-         :date:message-id:subject:to:from:reply-to:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=pUEt2Z97b8lEWwJktqHAAwXS3vj2uI9IohvvSbiYwx0=;
-        b=W/v2lSaVweoeOA+ldZ1Vew9BTTlCgdYwi6ysxTlErnGftfGJWSoj9Uc2HGXYbeFnTB
-         mW3XiCBniAtqV87BZfPxDCYjW5180VNVJQ3HpZJ3EyxuTXgzNmgP2/1zTDHgZM9GBO8P
-         xhAjMgKC1b2S3/GLMuHX0Yz6eGElVL+3P5MzBcsZymL9RdAobwjId5gclyMesId9QU9z
-         MsBb3YP+p8QQ4Sd1L4lEWIfJ2AP3/sSIoAEn3Cq38pvPWn4Lq8dz/FiBVPwcUpNWVIuT
-         Ob8BBZawHkX4U1OzOBOlBDcJw1INgfXyRcuqfGNN7pgSmRq3gEBJp0altLfSpQFO/LOL
-         KuhA==
-X-Gm-Message-State: AOJu0Yz/G6Dn/X0DppFtkYrL/ID42IcZHET6eqhJr1xWryX5DT1FHxku
-	v4CM2bkMJxmqtXqLpUaSyLaXU3qzpKeJFFSCMmMfKECaDVnENVPPAnJPCrIh
-X-Google-Smtp-Source: AGHT+IHO7PmseZroElxnntRG+71U6hx+vXgI/ibXOCO5ih2++Dqy8JTgtAW2iIzj3czGDatlMYY9Yg==
-X-Received: by 2002:a05:6a20:d707:b0:1a3:8195:17 with SMTP id iz7-20020a056a20d70700b001a381950017mr4736659pzb.42.1711002740254;
-        Wed, 20 Mar 2024 23:32:20 -0700 (PDT)
-Received: from ?IPv6:2409:4063:6c85:f395:d58f:6b15:5165:7028? ([2409:4063:6c85:f395:d58f:6b15:5165:7028])
-        by smtp.gmail.com with ESMTPSA id sy15-20020a17090b2d0f00b0029df9355e79sm2825083pjb.13.2024.03.20.23.32.19
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Mar 2024 23:32:19 -0700 (PDT)
-Reply-To: businesssolutionsrocks23@gmail.com
-From: Raju Kumar <rajukumarkorav@gmail.com>
-To: linux-kernel@vger.kernel.org
-Subject: RE:Mobile App Development || Web App Development
-Message-ID: <839b67d6-4192-dbc7-b4a3-47ad7b0d8875@gmail.com>
-Date: Thu, 21 Mar 2024 12:02:14 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        d=1e100.net; s=20230601; t=1711003123; x=1711607923;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=P4hwGF+QXFX1Vxi6snkUitGB1YN98VjNP9St3h6PXDQ=;
+        b=h+FsHFkSLdC14c70UQo7iv/d7p5ri0o5zNLK7rbpKIjiBYYyaSqu5PcXBx/y5JR+28
+         9d3N3dZYQ9nFidc1eO9wUq6vfZuRRrkzURy7uEn3kLb7E4IoUrhboMOzs6s+Pz4P/2My
+         ZFMEV1ZmpZgSaMUKoHlYvYJ0w+GxXLMs1TmQHWk8qYfLS3MIPHrNI2JKDpTpsx5gt+h/
+         bdoC5eno215JLW2hW1MxHTUATM6hKsKCZDNZiqXpkMat1r2S/pCSA9YFp0ngt2JNFhuo
+         wYd3l1pg6whaun8G9xJOAY6zXCNjektA3XsQTHTg3EoZrpUmYhKX5bsHmB5sKlLa9DiJ
+         3YAg==
+X-Forwarded-Encrypted: i=1; AJvYcCX4B7YD4LWBzuVjORGo2kRlkOHo5G75gzBWfepbGcLNNL4+5Pf9CQelp23s7hJOhI8E+i3PgEF4+k1i//44i3fYMhhQr091RKHBn7PW
+X-Gm-Message-State: AOJu0YziWkHQj8XwGLc8Y7T+o7DOSwi1k0zXNNogsf9dxSvP7rxb3ApB
+	XmealXi/WPmxYfV2nkVBZ+GQ4vKw7Ismj4EAwm6Qx4f/qxf1LFiUcdOJ7mxr3tc=
+X-Google-Smtp-Source: AGHT+IEDUPehHJz4ek7JwafnO4x+wLZIk1n91Eb6COngAaFGxoPjYaT3KfsS4Jezl5GNE0okIbeNVw==
+X-Received: by 2002:a05:600c:2484:b0:412:e50f:acaf with SMTP id 4-20020a05600c248400b00412e50facafmr615178wms.24.1711003123461;
+        Wed, 20 Mar 2024 23:38:43 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id l5-20020a05600c1d0500b004146a1bf590sm4502963wms.32.2024.03.20.23.38.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Mar 2024 23:38:43 -0700 (PDT)
+Date: Thu, 21 Mar 2024 09:38:39 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH] pinctrl: core: delete incorrect free in pinctrl_enable()
+Message-ID: <578fbe56-44e9-487c-ae95-29b695650f7c@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-Hi,
+The "pctldev" struct is allocated in devm_pinctrl_register_and_init().
+It's a devm_ managed pointer that is freed by devm_pinctrl_dev_release(),
+so freeing it in pinctrl_enable() will lead to a double free.
 
-Just checking with you if you got a chance to see my previous email.
+The devm_pinctrl_dev_release() function frees the pindescs and destroys
+the mutex as well.
 
-Please let us know if you have MOBILE APP or WEB APP DEVELOPMENT 
-requirements; we can schedule a quick call to discuss further in detail.
+Fixes: 6118714275f0 ("pinctrl: core: Fix pinctrl_register_and_init() with pinctrl_enable()")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+I spotted this during code review and have not tested it.
 
-Kindly suggest a good time to connect also best number to reach you.
+ drivers/pinctrl/core.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-Thank you
-Raju Kumar
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index 6649357637ff..cffeb869130d 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -2124,13 +2124,7 @@ int pinctrl_enable(struct pinctrl_dev *pctldev)
+ 
+ 	error = pinctrl_claim_hogs(pctldev);
+ 	if (error) {
+-		dev_err(pctldev->dev, "could not claim hogs: %i\n",
+-			error);
+-		pinctrl_free_pindescs(pctldev, pctldev->desc->pins,
+-				      pctldev->desc->npins);
+-		mutex_destroy(&pctldev->mutex);
+-		kfree(pctldev);
+-
++		dev_err(pctldev->dev, "could not claim hogs: %i\n", error);
+ 		return error;
+ 	}
+ 
+-- 
+2.43.0
 
-  On Tuesday 28 November 2023 5:43 PM, Raju Kumar wrote:
-
-
-Hi,
-
-We are a leading IT & Non-IT Staffing services company.
-We design and develop web and mobile applications for our clients 
-worldwide, focusing on outstanding user experience.
-
-We help companies leverage technological capabilities by developing 
-cutting-edge mobile applications with excellent UX (User Experience) 
-across multiple platforms.
-
-iOS App Development
-Android App Development
-Cross-platform App Development
-Web App Development
-
-Can we schedule a quick call with one of senior consultants so we can 
-discuss this further in detail?
-Please suggest a day and time and also share the best number to reach you.
-
-Thank you
-Raju Kumar
