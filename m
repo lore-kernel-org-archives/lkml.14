@@ -1,121 +1,53 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F129913664C
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 21:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110FC85265;
+	Thu, 21 Mar 2024 21:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711057854; cv=none; b=rbA0Dh8oI/m548CBNaVhcAEkczUrlNYmdvsqw5L2zsk2ev735y4uRufXdL4hJBSpgHPicLxeqEVOdhibSB8/64ICsIVxZTg2kiTJOojl/wTEctq9QfbZ/5HQvZE19thISOxiqSlLdvtx08vqgaIJbavVly3LMateKqp/w0cQOzU=
+	t=1711057908; cv=none; b=VbHE6eM7X/kV26TEgbPai7FylYxgPHSWPpHzKiURe/O9+ioBMTBl2a9ir3oSYlsSO+lPZ7APeXUHEzIei7YVYte+P6fvShENvtX/ZriXeBblJyhIKKEs0VrO5+56yLV4uBoR30nNOVebUILa0lDo0x4xw4HRxbVMvHWRIaKrw2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711057854; c=relaxed/simple;
-	bh=1q6/bssNd0006rOsrKjCaBr6cGn2MsVcOHvN/FPDSTM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Sf78krockjAPoyiV0BIV/QmE9zV9IHRWMz2ut+yKtg1m3XbOwuq94N0pXvV1C1P5JgUz8blc8Q1R5HAnwMMCoOIi/qtohbXFjz0uu3W6vT36MPP2lWy5axXi1lvmnR/QapG+G7jlQDXE2dNuyFpIFSoQB2evXe0Kz7lku55vfrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bvk6XnlF; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711057908; c=relaxed/simple;
+	bh=PFlFbtJo/tyI5/55AxDQL37wAmCPfeAfkLdS3jv8iE8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=cGmNaBExeCn4mrKR/FwWekpowQo4xSHKllcrYxV3f931zJb5hVAJtR91r4F54yTScUhNCQLz7O0cnVGipq7kXWZgwPTdNyBi71vAo7Tyh9gc6WAvnlIl6+aG28c9l406xmTFPF7wL8IfSU0JITvaLY6LwZ2h0DOP0VSb0tyf9LA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=CgSdgBUB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bvk6XnlF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711057851;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=aSRv2DetjMO/TSqj6Dtwz7BI28in2keILcLTnyc5ezU=;
-	b=Bvk6XnlFtwaAn286obWs0wBZiRS9H0MNCUWU9L37RBX/vr+y8C9bFqEAgKGKU88mRG2+yP
-	pcqKk9Vdo0uj5hf6tn2nQBsRV1niCXnz4hg4MMKxes4eeJE9eqiMXRA1WlV6oF6jqofIfI
-	MgAGeVzVoTJ4DrZatDQBUmCfC1KggkE=
-Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
- [209.85.210.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-621-hjGNVwQ9OGepQnV6o-WdwA-1; Thu, 21 Mar 2024 17:50:50 -0400
-X-MC-Unique: hjGNVwQ9OGepQnV6o-WdwA-1
-Received: by mail-ot1-f70.google.com with SMTP id 46e09a7af769-6e6ae0d2cf5so335298a34.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 14:50:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711057849; x=1711662649;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aSRv2DetjMO/TSqj6Dtwz7BI28in2keILcLTnyc5ezU=;
-        b=mDb3LhKMWvIAZLymR4fJU85FJ54X60DlnYplNscIcH9LuZkW3tTprfUq2cTNlkW4w1
-         P8pwBNny1RsqyNZ3e11oXQPRDIXbGiJPcNZGUQYNuF/dk6KowQvBEWRgr6Ak9I0bkU1f
-         YJBqY+s/1hRrx7AysoCXfXf8YZG2dLoR5OFQJkIbiFpdFvdsJvXb+BHGtvEY6lZPd7ds
-         Fb8Uzm/xcnVI1i5lBZyY5E5SvXpAozUiMD4dJ8VZvartDF7+jYLetkNVcTBkuoTI55PC
-         SUaglYyern3IgqZvPnMDa3ujOOdGGQkq+gcgBm8AGf5oAjcwWm+hfZTFcNnp42qWT+Es
-         fyUw==
-X-Forwarded-Encrypted: i=1; AJvYcCVOXNM2UJqGNOE6/WYpuBFStFHv4JOUChs6PLDtjN+SdVD6s9l00Eq9nLrwJlZ4pdQFxAKxtXk2lsMslPkB5ViKHYujy268sZffkDkZ
-X-Gm-Message-State: AOJu0Yw5JBD0hj2zJaKDtW4pMBeN5K05UL127m/OtsCWQGF+5QAKT4q4
-	+gLzubWUKfgIDv+9aiRUrh09Mv2kggiaj1hBT/z4RlP0/OuGKi/KlfoydpIVGoF7xKxUZvirVQK
-	+ElyK0F1zgK/kxuNcqjfEDTvpN51Rn3fDC5hyd1Z9j7JRUhiizNYTBsqXqBYHlQ==
-X-Received: by 2002:a05:6830:1517:b0:6e6:aecb:a4cc with SMTP id k23-20020a056830151700b006e6aecba4ccmr472989otp.3.1711057849571;
-        Thu, 21 Mar 2024 14:50:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEXP5i6En054QksU/9nYfuolH8wCep616IgwaADmT0nLBglGHG04UCSqFWJZjM6dLY5e46Vxg==
-X-Received: by 2002:a05:6830:1517:b0:6e6:aecb:a4cc with SMTP id k23-20020a056830151700b006e6aecba4ccmr472969otp.3.1711057849229;
-        Thu, 21 Mar 2024 14:50:49 -0700 (PDT)
-Received: from x1n.redhat.com ([99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id e10-20020a37db0a000000b00789fc91dcf1sm268952qki.87.2024.03.21.14.50.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 14:50:48 -0700 (PDT)
-From: peterx@redhat.com
-To: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	peterx@redhat.com,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	David Hildenbrand <david@redhat.com>,
-	Nico Pache <npache@redhat.com>,
-	Muchun Song <muchun.song@linux.dev>
-Subject: [PATCH] selftests/mm: run_vmtests.sh: Fix hugetlb mem size calculation
-Date: Thu, 21 Mar 2024 17:50:47 -0400
-Message-ID: <20240321215047.678172-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="CgSdgBUB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EBB6C433F1;
+	Thu, 21 Mar 2024 21:51:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1711057907;
+	bh=PFlFbtJo/tyI5/55AxDQL37wAmCPfeAfkLdS3jv8iE8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=CgSdgBUBFiDt3okUqvtkGMIEYDUqXbwvZ/kjzwcVxkwFMwp8MUfX5FM+8aDwEAmE+
+	 Mg8xwbKCQs/+Mt2df3CjIm90aQzLHuP+nRcvCA1T4uCofIcr6/zQCX7rXRk60R8TUM
+	 qh8AelK31eg/QzpxOhA7yTIwKhOTdv5SBLf/86YI=
+Date: Thu, 21 Mar 2024 14:51:46 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Dev Jain <dev.jain@arm.com>
+Cc: shuah@kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Anshuman.Khandual@arm.com
+Subject: Re: [PATCH] selftests/mm: Confirm VA exhaustion without reliance on
+ correctness of mmap()
+Message-Id: <20240321145146.a3ce8a1e247371e33a437978@linux-foundation.org>
+In-Reply-To: <20240321103522.516097-1-dev.jain@arm.com>
+References: <20240321103522.516097-1-dev.jain@arm.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Peter Xu <peterx@redhat.com>
+On Thu, 21 Mar 2024 16:05:22 +0530 Dev Jain <dev.jain@arm.com> wrote:
 
-The script calculates a mininum required size of hugetlb memories, but
-it'll stop working with <1MB huge page sizes, reporting all zeros even if
-huge pages are available.
+> Currently, VA exhaustion is being checked by passing a hint to mmap() and
+> expecting it to fail. This patch makes a stricter test by successful write()
+> calls from /proc/self/maps to a dump file, confirming that a free chunk is
+> indeed not available.
 
-In reality, the calculation doesn't really need to be as comlicated either.
-Make it simpler and work for KB-level hugepages too.
-
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Nico Pache <npache@redhat.com>
-Cc: Muchun Song <muchun.song@linux.dev>
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- tools/testing/selftests/mm/run_vmtests.sh | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
-index c2c542fe7b17..b1b78e45d613 100755
---- a/tools/testing/selftests/mm/run_vmtests.sh
-+++ b/tools/testing/selftests/mm/run_vmtests.sh
-@@ -152,9 +152,13 @@ done < /proc/meminfo
- # both of these requirements into account and attempt to increase
- # number of huge pages available.
- nr_cpus=$(nproc)
--hpgsize_MB=$((hpgsize_KB / 1024))
--half_ufd_size_MB=$((((nr_cpus * hpgsize_MB + 127) / 128) * 128))
--needmem_KB=$((half_ufd_size_MB * 2 * 1024))
-+uffd_min_KB=$((hpgsize_KB * nr_cpus * 2))
-+hugetlb_min_KB=$((256 * 1024))
-+if [[ $uffd_min_KB -gt $hugetlb_min_KB ]]; then
-+	needmem_KB=$uffd_min_KB
-+else
-+	needmem_KB=$hugetlb_min_KB
-+fi
- 
- # set proper nr_hugepages
- if [ -n "$freepgs" ] && [ -n "$hpgsize_KB" ]; then
--- 
-2.44.0
-
+What's wrong with the current approach?
