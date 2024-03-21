@@ -1,171 +1,64 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D6EBA28
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 03:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73DFC6FC5;
+	Thu, 21 Mar 2024 03:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710992385; cv=none; b=da4MOEaOXmb9DxFqwme8TwM1ESeBAs0gDd8vEJdcF7OGz5Jn3iEtmSsQqWyGM6gbbc9rQ+uA0zGfjbY9mhFZTxuQ7wlC2KuwslLpSNBaHK1MRP2pp4tYT+9FA8Gs31saqX5KNQvXeBsP4D92Yl/G1xCYrOvGC4wEPuuQtfB6Zc4=
+	t=1710992666; cv=none; b=RXnY+nY+j0Vlz+e0v8KJVWJ+J7ZGzgCJoUbT0Djw5zI24KptMeUAIToDYTU3Dp1pbNBeFxI3AHwlAy1rVFYlXr7AweZi2Um5sI017n+Wqj+U2rtJWK8iRdAPAw6GE9Jx4xl007mYl+yGLTTQEcrup2O1tW3fq3PGoJo/i6Bx7vY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710992385; c=relaxed/simple;
-	bh=e/oB7EHyTS+qrUZJuOHpe7f0RTBTpNdPueEV7DX+ZNY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EJnlTSlCKAXlsp6n50swsBHBe5rCO4807jKdeL6gm8Mp4/vBfAcsyCltt5hkDejJ4Rg0Oz7Ti4fBrpz0ML6+VsD/VQBpOII+bYRbF3zydqLEOcWRC8BLuzsfnBMgEQJdZw5M9cWxS2JhDvb6cyebsu4tM/AtbkcwC5fsx5e4GHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=JLbY4nIz; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1710992666; c=relaxed/simple;
+	bh=+l6G01eCUl5Gixax34NKHd4Ib4Zzzbyh1A0DAfjMr/E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ItXXYMW9j6SqIQd7UbCO90WPmR/GbFzBO9mV2vttKlvhbfgizw8CUOVR+7yqaPGVECHshjqk0i9cSB3Z7PNbix1QgKgKI7Wv7arcCCN7y2fy984kPKV9XtPsJJ+W3PUnZiw1p7C0Wa70FXfTb835vGSfEt3coxWaT69bGURB3uE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jWY6btUx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="JLbY4nIz"
-Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
-	by cmsmtp with ESMTPS
-	id myjcrrLzXPM1hn9HFrobWx; Thu, 21 Mar 2024 03:39:37 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id n9HFrlLvNd4oen9HFrYnwi; Thu, 21 Mar 2024 03:39:37 +0000
-X-Authority-Analysis: v=2.4 cv=aYKqngot c=1 sm=1 tr=0 ts=65fbabf9
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=UtBFqMlDG83dypD0sxEoAQ==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10
- a=pzMpKnHA-g9QxEOb-IoA:9 a=QEXdDO2ut3YA:10
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=xx+crt5ANis/Uvu0cR7hGXRkyaHIWmqFF50ZDHk5Svo=; b=JLbY4nIzWuQCLgb5ICw49FDMKR
-	/gzQINzFzoX6F2pjGfaO9J9u2drVa6xUl1c6zzZXdkMIikDGwHM+aNybzI4h7mquctoZL0V6fpxFG
-	UNS0VuXi5ReVD1ibKpHXBlaaaLHyQ1O3mqrVxaiV4GZIyKz5gEdWQE/9+mF+OYuqBYeEq6EDQaeow
-	P4sFbE1/rYZdydtTB5L3q4LClbdRtLtr56zsxXiR9/amRYqtQqK0svhm0BNpcIqolP3e0mmcDnuIz
-	4V30tSlXG5ydaBoBibFWe/ub4uOi4RfU7C/5CK/8Y9+IGqBkSSSGQHME3VWCISZcbH2WfcK4qq13d
-	kfzvj7Xw==;
-Received: from [201.172.174.229] (port=41350 helo=[192.168.15.14])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rn9HD-00172A-03;
-	Wed, 20 Mar 2024 22:39:35 -0500
-Message-ID: <fe36683b-ec78-4f83-b4ad-8dca35e4fa09@embeddedor.com>
-Date: Wed, 20 Mar 2024 21:39:32 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jWY6btUx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7796DC433C7;
+	Thu, 21 Mar 2024 03:44:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710992665;
+	bh=+l6G01eCUl5Gixax34NKHd4Ib4Zzzbyh1A0DAfjMr/E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jWY6btUxJH6gi6gBIF3xu62qAwvuRi6n1aBwzEN5pAQ2zH5mGOjZm60e51J6VDzTy
+	 P8FHmG7bfUmzig9uL2BICMtgdFjqZtv9ap/N3wVjMg95LJ8YvrI9Hp0qeemyFiqQIW
+	 8AZyGYfD/MMmJxCUZSKK3p0ABWnPCETbwMVaQlgMkELJr/4Ezmp5KcY8lCOI9Juax3
+	 90KC50omagrdLUs2g9PUL19ATYpTY+cm90Hdf9GzgUZr44yD+31e0crCp1XajeNdqE
+	 cB/jMFe1qLT1Tp4l/QZ08ckCPTcCAs8VMQ3eGilXkWc3KK3h9J7FgVo6n2Hv0QElQR
+	 qFhSRKy36eVQg==
+Date: Wed, 20 Mar 2024 20:44:23 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: <xu.xin16@zte.com.cn>
+Cc: <edumazet@google.com>, <davem@davemloft.net>, <rostedt@goodmis.org>,
+ <mhiramat@kernel.org>, <dsahern@kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+ <netdev@vger.kernel.org>, <yang.yang29@zte.com.cn>, <he.peilin@zte.com.cn>,
+ <liu.chun2@zte.com.cn>, <jiang.xuexin@zte.com.cn>,
+ <zhang.yunkai@zte.com.cn>
+Subject: Re: [PATCH v3 resend] net/ipv4: add tracepoint for icmp_send
+Message-ID: <20240320204423.270570c2@kernel.org>
+In-Reply-To: <202403211109183894466@zte.com.cn>
+References: <202403211109183894466@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] integrity: Avoid -Wflex-array-member-not-at-end
- warnings
-Content-Language: en-US
-To: Mimi Zohar <zohar@linux.ibm.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Roberto Sassu <roberto.sassu@huawei.com>,
- Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
- Eric Snowberg <eric.snowberg@oracle.com>, Paul Moore <paul@paul-moore.com>,
- James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>
-Cc: linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- Kees Cook <keescook@chromium.org>
-References: <ZeYKWrXvACBBrAP8@neat>
- <bbae0060d6ed7a0b033dc07e8d26c9d68585080b.camel@linux.ibm.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <bbae0060d6ed7a0b033dc07e8d26c9d68585080b.camel@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.174.229
-X-Source-L: No
-X-Exim-ID: 1rn9HD-00172A-03
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.14]) [201.172.174.229]:41350
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfB0v3YXf2n++sTB9C3DBU1YmvMupF6tg/kfEJJOrry+7ZzLphd1/xXOH6SybH2iGIo8ARMuCAuIgpUP9Uycl7T7D2kQyXdwWc4ZU0yDnZqElN+rc62OM
- D6An8NrfMDmBWwvhtGUV1IOrSLz/o2FuewOCP9+iZ5vcNHO7v11GHPJVBMKExKyT/IWPNNE6c/AIWshnEYvvjQevE3yLmf5r0o+2OuMR/OKcSj0cmtmJFavL
 
+On Thu, 21 Mar 2024 11:09:18 +0800 (CST) xu.xin16@zte.com.cn wrote:
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
+> \ No newline at end of file
 
+In addition to Jason's comments please make sure there is a new line at
+the end of the file.
 
-On 20/03/24 19:19, Mimi Zohar wrote:
-> Hi Gustavo,
-> 
-> Sorry for the delay...
+And please post v4 on Monday, net-next is currently closed.
 
-No worries. :)
+While you wait have a read of:
+https://www.kernel.org/doc/html/next/process/maintainer-netdev.html
 
-> 
-> On Mon, 2024-03-04 at 11:52 -0600, Gustavo A. R. Silva wrote:
->> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
->> ready to enable it globally.
->>
->> There is currently an object (`hdr)` in `struct ima_max_digest_data`
->> that contains a flexible structure (`struct ima_digest_data`):
->>
->>   struct ima_max_digest_data {
->> 	struct ima_digest_data hdr;
->>          u8 digest[HASH_MAX_DIGESTSIZE];
->>   } __packed;
->>
->> So, in order to avoid ending up with a flexible-array member in the
->> middle of another struct, we use the `struct_group_tagged()` helper to
->> separate the flexible array from the rest of the members in the flexible
->> structure:
->>
->> struct ima_digest_data {
->>          struct_group_tagged(ima_digest_data_hdr, hdr,
->>
->> 	... the rest of the members
->>
->>          );
->>          u8 digest[];
->> } __packed;
->>
->> With the change described above, we can now declare an object of the
->> type of the tagged struct, without embedding the flexible array in the
->> middle of another struct:
->>
->>   struct ima_max_digest_data {
->>          struct ima_digest_data_hdr hdr;
->>          u8 digest[HASH_MAX_DIGESTSIZE];
->>   } __packed;
->>
->> We also use `container_of()` whenever we need to retrieve a pointer to
->> the flexible structure.
-> 
-> Nice!
-> 
->>
->> So, with these changes, fix the following warnings:
->>
->> security/integrity/evm/evm.h:45:32: warning: structure containing a flexible
->> array member is not at the end of another structure [-Wflex-array-member-not-
->> at-end]
->> security/integrity/evm/evm.h:45:32: warning: structure containing a flexible
->> array member is not at the end of another structure [-Wflex-array-member-not-
->> at-end]
->> security/integrity/evm/evm.h:45:32: warning: structure containing a flexible
->> array member is not at the end of another structure [-Wflex-array-member-not-
->> at-end]
-> 
-> A similar change would need to be made to struct evm_digest:
-> 
-> struct evm_digest {
->          struct ima_digest_data hdr;
->          char digest[IMA_MAX_DIGEST_SIZE];
-> } __packed;
-> 
-> Is there are another patch?
-
-Oh, I missed that one. I'll include it and send v2, shortly.
-
-Thanks!
---
-Gustavo
+:)
