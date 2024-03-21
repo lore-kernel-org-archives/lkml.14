@@ -1,75 +1,97 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EAEB12B81;
-	Thu, 21 Mar 2024 09:06:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83669BE47;
+	Thu, 21 Mar 2024 09:08:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711011974; cv=none; b=CvXq++kOGHxil1Sk/X7/AFw47V/bw3QJWR720q5wRqlz1bxZD08GIsoq3LrbJUwV0nLx/IJf2OaY6bcFfLYvL1gzER77332ARm0YEcGAjiwHJEW+HHGQMBOLwgdW+aLSnuDPNLpIJ4UqO+7eiZ5qndXPnH3QVeaaB3onKHxDctA=
+	t=1711012090; cv=none; b=ikEezFnWezKUyGK722y7GdEVmbacNftzutGDl9a+lmuyXhdpAMX92PyPEifMWTCFmUN0+NKtVjROaW9d7A9ovDIx6BxRiUE++0zO1mC3oVKJaMOO93lq6U75pXwMVOzT3q1dwwKLfug2eFb6HLrbOmv7mU5ahItI41oXfcJoLfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711011974; c=relaxed/simple;
-	bh=ApUe4g5isArkGJCqj6ovGwuBj4eEwcEl+XEuUF9koxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LG1V56emxfGqXM/Mo5GZzidYOtav770K9iakbwQ/h8taclUknySiJB6FQH8YpF1tIw+hV1W3zJ7xmgNLeFaf1gCWzsk0/hQK4hsfTlT9IR/GxM/b8veXbL8U7s7wS4OqLjMIrcAd27axma/RimH+2+9x+Kn10yStIiHit8UiUjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Yj2wxetE; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Yj2wxetE"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6533B20004;
-	Thu, 21 Mar 2024 09:06:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1711011963;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ApUe4g5isArkGJCqj6ovGwuBj4eEwcEl+XEuUF9koxs=;
-	b=Yj2wxetET2SzxRT8SrwtiFJW4QlGc6ABbexCsTEu6+TvVJYsrjdrA6TpTVJtDaX709Dok4
-	aSaLyQAr86M+uRWv54c3SYfBc1NXye+DAgfsqdZWTnfxg6pTT2LqloAawCRefOHndYats8
-	kW4CklN1vjzHU1nryCLAgdvgFrZz2rIR3Wjeys0tVJfmeZEpkSBMN2kolccvrxUcbHookM
-	a4Eom/MjxbC5Wn+1j3z7JD/jx/bTwxTLW/KO1D2sC+ho3NfTpFNUG1zi/P5vBYRQQ1rxZU
-	jmFqMIZOGp2Hwua8Y2oqAkYTvTqPiAH7Xz/EO4644Oowybc/3FdbnOaWsHggCA==
-Date: Thu, 21 Mar 2024 10:06:00 +0100
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Elad Nachman <enachman@marvell.com>
-Cc: <taras.chornyi@plvision.eu>, <davem@davemloft.net>,
- <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
- <andrew@lunn.ch>, <thomas.petazzoni@bootlin.com>,
- <miquel.raynal@bootlin.com>, <przemyslaw.kitszel@intel.com>,
- <dkirjanov@suse.de>, <netdev@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/5] Fix prestera driver fail to probe twice
-Message-ID: <20240321100600.5ccba11d@kmaincent-XPS-13-7390>
-In-Reply-To: <20240320172008.2989693-1-enachman@marvell.com>
-References: <20240320172008.2989693-1-enachman@marvell.com>
-Organization: bootlin
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1711012090; c=relaxed/simple;
+	bh=Qpcx0mFyj0lNkiDCl/naVg0tO54qntAJp1uhqBMPplg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=bhrANU3MMLoOHas+yD0RjmvbFNComuyO2Zuoaw8fkwPr2iqBfDfdJ3/UefH5jvCtDuVqNozOXZIW90VIbkhU3J6OJk1Jm27QqJZHLL8cnTetiScUAfDBvrwbjM6pn8Wwxw+xH74wqGssuthdCSz87yO+Zh2Paz1vmBFbHH1CZ3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4V0fgV0SgqzwPtl;
+	Thu, 21 Mar 2024 17:05:26 +0800 (CST)
+Received: from dggpemm100001.china.huawei.com (unknown [7.185.36.93])
+	by mail.maildlp.com (Postfix) with ESMTPS id BC47E140114;
+	Thu, 21 Mar 2024 17:07:59 +0800 (CST)
+Received: from [10.174.177.243] (10.174.177.243) by
+ dggpemm100001.china.huawei.com (7.185.36.93) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 21 Mar 2024 17:07:59 +0800
+Message-ID: <45a2ab40-bc03-417e-9b9a-bb140e5f3444@huawei.com>
+Date: Thu, 21 Mar 2024 17:07:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: kory.maincent@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] fs: aio: use a folio in aio_setup_ring()
+Content-Language: en-US
+To: Alexander Viro <viro@zeniv.linux.org.uk>, Benjamin LaHaise
+	<bcrl@kvack.org>, Christian Brauner <brauner@kernel.org>, Jan Kara
+	<jack@suse.cz>, <linux-kernel@vger.kernel.org>, Matthew Wilcox
+	<willy@infradead.org>
+CC: <linux-aio@kvack.org>, <linux-fsdevel@vger.kernel.org>
+References: <20240321082733.614329-1-wangkefeng.wang@huawei.com>
+ <20240321082733.614329-2-wangkefeng.wang@huawei.com>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
+In-Reply-To: <20240321082733.614329-2-wangkefeng.wang@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemm100001.china.huawei.com (7.185.36.93)
 
-On Wed, 20 Mar 2024 19:20:03 +0200
-Elad Nachman <enachman@marvell.com> wrote:
 
-> From: Elad Nachman <enachman@marvell.com>
->=20
-> Fix issues resulting from insmod, rmmod and insmod of the
-> prestera driver:
 
-Please add "net" prefixes to all your patches subject, like that:
-[PATCH net v2 x/5]
+On 2024/3/21 16:27, Kefeng Wang wrote:
+> Use a folio throughout aio_setup_ring() to remove calls to compound_head().
+> 
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+>   fs/aio.c | 21 ++++++++++++---------
+>   1 file changed, 12 insertions(+), 9 deletions(-)
+> 
+> diff --git a/fs/aio.c b/fs/aio.c
+> index 9cdaa2faa536..d7f6c8705016 100644
+> --- a/fs/aio.c
+> +++ b/fs/aio.c
+> @@ -527,17 +527,20 @@ static int aio_setup_ring(struct kioctx *ctx, unsigned int nr_events)
+>   	}
+>   
+>   	for (i = 0; i < nr_pages; i++) {
+> -		struct page *page;
+> -		page = find_or_create_page(file->f_mapping,
+> -					   i, GFP_USER | __GFP_ZERO);
+> -		if (!page)
+> +		struct folio *folio;
+> +
+> +		folio = __filemap_get_folio(file->f_mapping, i,
+> +					    FGP_LOCK | FGP_ACCESSED | FGP_CREAT,
+> +					    GFP_USER | __GFP_ZERO);
+> +		if (!folio)
+Oh, this should be  if (IS_ERR(folio)), will update.
 
-I think the maintainers bots won't works if you don't.
-
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+>   			break;
+> -		pr_debug("pid(%d) page[%d]->count=%d\n",
+> -			 current->pid, i, page_count(page));
+> -		SetPageUptodate(page);
+> -		unlock_page(page);
+>   
+> -		ctx->ring_pages[i] = page;
+> +		pr_debug("pid(%d) [%d] folio->count=%d\n", current->pid, i,
+> +			 folio_ref_count(folio));
+> +		folio_mark_uptodate(folio);
+> +		folio_unlock(folio);
+> +
+> +		ctx->ring_pages[i] = &folio->page;
+>   	}
+>   	ctx->nr_pages = i;
+>   
