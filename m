@@ -1,71 +1,51 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F9451B592
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 23:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09D238BFD;
+	Thu, 21 Mar 2024 23:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711062558; cv=none; b=TU4mOKCUFZGr+/+KaCKjMpgqL+QOWBrbkkMzIAy4XlEjRY5tgY5h6569p6wcRjdaIChXxT0loJBrcibpZ3rbDsp5zhwtq+HzO3wYO4EXrrRNIOalLAPWBw408wSyIJteALXH4iDmI2Vv4rrJCO7lOMKp2b4d/VIkuoo3xEp9ohU=
+	t=1711062622; cv=none; b=YaISlXg/VynuceVZhAqqU08phz5Nbdn9nXLUCiXLdQ0AGhbaNNWbKcFR4XjDDKSeekHzwAsp2FK/COIJ1NO+ogHkNGiiDNwAFLaaAXqzn0thZbGA9AM1IuKvwt5+wBz6naAZVQgBcY6N8dllmA54UlVjbxl26TBCb1BQnTSQXeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711062558; c=relaxed/simple;
-	bh=n7xQqZqUl4kv50Nr07azm40NZTB1kOsTNps43RcbT/8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Dd4q8ec0NNu/oGIrbfOibZD2C16cB3Wvc6GEL6XIi5z793lMGQi2xgyNf73PMnzF5tWgGHTWKMaFBCWnDrmPgX498AxXg0h39GOHw+oqBEpKM449UK8yrmesBoj6LBa8nKOxwGZex79RrG6Ko+NsXw9/K+ScFnL1om5zyp3fO+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=j6p7vQFa; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1711062622; c=relaxed/simple;
+	bh=Syj3VIsbBHyNODRuAcpAPAnpfPox+6CfQY/gUxvqRfs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=VOBid51NvlsUO0ND2Vsrze2Fs0fk535TT/pbva2/bnhMnIJo/93MhlfeZPjiEBvXnYPLNRer1koekj/ATEDK2c2pc7vk1oZJgsDYrEZFlp9peXJaLlj9GBkwJqzwzMljTqAgIVkYX16/NYRj7nropg0hnwjdBN4YPirLg7Hdrds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y7C/EAKo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="j6p7vQFa"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6ea7f2d093aso408589b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 16:09:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1711062556; x=1711667356; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2g6BoqLKj372/A/Rp4yX95Q1DYjG7vH04Tm1sPT6Ptc=;
-        b=j6p7vQFaIl8f7e9Hync9P0Hs94KDf5hPrVciqDwiBg/4pMnLW6y08n6h/s22jDQ9Ry
-         lrWD12bS0fQZr0Nzulj60+Y3LphZX6myWjFrwNVYCue1jPc8IXHbxG+dJGszxI+Pmfve
-         t7VYhIzLEMk3SkaHhYv26P0B7KPSnYjVOP2NetJYwCES4ZOdlJPikKxtrK16kEVXTlLg
-         3X5kTIvHjwNjWNZQ+6RpySFQp9FR3bwXlWRYuWVzNaiif/lOe/nKP+waAz/jTOHAcooF
-         gOq7QjYWAtYtGmY1taZ3vFBOuTyqDVS8KWqOhaCuTbRFE4oc5+aC2i/YJNLObLnU3KfE
-         gwdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711062556; x=1711667356;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2g6BoqLKj372/A/Rp4yX95Q1DYjG7vH04Tm1sPT6Ptc=;
-        b=VHrTQrLFVbMK+ZSHNukCXalpNX+f4exTTM1yenTsOUYLmmLBCSCSFF6nF38xVNU0Rn
-         KahCZC+AjX4l0LBdIdxC5V7JfS0mMmh07iAtdY7lpybsaVFTbuIMPlCWkCWJT/OyVYEK
-         +36mOdSOc8fnHNQSqT0h+4iEkgpSyyu+KC6qkfqqn7FAtG1zxOborVvvqTF+SPIQw6tK
-         Siuc8CN/Xxtegfhk5I59xTffYDC1eK03UJVkTMt5usjIsMMxoP1swkN7ySf3jPIs1awj
-         6NbSPR38QHHUaXvFeP2l+IA1+Vk8cNNYHIC+Eg8tRHu5pBT6WXdcnBNeB4+pmBQOOTu/
-         Xq6A==
-X-Forwarded-Encrypted: i=1; AJvYcCWy76pgBx0lYHl3EnJF+WgvTmma0cFDm5AjLfhhSqqbwTD2jjgFdAK9SaMM9uWlsASoMb6KavYe09ycUuaudn0lgyazJko7Cyq1nNc7
-X-Gm-Message-State: AOJu0Yz6X9LYB3iZ7aDzgJS/Ra8l71Ja7LQSZFY2X1ytW8DFvNoibAxq
-	ZXbRs9eVCgdDxAFZkd78r5YGp0q8IsL1fcjT6OkfiRG1rjfao4IXToPspzweFlIKba9O0NNXiyB
-	K
-X-Google-Smtp-Source: AGHT+IHIoIGMfAMpYRB/firUliTLDlGtLCx6TBBwf1mVlVbKPjyICGbmWA2wnx86gggF4keCKftKfg==
-X-Received: by 2002:a05:6a20:9f95:b0:1a3:8904:1fc9 with SMTP id mm21-20020a056a209f9500b001a389041fc9mr1145120pzb.41.1711062093305;
-        Thu, 21 Mar 2024 16:01:33 -0700 (PDT)
-Received: from sw06.internal.sifive.com ([4.53.31.132])
-        by smtp.gmail.com with ESMTPSA id h16-20020aa786d0000000b006e6baf14752sm369511pfo.58.2024.03.21.16.01.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 16:01:32 -0700 (PDT)
-From: Samuel Holland <samuel.holland@sifive.com>
-To: Palmer Dabbelt <palmer@dabbelt.com>,
-	linux-riscv@lists.infradead.org
-Cc: Samuel Holland <samuel.holland@sifive.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] riscv: Add tracepoints for SBI calls and returns
-Date: Thu, 21 Mar 2024 16:01:25 -0700
-Message-ID: <20240321230131.1838105-1-samuel.holland@sifive.com>
-X-Mailer: git-send-email 2.43.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y7C/EAKo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96EDDC433F1;
+	Thu, 21 Mar 2024 23:10:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711062621;
+	bh=Syj3VIsbBHyNODRuAcpAPAnpfPox+6CfQY/gUxvqRfs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Y7C/EAKoe5psO3Rz+5pmEOOSZjeGKAu5uygqUpHmccnNhpXmVNkVtt0IDme9MgOj2
+	 4AUD7d3EoYRG8pIVy4lG3LTnr8aLhG+WbVCzBxzFEmeVeHWuuRQaYh21BWw+Tg1ByY
+	 Z3rS04HcTBw5X7TiYhGWy/IkZXJX4IZVUG9WUVUC53gYO94iQOBs2Tunx8U3AmX8aH
+	 rOywz64c3KTxpk7s8RsvG1FouZ75uGrAKNPZTeueY0ZmAvYAvrPmtEMc0E5C0yGEGE
+	 h4mKXHOsmWBMKWxaq88p4lH/tHlLV8WXLZQ/TkE6awIXp0ukoco8+xNdLWd2V10lmW
+	 7QVfDJgXTSbuw==
+From: SeongJae Park <sj@kernel.org>
+To: "Prasad, Aravinda" <aravinda.prasad@intel.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	"damon@lists.linux.dev" <damon@lists.linux.dev>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"s2322819@ed.ac.uk" <s2322819@ed.ac.uk>,
+	"Kumar, Sandeep4" <sandeep4.kumar@intel.com>,
+	"Huang, Ying" <ying.huang@intel.com>,
+	"Hansen, Dave" <dave.hansen@intel.com>,
+	"Williams, Dan J" <dan.j.williams@intel.com>,
+	"Subramoney, Sreenivas" <sreenivas.subramoney@intel.com>,
+	"Kervinen, Antti" <antti.kervinen@intel.com>,
+	"Kanevskiy, Alexander" <alexander.kanevskiy@intel.com>
+Subject: RE: [PATCH v2 0/3] mm/damon: Profiling enhancements for DAMON
+Date: Thu, 21 Mar 2024 16:10:19 -0700
+Message-Id: <20240321231019.81064-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <MW5PR11MB5907D65A7557AA1381B477B0F2332@MW5PR11MB5907.namprd11.prod.outlook.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,114 +54,343 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-These are useful for measuring the latency of SBI calls. The SBI HSM
-extension is excluded because those functions are called from contexts
-such as cpuidle where instrumentation is not allowed.
+On Wed, 20 Mar 2024 12:31:17 +0000 "Prasad, Aravinda" <aravinda.prasad@intel.com> wrote:
 
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
----
+> 
+> 
+> > -----Original Message-----
+> > From: SeongJae Park <sj@kernel.org>
+> > Sent: Tuesday, March 19, 2024 10:51 AM
+> > To: Prasad, Aravinda <aravinda.prasad@intel.com>
+> > Cc: damon@lists.linux.dev; linux-mm@kvack.org; sj@kernel.org; linux-
+> > kernel@vger.kernel.org; s2322819@ed.ac.uk; Kumar, Sandeep4
+> > <sandeep4.kumar@intel.com>; Huang, Ying <ying.huang@intel.com>; Hansen,
+> > Dave <dave.hansen@intel.com>; Williams, Dan J <dan.j.williams@intel.com>;
+> > Subramoney, Sreenivas <sreenivas.subramoney@intel.com>; Kervinen, Antti
+> > <antti.kervinen@intel.com>; Kanevskiy, Alexander
+> > <alexander.kanevskiy@intel.com>
+> > Subject: Re: [PATCH v2 0/3] mm/damon: Profiling enhancements for DAMON
+> > 
+> > Hi Aravinda,
+> > 
+> > 
+> > Thank you for posting this new revision!
+> > 
+> > I remember I told you that I don't see a high level significant problems on on the
+> > reply to the previous revision of this patch[1], but I show a concern now.
+> > Sorry for not raising this earlier, but let me explain my humble concerns before
+> > being even more late.
+> 
+> Please find my comments below:
+> 
+> > 
+> > On Mon, 18 Mar 2024 18:58:45 +0530 Aravinda Prasad
+> > <aravinda.prasad@intel.com> wrote:
+> > 
+> > > DAMON randomly samples one or more pages in every region and tracks
+> > > accesses to them using the ACCESSED bit in PTE (or PMD for 2MB pages).
+> > > When the region size is large (e.g., several GBs), which is common for
+> > > large footprint applications, detecting whether the region is accessed
+> > > or not completely depends on whether the pages that are actively
+> > > accessed in the region are picked during random sampling.
+> > > If such pages are not picked for sampling, DAMON fails to identify the
+> > > region as accessed. However, increasing the sampling rate or
+> > > increasing the number of regions increases CPU overheads of kdamond.
+> > 
+> > DAMON uses sampling because it considers a region as accessed if a portion of
+> > the region that big enough to be detected via sampling is all accessed.  If a region
+> > is having some pages that really accessed but the proportion is too small to be
+> > found via sampling, I think DAMON could say the overall access to the region is
+> > only modest and could even be ignored.  In my humble opinion, this fits with the
+> > definition of DAMON region: A memory address range that constructed with
+> > pages having similar access frequency.
+> 
+> Agree that DAMON considers a region as accessed if a good portion of the region
+> is accessed. But few points I would like to discuss:
+> 
+> For large regions (say 10GB, that has 2,621,440 4K pages), sampling at PTE level
+> will not cover a good portion of the region. For example, default 5ms sampling
+> and 100ms aggregation samples only 20 4K pages in an aggregation interval. 
 
-Changes in v2:
- - Remove some blank lines
+If the 20 attempts all failed at finding any single accessed 4K page, I think
+it roughly means less than 5% of the region is accessed within the
+user-specified time (aggregation interval).  I would translate that as only
+tiny portion of the region is accessed within the user-specified time, and
+hence DAMON is ok to say the region is nearly not accessed.
 
- arch/riscv/include/asm/trace.h | 54 ++++++++++++++++++++++++++++++++++
- arch/riscv/kernel/sbi.c        |  7 +++++
- 2 files changed, 61 insertions(+)
- create mode 100644 arch/riscv/include/asm/trace.h
+> Increasing sampling to 1 ms and aggregation to 1 second can only cover 
+> 1000 4K pages, but results in higher CPU overheads due to frequent sampling. 
+> Even increasing the aggregation interval to 60 seconds but sampling at 5ms can
+> only cover 12000 samples, but region splitting and merging happens once
+> in 60 seconds.
 
-diff --git a/arch/riscv/include/asm/trace.h b/arch/riscv/include/asm/trace.h
-new file mode 100644
-index 000000000000..6151cee5450c
---- /dev/null
-+++ b/arch/riscv/include/asm/trace.h
-@@ -0,0 +1,54 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM riscv
-+
-+#if !defined(_TRACE_RISCV_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_RISCV_H
-+
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT_CONDITION(sbi_call,
-+	TP_PROTO(int ext, int fid),
-+	TP_ARGS(ext, fid),
-+	TP_CONDITION(ext != SBI_EXT_HSM),
-+
-+	TP_STRUCT__entry(
-+		__field(int, ext)
-+		__field(int, fid)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->ext = ext;
-+		__entry->fid = fid;
-+	),
-+
-+	TP_printk("ext=0x%x fid=%d", __entry->ext, __entry->fid)
-+);
-+
-+TRACE_EVENT_CONDITION(sbi_return,
-+	TP_PROTO(int ext, long error, long value),
-+	TP_ARGS(ext, error, value),
-+	TP_CONDITION(ext != SBI_EXT_HSM),
-+
-+	TP_STRUCT__entry(
-+		__field(long, error)
-+		__field(long, value)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->error = error;
-+		__entry->value = value;
-+	),
-+
-+	TP_printk("error=%ld value=0x%lx", __entry->error, __entry->value)
-+);
-+
-+#endif /* _TRACE_RISCV_H */
-+
-+#undef TRACE_INCLUDE_PATH
-+#undef TRACE_INCLUDE_FILE
-+
-+#define TRACE_INCLUDE_PATH asm
-+#define TRACE_INCLUDE_FILE trace
-+
-+#include <trace/define_trace.h>
-diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
-index e66e0999a800..a1d21d8f5293 100644
---- a/arch/riscv/kernel/sbi.c
-+++ b/arch/riscv/kernel/sbi.c
-@@ -14,6 +14,9 @@
- #include <asm/smp.h>
- #include <asm/tlbflush.h>
- 
-+#define CREATE_TRACE_POINTS
-+#include <asm/trace.h>
-+
- /* default SBI version is 0.1 */
- unsigned long sbi_spec_version __ro_after_init = SBI_SPEC_VERSION_DEFAULT;
- EXPORT_SYMBOL(sbi_spec_version);
-@@ -31,6 +34,8 @@ struct sbiret sbi_ecall(int ext, int fid, unsigned long arg0,
- {
- 	struct sbiret ret;
- 
-+	trace_sbi_call(ext, fid);
-+
- 	register uintptr_t a0 asm ("a0") = (uintptr_t)(arg0);
- 	register uintptr_t a1 asm ("a1") = (uintptr_t)(arg1);
- 	register uintptr_t a2 asm ("a2") = (uintptr_t)(arg2);
-@@ -46,6 +51,8 @@ struct sbiret sbi_ecall(int ext, int fid, unsigned long arg0,
- 	ret.error = a0;
- 	ret.value = a1;
- 
-+	trace_sbi_return(ext, ret.error, ret.value);
-+
- 	return ret;
- }
- EXPORT_SYMBOL(sbi_ecall);
--- 
-2.43.1
+At the beginning of each sampling interval, DAMON randomly picks one page per
+region, clear their accessed bits, wait until the sampling interval is
+finished, and check the accessed bits again.  In other words, DAMON shows only
+accesses that made in last sampling interval.
 
+Increasing number of samples per aggregation interval can help DAMON knows the
+access frequency of regions in finer granularity, but doesn't allow DAMON see
+more accesses.  Rather than that, if the aggregation interval is fixed
+(reducing sampling interval), DAMON can show even less amount of accesses.
+
+What we need here is giving the workload longer sampling time so that the
+workload can make access to a size of memory regions that large enough to be
+found by DAMON.
+
+> 
+> In addition, this worsens when region sizes are say 100GB+. We observe that
+> sampling at PTE level does not help for large regions as more samples are
+> are required. So, decreasing/increasing the sampling or aggressions intervals
+> proportional to the region size is not practical as all regions are of not equal
+> size, we can have 100GB regions as well as many small regions (e.g., 16KB
+> to 1MB).
+
+IMO, it becomes worse because the minimum size of accessed memory regions that
+can be found by DAMON via sampling has increased together, while you didn't
+give more sampling time (a.k.a the time to let the workload make accesses that
+DAMON can show).
+
+> So tuning sampling rate and aggregation interval did not help for large
+> regions.
+
+Due to the mechanism of the DAMON's sampling I mentioned above, I think this is
+what expected.  We need to increase sampling interval.
+
+> 
+> It can also be observed that large regions cannot be avoided. Large regions
+> are created by merging adjacent smaller regions or at the beginning of
+> profiling (depending on min regions parameter which defaults to 10). 
+> Increasing min region reduces the size of regions but increases kdamond
+> overheads, hence, not preferable.
+> 
+> So, sampling at PTE level cannot precisely detect accesses to large regions
+> resulting in inaccuracies, even though it works for small regions. 
+> From our experiments, we found that with 10% hot data in a large region
+> (80+GB regions in a 1TB+ footprint application), DAMON was not able to
+> detect a single access to that region in 95+% cases with different sample
+> and aggregation interval combinations. But DAMON works good for
+> applications with footprint <50GB where regions are typically small.
+> 
+> Now consider the scenario with the proposed enhancement. With a
+> 100GB region, if we sample a PUD entry that covers 1GB address
+> space, then the default 5ms sampling and 100ms aggregation samples
+> 20 PUD entries that is 20 GB portion of the region. This gives a good
+> estimate of the portion of the region that is accessed. But the downside
+> is that as PUD accessed bit is set even if a small set of pages are accessed
+> under its subtree this can report more access as real as you noted.
+> 
+> But such large regions are split into two in the next aggregation interval. 
+> As the splitting of the regions continues, in next few aggregation intervals
+> many smaller regions are formed. Once smaller regions are formed,
+> the proposed enhancement cannot pick higher levels of the page table
+> tree and behaves as good as default DAMON. So, with the proposed
+> enhancement, larger regions are quickly split into smaller regions if they
+> have only small set of pages accessed.
+
+I fully agree.  This is what could be a real and important benefits.
+
+> 
+> To avoid misinterpreting region access count, I feel that the "age" of the
+> region is of real help and should be considered by both DAMON and the
+> proposed enhancement. If the age of a region is small (<10) then that
+> region should not be considered stable and hence should not be
+> considered for any memory tiering decisions. For regions with age, 
+> say >10, can be considered as stable as they reflect the actual access
+> frequency.
+
+I think this is a good approach, but difficult to be used by default.  I think
+we might be able to get the benefit without making problem at the
+over-reporting accesses by using the high level accessed bit check results as a
+hint for better quality of region split?
+
+Also, if we can allow large enough age, the random region split will eventually
+find the small hot regions even without high level accessed bit hint.  Of
+course the hint could help finding it earlier.  I think that was one of my
+comment on the first version of this patch.
+
+> 
+> > 
+> > >
+> > > This patch proposes profiling different levels of the
+> > > application\u2019s page table tree to detect whether a region is
+> > > accessed or not. This patch set is based on the observation that, when
+> > > the accessed bit for a page is set, the accessed bits at the higher
+> > > levels of the page table tree (PMD/PUD/PGD) corresponding to the path
+> > > of the page table walk are also set. Hence, it is efficient to check
+> > > the accessed bits at the higher levels of the page table tree to
+> > > detect whether a region is accessed or not. For example, if the access
+> > > bit for a PUD entry is set, then one or more pages in the 1GB PUD
+> > > subtree is accessed as each PUD entry covers 1GB mapping. Hence,
+> > > instead of sampling thousands of 4K/2M pages to detect accesses in a
+> > > large region, sampling at the higher level of page table tree is faster and
+> > efficient.
+> > 
+> > Due to the above reason, I concern this could result in making DAMON monitoring
+> > results be inaccurately biased to report more than real accesses.
+> 
+> DAMON, even without the proposed enhancement, can result in inaccuracies
+> for large regions, (see examples above).
+
+I think temporarily missing such tiny portion of accesses is not a critical
+problem.  If this is a problem, the user should increase the sampling interval
+in my opinion.  That said, as mentioned above, DAMON would better to improve
+its regions split mechanism.
+
+> 
+> > 
+> > >
+> > > This patch set is based on 6.8-rc5 kernel (commit: f48159f8,
+> > > mm-unstable
+> > > tree)
+> > >
+> > > Changes since v1 [1]
+> > > ====================
+> > >
+> > >  - Added support for 5-level page table tree
+> > >  - Split the patch to mm infrastructure changes and DAMON enhancements
+> > >  - Code changes as per comments on v1
+> > >  - Added kerneldoc comments
+> > >
+> > > [1] https://lkml.org/lkml/2023/12/15/272
+> > >
+> > > Evaluation:
+> > >
+> > > - MASIM benchmark with 1GB, 10GB, 100GB footprint with 10% hot data
+> > >   and 5TB with 10GB hot data.
+> > > - DAMON: 5ms sampling, 200ms aggregation interval. Rest all
+> > >   parameters set to default value.
+> > > - DAMON+PTP: Page table profiling applied to DAMON with the above
+> > >   parameters.
+> > >
+> > > Profiling efficiency in detecting hot data:
+> > >
+> > > Footprint	1GB	10GB	100GB	5TB
+> > > ---------------------------------------------
+> > > DAMON		>90%	<50%	 ~0%	  0%
+> > > DAMON+PTP	>90%	>90%	>90%	>90%
+> > 
+> > Sampling interval is the time interval that assumed to be large enough for the
+> > workload to make meaningful amount of accesses within the interval.  Hence,
+> > meaningful amount of sampling interval depends on the workload's characteristic
+> > and system's memory bandwidth.
+> > 
+> > Here, the size of the hot memory region is about 100MB, 1GB, 10GB, and 10GB
+> > for the four cases, respectively.  And you set the sampling interval as 5ms.  Let's
+> > assume the system can access, say, 50 GB per second, and hence it could be able
+> > to access only up to 250 MB per 5ms.  So, in case of 1GB and footprint, all hot
+> > memory region would be accessed while DAMON is waiting for next sampling
+> > interval.  Hence, DAMON would be able to see most accesses via sampling.  But
+> > for 100GB footprint case, only 250MB / 10GB = about 2.5% of the hot memory
+> > region would be accessed between the sampling interval.  DAMON cannot see
+> > whole accesses, and hence the precision could be low.
+> > 
+> > I don't know exact memory bandwith of the system, but to detect the 10 GB hot
+> > region with 5ms sampling interval, the system should be able to access 2GB
+> > memory per millisecond, or about 2TB memory per second.  I think systems of
+> > such memory bandwidth is not that common.
+> > 
+> > I show you also explored a configuration setting the aggregation interval higher.
+> > But because each sampling checks only access between the sampling interval,
+> > that might not help in this setup.  I'm wondering if you also explored increasing
+> > sampling interval.
+> >
+> 
+> What we have observed that many real-world benchmarks we experimented
+> with do not saturate the memory bandwidth. We also experimented with
+> masim microbenchmark to understand the impact on memory access rate
+> (we inserted delay between memory access operations in do_rnd_ro() and
+> other functions). We see decrease in the precision as access intensity is
+> reduced. We have experimented with different sampling and aggregation
+> intervals, but that did not help much in improving precision. 
+
+Again, please note that DAMON can show only accesses made between each sampling
+interval at a time.  The important factor for expectation of DAMON's accuracy
+is, the balance between the memory access intensity of the workload, and the
+length of the sampling interval.  The workload should be access intensive
+enough to make sufficient amount of accesses between sampling interval.  The
+sampling interval should be long enough to allow the workload makes sufficient
+amount of accesses within the time interval.
+
+The fact that the workloads were not saturating the memory bandwidth is not
+enough to know if that means the workload was memory intensive enough, and the
+sampling interval was long enough.
+
+I was mentioning the memory bandwidth as only the maximum memory intensity of
+the system that could be achieved.
+
+> 
+> So, what I think is it that most of the cases the precision depends on the page
+> (hot or cold) that is randomly picked for sampling than the sampling rate. Most
+> of the time only cold 4K pages are picked in a large region as they typically
+> account for 90% of the pages in the region and hence DAMON does not
+> detect any accesses at all. By profiling higher levels of the page table tree
+> this can be improved.
+
+Again, agreed.  This is an important and grateful finding.  Thank you.  And
+again as mentioned above, I don't think we can merge this patch as is, but we
+could think about using the high level access bit check results as a hint to
+better split the regions.
+
+Indeed, DAMON's monitoring mechanism has many rooms for improvements.  I also
+have some ideas but my time was more spent on more capabilities of DAMON/DAMOS
+so far.  It was a bit intentional proiority setting since I got no real DAMON
+accuracy problem report from the production usage, and improving the accuracy
+will deliver the benefit to all DAMON/DAMOS features.
+
+Since an important milestone of DAMOS, namely auto-tuning, has merged into the
+mainline, I think I may better to spend more time on monitoring accuracy
+improvement.  I have some immature ideas in my head.  I will try to summarize
+and share the ideas in near future.
+
+>  
+> > Sorry again for finding this concern not early enough.  But I think we may need to
+> > discuss about this first.
+> 
+> Absolutely no problem. Please let me know your thoughts.
+
+Thank you for patiently walking with me :)
+
+
+Thanks,
+SJ
+
+> 
+> Regards,
+> Aravinda
+> 
+> > 
+> > [1] https://lkml.kernel.org/r/20231215201159.73845-1-sj@kernel.org
+> > 
+> > 
+> > Thanks,
+> > SJ
+> > 
+> > 
+> > >
+> > > CPU overheads (in billion cycles) for kdamond:
+> > >
+> > > Footprint	1GB	10GB	100GB	5TB
+> > > ---------------------------------------------
+> > > DAMON		1.15	19.53	3.52	9.55
+> > > DAMON+PTP	0.83	 3.20	1.27	2.55
+> > >
+> > > A detailed explanation and evaluation can be found in the arXiv paper:
+> > > https://arxiv.org/pdf/2311.10275.pdf
+> > >
+> > >
+> > > Aravinda Prasad (3):
+> > >   mm/damon: mm infrastructure support
+> > >   mm/damon: profiling enhancement
+> > >   mm/damon: documentation updates
+> > >
+> > >  Documentation/mm/damon/design.rst |  42 ++++++
+> > >  arch/x86/include/asm/pgtable.h    |  20 +++
+> > >  arch/x86/mm/pgtable.c             |  28 +++-
+> > >  include/linux/mmu_notifier.h      |  36 +++++
+> > >  include/linux/pgtable.h           |  79 ++++++++++
+> > >  mm/damon/vaddr.c                  | 233 ++++++++++++++++++++++++++++--
+> > >  6 files changed, 424 insertions(+), 14 deletions(-)
+> > >
+> > > --
+> > > 2.21.3
