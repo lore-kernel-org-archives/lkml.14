@@ -1,339 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8050374D9;
-	Thu, 21 Mar 2024 05:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710999812; cv=fail; b=d+VWLPSDMXbY+QTQC8seZZvZfpLS31oL+n5N48vDPswBo6WWdGqi3umvw57g9/CcmUlPuhFi8S9ImScVoKIqkCfftlAapeQoSRZGJ8m9Veg6QmfrivtGbPlD/U4x+CQQRniNMieuW2CAxPiU7MMTw6r9QxDdEy6odC/FcZ2bZRk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710999812; c=relaxed/simple;
-	bh=X+qjYbBnmv/dTzFpQVC13GwGakPFqZTGowmXm6HhQJk=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=dMoKqRgXWhIzWTlEmN53n9GMiJZ0zElKAXymwH2WEDqLFxZAsVDmPNNJZrAXNhBDO6hRQbP+URO+hVeZZKLwBFBhOeSAUAuHaaIjeugvqJn2I9SezlQrK1kY+5wF/TZMvhvt7tdXL+RCrifVKIGWmqrl3q46fBbUp7112zfeXQU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nYrcxF/K; arc=fail smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACFF2838E
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 05:49:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711000190; cv=none; b=dfM1HxsqsOKz9Mbj7mtrZklkiy2wsXBQBqj81CyB4HIyYk4/qzFp1hLL9MlGvakhKHl8bI0f47aaeF8ITZfmc6bzHNJ+WE0iaSzF6Bmett2WbfzFF0ByGQYZrK8qCja1ZGJ6YkYc8OReiZdaNA+dUD27gmSemc8yALC7K3kBgWE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711000190; c=relaxed/simple;
+	bh=xqb6OW4NL610PwfRqtZ6sO9SB9ttkAls8egmCeYMbwQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gn/i5+NukPXJw9owr0xibW+gwQ73dYHvMPcl0EZGbbZrvL+DoCDEOQeLqQkWi9QKLPXsl1DcbVtl5gfGjUPLTZsKZ1MkdYxGiS/Db/UKtTAuggQcXLRbQHVsz7r2LUuwM7XEcKi7y4YVOcOvyDEbLQ98c0a6FJr9MezE5PqnTnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=kebzPVb+; arc=none smtp.client-ip=209.85.167.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nYrcxF/K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710999810; x=1742535810;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=X+qjYbBnmv/dTzFpQVC13GwGakPFqZTGowmXm6HhQJk=;
-  b=nYrcxF/KQUVsFY0+Xgff3OPh/yS0KEo34CFDIQUKhCHId1luMNFp7DEp
-   l7Z99oqO4l2qZOU/2UvZ0X0XxK1qT+sdaD1cqzDvd81b4DCTxt07a5X1G
-   QpQExUFnbu7dDh2rlsMXN1XeiadRaPwNrYfSVqzbkitnQpYn2VAgdSLUq
-   FeEmU+Ye99aQiriPnUoZx5CusaNVCreSfEfryPVvmqg2UB62EYCOtsS6Q
-   omwxPzU+SO8f8/63q8kgw6se1njKtRCO7s/pOS2Uv9VvGtCrlEHMoC8IK
-   bgrC3RWTPbUNTgGYJAiC5WsHivIz+/GK7o8Ufgb2UDMbp++10bIhsEUKl
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="28439101"
-X-IronPort-AV: E=Sophos;i="6.07,142,1708416000"; 
-   d="scan'208";a="28439101"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 22:43:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,142,1708416000"; 
-   d="scan'208";a="14419451"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 20 Mar 2024 22:43:29 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 20 Mar 2024 22:43:28 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 20 Mar 2024 22:43:28 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 20 Mar 2024 22:43:28 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mHF0zvs7V+TNAYLlcnCJcoEiM2hGU36YA2UuuwI7dKDHUiIcHOsLoWa0VXvDwm2IcyokU+UMUWHh5+w3ksiaun/ELcdSCNu4nkXKynTYXu6h8PQTQcSFyEsKx2Af6lXYIsi+Q/Er31ZbrCm+SHEgzmfPXjUMLGIKC+HDRkFsh974wGae2NcRM7TY8BJkZdyFLQUtJZ9b2UPNZRijhUbIIhuqKRX/iQQI/qUnnQ01x+jp8lfDgbLV0yfg32T3uqQLlkJB6P2/VU5kK9qXNciynF2pglgEooWu82K3f4PYS/GMWx/Xd0+8SCkyQt9v6xLvmNdBfqusNhO3X2MHcxQzbQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zQ4u/2iL9iUoY5htx9QIjFD0pp8Em7P1HWwg/furbjQ=;
- b=Gy0nhlFYKRJwa3FMHvSMpZLDVGyIj8k0XRJJ9FoQB78ltmm3N3sUq+ppT719mv3NQExkIiHSIGTM/LjG0XuvcbRA+0xd57iJdTKDYPia1Qdas6x3Z8r979N0FSNsI/mi6TbkD2vpG2H7HYOVS/9I2qQnkHtZMxllTkGqHeQyPzmLxgxrsLn+END9mPKZv/9VNNNT+nJmbdpa/S0swGpJ+4rT4jVpSGDuhbsBVrMVSAXeGICUoOmk4j61rYTQzLUP4hju9wWNEIyEhLYM5VNqSQU9s1ZD8p0CmN6DJ0pYU6FQpfjC4QUt0MVtkOVEWYqN2B0KjvBaane1EYGa2WFPSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
- by LV3PR11MB8508.namprd11.prod.outlook.com (2603:10b6:408:1b4::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.13; Thu, 21 Mar
- 2024 05:43:25 +0000
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::5135:2255:52ba:c64e]) by CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::5135:2255:52ba:c64e%6]) with mapi id 15.20.7409.010; Thu, 21 Mar 2024
- 05:43:25 +0000
-Date: Thu, 21 Mar 2024 13:43:14 +0800
-From: Chao Gao <chao.gao@intel.com>
-To: <isaku.yamahata@intel.com>
-CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<isaku.yamahata@gmail.com>, Paolo Bonzini <pbonzini@redhat.com>,
-	<erdemaktas@google.com>, Sean Christopherson <seanjc@google.com>, Sagi Shahar
-	<sagis@google.com>, Kai Huang <kai.huang@intel.com>, <chen.bo@intel.com>,
-	<hang.yuan@intel.com>, <tina.zhang@intel.com>, Sean Christopherson
-	<sean.j.christopherson@intel.com>
-Subject: Re: [PATCH v19 044/130] KVM: TDX: Do TDX specific vcpu initialization
-Message-ID: <ZfvI8t7SlfIsxbmT@chao-email>
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <d6a21fe6ea9eb53c24b6527ef8e5a07f0c2e8806.1708933498.git.isaku.yamahata@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <d6a21fe6ea9eb53c24b6527ef8e5a07f0c2e8806.1708933498.git.isaku.yamahata@intel.com>
-X-ClientProxiedBy: SI2PR02CA0054.apcprd02.prod.outlook.com
- (2603:1096:4:196::13) To CH3PR11MB8660.namprd11.prod.outlook.com
- (2603:10b6:610:1ce::13)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="kebzPVb+"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3c390030af2so448460b6e.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Mar 2024 22:49:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1711000188; x=1711604988; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4fMphhNJ5kOGNAmeCpoYULkf287odK9ySZpSTtY/rRg=;
+        b=kebzPVb+6u/YW8a0A4XMCsggydlDOG1DgqRx4NaX/gLoiocHYgJws6JIkKpizbsUiK
+         miUGX005eeVMYYGjv9iJrRmGSzQim+w7p+odCysbKYG7bbcpKZP14136G3IsaK9w17+F
+         Qep9aosrjOdC+b0ze6XJdNG/tD2mB3Ot+votZaTS9SzprVrEcbas/vFwSwloTxILWBqg
+         GFhfCSUILmoONUI5asJEMrWFRfG1hCI9rqZYALreffY8ALRZKRmlONGkcOzYBCkKZ5Z3
+         Tu/Davi9vKKCJHsSkfg8LLXcFIyruQzDuyGiCEUaWnPnrKXS9juo1Ujrcm0tRAAHt8Al
+         uuYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711000188; x=1711604988;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4fMphhNJ5kOGNAmeCpoYULkf287odK9ySZpSTtY/rRg=;
+        b=AQ0bcsR8uHriPmmspuwMUpOXYokQhXtZFidSMWNNuhpcBzeWBuT8X3YPdYvwA+Hx5b
+         lZjIhFjyTVS80hshZGJQRhtJ0Y+3buR4MlKDvFyeuZvgAyFP6JvNqflTNGvV0HKWJPC+
+         7ihzWD9fxojgfxnpldoRDKb9g8HcMFFgsvek7ZDZNBcU5qwGV1+2st9wZ0wL+JX0ZePH
+         L6mYYsJUZe2+hfl2uS+CCIq7pO9pGUqV0EoR/NdDe6jAfvTtmThflLr/aB4raXjvEeaL
+         O3hpIrzh8YDFak6aiIb8NPbTZUAxeg2UehQXIW9cE7TuVN2ROLRAmL9HgWRbQAbpwh00
+         36Mg==
+X-Forwarded-Encrypted: i=1; AJvYcCXF+vecqngm7UVtmVDuGvHA2eW4H/ud/msEKviijfZTxZxqXHl+jwHoptuzAnOQih1YPLN4NKG+NYgd7MEQIm2c1XG8L5TDbLGLRlg8
+X-Gm-Message-State: AOJu0YwqKHxjFgWNwjmKaB5FmXx2Rad39z7BvxIZfbg8kYvtm2bZdXfj
+	D7vYO5NnBg1KuW5sbdRQvX8yC+oLw5fqUjf3P47uAtdTXZrcjCU21GlLJcUdLiF7gQrHSrpzsTp
+	D
+X-Google-Smtp-Source: AGHT+IE0/NeFnqIC97uS0g8chtXLhBTnsViFruSK0O5TsDNqnoRtdY/a9pxc+Nn5UfS59hiKwsJLqA==
+X-Received: by 2002:a05:6808:16ac:b0:3c3:773b:1289 with SMTP id bb44-20020a05680816ac00b003c3773b1289mr4629025oib.5.1711000187996;
+        Wed, 20 Mar 2024 22:49:47 -0700 (PDT)
+Received: from sunil-laptop ([106.51.83.242])
+        by smtp.gmail.com with ESMTPSA id c25-20020aca1c19000000b003c3aef12838sm56402oic.42.2024.03.20.22.49.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Mar 2024 22:49:47 -0700 (PDT)
+Date: Thu, 21 Mar 2024 11:19:38 +0530
+From: Sunil V L <sunilvl@ventanamicro.com>
+To: Drew Fustini <drew@pdp7.com>
+Cc: linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Atish Kumar Patra <atishp@rivosinc.com>,
+	Anup Patel <apatel@ventanamicro.com>
+Subject: Re: [PATCH v1 -next 0/3] RISC-V: ACPI: Enable CPPC based cpufreq
+ support
+Message-ID: <ZfvKclUHAPkmywT3@sunil-laptop>
+References: <20240208034414.22579-1-sunilvl@ventanamicro.com>
+ <ZfiKooxO88h1nj35@x1>
+ <Zfj4FnG5vAPP55ri@x1>
+ <Zflm5cje/+rnZ7HH@sunil-laptop>
+ <Zfuzmx/bvJZjWDx4@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|LV3PR11MB8508:EE_
-X-MS-Office365-Filtering-Correlation-Id: 12ab73c7-3af5-466e-4f64-08dc4969d32c
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: TEFkYP0eU1K+itGr5py5aAbaxFytTqiYNRVSQ6Mcbl2snnwOFvbUup1WLnVbTKZ/BPSfLsK7FOjJpCF7x2LGGo0PfsfRehM8EeWaoJA4fG5qi3pYIdMcfEq6k35DWy3Iwtm90BOXFOfYG6mwdq8/Yme3BRGSV6JEz4h83vBSWQankAMiUcQP1fdNpuvusqICvEbJED5Mn7iInDaeWeQSDvab2IM84F2yMCXJv06YBOAr3guxmwXh1HO8jGG1hwyQ2dTarO5fBOFvgu6eJZHn+A6m5oBylFazZ0mkyIzEdzw2sBNI95dKlRRuucwew9owYwPeuXJO41BA9FCBFD65y5RtxP7vNKbM5t3aJtbbMKkgiwFUilcJO2MwHiSpfOKsw2qGZ6soeANjMmI7hnNrP0sEhzkvqtaEYhqHHT3isTD+jyd+YIfOtJOT3kLGcogVQrtibfgsHHx6wi6FlGHGxKLWZTXE9Rcbi7BatdkesIGUGqMj+lIyEUpOCqg2G/YjWVjRin48ib3heYQIBxbIxrBMxsK00m0lL/A8MIhZoFScf64VMM1fLdKEToluFzFbh60+wTNnckE1RZpcXPM/1fZIje2oyRMp1Wh9fPGZ5cZ2OQs1SLg9YKv3Me607XT9ZFcIa7wRqALwZLGANeyMO10AO/OTVItAJouB9Ot4PhY=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?GKi/ecgrIrIm8Uwn16ScZ9tA5RxOGgZXDXqVsKK31DLGLDTg6lgwp5bVJtof?=
- =?us-ascii?Q?nxpfOfZPO7VUlTM42gmy/cEwCqlfkWfLOvuESwEavlvQME/J5chf5bsJ4ets?=
- =?us-ascii?Q?pm0APrECSus3Od6R2mgG5oGJvgFdWyshbZ6FTAGUYWKZHtBBizjNTPBnd45Z?=
- =?us-ascii?Q?e+CVz7vaxJnkfiKoUI9UKJ0/5Ilm7wa7BGFP6/LrJ2qOOJBzLzKii2Hy7XyO?=
- =?us-ascii?Q?PAw+onnJI0N21J7fZXZGcMP5xqNWqKYT4f/5vrqnwdDtL4HB15feEFnPzb0a?=
- =?us-ascii?Q?9E++mY/xM3aBY2gFAnfXLi0GciaqV5K/ZwM6YGoF/hVOEkL0fDYV/wCKZ7J7?=
- =?us-ascii?Q?D3ojfZn0/gnD4jINsLm0OqgCmCE5zreXfFc5Ed74vrXQt6+542VGud3HZJB6?=
- =?us-ascii?Q?sMZFL51Bga1dAA2g6SYu/8TNYu3m7QPMCkqbSHQumTfpnn7Uft4+IC9PM4LD?=
- =?us-ascii?Q?L8ae64ZmexIAF7gFzWQ1pZVdqOp/LRsN/GLrTnZ+qZ+qGYQWSrqc4NtFE6Ge?=
- =?us-ascii?Q?0utD9pK/7MFoglP0Uez0Zx4jzmZJAsYcaDeIYCq0rCjNyPDZBbXF2nRrtJL0?=
- =?us-ascii?Q?qTSnit5vd8vpXB76jK4M+YaaBrqo6NexuKzzZhh0KybEId8uZxc0jTzpW+w+?=
- =?us-ascii?Q?FYuqZEV4QHgPfkZGvk/tg0n+dDECgH3+hIJksaAL+aY328T9Sqi3XPp31tRB?=
- =?us-ascii?Q?XQnzWEsvwJejZwCE99n9feQkFxWDbLLcwOzWsYhedRRa+/JZubplIkpLxAHr?=
- =?us-ascii?Q?TNDbVF4QNqmbL+ESG74HxUhtGArcaA0S8yuR5XxNbcK56a0xqvB96uSz5PqN?=
- =?us-ascii?Q?hMh+uNdz8x26qQJwgsKu0r2yTbnQop0ZS7VZaA1XqIAWjmO4kKL1CXQ3Uma7?=
- =?us-ascii?Q?viYSO/2gJNiPxExCyRDxHEqp9dcCNqTUtEaWwTv7lCH16pjWEVMfpd6SzkBX?=
- =?us-ascii?Q?pi6Lh4WuM3Ryw+ko/4PEfgIcBrlK+PD8AfqzzFafbVEh2YvtW8QbZyHUYqbQ?=
- =?us-ascii?Q?53+L74xtymN5LY5PpAiYhITsLd0Vb1qJjkbHcgbmII0ClmgOdogv9lPoi51k?=
- =?us-ascii?Q?IldGB0Ri+ORk7nKRR0suILx8Gf/k+6BjtFXZ0lPXvHgwPiyr9HtOCoCVjjeU?=
- =?us-ascii?Q?dubnLvU9B5NTCpm2wDSnrMD1bUBHu28x9UphifNVHAXQQEhZ3k2A5KXbQsXc?=
- =?us-ascii?Q?PPFPTuYMF5b+Mf2JjeLQJuLFvJP6Hjieoih+kV0oaLUFwBQsIFbz60KSIeJV?=
- =?us-ascii?Q?cBGqvI45y8IzSOLSFtgnoHG2egy4rzDJ+mRotpmsB5Z2hi9yE+QQ8qq2wQfD?=
- =?us-ascii?Q?SmehHIejU/lBK9qQwofuz5sgZr8Lte+3EcDCLUVOQBMtI91i9/MIQ+MA9Xag?=
- =?us-ascii?Q?XX+3YZ1Rj8xDzh/OIGZk/rl4FN6irPKmbg1kCTGUReJ0m63bNwGDOKHY2ogg?=
- =?us-ascii?Q?RKfdX/ztbS3F7TRuOaCTT6smVeL+Nt0nbyHiqQ8Et7pcUhMYMyAPLv7q439g?=
- =?us-ascii?Q?TAjHqLH0r0mvNbQg09N/VIIZM6196buBtlS5sA6LqGAivIJajPetbjiLpdBd?=
- =?us-ascii?Q?H7LRMVgBo/eoww80fpK5hwmGmT/pmEKkS/8eVAGw?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12ab73c7-3af5-466e-4f64-08dc4969d32c
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8660.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2024 05:43:25.0702
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SH4Q77VQLZHYqoNlW+8ZOAJcUdI26apHXSA0W9c7UFlHKXnnnxmKgU9zdeDDCNiCr1J0VoONysSLcKjbhDzbQQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8508
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zfuzmx/bvJZjWDx4@x1>
 
->+/* VMM can pass one 64bit auxiliary data to vcpu via RCX for guest BIOS. */
->+static int tdx_td_vcpu_init(struct kvm_vcpu *vcpu, u64 vcpu_rcx)
->+{
->+	struct kvm_tdx *kvm_tdx = to_kvm_tdx(vcpu->kvm);
->+	struct vcpu_tdx *tdx = to_tdx(vcpu);
->+	unsigned long *tdvpx_pa = NULL;
->+	unsigned long tdvpr_pa;
->+	unsigned long va;
->+	int ret, i;
->+	u64 err;
->+
->+	if (is_td_vcpu_created(tdx))
->+		return -EINVAL;
->+
->+	/*
->+	 * vcpu_free method frees allocated pages.  Avoid partial setup so
->+	 * that the method can't handle it.
->+	 */
->+	va = __get_free_page(GFP_KERNEL_ACCOUNT);
->+	if (!va)
->+		return -ENOMEM;
->+	tdvpr_pa = __pa(va);
->+
->+	tdvpx_pa = kcalloc(tdx_info->nr_tdvpx_pages, sizeof(*tdx->tdvpx_pa),
->+			   GFP_KERNEL_ACCOUNT);
->+	if (!tdvpx_pa) {
->+		ret = -ENOMEM;
->+		goto free_tdvpr;
->+	}
->+	for (i = 0; i < tdx_info->nr_tdvpx_pages; i++) {
->+		va = __get_free_page(GFP_KERNEL_ACCOUNT);
->+		if (!va) {
->+			ret = -ENOMEM;
->+			goto free_tdvpx;
->+		}
->+		tdvpx_pa[i] = __pa(va);
->+	}
->+
->+	err = tdh_vp_create(kvm_tdx->tdr_pa, tdvpr_pa);
->+	if (KVM_BUG_ON(err, vcpu->kvm)) {
->+		ret = -EIO;
->+		pr_tdx_error(TDH_VP_CREATE, err, NULL);
->+		goto free_tdvpx;
->+	}
->+	tdx->tdvpr_pa = tdvpr_pa;
->+
->+	tdx->tdvpx_pa = tdvpx_pa;
->+	for (i = 0; i < tdx_info->nr_tdvpx_pages; i++) {
+On Wed, Mar 20, 2024 at 09:12:11PM -0700, Drew Fustini wrote:
+> On Tue, Mar 19, 2024 at 03:50:21PM +0530, Sunil V L wrote:
+> > On Mon, Mar 18, 2024 at 07:27:34PM -0700, Drew Fustini wrote:
+> > > On Mon, Mar 18, 2024 at 11:40:34AM -0700, Drew Fustini wrote:
+> > > > On Thu, Feb 08, 2024 at 09:14:11AM +0530, Sunil V L wrote:
+> > > > > This series enables the support for "Collaborative Processor Performance
+> > > > > Control (CPPC) on ACPI based RISC-V platforms. It depends on the
+> > > > > encoding of CPPC registers as defined in RISC-V FFH spec [2].
+> > > > > 
+> > > > > CPPC is described in the ACPI spec [1]. RISC-V FFH spec required to
+> > > > > enable this, is available at [2].
+> > > > > 
+> > > > > [1] - https://uefi.org/specs/ACPI/6.5/08_Processor_Configuration_and_Control.html#collaborative-processor-performance-control
+> > > > > [2] - https://github.com/riscv-non-isa/riscv-acpi-ffh/releases/download/v1.0.0/riscv-ffh.pdf
+> > > > > 
+> > > > > The series is based on the LPI support series.
+> > > > > Based-on: 20240118062930.245937-1-sunilvl@ventanamicro.com
+> > > > > (https://lore.kernel.org/lkml/20240118062930.245937-1-sunilvl@ventanamicro.com/)
+> > > > 
+> > > > Should the https://github.com/vlsunil/qemu/tree/lpi_exp branch also be
+> > > > used for this CPPC series too?
+> > > 
+> > > I noticed the ventanamicro qemu repo has a dev-upstream branch [1] which
+> > > contains 4bb6ba4d0fb9 ("riscv/virt: acpi: Enable CPPC - _CPC and _PSD").
+> > > I've built that but I still see 'SBI CPPC extension NOT detected!!' in
+> > > the Linux boot log.
+> > > 
+> > > I'm using upstream opensbi. It seems that sbi_cppc_probe() fails because
+> > > cppc_dev is not set. Nothing in the upstream opensbi repo seems to call
+> > > sbi_cppc_set_device(), so I am uncertain how it is possible for it to
+> > > work. Is there an opensbi branch I should be using?
+> > > 
+> > > Thanks,
+> > > Drew
+> > > 
+> > > [1] https://github.com/ventanamicro/qemu/tree/dev-upstream
+> > 
+> > Please use below branches for qemu and opensbi. These are just dummy
+> > objects/interfaces added to test the kernel change which are otherwise
+> > platform specific features.
+> > 
+> > https://github.com/vlsunil/qemu/tree/lpi_cppc_exp
+> > https://github.com/vlsunil/opensbi/tree/cppc_exp
+> 
+> I know the opensbi branch is just for the purpose of testing the kernel
+> driver. However, I am new to ACPI and I am trying to understand how a
+> real system might work.
+> 
+> The _CPC register address encoding in the RISC-V FFH spec enables the
+> SBI CPPC register ID to be specified. But how would SBI firmware know
+> what physical address corresponds to the CPPC register?
+> 
+> If sbi_cppc_test_write() [1] was implemented for a real system, then how
+> would it know what physical address to write to for a CPPC register like
+> SBI_CPPC_DESIRED_PERF?
+> 
+The SBI extension provides an abstraction to access the CPPC registers.
+SBI implementation for the platform should be aware of how to access a
+particular register in the back end when it supports the extension.
 
-Can you merge the for-loop above into this one? then ...
-
->+		err = tdh_vp_addcx(tdx->tdvpr_pa, tdvpx_pa[i]);
->+		if (KVM_BUG_ON(err, vcpu->kvm)) {
->+			pr_tdx_error(TDH_VP_ADDCX, err, NULL);
-
->+			for (; i < tdx_info->nr_tdvpx_pages; i++) {
->+				free_page((unsigned long)__va(tdvpx_pa[i]));
->+				tdvpx_pa[i] = 0;
->+			}
-
-... no need to free remaining pages.
-
->+			/* vcpu_free method frees TDVPX and TDR donated to TDX */
->+			return -EIO;
->+		}
->+	}
->+
->+	err = tdh_vp_init(tdx->tdvpr_pa, vcpu_rcx);
->+	if (KVM_BUG_ON(err, vcpu->kvm)) {
->+		pr_tdx_error(TDH_VP_INIT, err, NULL);
->+		return -EIO;
->+	}
->+
->+	vcpu->arch.mp_state = KVM_MP_STATE_RUNNABLE;
->+	tdx->td_vcpu_created = true;
->+	return 0;
->+
->+free_tdvpx:
->+	for (i = 0; i < tdx_info->nr_tdvpx_pages; i++) {
->+		if (tdvpx_pa[i])
->+			free_page((unsigned long)__va(tdvpx_pa[i]));
->+		tdvpx_pa[i] = 0;
->+	}
->+	kfree(tdvpx_pa);
->+	tdx->tdvpx_pa = NULL;
->+free_tdvpr:
->+	if (tdvpr_pa)
->+		free_page((unsigned long)__va(tdvpr_pa));
->+	tdx->tdvpr_pa = 0;
->+
->+	return ret;
->+}
->+
->+int tdx_vcpu_ioctl(struct kvm_vcpu *vcpu, void __user *argp)
->+{
->+	struct msr_data apic_base_msr;
->+	struct kvm_tdx *kvm_tdx = to_kvm_tdx(vcpu->kvm);
->+	struct vcpu_tdx *tdx = to_tdx(vcpu);
->+	struct kvm_tdx_cmd cmd;
->+	int ret;
->+
->+	if (tdx->initialized)
->+		return -EINVAL;
->+
->+	if (!is_hkid_assigned(kvm_tdx) || is_td_finalized(kvm_tdx))
-
-These checks look random e.g., I am not sure why is_td_created() isn't check here.
-
-A few helper functions and boolean variables are added to track which stage the
-TD or TD vCPU is in. e.g.,
-
-is_hkid_assigned()
-is_td_finalized()
-is_td_created()
-tdx->initialized
-td_vcpu_created
-
-Insteading of doing this, I am wondering if adding two state machines for
-TD and TD vCPU would make the implementation clear and easy to extend.
-
->+		return -EINVAL;
->+
->+	if (copy_from_user(&cmd, argp, sizeof(cmd)))
->+		return -EFAULT;
->+
->+	if (cmd.error)
->+		return -EINVAL;
->+
->+	/* Currently only KVM_TDX_INTI_VCPU is defined for vcpu operation. */
->+	if (cmd.flags || cmd.id != KVM_TDX_INIT_VCPU)
->+		return -EINVAL;
-
-Even though KVM_TD_INIT_VCPU is the only supported command, it is worthwhile to
-use a switch-case statement. New commands can be added easily without the need
-to refactor this function first.
-
->+
->+	/*
->+	 * As TDX requires X2APIC, set local apic mode to X2APIC.  User space
->+	 * VMM, e.g. qemu, is required to set CPUID[0x1].ecx.X2APIC=1 by
->+	 * KVM_SET_CPUID2.  Otherwise kvm_set_apic_base() will fail.
->+	 */
->+	apic_base_msr = (struct msr_data) {
->+		.host_initiated = true,
->+		.data = APIC_DEFAULT_PHYS_BASE | LAPIC_MODE_X2APIC |
->+		(kvm_vcpu_is_reset_bsp(vcpu) ? MSR_IA32_APICBASE_BSP : 0),
->+	};
->+	if (kvm_set_apic_base(vcpu, &apic_base_msr))
->+		return -EINVAL;
-
-Exporting kvm_vcpu_is_reset_bsp() and kvm_set_apic_base() should be done
-here (rather than in a previous patch).
-
->+
->+	ret = tdx_td_vcpu_init(vcpu, (u64)cmd.data);
->+	if (ret)
->+		return ret;
->+
->+	tdx->initialized = true;
->+	return 0;
->+}
->+
-
->diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->index c002761bb662..2bd4b7c8fa51 100644
->--- a/arch/x86/kvm/x86.c
->+++ b/arch/x86/kvm/x86.c
->@@ -6274,6 +6274,12 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
-> 	case KVM_SET_DEVICE_ATTR:
-> 		r = kvm_vcpu_ioctl_device_attr(vcpu, ioctl, argp);
-> 		break;
->+	case KVM_MEMORY_ENCRYPT_OP:
->+		r = -ENOTTY;
-
-Maybe -EINVAL is better. Because previously trying to call this on vCPU fd
-failed with -EINVAL given ...
-
->+		if (!kvm_x86_ops.vcpu_mem_enc_ioctl)
->+			goto out;
->+		r = kvm_x86_ops.vcpu_mem_enc_ioctl(vcpu, argp);
->+		break;
-> 	default:
-> 		r = -EINVAL;
-
-... this.
-
-> 	}
->-- 
->2.25.1
->
->
+Regards,
+Sunil
