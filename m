@@ -1,46 +1,39 @@
-Received: from forwardcorp1c.mail.yandex.net (forwardcorp1c.mail.yandex.net [178.154.239.200])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564CB2AF18;
-	Thu, 21 Mar 2024 08:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A4C2E41A;
+	Thu, 21 Mar 2024 08:27:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711009592; cv=none; b=BvgHDXAeFG9+ywatzoAgAywFxi6MMmXRd/PF1pfUL/FN5YFoE0jBH4GdjeqviXjP1Ckng4mN4E0/Osa/Tf0mMDKAlJaZa9uKh5QmTi4xBY7tu4pQOiBL6YLNkFUYIeojBpxzVW44qNdc+E2IyyCBPoXCZlC5OWirEzY8X55fNH8=
+	t=1711009664; cv=none; b=fwLqS3Kf1tDILVBRgW1WoR49GzGIcYFKHaZzsP01YzjgysNJUsrw0sIlLalJRPaBffTxI9ID3oYkiO6hLSuQI2/vh8Qjhq9jJ95uZdbuYqNS+cvjoWSZeW6ssoc75OKryZXWnVCn3ovEb3Ukiid5OmU3XlwM6omevvacgpGLNCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711009592; c=relaxed/simple;
-	bh=o7eLeeb73ije49Oi1IJyOnTmSadKsQM6b8k54OUj5ME=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ilP98SwEEJ1krDgG1NdHR2NZYYk+/7MgywVnwsQMiAHCZUY6XFOc8SiRjVa580290Zxo5tlSxv95Fnii/JAqLBBc+1Uu+ZYKQRumXSdjyRawhNuDL/zTx3h1xqyKmWLOQFiCLxsYIKIEcVTVW9l3Pl3YQBsXBZxyik/P5AGqPOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=d9I+3wG3; arc=none smtp.client-ip=178.154.239.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="d9I+3wG3"
-Received: from mail-nwsmtp-smtp-corp-main-62.myt.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-62.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:400c:0:640:9907:0])
-	by forwardcorp1c.mail.yandex.net (Yandex) with ESMTPS id 3B20A60C14;
-	Thu, 21 Mar 2024 11:24:58 +0300 (MSK)
-Received: from d-tatianin-nix.yandex-team.ru (unknown [2a02:6b8:b081:b674::1:39])
-	by mail-nwsmtp-smtp-corp-main-62.myt.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id oOB6eO0Il4Y0-TeYwma2u;
-	Thu, 21 Mar 2024 11:24:57 +0300
-Precedence: bulk
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
-	s=default; t=1711009497;
-	bh=4y4z1WbAJjObghcOw14l3LhaD/LDb5HVnVDoPNdghx0=;
-	h=Message-Id:Date:Cc:Subject:To:From;
-	b=d9I+3wG3sJfM+lF+n68sGZ2T1AAbNEbyUZ/HzjHSXkwmFiX5tVYCC5rFC1mlitPpl
-	 hOxbRP/fmOWtfduXN+FYhwkZfV1V995Ezu9y0hv7YC1DkHHytkZelxaU/EeuUqHBC2
-	 ZCMuLbNwZpD/va6Lm/suO312NsiVUxATCcCKnpWE=
-Authentication-Results: mail-nwsmtp-smtp-corp-main-62.myt.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
-From: Daniil Tatianin <d-tatianin@yandex-team.ru>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Daniil Tatianin <d-tatianin@yandex-team.ru>,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yc-core@yandex-team.ru
-Subject: [PATCH] kvm_host: bump KVM_MAX_IRQ_ROUTE to 128k
-Date: Thu, 21 Mar 2024 11:24:42 +0300
-Message-Id: <20240321082442.195631-1-d-tatianin@yandex-team.ru>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1711009664; c=relaxed/simple;
+	bh=fX8Ji1w5GlegFTVQrthuRLrhBH949INdDZAkTey3mpg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OG7kJ8Da16nWprpnKrlUSZ47yWDDulMAdte4agcM0yjrYnqhPIWfipgdiZ9J7N1bcf3m4PODfXHJ/GPdC50HY+gFvDdgfIJZ9aQknL46UWTrZZBh++p7QgmkRlRfTttXvMHoGPr15PCX7CIkpa5MohXKuCM+D+imq66NwjmWhqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4V0dpz44zfz1vx3b;
+	Thu, 21 Mar 2024 16:26:51 +0800 (CST)
+Received: from dggpemm100001.china.huawei.com (unknown [7.185.36.93])
+	by mail.maildlp.com (Postfix) with ESMTPS id 333941400D5;
+	Thu, 21 Mar 2024 16:27:38 +0800 (CST)
+Received: from localhost.localdomain (10.175.112.125) by
+ dggpemm100001.china.huawei.com (7.185.36.93) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 21 Mar 2024 16:27:37 +0800
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
+To: Alexander Viro <viro@zeniv.linux.org.uk>, Benjamin LaHaise
+	<bcrl@kvack.org>, Christian Brauner <brauner@kernel.org>, Jan Kara
+	<jack@suse.cz>, <linux-kernel@vger.kernel.org>, Matthew Wilcox
+	<willy@infradead.org>
+CC: <linux-aio@kvack.org>, <linux-fsdevel@vger.kernel.org>, Kefeng Wang
+	<wangkefeng.wang@huawei.com>
+Subject: [PATCH 0/3] fs: aio: more folio conversion
+Date: Thu, 21 Mar 2024 16:27:30 +0800
+Message-ID: <20240321082733.614329-1-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,37 +41,20 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemm100001.china.huawei.com (7.185.36.93)
 
-We would like to be able to create large VMs (up to 224 vCPUs atm) with
-up to 128 virtio-net cards, where each card needs a TX+RX queue per vCPU
-for optimal performance (as well as config & control interrupts per
-card). Adding in extra virtio-blk controllers with a queue per vCPU (up
-to 192 disks) yields a total of about ~100k IRQ routes, rounded up to
-128k for extra headroom and flexibility.
+Convert to use folio throughout aio.
 
-The current limit of 4096 was set in 2018 and is too low for modern
-demands. It also seems to be there for no good reason as routes are
-allocated lazily by the kernel anyway (depending on the largest GSI
-requested by the VM).
+Kefeng Wang (3):
+  fs: aio: use a folio in aio_setup_ring()
+  fs: aio: use a folio in aio_free_ring()
+  fs: aio: convert to ring_folios and internal_folios
 
-Signed-off-by: Daniil Tatianin <d-tatianin@yandex-team.ru>
----
- include/linux/kvm_host.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/aio.c | 92 +++++++++++++++++++++++++++++---------------------------
+ 1 file changed, 48 insertions(+), 44 deletions(-)
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 48f31dcd318a..10a141add2a8 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -2093,7 +2093,7 @@ static inline bool mmu_invalidate_retry_gfn_unsafe(struct kvm *kvm,
- 
- #ifdef CONFIG_HAVE_KVM_IRQ_ROUTING
- 
--#define KVM_MAX_IRQ_ROUTES 4096 /* might need extension/rework in the future */
-+#define KVM_MAX_IRQ_ROUTES 131072 /* might need extension/rework in the future */
- 
- bool kvm_arch_can_set_irq_routing(struct kvm *kvm);
- int kvm_set_irq_routing(struct kvm *kvm,
 -- 
-2.34.1
+2.27.0
 
