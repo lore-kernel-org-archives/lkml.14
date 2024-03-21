@@ -1,185 +1,172 @@
-Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA32184A54
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 13:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.77.79.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A5F82D86;
+	Thu, 21 Mar 2024 13:58:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711029397; cv=none; b=fe1WdVqL4+qPer2xHC8D3VEZIeFRn/AYRF3hkGB6H8IwOLiBrapQf2P6m+lkiVYAAzm1EEnuX8CM2NIqEzdkn5xEwlxe/p08lNK4BrAFiZ4GnIraocafcLaiC+1OLWdK0r65rEiKwffDVNdvRPXY0JNf1R141e2wR1JE57/G8C0=
+	t=1711029536; cv=none; b=h1dWgUZIeOMbEegUlRd8GNN4ljy145xSQmx4RVAvkdYL/A8cW7uCuMasUoHG73AlxcyEGwzUm6u2++2iFAPtpUKTyKj6kFfJ9RT0WYo91FRSYj8I1ePO/IBifP9slEEPg2CLE9mzJboJdYO7f0LHhQAhv7OugUqT7VAHLMnrt5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711029397; c=relaxed/simple;
-	bh=qXTQzXE42jIqU86dY8JNyjmzbaiF6mqxNVesECoZkAk=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cMNfsAWw/lEdCJBfF8fv1DofDDdVdHl5zpBwyy7tsaDGphpGljz8Ls224fCxJrmY1blNmXbOPT5UGdmO/Uy8TBcVCimtE2gkpe9KhlpA0vdMmvvB67VWEaH78C3hJ8QxC0EdcWMI/tzzHPnlauVKjTo38DKp7HgFQo4gKJyIHQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=CwO5JKKg; arc=none smtp.client-ip=51.77.79.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1711029536; c=relaxed/simple;
+	bh=HPFUfXcjh9xUQ2o4yoAZg0WXqjhPAAlp6RwOP/jeKCw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:Mime-Version; b=NVVPyQfmA8140QXfwm73t/7Vn87x08AhDVW/REktBIhFmcbQCUABw4PZnsw0f5YigwPFI3qAfwMV3Pbl4IkfTCqd/jTw4pCOs8aCs1roXAvSpq0csWlpYhsCiePte/EvNxV9c6Z68mFm6oinN5C0s+GLtmHBFZJ5xyfKMXGKJhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rpoAc7mb; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="CwO5JKKg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1711029385; x=1711288585;
-	bh=+DZVzwGA3DNwg1DykuRDpqsopt/Gmedd14krbU6mhdE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=CwO5JKKgXVn+JoGs/oxfHnLuOyuxpDFkQiKIHtgtT472HlueJhv0iSK590fc+QdMr
-	 4ZZvdyJfubOA8rbBKo2cbbYcbxRANSBUeL3kxYYKUMv1Rk/BeIsHh1JwT4ZstA6VRF
-	 czmYQzARvgK0c39fgn0Dfq27/7/VF+zelB8iskbVAoCPdmaNc7zJlgYCpl1S8hBUir
-	 /dq64fhB4jQaqrCMX+tH/8OPGLRcHV5qfhVLhl90sh9WXwfSFDWPARDMrXdFqb0CQR
-	 adGovePRsjpcc92pFMbrvFVfk7tKdAkzrmDzUX/9LAFBzAkYwRGSZE3gfvKg6rA/XI
-	 /kG4xT5Y5ceOQ==
-Date: Thu, 21 Mar 2024 13:56:11 +0000
-To: Alice Ryhl <aliceryhl@google.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: a.hindborg@samsung.com, akpm@linux-foundation.org, alex.gaynor@gmail.com, arnd@arndb.de, arve@android.com, bjorn3_gh@protonmail.com, boqun.feng@gmail.com, brauner@kernel.org, cmllamas@google.com, gary@garyguo.net, gregkh@linuxfoundation.org, joel@joelfernandes.org, keescook@chromium.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, maco@android.com, ojeda@kernel.org, rust-for-linux@vger.kernel.org, surenb@google.com, tkjos@android.com, viro@zeniv.linux.org.uk, wedsonaf@gmail.com, willy@infradead.org
-Subject: Re: [PATCH v3 4/4] rust: add abstraction for `struct page`
-Message-ID: <e088f9a2-c0aa-41b6-993b-01adb5fba929@proton.me>
-In-Reply-To: <CAH5fLgj_vmhCV-Ptfbjbq=FZOuVSLOEsatELaPmz=BuDuemghw@mail.gmail.com>
-References: <baee63d9-273a-48aa-b3cc-f15e3782156b@proton.me> <20240320084630.2727355-1-aliceryhl@google.com> <9ed03148-5ceb-40f2-9c2d-31e2b8918888@proton.me> <CAH5fLgj_vmhCV-Ptfbjbq=FZOuVSLOEsatELaPmz=BuDuemghw@mail.gmail.com>
-Feedback-ID: 71780778:user:proton
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rpoAc7mb"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42LCm5NZ008641;
+	Thu, 21 Mar 2024 13:58:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=eWM4TWj+zZPR08g9wS1AAFFSzeMGDPAIQ+pCPf4MFe0=;
+ b=rpoAc7mbhihYAII22azxL74DzRLCpsm2Tdb9ZCl1uoQskOSiPTjz73hqB+Uf3V34KA4G
+ XRYq8Q0hxbcZbYoiBsx+mZGgS1qdj9/BstSGzEz4TibAnWVUZq61skw28fgj3Vpnz8FL
+ kiwiKgW7fdDqQ5QirKTnykxPXswnedlz9gkV3lvD+2uCEwjZRFmqPEXdWASgsGRHR98c
+ VVy/mG4D/uZkxqYc2npSZk3hhiOez7TK3WA2kN/G8Vb+5+0dY+IsMWUCCQ8GIfPX3e6q
+ S6XzMWG/LvMTY2Zgh2ZkERZi8gmiJz3FxeYlBnxwWuDOiYX/WcAoL2IOODP6qXu4KZ9r +A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x0n6wr8hp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Mar 2024 13:58:38 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42LDwb3S028244;
+	Thu, 21 Mar 2024 13:58:37 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x0n6wr8h1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Mar 2024 13:58:37 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42LBM934010083;
+	Thu, 21 Mar 2024 13:58:36 GMT
+Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wxvavah10-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Mar 2024 13:58:36 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42LDwXBK7340662
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 21 Mar 2024 13:58:35 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C5BF85808F;
+	Thu, 21 Mar 2024 13:58:31 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2BF085807C;
+	Thu, 21 Mar 2024 13:58:31 +0000 (GMT)
+Received: from li-5cd3c5cc-21f9-11b2-a85c-a4381f30c2f3.ibm.com (unknown [9.61.40.138])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 21 Mar 2024 13:58:31 +0000 (GMT)
+Message-ID: <267f340e1b309cff2fab01f83a141ee465296907.camel@linux.ibm.com>
+Subject: Re: [PATCH v3][next] integrity: Avoid
+ -Wflex-array-member-not-at-end warnings
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Roberto Sassu
+ <roberto.sassu@huawei.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Eric Snowberg <eric.snowberg@oracle.com>,
+        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Cc: linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Date: Thu, 21 Mar 2024 09:58:30 -0400
+In-Reply-To: <ZfuzWku+ip4fsZrb@neat>
+References: <ZfuzWku+ip4fsZrb@neat>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-23.el8_9) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: -PQQ-S8rn1ftx9JS2MJlj6S1u3AoIdvq
+X-Proofpoint-ORIG-GUID: ZUNX21kpOw7k7GpDeTPF6HPVVI0NDsN8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-21_10,2024-03-18_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 adultscore=0 impostorscore=0 mlxscore=0
+ priorityscore=1501 bulkscore=0 suspectscore=0 mlxlogscore=898 spamscore=0
+ phishscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2403140000 definitions=main-2403210100
 
-On 3/21/24 14:42, Alice Ryhl wrote:
-> On Thu, Mar 21, 2024 at 2:16=E2=80=AFPM Benno Lossin <benno.lossin@proton=
-.me> wrote:
->>
->> On 3/20/24 09:46, Alice Ryhl wrote:
->>>> On 3/11/24 11:47, Alice Ryhl wrote:
->>>>> +/// A pointer to a page that owns the page allocation.
->>>>> +///
->>>>> +/// # Invariants
->>>>> +///
->>>>> +/// The pointer points at a page, and has ownership over the page.
->>>>
->>>> Why not "`page` is valid"?
->>>> Do you mean by ownership of the page that `page` has ownership of the
->>>> allocation, or does that entail any other property/privilege?
->>>
->>> I can add "at a valid page".
->>
->> I don't think that helps, what you need as an invariant is that the
->> pointer is valid.
->=20
-> To me "points at a page" implies that the pointer is valid. I mean, if
-> it was dangling, it would not point at a page?
->=20
-> But I can reword to something else if you have a preferred phrasing.
+On Wed, 2024-03-20 at 22:11 -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+> ready to enable it globally.
+> 
+> There is currently an object (`hdr)` in `struct ima_max_digest_data`
+> that contains a flexible structure (`struct ima_digest_data`):
+> 
+>  struct ima_max_digest_data {
+> 	struct ima_digest_data hdr;
+>         u8 digest[HASH_MAX_DIGESTSIZE];
+>  } __packed;
+> 
+> So, in order to avoid ending up with a flexible-array member in the
+> middle of a struct, we use the `__struct_group()` helper to separate
+> the flexible array from the rest of the members in the flexible
+> structure:
+> 
+> struct ima_digest_data {
+>         __struct_group(ima_digest_data_hdr, hdr, __packed,
+> 
+> 	... the rest of the members
+> 
+>         );
+>         u8 digest[];
+> } __packed;
+> 
+> With the change described above, we can now declare an object of the
+> type of the tagged `struct ima_digest_data_hdr`, without embedding the
+> flexible array in the middle of another struct:
+> 
+>  struct ima_max_digest_data {
+>         struct ima_digest_data_hdr hdr;
+>         u8 digest[HASH_MAX_DIGESTSIZE];
+>  } __packed;
+> 
 
-I would just say "`page` is valid" or "`self.page` is valid".
-
->>>>> +    /// Runs a piece of code with this page mapped to an address.
->>>>> +    ///
->>>>> +    /// The page is unmapped when this call returns.
->>>>> +    ///
->>>>> +    /// It is up to the caller to use the provided raw pointer corre=
-ctly.
->>>>
->>>> This says nothing about what 'correctly' means. What I gathered from t=
-he
->>>> implementation is that the supplied pointer is valid for the execution
->>>> of `f` for `PAGE_SIZE` bytes.
->>>> What other things are you allowed to rely upon?
->>>>
->>>> Is it really OK for this function to be called from multiple threads?
->>>> Could that not result in the same page being mapped multiple times? If
->>>> that is fine, what about potential data races when two threads write t=
-o
->>>> the pointer given to `f`?
->>>>
->>>>> +    pub fn with_page_mapped<T>(&self, f: impl FnOnce(*mut u8) -> T) =
--> T {
->>>
->>> I will say:
->>>
->>> /// It is up to the caller to use the provided raw pointer correctly.
->>> /// The pointer is valid for `PAGE_SIZE` bytes and for the duration in
->>> /// which the closure is called. Depending on the gfp flags and kernel
->>> /// configuration, the pointer may only be mapped on the current thread=
-,
->>> /// and in those cases, dereferencing it on other threads is UB. Other
->>> /// than that, the usual rules for dereferencing a raw pointer apply.
->>> /// (E.g., don't cause data races, the memory may be uninitialized, and
->>> /// so on.)
->>
->> I would simplify and drop "depending on the gfp flags and kernel..." and
->> just say that the pointer is only valid on the current thread.
->=20
-> Sure, that works for me.
->=20
->> Also would it make sense to make the pointer type *mut [u8; PAGE_SIZE]?
->=20
-> I think it's a trade-off. That makes the code more error-prone, since
-> `pointer::add` now doesn't move by a number of bytes, but a number of
-> pages.
-
-Yeah. As long as you document that the pointer is valid for r/w with
-offsets in `0..PAGE_SIZE` bytes, leaving the type as is, is fine by me.
+And similarly for 'struct evm_digest'.
 
 
->>> It's okay to map it multiple times from different threads.
->>
->> Do you still need to take care of data races?
->> So would it be fine to execute this code on two threads in parallel?
->>
->>       static PAGE: Page =3D ...; // assume we have a page accessible by =
-both threads
->>
->>       PAGE.with_page_mapped(|ptr| {
->>           loop {
->>               unsafe { ptr.write(0) };
->>               pr_info!("{}", unsafe { ptr.read() });
->>           }
->>       });
->=20
-> Like I said, the usual pointer rules apply. Two threads can access it
-> in parallel as long as one of the following are satisfied:
->=20
-> * Both accesses are reads.
-> * Both accesses are atomic.
-> * They access disjoint byte ranges.
->=20
-> Other than the fact that it uses a thread-local mapping on machines
-> that can't address all of their memory at the same time, it's
-> completely normal memory. It's literally just a PAGE_SIZE-aligned
-> allocation of PAGE_SIZE bytes.
+> We also use `container_of()` whenever we need to retrieve a pointer to
+> the flexible structure.
+> 
+> So, with these changes, fix the following warnings:
+> 
+> security/integrity/evm/evm.h:45:32: warning: structure containing a flexible
+> array member is not at the end of another structure [-Wflex-array-member-not-
+> at-end]
+> security/integrity/evm/evm.h:45:32: warning: structure containing a flexible
+> array member is not at the end of another structure [-Wflex-array-member-not-
+> at-end]
+> security/integrity/evm/evm.h:45:32: warning: structure containing a flexible
+> array member is not at the end of another structure [-Wflex-array-member-not-
+> at-end]
 
-Thanks for the info, what do you think of this?:
+I assume these messages are gone.
 
-/// It is up to the caller to use the provided raw pointer correctly. The p=
-ointer is valid for reads
-/// and writes for `PAGE_SIZE` bytes and for the duration in which the clos=
-ure is called. The
-/// pointer must only be used on the current thread. The caller must also e=
-nsure that no data races
-/// occur: when mapping the same page on two threads accesses to memory wit=
-h the same offset must be
-/// synchronized.
+thanks,
 
->=20
->> If this is not allowed, I don't really like the API. As a raw version it
->> would be fine, but I think we should have a safer version (eg by taking
->> `&mut self`).
->=20
-> I don't understand what you mean. It is the *most* raw API that `Page`
-> has. I can make them private if you want me to. The API cannot take
-> `&mut self` because I need to be able to unsafely perform concurrent
-> writes to disjoint byte ranges.
+Mimi
 
-If you don't need these functions to be public, I think we should
-definitely make them private.
-Also we could add a `raw` suffix to the functions to make it clear that
-it is a primitive API. If you think that it is highly unlikely that we
-get a safer version, then I don't think there is value in adding the
-suffix.
 
---=20
-Cheers,
-Benno
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+> Changes in v3:
+>  - struct ima_digest_data is a packed structure. So, to keep things
+>    consistent, use the attribute __packed on the tagged struct 
+>    ima_digest_data_hdr. For this, we use __struct_group() instead of
+>    struct_group_tagged(). Update the changelog text, accordingly.
+> 
+> Changes in v2:
+>  - Include changes for `struct evm_digest` (Mimi Zohar)
+> 
 
