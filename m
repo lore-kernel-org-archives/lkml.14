@@ -1,378 +1,241 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DBAD84FCC;
-	Thu, 21 Mar 2024 14:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A90D84FCC;
+	Thu, 21 Mar 2024 14:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711030633; cv=none; b=LzUy+RNAqhaj2WbarG1YF8DSq3HIvHgtBuVcI+A5ZnrTr0/nbL2d85aMbMVoA4f2s8nkQxHXSRzW3O4+1on9o7sEy/yKTEk8YYIJTc4pIA31xYqvMeXsF3IhCji0C9X4ar+J81jUk7D82JHOarwi+txRZdKnk8HApnUuA1wRrtQ=
+	t=1711030652; cv=none; b=HjnfTZ7k5rq/FySC97WFCquLf81ZbrO9lEwd4jbJk0WpThXrn5AGOojmTS2jlkuwpFiEiqZZGZ/ueL53c+3rXgtljILIH1PFvcK/5wgDyWThqYrPPMUUHWuQUfGUYxaW/xEL5luaaGa8MYPRLNK1f2AVob3nlKUn+OLZ4PjOTOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711030633; c=relaxed/simple;
-	bh=9XQwFo1aUQ9b/EM6QySTpjS4eXrihk6w1KvM2UgC27A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c/EL/EaARJ8+rqNn0PByzue+D6N1hRImideJpde31OlfMLBLm8KNIyGO8RttXF/Z/8j1XC2bY+s/K4olfcxIQGdjCXabcemGcY3pdpTsScGpDUpNGHzglqn+BWNFmbvq3svqyJ0AEPGMUsv4Kzkdp1Vy1Dj9e2czNylBBWZW/pI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T5l5yva/; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711030652; c=relaxed/simple;
+	bh=Ni0tmWCL1hA2kINuC9haUQw7IfddFdgyM9ihmYsSCDs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N/XtSYRKUnAOp4lnQRR/GCJ2/l5jpkWaRU05HsV06bMqBhD5+T245fleX80PeG/MOSM0tSL3trFMjh85BvWH7KXvV+q8e26V37vm8J5CFz6FLEgG2VxsV2flw0OO3xL9tz3bR/hMMvbNKVPGtSTuMJ2vDiiL69h6PRjBPXuCEeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ksrh5gh/; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T5l5yva/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711030631; x=1742566631;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9XQwFo1aUQ9b/EM6QySTpjS4eXrihk6w1KvM2UgC27A=;
-  b=T5l5yva/PfSpyDNiX9ACAL8I156wzo9Yp0oij8eqhfMpEr0lEsqCXvMv
-   Y0zQ1FmXm8/sgKM4XqtevcAxuRv/JDcSM3pFgPvqtTuVt8KwTefLyVG/w
-   icKkPdbyX4O1LaQyXqk9gCCcwcQfJhYRYOGL2o58dazJXHMJq29GHcjWJ
-   0/POkXGxXHyquK4COCoMO/qOcmSBKFjgYy+vxN6YWR5CRuMcCn289sFKp
-   ENQAVLxjD8H/ROC+fv0AbYXdfIWE4XlQlg6fdd1IMmcd8JBshBPlUEH96
-   VxnGR341I6Jyz4je6/iydyL/dMrOwn0jeaZFV3GDLWY+upV6aF36mvAqk
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="5963243"
-X-IronPort-AV: E=Sophos;i="6.07,143,1708416000"; 
-   d="scan'208";a="5963243"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 07:17:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,143,1708416000"; 
-   d="scan'208";a="15164123"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 07:17:10 -0700
-Date: Thu, 21 Mar 2024 07:17:09 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: Chao Gao <chao.gao@intel.com>
-Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
-	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com,
-	Sean Christopherson <seanjc@google.com>,
-	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
-	chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
-	Sean Christopherson <sean.j.christopherson@intel.com>,
-	isaku.yamahata@linux.intel.com
-Subject: Re: [PATCH v19 038/130] KVM: TDX: create/destroy VM structure
-Message-ID: <20240321141709.GK1994522@ls.amr.corp.intel.com>
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <7a508f88e8c8b5199da85b7a9959882ddf390796.1708933498.git.isaku.yamahata@intel.com>
- <ZfpwIespKy8qxWWE@chao-email>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ksrh5gh/"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1e07cd7b798so3400815ad.2;
+        Thu, 21 Mar 2024 07:17:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711030650; x=1711635450; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=H731sFXJHRN+U6FhoZgkf7hLKrG+XElaabkVAhLVh2I=;
+        b=ksrh5gh/itwciEUZ8vswRHc9ZmynXL6OdAiqpLZg04kOmK8p3c+IO5AWsNJfCZdYdG
+         JiPmGyo6szT29OI1yV3so8UQboWOoKuewxY1i5VWC2klLqNQmjeZQuqlplzEmj5Wrp+L
+         DfYfNH2+Di76JqC13qKCsqnGZOFhVRI+OvQXUvHYB4Ca26yyG9qdNFs8oULMPQQIGrLL
+         ulWwtbOEgfsujkp/W5wrkjnXzbZvdvwSiE4kaZ6AcfrCWlHo+bT2e+HhWyYO57bku/XQ
+         sltaBZddjrOwkT9+zp+sgUttpdhfjkguD1NACSDcO77ZthaUv63tFz4NIj8LJccSEWEw
+         eW5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711030650; x=1711635450;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=H731sFXJHRN+U6FhoZgkf7hLKrG+XElaabkVAhLVh2I=;
+        b=monr/Ftopb1Lzs9Px/zhPMjg2X9zkmWS2T/iUBto08HuBlSKIXVtd3sNAuSiGDQcXC
+         3ziPmJXNJHrFJz9uRzIlJgmPkpf7rWmaWXMlnwWjpEuUpbQk4VYzlq8/Q8fYsfO9m54w
+         niogmfC8uwl/0huUSbiBfOz6sAwhJkFdb/bbEZQMTyEEK39uGHIkFSEkeFt2bNVRWRbO
+         AhdmCrzesRnB84hPZSNtbj3Tsb4rO6SypRUj2QkWS3G1ykp3hn2Cyf9uNuMlWYTteEw/
+         LHNb4HnJaqZ1vJFwAWA42AKFz7DiZSJ+0BSgiD3UK4KjZAIPn8aFN7wtVKw6tr74ot9x
+         aYWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVb0Zuucd2seSmTrmJ+ukjn0TH+BKztBpyhGLZQccHnNjryu05trWRD+IxPAwx929MwIyNmcIOPkbGafl0TS0SJLrbr2T8TA/2CBESRz1142bfTsTMKBXWhct0HTU0zhOJd5eMULwSpg7n9yrD4zQNsOM9KkZl/bhXjijqNUGHWTNtYpolF
+X-Gm-Message-State: AOJu0YwcCYVsn/9eSC5MxDghRsGP3dXDKxTdJ7uOYc6bN44gt8aW5vsC
+	DYLs43yy9Tu4i6JW8z2mjkL4GpE4G7c9QONOXhhz45GBaDpa+MWkw4N46HyY
+X-Google-Smtp-Source: AGHT+IG1Tj41Rl8D3VY1vXme2ZcXyMlGDaoWFG7F42KCXLbE/aXwYp4DS2PRAbM0+Ks0KYyDtbv1Bw==
+X-Received: by 2002:a17:902:6848:b0:1dd:e13d:6834 with SMTP id f8-20020a170902684800b001dde13d6834mr1915471pln.41.1711030649737;
+        Thu, 21 Mar 2024 07:17:29 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l2-20020a170902d04200b001ddd6ba8113sm15970022pll.207.2024.03.21.07.17.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Mar 2024 07:17:29 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <f3235950-fdec-481e-a4db-9cd4146c19b0@roeck-us.net>
+Date: Thu, 21 Mar 2024 07:17:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZfpwIespKy8qxWWE@chao-email>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] dt-bindings: hwmon: max6650: convert to dtschema
+Content-Language: en-US
+To: Rob Herring <robh@kernel.org>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Cc: Jean Delvare <jdelvare@suse.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, peiyu li <579lpy@gmail.com>,
+ linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240320-hwmon_yaml-v1-0-a349ca21ccab@gmail.com>
+ <20240320-hwmon_yaml-v1-2-a349ca21ccab@gmail.com>
+ <20240321140336.GA1648289-robh@kernel.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20240321140336.GA1648289-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 20, 2024 at 01:12:01PM +0800,
-Chao Gao <chao.gao@intel.com> wrote:
-
-> > config KVM_SW_PROTECTED_VM
-> > 	bool "Enable support for KVM software-protected VMs"
-> >-	depends on EXPERT
-> > 	depends on KVM && X86_64
-> > 	select KVM_GENERIC_PRIVATE_MEM
-> > 	help
-> >@@ -89,6 +88,8 @@ config KVM_SW_PROTECTED_VM
-> > config KVM_INTEL
-> > 	tristate "KVM for Intel (and compatible) processors support"
-> > 	depends on KVM && IA32_FEAT_CTL
-> >+	select KVM_SW_PROTECTED_VM if INTEL_TDX_HOST
+On 3/21/24 07:03, Rob Herring wrote:
+> On Wed, Mar 20, 2024 at 06:04:58PM +0100, Javier Carrasco wrote:
+>>   Convert existing bindings to dtschema to support validation.
+>>
+>>   This is a straightforward conversion with no new properties.
 > 
-> why does INTEL_TDX_HOST select KVM_SW_PROTECTED_VM?
-
-I wanted KVM_GENERIC_PRIVATE_MEM.  Ah, we should do
-
-        select KKVM_GENERIC_PRIVATE_MEM if INTEL_TDX_HOST
-
-
-> >+	select KVM_GENERIC_MEMORY_ATTRIBUTES if INTEL_TDX_HOST
-> > 	help
-> > 	.vcpu_precreate = vmx_vcpu_precreate,
-> > 	.vcpu_create = vmx_vcpu_create,
+> Why the indentation?
 > 
-> >--- a/arch/x86/kvm/vmx/tdx.c
-> >+++ b/arch/x86/kvm/vmx/tdx.c
-> >@@ -5,10 +5,11 @@
-> > 
-> > #include "capabilities.h"
-> > #include "x86_ops.h"
-> >-#include "x86.h"
-> > #include "mmu.h"
-> > #include "tdx_arch.h"
-> > #include "tdx.h"
-> >+#include "tdx_ops.h"
-> >+#include "x86.h"
+>>
+>> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+>> ---
+>>   .../devicetree/bindings/hwmon/max6650.txt          | 28 ---------
+>>   .../devicetree/bindings/hwmon/maxim,max6650.yaml   | 68 ++++++++++++++++++++++
+>>   2 files changed, 68 insertions(+), 28 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/hwmon/max6650.txt b/Documentation/devicetree/bindings/hwmon/max6650.txt
+>> deleted file mode 100644
+>> index f6bd87d8e284..000000000000
+>> --- a/Documentation/devicetree/bindings/hwmon/max6650.txt
+>> +++ /dev/null
+>> @@ -1,28 +0,0 @@
+>> -Bindings for MAX6651 and MAX6650 I2C fan controllers
+>> -
+>> -Reference:
+>> -[1]	https://datasheets.maximintegrated.com/en/ds/MAX6650-MAX6651.pdf
+>> -
+>> -Required properties:
+>> -- compatible : One of "maxim,max6650" or "maxim,max6651"
+>> -- reg        : I2C address, one of 0x1b, 0x1f, 0x4b, 0x48.
+>> -
+>> -Optional properties, default is to retain the chip's current setting:
+>> -- maxim,fan-microvolt : The supply voltage of the fan, either 5000000 uV or
+>> -			12000000 uV.
+>> -- maxim,fan-prescale  : Pre-scaling value, as per datasheet [1]. Lower values
+>> -			allow more fine-grained control of slower fans.
+>> -			Valid: 1, 2, 4, 8, 16.
+>> -- maxim,fan-target-rpm: Initial requested fan rotation speed. If specified, the
+>> -			driver selects closed-loop mode and the requested speed.
+>> -			This ensures the fan is already running before userspace
+>> -			takes over.
+>> -
+>> -Example:
+>> -	fan-max6650: max6650@1b {
+>> -		reg = <0x1b>;
+>> -		compatible = "maxim,max6650";
+>> -		maxim,fan-microvolt = <12000000>;
+>> -		maxim,fan-prescale = <4>;
+>> -		maxim,fan-target-rpm = <1200>;
+>> -	};
+>> diff --git a/Documentation/devicetree/bindings/hwmon/maxim,max6650.yaml b/Documentation/devicetree/bindings/hwmon/maxim,max6650.yaml
+>> new file mode 100644
+>> index 000000000000..1b33b5fb606d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/hwmon/maxim,max6650.yaml
+>> @@ -0,0 +1,68 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +
+>> +$id: http://devicetree.org/schemas/hwmon/maxim,max6650.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Maxim MAX6650 and MAX6651 I2C Fan Controllers
+>> +
+>> +maintainers:
+>> +  - Javier Carrasco <javier.carrasco.cruz@gmail.com>
+>> +
+>> +description: |
+>> +  The MAX6650 and MAX6651 regulate and monitor the speed
+>> +  of 5VDC/12VDC burshless fans with built-in tachometers.
+>> +
+>> +  Datasheets:
+>> +    https://datasheets.maximintegrated.com/en/ds/MAX6650-MAX6651.pdf
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - maxim,max6650
+>> +      - maxim,max6651
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  maxim,fan-microvolt:
+>> +    description:
+>> +      The supply voltage of the fan, either 5000000 uV or
+>> +      12000000 uV.
 > 
-> any reason to reorder x86.h?
-
-No, I think it's accidental during rebase.
-Will fix.
-
-
-
-> >+static void tdx_do_tdh_phymem_cache_wb(void *unused)
-> >+{
-> >+	u64 err = 0;
-> >+
-> >+	do {
-> >+		err = tdh_phymem_cache_wb(!!err);
-> >+	} while (err == TDX_INTERRUPTED_RESUMABLE);
-> >+
-> >+	/* Other thread may have done for us. */
-> >+	if (err == TDX_NO_HKID_READY_TO_WBCACHE)
-> >+		err = TDX_SUCCESS;
-> >+	if (WARN_ON_ONCE(err))
-> >+		pr_tdx_error(TDH_PHYMEM_CACHE_WB, err, NULL);
-> >+}
-> >+
-> >+void tdx_mmu_release_hkid(struct kvm *kvm)
-> >+{
-> >+	bool packages_allocated, targets_allocated;
-> >+	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-> >+	cpumask_var_t packages, targets;
-> >+	u64 err;
-> >+	int i;
-> >+
-> >+	if (!is_hkid_assigned(kvm_tdx))
-> >+		return;
-> >+
-> >+	if (!is_td_created(kvm_tdx)) {
-> >+		tdx_hkid_free(kvm_tdx);
-> >+		return;
-> >+	}
-> >+
-> >+	packages_allocated = zalloc_cpumask_var(&packages, GFP_KERNEL);
-> >+	targets_allocated = zalloc_cpumask_var(&targets, GFP_KERNEL);
-> >+	cpus_read_lock();
-> >+
-> >+	/*
-> >+	 * We can destroy multiple guest TDs simultaneously.  Prevent
-> >+	 * tdh_phymem_cache_wb from returning TDX_BUSY by serialization.
-> >+	 */
-> >+	mutex_lock(&tdx_lock);
-> >+
-> >+	/*
-> >+	 * Go through multiple TDX HKID state transitions with three SEAMCALLs
-> >+	 * to make TDH.PHYMEM.PAGE.RECLAIM() usable.  Make the transition atomic
-> >+	 * to other functions to operate private pages and Secure-EPT pages.
-> >+	 *
-> >+	 * Avoid race for kvm_gmem_release() to call kvm_mmu_unmap_gfn_range().
-> >+	 * This function is called via mmu notifier, mmu_release().
-> >+	 * kvm_gmem_release() is called via fput() on process exit.
-> >+	 */
-> >+	write_lock(&kvm->mmu_lock);
-> >+
-> >+	for_each_online_cpu(i) {
-> >+		if (packages_allocated &&
-> >+		    cpumask_test_and_set_cpu(topology_physical_package_id(i),
-> >+					     packages))
-> >+			continue;
-> >+		if (targets_allocated)
-> >+			cpumask_set_cpu(i, targets);
-> >+	}
-> >+	if (targets_allocated)
-> >+		on_each_cpu_mask(targets, tdx_do_tdh_phymem_cache_wb, NULL, true);
-> >+	else
-> >+		on_each_cpu(tdx_do_tdh_phymem_cache_wb, NULL, true);
+> Looks like constraints. Please add them.
 > 
-> This tries flush cache on all CPUs when we run out of memory. I am not sure if
-> it is the best solution. A simple solution is just use two global bitmaps.
+>> +
+>> +  maxim,fan-prescale:
+>> +    description:
+>> +      Pre-scaling value, as per datasheet. Lower values
+>> +      allow more fine-grained control of slower fans.
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    enum: [1, 2, 4, 8, 16]
+>> +
+>> +  maxim,fan-target-rpm:
+>> +    description:
+>> +      Initial requested fan rotation speed. If specified, the
+>> +      driver selects closed-loop mode and the requested speed.
+>> +      This ensures the fan is already running before userspace
+>> +      takes over.
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
 > 
-> And current logic isn't optimal. e.g., if packages_allocated is true while
-> targets_allocated is false, then we will fill in the packages bitmap but don't
-> use it at all.
+> Constraints? I'm sure no fan RPM is higher than 10000 and probably much
+> less than that.
 > 
-> That said, I prefer to optimize the rare case in a separate patch. We can just use
-> two global bitmaps or let the flush fail here just as you are doing below on
-> seamcall failure.
 
-Makes sense. We can allocate cpumasks on hardware_setup/unsetup() and update them
-on hardware_enable/disable().
+There are industrial fans with much higher rpm. mouser.com lists one
+with more than 60,000 rpm, but I am sure I have seen some with more than
+100k rpm.
 
-...
+Guenter
 
-> >+static int __tdx_td_init(struct kvm *kvm)
-> >+{
-> >+	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-> >+	cpumask_var_t packages;
-> >+	unsigned long *tdcs_pa = NULL;
-> >+	unsigned long tdr_pa = 0;
-> >+	unsigned long va;
-> >+	int ret, i;
-> >+	u64 err;
-> >+
-> >+	ret = tdx_guest_keyid_alloc();
-> >+	if (ret < 0)
-> >+		return ret;
-> >+	kvm_tdx->hkid = ret;
-> >+
-> >+	va = __get_free_page(GFP_KERNEL_ACCOUNT);
-> >+	if (!va)
-> >+		goto free_hkid;
-> >+	tdr_pa = __pa(va);
-> >+
-> >+	tdcs_pa = kcalloc(tdx_info->nr_tdcs_pages, sizeof(*kvm_tdx->tdcs_pa),
-> >+			  GFP_KERNEL_ACCOUNT | __GFP_ZERO);
-> >+	if (!tdcs_pa)
-> >+		goto free_tdr;
-> >+	for (i = 0; i < tdx_info->nr_tdcs_pages; i++) {
-> >+		va = __get_free_page(GFP_KERNEL_ACCOUNT);
-> >+		if (!va)
-> >+			goto free_tdcs;
-> >+		tdcs_pa[i] = __pa(va);
-> >+	}
-> >+
-> >+	if (!zalloc_cpumask_var(&packages, GFP_KERNEL)) {
-> >+		ret = -ENOMEM;
-> >+		goto free_tdcs;
-> >+	}
-> >+	cpus_read_lock();
-> >+	/*
-> >+	 * Need at least one CPU of the package to be online in order to
-> >+	 * program all packages for host key id.  Check it.
-> >+	 */
-> >+	for_each_present_cpu(i)
-> >+		cpumask_set_cpu(topology_physical_package_id(i), packages);
-> >+	for_each_online_cpu(i)
-> >+		cpumask_clear_cpu(topology_physical_package_id(i), packages);
-> >+	if (!cpumask_empty(packages)) {
-> >+		ret = -EIO;
-> >+		/*
-> >+		 * Because it's hard for human operator to figure out the
-> >+		 * reason, warn it.
-> >+		 */
-> >+#define MSG_ALLPKG	"All packages need to have online CPU to create TD. Online CPU and retry.\n"
-> >+		pr_warn_ratelimited(MSG_ALLPKG);
-> >+		goto free_packages;
-> >+	}
-> >+
-> >+	/*
-> >+	 * Acquire global lock to avoid TDX_OPERAND_BUSY:
-> >+	 * TDH.MNG.CREATE and other APIs try to lock the global Key Owner
-> >+	 * Table (KOT) to track the assigned TDX private HKID.  It doesn't spin
-> >+	 * to acquire the lock, returns TDX_OPERAND_BUSY instead, and let the
-> >+	 * caller to handle the contention.  This is because of time limitation
-> >+	 * usable inside the TDX module and OS/VMM knows better about process
-> >+	 * scheduling.
-> >+	 *
-> >+	 * APIs to acquire the lock of KOT:
-> >+	 * TDH.MNG.CREATE, TDH.MNG.KEY.FREEID, TDH.MNG.VPFLUSHDONE, and
-> >+	 * TDH.PHYMEM.CACHE.WB.
-> >+	 */
-> >+	mutex_lock(&tdx_lock);
-> >+	err = tdh_mng_create(tdr_pa, kvm_tdx->hkid);
-> >+	mutex_unlock(&tdx_lock);
-> >+	if (err == TDX_RND_NO_ENTROPY) {
-> >+		ret = -EAGAIN;
-> >+		goto free_packages;
-> >+	}
-> >+	if (WARN_ON_ONCE(err)) {
-> >+		pr_tdx_error(TDH_MNG_CREATE, err, NULL);
-> >+		ret = -EIO;
-> >+		goto free_packages;
-> >+	}
-> >+	kvm_tdx->tdr_pa = tdr_pa;
-> >+
-> >+	for_each_online_cpu(i) {
-> >+		int pkg = topology_physical_package_id(i);
-> >+
-> >+		if (cpumask_test_and_set_cpu(pkg, packages))
-> >+			continue;
-> >+
-> >+		/*
-> >+		 * Program the memory controller in the package with an
-> >+		 * encryption key associated to a TDX private host key id
-> >+		 * assigned to this TDR.  Concurrent operations on same memory
-> >+		 * controller results in TDX_OPERAND_BUSY.  Avoid this race by
-> >+		 * mutex.
-> >+		 */
-> >+		mutex_lock(&tdx_mng_key_config_lock[pkg]);
-> 
-> the lock is superfluous to me. with cpu lock held, even if multiple CPUs try to
-> create TDs, the same set of CPUs (the first online CPU of each package) will be
-> selected to configure the key because of the cpumask_test_and_set_cpu() above.
-> it means, we never have two CPUs in the same socket trying to program the key,
-> i.e., no concurrent calls.
-
-Makes sense. Will drop the lock.
-
-
-> >+		ret = smp_call_on_cpu(i, tdx_do_tdh_mng_key_config,
-> >+				      &kvm_tdx->tdr_pa, true);
-> >+		mutex_unlock(&tdx_mng_key_config_lock[pkg]);
-> >+		if (ret)
-> >+			break;
-> >+	}
-> >+	cpus_read_unlock();
-> >+	free_cpumask_var(packages);
-> >+	if (ret) {
-> >+		i = 0;
-> >+		goto teardown;
-> >+	}
-> >+
-> >+	kvm_tdx->tdcs_pa = tdcs_pa;
-> >+	for (i = 0; i < tdx_info->nr_tdcs_pages; i++) {
-> >+		err = tdh_mng_addcx(kvm_tdx->tdr_pa, tdcs_pa[i]);
-> >+		if (err == TDX_RND_NO_ENTROPY) {
-> >+			/* Here it's hard to allow userspace to retry. */
-> >+			ret = -EBUSY;
-> >+			goto teardown;
-> >+		}
-> >+		if (WARN_ON_ONCE(err)) {
-> >+			pr_tdx_error(TDH_MNG_ADDCX, err, NULL);
-> >+			ret = -EIO;
-> >+			goto teardown;
-> >+		}
-> >+	}
-> >+
-> >+	/*
-> >+	 * Note, TDH_MNG_INIT cannot be invoked here.  TDH_MNG_INIT requires a dedicated
-> >+	 * ioctl() to define the configure CPUID values for the TD.
-> >+	 */
-> >+	return 0;
-> >+
-> >+	/*
-> >+	 * The sequence for freeing resources from a partially initialized TD
-> >+	 * varies based on where in the initialization flow failure occurred.
-> >+	 * Simply use the full teardown and destroy, which naturally play nice
-> >+	 * with partial initialization.
-> >+	 */
-> >+teardown:
-> >+	for (; i < tdx_info->nr_tdcs_pages; i++) {
-> >+		if (tdcs_pa[i]) {
-> >+			free_page((unsigned long)__va(tdcs_pa[i]));
-> >+			tdcs_pa[i] = 0;
-> >+		}
-> >+	}
-> >+	if (!kvm_tdx->tdcs_pa)
-> >+		kfree(tdcs_pa);
-> >+	tdx_mmu_release_hkid(kvm);
-> >+	tdx_vm_free(kvm);
-> >+	return ret;
-> >+
-> >+free_packages:
-> >+	cpus_read_unlock();
-> >+	free_cpumask_var(packages);
-> >+free_tdcs:
-> >+	for (i = 0; i < tdx_info->nr_tdcs_pages; i++) {
-> >+		if (tdcs_pa[i])
-> >+			free_page((unsigned long)__va(tdcs_pa[i]));
-> >+	}
-> >+	kfree(tdcs_pa);
-> >+	kvm_tdx->tdcs_pa = NULL;
-> >+
-> >+free_tdr:
-> >+	if (tdr_pa)
-> >+		free_page((unsigned long)__va(tdr_pa));
-> >+	kvm_tdx->tdr_pa = 0;
-> >+free_hkid:
-> >+	if (is_hkid_assigned(kvm_tdx))
-> 
-> IIUC, this is always true because you just return if keyid
-> allocation fails.
-
-You're right. Will fix
--- 
-Isaku Yamahata <isaku.yamahata@intel.com>
