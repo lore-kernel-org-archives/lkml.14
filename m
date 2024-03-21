@@ -1,136 +1,120 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FEFB1CA83
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 12:57:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F541CA83;
+	Thu, 21 Mar 2024 12:58:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711025858; cv=none; b=bN8C1N+Rm4Ly9Xio2mbGoc6fH2Ze4j8uCz2W0PfN9JB61pONW9sA2oZS7rCQoSpFIa9sPE2BtZi32Ah/4ehz/8pKxAOkzi2I7IAL89yyZZ0cgLwzcguiEWanX6wRKs2M6JVTU8K+Rp9shelpn0HW8tQm78oBpHjudIusbSl4GOk=
+	t=1711025911; cv=none; b=CBVV5KFt6/DmEiO71CvG4owc3W3pOFvmC/fI8xi/FEKyfTaeOYekYzHSlFb/4t3wHzOb00Q1priwyTN/4a2pX9U/SKFUumhXOD0vCGAPVpwxSmGUy8T7cQJdzkLHcB8BVo1baHQ8pZ00Z/Py2hAZ7XB8Njpu5B6o9ods1cI+300=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711025858; c=relaxed/simple;
-	bh=Ugs/LBHQ17TVRz8+/1tX85sJb3QOcQv7xVKlpf6dBWE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=C3B7dG+HB/hriZy8KBv8bL05YEA5IB+LDbhB9jx/lkyRy8ND9m/mVLZ2bCBfPvv7Ac9rxdgBXTG2Y9ZJvlDCJwO3z1/8PNIWDfB7TI44vcsGe1IT+/7CumZBlQ9RMLz+LHAWVQ0ZECONWj88+f7wkOhqvnCHb2JaZRki4+7LNPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-199-xgFlFvyBPmuyMshxla-1pg-1; Thu, 21 Mar 2024 12:57:33 +0000
-X-MC-Unique: xgFlFvyBPmuyMshxla-1pg-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 21 Mar
- 2024 12:57:07 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Thu, 21 Mar 2024 12:57:07 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Russell King' <linux@armlinux.org.uk>
-CC: Ard Biesheuvel <ardb@kernel.org>, 'Jiangfeng Xiao'
-	<xiaojiangfeng@huawei.com>, "arnd@arndb.de" <arnd@arndb.de>,
-	"keescook@chromium.org" <keescook@chromium.org>, "haibo.li@mediatek.com"
-	<haibo.li@mediatek.com>, "angelogioacchino.delregno@collabora.com"
-	<angelogioacchino.delregno@collabora.com>, "amergnat@baylibre.com"
-	<amergnat@baylibre.com>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "douzhaolei@huawei.com"
-	<douzhaolei@huawei.com>, "gustavoars@kernel.org" <gustavoars@kernel.org>,
-	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, "kepler.chenxin@huawei.com"
-	<kepler.chenxin@huawei.com>, "kirill.shutemov@linux.intel.com"
-	<kirill.shutemov@linux.intel.com>, "linux-hardening@vger.kernel.org"
-	<linux-hardening@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "nixiaoming@huawei.com"
-	<nixiaoming@huawei.com>, "peterz@infradead.org" <peterz@infradead.org>,
-	"wangbing6@huawei.com" <wangbing6@huawei.com>, "wangfangpeng1@huawei.com"
-	<wangfangpeng1@huawei.com>, "jannh@google.com" <jannh@google.com>,
-	"willy@infradead.org" <willy@infradead.org>
-Subject: RE: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
-Thread-Topic: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
-Thread-Index: AQHae3ROEuI+AaCprEesIWGaAOB7ebFB9uHAgAAWtoCAAAVW8IAACy4AgAADrmA=
-Date: Thu, 21 Mar 2024 12:57:07 +0000
-Message-ID: <0fd55e156195440bb1d815dd8300894b@AcuMS.aculab.com>
-References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
- <1710906278-23851-1-git-send-email-xiaojiangfeng@huawei.com>
- <ZfqiD8Yw0oOVHW/p@shell.armlinux.org.uk>
- <84a57ca8-8963-ca24-8bd1-ddc5c33bf4da@huawei.com>
- <Zfs7sT6Pxy5yjnPC@shell.armlinux.org.uk>
- <bad25937-fc98-8e11-4279-ab6b3a727c1f@huawei.com>
- <bbcca1e205384cf0b42236e17f3969f7@AcuMS.aculab.com>
- <ZfwYx/8k8FVONg6+@shell.armlinux.org.uk>
- <db930076c837456f999daee5cb76735f@AcuMS.aculab.com>
- <ZfwmomjUwQdCefzh@shell.armlinux.org.uk>
-In-Reply-To: <ZfwmomjUwQdCefzh@shell.armlinux.org.uk>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1711025911; c=relaxed/simple;
+	bh=yHzWlgMvexL/4zkbF158Iee8weCY8LouKs27+QuNRnU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LGnbDQCo9mjQwfd8zjuZvcDfxvsie2OTG+BjHA2zscbDN2AtInH9rVw17vhK9snoQsAgxbNnlo6EyvC0v7vc2v0UMk4M3s76D+rHgnvDKQwq3LW5S8GvNu875dLxnruH4RwoCFgrgELw/pmPPyIaHEFwjewp4Ad4a44QTfTc+Q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=eDRIT9VY; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=eDRIT9VY; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="eDRIT9VY";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="eDRIT9VY"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 6A6445CE7F;
+	Thu, 21 Mar 2024 12:58:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1711025907; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=93QxAQP5ZM16jg+U1fz+z2aWxXn55c/xIhJmz7m/Bz8=;
+	b=eDRIT9VYSu02snUagXPwSm/gDgHeLUNXI+Hv85SU8wBDFoKf2XkUDe0aHfpCLsVKPaqVrn
+	ELj9Xx5Yxk9fpIvLd0r8tuTMLBR/iXfi5H+xDWoeGOd/y69j0xJ+6rkIU4ZLgN0D/w14FU
+	4MD7z65xI0Nq9zaDbaBzGCuWOWvt46w=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1711025907; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=93QxAQP5ZM16jg+U1fz+z2aWxXn55c/xIhJmz7m/Bz8=;
+	b=eDRIT9VYSu02snUagXPwSm/gDgHeLUNXI+Hv85SU8wBDFoKf2XkUDe0aHfpCLsVKPaqVrn
+	ELj9Xx5Yxk9fpIvLd0r8tuTMLBR/iXfi5H+xDWoeGOd/y69j0xJ+6rkIU4ZLgN0D/w14FU
+	4MD7z65xI0Nq9zaDbaBzGCuWOWvt46w=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4C460136AD;
+	Thu, 21 Mar 2024 12:58:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id DZvkD/Mu/GXhUAAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Thu, 21 Mar 2024 12:58:27 +0000
+Date: Thu, 21 Mar 2024 13:58:18 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: remove CONFIG_MEMCG_KMEM
+Message-ID: <Zfwu6oquhe7CSkOz@tiehlicka>
+References: <20240320202745.740843-1-hannes@cmpxchg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240320202745.740843-1-hannes@cmpxchg.org>
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -0.84
+X-Spamd-Result: default: False [-0.84 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.04)[57.51%]
+X-Spam-Flag: NO
 
-From: Russell King
-> Sent: 21 March 2024 12:23
-...
-> > That might mean you can get the BL in the middle of a function
-> > but where the following instruction is for the 'no stack frame'
-> > side of the branch.
-> > That is very likely to break any stack offset calculations.
->=20
-> No it can't. At any one point in the function, the stack has to be in
-> a well defined state, so that access to local variables can work, and
-> also the stack can be correctly unwound. If there exists a point in
-> the function body which can be reached where the stack could be in two
-> different states, then the stack can't be restored to the parent
-> context.
+On Wed 20-03-24 16:27:45, Johannes Weiner wrote:
+> CONFIG_MEMCG_KMEM used to be a user-visible option for whether slab
+> tracking is enabled. It has been default-enabled and equivalent to
+> CONFIG_MEMCG for almost a decade. We've only grown more kernel memory
+> accounting sites since, and there is no imaginable cgroup usecase
+> going forward that wants to track user pages but not the multitude of
+> user-drivable kernel allocations.
+> 
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
-Actually you can get there with a function that has a lot of args.
-So you can have:
-=09if (...) {
-=09=09push x
-=09=09bl func
-=09=09add %sp, #8
-=09}
-=09code;
-which is fine.
-But if 'func' is 'noreturn' then the 'add %sp, #8' can be discarded
-and then the saved LR is that of 'code' - but the stack offset is wrong.
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-> > > This is where the problem lies - because the link register value
-> > > created by the BL instruction will point to the instruction after the
-> > > BL which will _not_ part of the function that invoked the BL. That
-> > > will probably cause issues for the ELF unwinder, which means this
-> > > issue probably goes beyond _just_ printing the function name.
-> >
-> > Isn't this already in the unwinder?
-> > A BL itself isn't going to fault with PC =3D next-instruction.
->=20
-> You are missing the fact that the PC can be the saved LR, and thus
-> can very well be the next instruction.
+But this
+> @@ -422,7 +422,7 @@ kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1];
+>  #define KMALLOC_NOT_NORMAL_BITS					\
+>  	(__GFP_RECLAIMABLE |					\
+>  	(IS_ENABLED(CONFIG_ZONE_DMA)   ? __GFP_DMA : 0) |	\
+> -	(IS_ENABLED(CONFIG_MEMCG_KMEM) ? __GFP_ACCOUNT : 0))
+> +	(IS_ENABLED(CONFIG_KMEM) ? __GFP_ACCOUNT : 0))
 
-A PC from LR will always be the next instruction.
-It is only the PC from a fault frame that is the current one.
-The unwinder probably need to be told which one it has.
-(Or add 4 the fault frame PC so that the unwinder can subtract
-4 from it.)
-
-At least (I don't think) there are any functions where the
-called code is responsible for removing arguments.
-That is a whole different bag of worms.
-
-=09David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
-
+seems like a typo and should be CONFIG_MEMCG, right?
+-- 
+Michal Hocko
+SUSE Labs
