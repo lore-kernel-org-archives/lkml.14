@@ -1,325 +1,61 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A638D83CCE;
-	Thu, 21 Mar 2024 13:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359A784038;
+	Thu, 21 Mar 2024 13:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711027849; cv=none; b=cFtvK11/xGX113MZ+CSG3fsSUrR1ADNs+XLcl7P1lWBX+yQvX34EYQr41pzHg5nY4c1E2dK9pE5oJAnOzJeqU7Ej+J1Gkt/a7VE99dCdH9ruJ0xcFmr+aOCRTPLLTsoYIrnKCjfq5OIU/R/7slg3rAtWdKOgdqQHBAsTzxs0YXU=
+	t=1711027877; cv=none; b=mua96ZOJL4temxJrRCQt0fHdzlJe/KmoPGCJYqsg4wKaaQXCS03lvHqedq4RN+XHD+MyXUAivJqE0e4EBKbndQ4pWVytdKmu6pZzEvQJhPkSRGQl84ZeFmELgg67bysbfwa5L4MNw+WpiEsO2VlQsGAY58OAOJsj3l5XR3TzOiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711027849; c=relaxed/simple;
-	bh=kxspY95vYGYTOvbO2uG5v443F1J4LThpxAicjseqQ3k=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=p/wY5s4LNc/VHrzluYN/r0PVzpimHwmSdIgEe/AVGKphFZw/MwlUPRMU1DK+7BAcwQb4QAsoDBhtZL1d8Q0AelOCF5hOGCFtrKTDXS8aCVH0egyG22nULULyzNbXvJTMoHWXMfkYerH9LUGTlsZI0eu182Hqo1KybHt3ZjOQlmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 385201A080B;
-	Thu, 21 Mar 2024 14:30:40 +0100 (CET)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A38B21A0101;
-	Thu, 21 Mar 2024 14:30:39 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 6834B1834868;
-	Thu, 21 Mar 2024 21:30:37 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: abelvesa@kernel.org,
-	peng.fan@nxp.com,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	linux-imx@nxp.com,
-	shengjiu.wang@gmail.com
-Cc: linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4] clk: imx: imx8mp: Add pm_runtime support for power saving
-Date: Thu, 21 Mar 2024 21:14:02 +0800
-Message-Id: <1711026842-7268-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1711027877; c=relaxed/simple;
+	bh=OhCMX+u/w5DafdAqpyRLtzB5VUIURs138ZjC93mxC5M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=RszH4FSc0nlzc+485TpjKUQkwEIm6KpUfvVNNuZvnlbBJrhRjGQY7zaxLH3pSeq07tOCkx0X1QqDWLfp4JZe0lW4uk14uGAmyViw/7aF/sU5wq/FJ2mROb8R463S6jwV+vsK6w2crsIcFlsxOEK/6PXmRBmqiZDunnY6xYI0NiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4V0mY50FP4zbdSr;
+	Thu, 21 Mar 2024 21:30:17 +0800 (CST)
+Received: from dggpemm100001.china.huawei.com (unknown [7.185.36.93])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3C73D140FEA;
+	Thu, 21 Mar 2024 21:31:06 +0800 (CST)
+Received: from [10.174.177.243] (10.174.177.243) by
+ dggpemm100001.china.huawei.com (7.185.36.93) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 21 Mar 2024 21:31:05 +0800
+Message-ID: <c798ca36-397d-4406-900b-a2b02c0462b1@huawei.com>
+Date: Thu, 21 Mar 2024 21:31:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] fs: aio: more folio conversion
+Content-Language: en-US
+To: Matthew Wilcox <willy@infradead.org>
+CC: Alexander Viro <viro@zeniv.linux.org.uk>, Benjamin LaHaise
+	<bcrl@kvack.org>, Christian Brauner <brauner@kernel.org>, Jan Kara
+	<jack@suse.cz>, <linux-kernel@vger.kernel.org>, <linux-aio@kvack.org>,
+	<linux-fsdevel@vger.kernel.org>
+References: <20240321082733.614329-1-wangkefeng.wang@huawei.com>
+ <Zfwncw6NrQc6K6ki@casper.infradead.org>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
+In-Reply-To: <Zfwncw6NrQc6K6ki@casper.infradead.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemm100001.china.huawei.com (7.185.36.93)
 
-Add pm_runtime support for power saving. In pm runtime suspend
-state the registers will be reseted, so add registers save
-in pm runtime suspend and restore them in pm runtime resume.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Reviewed-by: Peng Fan <peng.fan@nxp.com>
----
-changes in v4:
-- use struct clk_hw_onecell_data clk_data in priv struct
 
-changes in v3:
-- remove REGS_NUM, use the ARRAY_SIZE
-- merge clk_imx8mp_audiomix_drvdata and clk_hw_onecell_data together.
+On 2024/3/21 20:26, Matthew Wilcox wrote:
+> On Thu, Mar 21, 2024 at 04:27:30PM +0800, Kefeng Wang wrote:
+>> Convert to use folio throughout aio.
+> 
+> I see no problems here other than the one you mentioned and the minor
+> optimisation I pointed out.  Thanks.
 
-changes in v2:
-- move pm_runtime_enable before the clk register
-
- drivers/clk/imx/clk-imx8mp-audiomix.c | 157 ++++++++++++++++++++++----
- 1 file changed, 136 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
-index 55ed211a5e0b..574a032309c1 100644
---- a/drivers/clk/imx/clk-imx8mp-audiomix.c
-+++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
-@@ -7,10 +7,12 @@
- 
- #include <linux/clk-provider.h>
- #include <linux/device.h>
-+#include <linux/io.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
- 
- #include <dt-bindings/clock/imx8mp-clock.h>
- 
-@@ -18,6 +20,7 @@
- 
- #define CLKEN0			0x000
- #define CLKEN1			0x004
-+#define EARC			0x200
- #define SAI1_MCLK_SEL		0x300
- #define SAI2_MCLK_SEL		0x304
- #define SAI3_MCLK_SEL		0x308
-@@ -26,6 +29,11 @@
- #define SAI7_MCLK_SEL		0x314
- #define PDM_SEL			0x318
- #define SAI_PLL_GNRL_CTL	0x400
-+#define SAI_PLL_FDIVL_CTL0	0x404
-+#define SAI_PLL_FDIVL_CTL1	0x408
-+#define SAI_PLL_SSCG_CTL	0x40C
-+#define SAI_PLL_MNIT_CTL	0x410
-+#define IPG_LP_CTRL		0x504
- 
- #define SAIn_MCLK1_PARENT(n)						\
- static const struct clk_parent_data					\
-@@ -182,26 +190,82 @@ static struct clk_imx8mp_audiomix_sel sels[] = {
- 	CLK_SAIn(7)
- };
- 
-+static const u16 audiomix_regs[] = {
-+	CLKEN0,
-+	CLKEN1,
-+	EARC,
-+	SAI1_MCLK_SEL,
-+	SAI2_MCLK_SEL,
-+	SAI3_MCLK_SEL,
-+	SAI5_MCLK_SEL,
-+	SAI6_MCLK_SEL,
-+	SAI7_MCLK_SEL,
-+	PDM_SEL,
-+	SAI_PLL_GNRL_CTL,
-+	SAI_PLL_FDIVL_CTL0,
-+	SAI_PLL_FDIVL_CTL1,
-+	SAI_PLL_SSCG_CTL,
-+	SAI_PLL_MNIT_CTL,
-+	IPG_LP_CTRL,
-+};
-+
-+struct clk_imx8mp_audiomix_priv {
-+	void __iomem *base;
-+	u32 regs_save[ARRAY_SIZE(audiomix_regs)];
-+
-+	/* Must be last */
-+	struct clk_hw_onecell_data clk_data;
-+};
-+
-+static void clk_imx8mp_audiomix_save_restore(struct device *dev, bool save)
-+{
-+	struct clk_imx8mp_audiomix_priv *priv = dev_get_drvdata(dev);
-+	void __iomem *base = priv->base;
-+	int i;
-+
-+	if (save) {
-+		for (i = 0; i < ARRAY_SIZE(audiomix_regs); i++)
-+			priv->regs_save[i] = readl(base + audiomix_regs[i]);
-+	} else {
-+		for (i = 0; i < ARRAY_SIZE(audiomix_regs); i++)
-+			writel(priv->regs_save[i], base + audiomix_regs[i]);
-+	}
-+}
-+
- static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
- {
--	struct clk_hw_onecell_data *priv;
-+	struct clk_imx8mp_audiomix_priv *priv;
-+	struct clk_hw_onecell_data *clk_hw_data;
- 	struct device *dev = &pdev->dev;
- 	void __iomem *base;
- 	struct clk_hw *hw;
--	int i;
-+	int i, ret;
- 
- 	priv = devm_kzalloc(dev,
--			    struct_size(priv, hws, IMX8MP_CLK_AUDIOMIX_END),
-+			    struct_size(priv, clk_data.hws, IMX8MP_CLK_AUDIOMIX_END),
- 			    GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
- 
--	priv->num = IMX8MP_CLK_AUDIOMIX_END;
-+	clk_hw_data = &priv->clk_data;
-+	clk_hw_data->num = IMX8MP_CLK_AUDIOMIX_END;
- 
- 	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 
-+	priv->base = base;
-+	dev_set_drvdata(dev, priv);
-+
-+	/*
-+	 * pm_runtime_enable needs to be called before clk register.
-+	 * That is to make core->rpm_enabled to be true for clock
-+	 * usage.
-+	 */
-+	pm_runtime_get_noresume(dev);
-+	pm_runtime_set_active(dev);
-+	pm_runtime_enable(dev);
-+
- 	for (i = 0; i < ARRAY_SIZE(sels); i++) {
- 		if (sels[i].num_parents == 1) {
- 			hw = devm_clk_hw_register_gate_parent_data(dev,
-@@ -216,10 +280,12 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
- 				0, NULL, NULL);
- 		}
- 
--		if (IS_ERR(hw))
--			return PTR_ERR(hw);
-+		if (IS_ERR(hw)) {
-+			ret = PTR_ERR(hw);
-+			goto err_clk_register;
-+		}
- 
--		priv->hws[sels[i].clkid] = hw;
-+		clk_hw_data->hws[sels[i].clkid] = hw;
- 	}
- 
- 	/* SAI PLL */
-@@ -228,39 +294,86 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
- 		ARRAY_SIZE(clk_imx8mp_audiomix_pll_parents),
- 		CLK_SET_RATE_NO_REPARENT, base + SAI_PLL_GNRL_CTL,
- 		0, 2, 0, NULL, NULL);
--	priv->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_REF_SEL] = hw;
-+	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_REF_SEL] = hw;
- 
- 	hw = imx_dev_clk_hw_pll14xx(dev, "sai_pll", "sai_pll_ref_sel",
- 				    base + 0x400, &imx_1443x_pll);
--	if (IS_ERR(hw))
--		return PTR_ERR(hw);
--	priv->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL] = hw;
-+	if (IS_ERR(hw)) {
-+		ret = PTR_ERR(hw);
-+		goto err_clk_register;
-+	}
-+	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL] = hw;
- 
- 	hw = devm_clk_hw_register_mux_parent_data_table(dev,
- 		"sai_pll_bypass", clk_imx8mp_audiomix_pll_bypass_sels,
- 		ARRAY_SIZE(clk_imx8mp_audiomix_pll_bypass_sels),
- 		CLK_SET_RATE_NO_REPARENT | CLK_SET_RATE_PARENT,
- 		base + SAI_PLL_GNRL_CTL, 16, 1, 0, NULL, NULL);
--	if (IS_ERR(hw))
--		return PTR_ERR(hw);
--	priv->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_BYPASS] = hw;
-+	if (IS_ERR(hw)) {
-+		ret = PTR_ERR(hw);
-+		goto err_clk_register;
-+	}
-+
-+	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_BYPASS] = hw;
- 
- 	hw = devm_clk_hw_register_gate(dev, "sai_pll_out", "sai_pll_bypass",
- 				       0, base + SAI_PLL_GNRL_CTL, 13,
- 				       0, NULL);
--	if (IS_ERR(hw))
--		return PTR_ERR(hw);
--	priv->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_OUT] = hw;
-+	if (IS_ERR(hw)) {
-+		ret = PTR_ERR(hw);
-+		goto err_clk_register;
-+	}
-+	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_OUT] = hw;
- 
- 	hw = devm_clk_hw_register_fixed_factor(dev, "sai_pll_out_div2",
- 					       "sai_pll_out", 0, 1, 2);
--	if (IS_ERR(hw))
--		return PTR_ERR(hw);
-+	if (IS_ERR(hw)) {
-+		ret = PTR_ERR(hw);
-+		goto err_clk_register;
-+	}
-+
-+	ret = devm_of_clk_add_hw_provider(&pdev->dev, of_clk_hw_onecell_get,
-+					  clk_hw_data);
-+	if (ret)
-+		goto err_clk_register;
-+
-+	pm_runtime_put_sync(dev);
-+	return 0;
-+
-+err_clk_register:
-+	pm_runtime_put_sync(dev);
-+	pm_runtime_disable(dev);
-+	return ret;
-+}
-+
-+static int clk_imx8mp_audiomix_remove(struct platform_device *pdev)
-+{
-+	pm_runtime_disable(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static int clk_imx8mp_audiomix_runtime_suspend(struct device *dev)
-+{
-+	clk_imx8mp_audiomix_save_restore(dev, true);
- 
--	return devm_of_clk_add_hw_provider(&pdev->dev, of_clk_hw_onecell_get,
--					   priv);
-+	return 0;
- }
- 
-+static int clk_imx8mp_audiomix_runtime_resume(struct device *dev)
-+{
-+	clk_imx8mp_audiomix_save_restore(dev, false);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops clk_imx8mp_audiomix_pm_ops = {
-+	SET_RUNTIME_PM_OPS(clk_imx8mp_audiomix_runtime_suspend,
-+			   clk_imx8mp_audiomix_runtime_resume, NULL)
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				      pm_runtime_force_resume)
-+};
-+
- static const struct of_device_id clk_imx8mp_audiomix_of_match[] = {
- 	{ .compatible = "fsl,imx8mp-audio-blk-ctrl" },
- 	{ /* sentinel */ }
-@@ -269,9 +382,11 @@ MODULE_DEVICE_TABLE(of, clk_imx8mp_audiomix_of_match);
- 
- static struct platform_driver clk_imx8mp_audiomix_driver = {
- 	.probe	= clk_imx8mp_audiomix_probe,
-+	.remove = clk_imx8mp_audiomix_remove,
- 	.driver = {
- 		.name = "imx8mp-audio-blk-ctrl",
- 		.of_match_table = clk_imx8mp_audiomix_of_match,
-+		.pm = &clk_imx8mp_audiomix_pm_ops,
- 	},
- };
- 
--- 
-2.34.1
-
+I send v2 to fix the folio check and use the helper, thanks for you review.
