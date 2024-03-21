@@ -1,317 +1,341 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B74A13B7A6;
-	Thu, 21 Mar 2024 16:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BAD13EFE9
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 16:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711039087; cv=none; b=Q8L6TxvArGj/b9V+n7uQelnJxnDBmzKaVHOF2QF5SG6/RypYQkzruzi8GXmKr8SsYSncx7oc/VPFztcJ++0iIDNen2LxcEK9hJ0R0aHw+8thnWX7T3eo08tSiusf2fX4lSyNiaUy0ZYp3eayI/F582zsaBXRpGRkqSGbw/b/TkQ=
+	t=1711039091; cv=none; b=cQ/XEYO8xYO45YOY4vqSQoMg98Vgw7XFceByvetK7S4xo/gjYQZiTpT1skpTeLfA8uz4JkcNnorcQw3cyDXa6PxlCinW6APSz4dbieLnYCOoRkvBMwiuxmZO7lLS0OfmEDkywwRlC7bE6vf3VrIda0NwAU7G0NaQieTQmz1exKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711039087; c=relaxed/simple;
-	bh=VRSMWFCZT0oWTvcVrVc6zm0WXxmKtdud0NjIamWAcNM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oHaKZzjtC+5guoFPDbnAG5LLVOhQnEXtEh8cexgPU/Yf28pzLP2NRKYo5wURaWUtcLDUgadmwY7LyTXUH3/+PKmnACMGvErcKbv4KonwqlD8/Ig+WLDX8qPvlJgZjQxfM8XoRfGQRaNWokiziKSIz7oo/1MFIz28L8RsBbs53Jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FDdqjMCl; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711039091; c=relaxed/simple;
+	bh=ND4weKb2Cmy5ZvffNAUyVtQSvrQwxNVPHe7dGS4BU5U=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=E8rglu2broMLieKDfJ9WQXXyn4orK3/5zY5CiZkM/QKhKxtU+ttmlSuvgyDCm5660eTbi4P1RxS8DhIz/1SQejOP83ZPsdsTP+Sy1IVny0S8oYLHr9oECXzcBOXeWeU+nPICZ3xZhTw7D0w00NlH8ZH6nTBysY05G8Axq8P8P1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hvfDI9IK; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FDdqjMCl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711039085; x=1742575085;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=VRSMWFCZT0oWTvcVrVc6zm0WXxmKtdud0NjIamWAcNM=;
-  b=FDdqjMClR6UgoL7iorUdaqKqdCzNeF/VKUN6ku428cXHBMuxyqpN5GXC
-   Eb3r/gnAE9yI4i7TO9b/zm/6XWQWAYpk65oFuRMUCgFzLenyShAORYArG
-   xL6pj1jyUzJVKp8LDKyrIh62x/fuhNKfHnxAEbiOjzsnyE/AUw1IddyFa
-   1Hl94IGyEGEJRE6xodsUQAA3iQ60uqG8A2XxV8YoiGZf51hfAgPcgU/gh
-   wQUZ8/GYyWV7oUdHyHDBcO/wOLa5jf/ubs2AAQaSlrWC5iWqrP01eFKN3
-   NgqgqIDtlrFnGoaKD/5qDBNUulRG6C7Szyu8Kxd0b60ystfOglhCQuIgL
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="31477564"
-X-IronPort-AV: E=Sophos;i="6.07,143,1708416000"; 
-   d="scan'208";a="31477564"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 09:37:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,143,1708416000"; 
-   d="scan'208";a="19280019"
-Received: from rchatre-ws.ostc.intel.com ([10.54.69.144])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 09:37:58 -0700
-From: Reinette Chatre <reinette.chatre@intel.com>
-To: isaku.yamahata@intel.com,
-	pbonzini@redhat.com,
-	erdemaktas@google.com,
-	vkuznets@redhat.com,
-	seanjc@google.com,
-	vannapurve@google.com,
-	jmattson@google.com,
-	mlevitsk@redhat.com,
-	xiaoyao.li@intel.com,
-	chao.gao@intel.com,
-	rick.p.edgecombe@intel.com
-Cc: reinette.chatre@intel.com,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH V4 4/4] KVM: selftests: Add test for configure of x86 APIC bus frequency
-Date: Thu, 21 Mar 2024 09:37:44 -0700
-Message-Id: <731f6bd293d298f8cbd313d1e8e7d472d6d6d8e6.1711035400.git.reinette.chatre@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1711035400.git.reinette.chatre@intel.com>
-References: <cover.1711035400.git.reinette.chatre@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hvfDI9IK"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60a605154d0so14623367b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 09:38:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711039087; x=1711643887; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kbJXFr2w8KI4PQ3iTaDylf6laxNigfzl4BgVu2a2cxc=;
+        b=hvfDI9IK6CvB2tjcbMA1lEWqT/gkGMCTiCQ4cBhobR+2RSgzfSOqSpTT1YavGTN23y
+         /+a2OdcXGCm23P1eMk46Cn3xcrR9ZJ5xOYVWIV1HzmoL5J4Eu+vK1it/lk+RYiHzH/ZA
+         Uivcrcq4gz07FRVi9frmAG1Zl9JaWnpXP4gniI0zPrAZGTi1KxVRNnY5lhLueR14Vt56
+         chNKezSm3xyFAHuykn2MZctnu4gmUKB+KjMxw45aqkPlsIw8sCH5aqjM5szNA+aV8yQb
+         McmlKvKCOU++nH5gRdZzpY1N24fVwmhz7yXNO7nmUB4UfXVa1cpf3J5ce+g3o8hM/J3C
+         bWwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711039087; x=1711643887;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kbJXFr2w8KI4PQ3iTaDylf6laxNigfzl4BgVu2a2cxc=;
+        b=ZLY7QcPiq+cAo0C1rLObj9BOJW4NuT8WlmGZUMT1ZLzBemBwd8+f1M5G9ZEZkTy2Yg
+         znA3joIz2ZFO1wxdNRfnu2T32ItLgHovuPubYFJj1JYeCzA267cS7McPxaFy1r8WXxHn
+         dQW5Bi/uPUZl2sSnlH3VnAY2TYVRpwnLOv/68qBxibISd9JVNonKRI+Razef/tjXTeBZ
+         Wfnka4+0qIT3qgpcJsmGXm8/R23VX+ljIbLbIjenrVNhRNqU+I3YsCR/sj7VxGdJeZTr
+         EXwnnNyeAlDQ6ADWObY7GcamUYBnkkZkJBsDnimElSbjo0aZjl+0WXWWyAuhPL3eo0ps
+         4Dag==
+X-Forwarded-Encrypted: i=1; AJvYcCXFzPA61OQ0CbKxiUZtgf0AiN+6QfLj2LOZhLqGpy9IeWGKhVS1MkYk6rzZ2o6IJNbEE0HJpkqL7Mb0YdyJdFcT8hbJkQGPOPGooUYu
+X-Gm-Message-State: AOJu0YzA40Wy8MODTbK6eiAXm8CXl8RvV4jmnCMnWiCBfNlYf8fj+kZT
+	qblJNn6DHTzr764qCXBaWsIKJymKFJKM2NbsEdipLNvl18s9V/iYRz7wrv8bhoDd5UJ1yWd4CAe
+	9Ug==
+X-Google-Smtp-Source: AGHT+IGAFq37Jmasj0HYRGF5DFuiG3xE73e4VFfbf3VLLmYen1YphSWB2duspGO/poHTwQ+f8dcPx9x7Bl8=
+X-Received: from surenb-desktop.mtv.corp.google.com ([2620:15c:211:201:a489:6433:be5d:e639])
+ (user=surenb job=sendgmr) by 2002:a81:a1d2:0:b0:610:e44b:acc3 with SMTP id
+ y201-20020a81a1d2000000b00610e44bacc3mr857961ywg.4.1711039086504; Thu, 21 Mar
+ 2024 09:38:06 -0700 (PDT)
+Date: Thu, 21 Mar 2024 09:36:48 -0700
+In-Reply-To: <20240321163705.3067592-1-surenb@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240321163705.3067592-1-surenb@google.com>
+X-Mailer: git-send-email 2.44.0.291.gc1ea87d7ee-goog
+Message-ID: <20240321163705.3067592-27-surenb@google.com>
+Subject: [PATCH v6 26/37] mempool: Hook up to memory allocation profiling
+From: Suren Baghdasaryan <surenb@google.com>
+To: akpm@linux-foundation.org
+Cc: kent.overstreet@linux.dev, mhocko@suse.com, vbabka@suse.cz, 
+	hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
+	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
+	penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com, 
+	peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com, 
+	will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
+	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
+	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
+	nathan@kernel.org, dennis@kernel.org, jhubbard@nvidia.com, tj@kernel.org, 
+	muchun.song@linux.dev, rppt@kernel.org, paulmck@kernel.org, 
+	pasha.tatashin@soleen.com, yosryahmed@google.com, yuzhao@google.com, 
+	dhowells@redhat.com, hughd@google.com, andreyknvl@gmail.com, 
+	keescook@chromium.org, ndesaulniers@google.com, vvvvvv@google.com, 
+	gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com, 
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
+	bsegall@google.com, bristot@redhat.com, vschneid@redhat.com, cl@linux.com, 
+	penberg@kernel.org, iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, 
+	glider@google.com, elver@google.com, dvyukov@google.com, 
+	songmuchun@bytedance.com, jbaron@akamai.com, aliceryhl@google.com, 
+	rientjes@google.com, minchan@google.com, kaleshsingh@google.com, 
+	surenb@google.com, kernel-team@android.com, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
+	linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
+	cgroups@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Isaku Yamahata <isaku.yamahata@intel.com>
+From: Kent Overstreet <kent.overstreet@linux.dev>
 
-Test if the APIC bus clock frequency is the expected configured value.
+This adds hooks to mempools for correctly annotating mempool-backed
+allocations at the correct source line, so they show up correctly in
+/sys/kernel/debug/allocations.
 
-Set APIC timer's initial count to the maximum value and busy wait for 100
-msec (any value is okay) with TSC value. Read the APIC timer's "current
-count" to calculate the actual APIC bus clock frequency based on TSC
-frequency.
+Various inline functions are converted to wrappers so that we can invoke
+alloc_hooks() in fewer places.
 
-Suggested-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-Co-developed-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
+Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 ---
+ include/linux/mempool.h | 73 ++++++++++++++++++++---------------------
+ mm/mempool.c            | 36 ++++++++------------
+ 2 files changed, 49 insertions(+), 60 deletions(-)
 
-Changes v4:
-- Rework changelog.
-- Add Sean's "Suggested-by" to acknowledge guidance received in
-  https://lore.kernel.org/all/ZU0BASXWcck85r90@google.com/
-- Add copyright.
-- Add test description to file header.
-- Consistent capitalization for acronyms.
-- Rebase to kvm-x86/next.
-- Update to v4 change of providing bus clock rate in nanoseconds.
-- Add a "TEST_REQUIRE()" for the new capability so that the test can
-  work on kernels that do not support the new capability.
-- Address checkpatch warnings and use tabs instead of spaces in header
-  file to match existing code.
-
-Changes v3:
-- Use 1.5GHz instead of 1GHz as frequency.
-
-Changes v2:
-- Newly added.
-
- tools/testing/selftests/kvm/Makefile          |   1 +
- .../selftests/kvm/include/x86_64/apic.h       |   7 +
- .../kvm/x86_64/apic_bus_clock_test.c          | 166 ++++++++++++++++++
- 3 files changed, 174 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/x86_64/apic_bus_clock_test.c
-
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index da20e6bb43ed..05b9a942a878 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -110,6 +110,7 @@ TEST_GEN_PROGS_x86_64 += x86_64/vmx_invalid_nested_guest_state
- TEST_GEN_PROGS_x86_64 += x86_64/vmx_set_nested_state_test
- TEST_GEN_PROGS_x86_64 += x86_64/vmx_tsc_adjust_test
- TEST_GEN_PROGS_x86_64 += x86_64/vmx_nested_tsc_scaling_test
-+TEST_GEN_PROGS_x86_64 += x86_64/apic_bus_clock_test
- TEST_GEN_PROGS_x86_64 += x86_64/xapic_ipi_test
- TEST_GEN_PROGS_x86_64 += x86_64/xapic_state_test
- TEST_GEN_PROGS_x86_64 += x86_64/xcr0_cpuid_test
-diff --git a/tools/testing/selftests/kvm/include/x86_64/apic.h b/tools/testing/selftests/kvm/include/x86_64/apic.h
-index bed316fdecd5..b0d2fc62e172 100644
---- a/tools/testing/selftests/kvm/include/x86_64/apic.h
-+++ b/tools/testing/selftests/kvm/include/x86_64/apic.h
-@@ -60,6 +60,13 @@
- #define		APIC_VECTOR_MASK	0x000FF
- #define	APIC_ICR2	0x310
- #define		SET_APIC_DEST_FIELD(x)	((x) << 24)
-+#define APIC_LVT0	0x350
-+#define		APIC_LVT_TIMER_ONESHOT		(0 << 17)
-+#define		APIC_LVT_TIMER_PERIODIC		(1 << 17)
-+#define		APIC_LVT_TIMER_TSCDEADLINE	(2 << 17)
-+#define	APIC_TMICT	0x380
-+#define	APIC_TMCCT	0x390
-+#define	APIC_TDCR	0x3E0
+diff --git a/include/linux/mempool.h b/include/linux/mempool.h
+index 16c5cc807ff6..7b151441341b 100644
+--- a/include/linux/mempool.h
++++ b/include/linux/mempool.h
+@@ -5,6 +5,8 @@
+ #ifndef _LINUX_MEMPOOL_H
+ #define _LINUX_MEMPOOL_H
  
- void apic_disable(void);
- void xapic_enable(void);
-diff --git a/tools/testing/selftests/kvm/x86_64/apic_bus_clock_test.c b/tools/testing/selftests/kvm/x86_64/apic_bus_clock_test.c
-new file mode 100644
-index 000000000000..ee0cae056827
---- /dev/null
-+++ b/tools/testing/selftests/kvm/x86_64/apic_bus_clock_test.c
-@@ -0,0 +1,166 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Test configure of APIC bus frequency.
-+ *
-+ * Copyright (c) 2024 Intel Corporation
-+ *
-+ * To verify if the APIC bus frequency can be configured this test starts
-+ * by setting the TSC frequency in KVM, and then:
-+ * For every APIC timer frequency supported:
-+ * * In the guest:
-+ * * * Start the APIC timer by programming the APIC TMICT (initial count
-+ *       register) to the largest value possible to guarantee that it will
-+ *       not expire during the test,
-+ * * * Wait for a known duration based on previously set TSC frequency,
-+ * * * Stop the timer and read the APIC TMCCT (current count) register to
-+ *       determine the count at that time (TMCCT is loaded from TMICT when
-+ *       TMICT is programmed and then starts counting down).
-+ * * In the host:
-+ * * * Determine if the APIC counts close to configured APIC bus frequency
-+ *     while taking into account how the APIC timer frequency was modified
-+ *     using the APIC TDCR (divide configuration register).
-+ */
-+#define _GNU_SOURCE /* for program_invocation_short_name */
++#include <linux/sched.h>
++#include <linux/alloc_tag.h>
+ #include <linux/wait.h>
+ #include <linux/compiler.h>
+ 
+@@ -39,18 +41,32 @@ void mempool_exit(mempool_t *pool);
+ int mempool_init_node(mempool_t *pool, int min_nr, mempool_alloc_t *alloc_fn,
+ 		      mempool_free_t *free_fn, void *pool_data,
+ 		      gfp_t gfp_mask, int node_id);
+-int mempool_init(mempool_t *pool, int min_nr, mempool_alloc_t *alloc_fn,
 +
-+#include "apic.h"
-+#include "test_util.h"
++int mempool_init_noprof(mempool_t *pool, int min_nr, mempool_alloc_t *alloc_fn,
+ 		 mempool_free_t *free_fn, void *pool_data);
++#define mempool_init(...)						\
++	alloc_hooks(mempool_init_noprof(__VA_ARGS__))
+ 
+ extern mempool_t *mempool_create(int min_nr, mempool_alloc_t *alloc_fn,
+ 			mempool_free_t *free_fn, void *pool_data);
+-extern mempool_t *mempool_create_node(int min_nr, mempool_alloc_t *alloc_fn,
 +
-+/*
-+ * Pick one convenient value, 1.5GHz. No special meaning and different from
-+ * the default value, 1GHz.
-+ */
-+#define TSC_HZ			(1500 * 1000 * 1000ULL)
++extern mempool_t *mempool_create_node_noprof(int min_nr, mempool_alloc_t *alloc_fn,
+ 			mempool_free_t *free_fn, void *pool_data,
+ 			gfp_t gfp_mask, int nid);
++#define mempool_create_node(...)					\
++	alloc_hooks(mempool_create_node_noprof(__VA_ARGS__))
 +
-+/* Wait for 100 msec, not too long, not too short value. */
-+#define LOOP_MSEC		100ULL
-+#define TSC_WAIT_DELTA		(TSC_HZ / 1000 * LOOP_MSEC)
++#define mempool_create(_min_nr, _alloc_fn, _free_fn, _pool_data)	\
++	mempool_create_node(_min_nr, _alloc_fn, _free_fn, _pool_data,	\
++			    GFP_KERNEL, NUMA_NO_NODE)
+ 
+ extern int mempool_resize(mempool_t *pool, int new_min_nr);
+ extern void mempool_destroy(mempool_t *pool);
+-extern void *mempool_alloc(mempool_t *pool, gfp_t gfp_mask) __malloc;
 +
-+/*
-+ * Pick a typical value, 25MHz. Different enough from the default value, 1GHz.
-+ */
-+#define APIC_BUS_CLOCK_FREQ	(25 * 1000 * 1000ULL)
++extern void *mempool_alloc_noprof(mempool_t *pool, gfp_t gfp_mask) __malloc;
++#define mempool_alloc(...)						\
++	alloc_hooks(mempool_alloc_noprof(__VA_ARGS__))
 +
-+static void guest_code(void)
-+{
-+	/*
-+	 * Possible TDCR values and its divide count. Used to modify APIC
-+	 * timer frequency.
-+	 */
-+	struct {
-+		u32 tdcr;
-+		u32 divide_count;
-+	} tdcrs[] = {
-+		{0x0, 2},
-+		{0x1, 4},
-+		{0x2, 8},
-+		{0x3, 16},
-+		{0x8, 32},
-+		{0x9, 64},
-+		{0xa, 128},
-+		{0xb, 1},
-+	};
-+
-+	u32 tmict, tmcct;
-+	u64 tsc0, tsc1;
-+	int i;
-+
-+	asm volatile("cli");
-+
-+	xapic_enable();
-+
-+	/*
-+	 * Setup one-shot timer.  The vector does not matter because the
-+	 * interrupt does not fire.
-+	 */
-+	xapic_write_reg(APIC_LVT0, APIC_LVT_TIMER_ONESHOT);
-+
-+	for (i = 0; i < ARRAY_SIZE(tdcrs); i++) {
-+		xapic_write_reg(APIC_TDCR, tdcrs[i].tdcr);
-+
-+		/* Set the largest value to not trigger the interrupt. */
-+		tmict = ~0;
-+		xapic_write_reg(APIC_TMICT, tmict);
-+
-+		/* Busy wait for LOOP_MSEC */
-+		tsc0 = rdtsc();
-+		tsc1 = tsc0;
-+		while (tsc1 - tsc0 < TSC_WAIT_DELTA)
-+			tsc1 = rdtsc();
-+
-+		/* Read APIC timer and TSC */
-+		tmcct = xapic_read_reg(APIC_TMCCT);
-+		tsc1 = rdtsc();
-+
-+		/* Stop timer */
-+		xapic_write_reg(APIC_TMICT, 0);
-+
-+		/* Report it. */
-+		GUEST_SYNC_ARGS(tdcrs[i].divide_count, tmict - tmcct,
-+				tsc1 - tsc0, 0, 0);
-+	}
-+
-+	GUEST_DONE();
-+}
-+
-+void test_apic_bus_clock(struct kvm_vcpu *vcpu)
-+{
-+	bool done = false;
-+	struct ucall uc;
-+
-+	while (!done) {
-+		vcpu_run(vcpu);
-+		TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
-+
-+		switch (get_ucall(vcpu, &uc)) {
-+		case UCALL_DONE:
-+			done = true;
-+			break;
-+		case UCALL_ABORT:
-+			REPORT_GUEST_ASSERT(uc);
-+			break;
-+		case UCALL_SYNC: {
-+			u32 divide_counter = uc.args[1];
-+			u32 apic_cycles = uc.args[2];
-+			u64 tsc_cycles = uc.args[3];
-+			u64 freq;
-+
-+			TEST_ASSERT(tsc_cycles > 0,
-+				    "TSC cycles must not be zero.");
-+
-+			/* Allow 1% slack. */
-+			freq = apic_cycles * divide_counter * TSC_HZ / tsc_cycles;
-+			TEST_ASSERT(freq < APIC_BUS_CLOCK_FREQ * 101 / 100,
-+				    "APIC bus clock frequency is too large");
-+			TEST_ASSERT(freq > APIC_BUS_CLOCK_FREQ * 99 / 100,
-+				    "APIC bus clock frequency is too small");
-+			break;
-+		}
-+		default:
-+			TEST_FAIL("Unknown ucall %lu", uc.cmd);
-+			break;
-+		}
-+	}
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	struct kvm_vcpu *vcpu;
-+	struct kvm_vm *vm;
-+
-+	TEST_REQUIRE(kvm_has_cap(KVM_CAP_X86_APIC_BUS_FREQUENCY));
-+
-+	vm = __vm_create(VM_SHAPE_DEFAULT, 1, 0);
-+	vm_ioctl(vm, KVM_SET_TSC_KHZ, (void *)(TSC_HZ / 1000));
-+	/*
-+	 * KVM_CAP_X86_APIC_BUS_FREQUENCY expects APIC bus clock rate in
-+	 * nanoseconds and requires that no vCPU is created.
-+	 */
-+	vm_enable_cap(vm, KVM_CAP_X86_APIC_BUS_FREQUENCY,
-+		      NSEC_PER_SEC / APIC_BUS_CLOCK_FREQ);
-+	vcpu = vm_vcpu_add(vm, 0, guest_code);
-+
-+	virt_pg_map(vm, APIC_DEFAULT_GPA, APIC_DEFAULT_GPA);
-+
-+	test_apic_bus_clock(vcpu);
-+	kvm_vm_free(vm);
-+}
+ extern void *mempool_alloc_preallocated(mempool_t *pool) __malloc;
+ extern void mempool_free(void *element, mempool_t *pool);
+ 
+@@ -62,19 +78,10 @@ extern void mempool_free(void *element, mempool_t *pool);
+ void *mempool_alloc_slab(gfp_t gfp_mask, void *pool_data);
+ void mempool_free_slab(void *element, void *pool_data);
+ 
+-static inline int
+-mempool_init_slab_pool(mempool_t *pool, int min_nr, struct kmem_cache *kc)
+-{
+-	return mempool_init(pool, min_nr, mempool_alloc_slab,
+-			    mempool_free_slab, (void *) kc);
+-}
+-
+-static inline mempool_t *
+-mempool_create_slab_pool(int min_nr, struct kmem_cache *kc)
+-{
+-	return mempool_create(min_nr, mempool_alloc_slab, mempool_free_slab,
+-			      (void *) kc);
+-}
++#define mempool_init_slab_pool(_pool, _min_nr, _kc)			\
++	mempool_init(_pool, (_min_nr), mempool_alloc_slab, mempool_free_slab, (void *)(_kc))
++#define mempool_create_slab_pool(_min_nr, _kc)			\
++	mempool_create((_min_nr), mempool_alloc_slab, mempool_free_slab, (void *)(_kc))
+ 
+ /*
+  * a mempool_alloc_t and a mempool_free_t to kmalloc and kfree the
+@@ -83,17 +90,12 @@ mempool_create_slab_pool(int min_nr, struct kmem_cache *kc)
+ void *mempool_kmalloc(gfp_t gfp_mask, void *pool_data);
+ void mempool_kfree(void *element, void *pool_data);
+ 
+-static inline int mempool_init_kmalloc_pool(mempool_t *pool, int min_nr, size_t size)
+-{
+-	return mempool_init(pool, min_nr, mempool_kmalloc,
+-			    mempool_kfree, (void *) size);
+-}
+-
+-static inline mempool_t *mempool_create_kmalloc_pool(int min_nr, size_t size)
+-{
+-	return mempool_create(min_nr, mempool_kmalloc, mempool_kfree,
+-			      (void *) size);
+-}
++#define mempool_init_kmalloc_pool(_pool, _min_nr, _size)		\
++	mempool_init(_pool, (_min_nr), mempool_kmalloc, mempool_kfree,	\
++		     (void *)(unsigned long)(_size))
++#define mempool_create_kmalloc_pool(_min_nr, _size)			\
++	mempool_create((_min_nr), mempool_kmalloc, mempool_kfree,	\
++		       (void *)(unsigned long)(_size))
+ 
+ void *mempool_kvmalloc(gfp_t gfp_mask, void *pool_data);
+ void mempool_kvfree(void *element, void *pool_data);
+@@ -115,16 +117,11 @@ static inline mempool_t *mempool_create_kvmalloc_pool(int min_nr, size_t size)
+ void *mempool_alloc_pages(gfp_t gfp_mask, void *pool_data);
+ void mempool_free_pages(void *element, void *pool_data);
+ 
+-static inline int mempool_init_page_pool(mempool_t *pool, int min_nr, int order)
+-{
+-	return mempool_init(pool, min_nr, mempool_alloc_pages,
+-			    mempool_free_pages, (void *)(long)order);
+-}
+-
+-static inline mempool_t *mempool_create_page_pool(int min_nr, int order)
+-{
+-	return mempool_create(min_nr, mempool_alloc_pages, mempool_free_pages,
+-			      (void *)(long)order);
+-}
++#define mempool_init_page_pool(_pool, _min_nr, _order)			\
++	mempool_init(_pool, (_min_nr), mempool_alloc_pages,		\
++		     mempool_free_pages, (void *)(long)(_order))
++#define mempool_create_page_pool(_min_nr, _order)			\
++	mempool_create((_min_nr), mempool_alloc_pages,			\
++		       mempool_free_pages, (void *)(long)(_order))
+ 
+ #endif /* _LINUX_MEMPOOL_H */
+diff --git a/mm/mempool.c b/mm/mempool.c
+index 076c736f5f1f..602e6eba68d3 100644
+--- a/mm/mempool.c
++++ b/mm/mempool.c
+@@ -240,17 +240,17 @@ EXPORT_SYMBOL(mempool_init_node);
+  *
+  * Return: %0 on success, negative error code otherwise.
+  */
+-int mempool_init(mempool_t *pool, int min_nr, mempool_alloc_t *alloc_fn,
+-		 mempool_free_t *free_fn, void *pool_data)
++int mempool_init_noprof(mempool_t *pool, int min_nr, mempool_alloc_t *alloc_fn,
++			mempool_free_t *free_fn, void *pool_data)
+ {
+ 	return mempool_init_node(pool, min_nr, alloc_fn, free_fn,
+ 				 pool_data, GFP_KERNEL, NUMA_NO_NODE);
+ 
+ }
+-EXPORT_SYMBOL(mempool_init);
++EXPORT_SYMBOL(mempool_init_noprof);
+ 
+ /**
+- * mempool_create - create a memory pool
++ * mempool_create_node - create a memory pool
+  * @min_nr:    the minimum number of elements guaranteed to be
+  *             allocated for this pool.
+  * @alloc_fn:  user-defined element-allocation function.
+@@ -265,17 +265,9 @@ EXPORT_SYMBOL(mempool_init);
+  *
+  * Return: pointer to the created memory pool object or %NULL on error.
+  */
+-mempool_t *mempool_create(int min_nr, mempool_alloc_t *alloc_fn,
+-				mempool_free_t *free_fn, void *pool_data)
+-{
+-	return mempool_create_node(min_nr, alloc_fn, free_fn, pool_data,
+-				   GFP_KERNEL, NUMA_NO_NODE);
+-}
+-EXPORT_SYMBOL(mempool_create);
+-
+-mempool_t *mempool_create_node(int min_nr, mempool_alloc_t *alloc_fn,
+-			       mempool_free_t *free_fn, void *pool_data,
+-			       gfp_t gfp_mask, int node_id)
++mempool_t *mempool_create_node_noprof(int min_nr, mempool_alloc_t *alloc_fn,
++				      mempool_free_t *free_fn, void *pool_data,
++				      gfp_t gfp_mask, int node_id)
+ {
+ 	mempool_t *pool;
+ 
+@@ -291,7 +283,7 @@ mempool_t *mempool_create_node(int min_nr, mempool_alloc_t *alloc_fn,
+ 
+ 	return pool;
+ }
+-EXPORT_SYMBOL(mempool_create_node);
++EXPORT_SYMBOL(mempool_create_node_noprof);
+ 
+ /**
+  * mempool_resize - resize an existing memory pool
+@@ -374,7 +366,7 @@ int mempool_resize(mempool_t *pool, int new_min_nr)
+ EXPORT_SYMBOL(mempool_resize);
+ 
+ /**
+- * mempool_alloc - allocate an element from a specific memory pool
++ * mempool_alloc_noprof - allocate an element from a specific memory pool
+  * @pool:      pointer to the memory pool which was allocated via
+  *             mempool_create().
+  * @gfp_mask:  the usual allocation bitmask.
+@@ -387,7 +379,7 @@ EXPORT_SYMBOL(mempool_resize);
+  *
+  * Return: pointer to the allocated element or %NULL on error.
+  */
+-void *mempool_alloc(mempool_t *pool, gfp_t gfp_mask)
++void *mempool_alloc_noprof(mempool_t *pool, gfp_t gfp_mask)
+ {
+ 	void *element;
+ 	unsigned long flags;
+@@ -454,7 +446,7 @@ void *mempool_alloc(mempool_t *pool, gfp_t gfp_mask)
+ 	finish_wait(&pool->wait, &wait);
+ 	goto repeat_alloc;
+ }
+-EXPORT_SYMBOL(mempool_alloc);
++EXPORT_SYMBOL(mempool_alloc_noprof);
+ 
+ /**
+  * mempool_alloc_preallocated - allocate an element from preallocated elements
+@@ -562,7 +554,7 @@ void *mempool_alloc_slab(gfp_t gfp_mask, void *pool_data)
+ {
+ 	struct kmem_cache *mem = pool_data;
+ 	VM_BUG_ON(mem->ctor);
+-	return kmem_cache_alloc(mem, gfp_mask);
++	return kmem_cache_alloc_noprof(mem, gfp_mask);
+ }
+ EXPORT_SYMBOL(mempool_alloc_slab);
+ 
+@@ -580,7 +572,7 @@ EXPORT_SYMBOL(mempool_free_slab);
+ void *mempool_kmalloc(gfp_t gfp_mask, void *pool_data)
+ {
+ 	size_t size = (size_t)pool_data;
+-	return kmalloc(size, gfp_mask);
++	return kmalloc_noprof(size, gfp_mask);
+ }
+ EXPORT_SYMBOL(mempool_kmalloc);
+ 
+@@ -610,7 +602,7 @@ EXPORT_SYMBOL(mempool_kvfree);
+ void *mempool_alloc_pages(gfp_t gfp_mask, void *pool_data)
+ {
+ 	int order = (int)(long)pool_data;
+-	return alloc_pages(gfp_mask, order);
++	return alloc_pages_noprof(gfp_mask, order);
+ }
+ EXPORT_SYMBOL(mempool_alloc_pages);
+ 
 -- 
-2.34.1
+2.44.0.291.gc1ea87d7ee-goog
 
