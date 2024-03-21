@@ -1,111 +1,113 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A8B56B68;
-	Thu, 21 Mar 2024 12:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7060D56B68;
+	Thu, 21 Mar 2024 12:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711022630; cv=none; b=XHtf1Lnzcmngip6C2thPWbhw4FPFmYNEuECWdfe97Vyb5iN6FzdgI1DijjDjqDam5qyXDbNZEBWqTTWPdoo4BPFoaOK9m+hyMtlulvHS2EFJzCIBCSLjvZ1/KTY5bpYwCIC1kwPLTJYawhTH1YTuQZCjt+7M4js304+dqkRRugE=
+	t=1711022642; cv=none; b=EwoThVxN2y9VN5g7N+4Z4x/Wbtv2L2BWpCPSSZkLxFyM3RwXDPfSnAhhyjXxJFEM+2wHvkktX9vdyHKBQP3v6ipQsQv+mWs3pC2oL78o/fxMBjsS52RB53SNxSszswJwAwkMI/pM6Gv5fDEAkaa9EDRsbgkyfpIi+x2v3uz6Xlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711022630; c=relaxed/simple;
-	bh=6tBrYa203xuCC51j6/N1hP+cXyjYjBcvGz8a2k1TW8Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f0/G/bkeqdL/NrTFXLeVP0Lht+77PaafF87uJ5S8k/sccbKIMzMOSHSVj+bQ4PhRtGUAu9pi/irWx57UWrDsln2vvRl1mei0hMtyXUrYcIbbot3/9e2Fll9YBTomwORT07msekpF4eQP9A8Kit6J5O4mj17T0dFpLqOBfyVnc2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kkd8ok62; arc=none smtp.client-ip=209.85.208.45
+	s=arc-20240116; t=1711022642; c=relaxed/simple;
+	bh=DTA9W/t9iIbGd7n0PZa6SLoZYst4DuYNjRduEVFThaw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dWE2GD0xL7490hfu6XX6hCFGdhzYHtzaQ/5oj1+JmDcV7yZgK3WwS08eZvDmT1FH2oB2x8BBR5+Uiln+0ZAPUUGxrDylrl2u1gaobFfuwa0XFI1g97Bq1IFYRrgXdqR+Yv4C4+A7dPBdBb9L7IxXX7rzhJ7k/QPONVNXJUUjKOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NKXFblR4; arc=none smtp.client-ip=209.85.222.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kkd8ok62"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-56bcb9640bbso607141a12.0;
-        Thu, 21 Mar 2024 05:03:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKXFblR4"
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-7e09ba2ac02so488786241.1;
+        Thu, 21 Mar 2024 05:04:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711022627; x=1711627427; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QZuaEg5mTYe1p+g90HQY9VXRTkmxWXoDH9h8Hme3zkM=;
-        b=kkd8ok623PBN1QBn0Ml2y6BovI/Rbt5OfNQ1TXqKBee32TVMzY+YD4xA1uqCGnSu5r
-         ivu71rPeKxkTrc50Ja/yaXCwaccY/F2cIlUp5BcRRYyVoGo6nuCIpj1Mwj5uFhcGoG6q
-         w9c24x7pk6j+hko5t3e1aR5Qu0M5gfcfZ7bV/F4vBDcaKieXOXnAMh3xkDLYZdpXqpCz
-         UFl6pOtdHGMx4Ubm0j7+ObXSFiDVD+K8Y1WTad0NV/18zFwXqzqZvR3+6V+Us8hcETdX
-         4rNX2ED3Ivch9goEYqhCg2UJ4LjIBDFaqg5vfYN0qGM9Egj8s5+m2URK21s7DpS0Nl8i
-         tCnA==
+        d=gmail.com; s=20230601; t=1711022640; x=1711627440; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VWe40Qw2RtIY9rsmg4dS1sWx+IBR19FeZvKGaxKc9lg=;
+        b=NKXFblR4rOqkIgcGtOp8+3fLRjaZcnJMDeVrZhnoRRFyGuQcNaYSMMgpS/Y19NSHMb
+         ns0tsk0lfi9lb1lCSiZwsabhgdPmHkkIqYTjZ/vOk98RNkNbbzkr4lAYo0oGi24oJcXa
+         y6sgjugoF++l3rx7zlYVgQ5zkwPtKwt+Nxq595gjGau+LQLXly2Qk4zD/iIKX1heT3qg
+         lenJSUWNjPFU3kjTrTTJweRXIEE03P13G4hDjOiaYUsh+/+LeoWrDzKAYqHjmZa62uw7
+         eTHn3NsauoVrWT6jCThGu9uZc95HXNaVzoQucX88HiQCj0am8P8eNGdHVtXkFj/0rzsZ
+         Jzgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711022627; x=1711627427;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QZuaEg5mTYe1p+g90HQY9VXRTkmxWXoDH9h8Hme3zkM=;
-        b=RCx7WpWjmQI9E0YMqdAtFNzV3jGXiOOKwWez7qE9XfJCJNXeiNUwsam26WgGmLAZJl
-         WxKpHlx6LFVO/I0uQmvPV4yHjvwl76d3PujHsyAI7vZDuFpSEzc9iggyTTKjJnfedwit
-         XxKMuHWUlJCM9RGSFuMVUvis2e5iAU25ZtlAMxewlpJEPdwcdVKzuOOhcgFhgYhDfSiJ
-         AZedSNgS5rWVswwyWvMt4/L4bgD0ZJIrBLlThYu1X0b2Vh+bbDymCXwgk2YpfYyWB5Td
-         7m28IpcdKHcC5ide8+E4iY3g4bY5eKT2d5SXzjZepJSNAIRIHvbFunyBqsScEmyOoAG8
-         FJtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXpaZ8oW7f1KZxzpgKmsByTGKTQU8CHC0FBip5lysMgKqpiOIDs04BRduSB0KKSokrjWSAsd5rPevXe3ZsmcvuhrmsAcDqRyU6Gvj4Px+lQVMahAHPb6xq9VRwB4VmHpH/gl4l34JIKSsljN0dJKd6l7sx3gdUHrEzLXPQIoFESHw==
-X-Gm-Message-State: AOJu0Yy13zxt1NKwrre6dte6Fws/DgXy+hyU+ROnK+wV2HyorbQJOjEE
-	iHjKAys+wApYrc6QCfLpJfRBzHiG/n7FdpNFdEwbgKcHFc8E7q7333W3+65taH65eI4205b1m9X
-	Df8NtZfxnR20Dh01TCiZGr7rPFWY=
-X-Google-Smtp-Source: AGHT+IEdNcpby97h1zjyf0aFS1poMNJpJYG+OR/wb6fEAbDA/2zXZUCsa/fIfGYqn+836ym0L8juWXu/yyXOrcfy/E4=
-X-Received: by 2002:a05:6402:4145:b0:565:e646:5c15 with SMTP id
- x5-20020a056402414500b00565e6465c15mr18890285eda.31.1711022626546; Thu, 21
- Mar 2024 05:03:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711022640; x=1711627440;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VWe40Qw2RtIY9rsmg4dS1sWx+IBR19FeZvKGaxKc9lg=;
+        b=dpp0XQiXpF1upmguUxu4gvQVcmPf2fKW14M7eQ4tIzboKW+ilWH1csLl1U7beEUAUT
+         AivHysojRcN9LXqjHmiEXHbCgOtS5rWavd0slvS/1ExY2D+gNgqho0NFkJFpHWSlwXSE
+         U4wSyyhSePTMZ4nwYdT6ZeddEf8uabwTwWd4CUYKiZSLeKQBYiBYhjbHU4bbtx1TS/IJ
+         gyoqS3CT3KWz3winaDy0fQOzPN1SDN9XbMDLcXNI+l5lyNZtbvtLJUbpqMiNqWzRtVuQ
+         19no8I+v1y9cdg88okNn7y8ZE7biEkG6sRKVzfUZgaIDycwokc0UiC1gesQmqOuCcR0x
+         M17Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVPjRs/tfTgnCZV4LAOAAoeAMMjARJOd/xmNyswACdqcO2dHevibB5VxTP9kdCTuhE/dsGyoIhhgA24Wz6lLHyLxuoDa+jNnig4j724nXdv/KWhf9nJYeAnQ2MdgacyAB+GXhq7zpGk
+X-Gm-Message-State: AOJu0Yx7Wr0nNHIvRI7wvSDAupx7rvH8gsJgkofeM/v1X7ktJPqu3nvO
+	6R2iV9vBusut4SxJPlUPVyo8mqxAPNIsOTuA5jfJ2C/AWmoX3tjyAbeD/R+x0NBKLg==
+X-Google-Smtp-Source: AGHT+IGd6j5zlTykKxJioDolomp0QHiRr0lYiNs6eUgfeEk0yQ8XJOhGTolmdzYlL54znpzC3S1cjQ==
+X-Received: by 2002:a05:6a20:7da4:b0:1a3:63ca:632a with SMTP id v36-20020a056a207da400b001a363ca632amr13355089pzj.58.1711022302257;
+        Thu, 21 Mar 2024 04:58:22 -0700 (PDT)
+Received: from amogh-desk-mint.Dlink ([119.82.120.209])
+        by smtp.gmail.com with ESMTPSA id c23-20020aa78c17000000b006e69cb93585sm13341804pfd.83.2024.03.21.04.58.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Mar 2024 04:58:21 -0700 (PDT)
+From: Amogh Cheluvaraj <amogh.linux.kernel.dev@gmail.com>
+To: airlied@gmail.com,
+	daniel@ffwll.ch,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	corbet@lwn.net,
+	javier.carrasco.cruz@gmail.com,
+	skhan@linuxfoundation.org
+Cc: Amogh Cheluvaraj <amogh.linux.kernel.dev@gmail.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] Fix duplicate C declaration warnings
+Date: Thu, 21 Mar 2024 17:27:08 +0530
+Message-ID: <20240321115738.51188-1-amogh.linux.kernel.dev@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240310-realtek-led-v1-0-4d9813ce938e@gmail.com>
- <20240310-realtek-led-v1-1-4d9813ce938e@gmail.com> <6705a278-d294-475f-bc4c-b08926c5017d@lunn.ch>
-In-Reply-To: <6705a278-d294-475f-bc4c-b08926c5017d@lunn.ch>
-From: Luiz Angelo Daros de Luca <luizluca@gmail.com>
-Date: Thu, 21 Mar 2024 09:03:34 -0300
-Message-ID: <CAJq09z5wXQQQtHJ5TdSz6J+Ov0Hifde25psoWm8EiHxV8c-TYw@mail.gmail.com>
-Subject: Re: [PATCH net-next 1/4] dt-bindings: net: dsa: realtek: describe LED usage
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Linus Walleij <linus.walleij@linaro.org>, =?UTF-8?Q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>, 
-	Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean <olteanv@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Andrew,
+Fix the duplicate C declaration warnings found on
+Documentation/gpu/drm-kms.rst that was found by
+compiling htmldocs
 
-Em dom., 10 de mar. de 2024 =C3=A0s 15:02, Andrew Lunn <andrew@lunn.ch> esc=
-reveu:
->> On Sun, Mar 10, 2024 at 01:51:58AM -0300, Luiz Angelo Daros de Luca wrot=
-e:
-> > Each port can have up to 4 LEDs (3 for current rtl8365mb devices). The
-> > LED reg property will indicate its LED group.
-> > +                properties:
-> > +                  reg:
-> > +                    description:
-> > +                      "reg indicates the LED group for this LED"
-> > +                    enum: [0, 1, 2, 3]
->
-> If this identifies the group, what identifies the actual LED? There
-> are four of them. How do i say LEDs 0 and 1 are unused, 2 and 3 are
-> wired to LEDs?
+Signed-off-by: Amogh Cheluvaraj <amogh.linux.kernel.dev@gmail.com>
+---
+ Documentation/gpu/drm-kms.rst | 6 ------
+ 1 file changed, 6 deletions(-)
 
-Do we need to mention a specific HW is not present? I guess we just
-omit it, like the led@1 and led@2 in the example.
+diff --git a/Documentation/gpu/drm-kms.rst b/Documentation/gpu/drm-kms.rst
+index 13d3627d8bc0..a4145f391e43 100644
+--- a/Documentation/gpu/drm-kms.rst
++++ b/Documentation/gpu/drm-kms.rst
+@@ -357,9 +357,6 @@ Format Functions Reference
+ .. kernel-doc:: include/drm/drm_fourcc.h
+    :internal:
+ 
+-.. kernel-doc:: drivers/gpu/drm/drm_fourcc.c
+-   :export:
+-
+ .. _kms_dumb_buffer_objects:
+ 
+ Dumb Buffer Objects
+@@ -458,9 +455,6 @@ KMS Locking
+ .. kernel-doc:: include/drm/drm_modeset_lock.h
+    :internal:
+ 
+-.. kernel-doc:: drivers/gpu/drm/drm_modeset_lock.c
+-   :export:
+-
+ KMS Properties
+ ==============
+ 
+-- 
+2.44.0
 
-> It would be much more usual for reg to be the LED number for the
-> port. And there then be a group property indicating what group the LED
-> belongs to. However, i'm wondering, is group fixed? Do we actually
-> need it in DT, or can there just be a table in the driver which maps
-> port:led to group?
-
-The LED groups are a fixed HW feature. The chip has dedicated pins for
-each LED in each group. Those pins might have an alternative usage (as
-an GPIO) but you cannot change a LED from a group to another in SW.
-That's why I thought it was a thing to be described in the DT.
-
->          Andrew
-
-Regards,
-
-Luiz
