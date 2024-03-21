@@ -1,457 +1,234 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9FA959151
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 12:06:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9B5768F3
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 12:06:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711022780; cv=none; b=ITscU0yDbSHyUhYiHEZC/m7Iv6aH2uv5SadPy84c/D91GOYT3Vlske67BZtMw2W6iWGvNiI8o9N//OskChGyNDfFt2wOBIC4m2iax9bdczKrzcqtigHf1kaoIfLogGs+8Y5+IdF31clMUY3ptdo74vHRKWbucXEirSdkoUiyQkU=
+	t=1711022787; cv=none; b=pm1rJIt0GFdJtZiZNHcTsss4PennvjXKvbEeNWJOGwGFqiLd2wCEbuR3Iw81oBXMqlhFflw8EB5ytJgNyQld2tl4wiK5/BhrB8ruP38gL+T4TAvAg3Ivp7XN2zS1dWcp44fq9OAL/uZbofR1CP0D6YsyrDw4foaV+aACzN3Njmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711022780; c=relaxed/simple;
-	bh=QASwfGdSuzy6EEPEnU+sY1VuYAfopJAlnTbZFdE4mMo=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ViMn2ypc5THR5Ev43AyMLCWfhw+fMLubGwfgkG0Sa6sp7ITWj/wnTmp97LCieAvTJPsLcmiS4uoFdNEvSxZ6CUPS77jD8CdYGRD0FNFOugkWUcJfSTBZ1qXK9f2kLZpUOrrzO1vr4n47JiLNZV01MS5BKhCbKkY6iEi/TCsT99o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QKxq8ahm; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1711022787; c=relaxed/simple;
+	bh=k3CJSaMRAsHvZqgMfwvwOFoj47VDXS22sIOAMkNiMLA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nwQkzJ+ywIQZ38BHh+ipf70xousAxrb7GpZQUGQ24IvgVJMrl4gq+XUzZsUQEtf9vxWAl1Wjgjfnd4NzND0GsPCMh/poI1Npvv3U+kK+7cU0EtmroX+9qGIg/UHmE9cGm2e8PVgwxiCuUWFwp2D+Eu38TmbDcgzAQrnpTrkbdMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Of4woWHx; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QKxq8ahm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Of4woWHx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711022777;
+	s=mimecast20190719; t=1711022784;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7c8SHX9PRl72d3TEoBTDUEjPkhyVNdn8tRoFEHvIMNk=;
-	b=QKxq8ahmJJBAHIZk96yn2143/Jdo3X2aUct9XnLHM5DQn/cwB8BDSc+yVeBnUatkTlADGA
-	LBuVZyH4FSghCCKLJzUXcuPEx/eIQVnqg1CAFKKvL7CLjMxt72xSKmpwfSWrzTMW9OI32J
-	R07KMCZtgw+gLp/z7z5FpuqbPh2Nc7M=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=MaftwFTntyTyuVDa9i6qNAWKdEHOXUZrSNQMfaI1f0M=;
+	b=Of4woWHxFKyvvfzRQv/NnoYoeGzZO5GGRXhObwWmvralrSwzKNtwMZKiyUtDoKg91OUowe
+	iu5+KgtlqTTUHK4bfLzLQuS26qw4Fx0ycnhzcAAzXm3ewWwgm8K116vQSQ3OiU3TgAw7XW
+	ig6/erIHx0+Oq23B445XQ31qM6mQk/Y=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-551-ztA-M2SFNwGg7YcBNfqvzA-1; Thu, 21 Mar 2024 08:06:15 -0400
-X-MC-Unique: ztA-M2SFNwGg7YcBNfqvzA-1
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-1def3c93e28so5500555ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 05:06:15 -0700 (PDT)
+ us-mta-363-BrqeK4P_Ma6YMp9NcjlbVQ-1; Thu, 21 Mar 2024 08:06:23 -0400
+X-MC-Unique: BrqeK4P_Ma6YMp9NcjlbVQ-1
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-1e027e54554so9148835ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 05:06:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711022775; x=1711627575;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7c8SHX9PRl72d3TEoBTDUEjPkhyVNdn8tRoFEHvIMNk=;
-        b=Ucszrd0t8PQawfeOIBpvEDAAnB/8Hs9AdHlfWI6eVIVdCKjd7mTvqcNcOBsjmmxzW6
-         ALP9pOb0qfuycfKqJpUMNTD5GftrFDM8yeKjUXeIufEJJ5hvquna12/jY4lXDNsYojx6
-         6cKtICXaxLNc8EVydjPGUSvnaD+LgGZ+CenXw33uEsabIbDOKO1UyKq20jjEb3lD3dCE
-         /OeZILJ2jLuxmHuOpMb5xrRODOyl0gy634xO7YVMuySYuA3UlE4gNH0QnphVYpxK+6g2
-         j6jQHbyNBn385GO5fInsup4P4qXtKBbqwqlSo6nxxmRVaJNg6tlm5bTYHQMJlOhtixCR
-         B+1Q==
-X-Gm-Message-State: AOJu0Yz7Wg/Q46PJUouqU5VMEasat94JbQy8T+1vv+R0i4S/fTI5Xr7a
-	Suu29gw+5g2uC99zqAzgIQgkYoTyqHLD/BJ0eFF/ASDr1rem1ZgHg6Eu0vsFsrAD4DnhMMYle8p
-	mtEDGyj5LEPTpIUXHRbWjdiQES4jnFc4d3krl/GRvyTTMFwUbTsIGupbEdsYAWQ==
-X-Received: by 2002:a17:902:d2c4:b0:1de:fbc8:53af with SMTP id n4-20020a170902d2c400b001defbc853afmr21936221plc.25.1711022774695;
-        Thu, 21 Mar 2024 05:06:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGrqoaUZurKlk6Wnf9uE+37UHv/MGHIPnA2ca16qGUyUI1ZZR8O7rIgCgFJgKWyvSp4NxsJaQ==
-X-Received: by 2002:a17:902:d2c4:b0:1de:fbc8:53af with SMTP id n4-20020a170902d2c400b001defbc853afmr21936180plc.25.1711022774260;
-        Thu, 21 Mar 2024 05:06:14 -0700 (PDT)
-Received: from fc37-ani ([115.96.142.122])
-        by smtp.googlemail.com with ESMTPSA id jb2-20020a170903258200b001dd74bc21a9sm8699277plb.291.2024.03.21.05.06.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 05:06:13 -0700 (PDT)
-Date: Thu, 21 Mar 2024 17:36:05 +0530 (IST)
-From: Ani Sinha <anisinha@redhat.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-    "K. Y. Srinivasan" <kys@microsoft.com>, 
-    Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-    Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
-    Olaf Hering <olaf@aepfle.de>, Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v4] hv/hv_kvp_daemon: Handle IPv4 and Ipv6 combination
- for keyfile format
-In-Reply-To: <A940B76F-8409-4147-8C09-DB2B3FD2EAF5@redhat.com>
-Message-ID: <0aef5a81-8b8c-6165-d05d-77c9cf639ebd@redhat.com>
-References: <1710933451-6312-1-git-send-email-shradhagupta@linux.microsoft.com> <9879EB6C-FEC4-42AD-8B40-90457455F0DD@redhat.com> <A940B76F-8409-4147-8C09-DB2B3FD2EAF5@redhat.com>
+        d=1e100.net; s=20230601; t=1711022782; x=1711627582;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MaftwFTntyTyuVDa9i6qNAWKdEHOXUZrSNQMfaI1f0M=;
+        b=MxP0oq3ZpENoqo3kZh7tJ+HRXiDicR+KdmMR/ywTXYY7B5zgHpuluA+LNIPVvrbsg0
+         ZUr8+/B0TQRZtGBeqYaui4i9W3+zvBPQnz0wdlllpDil9348wIKz+Eyl2DdNURfs2Reu
+         ngYts9zMJV3bKKVHK6G8VO9k07c6OMBjTPztRW1FOT5IB+sYL++k7y56fxdsjkL5FrXY
+         fKq45HEZrqoqmqp8xqmNX7J+PruLrAMx0vqxHEJujysoGP1d4BSZ7rc1HQGe6+h+lBHr
+         0Z0c+avlwJI4oq8S7RD7MfOXdp89H9Z8XXZOhT9UjxU03BZlkAeOYKpqV5IKcvMnb75a
+         Jj5A==
+X-Forwarded-Encrypted: i=1; AJvYcCVEoPn18D+LaXveE7D0f7fUNeptevTJ8YBe/TuRPY/hyhGfQswYQTC715eahJeSq6QM8AugJWmdpjku1qk5JD/cR7+UwNhLkw6ihRis
+X-Gm-Message-State: AOJu0YxPC6JKcU8gHVASWF308+ID582p6yn+keC6J0xNKqcscWTTJtSJ
+	6w+4H10n7seI/PQO5FKKEq8OXBoFFWgCP8TBJa3Rhsw3wWDS3Dn66pXYYbb1W0TuvW6j8EZeNKT
+	B+EfalFToMNp+Fq9gCGq85hat+fh+2lKGgoFcEvNeDww2vFA5Mu2HLJb7auY3GA==
+X-Received: by 2002:a17:902:d549:b0:1dd:93f3:d575 with SMTP id z9-20020a170902d54900b001dd93f3d575mr5914492plf.30.1711022782361;
+        Thu, 21 Mar 2024 05:06:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IECnTXS5JWKv1pXKbA06u3gvbc+DZ5MivOM5zLUIw9sRi+g/m+s1qUdZJQCXBTcImopf4ZsuA==
+X-Received: by 2002:a17:902:d549:b0:1dd:93f3:d575 with SMTP id z9-20020a170902d54900b001dd93f3d575mr5914451plf.30.1711022781958;
+        Thu, 21 Mar 2024 05:06:21 -0700 (PDT)
+Received: from [192.168.68.51] ([43.252.115.31])
+        by smtp.gmail.com with ESMTPSA id j11-20020a17090276cb00b001dd88a5dc47sm5893220plt.290.2024.03.21.05.06.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Mar 2024 05:06:21 -0700 (PDT)
+Message-ID: <fa91d7bc-f4e5-4a1b-b35a-8e0ccfe1af2b@redhat.com>
+Date: Thu, 21 Mar 2024 22:06:15 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="-1463778935-701159659-1711022773=:180274"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] virtio_ring: Fix the stale index in available ring
+Content-Language: en-US
+To: Keir Fraser <keirf@google.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Will Deacon <will@kernel.org>,
+ virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+ jasowang@redhat.com, xuanzhuo@linux.alibaba.com, yihyu@redhat.com,
+ shan.gavin@gmail.com, linux-arm-kernel@lists.infradead.org,
+ Catalin Marinas <catalin.marinas@arm.com>, mochs@nvidia.com
+References: <20240314074923.426688-1-gshan@redhat.com>
+ <20240318165924.GA1824@willie-the-truck>
+ <35a6bcef-27cf-4626-a41d-9ec0a338fe28@redhat.com>
+ <20240319182251.GB3121@willie-the-truck>
+ <9500adaf-0075-4ae9-92db-7e310b6598b0@redhat.com>
+ <20240319203540-mutt-send-email-mst@kernel.org>
+ <3a6c8b23-af9c-47a7-8c22-8e0a78154bd3@redhat.com>
+ <ZfsZljA_mmHKkBsA@google.com>
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <ZfsZljA_mmHKkBsA@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 3/21/24 03:15, Keir Fraser wrote:
+> On Wed, Mar 20, 2024 at 03:24:16PM +1000, Gavin Shan wrote:
+>>
+>> Before this patch was posted, I had debugging code to record last 16 transactions
+>> to the available and used queue from guest and host side. It did reveal the wrong
+>> head was fetched from the available queue.
+>>
+>> [   11.785745] ================ virtqueue_get_buf_ctx_split ================
+>> [   11.786238] virtio_net virtio0: output.0:id 74 is not a head!
+>> [   11.786655] head to be released: 036 077
+>> [   11.786952]
+>> [   11.786952] avail_idx:
+>> [   11.787234] 000  63985  <--
+>> [   11.787237] 001  63986
+>> [   11.787444] 002  63987
+>> [   11.787632] 003  63988
+>> [   11.787821] 004  63989
+>> [   11.788006] 005  63990
+>> [   11.788194] 006  63991
+>> [   11.788381] 007  63992
+>> [   11.788567] 008  63993
+>> [   11.788772] 009  63994
+>> [   11.788957] 010  63995
+>> [   11.789141] 011  63996
+>> [   11.789327] 012  63997
+>> [   11.789515] 013  63998
+>> [   11.789701] 014  63999
+>> [   11.789886] 015  64000
+> 
+> Does the error always occur at such a round idx value?
+> 
+> Here, 64000 == 0xFA00. Maybe coincidence but it's improbable enough to be interesting.
+> 
+> This debug code seems rather useful!
+> 
 
----1463778935-701159659-1711022773=:180274
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Keir, Nope, it's just coincidence. We don't have such kind of pattern.
 
+Thanks,
+Gavin
 
-
-On Thu, 21 Mar 2024, Ani Sinha wrote:
-
->
->
-> > On 21 Mar 2024, at 09:25, Ani Sinha <anisinha@redhat.com> wrote:
-> >
-> >
-> >
-> >> On 20 Mar 2024, at 16:47, Shradha Gupta <shradhagupta@linux.microsoft.com> wrote:
-> >>
-> >> If the network configuration strings are passed as a combination of IPv4
-> >> and IPv6 addresses, the current KVP daemon does not handle processing for
-> >> the keyfile configuration format.
-> >> With these changes, the keyfile config generation logic scans through the
-> >> list twice to generate IPv4 and IPv6 sections for the configuration files
-> >> to handle this support.
-> >>
-> >> Testcases ran:Rhel 9, Hyper-V VMs
-> >>             (IPv4 only, IPv6 only, IPv4 and IPv6 combination)
-> >> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> >> ---
-> >> Changes in v4
-> >> * Removed the unnecessary memset for addr in the start
-> >> * Added a comment to describe how we erase the last comma character
-> >> * Fixed some typos in the commit description
-> >> * While using strncat, skip copying the '\0' character.
-> >> ---
-> >> tools/hv/hv_kvp_daemon.c | 181 ++++++++++++++++++++++++++++++---------
-> >> 1 file changed, 140 insertions(+), 41 deletions(-)
-> >>
-> >> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-> >> index 318e2dad27e0..d64d548a802f 100644
-> >> --- a/tools/hv/hv_kvp_daemon.c
-> >> +++ b/tools/hv/hv_kvp_daemon.c
-> >> @@ -76,6 +76,12 @@ enum {
-> >> DNS
-> >> };
-> >>
-> >> +enum {
-> >> + IPV4 = 1,
-> >> + IPV6,
-> >> + IP_TYPE_MAX
-> >> +};
-> >> +
-> >> static int in_hand_shake;
-> >>
-> >> static char *os_name = "";
-> >> @@ -102,6 +108,11 @@ static struct utsname uts_buf;
-> >>
-> >> #define MAX_FILE_NAME 100
-> >> #define ENTRIES_PER_BLOCK 50
-> >> +/*
-> >> + * Change this entry if the number of addresses increases in future
-> >> + */
-> >> +#define MAX_IP_ENTRIES 64
-> >> +#define OUTSTR_BUF_SIZE ((INET6_ADDRSTRLEN + 1) * MAX_IP_ENTRIES)
-> >>
-> >> struct kvp_record {
-> >> char key[HV_KVP_EXCHANGE_MAX_KEY_SIZE];
-> >> @@ -1171,6 +1182,18 @@ static int process_ip_string(FILE *f, char *ip_string, int type)
-> >> return 0;
-> >> }
-> >>
-> >> +int ip_version_check(const char *input_addr)
-> >> +{
-> >> + struct in6_addr addr;
-> >> +
-> >> + if (inet_pton(AF_INET, input_addr, &addr))
-> >> + return IPV4;
-> >> + else if (inet_pton(AF_INET6, input_addr, &addr))
-> >> + return IPV6;
-> >> +
-> >> + return -EINVAL;
-> >> +}
-> >> +
-> >> /*
-> >> * Only IPv4 subnet strings needs to be converted to plen
-> >> * For IPv6 the subnet is already privided in plen format
-> >> @@ -1197,14 +1220,75 @@ static int kvp_subnet_to_plen(char *subnet_addr_str)
-> >> return plen;
-> >> }
-> >>
-> >> +static int process_dns_gateway_nm(FILE *f, char *ip_string, int type,
-> >> +  int ip_sec)
-> >> +{
-> >> + char addr[INET6_ADDRSTRLEN], *output_str;
-> >> + int ip_offset = 0, error = 0, ip_ver;
-> >> + char *param_name;
-> >> +
-> >> + if (type == DNS)
-> >> + param_name = "dns";
-> >> + else if (type == GATEWAY)
-> >> + param_name = "gateway";
-> >> + else
-> >> + return -EINVAL;
-> >> +
-> >> + output_str = (char *)calloc(OUTSTR_BUF_SIZE, sizeof(char));
-> >> + if (!output_str)
-> >> + return -ENOMEM;
-> >> +
-> >> + while (1) {
-> >> + memset(addr, 0, sizeof(addr));
-> >> +
-> >> + if (!parse_ip_val_buffer(ip_string, &ip_offset, addr,
-> >> + (MAX_IP_ADDR_SIZE * 2)))
-> >> + break;
-> >> +
-> >> + ip_ver = ip_version_check(addr);
-> >> + if (ip_ver < 0)
-> >> + continue;
-> >> +
-> >> + if ((ip_ver == IPV4 && ip_sec == IPV4) ||
-> >> +    (ip_ver == IPV6 && ip_sec == IPV6)) {
-> >> + /*
-> >> + * do a bound check to avoid out-of bound writes
-> >> + */
-> >> + if ((OUTSTR_BUF_SIZE - strlen(output_str)) >
-> >> +    (strlen(addr) + 1)) {
-> >> + strncat(output_str, addr,
-> >> + OUTSTR_BUF_SIZE -
-> >> + strlen(output_str) - 1);
-> >> + strncat(output_str, ",",
-> >> + OUTSTR_BUF_SIZE -
-> >> + strlen(output_str) - 1);
-> >> + }
-> >> + } else {
-> >> + continue;
-> >> + }
-> >> + }
-> >> +
-> >> + if (strlen(output_str)) {
-> >> + /*
-> >> + * This is to get rid of that extra comma character
-> >> + * in the end of the string
-> >> + */
-> >> + output_str[strlen(output_str) - 1] = '\0';
-> >> + error = fprintf(f, "%s=%s\n", param_name, output_str);
-> >> + }
-> >> +
-> >> + free(output_str);
-> >> + return error;
-> >> +}
-> >> +
-> >> static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
-> >> - int is_ipv6)
-> >> + int ip_sec)
-> >> {
-> >> char addr[INET6_ADDRSTRLEN];
-> >> char subnet_addr[INET6_ADDRSTRLEN];
-> >> int error, i = 0;
-> >> int ip_offset = 0, subnet_offset = 0;
-> >> - int plen;
-> >> + int plen, ip_ver;
-> >>
-> >> memset(addr, 0, sizeof(addr));
-> >> memset(subnet_addr, 0, sizeof(subnet_addr));
-> >> @@ -1216,10 +1300,16 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
-> >>      subnet_addr,
-> >>      (MAX_IP_ADDR_SIZE *
-> >> 2))) {
-> >> - if (!is_ipv6)
-> >> + ip_ver = ip_version_check(addr);
-> >> + if (ip_ver < 0)
-> >> + continue;
-> >> +
-> >> + if (ip_ver == IPV4 && ip_sec == IPV4)
-> >> plen = kvp_subnet_to_plen((char *)subnet_addr);
-> >> - else
-> >> + else if (ip_ver == IPV6 && ip_sec == IPV6)
-> >> plen = atoi(subnet_addr);
-> >> + else
-> >> + continue;
-> >>
-> >> if (plen < 0)
-> >> return plen;
-> >> @@ -1238,12 +1328,11 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
-> >>
-> >> static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
-> >> {
-> >> - int error = 0;
-> >> + int error = 0, ip_ver;
-> >> char if_filename[PATH_MAX];
-> >> char nm_filename[PATH_MAX];
-> >> FILE *ifcfg_file, *nmfile;
-> >> char cmd[PATH_MAX];
-> >> - int is_ipv6 = 0;
-> >> char *mac_addr;
-> >> int str_len;
-> >>
-> >> @@ -1421,52 +1510,62 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
-> >> if (error)
-> >> goto setval_error;
-> >>
-> >> - if (new_val->addr_family & ADDR_FAMILY_IPV6) {
-> >> - error = fprintf(nmfile, "\n[ipv6]\n");
-> >> - if (error < 0)
-> >> - goto setval_error;
-> >> - is_ipv6 = 1;
-> >> - } else {
-> >> - error = fprintf(nmfile, "\n[ipv4]\n");
-> >> - if (error < 0)
-> >> - goto setval_error;
-> >> - }
-> >> -
-> >> /*
-> >> - * Now we populate the keyfile format
-> >> + * The keyfile format expects the IPv6 and IPv4 configuration in
-> >> + * different sections. Therefore we iterate through the list twice,
-> >> + * once to populate the IPv4 section and the next time for IPv6
-> >> */
-> >> + ip_ver = IPV4;
-> >> + do {
-> >> + if (ip_ver == IPV4) {
-> >> + error = fprintf(nmfile, "\n[ipv4]\n");
-> >> + if (error < 0)
-> >> + goto setval_error;
-> >> + } else {
-> >> + error = fprintf(nmfile, "\n[ipv6]\n");
-> >> + if (error < 0)
-> >> + goto setval_error;
-> >> + }
-> >>
-> >> - if (new_val->dhcp_enabled) {
-> >> - error = kvp_write_file(nmfile, "method", "", "auto");
-> >> - if (error < 0)
-> >> - goto setval_error;
-> >> - } else {
-> >> - error = kvp_write_file(nmfile, "method", "", "manual");
-> >> + /*
-> >> + * Now we populate the keyfile format
-> >> + */
-> >> +
-> >> + if (new_val->dhcp_enabled) {
-> >> + error = kvp_write_file(nmfile, "method", "", "auto");
-> >> + if (error < 0)
-> >> + goto setval_error;
-> >> + } else {
-> >> + error = kvp_write_file(nmfile, "method", "", "manual");
-> >> + if (error < 0)
-> >> + goto setval_error;
-> >
-> > There is a problem with this code. dhcp_enabled is only valid for ipv4. From looking at ifcfg files that were generated before, I do not see IPV6_AUTOCONF related settings.
->
-> So dhcp_enabled comes from running hv_get_shcp_info.sh which greps for “dhcp” in ifcfg files. If it is a hit, it sets dhcp_enabled to true.
-> The ifcfg files will have “dhcp” only if it’s set in BOOTPROTO=dhcp. So it is indeed ipv4 specific.
->
-> > So maybe we should set method only for ipv4 and not for ipv6.
-
-After some internal testing, it seems we need to set some method for both,
-otherwise, nm is complaining. Therefore, I propose the following patch
-
-From e1c3f4ece2c4bd191369582d84b8b508db5b5510 Mon Sep 17 00:00:00 2001
-From: Ani Sinha <anisinha@redhat.com>
-Date: Thu, 21 Mar 2024 10:00:26 +0530
-Subject: [PATCH] Handle dhcp configuration properly for ipv4 and ipv6
-
-dhcp_enabled is only valid for ipv4. So do not set dhcp methods for ipv6 based
-on dhcp_enabled flag. For ipv4, set method to manual only when dhcp_enabled is
-false and specific ipv4 addresses are configured. If neither dhcp_enabled is
-true and no ipv4 addresses are configured, set method to 'disabled'.
-
-For ipv6, set method to manual when we configure ipv6 addresses. Otherwise set
-method to 'auto' so that SLAAC from RA may be used.
-
-Signed-off-by: Ani Sinha <anisinha@redhat.com>
----
- hv_kvp_daemon.c | 57 +++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 41 insertions(+), 16 deletions(-)
-
-diff --git a/hv_kvp_daemon.c b/hv_kvp_daemon.c
-index b368d3d..a0e6e4a 100644
---- a/hv_kvp_daemon.c
-+++ b/hv_kvp_daemon.c
-@@ -1286,7 +1286,7 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
- {
- 	char addr[INET6_ADDRSTRLEN];
- 	char subnet_addr[INET6_ADDRSTRLEN];
--	int error, i = 0;
-+	int error = 0, i = 0;
- 	int ip_offset = 0, subnet_offset = 0;
- 	int plen, ip_ver;
-
-@@ -1323,7 +1323,7 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
- 		memset(subnet_addr, 0, sizeof(subnet_addr));
- 	}
-
--	return 0;
-+	return error;
- }
-
- static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
-@@ -1511,6 +1511,8 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
- 		goto setval_error;
-
- 	/*
-+	 * Now we populate the keyfile format
-+	 *
- 	 * The keyfile format expects the IPv6 and IPv4 configuration in
- 	 * different sections. Therefore we iterate through the list twice,
- 	 * once to populate the IPv4 section and the next time for IPv6
-@@ -1527,20 +1529,6 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
- 				goto setval_error;
- 		}
-
--		/*
--		 * Now we populate the keyfile format
--		 */
--
--		if (new_val->dhcp_enabled) {
--			error = kvp_write_file(nmfile, "method", "", "auto");
--			if (error < 0)
--				goto setval_error;
--		} else {
--			error = kvp_write_file(nmfile, "method", "", "manual");
--			if (error < 0)
--				goto setval_error;
--		}
--
- 		/*
- 		 * Write the configuration for ipaddress, netmask, gateway and
- 		 * name services
-@@ -1551,6 +1539,43 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
- 		if (error < 0)
- 			goto setval_error;
-
-+		if (ip_ver == IPV4) {
-+			if (new_val->dhcp_enabled) {
-+				error = kvp_write_file(nmfile, "method", "", "auto");
-+				if (error < 0)
-+					goto setval_error;
-+			} else if (error) {
-+				/* if ipv4 addresses were written, set method to 'manual' */
-+				error = kvp_write_file(nmfile, "method", "", "manual");
-+				if (error < 0)
-+					goto setval_error;
-+			} else {
-+				/*
-+				 * if no ipv4 addresses were set and dhcp was not enabled,
-+				 * disable ipv4 configuration.
-+				 */
-+				error = kvp_write_file(nmfile, "method", "", "disabled");
-+				if (error < 0)
-+					goto setval_error;
-+			}
-+
-+		} else if (ip_ver == IPV6) {
-+			if (error) {
-+				/* if ipv6 addresses were written, set method to 'manual' */
-+				error = kvp_write_file(nmfile, "method", "", "manual");
-+				if (error < 0)
-+					goto setval_error;
-+			} else {
-+				/*
-+				 * By default for ipv6, set method to 'auto' so that
-+				 * SLAAC in RA can be used to configure the interface
-+				 */
-+				error = kvp_write_file(nmfile, "method", "", "auto");
-+				if (error < 0)
-+					goto setval_error;
-+			}
-+		}
-+
- 		error = process_dns_gateway_nm(nmfile,
- 					       (char *)new_val->gate_way,
- 					       GATEWAY, ip_ver);
--- 
-2.39.2
-
----1463778935-701159659-1711022773=:180274--
+> 
+> 
+>> [   11.790068]
+>> [   11.790068] avail_head:
+>> [   11.790529] 000  075  <--
+>> [   11.790718] 001  036
+>> [   11.790890] 002  077
+>> [   11.791061] 003  129
+>> [   11.791231] 004  072
+>> [   11.791400] 005  130
+>> [   11.791574] 006  015
+>> [   11.791748] 007  074
+>> [   11.791918] 008  130
+>> [   11.792094] 009  130
+>> [   11.792263] 010  074
+>> [   11.792437] 011  015
+>> [   11.792617] 012  072
+>> [   11.792788] 013  129
+>> [   11.792961] 014  077    // The last two heads from guest to host: 077, 036
+>> [   11.793134] 015  036
+>>
+>> [root@nvidia-grace-hopper-05 qemu.main]# cat /proc/vhost
+>>
+>> avail_idx
+>> 000  63998
+>> 001  64000
+>> 002  63954  <---
+>> 003  63955
+>> 004  63956
+>> 005  63974
+>> 006  63981
+>> 007  63984
+>> 008  63986
+>> 009  63987
+>> 010  63988
+>> 011  63989
+>> 012  63992
+>> 013  63993
+>> 014  63995
+>> 015  63997
+>>
+>> avail_head
+>> 000  074
+>> 001  015
+>> 002  072
+>> 003  129
+>> 004  074            // The last two heads seen by vhost is: 074, 036
+>> 005  036
+>> 006  075  <---
+>> 007  036
+>> 008  077
+>> 009  129
+>> 010  072
+>> 011  130
+>> 012  015
+>> 013  074
+>> 014  130
+>> 015  130
+>>
+>> used_idx
+>> 000  64000
+>> 001  63882  <---
+>> 002  63889
+>> 003  63891
+>> 004  63898
+>> 005  63936
+>> 006  63942
+>> 007  63946
+>> 008  63949
+>> 009  63953
+>> 010  63957
+>> 011  63981
+>> 012  63990
+>> 013  63992
+>> 014  63993
+>> 015  63999
+>>
+>> used_head
+>> 000  072
+>> 001  129
+>> 002  074          // The last two heads published to guest is: 074, 036
+>> 003  036
+>> 004  075  <---
+>> 005  036
+>> 006  077
+>> 007  129
+>> 008  072
+>> 009  130
+>> 010  015
+>> 011  074
+>> 012  130
+>> 013  130
+>> 014  074
+>> 015  015
+>>
+>> Thanks,
+>> Gavin
+>>
+>>
+>>
+>>
+> 
 
