@@ -1,138 +1,137 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90917482E1
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 18:26:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1116E79C3;
+	Thu, 21 Mar 2024 18:29:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711045585; cv=none; b=seFADQC8bsGzIlYnaHpuo/MRqmtkEex8TLi9iuhKXcU6gZ9CSkhlOCjEjAAGPUa9ydZZxFelw0tsL5eF3Mzj/7zXE6HcfTBTLBTTPzhXi2IdBfTeiYzIxbh+tNohkJqgNm2wdFPQDNd0MrO8T4LssStiUFpoJt7qQjlRUMXOqV4=
+	t=1711045746; cv=none; b=Kw2arp/VyeTwT4+WqxfYKi50mIWg1kOekGwSXV8+oxZ5fEtkFCMFVIgtZQVVCBAoHR5WAEwKuxdGIvA7ZKdU1nNO32AoE6+7Q3Vo4B0cQsomJezNKz1KzR6lBIiHdZRXoXPU8hBE+2AyfYdrxZTRQq7PEfjm5stXJzHTm4Do1Wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711045585; c=relaxed/simple;
-	bh=SZgluvydT/EGvnA/dZrr4njmDWq5+XZCplcvNunBWIU=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=mdUDxTzwK2pI1tIa3V3yvoutIi/xzm9PzguI4O01A1+5AyytmU0FwS6N1MDVtXivYTbwiph4xXLN4ShWe9eLqfD2x0V5Fywie3g2QPIew4xjEPaJSGMISW7ttxCXJS+IJ46BLzhPs2jhYeU9NhbM4s72JebyDqEIIwLD8RoRKrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7cbf1d5d35bso140750539f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 11:26:23 -0700 (PDT)
+	s=arc-20240116; t=1711045746; c=relaxed/simple;
+	bh=zAYATeMtAMSyXywpEjHIrjoVSN0gBr394TEV8OH5uaM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U/6bYQ2PwU4V//c6WLBYighlX3h2z1NXA3o1+qs6oBj/3cscUzRusXNiVLY3ppreDlWlIBCH7GPRJCj80nXnt/ROznYV3x/7u0dzgweA2M4ut99ntD1ZczmWWbIPCEWX5KPGbYEInJ3zRvNs9BI8KUeFTw5e2/m/+IAyCV4AesY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dk50kXp0; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dk50kXp0"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d4a901e284so28531781fa.1;
+        Thu, 21 Mar 2024 11:29:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711045743; x=1711650543; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Vs5BZUwaXWyx9DjsP3hmBPa0Q/mMIBukAIBdGCnvVlg=;
+        b=dk50kXp00FStVEFHbmgDVFXONESk+IqBY23Mkyxa8P/WJHVSsZ+K4kAKeWter0TanJ
+         jPd6/UOqvBafj8WJJatfx3nGAA+2Y0+uF2ZdAgtnYwQcNQ8B9/Up+Ami0uw4Eu76+3ML
+         N67CpQxmxqaxZCiQl5TLlcM7h06EtLyqcB47XPFjM6HURZubyC9ei5cqJ2YiwiDFQttz
+         FsMEpgRKp2DLFdejwr0ikDB6Wtz6NSzXamYqdz4hYFZDxp29gLF4zCY3Ug6rE9vr8VgK
+         1Ss/kCmnIwOChwNgcDM5eEAMiMrY7hYV8UJRBi6X9u+WQlmJRt9js0Oe57Drzo6orzPx
+         A49Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711045583; x=1711650383;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
+        d=1e100.net; s=20230601; t=1711045743; x=1711650543;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gGGGJ6hS+NX1gIEP6zG3HfxGpBxruXr4DhrSeWnJUq0=;
-        b=KXSlgfLz6JscYLwG6ex7EAvMmGPfambTUidSCtfdq8yb4njOS/JKG1Vy3OdFOZbVXn
-         7axYFUe7fsKij+ZpbSYbBR1W0UIFzDUcA0x0CggXolBsdmmj/H6s1yC4KwFbUfeDZbvh
-         egF0tMiwitaT1Lwln06rkwSQ9lwF4kVsjSr9HSLu91WH8MTCYhYWX85JSPjujTfqFe+f
-         bT/1xjKm3Rt5xb2huNRdum56U8GBY2Cape6RxD5j7rjCKZQ1RFcNNI/3M6xBS2QdUFc3
-         VT/gKo6ivCVk2Teq6oPIObEKcdUoLle0PHrvpuXCnxp15tzzWS5UFCodwuHsbf2CQoYg
-         f8uA==
-X-Forwarded-Encrypted: i=1; AJvYcCV8R67QKgGZUdBUDELDGA4d1gykwVYcEluELLltf/mUMuHl8dOSd43R4x0rOc3HlCOIrx0AV1ASfCnop1r6qMEUlgoX8GVTZBh8vwVA
-X-Gm-Message-State: AOJu0YwQKNgpT3uRBF8kp5eH++/XzZ+BxE/UHam55zsma0TKtHAc/bOT
-	1L1R3EaXjav1NwzntpMObFUoVGVbIOocMzqTdX/i8jSmelSwyfFzmubUS/rVjzqT/XiPNtLWYGI
-	g41AGfxt3WV4w2bO+em9cqI39px3MMJwScL5fW41IWZJ3ta97ObQSjO0=
-X-Google-Smtp-Source: AGHT+IEzP9RQul65NSXzneKuudOdALyA2dyeNUf+LKuf/Nf3oynssdZsGa0i02ku//6FChBjtl5SnfQsZDXJK5VBLP6v7KRISl4N
+        bh=Vs5BZUwaXWyx9DjsP3hmBPa0Q/mMIBukAIBdGCnvVlg=;
+        b=SP3XxRY5L4F9VxOXNNyOJ9E1in9zGGlD7RxjQsKbz3LcP3HeJBx89FhLsQx0dV3U3/
+         AcrjL4bqaogswOeHfYGu6ur8227fKAH5nT1vzVQ5IPw3nyJi2czK5FXL8tix01yYJ9sN
+         vD1/e0ajUFL6QJuxLgU1Y+Q0TySwG2TVV2FNtlwz7OKiZa8X4MJCdibX0rkv1lStgPcp
+         KQ3FUN2azTfWnUEw7JRjRosW3Z9A1f7Q92rKa/HQwrowlk3OAseDbsLoaqvn360T2W8J
+         IxdhZhhPVY6nvL7JrGIL5Tll/uC/ZANgYoe/4YtrC57tj0XJAdOATQaLsV+WIGnPRi1x
+         9fCw==
+X-Forwarded-Encrypted: i=1; AJvYcCWGQktJbh9d0cstj7lgpw2y1S5hcP4I8ZqS8Z8ed3ctCb5dUQWhXW/1+oHhDCpUXgDBCMi5YuMhBd+I4aZzxObXpwT1Wpjm29g85pqmpDx3k8IQsuLuRkzg4HqRK9wnVkIAmNJcB5UkBw==
+X-Gm-Message-State: AOJu0Yy9TjDpDCTBp3jJ7U3NJ/eSU7Va8JsnI9BxzOv3ca+sLV1U7AwU
+	sBcPXw0eX64BKxctvXqJBFe0UJqSTk4U4YvLl76iQ8i5JIzPyYrW
+X-Google-Smtp-Source: AGHT+IHlLxV084PNF9KvdinqIY/5RnBQjRLaYTLjnsTeGxJShM01hzRIKLza1dnWvqk3W23qcD2dAA==
+X-Received: by 2002:a2e:9556:0:b0:2d4:7004:ba8a with SMTP id t22-20020a2e9556000000b002d47004ba8amr259463ljh.53.1711045742805;
+        Thu, 21 Mar 2024 11:29:02 -0700 (PDT)
+Received: from [10.0.0.42] (host-85-29-76-118.kaisa-laajakaista.fi. [85.29.76.118])
+        by smtp.gmail.com with ESMTPSA id p22-20020a2e9a96000000b002d45dd6004esm40852lji.121.2024.03.21.11.29.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Mar 2024 11:29:02 -0700 (PDT)
+Message-ID: <e6994ff1-6c32-4dac-846a-5f4f18b2f996@gmail.com>
+Date: Thu, 21 Mar 2024 20:31:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:270b:b0:474:c3b5:a8b7 with SMTP id
- m11-20020a056638270b00b00474c3b5a8b7mr238jav.6.1711045582799; Thu, 21 Mar
- 2024 11:26:22 -0700 (PDT)
-Date: Thu, 21 Mar 2024 11:26:22 -0700
-In-Reply-To: <000000000000ae28ce06112cb52e@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002854eb06142fd863@google.com>
-Subject: Re: [syzbot] [tipc?] [batman?] BUG: soft lockup in sys_sendmsg
-From: syzbot <syzbot+a6a4b5bb3da165594cff@syzkaller.appspotmail.com>
-To: a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org, davem@davemloft.net, 
-	edumazet@google.com, jmaloy@redhat.com, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch, 
-	netdev@vger.kernel.org, pabeni@redhat.com, sven@narfation.org, 
-	sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com, 
-	tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 13/13] ASoC: ti: davinci-i2s: Opitonally drive DX pin
+ during capture streams
+To: Bastien Curutchet <bastien.curutchet@bootlin.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, herve.codina@bootlin.com,
+ christophercordahi@nanometrics.ca
+References: <20240315112745.63230-1-bastien.curutchet@bootlin.com>
+ <20240315112745.63230-14-bastien.curutchet@bootlin.com>
+ <00182d1d-ef29-457f-9e3e-6e9b57592118@gmail.com>
+ <0bb26153-8bcb-475f-8892-5eb925fec538@bootlin.com>
+ <7925bbe5-17e8-42cb-a5f0-4f3e06810a90@gmail.com>
+ <d20dc37c-13fa-43d1-af52-dce8d8dcdd75@gmail.com>
+ <5467add6-0099-4e54-a4f7-12aa149d03c7@bootlin.com>
+Content-Language: en-US
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+In-Reply-To: <5467add6-0099-4e54-a4f7-12aa149d03c7@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-syzbot has found a reproducer for the following issue on:
+Hi Bastien,
 
-HEAD commit:    707081b61156 Merge branch 'for-next/core', remote-tracking..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=134d4fa5180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=caeac3f3565b057a
-dashboard link: https://syzkaller.appspot.com/bug?extid=a6a4b5bb3da165594cff
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=139a4c81180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=108b0ac9180000
+On 3/21/24 17:14, Bastien Curutchet wrote:
+>>> I think the definition of the 'ti,drive-dx' is somehow odd. It allows
+>>> you to set it to 0x1234 and the DX pin will show 0x1234 when you capture
+>>> 32bit. If you capture 16bit then it will transmit 0x12 (or 0x34?), no?
+>>> If you have 4 channel capture then I won't speculate what will be on the
+>>> DX pin ;)
+>>>
+>>> Would not be better to say that the DX pin will be driven low or high
+>>> during capture _and_ disable the playback support?
+>>
+>> After some thinking, it might be still better to use the DX pin as GPIO
+>> and either have a custom machine driver which would handle it (set low
+>> when a capture trigger happens) or connect it in DAPM as a supply, bias
+>> or something and ASoC would handle it automagically.
+>>
+>> I think that would be cleaner in many ways. What do you think?
+>>
+> I agree, that would be cleaner. I ran a few tests to see if that would
+> work on my hardware. It doesn't ... So I looked back to the schematics
+> and found two reasons :
+>  * the DX pin needs to be in sync with the clock.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/6cad68bf7532/disk-707081b6.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/1a27e5400778/vmlinux-707081b6.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/67dfc53755d0/Image-707081b6.gz.xz
+I'm not sure what this means, sync with which clock?
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a6a4b5bb3da165594cff@syzkaller.appspotmail.com
+>  * the DX pin needs to be in a high-impedance state between two frames
+>    so a pull-up can drive it back up. Actually, the DX pin is also
+>    linked to the FSR pin so it provides the frame clock to the capture
+>    stream.
 
-watchdog: BUG: soft lockup - CPU#0 stuck for 27s! [syz-executor227:7772]
-Modules linked in:
-irq event stamp: 5373
-hardirqs last  enabled at (5372): [<ffff80008ad68de8>] __exit_to_kernel_mode arch/arm64/kernel/entry-common.c:85 [inline]
-hardirqs last  enabled at (5372): [<ffff80008ad68de8>] exit_to_kernel_mode+0xdc/0x10c arch/arm64/kernel/entry-common.c:95
-hardirqs last disabled at (5373): [<ffff80008ad66a78>] __el1_irq arch/arm64/kernel/entry-common.c:533 [inline]
-hardirqs last disabled at (5373): [<ffff80008ad66a78>] el1_interrupt+0x24/0x68 arch/arm64/kernel/entry-common.c:551
-softirqs last  enabled at (542): [<ffff800088e9a56c>] spin_unlock_bh include/linux/spinlock.h:396 [inline]
-softirqs last  enabled at (542): [<ffff800088e9a56c>] release_sock+0x154/0x1b8 net/core/sock.c:3547
-softirqs last disabled at (548): [<ffff800088eaf8bc>] spin_lock_bh include/linux/spinlock.h:356 [inline]
-softirqs last disabled at (548): [<ffff800088eaf8bc>] lock_sock_nested+0x74/0x11c net/core/sock.c:3526
-CPU: 0 PID: 7772 Comm: syz-executor227 Not tainted 6.8.0-rc7-syzkaller-g707081b61156 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024
-pstate: 00400005 (nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : queued_spin_lock_slowpath+0x15c/0xcf8 kernel/locking/qspinlock.c:383
-lr : queued_spin_lock_slowpath+0x168/0xcf8 kernel/locking/qspinlock.c:383
-sp : ffff800097ca76c0
-x29: ffff800097ca7760 x28: 1fffe00018e1be6b x27: 1ffff00012f94ee4
-x26: dfff800000000000 x25: 1fffe00018e1be6d x24: ffff800097ca76e0
-x23: ffff800097ca7720 x22: ffff700012f94edc x21: 0000000000000001
-x20: 0000000000000001 x19: ffff0000c70df358 x18: 0000000000000000
-x17: 0000000000000000 x16: ffff8000809fd934 x15: 0000000000000001
-x14: 1fffe00018e1be6b x13: 0000000000000000 x12: 0000000000000000
-x11: ffff600018e1be6c x10: 1fffe00018e1be6b x9 : 0000000000000000
-x8 : 0000000000000001 x7 : ffff800088eaf8bc x6 : 0000000000000000
-x5 : 0000000000000000 x4 : 0000000000000001 x3 : ffff80008ae5db50
-x2 : 0000000000000000 x1 : 0000000000000001 x0 : 0000000000000001
-Call trace:
- __cmpwait_case_8 arch/arm64/include/asm/cmpxchg.h:229 [inline]
- __cmpwait arch/arm64/include/asm/cmpxchg.h:257 [inline]
- queued_spin_lock_slowpath+0x15c/0xcf8 kernel/locking/qspinlock.c:383
- queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
- do_raw_spin_lock+0x320/0x348 kernel/locking/spinlock_debug.c:116
- __raw_spin_lock_bh include/linux/spinlock_api_smp.h:127 [inline]
- _raw_spin_lock_bh+0x50/0x60 kernel/locking/spinlock.c:178
- spin_lock_bh include/linux/spinlock.h:356 [inline]
- lock_sock_nested+0x74/0x11c net/core/sock.c:3526
- lock_sock include/net/sock.h:1691 [inline]
- tipc_sendstream+0x50/0x84 net/tipc/socket.c:1550
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg net/socket.c:745 [inline]
- ____sys_sendmsg+0x56c/0x840 net/socket.c:2584
- ___sys_sendmsg net/socket.c:2638 [inline]
- __sys_sendmsg+0x26c/0x33c net/socket.c:2667
- __do_sys_sendmsg net/socket.c:2676 [inline]
- __se_sys_sendmsg net/socket.c:2674 [inline]
- __arm64_sys_sendmsg+0x80/0x94 net/socket.c:2674
- __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
- el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
- el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
- el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
+Hrm, you are using the DX pin as FSR for the capture? Why not McBSP.FSR pin?
 
+Looking back to the patch, one thing stood out: you are setting the
+XDATDLY to 2.
+You have some sort of T1 framing on the bus? The pullup will make the DX
+line high in for the framing bit, right?
+Or you simulate another FSR line with T1 framing DX?
 
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+The 'ti,drive-dx' sounds like a bad property for sure, you have T1
+framing and driving the DX to certain level.
+It is like DSP_A (1 bit delay) playing constant 0x2 ?
+
+Can you use aplay /dev/zero and a DT property to select T1 framing for
+the playback? Or that would be too coarse for timing the start of
+playback and capture?
+
+-- 
+Péter
