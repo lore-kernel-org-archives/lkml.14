@@ -1,129 +1,130 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900F718AE8;
-	Thu, 21 Mar 2024 16:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB4B137759;
+	Thu, 21 Mar 2024 16:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711039773; cv=none; b=tNOIBuFeBL7u/76Blp4ST0bk777S7e6oUbAlJoeKV/8UzqZB+R9ZBNp6j/aYZpH8lAhQdWmVY6aJkk29SiQlx3hlo9jvXqgpDCz3Mpi0vZQ/QWDKsRpRhVwypIcsYjm1DTGSmYeb4SWdXo2c99NdPKdMYIUsPnGmJOHPMFYCV/o=
+	t=1711039775; cv=none; b=JyNSXYQVroxwgR9rWQDcImpLfQwiKYBe1aZYvC2JD31Pfg6UtzByDJPxQv2s3+7Alg4SM9nl2LSLeTsT2iMXYJLIwMnH84vUUzIxS2WnVEqhNpflU9OqDv//uDV3zWnGG9rssiLL1Djb9YcfLqN1z8BIMhg51P8X5kaqyvwI4oM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711039773; c=relaxed/simple;
-	bh=msjSVfc4FMWJF0bIRPf2fnEnjPy6IJWQTOLnoiRoaB4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FX/UrOmpVi44qW94p4WMwPUQvNBkMFr3jsTja37Ta0WLNBFE6T/1M7z6hsQhwYcB+X/iyHLtuy+uT9/pWqvkVfvFUbkWQI8HcPxUTDosyASfRm+EQEvAS+RsGCtxJHws+dPgc5j/OvSFhrUAbNTL88wnwgjd72Vd5UmUGc2CoLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=bqrQpka9; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=bqrQpka9; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1711039775; c=relaxed/simple;
+	bh=DNdeAKw7uELy4zMBalpWTXvLgNXIKhXj6p88O9pPK+A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=G+ZQR8S1YLjILy2vDfYmV5aBjqL4e3gk78gn5ZXX8stIHPHF4eVmIdD0mj+DIF2Kfn6ccfseChId6+EzPJSqq5yESUKqqtE70sKLa/NKkyGCGcehDAIGk3YmCJj8aT3lPinNf3LR2JcmqoLGW4VRIMGeFbjpqg0zOxtKGm38fJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vIULKn7g; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yQGTe0bF; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="bqrQpka9";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="bqrQpka9"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B2C4B5D168;
-	Thu, 21 Mar 2024 16:49:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1711039768; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=SMjpEEFnZf7LG1TfNoc6vr0iLPwhwIh1iHx7zcmB9FU=;
-	b=bqrQpka9k4u6l34nqgEzirIVf/wi4+I8uL4eQuJamrHwtjoAweiWgUBaJ1ydBLJgCj8VZ/
-	Imuh7TPfvGKP1fY9tcYAxbIwUrGHOMV2px6rkwVC/ein6tHzsNGAgj7G9ei3I8amfcVkG7
-	izy9NnAgcHFWpVWMvPHRkDW4WUFu/p0=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1711039768; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=SMjpEEFnZf7LG1TfNoc6vr0iLPwhwIh1iHx7zcmB9FU=;
-	b=bqrQpka9k4u6l34nqgEzirIVf/wi4+I8uL4eQuJamrHwtjoAweiWgUBaJ1ydBLJgCj8VZ/
-	Imuh7TPfvGKP1fY9tcYAxbIwUrGHOMV2px6rkwVC/ein6tHzsNGAgj7G9ei3I8amfcVkG7
-	izy9NnAgcHFWpVWMvPHRkDW4WUFu/p0=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AC463136AD;
-	Thu, 21 Mar 2024 16:49:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id RIsJKhhl/GXhIAAAD6G6ig
-	(envelope-from <dsterba@suse.com>); Thu, 21 Mar 2024 16:49:28 +0000
-From: David Sterba <dsterba@suse.com>
-To: torvalds@linux-foundation.org
-Cc: David Sterba <dsterba@suse.com>,
-	linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fix for 6.9
-Date: Thu, 21 Mar 2024 17:42:03 +0100
-Message-ID: <cover.1711038961.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.42.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vIULKn7g";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yQGTe0bF"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1711039770;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pRTKoYKpDL9uP3VmcYe9zAlkKfXwqveFCpdlfcoPKqY=;
+	b=vIULKn7gGYUlHYUr5NGRuXsOBuv2sYqRHn1ixq/RV7f1SFRJlb8IBLu4m5KosJ3fG+k8xM
+	B9ZXsnqQnFOj859bZUXT8IrxRxNlIrvl/Nj/RJAkkb0FA/3L3l/JiZ+XeWQi43t5wkz8/Y
+	VrzJSvH5LahtIpx2ygq5wnY3Uo+JCN+lO3seergnxOdlS2fQLdNEylFSJW+WJaxqyiIudQ
+	3pX1esf5oJuLmUpSdVqiezb0Y0ep3islMEBlGY2CTCgVer8QNXO/FqaZd+9da8EBsGvZFp
+	4VGbkU/3f+9gwvrbFyuCa++KTn+yKxa5Vdth24ZIs1AtdXU07vN/isGsuyH2kQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1711039770;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pRTKoYKpDL9uP3VmcYe9zAlkKfXwqveFCpdlfcoPKqY=;
+	b=yQGTe0bFW9Vrf8XcmSDjcK4H4swmy/xSLqKu7PgW82bS5G5ATik3xigt0icjawEUzYWKwk
+	jwVAAQZdJ/N6IUCg==
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org, Linus Torvalds
+ <torvalds@linuxfoundation.org>, Uros Bizjak <ubizjak@gmail.com>,
+ linux-sparse@vger.kernel.org, lkp@intel.com, oe-kbuild-all@lists.linux.dev
+Subject: Re: [patch 5/9] x86: Cure per CPU madness on UP
+In-Reply-To: <86796005-f1d9-4c8c-80d8-f1f88ca220ba@roeck-us.net>
+References: <20240303235029.555787150@linutronix.de>
+ <20240304005104.622511517@linutronix.de>
+ <e20d88d0-5fb9-4307-be67-88b04ae9a188@roeck-us.net> <87bk79i8km.ffs@tglx>
+ <d51ec9a1-5221-4005-9980-8258df8b5102@roeck-us.net> <87r0g3hm5o.ffs@tglx>
+ <86796005-f1d9-4c8c-80d8-f1f88ca220ba@roeck-us.net>
+Date: Thu, 21 Mar 2024 17:49:30 +0100
+Message-ID: <87il1fh6n9.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: ***
-X-Spamd-Bar: +++
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=bqrQpka9
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [3.49 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 FROM_HAS_DN(0.00)[];
-	 RCPT_COUNT_THREE(0.00)[4];
-	 R_MISSING_CHARSET(2.50)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 BROKEN_CONTENT_TYPE(1.50)[];
-	 TO_DN_SOME(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 DKIM_TRACE(0.00)[suse.com:+];
-	 MX_GOOD(-0.01)[];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.00)[13.91%]
-X-Spam-Score: 3.49
-X-Rspamd-Queue-Id: B2C4B5D168
-X-Spam-Flag: NO
+Content-Type: text/plain
 
-Hi,
+On Thu, Mar 21 2024 at 07:06, Guenter Roeck wrote:
+> On 3/21/24 04:14, Thomas Gleixner wrote:
+>> If so can you please provide a full dmesg and then apply the patch below
+>> and provide the resulting full dmesg too?
+>
+> You'll find everything at http://server.roeck-us.net/qemu/x86-nosmp/
 
-please pull the following branch. It's fixing a problem found in 6.7
-after adding the temp-fsid feature which changed device tracking in
-memory and broke grub-probe. This is used on initrd-less systems. There
-were several iterations of the fix and it took longer than expected.
+Thanks for providing this.
 
-The patch depends on VFS changes (bdev_handle) so it's based on merge of
-last btrfs pull request.  We'll provide backport for stable trees.
+> The crash is gone after applying your patch. The difference is:
+>
+> +       /*
+> +        * If there was no APIC registered, then the map check below would
+> +        * fail. With no APIC this is guaranteed to be an UP system and
+> +        * therefore all topology levels have only one entry and their
+> +        * logical ID is obviously 0.
+> +        */
+> +       if (topo_info.boot_cpu_apic_id == BAD_APICID) {
+> +               pr_info("#### topo_info.boot_cpu_apic_id == BAD_APICID\n");
+>                  ^^^^ I added this
+> +               return 0;
+> +       }
+> +
+>
+> I see the "#### topo_info.boot_cpu_apic_id == BAD_APICID" message
+> twice in the log. See patched.log at the page pointed to above.
 
-Please pull, thanks.
+I can see why this is emitted. That happens on the initial CPUID
+evaluation of the boot CPU very early during boot.
 
-----------------------------------------------------------------
-The following changes since commit 43a7548e28a6df12a6170421d9d016c576010baa:
+[    0.000000] Command line: console=ttyS0
+[    0.000000] CPU topo: APIC logical ID: 0 0 6
+[    0.000000] CPU topo: #### topo_info.boot_cpu_apic_id == BAD_APICID
+[    0.000000] CPU topo: APIC logical ID: 0 0 4
+[    0.000000] CPU topo: #### topo_info.boot_cpu_apic_id == BAD_APICID
 
-  Merge tag 'for-6.9-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux (2024-03-12 12:28:34 -0700)
+The later full CPUID evaluation happens after the ACPI enumeration and
+way before the affected RAPL driver is initialized:
 
-are available in the Git repository at:
+[    0.088029] CPU topo: APIC logical ID: 0 0 6
+[    0.088084] CPU topo: APIC logical ID: 0 0 4
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.9-part2-tag
+This invocation has the boot APIC registered as your extra print does
+not show up.
 
-for you to fetch changes up to d565fffa68560ac540bf3d62cc79719da50d5e7a:
+...
 
-  btrfs: do not skip re-registration for the mounted device (2024-03-18 19:16:50 +0100)
+[    0.585850] RAPL PMU: API unit is 2^-32 Joules, 0 fixed counters, 10737418240 ms ovfl timer
 
-----------------------------------------------------------------
-Anand Jain (1):
-      btrfs: do not skip re-registration for the mounted device
+So even without that guard (which we need anyway for the non APIC case)
+topology_logical_die_id() == cpu_data(cpu).topo.logical_die_id must have
+the correct value in that RAPL initialization and CPU hotplug callback
+code.
 
- fs/btrfs/volumes.c | 58 +++++++++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 47 insertions(+), 11 deletions(-)
+But our absolutely convoluted startup logic prevents that because:
+
+    identify_cpu_early()      operates on boot_cpu_data
+    smp_prepare_boot_cpu()    copies boot_cpu_data to per CPU cpu data
+    identify_boot_cpu()       operates on boot_cpu_data
+
+identify_boot_cpu() is the one which gets the correct logical die info,
+but that never gets copied over to the per CPU data instance on which
+the RAPL code and everything else works on.
+
+I'll cook up a patch later.
+
+Thanks for providing the info!
+
+       tglx
+
