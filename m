@@ -1,100 +1,102 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEA3381AA
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 06:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2AB6FBF;
+	Thu, 21 Mar 2024 06:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711001297; cv=none; b=r1pm//d6Leu2BGpjwUZFLZWxSR31bqtGetKyhH6r0DXHPqf/CDRbuLhcLKGZtztczCEZzuM1cmjvjIXe4OEl0eEkJfk9BY0S1TYUZUQ27l/J9+XYdPGuXFXlJ/feVr3+gFySHemTiJkwXDz1v6sgbTF0FULkHD8ACv9ID+h2vcs=
+	t=1711001296; cv=none; b=GZn5pnSKomV04Me6BMyR4CpMWwOUiaCV9480yJN5Sr34eeyut/rP8vt7guAJTKmBXEmtm34ZBOVMl5eSpxmvxHXBLgHqDgH61KoWhM1goG028J+AxHOM6TmPr9jQ3Nk5k8AnqJO+diMC0qhi592I5TPoDWeJwMTJhN7pW32VztQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711001297; c=relaxed/simple;
-	bh=niE9a21M2fG8af9wfgYRU3gIVnddd4hp8Zph3fA39zg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DbpiUsbTcq6GA14uz1NP3M6Bz3XCw418k7jaQNrG5wZptKIJsf+it0WlaWQmiXdomcwxOXWhdb2qq7PnkDxLql5s2/69dEwDnb6ETEw4Pc8jWBcU1bsKGfmnDdHZs0IxbmiAXQjG81GkEf6iP5djzJljXnwfbgE+CL8yCqkK5DA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4V0Zkp0QQFz4f3jkC
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 14:08:02 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id EBCD01A016E
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 14:08:05 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.101.6])
-	by APP4 (Coremail) with SMTP id gCh0CgDHGWzCzvtlvfnzHg--.10900S2;
-	Thu, 21 Mar 2024 14:08:03 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: tj@kernel.org
-Cc: peterz@infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] workqueue: remove unnecessary import and function in wq_monitor.py
-Date: Thu, 21 Mar 2024 23:04:20 +0800
-Message-Id: <20240321150420.37648-1-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
+	s=arc-20240116; t=1711001296; c=relaxed/simple;
+	bh=Wea1fSqHpz3J/JBua4hd15llvV+QZuuLz+xrfQq/WvE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cQwLv0iPauVoCCnjSHXHkOa7IaCjCSnI3JqkC03wVad8LjgZSkfWHMY7z31fwED9ZHZ/KA6mK1/jelVmHm1o4BC8G/qzOXhi7lOrbzChND6a+YoAmSIF0LUHfgmXA1J3Hw9Ntt+M2CQj1ix5LgyloofkKkhXHYF8QvJXD4TKDg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=joL1OcsK; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="joL1OcsK"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-33ececeb19eso307831f8f.3;
+        Wed, 20 Mar 2024 23:08:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711001293; x=1711606093; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MAOWqEugmsLZcY5+XlGTS+PYzImgKXVHs0T7fAbF/hY=;
+        b=joL1OcsK5VI1Hooc7A5Lbdq40cfB29ry2iLhCLT9HcdvSM2En78nmBZe1+0mmZ0XlZ
+         J8a5OwP3hfZgsyCzHJ7Epmb3ABe3NGtqhmGK6Tsl6h7wBYC3+q5+dqyLOleDfU4EyHtE
+         VJkzB09g1yBz3XuQ2DwtAsmabV6NRsgRvfG7lB1qBwG5C7F0DXjEPeT9N5a4Ui4mkE3Q
+         8JmPJRwTCtaMIszPZGLVRpK72921T/eyLglFAZMEVVwwWwtZQAirLagoL3/PzT5qNL5Z
+         icDVuvbNktuO0D2LpeLSMc029nETieU2Ni0foKs/cDlg2lfu89akEvvXvYyybz9+mpHJ
+         5uHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711001293; x=1711606093;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MAOWqEugmsLZcY5+XlGTS+PYzImgKXVHs0T7fAbF/hY=;
+        b=GeZHu5IrzI6X4e+1yYGolPkggAsc6PhOONFWOsmPXwZIbYmXGW6A4VpoSzCRpbZuPF
+         CrFwuBZwJ+Ugh5vviDwSnb6mQOSy7bh5ZLp0uBZa8ik/CxKyqWm1db2ofBc5jmwN5tRu
+         iRmJCbd5kL0gqdK6t7GqpgLWR4NtqGKTgESZJuz+4dJVhNN8/sprdxeWuET10tovDrqM
+         WFsoDe9dW4fcQLV+AVjKjwo/R9Z/ffHvRr2xvFKEwBNg9EVWZG8SCkug3l+pKIuLP8Fm
+         J1b1WblRJDoaVOi8ASgbLKIISCb2QAoKtlTnysLBaQAxA1LA81BhXBKXeMeRmsUEP5kO
+         TBvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWHfVhVNcMrGwbxDJPAmwn1+BLlsMtYUyvu/EPgk3e9wRslIPyx/76Py+Cb5JgTMcDPTpihvw84XFekrGkV6avVtzfJhbb7lr3wKveOQ7++F2jTl4F+hzvThQ+7wMc1749jCSdQR1iN6nfDFkfpjLQ+FIMDvIGamK8V
+X-Gm-Message-State: AOJu0Yz2k8vMjUpBZLC+mXGfEeIEhyqL2mSKieXztGbxFENQQBPzF6RN
+	6kszFOMPuSxJydxCxJSORHgNJfdRNM/r2Hpl2W5ipur+6FLIit6cOmoGoSUessvh01lRzSXlkXZ
+	0lPm7g6tsLYeGlkyDjQhmGWVnioY=
+X-Google-Smtp-Source: AGHT+IG1ZQ91dGzNjV3S/a0sal/vPAwq07eP4TWvORk3wU+AEnbxoMNPW+53b4pyrDj05zRUsivgsb8wShGrtFAdUwQ=
+X-Received: by 2002:adf:e005:0:b0:33d:886d:bb51 with SMTP id
+ s5-20020adfe005000000b0033d886dbb51mr673479wrh.60.1711001292385; Wed, 20 Mar
+ 2024 23:08:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDHGWzCzvtlvfnzHg--.10900S2
-X-Coremail-Antispam: 1UD129KBjvJXoWrtr1Dtw1xCF15Xr4rXw47Jwb_yoW8Jr15pF
-	sakF47G3yfXryUX3Z5W343AFyfWrWDAF1qgayrXr1avrs8Xr9Ig34xK398Jr95Xa4DXFW0
-	9a9rWrZ0qr4DZF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
-	8lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E
-	3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r
-	xl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv
-	0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z2
-	80aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28I
-	cxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
-	IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI
-	42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
-	IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
-	87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUsBMNUUUUU
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+References: <20240320105436.4781-1-puranjay12@gmail.com>
+In-Reply-To: <20240320105436.4781-1-puranjay12@gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 20 Mar 2024 23:08:00 -0700
+Message-ID: <CAADnVQJ3o6DsURi=N_KXx+mbW9r7__3LrwYLyYwuoMOsqFHPkw@mail.gmail.com>
+Subject: Re: [PATCH bpf] bpf: verifier: prevent userspace memory access
+To: Puranjay Mohan <puranjay12@gmail.com>, Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, X86 ML <x86@kernel.org>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>, 
+	Network Development <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Remove unnecessary import and function in wq_monitor.py
+On Wed, Mar 20, 2024 at 3:55=E2=80=AFAM Puranjay Mohan <puranjay12@gmail.co=
+m> wrote:
+>
+> The JITs need to implement bpf_arch_uaddress_limit() to define where
+> the userspace addresses end for that architecture or TASK_SIZE is taken
+> as default.
+>
+> The implementation is as follows:
+>
+> REG_AX =3D  SRC_REG
+> if(offset)
+>         REG_AX +=3D offset;
+> REG_AX >>=3D 32;
+> if (REG_AX <=3D (uaddress_limit >> 32))
+>         DST_REG =3D 0;
+> else
+>         DST_REG =3D *(size *)(SRC_REG + offset);
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
----
- tools/workqueue/wq_monitor.py | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+The patch looks good, but it seems to be causing s390 CI failures.
 
-diff --git a/tools/workqueue/wq_monitor.py b/tools/workqueue/wq_monitor.py
-index a8856a9c45dc..9e964c5be40c 100644
---- a/tools/workqueue/wq_monitor.py
-+++ b/tools/workqueue/wq_monitor.py
-@@ -32,16 +32,13 @@ https://github.com/osandov/drgn.
-   rescued  The number of work items executed by the rescuer.
- """
- 
--import sys
- import signal
--import os
- import re
- import time
- import json
- 
- import drgn
--from drgn.helpers.linux.list import list_for_each_entry,list_empty
--from drgn.helpers.linux.cpumask import for_each_possible_cpu
-+from drgn.helpers.linux.list import list_for_each_entry
- 
- import argparse
- parser = argparse.ArgumentParser(description=desc,
-@@ -54,10 +51,6 @@ parser.add_argument('-j', '--json', action='store_true',
-                     help='Output in json')
- args = parser.parse_args()
- 
--def err(s):
--    print(s, file=sys.stderr, flush=True)
--    sys.exit(1)
--
- workqueues              = prog['workqueues']
- 
- WQ_UNBOUND              = prog['WQ_UNBOUND']
--- 
-2.30.0
-
+Ilya,
+could you help us understand is this check needed on s390
+and if so, what should be the uaddress_limit ?
