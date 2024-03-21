@@ -1,200 +1,161 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1ED4C153;
-	Thu, 21 Mar 2024 06:31:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF853BB4F;
+	Thu, 21 Mar 2024 06:33:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711002674; cv=none; b=bi3XydkMqYLbUM/GO9i1Ufav5FApuWZMHhRIjDCu5vmfxRsiyQYJcAo5qNNtljNYUX44iYC1/VfKCJKGe1yyunysiBpFAqrRX2GZ4VrtekindOkbzFM5ESJUwwUAXJqi09T09UeC6oFBjgIEiTmTJXt8KZgaBCOGlrB4k9/g56w=
+	t=1711002790; cv=none; b=XOibNK8h67pOOP9+/KzTtp2jyhLtIzxgkd6O03yo3sJMyE7nUqoAZ9o/2hy8W8fFbiGZY8/w5txZjYYfVQR441BTosqSJteMqKLsh+4zI3G6fU+XNaFJjUfbNwQ8GwYEzVZdezsNnqSHBbTjdNkHwvDfdQtZ/n4yXI3ZpF5sgrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711002674; c=relaxed/simple;
-	bh=sbdLq+CSq6E0bzokDR/Td3+L8V7Ur74akZHEGjUUpHg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ZmTjhmgFOtgSUHpY6BMJQE8u2yTvtGESvWtnRXTCi+k8wbspKJvmn5jredqF4xJE42NUHFenoZbBcthfL03QSFR7Fmt0bTy4viA0jeVHabV5UEuW9617EKiU1OFIR10r8fZdqqVpnNb6OlIu0EBnEkG1oNf3s8sHJK7SMeVYfko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=L603CopG; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1711002790; c=relaxed/simple;
+	bh=WwAGFrjD+oCIhEvw9WxEO4A1B0E7yDaH3fcLR5SunEY=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BTvNj6i1HzcMjDM8s1wq6N2EYZuoeHzP0Vmx03TdC90ar2lKuqb741rTRiZ5QNz7xHp0NibX0QYHYu0mAaDgd4Lu/nBlJHzVvlDlCfsQfAjZvmFc2ukpuwxt8gixEyqVCqYwPMWgKK2WDSSwhbFxu9IwmfRBir+1sGEXCfJ0aUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BVmAlxDy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xJ+wJFu5; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BVmAlxDy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xJ+wJFu5; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="L603CopG"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42L6UkXd098221;
-	Thu, 21 Mar 2024 01:30:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1711002646;
-	bh=rpdiJJ5eevOn74K0PaFnWxndVLDkQXyZa1juiP1FVx0=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=L603CopGxvt8nWOetVk0Lx7VS/76r/K6XOF0HDly12PgqaLdSiokGzJ+Xzj0FD+0i
-	 BTHEaN+8Nn0SAzlGkEEEKch7OoXNKy562QBLtDnxU50ZPazDG1RA4EdZBmr4U8HBhv
-	 yK5Avm3VLxPc9R0YXVqHSF3ETcQ4yvy594ramq1o=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42L6UkEm110795
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 21 Mar 2024 01:30:46 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 21
- Mar 2024 01:30:45 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 21 Mar 2024 01:30:45 -0500
-Received: from [10.24.69.142] ([10.24.69.142])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42L6Ubd6030896;
-	Thu, 21 Mar 2024 01:30:38 -0500
-Message-ID: <22a1e5fd-5858-43ff-b8fd-6b4124f6bd89@ti.com>
-Date: Thu, 21 Mar 2024 12:00:36 +0530
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BVmAlxDy";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xJ+wJFu5";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BVmAlxDy";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xJ+wJFu5"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 3E1945C986;
+	Thu, 21 Mar 2024 06:33:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1711002784; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HrVBJ0KMskz94C4NAej7qaBmjKzm3A9HzZyOV0QawhY=;
+	b=BVmAlxDy8I/IulSNNcOSJG/cttbGXGHqlk/VQCLb+dHNbTlBh1tglr3xPlcSfvnO/2UOtE
+	QpJ/+zFxEEjPGvJdldDQ8zY2IX+q0Zui8FrWXtvlslvw5uvDR0Rg7VZWT+bgeJ5729iK4x
+	vb8txFv19JTItTzDFxIP8Xoe9boMQMM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1711002784;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HrVBJ0KMskz94C4NAej7qaBmjKzm3A9HzZyOV0QawhY=;
+	b=xJ+wJFu5HetTZfM8aJGWcXd1GAmal+RCAI9xAgt4KsUAlZNRy3gitxEH/6wXe+kOpfi3N9
+	JFtYP4Cq5+AON3Dg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1711002784; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HrVBJ0KMskz94C4NAej7qaBmjKzm3A9HzZyOV0QawhY=;
+	b=BVmAlxDy8I/IulSNNcOSJG/cttbGXGHqlk/VQCLb+dHNbTlBh1tglr3xPlcSfvnO/2UOtE
+	QpJ/+zFxEEjPGvJdldDQ8zY2IX+q0Zui8FrWXtvlslvw5uvDR0Rg7VZWT+bgeJ5729iK4x
+	vb8txFv19JTItTzDFxIP8Xoe9boMQMM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1711002784;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HrVBJ0KMskz94C4NAej7qaBmjKzm3A9HzZyOV0QawhY=;
+	b=xJ+wJFu5HetTZfM8aJGWcXd1GAmal+RCAI9xAgt4KsUAlZNRy3gitxEH/6wXe+kOpfi3N9
+	JFtYP4Cq5+AON3Dg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 01CC5136AD;
+	Thu, 21 Mar 2024 06:33:03 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id cc1JOp/U+2VFTwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 21 Mar 2024 06:33:03 +0000
+Date: Thu, 21 Mar 2024 07:33:03 +0100
+Message-ID: <87y1acrt5s.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Edward Adam Davis <eadavis@qq.com>
+Cc: syzbot+18840ef96e57b83b7fea@syzkaller.appspotmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	perex@perex.cz,
+	syzkaller-bugs@googlegroups.com,
+	tiwai@suse.com
+Subject: Re: [PATCH] ALSA: timer: fix deadlock in _snd_pcm_stream_lock_irqsave
+In-Reply-To: <tencent_AC7946DBB367A364897F43B2045A37625705@qq.com>
+References: <00000000000096e5980613f4cb96@google.com>
+	<tencent_AC7946DBB367A364897F43B2045A37625705@qq.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/5] dt-bindings: misc: Add mikrobus-connector
-Content-Language: en-US
-To: Conor Dooley <conor@kernel.org>
-CC: Andrew Lunn <andrew@lunn.ch>, Ayush Singh <ayushdevel1325@gmail.com>,
-        Michael Walle <mwalle@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>, <jkridner@beagleboard.org>,
-        <robertcnelson@beagleboard.org>, <lorforlinux@beagleboard.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Derek Kiernan
-	<derek.kiernan@amd.com>,
-        Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann
-	<arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown
-	<broonie@kernel.org>, Johan Hovold <johan@kernel.org>,
-        Alex Elder
-	<elder@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE
- BINDINGS" <devicetree@vger.kernel.org>,
-        "moderated list:ARM/TEXAS INSTRUMENTS
- K3 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-        "open list:SPI
- SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        "moderated list:GREYBUS SUBSYSTEM"
-	<greybus-dev@lists.linaro.org>,
-        Vaishnav M A <vaishnav@beagleboard.org>
-References: <20240317193714.403132-1-ayushdevel1325@gmail.com>
- <20240317193714.403132-2-ayushdevel1325@gmail.com>
- <CZWVF90JJO98.2M7ARQ9WMGC94@kernel.org>
- <d4dc4d94-d323-4158-8c08-b7d37d8750d3@gmail.com>
- <b62915ca-c151-4e37-bb03-c92c569c84ff@lunn.ch>
- <4b319264-bff7-48e5-85e8-201ca0bafec6@ti.com>
- <20240319-unmoral-map-3ab9a467b637@spud>
-From: Vaishnav Achath <vaishnav.a@ti.com>
-In-Reply-To: <20240319-unmoral-map-3ab9a467b637@spud>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -0.90
+X-Spamd-Result: default: False [-0.90 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 BAYES_HAM(-2.10)[95.62%];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[qq.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[18840ef96e57b83b7fea];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_SEVEN(0.00)[7];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[qq.com:email];
+	 FREEMAIL_TO(0.00)[qq.com];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Flag: NO
 
-Hi Conor,
-
-On 19/03/24 23:49, Conor Dooley wrote:
-> On Tue, Mar 19, 2024 at 11:05:37PM +0530, Vaishnav Achath wrote:
->> Hi Andrew,
->>
->> On 19/03/24 17:55, Andrew Lunn wrote:
->>>> The device tree defines the SPI controller associated with mikroBUS SPI
->>>> pins. The driver on match queries and takes a reference to the SPI
->>>> controller but does nothing with it. Once a mikroBUS add-on board is
->>>> detected (by passing manifest using sysfs or reading from 1-wire EEPROM),
->>>> the driver parses the manifest, and if it detects an SPI device in manifest,
->>>> it registers SPI device along with setting properties such as `chip_select`,
->>>> `max_speed_hz`, `mode`, etc.,
->>>
->>> How complex can the description of the hardware be in the manifest?
->>>
->>> Could i describe an SPI to I2C converter? And then a few temperature
->>> sensors, a fan controller, and a GPIO controller on that I2C bus? And
->>> the GPIO controller is then used for LEDs and a push button? DT
->>> overlays could describe that. Can the manifest?
->>
->> No, it cannot describe such complex hardware, it can only describe simple
->> devices (sensors/displays .etc) on a standard mikroBUS add-on board, we did
->> a analysis on what mikroBUS add-on boards have driver support in Linux and
->> then noticed that most devices does not need this kind of complex
->> description to work:
->> https://elinux.org/MikroEClicks_with_Linux_Support
+On Thu, 21 Mar 2024 03:22:24 +0100,
+Edward Adam Davis wrote:
 > 
-> What happens to the devices that fall outside of the "do not need a
-> complex description" category? Do you expect that those would be
-> described by a dt overlay?
+> [Syzbot reported]
+> swapper/2/0 just changed the state of lock:
+> ffff88802a304110 (&group->lock#2){..-.}-{2:2}, at: _snd_pcm_stream_lock_irqsave+0xa0/0xd0 sound/core/pcm_native.c:170
+> but this lock took another, SOFTIRQ-unsafe lock in the past:
+>  (&timer->lock){+.+.}-{2:2}
 > 
-
-Yes, those would need a device tree overlay, but most mikroBUS add-on 
-boards does not need this, almost all the boards need the standard bus 
-properties (SPI/I2C properties), IRQ, named-gpios, named properties, 
-regulators, clocks and the current implementation supports this.
-
-Looking at the example Andrew provided above (SPI-I2C converter with 
-sensors .etc on the I2C bus and GPIO controller) - usually you will not 
-find such a mikroBUS add-on board, because if there are I2C devices they 
-would directly be on the mikroBUS I2C bus rather than on the converter, 
-now someone can do this in their custom solution but then it is no 
-different than an I2C adapter on USB/PCIe, does the standard discovery 
-mechanism on those buses help instantiate devices on the I2C? my 
-understanding is NO and you will need to write a custom device tree 
-overlay for the same and same will be the case here.
-
->> The greybus manifest already is being used in the greybus susbystem for
->> describing an interface and there are already greybus controllers (SPI/I2C
->> .etc) being created according to the manifest contents, all this driver does
->> is to extend that format to be able to instantiate devices on these buses.
->> The primary goals for introducing the driver for mikroBUS add-on boards are:
->>
->> 1) A way to isolate platform specific information from add-on board specific
->> information - so that each permutation of connecting the add-on board on
->> different ports on different board does not require a new overlay.
->> 2) A way to instantiate add-on boards on greybus created virtual mikroBUS
->> ports.
->> 3) Both 1 and 2 should use the same add-on board description format.
->>
->> Standard device tree overlays did not help to achieve this and that is why
->> the standard interface discovery mechanism in greybus, the manifest was
->> extended even though it is not the most optimal way to describe hardware.
->>
->> The greybus manifest extensions were made with the following things in mind
->> and three new descriptor were introduced:
->> 1) mikrobus descriptor - pinmux/port state
->> 2) device descriptor - contains information which is a superset of struct
->> i2c_board_info , struct spi_board_info .etc
->> 3) property descriptor - to describe named properties of the types defined
->> under https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/property.h#n22
->>
->> With these we were able to test around 150 add-on boards with corresponding
->> drivers in Linux :
->> https://github.com/MikroElektronika/click_id/tree/main/manifests
->>
->> The mechanism is not as robust a device tree and should not be compared, the
 > 
-> Why not? You're suggesting this as a method for describing devices and you
-> seem to have extended the manifest to support more complex properties, why
-> shouldn't someone question make that comparison?
+> and interrupts could create inverse lock ordering between them.
 > 
-
-Agreed, but the comparison need to limited to the expansion interface 
-(mikroBUS) under discussion as the idea is not to create an alternate 
-interface for describing generic devices, the   class of add-on boards 
-that can fit in the mikroBUS add-on board form factor and on the buses 
-exposed by mikroBUS requires only simple descriptions - namely standard 
-bus properties (SPI/I2C properties), IRQ, named-gpios, named properties, 
-regulators, clocks and the extensions to manifest were made for those 
-properties only. Also the extensions were done to support the properties 
-under unified device property interface under include/linux/property.h
-
-Thanks and Regards,
-Vaishnav
-
->> intent was not to create a new hardware description format, but extend the
->> existing greybus manifest format to be able to instantiate devices on the
->> greybus SPI/I2C/GPIO/ (mikroBUS)
 > 
+> other info that might help us debug this:
+>  Possible interrupt unsafe locking scenario:
+> 
+>        CPU0                    CPU1
+>        ----                    ----
+>   lock(&timer->lock);
+>                                local_irq_disable();
+>                                lock(&group->lock#2);
+>                                lock(&timer->lock);
+>   <Interrupt>
+>     lock(&group->lock#2);
+> 
+>  *** DEADLOCK ***
+> [Fix]
+> Ensure that the context interrupt state is the same before and after using the
+> timer->lock.
+> 
+> Fixes: beb45974dd49 ("ALSA: timer: Use guard() for locking")
+> Reported-and-tested-by: syzbot+18840ef96e57b83b7fea@syzkaller.appspotmail.com
+> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+
+This was already fixed in Linus tree commit
+587d67fd929ad89801bcc429675bda90d53f6592.
+
+
+thanks,
+
+Takashi
