@@ -1,148 +1,151 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2082.outbound.protection.outlook.com [40.107.223.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E924941E4E
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 08:01:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711008095; cv=none; b=Cnop12AKAGkL2SWy0g3mBqMnroRsL1VhlikZn1dufX+d1IrIaec0ey53Puoahipsc8ZpGs2I4mZl8zxAu3sant3uKRr5seq01Ue9MYOslHRXNVjQYJUgaKGDmmrDBsF6neitdcBIAWOexs0glCYaKR2jcwuTBSL+csPJ9F21pGA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711008095; c=relaxed/simple;
-	bh=i4zwPJVpXqhU2FAr++17pgpneo/UpWJ6XbYcmX19IAs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hHky8sbQ2xoE2G2GvXFuoEfxjh9JAXdcnLCt8MbUH2OW3bM9rbLSjocmIPlLi5VBeeajYBNoGBXsTL1hsiywVqcsZf2pkilys95MXG+mam7iPv9TVyIc00zf+bSIV0Tb16SpfSgotWQ+ve4PFk5B5ZR4l96xObaBDsyKhvme07c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qCPDx2G/; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B155441E4E;
+	Thu, 21 Mar 2024 08:09:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711008551; cv=fail; b=VPCrxPdDAONzE0KfSt+Kfmn0LWkIofz5nGjQK+xyDeHIMQhja368qTlXZE24wLbG+tKN2Gy9rtIwgcxccn1qpTwcL6T4w+tzDVPAXik3F46t6pkU5X2iwa+Nipaa2vqtBEjqQHS9CLceupFbRmTNsjyQwPbzLW2LEkNi3NZx1bI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711008551; c=relaxed/simple;
+	bh=tIR11BiQA1JPgmJqUI8/swdWMVGIMLSrwojQmX0arSA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=tgLFbcD9qu8Hu2mj20verYbnY0h6OlM2Uvt3Rdn/AtucBwPo8uMQNr1CWdG9aABIFVNv3egTCZ+QdXPDlAK1QwfLY9i2VrEeIIuX10BTlugylcV1SQIdwYLW6vga4m9iHae9oFn3EGJ02DCTodzx5LKdvqXDSV7KJduRlKlAqaI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZdDfj0nK; arc=fail smtp.client-ip=40.107.223.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qCPDx2G/"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-29fb7e52731so549365a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 01:01:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711008093; x=1711612893; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FjFrEpsJSPY9n7SWzhe+mZvEerSKreA8nYhpUpSVpXw=;
-        b=qCPDx2G/uYqRCtlTfNJ07BJeKjziCw01WNzrkxvQwvhyzLIWMo28UtOA/CHG/BoSe5
-         KjePOeZi0GxEDiTXxwbk2zDlTw/irFRPC6LbJMQofEd3wiCahhU60Y8GKsJlDmDY3U9H
-         b9TUNTaDfTaIDe3i0O1IPTS6Pwr+JyK0eqroXIEj4uOYVvbcLjDESC9GGZ3+0p1G0NL3
-         9F8xxit7qdnprYDDKUIvnyY8xaXpi5JZyTFCn8OwEdSb9SZ4hu8gDw45LuzrYvpeMZtL
-         Fkj37ilrx5MMNeIZZj4OkNHFWfyd8PNWG/b/vPk0zrwI9IrgB0d1VZjZR2jhqtYCdamE
-         ZxMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711008093; x=1711612893;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FjFrEpsJSPY9n7SWzhe+mZvEerSKreA8nYhpUpSVpXw=;
-        b=K/lzSPn2HuZd/Dkl+FJqbRvIHbj1s2XNtbgh3JsA9WGksgKzEVW3xhLeHenI6aUweQ
-         I72Y9RZfq/ncBNUtqscFXldstMiDOjWvp/hzpID/wc0MVsvGwYJ5CHiVB0KLz8Vqpq0O
-         wMOtan2CdRzrRfcPCDQsBQNxbveDsgca+fPMK5ZmfUVCSx75KJ07b+Ukubi+Tv1P2MYI
-         WJg9Har6SjkUAVxgSDZZMD4rg4vQMBNOw9P0yO6BsNaPQyvxukzq6rKwQa6NzML33lEU
-         wRYHoNrde8L1lSj8iebgCD4OjoBYyC3waSUNkpTK6zWhmImY+9kKiDlr3Mddx0Ng9ztV
-         2BqA==
-X-Forwarded-Encrypted: i=1; AJvYcCWpHtLw4k3wXQN8/1IvpvBuU3hMYVf7Ns3wuloJ8paPP1JFyJCT5NGktYfWJsVu+ZU9Z75rZ1FqIPfsSMK1P68Ugdvqhl6fEXCSkBd7
-X-Gm-Message-State: AOJu0YyxHu1C2I9RKa7vyZx/jl624aTNffwcJZFpvX0OkAW/fr/Cgzgl
-	2gVvVQF1O+3NfesqOiRWC9eY/4zlkrsZZSqSy5YQMGsmempzD7GvOYrJZi31BFc2RjyAZF44Qqz
-	+yI92zRZGSHt+TEo+dmHvDzkSQHUwAmm5YMsZHA==
-X-Google-Smtp-Source: AGHT+IE66tBwdnEhf50hb3gUZmIFhdYJN3ZVg6mlW83sBuBn2hsQfVGJ3pQgFiGmlp+qWP641zrSHsIszI3n8pq2Djw=
-X-Received: by 2002:a17:90a:e384:b0:29c:6fa7:980d with SMTP id
- b4-20020a17090ae38400b0029c6fa7980dmr8584517pjz.6.1711008093132; Thu, 21 Mar
- 2024 01:01:33 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZdDfj0nK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AH0weEdw80afpcWUp9IprszpDRV4QwphU0ZQtWbIZoiGgKVIIaBezHeeywtU77pdp/VAkbiAOyk6+eq8aQ+RMF92hQ8KZtirwPZOxeNbzd5FP+rWTapeoFPkjwSTfTioclr24twA+7tePmOJRPS5ZvL9pFJnkM5mSrz3rOnl0ZLoiijB5YyNNX6qWo3k8FyZaCLHVnc4+QXD5tBScByCDPkUodxUP6UE79n9SCHkhBIFHQIjOB3ckG8DDtb54HtdJJK+gnVCY4d/JjjGDbIaU3Ez55PlNxvL6G8hmzqk5hH9xgSta55jyMvwgX1I+OqcxEGupWYcobuK/9UFsUw+VA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cinKj7UNq02lP3lJF62PTbAMXOo8WE/KlV4HxlpCTqI=;
+ b=Dh34uwiyJL4AqVYAHu4c4pr6S+8KIhQkbyd2C1rZZz5eLx79t7aqZUqX0JGuXl4oF4EZJIu07bBwUuGV+auyQd97ya9dHZuhhVl4u5/jm+yhfMRbrjEhh0Q9RiueqffGMSyBgq4cs7P/D7BTmx1XMBpTA0CAiu6v+HSwzbTAxhBsK1hQmW7dqGAOjGXB72YwNBqFUudvqm5oL2xvZ1Or6KLsd3iTh8GEnTPVMY2HdIWsW3QzFnpOQF1BOkBnW0m3bUjMIjs4NBjwkHEpyl8H0H29CF8mXhCmjlKMlTcgpsdpIyYMVvQ3dfg8MRTbB2kprYcctVnopJ1Yh34EwHHibw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cinKj7UNq02lP3lJF62PTbAMXOo8WE/KlV4HxlpCTqI=;
+ b=ZdDfj0nK2R8gMWp2nxD4vPohmSXfa0dbY3Kdwk6uONFZ0vghRxWZRHEetyohw4Fdwg0pa4n7S20h/ja6QxYJHBUymwKNJTXPBMVVzdz/5Y9dBpSTUuc5siXXosg69iCRpUWlTMxr+6A4u0bKFxNMfppMdRX0mcMh31xKEzDd62Q=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
+ by SN7PR12MB8129.namprd12.prod.outlook.com (2603:10b6:806:323::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.34; Thu, 21 Mar
+ 2024 08:09:07 +0000
+Received: from CYYPR12MB8750.namprd12.prod.outlook.com
+ ([fe80::9d:17f1:8b3b:1958]) by CYYPR12MB8750.namprd12.prod.outlook.com
+ ([fe80::9d:17f1:8b3b:1958%4]) with mapi id 15.20.7409.010; Thu, 21 Mar 2024
+ 08:09:07 +0000
+Date: Thu, 21 Mar 2024 09:09:00 +0100
+From: Robert Richter <rrichter@amd.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org, Alison Schofield <alison.schofield@intel.com>,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, Derick Marks <derick.w.marks@intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v2 1/3] x86/numa: Fix SRAT lookup of CFMWS ranges with
+ numa_fill_memblks()
+Message-ID: <ZfvrHAQ9GMQ9aJlk@rric.localdomain>
+References: <20240319120026.2246389-1-rrichter@amd.com>
+ <20240319120026.2246389-2-rrichter@amd.com>
+ <65f9f2741e607_7702a294f7@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65f9f2741e607_7702a294f7@dwillia2-xfh.jf.intel.com.notmuch>
+X-ClientProxiedBy: FRYP281CA0018.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::28)
+ To CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240313150133.1182298-1-sshegde@linux.ibm.com> <20240313150133.1182298-3-sshegde@linux.ibm.com>
-In-Reply-To: <20240313150133.1182298-3-sshegde@linux.ibm.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Thu, 21 Mar 2024 09:01:21 +0100
-Message-ID: <CAKfTPtCnGRaAcqB6mkVZPP5CzptG-yLO4-mcoaOeHx8ZGPfTvA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] sched/fair: Use helper functions to access rd->overload
-To: Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: mingo@kernel.org, peterz@infradead.org, dietmar.eggemann@arm.com, 
-	qyousef@layalina.io, linux-kernel@vger.kernel.org, vschneid@redhat.com, 
-	qperret@google.com, yu.c.chen@intel.com, srikar@linux.ibm.com, 
-	pierre.gondois@arm.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|SN7PR12MB8129:EE_
+X-MS-Office365-Filtering-Correlation-Id: d6f86f83-22b7-4cb2-9fd4-08dc497e2e6c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	nM/01/EmMklT7IGiRnJGghfiqsY6s6SbmRvm7jTb+XrugFINnye4qzbeH9wnvJRCFLnJQxqukKe+sY/KOYhdu1iU19qm599GWExdZz/m6XXQmheUAWXx5/1RZ9Iw/DQ3RZnSkA4ELHwUOv4F7/0NbEx2mqKryEVH05qmj7PQKOYMJMSCElsfi4wdKqSf1DXRr1rWCIqVvY2AeNIjb9RlPlppRHPXlDAAVOfXMiIRPG8ODqPHk0wCD51NTt3a4zq/KW/XE2ODxs7nXrhLZXTP81IV8YuaP5l8CRVMxudX9fTaRAp+C1wMPArdrCB3+3ksVtC3IuI5LUMrTk4iK1OFso1SbR/RwSxeSqoLV+XL3bpTXTJ1e/f9Hg2/JwPUefdDCJH3lddPacd2nbP6OspBwLMhcrzGElACd4/YOWXwxq+N5cMJSdrzqJAWsTFtYVy0XM7KknardqxYdDNvD5yvhAgkKS6VzNTGZYKhK7Pazi+GG8JmCvPwpeXo4fKO87lqy8fRv6nZxLlhw+QY3U61MZzpyDAejkuZe0dDrydiMKcqyDOG5bnt2BdycGr4witEfWsn7q9ziDnHEaGDhZnihtM4+M5Sp3dPn5t1t5Fewe08gbe+P1ucu3xNRSnl7opNhfsjDBNNJBpM1VN3cgs/At5LmBxFYGepxXNkEav6IAA=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(7416005)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?T2KNd4ZaHc1lwaFbxm+b2U5kqWvqvZBRYavw3oUo3AOWiKUoFudcJbsBwGHs?=
+ =?us-ascii?Q?lv5nGnwXnW6pPcrMx8w+0RKnUt+KkcYLlj0xEb21Fr3t1pa3fEOZtb/6HPDn?=
+ =?us-ascii?Q?gAO+gZSaxIYGSjhIpCKJXzLelO+lKqCI3s4JmlyNlM+414teWvtvZ6PNH6UH?=
+ =?us-ascii?Q?fq8gJGpIlalTmiibt366CI1oBOjVsUVDqguO0QpDlJXrx0FbHmm/DTYNW/ct?=
+ =?us-ascii?Q?iPxa9G8K3w3RwtpPrIhWnDUgBfRGzaK/baz2YQfmcaYWbcCmqB57GMhgNPYy?=
+ =?us-ascii?Q?L8VGUYqIHZjusatQYN+E+d/j5fpHXSuIbl4iaEFKUMMEoQnssaCkhtJrgchJ?=
+ =?us-ascii?Q?IsE4d7RzLHUHHOg1fxYZcAcs7Dd73TNHcQkNYNWFWCkgrjIMaCLZNUkWwJ05?=
+ =?us-ascii?Q?BINAfoPwGislVimdM61hHXlGO0PP0bh38D4p4t42cekS744wKJyPaaa5S2M+?=
+ =?us-ascii?Q?9vwfIsRUaV917J9MzldjWLzKExxRc4/idpSSSXpd3l+BRqDaK212VbjcK4do?=
+ =?us-ascii?Q?53v7sPuNHPnj1ZmtNd+RUdiUMIzB3qexKRzLzafqxDV0/jW+HuuhRLO69sJI?=
+ =?us-ascii?Q?yN9MfMhF+4FuBsoRjnvEuoewJy+uGcrnI5P3Tvw2Cf0tSlSLPzUrz4dKD7vP?=
+ =?us-ascii?Q?wC6We4xGkpN87UPV/Ktsn+oem4uX2n3NQDwA4Y4IeNjyjyRadKBNciFWIxz1?=
+ =?us-ascii?Q?FTqLoYkY8x7EqdUoZg9t4MtrGCWtIsawfMcvrC2okyFXVUqkIGxE+Bntr1lf?=
+ =?us-ascii?Q?xK+5sASH6I7X5PGPy+m1PvI9YOF/3B3qHVy16RFgZqnKyJm80YWNPiRD7Hor?=
+ =?us-ascii?Q?FfRtMMA0nNYsJwAS/FfqTJpvUmYcWsK0k7pw/3emhtc0kvkVGP5Xj0ekQk3M?=
+ =?us-ascii?Q?Zc74ogEcBTg+XoBWEdr9EgSA1gPOQRab+zvH6saNxcYe3eOPtyBynYLTCBXF?=
+ =?us-ascii?Q?F/9zGISyUITbpLMEDW9sxyhGNL+7OgjbpqDsXr37ptgohKc8yBVo4nHs1PCb?=
+ =?us-ascii?Q?CTOBrZ6eyAxNkXUFJ8Td+EQ5sbpJRojP+leQR+P3GfSdjQ3HbwASG91TqQGJ?=
+ =?us-ascii?Q?ZfGR5e6XDpkMBe+NqH3pTwxNqrRhPKs/yNPmiem4gqTSf8EigVK4C+ZMqwc+?=
+ =?us-ascii?Q?fsXElJgZcwztIpHYb00lXPRU0PROLCADoJdaeE7n1CUoyrO8z1idPcMXYne8?=
+ =?us-ascii?Q?K8wYNGgyduqjOXGy9TPVwPr8pc52Iyyyl3O+hclX0E7jiZILfdaAHr1neC6y?=
+ =?us-ascii?Q?WB2M0NcGTRgoMTEk8ptaeg9sLVdE159XbmyfIe5K9Dp5vcQXs8itb33jsyAs?=
+ =?us-ascii?Q?BaqGiN+A6AXj0ByVUVjj525KnFwO4UDCtRzxnkIzbrXBaKOATb4GWt2DWxIg?=
+ =?us-ascii?Q?Acep/RZ+ikxRk2pUzQ81wHKY2tJkPwO2BUsTTiP+rsBFmxlGf3v7qXawBmJ/?=
+ =?us-ascii?Q?/8OqBxvczBOHq81UhqcjajcmRPEIxYl4jQxqTRC46TxUFnb5Mlp3cXts/QyD?=
+ =?us-ascii?Q?2VIj6WeQ1R0Os4YQjtqTgmPmDgyTLeP1v2EK5pvQp+mUaDfyK5O34ocgcj2N?=
+ =?us-ascii?Q?6XzuK4WZXdFGJzAxq/uQ07xC3N7MaJ8HX12hwlin?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d6f86f83-22b7-4cb2-9fd4-08dc497e2e6c
+X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2024 08:09:07.4535
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UvEoLcDUEbTa/ttJHEADphskGi6D5oTE/p+gx5urxi7SRPpznbsVtvkmVmlv+w1BaOBthyjC1ndLE+PsdfvNnQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8129
 
-On Wed, 13 Mar 2024 at 16:02, Shrikanth Hegde <sshegde@linux.ibm.com> wrote:
->
-> rd->overload is accessed at multiple places. Instead it could use helper
-> get/set functions. This would make the code more readable and easy to
-> maintain.
->
-> No change in functionality intended.
->
-> Suggested-by: Qais Yousef <qyousef@layalina.io>
-> Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+Dan,
 
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+On 19.03.24 13:15:48, Dan Williams wrote:
+> Does this achieve the goal without an additional hunk like this?
+> 
+> diff --git a/arch/x86/include/asm/sparsemem.h b/arch/x86/include/asm/sparsemem.h
+> index 1be13b2dfe8b..1aaa447ef24b 100644
+> --- a/arch/x86/include/asm/sparsemem.h
+> +++ b/arch/x86/include/asm/sparsemem.h
+> @@ -37,9 +37,9 @@ extern int phys_to_target_node(phys_addr_t start);
+>  #define phys_to_target_node phys_to_target_node
+>  extern int memory_add_physaddr_to_nid(u64 start);
+>  #define memory_add_physaddr_to_nid memory_add_physaddr_to_nid
+> +#endif
+>  extern int numa_fill_memblks(u64 start, u64 end);
+>  #define numa_fill_memblks numa_fill_memblks
+> -#endif
+>  #endif /* __ASSEMBLY__ */
+>  
+>  #endif /* _ASM_X86_SPARSEMEM_H */
 
-> ---
->  kernel/sched/fair.c  |  7 ++++---
->  kernel/sched/sched.h | 14 ++++++++++++--
->  2 files changed, 16 insertions(+), 5 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index eeebadd7d9ae..cee99c93e6a4 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -10621,8 +10621,9 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
->
->         if (!env->sd->parent) {
->                 /* update overload indicator if we are at root domain */
-> -               if (READ_ONCE(env->dst_rq->rd->overload) != (sg_status & SG_OVERLOAD))
-> -                       WRITE_ONCE(env->dst_rq->rd->overload, sg_status & SG_OVERLOAD);
-> +               if (is_rd_overloaded(env->dst_rq->rd) != (sg_status & SG_OVERLOAD))
-> +                       set_rd_overload_status(env->dst_rq->rd,
-> +                                              sg_status & SG_OVERLOAD);
->
->                 /* Update over-utilization (tipping point, U >= 0) indicator */
->                 set_rd_overutilized_status(env->dst_rq->rd,
-> @@ -12344,7 +12345,7 @@ static int sched_balance_newidle(struct rq *this_rq, struct rq_flags *rf)
->         rcu_read_lock();
->         sd = rcu_dereference_check_sched_domain(this_rq->sd);
->
-> -       if (!READ_ONCE(this_rq->rd->overload) ||
-> +       if (!is_rd_overloaded(this_rq->rd) ||
->             (sd && this_rq->avg_idle < sd->max_newidle_lb_cost)) {
->
->                 if (sd)
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 41024c1c49b4..c91eb8811bef 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -918,6 +918,16 @@ extern void rq_attach_root(struct rq *rq, struct root_domain *rd);
->  extern void sched_get_rd(struct root_domain *rd);
->  extern void sched_put_rd(struct root_domain *rd);
->
-> +static inline int is_rd_overloaded(struct root_domain *rd)
-> +{
-> +       return READ_ONCE(rd->overload);
-> +}
-> +
-> +static inline void set_rd_overload_status(struct root_domain *rd, int status)
-> +{
-> +       WRITE_ONCE(rd->overload, status);
-> +}
-> +
->  #ifdef HAVE_RT_PUSH_IPI
->  extern void rto_push_irq_work_func(struct irq_work *work);
->  #endif
-> @@ -2518,8 +2528,8 @@ static inline void add_nr_running(struct rq *rq, unsigned count)
->
->  #ifdef CONFIG_SMP
->         if (prev_nr < 2 && rq->nr_running >= 2) {
-> -               if (!READ_ONCE(rq->rd->overload))
-> -                       WRITE_ONCE(rq->rd->overload, 1);
-> +               if (!is_rd_overloaded(rq->rd))
-> +                       set_rd_overload_status(rq->rd, 1);
->         }
->  #endif
->
-> --
-> 2.39.3
->
+right, there are some build issues that need to be fixed in this
+patch. Sorry for that.
+
+Thanks,
+
+-Robert
