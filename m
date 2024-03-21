@@ -1,182 +1,153 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3BF133998;
-	Thu, 21 Mar 2024 22:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90AD1133998
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 22:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711058408; cv=none; b=RNMu42gWBotNoudOr5+rEC8TyirXP6uZkeMSFJHMKP57VZ3Pm173Rx9+na7bUvBMcoLtancc+m6Z9d99LEnwrs1oI0JZXUl499DWkk5HQSZCw2AgkCPG/ODVw/dtb7Izu6VLBxTN7xIPy3JrYm3v4dfnDUhOU0WGqX+OXMQLl/w=
+	t=1711058414; cv=none; b=nI68XW6jngRS8uR+nanRHoI/1k6ttuvWN9M2mTF6svi20eU2ME4ioIojVbtqgLM/LbkjJoNeg2oSvkEV8TLxlwlPpvbxB38/WcgF6fmGPuE5WJBhPFjANXN41kI8Dq3fBPN4mff4qrjxKN66KsiyicwSfB7oBzWfJADmZ53/EJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711058408; c=relaxed/simple;
-	bh=t2QmslawEats+EV93HQG0+kSPQ49sMzPwqUo61078Cg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J9rqWtWJ1iP9efXgS5M/u7NpeyvAy4msQMQQcgbGzb9KtmXNd7Z9C9DLuyO8pvyraMORxt9XtBEMoVsQs2LT46MjrNJWDqQWW7idjiyeHGULbX/steEfDNB+ndL0ApHwi80Diejq8zjueRktO7JMpbqBmrlJJbMFEoMHddSkAlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=52n0zck7; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1711058414; c=relaxed/simple;
+	bh=MUnq4/9M9vqTEBi0VBbrZcfbKui9X18koTYZs2S57UU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TZIiZiyh8L7gALq0NaWHR1lj4rnGQQJXsWRJB1TIcH9DNlycdryeGL0gP7K5nbvRxcD8hE6N0z17lgMMn+amD/WFvRfQEKT/lBO61o0fKxPFmyuiJVjZh+BMP48Zwweid0EVVoLkneubgCJpT7Cj/r90N2Lgv6lrRaIWBZkJoN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bmDjklXs; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="52n0zck7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=TT+5vkWHgG4JG2zDFc0DxT6DP+1/xW6JuSns2VThGEI=; b=52n0zck7k+vUeE+nu8Ctrwc7Ne
-	5YWLCUzmuP0BHiG99a9vi2uVwJ4NWyg/aPKrEljnQ54IUg0ZJ/Lf9LhPlyEljuPv8pKm4JKCQ/L+O
-	PtapZuCttFCEENUi8xBRZdV8MQYb1gPLG0kdlZWzdewh5F5tGaY3fNcCH/apvSUvFAaI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rnQS5-00AuVW-Eo; Thu, 21 Mar 2024 22:59:57 +0100
-Date: Thu, 21 Mar 2024 22:59:57 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Josua Mayer <josua@solid-run.com>
-Cc: Gregory Clement <gregory.clement@bootlin.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Yazan Shhady <yazan.shhady@solid-run.com>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: add description for solidrun cn9130 som
- and clearfog boards
-Message-ID: <e24e78a6-852c-4458-987c-3601908a71f0@lunn.ch>
-References: <20240321-cn9130-som-v1-0-711127a409ae@solid-run.com>
- <20240321-cn9130-som-v1-2-711127a409ae@solid-run.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bmDjklXs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711058411;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=nBGES3csgpwp5vpSi4JEYoorjMw2XPXljjFYfhTZHaY=;
+	b=bmDjklXsmlJRFG9K6OJKt53nHePLQRIeh3/Du0GX3tvoiS6uwedpJ6g3CVCEuihdIpLoE6
+	/lr45PHnU7w+U9S5ZYKDCXoEJIkqsPmC9eRw/D9UcnQwDYkpTZeAza4V9cnthvDWYdRecJ
+	NS4ORCdUNX7vwhjPeqa/ES7kUZ6zxBA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-654-QPBc37aMNa2ekgj5rzr0ow-1; Thu, 21 Mar 2024 18:00:06 -0400
+X-MC-Unique: QPBc37aMNa2ekgj5rzr0ow-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 28A5E185A781;
+	Thu, 21 Mar 2024 22:00:06 +0000 (UTC)
+Received: from t14s.redhat.com (unknown [10.39.192.95])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 91CEC1C060A6;
+	Thu, 21 Mar 2024 21:59:59 +0000 (UTC)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	David Hildenbrand <david@redhat.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Janosch Frank <frankja@linux.ibm.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Peter Xu <peterx@redhat.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	kvm@vger.kernel.org,
+	linux-s390@vger.kernel.org
+Subject: [PATCH v1 0/2] s390/mm: shared zeropage + KVM fix and optimization
+Date: Thu, 21 Mar 2024 22:59:52 +0100
+Message-ID: <20240321215954.177730-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240321-cn9130-som-v1-2-711127a409ae@solid-run.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-On Thu, Mar 21, 2024 at 10:47:12PM +0100, Josua Mayer wrote:
-> Add description for the SolidRun CN9130 SoM, and Clearfog Base / Pro
-> reference boards.
-> 
-> The SoM has been designed as a pin-compatible replacement for the older
-> Armada 388 based SoM. Therefore it supports the same boards and a
-> similar feature set.
-> 
-> Most notable upgrades:
-> - 4x Cortex-A72
-> - 10Gbps SFP
-> - Both eMMC and SD supported at the same time
-> 
-> The developer first supporting this product at SolidRun decided to use
-> different filenames for the DTBs: Armada 388 uses the full
-> "clearfog" string while cn9130 uses the abbreviation "cf".
-> This name is already hard-coded in pre-installed vendor u-boot and can
-> not be changed easily.
-> 
-> NOTICE IN CASE ANYBODY WANTS TO SELF-UPGRADE:
-> CN9130 SoM has a different footprint from Armada 388 SoM.
-> Components on the carrier board below the SoM may collide causing
-> damage, such as on Clearfog Base.
-> 
-> Signed-off-by: Josua Mayer <josua@solid-run.com>
-> ---
->  arch/arm64/boot/dts/marvell/Makefile           |   2 +
->  arch/arm64/boot/dts/marvell/cn9130-cf-base.dts | 138 ++++++++++++++
->  arch/arm64/boot/dts/marvell/cn9130-cf-pro.dts  | 249 +++++++++++++++++++++++++
->  arch/arm64/boot/dts/marvell/cn9130-cf.dtsi     | 198 ++++++++++++++++++++
->  arch/arm64/boot/dts/marvell/cn9130-sr-som.dtsi | 160 ++++++++++++++++
->  5 files changed, 747 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
-> index 99b8cb3c49e1..019f2251d696 100644
-> --- a/arch/arm64/boot/dts/marvell/Makefile
-> +++ b/arch/arm64/boot/dts/marvell/Makefile
-> @@ -28,3 +28,5 @@ dtb-$(CONFIG_ARCH_MVEBU) += cn9130-crb-A.dtb
->  dtb-$(CONFIG_ARCH_MVEBU) += cn9130-crb-B.dtb
->  dtb-$(CONFIG_ARCH_MVEBU) += ac5x-rd-carrier-cn9131.dtb
->  dtb-$(CONFIG_ARCH_MVEBU) += ac5-98dx35xx-rd.dtb
-> +dtb-$(CONFIG_ARCH_MVEBU) += cn9130-cf-base.dtb
-> +dtb-$(CONFIG_ARCH_MVEBU) += cn9130-cf-pro.dtb
-> diff --git a/arch/arm64/boot/dts/marvell/cn9130-cf-base.dts b/arch/arm64/boot/dts/marvell/cn9130-cf-base.dts
-> new file mode 100644
-> index 000000000000..b0067940d5e4
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/marvell/cn9130-cf-base.dts
-> @@ -0,0 +1,138 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (C) 2024 Josua Mayer <josua@solid-run.com>
-> + *
-> + * DTS for SolidRun CN9130 Clearfog Base.
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/input/input.h>
-> +
-> +#include "cn9130.dtsi"
-> +#include "cn9130-sr-som.dtsi"
-> +#include "cn9130-cf.dtsi"
-> +
-> +/ {
-> +	model = "SolidRun CN9130 Clearfog Base";
-> +	compatible = "solidrun,clearfog-base-a1", "solidrun,clearfog-a1",
-> +		     "solidrun,cn9130-sr-som","marvell,cn9130",
-> +		     "marvell,armada-ap807-quad", "marvell,armada-ap807";
-> +
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
-> +		pinctrl-0 = <&rear_button_pins>;
-> +		pinctrl-names = "default";
-> +
-> +		button-0 {
-> +			/* The rear SW3 button */
-> +			label = "Rear Button";
-> +			gpios = <&cp0_gpio1 31 GPIO_ACTIVE_LOW>;
-> +			linux,can-disable;
-> +			linux,code = <BTN_0>;
-> +		};
-> +	};
-> +
-> +	rfkill-m2-gnss {
-> +		compatible = "rfkill-gpio";
-> +		label = "m.2 GNSS";
-> +		radio-type = "gps";
-> +		/* rfkill-gpio inverts internally */
-> +		shutdown-gpios = <&expander0 9 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	/* M.2 is B-keyed, so w-disable is for WWAN */
-> +	rfkill-m2-wwan {
-> +		compatible = "rfkill-gpio";
-> +		label = "m.2 WWAN";
-> +		radio-type = "wwan";
-> +		/* rfkill-gpio inverts internally */
-> +		shutdown-gpios = <&expander0 8 GPIO_ACTIVE_HIGH>;
-> +	};
-> +};
-> +
-> +/* SRDS #3 - SGMII 1GE */
-> +&cp0_eth1 {
-> +	phy = <&phy1>;
-> +	phys = <&cp0_comphy3 1>;
-> +	phy-mode = "sgmii";
-> +	status = "okay";
-> +};
-> +
+This series fixes one issue with uffd + shared zeropages on s390x and
+optimizes "ordinary" KVM guests to make use of shared zeropages again.
 
-> +&cp0_eth2_phy {
-> +	/*
-> +	 * Configure LEDs:
-> +	 * - LED[0]: link/activity: On/blink (green)
-> +	 * - LED[1]: link is 100/1000Mbps: On (yellow)
-> +	 * - LED[2]: high impedance (floating)
-> +	 */
-> +	marvell,reg-init = <3 16 0xf000 0x0a61>;
+userfaultfd could currently end up mapping shared zeropages into processes
+that forbid shared zeropages. This only apples to s390x, relevant for
+handling PV guests and guests that use storage kets correctly. Fix it
+by placing a zeroed folio instead of the shared zeropage during
+UFFDIO_ZEROPAGE instead.
 
-Sorry, but no. List the LEDs in the PHY node, and they can then be
-controlled via /sys/class/leds.
+I stumbled over this issue while looking into a customer scenario that
+is using:
 
-arch/arm/boot/dts/marvell/armada-370-rd.dts is an example.
+(1) Memory ballooning for dynamic resizing. Start a VM with, say, 100 GiB
+    and inflate the balloon during boot to 60 GiB. The VM has ~40 GiB
+    available and additional memory can be "fake hotplugged" to the VM
+    later on demand by deflating the balloon. Actual memory overcommit is
+    not desired, so physical memory would only be moved between VMs.
 
-	Andrew
+(2) Live migration of VMs between sites to evacuate servers in case of
+    emergency.
+
+Without the shared zeropage, during (2), the VM would suddenly consume
+100 GiB on the migration source and destination. On the migration source,
+where we don't excpect memory overcommit, we could easilt end up crashing
+the VM during migration.
+
+Independent of that, memory handed back to the hypervisor using "free page
+reporting" would end up consuming actual memory after the migration on the
+destination, not getting freed up until reused+freed again.
+
+While there might be ways to optimize parts of this in QEMU, we really
+should just support the shared zeropage again for ordinary VMs.
+
+We only expect legcy guests to make use of storage keys, so let's handle
+zeropages again when enabling storage keys or when enabling PV. To not
+break userfaultfd like we did in the past, don't zap the shared zeropages,
+but instead trigger unsharing faults, just like we do for unsharing
+KSM pages in break_ksm().
+
+Unsharing faults will simply replace the shared zeropage by a zeroed
+anonymous folio. We can already trigger the same fault path using GUP,
+when trying to long-term pin a shared zeropage, but also when unmerging
+a KSM-placed zeropages, so this is nothing new.
+
+Patch #1 tested on 86-64 by forcing mm_forbids_zeropage() to be 1, and
+running the uffd selftests.
+
+Patch #2 tested on s390x: the live migration scenario now works as
+expected, and kvm-unit-tests that trigger usage of skeys work well, whereby
+I can see detection and unsharing of shared zeropages.
+
+Based on current mm-unstable. Maybe at least the second patch should
+go via the s390x tree, I think patch #1 could go that route as well.
+
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+Cc: Janosch Frank <frankja@linux.ibm.com>
+Cc: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Peter Xu <peterx@redhat.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Sven Schnelle <svens@linux.ibm.com>
+Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: kvm@vger.kernel.org
+Cc: linux-s390@vger.kernel.org
+
+David Hildenbrand (2):
+  mm/userfaultfd: don't place zeropages when zeropages are disallowed
+  s390/mm: re-enable the shared zeropage for !PV and !skeys KVM guests
+
+ arch/s390/include/asm/gmap.h        |   2 +-
+ arch/s390/include/asm/mmu.h         |   5 +
+ arch/s390/include/asm/mmu_context.h |   1 +
+ arch/s390/include/asm/pgtable.h     |  15 ++-
+ arch/s390/kvm/kvm-s390.c            |   4 +-
+ arch/s390/mm/gmap.c                 | 163 +++++++++++++++++++++-------
+ mm/userfaultfd.c                    |  35 ++++++
+ 7 files changed, 178 insertions(+), 47 deletions(-)
+
+-- 
+2.43.2
+
