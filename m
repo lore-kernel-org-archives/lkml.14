@@ -1,322 +1,160 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CF0BE6E;
-	Thu, 21 Mar 2024 08:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFFCBE6E;
+	Thu, 21 Mar 2024 08:58:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711011216; cv=none; b=ok4HMlaS+uv9a/4gcuDBY1vRZUyK/or3bZa2+0Hj/aP3PSn8H8GohVRrqfl5C3Vble2r0oksqOgnwEAOi+D7XW9Ab4ilm+9igrzY2Rph0/u/4hTUA+tp9XN2y5/QjAfStdJXoCLTyIlAMp2FnCpdpK+GHQLvr7oOb85kj15huqY=
+	t=1711011513; cv=none; b=AKuCgz6BJSzzK+9HL1cSrOEPBaS8T8xGAXkhzloZlRywB1IU923UBmGFXVNAeew61aEADCEY95pwPpNKjMUlIDzm6JTeckaTezuW2/VVNpF9Nc24gVLFyvGjBtkjBqSUb2kuZ2Q612H8pU5kwQs4f4btJ+/WChyxGp7qEFLvZKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711011216; c=relaxed/simple;
-	bh=b924mGehVaz7RM1Ell0G0QnlUCZl3Tnwtr/AfmvR5Z0=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=k4W+pcNi1dvRkwaB64Jxj6NOkKGj3fJnpcVyjl6Kv6X/qD4ZDH+ejDsqdEOLHIMCCqD1w/EP2tkzvGu+HrN9B34TGNrK2SGwovJ10parjGr/6mxICqw7Rfv/tUutXlim2j6h8kx9oviGfOm4VQp3jGRV8NtV2/m59Zc8h08wDn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 356611A2438;
-	Thu, 21 Mar 2024 09:53:32 +0100 (CET)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D07D71A0DED;
-	Thu, 21 Mar 2024 09:53:31 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 650AC180222D;
-	Thu, 21 Mar 2024 16:53:30 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: abelvesa@kernel.org,
-	peng.fan@nxp.com,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	linux-imx@nxp.com,
-	shengjiu.wang@gmail.com
-Cc: linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] clk: imx: imx8mp: Add pm_runtime support for power saving
-Date: Thu, 21 Mar 2024 16:36:51 +0800
-Message-Id: <1711010211-6825-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1711011513; c=relaxed/simple;
+	bh=uGpBd9QI+Atx1GoKgTQyA4nlsR96BwgZ79GAu7yGD1g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=sRMHD3gZTnBLWfoIvRWMuKILvIi8CzfXRz1AtUE7ZqvcHRyzPNOvNkiTG5JcpRjAGSO0dzRjMZKEseSRP3SdJb95L9HbzCcZh8b8HJS4r3LZBk33cGPqN5hNnH2pt9+9sjkhxHI20gVdsWP3gLfW9Xy3donpfz3JCcRtE2vTLv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qvP43udc; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qvP43udc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8D37C433F1;
+	Thu, 21 Mar 2024 08:58:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711011512;
+	bh=uGpBd9QI+Atx1GoKgTQyA4nlsR96BwgZ79GAu7yGD1g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=qvP43udcWQrSBEPeuwihpyfg0fFvip845SrGXz7bPiJjHieri42mcfdZqQDG0kc6+
+	 OH13aUlpu3Q4xJGkyE5mQ8T6efE522w++4IKlroUpju0JeINkt9GlEC1N83+uXyi7F
+	 MjWsXYk7eQKzrLijzdZdzSzMHK5L8Gr9qWKLjjV7hCGVSRSo9V5h04V5nBDNG2M3xh
+	 ZpCC5a0xqmaaguE1omKiNqgV/r3BztmHo5kwuSNw8Nqfo7AajuHr0qhEIS5APplFIZ
+	 ieJmyvkcZaMGR1TpRYbNkZ3mjrtsosTVruW/SOf/7dEs4M9cn0jwf4SNaozH2UWJUR
+	 hMCzRnWoXxyeA==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Puranjay Mohan <puranjay12@gmail.com>, Andy Chiu <andy.chiu@sifive.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Sami
+ Tolvanen <samitolvanen@google.com>, Guo Ren <guoren@kernel.org>, Ley Foon
+ Tan <leyfoon.tan@starfivetech.com>, Deepak Gupta <debug@rivosinc.com>, Sia
+ Jee Heng <jeeheng.sia@starfivetech.com>, Bjorn Topel <bjorn@rivosinc.com>,
+ Song Shuai <suagrfillet@gmail.com>, Cl'ement L'eger <cleger@rivosinc.com>,
+ Al Viro <viro@zeniv.linux.org.uk>, Jisheng Zhang <jszhang@kernel.org>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Robbin Ehn <rehn@rivosinc.com>
+Subject: Re: [RFC PATCH] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
+In-Reply-To: <ZfslAb_W0Gk-0pmR@FVFF77S0Q05N.cambridge.arm.com>
+References: <20240306165904.108141-1-puranjay12@gmail.com>
+ <87ttlhdeqb.fsf@all.your.base.are.belong.to.us>
+ <ZfBbxPDd0rz6FN2T@FVFF77S0Q05N>
+ <8734suqsth.fsf@all.your.base.are.belong.to.us>
+ <mb61pplvw6grf.fsf@gmail.com>
+ <87zfv0onre.fsf@all.your.base.are.belong.to.us>
+ <ZfslAb_W0Gk-0pmR@FVFF77S0Q05N.cambridge.arm.com>
+Date: Thu, 21 Mar 2024 09:58:28 +0100
+Message-ID: <87frwkotaj.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Add pm_runtime support for power saving. In pm runtime suspend
-state the registers will be reseted, so add registers save
-in pm runtime suspend and restore them in pm runtime resume.
+Mark,
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Reviewed-by: Peng Fan <peng.fan@nxp.com>
----
-changes in v3:
-- remove REGS_NUM, use the ARRAY_SIZE
-- merge clk_imx8mp_audiomix_drvdata and clk_hw_onecell_data together.
+Mark Rutland <mark.rutland@arm.com> writes:
 
-changes in v2:
-- move pm_runtime_enable before the clk register
+>> A) Use auipc/jalr, only patch jalr to take us to a common
+>>    dispatcher/trampoline
+>>=20=20=20
+>>  | <func_trace_target_data_8B> # probably on a data cache-line !=3D func=
+ .text to avoid ping-pong
+>>  | ...
+>>  | func:
+>>  |   ...make sure ra isn't messed up...
+>>  |   aupic
+>>  |   nop <=3D> jalr # Text patch point -> common_dispatch
+>>  |   ACTUAL_FUNC
+>>  |=20
+>>  | common_dispatch:
+>>  |   load <func_trace_target_data_8B> based on ra
+>>  |   jalr
+>>  |   ...
+>>=20
+>> The auipc is never touched, and will be overhead. Also, we need a mv to
+>> store ra in a scratch register as well -- like Arm. We'll have two insn
+>> per-caller overhead for a disabled caller.
+>
+> Is the AUIPC a significant overhead? IIUC that's similar to Arm's ADRP, a=
+nd I'd
+> have expected that to be pretty cheap.
 
- drivers/clk/imx/clk-imx8mp-audiomix.c | 157 ++++++++++++++++++++++----
- 1 file changed, 136 insertions(+), 21 deletions(-)
+No, reg-to-reg moves are dirt cheap in my book.
 
-diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
-index 55ed211a5e0b..5ae33bce8ad8 100644
---- a/drivers/clk/imx/clk-imx8mp-audiomix.c
-+++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
-@@ -7,10 +7,12 @@
- 
- #include <linux/clk-provider.h>
- #include <linux/device.h>
-+#include <linux/io.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
- 
- #include <dt-bindings/clock/imx8mp-clock.h>
- 
-@@ -18,6 +20,7 @@
- 
- #define CLKEN0			0x000
- #define CLKEN1			0x004
-+#define EARC			0x200
- #define SAI1_MCLK_SEL		0x300
- #define SAI2_MCLK_SEL		0x304
- #define SAI3_MCLK_SEL		0x308
-@@ -26,6 +29,11 @@
- #define SAI7_MCLK_SEL		0x314
- #define PDM_SEL			0x318
- #define SAI_PLL_GNRL_CTL	0x400
-+#define SAI_PLL_FDIVL_CTL0	0x404
-+#define SAI_PLL_FDIVL_CTL1	0x408
-+#define SAI_PLL_SSCG_CTL	0x40C
-+#define SAI_PLL_MNIT_CTL	0x410
-+#define IPG_LP_CTRL		0x504
- 
- #define SAIn_MCLK1_PARENT(n)						\
- static const struct clk_parent_data					\
-@@ -182,26 +190,82 @@ static struct clk_imx8mp_audiomix_sel sels[] = {
- 	CLK_SAIn(7)
- };
- 
-+static const u16 audiomix_regs[] = {
-+	CLKEN0,
-+	CLKEN1,
-+	EARC,
-+	SAI1_MCLK_SEL,
-+	SAI2_MCLK_SEL,
-+	SAI3_MCLK_SEL,
-+	SAI5_MCLK_SEL,
-+	SAI6_MCLK_SEL,
-+	SAI7_MCLK_SEL,
-+	PDM_SEL,
-+	SAI_PLL_GNRL_CTL,
-+	SAI_PLL_FDIVL_CTL0,
-+	SAI_PLL_FDIVL_CTL1,
-+	SAI_PLL_SSCG_CTL,
-+	SAI_PLL_MNIT_CTL,
-+	IPG_LP_CTRL,
-+};
-+
-+struct clk_imx8mp_audiomix_priv {
-+	void __iomem *base;
-+	struct clk_hw_onecell_data *clk_hw_data;
-+	u32 regs_save[ARRAY_SIZE(audiomix_regs)];
-+};
-+
-+static void clk_imx8mp_audiomix_save_restore(struct device *dev, bool save)
-+{
-+	struct clk_imx8mp_audiomix_priv *priv = dev_get_drvdata(dev);
-+	void __iomem *base = priv->base;
-+	int i;
-+
-+	if (save) {
-+		for (i = 0; i < ARRAY_SIZE(audiomix_regs); i++)
-+			priv->regs_save[i] = readl(base + audiomix_regs[i]);
-+	} else {
-+		for (i = 0; i < ARRAY_SIZE(audiomix_regs); i++)
-+			writel(priv->regs_save[i], base + audiomix_regs[i]);
-+	}
-+}
-+
- static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
- {
--	struct clk_hw_onecell_data *priv;
-+	struct clk_imx8mp_audiomix_priv *priv;
-+	struct clk_hw_onecell_data *clk_hw_data;
- 	struct device *dev = &pdev->dev;
- 	void __iomem *base;
- 	struct clk_hw *hw;
--	int i;
-+	int i, ret;
- 
- 	priv = devm_kzalloc(dev,
--			    struct_size(priv, hws, IMX8MP_CLK_AUDIOMIX_END),
-+			    sizeof(*priv) + struct_size(clk_hw_data, hws, IMX8MP_CLK_AUDIOMIX_END),
- 			    GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
- 
--	priv->num = IMX8MP_CLK_AUDIOMIX_END;
-+	priv->clk_hw_data = (struct clk_hw_onecell_data *)((void *)priv + sizeof(*priv));
-+
-+	clk_hw_data = priv->clk_hw_data;
-+	clk_hw_data->num = IMX8MP_CLK_AUDIOMIX_END;
- 
- 	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 
-+	priv->base = base;
-+	dev_set_drvdata(dev, priv);
-+
-+	/*
-+	 * pm_runtime_enable needs to be called before clk register.
-+	 * That is to make core->rpm_enabled to be true for clock
-+	 * usage.
-+	 */
-+	pm_runtime_get_noresume(dev);
-+	pm_runtime_set_active(dev);
-+	pm_runtime_enable(dev);
-+
- 	for (i = 0; i < ARRAY_SIZE(sels); i++) {
- 		if (sels[i].num_parents == 1) {
- 			hw = devm_clk_hw_register_gate_parent_data(dev,
-@@ -216,10 +280,12 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
- 				0, NULL, NULL);
- 		}
- 
--		if (IS_ERR(hw))
--			return PTR_ERR(hw);
-+		if (IS_ERR(hw)) {
-+			ret = PTR_ERR(hw);
-+			goto err_clk_register;
-+		}
- 
--		priv->hws[sels[i].clkid] = hw;
-+		clk_hw_data->hws[sels[i].clkid] = hw;
- 	}
- 
- 	/* SAI PLL */
-@@ -228,39 +294,86 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
- 		ARRAY_SIZE(clk_imx8mp_audiomix_pll_parents),
- 		CLK_SET_RATE_NO_REPARENT, base + SAI_PLL_GNRL_CTL,
- 		0, 2, 0, NULL, NULL);
--	priv->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_REF_SEL] = hw;
-+	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_REF_SEL] = hw;
- 
- 	hw = imx_dev_clk_hw_pll14xx(dev, "sai_pll", "sai_pll_ref_sel",
- 				    base + 0x400, &imx_1443x_pll);
--	if (IS_ERR(hw))
--		return PTR_ERR(hw);
--	priv->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL] = hw;
-+	if (IS_ERR(hw)) {
-+		ret = PTR_ERR(hw);
-+		goto err_clk_register;
-+	}
-+	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL] = hw;
- 
- 	hw = devm_clk_hw_register_mux_parent_data_table(dev,
- 		"sai_pll_bypass", clk_imx8mp_audiomix_pll_bypass_sels,
- 		ARRAY_SIZE(clk_imx8mp_audiomix_pll_bypass_sels),
- 		CLK_SET_RATE_NO_REPARENT | CLK_SET_RATE_PARENT,
- 		base + SAI_PLL_GNRL_CTL, 16, 1, 0, NULL, NULL);
--	if (IS_ERR(hw))
--		return PTR_ERR(hw);
--	priv->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_BYPASS] = hw;
-+	if (IS_ERR(hw)) {
-+		ret = PTR_ERR(hw);
-+		goto err_clk_register;
-+	}
-+
-+	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_BYPASS] = hw;
- 
- 	hw = devm_clk_hw_register_gate(dev, "sai_pll_out", "sai_pll_bypass",
- 				       0, base + SAI_PLL_GNRL_CTL, 13,
- 				       0, NULL);
--	if (IS_ERR(hw))
--		return PTR_ERR(hw);
--	priv->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_OUT] = hw;
-+	if (IS_ERR(hw)) {
-+		ret = PTR_ERR(hw);
-+		goto err_clk_register;
-+	}
-+	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_OUT] = hw;
- 
- 	hw = devm_clk_hw_register_fixed_factor(dev, "sai_pll_out_div2",
- 					       "sai_pll_out", 0, 1, 2);
--	if (IS_ERR(hw))
--		return PTR_ERR(hw);
-+	if (IS_ERR(hw)) {
-+		ret = PTR_ERR(hw);
-+		goto err_clk_register;
-+	}
-+
-+	ret = devm_of_clk_add_hw_provider(&pdev->dev, of_clk_hw_onecell_get,
-+					  clk_hw_data);
-+	if (ret)
-+		goto err_clk_register;
-+
-+	pm_runtime_put_sync(dev);
-+	return 0;
-+
-+err_clk_register:
-+	pm_runtime_put_sync(dev);
-+	pm_runtime_disable(dev);
-+	return ret;
-+}
-+
-+static int clk_imx8mp_audiomix_remove(struct platform_device *pdev)
-+{
-+	pm_runtime_disable(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static int clk_imx8mp_audiomix_runtime_suspend(struct device *dev)
-+{
-+	clk_imx8mp_audiomix_save_restore(dev, true);
- 
--	return devm_of_clk_add_hw_provider(&pdev->dev, of_clk_hw_onecell_get,
--					   priv);
-+	return 0;
- }
- 
-+static int clk_imx8mp_audiomix_runtime_resume(struct device *dev)
-+{
-+	clk_imx8mp_audiomix_save_restore(dev, false);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops clk_imx8mp_audiomix_pm_ops = {
-+	SET_RUNTIME_PM_OPS(clk_imx8mp_audiomix_runtime_suspend,
-+			   clk_imx8mp_audiomix_runtime_resume, NULL)
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				      pm_runtime_force_resume)
-+};
-+
- static const struct of_device_id clk_imx8mp_audiomix_of_match[] = {
- 	{ .compatible = "fsl,imx8mp-audio-blk-ctrl" },
- 	{ /* sentinel */ }
-@@ -269,9 +382,11 @@ MODULE_DEVICE_TABLE(of, clk_imx8mp_audiomix_of_match);
- 
- static struct platform_driver clk_imx8mp_audiomix_driver = {
- 	.probe	= clk_imx8mp_audiomix_probe,
-+	.remove = clk_imx8mp_audiomix_remove,
- 	.driver = {
- 		.name = "imx8mp-audio-blk-ctrl",
- 		.of_match_table = clk_imx8mp_audiomix_of_match,
-+		.pm = &clk_imx8mp_audiomix_pm_ops,
- 	},
- };
- 
--- 
-2.34.1
+> IIUC your JALR can choose which destination register to store the return
+> address in, and if so, you could leave the original ra untouched (and rec=
+over
+> that in the common trampoline). Have I misunderstood that?
+>
+> Maybe that doesn't play nicely with something else?
 
+No, you're right, we can link to another register, and shave off an
+instruction. I can imagine that some implementation prefer x1/x5 for
+branch prediction reasons, but that's something that we can measure on.=20
+
+So, 1-2 movs + nop are unconditionally executed on the disabled case.
+(1-2 depending on the ra save/jalr reg strategy).
+
+>> B) Use jal, which can only take us +/-1M, and requires multiple
+>>    dispatchers (and tracking which one to use, and properly distribute
+>>    them. Ick.)
+>>=20
+>>  | <func_trace_target_data_8B> # probably on a data cache-line !=3D func=
+ .text to avoid ping-pong
+>>  | ...
+>>  | func:
+>>  |   ...make sure ra isn't messed up...
+>>  |   nop <=3D> jal # Text patch point -> within_1M_to_func_dispatch
+>>  |   ACTUAL_FUNC
+>>  |=20
+>>  | within_1M_to_func_dispatch:
+>>  |   load <func_trace_target_data_8B> based on ra
+>>  |   jalr
+>>=20
+>> C) Use jal, which can only take us +/-1M, and use a per-function
+>>    trampoline requires multiple dispatchers (and tracking which one to
+>>    use). Blows up text size A LOT.
+>>=20
+>>  | <func_trace_target_data_8B> # somewhere, but probably on a different =
+cacheline than the .text to avoid ping-ongs
+>>  | ...
+>>  | per_func_dispatch
+>>  |   load <func_trace_target_data_8B> based on ra
+>>  |   jalr
+>>  | func:
+>>  |   ...make sure ra isn't messed up...
+>>  |   nop <=3D> jal # Text patch point -> per_func_dispatch
+>>  |   ACTUAL_FUNC
+>
+> Beware that with option (C) you'll need to handle that in your unwinder f=
+or
+> RELIABLE_STACKTRACE. If you don't have a symbol for per_func_dispatch (or
+> func_trace_target_data_8B), PC values within per_func_dispatch would be
+> symbolized as the prior function/data.
+
+Good point (but I don't like C much...)!
+
+>> It's a bit sad that we'll always have to have a dispatcher/trampoline,
+>> but it's still better than stop_machine(). (And we'll need a fencei IPI
+>> as well, but only one. ;-))
+>>=20
+>> Today, I'm leaning towards A (which is what Mark suggested, and also
+>> Robbin).. Any other options?
+>
+> Assuming my understanding of JALR above is correct, I reckon A is the nic=
+est
+> option out of A/B/C.
+
+Yes! +1!
+
+
+Bj=C3=B6rn
