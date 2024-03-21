@@ -1,140 +1,97 @@
-Received: from mail.3ffe.de (0001.3ffe.de [159.69.201.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6514F1E5;
-	Thu, 21 Mar 2024 09:44:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.201.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4FF15472A
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 09:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711014282; cv=none; b=gEQjIMSa1UUTb5fyn84Oekf7bL/ocFYnind91yiTp18wdImThQlcSPxVAKJkT9pF36FuLRdFCkxMaUVv1iRZVQUw+MxfueBGIKL010sEOnBd3XACCov1QCIfw4fmQjmigCe2OS26Zz5HMtOy260IMAlRpe2omH1kqvEy0pM/dbg=
+	t=1711014304; cv=none; b=u+CF2mwOm4BMn4SNR5+ZMFrGqHtjWWvgg4sYzpfAC0nQje573U73KUrs33/2D6MkZmvwJiow99Tp2zfLLLA4Pn6qvaBKxxmqcHMrc+owrNmlIxW06vOtD7TUV8THMX6iISVHDfcXT350ZNpmZNv3JwMIlSHnwlYKhE7Ce2oN4fQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711014282; c=relaxed/simple;
-	bh=ziGevIGlkKiaegYPFPO/RtQW2rshXRVfR9JEheugHps=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Subject:Cc:
-	 References:In-Reply-To; b=Xz4nlrAA5qYbw46Fc1WM7mUzI9cwgNZ+lEct09NRCDfqTe7tCCPcb6Q6Favznd0KpenUyAoYK5rwyIjZBleK5E3eXHrnb2GkjGutb6llmDZ4ZmG66FNzqziTl7mDDdE4lMEnn4d7Ai20VDHIJXRpjII1D3ErOSs/DWybhVag9dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=walle.cc; arc=none smtp.client-ip=159.69.201.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=walle.cc
-Received: from localhost (unknown [IPv6:2a02:810b:4340:6430:4685:ff:fe12:5967])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.3ffe.de (Postfix) with ESMTPSA id CA427959;
-	Thu, 21 Mar 2024 10:38:23 +0100 (CET)
+	s=arc-20240116; t=1711014304; c=relaxed/simple;
+	bh=USv2fOw88lYmsXLEAJsg9gUy2ptDgrHgVv9Sgni5eFU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DDrEuXVIpEaR/nSKNNbFHnQC0y6K9smdYxqSsLMEhuJO2Z3a1C3Yg3qtx5wYTpGmfoe1F5oU3QFIJJbGVS1bMFjPM5UpiRhJe+THRhoNrdnqdsFUL050XsbygZ1sqsneAxxemUqNcY1cYos/6EkJIgocpEFEV4dmB18F3e/ILFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YZmR/82u; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YZmR/82u"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-60a15449303so8021587b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 02:45:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711014302; x=1711619102; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=wsq6huHxMXFKmsQE0mL/RER+3c0d8PlFp7FnnyoJiEE=;
+        b=YZmR/82uRfmQtV/WX6IQlMczh7Ac9gJHx6eRJtpJOTf9ZojtwyKMwDw/BeZ9oPP7vD
+         5W8jCqW3Eca8b8HDksAOu+EdXs6gW9d5uCDiHNB37NdFiEscYGPPcVOvzBw30pX26CUF
+         KX2B9/1Du+riMrWgYPr0gkKkQxRzldc23Aoug8eOelaqtpaqTW65zljuakXEAoiS7RT9
+         Ybs5AyRUHiVBg/2uh6xvIsWomag3MlGkcQNjiJ2Aeh9nfCPknblfd7iSkfQao9BDe4D2
+         eZ42mV9udbjHycM5JoNfcX5Df8icELJy4hNVMX01T/hWvmKIvBziC2/hmFJxTvQdIJt0
+         eX9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711014302; x=1711619102;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wsq6huHxMXFKmsQE0mL/RER+3c0d8PlFp7FnnyoJiEE=;
+        b=O5oz8FwjGzo+SzrR8ByMGELSbXArjiv8Royw9M7BQ0AuqhZ073+wWTRzsz8MMgLioO
+         6X8b1YRKEDH2LNHgT2V5EWPbQ+94kJAa9d9U2VS59N7SNXdWE3r2iQRtAekgPztH2271
+         iDT9A5hAfhDHklkpjEXVhotfcRpCavyluniyLnCSU5CvuD4h6N1Y4knig4xGw3R8UKWD
+         +k2pgkP0qAhoxjYS3RU1hU7tAgxweO+Bv/sfb6e6rYkW0JarxaLzEoqBStKB84g/QiN7
+         ZYeXCua2z7UuBJ9JrrFcPPHtJ8zETeprg3+ZIlUe+Iii/cZzH4KS3OXxQPDiCweX7TVS
+         szew==
+X-Forwarded-Encrypted: i=1; AJvYcCWxUw4tNN55BNmS2XGj6If1MVNL8+N4UBTaYptZb/uKlgIwSvDZPU89OuoWDy0bF30p6PYzD9joQXrYmbW107I1Cs7iqP85tuhfIICG
+X-Gm-Message-State: AOJu0Ywmep3yAZsYOIBpBXbaK0IPlgNwT8prWl7S29wK2JPk9oVoqhhJ
+	qWcwL5XzolSjOYlS2mCXNqbCggXXTUi8LA+UGW/eqJqYYju11DEwCglppkhSJpmLma09V0M/4PO
+	+Sy1dfOdrhy8lbKNZbT1R4xiEhllKWXU6xNBHIw==
+X-Google-Smtp-Source: AGHT+IHYhhmTdh8jHR73tDxXGEyjQHJf8EIgdwjfMRiP3YSKMMj9MKe6GuvrydG88IgBd8VMu6yZcI70K5Z7Y418EUo=
+X-Received: by 2002:a25:ae84:0:b0:dcb:e82c:f7d with SMTP id
+ b4-20020a25ae84000000b00dcbe82c0f7dmr1349884ybj.41.1711014301808; Thu, 21 Mar
+ 2024 02:45:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 21 Mar 2024 10:38:23 +0100
-Message-Id: <CZZBT3ZMDCVI.40UX5MB6LY4I@kernel.org>
-From: "Michael Walle" <mwalle@kernel.org>
-To: "Vaishnav Achath" <vaishnav.a@ti.com>, "Andrew Lunn" <andrew@lunn.ch>
-Subject: Re: [PATCH v4 1/5] dt-bindings: misc: Add mikrobus-connector
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, "Ayush Singh"
- <ayushdevel1325@gmail.com>, "open list" <linux-kernel@vger.kernel.org>,
- <jkridner@beagleboard.org>, <robertcnelson@beagleboard.org>,
- <lorforlinux@beagleboard.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Nishanth Menon" <nm@ti.com>, "Vignesh Raghavendra"
- <vigneshr@ti.com>, "Tero Kristo" <kristo@kernel.org>, "Derek Kiernan"
- <derek.kiernan@amd.com>, "Dragan Cvetic" <dragan.cvetic@amd.com>, "Arnd
- Bergmann" <arnd@arndb.de>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Mark Brown" <broonie@kernel.org>, "Johan
- Hovold" <johan@kernel.org>, "Alex Elder" <elder@kernel.org>, "open
- list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, "moderated list:ARM/TEXAS INSTRUMENTS K3
- ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:SPI
- SUBSYSTEM" <linux-spi@vger.kernel.org>, "moderated list:GREYBUS SUBSYSTEM"
- <greybus-dev@lists.linaro.org>, "Vaishnav M A" <vaishnav@beagleboard.org>
-X-Mailer: aerc 0.16.0
-References: <20240317193714.403132-1-ayushdevel1325@gmail.com>
- <20240317193714.403132-2-ayushdevel1325@gmail.com>
- <CZWVF90JJO98.2M7ARQ9WMGC94@kernel.org>
- <d4dc4d94-d323-4158-8c08-b7d37d8750d3@gmail.com>
- <b62915ca-c151-4e37-bb03-c92c569c84ff@lunn.ch>
- <4b319264-bff7-48e5-85e8-201ca0bafec6@ti.com>
- <4c299d42-84c7-46fc-952f-292cef1bb4b4@lunn.ch>
- <ded6c350-4c70-4a26-8b18-6605dcc6e084@ti.com>
-In-Reply-To: <ded6c350-4c70-4a26-8b18-6605dcc6e084@ti.com>
+MIME-Version: 1.0
+References: <20240321092529.13362-1-quic_jkona@quicinc.com> <20240321092529.13362-3-quic_jkona@quicinc.com>
+In-Reply-To: <20240321092529.13362-3-quic_jkona@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Thu, 21 Mar 2024 11:44:50 +0200
+Message-ID: <CAA8EJpqrJ1bh3hdS8Gm-QRe1iEYj34Wwz+=vOtONUgAF=hOZYw@mail.gmail.com>
+Subject: Re: [PATCH V2 RESEND 2/6] clk: qcom: videocc-sm8550: Add support for
+ videocc XO clk ares
+To: Jagadeesh Kona <quic_jkona@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>, linux-arm-msm@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Taniya Das <quic_tdas@quicinc.com>, 
+	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>, Ajit Pandey <quic_ajipan@quicinc.com>, 
+	Imran Shaik <quic_imrashai@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
-
-> > Is that because the current software support is too limited? Are there
-> > manufactures who want to create more complex designed, but are limited
-> > by what can be described in the manifest?
-> >=20
+On Thu, 21 Mar 2024 at 11:26, Jagadeesh Kona <quic_jkona@quicinc.com> wrote:
 >
-> most mikroBUS add-on boards in production lies in the category of=20
-> sensors, displays, connectivity, mixed signal (ADC/DAC .etc) and if you=
-=20
-> look at the existing bindings under bindings/iio/ , most devices need=20
-> only simple descriptions and the properties are mainly standard bus=20
-> properties (SPI/I2C properties), IRQ, named-gpios, named properties,=20
-> regulators, clocks the extension to manifest was made taking this into=20
-> account and the named property description interface just maps the=20
-> manifest entries to the unified device property interface under=20
-> include/linux/property.h
+> Add support for videocc XO clk ares for consumer drivers to be
+> able to request for this reset.
 
-How will the ethernet boards ([1], [2]) work? Where do they get
-their MAC address from, for example. The DT has some nice properties
-for that, but I doubt that will be possible with the manifest files.
-I've looked at the manifest file for the w5500 board [3] and to me
-it looks like that board will come up with a random MAC address on
-each start. Thus, even today, you have some boards which require
-a more complex description.
+Nit: s/for//
 
-Apart from the discussion whether the manifest is a suitable or
-sufficient mechanism to describe the hardware, I think the main
-problem with the proposed binding, is that it doesn't follow the
-binding Rob was proposing for a socket. If I want to use DT
-overlays, how would you describe an add-on board?
+>
+> Fixes: f53153a37969 ("clk: qcom: videocc-sm8550: Add video clock controller driver for SM8550")
+> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
 
-The proposal was that the base board has something like
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-mikrobus: socket {
-	compatible =3D "mikrobus-socket";
-	i2c-parent =3D <&i2c0>;
-	spi-parent =3D <&spi0>;
+> ---
+>  drivers/clk/qcom/videocc-sm8550.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-	i2c {};
-	spi {};
-};
 
-an add-on board can then have a DT snippet/overlay like the
-following:
-
-&mikrobus {
-	i2c {
-		eeprom@52: {
-			reg =3D <52>;
-			compatible =3D <atmel,at24..>;
-		}
-	};
-
-	spi {
-		sensor@0: {
-			reg =3D <0>;
-			compatible =3D <foobar>;
-		};
-	};
-};
-
-That should be possible with a binding for the mikrobus, which
-in fact it is just a pin header with a standard pinout. Also as
-Russell pointed out in v3, the EEPROM/manifest is not part of the
-mikrobus standard. So maybe that deserves an own compatible, like
-
-   compatible =3D "mikroe,click", "mikrobus-socket";
-
-Or maybe click-eeprom? Although click seems to be the brand name of
-MikroElektronika.
-
--michael
-
-[1] https://www.mikroe.com/eth-3-click
-[2] https://www.mikroe.com/eth-wiz-click
-[3] https://github.com/MikroElektronika/click_id/blob/main/manifests/ETH-WI=
-Z-CLICK.mnfs
+-- 
+With best wishes
+Dmitry
