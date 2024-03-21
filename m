@@ -1,178 +1,122 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9248E13441F;
-	Thu, 21 Mar 2024 20:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3968413441F
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 20:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711051352; cv=none; b=VLE0HUTGseK1m3nJR9l+sGlwftlYl0HFAcdjDaRwDd4xDZhpBXf0h6XTZMtnxlvHBtHtxPLvSsvmIUBVVT8HsxKajm5F+GN5yVANOoFixpQtVTA/vVSIgqcEGMJV0s+9vpel+0C0iPlR10FVitSkKE3op0Oa+Cak0lgU/PQ1C8Q=
+	t=1711051453; cv=none; b=TkDhmEtxsM1p5NdlxOlcwJDMcQN6sE/kGHITqv7jyGdCsq6BP5Why5SpQveBuUlefqqcmutQk1yNzWoLhpUkdIYHt3+VO4+jahHmhqLm1eDaPpXdWXbks24tfBEjQQZvQTLulUzj40FTEYkX5mPwoaR2430Rojvr6NgeFgHWMX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711051352; c=relaxed/simple;
-	bh=epTfLOewodEC86qJUC6RxLcdPz3Hlv4ahcc4eMW0kaU=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=guU3zcugUMvVgxZmJ/I6uFssYuhMkhjCxt0/0w4F4v8HcgE35eKviY4U6tgrCjrt/tAQQS4xq9prNx6Sz2hwRpmOa5mXFhwFEQgheZTGi0WpNCO3JCXBI2FVqgF/prrwO1DpdRbMNLtEWaJJZMjsHQmC7r+g/qsTAr03eh2e+uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NNkn9QLO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aT+kUfid; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1711051453; c=relaxed/simple;
+	bh=S6RP6uWmLdlEXkKQny/wqkGVsqJcl1gAUGPqZ6bCYiM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ndf7hhnGoOPE3FJqSYoF04gy5hBtAu68sUbt6QdoSH1W2zgahkQ+gF5ksOJXdyzjLUghvjAsFNo55nXbsLV8ZwtyIBuAgtq/ztIc1wcnZSTzK8CEEX2Lwd7YQJXEIo5JQrXDOpoKo1UkOTEtoT8SLqYBMl43QaeO20sRVSNh6pM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t9UBmgHd; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NNkn9QLO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aT+kUfid"
-Date: Thu, 21 Mar 2024 20:02:27 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1711051348;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=faM9E3twZF3hQBVekLZiz6R2tsI1iVLR+JuxSZCz95U=;
-	b=NNkn9QLOg0mzVjLe6RJ7c3wfQLieCIvZY/LdTPaQmIJ9m/6B4yBJSS8wx+0oKiWwpQ58I0
-	xU7+eKUjG2kEbjgBtppUhn3Lh2LVmTZ7mQa7PpcQRIfrCv4DoqfzWo2PbSkSnNPDJrNgg6
-	U5kmWisIVg+Q7c8a37ulmDwCUhmrQappE0FsQhOFMucGSAMclVZW46YEj0C+hqj3jmh1Ty
-	HE3m3cBPBP/KyV7ow0XflLjHoGMliAcv2Zp0WmDbci3nVC9mwOZ1FiabOtous8P9CYFviq
-	RRJAY/zdytrubSW2m/5PRRC/qmI5NOSgRDrwDndWJebsT9G9udZpS+TdCKJ5HQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1711051348;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=faM9E3twZF3hQBVekLZiz6R2tsI1iVLR+JuxSZCz95U=;
-	b=aT+kUfidiloCo63kki8B+9tkzXyQnzopm5srWYMI+c8ATMj9a/ECQ3gmUubiFvRCJ8Zmci
-	c+k+mwn1gBzYDICw==
-From: "tip-bot2 for Rafael J. Wysocki" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/cpu] x86/cpu: Move leftover contents of topology.c to setup.c
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
- Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <12422874.O9o76ZdvQC@kreacher>
-References: <12422874.O9o76ZdvQC@kreacher>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t9UBmgHd"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b26845cdso1905828276.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 13:04:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711051449; x=1711656249; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=TCBKqThFKtYqhjiY4RMqU+IuZ1w6cv8EE0k+cJlDNnk=;
+        b=t9UBmgHd/q5utv6qWZdP7eKjHmnVZeNPsHJMDwPYc4VzSykPCFSN7CTgGuWTVhHh+a
+         aKYy3oo4FCmLVj+XEkYF67gVoWr+EGVpoDy9KDhU+KV1z8h0vybFigUzJVjuqcBcQVDi
+         9UmqlsMy2iJRkUHNR8I9EdPTQxdvTqqtsFqsliQ7cuFrF7hYiNguxgHqbnR4oDDOHWj+
+         FPJxBjH6zXp5rlwhy0fpxHw6jCbrbESsqvo5Ky7MZSvoDJz7FjZyvxMnyPP53mO65s3h
+         AWBYcWP74+R9YGP7LJSclVyEpCt5zYHP+H8lumtOK1/34k4CFGACNJ5Ja89dzoaPxFV4
+         U8lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711051449; x=1711656249;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TCBKqThFKtYqhjiY4RMqU+IuZ1w6cv8EE0k+cJlDNnk=;
+        b=MKWa+X4znWJ63lqhXmWrMaQoIR73Z0RqWOkT+dd8d9CEPzfu/qAtL8UCnbCghTl8Hm
+         B+DNVVfJvryXKB85VGRUUl+9cOK709dWs1zO0ifCveFbd6/YSGe6KF76GNrbluH8+z7i
+         umeKKQadPwNToCnipQvqI28oe8/3NTR7x12IUeDvKFlJAsL8B7ZyXNkDKgvhS7RYfcOy
+         rGIpz3doSJaEFj5vdWTxlZwVfnbtc0rB8RqPZ6U/fzXJLyz8NKKh7jvBXH1rhvMXGKnc
+         k66YsgUJQUzkp7KnyXgCuPXLCnPjREreX5cIoO9JyvL9nBTIflsi5zuvHmvPIZHgwSzh
+         lqzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVMYUj5dpK5+Vy0bqbhukZVuxu8D3IzTSSvOl/8GyrYDDpifOmIU7KMGCkUWdhOLZJ/Sz6hPMKBFu6uwZlsLQsZs8dznMYG8dWfd8gA
+X-Gm-Message-State: AOJu0YymG0P1Kkz3+JiePTkhVkAUrCyJNN0W63C0RP8nVpxndIwBj9eW
+	zNWWExtXejMwU67UtBF5Ses5phpYIH2rchBa5Xxjpiv5PHwbw6KGsu1uP2DIMhScm6WRXWz6auu
+	umi06loLiW0oxfqd4XZ293w==
+X-Google-Smtp-Source: AGHT+IE5VBN/+0LV/WPi06J13PSBodS0OdOu9MsbtLw0uhdLxrW4h4oP0M2VfdY/eM1a/8qsQNDCacEmRg4kGkc2ng==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:2484:b0:dbd:b165:441 with
+ SMTP id ds4-20020a056902248400b00dbdb1650441mr74857ybb.0.1711051449209; Thu,
+ 21 Mar 2024 13:04:09 -0700 (PDT)
+Date: Thu, 21 Mar 2024 20:04:08 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <171105134784.10875.12163504829972581498.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIALeS/GUC/4XNQQqDMBCF4avIrDslicVqV71HEWmTiQ5oEhKRi
+ nj3pkLXZVb/LL63QaLIlOBWbBBp4cTe5VCnAvTwdD0hm9yghLqIUglMc3Q6rGgTvtjZae5otJ0
+ 1gTVqrFW+ylyrUgrIRohk+X34jzb3wGn2cT3mFvn9/mT5R14kSrTGkKp03dQN3Xvv+5HO2k/Q7 vv+AbD0yg3LAAAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711051448; l=1634;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=S6RP6uWmLdlEXkKQny/wqkGVsqJcl1gAUGPqZ6bCYiM=; b=ltUxZ2cpj94pnvyIBEzmfBEHQXiRRLeDTlLyWbffUabFpLWPDEAtsiKsRij39k9phe/VyFBxJ
+ 50r/4jHF4KlATUMzXLzQG9U+LPWH6633/Y5LV4uwnne1EeG7KX+npD1
+X-Mailer: b4 0.12.3
+Message-ID: <20240321-strncpy-fs-binfmt_elf_fdpic-c-v2-1-0b6daec6cc56@google.com>
+Subject: [PATCH v2] binfmt: replace deprecated strncpy
+From: Justin Stitt <justinstitt@google.com>
+To: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Eric Biederman <ebiederm@xmission.com>, Kees Cook <keescook@chromium.org>
+Cc: linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/cpu branch of tip:
+strncpy() is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-Commit-ID:     edf66a3c76635a5d326badd83d76fd480a0c8db2
-Gitweb:        https://git.kernel.org/tip/edf66a3c76635a5d326badd83d76fd480a0c8db2
-Author:        Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-AuthorDate:    Mon, 18 Mar 2024 19:12:45 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 21 Mar 2024 20:47:40 +01:00
+There is a _nearly_ identical implementation of fill_psinfo present in
+binfmt_elf.c -- except that one uses get_task_comm over strncpy(). Let's
+mirror that in binfmt_elf_fdpic.c
 
-x86/cpu: Move leftover contents of topology.c to setup.c
-
-The only useful piece of arch/x86/kernel/topology.c is the definition
-of arch_cpu_is_hotpluggable() that can be moved elsewhere (other
-architectures tend to put it into setup.c), so do that and delete
-the rest of the file.
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/12422874.O9o76ZdvQC@kreacher
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
- arch/x86/kernel/Makefile   |  2 +-
- arch/x86/kernel/setup.c    |  8 +++++++-
- arch/x86/kernel/topology.c | 43 +-------------------------------------
- 3 files changed, 9 insertions(+), 44 deletions(-)
- delete mode 100644 arch/x86/kernel/topology.c
+Changes in v2:
+- use get_task_comm (thanks Eric)
+- Link to v1: https://lore.kernel.org/r/20240321-strncpy-fs-binfmt_elf_fdpic-c-v1-1-fdde26c8989e@google.com
+---
+Note: build-tested only.
 
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index 7407769..5d12816 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -62,7 +62,7 @@ obj-$(CONFIG_X86_64)	+= sys_x86_64.o
- obj-$(CONFIG_X86_ESPFIX64)	+= espfix_64.o
- obj-$(CONFIG_SYSFS)	+= ksysfs.o
- obj-y			+= bootflag.o e820.o
--obj-y			+= pci-dma.o quirks.o topology.o kdebugfs.o
-+obj-y			+= pci-dma.o quirks.o kdebugfs.o
- obj-y			+= alternative.o i8253.o hw_breakpoint.o
- obj-y			+= tsc.o tsc_msr.o io_delay.o rtc.o
- obj-y			+= resource.o
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 3e1e96e..d50b258 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -7,6 +7,7 @@
-  */
- #include <linux/acpi.h>
- #include <linux/console.h>
-+#include <linux/cpu.h>
- #include <linux/crash_dump.h>
- #include <linux/dma-map-ops.h>
- #include <linux/dmi.h>
-@@ -1227,3 +1228,10 @@ static int __init register_kernel_offset_dumper(void)
+Found with: $ rg "strncpy\("
+---
+ fs/binfmt_elf_fdpic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
+index 1920ed69279b..3314249e8674 100644
+--- a/fs/binfmt_elf_fdpic.c
++++ b/fs/binfmt_elf_fdpic.c
+@@ -1359,7 +1359,7 @@ static int fill_psinfo(struct elf_prpsinfo *psinfo, struct task_struct *p,
+ 	SET_UID(psinfo->pr_uid, from_kuid_munged(cred->user_ns, cred->uid));
+ 	SET_GID(psinfo->pr_gid, from_kgid_munged(cred->user_ns, cred->gid));
+ 	rcu_read_unlock();
+-	strncpy(psinfo->pr_fname, p->comm, sizeof(psinfo->pr_fname));
++	get_task_comm(psinfo->pr_fname, p);
+ 
  	return 0;
  }
- __initcall(register_kernel_offset_dumper);
-+
-+#ifdef CONFIG_HOTPLUG_CPU
-+bool arch_cpu_is_hotpluggable(int cpu)
-+{
-+	return cpu > 0;
-+}
-+#endif /* CONFIG_HOTPLUG_CPU */
-diff --git a/arch/x86/kernel/topology.c b/arch/x86/kernel/topology.c
-deleted file mode 100644
-index d42c28b..0000000
---- a/arch/x86/kernel/topology.c
-+++ /dev/null
-@@ -1,43 +0,0 @@
--/*
-- * Populate sysfs with topology information
-- *
-- * Written by: Matthew Dobson, IBM Corporation
-- * Original Code: Paul Dorwin, IBM Corporation, Patrick Mochel, OSDL
-- *
-- * Copyright (C) 2002, IBM Corp.
-- *
-- * All rights reserved.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful, but
-- * WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or
-- * NON INFRINGEMENT.  See the GNU General Public License for more
-- * details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-- *
-- * Send feedback to <colpatch@us.ibm.com>
-- */
--#include <linux/interrupt.h>
--#include <linux/nodemask.h>
--#include <linux/export.h>
--#include <linux/mmzone.h>
--#include <linux/init.h>
--#include <linux/smp.h>
--#include <linux/irq.h>
--#include <asm/io_apic.h>
--#include <asm/cpu.h>
--
--#ifdef CONFIG_HOTPLUG_CPU
--bool arch_cpu_is_hotpluggable(int cpu)
--{
--	return cpu > 0;
--}
--#endif /* CONFIG_HOTPLUG_CPU */
+
+---
+base-commit: a4145ce1e7bc247fd6f2846e8699473448717b37
+change-id: 20240320-strncpy-fs-binfmt_elf_fdpic-c-828286d76310
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
