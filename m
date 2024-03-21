@@ -1,150 +1,162 @@
-Received: from fallback17.i.mail.ru (fallback17.i.mail.ru [79.137.243.72])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E9F95660;
-	Thu, 21 Mar 2024 20:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.137.243.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915B3132C1C
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 20:41:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711053682; cv=none; b=kvNjib/qInHCZqDWjbzuhEOthghCy+R5satIhQxYuhrNNmxmM+4oWo56nCITx5NyFJjSuMopU5qZxBKkEy5EK90e4tfJ0FtJXnKD6kzOjaxiQe+VGDbT6FBtnt8odG90y4e1iOEzu1jIztGoKCTyphDexohaRiQRHIVeZtMwzW4=
+	t=1711053717; cv=none; b=t3EGrqHYZsVZcBcN7V9oplDOBFteKR2oPxho2Nm3OIlO0oaJ2TgBN6wqCDH8rwEa+OBEKK0nNWckfeYHCltxmyg1dYWYVMgOmldYn5UuC6W9HKdb1qySrcVifX1n0+igZH5+M8KvxicCnlxdsmNsXFVFgvALG/xOl8heLNjiVUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711053682; c=relaxed/simple;
-	bh=BnYtIwuw/2b/3vdvy2XgYNIkhimsRG88bIipYxK54WU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nGt4zcBJa1pLvLL6+sxSult4q0k/lSquUnHkc9BPZCi0QD0L6S4JHm79MrYaIUI3MhV1DRH+f0fEM5H8e/73ltHYCVk7MuzX5G3djGo2oFUgBxCS/lE1GwCwlv6H+NjC1fECfv/EI8qX6fnLKR8kXgn6hv2TqCsuhP0vRzpjqGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=HlW9mUyy; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=Zo26VBvX; arc=none smtp.client-ip=79.137.243.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
+	s=arc-20240116; t=1711053717; c=relaxed/simple;
+	bh=romOeRzE5Le7J+mTmXT8Q+Y/nqRqwZ0Vbk3UPuPptG0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=IimZYW+gKYwFqK+r3y2UUpXQ0vcrv1V0iaH1gE9ZBSygUVS3ujXvD97c1d5bocRL0JEFtj+FfxPW+0grrmximEMdyrCCftklIuHV9/AD2CwgRguqDkGdrMPCCrYAUomowIrL24HdYsk1llWPg2AUJf8x3IjGFCbcZ2RnkkOKCdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=prvsm2t8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="HlW9mUyy";
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="Zo26VBvX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com; s=mailru;
-	h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=3DQ7R9E3fkw/LRozVd+Y1xkz1Cnq0Gx+/x0PUNhoOvU=;
-	t=1711053680;x=1711143680; 
-	b=HlW9mUyyrhj22i18GL7OyQr3PalCFXfV8EQ2N4CUOpWetRxCh9WSRM1CUMw8qdfY/COP4C4DEqdlAQV7SeBC0qypMId4I2NQVCG8Z33vLFmRdR4hMxIxzwT1ZN+FBYdSjon/ZdE5UBlhn3xwMpYJvvcpvbYemFYu6j9c7SmnJcg=;
-Received: from [10.12.4.2] (port=58572 helo=smtp29.i.mail.ru)
-	by fallback17.i.mail.ru with esmtp (envelope-from <danila@jiaxyga.com>)
-	id 1rnP2G-00ElVG-WC; Thu, 21 Mar 2024 23:29:13 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
-	; s=mailru; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
-	Cc:To:From:From:Sender:Reply-To:To:Cc:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
-	X-Cloud-Ids:Disposition-Notification-To;
-	bh=3DQ7R9E3fkw/LRozVd+Y1xkz1Cnq0Gx+/x0PUNhoOvU=; t=1711052953; x=1711142953; 
-	b=Zo26VBvXqX/ulU5WZ6ji6ZHViTPYZA6WEwMNhzGpnb1leLbG3LHT0ppz1CAR4Nkawy7aIYSocQO
-	Cnjvykj+zx5IGILSUlGRf+gfKpje8dcIM6AoXW7PTJCPGeDPJJR++kW3Ksu63bHpMr4owabZsX3U1
-	e9jbOpSrqWnY6h7/+BI=;
-Received: by smtp29.i.mail.ru with esmtpa (envelope-from <danila@jiaxyga.com>)
-	id 1rnP20-00000005qz4-33rx; Thu, 21 Mar 2024 23:28:57 +0300
-From: Danila Tikhonov <danila@jiaxyga.com>
-To: andersson@kernel.org,
-	konrad.dybcio@linaro.org,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	david@mainlining.org,
-	adrian@travitia.xyz
-Cc: linux-arm-msm@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Danila Tikhonov <danila@jiaxyga.com>
-Subject: [PATCH v2 0/7] Add dispcc, videocc and camcc for SM7150.
-Date: Thu, 21 Mar 2024 23:28:07 +0300
-Message-ID: <20240321202814.59835-1-danila@jiaxyga.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="prvsm2t8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3A5BC433C7;
+	Thu, 21 Mar 2024 20:41:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711053717;
+	bh=romOeRzE5Le7J+mTmXT8Q+Y/nqRqwZ0Vbk3UPuPptG0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=prvsm2t8EMZtFF1+AB3ZYBSWXIeC3teQcIEwZdjXju6bEPD+4CrMtCZ9ABcuhO1nG
+	 xzNsP9XK6fBCMSMJcz6snQIs2V9GBCOVh63XDoDV5dnFNi3k8T7QZpJOW3FW93RVMt
+	 ZaG3+HCGCSWjyUVmfxhhJy7SiqbwnPGe9znhTNoY32mx8ojfniuIG7ySoS6OnPAvEy
+	 Cw39viBFi4aJaoldAp6nwEaScdmgrOaVsZDRDJI06hKgRAbW/jZjj9N3pLU3KYjTkG
+	 fxiWE2jC1xqXNljn3CSYIFv15kXzUigk25fwRC1hckBTshsDku557nJ9s2nVplQ1Le
+	 vnclLgLcdX5ZA==
+Date: Thu, 21 Mar 2024 17:41:54 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Zhu Lingshan <lingshan.zhu@intel.com>
+Subject: [PATCH fyi 1/1] perf trace beauty: Sync linux/vhost.h with the
+ kernel sources
+Message-ID: <ZfybkuM8DKsdX_yO@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mailru-Src: smtp
-X-7564579A: 646B95376F6C166E
-X-77F55803: 4F1203BC0FB41BD92CB91DAA594FB6BFBB91359AE34AC56FDC45F69F1CDD9C6C182A05F538085040ACBE9AE061793060D27678DDAA806314FE3BC179E5C52477DF7EF9FDA0AB3C1067D05D8178A78D18
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7C59BC9C499248573C2099A533E45F2D0395957E7521B51C2CFCAF695D4D8E9FCEA1F7E6F0F101C6778DA827A17800CE78C6616F30072131EEA1F7E6F0F101C6723150C8DA25C47586E58E00D9D99D84E1BDDB23E98D2D38B73AB1701401CD871DA52BB59AB7702E4A2E791B4B590506301DD028134C9E799A471835C12D1D9774AD6D5ED66289B5278DA827A17800CE764603B5C71CE8B8F9FA2833FD35BB23D2EF20D2F80756B5F868A13BD56FB6657A471835C12D1D977725E5C173C3A84C390D92131081DE748117882F4460429728AD0CFFFB425014E868A13BD56FB6657D81D268191BDAD3DC09775C1D3CA48CF30B39F36F4341585BA3038C0950A5D36C8A9BA7A39EFB766D91E3A1F190DE8FDBA3038C0950A5D36D5E8D9A59859A8B654D8DBA2F838621276E601842F6C81A1F004C906525384303E02D724532EE2C3F43C7A68FF6260569E8FC8737B5C2249957A4DEDD2346B42E827F84554CEF50127C277FBC8AE2E8BA83251EDC214901ED5E8D9A59859A8B6A0CD97369C4BDE2E089D37D7C0E48F6C5571747095F342E88FB05168BE4CE3AF
-X-C1DE0DAB: 0D63561A33F958A5EF7F25161DC27D4F5002B1117B3ED696D8C3924A16BEECA84A0A47EBA01A636A823CB91A9FED034534781492E4B8EEAD9F68E8F4EDE74A9DC79554A2A72441328621D336A7BC284946AD531847A6065A535571D14F44ED41
-X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CF9E7F0732E50E559C1E46A34E0CFCA5683CC0C22ADFB8E41E2080B7593ABB39939EC5AF04A575AA6CA5E652D4FCD6795A956B77AC907D458807F407391B6C10D8B479818CAECDF190146D90F64BF3396102C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojt33F1wIes25dEmFYDuiNpg==
-X-Mailru-Sender: 9EB879F2C80682A09F26F806C739498123F80C9C64FBB36EF6A6F50B1491C03520769053F69089FD7CBA92510FC6000E2C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
-X-Mras: Ok
-X-7564579A: 646B95376F6C166E
-X-77F55803: 6242723A09DB00B4A873E06F0BBE0AC52C7C9BC2A173244ACA555425FAF015D968F3CF0E9FE49B6993595096ACAD5B56A699D4E6ED4DEE20252F4A093CEBFC588127D9DBB485201F
-X-7FA49CB5: 0D63561A33F958A592CF1183090CA3BD3C791133B6816EA74C2605B28D18E60A8941B15DA834481FA18204E546F3947C05B7D4054DE234C1F6B57BC7E64490618DEB871D839B7333395957E7521B51C2DFABB839C843B9C08941B15DA834481F8AA50765F79006377B3E3CA19E3E440B389733CBF5DBD5E9B5C8C57E37DE458BD96E472CDF7238E0725E5C173C3A84C39C2627E4F2648A8635872C767BF85DA2F004C90652538430E4A6367B16DE6309
-X-87b9d050: 1
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojt33F1wIes2407rFjbB6fsQ==
-X-Mailru-MI: 8000000000000800
-X-Mras: Ok
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This series adds dispcc, videocc and camcc support for SM7150. This series
-also introduces various fixes for sm7150-gcc.
+tldr; Just FYI, I'm carrying this on the perf tools tree.
 
-David Wronek and Jens Reidel were added as maintainers. These people will
-be able to test new features at any time or make fixes if necessary.
+Full explanation:
 
-Changes in v2:
-- Drop patch 1 from v1 
-- Add Rob's R-b tag to patches no. 3, 4 and 5
-- Switch disp_cc/dispcc, cam_cc/camcc and video_cc/videocc
-- Make clk_init_data const for dispcc (For some reason this was missed in
-the first version)
-- Add gdsc cxcs for videocc
-- Fix topology around titan_top power domain for camcc
-- Drop the CAMCC_ prefix from camcc gdsc names
-- Add flags for camcc gdscs
-- Link to v1:
-https://lore.kernel.org/all/20240220165240.154716-1-danila@jiaxyga.com/
+There used to be no copies, with tools/ code using kernel headers
+directly. From time to time tools/perf/ broke due to legitimate kernel
+hacking. At some point Linus complained about such direct usage. Then we
+adopted the current model.
 
-To: Bjorn Andersson <andersson@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-To: Michael Turquette <mturquette@baylibre.com>
-To: Stephen Boyd <sboyd@kernel.org>
-To: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-To: Conor Dooley <conor+dt@kernel.org>
-To: David Wronek <david@mainlining.org>
-To: Jens Reidel <adrian@travitia.xyz>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: linux-clk@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+The way these headers are used in perf are not restricted to just
+including them to compile something.
 
-Danila Tikhonov (7):
-  clk: qcom: gcc-sm7150: Make clk_init_data const and various fixes
-  dt-bindings: clock: qcom: Add SM7150 DISPCC clocks
-  clk: qcom: Add Display Clock Controller driver for SM7150
-  dt-bindings: clock: qcom: Add SM7150 CAMCC clocks
-  clk: qcom: Add Camera Clock Controller driver for SM7150
-  dt-bindings: clock: qcom: Add SM7150 VIDEOCC clocks
-  clk: qcom: Add Video Clock Controller driver for SM7150
+There are sometimes used in scripts that convert defines into string
+tables, etc, so some change may break one of these scripts, or new MSRs
+may use some different #define pattern, etc.
 
- .../bindings/clock/qcom,sm7150-camcc.yaml     |   60 +
- .../bindings/clock/qcom,sm7150-dispcc.yaml    |   75 +
- .../bindings/clock/qcom,sm7150-videocc.yaml   |   58 +
- drivers/clk/qcom/Kconfig                      |   29 +
- drivers/clk/qcom/Makefile                     |    3 +
- drivers/clk/qcom/camcc-sm7150.c               | 2061 +++++++++++++++++
- drivers/clk/qcom/dispcc-sm7150.c              | 1020 ++++++++
- drivers/clk/qcom/gcc-sm7150.c                 |  394 ++--
- drivers/clk/qcom/videocc-sm7150.c             |  357 +++
- include/dt-bindings/clock/qcom,sm7150-camcc.h |  113 +
- .../dt-bindings/clock/qcom,sm7150-dispcc.h    |   59 +
- .../dt-bindings/clock/qcom,sm7150-videocc.h   |   28 +
- 12 files changed, 4060 insertions(+), 197 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm7150-camcc.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm7150-dispcc.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm7150-videocc.yaml
- create mode 100644 drivers/clk/qcom/camcc-sm7150.c
- create mode 100644 drivers/clk/qcom/dispcc-sm7150.c
- create mode 100644 drivers/clk/qcom/videocc-sm7150.c
- create mode 100644 include/dt-bindings/clock/qcom,sm7150-camcc.h
- create mode 100644 include/dt-bindings/clock/qcom,sm7150-dispcc.h
- create mode 100644 include/dt-bindings/clock/qcom,sm7150-videocc.h
+E.g.:
 
+  $ ls -1 tools/perf/trace/beauty/*.sh | head -5
+  tools/perf/trace/beauty/arch_errno_names.sh
+  tools/perf/trace/beauty/drm_ioctl.sh
+  tools/perf/trace/beauty/fadvise.sh
+  tools/perf/trace/beauty/fsconfig.sh
+  tools/perf/trace/beauty/fsmount.sh
+  $
+  $ tools/perf/trace/beauty/fadvise.sh
+  static const char *fadvise_advices[] = {
+        [0] = "NORMAL",
+        [1] = "RANDOM",
+        [2] = "SEQUENTIAL",
+        [3] = "WILLNEED",
+        [4] = "DONTNEED",
+        [5] = "NOREUSE",
+  };
+  $
+
+The tools/perf/check-headers.sh script, part of the tools/ build
+process, points out changes in the original files.
+
+So its important not to touch the copies in tools/ when doing changes in
+the original kernel headers, that will be done later, when
+check-headers.sh inform about the change to the perf tools hackers.
+
+To get the changes in:
+
+  1496c47065f9f841 ("vhost-vdpa: uapi to support reporting per vq size")
+
+To pick up these changes and support them:
+
+  $ tools/perf/trace/beauty/vhost_virtio_ioctl.sh > before
+  $ cp include/uapi/linux/vhost.h tools/perf/trace/beauty/include/uapi/linux/vhost.h
+  $ tools/perf/trace/beauty/vhost_virtio_ioctl.sh > after
+  $ diff -u before after
+  --- before	2024-03-21 17:33:58.878173388 -0300
+  +++ after	2024-03-21 17:34:07.687563333 -0300
+  @@ -49,6 +49,7 @@
+   	[0x7B] = "VDPA_GET_VRING_GROUP",
+   	[0x7F] = "VDPA_GET_VRING_DESC_GROUP",
+   	[0x80] = "VDPA_GET_VQS_COUNT",
+  +	[0x80] = "VDPA_GET_VRING_SIZE",
+   	[0x81] = "VDPA_GET_GROUP_NUM",
+   	[0x8] = "NEW_WORKER",
+   };
+  $
+
+For instance, see how those 'cmd' ioctl arguments get translated, now
+VDPA_GET_VRING_SIZE will be as well.
+
+  # perf trace -a -e ioctl --max-events=10
+       0.000 ( 0.011 ms): pipewire/2261 ioctl(fd: 60, cmd: SNDRV_PCM_HWSYNC, arg: 0x1)                   = 0
+      21.353 ( 0.014 ms): pipewire/2261 ioctl(fd: 60, cmd: SNDRV_PCM_HWSYNC, arg: 0x1)                   = 0
+      25.766 ( 0.014 ms): gnome-shell/2196 ioctl(fd: 14, cmd: DRM_I915_IRQ_WAIT, arg: 0x7ffe4a22c740)    = 0
+      25.845 ( 0.034 ms): gnome-shel:cs0/2212 ioctl(fd: 14, cmd: DRM_I915_IRQ_EMIT, arg: 0x7fd43915dc70) = 0
+      25.916 ( 0.011 ms): gnome-shell/2196 ioctl(fd: 9, cmd: DRM_MODE_ADDFB2, arg: 0x7ffe4a22c8a0)       = 0
+      25.941 ( 0.025 ms): gnome-shell/2196 ioctl(fd: 9, cmd: DRM_MODE_ATOMIC, arg: 0x7ffe4a22c840)       = 0
+      32.915 ( 0.009 ms): gnome-shell/2196 ioctl(fd: 9, cmd: DRM_MODE_RMFB, arg: 0x7ffe4a22cf9c)         = 0
+      42.522 ( 0.013 ms): gnome-shell/2196 ioctl(fd: 14, cmd: DRM_I915_IRQ_WAIT, arg: 0x7ffe4a22c740)    = 0
+      42.579 ( 0.031 ms): gnome-shel:cs0/2212 ioctl(fd: 14, cmd: DRM_I915_IRQ_EMIT, arg: 0x7fd43915dc70) = 0
+      42.644 ( 0.010 ms): gnome-shell/2196 ioctl(fd: 9, cmd: DRM_MODE_ADDFB2, arg: 0x7ffe4a22c8a0)       = 0
+  #
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Michael S. Tsirkin <mst@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Zhu Lingshan <lingshan.zhu@intel.com>
+Link: https://lore.kernel.org/lkml/
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/trace/beauty/include/uapi/linux/vhost.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/tools/perf/trace/beauty/include/uapi/linux/vhost.h b/tools/perf/trace/beauty/include/uapi/linux/vhost.h
+index 649560c685f13b73..bea6973906134656 100644
+--- a/tools/perf/trace/beauty/include/uapi/linux/vhost.h
++++ b/tools/perf/trace/beauty/include/uapi/linux/vhost.h
+@@ -227,4 +227,11 @@
+  */
+ #define VHOST_VDPA_GET_VRING_DESC_GROUP	_IOWR(VHOST_VIRTIO, 0x7F,	\
+ 					      struct vhost_vring_state)
++
++/* Get the queue size of a specific virtqueue.
++ * userspace set the vring index in vhost_vring_state.index
++ * kernel set the queue size in vhost_vring_state.num
++ */
++#define VHOST_VDPA_GET_VRING_SIZE	_IOWR(VHOST_VIRTIO, 0x80,	\
++					      struct vhost_vring_state)
+ #endif
 -- 
 2.44.0
 
