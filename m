@@ -1,247 +1,137 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218DAE57B;
-	Thu, 21 Mar 2024 17:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255C212DD96
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 17:46:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711043072; cv=none; b=D46csBHduHUtpO2A05P9zjUm8vvh5/R8UvtT4pP1JcbNciiBDeJII2qatImgFNuteEQewUubtXD3kIpNJikTSkkHzbR1ilue3GJnTLKs5mIbbMqyxN3KTRRWe8ewIihDcNWz8FUWk+GitRavWObgNwPfIvWWoVvkRi2oeVdtbMg=
+	t=1711043181; cv=none; b=Mlz7avJNlxGWHzQl9S3usuQ7BwH/EiFLsTuHBcOmPPGbQjmdghyjttY9NTsl/AWMkeRInEJR8uMeISy3U1U64Ic1sghIoaNaUW49wJYfSQRIqnUJYSUYcXtNUV7VJYpqmyRQZUowuGsPgvisOYBouZBul5aR6Vz8O/fu9VsNnZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711043072; c=relaxed/simple;
-	bh=wTbKWzdEt85HhcoAH5XHPgmXrvighJUnydmBeN8UTrA=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type; b=mh3b6Y3fKz9KdcwRwfenalotsIsqiRySnevuRcZFdbtaAAI5lXq5eCH18RPNywaCt+mLZfrXfO/p60xqlr9XZTPLqHKQxZmS6xpo1BjUilKKxDoX7tDlueR6NJULHkNkfPWrhXtsVak+AdiryxdgdmAcH1KbeMxeHJEBRkh9RyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V0t9d3slgz6K5rf;
-	Fri, 22 Mar 2024 01:43:49 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 62FDF140A36;
-	Fri, 22 Mar 2024 01:44:25 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 21 Mar
- 2024 17:44:24 +0000
-Date: Thu, 21 Mar 2024 17:44:23 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: <linux-cxl@vger.kernel.org>
-CC: Sreenivas Bagalkote <sreenivas.bagalkote@broadcom.com>, Brett Henning
-	<brett.henning@broadcom.com>, Harold Johnson <harold.johnson@broadcom.com>,
-	Sumanesh Samanta <sumanesh.samanta@broadcom.com>, "Williams, Dan J"
-	<dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>, Davidlohr Bueso
-	<dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, <linuxarm@huawei.com>,
-	<linux-api@vger.kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	"Natu, Mahesh" <mahesh.natu@intel.com>
-Subject: RFC: Restricting userspace interfaces for CXL fabric management
-Message-ID: <20240321174423.00007e0d@Huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1711043181; c=relaxed/simple;
+	bh=M/FF2755fkAa2/aIuZGCCr4SrdFdCOSK57hpejhxl8s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LufaKURoy7UOsOyt1fBcvCml8FqaQmeJTNh6xCZWOw8C2tjTqIFBlYe+ZJT1zEMHqp3c840IUZIKAYkGnd/2NcBFxcmDzT7rO/71X7LrnaAvaBDLgtazXRIAMkizV1d88sV4eAMOXqt8GHU86NW5PdNhHmz26ZcTJ07lNNVBCKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x3OBCoSS; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x3OBCoSS"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-56b85146589so2243208a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 10:46:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711043176; x=1711647976; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=s0dOTTXFfrfq9Ues5+BMkl/QwEDK0BHkLP5toiKcXc8=;
+        b=x3OBCoSSKDQUmaDs5w+A83UFD6a//HtPRRuB7RW7aDqs5abMFqDvb1UvgUNZ5YcL0X
+         esEUViiYATp2lCL/KKLu+xdUgl+J44zik0WTDoOk2s0+pIFGEPc/cj+9XRN1NG4O3yn5
+         St8jF7plmFAK29fffDWQnu6ZHwAo7SsmsYWmDdjmmSuiEBN4ihSKM9yN1yWeHFagvktQ
+         ijodTayv1ajfOiGXeHA8M2IAMq0kWiuDHzVeDRHwNow2gpG7WmuebzZGzwviLtrKa8xx
+         R+puZGPMLatDjewS2curPY9CLfe9Vg1xURMPDPZKdu+ePlRrbiAgLj7SFYukVKsrwFwn
+         5BVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711043176; x=1711647976;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s0dOTTXFfrfq9Ues5+BMkl/QwEDK0BHkLP5toiKcXc8=;
+        b=sRPWUa5/AWTOdKOGeESNpuDmlK32LPstVnUmCnbCUaN39GyBt3bwxOinWPIkWMzMYQ
+         S+MfeR81UzjDSo7mta/S6URqie4aOfPpPZdM4sMK0frdVUm31MWCJLm6RbIolE8Y/Q35
+         iH+R5dGzaDTvlh9mHj/00brPT+uVnqqw2/mmYmAg6xqr9yU6tJSXLwRRyB9lXcJKFAOW
+         SIyZOIvNTNLN5KwjBYFmcVT0bdHIlMv2TH8LQbFx6kDzXZCybc0UGzYLMxEHQVa646ff
+         bMKpthaH7NO0Cxth4jqr81l6frm0q/ZuEgisg1/nUtloPJrO6HQyjAPu2jM3ZdDEUM5r
+         mS1w==
+X-Forwarded-Encrypted: i=1; AJvYcCVWCL06frDKGFHlXcN976T59DiXIq47zXiWrd82ezLR0M+BSEf/2i4ThKtwxWFzg+5DjHBLZQd0pNJh/M6V3FmcNYXVXPG043JBv3SJ
+X-Gm-Message-State: AOJu0YwYWndkSj0T84rkJLW/qhnOYi0iD60v7Hw77NAcv39o6Aeptdhj
+	SeHX5cim2V8LTLuPKV/7Fax4wjp6RjgGCVbDZWd6T1GVWZzz2dWXvjg6M2MYtlA=
+X-Google-Smtp-Source: AGHT+IGAnoHF7ZnUlaDRyNuBDzwAyyxaXgrPr0oX691iRTn+TEMFGtgI0ivz96S0AbL/CAmSZ42i7w==
+X-Received: by 2002:a50:d78d:0:b0:568:c6fd:4f50 with SMTP id w13-20020a50d78d000000b00568c6fd4f50mr176577edi.7.1711043176342;
+        Thu, 21 Mar 2024 10:46:16 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id cm8-20020a0564020c8800b005689f3d6936sm110773edb.53.2024.03.21.10.46.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Mar 2024 10:46:15 -0700 (PDT)
+Message-ID: <0f180f62-8782-456f-b05e-5bc0a2cb7ef2@linaro.org>
+Date: Thu, 21 Mar 2024 18:46:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: hwmon: lm87: convert to dtschema
+To: Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, peiyu li <579lpy@gmail.com>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240321-hwmon_yaml-v2-0-74fa8eb60ec9@gmail.com>
+ <20240321-hwmon_yaml-v2-1-74fa8eb60ec9@gmail.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240321-hwmon_yaml-v2-1-74fa8eb60ec9@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Hi All,
+On 21/03/2024 17:33, Javier Carrasco wrote:
+> Convert existing bindings to dtschema to support validation.
+> 
+> This is a straightforward conversion with no new properties.
+> 
+> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+> ---
 
-This is has come up in a number of discussions both on list and in private,
-so I wanted to lay out a potential set of rules when deciding whether or not
-to provide a user space interface for a particular feature of CXL Fabric
-Management.  The intent is to drive discussion, not to simply tell people
-a set of rules.  I've brought this to the public lists as it's a Linux kernel
-policy discussion, not a standards one.
+Please keep original Co-developed-by with SoB.
 
-Whilst I'm writing the RFC this my attempt to summarize a possible
-position rather than necessarily being my personal view.
-
-It's a straw man - shoot at it!
-
-Not everyone in this discussion is familiar with relevant kernel or CXL concepts
-so I've provided more info than I normally would.
-
-First some background:
-======================
-
-CXL has two different types of Fabric. The comments here refer to both, but
-for now the kernel stack is focused on the simpler VCS fabric, not the more
-recent Port Based Routing (PBR) Fabrics. A typical example for 2 hosts
-connected to a common switch looks something like:
-
- ________________               _______________
-|                |             |               |    Hosts - each sees 
-|    HOST A      |             |     HOST B    |    a PCIe style tree
-|                |             |               |    but from a fabric config
-|   |Root Port|  |             |   |Root Port| |    point of view it's more
- -------|--------               -------|-------     complex.
-        |                              |           
-        |                              |
- _______|______________________________|________
-|      USP (SW-CCI)                   USP       | Switch can have lots of
-|       |                              |        | Upstream Ports. Each one
-|   ____|________               _______|______  | has a virtual hierarchy.
-|  |             |              |             | |
-| vPPB          vPPB          vPPB          vPPB| There are virtual
-|  x             |             |              | | "downstream ports."(vPPBs)
-|                \            /              /  | That can be bound to real
-|                 \          /              /   | downstream ports.
-|                  \        /              /    |
-|                   \      /              /     | Multi Logical Devices are
-|      DSP0           DSP1             DSP 2    | support more than one vPPB
-------------------------------------------------  bound to a single physical
-         |             |                 |        DSP (transactions are tagged
-         |             |                 |        with an LD-ID)
-        SLD0           MLD0              SLD1
-
-Some typical fabric management activities:
-1) Bind/Unbind vPPB to physical DSP (Results in hotplug / unplug events)
-2) Access config space or BAR space of End Points below the switch.
-3) Tunneling messages through to devices downstream (e.g Dynamic Capacity
-   Forced Remove that will blow away some memory even if a host is using it).
-4) Non destructive stuff like status read back.
-
-Given the hosts may be using the Type 3 hosted memory (either Single Logical
-Device - SLD, or an LD on a Multi logical Device - MLD) as normal memory,
-unbinding a device in use can result in the memory access from a
-different host being removed. The 'blast radius' is perhaps a rack of
-servers.  This discussion applies equally to FM-API commands sent to Multi
-Head Devices (see CXL r3.1).
-
-The Fabric Management actions are done using the CXL spec defined Fabric
-Management API, (FM-API) which is transported over various means including
-OoB MCTP over your favourite transport (I2C, PCIe-VDM...) or via normal
-PCIe read/write to a Switch-CCI.  A Switch-CCI is mailbox in PCI BAR
-space on a function found alongside one of the switch upstream ports;
-this mailbox is very similar to the MMPT definition found in PCIe r6.2.
-
-In many cases this switch CCI / MCTP connection is used by a BMC rather
-than a normal host, but there have been some questions raised about whether
-a general purpose server OS would have a valid reason to use this interface
-(beyond debug and testing) to configure the switch or an MHD.
-
-If people have a use case for this, please reply to this thread to give
-more details.
-
-The most recently posted CXL Switch-CCI support only provided the RAW CXL
-command IOCTL interface that is already available for Type 3 memory devices.
-That allows for unfettered control of the switch but, because it is
-extremely easy to shoot yourself in the foot and cause unsolvable bug reports,
-it taints the kernel. There have been several requests to provide this interface
-without the taint for these switch configuration mailboxes.
-
-Last posted series:
-https://lore.kernel.org/all/20231016125323.18318-1-Jonathan.Cameron@huawei.com/
-Note there are unrelated reasons why that code hasn't been updated since v6.6 time,
-but I am planning to get back to it shortly.
-
-Similar issues will occur for other uses of PCIe MMPT (new mailbox in PCI that
-sometimes is used for similarly destructive activity such as PLDM based
-firmware update).
-
-
-On to the proposed rules:
-
-1) Kernel space use of the various mailboxes, or filtered controls from user space.
-==================================================================================
-
-Absolutely fine - no one worries about this, but the mediated traffic will
-be filtered for potentially destructive side effects. E.g. it will reject
-attempts to change anything routing related if the kernel either knows a host is
-using memory that will be blown away, or has no way to know (so affecting
-routing to another host).  This includes blocking 'all' vendor defined
-messages as we have no idea what the do.  Note this means the kernel has
-an allow list and new commands are not initially allowed.
-
-This isn't currently enabled for Switch CCIs because they are only really
-interesting if the potentially destructive stuff is available (an earlier
-version did enable query commands, but it wasn't particularly useful to
-know what your switch could do but not be allowed to do any of it).
-If you take a MMPT usecase of PLDM firmware update, the filtering would
-check that the device was in a state where a firmware update won't rip
-memory out from under a host, which would be messy if that host is
-doing the update.
-
-2) Unfiltered userspace use of mailbox for Fabric Management - BMC kernels
-==========================================================================
-
-(This would just be a kernel option that we'd advise normal server
-distributions not to turn on. Would be enabled by openBMC etc)
-
-This is fine - there is some work to do, but the switch-cci PCI driver
-will hopefully be ready for upstream merge soon. There is no filtering of
-accesses. Think of this as similar to all the damage you can do via
-MCTP from a BMC. Similarly it is likely that much of the complexity
-of the actual commands will be left to user space tooling: 
-https://gitlab.com/jic23/cxl-fmapi-tests has some test examples.
-
-Whether Kconfig help text is strong enough to ensure this only gets
-enabled for BMC targeted distros is an open question we can address
-alongside an updated patch set.
-
-(On to the one that the "debate" is about)
-
-3) Unfiltered user space use of mailbox for Fabric Management - Distro kernels
-=============================================================================
-(General purpose Linux Server Distro (Redhat, Suse etc))
-
-This is equivalent of RAW command support on CXL Type 3 memory devices.
-You can enable those in a distro kernel build despite the scary config
-help text, but if you use it the kernel is tainted. The result
-of the taint is to add a flag to bug reports and print a big message to say
-that you've used a feature that might result in you shooting yourself
-in the foot.
-
-The taint is there because software is not at first written to deal with
-everything that can happen smoothly (e.g. surprise removal) It's hard
-to survive some of these events, so is never on the initial feature list
-for any bus, so this flag is just to indicate we have entered a world
-where almost all bets are off wrt to stability.  We might not know what
-a command does so we can't assess the impact (and no one trusts vendor
-commands to report affects right in the Command Effects Log - which
-in theory tells you if a command can result problems).
-
-A concern was raised about GAE/FAST/LDST tables for CXL Fabrics
-(a r3.1 feature) but, as I understand it, these are intended for a
-host to configure and should not have side effects on other hosts?
-My working assumption is that the kernel driver stack will handle
-these (once we catch up with the current feature backlog!) Currently
-we have no visibility of what the OS driver stack for a fabrics will
-actually look like - the spec is just the starting point for that.
-(patches welcome ;)
-
-The various CXL upstream developers and maintainers may have
-differing views of course, but my current understanding is we want
-to support 1 and 2, but are very resistant to 3!
-
-General Notes
-=============
-
-One side aspect of why we really don't like unfiltered userspace access to any
-of these devices is that people start building non standard hacks in and we
-lose the ecosystem advantages. Forcing a considered discussion + patches
-to let a particular command be supported, drives standardization.
-
-https://lore.kernel.org/linux-cxl/CAPcyv4gDShAYih5iWabKg_eTHhuHm54vEAei8ZkcmHnPp3B0cw@mail.gmail.com/
-provides some history on vendor specific extensions and why in general we
-won't support them upstream.
-
-To address another question raised in an earlier discussion:
-Putting these Fabric Management interfaces behind guard rails of some type
-(e.g. CONFIG_IM_A_BMC_AND_CAN_MAKE_A_MESS) does not encourage the risk
-of non standard interfaces, because we will be even less likely to accept
-those upstream!
-
-If anyone needs more details on any aspect of this please ask.
-There are a lot of things involved and I've only tried to give a fairly
-minimal illustration to drive the discussion. I may well have missed
-something crucial.
-
-Jonathan
+Best regards,
+Krzysztof
 
