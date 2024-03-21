@@ -1,135 +1,325 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DC95730E
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 13:28:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A638D83CCE;
+	Thu, 21 Mar 2024 13:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711027709; cv=none; b=uWGavIbVBbLcXKn6eYcO3R1Q+zT6Rv4NuqU7gneQ6ypYm5+Tn3mnCgR3G2GR9oE9GK5o2Igr8nnjKEPkFMmWwMe9+q+/gZeM6/laGm/f5IlCoJBuQi68aDJ18raPYP+2pdKNGhjIRjoN60F9VsCvk1MSBbJdD5XpXf0e86JTdNs=
+	t=1711027849; cv=none; b=cFtvK11/xGX113MZ+CSG3fsSUrR1ADNs+XLcl7P1lWBX+yQvX34EYQr41pzHg5nY4c1E2dK9pE5oJAnOzJeqU7Ej+J1Gkt/a7VE99dCdH9ruJ0xcFmr+aOCRTPLLTsoYIrnKCjfq5OIU/R/7slg3rAtWdKOgdqQHBAsTzxs0YXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711027709; c=relaxed/simple;
-	bh=Fq8KLFQJSw1OvZB7PQpHngU+2ITGmNUv3F3KHyGJK8M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZHQBHtbPPXFGH7GHJkukrZlrxMtwZvJ1AAcJCHmI8mufyIdI25v7fu3rgDXYNIg958uJwD03VUzSwHEHyHzSD0u6UoWFNO2BrBQyIb1zgGYcdcxSY5KEjIWdg0SdO4QHFHYQWgv132CFQH6CFbm9jmIeHYt7LLZf/D2RcPN3dMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S7Bh47gm; arc=none smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S7Bh47gm"
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-7e03e591693so377020241.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 06:28:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711027706; x=1711632506; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TWH+6eW0sGOMBcqq3GR/+5MQ85rnPGezuZLizVnSsrs=;
-        b=S7Bh47gmFs7ZNPFCC1HtGc//w3tte6KUhETVhV1mXSi+p6SM7wAeHXGOm4s+iUmYZQ
-         E0qfXt4LDO1ZHd3tkQb27pltMOxjJLtBgsbhgXRvm3OeXDZqlhf2/vfTkzfqEJ8kFozL
-         KOpBVxR2K8n1G48KLUuWzEqa5lJKfFtkZ1FeM359E7orsTsxBTUwbHtBIG3frbL+QD83
-         58FusM2sYlqZ+vbK7ShNAc9bzAvx4JA3+u5TR6ozPm7BadfQhsfm/z41qcvysxRQ0jpb
-         R5aTZbRrDFyPipWnyibVV/G/a8En3MGb53+y4xC+Gl/KqhRuIyZ7SLIx1Tq9/0oVfrNA
-         52Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711027706; x=1711632506;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TWH+6eW0sGOMBcqq3GR/+5MQ85rnPGezuZLizVnSsrs=;
-        b=ikFMGWnxZQmAY1gc4jjryY9ei745+TMVjUR81gDH5SewCewWySzGVdHYIfcKUeo6Lr
-         7t8eb4SVZcX2ud5eKq3VDmcblujwDFxZ0SA3bb70hfmVS3JaNbRWc9qq3Tm+DtjGAqSi
-         we8bJ68Xg8PnHQpPRXYZzo3UEZRXt0IIkKsebCTiCjK+Oob9McOKgyd2UjZ6EMxqRB9Y
-         fl2q2awn9DPyaf5KN04qY6yDaH6sh3/WpNYDp7wsHi7DrHutAhzwohIsI4n03gYR3x6g
-         20Z7rvU5WCfyyTkOKwy+tmSImfqdkm2+Qy9vvsHUx+RvCXSu/uPmW0dLJsqthUg7sLZe
-         QTSw==
-X-Forwarded-Encrypted: i=1; AJvYcCXQWhKNG0nv/m0NVPaNmTaFVDVZ1cFjHxcBs3GcNnBlTmgYyq6qhzQC7NmvNl/BacLk91JDQprUcG0iHILJex4dOR4CW7cYHeHSkg/6
-X-Gm-Message-State: AOJu0Yz+Gw2klFZRl+lmMmRG9SR8lqHKEvOgaE9hBaa1cZqP8nHe89nc
-	pkqCoicNb1HoqqD0OJtV2/zLdepT9JsVLcQ3flegXIAfGdSjNClxIhX8sCNJgdLt14rBw+5QTUV
-	vnwD25AkonpYwvJTwAIg5U5bA+eBFTvNgMMCf
-X-Google-Smtp-Source: AGHT+IE+j+Qli1XePxAilxL5R4FQhkJSRHtQ+wFvcX+d7554bq37l+EQBnd62M0HSJSkW5gjbHPTrWC84iG4Aiv+Geg=
-X-Received: by 2002:a05:6122:20a2:b0:4d3:36b9:2c26 with SMTP id
- i34-20020a05612220a200b004d336b92c26mr20776441vkd.14.1711027706376; Thu, 21
- Mar 2024 06:28:26 -0700 (PDT)
+	s=arc-20240116; t=1711027849; c=relaxed/simple;
+	bh=kxspY95vYGYTOvbO2uG5v443F1J4LThpxAicjseqQ3k=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=p/wY5s4LNc/VHrzluYN/r0PVzpimHwmSdIgEe/AVGKphFZw/MwlUPRMU1DK+7BAcwQb4QAsoDBhtZL1d8Q0AelOCF5hOGCFtrKTDXS8aCVH0egyG22nULULyzNbXvJTMoHWXMfkYerH9LUGTlsZI0eu182Hqo1KybHt3ZjOQlmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 385201A080B;
+	Thu, 21 Mar 2024 14:30:40 +0100 (CET)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A38B21A0101;
+	Thu, 21 Mar 2024 14:30:39 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 6834B1834868;
+	Thu, 21 Mar 2024 21:30:37 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: abelvesa@kernel.org,
+	peng.fan@nxp.com,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	linux-imx@nxp.com,
+	shengjiu.wang@gmail.com
+Cc: linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4] clk: imx: imx8mp: Add pm_runtime support for power saving
+Date: Thu, 21 Mar 2024 21:14:02 +0800
+Message-Id: <1711026842-7268-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240209-alice-file-v5-0-a37886783025@google.com>
- <20240209-alice-file-v5-8-a37886783025@google.com> <20240320-massieren-lackschaden-9b30825babec@brauner>
-In-Reply-To: <20240320-massieren-lackschaden-9b30825babec@brauner>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 21 Mar 2024 14:28:15 +0100
-Message-ID: <CAH5fLgjeet1nhycCqdaKE9CSY02XW85jn302zNEjJNQaJ1czGQ@mail.gmail.com>
-Subject: Re: [PATCH v5 8/9] rust: file: add `DeferredFdCloser`
-To: Christian Brauner <brauner@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Kees Cook <keescook@chromium.org>, Matthew Wilcox <willy@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Daniel Xu <dxu@dxuuu.xyz>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Martin Rodriguez Reboredo <yakoyoku@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 20, 2024 at 3:22=E2=80=AFPM Christian Brauner <brauner@kernel.o=
-rg> wrote:
->
-> On Fri, Feb 09, 2024 at 11:18:21AM +0000, Alice Ryhl wrote:
-> >
-> > +/// Helper used for closing file descriptors in a way that is safe eve=
-n if the file is currently
-> > +/// held using `fdget`.
-> > +///
-> > +/// Additional motivation can be found in commit 80cd795630d6 ("binder=
-: fix use-after-free due to
-> > +/// ksys_close() during fdget()") and in the comments on `binder_do_fd=
-_close`.
-> > +pub struct DeferredFdCloser {
-> > +    inner: Box<DeferredFdCloserInner>,
-> > +}
-> > +
-> > +/// SAFETY: This just holds an allocation with no real content, so the=
-re's no safety issue with
-> > +/// moving it across threads.
-> > +unsafe impl Send for DeferredFdCloser {}
-> > +unsafe impl Sync for DeferredFdCloser {}
-> > +
-> > +/// # Invariants
-> > +///
-> > +/// If the `file` pointer is non-null, then it points at a `struct fil=
-e` and owns a refcount to
-> > +/// that file.
-> > +#[repr(C)]
-> > +struct DeferredFdCloserInner {
-> > +    twork: mem::MaybeUninit<bindings::callback_head>,
-> > +    file: *mut bindings::file,
-> > +}
-> > +
-> > +impl DeferredFdCloser {
->
-> So the explicitly deferred close is due to how binder works so it's not
-> much of a general purpose interface as I don't recall having other
-> codepaths with similar problems. So this should live in the binder
-> specific rust code imo.
+Add pm_runtime support for power saving. In pm runtime suspend
+state the registers will be reseted, so add registers save
+in pm runtime suspend and restore them in pm runtime resume.
 
-Hmm. Are there really no other ioctls that call ksys_close on a
-user-provided fd?
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
+---
+changes in v4:
+- use struct clk_hw_onecell_data clk_data in priv struct
 
-As far as I can tell, this kind of deferred API is the only way for us
-to provide a fully safe Rust api for closing an fd. Directly calling
-ksys_close must unsafely assert that the fd does not have an active
-fdget call. So it makes sense to me as an API that others might want
-to use.
+changes in v3:
+- remove REGS_NUM, use the ARRAY_SIZE
+- merge clk_imx8mp_audiomix_drvdata and clk_hw_onecell_data together.
 
-Still I can move it elsewhere if necessary.
+changes in v2:
+- move pm_runtime_enable before the clk register
 
-Alice
+ drivers/clk/imx/clk-imx8mp-audiomix.c | 157 ++++++++++++++++++++++----
+ 1 file changed, 136 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
+index 55ed211a5e0b..574a032309c1 100644
+--- a/drivers/clk/imx/clk-imx8mp-audiomix.c
++++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
+@@ -7,10 +7,12 @@
+ 
+ #include <linux/clk-provider.h>
+ #include <linux/device.h>
++#include <linux/io.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
+ 
+ #include <dt-bindings/clock/imx8mp-clock.h>
+ 
+@@ -18,6 +20,7 @@
+ 
+ #define CLKEN0			0x000
+ #define CLKEN1			0x004
++#define EARC			0x200
+ #define SAI1_MCLK_SEL		0x300
+ #define SAI2_MCLK_SEL		0x304
+ #define SAI3_MCLK_SEL		0x308
+@@ -26,6 +29,11 @@
+ #define SAI7_MCLK_SEL		0x314
+ #define PDM_SEL			0x318
+ #define SAI_PLL_GNRL_CTL	0x400
++#define SAI_PLL_FDIVL_CTL0	0x404
++#define SAI_PLL_FDIVL_CTL1	0x408
++#define SAI_PLL_SSCG_CTL	0x40C
++#define SAI_PLL_MNIT_CTL	0x410
++#define IPG_LP_CTRL		0x504
+ 
+ #define SAIn_MCLK1_PARENT(n)						\
+ static const struct clk_parent_data					\
+@@ -182,26 +190,82 @@ static struct clk_imx8mp_audiomix_sel sels[] = {
+ 	CLK_SAIn(7)
+ };
+ 
++static const u16 audiomix_regs[] = {
++	CLKEN0,
++	CLKEN1,
++	EARC,
++	SAI1_MCLK_SEL,
++	SAI2_MCLK_SEL,
++	SAI3_MCLK_SEL,
++	SAI5_MCLK_SEL,
++	SAI6_MCLK_SEL,
++	SAI7_MCLK_SEL,
++	PDM_SEL,
++	SAI_PLL_GNRL_CTL,
++	SAI_PLL_FDIVL_CTL0,
++	SAI_PLL_FDIVL_CTL1,
++	SAI_PLL_SSCG_CTL,
++	SAI_PLL_MNIT_CTL,
++	IPG_LP_CTRL,
++};
++
++struct clk_imx8mp_audiomix_priv {
++	void __iomem *base;
++	u32 regs_save[ARRAY_SIZE(audiomix_regs)];
++
++	/* Must be last */
++	struct clk_hw_onecell_data clk_data;
++};
++
++static void clk_imx8mp_audiomix_save_restore(struct device *dev, bool save)
++{
++	struct clk_imx8mp_audiomix_priv *priv = dev_get_drvdata(dev);
++	void __iomem *base = priv->base;
++	int i;
++
++	if (save) {
++		for (i = 0; i < ARRAY_SIZE(audiomix_regs); i++)
++			priv->regs_save[i] = readl(base + audiomix_regs[i]);
++	} else {
++		for (i = 0; i < ARRAY_SIZE(audiomix_regs); i++)
++			writel(priv->regs_save[i], base + audiomix_regs[i]);
++	}
++}
++
+ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
+ {
+-	struct clk_hw_onecell_data *priv;
++	struct clk_imx8mp_audiomix_priv *priv;
++	struct clk_hw_onecell_data *clk_hw_data;
+ 	struct device *dev = &pdev->dev;
+ 	void __iomem *base;
+ 	struct clk_hw *hw;
+-	int i;
++	int i, ret;
+ 
+ 	priv = devm_kzalloc(dev,
+-			    struct_size(priv, hws, IMX8MP_CLK_AUDIOMIX_END),
++			    struct_size(priv, clk_data.hws, IMX8MP_CLK_AUDIOMIX_END),
+ 			    GFP_KERNEL);
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
+-	priv->num = IMX8MP_CLK_AUDIOMIX_END;
++	clk_hw_data = &priv->clk_data;
++	clk_hw_data->num = IMX8MP_CLK_AUDIOMIX_END;
+ 
+ 	base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
+ 
++	priv->base = base;
++	dev_set_drvdata(dev, priv);
++
++	/*
++	 * pm_runtime_enable needs to be called before clk register.
++	 * That is to make core->rpm_enabled to be true for clock
++	 * usage.
++	 */
++	pm_runtime_get_noresume(dev);
++	pm_runtime_set_active(dev);
++	pm_runtime_enable(dev);
++
+ 	for (i = 0; i < ARRAY_SIZE(sels); i++) {
+ 		if (sels[i].num_parents == 1) {
+ 			hw = devm_clk_hw_register_gate_parent_data(dev,
+@@ -216,10 +280,12 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
+ 				0, NULL, NULL);
+ 		}
+ 
+-		if (IS_ERR(hw))
+-			return PTR_ERR(hw);
++		if (IS_ERR(hw)) {
++			ret = PTR_ERR(hw);
++			goto err_clk_register;
++		}
+ 
+-		priv->hws[sels[i].clkid] = hw;
++		clk_hw_data->hws[sels[i].clkid] = hw;
+ 	}
+ 
+ 	/* SAI PLL */
+@@ -228,39 +294,86 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
+ 		ARRAY_SIZE(clk_imx8mp_audiomix_pll_parents),
+ 		CLK_SET_RATE_NO_REPARENT, base + SAI_PLL_GNRL_CTL,
+ 		0, 2, 0, NULL, NULL);
+-	priv->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_REF_SEL] = hw;
++	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_REF_SEL] = hw;
+ 
+ 	hw = imx_dev_clk_hw_pll14xx(dev, "sai_pll", "sai_pll_ref_sel",
+ 				    base + 0x400, &imx_1443x_pll);
+-	if (IS_ERR(hw))
+-		return PTR_ERR(hw);
+-	priv->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL] = hw;
++	if (IS_ERR(hw)) {
++		ret = PTR_ERR(hw);
++		goto err_clk_register;
++	}
++	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL] = hw;
+ 
+ 	hw = devm_clk_hw_register_mux_parent_data_table(dev,
+ 		"sai_pll_bypass", clk_imx8mp_audiomix_pll_bypass_sels,
+ 		ARRAY_SIZE(clk_imx8mp_audiomix_pll_bypass_sels),
+ 		CLK_SET_RATE_NO_REPARENT | CLK_SET_RATE_PARENT,
+ 		base + SAI_PLL_GNRL_CTL, 16, 1, 0, NULL, NULL);
+-	if (IS_ERR(hw))
+-		return PTR_ERR(hw);
+-	priv->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_BYPASS] = hw;
++	if (IS_ERR(hw)) {
++		ret = PTR_ERR(hw);
++		goto err_clk_register;
++	}
++
++	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_BYPASS] = hw;
+ 
+ 	hw = devm_clk_hw_register_gate(dev, "sai_pll_out", "sai_pll_bypass",
+ 				       0, base + SAI_PLL_GNRL_CTL, 13,
+ 				       0, NULL);
+-	if (IS_ERR(hw))
+-		return PTR_ERR(hw);
+-	priv->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_OUT] = hw;
++	if (IS_ERR(hw)) {
++		ret = PTR_ERR(hw);
++		goto err_clk_register;
++	}
++	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_OUT] = hw;
+ 
+ 	hw = devm_clk_hw_register_fixed_factor(dev, "sai_pll_out_div2",
+ 					       "sai_pll_out", 0, 1, 2);
+-	if (IS_ERR(hw))
+-		return PTR_ERR(hw);
++	if (IS_ERR(hw)) {
++		ret = PTR_ERR(hw);
++		goto err_clk_register;
++	}
++
++	ret = devm_of_clk_add_hw_provider(&pdev->dev, of_clk_hw_onecell_get,
++					  clk_hw_data);
++	if (ret)
++		goto err_clk_register;
++
++	pm_runtime_put_sync(dev);
++	return 0;
++
++err_clk_register:
++	pm_runtime_put_sync(dev);
++	pm_runtime_disable(dev);
++	return ret;
++}
++
++static int clk_imx8mp_audiomix_remove(struct platform_device *pdev)
++{
++	pm_runtime_disable(&pdev->dev);
++
++	return 0;
++}
++
++static int clk_imx8mp_audiomix_runtime_suspend(struct device *dev)
++{
++	clk_imx8mp_audiomix_save_restore(dev, true);
+ 
+-	return devm_of_clk_add_hw_provider(&pdev->dev, of_clk_hw_onecell_get,
+-					   priv);
++	return 0;
+ }
+ 
++static int clk_imx8mp_audiomix_runtime_resume(struct device *dev)
++{
++	clk_imx8mp_audiomix_save_restore(dev, false);
++
++	return 0;
++}
++
++static const struct dev_pm_ops clk_imx8mp_audiomix_pm_ops = {
++	SET_RUNTIME_PM_OPS(clk_imx8mp_audiomix_runtime_suspend,
++			   clk_imx8mp_audiomix_runtime_resume, NULL)
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++				      pm_runtime_force_resume)
++};
++
+ static const struct of_device_id clk_imx8mp_audiomix_of_match[] = {
+ 	{ .compatible = "fsl,imx8mp-audio-blk-ctrl" },
+ 	{ /* sentinel */ }
+@@ -269,9 +382,11 @@ MODULE_DEVICE_TABLE(of, clk_imx8mp_audiomix_of_match);
+ 
+ static struct platform_driver clk_imx8mp_audiomix_driver = {
+ 	.probe	= clk_imx8mp_audiomix_probe,
++	.remove = clk_imx8mp_audiomix_remove,
+ 	.driver = {
+ 		.name = "imx8mp-audio-blk-ctrl",
+ 		.of_match_table = clk_imx8mp_audiomix_of_match,
++		.pm = &clk_imx8mp_audiomix_pm_ops,
+ 	},
+ };
+ 
+-- 
+2.34.1
+
