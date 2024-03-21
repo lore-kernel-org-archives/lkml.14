@@ -1,140 +1,234 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096EA83CC9;
-	Thu, 21 Mar 2024 13:08:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711026525; cv=none; b=faiHmwNhIwGJOZ1WfvwMPuSrXITQBSzA2QOpjzVsb0innOmi4BdS3htvZjjaFH4Gszw5otoSC5Ym7hhnCeuFlI3TvrgUCLkbRT9V0nwFaAZCeD55w4lBW0mQ8c3HSJE/u8/GJrSutpobPRBBpUmTwwqcYhb1c8BZTsCREXm98IE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711026525; c=relaxed/simple;
-	bh=cG0asu/1nO7Dp23vefPYOO9+RR4qemdnjGRrIiAl7y8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZiI5W9VHWIiLew2ddf3Rf5lG58pTzCyiUFf8JVBbWV0BX9+GeIEURJT6axuH4xdompipR2QIQZgspaVc8ia9QYnITia7nxg0riF1gj1+L1kA/zkWS2P+yqD3WXs1gnQIx1fSJikT7Q5diOruY9h2TCKLL+XpzZowRE2lVrpcHMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=bq3le8SH; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D89E84A2C
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 13:08:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.178.238
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711026529; cv=fail; b=WpUZS5R5HOh55sC+DgO5laWXfibbXw3PUCgxygS9rb4gaeNbwfijhNa6KipkB6D6BsSp2FHlJ3lhWVzZgmYC8wDYfo1IJJcj0/RQogX+r8krhFr62+dTQBKmpAWni3muzzwCcW8W5ejhJMghOdwjCR3McwRK63dH8M3qlJehfo8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711026529; c=relaxed/simple;
+	bh=dLcEcDtj53+NNrH34WPraAjd6UBsG4Ktx7SvbdwuAv0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=j3+WaLQjufpp9f/vjxfvt6b5k3N3E//eL6mq4FjGAjtVZdmJ4ZX9NzHlW4W5Mj9pQZfQpLPMdz0pf43f0XMAzh+thx/EFpGroflAmi69IuHZFysq6vito1+W0LS7L59V5EF9OOpAotwEgNu5n/6sSUfUlytTUtUl0QTp/qg/MSc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b=lC0zz9I5; arc=fail smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="bq3le8SH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=PeWMjzv2TCP5O1EIfymN2AlFHQvzJcY+97La6mMNs54=; b=bq3le8SHCA9RGKtRjoQT80Yt+r
-	GAIPSfvVky9RjIb3Jj6jCkxsr54sQBXpDnitSmwOcVhkDXEcZK7iXBPmTzELNxCtRU3Vna8xkgRzH
-	VzC9PZx2c0580S3Ilj4czYH2iklxaE1QrI3ge/k08tld8peE+ZQy1PAa5ggPZ7Rv1NEnUXK9bNxX/
-	ZpkNxepK5BDc6i0hD5OnbzzCwQn3UMPFIYJR2uNhCtYtNOhPACtZPiKqzywCz5Fp75hED7U6OkODN
-	v3+FJbVe6G2ys8Z01T/dpSdLUaBrzBeQhu33cane2Z8qXzEP/ak8sBIFxtiPwDsTdilrD6PVtwRC9
-	C1LYOZhg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:42380)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rnI9R-0007a9-10;
-	Thu, 21 Mar 2024 13:08:09 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rnI9K-0003fA-VJ; Thu, 21 Mar 2024 13:08:03 +0000
-Date: Thu, 21 Mar 2024 13:08:02 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: David Laight <David.Laight@aculab.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>,
-	'Jiangfeng Xiao' <xiaojiangfeng@huawei.com>,
-	"arnd@arndb.de" <arnd@arndb.de>,
-	"keescook@chromium.org" <keescook@chromium.org>,
-	"haibo.li@mediatek.com" <haibo.li@mediatek.com>,
-	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>,
-	"amergnat@baylibre.com" <amergnat@baylibre.com>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"douzhaolei@huawei.com" <douzhaolei@huawei.com>,
-	"gustavoars@kernel.org" <gustavoars@kernel.org>,
-	"jpoimboe@kernel.org" <jpoimboe@kernel.org>,
-	"kepler.chenxin@huawei.com" <kepler.chenxin@huawei.com>,
-	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"nixiaoming@huawei.com" <nixiaoming@huawei.com>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"wangbing6@huawei.com" <wangbing6@huawei.com>,
-	"wangfangpeng1@huawei.com" <wangfangpeng1@huawei.com>,
-	"jannh@google.com" <jannh@google.com>,
-	"willy@infradead.org" <willy@infradead.org>
-Subject: Re: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
-Message-ID: <ZfwxMuPflqlVyCDd@shell.armlinux.org.uk>
-References: <1710906278-23851-1-git-send-email-xiaojiangfeng@huawei.com>
- <ZfqiD8Yw0oOVHW/p@shell.armlinux.org.uk>
- <84a57ca8-8963-ca24-8bd1-ddc5c33bf4da@huawei.com>
- <Zfs7sT6Pxy5yjnPC@shell.armlinux.org.uk>
- <bad25937-fc98-8e11-4279-ab6b3a727c1f@huawei.com>
- <bbcca1e205384cf0b42236e17f3969f7@AcuMS.aculab.com>
- <ZfwYx/8k8FVONg6+@shell.armlinux.org.uk>
- <db930076c837456f999daee5cb76735f@AcuMS.aculab.com>
- <ZfwmomjUwQdCefzh@shell.armlinux.org.uk>
- <0fd55e156195440bb1d815dd8300894b@AcuMS.aculab.com>
+	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="lC0zz9I5"
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42L6omad000532;
+	Thu, 21 Mar 2024 12:20:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=from:to:cc:subject:date:message-id:references:in-reply-to
+	:content-type:content-transfer-encoding:mime-version; s=
+	PPS06212021; bh=rOCowNz8cBqADztTcjL/Zxd57OetXnTY7MO1ZT7fxH8=; b=
+	lC0zz9I5n1+fUiCx3AeFqInNvGw71XSLFUbpTWBPsVaFQ5Ns+mPPozghAszJdY0M
+	ppAeKfWca9DEEPJuwxUD/RkvL52z06mwLvSA8798JS6TwaXmZKomcp/TxQ1M2qup
+	t2MiFo3m6RrCNjLAvUkYCmJW6x3huUoGV3upMgEsGA3z6d1LYZayD76cgTBs+Hm3
+	9ueGGy7Su8QjAgOl+zCR5LUOrv8t6cdc7IZL9BOSGW9a2D3RauiQpVIBgqVmjOqT
+	f4C6Lh+Pgc5MnIini0KMr5KPGIMG18YyKEVmoNW5RVv2eNcuOrsYFQ8AFcqXP5V4
+	Pd0Ie5ZQUUinqVTC2euzAQ==
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2040.outbound.protection.outlook.com [104.47.73.40])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3ww2d6n0vs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Mar 2024 12:20:46 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CTBBzoonyHC1mileI0AVW2dkJtCi8EI0LWdIbUEFp6+/CUJ7lrDbIGaDK3m5Bb71zpgRA+tqzKfRC/yzfr+eMidMJImiWFn2U4SCJQl+SDvwUpSNdN4+4FMALbemFTBlKEC34HZMvkMWxhPQYdlsvOQZDZZYgs5XJKAf7OZNjMGxFPreOQKIPZSQRPrQiwXu9g0S0AOECLQhGc/vmCCrSlT1Y1EnT1NdERSqvv2cCphDodPSDNc6rcvMiSeG08iejQWmDRr7foHSN7sOn/oa7ILEpGtUKxW00twjmZV7ifIm9RuHSLKt91tPaIkrYsYBy498QU4+CbMhgCLJYGIIDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rOCowNz8cBqADztTcjL/Zxd57OetXnTY7MO1ZT7fxH8=;
+ b=BIaI31n3Hka1Yvw9vXXEFMLiYCg0G3QPvxBO2rqRbDpsYwB4IbB5RZTvjrMM0IaJMm6OFBFvZNbaAaZlJuWKCxfNwiM/OO+UltP7Yj9TPtaLrQD8lHmsKbJZtkwsewoq5jYOTr9wVqs6Oc6MHvH0Eb9WNWa3rMVUIleQHXj9sYYoQd3XQpRXCoSJaqfs4xQ0eXPlLjT7U/Lc/ir+VMqH5Nye0JReiJCZFm2sBmo9okxqP2rU2TiAHD6EJ3L3lNvK5zf81nh/Ji4YtozLM5pXZubbP/cXjL4jdiQxnD0vGmkUjSiyP9oaNVmTrXrcVWkpSDGIctmwhza3KetR/j6tjQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from PH0PR11MB5192.namprd11.prod.outlook.com (2603:10b6:510:3b::9)
+ by DS0PR11MB7458.namprd11.prod.outlook.com (2603:10b6:8:145::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.12; Thu, 21 Mar
+ 2024 12:20:42 +0000
+Received: from PH0PR11MB5192.namprd11.prod.outlook.com
+ ([fe80::8cb4:86ac:461a:d683]) by PH0PR11MB5192.namprd11.prod.outlook.com
+ ([fe80::8cb4:86ac:461a:d683%4]) with mapi id 15.20.7409.022; Thu, 21 Mar 2024
+ 12:20:39 +0000
+From: "Song, Xiongwei" <Xiongwei.Song@windriver.com>
+To: Xiu Jianfeng <xiujianfeng@huaweicloud.com>, "cl@linux.com" <cl@linux.com>,
+        "penberg@kernel.org" <penberg@kernel.org>,
+        "rientjes@google.com"
+	<rientjes@google.com>,
+        "iamjoonsoo.kim@lge.com" <iamjoonsoo.kim@lge.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "vbabka@suse.cz"
+	<vbabka@suse.cz>,
+        "roman.gushchin@linux.dev" <roman.gushchin@linux.dev>,
+        "42.hyeyoo@gmail.com" <42.hyeyoo@gmail.com>
+CC: "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "xiujianfeng@huawei.com"
+	<xiujianfeng@huawei.com>
+Subject: RE: [PATCH -next] mm/slub: remove dummy slabinfo functions
+Thread-Topic: [PATCH -next] mm/slub: remove dummy slabinfo functions
+Thread-Index: AQHae2zR49nd4JIODEC+LaQAnyvx1LFCHC3A
+Date: Thu, 21 Mar 2024 12:20:39 +0000
+Message-ID: 
+ <PH0PR11MB51924AC8A58ABB22B8015296EC322@PH0PR11MB5192.namprd11.prod.outlook.com>
+References: <20240321084415.265643-1-xiujianfeng@huaweicloud.com>
+In-Reply-To: <20240321084415.265643-1-xiujianfeng@huaweicloud.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH0PR11MB5192:EE_|DS0PR11MB7458:EE_
+x-ms-office365-filtering-correlation-id: 0c87ae28-2f0d-4b7b-742c-08dc49a151f3
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 
+ 4kzCHz733bldCHTkSX6buTs0PIkl21zxOnoPRC53c+6rBG1WFBqZydGw7HZI/Sp31c+Gd9uvnmdWgUXBLbSaPsMVTneoacNavxF5BptMgsT4iaEtjrEClFuiMsA0o8Ln0faynEFqnwpj7FwP6MdEHim0BXIByetT5evne7wgtZWjG7OeWpGUwCS/bAwTNLd1KteIGTRnRGo4X5WicOVKZrUR4w6CVi2AQiX/weXNl+9sm0cqnU4M5uHMylTFuwMu0jghzJuMHCNlQK3VHVPJhye/oaoAaPJdjVNrYKFRINNhYRzFgVBfwXBkO8N5kIb11lTF4b38NHRAysKyQFIlq/HdaeqtQG66zfw/089oeTO5fPpRPuadlh6qxcCkEMuSywKsl7m5zlcQz/4UjGbMKo/rMq2peUPMPLs4rsNlq7EPYZg6VDYtm2YfkBSqPQvVkG+Dnfhd1MAO89S3oKG+fmwEJA75QlwEqo3WT1cy66WflG3idp5IMYLHNNvJGZK9nUZoDVon48wQkR7zvWB9ZiQhPD3BTfLmroGoJvl/ZqgsRrzrhZuLPvNcVpqFrfD7Ne6hSa4n7FNeGxgD8wQZwFYP2DfNkp5uTEc1juiVrXFfSN9EYUHtpup/FqfH1xgz44zI4MAPu0JOHso0AUlisEa/YivXLLTXwO3hxBkP3T4EhwWJh8xQngvh9ihPtl5g8YMVqrpx5PrAnF9P95TvVnnuuZ4RBrPbJDmQP+/rgeQ=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB5192.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(7416005)(1800799015)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?us-ascii?Q?HiGgwaCSlXfDfY+w0Eq7osQV9CZmZq0ZfF/fmmXJBUSvMxaGYxLckvphjojj?=
+ =?us-ascii?Q?GqyEQn7l7Di9Dbm3DxyvTGvi+HhAqLUPKD1uGo/gJX3glIBh/dU7aXKx1tLO?=
+ =?us-ascii?Q?VyjhBzOrwMBR7tYgB4moEwZOWjDv+MgAwQtQr1pZl+Fxoko/zHADjWfra5rK?=
+ =?us-ascii?Q?l6Y7R6rdKMwY+z5k2LmPI0ftm7tE+DdOWVWgt7mnv6Jvw2FGceuwLLkmIKAe?=
+ =?us-ascii?Q?syAQ9IPoBpQN/85mEZAOdTVeQD7mqjXuPzcqR5xyuUDjiof+Ks6JO5W2F/1F?=
+ =?us-ascii?Q?3UX4eO54O80F/PwtnOD+plv8d91o7bA2r3n+r27KjjryPuGRVAiPofgwBQvi?=
+ =?us-ascii?Q?Mh8Q19oZ5S1kGDBNqIEznvJg/zOSSL/n37Ld9oayPUM8yfVVmdHy2625ro/w?=
+ =?us-ascii?Q?TaF0Zrys+xzSqJMDCOVc2Zldca+b2rrhUt2yZsv2d71QZZsqcgSmpHQobyIc?=
+ =?us-ascii?Q?0lPYicqBmgViCQT31TDCy23j+yh2GQ78sWCcDIeW40XJARNkyX59yaj2DgQr?=
+ =?us-ascii?Q?EI4lYsh0huiNBY/K+m0UGNBOahumGCJY9W6bat/7D3hU/sPA/nYUYDH/g9Ek?=
+ =?us-ascii?Q?fkr1P6PaXWNyYYa7R2jRcHiHbA88tFaCFOCB3C9MnPK5q9AHyzY1KWqGhUY2?=
+ =?us-ascii?Q?rpamc0XVgr0K5u0ZHEuLdjhb0jCUjJ3r1RnkiqlpHPAN12bj8jfzdDLVTN7l?=
+ =?us-ascii?Q?iFOrc5B4wHTqeV+G/LWmDVfPb46SsVq3XVEcjfoMbYQghmQhnRfEn1olwHWB?=
+ =?us-ascii?Q?fiJSzngxBgF9vUnF4Yhs3DciIfqR5mSS84E4LC9AQpr4mYz8DtnQt9dhR5o3?=
+ =?us-ascii?Q?tdkD2266MuRJz7IM82Khm1VJ/oY5VmTYFFzig1FDvc0g9i7c0KFiiY7W918J?=
+ =?us-ascii?Q?KINw0HZto9/moi8xGxDLnxLZZyeJ9SrfQ3dpzW9y9yu534052P0fU5n5141D?=
+ =?us-ascii?Q?mx2Pwv03DxIXQvWDl8v5l8xOLT7AdUHaDiE/epFysBKduHN4ysPS4lUgVJ3/?=
+ =?us-ascii?Q?GHbhtCCA/sZeM/m8TGPhWsiXngtNHf0UaSgXgeRywdgL285xLLD8PUSj0fpe?=
+ =?us-ascii?Q?LCWlNTaT2+1HW+iQ8RtCdjfBMXQM52EDwqAmpZFuh/3o1wiNtjvn5yjg1jcm?=
+ =?us-ascii?Q?RymPtckI91mpxVCDOqDrkMJvpApe3aU94/agYo5RwG2C6h7dfN2deoJX/lAa?=
+ =?us-ascii?Q?6glFwp4QwHhW+1ulXgtIVme0s9eXBfYklGNNUe9tEZ3CVogjqRiyFauZ/Zq0?=
+ =?us-ascii?Q?SFtA/OAh92SsPcMUuWmC9pqHawiQstZGxOiZxuYmwj5s3W7MW7xz9OukM6YS?=
+ =?us-ascii?Q?pVIMPv5y9G/yya5FC0W2uLlZnDkjJljfteJEHgGOh/2Kme9wNTFNpzanEfIm?=
+ =?us-ascii?Q?/3M8a6bmKZEOB83WJH1ruI2cDPObM/ZHTgkP/BzY5tqLqp5rB+n+ufq1zwDZ?=
+ =?us-ascii?Q?fCr1nF1V11K4M2EVwwhi63PfLWUUcpwBsmq34SGRs3VjE5/6MB8JC28zsS2q?=
+ =?us-ascii?Q?IvIq27HRQ9pz+SDJbp2/kcG41jNUruFpPGCgWtQ3Ea8OjGohDqTjVMzNYbLd?=
+ =?us-ascii?Q?qlKl5OezoqSNRB4yAmqLC/dIEpIErH3glivOXPC7AC0qQnnH2PuwmoCxIb7/?=
+ =?us-ascii?Q?yw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0fd55e156195440bb1d815dd8300894b@AcuMS.aculab.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB5192.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c87ae28-2f0d-4b7b-742c-08dc49a151f3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2024 12:20:39.3042
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: khHHCmhC+J94QE2DWkxQV0x5xZiNiyimyxzxA30V1I+Lx1bToyfQFabpvoik9oRN25IU1h0vq47PKaZPoDCgEkqveZ+AmUIIif4ahdt4miw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7458
+X-Proofpoint-GUID: lVY5Qkp8LwdW4dn-AqR-AprlqgkIE15B
+X-Proofpoint-ORIG-GUID: lVY5Qkp8LwdW4dn-AqR-AprlqgkIE15B
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-21_08,2024-03-18_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 malwarescore=0 mlxscore=0 clxscore=1011 mlxlogscore=999
+ impostorscore=0 suspectscore=0 phishscore=0 priorityscore=1501 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403140001 definitions=main-2403210086
 
-On Thu, Mar 21, 2024 at 12:57:07PM +0000, David Laight wrote:
-> From: Russell King
-> > Sent: 21 March 2024 12:23
-> ...
-> > > That might mean you can get the BL in the middle of a function
-> > > but where the following instruction is for the 'no stack frame'
-> > > side of the branch.
-> > > That is very likely to break any stack offset calculations.
-> > 
-> > No it can't. At any one point in the function, the stack has to be in
-> > a well defined state, so that access to local variables can work, and
-> > also the stack can be correctly unwound. If there exists a point in
-> > the function body which can be reached where the stack could be in two
-> > different states, then the stack can't be restored to the parent
-> > context.
-> 
-> Actually you can get there with a function that has a lot of args.
-> So you can have:
-> 	if (...) {
-> 		push x
-> 		bl func
-> 		add %sp, #8
-> 	}
-> 	code;
-> which is fine.
 
-No you can't.... and that isn't even Arm code. Arm doesn't use %sp.
-Moreover, that "bl" will stomp over the link register, meaning this
-function can not return.
 
-> But if 'func' is 'noreturn' then the 'add %sp, #8' can be discarded
-> and then the saved LR is that of 'code' - but the stack offset is wrong.
+> From: Xiu Jianfeng <xiujianfeng@huawei.com>
+>=20
+> Slab has been removed since 6.5, so there is no other versions of
 
-If func is noreturn, then the remainder of that path isn't expected
-to be executed, so anything that happens after the "bl" is irrelevant.
+Removed since 6.8. The changes looks good.
 
-> A PC from LR will always be the next instruction.
-> It is only the PC from a fault frame that is the current one.
+Regards,
+Xiongwei
 
-That sentence makes no sense to me, as I don't think it's even proper
-English, so I can't parse it.
+> slabinfo_show_stats() and slabinfo_write(), then we can remove these
+> two dummy functions.
+>=20
+> Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+> ---
+>  mm/slab.h        |  3 ---
+>  mm/slab_common.c |  2 --
+>  mm/slub.c        | 10 ----------
+>  3 files changed, 15 deletions(-)
+>=20
+> diff --git a/mm/slab.h b/mm/slab.h
+> index d2bc9b191222..78e205b46e19 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+> @@ -496,9 +496,6 @@ struct slabinfo {
+>  };
+>=20
+>  void get_slabinfo(struct kmem_cache *s, struct slabinfo *sinfo);
+> -void slabinfo_show_stats(struct seq_file *m, struct kmem_cache *s);
+> -ssize_t slabinfo_write(struct file *file, const char __user *buffer,
+> -                      size_t count, loff_t *ppos);
+>=20
+>  #ifdef CONFIG_SLUB_DEBUG
+>  #ifdef CONFIG_SLUB_DEBUG_ON
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index f5234672f03c..67c03d6bd26c 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -1078,7 +1078,6 @@ static void cache_show(struct kmem_cache *s, struct=
+ seq_file *m)
+>                    sinfo.limit, sinfo.batchcount, sinfo.shared);
+>         seq_printf(m, " : slabdata %6lu %6lu %6lu",
+>                    sinfo.active_slabs, sinfo.num_slabs, sinfo.shared_avai=
+l);
+> -       slabinfo_show_stats(m, s);
+>         seq_putc(m, '\n');
+>  }
+>=20
+> @@ -1155,7 +1154,6 @@ static const struct proc_ops slabinfo_proc_ops =3D =
+{
+>         .proc_flags     =3D PROC_ENTRY_PERMANENT,
+>         .proc_open      =3D slabinfo_open,
+>         .proc_read      =3D seq_read,
+> -       .proc_write     =3D slabinfo_write,
+>         .proc_lseek     =3D seq_lseek,
+>         .proc_release   =3D seq_release,
+>  };
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 1bb2a93cf7b6..cc7e68fbdbba 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -7099,14 +7099,4 @@ void get_slabinfo(struct kmem_cache *s, struct sla=
+binfo *sinfo)
+>         sinfo->objects_per_slab =3D oo_objects(s->oo);
+>         sinfo->cache_order =3D oo_order(s->oo);
+>  }
+> -
+> -void slabinfo_show_stats(struct seq_file *m, struct kmem_cache *s)
+> -{
+> -}
+> -
+> -ssize_t slabinfo_write(struct file *file, const char __user *buffer,
+> -                      size_t count, loff_t *ppos)
+> -{
+> -       return -EIO;
+> -}
+>  #endif /* CONFIG_SLUB_DEBUG */
+> --
+> 2.34.1
+>=20
 
-> The unwinder probably need to be told which one it has.
-> (Or add 4 the fault frame PC so that the unwinder can subtract
-> 4 from it.)
-
-That's basically what I said.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
