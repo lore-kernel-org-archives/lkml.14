@@ -1,44 +1,63 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B0D132C37;
-	Thu, 21 Mar 2024 22:16:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45CF136676
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 22:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711059410; cv=none; b=b2xg/SqJZllzQcuSjTV96uDi3aFHn4OjqFcrh8RKUKxMi52e/S/BIg1WADeNc+JhLXTHn4fdoP+BhvpWoLC8gULOj6Hg451FSRsxBZFv+nVrxawnalBuyzhiYtbxsKGxj2ETeoHawhPZ4hA0b76XnvMpjGT98mCHx1+Wbqd78ug=
+	t=1711059459; cv=none; b=Y3d6D383nH7bIGnUQMynFBvGklvUVl87Oar0VYkbGtyNLcWb2RkLyO27vCNm0+RSMDS+d2R8bwqPo6CpLL5YVXTFHn3xgSVADvl7F/M7Fi9crXIIF4E0nYHWrs/nrmvXWUorLk9Z+/v1w+jDT5xB4pCxFvAsaVdcK1H9HWblRyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711059410; c=relaxed/simple;
-	bh=sJvU7ilh07Ek0FCBD32UoETqJkXvBYXcyMghBANWQm8=;
+	s=arc-20240116; t=1711059459; c=relaxed/simple;
+	bh=48MDU/nc47hzkUWjchZtFQewyGLXSQIKOvEvF3GhbhU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pyse3DJcEr25Z5FvlhDatRn4dNuVw5Be3wFLpFjhJOLGcXOS+XL6GEcd9amM9izILdD7vPxjn1EiynJSuQRdEvytlBLUKEb+2fF2M77XP/5wW6enhxfLj3N8o6yJR7p2uDgIwsJzhm2hsjLl6Sa2BGg1XN/fVKcdxBfl6RPZmo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hGCqZzMi; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=PcPW0pGRk9wZ18wDHC+oLVoFDvKKx7jh06ieztPruME/13UjfOqkvEVT8DTxPOKGZBLuJPo1wYBowXtvhnswZwy99LPR4adIyKphIAOqbYrc7FpU1rxf53TCpUfe0MWOVfC1hnyHp7ddsmgel+L3eDx55GxawgfAOz5L+TvDERQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FZysDbxQ; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hGCqZzMi"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5393420004;
-	Thu, 21 Mar 2024 22:16:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1711059405;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FZysDbxQ"
+Date: Thu, 21 Mar 2024 18:17:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1711059455;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xxRLpU4mbet5kJHe9jhNwyAS8Ph3xY82FfqFnfC3CJA=;
-	b=hGCqZzMiE672RlUi8VNoWWCp5xJlMCqV7b5ZCWKxWcxcPF2qjyl7V1b9godj9QLEcom8vC
-	VLPoBD5ucAG+EavvSLGgW18AJzsvpXQ4ztl72/oJNpK5VO2vmUgOuIIk/QSIyi898CKm+N
-	xWw9NfyUzBx/V1XLUbAl1UQoHRczwzGbyX2ILAli9TY82QhCpvLpJI3WfzIM+8CCQBxqZO
-	SznJ6+NPk1oe8K0fHGBl0ClCEm8azXyaPPWDCCD8veDc6FBoX/bklq9CtE3+lgSwGuorLM
-	ri6BmB5SAVxYfNv1frGDIqJPVQmQU7aAgNm3g2s5/hDdtVLCVfd+mTOxZGMlwQ==
-Date: Thu, 21 Mar 2024 23:16:45 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Bjorn Andersson <quic_bjorande@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rtc@vger.kernel.org, Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>
-Subject: Re: [PATCH] MAINTAINER: Include linux-arm-msm for Qualcomm RTC
- patches
-Message-ID: <171105939644.367696.10302154362155347366.b4-ty@bootlin.com>
-References: <20240319-maintainer-msm-add-rtc-v1-1-3a4f7d41b4d4@quicinc.com>
+	bh=Avwu9Obvo7iLXBxmizf/EO08qQLthSdSW59GBeW8H+I=;
+	b=FZysDbxQhjIXqR1pi+xqtUgFMzj7/eEwMfqFXVNrKP4hKoq2eMyg+mr0CCyz9L7KqFOgHR
+	p5O/ufNLq1uDGvJZh6zage2q2y2AKKbqhiaE8rWYbulPbyHbczbhEbHNktWz0RHQl+5yfX
+	htak4lBJXiAjgjdWctvpqD6B01G3FgE=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Suren Baghdasaryan <surenb@google.com>, mhocko@suse.com, 
+	vbabka@suse.cz, hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
+	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
+	penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com, peterz@infradead.org, 
+	juri.lelli@redhat.com, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, 
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org, 
+	peterx@redhat.com, david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, 
+	masahiroy@kernel.org, nathan@kernel.org, dennis@kernel.org, jhubbard@nvidia.com, 
+	tj@kernel.org, muchun.song@linux.dev, rppt@kernel.org, paulmck@kernel.org, 
+	pasha.tatashin@soleen.com, yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com, 
+	hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org, 
+	ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org, 
+	ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org, 
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, bristot@redhat.com, 
+	vschneid@redhat.com, cl@linux.com, penberg@kernel.org, iamjoonsoo.kim@lge.com, 
+	42.hyeyoo@gmail.com, glider@google.com, elver@google.com, dvyukov@google.com, 
+	songmuchun@bytedance.com, jbaron@akamai.com, aliceryhl@google.com, rientjes@google.com, 
+	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
+	linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, cgroups@vger.kernel.org, 
+	Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v6 05/37] fs: Convert alloc_inode_sb() to a macro
+Message-ID: <bliyhrwtskv5xhg3rxxszouxntrhnm3nxhcmrmdwwk4iyx5wdo@vodd22dbtn75>
+References: <20240321163705.3067592-1-surenb@google.com>
+ <20240321163705.3067592-6-surenb@google.com>
+ <20240321133147.6d05af5744f9d4da88234fb4@linux-foundation.org>
+ <gnqztvimdnvz2hcepdh3o3dpg4cmvlkug4sl7ns5vd4lm7hmao@dpstjnacdubq>
+ <20240321150908.48283ba55a6c786dee273ec3@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,24 +66,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240319-maintainer-msm-add-rtc-v1-1-3a4f7d41b4d4@quicinc.com>
-X-GND-Sasl: alexandre.belloni@bootlin.com
+In-Reply-To: <20240321150908.48283ba55a6c786dee273ec3@linux-foundation.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 19 Mar 2024 17:05:55 -0700, Bjorn Andersson wrote:
-> Add Qualcomm RTC driver to the linux-arm-msm list, to ensure that
-> members of the Qualcomm community gets Cc'ed, to assist with reviews
-> etc.
+On Thu, Mar 21, 2024 at 03:09:08PM -0700, Andrew Morton wrote:
+> On Thu, 21 Mar 2024 17:15:39 -0400 Kent Overstreet <kent.overstreet@linux.dev> wrote:
 > 
+> > On Thu, Mar 21, 2024 at 01:31:47PM -0700, Andrew Morton wrote:
+> > > On Thu, 21 Mar 2024 09:36:27 -0700 Suren Baghdasaryan <surenb@google.com> wrote:
+> > > 
+> > > > From: Kent Overstreet <kent.overstreet@linux.dev>
+> > > > 
+> > > > We're introducing alloc tagging, which tracks memory allocations by
+> > > > callsite. Converting alloc_inode_sb() to a macro means allocations will
+> > > > be tracked by its caller, which is a bit more useful.
+> > > 
+> > > I'd have thought that there would be many similar
+> > > inlines-which-allocate-memory.  Such as, I dunno, jbd2_alloc_inode(). 
+> > > Do we have to go converting things to macros as people report
+> > > misleading or less useful results, or is there some more general
+> > > solution to this?
+> > 
+> > No, this is just what we have to do.
 > 
+> Well, this is something we strike in other contexts - kallsyms gives us
+> an inlined function and it's rarely what we wanted.
+> 
+> I think kallsyms has all the data which is needed to fix this - how
+> hard can it be to figure out that a particular function address lies
+> within an outer function?  I haven't looked...
 
-Applied, thanks!
-
-[1/1] MAINTAINER: Include linux-arm-msm for Qualcomm RTC patches
-      https://git.kernel.org/abelloni/c/f7cee094fb3b
-
-Best regards,
-
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+This is different, though - even if a function is inlined in multiple
+places there's only going to be one instance of a static var defined
+within that function.
