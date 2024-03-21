@@ -1,106 +1,136 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253F3134CD;
-	Thu, 21 Mar 2024 12:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FEFB1CA83
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 12:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711025782; cv=none; b=ZiUBM2JS5gLj/8MQDUSz/xDoAhkXXKVNOG7yqWMYeaXTM5e/12ZXZCBjrqdhmDNZ0NvY5C91DBQiWHEtZtNxJvzPt5eFEgTXKBYmIen4+LDSFERPPhhcFPK6bPtmBRXwplApmmTPNwhZxPgEGguB/iPD+Z+3GaXWS705CpokcqQ=
+	t=1711025858; cv=none; b=bN8C1N+Rm4Ly9Xio2mbGoc6fH2Ze4j8uCz2W0PfN9JB61pONW9sA2oZS7rCQoSpFIa9sPE2BtZi32Ah/4ehz/8pKxAOkzi2I7IAL89yyZZ0cgLwzcguiEWanX6wRKs2M6JVTU8K+Rp9shelpn0HW8tQm78oBpHjudIusbSl4GOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711025782; c=relaxed/simple;
-	bh=BxiWdf4/7BU0N7jaavO3/onZ7Kj2pPXj4FUIl3z2O1s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hmd9cH8U+x5mrnEUT8oVP6O9Czzv8FLz/ve5zlp1K267JhVeiYylGgJn9bz9Nu2GCSRXbikMKVE09ohlXGk1gCt7+pesR2DQPyacD3TRYldQd1+3ojR0VEV1V46OQvXRGXbU+9QUsUcdMIGO+p+i2ZLkO9FbkoPMypfbO2JdUa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=KNYi/Ufs; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="KNYi/Ufs"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=/VkiJjn/Ujsmq+U16JaWHWXV190NKV6cULGPu225XxU=; b=KNYi/UfsvbbcIhqHWGMXIBUscE
-	0NUwAsju2opk5jzCII3uqEkHR38PO9RlU5fEkVlNiKk6G/xRsfJT95BBpVXuicO7xdAiJj2zANZVH
-	b3cNy9k8i9zEFRfFL/mszQHX62S3jxZ+AaOcjMQvO2euRivm6dUzLycyLG+9z5r7rO+s=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rnHxe-00AsKQ-Pb; Thu, 21 Mar 2024 13:55:58 +0100
-Date: Thu, 21 Mar 2024 13:55:58 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Vaishnav Achath <vaishnav.a@ti.com>
-Cc: Michael Walle <mwalle@kernel.org>,
-	"Russell King (Oracle)" <linux@armlinux.org.uk>,
-	Ayush Singh <ayushdevel1325@gmail.com>,
-	open list <linux-kernel@vger.kernel.org>, jkridner@beagleboard.org,
-	robertcnelson@beagleboard.org, lorforlinux@beagleboard.org,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mark Brown <broonie@kernel.org>, Johan Hovold <johan@kernel.org>,
-	Alex Elder <elder@kernel.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	"moderated list:ARM/TEXAS INSTRUMENTS K3 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	"open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-	"moderated list:GREYBUS SUBSYSTEM" <greybus-dev@lists.linaro.org>,
-	Vaishnav M A <vaishnav@beagleboard.org>
-Subject: Re: [PATCH v4 1/5] dt-bindings: misc: Add mikrobus-connector
-Message-ID: <3904c7eb-c179-4596-ba42-d6b545a562a6@lunn.ch>
-References: <20240317193714.403132-1-ayushdevel1325@gmail.com>
- <20240317193714.403132-2-ayushdevel1325@gmail.com>
- <CZWVF90JJO98.2M7ARQ9WMGC94@kernel.org>
- <d4dc4d94-d323-4158-8c08-b7d37d8750d3@gmail.com>
- <b62915ca-c151-4e37-bb03-c92c569c84ff@lunn.ch>
- <4b319264-bff7-48e5-85e8-201ca0bafec6@ti.com>
- <4c299d42-84c7-46fc-952f-292cef1bb4b4@lunn.ch>
- <ded6c350-4c70-4a26-8b18-6605dcc6e084@ti.com>
- <CZZBT3ZMDCVI.40UX5MB6LY4I@kernel.org>
- <ef6a1c28-70dc-4077-b644-2704ac3cf30f@ti.com>
+	s=arc-20240116; t=1711025858; c=relaxed/simple;
+	bh=Ugs/LBHQ17TVRz8+/1tX85sJb3QOcQv7xVKlpf6dBWE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=C3B7dG+HB/hriZy8KBv8bL05YEA5IB+LDbhB9jx/lkyRy8ND9m/mVLZ2bCBfPvv7Ac9rxdgBXTG2Y9ZJvlDCJwO3z1/8PNIWDfB7TI44vcsGe1IT+/7CumZBlQ9RMLz+LHAWVQ0ZECONWj88+f7wkOhqvnCHb2JaZRki4+7LNPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-199-xgFlFvyBPmuyMshxla-1pg-1; Thu, 21 Mar 2024 12:57:33 +0000
+X-MC-Unique: xgFlFvyBPmuyMshxla-1pg-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 21 Mar
+ 2024 12:57:07 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Thu, 21 Mar 2024 12:57:07 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Russell King' <linux@armlinux.org.uk>
+CC: Ard Biesheuvel <ardb@kernel.org>, 'Jiangfeng Xiao'
+	<xiaojiangfeng@huawei.com>, "arnd@arndb.de" <arnd@arndb.de>,
+	"keescook@chromium.org" <keescook@chromium.org>, "haibo.li@mediatek.com"
+	<haibo.li@mediatek.com>, "angelogioacchino.delregno@collabora.com"
+	<angelogioacchino.delregno@collabora.com>, "amergnat@baylibre.com"
+	<amergnat@baylibre.com>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "douzhaolei@huawei.com"
+	<douzhaolei@huawei.com>, "gustavoars@kernel.org" <gustavoars@kernel.org>,
+	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, "kepler.chenxin@huawei.com"
+	<kepler.chenxin@huawei.com>, "kirill.shutemov@linux.intel.com"
+	<kirill.shutemov@linux.intel.com>, "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "nixiaoming@huawei.com"
+	<nixiaoming@huawei.com>, "peterz@infradead.org" <peterz@infradead.org>,
+	"wangbing6@huawei.com" <wangbing6@huawei.com>, "wangfangpeng1@huawei.com"
+	<wangfangpeng1@huawei.com>, "jannh@google.com" <jannh@google.com>,
+	"willy@infradead.org" <willy@infradead.org>
+Subject: RE: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
+Thread-Topic: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
+Thread-Index: AQHae3ROEuI+AaCprEesIWGaAOB7ebFB9uHAgAAWtoCAAAVW8IAACy4AgAADrmA=
+Date: Thu, 21 Mar 2024 12:57:07 +0000
+Message-ID: <0fd55e156195440bb1d815dd8300894b@AcuMS.aculab.com>
+References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
+ <1710906278-23851-1-git-send-email-xiaojiangfeng@huawei.com>
+ <ZfqiD8Yw0oOVHW/p@shell.armlinux.org.uk>
+ <84a57ca8-8963-ca24-8bd1-ddc5c33bf4da@huawei.com>
+ <Zfs7sT6Pxy5yjnPC@shell.armlinux.org.uk>
+ <bad25937-fc98-8e11-4279-ab6b3a727c1f@huawei.com>
+ <bbcca1e205384cf0b42236e17f3969f7@AcuMS.aculab.com>
+ <ZfwYx/8k8FVONg6+@shell.armlinux.org.uk>
+ <db930076c837456f999daee5cb76735f@AcuMS.aculab.com>
+ <ZfwmomjUwQdCefzh@shell.armlinux.org.uk>
+In-Reply-To: <ZfwmomjUwQdCefzh@shell.armlinux.org.uk>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ef6a1c28-70dc-4077-b644-2704ac3cf30f@ti.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-> > How will the ethernet boards ([1], [2]) work? Where do they get
-> > their MAC address from, for example. The DT has some nice properties
-> > for that, but I doubt that will be possible with the manifest files.
-> > I've looked at the manifest file for the w5500 board [3] and to me
-> > it looks like that board will come up with a random MAC address on
-> > each start. Thus, even today, you have some boards which require
-> > a more complex description.
-> > 
-> 
-> Agreed, this is a limitation, unless the corresponding drivers/subsystems
-> use device_property_read_* helper to fetch properties, it will not work and
-> net/core/of_net.c only implements of_get_* helpers even though the
-> underlying functions can be implemented with equivalent
-> device_property_read_* equivalent as well.
+From: Russell King
+> Sent: 21 March 2024 12:23
+...
+> > That might mean you can get the BL in the middle of a function
+> > but where the following instruction is for the 'no stack frame'
+> > side of the branch.
+> > That is very likely to break any stack offset calculations.
+>=20
+> No it can't. At any one point in the function, the stack has to be in
+> a well defined state, so that access to local variables can work, and
+> also the stack can be correctly unwound. If there exists a point in
+> the function body which can be reached where the stack could be in two
+> different states, then the stack can't be restored to the parent
+> context.
 
-I think this is a good example of the limitations. For an Ethernet
-NIC, you often want to describe properties of both the MAC and the
-PHY. What phy-mode should be used, what delays on the RGMII bus, what
-LEDs are there etc. This is a pretty much solved problem with DT, we
-have a well defined sub tree to represent the MAC, the MDIO bus and
-the PHY on the bus.
+Actually you can get there with a function that has a lot of args.
+So you can have:
+=09if (...) {
+=09=09push x
+=09=09bl func
+=09=09add %sp, #8
+=09}
+=09code;
+which is fine.
+But if 'func' is 'noreturn' then the 'add %sp, #8' can be discarded
+and then the saved LR is that of 'code' - but the stack offset is wrong.
 
-But we do have two classes of properties here. The MAC address is
-unique to a board. So that does need to be stored in the EEPROM, and
-cannot be in a one time converted manifest to DT file stored in
-/lib/firmware. However, to some extent, this is a solved problem. We
-have a DT representation of how to look in an EEPROM to find the MAC
-address. So the DT just needs to point to some bytes in the manifest
-in the EEPROM.
+> > > This is where the problem lies - because the link register value
+> > > created by the BL instruction will point to the instruction after the
+> > > BL which will _not_ part of the function that invoked the BL. That
+> > > will probably cause issues for the ELF unwinder, which means this
+> > > issue probably goes beyond _just_ printing the function name.
+> >
+> > Isn't this already in the unwinder?
+> > A BL itself isn't going to fault with PC =3D next-instruction.
+>=20
+> You are missing the fact that the PC can be the saved LR, and thus
+> can very well be the next instruction.
 
-	Andrew
+A PC from LR will always be the next instruction.
+It is only the PC from a fault frame that is the current one.
+The unwinder probably need to be told which one it has.
+(Or add 4 the fault frame PC so that the unwinder can subtract
+4 from it.)
+
+At least (I don't think) there are any functions where the
+called code is responsible for removing arguments.
+That is a whole different bag of worms.
+
+=09David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
+
