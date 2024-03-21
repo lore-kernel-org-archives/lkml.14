@@ -1,161 +1,167 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768741272C9
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 15:55:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DA412BF1A
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 15:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711036542; cv=none; b=RM14NM/JTWXKq7VYn+qHTxB7xwwtUti94ZElDOm5sNzcfUlPkKxqnszFmKkWDwxWtsBJ6fcMG94/kM0UTK2J8Ex6Nd6D9CluZOFKIFMIHJjhQPInJOszT1Ps6URezvqWSqemwOevJns2+BcxasHBciVLG2Xm2n90rD/nfKXBoCY=
+	t=1711036736; cv=none; b=Mj2gyYIw4z2XSLTK3TT+HnPPeHEOvZHGW7t5pLU5jWo/zJ1ScvXq9b+R4caLyLbPb1zvmzO6GoCkK2nc81/kiEkM1VM0aP1dZmgm9xCrDKYqgh3TCBSoCDXTdFO9/FzYSkJOaddJcXHIOojN4LtViYapBoBjuvxTm81cVOgWs9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711036542; c=relaxed/simple;
-	bh=oUSS9WbWUjleqESpW9c98IHhFOzKOgqmvwrILKrh0+k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h4i9sgCWRGLLJfr9eYW0UY4Lis5v8IMQaumtjRWYZVZnTObPlfH1X1ptRSNOiZjSRM/JqJsQX6ysrnpkcnH6oswgj6G8sg4bj6LFXGf2VfUzFHHWmR6nOZb8QBUoKwJHckjLWs1CCr6h7bWIf7AKgisNpS92hj4jA4dkzRJW9VE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=M9uj0aWz; arc=none smtp.client-ip=35.89.44.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1711036736; c=relaxed/simple;
+	bh=Iad1tyKhiFMIDC8Xt0/zXsbE/rY3pkbp2kXvv1eL2yo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W3orK0LohBRZm6mLlBEcrW6UptJ/YmHBzhp4qi7PXmI9eZtLj7PYrJS6wu9TTpj5zaHBzeRDW7B0nQWypJatb0TCtHn+ZRbsdaZhhX5rVrKwA8pnvqVldJyY9K/5eTIbGnEsosy5xW7YA1lcLOCxyug1Nwb3ZJqlekLAf7pyku8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aSgdNimu; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="M9uj0aWz"
-Received: from eig-obgw-5002a.ext.cloudfilter.net ([10.0.29.215])
-	by cmsmtp with ESMTPS
-	id mzporzBWkHXmAnKlSrw1JJ; Thu, 21 Mar 2024 15:55:34 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id nKlFrcSa3ybtznKlGrvAtH; Thu, 21 Mar 2024 15:55:22 +0000
-X-Authority-Analysis: v=2.4 cv=RsAOLzmK c=1 sm=1 tr=0 ts=65fc586a
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=UtBFqMlDG83dypD0sxEoAQ==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10
- a=pzMpKnHA-g9QxEOb-IoA:9 a=QEXdDO2ut3YA:10
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=A+WmTPuzkgZDSVrrCRyuXerhZHil+NNsnP3DC6nYWLs=; b=M9uj0aWzYqMtuCLokuF8MmFkPb
-	EJ0Xg5HQdoz3H03McPCY1gKkd+rX2+3UUt6BetiYwYq6SAu2IFYyzWA1LYQWZqHUG3kqVYH8cKI9O
-	c/QHrrUZDxdTFaoq21I6FdsAVX5N5n4gKzD3l3FAHCLG3lko4HdID3R/v+gw4xGsVydK6vSQbvwPT
-	FAraZMHsUIJ+XuF2/GyqgS0NWSitOp/SOR0Oh/P7AF+5jhangUPumjvU46aJvHN1BvxquFDHG7ZS4
-	rjwnDHCL4xgB+cYqwTpUn3OGbmCxib97UU9+IgPtUvDon8YxACiRAtdQJEAXC8gNSXT1LUNeZp3uM
-	GgboiAPg==;
-Received: from [201.172.174.229] (port=45852 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rnKfa-003VSS-2i;
-	Thu, 21 Mar 2024 10:49:30 -0500
-Message-ID: <afa0afb7-f756-45d0-97ab-44205e984199@embeddedor.com>
-Date: Thu, 21 Mar 2024 09:49:29 -0600
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aSgdNimu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711036732;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F/BIMjBq7uK/tVcgzATJ/EBrygqAy5kphRG6l+IH21c=;
+	b=aSgdNimuDtp43Ddp3j/PBEGyXJj4aXlnffoi9EIImL3UpJzYbxrkqhW8mribUW8lI/pikN
+	agIq1t6FDsn+rQsLMHuISuUrJsEl9su56qNQhWkeV9zMaAtmA3PFvIHfUerTgjc1go8BXU
+	N1Nk16qCY0kd7UCkEeuR6mpfV5tqcQw=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-256-T1lVxz7_NQ2k-tjWTXe59g-1; Thu, 21 Mar 2024 11:58:51 -0400
+X-MC-Unique: T1lVxz7_NQ2k-tjWTXe59g-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a46f6c1104eso131899466b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 08:58:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711036730; x=1711641530;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=F/BIMjBq7uK/tVcgzATJ/EBrygqAy5kphRG6l+IH21c=;
+        b=lE8rSXombqiq/9NSuuZBxmYrqXXGKaxqYL5V4T04cjLfaFyuWKCukG7fbJLNV7A4UK
+         y8cZ8P+ONrkufSny0pFPrz633POSacEIjcUneokwhDDFyLWF0pLG+OioFrOhZE2YY956
+         ULgPxuJLjH2VThd3E3Xf+B9lNQFLYuyDq2wyhRugzcFwm6c2qwE8fQaYi7lLwoXeAA1l
+         GE332OCPhPjmsZo3CsEXmetv+uGrebD00o+ELMnpVR4TuADMcirhNMJccsHoronNf6k/
+         MvYHYYfrp8swmzFAt8mINOU8rKu/OIoMpcLxm3+YoMYl3nTzhjKfThLCgVHsldpir/gl
+         d0/g==
+X-Forwarded-Encrypted: i=1; AJvYcCXQZI/cHd5fshjk4XNFDeqNYOcJIUcdSAb4R/zeAFZGnhtO5qUTLZbuZ8OeLtWnFPgdBvqOp27d6lWJaSxDfL/Jn4bCfpCc2oa+0z5q
+X-Gm-Message-State: AOJu0Yyz/+XOPIGnU1v3T299XDXvxwIpXDuidGl1ONh6O8bIai9WYpeL
+	QvNWA82EiceH+OeQgWC95hJQzWD8rqV05R+VZ45EszoScGxtD4BBJU+uccauevn/NND8TtxxbKD
+	XKhkc9s8EoTEYivgTErPqfr2yR1e4I3TVUhfYcKavm3ONe6WabLHNYOhlcCpZh1L//KJvpPX0SA
+	Pt7TFaYLfsii0DlNkACehKAahy7ojTONorVu4P
+X-Received: by 2002:a17:906:c149:b0:a45:bde1:a334 with SMTP id dp9-20020a170906c14900b00a45bde1a334mr3108498ejc.27.1711036730304;
+        Thu, 21 Mar 2024 08:58:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHLAjPwlWHH+uhpm++Xyte28ALX+FmmBQ1UMFwPp+aVKCO/tWvAIb4yfOYkcRBNFi+4fGQDhXBDoSX46ViEtiI=
+X-Received: by 2002:a17:906:c149:b0:a45:bde1:a334 with SMTP id
+ dp9-20020a170906c14900b00a45bde1a334mr3108485ejc.27.1711036730019; Thu, 21
+ Mar 2024 08:58:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3][next] integrity: Avoid -Wflex-array-member-not-at-end
- warnings
-Content-Language: en-US
-To: Mimi Zohar <zohar@linux.ibm.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Roberto Sassu <roberto.sassu@huawei.com>,
- Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
- Eric Snowberg <eric.snowberg@oracle.com>, Paul Moore <paul@paul-moore.com>,
- James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>
-Cc: linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZfuzWku+ip4fsZrb@neat>
- <267f340e1b309cff2fab01f83a141ee465296907.camel@linux.ibm.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <267f340e1b309cff2fab01f83a141ee465296907.camel@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.174.229
-X-Source-L: No
-X-Exim-ID: 1rnKfa-003VSS-2i
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.174.229]:45852
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfPx1/4Z+ceJrFDN7pqmiMOEwe/qKnrcyojOlBNORXPH9i/jWTDDHwPO2DNZVLAWdFzl6T7llE3HkX7BAc2DbDczGnha18ypfwx/qKsS8EkAGqhAeZDpN
- vaq+1i0cFFMds8pBg5vK/cvfjfaMbf2cVZTDodrNC9drD6cNeCZn3zhaUqcHWQDtvQ7lHpFWp7vMJMXerd/Mw9oinMtJH7QhWH8HOYTnU+iu14IdJ2nZjK+p
+References: <20240315-hid-bpf-sleepable-v4-0-5658f2540564@kernel.org>
+ <20240315-hid-bpf-sleepable-v4-2-5658f2540564@kernel.org> <88fde9a0bb55c74fe34667e891572d8af9eec21d.camel@gmail.com>
+In-Reply-To: <88fde9a0bb55c74fe34667e891572d8af9eec21d.camel@gmail.com>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date: Thu, 21 Mar 2024 16:58:38 +0100
+Message-ID: <CAO-hwJ+bTHfraJkpDDchP4k+JDZKChbv8pb+9Wwc7E45P9X-jw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 2/6] bpf/verifier: add bpf_timer as a kfunc
+ capable type
+To: Eduard Zingerman <eddyz87@gmail.com>
+Cc: Benjamin Tissoires <bentiss@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Mar 18, 2024 at 10:59=E2=80=AFPM Eduard Zingerman <eddyz87@gmail.co=
+m> wrote:
+>
+> On Fri, 2024-03-15 at 15:29 +0100, Benjamin Tissoires wrote:
+> [...]
+>
+> > @@ -12021,6 +12034,12 @@ static int check_kfunc_args(struct bpf_verifie=
+r_env *env, struct bpf_kfunc_call_
+> >                       if (ret)
+> >                               return ret;
+> >                       break;
+> > +             case KF_ARG_PTR_TO_TIMER:
+> > +                     if (reg->type !=3D PTR_TO_MAP_VALUE) {
+> > +                             verbose(env, "arg#%d doesn't point to a m=
+ap value\n", i);
+> > +                             return -EINVAL;
+> > +                     }
+> > +                     break;
+>
+> I think that pointer offset has to be checked as well,
+> otherwise the following program verifies w/o error:
 
+I initially thought it would be harder than it actually was.
 
-On 3/21/24 07:58, Mimi Zohar wrote:
-> On Wed, 2024-03-20 at 22:11 -0600, Gustavo A. R. Silva wrote:
->> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
->> ready to enable it globally.
->>
->> There is currently an object (`hdr)` in `struct ima_max_digest_data`
->> that contains a flexible structure (`struct ima_digest_data`):
->>
->>   struct ima_max_digest_data {
->> 	struct ima_digest_data hdr;
->>          u8 digest[HASH_MAX_DIGESTSIZE];
->>   } __packed;
->>
->> So, in order to avoid ending up with a flexible-array member in the
->> middle of a struct, we use the `__struct_group()` helper to separate
->> the flexible array from the rest of the members in the flexible
->> structure:
->>
->> struct ima_digest_data {
->>          __struct_group(ima_digest_data_hdr, hdr, __packed,
->>
->> 	... the rest of the members
->>
->>          );
->>          u8 digest[];
->> } __packed;
->>
->> With the change described above, we can now declare an object of the
->> type of the tagged `struct ima_digest_data_hdr`, without embedding the
->> flexible array in the middle of another struct:
->>
->>   struct ima_max_digest_data {
->>          struct ima_digest_data_hdr hdr;
->>          u8 digest[HASH_MAX_DIGESTSIZE];
->>   } __packed;
->>
-> 
-> And similarly for 'struct evm_digest'.
+Fixed (with the new test below) in v5.
 
-Yes. :)
+Cheers,
+Benjamin
 
-> 
-> 
->> We also use `container_of()` whenever we need to retrieve a pointer to
->> the flexible structure.
->>
->> So, with these changes, fix the following warnings:
->>
->> security/integrity/evm/evm.h:45:32: warning: structure containing a flexible
->> array member is not at the end of another structure [-Wflex-array-member-not-
->> at-end]
->> security/integrity/evm/evm.h:45:32: warning: structure containing a flexible
->> array member is not at the end of another structure [-Wflex-array-member-not-
->> at-end]
->> security/integrity/evm/evm.h:45:32: warning: structure containing a flexible
->> array member is not at the end of another structure [-Wflex-array-member-not-
->> at-end]
-> 
-> I assume these messages are gone.
-
-Yes. :)
-
-Thanks
---
-Gustavo
+>
+> --- 8< ----------------------------
+>
+> #include <linux/bpf.h>
+> #include <time.h>
+> #include <errno.h>
+> #include <bpf/bpf_helpers.h>
+> #include "bpf_tcp_helpers.h"
+>
+> extern int bpf_timer_set_sleepable_cb_impl(struct bpf_timer *timer,
+>                 int (callback_fn)(void *map, int *key, struct bpf_timer *=
+timer), void *aux__ign) __ksym;
+>
+> #define bpf_timer_set_sleepable_cb(timer, cb) \
+>         bpf_timer_set_sleepable_cb_impl(timer, cb, NULL)
+>
+> struct elem {
+>         struct bpf_timer t;
+> };
+>
+> struct {
+>         __uint(type, BPF_MAP_TYPE_ARRAY);
+>         __uint(max_entries, 2);
+>         __type(key, int);
+>         __type(value, struct elem);
+> } array SEC(".maps");
+>
+> static int cb_sleepable(void *map, int *key, struct bpf_timer *timer)
+> {
+>         return 0;
+> }
+>
+> SEC("fentry/bpf_fentry_test5")
+> int BPF_PROG2(test_sleepable, int, a)
+> {
+>         struct bpf_timer *arr_timer;
+>         int array_key =3D 1;
+>
+>         arr_timer =3D bpf_map_lookup_elem(&array, &array_key);
+>         if (!arr_timer)
+>                 return 0;
+>         bpf_timer_init(arr_timer, &array, CLOCK_MONOTONIC);
+>         bpf_timer_set_sleepable_cb((void *)arr_timer + 1, // <-- note inc=
+orrect offset
+>                                    cb_sleepable);
+>         bpf_timer_start(arr_timer, 0, 0);
+>         return 0;
+> }
+>
+> char _license[] SEC("license") =3D "GPL";
+>
+> ---------------------------- >8 ---
+>
 
