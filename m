@@ -1,236 +1,131 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from out203-205-221-202.mail.qq.com (out203-205-221-202.mail.qq.com [203.205.221.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C548C153;
-	Thu, 21 Mar 2024 07:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CEEC153;
+	Thu, 21 Mar 2024 07:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711006552; cv=none; b=IkboqDqFLB3d5F9YiSnuXRPMv9YZ/Mm1l5DfYwL4UpGHw3Gv0YpiZtjO5WxAPzqjhtOQTO460EBBaAEwQfpmrezoHkklChgQerxFUKNorVgM2UoVfNZOUfCpM/q9PIaR3Banyxb1dRzUmpg5gO4PQDvukgWaF94gFlu0U3Ba9lM=
+	t=1711006606; cv=none; b=c4Cbrr+wqI3YAbfbveQ+14w3s5kAcUs/N4HnM7a1KPclWmvZaLwoBu+c7+DJUbi3IgvDMdLdntgpP//7Opf8NtL4Dyic80J5btGVNToQ2MzPuNYt976RyhFoSoJ3CYm1Mp4N2xuW+r0BHqGuJVszlpFYV1yutfToQTwA5ELrFRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711006552; c=relaxed/simple;
-	bh=l3XHxGpUD80HFnlqU/qXkkV/AbISSLG1O1P8bH0VDto=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=KGKrPPPTGS3tR50K3x1TGp2mVNVAH0pB1b7xwWbURgZoRCnhVAB8I8/YCqQQmCfn3jGWRQHPWSknHOaajg2e+AN8qsxCDBIWoiVskp6pRDepxyDG+Nat+cdMPXVkwATeNcJY5mFyty7df5q2K0mysM3bj8Bm5S+HTy1nk4ee78Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=TziBhDd+; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1711006606; c=relaxed/simple;
+	bh=4wKdMcmeIxxwMjUiVEOwaobzxEYi+ENpyHnS61pvJRE=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=P8HO25hxlSqj2Bmz/ZixgdOGabPmaHJgp7gbt8SV0o9DwrSiMSVC7tu1mPYAmJ4UWfIlQTZGAnmXW5sqgSRH494nBxwe61R0QN3YRzSEGLEpPuKsJ6cbpvtyG2Pmb3/ynig//jHfGmqYewAdJrLGtaqTyB0azQNWpup0bPxySGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=NyxM9DY+; arc=none smtp.client-ip=203.205.221.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TziBhDd+"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42L7ZNbo075909;
-	Thu, 21 Mar 2024 02:35:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1711006523;
-	bh=KwkoU2lZ2JJrHgYrLkBhgW9349Ie/raH4I2wZXm5JMg=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=TziBhDd+1T3XNQLxwtjzovjhnP5ZpmM4lDDTU/rRLJfwdv9pfMJcoydM01QQj/TR+
-	 82qgkKqAjEDBTEbQRD4gyrcO93UioSTe2xx6VAxWRyN4QUoJGhO5YSEM2grkg5pjnW
-	 B2tII4pDMVk0LI343dXLgxReSaPwXoRnfmr6Ll44=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42L7ZN4f017132
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 21 Mar 2024 02:35:23 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 21
- Mar 2024 02:35:22 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 21 Mar 2024 02:35:22 -0500
-Received: from [10.24.69.142] ([10.24.69.142])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42L7ZFxT004743;
-	Thu, 21 Mar 2024 02:35:16 -0500
-Message-ID: <9ea69bd3-977d-442e-aacc-3c819b1a5630@ti.com>
-Date: Thu, 21 Mar 2024 13:05:14 +0530
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="NyxM9DY+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1711006296; bh=8u8GJnikIVLt9o3AKQrprbA51XrwMm6d9t0CFH0aJ0o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=NyxM9DY+sJxECP+WTwq+O6+F8ZJuOm0c7+ELmnSsMTSeAZXM37qZQFdBDOGwxPzg1
+	 E1CpnCnXDDw+nJjRdiy8VJcH+IqFrDIjEfJCk23jDblqHQJjDDRVVvMh9ZsVSddwYA
+	 pDBXH8VE7+XdOvnWbgjmysY0Y/Pc+oFti74jYrtg=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
+	by newxmesmtplogicsvrszc5-2.qq.com (NewEsmtp) with SMTP
+	id 7E094A93; Thu, 21 Mar 2024 15:31:32 +0800
+X-QQ-mid: xmsmtpt1711006292tid191y1d
+Message-ID: <tencent_7225DC0D859205DD8BDDAE191CCFBF0D8907@qq.com>
+X-QQ-XMAILINFO: MB5+LsFw85No0+H8hKNnPjt0TZNFWjDY8EcRXtW68WG0QS11aImSoO+tEj7xyB
+	 pxhW3UzKbTu9PmbiRlY9xedW5tDLwSCN+4ZNRsEfFXa+oii4HRiEKV6/y4kUWbFQvP9uXAG+zgt8
+	 X0/rFAt2GaD2IKJ/P7SifY8U2ZWU/gFGblLfGZbwWWbV1dDzOTpG6Cq0cB6rYgeHTveZIYyNddpd
+	 0vl5APARmC0HpogWNFreP/05ExkTw1u8AX7k+mYSL8w+apYvfaeoz8X83gtDQT4qzLPD/ByM7OHB
+	 nUmmuGELQrA+3+RlNjEaV7/CZ7eowFJoobDkPeIeROPIHWUovcb8SqPH3r7dQlRl++oCQWgk13R+
+	 gdYjP/ODaVeAfnZHCdpaOUgZ2gVKnT0wva7F84pIEm1kCQ8EWRRrFpeuziWyMQ/iJruwDd67f285
+	 kvzb35+WA4d4TLJZWAwROtunnmjM2+03xnI7W66jJQp0c2lYVKDOiyF3n6yjdUszcpvomu74zuam
+	 KpHkPglwkOQTYIPOWbabuE2nU1RfTUIwQ6Hxjxhzet/RT+f7RCwA7JZyS71kzpezx1wJOb1JTbpj
+	 KYbFQT3+BKlnft3gVYvGwsSzNMx973Pquu4ofv83RNUm8mELYNtCiUfJ9+lOBlDIKGwkXIl0msbV
+	 GE2UH8Pwp1KKgkmqLuX2RdvNMkV6mij69ecvXCMLmtuqbV4vKOt63U0bdmts0HRetigpZ4SPgoG6
+	 GRP5Q9upeuCiZK2UnaGpi3m74UCOMu78Msk4md6dON0y+ztybHLI+Lv6xRbPBgp6EUi0CrRHH+2p
+	 +KrUNKTQQfAu6VybRFpgLDh/XI4vcG4Sd4BeymsATRxGiQ/2TTZuvo/QmJGCrOMn4r2cYtjT5QTQ
+	 xG/fCXo7cUTPKEL8je4vS4IJGe8gEQZskkRXP1dmpnnQEtaifcpv3gCycgpUPF5kCaoK7X9OEzZR
+	 mzwhzY5b4=
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+93cbd5fbb85814306ba1@syzkaller.appspotmail.com
+Cc: kvalo@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
+	netdev@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com,
+	toke@toke.dk
+Subject: [PATCH usb] wifi: ath9k: fix oob in htc_issue_send
+Date: Thu, 21 Mar 2024 15:31:33 +0800
+X-OQ-MSGID: <20240321073132.2181617-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000004e41110614187d35@google.com>
+References: <0000000000004e41110614187d35@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/5] dt-bindings: misc: Add mikrobus-connector
-Content-Language: en-US
-To: Andrew Lunn <andrew@lunn.ch>, Ayush Singh <ayushdevel1325@gmail.com>
-CC: Michael Walle <mwalle@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>, <jkridner@beagleboard.org>,
-        <robertcnelson@beagleboard.org>, <lorforlinux@beagleboard.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Derek Kiernan
-	<derek.kiernan@amd.com>,
-        Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann
-	<arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown
-	<broonie@kernel.org>, Johan Hovold <johan@kernel.org>,
-        Alex Elder
-	<elder@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE
- BINDINGS" <devicetree@vger.kernel.org>,
-        "moderated list:ARM/TEXAS INSTRUMENTS
- K3 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-        "open list:SPI
- SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        "moderated list:GREYBUS SUBSYSTEM"
-	<greybus-dev@lists.linaro.org>,
-        Vaishnav M A <vaishnav@beagleboard.org>
-References: <c8031e17-5ae8-4794-8b8c-1736be6452d3@gmail.com>
- <CZXMK3W52AFO.1APK080GVJESK@kernel.org>
- <5a9b1cd9-05ec-4606-92b6-eadbc7af6202@gmail.com>
- <CZXPQZY8PUGE.QZM8XSOUNMT4@kernel.org>
- <81ec4156-8758-406e-876b-5acf13951d09@gmail.com>
- <CZXSKOLK6S1S.N86E2AZG2V90@kernel.org>
- <2eec6437-dd11-408d-9bcb-92ba2bee4487@ti.com>
- <28c995cb-1660-435f-9ee4-1195439231f0@gmail.com>
- <f53cd006-5eb0-47f2-8f84-e7915154f12d@lunn.ch>
- <c3223f90-6e7c-4fdc-905a-770c474445e2@gmail.com>
- <c368ee3b-1b80-46b1-9aa7-b7fc0094e3a1@lunn.ch>
-From: Vaishnav Achath <vaishnav.a@ti.com>
-In-Reply-To: <c368ee3b-1b80-46b1-9aa7-b7fc0094e3a1@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 
-Hi Andrew,
+[syzbot reported]
+usb 1-1: ath9k_htc: Transferred FW: ath9k_htc/htc_9271-1.4.0.fw, size: 51008
+ath9k_htc 1-1:1.0: ath9k_htc: HTC initialized with 33 credits
+------------[ cut here ]------------
+UBSAN: array-index-out-of-bounds in drivers/net/wireless/ath/ath9k/htc_hst.c:26:51
+index 255 is out of range for type 'htc_endpoint [22]'
+CPU: 1 PID: 2494 Comm: kworker/1:2 Not tainted 6.8.0-rc6-syzkaller-00190-ga788e53c05ae #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024
+Workqueue: events request_firmware_work_func
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x125/0x1b0 lib/dump_stack.c:106
+ ubsan_epilogue lib/ubsan.c:217 [inline]
+ __ubsan_handle_out_of_bounds+0x111/0x150 lib/ubsan.c:347
+ htc_issue_send.constprop.0+0x209/0x230 drivers/net/wireless/ath/ath9k/htc_hst.c:26
+ ath9k_wmi_cmd_issue drivers/net/wireless/ath/ath9k/wmi.c:305 [inline]
+ ath9k_wmi_cmd+0x424/0x630 drivers/net/wireless/ath/ath9k/wmi.c:342
+ ath9k_regread+0xdb/0x160 drivers/net/wireless/ath/ath9k/htc_drv_init.c:242
+ ath9k_hw_read_revisions drivers/net/wireless/ath/ath9k/hw.c:287 [inline]
+ __ath9k_hw_init drivers/net/wireless/ath/ath9k/hw.c:572 [inline]
+ ath9k_hw_init+0xf02/0x2b30 drivers/net/wireless/ath/ath9k/hw.c:700
+ ath9k_init_priv drivers/net/wireless/ath/ath9k/htc_drv_init.c:662 [inline]
+ ath9k_init_device drivers/net/wireless/ath/ath9k/htc_drv_init.c:839 [inline]
+ ath9k_htc_probe_device+0xb37/0x25f0 drivers/net/wireless/ath/ath9k/htc_drv_init.c:963
+ ath9k_htc_hw_init+0x33/0x70 drivers/net/wireless/ath/ath9k/htc_hst.c:529
+ ath9k_hif_usb_firmware_cb+0x272/0x620 drivers/net/wireless/ath/ath9k/hif_usb.c:1273
+ request_firmware_work_func+0x13a/0x240 drivers/base/firmware_loader/main.c:1163
+ process_one_work+0x886/0x15d0 kernel/workqueue.c:2633
+ process_scheduled_works kernel/workqueue.c:2706 [inline]
+ worker_thread+0x8b9/0x1290 kernel/workqueue.c:2787
+ kthread+0x2c6/0x3a0 kernel/kthread.c:388
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:243
+ </TASK>
+---[ end trace ]---
+[Fix]
+If the target does not return a valid end point id during the device connection
+process, returns a failure.
 
-On 21/03/24 00:14, Andrew Lunn wrote:
-> On Wed, Mar 20, 2024 at 10:09:05PM +0530, Ayush Singh wrote:
->> On 3/20/24 01:02, Andrew Lunn wrote:
->>
->>>> Yes, after discussion with Vaishnav and trying to brainstorm some way to do
->>>> the same thing with dt overlays, it seems that trying to use dt overlays
->>>> will mean need to have completely separate implementation of mikroBUS for
->>>> local ports and mikroBUS over greybus.
->>> Could you explain why please?
->>>
->>> Are greybus I2C bus masters different from physical I2C bus masters?
->>> Are greybus SPI bus masters different from physical SPI bus masters?
->>
->> Well, they are virtual, so they are not declared in the device tree. I have
->> linked the greybus i2c implementation. It basically allocates an i2c_adpater
->> and then adds it using `i2c_add_adapter` method. This adapter can then be
->> passed to say mikroBUS driver where it can be used as a normal i2c_adapter,
->> and we can register the device to it.
-> 
-> Being virtual does not really stop it being added to the DT.
-> 
-> I'm making this all up, but i assume it will look something like this:
-> 
-> greybus@42 {
->          compatible = "acme,greybus";
->          reg = <0x42 0x100>;
-> 
-> This would represent the greybus host controller.
-> 
-> 	module@0 {
-> 		 reg = <0>;
-> 
-> This would represent a module discovered on the bus. I assume there is
-> some sort of addressing? The greybus core code dynamically creates the
-> node in DT to describe the modules it has discovered. This is not too
-> different to USB. You can already describe USB devices in DT, but the
-> assumption is you know they exists, e.g. because they are hard wired,
-> not hot-plugable. The USB core will associate the USB device with the
-> node in DT. But actually creating a node in DT is not too big a jump.
-> 
-> 		interface@0 {
->       			compatible = "greybus,i2c";
-> 			reg = <0>;
-> 		}
-> 		interface@1 {
->       			compatible = "greybus,spi";
-> 			reg = <1>;
-> 		}
-> 		interface@10 {
->       			compatible = "greybus,gpio";
-> 			reg = <10>;
-> 		}
-> 
-> It can then enumerate the interfaces on the module, and create the I2C
-> node, SPI bus node, the gpio controller etc. Again, the greybus core
-> can add nodes to DT to described the discovered hardware, and
-> associate them to the linux devices which are created.
-> 
+Fixes: fb9987d0f748 ("ath9k_htc: Support for AR9271 chipset.")
+Reported-and-tested-by: syzbot+93cbd5fbb85814306ba1@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ drivers/net/wireless/ath/ath9k/htc_hst.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-This proposal looks great and would be the ideal solution, but we met 
-with few challenges when initially trying to implement something like 
-this and had to drop and take the route with minimal development effort 
-to just instantiate mikroBUS devices.
+diff --git a/drivers/net/wireless/ath/ath9k/htc_hst.c b/drivers/net/wireless/ath/ath9k/htc_hst.c
+index eb631fd3336d..0d1115d1cc29 100644
+--- a/drivers/net/wireless/ath/ath9k/htc_hst.c
++++ b/drivers/net/wireless/ath/ath9k/htc_hst.c
+@@ -295,6 +295,9 @@ int htc_connect_service(struct htc_target *target,
+ 	}
+ 
+ 	*conn_rsp_epid = target->conn_rsp_epid;
++	if (*conn_rsp_epid < 0 || *conn_rsp_epid > ENDPOINT_MAX)
++		return -EINVAL;
++
+ 	return 0;
+ err:
+ 	kfree_skb(skb);
+-- 
+2.43.0
 
- From what we understand, you are recommending to change the manifest 
-description format used by greybus to device tree and also add of_bus 
-support for greybus - now this will not only solve instantiating 
-mikrobus devices on greybus but even complex devices on greybus making 
-it a robust solution and using standard tools and support DT offers.
-
-However we have a few doubts:
-* For USB or PCIe, to add OF device tree support the parent devices are 
-physically present, for example USB device is a child node of USB 
-controller (physically description available in a SoC DT) and USB 
-interfaces are child of USB devices, how would that hierarchy look for 
-greybus devices?
-Would it be
-USB/UART/transport controller -> AP Bridge host controller -> Module -> 
-interface -> bundle -> CPort ?
-
-When this mikrobus driver was initially implemented we could not think 
-of such an approach as the SVC and Control functionality were 
-implemented in userspace with gbridge ( 
-https://github.com/anobli/gbridge ) with a netlink interface to kernel 
-greybus, but today there are references to do it completely in kernel ( 
-drivers/greybus/gb-beagleplay.c) and your proposal is implementable.
-
-Also with this the manifesto tool which is not very well maintained is 
-not necessary : https://github.com/projectara/manifesto
-
-> That gives you what you need to load a DT overlay to make use of these
-> devices. That overlay would contain one of your virtual mikroBUS
-> controllers. This virtual controller is basically a phandle-proxy. The
-> virtual mikroBUS controllers is a consumer of phandles to an I2C bus,
-> an SPI bus, GPIO bus which makes up the pins routed to the mikroBUS
-> connector. The virtual mikroBUS controllers is also a provider of an
-> I2C bus, an SPI bus, GPIO controller. The mikroBUS device consumes
-> these I2C bus, SPI bus etc. The virtual mikroBUS controllers makes it
-> simpler for the device to find the resources it needs, since they are
-> all in one place. For a physical mikroBUS you have a DT node with
-> phandles to the physical devices. For greybus you create a virtual
-> device with phandles to the virtual devices added to the DT bus.
-> 
-> You then have everything you need to describe the mikroBUS
-> devices. For very simple devices you convert the manifest to a DT
-> overlay and load it. For complex devices you directly use a DT
-> overlay.
-> 
-> I also don't see any need to do the manifest to DT overlay conversion
-> on the fly. You have a database of manifests. They could be converted
-> to DT and then added to the linux-firmware repo, for example. If
-> device with an unknown manifest is found,
-
-  How do we know if we found a device with unknown manifest if we don't 
-read the EEPROM?
-
-  it should be possible to
-> read the manifest in userspace via its eeprom in /sys/class/. An tool
-> could create DT blob and add it to /lib/firmware to get it working
-> locally, and provide suggestions how to contribute it to the linux
-> firmware project?
-
-Agreed, but on what basis will you load the particular manifest for a 
-add-on board if you are not reading the DT overlay (or manifest blob) 
-from the EEPROM?
-
-Thanks and Regards,
-Vaishnav
-
-> 
->     Andrew
