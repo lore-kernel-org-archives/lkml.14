@@ -1,76 +1,77 @@
-Received: from 7.mo560.mail-out.ovh.net (7.mo560.mail-out.ovh.net [188.165.48.182])
+Received: from out-185.mta1.migadu.com (out-185.mta1.migadu.com [95.215.58.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24541353EC
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 21:20:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.48.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED1E135A72
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 21:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711056035; cv=none; b=GY8gLHM/5q54qYbYRrUTrWkclEES31NutLfpT4e7IKiCVlxDgAOTp5Wxpx+rGGJ3AmgMs85y+ND8HRL8LEQ5r4fUjLfrHfdEyn/wPOTwugq7Rp/ReqU4lC6GgkkdNzhbMhOrXo2jQuR4TSSbt/8Gvu45afo8uX2cosELUs/g1Mo=
+	t=1711056143; cv=none; b=EAe4a3j7W+whxeBSd9yW1fW5xn9XfRXLsuot/I6xDQayvRdQHs4gCGiI6aVQvM9hpIW3CWJ7qrQYaCJ5L7lGtcTghw1jpJgiUChRjUuKMbAzcQzp4m8DDT/lRtyoiwPE1FofUQ/L2jJa6Hw053RSZ0Mla5zrLeymWZFPZaP4pSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711056035; c=relaxed/simple;
-	bh=djABA0MQUQ/IUXuxCfbdjgnBP5/7imImBFnUbC+vJz4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ZWXf7Z0x0hlxnyhoholU8r7cb76M5Hyc9i6xMxrJYSHzLka4Ch60zLKBZBmsq5y/29mPdsDNKdKKocGSUXBaDh2CSpm9VbB8Uy3NYM+gShcgsuTqZEcDoDHBnxrijO+x3kK4H+ZNb3kNkWPp7jhvxa6ug3kILjv/P39tnywm0eA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=188.165.48.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
-Received: from director6.ghost.mail-out.ovh.net (unknown [10.108.9.135])
-	by mo560.mail-out.ovh.net (Postfix) with ESMTP id 4V0yn671fsz1Mky
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 21:11:22 +0000 (UTC)
-Received: from ghost-submission-6684bf9d7b-rvvvl (unknown [10.110.96.223])
-	by director6.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 3CBD11FEA3;
-	Thu, 21 Mar 2024 21:11:20 +0000 (UTC)
-Received: from etezian.org ([37.59.142.96])
-	by ghost-submission-6684bf9d7b-rvvvl with ESMTPSA
-	id wCfFC3ii/GWbmBoAVwvt7A
-	(envelope-from <andi@etezian.org>); Thu, 21 Mar 2024 21:11:20 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-96R00106e97499-cce7-40cf-b671-3279a700b6aa,
-                    FCB1700D1C5E2813125D8B0A0227DF34E0FBA9B2) smtp.auth=andi@etezian.org
-X-OVh-ClientIp:89.217.109.169
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Animesh Agarwal <animeshagarwal28@gmail.com>
-Cc: Conor Dooley <conor.dooley@microchip.com>, 
- Vladimir Zapolskiy <vz@mleia.com>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, 
- linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240320084623.82248-1-animeshagarwal28@gmail.com>
-References: <20240320084623.82248-1-animeshagarwal28@gmail.com>
-Subject: Re: [PATCH v3] dt-bindings: i2c: nxp,pnx-i2c: Convert to dtschema
-Message-Id: <171105547918.707638.11304000819202245225.b4-ty@kernel.org>
-Date: Thu, 21 Mar 2024 22:11:19 +0100
+	s=arc-20240116; t=1711056143; c=relaxed/simple;
+	bh=Anq4NcuB/lwgoTXLF75lThmEeR+MuCgA6bicmSCWtE4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=atOXxiBVElGY0R+/CFOLB/QoX+F5204Q0moOQdDPsmVzIMYaTsa9J5NHYI57q6rZHYQsJBd4WSgMpB+mb5uEYINQSOIR9sXauIsTzouK2DLQ6JoPGCOflT+xSbQk7+0JZxSr6RT7IA2icopDJ0NiSgZmsTCefVP6Ojn3n76CxwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KXyqdB/5; arc=none smtp.client-ip=95.215.58.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KXyqdB/5"
+Date: Thu, 21 Mar 2024 17:22:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1711056139;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S05qIGXtD9xW8hBhYLVEJF2bePesL9LF4WflE+oBdCA=;
+	b=KXyqdB/5x6fm8sKDy7Wx6c1+9/aaeEK0c6jkGhTWGiLB9kU+pA76QZmr1Kf9DTr66Dc60G
+	fB2C5gKBmUG3J3KTzZLaNkFSoCZTsVYWkK9kLZLejwfJhbprlY/Qz7wCVcISG86ycSSRRM
+	37QJ0vm12wWgJX97hIfyhbDmoQVqYJg=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: colyli@suse.de, msakai@redhat.com, peterz@infradead.org, 
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, akpm@linux-foundation.org, 
+	bfoster@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	jserv@ccns.ncku.edu.tw, dm-devel@lists.linux.dev, linux-bcache@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-bcachefs@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 04/15] lib min_heap: Add type safe interface
+Message-ID: <mi3uq4gqvseubfiylslxfrnwupfzopz753md5f53v6brlgiamv@l5bxmctqnz6g>
+References: <20240320145417.336208-1-visitorckw@gmail.com>
+ <20240320145417.336208-5-visitorckw@gmail.com>
+ <iz6wl3twuc72txd4ifxy73bbbfijo3ecy7izw3drsmcb2payeu@b2dusfoqobgu>
+ <Zfwgu8+IeH/YqWYR@visitorckw-System-Product-Name>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
-X-Ovh-Tracer-Id: 11707670182381750808
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrleejgdekhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevjghfuffkffggtgfgofesthejredtredtjeenucfhrhhomheptehnughiucfuhhihthhiuceorghnughirdhshhihthhisehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnhepffetheduffdvhfdugfffudfgjeejudehheegfeeguefhieeugffhgfeuffdvgfefnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddvjedrtddrtddruddpkeelrddvudejrddutdelrdduieelpdefjedrheelrddugedvrdelieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomheprghnughisegvthgviihirghnrdhorhhgpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehiedtpdhmohguvgepshhmthhpohhuth
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zfwgu8+IeH/YqWYR@visitorckw-System-Product-Name>
+X-Migadu-Flow: FLOW_OUT
 
-Hi
+On Thu, Mar 21, 2024 at 07:57:47PM +0800, Kuan-Wei Chiu wrote:
+> On Wed, Mar 20, 2024 at 04:56:57PM -0400, Kent Overstreet wrote:
+> > On Wed, Mar 20, 2024 at 10:54:06PM +0800, Kuan-Wei Chiu wrote:
+> > > Introduce a type-safe interface for min_heap by adding small macro
+> > > wrappers around functions and using a 0-size array to store type
+> > > information. This enables the use of __minheap_cast and
+> > > __minheap_obj_size macros for type casting and obtaining element size.
+> > > The implementation draws inspiration from generic-radix-tree.h,
+> > > eliminating the need to pass element size in min_heap_callbacks.
+> > 
+> > let's avoid the heap->heap.nr - darray (fs/bcachefs/darray.h) has a
+> > trick for that. All heaps have the same memory layout, so we can just
+> > cast to a void pointer heap to get something the C code can use.
+> >
+> If I understand correctly, you're suggesting adding APIs similar to
+> darray_top(), darray_first(), and darray_last() within min_heap and
+> having them return a pointer. However, some users are using heap.nr in
+> conditional statements instead of utilizing heap.nr for memory
+> operations, so returning pointers may not be as convenient. What about
+> adding get and set functions for nr instead?
 
-On Wed, 20 Mar 2024 14:16:20 +0530, Animesh Agarwal wrote:
-> Convert the NXP PNX I2C Controller bindings to DT schema.
-> Keep only one example in DT schema to remove redundancy.
-> 
-> 
-
-Applied to i2c/i2c-host on
-
-git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
-
-Thank you,
-Andi
-
-Patches applied
-===============
-[1/1] dt-bindings: i2c: nxp,pnx-i2c: Convert to dtschema
-      commit: e73b7060deb7da42f4e887cb726d0c7019a84cd0
-
+No, I mean not having separate inner and outer types. Want me to sketch
+something out?
