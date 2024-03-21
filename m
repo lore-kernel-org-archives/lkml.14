@@ -1,64 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2183B1C05;
-	Thu, 21 Mar 2024 03:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97BA7494
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 03:23:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710991146; cv=none; b=eNrQ+qWL4XXG70gaAvYeeoaQPvehVTCg5NVraQEXx5VkSoaukXmKkAeXm2+4NU2vDgO9X+gFPhBXcobL4EjlE804/LfiZbRsDIl3Ery2zFxm/9880pAjQbYwPFq7XLDF2/ZN6/ovh0fPDaOquYIdhgqUMVihjBxUTp0rkTp8fug=
+	t=1710991388; cv=none; b=scF6KQnjUVTtStIkQ2qit4U4iXSyB0T/omdTTIETFTGJ9oApGHQp9xqIOvECJlbTxEgJ7XvtAk2iuA/lijJRdujBpBIczd1G7Bp2L0MP+IB6nSg+bC70GdzW9F8a0ghG6iWUrZHFki3kMKCqNxD9Xm3deW/zXe/a+Wpth1vGDxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710991146; c=relaxed/simple;
-	bh=XIrK6+XRynGxct1VOsfF7Y6IWSVr3BBqO6upxc4Ad60=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZJn67+NqSsMNVmdHoLmFEBcc9NmUnoLxQX8k/CsbgtM/B4IO19TjbkrsDKpB+BO2UD9cC6/CRfY6HyQIf6Xffm87dmwdTOg9jZ3kZtwdzqY8Bhm/GhuI8ue946TLmOgE48UOs0s+h8eN2+JX7tALqgKOUTl3Dh/SuJyUFNL96uA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sEsWWEo0; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sEsWWEo0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B9F9C43399;
-	Thu, 21 Mar 2024 03:19:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710991145;
-	bh=XIrK6+XRynGxct1VOsfF7Y6IWSVr3BBqO6upxc4Ad60=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=sEsWWEo03vCQ+jN1NVSuMr9+zxUVpDZFBKix28LduCbvd3YIKMDHPiyZz+twhejYs
-	 LAzw4msSbkJM6YQaD3ERHRau5GRwV2YHk4gctfY8PWrRNEgm3USaj21oOemBul10GI
-	 U01I2/vITIYGKcp7UfpwjG6xexEG13SCrqygSTlHfshyOwCJSvYXIaQ9vjqosTQpEu
-	 Jm3GEyBjGCI5nW8MwdgpnN1ELFqdN/3wefcIbbXrmi5troDDTjOdBQ/oiEEVsyhToJ
-	 4bAbcuHRgHkBYGWUeO97VW/JQGAY1Brc+QuF4eixekIYLHpTDODZf9COqSQ8blk/oH
-	 P7xhUpjds0e3w==
-Date: Wed, 20 Mar 2024 20:19:04 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Herve Codina <herve.codina@bootlin.com>, "David S. Miller"
- <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Rasmus Villemoes
- <linux@rasmusvillemoes.dk>, Stephen Rothwell <sfr@canb.auug.org.au>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2] lib/bitmap: Fix bitmap_scatter() and bitmap_gather()
- kernel doc
-Message-ID: <20240320201904.519613e4@kernel.org>
-In-Reply-To: <ZfssQF5MIQSFCaT8@yury-ThinkPad>
-References: <20240314120006.458580-1-herve.codina@bootlin.com>
-	<20240319193338.068c2559@kernel.org>
-	<ZfssQF5MIQSFCaT8@yury-ThinkPad>
+	s=arc-20240116; t=1710991388; c=relaxed/simple;
+	bh=ZMWlRcuAb2eO+8ORkLGAORRt/P4RK7aKgzPMgTJVL5E=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=hDOYpIsclz0+YTvc1qdU0PhGBJ5J3x/mbgt7EDxdgG+X5FMbdUG3/tH9P76k63kTRPrfRagjw+IdYSI5We6IWIhiymAxoaQNbtqS0AZ0n/EBhDSmDtYGAXepzjhKZ/gcsKOsixsEodoYS9oHzLZSoQCxIV0wKz77cwQBg3ri28Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: a1d4b8dd8c3041ecb7c1e1fda858d425-20240321
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:f027e407-92e3-4cdb-ae1a-c95a27265afd,IP:15,
+	URL:0,TC:0,Content:-5,EDM:25,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:30
+X-CID-INFO: VERSION:1.1.37,REQID:f027e407-92e3-4cdb-ae1a-c95a27265afd,IP:15,UR
+	L:0,TC:0,Content:-5,EDM:25,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:30
+X-CID-META: VersionHash:6f543d0,CLOUDID:9df73f85-8d4f-477b-89d2-1e3bdbef96d1,B
+	ulkID:2403211122590VMIGIM0,BulkQuantity:0,Recheck:0,SF:66|38|24|19|74|100|
+	17|42|101|102,TC:nil,Content:0,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,
+	QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-UUID: a1d4b8dd8c3041ecb7c1e1fda858d425-20240321
+X-User: gehao@kylinos.cn
+Received: from localhost.localdomain [(116.128.244.171)] by mailgw
+	(envelope-from <gehao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 581281279; Thu, 21 Mar 2024 11:22:57 +0800
+From: Hao Ge <gehao@kylinos.cn>
+To: akpm@linux-foundation.org,
+	willy@infradead.org
+Cc: gehao@kylinos.cn,
+	gehao618@163.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [PATCH V2] mm/page-flags: make __PageMovable return bool
+Date: Thu, 21 Mar 2024 11:22:56 +0800
+Message-Id: <20240321032256.82063-1-gehao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240307132859.171048-1-gehao@kylinos.cn>
+References: <20240307132859.171048-1-gehao@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Wed, 20 Mar 2024 11:34:40 -0700 Yury Norov wrote:
-> > We took the offending commit via netdev, so I feel responsible. Please
-> > LMK if anyone else is planning to apply this fix, otherwise we'll take
-> > it and ship it to Linus on Thursday (19th).  
-> 
-> Please go ahead and add my
-> 
-> Acked-by: Yury Norov <yury.norov@gmail.com>
+make __PageMovable return bool like __folio_test_movable
 
-Done, thank you!
+Signed-off-by: Hao Ge <gehao@kylinos.cn>
+
+---
+v2: Send this patch on the latest version
+---
+ include/linux/page-flags.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index 5ee2d0ab62c6..2647c7a35c5a 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -689,7 +689,7 @@ static __always_inline bool __folio_test_movable(const struct folio *folio)
+ 			PAGE_MAPPING_MOVABLE;
+ }
+ 
+-static __always_inline int __PageMovable(const struct page *page)
++static __always_inline bool __PageMovable(const struct page *page)
+ {
+ 	return ((unsigned long)page->mapping & PAGE_MAPPING_FLAGS) ==
+ 				PAGE_MAPPING_MOVABLE;
+-- 
+2.25.1
+
