@@ -1,138 +1,135 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C89A947;
-	Thu, 21 Mar 2024 15:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC918624E
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 15:25:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711034708; cv=none; b=IrGy8TE140MA6kXla1YQb0nbcUkzv204kyEWhJ5OcxzyiRSdVtqSKwxA6F3rZgeiLG+dDOmzCAXqtbc4Hz4rmscsVotCabG7pbleQiEM+1+cNf+eCofq2Op4ke+XP7WAv8iT+fLkjmb6FRXeP3aQYiiSxfPb+z1Ocw8Bue2n4U4=
+	t=1711034728; cv=none; b=N+aVcYx2OVwIgcxWxazVGvtdj6Uy6iXgWvUH9lsg0v8TU/m+eJYw6y9DzwAVurD2r7QycSfzUtjFI6DWEQ/FhHkHuT0FPX5YMpQFFp8PpWNceH8tsdYEaVxy5pCCtpzu4KLGubhDF92z135NLxnsVAdKpOr7XFjjKhMNMVyxSkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711034708; c=relaxed/simple;
-	bh=nScFnHlL7qAuBvXIbJwu/HhkppyDJ/y3VdbR3v42IXo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OQrZ+y+jjSgxCtHChJt1biGX0HZtcqwXnDbevU+fGBV2nLnKsC9ta2Cd9VPNVIh8dK5iczFUoeZy/aTsuqdTMGottADRtHD6eA5CfxhyQzdl3M0ufvilq/E/Q7MATDI8m4ja+pUHFGL6b0fCDSFArOzN5Bqlld0tu7pDI3RkkIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lb0Mh8TE; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1711034728; c=relaxed/simple;
+	bh=keHTiEytawshQb8pgvqpSP5oSevhiW6x2JK067oi9nc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F9iS6dg5qVmto4qfKNQ3ScAKgavd3pZgG7rIzb0ARhGFj8CxuN+VkR7uQDmRUGVsyISytNh/fgo9m10OkRzwcB/c9gsiiG93syt3/OK6Uzcny6KkpiBWt0s5Z8QQpJO6RG9dCmLSRxVA+h9TeKhC9dVzbU9uLBxqnFMhxqqbIGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iV4b3JuV; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lb0Mh8TE"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42L6Y0qL026315;
-	Thu, 21 Mar 2024 15:25:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=4xUMm1i3A01jJ6DH6SDj
-	r2kR8eQLRFI5iu89vpudroE=; b=lb0Mh8TEiX50t6rKKgfRXwNHdsMKuwBukRwu
-	sAPLsmaxoEnWFMikTeKnPY/aWAXkKtCmxocp7rXobPvJcEPUReQ+Rcp7fbzfkMCn
-	C65Z+oMvotshpFkFoOWb87vCyJzuNlCWGRWqCqNEaEb573hKEtyT006yZirAtKm1
-	MpQBYnYjyUUG7cQrYzl+OMvWLCijD0AHMY6/J5S4DgLyCQ3OPQqAYyGwKN1e6sFk
-	DxXcfoO7yRzPzxTmMEvoxK3jtnukx0TvFRHLpFELOIZOFMG+ZqkzSO9Bt8hjw5jx
-	xqG0+YCXpL9i2ooN6s40fT9csclsVjtgSPM/izEY7NH9BJEz/A==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x0fqxh8py-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 21 Mar 2024 15:25:03 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42LFOP6P013309
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 21 Mar 2024 15:24:25 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 21 Mar 2024 08:24:23 -0700
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Mukesh
- Ojha" <quic_mojha@quicinc.com>
-Subject: [PATCH v2 4/4] firmware: qcom: scm: Fix __scm and waitq completion variable initialization
-Date: Thu, 21 Mar 2024 20:54:02 +0530
-Message-ID: <1711034642-22860-4-git-send-email-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1711034642-22860-1-git-send-email-quic_mojha@quicinc.com>
-References: <1711034642-22860-1-git-send-email-quic_mojha@quicinc.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iV4b3JuV"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6e703e0e5deso834260b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 08:25:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711034726; x=1711639526; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=82OI8Gh7oQu/9StlFoR10DICm6BhP8N6L+l5Ik+ILaw=;
+        b=iV4b3JuVmqqxcc46GxoxvkIj+168yQojSblvVjG5JsICN6AEUjE9zAp7VrayNvlvXL
+         4iRFzvkFXJwBfCnqByJzVl3WSg/L/pV5iB+o1fhQ8X2vji+DlVE5ELAoxdVKTH/X2zud
+         qqLwgcheSoI8eM9hyHLW6YwgJuJB20mijs72FfYyx0tUC42ZAZZ0ACgakbhI1d3y43aF
+         paaVuFXs2UNznYRLe8wvm/0FDEQoCYyXfNJi4rLjzpDILZH/IM4kWiJ0j8YdDUHk6Zhw
+         eiwjPieAcyjtaicrNCPTtaZGtrPw9WLZqbM12ivdg/HUBNlnY8UXPR28JjWRbNn05tim
+         ndAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711034726; x=1711639526;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=82OI8Gh7oQu/9StlFoR10DICm6BhP8N6L+l5Ik+ILaw=;
+        b=H9tUUeuO1jxDgI61SRhmEYfnUMjM37ic1qjmiSnrQKLe8butv8/aQe26CpPwX+YF/v
+         aBOyHwib5cC/kxR/c/bceh5J2357mpiu2bhqzVCN1tW2ASv3gEopHbJUW7/sgL1mehBm
+         ynwDdW6WDzby6s8yxjAgWpPD2XCQN464USgMuLuFunwcQHOYoGzUEbcfmYaeQVK12Grw
+         kK7/FgnMqQsNkZfvkCq58JWWk1oLokXI96kOzCluaiJYcN37TeH6oBP8QqUxwP6DPJKN
+         sdjH87h4flkUMJdl5dGbNlc5QJRhU2wUjTHbRdlUnS16irrxJHWr805binTY7eZRraZj
+         gIPw==
+X-Forwarded-Encrypted: i=1; AJvYcCXa9w1vOOws2u8FUDjM961tdtj/OFeX50OaKjAfCW29/XRVtGxkmukk49WFjfyqE4hhSEkbdLyyvonWCYvIvjBomD+Eef9pufJral/J
+X-Gm-Message-State: AOJu0Yz7Cqguhth/QLxwFh4ZUHnmvsUgGyzKQ4tM1fqW2iqNSimbKQcF
+	iRYZ7STPQfyEKp3gNNmwnHs91CQQpJukeKfpb+9QVxjbXVGA5uLkagGPe2Gxm2Y=
+X-Google-Smtp-Source: AGHT+IEmFIp+48D2B1hUzpIyAXGeGOM1HqTNVM5BMRBIcH3HZOKodw1pu3F3fpANojgpouNGrD0GsQ==
+X-Received: by 2002:a05:6a00:3d42:b0:6e6:a3b3:923c with SMTP id lp2-20020a056a003d4200b006e6a3b3923cmr2898786pfb.6.1711034726278;
+        Thu, 21 Mar 2024 08:25:26 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:d9a2:e52:d93:c759])
+        by smtp.gmail.com with ESMTPSA id fi37-20020a056a0039a500b006e69a142458sm13534453pfb.213.2024.03.21.08.25.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Mar 2024 08:25:25 -0700 (PDT)
+Date: Thu, 21 Mar 2024 09:25:23 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: andersson@kernel.org, matthias.bgg@gmail.com, tzungbi@kernel.org,
+	tinghan.shen@mediatek.com, linux-remoteproc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, wenst@chromium.org,
+	kernel@collabora.com
+Subject: Re: [PATCH 1/2] remoteproc: mediatek: Make sure IPI buffer fits in
+ L2TCM
+Message-ID: <ZfxRY475SKaRYVTj@p14s>
+References: <20240321084614.45253-1-angelogioacchino.delregno@collabora.com>
+ <20240321084614.45253-2-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: qlzqtlVChHi5xwsx2rVUc494xtlMvSQc
-X-Proofpoint-GUID: qlzqtlVChHi5xwsx2rVUc494xtlMvSQc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-21_10,2024-03-21_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- clxscore=1015 lowpriorityscore=0 phishscore=0 mlxlogscore=999
- suspectscore=0 spamscore=0 priorityscore=1501 malwarescore=0 adultscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2403140001 definitions=main-2403210111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240321084614.45253-2-angelogioacchino.delregno@collabora.com>
 
-It is possible qcom_scm_is_available() gives wrong indication that
-if __scm is initialized while __scm->dev is not and similar issue
-is also possible with __scm->waitq_comp.
+Good day,
 
-Fix this appropriately by the use of release barrier and read barrier
-that will make sure if __scm is initialized so, is all of its field
-variable.
+On Thu, Mar 21, 2024 at 09:46:13AM +0100, AngeloGioacchino Del Regno wrote:
+> The IPI buffer location is read from the firmware that we load to the
+> System Companion Processor, and it's not granted that both the SRAM
+> (L2TCM) size that is defined in the devicetree node is large enough
+> for that, and while this is especially true for multi-core SCP, it's
+> still useful to check on single-core variants as well.
+> 
+> Failing to perform this check may make this driver perform R/W
+> oeprations out of the L2TCM boundary, resulting (at best) in a
 
-Fixes: d0f6fa7ba2d6 ("firmware: qcom: scm: Convert SCM to platform driver")
-Fixes: 6bf325992236 ("firmware: qcom: scm: Add wait-queue handling logic")
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
----
-Changes in v2:
- - Added barrier instruction to make the stores available only
-   after __scm initialization.
- - Moved __scm->waitq_comp initialized slight up in program order.
- - Added Fixes tag.
+s/oeprations/operations
 
- drivers/firmware/qcom/qcom_scm.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+I will fix that when I apply the patch.
 
-diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
-index e238ebe21099..f014a934a603 100644
---- a/drivers/firmware/qcom/qcom_scm.c
-+++ b/drivers/firmware/qcom/qcom_scm.c
-@@ -1737,7 +1737,7 @@ static int qcom_scm_qseecom_init(struct qcom_scm *scm)
-  */
- bool qcom_scm_is_available(void)
- {
--	return !!__scm;
-+	return !!READ_ONCE(__scm);
- }
- EXPORT_SYMBOL_GPL(qcom_scm_is_available);
- 
-@@ -1818,10 +1818,12 @@ static int qcom_scm_probe(struct platform_device *pdev)
- 	if (!scm)
- 		return -ENOMEM;
- 
-+	scm->dev = &pdev->dev;
- 	ret = qcom_scm_find_dload_address(&pdev->dev, &scm->dload_mode_addr);
- 	if (ret < 0)
- 		return ret;
- 
-+	init_completion(&scm->waitq_comp);
- 	mutex_init(&scm->scm_bw_lock);
- 
- 	scm->path = devm_of_icc_get(&pdev->dev, NULL);
-@@ -1853,10 +1855,8 @@ static int qcom_scm_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	__scm = scm;
--	__scm->dev = &pdev->dev;
--
--	init_completion(&__scm->waitq_comp);
-+	/* Let all above stores be available after this */
-+	smp_store_release(&__scm, scm);
- 
- 	irq = platform_get_irq_optional(pdev, 0);
- 	if (irq < 0) {
--- 
-2.7.4
-
+> kernel panic.
+> 
+> To fix that, check that the IPI buffer fits, otherwise return a
+> failure and refuse to boot the relevant SCP core (or the SCP at
+> all, if this is single core).
+> 
+> Fixes: 3efa0ea743b7 ("remoteproc/mediatek: read IPI buffer offset from FW")
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> ---
+>  drivers/remoteproc/mtk_scp.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/remoteproc/mtk_scp.c b/drivers/remoteproc/mtk_scp.c
+> index a35409eda0cf..67518291a8ad 100644
+> --- a/drivers/remoteproc/mtk_scp.c
+> +++ b/drivers/remoteproc/mtk_scp.c
+> @@ -132,7 +132,7 @@ static int scp_elf_read_ipi_buf_addr(struct mtk_scp *scp,
+>  static int scp_ipi_init(struct mtk_scp *scp, const struct firmware *fw)
+>  {
+>  	int ret;
+> -	size_t offset;
+> +	size_t buf_sz, offset;
+>  
+>  	/* read the ipi buf addr from FW itself first */
+>  	ret = scp_elf_read_ipi_buf_addr(scp, fw, &offset);
+> @@ -144,6 +144,14 @@ static int scp_ipi_init(struct mtk_scp *scp, const struct firmware *fw)
+>  	}
+>  	dev_info(scp->dev, "IPI buf addr %#010zx\n", offset);
+>  
+> +	/* Make sure IPI buffer fits in the L2TCM range assigned to this core */
+> +	buf_sz = sizeof(*scp->recv_buf) + sizeof(*scp->send_buf);
+> +
+> +	if (scp->sram_size < buf_sz + offset) {
+> +		dev_err(scp->dev, "IPI buffer does not fit in SRAM.\n");
+> +		return -EOVERFLOW;
+> +	}
+> +
+>  	scp->recv_buf = (struct mtk_share_obj __iomem *)
+>  			(scp->sram_base + offset);
+>  	scp->send_buf = (struct mtk_share_obj __iomem *)
+> -- 
+> 2.44.0
+> 
