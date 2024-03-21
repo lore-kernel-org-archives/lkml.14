@@ -1,112 +1,270 @@
-Received: from out203-205-251-66.mail.qq.com (out203-205-251-66.mail.qq.com [203.205.251.66])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0118F4C8C
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 02:54:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E9679C0
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 02:55:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710989686; cv=none; b=j23NwPPijKoVH3jY7M+OpDft08fvenAxyT5w/TcvBno7OLXL4GLI17HMIIcy2DHb9/5khTD9QYrneM9oFE8keuUPDfPbNzJftt4irDGtMU5K/7+qAdekWGdAx0LZeIF4gudYJY/HUgWqEg4mR8MoIQ6cnYx58ej2K++8J2Qcvdw=
+	t=1710989731; cv=none; b=UTzS48RYTIYgOEbplLT96lessQg50YxaFX5G60/Sx08f6/p2g+dC6/jnu+zvyfk6L9knWBhT3qy5DxFbR9MQOqzUQUXFso9IUzju1+H2IRkwfskyHFi1zlS91cx6NRoQChAn0c3efiBx//jh6dKuOhA9bEiMJkxPmWpQOCTByPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710989686; c=relaxed/simple;
-	bh=SsPl6lnAdqS/S+GeY3UVEaFsBoIWgWENPgpAMnzgZNY=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=REc59V8u1J6ZCuv66Zvy1SueM/Eme8/GKdHS4sYG8/pTL7XA+jt3OQV5fhy+0FYaB9h8Xz8Ccc11tzLYLd7rM570vurau/YkIoON2k6GU/CU22D8VuAs7nBKLo4ejsV7xFWtZhm06eMbDDTV0TxCqUHpz2rR1UCZri8z6kPQfaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=kmz8468X; arc=none smtp.client-ip=203.205.251.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="kmz8468X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1710989676; bh=f5jT1hNfbmJ01fmppMvabKrX5qm3Y5Yh4bcX0uJxKHs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=kmz8468X1m6ybJanGYWkGiTx4DdvN3BFJu6MVpNvWBPrdaP+deyIKEm0HHqiT+mqk
-	 B+0ayxYxlp/JX8e7hLYbc6YISURg99ZBVMd4H6gERDlvG3dPD1Mvtr1dSTbb1BYA9m
-	 czfeI6bq9Uz+mh52Kzv3p+2XCBaunXt3TvY+Npww=
-Received: from localhost.localdomain ([153.3.156.52])
-	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
-	id C0E1E684; Thu, 21 Mar 2024 10:48:14 +0800
-X-QQ-mid: xmsmtpt1710989294t10a5k7uh
-Message-ID: <tencent_BF745A1543ABB0579DFC20480AA1A4456307@qq.com>
-X-QQ-XMAILINFO: MyirvGjpKb1jMknYzBTUX1TyLQJJwnGJa2kGkEXkzy0QynM54t99hdlGOmruc7
-	 toQQcHl+vKWX9+9pLw9QmAfPfFz+Fcina/RUynC85MoalhWZJrTyu6CyQqCS0xH5CKDvha3pOLwj
-	 8dDw9JGPUmWO2qXBykbYrODaauNVGyEaclEu/d9oiQqBLlEphq2aUQ9NVG80sufxqxP0G4D1v40C
-	 tQrqGcv4HO84B8O1I9YRrb1N3nj8uhY/YUFSsDGuNjo+m+Iq6xElACW21mDdJfUEroXSciS2ixUN
-	 H+rKWbQVORslYyIKY1A6Q6Fxfu89FN5Ryp2yashaiCveCtW5/vHG4ws+bUdE2VbiuX7bsrl/wO+C
-	 MpP3YdXcBydST3g32C7EOvTw1Kd1nOBvWvtVxYe0PZ9uEnloRdGNed/Mct8rEEQO500MQGqrP5rX
-	 VIMPgJZkFwZLA4O3cL24DYJFCLY4GPj1f3Ixj6mLoAdjQ8XwGyjCexj1uBEpztO8HBHORuKyp2BI
-	 aVwZt2J71jdknC5+W9ADQnPVjSFR3m41sCVIAorqC7MTXdbStHbQTFg2UtFIU6fmRSaQOqKZWcTF
-	 VfEgnKXWsvjhm7uZww+85MWGqikf4OL34cqXdxy1T/FtwBxJOlwQi80Hq+LNuCkvmsDHmaUNNjWh
-	 we4l0y3SE2ZGahL/SFY+rG/UBILx17k8CLnSWqZBcXpy3PnmLHar5/5IK5El4+xLj46Bp8f0GpQO
-	 eOD3J3SAweSh+8+DyG1ztLSPP6Q8bOuFspz1jA4z+YVsYw7WVk062wkCSYmu/RTpff455UuvskHK
-	 MaEJm6sLtRYa0M3Y9VT4utfv54gnO8frSX5gCLEcO273dAgfO/cN7cFQlByVr8hhkNX+N5R0sHTU
-	 dpICBgdQ6Yx7U/yMBshA8ulpDLrGTFAv0dgpHdAAJBemTATMJrF7mZipsHDLAemsXeM0Y9TFBGFv
-	 /f5FTsnAEHHEYplPbe+ABftfReiA1wd2uhHnjKcshWTx6du94nyusaSVT9N7IvTj/rxsj61DELwe
-	 wz83YKpm0UjRl3oTXu
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-From: linke li <lilinke99@qq.com>
-To: chengming.zhou@linux.dev
-Cc: 42.hyeyoo@gmail.com,
-	akpm@linux-foundation.org,
-	cl@linux.com,
-	iamjoonsoo.kim@lge.com,
-	lilinke99@qq.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	penberg@kernel.org,
-	rientjes@google.com,
-	roman.gushchin@linux.dev,
-	vbabka@suse.cz
-Subject: Re: [PATCH] mm/slub: mark racy accesses on slab->slabs
-Date: Thu, 21 Mar 2024 10:48:11 +0800
-X-OQ-MSGID: <20240321024811.57550-1-lilinke99@qq.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <8bc1aebf-8395-416f-8c23-53cbd25d0eef@linux.dev>
-References: <8bc1aebf-8395-416f-8c23-53cbd25d0eef@linux.dev>
+	s=arc-20240116; t=1710989731; c=relaxed/simple;
+	bh=+7lTDwmSBOUwi/jPMHGe79qJoB0iiS7yQSPs+9VAo8U=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=B4SrT7RCbdWZvCh1syrCbiY6m2ikkTecIATS+R3teRcjLpp7mnnp2cIe+sTDew8yVyJx4hVGIlQM8gn6zUJThiqPYsxDZ8BauN0TlDN4feoZOsev4PnOBuXbVaJeszgNxXaIBgsWPPdjvOA6CeOj7mqo21HxzJ4qlNM2rZ6F7tY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4V0VPW3YkHzXjLb;
+	Thu, 21 Mar 2024 10:52:47 +0800 (CST)
+Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
+	by mail.maildlp.com (Postfix) with ESMTPS id 10E7918007D;
+	Thu, 21 Mar 2024 10:55:25 +0800 (CST)
+Received: from [10.174.178.46] (10.174.178.46) by
+ kwepemm600013.china.huawei.com (7.193.23.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 21 Mar 2024 10:55:24 +0800
+Subject: Re: [RFC PATCH 1/5] ubifs: Implement POSIX Access Control Lists
+ (ACLs)
+To: Li Zetao <lizetao1@huawei.com>, <richard@nod.at>
+CC: <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>
+References: <20240319161646.2153867-1-lizetao1@huawei.com>
+ <20240319161646.2153867-2-lizetao1@huawei.com>
+From: Zhihao Cheng <chengzhihao1@huawei.com>
+Message-ID: <61bf91fb-f926-8fdf-0157-20f5ad2ae279@huawei.com>
+Date: Thu, 21 Mar 2024 10:55:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <20240319161646.2153867-2-lizetao1@huawei.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600013.china.huawei.com (7.193.23.68)
 
-Sorry for a late reply, I just found this because of my bad email client.
+ÔÚ 2024/3/20 0:16, Li Zetao Ð´µÀ:
+> Implement the ACLs feature for ubifs based on vfs Posix ACLs,
+> details as follows:
+>    * Initialize acl for newly created inode.
+>    * Provides get/set interface to access ACLs.
+> 
+> ACLs feature relies on xattr implementation which using specific key
+> names "system.posix_acl_default" and "system.posix_acl_access". Now Only
+> the v2 version of POSIX ACLs is supported, and ubifs does not need to
+> customize the storage format, which can simplify the implementation.
+> 
+> Signed-off-by: Li Zetao <lizetao1@huawei.com>
+> ---
+>   fs/ubifs/acl.c   | 140 +++++++++++++++++++++++++++++++++++++++++++++++
+>   fs/ubifs/ubifs.h |  13 +++++
+>   fs/ubifs/xattr.c |   1 -
+>   3 files changed, 153 insertions(+), 1 deletion(-)
+>   create mode 100644 fs/ubifs/acl.c
+> 
+> diff --git a/fs/ubifs/acl.c b/fs/ubifs/acl.c
+> new file mode 100644
+> index 000000000000..253568baf097
+> --- /dev/null
+> +++ b/fs/ubifs/acl.c
+> @@ -0,0 +1,140 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * This file is part of UBIFS.
+> + *
+> + * Copyright (C) 2024 Huawei Tech. Co., Ltd.
+> + *
+> + * Authors: Li Zetao <lizetao1@huawei.com>
+> + */
+> +
+> +/* This file implements POSIX Access Control Lists (ACLs) */
+> +
+> +#include "ubifs.h"
+> +
+> +#include <linux/posix_acl_xattr.h>
+> +
+> +struct posix_acl *ubifs_get_inode_acl(struct inode *inode, int type, bool rcu)
+> +{
+> +	char *xattr_value = NULL;
+> +	const char *xattr_name;
+> +	struct posix_acl *acl;
+> +	ssize_t size;
+> +
+> +	if (rcu)
+> +		return ERR_PTR(-ECHILD);
+> +
+> +	xattr_name = posix_acl_xattr_name(type);
+> +	if (unlikely(!strcmp(xattr_name, "")))
+> +		return ERR_PTR(-EINVAL);
+The acl type has been guaranteed valid from vfs caller, there is no need 
+to check converted name by 'strcmp', in theory, we can use it directly 
+just like f2fs does. For this case, I suggest to unfold the 
+posix_acl_xattr_name and convert it to corresponding name just like 
+btrfs does.
+> +
+> +	size = ubifs_xattr_get(inode, xattr_name, NULL, 0);
+> +	if (size > 0) {
+> +		xattr_value = kzalloc(size, GFP_KERNEL);
+> +		if (unlikely(!xattr_value))
+> +			return ERR_PTR(-ENOMEM);
+> +
+> +		size = ubifs_xattr_get(inode, xattr_name, xattr_value, size);
+> +	}
+> +
+> +	if (size > 0)
+> +		acl = posix_acl_from_xattr(&init_user_ns, xattr_value, size);
+> +	else if (size == -ENODATA || size == 0)
+> +		acl = NULL;
+> +	else
+> +		acl = ERR_PTR(size);
+> +
+> +	kfree(xattr_value);
+> +
+> +	return acl;
+> +}
+> +
+> +static int __ubifs_set_acl(struct inode *inode, int type, struct posix_acl *acl, int flags)
+> +{
+> +	void *xattr_value = NULL;
+> +	const char *xattr_name;
+> +	size_t size = 0;
+> +	int error;
+> +
 
-> There is another unmarked access of "slab->slabs" in the show_slab_objects(),
-> which you can change too.
-
-Yes, I think show_slab_objects() has a similar situation. Should I
-consider to submit a V2 patch for this?
-
-> I'm not sure that it's really safe to access "slab->slabs" here without any protection?
-> Although it should be no problem in practice, alternative choice maybe putting partial
-> slabs count in the kmem_cache_cpu struct.
-
-I think it is ok, because it seems that slab->slabs in slub_percpu_partial
-and show_slab_objects() are just used for showing some infomation.
-
-I noticed Paul summarized some of these strategies in access-marking.txt[1]
-
-Quote from it:
-
-"Use of the data_race() Macro
-----------------------------
-
-Here are some situations where data_race() should be used instead of
-READ_ONCE() and WRITE_ONCE():
-
-1.	Data-racy loads from shared variables whose values are used only
-	for diagnostic purposes.
-
-2.	Data-racy reads whose values are checked against marked reload.
-
-3.	Reads whose values feed into error-tolerant heuristics.
-
-4.	Writes setting values that feed into error-tolerant heuristics.
-"
-
-Thanks,
-Linke
-
-[1]https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/memory-model/Documentation/access-marking.txt
+> +	xattr_name = posix_acl_xattr_name(type);
+> +	if (unlikely(!strcmp(xattr_name, "")))
+> +		return -EINVAL;
+> +
+> +	if (unlikely(!strcmp(xattr_name, XATTR_NAME_POSIX_ACL_DEFAULT) && !S_ISDIR(inode->i_mode)))
+> +		return acl ? -EACCES : 0;
+> +
+Similar to previous, replace above 6 lines, refer to __btrfs_set_acl but 
+keep the error code same with __ext4_set_acl.
+> +	if (acl) {
+> +		size = posix_acl_xattr_size(acl->a_count);
+> +		xattr_value = kmalloc(size, GFP_KERNEL);
+> +		if (unlikely(!xattr_value))
+> +			return -ENOMEM;
+> +
+> +		error = posix_acl_to_xattr(&init_user_ns, acl, xattr_value, size);
+> +		if (unlikely(error < 0))
+> +			goto out;
+> +	}
+> +
+> +	error = ubifs_xattr_set(inode, xattr_name, xattr_value, size, flags, false);
+There are 2 situations here, Updating acl and Removing acl. For the 
+later case, funcion vfs_remove_acl will remove corresponding xattr, the 
+xattr removing function in ubifs is ubifs_xattr_remove.
+> +	if (likely(!error))
+I prefer to remove the 'likely', UBIFS limits the max xattr count for 
+each file(Goto create_xattr), non zero error returned is a common case 
+on a small LEB flash.
+> +		set_cached_acl(inode, type, acl);
+> +out:
+> +	kfree(xattr_value);
+> +	return error;
+> +}
+> +
+> +int ubifs_set_acl(struct mnt_idmap *idmap, struct dentry *dentry, struct posix_acl *acl, int type)
+> +{
+> +	struct inode *inode = d_inode(dentry);
+> +	umode_t old_mode = inode->i_mode;
+> +	int error;
+> +
+> +	if (type == ACL_TYPE_ACCESS && acl) {
+> +		error = posix_acl_update_mode(idmap, inode, &inode->i_mode, &acl);
+> +		if (unlikely(error))
+> +			return error;
+> +	}
+> +
+> +	error = __ubifs_set_acl(inode, type, acl, 0);
+> +	if (unlikely(error))
+Mentioned in __ubifs_set_acl, error could be returned, just remove 
+'unlikely'.
+> +		inode->i_mode = old_mode;
+> +
+> +	return error;
+> +
+> +}
+> +
+> +/**
+> + * ubifs_init_acl - initialize the ACLs for a new inode.
+> + * @inode: newly created inode
+> + * @dir: parent directory inode
+> + *
+> + * This function initialize ACLs, including inheriting the
+initialize -> initializes
+> + * default ACLs of parent directory or modifying the default
+> + * ACLs according to the mode parameter in open() / creat()
+> + * system calls.
+> + */
+> +int ubifs_init_acl(struct inode *inode, struct inode *dir)
+> +{
+> +	struct posix_acl *default_acl;
+> +	struct posix_acl *acl;
+> +	int error;
+> +
+> +	error = posix_acl_create(dir, &inode->i_mode, &default_acl, &acl);
+> +	if (unlikely(error))
+> +		return error;
+> +
+> +	if (default_acl) {
+> +		error = __ubifs_set_acl(inode, ACL_TYPE_DEFAULT, default_acl, XATTR_CREATE);
+> +		posix_acl_release(default_acl);
+> +	} else {
+> +		inode->i_default_acl = NULL;
+> +	}
+> +
+> +	if (acl) {
+> +		if (likely(!error))
+Remove 'likely'.
+> +			error = __ubifs_set_acl(inode, ACL_TYPE_ACCESS, acl, XATTR_CREATE);
+> +		posix_acl_release(acl);
+> +	} else {
+> +		inode->i_acl = NULL;
+> +	}
+> +
+> +	return error;
+> +}
+> diff --git a/fs/ubifs/ubifs.h b/fs/ubifs/ubifs.h
+> index 3916dc4f30ca..b0d3b076290d 100644
+> --- a/fs/ubifs/ubifs.h
+> +++ b/fs/ubifs/ubifs.h
+> @@ -2069,6 +2069,19 @@ static inline int ubifs_init_security(struct inode *dentry,
+>   }
+>   #endif
+>   
+> +#ifdef CONFIG_UBIFS_FS_POSIX_ACL
+> +struct posix_acl *ubifs_get_inode_acl(struct inode *inode, int type, bool rcu);
+> +int ubifs_set_acl(struct mnt_idmap *idmap, struct dentry *dentry, struct posix_acl *acl, int type);
+> +int ubifs_init_acl(struct inode *inode, struct inode *dir);
+> +
+> +#else /* CONFIG_UBIFS_FS_POSIX_ACL */
+> +#define ubifs_get_inode_acl NULL
+> +#define ubifs_set_acl NULL
+> +static inline int ubifs_init_acl(struct inode *inode, struct inode *dir)
+> +{
+> +	return 0;
+> +}
+> +#endif /* CONFIG_UBIFS_FS_POSIX_ACL */
+>   
+>   /* super.c */
+>   struct inode *ubifs_iget(struct super_block *sb, unsigned long inum);
+> diff --git a/fs/ubifs/xattr.c b/fs/ubifs/xattr.c
+> index 0847db521984..eb1c1f5d10df 100644
+> --- a/fs/ubifs/xattr.c
+> +++ b/fs/ubifs/xattr.c
+> @@ -40,7 +40,6 @@
+>    * in the VFS inode cache. The xentries are cached in the LNC cache (see
+>    * tnc.c).
+>    *
+> - * ACL support is not implemented.
+>    */
+>   
+>   #include "ubifs.h"
+> 
 
