@@ -1,48 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B956130E54;
-	Thu, 21 Mar 2024 16:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066BA24A11
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 16:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711039538; cv=none; b=GlbNprUdKcZ5mIV5WYfG5Tbq2xzz3bnv7MnY2h6u6jWPuM5pNk1nbg0PPmJ9c+w7sAPqWW+x1Hoye4aNprxXMt3Lme24S1tQ566+cbdsaZcFohI0A/E5Gi6ntu9efqhpDjpMkphCv6HOkzlGGpnYFxiFiWL24n3oDpBMcWfhOA4=
+	t=1711039633; cv=none; b=l+t/kxiWyGazaAX9iOv06zHPshpJBWI95bGXgBw3hwuXT8cyPzJdbALYRpLxuyVRONoibC6WFy9djudVqE5xgF0iorSvbraRXBDV60qRNzaAedVzXkIxCympvhM494/0fQtOvcSKw2ra6HATAjuUZUmYR3Zl/2n2m37CRxnpoBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711039538; c=relaxed/simple;
-	bh=nPVWYcFVife9z6PvN7CZBdrGkGPDFZARTn8Jlbi06jo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k8Y0fuyQKSLoVwiPVSRFhns/kEWUOlQrcZsVrNTeBslGvIRj0ZhudE3aRvjEPj63D0USUfKZJ8c787auZgXKxbXe2pOkp0y7evzfh6OHM6nFgsK1W+vOtNafWajWbIXCBU8L7vNvNIEgaDCpYmsrA/L41o6KzgjgP+nBi0F7r0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p0QhQBUf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711039633; c=relaxed/simple;
+	bh=6hQb+5MC6V7N8F2R3h2eh5BgzYqYZcc5K1Let0XcNHs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l4gFngqiWpH80eD0Zxb/ytOi/fqn4qSM96B0atjVKbzxqwXEM2Sn2OnaXicyUVHsadOHQAUr6gs2RTTG7lzuypJUx++MR0pYzrz1TY+ZfB9ErpnZ0t0larCTBHBFG5gcSsdISvg5+ih5Vb4W79QQfIvOVR3yP61mUJU6rA/uPuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RgoxSTtT; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p0QhQBUf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6728AC433C7;
-	Thu, 21 Mar 2024 16:45:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711039538;
-	bh=nPVWYcFVife9z6PvN7CZBdrGkGPDFZARTn8Jlbi06jo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=p0QhQBUfqBhYa0QHOFz2qzWrrtUZmGwvBVc1ven3CagVdge1xOMt6mi5/CAbFumaG
-	 lLVDLvYdAJA48kGHY0T3BLbfFR0xuoLsnMHIvmvK+RlZKfNqM+eAuExhhPfqxdTUdW
-	 K4KYpS+aA4PRgIzSJ7zbsuxC93sUc0oZPMVS0Jbj65Ggwgq39IW/tsLsnZdokrIHwP
-	 05WBoKY82KPsnR8Gm04ENhFBmDSCPkGSDQM8sWRJxszfcvRE1feRkX1PHWWWcrNagA
-	 6S8wF9mdknt7/Y2QlcfwFarDDJBf9FEVbz8iqHNBI0iVCjMzQR9u1osUuDF4tmuENu
-	 GByjFZx4UYAgQ==
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: linux-integrity@vger.kernel.org
-Cc: Jarkko Sakkinen <jarkko@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Daniel P . Smith" <dpsmith@apertussolutions.com>,
-	Lino Sanfilippo <l.sanfilippo@kunbus.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Peter Huewe <peterhuewe@gmx.de>,
-	James Bottomley <James.Bottomley@HansenPartnership.com>,
-	Alexander Steffen <Alexander.Steffen@infineon.com>,
-	keyrings@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v3] Documentation: tpm_tis
-Date: Thu, 21 Mar 2024 18:43:07 +0200
-Message-ID: <20240321164314.14732-1-jarkko@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RgoxSTtT"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-41400a9844aso13656005e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 09:47:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711039630; x=1711644430; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zBjb7t6MjmNwbN/X8h6EXbiMXQqTy5/eHrgGpuiEnNU=;
+        b=RgoxSTtTXXyNXrnYk9FoaFx1r6bbEKFI5z9mfEnyhG+b16fyaekXSFlQYX7VZfPA0a
+         lkyjutTlZ7KjrgAdrzxLHyhaV79fWUQu2db/OmHfyPXYMEOWgUoz7XGuN9NFhk4zr/Co
+         JEwvtpXSVZOkYdivKhleawut/UjPeFE36QOARRQt0YGDZFVqIOoKJ/W6Nf0fIDzucOxq
+         tOutYLFmTzhAWjCbocZxbR9C2GoXheh9w/EzQWkoLpgMkV2gZS2xDI/vb5qEAwj2dNHK
+         0DOr/NDvL0gHoSuHdNHBVggvL/utWK4B3IM9gnQEN/acTcnen9S3tXtHB2pLYpZCrHvw
+         guug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711039630; x=1711644430;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zBjb7t6MjmNwbN/X8h6EXbiMXQqTy5/eHrgGpuiEnNU=;
+        b=RsZee5yAdV+mZgT2/MnRcW8vySX/F4pitsO9RVBMSUfpYKoQLCPyvpTqMWnicr2CiI
+         zG1Ck5kqZdU7V14KHL2Vx4qoPKNvlrnO1L7DotmHR3OWatF87nWEhHVmCe/Tt7+MTOoi
+         sT5IHCBjMOytXspfW/Dmk/oM38dtbcVqOmR1qE5dZPOTbERjxyoejZ0bD3rKjfPMS2hM
+         sOhPuyE6DrrbMv3edZE2ROrcpsVuOHgXxn8vbg+X1OqnoDcUllGwhAfroLkszUxtFoxs
+         M0DQVwJW1tEEQ1N9tcyoyk6aIOu/LxPhPV6cxy2EcaLp6aGzXvEu7VkJH8dAlTef9cSv
+         j5sw==
+X-Forwarded-Encrypted: i=1; AJvYcCVXsHTIpkpSeIQkk7y8zf+AFVIRJfhCW51bcjjJgM7Ae+yGGTwETAQiVi+H297YdNCrFDb2v/Wi1GpwnT1QZfj8V+W2U6lX17nVOCRk
+X-Gm-Message-State: AOJu0YzK2+BSk6NVtqs+dKmmrP7xRN5NuxBhUWcJM+9f6jhRYP9Ra9vA
+	8bcno1s9qPViA42OCKqXlif8etsA/jFeIuQbpRoL5Y1lmiEu/x9s
+X-Google-Smtp-Source: AGHT+IHLe3dSyU8kpr4d/IwcJOFAsOV6Tv7VXJSRasKUnNGu8lgrs6zh7e39UxePQ7/LPpNSBQDSWw==
+X-Received: by 2002:a05:600c:444b:b0:414:5e9b:804b with SMTP id v11-20020a05600c444b00b004145e9b804bmr3205770wmn.10.1711039630166;
+        Thu, 21 Mar 2024 09:47:10 -0700 (PDT)
+Received: from localhost.localdomain ([46.248.82.114])
+        by smtp.gmail.com with ESMTPSA id m21-20020a05600c4f5500b0041401eb021asm277697wmq.24.2024.03.21.09.47.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Mar 2024 09:47:09 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Brian Gerst <brgerst@gmail.com>,
+	Denys Vlasenko <dvlasenk@redhat.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH -tip] x86/percpu: Enable named address spaces for GCC 9.1+
+Date: Thu, 21 Mar 2024 17:46:41 +0100
+Message-ID: <20240321164647.289879-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,85 +75,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Based recent discussions on LKML, provide preliminary bits of tpm_tis_core
-dependent drivers. Includes only bare essentials but can be extended later
-on case by case. This way some people may even want to read it later on.
+Enable named address spaces also for GCC 9, GCC 10 and GCC 11
+releases. These compilers all produce kernel images that boot
+without problems.
 
-Cc: Jonathan Corbet <corbet@lwn.net>
-CC: Daniel P. Smith <dpsmith@apertussolutions.com>
-Cc: Lino Sanfilippo <l.sanfilippo@kunbus.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Peter Huewe <peterhuewe@gmx.de>
-Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
-Cc: keyrings@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-integrity@vger.kernel.org
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
----
-v3:
-- Fixed incorrect buffer size:
-  https://lore.kernel.org/linux-integrity/d957dbd3-4975-48d7-abc5-1a01c0959ea3@linux.ibm.com/
-v2:
-- Fixed errors reported by Randy:
-  https://lore.kernel.org/all/aed28265-d677-491a-a045-24b351854b24@infradead.org/
-- Improved the text a bit to have a better presentation.
----
- Documentation/security/tpm/index.rst   |  1 +
- Documentation/security/tpm/tpm_tis.rst | 30 ++++++++++++++++++++++++++
- 2 files changed, 31 insertions(+)
- create mode 100644 Documentation/security/tpm/tpm_tis.rst
+GCC_VERSION cutoff is arbitrary. It is primary a risk-reduction
+cutoff, older compilers will be tested and enabled in linux 6.10
+release.
 
-diff --git a/Documentation/security/tpm/index.rst b/Documentation/security/tpm/index.rst
-index fc40e9f23c85..f27a17f60a96 100644
---- a/Documentation/security/tpm/index.rst
-+++ b/Documentation/security/tpm/index.rst
-@@ -5,6 +5,7 @@ Trusted Platform Module documentation
- .. toctree::
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+---
+ arch/x86/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 09455d93b947..03c9d1100f09 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2433,7 +2433,7 @@ source "kernel/livepatch/Kconfig"
+ endmenu
  
-    tpm_event_log
-+   tpm_tis
-    tpm_vtpm_proxy
-    xen-tpmfront
-    tpm_ftpm_tee
-diff --git a/Documentation/security/tpm/tpm_tis.rst b/Documentation/security/tpm/tpm_tis.rst
-new file mode 100644
-index 000000000000..078b75666086
---- /dev/null
-+++ b/Documentation/security/tpm/tpm_tis.rst
-@@ -0,0 +1,30 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=========================
-+TPM FIFO interface Driver
-+=========================
-+
-+FIFO (First-In-First-Out) is the name of the hardware interface used by the
-+tpm_tis_core dependent drivers. The prefix "tis" comes from the TPM Interface
-+Specification, which is the hardware interface specification for TPM 1.x chips.
-+
-+Communication is based on a 20 KiB buffer shared by the TPM chip through a
-+hardware bus or memory map, depending on the physical wiring. The buffer is
-+further split into five equal-size 4 KiB buffers, which provide equivalent
-+sets of registers for communication between the CPU and TPM. These
-+communication endpoints are called localities in the TCG terminology.
-+
-+When the kernel wants to send commands to the TPM chip, it first reserves
-+locality 0 by setting the requestUse bit in the TPM_ACCESS register. The bit is
-+cleared by the chip when the access is granted. Once it completes its
-+communication, the kernel writes the TPM_ACCESS.activeLocality bit. This
-+informs the chip that the locality has been relinquished.
-+
-+Pending localities are served in order by the chip in descending order, one at
-+a time:
-+
-+- Locality 0 has the lowest priority.
-+- Locality 5 has the highest priority.
-+
-+Further information on the purpose and meaning of the localities can be found
-+in section 3.2 of the TCG PC Client Platform TPM Profile Specification.
+ config CC_HAS_NAMED_AS
+-	def_bool CC_IS_GCC && GCC_VERSION >= 120100
++	def_bool CC_IS_GCC && GCC_VERSION >= 90100
+ 
+ config CC_HAS_NAMED_AS_FIXED_ASAN
+ 	def_bool CC_IS_GCC && GCC_VERSION >= 130300
 -- 
-2.43.0
+2.42.0
 
