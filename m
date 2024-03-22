@@ -1,44 +1,42 @@
 Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82985FDC8
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 13:26:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98CC604C7
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 13:26:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711114017; cv=none; b=BBORkBtA2nah4UWDMSbyp0iZpmxVyANqpYduSmxspNsfnx9vapIQ0neHPVsgvyddD1D77F2owojexUMMB37kJl9hZg5m1F5YrjBCMxVowuSny0/P5MEtpbR/7He9E+ziNqN9H4dBZEIEDWrqyK/sSbcznEyj6YT+XPyV6k1fCw0=
+	t=1711114018; cv=none; b=lBpB/O8a6hhn7scy03guT3+hcVdhxyijNzJjF8oe0xECEAB/SigqBL/WbCVOtbBNa3qwJha90O/H9VHoMH1XjTYx69tXTMF2IiGpf+ONShwglnR4w1VM5Ypd4yzhLeiahOa/5ALLWyeovfNfrprCYtcJIfeYQRPryeBC4d22Hmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711114017; c=relaxed/simple;
-	bh=ILcQv+XMPcULM0Od7ox9jtX5Kx6Qqnb5MUap2X6BCj8=;
+	s=arc-20240116; t=1711114018; c=relaxed/simple;
+	bh=m7oBZiPiCYpAs48i0suwGRxvQW5vIb79oo+w8VDHE58=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t/XlT+p0QVU82NpTg33S+AWzCIA70R/Ee4Wa56/8x3JaI9JVwnLr/4RgZyayGXU9Pavyj208/lsrrs3uwzs+IB4lIBGA/rCCvgS1vXLtmJgex/BIA6c5xKExpZbXO1feSkJmJvf6Kvrl25YkLY6IJOkIZYNE7WfBYBQM7TbIp5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=BR2UeEu3; arc=none smtp.client-ip=194.117.254.33
+	 MIME-Version; b=fAcDLCTwhTTEo+vnrNAKphkXKKYnOMO0skJyyhls7vszMagE80oN8gt8h6H/5JdZxboI2bqdAqTg+/2VeXq6RPC13fUBK9vpuBw5bmkES46O5+b0p+RgG7KIVyL5RfRnp3qPphBb6486UDTEtOegHNayKPNXjhtoX4zAtd/cKBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=SH4q4sck; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="BR2UeEu3"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="SH4q4sck"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
 	:in-reply-to:references:mime-version:content-transfer-encoding;
-	 s=k1; bh=rF3P6J6pSBdQz8zQrkau4cQ2HrCjATGi3VINbjYPxk8=; b=BR2UeE
-	u3ZhJZClbCnp6JJ7SSSGJFdeMkJJJRly8Xvfvt/D7xZNqRH2I78LMFzu6WttGKVf
-	MKU8rrv+14plOq+L+lqqxU7M2CtigheDpoa/G8VYic2YxeY8xADOMxEqz8l0EdC8
-	rgMSALpEVJ5AZ7Ij8cnMQDk2tnov8pUKUJRkkJ+gCcblrQGR9OrBesVXTQnRIyT5
-	hN1Pjxf07K+UH1HLl14kSfTxKmT8TlhuFmTs2zkFwlDZCpMew2pQVfNyXODleFMF
-	uojTCLh1UGANq71speTP3P2gNP5Yqo4OVDXWAgJLaohecPIxpzH3pnALtOS2L6Jw
-	VoByjyA6mrD9aLlQ==
-Received: (qmail 3870567 invoked from network); 22 Mar 2024 14:26:37 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Mar 2024 14:26:37 +0100
-X-UD-Smtp-Session: l3s3148p1@UMH8xT8U8OBehhtF
+	 s=k1; bh=zHWcrqcqGocHIBXF4RitcyOSKbklqY+OmlrTvuEauIc=; b=SH4q4s
+	ckAA+8fPDc59KFMUlUUyeLDLg+nI7lwTpVTrZ1ZDYtAf9Yp+3tfFzElEg1E5ZsXS
+	8Uzblu2k9EFn3Y9kVphWMLp5mDpFJASJuvWmJwTYRRVgaBPkKcNKyqGIHLR5EzWX
+	mQME/y1cwEcFymaUfcdHW+GoaNNB+1jvSANciScJT4oZoa/PU97vKizpeoho1LGM
+	SUlMm4ms7Kq1OCXE6DzJ3ygiSZrO2D8UExUtb1GSxn7xoupr0TSrD2X2eN0ppDxE
+	B/gZNC4eTqJ0TTfTafFCRrwTj80g73t9aFEb9MpBwECSYkw3EgMvO++jxMFfh04g
+	2KwyBBje2379BtVg==
+Received: (qmail 3870645 invoked from network); 22 Mar 2024 14:26:40 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Mar 2024 14:26:40 +0100
+X-UD-Smtp-Session: l3s3148p1@MQ4ixj8UnpRehhtF
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-i2c@vger.kernel.org
 Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Eddie James <eajames@linux.ibm.com>,
 	Andi Shyti <andi.shyti@kernel.org>,
-	openbmc@lists.ozlabs.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 20/64] i2c: fsi: reword according to newest specification
-Date: Fri, 22 Mar 2024 14:25:13 +0100
-Message-ID: <20240322132619.6389-21-wsa+renesas@sang-engineering.com>
+Subject: [PATCH 23/64] i2c: hix5hd2: reword according to newest specification
+Date: Fri, 22 Mar 2024 14:25:16 +0100
+Message-ID: <20240322132619.6389-24-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
 References: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
@@ -57,257 +55,31 @@ entity ("client") and a local one ("target").
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- drivers/i2c/busses/i2c-fsi.c | 56 ++++++++++++++++++------------------
- 1 file changed, 28 insertions(+), 28 deletions(-)
+ drivers/i2c/busses/i2c-hix5hd2.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-fsi.c b/drivers/i2c/busses/i2c-fsi.c
-index 10332693edf0..5eaf2c85a72c 100644
---- a/drivers/i2c/busses/i2c-fsi.c
-+++ b/drivers/i2c/busses/i2c-fsi.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * FSI-attached I2C master algorithm
-+ * FSI-attached I2C controller algorithm
-  *
-  * Copyright 2018 IBM Corporation
-  *
-@@ -145,7 +145,7 @@
- /* choose timeout length from legacy driver; it's well tested */
- #define I2C_ABORT_TIMEOUT	msecs_to_jiffies(100)
- 
--struct fsi_i2c_master {
-+struct fsi_i2c_host {
- 	struct fsi_device	*fsi;
- 	u8			fifo_size;
- 	struct list_head	ports;
-@@ -155,7 +155,7 @@ struct fsi_i2c_master {
- struct fsi_i2c_port {
- 	struct list_head	list;
- 	struct i2c_adapter	adapter;
--	struct fsi_i2c_master	*master;
-+	struct fsi_i2c_host	*host;
- 	u16			port;
- 	u16			xfrd;
- };
-@@ -183,7 +183,7 @@ static int fsi_i2c_write_reg(struct fsi_device *fsi, unsigned int reg,
- 	return fsi_device_write(fsi, reg, &data_be, sizeof(data_be));
+diff --git a/drivers/i2c/busses/i2c-hix5hd2.c b/drivers/i2c/busses/i2c-hix5hd2.c
+index 8e75515c3ca4..d7a834a7fec5 100644
+--- a/drivers/i2c/busses/i2c-hix5hd2.c
++++ b/drivers/i2c/busses/i2c-hix5hd2.c
+@@ -200,7 +200,7 @@ static void hix5hd2_read_handle(struct hix5hd2_i2c_priv *priv)
+ 		/* the last byte don't need send ACK */
+ 		writel_relaxed(I2C_READ | I2C_NO_ACK, priv->regs + HIX5I2C_COM);
+ 	} else if (priv->msg_len > 1) {
+-		/* if i2c master receive data will send ACK */
++		/* if i2c controller receive data will send ACK */
+ 		writel_relaxed(I2C_READ, priv->regs + HIX5I2C_COM);
+ 	} else {
+ 		hix5hd2_rw_handle_stop(priv);
+@@ -384,7 +384,7 @@ static u32 hix5hd2_i2c_func(struct i2c_adapter *adap)
  }
  
--static int fsi_i2c_dev_init(struct fsi_i2c_master *i2c)
-+static int fsi_i2c_dev_init(struct fsi_i2c_host *i2c)
- {
- 	int rc;
- 	u32 mode = I2C_MODE_ENHANCED, extended_status, watermark;
-@@ -214,7 +214,7 @@ static int fsi_i2c_dev_init(struct fsi_i2c_master *i2c)
- static int fsi_i2c_set_port(struct fsi_i2c_port *port)
- {
- 	int rc;
--	struct fsi_device *fsi = port->master->fsi;
-+	struct fsi_device *fsi = port->host->fsi;
- 	u32 mode, dummy = 0;
- 
- 	rc = fsi_i2c_read_reg(fsi, I2C_FSI_MODE, &mode);
-@@ -236,7 +236,7 @@ static int fsi_i2c_set_port(struct fsi_i2c_port *port)
- static int fsi_i2c_start(struct fsi_i2c_port *port, struct i2c_msg *msg,
- 			 bool stop)
- {
--	struct fsi_i2c_master *i2c = port->master;
-+	struct fsi_i2c_host *i2c = port->host;
- 	u32 cmd = I2C_CMD_WITH_START | I2C_CMD_WITH_ADDR;
- 
- 	port->xfrd = 0;
-@@ -268,7 +268,7 @@ static int fsi_i2c_write_fifo(struct fsi_i2c_port *port, struct i2c_msg *msg,
- {
- 	int write;
- 	int rc;
--	struct fsi_i2c_master *i2c = port->master;
-+	struct fsi_i2c_host *i2c = port->host;
- 	int bytes_to_write = i2c->fifo_size - fifo_count;
- 	int bytes_remaining = msg->len - port->xfrd;
- 
-@@ -294,7 +294,7 @@ static int fsi_i2c_read_fifo(struct fsi_i2c_port *port, struct i2c_msg *msg,
- {
- 	int read;
- 	int rc;
--	struct fsi_i2c_master *i2c = port->master;
-+	struct fsi_i2c_host *i2c = port->host;
- 	int bytes_to_read;
- 	int xfr_remaining = msg->len - port->xfrd;
- 	u32 dummy;
-@@ -330,7 +330,7 @@ static int fsi_i2c_get_scl(struct i2c_adapter *adap)
- {
- 	u32 stat = 0;
- 	struct fsi_i2c_port *port = adap->algo_data;
--	struct fsi_i2c_master *i2c = port->master;
-+	struct fsi_i2c_host *i2c = port->host;
- 
- 	fsi_i2c_read_reg(i2c->fsi, I2C_FSI_STAT, &stat);
- 
-@@ -341,7 +341,7 @@ static void fsi_i2c_set_scl(struct i2c_adapter *adap, int val)
- {
- 	u32 dummy = 0;
- 	struct fsi_i2c_port *port = adap->algo_data;
--	struct fsi_i2c_master *i2c = port->master;
-+	struct fsi_i2c_host *i2c = port->host;
- 
- 	if (val)
- 		fsi_i2c_write_reg(i2c->fsi, I2C_FSI_SET_SCL, &dummy);
-@@ -353,7 +353,7 @@ static int fsi_i2c_get_sda(struct i2c_adapter *adap)
- {
- 	u32 stat = 0;
- 	struct fsi_i2c_port *port = adap->algo_data;
--	struct fsi_i2c_master *i2c = port->master;
-+	struct fsi_i2c_host *i2c = port->host;
- 
- 	fsi_i2c_read_reg(i2c->fsi, I2C_FSI_STAT, &stat);
- 
-@@ -364,7 +364,7 @@ static void fsi_i2c_set_sda(struct i2c_adapter *adap, int val)
- {
- 	u32 dummy = 0;
- 	struct fsi_i2c_port *port = adap->algo_data;
--	struct fsi_i2c_master *i2c = port->master;
-+	struct fsi_i2c_host *i2c = port->host;
- 
- 	if (val)
- 		fsi_i2c_write_reg(i2c->fsi, I2C_FSI_SET_SDA, &dummy);
-@@ -377,7 +377,7 @@ static void fsi_i2c_prepare_recovery(struct i2c_adapter *adap)
- 	int rc;
- 	u32 mode;
- 	struct fsi_i2c_port *port = adap->algo_data;
--	struct fsi_i2c_master *i2c = port->master;
-+	struct fsi_i2c_host *i2c = port->host;
- 
- 	rc = fsi_i2c_read_reg(i2c->fsi, I2C_FSI_MODE, &mode);
- 	if (rc)
-@@ -392,7 +392,7 @@ static void fsi_i2c_unprepare_recovery(struct i2c_adapter *adap)
- 	int rc;
- 	u32 mode;
- 	struct fsi_i2c_port *port = adap->algo_data;
--	struct fsi_i2c_master *i2c = port->master;
-+	struct fsi_i2c_host *i2c = port->host;
- 
- 	rc = fsi_i2c_read_reg(i2c->fsi, I2C_FSI_MODE, &mode);
- 	if (rc)
-@@ -402,7 +402,7 @@ static void fsi_i2c_unprepare_recovery(struct i2c_adapter *adap)
- 	fsi_i2c_write_reg(i2c->fsi, I2C_FSI_MODE, &mode);
- }
- 
--static int fsi_i2c_reset_bus(struct fsi_i2c_master *i2c,
-+static int fsi_i2c_reset_bus(struct fsi_i2c_host *i2c,
- 			     struct fsi_i2c_port *port)
- {
- 	int rc;
-@@ -435,7 +435,7 @@ static int fsi_i2c_reset_bus(struct fsi_i2c_master *i2c,
- 	return fsi_i2c_dev_init(i2c);
- }
- 
--static int fsi_i2c_reset_engine(struct fsi_i2c_master *i2c, u16 port)
-+static int fsi_i2c_reset_engine(struct fsi_i2c_host *i2c, u16 port)
- {
- 	int rc;
- 	u32 mode, dummy = 0;
-@@ -478,7 +478,7 @@ static int fsi_i2c_abort(struct fsi_i2c_port *port, u32 status)
- 	unsigned long start;
- 	u32 cmd = I2C_CMD_WITH_STOP;
- 	u32 stat;
--	struct fsi_i2c_master *i2c = port->master;
-+	struct fsi_i2c_host *i2c = port->host;
- 	struct fsi_device *fsi = i2c->fsi;
- 
- 	rc = fsi_i2c_reset_engine(i2c, port->port);
-@@ -505,7 +505,7 @@ static int fsi_i2c_abort(struct fsi_i2c_port *port, u32 status)
- 	if (rc)
- 		return rc;
- 
--	/* wait until we see command complete in the master */
-+	/* wait until we see command complete in the controller */
- 	start = jiffies;
- 
- 	do {
-@@ -579,7 +579,7 @@ static int fsi_i2c_wait(struct fsi_i2c_port *port, struct i2c_msg *msg,
- 	unsigned long start = jiffies;
- 
- 	do {
--		rc = fsi_i2c_read_reg(port->master->fsi, I2C_FSI_STAT,
-+		rc = fsi_i2c_read_reg(port->host->fsi, I2C_FSI_STAT,
- 				      &status);
- 		if (rc)
- 			return rc;
-@@ -609,10 +609,10 @@ static int fsi_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
- 	int i, rc;
- 	unsigned long start_time;
- 	struct fsi_i2c_port *port = adap->algo_data;
--	struct fsi_i2c_master *master = port->master;
-+	struct fsi_i2c_host *host = port->host;
- 	struct i2c_msg *msg;
- 
--	mutex_lock(&master->lock);
-+	mutex_lock(&host->lock);
- 
- 	rc = fsi_i2c_set_port(port);
- 	if (rc)
-@@ -633,7 +633,7 @@ static int fsi_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
- 	}
- 
- unlock:
--	mutex_unlock(&master->lock);
-+	mutex_unlock(&host->lock);
- 	return rc ? : num;
- }
- 
-@@ -654,7 +654,7 @@ static struct i2c_bus_recovery_info fsi_i2c_bus_recovery_info = {
+ static const struct i2c_algorithm hix5hd2_i2c_algorithm = {
+-	.master_xfer		= hix5hd2_i2c_xfer,
++	.xfer		= hix5hd2_i2c_xfer,
+ 	.functionality		= hix5hd2_i2c_func,
  };
  
- static const struct i2c_algorithm fsi_i2c_algorithm = {
--	.master_xfer = fsi_i2c_xfer,
-+	.xfer = fsi_i2c_xfer,
- 	.functionality = fsi_i2c_functionality,
- };
- 
-@@ -676,7 +676,7 @@ static struct device_node *fsi_i2c_find_port_of_node(struct device_node *fsi,
- 
- static int fsi_i2c_probe(struct device *dev)
- {
--	struct fsi_i2c_master *i2c;
-+	struct fsi_i2c_host *i2c;
- 	struct fsi_i2c_port *port;
- 	struct device_node *np;
- 	u32 port_no, ports, stat;
-@@ -699,7 +699,7 @@ static int fsi_i2c_probe(struct device *dev)
- 		return rc;
- 
- 	ports = FIELD_GET(I2C_STAT_MAX_PORT, stat) + 1;
--	dev_dbg(dev, "I2C master has %d ports\n", ports);
-+	dev_dbg(dev, "I2C controller has %d ports\n", ports);
- 
- 	for (port_no = 0; port_no < ports; port_no++) {
- 		np = fsi_i2c_find_port_of_node(dev->of_node, port_no);
-@@ -712,7 +712,7 @@ static int fsi_i2c_probe(struct device *dev)
- 			break;
- 		}
- 
--		port->master = i2c;
-+		port->host = i2c;
- 		port->port = port_no;
- 
- 		port->adapter.owner = THIS_MODULE;
-@@ -742,7 +742,7 @@ static int fsi_i2c_probe(struct device *dev)
- 
- static int fsi_i2c_remove(struct device *dev)
- {
--	struct fsi_i2c_master *i2c = dev_get_drvdata(dev);
-+	struct fsi_i2c_host *i2c = dev_get_drvdata(dev);
- 	struct fsi_i2c_port *port, *tmp;
- 
- 	list_for_each_entry_safe(port, tmp, &i2c->ports, list) {
-@@ -772,5 +772,5 @@ static struct fsi_driver fsi_i2c_driver = {
- module_fsi_driver(fsi_i2c_driver);
- 
- MODULE_AUTHOR("Eddie James <eajames@us.ibm.com>");
--MODULE_DESCRIPTION("FSI attached I2C master");
-+MODULE_DESCRIPTION("FSI attached I2C controller");
- MODULE_LICENSE("GPL");
 -- 
 2.43.0
 
