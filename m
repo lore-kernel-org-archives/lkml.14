@@ -1,44 +1,44 @@
 Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1594644E
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 13:26:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345EE59170
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 13:26:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711114012; cv=none; b=aZrDC15O1Gz30W0rccUB9oOz3dMkUe3CTYfpdkWulm/7ZzL9W/V8YQeGHp5hJoLg86KAL6DJJ8Ka2W23WIIlI61+2B35QUcXXsX8gWNr8EfJOJImXtRER2dxIa4Jsc+WpawN6XnG+hcDzv40GBnD9+A4hKyRvwCq62cRuudlrIc=
+	t=1711114013; cv=none; b=jAHqgph46Q0//Qho5seD2nnW4SoNY8u0pbL02tourGTBtUNXJiV047SleXLD9qgo+auC4F+5bxJDffnRdrIbCW6lH99mdyldhVAMXyO7mgc3d4unNL0OGcvwPzu9EvMh+60OCtQPSaPSSUqXstKkyL1OqUAGJoEmVs9s2rTWC64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711114012; c=relaxed/simple;
-	bh=+VaxMN7cZnZJjhL9SNR43NWlUn9PaNRHhMOl/YlZsqY=;
+	s=arc-20240116; t=1711114013; c=relaxed/simple;
+	bh=060GHiUn1CwotzIl6MBVCwJ278n1ziyGC1UQUnT2QEs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T3sZgA+gVtrmhsMDLpcTGz26Yjt57wC5iYJEuVKu7/uqnK+er3mSJG6s7KFvtaTAiten9xRf7VqfQYkF+T4iYgeEjvcs7VIjkCls7R54g7SafBe/FZKMh4GnQm9e0TkPzKmLJSxXXliFf7CTfxrjGpSyTpApwE0+S3VwlrmvDZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=N1vh2CY6; arc=none smtp.client-ip=194.117.254.33
+	 MIME-Version; b=fL8s7XAi3ksSXEKuO2PzBzuPabkGw8htPcJby7o/YXmBetN6xAzLk2CkWQgCkXgVzyKZJ67nHwPGASgBSN/eEssHqSRADiENUN5m0aR3hZR6g5BgdX6TiSpjexv3oz4tcrEZLE+UUQAx8zWWrcdKTTwmAFNwEOy36iWt3Ae1aVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=K+HqkwMH; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="N1vh2CY6"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="K+HqkwMH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
 	:in-reply-to:references:mime-version:content-transfer-encoding;
-	 s=k1; bh=EAolHBSknmyHAIRGgTuBToiKe0Qd+7DMZZj0gDF7Amc=; b=N1vh2C
-	Y6glG5MRwaBGI0w+5dr2w3TJMvEHi9bZTIuPfPkRF5KOBkEpp3vSs/D/qqkgzmIq
-	T0MfVmIJJF4mbd+yXDq4c34FSkEZTmJYkPenM6fqO1Z8f6EG0ORHWs63/hmmsMuP
-	EBa4nCRh/MqZ5EP/akN7B3mCjK/kPe6vU4ir4v57dC4heOzWhCiLOm+L177TuC4O
-	MK52+Sk5YYLO8NmakmY+hhkB64W/d6YcH/3Ihs0J4/sxLYG1dlfVK13wr2ri7kSa
-	vQYOta2Hcw7EGIKwk3BvrTZ+4uUkU7ZOKATLhLFdoF2KxoTzzjgzE9g0o87yvrb8
-	IbNMHGAOAYo5wvQA==
-Received: (qmail 3870347 invoked from network); 22 Mar 2024 14:26:32 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Mar 2024 14:26:32 +0100
-X-UD-Smtp-Session: l3s3148p1@F4KwxT8UrOBehhtF
+	 s=k1; bh=Qu3vk6w/0m8AM5GY0guKeGtY0uhOhyvvrd8UxUlbHVQ=; b=K+Hqkw
+	MHpY2i1IaxFUSVbDNRcfcIgO7dod5HZW8PGN+Jf/bHeKSiLOnfja1ibkdVOWbJLr
+	P7PfSih92G7W1yW4k67T+t89P31K6PTCIPPJsPb5vK13mOqWPRt7b69cj0GH5Fuc
+	/wLDqEvUpAJMvHp8VuUihYHvc6rUKnOeWx/NHhnKnGjqffgiMdcMs/6GPFReC3wJ
+	OOrcMGR/57+W5jskecPllC/z/5I31wAUb1dZ9zBD0Ir5oyyz1BqL+FLJLFDs1MKc
+	AAUmBnxgPjO4elSKGAzOzX5Sn5sKpzqkyjHXi5bqcsGXBeybzgUwN9rLJQ7PoJ0P
+	GEjdfmcm6/BtYZhQ==
+Received: (qmail 3870420 invoked from network); 22 Mar 2024 14:26:34 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Mar 2024 14:26:34 +0100
+X-UD-Smtp-Session: l3s3148p1@XQbKxT8UxOBehhtF
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-i2c@vger.kernel.org
 Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Jochen Friedrich <jochen@scram.de>,
 	Andi Shyti <andi.shyti@kernel.org>,
-	linuxppc-dev@lists.ozlabs.org,
+	Baruch Siach <baruch@tkos.co.il>,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 14/64] i2c: cpm: reword according to newest specification
-Date: Fri, 22 Mar 2024 14:25:07 +0100
-Message-ID: <20240322132619.6389-15-wsa+renesas@sang-engineering.com>
+Subject: [PATCH 16/64] i2c: digicolor: reword according to newest specification
+Date: Fri, 22 Mar 2024 14:25:09 +0100
+Message-ID: <20240322132619.6389-17-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
 References: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
@@ -57,31 +57,29 @@ entity ("client") and a local one ("target").
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- drivers/i2c/busses/i2c-cpm.c | 4 ++--
+ drivers/i2c/busses/i2c-digicolor.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-cpm.c b/drivers/i2c/busses/i2c-cpm.c
-index 4404b4aac676..306e397fec0a 100644
---- a/drivers/i2c/busses/i2c-cpm.c
-+++ b/drivers/i2c/busses/i2c-cpm.c
-@@ -402,7 +402,7 @@ static u32 cpm_i2c_func(struct i2c_adapter *adap)
- /* -----exported algorithm data: -------------------------------------	*/
+diff --git a/drivers/i2c/busses/i2c-digicolor.c b/drivers/i2c/busses/i2c-digicolor.c
+index 3462f2bc0fa8..0d777f5c6b41 100644
+--- a/drivers/i2c/busses/i2c-digicolor.c
++++ b/drivers/i2c/busses/i2c-digicolor.c
+@@ -281,7 +281,7 @@ static u32 dc_i2c_func(struct i2c_adapter *adap)
+ }
  
- static const struct i2c_algorithm cpm_i2c_algo = {
--	.master_xfer = cpm_i2c_xfer,
-+	.xfer = cpm_i2c_xfer,
- 	.functionality = cpm_i2c_func,
+ static const struct i2c_algorithm dc_i2c_algorithm = {
+-	.master_xfer	= dc_i2c_xfer,
++	.xfer	= dc_i2c_xfer,
+ 	.functionality	= dc_i2c_func,
  };
  
-@@ -570,7 +570,7 @@ static int cpm_i2c_setup(struct cpm_i2c *cpm)
- 	out_8(&cpm->i2c_reg->i2brg, brg);
+@@ -372,5 +372,5 @@ static struct platform_driver dc_i2c_driver = {
+ module_platform_driver(dc_i2c_driver);
  
- 	out_8(&cpm->i2c_reg->i2mod, 0x00);
--	out_8(&cpm->i2c_reg->i2com, I2COM_MASTER);	/* Master mode */
-+	out_8(&cpm->i2c_reg->i2com, I2COM_MASTER);	/* Host mode */
- 
- 	/* Disable interrupts. */
- 	out_8(&cpm->i2c_reg->i2cmr, 0);
+ MODULE_AUTHOR("Baruch Siach <baruch@tkos.co.il>");
+-MODULE_DESCRIPTION("Conexant Digicolor I2C master driver");
++MODULE_DESCRIPTION("Conexant Digicolor I2C controller driver");
+ MODULE_LICENSE("GPL v2");
 -- 
 2.43.0
 
