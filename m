@@ -1,475 +1,162 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A82C60277
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 16:52:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0AC605A8
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 16:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711126377; cv=none; b=jsbiJ/mtlVIfb0+Bv5SIfwtq7e51GDnqkxIJaUfzoU9noeovtoJUbVQVlGYlWFYcxUTaYyOPezdKlNETID88qwYab9xsmkT8aGysGPsMfruFsP/uSKBE16g/VLPx0GHSjxb9wrDzzPyvVc4krMm1GoEomAJmJsv0cWsQr58JgiA=
+	t=1711126380; cv=none; b=sXMT14f7iC7W/susKgAyvPhoHxAiCNUQ7QIj/Ua5LqVj/2fxaJ16vQXm2YozbuYPOxEl6SzeSfGw1+BNuboygSxoD3eeIKY0+3I0hJixpnrYnBlEVENeYFPoBHzcBc0PiY1E4j3u4ae4qfCMbzi2Bs83nWkM/w5i+RdUh4AvE54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711126377; c=relaxed/simple;
-	bh=QWJIypdY0CvW+wo9ydMAZKiFXAxpjytAC8MBF5uqHC8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A1h4/kAKo3am34qQQo7AEA+sDXGQGG+svS4vW5hrjQ7x+EZV+33ygAtw74q1WFRiS5kGY8Z35dzBXSyvuOiImgrNeWXMV8IM6ySm1y62MSVgbeXpaeDlpHZCxcfhzEV7SbRhdDZ6hxt+llreX3tYxHPAXZ6CdfIRVrLgM/fgpbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZxQXec7G; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711126380; c=relaxed/simple;
+	bh=ugO3VCcCbFXqa0j0ulFrbXaGajsAP4EqVB7of7qqfPs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NKw3lH3nkKYurBELdBqmA4VbFIx8lw7kQHR06kpqVW9yEh6OZAMuO8JN2PyLOUVaDEwfHnnxMBm/cGYm//8Xrg2ivIgTW4fALBtpfrNOCxTsGieNxXe+xdM/o9bblCBhFH69JKJOhPfzg8vRcy9QV5fSHADWs+VIsre/EmveksU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=gt7Zs7LI; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZxQXec7G"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-789db18e24eso154494085a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 09:52:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="gt7Zs7LI"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-60a068e26d8so26378817b3.3
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 09:52:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711126374; x=1711731174; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1711126377; x=1711731177; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=m5DU/vZcDbeSUX/IUEB2wszFdA5PfNHk+If8FV6cjJc=;
-        b=ZxQXec7GtpGkuMwiVpGJeC+fSfQdC/PY4g2fJQDZ0RB3lUk/XpUN6a7bO1W0Va9UEU
-         BfAokl9shcvro4sOj1fbWPJFNQOmyJGcSbe/ly7WLa5kqzEcbs3Tarqiw0bNvfojqksA
-         kU2j2mTJ3HRdZEYtEBSgEd+g1J2xsli6Phuxw3pvKvXMcIIao94pFAwQonbAeLTmtqdQ
-         crdL6kC+NiP1e2oZVhKU5/4YL/u0TYrAPOEIghJ95AkR/a9l2Mgg9tamXhZ98zp4Wivu
-         j/1ICWw8EOBnW1R5rqf6IKQCLb94h+yd5ESNz2hb+saw5LpqqFzH7R9pU4Lo+kjB7mlL
-         e0zQ==
+        bh=y51uEGJ03D6pw21uRms6OLbBjZsNY8YSRn9RWNKVb+8=;
+        b=gt7Zs7LIEjkrCuFLBHQq+9o8bSsfH1Ov05v4LPLE48/hUiYYODfkVGVUaYhBcFjHJ+
+         0X6i9UOEdDeICZydK840q2xp/F+AB3VW4Zmf8NTkSmYOqZ8T/ovN5fZ44dw1oM6+AUoI
+         zXET6j7bNXPdROlqyKcR7OPsdT3j0Qc9vLS+nXD/1vw8jT6QeBkKH2a44Daox+SH4ep+
+         MNNd4bpmivvUdP4WFv3LEq0wp6aIP8Gb6qRxiDSzwvjpFfhou84x3tnZYo7AwL7XpK+L
+         vOnuj6//8GRCtfQzE7llvlSmRkXL+DQasnbiIQY43gK+e3C8sZNrW6HvLBgRs4onCSwl
+         doYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711126374; x=1711731174;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1711126377; x=1711731177;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=m5DU/vZcDbeSUX/IUEB2wszFdA5PfNHk+If8FV6cjJc=;
-        b=niTqHQcLIw5JI6Te/uacclQc2RPdnCvuE1A9Urm63XXuGqk+hXpuGDw2bXNX82HftI
-         7RryI+HvCU8G9zuLEc9IJmMEaOB+Rt76zN3yPnKZY3chcWSOTLsUYps8dmIuqu1q8vrU
-         tITcyv9bQ3vqU0s7ncmWhx0FVPyGhpD58l1dt8brqsEzqhtbtpNnKOseheQCDIL83vcl
-         0zeWY5bRNJXK0b3QigvbEO90IJE5Wo6Ax/o69RSYiqrwIku40W5WQnUHKF1v2wBht4j2
-         JQE/HPcWsSuYg3fC3A/Rt2iHG5asl6/VYxF7EiFNZ9QEMpLYJ1ogcgJIJ0ttRkU9Qr4e
-         Uw/Q==
-X-Gm-Message-State: AOJu0YwGi+cos81nJyUNsMnuUab43KoPnPvGyDuOQ0K4otAhW1RLqq/b
-	jIYyjDOAe5MXZZ2XeW+QuGrvSboQWAjZirtlI3F7YHHtyfjgvXkzdj7QZrE=
-X-Google-Smtp-Source: AGHT+IHZpToUOEhNCP/TnbPU/wvyqff9rTijW2pwCbptSCj/CF90lSssQxXf80Mxyk1Kzq53zdb3Tw==
-X-Received: by 2002:a05:620a:4110:b0:789:f195:6702 with SMTP id j16-20020a05620a411000b00789f1956702mr14196qko.3.1711126374137;
-        Fri, 22 Mar 2024 09:52:54 -0700 (PDT)
-Received: from citadel.lan (2600-6c4a-4d3f-6d5c-0000-0000-0000-1019.inf6.spectrum.com. [2600:6c4a:4d3f:6d5c::1019])
-        by smtp.gmail.com with ESMTPSA id j1-20020a37ef01000000b00789e9bbf962sm894901qkk.133.2024.03.22.09.52.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 09:52:53 -0700 (PDT)
-From: Brian Gerst <brgerst@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Uros Bizjak <ubizjak@gmail.com>,
-	David.Laight@aculab.com,
-	Brian Gerst <brgerst@gmail.com>
-Subject: [PATCH v4 06/16] objtool: Allow adding relocations to an existing section
-Date: Fri, 22 Mar 2024 12:52:23 -0400
-Message-ID: <20240322165233.71698-7-brgerst@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240322165233.71698-1-brgerst@gmail.com>
-References: <20240322165233.71698-1-brgerst@gmail.com>
+        bh=y51uEGJ03D6pw21uRms6OLbBjZsNY8YSRn9RWNKVb+8=;
+        b=qTkXlwJ1RzQMAylc2aRY0UK9aer5Bd5q/isBWQd7TKiU5SyE5OuVLp2lvwo07Ux3qe
+         LfOx9G8RDQfOXATE9yP77Wxvpgi+Ifncwr1MPG2PLE/neuHXcZxswqcpQOw/sWtee2zE
+         F4oEKMuOfxN4Pj/9Agt5V/UDuCCFK+5exdRpmk2ext7PvJUD2ecqb2tZBhCpgmPOgrf/
+         +xN9ltLrdx3zCOfoOW2z1yt6HZLUljcqG6aeHMJVVQcrCWp1fYIZT9QlyXTz0vDlDTzt
+         jBym+7F6Bo1ME1nPADt66h11x7OP9iLujBzFG5oQy1ZzwS9BXSnMW4PqmFIVRlF0gjTf
+         Ju3g==
+X-Forwarded-Encrypted: i=1; AJvYcCX9UpJqQ5uWM1NPWWtg196gI82ZGo40SYeAFbI5rAnfQpZlcIx5QNVaN1j12cbTwIZyD1lbtXzonkuyJ7d5ngrlE8E67iZg8KxTnn4w
+X-Gm-Message-State: AOJu0Yxl/dYngzFOtBIVX6AGqmBzrzZuIs2VNEKBdgQLYZxg+De/rA/S
+	IZ+Hz9IVen1vDLnZAtmw+iJrI5jUKTXCL7j3t1sY2VLmcr3dMkm79NVLv9StFUgm+oZ/5gtb5LC
+	WNOEER+nnzrlx6s9STFGQXud8sLe4mae0i3kjwg==
+X-Google-Smtp-Source: AGHT+IEpg7MCg3bZ38eIAspdWgzOjXUKRaxb3wbMQl77qTIMFr7IGfaPlazJNe4j1FElxowopIqWuHH20jjSqY11dPk=
+X-Received: by 2002:a81:710a:0:b0:60f:d6fc:74f3 with SMTP id
+ m10-20020a81710a000000b0060fd6fc74f3mr228823ywc.7.1711126377529; Fri, 22 Mar
+ 2024 09:52:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240319215915.832127-1-samuel.holland@sifive.com>
+ <20240319215915.832127-6-samuel.holland@sifive.com> <CAKC1njSg9-hJo6hibcM9a-=FUmMWyR39QUYqQ1uwiWhpBZQb9A@mail.gmail.com>
+ <40ab1ce5-8700-4a63-b182-1e864f6c9225@sifive.com> <CAKC1njQYZHbQJ71mapeG1DEw=A+aGx77xsuQGecsNFpoJ=tzGQ@mail.gmail.com>
+ <20240322-3c32873c4021477383a15f7d@orel>
+In-Reply-To: <20240322-3c32873c4021477383a15f7d@orel>
+From: Deepak Gupta <debug@rivosinc.com>
+Date: Fri, 22 Mar 2024 09:52:48 -0700
+Message-ID: <CAKC1njTGSMPekhvyRW0gz6+mY2S_==voCcspoLAyp38X-BcWcw@mail.gmail.com>
+Subject: Re: [RISC-V] [tech-j-ext] [RFC PATCH 5/9] riscv: Split per-CPU and
+ per-thread envcfg bits
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: Samuel Holland <samuel.holland@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
+	Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, 
+	tech-j-ext@lists.risc-v.org, Conor Dooley <conor@kernel.org>, kasan-dev@googlegroups.com, 
+	Evgenii Stepanov <eugenis@google.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+	Guo Ren <guoren@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+	Paul Walmsley <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In order to add relocations to existing sections (e.g. ".rela.text"),
-encapsulate the reloc array in a block header to allow chaining blocks
-to add more relocs without moving and relinking the existing ones.
-This adds minimal memory overhead, while still being able to easily
-access the arrays by index.
+On Fri, Mar 22, 2024 at 1:09=E2=80=AFAM Andrew Jones <ajones@ventanamicro.c=
+om> wrote:
+>
+> On Tue, Mar 19, 2024 at 09:39:52PM -0700, Deepak Gupta wrote:
+> ...
+> > I am not sure of the practicality of this heterogeneity for Zicboz and
+> > for that matter any of the upcoming
+> > features that'll be enabled via senvcfg (control flow integrity,
+> > pointer masking, etc).
+> >
+> > As an example if cache zeroing instructions are used by app binary, I
+> > expect it to be used in following
+> > manner
+> >
+> >  - Explicitly inserting cbo.zero by application developer
+> >  - Some compiler flag which ensures that structures larger than cache
+> > line gets zeroed by cbo.zero
+> >
+> > In either of the cases, the developer is not expecting to target it to
+> > a specific hart on SoC and instead expect it to work.
+> > There might be libraries (installed via sudo apt get) with cache zero
+> > support in them which may run in different address spaces.
+> > Should the library be aware of the CPU on which it's running. Now
+> > whoever is running these binaries should be aware which CPUs
+> > they get assigned to in order to avoid faults?
+> >
+> > That seems excessive, doesn't it?
+> >
+>
+> It might be safe to assume extensions like Zicboz will be on all harts if
+> any, but I wouldn't expect all extensions in the future to be present on
+> all available harts. For example, some Arm big.LITTLE boards only have
+> virt extensions on big CPUs. When a VMM wants to launch a guest it must
+> be aware of which CPUs it will use for the VCPU threads. For riscv, we
+> have the which-cpus variant of the hwprobe syscall to try and make this
+> type of thing easier to manage, but I agree it will still be a pain for
+> software since it will need to make that query and then set its affinity,
+> which is something it hasn't needed to do before.
+>
 
-Signed-off-by: Brian Gerst <brgerst@gmail.com>
----
- tools/objtool/check.c               |  2 +-
- tools/objtool/elf.c                 | 99 +++++++++++++++++++++++------
- tools/objtool/include/objtool/elf.h | 84 +++++++++++++++++++-----
- 3 files changed, 148 insertions(+), 37 deletions(-)
+Sure, the future may be a world where heterogeneous ISA is a thing. But
+that's not the present. Let's not try to build for something which
+doesn't exist.
+It has been (heterogeneous ISA) tried earlier many times and mostly have
+fallen flat (remember on Intel alder lake, Intel had to ship a ucode patch =
+to
+disable AVX512 exactly for same reason)
+https://www.anandtech.com/show/17047/the-intel-12th-gen-core-i912900k-revie=
+w-hybrid-performance-brings-hybrid-complexity/2
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index eb7e12ebc1d0..0a2c161fc04d 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -4421,7 +4421,7 @@ static int validate_ibt_data_reloc(struct objtool_file *file,
- 		return 0;
- 
- 	WARN_FUNC("data relocation to !ENDBR: %s",
--		  reloc->sec->base, reloc_offset(reloc),
-+		  reloc->block->sec->base, reloc_offset(reloc),
- 		  offstr(dest->sec, dest->offset));
- 
- 	return 1;
-diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index 3d27983dc908..cfb970727c8a 100644
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -277,7 +277,7 @@ struct reloc *find_reloc_by_dest_range(const struct elf *elf, struct section *se
- 	for_offset_range(o, offset, offset + len) {
- 		elf_hash_for_each_possible(reloc, reloc, hash,
- 					   sec_offset_hash(rsec, o)) {
--			if (reloc->sec != rsec)
-+			if (reloc->block->sec != rsec)
- 				continue;
- 
- 			if (reloc_offset(reloc) >= offset &&
-@@ -333,6 +333,7 @@ static int read_sections(struct elf *elf)
- 		sec = &elf->section_data[i];
- 
- 		INIT_LIST_HEAD(&sec->symbol_list);
-+		INIT_LIST_HEAD(&sec->reloc_list);
- 
- 		s = elf_getscn(elf->elf, i);
- 		if (!s) {
-@@ -850,7 +851,7 @@ static struct reloc *elf_init_reloc(struct elf *elf, struct section *rsec,
- 				    unsigned long offset, struct symbol *sym,
- 				    s64 addend, unsigned int type)
- {
--	struct reloc *reloc, empty = { 0 };
-+	struct reloc *reloc;
- 
- 	if (reloc_idx >= sec_num_entries(rsec)) {
- 		WARN("%s: bad reloc_idx %u for %s with %d relocs",
-@@ -858,15 +859,18 @@ static struct reloc *elf_init_reloc(struct elf *elf, struct section *rsec,
- 		return NULL;
- 	}
- 
--	reloc = &rsec->relocs[reloc_idx];
-+	reloc = get_reloc_by_index(rsec, reloc_idx);
-+	if (!reloc) {
-+		WARN("%s: %s: reloc %d out of range!",
-+		     __func__, rsec->name, reloc_idx);
-+		return NULL;
-+	}
- 
--	if (memcmp(reloc, &empty, sizeof(empty))) {
-+	if (reloc->sym) {
- 		WARN("%s: %s: reloc %d already initialized!",
- 		     __func__, rsec->name, reloc_idx);
- 		return NULL;
- 	}
--
--	reloc->sec = rsec;
- 	reloc->sym = sym;
- 
- 	set_reloc_offset(elf, reloc, offset);
-@@ -930,19 +934,45 @@ struct reloc *elf_init_reloc_data_sym(struct elf *elf, struct section *sec,
- 			      elf_data_rela_type(elf));
- }
- 
-+static struct reloc_block *alloc_reloc_block(struct section *rsec, size_t num_relocs)
-+{
-+	struct reloc_block *block;
-+	size_t block_size = sizeof(struct reloc_block) + sec_num_entries(rsec) * sizeof(struct reloc);
-+	int i;
-+
-+	block = malloc(block_size);
-+	if (!block) {
-+		perror("malloc");
-+		return NULL;
-+	}
-+
-+	memset(block, 0, block_size);
-+	INIT_LIST_HEAD(&block->list);
-+	block->sec = rsec;
-+	block->start_idx = rsec->num_relocs;
-+	block->len = num_relocs;
-+
-+	for (i = 0; i < num_relocs; i++)
-+		block->relocs[i].block = block;
-+
-+	rsec->num_relocs += num_relocs;
-+	list_add_tail(&block->list, &rsec->reloc_list);
-+
-+	return block;
-+}
-+
- static int read_relocs(struct elf *elf)
- {
- 	unsigned long nr_reloc, max_reloc = 0;
- 	struct section *rsec;
--	struct reloc *reloc;
--	unsigned int symndx;
--	struct symbol *sym;
- 	int i;
- 
- 	if (!elf_alloc_hash(reloc, elf->num_relocs))
- 		return -1;
- 
- 	list_for_each_entry(rsec, &elf->sections, list) {
-+		struct reloc_block *block;
-+
- 		if (!is_reloc_sec(rsec))
- 			continue;
- 
-@@ -956,15 +986,15 @@ static int read_relocs(struct elf *elf)
- 		rsec->base->rsec = rsec;
- 
- 		nr_reloc = 0;
--		rsec->relocs = calloc(sec_num_entries(rsec), sizeof(*reloc));
--		if (!rsec->relocs) {
--			perror("calloc");
-+		block = alloc_reloc_block(rsec, sec_num_entries(rsec));
-+		if (!block)
- 			return -1;
--		}
-+
- 		for (i = 0; i < sec_num_entries(rsec); i++) {
--			reloc = &rsec->relocs[i];
-+			struct reloc *reloc = &block->relocs[i];
-+			struct symbol *sym;
-+			unsigned int symndx;
- 
--			reloc->sec = rsec;
- 			symndx = reloc_sym(reloc);
- 			reloc->sym = sym = find_symbol_by_index(elf, symndx);
- 			if (!reloc->sym) {
-@@ -1100,6 +1130,7 @@ struct section *elf_create_section(struct elf *elf, const char *name,
- 	memset(sec, 0, sizeof(*sec));
- 
- 	INIT_LIST_HEAD(&sec->symbol_list);
-+	INIT_LIST_HEAD(&sec->reloc_list);
- 
- 	s = elf_newscn(elf->elf);
- 	if (!s) {
-@@ -1170,6 +1201,7 @@ static struct section *elf_create_rela_section(struct elf *elf,
- 					       unsigned int reloc_nr)
- {
- 	struct section *rsec;
-+	struct reloc_block *block;
- 	char *rsec_name;
- 
- 	rsec_name = malloc(strlen(sec->name) + strlen(".rela") + 1);
-@@ -1192,11 +1224,9 @@ static struct section *elf_create_rela_section(struct elf *elf,
- 	rsec->sh.sh_info = sec->idx;
- 	rsec->sh.sh_flags = SHF_INFO_LINK;
- 
--	rsec->relocs = calloc(sec_num_entries(rsec), sizeof(struct reloc));
--	if (!rsec->relocs) {
--		perror("calloc");
-+	block = alloc_reloc_block(rsec, sec_num_entries(rsec));
-+	if (!block)
- 		return NULL;
--	}
- 
- 	sec->rsec = rsec;
- 	rsec->base = sec;
-@@ -1204,6 +1234,37 @@ static struct section *elf_create_rela_section(struct elf *elf,
- 	return rsec;
- }
- 
-+int elf_extend_rela_section(struct elf *elf,
-+			    struct section *rsec,
-+			    int add_relocs)
-+{
-+	int newnr = sec_num_entries(rsec) + add_relocs;
-+	size_t oldsize = rsec->sh.sh_size;
-+	size_t newsize = newnr * rsec->sh.sh_entsize;
-+	void *buf;
-+	struct reloc_block *block;
-+
-+	buf = realloc(rsec->data->d_buf, newnr * rsec->sh.sh_entsize);
-+	if (!buf) {
-+		perror("realloc");
-+		return -1;
-+	}
-+
-+	memset(buf + oldsize, 0, newsize - oldsize);
-+
-+	rsec->data->d_size = newsize;
-+	rsec->data->d_buf = buf;
-+	rsec->sh.sh_size = newsize;
-+
-+	mark_sec_changed(elf, rsec, true);
-+
-+	block = alloc_reloc_block(rsec, add_relocs);
-+	if (!block)
-+		return -1;
-+
-+	return 0;
-+}
-+
- struct section *elf_create_section_pair(struct elf *elf, const char *name,
- 					size_t entsize, unsigned int nr,
- 					unsigned int reloc_nr)
-diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
-index 9f71e988eca4..7851467f6878 100644
---- a/tools/objtool/include/objtool/elf.h
-+++ b/tools/objtool/include/objtool/elf.h
-@@ -43,7 +43,8 @@ struct section {
- 	char *name;
- 	int idx;
- 	bool _changed, text, rodata, noinstr, init, truncate;
--	struct reloc *relocs;
-+	struct list_head reloc_list;
-+	int num_relocs;
- };
- 
- struct symbol {
-@@ -71,13 +72,23 @@ struct symbol {
- 	struct reloc *relocs;
- };
- 
-+struct reloc_block;
-+
- struct reloc {
- 	struct elf_hash_node hash;
--	struct section *sec;
-+	struct reloc_block *block;
- 	struct symbol *sym;
- 	struct reloc *sym_next_reloc;
- };
- 
-+struct reloc_block {
-+	struct list_head list;
-+	struct section *sec;
-+	int start_idx;
-+	int len;
-+	struct reloc relocs[0];
-+};
-+
- struct elf {
- 	Elf *elf;
- 	GElf_Ehdr ehdr;
-@@ -108,6 +119,11 @@ struct elf *elf_open_read(const char *name, int flags);
- 
- struct section *elf_create_section(struct elf *elf, const char *name,
- 				   size_t entsize, unsigned int nr);
-+
-+int elf_extend_rela_section(struct elf *elf,
-+			    struct section *rsec,
-+			    int add_relocs);
-+
- struct section *elf_create_section_pair(struct elf *elf, const char *name,
- 					size_t entsize, unsigned int nr,
- 					unsigned int reloc_nr);
-@@ -197,12 +213,12 @@ static inline unsigned int sec_num_entries(struct section *sec)
- 
- static inline unsigned int reloc_idx(struct reloc *reloc)
- {
--	return reloc - reloc->sec->relocs;
-+	return reloc->block->start_idx + (reloc - &reloc->block->relocs[0]);
- }
- 
- static inline void *reloc_rel(struct reloc *reloc)
- {
--	struct section *rsec = reloc->sec;
-+	struct section *rsec = reloc->block->sec;
- 
- 	return rsec->data->d_buf + (reloc_idx(reloc) * rsec->sh.sh_entsize);
- }
-@@ -215,7 +231,7 @@ static inline bool is_32bit_reloc(struct reloc *reloc)
- 	 * Elf64_Rel:  16 bytes
- 	 * Elf64_Rela: 24 bytes
- 	 */
--	return reloc->sec->sh.sh_entsize < 16;
-+	return reloc->block->sec->sh.sh_entsize < 16;
- }
- 
- #define __get_reloc_field(reloc, field)					\
-@@ -241,7 +257,7 @@ static inline u64 reloc_offset(struct reloc *reloc)
- static inline void set_reloc_offset(struct elf *elf, struct reloc *reloc, u64 offset)
- {
- 	__set_reloc_field(reloc, r_offset, offset);
--	mark_sec_changed(elf, reloc->sec, true);
-+	mark_sec_changed(elf, reloc->block->sec, true);
- }
- 
- static inline s64 reloc_addend(struct reloc *reloc)
-@@ -252,7 +268,7 @@ static inline s64 reloc_addend(struct reloc *reloc)
- static inline void set_reloc_addend(struct elf *elf, struct reloc *reloc, s64 addend)
- {
- 	__set_reloc_field(reloc, r_addend, addend);
--	mark_sec_changed(elf, reloc->sec, true);
-+	mark_sec_changed(elf, reloc->block->sec, true);
- }
- 
- 
-@@ -282,7 +298,7 @@ static inline void set_reloc_sym(struct elf *elf, struct reloc *reloc, unsigned
- 
- 	__set_reloc_field(reloc, r_info, info);
- 
--	mark_sec_changed(elf, reloc->sec, true);
-+	mark_sec_changed(elf, reloc->block->sec, true);
- }
- static inline void set_reloc_type(struct elf *elf, struct reloc *reloc, unsigned int type)
- {
-@@ -292,7 +308,46 @@ static inline void set_reloc_type(struct elf *elf, struct reloc *reloc, unsigned
- 
- 	__set_reloc_field(reloc, r_info, info);
- 
--	mark_sec_changed(elf, reloc->sec, true);
-+	mark_sec_changed(elf, reloc->block->sec, true);
-+}
-+
-+static inline struct reloc *get_reloc_by_index(struct section *rsec, int idx)
-+{
-+	struct reloc_block *block;
-+
-+	list_for_each_entry(block, &rsec->reloc_list, list) {
-+		if (idx < block->len)
-+			return &block->relocs[idx];
-+		idx -= block->len;
-+	}
-+
-+	return NULL;
-+}
-+
-+static inline struct reloc *first_reloc(struct section *sec)
-+{
-+	struct reloc_block *block;
-+
-+	if (list_empty(&sec->reloc_list))
-+		return NULL;
-+
-+	block = list_first_entry(&sec->reloc_list, struct reloc_block, list);
-+	return &block->relocs[0];
-+}
-+
-+static inline struct reloc *next_reloc(struct reloc *reloc)
-+{
-+	struct reloc_block *block = reloc->block;
-+
-+	reloc++;
-+	if (reloc < &block->relocs[block->len])
-+		return reloc;
-+
-+	if (list_is_last(&block->list, &block->sec->reloc_list))
-+		return NULL;
-+
-+	block = list_next_entry(block, list);
-+	return &block->relocs[0];
- }
- 
- #define for_each_sec(file, sec)						\
-@@ -308,15 +363,10 @@ static inline void set_reloc_type(struct elf *elf, struct reloc *reloc, unsigned
- 			sec_for_each_sym(__sec, sym)
- 
- #define for_each_reloc(rsec, reloc)					\
--	for (int __i = 0, __fake = 1; __fake; __fake = 0)		\
--		for (reloc = rsec->relocs;				\
--		     __i < sec_num_entries(rsec);			\
--		     __i++, reloc++)
-+	for (reloc = first_reloc(rsec); reloc; reloc = next_reloc(reloc))
- 
- #define for_each_reloc_from(rsec, reloc)				\
--	for (int __i = reloc_idx(reloc);				\
--	     __i < sec_num_entries(rsec);				\
--	     __i++, reloc++)
-+	for (; reloc; reloc = next_reloc(reloc))
- 
- #define OFFSET_STRIDE_BITS	4
- #define OFFSET_STRIDE		(1UL << OFFSET_STRIDE_BITS)
-@@ -344,7 +394,7 @@ static inline u32 sec_offset_hash(struct section *sec, unsigned long offset)
- 
- static inline u32 reloc_hash(struct reloc *reloc)
- {
--	return sec_offset_hash(reloc->sec, reloc_offset(reloc));
-+	return sec_offset_hash(reloc->block->sec, reloc_offset(reloc));
- }
- 
- #endif /* _OBJTOOL_ELF_H */
--- 
-2.44.0
+As and when ISA features get enabled, they get compiled into libraries/bina=
+ries
+and end user many times use things like `taskset` to set affinity
+without even realizing
+there is some weirdness going on under the hood. For majority of use
+cases -- heterogeneous
+ISA doesn't make sense. Sure if someone is willing to build a custom
+SoC with heterogeneous
+ISA for their strict usecase, they control their software and hardware
+and thus they can do that.
+But littering linux kernel to support wierd usecases and putting a
+burden of that on majority of
+usecases and software is not wise.
 
+If something like this has to be done, I expect first that it doesn't
+force end users to learn
+about ISA differences between harts on their system and then figure
+out which installed
+packages have which ISA features compiled in. This is like walking on
+eggshells from the end
+user perspective. Sure, end user can be extremely intelligent / smart
+and figure it all out but
+that population is rare and that rare population can develop their
+custom kernel and libc
+patches to do something like this.
+
+This is a good science project to support heterogeneous ISA but
+practically not viable unless
+there is a high level end user use case.
+
+> Thanks,
+> drew
