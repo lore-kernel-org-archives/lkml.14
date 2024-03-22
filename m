@@ -1,105 +1,72 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9379382;
-	Fri, 22 Mar 2024 00:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED3F19A
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 00:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711066011; cv=none; b=jLuxqdy0QwmcftLC1Akl+VymmgRPWTZ8+SgzURhgf25nAh5JbmJNxV8Yahz5wEPrwQM58YI7GsRsBlDpLPiscXFWKs4m1tJKUA0kLKTuP4K3kkPHJhlPhMiHdDUbkXtDfIfku88dLZD6llWNXJK5G3FGKb51wkApSU2hxzwBHQQ=
+	t=1711066158; cv=none; b=K63gg8VarYTQL0l2e+kOaw8fpu/NWxvGbgzTeCRywj/myU6qFexcHtbHnqF3+u0EXiIKEEuWV1/EuAb7J6Wd5qBt0AYPRGO7hPi2OagBDSpnLyEAEnimP3xnwKJ98erXUE+T+n8EEQIV2aZdcP9oesmnaoch6RrsM5h7a6385QU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711066011; c=relaxed/simple;
-	bh=sJNuvfV/Rre/UoxjQHPPLLAdGqsUE6wJx6GszC4ZmZA=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mdHFd4krOdBIaTmecdz7Cgo8sLM8wWn0LnF0RNUbFAbJSiccAR+289rD/Sprk6B+jvZ8XVTVKLFRemup+V6VFCDkfwWpXGOgnKPXdRaBqaT70kr0aDT4mrxrizF+4vCrYlc17n5CcLLOKVrxOv9NH75SemKt1MJ5qIWiL8zVChE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=craftyguy.net; spf=pass smtp.mailfrom=craftyguy.net; dkim=pass (2048-bit key) header.d=craftyguy.net header.i=@craftyguy.net header.b=QZLbi5YU; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=craftyguy.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=craftyguy.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=craftyguy.net header.i=@craftyguy.net header.b="QZLbi5YU"
-Date: Thu, 21 Mar 2024 17:06:41 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=craftyguy.net;
-	s=key1; t=1711066006;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sJNuvfV/Rre/UoxjQHPPLLAdGqsUE6wJx6GszC4ZmZA=;
-	b=QZLbi5YUc4TG37Pz56OmLR1DDAJWJlCstn9sWQ2Eq7+MEXdBpQuKfrAQLrU1O9REwFQolK
-	OLww4pVhrwIq10k9/7pr+CIlBnuPLIKgXerVIilSujBvCxhGanoYqu6N6pogg1Slf0Io8A
-	rJ/8JPIlZJMz9UrcLfqyi61B/eVEWvCWf1cOkmB28IlM8VSFLt/2AEnOzWpZu/q3j7YqRb
-	Ct8g6zZxXFYShObMd+JmWD7Q47m4b0I6sF+751gW4Wqiy8ztONWJLVeSlAl0tcl1UIaTTB
-	fWVN7DuZrz4W10DxWW1McCZpT3LIEJAsBDUGaSaycQYvOTnnQW/w9vOme0Tsmw==
-Message-ID: <20240321170641.GK8211@craftyguy.net>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Clayton Craft <clayton@craftyguy.net>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- regressions@lists.linux.dev
-Subject: Re: x86_64 32-bit EFI mixed mode boot broken
-In-Reply-To: <CAMj1kXGzH4TiwvSF3bZsJpuuWf04Ri_852fUMTdH8pLRaH3+Yg@mail.gmail.com>
-References: <20240321150510.GI8211@craftyguy.net>
- <CAMj1kXGzH4TiwvSF3bZsJpuuWf04Ri_852fUMTdH8pLRaH3+Yg@mail.gmail.com>
+	s=arc-20240116; t=1711066158; c=relaxed/simple;
+	bh=5yDtrZnPxvihvRPCSxRlEksfo+ug4u8be/i/Zsu57Zk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Y74qzaGfrlBKhv+Yr0drYTQG+xzIsUuJ/XhhDxA4DJeXEafIjh9Bvu9km2I3vX+GGXUCDMTfLw8Cl+KITZBhuhDlXZgbKhYPfbkm9HDn0R8xt3Jn+GHLVhR9A4bvl6lHw4LD44lymyxuWQgvjZuj48HZd35sswVyNGvSjT0uKeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BBAFC43390;
+	Fri, 22 Mar 2024 00:09:16 +0000 (UTC)
+Date: Fri, 22 Mar 2024 00:09:14 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] arm64 fixes for 6.9-rc1
+Message-ID: <ZfzMKqtxAfHwHY3p@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="N3XsRCzAXOHRROpi"; micalg="pgp-sha512"; protocol="application/pgp-signature"
-X-Migadu-Flow: FLOW_OUT
-
-
---N3XsRCzAXOHRROpi
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: base64
 
-T24gVGh1LCAyMSBNYXIgMjAyNCAyMzo0ODowOSArMDEwMCBBcmQgQmllc2hldXZlbCA8YXJkYkBr
-ZXJuZWwub3JnPiB3cm90ZToKPiA+IHY2LjggZmFpbHMgZm9yIG1lLCBhbmQgcHJlc3VtYWJseSBz
-byBkb2VzIGV2ZXJ5dGhpbmcgYmFjayB0byB2Ni4yLiB2Ni4xIGlzIGFibGUKPiA+IHRvIGJvb3Qg
-T0sgb24gdGhlc2UgcGxhdGZvcm1zIHdpdGggbWl4ZWQgbW9kZSwgYW5kIGl0IGxvb2tzIGxpa2Ug
-dGhlcmUgYXJlIGEgbG90Cj4gPiBvZiBjaGFuZ2VzIGZyb20gNi4xLi42LjIgZm9yIEVGSS9taXhl
-ZCBtb2RlIGJvb3RpbmcuCj4gCj4gdjYuMSBqdXN0IHJlY2VpdmVkIHNvbWUgRUZJIHJlbGF0ZWQg
-YmFja3BvcnRzLCBzbyBwbGVhc2UgY2hlY2sgdGhlCj4gbGF0ZXN0IHY2LjEueSBhcyB3ZWxsLgoK
-SSBqdXN0IGdhdmUgdjYuMS44MiBhIHRyeSwgYW5kIGl0IGZhaWxzIHRvIGJvb3QgZm9yIG1lLiBU
-aGF0IHNlZW1zIHRvIGJlIGEKcmVncmVzc2lvbiBmcm9tIHRoZSA2LjEuMCB0aGF0IEkgdGVzdGVk
-IHByZXZpb3VzbHkuCgo+IEkgdXN1YWxseSB0ZXN0IG9uIDMyLWJpdCBPVk1GIGJ1aWx0IHdpdGgg
-TE9BRF9YNjRfT05fSUEzMl9FTkFCTEUsCj4gd2hpY2ggYWxsb3dzIHRoZSB1c2Ugb2YgdGhlIGNv
-bXBhdCBlbnRyeSBwb2ludC4gVGhpcyBpcyBkaWZmZXJlbnQgZnJvbQo+IHRoZSBFRkkgaGFuZG92
-ZXIgcHJvdG9jb2wsIGFuZCBJIGFtIG5vdCBzdXJlIHdoaWNoIG9uZSB5b3UgYXJlIHVzaW5nLgoK
-SSBzaG91bGQgaGF2ZSBtZW50aW9uZWQgdGhpcyBwcmV2aW91c2x5LCBoZXJlJ3MgdGhlIEVGSS1y
-ZWxhdGVkIGtjb25maWcgdGhhdCBJCmFtIHVzaW5nLiBJZiB0aGVyZSdzIGFueXRoaW5nIG1pc3Np
-bmcgdGhlbiBwbGVhc2UgbGV0IG1lIGtub3c6CgogICAgICAgIENPTkZJR19FRkk9eQogICAgICAg
-IENPTkZJR19FRklfRUFSTFlDT049eQogICAgICAgIENPTkZJR19FRklfRVNSVD15CiAgICAgICAg
-IyBDT05GSUdfRUZJX0hBTkRPVkVSX1BST1RPQ09MIGlzIG5vdCBzZXQKICAgICAgICBDT05GSUdf
-RUZJX01JWEVEPXkKICAgICAgICBDT05GSUdfRUZJX1JVTlRJTUVfV1JBUFBFUlM9eQogICAgICAg
-IENPTkZJR19FRklfU1RVQj15CiAgICAgICAgQ09ORklHX0VGSV9WQVJTX1BTVE9SRT1tCiAgICAg
-ICAgQ09ORklHX0VGSV9WQVJTX1BTVE9SRV9ERUZBVUxUX0RJU0FCTEU9eQoKTm90ZSB0aGF0IHRo
-ZSBFRkkgaGFuZG92ZXIgcHJvdG9jb2wgc3VwcG9ydCBpcyBkaXNhYmxlZCwgSSB3YXMgdW5kZXIg
-dGhlCmltcHJlc3Npb24gdGhhdCBpdCdzIG5vdCByZXF1aXJlZCBmb3IgbWl4ZWQgbW9kZS4KClBs
-ZWFzZSBsZXQgbWUga25vdyBpZiB0aGVyZSdzIGFueSBtb3JlIGluZm9ybWF0aW9uIEkgY2FuIHBy
-b3ZpZGUgYWJvdXQgbXkKdGVzdGluZyAvIHNldHVwLgoKLUNsYXl0b24K
+Hi Linus,
 
---N3XsRCzAXOHRROpi
-Content-Type: application/pgp-signature; name="signature.asc"
+Please pull the arm64 update and perf fix below. Thanks.
 
------BEGIN PGP SIGNATURE-----
+The following changes since commit 1ef21fcd6a50f011680dbbd678c1bea8e3f67ab9:
 
-iQIzBAABCgAdFiEEkdOrrjmBP3eB7DeWSkztbX7flQoFAmX8y5EACgkQSkztbX7f
-lQqPbA//WPktNG9F+YujYiC1/7VIPC8mPvbRNdwMZA5LYSGgKDP8vRjuU+zoX8Aa
-o20GByQ7LxvByv7XhzdMv7oLFRI5sFwcYJraleO+fUvJT9YluN3eN7rZNeZyUOzc
-f14xiC4uXniYxnJq6L3aAf24FACKmg1ub+NPXTZtswLp06sq2oyVoN5La8K9h/4Y
-pjg6lbxwM5vqoCovDDF3C9WqvmEWcyYsGFPs3ptFxTqMSYQAMjtXUl0jTjFM8ncj
-VY1dK/P3Lt2AUVtaUDyAWGBXnmx5CICgkx7LjWCu9pPto0B89y2DUjQhsJ2litnB
-UFQq5A2oL3GF2uv/w34LrGh97HQT+C8L6BD9D7HJrBlzz7X1bjBmeDlN9bL9iYId
-JSGVGMc3UwAgeLV/mjrdB7vL6UHjMdXUlOPHz8W2OMIKC3p6iJmo5+tyRWYCSB21
-DMjqA4Oy/IOTSOC6t9oxaBDJwJvjGbWVXB4AFiHIbKZ428UHkvKxPVBVMhu1TUV4
-heHw/WhRpv3HDVVFwM1YRveB7Ec1ewjwRJdrydGmLWX19c6cNNFec6jsh5FavLPk
-FiydB3Neubs/61cT9d4lS7ibdhyrTEkxX2cyeJEwC1CLlQDM03AwiyraUvG/323Z
-+rBImKoZgRBnj+q2juHFSzYcj1UVi8i1uibWnfamUxTPoN458J8=
-=HxZ7
------END PGP SIGNATURE-----
+  Revert "mm: add arch hook to validate mmap() prot flags" (2024-03-13 10:59:38 +0000)
 
---N3XsRCzAXOHRROpi--
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
+
+for you to fetch changes up to 1d63d1d9e5c5cb2e7c7ca75751a5eaf67c5623a7:
+
+  perf: starfive: fix 64-bit only COMPILE_TEST condition (2024-03-19 19:01:39 +0000)
+
+----------------------------------------------------------------
+arm64 fix/update:
+
+- Re-instate the CPUMASK_OFFSTACK option for arm64 when NR_CPUS > 256.
+  The bug that led to the initial revert was the cpufreq-dt code not
+  using zalloc_cpumask_var().
+
+- Make the STARFIVE_STARLINK_PMU config option depend on 64BIT to
+  prevent compile-test failures on 32-bit architectures due to missing
+  writeq().
+
+----------------------------------------------------------------
+Christoph Lameter (Ampere) (1):
+      ARM64: Dynamically allocate cpumasks and increase supported CPUs to 512
+
+Conor Dooley (1):
+      perf: starfive: fix 64-bit only COMPILE_TEST condition
+
+ arch/arm64/Kconfig   | 3 ++-
+ drivers/perf/Kconfig | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+-- 
+Catalin
