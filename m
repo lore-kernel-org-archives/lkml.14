@@ -1,215 +1,537 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 117F0383B4;
-	Fri, 22 Mar 2024 10:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26E2E225AF
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 10:19:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711102691; cv=none; b=Mf1IANkf7ii2kr7U9omD/HY3DoHAWv4+QpU1UWJpe2jLWPlYM4uvAFRsU6bc1fQE1Kje7vwpU0K8Aa8FSG5jv6GRxLOdFBS4qY83yDoso9JZ1/bfWa70l7oQnS+i/M8Qo6y0n2WqB21mDMcgzq2GOk8TzdxKsd4eCpTUQraU+ps=
+	t=1711102793; cv=none; b=TV1fImknYJSUliu68Qnti8xmNR0/3OaowNLKXVPsAsdhoNOjNpGBmx+DeQrB8JV31nu4OiAa6YFoVsK35vum8OSf2PMeLiK7IY60W/s9DStAuJ4O2SfmcenTEE2eSkpx3Cm6pd4WF6A3QawA/ILadra8dbwovcI0k9mqq0cf6Pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711102691; c=relaxed/simple;
-	bh=X7ez2jSQFnu9TSAzwW8kIzCSwLBKvwMau3lYmUIiTpc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bCIXJ80SDXjxfmk6lovthDBjlQWlZR+KbtZu0bVHbU+YzsGkfIPtYPu8UvdJIOwU0GStB+/oHLMQKbp/+BF+dJzB1cq//inPzPFb5Huh8S3OjUIU41DojXGfulDjrQp+kVrNSbxeoQL4xYiE/o0Z3v6r8v/VQQg5tq8b2UOUkyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PGVDrw2A; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PGVDrw2A"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=X7ez2jSQFnu9TSAzwW8kIzCSwLBKvwMau3lYmUIiTpc=; b=PGVDrw2A3aWCFKNxybmWKyUt9b
-	qKRDrvX/6THGkjKkbUUBwbTc2OudQ7UvIKNxi49lJSEPO4dSg+bvAxm4alwMDcjC12+NSYg3CYvJd
-	XdMrp/s4ve2lw+QNhQwgrwLgsBtUG21JcOcQCAqp5A2uDOiGGmaKvYz8Ys6xv1T8z/3aQQNzI2/Qv
-	h1ij01pDYH+gmqAXRPzixBTKLmbaieZffQ/F0Aylbqd5e6Jd091Qeu1fsLXMg77nLEYTbhOaOvKVG
-	b6F/H+tZnoJPVPBWcYLen7GyMLDq4QJm2sldEC3/ASnjoXsC5+0DdzcjxNB1hqzKyJLs9/T2IP4gC
-	IPpDFgnw==;
-Received: from [2001:8b0:10b:5:9bbb:2be8:b21a:e5b8] (helo=u3832b3a9db3152.ant.amazon.com)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rnbyJ-000000091Fl-3iSI;
-	Fri, 22 Mar 2024 10:18:00 +0000
-Message-ID: <248ec30e7b5c8a42d184f029c1cc9b664656b356.camel@infradead.org>
-Subject: Re: [RFC PATCH v3 0/5] Add PSCI v1.3 SYSTEM_OFF2 support for
- hibernation
-From: David Woodhouse <dwmw2@infradead.org>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org, Paolo Bonzini
- <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier
- <maz@kernel.org>, James Morse <james.morse@arm.com>, Suzuki K Poulose
- <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, Catalin
- Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
- Pavel Machek <pavel@ucw.cz>, Mostafa Saleh <smostafa@google.com>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- kvmarm@lists.linux.dev,  linux-pm@vger.kernel.org
-Date: Fri, 22 Mar 2024 10:17:58 +0000
-In-Reply-To: <Zfnpj2FShq05QZpf@linux.dev>
-References: <20240319130957.1050637-1-dwmw2@infradead.org>
-	 <Zfmu3wnFbIGQZD-j@linux.dev>
-	 <9e7a6e0f9c290a4b84c5bcc8cf3d4aba3cae2be5.camel@infradead.org>
-	 <Zfnpj2FShq05QZpf@linux.dev>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-n2xPZNttC2QHXGN3mKZ8"
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1711102793; c=relaxed/simple;
+	bh=ITzLC7nVKLxGr2t9tg5SgaMhlURVlosdi+tr3gfEKDU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fVAeo5DC+/iH7mpl6TIGh7rhW/yQ7htLN/Ggx9JoFtRT3gS1sacvKRSyqRDB4zKNcFNsrOlDGMiIPO8/8cFSRPcNHNL4InQuQmTWGZRI0Wk+yDA6tead306Bf+sPnI+qnrLCSTagWwA0k7clVRf9wRL8LUFM1YoHACJ91kX4ZOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C0E31007;
+	Fri, 22 Mar 2024 03:20:23 -0700 (PDT)
+Received: from [10.57.72.175] (unknown [10.57.72.175])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 586483F64C;
+	Fri, 22 Mar 2024 03:19:43 -0700 (PDT)
+Message-ID: <2e9ddc16-b6e7-46d4-8dd7-61977f61f2d0@arm.com>
+Date: Fri, 22 Mar 2024 10:19:41 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 1/5] arm64: mm: swap: support THP_SWAP on hardware
+ with MTE
+Content-Language: en-GB
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, chengming.zhou@linux.dev,
+ chrisl@kernel.org, david@redhat.com, hannes@cmpxchg.org, kasong@tencent.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ mhocko@suse.com, nphamcs@gmail.com, shy828301@gmail.com,
+ steven.price@arm.com, surenb@google.com, wangkefeng.wang@huawei.com,
+ willy@infradead.org, xiang@kernel.org, ying.huang@intel.com,
+ yosryahmed@google.com, yuzhao@google.com, Barry Song
+ <v-songbaohua@oppo.com>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Kemeng Shi <shikemeng@huaweicloud.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Peter Collingbourne <pcc@google.com>, Peter Xu <peterx@redhat.com>,
+ Lorenzo Stoakes <lstoakes@gmail.com>, "Mike Rapoport (IBM)"
+ <rppt@kernel.org>, Hugh Dickins <hughd@google.com>,
+ "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>
+References: <20240304081348.197341-1-21cnbao@gmail.com>
+ <20240304081348.197341-2-21cnbao@gmail.com>
+ <01c61b90-df90-4819-978b-414bb717ef64@arm.com>
+ <CAGsJ_4z5xDtBj-nyvPXfgv+ZVmzPQzvptyBrf=kB49Q3=Dmq-Q@mail.gmail.com>
+ <e77c18df-2796-4fd1-b589-57f0569587e8@arm.com>
+ <CAGsJ_4zT5YCkSLthCGDe5t3B4dR2syJa_MA3ytZ3YmSCERn_TQ@mail.gmail.com>
+ <CAGsJ_4wRNRbdXGV-2LUNNP2Dgi6JZ4fZbC2VGPS4ui8HdvuxnQ@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CAGsJ_4wRNRbdXGV-2LUNNP2Dgi6JZ4fZbC2VGPS4ui8HdvuxnQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+On 22/03/2024 07:41, Barry Song wrote:
+> On Fri, Mar 22, 2024 at 3:51 PM Barry Song <21cnbao@gmail.com> wrote:
+>>
+>> On Thu, Mar 21, 2024 at 11:31 PM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>
+>>> On 21/03/2024 08:42, Barry Song wrote:
+>>>> Hi Ryan,
+>>>> Sorry for the late reply.
+>>>
+>>> No problem!
+>>>
+>>>>
+>>>> On Tue, Mar 12, 2024 at 5:56 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>>>
+>>>>> On 04/03/2024 08:13, Barry Song wrote:
+>>>>>> From: Barry Song <v-songbaohua@oppo.com>
+>>>>>>
+>>>>>> Commit d0637c505f8a1 ("arm64: enable THP_SWAP for arm64") brings up
+>>>>>> THP_SWAP on ARM64, but it doesn't enable THP_SWP on hardware with
+>>>>>> MTE as the MTE code works with the assumption tags save/restore is
+>>>>>> always handling a folio with only one page.
+>>>>>>
+>>>>>> The limitation should be removed as more and more ARM64 SoCs have
+>>>>>> this feature. Co-existence of MTE and THP_SWAP becomes more and
+>>>>>> more important.
+>>>>>>
+>>>>>> This patch makes MTE tags saving support large folios, then we don't
+>>>>>> need to split large folios into base pages for swapping out on ARM64
+>>>>>> SoCs with MTE any more.
+>>>>>>
+>>>>>> arch_prepare_to_swap() should take folio rather than page as parameter
+>>>>>> because we support THP swap-out as a whole. It saves tags for all
+>>>>>> pages in a large folio.
+>>>>>>
+>>>>>> As now we are restoring tags based-on folio, in arch_swap_restore(),
+>>>>>> we may increase some extra loops and early-exitings while refaulting
+>>>>>> a large folio which is still in swapcache in do_swap_page(). In case
+>>>>>> a large folio has nr pages, do_swap_page() will only set the PTE of
+>>>>>> the particular page which is causing the page fault.
+>>>>>> Thus do_swap_page() runs nr times, and each time, arch_swap_restore()
+>>>>>> will loop nr times for those subpages in the folio. So right now the
+>>>>>> algorithmic complexity becomes O(nr^2).
+>>>>>>
+>>>>>> Once we support mapping large folios in do_swap_page(), extra loops
+>>>>>> and early-exitings will decrease while not being completely removed
+>>>>>> as a large folio might get partially tagged in corner cases such as,
+>>>>>> 1. a large folio in swapcache can be partially unmapped, thus, MTE
+>>>>>> tags for the unmapped pages will be invalidated;
+>>>>>> 2. users might use mprotect() to set MTEs on a part of a large folio.
+>>>>>>
+>>>>>> arch_thp_swp_supported() is dropped since ARM64 MTE was the only one
+>>>>>> who needed it.
+>>>
+>>> I think we should decouple this patch from your swap-in series. I suspect this
+>>> one could be ready and go in sooner than the swap-in series based on the current
+>>> discussions :)
+>>>
+>>>>>>
+>>>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>>>>> Cc: Will Deacon <will@kernel.org>
+>>>>>> Cc: Ryan Roberts <ryan.roberts@arm.com>
+>>>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>>>>> Cc: David Hildenbrand <david@redhat.com>
+>>>>>> Cc: Kemeng Shi <shikemeng@huaweicloud.com>
+>>>>>> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+>>>>>> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+>>>>>> Cc: Peter Collingbourne <pcc@google.com>
+>>>>>> Cc: Steven Price <steven.price@arm.com>
+>>>>>> Cc: Yosry Ahmed <yosryahmed@google.com>
+>>>>>> Cc: Peter Xu <peterx@redhat.com>
+>>>>>> Cc: Lorenzo Stoakes <lstoakes@gmail.com>
+>>>>>> Cc: "Mike Rapoport (IBM)" <rppt@kernel.org>
+>>>>>> Cc: Hugh Dickins <hughd@google.com>
+>>>>>> CC: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+>>>>>> Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
+>>>>>> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+>>>>>> Reviewed-by: Steven Price <steven.price@arm.com>
+>>>>>> Acked-by: Chris Li <chrisl@kernel.org>
+>>>>>> ---
+>>>>>>  arch/arm64/include/asm/pgtable.h | 19 ++------------
+>>>>>>  arch/arm64/mm/mteswap.c          | 43 ++++++++++++++++++++++++++++++++
+>>>>>>  include/linux/huge_mm.h          | 12 ---------
+>>>>>>  include/linux/pgtable.h          |  2 +-
+>>>>>>  mm/page_io.c                     |  2 +-
+>>>>>>  mm/swap_slots.c                  |  2 +-
+>>>>>>  6 files changed, 48 insertions(+), 32 deletions(-)
+>>>>>>
+>>>>>> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+>>>>>> index 401087e8a43d..7a54750770b8 100644
+>>>>>> --- a/arch/arm64/include/asm/pgtable.h
+>>>>>> +++ b/arch/arm64/include/asm/pgtable.h
+>>>>>> @@ -45,12 +45,6 @@
+>>>>>>       __flush_tlb_range(vma, addr, end, PUD_SIZE, false, 1)
+>>>>>>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+>>>>>>
+>>>>>> -static inline bool arch_thp_swp_supported(void)
+>>>>>> -{
+>>>>>> -     return !system_supports_mte();
+>>>>>> -}
+>>>>>> -#define arch_thp_swp_supported arch_thp_swp_supported
+>>>>>> -
+>>>>>>  /*
+>>>>>>   * Outside of a few very special situations (e.g. hibernation), we always
+>>>>>>   * use broadcast TLB invalidation instructions, therefore a spurious page
+>>>>>> @@ -1095,12 +1089,7 @@ static inline pmd_t pmdp_establish(struct vm_area_struct *vma,
+>>>>>>  #ifdef CONFIG_ARM64_MTE
+>>>>>>
+>>>>>>  #define __HAVE_ARCH_PREPARE_TO_SWAP
+>>>>>> -static inline int arch_prepare_to_swap(struct page *page)
+>>>>>> -{
+>>>>>> -     if (system_supports_mte())
+>>>>>> -             return mte_save_tags(page);
+>>>>>> -     return 0;
+>>>>>> -}
+>>>>>> +extern int arch_prepare_to_swap(struct folio *folio);
+>>>>>>
+>>>>>>  #define __HAVE_ARCH_SWAP_INVALIDATE
+>>>>>>  static inline void arch_swap_invalidate_page(int type, pgoff_t offset)
+>>>>>> @@ -1116,11 +1105,7 @@ static inline void arch_swap_invalidate_area(int type)
+>>>>>>  }
+>>>>>>
+>>>>>>  #define __HAVE_ARCH_SWAP_RESTORE
+>>>>>> -static inline void arch_swap_restore(swp_entry_t entry, struct folio *folio)
+>>>>>> -{
+>>>>>> -     if (system_supports_mte())
+>>>>>> -             mte_restore_tags(entry, &folio->page);
+>>>>>> -}
+>>>>>> +extern void arch_swap_restore(swp_entry_t entry, struct folio *folio);
+>>>>>>
+>>>>>>  #endif /* CONFIG_ARM64_MTE */
+>>>>>>
+>>>>>> diff --git a/arch/arm64/mm/mteswap.c b/arch/arm64/mm/mteswap.c
+>>>>>> index a31833e3ddc5..295836fef620 100644
+>>>>>> --- a/arch/arm64/mm/mteswap.c
+>>>>>> +++ b/arch/arm64/mm/mteswap.c
+>>>>>> @@ -68,6 +68,13 @@ void mte_invalidate_tags(int type, pgoff_t offset)
+>>>>>>       mte_free_tag_storage(tags);
+>>>>>>  }
+>>>>>>
+>>>>>> +static inline void __mte_invalidate_tags(struct page *page)
+>>>>>> +{
+>>>>>> +     swp_entry_t entry = page_swap_entry(page);
+>>>>>> +
+>>>>>> +     mte_invalidate_tags(swp_type(entry), swp_offset(entry));
+>>>>>> +}
+>>>>>> +
+>>>>>>  void mte_invalidate_tags_area(int type)
+>>>>>>  {
+>>>>>>       swp_entry_t entry = swp_entry(type, 0);
+>>>>>> @@ -83,3 +90,39 @@ void mte_invalidate_tags_area(int type)
+>>>>>>       }
+>>>>>>       xa_unlock(&mte_pages);
+>>>>>>  }
+>>>>>> +
+>>>>>> +int arch_prepare_to_swap(struct folio *folio)
+>>>>>> +{
+>>>>>> +     long i, nr;
+>>>>>> +     int err;
+>>>>>> +
+>>>>>> +     if (!system_supports_mte())
+>>>>>> +             return 0;
+>>>>>> +
+>>>>>> +     nr = folio_nr_pages(folio);
+>>>>>> +
+>>>>>> +     for (i = 0; i < nr; i++) {
+>>>>>> +             err = mte_save_tags(folio_page(folio, i));
+>>>>>> +             if (err)
+>>>>>> +                     goto out;
+>>>>>> +     }
+>>>>>> +     return 0;
+>>>>>> +
+>>>>>> +out:
+>>>>>> +     while (i--)
+>>>>>> +             __mte_invalidate_tags(folio_page(folio, i));
+>>>>>> +     return err;
+>>>>>> +}
+>>>>>> +
+>>>>>> +void arch_swap_restore(swp_entry_t entry, struct folio *folio)
+>>>>>
+>>>>> I'm still not a fan of the fact that entry could be anywhere within folio.
+>>>>>
+>>>>>> +{
+>>>>>> +     if (system_supports_mte()) {
+>>>>>
+>>>>> nit: if you do:
+>>>>>
+>>>>> if (!system_supports_mte())
+>>>>>         return;
+>>>>
+>>>> Acked
+>>>>
+>>>>>
+>>>>> It will be consistent with arch_prepare_to_swap() and reduce the indentation of
+>>>>> the main body.
+>>>>>
+>>>>>> +             long i, nr = folio_nr_pages(folio);
+>>>>>> +
+>>>>>> +             entry.val -= swp_offset(entry) & (nr - 1);
+>>>>>
+>>>>> This assumes that folios are always stored in swap with natural alignment. Is
+>>>>> that definitely a safe assumption? My swap-out series is currently ensuring that
+>>>>> folios are swapped-out naturally aligned, but that is an implementation detail.
+>>>>>
+>>>>
+>>>> I concur that this is an implementation detail. However, we should be
+>>>> bold enough
+>>>> to state that swap slots will be contiguous, considering we are
+>>>> currently utilizing
+>>>> folio->swap instead of subpage->swap ?
+>>>
+>>> Yes, I agree about contiguity. My objection is about assuming natural alignment
+>>> though. It can still be contiguous while not naturally aligned in swap.
+>>
+>> Hi Ryan,
+>>
+>> While working on the new version of this patch, I've come to recognize
+>> that, for the time being, it's
+>> imperative to maintain a natural alignment. The following code
+>> operates on the basis of this
+>> assumption.
+>>
+>> /**
+>>  * folio_file_page - The page for a particular index.
+>>  * @folio: The folio which contains this index.
+>>  * @index: The index we want to look up.
+>>  *
+>>  * Sometimes after looking up a folio in the page cache, we need to
+>>  * obtain the specific page for an index (eg a page fault).
+>>  *
+>>  * Return: The page containing the file data for this index.
+>>  */
+>> static inline struct page *folio_file_page(struct folio *folio, pgoff_t index)
+>> {
+>>         return folio_page(folio, index & (folio_nr_pages(folio) - 1));
+>> }
+>>
+>>
+>> It's invoked everywhere, particularly within do_swap_page(). Nonetheless,
+>> I remain confident that I can consistently pass the first entry to
+>> arch_swap_restore().
+> 
+> After grappling for a couple of hours, I've realized that the only
+> viable approach
+> is as follows: shifting the task of obtaining the first entry from the
+> callee to the
+> callers( looks silly). This is necessary due to various scenarios like
+> swap cache,
+> non-swap cache, and KSM, each presenting different cases. Since there's no
+> assurance of folio->swap being present, forcibly setting folio->swap could pose
+> risks (There might not even be any risk involved, but the associated
+> task getting
+> the first entry still cannot be overlooked by callers).
+> 
+> diff --git a/mm/internal.h b/mm/internal.h
+> index 7e486f2c502c..94d5b4b5a5da 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -76,6 +76,20 @@ static inline int folio_nr_pages_mapped(struct folio *folio)
+>         return atomic_read(&folio->_nr_pages_mapped) & FOLIO_PAGES_MAPPED;
+>  }
+> 
+> +/*
+> + * Retrieve the first entry of a folio based on a provided entry within the
+> + * folio. We cannot rely on folio->swap as there is no guarantee that it has
+> + * been initialized. Used by arch_swap_restore()
+> + */
+> +static inline swp_entry_t folio_swap(swp_entry_t entry, struct folio *folio)
+> +{
+> +       swp_entry_t swap = {
+> +               .val = entry.val & (folio_nr_pages(folio) - 1),
+> +       };
+> +
+> +       return swap;
+> +}
+> +
+>  static inline void *folio_raw_mapping(struct folio *folio)
+>  {
+>         unsigned long mapping = (unsigned long)folio->mapping;
+> diff --git a/mm/memory.c b/mm/memory.c
+> index f2bc6dd15eb8..b7cab8be8632 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -4188,7 +4188,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+>          * when reading from swap. This metadata may be indexed by swap entry
+>          * so this must be called before swap_free().
+>          */
+> -       arch_swap_restore(entry, folio);
+> +       arch_swap_restore(folio_swap(entry, folio), folio);
+> 
+>         /*
+>          * Remove the swap entry and conditionally try to free up the swapcache.
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index 0aad0d9a621b..82c9df4628f2 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -1913,7 +1913,7 @@ static int shmem_swapin_folio(struct inode
+> *inode, pgoff_t index,
+>          * Some architectures may have to restore extra metadata to the
+>          * folio after reading from swap.
+>          */
+> -       arch_swap_restore(swap, folio);
+> +       arch_swap_restore(folio_swap(entry, folio), folio);
+> 
+>         if (shmem_should_replace_folio(folio, gfp)) {
+>                 error = shmem_replace_folio(&folio, gfp, info, index);
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index 4919423cce76..5e6d2304a2a4 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -1806,7 +1806,7 @@ static int unuse_pte(struct vm_area_struct *vma,
+> pmd_t *pmd,
+>          * when reading from swap. This metadata may be indexed by swap entry
+>          * so this must be called before swap_free().
+>          */
+> -       arch_swap_restore(entry, folio);
+> +       arch_swap_restore(folio_swap(entry, folio), folio);
+> 
+>         dec_mm_counter(vma->vm_mm, MM_SWAPENTS);
+>         inc_mm_counter(vma->vm_mm, MM_ANONPAGES);
+> 
+> 
+> Meanwhile, natural alignment is essential even during the execution of
+> add_to_swap(), as failure to
+> do so will trigger the VM_BUG_ON condition below.
+> 
+> int add_to_swap_cache(struct folio *folio, swp_entry_t entry,
+>                         gfp_t gfp, void **shadowp)
+> {
+>         struct address_space *address_space = swap_address_space(entry);
+>         pgoff_t idx = swp_offset(entry);
+>         XA_STATE_ORDER(xas, &address_space->i_pages, idx, folio_order(folio));
+>         unsigned long i, nr = folio_nr_pages(folio);
+>         ...
+>         folio_set_swapcache(folio);
+>         folio->swap = entry;
+> 
+>         do {
+>                 xas_lock_irq(&xas);
+>                 xas_create_range(&xas);
+>                 if (xas_error(&xas))
+>                         goto unlock;
+>                 for (i = 0; i < nr; i++) {
+>                         VM_BUG_ON_FOLIO(xas.xa_index != idx + i, folio);
+>                         if (shadowp) {
+>                                 old = xas_load(&xas);
+>                                 if (xa_is_value(old))
+>                                         *shadowp = old;
+>                         }
+>                         xas_store(&xas, folio);
+>                         xas_next(&xas);
+>                 }
+> }
+> 
+> 
+> Based on the information provided, Ryan, would it be feasible to retain the task
+> of obtaining the first entry within the callee? Or, are you in favor
+> of utilizing the
+> new folio_swap() helper?
+
+My opinion still remains that either:
+
+ - This should be a per-page interface - i.e. call it for each page to restore
+tags. If we don't want to pass `struct page *` then perhaps we can pass a folio
+and the index of the page we want to restore? In this case, entry refers the the
+precise page we are operating on.
+
+OR
+
+ - Make it a per-folio interface - i.e. it restores tags for all pages in the
+folio. But in this case, entry must refer to the first page in the folio.
+Anything else is confusing.
+
+So if going for the latter approach, then I vote for fixing it up in the callee.
+But I'm just one guy with one opinion!
 
 
---=-n2xPZNttC2QHXGN3mKZ8
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> 
+>>
+>>>
+>>>>
+>>>>> Your cover note for swap-in says that you could technically swap in a large
+>>>>> folio without it having been swapped-out large. If you chose to do that in
+>>>>> future, this would break, right? I don't think it's good to couple the swap
+>>>>
+>>>> Right. technically I agree. Given that we still have many tasks involving even
+>>>> swapping in contiguous swap slots, it's unlikely that swapping in large folios
+>>>> for non-contiguous entries will occur in the foreseeable future :-)
+>>>>
+>>>>> storage layout to the folio order that you want to swap into. Perhaps that's an
+>>>>> argument for passing each *page* to this function with its exact, corresponding
+>>>>> swap entry?
+>>>>
+>>>> I recall Matthew Wilcox strongly objected to using "page" as the
+>>>> parameter, so I've
+>>>> discarded that approach. Alternatively, it appears I can consistently pass
+>>>> folio->swap to this function and ensure the function always retrieves
+>>>> the first entry?
+>>>
+>>> Yes, if we must pass a folio here, I'd prefer that entry always corresponds to
+>>> the first entry for the folio. That will remove the need for this function to do
+>>> the alignment above too. So win-win.
+>>>
+>>>>
+>>>>>
+>>>>>> +             for (i = 0; i < nr; i++) {
+>>>>>> +                     mte_restore_tags(entry, folio_page(folio, i));
+>>>>>> +                     entry.val++;
+>>>>>> +             }
+>>>>>> +     }
+>>>>>> +}
+>>>>>> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+>>>>>> index de0c89105076..e04b93c43965 100644
+>>>>>> --- a/include/linux/huge_mm.h
+>>>>>> +++ b/include/linux/huge_mm.h
+>>>>>> @@ -535,16 +535,4 @@ static inline int split_folio_to_order(struct folio *folio, int new_order)
+>>>>>>  #define split_folio_to_list(f, l) split_folio_to_list_to_order(f, l, 0)
+>>>>>>  #define split_folio(f) split_folio_to_order(f, 0)
+>>>>>>
+>>>>>> -/*
+>>>>>> - * archs that select ARCH_WANTS_THP_SWAP but don't support THP_SWP due to
+>>>>>> - * limitations in the implementation like arm64 MTE can override this to
+>>>>>> - * false
+>>>>>> - */
+>>>>>> -#ifndef arch_thp_swp_supported
+>>>>>> -static inline bool arch_thp_swp_supported(void)
+>>>>>> -{
+>>>>>> -     return true;
+>>>>>> -}
+>>>>>> -#endif
+>>>>>> -
+>>>>>>  #endif /* _LINUX_HUGE_MM_H */
+>>>>>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+>>>>>> index e1b22903f709..bfcfe3386934 100644
+>>>>>> --- a/include/linux/pgtable.h
+>>>>>> +++ b/include/linux/pgtable.h
+>>>>>> @@ -1106,7 +1106,7 @@ static inline int arch_unmap_one(struct mm_struct *mm,
+>>>>>>   * prototypes must be defined in the arch-specific asm/pgtable.h file.
+>>>>>>   */
+>>>>>>  #ifndef __HAVE_ARCH_PREPARE_TO_SWAP
+>>>>>> -static inline int arch_prepare_to_swap(struct page *page)
+>>>>>> +static inline int arch_prepare_to_swap(struct folio *folio)
+>>>>>>  {
+>>>>>>       return 0;
+>>>>>>  }
+>>>>>> diff --git a/mm/page_io.c b/mm/page_io.c
+>>>>>> index ae2b49055e43..a9a7c236aecc 100644
+>>>>>> --- a/mm/page_io.c
+>>>>>> +++ b/mm/page_io.c
+>>>>>> @@ -189,7 +189,7 @@ int swap_writepage(struct page *page, struct writeback_control *wbc)
+>>>>>>        * Arch code may have to preserve more data than just the page
+>>>>>>        * contents, e.g. memory tags.
+>>>>>>        */
+>>>>>> -     ret = arch_prepare_to_swap(&folio->page);
+>>>>>> +     ret = arch_prepare_to_swap(folio);
+>>>>>>       if (ret) {
+>>>>>>               folio_mark_dirty(folio);
+>>>>>>               folio_unlock(folio);
+>>>>>> diff --git a/mm/swap_slots.c b/mm/swap_slots.c
+>>>>>> index 90973ce7881d..53abeaf1371d 100644
+>>>>>> --- a/mm/swap_slots.c
+>>>>>> +++ b/mm/swap_slots.c
+>>>>>> @@ -310,7 +310,7 @@ swp_entry_t folio_alloc_swap(struct folio *folio)
+>>>>>>       entry.val = 0;
+>>>>>>
+>>>>>>       if (folio_test_large(folio)) {
+>>>>>> -             if (IS_ENABLED(CONFIG_THP_SWAP) && arch_thp_swp_supported())
+>>>>>> +             if (IS_ENABLED(CONFIG_THP_SWAP))
+>>>>>>                       get_swap_pages(1, &entry, folio_nr_pages(folio));
+>>>>>>               goto out;
+>>>>>>       }
+>>>>>
+>>>>
+>>>> Thanks
+>>>> Barry
+>>>
 
-On Tue, 2024-03-19 at 12:41 -0700, Oliver Upton wrote:
-> On Tue, Mar 19, 2024 at 05:14:42PM +0000, David Woodhouse wrote:
-> > On Tue, 2024-03-19 at 08:27 -0700, Oliver Upton wrote:
-> > > If we're going down the route of having this PSCI call live in KVM, i=
-t
-> > > really deserves a test. I think you can just pile on the existing
-> > > psci_test selftest.
-> >=20
-> > Added to
-> > https://git.infradead.org/users/dwmw2/linux.git/shortlog/refs/heads/psc=
-i-hibernate
-> > for next time.
-> >=20
-> > From 8c72a78e6179bc8970edc66a85ab6bee26f581fb Mon Sep 17 00:00:00 2001
-> > From: David Woodhouse <dwmw@amazon.co.uk>
-> > Date: Tue, 19 Mar 2024 17:07:46 +0000
-> > Subject: [PATCH 4/8] KVM: selftests: Add test for PSCI SYSTEM_OFF2
-> >=20
-> > Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
->=20
-> Looks good, thanks!
-
-Thanks.
-
-Marc, I think I've also addressed your feedback? Is there anything else
-to do other than wait for the spec to be published?
-
-Shall I post a v4 with PSCI v1.3 as default and the self-test? Would
-you apply that into a branch ready for merging when the spec is ready,
-or should I just wait and repost it all then?
-
-
---=-n2xPZNttC2QHXGN3mKZ8
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
-ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
-EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
-FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
-aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
-VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
-ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
-QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
-rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
-ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
-U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
-BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
-dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
-BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
-QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
-CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
-xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
-IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
-kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
-eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
-KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
-1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
-OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
-x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
-5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
-DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
-VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
-UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
-MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
-ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
-oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
-SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
-xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
-RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
-bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
-NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
-KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
-5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
-C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
-gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
-VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
-MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
-by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
-b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
-BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
-QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
-c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
-AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
-qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
-v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
-Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
-tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
-Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
-YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
-ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
-IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
-ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
-GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
-h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
-9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
-P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
-2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
-BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
-7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
-lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
-lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
-AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
-Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
-FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
-BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
-cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
-aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
-LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
-BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
-Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
-lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
-WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
-hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
-IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
-dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
-NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
-xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQwMzIyMTAxNzU4WjAvBgkqhkiG9w0BCQQxIgQgIF+/WMlJ
-QdIqST7i5wgSvmiC+X46iHxJbCagAUB+WU4wgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
-A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
-dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
-DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
-MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
-Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgAf7E1B86/y0jYXGg0Plqr9WlxXtFRpCTa1
-//jcplLeQgqabr2f1MU6yvLJnFsOYBA2WNileXDZblnnPmF8PeCsh7b6R6xXf2haViCF48YEWQ0X
-NObmUEJ+dY9ZfPPbVvfmHctg85923Ig1McbqzQA+MI3plcuIe1KP3Che98Rqd+6MydRVi25uN9OS
-/r7DOM3kTGsgwavzgMX6q/ynTbZjLxxbQ8jc7xXyvA1qXJOgnExA27VH4tfHAZEycLjWZQDq5E67
-uuvXMitoNn3gkIZL2uJEiqtGvPg0NKy4nUDfN8Uwm7w3FB4f/es15sUiq6MDpNtSzjF19CfmsCD+
-ETdrUMB6obw+p7wz0afBLUPjr3T3dWzJ3vfa/0tS0auKhDxQ3YuKxvQURTHbvubKSvgrEnd58ihU
-4+XnW6kOm92Or+bnLoBvaRHslpotEbFg6b4UYsomuj3QfLJHvN9NhGgqBX78QI4XFReZo/yJewri
-K4njWeYT4IBNFJwNPxUQ3s+RJfgdwlyadRKTi9uzpT8QZDVFn0qUWF/1+lBwxgjTIqimxzHMrW1+
-mSW/fFVuRfkVok36MJ1L+OJejbjr0sJ7VIEhwbK2XW1h4s+jKjHzr1g4zVYKqzo7aq1J3BIkXNf+
-2dhtlwXg5eDyBh9+G+kASp3b9HKcJYgWNUYBauuasgAAAAAAAA==
-
-
---=-n2xPZNttC2QHXGN3mKZ8--
