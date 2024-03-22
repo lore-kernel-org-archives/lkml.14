@@ -1,83 +1,189 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9FF4436;
-	Fri, 22 Mar 2024 05:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8EA8F68
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 05:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711086594; cv=none; b=jfGGap4v2l35XgD5eudPeWhAKiuzYwaHjtzKV69aOFpjV5oC4+dHgWHq9kAS5uiyZT8PvbGm21qbVLONNrxyh/3rUMpjQbXtnftLY9rZIh+btkVdNYlHDIFSecRKVsgRMUBtkmxeZ7QBaZp3Rk94TRd5QW+TOcz2wGsBQGAsOGs=
+	t=1711086663; cv=none; b=RDQLJC/C/USazkDsX6ZvEceBTJUsuVPIx8ix8mnfO6L2tUxah4GnfJnM1bYalMBS6olkiK6XiWc78P7mmwM+SRK6aNss0NdFBPls3Cgtu7/QJ3/C8vGvgmzCg6YPjyM+iH+V3CYTCeGiTndUpe1/zYAAjAGiTMICWZKGkQyBPeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711086594; c=relaxed/simple;
-	bh=3dxZ97h1bBewqFSrSCxZ0u2xq2+UB+rYnjeTo4PLAV8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=XcrVCqdG4PfYYUXqV4UXWRjKuAoOD8L5o3C+80jiKU+qkI3hqM1E2vV7PW/N8VMgnSaMUEFv1L0DOe5d3O+t3FsHxKUksuhUNaBcD1Nt+r294rNsIq285NMfJiKwoAuFjQDfwa8an2hCQMAZD3Cj7UDqrDrnXUCC3vfawi9qpZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=nZ6LzF89; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	s=arc-20240116; t=1711086663; c=relaxed/simple;
+	bh=GY/sUvmM1mLxF32AoCd7xA0bTlkUTTNkywVo0ImEZZQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dQYdUxRY2iVVgJ6mozVpDVGH7o2NKxbPH0VslPmY1rCG/rhESOFwAzGWbcwaUSrYaJm1C98wDo5Y2OhQBqnvJtbUoxIcy5KLsg80+7GEkJov+XmFCaX/HBmkQ4/VCW2ZLb92KOQj9r3xHcrL202fwZf3Rq1fmB4IKjgB5FGXn0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Yrz8fDUV; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="nZ6LzF89"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1711086589;
-	bh=3dxZ97h1bBewqFSrSCxZ0u2xq2+UB+rYnjeTo4PLAV8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=nZ6LzF89AlrxXzDXd3QYUcFV677SbDrpe7d8wTOKSI9z4sQrwflKXJiuKHFQPldHU
-	 2zc466eC0WPNUECV45Sx3Xt0p3N3asRi0s9bzaBSan6JBwr3zOhhUVUrDs1T62ksm4
-	 /W+rwkWmzx4DevQBKw1AJzPA5t1pSanKbIirVQKOl1jZT0nVbCmeAEmBtTx/5gJ6ZV
-	 tqX6f6KtRH8uWu+PuXX29MEoCpJrX1QM48JFOi26G9jIV+8ciPHjHOwSGf2Y6qiB9B
-	 GXhmKc0DU09lOC4tOeZLYPTsZblimmwcieKRF01BNk/vB3B1f4up32uBu2biiUybfD
-	 VUSx1SnXOjBrQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4V1BHF6qs1z4wcF;
-	Fri, 22 Mar 2024 16:49:45 +1100 (AEDT)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Jason Gunthorpe <jgg@ziepe.ca>, Shivaprasad G Bhat <sbhat@linux.ibm.com>
-Cc: tpearson@raptorengineering.com, alex.williamson@redhat.com,
- linuxppc-dev@lists.ozlabs.org, npiggin@gmail.com,
- christophe.leroy@csgroup.eu, aneesh.kumar@kernel.org,
- naveen.n.rao@linux.ibm.com, gbatra@linux.vnet.ibm.com,
- brking@linux.vnet.ibm.com, aik@ozlabs.ru, robh@kernel.org,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org, aik@amd.com,
- msuchanek@suse.de, jroedel@suse.de, vaibhav@linux.ibm.com,
- svaidy@linux.ibm.com
-Subject: Re: [RFC PATCH 1/3] powerpc/pseries/iommu: Bring back userspace
- view for single level TCE tables
-In-Reply-To: <20240319143202.GA66976@ziepe.ca>
-References: <171026724548.8367.8321359354119254395.stgit@linux.ibm.com>
- <171026725393.8367.17497620074051138306.stgit@linux.ibm.com>
- <20240319143202.GA66976@ziepe.ca>
-Date: Fri, 22 Mar 2024 16:49:43 +1100
-Message-ID: <877chuke88.fsf@mail.lhotse>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Yrz8fDUV"
+Received: from [192.168.88.20] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3C95782A;
+	Fri, 22 Mar 2024 06:50:30 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1711086631;
+	bh=GY/sUvmM1mLxF32AoCd7xA0bTlkUTTNkywVo0ImEZZQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Yrz8fDUVV5FnG9d3LMNWlJgC6nrHFP/33N6EC36BMK6xj04TKksWmoYFvdcQ2zEg5
+	 tQI96VEk+SQzYrQ/UioOP8POk2BkTgH45FoGmLvsfV6mBsDapOvgRE8WYbLZcgsmRn
+	 L1qS3qNPqgvF7jIMDE24EMQODkTYCPVYtaxRe2Gg=
+Message-ID: <19d6da67-f9a6-4e01-a956-3b60f0ebf769@ideasonboard.com>
+Date: Fri, 22 Mar 2024 07:50:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/8] drm: xlnx: Fix kerneldoc
+Content-Language: en-US
+To: Sean Anderson <sean.anderson@linux.dev>,
+ Randy Dunlap <rdunlap@infradead.org>
+Cc: Michal Simek <michal.simek@amd.com>, David Airlie <airlied@gmail.com>,
+ linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+ linux-arm-kernel@lists.infradead.org,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ dri-devel@lists.freedesktop.org
+References: <20240319225122.3048400-1-sean.anderson@linux.dev>
+ <20240319225122.3048400-2-sean.anderson@linux.dev>
+ <e2eba421-cba1-4dd5-837c-6be5f07ed402@ideasonboard.com>
+ <d4072aa1-47e4-45d3-9e04-2cd9d782b593@infradead.org>
+ <2c38ac1c-cc0e-43b3-86d3-5b6a2f00f9e7@linux.dev>
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <2c38ac1c-cc0e-43b3-86d3-5b6a2f00f9e7@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Jason Gunthorpe <jgg@ziepe.ca> writes:
-> On Tue, Mar 12, 2024 at 01:14:20PM -0500, Shivaprasad G Bhat wrote:
->> The commit 090bad39b237a ("powerpc/powernv: Add indirect levels to
->> it_userspace") which implemented the tce indirect levels
->> support for PowerNV ended up removing the single level support
->> which existed by default(generic tce_iommu_userspace_view_alloc/free()
->> calls). On pSeries the TCEs are single level, and the allocation
->> of userspace view is lost with the removal of generic code.
->
-> :( :(
->
-> If this has been broken since 2018 and nobody cared till now can we
-> please go in a direction of moving this code to the new iommu APIs
-> instead of doubling down on more of this old stuff that apparently
-> almost nobody cares about ??
+On 21/03/2024 17:33, Sean Anderson wrote:
+> On 3/20/24 02:05, Randy Dunlap wrote:
+>>
+>>
+>> On 3/19/24 22:42, Tomi Valkeinen wrote:
+>>> On 20/03/2024 00:51, Sean Anderson wrote:
+>>>> Fix a few errors in the kerneldoc. Mostly this addresses missing/renamed
+>>>> members.
+>>>>
+>>>> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+>>>> ---
+>>>>
+>>>> Changes in v2:
+>>>> - New
+>>>>
+>>>>    drivers/gpu/drm/xlnx/zynqmp_disp.c  | 6 +++---
+>>>>    drivers/gpu/drm/xlnx/zynqmp_dpsub.h | 1 +
+>>>>    drivers/gpu/drm/xlnx/zynqmp_kms.h   | 4 ++--
+>>>>    3 files changed, 6 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+>>>> index 407bc07cec69..f79bf3fb8110 100644
+>>>> --- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
+>>>> +++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+>>>> @@ -128,9 +128,9 @@ struct zynqmp_disp_layer {
+>>>>     * struct zynqmp_disp - Display controller
+>>>>     * @dev: Device structure
+>>>>     * @dpsub: Display subsystem
+>>>> - * @blend.base: Register I/O base address for the blender
+>>>> - * @avbuf.base: Register I/O base address for the audio/video buffer manager
+>>>> - * @audio.base: Registers I/O base address for the audio mixer
+>>>> + * @blend: Register I/O base address for the blender
+>>>> + * @avbuf: Register I/O base address for the audio/video buffer manager
+>>>> + * @audio: Registers I/O base address for the audio mixer
+>>>
+>>> Afaics, the kernel doc guide:
+>>>
+>>> https://docs.kernel.org/doc-guide/kernel-doc.html#nested-structs-unions
+>>>
+>>> says that the current version is correct. Or is the issue that while, say, 'base' is documented, 'blend' was not?
+>>
+>> Hi,
+>>
+>> I would do it more like so:
+>>
+>> ---
+>>   drivers/gpu/drm/xlnx/zynqmp_disp.c |    3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff -- a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+>> --- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
+>> +++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+>> @@ -128,8 +128,11 @@ struct zynqmp_disp_layer {
+>>    * struct zynqmp_disp - Display controller
+>>    * @dev: Device structure
+>>    * @dpsub: Display subsystem
+>> + * @blend: blender iomem info
+>>    * @blend.base: Register I/O base address for the blender
+>> + * @avbuf: audio/video buffer iomem info
+>>    * @avbuf.base: Register I/O base address for the audio/video buffer manager
+>> + * @audio: audio mixer iomem info
+>>    * @audio.base: Registers I/O base address for the audio mixer
+>>    * @layers: Layers (planes)
+>>    */
+>>
+>>
+>> but in my testing, Sean's way or my way result in no warning/errors.
+>>
+> 
+> The specific errors are:
+> 
+> ../drivers/gpu/drm/xlnx/zynqmp_disp.c:151: warning: Function parameter or struct member 'blend' not described in 'zynqmp_disp'
+> ../drivers/gpu/drm/xlnx/zynqmp_disp.c:151: warning: Function parameter or struct member 'avbuf' not described in 'zynqmp_disp'
+> ../drivers/gpu/drm/xlnx/zynqmp_disp.c:151: warning: Function parameter or struct member 'audio' not described in 'zynqmp_disp'
+> 
+> I don't see the need to document a single-member struct twice. Actually,
 
-It's broken *on pseries* (Linux as a guest), but it works fine on
-powernv (aka bare metal, aka Linux as Hypervisor).
+But if only the struct is documented, then we're documenting the wrong 
+thing. A tool showing to the user what blend.base is would miss that 
+documentation.
 
-What's changed is folks are now testing it on pseries with Linux as a
-nested hypervisor.
+> maybe it would be better to just lift the .base member to live in
+> zynqmp_disp. But I think that would be better in another series.
 
-cheers
+Yes, there's not much point with the structs.
+
+  Tomi
+
