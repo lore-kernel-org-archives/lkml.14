@@ -1,90 +1,105 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3937154744;
-	Fri, 22 Mar 2024 15:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8652A55C26;
+	Fri, 22 Mar 2024 16:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711123190; cv=none; b=KHi+UzxWCyPD5V/ki69+v1CMWcPsLeQi/6ugCG0fbmJcg+9Izi7JwsMV6jTBqI4oja7oY7JA74CfSHDECM96q6qdIPXHxNUJLOmtWuhD0CirHKQJDZMx8lGP8S//PevUSA5ot/MgJcogbs1gRTEmlQK/TL6zh3ACdLvuhmj6ens=
+	t=1711123336; cv=none; b=KWu4diiDc996oYNK0XhntUbwrSlXfLlp7CoyNHgtz3xLRO10EnK69PcnFO8J5R9grl097zzEG/otSD3d1t2kR4Xo0PA62zYcDW24M+f53TGLyOrJui/vOf6rlhLH6iM/fLMCyvxYhKOJ/4n770j6ZFa8vvRz0w8B/IA87CtBt4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711123190; c=relaxed/simple;
-	bh=N9NyQeoZYI6Mc7PdTUg2nHN+SIulmxpQHe50iCc+N9w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ReQgmKQcmm5GgChNXz2IGeeRgBwizJKEFZr3nEs7aBhu+Jhw2qeJ9IF8VPGIdtLy0YQPrJUsNAE+6CGMtbOd+G0lrJL9VQQDgP5Bnsq12SFDn/0TvmMMDlI/2H51jHfoQJUHYZtd47ce8ZtUFfdp8d3qrrgMCAbvbhUHOkqvzS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LgPluiGB; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711123336; c=relaxed/simple;
+	bh=aoF4dmwFvyElelkcyMu8PBXHligJrfzMuWeep9NvMbE=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o++SgCsi1gVOqrHHhuslc+4blCyIZ/pJESI3B9ed5GLVh8AqZeJEGSP84Y/EpayIofmsSgbimmEmUWEouizamzLhBxcqfFCjKRhs4TKX0BaalchySLSq9kzQPvYXjCWPiBvXDN6kKImCMSa6I6Fg9VTqKM2DHcAEoeL+e2AFdx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jmV2lbD8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LgPluiGB"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a46d0a8399aso566113166b.1;
-        Fri, 22 Mar 2024 08:59:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711123187; x=1711727987; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N9NyQeoZYI6Mc7PdTUg2nHN+SIulmxpQHe50iCc+N9w=;
-        b=LgPluiGBJtQCMWGPWPxW1ZoG+FnQnsdJnjtXB5VpcLKkvdiEE/S2bHPV0rMrqOY7Oa
-         N+3o7Ff0Klxb6KTiYyTBp2Ev8r9k+cXDdVPBo09ZqxNd9Bsd4QByjMibebqPUZcmL8Nh
-         FDLYOTu5KubTHxbXzdNuyPinXFyOVeBU+cg+zEfaZNeNmCf7rEC/n73QlUx8UPCRHdC9
-         IO59Y9Je+h1TtnVshzm2NMbo7qI7426GgnkWkeHcruR09KcKPvGWnfxiiMgFkgCAOiBl
-         XjchrTkh5dFdJVlOBhHdbDvlpTsBoZR9/Tcd0MLFdYlK2mukLGEbysqxopJ+GaL3Df63
-         aAtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711123187; x=1711727987;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N9NyQeoZYI6Mc7PdTUg2nHN+SIulmxpQHe50iCc+N9w=;
-        b=KV3zYBNfL9U2cYxxjlAQtvvYf/DOZZ99yjzmxmEQFsQRy74NMderkw7o3QYkovzjlo
-         OpvqFLUvyEG3SB3aCfbyTbVlYb4YbXaX3HnI+0WlCkuSgAx96YfmJbzLqaI4V102EukJ
-         zziQ98feCAAXWuOwkEcyEp0nR2B8+YMzEvxUgw0grEZuk2rBhmxmffMIFAS9qL/8VFuI
-         b0bfY8COgD9UTfkxvUiU1+R3qRFTUj+cDfAgD0gj5Vy270hhzkvl9NG8HtdloN4rqUbY
-         Ngg/6z4tMoaPdAA2/anXFqpzrKtnD9VJjArEnQoqUhITXpN+YoMwTGrishFD5rwY+qwW
-         Thdw==
-X-Forwarded-Encrypted: i=1; AJvYcCULiesM7yBGRhY4DuzpBn5iGfNiBs7o6x7fXrLk3slXNC3IxFo5IlEMBJ7ph4wu/mrxo0XwjpB2X3cNA5fEf6f+RU+Xvb+yK5FdhQ9GOcUlGEoECrY2LVmVywHDYobiOLpGEpaDGeqAag==
-X-Gm-Message-State: AOJu0YxSczotr5zWqND0XHJcylzdZ+yVt1F2Qhrp9QYaF23chftBo9Rh
-	xAsZUtLTQEBmsU9pefuotvqQ3U+F1VNgTZ9DZzcR5UPIttrACASP536/pD5JW4ajzBEMRT1V/1+
-	hpKl8+8iQktJ87IW2rBpIynbla0Q=
-X-Google-Smtp-Source: AGHT+IHmRGEicYM4+wa71dUBZ89CpP0EAP7GTpEBsjRp7A2HQjIetZqfWsCMm97JGXINzNjeOwrUpYwst+YV9bPiF7g=
-X-Received: by 2002:a17:906:5790:b0:a47:322b:c94d with SMTP id
- k16-20020a170906579000b00a47322bc94dmr1795315ejq.6.1711123187198; Fri, 22 Mar
- 2024 08:59:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jmV2lbD8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 029EEC43390;
+	Fri, 22 Mar 2024 16:02:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711123336;
+	bh=aoF4dmwFvyElelkcyMu8PBXHligJrfzMuWeep9NvMbE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jmV2lbD8c9m4XS0wNhC398FxSmiqjv7s7Bi+bn9P468s7vuNLU2ruoJ3MPBccLCWs
+	 rgwR/pvDFZf1bWj6jd0Dhd4gZ+9bGE3/APLKNs/Iz9t5EVO+9zTe7NInnlSLFwKNSZ
+	 2W8bmvrhS3UOcgseDjzYAtGUKnv56maI6uA8aFjAG2gdnlMhDvIwIH4t4hM/J6SJzU
+	 r/BuncZ/jwB6zYWPobFYoj5YxFXNaz7o1HU+Ndw1WKVgcghEDT7KTWf77RYOFGopG3
+	 QJC8nmcK+OiFRLvPxkAuADC7fJND5aBOwvL6kB9t1Cb8eXSZLedn73exd+6T3u8RJ0
+	 lp62WtpQCKA6Q==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rnhLR-00EYDl-8X;
+	Fri, 22 Mar 2024 16:02:13 +0000
+Date: Fri, 22 Mar 2024 16:02:12 +0000
+Message-ID: <86jzluz24b.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+	kvm@vger.kernel.org,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <len.brown@intel.com>,
+	Pavel Machek <pavel@ucw.cz>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Mostafa Saleh <smostafa@google.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev,
+	linux-pm@vger.kernel.org
+Subject: Re: [RFC PATCH v3 5/5] arm64: Use SYSTEM_OFF2 PSCI call to power off for hibernate
+In-Reply-To: <20240319130957.1050637-6-dwmw2@infradead.org>
+References: <20240319130957.1050637-1-dwmw2@infradead.org>
+	<20240319130957.1050637-6-dwmw2@infradead.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240322073725.3338266-1-peng.fan@oss.nxp.com>
-In-Reply-To: <20240322073725.3338266-1-peng.fan@oss.nxp.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 22 Mar 2024 17:59:10 +0200
-Message-ID: <CAHp75Vds1dmjbaDa0D+Xxoyt_9CgHhoS2j0cR3EQdMp3sbwg5g@mail.gmail.com>
-Subject: Re: [PATCH V3] gpiolib: use dev_err() when gpiod_configure_flags failed
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Peng Fan <peng.fan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, lpieralisi@kernel.org, rafael@kernel.org, len.brown@intel.com, pavel@ucw.cz, dwmw@amazon.co.uk, smostafa@google.com, jean-philippe@linaro.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev, linux-pm@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Fri, Mar 22, 2024 at 9:29=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.co=
-m> wrote:
->
-> From: Peng Fan <peng.fan@nxp.com>
->
-> When gpio-ranges property was missed to be added in the gpio node,
-> using dev_err() to show an error message will helping to locate issues
-> easier.
+On Tue, 19 Mar 2024 12:59:06 +0000,
+David Woodhouse <dwmw2@infradead.org> wrote:
 
-Bart, are you aware that this will add yet another possibility of
-scary '(null)' in the error level, which is much likely visible to the
-end users?
+[...]
 
-I propose to apply my fix first to avoid this happening.
-20240320165930.1182653-1-andriy.shevchenko@linux.intel.com
+> +static void __init psci_init_system_off2(void)
+> +{
+> +	int ret;
+> +
+> +	ret = psci_features(PSCI_FN_NATIVE(1_3, SYSTEM_OFF2));
+> +
+> +	if (ret != PSCI_RET_NOT_SUPPORTED)
+> +		psci_system_off2_supported = true;
 
---=20
-With Best Regards,
-Andy Shevchenko
+It'd be worth considering the (slightly broken) case where SYSTEM_OFF2
+is supported, but HIBERNATE_OFF is not set in the response, as the
+spec doesn't say that this bit is mandatory (it seems legal to
+implement SYSTEM_OFF2 without any hibernate type, making it similar to
+SYSTEM_OFF).
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
