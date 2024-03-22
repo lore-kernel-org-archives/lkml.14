@@ -1,203 +1,79 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1510A6D39
-	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 08:55:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+Received: from chinatelecom.cn (smtpnm6-05.21cn.com [182.42.157.213])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58331D535
+	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 08:57:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=182.42.157.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711184108; cv=none; b=j8vCR7cjv6kKMgNbNOWpwhzpYXofR/DCLwjOZPhkHm20bgzPo0dqRT4IOGIJ5n38mU1H3PwCofTSZDcjMNA06a4I1XnaHFw8IhbouJMMr0WMCq4RkQgRJ4wYod6pHypDVR0L8qdgO7dr8g/Nxrq5UW8qvZJ3qPd/C4P9HPx4+u8=
+	t=1711184266; cv=none; b=suVlr08LZP/eYLUqUCQ5iRVbs5E0hH0VzUvTw5/iw00nOB261FeIcYE/XicRL2/Yk0mkiyF64o1Ej6V7vWrgDOcHQ5Y8uipos0oGv5MNwILat4oePikvR/oRLpgqjnpivhTP8xW9GhKf5da5RWTbm+8ACcFsgwEAefP/ug4bWtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711184108; c=relaxed/simple;
-	bh=kcPY+uAYhpR11SyqWUdaVLpYzTaSDlEU7e/g5QTEhqA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pWuVoFkGOk90jpvC0ls7NoSLndrO1wKY5VcauoZmiQF62UKTtRMjxbL8OldTzbDXgwtZnPzvn6xz1xwiA4z6foKbSxqwNP2enLgbW+eXoNO1H6WVGwrHsqO723IfG7hzX2gtX1EiLurDXah/gnSAHLodINHRut2wQ0l4LI+BSNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Cn8GFEYH; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Cn8GFEYH"
-Received: from [192.168.88.20] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 59DCA669;
-	Sat, 23 Mar 2024 09:54:29 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1711184069;
-	bh=kcPY+uAYhpR11SyqWUdaVLpYzTaSDlEU7e/g5QTEhqA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Cn8GFEYHJEqI2jPkHtG9YZnYFWD9F5zv1+n/8hzXO3VbE2H3S1i6Mz9VX4pStrDl0
-	 jlANx7jWO6cSjKS7qQXyI/yaH2cGzVLOJOo2Y2moReY04YjLTlJNC4ZNwGzJE9+xbX
-	 TtVSEwoJyshSZgroEWQg4wHbPJrVnXY69IYfiFtc=
-Message-ID: <a5b9a5eb-2707-49ce-b5b0-f6e2839cdb82@ideasonboard.com>
-Date: Sat, 23 Mar 2024 10:54:55 +0200
+	s=arc-20240116; t=1711184266; c=relaxed/simple;
+	bh=YR9Icjn4E0WLpXvgUHdNENF0Q30VS6zm01rlmVJ+EX8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=michQtWn408dD2PCVNuXcQ+eqSsWVmqk1kc9O3XN7RpIy32oX9MpGXTCail6LJXY4ntiUTZ6r5yrelP/wytLukSbUwesdPORM7Xm4iV1awDcwviahi1CP8/7Nty7hTIhyShNFMqm5aGv9UL/1M8oH9SGGsDUvlwDqvjsqlawZRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chinatelecom.cn; spf=pass smtp.mailfrom=chinatelecom.cn; arc=none smtp.client-ip=182.42.157.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chinatelecom.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chinatelecom.cn
+HMM_SOURCE_IP:192.168.137.232:3649.1797840252
+HMM_ATTACHE_NUM:0000
+HMM_SOURCE_TYPE:SMTP
+Received: from clientip-36.111.64.84 (unknown [192.168.137.232])
+	by chinatelecom.cn (HERMES) with SMTP id 368419BD0A;
+	Sat, 23 Mar 2024 16:46:08 +0800 (CST)
+X-189-SAVE-TO-SEND: chentt10@chinatelecom.cn
+Received: from  ([36.111.64.84])
+	by gateway-ssl-dep-77bc75f6c8-jgbgh with ESMTP id 093e69577b2144e3b8c2a8bd28ab5af2 for akpm@linux-foundation.org;
+	Sat, 23 Mar 2024 16:46:12 CST
+X-Transaction-ID: 093e69577b2144e3b8c2a8bd28ab5af2
+X-Real-From: chentt10@chinatelecom.cn
+X-Receive-IP: 36.111.64.84
+X-MEDUSA-Status: 0
+Sender: chentt10@chinatelecom.cn
+From: Chen Taotao <chentt10@chinatelecom.cn>
+To: akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC] mm: get_mm_counter() get the total memory usage of the process
+Date: Fri, 22 Mar 2024 23:11:39 +0800
+Message-Id: <20240322151139.7417-1-chentt10@chinatelecom.cn>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/8] drm: zynqmp_dp: Don't retrain the link in our IRQ
-Content-Language: en-US
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Michal Simek <michal.simek@amd.com>, David Airlie <airlied@gmail.com>,
- linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
- linux-arm-kernel@lists.infradead.org,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- dri-devel@lists.freedesktop.org
-References: <20240319225122.3048400-1-sean.anderson@linux.dev>
- <20240319225122.3048400-6-sean.anderson@linux.dev>
- <ca4de45b-302c-4eea-bd6b-8c04e2ed89cb@ideasonboard.com>
- <53b2df23-d5ea-498b-a501-b64f753c0074@linux.dev>
- <0514ef71-5baa-4989-9b7d-8bd9526c4d8d@ideasonboard.com>
- <16ccf678-270c-4770-8cc9-f676b4fabf09@linux.dev>
- <1f27ce69-9ea6-4df4-9147-332d74febdf0@ideasonboard.com>
- <b2bef7f9-fe46-45d0-a09b-50777f71f43c@linux.dev>
- <d6a8bc5c-aed9-4ef4-adb2-dc171106b44b@ideasonboard.com>
- <2dbf138f-5112-48e1-85a6-9e3ad84ec4a6@linux.dev>
- <305a8e43-4d65-490c-9f83-afce6490bc83@ideasonboard.com>
- <7a4c332b-a044-4c82-a5b2-cb4b318f5110@linux.dev>
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <7a4c332b-a044-4c82-a5b2-cb4b318f5110@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 22/03/2024 23:22, Sean Anderson wrote:
-> On 3/22/24 14:09, Tomi Valkeinen wrote:
->> On 22/03/2024 18:18, Sean Anderson wrote:
->>> On 3/22/24 01:32, Tomi Valkeinen wrote:
->>>> On 21/03/2024 21:17, Sean Anderson wrote:
->>>>> On 3/21/24 15:08, Tomi Valkeinen wrote:
->>>>>> On 21/03/2024 20:01, Sean Anderson wrote:
->>>>>>> On 3/21/24 13:25, Tomi Valkeinen wrote:
->>>>>>>> On 21/03/2024 17:52, Sean Anderson wrote:
->>>>>>>>> On 3/20/24 02:53, Tomi Valkeinen wrote:
->>>>>>>>>> On 20/03/2024 00:51, Sean Anderson wrote:
->>>>>>>>>> Do we need to handle interrupts while either delayed work is being done?
->>>>>>>>>
->>>>>>>>> Probably not.
->>>>>>>>>
->>>>>>>>>> If we do need a delayed work, would just one work be enough which
->>>>>>>>>> handles both HPD_EVENT and HPD_IRQ, instead of two?
->>>>>>>>>
->>>>>>>>> Maybe, but then we need to determine which pending events we need to
->>>>>>>>> handle. I think since we have only two events it will be easier to just
->>>>>>>>> have separate workqueues.
->>>>>>>>
->>>>>>>> The less concurrency, the better...Which is why it would be nice to do it all in the threaded irq.
->>>>>>>
->>>>>>> Yeah, but we can use a mutex for this which means there is not too much
->>>>>>> interesting going on.
->>>>>>
->>>>>> Ok. Yep, if we get (hopefully) a single mutex with clearly defined fields that it protects, I'm ok with workqueues.
->>>>>>
->>>>>> I'd still prefer just one workqueue, though...
->>>>>
->>>>> Yeah, but then we need a spinlock or something to tell the workqueue what it should do.
->>>>
->>>> Yep. We could also always look at the HPD (if we drop the big sleeps) in the wq, and have a flag for the HPD IRQ, which would reduce the state to a single bit.
->>>
->>> How about something like
->>>
->>> zynqmp_dp_irq_handler(...)
->>> {
->>>      /* Read status and handle underflow/overflow/vblank */
->>>
->>>      status &= ZYNQMP_DP_INT_HPD_EVENT | ZYNQMP_DP_INT_HPD_IRQ;
->>>      if (status) {
->>>          atomic_or(status, &dp->status);
->>>          return IRQ_WAKE_THREAD;
->>>      }
->>>
->>>      return IRQ_HANDLED;
->>> }
->>>
->>> zynqmp_dp_thread_handler(...)
->>> {
->>>      status = atomic_xchg(&dp->status, 0);
->>>      /* process HPD stuff */
->>> }
->>>
->>> which gets rid of the workqueue too.
->>
->> I like it. We can't use IRQF_ONESHOT, as that would keep the irq masked while the threaded handler is being ran. I don't think that's a problem, but just something to keep in mind that both handlers can run concurrently.
-> 
-> Actually, I'm not sure we can do it like this. Imagine we have something
-> like
-> 
-> CPU 0                      CPU 1
-> zynqmp_dp_thread_handler()
->    atomic_xchg()
-> 			   __handle_irq_event_percpu
->                               zynqmp_dp_irq_handler()
->                                 atomic_or()
->                                 return IRQ_WAIT_THREAD
->                               __irq_wake_thread()
->                                 test_and_set_bit(IRQTF_RUNTHREAD, ...)
->                                 return
->    return IRQ_HANDLED
-> 
-> and whoops we now have bits set in dp->status but the thread isn't
-> running. I don't think there's a way to fix this without locking (or two
+Currently, the get_mm_counter() function returns only the value of
+the process memory counter percpu_counter ->count record, ignoring
+the memory usage count maintained by each CPU in the
+percpu_counter->counters array, which leads to an error in obtaining
+the memory usage count of a process, especially when there are many
+CPU cores. counts, especially when there are many CPU cores.
 
-In your example above, the IRQTF_RUNTHREAD has been cleared by the 
-threaded-irq before calling zynqmp_dp_thread_handler. So the hard-irq 
-will set that flag before the zynqmp_dp_thread_handler() returns.
+It is now possible to have get_mm_counter() get the memory count of a
+process by adding the memory counts maintained by each cpu, thus getting
+an accurate memory count of the process.
 
-When zynqmp_dp_thread_handler() returns, the execution will go to 
-irq_wait_for_interrupt(). That function will notice the IRQTF_RUNTHREAD 
-flag (and clear it), and run the zynqmp_dp_thread_handler() again.
+This patch is an unofficial version that simply fixes the above problem,
+as I'm not sure if it makes sense to do so.
 
-So if I'm not mistaken, when the hard-irq function returns 
-IRQ_WAKE_THREAD, it's always guaranteed that a "fresh" run of the 
-threaded handler will be ran.
+Signed-off-by: Chen Taotao <chentt10@chinatelecom.cn>
+---
+ include/linux/mm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I think that makes sense, as I'm not sure how threaded handlers without 
-IRQF_ONESHOT could be used if that were not the case. I hope I'm right 
-in my analysis =).
-
-  Tomi
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index f5a97dec5..5cf6443aa 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2569,7 +2569,7 @@ static inline bool get_user_page_fast_only(unsigned long addr,
+  */
+ static inline unsigned long get_mm_counter(struct mm_struct *mm, int member)
+ {
+-	return percpu_counter_read_positive(&mm->rss_stat[member]);
++	return percpu_counter_sum_positive(&mm->rss_stat[member]);
+ }
+ 
+ void mm_trace_rss_stat(struct mm_struct *mm, int member);
+-- 
+2.27.0
 
