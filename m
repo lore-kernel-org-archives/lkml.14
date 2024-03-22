@@ -1,111 +1,97 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC5C638DDD;
-	Fri, 22 Mar 2024 10:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C70926ADB;
+	Fri, 22 Mar 2024 10:16:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711102463; cv=none; b=guermURhxnbpY7dgDfhUbZlRawmqdkkAFCM8wbRrCH88ly71r81f97Z89MmVzxZxan7wNPGlzBmn/hm0Q78BfAY6R1fQ6anpNF8c7EvEEIm8Vyx5V8mlz4JpA0sWvoo+X4BrQiSKAj/Zv2TDV03qS5BtKA8zf38eSF6NLqH5BNI=
+	t=1711102570; cv=none; b=AR+wv5zqn0D91qd2/VWbQAAT2yA8RYRr8pD22gWT95pe47bv3M5uWyFqHszfpUcgmqBJbuGDzX4GVzLpqdCj9HnQ72XDyAKwCGDePI3muEwKpTIPu7OtTN+qD7SFQ1WUMK6pgz1+Vwiv0jGzzCdKqrAq+ffK/8Wlf/ir+89QawQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711102463; c=relaxed/simple;
-	bh=5S8ymAudHdNfId4Tqv7tuai+C9MtL4MSBq1XCsGm7MU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=MbTRrY8eF+lGbG11yxQC0SnmQL/Vhw87yUB4kmsWamGAc4GGxcQmHfDMf621wTfMwJUmeRBGsrxUonxx3ohgQK75ppUy0OKc2qmVzo+qoK8tEJW3DCZkMiWVeZWuFo/KiRffmSHzWn4KplFwXuUxYJ7jZmfL5FemmD0hZ1jzwOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.24])
-	by gateway (Coremail) with SMTP id _____8CxbevzWf1lymocAA--.1807S3;
-	Fri, 22 Mar 2024 18:14:11 +0800 (CST)
-Received: from [10.20.42.24] (unknown [10.20.42.24])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxPs_tWf1lNuNhAA--.59382S3;
-	Fri, 22 Mar 2024 18:14:10 +0800 (CST)
-Subject: Re: [PATCH V3] irqchip/loongson-pch-pic: Update interrupt
- registration policy
-To: Thomas Gleixner <tglx@linutronix.de>, chenhuacai@kernel.org,
- jiaxun.yang@flygoat.com
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
- Baoqi Zhang <zhangbaoqi@loongson.cn>, Biao Dong <dongbiao@loongson.cn>
-References: <20240319124629.23925-1-zhangtianyang@loongson.cn>
- <878r2di3ak.ffs@tglx>
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-Message-ID: <648e7f23-a2e0-ce8f-7c52-3bcda262de86@loongson.cn>
-Date: Fri, 22 Mar 2024 18:14:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1711102570; c=relaxed/simple;
+	bh=GadESi8ONSV56erp89XTT+vSta6NjyXh9DD7OG2fFAk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GzhD8K+syW30a0xPXWftCf6RkJwjT81eUQ/qqHiw9tt35KOmjoM10zlyB0S23uFlKscVoDCghNnsxCuTu0zhMPpxFmMCJxiSNVYLqLEY+fkswO+6oitxHZqnXhNhIqGZSJk5tjvDrGQRwSddP1aiO8Eh99nd8GzWamr2JHirGbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Y2ReAm1C; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Y2ReAm1C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1711102564; x=1711707364; i=markus.elfring@web.de;
+	bh=YITSdSNKjtGWKQJCqVlDxMIGXLNZSJ1FOmf8VqHMVLI=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=Y2ReAm1Cd4sNe5u0ne9uK6PLGurzdh+kkALmaxx1M8WJ19BTpB/sxYqatqgkFwzP
+	 HNF6CiMavemFWZHCjCubLFrgKKREtpcm54KNbLjWzuDbNgiCTymtjqR23i11rdQhb
+	 /jsC0CFngbzNkN5VYgk6g9PyNKArXi5Mrpdfnjj+8m3wLJeQ+ifFhl1ZzhMRiju1f
+	 9ASJjnPNlrnDdQAZBiLiUD8HpjBHbUSXIl3tqKcquS2n347ya0QQ1U3zAb0PyBpt1
+	 cmsN0xV+5bpWjRmzfaTXqNXoLqHvTf/2sVlyTXTYeAwf0dMUTQrJgA9vrYO/Sy0xn
+	 tyLUC+DMpTYrbbW5Pw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.90.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mfc4q-1r7vNl0NY0-00jbRy; Fri, 22
+ Mar 2024 11:10:13 +0100
+Message-ID: <9b09c797-2b01-40d8-9e83-ecb6e25ee78a@web.de>
+Date: Fri, 22 Mar 2024 11:10:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <878r2di3ak.ffs@tglx>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8CxPs_tWf1lNuNhAA--.59382S3
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7WrykWw45WFyUZw1DGw4rJFc_yoW8Ar43pa
-	yxX3ZFgan0qw47KrZ7Xrs7Xr1xCF97Ga4kKr90yry2k3s8W3W7KFW7AFW5uFyfGryFya1j
-	vrZ3trW8Ka4UAFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1Ek
-	sDUUUUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v2] ice: Fix freeing uninitialized pointers
+Content-Language: en-GB
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+ kernel-janitors@vger.kernel.org, netdev@vger.kernel.org,
+ intel-wired-lan@lists.osuosl.org
+Cc: Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>, LKML
+ <linux-kernel@vger.kernel.org>,
+ Alexander Lobakin <aleksander.lobakin@intel.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ David Laight <David.Laight@aculab.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>,
+ Jesse Brandeburg <jesse.brandeburg@intel.com>, Jiri Pirko
+ <jiri@resnulli.us>, Jonathan Cameron <jic23@kernel.org>,
+ Julia Lawall <julia.lawall@inria.fr>, Kees Cook <keescook@chromium.org>,
+ Lukasz Czapnik <lukasz.czapnik@intel.com>, Paolo Abeni <pabeni@redhat.com>,
+ Pucha Himasekhar Reddy <himasekharx.reddy.pucha@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>
+References: <0efe132b-b343-4438-bb00-5a4b82722ed3@moroto.mountain>
+ <0d7062e1-995b-42bc-8a62-d57c8cb588ee@web.de>
+ <7ca4a907-2a9c-4711-a13c-22cbfec15e0e@moroto.mountain>
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <7ca4a907-2a9c-4711-a13c-22cbfec15e0e@moroto.mountain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:OPtKNGD3xEcd1Z7sJW7cRkjajBmWMTdxQ7djE0xUhQ1czhFk4yH
+ OVOh6h+sux0OGb4dFA5OaxAiv2F5OWxkUlsDdTB4f5Pvtz2WBLmL0CV0DgoYjprq1yAbO5G
+ b1/blJMXPlAmdOtqF6VrJzL01o8nYCkjLkbKyX1X5vVNYHTjvXF9uZyFXaI1Skgc3NRMsNq
+ SWWI3YTNfkGNTd1Y5yQHw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:HTHlWZPjstg=;x80qYP9/CGxP7aDaVgcrNlTbZCo
+ 8+g3feTSIdzmhy59CGiNd+Y2CkUnn3bhYyjDFbhgKuFyi2US31K4d4Ssaxf46f6LbTg0mG2VT
+ Ab/N2Olz2GjX0FyMg45JwCzWCYE3uD8KY6fMpk12gmaM6V/5MVZwjpKZEWSG5ZNrWLTTucvh4
+ QK3vq3Vdj4ySXAb4t0aO61TTUM731MJyrzzSkQTo4+OtNBwkWxj2988EECm13MTv/p8yLdU2z
+ Tvuh3H/k1ZQVZRpJIGsZzewOm2nD8xRl96OzPcwnbfPrcblQd2aXfTvhAXJrtfOr+kUiZplDN
+ ztRgIs3VeZ/IM7zUAxg/9k/G1gH8hPV/p5sr7/nDRAhsOwzbYPNipSEE0VUoV+C9NDVrr1WzD
+ J3gxC7v4YH//04J2kPQG4NYGA+B5e5csAAJbPtw/VuQ4IIeWli1Pxz5gXDxMiwpzd2dCiivtU
+ 4c4CwlgrN2r/+O8qNKWxwnnOYZrPaaM3Acgk24988vlrWUEGwT3VuA1ZWnNnx8KW5zY4AIQkj
+ TN8LcARbvYrz3PIFKLvS5gxFwB3qhL5CY8Pfi9xr6Ya3EmZPJXsCrWt7UNUdxiHrFezfRks+j
+ i5RCd4l79gskUd+XK89dCmxsQbpFvxLciO8Bs7alT7ijXgrcyXH+8SqrL3YvswgZ8et8Cj4Kg
+ SRs5UcH8oE0TFL7Xd1fPlkRViExswSYDryUW8adaulV5vmf9993ce+YQplB2juw4X/+5hr8Rc
+ Pxd8Z2+k0GNykhsagBTe5nrJ1vlFpRZUzmKhdwWd+W6Xag6D6gkUzAxVIBHdTd5DPIAFsOG0O
+ tiMMF+iecfcmaEdmBPSHq00WfyvuMa/OjmqXEAy0kMyO8=
 
-Hi, Thomas
+> Markus please don't do this.  Don't take a controversial opinion and
+> start trying to force it on everyone via review comments and an
+> automatic converstion script.
 
-I will continue to revise my patch according to the document requirements.
+I dare also to point additional change possibilities out.
+I hope that further collateral evolution will become better supported.
 
-Regarding "WHY", my understanding is that a convincing reason is needed 
-to explain the necessity of this patch.
-
-If so, can the last paragraph "This will be more conducive to fully 
-utilizing existing vectors to support more devices."
-
-be considered a simple explanation?
-
-ÔÚ 2024/3/20 ÏÂÎç6:52, Thomas Gleixner Ð´µÀ:
-> On Tue, Mar 19 2024 at 20:46, Tianyang Zhang wrote:
->> From: Baoqi Zhang <zhangbaoqi@loongson.cn>
->>
->> This patch remove the fixed mapping between the LS7A interrupt source
-> Please don't use 'This patch'. We already know that this is a patch.
->
-> See Documentation/process/
->
->> and the HT interrupt vector, and replaced it with a dynamically
->> allocated approach.
-> You explain the WHAT, but you really need to explain the WHY.
->
->> We introduce a mapping table in struct pch_pic, where each interrupt
-> s/We introduce/Introduce/ See documentation.
->
->> source will allocate an index as a 'hwirq' from the table in the order
->> of application and set table value as interrupt source number. This hwirq
->> will be configured as its vector in the HT interrupt controller. For an
->> interrupt source, the validity period of the obtained hwirq will last until
->> the system reset.
->>
->> This will be more conducive to fully utilizing existing vectors to
->> support more devices.
->>
->> Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
->> Signed-off-by: Biao Dong <dongbiao@loongson.cn>
->> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
-> This Signed-off-by chain is wrong.
->
-> Please see Documentation/process/submitting-patches.rst
->
-> Thanks,
->
->          tglx
-
+Regards,
+Markus
