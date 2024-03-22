@@ -1,42 +1,40 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A36F5674C
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 16:40:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 887E85674C;
+	Fri, 22 Mar 2024 16:42:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711125612; cv=none; b=ldHU+JCMYqEy+L57FYzEf7mm0RMt/fb0Xriii6WclrjxRcq1nsppEQI7aMgTnpM7nuz9TIBYWFSNFdJsZHHgnoKBxMkEM0r0/VVfkcowtiTvsMAJkVphzHELaSzynTROv0r9xSgXzWgMXhoHbIgNg33kxz3CyAyhkg0SbdU95l4=
+	t=1711125770; cv=none; b=j2vDgKb2b5DPLIs2qOelhVuetO0MzGuFYOZFI99nfPyRTtnvnMDv8xopINOwyy1uXg7MLz59LcHa8cfVg4ietXMXUsKWKRjGB86bEAmf14thZleoHY/Qf1tWdOyJ+Hk7XF7+syPZMzCZbv5SMD+XndhOxclEVITjvtO8BqgLMKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711125612; c=relaxed/simple;
-	bh=be5YocDWCbRGR4uAZlmMAzBgoMxaC0MoO2MNArRgWlk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AaL4YstlnFDpcHnmME8PCk3LT9YyrdOaSGXCFd/y5g5osU7p9jP70Fbcowj/n/nhz7j3UFPAa4/7cenSfrW1jRMXwfaGDLM8WOrIBj8TADdS5bbl1qO4/EIEcknunu4RrWwPSkXkYB8GNXUfjnnCYQdvnOB08lgpX5QFPaBXqHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QtD5iCkR; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QtD5iCkR"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1711125608;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=alKuNVPMUZUInvf3FonZiSKCsCjs3x5ZGIB2V/RJ1Bc=;
-	b=QtD5iCkRCOfhonm2ViUGyN7iojeqGcmSW/yx+PEgNH3oECNvazjIbddo34MdYyNpjZy5zn
-	fczjHWvReG1rzqrjx+YygIGC3C+mhwCueqod20QSEa+FBl2L+wCkWsSPtoHSv9PTmjXYfn
-	zkOFNv+gtBAR+CY9T1yxCLa8bVZ3ID4=
-From: chengming.zhou@linux.dev
-To: hannes@cmpxchg.org,
-	yosryahmed@google.com,
-	nphamcs@gmail.com,
-	chengming.zhou@linux.dev,
-	akpm@linux-foundation.org
-Cc: linux-mm@kvack.org,
+	s=arc-20240116; t=1711125770; c=relaxed/simple;
+	bh=hEsqfxJIR2reToPP0pC1oNrl0WbP9UJr+qXgdqGojAc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hSCaz7mK2PKwSa4isdCRBYvC49qaCiMWyOV1xsfmNwX4Fks+WMCiNHsDjHo4/KdJAyhlw+9+AEwEjd9xQ7LLOmphm8qB79+t54HISBAqfl6YFMfqU5XhFeOlNABoSfhPzwmLwVvz/OM2P5/9zya0fHStJRPKbVtrVzBrZtGQTiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C36F8FEC;
+	Fri, 22 Mar 2024 09:43:21 -0700 (PDT)
+Received: from e126817.cambridge.arm.com (e126817.cambridge.arm.com [10.2.3.5])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D24E43F762;
+	Fri, 22 Mar 2024 09:42:45 -0700 (PDT)
+From: Ben Gainey <ben.gainey@arm.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: james.clark@arm.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Zhongkun He <hezhongkun.hzk@bytedance.com>
-Subject: [RFC PATCH] mm: add folio in swapcache if swapin from zswap
-Date: Sat, 23 Mar 2024 00:39:39 +0800
-Message-Id: <20240322163939.17846-1-chengming.zhou@linux.dev>
+	Ben Gainey <ben.gainey@arm.com>
+Subject: [PATCH v4 0/4] perf: Support PERF_SAMPLE_READ with inherit_stat
+Date: Fri, 22 Mar 2024 16:42:33 +0000
+Message-ID: <20240322164237.203358-1-ben.gainey@arm.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,128 +42,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-From: Chengming Zhou <chengming.zhou@linux.dev>
+This change allows events to use PERF_SAMPLE READ with inherit so long 
+as both inherit_stat and PERF_SAMPLE_TID are set.
 
-There is a report of data corruption caused by double swapin, which is
-only possible in the skip swapcache path on SWP_SYNCHRONOUS_IO backends.
+Currently it is not possible to use PERF_SAMPLE_READ with inherit. This 
+restriction assumes the user is interested in collecting aggregate 
+statistics as per `perf stat`. It prevents a user from collecting 
+per-thread samples using counter groups from a multi-threaded or 
+multi-process application, as with `perf record -e '{....}:S'`. Instead 
+users must use system-wide mode, or forgo the ability to sample counter 
+groups. System-wide mode is often problematic as it requires specific 
+permissions (no CAP_PERFMON / root access), or may lead to capture of 
+significant amounts of extra data from other processes running on the 
+system. 
 
-The root cause is that zswap is not like other "normal" swap backends,
-it won't keep the copy of data after the first time of swapin. So if
-the folio in the first time of swapin can't be installed in the pagetable
-successfully and we just free it directly. Then in the second time of
-swapin, we can't find anything in zswap and read wrong data from swapfile,
-so this data corruption problem happened.
+Perf already supports the ability to collect per-thread counts with 
+`inherit` via the `inherit_stat` flag. This patch changes 
+`perf_event_alloc` relaxing the restriction to combine `inherit` with 
+`PERF_SAMPLE_READ` so that the combination will be allowed so long as 
+`inherit_stat` and `PERF_SAMPLE_TID` are enabled.
 
-We can fix it by always adding the folio into swapcache if we know the
-pinned swap entry can be found in zswap, so it won't get freed even though
-it can't be installed successfully in the first time of swapin.
+In this configuration stream ids (such as may appear in the read_format 
+field of a PERF_RECORD_SAMPLE) are no longer globally unique, rather 
+the pair of (stream id, tid) uniquely identify each event. Tools that 
+rely on this, for example to calculate a delta between samples, would 
+need updating to take this into account. Previously valid event 
+configurations (system-wide, no-inherit and so on) where each stream id 
+is the identifier are unaffected.
 
-And we have to check if the swap entry is in zswap after entry pinned,
-only then we can make sure the check result is stable.
 
-Reported-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
-Closes: https://lore.kernel.org/all/CACSyD1N+dUvsu8=zV9P691B9bVq33erwOXNTmEaUbi9DrDeJzw@mail.gmail.com
-Signed-off-by: Chengming Zhou <chengming.zhou@linux.dev>
----
- include/linux/zswap.h |  6 ++++++
- mm/memory.c           | 28 ++++++++++++++++++++++++----
- mm/zswap.c            | 10 ++++++++++
- 3 files changed, 40 insertions(+), 4 deletions(-)
+Changes since v3:
+ - Cleaned up perf test data changes incorrectly included into this
+   series from elsewhere.
 
-diff --git a/include/linux/zswap.h b/include/linux/zswap.h
-index 2a85b941db97..180d0b1f0886 100644
---- a/include/linux/zswap.h
-+++ b/include/linux/zswap.h
-@@ -36,6 +36,7 @@ void zswap_memcg_offline_cleanup(struct mem_cgroup *memcg);
- void zswap_lruvec_state_init(struct lruvec *lruvec);
- void zswap_folio_swapin(struct folio *folio);
- bool is_zswap_enabled(void);
-+bool zswap_find(swp_entry_t swp);
- #else
- 
- struct zswap_lruvec_state {};
-@@ -65,6 +66,11 @@ static inline bool is_zswap_enabled(void)
- 	return false;
- }
- 
-+static inline bool zswap_find(swp_entry_t swp)
-+{
-+	return false;
-+}
-+
- #endif
- 
- #endif /* _LINUX_ZSWAP_H */
-diff --git a/mm/memory.c b/mm/memory.c
-index 4f2caf1c3c4d..a564b2b8faca 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -4031,18 +4031,38 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
- 					ret = VM_FAULT_OOM;
- 					goto out_page;
- 				}
-+
-+				/*
-+				 * We have to add the folio into swapcache if
-+				 * this pinned swap entry is found in zswap,
-+				 * which won't keep copy of data after swapin.
-+				 * Or data will just get lost if later folio
-+				 * can't be installed successfully in pagetable.
-+				 */
-+				if (zswap_find(entry)) {
-+					if (add_to_swap_cache(folio, entry,
-+							GFP_KERNEL, &shadow)) {
-+						ret = VM_FAULT_OOM;
-+						goto out_page;
-+					}
-+					swapcache = folio;
-+					need_clear_cache = false;
-+				} else {
-+					shadow = get_shadow_from_swap_cache(entry);
-+					/* To provide entry to swap_read_folio() */
-+					folio->swap = entry;
-+				}
-+
- 				mem_cgroup_swapin_uncharge_swap(entry);
- 
--				shadow = get_shadow_from_swap_cache(entry);
- 				if (shadow)
- 					workingset_refault(folio, shadow);
- 
- 				folio_add_lru(folio);
- 
--				/* To provide entry to swap_read_folio() */
--				folio->swap = entry;
- 				swap_read_folio(folio, true, NULL);
--				folio->private = NULL;
-+				if (need_clear_cache)
-+					folio->private = NULL;
- 			}
- 		} else {
- 			page = swapin_readahead(entry, GFP_HIGHUSER_MOVABLE,
-diff --git a/mm/zswap.c b/mm/zswap.c
-index c4979c76d58e..84a904a788a3 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -1601,6 +1601,16 @@ void zswap_invalidate(swp_entry_t swp)
- 		zswap_entry_free(entry);
- }
- 
-+bool zswap_find(swp_entry_t swp)
-+{
-+	pgoff_t offset = swp_offset(swp);
-+	struct xarray *tree = swap_zswap_tree(swp);
-+	struct zswap_entry *entry;
-+
-+	entry = xa_find(tree, &offset, offset, XA_PRESENT);
-+	return entry != NULL;
-+}
-+
- int zswap_swapon(int type, unsigned long nr_pages)
- {
- 	struct xarray *trees, *tree;
+Changes since v2:
+ - Rebase on v6.8
+ - Respond to James Clarke's feedback; fixup some typos and move some
+   repeated checks into a helper macro.
+ - Cleaned up checkpatch lints.
+ - Updated perf test; fixed evsel handling so that existing tests pass
+   and added new tests to cover the new behaviour.
+
+Changes since v1:
+ - Rebase on v6.8-rc1
+ - Fixed value written into sample after child exists.
+ - Modified handling of switch-out so that context with these events
+   take the slow path, so that the per-event/per-thread PMU state is
+   correctly switched.
+ - Modified perf tools to support this mode of operation.
+
+Ben Gainey (4):
+  perf: Support PERF_SAMPLE_READ with inherit_stat
+  tools/perf: Track where perf_sample_ids need per-thread periods
+  tools/perf: Correctly calculate sample period for inherited
+    SAMPLE_READ values
+  tools/perf: Allow inherit + inherit_stat + PERF_SAMPLE_READ when
+    opening events
+
+ include/linux/perf_event.h                    |  1 +
+ kernel/events/core.c                          | 62 ++++++++++----
+ tools/lib/perf/evlist.c                       |  1 +
+ tools/lib/perf/evsel.c                        | 48 +++++++++++
+ tools/lib/perf/include/internal/evsel.h       | 55 ++++++++++++-
+ .../test-record-group-sampling-inherit-stat   | 62 ++++++++++++++
+ tools/perf/util/evsel.c                       | 82 ++++++++++++++++++-
+ tools/perf/util/evsel.h                       |  1 +
+ tools/perf/util/session.c                     | 11 ++-
+ 9 files changed, 301 insertions(+), 22 deletions(-)
+ create mode 100644 tools/perf/tests/attr/test-record-group-sampling-inherit-stat
+
 -- 
-2.20.1
+2.44.0
 
