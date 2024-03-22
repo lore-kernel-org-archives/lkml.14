@@ -1,137 +1,148 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2110.outbound.protection.partner.outlook.cn [139.219.17.110])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB67D33CE;
-	Fri, 22 Mar 2024 09:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.110
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711101148; cv=fail; b=LS8AfFh4wXOlqRZiD121oiOQfKA7p89PingE2c3V2ckxyzDCElgcAMkzR/JIvJzxLIrZuSOZClGWyTruGXSzCGnJMw/kTErPwIlOYdwkk3VmPuHRBEgVcwJSgMu9VRA6fPPrQ04fzntUPDf4fxRBjC69b9FSbFr+0GgIZyxjoAM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711101148; c=relaxed/simple;
-	bh=ItW7JvuP1szIFY0mbg3DeHs/cQRu0hDiqarr0CPSdrU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=NgpLkjRsjIkYeolKxMOtCkh/4LoTvvcGCgCrW/rlmGu9k05PnwA/JGhav2sB4Z9TRo6TmOftTcf3nexKP696ZoIWrESzuTyW0zUkymda5DiJIQC1p8ZE4YHoCZ7BYfC7cUuVpCugyYx6WFkd0ZPWcKmMOGmnkODAxez5JOmu5Vk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=liHMX8QkoJiCKn8YYutABNsKrxFDg6pRIV6g0uJRbMeAlEXMozL0O2sPrIWDCi+sUklH3LVS1Dt6TLWakFfq71kWBBHhOu44HpmCOUwmlDHJ3ZJUgd1zRd6QAYYeA1+Kjn0MTUK1lPyUGB8ZofnR6tmJ6KjU+8DEEe8r+vLwdvF3VRZ4YhB3FwWygRQJtSbDPUDnG9Fq7eX12PcX4S88izfgXbdb9UGHPiKO1ZppZTZiUwHr1t38pT4lzhpz8Dg837lL7gDNp5EbdwnLW+V9jvpIrOdCnbgPLQ0Zem3A0kO/UClMkZrO4WoN6O2EcMgabgx9zDRC+AUSogPrVzPU4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ItW7JvuP1szIFY0mbg3DeHs/cQRu0hDiqarr0CPSdrU=;
- b=Dvt70RXtZqyJ5IoDnhVgpGY41Ce828WgKxQjphWkDvYLl+AgmkAmLlUARO3mcCRCcX20TA8boqeJEeTbSLgnqeyM5NUY/mFAihMm3uC11JY7Fxg78xXzlLrcfF82iSuqaP7H0zvT5c7EQHTU+tm4ei8Jvqt3GnJcIKS/XaUH/hIzQrFsEDBVk5TVvVIqOS0pzuEe7+lCIiozWAMoxvPNqp2uCz84Yn2e/hHOzPilpAS9IhCyIM6VtzjR9h+Or2VL3u19CFZjLBraAVnxzoC7KWxvrCUIG1eFJrOvbxbeekicoTBkbSeuUeIbjJDex3lVyjwjQLG+vT0n11c8FxogQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:7::14) by ZQ2PR01MB1241.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:6::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.13; Fri, 22 Mar
- 2024 09:36:19 +0000
-Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- ([fe80::5de:15b9:3114:4f45]) by ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- ([fe80::5de:15b9:3114:4f45%5]) with mapi id 15.20.7386.025; Fri, 22 Mar 2024
- 09:36:19 +0000
-From: Hal Feng <hal.feng@starfivetech.com>
-To: JeeHeng Sia <jeeheng.sia@starfivetech.com>, "kernel@esmil.dk"
-	<kernel@esmil.dk>, "conor@kernel.org" <conor@kernel.org>,
-	"robh+dt@kernel.org" <robh+dt@kernel.org>,
-	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
-	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, "palmer@dabbelt.com"
-	<palmer@dabbelt.com>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-	"mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org"
-	<sboyd@kernel.org>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-	"emil.renner.berthing@canonical.com" <emil.renner.berthing@canonical.com>,
-	Xingyu Wu <xingyu.wu@starfivetech.com>
-CC: "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EED717575;
+	Fri, 22 Mar 2024 09:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711101172; cv=none; b=DcF8KeEtOn99TKewVAlxdlNGpeRcfngtAVfRZXOKTslIqAvARVyDbqCl6tZsRHt3F3DiPYdtHtbXcdsbX/58WGNppXeGeY2sl73OohynR8nr4ePDQOOMWcYfcUX7z6+mApLjXENyhqa5fPyQ/PTVTB5Dj+ss9jHxp3BQH778zU8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711101172; c=relaxed/simple;
+	bh=bOhLcsYDVZmhBgEUm4A+AenfvHCVdl7QYceTR0y7L2I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f60irZwXF1ONF2rI1tL7iaer3o9vpfyJpjCINhtDjk93c6JO0bSwCgQdg1JaBr4Dpo1eJ+pFqqb0iXAduoZnw8Iqal7ZLllwrnyiRnWwBQ922eMBESFQ6ry/NplQPrm9c0728UfiZbGi5vQsj/GvaUB46/+tHwOUvdHzY172Nv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=Y384k+jz; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Y384k+jz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=uY3ErBRSm13BWg/PRQDPTz4nkc8UUIhrKSwSU3A1w7U=; b=Y384k+jzKaq1zpLti0tPPj9ga5
+	MNe50rOqiaFr4DqqJtrpa5NP1INK5UeoY34zpnnSteBYYYUajBQLdyy1U9zWiG+/kgjgaffsnzQ0J
+	1keQ8qPvs8MHWpN9QXTeEvBiMg37vNC0qwPQC6JVGIqKs563vXAJ37YbSJ/xvT1xWHIYRjFp09otU
+	OYbqxq5EXKWY+ARCABdGy8Xr+tcpLKRNzl9CkkLqGLgIuRiYdgvSwbhg5xAHUwuUWE8ENBgmH0jfX
+	0NETo0ksPxJpcda3ZrZALDQO0wDdwRAhbd5TkOsT9YkqP+rFlBporRUq1fni/+o8sTOcKBTxNe/N3
+	jgcRP+Wg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54618)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rnbZT-0000BM-0N;
+	Fri, 22 Mar 2024 09:52:19 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rnbZL-0004bs-DT; Fri, 22 Mar 2024 09:52:11 +0000
+Date: Fri, 22 Mar 2024 09:52:11 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: David Laight <David.Laight@aculab.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+	Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+	"arnd@arndb.de" <arnd@arndb.de>,
+	"keescook@chromium.org" <keescook@chromium.org>,
+	"haibo.li@mediatek.com" <haibo.li@mediatek.com>,
+	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>,
+	"amergnat@baylibre.com" <amergnat@baylibre.com>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"douzhaolei@huawei.com" <douzhaolei@huawei.com>,
+	"gustavoars@kernel.org" <gustavoars@kernel.org>,
+	"jpoimboe@kernel.org" <jpoimboe@kernel.org>,
+	"kepler.chenxin@huawei.com" <kepler.chenxin@huawei.com>,
+	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Leyfoon Tan
-	<leyfoon.tan@starfivetech.com>
-Subject: RE: [RFC v3 04/16] clk: starfive: Convert the word "jh71x0" to
- "starfive"
-Thread-Topic: [RFC v3 04/16] clk: starfive: Convert the word "jh71x0" to
- "starfive"
-Thread-Index: AQHaQ8liKjyIY2IllECjyvkvWy1XuLFD8LTw
-Date: Fri, 22 Mar 2024 09:36:19 +0000
-Message-ID:
- <ZQ2PR01MB1307520AC705D79ED14F24E4E631A@ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn>
-References: <20240110133128.286657-1-jeeheng.sia@starfivetech.com>
- <20240110133128.286657-5-jeeheng.sia@starfivetech.com>
-In-Reply-To: <20240110133128.286657-5-jeeheng.sia@starfivetech.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: ZQ2PR01MB1307:EE_|ZQ2PR01MB1241:EE_
-x-ms-office365-filtering-correlation-id: 453e67e6-29d2-4ab4-f678-08dc4a538749
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- /dKK+1qJpFQMkyJMDFlTGQMxUCAkwA6iNHgWOhhSHYY167oiNV+j5nxkP1h+99pDWhiiZ+IYc17ABdtxmrdGHUeYQbc6Kez+Ld9U81+QBE1J6/8geB6V2f5r57p9yxcmWnqB584AE5TqjtR645+Henqje8Ln/mBxMefZUzVWXnD52QV7b6qiT3wypa2CxXYo1H24UpIiTUSvy0Za1xqn3Pn9qsUD8o4GBm2qiGpu5ywmC7AASmbtN8qLJzgLaW+SFTMrfohZmU+8yQT3g+pnpcIU/KqndB+CQSmbvab3PfRAU0MJOvW5dkcit7fmKoIQlxy1Vj68E9C3rQix62A1+2BempG0Ob6fdgzLIm501DSO04iIdN6M+GEQFpRgC/VBC2MdFDL5ogFP04/eRutVD5hRsLHkxsBZHkiDKrFphVl3/Q4xc0jP9XnBN7gObL61sgsGSWNLXJBTX4+KZSlP8wVYgq3PBM7UHDruPFa9fju5rbDOATHmF91dY+sjYT9oYkDhUmCART/l+e8M6M12Pw/E6TJt798K1xJDJ/50nRd0UvlIlhsIMgyxwRW7qNEt74yZ6Kt9kUZMecwP+t3XM1Br7P/12gLShwnhrwVkIj678m0Jb1EjXdFHC/ywfardEGzSV3BXwjJgDJN31ZqnLg==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(366007)(921011)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?tLtv57/083L3Knb5MhEMPm1albIlSWm1zU2AkdHsH7/BS3HUw149lv4TbB/j?=
- =?us-ascii?Q?aivTd55WaZJ4GNX8lttaTTqwBbOpdYzUKvFx88gwfsZmCEBSB0s8aHAlK8kx?=
- =?us-ascii?Q?pVYdvrJcZCgzZ6JCcZohnlFY9+PFxA9A5tQS8fEG0lioo7CwD0YC2i/0TUY4?=
- =?us-ascii?Q?28cYIG57dfZE2g8mxg9aKFVsXeLtnjmGlywte0ULW+NKjsuNCIY1j5y3TGnH?=
- =?us-ascii?Q?ycTjkR3weXohbJXvXBL5+6jJZgFLaWXACDE+guDgG8HVc/rm54ozkFeD5GqW?=
- =?us-ascii?Q?I6c5nv9TZYlvMpBEKAV5ni1RIyPwMbJOFg5Rpp5lSTgrjeT16VDslMDn01Pm?=
- =?us-ascii?Q?QYPiMfuveXnImp7hCrNuVbMmhPiWaUY54p8VI18BPbgI44R12ayTsNHgSk+8?=
- =?us-ascii?Q?dk/o9eI3cs06KdfosA2SuGJZPL9/qlvWkZsGUhaGMGTMKpkYsBp/xUFhNBb9?=
- =?us-ascii?Q?mSp05nE5GFGGDUZULfuCBys3tB5F9WrjtOjfSFPXfJ5kN8EQAVsfXcz3MOyn?=
- =?us-ascii?Q?1SfSbMO0wR+hZbjGFzO7kU5cX6P2J/9NqIE+BPeBJ1ZHo22Hz3VKuH85BZ0m?=
- =?us-ascii?Q?4QiMDB+eq4gehazwU7/YcxY7kBljQ5akdW4TNhFZW1xmZKcOPn35BSkd96fl?=
- =?us-ascii?Q?H775cupuQksrFAvABx/UjU4+MSlvIJA9/tSXGqKQNiqghAq/2HzCAt9yciK2?=
- =?us-ascii?Q?X1/cVi/m2e9IyygrO5Uxs2xd7sm9Fc/0AQiWGOwwK0RTjyokj+0DEXdRlfy+?=
- =?us-ascii?Q?xPeULxzthr8d7n8FM8GAU8fOZG8ruAlVBEb4yr6u79zavofMpvgCm+ujHB2z?=
- =?us-ascii?Q?VWlxuPytlsBgwEf7BUXNGXr4MrNKx7iudLidDdyVVwFEn7DlcvpFPGzSdd2Z?=
- =?us-ascii?Q?uVJryl9laSbvuC2LvU6yCRB9YUqG17bYyuOI6rJSgMVSRmm5t8MyMdh+ibnp?=
- =?us-ascii?Q?7aS1LxeGceiDhH1G4hPD2s6QizNm6jyiM/S4R56OjqtjH83GQbz9v20AsFG6?=
- =?us-ascii?Q?qHGKhb15bf4gmy/Hb39zQ3AE2VHtZj2VFzNxX5+LtgFPMEeprZZevN08gTyY?=
- =?us-ascii?Q?LWKp/HxTDRcm96zkTv9YdgWDJgxG0mbhYtetIjxU9Za9OJLtk9tnifMLgi+J?=
- =?us-ascii?Q?E1v0GfjWJeSDxrxkfxTlMO+qyeqVK4GqH96IeXdHjhNQ84BKmCh/AQ9pJdmy?=
- =?us-ascii?Q?tv3rnzUTco7y0+uiKwdlLWkSG23aRHBRTX2Hhg2iCzvxHQbtZY8gDJVU/xpT?=
- =?us-ascii?Q?oPIB3RLRxH9zPtFyROL148+Q5a/LSj8dOONWwbFNy9L1NgXJYWTeADa3SQKE?=
- =?us-ascii?Q?0MMxHO0ogS26aSNTIFYegjbb9/Ak0lD6cbwcqceUwLaJs6Q4LoxMfxKRaSiM?=
- =?us-ascii?Q?1rd/liaxJw/YUTVx2Xz3F/OM3ZoeqW0qu5rqJVqsy4PV8jYamP2NzaAF97Tz?=
- =?us-ascii?Q?VAnAVBbU5zU4RjGCnIx3hanfmb5UCmYxfT6ymqRKo38guWkYRIxht5ifGCMG?=
- =?us-ascii?Q?GCRct29bYOBFtibQ6rp88o8/a8ppWnH3mswiXOFG9YzqwSFDY1i6L61RzOhe?=
- =?us-ascii?Q?gaBjJNXElZ4L0+Cgf5sNA1234Btqezw9f9Y1wNFK?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"nixiaoming@huawei.com" <nixiaoming@huawei.com>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"wangbing6@huawei.com" <wangbing6@huawei.com>,
+	"wangfangpeng1@huawei.com" <wangfangpeng1@huawei.com>,
+	"jannh@google.com" <jannh@google.com>,
+	"willy@infradead.org" <willy@infradead.org>
+Subject: Re: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
+Message-ID: <Zf1UyxlDf/oCjXxr@shell.armlinux.org.uk>
+References: <1710906278-23851-1-git-send-email-xiaojiangfeng@huawei.com>
+ <ZfqiD8Yw0oOVHW/p@shell.armlinux.org.uk>
+ <84a57ca8-8963-ca24-8bd1-ddc5c33bf4da@huawei.com>
+ <Zfs7sT6Pxy5yjnPC@shell.armlinux.org.uk>
+ <bad25937-fc98-8e11-4279-ab6b3a727c1f@huawei.com>
+ <bbcca1e205384cf0b42236e17f3969f7@AcuMS.aculab.com>
+ <ZfwYx/8k8FVONg6+@shell.armlinux.org.uk>
+ <CAMj1kXG2EGvgGuV-K7h5qDVJeLMd5hkq8GzigzCRzh9Z8cgyWw@mail.gmail.com>
+ <ZfzMFv3zmYY36l9u@shell.armlinux.org.uk>
+ <2b2993fb215c4a5abd7d77ff1c984113@AcuMS.aculab.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: 453e67e6-29d2-4ab4-f678-08dc4a538749
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2024 09:36:19.1762
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FfYBBif0XtHZmGsBV328nAhggzGJGKApc/+rmq6phUioLV/LODHcHf+iqOAYH/iw5F9CfkoSw8N090F/o9otjhgK3W0iIknbtPTInCtEy2U=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ2PR01MB1241
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2b2993fb215c4a5abd7d77ff1c984113@AcuMS.aculab.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-> On 10.01.24 21:31, JeeHeng Sia wrote:
->=20
-> Function names that consist of the 'jh71x0' naming convention are
-> renamed to use the 'starfive' wording.
->=20
-> Signed-off-by: Sia Jee Heng <jeeheng.sia@starfivetech.com>
-> Reviewed-by: Ley Foon Tan <leyfoon.tan@starfivetech.com>
-> Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+On Fri, Mar 22, 2024 at 09:24:20AM +0000, David Laight wrote:
+> From: Russell King
+> > Sent: 22 March 2024 00:09
+> > 
+> > On Thu, Mar 21, 2024 at 11:43:41PM +0100, Ard Biesheuvel wrote:
+> > > Given that this particular issue would just disappear if the compiler
+> > > would just insert a BRK after the BL, I'd prefer to explore first
+> > > whether we can get this fixed on the compiler side.
+> > 
+> > Arm32 doesn't have a BRK instruction. What would be appropriate after
+> > the no-return BL would be OS specific.
+> 
+> It would need to depend on what was being compiled.
 
-Reviewed-by: Hal Feng <hal.feng@starfivetech.com>
+Yes, but as for the rest...
 
+> For the kernel it could be much the same as BUG().
+> (Probably without any extra data.)
+> I suspect that arm32 could use 'swi' in kernel space,
+> but you wouldn't want to use that in userspace.
+> 
+> Looks like armv5 has a bkpt instruction - could that be used?
+> Or does the kernel need to support armv4?
+> 
+> The last arm I wrote anything for was a strongarm.
+
+Thank you David, but remember - I have programmed 32-bit Arm since 1992,
+and wrote the majority of the 32-bit Arm kernel support. I think I know
+what I'm walking about by now.
+
+The compiler can't do the same as BUG() - that is a kernel specific
+construct and not an architecture one. It is an undefined instruction
+specifically chosen to be undefined on both 32-bit and 16-bit Arm ISAs.
+
+As for your idea of using "swi" in kernel space, no that's never going
+to happen - to shoe-horn that into the SWI exception path for the sake
+of the compiler would be totally idiotic - it would cause userspace
+performance regressions for something that never happens. Moreover,
+with EABI the "comment" field in the "swi" instruction is ignored so
+all SWIs under EABI are treated the same. So no, that's not going to
+work without causing inefficiencies - again - for a case that will
+likely never happen.
+
+Whereas we already provide an abort() function because iirc the
+compiler used to emit branches to that due to noreturn functions. If
+correct, there's previous convention for doing this - and abort() is
+still exists in the kernel and in userspace since it's part of ANSI
+C. This would be a more reliable and portable solution, but probably
+not for embedded platforms - and that's probably why it got removed.
+
+There isn't going to be a single solution to this which satisfies
+everyone, and I don't blame the compiler people for deciding to
+basically give up with putting any instruction after a call to a
+no-return function - because there isn't an instruction defined in
+the architecture that _could_ be put there that would work everywhere.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
