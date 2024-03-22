@@ -1,56 +1,56 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2396604DA
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 16:52:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73DAF605C1
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 16:53:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711126379; cv=none; b=i67ciJISf2qtfPFdx0iMoAxlFwVIROO+s3DctpGZzCs8KsGlSUSPJf1Sj1MIp1BnZQy+w3cIFXUfLlkwt5HCIYAzVSZ8K9aaet9wXZjFitUThO0eqZkbRUXypOyXLPz1WCg55LD/Itq+c7Zm6csHmXC5kdNeLI+7RMtoIUniW90=
+	t=1711126382; cv=none; b=KpnVpTp71CHM689eGsN5By9yBFoMR6BkURHdEgpnrE8c01pKoddPGoXyMUYG+pwVGQ1Qqz9WftfJ4wGxncRGsvOBndPWlCJGn3Hdr6HFOA0uO+Yah1Tyw9KcVTqDo1fWmQ7MYJAIjnZsGFR87vAXqOZpd25pE8gypkrKC4oAN6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711126379; c=relaxed/simple;
-	bh=ZQ683fxTBC0cltc7iuh7WXmR5+v1UXe5xO6cUtiL1iM=;
+	s=arc-20240116; t=1711126382; c=relaxed/simple;
+	bh=avYapo0EFqaCq2WtjSTlPyiOsoi1q9qa0+9WdAJqEy8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K10gMy4D5HuHeHqoatKK1T/Hha9NbKpRRW+9rqddd4TLb4oYESaxFFcCnk9ZibhdAuDlObYY8UxsJGSy0obsl0/SiNVWv7hsEqQV7pPdNsBtEFYTJtwgOrU3fZgO8veYGAbwU10AP8a3hwBx9T+LevhVhxeAGMIQY9Tr7VYxkRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gcHgopvo; arc=none smtp.client-ip=209.85.222.172
+	 MIME-Version; b=dqcwna5OBLfOi4XGWEs2Ay7swd5zB3U7WElCtu62u50ykVJjQtb4tZW8KpO3hGeWt+bIQC7WNxwkZ8bjp6X54zRXGlhWCYbJobKuJ4cKX2YUcebpnDm1yxa8bC9mvVdm2k0uyy1S8kz2GlzHrI3MmqajyFufnQEhz6BqiqB+0Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bX44u9Et; arc=none smtp.client-ip=209.85.222.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gcHgopvo"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-789e6ceaff1so317882585a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 09:52:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bX44u9Et"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-78a2093cd44so187344485a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 09:53:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711126376; x=1711731176; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1711126379; x=1711731179; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MY5D337qL3lZHb49Uvgq3uHMbzigT03YWvbgK9Cha9Y=;
-        b=gcHgopvoIKCBEk0IdWYau+gBKs866DoiSgw608FLNEPViCWbdwlYsSukK0CkHxHy8P
-         bnHunt+ukvdgJ421e8Axzj0RmaNpa49lWO3WwDMrTciqiLmpa+6HbVaQb09bpWssNa71
-         DLFUenXDdbH1H2Anc2BtDJN4WeyNA52G+HnZea8JMvc2zqo4kahNw+qitDc1xr2eeGIf
-         0WmPwpUqyGU+kebF1m1P0G9RIOaTDV65TPbFeACFX5tbEgUEdF6bXari0vqAoiwlrKk5
-         7YrPWtARxn1xmij9etrp92dTT285urOsABhv6d+YmL6WWHE5mmEBEECouhfxeuY84kkQ
-         ehMg==
+        bh=Y0pfakbWaglqIoATRtXvgwUhPasnZ0G2B+uvX65Dwq4=;
+        b=bX44u9Et+WQQ7YgLCEFOZZZx3mljnf8qoMXBkacOQwBYKDm5hr+RnN0VY/3dPrj3Qm
+         PA7OR7bUSGvVB0YDOWOSnCAeAHXWbZ1pfEX3iXGd4YH/mC8bdUAy6kbOZLc11QdcY7Xz
+         UqYV1pBsAhg2tMc1ZjJ4YCmTm+JuUeBY2AxdpIz9Xxfg6GtOmp+n/w3aT89kk8UZq6Rc
+         GuwmbC5vrs2d1hVn4u+G6OmrhELZMHNQobn/p4bKv7rkZiEGuKiJJ0t9VrHjKr5E8H7D
+         I9vtiOGgN8rvu9yI4IIye3fZ2xnQ9qHsW4mXsLC8bniI08Osg/Uug7YJPwP8ntkRFsMM
+         Ntqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711126376; x=1711731176;
+        d=1e100.net; s=20230601; t=1711126379; x=1711731179;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MY5D337qL3lZHb49Uvgq3uHMbzigT03YWvbgK9Cha9Y=;
-        b=TOVYyhAJvBUWNSNbC2vaQBdfzbMlu72sab1MYjL+K9Fck7wXDtwvNMMk7DBGSVEM8d
-         AqGBq3lKOyZXQKJgJ/NZdZJ4xiJk7ne+Pw0NWBcx+vHAikiw7kPUmiRu6fjL/JQCNJEY
-         pcqhaL+nVDuscsWFVwAn9j2gS1M3eaCES58S6DykxF5AsGmoiAHoC1v34GzCzvNknA9/
-         AQxt5AmKqBZvmmyVrdwv26GNYqtxrgyg6DORJgPZvZR9Y0Cde00CRoEuMbGVs+CBpFCS
-         rTomHM6dlAnWXz86lVPlLsQrDDtdPm1sgBN2j/SlT87RY6t+Qwk4bsnWHQI50E/j86sC
-         SaEg==
-X-Gm-Message-State: AOJu0YxECrvBF03Yr+TZEnqjW4xlOhu0NKJDS5yqbe6nwAnX7jB6syEO
-	cpbuYgxXZdDbhGWt9djDFFBXoaEQvRswRa+xblOuQs4VJgrVe/XhSabmxZk=
-X-Google-Smtp-Source: AGHT+IH0WfM67NC7jA3maIyhtYVDQwTjD+v0j92xOZqBFhEx6T+xxxJvv1GDFUqAjoP5wz43jlvS5A==
-X-Received: by 2002:a05:620a:4953:b0:789:f80d:4625 with SMTP id vz19-20020a05620a495300b00789f80d4625mr212092qkn.12.1711126376585;
-        Fri, 22 Mar 2024 09:52:56 -0700 (PDT)
+        bh=Y0pfakbWaglqIoATRtXvgwUhPasnZ0G2B+uvX65Dwq4=;
+        b=k192oLZILwXI6n10hjrVr1g20ERQwt6PLBTc8VtUJUvQCO1mFw0EPkEZhKV/dp8E21
+         LANlOw6tf4Wvo9cvqA8YWf+JQnk+fT038GlVORWOzil2VI8+1mOVTSXolaBvYTsJ9wYm
+         bYbhNsEdRrtb1oSfBHDKEpv+jGoofbjhIO3nc5NqYZOSecYhzZVCx0A96uVwHnyrMuNc
+         SGrspNfFjG5NwKuFbx/5ABDaRt1dQmIz2aEGALyJljAuXz7TKTywl0ZCRNbPBfkFyPFR
+         YDeL2RXxz5PEewhME6IDtKbZ4J0FlLGL/yvYnPn31EySoNBpcOzilTO2dnoaoogbM6UY
+         coEw==
+X-Gm-Message-State: AOJu0YwePNK29HuuR3M9O1AcHOYNUtKTiQFwXpjMcmyJfK+zE3AXzUnt
+	txaxoL2Zjocnc7sPmziLeMSn2JO4qCC8UZFCmUp64H1emCJBVCxGIYeYWsU=
+X-Google-Smtp-Source: AGHT+IF0AAdlE4uIoVz7sxvN8rbXVr8QSHh1wK0otrEBF/dPfTo3pmBesRKuaCdH27sU11LYp/AlUQ==
+X-Received: by 2002:a05:620a:a1d:b0:789:d43b:3702 with SMTP id i29-20020a05620a0a1d00b00789d43b3702mr2598412qka.59.1711126379139;
+        Fri, 22 Mar 2024 09:52:59 -0700 (PDT)
 Received: from citadel.lan (2600-6c4a-4d3f-6d5c-0000-0000-0000-1019.inf6.spectrum.com. [2600:6c4a:4d3f:6d5c::1019])
-        by smtp.gmail.com with ESMTPSA id j1-20020a37ef01000000b00789e9bbf962sm894901qkk.133.2024.03.22.09.52.55
+        by smtp.gmail.com with ESMTPSA id j1-20020a37ef01000000b00789e9bbf962sm894901qkk.133.2024.03.22.09.52.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 09:52:56 -0700 (PDT)
+        Fri, 22 Mar 2024 09:52:58 -0700 (PDT)
 From: Brian Gerst <brgerst@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	x86@kernel.org
@@ -61,9 +61,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Uros Bizjak <ubizjak@gmail.com>,
 	David.Laight@aculab.com,
 	Brian Gerst <brgerst@gmail.com>
-Subject: [PATCH v4 08/16] x86/stackprotector/64: Convert to normal percpu variable
-Date: Fri, 22 Mar 2024 12:52:25 -0400
-Message-ID: <20240322165233.71698-9-brgerst@gmail.com>
+Subject: [PATCH v4 10/16] x86/percpu/64: Remove fixed_percpu_data
+Date: Fri, 22 Mar 2024 12:52:27 -0400
+Message-ID: <20240322165233.71698-11-brgerst@gmail.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240322165233.71698-1-brgerst@gmail.com>
 References: <20240322165233.71698-1-brgerst@gmail.com>
@@ -75,286 +75,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Older versions of GCC fixed the location of the stack protector canary
-at %gs:40.  This constraint forced the percpu section to be linked at
-virtual address 0 so that the canary could be the first data object in
-the percpu section.  Supporting the zero-based percpu section requires
-additional code to handle relocations for RIP-relative references to
-percpu data, extra complexity to kallsyms, and workarounds for linker
-bugs due to the use of absolute symbols.
-
-Use compiler options to redefine the stack protector location if
-supported, otherwise use objtool.  This will remove the contraint that
-the percpu section must be zero-based.
+Now that the stack protector canary value is a normal percpu variable,
+fixed_percpu_data is unused and can be removed.
 
 Signed-off-by: Brian Gerst <brgerst@gmail.com>
 ---
- arch/x86/Kconfig                      | 11 ++++----
- arch/x86/Makefile                     | 21 ++++++++++------
- arch/x86/entry/entry_64.S             |  2 +-
- arch/x86/include/asm/processor.h      | 16 ++----------
- arch/x86/include/asm/stackprotector.h | 36 ++++-----------------------
- arch/x86/kernel/asm-offsets_64.c      |  6 -----
- arch/x86/kernel/cpu/common.c          |  5 +---
- arch/x86/kernel/head_64.S             |  3 +--
- arch/x86/xen/xen-head.S               |  3 +--
- 9 files changed, 30 insertions(+), 73 deletions(-)
+ arch/x86/include/asm/processor.h | 8 --------
+ arch/x86/kernel/cpu/common.c     | 4 ----
+ arch/x86/kernel/vmlinux.lds.S    | 1 -
+ arch/x86/tools/relocs.c          | 1 -
+ 4 files changed, 14 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 121cfb9ffc0e..3dbefdb8a5d6 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -271,7 +271,7 @@ config X86
- 	select HAVE_FUNCTION_ARG_ACCESS_API
- 	select HAVE_SETUP_PER_CPU_AREA
- 	select HAVE_SOFTIRQ_ON_OWN_STACK
--	select HAVE_STACKPROTECTOR		if CC_HAS_SANE_STACKPROTECTOR
-+	select HAVE_STACKPROTECTOR		if X86_64 || CC_HAS_SANE_STACKPROTECTOR
- 	select HAVE_STACK_VALIDATION		if HAVE_OBJTOOL
- 	select HAVE_STATIC_CALL
- 	select HAVE_STATIC_CALL_INLINE		if HAVE_OBJTOOL
-@@ -411,15 +411,14 @@ config PGTABLE_LEVELS
- 
- config CC_HAS_SANE_STACKPROTECTOR
- 	bool
--	default y if 64BIT
-+	default $(cc-option,-mstack-protector-guard-reg=gs -mstack-protector-guard-symbol=__stack_chk_guard) if 64BIT
- 	default $(cc-option,-mstack-protector-guard-reg=fs -mstack-protector-guard-symbol=__stack_chk_guard)
--	help
--	  We have to make sure stack protector is unconditionally disabled if
--	  the compiler does not allow control of the segment and symbol.
- 
- config STACKPROTECTOR_OBJTOOL
- 	bool
--	default n
-+	depends on X86_64 && STACKPROTECTOR
-+	default !CC_HAS_SANE_STACKPROTECTOR
-+	prompt "Debug objtool stack protector conversion" if CC_HAS_SANE_STACKPROTECTOR && DEBUG_KERNEL
- 
- menu "Processor type and features"
- 
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 662d9d4033e6..2a3ba1abb802 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -116,13 +116,7 @@ ifeq ($(CONFIG_X86_32),y)
-         # temporary until string.h is fixed
-         KBUILD_CFLAGS += -ffreestanding
- 
--    ifeq ($(CONFIG_STACKPROTECTOR),y)
--        ifeq ($(CONFIG_SMP),y)
--			KBUILD_CFLAGS += -mstack-protector-guard-reg=fs -mstack-protector-guard-symbol=__stack_chk_guard
--        else
--			KBUILD_CFLAGS += -mstack-protector-guard=global
--        endif
--    endif
-+        percpu_seg := fs
- else
-         BITS := 64
-         UTS_MACHINE := x86_64
-@@ -172,6 +166,19 @@ else
-         KBUILD_CFLAGS += -mcmodel=kernel
-         KBUILD_RUSTFLAGS += -Cno-redzone=y
-         KBUILD_RUSTFLAGS += -Ccode-model=kernel
-+
-+        percpu_seg := gs
-+endif
-+
-+ifeq ($(CONFIG_STACKPROTECTOR),y)
-+    ifneq ($(CONFIG_STACKPROTECTOR_OBJTOOL),y)
-+        ifeq ($(CONFIG_SMP),y)
-+		KBUILD_CFLAGS += -mstack-protector-guard-reg=$(percpu_seg)
-+		KBUILD_CFLAGS += -mstack-protector-guard-symbol=__stack_chk_guard
-+        else
-+		KBUILD_CFLAGS += -mstack-protector-guard=global
-+        endif
-+    endif
- endif
- 
- #
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 8af2a26b24f6..9478ff768dd0 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -191,7 +191,7 @@ SYM_FUNC_START(__switch_to_asm)
- 
- #ifdef CONFIG_STACKPROTECTOR
- 	movq	TASK_stack_canary(%rsi), %rbx
--	movq	%rbx, PER_CPU_VAR(fixed_percpu_data + FIXED_stack_canary)
-+	movq	%rbx, PER_CPU_VAR(__stack_chk_guard)
- #endif
- 
- 	/*
 diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 89ed5237e79f..946bebce396f 100644
+index 40d6add8ff31..1f15a7bee876 100644
 --- a/arch/x86/include/asm/processor.h
 +++ b/arch/x86/include/asm/processor.h
-@@ -387,16 +387,8 @@ struct irq_stack {
+@@ -386,14 +386,6 @@ struct irq_stack {
+ } __aligned(IRQ_STACK_SIZE);
  
  #ifdef CONFIG_X86_64
- struct fixed_percpu_data {
--	/*
--	 * GCC hardcodes the stack canary as %gs:40.  Since the
--	 * irq_stack is the object at %gs:0, we reserve the bottom
--	 * 48 bytes of the irq stack for the canary.
--	 *
--	 * Once we are willing to require -mstack-protector-guard-symbol=
--	 * support for x86_64 stackprotector, we can get rid of this.
--	 */
- 	char		gs_base[40];
--	unsigned long	stack_canary;
-+	unsigned long	reserved;
- };
- 
- DECLARE_PER_CPU_FIRST(struct fixed_percpu_data, fixed_percpu_data) __visible;
-@@ -411,11 +403,7 @@ extern asmlinkage void entry_SYSCALL32_ignore(void);
- 
- /* Save actual FS/GS selectors and bases to current->thread */
- void current_save_fsgs(void);
--#else	/* X86_64 */
--#ifdef CONFIG_STACKPROTECTOR
--DECLARE_PER_CPU(unsigned long, __stack_chk_guard);
--#endif
--#endif	/* !X86_64 */
-+#endif	/* X86_64 */
- 
- struct perf_event;
- 
-diff --git a/arch/x86/include/asm/stackprotector.h b/arch/x86/include/asm/stackprotector.h
-index 00473a650f51..d43fb589fcf6 100644
---- a/arch/x86/include/asm/stackprotector.h
-+++ b/arch/x86/include/asm/stackprotector.h
-@@ -2,26 +2,10 @@
- /*
-  * GCC stack protector support.
-  *
-- * Stack protector works by putting predefined pattern at the start of
-+ * Stack protector works by putting a predefined pattern at the start of
-  * the stack frame and verifying that it hasn't been overwritten when
-- * returning from the function.  The pattern is called stack canary
-- * and unfortunately gcc historically required it to be at a fixed offset
-- * from the percpu segment base.  On x86_64, the offset is 40 bytes.
-- *
-- * The same segment is shared by percpu area and stack canary.  On
-- * x86_64, percpu symbols are zero based and %gs (64-bit) points to the
-- * base of percpu area.  The first occupant of the percpu area is always
-- * fixed_percpu_data which contains stack_canary at the appropriate
-- * offset.  On x86_32, the stack canary is just a regular percpu
-- * variable.
-- *
-- * Putting percpu data in %fs on 32-bit is a minor optimization compared to
-- * using %gs.  Since 32-bit userspace normally has %fs == 0, we are likely
-- * to load 0 into %fs on exit to usermode, whereas with percpu data in
-- * %gs, we are likely to load a non-null %gs on return to user mode.
-- *
-- * Once we are willing to require GCC 8.1 or better for 64-bit stackprotector
-- * support, we can remove some of this complexity.
-+ * returning from the function.  The pattern is called the stack canary
-+ * and is a unique value for each task.
-  */
- 
- #ifndef _ASM_STACKPROTECTOR_H
-@@ -36,6 +20,8 @@
- 
- #include <linux/sched.h>
- 
-+DECLARE_PER_CPU(unsigned long, __stack_chk_guard);
-+
- /*
-  * Initialize the stackprotector canary value.
-  *
-@@ -51,25 +37,13 @@ static __always_inline void boot_init_stack_canary(void)
- {
- 	unsigned long canary = get_random_canary();
- 
--#ifdef CONFIG_X86_64
--	BUILD_BUG_ON(offsetof(struct fixed_percpu_data, stack_canary) != 40);
--#endif
+-struct fixed_percpu_data {
+-	char		gs_base[40];
+-	unsigned long	reserved;
+-};
 -
- 	current->stack_canary = canary;
--#ifdef CONFIG_X86_64
--	this_cpu_write(fixed_percpu_data.stack_canary, canary);
--#else
- 	this_cpu_write(__stack_chk_guard, canary);
--#endif
- }
- 
- static inline void cpu_init_stack_canary(int cpu, struct task_struct *idle)
- {
--#ifdef CONFIG_X86_64
--	per_cpu(fixed_percpu_data.stack_canary, cpu) = idle->stack_canary;
--#else
- 	per_cpu(__stack_chk_guard, cpu) = idle->stack_canary;
--#endif
- }
- 
- #else	/* STACKPROTECTOR */
-diff --git a/arch/x86/kernel/asm-offsets_64.c b/arch/x86/kernel/asm-offsets_64.c
-index bb65371ea9df..590b6cd0eac0 100644
---- a/arch/x86/kernel/asm-offsets_64.c
-+++ b/arch/x86/kernel/asm-offsets_64.c
-@@ -54,11 +54,5 @@ int main(void)
- 	BLANK();
- #undef ENTRY
- 
--	BLANK();
+-DECLARE_PER_CPU_FIRST(struct fixed_percpu_data, fixed_percpu_data) __visible;
+-DECLARE_INIT_PER_CPU(fixed_percpu_data);
 -
--#ifdef CONFIG_STACKPROTECTOR
--	OFFSET(FIXED_stack_canary, fixed_percpu_data, stack_canary);
--	BLANK();
--#endif
- 	return 0;
- }
+ static inline unsigned long cpu_kernelmode_gs_base(int cpu)
+ {
+ #ifdef CONFIG_SMP
 diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 9a34651d24e7..f49e8f5b858d 100644
+index f49e8f5b858d..395a8831d507 100644
 --- a/arch/x86/kernel/cpu/common.c
 +++ b/arch/x86/kernel/cpu/common.c
-@@ -2063,16 +2063,13 @@ void syscall_init(void)
- 	if (!cpu_feature_enabled(X86_FEATURE_FRED))
- 		idt_syscall_init();
- }
--
--#else	/* CONFIG_X86_64 */
-+#endif /* CONFIG_X86_64 */
+@@ -1997,10 +1997,6 @@ EXPORT_PER_CPU_SYMBOL(pcpu_hot);
+ EXPORT_PER_CPU_SYMBOL(const_pcpu_hot);
  
- #ifdef CONFIG_STACKPROTECTOR
- DEFINE_PER_CPU(unsigned long, __stack_chk_guard);
- EXPORT_PER_CPU_SYMBOL(__stack_chk_guard);
- #endif
- 
--#endif	/* CONFIG_X86_64 */
+ #ifdef CONFIG_X86_64
+-DEFINE_PER_CPU_FIRST(struct fixed_percpu_data,
+-		     fixed_percpu_data) __aligned(PAGE_SIZE) __visible;
+-EXPORT_PER_CPU_SYMBOL_GPL(fixed_percpu_data);
 -
- /*
-  * Clear all 6 debug registers:
+ static void wrmsrl_cstar(unsigned long val)
+ {
+ 	/*
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index 0b152f96c24e..667202ebd37f 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -473,7 +473,6 @@ SECTIONS
   */
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index b11526869a40..cfbf0486d424 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -361,8 +361,7 @@ SYM_INNER_LABEL(common_startup_64, SYM_L_LOCAL)
+ #define INIT_PER_CPU(x) init_per_cpu__##x = ABSOLUTE(x)
+ INIT_PER_CPU(gdt_page);
+-INIT_PER_CPU(fixed_percpu_data);
+ INIT_PER_CPU(irq_stack_backing_store);
  
- 	/* Set up %gs.
- 	 *
--	 * The base of %gs always points to fixed_percpu_data. If the
--	 * stack protector canary is enabled, it is located at %gs:40.
-+	 * The base of %gs always points to fixed_percpu_data.
- 	 * Note that, on SMP, the boot cpu uses init data section until
- 	 * the per cpu areas are set up.
- 	 */
-diff --git a/arch/x86/xen/xen-head.S b/arch/x86/xen/xen-head.S
-index 758bcd47b72d..ae4672ea00bb 100644
---- a/arch/x86/xen/xen-head.S
-+++ b/arch/x86/xen/xen-head.S
-@@ -53,8 +53,7 @@ SYM_CODE_START(startup_xen)
- 
- 	/* Set up %gs.
- 	 *
--	 * The base of %gs always points to fixed_percpu_data.  If the
--	 * stack protector canary is enabled, it is located at %gs:40.
-+	 * The base of %gs always points to fixed_percpu_data.
- 	 * Note that, on SMP, the boot cpu uses init data section until
- 	 * the per cpu areas are set up.
- 	 */
+ #ifdef CONFIG_MITIGATION_UNRET_ENTRY
+diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
+index 016650ddaf7f..65e6f3d6d890 100644
+--- a/arch/x86/tools/relocs.c
++++ b/arch/x86/tools/relocs.c
+@@ -834,7 +834,6 @@ static void percpu_init(void)
+  *	__per_cpu_load
+  *
+  * The "gold" linker incorrectly associates:
+- *	init_per_cpu__fixed_percpu_data
+  *	init_per_cpu__gdt_page
+  */
+ static int is_percpu_sym(ElfW(Sym) *sym, const char *symname)
 -- 
 2.44.0
 
