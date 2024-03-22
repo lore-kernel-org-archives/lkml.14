@@ -1,95 +1,228 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842BE59176;
-	Fri, 22 Mar 2024 16:02:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C8141C6A
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 16:03:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711123342; cv=none; b=l0vkPbK8cW/ss8xszssYgtOGk7G8H8O4xyEuBC11aGnBxwRX08ezEcRuzgusV5ptXGenQQGunaeb2vcklzbj9bQMUomhtJ3q/cLc05+npohu0XyBVLwx0I/gftiziqVRBt+lFbo8cUn45G7+iL4/mmFEwvgd3Quy77o7z6YYm+0=
+	t=1711123394; cv=none; b=iGeU7Oh679OYVolrsWlBkQf4AqX0021iZBh32BanvTGQVWDzcUlq5pa5w0B2HmztyNQ9epUPolQUjtmXIH9s4/zUTRfqDZT63t5xPlv64b7EJaisXwhIuC1bdMwmzgZ2K5ShbNaGR4WgBn/TRkypmCyjPh8ScVDehLXPEwiB9hI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711123342; c=relaxed/simple;
-	bh=Fh1WVlXUCaDzE+2uvloKq2wmWpHmUcExpGG+lPA3Nz4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZlG8RZK11FJXZ4+q7e2FxfJ70uzKd+KAuu7NhgGMfERwgO9CuuP1wjGEY2lyid9l5ZRHOstUjrptUbDv2SSwH0c1Ah27wqFlU4Kxdlkuo5LKRWukpKgGdhuwBtuFyTBgovt6yY78xUdK7//BDIdtgshkBkcTKmC2TyshtnVJAPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OqcIEBaI; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711123394; c=relaxed/simple;
+	bh=SvJGLYHJxEO+kQPgbDvLc6DOGWqvWJBC/KeHsXQ0S+4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=HBTwgffkQ/80yP2JVOIiKNJptaGPAdJdUVV5ksft5nFkafn0eWBP6T+EAUA52AadpgQBX7PlVgILM4ceVTxLZ0+ElkZT/KjegAX2I9qyuMm7PTJ6Zjr/04iz7yL73SH0vAeryKYcXjUnx8RF7i9bcsn7yN5ZdsY6PZVQG/+wQec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=IdDw0AIz; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OqcIEBaI"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a46f97b8a1bso308978766b.0;
-        Fri, 22 Mar 2024 09:02:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="IdDw0AIz"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d4a8bddc21so31218161fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 09:03:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711123339; x=1711728139; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711123390; x=1711728190; darn=vger.kernel.org;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OPqoca3+E6LNWJ9WbqjZz0KE97nzXeTI6WO+9c+3l6A=;
-        b=OqcIEBaIGZMzKwinb4pCyYvxnGviIpvc9qV9ukjKfDSDE9qUPGWrBah8B0i1SdYZ1j
-         yTgzru1IDqPoxatyPTbWW8c0M/oXXSkKEP4MBx1V9bgkn2GSjgA3KufhAU259yfvkIl7
-         pas3E4iJhAfYn2D+v6e4UqgKUkY2PqUAEkVtixrqn33UiZH1N19GwusAmfwhTzFrK15n
-         qUGVVrbQv/yx2SCSsLmrT4LKBiRRMmHYiPR+gpAH3VfLaXylR+NPmVoTBnjkHj21cNjq
-         /jvl1nNFEi+gH4HNpIJio06LgU9L4sJdxpA1DsT7Cv9uV8fgHOZK5lc9BAhs3bHUk4Zc
-         X6gw==
+        bh=Kh0B0Op/7iFcRFrIOoiJQuhYzDeOdAJ2QNUlBpVkvVY=;
+        b=IdDw0AIzYkF3KLWngPQI+az8mx+M8FLiWwNYqRIE92h8Vu9srNP9eZVFiNGc7jtPGA
+         Ih89BDJdG9LFzi2dVc6cam4pv2zesvKRNxKYOSDUnFqxFZEUW/yVWNqD0bdxut/MYyDB
+         dML5PQc5dNse+OU64tVuoIjNUO8bApbXSsFiR/yWFhKl1A5B9tGZfD64CsH/PgdECJM1
+         KPL6zNMYuXmleSPYhC21pYuyYgUSQNnGV2k9Y9Mjp/WHXv4Z7CKhk8NJJUXEmBhcDerA
+         Ey21LQwfdKeZ2OqOI+V3JMqd9Ts9EOw3/9wHS2EY9+S2I7eLvf7L91yC9X7TKKWED4il
+         MYZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711123339; x=1711728139;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OPqoca3+E6LNWJ9WbqjZz0KE97nzXeTI6WO+9c+3l6A=;
-        b=Hf9CcldVi852Uv7Y6Fax7Fi680uQkhxcU3lJ0ynxxgcg9nVAphFQ9GeCP/tU7k/hxq
-         7Vfa0uxK7pOZMRyHsD/k8JwWRJhbc+UfNfQarmlb7TIVX9Mv2PqMUlkJNGU45rbBfdaz
-         6L2/scevu3/fSIjFSgrm1g2f07c4tvXFOhGhoq3LNmb+d6+iWHsc1mUtvU+3TXdQ60rd
-         oh2H0dToEpK3r2Sai8p7vHu9FVd0/8ALCwyOpVw7RPKEIVXGfAGLboS/vAaKt/2voMft
-         VoEHOn50tmMdxMrMk6qSCxYeuYVeqKiyb+NZlJ2LQVXawF85posseEz5OeOlJ5cl0dIG
-         q7pw==
-X-Forwarded-Encrypted: i=1; AJvYcCWbyEL6/YNt2acXKH6YkFsVgrD5Bon1C7M3cL7ZjFAzGRFvtT+Uhvxysn7G0EaJ5XN8r6mrcD1AZthgdRoU7UhS1F0czRN6cjt0wkVNcRs4ZriOH3nQLllTpYJUAHIw7W2Lkbc5RpUq5GwmVSAWqxhmhuwuP8R69nTsz0Xt8FrtFmsRfKqAUZ7dUaB87LE=
-X-Gm-Message-State: AOJu0YzzWXYlc1TCllg4DwOABwuBoYGan4cJVONOFkEAvTiUbNcSQbFJ
-	r3ao1N/wxeYVNQ0hxbPspQE0RiUWdO7lnDiWvOomH77YVFfYCEn53vmYiigxH/CMccJODrvBu6f
-	129cXtU8vVa4N8Vq5u6NzWBhAAq/TPtC84KE=
-X-Google-Smtp-Source: AGHT+IHrqPd014UhVB5COl0nfeju4prpHRPxz6aAstoqTW/frcw+zEFJRprsD9GE7c4ZfoZuZEXUC0gYmH0ur9J/ccM=
-X-Received: by 2002:a17:906:a3d6:b0:a46:fc33:9f3a with SMTP id
- ca22-20020a170906a3d600b00a46fc339f3amr113539ejb.26.1711123338499; Fri, 22
- Mar 2024 09:02:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711123390; x=1711728190;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Kh0B0Op/7iFcRFrIOoiJQuhYzDeOdAJ2QNUlBpVkvVY=;
+        b=GXs5dJHmhy6fvjPzRD1RM1lFioWRuk0D1tjBr4D5EsoMz+3K3jr2vzQQXNTnionw13
+         EiUO+SWc/VUph3SohRXImS79DM0ue8T506xrNyOvUXGFwY0qKV/9lZqjJSd3f8DXPKEg
+         A3PR44rvBsmOXVaRIjYZl2xullTPWPQKavYVOv8lmZi3KeoumdW1AlwwBa7Z/m+lB2na
+         rRSYMi8aCvFSyGBl0JlWGBfQkcAGDi8erolS4I8uiMTa3fG9qrpKztYz7LJReb9LjznM
+         hA+9BxVkNw0PXePI8uytkZB39ir3JpH238D0WzBF+cfSNZ1dAumJBmQB0JlDll9QEZrZ
+         7fqw==
+X-Forwarded-Encrypted: i=1; AJvYcCWZvvHJLGPKzWfHJg51OAulawWNXu4EKPsM9ebEeG5Q6fMHIAKBfOUOYxfu0IOp21Vqlb22yQZ/LTayJgg6/vNHtAYhj9agDTEyvW0R
+X-Gm-Message-State: AOJu0YwCGXvTLd6HqjPnlyfM1XI8ACp/NJ0q4v0wjBGePgqGW/JXm+uC
+	l2Y6OPnUuQk7bpVW0FlMqnM8GDALQhq5fOPdqPuRgedlsjV3GeSkqNxDLXmAQXs=
+X-Google-Smtp-Source: AGHT+IEkR6PizaNuC62j5Grot13csXnQY6gVrSzN5nx/GfkID77oL8KO3GnXgbM82pcwsLxNamFMfQ==
+X-Received: by 2002:a2e:9f4c:0:b0:2d4:6910:2ee5 with SMTP id v12-20020a2e9f4c000000b002d469102ee5mr2129385ljk.8.1711123390044;
+        Fri, 22 Mar 2024 09:03:10 -0700 (PDT)
+Received: from localhost (alyon-651-1-22-137.w82-122.abo.wanadoo.fr. [82.122.123.137])
+        by smtp.gmail.com with ESMTPSA id g11-20020a05600c310b00b0041408e16e6bsm3472839wmo.25.2024.03.22.09.03.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Mar 2024 09:03:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240306025801.8814-1-hpa@redhat.com> <20240306025801.8814-3-hpa@redhat.com>
- <Ze-N_y5Tbjc93aRp@surfacebook.localdomain> <CAEth8oEdzomdn5avXf44HXpoMFDfGpOjjxPFtaGkh0EhfZsPMQ@mail.gmail.com>
-In-Reply-To: <CAEth8oEdzomdn5avXf44HXpoMFDfGpOjjxPFtaGkh0EhfZsPMQ@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 22 Mar 2024 18:01:42 +0200
-Message-ID: <CAHp75VeoZ7p=7e9CgZftT5hThf-uMaUrqZBv=+tNYiUOevUOnw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] leds: rgb: leds-ktd202x: Get device properties
- through fwnode to support ACPI
-To: Kate Hsuan <hpa@redhat.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	=?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 22 Mar 2024 17:03:08 +0100
+Message-Id: <D00EM8TTYGXL.3MMIBWJT03M5R@baylibre.com>
+Subject: Re: [PATCH v4 10/11] pinctrl: pinctrl-tps6594: Add TPS65224 PMIC
+ pinctrl and GPIO
+From: "Esteban Blanc" <eblanc@baylibre.com>
+To: "Bhargav Raviprakash" <bhargav.r@ltts.com>,
+ <linux-kernel@vger.kernel.org>
+Cc: <m.nirmaladevi@ltts.com>, <lee@kernel.org>, <robh+dt@kernel.org>,
+ <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+ <jpanis@baylibre.com>, <devicetree@vger.kernel.org>, <arnd@arndb.de>,
+ <gregkh@linuxfoundation.org>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
+ <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>, <nm@ti.com>, <vigneshr@ti.com>,
+ <kristo@kernel.org>
+X-Mailer: aerc 0.15.2
+References: <20240320102559.464981-1-bhargav.r@ltts.com>
+ <20240320102559.464981-11-bhargav.r@ltts.com>
+In-Reply-To: <20240320102559.464981-11-bhargav.r@ltts.com>
 
-On Fri, Mar 22, 2024 at 7:45=E2=80=AFAM Kate Hsuan <hpa@redhat.com> wrote:
-> On Tue, Mar 12, 2024 at 7:04=E2=80=AFAM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
+On Wed Mar 20, 2024 at 11:25 AM CET, Bhargav Raviprakash wrote:
+> From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+>
+> Add support for TPS65224 pinctrl and GPIOs to TPS6594 driver as they have
+> significant functional overlap.
+> TPS65224 PMIC has 6 GPIOS which can be configured as GPIO or other
+> dedicated device functions.
+>
+> Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+> Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  drivers/pinctrl/pinctrl-tps6594.c | 258 +++++++++++++++++++++++++-----
+>  1 file changed, 215 insertions(+), 43 deletions(-)
+>
+> diff --git a/drivers/pinctrl/pinctrl-tps6594.c b/drivers/pinctrl/pinctrl-=
+tps6594.c
+> index 66985e54b..db0f5d2a8 100644
+> --- a/drivers/pinctrl/pinctrl-tps6594.c
+> +++ b/drivers/pinctrl/pinctrl-tps6594.c
+> @@ -320,8 +451,18 @@ static int tps6594_pinctrl_probe(struct platform_dev=
+ice *pdev)
+>  		return -ENOMEM;
+>  	pctrl_desc->name =3D dev_name(dev);
+>  	pctrl_desc->owner =3D THIS_MODULE;
+> -	pctrl_desc->pins =3D tps6594_pins;
+> -	pctrl_desc->npins =3D ARRAY_SIZE(tps6594_pins);
+> +	switch (tps->chip_id) {
+> +	case TPS65224:
+> +		pctrl_desc->pins =3D tps65224_pins;
+> +		pctrl_desc->npins =3D ARRAY_SIZE(tps65224_pins);
+> +		break;
+> +	case TPS6594:
+> +		pctrl_desc->pins =3D tps6594_pins;
+> +		pctrl_desc->npins =3D ARRAY_SIZE(tps6594_pins);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+>  	pctrl_desc->pctlops =3D &tps6594_pctrl_ops;
+>  	pctrl_desc->pmxops =3D &tps6594_pmx_ops;
 
-...
+See below.
 
-> > > +     chip->num_leds =3D (unsigned long)i2c_get_match_data(client);
-> >
-> > No warnings during compilation?
-> Yes, the compiler doesn't complain about it.
+> @@ -329,8 +470,28 @@ static int tps6594_pinctrl_probe(struct platform_dev=
+ice *pdev)
+>  	if (!pinctrl)
+>  		return -ENOMEM;
+>  	pinctrl->tps =3D dev_get_drvdata(dev->parent);
+> -	pinctrl->funcs =3D pinctrl_functions;
+> -	pinctrl->pins =3D tps6594_pins;
+> +	switch (pinctrl->tps->chip_id) {
 
-And for 32-bit mode as well?
+You could use tps->chip_id like in the previous switch.
 
-...
+> +	case TPS65224:
+> +		pinctrl->funcs =3D tps65224_pinctrl_functions;
+> +		pinctrl->func_cnt =3D ARRAY_SIZE(tps65224_pinctrl_functions);
+> +		pinctrl->pins =3D tps65224_pins;
+> +		pinctrl->num_pins =3D ARRAY_SIZE(tps65224_pins);
+> +		pinctrl->mux_sel_mask =3D TPS65224_MASK_GPIO_SEL;
+> +		pinctrl->remap =3D tps65224_muxval_remap;
+> +		pinctrl->remap_cnt =3D ARRAY_SIZE(tps65224_muxval_remap);
+> +		break;
+> +	case TPS6594:
+> +		pinctrl->funcs =3D pinctrl_functions;
 
-P.S. You have commented only on the two comments. What about the rest?
+This should be tps6594_pinctrl_functions
+
+> +		pinctrl->func_cnt =3D ARRAY_SIZE(pinctrl_functions);
+> +		pinctrl->pins =3D tps6594_pins;
+> +		pinctrl->num_pins =3D ARRAY_SIZE(tps6594_pins);
+> +		pinctrl->mux_sel_mask =3D TPS6594_MASK_GPIO_SEL;
+> +		pinctrl->remap =3D tps6594_muxval_remap;
+> +		pinctrl->remap_cnt =3D ARRAY_SIZE(tps6594_muxval_remap);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+
+See blow.
+
+>  	pinctrl->pctl_dev =3D devm_pinctrl_register(dev, pctrl_desc, pinctrl);
+>  	if (IS_ERR(pinctrl->pctl_dev))
+>  		return dev_err_probe(dev, PTR_ERR(pinctrl->pctl_dev),
+> @@ -338,8 +499,18 @@ static int tps6594_pinctrl_probe(struct platform_dev=
+ice *pdev)
+> =20
+>  	config.parent =3D tps->dev;
+>  	config.regmap =3D tps->regmap;
+> -	config.ngpio =3D TPS6594_PINCTRL_PINS_NB;
+> -	config.ngpio_per_reg =3D 8;
+> +	switch (pinctrl->tps->chip_id) {
+
+Same here, use tps->chip_id
+
+> +	case TPS65224:
+> +		config.ngpio =3D ARRAY_SIZE(tps65224_gpio_func_group_names);
+> +		config.ngpio_per_reg =3D TPS65224_NGPIO_PER_REG;
+> +		break;
+> +	case TPS6594:
+> +		config.ngpio =3D ARRAY_SIZE(tps6594_gpio_func_group_names);
+> +		config.ngpio_per_reg =3D TPS6594_NGPIO_PER_REG;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+>  	config.reg_dat_base =3D TPS6594_REG_GPIO_IN_1;
+>  	config.reg_set_base =3D TPS6594_REG_GPIO_OUT_1;
+>  	config.reg_dir_out_base =3D TPS6594_REG_GPIOX_CONF(0);
+
+Regarding all the switch case, they should be use to set all the struct
+fields that are known at runtime only. For example, pinctrl->funcs, and
+pinctrl->func_cnt are known at compile time. You should create template
+structs, one for TPS6594 the other TPS65224, initialise the allocated
+struct with the template and then fill the remaining fields with the
+runtime values. Something like this:
+
+```c
+struct test {
+    int a;
+    int *b;
+};
+
+static struct test template =3D {
+    .a =3D 42,
+};
+
+int main(void) {
+    struct test *test =3D malloc(sizeof(*test));
+    *test =3D sample;
+    test->b =3D NULL;
+
+    return 0;
+}
+```
+
+You could also try to reduce the number of switch case, there is no good
+reason to have 2 switch instead of one for pctrl_desc and pinctrl
+structs.
+
+Best regards,
 
 --=20
-With Best Regards,
-Andy Shevchenko
+Esteban "Skallwar" Blanc
+BayLibre
+
