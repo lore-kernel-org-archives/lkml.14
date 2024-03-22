@@ -1,122 +1,103 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053A34E1C4;
-	Fri, 22 Mar 2024 15:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FCF3C17;
+	Fri, 22 Mar 2024 15:16:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711120430; cv=none; b=MU/iFWND1f7MT1dbhE0AWC9zUwQzi2lFmWs3WYTc2iGl3tGeT7VR+aVqFPYywX4js+evXgxODhQRy+syoNFiNpWO4HqSH/DQcT0KHNMBosJbA2R73beLpT0/9vPAMDG+uOkUeSA+NOpl8qIu6p2NNWJ2egbiUIEFamWuUind/Iw=
+	t=1711120583; cv=none; b=KAKeM2x9LardCsyAQcN07SlQVLRAeXrvM6G0bAZ72vhNzpfBnv9kTWAl4nY7B91abGXCQxDn1LDOmfxnvTyP+yloiJOwcgz0d8HrvqXZU0Grd8nZ0/8ol5SID+bOG5heRpFZ7u6VMnLb/xfIlI6RhHToM8TeqnFI/In6mItoyGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711120430; c=relaxed/simple;
-	bh=aEiwvFe1b6yF+StEQZ1rr1/VhFvd+gqzOrSn6S08Psw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GUOs/p5Q8dKD+SJVa/edKL65GOIQjTC+ijxuTHWtc9X17wZjKYP4CNtRs1TDTxTUQGURFx5Whr5qDcRUs2v/peGnkhkCNIkeMpEMM0OF+UfX3EKNtMZ9OzeswvODaABxSQkVViAyXvY3iQ09rfsl8bPA+BoeC8aRfvZcd3dwvxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HF8JbSRd; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1711120583; c=relaxed/simple;
+	bh=k6ZBqXOSOxwfvSpr3Zn2oOPOvUxMxZJnrUwc4UoCotY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sRl7vAAbB5VGKJmYKF4MFlAs/uvWF1jrovrBA1iBj4D1KD4v9ickIpHuftzp9/SVWQSm2hXKHRj+dPvdKK7UpNBYfgcNXcRz6R9gyTHHfl3o5wzj5uHLKVLN1NwDyxhkFczkiSo8jRdL1qOu7YAPXnxbafqsTRiWBf3Eu1Hv5/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HF8JbSRd"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-414787c73c7so8261155e9.0;
-        Fri, 22 Mar 2024 08:13:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711120427; x=1711725227; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WwFqtu9cCN48eR2VP1yO+BUGDJO89kd/raVOaSi/YaE=;
-        b=HF8JbSRdRNXTUpKRm+8Gxk3C74RbWDpW2ZhBXu/ukJ6p/0AFRyBeO01FM5nJQuDe7J
-         TftpE3pFl2XMV22KdoD4L6LOvhPbhWKi6YlxlJizqcZiBU9kM3ghnjLxJ9sAvk+IhSoa
-         qqr1GzTmC5dNwjtQx8VZ2RQgVDCiYjmNbp9DxcD7XcnCbLDkrybTucm/jf8TlwisWy8I
-         P6UFT9v1lppCnVLarS+Fjv37qFwDfDmKc1RwY5RBqI8vkoExB+DImT75aT+TpBirnuiw
-         ZyUrNhIiHrfwkIBDYjA9PNr0kcWs+dkzzJlUdehFuJMiFBom1ClyXf4JBrJmIDI0ZbIs
-         JJ0A==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-56b8e4f38a2so2951581a12.3;
+        Fri, 22 Mar 2024 08:16:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711120427; x=1711725227;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WwFqtu9cCN48eR2VP1yO+BUGDJO89kd/raVOaSi/YaE=;
-        b=p2Qc/8QOJhSNtduFksby/WwUSlOqAc0PwdKy9IgYEWbuAJfniv+DcC6yUzExIXW0MX
-         Zam3P5rclcMlR8+aHREMwWQ0SCkBf6VGmJugPQCgNhsgpGHJHqSmUWuBDmECQI9ZMxml
-         CgT3vZIyPzo3B3ojVxaBnp2J/bM/UMnQXAxdtCrgNDhZzqajn+yjSTBgWxsz0bNSKhN2
-         LOE7mdFoIId/iGjO//uULRPyKrDJXTbN3kqWSacFbbDCLyjcbtO6dKanLE6fYOc2Pmvs
-         UN2A/jgES9+1ZciyksRzoAeJYv/vKpN4UZUz0mwj609p1cYdRRYpOcdC894U8si/HRou
-         oevQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVn6Yyqy8zWN8xEbweO1oIqhoCptrJiYboWFs2D6vw9ODhGf3TzWzFztVz1bi32dPskz1HKrt5Tq2UCv3iySMJtI3Tj/PjLwLk0l01GpBaa0I8yKO8nKf42ub4by7nqTSFlLuHh59ec3f9tY7q2
-X-Gm-Message-State: AOJu0YzWPX93eihme8m3uRiup7JYLYlcmVwFvWWMjoDRIJ2XlPzc7Kd/
-	FbvN+cJw8kBFkNxPXh/a93MJ3MzpfheUSZIEWBsqptEVk3MiXcIp
-X-Google-Smtp-Source: AGHT+IHZNeSZB4uvwIbaQvYaMT6aOs5dhwK5eOPl9RrKRfxIl1ZJULyy64o1gTX5Dx2isLcaInjLRg==
-X-Received: by 2002:a05:600c:5596:b0:414:c42:e114 with SMTP id jp22-20020a05600c559600b004140c42e114mr1824737wmb.39.1711120427360;
-        Fri, 22 Mar 2024 08:13:47 -0700 (PDT)
-Received: from prasmi.home ([2a00:23c8:2500:a01:7b89:721b:d6b0:d7e8])
-        by smtp.gmail.com with ESMTPSA id h13-20020a05600c314d00b004146d736fcdsm8626677wmo.36.2024.03.22.08.13.46
+        d=1e100.net; s=20230601; t=1711120580; x=1711725380;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SMb2IgPKyZnj/ue62em5Q9KAY8/Lp0+DnO65BTLg4OM=;
+        b=CoJ9mIHihB2kA/XJyUiSefUz0qvTLupzv8EU44zZw8l1kvolD71JaqF/9x1Ks7dS8c
+         tSpDrWBRqoyRWjumtaoB1OwtFcrFefSx7IL4mU9RMcNDHk9sgqUCRd3QBDwPssNhu7PX
+         D3PTg+ZzNvB2LSDFaNRfA9QaKgIFYgQjmNVQYTC6WzrK6S/3tVthRsZXHs0K2oMBchwp
+         teSTqCBZ/0heRYk4CPf8Ayd7EYpW6iuhGpjYdqgzsCb6wADBQRCyDnY/peqlEt67Grz1
+         LhXCDVeww5oaGfaSY4BnmzlJLHaLVA44Bp0+J6s0kz07rf8UZFe1kpKfka66USAiYLq4
+         7kow==
+X-Forwarded-Encrypted: i=1; AJvYcCUzEcykoZ6I+tQ7lgSV4jvKqMFIl+3p7FXU7n9C7q9W1CzAnFbRpS/+1fCawgoXa2vIK+xaLQfXQcri76HFLhqKhFZlV6EEqlFurUEOzVo/efXRrat7Rwe5UWJSk/oHmVyKDahtNZsuEwOrJjA=
+X-Gm-Message-State: AOJu0Yz7QHfnRH92h7ggbCZ8Qj22u+tIlAESQX0aBZqwwcBC81aKKS0o
+	ctzuouInbJp9+pxa/yafmLeUbesKq2PaRoq7Akw+TKdfk3AOvj1ppzVlpg8O
+X-Google-Smtp-Source: AGHT+IG19fJVfmLxYOcOEr80oE8P0l2x5mYegvQxSIpQMrvkuLrpfoVX+O792HS4x99bT+I74w91TA==
+X-Received: by 2002:a17:906:1843:b0:a46:f958:2eb6 with SMTP id w3-20020a170906184300b00a46f9582eb6mr1801147eje.67.1711120580209;
+        Fri, 22 Mar 2024 08:16:20 -0700 (PDT)
+Received: from gmail.com (fwdproxy-lla-120.fbsv.net. [2a03:2880:30ff:78::face:b00c])
+        by smtp.gmail.com with ESMTPSA id oz27-20020a170906cd1b00b00a473490aae8sm543234ejb.24.2024.03.22.08.16.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 08:13:46 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chris Brandt <chris.brandt@renesas.com>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 2/2] clocksource/drivers/renesas-ostm: Allow OSTM driver to reprobe for RZ/V2H(P) SoC
-Date: Fri, 22 Mar 2024 15:12:19 +0000
-Message-Id: <20240322151219.885832-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240322151219.885832-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20240322151219.885832-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Fri, 22 Mar 2024 08:16:19 -0700 (PDT)
+Date: Fri, 22 Mar 2024 08:16:17 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: Jeff Johnson <jjohnson@kernel.org>, kuba@kernel.org,
+	keescook@chromium.org,
+	"open list:NETWORKING DRIVERS (WIRELESS)" <linux-wireless@vger.kernel.org>,
+	"open list:QUALCOMM ATHEROS ATH11K WIRELESS DRIVER" <ath11k@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] wifi: ath11k: allocate dummy net_device dynamically
+Message-ID: <Zf2gwaEU4PQ+6GMe@gmail.com>
+References: <20240319185735.1268980-1-leitao@debian.org>
+ <871q85as8e.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <871q85as8e.fsf@kernel.org>
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Wed, Mar 20, 2024 at 04:32:49PM +0200, Kalle Valo wrote:
+> Breno Leitao <leitao@debian.org> writes:
+> 
+> > Embedding net_device into structures prohibits the usage of flexible
+> > arrays in the net_device structure. For more details, see the discussion
+> > at [1].
+> >
+> > Un-embed the net_device from struct ath11k_ext_irq_grp by converting it
+> > into a pointer. Then use the leverage alloc_netdev() to allocate the
+> > net_device object at ath11k_ahb_config_ext_irq() for ahb, and
+> > ath11k_pcic_ext_irq_config() for pcic.
+> >
+> >  The free of the device occurs at ath11k_ahb_free_ext_irq() for the ahb
+> > case, and ath11k_pcic_free_ext_irq() for the pcic case.
+> >
+> > [1] https://lore.kernel.org/all/20240229225910.79e224cf@kernel.org/
+> >
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> 
+> This crashes on my nuc x86 test box with WCN6855 hw2.0 when running
+> rmmod, stacktrace below. I used tag ath-202403201010 from my ath.git
+> tree as the baseline. Sorry that I'm not able to debug this further
+> right now.
 
-The RZ/V2H(P) (R9A09G057) SoC is equipped with the Generic Timer Module,
-also known as OSTM. Similar to the RZ/G2L SoC, the OSTM on the RZ/V2H(P)
-SoC requires the reset line to be deasserted before accessing any
-registers.
+Thanks for the detailed log. I am trying to understood the issue, and I think
+we are deferring a null pointer, which is likely net_device->dev_addr.
 
-Early call to ostm_init() happens through TIMER_OF_DECLARE() which always
-fails with -EPROBE_DEFER, as resets are not available that early in the
-boot process.  To address this issue on the RZ/V2H(P) SoC, enable the OSTM
-driver to be reprobed through the platform driver probe mechanism.
+Here, dev->dev_addr seems to be NULL.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
-v1->v2
-- Updated commit description
-- Dropped usage of IS_ENABLED() and used defined() instead
----
- drivers/clocksource/renesas-ostm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>   27:	83 e6 07             	and    $0x7,%esi
+>   2a:*	42 0f b6 14 30       	movzbl (%rax,%r14,1),%edx		<-- trapping instruction
 
-diff --git a/drivers/clocksource/renesas-ostm.c b/drivers/clocksource/renesas-ostm.c
-index 8da972dc1713..39487d05a009 100644
---- a/drivers/clocksource/renesas-ostm.c
-+++ b/drivers/clocksource/renesas-ostm.c
-@@ -224,7 +224,7 @@ static int __init ostm_init(struct device_node *np)
- 
- TIMER_OF_DECLARE(ostm, "renesas,ostm", ostm_init);
- 
--#ifdef CONFIG_ARCH_RZG2L
-+#if defined(CONFIG_ARCH_RZG2L) || defined(CONFIG_ARCH_R9A09G057)
- static int __init ostm_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--- 
-2.34.1
+In this case, and I understand RAX seems to be dev->addr, and R14 is the
+KASAN shadow:
 
+	RAX = 0000000000000000
+	R14 = dffffc0000000000 (CONFIG_KASAN_SHADOW_OFFSET)
+
+So, we are clearly deferring a NULL pointer.
+
+Now, why? Not sure yet.
