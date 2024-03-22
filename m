@@ -1,84 +1,172 @@
-Received: from dilbert.mork.no (dilbert.mork.no [65.108.154.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A727171C1;
-	Fri, 22 Mar 2024 12:15:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.108.154.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F0C2A1BA
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 12:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711109757; cv=none; b=X4K3DK/xN1ZxXfzavrWX0DrlWLLNGtaLhnE5SEiHOv3hF/JS3nn5te3mIWu1HaxBvQGUduNFHNciR6a2phLR7Ul9BTn/UmK/MAYqnlSZgrDOJJdQFL3v37cNv9C0Wm0vEYG2T5vxCCiIjS0Dm2dnfm1r8BDM5q/05GKBk4c2wMA=
+	t=1711109841; cv=none; b=cNQOL+AMXbB2gMNeC2trhHvEqp3MkzSUNVQIOw4191umm1MSchqCMpS5JcyC0nFK5vFxQP6xMfhWrgJSBixJlM4BT/9OW79K+2laqp65L/P+806aAlvAipEUHDIXgLsyXk0/CYp7hCfstyEKqh17BuMYQNU4Shh6EPQOOMF89fU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711109757; c=relaxed/simple;
-	bh=JWlzNTdBPfHAxnqkWziniLXSJYrdVDBFRm2ImvbfiSc=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=QGYzJW/eckdZfrNWiZpOEvmNdIH861cyuvHEVJPnTyNr7JBWM6vxinv81vPg/s7LsvAR6mjbtCmEIYerU+0JHmNfojbLXnn+RtL/jvhhCjt+UmZ1xYZ+72P+GowrxKcACKSt85o4X+J6C09PLHWo9EV+21KgMd2iZZunz049AUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mork.no; spf=pass smtp.mailfrom=miraculix.mork.no; dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b=kkHOLx4B; arc=none smtp.client-ip=65.108.154.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mork.no
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=miraculix.mork.no
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="kkHOLx4B"
-Received: from canardo.dyn.mork.no ([IPv6:2a01:799:10da:6900:0:0:0:1])
-	(authenticated bits=0)
-	by dilbert.mork.no (8.17.1.9/8.17.1.9) with ESMTPSA id 42MC0OpO490219
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
-	Fri, 22 Mar 2024 12:00:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
-	t=1711108824; bh=v1Mw2t0DHAqma4CLFbfsRIpr8UUgEMDDKtBpdTfFWZo=;
-	h=From:To:Cc:Subject:References:Date:Message-ID:From;
-	b=kkHOLx4BY4hrINWm3v7suVdWXoyKOo9sC95WCxewPn7sSlV7Lq/GGm9SGPg3uiBu6
-	 0nNN2clcjmde6NDBXGWgN15PezfcHA8pRYU6YjCp3/aGAwS6dK28zDcMkHrzxtmheO
-	 5wldMRSxgX0W4n+7aPuuNQ47As7rQfhSMrfuheVM=
-Received: from miraculix.mork.no ([IPv6:2a01:799:10da:690a:d43d:737:5289:b66f])
-	(authenticated bits=0)
-	by canardo.dyn.mork.no (8.17.1.9/8.17.1.9) with ESMTPSA id 42MC0N8w3345610
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
-	Fri, 22 Mar 2024 13:00:23 +0100
-Received: (nullmailer pid 1671577 invoked by uid 1000);
-	Fri, 22 Mar 2024 12:00:22 -0000
-From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-To: Liviu Dudau <liviu@dudau.co.uk>
-Cc: Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>,
-        Haijun Liu <haijun.liu@mediatek.com>,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@linux.intel.com>,
-        M Chetan Kumar <m.chetan.kumar@linux.intel.com>,
-        Ricardo Martinez <ricardo.martinez@linux.intel.com>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Sergey Ryazanov <ryazanov.s.a@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: net: wwan: t7xx: BUG: Unaligned access when loading mtk_t7xx
- module
-Organization: m
-References: <Zfxlj3pYUk4ys47T@bart.dudau.co.uk>
-Date: Fri, 22 Mar 2024 13:00:22 +0100
-In-Reply-To: <Zfxlj3pYUk4ys47T@bart.dudau.co.uk> (Liviu Dudau's message of
-	"Thu, 21 Mar 2024 16:51:27 +0000")
-Message-ID: <87il1ezdbd.fsf@miraculix.mork.no>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1711109841; c=relaxed/simple;
+	bh=0pbRR2vkbIB7Z3gkQkplpo2Ziv0vQOMlC6ZXoJM3okM=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=IVjrtJWAolMynai8qFd7L6iZUmfIqJJMddQECe/LXTO9GGEYfXFEY1PHZJQXQXp4Ag3+EHpu2JV6U/dXSAgqxm2Me9kj1G9bGym0TgvrIlcAti0238lbyEf82Ib18W+9ez5lZiYKOCoA6HPTP+MD7m9QTdfdPV43Mj9UqD+OQR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7cc01445f6bso209810439f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 05:17:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711109839; x=1711714639;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rcqXujar57OhAQTqX7QZ4R+z6KDBiN43Nl6ZNtRa3F4=;
+        b=EM85ZQwnAz1LiVmfl9QXZ5Lb/XHa9zkv9Gg18IOz12KudRVhgIp+DhKVIhhwl7AJ+V
+         +27tFmUMmRdbNDt8hTG36N67+j4NYbQCXYb2W0QL4g2N88SwR4bQXhvhptGZxEvnJXKr
+         O2pJbJSLvcgxjvm+O33alweza1Pr2pWpy3w0GBnbDf2YW29l+LRWSY4eA2BPzGxAoIGw
+         nGYYJTMSYUNHO3qJt40ciQEH8LWILnh+N63URTGvAQ8fCaI+cQ4flGedufk/1Ef4bzVz
+         y5jf99Odf0XwuqwW0CunKwpSslrRUFJiDCiyd/Paeco6ZW4DsvdGQauskrSbsw71Nl0g
+         EMZw==
+X-Forwarded-Encrypted: i=1; AJvYcCXOUyz9vUwn6hGUpzrUXCrLsoc7dKaTxJl2XsYG0zdvv2EffgaL3tx8LmXMA5tly9T1f68jl1eHks1z+DoYUoc+2R/F9FTK05LOZdgs
+X-Gm-Message-State: AOJu0YznoloEuiWhUEnDX6RfsgcEHmWKdjTCRZErCoDJbGfroEDgBVnw
+	ytmPAFF7rU5QmZPjVVDI5IUilFE/CyRTu9O819gb2b+GuaYp3j2QVq2sXk4oQT3gEKe5l45YUgk
+	AMBV6s/7ND3jfat87K9aSyqN4ukrD1cL/51+hCyBN+R5/OoJTFkbTOPI=
+X-Google-Smtp-Source: AGHT+IGE/RCFPMJfBXSSfiLYr8RuHW+ea3Rnm0hwY/q+klNFkh+wLxljOkSaNDyyrkeMWE0xNGNiJyY4T7RcribgVZdtys/LVTYg
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 1.0.3 at canardo
-X-Virus-Status: Clean
+X-Received: by 2002:a92:c26b:0:b0:366:be6a:10b7 with SMTP id
+ h11-20020a92c26b000000b00366be6a10b7mr112493ild.2.1711109839014; Fri, 22 Mar
+ 2024 05:17:19 -0700 (PDT)
+Date: Fri, 22 Mar 2024 05:17:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000205af206143ece22@google.com>
+Subject: [syzbot] [net?] KMSAN: uninit-value in erspan_build_header (2)
+From: syzbot <syzbot+9e27778c0edc62cb97d8@syzkaller.appspotmail.com>
+To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Liviu Dudau <liviu@dudau.co.uk> writes:
+Hello,
 
->  I had a
-> go at guessing that UL registers are at 0x8 and 0x48 offsets and DL
-> registers are at 0x0478 and 0x04b8, but while that fixes the alignment
-> exception, I now get a "CLDMA{0,1} queue 0 is not empty" message.
+syzbot found the following issue on:
 
-I don't think you can assume the register offsets are wrong.  It looks
-more like the device doesn't care about alignment.
+HEAD commit:    a4145ce1e7bc Merge tag 'bcachefs-2024-03-19' of https://ev..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=154a06a5180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5c1d7ee7e74661a8
+dashboard link: https://syzkaller.appspot.com/bug?extid=9e27778c0edc62cb97d8
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1126e1a5180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15c14e31180000
 
-But given that the driver includes <linux/io-64-nonatomic-lo-hi.h>, you
-can probably replace those unaligned 64bit accesses with two nonatomic
-32bit accesses.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/ce90c7e9c4b9/disk-a4145ce1.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/fc2e82754c55/vmlinux-a4145ce1.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/dfc8b656ea07/bzImage-a4145ce1.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+9e27778c0edc62cb97d8@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in erspan_build_header+0x170/0x2f0 include/net/erspan.h:197
+ erspan_build_header+0x170/0x2f0 include/net/erspan.h:197
+ erspan_xmit+0x128a/0x1ec0 net/ipv4/ip_gre.c:706
+ __netdev_start_xmit include/linux/netdevice.h:4903 [inline]
+ netdev_start_xmit include/linux/netdevice.h:4917 [inline]
+ xmit_one net/core/dev.c:3531 [inline]
+ dev_hard_start_xmit+0x247/0xa20 net/core/dev.c:3547
+ sch_direct_xmit+0x3c5/0xd50 net/sched/sch_generic.c:343
+ __dev_xmit_skb net/core/dev.c:3760 [inline]
+ __dev_queue_xmit+0x2e6a/0x52c0 net/core/dev.c:4301
+ dev_queue_xmit include/linux/netdevice.h:3091 [inline]
+ __bpf_tx_skb net/core/filter.c:2136 [inline]
+ __bpf_redirect_common net/core/filter.c:2180 [inline]
+ __bpf_redirect+0x14a6/0x1620 net/core/filter.c:2187
+ ____bpf_clone_redirect net/core/filter.c:2460 [inline]
+ bpf_clone_redirect+0x328/0x470 net/core/filter.c:2432
+ ___bpf_prog_run+0x13fe/0xe0f0 kernel/bpf/core.c:1997
+ __bpf_prog_run512+0xb5/0xe0 kernel/bpf/core.c:2238
+ bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
+ __bpf_prog_run include/linux/filter.h:657 [inline]
+ bpf_prog_run include/linux/filter.h:664 [inline]
+ bpf_test_run+0x499/0xc30 net/bpf/test_run.c:425
+ bpf_prog_test_run_skb+0x14ea/0x1f20 net/bpf/test_run.c:1058
+ bpf_prog_test_run+0x6b7/0xad0 kernel/bpf/syscall.c:4240
+ __sys_bpf+0x6aa/0xd90 kernel/bpf/syscall.c:5649
+ __do_sys_bpf kernel/bpf/syscall.c:5738 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:5736 [inline]
+ __x64_sys_bpf+0xa0/0xe0 kernel/bpf/syscall.c:5736
+ do_syscall_64+0xd5/0x1f0
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+
+Uninit was created at:
+ slab_post_alloc_hook mm/slub.c:3804 [inline]
+ slab_alloc_node mm/slub.c:3845 [inline]
+ kmem_cache_alloc_node+0x613/0xc50 mm/slub.c:3888
+ kmalloc_reserve+0x13d/0x4a0 net/core/skbuff.c:577
+ pskb_expand_head+0x222/0x19d0 net/core/skbuff.c:2245
+ __skb_cow include/linux/skbuff.h:3671 [inline]
+ skb_cow_head include/linux/skbuff.h:3705 [inline]
+ erspan_xmit+0xb08/0x1ec0 net/ipv4/ip_gre.c:692
+ __netdev_start_xmit include/linux/netdevice.h:4903 [inline]
+ netdev_start_xmit include/linux/netdevice.h:4917 [inline]
+ xmit_one net/core/dev.c:3531 [inline]
+ dev_hard_start_xmit+0x247/0xa20 net/core/dev.c:3547
+ sch_direct_xmit+0x3c5/0xd50 net/sched/sch_generic.c:343
+ __dev_xmit_skb net/core/dev.c:3760 [inline]
+ __dev_queue_xmit+0x2e6a/0x52c0 net/core/dev.c:4301
+ dev_queue_xmit include/linux/netdevice.h:3091 [inline]
+ __bpf_tx_skb net/core/filter.c:2136 [inline]
+ __bpf_redirect_common net/core/filter.c:2180 [inline]
+ __bpf_redirect+0x14a6/0x1620 net/core/filter.c:2187
+ ____bpf_clone_redirect net/core/filter.c:2460 [inline]
+ bpf_clone_redirect+0x328/0x470 net/core/filter.c:2432
+ ___bpf_prog_run+0x13fe/0xe0f0 kernel/bpf/core.c:1997
+ __bpf_prog_run512+0xb5/0xe0 kernel/bpf/core.c:2238
+ bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
+ __bpf_prog_run include/linux/filter.h:657 [inline]
+ bpf_prog_run include/linux/filter.h:664 [inline]
+ bpf_test_run+0x499/0xc30 net/bpf/test_run.c:425
+ bpf_prog_test_run_skb+0x14ea/0x1f20 net/bpf/test_run.c:1058
+ bpf_prog_test_run+0x6b7/0xad0 kernel/bpf/syscall.c:4240
+ __sys_bpf+0x6aa/0xd90 kernel/bpf/syscall.c:5649
+ __do_sys_bpf kernel/bpf/syscall.c:5738 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:5736 [inline]
+ __x64_sys_bpf+0xa0/0xe0 kernel/bpf/syscall.c:5736
+ do_syscall_64+0xd5/0x1f0
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+
+CPU: 0 PID: 5041 Comm: syz-executor167 Not tainted 6.8.0-syzkaller-11743-ga4145ce1e7bc #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024
+=====================================================
 
 
-Bj=C3=B8rn
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
