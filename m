@@ -1,172 +1,283 @@
-Received: from out03.mta.xmission.com (out03.mta.xmission.com [166.70.13.233])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C7F6E609;
-	Fri, 22 Mar 2024 18:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8AA39AC5;
+	Fri, 22 Mar 2024 18:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711133218; cv=none; b=duFMF5pWnwZ6n1kW8ECigABrFb8Du96JqGWZhV38fryECt6cTTHbGaeJfRm5dYodjqDUv81SKrHXRj/qJD6UyedaPwFs/cuxZ9+dJLCXG14jx4ioo0iiMZhQ6zaZq/ppxEqGyHhRBLqz2sVAs1Z2sgjogafCbW1s21WW1yxLuSQ=
+	t=1711133356; cv=none; b=cAWtdKcuf9vQDK4D27O/5k4f8ikPXITgDePAgbVA8/DYOzbnf6yhOddBZ2xs6zhlYLooS8R1ZW8NYTVfCSjaA66cAZPrIvYfjLAQnnnQN09wqbOwKSolRF29X1cZ1JKSBwfUZFhe5m+wcyDLqv44oU7PTuPVzV04jzHWMrVrnM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711133218; c=relaxed/simple;
-	bh=03Dg747A2OHVuEOp09BcVhm0o4yUsfAGR6i/kBtBbls=;
-	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type:Subject; b=rOi1KJYZQDC/b/ut6G813Y/0Rflwxh4UTDkYJHpnof/ZLzImitsc18tO9DbbR70fZV0YB3lfRw7bvUHNLiUi5Xl1kgiEPanflkYmU8BHd3y2bhm1s6WLRIr5twJZ+W23+CdDsTsRHpTNPmgeHHENKrOiSCt8nCAvvNE2G7DYDkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
-Received: from in01.mta.xmission.com ([166.70.13.51]:59970)
-	by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1rnids-009kpI-Kq; Fri, 22 Mar 2024 11:25:20 -0600
-Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:53186 helo=email.froward.int.ebiederm.org.xmission.com)
-	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1rnidr-001ecQ-FZ; Fri, 22 Mar 2024 11:25:20 -0600
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,  Christian Brauner
- <brauner@kernel.org>,  Jan Kara <jack@suse.cz>,  Kees Cook
- <keescook@chromium.org>,  linux-fsdevel@vger.kernel.org,
-  linux-mm@kvack.org,  linux-kernel@vger.kernel.org,  Peter Zijlstra
- <peterz@infradead.org>,  Ingo Molnar <mingo@redhat.com>,  Arnaldo Carvalho
- de Melo <acme@kernel.org>,  Namhyung Kim <namhyung@kernel.org>,  Ian
- Rogers <irogers@google.com>,  Al Grant <al.grant@arm.com>,  James Clark
- <james.clark@arm.com>,  Mark Rutland <mark.rutland@arm.com>
-References: <20240322162759.714141-1-leo.yan@arm.com>
-Date: Fri, 22 Mar 2024 12:24:54 -0500
-In-Reply-To: <20240322162759.714141-1-leo.yan@arm.com> (Leo Yan's message of
-	"Fri, 22 Mar 2024 16:27:59 +0000")
-Message-ID: <87zfuqb2mx.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1711133356; c=relaxed/simple;
+	bh=n53/fcwqscy7JLUVq7eTOs9MewFdG7+seHsjTqDEO9Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XkWSQdiSQzRFj3aDyWv8TXFG1kVHA+hekcYuz5OSqaqEry4LuPuyAvOgm6QHUTU57szChbr3zKNSz1e6h5dVcvGHmTl2+Mm+jF2rMzOiBfkbohrwAmmYR46Ie2Cpb52lSnHJI2mLfP3ujnj7wvjw+Oi1bgPpK2S3m0hdRDoeXgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=fexFCljY; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="fexFCljY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1711133340; x=1711738140; i=w_armin@gmx.de;
+	bh=Gf140vAIe/6XrAFst2m1XbhP5EmoKJXbeR+F4ntRdGU=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=fexFCljYi93Hvqo6mFkliIuDP1KSoVls2MBk+s+j9gCEChHiS+EFsGmjc8+Vvk3U
+	 mS/kykzrZHZUkxy4HeAj/JCYXXEJMAhyQt0BvKwrut34H+I/nJ+kEP9Nsq8U2E570
+	 4A6ropIPRGaOo09FngwBlNIuBSwGXBPDJaLUflzg1T2H7Njicbi0v82qcsT9aFi8q
+	 GqAoajZmabuu3G1CesfArnm3cU8OD8ddMWpN0UoshF4uc2nEDxQu/dzkgE/YcdFX/
+	 rvenp9bIPtdQYzXxAntYLnhFn8Do16urAXfgPBLxXY2ml7IG1UyZj2BtNRIDQRlfQ
+	 Fegb1QcUVvaAM7X3JQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mi2O1-1r9iIM45VR-00e43t; Fri, 22
+ Mar 2024 19:49:00 +0100
+Message-ID: <8b2245fb-fce0-4155-b022-19ca1d6b9a77@gmx.de>
+Date: Fri, 22 Mar 2024 19:48:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1rnidr-001ecQ-FZ;;;mid=<87zfuqb2mx.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX18snvkqDraPiZ7Bkn94EiEyuPU/BkxIg2g=
-X-SA-Exim-Connect-IP: 68.227.168.167
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-X-Spam-Level: 
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-	*      [score: 0.4997]
-	*  0.7 XMSubLong Long Subject
-	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
-	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
-	*      [sa05 1397; Body=1 Fuz1=1 Fuz2=1]
-	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
-X-Spam-DCC: XMission; sa05 1397; Body=1 Fuz1=1 Fuz2=1 
-X-Spam-Combo: ;Leo Yan <leo.yan@arm.com>
-X-Spam-Relay-Country: 
-X-Spam-Timing: total 592 ms - load_scoreonly_sql: 0.05 (0.0%),
-	signal_user_changed: 13 (2.2%), b_tie_ro: 11 (1.9%), parse: 1.57
-	(0.3%), extract_message_metadata: 19 (3.3%), get_uri_detail_list: 4.1
-	(0.7%), tests_pri_-2000: 14 (2.4%), tests_pri_-1000: 4.1 (0.7%),
-	tests_pri_-950: 1.59 (0.3%), tests_pri_-900: 1.27 (0.2%),
-	tests_pri_-90: 134 (22.7%), check_bayes: 132 (22.3%), b_tokenize: 13
-	(2.1%), b_tok_get_all: 12 (2.0%), b_comp_prob: 4.0 (0.7%),
-	b_tok_touch_all: 100 (16.8%), b_finish: 1.18 (0.2%), tests_pri_0: 389
-	(65.6%), check_dkim_signature: 0.78 (0.1%), check_dkim_adsp: 3.3
-	(0.6%), poll_dns_idle: 0.61 (0.1%), tests_pri_10: 2.2 (0.4%),
-	tests_pri_500: 7 (1.2%), rewrite_mail: 0.00 (0.0%)
-Subject: Re: [PATCH] exec: Don't disable perf events for setuid root
- executables
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11] platform/x86: add lenovo wmi camera button driver
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Ai Chao <aichao@kylinos.cn>, Hans de Goede <hdegoede@redhat.com>,
+ LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+References: <20240322064750.267422-1-aichao@kylinos.cn>
+ <5e30a445-0a14-4242-9c1d-578a5b7cfcbe@linux.intel.com>
+ <f1421e47-a6b7-e8f1-49a0-28e3351b2450@linux.intel.com>
+ <7705e36f-829b-4661-9399-496905b3d161@linux.intel.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <7705e36f-829b-4661-9399-496905b3d161@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:bUPb3MKzRGowKHd2B2cN6R6gArEQdmOVymPGvZkoFZ6ncCkU/Ec
+ fkiw+WWjtGlSqIcr9YzIqJUHVEMMiIJLWlMrAfkT4J8UujjrxUp5yQf9ocUkE/RsHGBT/3B
+ EtovWAM886/a4lCniJRum1Gq2PnIU/CNxhiIw61IiViF2VPE/D5xGN9XEos3GOxucB0big7
+ skZlpFcV5FnqsQQb+6M7g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:lU2DApP1Dws=;9RljlQCgpoQNUCx7h08Ysj6M9r8
+ jfOh/GgkEkKb385vOI0T7Gy/oFjJA65duK+KSSyj9H+4D6FNhHV/gfxPA6t//P+8Kpo0/DF7Y
+ 9W8eVpQ/f2YHtxXSYI/xHuhOcyVO6fxuRMdY2mpuICtl9q9uJqn2asc7O9l7oQbNb8bCe4cbt
+ 0g5A8FDBA74Ww658HXbPSQgqM/9dlhKCnTJ4noqq1bm8NgC+v3rixDffSmiMXF3WQL42xeau4
+ qZqM2h/jlrrOzurYG3WztBTX55OLlRExCliAQ5xec2nQ2q1MAIcUDrNT2Uxl38t9tDb9ZdVPJ
+ tsmwjegO4QQmeSdKDSoVkceWmmW/im5nBGHLnU1xP1QgEDeIWVAmoyk4AkjPyNNo+YcZIfAB3
+ VM7BNeke8ASziSoACvDfDTbzemRa08IA7ALhbxm0lz2H9pA/WIYyb7xeB2+v/2tDddfj91Z/H
+ gjNFgARqvi/5+Ys4ZG+BOXgaxUTp6IhyxeQYwPxOXPhd+nnouSgrC5xzvKFCrN4bOMGSf9+Tf
+ z0X4IhetsRFHETKAFHNaQOOEMj8coGty7AxM0zIT0MIdnX7VG4ojDwU18pNeu/SMS1JIwKDkw
+ IvnwA+A4agBt1Vl5DL46U2EFcNhnAE/WGa+HszPNP+j22K6rutAjyt9m6v7msCw5OZcjhEb6a
+ uSAhIxDngxVSOc0Hx2Af1G+tqteeyBPVUlbN+dGdMATYuu1WpJICpI7F93GGCvdilBrYB3kCt
+ OC6xpMnmOTQGbrC48ylpqpcbry0Q6lXi/AUyrYX/lZRNgNRkKnRPLP0fbJP3Pasqft7fFnuYx
+ wcgX7ETj5cB/SOFJLSlWX2mMRaIRWLOQG3UJJDvweNMJ4=
 
-Leo Yan <leo.yan@arm.com> writes:
+Am 22.03.24 um 17:47 schrieb Kuppuswamy Sathyanarayanan:
 
-> Al Grant reported that the 'perf record' command terminates abnormally
-> after setting the setuid bit for the executable. To reproduce this
-> issue, an additional condition is the binary file is owned by the root
-> user but is running under a non-privileged user. The logs below provide
-> details:
+> On 3/22/24 7:39 AM, Ilpo J=C3=A4rvinen wrote:
+>> On Fri, 22 Mar 2024, Kuppuswamy Sathyanarayanan wrote:
+>>> On 3/21/24 11:47 PM, Ai Chao wrote:
+>>>> Add lenovo generic wmi driver to support camera button.
+>>>> The Camera button is a GPIO device. This driver receives ACPI notifyi
+>>>> when the camera button is switched on/off. This driver is used in
+>>>> Lenovo A70, it is a Computer integrated machine.
+>>>>
+>>>> Signed-off-by: Ai Chao <aichao@kylinos.cn>
+>>>> ---
+>>>> v11: remove input_unregister_device.
+>>>> v10: Add lenovo_wmi_remove and mutex_destroy.
+>>>> v9: Add mutex for wmi notify.
+>>>> v8: Dev_deb convert to dev_err.
+>>>> v7: Add dev_dbg and remove unused dev in struct.
+>>>> v6: Modify SW_CAMERA_LENS_COVER to KEY_CAMERA_ACCESS_ENABLE/KEY_CAMER=
+A_ACCESS_DISABLE.
+>>>> v5: Remove camera button groups, modify KEY_CAMERA to SW_CAMERA_LENS_=
+COVER.
+>>>> v4: Remove lenovo_wmi_input_setup, move camera_mode into struct lenov=
+o_wmi_priv.
+>>>> v3: Remove lenovo_wmi_remove function.
+>>>> v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
+>>>>
+>>>>   drivers/platform/x86/Kconfig             |  12 +++
+>>>>   drivers/platform/x86/Makefile            |   1 +
+>>>>   drivers/platform/x86/lenovo-wmi-camera.c | 126 ++++++++++++++++++++=
++++
+>>>>   3 files changed, 139 insertions(+)
+>>>>   create mode 100644 drivers/platform/x86/lenovo-wmi-camera.c
+>>>>
+>>>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kcon=
+fig
+>>>> index bdd302274b9a..9506a455b547 100644
+>>>> --- a/drivers/platform/x86/Kconfig
+>>>> +++ b/drivers/platform/x86/Kconfig
+>>>> @@ -1001,6 +1001,18 @@ config INSPUR_PLATFORM_PROFILE
+>>>>   	To compile this driver as a module, choose M here: the module
+>>>>   	will be called inspur-platform-profile.
+>>>>
+>>>> +config LENOVO_WMI_CAMERA
+>>>> +	tristate "Lenovo WMI Camera Button driver"
+>>>> +	depends on ACPI_WMI
+>>>> +	depends on INPUT
+>>>> +	help
+>>>> +	  This driver provides support for Lenovo camera button. The Camera
+>>>> +	  button is a GPIO device. This driver receives ACPI notify when th=
+e
+>>>> +	  camera button is switched on/off.
+>>>> +
+>>>> +	  To compile this driver as a module, choose M here: the module
+>>>> +	  will be called lenovo-wmi-camera.
+>>>> +
+>>>>   source "drivers/platform/x86/x86-android-tablets/Kconfig"
+>>>>
+>>>>   config FW_ATTR_CLASS
+>>>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Mak=
+efile
+>>>> index 1de432e8861e..217e94d7c877 100644
+>>>> --- a/drivers/platform/x86/Makefile
+>>>> +++ b/drivers/platform/x86/Makefile
+>>>> @@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+=3D hdaps.o
+>>>>   obj-$(CONFIG_THINKPAD_ACPI)	+=3D thinkpad_acpi.o
+>>>>   obj-$(CONFIG_THINKPAD_LMI)	+=3D think-lmi.o
+>>>>   obj-$(CONFIG_YOGABOOK)		+=3D lenovo-yogabook.o
+>>>> +obj-$(CONFIG_LENOVO_WMI_CAMERA)	+=3D lenovo-wmi-camera.o
+>>>>
+>>>>   # Intel
+>>>>   obj-y				+=3D intel/
+>>>> diff --git a/drivers/platform/x86/lenovo-wmi-camera.c b/drivers/platf=
+orm/x86/lenovo-wmi-camera.c
+>>>> new file mode 100644
+>>>> index 000000000000..fda936e2f37c
+>>>> --- /dev/null
+>>>> +++ b/drivers/platform/x86/lenovo-wmi-camera.c
+>>>> @@ -0,0 +1,126 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>> +/*
+>>>> + * Lenovo WMI Camera Button Driver
+>>>> + *
+>>>> + * Author: Ai Chao <aichao@kylinos.cn>
+>>>> + * Copyright (C) 2024 KylinSoft Corporation.
+>>>> + */
+>>>> +
+>>>> +#include <linux/acpi.h>
+>>>> +#include <linux/device.h>
+>>>> +#include <linux/input.h>
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/mutex.h>
+>>>> +#include <linux/wmi.h>
+>>>> +
+>>>> +#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-=
+62F4EA400013"
+>>>> +
+>>>> +struct lenovo_wmi_priv {
+>>>> +	struct input_dev *idev;
+>>>> +	struct mutex notify_lock;	/* lenovo wmi camera button notify lock *=
+/
+>>>> +};
+>>>> +
+>>>> +enum {
+>>>> +	SW_CAMERA_OFF	=3D 0,
+>>>> +	SW_CAMERA_ON	=3D 1,
+>>>> +};
+>>>> +
+>>>> +static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_ob=
+ject *obj)
+>>>> +{
+>>>> +	struct lenovo_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
+>>>> +	unsigned int keycode;
+>>>> +	u8 camera_mode;
+>>>> +
+>>>> +	if (obj->type !=3D ACPI_TYPE_BUFFER) {
+>>>> +		dev_err(&wdev->dev, "Bad response type %u\n", obj->type);
+>>>> +		return;
+>>>> +	}
+>>>> +
+>>>> +	if (obj->buffer.length !=3D 1) {
+>>>> +		dev_err(&wdev->dev, "Invalid buffer length %u\n", obj->buffer.leng=
+th);
+>>>> +		return;
+>>>> +	}
+>>>> +
+>>>> +	/* obj->buffer.pointer[0] is camera mode:
+>>>> +	 *      0 camera close
+>>>> +	 *      1 camera open
+>>>> +	 */
+>>>> +	camera_mode =3D obj->buffer.pointer[0];
+>>>> +	if (camera_mode > SW_CAMERA_ON) {
+>>>> +		dev_err(&wdev->dev, "Unknown camera mode %u\n", camera_mode);
+>>>> +		return;
+>>>> +	}
+>>>> +
+>>>> +	mutex_lock(&priv->notify_lock);
+>>>> +
+>>>> +	keycode =3D (camera_mode =3D=3D SW_CAMERA_ON ?
+>>>> +		   KEY_CAMERA_ACCESS_ENABLE : KEY_CAMERA_ACCESS_DISABLE);
+>>>> +	input_report_key(priv->idev, keycode, 1);
+>>>> +	input_sync(priv->idev);
+>>>> +	input_report_key(priv->idev, keycode, 0);
+>>>> +	input_sync(priv->idev);
+>>>> +
+>>>> +	mutex_unlock(&priv->notify_lock);
+>>>> +}
+>>>> +
+>>>> +static int lenovo_wmi_probe(struct wmi_device *wdev, const void *con=
+text)
+>>>> +{
+>>>> +	struct lenovo_wmi_priv *priv;
+>>>> +	int ret;
+>>>> +
+>>>> +	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+>>>> +	if (!priv)
+>>>> +		return -ENOMEM;
+>>>> +
+>>>> +	dev_set_drvdata(&wdev->dev, priv);
+>>>> +
+>>>> +	priv->idev =3D devm_input_allocate_device(&wdev->dev);
+>>>> +	if (!priv->idev)
+>>>> +		return -ENOMEM;
+>>>> +
+>>>> +	priv->idev->name =3D "Lenovo WMI Camera Button";
+>>>> +	priv->idev->phys =3D "wmi/input0";
+>>>> +	priv->idev->id.bustype =3D BUS_HOST;
+>>>> +	priv->idev->dev.parent =3D &wdev->dev;
+>>>> +	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_ENABLE);
+>>>> +	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_DISABLE)=
+;
+>>>> +
+>>>> +	ret =3D input_register_device(priv->idev);
+>>>> +	if (ret)
+>>>> +		return ret;
+>>>> +
+>>>> +	mutex_init(&priv->notify_lock);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static void lenovo_wmi_remove(struct wmi_device *wdev)
+>>>> +{
+>>>> +	struct lenovo_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
+>>>> +
+>>>> +	mutex_destroy(&priv->notify_lock);
+>>> Do you really need to call mutex_destroy() during the module unload?
+>>>
+>>> I don't think kernel allocates any memory during mutex_init() that nee=
+ds
+>>> be freed.
+>> Is all debug code going to be happy if it's not called?
+>>
+> I am not aware of any issue. Do you have any details about it?
 >
->     $ sudo chmod u+s perf
->     $ ls -l perf
->     -rwsr-xr-x 1 root root 13147600 Mar 17 14:56 perf
->     $ ./perf record -e cycles -- uname
->     [ perf record: Woken up 1 times to write data ]
->     [ perf record: Captured and wrote 0.003 MB perf.data (7 samples) ]
->     Terminated
->
-> Comparatively, the same command can succeed if the setuid bit is cleared
-> for the perf executable:
->
->     $ sudo chmod u-s perf
->     $ ls -l perf
->     -rwxr-xr-x 1 root root 13147600 Mar 17 14:56 perf
->     $ ./perf record -e cycles -- uname
->     Linux
->     [ perf record: Woken up 1 times to write data ]
->     [ perf record: Captured and wrote 0.003 MB perf.data (13 samples) ]
->
-> After setting the setuid bit, the problem arises when begin_new_exec()
-> disables the perf events upon detecting that a regular user is executing
-> a setuid binary, which notifies the perf process. Consequently, the perf
-> tool in user space exits from polling and sends a SIGTERM signal to kill
-> child processes and itself. This explains why we observe the tool being
-> 'Terminated'.
->
-> With the setuid bit a non-privileged user can obtain the same
-> permissions as the executable's owner. If the owner has the privileged
-> permission for accessing perf events, the kernel should keep enabling
-> perf events. For this reason, this patch adds a condition checking for
-> perfmon_capable() to not disabling perf events when the user has
-> privileged permission yet.
->
-> Note the begin_new_exec() function only checks permission for the
-> per-thread mode in a perf session. This is why we don't need to add any
-> extra checking for the global knob 'perf_event_paranoid', as it always
-> grants permission for per-thread performance monitoring for unprivileged
-> users (see Documentation/admin-guide/perf-security.rst).
+>  From the comments, it looks like mutex_destroy() is used to mark a
+> mutex unusable. Not sure why we need to mark a device priv lock
+> unusable during the unload process.
 
-This code change makes no sense.
+Hi,
 
-The logic you are attempting to implement, allowing performance
-measurements of a setuid application if it has sufficient capabilities
-does make sense.
+AFAIK calling mutex_destroy() allows the lock debugging code to catch
+attempts to access the mutex afterwards, so this would allow us to spot
+such issues when enabling lock debugging.
 
-perfmon_capable tests if the current program has sufficient privileges
-to use perf, not the program that enabled performance measurements.
+For the whole driver:
 
-The location perfmon_capable is being called in the new executable is
-after the new executable gets it's new credentials.  AKA the suidroot
-has already happened.  So it will always succeed for suidroot
-executables.
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
-I suggest you take a look at ptracer_capable that is used to test if the
-ptracer has sufficient credentials to trace a suid root exectuable.
-
-Eric
-
-
-
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> Cc: Al Grant <al.grant@arm.com>
-> Cc: James Clark <james.clark@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> ---
->  fs/exec.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/exec.c b/fs/exec.c
-> index ff6f26671cfc..5ded01190278 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1401,7 +1401,8 @@ int begin_new_exec(struct linux_binprm * bprm)
->  	 * wait until new credentials are committed
->  	 * by commit_creds() above
->  	 */
-> -	if (get_dumpable(me->mm) != SUID_DUMP_USER)
-> +	if ((get_dumpable(me->mm) != SUID_DUMP_USER) &&
-> +	    !perfmon_capable())
->  		perf_event_exit_task(me);
->  	/*
->  	 * cred_guard_mutex must be held at least to this point to prevent
