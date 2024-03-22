@@ -1,129 +1,104 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82DC27A13F;
-	Fri, 22 Mar 2024 19:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7787A157;
+	Fri, 22 Mar 2024 19:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711135770; cv=none; b=X7U1g+51ZkUUmmhMWDhA/ClI5cTvK1Ncyrc1g2LYnGib+Coe5XZYf7bhfSUAAWksXvgtGRXCKkukWld6BNuY8eOu4jFts2u3z8Dnm3IdjGHGbzo6I6oF0ZJ0GrurZkQ6LB+w3Laaky3rEpJ0oKCgD3wA2QCy/XmhPYokTt4rEW4=
+	t=1711135813; cv=none; b=giOnuV2bUfdRzRm399Re2dvoBREVgcfnEo5Tv9xeGUu7i5emumD1erKCPKu33RHL2aXQuABPdX2hpu2IFmKp4rYJRFT/Pm5REQ0yQc2GrCEIZ5JsGxZxuWKeWF8tchpfEwsPTmq+nVpJEGc/fLCWIDrvpx0DVt4ID1jRe79t/ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711135770; c=relaxed/simple;
-	bh=oklDj6U5/LTJT3ihNDzab3Tqa5Dr3WbJv3X1jhT5abE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=goti0jz//0ZCZmJOUmk8aEBTIRt7fCUbZ8SfrcHmFH+w2jvKfZyWFjveOmFtVkZ0Ok3dpMp3JD3/8tQ2ktRnP9N1bh64QZ6w7W346RGNqnhFpU+DMJKpr+tp/IYx87SuTWElmOnWUmc0fZaj0sWHORICibB57b3o0u0g1Gimk/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=i4hlgaZA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=1Bi2Dc4s; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=i4hlgaZA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=1Bi2Dc4s; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1711135813; c=relaxed/simple;
+	bh=9R6ki8LkQLAWyMMmV+81/0KXBdxdkaUt91oUyJxHRXQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=IYiU374NgAm5WgNqJKJUa0icEVzud0W4KOGo5y5dGAGfSCB9pcJ/G02TB71+Uk9ygIdUaQfIBo2ikyZyPUEdqVIXHFPIkT9bJRcdl+CehvksJCft5MmyW+alRyMYOv9yoCEdxO+hR9QsBTTXXKfY5xfLxtxAJvylCD2EO2G00Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GI4W6i26; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="i4hlgaZA";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="1Bi2Dc4s";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="i4hlgaZA";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="1Bi2Dc4s"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id BC32038920;
-	Fri, 22 Mar 2024 19:29:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1711135766;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WDBYbPR6/NMtSTPqLqOpeS79MMzIcadeQ6TPNXM4lkA=;
-	b=i4hlgaZADy29ECHg1y7N46TpVjCijRYj9F5ZxBAMYW+0MU+quSaZn7toW8+tNmFpkuT0EM
-	9DlykmGgRFLODK1mU5/hPwEG+ea3RRGjE4zDjRBTVMUWsdz/YENUtyOajYpONb4PcdldDQ
-	zb4gIWP50LFWXO24VFrOKbfGRVItRVM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1711135766;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WDBYbPR6/NMtSTPqLqOpeS79MMzIcadeQ6TPNXM4lkA=;
-	b=1Bi2Dc4sYrRxsc1KjhNBShVRFCAQOG3spXNE+k1n93NLNrva8pbuGWZQhSDtdsKc8GQ2cF
-	t6L6qNrOytrafoBw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1711135766;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WDBYbPR6/NMtSTPqLqOpeS79MMzIcadeQ6TPNXM4lkA=;
-	b=i4hlgaZADy29ECHg1y7N46TpVjCijRYj9F5ZxBAMYW+0MU+quSaZn7toW8+tNmFpkuT0EM
-	9DlykmGgRFLODK1mU5/hPwEG+ea3RRGjE4zDjRBTVMUWsdz/YENUtyOajYpONb4PcdldDQ
-	zb4gIWP50LFWXO24VFrOKbfGRVItRVM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1711135766;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WDBYbPR6/NMtSTPqLqOpeS79MMzIcadeQ6TPNXM4lkA=;
-	b=1Bi2Dc4sYrRxsc1KjhNBShVRFCAQOG3spXNE+k1n93NLNrva8pbuGWZQhSDtdsKc8GQ2cF
-	t6L6qNrOytrafoBw==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id AB521138E8;
-	Fri, 22 Mar 2024 19:29:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id 7malKRbc/WWlKwAAn2gu4w
-	(envelope-from <dsterba@suse.cz>); Fri, 22 Mar 2024 19:29:26 +0000
-Date: Fri, 22 Mar 2024 20:22:11 +0100
-From: David Sterba <dsterba@suse.cz>
-To: Tavian Barnes <tavianator@tavianator.com>
-Cc: linux-btrfs@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] extent_buffer read cleanups
-Message-ID: <20240322192211.GL14596@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <cover.1710769876.git.tavianator@tavianator.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GI4W6i26"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17D41C433F1;
+	Fri, 22 Mar 2024 19:30:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711135813;
+	bh=9R6ki8LkQLAWyMMmV+81/0KXBdxdkaUt91oUyJxHRXQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=GI4W6i26GH4YKoxcLI7lQ8yf1CYz3gnsVS5q/50obT5c+RAjHWdIx+1+1fcYFuMSK
+	 z7tq2Hy8gsByyk1C6HLUmIdEjEMjPlAEd5SPyoRNSsS1HUrAS8NtMtMQaTjVj8XtIP
+	 GfI5wwIhfK2ZdvFH8yfESIP4RXcrOtJGRVvTmGJafpDdRsj5RvAbXWu2XtvMvItr/Z
+	 Zoq9QazCmln///YbTsHQqQmawt8pLZ8s+57149iivVTAWIDAH/W5Cm1wZubwMH+tEE
+	 0i08O00EIoJelk5Ubc024aZSDXEmpIUnVRa35wSfyaEC/x0wB3d6Rabg6Z8TigwMBO
+	 GVbz6krwT5hCg==
+Date: Fri, 22 Mar 2024 14:30:11 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	intel-wired-lan@lists.osuosl.org,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	linux-edac@vger.kernel.org, linux-efi@vger.kernel.org,
+	Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH 3/4] PCI: Add TLP Prefix reading into pcie_read_tlp_log()
+Message-ID: <20240322193011.GA701027@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <cover.1710769876.git.tavianator@tavianator.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Score: -2.50
-X-Spamd-Result: default: False [-2.50 / 50.00];
-	 ARC_NA(0.00)[];
-	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-0.998];
-	 MIME_GOOD(-0.10)[text/plain];
-	 REPLYTO_ADDR_EQ_FROM(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.19)[-0.972];
-	 RCPT_COUNT_SEVEN(0.00)[7];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-1.50)[91.73%]
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240206135717.8565-4-ilpo.jarvinen@linux.intel.com>
 
-On Mon, Mar 18, 2024 at 09:56:52AM -0400, Tavian Barnes wrote:
-> This small series refactors some duplicated code introduced by a recent
-> bugfix (which was intentionally duplicated to make stable backports
-> easier), and adds a WARN_ON() to make it easier to debug similar issues
-> in the future.
-> 
-> Link: https://lore.kernel.org/linux-btrfs/20240317203508.GA5975@lst.de/T/
-> 
-> Tavian Barnes (2):
->   btrfs: New helper to clear EXTENT_BUFFER_READING
->   btrfs: WARN if EXTENT_BUFFER_UPTODATE is set while reading
+On Tue, Feb 06, 2024 at 03:57:16PM +0200, Ilpo Järvinen wrote:
+> pcie_read_tlp_log() handles only 4 TLP Header Log DWORDs but TLP Prefix
+> Log (PCIe r6.1 secs 7.8.4.12 & 7.9.14.13) may also be present.
 
-Thanks, patches added to for-next.
+s/TLP Header Log/Header Log/ to match spec terminology (also below)
+
+> Generalize pcie_read_tlp_log() and struct pcie_tlp_log to handle also
+> TLP Prefix Log. The layout of relevant registers in AER and DPC
+> Capability is not identical but the offsets of TLP Header Log and TLP
+> Prefix Log vary so the callers must pass the offsets to
+> pcie_read_tlp_log().
+
+s/is not identical but/is identical, but/ ?
+
+The spec is a little obtuse about Header Log Size.
+
+> Convert eetlp_prefix_path into integer called eetlp_prefix_max and
+> make is available also when CONFIG_PCI_PASID is not configured to
+> be able to determine the number of E-E Prefixes.
+
+I think this eetlp_prefix_path piece is right, but would be nice in a
+separate patch since it's a little bit different piece to review.
+
+> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+> @@ -11336,7 +11336,9 @@ static pci_ers_result_t ixgbe_io_error_detected(struct pci_dev *pdev,
+>  	if (!pos)
+>  		goto skip_bad_vf_detection;
+>  
+> -	ret = pcie_read_tlp_log(pdev, pos + PCI_ERR_HEADER_LOG, &tlp_log);
+> +	ret = pcie_read_tlp_log(pdev, pos + PCI_ERR_HEADER_LOG,
+> +				pos + PCI_ERR_PREFIX_LOG,
+> +				aer_tlp_log_len(pdev), &tlp_log);
+>  	if (ret < 0) {
+>  		ixgbe_check_cfg_remove(hw, pdev);
+>  		goto skip_bad_vf_detection;
+
+We applied the patch to export pcie_read_tlp_log(), but I'm having
+second thoughts about it.   I don't think drivers really have any
+business here, and I'd rather not expose either pcie_read_tlp_log() or
+aer_tlp_log_len().
+
+This part of ixgbe_io_error_detected() was added by 83c61fa97a7d
+("ixgbe: Add protection from VF invalid target DMA"), and to me it
+looks like debug code that probably doesn't need to be there as long
+as the PCI core does the appropriate logging.
+
+Bjorn
