@@ -1,129 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 986131C6AB;
-	Fri, 22 Mar 2024 17:27:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E25D47793
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 17:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711128449; cv=none; b=ZmUWqMtQ3Lw3iSXgsXGPs9ZZxHaU6/Zo9XjJX1nj4tnhZxblC/j/x3xP9lyNf+SySfkd/tDs79G1FfM+f21ywLqIa2rbN6Bn2tVGG7p2NMzPOJ0rLNg7CVLTExr8v2ikrfmQ1yDyEi0iumhleY0aDIhpvl40SiV4bYuZFLM5D84=
+	t=1711128809; cv=none; b=WRId1cNvYmfSkx8aimB4QxPEcRzI+RIy1eaunUZ8DqZyoQWpwaV2AUyP+CUXy0wabBOZTCIKi1P/aiN8P2isaDSdBcbdNIWqCL4lc2W7l9R6ccCD8CCNT6pQ7y3usj45M+Ib524fZazvG6IbuizGNDQoTI17zMbgdcoeYh/k8Ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711128449; c=relaxed/simple;
-	bh=8jU4Y94EgTZ2cjnSSp7l1TCrtVwVdXwRUYY1Hz25hzk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wc9h6FJYU0m25x2uzEWF4UiACoevHMluYaqFJ+Zr3V54bEOe8PK1ySuNeGudKxhVmf+jws0ujgaLVs1seyekUqEwc1EBAMb89j4ruUyDPt3eJJcqHDs6BE7MMTdFJn0fd04sL/JMFEG7I6HWn2TeSgaXEpjQzFtB7KKCS9poJQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R53Y9fMA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711128809; c=relaxed/simple;
+	bh=Yq6TPIOySs5SbkTECG8fTC9rHi3vyaMmLcUMisKVIDY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A7GaP+tq4vqPL87zH/KrErkyUdlTi/0NMwxeRk6xD1i/0siEsqkHP0guKU6WJH71eroQishi7LQqKmzNbSnIwjNnmG0tGE7J1yczdL7T1zaoITY4FOVRlZydM59z4PXMW2LxDqhWSZb/ZgiboXNjhdEramVSVgZheQr+44PnOr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=jdYGucEV; arc=none smtp.client-ip=37.205.15.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R53Y9fMA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91BCCC433F1;
-	Fri, 22 Mar 2024 17:27:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711128449;
-	bh=8jU4Y94EgTZ2cjnSSp7l1TCrtVwVdXwRUYY1Hz25hzk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R53Y9fMA3e14/1ff1d4IvrBB//jd7qQ4DJBGT7ibVt+eMuvh38Rvn6sZrEF+/FYtE
-	 VZ+nNoz9Rt+JFCmCu36RheRF34nBzeRhg+RHFM5hQ8q3ArZq8pbantXKE7oDHHVZxz
-	 /V0M7fO/sZz8xqjkKf3P6SgxNNnplgeYLT+uXtb0F45wzDfaSzV/IQIwNlGbXvgdxg
-	 Sa1BH5llQw6qrJHN1WxqDARsTXm8t1g2QkA9sgV3IxZXiLCoejc9lUeoOVKoJbZNPd
-	 zSk5faKwi1g3MOpndx9FuXlZVO/ieMWSGF5oVLud//r8LlX0dOPO2KnE3qlMfNlofO
-	 TbV5ExZWDEnuw==
-Date: Fri, 22 Mar 2024 14:27:26 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Alan Maguire <alan.maguire@oracle.com>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>, bpf@vger.kernel.org,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kbuild: disable pahole multithreading for reproducible
- builds
-Message-ID: <Zf2_fgs0cqW82zEu@x1>
-References: <20240322-pahole-reprodicible-v1-1-3eaafb1842da@weissschuh.net>
- <49fa2bd1-bd6e-4404-a1c7-2170d37f0194@oracle.com>
+	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="jdYGucEV"
+Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-b985-910f-39e1-703f.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:b985:910f:39e1:703f])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by bee.tesarici.cz (Postfix) with ESMTPSA id B25D71AA455;
+	Fri, 22 Mar 2024 18:33:16 +0100 (CET)
+Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
+	t=1711128796; bh=uSujtAeKaM3ubzxeNWEHiD7u5zka7YhzUm+SfYHNOq4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jdYGucEVaESbR0fs1Ior9j0PrsOWd3/gK8UJHLlP/YuvCgjL/L3Yol+RFfoh4ECyq
+	 MFs8QxbkGQRCFZsbo1rMYejOwzUmzIukrhUVr6bV7E29oaXKRgZdu4o7gjVS+7x077
+	 I0vJYRoyo1NEt6GrWM7giiZr5yNIgtaQXGF2qHMDOT9qnMx/3tprgDw3lkaljVcYU2
+	 e7YxG9ehmgRTtQRyljUekEyMuNe1XOhjqRR4KbY1Fs83pNBltviMhrCbEdaS5L5CYi
+	 r1YMjqfZvPQZI+tj/eloS/zk8sbfcr+tAh0CFxrp/aXWopaF36oOXOKvu8XjLRnHGr
+	 sZKxeTaedaplA==
+Date: Fri, 22 Mar 2024 18:33:15 +0100
+From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+To: Will Deacon <will@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Marek Szyprowski
+ <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, Petr
+ Tesarik <petr.tesarik1@huawei-partners.com>, Michael Kelley
+ <mhklinux@outlook.com>, open list <linux-kernel@vger.kernel.org>, "open
+ list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>, Roberto Sassu
+ <roberto.sassu@huaweicloud.com>
+Subject: Re: [PATCH v3 2/2] bug: introduce ASSERT_VAR_CAN_HOLD()
+Message-ID: <20240322183302.197c9b5f@meshulam.tesarici.cz>
+In-Reply-To: <20240322153738.GC5634@willie-the-truck>
+References: <20240321171902.85-1-petrtesarik@huaweicloud.com>
+	<20240321171902.85-3-petrtesarik@huaweicloud.com>
+	<20240322153738.GC5634@willie-the-truck>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <49fa2bd1-bd6e-4404-a1c7-2170d37f0194@oracle.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 22, 2024 at 10:07:00AM +0000, Alan Maguire wrote:
-> On 22/03/2024 08:31, Thomas Weiﬂschuh wrote:
-> > A BTF type_id is a numeric identifier allocated by pahole through
-> > libbpfd. Ids are incremented for each allocation.
-> > Running pahole multithreaded makes the sequence of allocations
-> > non-deterministic which also makes the type_id itself non-deterministic.
-> > As the type_id end up in the binary this breaks reproducibility.
+On Fri, 22 Mar 2024 15:37:38 +0000
+Will Deacon <will@kernel.org> wrote:
+
+> On Thu, Mar 21, 2024 at 06:19:02PM +0100, Petr Tesarik wrote:
+> > From: Petr Tesarik <petr.tesarik1@huawei-partners.com>
 > > 
-> > Therefore, if the kernel is built reproducibly as indicated by
-> > KBUILD_BUILD_TIMESTAMP, disable threading in pahole.
+> > Introduce an ASSERT_VAR_CAN_HOLD() macro to check at build time that a
+> > variable can hold the given value.
 > > 
-> > Fixes: b4f72786429c ("scripts/pahole-flags.sh: Parse DWARF and generate BTF with multithreading.")
-> > Fixes: 72d091846de9 ("kbuild: avoid too many execution of scripts/pahole-flags.sh")
-> > Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
-> 
-> Yep, we've talked about sorting final BTF in various ways but until that
-> is implemented, non-parallel execution of pahole is the best way to get
-> reliabily-reproducing BTF ids. We should probably update the pahole
-
-So, the problem is about parallel BTF encoding, not so much about
-parallel DWARF loading, which speeds up the whole process and could
-continue if we make sure that we feed the BTF encoder in the same order
-as when not doing anything in parallel.
-
-I.e. a serial BTF encoding done at the same time as a parallel DWARF
-loading would produce a reproducible build faster than doing
-_everything_ serially.
-
-The important point would be to feed the btf encoder the DWARF CUs in
-the same order as when doing it serially.
-
-No need to order anything, just create a linked list/array of CUs and
-then start loading them and leave the BTF encoder go on taking CUs from
-that linked list/array in the order they are in vmlinux.
-
-- Arnaldo
-
-> manpage to warn about parallel non-deterministic id allocation in the
-> meantime.
-> 
-> Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
-> 
+> > Use this macro in swiotlb to make sure that the list and pad_slots fields
+> > of struct io_tlb_slot are big enough to hold the maximum possible value of
+> > IO_TLB_SEGSIZE.
+> > 
+> > Signed-off-by: Petr Tesarik <petr.tesarik1@huawei-partners.com>
 > > ---
-> >  scripts/Makefile.btf | 3 +++
-> >  1 file changed, 3 insertions(+)
+> >  include/linux/build_bug.h | 10 ++++++++++
+> >  kernel/dma/swiotlb.c      |  2 ++
+> >  2 files changed, 12 insertions(+)
 > > 
-> > diff --git a/scripts/Makefile.btf b/scripts/Makefile.btf
-> > index 82377e470aed..2356929e62e4 100644
-> > --- a/scripts/Makefile.btf
-> > +++ b/scripts/Makefile.btf
-> > @@ -10,7 +10,10 @@ endif
+> > diff --git a/include/linux/build_bug.h b/include/linux/build_bug.h
+> > index 3aa3640f8c18..6e2486508af0 100644
+> > --- a/include/linux/build_bug.h
+> > +++ b/include/linux/build_bug.h
+> > @@ -86,4 +86,14 @@
+> >  		"Offset of " #field " in " #type " has changed.")
 > >  
-> >  pahole-flags-$(call test-ge, $(pahole-ver), 121)	+= --btf_gen_floats
 > >  
-> > +# threaded execution randomizes BTF type_id allocation, breaking reproducibility
-> > +ifeq ($(KBUILD_BUILD_TIMESTAMP),)
-> >  pahole-flags-$(call test-ge, $(pahole-ver), 122)	+= -j
-> > +endif
-> >  
-> >  pahole-flags-$(CONFIG_PAHOLE_HAS_LANG_EXCLUDE)		+= --lang_exclude=rust
-> >  
-> > 
-> > ---
-> > base-commit: 8e938e39866920ddc266898e6ae1fffc5c8f51aa
-> > change-id: 20240322-pahole-reprodicible-02e904e45686
-> > 
-> > Best regards,
+> > +/*
+> > + * Compile time check that a variable can hold the given value
+> > + */
+> > +#define ASSERT_VAR_CAN_HOLD(var, value) ({		\
+> > +	typeof(value) __val = (value);			\
+> > +	typeof(var) __tmp = __val;			\
+> > +	BUILD_BUG_ON_MSG(__tmp != __val,		\
+> > +		#var " cannot hold " #value ".");	\
+> > +})  
 > 
+> nit, but I think this prevents putting negative values into unsigned
+> types. Not sure whether we care? Arguably it's even correct to complain.
+> 
+> e.g.
+> 
+> 	u16 s;
+> 	ASSERT_VAR_CAN_HOLD(s, -1);
+> 
+> explodes for me.
+
+Then it works as intended. I specifically aimed at making a macro that
+checks at build time whether a given constant is within the value range
+of a variable, so it explodes for a signed overflow (in either
+direction).
+
+To check the size of a variable, I could have gone with something
+simpler like BUG_ON(sizeof(var) < sizeof(val)).
+
+Petr T
