@@ -1,97 +1,223 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1ED83F9D3
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 08:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0B83FB87;
+	Fri, 22 Mar 2024 08:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711096512; cv=none; b=KmtUu2aZvoaJ+oO5TyZMhznrWS85i2x7Jk6B3VkrfpwTZ87ERbZDO+I2p0hLeMkCkkJKcbyC5YgS7RSr/s/E8qTvwIcRLOUIu3OdDFSNOXKuxMA05md+e8fLf76xh8jur0Yjw5spuaNs8tSG6eVyBVO5oNWNlWbwTcQVP7AGXJc=
+	t=1711096518; cv=none; b=eRyvRm3Lycb7ApnXtvnIBjdesZVe7Opnefl2cWkj4NUEEdU7QIVpEgOM3Ur5C44um9ErReKVMzRQf9dVd4Jw/CtGMKrsi3K6kNJ0likACK3j3KuS8pSkreyT23GdLihKoH+kJ6TFoQ7P1pq5d6bXAfdrobhbBSXeXDFn7P/f0hQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711096512; c=relaxed/simple;
-	bh=S+tu/Us/naajLYwRUmTRqpD4Xo/mrCDuxEPxhqR6e8U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AGsFFtG1jRDdX87BC/DRYCB4fMn39e9pN9QzC41JOFEZFeNzR092yquxKhnVsFbFPs0ma7Q7+daWnzE61qWovnOyhuQNUX1KvwNFFFcf51DYf/vprC9OzqLMMyA+8j3qMfJDuPvL2LFRyUWYCCCLNdGZfGWXkc8gfwBiU057Te4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PhuQzHg2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711096518; c=relaxed/simple;
+	bh=ubt8vwuXHMoPvm2FKiDUEHRj3q7PZZktUm1LKe+DoxQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Lvc1Lv4sF1vhyT5ijFDp1g1LX+3ydRGLLNpIW/oC/DgERrxxWSgim50IQFi44oDCqCSUEC5JeHJbGA+ZipO3s7Adr/U36F5xH1NzT2VDSGb/D+WmH3H+JQ9bhTA1RILUqcK0YBWHbXnmKAvcifrPd3es64PGIMXTHJYKe/gJU4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JHtyBQH6; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PhuQzHg2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25DC7C43390;
-	Fri, 22 Mar 2024 08:35:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711096512;
-	bh=S+tu/Us/naajLYwRUmTRqpD4Xo/mrCDuxEPxhqR6e8U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PhuQzHg2zIDfH+NNdpucuHBPSFDXUngQkMtXneTPOFB3EXsUgkeeJH4rsslCkfhG5
-	 4wFPvYbHSCE1xnudBCQq/bBl6/P0nYNJuw0bYM9e5eLZxxb+YECPnd20i5Txxb4zKs
-	 gGttqYPNlKI/hzAMzVxPjsOAuaBXmXgrApgVatUr4bxEiDjBVgiiVca6abAnh8U2g7
-	 k7CNbcR2g5fpVxGiJbyhueHZGdKDDJIz8FplT+V78W6m8/Vb9yRVw27y5h1+wbwVth
-	 M0199e2qvjbnu+xUqBsqOJYP3AyHoE+7ixgaOs8916eariT5tsdciqmT0QRoiDGDPy
-	 kyPPjQTt5vogA==
-From: alexs@kernel.org
-To: Matthew Wilcox <willy@infradead.org>,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	Izik Eidus <izik.eidus@ravellosystems.com>,
-	david@redhat.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: "Alex Shi (tencent)" <alexs@kernel.org>,
-	Hugh Dickins <hughd@google.com>,
-	Chris Wright <chrisw@sous-sol.org>
-Subject: [PATCH v2 14/14] mm/ksm: remove set_page_stable_node
-Date: Fri, 22 Mar 2024 16:37:01 +0800
-Message-ID: <20240322083703.232364-15-alexs@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240322083703.232364-1-alexs@kernel.org>
-References: <20240322083703.232364-1-alexs@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JHtyBQH6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=B+eEe2rJKYVCOSpsUyFR0aFEgGcdrU57l8z/qph+tmM=; b=JHtyBQH6EX7GceqkO4taJJgxTp
+	MHSM6Uqnw3YFlkvvhAiy3qbAR0vYz3MGRdxZmGg5/mdAUNTul1mWj09WvLulV1q1v69YEuYQIuXhn
+	P+4q733Age1NYD6hfFWEFc0t+KuF9HA90D8+TcIfO/d9koXu4navByN+ZmWwMcqPO/i01Opbj0EBy
+	WTuTwTFJ/dZm7bPQd8J/FD43zJbO6Y047A+sffZnE54IZNoZV5n9cCRmuC+yxOzAZwfnlJQq4pCoy
+	ym665tUf6yqhhjtVMcCNHOKjEijyCNM6tDQWevVoSRf1chQmYyScxbzC4JT3i+oeKd+PzlolBJwMN
+	7ds5xwDA==;
+Received: from fpd2fa7e2a.ap.nuro.jp ([210.250.126.42] helo=[192.168.1.8])
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rnaMZ-0000000EhCD-3xGY;
+	Fri, 22 Mar 2024 08:34:56 +0000
+Message-ID: <87f6365f-a40e-4606-baff-170cb8fc48f3@infradead.org>
+Date: Fri, 22 Mar 2024 17:34:45 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] powerpc: ps3: mark ps3_notification_device static for
+ stack usage
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Arnd Bergmann <arnd@kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
+ Nathan Chancellor <nathan@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
+ Arnd Bergmann <arnd@arndb.de>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Kevin Hao <haokexin@gmail.com>, linuxppc-dev@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+References: <20240320180333.151043-1-arnd@kernel.org>
+ <CAMuHMdW41e+DSBKBgugTkjoLy6bXfji-KWmB_d9EstEv01eC6w@mail.gmail.com>
+Content-Language: en-US
+From: Geoff Levand <geoff@infradead.org>
+In-Reply-To: <CAMuHMdW41e+DSBKBgugTkjoLy6bXfji-KWmB_d9EstEv01eC6w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: "Alex Shi (tencent)" <alexs@kernel.org>
+On 3/21/24 17:32, Geert Uytterhoeven wrote:
+> --- a/arch/powerpc/platforms/ps3/device-init.c
+>> +++ b/arch/powerpc/platforms/ps3/device-init.c
+>> @@ -770,7 +770,7 @@ static struct task_struct *probe_task;
+>>
+>>  static int ps3_probe_thread(void *data)
+>>  {
+>> -       struct ps3_notification_device dev;
+>> +       static struct ps3_notification_device dev;
+>>         int res;
+>>         unsigned int irq;
+>>         u64 lpar;
+> 
+> Making it static increases kernel size for everyone.  So I'd rather
+> allocate it dynamically. The thread already allocates a buffer, which
+> can be replaced at no cost by allocating a structure containing both
+> the ps3_notification_device and the buffer.
 
-Remove the func since all caller are gone. Also remove the
-VM_BUG_ON_PAGE() because it's not applicable for a folio.
+Here's what I came up with.  It builds for me without warnings.
+I haven't tested it yet.  A review would be appreciated.
 
-Signed-off-by: Alex Shi (tencent) <alexs@kernel.org>
-To: linux-kernel@vger.kernel.org
-To: linux-mm@kvack.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Izik Eidus <izik.eidus@ravellosystems.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Chris Wright <chrisw@sous-sol.org>
----
- mm/ksm.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
-
-diff --git a/mm/ksm.c b/mm/ksm.c
-index d7c4cc4a0cc1..136909f0c5d5 100644
---- a/mm/ksm.c
-+++ b/mm/ksm.c
-@@ -1094,17 +1094,10 @@ static inline struct ksm_stable_node *page_stable_node(struct page *page)
- 	return folio_stable_node(page_folio(page));
- }
+diff --git a/arch/powerpc/platforms/ps3/device-init.c b/arch/powerpc/platforms/ps3/device-init.c
+index 878bc160246e..9bb44a6ccdaf 100644
+--- a/arch/powerpc/platforms/ps3/device-init.c
++++ b/arch/powerpc/platforms/ps3/device-init.c
+@@ -770,37 +770,48 @@ static struct task_struct *probe_task;
  
--static inline void set_page_stable_node(struct page *page,
--					struct ksm_stable_node *stable_node)
--{
--	VM_BUG_ON_PAGE(PageAnon(page) && PageAnonExclusive(page), page);
--	page->mapping = (void *)((unsigned long)stable_node | PAGE_MAPPING_KSM);
--}
--
- static inline void folio_set_stable_node(struct folio *folio,
- 					 struct ksm_stable_node *stable_node)
+ static int ps3_probe_thread(void *data)
  {
--	set_page_stable_node(&folio->page, stable_node);
-+	folio->mapping = (void *)((unsigned long)stable_node | PAGE_MAPPING_KSM);
- }
+-	struct ps3_notification_device dev;
++	struct ps3_probe_thread_local {
++		struct ps3_notification_device dev;
++		union {
++			char buf[512];
++			struct ps3_notify_cmd notify_cmd;
++			struct ps3_notify_event notify_event;
++		};
++	};
++	struct ps3_probe_thread_local *local;
++	struct ps3_notification_device *dev;
++	struct ps3_notify_cmd *notify_cmd;
++	struct ps3_notify_event *notify_event;
+ 	int res;
+ 	unsigned int irq;
+ 	u64 lpar;
+-	void *buf;
+-	struct ps3_notify_cmd *notify_cmd;
+-	struct ps3_notify_event *notify_event;
  
- #ifdef CONFIG_SYSFS
--- 
-2.43.0
+ 	pr_debug(" -> %s:%u: kthread started\n", __func__, __LINE__);
+ 
+-	buf = kzalloc(512, GFP_KERNEL);
+-	if (!buf)
++	local = kzalloc(sizeof(local), GFP_KERNEL);
++
++	if (!local)
+ 		return -ENOMEM;
+ 
+-	lpar = ps3_mm_phys_to_lpar(__pa(buf));
+-	notify_cmd = buf;
+-	notify_event = buf;
++	dev = &local->dev;
++	notify_cmd = &local->notify_cmd;
++	notify_event = &local->notify_event;
++
++	lpar = ps3_mm_phys_to_lpar(__pa(&local->notify_cmd));
+ 
+ 	/* dummy system bus device */
+-	dev.sbd.bus_id = (u64)data;
+-	dev.sbd.dev_id = PS3_NOTIFICATION_DEV_ID;
+-	dev.sbd.interrupt_id = PS3_NOTIFICATION_INTERRUPT_ID;
++	dev->sbd.bus_id = (u64)data;
++	dev->sbd.dev_id = PS3_NOTIFICATION_DEV_ID;
++	dev->sbd.interrupt_id = PS3_NOTIFICATION_INTERRUPT_ID;
+ 
+-	res = lv1_open_device(dev.sbd.bus_id, dev.sbd.dev_id, 0);
++	res = lv1_open_device(dev->sbd.bus_id, dev->sbd.dev_id, 0);
+ 	if (res) {
+ 		pr_err("%s:%u: lv1_open_device failed %s\n", __func__,
+ 		       __LINE__, ps3_result(res));
+ 		goto fail_free;
+ 	}
+ 
+-	res = ps3_sb_event_receive_port_setup(&dev.sbd, PS3_BINDING_CPU_ANY,
++	res = ps3_sb_event_receive_port_setup(&dev->sbd, PS3_BINDING_CPU_ANY,
+ 					      &irq);
+ 	if (res) {
+ 		pr_err("%s:%u: ps3_sb_event_receive_port_setup failed %d\n",
+@@ -808,11 +819,11 @@ static int ps3_probe_thread(void *data)
+ 	       goto fail_close_device;
+ 	}
+ 
+-	spin_lock_init(&dev.lock);
+-	rcuwait_init(&dev.wait);
++	spin_lock_init(&dev->lock);
++	rcuwait_init(&dev->wait);
+ 
+ 	res = request_irq(irq, ps3_notification_interrupt, 0,
+-			  "ps3_notification", &dev);
++			  "ps3_notification", &local->dev);
+ 	if (res) {
+ 		pr_err("%s:%u: request_irq failed %d\n", __func__, __LINE__,
+ 		       res);
+@@ -823,7 +834,7 @@ static int ps3_probe_thread(void *data)
+ 	notify_cmd->operation_code = 0; /* must be zero */
+ 	notify_cmd->event_mask = 1UL << notify_region_probe;
+ 
+-	res = ps3_notification_read_write(&dev, lpar, 1);
++	res = ps3_notification_read_write(&local->dev, lpar, 1);
+ 	if (res)
+ 		goto fail_free_irq;
+ 
+@@ -834,36 +845,36 @@ static int ps3_probe_thread(void *data)
+ 
+ 		memset(notify_event, 0, sizeof(*notify_event));
+ 
+-		res = ps3_notification_read_write(&dev, lpar, 0);
++		res = ps3_notification_read_write(&local->dev, lpar, 0);
+ 		if (res)
+ 			break;
+ 
+ 		pr_debug("%s:%u: notify event type 0x%llx bus id %llu dev id %llu"
+ 			 " type %llu port %llu\n", __func__, __LINE__,
+-			 notify_event->event_type, notify_event->bus_id,
+-			 notify_event->dev_id, notify_event->dev_type,
+-			 notify_event->dev_port);
++			notify_event->event_type, notify_event->bus_id,
++			notify_event->dev_id, notify_event->dev_type,
++			notify_event->dev_port);
+ 
+ 		if (notify_event->event_type != notify_region_probe ||
+-		    notify_event->bus_id != dev.sbd.bus_id) {
++			notify_event->bus_id != dev->sbd.bus_id) {
+ 			pr_warn("%s:%u: bad notify_event: event %llu, dev_id %llu, dev_type %llu\n",
+ 				__func__, __LINE__, notify_event->event_type,
+ 				notify_event->dev_id, notify_event->dev_type);
+ 			continue;
+ 		}
+ 
+-		ps3_find_and_add_device(dev.sbd.bus_id, notify_event->dev_id);
++		ps3_find_and_add_device(dev->sbd.bus_id, notify_event->dev_id);
+ 
+ 	} while (!kthread_should_stop());
+ 
+ fail_free_irq:
+-	free_irq(irq, &dev);
++	free_irq(irq, &local->dev);
+ fail_sb_event_receive_port_destroy:
+-	ps3_sb_event_receive_port_destroy(&dev.sbd, irq);
++	ps3_sb_event_receive_port_destroy(&dev->sbd, irq);
+ fail_close_device:
+-	lv1_close_device(dev.sbd.bus_id, dev.sbd.dev_id);
++	lv1_close_device(dev->sbd.bus_id, dev->sbd.dev_id);
+ fail_free:
+-	kfree(buf);
++	kfree(local);
+ 
+ 	probe_task = NULL;
+ 
+
 
