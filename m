@@ -1,19 +1,19 @@
 Received: from mx.gpxsee.org (mx.gpxsee.org [37.205.14.76])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E27C81CA80;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E281346453;
 	Fri, 22 Mar 2024 14:10:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.14.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711116632; cv=none; b=P8OLKkKkeRx3y+59w4i004huBjv9WfWVe8A1DLjEKu9qx9oIDTxxH6Cxlidfe7KWZpgH/IoDQsTPkNk/MbZBMCPzyD4wXI9kc4FmhUYRELJXQOJUteaDPQNS+hv9hNJ31U0iSPZwHM4C+RbZfx3CGUx72fezWmJqn3uyKF4Pz0w=
+	t=1711116632; cv=none; b=W3jEIfhR1BVk1PclGx6hhXtAvW6WDMjLs9vJZfHJLmp17hNUg1ccjaw5IozRPh785ttNqBAO6u2xQpJv7st6jK9WuIJg5fTI3i6sbgYYi6hHBbtrRjHgQezTgWIO5q/yk2+sWK2Ux+GrsvZWbkGbdCKbDSxFOUMLH482xS+btY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711116632; c=relaxed/simple;
-	bh=oQuYmWVqALX8DuaBrS27WLrJOU8gMDweyWEs5gjnIaI=;
+	bh=z7uHi44jazTy+1QLYDTQDu8HlqDYjCoKrSPOoXI9JVk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BLFoS50s03dLib3Hj3lXUwHhg6497atvoiem/RMu9MRLtt+wn8nfCXM1Gk04tQGps3I84zOE8nDXag2ksF3XM2rXsKqPfu982Dw3xFfhw8i6MqPzV8Hn1BwS1s12meCGavkn0M9rYKWqfoPHKzTWdjT0pISDMa6HGBUiEzUhXJY=
+	 MIME-Version:Content-Type; b=S+CFIlfhNpdpqJY+wr0zLktHpdA1KN5MmJXx7a7WDChjc7xpKMAEvnm9gcyJAWgXQO+ZnNqla20pDLeKNZuLL1EJQV0QArDm8lMgs2uvYmtUUgeHgBZw1hLu1EmUK9SPVbFwhVrXXGytSf2BvHIGjXP61kaFRTrJZ+KgfVZaCRo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gpxsee.org; spf=pass smtp.mailfrom=gpxsee.org; arc=none smtp.client-ip=37.205.14.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gpxsee.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gpxsee.org
 Received: from mgb4.. (unknown [62.77.71.229])
-	by mx.gpxsee.org (Postfix) with ESMTPSA id 8E6A367184;
+	by mx.gpxsee.org (Postfix) with ESMTPSA id 5BB4A664E2;
 	Fri, 22 Mar 2024 15:10:22 +0100 (CET)
 From: tumic@gpxsee.org
 To: Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -21,9 +21,9 @@ To: Mauro Carvalho Chehab <mchehab@kernel.org>,
 Cc: linux-media@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	=?UTF-8?q?Martin=20T=C5=AFma?= <martin.tuma@digiteqautomotive.com>
-Subject: [PATCH v4 3/3] media: mgb4: Fixed signal frame rate limit handling
-Date: Fri, 22 Mar 2024 16:10:05 +0100
-Message-ID: <20240322151005.3499-4-tumic@gpxsee.org>
+Subject: [PATCH v4 1/3] media: mgb4: Add support for YUV image formats
+Date: Fri, 22 Mar 2024 16:10:03 +0100
+Message-ID: <20240322151005.3499-2-tumic@gpxsee.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240322151005.3499-1-tumic@gpxsee.org>
 References: <20240322151005.3499-1-tumic@gpxsee.org>
@@ -38,116 +38,410 @@ Content-Transfer-Encoding: 8bit
 
 From: Martin Tůma <martin.tuma@digiteqautomotive.com>
 
-Properly document the function of the mgb4 output frame_rate sysfs parameter
-and fix the corner case when the frame rate is set to zero causing a "divide
-by zero" kernel panic.
+Recent mgb4 firmwares support YUV in addition to the RGB image format. Enable
+YUV in the driver when the FW supports it.
 
 Signed-off-by: Martin Tůma <martin.tuma@digiteqautomotive.com>
 ---
- Documentation/admin-guide/media/mgb4.rst |  8 ++++++--
- drivers/media/pci/mgb4/mgb4_sysfs_out.c  |  9 +++++----
- drivers/media/pci/mgb4/mgb4_vout.c       | 12 ++++++------
- drivers/media/pci/mgb4/mgb4_vout.h       |  2 +-
- 4 files changed, 18 insertions(+), 13 deletions(-)
+ drivers/media/pci/mgb4/mgb4_io.h   |   7 ++
+ drivers/media/pci/mgb4/mgb4_vin.c  | 116 ++++++++++++++++++++++++-----
+ drivers/media/pci/mgb4/mgb4_vout.c | 116 ++++++++++++++++++++++++-----
+ 3 files changed, 203 insertions(+), 36 deletions(-)
 
-diff --git a/Documentation/admin-guide/media/mgb4.rst b/Documentation/admin-guide/media/mgb4.rst
-index 2977f74d7e26..6fff886003e2 100644
---- a/Documentation/admin-guide/media/mgb4.rst
-+++ b/Documentation/admin-guide/media/mgb4.rst
-@@ -228,8 +228,12 @@ Common FPDL3/GMSL output parameters
-     open.*
- 
- **frame_rate** (RW):
--    Output video frame rate in frames per second. The default frame rate is
--    60Hz.
-+    Output video signal frame rate limit in frames per second. Due to
-+    the limited output pixel clock steps, the card can not always generate
-+    a frame rate perfectly matching the value required by the connected display.
-+    Using this parameter one can limit the frame rate by "crippling" the signal
-+    so that the lines are not equal but the signal appears like having the exact
-+    frame rate to the connected display. The default frame rate limit is 60Hz.
- 
- **hsync_polarity** (RW):
-     HSYNC signal polarity.
-diff --git a/drivers/media/pci/mgb4/mgb4_sysfs_out.c b/drivers/media/pci/mgb4/mgb4_sysfs_out.c
-index f67ff2a48329..573aa61c69d4 100644
---- a/drivers/media/pci/mgb4/mgb4_sysfs_out.c
-+++ b/drivers/media/pci/mgb4/mgb4_sysfs_out.c
-@@ -229,9 +229,9 @@ static ssize_t frame_rate_show(struct device *dev,
- 	struct video_device *vdev = to_video_device(dev);
- 	struct mgb4_vout_dev *voutdev = video_get_drvdata(vdev);
- 	u32 period = mgb4_read_reg(&voutdev->mgbdev->video,
--				   voutdev->config->regs.frame_period);
-+				   voutdev->config->regs.frame_limit);
- 
--	return sprintf(buf, "%u\n", MGB4_HW_FREQ / period);
-+	return sprintf(buf, "%u\n", period ? MGB4_HW_FREQ / period : 0);
+diff --git a/drivers/media/pci/mgb4/mgb4_io.h b/drivers/media/pci/mgb4/mgb4_io.h
+index 8698db1be4a9..204613a6685c 100644
+--- a/drivers/media/pci/mgb4/mgb4_io.h
++++ b/drivers/media/pci/mgb4/mgb4_io.h
+@@ -30,4 +30,11 @@ static inline struct mgb4_frame_buffer *to_frame_buffer(struct vb2_v4l2_buffer *
+ 	return container_of(vbuf, struct mgb4_frame_buffer, vb);
  }
  
- /*
-@@ -245,14 +245,15 @@ static ssize_t frame_rate_store(struct device *dev,
- 	struct video_device *vdev = to_video_device(dev);
- 	struct mgb4_vout_dev *voutdev = video_get_drvdata(vdev);
- 	unsigned long val;
--	int ret;
-+	int limit, ret;
++static inline bool has_yuv(struct mgb4_regs *video)
++{
++	u32 status = mgb4_read_reg(video, 0xD0);
++
++	return (status & (1U << 8));
++}
++
+ #endif
+diff --git a/drivers/media/pci/mgb4/mgb4_vin.c b/drivers/media/pci/mgb4/mgb4_vin.c
+index 2cd78c539889..19692e4dfb59 100644
+--- a/drivers/media/pci/mgb4/mgb4_vin.c
++++ b/drivers/media/pci/mgb4/mgb4_vin.c
+@@ -186,8 +186,11 @@ static int queue_setup(struct vb2_queue *q, unsigned int *nbuffers,
+ 		       struct device *alloc_devs[])
+ {
+ 	struct mgb4_vin_dev *vindev = vb2_get_drv_priv(q);
++	struct mgb4_regs *video = &vindev->mgbdev->video;
++	u32 config = mgb4_read_reg(video, vindev->config->regs.config);
++	u32 pixelsize = (config & (1U << 16)) ? 2 : 4;
+ 	unsigned int size = (vindev->timings.bt.width + vindev->padding)
+-	 * vindev->timings.bt.height * 4;
++			    * vindev->timings.bt.height * pixelsize;
  
- 	ret = kstrtoul(buf, 10, &val);
- 	if (ret)
- 		return ret;
+ 	/*
+ 	 * If I/O reconfiguration is in process, do not allow to start
+@@ -220,9 +223,12 @@ static int buffer_init(struct vb2_buffer *vb)
+ static int buffer_prepare(struct vb2_buffer *vb)
+ {
+ 	struct mgb4_vin_dev *vindev = vb2_get_drv_priv(vb->vb2_queue);
++	struct mgb4_regs *video = &vindev->mgbdev->video;
+ 	struct device *dev = &vindev->mgbdev->pdev->dev;
++	u32 config = mgb4_read_reg(video, vindev->config->regs.config);
++	u32 pixelsize = (config & (1U << 16)) ? 2 : 4;
+ 	unsigned int size = (vindev->timings.bt.width + vindev->padding)
+-	 * vindev->timings.bt.height * 4;
++			    * vindev->timings.bt.height * pixelsize;
  
-+	limit = val ? MGB4_HW_FREQ / val : 0;
- 	mgb4_write_reg(&voutdev->mgbdev->video,
--		       voutdev->config->regs.frame_period, MGB4_HW_FREQ / val);
-+		       voutdev->config->regs.frame_limit, limit);
+ 	if (vb2_plane_size(vb, 0) < size) {
+ 		dev_err(dev, "buffer too small (%lu < %u)\n",
+@@ -359,22 +365,33 @@ static int vidioc_querycap(struct file *file, void *priv,
+ static int vidioc_enum_fmt(struct file *file, void *priv,
+ 			   struct v4l2_fmtdesc *f)
+ {
+-	if (f->index != 0)
+-		return -EINVAL;
++	struct mgb4_vin_dev *vindev = video_drvdata(file);
++	struct mgb4_regs *video = &vindev->mgbdev->video;
  
- 	return count;
+-	f->pixelformat = V4L2_PIX_FMT_ABGR32;
++	if (f->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
++		return -EINVAL;
+ 
+-	return 0;
++	if (f->index == 0) {
++		f->pixelformat = V4L2_PIX_FMT_ABGR32;
++		return 0;
++	} else if (f->index == 1 && has_yuv(video)) {
++		f->pixelformat = V4L2_PIX_FMT_YUYV;
++		return 0;
++	} else {
++		return -EINVAL;
++	}
  }
+ 
+ static int vidioc_enum_frameintervals(struct file *file, void *priv,
+ 				      struct v4l2_frmivalenum *ival)
+ {
+ 	struct mgb4_vin_dev *vindev = video_drvdata(file);
++	struct mgb4_regs *video = &vindev->mgbdev->video;
+ 
+ 	if (ival->index != 0)
+ 		return -EINVAL;
+-	if (ival->pixel_format != V4L2_PIX_FMT_ABGR32)
++	if (!(ival->pixel_format == V4L2_PIX_FMT_ABGR32 ||
++	      ((has_yuv(video) && ival->pixel_format == V4L2_PIX_FMT_YUYV))))
+ 		return -EINVAL;
+ 	if (ival->width != vindev->timings.bt.width ||
+ 	    ival->height != vindev->timings.bt.height)
+@@ -393,13 +410,32 @@ static int vidioc_enum_frameintervals(struct file *file, void *priv,
+ static int vidioc_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
+ {
+ 	struct mgb4_vin_dev *vindev = video_drvdata(file);
++	struct mgb4_regs *video = &vindev->mgbdev->video;
++	u32 config = mgb4_read_reg(video, vindev->config->regs.config);
++
++	if (f->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
++		return -EINVAL;
+ 
+-	f->fmt.pix.pixelformat = V4L2_PIX_FMT_ABGR32;
+ 	f->fmt.pix.width = vindev->timings.bt.width;
+ 	f->fmt.pix.height = vindev->timings.bt.height;
+ 	f->fmt.pix.field = V4L2_FIELD_NONE;
+-	f->fmt.pix.colorspace = V4L2_COLORSPACE_RAW;
+-	f->fmt.pix.bytesperline = (f->fmt.pix.width + vindev->padding) * 4;
++
++	if (config & (1U << 16)) {
++		f->fmt.pix.pixelformat = V4L2_PIX_FMT_YUYV;
++		if (config & (1U << 20)) {
++			f->fmt.pix.colorspace = V4L2_COLORSPACE_REC709;
++		} else {
++			if (config & (1U << 19))
++				f->fmt.pix.colorspace = V4L2_COLORSPACE_SMPTE170M;
++			else
++				f->fmt.pix.colorspace = V4L2_COLORSPACE_SRGB;
++		}
++		f->fmt.pix.bytesperline = (f->fmt.pix.width + vindev->padding) * 2;
++	} else {
++		f->fmt.pix.pixelformat = V4L2_PIX_FMT_ABGR32;
++		f->fmt.pix.colorspace = V4L2_COLORSPACE_RAW;
++		f->fmt.pix.bytesperline = (f->fmt.pix.width + vindev->padding) * 4;
++	}
+ 	f->fmt.pix.sizeimage = f->fmt.pix.bytesperline * f->fmt.pix.height;
+ 
+ 	return 0;
+@@ -408,14 +444,33 @@ static int vidioc_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
+ static int vidioc_try_fmt(struct file *file, void *priv, struct v4l2_format *f)
+ {
+ 	struct mgb4_vin_dev *vindev = video_drvdata(file);
++	struct mgb4_regs *video = &vindev->mgbdev->video;
++	u32 pixelsize;
++
++	if (f->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
++		return -EINVAL;
+ 
+-	f->fmt.pix.pixelformat = V4L2_PIX_FMT_ABGR32;
+ 	f->fmt.pix.width = vindev->timings.bt.width;
+ 	f->fmt.pix.height = vindev->timings.bt.height;
+ 	f->fmt.pix.field = V4L2_FIELD_NONE;
+-	f->fmt.pix.colorspace = V4L2_COLORSPACE_RAW;
+-	f->fmt.pix.bytesperline = max(f->fmt.pix.width * 4,
+-				      ALIGN_DOWN(f->fmt.pix.bytesperline, 4));
++
++	if (has_yuv(video) && f->fmt.pix.pixelformat == V4L2_PIX_FMT_YUYV) {
++		pixelsize = 2;
++		if (!(f->fmt.pix.colorspace == V4L2_COLORSPACE_REC709 ||
++		      f->fmt.pix.colorspace == V4L2_COLORSPACE_SMPTE170M))
++			f->fmt.pix.colorspace = V4L2_COLORSPACE_SRGB;
++	} else {
++		pixelsize = 4;
++		f->fmt.pix.pixelformat = V4L2_PIX_FMT_ABGR32;
++		f->fmt.pix.colorspace = V4L2_COLORSPACE_RAW;
++	}
++
++	if (f->fmt.pix.bytesperline > f->fmt.pix.width * pixelsize
++	    && f->fmt.pix.bytesperline < f->fmt.pix.width * pixelsize * 2)
++		f->fmt.pix.bytesperline = ALIGN(f->fmt.pix.bytesperline,
++						pixelsize);
++	else
++		f->fmt.pix.bytesperline = f->fmt.pix.width * pixelsize;
+ 	f->fmt.pix.sizeimage = f->fmt.pix.bytesperline * f->fmt.pix.height;
+ 
+ 	return 0;
+@@ -425,13 +480,39 @@ static int vidioc_s_fmt(struct file *file, void *priv, struct v4l2_format *f)
+ {
+ 	struct mgb4_vin_dev *vindev = video_drvdata(file);
+ 	struct mgb4_regs *video = &vindev->mgbdev->video;
++	u32 config, pixelsize;
++	int ret;
+ 
+ 	if (vb2_is_busy(&vindev->queue))
+ 		return -EBUSY;
+ 
+-	vidioc_try_fmt(file, priv, f);
++	ret = vidioc_try_fmt(file, priv, f);
++	if (ret < 0)
++		return ret;
++
++	config = mgb4_read_reg(video, vindev->config->regs.config);
++	if (f->fmt.pix.pixelformat == V4L2_PIX_FMT_YUYV) {
++		pixelsize = 2;
++		config |= 1U << 16;
++
++		if (f->fmt.pix.colorspace == V4L2_COLORSPACE_REC709) {
++			config |= 1U << 20;
++			config |= 1U << 19;
++		} else if (f->fmt.pix.colorspace == V4L2_COLORSPACE_SMPTE170M) {
++			config &= ~(1U << 20);
++			config |= 1U << 19;
++		} else {
++			config &= ~(1U << 20);
++			config &= ~(1U << 19);
++		}
++	} else {
++		pixelsize = 4;
++		config &= ~(1U << 16);
++	}
++	mgb4_write_reg(video, vindev->config->regs.config, config);
+ 
+-	vindev->padding = (f->fmt.pix.bytesperline - (f->fmt.pix.width * 4)) / 4;
++	vindev->padding = (f->fmt.pix.bytesperline - (f->fmt.pix.width
++			   * pixelsize)) / pixelsize;
+ 	mgb4_write_reg(video, vindev->config->regs.padding, vindev->padding);
+ 	set_loopback_padding(vindev, vindev->padding);
+ 
+@@ -467,7 +548,8 @@ static int vidioc_enum_framesizes(struct file *file, void *fh,
+ {
+ 	struct mgb4_vin_dev *vindev = video_drvdata(file);
+ 
+-	if (fsize->index != 0 || fsize->pixel_format != V4L2_PIX_FMT_ABGR32)
++	if (fsize->index != 0 || !(fsize->pixel_format == V4L2_PIX_FMT_ABGR32 ||
++				   fsize->pixel_format == V4L2_PIX_FMT_YUYV))
+ 		return -EINVAL;
+ 
+ 	fsize->discrete.width = vindev->timings.bt.width;
 diff --git a/drivers/media/pci/mgb4/mgb4_vout.c b/drivers/media/pci/mgb4/mgb4_vout.c
-index a6b55669f0a8..cd001ceaae63 100644
+index 241353ee77a5..243fbeaaceb9 100644
 --- a/drivers/media/pci/mgb4/mgb4_vout.c
 +++ b/drivers/media/pci/mgb4/mgb4_vout.c
-@@ -680,12 +680,12 @@ static void fpga_init(struct mgb4_vout_dev *voutdev)
- 	mgb4_write_reg(video, regs->config, 0x00000011);
- 	mgb4_write_reg(video, regs->resolution,
- 		       (DEFAULT_WIDTH << 16) | DEFAULT_HEIGHT);
--	mgb4_write_reg(video, regs->hsync, 0x00102020);
--	mgb4_write_reg(video, regs->vsync, 0x40020202);
--	mgb4_write_reg(video, regs->frame_period, DEFAULT_PERIOD);
-+	mgb4_write_reg(video, regs->hsync, 0x00283232);
-+	mgb4_write_reg(video, regs->vsync, 0x40141F1E);
-+	mgb4_write_reg(video, regs->frame_limit, DEFAULT_PERIOD);
- 	mgb4_write_reg(video, regs->padding, 0x00000000);
+@@ -59,7 +59,11 @@ static int queue_setup(struct vb2_queue *q, unsigned int *nbuffers,
+ 		       struct device *alloc_devs[])
+ {
+ 	struct mgb4_vout_dev *voutdev = vb2_get_drv_priv(q);
+-	unsigned int size;
++	struct mgb4_regs *video = &voutdev->mgbdev->video;
++	u32 config = mgb4_read_reg(video, voutdev->config->regs.config);
++	u32 pixelsize = (config & (1U << 16)) ? 2 : 4;
++	unsigned int size = (voutdev->width + voutdev->padding) * voutdev->height
++			    * pixelsize;
  
--	voutdev->freq = mgb4_cmt_set_vout_freq(voutdev, 70000 >> 1) << 1;
-+	voutdev->freq = mgb4_cmt_set_vout_freq(voutdev, 61150 >> 1) << 1;
+ 	/*
+ 	 * If I/O reconfiguration is in process, do not allow to start
+@@ -69,8 +73,6 @@ static int queue_setup(struct vb2_queue *q, unsigned int *nbuffers,
+ 	if (test_bit(0, &voutdev->mgbdev->io_reconfig))
+ 		return -EBUSY;
  
- 	mgb4_write_reg(video, regs->config,
- 		       (voutdev->config->id + MGB4_VIN_DEVICES) << 2 | 1 << 4);
-@@ -711,8 +711,8 @@ static void debugfs_init(struct mgb4_vout_dev *voutdev)
- 	voutdev->regs[3].offset = voutdev->config->regs.hsync;
- 	voutdev->regs[4].name = "VIDEO_PARAMS_2";
- 	voutdev->regs[4].offset = voutdev->config->regs.vsync;
--	voutdev->regs[5].name = "FRAME_PERIOD";
--	voutdev->regs[5].offset = voutdev->config->regs.frame_period;
-+	voutdev->regs[5].name = "FRAME_LIMIT";
-+	voutdev->regs[5].offset = voutdev->config->regs.frame_limit;
- 	voutdev->regs[6].name = "PADDING_PIXELS";
- 	voutdev->regs[6].offset = voutdev->config->regs.padding;
- 	if (has_timeperframe(video)) {
-diff --git a/drivers/media/pci/mgb4/mgb4_vout.h b/drivers/media/pci/mgb4/mgb4_vout.h
-index ab9b58b1deb7..adc8fe1e7ae6 100644
---- a/drivers/media/pci/mgb4/mgb4_vout.h
-+++ b/drivers/media/pci/mgb4/mgb4_vout.h
-@@ -19,7 +19,7 @@ struct mgb4_vout_regs {
- 	u32 config;
- 	u32 status;
- 	u32 resolution;
--	u32 frame_period;
-+	u32 frame_limit;
- 	u32 hsync;
- 	u32 vsync;
- 	u32 padding;
+-	size = (voutdev->width + voutdev->padding) * voutdev->height * 4;
+-
+ 	if (*nplanes)
+ 		return sizes[0] < size ? -EINVAL : 0;
+ 	*nplanes = 1;
+@@ -93,9 +95,11 @@ static int buffer_prepare(struct vb2_buffer *vb)
+ {
+ 	struct mgb4_vout_dev *voutdev = vb2_get_drv_priv(vb->vb2_queue);
+ 	struct device *dev = &voutdev->mgbdev->pdev->dev;
+-	unsigned int size;
+-
+-	size = (voutdev->width + voutdev->padding) * voutdev->height * 4;
++	struct mgb4_regs *video = &voutdev->mgbdev->video;
++	u32 config = mgb4_read_reg(video, voutdev->config->regs.config);
++	u32 pixelsize = (config & (1U << 16)) ? 2 : 4;
++	unsigned int size = (voutdev->width + voutdev->padding) * voutdev->height
++			    * pixelsize;
+ 
+ 	if (vb2_plane_size(vb, 0) < size) {
+ 		dev_err(dev, "buffer too small (%lu < %u)\n",
+@@ -194,24 +198,53 @@ static int vidioc_querycap(struct file *file, void *priv,
+ static int vidioc_enum_fmt(struct file *file, void *priv,
+ 			   struct v4l2_fmtdesc *f)
+ {
+-	if (f->index != 0)
+-		return -EINVAL;
++	struct mgb4_vin_dev *voutdev = video_drvdata(file);
++	struct mgb4_regs *video = &voutdev->mgbdev->video;
+ 
+-	f->pixelformat = V4L2_PIX_FMT_ABGR32;
++	if (f->type != V4L2_BUF_TYPE_VIDEO_OUTPUT)
++		return -EINVAL;
+ 
+-	return 0;
++	if (f->index == 0) {
++		f->pixelformat = V4L2_PIX_FMT_ABGR32;
++		return 0;
++	} else if (f->index == 1 && has_yuv(video)) {
++		f->pixelformat = V4L2_PIX_FMT_YUYV;
++		return 0;
++	} else {
++		return -EINVAL;
++	}
+ }
+ 
+ static int vidioc_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
+ {
+ 	struct mgb4_vout_dev *voutdev = video_drvdata(file);
++	struct mgb4_regs *video = &voutdev->mgbdev->video;
++	u32 config = mgb4_read_reg(video, voutdev->config->regs.config);
++
++	if (f->type != V4L2_BUF_TYPE_VIDEO_OUTPUT)
++		return -EINVAL;
+ 
+-	f->fmt.pix.pixelformat = V4L2_PIX_FMT_ABGR32;
+ 	f->fmt.pix.width = voutdev->width;
+ 	f->fmt.pix.height = voutdev->height;
+ 	f->fmt.pix.field = V4L2_FIELD_NONE;
+-	f->fmt.pix.colorspace = V4L2_COLORSPACE_RAW;
+-	f->fmt.pix.bytesperline = (f->fmt.pix.width + voutdev->padding) * 4;
++
++	if (config & (1U << 16)) {
++		f->fmt.pix.pixelformat = V4L2_PIX_FMT_YUYV;
++		if (config & (1U << 20)) {
++			f->fmt.pix.colorspace = V4L2_COLORSPACE_REC709;
++		} else {
++			if (config & (1U << 19))
++				f->fmt.pix.colorspace = V4L2_COLORSPACE_SMPTE170M;
++			else
++				f->fmt.pix.colorspace = V4L2_COLORSPACE_SRGB;
++		}
++		f->fmt.pix.bytesperline = (f->fmt.pix.width + voutdev->padding) * 2;
++	} else {
++		f->fmt.pix.pixelformat = V4L2_PIX_FMT_ABGR32;
++		f->fmt.pix.colorspace = V4L2_COLORSPACE_RAW;
++		f->fmt.pix.bytesperline = (f->fmt.pix.width + voutdev->padding) * 4;
++	}
++
+ 	f->fmt.pix.sizeimage = f->fmt.pix.bytesperline * f->fmt.pix.height;
+ 
+ 	return 0;
+@@ -220,14 +253,33 @@ static int vidioc_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
+ static int vidioc_try_fmt(struct file *file, void *priv, struct v4l2_format *f)
+ {
+ 	struct mgb4_vout_dev *voutdev = video_drvdata(file);
++	struct mgb4_regs *video = &voutdev->mgbdev->video;
++	u32 pixelsize;
++
++	if (f->type != V4L2_BUF_TYPE_VIDEO_OUTPUT)
++		return -EINVAL;
+ 
+-	f->fmt.pix.pixelformat = V4L2_PIX_FMT_ABGR32;
+ 	f->fmt.pix.width = voutdev->width;
+ 	f->fmt.pix.height = voutdev->height;
+ 	f->fmt.pix.field = V4L2_FIELD_NONE;
+-	f->fmt.pix.colorspace = V4L2_COLORSPACE_RAW;
+-	f->fmt.pix.bytesperline = max(f->fmt.pix.width * 4,
+-				      ALIGN_DOWN(f->fmt.pix.bytesperline, 4));
++
++	if (has_yuv(video) && f->fmt.pix.pixelformat == V4L2_PIX_FMT_YUYV) {
++		pixelsize = 2;
++		if (!(f->fmt.pix.colorspace == V4L2_COLORSPACE_REC709 ||
++		      f->fmt.pix.colorspace == V4L2_COLORSPACE_SMPTE170M))
++			f->fmt.pix.colorspace = V4L2_COLORSPACE_SRGB;
++	} else {
++		pixelsize = 4;
++		f->fmt.pix.pixelformat = V4L2_PIX_FMT_ABGR32;
++		f->fmt.pix.colorspace = V4L2_COLORSPACE_RAW;
++	}
++
++	if (f->fmt.pix.bytesperline > f->fmt.pix.width * pixelsize
++	    && f->fmt.pix.bytesperline < f->fmt.pix.width * pixelsize * 2)
++		f->fmt.pix.bytesperline = ALIGN(f->fmt.pix.bytesperline,
++						pixelsize);
++	else
++		f->fmt.pix.bytesperline = f->fmt.pix.width * pixelsize;
+ 	f->fmt.pix.sizeimage = f->fmt.pix.bytesperline * f->fmt.pix.height;
+ 
+ 	return 0;
+@@ -237,13 +289,39 @@ static int vidioc_s_fmt(struct file *file, void *priv, struct v4l2_format *f)
+ {
+ 	struct mgb4_vout_dev *voutdev = video_drvdata(file);
+ 	struct mgb4_regs *video = &voutdev->mgbdev->video;
++	u32 config, pixelsize;
++	int ret;
+ 
+ 	if (vb2_is_busy(&voutdev->queue))
+ 		return -EBUSY;
+ 
+-	vidioc_try_fmt(file, priv, f);
++	ret = vidioc_try_fmt(file, priv, f);
++	if (ret < 0)
++		return ret;
++
++	config = mgb4_read_reg(video, voutdev->config->regs.config);
++	if (f->fmt.pix.pixelformat == V4L2_PIX_FMT_YUYV) {
++		pixelsize = 2;
++		config |= 1U << 16;
++
++		if (f->fmt.pix.colorspace == V4L2_COLORSPACE_REC709) {
++			config |= 1U << 20;
++			config |= 1U << 19;
++		} else if (f->fmt.pix.colorspace == V4L2_COLORSPACE_SMPTE170M) {
++			config &= ~(1U << 20);
++			config |= 1U << 19;
++		} else {
++			config &= ~(1U << 20);
++			config &= ~(1U << 19);
++		}
++	} else {
++		pixelsize = 4;
++		config &= ~(1U << 16);
++	}
++	mgb4_write_reg(video, voutdev->config->regs.config, config);
+ 
+-	voutdev->padding = (f->fmt.pix.bytesperline - (f->fmt.pix.width * 4)) / 4;
++	voutdev->padding = (f->fmt.pix.bytesperline - (f->fmt.pix.width
++			    * pixelsize)) / pixelsize;
+ 	mgb4_write_reg(video, voutdev->config->regs.padding, voutdev->padding);
+ 
+ 	return 0;
 -- 
 2.44.0
 
