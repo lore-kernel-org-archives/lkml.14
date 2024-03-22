@@ -1,411 +1,209 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11271171C9;
-	Fri, 22 Mar 2024 08:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711096096; cv=none; b=PpqQUTiuLXBsLvG6qDloxwkN0rhwACvX/5ikcQFNXdXzKOVGkZzM0f1B03/wpCGZecoUEmjK+Jj3zn5hfv67dR6DbL9aRX+t4mePoPI8622XptXXfVnfLRNA9zy3wEwczPGs1b0+moH+JwL2Dx6liJ6k+6Rkdt/d389rX8rpvbk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711096096; c=relaxed/simple;
-	bh=UftWVjwy19WCwvccb70bC/mL8pOUa+OMVbElZ21oS2Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Pu83hw4/TCs8vEdbL57ngbvva4OMq2QGpUHXmAXVttrwzP79IIj0C0BGm7Ak+qr+LxfqWRJHq5q0Gg7RsLdNML89cd+44K/4UnGy4Op1osTKsi8PUBBHHbCyKdik9dtukUtIObIO1eSqhxDO/CbG408ZUHnqVyM0bTJd3mfxamM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d6dff70000001748-96-65fd4111d96d
-From: Honggyu Kim <honggyu.kim@sk.com>
-To: SeongJae Park <sj@kernel.org>
-Cc: damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	akpm@linux-foundation.org,
-	apopple@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	dave.jiang@intel.com,
-	hyeongtak.ji@sk.com,
-	kernel_team@skhynix.com,
-	linmiaohe@huawei.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	rakie.kim@sk.com,
-	rostedt@goodmis.org,
-	surenb@google.com,
-	yangx.jy@fujitsu.com,
-	ying.huang@intel.com,
-	ziy@nvidia.com,
-	42.hyeyoo@gmail.com,
-	art.jeongseob@gmail.com
-Subject: Re: [RFC PATCH v2 0/7] DAMON based 2-tier memory management for CXL memory
-Date: Fri, 22 Mar 2024 17:27:34 +0900
-Message-ID: <20240322082742.2233-1-honggyu.kim@sk.com>
-X-Mailer: git-send-email 2.43.0.windows.1
-In-Reply-To: <20240320165619.71478-1-sj@kernel.org>
-References: 
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125181B277;
+	Fri, 22 Mar 2024 08:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.154.123
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711096133; cv=fail; b=oe6iX5S8goMwfw28OOAfTXFsKimo6Mbc3T1RJamcI9IG+ytuE+W36IMeNEsHXudXbQWIS8Fna6G+Tg51Q+pJ7GtZd9K7kvXdHk6e6HZvGc/eTIVSOmcSTR7mOhR4ikJMVjO9+e2fx+IHb8Qmj7rj4P3doQdc+Ei1cOrSY3uFvcs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711096133; c=relaxed/simple;
+	bh=OBo/tb/70y3jzTrcTRpoXXt60WrtS8NDErCwu4VTplY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=AIZxLwT9O2OonEfBpvrys5cXh8E9ot+5N6zWchuqAY0Cdb9nLPcGcveVuj+jkc8sB8jv/KBYcOxNNhERIv6NhMTS6WWxYFgtHOsPMUE+DNmj51RK6Y/fC3ys6UlXOSEqqrE52qGOWzoo3bTgXNSbC9AEqBJgj/DpiqRT0kvhaF8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=ZH8OK+LF; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=sEu5V4On; arc=fail smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ZH8OK+LF";
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="sEu5V4On"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1711096131; x=1742632131;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=OBo/tb/70y3jzTrcTRpoXXt60WrtS8NDErCwu4VTplY=;
+  b=ZH8OK+LFwMcLWuNOlzA9tdaiTzymQOvQxDw8Z/EXWzPafnAxxgDUel7y
+   ZB+H3UCHSUwcQul1oXkdRFecSwlrki5pub0ZEXE/Sbod/wFxzhqIt7gKY
+   ALRU16hO8ZJGKZoEAKxRADrRrGHKvdJv4oHpaeeDtaIyCGsT2q0HHxH+Z
+   SStLjIpMnMX2R3Ld9MOO/P4ek4aV9NJejgWlkvA6ScYT8KQCa/b06uX9H
+   GBaU2ywp6v5UO01VibtNAvlHohe8dxTSuGxgWOZTxJO0US/e45fjFkna8
+   Q1OPS9GY6ncnvQoOlZI9rTorJAVqf6BekvAA3SBhx250TIZDj+JCVFzwv
+   g==;
+X-CSE-ConnectionGUID: 7cRZVOA6TQyD8KbnDeMT3g==
+X-CSE-MsgGUID: CsqBXNV7TOan2cVL55Jyfg==
+X-IronPort-AV: E=Sophos;i="6.07,145,1708412400"; 
+   d="scan'208";a="18547480"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 22 Mar 2024 01:28:49 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 22 Mar 2024 01:28:40 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (10.10.215.250)
+ by email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Fri, 22 Mar 2024 01:28:40 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fRHUZ2sq0RrkmDatZ9+soRvDDbaOFookD9CxTsvx9uuXowV9xlwAtHPCpwUmTYwGv0w31gnC28MacGwv0C9iewLt1lIFb5ivRmCwEKIzPCj+QmTUBM0atRo6xMhWtb3TGOZKWrLDrHlJnTUzx/gpOl6owaSnUis1vhb4Zxuulxoe/2O+Hp6vbGj5qMyEYOzvkNHQUwc1h/KdF/cQTmKYdJoOaqJ8yWmpS47m9AEXLyLLNkA6WInsa1P56TKnTiAWDDL5pIEPjzRnwdchBZOBzqBcCQYcPNosKaBptsFeB8rVzwigjSHcVIzgU0Gddt+5a5VCX0/za65AYHwpQSbqnw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OBo/tb/70y3jzTrcTRpoXXt60WrtS8NDErCwu4VTplY=;
+ b=S+2d4W6+gYNt19p5JFt0MHLAbXuVmFHQgp1vaI7heO5n4lme47Vt/QYBg6CDq+Amf6dDI2NvKCfxxN5XGuI8FiXtNzcggHBqv9kKaEj+cToyjOMbe2y1eiKT+WJUgM2/7TEqPSl1rRV5SxTIYJgTFfTXDvCyDNyW14mbS95taSfPl1Y3OIo7d9GBi55bZe6gGzRHeaOkGWBIaufDB/svsKSao9ZIA3TjGg+bovwAaytX98+wMALiqcuDcDdW2D4F+XK+MJmBh2kpQp/LQzxBCMi1ice3oytSJ0dr4isbn9ug/IlxC79N6/wnHEvXkAVDkjYgdIGqG1dnQT8s0KGVlQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OBo/tb/70y3jzTrcTRpoXXt60WrtS8NDErCwu4VTplY=;
+ b=sEu5V4OncHZtmFVtHng/jL+3dCuNe4h+tdxKmeFl/VtNVCMlgPVQM+7d8HTMlfWdpVTa1mAML23gds38JtaWWAExY61eFiagpwy0p12qHTwr4GZ3tXUfbFiXMd11OJze0LRoVF0OFK/Cj7dJqAFlfeZ0qlOofe7D75ZFv1VhqhO5w13Pz8pbeLlQZCDJRxoK5JinU/84FC+0I3RjhCxxa+nLpYrHq3x94H0B6T1B0R9CuM4Ek58VZY75G+jZDwh/ADSOT82yBsNrTrusvNcg4gwliVhWqOW1QTmPIKXT4l1VCHrykREiQoKu5Azha2Ss/BksL7/AM5iifMEeg8MDUw==
+Received: from SA1PR11MB8278.namprd11.prod.outlook.com (2603:10b6:806:25b::19)
+ by SN7PR11MB7708.namprd11.prod.outlook.com (2603:10b6:806:352::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.24; Fri, 22 Mar
+ 2024 08:28:38 +0000
+Received: from SA1PR11MB8278.namprd11.prod.outlook.com
+ ([fe80::f633:b9d4:f539:177d]) by SA1PR11MB8278.namprd11.prod.outlook.com
+ ([fe80::f633:b9d4:f539:177d%6]) with mapi id 15.20.7386.015; Fri, 22 Mar 2024
+ 08:28:38 +0000
+From: <Parthiban.Veerasooran@microchip.com>
+To: <krzysztof.kozlowski@linaro.org>, <conor@kernel.org>
+CC: <andrew@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>,
+	<saeedm@nvidia.com>, <anthony.l.nguyen@intel.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <corbet@lwn.net>,
+	<linux-doc@vger.kernel.org>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+	<devicetree@vger.kernel.org>, <Horatiu.Vultur@microchip.com>,
+	<ruanjinjie@huawei.com>, <Steen.Hegelund@microchip.com>,
+	<vladimir.oltean@nxp.com>, <UNGLinuxDriver@microchip.com>,
+	<Thorsten.Kummermehr@microchip.com>, <Pier.Beruto@onsemi.com>,
+	<Selvamani.Rajagopal@onsemi.com>, <Nicolas.Ferre@microchip.com>,
+	<benjamin.bigler@bernformulastudent.ch>
+Subject: Re: [PATCH net-next v3 12/12] dt-bindings: net: add Microchip's
+ LAN865X 10BASE-T1S MACPHY
+Thread-Topic: [PATCH net-next v3 12/12] dt-bindings: net: add Microchip's
+ LAN865X 10BASE-T1S MACPHY
+Thread-Index: AQHab6Ox6ghenOTJpkWNbGLTwd03cbErBYYAgAAJFoCAAANkgIAVU1wAgAAUTICAAX1RAIAAAHgAgAA4LwCAADuQgIAA+O2AgAAKtoCAABfTgA==
+Date: Fri, 22 Mar 2024 08:28:38 +0000
+Message-ID: <b3c5d217-a5e3-4957-884c-02e8c10aba9d@microchip.com>
+References: <20240306085017.21731-1-Parthiban.Veerasooran@microchip.com>
+ <20240306085017.21731-13-Parthiban.Veerasooran@microchip.com>
+ <20240306-spree-islamist-957acf0ee368@spud>
+ <4c5968a3-c043-45fc-8fff-2a9eaa6de341@lunn.ch>
+ <20240306-ripeness-dimple-e360a031ccde@spud>
+ <05a9a7ee-e4f0-443e-9c8a-8ee649a11448@microchip.com>
+ <2f384a54-74a0-4a75-a325-8985257b5d66@linaro.org>
+ <ba37c212-fb98-407d-9bee-6d14801754d9@microchip.com>
+ <96493beb-afbf-42f2-88f0-ad645422ecdb@linaro.org>
+ <1735add6-4a6a-452b-bf26-1cf19c95493e@microchip.com>
+ <20240321-upcountry-finless-b0e9b1ab4deb@spud>
+ <13a28ba3-2da4-428c-8091-25e75c6c11e8@microchip.com>
+ <d41a53bd-ea1e-476a-a18c-ed51dbac0a98@linaro.org>
+In-Reply-To: <d41a53bd-ea1e-476a-a18c-ed51dbac0a98@linaro.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla Thunderbird
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microchip.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR11MB8278:EE_|SN7PR11MB7708:EE_
+x-ms-office365-filtering-correlation-id: f8912ae0-8ce9-48a0-b475-08dc4a4a12e6
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: r1VtQR8r2KNe3N3tsjaabzJstZj/S/+AL0HR9MxzSAUQmBEx4yLYs2jnWb4X2hLFEjoTVnxtZDTBhKASNzy0HGFZheZ1rA6/zGAS7HY37GhZyBxpYOsJCH3JI7dol0khgO3tlhNEPa9TiFoyvr/3TJw/SS0z8Yi4hupfqdras1+ePzPEMfNQjkk8N0GAAmzS6dFKEcsdu+nJDFi48Gcm/x0KV7Q0biuPFjyAhRKARVtDDDaJp7TGJJ+O1pnAB8JPnrvnzn29kFQKRdUK63HQopXa23Ig4ETJ3TmAPnFoMEtO7vBw6ndKdbac+AqdAIYfkZnnb4JMGxc7oYo8Buk2trjAPggwRWfgNERbxHun/oiIpDkpHIDKar5FVU8stu4xsnelpTu+cP1zC98b5zTPXVxj7nDopyGUCl0m/CJBpDPwjaDsbw3OdxkFJ9zQFGoIpJnIBrwTItE/iuAgzn+QxDC6DBKuyxPQQf1OOPrENGkh2mCYfSok17uIvG12nDPl8SMEXz/V7mo0fzmJUp1CfF30ZUa3zqxND1gACy/rGkKbDkECq+sZjGE/grCs9CG3jfG89/U2W9r44B7AxbdCrg6mwDI4maanAuYQRtIL5P8q/1G10yZEEujLFag7MV2XXouQAyfsITv/JsftrHOToXkqBvB5oLDxPmxU2UEkIMvXfKsLn7dZc03FAjtUts0Rwdzf4Do6TReDNa0X00WNPbqXeP6yGzUeAWg940VHJ8E=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB8278.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(366007)(376005)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Sy9qMnlPaGQvUVFKQ3djMUIycmhkeDFiTkNYdkp5WUlpOEY5OHl2aFRCWDl6?=
+ =?utf-8?B?cTAzcnpvaHZBdzJrMksyM3lKMC9nSkp2NklPdVVpNXJkM3FUZ1BYVlFJWTJB?=
+ =?utf-8?B?bVFUd2ZEVEE3OUpTb0lsODFnaEJnNExOcjgyeFpoa1c5NVNXNi9pdWxCVEJW?=
+ =?utf-8?B?YjlPSXFGWjY2dzdYWVlhcUVOY1pUT1FiUEJSN1F2SDdTUVp1SFY5enFiMklv?=
+ =?utf-8?B?ZjIxVUF5K3U4MGxhU0c4WUVlNytwTlhtSlZ5b2lVbFlXT0JqMisrWGZCblQ3?=
+ =?utf-8?B?SktjMUdXY2lrbUllMGhjK2tHZkNCam9RWFlCRmdiQWZqdDBvYjVXVXFqR1lX?=
+ =?utf-8?B?Z29KNDZISlNGTi9GTldDeHgzQm9VclBvRmZyRTNjaS8vcVY4UFVxNFF0NFRO?=
+ =?utf-8?B?TzVnV3FWL2pucXA5MzI5SkRsbFVGUTl5SkxOZk1hWndmam5jdkh6Tk9JQzhq?=
+ =?utf-8?B?R0MydW5hR3V0azVzaUhFcU1zMGYyazdwMmJ1TTUrYkFTUHg0UjhVUzlvY3l6?=
+ =?utf-8?B?S3hMR1N5UlkwSEkyTVozZU1QL01OcW9FMVQyNG9jeVAzMEZSbjVIYndwU2gx?=
+ =?utf-8?B?cmFReHFaSnNTWHluSjVlUUR0YXhHaVNmb2JVcW5XY3kwbWd5N3h0RG5oeWNS?=
+ =?utf-8?B?M0lLWlpqdWxGU1B1VU5kNE1MVExCODdqZ1FXTWUxZ0J3cktrNnhkTjhoOWxK?=
+ =?utf-8?B?M25ISVk2cUZrbkIxYzYxMWp5d1VSTllWV0VMQXM2MC9jQTIzTkhRc2ZMZHFv?=
+ =?utf-8?B?VFlUVjExSlVnN040TVpXOEpRM0tTVkhuZ05hUFB3NUNhN1ZxOXIwWWxJTjdl?=
+ =?utf-8?B?SnhpMXlZbXpxbjhGWnF4VTBwUnpQYldyUEFmZzk1cEhKUWxJS2FyUTdWbVg1?=
+ =?utf-8?B?YWEzazFBVUR2QlNTenRoT2VFY1BOWjQyQ0cxYTZNWmVWUkRma3BZSmRHU09o?=
+ =?utf-8?B?dVd5NDFCRVhUb3htOTUrWUQvRy9Qc2NqeG1uWVRIc0k1V25DRml1U1d1VkNt?=
+ =?utf-8?B?L05TN0dsYmE3ZnF2MHU3V1ZmS0hFYjY2b0VOakF0aUZxSERRV1ltZEJEUUlC?=
+ =?utf-8?B?VWFpRTA4WXgrZUV5L0c5UXB2YkRCTmxiS1hjUWx1d3lZMU5NWDNDZUNIYUFN?=
+ =?utf-8?B?YnUvV1VsUTg3a2doWFg5Zy94bUdJcllkUjZNOFJBQ3ZFaWpqSFFnbTJMcnpN?=
+ =?utf-8?B?UkFsNWttUUp1VHdHYnJ1MlUxZ0xnblZRcWpza1hvZXdJZWY2OVJaeHllejY5?=
+ =?utf-8?B?VHJOZ1g2bzVtWDFOaVVhVlhuZm1YTmxRYzFmZUh5ejMzMW1ESXFpMlQ4M09F?=
+ =?utf-8?B?OWpVQUJDeXo2ckFMV2dqOGFmM3NOelMzYlAzQmY4c0M5NVZyZEZmZHNpTzVq?=
+ =?utf-8?B?Y2xDNFRlc2FtcHpIZSttdWRLYjFSN0hOblVXMGpPdVo3enEzM1YvY0Jaa0pk?=
+ =?utf-8?B?Z3lHdGdiaHl6Wkd1M29MQmo1RVFVc1JKc2Y0VVlyRFFlTHB4SE5mKzlaWmF1?=
+ =?utf-8?B?VFRubjUzTTBhSmlLNmwxcTZ1VCtnQWQzVkpNS0tkV0YxV1ZmQTY4OFZiV0cz?=
+ =?utf-8?B?SHFRc3JHM0QxSmNKWXBoS01HUmcvb25rOU9TYXBKSzNJSTM5K3kySkVESWRB?=
+ =?utf-8?B?b2xodEkxS1UwSkpoWStrQ2FYclJITmVvenk2eHBwanFTcFRrZ0ltT1hqSElI?=
+ =?utf-8?B?OE94TVV0V2hQdndQRisrd3VsMEtWNWlhaTl1UCtoNzAxNnBOaGtjR0tRSTJh?=
+ =?utf-8?B?WXlBQkxyc0NjL2ZpVmNVR0luY3NOSUJWZnl6UytDSWRNeTNJdWE5Lzc4allj?=
+ =?utf-8?B?TU5VK3NXcUMwZi9LRTliQVJiMFVMQUJ1OHZsaG9aUHZnSm1PS1lxV3d4NW56?=
+ =?utf-8?B?UkRzMlp1UDVTVldDRWxBOU5EenIzZzE5STZsTUVhNDNrWk1CdGdBSlUweXdQ?=
+ =?utf-8?B?RDRrV2p4WnE1ekN0OURzNEc2RHZzKzJ3dmdmLzBIb25ST0EyMk4vKy90d09H?=
+ =?utf-8?B?TCtUd1dsQUxDUEFPOGNtWi9tdDVFMmlnWWpIVG5zdzBkWVg0bVJyZit3eCtw?=
+ =?utf-8?B?ZXN4RWlmMHRBV0Zjem40L1hTeUJ2Mzk4azIrK1dhQ3phWDhPSjZ5cjNDNmdr?=
+ =?utf-8?B?VWtLclhwbXBiYmR0RmpQclcwOEJpL0F5a1M5VUFGbUpPN29TVmNzNmZ0WWVv?=
+ =?utf-8?B?b3c9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B494678BC6CCB540B3A52D483E71D1DF@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCIsWRmVeSWpSXmKPExsXC9ZZnoa6g499UgzlThCwm9hhYzFm/hs1i
-	140Qi/sPXrNb/N97jNHiyf/frBYnbjayWXR+X8picXnXHDaLe2v+s1ocWX+WxWLz2TPMFouX
-	q1ns63jAZHH46xsmi8mXFrBZvJhyhtHi5KzJLBazj95jdxD2WHr6DZvHhiYgsXPWXXaPln23
-	2D0WbCr1aDnyltVj8Z6XTB6bVnWyeWz6NInd48SM3yweOx9aerzYPJPRo7f5HZvH501yAXxR
-	XDYpqTmZZalF+nYJXBn/d7SyF/woruh5do+xgXFJRBcjJ4eEgInEvc/b2GHsKQe2g9lsAmoS
-	V15OYgKxRQQUJc49vsjaxcjFwSwwg0Xi8MIuRpCEsECwxNyz/8FsFgFVibdXn7B0MXJw8AqY
-	SVx5kAQxU1Pi8fafYDM5BYwl7h7/wwZiCwnwSLzasB+slVdAUOLkTJBWTqD58hLNW2czg+yS
-	EDjELnHj9ClmiEGSEgdX3GCZwMg/C0nPLCQ9CxiZVjEKZeaV5SZm5pjoZVTmZVboJefnbmIE
-	xt2y2j/ROxg/XQg+xCjAwajEw2sg/CdViDWxrLgy9xCjBAezkgjvjv9AId6UxMqq1KL8+KLS
-	nNTiQ4zSHCxK4rxG38pThATSE0tSs1NTC1KLYLJMHJxSDYzhugtuhiju+8nXsU922xb5l5s3
-	33jFe2263ny+jdEiBdMdAr9vmy14ddIC/RlaW2JfuGcdftQrv0raXLV7xZKelk/nF/wv6/vx
-	MH33xUV1t18WWq0xtFmYMKfm6iOtWbW/l4Tv7FqaVZYbyzVVMeJanIBG11uP7mX25Q21G/81
-	/F6ab+x5/aK7EktxRqKhFnNRcSIAFEJFrLcCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsXCNUNLT1fQ8W+qwWkHi4k9BhZz1q9hs9h1
-	I8Ti/oPX7Bb/9x5jtHjy/zerxYmbjWwWnU++M1ocnnuS1aLz+1IWi8u75rBZ3Fvzn9XiyPqz
-	LBabz55htli8XM3i0LXnrBb7Oh4wWRz++obJYvKlBWwWL6acYbQ4OWsyi8Xso/fYHcQ8lp5+
-	w+axoQlI7Jx1l92jZd8tdo8Fm0o9Wo68ZfVYvOclk8emVZ1sHps+TWL3ODHjN4vHzoeWHi82
-	z2T06G1+x+bx7baHx+IXH5g8Pm+SCxCI4rJJSc3JLEst0rdL4Mr4v6OVveBHcUXPs3uMDYxL
-	IroYOTkkBEwkphzYzg5iswmoSVx5OYkJxBYRUJQ49/giaxcjFwezwAwWicMLuxhBEsICwRJz
-	z/4Hs1kEVCXeXn3C0sXIwcErYCZx5UESxExNicfbf4LN5BQwlrh7/A8biC0kwCPxasN+sFZe
-	AUGJkzNBWjmB5stLNG+dzTyBkWcWktQsJKkFjEyrGEUy88pyEzNzTPWKszMq8zIr9JLzczcx
-	AuNrWe2fiTsYv1x2P8QowMGoxMNrIfUnVYg1say4MvcQowQHs5II747/QCHelMTKqtSi/Pii
-	0pzU4kOM0hwsSuK8XuGpCUIC6YklqdmpqQWpRTBZJg5OqQbGAI2ZC1Z6H0zQn7peL73omYtf
-	xBt+Ebu1Al3vNka8u7z4v1+3y/WnTFVaDGYGr/496szzKDnZor3isuj0pvoleq/3JMp9Wv3R
-	VXhi0OmA+YFTjD4t/rLjrUSlfevnmYfK625Jy31N5D+4b33kw/W1bJUevI8+fPi2V8juEFdv
-	Rsu9ZKX3x1vFlFiKMxINtZiLihMBo9XRcKsCAAA=
-X-CFilter-Loop: Reflected
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB8278.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f8912ae0-8ce9-48a0-b475-08dc4a4a12e6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2024 08:28:38.4780
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kDQCniAYbBDqgzdfHLTZI5x7FomeJVYOXT1uoZ0R0ZRcR9CF2Rq4zkYf/9tzieOyWd5oY15UgW9gTr7en4HDSTIXD9Rheb3BHMMgi6Bf91VUDg5GZAzLhfLBNwo5GiPp
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7708
 
-Hi SeongJae,
-
-On Wed, 20 Mar 2024 09:56:19 -0700 SeongJae Park <sj@kernel.org> wrote:
-> Hi Honggyu,
-> 
-> On Wed, 20 Mar 2024 16:07:48 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
-> 
-> > Hi SeongJae,
-> > 
-> > On Mon, 18 Mar 2024 12:07:21 -0700 SeongJae Park <sj@kernel.org> wrote:
-> > > On Mon, 18 Mar 2024 22:27:45 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
-> > > 
-> > > > Hi SeongJae,
-> > > > 
-> > > > On Sun, 17 Mar 2024 08:31:44 -0700 SeongJae Park <sj@kernel.org> wrote:
-> > > > > Hi Honggyu,
-> > > > > 
-> > > > > On Sun, 17 Mar 2024 17:36:29 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
-> > > > > 
-> > > > > > Hi SeongJae,
-> > > > > > 
-> > > > > > Thanks for the confirmation.  I have a few comments on young filter so
-> > > > > > please read the inline comments again.
-> > > > > > 
-> > > > > > On Wed, 12 Mar 2024 08:53:00 -0800 SeongJae Park <sj@kernel.org> wrote:
-> > > > > > > Hi Honggyu,
-> > > > > > > 
-> > > > > > > > > -----Original Message-----
-> > > > > > > > > From: SeongJae Park <sj@kernel.org>
-> > > > > > > > > Sent: Tuesday, March 12, 2024 3:33 AM
-> > > > > > > > > To: Honggyu Kim <honggyu.kim@sk.com>
-> > > > > > > > > Cc: SeongJae Park <sj@kernel.org>; kernel_team <kernel_team@skhynix.com>
-> > > > > > > > > Subject: RE: Re: [RFC PATCH v2 0/7] DAMON based 2-tier memory management for CXL memory
-> > > > > > > > >
-> > > > > > > > > Hi Honggyu,
-> > > > > > > > >
-> > > > > > > > > On Mon, 11 Mar 2024 12:51:12 +0000 "honggyu.kim@sk.com" <honggyu.kim@sk.com> wrote:
-> > > > > > > > >
-> > > > > > > > > > Hi SeongJae,
-> > > > > > > > > >
-> > > > > > > > > > I've tested it again and found that "young" filter has to be set
-> > > > > > > > > > differently as follows.
-> > > > > > > > > > - demote action: set "young" filter with "matching" true
-> > > > > > > > > > - promote action: set "young" filter with "matching" false
-> > > > 
-> > > > Thinking it again, I feel like "matching" true or false looks quite
-> > > > vague to me as a general user.
-> > > > 
-> > > > Instead, I would like to have more meaningful names for "matching" as
-> > > > follows.
-> > > > 
-> > > > - matching "true" can be either (filter) "out" or "skip".
-> > > > - matching "false" can be either (filter) "in" or "apply".
-> > > 
-> > > I agree the naming could be done much better.  And thank you for the nice
-> > > suggestions.  I have a few concerns, though.
-> > 
-> > I don't think my suggestion is best.  I just would like to have more
-> > discussion about it.
-> 
-> I also understand my naming sense is far from good :)  I'm grateful to have
-> this constructive discussion!
-
-Yeah, naming is always difficult. Thanks anyway :)
-
-> > 
-> > > Firstly, increasing the number of behavioral concepts.  DAMOS filter feature
-> > > has only single behavior: excluding some types of memory from DAMOS action
-> > > target.  The "matching" is to provide a flexible way for further specifying the
-> > > target to exclude in a bit detail.  Without it, we would need non-variant for
-> > > each filter type.  Comapred to the current terms, the new terms feel like
-> > > implying there are two types of behaviors.  I think one behavior is easier to
-> > > understand than two behaviors, and better match what internal code is doing.
-> > > 
-> > > Secondly, ambiguity in "in" and "apply".  To me, the terms sound like _adding_
-> > > something more than _excluding_.
-> > 
-> > I understood that young filter "matching" "false" means apply action
-> > only to young pages.  Do I misunderstood something here?  If not,
-> 
-> Technically speaking, having a DAMOS filter with 'matching' parameter as
-> 'false' for 'young pages' type means you want DAMOS to "exclude pages that not
-> young from the scheme's action target".  That's the only thing it truly does,
-> and what it tries to guarantee.  Whether the action will be applied to young
-> pages or not depends on more factors including additional filters and DAMOS
-> parameter.  IOW, that's not what the simple setting promises.
-> 
-> Of course, I know you are assuming there is only the single filter.  Hence,
-> effectively you're correct.  And the sentence may be a better wording for end
-> users.  However, it tooke me a bit time to understand your assumption and
-> concluding whether your sentence is correct or not, since I had to think about
-> the assumptions.
-> 
-> I'd say this also reminds me the first concern that I raised on the previous
-> mail.  IOW, I feel this sentence is introducing one more behavior and making it
-> bit taking longer time to digest, for developers who should judge it based on
-> the source code.  I'd suggest use only one behavioral term, "exclude", since it
-> is what the code really does, unless it is wording for end users.
-
-Okay, I will just think filter "exclude" something.
-
-> > "apply" means _adding_ or _including_ only the matched pages for action.
-> > It looks like you thought about _excluding_ non matched pages here.
-> 
-> Yes.  I'd prefer using only single term, _excluding_.  It fits with the code,
-> and require one word less that "adding" or "including", since "adding" or
-> "including" require one more word, "only".
-> 
-> Also, even with "only", the fact that there could be more filters makes me
-> unsure what is the consequence of having it.  That is, if we have a filter that
-> includes only pages of type A, but if there could be yet another filter that
-> includes only pages of type B, would the consequence is the action being
-> applied to pages of type A and B?  Or, type A or type B?
-> 
-> In my opinion, exclusion based approach is simpler for understanding the
-> consequence of such combinational usage.
-> 
-> > 
-> > > I think that might confuse people in some
-> > > cases.  Actually, I have used the term "filter-out" and "filter-in" on
-> > > this  and several threads.  When saying about "filter-in" scenario, I had to
-> > > emphasize the fact that it is not adding something but excluding others.
-> > 
-> > Excluding others also means including matched pages.  I think we better
-> > focus on what to do only for the matched pages.
-> 
-> I agree that is true for the end-users in many cases.  But I think that depends
-> on the case, and at least this specific case (kernel ABI level discussion about
-> DAMOS filters), I don't really feel that's better.
-
-OK. It could be a matter of preference and the current filter is already
-in the mainline so I won't insist more.
-
-> > 
-> > > I now think that was not a good approach.
-> > > 
-> > > Finally, "apply" sounds a bit deterministic.  I think it could be a bit
-> > > confusing in some cases such as when using multiple filters in a combined way.
-> > > For example, if we have two filters for 1) "apply" a memcg and 2) skip anon
-> > > pages, the given DAMOS action will not be applied to anon pages of the memcg.
-> > > I think this might be a bit confusing.
-> > 
-> > No objection on this.  If so, I think "in" sounds better than "apply".
-> 
-> Thanks for understanding.  I think allowlists or denylists might also been
-> better names.
-
-"allow" and "deny" sound good to me as well. We don't have to change it
-though.
-
-> > 
-> > > > 
-> > > > Internally, the type of "matching" can be boolean, but it'd be better
-> > > > for general users have another ways to set it such as "out"/"in" or
-> > > > "skip"/"apply" via sysfs interface.  I prefer "skip" and "apply" looks
-> > > > more intuitive, but I don't have strong objection on "out" and "in" as
-> > > > well.
-> > > 
-> > > Unfortunately, DAMON sysfs interface is an ABI that we want to keep stable.  Of
-> > > course we could make some changes on it if really required.  But I'm unsure if
-> > > the problem of current naming and benefit of the sugegsted change are big
-> > > enough to outweighs the stability risk and additional efforts.
-> > 
-> > I don't ask to change the interface, but just provide another way for
-> > the setting.  For example, the current "matching" accepts either 1,
-> > true, or Y but internally keeps as "true" as a boolean type.
-> > 
-> >   $ cd /sys/kernel/mm/damon/admin/kdamonds/0/contexts/0/schemes/0/filters/0
-> > 
-> >   $ echo 1 | tee matching && cat matching
-> >   1
-> >   Y
-> > 
-> >   $ echo true | tee matching && cat matching
-> >   true
-> >   Y
-> > 
-> >   $ echo Y | tee matching && cat matching
-> >   Y
-> >   Y
-> > 
-> > I'm asking if it's okay making "matching" receive "out" or "skip" as
-> > follows.
-> > 
-> >   $ echo out | tee matching && cat matching
-> >   out
-> >   Y
-> > 
-> >   $ echo skip | tee matching && cat matching
-> >   skip
-> >   Y
-> 
-> I have no strong concern about this.  But also not seeing significant benefit
-> of this change.  This will definitely not regress user experience.  But it will
-> require introducing more kernel code, though the amount will be fairly small.
-> And this new interface will be something that we need to keep maintain, so
-> adding a tiny bit of maintenance burden.  I'd prefer improving the documents or
-> user-space tool and keep the kernel code simple.
-
-OK. I will see if there is a way to improve damo tool for this instead
-of making changes on the kernel side.
-
-> IMHO, end users shouldn't deal directly with DAMOS filters at all, and kernel
-> ABI document should be clear enough to avoid confusion.  But, if someone uses
-> kernel ABI on production without reading the document, I'd say it might better
-> to crash or OOPS to give clear warning and lessons.
-> 
-> > 
-> > > Also, DAMON sysfs interface is arguably not for _very_ general users.  DAMON
-> > > user-space tool is the one for _more_ general users.  To quote DAMON usage
-> > > document,
-> > > 
-> > >     - *DAMON user space tool.*
-> > >       `This <https://github.com/awslabs/damo>`_ is for privileged people such as
-> > >       system administrators who want a just-working human-friendly interface.
-> > >       [...]
-> > >     - *sysfs interface.*
-> > >       :ref:`This <sysfs_interface>` is for privileged user space programmers who
-> > >       want more optimized use of DAMON. [...]
-> > >  
-> > > If the concept is that confused, I think we could improve the documentation, or
-> > > the user space tool.  But for DAMON sysfs interface, I think we need more
-> > > discussions for getting clear pros/cons that justifies the risk and the effort.
-> > 
-> > If my suggestion is not what you want in sysfs interface, then "damo"
-> > can receive these more meaningful names and translate to "true" or
-> > "false" when writing to sysfs.
-> 
-> Yes, I agree.  We could further hide filter concept at all.  For example, we
-> could let damo user call "migrate" DAMOS action plus "non-young" filter as
-> "promote" action.  Or, have a dedicated command for tiered-memory management.
-> Similar to the gen_config.py of HMSDK
-> (https://github.com/skhynix/hmsdk/blob/main/tools/gen_config.py).  But this
-> would be something to further discuss on different threads.
-
-Yeah, I made this thread too much about filter naming discussion rather
-than tiered memory support.
-
-> > 
-> > > > 
-> > > > I also feel the filter name "young" is more for developers not for
-> > > > general users.  I think this can be changed to "accessed" filter
-> > > > instead.
-> > > 
-> > > In my humble opinion, "accessed" might be confusing with the term that being
-> > > used by DAMON, specifically, the concept of "nr_accesses".  I also thought
-> > > about using more specific term such as "pg-accessed" or something else, but I
-> > > felt it is still unclear or making it too verbose.
-> > > 
-> > > I agree "young" sounds more for developers.  But, again, DAMON sysfs is for not
-> > > _very_ general users.
-> > 
-> > I worried the developer term is also going to be used for "damo" user
-> > space tool as "young" filter.  But if you think it's good enough, then I
-> > will follow the decision as I also think "accessed" is not the best term
-> > for this.
-> 
-> The line is not very clear, but I think the line for "damo" should be different
-> from that for DAMON sysfs interface.
-> 
-> [...]
-> > > > > > > > > DAMOS filter is basically for filtering "out" memory regions that matches to
-> > > > > > > > > the condition.
-> > > > 
-> > > > Right.  In other tools, I see filters are more used as filtering "in"
-> > > > rather than filtering "out".  I feel this makes me more confused.
-> > > 
-> > > I understand that the word, "filtering", can be used for both, and therefore
-> > > can be confused.  I was also spending no small times at naming since I was
-> > > thinking about both coffee filters and color filters (of photoshop or glasses).
-> > > But it turned out that I'm more familiar with coffee filters, and might be same
-> > > for DAMON community, since the community is having beer/coffee/tea chat series
-> > > ;) (https://lore.kernel.org/damon/20220810225102.124459-1-sj@kernel.org/)
-> > 
-> > Yeah, I thought about filter for including pages for given config as
-> > follows.
-> > 
-> >     \    /
-> >      \  /     only matched items pass this filter.
-> >       ||
-> > 
-> > But the current DAMOS filter is about excluding pages for given config
-> > as follows just like a strainer.
-> >       ___
-> >      /###\
-> >     |#####|   matched items are excluded via this filter.
-> >      \###/
-> >       ---
-> > 
-> > I think I won't get confused after keeping this difference in mind.
-> 
-> My mind model was describing it as "excluding" coffee beans, but I'd say these
-> are just different perspectives, not a thing about right or wrong.  I'm
-> grateful to learn one more perspective that is different from mine :)
-
-I'm more familiar with the filter in ftrace, which is set to 
-/sys/kernel/tracing/set_ftrace_filter and it means "including"
-something.  But I will keep thinking DAMOS filter is different.
-
-> > 
-> > > That said, I think we may be able to make this better documented, or add a
-> > > layer of abstraction on DAMON user-space tool.
-> > > 
-> [...]
-> > > To summarize my opinion again,
-> > > 
-> > > 1. I agree the concept and names of DAMOS filters are confusing and not very
-> > >    intuitive.
-> > > 2. However, it's unclear if the problem and the benefit from the suggested new
-> > >    names are huge enough to take the risk and effort on changing ABI.
-> > > 3. We could improve documentation and/or user-space tool.
-> > 
-> > I think improving "damo" can be a good solution.
-> 
-> Looking forward to the discussion on it! :)
-> 
-> > 
-> > > Thank you again for the suggestion and confirmations to my questions.
-> > 
-> > Likewise, thank you for the explanation in details.
-> 
-> My great pleasure, and thank you for patiently keeping this grateful
-> discussion!
-
-Thanks again for your feedback.
-
-Honggyu
-
-> Thanks,
-> SJ
-> 
-> [...]
+SGkgS3J6eXN6dG9mLA0KDQpPbiAyMi8wMy8yNCAxMjozMyBwbSwgS3J6eXN6dG9mIEtvemxvd3Nr
+aSB3cm90ZToNCj4gRVhURVJOQUwgRU1BSUw6IERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0
+dGFjaG1lbnRzIHVubGVzcyB5b3Uga25vdyB0aGUgY29udGVudCBpcyBzYWZlDQo+IA0KPiBPbiAy
+Mi8wMy8yMDI0IDA3OjI1LCBQYXJ0aGliYW4uVmVlcmFzb29yYW5AbWljcm9jaGlwLmNvbSB3cm90
+ZToNCj4+Pj4gcHJvcGVydGllczoNCj4+Pj4gICAgICBjb21wYXRpYmxlOg0KPj4+PiAgICAgICAg
+b25lT2Y6DQo+Pj4+ICAgICAgICAgIC0gaXRlbXM6DQo+Pj4+ICAgICAgICAgICAgICAtIGNvbnN0
+OiBtaWNyb2NoaXAsbGFuODY1MQ0KPj4+PiAgICAgICAgICAgICAgLSBjb25zdDogbWljcm9jaGlw
+LGxhbjg2NTANCj4+PiBObywgdGhpcyBpcyBub3QgcmlnaHQgZWl0aGVyLiBZb3UgbmVlZCB0byBh
+bHNvIGFsbG93IHRoZSBsYW44NjUwIG9uIGl0cw0KPj4+IG93bi4gQWxsIHlvdSBoYWQgdG8gZG8g
+d2l0aCB0aGUgb3JpZ2luYWwgaXRlbXMgbGlzdCB3YXMgZmxpcCB0aGUgb3JkZXINCj4+PiBvZiB0
+aGUgbGFuODY1MCBhbmQgbGFuODY1MS4NCj4+IEFoIG9rLCBub3cgSSB1bmRlcnN0YW5kIHRoaXMu
+IFRoZW4gaXQgaXMgc3VwcG9zZWQgdG8gYmUgbGlrZSBiZWxvdywNCj4+DQo+PiBwcm9wZXJ0aWVz
+Og0KPj4NCj4+ICAgICBjb21wYXRpYmxlOg0KPj4NCj4+ICAgICAgIG9uZU9mOg0KPj4NCj4+ICAg
+ICAgICAgLSBjb25zdDogbWljcm9jaGlwLGxhbjg2NTANCj4+DQo+PiAgICAgICAgIC0gaXRlbXM6
+DQo+Pg0KPj4gICAgICAgICAgICAgLSBjb25zdDogbWljcm9jaGlwLGxhbjg2NTENCj4+DQo+PiAg
+ICAgICAgICAgICAtIGNvbnN0OiBtaWNyb2NoaXAsbGFuODY1MA0KPj4NCj4+IEV4ZWN1dGVkIGR0
+X2JpbmRpbmdfY2hlY2sgd2l0aCB0aGUgYWJvdmUgdXBkYXRlIGFuZCBpdCB3YXMgc3VjY2Vzc2Z1
+bC4NCj4+IEhvcGUgdGhpcyBpcyBPSz8NCj4gDQo+IFRoaXMgaXMgdGhlIHRoaXJkIHRpbWUgeW91
+IGFzayB1cy4gTm9uZSBvZiB0aGUgcHJldmlvdXMgY2FzZXMgd2VyZQ0KPiBhY3R1YWxseSB0ZXN0
+ZWQuIE1heWJlIHRoaXMgb25lIHdhcywgbWF5YmUgbm90LiBJIGFzc3VtZSB0aGUgbGF0dGVyLg0K
+PiANCj4gRmlyc3QsIHRlc3QgeW91ciBjb2RlLg0KQXMgSSBtZW50aW9uZWQgaW4gdGhlIHByZXZp
+b3VzIGVtYWlsIGl0c2VsZiwgSSB0ZXN0ZWQgdGhpcyBjYXNlIGFuZCB0aGUgDQpwcmV2aW91cyBj
+YXNlIGJvdGggaW4gbXkgUlBJIDQgc2V0dXAgYmVmb3JlIHJlcGx5aW5nIHRvIHRoZSBjb21tZW50
+LiBUaGUgDQpxdWVzdGlvbiBJIGFzayBpcyB0byBjaGVjayB3aGV0aGVyIHRoZSBwZXJzb24gd2hv
+IGNvbW1lbnRzIGlzIE9LIHdpdGggDQp0aGUgY2hhbmdlcyBvciBub3QuIERpZG4ndCB5b3Ugc2Vl
+IHRoZSBhdHRhY2htZW50cyBpbiBteSBwcmV2aW91cyBlbWFpbCANCndoaWNoIEkgdXNlZCBpbiBt
+eSBSUEkgNCBkdHMgc2V0dXAgZm9yIG15IHRlc3Rpbmc/IGlmIG5vdCBJIGNhbiBmb3J3YXJkIA0K
+aXQgYWdhaW4uDQoNCkJlc3QgcmVnYXJkcywNClBhcnRoaWJhbiBWDQo+IA0KPiBCZXN0IHJlZ2Fy
+ZHMsDQo+IEtyenlzenRvZg0KPiANCg0K
