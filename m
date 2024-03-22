@@ -1,42 +1,80 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309A3224CF;
-	Fri, 22 Mar 2024 09:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC3B20DDB;
+	Fri, 22 Mar 2024 09:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711101417; cv=none; b=bQMEHZbC8KfH1IsNC1Hw8caBFOuA6zRpwtf+s2tG38hjg8NMrItjGF2e8btvtWLcdNfEe+wLsR8fmMJX+lrXuHR1hOZh4ZkFg6YJgAWXg9HOFwNHEFkLZA5BWWyEjoL1j8EUG3TSCLVaOVE1bfNhWsLHpwzDH2xdKZ/lxoKsNtY=
+	t=1711101493; cv=none; b=NWQLefymoUr3lkYygRpUGCQluC2F1qndpWnfkoDAna67P6zc0fLRlyoWf21lld9B55KB2GAUFjfexwAHV93RXp97lcBHvB/fHclYwGY7qSpQtKNZP+HnP1ve2ieZ+SJlEHxfZKAKE+Qk7POoq1ePeRN2qoRlfuGaB5V3olKOZdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711101417; c=relaxed/simple;
-	bh=WKWZ/KICR+3/pNg0wrbFmwo4Yb28kZbDtGwYfzPTtko=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z2YkkcNgeNao7ogszT2K2whY1wtj+xLtvm1SQxhh/KHVQDSo+wUVbHsAPv2z+Fnq6ZUZsBxHK8psVe5AAEu+1QVl/fvWW+LZqWsql7lQTY/Qm/pLnqvVNlz2cT4/EuPXH7Hi1uW2XaFfmFKlUd6n2aijegXHtjCex7u7oBssJwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=b19OwU7R; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1711101493; c=relaxed/simple;
+	bh=mZTyWVFeEOx3cqGMfXq4zUTy9aeTI1cR1TIk16D5slo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q09ll9BfkEfOKpD8pdoBs5jNjN76RrpnimzIScFlQX0m+UDA+ejI2/f3pmpTVUFOHQnaTiENTj8BCFPq4yvG+/0njETDqMe+UTf8+vGlA1rRc2/43l8bt/sp0AM9AaKBcXNIMxeXzq4nqujasYardu+kgWYYOtNSwKN5VdzvjAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nci4RWRX; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="b19OwU7R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=modqwmhza5bkfgbjxu6nf6ij3m.protonmail; t=1711101412; x=1711360612;
-	bh=YAAnBuxNM7tVgIu9+wxVQ7JSvFKV0lJF3itk6SdkcfE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=b19OwU7RLVBUrXyLzmCIuleRw6VLcau5MD21ndRCbpwNJGwisIvcSbnTFXHPfLSnj
-	 vKfM1cZj0wBkwQTbou81ZUm/4dEJ2oIihIZZHxC2DLQIeLlqM4zEPG5kqVw/1yO8P3
-	 l4fJufGtV+KBxhch9/OPkCuERVXIC0XHz+AFrkIgasjXLVutgl8lAOsFr/qgJoSbyI
-	 4fCA6yhSi5Uyi7XiaYVRnCWRHzKP+ukZo0jS3F7jftc4JreVGhWpYNh1kW4SPamNc4
-	 q+klWutUh9skCoLnfT/5mZOyQUWi4NtqDVDKnxTUUuZL1lnnhtXED90FJCIx9rRlpT
-	 fu6YbZI3/UokA==
-Date: Fri, 22 Mar 2024 09:56:36 +0000
-To: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, John Stultz <jstultz@google.com>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] rust: time: add Ktime
-Message-ID: <2ecf6529-5408-4621-becc-2f30e1039079@proton.me>
-In-Reply-To: <20240322-rust-ktime_ms_delta-v2-1-d98de1f7c282@google.com>
-References: <20240322-rust-ktime_ms_delta-v2-1-d98de1f7c282@google.com>
-Feedback-ID: 71780778:user:proton
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nci4RWRX"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4146a1ac117so11558615e9.0;
+        Fri, 22 Mar 2024 02:58:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711101490; x=1711706290; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xGqEICCDmfISMN2Tgs6OomSyhnoxbbHxoKPcMA5U3Ds=;
+        b=Nci4RWRX/RWHJ51etY9g5hgxnnk3wT4B1W37BR8FlFgmbMB8aOQc1rwZyozy9Si3jr
+         1FKC+gc4Ps8KUjyxmagx05m6Gc4y70GU8cnSyI2Ifj0hYEjfLRT6iEzqWSuJKZvh9Em5
+         Aut2r1gPnwGYzd3NGfOkuAKoMCbyA2ny3aNsLmIZdO9e5a5qILG+CTmqVPnFhpWJVHWT
+         5GavHYDxPLPvpzwklZX0MpoSn79lg7eT/iHvFcdxDQsDITKZxgYb4jr6XrmOggNy5Umt
+         V3pjX3iBv+wPv8AvXGsMTl8NAK6lgaEv3PYBMfiILronSV4DlRTruhn92x7zOHiWjcpv
+         393A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711101490; x=1711706290;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xGqEICCDmfISMN2Tgs6OomSyhnoxbbHxoKPcMA5U3Ds=;
+        b=G2nBnjqRNrMFZN8EFdz0wMV/hvHELz0VuqFwg98tz5hZOslXMSdd6MMhIoKbLGxs5g
+         84X6W/OuubUTpC2ODGCetNhE5bDR04VE0MB07V2OIXwdghpF9OlR3WHF10AAdycjnq/7
+         qcQ8+01AZp/bbe623LEmzcaf8dHTvpRSAWAWMVzeeR93AgTuIHsIZoIyUynMF8/xxpjp
+         fWfCnny5dP6ChTisqpeT725DVDehXL+aEFxNpBWY99ITgRCalEkp58VYPXaLes/Zs0md
+         zVPqcqKBT24wxE9b5i9ToZlqfJmaUG5mUsHX6WRuVIuUgg9ZNJIyTQyY/qDPzheGgRzr
+         OJEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX19XW8Yx1cd2dJ7ENbiiDTSBT02i0AQ+vzSo4xyJTanHFD5ncItx2G9PHXVLYwv1wa5C7ehObjsHwSP8vkteMaLtsm3gWcTPeg2vd7dOAr5vBs55gXwsKiwvBVyoj+fqem6gDt6tOY53xSevVwUZ/1FmDkTTlpBzqbCTlZKDI=
+X-Gm-Message-State: AOJu0Yznzkv9akcoY8vG0ONTxLQW5L0aDogbVv9qfcn8v54VgaT1j0JQ
+	kC0cwkk3NgIG71RzR3HXUBs3ETtcCZUsZNUjwmDLRDFJmtAeTgC9
+X-Google-Smtp-Source: AGHT+IGVBpsURgy95iJG0WVZSv0I6xzHthi5Am+OVL/2gfunyQBb0t2g50DRG1kF8q/B9Ag+0WfCPQ==
+X-Received: by 2002:a05:600c:3507:b0:414:76df:41d6 with SMTP id h7-20020a05600c350700b0041476df41d6mr1401787wmq.13.1711101489520;
+        Fri, 22 Mar 2024 02:58:09 -0700 (PDT)
+Received: from gmail.com (1F2EF04C.nat.pool.telekom.hu. [31.46.240.76])
+        by smtp.gmail.com with ESMTPSA id fm5-20020a05600c0c0500b004146c769c79sm8087715wmb.0.2024.03.22.02.58.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Mar 2024 02:58:09 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Fri, 22 Mar 2024 10:58:06 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Dave Hansen <dave.hansen@intel.com>,
+	Anton Altaparmakov <anton@tuxera.com>, Pavel Machek <pavel@ucw.cz>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>, Chen Yu <yu.c.chen@intel.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Catalin Marinas <catalin.marinas@arm.com>, linux-mm@kvack.org,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] x86/pm: Fix false positive kmemleak report in
+ msr_build_context().
+Message-ID: <Zf1WLscQHk9+w+Z+@gmail.com>
+References: <20240314142656.17699-1-anton@tuxera.com>
+ <70261e2a-b87e-462e-964e-95a51ecde978@intel.com>
+ <CAJZ5v0hdA2PUc8cmJtCNxW-nzHdWV+pxnTEeVu_7YHsHZTmFLw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,133 +82,79 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0hdA2PUc8cmJtCNxW-nzHdWV+pxnTEeVu_7YHsHZTmFLw@mail.gmail.com>
 
-On 3/22/24 09:59, Alice Ryhl wrote:
-> Introduce a wrapper around `ktime_t` with a few different useful
-> methods.
->=20
-> Rust Binder will use these bindings to compute how many milliseconds a
-> transaction has been active for when dumping the current state of the
-> Binder driver. This replicates the logic in C Binder [1].
->=20
-> For a usage example in Rust Binder, see [2].
->=20
-> The `ktime_get` method cannot be safely called in NMI context. This
-> requirement is not checked by these abstractions, but it is intended
-> that klint [3] or a similar tool will be used to check it in the future.
->=20
-> Link: https://lore.kernel.org/lkml/5ac8c0d09392290be789423f0dd78a520b830f=
-ab.1682333709.git.zhangchuang3@xiaomi.com/ [1]
-> Link: https://r.android.com/3004103 [2]
-> Link: https://rust-for-linux.com/klint [3]
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
-I have one comment below, I don't mind leaving it as-is:
+* Rafael J. Wysocki <rafael@kernel.org> wrote:
 
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> On Thu, Mar 14, 2024 at 4:05 PM Dave Hansen <dave.hansen@intel.com> wrote:
+> >
+> > On 3/14/24 07:26, Anton Altaparmakov wrote:
+> > >  /* image of the saved processor state */
+> > >  struct saved_context {
+> > > -     /*
+> > > -      * On x86_32, all segment registers except gs are saved at kernel
+> > > -      * entry in pt_regs.
+> > > -      */
+> > > -     u16 gs;
+> > >       unsigned long cr0, cr2, cr3, cr4;
+> > >       u64 misc_enable;
+> > >       struct saved_msrs saved_msrs;
+> > > @@ -27,6 +22,11 @@ struct saved_context {
+> > >       unsigned long tr;
+> > >       unsigned long safety;
+> > >       unsigned long return_address;
+> > > +     /*
+> > > +      * On x86_32, all segment registers except gs are saved at kernel
+> > > +      * entry in pt_regs.
+> > > +      */
+> > > +     u16 gs;
+> > >       bool misc_enable_saved;
+> > >  } __attribute__((packed));
+> >
+> > Isn't this just kinda poking at the symptoms?  This seems to be
+> > basically the exact same bug as b0b592cf08, just with a different source
+> > of unaligned structure members.
+> >
+> > There's nothing to keep folks from reintroducing these kinds of issues
+> > and evidently no way to detect when they happen without lengthy reproducers.
+> 
+> This change is fine with me FWIW,
 
-> ---
-> Changes in v2:
-> - Mention that ktime_get cannot be safely called in NMI context.
-> - Link to v1: https://lore.kernel.org/r/20240320-rust-ktime_ms_delta-v1-1=
--ccb8672a0941@google.com
-> ---
->   rust/kernel/time.rs | 60 ++++++++++++++++++++++++++++++++++++++++++++++=
-+++++++
->   1 file changed, 60 insertions(+)
->=20
-> diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
-> index 25a896eed468..6811d5cadbd4 100644
-> --- a/rust/kernel/time.rs
-> +++ b/rust/kernel/time.rs
-> @@ -5,6 +5,9 @@
->   //! This module contains the kernel APIs related to time and timers tha=
-t
->   //! have been ported or wrapped for usage by Rust code in the kernel.
->=20
-> +/// The number of nanoseconds per millisecond.
-> +pub const NSEC_PER_MSEC: i64 =3D bindings::NSEC_PER_MSEC as i64;
-> +
->   /// The time unit of Linux kernel. One jiffy equals (1/HZ) second.
->   pub type Jiffies =3D core::ffi::c_ulong;
->=20
-> @@ -18,3 +21,60 @@ pub fn msecs_to_jiffies(msecs: Msecs) -> Jiffies {
->       // matter what the argument is.
->       unsafe { bindings::__msecs_to_jiffies(msecs) }
->   }
-> +
-> +/// A Rust wrapper around a `ktime_t`.
-> +#[repr(transparent)]
-> +#[derive(Copy, Clone)]
-> +pub struct Ktime {
-> +    inner: bindings::ktime_t,
-> +}
-> +
-> +impl Ktime {
-> +    /// Create a `Ktime` from a raw `ktime_t`.
-> +    #[inline]
-> +    pub fn from_raw(inner: bindings::ktime_t) -> Self {
-> +        Self { inner }
-> +    }
-> +
-> +    /// Get the current time using `CLOCK_MONOTONIC`.
-> +    #[inline]
-> +    pub fn ktime_get() -> Self {
-> +        // SAFETY: It is always safe to call `ktime_get` outside of NMI =
-context.
-> +        Self::from_raw(unsafe { bindings::ktime_get() })
-> +    }
-> +
-> +    /// Divide the number of nanoseconds by a compile-time constant.
-> +    #[inline]
-> +    fn divns_constant<const DIV: i64>(self) -> i64 {
-> +        self.to_ns() / DIV
-> +    }
-> +
-> +    /// Returns the number of nanoseconds.
-> +    #[inline]
-> +    pub fn to_ns(self) -> i64 {
-> +        self.inner
-> +    }
-> +
-> +    /// Returns the number of milliseconds.
-> +    #[inline]
-> +    pub fn to_ms(self) -> i64 {
-> +        self.divns_constant::<NSEC_PER_MSEC>()
-> +    }
-> +}
-> +
-> +/// Returns the number of milliseconds between two ktimes.
-> +#[inline]
-> +pub fn ktime_ms_delta(later: Ktime, earlier: Ktime) -> i64 {
-> +    (later - earlier).to_ms()
-> +}
+thx, I've added your:
 
-Is there a reason for this function being standalone?
+    Acked-by: "Rafael J. Wysocki" <rafael@kernel.org>
 
---=20
-Cheers,
-Benno
+> but I agree that making it for kmemleak reasons feels kind of misguided.
 
-> +
-> +impl core::ops::Sub for Ktime {
-> +    type Output =3D Ktime;
-> +
-> +    #[inline]
-> +    fn sub(self, other: Ktime) -> Ktime {
-> +        Self {
-> +            inner: self.inner - other.inner,
-> +        }
-> +    }
-> +}
->=20
-> ---
-> base-commit: 768409cff6cc89fe1194da880537a09857b6e4db
-> change-id: 20240320-rust-ktime_ms_delta-74b00c9ab872
->=20
-> Best regards,
-> --
-> Alice Ryhl <aliceryhl@google.com>
->=20
+Yeah, so it's a workaround, but kmemleak is also a useful debugging 
+facility that is finding memory leaks that static checkers are missing.
 
+The fact that we don't have an easy way to prevent these problems from 
+being introduced is I think properly counterbalanced by the facts that:
+
+  1) Only kmemleak users are inconvenienced by the false positives.
+
+  2) kmemleak users & maintainers have created the patch. There was no 
+     pressure on us x86 maintainers other than to apply a root-cause 
+     analyzed patch.
+
+  2) Over a timespan of ~10 years only 2 such alignment problems were 
+     introduced, and they were fixed by the kmemleak folks. I think that's 
+     a fair price to pay for a useful facility.
+
+Ie. I don't think there's any long-term maintenance burder concern.
+
+So I've applied this workaround to x86/urgent, with a change to the title 
+to make sure this isn't understood as a real bug in the PM code, but a 
+workaround:
+
+   37fb408c99af x86/pm: Work around false positive kmemleak report in msr_build_context()
+
+... lemme know if you feel strongly about this. :-)
+
+Thanks,
+
+	Ingo
