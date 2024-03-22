@@ -1,136 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB6479931;
-	Fri, 22 Mar 2024 19:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8438679924;
+	Fri, 22 Mar 2024 19:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711135292; cv=none; b=MboID71zkYqm8agw98Fv0Iics8e9MFMl+x8ayYV73+Ay03rXngb546+vM3GKzvwWP75IXMUk6fAHJxtjrFh7opVMYchykEs7IM+b5VMnqQzHO1nyaVBUEbCOQy789CKfNtIliC9ryxZ4TAb2U32piBZHdNEakweZO/BdJXnDnVg=
+	t=1711135366; cv=none; b=cpA1MGiGVNI+w6NC+W2rTlblHMn8y26BIyqjzaZtGyfeYKl3ocllALq7PXhx2EC0CW6M38FF8PRKNOzAGROgxhLDJhrQ6/jW6ch8z0QsnvfA70MR8Gv8eHTbnP+FLolqFzyVpDskE16+8H0Czdv6WGuRHAYm6OcGyraYjc4Oh2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711135292; c=relaxed/simple;
-	bh=8GHI0o7wqi9kjX1y8O2b7tkzv9Bz9lBCxkn7jE8Ae1A=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=HMBaCN5iy9bxRmLkKdjZByAOQI0xf/0KNg8OL8vmXsEu8/wlL4wytZiPtu0YZsRAe+SndihIFt4wX71T+VaPaONN95QsRbNb1rZJOongkGHbAzjkNDYpzGZvmzTLrfY1eYOxXpzI+Yf5HGMwCKOfLPF05ha8yNdy2P2CZeoP8L0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kr2PNy6c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711135366; c=relaxed/simple;
+	bh=BUz5hK96G+jleUn15ldF4ameZxFw2z69VYrq+t9w4a4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Pb6TN6gUJzJX3/4ku9CCD8ax/sVUOQFpA+IWFgfmGv+N6KFJjOZBV/ruOz6CJxM+LU3IovkuzdzhqoG5r1QrpGgNIro7/IyWglGwvwLZFNzbp2hk9q4kSpY7IpqRldRw11zz5wsmKCWeBzEUGchyJdfzAUHgoxymDfC7dT38wb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=RBf0ivVv; arc=none smtp.client-ip=199.89.1.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kr2PNy6c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C82CC43390;
-	Fri, 22 Mar 2024 19:21:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711135292;
-	bh=8GHI0o7wqi9kjX1y8O2b7tkzv9Bz9lBCxkn7jE8Ae1A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=kr2PNy6cevo37THCTvYRS4j8RR3WxYeJbQPxc/b/04Kk7Hlci/rpk0114furSEml3
-	 1DypHJR8edT+SGLCcrFeL6CyzoXdk50Ln7aZIvsuBZ8mFMElt8IqHUnJ+bbdUuTZhk
-	 VRkzv8WuOQovxYxM3jMH+G8+CLTATAlIvysGlSWcnwL2ZY/vHJ7DpZsytlh5uQq7MH
-	 KnVUqUs8gimL8o35vHp3zcXdF3zG6buoBj/hrJbU92pXbMR9obub58UT3iXPRY6M3L
-	 eoAzqohI33/w9ajQLaLz7pbsrWVTsWmwVy993XytK6CEgbbE5gYfQprz3/MMuOd96F
-	 +sJfKST5IHiJQ==
-Date: Fri, 22 Mar 2024 14:21:30 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, Frank Li <Frank.Li@nxp.com>,
-	niklas.cassel@wdc.com, bhelgaas@google.com,
-	gustavo.pimentel@synopsys.com, imx@lists.linux.dev,
-	jdmason@kudzu.us, jingoohan1@gmail.com, kw@linux.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org, robh@kernel.org
-Subject: Re: [PATCH v2 1/1] PCI: dwc: Fix index 0 incorrectly being
- interpreted as a free ATU slot
-Message-ID: <20240322192130.GA1367450@bhelgaas>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="RBf0ivVv"
+Received: from localhost (localhost [127.0.0.1])
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4V1XKH5p80zlgVnF;
+	Fri, 22 Mar 2024 19:22:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:references:content-language:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1711135355; x=1713727356; bh=FI4Z6ZgHS15qtNLhRTTVJj5+
+	StHISvSkt2DHgw+Aldg=; b=RBf0ivVv7aAbjp3GUFo3+Fb23Fs8iMz79BTY+mUS
+	EarP+Luey+lgFSgqlWVpFMnI8934ZRjKGYBsQPV0/uDEF2I/ioeqPDiIvStU5EQy
+	YZy4csacStuJhxZhB+s2GHvbfAoqE3BlM720eGX2QDh6zyTAewKYwV7f5FHKF80Z
+	HtHD2I1z8V+3I7isZfr9IQkxE2RLv9bhUeo5VRAWnkbLZButB2Neg0khwa3NnKF+
+	nvkiPImFUpBkLDtJGfA1ADUzwaZVe0tU5craHZgAmX7UgaX6QOIzvePFsy66yZb7
+	rC6fXjyxw3vKuN3wV+nx5gx9Ax294Tdaam87uhfxQBAxuA==
+X-Virus-Scanned: by MailRoute
+Received: from 009.lax.mailroute.net ([127.0.0.1])
+ by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id GAB01t24zNHL; Fri, 22 Mar 2024 19:22:35 +0000 (UTC)
+Received: from [100.96.154.173] (unknown [104.132.1.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4V1XK5106BzlgTGW;
+	Fri, 22 Mar 2024 19:22:33 +0000 (UTC)
+Message-ID: <192acb8f-47b8-426c-bcc9-ef214a797f26@acm.org>
+Date: Fri, 22 Mar 2024 12:22:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zf0i1X5fg-E59NWx@ryzen>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/8] block: add new genhd flag GENHD_FL_NVMEM
+Content-Language: en-US
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Jens Axboe <axboe@kernel.dk>, Dave Chinner <dchinner@redhat.com>,
+ Jan Kara <jack@suse.cz>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?=
+ <linux@weissschuh.net>, Damien Le Moal <dlemoal@kernel.org>,
+ Li Lingfeng <lilingfeng3@huawei.com>, Christian Brauner
+ <brauner@kernel.org>, Christian Heusel <christian@heusel.eu>,
+ Min Li <min15.li@samsung.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Avri Altman <avri.altman@wdc.com>, Hannes Reinecke <hare@suse.de>,
+ Christian Loehle <CLoehle@hyperstone.com>, Bean Huo <beanhuo@micron.com>,
+ Yeqi Fu <asuk4.q@gmail.com>, Victor Shih <victor.shih@genesyslogic.com.tw>,
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ Dominique Martinet <dominique.martinet@atmark-techno.com>,
+ "Ricardo B. Marliere" <ricardo@marliere.net>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+ linux-block@vger.kernel.org
+References: <cover.1711048433.git.daniel@makrotopia.org>
+ <89abd9ab93783da0e8934ebc03d66559f78f6060.1711048433.git.daniel@makrotopia.org>
+ <7027ccdc-878a-420e-a7ea-5156e1d67b8a@acm.org>
+ <Zf3I6DDqqyd924Ks@makrotopia.org>
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <Zf3I6DDqqyd924Ks@makrotopia.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 22, 2024 at 07:19:01AM +0100, Niklas Cassel wrote:
-> On Fri, Mar 22, 2024 at 10:56:23AM +0530, Manivannan Sadhasivam wrote:
-> > On Thu, Mar 21, 2024 at 01:07:32PM -0500, Bjorn Helgaas wrote:
-> > > On Thu, Mar 21, 2024 at 10:43:45PM +0530, Manivannan Sadhasivam wrote:
-> > > > On Mon, Mar 04, 2024 at 05:46:16PM -0500, Frank Li wrote:
-> > > > > dw_pcie_ep_inbound_atu()
-> > > > > {
-> > > > > 	...
-> > > > > 	if (!ep->bar_to_atu[bar])
-> > > > > 		free_win = find_first_zero_bit(ep->ib_window_map, pci->num_ib_windows);
-> > > > > 	else
-> > > > > 		free_win = ep->bar_to_atu[bar];
-> > > > > 	...
-> > > > > }
-> > > > > 
-> > > > > The atu index 0 is valid case for atu number. The find_first_zero_bit()
-> > > > > will return 6 when second time call into this function if atu is 0. Suppose
-> > > > > it should use branch 'free_win = ep->bar_to_atu[bar]'.
-> > > > > 
-> > > > > Change 'bar_to_atu' to free_win + 1. Initialize bar_to_atu as 0 to indicate
-> > > > > it have not allocate atu to the bar.
-> > > > 
-> > > > I'd rewrite the commit message as below:
-> > > > 
-> > > > "The mapping between PCI BAR and iATU inbound window are maintained in the
-> > > > dw_pcie_ep::bar_to_atu[] array. While allocating a new inbound iATU map for a
-> > > > BAR, dw_pcie_ep_inbound_atu() API will first check for the availability of the
-> > > > existing mapping in the array and if it is not found (i.e., value in the array
-> > > > indexed by the BAR is found to be 0), then it will allocate a new map value
-> > > > using find_first_zero_bit().
-> > > > 
-> > > > The issue here is, the existing logic failed to consider the fact that the map
-> > > > value '0' is a valid value for BAR0. Because, find_first_zero_bit() will return
-> > > > '0' as the map value for BAR0 (note that it returns the first zero bit
-> > > > position).
-> > > > 
-> > > > Due to this, when PERST# assert + deassert happens on the PERST# supported
-> > > > platforms, the inbound window allocation restarts from BAR0 and the existing
-> > > > logic to find the BAR mapping will return '6' for BAR0 instead of '0' due to the
-> > > > fact that it considers '0' as an invalid map value.
-> > > > 
-> > > > So fix this issue by always incrementing the map value before assigning to
-> > > > bar_to_atu[] array and then decrementing it while fetching. This will make sure
-> > > > that the map value '0' always represents the invalid mapping."
-> > > 
-> > > This translates C code to English in great detail, but still doesn't
-> > > tell me what's broken from a user's point of view, how urgent the fix
-> > > is, or how it should be handled.
-> > > 
-> > > DMA doesn't work because ATU setup is wrong?  Driver MMIO access to
-> > > the device doesn't work?  OS crashes?  How?  Incorrectly routed access
-> > > causes UR response?  Happens on every boot?  Only after a reboot or
-> > > controller reset?  What platforms are affected?  "PERST# supported
-> > > platforms" is not actionable without a lot of research or pre-existing
-> > > knowledge.  Should this be backported to -stable?
-> > 
-> > Severity is less for the bug fixed by this patch. We have 8 inbound iATU windows
-> > on almost all of the platforms and after PERST# assert + deassert, BAR0 uses map
-> > '6' instead of '0'.
-> > 
-> > This has no user visibility since the mapping will go fine and we have only 6
-> > BARs. So I'd not mark this as as critical fix that needs special attention.
+On 3/22/24 11:07, Daniel Golle wrote:
+> On Fri, Mar 22, 2024 at 10:49:48AM -0700, Bart Van Assche wrote:
+>> On 3/21/24 12:33, Daniel Golle wrote:
+>>>    enum {
+>>>    	GENHD_FL_REMOVABLE			= 1 << 0,
+>>>    	GENHD_FL_HIDDEN				= 1 << 1,
+>>>    	GENHD_FL_NO_PART			= 1 << 2,
+>>> +	GENHD_FL_NVMEM				= 1 << 3,
+>>>    };
+>>
+>> What would break if this flag wouldn't exist?
 > 
-> So we will have 6 mappings configured, but only 5 BARs, so two mappings for
-> BAR0. The iATU looks at them in order, so index 0 will override index 6.
+> As both, MTD and UBI already act as NVMEM providers themselves, once
+> the user creates a ubiblock device or got CONFIG_MTD_BLOCK=y set in their
+> kernel configuration, we would run into problems because both, the block
+> layer as well as MTD or UBI would try to be an NVMEM provider for the same
+> device tree node.
 
-Sounds like we dodge the bullet as long as the mappings for BAR 0 are
-identical, which doesn't feel like much comfort.
+Why would both MTD and UBI try to be an NVMEM provider for the same
+device tree node? Why can't this patch series be implemented such that
+a partition UUID occurs in the device tree and such that other code
+scans for that partition UUID?
 
-> We are lucky that the endpoint subsystem does not clean up allocations properly
-> right now (you have an outstanding series which fixes this).
-> 
-> If the endpoint subsystem did clean up resources properly, we would DMA to the
-> area that was previously allocated for BAR0, instead of the new area for BAR0.
+Thanks,
 
-This is the right level of abstraction for the commit log -- sounds
-like there's some reset scenario where the pre-reset iATU windows are
-not cleared out and we reallocate iATU windows, and we end up using
-one of the stale windows instead of the new one, which could lead to
-DMA to the wrong area.  That incorrect DMA sounds like data corruption
-in the right circumstances.
+Bart.
 
-Of course it can *also* include some detail about the mechanism of why
-that stale entry still exists and when it can be used.
-
-Bjorn
