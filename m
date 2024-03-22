@@ -1,131 +1,101 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ADE01BF3D;
-	Fri, 22 Mar 2024 08:39:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79411BDD9;
+	Fri, 22 Mar 2024 08:39:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711096779; cv=none; b=F1EmiCmo0HDk00mpo//a/q6gpjIxrdeCPKAVNjlbVaORpS60hjJlvo12BD4XGxzG+2tWK2EiRkcmbWM9DvaBPV5VEjsRMi795FnogavUaG+pWDJ3UQJGHKHwywm/Zg0nQpc1thkjXd2eVQvTWJi2TNvuNUjV2cr2aRz7EeYfRv8=
+	t=1711096779; cv=none; b=ZJD+CQaEERVZMwnyFqMwcnhrTgXwIPCKbXOrhtncqX98lCASCqSkg12dkRXpeLFbUut2jNnegfLLNiA3J0HDX4CuSpl01DcaPeKWqvhXg3CIaNKunecpWNTab5YpC2P88oHMoGQpNKjsVTank4MLyOBKNn34t/zQvxcd1fr5s+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711096779; c=relaxed/simple;
-	bh=wjX4iW6vPhAL5Q/HrAU+Ppr//9UgV0aTcsI4QPDBVrc=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=ubRIF3OYlpakxSLq6+ecp+TyjzItRsFKyniGlmU4mEHXOh4ixKwqqFlF7lh7RHm+0DlNt1Yrq8Jl9kf8dyGc8d1o6rMfuX3KXQdIpa9MokQOSgqygjaojmLhw/Teyp9Oj0JmRm7HUYmszWlTPZJIBV1wvsGwQBxEe0gJ85GKq68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=m/GzVnyx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eyxWJYEG; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	bh=8qz9C1oFZqtOS8DKNo2scRc67XzoLfuI7Z79A8V/CMs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=DHok/06blzm4XFyFhYaVugFmrOgA3XI+NS/jkuWsMOSFzdalfbhE/PexyinIkjcW0qGCS72cQsV9UqNrvgIgiT5wxSi1YjxA+RMttbhIacaXtllDZ7snGSnJw566tmeK8cd6DUlfx8/x5RcujQ/0YfJqZZfz1jNgTSYuLyOdfXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=HbD1IvwZ; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="m/GzVnyx";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eyxWJYEG"
-Date: Fri, 22 Mar 2024 08:39:34 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1711096775;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k9H0AkpxP+aZ/46y0uyxR1w0hSG+NvlkLnsM6ltSG7w=;
-	b=m/GzVnyx3HmrMYykRUit7g28nUbrYczWnPUt/102QN9juAkIloxgBNWXfb3k3z/TmjFF3w
-	FWuV2wPglwxwqwYjFJyJpC7GzkZ3dEufsgHpgZV44277BHG987TmWH4pqal9AzN63cS98M
-	1IEQ7tSpVbjE6KTW+RU9ZpGFBRpO2Sfo0xPtbT5bTpmzJ5TitFHqkTwT5nHGczKoBfFN0A
-	5CBoiCrUAa6lj/XIAkb1YKVcOxryr4pqVoLKS+0LZnmTtPhwtfnzw1A89NMFiuir27o1OE
-	qX9ovyToJ92PntEDKsahrCMDYSQlOGKOPHv3GjqDwwTLZBjdX0AnZAweGBxslA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1711096775;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k9H0AkpxP+aZ/46y0uyxR1w0hSG+NvlkLnsM6ltSG7w=;
-	b=eyxWJYEGK+hSqcisv/5T1tX55Lt53wGh4mt9uKWxpNIx++VikZ8+fSXIXK+gAoc2pVrN3Y
-	8Lxld5PthLxOzNBg==
-From: "tip-bot2 for Xin Li (Intel)" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/boot] x86: Rename __{start,end}_init_task to
- __{start,end}_init_stack
-Cc: "Xin Li (Intel)" <xin@zytor.com>, Ingo Molnar <mingo@kernel.org>,
- Juergen Gross <jgross@suse.com>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240322081616.3346181-1-xin@zytor.com>
-References: <20240322081616.3346181-1-xin@zytor.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="HbD1IvwZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1711096379;
+	bh=8qz9C1oFZqtOS8DKNo2scRc67XzoLfuI7Z79A8V/CMs=;
+	h=From:Date:Subject:To:Cc:From;
+	b=HbD1IvwZU+Fa0R5+dXd4Z5PtorJ9kamLlngsQfK0DXHSSogIt7EswCusDU8mv0oyu
+	 gqqDARm5PcYZcx9Z9domjyy5fu4OkBPYPRXMiQGYGkAH09iF5Zmt2r4575I3D75+1k
+	 CXlr7MqC0963vTRwAT9PxZIv7q23tpRMGhGycHOg=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Fri, 22 Mar 2024 09:31:19 +0100
+Subject: [PATCH] kbuild: disable pahole multithreading for reproducible
+ builds
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171109677435.10875.4562573360831498341.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240322-pahole-reprodicible-v1-1-3eaafb1842da@weissschuh.net>
+X-B4-Tracking: v=1; b=H4sIANZB/WUC/x3MSwqAMAxF0a1IxhZqrKJuRRz4eWpAbElBBHHvF
+ odncO9DESqI1GUPKS6J4s+EIs9o3sdzg5ElmdiysyWzCePuDxhFUL/ILFOCZbTWwVV1U1Mqg2K
+ V+7/2w/t+PO3FuGUAAAA=
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>
+Cc: bpf@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711096377; l=1459;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=8qz9C1oFZqtOS8DKNo2scRc67XzoLfuI7Z79A8V/CMs=;
+ b=+1w57nbzBpgRD+AXa4yunHz9+Ji2wjrUngukytktGDUCX3+WZfibC3N9MyodM4RVgH+F813g6
+ SR22gH31hmICRM3DTrBN3/7Gg8xNO/qXW16Ne5R8f5pg+i+KcKkCtIy
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-The following commit has been merged into the x86/boot branch of tip:
+A BTF type_id is a numeric identifier allocated by pahole through
+libbpfd. Ids are incremented for each allocation.
+Running pahole multithreaded makes the sequence of allocations
+non-deterministic which also makes the type_id itself non-deterministic.
+As the type_id end up in the binary this breaks reproducibility.
 
-Commit-ID:     8f69cba096b5cfd09be2d06c15d08dbd4a58c9d7
-Gitweb:        https://git.kernel.org/tip/8f69cba096b5cfd09be2d06c15d08dbd4a58c9d7
-Author:        Xin Li (Intel) <xin@zytor.com>
-AuthorDate:    Fri, 22 Mar 2024 01:16:16 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 22 Mar 2024 09:32:41 +01:00
+Therefore, if the kernel is built reproducibly as indicated by
+KBUILD_BUILD_TIMESTAMP, disable threading in pahole.
 
-x86: Rename __{start,end}_init_task to __{start,end}_init_stack
-
-The stack of a task has been separated from the memory of a task_struct
-struture for a long time on x86, as a result __{start,end}_init_task no
-longer mark the start and end of the init_task structure, but its stack
-only.
-
-Rename __{start,end}_init_task to __{start,end}_init_stack.
-
-Note other architectures are not affected because __{start,end}_init_task
-are used on x86 only.
-
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Link: https://lore.kernel.org/r/20240322081616.3346181-1-xin@zytor.com
+Fixes: b4f72786429c ("scripts/pahole-flags.sh: Parse DWARF and generate BTF with multithreading.")
+Fixes: 72d091846de9 ("kbuild: avoid too many execution of scripts/pahole-flags.sh")
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- arch/x86/kernel/vmlinux.lds.S     | 2 +-
- include/asm-generic/vmlinux.lds.h | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ scripts/Makefile.btf | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 91085c3..4c04a36 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -173,7 +173,7 @@ SECTIONS
- 		INIT_TASK_DATA(THREAD_SIZE)
+diff --git a/scripts/Makefile.btf b/scripts/Makefile.btf
+index 82377e470aed..2356929e62e4 100644
+--- a/scripts/Makefile.btf
++++ b/scripts/Makefile.btf
+@@ -10,7 +10,10 @@ endif
  
- 		/* equivalent to task_pt_regs(&init_task) */
--		__top_init_kernel_stack = __end_init_task - TOP_OF_KERNEL_STACK_PADDING - PTREGS_SIZE;
-+		__top_init_kernel_stack = __end_init_stack - TOP_OF_KERNEL_STACK_PADDING - PTREGS_SIZE;
+ pahole-flags-$(call test-ge, $(pahole-ver), 121)	+= --btf_gen_floats
  
- #ifdef CONFIG_X86_32
- 		/* 32 bit has nosave before _edata */
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index f7749d0..8708243 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -399,13 +399,13 @@
++# threaded execution randomizes BTF type_id allocation, breaking reproducibility
++ifeq ($(KBUILD_BUILD_TIMESTAMP),)
+ pahole-flags-$(call test-ge, $(pahole-ver), 122)	+= -j
++endif
  
- #define INIT_TASK_DATA(align)						\
- 	. = ALIGN(align);						\
--	__start_init_task = .;						\
-+	__start_init_stack = .;						\
- 	init_thread_union = .;						\
- 	init_stack = .;							\
- 	KEEP(*(.data..init_task))					\
- 	KEEP(*(.data..init_thread_info))				\
--	. = __start_init_task + THREAD_SIZE;				\
--	__end_init_task = .;
-+	. = __start_init_stack + THREAD_SIZE;				\
-+	__end_init_stack = .;
+ pahole-flags-$(CONFIG_PAHOLE_HAS_LANG_EXCLUDE)		+= --lang_exclude=rust
  
- #define JUMP_TABLE_DATA							\
- 	. = ALIGN(8);							\
+
+---
+base-commit: 8e938e39866920ddc266898e6ae1fffc5c8f51aa
+change-id: 20240322-pahole-reprodicible-02e904e45686
+
+Best regards,
+-- 
+Thomas Weißschuh <linux@weissschuh.net>
+
