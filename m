@@ -1,112 +1,99 @@
-Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5CF3D0D9
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 11:05:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59AB22C18D;
+	Fri, 22 Mar 2024 11:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711105540; cv=none; b=WRQamMTg8zGBIOqp2V0eN5+La73lA6p2+CjSIoKbzqr+toH6a/DYvBefAskSYybGSk84IUkCQJDQFhFmM3IhXI85zbYDg8rqufS6TRw0oGsotXxK+bwOf6Hj6yl3Rwhkc0CVDz2pFiADuXWKh4FAnH2RIIbNEi5BONrvtq/hNpM=
+	t=1711105622; cv=none; b=bQNhfnFDE62WJyb0WISUtlqugfLMcV/pik4rxHrU8QULUgwcuIw0Pn4SzkHS9FdIXGE7u+DZZuUdXxJp1elUpFY2KmwmTmvULpIvmBHwUsefc6UZOmW296WQINB6Q8niiSv17vg8gQ79/IWF9QNYDLIMDt4w32InBFiZFFjMbSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711105540; c=relaxed/simple;
-	bh=Was4C+ESu5JAiwUHW6xmTjdvg1OJtFhRQJ3CzQTJRjI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Bn59egfQVFFkKH223NRNdbkQCQdjzyNmWsM86Mw9kaLBPfQjIacSrHyCuMU3vBozuOrYDIwngVZNjPK15MA3FxsjlbVFpIGjzOwNfV+gw/XH57O5UHI1OK6Tpyly0BqbwvmS6P3qbjlPkHQqSW7uerkkPwdv0cs5twnPrig/uQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=EGI2bvKt; arc=none smtp.client-ip=188.40.30.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="EGI2bvKt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
-	s=default2211; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
-	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References;
-	bh=J9CuZ33LUi+k6FzE7felhvKpLH81dmZUIoVLkX9iVZc=; b=EGI2bvKt0dsRuvymeSTE44Lu0C
-	0dY91Sy6D7CK+hkso1Zc+qs3iwd2r8eSK48LENFGHkTjwZdiDjZ7+yx1AoUVhC8q4hBiCAQkWYbJS
-	wrH8OKsCg1NdlTi8egsT96mJyYWS0/3XkZPGHG4VbD7NBE6KryqudkAty571UJoz6tja6gOdhzyAD
-	DTwM0GQRaQ5+SFWH9dHvORKJ+nk8wsCixkvZPLOlUSYF5gOLnXG0lTt+lktVXLkCRIdlPXLUbtfid
-	fmUSGQg7AtwpXEUZbt4c+zts15I1jhjPAhRro7UEeVSvRQvnY87RDefXL6XnST34mgRnqWsG4aYcI
-	DySFbOHw==;
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <sean@geanix.com>)
-	id 1rncRL-000B01-On; Fri, 22 Mar 2024 11:47:59 +0100
-Received: from [185.17.218.86] (helo=zen..)
-	by sslproxy02.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <sean@geanix.com>)
-	id 1rncRK-00G8Yg-1h;
-	Fri, 22 Mar 2024 11:47:58 +0100
-From: Sean Nyekjaer <sean@geanix.com>
-To: Yannick Fertre <yannick.fertre@foss.st.com>,
-	Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>,
-	Philippe Cornu <philippe.cornu@foss.st.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Robert Foss <rfoss@kernel.org>,
-	Antonio Borneo <antonio.borneo@foss.st.com>
-Cc: Sean Nyekjaer <sean@geanix.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/stm: dsi: relax mode_valid clock tolerance
-Date: Fri, 22 Mar 2024 11:47:31 +0100
-Message-ID: <20240322104732.2327060-1-sean@geanix.com>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1711105622; c=relaxed/simple;
+	bh=EYYHZIaBz/ypfFhjlvxZu3aL3IPa6xvR2uwygCIyUJQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VF2c6tZd9VxWoCuV664FmUdKXXSUFTfstYIKY82bzWV5WSFZOIutrE5bLL3mSAUTgBh4a23araVyugWFc9JY+3rNQllby1uPt19skb+JTe+z9DnuoQfmmCXN0fCkU1A0z87f+cLuOY0wPWeYTh9HY13qETPQmxsxgXU9hPAXGY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D40631007;
+	Fri, 22 Mar 2024 04:07:33 -0700 (PDT)
+Received: from [10.57.71.57] (unknown [10.57.71.57])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B2283F64C;
+	Fri, 22 Mar 2024 04:06:57 -0700 (PDT)
+Message-ID: <43b3feb2-8eb7-4f6d-a41b-d2d3c8893ec4@arm.com>
+Date: Fri, 22 Mar 2024 11:06:55 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: sean@geanix.com
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27222/Fri Mar 22 09:30:59 2024)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/4] Update Energy Model after chip binning adjusted
+ voltages
+Content-Language: en-US
+To: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: dietmar.eggemann@arm.com, linux-arm-kernel@lists.infradead.org,
+ sboyd@kernel.org, nm@ti.com, linux-samsung-soc@vger.kernel.org,
+ daniel.lezcano@linaro.org, rafael@kernel.org, viresh.kumar@linaro.org,
+ krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com,
+ m.szyprowski@samsung.com, mhiramat@kernel.org
+References: <20240322103221.47594-1-lukasz.luba@arm.com>
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <20240322103221.47594-1-lukasz.luba@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When using the DSI interface via DSI2LVDS bridge, it seems a bit harsh
-to reguire the requested and the actual px clock to be within
-50Hz. A typical LVDS display requires the px clock to be within +-10%.
 
-In case for HDMI .5% tolerance is required.
 
-Fixes: e01356d18273 ("drm/stm: dsi: provide the implementation of mode_valid()")
-Signed-off-by: Sean Nyekjaer <sean@geanix.com>
----
- drivers/gpu/drm/stm/dw_mipi_dsi-stm.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+On 3/22/24 10:32, Lukasz Luba wrote:
+> Hi all,
+> 
+> This is a follow-up patch aiming to add EM modification due to chip binning.
+> The first RFC and the discussion can be found here [1].
+> 
+> It uses Exynos chip driver code as a 1st user. The EM framework has been
+> extended to handle this use case easily, when the voltage has been changed
+> after setup. On my Odroid-xu4 in some OPPs I can observe ~20% power difference.
+> According to that data in driver tables it could be up to ~29%.
+> 
+> This chip binning is applicable to a lot of SoCs, so the EM framework should
+> make it easy to update. It uses the existing OPP and DT information to
+> re-calculate the new power values.
+> 
+> 
+> Changes:
+> v2:
+> - removed 'ret' from error message which wasn't initialized (Christian)
+> v1:
+> - exported the OPP calculation function from the OPP/OF so it can be
+>    used from EM fwk (Viresh)
+> - refactored EM updating function to re-use common code
+> - added new EM function which can be used by chip device drivers which
+>    modify the voltage in OPPs
+> RFC is at [1]
+> 
+> Regards,
+> Lukasz Luba
+> 
+> [1] https://lore.kernel.org/lkml/20231220110339.1065505-1-lukasz.luba@arm.com/
+> 
+> Lukasz Luba (4):
+>    OPP: OF: Export dev_opp_pm_calc_power() for usage from EM
+>    PM: EM: Change the em_adjust_new_capacity() to re-use code
+>    PM: EM: Add em_dev_update_chip_binning()
+>    soc: samsung: exynos-asv: Update Energy Model after adjusting voltage
+> 
+>   drivers/opp/of.c                 |  17 +++--
+>   drivers/soc/samsung/exynos-asv.c |  11 +++-
+>   include/linux/energy_model.h     |   5 ++
+>   include/linux/pm_opp.h           |   8 +++
+>   kernel/power/energy_model.c      | 109 +++++++++++++++++++++++++------
+>   5 files changed, 125 insertions(+), 25 deletions(-)
+> 
 
-diff --git a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
-index d5f8c923d7bc..97936b0ef702 100644
---- a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
-+++ b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
-@@ -322,8 +322,6 @@ dw_mipi_dsi_phy_get_timing(void *priv_data, unsigned int lane_mbps,
- 	return 0;
- }
- 
--#define CLK_TOLERANCE_HZ 50
--
- static enum drm_mode_status
- dw_mipi_dsi_stm_mode_valid(void *priv_data,
- 			   const struct drm_display_mode *mode,
-@@ -375,9 +373,10 @@ dw_mipi_dsi_stm_mode_valid(void *priv_data,
- 		/*
- 		 * Filter modes according to the clock value, particularly useful for
- 		 * hdmi modes that require precise pixel clocks.
-+		 * Check that px_clock is within .5% tolerance.
- 		 */
--		if (px_clock_hz < target_px_clock_hz - CLK_TOLERANCE_HZ ||
--		    px_clock_hz > target_px_clock_hz + CLK_TOLERANCE_HZ)
-+		if (px_clock_hz < mult_frac(target_px_clock_hz, 995, 1000) ||
-+		    px_clock_hz > mult_frac(target_px_clock_hz, 1005, 1000))
- 			return MODE_CLOCK_RANGE;
- 
- 		/* sync packets are codes as DSI short packets (4 bytes) */
--- 
-2.44.0
+Please ignore this version. It still has that 'ret'. I've fixed in
+different repo, but sent patches from different terminal.
 
+I'll resend it in a second...
+
+Regards,
+Lukasz
