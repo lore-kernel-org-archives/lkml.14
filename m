@@ -1,107 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C015FBA5;
-	Fri, 22 Mar 2024 17:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867EC5FBA5;
+	Fri, 22 Mar 2024 17:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711129214; cv=none; b=UgMtDn88TE3i3fV22J8dXkcijwYGkLpNKbVNZouQBWPB9q26bvhkP2XsI0fmLjdROxDOd7zLLoCFT1LjBYCyhM8hJRV/bYFkdPqtLO3zF5K1Xcj1zSkUtcaF9P36v5glOdsBlHfBQ7L5CQqulAM1iZWPKrnEcwPtqZCA7CInMwo=
+	t=1711129241; cv=none; b=gL0aSS33jizyW/OMMWhNqJ7r0GBNjFdOPA9C5cIbZr0WKZtMOGe0WpmY/RTGVsm2jmITnCEYSedPM5NIblrOkrjLOp69rXho6RCP9TGgcxhYAjxu73ltBBbifUGJBgge/8cmCcy0xxLCF31pg4yrVAQ78tp5uvmflxr20e/mBWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711129214; c=relaxed/simple;
-	bh=tTwBbRt2pqHamlnWharifXWWwuWmdQz8Rk753vrs9Tc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GGbaeP+bk/ShdsMxJX7Yj+DDkIxBw4jKn1yDd6BrZ40YxOod4pRaXHCzTL6EPqzGCoT32D+mIV4cc6KLrQ7uoykHLQ7FIpm3kbI9tIcWqu6olAByoDWqo2pc3ktCoHAemE403nna3QZuPZidSTwMelThruHj8SYfR0HZL0YSvKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tUV4V9ch; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711129241; c=relaxed/simple;
+	bh=wFZI1PIUaOqlEpxFZyEcVJq0yyXGgKI3wtKeSznMuas=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BOZ5yOTRwaPJizeVPwgaQGorbCSTnG1li2EDpNEIiZ+as3rqSkEPcT5ecLpp3fzNWedOBuP7CSZCty/Cu3oex/UAO8/FYAQk7YgILn9F4nIXLreCv1kjd89CHjjN9mJe8g/3MZBNL5hIGqhp7mr/lwTH8fzogvM5HMU+0rIx+3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RzRQFc8/; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tUV4V9ch"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65E1DC433C7;
-	Fri, 22 Mar 2024 17:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711129214;
-	bh=tTwBbRt2pqHamlnWharifXWWwuWmdQz8Rk753vrs9Tc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tUV4V9chSdBEhmS3/ab/LOTuC18tZ5+Xt9D4PIFL9rhdteNBuxvFgwNzKnxUCpx39
-	 xSNyMVK0iGDIKqvXHfr9GfE6EqcmmKwGa2zd3AQOkAaAiVFr2DIcDnvL/eLoWCW0+g
-	 T0htdNedHpFoIJJrZjeG+pIY4NSf6RT4FWmmi4Ncvt0nkLS1j1l+pVWgHYJr+arT9G
-	 LO7EgQJiZcHwwYVh4DCjxTcMZ+tqxSVapjXaPc7b5hPiwjEX4VkCK97zQZaYp73t/Z
-	 tPiMy5yoJp4rpdLUxmFWfwpualX/lxqznaUpeG7zx71u3mZE32PxtDCWgqQbHBDw36
-	 XaNwctZduV9JQ==
-Date: Fri, 22 Mar 2024 17:40:08 +0000
-From: Conor Dooley <conor@kernel.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: linux-media@vger.kernel.org, mchehab@kernel.org, robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	matthias.bgg@gmail.com, amergnat@baylibre.com,
-	moudy.ho@mediatek.com, hverkuil-cisco@xs4all.nl,
-	sebastian.fricke@collabora.com, u.kleine-koenig@pengutronix.de,
-	chunkuang.hu@kernel.org, p.zabel@pengutronix.de,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, kernel@collabora.com
-Subject: Re: [PATCH 3/4] dt-bindings: media: mediatek: mdp3: Add support for
- MT8188 RDMA
-Message-ID: <20240322-elderly-ether-170408423883@spud>
-References: <20240322092845.381313-1-angelogioacchino.delregno@collabora.com>
- <20240322092845.381313-4-angelogioacchino.delregno@collabora.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RzRQFc8/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711129239; x=1742665239;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=wFZI1PIUaOqlEpxFZyEcVJq0yyXGgKI3wtKeSznMuas=;
+  b=RzRQFc8/8bMkKO6l8J/TCuIHBB3/+TdmK8zzroUqNsZXBv+g8jK0rqLd
+   s8l2cqGNiVzn2ZM060TeK7QXOe3CyLHoJkQKwHkLWSlPahfiqtyeS5M04
+   X7i1Lm++g/bV7INToXcSufXscqJXTi1ocZY4hV4ZTfQgom0rDpJVMDwui
+   Uac2K5waFk0DxtRx1tVFd5KqLmpVD7VTtrcVavOEyYHanI98D++6M0gNk
+   JDF++JYKoWpVkj5KXwBzWY2QV7yz/a2M9trRgREI3CGe1u8zVTr9Q7chP
+   WcbsJjyN4zXZCwsZ85etuRXfFI2EepYIx9P2i9CLvZFzXUmsMZtthZXq1
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="28666081"
+X-IronPort-AV: E=Sophos;i="6.07,146,1708416000"; 
+   d="scan'208";a="28666081"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 10:40:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,146,1708416000"; 
+   d="scan'208";a="19710803"
+Received: from ashwanim-mobl.amr.corp.intel.com (HELO [10.209.56.241]) ([10.209.56.241])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 10:40:38 -0700
+Message-ID: <2f8d726a-9800-4068-9c0c-6c4a79d69a85@intel.com>
+Date: Fri, 22 Mar 2024 10:40:37 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="TYbo2CO3aIfqwZwQ"
-Content-Disposition: inline
-In-Reply-To: <20240322092845.381313-4-angelogioacchino.delregno@collabora.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/mm/ident_map: Use full gbpages in identity maps
+ except on UV platform.
+Content-Language: en-US
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen
+ <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-kernel@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Pavin Joseph <me@pavinjoseph.com>, stable@vger.kernel.org,
+ Eric Hagberg <ehagberg@gmail.com>, Simon Horman <horms@verge.net.au>,
+ Dave Young <dyoung@redhat.com>, Sarah Brofeldt <srhb@dbc.dk>,
+ Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>
+References: <20240322162135.3984233-1-steve.wahl@hpe.com>
+ <003f1e83-fd93-4f4f-a316-d3e89e5a23a5@intel.com>
+ <87le6ab2bn.fsf@email.froward.int.ebiederm.org>
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <87le6ab2bn.fsf@email.froward.int.ebiederm.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+On 3/22/24 10:31, Eric W. Biederman wrote:
+>> I'd much rather add synthetic entries to the memory maps that have this
+>> information than hack around it by assuming that things are within a
+>> gigabyte.
+> So this change is a partial revert of a change that broke kexec in
+> existing configurations.  To fix a regression that breaks kexec.
+
+Let's back up for a second:
+
+ * Mapping extra memory on UV systems causes halts[1]
+ * Mapping extra memory on UV systems breaks kexec (this thread)
+
+So we're in a pickle.  I understand your concern for kexec.  But I'm
+concerned that fixing the kexec problem will re-expose us to the [1]
+problem.
+
+Steve, can you explain a bit why this patch doesn't re-expose the kernel
+to the [1] bug?
+
+1. https://lore.kernel.org/all/20240126164841.170866-1-steve.wahl@hpe.com/
 
 
---TYbo2CO3aIfqwZwQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Mar 22, 2024 at 10:28:44AM +0100, AngeloGioacchino Del Regno wrote:
-> Add a compatible for MediaTek MT8188 RDMA, which supports only a
-> subset of the MDP3 components of its similar MT8195 counterpart.
->=20
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
-abora.com>
-
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
-Thanks,
-Conor.
-
-> ---
->  Documentation/devicetree/bindings/media/mediatek,mdp3-rdma.yaml | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/media/mediatek,mdp3-rdma.y=
-aml b/Documentation/devicetree/bindings/media/mediatek,mdp3-rdma.yaml
-> index 59db8306485b..18603f6c5e06 100644
-> --- a/Documentation/devicetree/bindings/media/mediatek,mdp3-rdma.yaml
-> +++ b/Documentation/devicetree/bindings/media/mediatek,mdp3-rdma.yaml
-> @@ -23,6 +23,7 @@ properties:
->      oneOf:
->        - enum:
->            - mediatek,mt8183-mdp3-rdma
-> +          - mediatek,mt8188-mdp3-rdma
->            - mediatek,mt8195-mdp3-rdma
->            - mediatek,mt8195-vdo1-rdma
->        - items:
-> --=20
-> 2.44.0
->=20
-
---TYbo2CO3aIfqwZwQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZf3CeAAKCRB4tDGHoIJi
-0l3AAQCL5XSgotDR4l9Rji+b5MSgqPkrXB/7xT15infA4yxeLgD/dJ3reW+ywpxg
-TVn9ErbQIAsrdGYLZO/BdFSmBaP5pgE=
-=sIb/
------END PGP SIGNATURE-----
-
---TYbo2CO3aIfqwZwQ--
