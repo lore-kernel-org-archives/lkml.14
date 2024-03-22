@@ -1,223 +1,202 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0B83FB87;
-	Fri, 22 Mar 2024 08:35:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844B71756B
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 08:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711096518; cv=none; b=eRyvRm3Lycb7ApnXtvnIBjdesZVe7Opnefl2cWkj4NUEEdU7QIVpEgOM3Ur5C44um9ErReKVMzRQf9dVd4Jw/CtGMKrsi3K6kNJ0likACK3j3KuS8pSkreyT23GdLihKoH+kJ6TFoQ7P1pq5d6bXAfdrobhbBSXeXDFn7P/f0hQ=
+	t=1711096701; cv=none; b=p5C0X/m4fjVPNtHTE4Qwnw/0bKbHxvnOOFsFyz54+AI9idF8C3mgd4Nbedg7uaTfGA9LsC8TaxZ+PaXXnLF/xcj5DVrPFLnHfBZ3uuUDd0Vn3D2R/gbIGn0yBTgSiM3ip+C2lFXnplR84vqlPg6H3LpwmvOKa7vex45jbCJ8tjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711096518; c=relaxed/simple;
-	bh=ubt8vwuXHMoPvm2FKiDUEHRj3q7PZZktUm1LKe+DoxQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lvc1Lv4sF1vhyT5ijFDp1g1LX+3ydRGLLNpIW/oC/DgERrxxWSgim50IQFi44oDCqCSUEC5JeHJbGA+ZipO3s7Adr/U36F5xH1NzT2VDSGb/D+WmH3H+JQ9bhTA1RILUqcK0YBWHbXnmKAvcifrPd3es64PGIMXTHJYKe/gJU4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JHtyBQH6; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1711096701; c=relaxed/simple;
+	bh=Z43SjiOxfeJQZL4mOxWDH7CGTTHMmx/OgE6jMfq2IMk=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=GBCnYdbvdE4z5ReVtRnMXp+w+2ycvyCoSTvyY8nNLs4WdnbcUwSG/esfl0KWEl8CAk2xyimZl5QmfFm2joT5XIOuFAXRvtrTCW3Ts32nnFPq7TNibGstJNDHCy3dFG+j7xkhEkFVAIwZxv37mFa9Fb2x6cvekMMqw2Ml19/2f4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DU6noJx/; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JHtyBQH6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=B+eEe2rJKYVCOSpsUyFR0aFEgGcdrU57l8z/qph+tmM=; b=JHtyBQH6EX7GceqkO4taJJgxTp
-	MHSM6Uqnw3YFlkvvhAiy3qbAR0vYz3MGRdxZmGg5/mdAUNTul1mWj09WvLulV1q1v69YEuYQIuXhn
-	P+4q733Age1NYD6hfFWEFc0t+KuF9HA90D8+TcIfO/d9koXu4navByN+ZmWwMcqPO/i01Opbj0EBy
-	WTuTwTFJ/dZm7bPQd8J/FD43zJbO6Y047A+sffZnE54IZNoZV5n9cCRmuC+yxOzAZwfnlJQq4pCoy
-	ym665tUf6yqhhjtVMcCNHOKjEijyCNM6tDQWevVoSRf1chQmYyScxbzC4JT3i+oeKd+PzlolBJwMN
-	7ds5xwDA==;
-Received: from fpd2fa7e2a.ap.nuro.jp ([210.250.126.42] helo=[192.168.1.8])
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rnaMZ-0000000EhCD-3xGY;
-	Fri, 22 Mar 2024 08:34:56 +0000
-Message-ID: <87f6365f-a40e-4606-baff-170cb8fc48f3@infradead.org>
-Date: Fri, 22 Mar 2024 17:34:45 +0900
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DU6noJx/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711096699; x=1742632699;
+  h=date:from:to:cc:subject:message-id;
+  bh=Z43SjiOxfeJQZL4mOxWDH7CGTTHMmx/OgE6jMfq2IMk=;
+  b=DU6noJx/MtnAJdAJp3Emhy1q1oNJnNBrjAgNyThrL1KhS8OgIhAHxXSk
+   FbFLwBBZMp+CsJGNTF9Sp+kwkIsTXQNcdKF3Sewj5jrGE3toWpd7bP75K
+   J7jsbq14ToC61Vg8Jx8tacyK9uWlAX5tllC6Z/yX9rqLVrZBTd+Mh17fE
+   YRh5ukqb2rb8kDLWsO/s55gQRvd5hPiUAVnKrJyAFoNKC6NHPEEZrp/TO
+   F3Q1tkWMYRhzXHGjrEhSrDq6zrUIKVN8gqrpSrB1ww/h6Wcj2lXd77bbP
+   9S8FmQUcx2qXlNXNiA0EOepVTHjfXdMC4ziw7r+KbZqfwy7Rm/SkNEcvh
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="9084422"
+X-IronPort-AV: E=Sophos;i="6.07,145,1708416000"; 
+   d="scan'208";a="9084422"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 01:38:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,145,1708416000"; 
+   d="scan'208";a="15228738"
+Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 22 Mar 2024 01:38:17 -0700
+Received: from kbuild by b21307750695 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rnaPm-000KAV-33;
+	Fri, 22 Mar 2024 08:38:14 +0000
+Date: Fri, 22 Mar 2024 16:37:46 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:perf/core] BUILD SUCCESS
+ dfbc411e0a5ea72fdd563b2c7d627e9d993d865c
+Message-ID: <202403221643.4eTWpskJ-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] powerpc: ps3: mark ps3_notification_device static for
- stack usage
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Arnd Bergmann <arnd@kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
- Nathan Chancellor <nathan@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
- Arnd Bergmann <arnd@arndb.de>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Kevin Hao <haokexin@gmail.com>, linuxppc-dev@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-References: <20240320180333.151043-1-arnd@kernel.org>
- <CAMuHMdW41e+DSBKBgugTkjoLy6bXfji-KWmB_d9EstEv01eC6w@mail.gmail.com>
-Content-Language: en-US
-From: Geoff Levand <geoff@infradead.org>
-In-Reply-To: <CAMuHMdW41e+DSBKBgugTkjoLy6bXfji-KWmB_d9EstEv01eC6w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 3/21/24 17:32, Geert Uytterhoeven wrote:
-> --- a/arch/powerpc/platforms/ps3/device-init.c
->> +++ b/arch/powerpc/platforms/ps3/device-init.c
->> @@ -770,7 +770,7 @@ static struct task_struct *probe_task;
->>
->>  static int ps3_probe_thread(void *data)
->>  {
->> -       struct ps3_notification_device dev;
->> +       static struct ps3_notification_device dev;
->>         int res;
->>         unsigned int irq;
->>         u64 lpar;
-> 
-> Making it static increases kernel size for everyone.  So I'd rather
-> allocate it dynamically. The thread already allocates a buffer, which
-> can be replaced at no cost by allocating a structure containing both
-> the ps3_notification_device and the buffer.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
+branch HEAD: dfbc411e0a5ea72fdd563b2c7d627e9d993d865c  perf/x86/rapl: Prefer struct_size() over open coded arithmetic
 
-Here's what I came up with.  It builds for me without warnings.
-I haven't tested it yet.  A review would be appreciated.
+elapsed time: 733m
 
-diff --git a/arch/powerpc/platforms/ps3/device-init.c b/arch/powerpc/platforms/ps3/device-init.c
-index 878bc160246e..9bb44a6ccdaf 100644
---- a/arch/powerpc/platforms/ps3/device-init.c
-+++ b/arch/powerpc/platforms/ps3/device-init.c
-@@ -770,37 +770,48 @@ static struct task_struct *probe_task;
- 
- static int ps3_probe_thread(void *data)
- {
--	struct ps3_notification_device dev;
-+	struct ps3_probe_thread_local {
-+		struct ps3_notification_device dev;
-+		union {
-+			char buf[512];
-+			struct ps3_notify_cmd notify_cmd;
-+			struct ps3_notify_event notify_event;
-+		};
-+	};
-+	struct ps3_probe_thread_local *local;
-+	struct ps3_notification_device *dev;
-+	struct ps3_notify_cmd *notify_cmd;
-+	struct ps3_notify_event *notify_event;
- 	int res;
- 	unsigned int irq;
- 	u64 lpar;
--	void *buf;
--	struct ps3_notify_cmd *notify_cmd;
--	struct ps3_notify_event *notify_event;
- 
- 	pr_debug(" -> %s:%u: kthread started\n", __func__, __LINE__);
- 
--	buf = kzalloc(512, GFP_KERNEL);
--	if (!buf)
-+	local = kzalloc(sizeof(local), GFP_KERNEL);
-+
-+	if (!local)
- 		return -ENOMEM;
- 
--	lpar = ps3_mm_phys_to_lpar(__pa(buf));
--	notify_cmd = buf;
--	notify_event = buf;
-+	dev = &local->dev;
-+	notify_cmd = &local->notify_cmd;
-+	notify_event = &local->notify_event;
-+
-+	lpar = ps3_mm_phys_to_lpar(__pa(&local->notify_cmd));
- 
- 	/* dummy system bus device */
--	dev.sbd.bus_id = (u64)data;
--	dev.sbd.dev_id = PS3_NOTIFICATION_DEV_ID;
--	dev.sbd.interrupt_id = PS3_NOTIFICATION_INTERRUPT_ID;
-+	dev->sbd.bus_id = (u64)data;
-+	dev->sbd.dev_id = PS3_NOTIFICATION_DEV_ID;
-+	dev->sbd.interrupt_id = PS3_NOTIFICATION_INTERRUPT_ID;
- 
--	res = lv1_open_device(dev.sbd.bus_id, dev.sbd.dev_id, 0);
-+	res = lv1_open_device(dev->sbd.bus_id, dev->sbd.dev_id, 0);
- 	if (res) {
- 		pr_err("%s:%u: lv1_open_device failed %s\n", __func__,
- 		       __LINE__, ps3_result(res));
- 		goto fail_free;
- 	}
- 
--	res = ps3_sb_event_receive_port_setup(&dev.sbd, PS3_BINDING_CPU_ANY,
-+	res = ps3_sb_event_receive_port_setup(&dev->sbd, PS3_BINDING_CPU_ANY,
- 					      &irq);
- 	if (res) {
- 		pr_err("%s:%u: ps3_sb_event_receive_port_setup failed %d\n",
-@@ -808,11 +819,11 @@ static int ps3_probe_thread(void *data)
- 	       goto fail_close_device;
- 	}
- 
--	spin_lock_init(&dev.lock);
--	rcuwait_init(&dev.wait);
-+	spin_lock_init(&dev->lock);
-+	rcuwait_init(&dev->wait);
- 
- 	res = request_irq(irq, ps3_notification_interrupt, 0,
--			  "ps3_notification", &dev);
-+			  "ps3_notification", &local->dev);
- 	if (res) {
- 		pr_err("%s:%u: request_irq failed %d\n", __func__, __LINE__,
- 		       res);
-@@ -823,7 +834,7 @@ static int ps3_probe_thread(void *data)
- 	notify_cmd->operation_code = 0; /* must be zero */
- 	notify_cmd->event_mask = 1UL << notify_region_probe;
- 
--	res = ps3_notification_read_write(&dev, lpar, 1);
-+	res = ps3_notification_read_write(&local->dev, lpar, 1);
- 	if (res)
- 		goto fail_free_irq;
- 
-@@ -834,36 +845,36 @@ static int ps3_probe_thread(void *data)
- 
- 		memset(notify_event, 0, sizeof(*notify_event));
- 
--		res = ps3_notification_read_write(&dev, lpar, 0);
-+		res = ps3_notification_read_write(&local->dev, lpar, 0);
- 		if (res)
- 			break;
- 
- 		pr_debug("%s:%u: notify event type 0x%llx bus id %llu dev id %llu"
- 			 " type %llu port %llu\n", __func__, __LINE__,
--			 notify_event->event_type, notify_event->bus_id,
--			 notify_event->dev_id, notify_event->dev_type,
--			 notify_event->dev_port);
-+			notify_event->event_type, notify_event->bus_id,
-+			notify_event->dev_id, notify_event->dev_type,
-+			notify_event->dev_port);
- 
- 		if (notify_event->event_type != notify_region_probe ||
--		    notify_event->bus_id != dev.sbd.bus_id) {
-+			notify_event->bus_id != dev->sbd.bus_id) {
- 			pr_warn("%s:%u: bad notify_event: event %llu, dev_id %llu, dev_type %llu\n",
- 				__func__, __LINE__, notify_event->event_type,
- 				notify_event->dev_id, notify_event->dev_type);
- 			continue;
- 		}
- 
--		ps3_find_and_add_device(dev.sbd.bus_id, notify_event->dev_id);
-+		ps3_find_and_add_device(dev->sbd.bus_id, notify_event->dev_id);
- 
- 	} while (!kthread_should_stop());
- 
- fail_free_irq:
--	free_irq(irq, &dev);
-+	free_irq(irq, &local->dev);
- fail_sb_event_receive_port_destroy:
--	ps3_sb_event_receive_port_destroy(&dev.sbd, irq);
-+	ps3_sb_event_receive_port_destroy(&dev->sbd, irq);
- fail_close_device:
--	lv1_close_device(dev.sbd.bus_id, dev.sbd.dev_id);
-+	lv1_close_device(dev->sbd.bus_id, dev->sbd.dev_id);
- fail_free:
--	kfree(buf);
-+	kfree(local);
- 
- 	probe_task = NULL;
- 
+configs tested: 129
+configs skipped: 135
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                      axs103_smp_defconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240322   gcc  
+arc                   randconfig-002-20240322   gcc  
+arm                         axm55xx_defconfig   clang
+arm                   milbeaut_m10v_defconfig   clang
+arm                          moxart_defconfig   gcc  
+arm                   randconfig-001-20240322   gcc  
+arm                   randconfig-004-20240322   gcc  
+arm                           sama5_defconfig   gcc  
+arm                        shmobile_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-002-20240322   gcc  
+arm64                 randconfig-003-20240322   gcc  
+csky                              allnoconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240322   gcc  
+csky                  randconfig-002-20240322   gcc  
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240322   gcc  
+i386         buildonly-randconfig-002-20240322   gcc  
+i386         buildonly-randconfig-003-20240322   clang
+i386         buildonly-randconfig-004-20240322   clang
+i386         buildonly-randconfig-005-20240322   gcc  
+i386         buildonly-randconfig-006-20240322   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240322   clang
+i386                  randconfig-002-20240322   clang
+i386                  randconfig-003-20240322   gcc  
+i386                  randconfig-004-20240322   gcc  
+i386                  randconfig-005-20240322   clang
+i386                  randconfig-006-20240322   clang
+i386                  randconfig-011-20240322   gcc  
+i386                  randconfig-012-20240322   clang
+i386                  randconfig-013-20240322   clang
+i386                  randconfig-014-20240322   clang
+i386                  randconfig-015-20240322   gcc  
+i386                  randconfig-016-20240322   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240322   gcc  
+loongarch             randconfig-002-20240322   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                         amcore_defconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                           sun3_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                           ip27_defconfig   gcc  
+mips                    maltaup_xpa_defconfig   gcc  
+mips                         rt305x_defconfig   clang
+nios2                         10m50_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240322   gcc  
+nios2                 randconfig-002-20240322   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240322   gcc  
+parisc                randconfig-002-20240322   gcc  
+parisc64                            defconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                     asp8347_defconfig   clang
+powerpc               randconfig-002-20240322   gcc  
+powerpc64             randconfig-002-20240322   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240322   gcc  
+riscv                 randconfig-002-20240322   gcc  
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240322   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                         ap325rxa_defconfig   gcc  
+sh                                  defconfig   gcc  
+sh                    randconfig-001-20240322   gcc  
+sh                    randconfig-002-20240322   gcc  
+sh                          rsk7201_defconfig   gcc  
+sh                           se7724_defconfig   gcc  
+sh                            shmin_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                       sparc32_defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240322   gcc  
+sparc64               randconfig-002-20240322   gcc  
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240322   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64                              defconfig   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                randconfig-001-20240322   gcc  
+xtensa                randconfig-002-20240322   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
