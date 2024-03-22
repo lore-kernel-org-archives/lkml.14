@@ -1,238 +1,496 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D6F44C89;
-	Fri, 22 Mar 2024 14:27:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4041D6A5
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 14:28:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711117655; cv=none; b=Gm2hIqkRLJpm+qHVfI6pXWmBOueU/rDWPY3jDgaB2p4jL3gv9r9lwpswRKgxWL8uiPEHvLdtAWW2uad41HN5i9YmPRBkkOTevOrW0AzZah9v2pC20Udl/XA7PXUcPoMf0inAlE3CNR8VO1mmi1KYfW9DnYXQx//ynEyrqyGgZPw=
+	t=1711117696; cv=none; b=RlDp8No3l0Yr9q6KxgJ6MM+xXNX7BJZBr0MkL3YC3FUFXlmnVjF8gl/if8XBslpeus9oBuWSS9aLGOxONcqqnVltFXTcCV7/utWu9fYU6auRdmJ0HN3saSipL67begJMcmxy7qWCS7u2NR77rudKcOmCdQk23Ls3XOZdcUUEJ0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711117655; c=relaxed/simple;
-	bh=bw4vhtLjqJpYwYIS8AXmj7MejXi/EOT8hO1g7e2RFqQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uDNflKA8KHOO6AI4sdPpNvp/IPS+8RWiA/94ccTtTupV5mBdVg6exzFivDu+HRVyPE5bnOw3BJgg9f1z1WH1CK03grxEYRdXR3e5GzsP/VIGvC5x6IVy17Eys3MrXZbKGaY56y5JuA4B36wN2RZJSnQm0EqRoEiqTqrD3Okttko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Dwo8MzsG; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
+	s=arc-20240116; t=1711117696; c=relaxed/simple;
+	bh=rtrAT5Qp7v5F+I1PluGIH6d94gN+3cPp6n01HZNKHRc=;
+	h=Date:Subject:CC:From:To:Message-ID; b=NaVXfN8L5AvuUXPF50DumXhNhamJvc3Zr368TyJ8Ypvym5PV7D25Su19BL5I4doK7XprfSdTGed6AGBMu+jaGhV2ZXDcgqjjjW+rSaW4smNtdjoq6qJMfdBhqLxDLsoYc2r6R12jCuiver86D5H380wv22obLloIgzxq5XsCLUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=NC0DKq4C; arc=none smtp.client-ip=209.85.210.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Dwo8MzsG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=bw4vhtLjqJpYwYIS8AXmj7MejXi/EOT8hO1g7e2RFqQ=; b=Dwo8MzsGf5mwG11t9wkNFBKuuv
-	VO9pmMb2xGCeMRKHfaQWX6vozNKPf1rENfBw8eU60rqQT09J6aOmAoXz9HH/ZmJpnz9aE7CSNEu71
-	PTNDo8LI3JhD/eCa+LzfItgVzA4q4QG9n9u0D27Ldo4bpthGMECulFzqQQn6L+ZRSHEweB4UeY3rr
-	ngjyAT784booYg3I3Q1xriYXg7oPp8e/SuZuS8215cFdNEqWTnOjJcqhEt/XQsMb6wUObf5dErBgO
-	bPUBHyzgzDrU2K5QDCW74egoyHo9uGsehkh8FOdrvnxjqGjY8nLkwKAjNV/S/n9Tmu//JP6xOcch0
-	RPg+f3Ow==;
-Received: from [2001:8b0:10b:5:244c:6ee0:3d43:8a85] (helo=u3832b3a9db3152.ant.amazon.com)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rnfrf-00000009W4L-0FTH;
-	Fri, 22 Mar 2024 14:27:23 +0000
-Message-ID: <0a83e174db16e15cb0f0d3ac37d6717c918ee78d.camel@infradead.org>
-Subject: Re: [PATCH v1 0/4] virt: vmgenid: Add devicetree bindings support
-From: David Woodhouse <dwmw2@infradead.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, "Landge, Sudan"
-	 <sudanl@amazon.co.uk>, Sudan Landge <sudanl@amazon.com>, tytso@mit.edu, 
-	Jason@zx2c4.com, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	sathyanarayanan.kuppuswamy@linux.intel.com, thomas.lendacky@amd.com, 
-	dan.j.williams@intel.com, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, graf@amazon.de, bchalios@amazon.es, 
-	xmarcalx@amazon.co.uk, ardb@kernel.org, benh <benh@kernel.crashing.org>
-Date: Fri, 22 Mar 2024 14:27:22 +0000
-In-Reply-To: <CAL_JsqJOn9yU_YC0+q=4DX9_=0+z8yTact0HAvOKbrUpcXHxkQ@mail.gmail.com>
-References: <20240319143253.22317-1-sudanl@amazon.com>
-	 <23692c07-98bd-477d-b244-bba14c50352c@linaro.org>
-	 <38aad6c0e698c8e804694276d1762d61f2068ce8.camel@infradead.org>
-	 <20240320161531.GA1810860-robh@kernel.org>
-	 <60404403932a984d1f75d111ff53b9053af03579.camel@infradead.org>
-	 <20240321133250.GA1600070-robh@kernel.org>
-	 <db5a1027-93b7-4630-b679-8a654905dc48@amazon.co.uk>
-	 <17611183-f288-47fe-a5e1-91ee16168db0@linaro.org>
-	 <ee688cca986d95148a55e32fee48ceed8567f128.camel@infradead.org>
-	 <CAL_JsqJOn9yU_YC0+q=4DX9_=0+z8yTact0HAvOKbrUpcXHxkQ@mail.gmail.com>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-VP6CJ8fN7Mq7yYfq63Ga"
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="NC0DKq4C"
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6e682dbd84bso1235971a34.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 07:28:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1711117692; x=1711722492; darn=vger.kernel.org;
+        h=message-id:to:from:cc:subject:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NnpO+KHEiunJGmHhYTcLGtaH8aNQ7gaiB/0bX9RSjY0=;
+        b=NC0DKq4CfPmZ4cJrJ+OMMTuZ/ZBUmPtnfllwnHUIiT3YdqxlG6ydZEGu9Lm5JaOUI2
+         OneBjXR6nUkyNKvoMisIabNH+H52Jx+uu3wUbvzSCKRXTmE+BvzBrHI6+GiEvUWIJsYt
+         txiQO77SbzsjvSzzFAIj6sYZGqD3qVQsZfUaVO0Xk3wLs4Y0JoaRYHCKjq+L7RUizJCZ
+         nfcVgTFbfpVQuVJbq4NBL4sdbmEXMYVpmMsFa/RL3qaQTLmEsNEwjcXsFSKVE3ZQdWUE
+         vyZ3UrfOBweSb+OZZ4aCDiJXFUeV3AlfUrLnFj3wNnZGGhTKvUokzncRIqOOvhnh6h8v
+         i6iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711117692; x=1711722492;
+        h=message-id:to:from:cc:subject:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NnpO+KHEiunJGmHhYTcLGtaH8aNQ7gaiB/0bX9RSjY0=;
+        b=Znh8+RYazZFWSGfjZL5AXPsn57KAS5vRU+xnD/eKf9B6qMFQas6KoTVBE7No2IRKzG
+         jf7nRv5Pp461yxGnjsL/PhoFd5IiIvEdwR2raOTdy31qoVVa8+VVv+oaxQEOySbRhRbD
+         TzZho9lCTt3YS6kMVoQX3QMXfwboOCgByF1u9GhDUIdGHoXwr06UMTBJ4AcmxeXIm3OK
+         mIbdhBwvZdnwW7gJCO2fF78yWmuh6El/DjfJbLpivzv/K3Oq7gCI+s7qF0aFnn+NjaJj
+         X+GIDhIt1ASrZtGeNtn0lews1Jcrr181zSGirDLpJaiU1QjqYsXUFor+QXVVltJvGz9o
+         8aVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWtgNPL5D1CNm8CvrtyfzEFI4MwQ8O76gaHpMHzfPm1YAtHJTDeJrj8tiJ1SfU3AVtHvs7SbL8eOI2/lTkDKQSAwveRibsrcHtSi28C
+X-Gm-Message-State: AOJu0Yz6vh1r1bw+cIYD6H2KFLubcNFXfzEyl6PRWNtKSizjKUDYQNlL
+	r6vboJV3/GmAzQeVdy+zucWTafPjH4FrpTMC5C9eUPgyz5QULO7JHvb7WfC9XRGYwG5yL1B34W+
+	y
+X-Google-Smtp-Source: AGHT+IEjOQMnev0bkZ4FwCgpLPZGWjQERaQ0celRnABbJ/VBtvpcE70ZC05wWYcch8unleNLo/Qv/g==
+X-Received: by 2002:a05:6a20:4c91:b0:1a3:6c63:8f9e with SMTP id fq17-20020a056a204c9100b001a36c638f9emr2258716pzb.27.1711117327738;
+        Fri, 22 Mar 2024 07:22:07 -0700 (PDT)
+Received: from localhost ([192.184.165.199])
+        by smtp.gmail.com with ESMTPSA id n4-20020a62e504000000b006e64a9104fdsm1692757pff.114.2024.03.22.07.22.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Mar 2024 07:22:06 -0700 (PDT)
+Date: Fri, 22 Mar 2024 07:22:06 -0700 (PDT)
+X-Google-Original-Date: Fri, 22 Mar 2024 07:19:53 PDT (-0700)
+Subject: [GIT PULL] RISC-V Patches for the 6.9 Merge Window
+CC:         linux-riscv@lists.infradead.org,        linux-kernel@vger.kernel.org
+From: Palmer Dabbelt <palmer@rivosinc.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Message-ID: <mhng-105d6a21-7483-4a20-a9e7-8e72770737d8@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+
+The following changes since commit e0fe5ab4192c171c111976dbe90bbd37d3976be0:
+
+  riscv: Fix pte_leaf_size() for NAPOT (2024-02-29 10:21:23 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.9-mw2
+
+for you to fetch changes up to a9ad73295cc1e3af0253eee7d08943b2419444c4:
+
+  riscv: Fix syscall wrapper for >word-size arguments (2024-03-20 11:37:51 -0700)
+
+----------------------------------------------------------------
+RISC-V Patches for the 6.9 Merge Window
+
+* Support for various vector-accelerated crypto routines.
+* Hibernation is now enabled for portable kernel builds.
+* mmap_rnd_bits_max is larger on systems with larger VAs.
+* Support for fast GUP.
+* Support for membarrier-based instruction cache synchronization.
+* Support for the Andes hart-level interrupt controller and PMU.
+* Some cleanups around unaligned access speed probing and Kconfig
+  settings.
+* Support for ACPI LPI and CPPC.
+* Various cleanus related to barriers.
+* A handful of fixes.
+
+----------------------------------------------------------------
+Sorry this is so late, but we had a bit of churn this merge window that
+resulted in a handful of build failures in master and I wanted to get
+everything cleaned up before adding to the potential chaos (hence the -mw2 in
+the tag, I never sent the -mw1 because stuff was a bit too broken).  The fixes
+have all landed upstream and everyone I know about who's running builders are
+reporting this clean, so I think these should be pretty safe.
+
+I don't have anything else planned for this merge window, unless something goes
+off the rails again and there's a last-minute fix for a catastrophic issue.
+We've already got a few fixes smaller starting to come in, but that's all just
+regular -fixes type stuff so it'll be next week's material.
+
+I have a pair of merge conflicts for this one.  The Kconfig one is pretty
+trivial.  The bitops one comes from a tree-wide refactoring that happened to
+conflict with some cleanups, it's a little hairy looking because of the inline
+ASM but I think actually pretty simple.  Here's my resolutions, in case that
+helps any:
+
+diff --cc arch/riscv/include/asm/bitops.h
+index 329d8244a9b3,c4c2173dfe99..000000000000
+--- a/arch/riscv/include/asm/bitops.h
++++ b/arch/riscv/include/asm/bitops.h
+@@@ -37,10 -47,8 +47,8 @@@
+
+  static __always_inline unsigned long variable__ffs(unsigned long word)
+  {
+- 	int num;
+-
+ -	asm_volatile_goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
+ -				      RISCV_ISA_EXT_ZBB, 1)
+ +	asm goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
+- 				      RISCV_ISA_EXT_ZBB, 1)
+++			     RISCV_ISA_EXT_ZBB, 1)
+  			  : : : : legacy);
+
+  	asm volatile (".option push\n"
+@@@ -93,10 -76,8 +76,8 @@@ legacy
+
+  static __always_inline unsigned long variable__fls(unsigned long word)
+  {
+- 	int num;
+-
+ -	asm_volatile_goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
+ -				      RISCV_ISA_EXT_ZBB, 1)
+ +	asm goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
+- 				      RISCV_ISA_EXT_ZBB, 1)
+++			     RISCV_ISA_EXT_ZBB, 1)
+  			  : : : : legacy);
+
+  	asm volatile (".option push\n"
+@@@ -149,15 -105,13 +105,16 @@@ legacy
+
+  static __always_inline int variable_ffs(int x)
+  {
+- 	int r;
+-
+ -	asm_volatile_goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
+ -				      RISCV_ISA_EXT_ZBB, 1)
+ +	if (!x)
+ +		return 0;
+ +
+ +	asm goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
+- 				      RISCV_ISA_EXT_ZBB, 1)
+++			     RISCV_ISA_EXT_ZBB, 1)
+  			  : : : : legacy);
+
++ 	if (!x)
++ 		return 0;
++
+  	asm volatile (".option push\n"
+  		      ".option arch,+zbb\n"
+  		      CTZW "%0, %1\n"
+@@@ -204,15 -137,13 +140,16 @@@ legacy
+
+  static __always_inline int variable_fls(unsigned int x)
+  {
+- 	int r;
+-
+ -	asm_volatile_goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
+ -				      RISCV_ISA_EXT_ZBB, 1)
+ +	if (!x)
+ +		return 0;
+ +
+ +	asm goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
+- 				      RISCV_ISA_EXT_ZBB, 1)
+++			     RISCV_ISA_EXT_ZBB, 1)
+  			  : : : : legacy);
+
++ 	if (!x)
++ 		return 0;
++
+  	asm volatile (".option push\n"
+  		      ".option arch,+zbb\n"
+  		      CLZW "%0, %1\n"
+diff --cc drivers/perf/Kconfig
+index 54ff5cc17ccd,564e813d8c69..000000000000
+--- a/drivers/perf/Kconfig
++++ b/drivers/perf/Kconfig
+@@@ -86,16 -86,20 +86,30 @@@ config RISCV_PMU_SB
+  	  full perf feature support i.e. counter overflow, privilege mode
+  	  filtering, counter configuration.
+
++ config ANDES_CUSTOM_PMU
++ 	bool "Andes custom PMU support"
++ 	depends on ARCH_RENESAS && RISCV_ALTERNATIVE && RISCV_PMU_SBI
++ 	default y
++ 	help
++ 	  The Andes cores implement the PMU overflow extension very
++ 	  similar to the standard Sscofpmf and Smcntrpmf extension.
++
++ 	  This will patch the overflow and pending CSRs and handle the
++ 	  non-standard behaviour via the regular SBI PMU driver and
++ 	  interface.
++
++ 	  If you don't know what to do here, say "Y".
++
+ +config STARFIVE_STARLINK_PMU
+ +	depends on ARCH_STARFIVE || COMPILE_TEST
+ +	depends on 64BIT
+ +	bool "StarFive StarLink PMU"
+ +	help
+ +	   Provide support for StarLink Performance Monitor Unit.
+ +	   StarLink Performance Monitor Unit integrates one or more cores with
+ +	   an L3 memory system. The L3 cache events are added into perf event
+ +	   subsystem, allowing monitoring of various L3 cache perf events.
+ +
+  config ARM_PMU_ACPI
+  	depends on ARM_PMU && ACPI
+  	def_bool y
 
 
---=-VP6CJ8fN7Mq7yYfq63Ga
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+----------------------------------------------------------------
+Alexandre Ghiti (2):
+      riscv: Fix compilation error with FAST_GUP and rv32
+      riscv: Only flush the mm icache when setting an exec pte
 
-On Fri, 2024-03-22 at 08:22 -0500, Rob Herring wrote:
->=20
-> > > What stops you from passing fw_cfg not to UEFI FW? BTW, no actual VM
-> > > name was used in your posting, but now suddenly it is a talk about QE=
-MU.
+Andrea Parri (4):
+      membarrier: riscv: Add full memory barrier in switch_mm()
+      membarrier: Create Documentation/scheduler/membarrier.rst
+      locking: Introduce prepare_sync_core_cmd()
+      membarrier: riscv: Provide core serializing command
 
-(Forgot to address the second part of that last time. No specific VMM
-was mentioned in the first place because this isn't VMM-specific)
+Charlie Jenkins (7):
+      riscv: lib: Introduce has_fast_unaligned_access()
+      riscv: Only check online cpus for emulated accesses
+      riscv: Decouple emulated unaligned accesses from access speed
+      riscv: Set unaligned access speed at compile time
+      riscv: mm: Use hint address in mmap if available
+      selftests: riscv: Generalize mm selftests
+      docs: riscv: Define behavior of mmap
 
-> > That would be possible. But not ideal.
->=20
-> Why not ideal?
->=20
-> To rephrase the question, why is it fine for UEFI to read the vmgenid
-> from fw_cfg, but the kernel can't use the same mechanism?
+Clément Léger (1):
+      riscv: blacklist assembly symbols for kprobe
 
-Because fw_cfg an incestuous way to get data from the VMM into the BIOS
-(both SeaBIOS and UEFI). It's the way we pass the ACPI tables and
-things like that.
+Conor Dooley (1):
+      Revert "RISC-V: mark hibernation as nonportable"
 
-It *isn't* designed as a general-purpose way of doing device discovery
-for use by various operating systems.
+Drew Fustini (1):
+      riscv: defconfig: Enable mmc and dma drivers for T-Head TH1520
 
-I'm also not sure Firecracker, which is the VMM Sudan is working on,
-even *has* fw_cfg. Especially on ARM. If we're going to be forced to
-add some complicated device with MMIO and DMA just to be able to
-advertise the existence of a simple memory region, that's just as bad
-as being forced to expose it as an emulated PCI device.
+Eric Biggers (4):
+      RISC-V: add TOOLCHAIN_HAS_VECTOR_CRYPTO
+      RISC-V: fix check for zvkb with tip-of-tree clang
+      crypto: riscv - parallelize AES-CBC decryption
+      crypto: riscv - add vector crypto accelerated AES-CBC-CTS
 
-This is what DT is *for*.
+Eric Chan (4):
+      riscv/barrier: Define __{mb,rmb,wmb}
+      riscv/barrier: Define RISCV_FULL_BARRIER
+      riscv/barrier: Consolidate fence definitions
+      riscv/barrier: Add missing space after ','
 
+Erick Archer (1):
+      riscv: Use kcalloc() instead of kzalloc()
 
-> The response
-> that you'd have to use UEFI to use fw_cfg makes no sense to me.=C2=A0The
-> only reason I can think of is just being lazy and wanting to have
-> minimal changes to some existing driver. It looks to me like you could
-> implement this entirely in userspace already with zero kernel or
-> binding changes. From a quick look, we already have a fw_cfg driver
-> exposing UUID (that's the same thing as vmgenid AIUI) to userspace,
-> and you can feed that back into the random pool.
->=20
-> I am concerned that we already have a mechanism and you want to add a
-> second way. When do we ever think that's a good idea? What happens=C2=A0
-> on the next piece of fw_cfg data? We add yet another binding?
+Heiko Stuebner (2):
+      RISC-V: add helper function to read the vector VLEN
+      RISC-V: hook new crypto subdir into build-system
 
-No, because fw_cfg is a way for the VMM to give configuration
-information to the firmware. There's a clue in the name. The firmware
-then sets up ACPI tables or DT to pass information in a more coherent
-and structured fashion to general-purpose operating systems.
+Jerry Shih (7):
+      crypto: riscv - add vector crypto accelerated AES-{ECB,CBC,CTR,XTS}
+      crypto: riscv - add vector crypto accelerated ChaCha20
+      crypto: riscv - add vector crypto accelerated GHASH
+      crypto: riscv - add vector crypto accelerated SHA-{256,224}
+      crypto: riscv - add vector crypto accelerated SHA-{512,384}
+      crypto: riscv - add vector crypto accelerated SM3
+      crypto: riscv - add vector crypto accelerated SM4
 
-And some VMMs *don't* use fw_cfg at all because for the minimal microvm
-case it's overkill.
+Jisheng Zhang (3):
+      riscv: tlb: convert __p*d_free_tlb() to inline functions
+      riscv: enable MMU_GATHER_RCU_TABLE_FREE for SMP && MMU
+      riscv: enable HAVE_FAST_GUP if MMU
 
+Leonardo Bras (5):
+      riscv: Improve arch_get_mmap_end() macro
+      riscv: Replace direct thread flag check with is_compat_task()
+      riscv: add compile-time test into is_compat_task()
+      riscv: Introduce is_compat_thread() into compat.h
+      riscv: Introduce set_compat_task() in asm/compat.h
 
---=-VP6CJ8fN7Mq7yYfq63Ga
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
+Locus Wei-Han Chen (1):
+      riscv: andes: Support specifying symbolic firmware and hardware raw events
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
-ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
-EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
-FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
-aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
-VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
-ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
-QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
-rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
-ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
-U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
-BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
-dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
-BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
-QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
-CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
-xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
-IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
-kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
-eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
-KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
-1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
-OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
-x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
-5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
-DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
-VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
-UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
-MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
-ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
-oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
-SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
-xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
-RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
-bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
-NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
-KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
-5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
-C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
-gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
-VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
-MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
-by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
-b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
-BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
-QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
-c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
-AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
-qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
-v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
-Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
-tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
-Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
-YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
-ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
-IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
-ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
-GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
-h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
-9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
-P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
-2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
-BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
-7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
-lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
-lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
-AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
-Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
-FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
-BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
-cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
-aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
-LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
-BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
-Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
-lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
-WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
-hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
-IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
-dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
-NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
-xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQwMzIyMTQyNzIyWjAvBgkqhkiG9w0BCQQxIgQg+3vGUD6V
-EitP3niXqqd2TDfUo5u2taJJJRl+DHsGLL0wgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
-A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
-dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
-DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
-MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
-Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgAxakefUqDO0nSV9EHZyOP9YntNKNLrByzp
-NiWRr7o+htR0VW0sn68dXVDS6PYXpzT1u7K2DGsl1WVh3gxa1TguiwFHYj25H6a90YpifG3Tbx5v
-kAOjzDVd42XJ9G+yOKQDLF9WvZZAqDYEwuqQel0mF6wkDqU4DyTo14Oevcj8XQebR2PKGhHd8cTU
-Q/2ovCNxcahOyfYWaZ9R9segsaAvNJYeTpDBRDYJToWnelVB1teLV2sPKrg519RL871YlEJ1wmEd
-n1wnYfhf9BH3v6xLjA+EynQQgBsP+fVeoH2FQMIN+l5Lz6tA4Si8uR8mSPwPqj/8s+4EQxYxJEIZ
-W/Wv4w3+3tHXITg/XxkNyH3BfbUok2pc9P9cP+zsQ0jJEBzrMdsX2RswOg8BBg+KIyEnU/Huuzo4
-YV2iGrB3tX7CBaL60+8H9IA70mOhHVN4mhsm7fQpYdBS5wZFsa6PvtxAxanUWwR7WmWx1DdeOKRo
-ROyP0MvYOC79o03TLHVpxmXN4Jqt2eZmNPI4aLtiJVdxYqVCl5CgNKB7ZTKUQZ/VOuyyJVYPD+G2
-C7+G+4Z39NLwzUnHhqjegs+zD4gOabWekxaEavlnDibKke1LvZl6oYvJlM52Vu7Mdx1BSOz/ocw/
-ZRkPvt+2cNE6iGUeDunYvt4yqItHdsFmpi2vkWFfWgAAAAAAAA==
+Masahiro Yamada (1):
+      riscv: remove unneeded #include <asm-generic/export.h>
 
+Palmer Dabbelt (17):
+      Merge patch series "RISC-V crypto with reworked asm files"
+      Merge patch series "riscv: Increase mmap_rnd_bits_max on Sv48/57"
+      Merge patch series "riscv: support fast gup"
+      Merge patch series "membarrier: riscv: Core serializing command"
+      Merge commit '3aff0c459e77' into for-next
+      Merge tag 'irq-for-riscv-02-23-24' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip into for-next
+      Merge patch series "Support Andes PMU extension"
+      Merge patch series "riscv: Use Kconfig to set unaligned access speed"
+      Merge patch "riscv: Fix compilation error with FAST_GUP and rv32"
+      Merge patch series "Support Andes PMU extension"
+      Merge patch series "riscv: Use Kconfig to set unaligned access speed"
+      Merge patch series "riscv: mm: Extend mappable memory up to hint address"
+      Merge patch series "riscv: Introduce compat-mode helpers & improve arch_get_mmap_end()"
+      Merge patch series "RISC-V: ACPI: Add LPI support"
+      Merge patch series "RISC-V: ACPI: Enable CPPC based cpufreq support"
+      Merge patch series "riscv/barrier: tidying up barrier-related macro"
+      Merge patch series "riscv: mm: Extend mappable memory up to hint address"
 
---=-VP6CJ8fN7Mq7yYfq63Ga--
+Sami Tolvanen (3):
+      mm: Change mmap_rnd_bits_max to __ro_after_init
+      riscv: mm: Update mmap_rnd_bits_max
+      riscv: Fix syscall wrapper for >word-size arguments
+
+Song Shuai (2):
+      riscv: Support RANDOMIZE_KSTACK_OFFSET
+      riscv: vector: Fix a typo of preempt_v
+
+Sunil V L (6):
+      cpuidle: RISC-V: Move few functions to arch/riscv
+      ACPI: RISC-V: Add LPI driver
+      ACPI: Enable ACPI_PROCESSOR for RISC-V
+      ACPI: RISC-V: Add CPPC driver
+      cpufreq: Move CPPC configs to common Kconfig and add RISC-V
+      RISC-V: defconfig: Enable CONFIG_ACPI_CPPC_CPUFREQ
+
+Vincent Chen (1):
+      clocksource: extend the max_delta_ns of timer-riscv and timer-clint to ULONG_MAX
+
+Wende Tan (1):
+      RISC-V: build: Allow LTO to be selected
+
+Xiao Wang (1):
+      riscv: Avoid code duplication with generic bitops implementation
+
+Yang Li (1):
+      RISC-V: Remove duplicated include in smpboot.c
+
+Yu Chien Peter Lin (7):
+      riscv: errata: Rename defines for Andes
+      dt-bindings: riscv: Add Andes interrupt controller compatible string
+      riscv: dts: renesas: r9a07g043f: Update compatible string to use Andes INTC
+      perf: RISC-V: Eliminate redundant interrupt enable/disable operations
+      perf: RISC-V: Introduce Andes PMU to support perf event sampling
+      dt-bindings: riscv: Add Andes PMU extension description
+      riscv: dts: renesas: Add Andes PMU extension for r9a07g043f
+
+ Documentation/arch/riscv/vm-layout.rst             |  16 +-
+ Documentation/devicetree/bindings/riscv/cpus.yaml  |   6 +-
+ .../devicetree/bindings/riscv/extensions.yaml      |   7 +
+ .../sched/membarrier-sync-core/arch-support.txt    |  18 +-
+ Documentation/scheduler/index.rst                  |   1 +
+ Documentation/scheduler/membarrier.rst             |  39 ++
+ MAINTAINERS                                        |   4 +-
+ arch/riscv/Kbuild                                  |   1 +
+ arch/riscv/Kconfig                                 |  81 ++-
+ arch/riscv/Makefile                                |   5 +
+ arch/riscv/boot/dts/renesas/r9a07g043f.dtsi        |   4 +-
+ arch/riscv/configs/defconfig                       |   3 +
+ arch/riscv/crypto/Kconfig                          |  93 +++
+ arch/riscv/crypto/Makefile                         |  23 +
+ arch/riscv/crypto/aes-macros.S                     | 156 +++++
+ arch/riscv/crypto/aes-riscv64-glue.c               | 637 +++++++++++++++++++++
+ arch/riscv/crypto/aes-riscv64-zvkned-zvbb-zvkg.S   | 312 ++++++++++
+ arch/riscv/crypto/aes-riscv64-zvkned-zvkb.S        | 146 +++++
+ arch/riscv/crypto/aes-riscv64-zvkned.S             | 339 +++++++++++
+ arch/riscv/crypto/chacha-riscv64-glue.c            | 101 ++++
+ arch/riscv/crypto/chacha-riscv64-zvkb.S            | 294 ++++++++++
+ arch/riscv/crypto/ghash-riscv64-glue.c             | 168 ++++++
+ arch/riscv/crypto/ghash-riscv64-zvkg.S             |  72 +++
+ arch/riscv/crypto/sha256-riscv64-glue.c            | 137 +++++
+ .../crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S  | 225 ++++++++
+ arch/riscv/crypto/sha512-riscv64-glue.c            | 133 +++++
+ arch/riscv/crypto/sha512-riscv64-zvknhb-zvkb.S     | 203 +++++++
+ arch/riscv/crypto/sm3-riscv64-glue.c               | 112 ++++
+ arch/riscv/crypto/sm3-riscv64-zvksh-zvkb.S         | 123 ++++
+ arch/riscv/crypto/sm4-riscv64-glue.c               | 107 ++++
+ arch/riscv/crypto/sm4-riscv64-zvksed-zvkb.S        | 117 ++++
+ arch/riscv/errata/andes/errata.c                   |  10 +-
+ arch/riscv/include/asm/asm.h                       |  10 +
+ arch/riscv/include/asm/atomic.h                    |  17 +-
+ arch/riscv/include/asm/barrier.h                   |  21 +-
+ arch/riscv/include/asm/bitops.h                    | 138 +----
+ arch/riscv/include/asm/cmpxchg.h                   |   5 +-
+ arch/riscv/include/asm/compat.h                    |  19 +
+ arch/riscv/include/asm/cpufeature.h                |  31 +-
+ arch/riscv/include/asm/elf.h                       |  11 +-
+ arch/riscv/include/asm/errata_list.h               |  13 +-
+ arch/riscv/include/asm/fence.h                     |  10 +-
+ arch/riscv/include/asm/hwcap.h                     |   1 +
+ arch/riscv/include/asm/io.h                        |   8 +-
+ arch/riscv/include/asm/membarrier.h                |  50 ++
+ arch/riscv/include/asm/mmio.h                      |   5 +-
+ arch/riscv/include/asm/mmiowb.h                    |   2 +-
+ arch/riscv/include/asm/pgalloc.h                   |  53 +-
+ arch/riscv/include/asm/pgtable.h                   |  32 +-
+ arch/riscv/include/asm/processor.h                 |  31 +-
+ arch/riscv/include/asm/simd.h                      |   4 +-
+ arch/riscv/include/asm/suspend.h                   |   3 +
+ arch/riscv/include/asm/sync_core.h                 |  29 +
+ arch/riscv/include/asm/syscall_wrapper.h           |  53 +-
+ arch/riscv/include/asm/tlb.h                       |  18 +
+ arch/riscv/include/asm/vector.h                    |  11 +
+ arch/riscv/include/asm/vendorid_list.h             |   2 +-
+ arch/riscv/kernel/Makefile                         |   4 +-
+ arch/riscv/kernel/alternative.c                    |   2 +-
+ arch/riscv/kernel/cpufeature.c                     | 256 +--------
+ arch/riscv/kernel/entry.S                          |   3 +
+ arch/riscv/kernel/pi/Makefile                      |   3 +
+ arch/riscv/kernel/ptrace.c                         |   6 +-
+ arch/riscv/kernel/smpboot.c                        |   1 -
+ arch/riscv/kernel/suspend.c                        |  49 ++
+ arch/riscv/kernel/sys_hwprobe.c                    |  13 +
+ arch/riscv/kernel/traps.c                          |  17 +-
+ arch/riscv/kernel/traps_misaligned.c               |  17 +-
+ arch/riscv/kernel/unaligned_access_speed.c         | 281 +++++++++
+ arch/riscv/lib/csum.c                              |   7 +-
+ arch/riscv/lib/uaccess_vector.S                    |   1 -
+ arch/riscv/mm/cacheflush.c                         |   4 +-
+ arch/riscv/mm/context.c                            |   2 +
+ arch/riscv/mm/init.c                               |   6 +
+ arch/riscv/mm/pgtable.c                            |   2 +-
+ crypto/Kconfig                                     |   3 +
+ drivers/acpi/Kconfig                               |   2 +-
+ drivers/acpi/riscv/Makefile                        |   4 +-
+ drivers/acpi/riscv/cppc.c                          | 157 +++++
+ drivers/acpi/riscv/cpuidle.c                       |  81 +++
+ drivers/clocksource/timer-clint.c                  |   2 +-
+ drivers/clocksource/timer-riscv.c                  |   2 +-
+ drivers/cpufreq/Kconfig                            |  29 +
+ drivers/cpufreq/Kconfig.arm                        |  26 -
+ drivers/cpuidle/cpuidle-riscv-sbi.c                |  49 +-
+ drivers/irqchip/irq-riscv-intc.c                   |  82 ++-
+ drivers/perf/Kconfig                               |  14 +
+ drivers/perf/riscv_pmu_sbi.c                       |  37 +-
+ include/asm-generic/bitops/__ffs.h                 |   8 +-
+ include/asm-generic/bitops/__fls.h                 |   8 +-
+ include/asm-generic/bitops/ffs.h                   |   8 +-
+ include/asm-generic/bitops/fls.h                   |   8 +-
+ include/linux/mm.h                                 |   2 +-
+ include/linux/soc/andes/irq.h                      |  18 +
+ include/linux/sync_core.h                          |  16 +-
+ init/Kconfig                                       |   3 +
+ kernel/sched/core.c                                |  16 +-
+ kernel/sched/membarrier.c                          |  13 +-
+ mm/mmap.c                                          |   2 +-
+ scripts/Kconfig.include                            |   2 +-
+ scripts/Makefile.compiler                          |   2 +-
+ .../pmu-events/arch/riscv/andes/ax45/firmware.json |  68 +++
+ .../arch/riscv/andes/ax45/instructions.json        | 127 ++++
+ .../pmu-events/arch/riscv/andes/ax45/memory.json   |  57 ++
+ .../arch/riscv/andes/ax45/microarch.json           |  77 +++
+ tools/perf/pmu-events/arch/riscv/mapfile.csv       |   1 +
+ tools/testing/selftests/riscv/mm/mmap_bottomup.c   |  23 +-
+ tools/testing/selftests/riscv/mm/mmap_default.c    |  23 +-
+ tools/testing/selftests/riscv/mm/mmap_test.h       | 107 ++--
+ 109 files changed, 5272 insertions(+), 749 deletions(-)
+ create mode 100644 Documentation/scheduler/membarrier.rst
+ create mode 100644 arch/riscv/crypto/Kconfig
+ create mode 100644 arch/riscv/crypto/Makefile
+ create mode 100644 arch/riscv/crypto/aes-macros.S
+ create mode 100644 arch/riscv/crypto/aes-riscv64-glue.c
+ create mode 100644 arch/riscv/crypto/aes-riscv64-zvkned-zvbb-zvkg.S
+ create mode 100644 arch/riscv/crypto/aes-riscv64-zvkned-zvkb.S
+ create mode 100644 arch/riscv/crypto/aes-riscv64-zvkned.S
+ create mode 100644 arch/riscv/crypto/chacha-riscv64-glue.c
+ create mode 100644 arch/riscv/crypto/chacha-riscv64-zvkb.S
+ create mode 100644 arch/riscv/crypto/ghash-riscv64-glue.c
+ create mode 100644 arch/riscv/crypto/ghash-riscv64-zvkg.S
+ create mode 100644 arch/riscv/crypto/sha256-riscv64-glue.c
+ create mode 100644 arch/riscv/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S
+ create mode 100644 arch/riscv/crypto/sha512-riscv64-glue.c
+ create mode 100644 arch/riscv/crypto/sha512-riscv64-zvknhb-zvkb.S
+ create mode 100644 arch/riscv/crypto/sm3-riscv64-glue.c
+ create mode 100644 arch/riscv/crypto/sm3-riscv64-zvksh-zvkb.S
+ create mode 100644 arch/riscv/crypto/sm4-riscv64-glue.c
+ create mode 100644 arch/riscv/crypto/sm4-riscv64-zvksed-zvkb.S
+ create mode 100644 arch/riscv/include/asm/membarrier.h
+ create mode 100644 arch/riscv/include/asm/sync_core.h
+ create mode 100644 arch/riscv/kernel/unaligned_access_speed.c
+ create mode 100644 drivers/acpi/riscv/cppc.c
+ create mode 100644 drivers/acpi/riscv/cpuidle.c
+ create mode 100644 include/linux/soc/andes/irq.h
+ create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
