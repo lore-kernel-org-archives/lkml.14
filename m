@@ -1,56 +1,56 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272915FDCF
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 16:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8519660254
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 16:52:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711126374; cv=none; b=Aunc4YQ2ymbzpeUnvjpxoBIu0HiaL9NtqJFEvEohs+cpGNIaE40l+1kiiHIQ/RpKyMHeZa417Jk8yGLYoltDYmZ2VFkJoSeXKBggpg6RsHf6UFkzYZyRTLS/5a/+27kLMzAfcvZNUKjjbX+BiK8D9kGWcz64PM0x/cnj1iHj1GI=
+	t=1711126376; cv=none; b=UGxmPGToh4/BhHoQQQX3Wf52c9fB1A8CHdd+psJKDXwqzAY0BDgKs4+ItJPNXOvMSVq91zbOVE3tU901RREiJzpBUhC9rnAm0qWLoyr3F0fNPX5jZGNkOU/IF550tXhVHmGklunxEutTcQugpFf77iGZ+aYjFNhkX/Qn9gbnp1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711126374; c=relaxed/simple;
-	bh=RklUhCugdS79Sgvea9NKA5O8n1Z8/hDlRq99HOBTwEM=;
+	s=arc-20240116; t=1711126376; c=relaxed/simple;
+	bh=vHCEtQUNKboF1EBobqFitqfcjvkiF76fENvbIuSp/p4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DQCr+OY9haYSvsldl9Qfd7qmEKaWQL7zCLJuHwe49BEx/7GhkJCt/PGRCACts4mGzQdM/pudQD2OlPul64Clv4Wv/50QoT9ihUrsi1kPQX0jPqnqBzf2Jm9q3FSuCS/Aynsc/MvZ3a0ZUophKg4/SpvNAt8Qx2DfJb3neWdG9qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XLY1kkgI; arc=none smtp.client-ip=209.85.222.174
+	 MIME-Version; b=eDoQ0Br7ZENzYHQF0sdk6cBLDuRu5EiwXhPDanAz/+JgIladYsu1hayuRx3B2xr1AI5D3fZBfGSe+l/3vBfo9/K0CgR/ArL3APSvtB2FnvzYkQNjSOTuDpjljRmUs++jJNusuABicMk1QpxOC1G8ZzZYN36/tVQ7L+gXzMHtNik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g+6NjRLI; arc=none smtp.client-ip=209.85.222.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XLY1kkgI"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-789e3f17a6eso164790885a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 09:52:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+6NjRLI"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-789e4a4d3a5so160939085a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 09:52:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711126371; x=1711731171; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1711126372; x=1711731172; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rbNPugqeDmoqssGoWTn8SPKVapnb1hcd5ZsudgigNFk=;
-        b=XLY1kkgIj8iY3ILqtiv4myLjJE7RD/nEojwcOJiJlcL4KFb60jSlkm803c1g/IVRI3
-         m5A12yMS52J7G8NWE501OrukG8MzUD7KNSPTQeXh/B+luEAhHt3R5D0oJyj4OwmH0Pni
-         sgnHKtqILvSbteW5gR6rwu5v5n40iK3ai8dbm3VI+y3oPsmf5UQWRkLTrXnKb9Qaf1uO
-         W1yaWPXbFhOUu85z7AwjC8Sm0QKcJYGciUfamF5GGHvTcCuNc8ykrWbr7d5pafC6LBNX
-         XZUjMFm89sOTsfYyMcQYhFByBpxo10HTNQbxI+NS0FZncy5BOpIemKe2avaVEnQu15Pq
-         QQxg==
+        bh=HZ0GbtudtLz2tjdpQffeTy/JKfNLrKUmMY/gqagEmlQ=;
+        b=g+6NjRLITYdScf+tGlwFJl7BJJCuvxaeWN8LDlsu0d2xQ3bGOBqFReT5Nsa89+hN/S
+         Tu3UXbDtfcDjPBfKP9ljoaUBC7q91xecP/y3e+ezGB/RYErWlxICqBjkpD0ZSkjDVtdY
+         JDq+eKxHEq1I+TL+jTssJ2wmHBfzrZlx+RVJJUQHbY/mtRUu5lldWi+Af5Js/K21asWy
+         xT1D43q7zPk42/IkmTg405knmwlvXebbYYP2sJuQwWQXPj3LyJ75o1JD0QwZ9gQMmBDG
+         imbmWRNlDl28NPNx90oCpvGJvs+mvTf+/Dhtdk02e/pmw1skASPyxoK0bn3MIV1LpqCo
+         Asvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711126371; x=1711731171;
+        d=1e100.net; s=20230601; t=1711126372; x=1711731172;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rbNPugqeDmoqssGoWTn8SPKVapnb1hcd5ZsudgigNFk=;
-        b=NteSN6/AtQK61SEU1SIePEAYRfiKW484XsYHhP4L98j2EG51pqBcJWd0dqBMrH5soH
-         DGll8hQE6LhOSaAy7FJ0Si0OdXyaodg8rUzgv99QX2bJ+BC3rBNRTklYZlbrbO1fLBJ7
-         2xYdEdOaUR58ptkIEqCs155oj0DZeLzWaRmRkkcyk+Ln35ECzUvfiePovLYQiByBkxa+
-         /EhkRgs2FN5jwc1so+WOvTn0erJBwaeLM+j3+snJKLIBDqQVWU3+apF4YXAXDVQMLxQy
-         h3AseP0bW7ahrSATZEogEmpuhw+ElEgt5CuK/jXfp5L4Y+QLlB4F2O0anYcgGnPUlWeY
-         Y2ZA==
-X-Gm-Message-State: AOJu0Yx+4EK6/Gg541W+qaOL5Fb4d3jAVJJZAYFuhir51JV8Khnoj2Uk
-	SwnAEqv5md610hcjJIgWBMg6HWvZLx9pNNtIYgpMKBSHhw9ntQ4h8/eUBn0=
-X-Google-Smtp-Source: AGHT+IFp9Qt9VzC4/JAJENgOHxRsYrn05WAatJAj6yqKGA84MaofhjDez1oAYNaaK2ot81K/pVO0tA==
-X-Received: by 2002:a05:620a:210c:b0:78a:2945:8658 with SMTP id l12-20020a05620a210c00b0078a29458658mr2789389qkl.33.1711126371089;
-        Fri, 22 Mar 2024 09:52:51 -0700 (PDT)
+        bh=HZ0GbtudtLz2tjdpQffeTy/JKfNLrKUmMY/gqagEmlQ=;
+        b=r8rYAspJG3ASrN3PKAlrwOxVHu5dcofPKLV+gYH0kNkgrFIPfaRWm0CxaaNlOKQrRw
+         r8NMqxBe+I7ay9QhlO3VY8/cF6lSSYsk8qMnVeVjuHg6dq073+sHLasPyHO0C4jIr1sI
+         bWKZjHLBED2BIEdb9BaZiHtxHztlrUVusjOJB/06KX3o6dLDCCWF4fhZLr+Kl8OwcRnz
+         bWmwnygO4KGN7DrXFOlbq6KikeW5mSGI7uZJsuac8n/rFvfY1IMQcVUiduIkw+RQKUyw
+         vx1PJo2E9n4HIx6CcCS103LkvgTpECQ1pnPcYbtE1fMh/zXFfoqyEQQZ5BF8J6vKV1La
+         0moQ==
+X-Gm-Message-State: AOJu0YwQrtJIeeG/7eM4lB81/uco5GX3oniOV3LAdgtIww2pP9p7cqXB
+	dNvEyyOfk9t0s08jqPfgSFKDxP5a8HtVaGDkyvevh0K86Y0fcYuwE/vp/J8=
+X-Google-Smtp-Source: AGHT+IHYguapQSmH5+/TDI2EpFKsaKdcAAFmZIGnZVztKI7x9IXwVGFPaJNPesx49FQClUBMfkh38Q==
+X-Received: by 2002:a05:620a:16dc:b0:78a:2809:dc69 with SMTP id a28-20020a05620a16dc00b0078a2809dc69mr3143112qkn.51.1711126372661;
+        Fri, 22 Mar 2024 09:52:52 -0700 (PDT)
 Received: from citadel.lan (2600-6c4a-4d3f-6d5c-0000-0000-0000-1019.inf6.spectrum.com. [2600:6c4a:4d3f:6d5c::1019])
-        by smtp.gmail.com with ESMTPSA id j1-20020a37ef01000000b00789e9bbf962sm894901qkk.133.2024.03.22.09.52.49
+        by smtp.gmail.com with ESMTPSA id j1-20020a37ef01000000b00789e9bbf962sm894901qkk.133.2024.03.22.09.52.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 09:52:50 -0700 (PDT)
+        Fri, 22 Mar 2024 09:52:52 -0700 (PDT)
 From: Brian Gerst <brgerst@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	x86@kernel.org
@@ -61,9 +61,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Uros Bizjak <ubizjak@gmail.com>,
 	David.Laight@aculab.com,
 	Brian Gerst <brgerst@gmail.com>
-Subject: [PATCH v4 04/16] x86/pvh: Use fixed_percpu_data for early boot GSBASE
-Date: Fri, 22 Mar 2024 12:52:21 -0400
-Message-ID: <20240322165233.71698-5-brgerst@gmail.com>
+Subject: [PATCH v4 05/16] x86/relocs: Handle R_X86_64_REX_GOTPCRELX relocations
+Date: Fri, 22 Mar 2024 12:52:22 -0400
+Message-ID: <20240322165233.71698-6-brgerst@gmail.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240322165233.71698-1-brgerst@gmail.com>
 References: <20240322165233.71698-1-brgerst@gmail.com>
@@ -75,46 +75,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Instead of having a private area for the stack canary, use
-fixed_percpu_data for GSBASE like the native kernel.
+Clang may produce R_X86_64_REX_GOTPCRELX relocations when redefining the
+stack protector location.  Treat them as another type of PC-relative
+relocation.
 
 Signed-off-by: Brian Gerst <brgerst@gmail.com>
 ---
- arch/x86/platform/pvh/head.S | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ arch/x86/tools/relocs.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/x86/platform/pvh/head.S b/arch/x86/platform/pvh/head.S
-index f7235ef87bc3..1f1c3230b27b 100644
---- a/arch/x86/platform/pvh/head.S
-+++ b/arch/x86/platform/pvh/head.S
-@@ -95,10 +95,15 @@ SYM_CODE_START_LOCAL(pvh_start_xen)
- 	/* 64-bit entry point. */
- 	.code64
- 1:
--	/* Set base address in stack canary descriptor. */
-+	/*
-+	 * Set up GSBASE.
-+	 * Note that, on SMP, the boot cpu uses init data section until
-+	 * the per cpu areas are set up.
-+	 */
- 	mov $MSR_GS_BASE,%ecx
--	mov $_pa(canary), %eax
--	xor %edx, %edx
-+	lea INIT_PER_CPU_VAR(fixed_percpu_data)(%rip), %rdx
-+	mov %edx, %eax
-+	shr $32, %rdx
- 	wrmsr
+diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
+index e7a44a7f617f..adf11a48ec70 100644
+--- a/arch/x86/tools/relocs.c
++++ b/arch/x86/tools/relocs.c
+@@ -31,6 +31,11 @@ static struct relocs relocs32;
+ static struct relocs relocs32neg;
+ static struct relocs relocs64;
+ #define FMT PRIu64
++
++#ifndef R_X86_64_REX_GOTPCRELX
++#define R_X86_64_REX_GOTPCRELX 42
++#endif
++
+ #else
+ #define FMT PRIu32
+ #endif
+@@ -224,6 +229,7 @@ static const char *rel_type(unsigned type)
+ 		REL_TYPE(R_X86_64_PC16),
+ 		REL_TYPE(R_X86_64_8),
+ 		REL_TYPE(R_X86_64_PC8),
++		REL_TYPE(R_X86_64_REX_GOTPCRELX),
+ #else
+ 		REL_TYPE(R_386_NONE),
+ 		REL_TYPE(R_386_32),
+@@ -865,6 +871,7 @@ static int do_reloc64(struct section *sec, Elf_Rel *rel, ElfW(Sym) *sym,
  
- 	call xen_prepare_pvh
-@@ -157,8 +162,6 @@ SYM_DATA_START_LOCAL(gdt_start)
- SYM_DATA_END_LABEL(gdt_start, SYM_L_LOCAL, gdt_end)
- 
- 	.balign 16
--SYM_DATA_LOCAL(canary, .fill 48, 1, 0)
--
- SYM_DATA_START_LOCAL(early_stack)
- 	.fill BOOT_STACK_SIZE, 1, 0
- SYM_DATA_END_LABEL(early_stack, SYM_L_LOCAL, early_stack_end)
+ 	case R_X86_64_PC32:
+ 	case R_X86_64_PLT32:
++	case R_X86_64_REX_GOTPCRELX:
+ 		/*
+ 		 * PC relative relocations don't need to be adjusted unless
+ 		 * referencing a percpu symbol.
 -- 
 2.44.0
 
