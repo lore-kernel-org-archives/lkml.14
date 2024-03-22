@@ -1,147 +1,181 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE817A13B;
-	Fri, 22 Mar 2024 19:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B8C79B86;
+	Fri, 22 Mar 2024 19:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711135495; cv=none; b=CHbJsXY1fcaNAQa6winXv0Is/uQlKC02OSly+K3HOIM2yh9A8uOsMChjPT1Xh6QPR5EpDzxaBKUEU6S9KGCKk8JPw/Lsg9VWWvsWSQhn48xRcbGrYpf03ImctyfqCsTrokxVbpPVqqxT76vk85AocBMgleysTE0bKDgy482+lrc=
+	t=1711135708; cv=none; b=bjENnjCPIQPbTUZy1y9FzD5WtY4pz3pu2h/+EdFM7i0v3Q9SyBjPYqD43aMW969yQl3B3kIIOOEQptRKCctVtBowLMLF22O8ovoj8KrSdReyLr3yFIUzaviXgY6Uo7S9WWlBtN6p189uSYibxnFDX0mXEMSt9aRZbTtJrERbnG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711135495; c=relaxed/simple;
-	bh=4rUBSyPV6ao55dHemnHVuLdadgQFFoAi54Gb6HBKVTY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ve5WvXhEOpI7UNa3pE5g84lku0GsbEnY14e5QfTqoS7i+zeab2qolyLLRV6Uk6Xiq7SUrTRyOJxDidugkzLULUghpeMGvCRcsEReUUaDWjoG0ILXMjr8AdFdyQob3edXAhQYbmOgjM23D1EzwS+63vDTjwRgsgNZNzGEZTSARUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mOYSpRjY; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711135708; c=relaxed/simple;
+	bh=gjBO/n3tvNmqzJTwN1vMsW3KvoK7d6Ksag+l88ycBNQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PCMH2wdpAESDNRAC13otH9WQEfGEcs+sIUQ/L6bsPgjXKlrFaqkKzP+BvlKn56vZwDDFSG/GdO6zkqllCC/ldgKgwKnUzfNMalABdmTqJPx6r33dE001bI0aYQHe9sdK06R8ZIy5Yr4/UIeCOnPJjvzSzQhjvYl0Le+FjBKonMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=HI4XygVi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=l9+9b/4l; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=iEAR/L4U; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rNQIK5np; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mOYSpRjY"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a46f97b8a1bso330250466b.0;
-        Fri, 22 Mar 2024 12:24:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711135492; x=1711740292; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=k0ZX0mSNtR84zaDW6QrVcacYADFhCeQmdayKmvm0d6c=;
-        b=mOYSpRjYH4EV+KEI/ebzvFSQsIEf9Y1VNiRWUcn+JW/QDdKMf05Qnf1l8Bt67Gc+60
-         nGvSq+eg9ya1BVX6VJ8PHN9MoJ2vOjgoQfmJ+9X0pqHHOhLeTE8uS8wuZEec7hZKtSoG
-         +HpMN2Xi/RWeB9RT3sed8KnCQ8Clw+lkqCSene6lejdQJU0a/OwxPJdCuc0rWVs6/Ott
-         MGbuKCB/L/TbNHoWk2DI5AfOognySJCrZY207zhcyXGkRHvVcbgOuH3XLcDqIxwfLr2K
-         OAqrXDd6EhQahR5Ti0Sb7HGw5qa8dS5PSW/JPK1TXfvN3uLpPRGOkB3fjb9+YNBYnx+z
-         NHRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711135492; x=1711740292;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k0ZX0mSNtR84zaDW6QrVcacYADFhCeQmdayKmvm0d6c=;
-        b=Qucw2QLnwwEe9ERvK0d5/cA6WPQxMpZEt7N9UPkqPz6LCsliZsL9LT1I8PqBHbd2rD
-         5OMlAn71TTskxtFfhTdB0gb277WHU6Frsz+n0Eru7F0NYKlXMPPOFsyrmN+QdzSYqf8U
-         /KWQ/ZT7w+60j/dRPpoDxfq2E25uzt7aSQ6HF/I9q2nT03s1LrRd30Xy2HKProsmLc55
-         7WFof9/PuTz6YRMwm0ANkPo5R1W+pmTZ8PWhAzenVMro45pxzlGHJZruX9gtBufh8VYn
-         2VvdhkfDoXXLNEplOHm2JN+6nhiVtxBviO3mPCiYbGfSBTknNWgaRKltkijebWWgU4w3
-         K1Gg==
-X-Forwarded-Encrypted: i=1; AJvYcCU849NQ0kWJK5Ms03ob8Ti215zbOXam/MPDbCI8OmG2meVfu99+1RY4Mo1Wc3nQx8qA4OkJVf9fUug+tN3cxlLefribokH6BXEkDNYnWxr0OcgvkEnW9vzDrObe7+/EaQfav6Ek0c3LHw==
-X-Gm-Message-State: AOJu0YzpHLtZCp7Z75I+8zDsMf/j4ZURDyR7wlJal01o1fXS/UKA+CvT
-	ogDdukk8gx/feCFgpI9i5sLoHhA/2JRktDtiJgqqbrnfnuglJLG6
-X-Google-Smtp-Source: AGHT+IELHgSsJUpsN7yw8plhcYvSHv3xoFGdy2OWmwfX2zWELl6zDgevNE+MyEEhH8Jiec/NFjsrXQ==
-X-Received: by 2002:a17:906:3e19:b0:a46:c0dd:88f7 with SMTP id k25-20020a1709063e1900b00a46c0dd88f7mr483888eji.17.1711135492177;
-        Fri, 22 Mar 2024 12:24:52 -0700 (PDT)
-Received: from [127.0.1.1] (2a02-8389-41cf-e200-b7fa-7d92-6b28-0504.cable.dynamic.v6.surfer.at. [2a02:8389:41cf:e200:b7fa:7d92:6b28:504])
-        by smtp.gmail.com with ESMTPSA id ku12-20020a170907788c00b00a46b87c32besm138572ejc.39.2024.03.22.12.24.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 12:24:51 -0700 (PDT)
-From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Date: Fri, 22 Mar 2024 20:24:39 +0100
-Subject: [PATCH v3 5/5] dt-bindings: hwmon: ibm,p8-occ-hwmon: move to
- trivial devices
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="HI4XygVi";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="l9+9b/4l";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="iEAR/L4U";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rNQIK5np"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id ED5EA38917;
+	Fri, 22 Mar 2024 19:28:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711135704;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MlXKbWYWf6ZszMJFknPMYT3hDt5uq28CojVsP5eYUQg=;
+	b=HI4XygVileQBgOlO3oxKBk5qvy/FD1U9riFbB0clDw9ZdKc6sKToAIJGxIbjVN0nlAhIaJ
+	Q1ZZ2wJEgkYD8uJ/gevZOrv0XpWmVRFV3ORb64xNPfgKLi7t6gEcxGjfI384cRTwgh6Q1k
+	ltXPhNzd3klxOjKA4DcmFP0hlljJB8Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711135704;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MlXKbWYWf6ZszMJFknPMYT3hDt5uq28CojVsP5eYUQg=;
+	b=l9+9b/4lAwnZo6EzAjsoa4+UTcENRACdLdQ84xKNdNpweIwbG2z1PphynFVrSEU0Xtb49E
+	0qPichFqjJQ92bCg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711135703;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MlXKbWYWf6ZszMJFknPMYT3hDt5uq28CojVsP5eYUQg=;
+	b=iEAR/L4UcAVyozNbJg2EWDUw6wakuDp9lxWd+RZevlUiAxm+Ql/uHB1aXPwmCWUFvxWDMF
+	WWrav2zkCXG3n3MHnRHSghmf7QHtHvFuXr+rFi7HUK9ZAp/WKwuzCA9/tNXv4Qgp6bvaqc
+	kFRXxp3JOxxchdPX8CzFNOYAcZYjxGE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711135703;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MlXKbWYWf6ZszMJFknPMYT3hDt5uq28CojVsP5eYUQg=;
+	b=rNQIK5npFbBT4BOwts65yq8c7DLMY5YBrBG8cHRx7PvxKCBddA4+iJF5dNZsvjjRKMj/nE
+	ak0HP8hSfczkc6BQ==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id CCEBA138E8;
+	Fri, 22 Mar 2024 19:28:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id Uc5sMdfb/WV5KwAAn2gu4w
+	(envelope-from <dsterba@suse.cz>); Fri, 22 Mar 2024 19:28:23 +0000
+Date: Fri, 22 Mar 2024 20:21:08 +0100
+From: David Sterba <dsterba@suse.cz>
+To: Tavian Barnes <tavianator@tavianator.com>
+Cc: linux-btrfs@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+	Qu Wenruo <wqu@suse.com>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: Fix race in read_extent_buffer_pages()
+Message-ID: <20240322192108.GK14596@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <1ca6e688950ee82b1526bb3098852af99b75e6ba.1710551459.git.tavianator@tavianator.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240322-hwmon_dtschema-v3-5-6697de2a8228@gmail.com>
-References: <20240322-hwmon_dtschema-v3-0-6697de2a8228@gmail.com>
-In-Reply-To: <20240322-hwmon_dtschema-v3-0-6697de2a8228@gmail.com>
-To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
- Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
- Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
- Javier Carrasco <javier.carrasco.cruz@gmail.com>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711135482; l=2051;
- i=javier.carrasco.cruz@gmail.com; s=20240312; h=from:subject:message-id;
- bh=4rUBSyPV6ao55dHemnHVuLdadgQFFoAi54Gb6HBKVTY=;
- b=zWmOM6kGKZqUQ+f1L0py3IV+XS117E9ltKUW8/tcaqs7l9b5mKAT/Kh5w3bCFk7xCLyks7s5q
- vIrcv2/ZrWaA8uTw6J+NgLLb4IsEFsI7ut1VFEDUJXGbiYLtBxiUPms
-X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
- pk=lzSIvIzMz0JhJrzLXI0HAdPwsNPSSmEn6RbS+PTS9aQ=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1ca6e688950ee82b1526bb3098852af99b75e6ba.1710551459.git.tavianator@tavianator.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="iEAR/L4U";
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=rNQIK5np
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.21 / 50.00];
+	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 ARC_NA(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 REPLYTO_ADDR_EQ_FROM(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 MX_GOOD(-0.01)[];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Score: -4.21
+X-Rspamd-Queue-Id: ED5EA38917
+X-Spam-Flag: NO
 
-This binding meets the requirements to be converted to dtschema
-via trivial-devices.yaml.
+On Fri, Mar 15, 2024 at 09:14:29PM -0400, Tavian Barnes wrote:
+> To prevent concurrent reads for the same extent buffer,
+> read_extent_buffer_pages() performs these checks:
+> 
+>     /* (1) */
+>     if (test_bit(EXTENT_BUFFER_UPTODATE, &eb->bflags))
+>         return 0;
+> 
+>     /* (2) */
+>     if (test_and_set_bit(EXTENT_BUFFER_READING, &eb->bflags))
+>         goto done;
+> 
+> At this point, it seems safe to start the actual read operation. Once
+> that completes, end_bbio_meta_read() does
+> 
+>     /* (3) */
+>     set_extent_buffer_uptodate(eb);
+> 
+>     /* (4) */
+>     clear_bit(EXTENT_BUFFER_READING, &eb->bflags);
+> 
+> Normally, this is enough to ensure only one read happens, and all other
+> callers wait for it to finish before returning.  Unfortunately, there is
+> a racey interleaving:
+> 
+>     Thread A | Thread B | Thread C
+>     ---------+----------+---------
+>        (1)   |          |
+>              |    (1)   |
+>        (2)   |          |
+>        (3)   |          |
+>        (4)   |          |
+>              |    (2)   |
+>              |          |    (1)
+> 
+> When this happens, thread B kicks of an unnecessary read. Worse, thread
+> C will see UPTODATE set and return immediately, while the read from
+> thread B is still in progress.  This race could result in tree-checker
+> errors like this as the extent buffer is concurrently modified:
+> 
+>     BTRFS critical (device dm-0): corrupted node, root=256
+>     block=8550954455682405139 owner mismatch, have 11858205567642294356
+>     expect [256, 18446744073709551360]
+> 
+> Fix it by testing UPTODATE again after setting the READING bit, and if
+> it's been set, skip the unnecessary read.
+> 
+> Fixes: d7172f52e993 ("btrfs: use per-buffer locking for extent_buffer reading")
+> Link: https://lore.kernel.org/linux-btrfs/CAHk-=whNdMaN9ntZ47XRKP6DBes2E5w7fi-0U3H2+PS18p+Pzw@mail.gmail.com/
+> Link: https://lore.kernel.org/linux-btrfs/f51a6d5d7432455a6a858d51b49ecac183e0bbc9.1706312914.git.wqu@suse.com/
+> Link: https://lore.kernel.org/linux-btrfs/c7241ea4-fcc6-48d2-98c8-b5ea790d6c89@gmx.com/
+> Signed-off-by: Tavian Barnes <tavianator@tavianator.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
----
- .../devicetree/bindings/hwmon/ibm,p8-occ-hwmon.txt | 25 ----------------------
- .../devicetree/bindings/trivial-devices.yaml       |  2 ++
- 2 files changed, 2 insertions(+), 25 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/hwmon/ibm,p8-occ-hwmon.txt b/Documentation/devicetree/bindings/hwmon/ibm,p8-occ-hwmon.txt
-deleted file mode 100644
-index 5dc5d2e2573d..000000000000
---- a/Documentation/devicetree/bindings/hwmon/ibm,p8-occ-hwmon.txt
-+++ /dev/null
-@@ -1,25 +0,0 @@
--Device-tree bindings for I2C-based On-Chip Controller hwmon device
--------------------------------------------------------------------
--
--Required properties:
-- - compatible = "ibm,p8-occ-hwmon";
-- - reg = <I2C address>;			: I2C bus address
--
--Examples:
--
--    i2c-bus@100 {
--        #address-cells = <1>;
--        #size-cells = <0>;
--        clock-frequency = <100000>;
--        < more properties >
--
--        occ-hwmon@1 {
--            compatible = "ibm,p8-occ-hwmon";
--            reg = <0x50>;
--        };
--
--        occ-hwmon@2 {
--            compatible = "ibm,p8-occ-hwmon";
--            reg = <0x51>;
--        };
--    };
-diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-index e07be7bf8395..87b0dd9b0734 100644
---- a/Documentation/devicetree/bindings/trivial-devices.yaml
-+++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-@@ -126,6 +126,8 @@ properties:
-           - ibm,cffps1
-             # IBM Common Form Factor Power Supply Versions 2
-           - ibm,cffps2
-+            # IBM On-Chip Controller hwmon device
-+          - ibm,p8-occ-hwmon
-             # Infineon barometric pressure and temperature sensor
-           - infineon,dps310
-             # Infineon IR36021 digital POL buck controller
-
--- 
-2.40.1
-
+Thank you very much for taking the time to debug the issue and for the
+fix. It is a rare occurrence that a tough bug is followed by a fix from
+the same person (outside of the developer group) and is certainly
+appreciated.
