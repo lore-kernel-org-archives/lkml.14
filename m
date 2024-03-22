@@ -1,49 +1,43 @@
 Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85FEA60881
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 13:26:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4D460B90
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 13:27:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711114021; cv=none; b=pJm1e9EOAFJzWYcWkBck3VCdK5USKUAq4njIbRYNV7mnxko4Xyq4X2uUS9xjVuMqga96q7puufkHGV9/avQwJIhnW6tlXuvk6dBsG4Uuy8bgSSl910WDB/Tum7ZIOv6hPzgvyUJW9n0jWLnRR4rAtYFzSeiWNHXCsxQ5zP4VO9o=
+	t=1711114022; cv=none; b=rbF1CIMxqtxfRzEfzDJfu7UNKuKY8l5vYRh9OLasBIDBffYKO0ONvAODPXW9TAFsP/iKEanjMD4lwlmrFj7IIw6R+6rQHvaYB+rf3pGMxHGMjrxKWSu9964xULWFhvrpTWIEM87289zONVpqrfmRzbZXX7RB0trRbSPyiwQ1gF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711114021; c=relaxed/simple;
-	bh=IT1cLzX/MW7DWta6VFhg4vcgUE19Sls0w1v03CPRnGw=;
+	s=arc-20240116; t=1711114022; c=relaxed/simple;
+	bh=GAY5ft5NyrayMYnRBVE9b/3C6FO7J6omqMboPfkPyJE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jU6WXCo0wLPtTMb1XPnjIWSojg30pBC7lQ9soWXYFNBUlRQKbtoHcSAlUpcclSpJDkEv/D7Dts5d6l6hNe2tXTyZBFqgxbbS/2tBIarr1j4afSgGI0IgnguyVCgcbH+nTu7Evgh8v56e+g8XrElokgXn355RJYpVHgYYhgtUvn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=dsjJPEhA; arc=none smtp.client-ip=194.117.254.33
+	 MIME-Version; b=o5G7dNXZO/yo2uWM86Ns6p8NcATbNoktjalbVVtFNJtWBHD+VMYmrW6ge13pfx1sxA9kcoPkESP0/utOSYOXWJktaK/kLrozw7g+J88utqqQtix2GpRgcQ9VoHEBfJQb5g/gjS8XBjlwIXZJe2DGG4lm3ksxx9dWFEC9OWdk/Y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=i/lY9Qmd; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="dsjJPEhA"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="i/lY9Qmd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
 	:in-reply-to:references:mime-version:content-transfer-encoding;
-	 s=k1; bh=vWbyFOf4V5PXU0iX7KbH4cd/yxRPi16DHsMc4aLJqy8=; b=dsjJPE
-	hALiYPDPqtAFQ9EyzYechmRJCyKo2h6c35ksfOQrlgN1rmUEg4Y7fLngd2J9G9p+
-	Oz0qQTHVz4dyoVxysc3oIAd6aqrD8dQRVBORRlMCPZGEdR4jQ2LW/DqZfTAfoosv
-	+biP1HBKQbD508GCkIiyb+YRG9E/PbE7lFGuIFBsw79gPg0F2oH+mWImZLKKIpzs
-	9MltKvpsXhxOhqVMhDQwY4xWK9SoMDk6X9kz/J5121N3QLsWaVz5j4ZSUuswAA9g
-	V3CWKqHMUpyk6P94HcL5l5ldZJhTATEzYi8BfVlUOJHG53Mw+tVekPrFcBCnzfwW
-	gbk3bi9HmsyGDb7A==
-Received: (qmail 3870775 invoked from network); 22 Mar 2024 14:26:42 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Mar 2024 14:26:42 +0100
-X-UD-Smtp-Session: l3s3148p1@rQJJxj8UupRehhtF
+	 s=k1; bh=ha2oisARdYVLXS1jZiTtFGRJALZMNbKy5spP2HTyWXA=; b=i/lY9Q
+	mdnGtjoRzM/ks8HxUNOpzXZmGFanUtRHvykViSfKGPGEQ1PfWtcZdIyWdMo94hcF
+	I3hA91jiWmW0zYazPTlLOCkkE/FUnGdq3kxGjOV5ztIRi7lmj74NGx5veDqBMKza
+	lfaSmpfSbpVOmnzqj2iRPIhyQAnSJOYR4f8S5pu3/UBSqUX3pet5mdKu3EbzI1xm
+	eim2LABOilzx1KHuDzU6xXanmUYpX6bvObS7tJAl3Z2HdeIqyxnjXpwGbKEyj3lE
+	lCIZcaPhK+Sl3LnyT8GMd7BgkaqqJ3SiJfrKFdKVXJZmeLK4RJfEmpV+j3zB3oUi
+	TTv/lAbovc1Zv+ig==
+Received: (qmail 3870872 invoked from network); 22 Mar 2024 14:26:44 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Mar 2024 14:26:44 +0100
+X-UD-Smtp-Session: l3s3148p1@zwlixj8UypRehhtF
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-i2c@vger.kernel.org
 Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
+	Jean Delvare <jdelvare@suse.com>,
 	Andi Shyti <andi.shyti@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 26/64] i2c: imx-lpi2c: reword according to newest specification
-Date: Fri, 22 Mar 2024 14:25:19 +0100
-Message-ID: <20240322132619.6389-27-wsa+renesas@sang-engineering.com>
+Subject: [PATCH 28/64] i2c: isch: reword according to newest specification
+Date: Fri, 22 Mar 2024 14:25:21 +0100
+Message-ID: <20240322132619.6389-29-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
 References: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
@@ -62,58 +56,22 @@ entity ("client") and a local one ("target").
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- drivers/i2c/busses/i2c-imx-lpi2c.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/i2c/busses/i2c-isch.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-imx-lpi2c.c b/drivers/i2c/busses/i2c-imx-lpi2c.c
-index 6d72e4e126dd..337a55804463 100644
---- a/drivers/i2c/busses/i2c-imx-lpi2c.c
-+++ b/drivers/i2c/busses/i2c-imx-lpi2c.c
-@@ -262,7 +262,7 @@ static int lpi2c_imx_config(struct lpi2c_imx_struct *lpi2c_imx)
- 	return 0;
- }
- 
--static int lpi2c_imx_master_enable(struct lpi2c_imx_struct *lpi2c_imx)
-+static int lpi2c_imx_host_enable(struct lpi2c_imx_struct *lpi2c_imx)
- {
- 	unsigned int temp;
- 	int ret;
-@@ -292,7 +292,7 @@ static int lpi2c_imx_master_enable(struct lpi2c_imx_struct *lpi2c_imx)
- 	return ret;
- }
- 
--static int lpi2c_imx_master_disable(struct lpi2c_imx_struct *lpi2c_imx)
-+static int lpi2c_imx_host_disable(struct lpi2c_imx_struct *lpi2c_imx)
- {
- 	u32 temp;
- 
-@@ -459,7 +459,7 @@ static int lpi2c_imx_xfer(struct i2c_adapter *adapter,
- 	unsigned int temp;
- 	int i, result;
- 
--	result = lpi2c_imx_master_enable(lpi2c_imx);
-+	result = lpi2c_imx_host_enable(lpi2c_imx);
- 	if (result)
- 		return result;
- 
-@@ -502,7 +502,7 @@ static int lpi2c_imx_xfer(struct i2c_adapter *adapter,
+diff --git a/drivers/i2c/busses/i2c-isch.c b/drivers/i2c/busses/i2c-isch.c
+index 416a9968ed28..389202625964 100644
+--- a/drivers/i2c/busses/i2c-isch.c
++++ b/drivers/i2c/busses/i2c-isch.c
+@@ -104,7 +104,7 @@ static int sch_transaction(void)
  		result = -EIO;
- 
- disable:
--	lpi2c_imx_master_disable(lpi2c_imx);
-+	lpi2c_imx_host_disable(lpi2c_imx);
- 
- 	dev_dbg(&lpi2c_imx->adapter.dev, "<%s> exit with: %s: %d\n", __func__,
- 		(result < 0) ? "error" : "success msg",
-@@ -554,7 +554,7 @@ static u32 lpi2c_imx_func(struct i2c_adapter *adapter)
- }
- 
- static const struct i2c_algorithm lpi2c_imx_algo = {
--	.master_xfer	= lpi2c_imx_xfer,
-+	.xfer	= lpi2c_imx_xfer,
- 	.functionality	= lpi2c_imx_func,
- };
- 
+ 		dev_dbg(&sch_adapter.dev, "Bus collision! SMBus may be "
+ 			"locked until next hard reset. (sorry!)\n");
+-		/* Clock stops and slave is stuck in mid-transmission */
++		/* Clock stops and client is stuck in mid-transmission */
+ 	} else if (temp & 0x02) {
+ 		result = -EIO;
+ 		dev_err(&sch_adapter.dev, "Error: no response!\n");
 -- 
 2.43.0
 
