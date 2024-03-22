@@ -1,153 +1,237 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A9B481B3;
-	Fri, 22 Mar 2024 14:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4733FB02;
+	Fri, 22 Mar 2024 14:39:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711118317; cv=none; b=X8BEoDv5xMo14Z9roH4R+0Re4id1IQfu7t3m/hNiWc+6oNcHgs4rk8t71bpS8yzN+jpXwUeJgvttuQtbqsNkCviTVraB/1br+XhWHxgl5xR2p7pv9Wv8vkI73so0gU9/HcWu0HTH494LaTa50obq18bKa+MG8p/Jcu5VodTDmSE=
+	t=1711118378; cv=none; b=uTGe66Z7PogxA3tKU9iQmaxNZ6m0Jlc9mRISGz+wYy2lw9igP2CSUTul7Fb7yG8DPQ6krKUTSf3m9wK3M29KtCu+FleXCXh/GjvClxa7NkymAxRBo9xCT0tyqN2CLaiVVts9OpRnWmCnJr/uLrVFmYYDuvY/Jm+IS16p71XzqLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711118317; c=relaxed/simple;
-	bh=UYu09zXduUkm+JBpN/Y+TghaNpL7q3wgNHbep29sdA8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CiL8138RHZbT8H8ae6xqmLR4u2w4AT3HNN1NnpXVaH5vG18BH3WynCQrbPJiJJ1XOEUwpLon2KgAi+/30FM/1bOcinOYA//rwUqCewbx7t4JugRO7440pMDP842P7kHMqw3n+/dfIG7nvaHxZUPOjTAZ2iuxSD15w7h6cy6a24g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f45hVtJO; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711118378; c=relaxed/simple;
+	bh=a3YCJUrMo7CDH/5/zOS6zAymiu5i9hE+3myfHHf8+dw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=qNpslWTpwE2ufynNSUfmI1+CTsCXEGSMcYrNlZ9NlxIaSWT5QKDrCVjvm32aG+j2JRitlqP5QTTa3Tpyn5tHCs4uFLqugk2bwRG6fooVb4U2OkUJGlkHbWyHWtAyjAXamMSQTZs7p4s4/PYM+57pcAjTHrPuZ2TJc6z31ECa0Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k2mO2W2w; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f45hVtJO"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4146fe16a1aso16852595e9.1;
-        Fri, 22 Mar 2024 07:38:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711118314; x=1711723114; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FKzLRPLFfDKfGP0XYZGykBAFy/DE3UMNbmNAv4XV4p4=;
-        b=f45hVtJOtasi0EsOcMms1/CobVX6nLF+YQGdp3uo0qx8jobCzzeix8WOfG8NNS0eHa
-         H0ojapfFQpogIiqjdP1nyyoApJfxABMWYVOsReqHcCLbOTw8HtOH77pVH3H5/nja17ld
-         udpGSqGz7K3oAvc3+lAJl7VK0qAUrc8lkEKrNA0ZXmdXiYyAluD0+ZNQxvWdPBTS0kyA
-         aNfam1L/jPLsEL4uoKD0odWWwer/Cu4RRJQaCEZNkBNz1Q2TAkDi+01P6k7NtTULi+Id
-         25nW8ZMQCcL+JOagRlmq7o6ez5xpW8nQ2EXBlUd6rYHuprpisq7u5JDegOJIoDs13NYl
-         rsiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711118314; x=1711723114;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FKzLRPLFfDKfGP0XYZGykBAFy/DE3UMNbmNAv4XV4p4=;
-        b=XWbWEnTaEvlW35ufaczgx9ZCKUosTd1Li+kLAxUUGMP8R/mE3g/Yr14zndBMnO9u2q
-         FWSdOoRUlbxbxVh231oh/H50HgYPRSqgaObgc6Tbb4prj92CfM5ky7CNjEOESxSSKcB5
-         b7U4PF9o7CMsTqEfPJZcWbt22wx9kyKhjRpkqJDMxN/DZHYRGIfN/yGFGr7blE+HEOWo
-         bfz5FF7BDF1iycmpybCnzN9//woLaaIOCRuh7MkzeU6PJl3p+zPlBbmQ31nfdQ3SJjKV
-         VSxJp7wHUnCn+dbs3sTc4tfxMVZpaFkdnztlrnsE7RjzC29/LC0S1nPmMcdXnLf5sDsO
-         +Liw==
-X-Forwarded-Encrypted: i=1; AJvYcCVwcjMnOfj1F1KrStD595j04HJKaEEbqAy0xVVdBX9scb/WH6OoxtjV/oAGJH5GFfZofyox1OEyicsX0inrf2CLCfPWLONl3Al7YetaXtz/Z+DoFsdVAzorwRYRlhaJelgJ
-X-Gm-Message-State: AOJu0YyqUlHzCUNUnlzBongW1aMzEWOZx4TTtnwy3ScoTB6b2rKm+QLF
-	OyVTM0AHmR4F7M82Os5t3XS8wlgLJaJ10PcdMYxTzPk0wCxDYjEK
-X-Google-Smtp-Source: AGHT+IGzQogvPhukuBYoDN9FrU8Da6oUbBGenCI8NWXeIhXKSt0arOEE+DvWr59JKV87Diz2jxEZRg==
-X-Received: by 2002:a05:600c:1546:b0:414:71b2:73c4 with SMTP id f6-20020a05600c154600b0041471b273c4mr1811485wmg.12.1711118314000;
-        Fri, 22 Mar 2024 07:38:34 -0700 (PDT)
-Received: from localhost (54-240-197-231.amazon.com. [54.240.197.231])
-        by smtp.gmail.com with ESMTPSA id fl21-20020a05600c0b9500b00414674a1a40sm3244029wmb.45.2024.03.22.07.38.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Mar 2024 07:38:33 -0700 (PDT)
-From: Puranjay Mohan <puranjay12@gmail.com>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Cc: puranjay12@gmail.com
-Subject: [PATCH bpf] bpf: verifier: fix NULL pointer dereference in do_misc_fixups()
-Date: Fri, 22 Mar 2024 14:38:29 +0000
-Message-Id: <20240322143829.40808-1-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k2mO2W2w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711118376; x=1742654376;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=a3YCJUrMo7CDH/5/zOS6zAymiu5i9hE+3myfHHf8+dw=;
+  b=k2mO2W2wANp+n5yfW3UdApJL4V3m1VTiNVM7xZ8FPCqW5DkGo03Hpkll
+   BcnhCV6/6hVUcag0un0cuU9F88jbfOT/V18FnDb07NHcqqeWPXKWHGwIZ
+   KaAPDzAjXs5KZNYHS5PkGDbrpZhfmrNsxNjb6eMLUgmBgCOCWTYeJy7a6
+   /mM44RHFx81QKFnj7BzL1yIXl/h8/pzIKfWKWwBIvJOjcgDpEc4JHUU23
+   wa/WnxfaXZtGwYZx5+wXtjh0SkxIoA51smCi8VgbrrlkiHp/sKVV1M4tH
+   ngMxhrBnSlrYACEN7WW9ryjwy5yy4V9Ro8axR1CMSmeP9Ve4pzSan6Qay
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="16716335"
+X-IronPort-AV: E=Sophos;i="6.07,146,1708416000"; 
+   d="scan'208";a="16716335"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 07:39:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,146,1708416000"; 
+   d="scan'208";a="15592152"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.18])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 07:39:33 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 22 Mar 2024 16:39:28 +0200 (EET)
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+cc: Ai Chao <aichao@kylinos.cn>, Hans de Goede <hdegoede@redhat.com>, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v11] platform/x86: add lenovo wmi camera button driver
+In-Reply-To: <5e30a445-0a14-4242-9c1d-578a5b7cfcbe@linux.intel.com>
+Message-ID: <f1421e47-a6b7-e8f1-49a0-28e3351b2450@linux.intel.com>
+References: <20240322064750.267422-1-aichao@kylinos.cn> <5e30a445-0a14-4242-9c1d-578a5b7cfcbe@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-The addr_space_cast instruction is convered to a normal 32 bit mov by the
-verifier if the cast from as(0) to as(1) or if the user has set the flag
-BPF_F_NO_USER_CONV in the arena.
+On Fri, 22 Mar 2024, Kuppuswamy Sathyanarayanan wrote:
+> On 3/21/24 11:47 PM, Ai Chao wrote:
+> > Add lenovo generic wmi driver to support camera button.
+> > The Camera button is a GPIO device. This driver receives ACPI notifyi
+> > when the camera button is switched on/off. This driver is used in
+> > Lenovo A70, it is a Computer integrated machine.
+> >
+> > Signed-off-by: Ai Chao <aichao@kylinos.cn>
+> > ---
+> > v11: remove input_unregister_device.
+> > v10: Add lenovo_wmi_remove and mutex_destroy.
+> > v9: Add mutex for wmi notify.
+> > v8: Dev_deb convert to dev_err.
+> > v7: Add dev_dbg and remove unused dev in struct.
+> > v6: Modify SW_CAMERA_LENS_COVER to KEY_CAMERA_ACCESS_ENABLE/KEY_CAMERA_ACCESS_DISABLE.
+> > v5: Remove camera button groups, modify KEY_CAMERA to SW_CAMERA_LENS_COVER.
+> > v4: Remove lenovo_wmi_input_setup, move camera_mode into struct lenovo_wmi_priv.
+> > v3: Remove lenovo_wmi_remove function.
+> > v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
+> >
+> >  drivers/platform/x86/Kconfig             |  12 +++
+> >  drivers/platform/x86/Makefile            |   1 +
+> >  drivers/platform/x86/lenovo-wmi-camera.c | 126 +++++++++++++++++++++++
+> >  3 files changed, 139 insertions(+)
+> >  create mode 100644 drivers/platform/x86/lenovo-wmi-camera.c
+> >
+> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> > index bdd302274b9a..9506a455b547 100644
+> > --- a/drivers/platform/x86/Kconfig
+> > +++ b/drivers/platform/x86/Kconfig
+> > @@ -1001,6 +1001,18 @@ config INSPUR_PLATFORM_PROFILE
+> >  	To compile this driver as a module, choose M here: the module
+> >  	will be called inspur-platform-profile.
+> >  
+> > +config LENOVO_WMI_CAMERA
+> > +	tristate "Lenovo WMI Camera Button driver"
+> > +	depends on ACPI_WMI
+> > +	depends on INPUT
+> > +	help
+> > +	  This driver provides support for Lenovo camera button. The Camera
+> > +	  button is a GPIO device. This driver receives ACPI notify when the
+> > +	  camera button is switched on/off.
+> > +
+> > +	  To compile this driver as a module, choose M here: the module
+> > +	  will be called lenovo-wmi-camera.
+> > +
+> >  source "drivers/platform/x86/x86-android-tablets/Kconfig"
+> >  
+> >  config FW_ATTR_CLASS
+> > diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> > index 1de432e8861e..217e94d7c877 100644
+> > --- a/drivers/platform/x86/Makefile
+> > +++ b/drivers/platform/x86/Makefile
+> > @@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
+> >  obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
+> >  obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+> >  obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
+> > +obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
+> >  
+> >  # Intel
+> >  obj-y				+= intel/
+> > diff --git a/drivers/platform/x86/lenovo-wmi-camera.c b/drivers/platform/x86/lenovo-wmi-camera.c
+> > new file mode 100644
+> > index 000000000000..fda936e2f37c
+> > --- /dev/null
+> > +++ b/drivers/platform/x86/lenovo-wmi-camera.c
+> > @@ -0,0 +1,126 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Lenovo WMI Camera Button Driver
+> > + *
+> > + * Author: Ai Chao <aichao@kylinos.cn>
+> > + * Copyright (C) 2024 KylinSoft Corporation.
+> > + */
+> > +
+> > +#include <linux/acpi.h>
+> > +#include <linux/device.h>
+> > +#include <linux/input.h>
+> > +#include <linux/module.h>
+> > +#include <linux/mutex.h>
+> > +#include <linux/wmi.h>
+> > +
+> > +#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
+> > +
+> > +struct lenovo_wmi_priv {
+> > +	struct input_dev *idev;
+> > +	struct mutex notify_lock;	/* lenovo wmi camera button notify lock */
+> > +};
+> > +
+> > +enum {
+> > +	SW_CAMERA_OFF	= 0,
+> > +	SW_CAMERA_ON	= 1,
+> > +};
+> > +
+> > +static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
+> > +{
+> > +	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+> > +	unsigned int keycode;
+> > +	u8 camera_mode;
+> > +
+> > +	if (obj->type != ACPI_TYPE_BUFFER) {
+> > +		dev_err(&wdev->dev, "Bad response type %u\n", obj->type);
+> > +		return;
+> > +	}
+> > +
+> > +	if (obj->buffer.length != 1) {
+> > +		dev_err(&wdev->dev, "Invalid buffer length %u\n", obj->buffer.length);
+> > +		return;
+> > +	}
+> > +
+> > +	/* obj->buffer.pointer[0] is camera mode:
+> > +	 *      0 camera close
+> > +	 *      1 camera open
+> > +	 */
+> > +	camera_mode = obj->buffer.pointer[0];
+> > +	if (camera_mode > SW_CAMERA_ON) {
+> > +		dev_err(&wdev->dev, "Unknown camera mode %u\n", camera_mode);
+> > +		return;
+> > +	}
+> > +
+> > +	mutex_lock(&priv->notify_lock);
+> > +
+> > +	keycode = (camera_mode == SW_CAMERA_ON ?
+> > +		   KEY_CAMERA_ACCESS_ENABLE : KEY_CAMERA_ACCESS_DISABLE);
+> > +	input_report_key(priv->idev, keycode, 1);
+> > +	input_sync(priv->idev);
+> > +	input_report_key(priv->idev, keycode, 0);
+> > +	input_sync(priv->idev);
+> > +
+> > +	mutex_unlock(&priv->notify_lock);
+> > +}
+> > +
+> > +static int lenovo_wmi_probe(struct wmi_device *wdev, const void *context)
+> > +{
+> > +	struct lenovo_wmi_priv *priv;
+> > +	int ret;
+> > +
+> > +	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+> > +	if (!priv)
+> > +		return -ENOMEM;
+> > +
+> > +	dev_set_drvdata(&wdev->dev, priv);
+> > +
+> > +	priv->idev = devm_input_allocate_device(&wdev->dev);
+> > +	if (!priv->idev)
+> > +		return -ENOMEM;
+> > +
+> > +	priv->idev->name = "Lenovo WMI Camera Button";
+> > +	priv->idev->phys = "wmi/input0";
+> > +	priv->idev->id.bustype = BUS_HOST;
+> > +	priv->idev->dev.parent = &wdev->dev;
+> > +	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_ENABLE);
+> > +	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_DISABLE);
+> > +
+> > +	ret = input_register_device(priv->idev);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	mutex_init(&priv->notify_lock);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void lenovo_wmi_remove(struct wmi_device *wdev)
+> > +{
+> > +	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+> > +
+> > +	mutex_destroy(&priv->notify_lock);
+> 
+> Do you really need to call mutex_destroy() during the module unload?
+> 
+> I don't think kernel allocates any memory during mutex_init() that needs
+> be freed.
 
-If the BPF program doesn't have an associated arena
-env->prog->aux->arena is NULL and the verifier currently doesn't check
-for it being NULL before accessing map_flags. This can cause a NULL
-pointer dereference:
+Is all debug code going to be happy if it's not called?
 
-root@rv-tester:~# ./reproducer
- Unable to handle kernel access to user memory without uaccess routines at virtual address 0000000000000030
- Oops [#1]
- Modules linked in: sch_fq_codel drm fuse i2c_core drm_panel_orientation_quirks backlight configfs ip_tables x_tables
- CPU: 2 PID: 265 Comm: reproducer Not tainted 6.8.0 #3
- Hardware name: riscv-virtio,qemu (DT)
- epc : do_misc_fixups+0x43c/0x1168
-  ra : bpf_check+0xda8/0x22b6
- epc : ffffffff8017eeaa ra : ffffffff801936d6 sp : ff200000011bb890
-  gp : ffffffff82293468 tp : ff60000084fcb840 t0 : ff60000084e38048
-  t1 : 0000000000000048 t2 : ff5fffff80000000 s0 : ff200000011bba60
-  s1 : ff2000000101d058 a0 : ff6000008b980000 a1 : 0000000000000004
-  a2 : 00000000000000e1 a3 : 0000000000000001 a4 : 0000000000010000
-  a5 : 0000000000000000 a6 : 0000000000000001 a7 : ff2000000101d000
-  s2 : 0000000000000002 s3 : 0000000000000000 s4 : 0000000000000000
-  s5 : 0000000000000002 s6 : 0000000000000000 s7 : ff6000008b980aa0
-  s8 : 0000000000010005 s9 : 0000000000000004 s10: ff6000008b980000
-  s11: 0000000000000000 t3 : 0000000000002000 t4 : 0000ff0000000000
-  t5 : 00ff000000000000 t6 : ff20000000000000
- status: 0000000200000120 badaddr: 0000000000000030 cause: 000000000000000d
- [<ffffffff8017eeaa>] do_misc_fixups+0x43c/0x1168
- [<ffffffff801936d6>] bpf_check+0xda8/0x22b6
- [<ffffffff80174b32>] bpf_prog_load+0x486/0x8dc
- [<ffffffff80176566>] __sys_bpf+0xbd8/0x214e
- [<ffffffff80177d14>] __riscv_sys_bpf+0x22/0x2a
- [<ffffffff80d2493a>] do_trap_ecall_u+0x102/0x17c
- [<ffffffff80d3048c>] ret_from_exception+0x0/0x64
- Code: b345 9783 0024 4685 8b63 16d7 3783 008d 7f9c 7fdc (5b9c) 83c9
- ---[ end trace 0000000000000000 ]---
- Kernel panic - not syncing: Fatal exception
- SMP: stopping secondary CPUs
-
-Add a check for NULL pointer before checking map_flags.
-
-Fixes: 6082b6c328b5 ("bpf: Recognize addr_space_cast instruction in the verifier.")
-Reported-by: xingwei lee <xrivendell7@gmail.com>
-Reported-by: yue sun <samsun1006219@gmail.com>
-Closes: https://lore.kernel.org/bpf/CABOYnLz09O1+2gGVJuCxd_24a-7UueXzV-Ff+Fr+h5EKFDiYCQ@mail.gmail.com/
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
----
- kernel/bpf/verifier.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index ca6cacf7b42f..78945e7b856d 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -19607,7 +19607,8 @@ static int do_misc_fixups(struct bpf_verifier_env *env)
- 	for (i = 0; i < insn_cnt;) {
- 		if (insn->code == (BPF_ALU64 | BPF_MOV | BPF_X) && insn->imm) {
- 			if ((insn->off == BPF_ADDR_SPACE_CAST && insn->imm == 1) ||
--			    (((struct bpf_map *)env->prog->aux->arena)->map_flags & BPF_F_NO_USER_CONV)) {
-+			    (env->prog->aux->arena &&
-+			     (((struct bpf_map *)env->prog->aux->arena)->map_flags & BPF_F_NO_USER_CONV))) {
- 				/* convert to 32-bit mov that clears upper 32-bit */
- 				insn->code = BPF_ALU | BPF_MOV | BPF_X;
- 				/* clear off, so it's a normal 'wX = wY' from JIT pov */
 -- 
-2.40.1
+ i.
 
