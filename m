@@ -1,249 +1,140 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19E2E12E4E;
-	Fri, 22 Mar 2024 07:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E671170A
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 07:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711092012; cv=none; b=WR54WR2IJ5X1XaeyLpg2zIW7o5Boyah1Fj+5gOT4CPtQEiZleWvROXXtQFHngTYAXGRT84PASH4Q0vXVkZdPoDfbVb5TuzkRAERESQb/p9/S92+//XKtgmoitq/VEoyV8KQlSuuEJRaE+AexY6MMuBLXbIBxtP0WpRjqbzaEFEY=
+	t=1711092146; cv=none; b=cWhekyfoV52mfLNwkLXDvDF2ajEL4CWaUYTA2I/nDEjMLmeje6qKkzsazNAq6OWqnZAeaCfBTZnU7eFk5/J7JG+dRqPJ56GhOIGoswKOdNwgCUyqSDLaNaEypGx7cLYfaJcYEvRfSjSv5D3ibOth1s3Tm+d87s3Wsau0nUXatoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711092012; c=relaxed/simple;
-	bh=LFdc6wvNBvNZSM+ScqY+ftX4LqLNC8+5WdPcp3MQjMw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SjMN+Ccz983AB2LgZYMLFzRCm0YYiD8xpw7j/CknVtdR0Wh8i2dV6sMX3DJqqd4Et2VMilHwQz2kJl3QvmKtt9Z/LRpT0ApjI5430J6a+YvPXGGy6pdF7YtA1AQI/lLAp199OicoSsZYbX1TUJGezPgwJN+2vfv/GU9v6cnZPtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: a310e78234a64a3bb379bc471eeb09bc-20240322
-X-CID-O-RULE: Release_Ham
-X-CID-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:6e164720-6780-40d0-8065-d185bdb6645e,IP:10,
-	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-10
-X-CID-INFO: VERSION:1.1.37,REQID:6e164720-6780-40d0-8065-d185bdb6645e,IP:10,UR
-	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-10
-X-CID-META: VersionHash:6f543d0,CLOUDID:d0ba4d85-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:240322144755OIDVTJAZ,BulkQuantity:0,Recheck:0,SF:66|38|24|17|19|44|1
-	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC
-	:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
-X-UUID: a310e78234a64a3bb379bc471eeb09bc-20240322
-X-User: aichao@kylinos.cn
-Received: from localhost.localdomain [(112.64.161.44)] by mailgw
-	(envelope-from <aichao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 722880788; Fri, 22 Mar 2024 14:47:53 +0800
-From: Ai Chao <aichao@kylinos.cn>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Cc: Ai Chao <aichao@kylinos.cn>
-Subject: [PATCH v11] platform/x86: add lenovo wmi camera button driver
-Date: Fri, 22 Mar 2024 14:47:50 +0800
-Message-Id: <20240322064750.267422-1-aichao@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1711092146; c=relaxed/simple;
+	bh=vA9V4rMxzBXvxWkJTH6dyTC2wPtZ0a7RH9Hx5DktLNg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dF5z7GIlblQncjQLVkZf0889WWCsXRfDeAsu1CJS15g9pLoRL/5xhCBTiWS+XT9hxR0YNh7zmn+kfdL3EMQPiKVSDg6lpc6b1XAkbtSKTXGVL6zCu0d3Sn+90YTW5NCmghrn0uke3BcYtcSFdWVtrDEixBocgjr3B8RUlKJZ8xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rnZEH-00076G-Pd; Fri, 22 Mar 2024 08:22:17 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rnZEG-007nie-TN; Fri, 22 Mar 2024 08:22:16 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rnZEG-009ZEN-2g;
+	Fri, 22 Mar 2024 08:22:16 +0100
+Date: Fri, 22 Mar 2024 08:22:16 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Thorsten Scherer <t.scherer@eckelmann.de>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PULL] siox changes for 6.9
+Message-ID: <mryuydqd7pqxwkvylp24fped57tsys4me4pazdg4ujwkwtthhp@26rnjgzjesrx>
+References: <cover.1708328466.git.u.kleine-koenig@pengutronix.de>
+ <ad141dd22c7d95ad0bd347f257ce586e1afb22a4.1708328466.git.u.kleine-koenig@pengutronix.de>
+ <ftvih5huvc72a76s7fe4zisrqtaax5tcgoukqoi2bkz47zcrq2@4fixszonixgl>
+ <2024030732-ocean-handbook-161f@gregkh>
+ <nuchb5aaywc5vr6cof4gqbavq4rkte3hvzgs6au3lbg6s6wlq4@bvbjevbum7kc>
+ <o52ptgjxknpxhtyemb5xdjyobidejvzluicsoc5ceajy4pz4xy@6e3aecoiz7eh>
+ <k7pd3oar3e3mogaokjl7mykqy3w3cifl4dgbukmnsynyqgk5ze@ch5mn5xln2j7>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="dviotmiylxvmpowz"
+Content-Disposition: inline
+In-Reply-To: <k7pd3oar3e3mogaokjl7mykqy3w3cifl4dgbukmnsynyqgk5ze@ch5mn5xln2j7>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Add lenovo generic wmi driver to support camera button.
-The Camera button is a GPIO device. This driver receives ACPI notifyi
-when the camera button is switched on/off. This driver is used in
-Lenovo A70, it is a Computer integrated machine.
 
-Signed-off-by: Ai Chao <aichao@kylinos.cn>
----
-v11: remove input_unregister_device.
-v10: Add lenovo_wmi_remove and mutex_destroy.
-v9: Add mutex for wmi notify.
-v8: Dev_deb convert to dev_err.
-v7: Add dev_dbg and remove unused dev in struct.
-v6: Modify SW_CAMERA_LENS_COVER to KEY_CAMERA_ACCESS_ENABLE/KEY_CAMERA_ACCESS_DISABLE.
-v5: Remove camera button groups, modify KEY_CAMERA to SW_CAMERA_LENS_COVER.
-v4: Remove lenovo_wmi_input_setup, move camera_mode into struct lenovo_wmi_priv.
-v3: Remove lenovo_wmi_remove function.
-v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
+--dviotmiylxvmpowz
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- drivers/platform/x86/Kconfig             |  12 +++
- drivers/platform/x86/Makefile            |   1 +
- drivers/platform/x86/lenovo-wmi-camera.c | 126 +++++++++++++++++++++++
- 3 files changed, 139 insertions(+)
- create mode 100644 drivers/platform/x86/lenovo-wmi-camera.c
+Hello Greg,
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index bdd302274b9a..9506a455b547 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1001,6 +1001,18 @@ config INSPUR_PLATFORM_PROFILE
- 	To compile this driver as a module, choose M here: the module
- 	will be called inspur-platform-profile.
- 
-+config LENOVO_WMI_CAMERA
-+	tristate "Lenovo WMI Camera Button driver"
-+	depends on ACPI_WMI
-+	depends on INPUT
-+	help
-+	  This driver provides support for Lenovo camera button. The Camera
-+	  button is a GPIO device. This driver receives ACPI notify when the
-+	  camera button is switched on/off.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called lenovo-wmi-camera.
-+
- source "drivers/platform/x86/x86-android-tablets/Kconfig"
- 
- config FW_ATTR_CLASS
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 1de432e8861e..217e94d7c877 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
- obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
- obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
- obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
-+obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
- 
- # Intel
- obj-y				+= intel/
-diff --git a/drivers/platform/x86/lenovo-wmi-camera.c b/drivers/platform/x86/lenovo-wmi-camera.c
-new file mode 100644
-index 000000000000..fda936e2f37c
---- /dev/null
-+++ b/drivers/platform/x86/lenovo-wmi-camera.c
-@@ -0,0 +1,126 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Lenovo WMI Camera Button Driver
-+ *
-+ * Author: Ai Chao <aichao@kylinos.cn>
-+ * Copyright (C) 2024 KylinSoft Corporation.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/device.h>
-+#include <linux/input.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/wmi.h>
-+
-+#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
-+
-+struct lenovo_wmi_priv {
-+	struct input_dev *idev;
-+	struct mutex notify_lock;	/* lenovo wmi camera button notify lock */
-+};
-+
-+enum {
-+	SW_CAMERA_OFF	= 0,
-+	SW_CAMERA_ON	= 1,
-+};
-+
-+static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
-+{
-+	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-+	unsigned int keycode;
-+	u8 camera_mode;
-+
-+	if (obj->type != ACPI_TYPE_BUFFER) {
-+		dev_err(&wdev->dev, "Bad response type %u\n", obj->type);
-+		return;
-+	}
-+
-+	if (obj->buffer.length != 1) {
-+		dev_err(&wdev->dev, "Invalid buffer length %u\n", obj->buffer.length);
-+		return;
-+	}
-+
-+	/* obj->buffer.pointer[0] is camera mode:
-+	 *      0 camera close
-+	 *      1 camera open
-+	 */
-+	camera_mode = obj->buffer.pointer[0];
-+	if (camera_mode > SW_CAMERA_ON) {
-+		dev_err(&wdev->dev, "Unknown camera mode %u\n", camera_mode);
-+		return;
-+	}
-+
-+	mutex_lock(&priv->notify_lock);
-+
-+	keycode = (camera_mode == SW_CAMERA_ON ?
-+		   KEY_CAMERA_ACCESS_ENABLE : KEY_CAMERA_ACCESS_DISABLE);
-+	input_report_key(priv->idev, keycode, 1);
-+	input_sync(priv->idev);
-+	input_report_key(priv->idev, keycode, 0);
-+	input_sync(priv->idev);
-+
-+	mutex_unlock(&priv->notify_lock);
-+}
-+
-+static int lenovo_wmi_probe(struct wmi_device *wdev, const void *context)
-+{
-+	struct lenovo_wmi_priv *priv;
-+	int ret;
-+
-+	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(&wdev->dev, priv);
-+
-+	priv->idev = devm_input_allocate_device(&wdev->dev);
-+	if (!priv->idev)
-+		return -ENOMEM;
-+
-+	priv->idev->name = "Lenovo WMI Camera Button";
-+	priv->idev->phys = "wmi/input0";
-+	priv->idev->id.bustype = BUS_HOST;
-+	priv->idev->dev.parent = &wdev->dev;
-+	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_ENABLE);
-+	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_DISABLE);
-+
-+	ret = input_register_device(priv->idev);
-+	if (ret)
-+		return ret;
-+
-+	mutex_init(&priv->notify_lock);
-+
-+	return 0;
-+}
-+
-+static void lenovo_wmi_remove(struct wmi_device *wdev)
-+{
-+	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-+
-+	mutex_destroy(&priv->notify_lock);
-+}
-+
-+static const struct wmi_device_id lenovo_wmi_id_table[] = {
-+	{ .guid_string = WMI_LENOVO_CAMERABUTTON_EVENT_GUID },
-+	{  }
-+};
-+
-+static struct wmi_driver lenovo_wmi_driver = {
-+	.driver = {
-+		.name = "lenovo-wmi-camera",
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+	.id_table = lenovo_wmi_id_table,
-+	.no_singleton = true,
-+	.probe = lenovo_wmi_probe,
-+	.notify = lenovo_wmi_notify,
-+	.remove = lenovo_wmi_remove,
-+};
-+
-+module_wmi_driver(lenovo_wmi_driver);
-+
-+MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
-+MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
-+MODULE_DESCRIPTION("Lenovo WMI Camera Button Driver");
-+MODULE_LICENSE("GPL");
--- 
-2.25.1
+On Sat, Mar 16, 2024 at 08:37:04AM +0100, Uwe Kleine-K=F6nig wrote:
+> On Fri, Mar 08, 2024 at 10:20:05PM +0100, Uwe Kleine-K=F6nig wrote:
+> > On Thu, Mar 07, 2024 at 09:38:07AM +0100, Uwe Kleine-K=F6nig wrote:
+> > > On Thu, Mar 07, 2024 at 07:29:59AM +0000, Greg Kroah-Hartman wrote:
+> > > > Can you send me a "real" git pull request so that I can verify it is
+> > > > what you say it is (ideally with a signed tag)?
+> > >=20
+> > > Sure, can do. I will do that tomorrow when (and if) my branch is in n=
+ext
+> > > and so got a bit more exposure.
+> >=20
+> > That has worked so far. So here comes the requested pull request. I
+> > dropped the two patches you collected in the meantime in your
+> > char-misc-next branch. The two branches (i.e. your char-misc-next and
+> > this PR's tag) merge without conflict.
+> >=20
+> > The following changes since commit 6613476e225e090cc9aad49be7fa504e290d=
+d33d:
+> >=20
+> >   Linux 6.8-rc1 (2024-01-21 14:11:32 -0800)
+> >=20
+> > are available in the Git repository at:
+> >=20
+> >   https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git ta=
+gs/siox/for-greg-6.9-rc1
+> >=20
+> > for you to fetch changes up to db418d5f1ca5b7bafc8eaa9393ea18a7901bb0ed:
+> >=20
+> >   siox: bus-gpio: Simplify using devm_siox_* functions (2024-03-08 22:0=
+1:10 +0100)
+> >=20
+> > Please pull this for the 6.9-rc1 merge window.
+>=20
+> I didn't hear anything back from you and wonder if there is still a
+> chance to get this in. I guess that's just you being busy with other
+> (and more important) stuff. Would it help you if I sent a pull request
+> to Linus directly?
+>=20
+> The changes are in next leading to db418d5f1ca5 since next-20240308. (As
+> db418d5f1ca since next-20240312, I rebased as two of the six siox
+> patches got into char-misc-next that were picked up directly from the
+> mailing list. Before the rebase it was 4ab973203404.)
 
+You probably saw me being impatient and sending the PR to Linus
+directly. If not: These changes are already in the mainline now
+(00453419575d6b4f5ce0f370da9421cf5253f103) and this is the thread you
+can drop from your todo list. I removed the above tag from my repository
+to (hopefully) prevent future confusion.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--dviotmiylxvmpowz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmX9MacACgkQj4D7WH0S
+/k5TgAf/dp9yPwOLSOijBryob6WgEuV4Pn3MW54oV8BiMvGdQMNCAX2BXe6vU3NU
+ISKlZ8EPZkrV5wu9jQ2Kpc+kcwQcTxC4KE6aJMIwOxq917OWW3M4avsrIMKHqLqk
+P5Xt6lyc3NhJFmNC52RDpwISoosz7h29yyWMAkByPUcoasXAGY8I1Dg0AlIR9oKv
+eswYxZUJPepBzXaF9D3Tp8EFGIkvoUn0j9wq3JRpBSiwoqiqxrczZ+hqbjiQ4zfz
+VYaPc4nXyAGy0yx+x3Q9CMFma2wL933D7R+7HxoBii1bpzCqCk0x20K/1XC9ZREY
+IPtdjB8VFcvSlAVbLrbwLhA3PxVwSw==
+=3pxP
+-----END PGP SIGNATURE-----
+
+--dviotmiylxvmpowz--
