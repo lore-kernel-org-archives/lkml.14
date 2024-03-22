@@ -1,205 +1,244 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2046.outbound.protection.outlook.com [40.107.22.46])
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0520B54FB0;
-	Fri, 22 Mar 2024 16:47:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711126045; cv=fail; b=SglEXoZTUSQMpGcpc+n8JAyut+mckhNg+iRyGAMYToNe1eJfwixcksXp8hECt1kqJnyIAU7Yk8lwJd6G3ZJ9RbCbYKuJSdvaIV7wX5QMTobsDYlfyb1w2BHAk0jPNZprr671kOEPRJQijAn1RKBi4jn8jZBbwSvZnx72KcxGBp8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711126045; c=relaxed/simple;
-	bh=x4Agbi4JG6RT6eEHAcI7QdDsYeCUF81txT8lsWqvImU=;
-	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=pB/GFpsNnO0Z9Lo/BQ4eTyONWjbjHN2Q4eFKFOLGr26DtuTq3vU0BsN/w2oDmEofM14Fix2VG3xAwqRMGlk3nKzWZmI/7mmpK7wb138eZoo/ri3bx6kaq1jZEx1OSDB8jPzYMa1wkSABvQGYzovzUz5vD5L4WWb/VQVY/wspzaY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=GfW4Vs3V; arc=fail smtp.client-ip=40.107.22.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947805D75F
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 16:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711126059; cv=none; b=FmYmODw4qJDCco/X0UhJyVRcMXPPTdQ6WGYSM/4y1JlSLSvHE7EUDJgJj4M2BatmutnN9DdMT4frF3HTZ66YAmmzKK1BSBQH2n0LbE9oyoEVfLbREcQZIkuyzEOP/DUETNWUCdYER1ZeHCWiYPc78T+79Edn2Gx/pKymwrTQHTM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711126059; c=relaxed/simple;
+	bh=qvSq9KJ8v4lS2XRWA030SlZVY6brnDRMxRpdfBEXl68=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EbsO3xxQegfu7r3+Pc5/OV1cpSHUWBFPbCFx70oPo8odos7WjHAHbSon3N03oK5dTrQFT58oZY278yU4EyLOmWoS2Wk8ZLaxFYpbkkQ03ucSv1KJsOpsAzdcH8RO+70IbOA8PJoqTQUEtOfB3nOivw67LH1d18PYgHk20GKkoZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=SusbELVL; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GfW4Vs3V"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R+VIzEdgDmrC82lfdQ/7Q2PvovYb97o2LpAomwkzZe/t8kUGaIVPnpF5YCT+VwfRsUsqnCCM+oy0ioyTWr3nnlixC9BIJUDSV4XOhH1covyZcC7weUGUCKlxGy9nbfYhgNzvgiTRnIfbqp9G4u7xzFEBaEZNr6o0WkQr2YursSRWmjbGkmkr0SbQfooM/NJBB3U9hVU3P3AUv1RuDlOj1JnTPw1GoCGADzU1GgJIbbZ691yRyR8o1ZkNnEUugbaR2v5nCZF5e0d397SqCcOzSp9lbd/kAwaILEsL8Fln99dVFp3l4e5RcHeQ+7XbFVufZzyTs9oJIeXH2Sn5vb6ZVA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=q95J9wkBjmG8HlTJHJKKLK7f5frw5MA4lLnjSh4FkNE=;
- b=DscUzN76sS66EceVMEdGGuD+M7IC3jFr12eiAd0Jt6mYP7eh6FqHnWfLWXYu+0BxdIgMUTQfkv2fCeQAtpD9Ivx2lnbTjzb4fzTymEJnvzE10XtyXZ1SBfniMK/X2o0K7xBtLcChKROORdJp4NpIQvxFTfcogZJ/WwVco/B1yiYZVOWLRtaPXeNC9PQFeI86UwAwmekQ5ekIiNyrtfNDyjQO0CQAaWJu1T1/ciAjRIY+xehBlCVxJnCfQl6DmDeGI5PM3b/6KPu4ur+4Jk/C2FypDg5DMWskO0renOpHCgWGI9zXbpawzvg3sXPZYWLfh91EY6y51iA9vzE4WhZfVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q95J9wkBjmG8HlTJHJKKLK7f5frw5MA4lLnjSh4FkNE=;
- b=GfW4Vs3Vp4VVO2bRxXuyDM0iJlQUR973PrFURcFeEux14bDqc528S/ADByH+24qGr+KFUCWvGhTHxc9LrxRHbFmYws6BOqrLTh3W5ndorMld7BmDhhYhdLgBgbZCewsQvS7LFH/IikliG4/w7S8l18ChR3SuAEmixIktxb+Xo3M=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DBAPR04MB7477.eurprd04.prod.outlook.com (2603:10a6:10:1a9::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.23; Fri, 22 Mar
- 2024 16:47:20 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7386.025; Fri, 22 Mar 2024
- 16:47:20 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="SusbELVL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=qvSq
+	9KJ8v4lS2XRWA030SlZVY6brnDRMxRpdfBEXl68=; b=SusbELVLWoGcXjR0uw/N
+	vi0sJrpp2Y39ZnmOG7CNzMgPhLJURyC8Ho1V2uCRlcvnaxkMo5ejfDKJAgJ8LD5+
+	ErO+aG0llBV4NOPJR7LTMZIboa5omtT/2jAbOJcqJOQ/wBxQNzfz5+r/+Eu9muqU
+	u3o0Cfqet5Kvqs6P5W5slQ6Inml6Pmf4/TNCQC3zDhVHGnArXFWwCjrnwGWQo0Vk
+	kR4mF6CHRGyH7rhaQs2WGWMZhevxcrSvBnSpJ6U14YPLXLKwARnJ4YpJUailRc5N
+	gw95oEIJLLt23XAQDl4rzIwSuGoN/zc3BQAG+xnAB9zO2ISuT7ciBBNHPzUvdSSR
+	FA==
+Received: (qmail 3923149 invoked from network); 22 Mar 2024 17:47:24 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Mar 2024 17:47:24 +0100
+X-UD-Smtp-Session: l3s3148p1@gWAOlEIU/rlehhtF
+Date: Fri, 22 Mar 2024 17:47:23 +0100
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: linux-i2c@vger.kernel.org, Elie Morisse <syniurge@gmail.com>,
+	Shyam Sundar S K <shyam-sundar.s-k@amd.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Krzysztof Adamski <krzysztof.adamski@nokia.com>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jan Dabros <jsd@semihalf.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Jean-Marie Verdun <verdun@hpe.com>,
+	Nick Hawkins <nick.hawkins@hpe.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
 	Shawn Guo <shawnguo@kernel.org>,
 	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
 	Fabio Estevam <festevam@gmail.com>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	imx@lists.linux.dev (open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 1/1] arm64: dts: imx8-ss-conn: fix usdhc wrong lpcg clock order
-Date: Fri, 22 Mar 2024 12:47:05 -0400
-Message-Id: <20240322164706.2626088-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SA1P222CA0115.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:3c5::24) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	Paul Cercueil <paul@crapouillou.net>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Khalil Blaiech <kblaiech@nvidia.com>,
+	Asmaa Mnebhi <asmaa@nvidia.com>, Qii Wang <qii.wang@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Avi Fishman <avifishman70@gmail.com>,
+	Tomer Maimon <tmaimon77@gmail.com>,
+	Tali Perry <tali.perry1@gmail.com>,
+	Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>,
+	Benjamin Fair <benjaminfair@google.com>,
+	Ajay Gupta <ajayg@nvidia.com>,
+	Peter Korsgaard <peter@korsgaard.com>, Andrew Lunn <andrew@lunn.ch>,
+	Robert Richter <rric@kernel.org>,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	Tony Lindgren <tony@atomide.com>, Vignesh R <vigneshr@ti.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Loic Poulain <loic.poulain@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>,
+	Alain Volmat <alain.volmat@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Laxman Dewangan <ldewangan@nvidia.com>,
+	Dmitry Osipenko <digetx@gmail.com>,
+	Conghui Chen <conghui.chen@intel.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Michal Simek <michal.simek@amd.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	chrome-platform@lists.linux.dev, linux-samsung-soc@vger.kernel.org,
+	imx@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-amlogic@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, openbmc@lists.ozlabs.org,
+	linux-omap@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	asahi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-tegra@vger.kernel.org, virtualization@lists.linux.dev,
+	Ryan Wanner <Ryan.Wanner@microchip.com>
+Subject: Re: [PATCH 64/64] i2c: reword i2c_algorithm in drivers according to
+ newest specification
+Message-ID: <Zf22G4jC2gIlzhi_@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	linux-i2c@vger.kernel.org, Elie Morisse <syniurge@gmail.com>,
+	Shyam Sundar S K <shyam-sundar.s-k@amd.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Krzysztof Adamski <krzysztof.adamski@nokia.com>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jan Dabros <jsd@semihalf.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Jean-Marie Verdun <verdun@hpe.com>,
+	Nick Hawkins <nick.hawkins@hpe.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Paul Cercueil <paul@crapouillou.net>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Khalil Blaiech <kblaiech@nvidia.com>,
+	Asmaa Mnebhi <asmaa@nvidia.com>, Qii Wang <qii.wang@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Avi Fishman <avifishman70@gmail.com>,
+	Tomer Maimon <tmaimon77@gmail.com>,
+	Tali Perry <tali.perry1@gmail.com>,
+	Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>,
+	Benjamin Fair <benjaminfair@google.com>,
+	Ajay Gupta <ajayg@nvidia.com>,
+	Peter Korsgaard <peter@korsgaard.com>, Andrew Lunn <andrew@lunn.ch>,
+	Robert Richter <rric@kernel.org>,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	Tony Lindgren <tony@atomide.com>, Vignesh R <vigneshr@ti.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Loic Poulain <loic.poulain@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>,
+	Alain Volmat <alain.volmat@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Laxman Dewangan <ldewangan@nvidia.com>,
+	Dmitry Osipenko <digetx@gmail.com>,
+	Conghui Chen <conghui.chen@intel.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Michal Simek <michal.simek@amd.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	chrome-platform@lists.linux.dev, linux-samsung-soc@vger.kernel.org,
+	imx@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-amlogic@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, openbmc@lists.ozlabs.org,
+	linux-omap@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	asahi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-tegra@vger.kernel.org, virtualization@lists.linux.dev,
+	Ryan Wanner <Ryan.Wanner@microchip.com>
+References: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
+ <20240322132619.6389-65-wsa+renesas@sang-engineering.com>
+ <e8dff9d4-ed15-44e9-ae9a-2e77845ec40b@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBAPR04MB7477:EE_
-X-MS-Office365-Filtering-Correlation-Id: e775c2ae-d62a-47e1-e868-08dc4a8fbd8b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	QQs51n5k+mQw6TZWA05nxz8u/PuOb+Qd2shssjKB4dm8STbMSfcmZQwQx1NCtHCxH5kEuZWbVdXstDnyBTqhm7hZMU2FRL5RKCg6ruJF+6NjUTt3kfnNQ5HLbGAtX7lZM1q4BWKLErMpOUw8uclMMYSaehRVOu9L5ThqRQHbjOVbw/KAWNnQWBNscX8VtJzfHt0t22C8y2BWxZD6qEBLf0CM1zurSEbxZsQEHnB/QDuQCo63I6NAxUjLc0rPtdenun7hUayBrhYKM3e1qGmPI77jOW6jKxizBa8UxeMju7wUCgqwgqC+oUGkelI7Z9aYQQt4cULJhc+LYNsBr7Grg76oQIRvrqlQusqv13wsNCKljY5+NANr1wh0QdEgScT5U16F6sEU+ppWCBCICcMOGnJw/VbNYpQGFke6XgAQGcu6R2DGoRzxtDs+pyuQg+UEUF1b1su73U5ls4ERzjpquLw9wiz661xFmq4bbhenPQnmgEzqbEeZWT7384IFkQKQSXQ79IPF7Wxo+rzfelZUU5pDP9kj3L0Gvc1dRZ+p/JbP1vkHqaNXMLnM81j2Q8LbIkkk0qYuebNuTarOOD4WSZP9oYD9XDWSAvzdlLLxA8Tq0Mrg9lOvBYHxbPRycDyZX1BuLUoGSP6ZrBK5zBVtQjYmFixLSaMuXnoLo3FA0dmMrYVbmoGihDWIvIfs2E6lMEaAVRwnBZ/BVxQjNtTwPD4LJ47bIjj8h+xJezhbuUA=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(52116005)(7416005)(1800799015)(376005)(38350700005)(921011);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?uW01BKcEzHzegBJC+e7UjxBY0+xNpFFnacIfq8Y0xiYdWTKzGdjv5d6k2MDy?=
- =?us-ascii?Q?wQVHGFFJJkEF4Vwe8ezzrCWX/ZnVrZ6aFVR3vHAqePJS4/bJWH/p0TkvkAkf?=
- =?us-ascii?Q?4aENNDw46K8a3ci1w8t0KiXVdqKXztzTUle3JHGWhgEr5OpM5/Ce5jSVh8lx?=
- =?us-ascii?Q?KFJSxhMqpNAvvXwaU9ThLacwTnoRaRVVo0W/h1XcR5Gwcfn6/bEhD+b/U5RS?=
- =?us-ascii?Q?Kav9NHgdv+aOW74lOshQlQ7EZJsjblgK3h9ZRe6USzsdfYfMA/Z1h9KSGjqp?=
- =?us-ascii?Q?0lKYXDGeRBaGILqtJxf81bZf4nyOV/5I7+H5JPti5MdtDqmzDdeOIkhfgRhL?=
- =?us-ascii?Q?dDvBPifdQtvv/jwMQo9Utw+tBULUdOj4UrPYU0KTtHefVXEJTy3SkzEyYJA/?=
- =?us-ascii?Q?/XOqJ21qPT4oANT7LCeTx3sAOw1ljC6eUoo79QJZ6ZwCOWOK2tWVJRQ+bz4k?=
- =?us-ascii?Q?wqPNwND0Ew2aCUxwQ5d28h7P8h6TVFGPXxTa1+/8zVeDFBYUhGQMeAY8ypER?=
- =?us-ascii?Q?e9rgP2RXEu7YcOL/BFE2dCvk66czvCLDJ4k7DmrCfKU8WsXqkhLDQOMcNKtT?=
- =?us-ascii?Q?0mRIeE8Q+6rHdVP59MrpBSmYP6lC8znYDFe1VVudVxM1n+blVKyTHBrMf4qn?=
- =?us-ascii?Q?3qm1F8NkdfIVAmZ36MbROLjI9MRFU5vl4IOuECKfP8kBzJLKg+AaBySFxgNR?=
- =?us-ascii?Q?vblUPK66bHj/6BrieIB+YXS6w2V4xC+3kXRo1UAyWMPLgjCKoHJGzfC1lixg?=
- =?us-ascii?Q?bXBKvdlTLN5QNJ4vfcqPZphrOAPWI3HLqE7wIPnL87EMwZfcycc1UvZdFPCz?=
- =?us-ascii?Q?XD5gG8jAb8xCn158jjm2lwB36Xp6k82WVrQHvMZ+mr0S+vbRMVEcFdp1RbOJ?=
- =?us-ascii?Q?f3TeJ1EAcEX14WP19ss7Y1ies8Xhd8V8AGIVxsbo7loyZfwUr1u3CgMb49Q5?=
- =?us-ascii?Q?sqR6Tq/7XefFr8VN2sduoHTNhfQw1RkM+rqf7SozRGN4Z1fZOP2pOjcC1X36?=
- =?us-ascii?Q?vgzt1Rixhy5MWCzyuj2uam9+zIOUWrT5suYo+TTOyFds0S8FqRcUuczncRJa?=
- =?us-ascii?Q?mkGUSgrM1xRm/7Mqw1V1O2jx8dnPhd/ddr1HFimEmcFTs4PtkP8QxrhphtlF?=
- =?us-ascii?Q?uXFQvNyNMsQ3j3AenO/cJSS6UIq1HqtZ6h9Z754gv1cYfKZmBlA5NUFZNbii?=
- =?us-ascii?Q?r22ST7KISzdYhzSTsmABlWalzFL5OXdBcxfmiIB+v43z2RBLTF2OoPVjlT8a?=
- =?us-ascii?Q?tPk4a/Z7EaAmu8zY/fKbDFRnZZpa4vYiRijQXqnPoT7D+fEpvIyivnKjnTuz?=
- =?us-ascii?Q?k5vxDbl1ilJ7MMzV4+TvvwJ+arLvyxnewFu+Ovc63TmSX7k1y59w24Iz3RHd?=
- =?us-ascii?Q?f1GgudpxVhUhthq3HfyUFNda3ZPBRjnIAHyJe7ALWOZYCUpTEjnY3YaNx5TZ?=
- =?us-ascii?Q?qQK4PQtJOraOLxOckA6b7mEHiI5EvaHWVBAcKEggA4qZzP9U6QvnsEcRjpa4?=
- =?us-ascii?Q?a5kGj0pCixqqF0aYuGbkxHyl+AY8TQ01AeWAf7R4H8R7XIpabog+gQxi5SFT?=
- =?us-ascii?Q?bK6zLHZAxBr77XV/6xGvFiCxjVc47Gg2PaUovo/Q?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e775c2ae-d62a-47e1-e868-08dc4a8fbd8b
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Mar 2024 16:47:20.2334
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6jbcFlFBYJp4yPhgTH85LE7VsjRKSOo2DYphe3Ly0uSdPAxYupI46paYhodLmiqdP/Q9K6UHzhGNlKqzVejwUA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7477
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="9lYJOkUv0cPFV6j6"
+Content-Disposition: inline
+In-Reply-To: <e8dff9d4-ed15-44e9-ae9a-2e77845ec40b@microchip.com>
 
-The actual clock show wrong frequency:
 
-   echo on >/sys/devices/platform/bus\@5b000000/5b010000.mmc/power/control
-   cat /sys/kernel/debug/mmc0/ios
+--9lYJOkUv0cPFV6j6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-   clock:          200000000 Hz
-   actual clock:   166000000 Hz
-                   ^^^^^^^^^
-   .....
 
-According to
+> Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com> # for at91
+> Probably file names themselves will need some care, in a second time.
 
-sdhc0_lpcg: clock-controller@5b200000 {
-                compatible = "fsl,imx8qxp-lpcg";
-                reg = <0x5b200000 0x10000>;
-                #clock-cells = <1>;
-                clocks = <&clk IMX_SC_R_SDHC_0 IMX_SC_PM_CLK_PER>,
-                         <&conn_ipg_clk>, <&conn_axi_clk>;
-                clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>,
-                                <IMX_LPCG_CLK_5>;
-                clock-output-names = "sdhc0_lpcg_per_clk",
-                                     "sdhc0_lpcg_ipg_clk",
-                                     "sdhc0_lpcg_ahb_clk";
-                power-domains = <&pd IMX_SC_R_SDHC_0>;
-        }
+Totally true. I am aware of that. But one step after the other...
 
-"per_clk" should be IMX_LPCG_CLK_0 instead of IMX_LPCG_CLK_5.
 
-After correct clocks order:
+--9lYJOkUv0cPFV6j6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-   echo on >/sys/devices/platform/bus\@5b000000/5b010000.mmc/power/control
-   cat /sys/kernel/debug/mmc0/ios
+-----BEGIN PGP SIGNATURE-----
 
-   clock:          200000000 Hz
-   actual clock:   198000000 Hz
-                   ^^^^^^^^
-   ...
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmX9thcACgkQFA3kzBSg
+KbYGfw/+LQ3hxBO2X+O6EGQNj9zWf2B5N5sjnoAM9/9Me+X81oLmIkTF01pWe8R3
+bIHrKR3dMTkxZIPm+WlZDGrUAEK1UKTgtzjM7MWEsb+rQ2RpH3/Wk+gKVsGI0Qt3
+9oT+NKxyhdMXSggbOzoquWHAzB/LzL0sYoDtGre6k/rDEduSPqkDlaZ+BGmDO6uq
+I2efrkUJgN0Qf5YyqKeu54G5K0e8xk+/Igp4Z9GlSJ4BOMOFSVmDO8DFw8SU92Nt
+E8o1H2djbmOzxgdzIVVNQm9meh3ywyJ5ioL1gR0PyaG52jNMyQTxo9s8KI4Kok2g
+NTj9dthAfLnCNRnrG/DHKAVnA7bX1SQ/CtddEvpZjY8DUfElpO10ejozu0aXXKzu
+KXLxApqMcuzEVYG8LP/NqXNqPu8QhYdWWgwhiyEok9nsJWBIcv+Jsu/LFMoReo+j
+PaiXkF3ANW6doXSn9v1B8jOdoGQnPsaPjpXbI69ZNNX2/Q3AoFrunfzrWh58hU2E
+VEHLY/ZrvSe/8PiFCPPauo1jjT9a3sgW2moYeh9DjpkjwWFPamUol3fhtH811QGe
+qw/gHCLtNeD4zyV5YtMs1YSn5kClt4DzjPXISGI7uvZIvsYuZlN8QnbKk9No5YjY
+eLqZFiQT/VIBRHqACzaH7xbkdHW6UNcT5irBPAyy7YWElz0nkTA=
+=ScZ5
+-----END PGP SIGNATURE-----
 
-Fixes: 16c4ea7501b1 ("arm64: dts: imx8: switch to new lpcg clock binding")
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
-index 3c42240e78e24..af2259e997967 100644
---- a/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
-@@ -67,8 +67,8 @@ usdhc1: mmc@5b010000 {
- 		interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
- 		reg = <0x5b010000 0x10000>;
- 		clocks = <&sdhc0_lpcg IMX_LPCG_CLK_4>,
--			 <&sdhc0_lpcg IMX_LPCG_CLK_0>,
--			 <&sdhc0_lpcg IMX_LPCG_CLK_5>;
-+			 <&sdhc0_lpcg IMX_LPCG_CLK_5>,
-+			 <&sdhc0_lpcg IMX_LPCG_CLK_0>;
- 		clock-names = "ipg", "ahb", "per";
- 		power-domains = <&pd IMX_SC_R_SDHC_0>;
- 		status = "disabled";
-@@ -78,8 +78,8 @@ usdhc2: mmc@5b020000 {
- 		interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_HIGH>;
- 		reg = <0x5b020000 0x10000>;
- 		clocks = <&sdhc1_lpcg IMX_LPCG_CLK_4>,
--			 <&sdhc1_lpcg IMX_LPCG_CLK_0>,
--			 <&sdhc1_lpcg IMX_LPCG_CLK_5>;
-+			 <&sdhc1_lpcg IMX_LPCG_CLK_5>,
-+			 <&sdhc1_lpcg IMX_LPCG_CLK_0>;
- 		clock-names = "ipg", "ahb", "per";
- 		power-domains = <&pd IMX_SC_R_SDHC_1>;
- 		fsl,tuning-start-tap = <20>;
-@@ -91,8 +91,8 @@ usdhc3: mmc@5b030000 {
- 		interrupts = <GIC_SPI 234 IRQ_TYPE_LEVEL_HIGH>;
- 		reg = <0x5b030000 0x10000>;
- 		clocks = <&sdhc2_lpcg IMX_LPCG_CLK_4>,
--			 <&sdhc2_lpcg IMX_LPCG_CLK_0>,
--			 <&sdhc2_lpcg IMX_LPCG_CLK_5>;
-+			 <&sdhc2_lpcg IMX_LPCG_CLK_5>,
-+			 <&sdhc2_lpcg IMX_LPCG_CLK_0>;
- 		clock-names = "ipg", "ahb", "per";
- 		power-domains = <&pd IMX_SC_R_SDHC_2>;
- 		status = "disabled";
--- 
-2.34.1
-
+--9lYJOkUv0cPFV6j6--
