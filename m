@@ -1,162 +1,125 @@
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
+Received: from out-176.mta0.migadu.com (out-176.mta0.migadu.com [91.218.175.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E50D57876;
-	Fri, 22 Mar 2024 16:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.143.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522524F60D
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 16:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711124562; cv=none; b=tkADdNLz/hxZynMV7dQvTCSY0g1D8fJr/OmSeKv0XkbVQJTL0hJwLCKwSyT5/+yUOJwIsJeSUg/1g9vPTly8lkye6lrO0KfeiZYrGd1pfnIlyKEKQl2HRj2UfCigFdCDwk62GhJyEmVvvUxTqw/jxDR8xDIs4Q7KlgEu88HFAj0=
+	t=1711124777; cv=none; b=EnLjyfcZJdp/CQc7DwGHfUc0lPATddA25HgJLY6cpg8/UYunZfSqRAan+9CxuP4F2J5U+2wgJ+aqLrWYC4mqrB4Q2Uigd5mqKTvAC7OjdZcAiFUHuIi/W9aJWjri1oTPEjeZhZxIneGCQ+d/8Uub6m05JgVyYTRhKGsmpp0yEY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711124562; c=relaxed/simple;
-	bh=MAE8WIHU9ta7n4x/BR5+OwfH/AdkCJB+DKep9CrSiJ4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WU6L7jKXUFPk3aDOtkKkN3SfREgFK7IAXzX05wqAG+e7t+dZBoyBj/lo7jXik4/6Y+yThKCQm2HQU/cWaRue7VlMa9LO+L7zBzOGBCOWtvuuty/3eL8sLZte9+R/RzIT9KcQK3APyysYM3vdffFN7Y68A4XOdd4367rIUVTu3Wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=Ip4ViCWf; arc=none smtp.client-ip=148.163.143.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	s=arc-20240116; t=1711124777; c=relaxed/simple;
+	bh=HOkr8Hoor9LWrctKOQzP7fj5wIdq4ZleDhqNpY3eCFM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G6lV5KEG94XssEYTnmuAKtthz8olibpI81kGTEMnf5NCzFCDWQ6rZkGS+i8E1+5cnnXm+SelYHfMuSFQoyKTGBi5Opra25JeNkwtLbw+Y7jg/PFxMXChhTKxqbjuZE6RYRRarVrnHukPXzGMLY9v/tX55kUxZfShxeNw0QqmwQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=W3V1cRet; arc=none smtp.client-ip=91.218.175.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="Ip4ViCWf"
-Received: from pps.filterd (m0134425.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42MDWoAc020466;
-	Fri, 22 Mar 2024 16:21:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
- : date : message-id : content-transfer-encoding : mime-version; s=pps0720;
- bh=UkvndrBpowbSq2m7Khs+/6kDy0TN1ypmmFxO26zOD98=;
- b=Ip4ViCWf/re1gFk8m+T/teZhgpZs46nWSlanj0dgUdQM+i3bi6ofXxeEhI0whQMxJQxP
- 55CHzRjLhQqxA9Fvv1CyvB30sh1I72nWJ6f7ZvvMl/jTYYvaZGKQWTxRd0Q8NOqPjuBx
- PLMShfMn/BGNilt7LHzLs4T10FIRDOfLkEK2XyW+oI9LSDxTX4x3YnR93LpO2AgNqkn0
- w7pxLQKU8ERnIBwQXSvOoWGwZLvH67X22uDS1/dg4nrsUT/48KTmYTZxHIOyMR5D7e6m
- JS1ZILLydV4+/XXoNiNjuMSVcdANOybSJcJW3R3fl/bVabV8uKdxiywkBRNnD6L7mlqW Ow== 
-Received: from p1lg14881.it.hpe.com ([16.230.97.202])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3x183dbayg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 Mar 2024 16:21:57 +0000
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14881.it.hpe.com (Postfix) with ESMTPS id EC9B68059E3;
-	Fri, 22 Mar 2024 16:21:55 +0000 (UTC)
-Received: from dog.eag.rdlabs.hpecorp.net (unknown [16.231.227.36])
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTP id DA6E9808350;
-	Fri, 22 Mar 2024 16:21:51 +0000 (UTC)
-Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
-	id A1A6B3000059D; Fri, 22 Mar 2024 11:21:35 -0500 (CDT)
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Linux regressions mailing list <regressions@lists.linux.dev>,
-        Pavin Joseph <me@pavinjoseph.com>, stable@vger.kernel.org,
-        Eric Hagberg <ehagberg@gmail.com>
-Cc: Simon Horman <horms@verge.net.au>, Eric Biederman <ebiederm@xmission.com>,
-        Dave Young <dyoung@redhat.com>, Sarah Brofeldt <srhb@dbc.dk>,
-        Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>
-Subject: [PATCH] x86/mm/ident_map: Use full gbpages in identity maps except on UV platform.
-Date: Fri, 22 Mar 2024 11:21:35 -0500
-Message-Id: <20240322162135.3984233-1-steve.wahl@hpe.com>
-X-Mailer: git-send-email 2.26.2
-X-Proofpoint-GUID: oYOSRYdA2RlWrO_MVfNl-dLggOq7mrmq
-X-Proofpoint-ORIG-GUID: oYOSRYdA2RlWrO_MVfNl-dLggOq7mrmq
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="W3V1cRet"
+Message-ID: <bcb82d05-3c8f-40f4-a8d3-a0d7c17497b3@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1711124774;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y/6J+YbEX3EYv+o0oRRUc2f+RR8PKsdbh2rDoDRf+CQ=;
+	b=W3V1cRetDjH+QZIfP4YR4L6tc6g5V3rgUlEvOaJraPy1aw5TxWHFAm76DXOEaXXhFcDmRO
+	/A8RFQT2CcLz+uR6kYkPmm9mRm2eUeXxXManLt/BUgoFyzoQVys+3F5xw6hW2idomfhSEl
+	z0QwYPUnTiKYqSmUGTO8tb68riCfcj0=
+Date: Fri, 22 Mar 2024 12:26:10 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-22_08,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- priorityscore=1501 lowpriorityscore=0 suspectscore=0 adultscore=0
- clxscore=1011 spamscore=0 malwarescore=0 phishscore=0 mlxlogscore=999
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2403220117
+Subject: Re: [PATCH 1/2] dt-bindings: nvmem: Remove fsl,t1023-sfp in favor of
+ fsl,layerscape-sfp
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Conor Dooley <conor@kernel.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+ Richard Alpe <richard@bit42.se>, linux-kernel@vger.kernel.org,
+ =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+ Michael Walle <michael@walle.cc>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+References: <20240316002026.1808336-1-sean.anderson@linux.dev>
+ <20240317-starved-pager-7a81c5045cfc@spud>
+ <9daf9c8f-6606-4ff6-8065-6a32fa0d152c@linux.dev>
+ <20240318-scarf-startup-64088b1d8d35@spud>
+ <fa047914-da03-4234-b48f-eebdf350795e@linux.dev>
+ <20240319-fondling-implode-322a9cb570b8@spud>
+ <d947cb15-aafc-487e-8bbd-54d786683470@linux.dev>
+ <024ca6eb-c3d8-4764-946e-1070d1bfb806@linaro.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <024ca6eb-c3d8-4764-946e-1070d1bfb806@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Some systems have ACPI tables that don't include everything that needs
-to be mapped for a successful kexec.  These systems rely on identity
-maps that include the full gigabyte surrounding any smaller region
-requested for kexec success.  Without this, they fail to kexec and end
-up doing a full firmware reboot.
+On 3/22/24 03:01, Krzysztof Kozlowski wrote:
+> On 21/03/2024 17:21, Sean Anderson wrote:
+>> On 3/19/24 13:55, Conor Dooley wrote:
+>>> On Mon, Mar 18, 2024 at 11:48:06AM -0400, Sean Anderson wrote:
+>>>> On 3/18/24 11:40, Conor Dooley wrote:
+>>>>> On Mon, Mar 18, 2024 at 11:08:00AM -0400, Sean Anderson wrote:
+>>>>>> On 3/17/24 11:10, Conor Dooley wrote:
+>>>>>
+>>>>>>> Additionally, should
+>>>>>>> they fall back to t1023-sfp? I see that there's already some dts files
+>>>>>>> with these compatibles in them but seemingly no driver support as there
+>>>>>>> is for the t1023-sfp.
+>>>>>>
+>>>>>> I checked the reference manuals for these processors, and all of them use TA 2.0.
+>>>>>
+>>>>> Sounds like a fallback is suitable then, although that will require
+>>>>> updating the various dts files.
+>>>>
+>>>> Yes, a fallback (like what is done for the T-series) would be suitable,
+>>>> but given that these devicetrees have been in-tree for eight years I
+>>>> think it would be preferable to support the existing bindings for
+>>>> compatibility purposes.
+>>>
+>>> Just cos stuff snuck into the tree in dts files doesn't make it right
+>>> though, I'd rather the bindings were done correctly. I don't care if you
+>>> want to support all of the compatibles in the driver so that it works
+>>> with the existing devicetrees though, as long as you mention the
+>>> rationale in the commit message.
+>> 
+>> It doesn't really matter what the schema has as long as the driver supports
+>> existing device trees.
+> 
+> We do not talk about driver now but bindings. You add new compatibles on
+> a basis that they were already used. This cannot bypass regular review
+> comments, so if during regular review process we would require
+> fallbacks, then you are expected to listen to review also when
+> documenting existing compatibles. Otherwise everyone would prefer to
+> snuck in incorrect code and later document it "it was there!".
 
-So, reduce the use of GB pages only on systems where this is known to
-be necessary (specifically, UV systems).
+To be clear, the existing nodes look like
 
-Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
-Fixes: d794734c9bbf ("x86/mm/ident_map: Use gbpages only where full GB page should be mapped.")
-Reported-by: Pavin Joseph <me@pavinjoseph.com>
-Closes: https://lore.kernel.org/all/3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com/
-Tested-by: Pavin Joseph <me@pavinjoseph.com>
-Tested-by: Eric Hagberg <ehagberg@gmail.com>
-Tested-by: Sarah Brofeldt <srhb@dbc.dk>
----
- arch/x86/include/asm/init.h        |  1 +
- arch/x86/kernel/machine_kexec_64.c |  3 +++
- arch/x86/mm/ident_map.c            | 13 +++++++------
- 3 files changed, 11 insertions(+), 6 deletions(-)
+	sfp: sfp@e8000 {
+		compatible = "fsl,t1040-sfp";
+		reg	   = <0xe8000 0x1000>;
+	};
 
-diff --git a/arch/x86/include/asm/init.h b/arch/x86/include/asm/init.h
-index cc9ccf61b6bd..4ae843e8fefb 100644
---- a/arch/x86/include/asm/init.h
-+++ b/arch/x86/include/asm/init.h
-@@ -10,6 +10,7 @@ struct x86_mapping_info {
- 	unsigned long page_flag;	 /* page flag for PMD or PUD entry */
- 	unsigned long offset;		 /* ident mapping offset */
- 	bool direct_gbpages;		 /* PUD level 1GB page support */
-+	bool direct_gbpages_always;	 /* use 1GB pages exclusively */
- 	unsigned long kernpg_flag;	 /* kernel pagetable flag override */
- };
- 
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index b180d8e497c3..1e1c6633bbec 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -28,6 +28,7 @@
- #include <asm/setup.h>
- #include <asm/set_memory.h>
- #include <asm/cpu.h>
-+#include <asm/uv/uv.h>
- 
- #ifdef CONFIG_ACPI
- /*
-@@ -212,6 +213,8 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
- 
- 	if (direct_gbpages)
- 		info.direct_gbpages = true;
-+	if (!is_uv_system())
-+		info.direct_gbpages_always = true;
- 
- 	for (i = 0; i < nr_pfn_mapped; i++) {
- 		mstart = pfn_mapped[i].start << PAGE_SHIFT;
-diff --git a/arch/x86/mm/ident_map.c b/arch/x86/mm/ident_map.c
-index a204a332c71f..8039498b9713 100644
---- a/arch/x86/mm/ident_map.c
-+++ b/arch/x86/mm/ident_map.c
-@@ -39,12 +39,13 @@ static int ident_pud_init(struct x86_mapping_info *info, pud_t *pud_page,
- 		/* Is using a gbpage allowed? */
- 		use_gbpage = info->direct_gbpages;
- 
--		/* Don't use gbpage if it maps more than the requested region. */
--		/* at the begining: */
--		use_gbpage &= ((addr & ~PUD_MASK) == 0);
--		/* ... or at the end: */
--		use_gbpage &= ((next & ~PUD_MASK) == 0);
--
-+		if (!info->direct_gbpages_always) {
-+			/* Don't use gbpage if it maps more than the requested region. */
-+			/* at the beginning: */
-+			use_gbpage &= ((addr & ~PUD_MASK) == 0);
-+			/* ... or at the end: */
-+			use_gbpage &= ((next & ~PUD_MASK) == 0);
-+		}
- 		/* Never overwrite existing mappings */
- 		use_gbpage &= !pud_present(*pud);
- 
--- 
-2.26.2
+which is perfectly serviceable for read-only use (as the clock is only
+necessary for writing). As these devices are effectively identical, the
+compatible could also look like what the P-series has:
 
+	sfp: sfp@e8000 {
+		compatible = "fsl,p2041-sfp", "fsl,qoriq-sfp-1.0";
+		reg	   = <0xe8000 0x1000>;
+	};
+
+but in either case, it is desirable for the driver to match based on the
+more-specific compatible (as well as the less-specific compatible) as we
+already have enough information from the more-specific compatible to
+select the correct implementation.
+
+--Sean
