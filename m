@@ -1,228 +1,263 @@
-Received: from AUS01-SY4-obe.outbound.protection.outlook.com (mail-sy4aus01olkn2181.outbound.protection.outlook.com [40.92.62.181])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 338583D3A4
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 10:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.62.181
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711103642; cv=fail; b=VWgmt8ypELwvLoNHB4kCsuZITeLKut+be7uUkWKxpa0hrXcltQTaTSvx9Y5qsO3fGSSlwaope0y6+m7UA1jxeXVxabs3EtUMlESgzeevX1fKQ/e6q842ieRjwx0spAi5IMmaMjQlBqCRCJjrnN9muLVfevnT0R54cJsu8Rf03So=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711103642; c=relaxed/simple;
-	bh=q2CSOORofJAO2oPdxbMV8QGH9tynPBLZaTq9JpjMcko=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=A+Ao2pLyoPXYEtcmN6E8+sWfwi0d9TYU8fH8GO8EFeRz/309giOeK86XGHjbhT4+Iy+2oTqdY+LZOnrzHyXlU3YRxjTa18h4qNLZJb5+eKTFc54RyVb35AV3oyUFVwHOM62EPX70aGZiE14KbsnftC3VBa+KoxQ7pQZBm37y2vM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com.au; spf=pass smtp.mailfrom=outlook.com.au; dkim=pass (2048-bit key) header.d=OUTLOOK.COM.AU header.i=@OUTLOOK.COM.AU header.b=tHpe1s9y; arc=fail smtp.client-ip=40.92.62.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com.au
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F8B1E522;
+	Fri, 22 Mar 2024 10:34:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711103702; cv=none; b=oIvkKyR/CxzCbue43T8qk4X5gsjoanKRxZeIXmKQjnA3FN0vEx81g1JHHOOEZAOvKymaYA9hD6bGXotgt/qkhnLEZVX/9oKUh3Uvshvj2o/SkGJTF3+Fh7kqeaZPMIC0brg/PlHMBZKBFIzGvkKOGF2Ft7BoNakcwZSEqFrVwqk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711103702; c=relaxed/simple;
+	bh=lrn69a3Bf4DO8NuVsgSqNnzfpBJvK8V4u5Lh/k+KglU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DPfGczqtg/kKxbTS5Jcnz/VQQoYwhe9W11Wc8Xeo2nw8bPxuhtIvXxOUlQ5vav+17tL629uRpf9Hmb6lEcFPrUyH0BYJK87pXRBgztPmF038Ky3eEFOgdCzfhW/dkQOLDE/l/eUHfwAUW896W+vAnIeYMBfOkyNzLN7WfKgWC3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dBudfMDM; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=OUTLOOK.COM.AU header.i=@OUTLOOK.COM.AU header.b="tHpe1s9y"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c5/s891G6W8OyNJlnMcR4izCIGZffCgBwIOUqHmk+ZICcKyOt8Jnf6MYabKat+HgA1T5/+75sFlVd+7oB91Qf7+5fbsXRWk18cqshZsiFwk2w4nPCvI3RZzc8ERsKBkLtanjDpdGX9Gsw9P+JLxLA17leqgV/2dohgatDR9W3+c3/R5R/wrG0J1sprJmSyd8qTi7dKPPQbJvKU1/EQn6q3KgNPwK0NL/B3UE8OpvysVVKTMHQfzvCbtggTJyPPI8T5O2QuEdjvut2KpZwXn45dmz7OyPfXssIpYoRDHweY+uBS2gG5JKrc/M1tF1GjR2ty7gklM3jIs64yfLuTD0+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Fuo327e0tLMjSKRCCf6sFQ/r/yyShcRDGK5T10NabhY=;
- b=QfC4jMMpeMrA9G2oeNh1Njt2ggh72RyLGVH2DT4L1WALxLkteSFhVrL7RhDu3dbQE/j0sogm6jRKqz1dAtihf9F7XIcJRIRqACWRqArsDSOs+egTvrw5Vm2TzQnSj19fr9mrtdiRS99jTn3KpVx61+vIQu2Byg66oJ9Jhk2VwwDYvIOn4bGzRzxaiXPYH38/cgsVnIoBeLNidoiD0WcNIPX54sfqu1fW2m/D43O2F4oC0aWCsusI1gw5SAs5HHxSq+p/4b9PBhyutxL5UiPvUFxwRkh+A8hvCkeQg3dP65tjUHQg6mowCxl30yJayqkv9v901wM2+BuiJ7DocVzd2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=OUTLOOK.COM.AU;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Fuo327e0tLMjSKRCCf6sFQ/r/yyShcRDGK5T10NabhY=;
- b=tHpe1s9yI/pP69oqiYL33OE+640b/TQuj1LJtrlliM9JY5j2ZtjH7ut4IlXnReAwIA0MhW75/w85ieVIUoMqyPj3BifkrfRRJBYedZH01jFz/VUdOhyFPU20gwwvP1ZL9Tw10OlIb0aTKlSJJAS+vJcbFYk0ZXPNp+WhtzMI7XjskBo8e5HqqjncXcivQl1rrF7p/AIXCBRh09A4Pmv9Zy4i1JUJfpDuEkSoRWmrxjACNp/+mcPl4G1kcQ2blhzKMYziTVhPoCog0ZE9nG+1nR2eZDEmU6rYdyUeXhbbAjYTDlpZ/W9+aqmtJ9Pl0HcYGcqLjUzuv0G7tUukibncXA==
-Received: from SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:159::9) by
- SY8P282MB5238.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:2b5::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7386.30; Fri, 22 Mar 2024 10:33:53 +0000
-Received: from SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM
- ([fe80::22c8:76c8:58ad:f00d]) by SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM
- ([fe80::22c8:76c8:58ad:f00d%3]) with mapi id 15.20.7409.023; Fri, 22 Mar 2024
- 10:33:53 +0000
-From: Stephen Horvath <s.horvath@outlook.com.au>
-To: Lee Jones <lee@kernel.org>,
-	Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Stephen Horvath <s.horvath@outlook.com.au>
-Subject: [PATCH 2/2] platform/chrome: cros_kbd_led_backlight: Remove obsolete commands (EC_CMD_PWM_*_KEYBOARD_BACKLIGHT)
-Date: Fri, 22 Mar 2024 20:27:59 +1000
-Message-ID:
- <SY4P282MB3063D447DA09D35F5FBD4721C5312@SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240322102800.1322022-1-s.horvath@outlook.com.au>
-References: <20240322102800.1322022-1-s.horvath@outlook.com.au>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN:
- [xcla9VZ8m/6GwZ6d+Io/C7rkYK4AIWt7E30yCe0/PdTm+3jaINrD1YQS69ohbGN5KfXFar0MPJw=]
-X-ClientProxiedBy: SYCPR01CA0033.ausprd01.prod.outlook.com
- (2603:10c6:10:e::21) To SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:10:159::9)
-X-Microsoft-Original-Message-ID:
- <20240322102800.1322022-3-s.horvath@outlook.com.au>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dBudfMDM"
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42M92orD024593;
+	Fri, 22 Mar 2024 10:34:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=2VbR/Un5M3aljxjEjZ3WG2Xn6Z2aYN4MqXSuM9FhLrA=;
+ b=dBudfMDMgiUknhgWT7doYP5l0hGBVdzt0KINdwHq9wavaRhlK7BGtNqvZEej0ig9+6vy
+ Nhhm/d26Yer7lSuDJJSLINQWYDol9+ltpuZuINtGY5B8+swKERgxs6oxul7kH4dvYzJD
+ 5BnRk06wwuYhdnqAsZSIPkklY+7DufbLEM6ppF61u57pj1yzNuHc6xDxxDb09CJTvSYG
+ k3sAjVDVGNGvPU2Gs2zsE9HuL99D/7jSBhWgRbwvg8G/0h/UQOJWqeKLvYFQlAm696ZS
+ v2jCrJzB+nP5xR+T7KOdCQSrEOSuSzAHd/moVHQHnEkZnpDwjGBrv7V/ksrHIo2z5O8c LA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x170mr5t5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 22 Mar 2024 10:34:45 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42MAYjHa000747;
+	Fri, 22 Mar 2024 10:34:45 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x170mr5t3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 22 Mar 2024 10:34:45 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42M8oORj026678;
+	Fri, 22 Mar 2024 10:34:44 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x0x17356m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 22 Mar 2024 10:34:44 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42MAYc5H44499400
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 22 Mar 2024 10:34:41 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CD3D020144;
+	Fri, 22 Mar 2024 10:11:39 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DA4902013E;
+	Fri, 22 Mar 2024 10:11:37 +0000 (GMT)
+Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.in.ibm.com (unknown [9.204.206.66])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 22 Mar 2024 10:11:37 +0000 (GMT)
+From: Gautam Menghani <gautam@linux.ibm.com>
+To: mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+        aneesh.kumar@kernel.org, naveen.n.rao@linux.ibm.com
+Cc: Gautam Menghani <gautam@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vaibhav Jain <vaibhav@linux.ibm.com>
+Subject: [PATCH v3] arch/powerpc/kvm: Add support for reading VPA counters for pseries guests
+Date: Fri, 22 Mar 2024 15:41:32 +0530
+Message-ID: <20240322101135.33295-1-gautam@linux.ibm.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SY4P282MB3063:EE_|SY8P282MB5238:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1a207680-89e6-4600-a1a8-08dc4a5b9240
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	wBETH778bwXOyPdlBl/m4Nk1EdI9ZtBYhfKVX6V29SvsTa0kLgMpelDRNMcNTRxGWcoirnnKdv7B3TMiCBwQnNOOEv583h5s8LjvRMiOXbXpOgk9raQEzDaPD6aLRDsQBj35dbYlOkTVCNbwhmW9XILfFm7RKbRVdZcQQzB5Q/yrfozNtPYxGlqbRwF0t/R9+yyorUymuKq+0BvjytgIQ1S/RklB2K2Di0Nm6MLqiLojj6+CLtkHPFWKLLV7HmRsDG4f9T/jpo0wCVZhBOYkuarS5eCOebsAqY+fC+BDpFM7cLMDFiW32uZFMZiXNE60kStrvKZx5nBHktVB6fnAcreuUzq9ya8H1OA4zygfi8fYxZOBiaHjJf29emPlrh4OTeEZSRBPUmVSa9cO+kyTTMbENrj41548qB5bHOhSJXopzrVpy9BHMwFhxoPvoko8N2sMgRG6YhHZbqg4w4GwUnQTGWme0+JDwrP7YSyLuIWgFNV6Po4suNplSDzmBJjkPgNF0pbux+A5TBJyhIZUARebEnp3SkMyogQFvqZesJw76I/3pBFuLR2w5WvqbglCOxTPgCpgeM/OGng/L1E235vgknvtrit1E0/o0BUJJui2LYHzEtGOoF5Cfur2hN0c
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?aQyqeuQBxI4utWl9jwteQQfnT/zA81/T5GUaBLrVOqaT9W94FiH37ur5OTag?=
- =?us-ascii?Q?aAmky2+XsL9Mhb7fG/p3OKOV2tzCKkPH14Cv+MuDMCdLoLZtNAgZ1pAwaw8t?=
- =?us-ascii?Q?mrBqLp4iOB++hA8vddxDDq63Pc3eUXD7MWtXNYl6fYmdL7Q+48yhh76VLlek?=
- =?us-ascii?Q?/a7ZAlXFzMgcK8r9YVfpxXdFOS0kXF63oSd5bxECjedthormO5uunMDmXVzY?=
- =?us-ascii?Q?xlpXBFO3sO1cg3hLalStAe6GzoHo9hj3kb3Yq4OlimpRAzIZSLlq6zbT3uxo?=
- =?us-ascii?Q?2GGhmbY92uH1ZpLEcgCKUm9N0WTn4eQbdUulA4zUmt1dG+PM2bbhzE+w7a7N?=
- =?us-ascii?Q?Z9EvACim3U89esEKTg/aGwhFunIOKwGbPcC4M3LyXvMQ5MDf0TDpov2LBw5c?=
- =?us-ascii?Q?x3dcbtWILPDyXP/3DJQvs8OLpIqxrpHCNOXO/4ckUdbpW07NuXKQnbxNjyYc?=
- =?us-ascii?Q?ayFPq2m+eta6Wr+S8dEUlOICIouk5AwYiXN0qBVabNc7q8NKugDfGqjtKk9A?=
- =?us-ascii?Q?zjOTq+BuDqVGCEbWf3mTRwcZBG1kwsmheI5EtUDzV/DZLGBcwFrNvISnwS+l?=
- =?us-ascii?Q?75Gkr3BOIqCvaunwPm/TQYvBQ5HZtdUlrkynxOCUPU9KjC+2IhKWDiiyJhu3?=
- =?us-ascii?Q?tXK+74Skj9Z//fH63hPfRqI/iouUypJ8WTv7e7WAYEOCSd93TuGW0T1gpesQ?=
- =?us-ascii?Q?M3oGZHYzMfv0uU3UfwptQMEzXZpfMq38pyHYsO3uhlrXG2MQvZ7TkZjAvPpq?=
- =?us-ascii?Q?cv5A80q/v8ZYSpFC2jJzSwSN0T/Q87iINhSbcIPZWxQwPs4cNyMAAn7aCCS+?=
- =?us-ascii?Q?4Xj7+mnvMOwcX7tOuV4iYYb5EHz3U35cRQiW2qOBqQm7qqrlHghILCeZInyE?=
- =?us-ascii?Q?yH+bY7At1JsXDfd08evDfjsnhFqRiRuvoxYux6OEx+i+i34wBgc2zoQZfn4S?=
- =?us-ascii?Q?GRPqOfiApTkjRpz2s6eM32hctd9tAY8m9qScH+b+MM+3XtgXIMa1T6Nvww14?=
- =?us-ascii?Q?NVL2/iy3Gjui7d+LXOF59ecu+VvPc3aHdroG3hW8ISnRiyFsJbMbiLZJmB9p?=
- =?us-ascii?Q?LZe4gIZG0UphdQfW/y2lKK4GdsLCFxWXJ5UufyZLzG9hKAWXAY5+8PMkgfXa?=
- =?us-ascii?Q?fkCA/YjYvdDJYYVuTxPGbYrcLIw2Mb+UP9QwbUngD19drRvRJ1oGcZZAm9rA?=
- =?us-ascii?Q?ff2RqlrIVP38WxmCyJmEhWtX6LK84dH0eyL5SMnH3ItJ8RA/Rlnkk1D4OIQk?=
- =?us-ascii?Q?Ltw4bo8ANfYtiheRiD76dhBz4OzEXkXFaKg4cSB4nlZyol1nPq/p6E12KE7/?=
- =?us-ascii?Q?TLuXW7YTv1GviYs+MxYmAyRg?=
-X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-746f3.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a207680-89e6-4600-a1a8-08dc4a5b9240
-X-MS-Exchange-CrossTenant-AuthSource: SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Mar 2024 10:33:53.7537
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SY8P282MB5238
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: ZotAiG8rC6LKqpbFYx7f5gtNgWgE-AtS
+X-Proofpoint-ORIG-GUID: Z-BuT7jZuvBU7xX2iSy-Gn4jOmpK3YC_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-22_06,2024-03-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ suspectscore=0 spamscore=0 priorityscore=1501 mlxlogscore=999
+ lowpriorityscore=0 bulkscore=0 mlxscore=0 malwarescore=0 impostorscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403210000 definitions=main-2403220074
 
-EC_CMD_PWM_GET_KEYBOARD_BACKLIGHT and EC_CMD_PWM_SET_KEYBOARD_BACKLIGHT
-are marked as obsolete in `cros_ec_commands.h`, this patch removes the
-usage of these commands from the driver.
+PAPR hypervisor has introduced three new counters in the VPA area of
+LPAR CPUs for KVM L2 guest (see [1] for terminology) observability - 2
+for context switches from host to guest and vice versa, and 1 counter
+for getting the total time spent inside the KVM guest. Add a tracepoint
+that enables reading the counters for use by ftrace/perf. Note that this
+tracepoint is only available for nestedv2 API (i.e, KVM on PowerVM).
 
-The max brightness value is now set to `EC_PWM_MAX_DUTY` (65535) when
-running on the EC, as this is the maximum value that the EC can accept.
+Also maintain an aggregation of the context switch times in vcpu->arch.
+This will be useful in getting the aggregate times with a pmu driver
+which will be upstreamed in the near future.
 
-Signed-off-by: Stephen Horvath <s.horvath@outlook.com.au>
+[1] Terminology:
+a. L1 refers to the VM (LPAR) booted on top of PAPR hypervisor
+b. L2 refers to the KVM guest booted on top of L1.
+
+Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
 ---
- .../platform/chrome/cros_kbd_led_backlight.c  | 37 +++++++++++++------
- 1 file changed, 25 insertions(+), 12 deletions(-)
+v1 -> v2:
+1. Fix the build error due to invalid struct member reference.
 
-diff --git a/drivers/platform/chrome/cros_kbd_led_backlight.c b/drivers/platform/chrome/cros_kbd_led_backlight.c
-index 06e9a57536af..bc021437e8b1 100644
---- a/drivers/platform/chrome/cros_kbd_led_backlight.c
-+++ b/drivers/platform/chrome/cros_kbd_led_backlight.c
-@@ -47,10 +47,10 @@ struct keyboard_led_drvdata {
- 	enum led_brightness max_brightness;
- };
- 
--#define KEYBOARD_BACKLIGHT_MAX 100
--
- #ifdef CONFIG_ACPI
- 
-+#define ACPI_KEYBOARD_BACKLIGHT_MAX 100
+v2 -> v3:
+1. Move the counter disabling and zeroing code to a different function.
+2. Move the get_lppaca() inside the tracepoint_enabled() branch.
+3. Add the aggregation logic to maintain total context switch time.
+
+ arch/powerpc/include/asm/kvm_host.h |  5 +++++
+ arch/powerpc/include/asm/lppaca.h   | 11 +++++++---
+ arch/powerpc/kvm/book3s_hv.c        | 33 +++++++++++++++++++++++++++++
+ arch/powerpc/kvm/trace_hv.h         | 25 ++++++++++++++++++++++
+ 4 files changed, 71 insertions(+), 3 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/asm/kvm_host.h
+index 8abac5321..d953b32dd 100644
+--- a/arch/powerpc/include/asm/kvm_host.h
++++ b/arch/powerpc/include/asm/kvm_host.h
+@@ -847,6 +847,11 @@ struct kvm_vcpu_arch {
+ 	gpa_t nested_io_gpr;
+ 	/* For nested APIv2 guests*/
+ 	struct kvmhv_nestedv2_io nestedv2_io;
 +
- /* Keyboard LED ACPI Device must be defined in firmware */
- #define ACPI_KEYBOARD_BACKLIGHT_DEVICE	"\\_SB.KBLT"
- #define ACPI_KEYBOARD_BACKLIGHT_READ	ACPI_KEYBOARD_BACKLIGHT_DEVICE ".KBQC"
-@@ -114,7 +114,7 @@ static const struct keyboard_led_drvdata keyboard_led_drvdata_acpi = {
- 	.init = keyboard_led_init_acpi,
- 	.brightness_set = keyboard_led_set_brightness_acpi,
- 	.brightness_get = keyboard_led_get_brightness_acpi,
--	.max_brightness = KEYBOARD_BACKLIGHT_MAX,
-+	.max_brightness = ACPI_KEYBOARD_BACKLIGHT_MAX,
- };
++	/* Aggregate context switch and guest run time info (in ns) */
++	u64 l1_to_l2_cs_agg;
++	u64 l2_to_l1_cs_agg;
++	u64 l2_runtime_agg;
+ #endif
  
- #endif /* CONFIG_ACPI */
-@@ -127,18 +127,22 @@ keyboard_led_set_brightness_ec_pwm(struct led_classdev *cdev,
- {
- 	struct {
- 		struct cros_ec_command msg;
--		struct ec_params_pwm_set_keyboard_backlight params;
-+		struct ec_params_pwm_set_duty params;
- 	} __packed buf;
--	struct ec_params_pwm_set_keyboard_backlight *params = &buf.params;
-+	struct ec_params_pwm_set_duty *params = &buf.params;
- 	struct cros_ec_command *msg = &buf.msg;
- 	struct keyboard_led *keyboard_led = container_of(cdev, struct keyboard_led, cdev);
+ #ifdef CONFIG_KVM_BOOK3S_HV_EXIT_TIMING
+diff --git a/arch/powerpc/include/asm/lppaca.h b/arch/powerpc/include/asm/lppaca.h
+index 61ec2447d..bda6b86b9 100644
+--- a/arch/powerpc/include/asm/lppaca.h
++++ b/arch/powerpc/include/asm/lppaca.h
+@@ -62,7 +62,8 @@ struct lppaca {
+ 	u8	donate_dedicated_cpu;	/* Donate dedicated CPU cycles */
+ 	u8	fpregs_in_use;
+ 	u8	pmcregs_in_use;
+-	u8	reserved8[28];
++	u8	l2_accumul_cntrs_enable;  /* Enable usage of counters for KVM guest */
++	u8	reserved8[27];
+ 	__be64	wait_state_cycles;	/* Wait cycles for this proc */
+ 	u8	reserved9[28];
+ 	__be16	slb_count;		/* # of SLBs to maintain */
+@@ -92,9 +93,13 @@ struct lppaca {
+ 	/* cacheline 4-5 */
  
- 	memset(&buf, 0, sizeof(buf));
+ 	__be32	page_ins;		/* CMO Hint - # page ins by OS */
+-	u8	reserved12[148];
++	u8	reserved12[28];
++	volatile __be64 l1_to_l2_cs_tb;
++	volatile __be64 l2_to_l1_cs_tb;
++	volatile __be64 l2_runtime_tb;
++	u8 reserved13[96];
+ 	volatile __be64 dtl_idx;	/* Dispatch Trace Log head index */
+-	u8	reserved13[96];
++	u8	reserved14[96];
+ } ____cacheline_aligned;
  
--	msg->command = EC_CMD_PWM_SET_KEYBOARD_BACKLIGHT;
-+	msg->version = 0;
-+	msg->command = EC_CMD_PWM_SET_DUTY;
-+	msg->insize = 0;
- 	msg->outsize = sizeof(*params);
- 
--	params->percent = brightness;
-+	params->duty = brightness;
-+	params->pwm_type = EC_PWM_TYPE_KB_LIGHT;
-+	params->index = 0;
- 
- 	return cros_ec_cmd_xfer_status(keyboard_led->ec, msg);
- }
-@@ -148,23 +152,32 @@ keyboard_led_get_brightness_ec_pwm(struct led_classdev *cdev)
- {
- 	struct {
- 		struct cros_ec_command msg;
--		struct ec_response_pwm_get_keyboard_backlight resp;
-+		union {
-+			struct ec_params_pwm_get_duty params;
-+			struct ec_response_pwm_get_duty resp;
-+		};
- 	} __packed buf;
--	struct ec_response_pwm_get_keyboard_backlight *resp = &buf.resp;
-+	struct ec_params_pwm_get_duty *params = &buf.params;
-+	struct ec_response_pwm_get_duty *resp = &buf.resp;
- 	struct cros_ec_command *msg = &buf.msg;
- 	struct keyboard_led *keyboard_led = container_of(cdev, struct keyboard_led, cdev);
- 	int ret;
- 
- 	memset(&buf, 0, sizeof(buf));
- 
--	msg->command = EC_CMD_PWM_GET_KEYBOARD_BACKLIGHT;
-+	msg->version = 0;
-+	msg->command = EC_CMD_PWM_GET_DUTY;
- 	msg->insize = sizeof(*resp);
-+	msg->outsize = sizeof(*params);
-+
-+	params->pwm_type = EC_PWM_TYPE_KB_LIGHT;
-+	params->index = 0;
- 
- 	ret = cros_ec_cmd_xfer_status(keyboard_led->ec, msg);
- 	if (ret < 0)
- 		return ret;
- 
--	return resp->percent;
-+	return resp->duty;
+ #define lppaca_of(cpu)	(*paca_ptrs[cpu]->lppaca_ptr)
+diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
+index 8e86eb577..5a0bcb57e 100644
+--- a/arch/powerpc/kvm/book3s_hv.c
++++ b/arch/powerpc/kvm/book3s_hv.c
+@@ -4108,6 +4108,30 @@ static void vcpu_vpa_increment_dispatch(struct kvm_vcpu *vcpu)
+ 	}
  }
  
- static int keyboard_led_init_ec_pwm(struct platform_device *pdev)
-@@ -186,7 +199,7 @@ static const __maybe_unused struct keyboard_led_drvdata keyboard_led_drvdata_ec_
- 	.init = keyboard_led_init_ec_pwm,
- 	.brightness_set_blocking = keyboard_led_set_brightness_ec_pwm,
- 	.brightness_get = keyboard_led_get_brightness_ec_pwm,
--	.max_brightness = KEYBOARD_BACKLIGHT_MAX,
-+	.max_brightness = EC_PWM_MAX_DUTY,
- };
++static void do_trace_nested_cs_time(struct kvm_vcpu *vcpu)
++{
++	struct lppaca *lp = get_lppaca();
++	u64 l1_to_l2_ns, l2_to_l1_ns, l2_runtime_ns;
++
++	if (!lp->l2_accumul_cntrs_enable)
++		return;
++
++	l1_to_l2_ns = tb_to_ns(be64_to_cpu(lp->l1_to_l2_cs_tb));
++	l2_to_l1_ns = tb_to_ns(be64_to_cpu(lp->l2_to_l1_cs_tb));
++	l2_runtime_ns = tb_to_ns(be64_to_cpu(lp->l2_runtime_tb));
++	trace_kvmppc_vcpu_exit_cs_time(vcpu, l1_to_l2_ns, l2_to_l1_ns,
++			l2_runtime_ns);
++	lp->l1_to_l2_cs_tb = 0;
++	lp->l2_to_l1_cs_tb = 0;
++	lp->l2_runtime_tb = 0;
++	lp->l2_accumul_cntrs_enable = 0;
++
++	// Maintain an aggregate of context switch times
++	vcpu->arch.l1_to_l2_cs_agg += l1_to_l2_ns;
++	vcpu->arch.l2_to_l1_cs_agg += l2_to_l1_ns;
++	vcpu->arch.l2_runtime_agg += l2_runtime_ns;
++}
++
+ static int kvmhv_vcpu_entry_nestedv2(struct kvm_vcpu *vcpu, u64 time_limit,
+ 				     unsigned long lpcr, u64 *tb)
+ {
+@@ -4130,6 +4154,11 @@ static int kvmhv_vcpu_entry_nestedv2(struct kvm_vcpu *vcpu, u64 time_limit,
+ 	kvmppc_gse_put_u64(io->vcpu_run_input, KVMPPC_GSID_LPCR, lpcr);
  
- #else /* IS_ENABLED(CONFIG_CROS_EC) */
+ 	accumulate_time(vcpu, &vcpu->arch.in_guest);
++
++	/* Enable the guest host context switch time tracking */
++	if (unlikely(trace_kvmppc_vcpu_exit_cs_time_enabled()))
++		get_lppaca()->l2_accumul_cntrs_enable = 1;
++
+ 	rc = plpar_guest_run_vcpu(0, vcpu->kvm->arch.lpid, vcpu->vcpu_id,
+ 				  &trap, &i);
+ 
+@@ -4156,6 +4185,10 @@ static int kvmhv_vcpu_entry_nestedv2(struct kvm_vcpu *vcpu, u64 time_limit,
+ 
+ 	timer_rearm_host_dec(*tb);
+ 
++	/* Record context switch and guest_run_time data */
++	if (unlikely(trace_kvmppc_vcpu_exit_cs_time_enabled()))
++		do_trace_nested_cs_time(vcpu);
++
+ 	return trap;
+ }
+ 
+diff --git a/arch/powerpc/kvm/trace_hv.h b/arch/powerpc/kvm/trace_hv.h
+index 8d57c8428..ab19977c9 100644
+--- a/arch/powerpc/kvm/trace_hv.h
++++ b/arch/powerpc/kvm/trace_hv.h
+@@ -491,6 +491,31 @@ TRACE_EVENT(kvmppc_run_vcpu_enter,
+ 	TP_printk("VCPU %d: tgid=%d", __entry->vcpu_id, __entry->tgid)
+ );
+ 
++TRACE_EVENT(kvmppc_vcpu_exit_cs_time,
++	TP_PROTO(struct kvm_vcpu *vcpu, u64 l1_to_l2_cs, u64 l2_to_l1_cs,
++		u64 l2_runtime),
++
++	TP_ARGS(vcpu, l1_to_l2_cs, l2_to_l1_cs, l2_runtime),
++
++	TP_STRUCT__entry(
++		__field(int,		vcpu_id)
++		__field(__u64,		l1_to_l2_cs_ns)
++		__field(__u64,		l2_to_l1_cs_ns)
++		__field(__u64,		l2_runtime_ns)
++	),
++
++	TP_fast_assign(
++		__entry->vcpu_id  = vcpu->vcpu_id;
++		__entry->l1_to_l2_cs_ns = l1_to_l2_cs;
++		__entry->l2_to_l1_cs_ns = l2_to_l1_cs;
++		__entry->l2_runtime_ns = l2_runtime;
++	),
++
++	TP_printk("VCPU %d: l1_to_l2_cs_time=%llu-ns l2_to_l1_cs_time=%llu-ns l2_runtime=%llu-ns",
++		__entry->vcpu_id,  __entry->l1_to_l2_cs_ns,
++		__entry->l2_to_l1_cs_ns, __entry->l2_runtime_ns)
++);
++
+ TRACE_EVENT(kvmppc_run_vcpu_exit,
+ 	TP_PROTO(struct kvm_vcpu *vcpu),
+ 
 -- 
-2.43.0
+2.43.2
 
