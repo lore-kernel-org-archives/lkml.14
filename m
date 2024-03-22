@@ -1,105 +1,116 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1795CDFA;
-	Fri, 22 Mar 2024 16:48:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1335B698
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 16:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711126100; cv=none; b=ZzGYx3JuSwy1iluezK7Wy/7FQVk14G79qIcqW8KLQpmlP0x7+QJxhhF7XLE6TbbWOk6aozQ4DWJfh+qY9RCwqnDrFjUweypT9BD5q0Z/1CHVb3VOODkdP8mZoz3X14UhxU1AQL6ZXE+1heb3JSTt8Grb+9k/s/ZrUo+lkt0QCHU=
+	t=1711126182; cv=none; b=ohbUpDkugDH/KgG2Vu14c16ZMsYt0RSZZIOpN06YWaJEt8Q4E8erWopFObSmVULifyrNigicqP3eY7lj536XDFW0zFU/q7KsMOhYJlfKbIke/nw+htPmgAzgBU7In49BhLg0RzH7AW918f0joplPFLeuYeWCeepiAlN1Ns1KVVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711126100; c=relaxed/simple;
-	bh=AIxpdyQlT/B7BYVjFoMD8/QUyW+1uhLFqyaeq6EgDW4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZWC7/4T6D+CBUUfx5A8gTgh9/1q7ajCldM6otX8jiAyo3tFeps3E3ZLWTIB2t4OI/UnuH4jOW415uprB5w9RBHRsK0KyPGJDO9xUeWak71wHSmxAWlrw7LlTrftbVIZ3uOxyKZh+dTvy8YN0TDUHPL5bMYArKhueO+S5zeryD5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m+SenR8z; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711126182; c=relaxed/simple;
+	bh=E02OlXM6mdQVzxuhxKqQyIvcl8Sg2vFB6YVA0c4qnK8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hBuOGKWwwQ75WNRfgfzcUfuA24RP+uCETbF4lyyhrDjaaatNNc4+a/GRYFhYVHPpe7Tpkp/45m/Kwbkm8ubPsRfqt31biJSxAQQ1kvR3Ic3CAYrWH4cnSmro3yBMtxkE19rgHZXzhJxxfr3kQ4L0vjyPcQACM5rNJeanaR1F2kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B8D4VQC/; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m+SenR8z"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5dbd519bde6so1467200a12.1;
-        Fri, 22 Mar 2024 09:48:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711126098; x=1711730898; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iLWuYvxt8cJho/qyhrDkNvS5uRVsAloQRBQojo7kkCY=;
-        b=m+SenR8znrNZmLAg7GWJCqvlUSpT/0BvOYuM8PMFsjm5eBQtFooZHeGFQwa+n7awHC
-         Z1rjJ/UtR9KYlHsApMkUHIGtWtGXQGzxu/83+amxOHUqWNgQzjY4YfSaDJUODmeYFBl8
-         wdSk7rOLSnCdX2YMeUxsVgNRe5jQlpzgqwAl86k0wxF9aF0vyMODxYjWeXPhBm0d3V4D
-         xo6wIpxAYCUedsLnRu36hH9hPseoq6S9ln9hmjYQem8kjMnPt+Y6zPDa6JiDp597Wuxa
-         gskeyhMZW1cc7gZ8D8Mda5uwgqVZCyokbgd6FWyMkzQYcpUeXDxf500kBNiYxHfWurTd
-         0eLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711126098; x=1711730898;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iLWuYvxt8cJho/qyhrDkNvS5uRVsAloQRBQojo7kkCY=;
-        b=hgxaMMLBpSwkzNE1X8lVYLq/Qere1lbcfLXeWbeRDKzNl1J65pnu8O3A1j88SsCS2l
-         Pfx0xXb9WMKq3g7KKEedcosCR8bZkTvWa8P/RPrxa7s/iauYuF1+QrPu1a6UNAWkNcO6
-         EXSHMT65YQO2BR6IWVNsyFQiLmqvV+ZaMEZSaekmswNMDm8NEWH0XXJdl2XlBjBx7Uyy
-         tfFJyf+/N85okUyRJXGbQ92p0Jd0Kjeb61x7yXcUCDYQzKxiCHOVNi1EL9yz45AW5jT9
-         5owVUdrzkkql8fSSFDFgo/y5FRjx0LLp0euoN8pTiU9XEkCpvUnXTx6JbU1xDKIKzf44
-         8n1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVb37bTfdj0dMD014I+0Q+yFGeVC3CVh/l7BAjwBWwJbJphV/BnA+CCGFx68TRhjhArWMLtmUmOGb9yw1+8mBPWPOrpqR88Gwya/+o7/mL791zK04CLQ/c4l+jfURkza3N8PTjwt6cDfHxuVXhHH0dLDvPVhmpQmLoOC7WEztkdgSIdcA==
-X-Gm-Message-State: AOJu0Yw1DbxLGxverbXzmAYhUBBsAoc7K22SJesQlGdwvDBwgTtvT1SB
-	7hKmsb9jn5jpuraV+yGzCM+YLU3jlbf8AZYUtdD/55ds7hJjpovV
-X-Google-Smtp-Source: AGHT+IF7ZJb9s4Yx5/oto0bsQjpkkyHcU/EVUMjRlMUGYu/PgXMG5bI/6u+KSo3WZ0/VTzE6OQtw6A==
-X-Received: by 2002:a17:90b:1c01:b0:29f:cd96:5952 with SMTP id oc1-20020a17090b1c0100b0029fcd965952mr187833pjb.22.1711126098455;
-        Fri, 22 Mar 2024 09:48:18 -0700 (PDT)
-Received: from five231003 ([2405:201:c006:31f8:d95b:eb72:e032:7eef])
-        by smtp.gmail.com with ESMTPSA id si15-20020a17090b528f00b0029e05ec1cb3sm2124620pjb.52.2024.03.22.09.48.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 09:48:18 -0700 (PDT)
-Date: Fri, 22 Mar 2024 22:18:12 +0530
-From: Kousik Sanagavarapu <five231003@gmail.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>
-Subject: Re: [PATCH v2] spi: dt-bindings: jcore,spi: convert spi-jcore to
- dtschema
-Message-ID: <Zf22TLko8tFEYMDI@five231003>
-References: <20240321180617.35390-1-five231003@gmail.com>
- <affc1b03-7a23-4fd8-bf85-4155bcd41df1@linaro.org>
- <CAN19-EfCOWFqFCrF0iCaxhfZuteWawQoH0d6pTN3cgQ7p-CK6w@mail.gmail.com>
- <5dd3237f-e0a2-4214-a63f-233e89a26b8d@linaro.org>
- <6552bcb8-e046-4882-91da-1094fff3d239@linaro.org>
- <20240322150524.GA895852-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B8D4VQC/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711126180; x=1742662180;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=E02OlXM6mdQVzxuhxKqQyIvcl8Sg2vFB6YVA0c4qnK8=;
+  b=B8D4VQC/HOkego/fDHkMV7uzu8w9BgDwZIgFeaoeMAtGZNbpv5dsSYf/
+   aRr3Kn3CDZw9Uy/+q09etRW9sZS4CEnwxiNkU0ZkaZjifp0nanRf9zWxN
+   tgCTdhUlVOnVEcJXaPBVM4rzaIZ2cuk1ECgv/8EVCgfMDjroFWORTmV+k
+   GZDhr9++brWNNZDYtxnn0SEV0rh+OZzx757uIRGTg2xJPqoPG3mKxyuHP
+   77cJ7DaUrW1Z12PBMWQWKaIHqy1mEQRwBqD/vvo1lnFejEDfqqK5jttyM
+   OvL2l/vAFV2Iys+LXmo6KIEnR7C0ThVxiD2yM5lvpyPWlMLeZr7ZCjtyt
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="6013754"
+X-IronPort-AV: E=Sophos;i="6.07,146,1708416000"; 
+   d="scan'208";a="6013754"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 09:49:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,146,1708416000"; 
+   d="scan'208";a="46092985"
+Received: from ashwanim-mobl.amr.corp.intel.com (HELO [10.209.56.241]) ([10.209.56.241])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 09:49:39 -0700
+Message-ID: <264400cc-ccb6-46c5-b054-403f6b82860a@intel.com>
+Date: Fri, 22 Mar 2024 09:49:37 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240322150524.GA895852-robh@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/shstk: Enable shadow stack for x32
+Content-Language: en-US
+To: "H.J. Lu" <hjl.tools@gmail.com>, linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Rick P Edgecombe <rick.p.edgecombe@intel.com>
+References: <20240315140433.1966543-1-hjl.tools@gmail.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20240315140433.1966543-1-hjl.tools@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 22, 2024 at 10:05:24AM -0500, Rob Herring wrote:
-> On Fri, Mar 22, 2024 at 07:49:57AM +0100, Krzysztof Kozlowski wrote:
-> > This applies to all GSoC or some Linux Mentorship programs: I suggest to
-> > choose for conversion bindings with more users and bigger possible
-> > impact. So first I would look at ARM64 and ARMv7 platforms. We still
-> > have around 1000 and 3500 unique warnings about undocumented compatibles
-> > for ARM64 defconfig and ARM multi_v7! That's the platforms you should
-> > choose.
-> > 
-> > Not SuperH, ARC, or whatever with only one DTS which is difficult to
-> > build for regular developer.
+On 3/15/24 07:04, H.J. Lu wrote:
+> 1. Add shadow stack support to x32 signal.
+> 2. Use the 64-bit map_shadow_stack syscall for x32.
+> 3. Set up shadow stack for x32.
 > 
-> To add to this, either ask DT maintainers what would be useful to work 
-> on or you can look here[1][2] to see what are the top occurring 
-> undocumented (by schema) compatibles.
-> 
-> Rob
-> 
-> [1] https://gitlab.com/robherring/linux-dt/-/jobs/6453674734
-> [2] https://gitlab.com/robherring/linux-dt/-/jobs/6453674732
+> Tested with shadow stack enabled x32 glibc on Intel Tiger Lake.
 
-Thank you for the valuable pieces of advice and links Krzysztof and Rob.
+I don't think we should wire up code that's never going to get used in
+practice.  I think I'd want to be sure of the existence of some
+specific, real-world, long-term users of this before we add a new ABI
+that we need to support forever.
+
+Are there real users?
