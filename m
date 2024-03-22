@@ -1,140 +1,185 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B727020DDB;
-	Fri, 22 Mar 2024 09:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F1D39854;
+	Fri, 22 Mar 2024 09:58:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711101500; cv=none; b=cZQtnYYhvk4kMsuAyIBWt4luvboZDi34DwM8dbb6cesiB0xKZs3YL68Mez5yiRrTsxEinLEFqAk/aPn/9Cd+BUGQkgvlAJeHUa7453jmGGRkQWIwZ7ZlFJ7ob3CKfJvCgFRyjL07DvZALOfzV1ZDEeO8skzzVQHVo+3FiF45guQ=
+	t=1711101543; cv=none; b=O1prgql9nkdtWpZU8+6gjhcEEM8NVfiyPKSa1LP3EmH7DrNz5o9jT0IDhGcPz7z54YSzDZg6lx3kyWssUY6qM9OG9fVaeQguzZc0Dw4XM5TzRT9cKWaW6WUQfEElMIdi5mcQOVaBv/eqB+5h+lojUuVVkv6szdOmXCqMB1ppKhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711101500; c=relaxed/simple;
-	bh=/30BwBXERLGIM0q6thI+873JARw67ueqrIsiqLnetpg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JmG64AWyAdeKS9ZuEnQ7KVBhdGs2NcINU26V2bOkNoZNr00XeGYjCtS6Tbqh7hKjbD5s8Bvg6Kbu2VEZV+84C9qDDfC5uMk2cpy7y+TrA7jl/jIYRm5UGZh/0d4uSREGGm/m4agk81XY+1P+su4jsnhd6xZV14w7y0SZ4pmu18o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MKBmpTld; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711101543; c=relaxed/simple;
+	bh=snSfJ5AEfJHDPAVmOuKibdE9ybjzZy8eOI7cRfFLAgE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a8S78l6c18tuFgudDNaS7ielehWLHwm37xIJbFnIu/2w1JGuHvIXauYZeZHF6JyTSu0jlCb7Q4NbDEGtQjXzDcXteFz0xDzifMDRZkdIH1ZQHKMT07BJGs/iXSvUF21VMXB4LUSvnxDGsKmhShl+5mVXSDwzx6CtYVojzVUFnsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=DBX7q0i8; arc=none smtp.client-ip=46.19.9.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MKBmpTld"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-513e4dd6ca4so2691110e87.0;
-        Fri, 22 Mar 2024 02:58:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711101497; x=1711706297; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gLzE8tALpeCrWW/quPBxEN3bxd3tzH7hzk8V7xM0O5E=;
-        b=MKBmpTldH3Kots6AVnX3diz5znFaGYWFQ+X/4otvKqkGdrl4wItfebktffJlZMXdja
-         wHnioA3DvpeipxQBscKbqhJbi7xjJJo3r3bBbugdpYBIYtCI4dX7BmIXho80TnAQxvVk
-         ufSzwIRARjoY7iRnVXWTqtsLH3j9c6BFpkXiC1WgifBSVpnovGxLQ7LrlF/o0QOMpbvJ
-         Y+dm1K2STqbFUqZT+oBsNRJX/od6m3wH/ElwHRsP4ZGiHf4jdeQ8S+MZmENlyiWC2wrY
-         f7V4nT7LIU0CRnhuk7jlh84LFV+GHY/eoKOdPxDsKqPCBYQgpq7zhVznRb1omWgQOCmO
-         zFgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711101497; x=1711706297;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gLzE8tALpeCrWW/quPBxEN3bxd3tzH7hzk8V7xM0O5E=;
-        b=wCubQRuUfqnKxcQBYLudi4LdUGcAFgMOkae6F0Wa0UKmXBZHlwah8qcyR9iEOi+6iP
-         jjOMxrB5RKxWRRHIJjlodFl3BMx6JMJQWWgmPN9bxadTfsyxf4+K2t0j8HJly0FBbWzp
-         tRrGZx7bbQNXE5DvLJKLFeTiHWDqyQfSwHSLjftYWCgs1JRIjfr4jEjYVskarGxXrlMA
-         1EL1v8HjrcPXPUsdHN8qXHWN5Z0gyqqngwB6rskx23hCMMMJEYJULO2wrQQCILhFOSuN
-         VqzqvbynS+JKJ6XUQkpGNwAIrBY0dL7c65bWsrhF9mxPf2laSp4ivwKzHwAPf+VanLRc
-         kQbg==
-X-Forwarded-Encrypted: i=1; AJvYcCXqyqVizRyJForL9yzhZQ0A9uQzx2BabYABXDTjA/k40foXg+OAi4n/lJ/0n6zDxJ7Zvoopp59yrtE14CK+Klt19k/jqIMUOSFgrtDr
-X-Gm-Message-State: AOJu0YzRhhybR5PYkcaF+OSq0FZjeKYZZuos5St+v8tH+EL+rmeTcaMY
-	FYZy0XxLlwBW6xxZ3fQ3PnhkQ38CS9BQzhtjyOh9MytrqjRcB3hBDXEfrI48QXjlC0F0wjd9ykd
-	mZbD/kHwmdcTWkgL+Qy0XCDsDbezwTMXQyz0=
-X-Google-Smtp-Source: AGHT+IEJM70W/0XiCmq4w9Dz9xgCijW80RjvzOaO4tlBA7LSpPvU4fdW7yC40Q3vV0aWt/A2/SiR5Cs5o/sQ5ZzoOh8=
-X-Received: by 2002:ac2:498c:0:b0:513:d4fb:fa76 with SMTP id
- f12-20020ac2498c000000b00513d4fbfa76mr647885lfl.3.1711101496658; Fri, 22 Mar
- 2024 02:58:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="DBX7q0i8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=yzXvXf84t5xedKkjpoUQe3At33UjMGBnjxJCS2m3Aho=; b=DBX7q0i8YZtNwO6PSSaLlw49o1
+	V1an/mgH+UuZNViR2IPATvhExnpVYVBCaTstrG8ousCWpKY8LVQxP4iA0pWCLU7mlCmZkWtW8KsW7
+	ArSqZtTY7hJwqKo828YNyXtEFQdybQPr56E6vs69If8RCNLIu0/pCv4UAq5/AljNpWZ5d6gt1V0ZT
+	dUBO9tnaV0GX1LevYNBFaqQW5nOLi2tBhxb9L/ky1JhB2ZgUCz2PJ9lDZcdxnOgtKpdttkbcxLe2H
+	JGG5ZdSA8d/9iXyY9IMuu/1o4VKYmubbqXGiiZxRYsx2R8YnpTlyiTN+IYhEOaWMrI7qwJFSf0A6X
+	mgdAEDQA==;
+Received: from 89-212-21-243.static.t-2.net ([89.212.21.243]:44576 helo=[192.168.69.84])
+	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <andrej.picej@norik.com>)
+	id 1rnbfu-00Ev5q-2H;
+	Fri, 22 Mar 2024 10:58:57 +0100
+Message-ID: <1bbd4fdf-59c5-42b2-8698-95f402645c67@norik.com>
+Date: Fri, 22 Mar 2024 10:58:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240322073240.91639-1-yang.lee@linux.alibaba.com> <20240322073240.91639-2-yang.lee@linux.alibaba.com>
-In-Reply-To: <20240322073240.91639-2-yang.lee@linux.alibaba.com>
-From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Date: Fri, 22 Mar 2024 18:57:59 +0900
-Message-ID: <CAKFNMon20yyJ2Daf3nkG1A4hP=ENEnO_em4qrGm50e=A9c1++A@mail.gmail.com>
-Subject: Re: [PATCH -next 2/3] fs: Add kernel-doc comments to nilfs_btree_convert_and_insert()
-To: Yang Li <yang.lee@linux.alibaba.com>
-Cc: linux-nilfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] dt-bindings: iio: adc: nxp,imx93-adc.yaml: Add
+ calibration properties
+Content-Language: en-GB
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, haibo.chen@nxp.com,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Cc: jic23@kernel.org, lars@metafoo.de, shawnguo@kernel.org,
+ s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, robh@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ upstream@lists.phytec.de
+References: <20240320100407.1639082-1-andrej.picej@norik.com>
+ <20240320100407.1639082-3-andrej.picej@norik.com>
+ <38637621-1611-4268-ae79-7ac93a72c5ee@linaro.org>
+ <e994b756-7f4e-4be3-b8f3-310988174b44@norik.com>
+ <7e58bf96-3c38-467f-86b6-06ff5feedb31@linaro.org>
+ <40e08a5e-e7e9-47c7-9102-24a2bbba67cf@norik.com>
+ <a1b173c0-5120-40f6-9708-cd810b4a2406@linaro.org>
+From: Andrej Picej <andrej.picej@norik.com>
+In-Reply-To: <a1b173c0-5120-40f6-9708-cd810b4a2406@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel.siel.si
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - norik.com
+X-Get-Message-Sender-Via: cpanel.siel.si: authenticated_id: andrej.picej@norik.com
+X-Authenticated-Sender: cpanel.siel.si: andrej.picej@norik.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On Fri, Mar 22, 2024 at 4:32=E2=80=AFPM Yang Li wrote:
->
-> This commit adds kernel-doc style comments with complete parameter
-> descriptions for the function nilfs_btree_convert_and_insert.
->
-> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
-> ---
->  fs/nilfs2/btree.c | 22 +++++++++++++++-------
->  1 file changed, 15 insertions(+), 7 deletions(-)
->
-> diff --git a/fs/nilfs2/btree.c b/fs/nilfs2/btree.c
-> index 65659fa0372e..de38012fd87c 100644
-> --- a/fs/nilfs2/btree.c
-> +++ b/fs/nilfs2/btree.c
-> @@ -1857,13 +1857,21 @@ nilfs_btree_commit_convert_and_insert(struct nilf=
-s_bmap *btree,
->  }
->
->  /**
-> - * nilfs_btree_convert_and_insert -
-> - * @bmap:
-> - * @key:
-> - * @ptr:
-> - * @keys:
-> - * @ptrs:
-> - * @n:
-> + * nilfs_btree_convert_and_insert - Convert and insert entries into a B-=
-tree
-> + * @btree: NILFS B-tree structure
-> + * @key: Key of the new entry to be inserted
-> + * @ptr: Pointer (block number) associated with the key to be inserted
-> + * @keys: Array of keys to be inserted in addition to @key
-> + * @ptrs: Array of pointers associated with @keys
-> + * @n: Number of keys and pointers in @keys and @ptrs
-> + *
-> + * This function is used to insert a new entry specified by @key and @pt=
-r, along
-> + * with additional entries specified by @keys and @ptrs arrays, into a N=
-ILFS B-tree.
-> + * It prepares the necessary changes by allocating the required blocks a=
-nd any
-> + * necessary intermediate nodes. This function handles the conversion of=
- a B-tree
-> + * node when it is necessary to split it due to the size constraint.
-> + *
-> + * Return: 0 on success or a negative error code on failure.
->   */
->  int nilfs_btree_convert_and_insert(struct nilfs_bmap *btree,
->                                    __u64 key, __u64 ptr,
-> --
-> 2.20.1.7.g153144c
->
+On 22. 03. 24 09:14, Krzysztof Kozlowski wrote:
+> On 22/03/2024 08:39, Andrej Picej wrote:
+>> On 20. 03. 24 13:15, Krzysztof Kozlowski wrote:
+>>> On 20/03/2024 13:05, Andrej Picej wrote:
+>>>> Hi Krzysztof,
+>>>>
+>>>> On 20. 03. 24 11:26, Krzysztof Kozlowski wrote:
+>>>>> On 20/03/2024 11:04, Andrej Picej wrote:
+>>>>>> Document calibration properties and how to set them.
+>>>>>
+>>>>> Bindings are before users.
+>>>>
+>>>> will change patch order when I send a v2.
+>>>>
+>>>>>
+>>>>> Please use subject prefixes matching the subsystem. You can get them for
+>>>>> example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+>>>>> your patch is touching.
+>>>>> There is no file extension in prefixes.
+>>>>
+>>>> So: dt-bindings: iio/adc: nxp,imx93-adc: Add calibration properties?
+>>>
+>>> Did you run the command I proposed? I don't see much of "/", but except
+>>> that looks good.
+>>
+>> Ok noted.
+>>
+>>>
+>>>>
+>>>>>
+>>>>>>
+>>>>>> Signed-off-by: Andrej Picej <andrej.picej@norik.com>
+>>>>>> ---
+>>>>>>     .../bindings/iio/adc/nxp,imx93-adc.yaml           | 15 +++++++++++++++
+>>>>>>     1 file changed, 15 insertions(+)
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/iio/adc/nxp,imx93-adc.yaml b/Documentation/devicetree/bindings/iio/adc/nxp,imx93-adc.yaml
+>>>>>> index dacc526dc695..64958be62a6a 100644
+>>>>>> --- a/Documentation/devicetree/bindings/iio/adc/nxp,imx93-adc.yaml
+>>>>>> +++ b/Documentation/devicetree/bindings/iio/adc/nxp,imx93-adc.yaml
+>>>>>> @@ -46,6 +46,21 @@ properties:
+>>>>>>       "#io-channel-cells":
+>>>>>>         const: 1
+>>>>>>     
+>>>>>> +  nxp,calib-avg-en:
+>>>>>> +    description:
+>>>>>> +      Enable or disable averaging of calibration time.
+>>>>>> +    enum: [ 0, 1 ]
+>>>>>> +
+>>>>>> +  nxp,calib-nr-samples:
+>>>>>> +    description:
+>>>>>> +      Selects the number of averaging samples to be used during calibration.
+>>>>>> +    enum: [ 16, 32, 128, 512 ]
+>>>>>> +
+>>>>>> +  nxp,calib-t-samples:
+>>>>>> +    description:
+>>>>>> +      Specifies the sample time of calibration conversions.
+>>>>>> +    enum: [ 8, 16, 22, 32 ]
+>>>>>
+>>>>> No, use existing, generic properties. Open other bindings for this.
+>>>>
+>>>> You mean I should use generic properties for the ADC calibration
+>>>> settings? Is there already something in place? Because as I understand
+>>>> it, these calib-* values only effect the calibration process of the ADC.
+>>>
+>>> Please take a look at other devices and dtschema. We already have some
+>>> properties for this... but maybe they cannot be used?
+>>>
+>>
+>> I did look into other ADC devices, grep across iio/adc, adc bindings
+>> folders and couldn't find anything closely related to what we are
+>> looking for. Could you please point me to the properties that you think
+>> should be used for this?
+> 
+> Indeed, there are few device specific like qcom,avg-samples. We have
+> though oversampling-ratio, settling-time-us and min-sample-time (which
+> is not that good because does not use unit suffix).
 
-Hi,
+Ok, these are examples but I think I should not use them, since these 
+are i.MX93 ADC specific settings, which are used for configuration of 
+calibration process, and are not related to the standard conversion 
+process during runtime. Calibration process is the first step that 
+should be done after every power-on reset.
 
-First of all, thank you for posting these patches.
-These three kernel-doc comment completions are necessary.
+> 
+> Then follow up questions:
+>   - nxp,calib-avg-en: Why is it a board-level decision? I would assume
+> this depends on user choice and what kind of input you have (which could
+> be board dependent or could be runtime decision).
 
-One thing I would like to point out is that the last part of the
-descriptive comment for this patch is not accurate.
-nilfs_btree_convert_and_insert() is used to convert configurations
-from other forms of block mapping (the one that currently exists is
-direct mapping) to a B-tree, and is not intended to split a B-tree
-node block on excess of the number of entries.
+Not really sure I get your question, so please elaborate if I missed the 
+point.
+This is a user choice, to enable or disable the averaging function in 
+calibration, but this is a board-level decision, probably relates on 
+external ADC regulators and input connections. The same options are used 
+for every ADC channel and this can not be a runtime decision, since 
+calibration is done before the ADC is even registered.
 
-So, I'd like to slightly adjust the description for this patch and
-send all three to upstream.
-Or, if you want to fix it yourself, please send me the revised version.
+>   - nxp,calib-t-samples: what does it mean? Time is expressed in time
+> units, but there is nothing about units in the property name.
+> 
 
-Thanks,
-Ryusuke Konishi
+You are right, basically this is "time" in cycles of AD_CLK. I should at 
+least add that to the property description.
+
+Best regards,
+Andrej Picej
