@@ -1,96 +1,112 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1300433B3
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 14:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A431481D0;
+	Fri, 22 Mar 2024 14:30:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711117839; cv=none; b=VcjfRjTmF/5XmYa06uYlP7vECC2wpg90SwylkQ+NxXgV1IbFt3R0mTqaIxcHZc5u6RvexHFEPZoyZf+oPlosQr4DSUiqUgDEIVNALL69tkmO/jclaf5mEfaQ1en7J4r31gGObRP2tvuq2V4x7l5H6nxQWV1+lzwCcr/kiIewO7U=
+	t=1711117842; cv=none; b=O74AiG/nNJSOJrd7ryfYhWz8V4o2He8QH9Ti31nfj+xbtIAu3pgCZbz1MNwxzNlgwTnRiG60Il9lkMp9j9d7Pfi+q6N0qTm0UwEhin8OAuY4eoVG3Hvakz53Vr32zsCMelI+DeA3ZHcrHn3znuQEhBQ/JOP2XLAoTTIB7DJ5lG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711117839; c=relaxed/simple;
-	bh=ckkugpHgNe8GIeIYxkb7EhPuXOw/jTJIfXFSmMpb8YI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=igo+doRLDkJeF1Bvx9PVRmAgmDQXgCVEq5UNun2yqkBoxYy0Cye0B715whOWc/aNSgGUk2AYeP9PrHBIsfaEsgH3z7YkS1e08LC6Qr3KtfzCzE/Tcf61jfHW5CcVfdUR2ldmliq+ULM80RgSOHpvqOyodnx8F1cUw4JmJW72vsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vb2tIA0m; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1711117842; c=relaxed/simple;
+	bh=T/jKj4/iW9yfrA6kGZOg1yFTxBhpOhojURXvqMGy8G8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yo71IMW3fnY2ofuvFOM1MgauP/SHgZ9QAHpn7Oh9q6S+G1LXQxKPyFeKFe5qVLKiWw+4uMYpFVy489yjnXnbORU0P43s32cjgYRs/92B5WAIGbjEYtw07eUd9Xywgm8Wx7jHA4E2udRCRjadNvfyF4Wkong+EPboMhjjtk+ybTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=F0ZEsdOm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vb2tIA0m"
-Message-ID: <fe4ea866-5485-4041-9a06-5441c429b150@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1711117835;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IllocFnwNiXVGU+HouNFbx0kAsYD151iYbY5EqUrK60=;
-	b=vb2tIA0mE3RjQRmFtwRGeRNWtPVle8xwPuGz3k0mXmPbxA9+rb6RH0etsFkHhWQAK0DPpa
-	g5mehHDk0VOcMpylaYKuk/GPkLTeV+eLrTyDxbPhCe5wLBDOUZZwHJnSVNO/KTYtRNTvk5
-	0YVP778XwUltNtoGBLyTwJ0FFHUEiCo=
-Date: Fri, 22 Mar 2024 22:30:20 +0800
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="F0ZEsdOm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DC57C43394;
+	Fri, 22 Mar 2024 14:30:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1711117840;
+	bh=T/jKj4/iW9yfrA6kGZOg1yFTxBhpOhojURXvqMGy8G8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F0ZEsdOm1JYUMZqeYJCE3EC0AqqMsFWIxQlVCZSY7N3Sz+NIlaceCz/FL7RMbHsF1
+	 K1hxFhrj1aFF5dzMmZawvCKTkGWNzYeCxdfDR4Pj5Ge18QboRFf7Oxum1G8M8uvleA
+	 8eyNN8JcSOma2IRKCrnpd5ToWxjRUzMV0/7UlJpg=
+Date: Fri, 22 Mar 2024 15:30:37 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Chris Leech <cleech@redhat.com>, Nilesh Javali <njavali@marvell.com>,
+	Christoph Hellwig <hch@lst.de>,
+	John Meneghini <jmeneghi@redhat.com>, Lee Duncan <lduncan@suse.com>,
+	Mike Christie <michael.christie@oracle.com>,
+	Hannes Reinecke <hare@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+	GR-QLogic-Storage-Upstream@marvell.com,
+	Simon Horman <horms@kernel.org>
+Subject: Re: [PATCH v6 1/4] uio: introduce UIO_MEM_DMA_COHERENT type
+Message-ID: <2024032203-dawn-crestless-4199@gregkh>
+References: <20240201233400.3394996-2-cleech@redhat.com>
+ <20240205200137.138302-1-cleech@redhat.com>
+ <4f606e50-865c-46f2-b89e-6c1dfe02f527@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [v10,20/27] drm/connector: hdmi: Add Infoframes generation
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>,
- Sandy Huang <hjc@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?=
- <heiko@sntech.de>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>, Hans Verkuil <hverkuil@xs4all.nl>,
- Sebastian Wick <sebastian.wick@redhat.com>,
- =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
- linux-sunxi@lists.linux.dev
-References: <20240321-kms-hdmi-connector-state-v10-20-e6c178361898@kernel.org>
- <07125064-2a78-4515-bb48-655f2aec140f@linux.dev>
- <20240322-loose-resourceful-bullmastiff-92cfaf@houat>
- <7835e928-7d09-446e-91dd-13a0fa549bc2@linux.dev>
- <20240322-steadfast-tanuki-from-mars-b5ea5f@houat>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sui Jingfeng <sui.jingfeng@linux.dev>
-In-Reply-To: <20240322-steadfast-tanuki-from-mars-b5ea5f@houat>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4f606e50-865c-46f2-b89e-6c1dfe02f527@roeck-us.net>
 
-Hi,
+On Fri, Mar 22, 2024 at 07:16:19AM -0700, Guenter Roeck wrote:
+> On Mon, Feb 05, 2024 at 12:01:37PM -0800, Chris Leech wrote:
+> > Add a UIO memtype specifically for sharing dma_alloc_coherent
+> > memory with userspace, backed by dma_mmap_coherent.
+> > 
+> > This is mainly for the bnx2/bnx2x/bnx2i "cnic" interface, although there
+> > are a few other uio drivers which map dma_alloc_coherent memory and will
+> > be converted to use dma_mmap_coherent as well.
+> > 
+> > Signed-off-by: Nilesh Javali <njavali@marvell.com>
+> > Signed-off-by: Chris Leech <cleech@redhat.com>
+> > ---
+> 
+> Building i386:allyesconfig ... failed
+> --------------
+> Error log:
+> drivers/uio/uio.c: In function 'uio_mmap_dma_coherent':
+> drivers/uio/uio.c:795:16: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
+>   795 |         addr = (void *)mem->addr;
+>       |                ^
 
+So on 32bit systems phys_addr_t != the same size as (void *)?  How is
+that possible?  We also are doing an explicit cast here, how does this
+not work?
 
-On 2024/3/22 20:31, Maxime Ripard wrote:
-> On Fri, Mar 22, 2024 at 07:13:54PM +0800, Sui Jingfeng wrote:
->> Hi,
->>
->>
->> On 2024/3/22 18:31, Maxime Ripard wrote:
->>> Which default config are you talking about? This compiles fine with all
->>> drm-misc defconfig, x86 defconfig and allmodconfig.
->> The drm_hdmi_avi_infoframe_colorimetry() function is belong to the drm_display_helper.ko
->> kernel module, it get called from hdmi_generate_avi_infoframe() in drm_atomic_state_helper.c.
->> While drm_atomic_state_helper.c belongs to drm_kms_helper.ko. Therefore drm_kms_helper.ko
->> is dependent on drm_display_helper.ko implicitly. So we probably should select it.
-> Right. I was asking which config are you using to generate that build error
+Ah, do you have CONFIG_X86_PAE enabled?  That would cause that mess,
+ick.
 
 
-I'm using the arch/riscv/configs/defconfig, with the following module de-selected.
+> cc1: all warnings being treated as errors
+> make[5]: [scripts/Makefile.build:244: drivers/uio/uio.o] Error 1 (ignored)
+> drivers/uio/uio_dmem_genirq.c: In function 'uio_dmem_genirq_open':
+> drivers/uio/uio_dmem_genirq.c:63:39: error: cast from pointer to integer of different size [-Werror=pointer-to-int-cast]
+>    63 |                 uiomem->addr = addr ? (phys_addr_t) addr : DMEM_MAP_ERROR;
+>       |                                       ^
+> drivers/uio/uio_dmem_genirq.c: In function 'uio_dmem_genirq_release':
+> drivers/uio/uio_dmem_genirq.c:92:43: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
+>    92 |                                           (void *) uiomem->addr,
+>       |                                           ^
+> cc1: all warnings being treated as errors
+> make[5]: [scripts/Makefile.build:244: drivers/uio/uio_dmem_genirq.o] Error 1 (ignored)
+> drivers/uio/uio_pruss.c: In function 'pruss_probe':
+> drivers/uio/uio_pruss.c:194:34: error: cast from pointer to integer of different size [-Werror=pointer-to-int-cast]
+>   194 |                 p->mem[2].addr = (phys_addr_t) gdev->ddr_vaddr;
+>       |                                  ^
+> cc1: all warnings being treated as errors
+> 
+> Caused by this patch and "uio_dmem_genirq: UIO_MEM_DMA_COHERENT conversion" as well
+> as "uio_pruss: UIO_MEM_DMA_COHERENT conversion".
+> 
+> I'd suggest to make uio dependent on 64 bit if 32 bit is no longer supported
+> to prevent waste of test builds resources.
 
-CONFIG_DRM_RADEON
-CONFIG_DRM_NOUVEAU
-CONFIG_DRM_SUN4I
+Perhaps disable it if PHYS_ADDR_T_64BIT is not enabled?
 
-  
+Chris, can you make up a patch?  Odd that this didn't show up in 0-day
+before this, does it not test 32bit builds anymore?
 
-> Maxime
+thanks,
 
--- 
-Best regards,
-Sui
-
+greg k-h
