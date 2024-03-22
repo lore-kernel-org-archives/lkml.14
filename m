@@ -1,111 +1,88 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E4612E59;
-	Fri, 22 Mar 2024 06:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B2E10A17
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 06:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711090338; cv=none; b=SxFUiGFJDN9Wtht8HM0eFePdsO/jrDDgQf2HdJfoAwsonZmMoYgCO9+fiT7SjuqYC2kJXvglKoO44WuVbUmajo6l9wCu4xyFeDdmOx8oy8eYs2y9l8aeIeaztgSnDc7RkotVkEaBy28VDZYGPks9RM2ZLlXrrLK7m2ngdN0VRD0=
+	t=1711090394; cv=none; b=nhUA+/ASWd9PdM73ZPRQbEg1512MT71EK7/HJleMAGQ+X85pZx0Avowau1v6OYy/I+u/E1s+WwNHlW6D52Neg+sMhmIq6HwQvypK5HEr/CNFELfK+F4+2VAbqHvxNpbxpDArtTQzQNMQR59LdHPGxFUhRyHMZ4O/gWyeVf1Fn30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711090338; c=relaxed/simple;
-	bh=uov7lUYJCh+xUy0eBkN2SDq6BsxY/KiedSXqxnqt6Ec=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N3vJcTSjZYp5lmvlFe6suLronx63CNUCuF1r0A1XMY3gzJaO6KgYWASAzf/o92G80NWsu30zylpUf00KcUWof9kySyTTfBtM7062zQWUGgqDDvDLsGskCnwbvMrw0fgyAGIlV9SuM88+yTay/ZxBvcN5UYB8mwgWCV8/VetW+zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pR9WjbU0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s3klKYcv; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1711090394; c=relaxed/simple;
+	bh=TE/0hmyWh1Qw3fzYdhGjheA+rIirx+o8SmFEoJfqJEo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o8oocW9QxEzbPLYjpk7tZ6dBSZr31YDkTtY1bOlLrafJ6sBichIva5EX7Rga9GcIDZbi+17IQGmPT6uy+mo+NGywwWpuhQncH97z2+d0M1jYXXvMV0pIXmBtK5gDupy6GvFLGKe3nOz3D0kJpLz86BaZ+/HTWuULD9AbO0PSfGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=MG9nFrld; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pR9WjbU0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s3klKYcv"
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1711090333;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rP0uMrbdvGuw0gaehpXjO7C2OkXyANk5+OleJCkDezM=;
-	b=pR9WjbU03BbCeOem1TuBr2e6C7jaLNauCxLnF5XgP5ZhDp7XaaH0wgwJmCrVRGOxE/I2AL
-	j5yfVXuEa7B6Omy+hMJykSwI5AZI5FN4D7DR6LDK6NxxBdYe9o/WVCE5LXcjQrd7di5skl
-	cebauT/DOQF20QlMC57965lnysNDLBNZndO4bqOovKOVZESBYibrkE++T90+pk7i5Er+Ks
-	jPtyhlvc7iXtTNQXnAGO36tStjqYwt58HSCZjRxdQFrUkPOklM+434eyKgcM1b7QQ8biE6
-	HoCF0xOn4FnMIxtIYLcOmP/a+EOdP7tfX5rLpBPxfFfxvaej3EzDYjoeHcok8g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1711090333;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rP0uMrbdvGuw0gaehpXjO7C2OkXyANk5+OleJCkDezM=;
-	b=s3klKYcvmpZ02aC2i9WAA1dxbfKQJSWzlaRIm754CJy9I49OjjGVVaQQRn3wyB67ZDtww9
-	geTI6AuIaE7TelBw==
-To: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Marco Elver <elver@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v3 1/4] perf: Move irq_work_queue() where the event is prepared.
-Date: Fri, 22 Mar 2024 07:48:21 +0100
-Message-ID: <20240322065208.60456-2-bigeasy@linutronix.de>
-In-Reply-To: <20240322065208.60456-1-bigeasy@linutronix.de>
-References: <20240322065208.60456-1-bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="MG9nFrld"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a4733ac2109so22295966b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 23:53:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1711090390; x=1711695190; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dqvOkYG7PGR/60T9a+vecv0YvaykQSrN8+SAoBmbKLY=;
+        b=MG9nFrldGmo8g5SLiIre5Hf2u8db2QJ0lz5Gp2WXL0po1/gFtjkm8bAU7B0gZF/0Si
+         dDHrnbuQLZfBBncbLRz52WRUm7O4hy+MSLs5xjxZD/tCBC2wiXM+4Xc3hchBFXo80EUC
+         ZhBSt6lrcz6ZU0ltVdD7yEKRUWwDb+a7iEaqylXf/gwLd0xfMq3oYAMf95tB3XrjxxQw
+         5IyAMNBupfuKucMviYXxSyEpC85JtLTrafHKzz7tzBUWnNeBUcY374mZhjz0+eeyRBFT
+         r+Hl5/ouacjOJOBrkqPU1bjGqwF4y2kbl3nRGZ9khDrLxS7Y8D2+wLu1parvdoiVW7ET
+         TFDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711090390; x=1711695190;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dqvOkYG7PGR/60T9a+vecv0YvaykQSrN8+SAoBmbKLY=;
+        b=vf8t44I2LwXmwGaTczO6oqziHuQG6RwNyBHDvctsTgaqQyj9oMC+g5zghPgK3T4KHU
+         5pJB5UMATBbom9ubXWA+GhSjhb2qnGRa5MtO0pBt9Aa4Hy7HZYwe4Yi472m6fyLdNSLe
+         Q/34uK43XhQ/ETKCBhmVK68akWU1FaYKNetkvoFTn4uoOiLHO6SOg0Z3yK5mAF2y5cOa
+         IBS7+TqZNUzYHsmYVEY2okR2v87yH37QT8wWBZfjV4eJvcdGc/gc7P4bGEca9/JMI8qF
+         121T4yeA3i+IYTUFRKueWrbI+wzr67hx+xYaJdF25dlT+4jAIrmDmt+Rp9E5ChITgdW+
+         3Nzw==
+X-Forwarded-Encrypted: i=1; AJvYcCWhF/XVdPJFFgNVuVnnVNd0J3bzPIMQJ/9ya9aUWoUuMNlIxXM2d+lmC8zUlAn4Ie/2LBd6RY29NYgBsw6UIJn8kYghQTJfQdseedM4
+X-Gm-Message-State: AOJu0Yz+HHlsoGzVJHeioFIHkWCRGz8Ux3Qs0kbRqUZzoIypmVxk9AbL
+	g225Wm2JsJIFmMBb3UP2N/3z5n/MM2aH4z0wWav46Ngx/TrELm9hE+Pa8JKDE30=
+X-Google-Smtp-Source: AGHT+IFlkBu7bgRCcPm1ksy6ar+oWKKLT0QxCo9cXoRVYuAvIvMat/Nwchd03Pt+Yo+xx4szyR3oHw==
+X-Received: by 2002:a17:907:940f:b0:a46:75d3:dd46 with SMTP id dk15-20020a170907940f00b00a4675d3dd46mr1107120ejc.17.1711090390380;
+        Thu, 21 Mar 2024 23:53:10 -0700 (PDT)
+Received: from ?IPV6:2003:e5:873a:400:704b:6dbb:e7c0:786e? (p200300e5873a0400704b6dbbe7c0786e.dip0.t-ipconnect.de. [2003:e5:873a:400:704b:6dbb:e7c0:786e])
+        by smtp.gmail.com with ESMTPSA id h10-20020a1709060f4a00b00a472c4b9486sm460730ejj.84.2024.03.21.23.53.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Mar 2024 23:53:10 -0700 (PDT)
+Message-ID: <51389495-4b99-430b-9ae8-7f938af34bec@suse.com>
+Date: Fri, 22 Mar 2024 07:53:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] xen/x86: Remove duplicate include
+Content-Language: en-US
+To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Cc: boris.ostrovsky@oracle.com, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+ Abaci Robot <abaci@linux.alibaba.com>
+References: <20240322063957.94159-1-jiapeng.chong@linux.alibaba.com>
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+In-Reply-To: <20240322063957.94159-1-jiapeng.chong@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Only if perf_event::pending_sigtrap is zero, the irq_work accounted by
-increminging perf_event::nr_pending. The member perf_event::pending_addr
-might be overwritten by a subsequent event if the signal was not yet
-delivered and is expected. The irq_work will not be enqeueued again
-because it has a check to be only enqueued once.
+On 22.03.24 07:39, Jiapeng Chong wrote:
+> ./arch/x86/xen/enlighten.c: linux/memblock.h is included more than once.
+> 
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8610
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 
-Move irq_work_queue() to where the counter is incremented and
-perf_event::pending_sigtrap is set to make it more obvious that the
-irq_work is scheduled once.
+Reviewed-by: Juergen Gross <jgross@suse.com>
 
-Tested-by: Marco Elver <elver@google.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- kernel/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f0f0f71213a1d..c7a0274c662c8 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -9595,6 +9595,7 @@ static int __perf_event_overflow(struct perf_event *e=
-vent,
- 		if (!event->pending_sigtrap) {
- 			event->pending_sigtrap =3D pending_id;
- 			local_inc(&event->ctx->nr_pending);
-+			irq_work_queue(&event->pending_irq);
- 		} else if (event->attr.exclude_kernel && valid_sample) {
- 			/*
- 			 * Should not be able to return to user space without
-@@ -9614,7 +9615,6 @@ static int __perf_event_overflow(struct perf_event *e=
-vent,
- 		event->pending_addr =3D 0;
- 		if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
- 			event->pending_addr =3D data->addr;
--		irq_work_queue(&event->pending_irq);
- 	}
-=20
- 	READ_ONCE(event->overflow_handler)(event, data, regs);
---=20
-2.43.0
+Juergen
 
