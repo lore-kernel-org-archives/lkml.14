@@ -1,52 +1,66 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B9C1E53A;
-	Fri, 22 Mar 2024 21:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F8D43AB5;
+	Fri, 22 Mar 2024 21:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711141276; cv=none; b=n8RN25344mT8G761FO8bqh92VwKHE6WfqZ6k6pfO0SjNasxy+B+dkuJYIemfwrrOg+vbiPwouOYq9vnd2DwdsPxejP3I5OgAvM+KL78jUPjbnv6f/4b7nZwdqX5Yt/Yf8FuHVH8rYFLMb3B652MPlQka4/lknDUQJc2A8g/KDoU=
+	t=1711141631; cv=none; b=Qz4MzYesAf1hhmNTW30vaG7UmDqTXqrgjmvTBV8ejbCpAdJXiRYDGE4RnYEo9XbKkWA0D8gkOmikwohECR4R4OYeyOFSPjDg71F0kxhQiTmIt5ph2JAWuidz/cfd3wVe0vEOjSfn6mkCv4AS8ehHtt8kmrb5pgG2k69BBDaUNlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711141276; c=relaxed/simple;
-	bh=qHZQxL/07nk39dovZ4jroYtYQAGKCNn3FZb5dLi7uuM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bf0K8UvM6gJ9IQYHOxjvlP/mbUQ9Iu2bBVmQy0psxwY4+qCyl94VIUm2GYH0ghTqJFD4+9rIAi1y5oz2tyHjo2ww2sVTgt3nZnHNdfkaiV3AQvJyfJjhqieVKKQguoalNRg3FcPzSea/KUy/XO13sMC1kXuXm03Bv4TVJo7iwP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=YcJreD3M; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+	s=arc-20240116; t=1711141631; c=relaxed/simple;
+	bh=YkgedNbnPlvyhg23jakh3mh9WdU2gO/2Oo9+tx8JwdY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kpKvGe0QKPoaxvBtUujRNgm3G3S1zU1u4TuWN0KOJdSJ3M0YbT31JbqFAqJkQnC59aakdKlrYTRdvWJbaeZ5r5JvUxJZDqK+VP58RmgpUpTDy5tVu1L/X/3RvQqmC34kGe/1xtfSFdr2qLbMKacKLo9WmppejO6NTe3aVfauUHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DhwK4mVd; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="YcJreD3M"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id E2E7F100002;
-	Sat, 23 Mar 2024 00:00:52 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1711141252; bh=AHaDfWqKeTOZ0MS8fprzUVNZEFZ6lLX0Zn06/jjcUO8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=YcJreD3M2b03HXR8f2Z8GrN2oP2kikzXvI0qZ0/hl6wggjnME5zguGAmROJ3jqrvc
-	 tgSCw1+6K4B/drfyHlkKKE8HQc2kDNShSsTo+26o50fUvo0S0bfLUxW1qUQDt3yAqO
-	 Z9FX0XWPKbuMyEYo2G9JB9GDlBNYX8ofGuQP0EfncSEODxXc7dC0kpL8GbP8ByipPw
-	 H45jEZyfyAqaS56042t7QjL2ogau2+kSNYDeWyReekqKE2sXsaGEsgegkg8lOZtI2Z
-	 03rnvt0dOiGfcUq7Mr6b9I20eJedYvnko4V9vNbeqpkbHfjURG5YKALPqSIw7CsV4Q
-	 Wrb/+V+w6ZtIg==
-Received: from mx1.t-argos.ru.ru (mail.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Sat, 23 Mar 2024 00:00:05 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.6) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 22 Mar
- 2024 23:59:45 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, "David S. Miller"
-	<davem@davemloft.net>, Steve Lin <steven.lin1@broadcom.com>, Rob Rice
-	<rob.rice@broadcom.com>, <linux-crypto@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-Subject: [PATCH v2] crypto: bcm/spu2 - Add buffer size check
-Date: Fri, 22 Mar 2024 23:59:15 +0300
-Message-ID: <20240322205915.13305-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240306110022.21574-1-amishin@t-argos.ru>
-References: 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DhwK4mVd"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e6f4ad4c57so1844078b3a.2;
+        Fri, 22 Mar 2024 14:07:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711141629; x=1711746429; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1XeA+1BAAqVXX6Ddia15d3yogqfe8/erMo6VyCuZWoM=;
+        b=DhwK4mVdi6MNR8YHapVB4NE2gu8ez61GzcSIpmXpYuXkTtG7xwMxOlEfF79VFOXroM
+         I2cWnizLWMB7qyiKtiEu+h9GgJ4Ktz/Zt8JCESril0YpL8vOm+wlU+7/afEfNE46cL3m
+         yRyvhlPOUI/BpdicAZoZ0QLrDO+QDqA0MeRSm/nwpokVvYTwvVSw+FlUaYBeSqhnPR98
+         OE8znGWobBGa2qTvGNlYw+14PhfS4TwVkD1Ep/OSwTNc59Nkqp+nmkcNOyNMIMbYhrum
+         xxvwyh7iCnTe/dgSE3hoDi0rbPGF/65RW1s2bshLp2bGdq+sdITZ0t40Lm4V4SwZade1
+         MCNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711141629; x=1711746429;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1XeA+1BAAqVXX6Ddia15d3yogqfe8/erMo6VyCuZWoM=;
+        b=Pvowz8m5fO2JoRtVDbIGbyPCss00frTcabJbXr+AHlHrAhRND/QQ/rYgyjAK67jKZe
+         FClZ83Dd20JhGaJ7/1rlJ3eJ+u7xyQt3tbRyq6mphEB0b3i+We7i0chG9zwRb73Dq1uL
+         RnVKn9N4oW9s7RaNAbLcic8b+w/fk9mABa63Hi9l92VlxffPSQHP8TRsCqqCOPfGkzWV
+         2qItQMK0XwnqHInMvbPV35c7RMDJ7zMPfoLbZ0tr/eYDGqnKmDhP4b4BQPrD0h9ZL9/Y
+         RSpD4Pryjach/bm4KHb49ixmCZZyEjRPQbabDbGRhlrsYcsfCcFryYkvxqMJ+/v+UGid
+         iLeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUjkPRUDDfKEja7Tjo46vS16zSkgcCHA/xTuFg1dfsLnV9zw3z+P51JvCGdjejlHIfhLgno0r9C9Pdvfdl/RynOKz8Pr3ozg0ngUOv0OU3dEa7Dt715eB496eMb3Q92Yo9Qm48uMNM5XGy7QA==
+X-Gm-Message-State: AOJu0YwSvcSVPZSfFakcVxYJtUljod6c/X2C2AeP7se4P6Jq59iW/HaV
+	O2TZxpE4S+Jv0L4nQ5N3QvNO2HSqItJ2KoTtywa68G8+YpLmst6C
+X-Google-Smtp-Source: AGHT+IFgMy1CSPUjv+TNn7WAnGnMfNGDWz+egwFlwmPjHLf9tI2fPtnVT3pxannuIeETTJXF3HkIog==
+X-Received: by 2002:a17:902:eb92:b0:1dc:4bf6:7eb4 with SMTP id q18-20020a170902eb9200b001dc4bf67eb4mr1047502plg.31.1711141628851;
+        Fri, 22 Mar 2024 14:07:08 -0700 (PDT)
+Received: from localhost.localdomain (58-190-164-40f1.hyg1.eonet.ne.jp. [58.190.164.40])
+        by smtp.gmail.com with ESMTPSA id a4-20020a170902ecc400b001dddce2291esm187307plh.31.2024.03.22.14.07.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Mar 2024 14:07:08 -0700 (PDT)
+From: Soma Nakata <soma.nakata01@gmail.com>
+To: linux-mm@kvack.org
+Cc: soma.nakata01@gmail.com,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mm/filemap: set folio->mapping to NULL before xas_store()
+Date: Sat, 23 Mar 2024 06:04:54 +0900
+Message-Id: <20240322210455.3738-1-soma.nakata01@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,53 +68,35 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184367 [Mar 22 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 11 0.3.11 5ecf9895443a5066245fcb91e8430edf92b1b594, {Tracking_from_domain_doesnt_match_to}, mx1.t-argos.ru.ru:7.1.1;t-argos.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/03/22 20:48:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/03/22 14:30:00 #24353062
-X-KSMG-AntiVirus-Status: Clean, skipped
 
-In spu2_dump_omd() value of ptr is increased by ciph_key_len
-instead of hash_iv_len which could lead to going beyond the
-buffer boundaries.
-Fix this bug by changing ciph_key_len to hash_iv_len.
+Functions such as __filemap_get_folio() check the truncation of
+folios based on the mapping field. Therefore setting this field to NULL
+earlier prevents unnecessary operations on already removed folios.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Fixes: 9d12ba86f818 ("crypto: brcm - Add Broadcom SPU driver")
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+Signed-off-by: Soma Nakata <soma.nakata01@gmail.com>
 ---
-v2: Fix commit message according to the Linux kernel rules
+ mm/filemap.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
- drivers/crypto/bcm/spu2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/crypto/bcm/spu2.c b/drivers/crypto/bcm/spu2.c
-index 07989bb8c220..3fdc64b5a65e 100644
---- a/drivers/crypto/bcm/spu2.c
-+++ b/drivers/crypto/bcm/spu2.c
-@@ -495,7 +495,7 @@ static void spu2_dump_omd(u8 *omd, u16 hash_key_len, u16 ciph_key_len,
- 	if (hash_iv_len) {
- 		packet_log("  Hash IV Length %u bytes\n", hash_iv_len);
- 		packet_dump("  hash IV: ", ptr, hash_iv_len);
--		ptr += ciph_key_len;
-+		ptr += hash_iv_len;
- 	}
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 2723104cc06a..79bac7c00084 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -139,11 +139,12 @@ static void page_cache_delete(struct address_space *mapping,
  
- 	if (ciph_iv_len) {
+ 	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
+ 
++	folio->mapping = NULL;
++	/* Leave page->index set: truncation lookup relies upon it */
++
+ 	xas_store(&xas, shadow);
+ 	xas_init_marks(&xas);
+ 
+-	folio->mapping = NULL;
+-	/* Leave page->index set: truncation lookup relies upon it */
+ 	mapping->nrpages -= nr;
+ }
+ 
 -- 
-2.30.2
+2.25.1
 
