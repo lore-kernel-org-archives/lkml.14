@@ -1,429 +1,194 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F004C3EA88
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 11:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACA017564;
+	Fri, 22 Mar 2024 11:40:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711107447; cv=none; b=jlyVxOVJB8cW/uEk1w2eeNBHGJLoMqRp10M2k/QldBlBuEwIyYlZxt90+4l+u+i9v3Mw5CD4Nm6PM0Bpq4uQyxF7+xHkai1+ROUE1bh2hR82FFLgGBVLgGlN/b4Qr8XyOZYquhJJXp9UYy6ZUvhzOQnbQz0ISmp6cv1HHauC6lc=
+	t=1711107602; cv=none; b=lg4YNvkqpVzZzFK65jXjpn4H0I+dadIcY1K0Vbrrpzi0N+ahOnPwKrDK9/DfXEkqSohHQ72GHy/d+NJkH3lAgDOWpMxTJF2yfJeoHsNRQF+mhH2z9636Yl+CZtz5LG0VLw+Lcidsp2iUJ5B7WkS00j70ol3vlmzkg63mzFlGNJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711107447; c=relaxed/simple;
-	bh=TimyXEnSMCMupMVrXo/0kXThu421K8Ag8jSJ5Wm6oiI=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=XJ2LT5Uw5ioCm+aru8WPsqDTFywl6pYy5cFd51p1p+ly/lmve8X/+2xFx34+OyAEmaIv9ycGPBJGh8gw2xTYJN7CpitNYPG3iZEZn2neNhGFk2M/ogAkgKLX5ijCjUGY0Kc4s+8Y+v+FoXkIDA/eUibS4tw4OK3W+CTsiJr/qqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=jva2DrDM; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1711107602; c=relaxed/simple;
+	bh=QF8itS0V+c8f286d9XHattfLLj4ymX4XF7b7F0f9vbw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=TuujMQPUnBu3ZHJ8btnq78fJYPymE0EW8Gz+aS30CsO7+A8lbi2u9GRAYwp949/MNGkjtNaxsDSNbDXGshCNZ2HL9RqmBeenQt9VyPs1zYCv4NmSJtQSproyTDADke0vjPUh3WMSgWI0FVR4tRCjWvHk9vb6bqB7xrDzSCfPdAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eRTXagrb; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jva2DrDM"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240322113716epoutp0238ca6a035db8b2eaf5a22143df1c45d8~-EyXkn8FU2910829108epoutp02k
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 11:37:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240322113716epoutp0238ca6a035db8b2eaf5a22143df1c45d8~-EyXkn8FU2910829108epoutp02k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1711107436;
-	bh=BOmetlTwaNKvKFKIwahvFByB4VTueYCmBSAEBsP4hfg=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=jva2DrDMTl4lascGE1aYTh0nl5Mazwe7LSXiOUrWnp/+ipGrQ+ZM9jqU9ay0WhACf
-	 XLbXftMOLRpefHdLTrUT6tFaGtJvZeLngfU9tq5+bWjUim97dizFYjezS/FYIfzW+b
-	 9R2YC8Ac8SkSwm4q2dNdcNmY7TiQDgRFH/xQrhHY=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-	20240322113716epcas5p3820487949e0305da87345b43702074b0~-EyW3nfGT1001910019epcas5p3l;
-	Fri, 22 Mar 2024 11:37:16 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.179]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4V1L0B291Bz4x9Q1; Fri, 22 Mar
-	2024 11:37:14 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	FA.C9.08600.A6D6DF56; Fri, 22 Mar 2024 20:37:14 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240322112129epcas5p1b94af4317c52764b4129598734786fa0~-EklN6Ppc0150001500epcas5p1f;
-	Fri, 22 Mar 2024 11:21:29 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240322112129epsmtrp290e630b497127149d59220e98053708f~-EklM3o_u1200512005epsmtrp2u;
-	Fri, 22 Mar 2024 11:21:29 +0000 (GMT)
-X-AuditID: b6c32a44-6c3ff70000002198-90-65fd6d6a9f98
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	2A.77.19234.9B96DF56; Fri, 22 Mar 2024 20:21:29 +0900 (KST)
-Received: from FDSFTE462 (unknown [107.122.81.248]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20240322112124epsmtip289e536244f68a967d0e4f3dc5ac1b555~-EkgxMauO1632316323epsmtip2T;
-	Fri, 22 Mar 2024 11:21:24 +0000 (GMT)
-From: "Shradha Todi" <shradha.t@samsung.com>
-To: "'Manivannan Sadhasivam'" <manivannan.sadhasivam@linaro.org>, "'Jonathan
- Cameron'" <Jonathan.Cameron@Huawei.com>
-Cc: <bp@alien8.de>, <tony.luck@intel.com>, <james.morse@arm.com>,
-	<mchehab@kernel.org>, <rric@kernel.org>, <lpieralisi@kernel.org>,
-	<kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
-	<jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-	<josh@joshtriplett.org>, <lukas.bulwahn@gmail.com>, <hongxing.zhu@nxp.com>,
-	<pankaj.dubey@samsung.com>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <vidyas@nvidia.com>, <gost.dev@samsung.com>,
-	<alim.akhtar@samsung.com>, <shiju.jose@huawei.com>, "'Terry	Bowman'"
-	<Terry.Bowman@amd.com>
-In-Reply-To: <20240322103935.GD3638@thinkpad>
-Subject: RE: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
- controller
-Date: Fri, 22 Mar 2024 16:51:16 +0530
-Message-ID: <14ef01da7c4b$15dbaac0$41930040$@samsung.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eRTXagrb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=QF8itS0V+c8f286d9XHattfLLj4ymX4XF7b7F0f9vbw=; b=eRTXagrbI9cmQV/+eWasKlIX8l
+	WBP6ggPVt5G4NjvAlYOCdhNe0FEP0t7tjvS49rHfUv5jkcDj6WR1UFXcGlbZulwY6aWUE3PhYat14
+	lKrYqir+9UXh3pb2DYWaO+7+nXZQ9waPUm4gfDNuhjjhptH2U2uWgrhncbbnrJaOIogbOZ1eODhso
+	vBhiUyDBK3M5QfWjDuMAq0V14ePkVZqbP4/Ct9RYtwSy2h13luFH2YnsVMjmofbf8WU7kYlDNIxvN
+	6gsleLWtkOJZ3Wppm2+lFWGhl2siIyaYXfoMqeK2c+maC/RsB0A6HPGddvBrVQ1EJF7oWli+t/QG6
+	c3eumfTg==;
+Received: from [2001:8b0:10b:5:9bbb:2be8:b21a:e5b8] (helo=u3832b3a9db3152.ant.amazon.com)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rndFc-00000009AIF-3aWY;
+	Fri, 22 Mar 2024 11:39:56 +0000
+Message-ID: <ecaf87b40d6da2ca39a5eaf94d2efded2ae3368c.camel@infradead.org>
+Subject: Re: [PATCH 0/3] KVM: Fix for a mostly benign gpc WARN
+From: David Woodhouse <dwmw2@infradead.org>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzbot+106a4f72b0474e1d1b33@syzkaller.appspotmail.com, Paul Durrant
+	 <paul@xen.org>
+Date: Fri, 22 Mar 2024 11:39:56 +0000
+In-Reply-To: <20240320001542.3203871-1-seanjc@google.com>
+References: <20240320001542.3203871-1-seanjc@google.com>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-3Z+0DCDEEfR2eDjQpszW"
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+
+
+--=-3Z+0DCDEEfR2eDjQpszW
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQG/Q0WxGB9EWFeblm7N70OL8blxhQGR1/IBAmU4G1oB/2O7JgJFQ8VeAXfQWL0B/DJ/LQGGIYRVASmme0ECIZ7L6wMFIzwCsN3dMoA=
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xTVxzHc25vby/Mmstj45QMYXWoKI+WRz0obCwguwluIyNxRFyw0LuW
-	UdraFjfdsnVYJgg4JDpHB4jCcFbixmOsQFEEBIE5EYGpyHARBwx5hKLT8Fqh4Pjv8zvn+z3f
-	3++cHJLlWMpxJZMUWkatEMv5hD1e0+y12efjlHlGUDVCogdFNQQqTZMhy88LBLrbWIuhuoEM
-	DjLUFAI0ePk8hn6cyecg49k+Ai0WK5Eue5aNbtcVEOhGURuB9HN6HOmvHcXRgD6Tjcoq5zB0
-	7pcZDlo0mzjoqrECQ5aeZoD6r99ko8ddf+Ko71duGKT/TT+O0+nd8wRdXlQO6FrDAIcurkyl
-	9S3jbLrEPIrR98ZC6UpjJkHf7zMT9FDPaYzOOTJB0BUTJow+Xm0EdPUVC6AtlRuiqb3JITJG
-	LGHUHowiUSlJUkhD+VEx8eHxQSKB0EcYjLbzPRTiFCaUH7E72icySW69Db7HQbE81boULdZo
-	+H5vhKiVqVrGQ6bUaEP5jEoiVwWqfDXiFE2qQuqrYLQ7hAKBf5BVuD9ZVj5yD6hGEj7Na5vG
-	dSDrnWPAjoRUIBzNKiaOAXvSkaoH8JmxmWUrpgEsrOjAXxT9phFi1XLmUTfbtlELYF7+1yuW
-	EQArfhjGllQE5Q2HeuZYS+xMHYQnpseWHSyqGofGvzOXRXaUD+x83AmW2ImKgadPHcOXGKc8
-	4URFDXuJuVQwTKsz4DZ2gO35Q8vMorbBsrNjLFtLHvD5ozL2alhZbith07jAa8+zl7uDVLcd
-	zMmawm2GCFg/McmxsRP8p616hV2hZaJhZU4pvFD13UqAHD6tKsVs/CZs7CmwnkNaA7zgT3V+
-	tmU3eKrjEmbLXQ9zZodW5FxoKlrljXBm3rzSAg8Wtd5m5wK+Yc1ohjWjGdaMYPg/rRjgRsBj
-	VJoUKZMYpBIqmE9ePHmiMqUSLH+XrREmcOfMgm8TwEjQBCDJ4jtzTYtzjCNXIj50mFEr49Wp
-	ckbTBIKs932C5fpyotL63xTaeGFgsCBQJBIFBgeIhHwX7lh6ocSRkoq1TDLDqBj1qg8j7Vx1
-	WFzvFpeWScGzDH9eFLffpV59ZPj3rzxfDw7xz3MgdUzklNq+/9xvfe2dzt4L4vURm9wkGbNd
-	U9+/794hGj+6u9e0LnfTnouFrTzuF5ZdpNNge1jD/sGnMbmvhDkcOHl4Q/HFtsgHV2v3frBN
-	27hzXdc+bAt9F3iHy266X8rX/eE3/BEde3I6zi38iTSntiHroT5gu2PB8FiUZ1p2Z26advPo
-	h2/Ftbz3mTbp0MYv75u/HcK68ZKQHeaHvgP+vCfXr7yrfqlTP6t7jYC9zqa/drWp9MzOb0q4
-	dbegl5IcZd+Q7PG8FZYQe8f/cuKrOnf1eEKPKKBJNJUBRy8UvB3L+3zy/L4DfFwjEwu3stQa
-	8X+/vgbotwQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgleLIzCtJLcpLzFFi42LZdlhJXndn5t9Ug+bnwhYP5m1js1jSlGHx
-	ecM/NoubB3YyWey628FuMWvbXEaL+/uWM1ms+DKT3WLVwmtsFv8X5Fs09Pxmtbi8aw6bxdl5
-	x9ksWv60sFi0HG1nsbjb0slqsWzTHyaLRVu/sFv837OD3eLgqo1MFp+vHGa0uH3iPKvFmwv3
-	WCyubed1kPD43trH4tF66S+bx5p5axg9ds66y+6xYFOpR8uRt6wei/e8ZPK49drWY9OqTjaP
-	O9f2sHk8uTKdyaO3+R2bx8Z3O5g8+rasYvTYsv8zo8fnTXIBAlFcNimpOZllqUX6dglcGdOn
-	L2Uu2JVY0XD4AGsD4wLvLkZODgkBE4n5Ty+xdjFycQgJbGeU2L3hCDNEQlLi88V1TBC2sMTK
-	f8/ZIYqeMUqcn7SUESTBJqAj8eTKH7AGEYEyiWvHt7OAFDELnGOROPigAWrsA2aJC9f2gnVw
-	CuhKnH5zGswWFgiU2LrxLdgKFgFViXcbt7GC2LwClhJNu2axQNiCEidnPgGzmQW0JXoftjLC
-	2MsWvoY6VUHi59NlrDBXLJtwjA2iRlzi6M8e5gmMwrOQjJqFZNQsJKNmIWlZwMiyilE0taA4
-	Nz03ucBQrzgxt7g0L10vOT93EyM4sWgF7WBctv6v3iFGJg7GQ4wSHMxKIrw7/v9JFeJNSays
-	Si3Kjy8qzUktPsQozcGiJM6rnNOZIiSQnliSmp2aWpBaBJNl4uCUamAy2n21KeHhGuHHx0Iu
-	+Nt23lb137115Yerb29Pt/Ir2fKpuWW2duzGU/4if3pDj6UHP09f0Rt1YsN/63dv3t49Z7VQ
-	3eLDfqdZHzmMrCfEc8a8m/j9vfRduW+hlaxX+Z7MMQs8uefEhqePndf7NR07N7O0y/nMK+/v
-	V5jbjRO2tthxaUw+tOnkU4PHk15Fpc3+Y2ulLcTssMntmCjnavZjJ/r0al1KZ/ZE5b7esHez
-	0frg10sn/g7WZZ/hbzf16b+keg/rwu/31V6+uDHv4+pPzqXb2Xmdktq3X56Uf65c4d/3x3yf
-	edx+eaZEtVS3uJ7y0pATVF77bt/dAw8m7FeruhqYcdSVhfvMsUjehezPqpRYijMSDbWYi4oT
-	AYWR5+SbAwAA
-X-CMS-MailID: 20240322112129epcas5p1b94af4317c52764b4129598734786fa0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20231130115055epcas5p4e29befa80877be45dbee308846edc0ba
-References: <CGME20231130115055epcas5p4e29befa80877be45dbee308846edc0ba@epcas5p4.samsung.com>
-	<20231130115044.53512-1-shradha.t@samsung.com>
-	<20231130165514.GW3043@thinkpad>
-	<000601da3e07$c39e5e00$4adb1a00$@samsung.com>
-	<20240104055030.GA3031@thinkpad>
-	<0df701da5ff0$df1165a0$9d3430e0$@samsung.com>
-	<20240216134921.GH2559@thinkpad>
-	<120d01da657e$66b9d3b0$342d7b10$@samsung.com>
-	<20240319163315.GD3297@thinkpad> <20240320100144.0000056c@Huawei.com>
-	<20240322103935.GD3638@thinkpad>
 
-
-
-> -----Original Message-----
-> From: 'Manivannan Sadhasivam' <manivannan.sadhasivam=40linaro.org>
-> Sent: 22 March 2024 16:10
-> To: Jonathan Cameron <Jonathan.Cameron=40Huawei.com>
-> Cc: Shradha Todi <shradha.t=40samsung.com>; bp=40alien8.de;
-> tony.luck=40intel.com; james.morse=40arm.com; mchehab=40kernel.org;
-> rric=40kernel.org; lpieralisi=40kernel.org; kw=40linux.com; robh=40kernel=
-.org;
-> bhelgaas=40google.com; jingoohan1=40gmail.com;
-> gustavo.pimentel=40synopsys.com; josh=40joshtriplett.org;
-> lukas.bulwahn=40gmail.com; hongxing.zhu=40nxp.com;
-> pankaj.dubey=40samsung.com; linux-kernel=40vger.kernel.org; linux-
-> pci=40vger.kernel.org; vidyas=40nvidia.com; gost.dev=40samsung.com;
-> alim.akhtar=40samsung.com; shiju.jose=40huawei.com; Terry Bowman
-> <Terry.Bowman=40amd.com>
-> Subject: Re: =5BPATCH v2 0/3=5D Add support for RAS DES feature in PCIe D=
-W
-> controller
+On Tue, 2024-03-19 at 17:15 -0700, Sean Christopherson wrote:
+> Fix a bug found by syzkaller, thanks to a new WARN sanity check, where KV=
+M
+> marks a gfn_to_pfn_cache as active without actually setting gpc->gpa or a=
+ny
+> other metadata.=C2=A0 On top, harden against _directly_ setting gpc->gpa =
+to KVM's
+> magic INVALID_GPA, which would also fail the sanity check.
 >=20
-> On Wed, Mar 20, 2024 at 10:01:44AM +0000, Jonathan Cameron wrote:
-> > On Tue, 19 Mar 2024 22:03:15 +0530
-> > 'Manivannan Sadhasivam' <manivannan.sadhasivam=40linaro.org> wrote:
-> >
-> > > On Thu, Feb 22, 2024 at 04:30:47PM +0530, Shradha Todi wrote:
-> > > > + Borislav, Tony, James, Mauro, Robert
-> > > >
-> > > > Hi All,
-> > > >
-> > > > Synopsys DesignWare PCIe controllers have a vendor specific
-> > > > capability (which means that this set of registers are only
-> > > > present in DesignWare controllers) to perform debug operations call=
-ed
-> =22RASDES=22.
-> > > > The functionalities provided by this extended capability are:
-> > > >
-> > > > 1. Debug: This has some debug related diagnostic features like
-> > > > holding LTSSM in certain states, reading the status of lane
-> > > > detection, checking if any PCIe lanes are broken (RX Valid) and so
-> > > > on. It's a debug only feature used for diagnostic use-cases.
-> > > >
-> > > > 2. Error Injection: This is a way to inject certain errors in PCIe
-> > > > like LCRC, ECRC, Bad TLPs and so on. Again, this is a debug
-> > > > feature and generally not used in functional use-case.
-> > > >
-> > > > 3. Statistical counters: This has 3 parts
-> > > >  - Error counters
-> > > >  - Non error counters (covered as part of perf =5B1=5D)
-> > > >  - Time based analysis counters (covered as part of perf =5B1=5D)
-> > > >
-> > > > Selective features of  the above functionality has been
-> > > > implemented by vendor specific PCIe controller drivers
-> > > > (pcie-tegra194.c) that use Synopsys DesignWare PCIe controllers.
-> > > > In order to make it useful to all vendors using DWC controller, we
-> > > > had proposed a common implementation in DWC PCIe controller
-> > > > directory
-> > > > (drivers/pci/controller/dwc/) and our original idea was based on
-> > > > debugfs filesystem. v1 and v2 are mentioned in =5B2=5D and =5B3=5D.
-> > > >
-> > > > We got a suggestion to implement this as part of EDAC framework
-> > > > =5B3=5D and we looked into the same. But as far as I understood, wh=
-at
-> > > > I am trying to implement is a very specific feature (only valid for=
- Synopsys
-> DWC PCIe controllers).
-> >
-> > For error part there are (at least superficially) similar features in
-> > the PCIe standard that we've started thinking about how to support.
-> >
-> > See Flit Logging Extended capablity (7.7.8 in PCIe Base Spec rev6.
-> > That has the benefit that they are part of the standard so we can
-> > support them directly in portdrv / EP drivers using some library code
-> > in the PCI core.
-> >
->=20
-> Sounds good. But v6 is a relatively new version and the DWC RAS predates =
-that.
-> So we still need to support it somehow (either in EDAC or in
-> drivers/pci/controller/dwc).
->=20
+> Sean Christopherson (3):
+> =C2=A0 KVM: Add helpers to consolidate gfn_to_pfn_cache's page split chec=
+k
+> =C2=A0 KVM: Check validity of offset+length of gfn_to_pfn_cache prior to
+> =C2=A0=C2=A0=C2=A0 activation
+> =C2=A0 KVM: Explicitly disallow activatating a gfn_to_pfn_cache with
+> =C2=A0=C2=A0=C2=A0 INVALID_GPA
 
-For all PCIe spec standard errors (All of those mentioned in 6.2 in PCIe Ba=
-se Spec rev6 like AER,
-FLIT logging, DPC, SR-IOV Baseline Error Handling), extending the EDAC / po=
-rtdrv / EP drivers
-seems like the best way. But this particular RAS-DES functionality exists o=
-nly for Synopsys
-DesignWare controller, hence I feel the *DWC controller driver* should exte=
-nd this as it is a
-controller specific feature. What would you suggest?
-Unless there a plan to support vendor specific implementations through EDAC=
- or
-portdrv callbacks? Because writing a new pci driver would cause 2 driver bi=
-nding problem.
+It looks like these conflict with
+https://lore.kernel.org/kvm/20240227115648.3104-9-dwmw2@infradead.org/
 
-> > There are other interconnect and PCI PMU drivers that log retries etc
-> > which are also basically error counts. At least some of that is done th=
-rough perf
-> today.
-> >
->=20
-> IMO all the RAS support should be exposed through EDAC, otherwise it defe=
-ats
-> the purpose of the subsystem.
->=20
-> - Mani
->=20
+Want to arrange them to come after it?
 
-Yes, I see that lot of non-error based counters like memory packet tx/rx re=
-ceived,
-nak dllp received, etc is done as a part of perf today. But I believe, the =
-functionality I want to
-implement has features like error injection which would not be suitable to =
-be a part of perf.
+--=-3Z+0DCDEEfR2eDjQpszW
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
 
-> >
-> > > > This doesn't seem to fit in very well with the EDAC framework and
-> > > > we can hardly use any of the EDAC framework APIs. We tried
-> > > > implementing a =22pci_driver=22 but since a function driver will
-> > > > already be running on the EP and portdrv on the root-complex, we
-> > > > will not be able to bind 2 drivers to a single PCI device
-> > > > (root-complex or endpoint). Ultimately, what I will be doing is
-> > > > writing a platform driver with debugfs entries which will be presen=
-t in EDAC
-> directory instead of DWC directory.
-> >
-> > The addition of this type of functionality to pordrv is a long running =
-question.
-> > Everyone wants a solution, I believe some people are looking at it
-> > (+CC Terry)
-> >
-> > Terry, another case for your long list.
-> >
-> > For the EP end, this should be fired up by the EP driver, whilst it
-> > might be infrastructure used on a bunch of devices,  it is a feature
-> > of that particular EP - so you'd want to provide any functionality in
-> > a form that could be used by both the EP driver and a nice shiny new po=
-rtdrv
-> replacement.
-> >
-> > > >
-> > > > Can  you please help us out by going through this thread =5B3=5D an=
-d
-> > > > letting us know if our understanding is wrong at any point. If you
-> > > > think it is a better idea to integrate this in the EDAC framework,
-> > > > can you guide me as to how I can utilize the framework better?
-> > > > Please let me know if you need any other information to conclude.
-> > > >
-> > > > =5B1=5D
-> > > > https://lore.kernel.org/linux-pci/20231121013400.18367-1-xueshuai=
-=40
-> > > > linux.alibaba.com/ =5B2=5D
-> > > > https://lore.kernel.org/all/20210518174618.42089-1-shradha.t=40sams=
-u
-> > > > ng.com/T/ =5B3=5D
-> > > > https://lore.kernel.org/all/20231130115044.53512-1-shradha.t=40sams=
-u
-> > > > ng.com/
-> > > >
-> > >
-> > > Gentle ping for the EDAC maintainers.
-> > >
-> > > - Mani
-> > >
-> > > > Thanks,
-> > > > Shradha
-> > > >
-> > > > > -----Original Message-----
-> > > > > From: 'Manivannan Sadhasivam' <manivannan.sadhasivam=40linaro.org=
->
-> > > > > Sent: 16 February 2024 19:19
-> > > > > To: Shradha Todi <shradha.t=40samsung.com>
-> > > > > Cc: lpieralisi=40kernel.org; kw=40linux.com; robh=40kernel.org;
-> > > > > bhelgaas=40google.com; jingoohan1=40gmail.com;
-> > > > > gustavo.pimentel=40synopsys.com; josh=40joshtriplett.org;
-> > > > > lukas.bulwahn=40gmail.com; hongxing.zhu=40nxp.com;
-> > > > > pankaj.dubey=40samsung.com; linux-kernel=40vger.kernel.org; linux=
--
-> > > > > pci=40vger.kernel.org; vidyas=40nvidia.com; gost.dev=40samsung.co=
-m
-> > > > > Subject: Re: =5BPATCH v2 0/3=5D Add support for RAS DES feature i=
-n
-> > > > > PCIe DW controller
-> > > > >
-> > > > > On Thu, Feb 15, 2024 at 02:55:06PM +0530, Shradha Todi wrote:
-> > > > > >
-> > > > > >
-> > > > >
-> > > > > =5B...=5D
-> > > > >
-> > > > > > > For the error injection and counters, we already have the
-> > > > > > > EDAC framework. So adding them in the DWC driver doesn't make
-> sense to me.
-> > > > > > >
-> > > > > >
-> > > > > > Sorry for late response, was going through the EDAC framework
-> > > > > > to understand
-> > > > > better how we can fit RAS DES support in it. Below are some
-> > > > > technical challenges found so far:
-> > > > > > 1: This debugfs framework proposed =5B1=5D can run on both side=
- of
-> > > > > > the link i.e. RC
-> > > > > and EP as it will be a part of the link controller platform
-> > > > > driver. Here for the EP side the assumption is that it has Linux
-> > > > > running, which is primarily a use case for chip-to-chip
-> > > > > communication.  After your suggestion to migrate to EDAC framewor=
-k we
-> studied and here are the findings:
-> > > > > > - If we move to EDAC framework, we need to have RAS DES as a
-> > > > > > pci_driver which will be binded based on vendor_id and
-> > > > > > device_id. Our observation is that on EP side system we are
-> > > > > > unable to bind two function driver (pci_driver), as
-> > > > > > pci_endpoint_test function driver or some other chip-to-chip
-> > > > > > function driver will already be bound. On the other hand, on
-> > > > > > RC side we observed that if we have portdrv enabled in Linux
-> > > > > > running on RC system, it gets bound to RC controller and then
-> > > > > > it does not allow EDAC pci_driver to bind. So basically we see
-> > > > > > a problem here, that we can't have two pci_driver binding to
-> > > > > > same PCI device
-> > > > > > 2: Another point is even though we use EDAC driver framework,
-> > > > > > we may not be
-> > > > > able to use any of EDAC framework APIs as they are mostly
-> > > > > suitable for memory controller devices sitting on PCI BUS. We
-> > > > > will end up using debugfs entries just via a pci_driver placed in=
-side EDAC
-> framework.
-> > > > >
-> > > > > Please wrap your replies to 80 characters.
-> > > > >
-> > > > > There is no need to bind the edac driver to VID:PID of the
-> > > > > device. The edac driver can be a platform driver and you can
-> > > > > instantiate the platform device from the DWC driver. This way,
-> > > > > the PCI device can be assocaited with whatever driver, but still =
-there can
-> be a separate edac driver for handling errors.
-> > > > >
-> > > > > Regarding API limitation, you should ask the maintainer about
-> > > > > the possibility of extending them.
-> > > > >
-> > > > > >
-> > > > > > Please let me know if my understanding is wrong.
-> > > > > >
-> > > > > > > But first check with the perf driver author if they have any
-> > > > > > > plans on adding the proposed functionality. If they do not
-> > > > > > > have any plan or not working on it, then look into EDAC.
-> > > > > > >
-> > > > > > > - Mani
-> > > > > > >
-> > > > > >
-> > > > > > Since we already worked and posted patches =5B1=5D, =5B2=5D, we=
- will
-> > > > > > continue to work
-> > > > > on this and based on consent from community we will adopt to
-> > > > > most suitable framework.
-> > > > > > We see many subsystems like ethernet, usb, gpu, cxl having
-> > > > > > debugfs files that
-> > > > > give information about the current status of the running system
-> > > > > and as of now based on our findings, we still feel there is no
-> > > > > harm in having debugfs entry based support in DesignWare controll=
-er
-> driver itself.
-> > > > >
-> > > > > There is no issue in exposing the debug information through
-> > > > > debugfs, that's the sole purpose of the interface. But here, you
-> > > > > are trying to add support for DWC RAS feature for which a dedicat=
-ed
-> framework already exists.
-> > > > >
-> > > > > And there will be more similar requests coming for vendor
-> > > > > specific error protocols as well. So your investigation could ben=
-efit
-> everyone.
-> > > > >
-> > > > > From your above investigation, looks like there are some
-> > > > > shortcomings of the EDAC framework. So let's get that clarified
-> > > > > by writing to the EDAC maintainers (keep us in CC). If the EDAC
-> > > > > maintainer suggests you to add support for this feature in DWC dr=
-iver
-> itself citing some reasons, then no issues with me.
-> > > > >
-> > > > > - Mani
-> > > > >
-> > > > > --
-> > > > > =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=
-=E0=AE=A9=E0=AF=8D=20=E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=
-=E0=AE=AE=E0=AF=8D=0D=0A>=20>=20>=20>=0D=0A>=20>=20>=20>=0D=0A>=20>=20>=0D=
-=0A>=20>=0D=0A>=20=0D=0A>=20--=0D=0A>=20=E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=
-=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=E0=AF=8D=20=E0=AE=9A=E0=AE=A4=E0=AE=
-=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=E0=AF=8D=0D=0A=0D=0A
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
+ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
+EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
+FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
+aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
+EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
+VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
+aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
+ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
+QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
+rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
+ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
+U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
+DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
+BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
+dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
+BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
+QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
+CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
+xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
+IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
+kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
+eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
+KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
+1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
+OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
+x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
+5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
+DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
+VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
+UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
+MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
+ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
+oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
+SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
+xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
+RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
+bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
+NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
+KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
+5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
+C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
+gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
+VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
+MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
+by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
+b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
+BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
+QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
+c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
+AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
+qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
+v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
+Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
+tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
+Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
+YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
+ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
+IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
+ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
+GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
+h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
+9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
+P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
+2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
+BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
+7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
+lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
+lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
+AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
+Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
+FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
+BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
+cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
+aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
+LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
+BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
+cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
+Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
+lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
+WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
+hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
+IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
+dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
+NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
+xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQwMzIyMTEzOTU2WjAvBgkqhkiG9w0BCQQxIgQgrQNJoqEV
+IWPxb7bWjqGf65sRz+yWD4Q28BCRnAb6DJowgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
+A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
+dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
+DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
+MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
+Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
+lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgBXm7+WaGVUaU+G8kBDzr3QMpllbwThavft
+GH1Tjmy1XUJTPt73bUgTg+fuLPJ+bTnFocJ2xPbm8bcOOyUhhUrmj8wQX8mjacWguav3hLsuCXos
+0FGPkHF/8J+l+8UNr18qkxi7g5ps4g5mah78sWFPiPLcGR0kgZoH9OLF7pQYq6/ExB9q30XvjNzx
+jYIG33rfcpQffsc2Iew0bMKpr8/mdrEHCm5r51MLoehrcX8g1I7T0BfbKoRALt2bibeEWp3MczmB
+E6f9CwOz7dJ7LlT4fDxvL4Xdfw49tfR0ftBC1qpzLPsJa1aiNlBPKlpoN5RI4DHubyCcKlEuJz0G
+ewUOsa6TZJGeIXUB5oIfZuToZjJihelaXz3/+WXTg3As3oVztjZKJDrmTh64vCZyxBlD6/QA1sti
+CZ/i33lVEAUdAhm2cOpR98tbrZ6QIkbiPWUAVYtjTqAgnUwm3hSAKhGd685tGOLu8UQgGyGeZ6OT
+hECQaK7MqTHcmCC086P6f27y3nweMPLug9fSNRa0sp1yOo+bWW1IKEKJ3D9rTEfoSJEpiFzQUAHZ
+4oNPXz58ut1dt6tKQDkQd0WfS5baOPH0fVgtPDqqYYLqRZszBCAwSZwPBistTUeO/tKEK14ecHVJ
+SK4s/473z6tLrD9joNvYKuXgvoVjl8S/s1wmHklnewAAAAAAAA==
+
+
+--=-3Z+0DCDEEfR2eDjQpszW--
