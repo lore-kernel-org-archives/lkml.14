@@ -1,96 +1,88 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE542E62E;
-	Fri, 22 Mar 2024 15:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F20550278;
+	Fri, 22 Mar 2024 15:52:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711122703; cv=none; b=MTdQpmICKJfYClvv4vnf2KJN3G5ABvbnXFK4HRMMK2vCaCBvAfWzuEf6P78WU+TIQTeuPqHo4pqZxYUJaXnn3y9juH7uKcxXndrzZk6z0I1jcIHdrXD6Z8HsVTqkCNh4f3ts30YVaP/d6zLssbLeBNJKdZVpxyILWUmK4ZfvupM=
+	t=1711122724; cv=none; b=LecxSpnAifj8jntPna3Qnx6bfgFqm/klTQoNymebWmrJfR+JYI2Nm708X5dz7vAlWAsBVbl81BabTv+aZlEkW01jFUy+AMfbBe/5Tb3yxK8Igu9kvwDOl9TQvm4uTzBshW4HvrjFxaue+FI1hSW3H+ChQxkLGLy/Z79qWwSUjn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711122703; c=relaxed/simple;
-	bh=Zr2cd54MgddzgfTdF0+M/aAwttdJCFe4vAyZCKWRKC0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FQrEZIcLrnZMbp30VGTJl3EezE5Zw3EEe5kPTtA7GT4VQt0Uxbhu1eDXaZfwoKQ53s8YNtG37FCc9WgPMcLvEJ3hhN+vHRvaMFT5ak3qXftW+kJTNllNBxsTgPVtfHTVaZzeA3yEWJEmfcTr8ZNQKu4csKGtSDwsliU2yfPqhWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=sWxK41QI; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1711122724; c=relaxed/simple;
+	bh=a9x0EjWyPdwufxgTEjOLoHdDlBCO8EawXvsde+dmWeI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T4RND8EFbrQU+kzjd/ZRZ6EMhHrY04K1O2Xya1/18Va3BsY1k2vQAv4oFtc6kLXBRy4Lxx6Tga0twUvFPz9on4flEpEAo7W5Shr+qbl6E0mMd8tvj1+JJP4iFL3CcpGUZn0HQwSZvzFabCtkPX4l0Ep4bpLt0VeuvWEtbid06h0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i9cSUxp8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sWxK41QI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=DyDMdzAsGaOXL+Ymrn5kRCmWfUv/supTTQ8T5KTu0m4=; b=sWxK41QI0BDSXirW8ZBzZR8FFl
-	CKJUKNlbvbW+hclj6DNqdqhHpTszlezb0aPdeVAHYkzovJWqFQOzUplMu7wLLqbiGKgaOrGS5mi+t
-	fSlr820FNa5XW0KSrkQoxhV6+UDBqqZvCcxdADD3UL1Lnjns+3gakEYMRiKXigiwpILpdy5xH/nQW
-	BA2XRw3ARLVy8oNBnJrkO671W0WeRdE9q888FCPTLbcejp5SeuPYPiWNZ4sfR73D9boKojyZXX8bP
-	e0znS6XiBGTXrHIRNOcFxqLrtZYu8x8Ks8hOgU6iFx3F9T8bBnqkd/SxftGAnNWRaUs1oFmwAyyjo
-	BTpgqr8g==;
-Received: from [50.53.2.121] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rnhBB-00000007pM7-1L2S;
-	Fri, 22 Mar 2024 15:51:37 +0000
-Message-ID: <a9bddc1c-9652-400c-8f79-b745894604d9@infradead.org>
-Date: Fri, 22 Mar 2024 08:51:32 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i9cSUxp8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3439FC433F1;
+	Fri, 22 Mar 2024 15:52:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711122723;
+	bh=a9x0EjWyPdwufxgTEjOLoHdDlBCO8EawXvsde+dmWeI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i9cSUxp8ZpIaCT3GAK0ljz4aaFQiOh8lWr7QbjXiQWGqvohorTAQ3bfaTZ9VWhyrK
+	 ZJbRUrIFWyi/EhtRHlBVNvjYEN7KmNYZO6KO8SBWMYO8XICuGNJoD95TIsox7wWhZQ
+	 Qt0gevJauPkZ42w7AfvqdolJJQ2RoympO2lhgD5h+y+jdigNwb/5Rs+EV3acskoXen
+	 fRMzThDcSIGhiGKfZBfPtPLMpZt9IFJhliLwp8swnGVWOlOXRnVL9i1EqxDRM+fLKp
+	 cy/UmhjPIG6VeCIvbLEYBqcLf0Isi1pUwTFjJI85U/X8q1IWF6sqsBsoWMOkZG9hR1
+	 l5s2EUWeIGXWw==
+Date: Fri, 22 Mar 2024 15:51:57 +0000
+From: Will Deacon <will@kernel.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Tyler Hicks <code@tyhicks.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jerry Snitselaar <jsnitsel@redhat.com>,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+	Easwar Hariharan <eahariha@linux.microsoft.com>
+Subject: Re: Why is the ARM SMMU v1/v2 put into bypass mode on kexec?
+Message-ID: <20240322155157.GD5634@willie-the-truck>
+References: <ZfKsAIt8RY/JcL/V@sequoia>
+ <ZfNKv70oqqwMwIeS@sequoia>
+ <120d0dec-450f-41f8-9e05-fd763e84f6dd@arm.com>
+ <20240319154756.GB2901@willie-the-truck>
+ <5b19ab13-a7a0-48e2-99a4-357a9f4aeafa@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ftrace: fix FTRACE_RECORD_RECURSION_SIZE Kconfig entry
-Content-Language: en-US
-To: Prasad Pandit <ppandit@redhat.com>, Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- Prasad Pandit <pjp@fedoraproject.org>
-References: <20240322121801.1803948-1-ppandit@redhat.com>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20240322121801.1803948-1-ppandit@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5b19ab13-a7a0-48e2-99a4-357a9f4aeafa@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-
-
-On 3/22/24 05:18, Prasad Pandit wrote:
-> From: Prasad Pandit <pjp@fedoraproject.org>
+On Tue, Mar 19, 2024 at 06:17:39PM +0000, Robin Murphy wrote:
+> In terms of the shutdown behaviour, I think it actually works out as-is. For
+> the normal case we haven't touched GBPA, so we are truly returning to the
+> boot-time condition; in the unexpected case where SMMUEN was already enabled
+> then we'll go into an explicit GPBA abort state, but that seems a
+> not-unreasonable compromise for not preserving the entire boot-time Stream
+> Table etc., whose presence kind of implies it wouldn't have been bypassing
+> everything anyway.
 > 
-> Fix FTRACE_RECORD_RECURSION_SIZE entry, replace tab with
+> The more I look at the remaining aspect of disable_bypass for controlling
+> broken-DT behaviour the more I suspect it can't actually be useful either
+> way, especially not since default domains. I have no memory of what my
+> original reasoning might have been, so I'm inclined to just rip that all out
+> and let probe fail. I see no reason these days not to expect a broken DT to
+> leads to a broken system, especially not now with DTSchema validation.
 
-replace the tab between "default" and "128" with a space
+That sounds reasonable to me, although we may end up having to back it
+out if we regress systems with borked firmware :(
 
-> a space character. It helps Kconfig parsers to read file
-> without error.
+> Then there's just the kdump warning it suppresses, of which I also have no
+> idea why it's there either, but apparently that one's on you :P
 
-Parsers should accept either tab or space but this is a
-reasonable change.
+I think _that_ one is because the previous (crashed) kernel won't have
+torn anything down, so there could be active DMA using translations in
+the SMMU. In that case, the crashkernel (which is running from some
+carveout) may find the SMMU enabled, but it really can't stick it into
+bypass mode because that's likely to corrupt random memory. So in that
+case, we do stick it into abort before we reinitialise it and then we
+disabling fault reporting altogether to avoid the log spam:
 
-> Fixes: 773c16705058 ("ftrace: Add recording of functions that caused recursion")
-> Signed-off-by: Prasad Pandit <pjp@fedoraproject.org>
+	if (is_kdump_kernel())
+		enables &= ~(CR0_EVTQEN | CR0_PRIQEN)
 
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks.
-
-> ---
->  kernel/trace/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> index 61c541c36596..47345bf1d4a9 100644
-> --- a/kernel/trace/Kconfig
-> +++ b/kernel/trace/Kconfig
-> @@ -965,7 +965,7 @@ config FTRACE_RECORD_RECURSION
->  
->  config FTRACE_RECORD_RECURSION_SIZE
->  	int "Max number of recursed functions to record"
-> -	default	128
-> +	default 128
->  	depends on FTRACE_RECORD_RECURSION
->  	help
->  	  This defines the limit of number of functions that can be
-
--- 
-#Randy
+Will
