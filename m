@@ -1,121 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6764D8BE8;
-	Fri, 22 Mar 2024 05:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26928BF9
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 05:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711085195; cv=none; b=YN3FZABNsdMEy2DVYn2Py28wwgkxkeef/CHpYvkPW2ETksDF4/VKMMorXBXmpUkOmvhLPuqCrPIb8syPujNzV50HKpea9uLLozRyxGqDEes6HCUkCzlas6aFPvofg6apruoLfUqOkkD59GQ04xxxm0LnZoNT/fB/lr5uz5OVOf8=
+	t=1711085320; cv=none; b=j8DHuxqI7WUIPNWF/GnmZnNfhLZsNWJwi+PbdrqE9wrhk3PAiFyosxYOeunJqqBhleQzIKhKER09xJTP4t6MB3ZYh/B1G9ZseP8Ts5SFgrby4xxH9F7/N/Oj3hZMcbHtoCDLwvZNhvB2cwFD5GY+tgMiyNB9E81yEyNngyKnHlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711085195; c=relaxed/simple;
-	bh=XgCtEPtvhPQa/3nth0Qxvy5Epa05Z8v2RBpaIRqoZG8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IDlOdoLb6GnN8EYrIOqbiurWxv7hwN6rQGJ5gUK+wAECzluOZdOKuEK8oTu+tIdma9NkgwUwox9oysqNW7sVxdFkp8CPQk9oksvAzmusXdI5sOm1+AXv0vXt6JjWLjkUJbFFhKos8XWugJW3P4tJn8Kkq26zbENUXFpQ+QSf3Rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TIEp4OC4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711085320; c=relaxed/simple;
+	bh=glfHlNt0G3JLM8nXxM5z0FedVs76MkfR4NhoFD7a+NI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jiFsBkbmjYjMymPXKCUkYxMMnLFp8rljRA7eRPz/HtVUcZuzeR0x6/k2yVr/abs2sNX/oqsubeMsR298zBNrJTmGGDj+neSVQA8epRBGvdFmCy208SLCi0mqzanGZtx+1yJ76mbk8tfpJCFsJaEs8atKqM6PtfNR0nuCC5oGo5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=DK7njU96; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TIEp4OC4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34359C433C7;
-	Fri, 22 Mar 2024 05:26:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711085194;
-	bh=XgCtEPtvhPQa/3nth0Qxvy5Epa05Z8v2RBpaIRqoZG8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TIEp4OC4M5z6mpOgUpGNDFoS4Mbvk9BN481N0dArh6BKJmd7vlxuXBx5Q6Q8IyJGs
-	 lDPEtOFoffPaqHZxFeEwVpJrt36jbDNwTe/23chI9C0zXZEW7wp6fRhEOrXEqiniAS
-	 N8NxYQTfsiQJ20/sX7z4RJX0TfY+iE2T4fCglfRYVG2iwi7nfR5YBzxG7w/2cU6ymK
-	 /oXrFjczaZSAhR1+i4X7gABGsBUnRiGJRO4YAZpeLGid5Z2zeE8O1jIYmY30FiEANX
-	 5oVNASbOrFuRZKyEKpmLoYfuWUi7GntlZNYMYCzRD2mgrYW9a3qqe8DoJMtViUbIq9
-	 YSk+Xhs5xtSng==
-Date: Fri, 22 Mar 2024 10:56:23 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, Frank Li <Frank.Li@nxp.com>,
-	niklas.cassel@wdc.com, bhelgaas@google.com,
-	gustavo.pimentel@synopsys.com, imx@lists.linux.dev,
-	jdmason@kudzu.us, jingoohan1@gmail.com, kw@linux.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org, robh@kernel.org
-Subject: Re: [PATCH v2 1/1] PCI: dwc: Fix index 0 incorrectly being
- interpreted as a free ATU slot
-Message-ID: <20240322052623.GA4092@thinkpad>
-References: <20240321171345.GA2385@thinkpad>
- <20240321180732.GA1329092@bhelgaas>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="DK7njU96"
+X-UUID: 05a812dce80d11eeb8927bc1f75efef4-20240322
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=RRQ3alWKe4ZnruvA7OeP7d0ZCmcWukqzJaUdH2jWIGE=;
+	b=DK7njU963uJBGphT9LsTLMiMuPHiK6MSFlrOZSnZK0yz7SsPTM+AsKn3ar9+loIuPDX/48/deeXaBH+v7PmB4OhFnOaIuoy1LLymCA1wzTGBi1y35mOQgR3u4sbsBpSgajBGX5iQegXdRA1dHQmwwHXUg4nCURH2BtEedBVW/Aw=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:aefb78b5-66d3-4d35-b44b-73ae60d9bbf9,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6f543d0,CLOUDID:b655cc81-4f93-4875-95e7-8c66ea833d57,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: 05a812dce80d11eeb8927bc1f75efef4-20240322
+Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw01.mediatek.com
+	(envelope-from <shawn.sung@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 834257148; Fri, 22 Mar 2024 13:28:32 +0800
+Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Fri, 22 Mar 2024 13:28:30 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Fri, 22 Mar 2024 13:28:30 +0800
+From: Shawn Sung <shawn.sung@mediatek.com>
+To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
+	Bibby Hsieh <bibby.hsieh@mediatek.com>, CK Hu <ck.hu@mediatek.com>, "Nancy .
+ Lin" <nancy.lin@mediatek.com>, Fei Shao <fshao@chromium.org>, Sean Paul
+	<sean@poorly.run>, Jason Chen
+	<jason-ch.chen@mediatek.corp-partner.google.com>,
+	<dri-devel@lists.freedesktop.org>, <linux-mediatek@lists.infradead.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	"Hsiao Chien Sung" <shawn.sung@mediatek.com>
+Subject: [PATCH v6 03/14] drm/mediatek: Add missing plane settings when async update
+Date: Fri, 22 Mar 2024 13:28:18 +0800
+Message-ID: <20240322052829.9893-4-shawn.sung@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20240322052829.9893-1-shawn.sung@mediatek.com>
+References: <20240322052829.9893-1-shawn.sung@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240321180732.GA1329092@bhelgaas>
+Content-Type: text/plain
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--3.918200-8.000000
+X-TMASE-MatchedRID: OgX40jBOMA++g7B0zLCl84zb2GR6Ttd38/hTakhR/NCCsBeCv8CM/eNl
+	jrsvvgvDJZBJhgUbO4znftxNodBrx9m0JHSAKf2wA9lly13c/gHt/okBLaEo+NwQ5VDi3O9Bo8W
+	MkQWv6iXBcIE78YqRWo6HM5rqDwqtpWAvGJ/ULwFBW8LgMmswZUJNg7w8knTeIVlaBsGiozAecR
+	p7tGEPc+FlGNWqtMVYrSOp7Ox6H1VqyWAUjOlGLoX/IOJ9mK9dwZBgUyJVEbl6Fw8/PpTMRaVvm
+	iAyeA2kc5MSfkiJFI5p3LlElBHTlw==
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--3.918200-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP: BBF41F45905B9FA6C46E32246EF2F445B698C2A9EABDF94130790D0956D167F02000:8
+X-MTK: N
 
-On Thu, Mar 21, 2024 at 01:07:32PM -0500, Bjorn Helgaas wrote:
-> On Thu, Mar 21, 2024 at 10:43:45PM +0530, Manivannan Sadhasivam wrote:
-> > On Mon, Mar 04, 2024 at 05:46:16PM -0500, Frank Li wrote:
-> > > dw_pcie_ep_inbound_atu()
-> > > {
-> > > 	...
-> > > 	if (!ep->bar_to_atu[bar])
-> > > 		free_win = find_first_zero_bit(ep->ib_window_map, pci->num_ib_windows);
-> > > 	else
-> > > 		free_win = ep->bar_to_atu[bar];
-> > > 	...
-> > > }
-> > > 
-> > > The atu index 0 is valid case for atu number. The find_first_zero_bit()
-> > > will return 6 when second time call into this function if atu is 0. Suppose
-> > > it should use branch 'free_win = ep->bar_to_atu[bar]'.
-> > > 
-> > > Change 'bar_to_atu' to free_win + 1. Initialize bar_to_atu as 0 to indicate
-> > > it have not allocate atu to the bar.
-> > 
-> > I'd rewrite the commit message as below:
-> > 
-> > "The mapping between PCI BAR and iATU inbound window are maintained in the
-> > dw_pcie_ep::bar_to_atu[] array. While allocating a new inbound iATU map for a
-> > BAR, dw_pcie_ep_inbound_atu() API will first check for the availability of the
-> > existing mapping in the array and if it is not found (i.e., value in the array
-> > indexed by the BAR is found to be 0), then it will allocate a new map value
-> > using find_first_zero_bit().
-> > 
-> > The issue here is, the existing logic failed to consider the fact that the map
-> > value '0' is a valid value for BAR0. Because, find_first_zero_bit() will return
-> > '0' as the map value for BAR0 (note that it returns the first zero bit
-> > position).
-> > 
-> > Due to this, when PERST# assert + deassert happens on the PERST# supported
-> > platforms, the inbound window allocation restarts from BAR0 and the existing
-> > logic to find the BAR mapping will return '6' for BAR0 instead of '0' due to the
-> > fact that it considers '0' as an invalid map value.
-> > 
-> > So fix this issue by always incrementing the map value before assigning to
-> > bar_to_atu[] array and then decrementing it while fetching. This will make sure
-> > that the map value '0' always represents the invalid mapping."
-> 
-> This translates C code to English in great detail, but still doesn't
-> tell me what's broken from a user's point of view, how urgent the fix
-> is, or how it should be handled.
-> 
-> DMA doesn't work because ATU setup is wrong?  Driver MMIO access to
-> the device doesn't work?  OS crashes?  How?  Incorrectly routed access
-> causes UR response?  Happens on every boot?  Only after a reboot or
-> controller reset?  What platforms are affected?  "PERST# supported
-> platforms" is not actionable without a lot of research or pre-existing
-> knowledge.  Should this be backported to -stable?
-> 
+From: Hsiao Chien Sung <shawn.sung@mediatek.com>
 
-Severity is less for the bug fixed by this patch. We have 8 inbound iATU windows
-on almost all of the platforms and after PERST# assert + deassert, BAR0 uses map
-'6' instead of '0'.
+Fix an issue that plane coordinate was not saved when
+calling async update.
 
-This has no user visibility since the mapping will go fine and we have only 6
-BARs. So I'd not mark this as as critical fix that needs special attention.
+Fixes: 920fffcc8912 ("drm/mediatek: update cursors by using async atomic update")
 
-Frank: Please ammend the commit message with the bug impact.
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
+---
+ drivers/gpu/drm/mediatek/mtk_plane.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-- Mani
-
+diff --git a/drivers/gpu/drm/mediatek/mtk_plane.c b/drivers/gpu/drm/mediatek/mtk_plane.c
+index 4625deb21d406..a74b26d359857 100644
+--- a/drivers/gpu/drm/mediatek/mtk_plane.c
++++ b/drivers/gpu/drm/mediatek/mtk_plane.c
+@@ -227,6 +227,8 @@ static void mtk_plane_atomic_async_update(struct drm_plane *plane,
+ 	plane->state->src_y = new_state->src_y;
+ 	plane->state->src_h = new_state->src_h;
+ 	plane->state->src_w = new_state->src_w;
++	plane->state->dst.x1 = new_state->dst.x1;
++	plane->state->dst.y1 = new_state->dst.y1;
+ 
+ 	mtk_plane_update_new_state(new_state, new_plane_state);
+ 	swap(plane->state->fb, new_state->fb);
 -- 
-மணிவண்ணன் சதாசிவம்
+2.18.0
+
