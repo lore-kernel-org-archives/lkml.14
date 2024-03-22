@@ -1,43 +1,76 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7FE18AE8;
-	Fri, 22 Mar 2024 08:17:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7861217541;
+	Fri, 22 Mar 2024 08:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711095451; cv=none; b=OVHAmvWsr1bH6WSJHEXFOUt/A80pydsIlBRQBOXzKAO6/Tz+HPuOvVcqRv0OAhlnwQxjzkSy+LQVAQXXwu4vFK35eVNdfkXDXlybjB+ZzP/CPfqFQgLZ1B2L6Q1IWW56SBvulOy5R84F+rsxA2HQCrR6thiQ2EI6T+b6S4hG1ys=
+	t=1711095523; cv=none; b=mINajCRa26rv3C2undq0oqLE1NgOpP5iH1IB6sc+1B/57shlw1vhO8oRp/TuYM/lLR99xtbJrflxsO2LocC72b2gnM9b7w0RXjHntbe7S+Td1mWsRvnLabBPaNgUzWpMtDCwsc4HVO2oxMgadsIHfzliDUIiinK/7rYGEC7N2M8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711095451; c=relaxed/simple;
-	bh=s4XNSovHtSMoBIu/QGtMEdY/hgRXDsNSpZP95H+CZ9A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nJMC3dm660GoYjTYurfD09Qcp3e3koMd0FXVHB8QzGZgF8bUnMl2xyHfIPnXqSgo2ykq1q71g7eMgGx9eN38JCpRT11PNRr2K+Q/w18Z7lzLVeu1L3ZEWADMtBu4tHQ6uuJmCyKnU4DaSLZEnatSfc0ZdXZtswko0xTs26ATwQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4V1FYV2XJKz4f3jYJ;
-	Fri, 22 Mar 2024 16:17:18 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 664211A0B2D;
-	Fri, 22 Mar 2024 16:17:24 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAX6RGRPv1lh7rgHg--.49644S4;
-	Fri, 22 Mar 2024 16:17:23 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: song@kernel.org,
-	logang@deltatee.com,
-	dan@danm.net,
-	junxiao.bi@oracle.com,
-	xni@redhat.com
-Cc: linux-raid@vger.kernel.org,
+	s=arc-20240116; t=1711095523; c=relaxed/simple;
+	bh=rd+p0dVu4TA+0VkP+DxfWT2f83gmcmxQREG7HALIvfk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=r/Ogsr7bPV3j3YVNvAQlSKddtsv1rWrqUBWMKozbCudKKjLI1rP5YP//wYD2gCJhpc8SrXCebsriGVzVY4sjHdGcj2rZXhqWQu3JpkN4ddILOYvWDlbryg7RqeHXIajpoo+DQ1qWewmxgAd/DPORD76ywpBUFD3iyF4R185hLh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gKSSFatA; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gKSSFatA"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e00d1e13acso11203805ad.0;
+        Fri, 22 Mar 2024 01:18:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711095522; x=1711700322; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Yy+KHNUW+coF6cF93OFhp/xRFqCnGtKs15mHnvutaYM=;
+        b=gKSSFatAf8J+4Ivu4b1PmTKfXGqdp4Q5MYuWiqMWa4X+O8sfAGbaRBEypOYkIOXF2R
+         5vKi0fFCs5Fj794tZD28u/DCIa79JV9X1xzrtvPRUlRM6syZ//pjiVeLBLzK4Slm9vyN
+         3INK0+uYDO+abAXBzRteAadR+1aNe2bMeV7GsRJt/wl1ItlDl/ETAOZ31OXWeElMd2WN
+         wx5KZ44X6jqql9ocCrvha+Tk5S4TuZyLCH8Uc64HzgrgNUavU/c1RYsq7KKQZQjuOsjH
+         6bhwBJSxb1umOI+NGxd2TlUH2VGZ7EliIQZi8uFGk9dkGjK9RxS8SbbGbLMeOFQ2+c3/
+         FdAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711095522; x=1711700322;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Yy+KHNUW+coF6cF93OFhp/xRFqCnGtKs15mHnvutaYM=;
+        b=gIaVTmNQGgvCLxoFdiZ88gm+eA8hS4CWsBayffVUnUmGlZ7yo8AuoTypLIbKnvCBKW
+         buTK9DzXFuWnDnARgDQc1OOCVrPN66gQKnmxsU7wZdwqRY2C89Hic2B2qHjupAEkfgTC
+         EzbPOkl9t9PzdKc916qZMQFNEqvg0UrJbGmxQcGVUpSzMTc4XNs9mt8bcaGOI8ATXz56
+         mM4v5ipXGa4K6IRZDyOr/yU8/Ixpbcf4jv+PPSAd1aYQzwrBaMUKb8ZwKIoodSOaoiv4
+         HdX7r4qZCWWiwS3XcusaRpsr9l93QYOn2y7IXzje59qxWFYaeYC2Kg65YJuRYlaFX1mk
+         Vasg==
+X-Forwarded-Encrypted: i=1; AJvYcCW71eSkhZIluE6WFIKgsvzKAbwjl9nExvZ4n4oWOQkEejgQOeu/IFphDtTPd+OO7zcNRFm4qS5Io8DH6xU7DiwN3gB+YE1VRJn+W9n0bSdwwbqQh4bGNp1bEo5+0+a5BwoPKTM6XIf0hqVnoxMUSPpITgH4BNIdJ9CTadtkp2Gq/oraUg==
+X-Gm-Message-State: AOJu0YzAgJMT1d2RU3SCeqys9Ax18XVc2lCwdW75MkH6E55NGo/tf9er
+	dXvYNel7K7s1g/PVMfhLIvmA01wKLLCM3CoGkFPC4+DxJJSGv5DGqC3+zVl3OYI=
+X-Google-Smtp-Source: AGHT+IGtZSQd4OGDi6oKa3A/VMJZUn6iI84Lg9soIxe7ueMP2K9ls9aPaWHsCdIhDoSHLxi++tYQ8Q==
+X-Received: by 2002:a05:6a21:3997:b0:1a3:55d2:1489 with SMTP id ad23-20020a056a21399700b001a355d21489mr2312813pzc.7.1711095147442;
+        Fri, 22 Mar 2024 01:12:27 -0700 (PDT)
+Received: from hcdev-d520mt2.. (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
+        by smtp.gmail.com with ESMTPSA id s128-20020a625e86000000b006e749161d40sm1132564pfb.113.2024.03.22.01.12.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Mar 2024 01:12:26 -0700 (PDT)
+From: baneric926@gmail.com
+X-Google-Original-From: kcfeng0@nuvoton.com
+To: jdelvare@suse.com,
+	linux@roeck-us.net,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	corbet@lwn.net
+Cc: linux-hwmon@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH] md/raid5: fix deadlock that raid5d() wait for itself to clear MD_SB_CHANGE_PENDING
-Date: Fri, 22 Mar 2024 16:10:05 +0800
-Message-Id: <20240322081005.1112401-1-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	linux-doc@vger.kernel.org,
+	openbmc@lists.ozlabs.org,
+	kwliu@nuvoton.com,
+	kcfeng0@nuvoton.com,
+	DELPHINE_CHIU@wiwynn.com,
+	Bonnie_Lo@wiwynn.com
+Subject: [PATCH v5 0/2] hwmon: Driver for Nuvoton NCT7363Y
+Date: Fri, 22 Mar 2024 16:11:56 +0800
+Message-Id: <20240322081158.4106326-1-kcfeng0@nuvoton.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,102 +78,69 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAX6RGRPv1lh7rgHg--.49644S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxZFy5uFykAw1kWF4kAr1rCrg_yoW5WFW8pr
-	Z3ZFsIgrWUGrykua1DCa4UWFWjvF9F9rWjqrW7K3WkZ3WIvrWSq34rArWDtrykAFZYvFWq
-	q3W5GrnxXw18u3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v2
-	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0J
-	UdHUDUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-From: Yu Kuai <yukuai3@huawei.com>
+From: Ban Feng <kcfeng0@nuvoton.com>
 
-Xiao reported that lvm2 test lvconvert-raid-takeover.sh can hang with
-small possibility, the root cause is exactly the same as commit
-bed9e27baf52 ("Revert "md/raid5: Wait for MD_SB_CHANGE_PENDING in raid5d"")
+NCT7363Y is an I2C based hardware monitoring chip from Nuvoton.
 
-However, Dan reported another hang after that, and junxiao investigated
-the problem and found out that this is caused by plugged bio can't issue
-from raid5d().
+Changes since version 4:
+- add Datasheet information and refine words in yaml and rst files
+- remove fan-common.yaml since it is already in hwmon-next
+- refine the commit messages
+- modify the type of returned value in some functions
+- refine lock/unlock in nct7363_write_pwm and accessing
+  HVAL/LVAL registers
+- refine nct7363_init_chip
+- add range check in nct7363_present_pwm_fanin
+- add i2c_device_id table
+- add nct7362 to of_device_id and i2c_device_id table
 
-Current implementation in raid5d() has a weird dependence:
+Changes since version 3:
+- Cherry-pick the fan-common.yaml in [1]
+- Fix "checkpatch --strict" report
+- Replace BIT_CHECK() with BIT()
+- Fix CamelCase defines or variables
+- Drop enum chips
+- Drop all local caching and just read values through regmap
+- Drop chip auto-detection since it increases boot time
 
-1) md_check_recovery() from raid5d() must hold 'reconfig_mutex' to clear
-   MD_SB_CHANGE_PENDING;
-2) raid5d() handles IO in a deadloop, until all IO are issued;
-3) IO from raid5d() must wait for MD_SB_CHANGE_PENDING to be cleared;
+[1]: https://patchwork.kernel.org/project/linux-hwmon/patch/
+     20240221104025.1306227-2-billy_tsai@aspeedtech.com/
 
-This behaviour is introduce before v2.6, and for consequence, if other
-context hold 'reconfig_mutex', and md_check_recovery() can't update
-super_block, then raid5d() will waste one cpu 100% by the deadloop, until
-'reconfig_mutex' is released.
+Changes since version 2:
+- Cherry-pick the fan-common.yaml in [1]
+- Fix nct736x typo and add unevaluatedProperties
 
-Refer to the implementation from raid1 and raid10, fix this problem by
-skipping issue IO if MD_SB_CHANGE_PENDING is still set after
-md_check_recovery(), daemon thread will be woken up when 'reconfig_mutex'
-is released. Meanwhile, the hang problem will be fixed as well.
+[1]: https://patchwork.kernel.org/project/linux-hwmon/patch/
+     20231107105025.1480561-2-billy_tsai@aspeedtech.com/
 
-Fixes: 5e2cf333b7bd ("md/raid5: Wait for MD_SB_CHANGE_PENDING in raid5d")
-Reported-and-tested-by: Dan Moulding <dan@danm.net>
-Closes: https://lore.kernel.org/all/20240123005700.9302-1-dan@danm.net/
-Investigated-by: Junxiao Bi <junxiao.bi@oracle.com>
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- drivers/md/raid5.c | 15 +++------------
- 1 file changed, 3 insertions(+), 12 deletions(-)
+Changes since version 1:
+- Modify NCT736X(nct736x) to NCT7363Y(nct7363)
+- Convert to devm_hwmon_device_register_with_info API
+- All ID tables are next to each other and should be consistent
+  between i2c_device_id and of_device_id
+- Ref. fan-common.yaml and modify properties (nuvoton,pwm-mask/
+  nuvoton,fanin-mask) to (pwms/tach-ch)
+- Convert to devm_regmap_init_i2c API
+- Remove unused function (watchdog timer)
+- Fix uninitialized symbol which is reported by kernel test robot
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index d874abfc1836..2bd1ce9b3922 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -36,7 +36,6 @@
-  */
- 
- #include <linux/blkdev.h>
--#include <linux/delay.h>
- #include <linux/kthread.h>
- #include <linux/raid/pq.h>
- #include <linux/async_tx.h>
-@@ -6734,6 +6733,9 @@ static void raid5d(struct md_thread *thread)
- 		int batch_size, released;
- 		unsigned int offset;
- 
-+		if (test_bit(MD_SB_CHANGE_PENDING, &mddev->sb_flags))
-+			break;
-+
- 		released = release_stripe_list(conf, conf->temp_inactive_list);
- 		if (released)
- 			clear_bit(R5_DID_ALLOC, &conf->cache_state);
-@@ -6770,18 +6772,7 @@ static void raid5d(struct md_thread *thread)
- 			spin_unlock_irq(&conf->device_lock);
- 			md_check_recovery(mddev);
- 			spin_lock_irq(&conf->device_lock);
--
--			/*
--			 * Waiting on MD_SB_CHANGE_PENDING below may deadlock
--			 * seeing md_check_recovery() is needed to clear
--			 * the flag when using mdmon.
--			 */
--			continue;
- 		}
--
--		wait_event_lock_irq(mddev->sb_wait,
--			!test_bit(MD_SB_CHANGE_PENDING, &mddev->sb_flags),
--			conf->device_lock);
- 	}
- 	pr_debug("%d stripes handled\n", handled);
- 
+Ban Feng (2):
+  dt-bindings: hwmon: Add NCT7363Y documentation
+  hwmon: Add driver for I2C chip Nuvoton NCT7363Y
+
+ .../bindings/hwmon/nuvoton,nct7363.yaml       |  66 +++
+ Documentation/hwmon/index.rst                 |   1 +
+ Documentation/hwmon/nct7363.rst               |  33 ++
+ MAINTAINERS                                   |   8 +
+ drivers/hwmon/Kconfig                         |  11 +
+ drivers/hwmon/Makefile                        |   1 +
+ drivers/hwmon/nct7363.c                       | 396 ++++++++++++++++++
+ 7 files changed, 516 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.yaml
+ create mode 100644 Documentation/hwmon/nct7363.rst
+ create mode 100644 drivers/hwmon/nct7363.c
+
 -- 
-2.39.2
+2.34.1
 
