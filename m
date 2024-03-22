@@ -1,167 +1,288 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2087.outbound.protection.outlook.com [40.107.237.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED2E7224FA;
-	Fri, 22 Mar 2024 10:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711104347; cv=fail; b=V6jIl/BMa1tJv82hBzQU8Q646mSQu59Jltkuj1obOYQ0r9dsWr14IaDwhNNd2p5GI3IWmd+N0Jn8cassMDDjVDtMiNijOo6sRXMK1q5bHGPPWLCITdK4hoMi+C8LxzOMzyYyZelzlvIjqqJnH0J3iHbgYjAwQrfBnb86Nku/LsY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711104347; c=relaxed/simple;
-	bh=6yH3Jkfl/fV17Lu3XVz2bnGXs8NPodsMJhiwzodTSwk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=QjtFzOnNcGnyUUS1aRs7YpdjsRGpYw28PtiCJU/3tmOobCr19ctwIPSMB9TBJxAzv80/2KHber8QwMDdTb3OJnZy/4sPTAxZ7XmiJepd5sF0gXTxMeGRD80PRjweyjqYMvv7VfNK8KLFkPwaEuQ2VcrllEQSO5wq+Jl+IiufJow=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0WG0kGRW; arc=fail smtp.client-ip=40.107.237.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B403D0D9
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 10:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711104391; cv=none; b=XtVMjyy2akid2iDvoijRJRSiu0DGHY9iMuuuf6a45sFeVVqytlp0Z6WTDkjgDNW3Ki9/X1BDi2ttclME8Ey+FCfwQBlSdSp/aH6OpQOUOzD7H6QH7ElVNHRK+XUN/nGMcDEROf1w5HhQvON1MlsEMS9PuJt/l32g3l/P+yOyf+w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711104391; c=relaxed/simple;
+	bh=QGR7xcLql5isKboVB8Rcqcg5AQuhvZfEMrcZLfakR7M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NM2xcXNL/y1h8Bwqy5ZT7NcVgy5FQOqaTkkMfwDspo9WuOkY/8Lf04XYXA+LUvdK3IIE14b92UMDHKZfnBZ0mHxD+biT2vuluTAJy7ez/nMYdS3uKLQvEpIZGQ1JleTr0EDwFhqKRYHrKTEo4pGw7eazGg9Iz5miZnTr5Tv1fek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tKuYgS6G; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0WG0kGRW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=REQzzy0IOP9+wpWJaY+iuGeD9rzd9ZM+T/Fry8l+qh5sMTJ+uqQtS3jxIXMVS/3OdBU0Yt0boA6lK7X+K/h3Jo5eeTBDydhPVkLe4K35+JUA5s9ISHYOYSkG7ElCPvHZOkYQhhahr9vNHHn7DWSJTlWxp693bkOk3LyL44PaWw7rB3GmUvJ2aUhQ/d4GkrE5Uw3p+dBL+MLDw5ZbRCekUxkWFeYat5qDyr6ARzUMerAu2xznTj+CEaPUvDpu/uG0RbNhZXPsrm0xWHLKSMg7lKta4n/CHkX9RcPsFXs9DmKDpLxx0J9qr7gE608jXRalhO+nwbr1p54zyghlIcSaKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NJ40fTpi1X3XyhbHNfncF3nrCNL+5Ge4jqthzb7jY/c=;
- b=hKHoatiBjt9KK7p0eZ5xlU2iVRHnMle3cGwHto/9CkXqPkiAtgC/hpppr69T2M9Ee/7yTU6asNUWWGCefzMhkbiQlQzWvezm/hA3O4DLMAMj3sAbGx3PkBbagsAHpGgHfb2AL709UOuBnrMQXmzppk7i7FRbKdwKbqod0l646Wqi2/99cr8mI1qtYSahLjvYUdxeQEi4ddZDkSmOxcWrw+0+l9ipGR+pbfKnk1o26vNlXBCZU8ZnhBo4MAzq6P/JSf0KU/mlGu9Y5/JR6EAvxM6uWKWvkeO+8S9Y/AuIeYMzAgEln7D6810dWeqyxpEWYbn5+lO/E8XhiOAB5fTnuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NJ40fTpi1X3XyhbHNfncF3nrCNL+5Ge4jqthzb7jY/c=;
- b=0WG0kGRWLfJyOMrbTqNfYCErbVgBhoXAEoTRNFNH7Px0WrsxFdtMmKxxn20DVAEUTiBfTzwx8yi71arIiaq1dAsv4kZg3g75Ku5XRhu/y60BL/VDGG4Sdq2Clb5ibROckkMhpDFIC2Gn2fGmLHd7nGojb7G+QTaP0kK/0pzC2YA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4123.namprd12.prod.outlook.com (2603:10b6:5:21f::23)
- by DS0PR12MB6656.namprd12.prod.outlook.com (2603:10b6:8:d2::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.34; Fri, 22 Mar
- 2024 10:45:43 +0000
-Received: from DM6PR12MB4123.namprd12.prod.outlook.com
- ([fe80::57a8:313:6bf6:ccb3]) by DM6PR12MB4123.namprd12.prod.outlook.com
- ([fe80::57a8:313:6bf6:ccb3%3]) with mapi id 15.20.7409.022; Fri, 22 Mar 2024
- 10:45:43 +0000
-Message-ID: <3a057c60-4b4c-431a-85c3-1f15b757b16b@amd.com>
-Date: Fri, 22 Mar 2024 16:15:32 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] [RESEND] ASoC: amd: simplify soundwire dependencies for
-Content-Language: en-US
-To: broonie@kernel.org
-Cc: alsa-devel@alsa-project.org, venkataprasad.potturu@amd.com,
- Basavaraj.Hiregoudar@amd.com, Sunil-kumar.Dommati@amd.com, arnd@arndb.de,
- Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Syed Saba Kareem <Syed.SabaKareem@amd.com>,
- Lucas Tanure <lucas.tanure@collabora.com>,
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
- "open list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..."
- <linux-sound@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-References: <20240322070353.2367300-1-Vijendar.Mukunda@amd.com>
-From: "Mukunda,Vijendar" <vijendar.mukunda@amd.com>
-In-Reply-To: <20240322070353.2367300-1-Vijendar.Mukunda@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0087.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:9a::12) To DM6PR12MB4123.namprd12.prod.outlook.com
- (2603:10b6:5:21f::23)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tKuYgS6G"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-60a0579a931so21101087b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 03:46:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711104388; x=1711709188; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=97wDgtdQd/tbYmjqEKsHUC2QXzy0inSI9dKHg+PWn5c=;
+        b=tKuYgS6GuGgMeeOIuhcgKQU0ESAl2O9Jry9wWLkxXZo/TP/JNEnTxhAFWy6xq0Lsk7
+         iNnAKDKb02qVSYJrhEXdBkKd9ZXUgNR3QdMtkll2Hk8kLAN/vCM1wYRKYzV6/gQkjklE
+         jTN07p9cE5/k7msyy9R9KeHrohq4U9jpXNEh4TxSI01Tyoo2Hi9taiuyklgRkox6QMQE
+         IrtLsl9iCVn5YXswbkQ/RZi7r5CdZiNhrAs1u0xmT2w9D4OevOJ6kEw6pj/nLSG+tnNy
+         mK7GdPTwDABZYJWmkN6TD7JjXuNx3p3PSdyO2Y2ecDgOG5HMhHKg1MYENGDTNHrZBR5n
+         RuDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711104388; x=1711709188;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=97wDgtdQd/tbYmjqEKsHUC2QXzy0inSI9dKHg+PWn5c=;
+        b=dEaRG2wQ0++7D53oC4qz0l3lBWtwRmjT6qC0j+raRQ8d1BRGZ+BNTzoXCtFhOzOs6J
+         HGjtQR2c3rLMQEJOf/d7j0E8OQOYom2MCVHJ3lQ8QmioUdoDD2GIfkR+6RKFrh1ucM4/
+         u93i+kwjZXg2g4oqSTV9X1V6A2t2qlO9pghGGPLt2P1svPtV0yXDHwiv0QnizqKt3tjD
+         YCdaaQ+Iu26ZpGj7BcqWgZU0BS9fRlJlreXF/oc9D8L35HCCx7v5AfhybqY4+ljmUES6
+         VUvMhA05kjyemvyrDjC+ojYF3eCluJokC3NjDnrs0N4q/Pb/u7PUolsl/G5HNVncwrQk
+         QVVg==
+X-Forwarded-Encrypted: i=1; AJvYcCUXthfTaRmmXIu4Qxh6gL4hQfJo0yIz+gSkBbAlXyaDdZwoCLYqNLDc/uFjPirJ0BtGHTnsXkhwTHIJcKY3ZMESglkPjUur9wGoaORL
+X-Gm-Message-State: AOJu0YzDiMzd9EWLlYJDMYAdAKaDNEQPJQ6Tqm0u9JmpZP017mc0VauU
+	+v653L3XajDtaQYITSGVeUfU3gnIJbOfHvgsCBPXXbT4bpO5dlkc2MaYQXjaOJU/1E38jLLMRI8
+	=
+X-Google-Smtp-Source: AGHT+IHCtSqnlRUT3IQHM6cO7aExK3dHje4/hrZRKFBm1rkVrshemniCoiZ/NZDXGu4R1cb/6z9avQ==
+X-Received: by 2002:a05:6a20:d38c:b0:1a3:579f:2c5c with SMTP id iq12-20020a056a20d38c00b001a3579f2c5cmr2534308pzb.53.1711103998405;
+        Fri, 22 Mar 2024 03:39:58 -0700 (PDT)
+Received: from thinkpad ([2409:40f4:101a:4667:2dab:fb9d:47a0:28fe])
+        by smtp.gmail.com with ESMTPSA id x6-20020a170902ec8600b001ddb57a4dffsm1554671plg.132.2024.03.22.03.39.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Mar 2024 03:39:57 -0700 (PDT)
+Date: Fri, 22 Mar 2024 16:09:35 +0530
+From: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: Shradha Todi <shradha.t@samsung.com>, bp@alien8.de, tony.luck@intel.com,
+	james.morse@arm.com, mchehab@kernel.org, rric@kernel.org,
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, jingoohan1@gmail.com,
+	gustavo.pimentel@synopsys.com, josh@joshtriplett.org,
+	lukas.bulwahn@gmail.com, hongxing.zhu@nxp.com,
+	pankaj.dubey@samsung.com, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, vidyas@nvidia.com, gost.dev@samsung.com,
+	alim.akhtar@samsung.com, shiju.jose@huawei.com,
+	Terry Bowman <Terry.Bowman@amd.com>
+Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
+ controller
+Message-ID: <20240322103935.GD3638@thinkpad>
+References: <CGME20231130115055epcas5p4e29befa80877be45dbee308846edc0ba@epcas5p4.samsung.com>
+ <20231130115044.53512-1-shradha.t@samsung.com>
+ <20231130165514.GW3043@thinkpad>
+ <000601da3e07$c39e5e00$4adb1a00$@samsung.com>
+ <20240104055030.GA3031@thinkpad>
+ <0df701da5ff0$df1165a0$9d3430e0$@samsung.com>
+ <20240216134921.GH2559@thinkpad>
+ <120d01da657e$66b9d3b0$342d7b10$@samsung.com>
+ <20240319163315.GD3297@thinkpad>
+ <20240320100144.0000056c@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4123:EE_|DS0PR12MB6656:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5f89f3c3-c350-4548-794b-08dc4a5d38dc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	qVeTZdj0y3AlUCGFHpJ0lnhXXd2YOnV7NsH9bLCP6MWu8pX2RyFQ1rdCQiIM597jbFd3XFxdj0Q1UOKI91I4vmy7T8gLBmz+M2wXQLUsIOWDBv871e6pa5eq+WZ+4Lb3T6Cyy9Q5yMYPEwUxFIJ3YRH6GI7MvAs32owDeeHA1cjBfp3Za2+ViaZ2+DKOWsnKNx12pZi1iSwiXlMxYCL30ez/YuwrIclo+FK9tpdAybIVSjhBKIcq66i33RqVHiKVMaB/2uIOcapBiCiOBd+Cjxj3SoZXdrbzmaX4Mdxk6SUe9K35/pC9253g4ptpsHnP5SdRGkdpATd60agn4gl8f5KMcoqM0cpvO0uju95vyWwqvY7ZgokIp8RtTfMq8RychDy0oZ6rbeBOc5Fi453PpPKG+F0cdMj5+OCiwaHPZOEQtteEFADKr+PJ4rp5PT6uIkfdYBSZlXpUL7MmcFqEy9ikBZ/yvIHkTqkXkxkRl2Tav+5XhRh/EiHSFkEwoyQKQUyH/xFOzqCBtalWkcRLTIR2xAcSIXiF3WXqH7GhFY+Jw+9cLjRCZl3teVMSew6fyT2nmjXXP2ZYFRfdSjkapHFbZtn004o6hDUYfVLWy1NwtmjvMvdGotMmD6bXluXED8/5IAzWNRhV1LN0bqXpA42LzHd31Ra1rHpeXo98bcM=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4123.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(1800799015)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?b09OQmYyWkVXeHhWL2kzRytuMTBkMkVpVDdyLzV1R3R6ZlhzWERpdllZRGNm?=
- =?utf-8?B?aTRNa0FvMU9YTC9tMlZRM3dILzlZVVoxcFNJdWFDQ2ZhU2h3WG1JTmZnOTcv?=
- =?utf-8?B?cGZGVVo5bXJnSVRiSzlIcXdaV0haSWJRVWM3Y1hnRlhYYktSOHpyRUNYbUl5?=
- =?utf-8?B?QXNFVEp5MDVBQm9IdTc5VEx0WDc0RFZGZXA3QjE4RS9zSzFOL05tb1hzelMw?=
- =?utf-8?B?TVZOV1RRbmRRVHhmNGpZZTA1L1k0aWx6dUZNa0w2SlphRlhGLzE5WGVUcGx6?=
- =?utf-8?B?UVlvSFhkN1d5bERwdTNkeWVZQzNwdU81Z2ZQUmhudEtsRzQwS3NLWHI3endv?=
- =?utf-8?B?LzlWaEViT2NQdmYxeGFnUTlHNjRlVSt2eDRGOHg4VGo2UEl0TlRkdVp3eGpS?=
- =?utf-8?B?WW9kZ0t5bUZVcy8xdGRHTTF6Zmp6WHRYenVtRzJ2VjJDRUZ4UTJaM0E2MGp0?=
- =?utf-8?B?Y1NwV04vdEFwcm9rSlZ1UXMwaGNCbU1NbUd3OEpuWklpSXFEa0VyaHREenlP?=
- =?utf-8?B?b0hrckw3UFpWZzU2M3JpZEUybEFGczBhTWhWajVCY21UNU5FRHYzOGtycnVi?=
- =?utf-8?B?cmcxdWdHSENMWVhjc1VkZDZUR2UxQzc5WjQ3MUZmVm9DdTh6RTBuQ1l5ZmZP?=
- =?utf-8?B?QjdwaTlyQ0ZjVXN0TVlhYUt6WnM2WVRNNjBRNjgxeHlRQlpkNG94ZEpDN2Zr?=
- =?utf-8?B?Z05VNm85OWVXMWl0Q3JrdktVKzZYR1hHQk1JUDcxUzdvV1pHczJmUFhqRlo1?=
- =?utf-8?B?ZU5zVUE0Mlk5dWlYSWJmQkVURXBkTkdSL2RMWTY0UDFzNXpZWFNKN1FJS29L?=
- =?utf-8?B?VVQvek5QTTh3K3QxZmhLWWdQNWJmYU5xOGlnMHFKUmxMV2JVZ1NteGNwdWZJ?=
- =?utf-8?B?Q05UZCtONVFNVFlFZEhqYmlvemVxWDUxVVpQWEVXYUc0MDRiU3ZGa1FIeU41?=
- =?utf-8?B?RmIza051M2F5UlNXVnNRaStLZEg1KzNRMEt5ZVdUZ3ozbnRaaUExN1ZqcFU1?=
- =?utf-8?B?WGNuWFZNVWZqT3ZKUEI0bklPYTBKR2l0ZndGUnZDSDFTRHNTa3B0M2U3WVBq?=
- =?utf-8?B?dkhLQ1VvdlRLUVNLNGMwaDQ3a2VaVVRRd1lyUXV5dTdTSVhKdWF2Tm4rR3dG?=
- =?utf-8?B?eTdTM1JXS28wUXZvVVdSb3hDUVR5T2hsTmlpL0tZLzJvRlYvQXd4QktDYTFH?=
- =?utf-8?B?aldqU0JPUUlEZUVuOTNzV0tsKzZlSFIwaUd6VnN2TWVaRHlmZXBIY2phVXpW?=
- =?utf-8?B?aXp5b2RHZjQzUlcxZDZpTDE0bjBxTWNXbXorQ0xUYSs2Z0tYTDlKUWJFdFN0?=
- =?utf-8?B?UWlBQW1HQWJvMTA0SXNDMk9yTEZ2Y3FOVlNNdkRjVVNEaXJ0U1hxTS9MOVlN?=
- =?utf-8?B?TUFwbG82Y012UnNETSt0bDN6c2krTHhPRjdiMXh1YVVYWTZSZnhzK0I2VFlv?=
- =?utf-8?B?OFRPNk1idWgzc0hyeDREUXNTQTN5dlVLRmdFSkt5REFsMXRnY085K0pNRm9H?=
- =?utf-8?B?bkNzc2d2aG1XUGlQOWYzU1h5R3VpbFVJM1Z4V0lndHljekV2enRzUG5rcWdC?=
- =?utf-8?B?dUlUTXl6WnhTd2Uydk1iKzZYK1pRdUxmS2lMYmxrYk0yR1d4VUR2SXpweEJY?=
- =?utf-8?B?RVlyTlgyS1VXczFUbzFPOEhaS0NsWHU2NnlWeW5sbnB5TDN4ZERKMG92MitW?=
- =?utf-8?B?SnFYL1YreGo1eGZVZWNpSTBQc25uMFBKY1BlUXFHYjhQSUQ4MmpDWkxNVk1k?=
- =?utf-8?B?dWNvaUdmaVNEMS8vaFRvYzZ1OWxVTkpaOFc5MHlSNzlFcnNTSEhOVkxaODdh?=
- =?utf-8?B?R0JSeDE5U0NTZC9hTGM3dEpoTzY0VkxjSEtaYjJrc09DM0E5U0pPdXI5QkZD?=
- =?utf-8?B?a1R2Vi9wQ2lmVDQ0YU1QNVpUZzE5WG1ZT0NCNDBmRjFEYXBhSkQvQVJpV2xH?=
- =?utf-8?B?Vy82Sm1FRU9pWkRuYVJCVUE0cnR6MlFneEFBQzJsU29XN2Rqd1dRUUtBcEFU?=
- =?utf-8?B?VUczUnB4bnhSZWM0VXY3YTJiUGg1VkJTdmQ0MjBoRHFMV2kydzZzQ2wrRlg1?=
- =?utf-8?B?RkNDOXQrdklsUjQ5Yi9mc1dnTm5WanVxd0Z6dGMvSzE2MTdWKzRKSkRseit6?=
- =?utf-8?Q?pdwbO5gDIDtTsGbSX5jWfV6aW?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f89f3c3-c350-4548-794b-08dc4a5d38dc
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4123.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Mar 2024 10:45:43.0600
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3X4x7MyNxw3Eqj0ittyAg5fpc0ee9sr+HlBS0EMitsidPSav/KWQnt/Te7ykZ1+Nu8XEez9SYMc75aB2l8KwGA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6656
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240320100144.0000056c@Huawei.com>
 
-On 22/03/24 12:33, Vijendar Mukunda wrote:
-> The CONFIG_SOUNDWIRE_AMD is a user-visible option, it should be never
-> selected by another driver.
-> So replace the extra complexity with a normal Kconfig dependency in
-> SND_SOC_AMD_SOUNDWIRE.
-Please ignore this patch, as the commit title has not been posted
-completely.
->
-> Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-> ---
->  sound/soc/amd/Kconfig | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/sound/soc/amd/Kconfig b/sound/soc/amd/Kconfig
-> index fa74635cee08..3508f5a96b75 100644
-> --- a/sound/soc/amd/Kconfig
-> +++ b/sound/soc/amd/Kconfig
-> @@ -134,15 +134,14 @@ config SND_SOC_AMD_RPL_ACP6x
->  
->  config SND_SOC_AMD_SOUNDWIRE_LINK_BASELINE
->  	tristate
-> -	select SOUNDWIRE_AMD if SND_SOC_AMD_SOUNDWIRE != n
->  	select SND_AMD_SOUNDWIRE_ACPI if ACPI
->  
->  config SND_SOC_AMD_SOUNDWIRE
->  	tristate "Support for SoundWire based AMD platforms"
->  	default SND_SOC_AMD_SOUNDWIRE_LINK_BASELINE
->  	depends on SND_SOC_AMD_SOUNDWIRE_LINK_BASELINE
-> -	depends on ACPI && SOUNDWIRE
-> -	depends on !(SOUNDWIRE=m && SND_SOC_AMD_SOUNDWIRE_LINK_BASELINE=y)
-> +	depends on ACPI
-> +	depends on SOUNDWIRE_AMD
->  	help
->  	  This adds support for SoundWire for AMD platforms.
->  	  Say Y if you want to enable SoundWire links with SOF.
+On Wed, Mar 20, 2024 at 10:01:44AM +0000, Jonathan Cameron wrote:
+> On Tue, 19 Mar 2024 22:03:15 +0530
+> 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org> wrote:
+> 
+> > On Thu, Feb 22, 2024 at 04:30:47PM +0530, Shradha Todi wrote:
+> > > + Borislav, Tony, James, Mauro, Robert
+> > > 
+> > > Hi All,
+> > > 
+> > > Synopsys DesignWare PCIe controllers have a vendor specific capability (which
+> > > means that this set of registers are only present in DesignWare controllers)
+> > > to perform debug operations called "RASDES".
+> > > The functionalities provided by this extended capability are:
+> > > 
+> > > 1. Debug: This has some debug related diagnostic features like holding LTSSM
+> > > in certain states, reading the status of lane detection, checking if any PCIe
+> > > lanes are broken (RX Valid) and so on. It's a debug only feature used for diagnostic
+> > > use-cases.
+> > > 
+> > > 2. Error Injection: This is a way to inject certain errors in PCIe like LCRC, ECRC,
+> > > Bad TLPs and so on. Again, this is a debug feature and generally not used in
+> > > functional use-case.
+> > > 
+> > > 3. Statistical counters: This has 3 parts
+> > >  - Error counters
+> > >  - Non error counters (covered as part of perf [1])
+> > >  - Time based analysis counters (covered as part of perf [1])
+> > > 
+> > > Selective features of  the above functionality has been implemented
+> > > by vendor specific PCIe controller drivers (pcie-tegra194.c) that use
+> > > Synopsys DesignWare PCIe controllers.
+> > > In order to make it useful to all vendors using DWC controller, we had
+> > > proposed a common implementation in DWC PCIe controller directory
+> > > (drivers/pci/controller/dwc/) and our original idea was based on debugfs
+> > > filesystem. v1 and v2 are mentioned in [2] and [3].
+> > > 
+> > > We got a suggestion to implement this as part of EDAC framework [3] and
+> > > we looked into the same. But as far as I understood, what I am trying to
+> > > implement is a very specific feature (only valid for Synopsys DWC PCIe controllers).
+> 
+> For error part there are (at least superficially) similar features in the PCIe
+> standard that we've started thinking about how to support.
+> 
+> See Flit Logging Extended capablity (7.7.8 in PCIe Base Spec rev6.
+> That has the benefit that they are part of the standard so we can
+> support them directly in portdrv / EP drivers using some library code in the
+> PCI core.
+> 
 
+Sounds good. But v6 is a relatively new version and the DWC RAS predates that.
+So we still need to support it somehow (either in EDAC or in
+drivers/pci/controller/dwc).
+
+> There are other interconnect and PCI PMU drivers that log retries etc which are also basically error
+> counts. At least some of that is done through perf today. 
+> 
+
+IMO all the RAS support should be exposed through EDAC, otherwise it defeats the
+purpose of the subsystem.
+
+- Mani
+
+> 
+> > > This doesn't seem to fit in very well with the EDAC framework and we can 
+> > > hardly use any of the EDAC framework APIs. We tried implementing a
+> > > "pci_driver" but since a function driver will already be running on the EP and
+> > > portdrv on the root-complex, we will not be able to bind 2 drivers to a single
+> > > PCI device (root-complex or endpoint). Ultimately, what I will be doing is
+> > > writing a platform driver with debugfs entries which will be present in EDAC
+> > > directory instead of DWC directory.
+> 
+> The addition of this type of functionality to pordrv is a long running question.
+> Everyone wants a solution, I believe some people are looking at it (+CC Terry)
+> 
+> Terry, another case for your long list.
+> 
+> For the EP end, this should be fired up by the EP driver, whilst it might be
+> infrastructure used on a bunch of devices,  it is a feature of that particular
+> EP - so you'd want to provide any functionality in a form that could be used
+> by both the EP driver and a nice shiny new portdrv replacement.
+> 
+> > > 
+> > > Can  you please help us out by going through this thread [3] and letting us
+> > > know if our understanding is wrong at any point. If you think it is a better
+> > > idea to integrate this in the EDAC framework, can you guide me as
+> > > to how I can utilize the framework better?
+> > > Please let me know if you need any other information to conclude.
+> > > 
+> > > [1] https://lore.kernel.org/linux-pci/20231121013400.18367-1-xueshuai@linux.alibaba.com/
+> > > [2] https://lore.kernel.org/all/20210518174618.42089-1-shradha.t@samsung.com/T/
+> > > [3] https://lore.kernel.org/all/20231130115044.53512-1-shradha.t@samsung.com/
+> > >   
+> > 
+> > Gentle ping for the EDAC maintainers.
+> > 
+> > - Mani
+> > 
+> > > Thanks,
+> > > Shradha
+> > >   
+> > > > -----Original Message-----
+> > > > From: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
+> > > > Sent: 16 February 2024 19:19
+> > > > To: Shradha Todi <shradha.t@samsung.com>
+> > > > Cc: lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
+> > > > bhelgaas@google.com; jingoohan1@gmail.com;
+> > > > gustavo.pimentel@synopsys.com; josh@joshtriplett.org;
+> > > > lukas.bulwahn@gmail.com; hongxing.zhu@nxp.com;
+> > > > pankaj.dubey@samsung.com; linux-kernel@vger.kernel.org; linux-
+> > > > pci@vger.kernel.org; vidyas@nvidia.com; gost.dev@samsung.com
+> > > > Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
+> > > > controller
+> > > > 
+> > > > On Thu, Feb 15, 2024 at 02:55:06PM +0530, Shradha Todi wrote:  
+> > > > >
+> > > > >  
+> > > > 
+> > > > [...]
+> > > >   
+> > > > > > For the error injection and counters, we already have the EDAC
+> > > > > > framework. So adding them in the DWC driver doesn't make sense to me.
+> > > > > >  
+> > > > >
+> > > > > Sorry for late response, was going through the EDAC framework to understand  
+> > > > better how we can fit RAS DES support in it. Below are some technical challenges
+> > > > found so far:  
+> > > > > 1: This debugfs framework proposed [1] can run on both side of the link i.e. RC  
+> > > > and EP as it will be a part of the link controller platform driver. Here for the EP
+> > > > side the assumption is that it has Linux running, which is primarily a use case for
+> > > > chip-to-chip communication.  After your suggestion to migrate to EDAC
+> > > > framework we studied and here are the findings:  
+> > > > > - If we move to EDAC framework, we need to have RAS DES as a
+> > > > > pci_driver which will be binded based on vendor_id and device_id. Our
+> > > > > observation is that on EP side system we are unable to bind two
+> > > > > function driver (pci_driver), as pci_endpoint_test function driver or
+> > > > > some other chip-to-chip function driver will already be bound. On the
+> > > > > other hand, on RC side we observed that if we have portdrv enabled in
+> > > > > Linux running on RC system, it gets bound to RC controller and then it
+> > > > > does not allow EDAC pci_driver to bind. So basically we see a problem
+> > > > > here, that we can't have two pci_driver binding to same PCI device
+> > > > > 2: Another point is even though we use EDAC driver framework, we may not be  
+> > > > able to use any of EDAC framework APIs as they are mostly suitable for memory
+> > > > controller devices sitting on PCI BUS. We will end up using debugfs entries just via
+> > > > a pci_driver placed inside EDAC framework.
+> > > > 
+> > > > Please wrap your replies to 80 characters.
+> > > > 
+> > > > There is no need to bind the edac driver to VID:PID of the device. The edac driver
+> > > > can be a platform driver and you can instantiate the platform device from the
+> > > > DWC driver. This way, the PCI device can be assocaited with whatever driver, but
+> > > > still there can be a separate edac driver for handling errors.
+> > > > 
+> > > > Regarding API limitation, you should ask the maintainer about the possibility of
+> > > > extending them.
+> > > >   
+> > > > >
+> > > > > Please let me know if my understanding is wrong.
+> > > > >  
+> > > > > > But first check with the perf driver author if they have any plans
+> > > > > > on adding the proposed functionality. If they do not have any plan
+> > > > > > or not working on it, then look into EDAC.
+> > > > > >
+> > > > > > - Mani
+> > > > > >  
+> > > > >
+> > > > > Since we already worked and posted patches [1], [2], we will continue to work  
+> > > > on this and based on consent from community we will adopt to most suitable
+> > > > framework.  
+> > > > > We see many subsystems like ethernet, usb, gpu, cxl having debugfs files that  
+> > > > give information about the current status of the running system and as of now
+> > > > based on our findings, we still feel there is no harm in having debugfs entry based
+> > > > support in DesignWare controller driver itself.
+> > > > 
+> > > > There is no issue in exposing the debug information through debugfs, that's the
+> > > > sole purpose of the interface. But here, you are trying to add support for DWC
+> > > > RAS feature for which a dedicated framework already exists.
+> > > > 
+> > > > And there will be more similar requests coming for vendor specific error protocols
+> > > > as well. So your investigation could benefit everyone.
+> > > > 
+> > > > From your above investigation, looks like there are some shortcomings of the
+> > > > EDAC framework. So let's get that clarified by writing to the EDAC maintainers
+> > > > (keep us in CC). If the EDAC maintainer suggests you to add support for this
+> > > > feature in DWC driver itself citing some reasons, then no issues with me.
+> > > > 
+> > > > - Mani
+> > > > 
+> > > > --
+> > > > மணிவண்ணன் சதாசிவம்  
+> > > 
+> > >   
+> > 
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
