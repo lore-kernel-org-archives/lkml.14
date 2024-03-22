@@ -1,257 +1,172 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out03.mta.xmission.com (out03.mta.xmission.com [166.70.13.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DE36BFB4
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 18:43:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C7F6E609;
+	Fri, 22 Mar 2024 18:46:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711133014; cv=none; b=cakostOGsgsCdWHqNEFQ4eh7u8NAm87V25mlM83KcM0xsshCFsKSBECrg1w+4uRveYPm+fjUQAkDBPRseX81u8T4aeP3kxvImQfmmm8spvt37OGFa+cZI628Lmwyf9SvH41UVQNSxvSfomH64n8llBOgL81dWULcvRprwW0XzOI=
+	t=1711133218; cv=none; b=duFMF5pWnwZ6n1kW8ECigABrFb8Du96JqGWZhV38fryECt6cTTHbGaeJfRm5dYodjqDUv81SKrHXRj/qJD6UyedaPwFs/cuxZ9+dJLCXG14jx4ioo0iiMZhQ6zaZq/ppxEqGyHhRBLqz2sVAs1Z2sgjogafCbW1s21WW1yxLuSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711133014; c=relaxed/simple;
-	bh=GvQkjDWyqo+rghsqOlGEglCNlFD0oHAv/CYM8uzWhmE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Emp1VffkcPxZcrWlq/rIvxZjLjUlz53lbfY/Ivs1iP3wWNCw5uZ7FHY3E7Gu8UfrXvaDrZtYDyUFm2x3i+SQY5nIo3NhkZG1js8LmWsIcmzLW45zQlqQlx5WRtn7Nl47EzXZG3LYUIa2Z2wcIYxs2dlk5LijmHo4345V1riu8Xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=K7rdjqQl; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="K7rdjqQl"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6963cf14771so22003836d6.3
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 11:43:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1711133012; x=1711737812; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=07q//JdJmCCvVOn8q/irpx1t9tAUng9qf5/QnHEsi64=;
-        b=K7rdjqQliWI1TNqJz8KGw71PRrpl8qkRcqLOkRH8/6709xbL0qE4wJ0HaoCqRmIoWX
-         wAPgxZ1XoIn5zlaKvmi6RhSv0rJXioRdrI+8jjqBfZ3s7nMJ+ZFLNH77QiaeyXIEl8iP
-         pFKbmTgihrXr367Isdswg9geTJmOC178pnmyU/Fd5I7in7PPJDcHP7bubht99eioh85P
-         FamcMzVbG5p2smLx+7/gk8P50jdl924WQK43uF4rFCMRpZ00CaB2DrOo/PJ21Y9jM0Pb
-         LDWBs7rVMF+6qiqSHK3gcb6yytbIhCDcWLAzYpXOSWA3TVUzxDHf7vJq8+RHeXvRGLnx
-         LGxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711133012; x=1711737812;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=07q//JdJmCCvVOn8q/irpx1t9tAUng9qf5/QnHEsi64=;
-        b=CZJUldETXlrAvJK3yEkrYRMBg3Bzzu3bRbHeGmGyCHNBBK+pwTmvSMQiL3aLnkcIrp
-         NdwmuDHF8aMeXNHrscYWDchaID063QWl2gCFej5chnutVxG0gYqbc3RH7hpvsIhvJuxL
-         ExQplCvEwaIkAQUEuO0cOChxW1Og3yZrgnmFEwIBJWbwBLzGs89mrS2lakpHjZIb+Cg1
-         qn/NuFYAsNjs5UwOuFMe0vib+6w0ChtADTxILBQWRhWjGxkZbvaBG+JGUyKDXLVC0koh
-         tMdPuOv9WaTlY5U4CFilg+Ne8NwIvIaY8BdWkvOGWnWUW5x36hUpZtq4mfGDw+ra7PSh
-         7pjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVMGWcBdNUqQxaY8lpciMii+1LtuJtoGQfTlz65mHBV36cUijPn9/WSUTc3o7MaBSQ600VeZqsfltf9ct7Uq2exT3zWif3CAPyGh3ec
-X-Gm-Message-State: AOJu0Yx6ZQJ/oHT85NS0XrB1SJxSY89XUssu0nCQfPqq+H5f+ZkZVkgC
-	oaTqG5Ax3RXjmnYHKoSBG9u2FcXutklwxL2XiYM4v4AWRE2fyDy0HvCqG/PBSZM=
-X-Google-Smtp-Source: AGHT+IGXOk5dcQgdVkv6EYgSp4tZ+XXQ52Ta863vabfcwug61wLkQ0Ayg5iISSk/K2qeTKcn+PXm/w==
-X-Received: by 2002:a05:6214:21ab:b0:690:3ca2:1858 with SMTP id t11-20020a05621421ab00b006903ca21858mr295314qvc.4.1711133011811;
-        Fri, 22 Mar 2024 11:43:31 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
-        by smtp.gmail.com with ESMTPSA id n13-20020a0cfbcd000000b00696731ceef6sm435222qvp.2.2024.03.22.11.43.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 11:43:31 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1rnjrW-00Cg1F-Pb;
-	Fri, 22 Mar 2024 15:43:30 -0300
-Date: Fri, 22 Mar 2024 15:43:30 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Leon Romanovsky <leon@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-	Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org,
-	Bart Van Assche <bvanassche@acm.org>,
-	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-	Amir Goldstein <amir73il@gmail.com>,
-	"josef@toxicpanda.com" <josef@toxicpanda.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>,
-	Dan Williams <dan.j.williams@intel.com>,
-	"jack@suse.com" <jack@suse.com>, Zhu Yanjun <zyjzyj2000@gmail.com>
-Subject: Re: [RFC RESEND 00/16] Split IOMMU DMA mapping operation to two steps
-Message-ID: <20240322184330.GL66976@ziepe.ca>
-References: <20240306174456.GO9225@ziepe.ca>
- <20240306221400.GA8663@lst.de>
- <20240307000036.GP9225@ziepe.ca>
- <20240307150505.GA28978@lst.de>
- <20240307210116.GQ9225@ziepe.ca>
- <20240308164920.GA17991@lst.de>
- <20240308202342.GZ9225@ziepe.ca>
- <20240309161418.GA27113@lst.de>
- <20240319153620.GB66976@ziepe.ca>
- <20240321223910.GA22663@lst.de>
+	s=arc-20240116; t=1711133218; c=relaxed/simple;
+	bh=03Dg747A2OHVuEOp09BcVhm0o4yUsfAGR6i/kBtBbls=;
+	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type:Subject; b=rOi1KJYZQDC/b/ut6G813Y/0Rflwxh4UTDkYJHpnof/ZLzImitsc18tO9DbbR70fZV0YB3lfRw7bvUHNLiUi5Xl1kgiEPanflkYmU8BHd3y2bhm1s6WLRIr5twJZ+W23+CdDsTsRHpTNPmgeHHENKrOiSCt8nCAvvNE2G7DYDkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
+Received: from in01.mta.xmission.com ([166.70.13.51]:59970)
+	by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1rnids-009kpI-Kq; Fri, 22 Mar 2024 11:25:20 -0600
+Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:53186 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1rnidr-001ecQ-FZ; Fri, 22 Mar 2024 11:25:20 -0600
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,  Christian Brauner
+ <brauner@kernel.org>,  Jan Kara <jack@suse.cz>,  Kees Cook
+ <keescook@chromium.org>,  linux-fsdevel@vger.kernel.org,
+  linux-mm@kvack.org,  linux-kernel@vger.kernel.org,  Peter Zijlstra
+ <peterz@infradead.org>,  Ingo Molnar <mingo@redhat.com>,  Arnaldo Carvalho
+ de Melo <acme@kernel.org>,  Namhyung Kim <namhyung@kernel.org>,  Ian
+ Rogers <irogers@google.com>,  Al Grant <al.grant@arm.com>,  James Clark
+ <james.clark@arm.com>,  Mark Rutland <mark.rutland@arm.com>
+References: <20240322162759.714141-1-leo.yan@arm.com>
+Date: Fri, 22 Mar 2024 12:24:54 -0500
+In-Reply-To: <20240322162759.714141-1-leo.yan@arm.com> (Leo Yan's message of
+	"Fri, 22 Mar 2024 16:27:59 +0000")
+Message-ID: <87zfuqb2mx.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240321223910.GA22663@lst.de>
+Content-Type: text/plain
+X-XM-SPF: eid=1rnidr-001ecQ-FZ;;;mid=<87zfuqb2mx.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX18snvkqDraPiZ7Bkn94EiEyuPU/BkxIg2g=
+X-SA-Exim-Connect-IP: 68.227.168.167
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+	*      [score: 0.4997]
+	*  0.7 XMSubLong Long Subject
+	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
+	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
+	*      [sa05 1397; Body=1 Fuz1=1 Fuz2=1]
+	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
+X-Spam-DCC: XMission; sa05 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: ;Leo Yan <leo.yan@arm.com>
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 592 ms - load_scoreonly_sql: 0.05 (0.0%),
+	signal_user_changed: 13 (2.2%), b_tie_ro: 11 (1.9%), parse: 1.57
+	(0.3%), extract_message_metadata: 19 (3.3%), get_uri_detail_list: 4.1
+	(0.7%), tests_pri_-2000: 14 (2.4%), tests_pri_-1000: 4.1 (0.7%),
+	tests_pri_-950: 1.59 (0.3%), tests_pri_-900: 1.27 (0.2%),
+	tests_pri_-90: 134 (22.7%), check_bayes: 132 (22.3%), b_tokenize: 13
+	(2.1%), b_tok_get_all: 12 (2.0%), b_comp_prob: 4.0 (0.7%),
+	b_tok_touch_all: 100 (16.8%), b_finish: 1.18 (0.2%), tests_pri_0: 389
+	(65.6%), check_dkim_signature: 0.78 (0.1%), check_dkim_adsp: 3.3
+	(0.6%), poll_dns_idle: 0.61 (0.1%), tests_pri_10: 2.2 (0.4%),
+	tests_pri_500: 7 (1.2%), rewrite_mail: 0.00 (0.0%)
+Subject: Re: [PATCH] exec: Don't disable perf events for setuid root
+ executables
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 
-On Thu, Mar 21, 2024 at 11:39:10PM +0100, Christoph Hellwig wrote:
-> On Tue, Mar 19, 2024 at 12:36:20PM -0300, Jason Gunthorpe wrote:
-> > I kind of understand your thinking on the DMA side, but I don't see
-> > how this is good for users of the API beyond BIO.
-> > 
-> > How will this make RDMA better? We have one MR, the MR has pages, the
-> > HW doesn't care about the SW distinction of p2p, swiotlb, direct,
-> > encrypted, iommu, etc. It needs to create one HW page list for
-> > whatever user VA range was given.
-> 
-> Well, the hardware (as in the PCIe card) never cares.  But the setup
-> path for the IOMMU does, and something in the OS needs to know about
-> it.  So unless we want to stash away a 'is this P2P' flag in every
-> page / SG entry / bvec, or a do a lookup to find that out for each
-> of them we need to manage chunks at these boundaries.  And that's
-> what I'm proposing.
+Leo Yan <leo.yan@arm.com> writes:
 
-Okay, if we look at the struct-page-less world (which we want for
-DMABUF) then we need to keep track for sure. What I had drafted was to
-keep track in the new "per-SG entry" because that seemed easiest to
-migrate existing code into.
+> Al Grant reported that the 'perf record' command terminates abnormally
+> after setting the setuid bit for the executable. To reproduce this
+> issue, an additional condition is the binary file is owned by the root
+> user but is running under a non-privileged user. The logs below provide
+> details:
+>
+>     $ sudo chmod u+s perf
+>     $ ls -l perf
+>     -rwsr-xr-x 1 root root 13147600 Mar 17 14:56 perf
+>     $ ./perf record -e cycles -- uname
+>     [ perf record: Woken up 1 times to write data ]
+>     [ perf record: Captured and wrote 0.003 MB perf.data (7 samples) ]
+>     Terminated
+>
+> Comparatively, the same command can succeed if the setuid bit is cleared
+> for the perf executable:
+>
+>     $ sudo chmod u-s perf
+>     $ ls -l perf
+>     -rwxr-xr-x 1 root root 13147600 Mar 17 14:56 perf
+>     $ ./perf record -e cycles -- uname
+>     Linux
+>     [ perf record: Woken up 1 times to write data ]
+>     [ perf record: Captured and wrote 0.003 MB perf.data (13 samples) ]
+>
+> After setting the setuid bit, the problem arises when begin_new_exec()
+> disables the perf events upon detecting that a regular user is executing
+> a setuid binary, which notifies the perf process. Consequently, the perf
+> tool in user space exits from polling and sends a SIGTERM signal to kill
+> child processes and itself. This explains why we observe the tool being
+> 'Terminated'.
+>
+> With the setuid bit a non-privileged user can obtain the same
+> permissions as the executable's owner. If the owner has the privileged
+> permission for accessing perf events, the kernel should keep enabling
+> perf events. For this reason, this patch adds a condition checking for
+> perfmon_capable() to not disabling perf events when the user has
+> privileged permission yet.
+>
+> Note the begin_new_exec() function only checks permission for the
+> per-thread mode in a perf session. This is why we don't need to add any
+> extra checking for the global knob 'perf_event_paranoid', as it always
+> grants permission for per-thread performance monitoring for unprivileged
+> users (see Documentation/admin-guide/perf-security.rst).
 
-Though the datastructure could also be written to be a list of uniform
-memory types and then a list of SG entries. (more like how bio is
-organized)
+This code change makes no sense.
 
-No idea right now which is better, and I'm happy make it go either
-way.
+The logic you are attempting to implement, allowing performance
+measurements of a setuid application if it has sufficient capabilities
+does make sense.
 
-But Leon's series is not quite getting to this, it it still struct
-page based and struct page itself has all the metadata - though as you
-say it is a bit expensive to access.
+perfmon_capable tests if the current program has sufficient privileges
+to use perf, not the program that enabled performance measurements.
 
-> > Or worse, whatever thing is inside a DMABUF from a DRM
-> > driver. DMABUF's can have a (dynamic!) mixture of P2P and regular
-> > AFAIK based on the GPU's migration behavior.
-> 
-> And that's fine.  We just need to track it efficiently.
+The location perfmon_capable is being called in the new executable is
+after the new executable gets it's new credentials.  AKA the suidroot
+has already happened.  So it will always succeed for suidroot
+executables.
 
-Right, DMABUF/etc will return a something that has a list of physical
-addresses and some meta-data to indicate the "p2p memory provider" for
-the P2P part.
+I suggest you take a look at ptracer_capable that is used to test if the
+ptracer has sufficient credentials to trace a suid root exectuable.
 
-Perhaps it could be as simple as 1 bit in the physical address/length
-and a global "P2P memory provider" pointer for the entire DMA
-BUF. Unclear to me right now, but sure.
+Eric
 
-> > Or triple worse, ODP can dynamically change on a page by page basis
-> > the type depending on what hmm_range_fault() returns.
-> 
-> Same.  If this changes all the time you need to track it.  And we
-> should find a way to shared the code if we have multiple users for it.
 
-ODP (for at least the forseeable furture) is simpler because it is
-always struct page based so we don't need more metadata if we pay the
-cost to reach into the struct page. I suspect that is the right trade
-off for hmm_range_fault users.
 
-> But most DMA API consumers will never see P2P, and when they see it
-> it will be static.  So don't build the DMA API to automically do
-> the (not exactly super cheap) checks and add complexity for it.
-
-Okay, I think I get what you'd like to see.
-
-If we are going to make caller provided uniformity a requirement, lets
-imagine a formal memory type idea to help keep this a little
-abstracted?
-
- DMA_MEMORY_TYPE_NORMAL
- DMA_MEMORY_TYPE_P2P_NOT_ACS
- DMA_MEMORY_TYPE_ENCRYPTED
- DMA_MEMORY_TYPE_BOUNCE_BUFFER  // ??
-
-Then maybe the driver flow looks like:
-
-	if (transaction.memory_type == DMA_MEMORY_TYPE_NORMAL && dma_api_has_iommu(dev)) {
-		struct dma_api_iommu_state state;
-
-		dma_api_iommu_start(&state, transaction.num_pages);
-		for_each_range(transaction, range)
-			dma_api_iommu_map_range(&state, range.start_page, range.length);
-		num_hwsgls = 1;
-		hwsgl.addr = state.iova;
-		hwsgl.length = transaction.length
-		dma_api_iommu_batch_done(&state);
-	} else if (transaction.memory_type == DMA_MEMORY_TYPE_P2P_NOT_ACS) {
-		num_hwsgls = transcation.num_sgls;
-		for_each_range(transaction, range) {
-			hwsgl[i].addr = dma_api_p2p_not_acs_map(range.start_physical, range.length, p2p_memory_provider);
-			hwsgl[i].len = range.size;
-		}
-	} else {
-		/* Must be DMA_MEMORY_TYPE_NORMAL, DMA_MEMORY_TYPE_ENCRYPTED, DMA_MEMORY_TYPE_BOUNCE_BUFFER? */
-		num_hwsgls = transcation.num_sgls;
-		for_each_range(transaction, range) {
-			hwsgl[i].addr = dma_api_map_cpu_page(range.start_page, range.length);
-			hwsgl[i].len = range.size;
-		}
-	}
-
-And the hmm_range_fault case is sort of like:
-
-		struct dma_api_iommu_state state;
-		dma_api_iommu_start(&state, mr.num_pages);
-
-		[..]
-		hmm_range_fault(...)
-		if (present)
-			dma_link_page(&state, faulting_address_offset, page);
-		else
-			dma_unlink_page(&state, faulting_address_offset, page);
-
-Is this looking closer?
-
-> > So I take it as a requirement that RDMA MUST make single MR's out of a
-> > hodgepodge of page types. RDMA MRs cannot be split. Multiple MR's are
-> > not a functional replacement for a single MR.
-> 
-> But MRs consolidate multiple dma addresses anyway.
-
-I'm not sure I understand this?
- 
-> > Go back to the start of what are we trying to do here:
-> >  1) Make a DMA API that can support hmm_range_fault() users in a
-> >     sensible and performant way
-> >  2) Make a DMA API that can support RDMA MR's backed by DMABUF's, and
-> >     user VA's without restriction
-> >  3) Allow to remove scatterlist from BIO paths
-> >  4) Provide a DMABUF API that is not scatterlist that can feed into
-> >     the new DMA API - again supporting DMABUF's hodgepodge of types.
-> > 
-> > I'd like to do all of these things. I know 3 is your highest priority,
-> > but it is my lowest :)
-> 
-> Well, 3 an 4.  And 3 is not just limited to bio, but all the other
-> pointless scatterlist uses.
-
-Well, I didn't write a '5) remove all the other pointless scatterlist
-case' :)
-
-Anyhow, I think we all agree on the high level objective, we just need
-to get to an API that fuses all of these goals together.
-
-To go back to my main thesis - I would like a high performance low
-level DMA API that is capable enough that it could implement
-scatterlist dma_map_sg() and thus also implement any future
-scatterlist_v2, bio, hmm_range_fault or any other thing we come up
-with on top of it. This is broadly what I thought we agreed to at LSF
-last year.
-
-Jason
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> Cc: Al Grant <al.grant@arm.com>
+> Cc: James Clark <james.clark@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> ---
+>  fs/exec.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/exec.c b/fs/exec.c
+> index ff6f26671cfc..5ded01190278 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1401,7 +1401,8 @@ int begin_new_exec(struct linux_binprm * bprm)
+>  	 * wait until new credentials are committed
+>  	 * by commit_creds() above
+>  	 */
+> -	if (get_dumpable(me->mm) != SUID_DUMP_USER)
+> +	if ((get_dumpable(me->mm) != SUID_DUMP_USER) &&
+> +	    !perfmon_capable())
+>  		perf_event_exit_task(me);
+>  	/*
+>  	 * cred_guard_mutex must be held at least to this point to prevent
