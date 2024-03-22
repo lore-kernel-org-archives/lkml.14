@@ -1,89 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6225A7EF05;
-	Fri, 22 Mar 2024 23:19:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6AE82877
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 23:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711149588; cv=none; b=a2h41iclxISNtDykq63G75cGAjlPziiNcrggb6+v2qlIEi29BkIMEoJwODhxjqvxXZw037Tk8RPJxJPZAX1VQjvW3QCAI4MEzE86qgMfQ1ofgWRHAZduLJOyE4umIFLiaiEsZnoWOsxax9Rw/3Q2GJgFLo2zcwM8YsoAzbxicSE=
+	t=1711149629; cv=none; b=cW7SSNT8cFER/dNKuAIxol/yyhLAegFy2BoTLwx5/ch5OnGFpvHM5SLY5e45CUeL+JbkzHkq+PPxiZSez1EroPNV4LQAXRmoZOJwzb2Szp7oXFUktH/klri0EKLq06gWj1JkTPJeUkSoIbZ7T9dN61fyHNeap+tADXEF7DUefqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711149588; c=relaxed/simple;
-	bh=msieq1rlX+OhvWYoM0YV5KS97Dsg2PJYaBtuHVmZvcg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O7Z0zjKFbLW2twVBovyLEITwGs2kEFiBvyAVEAKpsdXtE/I5dwwEkED+9gN5c8MvbeekxI9f4GDl8iy4RSUVHlny9rKMbj3kPdBIDa5rW7SR6qTyZQZ5UGuLmxK53ukuIli31AFhVyIug2TA6Jy/HxH2fbsqXU67llLohuOZwlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ka5PHCyY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711149629; c=relaxed/simple;
+	bh=Ms4bz3fWKHV3dSnToflXLh0/u8AUGPKNSasrQEN8kSs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=u9NLRHWCm7ftRBwk6CCtkBn5JIcF+F2GLo99EUNp0D4g753Ig1IIqbuRtGbOEa4ILbUmwd9LrUwXf89pSPsR7pcjnSVv2yRnZAjoXiHy31o9C79dr4vCgtqqsjRGMe83/UghH7n4o3C0rN83a5SQvOtubV8wx0cQDBcy3dmnedw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i+VazJd1; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ka5PHCyY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8F27C433C7;
-	Fri, 22 Mar 2024 23:19:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711149587;
-	bh=msieq1rlX+OhvWYoM0YV5KS97Dsg2PJYaBtuHVmZvcg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ka5PHCyYmoZX9PsvxUAGJqdDBExkTkresHF1kC0nKcGUkpNWTtXfCM9eM3lON00E/
-	 sdTUglbJIwNhSuRIDCc+Shrxp7Q7F8OSC60m4cCVgaPGJWVHsM13+iCe/YoHIFFgiu
-	 5HybDp8YS06v2Xztbb1h0oBMyxoqE2gUndhvBCAbY26U2oBUOD1EZxE7LZ38fBL/QI
-	 5JZ0BUBtxg5FufRT6Zts8zD6NNC0atF7skifKgwBOdLblk5mTaX0LRELnaXdtdEHfX
-	 1o+GQ6VMkk+C/AzTNXltKD4XdDE8tCJ68h7rFM9MN2K/6Z5mQBQ5/GwiPbhToKc2vD
-	 QsSjoQ81Meb1g==
-Date: Fri, 22 Mar 2024 16:19:44 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mina Almasry <almasrymina@google.com>
-Cc: Christoph Hellwig <hch@infradead.org>, David Wei <dw@davidwei.uk>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>, Richard Henderson
- <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
- Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer
- <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
- <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>,
- Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
- <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
- <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai
- Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
- <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
- <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
- Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa
- <jolsa@kernel.org>, David Ahern <dsahern@kernel.org>, Willem de Bruijn
- <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, Sumit
- Semwal <sumit.semwal@linaro.org>, Christian =?UTF-8?B?S8O2bmln?=
- <christian.koenig@amd.com>, Pavel Begunkov <asml.silence@gmail.com>, Jason
- Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, Shailend
- Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>,
- Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
- <pkaligineedi@google.com>
-Subject: Re: [RFC PATCH net-next v6 02/15] net: page_pool: create hooks for
- custom page providers
-Message-ID: <20240322161944.4eba02b6@kernel.org>
-In-Reply-To: <CAHS8izMT1Smz6UWu2uwAQRqgZPU7jTfS3GKiA_sDw9KLqoP-JA@mail.gmail.com>
-References: <20240305020153.2787423-1-almasrymina@google.com>
-	<20240305020153.2787423-3-almasrymina@google.com>
-	<ZfegzB341oNc_Ocz@infradead.org>
-	<b938514c-61cc-41e6-b592-1003b8deccae@davidwei.uk>
-	<ZfjMopBl27-7asBc@infradead.org>
-	<CAHS8izMT1Smz6UWu2uwAQRqgZPU7jTfS3GKiA_sDw9KLqoP-JA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i+VazJd1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711149626; x=1742685626;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Ms4bz3fWKHV3dSnToflXLh0/u8AUGPKNSasrQEN8kSs=;
+  b=i+VazJd1BGpmVBtVnvdPiXCmOiMm/DcD0YWlZPW/+achLXBZ5yyWVfD0
+   hdu3mwZheogYvztnLPxOmD+pFw1sC1DrMNXoR3olmfCS7v6bXafmMzw4T
+   0yV/dtqo0YbugUilACMl9AWVNFh+6kv02ZSeT8RabY6fGcjpogeKjKag9
+   yNJJbZVGSl+ZwsG5RMfKvuJqXOH2AnUexrdGoWSbp9XLWlT0OpwuXW3YE
+   mehEw19Y38AmWUrHAkf8X6uJCuRZVI0+SQwhrnU2dqw/Mk24HRnDYcAgc
+   uHH3e67lI0XOphWVFOdE2IHvUDz2DIefgNrGa+7y/mWCIWaG4ZDxf+NVL
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11021"; a="6408514"
+X-IronPort-AV: E=Sophos;i="6.07,147,1708416000"; 
+   d="scan'208";a="6408514"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 16:20:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,147,1708416000"; 
+   d="scan'208";a="19748855"
+Received: from chang-linux-3.sc.intel.com ([172.25.66.175])
+  by orviesa004.jf.intel.com with ESMTP; 22 Mar 2024 16:20:25 -0700
+From: "Chang S. Bae" <chang.seok.bae@intel.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	tglx@linutronix.de,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	mingo@redhat.com
+Cc: attofari@amazon.de,
+	chang.seok.bae@intel.com
+Subject: [PATCH v4] x86/fpu: Keep xfd_state always in sync with MSR_IA32_XFD
+Date: Fri, 22 Mar 2024 16:04:39 -0700
+Message-Id: <20240322230439.456571-1-chang.seok.bae@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230519112315.30616-1-attofari@amazon.de>
+References: <20230519112315.30616-1-attofari@amazon.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Fri, 22 Mar 2024 10:40:26 -0700 Mina Almasry wrote:
-> Other designs for this hugepage use case are possible, I'm just
-> describing Jakub's idea for it as a potential use-case for these
-> hooks. 
+From: Adamos Ttofari <attofari@amazon.de>
 
-I made it ops because I had 4 different implementations with different
-recycling algorithms. I think it's a fairly reasonable piece of code.
+Commit 672365477ae8 ("x86/fpu: Update XFD state where required") and
+commit 8bf26758ca96 ("x86/fpu: Add XFD state to fpstate") introduced a
+per CPU variable xfd_state to keep the MSR_IA32_XFD value cached. In
+order to avoid unnecessary writes to the MSR.
+
+On CPU hotplug MSR_IA32_XFD is reset to the init_fpstate.xfd, which
+wipes out any stale state. But the per CPU cached xfd value is not
+reset, which brings them out of sync.
+
+As a consequence a subsequent xfd_update_state() might fail to update
+the MSR which in turn can result in XRSTOR raising a #NM in kernel
+space, which crashes the kernel.
+
+To address the issue mentioned, initialize xfd_state together with
+MSR_IA32_XFD.
+
+Fixes: 672365477ae8 ("x86/fpu: Update XFD state where required")
+Closes: https://lore.kernel.org/lkml/20230511152818.13839-1-attofari@amazon.de
+Signed-off-by: Adamos Ttofari <attofari@amazon.de>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
+---
+V4 <- V3: No code changes, just a minor tweak in the changelog:
+* Adjust the patch subject prefix to align with the preferred format for
+  'tip' [1], 'x86: fpu:' -> 'x86/fpu:'
+* Add a few more commit tags.
+
+It appears that the issue is predominantly exposed during the execution
+of synthetic test cases, such as concurrent AMX operations with CPU
+hotplug tests (e.g., 'stress-ng --cpu-online' [2]). While this might be
+seen as a corner case, it has been a recurring failure during hardware
+validation, leading to confusion regarding the source of the problem.
+
+I considered updating the AMX test like this [3]. But, the change
+introduced side effects, adding about 2 more seconds to run the test.
+Also, running AMX concurrently with aggressively on-/off-lining of CPUs
+doesn't seem to align well typical usage scenarios that warrant testing.
+Nonetheless, I'm open to add this test if it's deemed necessary.
+
+[1]: https://www.kernel.org/doc/html/next/process/maintainer-tip.html#patch-subject
+[2]: https://github.com/ColinIanKing/stress-ng/blob/master/stress-cpu-online.c#L27
+[3]: https://lore.kernel.org/lkml/20230603152455.12444-1-chang.seok.bae@intel.com/
+---
+ arch/x86/kernel/fpu/xstate.c |  5 +++--
+ arch/x86/kernel/fpu/xstate.h | 14 ++++++++++----
+ 2 files changed, 13 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index 117e74c44e75..33a214b1a4ce 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -178,10 +178,11 @@ void fpu__init_cpu_xstate(void)
+ 	 * Must happen after CR4 setup and before xsetbv() to allow KVM
+ 	 * lazy passthrough.  Write independent of the dynamic state static
+ 	 * key as that does not work on the boot CPU. This also ensures
+-	 * that any stale state is wiped out from XFD.
++	 * that any stale state is wiped out from XFD. Reset the per CPU
++	 * xfd cache too.
+ 	 */
+ 	if (cpu_feature_enabled(X86_FEATURE_XFD))
+-		wrmsrl(MSR_IA32_XFD, init_fpstate.xfd);
++		xfd_set_state(init_fpstate.xfd);
+ 
+ 	/*
+ 	 * XCR_XFEATURE_ENABLED_MASK (aka. XCR0) sets user features
+diff --git a/arch/x86/kernel/fpu/xstate.h b/arch/x86/kernel/fpu/xstate.h
+index 3518fb26d06b..19ca623ffa2a 100644
+--- a/arch/x86/kernel/fpu/xstate.h
++++ b/arch/x86/kernel/fpu/xstate.h
+@@ -148,20 +148,26 @@ static inline void xfd_validate_state(struct fpstate *fpstate, u64 mask, bool rs
+ #endif
+ 
+ #ifdef CONFIG_X86_64
++static inline void xfd_set_state(u64 xfd)
++{
++	wrmsrl(MSR_IA32_XFD, xfd);
++	__this_cpu_write(xfd_state, xfd);
++}
++
+ static inline void xfd_update_state(struct fpstate *fpstate)
+ {
+ 	if (fpu_state_size_dynamic()) {
+ 		u64 xfd = fpstate->xfd;
+ 
+-		if (__this_cpu_read(xfd_state) != xfd) {
+-			wrmsrl(MSR_IA32_XFD, xfd);
+-			__this_cpu_write(xfd_state, xfd);
+-		}
++		if (__this_cpu_read(xfd_state) != xfd)
++			xfd_set_state(xfd);
+ 	}
+ }
+ 
+ extern int __xfd_enable_feature(u64 which, struct fpu_guest *guest_fpu);
+ #else
++static inline void xfd_set_state(u64 xfd) { }
++
+ static inline void xfd_update_state(struct fpstate *fpstate) { }
+ 
+ static inline int __xfd_enable_feature(u64 which, struct fpu_guest *guest_fpu) {
+-- 
+2.40.1
+
