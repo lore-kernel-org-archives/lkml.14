@@ -1,154 +1,247 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BCB8830;
-	Fri, 22 Mar 2024 08:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16768830
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 08:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711096299; cv=none; b=D6HBMM6h9YjzmgkPalLRwlZ9sHrhOEH3NU4tRYZ9VrrRyagd1ucIXXsuAaD4hdpRzqZAuW5mJxM84VcfVaBiDYrtaxsjT2yvy/DLAEtLosG0ybOQ556TOXGsK3gULu9vIFM6WgtxcLsVUrMOP5YrdN3eWFwdTMihJVBZVb/r/n0=
+	t=1711096396; cv=none; b=bcwl0DXbN7FYikG5RwJt1pyRyUp9tItiHJycivbGdD2Wd43Dxu9Cm6p8V4lwJq7gg1Zu7h9uXdgFPIL+KViZidDxX5xCnSwGnkCKLPuIeZcaFlwBs4S6o9bpxaN/bgUJrLYnbx4zJu2ea5Un6ZSUL7+YQPBs3FkB1l2ktZGShrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711096299; c=relaxed/simple;
-	bh=eHe9zDfIr5wP83EpR+ZDJ3x9229GvW/zs00EBspiMKE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cu/4ujT3Y5JT6l/MMnmJ1cTi9/903SaFQ+h/kIowXF3qp8TjSu2tN40x+KwKa9E2bwEYhdclvL7Gf3eEhsZ9Fb79LbiMEDmJpaxIY4BqiO8K/RkKIst/SlnznWYP/ITOeRFslHHWxlOJOMxYZ6xfoUpL7FsifXYbjqF6/YTcXYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hn0WYqOz; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1711096396; c=relaxed/simple;
+	bh=DMqtk3eEcJRBCUbrtHl8AhdATznh4eTtumELyvNBQ/k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QTCZAvjZFAOFnBq2q6n97vm1puS0xEoGsiz1aBjjsM3aW27GrkBcDI1U4ooam8WDvwRmH16B7GZ/TpTLUsVlO697Dl2doj6PArbvhBH7/OqWaC9rJmCJcM1/OJysKFH6ggguwnH8g3qIl5Zf3/pEAoKLWXTnT/vGr5UmyEvUXYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KwAh6tz4; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hn0WYqOz"
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42M7FtZi030082;
-	Fri, 22 Mar 2024 08:31:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=+q4qti6zuThwqHyOnyddfu8tq7886ArbT3m1RqvkUrs=;
- b=hn0WYqOzHa2rGTYLcjwT1rS/1/ur6GiT0I4FthlhgwVQgSiBAJIQB9IIs6KlcagybXyH
- Mjt9ukiXeG++SUwIxliVtzfZFvQgTS/CQgcXfW/MFAE/SRVk5cG4dr1QWvM69tudKWnf
- 7rJhJCAOsOdXtVQqLSxeea555XjjeG8+KVGii1WJ/kaqFdsKYl5nm2cw+wbmZsmTblze
- VVF9iJUNeZx0u19ZOShJ+ztI4wR0J3QfuDReqY+le9IWutRLzU4Iu+HjdiVpA22EF72P
- 7nERD6hykq8czCYpoZgIqVYm44Bsb1I68EJ+WmyNg8GuJcuSfDCP69mQdnl9Ft9Uq1JN wA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x155w067f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 Mar 2024 08:31:28 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42M8VR1B002551;
-	Fri, 22 Mar 2024 08:31:27 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x155w067a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 Mar 2024 08:31:27 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42M5TH5g023286;
-	Fri, 22 Mar 2024 08:31:26 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3x0x14jjgg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 Mar 2024 08:31:26 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42M8VM8l45941242
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 22 Mar 2024 08:31:24 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 39CC720049;
-	Fri, 22 Mar 2024 08:31:22 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2704620040;
-	Fri, 22 Mar 2024 08:31:20 +0000 (GMT)
-Received: from li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com (unknown [9.43.0.231])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 22 Mar 2024 08:31:19 +0000 (GMT)
-Date: Fri, 22 Mar 2024 14:01:17 +0530
-From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-To: Frederick Lawler <fred@cloudflare.com>
-Cc: "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Ritesh Harjani <ritesh.list@gmail.com>, linux-kernel@vger.kernel.org,
-        Jan Kara <jack@suse.cz>, glandvador@yahoo.com, bugzilla@eyal.emu.id.au,
-        kernel-team@cloudflare.com
-Subject: Re: [PATCH 0/1] Fix for recent bugzilla reports related to long
- halts during block allocation
-Message-ID: <Zf1B1cPj/aO21pjZ@li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com>
-References: <cover.1702455010.git.ojaswin@linux.ibm.com>
- <170476879011.637731.13228432208887255974.b4-ty@mit.edu>
- <ZfsUaicHDpOtkkVv@CMGLRV3>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KwAh6tz4"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-609f1f97864so20962937b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 01:33:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711096393; x=1711701193; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=eznPwTZk7ZAEffHpcAWZTr/ae6mBoD7RvlNvXt/B97o=;
+        b=KwAh6tz4PCipzX1Gk1mm09km2zhqHrtRX+K3YSEzerCuj/MtVfyP95UeJ9tRFfAOQl
+         lQSetUz2wQ2iMPcyap6EY/qdFHC1VOcLtNpvE7GPKfCwXXAOXH0ed1r/hkkyNuWv37D5
+         Njb3bqSTJErIe8K44tslaJmml0gORkW+epjPg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711096393; x=1711701193;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eznPwTZk7ZAEffHpcAWZTr/ae6mBoD7RvlNvXt/B97o=;
+        b=u4ny9YwowPm5GiPX99lIFdVd9foSA0yqlUxCO3Axa6Na4trINBFyvy8WervW1cNTG2
+         FvyFweRzIDt0W990Z1LiroMp4+D+PLjTNIO9vfkM3dB6t1NrBH5vECUV2kXOMDwvEKX0
+         LezUcsORGhOuMqqUtMCoxXOv0ELj6+wFcDqOTtFL9AXsxRFOeWfXFKK9rdfQqG6feCif
+         Vt2I4XWlsTBaJgxVUlpvgkwWkEZlf7nr3abJwHF+xA6KztVuMkqXaNgvkXLUa9gTJ8hR
+         scMK3rPr/Q513Xdi/v083rHS1jPjxfVdMVCOrdwXfvZbvC9nIm7V11DQ9HtwZqIx3QZg
+         +RYw==
+X-Forwarded-Encrypted: i=1; AJvYcCU6j0MqOWAAyKxRKfexOqmIiB1CCM/aJvO9x667d+rmXVw5FgF7p5Ddp254hcxGCojRqmeaT84z3JUJvoW5s7VaALTtWosXct6Y5h8C
+X-Gm-Message-State: AOJu0YwF/KWrcznVaFkKUYyb6kGHYQODYXY3XeX24WZZ63eWs05W4JxU
+	NHQ+fuoKDVmuQtNR2pgVXSIes9vAaSBbx/KndqvD7JEBeDc1M2jN0OIitWHFfistvkyYbzUa0bE
+	=
+X-Google-Smtp-Source: AGHT+IHINwdp7hQOvhwY3yMYw46a5HSs52jhojDBqs1n/ZQc8HjsIkDwkwUpZ8AogmZUkrBE71VwZA==
+X-Received: by 2002:a81:5ec1:0:b0:60a:174f:b356 with SMTP id s184-20020a815ec1000000b0060a174fb356mr1820796ywb.3.1711096393210;
+        Fri, 22 Mar 2024 01:33:13 -0700 (PDT)
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com. [209.85.219.45])
+        by smtp.gmail.com with ESMTPSA id g2-20020a05620a218200b0078a0df3489esm592227qka.116.2024.03.22.01.33.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Mar 2024 01:33:12 -0700 (PDT)
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6962a97752eso14941256d6.2
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 01:33:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVsT5Pw7urazpy9gxAN0dMghtmH+fnAEkWjg1mIkJs3n6qQd3Flczmroe9kDToPliVuIBRLsMxP/rqSprd6Vz/B/dX4iKciRjg8ExSe
+X-Received: by 2002:a05:6214:2629:b0:68f:3c36:1b74 with SMTP id
+ gv9-20020a056214262900b0068f3c361b74mr1581869qvb.41.1711096392048; Fri, 22
+ Mar 2024 01:33:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZfsUaicHDpOtkkVv@CMGLRV3>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: pDfVLUMb_l8o_s8_IasYDkMP05vUFJax
-X-Proofpoint-GUID: XiPpAx2Lj5o9BGRQ5rb7wowVYbOfMA0B
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-22_05,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- spamscore=0 adultscore=0 bulkscore=0 phishscore=0 priorityscore=1501
- mlxlogscore=999 clxscore=1011 impostorscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2403220061
+References: <20220920-resend-hwtimestamp-v9-0-55a89f46f6be@chromium.org>
+ <20220920-resend-hwtimestamp-v9-3-55a89f46f6be@chromium.org> <20240321234434.GC20938@pendragon.ideasonboard.com>
+In-Reply-To: <20240321234434.GC20938@pendragon.ideasonboard.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Fri, 22 Mar 2024 09:32:56 +0100
+X-Gmail-Original-Message-ID: <CANiDSCs_dvKwRmws=DoN-YPaTzPeyJQLp0MCUxhRcK-R1T=YSA@mail.gmail.com>
+Message-ID: <CANiDSCs_dvKwRmws=DoN-YPaTzPeyJQLp0MCUxhRcK-R1T=YSA@mail.gmail.com>
+Subject: Re: [PATCH v9 3/6] media: uvcvideo: Quirk for invalid dev_sof in
+ Logitech C922
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	linux-kernel@vger.kernel.org, "hn.chen" <hn.chen@sunplusit.com>, 
+	linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Mar 20, 2024 at 11:52:58AM -0500, Frederick Lawler wrote:
-> Hi Theodore and Ojaswin,
-> 
-> On Mon, Jan 08, 2024 at 09:53:18PM -0500, Theodore Ts'o wrote:
-> > 
-> > On Fri, 15 Dec 2023 16:49:49 +0530, Ojaswin Mujoo wrote:
-> > > This patch intends to fix the recent bugzilla [1] report where the
-> > > kworker flush thread seemed to be taking 100% CPU utilizationa and was
-> > > slowing down the whole system. The backtrace indicated that we were
-> > > stuck in mballoc allocation path. The issue was only seen kernel 6.5+
-> > > and when ext4 was mounted with -o stripe (or stripe option was
-> > > implicitly added due us mkfs flags used).
-> > > 
-> > > [...]
-> > 
-> > Applied, thanks!
-> 
-> I backported this patch to at least 6.6 and tested on our fleet of
-> software RAID 0 NVME SSD nodes. This change worked very nicely
-> for us. We're interested in backporting this to at least 6.6.
-> 
-> I tried looking at xfstests, and didn't really see a good match
-> (user error?) to validate the fix via that. So I'm a little unclear what
-> the path forward here is.
-> 
-> Although we experienced this issue in 6.1, I didn't backport to 6.1 and
-> test to verify this also works there, however, setting stripe to 0 did in
-> the 6.1 case.
-> 
-> Best,
-> Fred
+Hi Laurent
 
-Hi Fred,
+On Fri, 22 Mar 2024 at 00:44, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Ricardo,
+>
+> Thank you for the patch.
+>
+> On Wed, Mar 15, 2023 at 02:30:14PM +0100, Ricardo Ribalda wrote:
+> > Logitech C922 internal SOF does not increases at a stable rate of 1kHz.
+>
+> The next thing you know they will redefine to value of pi to be 3.
+>
+> > This causes that the device_sof and the host_sof run at different rates,
+> > breaking the clock domain conversion algorithm. Eg:
+> >
+> > 30 (6) [-] none 30 614400 B 21.245557 21.395214 34.133 fps ts mono/SoE
+> > 31 (7) [-] none 31 614400 B 21.275327 21.427246 33.591 fps ts mono/SoE
+> > 32 (0) [-] none 32 614400 B 21.304739 21.459256 34.000 fps ts mono/SoE
+> > 33 (1) [-] none 33 614400 B 21.334324 21.495274 33.801 fps ts mono/SoE
+> > * 34 (2) [-] none 34 614400 B 21.529237 21.527297 5.130 fps ts mono/SoE
+> > * 35 (3) [-] none 35 614400 B 21.649416 21.559306 8.321 fps ts mono/SoE
+> > 36 (4) [-] none 36 614400 B 21.678789 21.595320 34.045 fps ts mono/SoE
+> > ...
+> > 99 (3) [-] none 99 614400 B 23.542226 23.696352 33.541 fps ts mono/SoE
+> > 100 (4) [-] none 100 614400 B 23.571578 23.728404 34.069 fps ts mono/SoE
+> > 101 (5) [-] none 101 614400 B 23.601425 23.760420 33.504 fps ts mono/SoE
+> > * 102 (6) [-] none 102 614400 B 23.798324 23.796428 5.079 fps ts mono/SoE
+> > * 103 (7) [-] none 103 614400 B 23.916271 23.828450 8.478 fps ts mono/SoE
+> > 104 (0) [-] none 104 614400 B 23.945720 23.860479 33.957 fps ts mono/SoE
+> >
+> > Instead of disabling completely the hardware timestamping for such
+> > hardware we take the assumption that the packet handling jitter is
+> > under 2ms and use the host_sof as dev_sof.
+> >
+> > We can think of the UVC hardware clock as a system with a coarse clock
+> > (the SOF) and a fine clock (the PTS). The coarse clock can be replaced
+> > with a clock on the same frequency, if the jitter of such clock is
+> > smaller than its sampling rate. That way we can save some of the
+> > precision of the fine clock.
+> >
+> > To probe this point we have run three experiments on the Logitech C922.
+> > On that experiment we run the camera at 33fps and we analyse the
+> > difference in msec between a frame and its predecessor. If we display
+> > the histogram of that value, a thinner histogram will mean a better
+> > meassurement. The results for:
+> > - original hw timestamp: https://ibb.co/D1HJJ4x
+> > - pure software timestamp: https://ibb.co/QC9MgVK
+> > - modified hw timestamp: https://ibb.co/8s9dBdk
+> >
+> > This bug in the camera firmware has been confirmed by the vendor.
+> >
+> > lsusb -v
+> >
+> > Bus 001 Device 044: ID 046d:085c Logitech, Inc. C922 Pro Stream Webcam
+> > Device Descriptor:
+> >   bLength                18
+> >   bDescriptorType         1
+> >   bcdUSB               2.00
+> >   bDeviceClass          239 Miscellaneous Device
+> >   bDeviceSubClass         2
+> >   bDeviceProtocol         1 Interface Association
+> >   bMaxPacketSize0        64
+> >   idVendor           0x046d Logitech, Inc.
+> >   idProduct          0x085c C922 Pro Stream Webcam
+> >   bcdDevice            0.16
+> >   iManufacturer           0
+> >   iProduct                2 C922 Pro Stream Webcam
+> >   iSerial                 1 80B912DF
+> >   bNumConfigurations      1
+> >
+> > Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > ---
+> >  drivers/media/usb/uvc/uvc_driver.c | 9 +++++++++
+> >  drivers/media/usb/uvc/uvc_video.c  | 8 ++++++++
+> >  drivers/media/usb/uvc/uvcvideo.h   | 1 +
+> >  3 files changed, 18 insertions(+)
+> >
+> > diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+> > index 7aefa76a42b3..678a5736c9df 100644
+> > --- a/drivers/media/usb/uvc/uvc_driver.c
+> > +++ b/drivers/media/usb/uvc/uvc_driver.c
+> > @@ -2549,6 +2549,15 @@ static const struct usb_device_id uvc_ids[] = {
+> >         .bInterfaceSubClass   = 1,
+> >         .bInterfaceProtocol   = 0,
+> >         .driver_info          = UVC_INFO_QUIRK(UVC_QUIRK_RESTORE_CTRLS_ON_INIT) },
+> > +     /* Logitech HD Pro Webcam C922 */
+> > +     { .match_flags          = USB_DEVICE_ID_MATCH_DEVICE
+> > +                             | USB_DEVICE_ID_MATCH_INT_INFO,
+> > +       .idVendor             = 0x046d,
+> > +       .idProduct            = 0x085c,
+> > +       .bInterfaceClass      = USB_CLASS_VIDEO,
+> > +       .bInterfaceSubClass   = 1,
+> > +       .bInterfaceProtocol   = 0,
+> > +       .driver_info          = UVC_INFO_QUIRK(UVC_QUIRK_INVALID_DEVICE_SOF) },
+> >       /* Chicony CNF7129 (Asus EEE 100HE) */
+> >       { .match_flags          = USB_DEVICE_ID_MATCH_DEVICE
+> >                               | USB_DEVICE_ID_MATCH_INT_INFO,
+> > diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
+> > index 1f416c494acc..4d566edb73e7 100644
+> > --- a/drivers/media/usb/uvc/uvc_video.c
+> > +++ b/drivers/media/usb/uvc/uvc_video.c
+> > @@ -547,6 +547,14 @@ uvc_video_clock_decode(struct uvc_streaming *stream, struct uvc_buffer *buf,
+> >       stream->clock.last_sof = dev_sof;
+> >
+> >       host_sof = usb_get_current_frame_number(stream->dev->udev);
+> > +
+> > +     /*
+> > +      * On some devices, like the Logitech C922, the device SOF does not run
+> > +      * at a stable rate of 1kHz. For those devices use the host SOF instead.
+>
+> I'm still not very convinced, as without a formal proof I think there's
+> some luck involved, and it may break later. This being said, given that
+> this is gated by a quirk, it won't impact other devices, and we can deal
+> with regressions when they happen. Could we record it here:
+>
+>          * On some devices, like the Logitech C922, the device SOF does not run
+>          * at a stable rate of 1kHz. For those devices use the host SOF instead.
+>          * This improves the timestamp precision in the tests performed so far,
+>          * even if the exact reason hasn't been fully determined.
+>
+> or something along those lines ?
+How does this sound:
 
-If I understand correctly, you are looking for a test case which you
-could use to confirm if the issue exists and if the backport is solving
-it, right?
 
-Actually, I was never able to replicate this at my end so I had to rely
-on people hitting the bug to confirm if it works. I did set out to write
-a testcase that could help us reliably replicate this issue but it needs
-a very specially crafted FS that is a bit difficult to achieve from user
-space. I was using debugfs to create an FS that could hit it but I kept 
-running into issues where it won't mount etc. Maybe there's a better 
-way to craft such an FS that I'm not aware of.
+        /*
+         * On some devices, like the Logitech C922, the device SOF does not run
+         * at a stable rate of 1kHz. For those devices use the host SOF instead.
++        * In the tests performed so far, this improves the timestamp precision.
++        * This is probably explained by a small packet handling jitter from the
++        * host, but the exact reason hasn't been fully determined.
+         */
 
-One more option is that maybe we can have KUnit test for this in the
-mballoc code but I'd need to read some more about the kunit
-infrastructure to see if it's possible/feasible.
+>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>
+> > +      */
+> > +     if (stream->dev->quirks & UVC_QUIRK_INVALID_DEVICE_SOF)
+> > +             dev_sof = host_sof;
+> > +
+> >       time = uvc_video_get_time();
+> >
+> >       /*
+> > diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+> > index 9a596c8d894a..07b2fdb80adf 100644
+> > --- a/drivers/media/usb/uvc/uvcvideo.h
+> > +++ b/drivers/media/usb/uvc/uvcvideo.h
+> > @@ -73,6 +73,7 @@
+> >  #define UVC_QUIRK_FORCE_Y8           0x00000800
+> >  #define UVC_QUIRK_FORCE_BPP          0x00001000
+> >  #define UVC_QUIRK_WAKE_AUTOSUSPEND   0x00002000
+> > +#define UVC_QUIRK_INVALID_DEVICE_SOF 0x00004000
+> >
+> >  /* Format flags */
+> >  #define UVC_FMT_FLAG_COMPRESSED              0x00000001
+> >
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
 
-Regards,
-ojaswin
-> 
-> > 
-> > [1/1] ext4: fallback to complex scan if aligned scan doesn't work
-> >       commit: a26b6faf7f1c9c1ba6edb3fea9d1390201f2ed50
-> > 
-> > Best regards,
-> > -- 
-> > Theodore Ts'o <tytso@mit.edu>
+
+
+-- 
+Ricardo Ribalda
