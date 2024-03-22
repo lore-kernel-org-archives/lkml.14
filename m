@@ -1,101 +1,293 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6983F8FB;
-	Fri, 22 Mar 2024 11:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00273EA88
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 11:36:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711107266; cv=none; b=VmdCczSbk64dOVn3k1ItCUoZcpomQhJ00i5cKMDUEE86uGjrZsZnuO4dvcYfdtDWdPmgUwQFzKLQyMFuIDxcNcNxYDLB+jfm8kGaxJZRLp4/pyjFzlFXc9mFhOD0GV9KJ6rVl+QZhhNtxG8zK6EXtb6t0DIR1diZUPSZWautPqs=
+	t=1711107386; cv=none; b=i/NyxCZa0H4EkFoFVAIfvZB5byJmSQ2rWFsV7EUyvKIwT0pTOLaVSLlecmsmsPdlhxAdeZsAc1fkLiifxz/roHWLP7hFZcWji5pl9AxFfAKYx4W5BciTkpYe8b4cLz+KsMsm9dH5Hdx/9zuLUiR1bxMtMLAGS3WA0KOY9NLJACQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711107266; c=relaxed/simple;
-	bh=OdYK8KD02d6UmxwIIam/r9XyRmX3DuDRyGM+jv+Hc2g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ipeum4vcE18EmvO3iFIoWGLcXoCQ45e2pUgL5GCr864cjEdegKVqR1nLvtqzdbs0x69QE457ycQ8DT1CxA0ozxRI06lE2bwIP6s5fPXwUF/WD4O0ZhMxb1h6YFyk7y1JD07ZjeQB9BcdyLYbsL+J5QqomjWx+4IJe+QTBMNx7Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fUDSHomL; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fUDSHomL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711107265; x=1742643265;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OdYK8KD02d6UmxwIIam/r9XyRmX3DuDRyGM+jv+Hc2g=;
-  b=fUDSHomLUzynr9rbREoLELXJpe0jIZb/wreoyu0RgdgmmjTuFm/OnzwS
-   qPerlpUlfCqIFbpXI1F/vRjvlSteuRlaWB/95Fl+swRhlM+CR85KjTt9G
-   gALMJTlHe0zheyOZ+5vHJ2Hav3iIZ7qyh0KhB/GEpmPFYXoibnuT8MNhK
-   Byl5HvZ7H583NR6IPDSOkms+IKhAyut/xuF00aNSPvy8R+W0hiYKBsIfJ
-   80xB9VaW4N2f1fJQlTBu0nNG6bvBXydUYMtD3yJBzeyA99ShlBPoK34B1
-   L6q5qeaBpAEjDh5N+ud+t1EiCpAMWZmxX0c49J6TOtE2uMROITtkemaai
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="6089699"
-X-IronPort-AV: E=Sophos;i="6.07,145,1708416000"; 
-   d="scan'208";a="6089699"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 04:34:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,145,1708416000"; 
-   d="scan'208";a="52313988"
-Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 22 Mar 2024 04:34:21 -0700
-Received: from kbuild by b21307750695 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rndAA-000KGx-1D;
-	Fri, 22 Mar 2024 11:34:18 +0000
-Date: Fri, 22 Mar 2024 19:33:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Varadarajan Narayanan <quic_varada@quicinc.com>, andersson@kernel.org,
-	konrad.dybcio@linaro.org, robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	mturquette@baylibre.com, sboyd@kernel.org, djakov@kernel.org,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Varadarajan Narayanan <quic_varada@quicinc.com>
-Subject: Re: [PATCH 2/2] clk: qcom: add IPQ9574 interconnect clocks support
-Message-ID: <202403221944.SAbczEhw-lkp@intel.com>
-References: <20240321043149.2739204-3-quic_varada@quicinc.com>
+	s=arc-20240116; t=1711107386; c=relaxed/simple;
+	bh=yPrcCze0EHpTuHszj5s6YaVUl58c+kw1BbdxRZvNuNA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=i8JTkfVhGxFkXpdnu/7r9UsMqrplyKutZ76TsuAf0wY4hSkr52WnHMB9eb054oLGdQBveXNWRtFa7vjvI6x9jHHs+AjNx5EsHC09O97GRtgAQsHe2pbszII5+8WMzAqT82uGKGtio3zLxzdf+9LBGKWdswmOjwRXjW3actvqPxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4V1Kwm52D6z1xsML;
+	Fri, 22 Mar 2024 19:34:16 +0800 (CST)
+Received: from kwepemd500012.china.huawei.com (unknown [7.221.188.25])
+	by mail.maildlp.com (Postfix) with ESMTPS id BD4F21A016C;
+	Fri, 22 Mar 2024 19:36:11 +0800 (CST)
+Received: from [10.67.111.176] (10.67.111.176) by
+ kwepemd500012.china.huawei.com (7.221.188.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Fri, 22 Mar 2024 19:36:11 +0800
+Message-ID: <6e0a0e04-1495-aec0-0ff3-d8df43ee9f16@huawei.com>
+Date: Fri, 22 Mar 2024 19:36:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240321043149.2739204-3-quic_varada@quicinc.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [RFC PATCH 1/5] ubifs: Implement POSIX Access Control Lists
+ (ACLs)
+To: Zhihao Cheng <chengzhihao1@huawei.com>, <richard@nod.at>
+CC: <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>
+References: <20240319161646.2153867-1-lizetao1@huawei.com>
+ <20240319161646.2153867-2-lizetao1@huawei.com>
+ <61bf91fb-f926-8fdf-0157-20f5ad2ae279@huawei.com>
+Content-Language: en-US
+From: Li Zetao <lizetao1@huawei.com>
+In-Reply-To: <61bf91fb-f926-8fdf-0157-20f5ad2ae279@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggpeml100008.china.huawei.com (7.185.36.48) To
+ kwepemd500012.china.huawei.com (7.221.188.25)
 
-Hi Varadarajan,
+Hi,
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on robh/for-next]
-[also build test ERROR on clk/clk-next linus/master v6.8 next-20240322]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Varadarajan-Narayanan/dt-bindings-interconnect-Add-Qualcomm-IPQ9574-support/20240321-123508
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20240321043149.2739204-3-quic_varada%40quicinc.com
-patch subject: [PATCH 2/2] clk: qcom: add IPQ9574 interconnect clocks support
-config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20240322/202403221944.SAbczEhw-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240322/202403221944.SAbczEhw-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403221944.SAbczEhw-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   alpha-linux-ld: drivers/clk/qcom/gcc-ipq9574.o: in function `gcc_ipq9574_probe':
->> (.text+0x1a0): undefined reference to `icc_clk_register'
->> alpha-linux-ld: (.text+0x1ac): undefined reference to `icc_clk_register'
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On 2024/3/21 10:55, Zhihao Cheng wrote:
+> 在 2024/3/20 0:16, Li Zetao 写道:
+>> Implement the ACLs feature for ubifs based on vfs Posix ACLs,
+>> details as follows:
+>>    * Initialize acl for newly created inode.
+>>    * Provides get/set interface to access ACLs.
+>>
+>> ACLs feature relies on xattr implementation which using specific key
+>> names "system.posix_acl_default" and "system.posix_acl_access". Now Only
+>> the v2 version of POSIX ACLs is supported, and ubifs does not need to
+>> customize the storage format, which can simplify the implementation.
+>>
+>> Signed-off-by: Li Zetao <lizetao1@huawei.com>
+>> ---
+>>   fs/ubifs/acl.c   | 140 +++++++++++++++++++++++++++++++++++++++++++++++
+>>   fs/ubifs/ubifs.h |  13 +++++
+>>   fs/ubifs/xattr.c |   1 -
+>>   3 files changed, 153 insertions(+), 1 deletion(-)
+>>   create mode 100644 fs/ubifs/acl.c
+>>
+>> diff --git a/fs/ubifs/acl.c b/fs/ubifs/acl.c
+>> new file mode 100644
+>> index 000000000000..253568baf097
+>> --- /dev/null
+>> +++ b/fs/ubifs/acl.c
+>> @@ -0,0 +1,140 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * This file is part of UBIFS.
+>> + *
+>> + * Copyright (C) 2024 Huawei Tech. Co., Ltd.
+>> + *
+>> + * Authors: Li Zetao <lizetao1@huawei.com>
+>> + */
+>> +
+>> +/* This file implements POSIX Access Control Lists (ACLs) */
+>> +
+>> +#include "ubifs.h"
+>> +
+>> +#include <linux/posix_acl_xattr.h>
+>> +
+>> +struct posix_acl *ubifs_get_inode_acl(struct inode *inode, int type, 
+>> bool rcu)
+>> +{
+>> +    char *xattr_value = NULL;
+>> +    const char *xattr_name;
+>> +    struct posix_acl *acl;
+>> +    ssize_t size;
+>> +
+>> +    if (rcu)
+>> +        return ERR_PTR(-ECHILD);
+>> +
+>> +    xattr_name = posix_acl_xattr_name(type);
+>> +    if (unlikely(!strcmp(xattr_name, "")))
+>> +        return ERR_PTR(-EINVAL);
+> The acl type has been guaranteed valid from vfs caller, there is no need 
+> to check converted name by 'strcmp', in theory, we can use it directly 
+> just like f2fs does. For this case, I suggest to unfold the 
+> posix_acl_xattr_name and convert it to corresponding name just like 
+> btrfs does.
+Ok, I will modify it in the next version.
+>> +
+>> +    size = ubifs_xattr_get(inode, xattr_name, NULL, 0);
+>> +    if (size > 0) {
+>> +        xattr_value = kzalloc(size, GFP_KERNEL);
+>> +        if (unlikely(!xattr_value))
+>> +            return ERR_PTR(-ENOMEM);
+>> +
+>> +        size = ubifs_xattr_get(inode, xattr_name, xattr_value, size);
+>> +    }
+>> +
+>> +    if (size > 0)
+>> +        acl = posix_acl_from_xattr(&init_user_ns, xattr_value, size);
+>> +    else if (size == -ENODATA || size == 0)
+>> +        acl = NULL;
+>> +    else
+>> +        acl = ERR_PTR(size);
+>> +
+>> +    kfree(xattr_value);
+>> +
+>> +    return acl;
+>> +}
+>> +
+>> +static int __ubifs_set_acl(struct inode *inode, int type, struct 
+>> posix_acl *acl, int flags)
+>> +{
+>> +    void *xattr_value = NULL;
+>> +    const char *xattr_name;
+>> +    size_t size = 0;
+>> +    int error;
+>> +
+> 
+>> +    xattr_name = posix_acl_xattr_name(type);
+>> +    if (unlikely(!strcmp(xattr_name, "")))
+>> +        return -EINVAL;
+>> +
+>> +    if (unlikely(!strcmp(xattr_name, XATTR_NAME_POSIX_ACL_DEFAULT) && 
+>> !S_ISDIR(inode->i_mode)))
+>> +        return acl ? -EACCES : 0;
+>> +
+> Similar to previous, replace above 6 lines, refer to __btrfs_set_acl but 
+> keep the error code same with __ext4_set_acl.
+Ok.
+>> +    if (acl) {
+>> +        size = posix_acl_xattr_size(acl->a_count);
+>> +        xattr_value = kmalloc(size, GFP_KERNEL);
+>> +        if (unlikely(!xattr_value))
+>> +            return -ENOMEM;
+>> +
+>> +        error = posix_acl_to_xattr(&init_user_ns, acl, xattr_value, 
+>> size);
+>> +        if (unlikely(error < 0))
+>> +            goto out;
+>> +    }
+>> +
+>> +    error = ubifs_xattr_set(inode, xattr_name, xattr_value, size, 
+>> flags, false);
+> There are 2 situations here, Updating acl and Removing acl. For the 
+> later case, funcion vfs_remove_acl will remove corresponding xattr, the 
+> xattr removing function in ubifs is ubifs_xattr_remove.
+Thanks. Indeed, ubifs_xattr_set() is is different from other file 
+systems, it will not delete xattr when value is NULL.
+>> +    if (likely(!error))
+> I prefer to remove the 'likely', UBIFS limits the max xattr count for 
+> each file(Goto create_xattr), non zero error returned is a common case 
+> on a small LEB flash.
+Ok.
+>> +        set_cached_acl(inode, type, acl);
+>> +out:
+>> +    kfree(xattr_value);
+>> +    return error;
+>> +}
+>> +
+>> +int ubifs_set_acl(struct mnt_idmap *idmap, struct dentry *dentry, 
+>> struct posix_acl *acl, int type)
+>> +{
+>> +    struct inode *inode = d_inode(dentry);
+>> +    umode_t old_mode = inode->i_mode;
+>> +    int error;
+>> +
+>> +    if (type == ACL_TYPE_ACCESS && acl) {
+>> +        error = posix_acl_update_mode(idmap, inode, &inode->i_mode, 
+>> &acl);
+>> +        if (unlikely(error))
+>> +            return error;
+>> +    }
+>> +
+>> +    error = __ubifs_set_acl(inode, type, acl, 0);
+>> +    if (unlikely(error))
+> Mentioned in __ubifs_set_acl, error could be returned, just remove 
+> 'unlikely'.
+Ok.
+>> +        inode->i_mode = old_mode;
+>> +
+>> +    return error;
+>> +
+>> +}
+>> +
+>> +/**
+>> + * ubifs_init_acl - initialize the ACLs for a new inode.
+>> + * @inode: newly created inode
+>> + * @dir: parent directory inode
+>> + *
+>> + * This function initialize ACLs, including inheriting the
+> initialize -> initializes
+Ok.
+>> + * default ACLs of parent directory or modifying the default
+>> + * ACLs according to the mode parameter in open() / creat()
+>> + * system calls.
+>> + */
+>> +int ubifs_init_acl(struct inode *inode, struct inode *dir)
+>> +{
+>> +    struct posix_acl *default_acl;
+>> +    struct posix_acl *acl;
+>> +    int error;
+>> +
+>> +    error = posix_acl_create(dir, &inode->i_mode, &default_acl, &acl);
+>> +    if (unlikely(error))
+>> +        return error;
+>> +
+>> +    if (default_acl) {
+>> +        error = __ubifs_set_acl(inode, ACL_TYPE_DEFAULT, default_acl, 
+>> XATTR_CREATE);
+>> +        posix_acl_release(default_acl);
+>> +    } else {
+>> +        inode->i_default_acl = NULL;
+>> +    }
+>> +
+>> +    if (acl) {
+>> +        if (likely(!error))
+> Remove 'likely'.
+Ok.
+>> +            error = __ubifs_set_acl(inode, ACL_TYPE_ACCESS, acl, 
+>> XATTR_CREATE);
+>> +        posix_acl_release(acl);
+>> +    } else {
+>> +        inode->i_acl = NULL;
+>> +    }
+>> +
+>> +    return error;
+>> +}
+>> diff --git a/fs/ubifs/ubifs.h b/fs/ubifs/ubifs.h
+>> index 3916dc4f30ca..b0d3b076290d 100644
+>> --- a/fs/ubifs/ubifs.h
+>> +++ b/fs/ubifs/ubifs.h
+>> @@ -2069,6 +2069,19 @@ static inline int ubifs_init_security(struct 
+>> inode *dentry,
+>>   }
+>>   #endif
+>> +#ifdef CONFIG_UBIFS_FS_POSIX_ACL
+>> +struct posix_acl *ubifs_get_inode_acl(struct inode *inode, int type, 
+>> bool rcu);
+>> +int ubifs_set_acl(struct mnt_idmap *idmap, struct dentry *dentry, 
+>> struct posix_acl *acl, int type);
+>> +int ubifs_init_acl(struct inode *inode, struct inode *dir);
+>> +
+>> +#else /* CONFIG_UBIFS_FS_POSIX_ACL */
+>> +#define ubifs_get_inode_acl NULL
+>> +#define ubifs_set_acl NULL
+>> +static inline int ubifs_init_acl(struct inode *inode, struct inode *dir)
+>> +{
+>> +    return 0;
+>> +}
+>> +#endif /* CONFIG_UBIFS_FS_POSIX_ACL */
+>>   /* super.c */
+>>   struct inode *ubifs_iget(struct super_block *sb, unsigned long inum);
+>> diff --git a/fs/ubifs/xattr.c b/fs/ubifs/xattr.c
+>> index 0847db521984..eb1c1f5d10df 100644
+>> --- a/fs/ubifs/xattr.c
+>> +++ b/fs/ubifs/xattr.c
+>> @@ -40,7 +40,6 @@
+>>    * in the VFS inode cache. The xentries are cached in the LNC cache 
+>> (see
+>>    * tnc.c).
+>>    *
+>> - * ACL support is not implemented.
+>>    */
+>>   #include "ubifs.h"
+>>
+> 
