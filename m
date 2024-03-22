@@ -1,70 +1,92 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655F51119E;
-	Fri, 22 Mar 2024 07:25:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626B1101E3
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 07:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711092336; cv=none; b=Om336MGy7VLZtLKarbwwoVRV/9qi6i3Z7i6WJi6DVaaBZWZ6E2mzhTC1bX4WwFr1UZCpYDFApIiOKSbhyLYf7fvDReObPICfmhIslusZNRQkKEt3oq0EHH9lzQxA92i5z5hqAcBSNovWCHndGbyXYzfD8TaRu6TeMUCnMRaFL14=
+	t=1711092418; cv=none; b=foc+HY662N4zGmq4LYcuo+l8fFnZeD5luEUtph5nzXV44oJmw3He4tPHsmUJYAhSoIiMeDw3WQg9E+51boJKv4U/J2ctMkKAF0syIFTxMoETdGW6QEXAxIn+UuB+E5eSWAKAMrAh/ksxLHBR6IsSikIkBnQJWCArzSNU7hLMGNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711092336; c=relaxed/simple;
-	bh=jQu3KitGULF0GTxrp71MyfRYsV4/79VPg4mVWauE5Nc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=msTOkXaAoBaXGl565OFdJUBQJRLdur1BAqXvErdRcq+LwTIntBfFJMC2tszxn2LACPGj623pamtStTdQ1bxfatZnqwbp9iUKwt5MY8FD4WFDfDQ5026jpfU8BYAID8v9pWqGAEGCo6QihHhY0XKegZ03nWYdazG1rw4OmRpK3Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4V1DLj6hwCz2BhNQ;
-	Fri, 22 Mar 2024 15:22:53 +0800 (CST)
-Received: from dggpemd500003.china.huawei.com (unknown [7.185.36.29])
-	by mail.maildlp.com (Postfix) with ESMTPS id 029171A0172;
-	Fri, 22 Mar 2024 15:25:29 +0800 (CST)
-Received: from localhost.localdomain (10.175.101.6) by
- dggpemd500003.china.huawei.com (7.185.36.29) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Fri, 22 Mar 2024 15:25:28 +0800
-From: gaoxingwang <gaoxingwang1@huawei.com>
-To: <mkubecek@suse.cz>, <idosch@nvidia.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yanan@huawei.com>, <liaichun@huawei.com>
-Subject: [PATCH] netlink: fix typo
-Date: Fri, 22 Mar 2024 15:24:56 +0800
-Message-ID: <20240322072456.1251387-1-gaoxingwang1@huawei.com>
-X-Mailer: git-send-email 2.27.0
+	s=arc-20240116; t=1711092418; c=relaxed/simple;
+	bh=f1MZe03oX4WFNKsFlfCt/ESOoXp43Si1Hmggvi3r3Ms=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WTb7jDGVPUXU6n1OPqyHOJ4EzUajbvWaZqcqgtsqzvJec03PV80/nkjQE6URIuiMWipkRpqnObM8d3X0KpIYK4ztWn/rrMAHYRvKAHmV9ePk4AszDfrICZIP/Umimm4bBS/8eqtIgP/c8ZSeX3ko8PV03nkZ8UKf5u871socCks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=L1eE+UHY; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="L1eE+UHY"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4FEE4240006;
+	Fri, 22 Mar 2024 07:26:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1711092408;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lQmTusbOmMSSaBgpQThp7ZrEL7/j9/5tVlOksabCb8Q=;
+	b=L1eE+UHYcFgfKp4UM/EZy1mC62JIry3PzwRfcrdzi8oR5i6fprdcPe/L0xltrb6+jzRUL7
+	j1tal/LT/rXn+AOAsubzJ5VBexbovqrD3vwqXeDReAPO0r4Vd1pYiUTHxybYduQeuqMaf0
+	Ep34Tx8uCwYA4t+InzIZCYGP7S0w/qxLfdhlEpUFbryEajFnCIdm/nYZT1L+ohZjHwjVuj
+	eEzmriTN3eIV7DbfgVDMwGa1OTUzYSk32MqvZEf6idF4F4WftzSEoyROjBx6qqpm6b0ibv
+	quJXJk0WGynqzQvNjC8bHKZvTX692+XbjJaC1A7+I9PLYfkqZBnIM9KYM69vaw==
+Date: Fri, 22 Mar 2024 08:26:45 +0100
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Mikhail Kobuk <m.kobuk@ispras.ru>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
+ <kishon@kernel.org>, Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, Pali
+ =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>, linux-phy@lists.infradead.org,
+ linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org, Alexey
+ Khoroshilov <khoroshilov@ispras.ru>
+Subject: Re: [PATCH 2/2] phy: marvell: a3700-comphy: Fix hardcoded array
+ size
+Message-ID: <20240322082645.6c1d43b5@xps-13>
+In-Reply-To: <20240321164734.49273-2-m.kobuk@ispras.ru>
+References: <20240321164734.49273-1-m.kobuk@ispras.ru>
+	<20240321164734.49273-2-m.kobuk@ispras.ru>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemd500003.china.huawei.com (7.185.36.29)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-Add missing colon in coalesce_reply_cb
+Hi Mikhail,
 
-Fixes: ec573f209d (netlink: settings: add netlink support for coalesce tx aggr params)
-Signed-off-by: gaoxingwang <gaoxingwang1@huawei.com>
+m.kobuk@ispras.ru wrote on Thu, 21 Mar 2024 19:47:31 +0300:
 
-Signed-off-by: gaoxingwang <gaoxingwang1@huawei.com>
----
- netlink/coalesce.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Replace hardcoded 'gbe_phy_init' array size by explicit one.
+>=20
+> Fixes: 934337080c6c ("phy: marvell: phy-mvebu-a3700-comphy: Add native ke=
+rnel implementation")
+> Signed-off-by: Mikhail Kobuk <m.kobuk@ispras.ru>
+> ---
+>  drivers/phy/marvell/phy-mvebu-a3700-comphy.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/phy/marvell/phy-mvebu-a3700-comphy.c b/drivers/phy/m=
+arvell/phy-mvebu-a3700-comphy.c
+> index 41162d7228c9..15bf10710de0 100644
+> --- a/drivers/phy/marvell/phy-mvebu-a3700-comphy.c
+> +++ b/drivers/phy/marvell/phy-mvebu-a3700-comphy.c
+> @@ -603,7 +603,7 @@ static void comphy_gbe_phy_init(struct mvebu_a3700_co=
+mphy_lane *lane,
+>  	u16 val;
+> =20
+>  	fix_idx =3D 0;
+> -	for (addr =3D 0; addr < 512; addr++) {
+> +	for (addr =3D 0; addr < ARRAY_SIZE(gbe_phy_init); addr++) {
+>  		/*
+>  		 * All PHY register values are defined in full for 3.125Gbps
+>  		 * SERDES speed. The values required for 1.25 Gbps are almost
 
-diff --git a/netlink/coalesce.c b/netlink/coalesce.c
-index bc34d3d..bb93f9b 100644
---- a/netlink/coalesce.c
-+++ b/netlink/coalesce.c
-@@ -93,7 +93,7 @@ int coalesce_reply_cb(const struct nlmsghdr *nlhdr, void *data)
- 		 tb[ETHTOOL_A_COALESCE_TX_AGGR_MAX_BYTES]);
- 	show_u32("tx-aggr-max-frames", "tx-aggr-max-frames:\t",
- 		 tb[ETHTOOL_A_COALESCE_TX_AGGR_MAX_FRAMES]);
--	show_u32("tx-aggr-time-usecs", "tx-aggr-time-usecs\t",
-+	show_u32("tx-aggr-time-usecs", "tx-aggr-time-usecs:\t",
- 		 tb[ETHTOOL_A_COALESCE_TX_AGGR_TIME_USECS]);
- 	show_cr();
- 
--- 
-2.27.0
+512 is also used where gbe_phy_init is defined, so maybe it would be
+worthe defining this size once and then use the definition in both
+places.
 
+Thanks, Miqu=C3=A8l
