@@ -1,153 +1,102 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298A33F8F0;
-	Fri, 22 Mar 2024 11:14:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9440E20DC5;
+	Fri, 22 Mar 2024 11:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711106058; cv=none; b=bqJ101UVq4MnYZlzJNRH6tLM7k6cLxnNtLsYdhQaxDkXIEaFqZVM7FH3QyH6lHS40EyyQbe2GZ11oYvAlJAPqOz0S6Q91JTwNnN3uejStvSQJE2OKPy8uwiFlbrnSG8rQ5iXNxvSLX5sru14proBuy2PhnKmwahhVkglzRnrK/Y=
+	t=1711106323; cv=none; b=CRJg2a5kvpu0o/+0kai3/pIcNHHkYshNDQqbLZMzhQ6NJXbLVH7/fvjGhlbwn3YF467F+BND8gFmS/SLfuBokQCOUFIO8yPpWA3AVzgljf2Y04CQ1vJdxiJnzDI8yZlXpvWR9wLjoeBCJtLbWjfdluVrXqvfkN3mziE65YeLaNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711106058; c=relaxed/simple;
-	bh=qsj5SJJLL3hn/E7WHUBIXUNo9Zm2xRwmM/UmQy0kVxc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uOoe6c5Vsl5VGR/cfBsCR0EU32QhZey6PewS4QBOEkyFK+DwW0ZP0GA5FaT4bYrNgotCkV2N7AIWD3n8FaK5vtbyN7HqWNOvw3yy9SzAeSXbH91mj/YyznV1JkTpGnYxczYNkpFrrdq6BzD4/bWcUren/gDEBlHZDahGOVvw/p0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=TumINdaO; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1711106323; c=relaxed/simple;
+	bh=MFvINfn5vumvepkoPTdM2FbWdWBkIsMV0xzgDvstI14=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jC7sqRKNGnJM9HpHRVAG/0ue2D6XdAsQoD1H1haiTzdmOcuqb36tiI5/+yEqS/I2TwhBe6T45GH//lWnZoWd9+Ist/CaTW3JvYMjfzns3GpUwBS918qN+9VsOfBlUBj6jhzWJKRjEFnXtbgCIbOKZPhzXPfaqBzVt217yTdFbxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DjHVqQAE; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TumINdaO"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42MBDnxp028164;
-	Fri, 22 Mar 2024 06:13:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1711106029;
-	bh=qsj5SJJLL3hn/E7WHUBIXUNo9Zm2xRwmM/UmQy0kVxc=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=TumINdaOvBTjZebAaKy0IAZ63sODcUYxwldp2AghLFJcC8YfqCC5oZglvgWpIZXau
-	 XiArng8WmN+6fv1G1eWBEjpxatclL+iapDGPYolSaP3r9m5Ae4VV/GpIn9IdzE1IpQ
-	 MQWxYGHYNt6byGHpa07ZFvzE/vsw+xfbOMI3cDjo=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42MBDn0d112805
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 22 Mar 2024 06:13:49 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 22
- Mar 2024 06:13:49 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 22 Mar 2024 06:13:49 -0500
-Received: from localhost (jluthra.dhcp.ti.com [172.24.227.217])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42MBDmAv056703;
-	Fri, 22 Mar 2024 06:13:49 -0500
-Date: Fri, 22 Mar 2024 16:43:48 +0530
-From: Jai Luthra <j-luthra@ti.com>
-To: Changhuang Liang <changhuang.liang@starfivetech.com>
-CC: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans
- Verkuil <hverkuil-cisco@xs4all.nl>,
-        Vaishnav Achath <vaishnav.a@ti.com>,
-        Maxime Ripard <mripard@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        "linux-media@vger.kernel.org"
-	<linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Aradhya
- Bhatia <a-bhatia1@ti.com>, Devarsh Thakkar <devarsht@ti.com>,
-        Jack Zhu
-	<jack.zhu@starfivetech.com>,
-        Julien Massot <julien.massot@collabora.com>,
-        Jayshri Pawar <jpawar@cadence.com>
-Subject: Re: =?utf-8?B?5Zue5aSNOiBbUEFUQw==?= =?utf-8?Q?H?= RFC 03/21] media:
- cadence: csi2rx: Support runtime PM
-Message-ID: <eymalpqyxgp3qa35fzvqahny4sg7xibzuvgoks2wp5wujrlltf@76i6d764npmt>
-References: <20240222-multistream-v1-0-1837ed916eeb@ti.com>
- <20240222-multistream-v1-3-1837ed916eeb@ti.com>
- <SHXPR01MB0671C565B12032569CFACD6EF231A@SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DjHVqQAE"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-517ab9a4a13so1381320a12.1;
+        Fri, 22 Mar 2024 04:18:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711106322; x=1711711122; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FzMeF+sVtP3tFHQX9ucDEOR6oj0iwNtMEiHNl4LGR5E=;
+        b=DjHVqQAERAtIGl8LvNPrP2ebuvgtcBtPrrs2LrAItCxueD5nPBQ/rIco8Yx5/4rL0e
+         f4Das8RiYUh+F45l+P5QTadotEvp6NwKKWFpT4RtzDaNPvUwZB3RupySUVSLo4Cj+U6i
+         Lwtk7K2uh3Lf31JlhaBac0ls5ZVl4kGPUEcxVE22xDu8EinC7opXclZHizuUrV2vOARJ
+         W+eeGgrb5k32Eu68aHpMXR392L5+JozL9MoHrIlUJmSwlzKMNVA3e9O9w6GJ60/xMDRH
+         yvXKbjpBZYlU8LqLLSEvSDGAzWPWAYH5TZ8zp7/o8bL13Frolq19cz+tJP2Iv6kFauSE
+         mDDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711106322; x=1711711122;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FzMeF+sVtP3tFHQX9ucDEOR6oj0iwNtMEiHNl4LGR5E=;
+        b=rIchO2XurKKac/Sa+zT5lQP/Xu+joY39SAaKxmC72KhsR8Z9c9a0Nyi9mJDAQYLG6M
+         zbyxQEI4VyXC6Rb/HNdZolbVsk+Ub6x6NCorwt+WWYXH2LmI2gUboliCPOmH+14fPijQ
+         bMx/Na51zYc4vA7RehBTVjITNPP7h+bbVUb7RqvIqAFnf1X70LUlmHWbm0wDrkKHP4p5
+         eR4kYi68zsS5IAqxkFwDgcY7kCpSkAdZHfTjZzlwle5OizS9xeMspdi6M7lNRMTDESsC
+         n7+kIzkfawkwSa992fJM/uqaFK8Xxlx4vG2BVabr/OI/i1zvRXPTb9XN4d7KONtjBWyD
+         dpBw==
+X-Forwarded-Encrypted: i=1; AJvYcCXjj05Z3zy1QzMowbNrmXdYOcZ3B9EXOUFyLJfFypTy/4Gvh73yxYksGR78xeIeVRXTh6l50AbAlcQC+BcMvfDFmKFoIYCDe+7YTT2LkDM/q8uIyR52rXwEWZn91OX1N79LrBNAv9vsnoyRFf4iKeCqEpBDloDl+1m0eXxe37j52g==
+X-Gm-Message-State: AOJu0YzbYd95dgQ/dqjvJOlfkEn0ibXC5aMlLj3mLTt0v5bjLHUe49UA
+	rw1xpYLxzxNavKSKNU2IVE95KwEa8Cn6rt5NAfttqA9QNg5/G1LT
+X-Google-Smtp-Source: AGHT+IGSmSngE9Cy/E/c/MFNCQX+hYIsufmB4ZwEAJR25mnh8Z66mbkdBiB9zPT0wfXskLrfQuBNJg==
+X-Received: by 2002:a17:90b:688:b0:29b:c4b7:3300 with SMTP id m8-20020a17090b068800b0029bc4b73300mr1955206pjz.44.1711106321743;
+        Fri, 22 Mar 2024 04:18:41 -0700 (PDT)
+Received: from rigel (110-175-159-48.tpgi.com.au. [110.175.159.48])
+        by smtp.gmail.com with ESMTPSA id nb8-20020a17090b35c800b002a039de455bsm1244149pjb.1.2024.03.22.04.18.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Mar 2024 04:18:41 -0700 (PDT)
+Date: Fri, 22 Mar 2024 19:18:35 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>,
+	stable@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2] gpio: cdev: sanitize the label before requesting the
+ interrupt
+Message-ID: <20240322111835.GA24228@rigel>
+References: <20240322090209.13384-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="itm27ryyihoirz6k"
-Content-Disposition: inline
-In-Reply-To: <SHXPR01MB0671C565B12032569CFACD6EF231A@SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-
---itm27ryyihoirz6k
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240322090209.13384-1-brgl@bgdev.pl>
 
-Hi Changhuang,
+On Fri, Mar 22, 2024 at 10:02:08AM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> @@ -2198,12 +2216,18 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+>  	if (ret)
+>  		goto out_free_le;
+>
+> +	label = make_irq_label(le->label);
+> +	if (!label) {
+> +		ret = -ENOMEM;
+> +		goto out_free_le;
+> +	}
+> +
+>  	/* Request a thread to read the events */
+>  	ret = request_threaded_irq(irq,
+>  				   lineevent_irq_handler,
+>  				   lineevent_irq_thread,
+>  				   irqflags,
+> -				   le->label,
+> +				   label,
+>  				   le);
+>  	if (ret)
+>  		goto out_free_le;
 
-On Mar 22, 2024 at 09:26:22 +0000, Changhuang Liang wrote:
-> Hi, Jai
->=20
-> > [PATCH RFC 03/21] media: cadence: csi2rx: Support runtime PM
-> >=20
-> > From: Jayshri Pawar <jpawar@cadence.com>
-> >=20
-> > Use runtime power management hooks to save power when CSI-RX is not in
-> > use. Also stop/start any in-progress streams, which might happen during=
- a
-> > system suspend/resume cycle.
-> >=20
-> > Signed-off-by: Jayshri Pawar <jpawar@cadence.com>
-> > Co-developed-by: Jai Luthra <j-luthra@ti.com>
-> > Signed-off-by: Jai Luthra <j-luthra@ti.com>
->=20
-> I want to send a series containing this patch, So I want to help you send=
- this patch,
-> What about your opinion?
+Leaks label if the request_threaded_irq() fails.
 
-Not sure I understood exactly - but yes please feel free to post this=20
-patch as part of your series.
-
-That will be appreciated in fact, as this change is not related to the=20
-multi-stream support anyway.
-
->=20
-> Regards,
-> Changhuang
-
---=20
-Thanks,
-Jai
-
-GPG Fingerprint: 4DE0 D818 E5D5 75E8 D45A AFC5 43DE 91F9 249A 7145
-
---itm27ryyihoirz6k
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEETeDYGOXVdejUWq/FQ96R+SSacUUFAmX9Z+kACgkQQ96R+SSa
-cUVrqQ/+OPUiGMHr7g5ovZS6euRkhPyWXNaM0BGqFtLD5S75tiX7y7Pet5GQ6aZg
-2m9+FcFC86zvIcF99C44op7tWRTuDtNcf3YGXnxFV7/izC8Z8YGjLEhdlybPj89u
-MHZuB6W2GVpWqLof0W+cBu/vXsifQmUAKtQXPe4FglJVaN25J+Q85jdzwy0sDIVI
-beCoWF5Dwjk+g3R4aodvNZCfQZ8g37nbRh5/72KAKDv8kcG590lRDCuHkBYVpowW
-XsJ5k1cci24XNsF5lzB83ScmsL1NVm8zj5XSwBbdAJjzIU0qVJe0U+w3kEMIhVFh
-45EYyAggEoaG2QotO91hS1uQ5PfbDGyYZp0OLvjzt8WIzBFbZLRUlIgE0sasWH9l
-EhEhjmEtSgIHpukYPt7BuEGU2VvxHLI5Wk+UYLJ3sQxxJk1sh0H70WTkYfcsB1Vr
-/SXsCt3p/FqkLobeQ5WXTy56rfqMTx25fk6m/FePK56ya97UHHp825IGCHgY/akh
-cyvuix3LOz9EsNF5FL7AKytbuo+wdmYZ1fP/jP2jRf4yVhWKoRa22zd0rLPckL+j
-Z537fVpVkcWTx/f4OFPxxXNPG2WP+qfv5J6ZZpI1wWSSa6n0Js/T7nXTERflHa/F
-nyHcxI8P43u82loUxoK6Jt955G1Ee/VTZdMOpKdUj7aAX1+CeQI=
-=dxEU
------END PGP SIGNATURE-----
-
---itm27ryyihoirz6k--
+Cheers,
+Kent.
