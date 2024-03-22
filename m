@@ -1,604 +1,743 @@
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D11112E51
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 07:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A16101C1;
+	Fri, 22 Mar 2024 07:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711093320; cv=none; b=AfLrTRcDM0Ny0XigxZvfWeJYKk+88YNTOAmO3ePw2PBDDMxG28NdI9qykXbB3Ju7bKkJkwRqLJdaHEqdpZNNxqE9RvCfEUU6kxXoAlOh6YqrA1scCjg10MN9F+G0k0IuJopCenB9XAuhyGGa2RGsxDL/nXEBQs0P3be2RU4JCsk=
+	t=1711093377; cv=none; b=tdLZ4qolvoY53jrdC3m0XmWb0xiQpH+1/Nj7701tWDYKpaYgp+y1/j5jGR1beoE2b3meMVA+ZO4zW1G2ahwXC3CxecjKOSkDhlROuCEQHGHJyHBINa8qA+958B8a24GuqFaw+4uVse+SW2oKGrsHPdFuWtvwQVeh4AexGeItK+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711093320; c=relaxed/simple;
-	bh=24dQKSS219MtapPvG2qUnTtLLIVUaPzzYSoKQfVTXig=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VIYJ8cSpictpmmFkSEgzNJlb37TqzQNg8IBKzAffpC9Jg1g26vufc59szkWPgJL52cB+6MncsbNCJaS1ePi53jLvvzi7aeZEkzU+OjULYtR567Id+IH8Ra3MVHAbTQ+CmA+uthaPHd3lEyIf9fuCf4Ik/TnH4VkzW3K0FSunJsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GUryIe8y; arc=none smtp.client-ip=209.85.217.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711093377; c=relaxed/simple;
+	bh=UXIlum4+ti+OT9Dbru66cUqyMha5D6BabFrIicUiHv0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LA/ehd43+ypBz+tSAnHbWXOK+cHuJm2uTUgsatS2rKS7oMDjUcxrs2cdtHR450aCpZv7XZysK33QUhc1oH7k0UVMQ2NZJtLG6sKZxGVjLsk7UWJYjGHql4bBF9K17UzFM/Iaoj8X8WXI0FxBMwn8pP8CwkpJHPIR/wv3/XA8Jhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=b7v4sYJ3; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GUryIe8y"
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-476d13e405fso197969137.0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 00:41:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711093317; x=1711698117; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DJxf/0IRyXWCJtbi5qbbmLaPh0sQtHW5xcaUos/BySI=;
-        b=GUryIe8yAs9+3lpkyV48QKi96fdHspWGymPyheROUhpVUsMpeeb+k6PhSEXdb51xAH
-         vpgo/goL+7tT8rrEQRSqLqY/Vqfq6Lqi6Dz4CR8+JcCqofMrbkGUd+69qm0r+hkGT6XZ
-         gaMiHpcmySOTCR6ZysX5kkF8vXuWN0MS/eHV+VgVQkGtxvTKggx6ezBNDFnxiF3c8SER
-         JAPwL9GeipU9sQkABSWsPxkrqTtUAtgk1qSmGQosUXRbbRTCdW6mmiCCmxQZbDIcp1rA
-         aPf3mt398mjLT3NbgBlvBrmkhTXqGKBRF1ZSYFIeDw/n/y9CzZ3vsbpY2w/kN6lzpc6d
-         d3MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711093317; x=1711698117;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DJxf/0IRyXWCJtbi5qbbmLaPh0sQtHW5xcaUos/BySI=;
-        b=FIDKmnFz7fqeIInD//70I4Hj7oKeqmgnPK+tZGTSrYBNVSboJZhhaxbhOx+tAgO7kl
-         BAuZuRQZGyR8ghjaZTk2pZbEAxwXW9lZNY7CUs5g3uxik13WzHWnjrdd9F3XjWQYEkH8
-         a7GZb6ybAaHZ7RfviaiPgtRMrx98XB+vLl4YGVjECr5m61OLn7OnW1XEShh23wYZ3Jrd
-         lkhQmO2Rj8Mb6y8xcUTuYSW6OiuGOH2X1B1R5m38GBtlYmtVXKaBPqgy3GgZf69ul2pb
-         AaQ1Dtzmu/SUfpBvAa8Vp13gRlj9Dmsd8OeDEJwR75RhiuICftLdKm6QX67pkk+DHTaC
-         q5pQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX1OLF2mGlYk3VutkM6fIMe+3gPNHDCF0CjTpE6sOvUpovSv0QYYRXsiPM3A+vsm039NfbVN3QyNdJiNIpkXFyE8ECrne/47/OWOFWE
-X-Gm-Message-State: AOJu0Yw2bRKy+xf2lUVQaXRc9RCtsbBLWnVYkOxKVwBZjRbj9q/LkX2d
-	I4uuQSJYGjIEQbxw8lhN2RNbD8U71mgI9rA0v3Cauq9wwjDKdGXphaweTBPB47wB93tCXqTJKFl
-	BZapQpE7VIpOOxPR8WxjFeKp0eMo=
-X-Google-Smtp-Source: AGHT+IHwtFuKS0M+9JXdh2SzS2uymxjTB97BrZmWBdNX6ou/0JIxYzMuqmrJH9bf94Toso8Gtr+Y9pcbSVTguJ9wYfs=
-X-Received: by 2002:a05:6102:4c18:b0:475:f444:748c with SMTP id
- jy24-20020a0561024c1800b00475f444748cmr1842524vsb.27.1711093316943; Fri, 22
- Mar 2024 00:41:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="b7v4sYJ3"
+Received: from wsk (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: lukma@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 4E0B78785E;
+	Fri, 22 Mar 2024 08:42:51 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1711093372;
+	bh=Zh5sCacH8UvU7m21D/paARqdx0koktfMe0b7t92m+IU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=b7v4sYJ3rGDO5U7hMc1eX0bdLu+gHaVdsTr2btpej2qy/kGglnyFsfYZ7iBBLW4ii
+	 vxVBX63MKmzuTdrOtefFWmNFTkG7zF0JxsDJPZ/qUSHtoIt4XGhOz89R+Z1U6Nv82x
+	 plH+EOiyPos86D63LtzA7rLoI/4WRe2uvND3WCZ/hA5002IICYUdgDu1uEAi6LI7eK
+	 ONpZkhpZPfOk7gtC35SRrqVDMFKPw8uAAJtlUJMZfMdz0Iw44fCU3SFZL64710sqbW
+	 3mCOMpCSWTN16RcWu9xKlBcmaG+MGtUlJMQyjKvBxLPvG93oAW7fvtNmu2CRuibFKQ
+	 ylqmYJnH5yJXA==
+Date: Fri, 22 Mar 2024 08:42:44 +0100
+From: Lukasz Majewski <lukma@denx.de>
+To: netdev@vger.kernel.org
+Cc: Andrew Lunn <andrew@lunn.ch>, Eric Dumazet <edumazet@google.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean
+ <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>, Jakub
+ Kicinski <kuba@kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ Tristram.Ha@microchip.com, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Paolo Abeni <pabeni@redhat.com>, Ravi Gunasekaran
+ <r-gunasekaran@ti.com>, Simon Horman <horms@kernel.org>, Wojciech Drewek
+ <wojciech.drewek@intel.com>, Nikita Zhandarovich
+ <n.zhandarovich@fintech.ru>, Murali Karicheri <m-karicheri2@ti.com>, Dan
+ Carpenter <dan.carpenter@linaro.org>, Ziyang Xuan
+ <william.xuanziyang@huawei.com>, Kristian Overskeid <koverskeid@gmail.com>,
+ Matthieu Baerts <matttbe@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] net: hsr: Provide RedBox support
+Message-ID: <20240322084244.7d0d17e8@wsk>
+In-Reply-To: <20240311115644.823829-1-lukma@denx.de>
+References: <20240311115644.823829-1-lukma@denx.de>
+Organization: denx.de
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240304081348.197341-1-21cnbao@gmail.com> <20240304081348.197341-2-21cnbao@gmail.com>
- <01c61b90-df90-4819-978b-414bb717ef64@arm.com> <CAGsJ_4z5xDtBj-nyvPXfgv+ZVmzPQzvptyBrf=kB49Q3=Dmq-Q@mail.gmail.com>
- <e77c18df-2796-4fd1-b589-57f0569587e8@arm.com> <CAGsJ_4zT5YCkSLthCGDe5t3B4dR2syJa_MA3ytZ3YmSCERn_TQ@mail.gmail.com>
-In-Reply-To: <CAGsJ_4zT5YCkSLthCGDe5t3B4dR2syJa_MA3ytZ3YmSCERn_TQ@mail.gmail.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Fri, 22 Mar 2024 20:41:45 +1300
-Message-ID: <CAGsJ_4wRNRbdXGV-2LUNNP2Dgi6JZ4fZbC2VGPS4ui8HdvuxnQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 1/5] arm64: mm: swap: support THP_SWAP on hardware
- with MTE
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, chengming.zhou@linux.dev, 
-	chrisl@kernel.org, david@redhat.com, hannes@cmpxchg.org, kasong@tencent.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	mhocko@suse.com, nphamcs@gmail.com, shy828301@gmail.com, steven.price@arm.com, 
-	surenb@google.com, wangkefeng.wang@huawei.com, willy@infradead.org, 
-	xiang@kernel.org, ying.huang@intel.com, yosryahmed@google.com, 
-	yuzhao@google.com, Barry Song <v-songbaohua@oppo.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Anshuman Khandual <anshuman.khandual@arm.com>, Peter Collingbourne <pcc@google.com>, Peter Xu <peterx@redhat.com>, 
-	Lorenzo Stoakes <lstoakes@gmail.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>, Hugh Dickins <hughd@google.com>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/nQH3aKb_JKVpGVq81pA/YRJ";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
+
+--Sig_/nQH3aKb_JKVpGVq81pA/YRJ
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 22, 2024 at 3:51=E2=80=AFPM Barry Song <21cnbao@gmail.com> wrot=
-e:
->
-> On Thu, Mar 21, 2024 at 11:31=E2=80=AFPM Ryan Roberts <ryan.roberts@arm.c=
-om> wrote:
-> >
-> > On 21/03/2024 08:42, Barry Song wrote:
-> > > Hi Ryan,
-> > > Sorry for the late reply.
-> >
-> > No problem!
-> >
-> > >
-> > > On Tue, Mar 12, 2024 at 5:56=E2=80=AFAM Ryan Roberts <ryan.roberts@ar=
-m.com> wrote:
-> > >>
-> > >> On 04/03/2024 08:13, Barry Song wrote:
-> > >>> From: Barry Song <v-songbaohua@oppo.com>
-> > >>>
-> > >>> Commit d0637c505f8a1 ("arm64: enable THP_SWAP for arm64") brings up
-> > >>> THP_SWAP on ARM64, but it doesn't enable THP_SWP on hardware with
-> > >>> MTE as the MTE code works with the assumption tags save/restore is
-> > >>> always handling a folio with only one page.
-> > >>>
-> > >>> The limitation should be removed as more and more ARM64 SoCs have
-> > >>> this feature. Co-existence of MTE and THP_SWAP becomes more and
-> > >>> more important.
-> > >>>
-> > >>> This patch makes MTE tags saving support large folios, then we don'=
-t
-> > >>> need to split large folios into base pages for swapping out on ARM6=
-4
-> > >>> SoCs with MTE any more.
-> > >>>
-> > >>> arch_prepare_to_swap() should take folio rather than page as parame=
-ter
-> > >>> because we support THP swap-out as a whole. It saves tags for all
-> > >>> pages in a large folio.
-> > >>>
-> > >>> As now we are restoring tags based-on folio, in arch_swap_restore()=
-,
-> > >>> we may increase some extra loops and early-exitings while refaultin=
-g
-> > >>> a large folio which is still in swapcache in do_swap_page(). In cas=
-e
-> > >>> a large folio has nr pages, do_swap_page() will only set the PTE of
-> > >>> the particular page which is causing the page fault.
-> > >>> Thus do_swap_page() runs nr times, and each time, arch_swap_restore=
-()
-> > >>> will loop nr times for those subpages in the folio. So right now th=
-e
-> > >>> algorithmic complexity becomes O(nr^2).
-> > >>>
-> > >>> Once we support mapping large folios in do_swap_page(), extra loops
-> > >>> and early-exitings will decrease while not being completely removed
-> > >>> as a large folio might get partially tagged in corner cases such as=
-,
-> > >>> 1. a large folio in swapcache can be partially unmapped, thus, MTE
-> > >>> tags for the unmapped pages will be invalidated;
-> > >>> 2. users might use mprotect() to set MTEs on a part of a large foli=
-o.
-> > >>>
-> > >>> arch_thp_swp_supported() is dropped since ARM64 MTE was the only on=
-e
-> > >>> who needed it.
-> >
-> > I think we should decouple this patch from your swap-in series. I suspe=
-ct this
-> > one could be ready and go in sooner than the swap-in series based on th=
-e current
-> > discussions :)
-> >
-> > >>>
-> > >>> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > >>> Cc: Will Deacon <will@kernel.org>
-> > >>> Cc: Ryan Roberts <ryan.roberts@arm.com>
-> > >>> Cc: Mark Rutland <mark.rutland@arm.com>
-> > >>> Cc: David Hildenbrand <david@redhat.com>
-> > >>> Cc: Kemeng Shi <shikemeng@huaweicloud.com>
-> > >>> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > >>> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-> > >>> Cc: Peter Collingbourne <pcc@google.com>
-> > >>> Cc: Steven Price <steven.price@arm.com>
-> > >>> Cc: Yosry Ahmed <yosryahmed@google.com>
-> > >>> Cc: Peter Xu <peterx@redhat.com>
-> > >>> Cc: Lorenzo Stoakes <lstoakes@gmail.com>
-> > >>> Cc: "Mike Rapoport (IBM)" <rppt@kernel.org>
-> > >>> Cc: Hugh Dickins <hughd@google.com>
-> > >>> CC: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-> > >>> Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
-> > >>> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-> > >>> Reviewed-by: Steven Price <steven.price@arm.com>
-> > >>> Acked-by: Chris Li <chrisl@kernel.org>
-> > >>> ---
-> > >>>  arch/arm64/include/asm/pgtable.h | 19 ++------------
-> > >>>  arch/arm64/mm/mteswap.c          | 43 ++++++++++++++++++++++++++++=
-++++
-> > >>>  include/linux/huge_mm.h          | 12 ---------
-> > >>>  include/linux/pgtable.h          |  2 +-
-> > >>>  mm/page_io.c                     |  2 +-
-> > >>>  mm/swap_slots.c                  |  2 +-
-> > >>>  6 files changed, 48 insertions(+), 32 deletions(-)
-> > >>>
-> > >>> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/=
-asm/pgtable.h
-> > >>> index 401087e8a43d..7a54750770b8 100644
-> > >>> --- a/arch/arm64/include/asm/pgtable.h
-> > >>> +++ b/arch/arm64/include/asm/pgtable.h
-> > >>> @@ -45,12 +45,6 @@
-> > >>>       __flush_tlb_range(vma, addr, end, PUD_SIZE, false, 1)
-> > >>>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
-> > >>>
-> > >>> -static inline bool arch_thp_swp_supported(void)
-> > >>> -{
-> > >>> -     return !system_supports_mte();
-> > >>> -}
-> > >>> -#define arch_thp_swp_supported arch_thp_swp_supported
-> > >>> -
-> > >>>  /*
-> > >>>   * Outside of a few very special situations (e.g. hibernation), we=
- always
-> > >>>   * use broadcast TLB invalidation instructions, therefore a spurio=
-us page
-> > >>> @@ -1095,12 +1089,7 @@ static inline pmd_t pmdp_establish(struct vm=
-_area_struct *vma,
-> > >>>  #ifdef CONFIG_ARM64_MTE
-> > >>>
-> > >>>  #define __HAVE_ARCH_PREPARE_TO_SWAP
-> > >>> -static inline int arch_prepare_to_swap(struct page *page)
-> > >>> -{
-> > >>> -     if (system_supports_mte())
-> > >>> -             return mte_save_tags(page);
-> > >>> -     return 0;
-> > >>> -}
-> > >>> +extern int arch_prepare_to_swap(struct folio *folio);
-> > >>>
-> > >>>  #define __HAVE_ARCH_SWAP_INVALIDATE
-> > >>>  static inline void arch_swap_invalidate_page(int type, pgoff_t off=
-set)
-> > >>> @@ -1116,11 +1105,7 @@ static inline void arch_swap_invalidate_area=
-(int type)
-> > >>>  }
-> > >>>
-> > >>>  #define __HAVE_ARCH_SWAP_RESTORE
-> > >>> -static inline void arch_swap_restore(swp_entry_t entry, struct fol=
-io *folio)
-> > >>> -{
-> > >>> -     if (system_supports_mte())
-> > >>> -             mte_restore_tags(entry, &folio->page);
-> > >>> -}
-> > >>> +extern void arch_swap_restore(swp_entry_t entry, struct folio *fol=
-io);
-> > >>>
-> > >>>  #endif /* CONFIG_ARM64_MTE */
-> > >>>
-> > >>> diff --git a/arch/arm64/mm/mteswap.c b/arch/arm64/mm/mteswap.c
-> > >>> index a31833e3ddc5..295836fef620 100644
-> > >>> --- a/arch/arm64/mm/mteswap.c
-> > >>> +++ b/arch/arm64/mm/mteswap.c
-> > >>> @@ -68,6 +68,13 @@ void mte_invalidate_tags(int type, pgoff_t offse=
-t)
-> > >>>       mte_free_tag_storage(tags);
-> > >>>  }
-> > >>>
-> > >>> +static inline void __mte_invalidate_tags(struct page *page)
-> > >>> +{
-> > >>> +     swp_entry_t entry =3D page_swap_entry(page);
-> > >>> +
-> > >>> +     mte_invalidate_tags(swp_type(entry), swp_offset(entry));
-> > >>> +}
-> > >>> +
-> > >>>  void mte_invalidate_tags_area(int type)
-> > >>>  {
-> > >>>       swp_entry_t entry =3D swp_entry(type, 0);
-> > >>> @@ -83,3 +90,39 @@ void mte_invalidate_tags_area(int type)
-> > >>>       }
-> > >>>       xa_unlock(&mte_pages);
-> > >>>  }
-> > >>> +
-> > >>> +int arch_prepare_to_swap(struct folio *folio)
-> > >>> +{
-> > >>> +     long i, nr;
-> > >>> +     int err;
-> > >>> +
-> > >>> +     if (!system_supports_mte())
-> > >>> +             return 0;
-> > >>> +
-> > >>> +     nr =3D folio_nr_pages(folio);
-> > >>> +
-> > >>> +     for (i =3D 0; i < nr; i++) {
-> > >>> +             err =3D mte_save_tags(folio_page(folio, i));
-> > >>> +             if (err)
-> > >>> +                     goto out;
-> > >>> +     }
-> > >>> +     return 0;
-> > >>> +
-> > >>> +out:
-> > >>> +     while (i--)
-> > >>> +             __mte_invalidate_tags(folio_page(folio, i));
-> > >>> +     return err;
-> > >>> +}
-> > >>> +
-> > >>> +void arch_swap_restore(swp_entry_t entry, struct folio *folio)
-> > >>
-> > >> I'm still not a fan of the fact that entry could be anywhere within =
-folio.
-> > >>
-> > >>> +{
-> > >>> +     if (system_supports_mte()) {
-> > >>
-> > >> nit: if you do:
-> > >>
-> > >> if (!system_supports_mte())
-> > >>         return;
-> > >
-> > > Acked
-> > >
-> > >>
-> > >> It will be consistent with arch_prepare_to_swap() and reduce the ind=
-entation of
-> > >> the main body.
-> > >>
-> > >>> +             long i, nr =3D folio_nr_pages(folio);
-> > >>> +
-> > >>> +             entry.val -=3D swp_offset(entry) & (nr - 1);
-> > >>
-> > >> This assumes that folios are always stored in swap with natural alig=
-nment. Is
-> > >> that definitely a safe assumption? My swap-out series is currently e=
-nsuring that
-> > >> folios are swapped-out naturally aligned, but that is an implementat=
-ion detail.
-> > >>
-> > >
-> > > I concur that this is an implementation detail. However, we should be
-> > > bold enough
-> > > to state that swap slots will be contiguous, considering we are
-> > > currently utilizing
-> > > folio->swap instead of subpage->swap ?
-> >
-> > Yes, I agree about contiguity. My objection is about assuming natural a=
-lignment
-> > though. It can still be contiguous while not naturally aligned in swap.
->
-> Hi Ryan,
->
-> While working on the new version of this patch, I've come to recognize
-> that, for the time being, it's
-> imperative to maintain a natural alignment. The following code
-> operates on the basis of this
-> assumption.
->
-> /**
->  * folio_file_page - The page for a particular index.
->  * @folio: The folio which contains this index.
->  * @index: The index we want to look up.
->  *
->  * Sometimes after looking up a folio in the page cache, we need to
->  * obtain the specific page for an index (eg a page fault).
->  *
->  * Return: The page containing the file data for this index.
->  */
-> static inline struct page *folio_file_page(struct folio *folio, pgoff_t i=
-ndex)
+Dear Community,
+
+> Introduce RedBox support (HSR-SAN to be more precise) for HSR
+> networks. Following traffic reduction optimizations have been
+> implemented:
+> - Do not send HSR supervisory frames to Port C (interlink)
+> - Do not forward to HSR ring frames addressed to Port C
+> - Do not forward to Port C frames from HSR ring
+> - Do not send duplicate HSR frame to HSR ring when destination is
+> Port C
+>=20
+> The corresponding patch to modify iptable2 sources has already been
+> sent:
+> https://lore.kernel.org/netdev/20240308145729.490863-1-lukma@denx.de/T/
+>=20
+> Testing procedure:
+> ------------------
+> The EVB-KSZ9477 has been used for testing on net-next branch
+> (SHA1: 709776ea8562).
+>=20
+> Ports 4/5 were used for SW managed HSR (hsr1) as first hsr0 for ports
+> 1/2 (with HW offloading for ksz9477) was created. Port 3 has been
+> used as interlink port (single USB-ETH dongle).
+>=20
+> Configuration - RedBox (EVB-KSZ9477):
+> ifconfig lan1 down;ifconfig lan2 down
+> ip link add name hsr0 type hsr slave1 lan1 slave2 lan2 supervision 45
+> version 1 ip link add name hsr1 type hsr slave1 lan4 slave2 lan5
+> interlink lan3 supervision 45 version 1 ifconfig lan4 up;ifconfig
+> lan5 up ifconfig lan3 up
+> ifconfig hsr1 192.168.0.11 up
+>=20
+> Configuration - DAN-H (EVB-KSZ9477):
+>=20
+> ifconfig lan1 down;ifconfig lan2 down
+> ip link add name hsr0 type hsr slave1 lan1 slave2 lan2 supervision 45
+> version 1 ip link add name hsr1 type hsr slave1 lan4 slave2 lan5
+> supervision 45 version 1 ifconfig lan4 up;ifconfig lan5 up
+> ifconfig hsr1 192.168.0.12 up
+>=20
+> This approach uses only SW based HSR devices (hsr1).
+>=20
+> --------------          -----------------       ------------
+> DAN-H  Port5 | <------> | Port5         |       |
+>        Port4 | <------> | Port4   Port3 | <---> | PC
+>              |          | (RedBox)      |       | (USB-ETH)
+> EVB-KSZ9477  |          | EVB-KSZ9477   |       |
+> --------------          -----------------       ------------
+>=20
+
+Gentle ping for this patch...
+
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+>=20
+> ---
+> Changes for v2:
+>=20
+> - Add deleting of HSR_PT_INTERLINK node to hsr_del_ports()
+> - Rewrite handle_std_frame() to awoid code duplication
+> - Fix reverse christmas tree in hsr_prune_proxy_nodes() as well as
+>   remove stale node indication as interlink doesn't need this
+> detection (only check if node is inactive for more than
+> HSR_PROXY_NODE_FORGET_TIME is required)
+> - Rewrite commit message
+>=20
+> Changes for v3:
+>=20
+> - Modify frame passed Port C (Interlink) to have RedBox's source
+> address (SA) This fixes issue with connecting L2 switch to Interlink
+> Port as switches drop frames with SA other than one registered in
+> their (internal) routing tables.
+>=20
+> - Do not forward to port C (Interlink) frames from nodes A and B if
+> DA is in NodeTable.
+>=20
+> - Fix problem with ProxyNodeTable being pollued by nodes already
+> registered in HSR ring.
+>=20
+> - Prevent from sending frames to HSR ring when destination addresses
+> (DA) are in ProxyNodeTable
+> ---
+>  include/uapi/linux/if_link.h |  1 +
+>  net/hsr/hsr_device.c         | 36 ++++++++++++++-
+>  net/hsr/hsr_device.h         |  4 +-
+>  net/hsr/hsr_forward.c        | 85
+> ++++++++++++++++++++++++++++++++---- net/hsr/hsr_framereg.c       |
+> 52 ++++++++++++++++++++++ net/hsr/hsr_framereg.h       |  6 +++
+>  net/hsr/hsr_main.h           |  7 +++
+>  net/hsr/hsr_netlink.c        | 29 ++++++++++--
+>  net/hsr/hsr_slave.c          |  1 +
+>  9 files changed, 205 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/include/uapi/linux/if_link.h
+> b/include/uapi/linux/if_link.h index ab9bcff96e4d..b93a3acdd83f 100644
+> --- a/include/uapi/linux/if_link.h
+> +++ b/include/uapi/linux/if_link.h
+> @@ -1770,6 +1770,7 @@ enum {
+>  	IFLA_HSR_PROTOCOL,		/* Indicate different
+> protocol than
+>  					 * HSR. For example PRP.
+>  					 */
+> +	IFLA_HSR_INTERLINK,		/* HSR interlink network
+> device */ __IFLA_HSR_MAX,
+>  };
+> =20
+> diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
+> index 904cd8f8f830..1be6563e0231 100644
+> --- a/net/hsr/hsr_device.c
+> +++ b/net/hsr/hsr_device.c
+> @@ -156,6 +156,9 @@ static int hsr_dev_open(struct net_device *dev)
+>  		case HSR_PT_SLAVE_B:
+>  			designation =3D "Slave B";
+>  			break;
+> +		case HSR_PT_INTERLINK:
+> +			designation =3D "Interlink";
+> +			break;
+>  		default:
+>  			designation =3D "Unknown";
+>  		}
+> @@ -295,6 +298,7 @@ static void send_hsr_supervision_frame(struct
+> hsr_port *master, struct hsr_priv *hsr =3D master->hsr;
+>  	__u8 type =3D HSR_TLV_LIFE_CHECK;
+>  	struct hsr_sup_payload *hsr_sp;
+> +	struct hsr_sup_tlv *hsr_stlv;
+>  	struct hsr_sup_tag *hsr_stag;
+>  	struct sk_buff *skb;
+> =20
+> @@ -334,6 +338,16 @@ static void send_hsr_supervision_frame(struct
+> hsr_port *master, hsr_sp =3D skb_put(skb, sizeof(struct
+> hsr_sup_payload)); ether_addr_copy(hsr_sp->macaddress_A,
+> master->dev->dev_addr);=20
+> +	if (hsr->redbox) {
+> +		hsr_stlv =3D skb_put(skb, sizeof(struct hsr_sup_tlv));
+> +		hsr_stlv->HSR_TLV_type =3D PRP_TLV_REDBOX_MAC;
+> +		hsr_stlv->HSR_TLV_length =3D sizeof(struct
+> hsr_sup_payload); +
+> +		/* Payload: MacAddressRedBox */
+> +		hsr_sp =3D skb_put(skb, sizeof(struct
+> hsr_sup_payload));
+> +		ether_addr_copy(hsr_sp->macaddress_A,
+> hsr->macaddress_redbox);
+> +	}
+> +
+>  	if (skb_put_padto(skb, ETH_ZLEN)) {
+>  		spin_unlock_bh(&hsr->seqnr_lock);
+>  		return;
+> @@ -418,6 +432,10 @@ void hsr_del_ports(struct hsr_priv *hsr)
+>  	port =3D hsr_port_get_hsr(hsr, HSR_PT_MASTER);
+>  	if (port)
+>  		hsr_del_port(port);
+> +
+> +	port =3D hsr_port_get_hsr(hsr, HSR_PT_INTERLINK);
+> +	if (port)
+> +		hsr_del_port(port);
+>  }
+> =20
+>  static void hsr_set_rx_mode(struct net_device *dev)
+> @@ -544,8 +562,8 @@ static const unsigned char
+> def_multicast_addr[ETH_ALEN] __aligned(2) =3D { };
+> =20
+>  int hsr_dev_finalize(struct net_device *hsr_dev, struct net_device
+> *slave[2],
+> -		     unsigned char multicast_spec, u8
+> protocol_version,
+> -		     struct netlink_ext_ack *extack)
+> +		     struct net_device *interlink, unsigned char
+> multicast_spec,
+> +		     u8 protocol_version, struct netlink_ext_ack
+> *extack) {
+>  	bool unregister =3D false;
+>  	struct hsr_priv *hsr;
+> @@ -554,6 +572,7 @@ int hsr_dev_finalize(struct net_device *hsr_dev,
+> struct net_device *slave[2], hsr =3D netdev_priv(hsr_dev);
+>  	INIT_LIST_HEAD(&hsr->ports);
+>  	INIT_LIST_HEAD(&hsr->node_db);
+> +	INIT_LIST_HEAD(&hsr->proxy_node_db);
+>  	spin_lock_init(&hsr->list_lock);
+> =20
+>  	eth_hw_addr_set(hsr_dev, slave[0]->dev_addr);
+> @@ -579,6 +598,7 @@ int hsr_dev_finalize(struct net_device *hsr_dev,
+> struct net_device *slave[2], /* Overflow soon to find bugs easier: */
+>  	hsr->sequence_nr =3D HSR_SEQNR_START;
+>  	hsr->sup_sequence_nr =3D HSR_SUP_SEQNR_START;
+> +	hsr->interlink_sequence_nr =3D HSR_SEQNR_START;
+> =20
+>  	timer_setup(&hsr->announce_timer, hsr_announce, 0);
+>  	timer_setup(&hsr->prune_timer, hsr_prune_nodes, 0);
+> @@ -614,6 +634,18 @@ int hsr_dev_finalize(struct net_device *hsr_dev,
+> struct net_device *slave[2], if (res)
+>  		goto err_unregister;
+> =20
+> +	if (interlink) {
+> +		res =3D hsr_add_port(hsr, interlink, HSR_PT_INTERLINK,
+> extack);
+> +		if (res)
+> +			goto err_unregister;
+> +
+> +		hsr->redbox =3D true;
+> +		ether_addr_copy(hsr->macaddress_redbox,
+> interlink->dev_addr);
+> +		timer_setup(&hsr->prune_proxy_timer,
+> hsr_prune_proxy_nodes, 0);
+> +		mod_timer(&hsr->prune_proxy_timer,
+> +			  jiffies +
+> msecs_to_jiffies(PRUNE_PROXY_PERIOD));
+> +	}
+> +
+>  	hsr_debugfs_init(hsr, hsr_dev);
+>  	mod_timer(&hsr->prune_timer, jiffies +
+> msecs_to_jiffies(PRUNE_PERIOD));=20
+> diff --git a/net/hsr/hsr_device.h b/net/hsr/hsr_device.h
+> index 9060c92168f9..655284095b78 100644
+> --- a/net/hsr/hsr_device.h
+> +++ b/net/hsr/hsr_device.h
+> @@ -16,8 +16,8 @@
+>  void hsr_del_ports(struct hsr_priv *hsr);
+>  void hsr_dev_setup(struct net_device *dev);
+>  int hsr_dev_finalize(struct net_device *hsr_dev, struct net_device
+> *slave[2],
+> -		     unsigned char multicast_spec, u8
+> protocol_version,
+> -		     struct netlink_ext_ack *extack);
+> +		     struct net_device *interlink, unsigned char
+> multicast_spec,
+> +		     u8 protocol_version, struct netlink_ext_ack
+> *extack); void hsr_check_carrier_and_operstate(struct hsr_priv *hsr);
+>  int hsr_get_max_mtu(struct hsr_priv *hsr);
+>  #endif /* __HSR_DEVICE_H */
+> diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
+> index 5d68cb181695..7c5a4bda1cca 100644
+> --- a/net/hsr/hsr_forward.c
+> +++ b/net/hsr/hsr_forward.c
+> @@ -377,6 +377,15 @@ static int hsr_xmit(struct sk_buff *skb, struct
+> hsr_port *port, */
+>  		ether_addr_copy(eth_hdr(skb)->h_source,
+> port->dev->dev_addr); }
+> +
+> +	/* When HSR node is used as RedBox - the frame received from
+> HSR ring
+> +	 * requires source MAC address (SA) replacement to one which
+> can be
+> +	 * recognized by SAN devices (otherwise, frames are dropped
+> by switch)
+> +	 */
+> +	if (port->type =3D=3D HSR_PT_INTERLINK)
+> +		memcpy(&eth_hdr(skb)->h_source,
+> port->hsr->macaddress_redbox,
+> +		       ETH_ALEN);
+> +
+>  	return dev_queue_xmit(skb);
+>  }
+> =20
+> @@ -390,9 +399,57 @@ bool prp_drop_frame(struct hsr_frame_info
+> *frame, struct hsr_port *port)=20
+>  bool hsr_drop_frame(struct hsr_frame_info *frame, struct hsr_port
+> *port) {
+> +	struct sk_buff *skb;
+> +
+>  	if (port->dev->features & NETIF_F_HW_HSR_FWD)
+>  		return prp_drop_frame(frame, port);
+> =20
+> +	/* RedBox specific frames dropping policies
+> +	 *
+> +	 * Do not send HSR supervisory frames to SAN devices
+> +	 */
+> +	if (frame->is_supervision && port->type =3D=3D HSR_PT_INTERLINK)
+> +		return true;
+> +
+> +	/* Do not forward to other HSR port (A or B) unicast frames
+> which
+> +	 * are addressed to interlink port (and are in the
+> ProxyNodeTable).
+> +	 */
+> +	skb =3D frame->skb_hsr;
+> +	if (skb && prp_drop_frame(frame, port) &&
+> +	    is_unicast_ether_addr(eth_hdr(skb)->h_dest) &&
+> +	    hsr_is_node_in_db(&port->hsr->proxy_node_db,
+> +			      eth_hdr(skb)->h_dest)) {
+> +		return true;
+> +	}
+> +
+> +	/* Do not forward to port C (Interlink) frames from nodes A
+> and B
+> +	 * if DA is in NodeTable.
+> +	 */
+> +	if ((frame->port_rcv->type =3D=3D HSR_PT_SLAVE_A ||
+> +	     frame->port_rcv->type =3D=3D HSR_PT_SLAVE_B) &&
+> +	    port->type =3D=3D HSR_PT_INTERLINK) {
+> +		skb =3D frame->skb_hsr;
+> +		if (skb &&
+> is_unicast_ether_addr(eth_hdr(skb)->h_dest) &&
+> +		    hsr_is_node_in_db(&port->hsr->node_db,
+> +				      eth_hdr(skb)->h_dest)) {
+> +			return true;
+> +		}
+> +	}
+> +
+> +	/* Do not forward to port A and B unicast frames received on
+> the
+> +	 * interlink port if it is addressed to one of nodes
+> registered in
+> +	 * the ProxyNodeTable.
+> +	 */
+> +	if ((port->type =3D=3D HSR_PT_SLAVE_A || port->type =3D=3D
+> HSR_PT_SLAVE_B) &&
+> +	    frame->port_rcv->type =3D=3D HSR_PT_INTERLINK) {
+> +		skb =3D frame->skb_std;
+> +		if (skb &&
+> is_unicast_ether_addr(eth_hdr(skb)->h_dest) &&
+> +		    hsr_is_node_in_db(&port->hsr->proxy_node_db,
+> +				      eth_hdr(skb)->h_dest)) {
+> +			return true;
+> +		}
+> +	}
+> +
+>  	return false;
+>  }
+> =20
+> @@ -448,13 +505,14 @@ static void hsr_forward_do(struct
+> hsr_frame_info *frame) }
+> =20
+>  		/* Check if frame is to be dropped. Eg. for PRP no
+> forward
+> -		 * between ports.
+> +		 * between ports, or sending HSR supervision to
+> RedBox. */
+>  		if (hsr->proto_ops->drop_frame &&
+>  		    hsr->proto_ops->drop_frame(frame, port))
+>  			continue;
+> =20
+> -		if (port->type !=3D HSR_PT_MASTER)
+> +		if (port->type =3D=3D HSR_PT_SLAVE_A ||
+> +		    port->type =3D=3D HSR_PT_SLAVE_B)
+>  			skb =3D
+> hsr->proto_ops->create_tagged_frame(frame, port); else
+>  			skb =3D
+> hsr->proto_ops->get_untagged_frame(frame, port); @@ -469,7 +527,9 @@
+> static void hsr_forward_do(struct hsr_frame_info *frame)
+> hsr_deliver_master(skb, port->dev, frame->node_src); } else {
+>  			if (!hsr_xmit(skb, port, frame))
+> -				sent =3D true;
+> +				if (port->type =3D=3D HSR_PT_SLAVE_A ||
+> +				    port->type =3D=3D HSR_PT_SLAVE_B)
+> +					sent =3D true;
+>  		}
+>  	}
+>  }
+> @@ -503,10 +563,12 @@ static void handle_std_frame(struct sk_buff
+> *skb, frame->skb_prp =3D NULL;
+>  	frame->skb_std =3D skb;
+> =20
+> -	if (port->type !=3D HSR_PT_MASTER) {
+> +	if (port->type !=3D HSR_PT_MASTER)
+>  		frame->is_from_san =3D true;
+> -	} else {
+> -		/* Sequence nr for the master node */
+> +
+> +	if (port->type =3D=3D HSR_PT_MASTER ||
+> +	    port->type =3D=3D HSR_PT_INTERLINK) {
+> +		/* Sequence nr for the master/interlink node */
+>  		lockdep_assert_held(&hsr->seqnr_lock);
+>  		frame->sequence_nr =3D hsr->sequence_nr;
+>  		hsr->sequence_nr++;
+> @@ -564,6 +626,7 @@ static int fill_frame_info(struct hsr_frame_info
+> *frame, {
+>  	struct hsr_priv *hsr =3D port->hsr;
+>  	struct hsr_vlan_ethhdr *vlan_hdr;
+> +	struct list_head *n_db;
+>  	struct ethhdr *ethhdr;
+>  	__be16 proto;
+>  	int ret;
+> @@ -574,9 +637,13 @@ static int fill_frame_info(struct hsr_frame_info
+> *frame,=20
+>  	memset(frame, 0, sizeof(*frame));
+>  	frame->is_supervision =3D is_supervision_frame(port->hsr, skb);
+> -	frame->node_src =3D hsr_get_node(port, &hsr->node_db, skb,
+> -				       frame->is_supervision,
+> -				       port->type);
+> +
+> +	n_db =3D &hsr->node_db;
+> +	if (port->type =3D=3D HSR_PT_INTERLINK)
+> +		n_db =3D &hsr->proxy_node_db;
+> +
+> +	frame->node_src =3D hsr_get_node(port, n_db, skb,
+> +				       frame->is_supervision,
+> port->type); if (!frame->node_src)
+>  		return -1; /* Unknown node and !is_supervision, or
+> no mem */=20
+> diff --git a/net/hsr/hsr_framereg.c b/net/hsr/hsr_framereg.c
+> index 6d14d935ee82..68ecf85790bd 100644
+> --- a/net/hsr/hsr_framereg.c
+> +++ b/net/hsr/hsr_framereg.c
+> @@ -71,6 +71,14 @@ static struct hsr_node *find_node_by_addr_A(struct
+> list_head *node_db, return NULL;
+>  }
+> =20
+> +/* Check if node for a given MAC address is already present in data
+> base
+> + */
+> +bool hsr_is_node_in_db(struct list_head *node_db,
+> +		       const unsigned char addr[ETH_ALEN])
+> +{
+> +	return !!find_node_by_addr_A(node_db, addr);
+> +}
+> +
+>  /* Helper for device init; the self_node is used in hsr_rcv() to
+> recognize
+>   * frames from self that's been looped over the HSR ring.
+>   */
+> @@ -223,6 +231,15 @@ struct hsr_node *hsr_get_node(struct hsr_port
+> *port, struct list_head *node_db, }
+>  	}
+> =20
+> +	/* Check if required node is not in proxy nodes table */
+> +	list_for_each_entry_rcu(node, &hsr->proxy_node_db, mac_list)
 > {
->         return folio_page(folio, index & (folio_nr_pages(folio) - 1));
-> }
->
->
-> It's invoked everywhere, particularly within do_swap_page(). Nonetheless,
-> I remain confident that I can consistently pass the first entry to
-> arch_swap_restore().
+> +		if (ether_addr_equal(node->macaddress_A,
+> ethhdr->h_source)) {
+> +			if (hsr->proto_ops->update_san_info)
+> +
+> hsr->proto_ops->update_san_info(node, is_sup);
+> +			return node;
+> +		}
+> +	}
+> +
+>  	/* Everyone may create a node entry, connected node to a
+> HSR/PRP
+>  	 * device.
+>  	 */
+> @@ -414,6 +431,10 @@ void hsr_addr_subst_dest(struct hsr_node
+> *node_src, struct sk_buff *skb,=20
+>  	node_dst =3D find_node_by_addr_A(&port->hsr->node_db,
+>  				       eth_hdr(skb)->h_dest);
+> +	if (!node_dst && port->hsr->redbox)
+> +		node_dst =3D
+> find_node_by_addr_A(&port->hsr->proxy_node_db,
+> +					       eth_hdr(skb)->h_dest);
+> +
+>  	if (!node_dst) {
+>  		if (port->hsr->prot_version !=3D PRP_V1 &&
+> net_ratelimit()) netdev_err(skb->dev, "%s: Unknown node\n", __func__);
+> @@ -557,6 +578,37 @@ void hsr_prune_nodes(struct timer_list *t)
+>  		  jiffies + msecs_to_jiffies(PRUNE_PERIOD));
+>  }
+> =20
+> +void hsr_prune_proxy_nodes(struct timer_list *t)
+> +{
+> +	struct hsr_priv *hsr =3D from_timer(hsr, t, prune_proxy_timer);
+> +	unsigned long timestamp;
+> +	struct hsr_node *node;
+> +	struct hsr_node *tmp;
+> +
+> +	spin_lock_bh(&hsr->list_lock);
+> +	list_for_each_entry_safe(node, tmp, &hsr->proxy_node_db,
+> mac_list) {
+> +		timestamp =3D node->time_in[HSR_PT_INTERLINK];
+> +
+> +		/* Prune old entries */
+> +		if (time_is_before_jiffies(timestamp +
+> +
+> msecs_to_jiffies(HSR_PROXY_NODE_FORGET_TIME))) {
+> +			hsr_nl_nodedown(hsr, node->macaddress_A);
+> +			if (!node->removed) {
+> +				list_del_rcu(&node->mac_list);
+> +				node->removed =3D true;
+> +				/* Note that we need to free this
+> entry later: */
+> +				kfree_rcu(node, rcu_head);
+> +			}
+> +		}
+> +	}
+> +
+> +	spin_unlock_bh(&hsr->list_lock);
+> +
+> +	/* Restart timer */
+> +	mod_timer(&hsr->prune_proxy_timer,
+> +		  jiffies + msecs_to_jiffies(PRUNE_PROXY_PERIOD));
+> +}
+> +
+>  void *hsr_get_next_node(struct hsr_priv *hsr, void *_pos,
+>  			unsigned char addr[ETH_ALEN])
+>  {
+> diff --git a/net/hsr/hsr_framereg.h b/net/hsr/hsr_framereg.h
+> index b23556251d62..67456a75d8fe 100644
+> --- a/net/hsr/hsr_framereg.h
+> +++ b/net/hsr/hsr_framereg.h
+> @@ -46,6 +46,7 @@ int hsr_register_frame_out(struct hsr_port *port,
+> struct hsr_node *node, u16 sequence_nr);
+> =20
+>  void hsr_prune_nodes(struct timer_list *t);
+> +void hsr_prune_proxy_nodes(struct timer_list *t);
+> =20
+>  int hsr_create_self_node(struct hsr_priv *hsr,
+>  			 const unsigned char addr_a[ETH_ALEN],
+> @@ -63,10 +64,15 @@ int hsr_get_node_data(struct hsr_priv *hsr,
+>  		      int *if2_age,
+>  		      u16 *if2_seq);
+> =20
+> +void hsr_handle_san_frame(bool san, enum hsr_port_type port,
+> +			  struct hsr_node *node);
+>  void prp_handle_san_frame(bool san, enum hsr_port_type port,
+>  			  struct hsr_node *node);
+>  void prp_update_san_info(struct hsr_node *node, bool is_sup);
+> =20
+> +bool hsr_is_node_in_db(struct list_head *node_db,
+> +		       const unsigned char addr[ETH_ALEN]);
+> +
+>  struct hsr_node {
+>  	struct list_head	mac_list;
+>  	/* Protect R/W access to seq_out */
+> diff --git a/net/hsr/hsr_main.h b/net/hsr/hsr_main.h
+> index 18e01791ad79..23850b16d1ea 100644
+> --- a/net/hsr/hsr_main.h
+> +++ b/net/hsr/hsr_main.h
+> @@ -21,6 +21,7 @@
+>   */
+>  #define HSR_LIFE_CHECK_INTERVAL		 2000 /* ms */
+>  #define HSR_NODE_FORGET_TIME		60000 /* ms */
+> +#define HSR_PROXY_NODE_FORGET_TIME	60000 /* ms */
+>  #define HSR_ANNOUNCE_INTERVAL		  100 /* ms */
+>  #define HSR_ENTRY_FORGET_TIME		  400 /* ms */
+> =20
+> @@ -35,6 +36,7 @@
+>   * HSR_NODE_FORGET_TIME?
+>   */
+>  #define PRUNE_PERIOD			 3000 /* ms */
+> +#define PRUNE_PROXY_PERIOD		 3000 /* ms */
+>  #define HSR_TLV_EOT				   0  /* End of
+> TLVs */ #define HSR_TLV_ANNOUNCE		   22
+>  #define HSR_TLV_LIFE_CHECK		   23
+> @@ -192,11 +194,14 @@ struct hsr_priv {
+>  	struct rcu_head		rcu_head;
+>  	struct list_head	ports;
+>  	struct list_head	node_db;	/* Known HSR nodes */
+> +	struct list_head	proxy_node_db;	/* RedBox HSR
+> proxy nodes */ struct hsr_self_node	__rcu *self_node;
+> /* MACs of slaves */ struct timer_list	announce_timer;
+> /* Supervision frame dispatch */ struct timer_list	prune_timer;
+> +	struct timer_list	prune_proxy_timer;
+>  	int announce_count;
+>  	u16 sequence_nr;
+> +	u16 interlink_sequence_nr; /* Interlink port seq_nr */
+>  	u16 sup_sequence_nr;	/* For HSRv1 separate seq_nr for
+> supervision */ enum hsr_version prot_version;	/* Indicate if
+> HSRv0, HSRv1 or PRPv1 */ spinlock_t seqnr_lock;	/* locking for
+> sequence_nr */ @@ -209,6 +214,8 @@ struct hsr_priv {
+>  				 * of lan_id
+>  				 */
+>  	bool fwd_offloaded;	/* Forwarding offloaded to HW */
+> +	bool redbox;            /* Device supports HSR RedBox */
+> +	unsigned char		macaddress_redbox[ETH_ALEN];
+>  	unsigned char		sup_multicast_addr[ETH_ALEN]
+> __aligned(sizeof(u16)); /* Align to u16 boundary to avoid unaligned
+> access
+>  				 * in ether_addr_equal
+> diff --git a/net/hsr/hsr_netlink.c b/net/hsr/hsr_netlink.c
+> index 78fe40eb9f01..86eae49009cb 100644
+> --- a/net/hsr/hsr_netlink.c
+> +++ b/net/hsr/hsr_netlink.c
+> @@ -23,6 +23,7 @@ static const struct nla_policy
+> hsr_policy[IFLA_HSR_MAX + 1] =3D { [IFLA_HSR_SUPERVISION_ADDR]	=3D
+> { .len =3D ETH_ALEN }, [IFLA_HSR_SEQ_NR]		=3D { .type =3D
+> NLA_U16 }, [IFLA_HSR_PROTOCOL]		=3D { .type =3D NLA_U8 },
+> +	[IFLA_HSR_INTERLINK]		=3D { .type =3D NLA_U32 },
+>  };
+> =20
+>  /* Here, it seems a netdevice has already been allocated for us, and
+> the @@ -35,8 +36,8 @@ static int hsr_newlink(struct net *src_net,
+> struct net_device *dev, enum hsr_version proto_version;
+>  	unsigned char multicast_spec;
+>  	u8 proto =3D HSR_PROTOCOL_HSR;
+> -	struct net_device *link[2];
+> =20
+> +	struct net_device *link[2], *interlink =3D NULL;
+>  	if (!data) {
+>  		NL_SET_ERR_MSG_MOD(extack, "No slave devices
+> specified"); return -EINVAL;
+> @@ -67,6 +68,20 @@ static int hsr_newlink(struct net *src_net, struct
+> net_device *dev, return -EINVAL;
+>  	}
+> =20
+> +	if (data[IFLA_HSR_INTERLINK])
+> +		interlink =3D __dev_get_by_index(src_net,
+> +
+> nla_get_u32(data[IFLA_HSR_INTERLINK])); +
+> +	if (interlink && interlink =3D=3D link[0]) {
+> +		NL_SET_ERR_MSG_MOD(extack, "Interlink and Slave1 are
+> the same");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (interlink && interlink =3D=3D link[1]) {
+> +		NL_SET_ERR_MSG_MOD(extack, "Interlink and Slave2 are
+> the same");
+> +		return -EINVAL;
+> +	}
+> +
+>  	if (!data[IFLA_HSR_MULTICAST_SPEC])
+>  		multicast_spec =3D 0;
+>  	else
+> @@ -96,10 +111,17 @@ static int hsr_newlink(struct net *src_net,
+> struct net_device *dev, }
+>  	}
+> =20
+> -	if (proto =3D=3D HSR_PROTOCOL_PRP)
+> +	if (proto =3D=3D HSR_PROTOCOL_PRP) {
+>  		proto_version =3D PRP_V1;
+> +		if (interlink) {
+> +			NL_SET_ERR_MSG_MOD(extack,
+> +					   "Interlink only works
+> with HSR");
+> +			return -EINVAL;
+> +		}
+> +	}
+> =20
+> -	return hsr_dev_finalize(dev, link, multicast_spec,
+> proto_version, extack);
+> +	return hsr_dev_finalize(dev, link, interlink, multicast_spec,
+> +				proto_version, extack);
+>  }
+> =20
+>  static void hsr_dellink(struct net_device *dev, struct list_head
+> *head) @@ -114,6 +136,7 @@ static void hsr_dellink(struct net_device
+> *dev, struct list_head *head)=20
+>  	hsr_del_self_node(hsr);
+>  	hsr_del_nodes(&hsr->node_db);
+> +	hsr_del_nodes(&hsr->proxy_node_db);
+> =20
+>  	unregister_netdevice_queue(dev, head);
+>  }
+> diff --git a/net/hsr/hsr_slave.c b/net/hsr/hsr_slave.c
+> index e5742f2a2d52..136e3917f477 100644
+> --- a/net/hsr/hsr_slave.c
+> +++ b/net/hsr/hsr_slave.c
+> @@ -55,6 +55,7 @@ static rx_handler_result_t hsr_handle_frame(struct
+> sk_buff **pskb) protocol =3D eth_hdr(skb)->h_proto;
+> =20
+>  	if (!(port->dev->features & NETIF_F_HW_HSR_TAG_RM) &&
+> +	    port->type !=3D HSR_PT_INTERLINK &&
+>  	    hsr->proto_ops->invalid_dan_ingress_frame &&
+>  	    hsr->proto_ops->invalid_dan_ingress_frame(protocol))
+>  		goto finish_pass;
 
-After grappling for a couple of hours, I've realized that the only
-viable approach
-is as follows: shifting the task of obtaining the first entry from the
-callee to the
-callers( looks silly). This is necessary due to various scenarios like
-swap cache,
-non-swap cache, and KSM, each presenting different cases. Since there's no
-assurance of folio->swap being present, forcibly setting folio->swap could =
-pose
-risks (There might not even be any risk involved, but the associated
-task getting
-the first entry still cannot be overlooked by callers).
-
-diff --git a/mm/internal.h b/mm/internal.h
-index 7e486f2c502c..94d5b4b5a5da 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -76,6 +76,20 @@ static inline int folio_nr_pages_mapped(struct folio *fo=
-lio)
-        return atomic_read(&folio->_nr_pages_mapped) & FOLIO_PAGES_MAPPED;
- }
-
-+/*
-+ * Retrieve the first entry of a folio based on a provided entry within th=
-e
-+ * folio. We cannot rely on folio->swap as there is no guarantee that it h=
-as
-+ * been initialized. Used by arch_swap_restore()
-+ */
-+static inline swp_entry_t folio_swap(swp_entry_t entry, struct folio *foli=
-o)
-+{
-+       swp_entry_t swap =3D {
-+               .val =3D entry.val & (folio_nr_pages(folio) - 1),
-+       };
-+
-+       return swap;
-+}
-+
- static inline void *folio_raw_mapping(struct folio *folio)
- {
-        unsigned long mapping =3D (unsigned long)folio->mapping;
-diff --git a/mm/memory.c b/mm/memory.c
-index f2bc6dd15eb8..b7cab8be8632 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -4188,7 +4188,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
-         * when reading from swap. This metadata may be indexed by swap ent=
-ry
-         * so this must be called before swap_free().
-         */
--       arch_swap_restore(entry, folio);
-+       arch_swap_restore(folio_swap(entry, folio), folio);
-
-        /*
-         * Remove the swap entry and conditionally try to free up the swapc=
-ache.
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 0aad0d9a621b..82c9df4628f2 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -1913,7 +1913,7 @@ static int shmem_swapin_folio(struct inode
-*inode, pgoff_t index,
-         * Some architectures may have to restore extra metadata to the
-         * folio after reading from swap.
-         */
--       arch_swap_restore(swap, folio);
-+       arch_swap_restore(folio_swap(entry, folio), folio);
-
-        if (shmem_should_replace_folio(folio, gfp)) {
-                error =3D shmem_replace_folio(&folio, gfp, info, index);
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 4919423cce76..5e6d2304a2a4 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -1806,7 +1806,7 @@ static int unuse_pte(struct vm_area_struct *vma,
-pmd_t *pmd,
-         * when reading from swap. This metadata may be indexed by swap ent=
-ry
-         * so this must be called before swap_free().
-         */
--       arch_swap_restore(entry, folio);
-+       arch_swap_restore(folio_swap(entry, folio), folio);
-
-        dec_mm_counter(vma->vm_mm, MM_SWAPENTS);
-        inc_mm_counter(vma->vm_mm, MM_ANONPAGES);
 
 
-Meanwhile, natural alignment is essential even during the execution of
-add_to_swap(), as failure to
-do so will trigger the VM_BUG_ON condition below.
 
-int add_to_swap_cache(struct folio *folio, swp_entry_t entry,
-                        gfp_t gfp, void **shadowp)
-{
-        struct address_space *address_space =3D swap_address_space(entry);
-        pgoff_t idx =3D swp_offset(entry);
-        XA_STATE_ORDER(xas, &address_space->i_pages, idx, folio_order(folio=
-));
-        unsigned long i, nr =3D folio_nr_pages(folio);
-        ...
-        folio_set_swapcache(folio);
-        folio->swap =3D entry;
+Best regards,
 
-        do {
-                xas_lock_irq(&xas);
-                xas_create_range(&xas);
-                if (xas_error(&xas))
-                        goto unlock;
-                for (i =3D 0; i < nr; i++) {
-                        VM_BUG_ON_FOLIO(xas.xa_index !=3D idx + i, folio);
-                        if (shadowp) {
-                                old =3D xas_load(&xas);
-                                if (xa_is_value(old))
-                                        *shadowp =3D old;
-                        }
-                        xas_store(&xas, folio);
-                        xas_next(&xas);
-                }
-}
+Lukasz Majewski
 
+--
 
-Based on the information provided, Ryan, would it be feasible to retain the=
- task
-of obtaining the first entry within the callee? Or, are you in favor
-of utilizing the
-new folio_swap() helper?
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
 
->
-> >
-> > >
-> > >> Your cover note for swap-in says that you could technically swap in =
-a large
-> > >> folio without it having been swapped-out large. If you chose to do t=
-hat in
-> > >> future, this would break, right? I don't think it's good to couple t=
-he swap
-> > >
-> > > Right. technically I agree. Given that we still have many tasks invol=
-ving even
-> > > swapping in contiguous swap slots, it's unlikely that swapping in lar=
-ge folios
-> > > for non-contiguous entries will occur in the foreseeable future :-)
-> > >
-> > >> storage layout to the folio order that you want to swap into. Perhap=
-s that's an
-> > >> argument for passing each *page* to this function with its exact, co=
-rresponding
-> > >> swap entry?
-> > >
-> > > I recall Matthew Wilcox strongly objected to using "page" as the
-> > > parameter, so I've
-> > > discarded that approach. Alternatively, it appears I can consistently=
- pass
-> > > folio->swap to this function and ensure the function always retrieves
-> > > the first entry?
-> >
-> > Yes, if we must pass a folio here, I'd prefer that entry always corresp=
-onds to
-> > the first entry for the folio. That will remove the need for this funct=
-ion to do
-> > the alignment above too. So win-win.
-> >
-> > >
-> > >>
-> > >>> +             for (i =3D 0; i < nr; i++) {
-> > >>> +                     mte_restore_tags(entry, folio_page(folio, i))=
-;
-> > >>> +                     entry.val++;
-> > >>> +             }
-> > >>> +     }
-> > >>> +}
-> > >>> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-> > >>> index de0c89105076..e04b93c43965 100644
-> > >>> --- a/include/linux/huge_mm.h
-> > >>> +++ b/include/linux/huge_mm.h
-> > >>> @@ -535,16 +535,4 @@ static inline int split_folio_to_order(struct =
-folio *folio, int new_order)
-> > >>>  #define split_folio_to_list(f, l) split_folio_to_list_to_order(f, =
-l, 0)
-> > >>>  #define split_folio(f) split_folio_to_order(f, 0)
-> > >>>
-> > >>> -/*
-> > >>> - * archs that select ARCH_WANTS_THP_SWAP but don't support THP_SWP=
- due to
-> > >>> - * limitations in the implementation like arm64 MTE can override t=
-his to
-> > >>> - * false
-> > >>> - */
-> > >>> -#ifndef arch_thp_swp_supported
-> > >>> -static inline bool arch_thp_swp_supported(void)
-> > >>> -{
-> > >>> -     return true;
-> > >>> -}
-> > >>> -#endif
-> > >>> -
-> > >>>  #endif /* _LINUX_HUGE_MM_H */
-> > >>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> > >>> index e1b22903f709..bfcfe3386934 100644
-> > >>> --- a/include/linux/pgtable.h
-> > >>> +++ b/include/linux/pgtable.h
-> > >>> @@ -1106,7 +1106,7 @@ static inline int arch_unmap_one(struct mm_st=
-ruct *mm,
-> > >>>   * prototypes must be defined in the arch-specific asm/pgtable.h f=
-ile.
-> > >>>   */
-> > >>>  #ifndef __HAVE_ARCH_PREPARE_TO_SWAP
-> > >>> -static inline int arch_prepare_to_swap(struct page *page)
-> > >>> +static inline int arch_prepare_to_swap(struct folio *folio)
-> > >>>  {
-> > >>>       return 0;
-> > >>>  }
-> > >>> diff --git a/mm/page_io.c b/mm/page_io.c
-> > >>> index ae2b49055e43..a9a7c236aecc 100644
-> > >>> --- a/mm/page_io.c
-> > >>> +++ b/mm/page_io.c
-> > >>> @@ -189,7 +189,7 @@ int swap_writepage(struct page *page, struct wr=
-iteback_control *wbc)
-> > >>>        * Arch code may have to preserve more data than just the pag=
-e
-> > >>>        * contents, e.g. memory tags.
-> > >>>        */
-> > >>> -     ret =3D arch_prepare_to_swap(&folio->page);
-> > >>> +     ret =3D arch_prepare_to_swap(folio);
-> > >>>       if (ret) {
-> > >>>               folio_mark_dirty(folio);
-> > >>>               folio_unlock(folio);
-> > >>> diff --git a/mm/swap_slots.c b/mm/swap_slots.c
-> > >>> index 90973ce7881d..53abeaf1371d 100644
-> > >>> --- a/mm/swap_slots.c
-> > >>> +++ b/mm/swap_slots.c
-> > >>> @@ -310,7 +310,7 @@ swp_entry_t folio_alloc_swap(struct folio *foli=
-o)
-> > >>>       entry.val =3D 0;
-> > >>>
-> > >>>       if (folio_test_large(folio)) {
-> > >>> -             if (IS_ENABLED(CONFIG_THP_SWAP) && arch_thp_swp_suppo=
-rted())
-> > >>> +             if (IS_ENABLED(CONFIG_THP_SWAP))
-> > >>>                       get_swap_pages(1, &entry, folio_nr_pages(foli=
-o));
-> > >>>               goto out;
-> > >>>       }
-> > >>
-> > >
-> > > Thanks
-> > > Barry
-> >
+--Sig_/nQH3aKb_JKVpGVq81pA/YRJ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmX9NnQACgkQAR8vZIA0
+zr0Fdwf/UVRNj+FWS2p7d4DPVSU+2/31qvxGC+JNkb28WRSVpSIC/oF4YrgOfa+z
+GGXToX5fLssqDwZUaNX68LoBDMVLehVfYyD10kHxlEwAowMi8QttfuR0jmPi3fdB
+shEoNYTGzxcw//L43KEgq3VcF9IbuVeuqwFuf91BG1APTy6QTAwL5yJIByD2GRrU
+5bbj2BzOba8UN2ubEtRSB7l9o/TAlGuy6D8S8nkdRxrPxPNYOsGRo4vX3KyNDr7A
+RQ7yO6uGvZrkr1YHzmbS8n1ZSj74Vraza/sxXkgato9OaiXrVBUmgMgyJXjxCdVr
+t0lsez29BNRUtU/OJONSkTBNRZLJcQ==
+=9JHx
+-----END PGP SIGNATURE-----
+
+--Sig_/nQH3aKb_JKVpGVq81pA/YRJ--
