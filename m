@@ -1,203 +1,96 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from h3cspam02-ex.h3c.com (smtp.h3c.com [60.191.123.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0089B15E80;
-	Fri, 22 Mar 2024 07:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57D012E4E;
+	Fri, 22 Mar 2024 07:52:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.191.123.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711093896; cv=none; b=GOR71TIlLhpJFdhWKdXH+KQMALNEH45MYZgSEHhcPhaOUvuihPal9Wfgxf8raLxkhmoV5O0ywZkDq9IqI3qnNfqO+I8CyVUmcbUPKOIuXlFF4ZNW6M6F+kNblBCrTXo1mvjGtvZ/U+VjzInfJJD9FgsJrmMn0GaPoGyboxySjaw=
+	t=1711093952; cv=none; b=p5j4gDtvbpKID9zGDzb3GxSPrCZZTqG7DCN+Rtpuqc+Yp3l+LQRk5qaa/tbtHBlgfSouUd32C5bhxa2beGvoW7zyJclhQhuEs5gkD1S9ApYH6zSyw02XtoOJ+/52jLKaDtl/bJaeKAxqJppLN4GpazVKBT5Dn9VRtEXQuNBEWXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711093896; c=relaxed/simple;
-	bh=LrGD4CdH70Ot8YjR3/hDQnujLQga75Lm7K2IQB1C1XY=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=GEyv03gWhJYQNEZf1lDsccV74DqGjdBb614Cfr0YHGbjKNKcst5N312el3tTl60b9AfodXw2JpH+eChwzCrH9QyiTJCd4D3OWugU2o7Kn7P4mMB5KDRf/u/oFR7FFCXyJrFQxb9wCemty8g4d1R9IoggwNj+YakyWfPzx1dQCW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4V1DzY4mTVz4f3jHr;
-	Fri, 22 Mar 2024 15:51:21 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id A059E1A0BC6;
-	Fri, 22 Mar 2024 15:51:29 +0800 (CST)
-Received: from [10.174.178.129] (unknown [10.174.178.129])
-	by APP4 (Coremail) with SMTP id gCh0CgCn+mx_OP1l4WJkHw--.62143S2;
-	Fri, 22 Mar 2024 15:51:29 +0800 (CST)
-Subject: Re: [PATCH 1/6] writeback: collect stats of all wb of bdi in
- bdi_debug_stats_show
-To: Jan Kara <jack@suse.cz>
-Cc: akpm@linux-foundation.org, tj@kernel.org, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- willy@infradead.org, bfoster@redhat.com, dsterba@suse.com,
- mjguzik@gmail.com, dhowells@redhat.com, peterz@infradead.org
-References: <20240320110222.6564-1-shikemeng@huaweicloud.com>
- <20240320110222.6564-2-shikemeng@huaweicloud.com>
- <20240321180620.mbint45pbyc74vpg@quack3>
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-Message-ID: <a684ccdb-372f-b9e6-7239-ddb42a3f5f28@huaweicloud.com>
-Date: Fri, 22 Mar 2024 15:51:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+	s=arc-20240116; t=1711093952; c=relaxed/simple;
+	bh=JcawjuQzj2kIp/tXe59hsACPJPeGZetDdjNA++lcYhg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=FdkRPZ4caReE/rRlZjPzh1cFDt4A9kjiqcJdPd4TxSRqF7BXTrhBqlU0xto1PJjL/pr3QODMIk3XD6oTLLBhxPepc0qi4bXxRi2oIaU8bsn8QPWK3qpEbgU0dtFIYzfeYWymdiNo0P2kvR9zAqBbYVTM1g+RlhvoQBV3oTIJHX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com; spf=pass smtp.mailfrom=h3c.com; arc=none smtp.client-ip=60.191.123.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h3c.com
+Received: from mail.maildlp.com ([172.25.15.154])
+	by h3cspam02-ex.h3c.com with ESMTP id 42M7oqLk000733;
+	Fri, 22 Mar 2024 15:50:52 +0800 (GMT-8)
+	(envelope-from liu.yeC@h3c.com)
+Received: from DAG6EX05-IMDC.srv.huawei-3com.com (unknown [10.62.14.14])
+	by mail.maildlp.com (Postfix) with ESMTP id 09A1D2004BB9;
+	Fri, 22 Mar 2024 15:52:36 +0800 (CST)
+Received: from DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11) by
+ DAG6EX05-IMDC.srv.huawei-3com.com (10.62.14.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.27; Fri, 22 Mar 2024 15:50:54 +0800
+Received: from DAG6EX02-IMDC.srv.huawei-3com.com ([fe80::4c21:7c89:4f9d:e4c4])
+ by DAG6EX02-IMDC.srv.huawei-3com.com ([fe80::4c21:7c89:4f9d:e4c4%16]) with
+ mapi id 15.02.1258.027; Fri, 22 Mar 2024 15:50:54 +0800
+From: Liuye <liu.yeC@h3c.com>
+To: Jiri Slaby <jirislaby@kernel.org>,
+        "daniel.thompson@linaro.org"
+	<daniel.thompson@linaro.org>
+CC: "dianders@chromium.org" <dianders@chromium.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jason.wessel@windriver.com" <jason.wessel@windriver.com>,
+        "kgdb-bugreport@lists.sourceforge.net"
+	<kgdb-bugreport@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "linux-serial@vger.kernel.org"
+	<linux-serial@vger.kernel.org>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0ggVjRdIGtkYjogRml4IHRoZSBkZWFkbG9jayBpc3N1?=
+ =?utf-8?Q?e_in_KDB_debugging.?=
+Thread-Topic: [PATCH V4] kdb: Fix the deadlock issue in KDB debugging.
+Thread-Index: AQHae4X3OBfEt+YG5U6iGFBuJcoLGLFCznkAgACVJ+A=
+Date: Fri, 22 Mar 2024 07:50:54 +0000
+Message-ID: <5649fa8bfbdb43ea914850794afc6cac@h3c.com>
+References: <20240321110407.GB7342@aspen.lan>
+ <20240321115017.2879691-1-liu.yec@h3c.com>
+ <d3b77177-7c00-4459-9515-37afe741e9dd@kernel.org>
+In-Reply-To: <d3b77177-7c00-4459-9515-37afe741e9dd@kernel.org>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-sender-location: DAG2
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240321180620.mbint45pbyc74vpg@quack3>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgCn+mx_OP1l4WJkHw--.62143S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxZFy5JryrKrW5Zw43uw1rWFg_yoWrZw45pF
-	s8Ga1rGr48Xry7W3ZxZFWDXrWftw4Fqw12qFyIyay5Cw1DZF1akFy3uFyjyFykArZ7GFyj
-	yan0y3s3urWUtFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvab4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
-	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
-	67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
-	uYvjxUrR6zUUUUU
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:h3cspam02-ex.h3c.com 42M7oqLk000733
 
-
-
-on 3/22/2024 2:06 AM, Jan Kara wrote:
-> On Wed 20-03-24 19:02:17, Kemeng Shi wrote:
->> /sys/kernel/debug/bdi/xxx/stats is supposed to show writeback information
->> of whole bdi, but only writeback information of bdi in root cgroup is
->> collected. So writeback information in non-root cgroup are missing now.
->> To be more specific, considering following case:
->>
->> /* create writeback cgroup */
->> cd /sys/fs/cgroup
->> echo "+memory +io" > cgroup.subtree_control
->> mkdir group1
->> cd group1
->> echo $$ > cgroup.procs
->> /* do writeback in cgroup */
->> fio -name test -filename=/dev/vdb ...
->> /* get writeback info of bdi */
->> cat /sys/kernel/debug/bdi/xxx/stats
->> The cat result unexpectedly implies that there is no writeback on target
->> bdi.
->>
->> Fix this by collecting stats of all wb in bdi instead of only wb in
->> root cgroup.
->>
->> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-> 
-> Looks mostly good, one comment below:
-> 
->> ---
->>  mm/backing-dev.c | 93 ++++++++++++++++++++++++++++++++++++------------
->>  1 file changed, 70 insertions(+), 23 deletions(-)
->>
->> diff --git a/mm/backing-dev.c b/mm/backing-dev.c
->> index 5f2be8c8df11..788702b6c5dd 100644
->> --- a/mm/backing-dev.c
->> +++ b/mm/backing-dev.c
->> @@ -39,6 +39,19 @@ struct workqueue_struct *bdi_wq;
->>  #include <linux/debugfs.h>
->>  #include <linux/seq_file.h>
->>  
->> +struct wb_stats {
->> +	unsigned long nr_dirty;
->> +	unsigned long nr_io;
->> +	unsigned long nr_more_io;
->> +	unsigned long nr_dirty_time;
->> +	unsigned long nr_writeback;
->> +	unsigned long nr_reclaimable;
->> +	unsigned long nr_dirtied;
->> +	unsigned long nr_written;
->> +	unsigned long dirty_thresh;
->> +	unsigned long wb_thresh;
->> +};
->> +
->>  static struct dentry *bdi_debug_root;
->>  
->>  static void bdi_debug_init(void)
->> @@ -46,31 +59,65 @@ static void bdi_debug_init(void)
->>  	bdi_debug_root = debugfs_create_dir("bdi", NULL);
->>  }
->>  
->> -static int bdi_debug_stats_show(struct seq_file *m, void *v)
->> +static void collect_wb_stats(struct wb_stats *stats,
->> +			     struct bdi_writeback *wb)
->>  {
->> -	struct backing_dev_info *bdi = m->private;
->> -	struct bdi_writeback *wb = &bdi->wb;
->> -	unsigned long background_thresh;
->> -	unsigned long dirty_thresh;
->> -	unsigned long wb_thresh;
->> -	unsigned long nr_dirty, nr_io, nr_more_io, nr_dirty_time;
->>  	struct inode *inode;
->>  
->> -	nr_dirty = nr_io = nr_more_io = nr_dirty_time = 0;
->>  	spin_lock(&wb->list_lock);
->>  	list_for_each_entry(inode, &wb->b_dirty, i_io_list)
->> -		nr_dirty++;
->> +		stats->nr_dirty++;
->>  	list_for_each_entry(inode, &wb->b_io, i_io_list)
->> -		nr_io++;
->> +		stats->nr_io++;
->>  	list_for_each_entry(inode, &wb->b_more_io, i_io_list)
->> -		nr_more_io++;
->> +		stats->nr_more_io++;
->>  	list_for_each_entry(inode, &wb->b_dirty_time, i_io_list)
->>  		if (inode->i_state & I_DIRTY_TIME)
->> -			nr_dirty_time++;
->> +			stats->nr_dirty_time++;
->>  	spin_unlock(&wb->list_lock);
->>  
->> +	stats->nr_writeback += wb_stat(wb, WB_WRITEBACK);
->> +	stats->nr_reclaimable += wb_stat(wb, WB_RECLAIMABLE);
->> +	stats->nr_dirtied += wb_stat(wb, WB_DIRTIED);
->> +	stats->nr_written += wb_stat(wb, WB_WRITTEN);
->> +	stats->wb_thresh += wb_calc_thresh(wb, stats->dirty_thresh);
->> +}
->> +
->> +#ifdef CONFIG_CGROUP_WRITEBACK
->> +static void bdi_collect_stats(struct backing_dev_info *bdi,
->> +			      struct wb_stats *stats)
->> +{
->> +	struct bdi_writeback *wb;
->> +
->> +	/* protect wb from release */
->> +	mutex_lock(&bdi->cgwb_release_mutex);
->> +	list_for_each_entry(wb, &bdi->wb_list, bdi_node)
->> +		collect_wb_stats(stats, wb);
->> +	mutex_unlock(&bdi->cgwb_release_mutex);
->> +}
-> 
-> So AFAICT this function can race against
->   bdi_unregister() -> wb_shutdown(&bdi->wb)
-> 
-> because that doesn't take the cgwb_release_mutex. So we either need the RCU
-> protection as Brian suggested or cgwb_lock or something. But given
-> collect_wb_stats() can take a significant amount of time (traversing all
-> the lists etc.) I think we'll need something more clever.
-Sorry for missing this. I only pay attention to wb in cgroup as there is no
-much change to how we use bdi->wb.
-It seems that there was always a race between orginal bdi_debug_stats_show and
-release of bdi as following
-cat /.../stats
-bdi_debug_stats_show
-			bdi_unregister
-			bdi_put
-			  release_bdi
-			    kfree(bdi)
-  use after free
-
-I will fix this in next version. Thanks!
-
-> 
-> 								Honza
-> 
-
+Pk9uIDIxLiAwMy4gMjQsIDEyOjUwLCBsaXUueWVjQGgzYy5jb20gd3JvdGU6DQo+PiBGcm9tOiBM
+aXVZZSA8bGl1LnllQ0BoM2MuY29tPg0KPj4gDQo+PiBDdXJyZW50bHksIGlmIENPTkZJR19LREJf
+S0VZQk9BUkQgaXMgZW5hYmxlZCwgdGhlbiBrZ2Rib2Mgd2lsbCBhdHRlbXB0IA0KPj4gdG8gdXNl
+IHNjaGVkdWxlX3dvcmsoKSB0byBwcm92b2tlIGEga2V5Ym9hcmQgcmVzZXQgd2hlbiB0cmFuc2l0
+aW9uaW5nIA0KPj4gb3V0IG9mIHRoZSBkZWJ1Z2dlciBhbmQgYmFjayB0byBub3JtYWwgb3BlcmF0
+aW9uLg0KPj4gVGhpcyBjYW4gY2F1c2UgZGVhZGxvY2sgYmVjYXVzZSBzY2hlZHVsZV93b3JrKCkg
+aXMgbm90IE5NSS1zYWZlLg0KPj4gDQo+PiBUaGUgc3RhY2sgdHJhY2UgYmVsb3cgc2hvd3MgYW4g
+ZXhhbXBsZSBvZiB0aGUgcHJvYmxlbS4gSW4gdGhpcyBjYXNlIA0KPj4gdGhlIG1hc3RlciBjcHUg
+aXMgbm90IHJ1bm5pbmcgZnJvbSBOTUkgYnV0IGl0IGhhcyBwYXJrZWQgdGhlIHNsYXZlIA0KPj4g
+Q1BVcyB1c2luZyBhbiBOTUkgYW5kIHRoZSBwYXJrZWQgQ1BVcyBpcyBob2xkaW5nIHNwaW5sb2Nr
+cyBuZWVkZWQgYnkgDQo+PiBzY2hlZHVsZV93b3JrKCkuDQo+DQo+SSBhbSBtaXNzaW5nIGhlcmUg
+YW4gZXhwbGFuYXRpb24gKHBlcmhhcHMgYmVjYXVzZSBJIGNhbm5vdCBmaW5kIGFueSBkb2NzIGZv
+ciBpcnFfd29yaykgd2h5IGlycV93b3JrIHdvcmtzIGluIHRoaXMgY2FzZS4NCg0KSnVzdCBuZWVk
+IHRvIHBvc3Rwb25lIHNjaGVkdWxlX3dvcmsgdG8gdGhlIHNsYXZlIENQVSBleGl0aW5nIHRoZSBO
+TUkgY29udGV4dCwgYW5kIHRoZXJlIHdpbGwgYmUgbm8gZGVhZGxvY2sgcHJvYmxlbS4gDQppcnFf
+d29yayB3aWxsIG9ubHkgcmVzcG9uZCB0byBoYW5kbGUgc2NoZWR1bGVfd29yayBhZnRlciBtYXN0
+ZXIgY3B1IGV4aXRpbmcgdGhlIGN1cnJlbnQgaW50ZXJydXB0IGNvbnRleHQuIA0KV2hlbiB0aGUg
+bWFzdGVyIENQVSBleGl0cyB0aGUgaW50ZXJydXB0IGNvbnRleHQsIG90aGVyIENQVXMgd2lsbCBu
+YXR1cmFsbHkgZXhpdCB0aGUgTk1JIGNvbnRleHQsIHNvIHRoZXJlIHdpbGwgYmUgbm8gZGVhZGxv
+Y2suDQoNCj5BbmQgd2h5IHlvdSBuZWVkIHRvIHNjaGVkdWxlIGFub3RoZXIgd29yayBpbiB0aGUg
+aXJxX3dvcmsgYW5kIG5vdCBkbyB0aGUgam9iIGRpcmVjdGx5Lg0KDQpJbiB0aGUgZnVuY3Rpb24g
+a2dkYm9jX3Jlc3RvcmVfaW5wdXRfaGVscGVyICwgdXNlIG11dGV4X2xvY2sgZm9yIHByb3RlY3Rp
+b24uIFRoZSBtdXRleCBsb2NrIGNhbm5vdCBiZSB1c2VkIGluIGludGVycnVwdCBjb250ZXh0Lg0K
+R3Vlc3MgdGhhdCB0aGUgcHJvY2VzcyBuZWVkcyB0byBydW4gaW4gdGhlIGNvbnRleHQgb2YgdGhl
+IHByb2Nlc3MuIFRoZXJlZm9yZSwgY2FsbCBzY2hlZHVsZV93b3JrIGluIGlycV93b3JrLiBLZWVw
+IHRoZSBvcmlnaW5hbCBmbG93IHVuY2hhbmdlZC4NCg==
