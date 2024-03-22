@@ -1,120 +1,116 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C003171CE
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 08:06:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A4114AAE;
+	Fri, 22 Mar 2024 08:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711094780; cv=none; b=ARdrZEb1arUNtGEcYbeZKHm7AKmEtvJezloPyrXYuCuWTBwJumwdpc4+eCslA13ctKkWNJu4hnadDV/VK3kPEu5pWiXGRGXNlmu01XLVOIm2mgGIRpxcdWw5nUxELevHmLHc7a5TdsYull9tw/IclWZLoNUz/ipEMdPQ/2YZ6g0=
+	t=1711094817; cv=none; b=Pu67heYFRuTS22PG5kZeNpJZmTLIV0uEr2Ysu6qwyRZbkmApl37X4TZoDo6Q6Mh/iKse5Yx2f/RxdRdw86Zov0tL14ygnmkqq7oEH4CnOBwp7n6eV4YogqwGoxjiLrl9Qh2HYcQqVuPT1hCjlwi1HOJDS7xSlfc6ld19ry9UqUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711094780; c=relaxed/simple;
-	bh=yuz1DDYwwZ+Wu+hp6fEC6IuIktiCN/2dn12Wf0kXYLk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=tyMcdLXxviSiZ3aCC75Qoem9iHcWBac94oWH7fMtXPPvksZ6swfxC2d5irQwdf+F5Mnl5HmApm0DzsY2vCtbW/7+Mn5u50C+Ipp2SxUklGTfVH4CEehpR6LCrJ1tjtyc8416WNfON0RpsLei7MxXIvylnmmZGKR5ffJi8lOPQFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=CBrUF++O; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="CBrUF++O"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5684db9147dso2077376a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 01:06:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711094776; x=1711699576; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=XsZLSAJEXmeZxbFin0CImKOsNm3aXacrTABAdgCK260=;
-        b=CBrUF++OF+YmwdF6X7cykeYwFFB9S4gKX91/zNupGnSducv/hPcy1m4P6tCruNlZ7S
-         xas4y+D/4SCEZFHVgSY2G4pNqZUN6GPz9NfUhkb85MzcScr4YLE4FsN0PuDuwF4Iynj8
-         ObSYvEe8YoMS0IjJRdo2KIYRIhK8XroE5ez5ergYLk6pqiU1G4pPriGhEHmwp7f5eF8E
-         v1QKwafh/VkVEL23GO8IljWpuG2qr3GAe17GOSYuEiqDIgdO8u4TNdpS+AbLUO3uRdu/
-         bOk7whClpIa/DtkJ2Vfp8s2pSM93Tk9DL/6OH+FM4VmrHSu+IyuCL5xtxkJU+tff5e8f
-         LAxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711094776; x=1711699576;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XsZLSAJEXmeZxbFin0CImKOsNm3aXacrTABAdgCK260=;
-        b=Jtx0L3/MTyfIbBA0S75RiAboPtJtRhH/FP/yLoQgyP/6vDrlZcXjIrPEI7ra/CcZpb
-         A5nak5iXdkpS2kqHsv5j/699SPGZ67YH6mTMO5Xl/E54QJ6FOp7ujY1+zVQ0TFyHX9fW
-         FE39b42AbpcHtrjEc6rAme53yQbV9wVJ2AcWcGZwfgn+o8QNWqFSlY6NjYzEK+xZ8WyD
-         J6Kq17NoxDTjQ/aQRrFreEsigQR+x4L2MfS6Hmg5p4f4wgdE0FUYOYpNCZAHhi1pz8uA
-         kqm6v/BRL+80+Ecl2BhgdKWehJLrBm902mLEcrnx3HkAG865t30JmSVsej8HoMViUQVY
-         ouNg==
-X-Forwarded-Encrypted: i=1; AJvYcCWfxoCdAzI/fwFeQGyr0hXObxwJwxER/ttlD11iBNPAb7UnxbiB/qcJqWzOlqvR6kgZb45VW+mBNYfL7rIy2Z97zpfQvPSy0AgqciRW
-X-Gm-Message-State: AOJu0YxD4QYh3i0u0zZmW7zQ9sJ1ZapPXiRlt5UNOk2uUUQG8Vf9HEsT
-	WK93XZCe6h7hiTvmm96FR5bfk1AdionFTwRIf159QGhdPv76GZJfWUEPS+hl8B0=
-X-Google-Smtp-Source: AGHT+IF6hLTM5QsWFB8daZv5l4Na45H7PPkkgF62jW5LxW0NpIpFh38gMORfD2MF7w/c7B8DVIGztA==
-X-Received: by 2002:a50:9b44:0:b0:56b:b7f1:8094 with SMTP id a4-20020a509b44000000b0056bb7f18094mr977606edj.35.1711094775863;
-        Fri, 22 Mar 2024 01:06:15 -0700 (PDT)
-Received: from [192.168.1.70] ([84.102.31.156])
-        by smtp.gmail.com with ESMTPSA id fe8-20020a056402390800b0056bd1e71310sm743729edb.85.2024.03.22.01.06.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Mar 2024 01:06:15 -0700 (PDT)
-Message-ID: <b473d940-0301-472d-90f0-297da6815377@baylibre.com>
-Date: Fri, 22 Mar 2024 09:06:13 +0100
+	s=arc-20240116; t=1711094817; c=relaxed/simple;
+	bh=zeEyzkGVsnYT+UEL/kKr4eYf2sxQMgOT0Az3cEDXNQg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RjiX+YXIYu4/k0MfSGx69euOhN76lwp7+rIKTHiuPllM6aQT7GXCcb+/RpUHvzTObxz1I+hdy2rrtoC9pX6gfvrnvZFO7Ac6Ngk78Wb0dyL2GxdH4ENDhmDyFbG5LD2qXpV0rvQOp/4VY96UYXLJ+NE5epn2IxPBGzOI7APj/18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-swift.com; spf=pass smtp.mailfrom=net-swift.com; arc=none smtp.client-ip=54.254.200.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-swift.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=net-swift.com
+X-QQ-mid: bizesmtp86t1711094719tskd1b4r
+X-QQ-Originating-IP: 6/spgvc5G+FNS3fcq5kQX1slQ/CH+qbDWACeJxyYghs=
+Received: from localhost.trustnetic.com ( [183.159.169.46])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 22 Mar 2024 16:05:17 +0800 (CST)
+X-QQ-SSF: 01400000000000E0E000000A0000000
+X-QQ-FEAT: q+yjhizk/eKkPiEx3g0rTO1cZf/nFOdAGzzaWF1yIEfzYx7KehWAxm3MDQ52i
+	dDgGud7Zr33pGI5ZtyN6g5WuhNPzvwa+8pcVPfPqqrX0C8PcQisqBGSRf6Negv1nw0HH9h2
+	PSkBb/N3wX8U16X5dhCBU6CkZnPs7Vexi+S1OipUcLBeMkhFJetxvxdPwJLhMVZkiuItfPS
+	NGL7grd5+IMQotNmLp0Gqgam4tWODxgaUgwLhh3qYZgSObjgMcv3mKo9G62CE3SieyKv0dJ
+	pWoIoUezwQXnnDcjarlHRvAPPqcbVolRvRTlwKuy5jmCalg6DjocFh+NTZFsQWScfsJbtmX
+	AyZVhzDw+0nRGpMNwoggnBZbMHFhbpiyglJN/OsSlEMFGSbUubRIChQ7CDyhxufvDUHFiZa
+	HwAAxn+eQnQ=
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 18032392528168127567
+From: Duanqiang Wen <duanqiangwen@net-swift.com>
+To: netdev@vger.kernel.org,
+	jiawenwu@trustnetic.com,
+	mengyuanlou@net-swift.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	maciej.fijalkowski@intel.com,
+	andrew@lunn.ch,
+	wangxiongfeng2@huawei.com,
+	linux-kernel@vger.kernel.org,
+	michal.kubiak@intel.com
+Cc: Duanqiang Wen <duanqiangwen@net-swift.com>
+Subject: [PATCH net v5] net: txgbe: fix i2c dev name cannot match clkdev
+Date: Fri, 22 Mar 2024 16:04:16 +0800
+Message-Id: <20240322080416.470517-1-duanqiangwen@net-swift.com>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 10/11] pinctrl: pinctrl-tps6594: Add TPS65224 PMIC
- pinctrl and GPIO
-From: Julien Panis <jpanis@baylibre.com>
-To: Bhargav Raviprakash <bhargav.r@ltts.com>, linux-kernel@vger.kernel.org
-Cc: m.nirmaladevi@ltts.com, lee@kernel.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- devicetree@vger.kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
- lgirdwood@gmail.com, broonie@kernel.org, linus.walleij@linaro.org,
- linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nm@ti.com,
- vigneshr@ti.com, kristo@kernel.org, eblanc@baylibre.com
-References: <20240320102559.464981-1-bhargav.r@ltts.com>
- <20240320102559.464981-11-bhargav.r@ltts.com>
- <775348fb-3227-4609-b4aa-c8a6eddb8953@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <775348fb-3227-4609-b4aa-c8a6eddb8953@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:net-swift.com:qybglogicsvrsz:qybglogicsvrsz3a-1
 
-On 3/21/24 12:10, Julien Panis wrote:
-> On 3/20/24 11:25, Bhargav Raviprakash wrote:
->> From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
->>
->> Add support for TPS65224 pinctrl and GPIOs to TPS6594 driver as they have
->> significant functional overlap.
->> TPS65224 PMIC has 6 GPIOS which can be configured as GPIO or other
->> dedicated device functions.
->>
->> Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
->> Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
->> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->
-> With this patch, an issue is observed on am62a:
->
-> root@am62axx-evm:~# dmesg | grep tps
-> ...
-> [   12.122631] tps6594-pinctrl tps6594-pinctrl.2.auto: error -EINVAL: Couldn't register 
-> gpio_regmap driver
-> [   12.133216] tps6594-pinctrl: probe of tps6594-pinctrl.2.auto failed with error -22
->
-> Without this patch, the issue disappears. Do you observe
-> the same result with your am62p ?
->
-> Julien Panis
->
+txgbe clkdev shortened clk_name, so i2c_dev info_name
+also need to shorten. Otherwise, i2c_dev cannot initialize
+clock.
 
-Hi Barghav.
+Change log:
+v4-v5: address comments:
+	Jiri Pirko:
+	Well, since it is used in txgbe_phy.c, it should be probably
+	rather defined locally in txgbe_phy.c.
+v3->v4: address comments:
+	Jakub Kicinski:
+	No empty lines between Fixes and Signed-off... please.
+v2->v3: address comments:
+	Jiawen Wu:
+	Please add the define in txgbe_type.h
 
-I found the issue in your patch.
+Fixes: e30cef001da2 ("net: txgbe: fix clk_name exceed MAX_DEV_ID limits")
+Signed-off-by: Duanqiang Wen <duanqiangwen@net-swift.com>
+---
+ drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-In probe function you handle TPS652254 and TPS6594 'switch' cases,
-but you do not handle TPS6593 and LP8764 cases.
-Since AM62A uses a TPS6593, it currently falls in the default case,
-and as a result probe fails.
+diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
+index 5b5d5e4310d1..2fa511227eac 100644
+--- a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
++++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
+@@ -20,6 +20,8 @@
+ #include "txgbe_phy.h"
+ #include "txgbe_hw.h"
+ 
++#define TXGBE_I2C_CLK_DEV_NAME "i2c_dw"
++
+ static int txgbe_swnodes_register(struct txgbe *txgbe)
+ {
+ 	struct txgbe_nodes *nodes = &txgbe->nodes;
+@@ -571,8 +573,8 @@ static int txgbe_clock_register(struct txgbe *txgbe)
+ 	char clk_name[32];
+ 	struct clk *clk;
+ 
+-	snprintf(clk_name, sizeof(clk_name), "i2c_dw.%d",
+-		 pci_dev_id(pdev));
++	snprintf(clk_name, sizeof(clk_name), "%s.%d",
++		 TXGBE_I2C_CLK_DEV_NAME, pci_dev_id(pdev));
+ 
+ 	clk = clk_register_fixed_rate(NULL, clk_name, NULL, 0, 156250000);
+ 	if (IS_ERR(clk))
+@@ -634,7 +636,7 @@ static int txgbe_i2c_register(struct txgbe *txgbe)
+ 
+ 	info.parent = &pdev->dev;
+ 	info.fwnode = software_node_fwnode(txgbe->nodes.group[SWNODE_I2C]);
+-	info.name = "i2c_designware";
++	info.name = TXGBE_I2C_CLK_DEV_NAME;
+ 	info.id = pci_dev_id(pdev);
+ 
+ 	info.res = &DEFINE_RES_IRQ(pdev->irq);
+-- 
+2.27.0
 
-Please fix it for v5.
-
-Julien Panis
