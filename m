@@ -1,83 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79F420B27
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 09:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2108A224F1
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 09:39:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711100364; cv=none; b=saKLpUrMS3sZnDDmUeo6LPZ+bpjJvBgap4SzRW0jSjikR9LKe3q6fQBpTzR3b1E5men6hdZowVobPtFkAczgHW3h/0J6XheqLyPONH3o/k7W38KgA5MBXO2YKDU1iUlURUGhbXa0eZgtdstZ69z6/sSRlQQKvA0k8a655m60oGs=
+	t=1711100377; cv=none; b=rQSlI3DuJFrr9cLthY3fI2iv5vHquV0dL47aV1RitR2+uO9D/AZBrUSUlL07xf6tmAwncq9+NZ0KT2+UM+YqeDRZcCMvGQ3pTRerod/g2fEWBwzqxtVLG2ZlasEp83BkQ9hQktUm18Ct4isr7sx/4fuypwipOwtHSKnJk18cEK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711100364; c=relaxed/simple;
-	bh=V8aM6OCgOcvm5zmKYZ0GdgRjywxe/nP0WYMbHQYGD0Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ApCX1Ykkni4jlj8JxgOvqaOcdXXcuzjP/FXfGIETgb1FCqvNwK9gzQiCggKOiOQ9cUHo6Ko4w2WNX8lqApHy+JDhjBbG8SnoswFaK9EKL2dg0mECXPujV/ex0An9Ov1mRlZyTZdrUZLo+OdaIClomb13fY0yEIbyB1AZsYKkxA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ve5bcYW/; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ve5bcYW/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711100361; x=1742636361;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=V8aM6OCgOcvm5zmKYZ0GdgRjywxe/nP0WYMbHQYGD0Q=;
-  b=Ve5bcYW/yb7jPdw7GFG++bBnpv0C7GncCQCbIbiOeTQPlxXTINSQ3XMn
-   CK8GfDC2wbiz0ugiy3O/+Xm94pdZEyiGSgD5on72Bb8wRnjnXixFri58j
-   tOBsdeGBTVX2RfeXwiuk10Ls3BJE5qIyEFvS3sRxTb8CfnTzSzC3xpXUl
-   6D7TOOI40tJxK9Sy0D18D9yuzmapN1G9QKt1S5ltR/pC8dcQchP3Un1DW
-   KikNdZmOYf7Cxld4S/q/5AUtAxWMg7kepi1vijiqhnae4cEWE7kO+O0rz
-   GBUNNLFceLuuDWQ2FNeiGjVO3N9I9vhL/n0UMISQ5rWyawHn/6oAYn6Ag
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="6255465"
-X-IronPort-AV: E=Sophos;i="6.07,145,1708416000"; 
-   d="scan'208";a="6255465"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 02:39:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,145,1708416000"; 
-   d="scan'208";a="19549801"
-Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 22 Mar 2024 02:39:19 -0700
-Received: from kbuild by b21307750695 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rnbMq-000KCs-0W;
-	Fri, 22 Mar 2024 09:39:16 +0000
-Date: Fri, 22 Mar 2024 17:38:23 +0800
-From: kernel test robot <lkp@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Oleg Nesterov <oleg@redhat.com>
-Subject: powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data325'
- from `kernel/ptrace.o' being placed in section `.bss..Lubsan_data325'
-Message-ID: <202403221741.UKuCKo72-lkp@intel.com>
+	s=arc-20240116; t=1711100377; c=relaxed/simple;
+	bh=OJoEnYOjFTP4CHdGTPSIyur2cVGQFbj8igAcc8O+R/0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TRyM5G9p8i6qAdQ0P8xDrb4gEw0jgQYVy9G28ZHCKURIybGmL+ci4OdQBitvM14rPpbSejedsKk5M4chsk9cO6TIiyn5IsMyrixqiJ2fB7OkJ9wQAUyG3wu501EwVREPKNF5wPANMX3O9InEa15MmHopx4OdCHUJpFR5ja7+m/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71DC51007;
+	Fri, 22 Mar 2024 02:40:08 -0700 (PDT)
+Received: from [10.57.72.175] (unknown [10.57.72.175])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1DD13F64C;
+	Fri, 22 Mar 2024 02:39:31 -0700 (PDT)
+Message-ID: <32ca7e47-4a85-4170-a34a-d007494cc262@arm.com>
+Date: Fri, 22 Mar 2024 09:39:30 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/6] mm: swap: Allow storage of all mTHP orders
+Content-Language: en-GB
+To: "Huang, Ying" <ying.huang@intel.com>,
+ "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>,
+ Gao Xiang <xiang@kernel.org>, Yu Zhao <yuzhao@google.com>,
+ Yang Shi <shy828301@gmail.com>, Michal Hocko <mhocko@suse.com>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>, Barry Song <21cnbao@gmail.com>,
+ Chris Li <chrisl@kernel.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240311150058.1122862-1-ryan.roberts@arm.com>
+ <20240311150058.1122862-5-ryan.roberts@arm.com>
+ <87jzm751n3.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <d6ac1097-2ca3-4e6d-902d-1b942cacf0fb@arm.com>
+ <8734skryev.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <b22a222b-7fd8-4648-84a7-21d35f529f27@arm.com>
+ <87plvnq9ap.fsf@yhuang6-desk2.ccr.corp.intel.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <87plvnq9ap.fsf@yhuang6-desk2.ccr.corp.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   8e938e39866920ddc266898e6ae1fffc5c8f51aa
-commit: 5431fdd2c181dd2eac218e45b44deb2925fa48f0 ptrace: Convert ptrace_attach() to use lock guards
-date:   4 months ago
-config: powerpc-randconfig-r013-20211210 (https://download.01.org/0day-ci/archive/20240322/202403221741.UKuCKo72-lkp@intel.com/config)
-compiler: powerpc-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240322/202403221741.UKuCKo72-lkp@intel.com/reproduce)
+On 22/03/2024 02:39, Huang, Ying wrote:
+> Ryan Roberts <ryan.roberts@arm.com> writes:
+> 
+>> On 21/03/2024 04:39, Huang, Ying wrote:
+>>> Ryan Roberts <ryan.roberts@arm.com> writes:
+>>>
+>>>> Hi Huang, Ying,
+>>>>
+>>>>
+>>>> On 12/03/2024 07:51, Huang, Ying wrote:
+>>>>> Ryan Roberts <ryan.roberts@arm.com> writes:
+>>>> [...]
+>>>>
+>>>>>> @@ -905,17 +961,18 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
+>>>>>>  	}
+>>>>>>  
+>>>>>>  	if (si->swap_map[offset]) {
+>>>>>> +		VM_WARN_ON(order > 0);
+>>>>>>  		unlock_cluster(ci);
+>>>>>>  		if (!n_ret)
+>>>>>>  			goto scan;
+>>>>>>  		else
+>>>>>>  			goto done;
+>>>>>>  	}
+>>>>>> -	WRITE_ONCE(si->swap_map[offset], usage);
+>>>>>> -	inc_cluster_info_page(si, si->cluster_info, offset);
+>>>>>> +	memset(si->swap_map + offset, usage, nr_pages);
+>>>>>
+>>>>> Add barrier() here corresponds to original WRITE_ONCE()?
+>>>>> unlock_cluster(ci) may be NOP for some swap devices.
+>>>>
+>>>> Looking at this a bit more closely, I'm not sure this is needed. Even if there
+>>>> is no cluster, the swap_info is still locked, so unlocking that will act as a
+>>>> barrier. There are a number of other callsites that memset(si->swap_map) without
+>>>> an explicit barrier and with the swap_info locked.
+>>>>
+>>>> Looking at the original commit that added the WRITE_ONCE() it was worried about
+>>>> a race with reading swap_map in _swap_info_get(). But that site is now annotated
+>>>> with a data_race(), which will suppress the warning. And I don't believe there
+>>>> are any places that read swap_map locklessly and depend upon observing ordering
+>>>> between it and other state? So I think the si unlock is sufficient?
+>>>>
+>>>> I'm not planning to add barrier() here. Let me know if you disagree.
+>>>
+>>> swap_map[] may be read locklessly in swap_offset_available_and_locked()
+>>> in parallel.  IIUC, WRITE_ONCE() here is to make the writing take effect
+>>> as early as possible there.
+>>
+>> Afraid I'm not convinced by that argument; if it's racing, it's racing - the
+> 
+> It's not a race.
+> 
+>> lockless side needs to be robust (it is). Adding the compiler barrier limits the
+>> compiler's options which could lead to slower code in this path. If your
+>> argument is that you want to reduce the window where
+>> swap_offset_available_and_locked() could observe a free swap slot but then see
+>> that its taken after it gets the si lock, that seems like a micro-optimization
+>> to me, which we should avoid if we can.
+> 
+> Yes.  I think that it is a micro-optimization too.  I had thought that
+> it is a common practice to use WRITE_ONCE()/READ_ONCE() or barrier() in
+> intentional racy data accessing to make the change available as soon as
+> possible.  But I may be wrong here.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403221741.UKuCKo72-lkp@intel.com/
+My understanding is that WRITE_ONCE() forces the compiler to emit a store at
+that point in the program; it can't just rely on knowing that it has previously
+written the same value to that location, it can't reorder the load to later in
+the program and it must store the whole word atomically so that no tearing can
+be observed. But given that swap_map is only ever written with the si lock held,
+I don't believe we require the first two of those semantics. It should be enough
+to know that the compiler has emitted all the stores (if it determines they are
+required) prior to the spin_unlock(). I'm not sure about the anti-tearing
+guarrantee.
 
-All warnings (new ones prefixed by >>):
+Happy to be told I'm wrong here!
 
->> powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data325' from `kernel/ptrace.o' being placed in section `.bss..Lubsan_data325'
->> powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data325' from `kernel/ptrace.o' being placed in section `.bss..Lubsan_data325'
->> powerpc-linux-ld: warning: orphan section `.bss..Lubsan_data325' from `kernel/ptrace.o' being placed in section `.bss..Lubsan_data325'
+> 
+>> By remnoving the WRITE_ONCE() and using memset, the lockless reader could
+>> observe tearing though. I don't think that should cause a problem (because
+>> everything is rechecked with under the lock), but if we want to avoid it, then
+>> perhaps we just need to loop over WRITE_ONCE() here instead of using memset?
+> 
+> IIUC, in practice that isn't necessary, because type of si->swap_map[]
+> is "unsigned char".  It isn't possible to tear "unsigned char".  
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+In practice, perhaps. But I guess the compiler is free to update the char
+bit-by-bit if it wants to, if the store is not marked WRITE_ONCE()?
+
+> In
+> theory, it may be better to use WRITE_ONCE() because we may change the
+> type of si->swap_map[] at some time (who knows).  I don't have a strong
+> opinion here.
+
+The way I see it, the precedent is already set; there are a number of places
+that already use memset to update swap_map. They are all under the si lock, and
+none use barrier(). If its wrong here, then its wrong in those places too, I
+believe.
+
+> 
+>>>>>> +	add_cluster_info_page(si, si->cluster_info, offset, nr_pages);
+>>>>>>  	unlock_cluster(ci);
+> 
+> --
+> Best Regards,
+> Huang, Ying
+
