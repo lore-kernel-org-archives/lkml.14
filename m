@@ -1,160 +1,86 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B79F17541;
-	Fri, 22 Mar 2024 07:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F5612E4E
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 07:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711092700; cv=none; b=JurtapyVu4HdzMDSpfG9aFoIxPSW0Sew8jiiyK6lwW4OYsI87r3G8YaUwl3pNGMmVtE2DY45ag/QFcsiONJlSFDQMTMIWWW9H2Esy1/ZzcC98sra2TASR/anBT6HddfZqtKnOyqn9UcwtrpkU2qaOej9e3Rc4gKFpBhdmMRfJdI=
+	t=1711092754; cv=none; b=XxruAAG3WeHA9oiF00dojq2CTVrrm/af5OHHAKE6uxKKXxLaEKZcSbcHQJRNa1XeBtjEcshwj+KdZYKPPSreAWfInnjjFMgoTveiLWxx4TDa366NC3/Qax5nsxhfe8l2tTcDuM7dPSyULMH55aXH0rzOMZLwKPzmcdzBU7OoH1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711092700; c=relaxed/simple;
-	bh=1rzS6p1dJQyF/ZSOpXxB1J4g5C8EI88hO1+/BB5uU90=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=huxOnTyXIE7pZNJ39qUiISa8No6DUgfV7blz7B8yshfj/9O+RMwEKH87IYuK2HOfrNX0CtLSIxuTSJOWMze6qgk0ysVbIgC2vCzqhWBgqW/RwsWsMmBBECee/tN4Fvq9oLRkhFYO/nhCWzPHqdueWYVt9B3pdWVlGPgUfd3H1Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=iSD9Xgd4; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1711092754; c=relaxed/simple;
+	bh=dvaHaWF/NSDuciCxk9CaOg5cXqouPwxc5xMlUCVozmE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qJK+u/+uUu0Prphb1sHht6xZwkTzN3U+87dtKo9U26HmDCMI9MO38VF7RA0xtWfpwTj5aLNcYunw0J8roQU3cI2jBw6m1p/gQkEHVNWVU/IgN9DxadOF92IHyGzZv6l/jDygIgZ4IB0YHPKcth1rga3j5gfpppKNTANt56sNJvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NQdGycKH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="iSD9Xgd4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1711092698; x=1742628698;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1rzS6p1dJQyF/ZSOpXxB1J4g5C8EI88hO1+/BB5uU90=;
-  b=iSD9Xgd46P+QVW9IiApFp4zOrq8EFxUXbmj5BiREyLt1x2hBTXXWvP+P
-   4TT5xR4kZ4WVU13K0JYe+EMYA7PIB69EysZZlu2ugAOjEsR0qj0woy3c9
-   226LVZjAchd7cS7fivM6GmowP729Av3jbzyXhd3EA5As88rW4kLrL1bP/
-   2MdWo/6rngnT9rI2Ii+BQPAf705w3W/giNyCU+zOnCcmDM+wlGWwScPWm
-   NJR+A8qSEpvOrvVmaq6fAjIr5VoGtZGmiP96UguZEIGqCckXJchdPlY7j
-   NR5hNQAVtUXjfmyhF9qp4iq4oZoS1j5xq2gWlXbxajgurgjEaIqV5QCzf
-   Q==;
-X-CSE-ConnectionGUID: aRUh/ppPSjiLg30OD7E4FA==
-X-CSE-MsgGUID: 8SIMjWfATaawJYZQlZMRbQ==
-X-IronPort-AV: E=Sophos;i="6.07,145,1708412400"; 
-   d="asc'?scan'208";a="18544964"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 22 Mar 2024 00:31:36 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 22 Mar 2024 00:31:29 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex03.mchp-main.com (10.10.85.151)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Fri, 22 Mar 2024 00:31:26 -0700
-Date: Fri, 22 Mar 2024 07:30:39 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: <Balamanikandan.Gunasundar@microchip.com>
-CC: <conor@kernel.org>, <miquel.raynal@bootlin.com>, <richard@nod.at>,
-	<vigneshr@ti.com>, <robh@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-	<conor+dt@kernel.org>, <Nicolas.Ferre@microchip.com>,
-	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>,
-	<linux-mtd@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: mtd: atmel-nand: convert txt to yaml
-Message-ID: <20240322-arrest-pucker-7ff731359fa0@wendy>
-References: <20240320-linux-next-nand-yaml-v1-0-2d2495363e88@microchip.com>
- <20240320-linux-next-nand-yaml-v1-1-2d2495363e88@microchip.com>
- <20240320-quicksand-attentive-14610103237b@spud>
- <3c199359-f0d8-4ec0-bf86-930b2ecfb876@microchip.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NQdGycKH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1222FC433F1;
+	Fri, 22 Mar 2024 07:32:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1711092753;
+	bh=dvaHaWF/NSDuciCxk9CaOg5cXqouPwxc5xMlUCVozmE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NQdGycKH+xu6txLmlIXuGu8DBkCSUcDbCT2NAlC/iZrqK8s5KhtWwsVJ5ixI+HX0r
+	 5C0qm8ybvOGUsl24PEQNBgoVpxkfXL9JKtjGE6TWx2wD3HwZPPCTYJwrjqVo+JGalK
+	 DmB7sh3mzqr4cmWxu5sXDv5dk+1jLjI62f5S6P+o=
+Date: Fri, 22 Mar 2024 08:32:29 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: David Ahern <dsahern@kernel.org>
+Cc: Jason Gunthorpe <jgg@nvidia.com>, Christoph Hellwig <hch@infradead.org>,
+	Saeed Mahameed <saeed@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Leon Romanovsky <leonro@nvidia.com>, Jiri Pirko <jiri@nvidia.com>,
+	Leonid Bloch <lbloch@nvidia.com>, Itay Avraham <itayavr@nvidia.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Aron Silverton <aron.silverton@oracle.com>,
+	linux-kernel@vger.kernel.org,
+	Andy Gospodarek <andrew.gospodarek@broadcom.com>
+Subject: Re: [PATCH V4 0/5] mlx5 ConnectX control misc driver
+Message-ID: <2024032248-ardently-ribcage-a495@gregkh>
+References: <20240207072435.14182-1-saeed@kernel.org>
+ <Zcx53N8lQjkpEu94@infradead.org>
+ <ZczntnbWpxUFLxjp@C02YVCJELVCG.dhcp.broadcom.net>
+ <20240214175735.GG1088888@nvidia.com>
+ <20240304160237.GA2909161@nvidia.com>
+ <9cc7127f-8674-43bc-b4d7-b1c4c2d96fed@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5XY8D9lenP0Sop6x"
-Content-Disposition: inline
-In-Reply-To: <3c199359-f0d8-4ec0-bf86-930b2ecfb876@microchip.com>
-
---5XY8D9lenP0Sop6x
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <9cc7127f-8674-43bc-b4d7-b1c4c2d96fed@kernel.org>
 
-On Fri, Mar 22, 2024 at 04:27:29AM +0000, Balamanikandan.Gunasundar@microch=
-ip.com wrote:
-> On 20/03/24 10:05 pm, Conor Dooley wrote:
-> > On Wed, Mar 20, 2024 at 11:22:07AM +0530, Balamanikandan Gunasundar wro=
-te:
+On Thu, Mar 21, 2024 at 09:23:28PM -0600, David Ahern wrote:
+> On 3/4/24 9:02 AM, Jason Gunthorpe wrote:
+> > On Wed, Feb 14, 2024 at 01:57:35PM -0400, Jason Gunthorpe wrote:
+> > 
+> >> I also like this, I don't want the outcome of this discussion to be
+> >> that only mlx5ctl gets merged. I want all the HW that has this problem
+> >> to have support in the mainline kernel.
+> > 
+> > To this end here is my proposal to move forward with a new
+> > mini-subsystem to provide rules for this common approach. Get the
+> > existing tools out of hacky unstructured direct hardware access via
+> > /sys/XX and into a formalized lockdown compatible system. I've talked
+> > to enough people now to think we have a critical mass.
+> > 
+> 
+> It has been almost 3 weeks and no response (to this and other proposals
+> in this thread). I have been around Linux long enough to know that
+> silence is not acceptance.
+> 
+> To me, this seems like a sane start for a new subsystem addressing
+> challenges with complex, modern devices. To that end:
+> 
+> Acked-by: David Ahern <dsahern@kernel.org>
 
-> >> +allOf:
-> >> +  - if:
-> >> +      properties:
-> >> +        compatible:
-> >> +          contains:
-> >> +            enum:
-> >> +              - atmel,at91rm9200-nand-controller
-> >> +              - atmel,at91sam9260-nand-controller
-> >> +              - atmel,at91sam9261-nand-controller
-> >> +              - atmel,at91sam9g45-nand-controller
-> >> +              - atmel,sama5d3-nand-controller
-> >> +              - microchip,sam9x60-nand-controller
-> >> +    then:
-> >> +      properties:
-> >> +        "#address-cells":
-> >> +          const: 2
-> >> +
-> >> +        "#size-cells":
-> >> +          const: 1
-> > Why is this in an if? Isn't this all of the devices in the binding?
-> >=20
->=20
-> The default nand-controller.yaml defines this as const values.=20
-> (#address-cell : 1 and #size-cells : 1). I am trying to override this=20
-> const value.
+It's the middle of the merge window, not much we can actually do and
+this patch series itself couldn't be applied as-is, so it's hard to see
+what could have happened on my end...
 
-You're not overriding anything as you don't have a ref to
-nand-controller.yaml in this file, AFAICT. Why don't you?
+thanks,
 
-> May be I should think about better approach ?
-
-You should be able to apply this unconditionally for this file. I don't
-see why the if would be needed?
-
-
-> >> +patternProperties:
-> >> +  "^nand@[a-f0-9]$":
-> >> +    type: object
-> >> +    $ref: nand-chip.yaml#
-> >> +    description:
-> >> +      NAND chip bindings. All generic properties described in
-> >> +      Documentation/devicetree/bindings/mtd/{common,nand}.txt also ap=
-ply to
-> >> +      the NAND device node, and NAND partitions should be defined und=
-er the
-> >> +      NAND node as described in
-> >> +      Documentation/devicetree/bindings/mtd/partition.txt.
-> > These files do not exist.
-> >=20
->=20
-> Apologies for copying the content from the text file. I will correct this.
-
-You don't need these comments at all I think. You have the ref to
-nand-chip.yaml, so at least the first text file reference can be
-removed.
-
-> Yes. I should fix the alignment. I will send a v2 shortly
-
-I did make other comments, so I assume you agree with everything else I
-mentioned and will implement them in v2.
-
-Thanks,
-Conor.
-
---5XY8D9lenP0Sop6x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZf0zmQAKCRB4tDGHoIJi
-0udtAQD10mY1UxAUiy245iE/HFMBpXrP6RsT1/Jv5xwrvG6KqQD/XUG4OLX7ZUxr
-FFeupjEPcEhaLjXcg3DqAb7W/vtRCAw=
-=Lnin
------END PGP SIGNATURE-----
-
---5XY8D9lenP0Sop6x--
+greg k-h
