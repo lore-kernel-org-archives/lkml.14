@@ -1,57 +1,57 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456EF4DA14;
-	Fri, 22 Mar 2024 14:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B8250255;
+	Fri, 22 Mar 2024 14:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711118707; cv=none; b=Bc9+e1zoVd6rV4J7VNR0JhEuPtcUUAxp00O7hjUzhTm9hb//ISRs1jNivH6hFMqWSVvlOvOg++ioNFvmTz8F+bsdAax8J53oTNnJsxFtfCrw9pJTctPcsn14oJa9xxXsSAP04WbIbBxJYzbCjy59mvRbNLo0LQ3mDnoGHNTHCA4=
+	t=1711118708; cv=none; b=lRo03ezc/1IEapFOIrUqOfxn/oSc1FcIHcwBNTDi3MDwFN4zeG2V5evxFLMhEQYaJaIpiHXuR9APweoxkZscX2A0pq1ts3yqshifBdVqikETX49mwAxQ2NFG2myQm8KvXV9iY9N4KlU2SpS7Up/iuS6JGX3x3YC46Qag44D3nsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711118707; c=relaxed/simple;
-	bh=z0Q1447+VXQ1c95jXZFQ+x38c2pAXex+0RvwMrg0i0M=;
+	s=arc-20240116; t=1711118708; c=relaxed/simple;
+	bh=pk0bhuxbVWLKZLYkS//DIr1PzZ7X1d8HhGL4EDlpJgA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nK3A5lGjhRY5fztww9ikV+XG0aE+xSfIO9L/l3yLKaV86R0mJtLdVsRXahBFKAYKhdfe0sOcCyGel1Hpf3OxNofTBZCjFj0Uy/tpJm1fZI66ok1egKn4oNPK9wEPSeXZms3TwiFE6E5TQW5XYTZhEjH+kMwkkOTJkSzE2TnAy4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=APVllpdS; arc=none smtp.client-ip=209.85.208.179
+	 MIME-Version; b=GiWwXqQvLyKAWozKdGz8YHdVnwy9JBVLayWHhuJk1mgZZSjQv2RjhzTvbsNJwDQvm2NZ3CoKI6b8JqxF+AVP9HMVZ+ffFTqy0PVKGYW4WTZvko++Nb0gt39sZeS1tA2UKZ276Q1MibfTbrcRP4uAWTn7DQl8Va9dDI096uzkVOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AwjdgMmA; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="APVllpdS"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d4360ab3daso35447681fa.3;
-        Fri, 22 Mar 2024 07:45:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AwjdgMmA"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4147e135f4dso3325485e9.2;
+        Fri, 22 Mar 2024 07:45:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711118703; x=1711723503; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1711118705; x=1711723505; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TciX4HiN46XXmyc3hzy4hKoPSxTKgXcyydo7DRa6ZT4=;
-        b=APVllpdS+Xp+OF/dr45CJJhoaxWv/iy73NN2Ojc1jMbW2N4AY71KNPh6NQUb4Uh7rs
-         95I8XlXGWQ1a3RKGvNsJMQturnalKYPWxTykUJajpG1bOsJONJWpnnhPWg8TLSrUuDQP
-         sXX3m9G8Bpnpdm/JoK/95AhDnAm+IqCz2KFz+dGci6EdvSQz7moIoHaaCE7nP5RdelxQ
-         8qKtvPHwe3N/FyMN+2QGiXa+xA1wsxRDvnJ+nNIPx8hi0HngmR6OLxj+UfrGw8pnhomZ
-         sX9OctlUFVtxdEp0k4h6IzvgBDKkGpDkJNg19LK8hiwNIEHWot+Gyyzlx6RPa60eGqZw
-         +zjQ==
+        bh=U4uAQ4C9kulwxZznVlWW/8ebBG259lLBKIIu3Q2bFtY=;
+        b=AwjdgMmADANnmvf+1nxf4Ht8giXSyyV+g5+H+XX8zlTz4ISbxVQzotJOxnZZjYWSVY
+         QGOnoUMZjbbfEUvul9gGC7i9RLSvEW4vWR3RgqekY9CNVdpmdS0iwFJWznMptOaj3s5S
+         UMIvH6NnEOmzPIcmxFe7nD4qa1HvUa0sQYmORES9GX2QySVBWxaYI3+J/VTyhu8qHYns
+         udCS608+LQBm2yU2UnMpDBgWsn9vSujJL0dTqPZRRwxDs9Wmg3GiekBdDv/LgPDiZT5A
+         IvAgQRLQNWwAtXAZWmvPEeYtKCB8rmS3Np3i0/FxZn7vNo+BhGHNiIVdtHl8PwkHOWwC
+         aJog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711118703; x=1711723503;
+        d=1e100.net; s=20230601; t=1711118705; x=1711723505;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TciX4HiN46XXmyc3hzy4hKoPSxTKgXcyydo7DRa6ZT4=;
-        b=jfxdU9YJhwXwRIK5R2ZBQVzzvJJTWLC9Vf5TYz1gIug9gz1RF4un4FenjmugnP/EUO
-         rZFu/VNGGIgIOxL/nV3Na77UdDdc7xG8gT5hpb6QNqo4yB+F14r+8qPdH8am5jwxNu0c
-         xarS7/RcYa38H6kD+q9SDl6dBSqjjHJnzeZNn7PQNO1DJIKumNHsWtJktXlQ6kCwjQPZ
-         X0WellmR1oeFZLY/lSXFWzoxyQyMlMRowWQ8Y4gADX2d4zdYn+jJIO2xmLflfoA136Jp
-         JQkvEYHtumYbHunwFOB1T2+ejZk7cdrSzt1bl29T17R/nmHDejjs3IQkKySpDXBQ4Lfn
-         ltSg==
-X-Forwarded-Encrypted: i=1; AJvYcCW26NTqM1fWXBUjWIKWua352LcPPLHP4B0CRGMl9rau/CqupmhuguSgPOufPp6GMJOPxx3D4lhn2TgUeZcnBo7ZLggLHpVprbDRzLOL9LI+R8q8hAQ+AnaVZs8jga1LgkvH72Fb68Pobbz/oCbXiBTtEMYRKDYLKsufq+SdkpTvKmuGHdJBegypt5T/
-X-Gm-Message-State: AOJu0Yyrb1rW8guUkGH3pS/T3WpDCsaYCi62QPvN1SdxeICCmrr9aQAc
-	rRXl6DZV7C1y1Balzc2kKHQ7b0bo+AP7k3RYzB3JhZFxSmIOwI1g
-X-Google-Smtp-Source: AGHT+IFlVfO/3rSmnSFfsEbaTWG/rvRuZ6WdzzXtqSIhfCKde9Deb9cwHUkTZlWfUdAhPQOcipdW4A==
-X-Received: by 2002:a2e:95d3:0:b0:2d4:49d0:d20b with SMTP id y19-20020a2e95d3000000b002d449d0d20bmr1873600ljh.5.1711118702855;
-        Fri, 22 Mar 2024 07:45:02 -0700 (PDT)
+        bh=U4uAQ4C9kulwxZznVlWW/8ebBG259lLBKIIu3Q2bFtY=;
+        b=T5xdbGrfV5rQeGNxpGw5i4rKmB+pTYwMhb6lOnJpmtyKa1IycnD36OIBfBpj20TVla
+         eJiaonUla8lpb/jUOYY+53ZSm/5Y5nZMVttAaHHeLkdgNqB5yFgsuPbpcBpSkcYX/buu
+         XdB6fJ8Sjlnvr0+tZLUuQr0VotmhLPza/XvDKfo7COUbkD+6PndBK5VitWo5L+iY2SZI
+         5m7LJPkry8bymRYCOCmYPPccaaWQqnuJE1GDgN3Gk1uTsMrYN95p7/7NhsgeNFDIf1v+
+         vm/F1z+i1+gufmKgVy/wS87fdK9mlSvsK15UmJ77wf1PlH5G6nDyI2An2UWuWelonA42
+         jUYw==
+X-Forwarded-Encrypted: i=1; AJvYcCVcFwbXkMxfm3iyhSgiBWZUfAA4Xs2agF7ipvf+4fgLa4ZEfWtwKdYzH5sklM4NOeX8SE+tFn3ebBFIPAJVGca5ilBYNJb3Ka/4BsJk05EyFhPyEpIj8NQlOgl4wFaHRKOnaaKHnFe9vzFWAKL0coAK1GMHd8PlOOPmhrxR54KSXMPlv+zDm5Dvi9pb
+X-Gm-Message-State: AOJu0YwMP2eKiBQN4Kk/q0Q3BiGqjzybhgaGKXvwsQtUVt73DpT6Ut0Z
+	MgE7oM50EVpJOzf/Qtt30gbX60BMF2DKL7uEtCpvNDa+l+xxWzec
+X-Google-Smtp-Source: AGHT+IGsrDk14rRDiD9xfpqQ3L+sJLzhHcEk40nAr7Q2VFynMk7I/HH3yiJpFgIkH85Gg0jC02iVOg==
+X-Received: by 2002:a05:600c:1395:b0:414:7ddd:b92e with SMTP id u21-20020a05600c139500b004147dddb92emr887641wmf.39.1711118705493;
+        Fri, 22 Mar 2024 07:45:05 -0700 (PDT)
 Received: from prasmi.home ([2a00:23c8:2500:a01:7b89:721b:d6b0:d7e8])
-        by smtp.gmail.com with ESMTPSA id s15-20020a05600c45cf00b0041466e03e55sm3911117wmo.0.2024.03.22.07.45.01
+        by smtp.gmail.com with ESMTPSA id s15-20020a05600c45cf00b0041466e03e55sm3911117wmo.0.2024.03.22.07.45.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 07:45:01 -0700 (PDT)
+        Fri, 22 Mar 2024 07:45:04 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -67,11 +67,10 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-renesas-soc@vger.kernel.org,
 	Prabhakar <prabhakar.csengg@gmail.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v4 1/5] dt-bindings: serial: renesas,scif: Move ref for serial.yaml at the end
-Date: Fri, 22 Mar 2024 14:43:51 +0000
-Message-Id: <20240322144355.878930-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v4 3/5] dt-bindings: serial: renesas,scif: Make 'interrupt-names' property as required
+Date: Fri, 22 Mar 2024 14:43:53 +0000
+Message-Id: <20240322144355.878930-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240322144355.878930-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20240322144355.878930-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -85,70 +84,37 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-In preparation for adding more validation checks move the ref for
-'serial.yaml' to the end and also move reset check in 'allOf' block.
+As all the SoCs having multiple interrupts have 'interrupt-names' property
+in their respective DTSIs, make 'interrupt-names' property as required
+so that we can validate them using dtbs_check.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
 v3->v4
-- no change
+- New patch
 
-v2->v3
-- no change
+Note, we need patch [0] to be applied or else we might see
+dtbs_check warning.
+
+[0] https://patchwork.kernel.org/project/linux-renesas-soc/patch/20240318174345.46824-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
 ---
- .../bindings/serial/renesas,scif.yaml         | 30 +++++++++----------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ Documentation/devicetree/bindings/serial/renesas,scif.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/serial/renesas,scif.yaml b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-index 4610a5bd580c..af72c3420453 100644
+index eb2aa5e75e02..c13b31c28049 100644
 --- a/Documentation/devicetree/bindings/serial/renesas,scif.yaml
 +++ b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-@@ -9,9 +9,6 @@ title: Renesas Serial Communication Interface with FIFO (SCIF)
- maintainers:
-   - Geert Uytterhoeven <geert+renesas@glider.be>
+@@ -179,6 +179,9 @@ allOf:
+           maxItems: 1
  
--allOf:
--  - $ref: serial.yaml#
--
- properties:
-   compatible:
-     oneOf:
-@@ -160,18 +157,21 @@ required:
-   - clock-names
-   - power-domains
- 
--if:
--  properties:
--    compatible:
--      contains:
--        enum:
--          - renesas,rcar-gen2-scif
--          - renesas,rcar-gen3-scif
--          - renesas,rcar-gen4-scif
--          - renesas,scif-r9a07g044
--then:
--  required:
--    - resets
-+allOf:
-+  - $ref: serial.yaml#
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - renesas,rcar-gen2-scif
-+              - renesas,rcar-gen3-scif
-+              - renesas,rcar-gen4-scif
-+              - renesas,scif-r9a07g044
-+    then:
+         interrupt-names: false
++    else:
 +      required:
-+        - resets
++        - interrupt-names
  
- unevaluatedProperties: false
- 
+   - if:
+       properties:
 -- 
 2.34.1
 
