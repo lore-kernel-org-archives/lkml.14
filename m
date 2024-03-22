@@ -1,179 +1,139 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311583EA6F
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 19:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661893EA6F
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 19:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711134337; cv=none; b=DVUGtRO6ro+pUSkt/8eCuk4BoJ6hiQuHorixNtt8PvKW8iSq9XorViU1o+4QJjmvsDcgMAaApHviId+KdguJH3LPb8uoE15WxKkVquyvtC6Eh6qdmwF6D4vM6NCfONBxY6DqaJYmG99xuVs4raOZ2GRwvm0U/yEB9+LlhQmtx8Q=
+	t=1711134377; cv=none; b=cmo1+lBp1VZCNK3LnQQvikx47dWRscNSYj/p2/7RiBP9XawYjXdmokJzGPfeymEeHntG+CBirqigXeDpz8o+FtdqqC/i5zETpmUZu1AvuqEhk/4yZzk9ndDl/0rT/B09lueW+Uv7rJhwGOSD6Pm/n53mu5tOfnXHq1y22nOfuBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711134337; c=relaxed/simple;
-	bh=C9oJwFIZ1oe+4/AgkgUGhFF5pFPrBfOvNgDiiaKFmQk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=FHna9L+5fW9M+I9dQdFNxH2F/KtIZmeLr5SmXN/Q2G60unV68MGjNMadjTYwMTbJqObjvy/5+nAgIMJbKmGL5iuKPmyXlj0NbYAb5/Ez4AvsjEofSn7sebQG/jE+0BLGew1gQvX3TEcDUa3djopF1tkhuUjTWmClbQzn8eCQWtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=h6VAuxyq; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1711134377; c=relaxed/simple;
+	bh=G8IGxwSbCA7VtBX8XkVa1ambOdnemi9fnCfUORqa5dI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XU0Uw3P22rUiUgohrZF6s9lnaP3KSbZiMlCbecFmm15DXCaeuedYOAmxut5+RVyYO261h0eyo3ULy5B3AlfM1GWTAwLnZscnyZcgKYboDEj+FMhtnF1RIeeWHQjx4DV20EuT8PPKRjRLGma1eynwGhLa3igZb/6zDh45D2IMITM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cKqi9Wug; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="h6VAuxyq"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-696609f5cf2so10750316d6.3
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 12:05:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1711134334; x=1711739134; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=a6WGCJ5v+lTsE9g6YW58u86G+mWvoH1YiexQxNMU+bg=;
-        b=h6VAuxyqPy9RktM8F6yfOwHugT7MEG7gjtEOYYontrxHWZ54OApn3m629NbM054OSr
-         B1/n5Z84qvW4idU4lBqTf5lb9mfLOt6js6C2lxqNGRAa7hqTK65ef3gCRlO5PkzGfsRP
-         NTXc7fYCntN1xEFUqxA3gg2izm3uwpRFCpFl0sEhoR2VakyvqpEyyA3DwscPti/Lq+xe
-         zHPdHYZsbkPAtr6MB3ybAHzgzwhJi/rwXF63sV/EK4hh+qewmoVgGiMBVeIlOcR6ecrG
-         qpCotDMaMRQ7Y5H9tf25v9Ct+T6lV3QtEsPb/RmXo+tnRFVkIASk/XF0+Nq9uJjWz3ms
-         pRGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711134334; x=1711739134;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a6WGCJ5v+lTsE9g6YW58u86G+mWvoH1YiexQxNMU+bg=;
-        b=qPVxWz3uiUI1Jfn0jr47w6uKzpJ9ZA+65UjZoXwXI+oMbqbeX1nNal2q1F7TZMsYBp
-         +vXjmM5e5CPYbllkty65pHtNIoSbzAx//dTiZFMRGI3+f5faEUlfiitKK0/J6MzAfouB
-         FhyFISG7yIC/n83Wm34K6ZZgeNVLIXKPUT0CAucFm7bD8wViDMXdvFZxM9jRSWCNGAZq
-         L942aMvlwjLtzBo+maLN0iLZhVMR5DkLxYb0TVelZQOd+rMd1mS2bIIEuJtT7ABIwbrL
-         u5g3tYvNOSft6AkVTDH7EUYTM4vrPIlbMkXYVG7JUSj7U3i2swY63nvciinpbdkJ+hFb
-         WVqw==
-X-Forwarded-Encrypted: i=1; AJvYcCVpXGJmeLmJ02HUwsirmRn4pXRdAnp/a6LBT6R4QlY0OCxkDsEZhkCjc67YzjmM6uF6cq9vZZJ1ypG3XBkUuof6O87hLvXwC4xLPghJ
-X-Gm-Message-State: AOJu0YyMHfan1TtmppMY+MeMKLj7mT/LGDt/WBhFU6mSNaz2O+D3QGDg
-	dxN1WSwJmfIsD1iAi38CEGyAQ2btTqTjXJO/Uqe3aRMDzpv5BWXo/GYr/IkIqLkYbVpayn5PlgI
-	5
-X-Google-Smtp-Source: AGHT+IHQ5pFluRwp1jRQRBP0ScYuJl5DTFe5SBvmWRgRQLHsh0hGtceYDz92r8gVhFBKjlTPlcOqOw==
-X-Received: by 2002:a05:6a21:2786:b0:1a3:6bd8:f487 with SMTP id rn6-20020a056a21278600b001a36bd8f487mr516475pzb.51.1711133871755;
-        Fri, 22 Mar 2024 11:57:51 -0700 (PDT)
-Received: from ?IPV6:2601:647:4180:9630::546? ([2601:647:4180:9630::546])
-        by smtp.gmail.com with ESMTPSA id f8-20020a170902684800b001dee9d80bdcsm70160pln.107.2024.03.22.11.57.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Mar 2024 11:57:51 -0700 (PDT)
-Message-ID: <a4d340f0-960f-47bc-b45c-f89053526a22@rivosinc.com>
-Date: Fri, 22 Mar 2024 11:57:49 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cKqi9Wug"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711134374;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=bYv+g1I7ptnV6etPECbKRE2B/hEhZ4xk0E1ZHt/7Sok=;
+	b=cKqi9WugA5z+pTC1coQeI24eWnC7pjnpFAL/CMDqn2poK7/ZyPAm2skDZH6T/roxCn2dXC
+	KXl9ZUOtmzbthDrHrlM/3Yxmn7IAKajJuVExUgwN9Yriyj0BGJYYveA+1LaMs+YXPssonF
+	BjpbSSgsyeqizdQKY8+k30JI5h8G9xQ=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-131-gBjFs-OwO1uIF-FNgKwg-Q-1; Fri,
+ 22 Mar 2024 15:06:12 -0400
+X-MC-Unique: gBjFs-OwO1uIF-FNgKwg-Q-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 214A7280480F;
+	Fri, 22 Mar 2024 19:06:12 +0000 (UTC)
+Received: from RHTPC1VM0NT.redhat.com (unknown [10.22.33.162])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 55FDA492BC6;
+	Fri, 22 Mar 2024 19:06:11 +0000 (UTC)
+From: Aaron Conole <aconole@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Pravin B Shelar <pshelar@ovn.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	dev@openvswitch.org,
+	linux-kernel@vger.kernel.org,
+	Numan Siddique <nusiddiq@redhat.com>
+Subject: [PATCH net] openvswitch: Set the skbuff pkt_type for proper pmtud support.
+Date: Fri, 22 Mar 2024 15:06:03 -0400
+Message-ID: <20240322190603.251831-1-aconole@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: Improve sbi_ecall() code generation by reordering
- arguments
-Content-Language: en-US
-To: Alexandre Ghiti <alexghiti@rivosinc.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Samuel Holland <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240322112629.68170-1-alexghiti@rivosinc.com>
-From: Atish Patra <atishp@rivosinc.com>
-In-Reply-To: <20240322112629.68170-1-alexghiti@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-On 3/22/24 04:26, Alexandre Ghiti wrote:
-> The sbi_ecall() function arguments are not in the same order as the
-> ecall arguments, so we end up re-ordering the registers before the
-> ecall which is useless and costly.
-> 
-> So simply reorder the arguments in the same way as expected by ecall.
-> Instead of reordering directly the arguments of sbi_ecall(), use a proxy
-> macro since the current ordering is more natural.
-> 
-> Before:
-> 
-> Dump of assembler code for function sbi_ecall:
->     0xffffffff800085e0 <+0>: add sp,sp,-32
->     0xffffffff800085e2 <+2>: sd s0,24(sp)
->     0xffffffff800085e4 <+4>: mv t1,a0
->     0xffffffff800085e6 <+6>: add s0,sp,32
->     0xffffffff800085e8 <+8>: mv t3,a1
->     0xffffffff800085ea <+10>: mv a0,a2
->     0xffffffff800085ec <+12>: mv a1,a3
->     0xffffffff800085ee <+14>: mv a2,a4
->     0xffffffff800085f0 <+16>: mv a3,a5
->     0xffffffff800085f2 <+18>: mv a4,a6
->     0xffffffff800085f4 <+20>: mv a5,a7
->     0xffffffff800085f6 <+22>: mv a6,t3
->     0xffffffff800085f8 <+24>: mv a7,t1
->     0xffffffff800085fa <+26>: ecall
->     0xffffffff800085fe <+30>: ld s0,24(sp)
->     0xffffffff80008600 <+32>: add sp,sp,32
->     0xffffffff80008602 <+34>: ret
-> 
-> After:
-> 
-> Dump of assembler code for function __sbi_ecall:
->     0xffffffff8000b6b2 <+0>:	add	sp,sp,-32
->     0xffffffff8000b6b4 <+2>:	sd	s0,24(sp)
->     0xffffffff8000b6b6 <+4>:	add	s0,sp,32
->     0xffffffff8000b6b8 <+6>:	ecall
->     0xffffffff8000b6bc <+10>:	ld	s0,24(sp)
->     0xffffffff8000b6be <+12>:	add	sp,sp,32
->     0xffffffff8000b6c0 <+14>:	ret
-> 
+Open vSwitch is originally intended to switch at layer 2, only dealing with
+Ethernet frames.  With the introduction of l3 tunnels support, it crossed
+into the realm of needing to care a bit about some routing details when
+making forwarding decisions.  If an oversized packet would need to be
+fragmented during this forwarding decision, there is a chance for pmtu
+to get involved and generate a routing exception.  This is gated by the
+skbuff->pkt_type field.
 
-Nice!
+When a flow is already loaded into the openvswitch module this field is
+set up and transitioned properly as a packet moves from one port to
+another.  In the case that a packet execute is invoked after a flow is
+newly installed this field is not properly initialized.  This causes the
+pmtud mechanism to omit sending the required exception messages across
+the tunnel boundary and a second attempt needs to be made to make sure
+that the routing exception is properly setup.  To fix this, we set the
+outgoing packet's pkt_type to PACKET_OUTGOING, since it can only get
+to the openvswitch module via a port device or packet command.
 
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> ---
->   arch/riscv/include/asm/sbi.h | 10 ++++++----
->   arch/riscv/kernel/sbi.c      | 10 +++++-----
->   2 files changed, 11 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-> index 6e68f8dff76b..9041b009d3b5 100644
-> --- a/arch/riscv/include/asm/sbi.h
-> +++ b/arch/riscv/include/asm/sbi.h
-> @@ -292,10 +292,12 @@ struct sbiret {
->   };
->   
->   void sbi_init(void);
-> -struct sbiret sbi_ecall(int ext, int fid, unsigned long arg0,
-> -			unsigned long arg1, unsigned long arg2,
-> -			unsigned long arg3, unsigned long arg4,
-> -			unsigned long arg5);
-> +struct sbiret __sbi_ecall(unsigned long arg0, unsigned long arg1,
-> +			  unsigned long arg2, unsigned long arg3,
-> +			  unsigned long arg4, unsigned long arg5,
-> +			  int fid, int ext);
-> +#define sbi_ecall(e, f, a0, a1, a2, a3, a4, a5)	\
-> +		__sbi_ecall(a0, a1, a2, a3, a4, a5, f, e)
->   
->   #ifdef CONFIG_RISCV_SBI_V01
->   void sbi_console_putchar(int ch);
-> diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
-> index e66e0999a800..5719fa03c3d1 100644
-> --- a/arch/riscv/kernel/sbi.c
-> +++ b/arch/riscv/kernel/sbi.c
-> @@ -24,10 +24,10 @@ static int (*__sbi_rfence)(int fid, const struct cpumask *cpu_mask,
->   			   unsigned long start, unsigned long size,
->   			   unsigned long arg4, unsigned long arg5) __ro_after_init;
->   
-> -struct sbiret sbi_ecall(int ext, int fid, unsigned long arg0,
-> -			unsigned long arg1, unsigned long arg2,
-> -			unsigned long arg3, unsigned long arg4,
-> -			unsigned long arg5)
-> +struct sbiret __sbi_ecall(unsigned long arg0, unsigned long arg1,
-> +			  unsigned long arg2, unsigned long arg3,
-> +			  unsigned long arg4, unsigned long arg5,
-> +			  int fid, int ext)
->   {
->   	struct sbiret ret;
->   
-> @@ -48,7 +48,7 @@ struct sbiret sbi_ecall(int ext, int fid, unsigned long arg0,
->   
->   	return ret;
->   }
-> -EXPORT_SYMBOL(sbi_ecall);
-> +EXPORT_SYMBOL(__sbi_ecall);
->   
->   int sbi_err_map_linux_errno(int err)
->   {
+This issue is periodically encountered in complex setups, such as large
+openshift deployments, where multiple sets of tunnel traversal occurs.
+A way to recreate this is with the ovn-heater project that can setup
+a networking environment which mimics such large deployments.  In that
+environment, without this patch, we can see:
 
-Reviewed-by: Atish Patra <atishp@rivosinc.com>
+  ./ovn_cluster.sh start
+  podman exec ovn-chassis-1 ip r a 170.168.0.5/32 dev eth1 mtu 1200
+  podman exec ovn-chassis-1 ip netns exec sw01p1  ip r flush cache
+  podman exec ovn-chassis-1 ip netns exec sw01p1 ping 21.0.0.3 -M do -s 1300 -c2
+  PING 21.0.0.3 (21.0.0.3) 1300(1328) bytes of data.
+  From 21.0.0.3 icmp_seq=2 Frag needed and DF set (mtu = 1142)
+
+  --- 21.0.0.3 ping statistics ---
+  2 packets transmitted, 0 received, +1 errors, 100% packet loss, time 1017ms
+
+Using tcpdump, we can also see the expected ICMP FRAG_NEEDED message is not
+sent into the server.
+
+With this patch, setting the pkt_type, we see the following:
+
+  podman exec ovn-chassis-1 ip netns exec sw01p1 ping 21.0.0.3 -M do -s 1300 -c2
+  PING 21.0.0.3 (21.0.0.3) 1300(1328) bytes of data.
+  From 21.0.0.3 icmp_seq=1 Frag needed and DF set (mtu = 1222)
+  ping: local error: message too long, mtu=1222
+
+  --- 21.0.0.3 ping statistics ---
+  2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 1061ms
+
+In this case, the first ping request receives the FRAG_NEEDED message and
+a local routing exception is created.
+
+Reported-at: https://issues.redhat.com/browse/FDP-164
+Fixes: 58264848a5a7 ("openvswitch: Add vxlan tunneling support.")
+Signed-off-by: Aaron Conole <aconole@redhat.com>
+---
+NOTE: An alternate approach would be to add a netlink attribute to preserve
+      pkt_type across the kernel->user boundary, but that does require some
+      userspace cooperation.
+
+ net/openvswitch/actions.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
+index 6fcd7e2ca81fe..952c6292100d0 100644
+--- a/net/openvswitch/actions.c
++++ b/net/openvswitch/actions.c
+@@ -936,6 +936,8 @@ static void do_output(struct datapath *dp, struct sk_buff *skb, int out_port,
+ 				pskb_trim(skb, ovs_mac_header_len(key));
+ 		}
+ 
++		skb->pkt_type = PACKET_OUTGOING;
++
+ 		if (likely(!mru ||
+ 		           (skb->len <= mru + vport->dev->hard_header_len))) {
+ 			ovs_vport_send(vport, skb, ovs_key_mac_proto(key));
+-- 
+2.41.0
+
