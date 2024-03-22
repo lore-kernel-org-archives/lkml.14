@@ -1,91 +1,113 @@
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8325017998;
-	Fri, 22 Mar 2024 09:07:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366971B7F1;
+	Fri, 22 Mar 2024 09:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711098439; cv=none; b=HmRpXJM05W55mI3K2DHVi0A/DraXsJAn8YJ1xU7J4wWanpnkC9MOLbK+7wbllBtwBQ2pTwQzbP+U0lZwXFR1znvy7MrmOQvTmti0UnerbNjfOFeF9BVK9uhmykdjCKtmbxUVfxk/8eeD97Y0fk3rlm4I8wbywC9YkrFgnbUxjjo=
+	t=1711098760; cv=none; b=nN0AkNjAvFM+3CozfTKKatJdHHME+35LtGpJaL6Xu+JCzDNgy0/tc2wP6lkri6q1lNyJwgA2DQYeKVD0aF2bk9jBhWzVaF3MhH0/lbcNKwk8k/RN6whkyy7LQkJrr7js8i9LKve7ACwXIYN8qiQ2L1B0NsQRRTcHF5J/N3nH/Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711098439; c=relaxed/simple;
-	bh=fqnq0phZd8eQ1RBeCYKOKzraow94yCRC0cLooXVkLDs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WbTEi6mlR+W2WC9cucA0VYQogblYgcgcmpaBFP/o3XRUNzvER8jeOt2fs99mjEnmm9nQF3/jdSi2/gb9YiZahLBe8IsCyXeu3x26nZO2YPviuy+HBJuEYFJ87J6gxPglpE5XqcuNnyX32EZXmsQrVoS9F+AMEEStVD8wxvwOkl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=M9YV8kKn; arc=none smtp.client-ip=74.50.62.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+	s=arc-20240116; t=1711098760; c=relaxed/simple;
+	bh=vKOnfPyQ1xPLI1gBV7fgCykVn6n+w1P75Cmtg3MaDi8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FWw1KjLIIpngZx/10vCyayJ8LL2mLNOGSdxmaLxfVfTahwMar8g42YMYSko/5M2GDbSdyiumiw0rMQrZmeKpZZZS1pCWUbYOHVIw5ElUGIOu1O23XmJYXCsD3XadaQKsW5rKbW30yP8gGo8dfWGXlcTixoGYrQvZNDyG1LlhgiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=SiFYPpUv; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="M9YV8kKn"
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id 0040360340;
-	Fri, 22 Mar 2024 09:06:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1711098430;
-	bh=fqnq0phZd8eQ1RBeCYKOKzraow94yCRC0cLooXVkLDs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M9YV8kKnPAlSqDp772EmB/bHzTaDkR+q2GDGF+ZJKdISm9Z7MMsp/ij3Z7kNDdk97
-	 Y1/FDp98vv4WSDMbb1u1jk7XpUF8Kto52j04bNH8Wiw59zGrol+rEDjX0PWUf2XCSg
-	 0W+bh4RLEtuztC9SwxnvNZNbqw4Bt4e83IrZNlS2WD9yGzg80XD8LecgN1ht2ncY4Z
-	 sIUgOcMW3TgauctmrAvxSFEAddpztd96nqkNvjQnhj2rxYE3GFoAPOYO0zEKoT7qfJ
-	 J5QzaBv6TvPU/sE/HFDT4JLac2RkQSh2s72B/FvaI9qiPtX6/wTVTnzFjI+nzYAnpk
-	 8qg+hiadrnNmg==
-Date: Fri, 22 Mar 2024 11:06:57 +0200
-From: Tony Lindgren <tony@atomide.com>
-To: Nick Bowler <nbowler@draconx.ca>
-Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
-	regressions@lists.linux.dev, linux-serial@vger.kernel.org
-Subject: Re: PROBLEM: Sun Ultra 60 hangs on boot since Linux 6.8
-Message-ID: <20240322090657.GD5132@atomide.com>
-References: <d84baa5d-a092-3647-8062-ed7081d329d4@draconx.ca>
- <20240322051531.GA5132@atomide.com>
- <d7337014-09ac-8a35-7159-e75ecd2707b6@draconx.ca>
- <20240322064843.GC5132@atomide.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="SiFYPpUv"
+X-UUID: 522cc570e82c11ee935d6952f98a51a9-20240322
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=op9aiY3TOWj6dPubjkg2dvGqaIeTnrx2TAJelM32Z9k=;
+	b=SiFYPpUvCcZ238Oj9i+4n8M4NgzNyCMxC43KdmUk/yz4/TdXuH0Vn9VDPzrghuHE3fOZs1viOonTSKRs9uGDl3cfA+XZ7yQ5uR722xxGehY/qCduA0+EreOzf//iPeDwOKQWOR2uoL6jK0f8QosVOD+hM1rcpCtz4xr5PqryneA=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:28244cb8-a847-4797-a1e0-d544f990c362,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6f543d0,CLOUDID:fa1f3400-c26b-4159-a099-3b9d0558e447,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: 522cc570e82c11ee935d6952f98a51a9-20240322
+Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw02.mediatek.com
+	(envelope-from <shawn.sung@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 951881258; Fri, 22 Mar 2024 17:12:34 +0800
+Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
+ mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Fri, 22 Mar 2024 17:12:34 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Fri, 22 Mar 2024 17:12:34 +0800
+From: Shawn Sung <shawn.sung@mediatek.com>
+To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?q?Christian=20K=C3=B6nig?=
+	<christian.koenig@amd.com>, <dri-devel@lists.freedesktop.org>,
+	<linux-mediatek@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-media@vger.kernel.org>,
+	<linaro-mm-sig@lists.linaro.org>, Hsiao Chien Sung
+	<shawn.sung@mediatek.corp-partner.google.com>
+Subject: [PATCH v5 07/14] drm/mediatek: Rename files "mtk_drm_crtc.c" to "mtk_crtc.c"
+Date: Fri, 22 Mar 2024 17:12:25 +0800
+Message-ID: <20240322091232.26387-8-shawn.sung@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20240322091232.26387-1-shawn.sung@mediatek.com>
+References: <20240322091232.26387-1-shawn.sung@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240322064843.GC5132@atomide.com>
+Content-Type: text/plain
+X-MTK: N
 
-* Tony Lindgren <tony@atomide.com> [240322 08:48]:
-> * Nick Bowler <nbowler@draconx.ca> [240322 06:36]:
-> > On 2024-03-22 01:15, Tony Lindgren wrote:
-> > > Can you please test if the following change to add back the check for
-> > > !pm_runtime_active() is enough to fix the issue?
-> > 
-> > I applied the below patch on top of 6.8 and unfortunately it does _not_
-> > fix the problem (no obvious change in behaviour).
-> 
-> Hmm OK thanks for testing. I'll take a look and see if I can debug this
-> with qemu sparc as I no longer have any sparc boxes around.
+From: Hsiao Chien Sung <shawn.sung@mediatek.corp-partner.google.com>
 
-I can't reproduce this on qemu-system-sparc64, probably as it does not use
-the sunsab driver.
+Rename files mtk_drm_crtc.c to mtk_crtc.c and
+modify the Makefile accordingly.
 
-I noticed something though, I think we need to test for the port device
-instead for being runtime PM enabled.
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.corp-partner.google.com>
+---
+ drivers/gpu/drm/mediatek/Makefile                       | 4 ++--
+ drivers/gpu/drm/mediatek/{mtk_drm_crtc.c => mtk_crtc.c} | 0
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+ rename drivers/gpu/drm/mediatek/{mtk_drm_crtc.c => mtk_crtc.c} (100%)
 
-Can you please test if the updated patch below make things work again?
-
-Regards,
-
-Tony
-
-8< -------------------
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -156,7 +156,7 @@ static void __uart_start(struct uart_state *state)
- 	 * enabled, serial_port_runtime_resume() calls start_tx() again
- 	 * after enabling the device.
- 	 */
--	if (pm_runtime_active(&port_dev->dev))
-+	if (!pm_runtime_enabled(port->dev) || pm_runtime_active(&port_dev->dev))
- 		port->ops->start_tx(port);
- 	pm_runtime_mark_last_busy(&port_dev->dev);
- 	pm_runtime_put_autosuspend(&port_dev->dev);
+diff --git a/drivers/gpu/drm/mediatek/Makefile b/drivers/gpu/drm/mediatek/Makefile
+index 5e4436403b8d2..0198b50820d4c 100644
+--- a/drivers/gpu/drm/mediatek/Makefile
++++ b/drivers/gpu/drm/mediatek/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-mediatek-drm-y := mtk_disp_aal.o \
++mediatek-drm-y := mtk_crtc.o \
++		  mtk_disp_aal.o \
+ 		  mtk_disp_ccorr.o \
+ 		  mtk_disp_color.o \
+ 		  mtk_disp_gamma.o \
+@@ -8,7 +9,6 @@ mediatek-drm-y := mtk_disp_aal.o \
+ 		  mtk_disp_ovl.o \
+ 		  mtk_disp_ovl_adaptor.o \
+ 		  mtk_disp_rdma.o \
+-		  mtk_drm_crtc.o \
+ 		  mtk_drm_ddp_comp.o \
+ 		  mtk_drm_drv.o \
+ 		  mtk_drm_gem.o \
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_crtc.c
+similarity index 100%
+rename from drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+rename to drivers/gpu/drm/mediatek/mtk_crtc.c
 -- 
-2.44.0
+2.18.0
+
