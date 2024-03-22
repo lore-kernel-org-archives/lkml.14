@@ -1,43 +1,42 @@
 Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B1347774
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 13:26:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F97947A6B
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 13:26:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711114000; cv=none; b=b7CXyUvG8FU4nehj9kbGhK4CahXJZmCehP7AMhExUpCydrPIby8cmY/PPbzd/SRahbmlSIOXFaaWW3egbVePFcANJ5ysPSvuFrRTkpvo0RdM8uxZSgRosZI5VD0mZKxbF41aSN7dkOIteIwdcoxUz2GJQkjw+0PCsAiiyG5FvQc=
+	t=1711114000; cv=none; b=qGfxvcHPxT2k6KCXWrptD2LaGlbWkaYm3kZHTWxVD9iBWZ4hw5bMLZP08fRsefDSXDz6vxNFGHb5PBZ1mtWm6mWitMYVfxyiTGivDI25KkG8lNmfc8gmlSPRqmt9p70hX+JwXULUWxLIlTFQvW4+QoHRVP3Yw0S/prseDubcWlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711114000; c=relaxed/simple;
-	bh=0eqF1EZ5//2m7IOZIH/6WKxxgiYpU+vphX44onzpqRU=;
+	bh=fvv1sG3VG+bSgIpSE5KkC2vSc06VSykF5euhM2XlNLc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bG8Qo2Xni3iMZjBtp6EOXeiLj6JLqhPPxsPHTvBjon6DuZUGSyjaDIJT9zzzqWZj/yg+JRpgStuaoMYT0zO4ney7/lDKY+zprTgRjQW20sk2YzrXxVkVahBeLcBXNmnq5kFywmHjqznjq0rfmiiRTbCyeHMiIlg+YjOGOyUoil4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=NgxOpyOw; arc=none smtp.client-ip=194.117.254.33
+	 MIME-Version; b=Cn90GVoY4BSLAft1wDnNoUGKRO2/CtVVuQbSAYs1hFLhpMNTPdtJs43S4mfYFkJffTr3OMEaxulBa9ItNdjw0+YM8N6gr94f41v94tNfy82BZMBuJnD2Jdbqp/kZTgPBGS8TGTnoBGqtsoEjRFjMWx6sx/Xdc1JPlNdkJ83S3sY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=Ngzh/f2u; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="NgxOpyOw"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="Ngzh/f2u"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
 	:in-reply-to:references:mime-version:content-transfer-encoding;
-	 s=k1; bh=o02kBYEnft414jyQ74NQkV+FMLMQv2lOI3Wx7oPtptA=; b=NgxOpy
-	OwJdAPzp5OLNUSi+sT/hYXvyXe217psAAFpnVNwTZPCiWGcRjVRWNNgcXaiDblqb
-	+0HtIJHeUwyceh2iBQNzvyghr+h42rDb/kHGXvL/4bCDYva76IqLQMP7cTiJPPCm
-	PvyIi/4gZE4PfrgfdiFfnvXydnZHjSA5hSQAV+u2RUqFiUqOsE7cOwgV/shdpv6b
-	EmEpNZkPcRWE4x65vlCli5YuL5dbB8Yx9KdQEQDVp2K0S6WAKY3GRP9V/4gdZ7CM
-	Km/GmQgbo6F+E4b8wx30s02/oWhUejSaBmYbWP0+O9YXsaZaeOo4vziZzZMmhplj
-	WdlXBelM16CxYFvA==
-Received: (qmail 3870139 invoked from network); 22 Mar 2024 14:26:23 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Mar 2024 14:26:23 +0100
-X-UD-Smtp-Session: l3s3148p1@Q54cxT8UWJNehhtF
+	 s=k1; bh=BTYhgMQerKfjHZPgtx2s+my80JPp21aQgBykclcGkH0=; b=Ngzh/f
+	2uEAONEwVF7yBI6NiJbGG1dXLeFqxFemsWOgjDWl0MRW9JLz31eMbzRHVQxV2VdI
+	egmQdfrJ8MQxiFclvhhx3eGg5siVkA9kLi7//Wzn9gg3fg1ib/6hmHVUMZIm4JJO
+	YrvMfkD1abWklEZdeKfrEjSyxFoLJmqAZaezWH/2zrEMsZszQgBz8TDL1etl3enh
+	ibeztCwyFoDgGa+BG1U2pWSCZQ1jbDiCyh+p2w6MJM3Q9cVDRY15YonLWpYaPxyC
+	FEo5xPOYY0IW1qMZ2R//xzG0/L67jP0+/49TSkdvGtXHCGgr0IusoZRak9f30Ixp
+	BjakT+N8uIaLcqyQ==
+Received: (qmail 3870189 invoked from network); 22 Mar 2024 14:26:25 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Mar 2024 14:26:25 +0100
+X-UD-Smtp-Session: l3s3148p1@Yk5IxT8UZJNehhtF
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-i2c@vger.kernel.org
 Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Thor Thayer <thor.thayer@linux.intel.com>,
 	Andi Shyti <andi.shyti@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 03/64] i2c: altera: reword according to newest specification
-Date: Fri, 22 Mar 2024 14:24:56 +0100
-Message-ID: <20240322132619.6389-4-wsa+renesas@sang-engineering.com>
+Subject: [PATCH 06/64] i2c: au1550: reword according to newest specification
+Date: Fri, 22 Mar 2024 14:24:59 +0100
+Message-ID: <20240322132619.6389-7-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
 References: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
@@ -56,29 +55,67 @@ entity ("client") and a local one ("target").
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- drivers/i2c/busses/i2c-altera.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/i2c/busses/i2c-au1550.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-altera.c b/drivers/i2c/busses/i2c-altera.c
-index 252fbd175fb1..f4dde08a3b92 100644
---- a/drivers/i2c/busses/i2c-altera.c
-+++ b/drivers/i2c/busses/i2c-altera.c
-@@ -168,7 +168,7 @@ static void altr_i2c_init(struct altr_i2c_dev *idev)
- 	/* SDA Hold Time, 300ns */
- 	writel(3 * clk_mhz / 10, idev->base + ALTR_I2C_SDA_HOLD);
- 
--	/* Mask all master interrupt bits */
-+	/* Mask all interrupt bits */
- 	altr_i2c_int_enable(idev, ALTR_I2C_ALL_IRQ, false);
+diff --git a/drivers/i2c/busses/i2c-au1550.c b/drivers/i2c/busses/i2c-au1550.c
+index 8e43f25c117e..77d85feda631 100644
+--- a/drivers/i2c/busses/i2c-au1550.c
++++ b/drivers/i2c/busses/i2c-au1550.c
+@@ -81,11 +81,11 @@ static int wait_ack(struct i2c_au1550_data *adap)
+ 	return 0;
  }
  
-@@ -376,7 +376,7 @@ static u32 altr_i2c_func(struct i2c_adapter *adap)
+-static int wait_master_done(struct i2c_au1550_data *adap)
++static int wait_host_done(struct i2c_au1550_data *adap)
+ {
+ 	int i;
+ 
+-	/* Wait for Master Done. */
++	/* Wait for Host Done. */
+ 	for (i = 0; i < 2 * adap->xfer_timeout; i++) {
+ 		if ((RD(adap, PSC_SMBEVNT) & PSC_SMBEVNT_MD) != 0)
+ 			return 0;
+@@ -120,12 +120,12 @@ do_address(struct i2c_au1550_data *adap, unsigned int addr, int rd, int q)
+ 	if (q)
+ 		addr |= PSC_SMBTXRX_STP;
+ 
+-	/* Put byte into fifo, start up master. */
++	/* Put byte into fifo, start up host controller */
+ 	WR(adap, PSC_SMBTXRX, addr);
+ 	WR(adap, PSC_SMBPCR, PSC_SMBPCR_MS);
+ 	if (wait_ack(adap))
+ 		return -EIO;
+-	return (q) ? wait_master_done(adap) : 0;
++	return (q) ? wait_host_done(adap) : 0;
  }
  
- static const struct i2c_algorithm altr_i2c_algo = {
--	.master_xfer = altr_i2c_xfer,
-+	.xfer = altr_i2c_xfer,
- 	.functionality = altr_i2c_func,
+ static int wait_for_rx_byte(struct i2c_au1550_data *adap, unsigned char *out)
+@@ -175,7 +175,7 @@ static int i2c_read(struct i2c_au1550_data *adap, unsigned char *buf,
+ 
+ 	/* The last byte has to indicate transfer done. */
+ 	WR(adap, PSC_SMBTXRX, PSC_SMBTXRX_STP);
+-	if (wait_master_done(adap))
++	if (wait_host_done(adap))
+ 		return -EIO;
+ 
+ 	buf[i] = (unsigned char)(RD(adap, PSC_SMBTXRX) & 0xff);
+@@ -204,7 +204,7 @@ static int i2c_write(struct i2c_au1550_data *adap, unsigned char *buf,
+ 	data = buf[i];
+ 	data |= PSC_SMBTXRX_STP;
+ 	WR(adap, PSC_SMBTXRX, data);
+-	if (wait_master_done(adap))
++	if (wait_host_done(adap))
+ 		return -EIO;
+ 	return 0;
+ }
+@@ -246,7 +246,7 @@ static u32 au1550_func(struct i2c_adapter *adap)
+ }
+ 
+ static const struct i2c_algorithm au1550_algo = {
+-	.master_xfer	= au1550_xfer,
++	.xfer	= au1550_xfer,
+ 	.functionality	= au1550_func,
  };
  
 -- 
