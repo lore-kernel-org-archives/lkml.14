@@ -1,95 +1,305 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482E95D479;
-	Fri, 22 Mar 2024 16:49:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3645FDAE
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 16:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711126184; cv=none; b=vGIzZw/0nmCrrngpyGiTHKAE8nCeFeyRIWoQh3TdiyLmg8iSccLUsTrXnv8oo0KXW42nn8slWYG7+PqjYvDrw+G+VjC3y+8QrG2S5MVoYW08Sv9YGe70jXjsIZ5A247H6UstuNmoe0BvXh+W0D7s1IMZAXV1NihUHLZyp095wVk=
+	t=1711126206; cv=none; b=lG/obfKwxo5pZwqJKep+3vaq+S+woVF3PJs1YGIkAQ6C+577EwzShtGNzb9k0hYyteEjtXQwT2jsSQ19c7GhyupUfu6f0mXSRQXn6EgWvJfM7xbhroy+YZznJQaRYMVtKQo9p6K53vo/SWoKlr561J2myCYHtxxpbhelR9Ln0Xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711126184; c=relaxed/simple;
-	bh=ofr4IJKDtc++5mO73WvnwKV12KcYZaZurnkDZn0wcGw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EcCkFlhTox+t7DLij7IyLGe+TLXI27Fup/VIl8eypoM3QsdHqqtwCM7bvyR1LMlNZHpRVIv3PQlu/OjATmzsQ8zkPkaIGYhWKpMGC/LM8DcxuncFARPHE5vvbn8UTgU2gmyyKYdWXsVnH7zdRIMxF+kSH/kxq6Bz4HBRMj0h0Zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=cz2tiAY6; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1711126206; c=relaxed/simple;
+	bh=mPCCVJRa/QVXByUAn0xqqpuKab7OaVXxpWb4L3ZEwU8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U8+qMWJwS5nAGq2/2LGD+ImVADwRAG/BvRDX/PROe6n5o1uWjIZn9zc+N9iXENBwjDXVYTCK20pUR+2A+7EKyKGKgpEVLRP7UeaGBJpdbZqT5Pis3qgz3K1aU0VT2orkwLF6mJ0Gm3Nbw0ExFGSgUUtvJ/+ce1FmVK3u/0HVD4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=VW2nPlDV; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="cz2tiAY6"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9D1F340E0140;
-	Fri, 22 Mar 2024 16:49:31 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id u9kkTKGtkJhN; Fri, 22 Mar 2024 16:49:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1711126167; bh=zmgmuyyu04qQDDakR1Zt6nICyLhZvl92PNFJ6jYHiqs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cz2tiAY66U7fVC3nUBO5DuS8PIl8L4w0wz0PXUiFgot9znI4XTczaCmkzRj20IbXu
-	 H+fQ8Vc101mEukRzjo9t4uQKnlkN0dgn0gYWqZUc5MO1qXgrW4rXhp4HPuTAdhgcNa
-	 by0l1ZT8teq3Ibf8LeAwT0A8ZdpvfYZztd6b+k32U64coFMkf9Mnd58uCPWa2zro4O
-	 eczmAcswk65Ex4bWdfbx/o8FADM4PIMFxHfHxEpvq6YPXfU/ZF7xONWBVC1wpb4PdM
-	 XGRgQQbAFp3U1iEWfxjQLv1oQL4g6paR2/iMG/alp4l/QKGe9Lp7kjCEoQxn7uXKG7
-	 iOk8w4Gv5AnLUvN1wPxu5aPmKdq6pEbD6majeOPhuqFGmW548f/VTjkHTfr6cNAcUJ
-	 i5aK3NeQCLBwPeuReyuQYF/MAs7EXqqbcm27F+Hz/U17e66qWZegeJeyuKgGjqgE1k
-	 O3nem+NimSvS89HggVYwS04SgM7pDrf0ITYXNbqM5uugIyU6vEGtc8ofi9+iJgyDNu
-	 DIg8I3dgOjp4UjEZyCWJ2QHiZuKc8K2J0E6auUcEMU+J+poXapMN00UUUy2iKPU9LZ
-	 AIfdBxShVWztuIPTxr5TTekj8U4HyVNhTyqxNdQ6FnUfo9Xm/+gqCA7xC8RkC/Bytv
-	 1PFXb6Xn09jhAm2hvEGDRico=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 92D2940E00B2;
-	Fri, 22 Mar 2024 16:49:18 +0000 (UTC)
-Date: Fri, 22 Mar 2024 17:49:12 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: linux-kernel@vger.kernel.org
-Cc: linux-tip-commits@vger.kernel.org, "H.J. Lu" <hjl.tools@gmail.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>, x86@kernel.org
-Subject: Re: [tip: x86/shstk] x86/shstk: Enable shadow stacks for x32
-Message-ID: <20240322164912.GAZf22iBdqdkIFcrsl@fat_crate.local>
-References: <20240315140433.1966543-1-hjl.tools@gmail.com>
- <171110519880.10875.7663158781394877164.tip-bot2@tip-bot2>
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="VW2nPlDV"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-78a3bccc420so49983985a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 09:50:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1711126202; x=1711731002; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WJAQS09wl5gL4zlCIvpp2eOQaFo+rGQU6/Vm4ehOJB4=;
+        b=VW2nPlDVvgJU3ULRkDcmjiK3SBZCnSmwHod4EKz0qkEOAU8vtVpcTt1mi6knexvNEp
+         LEwtaQ1hfeQWVTcGSANfafUPTkefqGB/IQp5QSN0T7X4eTOg2aHZsCJvp/BSnuSTd3J4
+         sCl4VyuCx3WOI5P7p9mlLUOmwTiITTrs+qm0ss2rmiXFX3Dq+1w2dQfT/UGWJ/LEfqfd
+         2AoEIesmSJjVgsGqJtDJ5aOpNh3Svx7s+HeaM/mfqUhw1D44w7CiIycr95uDepz94P6w
+         LDdJMzxmXHxP2W8dHGaNkxdTUlzqbXVvQZcrZiD+L4TlM2cpnpBl9PcJHfMgPNlJgnIw
+         yW0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711126202; x=1711731002;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WJAQS09wl5gL4zlCIvpp2eOQaFo+rGQU6/Vm4ehOJB4=;
+        b=o1vnEaWO+09d/7Mks9V72obA6GlPCwcQ1o8qRvKPTndePQtXAJnbmFNV4PNH8xvYY2
+         xMOsLCiPrYdGb1brV8pd6h+fmb94QWeKDh6+wVZT55o9KzXkgsq9ptyxt0xdps0H02IZ
+         my5EcXcg75yJLw1YAatqgecaVeKd+n6UU7j8sq91sVGmAMfMonFweUwhZCq5FWpaWVqb
+         6OkBz/t2VhciQS+O1UT86XuFMSBvomvXlWYkTI1GCOYSH0YjUolm4SfXsAcKreGdvEbq
+         SmyoaH4QsQ0VyuHbohvJGmlpHvkopJX/eXnndQtJkjDwMpeLJQX5lRCUOVYGQcAdSzwC
+         wJOw==
+X-Forwarded-Encrypted: i=1; AJvYcCW24M8zrEEOUUkw7e+cRKLRkyBURbJxtGcrO0bIA2PqVXruHpzTFwTTyPCQLxA+hH3SFCHIQsXKKnc987CDL8/zXH6FE9WEX3UyMZYS
+X-Gm-Message-State: AOJu0YwoTLscU3Td82kHD90vIFw0qURzXGiBI9gUcewwTBkks6zWC5Ug
+	y6i2hXLo/va5FLGlNyA3FhWEqwwRWxRppGSLlpayoeIyfLVzo7ypQLIjf1S/6bk=
+X-Google-Smtp-Source: AGHT+IFexvyRbIqkdvdtyRG6N0/IbDNMA+Uq6i3Kv3Q5rLDDu+usO7MCuXyl/v3JGfS729p6TE5JqQ==
+X-Received: by 2002:a05:620a:8110:b0:789:ebd1:445a with SMTP id os16-20020a05620a811000b00789ebd1445amr2857290qkn.42.1711126202341;
+        Fri, 22 Mar 2024 09:50:02 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:400::5:16be])
+        by smtp.gmail.com with ESMTPSA id bi18-20020a05620a319200b0078a0774d1basm913629qkb.15.2024.03.22.09.50.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Mar 2024 09:50:01 -0700 (PDT)
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: linux-mm@kvack.org
+Cc: ying.huang@intel.com,
+	david@redhat.com,
+	hughd@google.com,
+	osandov@fb.com,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] mm: swapfile: fix SSD detection with swapfile on btrfs
+Date: Fri, 22 Mar 2024 12:42:21 -0400
+Message-ID: <20240322164956.422815-1-hannes@cmpxchg.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <171110519880.10875.7663158781394877164.tip-bot2@tip-bot2>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 22, 2024 at 10:59:58AM -0000, tip-bot2 for H.J. Lu wrote:
-> The following commit has been merged into the x86/shstk branch of tip:
-> 
-> Commit-ID:     2883f01ec37dd8668e7222dfdb5980c86fdfe277
-> Gitweb:        https://git.kernel.org/tip/2883f01ec37dd8668e7222dfdb5980c86fdfe277
-> Author:        H.J. Lu <hjl.tools@gmail.com>
-> AuthorDate:    Fri, 15 Mar 2024 07:04:33 -07:00
-> Committer:     Ingo Molnar <mingo@kernel.org>
-> CommitterDate: Fri, 22 Mar 2024 10:17:11 +01:00
-> 
-> x86/shstk: Enable shadow stacks for x32
-> 
-> 1. Add shadow stack support to x32 signal.
-> 2. Use the 64-bit map_shadow_stack syscall for x32.
-> 3. Set up shadow stack for x32.
+btrfs sets si->bdev during swap activation, which currently happens
+after swapon's SSD detection and cluster setup. Thus none of the SSD
+optimizations and cluster lock splitting are enabled for btrfs swap.
 
-Why are we still diddling with x32 and not patching it out instead?
+Rearrange the swapon sequence so that filesystem activation happens
+before determining swap behavior based on the backing device.
 
-https://lore.kernel.org/all/CALCETrXoRAibsbWa9nfbDrt0iEuebMnCMhSFg-d9W-J2g8mDjw@mail.gmail.com/
+Afterwards, the nonrotational drive is detected correctly:
 
+- Adding 2097148k swap on /mnt/swapfile.  Priority:-3 extents:1 across:2097148k
++ Adding 2097148k swap on /mnt/swapfile.  Priority:-3 extents:1 across:2097148k SS
+
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ mm/swapfile.c | 141 +++++++++++++++++++++++++-------------------------
+ 1 file changed, 70 insertions(+), 71 deletions(-)
+
+This survives a swapping smoketest, but I would really appreciate more
+eyes on the swap and fs implications of this change.
+
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 4919423cce76..4dd5f2e8190d 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -2919,22 +2919,15 @@ static unsigned long read_swap_header(struct swap_info_struct *p,
+ static int setup_swap_map_and_extents(struct swap_info_struct *p,
+ 					union swap_header *swap_header,
+ 					unsigned char *swap_map,
+-					struct swap_cluster_info *cluster_info,
+ 					unsigned long maxpages,
+ 					sector_t *span)
+ {
+-	unsigned int j, k;
+ 	unsigned int nr_good_pages;
++	unsigned long i;
+ 	int nr_extents;
+-	unsigned long nr_clusters = DIV_ROUND_UP(maxpages, SWAPFILE_CLUSTER);
+-	unsigned long col = p->cluster_next / SWAPFILE_CLUSTER % SWAP_CLUSTER_COLS;
+-	unsigned long i, idx;
+ 
+ 	nr_good_pages = maxpages - 1;	/* omit header page */
+ 
+-	cluster_list_init(&p->free_clusters);
+-	cluster_list_init(&p->discard_clusters);
+-
+ 	for (i = 0; i < swap_header->info.nr_badpages; i++) {
+ 		unsigned int page_nr = swap_header->info.badpages[i];
+ 		if (page_nr == 0 || page_nr > swap_header->info.last_page)
+@@ -2942,25 +2935,11 @@ static int setup_swap_map_and_extents(struct swap_info_struct *p,
+ 		if (page_nr < maxpages) {
+ 			swap_map[page_nr] = SWAP_MAP_BAD;
+ 			nr_good_pages--;
+-			/*
+-			 * Haven't marked the cluster free yet, no list
+-			 * operation involved
+-			 */
+-			inc_cluster_info_page(p, cluster_info, page_nr);
+ 		}
+ 	}
+ 
+-	/* Haven't marked the cluster free yet, no list operation involved */
+-	for (i = maxpages; i < round_up(maxpages, SWAPFILE_CLUSTER); i++)
+-		inc_cluster_info_page(p, cluster_info, i);
+-
+ 	if (nr_good_pages) {
+ 		swap_map[0] = SWAP_MAP_BAD;
+-		/*
+-		 * Not mark the cluster free yet, no list
+-		 * operation involved
+-		 */
+-		inc_cluster_info_page(p, cluster_info, 0);
+ 		p->max = maxpages;
+ 		p->pages = nr_good_pages;
+ 		nr_extents = setup_swap_extents(p, span);
+@@ -2973,9 +2952,55 @@ static int setup_swap_map_and_extents(struct swap_info_struct *p,
+ 		return -EINVAL;
+ 	}
+ 
++	return nr_extents;
++}
++
++static struct swap_cluster_info *setup_clusters(struct swap_info_struct *p,
++						unsigned char *swap_map)
++{
++	unsigned long nr_clusters = DIV_ROUND_UP(p->max, SWAPFILE_CLUSTER);
++	unsigned long col = p->cluster_next / SWAPFILE_CLUSTER % SWAP_CLUSTER_COLS;
++	struct swap_cluster_info *cluster_info;
++	unsigned long i, j, k, idx;
++	int cpu, err = -ENOMEM;
++
++	cluster_info = kvcalloc(nr_clusters, sizeof(*cluster_info), GFP_KERNEL);
+ 	if (!cluster_info)
+-		return nr_extents;
++		goto err;
++
++	for (i = 0; i < nr_clusters; i++)
++		spin_lock_init(&cluster_info[i].lock);
+ 
++	p->cluster_next_cpu = alloc_percpu(unsigned int);
++	if (!p->cluster_next_cpu)
++		goto err_free;
++
++	/* Random start position to help with wear leveling */
++	for_each_possible_cpu(cpu)
++		per_cpu(*p->cluster_next_cpu, cpu) =
++			get_random_u32_inclusive(1, p->highest_bit);
++
++	p->percpu_cluster = alloc_percpu(struct percpu_cluster);
++	if (!p->percpu_cluster)
++		goto err_free;
++
++	for_each_possible_cpu(cpu) {
++		struct percpu_cluster *cluster;
++
++		cluster = per_cpu_ptr(p->percpu_cluster, cpu);
++		cluster_set_null(&cluster->index);
++	}
++
++	/*
++	 * Mark unusable pages as unavailable. The clusters aren't
++	 * marked free yet, so no list operations are involved yet.
++	 */
++	for (i = 0; i < round_up(p->max, SWAPFILE_CLUSTER); i++)
++		if (i >= p->max || swap_map[i] == SWAP_MAP_BAD)
++			inc_cluster_info_page(p, cluster_info, i);
++
++	cluster_list_init(&p->free_clusters);
++	cluster_list_init(&p->discard_clusters);
+ 
+ 	/*
+ 	 * Reduce false cache line sharing between cluster_info and
+@@ -2994,7 +3019,13 @@ static int setup_swap_map_and_extents(struct swap_info_struct *p,
+ 					      idx);
+ 		}
+ 	}
+-	return nr_extents;
++
++	return cluster_info;
++
++err_free:
++	kvfree(cluster_info);
++err:
++	return ERR_PTR(err);
+ }
+ 
+ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
+@@ -3090,6 +3121,17 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
+ 		goto bad_swap_unlock_inode;
+ 	}
+ 
++	error = swap_cgroup_swapon(p->type, maxpages);
++	if (error)
++		goto bad_swap_unlock_inode;
++
++	nr_extents = setup_swap_map_and_extents(p, swap_header, swap_map,
++						maxpages, &span);
++	if (unlikely(nr_extents < 0)) {
++		error = nr_extents;
++		goto bad_swap_unlock_inode;
++	}
++
+ 	if (p->bdev && bdev_stable_writes(p->bdev))
+ 		p->flags |= SWP_STABLE_WRITES;
+ 
+@@ -3097,61 +3139,18 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
+ 		p->flags |= SWP_SYNCHRONOUS_IO;
+ 
+ 	if (p->bdev && bdev_nonrot(p->bdev)) {
+-		int cpu;
+-		unsigned long ci, nr_cluster;
+-
+ 		p->flags |= SWP_SOLIDSTATE;
+-		p->cluster_next_cpu = alloc_percpu(unsigned int);
+-		if (!p->cluster_next_cpu) {
+-			error = -ENOMEM;
+-			goto bad_swap_unlock_inode;
+-		}
+-		/*
+-		 * select a random position to start with to help wear leveling
+-		 * SSD
+-		 */
+-		for_each_possible_cpu(cpu) {
+-			per_cpu(*p->cluster_next_cpu, cpu) =
+-				get_random_u32_inclusive(1, p->highest_bit);
+-		}
+-		nr_cluster = DIV_ROUND_UP(maxpages, SWAPFILE_CLUSTER);
+-
+-		cluster_info = kvcalloc(nr_cluster, sizeof(*cluster_info),
+-					GFP_KERNEL);
+-		if (!cluster_info) {
+-			error = -ENOMEM;
+-			goto bad_swap_unlock_inode;
+-		}
+-
+-		for (ci = 0; ci < nr_cluster; ci++)
+-			spin_lock_init(&((cluster_info + ci)->lock));
+-
+-		p->percpu_cluster = alloc_percpu(struct percpu_cluster);
+-		if (!p->percpu_cluster) {
+-			error = -ENOMEM;
++		cluster_info = setup_clusters(p, swap_map);
++		if (IS_ERR(cluster_info)) {
++			error = PTR_ERR(cluster_info);
++			cluster_info = NULL;
+ 			goto bad_swap_unlock_inode;
+ 		}
+-		for_each_possible_cpu(cpu) {
+-			struct percpu_cluster *cluster;
+-			cluster = per_cpu_ptr(p->percpu_cluster, cpu);
+-			cluster_set_null(&cluster->index);
+-		}
+ 	} else {
+ 		atomic_inc(&nr_rotate_swap);
+ 		inced_nr_rotate_swap = true;
+ 	}
+ 
+-	error = swap_cgroup_swapon(p->type, maxpages);
+-	if (error)
+-		goto bad_swap_unlock_inode;
+-
+-	nr_extents = setup_swap_map_and_extents(p, swap_header, swap_map,
+-		cluster_info, maxpages, &span);
+-	if (unlikely(nr_extents < 0)) {
+-		error = nr_extents;
+-		goto bad_swap_unlock_inode;
+-	}
+-
+ 	if ((swap_flags & SWAP_FLAG_DISCARD) &&
+ 	    p->bdev && bdev_max_discard_sectors(p->bdev)) {
+ 		/*
 -- 
-Regards/Gruss,
-    Boris.
+2.44.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
