@@ -1,151 +1,83 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92678289B
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 22:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D546F1CD00;
+	Fri, 22 Mar 2024 22:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711146802; cv=none; b=MICzvwn8QAt31tGsMaeRzJFE9vqxC77mQyiZmvoZ2AM2xYoGJ1VvpZZjN97oeucJde5CMfhwpb2EmE2FlouOGVCdEmHRfumsa+6ZMWMItRryPmA7K45X8ySkiXBENBqA+oqXZAU3Xtne72eyqIiEjwdH/gYM8i84poNChuNeQCM=
+	t=1711147229; cv=none; b=TfvyFE/DDTxmG60UkMUoAh9XER0kmE8uh2txlMAWyZJFg83FfHUHfGQcFYrqGxsN0auRpgDYeq3cw8ZiSYYBqZ8jymNzBlb9lgzNf5JKeBwH+bTSaX/8XARP5DKzRAW+nGFN7QskZ3g7LFoig1hPN8pca9uHpyQpI8hjQJH61A0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711146802; c=relaxed/simple;
-	bh=eqf3ihHx9YHmHJuuScJ0QnswcC+loLOYogzQd1XaHpc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N9gUbRTs6hHe/FRYhs/Xm+4+w1SSFnizSikW8f6b+CBrZlNAWnkoLt5e/jKhErN7c6VdKNttCXSMLvYQC1kAThJiAdNMjEPIy0AIxdPAVLyEn2lhL9YQ3LNQr8pC0EXTBVo2hM7RoneVBzq0ZBbROqCpPHoh75le7OGG8+sUEKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EC1n8Imh; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711147229; c=relaxed/simple;
+	bh=HE4o6Ei+IAibzVmwUO2PTyjRZtSjmEv+wCxxrI6+tGs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aCEaV1ADSrgCOebHqHbtR6R215FaGqzC01Y28vCQa9iF3vV0aNzodoelHhWCwtenW/EQPf21MjHk9va4H5k7yq/eUas3mEIHZMjXNKXi6XcBdYssbiKgAyaRaNkXAihOlxgwG7JvgpXUkie/Trja7qvPd86xEoroDP6DyQpKsUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AswFhRNY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EC1n8Imh"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dd14d8e7026so2414136276.2
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 15:33:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711146800; x=1711751600; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kJ9F0pY9n/+igvd/03ZLKYicj33ULltRkxaxHp9S2Mk=;
-        b=EC1n8ImhTItkTN4PavZIK4BRpWnuHsMjukmbTREwhMfKuGkMbUU1ObIvXhzPgXskFf
-         Sjk0TPxH4Msq4lGSTPSMmSfpPwJGzLbTvg5OM9lG/fhQ+93MrO522fxc+UFfIEC5Vg4+
-         SQ3RaqAwpUi0urIseuKGN5JY10a7dm6ZeugrnBdltOaXS+bt15yg6YmYdyu5T7ilBk5k
-         p+d3kYZ3h75c6vnkv9vSwZqUCEy4oASN4RxFnrTgD98YdBh4OGXIX9DhJMm3v6+Cr4YC
-         CNScVUlHIjpbZzz1kWfm9p5RUfuMFfuWLQ6/xImSDi+z79q59NzUPdQ1dhKZP3OBgPw7
-         ajVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711146800; x=1711751600;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kJ9F0pY9n/+igvd/03ZLKYicj33ULltRkxaxHp9S2Mk=;
-        b=ihte8drQHC4hpDo1RCqhbWZqcGzS1Eo4ZBcW9PAqz2TbNGKOfiZvlmmO0jAvvkamx0
-         VHLXlnKJerPpkKdvIvGGqBlZwEqkRouoOh4dDMItG80Hs/FY+/fp1bI1sRdk/Bbb1Cwc
-         nB7OLE8zsrLR5QedGUjCWmW+G0IsYnXacaSYlIX/4YHs/attP25VnNN84x97lAfrL1SQ
-         zLAzfrvqq7SW6rcXJvNMV6c4EHHd1/dDuEDZn5rYkGjOuER1QUvBwvySSsJVYF1l1AnK
-         q/o39nNv5NSkhpc2BzTJgWOrxFLI53I7SGO80FXo52IlHwXDR1m6JhGlJGdHH9zE+/fm
-         VTqw==
-X-Forwarded-Encrypted: i=1; AJvYcCViPsqDs7aBVcV1kspF/YqVn8pc7MjhiS5+U7eP8FzcIz8pt1qdGjplRp1/2zs1O7qbhzJIXtul5Y6EW7jkPqudmhKQ+VqdcRhYmiit
-X-Gm-Message-State: AOJu0YyNDFzTuHz9POCJrLaHHWTlssduRIgM0xKf9HfgAHLDnmwiLdoD
-	17MnRdlNfX3uH+Kczg6wtloR9ASsR6PEIhxSGNKBDNkLbjBKSKjyNYj7ZvBarNBsuN6lxz6X/wU
-	7Q99YWWDR+jJvf2NYHq75wSZupDmLeJT7ptA69w==
-X-Google-Smtp-Source: AGHT+IHeqHvXyVTz47o9FkA2GJ7YHmI3n1DCfYkliY4NJgtd4mhyutbc3aVWnftbGu6jfh1yTN/kdnyTxaqt4ddPtJ8=
-X-Received: by 2002:a25:1941:0:b0:dd0:2076:4706 with SMTP id
- 62-20020a251941000000b00dd020764706mr576713ybz.31.1711146799824; Fri, 22 Mar
- 2024 15:33:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AswFhRNY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2945C433F1;
+	Fri, 22 Mar 2024 22:40:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711147229;
+	bh=HE4o6Ei+IAibzVmwUO2PTyjRZtSjmEv+wCxxrI6+tGs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=AswFhRNYr0sQGvqmIWUxR0Fxj3Oi1eB4Pr7c3dHAVzm6X/Npi4pd1rTJbIWpcyzRC
+	 TXX5RN0bcSKAQUWdwXGx0VMTqzCQYFDdqQvd65MFEhpBBgAT2l7IM/RbAl868tMJ+m
+	 mhBZRfDgjnRALFv5b2alSOVS6vFRcoGMOAHOe5wQKTQ9biylxghalY2JIQIC+8ZKR4
+	 d+VrZJwXLHMccxIpQCe1J6oFLy4ho3SSeklWF9ySaxU9EeLRXtDTlj0Y+7WhRoVSFh
+	 pJfVHfijRAwfoS4Nu51qiVEuMbHtHMj/g0oTomcCo88HgIYlRpJZBWxSpt6n24gU86
+	 BS+0Nn1Ci2swg==
+Date: Fri, 22 Mar 2024 15:40:27 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: David Ahern <dsahern@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe
+ <jgg@nvidia.com>, Christoph Hellwig <hch@infradead.org>, Saeed Mahameed
+ <saeed@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Leon Romanovsky
+ <leonro@nvidia.com>, Jiri Pirko <jiri@nvidia.com>, Leonid Bloch
+ <lbloch@nvidia.com>, Itay Avraham <itayavr@nvidia.com>, Saeed Mahameed
+ <saeedm@nvidia.com>, Aron Silverton <aron.silverton@oracle.com>,
+ linux-kernel@vger.kernel.org, "netdev@vger.kernel.org"
+ <netdev@vger.kernel.org>, Andy Gospodarek <andrew.gospodarek@broadcom.com>
+Subject: Re: [PATCH V4 0/5] mlx5 ConnectX control misc driver
+Message-ID: <20240322154027.5555780a@kernel.org>
+In-Reply-To: <e5c61607-4d66-4cd8-bf45-0aac2b3af126@kernel.org>
+References: <20240207072435.14182-1-saeed@kernel.org>
+	<Zcx53N8lQjkpEu94@infradead.org>
+	<ZczntnbWpxUFLxjp@C02YVCJELVCG.dhcp.broadcom.net>
+	<20240214175735.GG1088888@nvidia.com>
+	<20240304160237.GA2909161@nvidia.com>
+	<9cc7127f-8674-43bc-b4d7-b1c4c2d96fed@kernel.org>
+	<2024032248-ardently-ribcage-a495@gregkh>
+	<510c1b6b-1738-4baa-bdba-54d478633598@kernel.org>
+	<Zf2n02q0GevGdS-Z@C02YVCJELVCG>
+	<20240322135826.1c4655e2@kernel.org>
+	<e5c61607-4d66-4cd8-bf45-0aac2b3af126@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240321-apss-ipq-pll-cleanup-v2-0-201f3cf79fd4@gmail.com>
- <20240321-apss-ipq-pll-cleanup-v2-3-201f3cf79fd4@gmail.com>
- <CAA8EJprr4E1CM4f+eBzdRN41nm33xY-hRPQDn3peR94vLyJsYQ@mail.gmail.com> <ca4d85f1-397e-4c43-8548-436b9238e85e@gmail.com>
-In-Reply-To: <ca4d85f1-397e-4c43-8548-436b9238e85e@gmail.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Sat, 23 Mar 2024 00:33:08 +0200
-Message-ID: <CAA8EJpp9jyCHgMSEBMumSz7xXUkMRm3wapjUdjzeOuJSpH5g5w@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] clk: qcom: apss-ipq-pll: remove 'pll_type' field
- from struct 'apss_pll_data'
-To: Gabor Juhos <j4g8y7@gmail.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 22 Mar 2024 at 22:59, Gabor Juhos <j4g8y7@gmail.com> wrote:
->
-> 2024. 03. 21. 11:37 keltez=C3=A9ssel, Dmitry Baryshkov =C3=ADrta:
-> > On Thu, 21 Mar 2024 at 09:50, Gabor Juhos <j4g8y7@gmail.com> wrote:
-> >>
-> >> The value of the 'pll_type' field of 'struct apps_pll_data'
-> >> is used only by the probe function to decide which config
-> >> function should be called for the actual PLL. However this
-> >> can be derived also from the 'pll' field  which makes the
-> >> 'pll_type' field redundant.
-> >>
-> >> Additionally, the CLK_ALPHA_PLL_TYPE_* enumeration values
-> >> are meant to be used as indices to the 'clk_alpha_pll_regs'
-> >> array so using those to define the pll type in this driver
-> >> is misleading anyway.
-> >>
-> >> Change the probe function to use the 'pll' field to determine
-> >> the configuration function to be used, and remove the
-> >> 'pll_type' field to simplify the code.
-> >
-> > I can't fully appreciate this idea. There can be cases when different
-> > PLL types share the set of ops. I think having a type is more
-> > versatile and makes the code more obvious.
->
-> I understand your concerns, but let me explain the reasons about why I ha=
-ve
-> choosed this implementation in more detail.
->
-> The driver declares three distinct clocks for the three different PLL typ=
-es it
-> supports. Each one of these clocks are using different register maps and =
-clock
-> operations which in a whole uniquely identifies the type of the PLL. In c=
-ontrary
-> to this, the CLK_ALPHA_PLL_TYPE_* values assigned to 'pll_type' are only
-> indicating that which register map should be used for the given PLL. Howe=
-ver
-> this is also specified indirectly through the 'regs' member of the clocks=
- so
-> this is a redundant information.
->
-> Additionally, using the CLK_ALPHA_PLL_TYPE_*  for anything other than for
-> specifying the register map is misleading.  For example, here are some sn=
-ippets
-> from the driver before the patch:
->
-> static struct clk_alpha_pll ipq_pll_stromer_plus =3D {
->         ...
->         .regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_STROMER],
->         ...
->
-> static struct apss_pll_data ipq5332_pll_data =3D {
->         .pll_type =3D CLK_ALPHA_PLL_TYPE_STROMER_PLUS,
->         .pll =3D &ipq_pll_stromer_plus,
->         ...
->
-> Since it is not obvious at a first glance, one could ask that why the two
-> CLK_ALPHA_PLL_TYPE_* values are different?
->
-> Although my opinion that it is redundant still stand, but I'm not against
-> keeping the pll_type. However if we keep that, then at least we should us=
-e
-> private enums (IPQ_APSS_PLL_TYPE_* or similar) for that in order to make =
-it more
-> obvious that it means a different thing than the CLK_ALPHA_PLL_TYPE_* val=
-ues.
->
-> This solution would be more acceptable?
+On Fri, 22 Mar 2024 15:18:09 -0600 David Ahern wrote:
+> can you respond to Jason's email with the proposal for the new fwctl
+> subsystem and identify places you do not agree? That would provide more
+> concrete discussion points. Thanks,
 
-This looks like a slight overkill, but yes, it is more acceptable. The
-logic should be type =3D> functions, not the other way around.
+Respond in what way, David? Comment on technical aspects of whether 
+a common class device with a discovery mechanism and a sprinkling of
+semantically meaningless fields can be implemented? Some trivial object
+hierarchy?
 
+On whether someone can actually enforce any of the 4 "don't"s, and
+whether this interface is basically encouraging and giving a leg up
+to those willing to be dishonest?
 
---=20
-With best wishes
-Dmitry
+Or should we go for another loop of me talking about openness and
+building common abstractions, and vendors saying how their way of
+doing basic configuration is so very special, and this is just for
+debug and security and because others.
+
+There's absolutely no willingness to try and build a common interface
+here.
