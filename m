@@ -1,69 +1,101 @@
-Received: from mail115-100.sinamail.sina.com.cn (mail115-100.sinamail.sina.com.cn [218.30.115.100])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F8D3F8E2
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 11:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6983F8FB;
+	Fri, 22 Mar 2024 11:34:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711107268; cv=none; b=OlblUsaHE4RSPkR5pjiP69LhgESM8/ONXbJ61uw4r7Iys//qRNA7YGfWetWLa+tpucUmLTHB74Mdnhv7PV9BCQtnFHx715Ml15X7UOrFAeXnSgU3n5lY7K1yj4pG4fRI3DzccBld4fc2wzQmZmXYpuWL7yt3d8Fi6+3UA0B967o=
+	t=1711107266; cv=none; b=VmdCczSbk64dOVn3k1ItCUoZcpomQhJ00i5cKMDUEE86uGjrZsZnuO4dvcYfdtDWdPmgUwQFzKLQyMFuIDxcNcNxYDLB+jfm8kGaxJZRLp4/pyjFzlFXc9mFhOD0GV9KJ6rVl+QZhhNtxG8zK6EXtb6t0DIR1diZUPSZWautPqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711107268; c=relaxed/simple;
-	bh=ACSUIa5eILVdV9/unH/3mAmu4AhoNpcnkH7YwBEVNng=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XcZmsmGk0B5qR7qj8NdsvcKzvs7wQIdCaGqYbEdBESaoqe2sLdD17WzYNJzdBpRFCH1BQE9QVKU7l2OLQ47vEidNVaidKBmnvfi0FkHCTfGKPW9OU1Se/JOx7kse7hm82+Upp3lmLrcdQkVv4qRhUIcBRhnl3z+K2NDSdtuVeqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.118.69.35])
-	by sina.com (172.16.235.24) with ESMTP
-	id 65FD6CAE000022C4; Fri, 22 Mar 2024 19:34:13 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 49593745089255
-X-SMAIL-UIID: 836C24187C8B403DA6AFA1FE929A0CF9-20240322-193413-1
-From: Hillf Danton <hdanton@sina.com>
-To: Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	Light Hsieh =?utf-8?B?KOisneaYjueHiCk=?= <Light.Hsieh@mediatek.com>,
-	linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [PATCH] f2fs: avoid the deadlock case when stopping discard thread
-Date: Fri, 22 Mar 2024 19:33:57 +0800
-Message-Id: <20240322113357.2599-1-hdanton@sina.com>
-In-Reply-To: <ZfzQz5hwECOEGYVL@google.com>
-References: <20240320001442.497813-1-jaegeuk@kernel.org> <20240321224233.2541-1-hdanton@sina.com>
+	s=arc-20240116; t=1711107266; c=relaxed/simple;
+	bh=OdYK8KD02d6UmxwIIam/r9XyRmX3DuDRyGM+jv+Hc2g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ipeum4vcE18EmvO3iFIoWGLcXoCQ45e2pUgL5GCr864cjEdegKVqR1nLvtqzdbs0x69QE457ycQ8DT1CxA0ozxRI06lE2bwIP6s5fPXwUF/WD4O0ZhMxb1h6YFyk7y1JD07ZjeQB9BcdyLYbsL+J5QqomjWx+4IJe+QTBMNx7Bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fUDSHomL; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fUDSHomL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711107265; x=1742643265;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OdYK8KD02d6UmxwIIam/r9XyRmX3DuDRyGM+jv+Hc2g=;
+  b=fUDSHomLUzynr9rbREoLELXJpe0jIZb/wreoyu0RgdgmmjTuFm/OnzwS
+   qPerlpUlfCqIFbpXI1F/vRjvlSteuRlaWB/95Fl+swRhlM+CR85KjTt9G
+   gALMJTlHe0zheyOZ+5vHJ2Hav3iIZ7qyh0KhB/GEpmPFYXoibnuT8MNhK
+   Byl5HvZ7H583NR6IPDSOkms+IKhAyut/xuF00aNSPvy8R+W0hiYKBsIfJ
+   80xB9VaW4N2f1fJQlTBu0nNG6bvBXydUYMtD3yJBzeyA99ShlBPoK34B1
+   L6q5qeaBpAEjDh5N+ud+t1EiCpAMWZmxX0c49J6TOtE2uMROITtkemaai
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="6089699"
+X-IronPort-AV: E=Sophos;i="6.07,145,1708416000"; 
+   d="scan'208";a="6089699"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 04:34:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,145,1708416000"; 
+   d="scan'208";a="52313988"
+Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 22 Mar 2024 04:34:21 -0700
+Received: from kbuild by b21307750695 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rndAA-000KGx-1D;
+	Fri, 22 Mar 2024 11:34:18 +0000
+Date: Fri, 22 Mar 2024 19:33:27 +0800
+From: kernel test robot <lkp@intel.com>
+To: Varadarajan Narayanan <quic_varada@quicinc.com>, andersson@kernel.org,
+	konrad.dybcio@linaro.org, robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	mturquette@baylibre.com, sboyd@kernel.org, djakov@kernel.org,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Varadarajan Narayanan <quic_varada@quicinc.com>
+Subject: Re: [PATCH 2/2] clk: qcom: add IPQ9574 interconnect clocks support
+Message-ID: <202403221944.SAbczEhw-lkp@intel.com>
+References: <20240321043149.2739204-3-quic_varada@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240321043149.2739204-3-quic_varada@quicinc.com>
 
-On Thu, 21 Mar 2024 17:29:03 -0700 Jaegeuk Kim <jaegeuk@kernel.org>
-> 
-> I posted this patch before Light reported.
+Hi Varadarajan,
 
-Yeah, his report's timestamp is 2024-03-20  6:59, nearly 7 hours later,
-which shows that you constructed the deadlock with nothing to do with
-his report.
-> 
-> And, in the report, I didn't get this:
-> 
-> f2fs_ioc_shutdown() --> freeze_bdev() --> freeze_super() --> sb_wait_write(sb, SB_FREEZE_FS) --> ... ->percpu_down_write().
-> 
-> because f2fs_ioc_shutdown() calls f2fs_stop_discard_thread() after thaw_bdev()
-> like this order.
-> 
->  -> freeze_bdev()
->  -> thaw_bdev()
->  -> f2fs_stop_discard_thread()
-> 
-> Am I missing something?
+kernel test robot noticed the following build errors:
 
-Light, could you specify to help Jaegeuk understand the deadlock you reported?
+[auto build test ERROR on robh/for-next]
+[also build test ERROR on clk/clk-next linus/master v6.8 next-20240322]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Varadarajan-Narayanan/dt-bindings-interconnect-Add-Qualcomm-IPQ9574-support/20240321-123508
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/20240321043149.2739204-3-quic_varada%40quicinc.com
+patch subject: [PATCH 2/2] clk: qcom: add IPQ9574 interconnect clocks support
+config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20240322/202403221944.SAbczEhw-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240322/202403221944.SAbczEhw-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403221944.SAbczEhw-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   alpha-linux-ld: drivers/clk/qcom/gcc-ipq9574.o: in function `gcc_ipq9574_probe':
+>> (.text+0x1a0): undefined reference to `icc_clk_register'
+>> alpha-linux-ld: (.text+0x1ac): undefined reference to `icc_clk_register'
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
