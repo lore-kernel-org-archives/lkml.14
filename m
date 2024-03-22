@@ -1,164 +1,149 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DB520DC5;
-	Fri, 22 Mar 2024 09:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A9E208DD;
+	Fri, 22 Mar 2024 09:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711100164; cv=none; b=U/rTkZTwMYMtJTQLjI8Y5FsWdO5oioNZuqnAMHXP6RSFY/x+Zu4fPX9pE9A09Y9IxUpI9gcXHoUn2Hg1hlsnbtvX5pUE44kD6OiCIwYpZ1himiW0ViTFx1rYE5YPxUO2APOyuiUJa/Q95iCUOiA7RDLbQY1uF9+5787GpKcNJA0=
+	t=1711100183; cv=none; b=mryff4ezG8Hr2QyQLjCYH27oBr8McdUOvq6M8N4QjZG+CNtb1wKA7ICD0NePGP6fSuTXdmdeieo4rCT6e6MzqZIi/10vXcrivb6xpnYvOKS9c677etfKr7cQrDpRxaVaS/yCrurA353ihnyv9kacqQ9g60IW4cLkcnB26sBaZU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711100164; c=relaxed/simple;
-	bh=Ufp0zrM0qX+RX8b3KATGeapavTnxHX5+0luVxD6E1dk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lpi8oJAdedHCTsMsIBgWRgR2I3NE25ngOc2+RbfDxD0Le2bJ9f5Oqfrhmc1Ge4C9BzV4HuyxdOZOOtOeG39LY/1AzXOT2uAISySk98nljdYSeBjhWpPALp001qFkYY9SJ8wCX8CFUs9rDHVdHkFSctHCaC5bbpzquDW8IYnaj+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=lKxBDPt0; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="lKxBDPt0"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id BBD2182A;
-	Fri, 22 Mar 2024 10:35:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1711100133;
-	bh=Ufp0zrM0qX+RX8b3KATGeapavTnxHX5+0luVxD6E1dk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lKxBDPt0nXfjWRLKBMgrAE+TdMkw/GEgLZSTGHHSkhyeknBQAfhJbwjOe+cs6TgUM
-	 E2UJINzffH9RPi3QC/jqHjlcS8bB+aHPs2Qy520vAg6lIaBqd9fE5NJpg3HOXPohW7
-	 IqI+9UjInALb4J/UK3068MyG8X4wYdIu34LGbwCY=
-Date: Fri, 22 Mar 2024 11:35:57 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	linux-kernel@vger.kernel.org, "hn.chen" <hn.chen@sunplusit.com>,
-	linux-media@vger.kernel.org
-Subject: Re: [PATCH v9 1/6] media: uvcvideo: Fix negative modulus calculation
-Message-ID: <20240322093557.GO18799@pendragon.ideasonboard.com>
-References: <20220920-resend-hwtimestamp-v9-0-55a89f46f6be@chromium.org>
- <20220920-resend-hwtimestamp-v9-1-55a89f46f6be@chromium.org>
- <20240212225940.GA19316@pendragon.ideasonboard.com>
- <CANiDSCuoskaERyyzuLen+ReGHBNnOrFducbWYAvFQ6HfbUCPcg@mail.gmail.com>
- <20240219104046.GB13043@pendragon.ideasonboard.com>
- <CANiDSCsqYHModDZCi2hooDYsFgu+bN_OioBGEJQJuZgdiJO=ug@mail.gmail.com>
- <20240321215047.GA20938@pendragon.ideasonboard.com>
- <20240322091948.GA10059@pendragon.ideasonboard.com>
- <CANiDSCuxytDTC73Ni51h9v7yCZ46D5489fvt0Hy0ugcm=jcKRQ@mail.gmail.com>
+	s=arc-20240116; t=1711100183; c=relaxed/simple;
+	bh=w9Z3i0b5pe74kxTQVWjcv3AKhdTObu1bWsq0KMWECbY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OKaZ2k8uvIII4g860eJWYfrXQ/Wp3j0R/Emq7zTbPe6d+SfmZwLv7paAItvF6QmsVgS5Izs8sT+xzNBSUT7nX6FviTArn6sBPXHhRQy7mNXUXnhAXd0HvcW/K1tmsYlcdS14JbrqaN7PKxeKzrgC+6/ay1mTclXtKG8mGOMHJ+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4V1HGP0xK6z1xsQm;
+	Fri, 22 Mar 2024 17:34:21 +0800 (CST)
+Received: from dggpemd200004.china.huawei.com (unknown [7.185.36.141])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1F12C1A016C;
+	Fri, 22 Mar 2024 17:36:16 +0800 (CST)
+Received: from huawei.com (10.175.113.32) by dggpemd200004.china.huawei.com
+ (7.185.36.141) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Fri, 22 Mar
+ 2024 17:36:15 +0800
+From: Liu Shixin <liushixin2@huawei.com>
+To: Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>, Andrew
+ Morton <akpm@linux-foundation.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>
+CC: <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-mm@kvack.org>, Liu Shixin <liushixin2@huawei.com>
+Subject: [PATCH v2 0/2] Fix I/O high when memory almost met memcg limit
+Date: Fri, 22 Mar 2024 17:35:53 +0800
+Message-ID: <20240322093555.226789-1-liushixin2@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CANiDSCuxytDTC73Ni51h9v7yCZ46D5489fvt0Hy0ugcm=jcKRQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemd200004.china.huawei.com (7.185.36.141)
 
-On Fri, Mar 22, 2024 at 10:29:03AM +0100, Ricardo Ribalda wrote:
-> On Fri, 22 Mar 2024 at 10:19, Laurent Pinchart wrote:
-> > On Thu, Mar 21, 2024 at 11:50:48PM +0200, Laurent Pinchart wrote:
-> > > On Mon, Feb 19, 2024 at 04:07:12PM +0100, Ricardo Ribalda wrote:
-> > > > On Mon, 19 Feb 2024 at 11:40, Laurent Pinchart wrote:
-> > > > > On Mon, Feb 19, 2024 at 11:28:03AM +0100, Ricardo Ribalda wrote:
-> > > > > > On Mon, 12 Feb 2024 at 23:59, Laurent Pinchart wrote:
-> > > > > > > On Wed, Mar 15, 2023 at 02:30:12PM +0100, Ricardo Ribalda wrote:
-> > > > > > > > If head is 0, last will be addressing the index 0 instead of clock->size
-> > > > > > > > -1. Luckily clock->head is unsiged, otherwise it would be addressing
-> > > > > > > > 0xffffffff.
-> > > > > > >
-> > > > > > > I'm not following you. In the expression
-> > > > > > >
-> > > > > > >         (clock->head - 1) % clock->size
-> > > > > > >
-> > > > > > > clock->head is an unsigned int, and 1 as a signed int, so the result of
-> > > > > > > the subtraction is promoted to an unsigned int. When clock->head is 0, the expression evaluates to
-> > > > > > >
-> > > > > > >         0xffffffff % clock->size
-> > > > > > >
-> > > > > > > clock->size is a power of two (hardcoded to 32 at the moment), so the
-> > > > > > > expression evaluates to 31, as intended.
-> > > > > > >
-> > > > > > > Am I missing something ?
-> > > > > >
-> > > > > > Take a look to: https://godbolt.org/z/xYeqTx6ba
-> > > > > >
-> > > > > > The expression only works because the size is a power of two. In this
-> > > > > > set I am allowing sizes that are not powers of two.
-> > > > >
-> > > > > Could you then update the commit message to explain that ?
-> > > > >
-> > > > > I'll review the rest of the series this week.
-> > > > Thanks
-> > > >
-> > > > Will update with the following text after the review:
-> > > >
-> > > > The tail of the list lives at the position before the head. This is
-> > > > mathematically noted as
-> > > > ```
-> > > > (head-1)  mod size.
-> > > > ```
-> > > >
-> > > > Unfortunately C, does not have a modulus operator, but a remainder
-> > > > operator (%).
-> > > > The reminder operation has a different result than the modulus if
-> > > > (head -1) is a negative number and size is not a power of two.
-> > > >
-> > > > Adding size to (head-1) allows the code to run with any value of size.
-> > >
-> > > Could you please add
-> > >
-> > > This does not change the current behaviour of the driver, as the size is
-> > > always a power of two, but prepares for reworks that will change the
-> > > size to a non power of two.
-> > >
-> > > or something similar ?
-> > >
-> > > > > > > > Nontheless, this is not the intented behaviour and should be fixed.
-> > > > > > > >
-> > > > > > > > Fixes: 66847ef013cc ("[media] uvcvideo: Add UVC timestamps support")
-> > >
-> > > I think this should be dropped, the patch doesn't fix an issue, but
-> > > prepares for further changes that add new features. I'd also like to
-> > > update the commit message to avoid stating "Fix", to avoid this being
-> > > picked for stable kernels automatically.
-> >
-> > After reviewing the whole series, it seems that clock->size stays at its
-> > current value of 32. Do we thus need this patch ?
-> 
-> I remember that at some point, when I changed the size, it had been
-> really painful to figure out why the code was not working.
-> 
-> I'd rather keep this patch with a different commit message.
-> 
-> """
-> This does not change the current behaviour of the driver, as the size is
-> always a power of two, but avoid tedious debugging if we ever change its size.
-> """
-> 
-> WDYT?
+v1->v2:
+  1. Replace the variable active_refault with mmap_miss. Now mmap_miss will
+     not decreased if folio is active prior to eviction.
+  2. Jan has given me other two patches which aims to let mmap_miss properly
+     increased when the page is not ready. But in my scenario, the problem
+     is that the page will be reclaimed immediately. These two patches have
+     no logic conflict with Jan's patches[3].
 
-I'm OK with that.
+Recently, when install package in a docker which almost reached its memory
+limit, the installer has no respond severely for more than 15 minutes.
+During this period, I/O stays high(~1G/s) and influence the whole machine.
+I've constructed a use case as follows:
 
-> > > > > > > > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > > > > > > > ---
-> > > > > > > >  drivers/media/usb/uvc/uvc_video.c | 2 +-
-> > > > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > > > >
-> > > > > > > > diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
-> > > > > > > > index d4b023d4de7c..4ff4ab4471fe 100644
-> > > > > > > > --- a/drivers/media/usb/uvc/uvc_video.c
-> > > > > > > > +++ b/drivers/media/usb/uvc/uvc_video.c
-> > > > > > > > @@ -732,7 +732,7 @@ void uvc_video_clock_update(struct uvc_streaming *stream,
-> > > > > > > >               goto done;
-> > > > > > > >
-> > > > > > > >       first = &clock->samples[clock->head];
-> > > > > > > > -     last = &clock->samples[(clock->head - 1) % clock->size];
-> > > > > > > > +     last = &clock->samples[(clock->head - 1 + clock->size) % clock->size];
-> > > > > > > >
-> > > > > > > >       /* First step, PTS to SOF conversion. */
-> > > > > > > >       delta_stc = buf->pts - (1UL << 31);
+  1. create a docker:
+
+	$ cat test.sh
+	#!/bin/bash
+  
+	docker rm centos7 --force
+
+	docker create --name centos7 --memory 4G --memory-swap 6G centos:7 /usr/sbin/init
+	docker start centos7
+	sleep 1
+
+	docker cp ./alloc_page centos7:/
+	docker cp ./reproduce.sh centos7:/
+
+	docker exec -it centos7 /bin/bash
+
+  2. try reproduce the problem in docker:
+
+	$ cat reproduce.sh
+	#!/bin/bash
+  
+	while true; do
+		flag=$(ps -ef | grep -v grep | grep alloc_page| wc -l)
+		if [ "$flag" -eq 0 ]; then
+			/alloc_page &
+		fi
+
+		sleep 30
+
+		start_time=$(date +%s)
+		yum install -y expect > /dev/null 2>&1
+
+		end_time=$(date +%s)
+
+		elapsed_time=$((end_time - start_time))
+
+		echo "$elapsed_time seconds"
+		yum remove -y expect > /dev/null 2>&1
+	done
+
+	$ cat alloc_page.c:
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <unistd.h>
+	#include <string.h>
+
+	#define SIZE 1*1024*1024 //1M
+
+	int main()
+	{
+		void *addr = NULL;
+		int i;
+
+		for (i = 0; i < 1024 * 6 - 50;i++) {
+			addr = (void *)malloc(SIZE);
+			if (!addr)
+				return -1;
+
+			memset(addr, 0, SIZE);
+		}
+
+		sleep(99999);
+		return 0;
+	}
+
+
+We found that this problem is caused by a lot ot meaningless read-ahead.
+Since the docker is almost met memory limit, the page will be reclaimed
+immediately after read-ahead and will read-ahead again immediately.
+The program is executed slowly and waste a lot of I/O resource.
+
+These two patch aim to break the read-ahead in above scenario.
+
+[1] https://lore.kernel.org/linux-mm/c2f4a2fa-3bde-72ce-66f5-db81a373fdbc@huawei.com/T/
+[2] https://lore.kernel.org/all/20240201100835.1626685-1-liushixin2@huawei.com/
+[3] https://lore.kernel.org/all/20240201173130.frpaqpy7iyzias5j@quack3/
+
+Liu Shixin (2):
+  mm/readahead: break read-ahead loop if filemap_add_folio return
+    -ENOMEM
+  mm/readahead: increase mmap_miss when folio in workingset
+
+ include/linux/pagemap.h |  2 ++
+ mm/filemap.c            |  7 ++++---
+ mm/readahead.c          | 15 +++++++++++++--
+ 3 files changed, 19 insertions(+), 5 deletions(-)
 
 -- 
-Regards,
+2.25.1
 
-Laurent Pinchart
