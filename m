@@ -1,225 +1,163 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C2843F9E8
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 11:56:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94DBC2B9DF
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 11:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711108617; cv=none; b=jZb72TRdyOhkw+vWm15SmBub37n/LVkeVdXwdH9Omw0lVO+ln+2cg82DRvZ9QB334qwVEQvXORXZ4kGz49iFRZr4SvVnUAj8i3nwPScvnLONiD/MLr6Df9wHqhav1m5DOWLUdpQL49y/kvgqz3UqvNJIAZR4qkj5mtst3g+xqFc=
+	t=1711108654; cv=none; b=CaB0o+qsSPiT6FPV0lfoR1EaBQBrGmQznKd4PF2URPgm5l26mZEkc/9LQ4si3mpKQ78jeUPHh7hRTFVELa6aFTn2t7MSoJJBq+D0IkOWBHdmUoQPIwbrpk3EJ7YdVaUoQLva96ZkCT0D7m874IoeGthrf2qXvXGBCPABUsYZCI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711108617; c=relaxed/simple;
-	bh=Q4RS/3x0viHaa5JjdzuVSxgsfuVN6zlzwuYvVXD6sks=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BJwRBjZYY4JbZarab9kuQXECsQcRssrYVLzivwSFB3iS8N3O8YBpHQM39gBgn3EnVpkVSjZUsK7PaNxHKcD52J28CJKyIBhWfZ5sfegwO5y/Piw0InpKOBnKGuc7uTu3KxNvCYvExRm0tt/gcPFiUsP283TfLY2xASB7MHlRfgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VoQxDRPR; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VoQxDRPR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711108613;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BRTRiL57H/xzh7fXeNRidNb3wxYqBup/qLAl32c8wE8=;
-	b=VoQxDRPRvcIYkbdbPv4NgA2ogjMHSxVef6sDS94reveXQVBS7HTEt0Nv2M/ZPoxZPNAgMF
-	tnsS4yeaJpVDZN+tTcyZdEh00L6aUy0VAUHy9Y4lsoJr0cyAXY9cQwrpDL/+YxwqQPNtvR
-	kiTYRXqmXeHyAdv7n5EDEXI0zHP+SI0=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-168-iecBo9tsOPuuuefjyQjlKA-1; Fri, 22 Mar 2024 07:56:47 -0400
-X-MC-Unique: iecBo9tsOPuuuefjyQjlKA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 37E8585CD5B;
-	Fri, 22 Mar 2024 11:56:47 +0000 (UTC)
-Received: from bfoster (unknown [10.22.16.57])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A2E422022C24;
-	Fri, 22 Mar 2024 11:56:46 +0000 (UTC)
-Date: Fri, 22 Mar 2024 07:58:40 -0400
-From: Brian Foster <bfoster@redhat.com>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: Jan Kara <jack@suse.cz>, akpm@linux-foundation.org, tj@kernel.org,
-	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, willy@infradead.org, dsterba@suse.com,
-	mjguzik@gmail.com, dhowells@redhat.com, peterz@infradead.org
-Subject: Re: [PATCH 1/6] writeback: collect stats of all wb of bdi in
- bdi_debug_stats_show
-Message-ID: <Zf1ycOu3ODf2UcNw@bfoster>
-References: <20240320110222.6564-1-shikemeng@huaweicloud.com>
- <20240320110222.6564-2-shikemeng@huaweicloud.com>
- <20240321180620.mbint45pbyc74vpg@quack3>
- <a684ccdb-372f-b9e6-7239-ddb42a3f5f28@huaweicloud.com>
+	s=arc-20240116; t=1711108654; c=relaxed/simple;
+	bh=3U+7Avb3Ud9HwvQdmsRwCC4euMnigBREOCdk/yFSNCY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=FHqsx2GodBTV/oVgMMS6jD0/H6STr2JjmzlrDNFIRAJj+giXEMzR1qmYPWK9cbH9xl/WPF6yogB0CNdZlPdSIZPF5wpUlAOiUz9n0aLSkjNXFS+6Dtl7xgIq13T46V9sGCz2CDybNRMmxbF5etnZ3zk4FgKKBvoVPWUEeh/M2OI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4V1LNV6nWqzwQ1N;
+	Fri, 22 Mar 2024 19:54:50 +0800 (CST)
+Received: from kwepemd500012.china.huawei.com (unknown [7.221.188.25])
+	by mail.maildlp.com (Postfix) with ESMTPS id CEA141400D7;
+	Fri, 22 Mar 2024 19:57:25 +0800 (CST)
+Received: from [10.67.111.176] (10.67.111.176) by
+ kwepemd500012.china.huawei.com (7.221.188.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Fri, 22 Mar 2024 19:57:25 +0800
+Message-ID: <661736fb-bb3c-3519-1f4b-44dff285ea0b@huawei.com>
+Date: Fri, 22 Mar 2024 19:57:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a684ccdb-372f-b9e6-7239-ddb42a3f5f28@huaweicloud.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [RFC PATCH 2/5] ubifs: Initialize or update ACLs for inode
+Content-Language: en-US
+To: Zhihao Cheng <chengzhihao1@huawei.com>, <richard@nod.at>,
+	<kent.overstreet@linux.dev>, <agruenba@redhat.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>
+References: <20240319161646.2153867-1-lizetao1@huawei.com>
+ <20240319161646.2153867-3-lizetao1@huawei.com>
+ <2991c168-723d-48ef-8420-61e22a897239@huawei.com>
+From: Li Zetao <lizetao1@huawei.com>
+In-Reply-To: <2991c168-723d-48ef-8420-61e22a897239@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggpeml100005.china.huawei.com (7.185.36.185) To
+ kwepemd500012.china.huawei.com (7.221.188.25)
 
-On Fri, Mar 22, 2024 at 03:51:27PM +0800, Kemeng Shi wrote:
+Hi,
+
+On 2024/3/21 11:47, Zhihao Cheng wrote:
+> 在 2024/3/20 0:16, Li Zetao 写道:
+>> There are two scenarios where ACL needs to be updated, the first one
+>> is when creating the inode, and the second one is in the chmod process.
+>> When creating directories/files/device node/tmpfile, ACLs needs to be
+>> initialized, but symlink do not.Why not support symlink? It looks like 
+>> many filesystems(eg. ext4, f2fs, 
+> btrfs) support it, except xfs.
+Thanks for the reviews, but this is inconsistent with my understanding.
+I think most file systems in Linux do not support it, because most file 
+systems do not register the get/set functions of ACLs for symlink 
+operations. And the posix_acl_create() will determine that it is a 
+symlink type inode, and then skip the creation process. But except for 
+bcachefs, it may be to solve the problem of certain scenarios, so it 
+would be nice if anyone could explain it to us.
+>>
+>> Signed-off-by: Li Zetao <lizetao1@huawei.com>
+>> ---
+>>   fs/ubifs/dir.c  | 16 ++++++++++++++++
+>>   fs/ubifs/file.c |  4 ++++
+>>   2 files changed, 20 insertions(+)
+>>
+>> diff --git a/fs/ubifs/dir.c b/fs/ubifs/dir.c
+>> index 551148de66cd..dfb6823cc953 100644
+>> --- a/fs/ubifs/dir.c
+>> +++ b/fs/ubifs/dir.c
+>> @@ -316,6 +316,10 @@ static int ubifs_create(struct mnt_idmap *idmap, 
+>> struct inode *dir,
+>>           goto out_fname;
+>>       }
+>> +    err = ubifs_init_acl(inode, dir);
+>> +    if (err)
+>> +        goto out_inode;
+>> +
+> Attention, a new inconsistent problem point is imported by acl xattr 
+> creation. See https://bugzilla.kernel.org/show_bug.cgi?id=218309.  @Richard
+This problem is indeed a bit tricky.
+>>       err = ubifs_init_security(dir, inode, &dentry->d_name);
+>>       if (err)
+>>           goto out_inode;
+>> @@ -466,6 +470,10 @@ static int ubifs_tmpfile(struct mnt_idmap *idmap, 
+>> struct inode *dir,
+>>       }
+>>       ui = ubifs_inode(inode);
+>> +    err = ubifs_init_acl(inode, dir);
+>> +    if (err)
+>> +        goto out_inode;
+>> +
+>>       err = ubifs_init_security(dir, inode, &dentry->d_name);
+>>       if (err)
+>>           goto out_inode;
+>> @@ -1013,6 +1021,10 @@ static int ubifs_mkdir(struct mnt_idmap *idmap, 
+>> struct inode *dir,
+>>           goto out_fname;
+>>       }
+>> +    err = ubifs_init_acl(inode, dir);
+>> +    if (err)
+>> +        goto out_inode;
+>> +
+>>       err = ubifs_init_security(dir, inode, &dentry->d_name);
+>>       if (err)
+>>           goto out_inode;
+>> @@ -1108,6 +1120,10 @@ static int ubifs_mknod(struct mnt_idmap *idmap, 
+>> struct inode *dir,
+>>       ui->data = dev;
+>>       ui->data_len = devlen;
+>> +    err = ubifs_init_acl(inode, dir);
+>> +    if (err)
+>> +        goto out_inode;
+>> +
+>>       err = ubifs_init_security(dir, inode, &dentry->d_name);
+>>       if (err)
+>>           goto out_inode;
+> The whiteout inode is not set acl for rename(WHITEOUT) operation. It 
+> looks like many filesystems(eg. ext4, f2fs, btrfs) support it, except 
+> xfs. In my opinion, whiteout is a char dev, since char/block device is 
+> supported, why not support whiteout?
 > 
+> If we support whiteout, we should make sure that the whiteout renameing 
+> operation is atomic[1]. But I cannot come up with an idea how to combine 
+> whiteout xattr(acl) creation and whiteout file creation into an atomic 
+> operation, just like problem mentioned in [2],
+Yes, thanks, I have fixed it in v2 version.
 > 
-> on 3/22/2024 2:06 AM, Jan Kara wrote:
-> > On Wed 20-03-24 19:02:17, Kemeng Shi wrote:
-> >> /sys/kernel/debug/bdi/xxx/stats is supposed to show writeback information
-> >> of whole bdi, but only writeback information of bdi in root cgroup is
-> >> collected. So writeback information in non-root cgroup are missing now.
-> >> To be more specific, considering following case:
-> >>
-> >> /* create writeback cgroup */
-> >> cd /sys/fs/cgroup
-> >> echo "+memory +io" > cgroup.subtree_control
-> >> mkdir group1
-> >> cd group1
-> >> echo $$ > cgroup.procs
-> >> /* do writeback in cgroup */
-> >> fio -name test -filename=/dev/vdb ...
-> >> /* get writeback info of bdi */
-> >> cat /sys/kernel/debug/bdi/xxx/stats
-> >> The cat result unexpectedly implies that there is no writeback on target
-> >> bdi.
-> >>
-> >> Fix this by collecting stats of all wb in bdi instead of only wb in
-> >> root cgroup.
-> >>
-> >> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-> > 
-> > Looks mostly good, one comment below:
-> > 
-> >> ---
-> >>  mm/backing-dev.c | 93 ++++++++++++++++++++++++++++++++++++------------
-> >>  1 file changed, 70 insertions(+), 23 deletions(-)
-> >>
-> >> diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-> >> index 5f2be8c8df11..788702b6c5dd 100644
-> >> --- a/mm/backing-dev.c
-> >> +++ b/mm/backing-dev.c
-> >> @@ -39,6 +39,19 @@ struct workqueue_struct *bdi_wq;
-> >>  #include <linux/debugfs.h>
-> >>  #include <linux/seq_file.h>
-> >>  
-> >> +struct wb_stats {
-> >> +	unsigned long nr_dirty;
-> >> +	unsigned long nr_io;
-> >> +	unsigned long nr_more_io;
-> >> +	unsigned long nr_dirty_time;
-> >> +	unsigned long nr_writeback;
-> >> +	unsigned long nr_reclaimable;
-> >> +	unsigned long nr_dirtied;
-> >> +	unsigned long nr_written;
-> >> +	unsigned long dirty_thresh;
-> >> +	unsigned long wb_thresh;
-> >> +};
-> >> +
-> >>  static struct dentry *bdi_debug_root;
-> >>  
-> >>  static void bdi_debug_init(void)
-> >> @@ -46,31 +59,65 @@ static void bdi_debug_init(void)
-> >>  	bdi_debug_root = debugfs_create_dir("bdi", NULL);
-> >>  }
-> >>  
-> >> -static int bdi_debug_stats_show(struct seq_file *m, void *v)
-> >> +static void collect_wb_stats(struct wb_stats *stats,
-> >> +			     struct bdi_writeback *wb)
-> >>  {
-> >> -	struct backing_dev_info *bdi = m->private;
-> >> -	struct bdi_writeback *wb = &bdi->wb;
-> >> -	unsigned long background_thresh;
-> >> -	unsigned long dirty_thresh;
-> >> -	unsigned long wb_thresh;
-> >> -	unsigned long nr_dirty, nr_io, nr_more_io, nr_dirty_time;
-> >>  	struct inode *inode;
-> >>  
-> >> -	nr_dirty = nr_io = nr_more_io = nr_dirty_time = 0;
-> >>  	spin_lock(&wb->list_lock);
-> >>  	list_for_each_entry(inode, &wb->b_dirty, i_io_list)
-> >> -		nr_dirty++;
-> >> +		stats->nr_dirty++;
-> >>  	list_for_each_entry(inode, &wb->b_io, i_io_list)
-> >> -		nr_io++;
-> >> +		stats->nr_io++;
-> >>  	list_for_each_entry(inode, &wb->b_more_io, i_io_list)
-> >> -		nr_more_io++;
-> >> +		stats->nr_more_io++;
-> >>  	list_for_each_entry(inode, &wb->b_dirty_time, i_io_list)
-> >>  		if (inode->i_state & I_DIRTY_TIME)
-> >> -			nr_dirty_time++;
-> >> +			stats->nr_dirty_time++;
-> >>  	spin_unlock(&wb->list_lock);
-> >>  
-> >> +	stats->nr_writeback += wb_stat(wb, WB_WRITEBACK);
-> >> +	stats->nr_reclaimable += wb_stat(wb, WB_RECLAIMABLE);
-> >> +	stats->nr_dirtied += wb_stat(wb, WB_DIRTIED);
-> >> +	stats->nr_written += wb_stat(wb, WB_WRITTEN);
-> >> +	stats->wb_thresh += wb_calc_thresh(wb, stats->dirty_thresh);
-> >> +}
-> >> +
-> >> +#ifdef CONFIG_CGROUP_WRITEBACK
-> >> +static void bdi_collect_stats(struct backing_dev_info *bdi,
-> >> +			      struct wb_stats *stats)
-> >> +{
-> >> +	struct bdi_writeback *wb;
-> >> +
-> >> +	/* protect wb from release */
-> >> +	mutex_lock(&bdi->cgwb_release_mutex);
-> >> +	list_for_each_entry(wb, &bdi->wb_list, bdi_node)
-> >> +		collect_wb_stats(stats, wb);
-> >> +	mutex_unlock(&bdi->cgwb_release_mutex);
-> >> +}
-> > 
-> > So AFAICT this function can race against
-> >   bdi_unregister() -> wb_shutdown(&bdi->wb)
-> > 
-> > because that doesn't take the cgwb_release_mutex. So we either need the RCU
-> > protection as Brian suggested or cgwb_lock or something. But given
-> > collect_wb_stats() can take a significant amount of time (traversing all
-> > the lists etc.) I think we'll need something more clever.
-> Sorry for missing this. I only pay attention to wb in cgroup as there is no
-> much change to how we use bdi->wb.
-> It seems that there was always a race between orginal bdi_debug_stats_show and
-> release of bdi as following
-> cat /.../stats
-> bdi_debug_stats_show
-> 			bdi_unregister
-> 			bdi_put
-> 			  release_bdi
-> 			    kfree(bdi)
->   use after free
+> [1] 
+> https://lore.kernel.org/linux-mtd/20211227032246.2886878-6-chengzhihao1@huawei.com/
+> [2] https://bugzilla.kernel.org/show_bug.cgi?id=218309
+>> diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
+>> index 5029eb3390a5..8f964f8b0f96 100644
+>> --- a/fs/ubifs/file.c
+>> +++ b/fs/ubifs/file.c
+>> @@ -41,6 +41,7 @@
+>>   #include <linux/mount.h>
+>>   #include <linux/slab.h>
+>>   #include <linux/migrate.h>
+>> +#include <linux/posix_acl.h>
+>>   static int read_block(struct inode *inode, void *addr, unsigned int 
+>> block,
+>>                 struct ubifs_data_node *dn)
+>> @@ -1298,6 +1299,9 @@ int ubifs_setattr(struct mnt_idmap *idmap, 
+>> struct dentry *dentry,
+>>       else
+>>           err = do_setattr(c, inode, attr);
+>> +    if (!err && (attr->ia_valid & ATTR_MODE))
+>> +        err = posix_acl_chmod(idmap, dentry, inode->i_mode);
+>> +
+>>       return err;
+>>   }
+>>
 > 
-> I will fix this in next version. Thanks!
-> 
-
-BTW, I thought this was kind of the point of the tryget in the writeback
-path. I.e., the higher level loop runs under rcu_read_lock(), but in the
-case it needs to cycle the rcu lock it acquires a reference to the wb,
-and then can use that wb to continue the loop once the rcu lock is
-reacquired. IIUC, this works because the rcu list removal keeps the list
-->next pointer sane and then the ref keeps the wb memory from being
-freed. A tryget of any wb's that have been shutdown fails because the
-percpu ref counter has been killed.
-
-So I _think_ this means that for the stat collection use case, you could
-protect the overall walk with rcu as Jan alludes above, but then maybe
-use a combination of need_resched()/cond_resched_rcu() and wb_tryget()
-to introduce resched points and avoid holding lock(s) for too long.
-
-Personally, I wonder if since this is mainly debug code we could just
-get away with doing the simple thing of trying for a ref on each wb
-unconditionally rather than only in a need_resched() case, but maybe
-there are reasons not to do that... hm?
-
-Brian
-
-> > 
-> > 								Honza
-> > 
-> 
-
