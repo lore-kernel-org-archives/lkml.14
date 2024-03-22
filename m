@@ -1,288 +1,198 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2042.outbound.protection.outlook.com [40.107.114.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B403D0D9
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 10:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711104391; cv=none; b=XtVMjyy2akid2iDvoijRJRSiu0DGHY9iMuuuf6a45sFeVVqytlp0Z6WTDkjgDNW3Ki9/X1BDi2ttclME8Ey+FCfwQBlSdSp/aH6OpQOUOzD7H6QH7ElVNHRK+XUN/nGMcDEROf1w5HhQvON1MlsEMS9PuJt/l32g3l/P+yOyf+w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711104391; c=relaxed/simple;
-	bh=QGR7xcLql5isKboVB8Rcqcg5AQuhvZfEMrcZLfakR7M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NM2xcXNL/y1h8Bwqy5ZT7NcVgy5FQOqaTkkMfwDspo9WuOkY/8Lf04XYXA+LUvdK3IIE14b92UMDHKZfnBZ0mHxD+biT2vuluTAJy7ez/nMYdS3uKLQvEpIZGQ1JleTr0EDwFhqKRYHrKTEo4pGw7eazGg9Iz5miZnTr5Tv1fek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tKuYgS6G; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743473A8CB;
+	Fri, 22 Mar 2024 10:47:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.114.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711104432; cv=fail; b=SL8cD2Pb2BMT7JUUCs66PlWB77nRMmawMTy8Av+Fy7EFaj8I1pxWICcHZmjKXBn7ml5O6qfSE+AYf2G+1b1Jcu78W1IQh6gb1AJlOpi6otxjwV1S+KoBOe2G9a5IUMLCtqC66RPtIFhKd3VbWUl2Z3K/puUFrcfmD4ekZsXMG6Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711104432; c=relaxed/simple;
+	bh=RRNRgJzRrgHITpPO/1LPiUjqYNdV7c9a/xENndFDR4Q=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=P1n0LTcctXSFA0xfBmZ+KCg7/+XCBT6lHOgGGJHW53z6QuJMTlsudaDSx79ZxzC7i72sBJsFNG5DsdQX7YhZTKtdECsbE2GiAbJoJEQZtmIiDdTGgCsBxDk0gvOMmX4HkJ8qrQWsFtDxwMSlhfJhTdeb89fF1tvhVGwXf/9Dygw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nec.com; spf=pass smtp.mailfrom=nec.com; dkim=pass (2048-bit key) header.d=nec.com header.i=@nec.com header.b=jctpyjNi; arc=fail smtp.client-ip=40.107.114.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nec.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tKuYgS6G"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-60a0579a931so21101087b3.0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 03:46:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711104388; x=1711709188; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=97wDgtdQd/tbYmjqEKsHUC2QXzy0inSI9dKHg+PWn5c=;
-        b=tKuYgS6GuGgMeeOIuhcgKQU0ESAl2O9Jry9wWLkxXZo/TP/JNEnTxhAFWy6xq0Lsk7
-         iNnAKDKb02qVSYJrhEXdBkKd9ZXUgNR3QdMtkll2Hk8kLAN/vCM1wYRKYzV6/gQkjklE
-         jTN07p9cE5/k7msyy9R9KeHrohq4U9jpXNEh4TxSI01Tyoo2Hi9taiuyklgRkox6QMQE
-         IrtLsl9iCVn5YXswbkQ/RZi7r5CdZiNhrAs1u0xmT2w9D4OevOJ6kEw6pj/nLSG+tnNy
-         mK7GdPTwDABZYJWmkN6TD7JjXuNx3p3PSdyO2Y2ecDgOG5HMhHKg1MYENGDTNHrZBR5n
-         RuDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711104388; x=1711709188;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=97wDgtdQd/tbYmjqEKsHUC2QXzy0inSI9dKHg+PWn5c=;
-        b=dEaRG2wQ0++7D53oC4qz0l3lBWtwRmjT6qC0j+raRQ8d1BRGZ+BNTzoXCtFhOzOs6J
-         HGjtQR2c3rLMQEJOf/d7j0E8OQOYom2MCVHJ3lQ8QmioUdoDD2GIfkR+6RKFrh1ucM4/
-         u93i+kwjZXg2g4oqSTV9X1V6A2t2qlO9pghGGPLt2P1svPtV0yXDHwiv0QnizqKt3tjD
-         YCdaaQ+Iu26ZpGj7BcqWgZU0BS9fRlJlreXF/oc9D8L35HCCx7v5AfhybqY4+ljmUES6
-         VUvMhA05kjyemvyrDjC+ojYF3eCluJokC3NjDnrs0N4q/Pb/u7PUolsl/G5HNVncwrQk
-         QVVg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXthfTaRmmXIu4Qxh6gL4hQfJo0yIz+gSkBbAlXyaDdZwoCLYqNLDc/uFjPirJ0BtGHTnsXkhwTHIJcKY3ZMESglkPjUur9wGoaORL
-X-Gm-Message-State: AOJu0YzDiMzd9EWLlYJDMYAdAKaDNEQPJQ6Tqm0u9JmpZP017mc0VauU
-	+v653L3XajDtaQYITSGVeUfU3gnIJbOfHvgsCBPXXbT4bpO5dlkc2MaYQXjaOJU/1E38jLLMRI8
-	=
-X-Google-Smtp-Source: AGHT+IHCtSqnlRUT3IQHM6cO7aExK3dHje4/hrZRKFBm1rkVrshemniCoiZ/NZDXGu4R1cb/6z9avQ==
-X-Received: by 2002:a05:6a20:d38c:b0:1a3:579f:2c5c with SMTP id iq12-20020a056a20d38c00b001a3579f2c5cmr2534308pzb.53.1711103998405;
-        Fri, 22 Mar 2024 03:39:58 -0700 (PDT)
-Received: from thinkpad ([2409:40f4:101a:4667:2dab:fb9d:47a0:28fe])
-        by smtp.gmail.com with ESMTPSA id x6-20020a170902ec8600b001ddb57a4dffsm1554671plg.132.2024.03.22.03.39.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 03:39:57 -0700 (PDT)
-Date: Fri, 22 Mar 2024 16:09:35 +0530
-From: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: Shradha Todi <shradha.t@samsung.com>, bp@alien8.de, tony.luck@intel.com,
-	james.morse@arm.com, mchehab@kernel.org, rric@kernel.org,
-	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, jingoohan1@gmail.com,
-	gustavo.pimentel@synopsys.com, josh@joshtriplett.org,
-	lukas.bulwahn@gmail.com, hongxing.zhu@nxp.com,
-	pankaj.dubey@samsung.com, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, vidyas@nvidia.com, gost.dev@samsung.com,
-	alim.akhtar@samsung.com, shiju.jose@huawei.com,
-	Terry Bowman <Terry.Bowman@amd.com>
-Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
- controller
-Message-ID: <20240322103935.GD3638@thinkpad>
-References: <CGME20231130115055epcas5p4e29befa80877be45dbee308846edc0ba@epcas5p4.samsung.com>
- <20231130115044.53512-1-shradha.t@samsung.com>
- <20231130165514.GW3043@thinkpad>
- <000601da3e07$c39e5e00$4adb1a00$@samsung.com>
- <20240104055030.GA3031@thinkpad>
- <0df701da5ff0$df1165a0$9d3430e0$@samsung.com>
- <20240216134921.GH2559@thinkpad>
- <120d01da657e$66b9d3b0$342d7b10$@samsung.com>
- <20240319163315.GD3297@thinkpad>
- <20240320100144.0000056c@Huawei.com>
+	dkim=pass (2048-bit key) header.d=nec.com header.i=@nec.com header.b="jctpyjNi"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X8r2pX3O6dv13K4wYqMECmUcScBJ+yRQhZEK81bFzqtSWlh4fSYpDhbwx7lbcXXNJqUm6k+SKBIUiSMJ4JjK6eR/8kJNngL8egPCtixTOPPP7cOnJffsHQRlNQFSt3tj/7YxZnmLceCd2bW7amFXPOyghHzUT/wb9TZ/yqbHDJkXkoc5q1o2Rs87kom+o7pRwiGGJe5sycYWfj+sn2nd2W0TUK1PeMRzC33fvrt8W4B1uPBIoCNUFnwaK6Z/RMCa8syFKilu5gll9RyJHibt7/7TYD+408tWW0HG0UYHhdnN1Lm2xEXQXupPZJkS9q5masmEhxKZ9IyQ21Qo7LgKLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=W+BOConBcylqTq1Rj3MHMFy+PQy5kIsabyWphjNYiso=;
+ b=K4NEC1hHYiGhoHO2IWQI+j9tgwNxh1L9mhhILPUOVGfWYXqtg99wD20J0H266O1PHqyr96n8NI9ieNPr6VWEFrOERAuFouZgMyVhIvwAAFpftEzIgnwUwQPPk2L68/upb2ymvMmuvMVh8BVjEJ468rGAaBtlR01/Oy3jpSEWtyo9YUnsxSi/JQpualzph4zhlPjSiF0NZnBn4LgI25VMCVKZ95e1UmKV53W9wR45tEu5cIUyJ64VOv9CbnhucdHt45knWH8Ols0g5Xzx/+bZNFA7vkO5jCmUt0iABiuqkYoJKEybQFjJwwBR/lw4VVwWG3Ug97cYVRhOGWlFszH1pQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
+ header.d=nec.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W+BOConBcylqTq1Rj3MHMFy+PQy5kIsabyWphjNYiso=;
+ b=jctpyjNil2zvY42L8aFZMxSvlCW9BKc0JZJike0Hv99Sia10rKG6StYwf/EvHeFk6i+HYrJT0adrHmWDqzA5QW+58iK2CFqPx0euRv4zykCquAZlFvmr9SXFAUrhw6ZdZxS0s3W5qarWalhsRStXYHdhlLx6nUtTJNbOqEJDmYwQlvs82XBqpaIDcag5xyj9W+p3jS0mmxovSdI01qupvOQ6tfMTmW+yvGZk1c3v1M6KpI1psfGfVvSCfK8pWPIdDWUnzvywRvSeeeOT+za2i1XBIgTxS45UvKEhGNXlS/62L8ab7XwJspPE6E7CF8wnyxtMi5eZA7Vb3ibGWX5tSA==
+Received: from TY1PR01MB1625.jpnprd01.prod.outlook.com (2603:1096:403:5::19)
+ by TYCPR01MB11224.jpnprd01.prod.outlook.com (2603:1096:400:3bf::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.26; Fri, 22 Mar
+ 2024 10:47:04 +0000
+Received: from TY1PR01MB1625.jpnprd01.prod.outlook.com
+ ([fe80::fb45:85ca:f420:e514]) by TY1PR01MB1625.jpnprd01.prod.outlook.com
+ ([fe80::fb45:85ca:f420:e514%5]) with mapi id 15.20.7386.031; Fri, 22 Mar 2024
+ 10:47:02 +0000
+From: =?iso-2022-jp?B?S09ORE8gS0FaVU1BKBskQjZhRiMhIU9CPz8bKEIp?=
+	<kazuma-kondo@nec.com>
+To: =?iso-2022-jp?B?S09ORE8gS0FaVU1BKBskQjZhRiMhIU9CPz8bKEIp?=
+	<kazuma-kondo@nec.com>
+CC: "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, Tom Englund
+	<tomenglund26@gmail.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH] efi/libstub: fix efi_random_alloc() to allocate memory at
+ alloc_min or higher address
+Thread-Topic: [PATCH] efi/libstub: fix efi_random_alloc() to allocate memory
+ at alloc_min or higher address
+Thread-Index: AQHafEZF8i/GOaXeBk+/uRPkyUam/w==
+Date: Fri, 22 Mar 2024 10:47:02 +0000
+Message-ID: <20240322104646.556886-1-kazuma-kondo@nec.com>
+Accept-Language: ja-JP, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mailer: git-send-email 2.39.3
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nec.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY1PR01MB1625:EE_|TYCPR01MB11224:EE_
+x-ms-office365-filtering-correlation-id: 7f492250-5f01-492b-05ec-08dc4a5d6866
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ 8E9eJ0xUj4mTRrhzwpp7T6K3Lj5rwzwQl0ECYqAvUlFj8jLPSQhQ5q6zrKCvXwFPSVAIAbgoKfLYNfMNKbhX3WWX++W8LWjO2mrAYUrR2lbpAI7XPhLoyDCVqRFAM9o6RTocGeWt0g/EnXS5mBVeiZGdpYiKNICi+T3TOMAlS1TmjJrNnOo1qNjqLsMy+h2puC5qsEGKbWNEjzq0MP1RbR5ZwVmJWgjK+wdnCyKxSjpiIFxGMNNh0AW4tcdq1WHP3RdzyYmXwetxjQZey5sxhQ6jfwHbTU6u6G/vf21oIWP3xjJDyuMGEeLaN3aPKSjD2TCv9HqOwoF3iTPAGuuv5XYpA9BldbTEwGU/Zi9J2CeyEuWAB/sg0AaPdfJ2KL9oGTonuD2lMJfLfe/JLXhnLGekB8zFXEGnkoHXDbgJ7ztbkN6n5p5Za0xAYOdLUT95e+clY8TUvCBa5pq3wzQ83DKktvkBY7040NGtAXtHyePNgMaubLjYyYIENdOC4aG5oNccM7tzpH1b2SND/exKxjVi2+VBQ7xqMm/iAVAaIJL/dvZxiaSNmcnHrk18sE52FOWlq8ceFUGuNOxtKYKXdgknjwwS4mk4QuGjjOcXIbCSvPREmZeb3kw9IKOrkexGLoVHemyNvudZacT1nd3L22jkky4aQ9HVlXSI53tHPVeWtKGfBxsk1Vu4YqoLtizdZwvQvJXMD8woep+qxVH4dVj5udoBb1oP2oYyu+Nc2z8=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY1PR01MB1625.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-2022-jp?B?ZXZKN25IZmI3Vi8xNlUxVGlwNGJ4aExRRFhLckFMMkxLcHNDWjRta3dJ?=
+ =?iso-2022-jp?B?Yk9TWUpLdWszSTFjZWNGVi9xNnlxVmVpZlJDVTVGTHJ1RXg0OUowY1cz?=
+ =?iso-2022-jp?B?Z1JBd2JVSThmdnRQYWk2RDRxb3VZUDNhakVodHpPTDBVMDg1ZDNLd2E0?=
+ =?iso-2022-jp?B?ZWo0WlYyQWxOM0ZZaWZSbGFleTgvNGpqbmJSTHNveEpxbEdhMkRXSVBD?=
+ =?iso-2022-jp?B?NytoYzIzQ2tub1hDbWVkbVRuWjByRHhPS08rWWZpc0pWMS9MeUNqa3Ez?=
+ =?iso-2022-jp?B?anR5TXFKM2swK2dKZ1pZT2drVWdOR1dDVDVtSXJ6OFdaTmxidlh4MXJJ?=
+ =?iso-2022-jp?B?aU9VdUwzRVpadTdqUEhMOHhLTUdaVlhBTStRRjNOTjUzQXpucTZQV3V4?=
+ =?iso-2022-jp?B?U3puN0NtTTZXaXlRbVdpMmZhNEpSRno1cUNNK00vVEFGYnA5UjUzL1po?=
+ =?iso-2022-jp?B?Z0ZWT3YrZHROaGdSeVprbkNlYXdqZkFzd2FtOWtsMmRYS0V4a2x1OFVW?=
+ =?iso-2022-jp?B?TUhTcWtUaXR1THowRnJoSTM5Wk5RUXJEMmJkSVp5c1FxajJBR0Q1MkdF?=
+ =?iso-2022-jp?B?dWlXRG1DZVl1MDZFeGRWMEFyNkY3OVVWVDQ2WFNBOGY3NG5mTTdxZGZV?=
+ =?iso-2022-jp?B?bVFsdjVnV1l4eU5NSk9XM2dkM285RDc4YTU3YWtkcTlOeGFhcGpEdHVp?=
+ =?iso-2022-jp?B?N0Q0N21ZcCtxZjk5SGtkV2hFc3AxUkZSWVlsR1N4ZW9ZcHhMU2lEa0F2?=
+ =?iso-2022-jp?B?N0pRMFVFcDdJVlg1RVZSaWxIQ09FN1F3dmxycXI4c2JWdml0R2x1Y0pu?=
+ =?iso-2022-jp?B?SVlIMFh2dGl4clMzc0MrZGZGMWx1b3RsYjhzTXcrN3dWL1ZOQkFyY1VJ?=
+ =?iso-2022-jp?B?RC9CYWRwamNMZmRlUlArcXMydUtOQktMQzlWUlJxVjRhTkt6Rlh5eUNI?=
+ =?iso-2022-jp?B?THpTN1VFeUIzMDltZXp0bmhGWjZaN1FBMmh2RlFJU3k5L3M3YzBCTDIz?=
+ =?iso-2022-jp?B?ZVNaV2Fwb0tCUWtYdHZRbW9kZk03YXhTSGhaK3FoVllrSllKcjBHTWJ2?=
+ =?iso-2022-jp?B?NUhmNkFzTHprUUxmYTBxbCtZMDd3U3RFSmw1bDM1K2h6d09RSVVxSTZ0?=
+ =?iso-2022-jp?B?MUZWak1jYWhGdEIxWFp2d29hYzMweUYxeWFjT20zK21PdHVTUTI2czlt?=
+ =?iso-2022-jp?B?Uzk3dkJQS0Jid2p1UmdJR0JoM2J2RmkrcXZwdng2VThoUlUwVHhKaVhn?=
+ =?iso-2022-jp?B?cE8zclA1a2NJWk9KRWw2MGkwYTA3UEN4a05GRDR2Sy9VeHZYc3RIcHNp?=
+ =?iso-2022-jp?B?QnVzNXlaU2RnRHlCVnA2b28vR0ZUcjBVRG5LOWtiNGc4cHRmOUFQb2NP?=
+ =?iso-2022-jp?B?V2kza0x0SzJBRFRlQmRZMEJsdVdSa3BtWXYxczh2WVB4VytYT0lMVTV0?=
+ =?iso-2022-jp?B?ZGhCNkZHNlVRR1N1TmhnY01aWUlFajRVVUgwc29UMVA0SEVZcXFBV1Yv?=
+ =?iso-2022-jp?B?cXVWcFFvbkpqTnZuc2JXdnFEeWF5ZzdPbkdyWDE5UkZEWm96cndsNkFO?=
+ =?iso-2022-jp?B?NWxka2YyQTZWSWtuVE1mcXNkdkhKanNZNDRKMTViQmwrVlhDbUk4Q1Nt?=
+ =?iso-2022-jp?B?ZFlLcHdRR2pRaFlwWjUzTytsOUlNRUFLallSNldGTHR1citITDRKZnVM?=
+ =?iso-2022-jp?B?cGpWa1JlUUl6K0hvL0RMam91K1prTHhwODJCY1FWdkJONmNjSW9keDhM?=
+ =?iso-2022-jp?B?V0FvRGo1U0tTNE50bjIrNmhEZS9jdzFabXMvZ0xzbkJIdXpyWVdmMytL?=
+ =?iso-2022-jp?B?d3JWTTJ6V0lYeUZXN2ovRWhBWVdJTnhNTlhpQlNYUHI5L0NMK2ZVWjA3?=
+ =?iso-2022-jp?B?QUpFVE9WS1lYV2FjQm9qbjI3N05rR2tHdUtvU1FwTXVNVWNnd3hFUGE0?=
+ =?iso-2022-jp?B?K2FhY3ZzOEV3K0s4MHJ4NlJWTE9zb3Vsem5SNXdia1RDYk96RjlOVW5V?=
+ =?iso-2022-jp?B?dS9XL05sWmgvRXMwS1UxQVM2VloxYnlVbmtqcjlQV2dWVkFKYVBVR2hh?=
+ =?iso-2022-jp?B?RXFkaHBMc3pSanFXUDBOazJoMUVsdVZLdXc5NVlrODRjVzhGZXAvWlhn?=
+ =?iso-2022-jp?B?WjNmRGxBTGg3ZVlVejN3NFREMmxJUk92dkhqWk1lb0FhZmNqVHhZWCtp?=
+ =?iso-2022-jp?B?NFZpb25qN1VkMURsNFJwWHpCaENJVGl5MVZ3c3lubVlBUHNQcWVxMUkv?=
+ =?iso-2022-jp?B?MmROQUJMTzNtQnIrb2x0OXZsSmwwUTZTSmt4NjdDUHhRZTl3VkdCcDRz?=
+ =?iso-2022-jp?B?RmJNR2dsL2s3YVNlbkVkVHdCdmhSb0M5Znc9PQ==?=
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240320100144.0000056c@Huawei.com>
+X-OriginatorOrg: nec.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY1PR01MB1625.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f492250-5f01-492b-05ec-08dc4a5d6866
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2024 10:47:02.3094
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ir3A+/BiIRhpNdWic5LP6vfdohfcSHy04aJ6Zh5+DdFCeD4aRsSEIOrX5aeTgTifHVgQlPjeNb9liZ0sWbNzZQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB11224
 
-On Wed, Mar 20, 2024 at 10:01:44AM +0000, Jonathan Cameron wrote:
-> On Tue, 19 Mar 2024 22:03:15 +0530
-> 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org> wrote:
-> 
-> > On Thu, Feb 22, 2024 at 04:30:47PM +0530, Shradha Todi wrote:
-> > > + Borislav, Tony, James, Mauro, Robert
-> > > 
-> > > Hi All,
-> > > 
-> > > Synopsys DesignWare PCIe controllers have a vendor specific capability (which
-> > > means that this set of registers are only present in DesignWare controllers)
-> > > to perform debug operations called "RASDES".
-> > > The functionalities provided by this extended capability are:
-> > > 
-> > > 1. Debug: This has some debug related diagnostic features like holding LTSSM
-> > > in certain states, reading the status of lane detection, checking if any PCIe
-> > > lanes are broken (RX Valid) and so on. It's a debug only feature used for diagnostic
-> > > use-cases.
-> > > 
-> > > 2. Error Injection: This is a way to inject certain errors in PCIe like LCRC, ECRC,
-> > > Bad TLPs and so on. Again, this is a debug feature and generally not used in
-> > > functional use-case.
-> > > 
-> > > 3. Statistical counters: This has 3 parts
-> > >  - Error counters
-> > >  - Non error counters (covered as part of perf [1])
-> > >  - Time based analysis counters (covered as part of perf [1])
-> > > 
-> > > Selective features of  the above functionality has been implemented
-> > > by vendor specific PCIe controller drivers (pcie-tegra194.c) that use
-> > > Synopsys DesignWare PCIe controllers.
-> > > In order to make it useful to all vendors using DWC controller, we had
-> > > proposed a common implementation in DWC PCIe controller directory
-> > > (drivers/pci/controller/dwc/) and our original idea was based on debugfs
-> > > filesystem. v1 and v2 are mentioned in [2] and [3].
-> > > 
-> > > We got a suggestion to implement this as part of EDAC framework [3] and
-> > > we looked into the same. But as far as I understood, what I am trying to
-> > > implement is a very specific feature (only valid for Synopsys DWC PCIe controllers).
-> 
-> For error part there are (at least superficially) similar features in the PCIe
-> standard that we've started thinking about how to support.
-> 
-> See Flit Logging Extended capablity (7.7.8 in PCIe Base Spec rev6.
-> That has the benefit that they are part of the standard so we can
-> support them directly in portdrv / EP drivers using some library code in the
-> PCI core.
-> 
+Following warning is sometimes observed while booting my servers:
+  [    3.594838] DMA: preallocated 4096 KiB GFP_KERNEL pool for atomic allo=
+cations
+  [    3.602918] swapper/0: page allocation failure: order:10, mode:0xcc1(G=
+FP_KERNEL|GFP_DMA), nodemask=3D(null),cpuset=3D/,mems_allowed=3D0-1
+  ...
+  [    3.851862] DMA: preallocated 1024 KiB GFP_KERNEL|GFP_DMA pool for ato=
+mic allocation
 
-Sounds good. But v6 is a relatively new version and the DWC RAS predates that.
-So we still need to support it somehow (either in EDAC or in
-drivers/pci/controller/dwc).
+If 'nokaslr' boot option is set, the warning always happens.
 
-> There are other interconnect and PCI PMU drivers that log retries etc which are also basically error
-> counts. At least some of that is done through perf today. 
-> 
+On x86, ZONE_DMA is small zone at the first 16MB of physical address
+space. When this problem happens, most of that space seems to be used
+by decompressed kernel. Thereby, there is not enough space at DMA_ZONE
+to meet the request of DMA pool allocation.
 
-IMO all the RAS support should be exposed through EDAC, otherwise it defeats the
-purpose of the subsystem.
+The commit 2f77465b05b1 ("x86/efistub: Avoid placing the kernel below LOAD_=
+PHYSICAL_ADDR")
+tried to fix this problem by introducing lower bound of allocation.
 
-- Mani
+But the fix is not complete.
 
-> 
-> > > This doesn't seem to fit in very well with the EDAC framework and we can 
-> > > hardly use any of the EDAC framework APIs. We tried implementing a
-> > > "pci_driver" but since a function driver will already be running on the EP and
-> > > portdrv on the root-complex, we will not be able to bind 2 drivers to a single
-> > > PCI device (root-complex or endpoint). Ultimately, what I will be doing is
-> > > writing a platform driver with debugfs entries which will be present in EDAC
-> > > directory instead of DWC directory.
-> 
-> The addition of this type of functionality to pordrv is a long running question.
-> Everyone wants a solution, I believe some people are looking at it (+CC Terry)
-> 
-> Terry, another case for your long list.
-> 
-> For the EP end, this should be fired up by the EP driver, whilst it might be
-> infrastructure used on a bunch of devices,  it is a feature of that particular
-> EP - so you'd want to provide any functionality in a form that could be used
-> by both the EP driver and a nice shiny new portdrv replacement.
-> 
-> > > 
-> > > Can  you please help us out by going through this thread [3] and letting us
-> > > know if our understanding is wrong at any point. If you think it is a better
-> > > idea to integrate this in the EDAC framework, can you guide me as
-> > > to how I can utilize the framework better?
-> > > Please let me know if you need any other information to conclude.
-> > > 
-> > > [1] https://lore.kernel.org/linux-pci/20231121013400.18367-1-xueshuai@linux.alibaba.com/
-> > > [2] https://lore.kernel.org/all/20210518174618.42089-1-shradha.t@samsung.com/T/
-> > > [3] https://lore.kernel.org/all/20231130115044.53512-1-shradha.t@samsung.com/
-> > >   
-> > 
-> > Gentle ping for the EDAC maintainers.
-> > 
-> > - Mani
-> > 
-> > > Thanks,
-> > > Shradha
-> > >   
-> > > > -----Original Message-----
-> > > > From: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
-> > > > Sent: 16 February 2024 19:19
-> > > > To: Shradha Todi <shradha.t@samsung.com>
-> > > > Cc: lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > > > bhelgaas@google.com; jingoohan1@gmail.com;
-> > > > gustavo.pimentel@synopsys.com; josh@joshtriplett.org;
-> > > > lukas.bulwahn@gmail.com; hongxing.zhu@nxp.com;
-> > > > pankaj.dubey@samsung.com; linux-kernel@vger.kernel.org; linux-
-> > > > pci@vger.kernel.org; vidyas@nvidia.com; gost.dev@samsung.com
-> > > > Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
-> > > > controller
-> > > > 
-> > > > On Thu, Feb 15, 2024 at 02:55:06PM +0530, Shradha Todi wrote:  
-> > > > >
-> > > > >  
-> > > > 
-> > > > [...]
-> > > >   
-> > > > > > For the error injection and counters, we already have the EDAC
-> > > > > > framework. So adding them in the DWC driver doesn't make sense to me.
-> > > > > >  
-> > > > >
-> > > > > Sorry for late response, was going through the EDAC framework to understand  
-> > > > better how we can fit RAS DES support in it. Below are some technical challenges
-> > > > found so far:  
-> > > > > 1: This debugfs framework proposed [1] can run on both side of the link i.e. RC  
-> > > > and EP as it will be a part of the link controller platform driver. Here for the EP
-> > > > side the assumption is that it has Linux running, which is primarily a use case for
-> > > > chip-to-chip communication.  After your suggestion to migrate to EDAC
-> > > > framework we studied and here are the findings:  
-> > > > > - If we move to EDAC framework, we need to have RAS DES as a
-> > > > > pci_driver which will be binded based on vendor_id and device_id. Our
-> > > > > observation is that on EP side system we are unable to bind two
-> > > > > function driver (pci_driver), as pci_endpoint_test function driver or
-> > > > > some other chip-to-chip function driver will already be bound. On the
-> > > > > other hand, on RC side we observed that if we have portdrv enabled in
-> > > > > Linux running on RC system, it gets bound to RC controller and then it
-> > > > > does not allow EDAC pci_driver to bind. So basically we see a problem
-> > > > > here, that we can't have two pci_driver binding to same PCI device
-> > > > > 2: Another point is even though we use EDAC driver framework, we may not be  
-> > > > able to use any of EDAC framework APIs as they are mostly suitable for memory
-> > > > controller devices sitting on PCI BUS. We will end up using debugfs entries just via
-> > > > a pci_driver placed inside EDAC framework.
-> > > > 
-> > > > Please wrap your replies to 80 characters.
-> > > > 
-> > > > There is no need to bind the edac driver to VID:PID of the device. The edac driver
-> > > > can be a platform driver and you can instantiate the platform device from the
-> > > > DWC driver. This way, the PCI device can be assocaited with whatever driver, but
-> > > > still there can be a separate edac driver for handling errors.
-> > > > 
-> > > > Regarding API limitation, you should ask the maintainer about the possibility of
-> > > > extending them.
-> > > >   
-> > > > >
-> > > > > Please let me know if my understanding is wrong.
-> > > > >  
-> > > > > > But first check with the perf driver author if they have any plans
-> > > > > > on adding the proposed functionality. If they do not have any plan
-> > > > > > or not working on it, then look into EDAC.
-> > > > > >
-> > > > > > - Mani
-> > > > > >  
-> > > > >
-> > > > > Since we already worked and posted patches [1], [2], we will continue to work  
-> > > > on this and based on consent from community we will adopt to most suitable
-> > > > framework.  
-> > > > > We see many subsystems like ethernet, usb, gpu, cxl having debugfs files that  
-> > > > give information about the current status of the running system and as of now
-> > > > based on our findings, we still feel there is no harm in having debugfs entry based
-> > > > support in DesignWare controller driver itself.
-> > > > 
-> > > > There is no issue in exposing the debug information through debugfs, that's the
-> > > > sole purpose of the interface. But here, you are trying to add support for DWC
-> > > > RAS feature for which a dedicated framework already exists.
-> > > > 
-> > > > And there will be more similar requests coming for vendor specific error protocols
-> > > > as well. So your investigation could benefit everyone.
-> > > > 
-> > > > From your above investigation, looks like there are some shortcomings of the
-> > > > EDAC framework. So let's get that clarified by writing to the EDAC maintainers
-> > > > (keep us in CC). If the EDAC maintainer suggests you to add support for this
-> > > > feature in DWC driver itself citing some reasons, then no issues with me.
-> > > > 
-> > > > - Mani
-> > > > 
-> > > > --
-> > > > மணிவண்ணன் சதாசிவம்  
-> > > 
-> > >   
-> > 
-> 
+efi_random_alloc() allocates pages by following steps.
+1. Count total available slots ('total_slots')
+2. Select a slot ('target_slot') to allocate randomly
+3. Calculate a starting address ('target') to be included target_slot
+4. Allocate pages, which starting address is 'target'
 
--- 
-மணிவண்ணன் சதாசிவம்
+In step 1, 'alloc_min' is used to offset the starting address of
+memory chunk. But in step 3 'alloc_min' is not considered at all.
+As the result, 'target' can be miscalculated and become lower
+than 'alloc_min'.
+
+When KASLR is disabled, 'target_slot' is always 0 and
+the problem happens everytime if the EFI memory map of the system
+meets the condition.
+
+Fix this problem by calculating 'target' considering 'alloc_min'.
+
+Cc: linux-efi@vger.kernel.org
+Cc: Tom Englund <tomenglund26@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Fixes: 2f77465b05b1 ("x86/efistub: Avoid placing the kernel below LOAD_PHYS=
+ICAL_ADDR")
+Signed-off-by: Kazuma Kondo <kazuma-kondo@nec.com>
+---
+ drivers/firmware/efi/libstub/randomalloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/firmware/efi/libstub/randomalloc.c b/drivers/firmware/=
+efi/libstub/randomalloc.c
+index 4e96a855fdf4..7e1852859550 100644
+--- a/drivers/firmware/efi/libstub/randomalloc.c
++++ b/drivers/firmware/efi/libstub/randomalloc.c
+@@ -120,7 +120,7 @@ efi_status_t efi_random_alloc(unsigned long size,
+ 			continue;
+ 		}
+=20
+-		target =3D round_up(md->phys_addr, align) + target_slot * align;
++		target =3D round_up(max(md->phys_addr, alloc_min), align) + target_slot =
+* align;
+ 		pages =3D size / EFI_PAGE_SIZE;
+=20
+ 		status =3D efi_bs_call(allocate_pages, EFI_ALLOCATE_ADDRESS,
+--=20
+2.39.3
