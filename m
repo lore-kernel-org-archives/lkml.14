@@ -1,282 +1,119 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E674C376;
-	Fri, 22 Mar 2024 00:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345C8376;
+	Fri, 22 Mar 2024 00:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711067799; cv=none; b=qBcJiF5dEnRYnjbKDVTFA2mr4oSvH+tgekp30sPaXXxMphpcHfePpPqFFhS5EQFtVIYk/m3RRRJmEaGvt/T7rR7xnfrd/ACoXFRQplMel1OHwMkGaNFRRS4HSCt2Quf7tGwVL/9bCt2tOZl6V1giULH4dfnZxV/B+0ufotn8HKg=
+	t=1711067846; cv=none; b=UQpNZ0WwBwtslOS3taS/wZi7gqC5KHQLnlfOvipmm3vVq9ZLUAiKNSULzwc7InlZekET2mjoXMzMKfauvFZ/bjnRqzlaHqEWEXg9+GX88nbtKDOHtKiFYMczKyyPEH3/4lSMjtYHk35fVGWpSvLNB8S/DK9iZWli2ZejfVychzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711067799; c=relaxed/simple;
-	bh=8kXxlTmJUzH3MtoAtcY/OmCWO5ge1T7DAHf4NDWaW3c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PmyIpau/4iyLMphDopVTPAGA6ztZQJ7/wggodrhM3s/dAR57c05zsc/9AInfJnW+Gve0romPw++OXFiBV5a2IV5Qvpx8Rre31PYeNjWtERS5mQf5tR4Q51J9RBzOugxBqnP/D8N+ZsNtAvtXiz19HLtZdj40pIAL9Aj7KbcA4Tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=R8Dtj8Is; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1711067846; c=relaxed/simple;
+	bh=lM2DDRDjWwjPRlQ67f2eeArWymy0wFusj65S5rDPcz4=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=nGBxUi/RSXy+nbiGDbPbIts/P1VTg6C644FHuR4+pQuv1bnC1sasIWqYX5W632BKEebH0v1pEuqXuA88MYCsmE4B68t2mbMCcMiwY84ug63HJZvspQw49gMnXEMVPbShnbgO38PDy6ck2tYUHBtqRogc+zI1HJb/a+PQ4RYBNGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=KGNqJUXn; arc=none smtp.client-ip=162.62.57.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="R8Dtj8Is"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id D84AABEB;
-	Fri, 22 Mar 2024 01:36:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1711067768;
-	bh=8kXxlTmJUzH3MtoAtcY/OmCWO5ge1T7DAHf4NDWaW3c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R8Dtj8Is6HZCHdBBnYniJuhImlg+HszLh3ZW7R7WsLuZH5Zgt0rvmQzk+eobOcYNk
-	 RdWvPKgPZgxc+5hWBLIu+exejN2nkwNAVSv0RQOp32z+Vxz9LFQNlLHD8P6ct6P9nU
-	 aEaezeHBT04MZPODOv4rSHcFxAkBfbvq80SBIEjM=
-Date: Fri, 22 Mar 2024 02:36:31 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	linux-kernel@vger.kernel.org, "hn.chen" <hn.chen@sunplusit.com>,
-	linux-media@vger.kernel.org
-Subject: Re: [PATCH v9 5/6] media: uvcvideo: Refactor clock circular buffer
-Message-ID: <20240322003631.GE20938@pendragon.ideasonboard.com>
-References: <20220920-resend-hwtimestamp-v9-0-55a89f46f6be@chromium.org>
- <20220920-resend-hwtimestamp-v9-5-55a89f46f6be@chromium.org>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="KGNqJUXn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1711067838; bh=r4IFZTlDc4FNVIlNbrQKRPaN2yiQZzGfTw9TeJnxUWw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=KGNqJUXn8airvafwLPfVSg0b+B1dTwq1TNNJ0TGjEcnbXV13Ua1iMmV9ioOUZRT3e
+	 FUzxMX3+T+bXIfX4eUGgwOwpPOR6Gv2qsEq2nnsCx64fpqGsUHZsOI9P59OYaUZe6U
+	 rdfu63E2qY+Xrc2Uk68ciBHZO1rm4tawtYguLHtI=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrszc5-1.qq.com (NewEsmtp) with SMTP
+	id 7C7A2048; Fri, 22 Mar 2024 08:31:07 +0800
+X-QQ-mid: xmsmtpt1711067467tnw9eno2d
+Message-ID: <tencent_C54679498DEEC46ED40C8BA7F386D352D606@qq.com>
+X-QQ-XMAILINFO: Ncpnai4dwVTHorlzyzhU77ytbUvOBdgC2WZW0ZSVeR1eDCJaBUV5De7sHzroXJ
+	 NCPMnm1AImZ2qDwB048DoGdiKZWDPG7UwJNMeJTRqBiFFe9+mT/FkbgPGffkFy5g6d2L8ejVJY7s
+	 sJOdcjJgnJEst4eVPRO3C6oiMhSRck2qfpnQtomsvRBa6kQpftLQLT9lRVL83jqVHiBCEEU4QKSD
+	 7cewjJ5aJZZOrU/46m35tW55De4/L1MKcxc4qNHZfabPNUC/jwRX5ZK2EGYm5zS/Bnj0kUpVY72X
+	 DjvcUqv068/keICLAuGFpcbqrpnbEKiKHt8nAbdo9YKPPqG4zEBOJGssqd/8NjnRALQugVVdSuuy
+	 uI1JGCqgGYJCKAc9UR4TkAuNzmHJDKggo/EH8AvOQWcBc/JPK7qpjg5W061GSyAtWJnjNu79j2Xg
+	 s30ghUxM9qJ9Z8qh4vV97A0GbIneN2rsau22iVu5jmVU7p3YaRDH2dEHdjjLTNMh4Mu6+LKQaHPk
+	 WNmCsY5sEVwmuchDhGbdy4VD/jl6DhK5YHXoIrwztmVCadbPgUc2Oe/jJWYWHHsTrs3DR5pHKL5x
+	 0lDtvTVc2ZIY0+v5TUymVCHYSxtj5z0yKejIcgcN1zp7yTgks6SZfjNGMSyrBlNAAiz/sDP4oszF
+	 mXr+/hLa6VQUvwC4XJFvGn+GE97UV39j/IrY5Wou1VHCipab1JWwhtHrPLJe6dMMiWH1H008j7rv
+	 5kh8cGys0k7oWeHqT5fznYJ+MHCxo4b6DrCvaRuWKxfTZW617oG/ln36jHim2ZhQHSNTKsidSmFh
+	 pPVEE9pa/inLDfxGyfzycVlLnNtce/tl4VR3Rssgd5gR8aKfyztSUV1AxV1Mm5SXsspGNWO5L29C
+	 eI+cF7dP7DfSiLKYQuOPFG9+MxqH8MUZnW7H2qrJSkrTJBsrcCcQuzMKZ6owYVo8K+/N/pfLXL
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+65f53dd6a0f7ad64c0cb@syzkaller.appspotmail.com
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: [PATCH] fs/hfsplus: fix uninit-value in hfs_find_1st_rec_by_cnid
+Date: Fri, 22 Mar 2024 08:31:08 +0800
+X-OQ-MSGID: <20240322003107.2672796-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000008fd9bc061428179e@google.com>
+References: <0000000000008fd9bc061428179e@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220920-resend-hwtimestamp-v9-5-55a89f46f6be@chromium.org>
+Content-Transfer-Encoding: 8bit
 
-Hi Ricardo,
+[syzbot reported]
+BUG: KMSAN: uninit-value in hfs_find_1st_rec_by_cnid+0x27a/0x3f0 fs/hfsplus/bfind.c:78
+ hfs_find_1st_rec_by_cnid+0x27a/0x3f0 fs/hfsplus/bfind.c:78
+ __hfsplus_brec_find+0x26f/0x7b0 fs/hfsplus/bfind.c:135
+ hfsplus_brec_find+0x445/0x970 fs/hfsplus/bfind.c:195
+ hfsplus_find_attr+0x30c/0x390
+ hfsplus_listxattr+0x586/0x1a60 fs/hfsplus/xattr.c:708
+ vfs_listxattr fs/xattr.c:493 [inline]
+ listxattr+0x1f3/0x6b0 fs/xattr.c:840
+ path_listxattr fs/xattr.c:864 [inline]
+ __do_sys_listxattr fs/xattr.c:876 [inline]
+ __se_sys_listxattr fs/xattr.c:873 [inline]
+ __x64_sys_listxattr+0x16b/0x2f0 fs/xattr.c:873
+ do_syscall_64+0xd5/0x1f0
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
 
-Thank you for the patch.
+Uninit was created at:
+ slab_post_alloc_hook mm/slub.c:3804 [inline]
+ slab_alloc_node mm/slub.c:3845 [inline]
+ __do_kmalloc_node mm/slub.c:3965 [inline]
+ __kmalloc+0x6e4/0x1000 mm/slub.c:3979
+ kmalloc include/linux/slab.h:632 [inline]
+ hfsplus_find_init+0x91/0x250 fs/hfsplus/bfind.c:21
+ hfsplus_listxattr+0x44a/0x1a60 fs/hfsplus/xattr.c:695
+ vfs_listxattr fs/xattr.c:493 [inline]
+ listxattr+0x1f3/0x6b0 fs/xattr.c:840
+ path_listxattr fs/xattr.c:864 [inline]
+ __do_sys_listxattr fs/xattr.c:876 [inline]
+ __se_sys_listxattr fs/xattr.c:873 [inline]
+ __x64_sys_listxattr+0x16b/0x2f0 fs/xattr.c:873
+ do_syscall_64+0xd5/0x1f0
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+[Fix]
+Let's clear all search_key fields at alloc time.
 
-On Wed, Mar 15, 2023 at 02:30:16PM +0100, Ricardo Ribalda wrote:
-> Isolate all the changes related to the clock circular buffer to its own
-> function, that way we can make changes easier to the buffer logic.
-> 
-> Also simplify the lock, by removing the circular buffer clock handling
-> from uvc_video_clock_decode().
-> 
-> And now that we are at it, unify the API of the clock functions.
-> 
-> Tested-by: HungNien Chen <hn.chen@sunplusit.com>
-> Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->  drivers/media/usb/uvc/uvc_video.c | 84 ++++++++++++++++++---------------------
->  1 file changed, 38 insertions(+), 46 deletions(-)
-> 
-> diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
-> index 6d0243ea0e07..1db0d1bc80e6 100644
-> --- a/drivers/media/usb/uvc/uvc_video.c
-> +++ b/drivers/media/usb/uvc/uvc_video.c
-> @@ -466,19 +466,30 @@ static inline ktime_t uvc_video_get_time(void)
->  		return ktime_get_real();
->  }
->  
-> +static void uvc_video_clock_add_sample(struct uvc_clock *clock,
-> +				       const struct uvc_clock_sample *sample)
-> +{
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&clock->lock, flags);
-> +
-> +	memcpy(&clock->samples[clock->head], sample, sizeof(*sample));
+Reported-and-tested-by: syzbot+65f53dd6a0f7ad64c0cb@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ fs/hfsplus/bfind.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-How about
-
-	clock->samples[clock->head] = *sample;
-
-?
-
-> +	clock->head = (clock->head + 1) % clock->size;
-> +	clock->count = min(clock->count + 1, clock->size);
-> +
-> +	spin_unlock_irqrestore(&clock->lock, flags);
-> +
-> +	clock->last_sof = sample->dev_sof;
-
-Strictly speaking I wonder if this counts as "adding a sample". Any
-objection against keeping it in the caller ?
-
-> +}
-> +
->  static void
->  uvc_video_clock_decode(struct uvc_streaming *stream, struct uvc_buffer *buf,
->  		       const u8 *data, int len)
->  {
-> -	struct uvc_clock_sample *sample;
-> +	struct uvc_clock_sample sample;
->  	unsigned int header_size;
->  	bool has_pts = false;
->  	bool has_scr = false;
-> -	unsigned long flags;
-> -	ktime_t time;
-> -	u16 host_sof;
-> -	u16 dev_sof;
-> -	u32 dev_stc;
->  
->  	switch (data[1] & (UVC_STREAM_PTS | UVC_STREAM_SCR)) {
->  	case UVC_STREAM_PTS | UVC_STREAM_SCR:
-> @@ -523,11 +534,11 @@ uvc_video_clock_decode(struct uvc_streaming *stream, struct uvc_buffer *buf,
->  	 * all the data packets of the same frame contains the same SOF. In that
->  	 * case only the first one will match the host_sof.
->  	 */
-> -	dev_sof = get_unaligned_le16(&data[header_size - 2]);
-> -	if (dev_sof == stream->clock.last_sof)
-> +	sample.dev_sof = get_unaligned_le16(&data[header_size - 2]);
-> +	if (sample.dev_sof == stream->clock.last_sof)
->  		return;
->  
-> -	dev_stc = get_unaligned_le32(&data[header_size - 6]);
-> +	sample.dev_stc = get_unaligned_le32(&data[header_size - 6]);
->  
->  	/*
->  	 * STC (Source Time Clock) is the clock used by the camera. The UVC 1.5
-> @@ -541,21 +552,19 @@ uvc_video_clock_decode(struct uvc_streaming *stream, struct uvc_buffer *buf,
->  	 * and stc and sof are zero.
->  	 */
->  	if (buf && buf->bytesused == 0 && len == header_size &&
-> -	    dev_stc == 0 && dev_sof == 0)
-> +	    sample.dev_stc == 0 && sample.dev_sof == 0)
->  		return;
->  
-> -	stream->clock.last_sof = dev_sof;
-> -
-> -	host_sof = usb_get_current_frame_number(stream->dev->udev);
-> +	sample.host_sof = usb_get_current_frame_number(stream->dev->udev);
->  
->  	/*
->  	 * On some devices, like the Logitech C922, the device SOF does not run
->  	 * at a stable rate of 1kHz. For those devices use the host SOF instead.
->  	 */
->  	if (stream->dev->quirks & UVC_QUIRK_INVALID_DEVICE_SOF)
-> -		dev_sof = host_sof;
-> +		sample.dev_sof = sample.host_sof;
->  
-> -	time = uvc_video_get_time();
-> +	sample.host_time = uvc_video_get_time();
->  
->  	/*
->  	 * The UVC specification allows device implementations that can't obtain
-> @@ -578,46 +587,29 @@ uvc_video_clock_decode(struct uvc_streaming *stream, struct uvc_buffer *buf,
->  	 * the 8 LSBs of the delta are kept.
->  	 */
->  	if (stream->clock.sof_offset == (u16)-1) {
-> -		u16 delta_sof = (host_sof - dev_sof) & 255;
-> +		u16 delta_sof = (sample.host_sof - sample.dev_sof) & 255;
->  		if (delta_sof >= 10)
->  			stream->clock.sof_offset = delta_sof;
->  		else
->  			stream->clock.sof_offset = 0;
->  	}
->  
-> -	dev_sof = (dev_sof + stream->clock.sof_offset) & 2047;
-> -
-> -	spin_lock_irqsave(&stream->clock.lock, flags);
-> -
-> -	sample = &stream->clock.samples[stream->clock.head];
-> -	sample->dev_stc = dev_stc;
-> -	sample->dev_sof = dev_sof;
-> -	sample->host_sof = host_sof;
-> -	sample->host_time = time;
-> -
-> -	/* Update the sliding window head and count. */
-> -	stream->clock.head = (stream->clock.head + 1) % stream->clock.size;
-> +	sample.dev_sof = (sample.dev_sof + stream->clock.sof_offset) & 2047;
-> +	sample.dev_stc = get_unaligned_le32(&data[header_size - 6]);
-
-This is already done above.
-
-With these small issues addressed,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
->  
-> -	if (stream->clock.count < stream->clock.size)
-> -		stream->clock.count++;
-> -
-> -	spin_unlock_irqrestore(&stream->clock.lock, flags);
-> +	uvc_video_clock_add_sample(&stream->clock, &sample);
->  }
->  
-> -static void uvc_video_clock_reset(struct uvc_streaming *stream)
-> +static void uvc_video_clock_reset(struct uvc_clock *clock)
->  {
-> -	struct uvc_clock *clock = &stream->clock;
-> -
->  	clock->head = 0;
->  	clock->count = 0;
->  	clock->last_sof = -1;
->  	clock->sof_offset = -1;
->  }
->  
-> -static int uvc_video_clock_init(struct uvc_streaming *stream)
-> +static int uvc_video_clock_init(struct uvc_clock *clock)
->  {
-> -	struct uvc_clock *clock = &stream->clock;
-> -
->  	spin_lock_init(&clock->lock);
->  	clock->size = 32;
->  
-> @@ -626,15 +618,15 @@ static int uvc_video_clock_init(struct uvc_streaming *stream)
->  	if (clock->samples == NULL)
->  		return -ENOMEM;
->  
-> -	uvc_video_clock_reset(stream);
-> +	uvc_video_clock_reset(clock);
->  
->  	return 0;
->  }
->  
-> -static void uvc_video_clock_cleanup(struct uvc_streaming *stream)
-> +static void uvc_video_clock_cleanup(struct uvc_clock *clock)
->  {
-> -	kfree(stream->clock.samples);
-> -	stream->clock.samples = NULL;
-> +	kfree(clock->samples);
-> +	clock->samples = NULL;
->  }
->  
->  /*
-> @@ -2108,7 +2100,7 @@ int uvc_video_resume(struct uvc_streaming *stream, int reset)
->  
->  	stream->frozen = 0;
->  
-> -	uvc_video_clock_reset(stream);
-> +	uvc_video_clock_reset(&stream->clock);
->  
->  	if (!uvc_queue_streaming(&stream->queue))
->  		return 0;
-> @@ -2257,7 +2249,7 @@ int uvc_video_start_streaming(struct uvc_streaming *stream)
->  {
->  	int ret;
->  
-> -	ret = uvc_video_clock_init(stream);
-> +	ret = uvc_video_clock_init(&stream->clock);
->  	if (ret < 0)
->  		return ret;
->  
-> @@ -2275,7 +2267,7 @@ int uvc_video_start_streaming(struct uvc_streaming *stream)
->  error_video:
->  	usb_set_interface(stream->dev->udev, stream->intfnum, 0);
->  error_commit:
-> -	uvc_video_clock_cleanup(stream);
-> +	uvc_video_clock_cleanup(&stream->clock);
->  
->  	return ret;
->  }
-> @@ -2303,5 +2295,5 @@ void uvc_video_stop_streaming(struct uvc_streaming *stream)
->  		usb_clear_halt(stream->dev->udev, pipe);
->  	}
->  
-> -	uvc_video_clock_cleanup(stream);
-> +	uvc_video_clock_cleanup(&stream->clock);
->  }
-> 
-
+diff --git a/fs/hfsplus/bfind.c b/fs/hfsplus/bfind.c
+index ca2ba8c9f82e..b939dc879dac 100644
+--- a/fs/hfsplus/bfind.c
++++ b/fs/hfsplus/bfind.c
+@@ -18,7 +18,7 @@ int hfs_find_init(struct hfs_btree *tree, struct hfs_find_data *fd)
+ 
+ 	fd->tree = tree;
+ 	fd->bnode = NULL;
+-	ptr = kmalloc(tree->max_key_len * 2 + 4, GFP_KERNEL);
++	ptr = kzalloc(tree->max_key_len * 2 + 4, GFP_KERNEL);
+ 	if (!ptr)
+ 		return -ENOMEM;
+ 	fd->search_key = ptr;
 -- 
-Regards,
+2.43.0
 
-Laurent Pinchart
