@@ -1,135 +1,155 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01855FDA4
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 16:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035315D749
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 16:52:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711126346; cv=none; b=AZaAd3PpLKBkBVaiW56D34hXajnsKzQcydCSEOlVyqPJhVAmusJKDZMPoU85H7U6Ii42vDskoSrpMZXRPDPah8n3u55ahZyboZ/HDj7HFjR/YWfvARgXyREhctEpBCMNvLTTfJLonnViUQ4sXp+3qhTdCXEfdlBBQQmb4VxAigw=
+	t=1711126368; cv=none; b=S2Wz7zNn54YRsH7Gx3OrwHqef89TQdFqNF6m8VwRgjPCEByGzS0bmgyt7ExUHlmu4w46sc1fiZXppHI7m0JSSPtH/E5empZuHZWVC/kEVjSiizj+NxGyz7/6IrMUZAhv+9XW4ld6UzDgfZh2pQvRuK3Xn5JtSOU/DzeIpNyomh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711126346; c=relaxed/simple;
-	bh=Hoh9Udf3fXjskTmeMKui4oBPeZz1vE7VdeOvNcxWI9E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TmR8DICv6Y7HoReKHAWZmSJviKvWSqFrXPBchyUfrrKkHaOYB0El7RcNx45KcpSFRRJS0U3z6Oe9qW+HsYxaYTfYDbYvhFZ9ErvfVyWVPIKAionIfc/H7ns0rcoqYhH+glljvLML9+HJ9/oYf+gYXDNEju92JgPYwOI9zHDwxAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HYdl6muu; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711126368; c=relaxed/simple;
+	bh=hBqusfpeBkVmefE85XsEn17cxdE4qE4ZgKyCekh5dAA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gc4dWqv/b2OKIGN7sWw9OU9FbQxWjVfi/rzvYfhrnR8BQalbT4PzFWqeyVYdqdAhhoRBzE0jgyhjMF2kkHdZsEs1JsrsaS/+ilYjAOM2PgB2bUjHTdUzr40AYfqg1OzZHl4cvCSIrhuqPvsvHAtlYUldRUDkKtFdV+frztyHw6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NxUuzewA; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HYdl6muu"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d41d1bedc9so43862551fa.3
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 09:52:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NxUuzewA"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-789e4a4d3a5so160928885a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 09:52:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711126343; x=1711731143; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=J5Z0nlu3MokUcIosCaDsGW+EUzLRhDp3e6VIXE4GUUQ=;
-        b=HYdl6muu8NynjrkrSRzUtsP7wFSqBCYk//saI/wZvSUh03RVmrGi2t1FT44qqzb2vb
-         TgTqctlhsXk+X22pLWwDh09Ql5XIqQsqqwR3D/Awz5rCUdVI6xhfNIObRmv6vktuzRJ4
-         ynGRuIIY9so9XRy2hQfM5gmI/uLo8R09Lck6oRoeslCa8VVTmjO5G5D5hadObxM662jO
-         bhWP1kpB1ItQCdylBNzCwS/rzTnpYi4Hg/tStTVgfKb6tRr5Lnez6r7ab4MUj1gbdwVI
-         MwL8yu+eXr7OqncRzVD0GOGLAnXdQ1p5Y0Qcv62WmlmCr69QGBmXiQVcyP733uBneJ2R
-         c3jg==
+        d=gmail.com; s=20230601; t=1711126365; x=1711731165; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=m4y5+0+oAQIlI43aDoNNcW7UyxGgy4flhCtXSAtWytQ=;
+        b=NxUuzewAFQ8cxwAovxQTnsSmznZbSViSQMeER0wBRX+1eoVtmwHnnXaZLGmEcNM09W
+         j5+xe6C/vztJnTgV9MSclltcEqQIFV6sKcO3VPRawQTAeTRWfl9epuauDtBGf2LyF2nU
+         Iydn9oBYDYRm/jWgKdGgwFq9ozRBToXxI0ZcMz4xx9RG7a2CxLCDZaNeg5ToyFTZ1yQx
+         uAEj+ebq9RjwTrgHhJS1KJWFG9Xzkj1WDZxjb5avEWrU16Q0Mq4i+g99RDLb+1R3Jm2n
+         XuH62JvjYfioHKkOHawXJuID5C0aaoB2kHkL5UybcstzV2H2tgowOW3vMpvroGH1vxuZ
+         ScuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711126343; x=1711731143;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J5Z0nlu3MokUcIosCaDsGW+EUzLRhDp3e6VIXE4GUUQ=;
-        b=mbPnFIoM3xHklVqxQgEX3K+qo2j2Zz4ydVD3mDsB1oysQ3wC2vN8gUD7hzu6S7aqiB
-         prmj6l6xmr9XrdodWCaIZBjDZOZeoqKg9N2JjRAlLPOnfH/got00L2ooTbg5RM/MFCdi
-         v8JEZrdY24xwOf2Zl6sD7LCnA6A7rRlCC2xEluduRbYzN13HMT+UpebVKiq9KCF0fYkZ
-         f0tJUHJ2fUKem5Ct3BDOZQRZ9rFJFDBhkU5L36Q3jO209xswd8dKIBDAS7TXXUnkGcbc
-         SZSxaVI4NHcrQhEq5jn6aZ2sVaucJPw/GYpbKk72vDJtXkDeJ0tJngWLglKrLL28egYF
-         mwkA==
-X-Gm-Message-State: AOJu0YxnigXo/m8ubKlAEBGn5GxZIgZE+bvNe0R5dV1tLzgUlXjxPAel
-	SeZhYsKykE+xM1gqEb299k91A3yNDcm2SztLdBIFyJvOa7idAWRIzl8c8WOUsSk=
-X-Google-Smtp-Source: AGHT+IF/uWRfTp2ZpDpZsNA/lB15jRMsTZZo8ZQnkEjLY1csc3FLBJDOwSEm6pDxtaYGpVfKugUpHg==
-X-Received: by 2002:a2e:80d9:0:b0:2d4:8bfe:69b7 with SMTP id r25-20020a2e80d9000000b002d48bfe69b7mr53484ljg.46.1711126343096;
-        Fri, 22 Mar 2024 09:52:23 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id w17-20020a170906385100b00a46d8e5a031sm3370ejc.209.2024.03.22.09.52.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Mar 2024 09:52:22 -0700 (PDT)
-Message-ID: <4d9e7142-2047-4d82-aa1a-dea08e3bca81@linaro.org>
-Date: Fri, 22 Mar 2024 17:52:21 +0100
+        d=1e100.net; s=20230601; t=1711126365; x=1711731165;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m4y5+0+oAQIlI43aDoNNcW7UyxGgy4flhCtXSAtWytQ=;
+        b=qvvtto0phpMvV6Q17pQJSCYCG+99BWsKn34K/ACoS50S4TvSxFhxS0Wi9e4FO2qxUZ
+         5cpDAlTne2vfXIDUBSwti/x2Jzgx1WozJJMcnQWEdpthicAlNMirHOppWINSF4meOI3o
+         /noHPM4iumqBG5LToc0U/iiu9xZi+JGq5dxC1/aZnme3MQM6e/zizZbVkeyxX3cZ+8B4
+         E4oFL+RhDSiBEhaFF3mipaDSXFAQn5HVXbI0T8QVHBk858Gu8E3tS6QhLbOgi72dl79W
+         BzYGDrkWK6izq5TVEA4Kuv3A21RE4++UgkdG3Oqjfi87TFVfc+yPQSPutEDTXK9GRlsK
+         X7mw==
+X-Gm-Message-State: AOJu0YyzCZQkprqT5M13FLhB20hpCGLcDFQPO59F7mjwIqjoRIVZuUh8
+	x90yvo3DNB/psR7/kAaYEIUQcZVCSs5uMQVojYsunEZmRE5BoglBUNlm2+s=
+X-Google-Smtp-Source: AGHT+IGMTlHdS/diWd+UEtRVXGMX/0yVWwdUCsBrsa4OE2ABTq5Z2aHTKiyA62juTuVftq1d+3QDVA==
+X-Received: by 2002:a05:620a:821f:b0:789:f14b:19c9 with SMTP id ow31-20020a05620a821f00b00789f14b19c9mr2947369qkn.70.1711126365030;
+        Fri, 22 Mar 2024 09:52:45 -0700 (PDT)
+Received: from citadel.lan (2600-6c4a-4d3f-6d5c-0000-0000-0000-1019.inf6.spectrum.com. [2600:6c4a:4d3f:6d5c::1019])
+        by smtp.gmail.com with ESMTPSA id j1-20020a37ef01000000b00789e9bbf962sm894901qkk.133.2024.03.22.09.52.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Mar 2024 09:52:44 -0700 (PDT)
+From: Brian Gerst <brgerst@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	David.Laight@aculab.com,
+	Brian Gerst <brgerst@gmail.com>
+Subject: [PATCH v4 00/16] x86-64: Stack protector and percpu improvements
+Date: Fri, 22 Mar 2024 12:52:17 -0400
+Message-ID: <20240322165233.71698-1-brgerst@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] reset: gpio: Fix missing gpiolib dependency for GPIO
- reset controller
-To: Mark Brown <broonie@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-kernel@vger.kernel.org
-References: <20240320-reset-gpiolib-deps-v1-1-eaf5d30fa647@kernel.org>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240320-reset-gpiolib-deps-v1-1-eaf5d30fa647@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 20/03/2024 20:59, Mark Brown wrote:
-> The GPIO reset controller uses gpiolib but there is no Kconfig
-> dependency reflecting this fact, add one.
-> 
-> With the addition of the controller to the arm64 defconfig this is
-> causing build breaks for arm64 virtconfig in -next:
-> 
-> aarch64-linux-gnu-ld: drivers/reset/core.o: in function `__reset_add_reset_gpio_lookup':
-> /build/stage/linux/drivers/reset/core.c:861:(.text+0xccc): undefined reference to `gpio_device_find_by_fwnode'
-> 
+Currently, x86-64 uses an unusual percpu layout, where the percpu section
+is linked at absolute address 0.  The reason behind this is that older GCC
+versions placed the stack protector (if enabled) at a fixed offset from the
+GS segment base.  Since the GS segement is also used for percpu variables,
+this forced the current layout.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+GCC since version 8.1 supports a configurable location for the stack
+protector value, which allows removal of the restriction on how the percpu
+section is linked.  This allows the percpu section to be linked normally,
+like other architectures.  In turn, this allows removal of code that was
+needed to support the zero-based percpu section.
 
-Best regards,
-Krzysztof
+v4:
+- Updated to current tip tree
+- Added two new cleanups made possible by the removal of IA-64.
+- Small improvements to the objtool conversion code.
+
+Brian Gerst (16):
+  x86/stackprotector/32: Remove stack protector test script
+  x86/stackprotector/64: Remove stack protector test script
+  x86/boot: Disable stack protector for early boot code
+  x86/pvh: Use fixed_percpu_data for early boot GSBASE
+  x86/relocs: Handle R_X86_64_REX_GOTPCRELX relocations
+  objtool: Allow adding relocations to an existing section
+  objtool: Convert fixed location stack protector accesses
+  x86/stackprotector/64: Convert to normal percpu variable
+  x86/percpu/64: Use relative percpu offsets
+  x86/percpu/64: Remove fixed_percpu_data
+  x86/boot/64: Remove inverse relocations
+  x86/percpu/64: Remove INIT_PER_CPU macros
+  percpu: Remove PER_CPU_FIRST_SECTION
+  percpu: Remove PERCPU_VADDR()
+  percpu: Remove __per_cpu_load
+  kallsyms: Remove KALLSYMS_ABSOLUTE_PERCPU
+
+ arch/x86/Kconfig                          |  16 +--
+ arch/x86/Makefile                         |  21 ++--
+ arch/x86/boot/compressed/misc.c           |  14 +--
+ arch/x86/entry/entry_64.S                 |   2 +-
+ arch/x86/include/asm/desc.h               |   1 -
+ arch/x86/include/asm/percpu.h             |  22 ----
+ arch/x86/include/asm/processor.h          |  28 +----
+ arch/x86/include/asm/stackprotector.h     |  36 +-----
+ arch/x86/kernel/Makefile                  |   2 +
+ arch/x86/kernel/asm-offsets_64.c          |   6 -
+ arch/x86/kernel/cpu/common.c              |   9 +-
+ arch/x86/kernel/head64.c                  |   2 +-
+ arch/x86/kernel/head_64.S                 |  20 ++-
+ arch/x86/kernel/irq_64.c                  |   1 -
+ arch/x86/kernel/setup_percpu.c            |  12 +-
+ arch/x86/kernel/vmlinux.lds.S             |  35 ------
+ arch/x86/platform/pvh/head.S              |  10 +-
+ arch/x86/tools/relocs.c                   | 143 ++--------------------
+ arch/x86/xen/xen-head.S                   |  10 +-
+ include/asm-generic/sections.h            |   2 +-
+ include/asm-generic/vmlinux.lds.h         |  43 +------
+ include/linux/percpu-defs.h               |  12 --
+ init/Kconfig                              |  11 +-
+ kernel/kallsyms.c                         |  12 +-
+ mm/percpu.c                               |   4 +-
+ scripts/Makefile.lib                      |   2 +
+ scripts/gcc-x86_32-has-stack-protector.sh |   8 --
+ scripts/gcc-x86_64-has-stack-protector.sh |   4 -
+ scripts/kallsyms.c                        |  80 +++---------
+ scripts/link-vmlinux.sh                   |   4 -
+ tools/objtool/arch/x86/decode.c           |  46 +++++++
+ tools/objtool/arch/x86/special.c          |  91 ++++++++++++++
+ tools/objtool/builtin-check.c             |   9 +-
+ tools/objtool/check.c                     |  14 ++-
+ tools/objtool/elf.c                       | 133 ++++++++++++++++----
+ tools/objtool/include/objtool/arch.h      |   3 +
+ tools/objtool/include/objtool/builtin.h   |   2 +
+ tools/objtool/include/objtool/elf.h       |  90 +++++++++++---
+ 38 files changed, 442 insertions(+), 518 deletions(-)
+ delete mode 100755 scripts/gcc-x86_32-has-stack-protector.sh
+ delete mode 100755 scripts/gcc-x86_64-has-stack-protector.sh
+
+
+base-commit: 30052fd948a3b43506c83590eaaada12d1f2dd09
+-- 
+2.44.0
 
