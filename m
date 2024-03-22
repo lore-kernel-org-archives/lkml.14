@@ -1,292 +1,96 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 441E138DDD;
-	Fri, 22 Mar 2024 10:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C6521A0A
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 10:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711102574; cv=none; b=EdPgYXrVqvtnOOWfDBYc3P0fHE0WRo4pmsA0Rx98n1YkG2Lxs12NIPs1qW1ZeNi0hugGZOwK13z2nkO0lx24SLNta8xzMpKf9pAoEUSeqGEG9zozgjoRGBQjFD/8N39qhjC+FAJroUBWfB1bLBVtsugJ7EVA7J+Ig/A5jKZro4k=
+	t=1711102687; cv=none; b=FA0f/k4/DJjZQ+sfGRvvM1JtvjYK6AbRYEVzjv9/7Ezbe6j7c9rAirtCoDF9+7DLrvYm3FXEMRINaTOV0/qn4vPw3EBTY2RTzX0ywLDjBn7YqCQ+GQrBhmpawlgnShl9C2KVfETmlJ35c4NIgDnQ83i8OrJqrBhywn7jFKtqoqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711102574; c=relaxed/simple;
-	bh=1TwGmh3YnzHwWCnmV0rktleeOSBDlBNOeg1ghcviBJk=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Qcx8gxzTDhvA3cmL5JFS0NWG9LdJkkA/qrwpO9jfC5EJ0lnhas5ZsbZAV1JZWZ2EjmVNIO5Mwk/jp+bqr2FEEbq0BIK3oCfa1e8NX40zu3A98SgMaIWCWy/HuHRqwBYJaqMJaqrVtiCveZDTbUceD+PCna4FWoKIfOUqybVyLNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.24])
-	by gateway (Coremail) with SMTP id _____8BxOPBpWv1lN2scAA--.2446S3;
-	Fri, 22 Mar 2024 18:16:09 +0800 (CST)
-Received: from [10.20.42.24] (unknown [10.20.42.24])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxTs1nWv1lluRhAA--.58343S3;
-	Fri, 22 Mar 2024 18:16:08 +0800 (CST)
-Subject: Re: [PATCH v2] irqchip/loongson-pch-pic: Update interrupt
- registration policy
-To: Binbin Zhou <zhoubinbin@loongson.cn>, chenhuacai@kernel.org,
- jiaxun.yang@flygoat.com, tglx@linutronix.de
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
- Baoqi Zhang <zhangbaoqi@loongson.cn>, Biao Dong <dongbiao@loongson.cn>,
- zhoubb.aaron@gmail.com
-References: <20240316082141.26139-1-zhangtianyang@loongson.cn>
- <24131107-1e45-415a-b731-c1f97a231e22@loongson.cn>
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-Message-ID: <260541a1-f4c7-2f9b-7a20-9f9c0aea4fdd@loongson.cn>
-Date: Fri, 22 Mar 2024 18:16:07 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1711102687; c=relaxed/simple;
+	bh=Pvx75pjUmfAFix8YdtVQOmsT9EGDVWYx2bvbS3+FwfA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=i+9jerEE2Eq5PHvY/J24BY97nx1uxJuUx93+VerTITSUJRyrN51IzBA78Y4srxfbqIkQb0+5EFOH4aQEc/D6eJnPZuR9rktEvnMBcjLYroDCQobN/ocPM6WDZw40rvU7O9zHMgSZbg/dyurmmY96iqTTXrRmvysJsBisPeeYEiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3GbQ6/4N; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3GbQ6/4N"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60cd041665bso37289537b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 03:18:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711102685; x=1711707485; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ACnQs7aBrEZBi3RLGYrxwrSPV2Zrt2coy5sWl3wY0QA=;
+        b=3GbQ6/4Nq2m7q1fQ0gCoFAI0DNi3i+lJLYXtQoG9ik7oPnl8UtnD6PovuQLITi6JfM
+         hOMdwyh2BdUbczT10C4LaE8S7Iv82eOW+dDHSFru6ZtUHcSIMdjJZCCeQI2lTpRpRZ+A
+         0rHltXTFW1DAoJ5yjaMuej6n8KvzgThx2arFJV2ACvFanaG8/tJwbW0JqIwyOuKzJ7Yq
+         lB6+133f1JzaANO2+PUKBkQM4LEjbBCgONYzqM+bi8EarADottlKAhOWjOHrb+UUjpim
+         J+TgG/N+51FkcpFg6QTcHxzRBBOdxt+/2E6Z8uwLk4Vt85PFXvXAGXP1NOIzQo+phZ/C
+         a5VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711102685; x=1711707485;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ACnQs7aBrEZBi3RLGYrxwrSPV2Zrt2coy5sWl3wY0QA=;
+        b=i57BOQLpk7RLrRS98Ec4alRwe7QN/MauufYsjzzniASXzCbotm2teJGxLa5eVXUO5h
+         NDeeHnr4zP8M+2uMSTs+SJBCMZ4sQGv+xsM9AVn520k86KwueaMgCKM++JKzpUnVGaH2
+         TNmkxsLy1ujYYWOtPfP+XkX9liWWQSmlHhJC0dJfG+SORuqN4698wPreJWHiLvt44mD7
+         lHdpmSJ2P646sH32Rjz8ixTtq3QB9PLc7tSz36IVF2hkvmGJhpd2T0WdbKQTsMTm3TIq
+         HzVfLQ3MUwRxmxnF1iqtUKJq7HLKeTJy4hd4OxmaXDKpdpfB2Om3jNPsh54wgASIVpSF
+         U+xQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU9pJ69bN/HWfhPjq/iMHPa7r0vTBrVVybVy47cEQ00Omhj9K363mZbYO5BNUfh/RumVeaPIV111jqvvjQMrdK/pc7yqa2uLmyYI7g/
+X-Gm-Message-State: AOJu0YwhA9vC0KgguLspyY8Qw/rGnVywdlMrydN3o4ezVo1cdBVUhU6Z
+	dvsBYzb3R6RnSinyQSdDeZJV0BwrL8S61tdSaX1G4rjA1DA2AayXfwXADD7n4exWS1jjiqLwz41
+	P3xZ1XK8VyzCuXg==
+X-Google-Smtp-Source: AGHT+IFFpd2y4r17dMtANQ7EJXXpErok7tREHxgAjPnoff6hqLaJf+G18lXV1ORhcR/6TZaKCbZ+5IgRff5HgU4=
+X-Received: from aliceryhl2.c.googlers.com ([fda3:e722:ac3:cc00:68:949d:c0a8:572])
+ (user=aliceryhl job=sendgmr) by 2002:a05:6902:1009:b0:dd9:20d9:d010 with SMTP
+ id w9-20020a056902100900b00dd920d9d010mr595720ybt.3.1711102685532; Fri, 22
+ Mar 2024 03:18:05 -0700 (PDT)
+Date: Fri, 22 Mar 2024 10:18:02 +0000
+In-Reply-To: <2ecf6529-5408-4621-becc-2f30e1039079@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <24131107-1e45-415a-b731-c1f97a231e22@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8AxTs1nWv1lluRhAA--.58343S3
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3urW5Kw1UZr4rCr47ur4fXrc_yoWDZryUpF
-	WkJrW5AFWUJr1kJr18Jr1UAry3JF17X3WDKr48JFy7Jw47Zryjgr1UWr1qgr1UJr48Xr15
-	Ar1UWr9rZr47JFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
-	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j5xhLUUUUU=
+Mime-Version: 1.0
+References: <2ecf6529-5408-4621-becc-2f30e1039079@proton.me>
+X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
+Message-ID: <20240322101803.400735-1-aliceryhl@google.com>
+Subject: Re: [PATCH v2] rust: time: add Ktime
+From: Alice Ryhl <aliceryhl@google.com>
+To: benno.lossin@proton.me
+Cc: a.hindborg@samsung.com, alex.gaynor@gmail.com, aliceryhl@google.com, 
+	bjorn3_gh@protonmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
+	jstultz@google.com, linux-kernel@vger.kernel.org, ojeda@kernel.org, 
+	rust-for-linux@vger.kernel.org, sboyd@kernel.org, tglx@linutronix.de, 
+	wedsonaf@gmail.com
+Content-Type: text/plain; charset="utf-8"
 
-Hi,Binbin
-
-Thank you for pointing out the problems in this patch. We will adjust 
-the scheme after the test
-
-Thanks again
-
-在 2024/3/21 下午2:10, Binbin Zhou 写道:
-> Hi Tianyang:
->
-> On 2024/3/16 16:21, Tianyang Zhang wrote:
->> From: Baoqi Zhang <zhangbaoqi@loongson.cn>
->>
->> This patch remove the fixed mapping between the 7A interrupt source
->> and the HT interrupt vector, and replaced it with a dynamically
->> allocated approach.
->>
->> We introduce a mapping table in struct pch_pic, where each interrupt
->> source will allocate an index as a 'hwirq' from the table in the order
->> of application and set table value as interrupt source number. This 
->> hwirq
->> will be configured as its vector in the HT interrupt controller. For an
->> interrupt source, the validity period of the obtained hwirq will last 
->> until
->> the system reset
->>
->> This will be more conducive to fully utilizing existing vectors to
->> support more devices
->>
->> Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
->> Signed-off-by: Biao Dong <dongbiao@loongson.cn>
->> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
->> ---
->>   drivers/irqchip/irq-loongson-pch-pic.c | 77 ++++++++++++++++++++------
->>   1 file changed, 59 insertions(+), 18 deletions(-)
->>
->> diff --git a/drivers/irqchip/irq-loongson-pch-pic.c 
->> b/drivers/irqchip/irq-loongson-pch-pic.c
->> index 63db8e2172e0..f17187641154 100644
->> --- a/drivers/irqchip/irq-loongson-pch-pic.c
->> +++ b/drivers/irqchip/irq-loongson-pch-pic.c
->> @@ -33,7 +33,7 @@
->>   #define PIC_COUNT        (PIC_COUNT_PER_REG * PIC_REG_COUNT)
->>   #define PIC_REG_IDX(irq_id)    ((irq_id) / PIC_COUNT_PER_REG)
->>   #define PIC_REG_BIT(irq_id)    ((irq_id) % PIC_COUNT_PER_REG)
->> -
->> +#define PIC_UNDEF_VECTOR    255
->>   static int nr_pics;
->>     struct pch_pic {
->> @@ -46,12 +46,19 @@ struct pch_pic {
->>       u32            saved_vec_en[PIC_REG_COUNT];
->>       u32            saved_vec_pol[PIC_REG_COUNT];
->>       u32            saved_vec_edge[PIC_REG_COUNT];
->> +    u8            table[PIC_COUNT];
->> +    int            inuse;
->>   };
->>     static struct pch_pic *pch_pic_priv[MAX_IO_PICS];
->>     struct fwnode_handle *pch_pic_handle[MAX_IO_PICS];
->>   +static inline u8 hwirq_to_bit(struct pch_pic *priv, int hirq)
->> +{
->> +    return priv->table[hirq];
+Benno Lossin <benno.lossin@proton.me> wrote:
+> On 3/22/24 09:59, Alice Ryhl wrote:
+>> +/// Returns the number of milliseconds between two ktimes.
+>> +#[inline]
+>> +pub fn ktime_ms_delta(later: Ktime, earlier: Ktime) -> i64 {
+>> +    (later - earlier).to_ms()
 >> +}
->> +
->>   static void pch_pic_bitset(struct pch_pic *priv, int offset, int bit)
->>   {
->>       u32 reg;
->> @@ -80,45 +87,47 @@ static void pch_pic_mask_irq(struct irq_data *d)
->>   {
->>       struct pch_pic *priv = irq_data_get_irq_chip_data(d);
->>   -    pch_pic_bitset(priv, PCH_PIC_MASK, d->hwirq);
->> +    pch_pic_bitset(priv, PCH_PIC_MASK, hwirq_to_bit(priv, d->hwirq));
->>       irq_chip_mask_parent(d);
->>   }
->>     static void pch_pic_unmask_irq(struct irq_data *d)
->>   {
->>       struct pch_pic *priv = irq_data_get_irq_chip_data(d);
->> +    int bit = hwirq_to_bit(priv, d->hwirq);
->>   -    writel(BIT(PIC_REG_BIT(d->hwirq)),
->> -            priv->base + PCH_PIC_CLR + PIC_REG_IDX(d->hwirq) * 4);
->> +    writel(BIT(PIC_REG_BIT(bit)),
->> +            priv->base + PCH_PIC_CLR + PIC_REG_IDX(bit) * 4);
->>         irq_chip_unmask_parent(d);
->> -    pch_pic_bitclr(priv, PCH_PIC_MASK, d->hwirq);
->> +    pch_pic_bitclr(priv, PCH_PIC_MASK, bit);
->>   }
->>     static int pch_pic_set_type(struct irq_data *d, unsigned int type)
->>   {
->>       struct pch_pic *priv = irq_data_get_irq_chip_data(d);
->> +    int bit = hwirq_to_bit(priv, d->hwirq);
->>       int ret = 0;
->>         switch (type) {
->>       case IRQ_TYPE_EDGE_RISING:
->> -        pch_pic_bitset(priv, PCH_PIC_EDGE, d->hwirq);
->> -        pch_pic_bitclr(priv, PCH_PIC_POL, d->hwirq);
->> +        pch_pic_bitset(priv, PCH_PIC_EDGE, bit);
->> +        pch_pic_bitclr(priv, PCH_PIC_POL, bit);
->>           irq_set_handler_locked(d, handle_edge_irq);
->>           break;
->>       case IRQ_TYPE_EDGE_FALLING:
->> -        pch_pic_bitset(priv, PCH_PIC_EDGE, d->hwirq);
->> -        pch_pic_bitset(priv, PCH_PIC_POL, d->hwirq);
->> +        pch_pic_bitset(priv, PCH_PIC_EDGE, bit);
->> +        pch_pic_bitset(priv, PCH_PIC_POL, bit);
->>           irq_set_handler_locked(d, handle_edge_irq);
->>           break;
->>       case IRQ_TYPE_LEVEL_HIGH:
->> -        pch_pic_bitclr(priv, PCH_PIC_EDGE, d->hwirq);
->> -        pch_pic_bitclr(priv, PCH_PIC_POL, d->hwirq);
->> +        pch_pic_bitclr(priv, PCH_PIC_EDGE, bit);
->> +        pch_pic_bitclr(priv, PCH_PIC_POL, bit);
->>           irq_set_handler_locked(d, handle_level_irq);
->>           break;
->>       case IRQ_TYPE_LEVEL_LOW:
->> -        pch_pic_bitclr(priv, PCH_PIC_EDGE, d->hwirq);
->> -        pch_pic_bitset(priv, PCH_PIC_POL, d->hwirq);
->> +        pch_pic_bitclr(priv, PCH_PIC_EDGE, bit);
->> +        pch_pic_bitset(priv, PCH_PIC_POL, bit);
->>           irq_set_handler_locked(d, handle_level_irq);
->>           break;
->>       default:
->> @@ -133,11 +142,12 @@ static void pch_pic_ack_irq(struct irq_data *d)
->>   {
->>       unsigned int reg;
->>       struct pch_pic *priv = irq_data_get_irq_chip_data(d);
->> +    int bit = hwirq_to_bit(priv, d->hwirq);
->>   -    reg = readl(priv->base + PCH_PIC_EDGE + PIC_REG_IDX(d->hwirq) 
->> * 4);
->> -    if (reg & BIT(PIC_REG_BIT(d->hwirq))) {
->> -        writel(BIT(PIC_REG_BIT(d->hwirq)),
->> -            priv->base + PCH_PIC_CLR + PIC_REG_IDX(d->hwirq) * 4);
->> +    reg = readl(priv->base + PCH_PIC_EDGE + PIC_REG_IDX(bit) * 4);
->> +    if (reg & BIT(PIC_REG_BIT(bit))) {
->> +        writel(BIT(PIC_REG_BIT(bit)),
->> +            priv->base + PCH_PIC_CLR + PIC_REG_IDX(bit) * 4);
->>       }
->>       irq_chip_ack_parent(d);
->>   }
->> @@ -159,6 +169,8 @@ static int pch_pic_domain_translate(struct 
->> irq_domain *d,
->>   {
->>       struct pch_pic *priv = d->host_data;
->>       struct device_node *of_node = to_of_node(fwspec->fwnode);
->> +    unsigned long flags;
->> +    int i;
->>         if (of_node) {
->>           if (fwspec->param_count < 2)
->> @@ -171,6 +183,27 @@ static int pch_pic_domain_translate(struct 
->> irq_domain *d,
->>               return -EINVAL;
->>             *hwirq = fwspec->param[0] - priv->gsi_base;
->> +
->> +        raw_spin_lock_irqsave(&priv->pic_lock, flags);
->> +        /* Check pic-table to confirm if the hwirq has been assigned */
->> +        for (i = 0; i < priv->inuse; i++) {
->> +            if (priv->table[i] == *hwirq) {
->> +                *hwirq = i;
->> +                break;
->> +            }
->> +        }
->> +        if (i == priv->inuse) {
->> +            /* Assign a new hwirq in pic-table */
->> +            if (priv->inuse >= PIC_COUNT) {
->> +                pr_err("pch-pic domain has no free vectors\n");
->> + raw_spin_unlock_irqrestore(&priv->pic_lock, flags);
->> +                return -EINVAL;
->> +            }
->> +            priv->table[priv->inuse] = *hwirq;
->> +            *hwirq = priv->inuse++;
->> +        }
->> +        raw_spin_unlock_irqrestore(&priv->pic_lock, flags);
->> +
->
-> The patch fails the test on LS2K2000+FDT and does not boot the system 
-> properly.
->
-> The reason the test fails is that this part of the priv->table[] 
-> initialization is needed for FDT as well, so I think it needs to be 
-> put after the whole judgment, at the end of the function.
->
->
-> Thanks.
->
-> Binbin
->
->>           if (fwspec->param_count > 1)
->>               *type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
->>           else
->> @@ -194,6 +227,9 @@ static int pch_pic_alloc(struct irq_domain 
->> *domain, unsigned int virq,
->>       if (err)
->>           return err;
->>   +    /* Write vector ID */
->> +    writeb(priv->ht_vec_base + hwirq, priv->base + 
->> PCH_INT_HTVEC(hwirq_to_bit(priv, hwirq)));
->> +
->>       parent_fwspec.fwnode = domain->parent->fwnode;
->>       parent_fwspec.param_count = 1;
->>       parent_fwspec.param[0] = hwirq + priv->ht_vec_base;
->> @@ -222,7 +258,7 @@ static void pch_pic_reset(struct pch_pic *priv)
->>         for (i = 0; i < PIC_COUNT; i++) {
->>           /* Write vector ID */
->> -        writeb(priv->ht_vec_base + i, priv->base + PCH_INT_HTVEC(i));
->> +        writeb(priv->ht_vec_base + i, priv->base + 
->> PCH_INT_HTVEC(hwirq_to_bit(priv, i)));
->>           /* Hardcode route to HT0 Lo */
->>           writeb(1, priv->base + PCH_INT_ROUTE(i));
->>       }
->> @@ -284,6 +320,7 @@ static int pch_pic_init(phys_addr_t addr, 
->> unsigned long size, int vec_base,
->>               u32 gsi_base)
->>   {
->>       struct pch_pic *priv;
->> +    int i;
->>         priv = kzalloc(sizeof(*priv), GFP_KERNEL);
->>       if (!priv)
->> @@ -294,6 +331,10 @@ static int pch_pic_init(phys_addr_t addr, 
->> unsigned long size, int vec_base,
->>       if (!priv->base)
->>           goto free_priv;
->>   +    priv->inuse = 0;
->> +    for (i = 0; i < PIC_COUNT; i++)
->> +        priv->table[i] = PIC_UNDEF_VECTOR;
->> +
->>       priv->ht_vec_base = vec_base;
->>       priv->vec_count = ((readq(priv->base) >> 48) & 0xff) + 1;
->>       priv->gsi_base = gsi_base;
->>
+> 
+> Is there a reason for this function being standalone?
 
+I think for a Rust time API, we should make one of two choices:
+
+* Match the C ktime_t API as closely as possible.
+* Match the Rust standard library std::time API as closely as possible.
+
+This patchset has made the former choice, and that is why I went with
+this design.
+
+In the future it could make sense to add a more "Rusty" API, but even
+then I think it could make sense to have both and implement the latter
+in terms of the former. That way, only the API that closely matches the
+C ktime_t API needs to concern itself with unsafely calling into C.
+
+Alice
