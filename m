@@ -1,43 +1,43 @@
 Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D2963518
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 13:27:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1353364A89
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 13:27:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711114045; cv=none; b=HKnpeIG9pKaVYJ/GJZFpXjLQFks2wH0lbCG9rqk0MgPpu2mNPm1opcHXbUuYE3emC9O+mNUsVPbaeQLk41S3MGB5jd8Jh3AyKvEZEJ1ujzNjt45f5GCn9gXSDWnra8UaVkaMnz8LQFWYUntq+Ju6YZss7MnCgGrD0IrmGtXbXpU=
+	t=1711114046; cv=none; b=kDiDpqSi7bWYTfyjN+4eklMiV8ywraf0zvDxhhPpThPVtIlQjPEM3xxu/5VCmI/AHMuWeLJzzue3pJJlD9Mb3gIMapJsIvHkqayn0fCJwM+FUw/d0wi7nl3sdmdYgVWYBOJSoW3a4ip/5vtmePM4mzrD0chVBskfgJFjQgGmbgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711114045; c=relaxed/simple;
-	bh=VMxSxsDrMIWOAp623V5jvSZ4cL+pryV8GSIsKQDn4HM=;
+	s=arc-20240116; t=1711114046; c=relaxed/simple;
+	bh=JopqC1CUA53KwbARMzk2PCnsUdhS27WGHgIgrl130yc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DCY9RPQIYESGuBcUzj7eaY4WYi78Da4hfCZa20lcS63m/ZrBCzpgUf7/4LA3/pMHgz8qBKT36/O0DAb/Ao2mrKRn8QYL34nWhcNhrMMvU4KKV5Sxl2BHId8GXDplUDsD9moNcTBK0LffIWWFgFkpPbgKaW8gG9B43f9XLVOGL/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=IunH1A6N; arc=none smtp.client-ip=194.117.254.33
+	 MIME-Version; b=C8c+r1cFpfYIb3LLvSEWtSltkqB8jy304YUXYu2QrvEPSHTH4hNCD6l2RDh42ThdbuHNWNMJRSM4HTbwP0+31VA7cMxx0Rua2WTCCCcDo56KFX1/mrFGzlcIFYyICW3NsvNbzDRmupaAri8Jgi6anr/oynTgI4dFFVHyP3y6u3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=lmVKV8Fv; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="IunH1A6N"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="lmVKV8Fv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
 	:in-reply-to:references:mime-version:content-transfer-encoding;
-	 s=k1; bh=kmFZAXTAUJkEHBINWtZi5gZBA3xVRr2hXYbcafka3So=; b=IunH1A
-	6NiWhsejL+KPndU6242octjCHvXtl9fAgeq7JQxjHvdjeK04DE+0Y8aBV4Pas+yt
-	TxqKF5wS4gv0rHrtUCzzW6zdxAdBVF+ssRd1hRo9OfUV09sOVEXs9dNPdMH4Z1aU
-	G7XzV4Dqc2NmEwqM1Y5RoANQY9m9mplnos8IzAAbRfcYQkF8/BTIWZyyirnQeen+
-	2X8pIWBGJZWwprrEfFu1P+CUdzS6S0JlY7tRucaiZmPO70kVLmOGMPXFNAvAHOCX
-	gefZEEaqNMANXn5f4EOp0WSa4ZwKjL5nGwenat/QrV6EJmOSi42tD37Rt4mSAgeI
-	Wwk4u6Ubdy/j1Euw==
-Received: (qmail 3871800 invoked from network); 22 Mar 2024 14:27:01 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Mar 2024 14:27:01 +0100
-X-UD-Smtp-Session: l3s3148p1@lDxuxz8UGJRehhtF
+	 s=k1; bh=83ypbEc9zEl6mc8ZY/BhWqheV6O8ZhghdvuHQYn8SGw=; b=lmVKV8
+	Fv7W7PwTQKacO0Czh2T3OLVPheHj/dZG/Y1qnKYwxa+4V76ajiIV71HpaXJ8APPY
+	Vlz08qZ7Hrq5Zmycyj0/3901kolybUfUlsOb3nXVtE/5Ej7I7bXefHcJPUMjFoTo
+	ujOkZ0RDCSk4Xt1FUM61EWbUHf0BlE4y4OBKth00hiMNtBq44ciECxAODUQYs8Q8
+	0aKxYcdtk/pjE77HyOIUlir79KMbuTBazs2VxKdkdceZVpug5WAapNT//cdb2Xji
+	Xn4nUaaMUTws28u+fwr8JfF0SILwDB/p+8Nc39rfXupgJiw0VcMjDmocurJ4DDjB
+	9j+Z0kSvivo91URg==
+Received: (qmail 3871861 invoked from network); 22 Mar 2024 14:27:03 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Mar 2024 14:27:03 +0100
+X-UD-Smtp-Session: l3s3148p1@CtiFxz8UMJRehhtF
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-i2c@vger.kernel.org
 Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Jean Delvare <jdelvare@suse.com>,
 	Andi Shyti <andi.shyti@kernel.org>,
-	linux-renesas-soc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 49/64] i2c: sh_mobile: reword according to newest specification
-Date: Fri, 22 Mar 2024 14:25:42 +0100
-Message-ID: <20240322132619.6389-50-wsa+renesas@sang-engineering.com>
+Subject: [PATCH 51/64] i2c: sis630: reword according to newest specification
+Date: Fri, 22 Mar 2024 14:25:44 +0100
+Message-ID: <20240322132619.6389-52-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
 References: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
@@ -56,60 +56,64 @@ entity ("client") and a local one ("target").
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- drivers/i2c/busses/i2c-sh_mobile.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/i2c/busses/i2c-sis630.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-sh_mobile.c b/drivers/i2c/busses/i2c-sh_mobile.c
-index c65ac3d7eadc..276a036d8ef0 100644
---- a/drivers/i2c/busses/i2c-sh_mobile.c
-+++ b/drivers/i2c/busses/i2c-sh_mobile.c
-@@ -53,7 +53,7 @@
- /*                                                                          */
- /* Receive operation:                                                       */
- /*                                                                          */
--/* 0 byte receive - not supported since slave may hold SDA low              */
-+/* 0 byte receive - not supported since client may hold SDA low             */
- /*                                                                          */
- /* 1 byte receive       [TX] | [RX]                                         */
- /* BUS:     S     A8     ACK | D8(1)   ACK   P(*)                           */
-@@ -93,7 +93,7 @@
- /*         _______________________________________________                  */
- /* BUSY __/                                               \_                */
- /*                                                                          */
--/* (*) The STOP condition is only sent by the master at the end of the last */
-+/* (*) The STOP condition is only sent by the host at the end of the last   */
- /* I2C message or if the I2C_M_STOP flag is set. Similarly, the BUSY bit is */
- /* only cleared after the STOP condition, so, between messages we have to   */
- /* poll for the DTE bit.                                                    */
-@@ -495,7 +495,7 @@ static struct dma_chan *sh_mobile_i2c_request_dma_chan(struct device *dev,
+diff --git a/drivers/i2c/busses/i2c-sis630.c b/drivers/i2c/busses/i2c-sis630.c
+index 3505cf29cedd..7910ba2fce15 100644
+--- a/drivers/i2c/busses/i2c-sis630.c
++++ b/drivers/i2c/busses/i2c-sis630.c
+@@ -18,7 +18,7 @@
+ 	+------------------------+--------------------+-------------------+
+ 	| Clock                  | 14kHz/56kHz        | 55.56kHz/27.78kHz |
+ 	| SMBus registers offset | 0x80               | 0xE0              |
+-	| SMB_CNT                | Bit 1 = Slave Busy | Bit 1 = Bus probe |
++	| SMB_CNT                | Bit 1 = Client Busy| Bit 1 = Bus probe |
+ 	|         (not used yet) | Bit 3 is reserved  | Bit 3 = Last byte |
+ 	| SMB_PCOUNT		 | Offset + 0x06      | Offset + 0x14     |
+ 	| SMB_COUNT              | 4:0 bits           | 5:0 bits          |
+@@ -56,8 +56,8 @@
  
- 	ret = dmaengine_slave_config(chan, &cfg);
- 	if (ret) {
--		dev_dbg(dev, "slave_config failed for %s (%d)\n", chan_name, ret);
-+		dev_dbg(dev, "DMA config failed for %s (%d)\n", chan_name, ret);
- 		dma_release_channel(chan);
- 		return ERR_PTR(ret);
- 	}
-@@ -540,7 +540,7 @@ static void sh_mobile_i2c_xfer_dma(struct sh_mobile_i2c_data *pd)
- 					 read ? DMA_DEV_TO_MEM : DMA_MEM_TO_DEV,
- 					 DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
- 	if (!txdesc) {
--		dev_dbg(pd->dev, "dma prep slave sg failed, using PIO\n");
-+		dev_dbg(pd->dev, "dma prep sg failed, using PIO\n");
- 		sh_mobile_i2c_cleanup_dma(pd, false);
- 		return;
- 	}
-@@ -740,8 +740,8 @@ static u32 sh_mobile_i2c_func(struct i2c_adapter *adapter)
+ /* SMB_CNT register */
+ #define MSTO_EN			0x40	/* Host Master Timeout Enable */
+-#define SMBCLK_SEL		0x20	/* Host master clock selection */
+-#define SMB_PROBE		0x02	/* Bus Probe/Slave busy */
++#define SMBCLK_SEL		0x20	/* Host clock selection */
++#define SMB_PROBE		0x02	/* Bus Probe/Client busy */
+ #define SMB_HOSTBUSY		0x01	/* Host Busy */
  
- static const struct i2c_algorithm sh_mobile_i2c_algorithm = {
- 	.functionality = sh_mobile_i2c_func,
--	.master_xfer = sh_mobile_i2c_xfer,
--	.master_xfer_atomic = sh_mobile_i2c_xfer_atomic,
-+	.xfer = sh_mobile_i2c_xfer,
-+	.xfer_atomic = sh_mobile_i2c_xfer_atomic,
- };
+ /* SMBHOST_CNT register */
+@@ -93,7 +93,7 @@ static bool high_clock;
+ static bool force;
+ module_param(high_clock, bool, 0);
+ MODULE_PARM_DESC(high_clock,
+-	"Set Host Master Clock to 56KHz (default 14KHz) (SIS630/730 only).");
++	"Set Host Clock to 56KHz (default 14KHz) (SIS630/730 only).");
+ module_param(force, bool, 0);
+ MODULE_PARM_DESC(force, "Forcibly enable the SIS630. DANGEROUS!");
  
- static const struct i2c_adapter_quirks sh_mobile_i2c_quirks = {
+@@ -144,8 +144,7 @@ static int sis630_transaction_start(struct i2c_adapter *adap, int size,
+ 
+ 	dev_dbg(&adap->dev, "saved clock 0x%02x\n", *oldclock);
+ 
+-	/* disable timeout interrupt,
+-	 * set Host Master Clock to 56KHz if requested */
++	/* disable timeout interrupt, set Host Clock to 56KHz if requested */
+ 	if (high_clock)
+ 		sis630_write(SMB_CNT, SMBCLK_SEL);
+ 	else
+@@ -201,10 +200,7 @@ static void sis630_transaction_end(struct i2c_adapter *adap, u8 oldclock)
+ 	dev_dbg(&adap->dev,
+ 		"SMB_CNT before clock restore 0x%02x\n", sis630_read(SMB_CNT));
+ 
+-	/*
+-	 * restore old Host Master Clock if high_clock is set
+-	 * and oldclock was not 56KHz
+-	 */
++	/* restore old Host Clock if high_clock is set and oldclock was not 56KHz */
+ 	if (high_clock && !(oldclock & SMBCLK_SEL))
+ 		sis630_write(SMB_CNT, sis630_read(SMB_CNT) & ~SMBCLK_SEL);
+ 
 -- 
 2.43.0
 
