@@ -1,167 +1,119 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68BE645C0B;
-	Fri, 22 Mar 2024 13:01:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA8952D78A;
+	Fri, 22 Mar 2024 13:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711112500; cv=none; b=S08zRE7F6/Tb3fV5YZxxWpufmpgbDLpu4fHasKQyRZXkhuNgdUYGdpJIbY/x3DnLQc+6c/4TXkBLSpcm/HDmyiYWvjk/QkoWWCqcRxYT+heLkjq5wu3wNeCPo0MLMfUxX3O5G5zshDYch10twaxkDGGlbkNiscCtnY5HByB0HUk=
+	t=1711112674; cv=none; b=XieoSrNXLURkay3Ni0KhvvuLUJl6iVOGeW8sy9YCSdzJZKkK/p9LtR9l+Vxh1QTiSfS5E9aI1uKUDFRUWkcRBXnO7UOpTqSG+f5F1vXi79Tn6EfaeBwXBRTi+zE/71nKnIwVyGKssr5tfAcTYkiRxx6/MU0RaoNX3OrH2undZg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711112500; c=relaxed/simple;
-	bh=57Gnr1GDblaUtJoGzA33y6XntCYgqswvqSuwFA+G2xk=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=Znt/q8EBx93x2EBI4V6DW4BMfgtBgvgDZ83hxttve0Huyn7DMHFYmvQul1zLcEZCCfFN8sXA4px0dp0lpw/eRvvKxnhvrgfc5k+qTx4RB6NPnpvaJNFpAtTa0LmEw56Vn5ireWofUOyjD87P7uCY4DHfb0dhTfkCUS0SwhUA4Vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=GmDq6eJD; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="GmDq6eJD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1711112449; x=1711717249; i=markus.elfring@web.de;
-	bh=j5W+zIrNrwXHwy8i6ouAXhosP3kZXQBL5lb5KfWqjAo=;
-	h=X-UI-Sender-Class:Date:To:Cc:References:Subject:From:
-	 In-Reply-To;
-	b=GmDq6eJDYgPPVb3quJwNngmgZIfK/mGylkG8DG1tBwkw+EOXza0QNOpkNTdHHw6q
-	 m2NrpRltTR/uuy4AT30Z3Zxy/8TtUwRwrNDkw7jUOGABVmzFe5YUj9/CbIvTCKyEm
-	 UbFWmOzF8t1sBIKMzWbsemMVu/xeKmHK35wlOSQ/3ktdfrTTNOgYXkiFnR3TtJSOI
-	 veliHEpzy4pXcnUhWlWPLRdxl+hnGbzrN9MEKhaLo1OmPNibdQLvX4yTLgDLwyzL+
-	 freHk7CPcsYWKtrJPdpJjYrcZuMTfp2hHHh6zV9bf2H6376kQ0ADmRgtsrHosvuQp
-	 RwUIAHpaWm3asve6Ag==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.90.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MgRMB-1r6vNe1ovH-00ht8U; Fri, 22
- Mar 2024 14:00:49 +0100
-Message-ID: <8a1adff2-eb83-4dec-b8d0-1e523245de65@web.de>
-Date: Fri, 22 Mar 2024 14:00:42 +0100
+	s=arc-20240116; t=1711112674; c=relaxed/simple;
+	bh=36bOz8nNhZvOZ2vHdFujkr9NlYEM+bjWYl7mjNGjqPs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RYNU8PIvFFTI5k+gCiocnvHRz3C3rMy/P886vvChQEDz9LQXNk1aoAVTYDxu+0SutaNoH+UKH71UJwr3QsOeryyEB8W5J1WDIk4ooTOFOiaejc/YEAf2zzZ2Vc5Cb5Fbu0Fek4IYjjkCxQiEZIE58Ax3HCRa/yStCpAAX2TVoYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 297911007;
+	Fri, 22 Mar 2024 06:05:04 -0700 (PDT)
+Received: from e126817.cambridge.arm.com (e126817.cambridge.arm.com [10.2.3.5])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4B0F93F762;
+	Fri, 22 Mar 2024 06:04:28 -0700 (PDT)
+From: Ben Gainey <ben.gainey@arm.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: james.clark@arm.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ben Gainey <ben.gainey@arm.com>
+Subject: [PATCH v3 0/4] perf: Support PERF_SAMPLE_READ with inherit_stat
+Date: Fri, 22 Mar 2024 13:04:10 +0000
+Message-ID: <20240322130414.70186-1-ben.gainey@arm.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Dan Williams <dan.j.williams@intel.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Julia Lawall <Julia.Lawall@inria.fr>, Lukas Wunner <lukas.wunner@intel.com>
-References: <171097196970.1011049.9726486429680041876.stgit@dwillia2-xfh.jf.intel.com>
-Subject: Re: [PATCH] cleanup: Add usage and style documentation
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <171097196970.1011049.9726486429680041876.stgit@dwillia2-xfh.jf.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:UkSGC+4qo1n4XxoQDl15NnuOy58e3sPzB2i6UlqqDfSfdW9U9JQ
- 35gaoqp9m504/U5DfPHcqvKGeGm3kKpN378SPB3hEpNClCey/Yrbp1tFLLlJH3hMWbSufs3
- ayuqzVHb0ioFxaqpyaaPMkJvuT7nZwJiYsRptUuE3FAmNDk8oRMghoIKKQSVXVGn0gDMGFH
- EJQ8MfXNN+4Q01lcJzLpQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:sDd5Oswr9wg=;oUpHLGsbXWg5ca5bC8NBGfysCrf
- DFv6hUPq8S4H/XwQpwPiQuK4HLa3C2XsqohEPgF8DqzZ2fDNQxfq5ZjtnTiRXOh+cIfSx0si5
- I8p6NBAwC4kK18ez+vuj4QBiYZaedbKGinfljFLez8lz3PFDPoXvsJZ9FhWQUIY8x0KLDejZj
- 9SYVMpL7Hy2KSi85kGlwTXLj+OwNqHVdoBcZHVwXjiXUQLCFI9WqvY3zmPxKgYC3x1ql/1DeO
- 6iXHJ4zA7rzyBFgnZwFhA+sloNmWRsp7UQr5yT9HUFot1v3W//MS9grpfZoKs17jL7RM+7mqq
- VTJczbJTQY5/TS/miewAlPcLmi2qur+NZtXsdGMrOLgkpNuuwpVW5CylSlyQHwxHAl5OQSC0n
- hE/yVcRxZ+iIH1RMl6m9TNwEBvd1uvg4XvMbDaxPCLLbSQjp62otI96yLupwQNyHkvyOFlH6m
- 0kCUa+/bWDP8a8C72EV5qelNJEE3zux7FKyL6bWbZVjo6zs8T3HP0h9fmKjtnBSms3Jp6Lpui
- QmlqSE+Rae1sJUDalnx1KDcXNGI+N1D/aGvmytshJ1PgS4VRXj/hwjyrINOLgkGHuD7LuSscy
- jDoL363DGW2A1q5YWiEPzqKg0W7zBMepvkloBNElY5oIHN/GZNqfAVf5dhTyXqhWtbLLpbnHc
- 4f98L+PSD4h17gPOZusT1LB3gQCsD+MYLkKzIOfkNOTMpkpqoIccy7Xu8ao+FYHduF5742Ut/
- roZZ91Y7fK8Bk2rKmukct+SBsyqR+6lB8+CB5nRb7ybqmJXj0S33GNNL8NMNtwh15WRT74dZ9
- ak5aJWDVHTUL0WWtPbmSRaM3uFSuKvoFJUegBWNPntwQk=
+Content-Transfer-Encoding: 8bit
 
-=E2=80=A6
-> +++ b/include/linux/cleanup.h
-> @@ -4,6 +4,118 @@
->
->  #include <linux/compiler.h>
->
-> +/**
-> + * DOC: scope-based cleanup helpers
-> + *
-> + * The "goto error" pattern is notorious for introducing =E2=80=A6
+This change allows events to use PERF_SAMPLE READ with inherit so long 
+as both inherit_stat and PERF_SAMPLE_TID are set.
 
-Will any other label become more helpful for this description approach?
+Currently it is not possible to use PERF_SAMPLE_READ with inherit. This 
+restriction assumes the user is interested in collecting aggregate 
+statistics as per `perf stat`. It prevents a user from collecting 
+per-thread samples using counter groups from a multi-threaded or 
+multi-process application, as with `perf record -e '{....}:S'`. Instead 
+users must use system-wide mode, or forgo the ability to sample counter 
+groups. System-wide mode is often problematic as it requires specific 
+permissions (no CAP_PERFMON / root access), or may lead to capture of 
+significant amounts of extra data from other processes running on the 
+system. 
+
+Perf already supports the ability to collect per-thread counts with 
+`inherit` via the `inherit_stat` flag. This patch changes 
+`perf_event_alloc` relaxing the restriction to combine `inherit` with 
+`PERF_SAMPLE_READ` so that the combination will be allowed so long as 
+`inherit_stat` and `PERF_SAMPLE_TID` are enabled.
+
+In this configuration stream ids (such as may appear in the read_format 
+field of a PERF_RECORD_SAMPLE) are no longer globally unique, rather 
+the pair of (stream id, tid) uniquely identify each event. Tools that 
+rely on this, for example to calculate a delta between samples, would 
+need updating to take this into account. Previously valid event 
+configurations (system-wide, no-inherit and so on) where each stream id 
+is the identifier are unaffected.
 
 
-> + * this tedium and can aid in maintaining FILO (first in last out)
-             =E2=AC=86
-Would an other word be more appropriate here?
+Changes since v2:
+ - Rebase on v6.8
+ - Respond to James Clarke's feedback; fixup some typos and move some
+   repeated checks into a helper macro.
+ - Cleaned up checkpatch lints.
+ - Updated perf test; fixed evsel handling so that existing tests pass
+   and added new tests to cover the new behaviour.
+
+Changes since v1:
+ - Rebase on v6.8-rc1
+ - Fixed value written into sample after child exists.
+ - Modified handling of switch-out so that context with these events
+   take the slow path, so that the per-event/per-thread PMU state is
+   correctly switched.
+ - Modified perf tools to support this mode of operation.
 
 
 
-> + * contraindicates a pattern like the following:
+Ben Gainey (4):
+  perf: Support PERF_SAMPLE_READ with inherit_stat
+  tools/perf: Track where perf_sample_ids need per-thread periods
+  tools/perf: Correctly calculate sample period for inherited
+    SAMPLE_READ values
+  tools/perf: Allow inherit + inherit_stat + PERF_SAMPLE_READ when
+    opening events
 
-I would prefer an other wording approach.
+ include/linux/perf_event.h                    |  1 +
+ kernel/events/core.c                          | 62 ++++++++++----
+ tools/lib/perf/evlist.c                       |  1 +
+ tools/lib/perf/evsel.c                        | 48 +++++++++++
+ tools/lib/perf/include/internal/evsel.h       | 55 ++++++++++++-
+ tools/perf/tests/attr/base-record             |  2 +-
+ tools/perf/tests/attr/base-stat               |  2 +-
+ tools/perf/tests/attr/system-wide-dummy       |  2 +-
+ tools/perf/tests/attr/test-record-dummy-C0    |  2 +-
+ .../test-record-group-sampling-inherit-stat   | 62 ++++++++++++++
+ tools/perf/util/evsel.c                       | 82 ++++++++++++++++++-
+ tools/perf/util/evsel.h                       |  1 +
+ tools/perf/util/session.c                     | 11 ++-
+ 13 files changed, 305 insertions(+), 26 deletions(-)
+ create mode 100644 tools/perf/tests/attr/test-record-group-sampling-inherit-stat
 
+-- 
+2.44.0
 
-> + *	struct pci_dev *dev __free(pci_dev_put) =3D NULL;
-
-Programmers got used to null pointer initialisations.
-
-
-> + * In this case @dev is declared in x-mas tree style in a preamble
-> + * declaration block. That is problematic because it destroys the
-> + * compiler's ability to infer proper unwind order.
-
-Can capabilities be clarified better for the applied compilers?
-
-
->                                                      If other cleanup
-> + * helpers appeared in such a function that depended on @dev being live
-> + * to complete their unwind then using the "struct obj_type *obj
-> + * __free(...) =3D NULL" style is an anti-pattern that potentially caus=
-es
-> + * a use-after-free bug.
-
-I suggest to reconsider such a development concern in more detail.
-
-
-> + *	struct pci_dev *dev __free(pci_dev_put) =3D
-> + *		pci_get_slot(parent, PCI_DEVFN(0, 0));
-> + *
-> + * ...which implies that declaring variables in mid-function scope is
-> + * not only allowed, but expected.
-
-* Is there a need to separate the ellipsis from the subsequent word
-  by a space character?
-
-* You propose a variable definition without specifying extra curly bracket=
-s
-  (for another compound statement / code block).
-  This can work only if an appropriate pointer is returned by the called f=
-unction.
-
-* The involved identifiers can occasionally get longer.
-  Further code layout challenges would need corresponding clarifications.
-  How will the handling of line length concerns evolve?
-
-* I suggest to take another look also at the transformation pattern
-  =E2=80=9CReduce Scope of Variable=E2=80=9D.
-  https://refactoring.com/catalog/reduceScopeOfVariable.html
-
-
-> + * Conversions of existing code to use cleanup helpers should convert
-> + * all resources so that no "goto" unwind statements remain. If not all
-> + * resources are amenable to cleanup then additional refactoring is
-> + * needed to build helper functions, or the function is simply not a
-> + * good candidate for conversion.
-
-* How do you think about to specify any more resource cleanup functions
-  for growing usage of =E2=80=9Csmart pointers=E2=80=9D?
-
-* Would you like to extend the specification of function pairs for
-  improved applications of guard variants?
-
-
-Regards,
-Markus
