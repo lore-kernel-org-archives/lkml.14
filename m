@@ -1,115 +1,146 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0362171BA;
-	Fri, 22 Mar 2024 08:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7FE18AE8;
+	Fri, 22 Mar 2024 08:17:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711095424; cv=none; b=qAWAgvdleKkszq7DCs4KOkSIvCrGv2+LGWUsEFWECEgw8oYA9ty6TlYsGIF6dGQge06moiUGjRq6T/uXHGFXgTG9EVjUOCySpB95vNjZyRMshyRHC/Hp3GaYnz6GN4mrMCxslqoiKvPRtdDfLq106kIAzc5rovomm5Qfg9h5iIo=
+	t=1711095451; cv=none; b=OVHAmvWsr1bH6WSJHEXFOUt/A80pydsIlBRQBOXzKAO6/Tz+HPuOvVcqRv0OAhlnwQxjzkSy+LQVAQXXwu4vFK35eVNdfkXDXlybjB+ZzP/CPfqFQgLZ1B2L6Q1IWW56SBvulOy5R84F+rsxA2HQCrR6thiQ2EI6T+b6S4hG1ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711095424; c=relaxed/simple;
-	bh=G7RBzwIgb5QiL9kTtpqRRxwj3m/Y/RELefnFYmC61xA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fG6rCTrUJ9utzzq9gZKYm04POCK2KZA3ZeAoVDGSaYdqAm0COfs9H43o2EcPZuSmIeTkZ4we3C4PmzznS1BriggF042pfRpDTOSezLxtEDS7oNAH1CpNX4ljgVMDFCN211s6XoHFOnMLUUlj+9qUGO2HfmwDWtZgNCtx5jWpWzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=JuGtM0tf; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="JuGtM0tf"
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 42M8GG9e3346191
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Fri, 22 Mar 2024 01:16:20 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 42M8GG9e3346191
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024031401; t=1711095381;
-	bh=k7eKfOcnuljC+WdHZ/WvG4Vv4XD7QPRuthF5whrgwF8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=JuGtM0tfu2fMqhIFFArB2uZWF+01NrS3nd8DhPk1sXKePwN4vKwJm70aIdLap8sMt
-	 bkSNerFhQQ257nyuye8Hd7DP+r2vcORa1bihR1bPrvDALT+J0KqxlXfg3hMFq3O4Fn
-	 t1ynGTKCsGGFMh9bW0TCO/Q/8aeRhcN8ukr86ksHcMHFWq5eCvQVbXSDmR6tc8AjDE
-	 TvuAclOnO93GMlohYvihnxb4fYZGdocn71wWdH6CqZXO9bISwZKIueiEhP33jCXTI/
-	 bYTu7XZjgnuBvcECdB72tegow3CsDLVhb47IYC65XMLvkT7rYAX6zhyjMzNhuM8DP4
-	 gh3QA90BSWvWA==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-arch@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        jgross@suse.com, boris.ostrovsky@oracle.com, arnd@arndb.de
-Subject: [PATCH v3 1/1] x86: Rename __{start,end}_init_task to __{start,end}_init_stack
-Date: Fri, 22 Mar 2024 01:16:16 -0700
-Message-ID: <20240322081616.3346181-1-xin@zytor.com>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1711095451; c=relaxed/simple;
+	bh=s4XNSovHtSMoBIu/QGtMEdY/hgRXDsNSpZP95H+CZ9A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nJMC3dm660GoYjTYurfD09Qcp3e3koMd0FXVHB8QzGZgF8bUnMl2xyHfIPnXqSgo2ykq1q71g7eMgGx9eN38JCpRT11PNRr2K+Q/w18Z7lzLVeu1L3ZEWADMtBu4tHQ6uuJmCyKnU4DaSLZEnatSfc0ZdXZtswko0xTs26ATwQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4V1FYV2XJKz4f3jYJ;
+	Fri, 22 Mar 2024 16:17:18 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 664211A0B2D;
+	Fri, 22 Mar 2024 16:17:24 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgAX6RGRPv1lh7rgHg--.49644S4;
+	Fri, 22 Mar 2024 16:17:23 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: song@kernel.org,
+	logang@deltatee.com,
+	dan@danm.net,
+	junxiao.bi@oracle.com,
+	xni@redhat.com
+Cc: linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH] md/raid5: fix deadlock that raid5d() wait for itself to clear MD_SB_CHANGE_PENDING
+Date: Fri, 22 Mar 2024 16:10:05 +0800
+Message-Id: <20240322081005.1112401-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAX6RGRPv1lh7rgHg--.49644S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxZFy5uFykAw1kWF4kAr1rCrg_yoW5WFW8pr
+	Z3ZFsIgrWUGrykua1DCa4UWFWjvF9F9rWjqrW7K3WkZ3WIvrWSq34rArWDtrykAFZYvFWq
+	q3W5GrnxXw18u3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v2
+	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0J
+	UdHUDUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-The stack of a task has been separated from the memory of a task_struct
-struture for a long time on x86, as a result __{start,end}_init_task no
-longer mark the start and end of the init_task structure, but its stack
-only.
+From: Yu Kuai <yukuai3@huawei.com>
 
-Rename __{start,end}_init_task to __{start,end}_init_stack.
+Xiao reported that lvm2 test lvconvert-raid-takeover.sh can hang with
+small possibility, the root cause is exactly the same as commit
+bed9e27baf52 ("Revert "md/raid5: Wait for MD_SB_CHANGE_PENDING in raid5d"")
 
-Note other architectures are not affected because __{start,end}_init_task
-are used on x86 only.
+However, Dan reported another hang after that, and junxiao investigated
+the problem and found out that this is caused by plugged bio can't issue
+from raid5d().
 
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+Current implementation in raid5d() has a weird dependence:
+
+1) md_check_recovery() from raid5d() must hold 'reconfig_mutex' to clear
+   MD_SB_CHANGE_PENDING;
+2) raid5d() handles IO in a deadloop, until all IO are issued;
+3) IO from raid5d() must wait for MD_SB_CHANGE_PENDING to be cleared;
+
+This behaviour is introduce before v2.6, and for consequence, if other
+context hold 'reconfig_mutex', and md_check_recovery() can't update
+super_block, then raid5d() will waste one cpu 100% by the deadloop, until
+'reconfig_mutex' is released.
+
+Refer to the implementation from raid1 and raid10, fix this problem by
+skipping issue IO if MD_SB_CHANGE_PENDING is still set after
+md_check_recovery(), daemon thread will be woken up when 'reconfig_mutex'
+is released. Meanwhile, the hang problem will be fixed as well.
+
+Fixes: 5e2cf333b7bd ("md/raid5: Wait for MD_SB_CHANGE_PENDING in raid5d")
+Reported-and-tested-by: Dan Moulding <dan@danm.net>
+Closes: https://lore.kernel.org/all/20240123005700.9302-1-dan@danm.net/
+Investigated-by: Junxiao Bi <junxiao.bi@oracle.com>
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
+ drivers/md/raid5.c | 15 +++------------
+ 1 file changed, 3 insertions(+), 12 deletions(-)
 
-Change since v2:
-* Rebase to the latest tip master branch.
-
-Change since v1:
-* Revert an accident insane change, init_task to init_stack (Jürgen Groß).
----
- arch/x86/kernel/vmlinux.lds.S     | 2 +-
- include/asm-generic/vmlinux.lds.h | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index d430880175f2..3509afc6a672 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -168,7 +168,7 @@ SECTIONS
- 		INIT_TASK_DATA(THREAD_SIZE)
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index d874abfc1836..2bd1ce9b3922 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -36,7 +36,6 @@
+  */
  
- 		/* equivalent to task_pt_regs(&init_task) */
--		__top_init_kernel_stack = __end_init_task - TOP_OF_KERNEL_STACK_PADDING - PTREGS_SIZE;
-+		__top_init_kernel_stack = __end_init_stack - TOP_OF_KERNEL_STACK_PADDING - PTREGS_SIZE;
+ #include <linux/blkdev.h>
+-#include <linux/delay.h>
+ #include <linux/kthread.h>
+ #include <linux/raid/pq.h>
+ #include <linux/async_tx.h>
+@@ -6734,6 +6733,9 @@ static void raid5d(struct md_thread *thread)
+ 		int batch_size, released;
+ 		unsigned int offset;
  
- #ifdef CONFIG_X86_32
- 		/* 32 bit has nosave before _edata */
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index cb46306d8305..9752eb420ffa 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -399,13 +399,13 @@
++		if (test_bit(MD_SB_CHANGE_PENDING, &mddev->sb_flags))
++			break;
++
+ 		released = release_stripe_list(conf, conf->temp_inactive_list);
+ 		if (released)
+ 			clear_bit(R5_DID_ALLOC, &conf->cache_state);
+@@ -6770,18 +6772,7 @@ static void raid5d(struct md_thread *thread)
+ 			spin_unlock_irq(&conf->device_lock);
+ 			md_check_recovery(mddev);
+ 			spin_lock_irq(&conf->device_lock);
+-
+-			/*
+-			 * Waiting on MD_SB_CHANGE_PENDING below may deadlock
+-			 * seeing md_check_recovery() is needed to clear
+-			 * the flag when using mdmon.
+-			 */
+-			continue;
+ 		}
+-
+-		wait_event_lock_irq(mddev->sb_wait,
+-			!test_bit(MD_SB_CHANGE_PENDING, &mddev->sb_flags),
+-			conf->device_lock);
+ 	}
+ 	pr_debug("%d stripes handled\n", handled);
  
- #define INIT_TASK_DATA(align)						\
- 	. = ALIGN(align);						\
--	__start_init_task = .;						\
-+	__start_init_stack = .;						\
- 	init_thread_union = .;						\
- 	init_stack = .;							\
- 	KEEP(*(.data..init_task))					\
- 	KEEP(*(.data..init_thread_info))				\
--	. = __start_init_task + THREAD_SIZE;				\
--	__end_init_task = .;
-+	. = __start_init_stack + THREAD_SIZE;				\
-+	__end_init_stack = .;
- 
- #define JUMP_TABLE_DATA							\
- 	. = ALIGN(8);							\
-
-base-commit: 93387dba36cc9033724d8b874a5cf6779ef084ab
 -- 
-2.44.0
+2.39.2
 
