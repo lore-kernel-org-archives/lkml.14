@@ -1,92 +1,258 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-164.mail.qq.com (out203-205-221-164.mail.qq.com [203.205.221.164])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B212453395;
-	Fri, 22 Mar 2024 15:43:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FA1535A6
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 15:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.164
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711122190; cv=none; b=X7qn1yhXwRp6+p3EMg1cgHMDV/ioWzSBR2GvjuC4D1Xgmi/Irnob1UKF8qRSF8JKHym4KSUVBExyL2V2bdcP3LptgnSxuy233mECgzbvzDGiqppRWA+lkLK9zvUSRWuFp4YH02ocfOPJXgouoOPsODa2Pk4r9HLU8Z1tzIM5+sg=
+	t=1711122221; cv=none; b=CL1Fim01Nr3aTFBxk8hxoMbSK7Q+j+HppJ4MnF6z5rmhpMzII/cPHesuFVLU1cSO2yp7fM9PZTyvOKzEsMovTTsW8qDX80kdEafSXEFCoUd2qLKgnlm0YwQtzX1bAgEqcjDN3c3oXsX8EGCr7LQQxY1Vj/WGk/pNxf8CKK6wQLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711122190; c=relaxed/simple;
-	bh=Weycm4kqEPwh63+mxtksApHa+dqQabudom9GeH64K0E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n7LBsMKCqE5c7F29iRGxkd+m1SntfPVWtBf6Q6OWANesnNT1fmX40bAFlEn7qrFy2W0csX4ce7t8Wz4SuDzXgD3Q62cdqXsEAIxzjbiYKWu0SdC4e/xNPngjSc3zbMOVNL5ums03senK4ETpRnA4zYtxFoXr93k8upj9L5p6dL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BWBIYBOg; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711122221; c=relaxed/simple;
+	bh=Q6Z6Y78zjUvTC8yteKd1TQVGNbJDKneCaLYEMur8mxQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Pc6zGMQPFX9vH6Sjj0x4sKNh8vtTyb/yxKamr/n+73+SwPo9oYDOaZ9QqzlZ+CoNNMHdRvBMQSNocaav1lEHgciOREvFN2FugYEC8sGJ6TywoGZlBp8Ql5V8LsNecWSpitefl0ltXXStMlnD2wP8CLWC/yeP/C7F7PUYPq3IxME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=Zs/EUJ+o; arc=none smtp.client-ip=203.205.221.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BWBIYBOg"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7d026c0a08aso73732639f.1;
-        Fri, 22 Mar 2024 08:43:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711122187; x=1711726987; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MxRAWuLAmkBRUhkW64V55k5e3EH9DGdSK68BU70KiTs=;
-        b=BWBIYBOgWOBOMmqolmOQ2C1QO144sjn+Sju4Ga1G5MD4bnRFkxxIK4bbnDLuBdZUr0
-         /oRA4LN7Glu292htol9nh+lJgRKqftMjxYLkBizBcLBwvnZt7r8itv7Y5/uaj+v+DBos
-         EIK2erxCLnl0YwFDspc10XPjeUWc23aLccZRgCqrFqoMJFBlfT8d1FqfudzWLgtzScC4
-         WJ/7Xghe0NCfjP8YZ9bk2DrrOwjrWNZaAf15qUfCIjDkCS/osjcrQ+JYsqOR8xPb0Cc1
-         0gw0injEytIyyZ5nW1Z5AI7C6utkDushBaZjX3ubMHrd2hlN1wxps0lnX7/0Ao4m06l5
-         IVKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711122187; x=1711726987;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MxRAWuLAmkBRUhkW64V55k5e3EH9DGdSK68BU70KiTs=;
-        b=Nt7k0MY39i7xiVspcmDfcb5cZyaL+cM3Xk4xQA/KXB15G8RqdvAlo5YhX+LwzfOmTq
-         LGAr3ufM89gJZVpn826OWYDe3M9e8zrTHKJ6sOZjJXOk/sifLVCWLF6/9/Bcu/ATpyey
-         MglIQzbuFbs7L2c+0TIZR7JwiWQ8kxTXGAyhuClUm4SlREbwwlkiGBS2inMsy/SzS5Qy
-         fVe7TkzGk1R8QXlQu9yePYcu3UjDwtd5VdVVcvdiHlzw0AFEuLbfnTdi+RS1ssWH9Qaw
-         winIJiDlh9yrtIDed5cmYx3rDnzPQaHoRLO04kg5uNjnakyf5CiwyAvrXjPfU7SkWdhE
-         W2xg==
-X-Forwarded-Encrypted: i=1; AJvYcCXQq4MWBJ7Qs8K4BE1cB0sAdSGyxOzW+98vU+PTZcenl7Zdj4hTZUmWZwVsl1WiSfQXYUsYB4XCwWMSme+RuylM3Xad3lPPTyfsViNfEHi9npxTvE0QNlvxezw+S9KTqHcVI1UdNb6qjg==
-X-Gm-Message-State: AOJu0Yx8LqAGXHIpAL0unE1aYtBCvsl+dEHvb0ief2C9OnVPcNBrh+wp
-	tH59zgtf06iBbyET2BEGrkOGfej6fGuRnjQHIQIrzDAyIKlVI8ntgPQhiknA
-X-Google-Smtp-Source: AGHT+IFzk9z5MujRXMni5Ei3qd9UMZrhATLBX0KZNoNgLLoyCg4V3O1H+oYkUD62bAfsx7CtdQJefQ==
-X-Received: by 2002:a05:6358:7f1c:b0:17e:c5b9:5f6d with SMTP id p28-20020a0563587f1c00b0017ec5b95f6dmr3479648rwn.14.1711121872997;
-        Fri, 22 Mar 2024 08:37:52 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 31-20020a63185f000000b005dc389409c1sm1688906pgy.93.2024.03.22.08.37.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 08:37:52 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Fri, 22 Mar 2024 08:37:51 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: tytso@mit.edu, adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ext4: implement filesystem specific alloc_inode in unit
- test
-Message-ID: <8725e7d8-722e-43de-9458-dc9a48b93481@roeck-us.net>
-References: <20240322165518.8147-1-shikemeng@huaweicloud.com>
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="Zs/EUJ+o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1711122200;
+	bh=GJDoebOMWa+Y0Raoch9R+8A+TdpWU0Z/PpJq6lCHs6k=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=Zs/EUJ+oMoHVriSST6i1CjpeDUWlY538CHfaf2rN7C2Q7zAZLdjG3dCOrtRmstgNj
+	 QM9fRqXtUkkAIyGc29r6NiTxGxXxfKVYluMZ6UfIrHSQqFwPOs7R3BP8dUIZrUVZzr
+	 4FXpoTvp3IbZ1ojLV+r1tdwi5hnqQNy1FVp0B2wk=
+Received: from [IPV6:2409:8a60:2a60:b160:6151:55c3:310e:bea2] ([2409:8a60:2a60:b160:6151:55c3:310e:bea2])
+	by newxmesmtplogicsvrszc5-1.qq.com (NewEsmtp) with SMTP
+	id AD1AA813; Fri, 22 Mar 2024 23:43:17 +0800
+X-QQ-mid: xmsmtpt1711122197t0jl68v9r
+Message-ID: <tencent_994355E551CB05854C76A567301BFBC93D0A@qq.com>
+X-QQ-XMAILINFO: NbgegmlEc3JuB5p/v5iz0Q0ujBbw/MIFnFSrdTczd2bd4wtTVCFD05Prvs02YF
+	 jLLk54G08UwlThkawrau0hVOMoANUFxDDyd0L7UJn0VRoibaagbW758wy2oQNmqatQWXKY4ycwzo
+	 HV1/Fw8XWJV0Ep17P8zwFqtrGc7KKMhFgcCQOmNi+Wr+Elg58iTX/xjY8VSJI8Gd0rGSQ0MM76fK
+	 dGY6HrsRncuRAzb9ae8kV16t7edI1FtzLyoNZHGaIeubpR5hxrUzgJNbruqyfUF+n24kF9B0XT3v
+	 /HKBls+dIS0cQ8dIpnw9cJ95OEjri3E7cOJ+iXBfIH8Ct+tE2p/2JFITsPUPqTqHu8YAZTgnkbXI
+	 or+4IDvznk9TZMisqPQmIQHMobddlVGicV5R0tlnAfHFUHc6twg7jrZpSr/TuDcF6BHMh0QjBcXj
+	 E0DGJQeML5dA0IzBtRtaT5nloMfr0aP5sQwUTur8SeZJJzL4l6HsJXU1lmepTQX+steTQ/prNqC/
+	 7VC86yQCipXLJBt+brFpafk6OMb6F7qHNP0g8h23atyULJlan5COwBdrkWLnxHhGwmMj0cmppZt9
+	 n2Xr2UXJlgmQE5/UJKS0mAaKnE8xCE0pDxZVzTML6kzkeOGwqzUFjgBJcpPZWZ0KIxmx0A+ZW1y/
+	 L9BJj1MgPiSqwAnsw6GGbpCyS06omK2ozvs8DxUgqmld2jdCu2dAgB0YnYdnge0k3XqVKQWMKdFE
+	 Mv2VyPnpffHocogPpFonA5/csLGKoBJlgyPPU2zU8iXmsRWxBlkoB/INC1QYA6JXKfFDWYW60MdI
+	 0OtAHFThkoIaqGhaxl8/JXomuaziGroERMzWhBzLzJ04LZxlzrsjaeUn53B2QIVgjp+nNFN6G8R4
+	 H+/SLIqT9WGaaAeaU69nunNWZFlhndRVrX21pUcbF3w9VT3ddfmthO9FwroqWOBbF7GQg3R6G5FK
+	 N7UPxWkqx6+7nkdPzGj3+pFx1df8g3dCapve1QonUYRrfULX/HWmuoZP2KIjETlRZDjwovnvtJ1i
+	 p2/v53TUKlhTaAOdJW/UheTH04Ji3RLdsW6XGMGmYtfYh5fuBHx8hklIptnXg=
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-OQ-MSGID: <c6a42566-0503-7491-083d-a90bb7a21f35@foxmail.com>
+Date: Fri, 22 Mar 2024 23:43:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240322165518.8147-1-shikemeng@huaweicloud.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v2 1/9] sysctl: support encoding values directly in the
+ table entry
+Content-Language: en-US
+To: Joel Granados <j.granados@samsung.com>
+Cc: "Eric W . Biederman" <ebiederm@xmission.com>,
+ Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>,
+ Christian Brauner <brauner@kernel.org>, Iurii Zaikin <yzaikin@google.com>,
+ linux-kernel@vger.kernel.org
+References: <cover.1709978655.git.wenyang.linux@foxmail.com>
+ <CGME20240309103218eucas1p12d642356f7e90ebdf6a7a3101688f55a@eucas1p1.samsung.com>
+ <tencent_143077FB953D8B549153BB07F54C5AA4870A@qq.com>
+ <20240321162758.tkituzvff5rwnvd2@joelS2.panther.com>
+From: Wen Yang <wenyang.linux@foxmail.com>
+In-Reply-To: <20240321162758.tkituzvff5rwnvd2@joelS2.panther.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sat, Mar 23, 2024 at 12:55:18AM +0800, Kemeng Shi wrote:
-> We expect inode with ext4_info_info type as following:
-> mbt_kunit_init
->   mbt_mb_init
->     ext4_mb_init
->       ext4_mb_init_backend
->         sbi->s_buddy_cache = new_inode(sb);
->         EXT4_I(sbi->s_buddy_cache)->i_disksize = 0;
+
+
+On 2024/3/22 00:27, Joel Granados wrote:
+> On Sat, Mar 09, 2024 at 06:31:18PM +0800, wenyang.linux@foxmail.com wrote:
+>> From: Wen Yang <wenyang.linux@foxmail.com>
+>>
+>> Eric points out: "by turning .extra1 and .extra2 into longs instead of
+>> keeping them as pointers and needing constants to be pointed at somewhere
+>> ... The only people I can see who find a significant benefit by
+>> consolidating all of the constants into one place are people who know how
+>> to stomp kernel memory."
+> I'm assuming that this is the "why" of the commit. Please change it so
+> it is more direct. Something like "Directly encode numeric values in
+> macros in order to ...". If you want to add Eric's opinion please add it
+> as a link (Please follow Documentation/process/submitting-patches.rst)
 > 
-> Implement alloc_inode ionde with ext4_inode_info type to avoid
-> out-of-bounds write.
 > 
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
+>>
+>> This patch supports encoding values directly in table entries through the
+>> following work:
+>> - extra1/extra2 and min/max are placed in one union to ensure that the
+>>    previous code is not broken, then we have time to remove unnecessary
+>>    extra1/extra2 progressively;
+>> - since type only has two states, use one bit to represent it;
+> Please remove this optimization from your commit. This will conflict
+> with work that Thomas is doing here
+> https://lore.kernel.org/all/20240222-sysctl-empty-dir-v1-0-45ba9a6352e8@weissschuh.net
+> 
+>> - two bits were used to represent the information of the above union( 0:
+>>    using extra1/extra2, 1: using min, 2: using max, 3: using both min/max);
+>> - added some helper macros.
+>>
+>> Suggested-by: Eric W. Biederman <ebiederm@xmission.com>
+>> Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
+>> Cc: Luis Chamberlain <mcgrof@kernel.org>
+>> Cc: Kees Cook <keescook@chromium.org>
+>> Cc: Joel Granados <j.granados@samsung.com>
+>> Cc: Eric W. Biederman <ebiederm@xmission.com>
+>> Cc: Christian Brauner <brauner@kernel.org>
+>> Cc: Iurii Zaikin <yzaikin@google.com>
+>> Cc: linux-kernel@vger.kernel.org
+>> ---
+>>   include/linux/sysctl.h | 108 ++++++++++++++++++++++++++++++++++++++---
+>>   kernel/sysctl.c        |  61 +++++++++++++++++------
+>>   2 files changed, 148 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+>> index ee7d33b89e9e..1ba980219e40 100644
+>> --- a/include/linux/sysctl.h
+>> +++ b/include/linux/sysctl.h
+>> @@ -61,6 +61,25 @@ extern const int sysctl_vals[];
+>>   
+>>   extern const unsigned long sysctl_long_vals[];
+>>   
+>> +#define	SYSCTL_NUMERIC_NEG_ONE			((long)-1)
+>> +#define	SYSCTL_NUMERIC_ZERO			(0L)
+>> +#define	SYSCTL_NUMERIC_ONE			(1L)
+>> +#define	SYSCTL_NUMERIC_TWO			(2L)
+>> +#define	SYSCTL_NUMERIC_THREE			(3L)
+>> +#define	SYSCTL_NUMERIC_FOUR			(4L)
+>> +#define	SYSCTL_NUMERIC_ONE_HUNDRED		(100L)
+>> +#define	SYSCTL_NUMERIC_TWO_HUNDRED		(200L)
+>> +#define	SYSCTL_NUMERIC_THREE_HUNDRED		(300L)
+>> +#define	SYSCTL_NUMERIC_FIVE_HUNDRED		(500L)
+>> +#define	SYSCTL_NUMERIC_ONE_THOUSAND		(1000L)
+>> +#define	SYSCTL_NUMERIC_TWO_THOUSAND		(2000L)
+>> +#define	SYSCTL_NUMERIC_THREE_THOUSAND		(3000L)
+>> +#define	SYSCTL_NUMERIC_16K			(16384L)
+>> +#define	SYSCTL_NUMERIC_U8_MAX			((long)U8_MAX)
+>> +#define	SYSCTL_NUMERIC_U16_MAX			((long)U16_MAX)
+>> +#define	SYSCTL_NUMERIC_INT_MAX			((long)INT_MAX)
+>> +#define	SYSCTL_NUMERIC_LONG_MAX			(LONG_MAX)
+>> +
+>>   typedef int proc_handler(struct ctl_table *ctl, int write, void *buffer,
+>>   		size_t *lenp, loff_t *ppos);
+>>   
+>> @@ -131,6 +150,18 @@ static inline void *proc_sys_poll_event(struct ctl_table_poll *poll)
+>>   #define DEFINE_CTL_TABLE_POLL(name)					\
+>>   	struct ctl_table_poll name = __CTL_TABLE_POLL_INITIALIZER(name)
+>>   
+>> +enum {
+>> +	SYSCTL_TABLE_TYPE_DEFAULT,
+>> +	SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY
+>> +};
+>> +
+>> +enum {
+>> +	SYSCTL_TABLE_EXTRA_PTR,
+>> +	SYSCTL_TABLE_EXTRA_LONG_INIT_MIN,
+>> +	SYSCTL_TABLE_EXTRA_LONG_INIT_MAX,
+>> +	SYSCTL_TABLE_EXTRA_LONG_INIT_MINMAX
+>> +};
+>> +
+>>   /* A sysctl table is an array of struct ctl_table: */
+>>   struct ctl_table {
+>>   	const char *procname;		/* Text ID for /proc/sys, or zero */
+>> @@ -138,20 +169,39 @@ struct ctl_table {
+>>   	int maxlen;
+>>   	umode_t mode;
+>>   	/**
+>> -	 * enum type - Enumeration to differentiate between ctl target types
+>> +	 * type - Indicates to differentiate between ctl target types
+>>   	 * @SYSCTL_TABLE_TYPE_DEFAULT: ctl target with no special considerations
+>>   	 * @SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY: Used to identify a permanently
+>>   	 *                                       empty directory target to serve
+>>   	 *                                       as mount point.
+>>   	 */
+>> -	enum {
+>> -		SYSCTL_TABLE_TYPE_DEFAULT,
+>> -		SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY
+>> -	} type;
+>> +	u8 type:1;
+> As I said before. Please remove this from your patch.
+> 
+>> +
+>> +	/**
+>> +	 * extra_flags
+>> +	 * @SYSCTL_TABLE_EXTRA_PTR: flag indicating that this uses extra1/extra2.
+>> +	 * @SYSCTL_TABLE_EXTRA_LONG_INIT_MIN: flag indicating that this uses min/max
+>> +					      and min has been initialized.
+>> +	 * @SYSCTL_TABLE_EXTRA_LONG_INIT_MAX: flag indicating that this uses min/max
+>> +					      and max has been initialized.
+>> +	 * @SYSCTL_TABLE_EXTRA_LONG_INIT_MINMAX: flag indicating that this uses min/max
+>> +						 and both have been initialized.
+>> +	 *
+>> +	 */
+>> +	u8 extra_flags:2;
+> This extra_flag is needed because now you have lost the extra bit of
+> information that the NULL pointer gave you. This is effectively adding 2
+> bits per ctl_table element for all ctl_table types; event the ones that
+> do not need min max. So how much will we actually save with all this?
+> once you have added these 2 bits and removed the static variables from
+> the files that are not using the pointers? Is saving read only memory
+> the only reason for this? If that is the case, please add some
+> calculations of how much we save to see if it actually make sense. To
+> calculate the memory gains/losses you can use the bloat-o-meter script
+> under the scripts directory (something similar to what we did here
+> https://lore.kernel.org/all/20240314-jag-sysctl_remset_net-v1-0-aa26b44d29d9@samsung.com)
+> 
+> I'll hold off on reviewing the other patches in this set until this is a
+> bit more clear.
+> 
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
+Thank you for your comments.
 
-Guenter
+When we started this work, we had not yet seen Thomas's patch, so by 
+borrowing the existing enum type‘s field, we can achieve directly 
+encoding values without increasing the size of the ctl_table.
+
+We really appreciate that you pointed out this issue. It will take some 
+time for rework and the v3 will be sent out within a few weeks.
+
+In addition, the patch below is not related to "kill sysctl_vals". It is 
+just a regular optimization and was sent over 10 days ago. We also hope 
+to receive your kind advice:
+
+https://lkml.org/lkml/2024/3/8/871
+
+[RESEND PATCH v2] sysctl: move the extra1/2 boundary check of u8 to 
+sysctl_check_table_array
+
+--
+Best wishes,
+Wen
+
+
+>> +	union {
+>> +		struct {
+>> +			void *extra1;
+>> +			void *extra2;
+>> +		};
+>> +		struct {
+>> +			long min;
+>> +			long max;
+>> +		};
+>> +	};
+>> +
+>>   	proc_handler *proc_handler;	/* Callback for text formatting */
+>>   	struct ctl_table_poll *poll;
+>> -	void *extra1;
+>> -	void *extra2;
+>>   } __randomize_layout;
+> ...
+> 
+> Best
+
