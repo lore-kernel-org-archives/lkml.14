@@ -1,90 +1,63 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115687EF0C
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 20:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743FA31A60;
+	Fri, 22 Mar 2024 20:43:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711139687; cv=none; b=TjdIV18tmIjhLTeBgxvwFIr16rAyFch+QWw4kw5iYEjSut54AVye4rzppGQL5B9SRNmuKFKbf+XF4u0rPb1xdo0ejsB+6VJ+3nMaPd7kmc/9mFhUx31Bb/Rozooq3rrasFtJ+ZYeJE6vR5jgVlH8gWz0nnVxhQdwvwhky16Bbcg=
+	t=1711140232; cv=none; b=ERKESg7OTHe7DpXR//YBJVVJe6TPJFt7+yPGOVhsGbTRW1B4qElDWBZZfivQdMrz9JGwGpahW/fr3lFSFrkueoFVPOpPWffzAwzKcLxfw4HfhyoSbx3qR+Cn9XbiD93mql0Z2/NCEEDfIP6MRUr4ZWyUa6VCObm2inpWbRluLuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711139687; c=relaxed/simple;
-	bh=XjWgDhwAnyLOFEQHOgQQXXRRn46n/ix293GOySxitgs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UkgW5CAtf5d36sQ4IJ91ax3QDpkhHv4TSVdnH2pO0NCb3RO2l3QASHNWvkcbNORSj6kNbrbPdWLOAEgvLuReamcS00tHeDE6iah36Nn4XqzRG3hjId0U5y9YICUyTvn9h8geuit5WV5JFR8DA1I8kEHpyJKTcS/KFzjaijHhOHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=YpRUHmKK; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1711140232; c=relaxed/simple;
+	bh=9xXyKvR2dyuI/8yaI/PrK+wxYOfOvJFkvIKZ1t4TN94=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Ls25ECw+jpx1d/IU5bW+7DJ7VaKeH3oxMNX67rL1tEXv5MP8tKqlUac38dDh9Gzx6xJ20ZtL2mLqaxEt6PTTtycM1tR9O/mojj45e8OIc8YgorrQRBbgRFOTsba9iic7DfZu8OiVQTDCO9xcQyqwMHO5cZoTbkeMPVdAzvLOxxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X0SaU+cr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="YpRUHmKK"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5148ea935b8so2896183e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 13:34:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1711139683; x=1711744483; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=60APz7zYnkhGexsbPEuUDopr5dRjcEm9AN80VhOLeZA=;
-        b=YpRUHmKKuyOyhiCupZcwV71CoxyNmIMw+YxGhRATeg8BcNO7/iRz9HJ3U44S+ODVfx
-         X4UHnPJqtrRMJq7hSk52CU+vQ7R3VSS2hjaFnVM4NoRHh+cTA1PGd2zXjAxMIgmRf+tE
-         15JXESM+kXfdDe+Xmt2rwsaaOUq9nRVHozfII=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711139683; x=1711744483;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=60APz7zYnkhGexsbPEuUDopr5dRjcEm9AN80VhOLeZA=;
-        b=pfgzHg0EiInYZhu139KXf4cJVnzw7HXTPvBUSdU8OP0MPOevvBAXylReZXil7+6a8E
-         SHfLBGb7jHK4rKkrq4nc0bd9ai6TEgCc5yUWYwmlAijc3GAo8rpiOVwDKT/B0Iz5xlUO
-         FOTCGOV+ItgQaoaK9eDoZ7y2lKPxXZhtF7n/LlwyrW3nZEt3KMf1Jcrp+/bvnNE3IZ31
-         n4jYYS6l6gHHOOKrLmSdKhPjQRsNsJ2W+5JOE60y7OukE9IBtEiSu/cSx45xvEaNIVbr
-         +6c6pXn1p/lPuImujFQ752sw+vGyjK2qABuRXxybABq/PgIl0F7Q4gy+ZXdXSCxlxfxq
-         0oVg==
-X-Forwarded-Encrypted: i=1; AJvYcCWDNgSiDbOe6jwy3Ow0MU+xS0gARPXgwttSy7aD12cQ9z0RP/umIbNcuGdznQkPCTlMuNOLndpBCnA6yAYdCbGG8ToDYN/cOWksGWql
-X-Gm-Message-State: AOJu0Yz9QpUlWi/YY0PG/fZeWilBJVcQvptReoLdmA/s7A5/TlIQQUOb
-	+5LtUae4A9nIkxs6x62uK/dIk7f/A8+3k8FmRSGFN5wEJHVJf6/2D9AwWa25kk1ezaM7MGrQ7x4
-	f5yU=
-X-Google-Smtp-Source: AGHT+IGp4RXO+3bdiog4x6jDNPBK19j8KoMAmLQWuNd93v67BJlN10l3ZRb8dmc5/cS0oK52VeMxHQ==
-X-Received: by 2002:a19:5f11:0:b0:515:99f6:2ca4 with SMTP id t17-20020a195f11000000b0051599f62ca4mr396273lfb.36.1711139680748;
-        Fri, 22 Mar 2024 13:34:40 -0700 (PDT)
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
-        by smtp.gmail.com with ESMTPSA id i25-20020a1709064ed900b00a46d9ff8a58sm179593ejv.158.2024.03.22.13.34.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Mar 2024 13:34:40 -0700 (PDT)
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a47062136c0so319335566b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 13:34:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVGgLpF3GtZLX7Jm5XwHYjizTRb8z7D61FVbDv0Cydcw77A+/e+hAlEvW8GfzZ5+2BK6IUTcE3gfl1me7U5oEt+Ykew9Yxy9ljpJsEn
-X-Received: by 2002:a17:906:5288:b0:a46:13d5:46fe with SMTP id
- c8-20020a170906528800b00a4613d546femr621763ejm.11.1711139679859; Fri, 22 Mar
- 2024 13:34:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X0SaU+cr"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 42553C433C7;
+	Fri, 22 Mar 2024 20:43:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711140232;
+	bh=9xXyKvR2dyuI/8yaI/PrK+wxYOfOvJFkvIKZ1t4TN94=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=X0SaU+crQsUj96x4uvrxPYT51lROZW671ZJ79X3VvdpmxedXwTA0NBO+0avdJVxbw
+	 cVdxgkQgwJu4ksCQYT+G6b1lRLyYSk0/aUK0DVb5MxRhJBaliW00WcTy3Ye6XMj/Px
+	 1MmNap5LN+KoQm19ftz9WkZ9FZJ92+XvvpflAJFLvbWmvTbVJeaoGJ60rcTRiUvCQP
+	 FNnbcIlPV6oZZEjSjdh91MzEQKAQJ/zXdy9JFQhRww+Nz8lOzUAveoIq5KVnSlQiXS
+	 7s0z4Q67fQ6kwMi9NMEn7HbW1JJEupFOCT6SokjUE1wU9vSBM/sEWgYf+/QdEnpN4K
+	 iCXrNW8jvslHQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 39603D8BCE2;
+	Fri, 22 Mar 2024 20:43:52 +0000 (UTC)
+Subject: Re: [GIT PULL] SCSI postmerge updates for the 6.8+ merge window
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <3b789eacddd6265921be9da6e15257908f29b186.camel@HansenPartnership.com>
+References: <3b789eacddd6265921be9da6e15257908f29b186.camel@HansenPartnership.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <3b789eacddd6265921be9da6e15257908f29b186.camel@HansenPartnership.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
+X-PR-Tracked-Commit-Id: af180c0880f9df14be31807f0bb0fa6f0d34a943
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: bfa8f18691ed2e978e4dd51190569c434f93e268
+Message-Id: <171114023222.4193.9247889856429393841.pr-tracker-bot@kernel.org>
+Date: Fri, 22 Mar 2024 20:43:52 +0000
+To: James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, linux-scsi <linux-scsi@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <3b789eacddd6265921be9da6e15257908f29b186.camel@HansenPartnership.com>
- <CAHk-=wg9pvT5YEo_kGo2QGjbC-eRaaQNOZuJYCsM1zaxj+rnug@mail.gmail.com> <3b5f3404bc63d59f4093e02c2cbb426a88d0bc70.camel@HansenPartnership.com>
-In-Reply-To: <3b5f3404bc63d59f4093e02c2cbb426a88d0bc70.camel@HansenPartnership.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 22 Mar 2024 13:34:23 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj-d9pPn00m0v3K3rHD+O=oZV-JvX-Y4aZ9jKMdEq2Rtg@mail.gmail.com>
-Message-ID: <CAHk-=wj-d9pPn00m0v3K3rHD+O=oZV-JvX-Y4aZ9jKMdEq2Rtg@mail.gmail.com>
-Subject: Re: [GIT PULL] SCSI postmerge updates for the 6.8+ merge window
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-scsi <linux-scsi@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 22 Mar 2024 at 13:24, James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
->
-> OK, try this (I've updated the scsi-misc tag with it as well)
+The pull request you sent on Fri, 22 Mar 2024 15:12:27 -0400:
 
-Well there we go. I really had no idea what the pull was supposed to do.
+> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
 
-And while I end up looking at individual commits for random smaller
-subsystems when it's unclear (sometimes just for language barrier
-issues), for long-time maintainers of bigger stuff I kind of expect
-better.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/bfa8f18691ed2e978e4dd51190569c434f93e268
 
-           Linus
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
