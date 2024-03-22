@@ -1,238 +1,259 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D4967750
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 21:37:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78DE53361
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 21:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711143474; cv=none; b=FiGieeprso5koNYAw8ytQja3molYTKIsme2VaHPMOb2fHDZAvCgTpV4OnCoXFwO5ugIg51J/aDuCT63bdw2URabYUY1hq6VfUsFfh5qgqfZWKXkcYWKRSb1RsnujLHIMvn/zI53MuPjwm+neZmmurfvIbhCoKASrdq5D2IV55lk=
+	t=1711143682; cv=none; b=bVPKSDnVOeA4+ihs+m65eotRg9/pqrnlXJHgohrirGqh1mjhAFGzg4qbaJBvYFY5WB/xgKf84ynQAumX8bZzyvBz1vJP37UmOFbsOmpUkyV0nZ5QsaIqx5Vebi1+mBPkwZyea7fIYAArw563QGIt1J4b9Juv4Qb1b+YbERYaVFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711143474; c=relaxed/simple;
-	bh=4o29E18DvArCwwrf1uIOP968MrTh8gpzjXevBxF0sJ8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ielc6REAsT+iBK/WkIMmOlLRlPXDRcZPkMSG0lqjKULg3HUKMPqe8DYVlPVAWQ6b8yJPKa+rBBgJOrghM6znr1X6LNkaAYovxxg/5f/h7gUQH8JwDlba5rihl3XDH4vLbREj40OuIB5soNKItx9sMjvhiOp3hhdw1PxR0NyRs8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aqN3BIfb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711143682; c=relaxed/simple;
+	bh=kCrIrLnYkyAUgNslNwqkr4zJyZbl2lNoyftR8tSDdlI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=k15wW0RfED8+UeVzYbPGUCoV0Apph4VyfY02OoMjAIzSzwwfqaIvrn1ujwWPiv4sAmLLp0yA6hO8+CYySAAzN20VuqVSk09eZxbCb2lrzCC+/M1TFflrUvh4A8fU5PDyKbSmwC2HDRe+GDts0LDwMdRHf4bM5/fms8WhBL/P5+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ICE2PxMJ; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aqN3BIfb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711143471;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=dJLlKtTO62WD62r/VeuZe7I8eIHgd9fp/eop39lk08g=;
-	b=aqN3BIfbxjoZ3pAjaaUieS3jktwrcgBJI7n9tzw/c3rGv7d0C4J69CtYANYlYTl9hv9UGV
-	h5HtPfqPDUB4XPyTfo4yFUqxRxCcUXffHTFCvsVWQigZRGxU62UJ/sAYgMtZQJ0iiOBC/6
-	v2Mcwpp6zBBHXXotjWXybAwmIdYefyQ=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-130-NO7oAj3-PjuFKYtwx_r9Jw-1; Fri, 22 Mar 2024 17:37:50 -0400
-X-MC-Unique: NO7oAj3-PjuFKYtwx_r9Jw-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-33ec4fb1a83so620125f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 14:37:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711143469; x=1711748269;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:from:content-language:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ICE2PxMJ"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-610c23abd1fso51022927b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 14:41:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711143679; x=1711748479; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=dJLlKtTO62WD62r/VeuZe7I8eIHgd9fp/eop39lk08g=;
-        b=Xx7Fp9sOPL+GL24nErHIGarpu+4oqo4htpZj9jfRRQE9MXZdIchhkTecpMaTgqXndy
-         iX13HdAfb5lrzzB/pHiZ3S57BHCwgSOBxda60IK6VAVmS0KRrqOxLXLLM6ym1bo+xK7f
-         PklDM9exuz7OX0nHH1SDGuFqHVqK8yiSimWeJDHIycs9Uc652ki3OyEh4HayP4lpCi1+
-         dUL2rSnwy63Oq1K4kCPuUIc2mBgefU5HAN5ZV4w+oO4VPLwwRv+z6mP1jlYH1mW8pc75
-         yCBUIcZhnml9btN7BXLaqOuJFeTyw9B/0jhbozyzchEVAHr3xe8gpZkaDAKjD77OW1+K
-         QyIg==
-X-Forwarded-Encrypted: i=1; AJvYcCVslpmBPNdV8c2oNUrOmZBeO/kw5A+IeE+bam2WYKPWZrgir0ZyKj6xHyyjju00aATIYtlzPCl7sgrMou6/9y+OP9pItjistPOtQuLa
-X-Gm-Message-State: AOJu0Yz31bLjY0CQkhgC9HsM2eE1z6PGZhRc4iBdmmcGIU2y6Rq8TDB2
-	V3ubCvOwPT+qNirwqd/Io1nv32UfvmMhq4Gv+gUCakzendwM8MqNbcIaYb7NnLXHrhoFMQzBRE2
-	We27kPd838XK6GMHxg9kgH6ScS7tF8n9Rnf5SNH6Swf1k14ichcCVQ+tQltPlMQ==
-X-Received: by 2002:adf:ea0a:0:b0:33d:c217:e8a4 with SMTP id q10-20020adfea0a000000b0033dc217e8a4mr356445wrm.14.1711143468983;
-        Fri, 22 Mar 2024 14:37:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH5apehEMN7dJN5VDNeS7m0+2uq/zBxksh09hGs4GpIijR0sdSVzM6MYbYDeI4LGD2ytEjLtA==
-X-Received: by 2002:adf:ea0a:0:b0:33d:c217:e8a4 with SMTP id q10-20020adfea0a000000b0033dc217e8a4mr356436wrm.14.1711143468561;
-        Fri, 22 Mar 2024 14:37:48 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c71b:7e00:9339:4017:7111:82d0? (p200300cbc71b7e0093394017711182d0.dip0.t-ipconnect.de. [2003:cb:c71b:7e00:9339:4017:7111:82d0])
-        by smtp.gmail.com with ESMTPSA id w13-20020a05600c474d00b00414108a1c55sm621811wmo.16.2024.03.22.14.37.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Mar 2024 14:37:48 -0700 (PDT)
-Message-ID: <dd3e28b3-647c-4657-9c3f-9778bb046799@redhat.com>
-Date: Fri, 22 Mar 2024 22:37:47 +0100
+        bh=+/cK4VrLmTWPA6318VKJ4yfhkh1wxnx4NftuUd7wmwI=;
+        b=ICE2PxMJ0pRRE9X1RSeIBdCDt6WSzDrtld+1akYqJWklKvcRnOmDOFypiomn+wU9L/
+         txklE3jYvhd2Of7Yc6eIcNBb+HAeBqwoxf8sSpW+CjywW/V9/EM5OZ/sU/5IE4sJ89Ju
+         D1XgdHK/LBPqSyWr5ggtD4GDqCm8F2JsXJpMYi/RQPPcrEuhGpbXXIg83e1w+jm12iCC
+         2+A4BYxC+r/s4tpV7/soZQ1ZSiSW6gALAizaqUQ+uRtfIm7dXvwnHxmDp+wur6wJuhKI
+         KSr+2HIYZPaekav7/CZvlWg8UXf9TyNfm9Zq4hpxEKS/qDLGvbSrI0DkyBIFpPduZvJs
+         IFXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711143680; x=1711748480;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+/cK4VrLmTWPA6318VKJ4yfhkh1wxnx4NftuUd7wmwI=;
+        b=g1OsLrsshuNG6Ig/IahEEilwt9Y5y7QwjynTrXtxvbbrGzOc/SWx+G02Zhe9VPxr56
+         cv7XMnhu7zGtay5QpOy71uXRuezR1cbJIxEl5KlCWZ6tPRSaAvA9Ae9QK67sWOBJP48W
+         9iOJOlIGp15vOiLdsRMs2ZWfqd5NF+T8JuYJV3ch5jYamASiax8EZ0ob0nrrvCSw8Y1X
+         C4l4Fta4ln5JQe75gucr0Gbc2H9cBClYiifwHuUX0atVT+P9ZYos3+LPCRhUmxAxYl9l
+         2mc0wm9j2CVCIDiTdpTVM0F5sZ3kaaEBBcmHpTeJe/MDwt6NEOZEJ3MBtdnri6K7S0pw
+         pD4g==
+X-Forwarded-Encrypted: i=1; AJvYcCUm69A9KYVCgS+UQXrGOLtYkl4N0J4YjxLgXMu3PbwRSW9P5WgOkRrcLWvvFRyNdebrrH0TPGXyTpYcqUtEDYspVDUU7OPK0sG4mbVw
+X-Gm-Message-State: AOJu0Yz7KPjQZTl7cqGyagqyTLOGBb45nUoVQ02FcUCWoNzJ36zPzqxF
+	dJhb6pWAFigvctNjC1M9/5UUE21aeJIUnyQ/crdG7fxFcEa0VGv8ThGren4I7o9hCM+q8mjUgE+
+	uQZd9f+b1SKQz8o76tzLZEQ==
+X-Google-Smtp-Source: AGHT+IGV3RX2MGf0rzvIY2wtaSmKEHIRi46fd9KyFEpKIZfmeQmn0ftN16HAHO5u/WowlKQbiF7dNJQp8ZxVbYBPTA==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:110c:b0:dc6:53c3:bcbd with
+ SMTP id o12-20020a056902110c00b00dc653c3bcbdmr191960ybu.7.1711143679706; Fri,
+ 22 Mar 2024 14:41:19 -0700 (PDT)
+Date: Fri, 22 Mar 2024 21:41:18 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: BUG: unable to handle kernel paging request in fuse_copy_do
-Content-Language: en-US
-From: David Hildenbrand <david@redhat.com>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: xingwei lee <xrivendell7@gmail.com>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, samsun1006219@gmail.com,
- syzkaller-bugs@googlegroups.com, linux-mm <linux-mm@kvack.org>,
- Mike Rapoport <rppt@kernel.org>
-References: <CABOYnLyevJeravW=QrH0JUPYEcDN160aZFb7kwndm-J2rmz0HQ@mail.gmail.com>
- <CAJfpegu8qTARQBftZSaiif0E6dbRcbBvZvW7dQf8sf_ymoogCA@mail.gmail.com>
- <c58a8dc8-5346-4247-9a0a-8b1be286e779@redhat.com>
- <CAJfpegt3UCsMmxd0taOY11Uaw5U=eS1fE5dn0wZX3HF0oy8-oQ@mail.gmail.com>
- <620f68b0-4fe0-4e3e-856a-dedb4bcdf3a7@redhat.com>
- <CAJfpegub5Ny9kyX+dDbRwx7kd6ZdxtOeQ9RTK8n=LGGSzA9iOQ@mail.gmail.com>
- <463612f2-5590-4fb3-8273-0d64c3fd3684@redhat.com>
- <a6632384-c186-4640-8b48-f40d6c4f7d1d@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <a6632384-c186-4640-8b48-f40d6c4f7d1d@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAP76/WUC/x2MMQrDMAwAvxI0R+CoXdqvlAxGlhsttpFKSAj5e
+ 5xud3DcAS6m4vAeDjBZ1bWWLtM4AC+xfAU1dQcK9AwPIvSfFW47Zsdqd9AhceRFkPEVA2dKRCk K9EUzybr995/5PC+VZxzObgAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711143678; l=7412;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=kCrIrLnYkyAUgNslNwqkr4zJyZbl2lNoyftR8tSDdlI=; b=7c4BR7I5R869dYN+qXFqT6r2bEMyf5ENyhGKnZH0/dZJUA5NivWjOyavzCgNTjbK/3UXliywE
+ iH9vsjf384CC/WP6HVr6QX5YXoufyvayyHWPCuooJeA1MpLZu4LsnGo
+X-Mailer: b4 0.12.3
+Message-ID: <20240322-strncpy-fs-orangefs-dcache-c-v1-1-15d12debbf38@google.com>
+Subject: [PATCH] orangefs: cleanup uses of strncpy
+From: Justin Stitt <justinstitt@google.com>
+To: Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>
+Cc: devel@lists.orangefs.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On 22.03.24 22:33, David Hildenbrand wrote:
-> On 22.03.24 22:18, David Hildenbrand wrote:
->> On 22.03.24 22:13, Miklos Szeredi wrote:
->>> On Fri, 22 Mar 2024 at 22:08, David Hildenbrand <david@redhat.com> wrote:
->>>>
->>>> On 22.03.24 20:46, Miklos Szeredi wrote:
->>>>> On Fri, 22 Mar 2024 at 16:41, David Hildenbrand <david@redhat.com> wrote:
->>>>>
->>>>>> But at least the vmsplice() just seems to work. Which is weird, because
->>>>>> GUP-fast should not apply (page not faulted in?)
->>>>>
->>>>> But it is faulted in, and that indeed seems to be the root cause.
->>>>
->>>> secretmem mmap() won't populate the page tables. So it's not faulted in yet.
->>>>
->>>> When we GUP via vmsplice, GUP-fast should not find it in the page tables
->>>> and fallback to slow GUP.
->>>>
->>>> There, we seem to pass check_vma_flags(), trigger faultin_page() to
->>>> fault it in, and then find it via follow_page_mask().
->>>>
->>>> ... and I wonder how we manage to skip check_vma_flags(), or otherwise
->>>> managed to GUP it.
->>>>
->>>> vmsplice() should, in theory, never succeed here.
->>>>
->>>> Weird :/
->>>>
->>>>> Improved repro:
->>>>>
->>>>> #define _GNU_SOURCE
->>>>>
->>>>> #include <fcntl.h>
->>>>> #include <unistd.h>
->>>>> #include <stdio.h>
->>>>> #include <errno.h>
->>>>> #include <sys/mman.h>
->>>>> #include <sys/syscall.h>
->>>>>
->>>>> int main(void)
->>>>> {
->>>>>             int fd1, fd2;
->>>>>             int pip[2];
->>>>>             struct iovec iov;
->>>>>             char *addr;
->>>>>             int ret;
->>>>>
->>>>>             fd1 = syscall(__NR_memfd_secret, 0);
->>>>>             addr = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, fd1, 0);
->>>>>             ftruncate(fd1, 7);
->>>>>             addr[0] = 1; /* fault in page */
->>>
->>> Here the page is faulted in and GUP-fast will find it.  It's not in
->>> the kernel page table, but it is in the user page table, which is what
->>> matter for GUP.
->>
->> Trust me, I know the GUP code very well :P
->>
->> gup_pte_range -- GUP fast -- contains:
->>
->> if (unlikely(folio_is_secretmem(folio))) {
->> 	gup_put_folio(folio, 1, flags);
->> 	goto pte_unmap;
->> }
->>
->> So we "should" be rejecting any secretmem folios and fallback to GUP slow.
->>
->>
->> ... we don't check the same in gup_huge_pmd(), but we shouldn't ever see
->> THP in secretmem code.
->>
-> 
-> Ehm:
-> 
-> [   29.441405] Secretmem fault: PFN: 1096177
-> [   29.442092] GUP-fast: PFN: 1096177
-> 
-> 
-> ... is folio_is_secretmem() broken?
-> 
-> ... is it something "obvious" like:
-> 
-> diff --git a/include/linux/secretmem.h b/include/linux/secretmem.h
-> index 35f3a4a8ceb1e..6996f1f53f147 100644
-> --- a/include/linux/secretmem.h
-> +++ b/include/linux/secretmem.h
-> @@ -16,7 +16,7 @@ static inline bool folio_is_secretmem(struct folio *folio)
->            * We know that secretmem pages are not compound and LRU so we can
->            * save a couple of cycles here.
->            */
-> -       if (folio_test_large(folio) || !folio_test_lru(folio))
-> +       if (folio_test_large(folio) || folio_test_lru(folio))
->                   return false;
->    
->           mapping = (struct address_space *)
+strncpy() is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-... yes, that does the trick!
+There is some care taken to ensure these destination buffers are
+NUL-terminated by bounding the strncpy()'s by ORANGEFS_NAME_MAX - 1 or
+ORANGEFS_MAX_SERVER_ADDR_LEN - 1. Instead, we can use the new 2-argument
+version of strscpy() to guarantee NUL-termination on the destination
+buffers while simplifying the code.
 
--- 
-Cheers,
+Based on usage with printf-likes, we can see these buffers are expected
+to be NUL-terminated:
+|	gossip_debug(GOSSIP_NAME_DEBUG,
+|			"%s: doing lookup on %s under %pU,%d\n",
+|			__func__,
+|			new_op->upcall.req.lookup.d_name,
+|			&new_op->upcall.req.lookup.parent_refn.khandle,
+|			new_op->upcall.req.lookup.parent_refn.fs_id);
+...
+|	gossip_debug(GOSSIP_SUPER_DEBUG,
+|			"Attempting ORANGEFS Remount via host %s\n",
+|			new_op->upcall.req.fs_mount.orangefs_config_server);
 
-David / dhildenb
+NUL-padding isn't required for any of these destination buffers as
+they've all been zero-allocated with op_alloc() or kzalloc().
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Note: build-tested only.
+
+Found with: $ rg "strncpy\("
+---
+ fs/orangefs/dcache.c |  4 +---
+ fs/orangefs/namei.c  | 26 ++++++++------------------
+ fs/orangefs/super.c  | 17 ++++++-----------
+ 3 files changed, 15 insertions(+), 32 deletions(-)
+
+diff --git a/fs/orangefs/dcache.c b/fs/orangefs/dcache.c
+index 8bbe9486e3a6..395a00ed8ac7 100644
+--- a/fs/orangefs/dcache.c
++++ b/fs/orangefs/dcache.c
+@@ -33,9 +33,7 @@ static int orangefs_revalidate_lookup(struct dentry *dentry)
+ 
+ 	new_op->upcall.req.lookup.sym_follow = ORANGEFS_LOOKUP_LINK_NO_FOLLOW;
+ 	new_op->upcall.req.lookup.parent_refn = parent->refn;
+-	strncpy(new_op->upcall.req.lookup.d_name,
+-		dentry->d_name.name,
+-		ORANGEFS_NAME_MAX - 1);
++	strscpy(new_op->upcall.req.lookup.d_name, dentry->d_name.name);
+ 
+ 	gossip_debug(GOSSIP_DCACHE_DEBUG,
+ 		     "%s:%s:%d interrupt flag [%d]\n",
+diff --git a/fs/orangefs/namei.c b/fs/orangefs/namei.c
+index c9dfd5c6a097..200558ec72f0 100644
+--- a/fs/orangefs/namei.c
++++ b/fs/orangefs/namei.c
+@@ -41,8 +41,7 @@ static int orangefs_create(struct mnt_idmap *idmap,
+ 	fill_default_sys_attrs(new_op->upcall.req.create.attributes,
+ 			       ORANGEFS_TYPE_METAFILE, mode);
+ 
+-	strncpy(new_op->upcall.req.create.d_name,
+-		dentry->d_name.name, ORANGEFS_NAME_MAX - 1);
++	strscpy(new_op->upcall.req.create.d_name, dentry->d_name.name);
+ 
+ 	ret = service_operation(new_op, __func__, get_interruptible_flag(dir));
+ 
+@@ -137,8 +136,7 @@ static struct dentry *orangefs_lookup(struct inode *dir, struct dentry *dentry,
+ 		     &parent->refn.khandle);
+ 	new_op->upcall.req.lookup.parent_refn = parent->refn;
+ 
+-	strncpy(new_op->upcall.req.lookup.d_name, dentry->d_name.name,
+-		ORANGEFS_NAME_MAX - 1);
++	strscpy(new_op->upcall.req.lookup.d_name, dentry->d_name.name);
+ 
+ 	gossip_debug(GOSSIP_NAME_DEBUG,
+ 		     "%s: doing lookup on %s under %pU,%d\n",
+@@ -192,8 +190,7 @@ static int orangefs_unlink(struct inode *dir, struct dentry *dentry)
+ 		return -ENOMEM;
+ 
+ 	new_op->upcall.req.remove.parent_refn = parent->refn;
+-	strncpy(new_op->upcall.req.remove.d_name, dentry->d_name.name,
+-		ORANGEFS_NAME_MAX - 1);
++	strscpy(new_op->upcall.req.remove.d_name, dentry->d_name.name);
+ 
+ 	ret = service_operation(new_op, "orangefs_unlink",
+ 				get_interruptible_flag(inode));
+@@ -247,10 +244,8 @@ static int orangefs_symlink(struct mnt_idmap *idmap,
+ 			       ORANGEFS_TYPE_SYMLINK,
+ 			       mode);
+ 
+-	strncpy(new_op->upcall.req.sym.entry_name,
+-		dentry->d_name.name,
+-		ORANGEFS_NAME_MAX - 1);
+-	strncpy(new_op->upcall.req.sym.target, symname, ORANGEFS_NAME_MAX - 1);
++	strscpy(new_op->upcall.req.sym.entry_name, dentry->d_name.name);
++	strscpy(new_op->upcall.req.sym.target, symname);
+ 
+ 	ret = service_operation(new_op, __func__, get_interruptible_flag(dir));
+ 
+@@ -324,8 +319,7 @@ static int orangefs_mkdir(struct mnt_idmap *idmap, struct inode *dir,
+ 	fill_default_sys_attrs(new_op->upcall.req.mkdir.attributes,
+ 			      ORANGEFS_TYPE_DIRECTORY, mode);
+ 
+-	strncpy(new_op->upcall.req.mkdir.d_name,
+-		dentry->d_name.name, ORANGEFS_NAME_MAX - 1);
++	strscpy(new_op->upcall.req.mkdir.d_name, dentry->d_name.name);
+ 
+ 	ret = service_operation(new_op, __func__, get_interruptible_flag(dir));
+ 
+@@ -405,12 +399,8 @@ static int orangefs_rename(struct mnt_idmap *idmap,
+ 	new_op->upcall.req.rename.old_parent_refn = ORANGEFS_I(old_dir)->refn;
+ 	new_op->upcall.req.rename.new_parent_refn = ORANGEFS_I(new_dir)->refn;
+ 
+-	strncpy(new_op->upcall.req.rename.d_old_name,
+-		old_dentry->d_name.name,
+-		ORANGEFS_NAME_MAX - 1);
+-	strncpy(new_op->upcall.req.rename.d_new_name,
+-		new_dentry->d_name.name,
+-		ORANGEFS_NAME_MAX - 1);
++	strscpy(new_op->upcall.req.rename.d_old_name, old_dentry->d_name.name);
++	strscpy(new_op->upcall.req.rename.d_new_name, new_dentry->d_name.name);
+ 
+ 	ret = service_operation(new_op,
+ 				"orangefs_rename",
+diff --git a/fs/orangefs/super.c b/fs/orangefs/super.c
+index 34849b4a3243..fb4d09c2f531 100644
+--- a/fs/orangefs/super.c
++++ b/fs/orangefs/super.c
+@@ -253,9 +253,8 @@ int orangefs_remount(struct orangefs_sb_info_s *orangefs_sb)
+ 	new_op = op_alloc(ORANGEFS_VFS_OP_FS_MOUNT);
+ 	if (!new_op)
+ 		return -ENOMEM;
+-	strncpy(new_op->upcall.req.fs_mount.orangefs_config_server,
+-		orangefs_sb->devname,
+-		ORANGEFS_MAX_SERVER_ADDR_LEN);
++	strscpy(new_op->upcall.req.fs_mount.orangefs_config_server,
++		orangefs_sb->devname);
+ 
+ 	gossip_debug(GOSSIP_SUPER_DEBUG,
+ 		     "Attempting ORANGEFS Remount via host %s\n",
+@@ -400,8 +399,7 @@ static int orangefs_unmount(int id, __s32 fs_id, const char *devname)
+ 		return -ENOMEM;
+ 	op->upcall.req.fs_umount.id = id;
+ 	op->upcall.req.fs_umount.fs_id = fs_id;
+-	strncpy(op->upcall.req.fs_umount.orangefs_config_server,
+-	    devname, ORANGEFS_MAX_SERVER_ADDR_LEN - 1);
++	strscpy(op->upcall.req.fs_umount.orangefs_config_server, devname);
+ 	r = service_operation(op, "orangefs_fs_umount", 0);
+ 	/* Not much to do about an error here. */
+ 	if (r)
+@@ -494,9 +492,7 @@ struct dentry *orangefs_mount(struct file_system_type *fst,
+ 	if (!new_op)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	strncpy(new_op->upcall.req.fs_mount.orangefs_config_server,
+-		devname,
+-		ORANGEFS_MAX_SERVER_ADDR_LEN - 1);
++	strscpy(new_op->upcall.req.fs_mount.orangefs_config_server, devname);
+ 
+ 	gossip_debug(GOSSIP_SUPER_DEBUG,
+ 		     "Attempting ORANGEFS Mount via host %s\n",
+@@ -543,9 +539,8 @@ struct dentry *orangefs_mount(struct file_system_type *fst,
+ 	 * on successful mount, store the devname and data
+ 	 * used
+ 	 */
+-	strncpy(ORANGEFS_SB(sb)->devname,
+-		devname,
+-		ORANGEFS_MAX_SERVER_ADDR_LEN - 1);
++	strscpy(ORANGEFS_SB(sb)->devname, devname);
++
+ 
+ 	/* mount_pending must be cleared */
+ 	ORANGEFS_SB(sb)->mount_pending = 0;
+
+---
+base-commit: 241590e5a1d1b6219c8d3045c167f2fbcc076cbb
+change-id: 20240322-strncpy-fs-orangefs-dcache-c-9a0cf2d22dae
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
