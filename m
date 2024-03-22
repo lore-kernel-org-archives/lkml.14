@@ -1,48 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4094D1CD00;
-	Fri, 22 Mar 2024 22:52:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073D360B91
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 22:56:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711147955; cv=none; b=DyH7dD0Vxq+oSZH2oFX20DSJEggmcNEyKfrfEIn1KuRuzPzpqjHSndbe/6sM86R+mWwc/1/QAyDm+TCh9SrMgH6fra/ST28d8uHpFovLUPbDccq4QvI7Xkg1Qwe46wY/tVc4HGDWE8VJwWKAxeWeyTlCNOe3x4LbA5tlBb35QM4=
+	t=1711148208; cv=none; b=Mov90x6EkLosBNpLY1iV7KPyC1s/ZRVya9GzGMxeV4ex+Zut1rd2j3tDPhJJH/u0ksJc9jXaY5kznYPElojxPUqA4uI9g1QOPDs8sSLrv/EN2XiFvSFntmm5YelpqRaY7OtVG4cnOzLxeFFHnhpmNvxvz1VYUMTNOuBVsMYnJf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711147955; c=relaxed/simple;
-	bh=hKZFEeKpoc/pNzTRJQzWbV56PN2qw+KOa9bJztyzp6I=;
+	s=arc-20240116; t=1711148208; c=relaxed/simple;
+	bh=NWjST7AfhmWDCfO6EyHsfoZ7s5rcMP33bA0hV91Yn1g=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YYgkKxXIVvF7OqFznrrC0fosBoQ7A7SRczFYkZCuT3kw5IXkmvHVLHpM8KQLsI2pr2t0Nli7jNEmfitrTjzMGsvPn/p88YxpGHNtSPYCxC7uxjF1p37mMvJQPSYbLGawsn3P1u3MckGSJutauDRfDvFAOCw5STHXRRVv8TTx8iE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xu+/ScIr; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Qhjiip5yEpPBAoWZ8TIiudzUyl1xE2BUYjlRudBfdrdnAL9Q2URcdizdNixYv61KNhAEMaZGoYQnFQM9135yaKn/2xenZ2lsJb0Ven3TqZCA1z1uDtxF2rEDCIyqLz+2mL6J4E2uvkRIWpPbNEUcoBJ85Qbkz6GNtLj4aZdTtIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hv7SkGd2; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xu+/ScIr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E8ACC433F1;
-	Fri, 22 Mar 2024 22:52:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711147954;
-	bh=hKZFEeKpoc/pNzTRJQzWbV56PN2qw+KOa9bJztyzp6I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Xu+/ScIrlTsDPj9UZG+4uKHIoNFjGpxlEEKAPyt8hzlwWBqmd9SC5LWiFETpdCD2Z
-	 bozJduZe+PexSYCRHYN8JJJamnREaem1a5BobeKYSC0oeacyV3q+zlA6ll4b8nvgu1
-	 8MjjpGReyCeTdeF5wLun5k9YdDuT3GvU1ZZz7oGEaOtEEBAZ+GuF7VNJ9cZExGQrdG
-	 xVBDfk/w8i7jA3IXPFtcOqhoFQ9FgXl1NiRYTp6fvLLfUSWLZQJ7xgXWocc9kYRYKs
-	 u2d5siRZu10W3+lAmKuKsyceRI8BkwvuYKil67YqiDiFsWmQdnfsPEatSfdXsSegBB
-	 Rcq+CQ6M/8aNQ==
-Date: Fri, 22 Mar 2024 15:52:33 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: linux-integrity@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
- "Daniel P . Smith" <dpsmith@apertussolutions.com>, Lino Sanfilippo
- <l.sanfilippo@kunbus.com>, Jason Gunthorpe <jgg@ziepe.ca>, Peter Huewe
- <peterhuewe@gmx.de>, James Bottomley
- <James.Bottomley@HansenPartnership.com>, Alexander Steffen
- <Alexander.Steffen@infineon.com>, keyrings@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Randy Dunlap
- <rdunlap@infradead.org>, Richard Cochran <richardcochran@gmail.com>,
- netdev@vger.kernel.org (open list:PTP HARDWARE CLOCK
- SUPPORT:Keyword:(?:\b|_)ptp(?:\b|_))
-Subject: Re: [PATCH v4] Documentation: tpm_tis
-Message-ID: <20240322155233.30422299@kernel.org>
-In-Reply-To: <20240322123542.24158-1-jarkko@kernel.org>
-References: <20240322123542.24158-1-jarkko@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hv7SkGd2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711148205; x=1742684205;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=NWjST7AfhmWDCfO6EyHsfoZ7s5rcMP33bA0hV91Yn1g=;
+  b=Hv7SkGd2jiqyeiGdwRzWSA+XD1ERNZYQmGicdKzmcHl6fVYrK72A6xy8
+   qn730m7C79ROGvUKa/1uKZoTi9D2rsXP77WMJbcffQY+8Q7QIUn1u+Sv1
+   u7KsamgGVJE/8rEhXCg2KhZkqSZCChrGcla2gMpU5t2jZGozushXpwZVD
+   oh0WSOOGPWzwxLkKaAQ9w74gWdyw/bp0F0gKWYI3Upl/X46VSvvIZMMPM
+   6HcrYWAu6Kv/dOqgb+IDzd1+EPtCnwwT8/kbvUomG307cFp1hIZUO8tCi
+   tTAygu9N2T3iU1zQWF59ac7QEgkaL/EfESj7MAe7z2bSAxw7uxc8rPMS2
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11021"; a="6048043"
+X-IronPort-AV: E=Sophos;i="6.07,147,1708416000"; 
+   d="scan'208";a="6048043"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 15:56:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,147,1708416000"; 
+   d="scan'208";a="14950844"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 15:56:44 -0700
+Date: Fri, 22 Mar 2024 16:01:04 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: Dimitri Sivanich <sivanich@hpe.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Joerg Roedel <joro@8bytes.org>,
+ Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, Will Deacon
+ <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, David Woodhouse
+ <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, Mark Rutland
+ <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Arnd
+ Bergmann <arnd@arndb.de>, YueHaibing <yuehaibing@huawei.com>,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org, Steve Wahl
+ <steve.wahl@hpe.com>, Russ Anderson <russ.anderson@hpe.com>,
+ jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2] iommu/vt-d: Allocate DMAR fault interrupts locally
+Message-ID: <20240322160104.22af19bd@jacob-builder>
+In-Reply-To: <Zfydpp2Hm+as16TY@hpe.com>
+References: <Zfydpp2Hm+as16TY@hpe.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,12 +66,146 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 22 Mar 2024 14:35:36 +0200 Jarkko Sakkinen wrote:
-> +TCG PTP Specification defines two interface types: FIFO and CRB. The former is
+Hi Dimitri,
 
-Could be worth spelling out the PTP part here, I'm guessing
-get_maintainer made you CC netdev because it thought it stands
-for Precision Time Protocol. And one has to read till the end
-to see:
+On Thu, 21 Mar 2024 15:50:46 -0500, Dimitri Sivanich <sivanich@hpe.com>
+wrote:
 
-> +TCG PC Client Platform TPM Profile (PTP) Specification
+> The Intel IOMMU code currently tries to allocate all DMAR fault interrupt
+> vectors on the boot cpu.  On large systems with high DMAR counts this
+> results in vector exhaustion, and most of the vectors are not initially
+> allocated socket local.
+> 
+> Instead, have a cpu on each node do the vector allocation for the DMARs on
+> that node.  The boot cpu still does the allocation for its node during its
+> boot sequence.
+> 
+> Signed-off-by: Dimitri Sivanich <sivanich@hpe.com>
+> ---
+> 
+> v2: per Thomas Gleixner, implement this from a DYN CPU hotplug state,
+> though this implementation runs in CPUHP_AP_ONLINE_DYN space rather than
+>     CPUHP_BP_PREPARE_DYN space.
+> 
+
+I tested on a dual socket system (192 core) successfully with the following:
+1. After boot DMAR-MSI spread from BSP to the first CPU of the second numa
+node
+2. Offline/Online all CPUs in the 2nd node
+
+Code looks good to me.
+
+
+Thanks,
+
+Jacob
+
+>  drivers/iommu/amd/amd_iommu.h | 2 +-
+>  drivers/iommu/amd/init.c      | 2 +-
+>  drivers/iommu/intel/dmar.c    | 9 +++++++--
+>  drivers/iommu/irq_remapping.c | 5 ++++-
+>  drivers/iommu/irq_remapping.h | 2 +-
+>  include/linux/dmar.h          | 2 +-
+>  6 files changed, 15 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/iommu/amd/amd_iommu.h b/drivers/iommu/amd/amd_iommu.h
+> index f482aab420f7..410c360e7e24 100644
+> --- a/drivers/iommu/amd/amd_iommu.h
+> +++ b/drivers/iommu/amd/amd_iommu.h
+> @@ -33,7 +33,7 @@ int amd_iommu_prepare(void);
+>  int amd_iommu_enable(void);
+>  void amd_iommu_disable(void);
+>  int amd_iommu_reenable(int mode);
+> -int amd_iommu_enable_faulting(void);
+> +int amd_iommu_enable_faulting(unsigned int cpu);
+>  extern int amd_iommu_guest_ir;
+>  extern enum io_pgtable_fmt amd_iommu_pgtable;
+>  extern int amd_iommu_gpt_level;
+> diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
+> index e7a44929f0da..4782f690ed97 100644
+> --- a/drivers/iommu/amd/init.c
+> +++ b/drivers/iommu/amd/init.c
+> @@ -3389,7 +3389,7 @@ int amd_iommu_reenable(int mode)
+>  	return 0;
+>  }
+>  
+> -int __init amd_iommu_enable_faulting(void)
+> +int __init amd_iommu_enable_faulting(unsigned int cpu)
+>  {
+>  	/* We enable MSI later when PCI is initialized */
+>  	return 0;
+> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
+> index 36d7427b1202..7644a42f283c 100644
+> --- a/drivers/iommu/intel/dmar.c
+> +++ b/drivers/iommu/intel/dmar.c
+> @@ -2122,7 +2122,7 @@ int dmar_set_interrupt(struct intel_iommu *iommu)
+>  	return ret;
+>  }
+>  
+> -int __init enable_drhd_fault_handling(void)
+> +int enable_drhd_fault_handling(unsigned int cpu)
+>  {
+>  	struct dmar_drhd_unit *drhd;
+>  	struct intel_iommu *iommu;
+> @@ -2132,7 +2132,12 @@ int __init enable_drhd_fault_handling(void)
+>  	 */
+>  	for_each_iommu(iommu, drhd) {
+>  		u32 fault_status;
+> -		int ret = dmar_set_interrupt(iommu);
+> +		int ret;
+> +
+> +		if (iommu->irq || iommu->node != cpu_to_node(cpu))
+> +			continue;
+> +
+> +		ret = dmar_set_interrupt(iommu);
+>  
+>  		if (ret) {
+>  			pr_err("DRHD %Lx: failed to enable fault,
+> interrupt, ret %d\n", diff --git a/drivers/iommu/irq_remapping.c
+> b/drivers/iommu/irq_remapping.c index ee59647c2050..2f7281ccc05f 100644
+> --- a/drivers/iommu/irq_remapping.c
+> +++ b/drivers/iommu/irq_remapping.c
+> @@ -151,7 +151,10 @@ int __init irq_remap_enable_fault_handling(void)
+>  	if (!remap_ops->enable_faulting)
+>  		return -ENODEV;
+>  
+> -	return remap_ops->enable_faulting();
+> +	cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
+> "dmar:enable_fault_handling",
+> +			  remap_ops->enable_faulting, NULL);
+> +
+> +	return remap_ops->enable_faulting(smp_processor_id());
+>  }
+>  
+>  void panic_if_irq_remap(const char *msg)
+> diff --git a/drivers/iommu/irq_remapping.h b/drivers/iommu/irq_remapping.h
+> index 8c89cb947cdb..0d6f140b5e01 100644
+> --- a/drivers/iommu/irq_remapping.h
+> +++ b/drivers/iommu/irq_remapping.h
+> @@ -41,7 +41,7 @@ struct irq_remap_ops {
+>  	int  (*reenable)(int);
+>  
+>  	/* Enable fault handling */
+> -	int  (*enable_faulting)(void);
+> +	int  (*enable_faulting)(unsigned int);
+>  };
+>  
+>  extern struct irq_remap_ops intel_irq_remap_ops;
+> diff --git a/include/linux/dmar.h b/include/linux/dmar.h
+> index e34b601b71fd..499bb2c63483 100644
+> --- a/include/linux/dmar.h
+> +++ b/include/linux/dmar.h
+> @@ -117,7 +117,7 @@ extern int dmar_remove_dev_scope(struct
+> dmar_pci_notify_info *info, int count);
+>  /* Intel IOMMU detection */
+>  void detect_intel_iommu(void);
+> -extern int enable_drhd_fault_handling(void);
+> +extern int enable_drhd_fault_handling(unsigned int cpu);
+>  extern int dmar_device_add(acpi_handle handle);
+>  extern int dmar_device_remove(acpi_handle handle);
+>  
+
+
+Thanks,
+
+Jacob
