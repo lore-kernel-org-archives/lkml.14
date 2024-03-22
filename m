@@ -1,164 +1,200 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B2A47A58
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 14:17:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F1147A48;
+	Fri, 22 Mar 2024 14:19:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711117026; cv=none; b=ppm6t9vfcrgeO7xbrisfSPovzHn5CNkVBNyeoKnkABcXdJyv720nPU+9yMEbpDkjzoLJCI+Th91ecdaiSKjFwPcNGgsYM4+u47eka7Fy4HC7fnfh5M/KvYJzQmRy8kHCPtkWyu6BFHx8dp4P5vpaLpgFwjFG6EVSTGyNmFCL8qI=
+	t=1711117150; cv=none; b=sSrJmgiLTGUTxY+JT4jxGF6j0l7YthvuN+pwIf7mpHawpDK0X6WRekuWS7fCHqYbU/MqJklyoYLRsWmwNrNIJ1wiFxh4wYSIw3gKb/bl38U7pAhTCm0EGvrp5CDuU8UY/fYchA/6/a3PfWGRg/mzqK4iipoltGqKgkNT+vl692o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711117026; c=relaxed/simple;
-	bh=eo2bqWYrcUZNSzYAEbyAw9M6T0CNfKBfGrU/lftL2Cc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LYo7PB+YprHGmoNccF7grAz/T5G1GmTbL+G7yuYWl+cn9pXx/6P/QXSX7JOxHVkj03DX5NWmmHrMBpng3IYhxyp004xSqsOhek0FN0MnGbAHiaAGARoHadg3rAYvK5DosXifpR+qfaRiGmUPXjrDgqw6u3ZTt2aXDeUsDLOdCvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=awiy4z6j; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1711117150; c=relaxed/simple;
+	bh=PTURMPFQn7attYISZHemSwcitlPK027nPcC5wSNohQ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IuHIafWfXINA6oW2nWlSW3CF88zS0WgUrFoyowLrMwjWbGCATRfMBQZ71A7fEUrtWT4E8hDYFoKnXSbVdDVcP79PNa1tSLEZn9rFcFq3uGdGoUKgKfAWfyZkrR4cE6XOvgKi0NQHumoj+/IX/xC5IwsydRyewsTAWCloU+z7lLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=hkqv0UQs; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="awiy4z6j"
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42MDE841007491;
-	Fri, 22 Mar 2024 14:16:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=fTZi8Hls2BOsqd/YE8ytbGfxvxA6culBdT/x2CsCLEw=;
- b=awiy4z6jd+Gq9XjNWvbg/39r75YYlH+r8VG/Tgb3LUPhSrRCCsOePGvYcv80m7yzO+/U
- HiZzIgkjqUCtPXPo/OeiHztrLLRQ6s8tskNbAKwDChONjJTBIDewhrrXIRkuyJsCDwX/
- ns7EIX6wdRiukP/wF2pbwR6Kl61WX89Tm87DpeIvWOiDFX68SxszXm2XKOYhlsRBTrjK
- zJND8hEXBxBzGSg9YwBN/R0lh7ZNafbKXq6Yl/mUQ/890oJYy9pXobEDnUcX78fJxxIi
- RvUJnLSeahEyk1XcOIFJoCR+t5iFvQqjQjmuVo9ub6v3ro1lRW21PkmYPVZbV5cAx7cY 3g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x1apa13qd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 Mar 2024 14:16:48 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42MEGlf3005590;
-	Fri, 22 Mar 2024 14:16:47 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x1apa13qa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 Mar 2024 14:16:47 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42ME424f023115;
-	Fri, 22 Mar 2024 14:16:46 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3x0x14p3yh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 Mar 2024 14:16:46 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42MEGgF450069894
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 22 Mar 2024 14:16:44 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CB5EC20040;
-	Fri, 22 Mar 2024 14:16:42 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 16CA420043;
-	Fri, 22 Mar 2024 14:16:41 +0000 (GMT)
-Received: from li-c1fdab4c-355a-11b2-a85c-ef242fe9efb4.ibm.com.com (unknown [9.195.40.125])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 22 Mar 2024 14:16:40 +0000 (GMT)
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-To: mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org
-Cc: sshegde@linux.ibm.com, dietmar.eggemann@arm.com, qyousef@layalina.io,
-        linux-kernel@vger.kernel.org, vschneid@redhat.com, qperret@google.com
-Subject: [PATCH v2 2/2] sched/fair: Use helper functions to access rd->overload
-Date: Fri, 22 Mar 2024 19:46:32 +0530
-Message-Id: <20240322141632.28654-3-sshegde@linux.ibm.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240322141632.28654-1-sshegde@linux.ibm.com>
-References: <20240322141632.28654-1-sshegde@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="hkqv0UQs"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7B70982A;
+	Fri, 22 Mar 2024 15:18:37 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1711117117;
+	bh=PTURMPFQn7attYISZHemSwcitlPK027nPcC5wSNohQ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hkqv0UQsW55rGrAnJqN/5DJBlIz6UdQ6tiTQg7WU6NTxWYHTA94KwAZu8tIAo9KWk
+	 cqdT/bffSjC33ZDvOQsbshltlp1PD2401X5foSfKC1tzNZcm3xUyJyW+Y2ukTC85lF
+	 ef4qQN4BFSg5qqzl8S06n8Ayh0LVb4Prj6i4ePWI=
+Date: Fri, 22 Mar 2024 16:19:02 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Tomasz Figa <tfiga@chromium.org>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Sean Paul <seanpaul@chromium.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v5 3/3] media: uvcvideo: Do not use usb_* functions after
+ .disconnect
+Message-ID: <20240322141902.GV18799@pendragon.ideasonboard.com>
+References: <20231122-guenter-mini-v5-0-15d8cd8ed74f@chromium.org>
+ <20231122-guenter-mini-v5-3-15d8cd8ed74f@chromium.org>
+ <20231122133330.GE3909@pendragon.ideasonboard.com>
+ <CANiDSCunxALoBJg-u_s=A1Zi-NF3SaNRFhv3=2jTx0oeAPrCZw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: mnUizvjoLepEwdGRfRqiki8VV0GTTT38
-X-Proofpoint-ORIG-GUID: GabXCQp-lcSG7Q6nYnWJMuuiv5cqq3ve
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-22_08,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 mlxlogscore=781 impostorscore=0 lowpriorityscore=0
- adultscore=0 spamscore=0 mlxscore=0 phishscore=0 suspectscore=0
- malwarescore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2403210000 definitions=main-2403220101
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CANiDSCunxALoBJg-u_s=A1Zi-NF3SaNRFhv3=2jTx0oeAPrCZw@mail.gmail.com>
 
-rd->overload is accessed at multiple places. Instead it could use helper
-get/set functions. This would make the code more readable and easy to
-maintain.
+Hi Ricardo,
 
-No change in functionality intended.
+On Wed, Nov 22, 2023 at 03:59:10PM +0100, Ricardo Ribalda wrote:
+> On Wed, 22 Nov 2023 at 14:33, Laurent Pinchart wrote:
+> > On Wed, Nov 22, 2023 at 11:45:49AM +0000, Ricardo Ribalda wrote:
+> > > usb drivers should not call to any I/O function after the
+> > > .disconnect() callback has been triggered.
+> > > https://www.kernel.org/doc/html/latest/driver-api/usb/callbacks.html#the-disconnect-callback
+> > >
+> > > If an application is receiving frames form a camera and the device is
+> > > disconnected: the device will call close() after the usb .disconnect()
+> > > callback has been called. The streamoff path will call usb_set_interface
+> > > or usb_clear_halt, which is not allowed.
+> > >
+> > > This patch only solves the calls to close() *after* .disconnect() is
+> > > being called.
+> > >
+> > > Trace:
+> > > [ 1065.389723] drivers/media/usb/uvc/uvc_driver.c:2248 uvc_disconnect enter
+> > > [ 1065.390160] drivers/media/usb/uvc/uvc_driver.c:2264 uvc_disconnect exit
+> > > [ 1065.433956] drivers/media/usb/uvc/uvc_v4l2.c:659 uvc_v4l2_release enter
+> > > [ 1065.433973] drivers/media/usb/uvc/uvc_video.c:2274 uvc_video_stop_streaming enter
+> > > [ 1065.434560] drivers/media/usb/uvc/uvc_video.c:2285 uvc_video_stop_streaming exit
+> > > [ 1065.435154] drivers/media/usb/uvc/uvc_v4l2.c:680 uvc_v4l2_release exit
+> > > [ 1065.435188] drivers/media/usb/uvc/uvc_driver.c:2248 uvc_disconnect enter
+> > >
+> > > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > > ---
+> > >  drivers/media/usb/uvc/uvc_driver.c |  2 ++
+> > >  drivers/media/usb/uvc/uvc_video.c  | 45 ++++++++++++++++++++++++--------------
+> > >  drivers/media/usb/uvc/uvcvideo.h   |  2 ++
+> > >  3 files changed, 32 insertions(+), 17 deletions(-)
+> > >
+> > > diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+> > > index d5dbf2644272..d78640d422f4 100644
+> > > --- a/drivers/media/usb/uvc/uvc_driver.c
+> > > +++ b/drivers/media/usb/uvc/uvc_driver.c
+> > > @@ -2266,6 +2266,8 @@ static void uvc_disconnect(struct usb_interface *intf)
+> > >               return;
+> > >
+> > >       uvc_unregister_video(dev);
+> > > +     /* Barrier needed to pair with uvc_video_stop_streaming(). */
+> > > +     smp_store_release(&dev->disconnected, true);
+> >
+> > I can't think this would be such a hot path that we really need barriers
+> > in the driver.
+> 
+> Using the same variable from two contexts without any sync feels weird.
+> 
+> Your concern is that there will be a big penalty by using the
+> barriers? This is only used in stop_streaming and the shutdown path.
 
-Suggested-by: Qais Yousef <qyousef@layalina.io>
-Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
----
- kernel/sched/fair.c  |  7 ++++---
- kernel/sched/sched.h | 14 ++++++++++++--
- 2 files changed, 16 insertions(+), 5 deletions(-)
+What I meant is that lockless concurrency is much harder to get right
+than locked concurrency. Unless there's an important reason not to use
+lock (which would I think need to be related to performance, and I don't
+see that being an issue here), I think using locks will be less
+error-prone and more maintainable. That's the KISS approach to
+concurrency (even if it doesn't directly address lockless concurrency, I
+like the approach advocated by Sima in
+https://blog.ffwll.ch/2022/07/locking-engineering.html).
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index eeebadd7d9ae..cee99c93e6a4 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -10621,8 +10621,9 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
+> > >       kref_put(&dev->ref, uvc_delete);
+> > >  }
+> > >
+> > > diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
+> > > index 28dde08ec6c5..f5ef375088de 100644
+> > > --- a/drivers/media/usb/uvc/uvc_video.c
+> > > +++ b/drivers/media/usb/uvc/uvc_video.c
+> > > @@ -2243,28 +2243,39 @@ int uvc_video_start_streaming(struct uvc_streaming *stream)
+> > >       return ret;
+> > >  }
+> > >
+> > > -void uvc_video_stop_streaming(struct uvc_streaming *stream)
+> > > +static void uvc_video_halt(struct uvc_streaming *stream)
+> > >  {
+> > > -     uvc_video_stop_transfer(stream, 1);
+> > > +     unsigned int epnum;
+> > > +     unsigned int pipe;
+> > > +     unsigned int dir;
+> > >
+> > >       if (stream->intf->num_altsetting > 1) {
+> > >               usb_set_interface(stream->dev->udev, stream->intfnum, 0);
+> > > -     } else {
+> > > -             /*
+> > > -              * UVC doesn't specify how to inform a bulk-based device
+> > > -              * when the video stream is stopped. Windows sends a
+> > > -              * CLEAR_FEATURE(HALT) request to the video streaming
+> > > -              * bulk endpoint, mimic the same behaviour.
+> > > -              */
+> > > -             unsigned int epnum = stream->header.bEndpointAddress
+> > > -                                & USB_ENDPOINT_NUMBER_MASK;
+> > > -             unsigned int dir = stream->header.bEndpointAddress
+> > > -                              & USB_ENDPOINT_DIR_MASK;
+> > > -             unsigned int pipe;
+> > > -
+> > > -             pipe = usb_sndbulkpipe(stream->dev->udev, epnum) | dir;
+> > > -             usb_clear_halt(stream->dev->udev, pipe);
+> > > +             return;
+> > >       }
+> > >
+> > > +     /*
+> > > +      * UVC doesn't specify how to inform a bulk-based device
+> > > +      * when the video stream is stopped. Windows sends a
+> > > +      * CLEAR_FEATURE(HALT) request to the video streaming
+> > > +      * bulk endpoint, mimic the same behaviour.
+> > > +      */
+> > > +     epnum = stream->header.bEndpointAddress & USB_ENDPOINT_NUMBER_MASK;
+> > > +     dir = stream->header.bEndpointAddress & USB_ENDPOINT_DIR_MASK;
+> > > +     pipe = usb_sndbulkpipe(stream->dev->udev, epnum) | dir;
+> > > +     usb_clear_halt(stream->dev->udev, pipe);
+> > > +}
+> > > +
+> > > +void uvc_video_stop_streaming(struct uvc_streaming *stream)
+> > > +{
+> > > +     uvc_video_stop_transfer(stream, 1);
+> > > +
+> > > +     /*
+> > > +      * Barrier needed to pair with uvc_disconnect().
+> > > +      * We cannot call usb_* functions on a disconnected USB device.
+> > > +      */
+> > > +     if (!smp_load_acquire(&stream->dev->disconnected))
+> > > +             uvc_video_halt(stream);
+> > > +
+> > >       uvc_video_clock_cleanup(stream);
+> > >  }
+> > > diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+> > > index ba8f8c1f2c83..5b1a3643de05 100644
+> > > --- a/drivers/media/usb/uvc/uvcvideo.h
+> > > +++ b/drivers/media/usb/uvc/uvcvideo.h
+> > > @@ -559,6 +559,8 @@ struct uvc_device {
+> > >       unsigned int users;
+> > >       atomic_t nmappings;
+> > >
+> > > +     bool disconnected;
+> > > +
+> > >       /* Video control interface */
+> > >  #ifdef CONFIG_MEDIA_CONTROLLER
+> > >       struct media_device mdev;
+> > >
 
- 	if (!env->sd->parent) {
- 		/* update overload indicator if we are at root domain */
--		if (READ_ONCE(env->dst_rq->rd->overload) != (sg_status & SG_OVERLOAD))
--			WRITE_ONCE(env->dst_rq->rd->overload, sg_status & SG_OVERLOAD);
-+		if (is_rd_overloaded(env->dst_rq->rd) != (sg_status & SG_OVERLOAD))
-+			set_rd_overload_status(env->dst_rq->rd,
-+					       sg_status & SG_OVERLOAD);
+-- 
+Regards,
 
- 		/* Update over-utilization (tipping point, U >= 0) indicator */
- 		set_rd_overutilized_status(env->dst_rq->rd,
-@@ -12344,7 +12345,7 @@ static int sched_balance_newidle(struct rq *this_rq, struct rq_flags *rf)
- 	rcu_read_lock();
- 	sd = rcu_dereference_check_sched_domain(this_rq->sd);
-
--	if (!READ_ONCE(this_rq->rd->overload) ||
-+	if (!is_rd_overloaded(this_rq->rd) ||
- 	    (sd && this_rq->avg_idle < sd->max_newidle_lb_cost)) {
-
- 		if (sd)
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 41024c1c49b4..c91eb8811bef 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -918,6 +918,16 @@ extern void rq_attach_root(struct rq *rq, struct root_domain *rd);
- extern void sched_get_rd(struct root_domain *rd);
- extern void sched_put_rd(struct root_domain *rd);
-
-+static inline int is_rd_overloaded(struct root_domain *rd)
-+{
-+	return READ_ONCE(rd->overload);
-+}
-+
-+static inline void set_rd_overload_status(struct root_domain *rd, int status)
-+{
-+	WRITE_ONCE(rd->overload, status);
-+}
-+
- #ifdef HAVE_RT_PUSH_IPI
- extern void rto_push_irq_work_func(struct irq_work *work);
- #endif
-@@ -2518,8 +2528,8 @@ static inline void add_nr_running(struct rq *rq, unsigned count)
-
- #ifdef CONFIG_SMP
- 	if (prev_nr < 2 && rq->nr_running >= 2) {
--		if (!READ_ONCE(rq->rd->overload))
--			WRITE_ONCE(rq->rd->overload, 1);
-+		if (!is_rd_overloaded(rq->rd))
-+			set_rd_overload_status(rq->rd, 1);
- 	}
- #endif
-
---
-2.39.3
-
+Laurent Pinchart
