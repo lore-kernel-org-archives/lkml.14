@@ -1,66 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4AD13F9E7;
-	Fri, 22 Mar 2024 10:59:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C664087A;
+	Fri, 22 Mar 2024 10:59:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711105165; cv=none; b=lOEiZSSBJm+fVZiBwpRw/fTIj5p+sHNwErVWmYoeqYE3r4DDVTHPmo/+MDmsVB6JNiZSAVFAesZqrKN0QqIpoEIFOiDyIWbF5sAZDKwdhoyEYigK175FpRhjNe9H6YCwAVWdIaf1MQK3i7z3QloGPdOr4nHitCCCSkNlzGwu+XM=
+	t=1711105168; cv=none; b=hEu5e7YjfTEXdnuADXZuUeZTQMm3Mj0V6ATpGpScY0IiXok2oKbugg6iuohmzgfy9VXqsx14Mz/CjRlG6h6239CZLKgNbOIee2OBBJX1FCI+NPvgdC98W6xsTfAwmP9qEPBUApKh98z4mBzTCiS31B3PyTCHeMbBUTjlHtrZ3YQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711105165; c=relaxed/simple;
-	bh=6y0SKQP3yg6vtCvcWYd+vp+JKLb8VWhaYpIGqyabjVU=;
+	s=arc-20240116; t=1711105168; c=relaxed/simple;
+	bh=L8qApaEcm1Jab7Eb/ytzipWabEj9vH8HAJLX5WXcm8w=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=m6NxfVR1aIQZaKIy/F73cYQg4THyWr8mB1F/FhRC1UCtDqcrA5Gw6wmjCi9maWWpgGjie9yj8DYgKiqHAgu8eAspjd2wL4uUQCFODNwaHtOf6AfeHbVbNfZ4I7CPmCFhm3NDXquM3pDaH7WVI11KleH7DcAX15NQKdV2t08LyZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vGe67JcL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kGrOyUqt; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=ap39xo2P5LzEFNQAHWLqwvJ8ulSQ1nfy9BeYvpkcInQADcgdJE9SjAEO+n3m5hTc+jJ9J/gA3NcJOyOqbWETbfGWUTLRwRcDyqObQzl8BarGon4RjdgjdVxvxaZBEaLDZUXmiqYm10NiNeqV5D0g6qGhHV4jPxgVlyS0hySCsw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FWfS+fqr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VAj5FoBC; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vGe67JcL";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kGrOyUqt"
-Date: Fri, 22 Mar 2024 10:59:21 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FWfS+fqr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VAj5FoBC"
+Date: Fri, 22 Mar 2024 10:59:24 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1711105162;
+	s=2020; t=1711105165;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3vEhqtTPlY1TvYFcXQO0SZFnOE9PzEWsix7+imOWO1w=;
-	b=vGe67JcLFJCYQqmooohRfmyHainVE5yfJ5xnTU36TY4u+33OzzVs9ZksFT2lTwdClQr6/j
-	qCOjbwmHtbjvZ9Z8+9Az9YC11olegr6rO1jmkvi3Eyl3DOLroAhrQs6pMWKF0cT3kywYC0
-	R0Rsit1KdnrYFPVjznZlupfi4vBZ8g6TGYmCoG+7DBIgvfWH1NAfStKclpmZifIdmstsCj
-	M1qSVRBA1k0CaIqGswPn36ks+FMADE2wPwGOdgZwAgIJ4wxEvy2xPDD/cK+jStd0xcfb25
-	gOrtVahBZH48mzj76l5qPB/Vhbr7tHHoekoDupkMiKWMei3vJ1kuh5E4tvyxpQ==
+	bh=rRfKt+7hzmv05KxTVMNBWwwlVI52HpCdKXBJ1bXzSW4=;
+	b=FWfS+fqrLSHRvm5eFASMGt/CypGlh52bVW35V2y260vbv4Tpdirc9/UPb7cQt1+Dbi4fcS
+	UacTlDDon4HKX8wgoLhM2t92gA0yVUD7/yU6dwTFDckk8WLi6VJ4cxnQM2wEhvPK6DRZDv
+	/JFSIGaVIhI6E1M+10N/f/y7nwt6kdC9PNw1Xd83gx5xVhWMUrrf256bbeXzpv3mQkwWQ7
+	E+BshcchCbotmjgqsPIkoKNgN5WzfjPEn46I2yhLXixuxCfdUQwi+FLk3k4sxeL3i30gLW
+	zS3Kv1P/V/2irS3qERowF8e+TXGJjtNc3myj7WUYqfkNM7S6XMdiA9V7gWKMSw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1711105162;
+	s=2020e; t=1711105165;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3vEhqtTPlY1TvYFcXQO0SZFnOE9PzEWsix7+imOWO1w=;
-	b=kGrOyUqti5y5HY78ZYmB4cI3qKJXRR4hzafY8qBVkqRJKIiPAaydopSiiNb7ajx95xZKss
-	05/huNv6NCuFA0Bg==
-From: "tip-bot2 for Alexey Dobriyan" <tip-bot2@linutronix.de>
+	bh=rRfKt+7hzmv05KxTVMNBWwwlVI52HpCdKXBJ1bXzSW4=;
+	b=VAj5FoBCcj+sIJsSkJxqSLJod3O8lBrX8W8Vwk1mbivboLKBNhw/yVT1gD1bPAEWZKfWIS
+	B8vdSXgyWlIcDiBw==
+From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/asm] x86/asm/64: Clean up memset16(), memset32(),
- memset64() assembly constraints in <asm/string_64.h>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>, Ingo Molnar <mingo@kernel.org>,
- Uros Bizjak <ubizjak@gmail.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+Subject:
+ [tip: x86/cpu] x86/cpu/topology: Add support for the AMD 0x80000026 leaf
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ K Prateek Nayak <kprateek.nayak@amd.com>, Ingo Molnar <mingo@kernel.org>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240314165715.31831-1-adobriyan@gmail.com>
-References: <20240314165715.31831-1-adobriyan@gmail.com>
+In-Reply-To: <20240314050432.1710-1-kprateek.nayak@amd.com>
+References: <20240314050432.1710-1-kprateek.nayak@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171110516145.10875.12682506155345317874.tip-bot2@tip-bot2>
+Message-ID: <171110516470.10875.12388323344894124687.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,128 +66,171 @@ Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/asm branch of tip:
+The following commit has been merged into the x86/cpu branch of tip:
 
-Commit-ID:     4c9a93800121e90484cd07c8e5bde70e31cdb996
-Gitweb:        https://git.kernel.org/tip/4c9a93800121e90484cd07c8e5bde70e31cdb996
-Author:        Alexey Dobriyan <adobriyan@gmail.com>
-AuthorDate:    Thu, 14 Mar 2024 19:57:15 +03:00
+Commit-ID:     63edbaa48a579bb167aa92aa5826888730819fa2
+Gitweb:        https://git.kernel.org/tip/63edbaa48a579bb167aa92aa5826888730819fa2
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Thu, 14 Mar 2024 10:34:32 +05:30
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 22 Mar 2024 11:47:34 +01:00
+CommitterDate: Fri, 22 Mar 2024 11:22:14 +01:00
 
-x86/asm/64: Clean up memset16(), memset32(), memset64() assembly constraints in <asm/string_64.h>
+x86/cpu/topology: Add support for the AMD 0x80000026 leaf
 
-- Use "+" constraint modifier,
-  simplify inputs and output lists,
-  delete dummy variables with meaningless names,
+On AMD processors that support extended CPUID leaf 0x80000026, use the
+extended leaf to parse the topology information. In case of a failure,
+fall back to parsing the information from CPUID leaf 0xb.
 
-  "&" only makes sense in complex assembly creating constraints on
-  intermediate registers. But 1 instruction assemblies don't have
-  inner body so to speak.
+CPUID leaf 0x80000026 exposes the "CCX" and "CCD (Die)" information on
+AMD processors which have been mapped to TOPO_TILE_DOMAIN and
+TOPO_DIE_DOMAIN respectively.
 
-- Write "rep stos*" on one line:
-  Rep prefix is integral part of x86 instruction.  I'm not sure why
-  people separate "rep" with newline.
+Since this information was previously not available via CPUID leaf 0xb
+or 0x8000001e, the "die_id", "logical_die_id", "max_die_per_pkg",
+"die_cpus", and "die_cpus_list" will differ with this addition on
+AMD processors that support extended CPUID leaf 0x80000026 and contain
+more than one "CCD (Die)" on the package.
 
-  Uros Bizjak adds context: "some archaic assemblers rejected 'rep
-  insn' on one line. I have checked that the minimum required
-  binutils-2.25 assembles this without problems."
+For example, following are the changes in the values reported by
+"/sys/kernel/debug/x86/topo/cpus/16" after applying this patch on a 4th
+Generation AMD EPYC System (1 x 128C/256T):
 
-- Use __auto_type for maximum copy pasta experience,
+  (CPU16 is the first CPU of the second CCD on the package)
 
-- Reformat a bit to make everything looks nicer.
+		   tip:x86/apic      tip:x86/apic
+				     + this patch
 
-Note that "memory" clobber is too much if "n" is known at compile time.
-However,
+  online:              1                  1
+  initial_apicid:      80                 80
+  apicid:              80                 80
+  pkg_id:              0                  0
+  die_id:              0                  4       *
+  cu_id:               255                255
+  core_id:             64                 64
+  logical_pkg_id:      0                  0
+  logical_die_id:      0                  4       *
+  llc_id:              8                  8
+  l2c_id:              65535              65535
+  amd_node_id:         0                  0
+  amd_nodes_per_pkg:   1                  1
+  num_threads:         256                256
+  num_cores:           128                128
+  max_dies_per_pkg:    1                  8       *
+  max_threads_per_core:2                  2
 
-	"=m" (*(T(*)[n])s)
+[ prateek: commit log, updated comment in topoext_amd.c, changed has_0xb
+  to has_topoext, rebased the changes on tip:x86/apic, tested the
+  changes on 4th Gen AMD EPYC system ]
 
-doesn't work because -Wvla even if "n" is compile time constant:
+[ mingo: tidy up the changelog a bit more ]
 
-	if (BCP(n)) {
-		rep stos
-		: "=m" (*(T(*)[n])s)
-	} else {
-		rep stosw
-		: "memory"
-	}
-
-The above doesn't work.
-
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Link: https://lore.kernel.org/r/20240314165715.31831-1-adobriyan@gmail.com
+Link: https://lore.kernel.org/r/20240314050432.1710-1-kprateek.nayak@amd.com
 ---
- arch/x86/include/asm/string_64.h | 45 ++++++++++++++++---------------
- 1 file changed, 24 insertions(+), 21 deletions(-)
+ arch/x86/kernel/cpu/topology_amd.c | 19 +++++++++++--------
+ arch/x86/kernel/cpu/topology_ext.c | 15 +++++++++++++++
+ 2 files changed, 26 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/include/asm/string_64.h b/arch/x86/include/asm/string_64.h
-index 857d364..9d0b324 100644
---- a/arch/x86/include/asm/string_64.h
-+++ b/arch/x86/include/asm/string_64.h
-@@ -30,37 +30,40 @@ void *__memset(void *s, int c, size_t n);
- #define __HAVE_ARCH_MEMSET16
- static inline void *memset16(uint16_t *s, uint16_t v, size_t n)
- {
--	long d0, d1;
--	asm volatile("rep\n\t"
--		     "stosw"
--		     : "=&c" (d0), "=&D" (d1)
--		     : "a" (v), "1" (s), "0" (n)
--		     : "memory");
--	return s;
-+	const __auto_type s0 = s;
-+	asm volatile (
-+		"rep stosw"
-+		: "+D" (s), "+c" (n)
-+		: "a" (v)
-+		: "memory"
-+	);
-+	return s0;
+diff --git a/arch/x86/kernel/cpu/topology_amd.c b/arch/x86/kernel/cpu/topology_amd.c
+index 1a8b3ad..6bc44ab 100644
+--- a/arch/x86/kernel/cpu/topology_amd.c
++++ b/arch/x86/kernel/cpu/topology_amd.c
+@@ -48,7 +48,7 @@ static void store_node(struct topo_scan *tscan, unsigned int nr_nodes, u16 node_
+ 	tscan->amd_node_id = node_id;
  }
  
- #define __HAVE_ARCH_MEMSET32
- static inline void *memset32(uint32_t *s, uint32_t v, size_t n)
+-static bool parse_8000_001e(struct topo_scan *tscan, bool has_0xb)
++static bool parse_8000_001e(struct topo_scan *tscan, bool has_topoext)
  {
--	long d0, d1;
--	asm volatile("rep\n\t"
--		     "stosl"
--		     : "=&c" (d0), "=&D" (d1)
--		     : "a" (v), "1" (s), "0" (n)
--		     : "memory");
--	return s;
-+	const __auto_type s0 = s;
-+	asm volatile (
-+		"rep stosl"
-+		: "+D" (s), "+c" (n)
-+		: "a" (v)
-+		: "memory"
-+	);
-+	return s0;
- }
+ 	struct {
+ 		// eax
+@@ -78,7 +78,7 @@ static bool parse_8000_001e(struct topo_scan *tscan, bool has_0xb)
+ 	 * topology_set_dom() would propagate and overwrite the already
+ 	 * propagated CORE level.
+ 	 */
+-	if (!has_0xb) {
++	if (!has_topoext) {
+ 		unsigned int nthreads = leaf.core_nthreads + 1;
  
- #define __HAVE_ARCH_MEMSET64
- static inline void *memset64(uint64_t *s, uint64_t v, size_t n)
+ 		topology_update_dom(tscan, TOPO_SMT_DOMAIN, get_count_order(nthreads), nthreads);
+@@ -137,21 +137,24 @@ static void legacy_set_llc(struct topo_scan *tscan)
+ 
+ static void parse_topology_amd(struct topo_scan *tscan)
  {
--	long d0, d1;
--	asm volatile("rep\n\t"
--		     "stosq"
--		     : "=&c" (d0), "=&D" (d1)
--		     : "a" (v), "1" (s), "0" (n)
--		     : "memory");
--	return s;
-+	const __auto_type s0 = s;
-+	asm volatile (
-+		"rep stosq"
-+		: "+D" (s), "+c" (n)
-+		: "a" (v)
-+		: "memory"
-+	);
-+	return s0;
- }
- #endif
+-	bool has_0xb = false;
++	bool has_topoext = false;
  
+ 	/*
+ 	 * If the extended topology leaf 0x8000_001e is available
+-	 * try to get SMT and CORE shift from leaf 0xb first, then
+-	 * try to get the CORE shift from leaf 0x8000_0008.
++	 * try to get SMT, CORE, TILE, and DIE shifts from extended
++	 * CPUID leaf 0x8000_0026 on supported processors first. If
++	 * extended CPUID leaf 0x8000_0026 is not supported, try to
++	 * get SMT and CORE shift from leaf 0xb first, then try to
++	 * get the CORE shift from leaf 0x8000_0008.
+ 	 */
+ 	if (cpu_feature_enabled(X86_FEATURE_TOPOEXT))
+-		has_0xb = cpu_parse_topology_ext(tscan);
++		has_topoext = cpu_parse_topology_ext(tscan);
+ 
+-	if (!has_0xb && !parse_8000_0008(tscan))
++	if (!has_topoext && !parse_8000_0008(tscan))
+ 		return;
+ 
+ 	/* Prefer leaf 0x8000001e if available */
+-	if (parse_8000_001e(tscan, has_0xb))
++	if (parse_8000_001e(tscan, has_topoext))
+ 		return;
+ 
+ 	/* Try the NODEID MSR */
+diff --git a/arch/x86/kernel/cpu/topology_ext.c b/arch/x86/kernel/cpu/topology_ext.c
+index e477228..467b032 100644
+--- a/arch/x86/kernel/cpu/topology_ext.c
++++ b/arch/x86/kernel/cpu/topology_ext.c
+@@ -13,7 +13,10 @@ enum topo_types {
+ 	CORE_TYPE		= 2,
+ 	MAX_TYPE_0B		= 3,
+ 	MODULE_TYPE		= 3,
++	AMD_CCD_TYPE		= 3,
+ 	TILE_TYPE		= 4,
++	AMD_SOCKET_TYPE		= 4,
++	MAX_TYPE_80000026	= 5,
+ 	DIE_TYPE		= 5,
+ 	DIEGRP_TYPE		= 6,
+ 	MAX_TYPE_1F		= 7,
+@@ -32,6 +35,13 @@ static const unsigned int topo_domain_map_0b_1f[MAX_TYPE_1F] = {
+ 	[DIEGRP_TYPE]	= TOPO_DIEGRP_DOMAIN,
+ };
+ 
++static const unsigned int topo_domain_map_80000026[MAX_TYPE_80000026] = {
++	[SMT_TYPE]		= TOPO_SMT_DOMAIN,
++	[CORE_TYPE]		= TOPO_CORE_DOMAIN,
++	[AMD_CCD_TYPE]		= TOPO_TILE_DOMAIN,
++	[AMD_SOCKET_TYPE]	= TOPO_DIE_DOMAIN,
++};
++
+ static inline bool topo_subleaf(struct topo_scan *tscan, u32 leaf, u32 subleaf,
+ 				unsigned int *last_dom)
+ {
+@@ -56,6 +66,7 @@ static inline bool topo_subleaf(struct topo_scan *tscan, u32 leaf, u32 subleaf,
+ 	switch (leaf) {
+ 	case 0x0b: maxtype = MAX_TYPE_0B; map = topo_domain_map_0b_1f; break;
+ 	case 0x1f: maxtype = MAX_TYPE_1F; map = topo_domain_map_0b_1f; break;
++	case 0x80000026: maxtype = MAX_TYPE_80000026; map = topo_domain_map_80000026; break;
+ 	default: return false;
+ 	}
+ 
+@@ -125,6 +136,10 @@ bool cpu_parse_topology_ext(struct topo_scan *tscan)
+ 	if (tscan->c->cpuid_level >= 0x1f && parse_topology_leaf(tscan, 0x1f))
+ 		return true;
+ 
++	/* AMD: Try leaf 0x80000026 first. */
++	if (tscan->c->extended_cpuid_level >= 0x80000026 && parse_topology_leaf(tscan, 0x80000026))
++		return true;
++
+ 	/* Intel/AMD: Fall back to leaf 0xB if available */
+ 	return tscan->c->cpuid_level >= 0x0b && parse_topology_leaf(tscan, 0x0b);
+ }
