@@ -1,310 +1,358 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE8A4CE13
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 15:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 911B843AAB;
+	Fri, 22 Mar 2024 15:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711121480; cv=none; b=sbvF19wTs+JUvx/npCsTsp5PkSXbTIPibKEDzuno89BG1PmpjP03ScRUS+tj1Ykq2Fx1Rj2do4v8yQ72dv08H5Nvimb3VUuvj/cPivaPMINa/P4Xh/PJcrU4Pbvbb/9LFWpMQjjBlenQaDTdahW3QMxS/eiH2yf3W5xZleKMkbw=
+	t=1711121553; cv=none; b=HLI5/9c9FiZxrDh1c95y2Ot00Lb0b0vWOiCLyL2OGlq4DTitHBuN0D4I/8YRduccRz7n1kL0fO7y5koXA0DTxmiilV62/uZdmuLQLn1A/HtuS4xGLiGdq57/gPWeFIli+wivtuofsn3mxb+L2IT432Z7GG5CAi873pk541MW1KE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711121480; c=relaxed/simple;
-	bh=Ox0mmPE49F9PP7cJKvrl5cvdsz9gdE/4hTLv1j41J24=;
+	s=arc-20240116; t=1711121553; c=relaxed/simple;
+	bh=P3wyIxoBFXK1mVKfrTE7kGKRqmQadcn0/NHqsFnj96c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kTG9gU6UUYo42IsfYgCE+ZQm+ciSm+gZu9/VL6F+AuUESG9N/AxrZVs1vRZOcf687iREC2EFcGrd8NmS9uXYMMmWaGdvXx2RakkLmACJNJeV4RHBU/Kf9VGh+GwB0Ha71FBHvJa4C6tO5NhfX46E6P9aIpbD/I8qQ9SJrDcNP7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mytTlfzW; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=pL3kbza457z7JmO6KnE5bKcfz5fELjGgl4MKzbfX3vgP7ZZ1nz/ZzRr3vlS6WKXbdJwmtVRCrWEZAhWendiCFj5Eaz80j+aHnjsBaC9x9BaoMWXWSrI2eHQc56AVTHMutf8hivQ+lGzefUdVqvoz3X7g3za2svsd556p7llJOZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GkrBJ4D5; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mytTlfzW"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dc6d8bd618eso2225034276.3
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 08:31:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkrBJ4D5"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6918781a913so18623706d6.3;
+        Fri, 22 Mar 2024 08:32:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711121477; x=1711726277; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=6+zpz/0s08etd86Xo6qnUCY3UQn1+EUOk94+hs8faa0=;
-        b=mytTlfzWnsNU48/lbqAh7jW9ba08Up8PO3bB8dHxnotRpC0VL3F2IFZ5d4BZaUGUOl
-         W5i1t5mnCcYh65acsl/Nh6JU9N7C7R+rgd0XkRva/MbtLG3jkO/u9RtR1OIM1N7grvra
-         FV84gBHq/j19Xxtgh5r5r/GD5VQ4TIvTj3BDelCXoFMwzFK1N6I7/Q67XvZ2B7+cY8C3
-         jKmJsNqNckMM0WbJZSegU5CPHahyuOe9OQ1HhqA8zfflTlxVC9F2HcHAawE8NMNaSxcU
-         n3BbLMNeYZuqMcdSJDngAocK0IOIaiBD8Z58Z8etoTZxb6njh7mkCmbfmR58ypnzkFgc
-         nAqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711121477; x=1711726277;
+        d=gmail.com; s=20230601; t=1711121550; x=1711726350; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6+zpz/0s08etd86Xo6qnUCY3UQn1+EUOk94+hs8faa0=;
-        b=uoIUARAA2hYHjBN2Q2sw7Uys2gtH2RBi0HeZ2nQyiAGfVwoGz2U3ufKJYKnUXMT1W6
-         j7L4GsaxlaRuFnVlNZI16GCCaLNGk7YAiISfAU0U3dPqHS5qsWpzztBGdchkqtgKdrnJ
-         SH88m4ptf6tgFBdYTC7y3VRksIHsS//GWnV8o1Jn4GVRwEHTGyX6ZMoiL9A5QKzHUzre
-         QqslSrY2Eyqk8sCefo64D776IiK/9d5zkgQ67eheJvLZSQjK2SmLy6MIKFWRxAzve/dS
-         UvMZ4B6BPVKiPzFuj7RoEA3dAgx1TSQb8WnZKGsX112ov3hhMEyihBEJ8luZc36ZtFJ9
-         7zkw==
-X-Forwarded-Encrypted: i=1; AJvYcCUNQtk1EoQhl2V2QsQT5xXa8qe2iec1mjZhGC3tnrdEIaXOtewFH7fJ98/BPQHYiUb9hA/uYetNLtMU0JXfW2E8HdSfyRP0ESkBGnqr
-X-Gm-Message-State: AOJu0Yxulhtlt1/jKk3EszPLeEUGvpI2x0gT3m2r0yrxorbBBmhrky7T
-	XvKr6Zr5PgO+/Fs22L0sptF2j630vCjDSLo4jSLTJTKdRvUzSfxI7zmnTu4tWDafPWN4UMYsA88
-	=
-X-Google-Smtp-Source: AGHT+IFLY16MKppu2zecs7h+7oSpQlxQY1HhhVYugeIoJr77FKmAzqKcxjisNQan7xnx2xfIGv6v+w==
-X-Received: by 2002:a05:6a20:8f18:b0:1a3:6ee8:b84c with SMTP id b24-20020a056a208f1800b001a36ee8b84cmr3261446pzk.13.1711118510853;
-        Fri, 22 Mar 2024 07:41:50 -0700 (PDT)
-Received: from thinkpad ([103.28.246.103])
-        by smtp.gmail.com with ESMTPSA id kt3-20020a056a004ba300b006ea8152b657sm1617896pfb.69.2024.03.22.07.41.43
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=h1K6z7fXnB/y40CAaLq2u2T8rIHyCDP9Eyty22Wlld8=;
+        b=GkrBJ4D5IbQfzmyu9sgFoJc4AZz9+nptw/f9uqsLT5GK/ApxI7dsRNT5CXXHkAUiU/
+         gUlbphfbgY5mNo9G7Zpnt0Q1rjvEW92Hk1efT0YiwzfEu2gC9tL2MSurG5kGbGbHDZ+L
+         bg6f+7M0Ji87Va86GUjAq+tl4T9jntRPxXF1JVxhPKFTfNS/dvmEH1pGMWLLDvEy0OcU
+         JVgr9VetwT0EtePOJNdu82Lr5pcg9y6RlJjomKYjJZPpJwHWtFpwStyVTRTKZV1D53AX
+         JErhoKwBW807iAVmuSdLsuWdWK4+lzB6nfLOiSGIhna6qaVfDBDT+LjiU5A9dS14dzZD
+         6w6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711121550; x=1711726350;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=h1K6z7fXnB/y40CAaLq2u2T8rIHyCDP9Eyty22Wlld8=;
+        b=jxg+MSPhzl6/6uE16Hw/jMTS1HzS0Y1qoQkKIY6zko8DtoBnP0njAv4RvyviFzeGBa
+         8N1Hi0cxuxSl1NDXW8mNzLHw2+eGnQmIXh7elr2bR6pFXmoJYJ4ZaboVCh49YA6chC7N
+         PqLDs2RsfAy97fh4qMz6WsIEjim3K+nKZOgJNaabcsmqHKxwQjpd/TIRyraUWxHgVAoV
+         yfm5Oc62OrA++X1mKHgj7fS9gSVpeDPz+1mtDrBf1zL/jR6ShTqNTAYsXbGEghzerWsP
+         dzG81sigixXCpLSSHdDHiIoZsMZib+//LyMkLwtJ4B1YHtM8ccHMjcZft/pFFbYVXYVS
+         xIxw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+2ikN+PkVjNY6zpA7KrPATs/IEmr29fyL4f9Ot2WYqHikQybnaSJzyK+H99lSuBY+kHHW+p5wGokwOw4n5G/yNS+k5CJYJMPHOUE9QAB3sbmNzWDMywd2ncdptiqT9f9nYzbHsO5xJrsvvTw=
+X-Gm-Message-State: AOJu0YxB/85gnGgDxbDQn7cc3VKCrCgEmEEed/GYZbgt67E4Ba8YSgky
+	FlQ/wpAA9za+a4Kj9WsPdztkHIZgOlZAjyPybpQVHonr3q2Sn5Mb
+X-Google-Smtp-Source: AGHT+IGaO1+EvCcnVniGMfSPDZOPk8jpiG5xa91KWDNtek3tBbzaK6IbL+JZODUhmds+LX1/btEYaA==
+X-Received: by 2002:ad4:5fcf:0:b0:690:d754:284 with SMTP id jq15-20020ad45fcf000000b00690d7540284mr2259366qvb.27.1711121550448;
+        Fri, 22 Mar 2024 08:32:30 -0700 (PDT)
+Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id cy17-20020a05621418d100b0068f6e1c3582sm425573qvb.146.2024.03.22.08.32.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 07:41:50 -0700 (PDT)
-Date: Fri, 22 Mar 2024 20:11:41 +0530
-From: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: Shradha Todi <shradha.t@samsung.com>, bp@alien8.de, tony.luck@intel.com,
-	james.morse@arm.com, mchehab@kernel.org, rric@kernel.org,
-	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, jingoohan1@gmail.com,
-	gustavo.pimentel@synopsys.com, josh@joshtriplett.org,
-	lukas.bulwahn@gmail.com, hongxing.zhu@nxp.com,
-	pankaj.dubey@samsung.com, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, vidyas@nvidia.com, gost.dev@samsung.com,
-	alim.akhtar@samsung.com, shiju.jose@huawei.com,
-	Terry Bowman <Terry.Bowman@amd.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
- controller
-Message-ID: <20240322144141.GC3333@thinkpad>
-References: <20231130165514.GW3043@thinkpad>
- <000601da3e07$c39e5e00$4adb1a00$@samsung.com>
- <20240104055030.GA3031@thinkpad>
- <0df701da5ff0$df1165a0$9d3430e0$@samsung.com>
- <20240216134921.GH2559@thinkpad>
- <120d01da657e$66b9d3b0$342d7b10$@samsung.com>
- <20240319163315.GD3297@thinkpad>
- <20240320100144.0000056c@Huawei.com>
- <20240322103935.GD3638@thinkpad>
- <20240322125817.0000791f@Huawei.com>
+        Fri, 22 Mar 2024 08:32:29 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id 6EEAA1200066;
+	Fri, 22 Mar 2024 11:32:29 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Fri, 22 Mar 2024 11:32:29 -0400
+X-ME-Sender: <xms:jKT9ZXW8juNAixHYWl23vDN4r2HD-_LY4H3gga8fw9I7Cs6EJubA6Q>
+    <xme:jKT9Zfl36ZrZJ1cLP42wEl1-PujlvOA_ZdeR1LRqMceGK7zCujJO3hW0RN6XrHo_7
+    A-jS680h9WOztxomg>
+X-ME-Received: <xmr:jKT9ZTYjHjZVlRWiuxg9mvy52l-_AHlbSzZv1K6UzY7GgVhW9kkpQwRFsQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddtvddgudefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggugfgjsehtqhertddttddvnecuhfhrohhmpeeuohhq
+    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
+    grthhtvghrnheptdeijeetheelhedvfeehgeegjeeihfeihedvlefhveehueetffetieev
+    udegudeinecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdprghnughrohhiugdrtghomh
+    dprhhushhtqdhfohhrqdhlihhnuhigrdgtohhmpdgvlhgrphhsvggurdhtohenucevlhhu
+    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvg
+    hsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheeh
+    hedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:jKT9ZSXuIq2ExToqdvKjKaEjbF8AuPJtE1HEle0py0KOB79B4xKh5A>
+    <xmx:jKT9ZRloNPb020IzhvRKk9ouIMDsxHgtAQrpdt-L8PJcONKUJwP-XQ>
+    <xmx:jKT9ZfdkyQ825Fgo8VhPqlDWPd4j76vMwuxIxNuGOswvC3mAF5sVAA>
+    <xmx:jKT9ZbF4x2G1bbxC35nLVxXfMJUpEDRjc60ZfW6c3JB4whEPZ5jBoQ>
+    <xmx:jaT9ZT3ZOqVvishrBoettkZDpY24Gfv6NwGjzZ41mjoVy4qdQS6M2WQPKr4>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 22 Mar 2024 11:32:28 -0400 (EDT)
+Date: Fri, 22 Mar 2024 08:32:26 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: benno.lossin@proton.me, a.hindborg@samsung.com, alex.gaynor@gmail.com,
+	bjorn3_gh@protonmail.com, gary@garyguo.net, jstultz@google.com,
+	linux-kernel@vger.kernel.org, ojeda@kernel.org,
+	rust-for-linux@vger.kernel.org, sboyd@kernel.org,
+	tglx@linutronix.de, wedsonaf@gmail.com, lina@asahilina.net,
+	heghedus.razvan@protonmail.com
+Subject: Re: [PATCH v2] rust: time: add Ktime
+Message-ID: <Zf2kio8NYG5DEgyY@tardis>
+References: <2ecf6529-5408-4621-becc-2f30e1039079@proton.me>
+ <20240322101803.400735-1-aliceryhl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240322125817.0000791f@Huawei.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240322101803.400735-1-aliceryhl@google.com>
 
-On Fri, Mar 22, 2024 at 12:58:17PM +0000, Jonathan Cameron wrote:
-> On Fri, 22 Mar 2024 16:09:35 +0530
-> 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org> wrote:
-> 
-> > On Wed, Mar 20, 2024 at 10:01:44AM +0000, Jonathan Cameron wrote:
-> > > On Tue, 19 Mar 2024 22:03:15 +0530
-> > > 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org> wrote:
-> > >   
-> > > > On Thu, Feb 22, 2024 at 04:30:47PM +0530, Shradha Todi wrote:  
-> > > > > + Borislav, Tony, James, Mauro, Robert
-> > > > > 
-> > > > > Hi All,
-> > > > > 
-> > > > > Synopsys DesignWare PCIe controllers have a vendor specific capability (which
-> > > > > means that this set of registers are only present in DesignWare controllers)
-> > > > > to perform debug operations called "RASDES".
-> > > > > The functionalities provided by this extended capability are:
-> > > > > 
-> > > > > 1. Debug: This has some debug related diagnostic features like holding LTSSM
-> > > > > in certain states, reading the status of lane detection, checking if any PCIe
-> > > > > lanes are broken (RX Valid) and so on. It's a debug only feature used for diagnostic
-> > > > > use-cases.
-> > > > > 
-> > > > > 2. Error Injection: This is a way to inject certain errors in PCIe like LCRC, ECRC,
-> > > > > Bad TLPs and so on. Again, this is a debug feature and generally not used in
-> > > > > functional use-case.
-> > > > > 
-> > > > > 3. Statistical counters: This has 3 parts
-> > > > >  - Error counters
-> > > > >  - Non error counters (covered as part of perf [1])
-> > > > >  - Time based analysis counters (covered as part of perf [1])
-> > > > > 
-> > > > > Selective features of  the above functionality has been implemented
-> > > > > by vendor specific PCIe controller drivers (pcie-tegra194.c) that use
-> > > > > Synopsys DesignWare PCIe controllers.
-> > > > > In order to make it useful to all vendors using DWC controller, we had
-> > > > > proposed a common implementation in DWC PCIe controller directory
-> > > > > (drivers/pci/controller/dwc/) and our original idea was based on debugfs
-> > > > > filesystem. v1 and v2 are mentioned in [2] and [3].
-> > > > > 
-> > > > > We got a suggestion to implement this as part of EDAC framework [3] and
-> > > > > we looked into the same. But as far as I understood, what I am trying to
-> > > > > implement is a very specific feature (only valid for Synopsys DWC PCIe controllers).  
-> > > 
-> > > For error part there are (at least superficially) similar features in the PCIe
-> > > standard that we've started thinking about how to support.
-> > > 
-> > > See Flit Logging Extended capablity (7.7.8 in PCIe Base Spec rev6.
-> > > That has the benefit that they are part of the standard so we can
-> > > support them directly in portdrv / EP drivers using some library code in the
-> > > PCI core.
-> > >   
-> > 
-> > Sounds good. But v6 is a relatively new version and the DWC RAS predates that.
-> > So we still need to support it somehow (either in EDAC or in
-> > drivers/pci/controller/dwc).
-> > 
-> > > There are other interconnect and PCI PMU drivers that log retries etc which are also basically error
-> > > counts. At least some of that is done through perf today. 
-> > >   
-> > 
-> > IMO all the RAS support should be exposed through EDAC, otherwise it defeats the
-> > purpose of the subsystem.
-> 
-> Some RAS flows go nowhere near EDAC today.  Individual drivers poke out
-> the tracepoints and userspace tooling deals with it. One example is
-> CXL but there are plenty of others.
-> 
+On Fri, Mar 22, 2024 at 10:18:02AM +0000, Alice Ryhl wrote:
+> Benno Lossin <benno.lossin@proton.me> wrote:
+> > On 3/22/24 09:59, Alice Ryhl wrote:
+> >> +/// Returns the number of milliseconds between two ktimes.
+> >> +#[inline]
+> >> +pub fn ktime_ms_delta(later: Ktime, earlier: Ktime) -> i64 {
+> >> +    (later - earlier).to_ms()
+> >> +}
+> >=20
+> > Is there a reason for this function being standalone?
+>=20
+> I think for a Rust time API, we should make one of two choices:
+>=20
+> * Match the C ktime_t API as closely as possible.
+> * Match the Rust standard library std::time API as closely as possible.
+>=20
+> This patchset has made the former choice, and that is why I went with
+> this design.
+>=20
+> In the future it could make sense to add a more "Rusty" API, but even
+> then I think it could make sense to have both and implement the latter
+> in terms of the former. That way, only the API that closely matches the
+> C ktime_t API needs to concern itself with unsafely calling into C.
+>=20
 
-That's the problem. You'd end up with custom tooling for each individual
-drivers leading to userspace fragmentation.
+So I create the following one based on this patch and the previous we
+have. I changed the title a bit, did a s/Ktime/KTime and add the part of
+`Instant`, please take a look, I think the binder usage is still
+covered.
 
-- Mani
+Benno, I dropped your Reviewed-by since the patch has been changed.
+Please take annother look.
 
-> Perhaps that should not be the case, but there is definitely
-> precedence for ignoring edac when considering error flows.
-> 
-> Jonathan
-> 
-> > 
-> > - Mani
-> > 
-> > >   
-> > > > > This doesn't seem to fit in very well with the EDAC framework and we can 
-> > > > > hardly use any of the EDAC framework APIs. We tried implementing a
-> > > > > "pci_driver" but since a function driver will already be running on the EP and
-> > > > > portdrv on the root-complex, we will not be able to bind 2 drivers to a single
-> > > > > PCI device (root-complex or endpoint). Ultimately, what I will be doing is
-> > > > > writing a platform driver with debugfs entries which will be present in EDAC
-> > > > > directory instead of DWC directory.  
-> > > 
-> > > The addition of this type of functionality to pordrv is a long running question.
-> > > Everyone wants a solution, I believe some people are looking at it (+CC Terry)
-> > > 
-> > > Terry, another case for your long list.
-> > > 
-> > > For the EP end, this should be fired up by the EP driver, whilst it might be
-> > > infrastructure used on a bunch of devices,  it is a feature of that particular
-> > > EP - so you'd want to provide any functionality in a form that could be used
-> > > by both the EP driver and a nice shiny new portdrv replacement.
-> > >   
-> > > > > 
-> > > > > Can  you please help us out by going through this thread [3] and letting us
-> > > > > know if our understanding is wrong at any point. If you think it is a better
-> > > > > idea to integrate this in the EDAC framework, can you guide me as
-> > > > > to how I can utilize the framework better?
-> > > > > Please let me know if you need any other information to conclude.
-> > > > > 
-> > > > > [1] https://lore.kernel.org/linux-pci/20231121013400.18367-1-xueshuai@linux.alibaba.com/
-> > > > > [2] https://lore.kernel.org/all/20210518174618.42089-1-shradha.t@samsung.com/T/
-> > > > > [3] https://lore.kernel.org/all/20231130115044.53512-1-shradha.t@samsung.com/
-> > > > >     
-> > > > 
-> > > > Gentle ping for the EDAC maintainers.
-> > > > 
-> > > > - Mani
-> > > >   
-> > > > > Thanks,
-> > > > > Shradha
-> > > > >     
-> > > > > > -----Original Message-----
-> > > > > > From: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
-> > > > > > Sent: 16 February 2024 19:19
-> > > > > > To: Shradha Todi <shradha.t@samsung.com>
-> > > > > > Cc: lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > > > > > bhelgaas@google.com; jingoohan1@gmail.com;
-> > > > > > gustavo.pimentel@synopsys.com; josh@joshtriplett.org;
-> > > > > > lukas.bulwahn@gmail.com; hongxing.zhu@nxp.com;
-> > > > > > pankaj.dubey@samsung.com; linux-kernel@vger.kernel.org; linux-
-> > > > > > pci@vger.kernel.org; vidyas@nvidia.com; gost.dev@samsung.com
-> > > > > > Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
-> > > > > > controller
-> > > > > > 
-> > > > > > On Thu, Feb 15, 2024 at 02:55:06PM +0530, Shradha Todi wrote:    
-> > > > > > >
-> > > > > > >    
-> > > > > > 
-> > > > > > [...]
-> > > > > >     
-> > > > > > > > For the error injection and counters, we already have the EDAC
-> > > > > > > > framework. So adding them in the DWC driver doesn't make sense to me.
-> > > > > > > >    
-> > > > > > >
-> > > > > > > Sorry for late response, was going through the EDAC framework to understand    
-> > > > > > better how we can fit RAS DES support in it. Below are some technical challenges
-> > > > > > found so far:    
-> > > > > > > 1: This debugfs framework proposed [1] can run on both side of the link i.e. RC    
-> > > > > > and EP as it will be a part of the link controller platform driver. Here for the EP
-> > > > > > side the assumption is that it has Linux running, which is primarily a use case for
-> > > > > > chip-to-chip communication.  After your suggestion to migrate to EDAC
-> > > > > > framework we studied and here are the findings:    
-> > > > > > > - If we move to EDAC framework, we need to have RAS DES as a
-> > > > > > > pci_driver which will be binded based on vendor_id and device_id. Our
-> > > > > > > observation is that on EP side system we are unable to bind two
-> > > > > > > function driver (pci_driver), as pci_endpoint_test function driver or
-> > > > > > > some other chip-to-chip function driver will already be bound. On the
-> > > > > > > other hand, on RC side we observed that if we have portdrv enabled in
-> > > > > > > Linux running on RC system, it gets bound to RC controller and then it
-> > > > > > > does not allow EDAC pci_driver to bind. So basically we see a problem
-> > > > > > > here, that we can't have two pci_driver binding to same PCI device
-> > > > > > > 2: Another point is even though we use EDAC driver framework, we may not be    
-> > > > > > able to use any of EDAC framework APIs as they are mostly suitable for memory
-> > > > > > controller devices sitting on PCI BUS. We will end up using debugfs entries just via
-> > > > > > a pci_driver placed inside EDAC framework.
-> > > > > > 
-> > > > > > Please wrap your replies to 80 characters.
-> > > > > > 
-> > > > > > There is no need to bind the edac driver to VID:PID of the device. The edac driver
-> > > > > > can be a platform driver and you can instantiate the platform device from the
-> > > > > > DWC driver. This way, the PCI device can be assocaited with whatever driver, but
-> > > > > > still there can be a separate edac driver for handling errors.
-> > > > > > 
-> > > > > > Regarding API limitation, you should ask the maintainer about the possibility of
-> > > > > > extending them.
-> > > > > >     
-> > > > > > >
-> > > > > > > Please let me know if my understanding is wrong.
-> > > > > > >    
-> > > > > > > > But first check with the perf driver author if they have any plans
-> > > > > > > > on adding the proposed functionality. If they do not have any plan
-> > > > > > > > or not working on it, then look into EDAC.
-> > > > > > > >
-> > > > > > > > - Mani
-> > > > > > > >    
-> > > > > > >
-> > > > > > > Since we already worked and posted patches [1], [2], we will continue to work    
-> > > > > > on this and based on consent from community we will adopt to most suitable
-> > > > > > framework.    
-> > > > > > > We see many subsystems like ethernet, usb, gpu, cxl having debugfs files that    
-> > > > > > give information about the current status of the running system and as of now
-> > > > > > based on our findings, we still feel there is no harm in having debugfs entry based
-> > > > > > support in DesignWare controller driver itself.
-> > > > > > 
-> > > > > > There is no issue in exposing the debug information through debugfs, that's the
-> > > > > > sole purpose of the interface. But here, you are trying to add support for DWC
-> > > > > > RAS feature for which a dedicated framework already exists.
-> > > > > > 
-> > > > > > And there will be more similar requests coming for vendor specific error protocols
-> > > > > > as well. So your investigation could benefit everyone.
-> > > > > > 
-> > > > > > From your above investigation, looks like there are some shortcomings of the
-> > > > > > EDAC framework. So let's get that clarified by writing to the EDAC maintainers
-> > > > > > (keep us in CC). If the EDAC maintainer suggests you to add support for this
-> > > > > > feature in DWC driver itself citing some reasons, then no issues with me.
-> > > > > > 
-> > > > > > - Mani
-> > > > > > 
-> > > > > > --
-> > > > > > மணிவண்ணன் சதாசிவம்    
-> > > > > 
-> > > > >     
-> > > >   
-> > >   
-> > 
-> 
+Thomas, I tried to resolve a few comments you had for the previous
+version, please let me know whether this version looks OK to you.
 
--- 
-மணிவண்ணன் சதாசிவம்
+Regards,
+Boqun
+
+---------------------------->8
+Subject: [PATCH] rust: time: Add clock source reading functionality
+
+Introduce wrappers around `ktime_t` with a time duration type `KTime`
+and a timestamp type `Instant`.
+
+Rust Binder will use these bindings to compute how many milliseconds a
+transaction has been active for when dumping the current state of the
+Binder driver. This replicates the logic in C Binder [1].
+
+For a usage example in Rust Binder, see [2].
+
+The `ktime_get` method cannot be safely called in NMI context. This
+requirement is not checked by these abstractions, but it is intended
+that klint [3] or a similar tool will be used to check it in the future.
+
+Link: https://lore.kernel.org/lkml/5ac8c0d09392290be789423f0dd78a520b830fab=
+=2E1682333709.git.zhangchuang3@xiaomi.com/ [1]
+Link: https://r.android.com/3004103 [2]
+Link: https://rust-for-linux.com/klint [3]
+Originally-by: Heghedus Razvan <heghedus.razvan@protonmail.com>
+Originally-by: Asahi Lina <lina@asahilina.net>
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+---
+ rust/kernel/time.rs | 158 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 158 insertions(+)
+
+diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
+index 25a896eed468..50cc063aa9b4 100644
+--- a/rust/kernel/time.rs
++++ b/rust/kernel/time.rs
+@@ -4,6 +4,15 @@
+ //!
+ //! This module contains the kernel APIs related to time and timers that
+ //! have been ported or wrapped for usage by Rust code in the kernel.
++//!
++//! C header: [`include/linux/jiffies.h`](srctree/include/linux/jiffies.h).
++//! C header: [`include/linux/ktime.h`](srctree/include/linux/ktime.h).
++
++use crate::pr_err;
++use core::marker::PhantomData;
++
++/// The number of nanoseconds per millisecond.
++pub const NSEC_PER_MSEC: i64 =3D bindings::NSEC_PER_MSEC as i64;
+=20
+ /// The time unit of Linux kernel. One jiffy equals (1/HZ) second.
+ pub type Jiffies =3D core::ffi::c_ulong;
+@@ -18,3 +27,152 @@ pub fn msecs_to_jiffies(msecs: Msecs) -> Jiffies {
+     // matter what the argument is.
+     unsafe { bindings::__msecs_to_jiffies(msecs) }
+ }
++
++/// A kernel time duration.
++///
++/// This type basically wraps the `ktime_t` with one restriction: it shoul=
+d only be used for
++/// representing a time duration, in other words, it's not the type for ti=
+mestamps.
++#[repr(transparent)]
++#[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
++pub struct KTime {
++    inner: bindings::ktime_t,
++}
++
++impl KTime {
++    /// Create a [`KTime`] from a raw `ktime_t`.
++    #[inline]
++    pub fn from_raw(inner: bindings::ktime_t) -> Self {
++        Self { inner }
++    }
++
++    /// Divide the number of nanoseconds by a compile-time constant.
++    #[inline]
++    fn divns_constant<const DIV: i64>(self) -> i64 {
++        self.to_ns() / DIV
++    }
++
++    /// Returns the number of nanoseconds.
++    #[inline]
++    pub fn to_ns(self) -> i64 {
++        self.inner
++    }
++
++    /// Returns the number of milliseconds.
++    #[inline]
++    pub fn to_ms(self) -> i64 {
++        self.divns_constant::<NSEC_PER_MSEC>()
++    }
++}
++
++impl core::ops::Sub for KTime {
++    type Output =3D KTime;
++
++    #[inline]
++    fn sub(self, other: KTime) -> KTime {
++        Self {
++            inner: self.inner - other.inner,
++        }
++    }
++}
++
++/// Represents a clock, that is, a unique time source and it can be querie=
+d for the current time.
++pub trait Clock: Sized {
++    /// Returns the current time for this clock.
++    fn now() -> Instant<Self>;
++}
++
++/// Marker trait for clock sources that are guaranteed to be monotonic.
++pub trait Monotonic {}
++
++/// An instant in time associated with a given clock source.
++#[derive(Debug)]
++pub struct Instant<T: Clock> {
++    ktime: KTime,
++    _type: PhantomData<T>,
++}
++
++impl<T: Clock> Clone for Instant<T> {
++    fn clone(&self) -> Self {
++        *self
++    }
++}
++
++impl<T: Clock> Copy for Instant<T> {}
++
++impl<T: Clock> Instant<T> {
++    fn new(ktime: KTime) -> Self {
++        Instant {
++            ktime,
++            _type: PhantomData,
++        }
++    }
++
++    /// Returns the time elapsed since an earlier [`Instant`], or None if =
+the argument is a later
++    /// Instant.
++    ///
++    /// # Examples
++    ///
++    /// ```
++    /// use kernel::time::{Clock, clock::KernelTime};
++    ///
++    /// let a =3D KernelTime::now();
++    /// let b =3D KernelTime::now();
++    ///
++    /// // `KernelTime` is monotonic.
++    /// assert_eq!(a.since(b), None);
++    /// assert_eq!(b.since(a).map(|d| d.to_ns() >=3D 0), Some(true));
++    ///
++    /// ```
++    pub fn since(&self, earlier: Instant<T>) -> Option<KTime> {
++        if self.ktime < earlier.ktime {
++            None
++        } else {
++            Some(self.ktime - earlier.ktime)
++        }
++    }
++}
++
++impl<T: Clock + Monotonic> Instant<T> {
++    /// Returns the time elapsed since this [`Instant`].
++    ///
++    /// This is guaranteed to return a non-negative result, since it is on=
+ly implemented for
++    /// monotonic clocks.
++    ///
++    /// # Examples
++    ///
++    /// ```
++    /// use kernel::time::{Clock, clock::KernelTime};
++    ///
++    /// let a =3D KernelTime::now();
++    ///
++    /// // `KernelTime` is monotonic.
++    /// assert!(a.elapsed().to_ns() >=3D 0);
++    ///
++    /// ```
++    pub fn elapsed(&self) -> KTime {
++        self.since(T::now()).unwrap_or_else(|| {
++            pr_err!(
++                "Monotonic clock {} went backwards!",
++                core::any::type_name::<T>()
++            );
++            KTime::from_raw(0)
++        })
++    }
++}
++
++/// Contains the various clock source types available to the kernel.
++pub mod clock {
++    use super::*;
++
++    /// A clock representing the default kernel time source (`CLOCK_MONOTO=
+NIC`).
++    pub struct KernelTime;
++
++    impl Monotonic for KernelTime {}
++    impl Clock for KernelTime {
++        #[inline]
++        fn now() -> Instant<Self> {
++            // SAFETY: It is always safe to call `ktime_get` outside of NM=
+I context.
++            Instant::<Self>::new(KTime::from_raw(unsafe { bindings::ktime_=
+get() }))
++        }
++    }
++}
+--=20
+2.43.0
+
