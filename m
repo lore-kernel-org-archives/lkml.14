@@ -1,109 +1,103 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39771B7F3
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 09:24:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F755208D6;
+	Fri, 22 Mar 2024 09:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711099491; cv=none; b=i7BsSBTSSy+RuXxoGkSphxqhZNCHsaxbiqrtT1FrxK/Jgm+4ii8AC+EWsXzVWeDR9MLbNxfk36RTDLdPPZMKD2uXxkT1Jv7dagD2Gru+sU8C2yXu5Dk2BlBx81DR+6g5QliZqb4+OSnxGaZAo8nHiVUVxYpk3uIwtWwkx1CGh9s=
+	t=1711099619; cv=none; b=aF7uEZews+CnU8khpZI0RRDSWPKr4MLlgnsne8lGIDpNK3s+99mg9bbngAohR+osaWSZVJsJxaQuH/Fq5wLPJxm7EV/6XwRzBBTuHYOHnSMD5XBuR2IJ4zGS8SSY66t2ls3nsDvPrAK8Mqa0buMO9c3dcohYTjisowGovrzAbfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711099491; c=relaxed/simple;
-	bh=I8uHjlu16AjqAEeseHfO0a200Pi5aGA00Cly8jsvsTU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=sdnvNPgVE5NxvANDvvgT21SOfzXnBuxdH4fxbrVs5DG8G4WXabiOu6fxFXpgnvOJFjKhqqsKZS9DH+XyuyEKlwvIjBneVsGvLp7uLbLWSc7ma6iix31bYItSlfT0mepv10qGk/Qb7XPpY3AS6ec7ERj7nJVv11Ks71D6xwyVOkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-79-v95uIj2DP4yt8BN4J_ZXpQ-1; Fri, 22 Mar 2024 09:24:46 +0000
-X-MC-Unique: v95uIj2DP4yt8BN4J_ZXpQ-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Fri, 22 Mar
- 2024 09:24:21 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Fri, 22 Mar 2024 09:24:21 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Russell King' <linux@armlinux.org.uk>, Ard Biesheuvel <ardb@kernel.org>
-CC: Jiangfeng Xiao <xiaojiangfeng@huawei.com>, "arnd@arndb.de"
-	<arnd@arndb.de>, "keescook@chromium.org" <keescook@chromium.org>,
-	"haibo.li@mediatek.com" <haibo.li@mediatek.com>,
-	"angelogioacchino.delregno@collabora.com"
-	<angelogioacchino.delregno@collabora.com>, "amergnat@baylibre.com"
-	<amergnat@baylibre.com>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "douzhaolei@huawei.com"
-	<douzhaolei@huawei.com>, "gustavoars@kernel.org" <gustavoars@kernel.org>,
-	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, "kepler.chenxin@huawei.com"
-	<kepler.chenxin@huawei.com>, "kirill.shutemov@linux.intel.com"
-	<kirill.shutemov@linux.intel.com>, "linux-hardening@vger.kernel.org"
-	<linux-hardening@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "nixiaoming@huawei.com"
-	<nixiaoming@huawei.com>, "peterz@infradead.org" <peterz@infradead.org>,
-	"wangbing6@huawei.com" <wangbing6@huawei.com>, "wangfangpeng1@huawei.com"
-	<wangfangpeng1@huawei.com>, "jannh@google.com" <jannh@google.com>,
-	"willy@infradead.org" <willy@infradead.org>
-Subject: RE: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
-Thread-Topic: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
-Thread-Index: AQHae3ROEuI+AaCprEesIWGaAOB7ebFB9uHAgADsd8GAAJnLsA==
-Date: Fri, 22 Mar 2024 09:24:20 +0000
-Message-ID: <2b2993fb215c4a5abd7d77ff1c984113@AcuMS.aculab.com>
-References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
- <1710906278-23851-1-git-send-email-xiaojiangfeng@huawei.com>
- <ZfqiD8Yw0oOVHW/p@shell.armlinux.org.uk>
- <84a57ca8-8963-ca24-8bd1-ddc5c33bf4da@huawei.com>
- <Zfs7sT6Pxy5yjnPC@shell.armlinux.org.uk>
- <bad25937-fc98-8e11-4279-ab6b3a727c1f@huawei.com>
- <bbcca1e205384cf0b42236e17f3969f7@AcuMS.aculab.com>
- <ZfwYx/8k8FVONg6+@shell.armlinux.org.uk>
- <CAMj1kXG2EGvgGuV-K7h5qDVJeLMd5hkq8GzigzCRzh9Z8cgyWw@mail.gmail.com>
- <ZfzMFv3zmYY36l9u@shell.armlinux.org.uk>
-In-Reply-To: <ZfzMFv3zmYY36l9u@shell.armlinux.org.uk>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1711099619; c=relaxed/simple;
+	bh=Cm+91d8Ptgu0+GJYYynZrF7rW9pWZCvIsLct+865r5Y=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=Sx4w20LAsCQGfKz3fiDzdJsxHPjEt2UNafxPqeUQBYNPcHV+l2LGa+lzHS1EbzFjWGzTPwkq+VGWeRmfaO20FUcW5Mcj6ZdTHSQbvONvlP4UP97bJGkOq5dDoqRlAvGyNlgxp1gc5BHXJoXUkn1eJNjB4Q/0V+4INF62uCIxoPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R3/mnXy7; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R3/mnXy7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D2CAC433F1;
+	Fri, 22 Mar 2024 09:26:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711099618;
+	bh=Cm+91d8Ptgu0+GJYYynZrF7rW9pWZCvIsLct+865r5Y=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=R3/mnXy7nVsWaYfz5SB558XK4JcwbyRuE7QS9LUh1jq2UeMD3xyDUJwSfOujrhOK0
+	 DmXVRvyW0xFvMCSdNOmZAJCMPSS7ttw4aN6njF1zhSJrhsfNjExIlepvAdRNpkCLIh
+	 R5psas0Y0jbbmwXrDidOz61umSluAW15F80wfiRnw0/iqGRdp7k0xLS7pc7K4CMyge
+	 ypoo4WSWcQri9VUca57kZllvfUwUDCfFzjEDEtUNAwMFcJ8awRND3RX74vET+WNzWd
+	 pfdjVwG0KkSghwaBu2VRXpJfJ+qtBVZIAnc4Omnz7Iqnts3i9Pwu9gnLT4eILQyK3G
+	 pPPVy+4JZ2PcA==
+Date: Fri, 22 Mar 2024 04:26:57 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+From: Rob Herring <robh@kernel.org>
+To: baneric926@gmail.com
+Cc: linux-hwmon@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+ robh+dt@kernel.org, conor+dt@kernel.org, corbet@lwn.net, linux@roeck-us.net, 
+ jdelvare@suse.com, kwliu@nuvoton.com, kcfeng0@nuvoton.com, 
+ Paul Menzel <pmenzel@molgen.mpg.de>, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Bonnie_Lo@wiwynn.com, linux-doc@vger.kernel.org, 
+ DELPHINE_CHIU@wiwynn.com, openbmc@lists.ozlabs.org
+In-Reply-To: <20240322081158.4106326-2-kcfeng0@nuvoton.com>
+References: <20240322081158.4106326-1-kcfeng0@nuvoton.com>
+ <20240322081158.4106326-2-kcfeng0@nuvoton.com>
+Message-Id: <171109961635.307786.7810067768607811171.robh@kernel.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: hwmon: Add NCT7363Y documentation
 
-From: Russell King
-> Sent: 22 March 2024 00:09
->=20
-> On Thu, Mar 21, 2024 at 11:43:41PM +0100, Ard Biesheuvel wrote:
-> > Given that this particular issue would just disappear if the compiler
-> > would just insert a BRK after the BL, I'd prefer to explore first
-> > whether we can get this fixed on the compiler side.
->=20
-> Arm32 doesn't have a BRK instruction. What would be appropriate after
-> the no-return BL would be OS specific.
 
-It would need to depend on what was being compiled.
-For the kernel it could be much the same as BUG().
-(Probably without any extra data.)
-I suspect that arm32 could use 'swi' in kernel space,
-but you wouldn't want to use that in userspace.
+On Fri, 22 Mar 2024 16:11:57 +0800, baneric926@gmail.com wrote:
+> From: Ban Feng <kcfeng0@nuvoton.com>
+> 
+> Add bindings for the Nuvoton NCT7363Y Fan Controller
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> Signed-off-by: Ban Feng <kcfeng0@nuvoton.com>
+> ---
+>  .../bindings/hwmon/nuvoton,nct7363.yaml       | 66 +++++++++++++++++++
+>  MAINTAINERS                                   |  6 ++
+>  2 files changed, 72 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.yaml
+> 
 
-Looks like armv5 has a bkpt instruction - could that be used?
-Or does the kernel need to support armv4?
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-The last arm I wrote anything for was a strongarm.
+yamllint warnings/errors:
 
-=09David
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.yaml:
+Error in referenced schema matching $id: http://devicetree.org/schemas/hwmon/fan-common.yaml
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.example.dtb: hwmon@22: fan-0: False schema does not allow {'pwms': [[1, 0, 50000]], 'tach-ch': ['']}
+	from schema $id: http://devicetree.org/schemas/hwmon/nuvoton,nct7363.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.example.dtb: hwmon@22: fan-0: Unevaluated properties are not allowed ('pwms', 'tach-ch' were unexpected)
+	from schema $id: http://devicetree.org/schemas/hwmon/nuvoton,nct7363.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.example.dtb: hwmon@22: fan-1: False schema does not allow {'pwms': [[1, 1, 50000]], 'tach-ch': b'\x01'}
+	from schema $id: http://devicetree.org/schemas/hwmon/nuvoton,nct7363.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.example.dtb: hwmon@22: fan-1: Unevaluated properties are not allowed ('pwms', 'tach-ch' were unexpected)
+	from schema $id: http://devicetree.org/schemas/hwmon/nuvoton,nct7363.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.example.dtb: fan-1: tach-ch: b'\x01' is not of type 'object', 'array', 'boolean', 'null'
+	from schema $id: http://devicetree.org/schemas/dt-core.yaml#
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240322081158.4106326-2-kcfeng0@nuvoton.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
