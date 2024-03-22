@@ -1,244 +1,427 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324A154BD3;
-	Fri, 22 Mar 2024 14:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB8F4AEC3
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 14:46:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711118712; cv=none; b=V9/JKcx3EIkn60ohFWn393N/pcJr7J3wwURBysBzeGlkJ4HF0P7Ki6J4MQoKC0P57SgcQFUA4tgYpn7QI4pU+82/V9UD5hL8BAYig1cQPKVPvyIOGlNE5CDG5cDycXYRPPxrSa3rUHkH2O5/SsnxSu/L5CerbHuSxv79tYWZP9g=
+	t=1711118784; cv=none; b=MGw3jD9KNkvIgV6v74/nkjyL/laYPe2weNWD8I6VjAfhuk2AL1IWXGMKLQCOUOK6PhWL8ZaYpl7UACL6l6KApI/osXBh6PpneuN1Qb12sLg4YBV+MkVsN+uPGhvYS7kjkSn4yA4kDD/xeOiWvuO1FTp9i7nsFyPAF0wXDYMP59M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711118712; c=relaxed/simple;
-	bh=veb2SWtHL0Ox9QO3zZylkMTzcpBgXqQeJZKsGDwqEUg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=J1ycfjqDeRnOpAABg+oQs0p3iwxDQvSAA2AxqnRp4znDBqXp5DAQckHe5r1Ve4nQDSzTsSI1qXQrfvUX+S4XWGgZrhB0/XQNvdl44OqBg74RyduVACkxvRkwhhvc40UiFMXkqedx+PsZJYjN06WwJFBkDYElViycr63L/8cRlQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GxmfFUFc; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711118784; c=relaxed/simple;
+	bh=2OLBSmKbfWl0mQMfplJ+EOUjrlXFxoKD3AFdSuW0tt4=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=Kmy9qoCVYZZmVMDO2oMmFq/CZrC2CrcBJ3qGkBVPElRqB0ES+QCBA8JkCVMWZw6g+qP37QfPH58P2WhCuUmEnHfmtV1wb6Jk4S3kxGo2LfnlkevrzcZGr3DAZwLKxKx9jnUDZWceaOncXGAPgh47VVRjN1acVO1BgHRBi3hthx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SUVExRj1; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GxmfFUFc"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4147e3e4d3cso2484845e9.2;
-        Fri, 22 Mar 2024 07:45:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711118707; x=1711723507; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GWuEvV0rvpO/l7LvIGHT/JLAEhFTYoLZLqtwl5iRm64=;
-        b=GxmfFUFckVSHvrdQKxawyNBJ3Am2rTfgeAXR+PLnVUERvsp973ZE6FtoJyOzw2N9ZQ
-         tBCRhUf6d2ebKV/exxX365IiUdU6vrqVakHVFOcgrLQ3FoMSdXSWexBIFvkbvXyZgPck
-         XHz1RQMuFWZaY2r/lzlvu55Lb17/Ehd5T4/Qa5L15zOQjFQQbNkDcaM0cOZENNUTy8Kr
-         6PoVzJg0K3BuJaMACogkI+PVQBxqmJK8ahOTbrLQ11fY8qjAQJpM6aG7PTuckien+HHC
-         zb3FQ2n3iVU8IOu8S0roubqqEYFcPRQeGr4vr+pcDMQUro17VxD097MbfSNyt2NwIwMe
-         hxjA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SUVExRj1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711118781;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oYy4v+/sbdKYlL+/8ZdK/bGpwxS4+Wt4hNJ2lCaZCH4=;
+	b=SUVExRj1D9GMm/nqYsnTnpo3lXlM4Uzp1Of4jix5LaON8XEQAiDZFFiPY/cvf0RJ4Ly5us
+	PpgllA5FkBMsMRaF0vg3nTCvs2jpGzxfXEzbjh3mnWswAXTe7g0hd5wmMkwq2uzRS19qDR
+	DsvcJGtg+z/Y7XzRq/3vR2hUumz9nXY=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-449-dzdY3O5wMX2sqeDtP-A7ig-1; Fri, 22 Mar 2024 10:46:19 -0400
+X-MC-Unique: dzdY3O5wMX2sqeDtP-A7ig-1
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-29dfc072e95so1471314a91.3
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 07:46:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711118707; x=1711723507;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1711118778; x=1711723578;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GWuEvV0rvpO/l7LvIGHT/JLAEhFTYoLZLqtwl5iRm64=;
-        b=pFlVODu/GlxaZC/5ez+XR8UT3TYson36FW4wUBKoKyJN5Udad/vqmaVpT/XdDOOeNp
-         ++lgicMhaK/gY6K27Qyc8CLAJvgx/RnYMTxMrkoiLFebHszBN5vhPlaphKtQlaDRthJX
-         u6zeVVwY1b5wLtIHBgCP6k5SmzQcbFCB4lGJozzFhLkLsJtlFZVmEIjdXEgQmUEZSvDD
-         E98QARyOwKuoLqZqgXsOJ1Iv+2CRpbefT3l1B/HaK7CrZReAuNimWeArIT1Xmc5JKyv9
-         L3t8/hzWeoRMnqqjMW3Cj3rfym7p5Gk4CERw2kv1HRQ1cEMxFxxG5pyxZyn2fwvELQcF
-         Hx0g==
-X-Forwarded-Encrypted: i=1; AJvYcCVXgJqJGXKKke03JpsvECXRSIqvMqTBIsMCSFtYSJZcl0BKpD5S+SoHOywU6ZztO4cJYQZD/aFPnWczJjjUWgQGgQt/thOO+D+ZOQ0WST4EGXUA/zyIwZ18m09Wm2qRj0WwiJDgzHQPOxbG8KgSbM9xuDNsHwSrjkMuBVTgSxM9rQUsHZL9KF4JNQAx
-X-Gm-Message-State: AOJu0Yy+7YLsGun8nSnOdPpo5vuK3t+TpZW8wOvFKPI51OLIXHNnbaxT
-	5Ega546BE9dRZsHOgRYtNzY94qTyTAY/SMdUIYQ0+qJ3MUBbppLA
-X-Google-Smtp-Source: AGHT+IGjPztaqKpu596k3blnST+nfDPu+lVA/PnAdQ4mezi8JzRKgF2wtriu9oc4aDkqJvhuMV83+Q==
-X-Received: by 2002:a05:600c:6a85:b0:414:6638:4507 with SMTP id jl5-20020a05600c6a8500b0041466384507mr1723116wmb.16.1711118707528;
-        Fri, 22 Mar 2024 07:45:07 -0700 (PDT)
-Received: from prasmi.home ([2a00:23c8:2500:a01:7b89:721b:d6b0:d7e8])
-        by smtp.gmail.com with ESMTPSA id s15-20020a05600c45cf00b0041466e03e55sm3911117wmo.0.2024.03.22.07.45.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 07:45:06 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v4 5/5] serial: sh-sci: Add support for RZ/V2H(P) SoC
-Date: Fri, 22 Mar 2024 14:43:55 +0000
-Message-Id: <20240322144355.878930-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240322144355.878930-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20240322144355.878930-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        bh=oYy4v+/sbdKYlL+/8ZdK/bGpwxS4+Wt4hNJ2lCaZCH4=;
+        b=rL9AknEKa0nRMFix1tQQR/RyBjho83OnhdCkZf0OGb0zwkNRmlm9+wCcEpEXOxGlGq
+         bqwfjszC1tQA8xXTNUpgfTWjaxV3hfOxsdhoUXu8fu2OPS80C2TGbslUdMqRgeEL8Hil
+         LioFo7HKh0kn1cVlIqUFWB+4ZkVgNt5z+pNK9OXaHPfqmdFds4cJxfk7PfC6hM11Hzf2
+         wHh5aCwVBsp3t5hQBPzEwNEJfmemowT5kyQSbZxpCyTN038lZn4rMOVKYv7uSnvg25uU
+         bTQ4ErrxBGmpB3h46u+BU0Z+seM6kOH+pb/GHgtFVHrnH6YyZJmFyS/C490h7C4Pwr48
+         3fpQ==
+X-Gm-Message-State: AOJu0YyMQHpOpxEvqRKSxp/PRGgnKnOCfr8Sn/Pq3Ciyqrrm1XFGzZpN
+	rKhq6Lhaf7dn+MogIn0BoRsxBLAXpmQjv+CuddwwGFpH3ChzVEyJ4eK1myi5VfZfE84dhnOsYYw
+	KpVz5xYtO+GbzkCu8gTMloKH9p6zoclSqs/Bg5bB5xSmjCmXTv21+6PwRJ0ZiWQ==
+X-Received: by 2002:a17:90a:38e5:b0:29d:51ce:607d with SMTP id x92-20020a17090a38e500b0029d51ce607dmr2360079pjb.27.1711118778083;
+        Fri, 22 Mar 2024 07:46:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGSjp+uaT2DD87oSORZR5+2BC3aOkH3HGNr8n5s8pOXFfO0noAQeF10rj+7LdHcJuM02X8MOA==
+X-Received: by 2002:a17:90a:38e5:b0:29d:51ce:607d with SMTP id x92-20020a17090a38e500b0029d51ce607dmr2360049pjb.27.1711118777573;
+        Fri, 22 Mar 2024 07:46:17 -0700 (PDT)
+Received: from smtpclient.apple ([115.96.118.209])
+        by smtp.gmail.com with ESMTPSA id sm17-20020a17090b2e5100b002a027bf39a7sm1970543pjb.43.2024.03.22.07.46.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Mar 2024 07:46:17 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
+Subject: Re: [PATCH v5] hv/hv_kvp_daemon: Handle IPv4 and Ipv6 combination for
+ keyfile format
+From: Ani Sinha <anisinha@redhat.com>
+In-Reply-To: <1711115162-11629-1-git-send-email-shradhagupta@linux.microsoft.com>
+Date: Fri, 22 Mar 2024 20:16:02 +0530
+Cc: linux-kernel@vger.kernel.org,
+ linux-hyperv@vger.kernel.org,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>,
+ Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>,
+ Long Li <longli@microsoft.com>,
+ Olaf Hering <olaf@aepfle.de>,
+ Shradha Gupta <shradhagupta@microsoft.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <8767986C-0984-45ED-85E9-8F2271A16CCE@redhat.com>
+References: <1711115162-11629-1-git-send-email-shradhagupta@linux.microsoft.com>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Add serial support for RZ/V2H(P) SoC with earlycon.
 
-The SCIF interface in the Renesas RZ/V2H(P) is similar to that available
-in the RZ/G2L (R9A07G044) SoC, with the following differences:
+> On 22 Mar 2024, at 19:16, Shradha Gupta =
+<shradhagupta@linux.microsoft.com> wrote:
+>=20
+> If the network configuration strings are passed as a combination of =
+IPv4
+> and IPv6 addresses, the current KVP daemon does not handle processing =
+for
+> the keyfile configuration format.
+> With these changes, the keyfile config generation logic scans through =
+the
+> list twice to generate IPv4 and IPv6 sections for the configuration =
+files
+> to handle this support.
+>=20
+> Testcases ran:Rhel 9, Hyper-V VMs
+>              (IPv4 only, IPv6 only, IPv4 and IPv6 combination)
+>=20
+> Co-developed-by: Ani Sinha <anisinha@redhat.com>
+> Signed-off-by: Ani Sinha <anisinha@redhat.com>
+> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> Reviewed-by: Easwar Hariharan <eahariha@linux.microsoft.com>
 
-- RZ/V2H(P) SoC has three additional interrupts: one for Tx end/Rx ready
-  and two for Rx and Tx buffer full, all of which are edge-triggered.
-- RZ/V2H(P) supports asynchronous mode, whereas RZ/G2L supports both
-  synchronous and asynchronous modes.
-- There are differences in the configuration of certain registers such
-  as SCSMR, SCFCR, and SCSPTR between the two SoCs.
+Tested-by: Ani Sinha <anisinha@redhat.com>
+Reviewed-by: Ani Sinha <anisinha@redhat.com>
 
-To handle these differences on RZ/V2H(P) SoC SCIx_RZV2H_SCIF_REGTYPE
-is added.
-
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
-Hi Geert,
-
-To keep the changes minimal I've added a new regtype instead of
-port type.
-
-Cheers, Prabhakar
-
-v3 - > v4
-- Added SCIx_RZV2H_SCIF_REGTYPE to handle the differences on the
-  RZ/V2H(P) SoC
-
-v2 - > v3
-- new patch
----
- drivers/tty/serial/sh-sci.c | 55 +++++++++++++++++++++++++++++++++----
- include/linux/serial_sci.h  |  1 +
- 2 files changed, 51 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index a85e7b9a2e49..297787dc5c1c 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -317,6 +317,37 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
- 		.error_clear = SCIF_ERROR_CLEAR,
- 	},
- 
-+	/*
-+	 * The "SCIF" that is in RZ/V2H(P) SoC is similar to one found on RZ/G2L SoC
-+	 * with below differences,
-+	 * - Break out of interrupts are different: ERI, BRI, RXI, TXI, TEI, DRI,
-+	 *   TEI-DRI, RXI-EDGE and TXI-EDGE.
-+	 * - SCSMR register does not have CM bit (BIT(7)) ie it does not support synchronous mode.
-+	 * - SCFCR register does not have SCFCR_MCE bit.
-+	 * - SCSPTR register has only bits SCSPTR_SPB2DT and SCSPTR_SPB2IO.
-+	 */
-+	[SCIx_RZV2H_SCIF_REGTYPE] = {
-+		.regs = {
-+			[SCSMR]		= { 0x00, 16 },
-+			[SCBRR]		= { 0x02,  8 },
-+			[SCSCR]		= { 0x04, 16 },
-+			[SCxTDR]	= { 0x06,  8 },
-+			[SCxSR]		= { 0x08, 16 },
-+			[SCxRDR]	= { 0x0a,  8 },
-+			[SCFCR]		= { 0x0c, 16 },
-+			[SCFDR]		= { 0x0e, 16 },
-+			[SCSPTR]	= { 0x10, 16 },
-+			[SCLSR]		= { 0x12, 16 },
-+			[SEMR]		= { 0x14, 8 },
-+		},
-+		.fifosize = 16,
-+		.overrun_reg = SCLSR,
-+		.overrun_mask = SCLSR_ORER,
-+		.sampling_rate_mask = SCI_SR(32),
-+		.error_mask = SCIF_DEFAULT_ERROR_MASK,
-+		.error_clear = SCIF_ERROR_CLEAR,
-+	},
-+
- 	/*
- 	 * Common SH-3 SCIF definitions.
- 	 */
-@@ -758,7 +789,7 @@ static void sci_init_pins(struct uart_port *port, unsigned int cflag)
- 		}
- 		serial_port_out(port, SCPDR, data);
- 		serial_port_out(port, SCPCR, ctrl);
--	} else if (sci_getreg(port, SCSPTR)->size) {
-+	} else if (sci_getreg(port, SCSPTR)->size && s->cfg->regtype != SCIx_RZV2H_SCIF_REGTYPE) {
- 		u16 status = serial_port_in(port, SCSPTR);
- 
- 		/* RTS# is always output; and active low, unless autorts */
-@@ -2120,8 +2151,9 @@ static void sci_set_mctrl(struct uart_port *port, unsigned int mctrl)
- 
- 	if (!(mctrl & TIOCM_RTS)) {
- 		/* Disable Auto RTS */
--		serial_port_out(port, SCFCR,
--				serial_port_in(port, SCFCR) & ~SCFCR_MCE);
-+		if (s->cfg->regtype != SCIx_RZV2H_SCIF_REGTYPE)
-+			serial_port_out(port, SCFCR,
-+					serial_port_in(port, SCFCR) & ~SCFCR_MCE);
- 
- 		/* Clear RTS */
- 		sci_set_rts(port, 0);
-@@ -2133,8 +2165,9 @@ static void sci_set_mctrl(struct uart_port *port, unsigned int mctrl)
- 		}
- 
- 		/* Enable Auto RTS */
--		serial_port_out(port, SCFCR,
--				serial_port_in(port, SCFCR) | SCFCR_MCE);
-+		if (s->cfg->regtype != SCIx_RZV2H_SCIF_REGTYPE)
-+			serial_port_out(port, SCFCR,
-+					serial_port_in(port, SCFCR) | SCFCR_MCE);
- 	} else {
- 		/* Set RTS */
- 		sci_set_rts(port, 1);
-@@ -3224,6 +3257,10 @@ static const struct of_device_id of_sci_match[] __maybe_unused = {
- 		.compatible = "renesas,scif-r9a07g044",
- 		.data = SCI_OF_DATA(PORT_SCIF, SCIx_RZ_SCIFA_REGTYPE),
- 	},
-+	{
-+		.compatible = "renesas,scif-r9a09g057",
-+		.data = SCI_OF_DATA(PORT_SCIF, SCIx_RZV2H_SCIF_REGTYPE),
-+	},
- 	/* Family-specific types */
- 	{
- 		.compatible = "renesas,rcar-gen1-scif",
-@@ -3534,6 +3571,13 @@ static int __init rzscifa_early_console_setup(struct earlycon_device *device,
- 	return early_console_setup(device, PORT_SCIF);
- }
- 
-+static int __init rzv2hscif_early_console_setup(struct earlycon_device *device,
-+						const char *opt)
-+{
-+	port_cfg.regtype = SCIx_RZV2H_SCIF_REGTYPE;
-+	return early_console_setup(device, PORT_SCIF);
-+}
-+
- static int __init scifa_early_console_setup(struct earlycon_device *device,
- 					  const char *opt)
- {
-@@ -3554,6 +3598,7 @@ OF_EARLYCON_DECLARE(sci, "renesas,sci", sci_early_console_setup);
- OF_EARLYCON_DECLARE(scif, "renesas,scif", scif_early_console_setup);
- OF_EARLYCON_DECLARE(scif, "renesas,scif-r7s9210", rzscifa_early_console_setup);
- OF_EARLYCON_DECLARE(scif, "renesas,scif-r9a07g044", rzscifa_early_console_setup);
-+OF_EARLYCON_DECLARE(scif, "renesas,scif-r9a09g057", rzv2hscif_early_console_setup);
- OF_EARLYCON_DECLARE(scifa, "renesas,scifa", scifa_early_console_setup);
- OF_EARLYCON_DECLARE(scifb, "renesas,scifb", scifb_early_console_setup);
- OF_EARLYCON_DECLARE(hscif, "renesas,hscif", hscif_early_console_setup);
-diff --git a/include/linux/serial_sci.h b/include/linux/serial_sci.h
-index 1c89611e0e06..0f2f50b8d28e 100644
---- a/include/linux/serial_sci.h
-+++ b/include/linux/serial_sci.h
-@@ -37,6 +37,7 @@ enum {
- 	SCIx_SH7705_SCIF_REGTYPE,
- 	SCIx_HSCIF_REGTYPE,
- 	SCIx_RZ_SCIFA_REGTYPE,
-+	SCIx_RZV2H_SCIF_REGTYPE,
- 
- 	SCIx_NR_REGTYPES,
- };
--- 
-2.34.1
+> ---
+> Changes in v5
+> * Included Ani's proposed patch and added him as co-author
+> ---
+> tools/hv/hv_kvp_daemon.c | 213 +++++++++++++++++++++++++++++++--------
+> 1 file changed, 172 insertions(+), 41 deletions(-)
+>=20
+> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+> index 318e2dad27e0..ae57bf69ad4a 100644
+> --- a/tools/hv/hv_kvp_daemon.c
+> +++ b/tools/hv/hv_kvp_daemon.c
+> @@ -76,6 +76,12 @@ enum {
+> DNS
+> };
+>=20
+> +enum {
+> + IPV4 =3D 1,
+> + IPV6,
+> + IP_TYPE_MAX
+> +};
+> +
+> static int in_hand_shake;
+>=20
+> static char *os_name =3D "";
+> @@ -102,6 +108,11 @@ static struct utsname uts_buf;
+>=20
+> #define MAX_FILE_NAME 100
+> #define ENTRIES_PER_BLOCK 50
+> +/*
+> + * Change this entry if the number of addresses increases in future
+> + */
+> +#define MAX_IP_ENTRIES 64
+> +#define OUTSTR_BUF_SIZE ((INET6_ADDRSTRLEN + 1) * MAX_IP_ENTRIES)
+>=20
+> struct kvp_record {
+> char key[HV_KVP_EXCHANGE_MAX_KEY_SIZE];
+> @@ -1171,6 +1182,18 @@ static int process_ip_string(FILE *f, char =
+*ip_string, int type)
+> return 0;
+> }
+>=20
+> +int ip_version_check(const char *input_addr)
+> +{
+> + struct in6_addr addr;
+> +
+> + if (inet_pton(AF_INET, input_addr, &addr))
+> + return IPV4;
+> + else if (inet_pton(AF_INET6, input_addr, &addr))
+> + return IPV6;
+> +
+> + return -EINVAL;
+> +}
+> +
+> /*
+>  * Only IPv4 subnet strings needs to be converted to plen
+>  * For IPv6 the subnet is already privided in plen format
+> @@ -1197,14 +1220,75 @@ static int kvp_subnet_to_plen(char =
+*subnet_addr_str)
+> return plen;
+> }
+>=20
+> +static int process_dns_gateway_nm(FILE *f, char *ip_string, int type,
+> +  int ip_sec)
+> +{
+> + char addr[INET6_ADDRSTRLEN], *output_str;
+> + int ip_offset =3D 0, error =3D 0, ip_ver;
+> + char *param_name;
+> +
+> + if (type =3D=3D DNS)
+> + param_name =3D "dns";
+> + else if (type =3D=3D GATEWAY)
+> + param_name =3D "gateway";
+> + else
+> + return -EINVAL;
+> +
+> + output_str =3D (char *)calloc(OUTSTR_BUF_SIZE, sizeof(char));
+> + if (!output_str)
+> + return -ENOMEM;
+> +
+> + while (1) {
+> + memset(addr, 0, sizeof(addr));
+> +
+> + if (!parse_ip_val_buffer(ip_string, &ip_offset, addr,
+> + (MAX_IP_ADDR_SIZE * 2)))
+> + break;
+> +
+> + ip_ver =3D ip_version_check(addr);
+> + if (ip_ver < 0)
+> + continue;
+> +
+> + if ((ip_ver =3D=3D IPV4 && ip_sec =3D=3D IPV4) ||
+> +    (ip_ver =3D=3D IPV6 && ip_sec =3D=3D IPV6)) {
+> + /*
+> + * do a bound check to avoid out-of bound writes
+> + */
+> + if ((OUTSTR_BUF_SIZE - strlen(output_str)) >
+> +    (strlen(addr) + 1)) {
+> + strncat(output_str, addr,
+> + OUTSTR_BUF_SIZE -
+> + strlen(output_str) - 1);
+> + strncat(output_str, ",",
+> + OUTSTR_BUF_SIZE -
+> + strlen(output_str) - 1);
+> + }
+> + } else {
+> + continue;
+> + }
+> + }
+> +
+> + if (strlen(output_str)) {
+> + /*
+> + * This is to get rid of that extra comma character
+> + * in the end of the string
+> + */
+> + output_str[strlen(output_str) - 1] =3D '\0';
+> + error =3D fprintf(f, "%s=3D%s\n", param_name, output_str);
+> + }
+> +
+> + free(output_str);
+> + return error;
+> +}
+> +
+> static int process_ip_string_nm(FILE *f, char *ip_string, char =
+*subnet,
+> - int is_ipv6)
+> + int ip_sec)
+> {
+> char addr[INET6_ADDRSTRLEN];
+> char subnet_addr[INET6_ADDRSTRLEN];
+> - int error, i =3D 0;
+> + int error =3D 0, i =3D 0;
+> int ip_offset =3D 0, subnet_offset =3D 0;
+> - int plen;
+> + int plen, ip_ver;
+>=20
+> memset(addr, 0, sizeof(addr));
+> memset(subnet_addr, 0, sizeof(subnet_addr));
+> @@ -1216,10 +1300,16 @@ static int process_ip_string_nm(FILE *f, char =
+*ip_string, char *subnet,
+>       subnet_addr,
+>       (MAX_IP_ADDR_SIZE *
+> 2))) {
+> - if (!is_ipv6)
+> + ip_ver =3D ip_version_check(addr);
+> + if (ip_ver < 0)
+> + continue;
+> +
+> + if (ip_ver =3D=3D IPV4 && ip_sec =3D=3D IPV4)
+> plen =3D kvp_subnet_to_plen((char *)subnet_addr);
+> - else
+> + else if (ip_ver =3D=3D IPV6 && ip_sec =3D=3D IPV6)
+> plen =3D atoi(subnet_addr);
+> + else
+> + continue;
+>=20
+> if (plen < 0)
+> return plen;
+> @@ -1233,17 +1323,16 @@ static int process_ip_string_nm(FILE *f, char =
+*ip_string, char *subnet,
+> memset(subnet_addr, 0, sizeof(subnet_addr));
+> }
+>=20
+> - return 0;
+> + return error;
+> }
+>=20
+> static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value =
+*new_val)
+> {
+> - int error =3D 0;
+> + int error =3D 0, ip_ver;
+> char if_filename[PATH_MAX];
+> char nm_filename[PATH_MAX];
+> FILE *ifcfg_file, *nmfile;
+> char cmd[PATH_MAX];
+> - int is_ipv6 =3D 0;
+> char *mac_addr;
+> int str_len;
+>=20
+> @@ -1421,52 +1510,94 @@ static int kvp_set_ip_info(char *if_name, =
+struct hv_kvp_ipaddr_value *new_val)
+> if (error)
+> goto setval_error;
+>=20
+> - if (new_val->addr_family & ADDR_FAMILY_IPV6) {
+> - error =3D fprintf(nmfile, "\n[ipv6]\n");
+> - if (error < 0)
+> - goto setval_error;
+> - is_ipv6 =3D 1;
+> - } else {
+> - error =3D fprintf(nmfile, "\n[ipv4]\n");
+> - if (error < 0)
+> - goto setval_error;
+> - }
+> -
+> /*
+> * Now we populate the keyfile format
+> + *
+> + * The keyfile format expects the IPv6 and IPv4 configuration in
+> + * different sections. Therefore we iterate through the list twice,
+> + * once to populate the IPv4 section and the next time for IPv6
+> */
+> + ip_ver =3D IPV4;
+> + do {
+> + if (ip_ver =3D=3D IPV4) {
+> + error =3D fprintf(nmfile, "\n[ipv4]\n");
+> + if (error < 0)
+> + goto setval_error;
+> + } else {
+> + error =3D fprintf(nmfile, "\n[ipv6]\n");
+> + if (error < 0)
+> + goto setval_error;
+> + }
+>=20
+> - if (new_val->dhcp_enabled) {
+> - error =3D kvp_write_file(nmfile, "method", "", "auto");
+> - if (error < 0)
+> - goto setval_error;
+> - } else {
+> - error =3D kvp_write_file(nmfile, "method", "", "manual");
+> + /*
+> + * Write the configuration for ipaddress, netmask, gateway and
+> + * name services
+> + */
+> + error =3D process_ip_string_nm(nmfile, (char *)new_val->ip_addr,
+> +     (char *)new_val->sub_net,
+> +     ip_ver);
+> if (error < 0)
+> goto setval_error;
+> - }
+>=20
+> - /*
+> - * Write the configuration for ipaddress, netmask, gateway and
+> - * name services
+> - */
+> - error =3D process_ip_string_nm(nmfile, (char *)new_val->ip_addr,
+> -     (char *)new_val->sub_net, is_ipv6);
+> - if (error < 0)
+> - goto setval_error;
+> + /*
+> + * As dhcp_enabled is only valid for ipv4, we do not set dhcp
+> + * methods for ipv6 based on dhcp_enabled flag.
+> + *
+> + * For ipv4, set method to manual only when dhcp_enabled is
+> + * false and specific ipv4 addresses are configured. If neither
+> + * dhcp_enabled is true and no ipv4 addresses are configured,
+> + * set method to 'disabled'.
+> + *
+> + * For ipv6, set method to manual when we configure ipv6
+> + * addresses. Otherwise set method to 'auto' so that SLAAC from
+> + * RA may be used.
+> + */
+> + if (ip_ver =3D=3D IPV4) {
+> + if (new_val->dhcp_enabled) {
+> + error =3D kvp_write_file(nmfile, "method", "",
+> +       "auto");
+> + if (error < 0)
+> + goto setval_error;
+> + } else if (error) {
+> + error =3D kvp_write_file(nmfile, "method", "",
+> +       "manual");
+> + if (error < 0)
+> + goto setval_error;
+> + } else {
+> + error =3D kvp_write_file(nmfile, "method", "",
+> +       "disabled");
+> + if (error < 0)
+> + goto setval_error;
+> + }
+> + } else if (ip_ver =3D=3D IPV6) {
+> + if (error) {
+> + error =3D kvp_write_file(nmfile, "method", "",
+> +       "manual");
+> + if (error < 0)
+> + goto setval_error;
+> + } else {
+> + error =3D kvp_write_file(nmfile, "method", "",
+> +       "auto");
+> + if (error < 0)
+> + goto setval_error;
+> + }
+> + }
+>=20
+> - /* we do not want ipv4 addresses in ipv6 section and vice versa */
+> - if (is_ipv6 !=3D is_ipv4((char *)new_val->gate_way)) {
+> - error =3D fprintf(nmfile, "gateway=3D%s\n", (char =
+*)new_val->gate_way);
+> + error =3D process_dns_gateway_nm(nmfile,
+> +       (char *)new_val->gate_way,
+> +       GATEWAY, ip_ver);
+> if (error < 0)
+> goto setval_error;
+> - }
+>=20
+> - if (is_ipv6 !=3D is_ipv4((char *)new_val->dns_addr)) {
+> - error =3D fprintf(nmfile, "dns=3D%s\n", (char *)new_val->dns_addr);
+> + error =3D process_dns_gateway_nm(nmfile,
+> +       (char *)new_val->dns_addr, DNS,
+> +       ip_ver);
+> if (error < 0)
+> goto setval_error;
+> - }
+> +
+> + ip_ver++;
+> + } while (ip_ver < IP_TYPE_MAX);
+> +
+> fclose(nmfile);
+> fclose(ifcfg_file);
+>=20
+> --=20
+> 2.34.1
+>=20
 
