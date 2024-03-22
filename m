@@ -1,243 +1,251 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF103E49C;
-	Fri, 22 Mar 2024 10:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B74A03D968
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 10:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711105104; cv=none; b=g7dlYbn4vtiaDqgVqVnapm83GBz8zRwdrKxA+wxSUhRODysp3gSxA0QBVuvs4nGDFsxMensGoW/2bCmaw6wuhPXq7WcGKEAzHTXp6Af1cMWkwogjOgbu1IXdoU5uyzPNxWM+rtMwrcvwsaARa3xqPO3iNs7VnV9TS9qCu7vBpAU=
+	t=1711105131; cv=none; b=qM5SFfp4IEjsm71KS5HRnvkedQCDt8GBHFxau6Bqf44ChR0+4ETsmjtJWdcXy3d9JhGf4m71eo/YOUguDQasRklJwaVdpS1504xp+jPTs5/GUr5DvIY0RVVjcGBi25B2kSwv4HHaPVgJWd4WWklJzFtYKRUI8yb40/5aTMqud/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711105104; c=relaxed/simple;
-	bh=ZYiFn8k5HAsh7bCNbYcd6mIHSct42QlY/3NWX7DDd9s=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=i/u5vXvB1Py8Zqibj9ioqhfYOmMjcHDr4AQFtPnItnQrTugNcUGNyiNkc9gs08cVQOEOhZGIy4Q4V7IL2EljtTHdfhVNK5rJkz/A4qTlT+atACC8t5xM2iNTNrb81R5Dh9Q6sWvAevsdgUDP+9Yq8sEdOhjx0IIC1lL1rioQa3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1gaTx8W5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jWxVU9Ai; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1711105131; c=relaxed/simple;
+	bh=E+QRJbbDXgOnG+F7y9VJSSIz2tXSZacnuTn39fmlItM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=POuW+KmRZzjhWVwBo1asl5NVCBbUmseSNUEscUgS0yfq9ABq/JKyzDNTUxU8xUrHY1EbAUi3W227VxDHNycb9yCqQGose+P0lUguKD1IzfzFUuL/wTZ1HlT7ncEBRxsm/PSJAuM2VnYT6lD4MIi9wY/qQx38pgDRHR/E+VLgrAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YCppqF3l; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1gaTx8W5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jWxVU9Ai"
-Date: Fri, 22 Mar 2024 10:58:13 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1711105094;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9D/Ob1rCtnNJBYYrC2ve+lrueUgiBu72sPQjKt7MpWY=;
-	b=1gaTx8W5dCAVJDPZ/t4eloANEjIiaWkRgMU5M8gABSGpRN/DsIcQfAzXbbjjtxaEYZ3JRT
-	yxOcMbBWgt77JfbJFSVhcu1m7l5wli5JnmbO38AsSqlhmikoCZ4CVGiMWdQ59rO+mSwyb7
-	cWa6zz4yaiYpWyhuBk7lSRkR/Ghs//zqiXLNe1jk/xH48BLY+cZ0my1GtLlyKcfg2WKh4a
-	b3waRlFhGD2bZrI4KqEH917RJHFLKqY5UXyleRcQqoe2BHqIkNfJZSHxjXUONbBNFEwr5o
-	FaBuNllmLKNSOyKE7dA8FeZlDrjJt9geZud2vooZRoTifiKVoNOYXVq0qB+ocw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1711105094;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9D/Ob1rCtnNJBYYrC2ve+lrueUgiBu72sPQjKt7MpWY=;
-	b=jWxVU9Aid0hmP4wT5wBue/+jINgSPBqEfDUIQj0+yN0I7drfMh3gA7GRkO8Xt9zozU9hR7
-	i6cQMLm1CYPSHoAQ==
-From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] jump_label,module: Don't alloc static_key_mod for
- __ro_after_init keys
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Valentin Schneider <vschneid@redhat.com>, Ingo Molnar <mingo@kernel.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240313180106.2917308-2-vschneid@redhat.com>
-References: <20240313180106.2917308-2-vschneid@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YCppqF3l"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-513d3746950so2402611e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 03:58:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711105127; x=1711709927; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5J6hKaN1QOoxxXz1T+5CFRE6tdsrp4JJET9C/glDPY0=;
+        b=YCppqF3ltq357pitHV0u324fMPt7ZhDR35D83/zE5U3Wl9X2jnbj0mhlvtGjjZ8+s1
+         PzLPo44lDvNvoZqKcwBcZq7KyIaNiGe5x1NwIJ5B2WxXDZmXGWYAj75orbj+5nmNOYqE
+         YMgRNSYokBJzrWSN3LC2CTHL94q2gG0sKeLKCX4U6FHBB+tY3XwIR5DSXRuIdm1h+HuC
+         ccWVxyMpnejRioSQeevDD8fzYWFt4eolAgT5Ge61jJyoutsRZuZ44s85Qgu/qKTavyD7
+         UkelL3CfTweWXlGwOooztCvGFz/dZw/225V4zMjSAjPjqCt1qaAEOIq4pS0Vc+k5aA+J
+         Ib1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711105127; x=1711709927;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5J6hKaN1QOoxxXz1T+5CFRE6tdsrp4JJET9C/glDPY0=;
+        b=P89LWiYeU8lKNyDz1gB/RrPUSFTN36w8KvAkrBK9eh5drjsANDZiT9Ktxcf907KaF+
+         na2VBj7lP7kUA3369H9vLQFegAbhFXyiJQ5KIirlZvm+KEViy0jDblDt8pVzaVPe3O9q
+         JDr0pqSGj4LY45K7AUk0kwjvfgKj1mrewdD/bc3lTfdvxJD483tgSAlhFIFeoAkP0E48
+         o32yDwMxglEFzOLXXkAur/BFM54A43doTd3SyDeiy0b8cnsl+zPXRbz+T7TF0DsPfC2B
+         saTnv+R+cPThASoZdksWNFkf+lAsiX8IyqmAlHpvPlMc1v71iCRD2dyBBeRWx943w9pj
+         tDeg==
+X-Forwarded-Encrypted: i=1; AJvYcCXrnI3vmL2JBy2OET+dwrVQBBaI/21QTIWNyir3lEQSf/QwxCiDaCqOkfyi0Z4F+BiuebRhB2J20Ez06hIb9GdBpDhgdWTkdbNiQY5d
+X-Gm-Message-State: AOJu0YyKDktcDAWHbajdBM8t35QcilNS1uqGCudsljAKH2X0o83zLhc0
+	yr75i2L1eEkXAxMUyycfHmo46x6CnMWjFIdvg8mQ5EvAmEZYOcaJ3w0UhyaSFmE=
+X-Google-Smtp-Source: AGHT+IGM3Kt2gQLYglQ72vKDBZNdU1ywAm2J5Zc15UKLNfhAkHKQE43HaGykC/84SoWzGvuuRFn+7A==
+X-Received: by 2002:a19:4353:0:b0:512:be8e:79da with SMTP id m19-20020a194353000000b00512be8e79damr1302079lfj.8.1711105126886;
+        Fri, 22 Mar 2024 03:58:46 -0700 (PDT)
+Received: from [192.168.0.102] ([176.61.106.68])
+        by smtp.gmail.com with ESMTPSA id w15-20020a05600c474f00b00414037f27a9sm2740627wmo.31.2024.03.22.03.58.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Mar 2024 03:58:46 -0700 (PDT)
+Message-ID: <f8e4a364-a1b4-4b0e-905d-d3dde3557fe2@linaro.org>
+Date: Fri, 22 Mar 2024 10:58:45 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171110509398.10875.5547526128005717476.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/5] arm64: dts: qcom: sm7225-fairphone-fp4: Enable USB
+ role switching
+Content-Language: en-US
+To: Luca Weiss <luca.weiss@fairphone.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Liam Girdwood
+ <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Wesley Cheng <quic_wcheng@quicinc.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+References: <20240322-fp4-tcpm-v1-0-c5644099d57b@fairphone.com>
+ <20240322-fp4-tcpm-v1-5-c5644099d57b@fairphone.com>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20240322-fp4-tcpm-v1-5-c5644099d57b@fairphone.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the locking/core branch of tip:
+On 22/03/2024 08:01, Luca Weiss wrote:
+> Configure the Type-C and VBUS regulator on PM7250B and wire it up to the
+> USB PHY, so that USB role and orientation switching works.
+> 
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
+> With this patch I'm not quite sure if the 'ports' are connected
+> correctly, though functionally everything appears to work fine.
+> 
+> On some other SoCs port@1 in qmpphy and a second port in dwc3 are
+> connected together also - one port of USB 2.0 HS, one for USB 3.0 SS.
+> 
+> Here I'm following sm8250's solution. Also checking the binding doc
+> doesn't reveal anything useful.
 
-Commit-ID:     91a1d97ef482c1e4c9d4c1c656a53b0f6b16d0ed
-Gitweb:        https://git.kernel.org/tip/91a1d97ef482c1e4c9d4c1c656a53b0f6b16d0ed
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Wed, 13 Mar 2024 19:01:03 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 22 Mar 2024 11:18:16 +01:00
+I don't see a redriver on your schematics which appears to be the only 
+big difference to the qrb5165 reference.
 
-jump_label,module: Don't alloc static_key_mod for __ro_after_init keys
+https://www.fairphone.com/wp-content/uploads/2022/09/FP4_Information-for-repairers-and-recyclers.pdf
 
-When a static_key is marked ro_after_init, its state will never change
-(after init), therefore jump_label_update() will never need to iterate
-the entries, and thus module load won't actually need to track this --
-avoiding the static_key::next write.
 
-Therefore, mark these keys such that jump_label_add_module() might
-recognise them and avoid the modification.
+> ---
+>   arch/arm64/boot/dts/qcom/sm6350.dtsi              | 25 ++++++++++
+>   arch/arm64/boot/dts/qcom/sm7225-fairphone-fp4.dts | 57 ++++++++++++++++++++++-
+>   2 files changed, 81 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm6350.dtsi b/arch/arm64/boot/dts/qcom/sm6350.dtsi
+> index 24bcec3366ef..b267500467f0 100644
+> --- a/arch/arm64/boot/dts/qcom/sm6350.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm6350.dtsi
+> @@ -1686,6 +1686,27 @@ usb_1_qmpphy: phy@88e8000 {
+>   			#phy-cells = <1>;
+>   
+>   			status = "disabled";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +
+> +					usb_1_qmpphy_out: endpoint {};
+> +				};
+> +
+> +				port@1 {
+> +					reg = <1>;
+> +				};
+> +
+> +				port@2 {
+> +					reg = <2>;
+> +
+> +					usb_1_qmpphy_dp_in: endpoint {};
+> +				};
+> +			};
+>   		};
+>   
+>   		dc_noc: interconnect@9160000 {
+> @@ -1861,6 +1882,10 @@ usb_1_dwc3: usb@a600000 {
+>   				snps,hird-threshold = /bits/ 8 <0x10>;
+>   				phys = <&usb_1_hsphy>, <&usb_1_qmpphy QMP_USB43DP_USB3_PHY>;
+>   				phy-names = "usb2-phy", "usb3-phy";
+> +
+> +				port {
+> +					usb_1_role_switch_out: endpoint {};
+> +				};
+>   			};
+>   		};
+>   
+> diff --git a/arch/arm64/boot/dts/qcom/sm7225-fairphone-fp4.dts b/arch/arm64/boot/dts/qcom/sm7225-fairphone-fp4.dts
+> index bc67e8c1fe4d..104f23ec322d 100644
+> --- a/arch/arm64/boot/dts/qcom/sm7225-fairphone-fp4.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm7225-fairphone-fp4.dts
+> @@ -19,6 +19,7 @@
+>   #include <dt-bindings/leds/common.h>
+>   #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+>   #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+> +#include <dt-bindings/usb/pd.h>
+>   #include "sm7225.dtsi"
+>   #include "pm6150l.dtsi"
+>   #include "pm6350.dtsi"
+> @@ -543,6 +544,50 @@ conn-therm@1 {
+>   	};
+>   };
+>   
+> +&pm7250b_typec {
+> +	vdd-pdphy-supply = <&vreg_l3a>;
+> +
+> +	status = "okay";
+> +
+> +	connector {
+> +		compatible = "usb-c-connector";
+> +
+> +		power-role = "source";
+> +		data-role = "dual";
+> +		self-powered;
+> +
+> +		source-pdos = <PDO_FIXED(5000, 1500,
+> +					 PDO_FIXED_DUAL_ROLE |
+> +					 PDO_FIXED_USB_COMM |
+> +					 PDO_FIXED_DATA_SWAP)>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				pm7250b_role_switch_in: endpoint {
+> +					remote-endpoint = <&usb_1_role_switch_out>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +				pm7250b_typec_mux_in: endpoint {
+> +					remote-endpoint = <&usb_1_qmpphy_out>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&pm7250b_vbus {
+> +	regulator-min-microamp = <500000>;
+> +	regulator-max-microamp = <1500000>;
+> +	status = "okay";
+> +};
+> +
+>   &pmk8350_rtc {
+>   	status = "okay";
+>   };
+> @@ -726,7 +771,12 @@ &usb_1 {
+>   
+>   &usb_1_dwc3 {
+>   	maximum-speed = "super-speed";
+> -	dr_mode = "peripheral";
+> +	dr_mode = "otg";
+> +	usb-role-switch;
+> +};
+> +
+> +&usb_1_role_switch_out {
+> +	remote-endpoint = <&pm7250b_role_switch_in>;
+>   };
+>   
+>   &usb_1_hsphy {
+> @@ -740,10 +790,15 @@ &usb_1_hsphy {
+>   &usb_1_qmpphy {
+>   	vdda-phy-supply = <&vreg_l22a>;
+>   	vdda-pll-supply = <&vreg_l16a>;
+> +	orientation-switch;
+>   
+>   	status = "okay";
+>   };
+>   
+> +&usb_1_qmpphy_out {
+> +	remote-endpoint = <&pm7250b_typec_mux_in>;
+> +};
+> +
+>   &wifi {
+>   	vdd-0.8-cx-mx-supply = <&vreg_l4a>;
+>   	vdd-1.8-xo-supply = <&vreg_l7a>;
+> 
 
-Use the special state: 'static_key_linked(key) && !static_key_mod(key)'
-to denote such keys.
+This looks consistent with 8250
 
-jump_label_add_module() does not exist under CONFIG_JUMP_LABEL=n, so the
-newly-introduced jump_label_init_ro() can be defined as a nop for that
-configuration.
-
-[ mingo: Renamed jump_label_ro() to jump_label_init_ro() ]
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Valentin Schneider <vschneid@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Link: https://lore.kernel.org/r/20240313180106.2917308-2-vschneid@redhat.com
----
- include/asm-generic/sections.h |  5 +++-
- include/linux/jump_label.h     |  3 ++-
- init/main.c                    |  1 +-
- kernel/jump_label.c            | 53 +++++++++++++++++++++++++++++++++-
- 4 files changed, 62 insertions(+)
-
-diff --git a/include/asm-generic/sections.h b/include/asm-generic/sections.h
-index db13bb6..c768de6 100644
---- a/include/asm-generic/sections.h
-+++ b/include/asm-generic/sections.h
-@@ -180,6 +180,11 @@ static inline bool is_kernel_rodata(unsigned long addr)
- 	       addr < (unsigned long)__end_rodata;
- }
- 
-+static inline bool is_kernel_ro_after_init(unsigned long addr)
-+{
-+	return addr >= (unsigned long)__start_ro_after_init &&
-+	       addr < (unsigned long)__end_ro_after_init;
-+}
- /**
-  * is_kernel_inittext - checks if the pointer address is located in the
-  *                      .init.text section
-diff --git a/include/linux/jump_label.h b/include/linux/jump_label.h
-index f0a949b..f5a2727 100644
---- a/include/linux/jump_label.h
-+++ b/include/linux/jump_label.h
-@@ -216,6 +216,7 @@ extern struct jump_entry __start___jump_table[];
- extern struct jump_entry __stop___jump_table[];
- 
- extern void jump_label_init(void);
-+extern void jump_label_init_ro(void);
- extern void jump_label_lock(void);
- extern void jump_label_unlock(void);
- extern void arch_jump_label_transform(struct jump_entry *entry,
-@@ -265,6 +266,8 @@ static __always_inline void jump_label_init(void)
- 	static_key_initialized = true;
- }
- 
-+static __always_inline void jump_label_init_ro(void) { }
-+
- static __always_inline bool static_key_false(struct static_key *key)
- {
- 	if (unlikely_notrace(static_key_count(key) > 0))
-diff --git a/init/main.c b/init/main.c
-index 2ca5247..6c3f251 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -1408,6 +1408,7 @@ static void mark_readonly(void)
- 		 * insecure pages which are W+X.
- 		 */
- 		flush_module_init_free_work();
-+		jump_label_init_ro();
- 		mark_rodata_ro();
- 		debug_checkwx();
- 		rodata_test();
-diff --git a/kernel/jump_label.c b/kernel/jump_label.c
-index d9c822b..3218fa5 100644
---- a/kernel/jump_label.c
-+++ b/kernel/jump_label.c
-@@ -530,6 +530,45 @@ void __init jump_label_init(void)
- 	cpus_read_unlock();
- }
- 
-+static inline bool static_key_sealed(struct static_key *key)
-+{
-+	return (key->type & JUMP_TYPE_LINKED) && !(key->type & ~JUMP_TYPE_MASK);
-+}
-+
-+static inline void static_key_seal(struct static_key *key)
-+{
-+	unsigned long type = key->type & JUMP_TYPE_TRUE;
-+	key->type = JUMP_TYPE_LINKED | type;
-+}
-+
-+void jump_label_init_ro(void)
-+{
-+	struct jump_entry *iter_start = __start___jump_table;
-+	struct jump_entry *iter_stop = __stop___jump_table;
-+	struct jump_entry *iter;
-+
-+	if (WARN_ON_ONCE(!static_key_initialized))
-+		return;
-+
-+	cpus_read_lock();
-+	jump_label_lock();
-+
-+	for (iter = iter_start; iter < iter_stop; iter++) {
-+		struct static_key *iterk = jump_entry_key(iter);
-+
-+		if (!is_kernel_ro_after_init((unsigned long)iterk))
-+			continue;
-+
-+		if (static_key_sealed(iterk))
-+			continue;
-+
-+		static_key_seal(iterk);
-+	}
-+
-+	jump_label_unlock();
-+	cpus_read_unlock();
-+}
-+
- #ifdef CONFIG_MODULES
- 
- enum jump_label_type jump_label_init_type(struct jump_entry *entry)
-@@ -650,6 +689,15 @@ static int jump_label_add_module(struct module *mod)
- 			static_key_set_entries(key, iter);
- 			continue;
- 		}
-+
-+		/*
-+		 * If the key was sealed at init, then there's no need to keep a
-+		 * reference to its module entries - just patch them now and be
-+		 * done with it.
-+		 */
-+		if (static_key_sealed(key))
-+			goto do_poke;
-+
- 		jlm = kzalloc(sizeof(struct static_key_mod), GFP_KERNEL);
- 		if (!jlm)
- 			return -ENOMEM;
-@@ -675,6 +723,7 @@ static int jump_label_add_module(struct module *mod)
- 		static_key_set_linked(key);
- 
- 		/* Only update if we've changed from our initial state */
-+do_poke:
- 		if (jump_label_type(iter) != jump_label_init_type(iter))
- 			__jump_label_update(key, iter, iter_stop, true);
- 	}
-@@ -699,6 +748,10 @@ static void jump_label_del_module(struct module *mod)
- 		if (within_module((unsigned long)key, mod))
- 			continue;
- 
-+		/* No @jlm allocated because key was sealed at init. */
-+		if (static_key_sealed(key))
-+			continue;
-+
- 		/* No memory during module load */
- 		if (WARN_ON(!static_key_linked(key)))
- 			continue;
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
