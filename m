@@ -1,101 +1,104 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79411BDD9;
-	Fri, 22 Mar 2024 08:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F2E17748;
+	Fri, 22 Mar 2024 08:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711096779; cv=none; b=ZJD+CQaEERVZMwnyFqMwcnhrTgXwIPCKbXOrhtncqX98lCASCqSkg12dkRXpeLFbUut2jNnegfLLNiA3J0HDX4CuSpl01DcaPeKWqvhXg3CIaNKunecpWNTab5YpC2P88oHMoGQpNKjsVTank4MLyOBKNn34t/zQvxcd1fr5s+Q=
+	t=1711096781; cv=none; b=ZoRdKIt9WB5j2bl1zBttKEkGX21apkBKiFuezZhRMmnWGO+FqH0U7hILBbtjwaioH0X27PXde/FfulX3i7Ex7sQk/u6O3P89QDi2sGyYGfLSiCROqFRofcO5+wCChG5IbLzk18sKon+VzPxW+PcQWM1j07OiE0GVqRnTxGkaRxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711096779; c=relaxed/simple;
-	bh=8qz9C1oFZqtOS8DKNo2scRc67XzoLfuI7Z79A8V/CMs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=DHok/06blzm4XFyFhYaVugFmrOgA3XI+NS/jkuWsMOSFzdalfbhE/PexyinIkjcW0qGCS72cQsV9UqNrvgIgiT5wxSi1YjxA+RMttbhIacaXtllDZ7snGSnJw566tmeK8cd6DUlfx8/x5RcujQ/0YfJqZZfz1jNgTSYuLyOdfXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=HbD1IvwZ; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1711096781; c=relaxed/simple;
+	bh=93gzeeaN5qm6QBijvEufRQFWB3Ij9g2W1AnCC2UY6P8=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=oS/EDwqbsMhiuJFuxcSsxth3U0qgR4RxdG+ITlK8wD1H+wM01nFUQ493sKZ6w+6nQTXIBxP+0uKH++dMiJUpQgHeKCqH3AbKHou7HG56fnz7PAOAR0IJ90krURo8DTimwWl3qJw2u2bzeRf0tAFI+wj4nGg+qeCil68Yyjqkp7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oK7NoNUa; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vb3Oy6vQ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="HbD1IvwZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1711096379;
-	bh=8qz9C1oFZqtOS8DKNo2scRc67XzoLfuI7Z79A8V/CMs=;
-	h=From:Date:Subject:To:Cc:From;
-	b=HbD1IvwZU+Fa0R5+dXd4Z5PtorJ9kamLlngsQfK0DXHSSogIt7EswCusDU8mv0oyu
-	 gqqDARm5PcYZcx9Z9domjyy5fu4OkBPYPRXMiQGYGkAH09iF5Zmt2r4575I3D75+1k
-	 CXlr7MqC0963vTRwAT9PxZIv7q23tpRMGhGycHOg=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Fri, 22 Mar 2024 09:31:19 +0100
-Subject: [PATCH] kbuild: disable pahole multithreading for reproducible
- builds
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oK7NoNUa";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vb3Oy6vQ"
+Date: Fri, 22 Mar 2024 08:39:37 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1711096777;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CpnWBcijJRp3CYhHfLyQRUEM3geIo4pmSyJ1q1PutW4=;
+	b=oK7NoNUaMeqeB36UHcmUGxBQD8HBJ1uAdbPXTmRhy8BcKnTL8ekGTt1hegZgbqh4ix+pCD
+	YnUGcIv0KSG4DxBhguEYBK+hqVOvImdygOBa74Zy+7h9rbzYcQs6eBvARgglpYozk5pOOx
+	NiMjawkJI3n7TVq7q3nqq7uRn+rgR5iw4nKEGtClXFNcra14GNBaKU9XPpyQm1FSrYVrxP
+	kEE8UyHcV2G3rP82Tdek6COuUWE2gHqmQCStNK8Wb4Ux1Aca+SnMm9HFMwHqHc/h1UA0K1
+	/QGDe/gHA5Q38rTHvPvAJcm3TKrfSGxjBIEiD0N29vWYIzJtQ2tdVqdNA/+b3Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1711096777;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CpnWBcijJRp3CYhHfLyQRUEM3geIo4pmSyJ1q1PutW4=;
+	b=vb3Oy6vQVkh2VOaq/mb7O55sIXlaODveekHVlQqE7efesz9vt6sQGLjZrC6fwZQLHMhxVJ
+	MEBqu3mSaM5hskBw==
+From: "tip-bot2 for Jiapeng Chong" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] x86/virt/tdx: Remove duplicate include
+Cc: Abaci Robot <abaci@linux.alibaba.com>,
+ Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+ Ingo Molnar <mingo@kernel.org>, Kai Huang <kai.huang@intel.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240322061741.9869-1-jiapeng.chong@linux.alibaba.com>
+References: <20240322061741.9869-1-jiapeng.chong@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Message-ID: <171109677707.10875.10683497940799180966.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240322-pahole-reprodicible-v1-1-3eaafb1842da@weissschuh.net>
-X-B4-Tracking: v=1; b=H4sIANZB/WUC/x3MSwqAMAxF0a1IxhZqrKJuRRz4eWpAbElBBHHvF
- odncO9DESqI1GUPKS6J4s+EIs9o3sdzg5ElmdiysyWzCePuDxhFUL/ILFOCZbTWwVV1U1Mqg2K
- V+7/2w/t+PO3FuGUAAAA=
-To: Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>
-Cc: bpf@vger.kernel.org, linux-kbuild@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711096377; l=1459;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=8qz9C1oFZqtOS8DKNo2scRc67XzoLfuI7Z79A8V/CMs=;
- b=+1w57nbzBpgRD+AXa4yunHz9+Ji2wjrUngukytktGDUCX3+WZfibC3N9MyodM4RVgH+F813g6
- SR22gH31hmICRM3DTrBN3/7Gg8xNO/qXW16Ne5R8f5pg+i+KcKkCtIy
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
+Content-Transfer-Encoding: 7bit
 
-A BTF type_id is a numeric identifier allocated by pahole through
-libbpfd. Ids are incremented for each allocation.
-Running pahole multithreaded makes the sequence of allocations
-non-deterministic which also makes the type_id itself non-deterministic.
-As the type_id end up in the binary this breaks reproducibility.
+The following commit has been merged into the x86/cleanups branch of tip:
 
-Therefore, if the kernel is built reproducibly as indicated by
-KBUILD_BUILD_TIMESTAMP, disable threading in pahole.
+Commit-ID:     27d45fc7df2d9026185e86a7e45f3dd17f3e8ba4
+Gitweb:        https://git.kernel.org/tip/27d45fc7df2d9026185e86a7e45f3dd17f3e8ba4
+Author:        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+AuthorDate:    Fri, 22 Mar 2024 14:17:41 +08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 22 Mar 2024 09:35:43 +01:00
 
-Fixes: b4f72786429c ("scripts/pahole-flags.sh: Parse DWARF and generate BTF with multithreading.")
-Fixes: 72d091846de9 ("kbuild: avoid too many execution of scripts/pahole-flags.sh")
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+x86/virt/tdx: Remove duplicate include
+
+./arch/x86/virt/vmx/tdx/tdx.c: linux/acpi.h is included more than once.
+
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Kai Huang <kai.huang@intel.com>
+Link: https://lore.kernel.org/r/20240322061741.9869-1-jiapeng.chong@linux.alibaba.com
+
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8609
 ---
- scripts/Makefile.btf | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/virt/vmx/tdx/tdx.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/scripts/Makefile.btf b/scripts/Makefile.btf
-index 82377e470aed..2356929e62e4 100644
---- a/scripts/Makefile.btf
-+++ b/scripts/Makefile.btf
-@@ -10,7 +10,10 @@ endif
- 
- pahole-flags-$(call test-ge, $(pahole-ver), 121)	+= --btf_gen_floats
- 
-+# threaded execution randomizes BTF type_id allocation, breaking reproducibility
-+ifeq ($(KBUILD_BUILD_TIMESTAMP),)
- pahole-flags-$(call test-ge, $(pahole-ver), 122)	+= -j
-+endif
- 
- pahole-flags-$(CONFIG_PAHOLE_HAS_LANG_EXCLUDE)		+= --lang_exclude=rust
- 
-
----
-base-commit: 8e938e39866920ddc266898e6ae1fffc5c8f51aa
-change-id: 20240322-pahole-reprodicible-02e904e45686
-
-Best regards,
--- 
-Thomas Weißschuh <linux@weissschuh.net>
-
+diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
+index 4d6826a..49a1c68 100644
+--- a/arch/x86/virt/vmx/tdx/tdx.c
++++ b/arch/x86/virt/vmx/tdx/tdx.c
+@@ -27,7 +27,6 @@
+ #include <linux/log2.h>
+ #include <linux/acpi.h>
+ #include <linux/suspend.h>
+-#include <linux/acpi.h>
+ #include <asm/page.h>
+ #include <asm/special_insns.h>
+ #include <asm/msr-index.h>
