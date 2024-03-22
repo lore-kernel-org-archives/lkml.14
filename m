@@ -1,458 +1,207 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F86D4A3C;
-	Fri, 22 Mar 2024 00:37:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711067852; cv=none; b=lka8gPKeyFG7wODjBukJ3Xh+LAj0yPZdHtxN0nitbfSC0oEyLi3fcaA5oFkvz451lcXPW4or+djuhsiVi9iaOsNenxtWbd39vcQ9qERSDeIlKxG+OYllu/S9lgKQHsa4TWWYBUuGD4OGhKFEPcH4ZPTQDMk59dN9QWaeV4DFUKE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711067852; c=relaxed/simple;
-	bh=3CycA3mmXO4xQ85UTYU5bmuD2J3SC+juB4BZoKQmN5w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OiirfY7CncjPO8N+nIV8pLmi0LoXVxjD9gJwv9Hy868L9v8JsEnXM7E/INY71mKHceyn02HUs8tUGzcnRFs5kCfJNUMYjznfmcXAQQtmIYWXiWNqZjUZQcb6OyOuyLADKc9wivRT7VhITTKPn/szopAArbJY3yxPBPx/gQgiojM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AmKCrF41; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B61CA376;
+	Fri, 22 Mar 2024 00:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711068019; cv=fail; b=sgVxdqOPVOxXZursUpK4W80QoWis8uUR2cbbOMiZP2KeN6WESdYzTUzkhibOr4gm/V+NpkMhQ4oVKQXS++UklRZKa+WZLMQtDoRdJ9fj+c+4hb/GKefEkTFkAQ1EAPP9cZgGi87d7+wVKzSUiB5VGhWtcZE3LFrINrWOKu9Wutk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711068019; c=relaxed/simple;
+	bh=UGRfISmuh0hPUseCpExkGZo8+2Y9dnnNANKsppZENDk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=qEaDtC57A1yglKcBtchbeEmsxt8T3c2AZ2owB01IX7Nyr0KuetNj3RtjmloKZoHE6Vg57SLV15df7cBybgXqXNpqvhR/LQjRDnRGZiNUtiTttE9cU8fAzbhdrzz3QAB1kE5y4rS8rC14soFDXaSqPRuFO1to4qTWjg2OMVcKczA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LG6NbLb/; arc=fail smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AmKCrF41"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a4715d4c2cbso164212266b.1;
-        Thu, 21 Mar 2024 17:37:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711067848; x=1711672648; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Jr96grEbp0QCEdvGrKBsplKcmOfKqmllryZhp+VXvf0=;
-        b=AmKCrF41FAzThquREZPM/RCuwxPc8fDpwzveaqAo0Svv3T2lSjaO3ztn3FjKjzV6Ww
-         3I3j9DqP/YuPgcCkKngRnoeWqoH7JUDGQl7nq59/SQyq1gwuf9fHMZf5AgH8FbGkSz3s
-         VDOM0Tb7J0HvCgBv2SOZn27h/H4Q0TqqmCt2CpFiPy92qNHhM5ZvSfkLX8sqDHuYryss
-         EZCPJZw4DrEhUPYVK1vlNII8QwfJlf2u1heszEccOdICs3ZfvPwQLgrlWSPNwonhT/gw
-         8YEQcpqJRwerP2Yt9G03Jd+ptKF8iAiLUpZ3JV2SLl1I3V3wk7r3twz+HUBQktTGEA1O
-         kLBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711067848; x=1711672648;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Jr96grEbp0QCEdvGrKBsplKcmOfKqmllryZhp+VXvf0=;
-        b=J0SikCPp7NSWTypt8avo1BGqFg9+Gx4miiUnHU2bOPk9fwdYFwy4seLzt0fbcyDcVW
-         ziVtgiC851Y+JQriLzBjOSZigAsVI1sWx4zmBWNT2iJrbgn4vrB4Mv3vDOk0CDjFcyFL
-         574TXQsUuLJ8J0JwtIhyoxf51wdqC1U5bZ+vB6qWRNK8ouZ2a1Rmy1GQega+LKuPZLIi
-         lKbkHtCCyGiT4wshlFNRqbh2gnpVH3+soT0ce9/mhpdZIJQcHSPt9kp1MiAaTRbkdIf+
-         7o8+m7Vua7Koh7RkmyWYTPuxkqzYKywN1ryBg+9S7IAyD2H23cXwvpgh2PWlfX6ncqsJ
-         b6Rw==
-X-Forwarded-Encrypted: i=1; AJvYcCXCAkpe8XrCisLgIgF4C9VOY3XRI16fEci1vQH4GxskrsR3aFIDVd/Z9XjB6rQmyAy3fjRx9JJ8GOaEzibj1BErvu3tS90yHqPl2VSgXrRXq0PNAg7PWDCtEz4SRu/nz2A5a6EKTSNjHg==
-X-Gm-Message-State: AOJu0YzkvnqgFX4gww542TUkrV/NdZ6JHF/k4dXpxToLz3X76PxT2+qR
-	7gMOt+u2RomnC7t2RVxryh6y0KrAsv7xUAgrBkTR2UAo7Vdl1lOx
-X-Google-Smtp-Source: AGHT+IEaLcfAxxqjD4uHMWhBq+rNgl0e6DVTtKGbdA/EjfvLJhV9EdUfMJYy8c/mPw1owGyG6UIs2A==
-X-Received: by 2002:a17:906:4e98:b0:a46:8ca9:eb2e with SMTP id v24-20020a1709064e9800b00a468ca9eb2emr568770eju.38.1711067846425;
-        Thu, 21 Mar 2024 17:37:26 -0700 (PDT)
-Received: from 764c7355c69b.v.cablecom.net (84-72-156-211.dclient.hispeed.ch. [84.72.156.211])
-        by smtp.gmail.com with ESMTPSA id o11-20020a170906774b00b00a46af0fbf5dsm439950ejn.103.2024.03.21.17.37.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 17:37:26 -0700 (PDT)
-From: Lothar Rubusch <l.rubusch@gmail.com>
-To: lars@metafoo.de,
-	Michael.Hennerich@analog.com,
-	jic23@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org
-Cc: linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	eraretuya@gmail.com,
-	l.rubusch@gmail.com
-Subject: [PATCH v2 1/3] iio: accel: adxl345: Update adxl345
-Date: Fri, 22 Mar 2024 00:37:11 +0000
-Message-Id: <20240322003713.6918-2-l.rubusch@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240322003713.6918-1-l.rubusch@gmail.com>
-References: <20240322003713.6918-1-l.rubusch@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LG6NbLb/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711068017; x=1742604017;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=UGRfISmuh0hPUseCpExkGZo8+2Y9dnnNANKsppZENDk=;
+  b=LG6NbLb/7KUV/sZJiiRQw54TDPzYmbPq5TKyi3ct3doV+a+S2jdIWb4r
+   eES1W+HJYKNTpZlX46T4rcYB1JwDPmTOpJ1aBFoK/xqZXGzvaHLWw1sbY
+   I+kgOb6TwNYBhYm65XlamlvEs3eut2Nq0lj2Ti2v2/Y8TRxuUnQDlsE4v
+   NuUYL2IcafmxXuKP4w8cumatuQ4jf6ISkHHo+ad1k3dAZmTPhvZ4/2H8j
+   ABABAGd54D7iTGn8fissQEMoYO9+6PPyMn7sgh3+tXUe6NJgYde9UTND4
+   FILKw6JhSTvcJCZ5wlRYiGHyZlogX8z2JYkSbv/hcvwvP7ttEmnwu1eYW
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="9885331"
+X-IronPort-AV: E=Sophos;i="6.07,144,1708416000"; 
+   d="scan'208";a="9885331"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 17:40:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,144,1708416000"; 
+   d="scan'208";a="19413296"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 21 Mar 2024 17:40:17 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 21 Mar 2024 17:40:16 -0700
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 21 Mar 2024 17:40:16 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Thu, 21 Mar 2024 17:40:16 -0700
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.41) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 21 Mar 2024 17:40:15 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YoNke3ahNl16euKKDiykVd97HdiLbwxYiNVibmPfjZ0qHsH627/JdNiRFyO4xL+k1n+E0d/TGz2FbjWGGcRygYsgx7s7x71y8K0/x7cFleGFISj3qnPC8TRl40KW2ZGvhvgiOR9ply2d0/SPOySC7Io/cbLMelSTJ4ne+GqpYZf3O/WYLXA5oE5wxg06VT9gmcKOr08lad3itTcHyIX+eAjmiOEpsEht+bh7qAVezxcIy/EfB6V0wUEJ4HBdSk21CrEdwruJfpBGXLR5FtRAM3XFC4uc9sy2v73R7kn9c1zDqi/qhjhlLTrRg7gU3RcCJkhvWgcK9KRUL6w3orNTmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UGRfISmuh0hPUseCpExkGZo8+2Y9dnnNANKsppZENDk=;
+ b=g9IChzq+SWYooeIq20e45HrRQ82aS78qFhkxGvVM/reNOdx0LQnY9w+Xlvjf+KQxHn/F515zhp22sdK8MkUE3oNncsACqSCLa0Bc53PTjTQjZBC3esh+62I2nzXxIsGfU0j0P/eAFM8qQTZBk59q4GxGEP+uiG2dNmQpDdpb6AhL0YZalYKrQfew8QHTLY6UFjkRGfgomb/qSRe0kpgoCEk5pICsGq0HzGU8DfBqUyyCtqofFZXUt5g9pHDPUOuAuD7EbW27SpzrvGFOHX1EHLTJ3ZBKCURzdRIQr5daRpy/ZBB9+I2j11WSiA0wZqqd8mR4LUEmYLj+PEn1lCr69g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
+ by PH7PR11MB8249.namprd11.prod.outlook.com (2603:10b6:510:1a7::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.12; Fri, 22 Mar
+ 2024 00:40:12 +0000
+Received: from MN0PR11MB5963.namprd11.prod.outlook.com
+ ([fe80::1761:33ae:729c:a795]) by MN0PR11MB5963.namprd11.prod.outlook.com
+ ([fe80::1761:33ae:729c:a795%5]) with mapi id 15.20.7409.023; Fri, 22 Mar 2024
+ 00:40:12 +0000
+From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+To: "Yamahata, Isaku" <isaku.yamahata@intel.com>
+CC: "Zhang, Tina" <tina.zhang@intel.com>, "isaku.yamahata@gmail.com"
+	<isaku.yamahata@gmail.com>, "seanjc@google.com" <seanjc@google.com>, "Huang,
+ Kai" <kai.huang@intel.com>, "Chen, Bo2" <chen.bo@intel.com>,
+	"sagis@google.com" <sagis@google.com>, "isaku.yamahata@linux.intel.com"
+	<isaku.yamahata@linux.intel.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "Aktas, Erdem" <erdemaktas@google.com>,
+	"sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Yuan, Hang"
+	<hang.yuan@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>
+Subject: Re: [PATCH v19 059/130] KVM: x86/tdp_mmu: Don't zap private pages for
+ unsupported cases
+Thread-Topic: [PATCH v19 059/130] KVM: x86/tdp_mmu: Don't zap private pages
+ for unsupported cases
+Thread-Index: AQHadnqpCkdQcpy1UEaf8e2/el3pBrE+L/IAgAGVVQCAABCvgIABmDGAgAFrqACAABw5gA==
+Date: Fri, 22 Mar 2024 00:40:12 +0000
+Message-ID: <96fcb59cd53ece2c0d269f39c424d087876b3c73.camel@intel.com>
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+	 <1ed955a44cd81738b498fe52823766622d8ad57f.1708933498.git.isaku.yamahata@intel.com>
+	 <618614fa6c62a232d95da55546137251e1847f48.camel@intel.com>
+	 <20240319235654.GC1994522@ls.amr.corp.intel.com>
+	 <1c2283aab681bd882111d14e8e71b4b35549e345.camel@intel.com>
+	 <f63d19a8fe6d14186aecc8fcf777284879441ef6.camel@intel.com>
+	 <20240321225910.GU1994522@ls.amr.corp.intel.com>
+In-Reply-To: <20240321225910.GU1994522@ls.amr.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.44.4-0ubuntu2 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|PH7PR11MB8249:EE_
+x-ms-office365-filtering-correlation-id: ed314abf-c69d-40ad-084a-08dc4a08a26d
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: uhW9l29S7B8AizCvuxjBnvEDd2Lbdcgb+NdLWn+zMTV2nPA3VdKVxTQ67jefQoSiMhubcZGtCGSPkNRtWWjqKuAllBMz/w9/tKx9yu+mNypFV75eYoKIOA1DKLTy6KKKHLNh2J55RI0Y1ECPXEIC9zz6MJC+NBP4ZwAyrjo8fUTeH0BbEWw1PcL4dF88kfGNyyo2vncKeJ1zb1NEnGbExn+28xP2HLjIWUSHLTKQjnzduGWrN71SqK+z5szaRzlnkrRDdVfz6Dgst9wLsEQNMHcQ3dLIG6pCMAWqRnKbyQ2/ESWl69rKKgDFFucPZqw7ED62lD4MkNJPaMuUqWBeHcVMzwaZQbSrPAQ1Jk14aIkEkFLEMVTUpoSRAso2z+g6CQwYy+yXMeyIMSZzfDj1HNKrF7o0wNhNTB/xbX9dO5JadcJqdz/xdboQqTmnVbxbUA1UKJ5Kw+N9k8pzGRoSR44AhjmrFHcot/kZFSIrtT2famgU06tifS9XxhW2gYMqH7pFd3TKg2x0aPzNZOeqbw1o2dTrIqdN9YDpToy339Cafxp6lpk29Qe4twPM4zEdvCHqSvsUwwLejWJeO+rAdYXscNfJM3SycqzWzOz9RxW24+McehH6DSNKR2wftqARqxy4L0UPhm/Xfjyv7sLIBH4tvJO6HCnWdoXnSFW7PbwEl+Ahvv5O4NlE5pVW375g+D7csuEjs3IrEB7hcIiW4wuemWchRUO4bb0YQyCoVPo=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?anBJYXNaYkU1SDVHK01TeEdYK3doNnNKWW1MTjlXZmdOMzJtSEJPcmxQZ2kw?=
+ =?utf-8?B?Vkk3d2toU1dlMG5wa0pzMWJZQTM3YUxnSGJzMmR4MlZJbEdmRWx6RmNoZEFL?=
+ =?utf-8?B?U3F3NzZQbmJaUjhSUHB1ZXcya3U4MWZ4Qnljb00zWmNzYnF5emRnR1gycWlj?=
+ =?utf-8?B?aWZ1RUhsVGhWdUplekE2ZzF4RTY1dW9IRzVNcGlnZXBpYlZGbFdjbk1Ca3JH?=
+ =?utf-8?B?azJ0THk2TG9KOWNMNmRkTFFSQ0x0eHg3NFEwVm1VWGU0dEhGeGFXRHJvQngr?=
+ =?utf-8?B?QTh4a2dwaHBDK0t0bzNsZ04ySG90TTBuSTA4Z0lOZnJLNW0vZm9HVmkwN3Bp?=
+ =?utf-8?B?aDZhWGROSTEwY2ZZdzlVcitYc0JLMjF6all1dGdhWlFzbnlZT1dMRXoyVGNa?=
+ =?utf-8?B?SEpXTThLOHNmMkRTR1JpQjFLY0ZpdzBJRUdab3BJTUF6VTkrajJ5dHBDNFp4?=
+ =?utf-8?B?c0FaZzc1VE05ODJqZFlyUG9OQUc0S0l0RkpuQUN0alFmQ2FoS2pOaWFPOFJn?=
+ =?utf-8?B?VGVQcW10SGRGekpNMGdxMEVMZ2hwU0pEVkNReS9hYWV5UGZqSGlXU09rNWlR?=
+ =?utf-8?B?bVJLSDZGY2EzUkVKclpFcU13d1oyMkVJL3lSKzczaHhQdWxQaE5BL0VvMkF3?=
+ =?utf-8?B?Lzd5SG8rbXJxZjJyekZTUCtON3ZoRzd2OTREemJJVUtRR1gyMExsTFlMMm90?=
+ =?utf-8?B?SlplckhZN0RkSmNYbnZ0OVduMlkvbk9KSmxwY1pFNS84Q3Q5TnNSTGFnR3NS?=
+ =?utf-8?B?REU0TWNCREE1MG1rcUpUZytDS3VEVFZXekcxNGthMVg5NTN3YW9rUTE1a3BS?=
+ =?utf-8?B?bkoyVG5HZThwc2RMN1ZtSklRZDlyVllQVjRHT29vSjJRcHdVSDk5aDRHOHlW?=
+ =?utf-8?B?Z3JRMnFqRjdLZW5xL3VHaWZONW9ZS203OUVOQlNyTUwxZ3hwdHc3UzRwUG9R?=
+ =?utf-8?B?aVdKYytMbHNDV0xQU2dSdzNrVWN5V2tveVJlbEZwekdmNXlVazl1MUJiYnVG?=
+ =?utf-8?B?M284VnZwcEZrbUk5aGJ4NkZ0c3ZzRE84Vk1FRi9lNlRSRnJSRFNvQWo4Vy9S?=
+ =?utf-8?B?aUhiL01hdHhVOU9Dc1k5Q2tWMGJ1R01KUkRNQTJKOERXeUtPSllsYzVldFht?=
+ =?utf-8?B?N3loZ2Y4RzNzSm5IQ010MzdQcm5tbURGQ1ZiZUVacC91a1ZVVm43L2wxdWRP?=
+ =?utf-8?B?ZG1BWkk1dnZWd0pPM08zL252elhONFljVTlJTnNvbWw4VGJDN0o4aklOYXpv?=
+ =?utf-8?B?N1FqTitqaEtzcXFncjE0WGRQR0liOHdDZlVMVnNQTXorcmJncjY4dDJZRnZ0?=
+ =?utf-8?B?RUpXa3EvalZzbXVHVFNUR2pPdlVja1YyUGY0ZDZNbzcxT0hBS0o3YVBVR2xo?=
+ =?utf-8?B?SXR6em9UbXhIMjJDbEZnMXl2NGtQUnV6R1QxQlMyTEhiOUt6M2MrREY0NEVx?=
+ =?utf-8?B?VzFsV3BrUkwxSS9EdTJ6MTMxVjZ6WlczUTdGYlN6RlJzUS9seHROQjJwa2Vk?=
+ =?utf-8?B?YUhybWkrTWhoK1M0M2luOU9aQjduTUhZOEM3N2RJNzE1Uk5Jc0l0dWhBNWNH?=
+ =?utf-8?B?bWhHSHJ6RkpBWXBjRUZObVZ1Z2UvRzhERjU4dXJzdnV4K1Q4bkdEMHpFZlA3?=
+ =?utf-8?B?WHNXOTJTRk92NlQ1UW01dWw1RUYvdko3L1FidkJFcG5iV2ZhY0QxTFJwS2xB?=
+ =?utf-8?B?SmxpZndKZk5KeFA1VmNUUzMyWmp6SXk1eWtacU5Gbm1HSzBLQ1FXNXhJUEpw?=
+ =?utf-8?B?eFZxTzBqNkxZc3NLa08wcGVOSm5zQ1hjSWxVK2RtK2VBRSt2YjM4S0VZRHVs?=
+ =?utf-8?B?QURqVFVHek9DSW1qNHN2N1o3NEpkRmVyNEljNUxSNWFjVXdiYzY1cUlROU80?=
+ =?utf-8?B?d3ZGc2ZLdlZtNHJkZDJpMjlOVE5WTTNFSUhFRXc2b2tJODJwZmdFNW8rMjVj?=
+ =?utf-8?B?a1V6T29aZkMrMENBLzFReVBJUzhQdW9Vb0g1eDBJYlRxcitIQW1hSXhxcno2?=
+ =?utf-8?B?L1hUeUhFRnIzZm1SSmYvd3BiQ2NxNkloWWVUbkl4aWszTm9VNVhIUENlY0Nv?=
+ =?utf-8?B?SGNBUTA2M0tmZ1l3aVByOUp3QS9CR1VFb2M5SUh2cm56dnB1OXlxbTQ0U01a?=
+ =?utf-8?B?K2VJeTZyZjdNbmN2ZFVUbU9qM1E1akh5Qmt3NlQ0dmluaFVrajNxSTlEUUxJ?=
+ =?utf-8?B?SEE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A17E8BAD200A9049933E43D3D36A0290@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed314abf-c69d-40ad-084a-08dc4a08a26d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2024 00:40:12.4396
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uNRcZzn8c1bg+exmW+wj/6PT8XYCt+UQuXhElGTsCa8m+TqFolW8hT2qYhp12/8RCnsc49VTpltz5ELYkP05qZFAG1CYPNxsqx2nxMXsJlk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB8249
+X-OriginatorOrg: intel.com
 
-Move driver wide constants and fields into the header.
-Let probe call a separate setup function. Provide
-possibility for an SPI/I2C specific setup to be passed
-as function pointer to core.
-
-Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
----
- drivers/iio/accel/adxl345.h      |  44 +++++++++++-
- drivers/iio/accel/adxl345_core.c | 117 +++++++++++++++++--------------
- drivers/iio/accel/adxl345_i2c.c  |  30 ++++----
- drivers/iio/accel/adxl345_spi.c  |  28 ++++----
- 4 files changed, 134 insertions(+), 85 deletions(-)
-
-diff --git a/drivers/iio/accel/adxl345.h b/drivers/iio/accel/adxl345.h
-index 284bd387c..01493c999 100644
---- a/drivers/iio/accel/adxl345.h
-+++ b/drivers/iio/accel/adxl345.h
-@@ -8,6 +8,39 @@
- #ifndef _ADXL345_H_
- #define _ADXL345_H_
- 
-+#include <linux/iio/iio.h>
-+
-+/* ADXL345 register definitions */
-+#define ADXL345_REG_DEVID		0x00
-+#define ADXL345_REG_OFSX		0x1E
-+#define ADXL345_REG_OFSY		0x1F
-+#define ADXL345_REG_OFSZ		0x20
-+#define ADXL345_REG_OFS_AXIS(index)	(ADXL345_REG_OFSX + (index))
-+#define ADXL345_REG_BW_RATE		0x2C
-+#define ADXL345_REG_POWER_CTL		0x2D
-+#define ADXL345_REG_DATA_FORMAT		0x31
-+#define ADXL345_REG_DATAX0		0x32
-+#define ADXL345_REG_DATAY0		0x34
-+#define ADXL345_REG_DATAZ0		0x36
-+#define ADXL345_REG_DATA_AXIS(index)	\
-+	(ADXL345_REG_DATAX0 + (index) * sizeof(__le16))
-+
-+#define ADXL345_BW_RATE			GENMASK(3, 0)
-+#define ADXL345_BASE_RATE_NANO_HZ	97656250LL
-+
-+#define ADXL345_POWER_CTL_MEASURE	BIT(3)
-+#define ADXL345_POWER_CTL_STANDBY	0x00
-+
-+#define ADXL345_DATA_FORMAT_FULL_RES	BIT(3) /* Up to 13-bits resolution */
-+#define ADXL345_DATA_FORMAT_SPI         BIT(6) /* spi-3wire */
-+#define ADXL345_DATA_FORMAT_2G		0
-+#define ADXL345_DATA_FORMAT_4G		1
-+#define ADXL345_DATA_FORMAT_8G		2
-+#define ADXL345_DATA_FORMAT_16G		3
-+#define ADXL345_DATA_FORMAT_MSK		~((u8) BIT(6)) /* ignore spi-3wire */
-+
-+#define ADXL345_DEVID			0xE5
-+
- /*
-  * In full-resolution mode, scale factor is maintained at ~4 mg/LSB
-  * in all g ranges.
-@@ -23,11 +56,20 @@
-  */
- #define ADXL375_USCALE	480000
- 
-+enum adxl345_device_type {
-+	ADXL345,
-+	ADXL375,
-+};
-+
- struct adxl345_chip_info {
- 	const char *name;
- 	int uscale;
- };
- 
--int adxl345_core_probe(struct device *dev, struct regmap *regmap);
-+extern const struct adxl345_chip_info adxl3x5_chip_info[];
-+
-+int adxl345_core_probe(struct device *dev, struct regmap *regmap,
-+		       const struct adxl345_chip_info *chip_info,
-+		       int (*setup)(struct device*, struct regmap*));
- 
- #endif /* _ADXL345_H_ */
-diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl345_core.c
-index 8bd30a23e..040c3f05a 100644
---- a/drivers/iio/accel/adxl345_core.c
-+++ b/drivers/iio/accel/adxl345_core.c
-@@ -17,38 +17,9 @@
- 
- #include "adxl345.h"
- 
--#define ADXL345_REG_DEVID		0x00
--#define ADXL345_REG_OFSX		0x1e
--#define ADXL345_REG_OFSY		0x1f
--#define ADXL345_REG_OFSZ		0x20
--#define ADXL345_REG_OFS_AXIS(index)	(ADXL345_REG_OFSX + (index))
--#define ADXL345_REG_BW_RATE		0x2C
--#define ADXL345_REG_POWER_CTL		0x2D
--#define ADXL345_REG_DATA_FORMAT		0x31
--#define ADXL345_REG_DATAX0		0x32
--#define ADXL345_REG_DATAY0		0x34
--#define ADXL345_REG_DATAZ0		0x36
--#define ADXL345_REG_DATA_AXIS(index)	\
--	(ADXL345_REG_DATAX0 + (index) * sizeof(__le16))
--
--#define ADXL345_BW_RATE			GENMASK(3, 0)
--#define ADXL345_BASE_RATE_NANO_HZ	97656250LL
--
--#define ADXL345_POWER_CTL_MEASURE	BIT(3)
--#define ADXL345_POWER_CTL_STANDBY	0x00
--
--#define ADXL345_DATA_FORMAT_FULL_RES	BIT(3) /* Up to 13-bits resolution */
--#define ADXL345_DATA_FORMAT_2G		0
--#define ADXL345_DATA_FORMAT_4G		1
--#define ADXL345_DATA_FORMAT_8G		2
--#define ADXL345_DATA_FORMAT_16G		3
--
--#define ADXL345_DEVID			0xE5
--
- struct adxl345_data {
- 	const struct adxl345_chip_info *info;
- 	struct regmap *regmap;
--	u8 data_range;
- };
- 
- #define ADXL345_CHANNEL(index, axis) {					\
-@@ -62,6 +33,18 @@ struct adxl345_data {
- 		BIT(IIO_CHAN_INFO_SAMP_FREQ),				\
- }
- 
-+const struct adxl345_chip_info adxl3x5_chip_info[] = {
-+	[ADXL345] = {
-+		.name = "adxl345",
-+		.uscale = ADXL345_USCALE,
-+	},
-+	[ADXL375] = {
-+		.name = "adxl375",
-+		.uscale = ADXL375_USCALE,
-+	},
-+};
-+EXPORT_SYMBOL_NS_GPL(adxl3x5_chip_info, IIO_ADXL345);
-+
- static const struct iio_chan_spec adxl345_channels[] = {
- 	ADXL345_CHANNEL(0, X),
- 	ADXL345_CHANNEL(1, Y),
-@@ -197,14 +180,21 @@ static void adxl345_powerdown(void *regmap)
- 	regmap_write(regmap, ADXL345_REG_POWER_CTL, ADXL345_POWER_CTL_STANDBY);
- }
- 
--int adxl345_core_probe(struct device *dev, struct regmap *regmap)
-+static int adxl345_setup(struct device *dev, struct adxl345_data *data,
-+			 int (*setup)(struct device*, struct regmap*))
- {
--	struct adxl345_data *data;
--	struct iio_dev *indio_dev;
- 	u32 regval;
- 	int ret;
- 
--	ret = regmap_read(regmap, ADXL345_REG_DEVID, &regval);
-+	/* Perform bus specific settings if available */
-+	if (setup) {
-+		ret = setup(dev, data->regmap);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	/* Read out DEVID */
-+	ret = regmap_read(data->regmap, ADXL345_REG_DEVID, &regval);
- 	if (ret < 0)
- 		return dev_err_probe(dev, ret, "Error reading device ID\n");
- 
-@@ -212,37 +202,62 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap)
- 		return dev_err_probe(dev, -ENODEV, "Invalid device ID: %x, expected %x\n",
- 				     regval, ADXL345_DEVID);
- 
-+	/* Update data_format to full-resolution mode */
-+	ret = regmap_update_bits(data->regmap, ADXL345_REG_DATA_FORMAT,
-+				 ADXL345_DATA_FORMAT_MSK, ADXL345_DATA_FORMAT_FULL_RES);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to update data_format register\n");
-+
-+	/* Enable measurement mode */
-+	ret = adxl345_powerup(data->regmap);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "Failed to enable measurement mode\n");
-+
-+	ret = devm_add_action_or_reset(dev, adxl345_powerdown, data->regmap);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+/**
-+ * adxl345_core_probe() - probe and setup for the adxl345 accelerometer,
-+ *                        also covers the adlx375 accelerometer
-+ * @dev:	Driver model representation of the device
-+ * @regmap:	Regmap instance for the device
-+ * @chip_info:  Structure containing device specific data
-+ * @setup:	Setup routine to be executed right before the standard device
-+ *		setup, can also be set to NULL if not required
-+ *
-+ * Return: 0 on success, negative errno on error
-+ */
-+int adxl345_core_probe(struct device *dev, struct regmap *regmap,
-+		       const struct adxl345_chip_info *chip_info,
-+		       int (*setup)(struct device*, struct regmap*))
-+{
-+	struct adxl345_data *data;
-+	struct iio_dev *indio_dev;
-+	int ret;
-+
- 	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
- 	if (!indio_dev)
- 		return -ENOMEM;
- 
- 	data = iio_priv(indio_dev);
- 	data->regmap = regmap;
--	/* Enable full-resolution mode */
--	data->data_range = ADXL345_DATA_FORMAT_FULL_RES;
--	data->info = device_get_match_data(dev);
--	if (!data->info)
--		return -ENODEV;
--
--	ret = regmap_write(data->regmap, ADXL345_REG_DATA_FORMAT,
--			   data->data_range);
--	if (ret < 0)
--		return dev_err_probe(dev, ret, "Failed to set data range\n");
-+	data->info = chip_info;
- 
--	indio_dev->name = data->info->name;
-+	indio_dev->name = chip_info->name;
- 	indio_dev->info = &adxl345_info;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 	indio_dev->channels = adxl345_channels;
- 	indio_dev->num_channels = ARRAY_SIZE(adxl345_channels);
- 
--	/* Enable measurement mode */
--	ret = adxl345_powerup(data->regmap);
--	if (ret < 0)
--		return dev_err_probe(dev, ret, "Failed to enable measurement mode\n");
--
--	ret = devm_add_action_or_reset(dev, adxl345_powerdown, data->regmap);
--	if (ret < 0)
-+	ret = adxl345_setup(dev, data, setup);
-+	if (ret) {
-+		dev_err(dev, "ADXL345 setup failed\n");
- 		return ret;
-+	}
- 
- 	return devm_iio_device_register(dev, indio_dev);
- }
-diff --git a/drivers/iio/accel/adxl345_i2c.c b/drivers/iio/accel/adxl345_i2c.c
-index a3084b0a8..3f882e2e0 100644
---- a/drivers/iio/accel/adxl345_i2c.c
-+++ b/drivers/iio/accel/adxl345_i2c.c
-@@ -9,6 +9,7 @@
-  */
- 
- #include <linux/i2c.h>
-+#include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/regmap.h>
- 
-@@ -21,41 +22,36 @@ static const struct regmap_config adxl345_i2c_regmap_config = {
- 
- static int adxl345_i2c_probe(struct i2c_client *client)
- {
-+	const struct adxl345_chip_info *chip_data;
- 	struct regmap *regmap;
- 
-+	/* Retrieve device data, i.e. the name, to pass it to the core */
-+	chip_data = i2c_get_match_data(client);
-+
- 	regmap = devm_regmap_init_i2c(client, &adxl345_i2c_regmap_config);
- 	if (IS_ERR(regmap))
--		return dev_err_probe(&client->dev, PTR_ERR(regmap), "Error initializing regmap\n");
-+		return dev_err_probe(&client->dev, PTR_ERR(regmap),
-+				     "Error initializing regmap\n");
- 
--	return adxl345_core_probe(&client->dev, regmap);
-+	return adxl345_core_probe(&client->dev, regmap, chip_data, NULL);
- }
- 
--static const struct adxl345_chip_info adxl345_i2c_info = {
--	.name = "adxl345",
--	.uscale = ADXL345_USCALE,
--};
--
--static const struct adxl345_chip_info adxl375_i2c_info = {
--	.name = "adxl375",
--	.uscale = ADXL375_USCALE,
--};
--
- static const struct i2c_device_id adxl345_i2c_id[] = {
--	{ "adxl345", (kernel_ulong_t)&adxl345_i2c_info },
--	{ "adxl375", (kernel_ulong_t)&adxl375_i2c_info },
-+	{ "adxl345", (kernel_ulong_t)&adxl3x5_chip_info[ADXL345] },
-+	{ "adxl375", (kernel_ulong_t)&adxl3x5_chip_info[ADXL375] },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, adxl345_i2c_id);
- 
- static const struct of_device_id adxl345_of_match[] = {
--	{ .compatible = "adi,adxl345", .data = &adxl345_i2c_info },
--	{ .compatible = "adi,adxl375", .data = &adxl375_i2c_info },
-+	{ .compatible = "adi,adxl345", .data = &adxl3x5_chip_info[ADXL345] },
-+	{ .compatible = "adi,adxl375", .data = &adxl3x5_chip_info[ADXL375] },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, adxl345_of_match);
- 
- static const struct acpi_device_id adxl345_acpi_match[] = {
--	{ "ADS0345", (kernel_ulong_t)&adxl345_i2c_info },
-+	{ "ADS0345", (kernel_ulong_t)&adxl3x5_chip_info[ADXL345] },
- 	{ }
- };
- MODULE_DEVICE_TABLE(acpi, adxl345_acpi_match);
-diff --git a/drivers/iio/accel/adxl345_spi.c b/drivers/iio/accel/adxl345_spi.c
-index 93ca349f1..c26bac462 100644
---- a/drivers/iio/accel/adxl345_spi.c
-+++ b/drivers/iio/accel/adxl345_spi.c
-@@ -22,8 +22,14 @@ static const struct regmap_config adxl345_spi_regmap_config = {
- 
- static int adxl345_spi_probe(struct spi_device *spi)
- {
-+	const struct adxl345_chip_info *chip_data;
- 	struct regmap *regmap;
- 
-+	/* Retrieve device name to pass it as driver specific data */
-+	chip_data = device_get_match_data(&spi->dev);
-+	if (!chip_data)
-+		chip_data = spi_get_device_match_data(spi);
-+
- 	/* Bail out if max_speed_hz exceeds 5 MHz */
- 	if (spi->max_speed_hz > ADXL345_MAX_SPI_FREQ_HZ)
- 		return dev_err_probe(&spi->dev, -EINVAL, "SPI CLK, %d Hz exceeds 5 MHz\n",
-@@ -33,35 +39,25 @@ static int adxl345_spi_probe(struct spi_device *spi)
- 	if (IS_ERR(regmap))
- 		return dev_err_probe(&spi->dev, PTR_ERR(regmap), "Error initializing regmap\n");
- 
--	return adxl345_core_probe(&spi->dev, regmap);
-+	return adxl345_core_probe(&spi->dev, regmap, chip_data, NULL);
- }
- 
--static const struct adxl345_chip_info adxl345_spi_info = {
--	.name = "adxl345",
--	.uscale = ADXL345_USCALE,
--};
--
--static const struct adxl345_chip_info adxl375_spi_info = {
--	.name = "adxl375",
--	.uscale = ADXL375_USCALE,
--};
--
- static const struct spi_device_id adxl345_spi_id[] = {
--	{ "adxl345", (kernel_ulong_t)&adxl345_spi_info },
--	{ "adxl375", (kernel_ulong_t)&adxl375_spi_info },
-+	{ "adxl345", (kernel_ulong_t)&adxl3x5_chip_info[ADXL345] },
-+	{ "adxl375", (kernel_ulong_t)&adxl3x5_chip_info[ADXL375] },
- 	{ }
- };
- MODULE_DEVICE_TABLE(spi, adxl345_spi_id);
- 
- static const struct of_device_id adxl345_of_match[] = {
--	{ .compatible = "adi,adxl345", .data = &adxl345_spi_info },
--	{ .compatible = "adi,adxl375", .data = &adxl375_spi_info },
-+	{ .compatible = "adi,adxl345", .data = &adxl3x5_chip_info[ADXL345] },
-+	{ .compatible = "adi,adxl375", .data = &adxl3x5_chip_info[ADXL375] },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, adxl345_of_match);
- 
- static const struct acpi_device_id adxl345_acpi_match[] = {
--	{ "ADS0345", (kernel_ulong_t)&adxl345_spi_info },
-+	{ "ADS0345", (kernel_ulong_t)&adxl3x5_chip_info[ADXL345] },
- 	{ }
- };
- MODULE_DEVICE_TABLE(acpi, adxl345_acpi_match);
--- 
-2.25.1
-
+T24gVGh1LCAyMDI0LTAzLTIxIGF0IDE1OjU5IC0wNzAwLCBJc2FrdSBZYW1haGF0YSB3cm90ZToN
+Cj4gPiANCj4gPiBPaywgSSBzZWUgbm93IGhvdyB0aGlzIHdvcmtzLiBNVFJScyBhbmQgQVBJQyB6
+YXBwaW5nIGhhcHBlbiB0byB1c2UNCj4gPiB0aGUNCj4gPiBzYW1lIGZ1bmN0aW9uOiBrdm1femFw
+X2dmbl9yYW5nZSgpLiBTbyByZXN0cmljdGluZyB0aGF0IGZ1bmN0aW9uDQo+ID4gZnJvbQ0KPiA+
+IHphcHBpbmcgcHJpdmF0ZSBwYWdlcyBoYXMgdGhlIGRlc2lyZWQgYWZmZWN0LiBJIHRoaW5rIGl0
+J3Mgbm90DQo+ID4gaWRlYWwNCj4gPiB0aGF0IGt2bV96YXBfZ2ZuX3JhbmdlKCkgc2lsZW50bHkg
+c2tpcHMgemFwcGluZyBzb21lIHJhbmdlcy4gSQ0KPiA+IHdvbmRlcg0KPiA+IGlmIHdlIGNvdWxk
+IHBhc3Mgc29tZXRoaW5nIGluLCBzbyBpdCdzIG1vcmUgY2xlYXIgdG8gdGhlIGNhbGxlci4NCj4g
+PiANCj4gPiBCdXQgY2FuIHRoZXNlIGNvZGUgcGF0aHMgZXZlbiBnZXQgcmVhY2hlcyBpbiBURFg/
+IEl0IHNvdW5kZWQgbGlrZQ0KPiA+IE1UUlJzDQo+ID4gYmFzaWNhbGx5IHdlcmVuJ3Qgc3VwcG9y
+dGVkLg0KPiANCj4gV2UgY2FuIG1ha2UgdGhlIGNvZGUgcGF0aHMgc28gd2l0aCB0aGUgKG5ldykg
+YXNzdW1wdGlvbiB0aGF0IGd1ZXN0DQo+IE1UUlIgY2FuDQo+IGJlIGRpc2FibGVkIGNsZWFubHku
+DQoNClNvIHRoZSBzaXR1YXRpb24gaXMgKHBsZWFzZSBjb3JyZWN0KToNCktWTSBoYXMgYSBubyAi
+bWFraW5nIHVwIGFyY2hpdGVjdHVyYWwgYmVoYXZpb3IiIHJ1bGUsIHdoaWNoIGlzIGFuDQppbXBv
+cnRhbnQgb25lLiBCdXQgVERYIG1vZHVsZSBkb2Vzbid0IHN1cHBvcnQgTVRSUnMuIFNvIFREIGd1
+ZXN0cyBjYW4ndA0KaGF2ZSBhcmNoaXRlY3R1cmFsIGJlaGF2aW9yIGZvciBNVFJScy4gU28gdGhp
+cyBwYXRjaCBpcyB0cnlpbmcgYXMgYmVzdA0KYXMgcG9zc2libGUgdG8gbWF0Y2ggd2hhdCBNVFJS
+IGJlaGF2aW9yIGl0IGNhbiAobm90IGNyYXNoIHRoZSBndWVzdCBpZg0Kc29tZW9uZSB0cmllcyku
+DQoNCkZpcnN0IG9mIGFsbCwgaWYgdGhlIGd1ZXN0IHVubWFwcyB0aGUgcHJpdmF0ZSBtZW1vcnks
+IGRvZXNuJ3QgaXQgaGF2ZQ0KdG8gYWNjZXB0IGl0IGFnYWluIHdoZW4gZ2V0cyByZS1hZGRlZD8g
+U28gd2lsbCB0aGUgZ3Vlc3Qgbm90IGNyYXNoDQphbnl3YXk/DQoNCkJ1dCwgSSBndWVzcyB3ZSBz
+aG91bGQgcHVudCB0byB1c2Vyc3BhY2UgaXMgdGhlIGd1ZXN0IHRyaWVzIHRvIHVzZQ0KTVRSUnMs
+IG5vdCB0aGF0IHVzZXJzcGFjZSBjYW4gaGFuZGxlIGl0IGhhcHBlbmluZyBpbiBhIFRELi4uICBC
+dXQgaXQNCnNlZW1zIGNsZWFuZXIgYW5kIHNhZmVyIHRoZW4gc2tpcHBpbmcgemFwcGluZyBzb21l
+IHBhZ2VzIGluc2lkZSB0aGUNCnphcHBpbmcgY29kZS4NCg0KSSdtIHN0aWxsIG5vdCBzdXJlIGlm
+IEkgdW5kZXJzdGFuZCB0aGUgaW50ZW50aW9uIGFuZCBjb25zdHJhaW50cyBmdWxseS4NClNvIHBs
+ZWFzZSBjb3JyZWN0LiBUaGlzICh0aGUgc2tpcHBpbmcgdGhlIHphcHBpbmcgZm9yIHNvbWUgb3Bl
+cmF0aW9ucykNCmlzIGEgdGhlb3JldGljYWwgY29ycmVjdG5lc3MgaXNzdWUgcmlnaHQ/IEl0IGRv
+ZXNuJ3QgcmVzb2x2ZSBhIFREDQpjcmFzaD8NCg==
