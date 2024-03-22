@@ -1,48 +1,48 @@
 Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5593B2BF;
-	Fri, 22 Mar 2024 09:12:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9743F9E4;
+	Fri, 22 Mar 2024 09:12:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711098768; cv=none; b=J26HenodWUKa9Ev0BBrJzo5J7MdPQBPPD2+UtI9WP2uISqH0+bBP++2Edo7OrkvHazqETJVGZoJhe3HUfc8I2ijkz1QdgDZ1t0tBUscro1brEcHPT3UBUM/fxz/B01C9hrViDkJcX1XlQ0ajUtgW1GdGPvENmpBEjWiN0tE2nXE=
+	t=1711098769; cv=none; b=Vghiv8m2mxy005qdfooslL6dfzIP8DA2Ff9h+ov7ghxCHFzaTSr7+JG6PYsvlUl7eA72HEn7IzhGDjLIKhkQJc9jlfqIHwrCHhjGjtopxSqh8ROj8JexrHE4MGXtcgcyLnEBfNzzzE4+dDfPTAqfgcgxtp2FqTcsYE4BzUPXxE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711098768; c=relaxed/simple;
-	bh=0FlH7gZwgsbn/RMnVF/WySlYSvtRUr8cJZaaHlTdOHo=;
+	s=arc-20240116; t=1711098769; c=relaxed/simple;
+	bh=np8Nueif0/K4wSVFXa2CW7ohhFRKREKZK4PSQvv/VxM=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p2XbR97HDhqh1EHirWvrDC+POBRzNBRc9qTRKU4AErvjcdrQntiZEnvDmau21jRS3o67aSNzfv8vfSpxoYpR6z4qwd4SJP2Z265V9DzXyL3yq9/F0G0hYej8j29D6ksy/4FFZfdiyw0o3jP1JIz6AZyR9VOUQ/SxRIXK78YNJAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=kisgKUTv; arc=none smtp.client-ip=60.244.123.138
+	 MIME-Version:Content-Type; b=lCsPJlxxfXQ6NBrHA16y09xXG8bX9lzMz1Ws0BsmIRabXS/o3XeJ2N1ZMeitHH07ODrNrC+gTyxY4hAGhcXhEFS2dq95UtzZK4A6B90njylm72Y1MqQxFn3mwubEXoJbo90/zSscQPYFyRJ4Me6vXR9lJ5WP4x+EslH8ph2uGZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=IW6cdhSP; arc=none smtp.client-ip=60.244.123.138
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kisgKUTv"
-X-UUID: 5263320ee82c11eeb8927bc1f75efef4-20240322
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="IW6cdhSP"
+X-UUID: 534f93c4e82c11eeb8927bc1f75efef4-20240322
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=+Y7pDLy2z70oqV69Qv4vjpLNsRfJ8vJYpMU0Qdno7FQ=;
-	b=kisgKUTvK/x+z0xfSLT4vc2Lav4V7cXV7LJWvM4fKIbCBw98/SvOzZtypMQFYnklbRCVOO1XoAEujGO3MvnHHQt2GZiU9o6XZTcaCwmVTHNSLF0yMQTkl9+SqSkyGuyLThkzUDtySLSoI3J/1nrGoHILdBkz33nYk9SsZr28Vk0=;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=PZJix1J9Jpmh+i91OEHpGMGggBKx4tQWzIsRWzZa578=;
+	b=IW6cdhSPAItBocEGICoMemKZtRORlRJh7E9w3J7ZVE70Gg2AsCRn4yHlIaPgAs7oS8qh+/c8+Rc/7KTmSd7Bk2UQMtclZf6RCO59GSNnhrH0HlUmz0SJT5qa/qYtsWanCWf1GTLhPCupDhnxUqq0Ye6LBxTNungLJ1iIwUG3BL4=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:a3099fdc-677c-4425-aa1c-d9558720ae5e,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:6f543d0,CLOUDID:06203400-c26b-4159-a099-3b9d0558e447,B
+X-CID-O-INFO: VERSION:1.1.37,REQID:666dbc25-6397-42c9-8b67-571a72b9cf2e,IP:0,U
+	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-25
+X-CID-META: VersionHash:6f543d0,CLOUDID:9947b690-e2c0-40b0-a8fe-7c7e47299109,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
 	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
 	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 5263320ee82c11eeb8927bc1f75efef4-20240322
-Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw01.mediatek.com
+X-UUID: 534f93c4e82c11eeb8927bc1f75efef4-20240322
+Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw01.mediatek.com
 	(envelope-from <shawn.sung@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 943085202; Fri, 22 Mar 2024 17:12:35 +0800
+	with ESMTP id 863254185; Fri, 22 Mar 2024 17:12:36 +0800
 Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
+ mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Fri, 22 Mar 2024 17:12:34 +0800
+ 15.2.1118.26; Fri, 22 Mar 2024 17:12:35 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
  mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Fri, 22 Mar 2024 17:12:34 +0800
+ 15.2.1118.26 via Frontend Transport; Fri, 22 Mar 2024 17:12:35 +0800
 From: Shawn Sung <shawn.sung@mediatek.com>
 To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, AngeloGioacchino Del Regno
 	<angelogioacchino.delregno@collabora.com>
@@ -54,9 +54,9 @@ CC: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-media@vger.kernel.org>,
 	<linaro-mm-sig@lists.linaro.org>, Hsiao Chien Sung
 	<shawn.sung@mediatek.corp-partner.google.com>
-Subject: [PATCH v5 04/14] drm/mediatek: Rename "mtk_drm_gem" to "mtk_gem"
-Date: Fri, 22 Mar 2024 17:12:22 +0800
-Message-ID: <20240322091232.26387-5-shawn.sung@mediatek.com>
+Subject: [PATCH v5 14/14] drm/mediatek: Rename mtk_ddp_comp functions
+Date: Fri, 22 Mar 2024 17:12:32 +0800
+Message-ID: <20240322091232.26387-15-shawn.sung@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20240322091232.26387-1-shawn.sung@mediatek.com>
 References: <20240322091232.26387-1-shawn.sung@mediatek.com>
@@ -71,7 +71,7 @@ X-MTK: N
 
 From: Hsiao Chien Sung <shawn.sung@mediatek.corp-partner.google.com>
 
-Rename all "mtk_drm_gem" to "mtk_gem":
+Rename functions of mtk_ddp_comp:
 - To align the naming rule
 - To reduce the code size
 
@@ -79,280 +79,130 @@ Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com
 Reviewed-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.corp-partner.google.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c   |  8 +--
- drivers/gpu/drm/mediatek/mtk_drm_gem.c   | 63 ++++++++++++------------
- drivers/gpu/drm/mediatek/mtk_drm_gem.h   | 23 +++++----
- drivers/gpu/drm/mediatek/mtk_drm_plane.c |  2 +-
- 4 files changed, 47 insertions(+), 49 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_ddp_comp.c | 45 ++++++++++++++-----------
+ drivers/gpu/drm/mediatek/mtk_ddp_comp.h |  3 +-
+ drivers/gpu/drm/mediatek/mtk_dpi.c      |  2 +-
+ drivers/gpu/drm/mediatek/mtk_dsi.c      |  2 +-
+ 4 files changed, 28 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index c46773569b3c9..81e8aa65abd6d 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -576,8 +576,8 @@ DEFINE_DRM_GEM_FOPS(mtk_drm_fops);
-  * We need to override this because the device used to import the memory is
-  * not dev->dev, as drm_gem_prime_import() expects.
-  */
--static struct drm_gem_object *mtk_drm_gem_prime_import(struct drm_device *dev,
--						       struct dma_buf *dma_buf)
-+static struct drm_gem_object *mtk_gem_prime_import(struct drm_device *dev,
-+						   struct dma_buf *dma_buf)
- {
- 	struct mtk_drm_private *private = dev->dev_private;
- 
-@@ -587,9 +587,9 @@ static struct drm_gem_object *mtk_drm_gem_prime_import(struct drm_device *dev,
- static const struct drm_driver mtk_drm_driver = {
- 	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_ATOMIC,
- 
--	.dumb_create = mtk_drm_gem_dumb_create,
-+	.dumb_create = mtk_gem_dumb_create,
- 
--	.gem_prime_import = mtk_drm_gem_prime_import,
-+	.gem_prime_import = mtk_gem_prime_import,
- 	.gem_prime_import_sg_table = mtk_gem_prime_import_sg_table,
- 	.fops = &mtk_drm_fops,
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_gem.c b/drivers/gpu/drm/mediatek/mtk_drm_gem.c
-index 4f2e3feabc0f8..445fd8a8b8988 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_gem.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_gem.c
-@@ -14,26 +14,26 @@
- #include "mtk_drm_drv.h"
- #include "mtk_drm_gem.h"
- 
--static int mtk_drm_gem_object_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma);
-+static int mtk_gem_object_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma);
- 
- static const struct vm_operations_struct vm_ops = {
- 	.open = drm_gem_vm_open,
- 	.close = drm_gem_vm_close,
+diff --git a/drivers/gpu/drm/mediatek/mtk_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_ddp_comp.c
+index c3441508f452f..17b0364112922 100644
+--- a/drivers/gpu/drm/mediatek/mtk_ddp_comp.c
++++ b/drivers/gpu/drm/mediatek/mtk_ddp_comp.c
+@@ -497,10 +497,10 @@ static const struct mtk_ddp_comp_match mtk_ddp_matches[DDP_COMPONENT_DRM_ID_MAX]
+ 	[DDP_COMPONENT_WDMA1]		= { MTK_DISP_WDMA,		1, NULL },
  };
  
--static const struct drm_gem_object_funcs mtk_drm_gem_object_funcs = {
--	.free = mtk_drm_gem_free_object,
-+static const struct drm_gem_object_funcs mtk_gem_object_funcs = {
-+	.free = mtk_gem_free_object,
- 	.get_sg_table = mtk_gem_prime_get_sg_table,
--	.vmap = mtk_drm_gem_prime_vmap,
--	.vunmap = mtk_drm_gem_prime_vunmap,
--	.mmap = mtk_drm_gem_object_mmap,
-+	.vmap = mtk_gem_prime_vmap,
-+	.vunmap = mtk_gem_prime_vunmap,
-+	.mmap = mtk_gem_object_mmap,
- 	.vm_ops = &vm_ops,
- };
- 
--static struct mtk_drm_gem_obj *mtk_drm_gem_init(struct drm_device *dev,
--						unsigned long size)
-+static struct mtk_gem_obj *mtk_gem_init(struct drm_device *dev,
-+					unsigned long size)
+-static bool mtk_drm_find_comp_in_ddp(struct device *dev,
+-				     const unsigned int *path,
+-				     unsigned int path_len,
+-				     struct mtk_ddp_comp *ddp_comp)
++static bool mtk_ddp_comp_find(struct device *dev,
++			      const unsigned int *path,
++			      unsigned int path_len,
++			      struct mtk_ddp_comp *ddp_comp)
  {
--	struct mtk_drm_gem_obj *mtk_gem_obj;
-+	struct mtk_gem_obj *mtk_gem_obj;
- 	int ret;
+ 	unsigned int i;
  
- 	size = round_up(size, PAGE_SIZE);
-@@ -42,7 +42,7 @@ static struct mtk_drm_gem_obj *mtk_drm_gem_init(struct drm_device *dev,
- 	if (!mtk_gem_obj)
- 		return ERR_PTR(-ENOMEM);
- 
--	mtk_gem_obj->base.funcs = &mtk_drm_gem_object_funcs;
-+	mtk_gem_obj->base.funcs = &mtk_gem_object_funcs;
- 
- 	ret = drm_gem_object_init(dev, &mtk_gem_obj->base, size);
- 	if (ret < 0) {
-@@ -54,15 +54,15 @@ static struct mtk_drm_gem_obj *mtk_drm_gem_init(struct drm_device *dev,
- 	return mtk_gem_obj;
+@@ -514,10 +514,10 @@ static bool mtk_drm_find_comp_in_ddp(struct device *dev,
+ 	return false;
  }
  
--struct mtk_drm_gem_obj *mtk_drm_gem_create(struct drm_device *dev,
--					   size_t size, bool alloc_kmap)
-+struct mtk_gem_obj *mtk_gem_create(struct drm_device *dev,
-+				   size_t size, bool alloc_kmap)
+-static unsigned int mtk_drm_find_comp_in_ddp_conn_path(struct device *dev,
+-						       const struct mtk_drm_route *routes,
+-						       unsigned int num_routes,
+-						       struct mtk_ddp_comp *ddp_comp)
++static unsigned int mtk_ddp_comp_find_in_route(struct device *dev,
++					       const struct mtk_drm_route *routes,
++					       unsigned int num_routes,
++					       struct mtk_ddp_comp *ddp_comp)
  {
- 	struct mtk_drm_private *priv = dev->dev_private;
--	struct mtk_drm_gem_obj *mtk_gem;
-+	struct mtk_gem_obj *mtk_gem;
- 	struct drm_gem_object *obj;
  	int ret;
- 
--	mtk_gem = mtk_drm_gem_init(dev, size);
-+	mtk_gem = mtk_gem_init(dev, size);
- 	if (IS_ERR(mtk_gem))
- 		return ERR_CAST(mtk_gem);
- 
-@@ -97,9 +97,9 @@ struct mtk_drm_gem_obj *mtk_drm_gem_create(struct drm_device *dev,
- 	return ERR_PTR(ret);
+ 	unsigned int i;
+@@ -554,26 +554,31 @@ int mtk_ddp_comp_get_id(struct device_node *node,
+ 	return -EINVAL;
  }
  
--void mtk_drm_gem_free_object(struct drm_gem_object *obj)
-+void mtk_gem_free_object(struct drm_gem_object *obj)
+-unsigned int mtk_drm_find_possible_crtc_by_comp(struct drm_device *drm,
+-						struct device *dev)
++unsigned int mtk_find_possible_crtcs(struct drm_device *drm, struct device *dev)
  {
--	struct mtk_drm_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
-+	struct mtk_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
- 	struct mtk_drm_private *priv = obj->dev->dev_private;
+ 	struct mtk_drm_private *private = drm->dev_private;
+ 	unsigned int ret = 0;
  
- 	if (mtk_gem->sg)
-@@ -114,10 +114,10 @@ void mtk_drm_gem_free_object(struct drm_gem_object *obj)
- 	kfree(mtk_gem);
- }
+-	if (mtk_drm_find_comp_in_ddp(dev, private->data->main_path, private->data->main_len,
+-				     private->ddp_comp))
++	if (mtk_ddp_comp_find(dev,
++			      private->data->main_path,
++			      private->data->main_len,
++			      private->ddp_comp))
+ 		ret = BIT(0);
+-	else if (mtk_drm_find_comp_in_ddp(dev, private->data->ext_path,
+-					  private->data->ext_len, private->ddp_comp))
++	else if (mtk_ddp_comp_find(dev,
++				   private->data->ext_path,
++				   private->data->ext_len,
++				   private->ddp_comp))
+ 		ret = BIT(1);
+-	else if (mtk_drm_find_comp_in_ddp(dev, private->data->third_path,
+-					  private->data->third_len, private->ddp_comp))
++	else if (mtk_ddp_comp_find(dev,
++				   private->data->third_path,
++				   private->data->third_len,
++				   private->ddp_comp))
+ 		ret = BIT(2);
+ 	else
+-		ret = mtk_drm_find_comp_in_ddp_conn_path(dev,
+-							 private->data->conn_routes,
+-							 private->data->num_conn_routes,
+-							 private->ddp_comp);
++		ret = mtk_ddp_comp_find_in_route(dev,
++						 private->data->conn_routes,
++						 private->data->num_conn_routes,
++						 private->ddp_comp);
  
--int mtk_drm_gem_dumb_create(struct drm_file *file_priv, struct drm_device *dev,
--			    struct drm_mode_create_dumb *args)
-+int mtk_gem_dumb_create(struct drm_file *file_priv, struct drm_device *dev,
-+			struct drm_mode_create_dumb *args)
- {
--	struct mtk_drm_gem_obj *mtk_gem;
-+	struct mtk_gem_obj *mtk_gem;
- 	int ret;
- 
- 	args->pitch = DIV_ROUND_UP(args->width * args->bpp, 8);
-@@ -130,7 +130,7 @@ int mtk_drm_gem_dumb_create(struct drm_file *file_priv, struct drm_device *dev,
- 	args->size = args->pitch;
- 	args->size *= args->height;
- 
--	mtk_gem = mtk_drm_gem_create(dev, args->size, false);
-+	mtk_gem = mtk_gem_create(dev, args->size, false);
- 	if (IS_ERR(mtk_gem))
- 		return PTR_ERR(mtk_gem);
- 
-@@ -148,16 +148,16 @@ int mtk_drm_gem_dumb_create(struct drm_file *file_priv, struct drm_device *dev,
- 	return 0;
- 
- err_handle_create:
--	mtk_drm_gem_free_object(&mtk_gem->base);
-+	mtk_gem_free_object(&mtk_gem->base);
  	return ret;
  }
+diff --git a/drivers/gpu/drm/mediatek/mtk_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_ddp_comp.h
+index ba985206fdd24..26236691ce4c2 100644
+--- a/drivers/gpu/drm/mediatek/mtk_ddp_comp.h
++++ b/drivers/gpu/drm/mediatek/mtk_ddp_comp.h
+@@ -326,8 +326,7 @@ static inline void mtk_ddp_comp_encoder_index_set(struct mtk_ddp_comp *comp)
  
--static int mtk_drm_gem_object_mmap(struct drm_gem_object *obj,
--				   struct vm_area_struct *vma)
-+static int mtk_gem_object_mmap(struct drm_gem_object *obj,
-+			       struct vm_area_struct *vma)
- 
- {
- 	int ret;
--	struct mtk_drm_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
-+	struct mtk_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
- 	struct mtk_drm_private *priv = obj->dev->dev_private;
- 
- 	/*
-@@ -188,7 +188,7 @@ static int mtk_drm_gem_object_mmap(struct drm_gem_object *obj,
-  */
- struct sg_table *mtk_gem_prime_get_sg_table(struct drm_gem_object *obj)
- {
--	struct mtk_drm_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
-+	struct mtk_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
- 	struct mtk_drm_private *priv = obj->dev->dev_private;
- 	struct sg_table *sgt;
- 	int ret;
-@@ -212,7 +212,7 @@ struct sg_table *mtk_gem_prime_get_sg_table(struct drm_gem_object *obj)
- struct drm_gem_object *mtk_gem_prime_import_sg_table(struct drm_device *dev,
- 			struct dma_buf_attachment *attach, struct sg_table *sg)
- {
--	struct mtk_drm_gem_obj *mtk_gem;
-+	struct mtk_gem_obj *mtk_gem;
- 
- 	/* check if the entries in the sg_table are contiguous */
- 	if (drm_prime_get_contiguous_size(sg) < attach->dmabuf->size) {
-@@ -220,7 +220,7 @@ struct drm_gem_object *mtk_gem_prime_import_sg_table(struct drm_device *dev,
- 		return ERR_PTR(-EINVAL);
+ int mtk_ddp_comp_get_id(struct device_node *node,
+ 			enum mtk_ddp_comp_type comp_type);
+-unsigned int mtk_drm_find_possible_crtc_by_comp(struct drm_device *drm,
+-						struct device *dev);
++unsigned int mtk_find_possible_crtcs(struct drm_device *drm, struct device *dev);
+ int mtk_ddp_comp_init(struct device_node *comp_node, struct mtk_ddp_comp *comp,
+ 		      unsigned int comp_id);
+ enum mtk_ddp_comp_type mtk_ddp_comp_get_type(unsigned int comp_id);
+diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
+index fbf63e0441337..bfe8653005dbf 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dpi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
+@@ -805,7 +805,7 @@ static int mtk_dpi_bind(struct device *dev, struct device *master, void *data)
+ 		return ret;
  	}
  
--	mtk_gem = mtk_drm_gem_init(dev, attach->dmabuf->size);
-+	mtk_gem = mtk_gem_init(dev, attach->dmabuf->size);
- 	if (IS_ERR(mtk_gem))
- 		return ERR_CAST(mtk_gem);
+-	dpi->encoder.possible_crtcs = mtk_drm_find_possible_crtc_by_comp(drm_dev, dpi->dev);
++	dpi->encoder.possible_crtcs = mtk_find_possible_crtcs(drm_dev, dpi->dev);
  
-@@ -230,9 +230,9 @@ struct drm_gem_object *mtk_gem_prime_import_sg_table(struct drm_device *dev,
- 	return &mtk_gem->base;
- }
+ 	ret = drm_bridge_attach(&dpi->encoder, &dpi->bridge, NULL,
+ 				DRM_BRIDGE_ATTACH_NO_CONNECTOR);
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index e29c37fb5be09..67239606adbfc 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -836,7 +836,7 @@ static int mtk_dsi_encoder_init(struct drm_device *drm, struct mtk_dsi *dsi)
+ 		return ret;
+ 	}
  
--int mtk_drm_gem_prime_vmap(struct drm_gem_object *obj, struct iosys_map *map)
-+int mtk_gem_prime_vmap(struct drm_gem_object *obj, struct iosys_map *map)
- {
--	struct mtk_drm_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
-+	struct mtk_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
- 	struct sg_table *sgt = NULL;
- 	unsigned int npages;
+-	dsi->encoder.possible_crtcs = mtk_drm_find_possible_crtc_by_comp(drm, dsi->host.dev);
++	dsi->encoder.possible_crtcs = mtk_find_possible_crtcs(drm, dsi->host.dev);
  
-@@ -270,10 +270,9 @@ int mtk_drm_gem_prime_vmap(struct drm_gem_object *obj, struct iosys_map *map)
- 	return 0;
- }
- 
--void mtk_drm_gem_prime_vunmap(struct drm_gem_object *obj,
--			      struct iosys_map *map)
-+void mtk_gem_prime_vunmap(struct drm_gem_object *obj, struct iosys_map *map)
- {
--	struct mtk_drm_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
-+	struct mtk_gem_obj *mtk_gem = to_mtk_gem_obj(obj);
- 	void *vaddr = map->vaddr;
- 
- 	if (!mtk_gem->pages)
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_gem.h b/drivers/gpu/drm/mediatek/mtk_drm_gem.h
-index 78f23b07a02e2..66e5f154f6980 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_gem.h
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_gem.h
-@@ -3,8 +3,8 @@
-  * Copyright (c) 2015 MediaTek Inc.
-  */
- 
--#ifndef _MTK_DRM_GEM_H_
--#define _MTK_DRM_GEM_H_
-+#ifndef _MTK_GEM_H_
-+#define _MTK_GEM_H_
- 
- #include <drm/drm_gem.h>
- 
-@@ -22,7 +22,7 @@
-  * P.S. this object would be transferred to user as kms_bo.handle so
-  *	user can access the buffer through kms_bo.handle.
-  */
--struct mtk_drm_gem_obj {
-+struct mtk_gem_obj {
- 	struct drm_gem_object	base;
- 	void			*cookie;
- 	void			*kvaddr;
-@@ -32,18 +32,17 @@ struct mtk_drm_gem_obj {
- 	struct page		**pages;
- };
- 
--#define to_mtk_gem_obj(x)	container_of(x, struct mtk_drm_gem_obj, base)
-+#define to_mtk_gem_obj(x) container_of(x, struct mtk_gem_obj, base)
- 
--void mtk_drm_gem_free_object(struct drm_gem_object *gem);
--struct mtk_drm_gem_obj *mtk_drm_gem_create(struct drm_device *dev, size_t size,
--					   bool alloc_kmap);
--int mtk_drm_gem_dumb_create(struct drm_file *file_priv, struct drm_device *dev,
--			    struct drm_mode_create_dumb *args);
-+void mtk_gem_free_object(struct drm_gem_object *gem);
-+struct mtk_gem_obj *mtk_gem_create(struct drm_device *dev, size_t size,
-+				   bool alloc_kmap);
-+int mtk_gem_dumb_create(struct drm_file *file_priv, struct drm_device *dev,
-+			struct drm_mode_create_dumb *args);
- struct sg_table *mtk_gem_prime_get_sg_table(struct drm_gem_object *obj);
- struct drm_gem_object *mtk_gem_prime_import_sg_table(struct drm_device *dev,
- 			struct dma_buf_attachment *attach, struct sg_table *sg);
--int mtk_drm_gem_prime_vmap(struct drm_gem_object *obj, struct iosys_map *map);
--void mtk_drm_gem_prime_vunmap(struct drm_gem_object *obj,
--			      struct iosys_map *map);
-+int mtk_gem_prime_vmap(struct drm_gem_object *obj, struct iosys_map *map);
-+void mtk_gem_prime_vunmap(struct drm_gem_object *obj, struct iosys_map *map);
- 
- #endif
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_plane.c b/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-index 43137c46fc148..db63a32c407e3 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-@@ -135,7 +135,7 @@ static void mtk_plane_update_new_state(struct drm_plane_state *new_state,
- {
- 	struct drm_framebuffer *fb = new_state->fb;
- 	struct drm_gem_object *gem;
--	struct mtk_drm_gem_obj *mtk_gem;
-+	struct mtk_gem_obj *mtk_gem;
- 	unsigned int pitch, format;
- 	u64 modifier;
- 	dma_addr_t addr;
+ 	ret = drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL,
+ 				DRM_BRIDGE_ATTACH_NO_CONNECTOR);
 -- 
 2.18.0
 
