@@ -1,121 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3EA517564;
-	Fri, 22 Mar 2024 11:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061723EA9C;
+	Fri, 22 Mar 2024 11:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711107679; cv=none; b=S/rbW1hb3ylq63bTZ9X9YPcHTyytMmqwxLX0nrXEPScWPU7A4yK3O/0uENRSCYlOdw6ZAkKgZXtFvr0/1onlduFa+cvBZj90zSkZhERfgG5CydgKowDu6P5IIWIoECinja/MTR0NE92eBlaUesvufzUM91LGy1tN7esLfG9lQvg=
+	t=1711107707; cv=none; b=QlbhVbr7Zc0q4w+T3PTxWSv3Nn76gMK1nIKiipM5dIE3jSXm8XlBlFL4n8kDiWafd5mEdd9K+rBpkAxGuplmqk6b2GweoMm2JOOYYzOYQshAKSZ9pqVf8D8MnD/ggSK2VO8XXZV9DNGVNyt0T3kWMSNhyEdy5rhhFzDADt0QSr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711107679; c=relaxed/simple;
-	bh=LF2rr9dOfpEZuuPPXmvnPc6f8+IaaJWMgYsu8binxPo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rSiYUfRSQbOhMOXwrW9c3VQyVCe/YZrGly9B9ytm0jeABlD6YNSHhPXbllwW8wSf/X5FWsIKaumj2QLdNY4d2zbDvY2DHslCdZVhFCqDCcRgualTgmGP9XN/oADaMC4Q2p5O8olyQtDso251BM7qZMIVSE1+H5KgXdA8/DX+WIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ik50+Tid; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711107707; c=relaxed/simple;
+	bh=DnLFfeW1AMMJ/5y4K8wzGOftS7A6Z+PTU6bFKYYbMD8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aGP6N9L+6GU1yDSNCf3v2WpY00CUd2jUJ5ShsAX/EO7w5Kz8LRDHOGt52Uy79jYLFFfpD3sDmjyS/ZtEpZXx1GlaKkpFIW0PwyTX6qU0o0oaIDZEBszp3ps+HJ4y4T5sQSoCor2zg1S7DA9ytbXTZ/7cvV9zPX8Jh6pFXF+5vW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XkM9cqo/; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ik50+Tid"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8858CC433C7;
-	Fri, 22 Mar 2024 11:41:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711107679;
-	bh=LF2rr9dOfpEZuuPPXmvnPc6f8+IaaJWMgYsu8binxPo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ik50+Tid+IK1cuGjNPX272PhSxzPR9jT24fFkvLmo3GWTuS5DKQIuKnQhRqcUwDdg
-	 2R9X6ilqTc5Kb8nWL29j5GJtA+DVqsRNXPHUHg9/2uZiaBtiT7nknbvSHwBFJTxR/T
-	 YxQUOl1eL2DWupnzUon8IDpAo5hNoz58YUb8tnAaSmULOQVQTes9UlMeNqNpxAZtT7
-	 KC5qFgOhLUYLJ5O3kgMhLpOnO5wRNdyR6joTx96nrgeV61X4bTAwZ7D2J7RpZ6GGNJ
-	 y5tMlsgPA5yVeNSkaWhIW4QAtbrX4vlZOGymzjb+JIH8oUEgOTIz9890u7HRCsWi4j
-	 NXTHG1lAiqKMQ==
-Date: Fri, 22 Mar 2024 11:41:15 +0000
-From: Simon Horman <horms@kernel.org>
-To: Eric Dumazet <edumazet@google.com>
-Cc: Anastasia Belova <abelova@astralinux.ru>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Jiri Pirko <jiri@resnulli.us>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: Re: [PATCH v2] flow_dissector: prevent NULL pointer dereference in
- __skb_flow_dissect
-Message-ID: <20240322114115.GB372561@kernel.org>
-References: <Zfrmv4u0tVcYGS5n@nanopsycho>
- <20240321123446.7012-1-abelova@astralinux.ru>
- <CANn89iK1SO32Zggz5fh4J=NmrVW5RjkdbxJ+-ULP8ysmKXLGvg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XkM9cqo/"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-789e83637e0so126389485a.2;
+        Fri, 22 Mar 2024 04:41:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711107705; x=1711712505; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8evdBv9wfzyxMz+KpHh32wSrhwaXKbA+tqAPHK3l3vc=;
+        b=XkM9cqo/Ojd3gW26ZFoCUJ4nmQywIpC5VR9LrN0RE6HI7BrgsaT4NIOAEfZPch/tmd
+         hSSBa3GpdIz2c7DbdkpA3EluYsebNoEdst3N+WUQgVV1edsHZMUgpGt1zGqPtPggNuS+
+         tSbABDFrhPfNo0qUBAfCa7y7G7oHTIYJgIrcNsGDp5tR6c+nLJLcEj+NyfMd6vEYfQAr
+         DFwPvxtBcg2SbVB3kjhx7jYJGdfo4RZjxgHUU1z3xl2V+KEwfttDyaCvIVoIsSiS4EGK
+         tP0zKzFG0F0lNuOUeC5cp8F5aGdZSehaVnxyVTaVSkLUuessaB67dgbjouxlC4FJEafT
+         Scmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711107705; x=1711712505;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=8evdBv9wfzyxMz+KpHh32wSrhwaXKbA+tqAPHK3l3vc=;
+        b=c2lkvi1dLx8WqA/AksRL0dnIsa6hleMBmuh9HaGyE7xxbGjuqWPJh6owd4bJyiktGw
+         EQwPf/TDFRgBurLOHVyvoBQdkntcWZH9NWe7LLxyzHgFX8R53tu5faQTQ4vHplgBkNk3
+         2Z/+iLiBB6Gxqow7mu47qZPz/6fBWjDuMD7usOVSJshOw6EUE1AjB2OurJp6cieLPNFj
+         Kg/akYNYMwYe6bGHSTZvM9myuKPMA9IQJPmz597onKJg1upGXOBWpvj+IY6jK2MfsVvQ
+         czvL8f785avotqDjtt41C96X4PbcAX5k3e49tBTKPiRV+7NQpI9InOeb3rMJ9j5lF7FX
+         ZsTw==
+X-Forwarded-Encrypted: i=1; AJvYcCWBkjR+Ht769FX2LauhQIJm+I59xM01IYmdYFByjHcCbpH0nBA4dZciNmwrFmjcTSK9yiTcv/lEYDUTbL4RYq+YRQiYAcGMoCsnLk0UYQ82beIfGBbJC/3l3aKEEJcfghZN
+X-Gm-Message-State: AOJu0YyK5h7VyDmRgnurFiLGLF+T6yvjFuxOLSugAsuUz1VAMNhfBfC9
+	+mxrQLlO9bIeJ4JWKwFqX7jnUZxOc8eBXLH33dm0Mqi2aymZngo4j0tAIwNsRkPOjA==
+X-Google-Smtp-Source: AGHT+IHYXA++eriMaFp3DVL8xL47iq28Kzs2KTpZk5Dga3q6r6IomxL2a7u8Kbi2GZjdsrCkllcNxQ==
+X-Received: by 2002:a05:6358:4894:b0:17e:edfd:89bb with SMTP id pe20-20020a056358489400b0017eedfd89bbmr1963530rwc.15.1711107354301;
+        Fri, 22 Mar 2024 04:35:54 -0700 (PDT)
+Received: from [192.168.255.10] ([43.132.141.27])
+        by smtp.gmail.com with ESMTPSA id h190-20020a6383c7000000b005dc4fc80b21sm1382661pge.70.2024.03.22.04.35.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Mar 2024 04:35:53 -0700 (PDT)
+Message-ID: <f44de7d9-e03d-483d-96d3-76c63158061d@gmail.com>
+Date: Fri, 22 Mar 2024 19:35:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] KVM RISC-V APLIC fixes
+To: Anup Patel <apatel@ventanamicro.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Atish Patra <atishp@atishpatra.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Andrew Jones <ajones@ventanamicro.com>, Anup Patel <anup@brainfault.org>,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240321085041.1955293-1-apatel@ventanamicro.com>
+From: Bing Fan <hptsfb@gmail.com>
+In-Reply-To: <20240321085041.1955293-1-apatel@ventanamicro.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANn89iK1SO32Zggz5fh4J=NmrVW5RjkdbxJ+-ULP8ysmKXLGvg@mail.gmail.com>
 
-On Thu, Mar 21, 2024 at 06:16:30PM +0100, Eric Dumazet wrote:
-> On Thu, Mar 21, 2024 at 1:35 PM Anastasia Belova <abelova@astralinux.ru> wrote:
-> >
-> > skb is an optional parameter, so it may be NULL.
-> > Add check defore dereference in eth_hdr.
-> >
-> > Found by Linux Verification Center (linuxtesting.org) with SVACE.
-> >
-> > Fixes: 690e36e726d0 ("net: Allow raw buffers to be passed into the flow dissector.")
-> > Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
-> > ---
-> >  net/core/flow_dissector.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c
-> > index 272f09251343..68a8228ffae3 100644
-> > --- a/net/core/flow_dissector.c
-> > +++ b/net/core/flow_dissector.c
-> > @@ -1139,6 +1139,8 @@ bool __skb_flow_dissect(const struct net *net,
-> >
-> >         if (dissector_uses_key(flow_dissector,
-> >                                FLOW_DISSECTOR_KEY_ETH_ADDRS)) {
-> > +               if (!skb)
-> > +                       goto out_bad;
-> >                 struct ethhdr *eth = eth_hdr(skb);
-> >                 struct flow_dissector_key_eth_addrs *key_eth_addrs;
-> >
-> 
-> 
-> I think you ignored my prior feedback.
-> 
-> In which case can we go to this point with skb == NULL ?
-> How come nobody complained of crashes here ?
-> 
-> I think we need to know if adding code here is useful or not.
-> 
-> You have to understand that a patch like this might need days of work
-> from various teams in the world,
-> flooded by questionable CVE.
 
-Hi Eric and Anastasia,
+Hi,
 
-I have conducted a review of the callers of __skb_flow_dissect()
-that I could find in net-next and my conclusion is that, given
-current usage, the code path above will not be hit with a NULL skb.
 
-A summary of the analysis is as follows.
+As you mentioned as below, riscv's aia patch in 
+https://github.com/avpatel/linux.git
 
-bond_flow_dissect:
-- Analysis: skb parameter may be NULL but FLOW_DISSECTOR_KEY_ETH_ADDRS
-  is not included in flow_keys_bonding_keys
-- Conclusion: Code path in question is not hit for this user
+Why is this series of patches not merged into upstream?
 
-skb_flow_dissect:
-skb_flow_dissect_flow_keys:
-fib6_rules_early_flow_dissect:
-fib4_rules_early_flow_dissect:
-__skb_get_hash_symmetric:
-- Analysis: data parameter is NULL, which means that skb must be non-NULL
-  else a crash would occur in the following code near the top of
-  __skb_flow_dissect().
-	if (!data) {
-		data = skb->data;
-- Conclusion: Calling eth_hdr(skb) is safe for these users
 
-Assuming my analysis is correct (please check!) then
-as this code is in the fast path for many users I think it is best
-not to add this unnecessary check (which I assume is Eric's concern too).
+在 2024/3/21 16:50, Anup Patel 写道:
+> Few fixes for KVM RISC-V in-kernel APLIC emulation which were discovered
+> during Linux AIA driver patch reviews.
+>
+> These patches can also be found in the riscv_kvm_aplic_fixes_v1
+> branch at: https://github.com/avpatel/linux.git
+>
+> Anup Patel (2):
+>    RISC-V: KVM: Fix APLIC setipnum_le/be write emulation
+>    RISC-V: KVM: Fix APLIC in_clrip[x] read emulation
+>
+>   arch/riscv/kvm/aia_aplic.c | 37 +++++++++++++++++++++++++++++++------
+>   1 file changed, 31 insertions(+), 6 deletions(-)
+>
