@@ -1,126 +1,227 @@
-Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA6E7E766
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 20:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6C331A60
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 20:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711139082; cv=none; b=JvqOW7S0b00dD5hUh9z+acrhtogzPt2O/Ntrf33N6v3omRBB8J0PsjBqSdSoHzhuU62XSn1KO1c/0MTJHwyEk2lvF+2zZcKXMP6oRoaKDQaoKlfLUcn1e2EOMOPs8x3zI9kl1+JHKRtA3DYW5sMzlupzjBhM9IyMHI7sUSYpy+I=
+	t=1711139508; cv=none; b=I/hPUfff/mNSHoYhkGLwA9WoDNplQXaupfj7/+DhsKhjAXxUlshAiUOYEyjQszJhRvA90bD2njyasvzuLDgTF3I/ahZHpaKR8fYlbl3pBHtg/6zWs6qHD1YJjHXAmV9Ci8AullN29Icm5qUKiBdjhVA3xj8b2/nUd9m0VaQi4hI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711139082; c=relaxed/simple;
-	bh=GOa+p5rfQcsXcyuHjZYb1wXBDRY1vtpAWNC7xXOLWT4=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=sgIHDn2UDyBkF1G3ZN6cXeZULjdIkHbAxVCGZmnLcHBqBrr//3V0ANVkR+mlwMyE00WDE8rANijnvADvzv8NBPiJv3unuGeMi0K2DgUIlK71oot70E36XugNZP1bsdr+eH0hRwIahH7jrEpfjNUmVFxiCWJf8/kwmVA1Z1edV2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=kM/Mma5t; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZEqFDuPW; arc=none smtp.client-ip=64.147.123.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1711139508; c=relaxed/simple;
+	bh=3On0zwm6jM778YElkqeztalhlg0rp2vBVWWMjQCoI1M=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=SEjXLUjAYZDxdWrqRPfi/FL2rFFECJynRVa6VwwKpm4JPKZJSfdPPUQZbsqjgLBRmdOwcO6IJk56t8B4XDbGuT1WDb4F3GonyUq04xBuanQv6IfgqDtLYSv0yB0PGpA/zR8LWAqPbIGcfeN7UPJx82/hVff9OKVos3wb/9oq/V0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=f9ShoMH8; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="kM/Mma5t";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZEqFDuPW"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.west.internal (Postfix) with ESMTP id CA69732000CC;
-	Fri, 22 Mar 2024 16:24:38 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Fri, 22 Mar 2024 16:24:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1711139078; x=1711225478; bh=v/zZxMEUwy
-	rsOu50oZW1RGy+/TjNPs8E2T2TvPN/4J4=; b=kM/Mma5taCEDtcFsIAKJ/4bAcV
-	8csomuDgZ/yXneFO//9V/Ul8XlY0Tg5NLKjpkVe4UjrbfUvt52G6qUu4LIsCX5oa
-	7U6y8K9eGoCTq1Y93ULqrt96Yrnr0XIbL4tVPN4CIXxZw78A2KYyuRKxb3n7MSqK
-	Xdkv+rwKuvgQh+nuXX0nKrfeEt392iw+sPOuXPA+KQs5D0JHLq6pqUQnXLXZ/Pp1
-	KfvXbHBoGgBtoD1S7RKrb9r8aXkHPQqdsQlAuZz3Ynsw5xlZVUUOiAlso1PZmxWT
-	fwew/FTqYbDBAmz6hwf8s/8wXvFE5Qc2LH8+n3pvBNopWG67JAvYXFHheeLQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1711139078; x=1711225478; bh=v/zZxMEUwyrsOu50oZW1RGy+/TjN
-	Ps8E2T2TvPN/4J4=; b=ZEqFDuPWXya0h9zVZrULnxwUduLk1b1Qmzy513+P3YBc
-	u54DZDez4AYp0gY6Fic83TtGzegqn+2SXJqiWMknWD9/pRB/f6vvpW1eVcuGvN/t
-	q1M0iuDfMDzWsmUWuLwTFpOxvNsm6M/dOygrMn/ALn9ifeyN6QpznZ5gXnM0Tk9u
-	X+rVmGTuIV0OD2NP7uQ3l366kO/osRgQsPu6Kc55focmKsfKv8afVPnqLutai5gX
-	yeUq081AQTdrl5GKLnO1/pwiuhDDN6IkXwjUI/kr4+lnyysbsa4PIXYxf52KsGIJ
-	khoGrYmuPvCwMwqltpWj2gY0gzE2TVVWNPQaH5LyHA==
-X-ME-Sender: <xms:Ben9ZaKQ8RKa-cyjhQ5WBzKAqA0HzQLdmh2pWGHC5HZSfTiPC5myAg>
-    <xme:Ben9ZSI9GjJS9WoBW3Y4aqD9Kb1n8V_0oggHhutp5oqr34uV8dVC4qwDoId0tBaud
-    Otfa46tg7F-T3SOG8o>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddtvddgjeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:Ben9Zavr0LbgFgqow4rwvEpoh68ikn2AQGu0i33BYyA2zhQnfzx-wQ>
-    <xmx:Ben9ZfZlN1uh0G5i0nlIVxxJNLivXNMJOPoNamxiMyjPJQyDkTXzgg>
-    <xmx:Ben9ZRYyPSuXjZiPRBHryv62QeMpaHzJrTMtGdXCkpmrERi9Awfi3Q>
-    <xmx:Ben9ZbCzPCX7E43sLRvVh_VpdJPl213YS8a8Uia44SF2TxwLI4MPAw>
-    <xmx:Bun9ZVrQz6bwZlrVA9Ej5knBJLz21Rdcu5IflN_yY3GU4-O-DaghBg>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 520FDB6008D; Fri, 22 Mar 2024 16:24:37 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-332-gdeb4194079-fm-20240319.002-gdeb41940
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="f9ShoMH8"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a468226e135so318326566b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 13:31:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1711139504; x=1711744304; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bkEtvYqy1WvJcxiq2A/RIrn4954G/qQAXJYaM8Oh1Rc=;
+        b=f9ShoMH8457G/V9DH6KtgyRoF8sIeWN+T9+R+0ajoU5RslU5A3Bw5yoFIGnBJge9cH
+         QxtYL0N4+xoqQEPDj86x9xPesfm+H0Bm1Qm8z6TGm2HX+5u2u/9UcgQmKpdyrPxe6PX5
+         dzC1nchDNB9+4HjPMIUgrkd1uIggT/kDppPVvx3oSVfSpyDq2RhFM7s82iekByEQDeXl
+         g00RrpigiXAIGpelyL2mH5MdWazLUDcH67vNHT+uj/Ux2AqeQsnHVFpZ4hKThcHdm951
+         nwOOidMMUhokuXsDLr6nPnwIv6EKs288MIj5pQ3nG5V9Ea5MtgwJeoBNeqTN2l+REvQ5
+         Ik8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711139504; x=1711744304;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bkEtvYqy1WvJcxiq2A/RIrn4954G/qQAXJYaM8Oh1Rc=;
+        b=gfXsVWL9sUTS2dSfq4F4h29XjPFnWUha9tL9jjLfm9tPH8K/a2M+Y7T2cbp0kxWRow
+         WOOOpKOZwp1IKc8z7txFc+mpLJGM6bY5Xx2koC3B/MuJOarzQYpnrETp2HAdhr6X0fZh
+         XPwPh0NcR1sFircjV5i4mzW6lbs1QZjbva64OrHv3Y7WGHoemzDDa+lajntCWwI57oEL
+         524glTn7UcMgacrD8F6v6q3G3Hr7GjbjUiqfOG2hMdBRzzEotrIlOMwkPQyDo7sLqd6b
+         vtH1KEWNpy3v6tARr0TAnV03P4aCZlbCjbeLm2vUIf2f0Gw5EC0cTUCq7Oxg2qSYZXMV
+         tLHg==
+X-Gm-Message-State: AOJu0YwC/fMXth1zISCXpU8c/cFGv3G9tCykLcY2RrAHvR/q5oSZQQRK
+	NSNCpftbN2KSiPwEfEBcXwaLYyKKBBSWhDHcwPcG2TSHTFb8bXlRdqNOd+ZfEus=
+X-Google-Smtp-Source: AGHT+IE9CDoW3UpB5yWwdMtatijavNSDtDLQOJ31diqG3OtVOLCRXzNT+3xAKMg/PDwf8hgs+atsrw==
+X-Received: by 2002:a17:906:c12:b0:a47:32f7:fe9e with SMTP id s18-20020a1709060c1200b00a4732f7fe9emr528540ejf.37.1711139503934;
+        Fri, 22 Mar 2024 13:31:43 -0700 (PDT)
+Received: from ?IPv6:2804:5078:98c:e700:58f2:fc97:371f:2? ([2804:5078:98c:e700:58f2:fc97:371f:2])
+        by smtp.gmail.com with ESMTPSA id lr22-20020a170906fb9600b00a46fc33b479sm191492ejb.13.2024.03.22.13.31.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Mar 2024 13:31:43 -0700 (PDT)
+Message-ID: <9d4c5c6bd5b7fd0305f9ec26038f4afbea5fc166.camel@suse.com>
+Subject: Re: [PATCH] selftests: livepatch: Test atomic replace against
+ multiple modules
+From: Marcos Paulo de Souza <mpdesouza@suse.com>
+To: Joe Lawrence <joe.lawrence@redhat.com>, Josh Poimboeuf
+ <jpoimboe@kernel.org>,  Jiri Kosina <jikos@kernel.org>, Miroslav Benes
+ <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>, Shuah Khan
+ <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org, live-patching@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Date: Fri, 22 Mar 2024 17:31:35 -0300
+In-Reply-To: <56bf6323-9e9b-a0e3-f505-d628aac793d4@redhat.com>
+References: <20240312-lp-selftest-new-test-v1-1-9c843e25e38e@suse.com>
+	 <56bf6323-9e9b-a0e3-f505-d628aac793d4@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <7f854130-e92f-488f-9c56-a65f86b95567@app.fastmail.com>
-In-Reply-To: <87f6365f-a40e-4606-baff-170cb8fc48f3@infradead.org>
-References: <20240320180333.151043-1-arnd@kernel.org>
- <CAMuHMdW41e+DSBKBgugTkjoLy6bXfji-KWmB_d9EstEv01eC6w@mail.gmail.com>
- <87f6365f-a40e-4606-baff-170cb8fc48f3@infradead.org>
-Date: Fri, 22 Mar 2024 21:24:13 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Geoff Levand" <geoff@infradead.org>,
- "Geert Uytterhoeven" <geert@linux-m68k.org>,
- "Arnd Bergmann" <arnd@kernel.org>
-Cc: llvm@lists.linux.dev, "Kevin Hao" <haokexin@gmail.com>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- "Nick Desaulniers" <ndesaulniers@google.com>, linux-kernel@vger.kernel.org,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Nicholas Piggin" <npiggin@gmail.com>,
- "Justin Stitt" <justinstitt@google.com>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
- "Bill Wendling" <morbo@google.com>
-Subject: Re: [PATCH] powerpc: ps3: mark ps3_notification_device static for stack usage
-Content-Type: text/plain
 
-On Fri, Mar 22, 2024, at 09:34, Geoff Levand wrote:
-> On 3/21/24 17:32, Geert Uytterhoeven wrote:
->> --- a/arch/powerpc/platforms/ps3/device-init.c
->>> +++ b/arch/powerpc/platforms/ps3/device-init.c
->>> @@ -770,7 +770,7 @@ static struct task_struct *probe_task;
->>>
->>>  static int ps3_probe_thread(void *data)
->>>  {
->>> -       struct ps3_notification_device dev;
->>> +       static struct ps3_notification_device dev;
->>>         int res;
->>>         unsigned int irq;
->>>         u64 lpar;
->> 
->> Making it static increases kernel size for everyone.  So I'd rather
->> allocate it dynamically. The thread already allocates a buffer, which
->> can be replaced at no cost by allocating a structure containing both
->> the ps3_notification_device and the buffer.
+On Thu, 2024-03-21 at 10:08 -0400, Joe Lawrence wrote:
+> On 3/12/24 08:12, Marcos Paulo de Souza wrote:
+> > This new test checks if a livepatch with replace attribute set
+> > replaces
+> > all previously applied livepatches.
+> >=20
+> > Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+> > ---
+> > =C2=A0tools/testing/selftests/livepatch/Makefile=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 3 +-
+> > =C2=A0.../selftests/livepatch/test-atomic-replace.sh=C2=A0=C2=A0=C2=A0=
+=C2=A0 | 71
+> > ++++++++++++++++++++++
+> > =C2=A02 files changed, 73 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/tools/testing/selftests/livepatch/Makefile
+> > b/tools/testing/selftests/livepatch/Makefile
+> > index 35418a4790be..e92f61208d35 100644
+> > --- a/tools/testing/selftests/livepatch/Makefile
+> > +++ b/tools/testing/selftests/livepatch/Makefile
+> > @@ -10,7 +10,8 @@ TEST_PROGS :=3D \
+> > =C2=A0	test-state.sh \
+> > =C2=A0	test-ftrace.sh \
+> > =C2=A0	test-sysfs.sh \
+> > -	test-syscall.sh
+> > +	test-syscall.sh \
+> > +	test-atomic-replace.sh
+> > =C2=A0
+> > =C2=A0TEST_FILES :=3D settings
+> > =C2=A0
+> > diff --git a/tools/testing/selftests/livepatch/test-atomic-
+> > replace.sh b/tools/testing/selftests/livepatch/test-atomic-
+> > replace.sh
+> > new file mode 100755
+> > index 000000000000..09a3dcdcb8de
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/livepatch/test-atomic-replace.sh
+> > @@ -0,0 +1,71 @@
+> > +#!/bin/bash
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +#
+> > +# Copyright (C) 2024 SUSE
+> > +# Author: Marcos Paulo de Souza <mpdesouza@suse.com>
+> > +
+> > +. $(dirname $0)/functions.sh
+> > +
+> > +MOD_REPLACE=3Dtest_klp_atomic_replace
+> > +
+> > +setup_config
+> > +
+> > +# - Load three livepatch modules.
+> > +# - Load one more livepatch with replace being set, and check that
+> > only one
+> > +#=C2=A0=C2=A0 livepatch module is being listed.
+> > +
+> > +start_test "apply one liveptach to replace multiple livepatches"
+> > +
+> > +for mod in test_klp_livepatch test_klp_syscall
+> > test_klp_callbacks_demo; do
+> > +	load_lp $mod
+> > +done
+> > +
+> > +nmods=3D$(ls /sys/kernel/livepatch | wc -l)
+> > +if [ $nmods -ne 3 ]; then
+> > +	die "Expecting three modules listed, found $nmods"
+> > +fi
+> > +
+> > +load_lp $MOD_REPLACE replace=3D1
+> > +
+> > +nmods=3D$(ls /sys/kernel/livepatch | wc -l)
+> > +if [ $nmods -ne 1 ]; then
+> > +	die "Expecting only one moduled listed, found $nmods"
+> > +fi
+> > +
+> > +disable_lp $MOD_REPLACE
+> > +unload_lp $MOD_REPLACE
+> > +
+> > +check_result "% insmod test_modules/test_klp_livepatch.ko
+> > +livepatch: enabling patch 'test_klp_livepatch'
+> > +livepatch: 'test_klp_livepatch': initializing patching transition
+> > +livepatch: 'test_klp_livepatch': starting patching transition
+> > +livepatch: 'test_klp_livepatch': completing patching transition
+> > +livepatch: 'test_klp_livepatch': patching complete
+> > +% insmod test_modules/test_klp_syscall.ko
+> > +livepatch: enabling patch 'test_klp_syscall'
+> > +livepatch: 'test_klp_syscall': initializing patching transition
+> > +livepatch: 'test_klp_syscall': starting patching transition
+> > +livepatch: 'test_klp_syscall': completing patching transition
+> > +livepatch: 'test_klp_syscall': patching complete
+> > +% insmod test_modules/test_klp_callbacks_demo.ko
+> > +livepatch: enabling patch 'test_klp_callbacks_demo'
+> > +livepatch: 'test_klp_callbacks_demo': initializing patching
+> > transition
+> > +test_klp_callbacks_demo: pre_patch_callback: vmlinux
+> > +livepatch: 'test_klp_callbacks_demo': starting patching transition
+> > +livepatch: 'test_klp_callbacks_demo': completing patching
+> > transition
+> > +test_klp_callbacks_demo: post_patch_callback: vmlinux
+> > +livepatch: 'test_klp_callbacks_demo': patching complete
+> > +% insmod test_modules/test_klp_atomic_replace.ko replace=3D1
+> > +livepatch: enabling patch 'test_klp_atomic_replace'
+> > +livepatch: 'test_klp_atomic_replace': initializing patching
+> > transition
+> > +livepatch: 'test_klp_atomic_replace': starting patching transition
+> > +livepatch: 'test_klp_atomic_replace': completing patching
+> > transition
+> > +livepatch: 'test_klp_atomic_replace': patching complete
+> > +% echo 0 > /sys/kernel/livepatch/test_klp_atomic_replace/enabled
+> > +livepatch: 'test_klp_atomic_replace': initializing unpatching
+> > transition
+> > +livepatch: 'test_klp_atomic_replace': starting unpatching
+> > transition
+> > +livepatch: 'test_klp_atomic_replace': completing unpatching
+> > transition
+> > +livepatch: 'test_klp_atomic_replace': unpatching complete
+> > +% rmmod test_klp_atomic_replace"
+> > +
+> > +exit 0
+> >=20
+>=20
+> Hi Marcos,
+>=20
+> I'm not against adding a specific atomic replace test, but for a
+> quick
+> tl/dr what is the difference between this new test and
+> test-livepatch.sh's "atomic replace livepatch" test?
+>=20
+> If this one provides better coverage, should we follow up with
+> removing
+> the existing one?
 
-I didn't think it mattered much, given that you would rarely
-have a kernel with PS3 support along with other platforms.
+Hi Joe,
 
-I suppose it does increase the size for a PS3-only kernel
-as well, while your version makes it smaller.
+thanks for looking at it. To be honest I haven't checked the current
+use of atomic replace on test-livepatch.sh =3D/
 
-> Here's what I came up with.  It builds for me without warnings.
-> I haven't tested it yet.  A review would be appreciated.
+yes, that's mostly the same case, but in mine I load three modules and
+then load the third one replacing the others, while in the test-
+livepatch.sh we have only one module that is loaded, replaced, and then
+we unload the replaced one.
 
-It seems a little complicated but looks all correct to
-me and reduces both stack and .data size, so
+Do you see value in extending the test at test-livepatch.sh to load
+more than one LP moduled and the replace all of them with another one?
+I believe that it adds more coverage, while keeping the number of tests
+the same.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Thanks!
+
+>=20
+
