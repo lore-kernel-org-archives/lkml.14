@@ -1,193 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D5E7627FC
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 22:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C37627FC
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 22:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711145745; cv=none; b=ICwhhwJTa6DSZHV7G4Yp8UQAvAql4SxRxPowQXMO8RkG/Gl0n1v1/3bACMfA6mZoL9a4Vu2l55DEmw+vdEPaksY3cIGpoK4ly9Zbdnc+jYj+w/5EYxzbpPKZIk7zddlzSKPIJtGcIgLK8UVpEJWPtUasNYapjCOU3EcOmA4VIR0=
+	t=1711146275; cv=none; b=fqM0aweNW8dcKc69t1vjqKYRL7L1t09bP1IaeGuJ2hXD44XawXryQO/CNKyXXMQG3lA6+wj1p//6HdWRrtYuHg5Py2pm2hvPb5UOtdyKqfBGOJ+PSi9Sk7KWKWKoUdmIna9y3WHAwUflG7H0AaB5SnmwsLMkuHv+euyASPwlLxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711145745; c=relaxed/simple;
-	bh=ycMrtdPn68CTRrt3aDmyI8tifKQ2EOf0nLCRHFWzr08=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gag+72jv+UWfxwEYLRWsQ10UIWOM6pUf1xG4WL8GlJhbKf+DkXtCNomjJeqiQ/J9K4Nv0DurYV7WJiqF+72YjZGHBM1y7FxylDNwfpE9oFt1Ap998HLpyMeBSeJQq1CUjgkX++lBhiPKrJ9XI1tP4SVXicx/uaUcbBioii5l8Ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JtZkECFX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711146275; c=relaxed/simple;
+	bh=u9hLQq6AbccTuvOfTFuQN65uvQDoNtfDPvG6xM7TeA4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f3TjC6+iX4I6nQSAj+lx8cZ77GnoIRILA07HmfZ9AcUKjA2rnZ0/kj0LzGgcKGW54J92yu6EOM3yPneM+Y7qwnanaItnA2QfA3hSszhFC2vnNs5pOPsL3a5gZuqgUynBUy5j2Tt1/NJSPtnO3imrgFacOywI9OattGb4nkf1Kdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=THGcJ4Yz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JtZkECFX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711145742;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t+o/hq/vRaAlqZorXgz61wZ5x9VfNVOFlmD2hAnuwQc=;
-	b=JtZkECFX5OroTe2z+7T/LHbHzuguh/uULw919Wo8BycfmKV3jXP59AFMUhgkEq83R1lUj1
-	We9zxxFcGye0E5HsNjTkPR5WJBmGxeywNAmg5/VOruQizGsOLrJYj65E39suuk+W596Lrv
-	BGt7VRhX9hhOxGAmW/4IourcG5G+RSI=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-159-JjZz40PEMPe23vRDS-XaXg-1; Fri,
- 22 Mar 2024 18:15:38 -0400
-X-MC-Unique: JjZz40PEMPe23vRDS-XaXg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E5C3D3C02454;
-	Fri, 22 Mar 2024 22:15:36 +0000 (UTC)
-Received: from emerald.redhat.com (unknown [10.22.8.130])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 3BA338173;
-	Fri, 22 Mar 2024 22:15:36 +0000 (UTC)
-From: Lyude Paul <lyude@redhat.com>
-To: dri-devel@lists.freedesktop.org
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Asahi Lina <lina@asahilina.net>,
-	Martin Rodriguez Reboredo <yakoyoku@gmail.com>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	linux-kernel@vger.kernel.org (open list),
-	rust-for-linux@vger.kernel.org (open list:RUST)
-Subject: [PATCH 4/4] WIP: rust/drm/kms: Add ShadowPlaneState<T>
-Date: Fri, 22 Mar 2024 18:03:36 -0400
-Message-ID: <20240322221305.1403600-5-lyude@redhat.com>
-In-Reply-To: <20240322221305.1403600-1-lyude@redhat.com>
-References: <20240322221305.1403600-1-lyude@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="THGcJ4Yz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37C51C433F1;
+	Fri, 22 Mar 2024 22:24:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711146274;
+	bh=u9hLQq6AbccTuvOfTFuQN65uvQDoNtfDPvG6xM7TeA4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=THGcJ4YzFy+bIbZ5yw6EferzhNPNLNAFaPtsewBMPNNW+5dyCef7pSpzLtVSH1KFQ
+	 NxIkOcDhIhDOck+jrsDOzlf0tO1vDyN1grFlvCVLZo5gaNR6U1F7YRF51w/1CQL9BC
+	 TYhaFcARm1WIhHQp1XgJEkdR/MwaQp/I++cR6O895VhE8YVxViT/bK0IOIX8ThpMVU
+	 LEwinwAeVZerafNzdxgTCP49aJca7dmC5vqNULFc3p5eI9IonrJh/WzVHckBvPsqrV
+	 TZlfvZRTornG7hn3WTCbEyRYjhlZZNxg0ePBqY8hd1wNMAyG/sKqUDClekThul1Q5k
+	 lw3revJJdR8KQ==
+Date: Fri, 22 Mar 2024 22:24:32 +0000
+From: Jaegeuk Kim <jaegeuk@kernel.org>
+To: Light Hsieh =?utf-8?B?KOisneaYjueHiCk=?= <Light.Hsieh@mediatek.com>
+Cc: Hillf Danton <hdanton@sina.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-f2fs-devel@lists.sourceforge.net" <linux-f2fs-devel@lists.sourceforge.net>
+Subject: Re: =?utf-8?B?5Zue6KaGOiBbUEFUQ0g=?= =?utf-8?Q?=5D?= f2fs: avoid the
+ deadlock case when stopping discard thread
+Message-ID: <Zf4FIAkI83GbQYLB@google.com>
+References: <20240320001442.497813-1-jaegeuk@kernel.org>
+ <20240321224233.2541-1-hdanton@sina.com>
+ <ZfzQz5hwECOEGYVL@google.com>
+ <SI2PR03MB52607606AB0D29C8AB123C1484312@SI2PR03MB5260.apcprd03.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+In-Reply-To: <SI2PR03MB52607606AB0D29C8AB123C1484312@SI2PR03MB5260.apcprd03.prod.outlook.com>
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
----
- drivers/gpu/drm/rvkms/plane.rs           |  7 +++-
- rust/bindings/bindings_helper.h          |  2 +
- rust/kernel/drm/kms.rs                   |  1 +
- rust/kernel/drm/kms/gem_atomic_helper.rs | 48 ++++++++++++++++++++++++
- 4 files changed, 56 insertions(+), 2 deletions(-)
- create mode 100644 rust/kernel/drm/kms/gem_atomic_helper.rs
+On 03/22, Light Hsieh (謝明燈) wrote:
+> I don't see my added log in sb_free_unlock() which will invoke percpu_up_write to release the write semaphore.
 
-diff --git a/drivers/gpu/drm/rvkms/plane.rs b/drivers/gpu/drm/rvkms/plane.rs
-index d98a1f7bf79e2..5fb1b63842929 100644
---- a/drivers/gpu/drm/rvkms/plane.rs
-+++ b/drivers/gpu/drm/rvkms/plane.rs
-@@ -4,7 +4,10 @@
-     prelude::*,
-     drm::{
-         device::Device,
--        kms::plane::{self, DriverPlaneState},
-+        kms::{
-+            plane::{self, DriverPlaneState},
-+            gem_atomic_helper::ShadowPlaneState,
-+        }
-     },
- };
- 
-@@ -15,7 +18,7 @@ pub(crate) struct DriverPlane {
- }
- 
- pub(crate) type Plane = plane::Plane<DriverPlane>;
--pub(crate) type PlaneState = plane::PlaneState<RvkmsPlaneState>;
-+pub(crate) type PlaneState = ShadowPlaneState<RvkmsPlaneState>;
- 
- impl plane::DriverPlane for DriverPlane {
-     type Initializer = impl PinInit<Self, Error>;
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index 5856afbe6e8f6..73a5eb00e8625 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -12,6 +12,8 @@
- #include <drm/drm_edid.h>
- #include <drm/drm_file.h>
- #include <drm/drm_gem.h>
-+#include <drm/drm_gem_atomic_helper.h>
-+#include <drm/drm_gem_framebuffer_helper.h>
- #include <drm/drm_gem_framebuffer_helper.h>
- #include <drm/drm_gem_shmem_helper.h>
- #include <drm/drm_ioctl.h>
-diff --git a/rust/kernel/drm/kms.rs b/rust/kernel/drm/kms.rs
-index b55d14415367a..14f4c3842ada0 100644
---- a/rust/kernel/drm/kms.rs
-+++ b/rust/kernel/drm/kms.rs
-@@ -6,6 +6,7 @@
- pub mod crtc;
- pub mod encoder;
- pub mod plane;
-+pub mod gem_atomic_helper;
- 
- use crate::{
-     drm::{drv, device::Device},
-diff --git a/rust/kernel/drm/kms/gem_atomic_helper.rs b/rust/kernel/drm/kms/gem_atomic_helper.rs
-new file mode 100644
-index 0000000000000..85bc3df32d8b7
---- /dev/null
-+++ b/rust/kernel/drm/kms/gem_atomic_helper.rs
-@@ -0,0 +1,48 @@
-+use crate::{
-+    prelude::*,
-+    private::Sealed,
-+    bindings,
-+    init::Zeroable,
-+};
-+use super::plane::{IntoPlaneState, DriverPlaneState};
-+
-+unsafe impl Zeroable for bindings::drm_shadow_plane_state {}
-+
-+#[derive(Default)]
-+#[repr(C)]
-+pub struct ShadowPlaneState<T: DriverPlaneState> {
-+    shadow_state: bindings::drm_shadow_plane_state,
-+    inner: T,
-+}
-+
-+impl<T: DriverPlaneState> Sealed for ShadowPlaneState<T> {}
-+
-+static_assert!(crate::offset_of!(bindings::drm_shadow_plane_state, base) == 0);
-+
-+// SAFETY: Our data layout starts with drm_plane_state (contained at the start of
-+// drm_shadow_plane_state)
-+unsafe impl<T: DriverPlaneState> IntoPlaneState for ShadowPlaneState<T> {
-+    fn __duplicate_state(&self, plane: *mut bindings::drm_plane) -> Result<Box<Self>> {
-+        let mut new: Box<Self> = Box::try_init(try_init!(Self {
-+            shadow_state: bindings::drm_shadow_plane_state { ..Default::default() },
-+            inner: self.inner.clone()
-+        }))?;
-+
-+        // SAFETY: FFI call with no special requirements
-+        unsafe { bindings::__drm_gem_duplicate_shadow_plane_state(plane, &mut new.shadow_state) };
-+
-+        Ok(new)
-+    }
-+
-+    fn __destroy_state(state: *mut bindings::drm_plane_state) {
-+        // SAFETY: This would not be called without a plane state to destroy, and our data layout
-+        // starts with `bindings::drm_plane_state`
-+        unsafe { bindings::__drm_gem_destroy_shadow_plane_state(state.cast()) };
-+    }
-+
-+    fn __reset_state(plane: *mut bindings::drm_plane, state: *mut bindings::drm_plane_state) {
-+        // SAFETY: This would not be called without a plane state to reset, and our data layout
-+        // starts with `bindings::drm_plane_state`
-+        unsafe { bindings::__drm_gem_reset_shadow_plane(plane, state.cast()) }
-+    }
-+}
--- 
-2.43.0
+May I ask more details whether thaw_super() was called or not?
 
+> 
+> 
+> ________________________________
+> 寄件者: Jaegeuk Kim <jaegeuk@kernel.org>
+> 寄件日期: 2024年3月22日 上午 08:29
+> 收件者: Hillf Danton <hdanton@sina.com>
+> 副本: linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>; Light Hsieh (謝明燈) <Light.Hsieh@mediatek.com>; linux-f2fs-devel@lists.sourceforge.net <linux-f2fs-devel@lists.sourceforge.net>
+> 主旨: Re: [PATCH] f2fs: avoid the deadlock case when stopping discard thread
+> 
+> 
+> External email : Please do not click links or open attachments until you have verified the sender or the content.
+> 
+> On 03/22, Hillf Danton wrote:
+> > On Tue, 19 Mar 2024 17:14:42 -0700 Jaegeuk Kim <jaegeuk@kernel.org>
+> > > f2fs_ioc_shutdown(F2FS_GOING_DOWN_NOSYNC)  issue_discard_thread
+> > >  - mnt_want_write_file()
+> > >    - sb_start_write(SB_FREEZE_WRITE)
+> >  __sb_start_write()
+> >    percpu_down_read()
+> > >                                              - sb_start_intwrite(SB_FREEZE_FS);
+> >    __sb_start_write()
+> >      percpu_down_read()
+> >
+> > Given lock acquirers for read on both sides, wtf deadlock are you fixing?
+> 
+> Damn. I couldn't think _write uses _read sem.
+> 
+> >
+> > >  - f2fs_stop_checkpoint(sbi, false,            : waiting
+> > >     STOP_CP_REASON_SHUTDOWN);
+> > >  - f2fs_stop_discard_thread(sbi);
+> > >    - kthread_stop()
+> > >      : waiting
+> > >
+> > >  - mnt_drop_write_file(filp);
+> >
+> > More important, feel free to add in spin.
+> 
+> I posted this patch before Light reported.
+> 
+> And, in the report, I didn't get this:
+> 
+> f2fs_ioc_shutdown() --> freeze_bdev() --> freeze_super() --> sb_wait_write(sb, SB_FREEZE_FS) --> ... ->percpu_down_write().
+> 
+> because f2fs_ioc_shutdown() calls f2fs_stop_discard_thread() after thaw_bdev()
+> like this order.
+> 
+>  -> freeze_bdev()
+>  -> thaw_bdev()
+>  -> f2fs_stop_discard_thread()
+> 
+> Am I missing something?
+> 
+> >
+> > Reported-by: "Light Hsieh (謝明燈)" <Light.Hsieh@mediatek.com>
+> 
