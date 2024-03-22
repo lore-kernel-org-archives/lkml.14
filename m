@@ -1,249 +1,222 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA84423778
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 10:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711102037; cv=none; b=o2v8Mf3yO3n2xGyZEXPW8GYub/2wyXBG+ItpOrckEfh0nCVXp1L3DdnrYhJIWOfutmSr2j1UF6UWdpDgFFLlFp7MyUnXyW7QltsNwuvlBkZQuhBdD2/Tbco2BfC9xnCo9fv5X5/DGXTldfNIKFpjQQORoJCChzS3oxfGsW+HcsQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711102037; c=relaxed/simple;
-	bh=7TtEdYzPi5fbQRciNfcHTMCffp6dm4m9znlEhabaVpU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HlLpgtevjMK+p64pQaFVy6okmGVRpL/Gs3uyQgs3no+6Vuj+wOzaxciAhZgwaYa0MYEnDr8LaVO6Zi9B7yMvdlYTJCy9HA+zarKf6oM9KGx0eUexqDK7InWdfqK75ImskICNuND1CzMOBaMvGGitd8AWS80oqub019c68I/VG7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Y+TbRhax; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB5424A0D;
+	Fri, 22 Mar 2024 10:07:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711102063; cv=fail; b=TwfaEvqLBXgiPEX9PUeRj1tlatkvNL7X5YR2vGsZRTUNZ+1bG9wDo+5evB4xwUb51FolQYNLdYtR8VRhxvWDFSe7G6TGYZbrOPB8Cm4z8BjKQd3Ry2RKj5AxYEpxkqj9TOlwa0Txz1P4ercScSJaj+4dDGiV3KiRVLRpraihgMk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711102063; c=relaxed/simple;
+	bh=8bXUFY07kcCZHUgJx7JVD4yFTg6ydfkTZZco2MvjPnw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HdQIA/aAg+uxeez7ch+TemlM2XrzZ8g4wYSTcF77R+/BiGPkVBC/R8Z5yY8SSRzumWp0bsP+FiSBHDxyE1EzmNtjGDUPviuuP5FNLzebSAFkf9Q1f7wUpWVgftZYkObU7PhCIKwajAH33hxu75VyzLKDppSG3NoT/BxcD0O/pOA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=YKEsv/CR; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=P6r9TYrb; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Y+TbRhax"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42M92eR9012464;
-	Fri, 22 Mar 2024 10:06:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=9TMi6egVQdQZ0zgEWercfnyS9DH0TyrEgDXmK2bzoKo=;
- b=Y+TbRhaxoarvY2UQpSRlThS18yHtC23MaVoujjxN3cuNxdnAVeBCZRHNmNWcgBL3242P
- wV8DD0cfFIlNAv182nvVeTVqzFZ+kzvUHkFPVND2oP9f36AjlpIWorNGdeghd1/VVGOQ
- 4wNA3JJQiV+PphtKJEDs11/a/rAEDThcknn5TC3UVsswfSUw+Ju3KKw3Tv6b4qK4nG0e
- MmV+c3l2gz7D2mR1PCx37QS/0SoFpes2NcK4H18JHEDa/rbJWu2/0/JClDcfIgnMCAY6
- SbJ/tfl2PMy7RSufuOPHJHJJ1B2OdRuusn5yS0w2t0EuPmQn1vAuvtkcl8keJMPQNk8y MQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x170kg4wx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 Mar 2024 10:06:11 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42MA6A6b013715;
-	Fri, 22 Mar 2024 10:06:10 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x170kg4ww-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 Mar 2024 10:06:10 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42M8kbre023107;
-	Fri, 22 Mar 2024 10:06:10 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3x0x14k1f8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 Mar 2024 10:06:10 +0000
-Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42MA67Y158327320
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 22 Mar 2024 10:06:09 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 079BC58054;
-	Fri, 22 Mar 2024 10:06:07 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 695C558062;
-	Fri, 22 Mar 2024 10:06:00 +0000 (GMT)
-Received: from [9.109.245.191] (unknown [9.109.245.191])
-	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 22 Mar 2024 10:06:00 +0000 (GMT)
-Message-ID: <e65b4e89-e8a9-475d-abc7-c63db8af435e@linux.ibm.com>
-Date: Fri, 22 Mar 2024 15:35:58 +0530
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YKEsv/CR";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="P6r9TYrb"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42M7Y7dO004098;
+	Fri, 22 Mar 2024 10:07:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=99IpJJtAPfY6b+9fG23jv0nWO31VbrQZ9ZJMZk2DmXs=;
+ b=YKEsv/CRAolMuX8ivyGcK9q2E2HEMiFOkmniBvDpr58bDoVdIG+40FSd3/0ptTYusMNX
+ G1IY3wI55ZoWRdzhTf2Ue78xKn+aw2KbPgckRB5sDVsGHJ292ck6pAVH0BdcsZXvlrzt
+ XFVZ0Qh7OABcUeimevlI58nrPId2dAgBe01U44j1s+lpRrPv/m5mKnPazZvGmrGGvMtL
+ ipG8jFxVwSdBf+3z7Q95gIdTLDPj0bqIRtkD/zCbn/f7r4Z/TyYJg3a5p627mPQRPJNW
+ 3v9eqR6XUP0gOUe583GSs0yoF+xsOwcMMCFqatXNPyK6etL2ncgAPdi+mDat65xLSTvQ EA== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3x0wvk8sfd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 22 Mar 2024 10:07:08 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42M9EWOp012743;
+	Fri, 22 Mar 2024 10:07:07 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2101.outbound.protection.outlook.com [104.47.55.101])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3x0wvfst6h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 22 Mar 2024 10:07:07 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CrR0eZ+KjD4IhOw49K+Sno2LSVNTSnq9yrAyDeclkN+ti5fwkLM/+3Zsp23WquFfti8NKQywgAy9ux/Dz5DnOIdfgcRVUlMzfU5r7OtUwd7mUH0DftwIPnf+cMCMZXdTq0tkCvk9u+B2ifwB6Z4uCs12hgbAtms/miCJw/idTpJn6u0YpOlyxCcunhaRnlvn/8jKjx2eCs18N9m5mbYLhmnNdh3wKd3ypXIqgtx5UOOMvOhoSGOBwQvgLKJmk6bjPuWmE25lpTgj5v8keXY2lHaP88YNucYTwvt9B39Bt+5L866zoF1BZPaLYT27v3hV6neHMSl3G4FwGX3lrdC4eg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=99IpJJtAPfY6b+9fG23jv0nWO31VbrQZ9ZJMZk2DmXs=;
+ b=W9rSJLgga9mAzQtvd/K+NSdXUGLK4u6wUnWQYL004ijV7xGhAr5XqI/q6Bbab5ps/+25Q/nNP7JxYnIJZAo9II5RM7z2+RWpUO5DOVqTjnQWlPqq9veA4ZG1es7TVAYdqJooRKg0E8oeo1KmPatNWFmxvBYGW1kzWPfufG/LlRYlwRwD68/zVsm2mqaRBiDvRf0S2YmWul0BJjeEdOhriK5T0nbbrDx7XPqvRDm1UQvbUhM0vAtBbGAuglDbQmqT1vqoA4/QYeUsCZ2x+lQdmsO32sqt2996bHN5zbGr3e/9aDSgAHh1XX9pvvlessefMdeHs29n1ELXB2O53Q3L5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=99IpJJtAPfY6b+9fG23jv0nWO31VbrQZ9ZJMZk2DmXs=;
+ b=P6r9TYrbppe3Xau4vCFGMuqiJO5VqebB1jwTMSvqsdsyPEuLfBNtdIzRFEP4jLG4AO9IzifJVmbWEXx9H1PCp0Y2l5n60KKO7musv4W2ll1I+vCTUGPxehn4FIS6VhoKjrQWTww8jEejt+PfeexobmhgwlNmV8ulFnu8BQncHgo=
+Received: from BLAPR10MB5267.namprd10.prod.outlook.com (2603:10b6:208:30e::22)
+ by SN7PR10MB6548.namprd10.prod.outlook.com (2603:10b6:806:2ab::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.24; Fri, 22 Mar
+ 2024 10:07:05 +0000
+Received: from BLAPR10MB5267.namprd10.prod.outlook.com
+ ([fe80::372c:5fce:57c3:6a03]) by BLAPR10MB5267.namprd10.prod.outlook.com
+ ([fe80::372c:5fce:57c3:6a03%4]) with mapi id 15.20.7409.023; Fri, 22 Mar 2024
+ 10:07:04 +0000
+Message-ID: <49fa2bd1-bd6e-4404-a1c7-2170d37f0194@oracle.com>
+Date: Fri, 22 Mar 2024 10:07:00 +0000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] kbuild: disable pahole multithreading for reproducible
+ builds
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau
+ <martin.lau@linux.dev>,
+        Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+        Yonghong Song <yonghong.song@linux.dev>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nicolas Schier <nicolas@fjasle.eu>
+Cc: bpf@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20240322-pahole-reprodicible-v1-1-3eaafb1842da@weissschuh.net>
+Content-Language: en-GB
+From: Alan Maguire <alan.maguire@oracle.com>
+In-Reply-To: <20240322-pahole-reprodicible-v1-1-3eaafb1842da@weissschuh.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LO4P123CA0389.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:18f::16) To BLAPR10MB5267.namprd10.prod.outlook.com
+ (2603:10b6:208:30e::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] mm/numa_balancing:Allow migrate on protnone
- reference with MPOL_PREFERRED_MANY policy
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Aneesh Kumar <aneesh.kumar@kernel.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Mel Gorman <mgorman@suse.de>, Feng Tang <feng.tang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Rik van Riel <riel@surriel.com>, Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Hugh Dickins <hughd@google.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Suren Baghdasaryan <surenb@google.com>
-References: <cover.1711002865.git.donettom@linux.ibm.com>
- <b1599085e1d2f3e48dc71c7991283b8aaa0fe00c.1711002865.git.donettom@linux.ibm.com>
- <87h6gyr7jf.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Content-Language: en-US
-From: Donet Tom <donettom@linux.ibm.com>
-In-Reply-To: <87h6gyr7jf.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: hUllS7CfOo4ofICQxkpMJXcJReClnl_Y
-X-Proofpoint-ORIG-GUID: OQpOjerspSrz7iRtEskWfLOdJbyHARGt
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BLAPR10MB5267:EE_|SN7PR10MB6548:EE_
+X-MS-Office365-Filtering-Correlation-Id: 358db59d-99fc-49a2-4856-08dc4a57d32d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	Lj4YwLD0l9fOMe589kq0CcRiUjMHqp5/p5eyvwLHcJ0tXXS2S0vEXnftwtenscUGf/8cJ6Tnikuu0yXpK5S7tDLLVweMU4+zoCF7KKnI93jMnIemS3ctgOB8IA+lbBMd5xTd2GkjBc5vsWKRZmHGtAjumSeg6t+q/0iZsqZ5/VD2o32eT2K6yKQTf+1Hloh8zvNZERy0bb5VFaLV8XQg7GRnEKb3ZJ01uy9/0JuvMeqGRQ2srRCNecajhk+YhYXvX7bEktDyf45gq6EquHD+49YstwzKKsZZ77DFVfZHmTdKJCECqNq084XXcOyaX30gHnA+BAU+/TFDp/CKhpMgqRgwDvEqMgfVdidgXYGt/27OCxIXYCQC1DRZtPQ8oyWXeaOQBNuoSSKN6DhtLjnU362Vv1T2LFNcWHijuj8XSNW1ylJI/Z0ltLvzt5gDRBiuCS0Q/3CG8blxwRgklqBYIZyNlLTnsUTy0KRr5JPaQ+k210qVzuo2XokaEEQkzGLNPuWVaFO6ihuCm8OaDDFsCI5Oyhw3vq0g5M7zVrCu+Z3lJ/Z3CKmd522n0NzB7c6Ly8ddlguWUhynZVtIJKtgde3UoCaAgsw9oFNv4I+tL6X8d+hNeI2nsshfhhvJJE15u0V8Cmbx/xpDxMZ2sB4nSA8X+ZGyQUV3nJ86rmdbOtwoRf3NDqOYdk4erHMN7yYKb5MTgqoHuHyqQ/1RB6Dg5A==
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5267.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(7416005)(376005)(921011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?S2p4ZEx1THl2emJKRk1kbGN3L1NyZFdRVlNFWFhva3dId2lwc0tTS252Njhk?=
+ =?utf-8?B?VDdGL2pZaEthdGhLWjdBZkFqZWpVQnFnbU1UWXhlZE9QU2xVMjVWUjBsRlJ4?=
+ =?utf-8?B?NHV5cWJKaEdOUDJyMUhVTXZQUU9MNW9XS1lHbnd4akZkakQ4SHFCWG9TaFoz?=
+ =?utf-8?B?M1J2MlNWNTdmUmU4cGNiZ3NXeTU1MTNLZ1A1Z092SWZjVmtKNy8rQkVpZFp2?=
+ =?utf-8?B?S1JMemtxSlhYajNGZEFIQUM5R1VhMk4wSDRXamVpQVNoZDhobUtCTDgxVUVW?=
+ =?utf-8?B?eU5mVnhXVk9tNG9rWm1VUURQYXhMS014dGF1NDVuR2NyKzk0TW1icHlJRm5K?=
+ =?utf-8?B?TWdTZHROUWVKbzZ2VEhHYzgrWlduNVdiUnpqdS9uZHh1MTZoUS9SaFVNcGVv?=
+ =?utf-8?B?aEJtZFp0RkhNS2ZXcGVpQVc4UXdwcklQOUJWeGtZTERsTkNmYWk1bUxvYkN1?=
+ =?utf-8?B?TVhZYWFKVGNtMUIxbUtRb3VOa2k5UUJpcm9rRFVaeDNOL3VKWHE5NURpTExY?=
+ =?utf-8?B?ZmpsSklxQ0oyT2UveXYzSVBGbURQRWJMOFQ0NG90YWtnaHJ4N0RVc3Y4Yk1J?=
+ =?utf-8?B?cEpxUmtnS1ExZ1hUOUh6MnJGZFNBSFV0T09WWXBmZVFvUGw0TSt1MWtrS0pE?=
+ =?utf-8?B?emZ5MlFQcVVrUGE2L1M1cEZ2b3J6eXdsYjZuQ3o4MGFmY1ZuT0RCd3lrQTB1?=
+ =?utf-8?B?bDBLMlBLLzJJZWxONmdpNlE1ZVdvUXlRZk1ENjhUM28yWFZnK2hXVGJRMDNH?=
+ =?utf-8?B?dnNuclN0Z2dZRnpXU1VKbHFORzFkWFpmeXpOdVFaZDhKekZTdmlpa0RFbm01?=
+ =?utf-8?B?L2c1LzdmVkVhbmc4dXhCZTYxVUtXekJZTi9PMUpVVXR1N2JYbTJTdEZCQkRV?=
+ =?utf-8?B?dityMDZqUllNdXpHdlJVMVBjOXc0Y2VLYzZBdTBUNHhrSkZKUGZrZTJGRnQ0?=
+ =?utf-8?B?WGZvWUhSQlNUNkc2U0h3TytUalhCOC9VWEc4ZWJTOTFwOEExRldBK2crWjF3?=
+ =?utf-8?B?NFlMTSt3NUlEdVJhOWh4TnVRRVIyS2xWMzF3cmpuTFBucWJrWnVzckgydTBH?=
+ =?utf-8?B?dGdGYUlIVDk5bTBuM0lTMVR0czV2Rkk1T0k5bnNoMmIxVko4RlE4c2RlVWZJ?=
+ =?utf-8?B?VlV4Q3RYVWdoaFVWQnVlVkZ0YjhuTDJVSk4xcm1zMmYwSjJLSXVCelIwT3lz?=
+ =?utf-8?B?NDN3dzF4SGY1Mk9lS3oyRmNsTUsxSXBGaVFKZk5VZ0tMNTArcGE2NWg5Vk9w?=
+ =?utf-8?B?djZkdU9UNElKaWNvYmRONFVHaXNBcUZrbmlIay9PbGh5VmlzckFxeGNBV0tm?=
+ =?utf-8?B?cUJXOEpEMTVFOTNXMXZwR1JKLytkalY1NGlsMWdhcmpSZEJabzdHQ2hiM01H?=
+ =?utf-8?B?ck1xek1hR3V4cWphaUd5dEVobUNqVjhDd3lWVTVweE5Pc2pnU1RMRW1uSlZx?=
+ =?utf-8?B?Qy8xUFNBd3k5VFFBeHZxOGZsMFhXdkVKTThjWFFrOGdOejJNc2NUcDA4eEU3?=
+ =?utf-8?B?dmVIN3pKTDVnVjVMeStpeWdjVjN5ZnUzMTJReHpOQUZHeGFZVmVFTCtqMmN0?=
+ =?utf-8?B?Z1VrQkx5ZHhjZFhiem0zMWwzV0w5RGNHTXFTUWdycVNvMU5BSGROdGlwK3BU?=
+ =?utf-8?B?MVppK3RGeThNUHRJOUlLNHlEemJRSC9icFllVzIzUVc5dEkrTVllUDhXTkdF?=
+ =?utf-8?B?RkxrWUlnbzV4eEFnL0xxQU8vYkVJV3l2VDgzRmtiNXNKbWJnUStrQ1pPbDly?=
+ =?utf-8?B?ODNvYmt4T1VYc21TVEV1QzA3VnRRemxkejVwM253QjBOSVh0SWtWS2pCVnNG?=
+ =?utf-8?B?bG5ic3l5MHJRc1JIaFRaZ2FxQ3JOb0d3bitUN0N5eDUwTjFIWWUzUHJOYjZh?=
+ =?utf-8?B?NUhmT3o3Q0Q3ZE9VNCtUeDVDSUxHUnF3U0YrbndrYko4YTBIQUs4K045bjlk?=
+ =?utf-8?B?cDF0OHp2NWRxQWhaazBRdkF3eDZYZUp6MVRjQnZNK3NQelNZa0YxYTRkUGFW?=
+ =?utf-8?B?TTZlUjV3d0p4TTVWKzl1Y2E4WFVrWGxtVEJtUmJ5dTVFT0NXK1draWlSWjUy?=
+ =?utf-8?B?cW1DQ21uUVIxeVRsVjNPWFBvTWxscUxpbkpYMEtwcHhWS0k4cE5mckhtUTZi?=
+ =?utf-8?B?MUdyWFBBWnBOb0VtSTduNXByK2ZEQXY1R3VOSHU2ay9GU2hZdzF6TEVKNXN2?=
+ =?utf-8?Q?bnWoBuPH93K4fcMhy/4O5cw=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	wCyGnWtE3VdxaWZUexCi/LE/vcYg6I/2Pwr8pmaYiZOBl3x9INlGPXU/IrzCD9fuQT06+T2jLBCyJyB9k73iYfQCmQEjQ5qfRATNJASxFIXSkD6XuxQjDwusye/3C3xekAmMtzAx+iU+OONoQ95dRuoiflItHogYMxvLoEsp3MkYfATxtqpLGmd3KXMMCv3wIQ8ARh+NJsMRlJqJHaUCAjyXVZAhpDu7TJua2+LUteAOm6ElUiGzmSNd7n7i78H7p3zU5AyvZpRmToxXJ7lCbbafM/e2md5JmGKZudevEWSBLpgRLd5jOR+9OqqSAYwqguhCKQoWfFxUFhxKNeSb52THbKXzBdzsqdv5Q43iqAzWBoo/xhaPeXbt9ty784JPFgytssYMwWzJIC3Rdf24k1PSk1uGeW/kVkotdBDthFN4uK5MpoTRZy8Fe12YDfaf2YsgdIGWsT1vCEEU/L3d5uLPodhTrsaj3zi1o+WkxoB1G+sxvIIMUZ7SClSs2y9gN75YH8nXRAzdlMgAYgdullbvo5C/wiY8vin0xzXHiM0GE4QwoCKtq6B5oGk+nRrm/FbVsokA3xAy9N6HSI3kAQaPexfc4vs8hPKexhHjUyo=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 358db59d-99fc-49a2-4856-08dc4a57d32d
+X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5267.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Mar 2024 10:07:04.8944
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GHZ6WfiZYIb3aW62NGU42hzbHsx1C5JNEUI03DPLYvVGrqZwdMPCp4bIsTTB0/hc0WET8E828u56cyBLNnXDug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR10MB6548
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-03-22_06,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- clxscore=1015 adultscore=0 spamscore=0 lowpriorityscore=0 mlxlogscore=999
- priorityscore=1501 mlxscore=0 impostorscore=0 suspectscore=0 bulkscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 phishscore=0
+ spamscore=0 suspectscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2403210000
  definitions=main-2403220071
+X-Proofpoint-GUID: m2iE9KaiCuMWarir62dTPbdkmAMso8ae
+X-Proofpoint-ORIG-GUID: m2iE9KaiCuMWarir62dTPbdkmAMso8ae
 
+On 22/03/2024 08:31, Thomas Weißschuh wrote:
+> A BTF type_id is a numeric identifier allocated by pahole through
+> libbpfd. Ids are incremented for each allocation.
+> Running pahole multithreaded makes the sequence of allocations
+> non-deterministic which also makes the type_id itself non-deterministic.
+> As the type_id end up in the binary this breaks reproducibility.
+> 
+> Therefore, if the kernel is built reproducibly as indicated by
+> KBUILD_BUILD_TIMESTAMP, disable threading in pahole.
+> 
+> Fixes: b4f72786429c ("scripts/pahole-flags.sh: Parse DWARF and generate BTF with multithreading.")
+> Fixes: 72d091846de9 ("kbuild: avoid too many execution of scripts/pahole-flags.sh")
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 
-On 3/22/24 14:02, Huang, Ying wrote:
-> Donet Tom <donettom@linux.ibm.com> writes:
->
->> commit bda420b98505 ("numa balancing: migrate on fault among multiple bound
->> nodes") added support for migrate on protnone reference with MPOL_BIND
->> memory policy. This allowed numa fault migration when the executing node
->> is part of the policy mask for MPOL_BIND. This patch extends migration
->> support to MPOL_PREFERRED_MANY policy.
->>
->> Currently, we cannot specify MPOL_PREFERRED_MANY with the mempolicy flag
->> MPOL_F_NUMA_BALANCING. This causes issues when we want to use
->> NUMA_BALANCING_MEMORY_TIERING. To effectively use the slow memory tier,
->> the kernel should not allocate pages from the slower memory tier via
->> allocation control zonelist fallback. Instead, we should move cold pages
->> from the faster memory node via memory demotion. For a page allocation,
->> kswapd is only woken up after we try to allocate pages from all nodes in
->> the allocation zone list. This implies that, without using memory
->> policies, we will end up allocating hot pages in the slower memory tier.
->>
->> MPOL_PREFERRED_MANY was added by commit b27abaccf8e8 ("mm/mempolicy: add
->> MPOL_PREFERRED_MANY for multiple preferred nodes") to allow better
->> allocation control when we have memory tiers in the system. With
->> MPOL_PREFERRED_MANY, the user can use a policy node mask consisting only
->> of faster memory nodes. When we fail to allocate pages from the faster
->> memory node, kswapd would be woken up, allowing demotion of cold pages
->> to slower memory nodes.
->>
->> With the current kernel, such usage of memory policies implies we can't
->> do page promotion from a slower memory tier to a faster memory tier
->> using numa fault. This patch fixes this issue.
->>
->> For MPOL_PREFERRED_MANY, if the executing node is in the policy node
->> mask, we allow numa migration to the executing nodes. If the executing
->> node is not in the policy node mask, we do not allow numa migration.
-> Can we provide more information about this?  I suggest to use an
-> example, for instance, pages may be distributed among multiple sockets
-> unexpectedly.
+Yep, we've talked about sorting final BTF in various ways but until that
+is implemented, non-parallel execution of pahole is the best way to get
+reliabily-reproducing BTF ids. We should probably update the pahole
+manpage to warn about parallel non-deterministic id allocation in the
+meantime.
 
-Thank you for your suggestion. However, this commit message explains all the scenarios.
+Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
 
-For example, Consider a system with 3 numa nodes (N0,N1 and N6).
-N0 and N1 are tier1 DRAM nodes  and N6 is tier 2 PMEM node.
-
-Scenario 1: The process is executing on N1,
-             If the executing node is in the policy node mask,
-             Curr Loc Pages - The numa node where page present(folio node)
-==================================================================================
-Process      Policy          Curr Loc Pages                 Observations
------------------------------------------------------------------------------------
-N1           N0 N1 N6              N0                   Pages Migrated from N0 to N1
-N1           N0 N1 N6              N6                   Pages Migrated from N6 to N1
-N1           N0 N1                 N1                   Pages Migrated from N1 to N6
-N1           N0 N1                 N6                   Pages Migrated from N6 to N1
-------------------------------------------------------------------------------------
-Scenario 2:  The process is executing on N1,
-              If the executing node is NOT in the policy node mask,
-              Curr Loc Pages - The numa node where page present(folio node)
-===================================================================================
-Process       Policy       Curr Loc Pages       Observations
------------------------------------------------------------------------------------
-N1            N0 N6             N0              Pages are not Migrating
-N1            N0 N6             N6              Pages are not migration,
-N1            N0                N0              Pages are not Migrating
-------------------------------------------------------------------------------------
-
-Scenario 3: The process is executing on N1,
-             If the executing node and folio nodes are  NOT in the policy node mask,
-             Curr Loc Pages - The numa node where page present (folio node)
-====================================================================================
-Thread    Policy       Curr Loc Pages           Observations
-------------------------------------------------------------------------------------
-N1          N0               N6                 Pages are not Migrating
-N1          N6               N0                 Pages are not Migrating
-------------------------------------------------------------------------------------
-
-We can conclude that even if the pages are distributed among multiple sockets,
-if the executing node is in the policy node mask, we allow numa migration to the
-executing nodes. If the executing node is not in the policy node mask,
-we do not allow numa migration.
-
-Thanks
-Donet Tom
-
->
-> --
-> Best Regards,
-> Huang, Ying
->
->> Signed-off-by: Aneesh Kumar K.V (IBM) <aneesh.kumar@kernel.org>
->> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
->> ---
->>   mm/mempolicy.c | 22 +++++++++++++++++-----
->>   1 file changed, 17 insertions(+), 5 deletions(-)
->>
->> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
->> index aa48376e2d34..13100a290918 100644
->> --- a/mm/mempolicy.c
->> +++ b/mm/mempolicy.c
->> @@ -1504,9 +1504,10 @@ static inline int sanitize_mpol_flags(int *mode, unsigned short *flags)
->>   	if ((*flags & MPOL_F_STATIC_NODES) && (*flags & MPOL_F_RELATIVE_NODES))
->>   		return -EINVAL;
->>   	if (*flags & MPOL_F_NUMA_BALANCING) {
->> -		if (*mode != MPOL_BIND)
->> +		if (*mode == MPOL_BIND || *mode == MPOL_PREFERRED_MANY)
->> +			*flags |= (MPOL_F_MOF | MPOL_F_MORON);
->> +		else
->>   			return -EINVAL;
->> -		*flags |= (MPOL_F_MOF | MPOL_F_MORON);
->>   	}
->>   	return 0;
->>   }
->> @@ -2770,15 +2771,26 @@ int mpol_misplaced(struct folio *folio, struct vm_fault *vmf,
->>   		break;
->>   
->>   	case MPOL_BIND:
->> -		/* Optimize placement among multiple nodes via NUMA balancing */
->> +	case MPOL_PREFERRED_MANY:
->> +		/*
->> +		 * Even though MPOL_PREFERRED_MANY can allocate pages outside
->> +		 * policy nodemask we don't allow numa migration to nodes
->> +		 * outside policy nodemask for now. This is done so that if we
->> +		 * want demotion to slow memory to happen, before allocating
->> +		 * from some DRAM node say 'x', we will end up using a
->> +		 * MPOL_PREFERRED_MANY mask excluding node 'x'. In such scenario
->> +		 * we should not promote to node 'x' from slow memory node.
->> +		 */
->>   		if (pol->flags & MPOL_F_MORON) {
->> +			/*
->> +			 * Optimize placement among multiple nodes
->> +			 * via NUMA balancing
->> +			 */
->>   			if (node_isset(thisnid, pol->nodes))
->>   				break;
->>   			goto out;
->>   		}
->> -		fallthrough;
->>   
->> -	case MPOL_PREFERRED_MANY:
->>   		/*
->>   		 * use current page if in policy nodemask,
->>   		 * else select nearest allowed node, if any.
+> ---
+>  scripts/Makefile.btf | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/scripts/Makefile.btf b/scripts/Makefile.btf
+> index 82377e470aed..2356929e62e4 100644
+> --- a/scripts/Makefile.btf
+> +++ b/scripts/Makefile.btf
+> @@ -10,7 +10,10 @@ endif
+>  
+>  pahole-flags-$(call test-ge, $(pahole-ver), 121)	+= --btf_gen_floats
+>  
+> +# threaded execution randomizes BTF type_id allocation, breaking reproducibility
+> +ifeq ($(KBUILD_BUILD_TIMESTAMP),)
+>  pahole-flags-$(call test-ge, $(pahole-ver), 122)	+= -j
+> +endif
+>  
+>  pahole-flags-$(CONFIG_PAHOLE_HAS_LANG_EXCLUDE)		+= --lang_exclude=rust
+>  
+> 
+> ---
+> base-commit: 8e938e39866920ddc266898e6ae1fffc5c8f51aa
+> change-id: 20240322-pahole-reprodicible-02e904e45686
+> 
+> Best regards,
