@@ -1,48 +1,44 @@
 Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567B7524DD
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 13:26:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7542F56444
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 13:26:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711114007; cv=none; b=Inp8P24MM9P7p0C/++smFkyY/e5sX1gADtbwpqHOk3mb90PCf+M2HeK1M+Crxp0N323Y9cz8M69oYcTrb0jlVAIh8AY2mDx44nBFEBN73Jst4564RsRWahyYSDORiB0jYe/wfbJyyrDWUeT1aYtjE8q/adwGxbvTkUdP424ChqA=
+	t=1711114009; cv=none; b=Quu41ONYbPfJzYt7/aB/8ePderc7uxsQInTwhaNiquwnpwOM1erNaxyvuo+XzOnwCIGgce2l6H9Oe0ZmIioNEypmADRbdae3L7AFe6yVwQIuxyNxTDgw/grtD7RfzOzl+hQJv31I7V0jJ4x6T3TK/j58wWwwGHtGNot+uITX7ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711114007; c=relaxed/simple;
-	bh=yjJFdslix4fvxNZnqmJv9g6Ug9JLy7/NmPCFMdQRC4M=;
+	s=arc-20240116; t=1711114009; c=relaxed/simple;
+	bh=RdpvTecA4tz3IWeF3JWv+DS2tIVcREHLGWPjN6GdG0Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Em7TOw2tmnUgkh8clCK6QljSxMlrxJDC1v7FYib8O/Uv/dKUo7wOZYJrd31lQi7RsO9EuTm/3sxvk8A6gc7CSlWkOBS0SeYh7nEg8xoV2oDNFPWRJ7Dl0lfo+UnkUsuSduwq7UzLZp4U8R/meEcBr/8hqrqDZ3oUGmZ8qqj+Ehk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=h2lJ2/uT; arc=none smtp.client-ip=194.117.254.33
+	 MIME-Version; b=pGjAIO0b3X2OWxt3YcObLZrYIptw6+/VineeABSbJCqpvLs458iNt21u8t1UfoCoLoeIGvTfDhngKN3TOsNct3aNPr+okolLVcXsVHhcJ6dwCvgYHVwwa8AYNfz6P/hruNRvryy3ikhYRkHU+ceAY98X5Q/WPakN243ca33SMbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=jgZFWcE8; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="h2lJ2/uT"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="jgZFWcE8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
 	:in-reply-to:references:mime-version:content-transfer-encoding;
-	 s=k1; bh=nPqXdlyyhoVRqPKoOjv5iKVpiVyc/2GvO8xysHtbwCM=; b=h2lJ2/
-	uTAJuVBvALeij3E7HhDhVB7/fK2mdO61oqQuQUGso6rFwd3mqai5jyslxoAArUya
-	G7AEv1uS4yCFb3QafOciA6sTPiEmxBa1mX7XqE8dQlOT/awHTHrT+9EyD//x77Zi
-	xuu0OfvsAte5hCCHxQJd2F+OesgBwu3ifnUzPBi7Z/AU5vL+I5Bl0/rMNvmwZ6Pz
-	AyCjlvju3pXnPiHUKYVAp6vcz+V2TfFDm4ABfuRbntk+ySkbOS9pN+bpgLfI9RqV
-	kQYXAjgG9Vr0DxjGpR+MBeL5ah3ZlsiSZJxC9Qiv/FuwnI3vL3Pi+XU5xfIF7vR6
-	otuCNEvEKwnu6Bpg==
-Received: (qmail 3870228 invoked from network); 22 Mar 2024 14:26:28 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Mar 2024 14:26:28 +0100
-X-UD-Smtp-Session: l3s3148p1@xr1uxT8UgJNehhtF
+	 s=k1; bh=sPIndfoTUi+H7yC2Vw2N54ArxxcZ9SSScdyIHb5qHpg=; b=jgZFWc
+	E83WdTi0EfWJTud1ynqA2PplpkcyePEsxtQ20N51vsqmi7751ncZqB2hZfcSgEcR
+	M97D6YCIAedDg71nlBfDvaMYMC5pMR/zdTvAEYuFMihhZf7zkksHYU+lsvX5YBLG
+	oLny3r+tT+vkOGAabF/qJP32PiiehoOGiqoaa4bxQOQeicwUdhkiRzAcVWQYFwlP
+	wKTCMciq3j4A0eFnEgP8StB+eaEkpYcpSMLACW/Z5hEhHI0KuXB4RtNtIJcIVsxL
+	cZKJv71ldw6lYAiM3SRJ1XXuRiBcXbXpWF11UFGeRT1XrLtAFnkbfcRou8nbuGB+
+	Mg96S92tGG4xCD3w==
+Received: (qmail 3870265 invoked from network); 22 Mar 2024 14:26:30 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Mar 2024 14:26:30 +0100
+X-UD-Smtp-Session: l3s3148p1@phGJxT8UjuBehhtF
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-i2c@vger.kernel.org
 Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Michal Simek <michal.simek@amd.com>,
 	Andi Shyti <andi.shyti@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	linux-rpi-kernel@lists.infradead.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 09/64] i2c: bcm2835: reword according to newest specification
-Date: Fri, 22 Mar 2024 14:25:02 +0100
-Message-ID: <20240322132619.6389-10-wsa+renesas@sang-engineering.com>
+Subject: [PATCH 11/64] i2c: cadence: reword according to newest specification
+Date: Fri, 22 Mar 2024 14:25:04 +0100
+Message-ID: <20240322132619.6389-12-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
 References: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
@@ -61,46 +57,62 @@ entity ("client") and a local one ("target").
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- drivers/i2c/busses/i2c-bcm2835.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/i2c/busses/i2c-cadence.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-bcm2835.c b/drivers/i2c/busses/i2c-bcm2835.c
-index b92de1944221..62776e7fc586 100644
---- a/drivers/i2c/busses/i2c-bcm2835.c
-+++ b/drivers/i2c/busses/i2c-bcm2835.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * BCM2835 master mode driver
-+ * BCM2835 host controller mode driver
-  */
- 
- #include <linux/clk.h>
-@@ -25,7 +25,7 @@
- #define BCM2835_I2C_DEL		0x18
- /*
-  * 16-bit field for the number of SCL cycles to wait after rising SCL
-- * before deciding the slave is not responding. 0 disables the
-+ * before deciding the client is not responding. 0 disables the
-  * timeout detection.
-  */
- #define BCM2835_I2C_CLKT	0x1c
-@@ -223,7 +223,7 @@ static void bcm2835_drain_rxfifo(struct bcm2835_i2c_dev *i2c_dev)
- /*
-  * Repeated Start Condition (Sr)
-  * The BCM2835 ARM Peripherals datasheet mentions a way to trigger a Sr when it
-- * talks about reading from a slave with 10 bit address. This is achieved by
-+ * talks about reading from a client with 10 bit address. This is achieved by
-  * issuing a write, poll the I2CS.TA flag and wait for it to be set, and then
-  * issue a read.
-  * A comment in https://github.com/raspberrypi/linux/issues/254 shows how the
-@@ -391,7 +391,7 @@ static u32 bcm2835_i2c_func(struct i2c_adapter *adap)
+diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
+index 4bb7d6756947..91085e719689 100644
+--- a/drivers/i2c/busses/i2c-cadence.c
++++ b/drivers/i2c/busses/i2c-cadence.c
+@@ -808,7 +808,7 @@ static int cdns_i2c_process_msg(struct cdns_i2c *id, struct i2c_msg *msg,
  }
  
- static const struct i2c_algorithm bcm2835_i2c_algo = {
--	.master_xfer	= bcm2835_i2c_xfer,
-+	.xfer	= bcm2835_i2c_xfer,
- 	.functionality	= bcm2835_i2c_func,
+ /**
+- * cdns_i2c_master_xfer - The main i2c transfer function
++ * cdns_i2c_xfer - The main i2c transfer function
+  * @adap:	pointer to the i2c adapter driver instance
+  * @msgs:	pointer to the i2c message structure
+  * @num:	the number of messages to transfer
+@@ -817,7 +817,7 @@ static int cdns_i2c_process_msg(struct cdns_i2c *id, struct i2c_msg *msg,
+  *
+  * Return: number of msgs processed on success, negative error otherwise
+  */
+-static int cdns_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
++static int cdns_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
+ 				int num)
+ {
+ 	int ret, count;
+@@ -947,7 +947,7 @@ static u32 cdns_i2c_func(struct i2c_adapter *adap)
+ }
+ 
+ #if IS_ENABLED(CONFIG_I2C_SLAVE)
+-static int cdns_reg_slave(struct i2c_client *slave)
++static int cdns_reg_target(struct i2c_client *slave)
+ {
+ 	int ret;
+ 	struct cdns_i2c *id = container_of(slave->adapter, struct cdns_i2c,
+@@ -972,7 +972,7 @@ static int cdns_reg_slave(struct i2c_client *slave)
+ 	return 0;
+ }
+ 
+-static int cdns_unreg_slave(struct i2c_client *slave)
++static int cdns_unreg_target(struct i2c_client *slave)
+ {
+ 	struct cdns_i2c *id = container_of(slave->adapter, struct cdns_i2c,
+ 									adap);
+@@ -990,11 +990,11 @@ static int cdns_unreg_slave(struct i2c_client *slave)
+ #endif
+ 
+ static const struct i2c_algorithm cdns_i2c_algo = {
+-	.master_xfer	= cdns_i2c_master_xfer,
++	.xfer	= cdns_i2c_xfer,
+ 	.functionality	= cdns_i2c_func,
+ #if IS_ENABLED(CONFIG_I2C_SLAVE)
+-	.reg_slave	= cdns_reg_slave,
+-	.unreg_slave	= cdns_unreg_slave,
++	.reg_target	= cdns_reg_target,
++	.unreg_target	= cdns_unreg_target,
+ #endif
  };
  
 -- 
