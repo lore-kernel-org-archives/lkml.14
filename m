@@ -1,357 +1,186 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C0165C;
-	Fri, 22 Mar 2024 01:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96CD4A3C;
+	Fri, 22 Mar 2024 01:28:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711070905; cv=none; b=qofnAjKpp/QJScMNZvNQqEp84qpTIBYai6aUjDxaSiq9tsionGw+hmlCpb/yWywGTBOqlmq9Z3H59BajIIGfRIQsnktN9gG4esd5d8nfaz7wh4GJtFgRvSVhoZLILC88wyk6lYrwP2wlittoGFCkHXHx3AAa9dPtB+SBtokAU40=
+	t=1711070907; cv=none; b=W91QYvCg/mMrdb7X9vcCNgk7tRH3vtgy3LFNtpI0vlcpQ6VKIQKRAKsNBkumPOitzAHz0VhgL/eku5au+pvDbfA8FzLBlVivGdCL7s8ftXhpi4SNn5DiDwrXgWZKfzomHGhRGSnF3Y7vVy/6PzvnB3o9eBKFCicfOTlLaI5n+Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711070905; c=relaxed/simple;
-	bh=jH1o/GMcwVUT/vVq3X9vuZi0bryF7eIWnZzz8LNJjp8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VtFh9bbAR47ODi4lcVaomAUAVwrD3Ng7dXAY4aPzbP8Vd0DFwirfGIgpcsiUnckH/zbWO1th2cQ97MQdo13yhfzP7BktGx3qgn1qsoa5R+tl5KM9j9gzbGgmBCTcswMSq1En6/3GUWUaVl1ByW2zGC0rVeeDiIj19fflFwMqwj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=rkHfM8r3; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1711070907; c=relaxed/simple;
+	bh=gZdZ3hdWBfYEkQG7B5WtoNrgHjqYlmm69pYdgNV6Mk0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XSRdzLILfCj0/xUcFHLTprxLDsTdWWKlPxiGXPn9z27m6Wb16Xe8aUr2MqNr8H+BJ6qbsPvfe+3VwDbAAKTTsnTkgB89TUroFO1Z5quuGj8/FoKyv4DPZM4fUDrSPfqHlprTo11QpZ0Wv09o7Hh6LsODbkFwxSbBBs3q/JtKG9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JptDIvyH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rkHfM8r3"
-X-UUID: 720e09e4e7eb11ee935d6952f98a51a9-20240322
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=uIejdunjEp+YtPj5JdHmQGRFpoIjE1nNU5EUs8fsESE=;
-	b=rkHfM8r3bn91/7i/cx7OAOy2yKdSGVkF1mS4aTZVAN0Olzqs7YL4jMs57yiC+ardbBIQzqDgYEB5Az+cF8m1wz1PjtHSJFwExOANouaCeFc0T/Irj9kGAozZj+xkcIAPqclYNoqr9Sv7oCsMlt8qYfa1DiUxuKGTVMQ8YspjrbU=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:2ef96249-236e-44ce-bd3b-282926df7f5e,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:6f543d0,CLOUDID:14184a85-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_ULN,TF_CID_SPAM_SNR
-X-UUID: 720e09e4e7eb11ee935d6952f98a51a9-20240322
-Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw02.mediatek.com
-	(envelope-from <shawn.sung@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1152393663; Fri, 22 Mar 2024 09:28:11 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Fri, 22 Mar 2024 09:28:10 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Fri, 22 Mar 2024 09:28:10 +0800
-From: Shawn Sung <shawn.sung@mediatek.com>
-To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>
-CC: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?q?Christian=20K=C3=B6nig?=
-	<christian.koenig@amd.com>, <dri-devel@lists.freedesktop.org>,
-	<linux-mediatek@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-media@vger.kernel.org>,
-	<linaro-mm-sig@lists.linaro.org>, Hsiao Chien Sung
-	<shawn.sung@mediatek.corp-partner.google.com>
-Subject: [PATCH v4 08/14] drm/mediatek: Rename files "mtk_drm_ddp_comp.h" to "mtk_ddp_comp.h"
-Date: Fri, 22 Mar 2024 09:28:02 +0800
-Message-ID: <20240322012808.26234-9-shawn.sung@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20240322012808.26234-1-shawn.sung@mediatek.com>
-References: <20240322012808.26234-1-shawn.sung@mediatek.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JptDIvyH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A987CC433C7;
+	Fri, 22 Mar 2024 01:28:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711070906;
+	bh=gZdZ3hdWBfYEkQG7B5WtoNrgHjqYlmm69pYdgNV6Mk0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JptDIvyH6Lk1TmKhg29yIXW8CU/5X/6PWx45s3vY34YKDq0AM+pTMp6YGC528/cO7
+	 3djFon33VsXp/e+Ortmxx2l8wjb7GKBWI+Vdjnn0C2N/usIhV9SNc+XVITkN+uMf5P
+	 S+Ek7tuOehjNFd4THI3sapLN5U+qKp3hiAdl7bhz8Ujx4V5X9zpYY3NTr6rMhrhOce
+	 OIx61xZ/gjjDMF4xDQpEdn7tMqzbWDwhMqDxVe8ZfgPso6HHR1J7HinvHAXwckMtOA
+	 YrlmYt02q88Muiiw6ExpZxhPfEXQOklhrwLd4h6RVeTRScmEE2a9aAbhiZ9Z9ZOWtS
+	 X/tzzCuobz1DQ==
+Date: Thu, 21 Mar 2024 18:28:24 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: asmadeus@codewreck.org
+Cc: ericvh@kernel.org, Lizhi Xu <lizhi.xu@windriver.com>,
+ syzbot+7a3d75905ea1a830dbe5@syzkaller.appspotmail.com,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux_oss@crudebyte.com, lucho@ionkov.net, syzkaller-bugs@googlegroups.com,
+ v9fs@lists.linux.dev, regressions@lists.linux.dev, netdev@vger.kernel.org
+Subject: Re: [PATCH next] fs/9p: fix uaf in in v9fs_stat2inode_dotl
+Message-ID: <20240321182824.6f303e38@kernel.org>
+In-Reply-To: <ZeXGZS1-X8_CYCUz@codewreck.org>
+References: <00000000000055ecb906105ed669@google.com>
+	<20240202121531.2550018-1-lizhi.xu@windriver.com>
+	<ZeXGZS1-X8_CYCUz@codewreck.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK: N
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Hsiao Chien Sung <shawn.sung@mediatek.corp-partner.google.com>
+On Mon, 4 Mar 2024 22:02:29 +0900 asmadeus@codewreck.org wrote:
+> Lizhi Xu wrote on Fri, Feb 02, 2024 at 08:15:31PM +0800:
+> > The incorrect logical order of accessing the st object code in v9fs_fid_iget_dotl
+> > is causing this uaf.  
+> 
+> Thanks for the fix!
+> 
+> Eric, this is also for your tree.
+> 
+> > Fixes: 724a08450f74 ("fs/9p: simplify iget to remove unnecessary paths")  
+> 
+> (careful if you rebase your tree as this commit isn't merged yet)
+> 
+> > Reported-and-tested-by: syzbot+7a3d75905ea1a830dbe5@syzkaller.appspotmail.com
+> > Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>  
+> 
+> Reviewed-by: Dominique Martinet <asmadeus@codewreck.org>
 
-Rename files mtk_drm_ddp_comp.h to mtk_ddp_comp.h.
+Looks like this UAF is in Linus's tree now, and possibly getting hit
+by anyone using virtme to test the kernel? I can't vouch for the
+correctness of the fix but it does make the KASAN splat go away for me.
 
-Reviewed-by: AngeloGiaocchino Del Regno <angelogioacchino.delregno@collabora.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.corp-partner.google.com>
----
- drivers/gpu/drm/mediatek/mtk_crtc.c                             | 2 +-
- drivers/gpu/drm/mediatek/mtk_crtc.h                             | 2 +-
- drivers/gpu/drm/mediatek/{mtk_drm_ddp_comp.h => mtk_ddp_comp.h} | 0
- drivers/gpu/drm/mediatek/mtk_disp_aal.c                         | 2 +-
- drivers/gpu/drm/mediatek/mtk_disp_ccorr.c                       | 2 +-
- drivers/gpu/drm/mediatek/mtk_disp_color.c                       | 2 +-
- drivers/gpu/drm/mediatek/mtk_disp_gamma.c                       | 2 +-
- drivers/gpu/drm/mediatek/mtk_disp_merge.c                       | 2 +-
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c                         | 2 +-
- drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c                 | 2 +-
- drivers/gpu/drm/mediatek/mtk_disp_rdma.c                        | 2 +-
- drivers/gpu/drm/mediatek/mtk_dpi.c                              | 2 +-
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c                     | 2 +-
- drivers/gpu/drm/mediatek/mtk_drm_drv.c                          | 2 +-
- drivers/gpu/drm/mediatek/mtk_drm_drv.h                          | 2 +-
- drivers/gpu/drm/mediatek/mtk_drm_plane.c                        | 2 +-
- drivers/gpu/drm/mediatek/mtk_dsi.c                              | 2 +-
- drivers/gpu/drm/mediatek/mtk_ethdr.c                            | 2 +-
- drivers/gpu/drm/mediatek/mtk_padding.c                          | 2 +-
- 19 files changed, 18 insertions(+), 18 deletions(-)
- rename drivers/gpu/drm/mediatek/{mtk_drm_ddp_comp.h => mtk_ddp_comp.h} (100%)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_crtc.c b/drivers/gpu/drm/mediatek/mtk_crtc.c
-index d9f7febd24a6d..97b5e0f186a1d 100644
---- a/drivers/gpu/drm/mediatek/mtk_crtc.c
-+++ b/drivers/gpu/drm/mediatek/mtk_crtc.c
-@@ -20,8 +20,8 @@
- #include <drm/drm_vblank.h>
- 
- #include "mtk_crtc.h"
-+#include "mtk_ddp_comp.h"
- #include "mtk_drm_drv.h"
--#include "mtk_drm_ddp_comp.h"
- #include "mtk_drm_gem.h"
- #include "mtk_drm_plane.h"
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_crtc.h b/drivers/gpu/drm/mediatek/mtk_crtc.h
-index 2d9f28f436aea..fd6c006f0c169 100644
---- a/drivers/gpu/drm/mediatek/mtk_crtc.h
-+++ b/drivers/gpu/drm/mediatek/mtk_crtc.h
-@@ -7,7 +7,7 @@
- #define MTK_CRTC_H
- 
- #include <drm/drm_crtc.h>
--#include "mtk_drm_ddp_comp.h"
-+#include "mtk_ddp_comp.h"
- #include "mtk_drm_drv.h"
- #include "mtk_drm_plane.h"
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_ddp_comp.h
-similarity index 100%
-rename from drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-rename to drivers/gpu/drm/mediatek/mtk_ddp_comp.h
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_aal.c b/drivers/gpu/drm/mediatek/mtk_disp_aal.c
-index ba926e797af8a..92acdaddd648d 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_aal.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_aal.c
-@@ -12,8 +12,8 @@
- #include <linux/soc/mediatek/mtk-cmdq.h>
- 
- #include "mtk_crtc.h"
-+#include "mtk_ddp_comp.h"
- #include "mtk_disp_drv.h"
--#include "mtk_drm_ddp_comp.h"
- #include "mtk_drm_drv.h"
- 
- #define DISP_AAL_EN				0x0000
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ccorr.c b/drivers/gpu/drm/mediatek/mtk_disp_ccorr.c
-index 79bcd3c487563..975ee45a0f72c 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ccorr.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ccorr.c
-@@ -11,8 +11,8 @@
- #include <linux/soc/mediatek/mtk-cmdq.h>
- 
- #include "mtk_crtc.h"
-+#include "mtk_ddp_comp.h"
- #include "mtk_disp_drv.h"
--#include "mtk_drm_ddp_comp.h"
- #include "mtk_drm_drv.h"
- 
- #define DISP_CCORR_EN				0x0000
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_color.c b/drivers/gpu/drm/mediatek/mtk_disp_color.c
-index 4aa41b1ff2602..91e7837a32c86 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_color.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_color.c
-@@ -11,8 +11,8 @@
- #include <linux/soc/mediatek/mtk-cmdq.h>
- 
- #include "mtk_crtc.h"
-+#include "mtk_ddp_comp.h"
- #include "mtk_disp_drv.h"
--#include "mtk_drm_ddp_comp.h"
- #include "mtk_drm_drv.h"
- 
- #define DISP_COLOR_CFG_MAIN			0x0400
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_gamma.c b/drivers/gpu/drm/mediatek/mtk_disp_gamma.c
-index 1a1ee77127ee9..51ae4f947c714 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_gamma.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_gamma.c
-@@ -12,8 +12,8 @@
- #include <linux/soc/mediatek/mtk-cmdq.h>
- 
- #include "mtk_crtc.h"
-+#include "mtk_ddp_comp.h"
- #include "mtk_disp_drv.h"
--#include "mtk_drm_ddp_comp.h"
- #include "mtk_drm_drv.h"
- 
- #define DISP_GAMMA_EN				0x0000
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_merge.c b/drivers/gpu/drm/mediatek/mtk_disp_merge.c
-index 32a29924bd54c..3b1e04ecb9d45 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_merge.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_merge.c
-@@ -10,7 +10,7 @@
- #include <linux/reset.h>
- #include <linux/soc/mediatek/mtk-cmdq.h>
- 
--#include "mtk_drm_ddp_comp.h"
-+#include "mtk_ddp_comp.h"
- #include "mtk_drm_drv.h"
- #include "mtk_disp_drv.h"
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-index 7f2219c0119be..0ebeaf9830d83 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-@@ -16,8 +16,8 @@
- #include <linux/soc/mediatek/mtk-cmdq.h>
- 
- #include "mtk_crtc.h"
-+#include "mtk_ddp_comp.h"
- #include "mtk_disp_drv.h"
--#include "mtk_drm_ddp_comp.h"
- #include "mtk_drm_drv.h"
- 
- #define DISP_REG_OVL_INTEN			0x0004
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c
-index 542dc2a20ea90..d957f5c8ccf92 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c
-@@ -18,8 +18,8 @@
- #include <linux/soc/mediatek/mtk-mutex.h>
- 
- #include "mtk_crtc.h"
-+#include "mtk_ddp_comp.h"
- #include "mtk_disp_drv.h"
--#include "mtk_drm_ddp_comp.h"
- #include "mtk_drm_drv.h"
- #include "mtk_ethdr.h"
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-index 04f584372214f..f06b048c12479 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-@@ -14,8 +14,8 @@
- #include <linux/soc/mediatek/mtk-cmdq.h>
- 
- #include "mtk_crtc.h"
-+#include "mtk_ddp_comp.h"
- #include "mtk_disp_drv.h"
--#include "mtk_drm_ddp_comp.h"
- #include "mtk_drm_drv.h"
- 
- #define DISP_REG_RDMA_INT_ENABLE		0x0000
-diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-index beb7d9d08e971..fbf63e0441337 100644
---- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-@@ -26,9 +26,9 @@
- #include <drm/drm_of.h>
- #include <drm/drm_simple_kms_helper.h>
- 
-+#include "mtk_ddp_comp.h"
- #include "mtk_disp_drv.h"
- #include "mtk_dpi_regs.h"
--#include "mtk_drm_ddp_comp.h"
- #include "mtk_drm_drv.h"
- 
- enum mtk_dpi_out_bit_num {
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-index 24389c6c3561f..ab96b1001de3e 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-@@ -15,10 +15,10 @@
- #include <drm/drm_print.h>
- 
- #include "mtk_crtc.h"
-+#include "mtk_ddp_comp.h"
- #include "mtk_disp_drv.h"
- #include "mtk_drm_drv.h"
- #include "mtk_drm_plane.h"
--#include "mtk_drm_ddp_comp.h"
- 
- 
- #define DISP_REG_DITHER_EN			0x0000
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index 7be3b0546d3df..113fdbaac5a14 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -25,7 +25,7 @@
- #include <drm/drm_vblank.h>
- 
- #include "mtk_crtc.h"
--#include "mtk_drm_ddp_comp.h"
-+#include "mtk_ddp_comp.h"
- #include "mtk_drm_drv.h"
- #include "mtk_drm_gem.h"
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-index 24c4d59085bd6..78d698ede1bf8 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-@@ -7,7 +7,7 @@
- #define MTK_DRM_DRV_H
- 
- #include <linux/io.h>
--#include "mtk_drm_ddp_comp.h"
-+#include "mtk_ddp_comp.h"
- 
- #define MAX_CONNECTOR	2
- #define DDP_COMPONENT_DRM_OVL_ADAPTOR (DDP_COMPONENT_ID_MAX + 1)
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_plane.c b/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-index 720f6b4b08215..63a7a24468c13 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-@@ -14,7 +14,7 @@
- #include <linux/align.h>
- 
- #include "mtk_crtc.h"
--#include "mtk_drm_ddp_comp.h"
-+#include "mtk_ddp_comp.h"
- #include "mtk_drm_drv.h"
- #include "mtk_drm_gem.h"
- #include "mtk_drm_plane.h"
-diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index ec9d96396d7b2..e29c37fb5be09 100644
---- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -28,8 +28,8 @@
- #include <drm/drm_probe_helper.h>
- #include <drm/drm_simple_kms_helper.h>
- 
-+#include "mtk_ddp_comp.h"
- #include "mtk_disp_drv.h"
--#include "mtk_drm_ddp_comp.h"
- #include "mtk_drm_drv.h"
- 
- #define DSI_START		0x00
-diff --git a/drivers/gpu/drm/mediatek/mtk_ethdr.c b/drivers/gpu/drm/mediatek/mtk_ethdr.c
-index 41efaafe26f1a..9b0264bd5e731 100644
---- a/drivers/gpu/drm/mediatek/mtk_ethdr.c
-+++ b/drivers/gpu/drm/mediatek/mtk_ethdr.c
-@@ -15,7 +15,7 @@
- #include <linux/soc/mediatek/mtk-mmsys.h>
- 
- #include "mtk_crtc.h"
--#include "mtk_drm_ddp_comp.h"
-+#include "mtk_ddp_comp.h"
- #include "mtk_drm_drv.h"
- #include "mtk_ethdr.h"
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_padding.c b/drivers/gpu/drm/mediatek/mtk_padding.c
-index ff6a5c695128c..1f91805cd9aac 100644
---- a/drivers/gpu/drm/mediatek/mtk_padding.c
-+++ b/drivers/gpu/drm/mediatek/mtk_padding.c
-@@ -12,8 +12,8 @@
- #include <linux/soc/mediatek/mtk-cmdq.h>
- 
- #include "mtk_crtc.h"
-+#include "mtk_ddp_comp.h"
- #include "mtk_disp_drv.h"
--#include "mtk_drm_ddp_comp.h"
- 
- #define PADDING_CONTROL_REG	0x00
- #define PADDING_BYPASS			BIT(0)
--- 
-2.18.0
-
+[   12.474676][    T1] ==================================================================
+[   12.474870][    T1] BUG: KASAN: slab-use-after-free in v9fs_stat2inode_dotl+0x9d6/0xb80
+[   12.475060][    T1] Read of size 8 at addr ffff888002bdbad8 by task swapper/0/1
+[   12.475248][    T1] 
+[   12.475314][    T1] CPU: 3 PID: 1 Comm: swapper/0 Not tainted 6.8.0-virtme #1
+[   12.475503][    T1] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+[   12.475811][    T1] Call Trace:
+[   12.475908][    T1]  <TASK>
+[   12.475976][    T1]  dump_stack_lvl+0x82/0xd0
+[   12.476133][    T1]  print_address_description.constprop.0+0x2c/0x3b0
+[   12.476295][    T1]  ? v9fs_stat2inode_dotl+0x9d6/0xb80
+[   12.476425][    T1]  print_report+0xb4/0x270
+[   12.476552][    T1]  ? kasan_addr_to_slab+0x4e/0x90
+[   12.476679][    T1]  kasan_report+0xbd/0xf0
+[   12.476775][    T1]  ? v9fs_stat2inode_dotl+0x9d6/0xb80
+[   12.476903][    T1]  v9fs_stat2inode_dotl+0x9d6/0xb80
+[   12.477053][    T1]  v9fs_fid_iget_dotl+0x18c/0x210
+[   12.477180][    T1]  v9fs_mount+0x3fe/0x7d0
+[   12.477281][    T1]  ? __pfx_v9fs_mount+0x10/0x10
+[   12.477406][    T1]  ? vfs_parse_fs_string+0xdb/0x130
+[   12.477533][    T1]  ? __pfx_vfs_parse_fs_string+0x10/0x10
+[   12.477660][    T1]  ? __pfx_v9fs_mount+0x10/0x10
+[   12.477786][    T1]  legacy_get_tree+0x107/0x200
+[   12.477912][    T1]  vfs_get_tree+0x8a/0x2e0
+[   12.478042][    T1]  do_new_mount+0x27d/0x5e0
+[   12.478170][    T1]  ? __pfx_do_new_mount+0x10/0x10
+[   12.478294][    T1]  ? __pfx___debug_check_no_obj_freed+0x10/0x10
+[   12.478453][    T1]  ? __virt_addr_valid+0x227/0x420
+[   12.478583][    T1]  path_mount+0x271/0x14f0
+[   12.478713][    T1]  ? __pfx_path_mount+0x10/0x10
+[   12.478840][    T1]  ? kmem_cache_free+0xd7/0x220
+[   12.478970][    T1]  ? kern_path+0x3d/0x50
+[   12.479068][    T1]  init_mount+0x9d/0xf0
+[   12.479164][    T1]  ? __pfx_init_mount+0x10/0x10
+[   12.479292][    T1]  do_mount_root+0xbc/0x330
+[   12.479419][    T1]  mount_root_generic+0x22c/0x470
+[   12.479550][    T1]  ? __pfx_mount_root_generic+0x10/0x10
+[   12.479680][    T1]  ? mount_root+0x25b/0x2f0
+[   12.479807][    T1]  prepare_namespace+0xa5/0x2d0
+[   12.479933][    T1]  ? __pfx_prepare_namespace+0x10/0x10
+[   12.480061][    T1]  ? __pfx_kernel_init+0x10/0x10
+[   12.480188][    T1]  kernel_init+0x20/0x200
+[   12.480285][    T1]  ? __pfx_kernel_init+0x10/0x10
+[   12.480410][    T1]  ret_from_fork+0x31/0x70
+[   12.480543][    T1]  ? __pfx_kernel_init+0x10/0x10
+[   12.480670][    T1]  ret_from_fork_asm+0x1a/0x30
+[   12.480807][    T1]  </TASK>
+[   12.480904][    T1] 
+[   12.480969][    T1] Allocated by task 1:
+[   12.481063][    T1]  kasan_save_stack+0x24/0x50
+[   12.481191][    T1]  kasan_save_track+0x14/0x30
+[   12.481323][    T1]  __kasan_kmalloc+0x7f/0x90
+[   12.481449][    T1]  p9_client_getattr_dotl+0x4c/0x1a0
+[   12.481576][    T1]  v9fs_fid_iget_dotl+0xca/0x210
+[   12.481706][    T1]  v9fs_mount+0x3fe/0x7d0
+[   12.481801][    T1]  legacy_get_tree+0x107/0x200
+[   12.481927][    T1]  vfs_get_tree+0x8a/0x2e0
+[   12.482053][    T1]  do_new_mount+0x27d/0x5e0
+[   12.482178][    T1]  path_mount+0x271/0x14f0
+[   12.482303][    T1]  init_mount+0x9d/0xf0
+[   12.482397][    T1]  do_mount_root+0xbc/0x330
+[   12.482523][    T1]  mount_root_generic+0x22c/0x470
+[   12.482649][    T1]  prepare_namespace+0xa5/0x2d0
+[   12.482779][    T1]  kernel_init+0x20/0x200
+[   12.482876][    T1]  ret_from_fork+0x31/0x70
+[   12.483002][    T1]  ret_from_fork_asm+0x1a/0x30
+[   12.483128][    T1] 
+[   12.483191][    T1] Freed by task 1:
+[   12.483283][    T1]  kasan_save_stack+0x24/0x50
+[   12.483409][    T1]  kasan_save_track+0x14/0x30
+[   12.483535][    T1]  kasan_save_free_info+0x3b/0x60
+[   12.483662][    T1]  __kasan_slab_free+0xf4/0x180
+[   12.483788][    T1]  kfree+0xd3/0x230
+[   12.483886][    T1]  v9fs_fid_iget_dotl+0x15e/0x210
+[   12.484017][    T1]  v9fs_mount+0x3fe/0x7d0
+[   12.484112][    T1]  legacy_get_tree+0x107/0x200
+[   12.484238][    T1]  vfs_get_tree+0x8a/0x2e0
+[   12.484365][    T1]  do_new_mount+0x27d/0x5e0
+[   12.484492][    T1]  path_mount+0x271/0x14f0
+[   12.484619][    T1]  init_mount+0x9d/0xf0
+[   12.484713][    T1]  do_mount_root+0xbc/0x330
+[   12.484846][    T1]  mount_root_generic+0x22c/0x470
+[   12.484974][    T1]  prepare_namespace+0xa5/0x2d0
+[   12.485100][    T1]  kernel_init+0x20/0x200
+[   12.485196][    T1]  ret_from_fork+0x31/0x70
+[   12.485324][    T1]  ret_from_fork_asm+0x1a/0x30
+[   12.485449][    T1] 
+[   12.485512][    T1] The buggy address belongs to the object at ffff888002bdbad8
+[   12.485512][    T1]  which belongs to the cache kmalloc-192 of size 192
+[   12.485825][    T1] The buggy address is located 0 bytes inside of
+[   12.485825][    T1]  freed 192-byte region [ffff888002bdbad8, ffff888002bdbb98)
+[   12.486131][    T1] 
+[   12.486194][    T1] The buggy address belongs to the physical page:
+[   12.486347][    T1] page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff888002bdbc10 pfn:0x2bda
+[   12.486600][    T1] head: order:1 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+[   12.486795][    T1] flags: 0x80000000000a40(workingset|slab|head|node=0|zone=1)
+[   12.486989][    T1] page_type: 0xffffffff()
+[   12.487088][    T1] raw: 0080000000000a40 ffff888001042c40 ffff888001040a88 ffff888001040a88
+[   12.487315][    T1] raw: ffff888002bdbc10 00000000001a0017 00000001ffffffff 0000000000000000
+[   12.487538][    T1] head: 0080000000000a40 ffff888001042c40 ffff888001040a88 ffff888001040a88
+[   12.487765][    T1] head: ffff888002bdbc10 00000000001a0017 00000001ffffffff 0000000000000000
+[   12.487992][    T1] head: 0080000000000001 ffffea00000af681 dead000000000122 00000000ffffffff
+[   12.488213][    T1] head: 0000000200000000 0000000000000000 00000000ffffffff 0000000000000000
+[   12.488436][    T1] page dumped because: kasan: bad access detected
+[   12.488590][    T1] 
+[   12.488653][    T1] Memory state around the buggy address:
+[   12.488797][    T1]  ffff888002bdb980: fc fc fc fc 00 00 00 00 00 00 00 00 00 00 00 00
+[   12.488986][    T1]  ffff888002bdba00: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
+[   12.489168][    T1] >ffff888002bdba80: fc fc fc fc fc fc fc fc fc fc fc fa fb fb fb fb
+[   12.489353][    T1]                                                     ^
+[   12.489506][    T1]  ffff888002bdbb00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[   12.489688][    T1]  ffff888002bdbb80: fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc fc
+[   12.489873][    T1] ==================================================================
