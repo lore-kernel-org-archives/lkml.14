@@ -1,57 +1,71 @@
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345C8376;
-	Fri, 22 Mar 2024 00:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E62210FA;
+	Fri, 22 Mar 2024 00:37:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711067846; cv=none; b=UQpNZ0WwBwtslOS3taS/wZi7gqC5KHQLnlfOvipmm3vVq9ZLUAiKNSULzwc7InlZekET2mjoXMzMKfauvFZ/bjnRqzlaHqEWEXg9+GX88nbtKDOHtKiFYMczKyyPEH3/4lSMjtYHk35fVGWpSvLNB8S/DK9iZWli2ZejfVychzc=
+	t=1711067848; cv=none; b=CViGpdohUh5TpSDcpEbDbeHR5kfd52HmFP+luJQ7XNhJXUHtSMcjkMXFTZcYjIeCepmVy6dRv4l+onFhIQdzNpYOrR1sRlZrZqcHEISNz+qur+SO9+OQMGjzkD5fiSob4RSFu7FJcQM3spZ+IbCIm/eq9hBhRAcoBOnqkzhjchA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711067846; c=relaxed/simple;
-	bh=lM2DDRDjWwjPRlQ67f2eeArWymy0wFusj65S5rDPcz4=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=nGBxUi/RSXy+nbiGDbPbIts/P1VTg6C644FHuR4+pQuv1bnC1sasIWqYX5W632BKEebH0v1pEuqXuA88MYCsmE4B68t2mbMCcMiwY84ug63HJZvspQw49gMnXEMVPbShnbgO38PDy6ck2tYUHBtqRogc+zI1HJb/a+PQ4RYBNGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=KGNqJUXn; arc=none smtp.client-ip=162.62.57.252
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1711067848; c=relaxed/simple;
+	bh=cZRKpREq1+mSTdHJ2+dKnJk+wXA+G7FnsX/QltF9LoU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VNhVhjWzmqxeLd6Fwr5ce4zOGb0c/6rnyCAjGmcOKFbNLGd2VoUtVyy4cyjQ2OG5d/IngIs4fGaYV/uoN7RXmF2eAcEGVHX7gK9JJuX54J1JeKDtagR2KcTK0IUCJKc8N6HZg5jB090jIJvAGhAk4n3J7UwY1e6Ts0AW4v4Mbbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zin8zpDE; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="KGNqJUXn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1711067838; bh=r4IFZTlDc4FNVIlNbrQKRPaN2yiQZzGfTw9TeJnxUWw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=KGNqJUXn8airvafwLPfVSg0b+B1dTwq1TNNJ0TGjEcnbXV13Ua1iMmV9ioOUZRT3e
-	 FUzxMX3+T+bXIfX4eUGgwOwpPOR6Gv2qsEq2nnsCx64fpqGsUHZsOI9P59OYaUZe6U
-	 rdfu63E2qY+Xrc2Uk68ciBHZO1rm4tawtYguLHtI=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrszc5-1.qq.com (NewEsmtp) with SMTP
-	id 7C7A2048; Fri, 22 Mar 2024 08:31:07 +0800
-X-QQ-mid: xmsmtpt1711067467tnw9eno2d
-Message-ID: <tencent_C54679498DEEC46ED40C8BA7F386D352D606@qq.com>
-X-QQ-XMAILINFO: Ncpnai4dwVTHorlzyzhU77ytbUvOBdgC2WZW0ZSVeR1eDCJaBUV5De7sHzroXJ
-	 NCPMnm1AImZ2qDwB048DoGdiKZWDPG7UwJNMeJTRqBiFFe9+mT/FkbgPGffkFy5g6d2L8ejVJY7s
-	 sJOdcjJgnJEst4eVPRO3C6oiMhSRck2qfpnQtomsvRBa6kQpftLQLT9lRVL83jqVHiBCEEU4QKSD
-	 7cewjJ5aJZZOrU/46m35tW55De4/L1MKcxc4qNHZfabPNUC/jwRX5ZK2EGYm5zS/Bnj0kUpVY72X
-	 DjvcUqv068/keICLAuGFpcbqrpnbEKiKHt8nAbdo9YKPPqG4zEBOJGssqd/8NjnRALQugVVdSuuy
-	 uI1JGCqgGYJCKAc9UR4TkAuNzmHJDKggo/EH8AvOQWcBc/JPK7qpjg5W061GSyAtWJnjNu79j2Xg
-	 s30ghUxM9qJ9Z8qh4vV97A0GbIneN2rsau22iVu5jmVU7p3YaRDH2dEHdjjLTNMh4Mu6+LKQaHPk
-	 WNmCsY5sEVwmuchDhGbdy4VD/jl6DhK5YHXoIrwztmVCadbPgUc2Oe/jJWYWHHsTrs3DR5pHKL5x
-	 0lDtvTVc2ZIY0+v5TUymVCHYSxtj5z0yKejIcgcN1zp7yTgks6SZfjNGMSyrBlNAAiz/sDP4oszF
-	 mXr+/hLa6VQUvwC4XJFvGn+GE97UV39j/IrY5Wou1VHCipab1JWwhtHrPLJe6dMMiWH1H008j7rv
-	 5kh8cGys0k7oWeHqT5fznYJ+MHCxo4b6DrCvaRuWKxfTZW617oG/ln36jHim2ZhQHSNTKsidSmFh
-	 pPVEE9pa/inLDfxGyfzycVlLnNtce/tl4VR3Rssgd5gR8aKfyztSUV1AxV1Mm5SXsspGNWO5L29C
-	 eI+cF7dP7DfSiLKYQuOPFG9+MxqH8MUZnW7H2qrJSkrTJBsrcCcQuzMKZ6owYVo8K+/N/pfLXL
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+65f53dd6a0f7ad64c0cb@syzkaller.appspotmail.com
-Cc: linux-fsdevel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zin8zpDE"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a4715d4c2cbso164209566b.1;
+        Thu, 21 Mar 2024 17:37:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711067845; x=1711672645; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=O2uqHc9ouvoPNaqDwbwGS4nnzEWfppAeWb4n/QR3EZE=;
+        b=Zin8zpDE9ynn1ZIeXvHATJmD4YL78SRZXpom4hHmVSA/W8MjNixZRUCrQ2Q8G8QpHo
+         VoHgHEX4D1DVWyP1J5Nt9zJ/eEvkNq1SK+BHB8yoikrOqTTLH1VWxpok1VDmdnpDTUsY
+         G4Tg2b+ir2j+Ljta2YXn5llwikllQV1tY6WON5PbDExfYZXJDyxLjaqVBdcyBaW01qOb
+         A5nnDfdeCEPV88YQHab3oQjRlqPLkbzi4PMUrlpxaod8ZaPpdfaJ6uOElklgDeF6RCms
+         pv8OEk6VktxwR9t3Soe4qI5B/6Kr3CWbvWngN4449XBgQtMkGrV1x8hYs+d6f61tsp52
+         yZKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711067845; x=1711672645;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=O2uqHc9ouvoPNaqDwbwGS4nnzEWfppAeWb4n/QR3EZE=;
+        b=kO5FqcGqCjWiHXxepoFe+QeF66z4+ffyRQ0hBg06mjjaBp0T8eOa9MItoRPo3JVSJH
+         U2q3j7emkZm+R7QwjN9xcPjK+uAQvhWN1/kIFtuFHndDSCFbegFCJykGG2l1wo6/ShHQ
+         1xDNWen4OmZdjb9nNIs99L33t3RBKPqy6D67tkRij9K4Lck675dLgCxG9q8kIynNIJSw
+         jnaczdpvbq+aPubt5gAThfwc5Lcm1rgSbWxnHWrstDKlBiDH0YT8FvvtOAe4O7woITMa
+         Bm8k5yqXXqJ1QZiO8BUeRjPPCOxr5wgsAyuQolBRLgSvGPEnY0gSY40w20A0VI6Jv7z+
+         W+jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXKOh2sxZNMQq2E3xCB6ac/87Z9EvOCLORQmXmJ661gs0b8JdIRpgwfkobQnScD3gdK3E0miGEdt3CTeov/PMWcuM9FPq5GhShxzDVZfhgEBO30oLdbkDon9QWyMUJmbn3iP/DYDA2BMQ==
+X-Gm-Message-State: AOJu0YzDzzSq7T1CVZYMVXEn88sn+Ys2ofKN8vso9BrlEuPMbr1SK1iR
+	dND/3GMV4lZENHZdDHJUaEnq/2yFt/fMZCFy++lLEzbNKAX/QIDnkFle/SQUADRvlA==
+X-Google-Smtp-Source: AGHT+IE9F9LofvqrJFkW07VZDpYiLFIMl/PfrORIa1sQYA5F+od94OpRg4nR/XnDMp/LSOleot+SGQ==
+X-Received: by 2002:a17:906:e290:b0:a46:f018:3f1d with SMTP id gg16-20020a170906e29000b00a46f0183f1dmr599310ejb.73.1711067845388;
+        Thu, 21 Mar 2024 17:37:25 -0700 (PDT)
+Received: from 764c7355c69b.v.cablecom.net (84-72-156-211.dclient.hispeed.ch. [84.72.156.211])
+        by smtp.gmail.com with ESMTPSA id o11-20020a170906774b00b00a46af0fbf5dsm439950ejn.103.2024.03.21.17.37.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Mar 2024 17:37:25 -0700 (PDT)
+From: Lothar Rubusch <l.rubusch@gmail.com>
+To: lars@metafoo.de,
+	Michael.Hennerich@analog.com,
+	jic23@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org
+Cc: linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH] fs/hfsplus: fix uninit-value in hfs_find_1st_rec_by_cnid
-Date: Fri, 22 Mar 2024 08:31:08 +0800
-X-OQ-MSGID: <20240322003107.2672796-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000008fd9bc061428179e@google.com>
-References: <0000000000008fd9bc061428179e@google.com>
+	eraretuya@gmail.com,
+	l.rubusch@gmail.com
+Subject: [PATCH v2 0/3] iio: adxl345: add spi-3wire
+Date: Fri, 22 Mar 2024 00:37:10 +0000
+Message-Id: <20240322003713.6918-1-l.rubusch@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,60 +74,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-[syzbot reported]
-BUG: KMSAN: uninit-value in hfs_find_1st_rec_by_cnid+0x27a/0x3f0 fs/hfsplus/bfind.c:78
- hfs_find_1st_rec_by_cnid+0x27a/0x3f0 fs/hfsplus/bfind.c:78
- __hfsplus_brec_find+0x26f/0x7b0 fs/hfsplus/bfind.c:135
- hfsplus_brec_find+0x445/0x970 fs/hfsplus/bfind.c:195
- hfsplus_find_attr+0x30c/0x390
- hfsplus_listxattr+0x586/0x1a60 fs/hfsplus/xattr.c:708
- vfs_listxattr fs/xattr.c:493 [inline]
- listxattr+0x1f3/0x6b0 fs/xattr.c:840
- path_listxattr fs/xattr.c:864 [inline]
- __do_sys_listxattr fs/xattr.c:876 [inline]
- __se_sys_listxattr fs/xattr.c:873 [inline]
- __x64_sys_listxattr+0x16b/0x2f0 fs/xattr.c:873
- do_syscall_64+0xd5/0x1f0
- entry_SYSCALL_64_after_hwframe+0x6d/0x75
+Move driver wide constants and fields into the header. Reduce
+redundant info struct definitions. Allow to pass a function
+pointer from SPI/I2C specific probe, and smaller refactorings.
+Apply regmap_update_bits() in the core file replaces the
+regmap_write() to format_data.
 
-Uninit was created at:
- slab_post_alloc_hook mm/slub.c:3804 [inline]
- slab_alloc_node mm/slub.c:3845 [inline]
- __do_kmalloc_node mm/slub.c:3965 [inline]
- __kmalloc+0x6e4/0x1000 mm/slub.c:3979
- kmalloc include/linux/slab.h:632 [inline]
- hfsplus_find_init+0x91/0x250 fs/hfsplus/bfind.c:21
- hfsplus_listxattr+0x44a/0x1a60 fs/hfsplus/xattr.c:695
- vfs_listxattr fs/xattr.c:493 [inline]
- listxattr+0x1f3/0x6b0 fs/xattr.c:840
- path_listxattr fs/xattr.c:864 [inline]
- __do_sys_listxattr fs/xattr.c:876 [inline]
- __se_sys_listxattr fs/xattr.c:873 [inline]
- __x64_sys_listxattr+0x16b/0x2f0 fs/xattr.c:873
- do_syscall_64+0xd5/0x1f0
- entry_SYSCALL_64_after_hwframe+0x6d/0x75
-[Fix]
-Let's clear all search_key fields at alloc time.
-
-Reported-and-tested-by: syzbot+65f53dd6a0f7ad64c0cb@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
 ---
- fs/hfsplus/bfind.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+V1 -> V2: split into spi-3wire and refactoring
 
-diff --git a/fs/hfsplus/bfind.c b/fs/hfsplus/bfind.c
-index ca2ba8c9f82e..b939dc879dac 100644
---- a/fs/hfsplus/bfind.c
-+++ b/fs/hfsplus/bfind.c
-@@ -18,7 +18,7 @@ int hfs_find_init(struct hfs_btree *tree, struct hfs_find_data *fd)
- 
- 	fd->tree = tree;
- 	fd->bnode = NULL;
--	ptr = kmalloc(tree->max_key_len * 2 + 4, GFP_KERNEL);
-+	ptr = kzalloc(tree->max_key_len * 2 + 4, GFP_KERNEL);
- 	if (!ptr)
- 		return -ENOMEM;
- 	fd->search_key = ptr;
+Lothar Rubusch (3):
+  iio: accel: adxl345: Update adxl345
+  iio: accel: adxl345: Add spi-3wire feature
+  dt-bindings: iio: accel: adxl345: Add spi-3wire
+
+ .../bindings/iio/accel/adi,adxl345.yaml       |   2 +
+ drivers/iio/accel/adxl345.h                   |  44 ++++++-
+ drivers/iio/accel/adxl345_core.c              | 117 ++++++++++--------
+ drivers/iio/accel/adxl345_i2c.c               |  30 ++---
+ drivers/iio/accel/adxl345_spi.c               |  38 +++---
+ 5 files changed, 146 insertions(+), 85 deletions(-)
+
 -- 
-2.43.0
+2.25.1
 
