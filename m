@@ -1,77 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A92481B3;
-	Fri, 22 Mar 2024 15:09:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C9F53395;
+	Fri, 22 Mar 2024 15:10:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711120187; cv=none; b=YCk638+GQ0VIHW409/WY1U6qnjKJHPtLaujtgKaqhpOh2kl+ETVJhPDcuDUZ9uFlNWf4tbJ/LDOB9xEl1ZoKKU1dMCgEKyD5ANyXGiizMjxGGQSryQ1wiKY+s48JpQISMaAOSBQUa8x/j5FRI1wjcvvsD7yXhCLzww8leY3MGL0=
+	t=1711120241; cv=none; b=LFdOlsSCVvaYahwisX/IGg2H3oK5Lsbho5wiKDX49h4Z9IlEc/htX1k+Xn0fevrMnLF586BkBbIOdwdpHBI0HuOsQZR+01E0gmpqWwwB7fZqJzc8H5v6WSH4+L9mgWYV0RLeoqgcAMyOt8P8PxRQChpD6US0X+0YXZwmxYQY0hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711120187; c=relaxed/simple;
-	bh=UXgPa4p5wBn1d97FInWzLgeWdHJZdB/ycE6abVVuEHE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BeMeWAnVUGKB9Cl6n4d/zBIJ5/7Y0U+w9SSQXj9XiQa9sObGXFF/NMzy/jG6/EmOgpRE+pcMuTWLp+wsBBjLw9EOEw2UiLypPP2jgUKoVv4lv8hPO8+WQ3i80M1x88Sl7rLlqKehQX0P20+g2hS6mt7fgVCoEBhjKQ+bvAHifII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VPlLRpNd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711120241; c=relaxed/simple;
+	bh=zuAJ4KqMjN/DpBCJhAzyfFMIpKPo4o0Xr2xSP1cuuW4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZyVvYESSCEq+FugNc27ldzAYqaB2zbyHI+iMeyNZsvlQeomZbBT90KdEWtF5qsfaE2t1BudBRxo2++7lXbGQJuzqd0E7CASOYTV13qtgSB76jiInskeT1oM5Bim/SCjYvsz/8ZrGFs3SH1zH45hWyCk2UrfdKxeVwFqWTClfY78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ILqw2lM2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VPlLRpNd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DD70C433F1;
-	Fri, 22 Mar 2024 15:09:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ILqw2lM2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FB1FC433F1;
+	Fri, 22 Mar 2024 15:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711120187;
-	bh=UXgPa4p5wBn1d97FInWzLgeWdHJZdB/ycE6abVVuEHE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VPlLRpNdS0FHw4DD9EZneTwobhZblVezN/Y/Y5CiXqGdaxw4FLFxImpc4d2HP/RgC
-	 ZxPntCPNxSokHzmY+inIKJlDcfRR4ldf1ugOGXa8ymSMVizhTL5WxdKOI2FoyjI/bm
-	 IXvjvB+JROneBphP6GvK4+3fwFQqnawdTrWzKIvGCSk7bLXbFVATkEsTIVhZ2YGML/
-	 IiOPbS3Za+YsVysbG+t96OHjLmyG+sGkXdzJSfSJOaO0WFegSZJ59z7siq0zr/ehIa
-	 5g7e++IWf253Io63or2ImSQ127kTbhSZyn4JtO6yk+IfNLkKFnecTd+0RCZjNai8Kr
-	 uTOAqNF1rftag==
-Date: Fri, 22 Mar 2024 15:09:41 +0000
-From: Will Deacon <will@kernel.org>
-To: Petr Tesarik <petrtesarik@huaweicloud.com>
-Cc: Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Petr Tesarik <petr.tesarik1@huawei-partners.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
-	Roberto Sassu <roberto.sassu@huaweicloud.com>,
-	Petr Tesarik <petr@tesarici.cz>
-Subject: Re: [PATCH v3 0/2] swiotlb: allocate padding slots if necessary
-Message-ID: <20240322150941.GA5634@willie-the-truck>
-References: <20240321171902.85-1-petrtesarik@huaweicloud.com>
+	s=k20201202; t=1711120241;
+	bh=zuAJ4KqMjN/DpBCJhAzyfFMIpKPo4o0Xr2xSP1cuuW4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ILqw2lM2KoUGCN9xfK9q4QR88Tja0wqBbaWYl749k/Ao4mPktKoyQte9b+wjHNeUd
+	 IdY1rcrUc50AegJV3nVEnazLG5nd+DhirwSYwMxM9xHmFCOekg45kDMUUlZvm3Ewgt
+	 djdjusIxPtY/EZP1Apuuaq753dHDe3eG/hDseOOwjxoRsU3huM7TAL2LPdeM+xpbrf
+	 vpKsDQr4KzwnXQo/vNPPsgy9Wa0Dijbo+qx4OC3MppYHHRjEBCJDH+Vui96CXkRRlX
+	 dxi6UcLO/9oUgNXABZtJgv2Whwa6VuQ5TqwWXdY5kKunNT502ocyWoPkX0nmE7rBV0
+	 WZPVvjfqUDtYQ==
+Message-ID: <4f1aed2e-d382-4147-912a-c915026f8f0c@kernel.org>
+Date: Fri, 22 Mar 2024 09:10:39 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240321171902.85-1-petrtesarik@huaweicloud.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ipv4/route: avoid unused-but-set-variable warning
+Content-Language: en-US
+To: Arnd Bergmann <arnd@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Kunwu Chan <chentao@kylinos.cn>,
+ Joel Granados <joel.granados@gmail.com>,
+ Zhengchao Shao <shaozhengchao@huawei.com>,
+ Wangyang Guo <wangyang.guo@intel.com>, Kyle Zeng <zengyhkyle@gmail.com>,
+ Beniamino Galvani <b.galvani@gmail.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240322131817.905700-1-arnd@kernel.org>
+From: David Ahern <dsahern@kernel.org>
+In-Reply-To: <20240322131817.905700-1-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Petr,
-
-On Thu, Mar 21, 2024 at 06:19:00PM +0100, Petr Tesarik wrote:
-> From: Petr Tesarik <petr.tesarik1@huawei-partners.com>
+On 3/22/24 7:18 AM, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> If the allocation alignment is bigger than IO_TLB_SIZE and min_align_mask
-> covers some bits in the original address between IO_TLB_SIZE and
-> alloc_align_mask, preserve these bits by allocating additional padding
-> slots before the actual swiotlb buffer.
+> The log_martians variable is only used in an #ifdef, causing a 'make W=1'
+> warning with gcc:
+> 
+> net/ipv4/route.c: In function 'ip_rt_send_redirect':
+> net/ipv4/route.c:880:13: error: variable 'log_martians' set but not used [-Werror=unused-but-set-variable]
+> 
+> Change the #ifdef to an equivalent IS_ENABLED() to let the compiler
+> see where the variable is used.
+> 
+> Fixes: 30038fc61adf ("net: ip_rt_send_redirect() optimization")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  net/ipv4/route.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
 
-Thanks for fixing this! I was out at a conference last week, so I didn't
-get very far with it myself, but I ended up in a pickle trying to avoid
-extending 'struct io_tlb_slot'. Your solution is much better than the
-crazy avenue I started going down...
+Reviewed-by: David Ahern <dsahern@kernel.org>
 
-With your changes, can we now simplify swiotlb_align_offset() to ignore
-dma_get_min_align_mask() altogether and just:
 
-	return addr & (IO_TLB_SIZE - 1);
-
-?
-
-Will
