@@ -1,73 +1,78 @@
-Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B34DE65C
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 06:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DE6BE4C
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 06:09:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711087462; cv=none; b=fBmmwU8LD7hQTuvW0dPBfgMRT53scMhZeZ6+QeOUTML3x88dSzE8P81cHbjdJj/AnYmk3+LSWrp0Qp9Z6m62j2ZEImckyYwP8hDu/PzM3Pk0oAWsQ0PNmWgSKkonizKtLH1eUBVuWYLHgOj6+x+i+VhJDqys+/Tpt0gU/FEo06Q=
+	t=1711087753; cv=none; b=PNTUufpVYavJA3GjmlFDHyCIaIu3UaMa7i5r0VQdlOxkRBYnmp78zNa2imQhmlNdZ9f5EtgYIaZNHonDlZhbR3EDb121cM/O7Dthh//wrqMZ4AoJxxACEw4AoNa2aefK0Fw9no2v3tGkmcASQmR0lXMHh6oL7a8fMxiRGgaMMcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711087462; c=relaxed/simple;
-	bh=oymclslinvYkSdIJY8wyn9nZB7VJgipYqG8U7+so4+A=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=S4rSMIa8u58H7o7mXE513YumwWJ6aPcIYTnnWOyV9l3ODNtVEqK+286Op+sYfWeQk2zyIioUDQls7PFs4ypMwmWIa84wJ0G/xxcGCvBZ7NPQPCTIefw2Ie/8896gy/e9xzKDxmMmek0wMzlohJUc1B5pSN0UMdgdiRvme9dZnvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 42M63LJl093516;
-	Fri, 22 Mar 2024 14:03:21 +0800 (+08)
-	(envelope-from Zhiguo.Niu@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4V1BY828Zkz2Lj488;
-	Fri, 22 Mar 2024 14:01:48 +0800 (CST)
-Received: from bj08434pcu.spreadtrum.com (10.0.73.87) by
- BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Fri, 22 Mar 2024 14:03:19 +0800
-From: Zhiguo Niu <zhiguo.niu@unisoc.com>
-To: <jaegeuk@kernel.org>, <chao@kernel.org>
-CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
-        <niuzhiguo84@gmail.com>, <zhiguo.niu@unisoc.com>, <ke.wang@unisoc.com>,
-        <hongyu.jin@unisoc.com>
-Subject: [PATCH] f2fs: fix to adjust appropirate defragment pg_end
-Date: Fri, 22 Mar 2024 14:03:10 +0800
-Message-ID: <1711087390-23645-1-git-send-email-zhiguo.niu@unisoc.com>
-X-Mailer: git-send-email 1.9.1
+	s=arc-20240116; t=1711087753; c=relaxed/simple;
+	bh=pUs6u1RK/Iri4Co+CnkIKgtpNPWGUEi8HJ+KcK4egAU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oA+D2bWLvcGkwJr8FfalUUf1kY5tL/Cu22p2B7+IfQVf3ZGkYvWPJ/41nu5hxFpwxh77kZeEApufSdYPZBU3YAkvPiI12YZnoQttMQCENd+ydSjHlV7v36+xFV6xMbc7+A31uyRFrJJEeRxkvCaDAKsNeKvcq4OTDJ22qMgfgZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=S1z57kLv; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="S1z57kLv"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1711087748; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=ZnOfZWACaOxrEQs6ttoM82Jv+ZuQFuiTW3VGfaJ+7y4=;
+	b=S1z57kLvBLGQBzudboj9SIzJyvt9nFQS387TwNS9Y3X8LEY2Dcmq5RZRLMZ9MrXQ7w4lz2T4K9A4xMTajpW6t++5yLTaTpD6KXdC4b6gRvq9Rn8L50twsJWjXw9BQF/+WtuMTA7sBjQR+0dSb5kwR4E+Wp3onUVva+KxtqT8gOk=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0W315rNc_1711087740;
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0W315rNc_1711087740)
+          by smtp.aliyun-inc.com;
+          Fri, 22 Mar 2024 14:09:07 +0800
+From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To: alexander.deucher@amd.com
+Cc: christian.koenig@amd.com,
+	Xinhui.Pan@amd.com,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH] drm/amd/display: clean up some inconsistent indenting
+Date: Fri, 22 Mar 2024 14:08:59 +0800
+Message-Id: <20240322060859.120155-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-X-MAIL:SHSQR01.spreadtrum.com 42M63LJl093516
+Content-Transfer-Encoding: 8bit
 
-A length that exceeds the real size of the inode may be
-specified from user, although these out-of-range areas
-are not mapped, but they still need to be check in
-while loop, which is unnecessary.
+No functional modification involved.
 
-Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn351/dcn351_fpu.c:569 dcn351_decide_zstate_support() warn: inconsistent indenting.
+
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8608
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 ---
- fs/f2fs/file.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/dml/dcn351/dcn351_fpu.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 128e53d..0e7eac6 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -2609,7 +2609,9 @@ static int f2fs_defragment_range(struct f2fs_sb_info *sbi,
- 	int err;
+diff --git a/drivers/gpu/drm/amd/display/dc/dml/dcn351/dcn351_fpu.c b/drivers/gpu/drm/amd/display/dc/dml/dcn351/dcn351_fpu.c
+index dc9e1b758ed6..1c16c5f2ce78 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml/dcn351/dcn351_fpu.c
++++ b/drivers/gpu/drm/amd/display/dc/dml/dcn351/dcn351_fpu.c
+@@ -564,9 +564,8 @@ void dcn351_decide_zstate_support(struct dc *dc, struct dc_state *context)
+ 			dc->debug.minimum_z8_residency_time > 0 ? dc->debug.minimum_z8_residency_time : 1000;
+ 		bool allow_z8 = context->bw_ctx.dml.vba.StutterPeriod > (double)minmum_z8_residency;
  
- 	pg_start = range->start >> PAGE_SHIFT;
--	pg_end = (range->start + range->len) >> PAGE_SHIFT;
-+	pg_end = min_t(pgoff_t,
-+			(range->start + range->len) >> PAGE_SHIFT,
-+			DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE));
+-
+ 		/*for psr1/psr-su, we allow z8 and z10 based on latency, for replay with IPS enabled, it will enter ips2*/
+-		 if (is_pwrseq0 && (is_psr || is_replay))
++		if (is_pwrseq0 && (is_psr || is_replay))
+ 			support = allow_z8 ? allow_z8 : DCN_ZSTATE_SUPPORT_DISALLOW;
  
- 	f2fs_balance_fs(sbi, true);
- 
+ 	}
 -- 
-1.9.1
+2.20.1.7.g153144c
 
