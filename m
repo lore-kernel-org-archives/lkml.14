@@ -1,185 +1,145 @@
-Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2094.outbound.protection.partner.outlook.cn [139.219.146.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F1D39854;
-	Fri, 22 Mar 2024 09:58:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711101543; cv=none; b=O1prgql9nkdtWpZU8+6gjhcEEM8NVfiyPKSa1LP3EmH7DrNz5o9jT0IDhGcPz7z54YSzDZg6lx3kyWssUY6qM9OG9fVaeQguzZc0Dw4XM5TzRT9cKWaW6WUQfEElMIdi5mcQOVaBv/eqB+5h+lojUuVVkv6szdOmXCqMB1ppKhw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711101543; c=relaxed/simple;
-	bh=snSfJ5AEfJHDPAVmOuKibdE9ybjzZy8eOI7cRfFLAgE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a8S78l6c18tuFgudDNaS7ielehWLHwm37xIJbFnIu/2w1JGuHvIXauYZeZHF6JyTSu0jlCb7Q4NbDEGtQjXzDcXteFz0xDzifMDRZkdIH1ZQHKMT07BJGs/iXSvUF21VMXB4LUSvnxDGsKmhShl+5mVXSDwzx6CtYVojzVUFnsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=DBX7q0i8; arc=none smtp.client-ip=46.19.9.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="DBX7q0i8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=yzXvXf84t5xedKkjpoUQe3At33UjMGBnjxJCS2m3Aho=; b=DBX7q0i8YZtNwO6PSSaLlw49o1
-	V1an/mgH+UuZNViR2IPATvhExnpVYVBCaTstrG8ousCWpKY8LVQxP4iA0pWCLU7mlCmZkWtW8KsW7
-	ArSqZtTY7hJwqKo828YNyXtEFQdybQPr56E6vs69If8RCNLIu0/pCv4UAq5/AljNpWZ5d6gt1V0ZT
-	dUBO9tnaV0GX1LevYNBFaqQW5nOLi2tBhxb9L/ky1JhB2ZgUCz2PJ9lDZcdxnOgtKpdttkbcxLe2H
-	JGG5ZdSA8d/9iXyY9IMuu/1o4VKYmubbqXGiiZxRYsx2R8YnpTlyiTN+IYhEOaWMrI7qwJFSf0A6X
-	mgdAEDQA==;
-Received: from 89-212-21-243.static.t-2.net ([89.212.21.243]:44576 helo=[192.168.69.84])
-	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <andrej.picej@norik.com>)
-	id 1rnbfu-00Ev5q-2H;
-	Fri, 22 Mar 2024 10:58:57 +0100
-Message-ID: <1bbd4fdf-59c5-42b2-8698-95f402645c67@norik.com>
-Date: Fri, 22 Mar 2024 10:58:54 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A951C224FA;
+	Fri, 22 Mar 2024 10:00:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711101608; cv=fail; b=SSW6n/YtJ6amrH/LGM2J9h4TTvZ3yMzZo/TzqwNU7OELZwVND2m3NorMN8RfECcYfd7QpdaEdhjoZGXw0YcQTfygo5d4WVCoCpyBP+PYGA1oh0c6JEWCVbjoBNbBswnXe8qEWaawaCv93KSlPF6+FInx8ytnimReTYLZsqOv9R8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711101608; c=relaxed/simple;
+	bh=nnjn6zU3N+Z7Zr1vOpWBk5H/GbQC1wT8XZ8vPYQtsHw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=GRoMhApaIA7o+w5R2sQcKvxdsIj9eJ1nz35B5rLDnX3DKIYJCx68R6CYQyk7gJoqfn4r63Va04Um8LOn0LH0eQgQ7MuBJC0QOWv6rSk3IlXSbREKWLMOYZN+n3atjoKvosa9vTMegB71bxMfbDk0wpYMEhT8zhhNzO6ItqB1NBU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Wf3ZkexNydclEySS98OQGGHgUIsxQD4n+R+NHqz2PFuB+iPdt9P8pMKG/SEciUthfVZdRc2VsewiOu4mzoz4XkcLvQhqii/3sNn4wGMzBgRLCLPemFW4LFPPdbqoi70gawcYPWhgf8XRPYkO4+mrwMK+KS5+AvnH7tGDehsVW6oe5BxOCKPD2hkL8mrugOgO44GwpBW+yN75p5cHo2rQpe2KXuo9TUihpg3MVN6dSxg+TAlDE76G2agra63QhJ0jpfjqjO6NZiM5VNiGTlE8pegUgQQm3roKty2HfhqmwnRZsPPnWi9aN5VDSOqQmmQPAjMmhKHAzzN7woWHv1+OiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nnjn6zU3N+Z7Zr1vOpWBk5H/GbQC1wT8XZ8vPYQtsHw=;
+ b=Xz+w6whMyMdabf9sTurkO2v1FDa7JUJhMuVJOmEo2BJG2VRl/kWGNwF84sEq85mJOQAeByTOM/LV23tlWXUpG9mb/1/5BZ8evsh4MdEzDg+Iapx9q5e7C0OolnVs63fpMFO+d+1FDPF3iAVtvFTX6dS9760Uw3RLmZ3osq3TxV/O3DSJJKjHB+QV5FlcIVd13/gN9LvsEDPFAXg8JvQkaEUF8bw/Jm3gSDdSg/vJ83iv6uUDpvEAUAG/UZErDIOzs2IvHEPFqsgpv+cYPA+TLIAAyVqujgw2hm1Y+ZLxWPRpcJN9KLu1PYc7f6oxQgrfZADTv9Avvt+6kboUkmR0VA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::10) by SHXPR01MB0767.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:27::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.51; Fri, 22 Mar
+ 2024 09:26:23 +0000
+Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+ ([fe80::b0af:4c9d:2058:a344]) by
+ SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn ([fe80::b0af:4c9d:2058:a344%6])
+ with mapi id 15.20.7249.041; Fri, 22 Mar 2024 09:26:22 +0000
+From: Changhuang Liang <changhuang.liang@starfivetech.com>
+To: Jai Luthra <j-luthra@ti.com>, Tomi Valkeinen
+	<tomi.valkeinen@ideasonboard.com>, Mauro Carvalho Chehab
+	<mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans
+ Verkuil <hverkuil-cisco@xs4all.nl>, Vaishnav Achath <vaishnav.a@ti.com>,
+	Maxime Ripard <mripard@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+	<conor+dt@kernel.org>
+CC: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vignesh
+ Raghavendra <vigneshr@ti.com>, Aradhya Bhatia <a-bhatia1@ti.com>, Devarsh
+ Thakkar <devarsht@ti.com>, Jack Zhu <jack.zhu@starfivetech.com>, Julien
+ Massot <julien.massot@collabora.com>, Jayshri Pawar <jpawar@cadence.com>
+Subject:
+ =?utf-8?B?5Zue5aSNOiBbUEFUQ0ggUkZDIDAzLzIxXSBtZWRpYTogY2FkZW5jZTogY3Np?=
+ =?utf-8?Q?2rx:_Support_runtime_PM?=
+Thread-Topic: [PATCH RFC 03/21] media: cadence: csi2rx: Support runtime PM
+Thread-Index: AQHaZYLyEm4HbUx67EuitQv2Y7JSOrFDqZIA
+Date: Fri, 22 Mar 2024 09:26:22 +0000
+Message-ID:
+ <SHXPR01MB0671C565B12032569CFACD6EF231A@SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn>
+References: <20240222-multistream-v1-0-1837ed916eeb@ti.com>
+ <20240222-multistream-v1-3-1837ed916eeb@ti.com>
+In-Reply-To: <20240222-multistream-v1-3-1837ed916eeb@ti.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SHXPR01MB0671:EE_|SHXPR01MB0767:EE_
+x-ms-office365-filtering-correlation-id: 093cda2b-4617-498b-36ed-08dc4a5223d0
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ JeUqzyuI12yqW0/UpvnJGMZvGTuUWCxmA5ncT8BIz5kmG2cJx5Dy85E7FZr2BwIcoOHO3ULde3jMDgTu5u7WmtrY4s9siWu+0PB4f/RjcdPk89GxXJ1I6TcUU9t3fCjoZktOrQzDI0vvMz/ZlDzlbDrlF2DhnIPK8Dp6TOMX+nmuucm9wqFTMrgtvhR/ngiSyfrjGSGYVNqeCeX4posRzSykzHpdc3nVRwOkoeAP4YgztL8/r08BTd06xrCEQcp2A9zZCIBm4lzqT6YmpQmqtd9Q5pfyRGAXd9zKR4OvfquNyOSIEDGlhdmWy94SwuMroudv6+B+4aPGtMKAgv6zwOasIrkp9xUyyO1K2cjPhT7v3jFk3ifesPx2jIH6vZULbCzlIkECnvGaAqi2XbDezuKZlvCWi9NutqEKQQMx/MXNiwJnYZKQjulzA/VgYr/n2W2bX3KkpSye9UWc5/XiILMe3D2uthbkL45jG8ChjoRGiUZ+SQYi3Bq4VgCFelOChNPuz5JmH57/ILvkIsfFZZoTvBfl727/pXmk/BWWkqvBtKhF9CWTOjVRbbcdu87YtS5p+vhFUeXAakDbfF4hSUB3hgA8HHzWtVCbTiCh85XXBUXOS0TYx4ledEsu+rrIyCJMJbyiIMUg+HuijKWmNA==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(41320700004)(1800799015)(7416005)(366007)(921011)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?K3RJeEtzWGxsMjVybGhpRy85ZFpXa2c1WHBwNm04NWN2d2VOSGN6ckY4ZzN5?=
+ =?utf-8?B?bVVRWjlsU2VXdzlZbDhnSHlqellEK0I3WnkwZ3JxOCtCRUoxMU5MdUIvcFJU?=
+ =?utf-8?B?Rk9ibHRXMDFTZmJSK2RBOWtZeWZUQTFLQmUrMnVxMHdaV0dWdnU3bzR6TUZt?=
+ =?utf-8?B?TVRQQlZWRDFYWU1xcmp1UWs1dXd6SVNYdDZnNDhhU20zYTNWcUtTSWxGdXc4?=
+ =?utf-8?B?VVhzV0JPcTc3M0FidlVwY3NuMXE3RVNzV21jSm1vTHBETlVIT2lHYmk4eEF0?=
+ =?utf-8?B?a3ZQNyt1T3ViY2tFNzFTemhqVk5RMUN6RVdMT1YvbE1zaVY2eG83TUgyOStQ?=
+ =?utf-8?B?My9WZnIvaXZjTnVhRiszNjVzblRmaHBnZXoyRzkxZ2ZKTTBrNlAwaTF5K2NH?=
+ =?utf-8?B?aCtuV1JUbkl3LzlRcGFOY2xPZ0dGTlMvWmM0L0J5b2pVME0xalIxZ2JVL2Y5?=
+ =?utf-8?B?Y3hhSnFiM3A5YXBGWFdFWWRUZ3Y3bHFaWXlSMnEzUVlua05MVXVkTXU4NTB3?=
+ =?utf-8?B?bTlSRURmL2FFaXZYNzR4TiswSU1vRExOWk1UTnh0cU9QclRyN2FtQnJNdEc3?=
+ =?utf-8?B?QWlVajR0UFREZUoyeGNFbE9jTno4WTJZZ1BzZ2FJS3JVRUpiZmlSNDROUFlK?=
+ =?utf-8?B?empCeVovT09YNk5UZEtlaDAvd3k5MEU2aFZjYllnMko4ZEtQdzdMTXVWTUZ3?=
+ =?utf-8?B?OGRlc2RNVU5aK2VyelBmK1g1WlpPb2JOT1JlM0p0eE1vOGhrdStMKzJmSkV4?=
+ =?utf-8?B?N2FLRzRSeFlvWHc3Z0x6dVBCQnlZK3o3QlhKUjVsNzZXT2ZOQmM1bm1RZlBq?=
+ =?utf-8?B?Wi9tc3hHZm1UU29BL2ZSbCtRWU9wY2tGZkk2NUxxZXRKdkFJdDBCNlVhQllX?=
+ =?utf-8?B?SWZpYlNhM3I2VHZEUTdDV25BTGFBNGthME9YN1pXc2ZYQk9WN25ZN0FDRTY1?=
+ =?utf-8?B?SXNxRG4wdm1vL1dYUUFSajdVcUVscFlQN3EzSmRyT3QyWmVSd0tQa3dVdGVv?=
+ =?utf-8?B?MVJEemsrdEo2bzA3empEMXR4ZjBSMnNGT0lyNDJDd3BBVlhaUkZ2MXNnbUh4?=
+ =?utf-8?B?T2JNb0ZvQW05R3RKLzNlcndnOTdUbE1wekxBZW01L2tLaVR0QTk3c01Qdy90?=
+ =?utf-8?B?cDRjZkU1RytMbVpKaUVoZS9EM29MeDlLQVdjWkEvcUVsY05iZUwxclVXekpp?=
+ =?utf-8?B?T250RFZCQVIzL3dSaU5hdU1RWU5tTS9VdFFrZFM5ek10TG9jUTFVcituMG1p?=
+ =?utf-8?B?WC96NUFLZWhHWFlTd1g4Zys5dUlWQXdBSzF4bVlXT1JWcUVFU0piQ0ZkMEps?=
+ =?utf-8?B?VTBWWjdVVXptQWkvcTNWdE1MZkhUZnNYWEJTd2pqSWRGWDN3VE9pSDh5dlIx?=
+ =?utf-8?B?cjhWVVV1aEhrRnVRS0lTL29KRTBPVUhYQjYzRUk1U3FNL3Y1MzAzaXdPSUI5?=
+ =?utf-8?B?aGxDelNGYW50bVQvRjVzUWFGa1JRdUZWckNrSzdXT21HbFR0K3BoZVZKYWFX?=
+ =?utf-8?B?S2w5SUYzNzVjbWRMemZ6aEc5cHlKa245VmFIK3c5QnVKUldBWkxnT1N0UDNO?=
+ =?utf-8?B?cVdKUXdKNG5vandIQVNGdEhDM1p1bHFjUG45V2VaOS9DeXNTbEttSE1iNERw?=
+ =?utf-8?B?ai94S1BqVmpleHd0cWhnL2pWRFY5WVNUT0xJWVRsMmY0c3JucUwzYWprN2w0?=
+ =?utf-8?B?QjdJLzl0VWtzcytmS2p5NU5zTFU3VDBvSWY0SEplUUNmL0h3a3dwOWVIQnRj?=
+ =?utf-8?B?a0kweTlKQ0ZndVZrY2dSTm9pN1A3SFFDa1A3R1B2YVJtY29ZM1djMUFiUjgy?=
+ =?utf-8?B?bXdCaHVSb0hLMnY3QVJXUzlzNjgzOHRGYnd3RjY2QU1RRklCbm1KV09lTUZ2?=
+ =?utf-8?B?cnl3VEJBbXVVaUhlZmJjMmJDMmkzZmowblBlODY4VVhNbURWQTlLdzNIdVdJ?=
+ =?utf-8?B?cWppVUpyQm9oSk95RjA0aEFrQ1R0MURROFJqRWFiaUpuRDd5NG5lVHZ1c0Zw?=
+ =?utf-8?B?bGFZMS96MzI5aWhSSHkzcm9VWUJ1cEI4S0ljaWh1bnNYL3U1UEFZWmtuUnov?=
+ =?utf-8?B?Y3lVTW9hd1BwR1hLNitEbWtsV01rcDlSV0RQNElHUG9BWlVVZEdpcnl4R2du?=
+ =?utf-8?B?TlIwUjIvK1BRWWdnL0RhVVpvTkhvSEYvcWo0ZkVSWlY4US9QaHVvcml5ajhU?=
+ =?utf-8?B?Smc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dt-bindings: iio: adc: nxp,imx93-adc.yaml: Add
- calibration properties
-Content-Language: en-GB
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, haibo.chen@nxp.com,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org
-Cc: jic23@kernel.org, lars@metafoo.de, shawnguo@kernel.org,
- s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- upstream@lists.phytec.de
-References: <20240320100407.1639082-1-andrej.picej@norik.com>
- <20240320100407.1639082-3-andrej.picej@norik.com>
- <38637621-1611-4268-ae79-7ac93a72c5ee@linaro.org>
- <e994b756-7f4e-4be3-b8f3-310988174b44@norik.com>
- <7e58bf96-3c38-467f-86b6-06ff5feedb31@linaro.org>
- <40e08a5e-e7e9-47c7-9102-24a2bbba67cf@norik.com>
- <a1b173c0-5120-40f6-9708-cd810b4a2406@linaro.org>
-From: Andrej Picej <andrej.picej@norik.com>
-In-Reply-To: <a1b173c0-5120-40f6-9708-cd810b4a2406@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel.siel.si
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - norik.com
-X-Get-Message-Sender-Via: cpanel.siel.si: authenticated_id: andrej.picej@norik.com
-X-Authenticated-Sender: cpanel.siel.si: andrej.picej@norik.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 093cda2b-4617-498b-36ed-08dc4a5223d0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2024 09:26:22.7892
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YkYLrWmPSdGVsyoVQf0V6QQAJRwXWIO5Sy0Ivok84ms0Vp+7KAt6TmQzJQlAhSi85vjXz01L5lDQJaKL3KQaTsJ1388ZToYqTV+7JknuN37XWf0Eg2Lwg0fdF4SxS/+S
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0767
 
-On 22. 03. 24 09:14, Krzysztof Kozlowski wrote:
-> On 22/03/2024 08:39, Andrej Picej wrote:
->> On 20. 03. 24 13:15, Krzysztof Kozlowski wrote:
->>> On 20/03/2024 13:05, Andrej Picej wrote:
->>>> Hi Krzysztof,
->>>>
->>>> On 20. 03. 24 11:26, Krzysztof Kozlowski wrote:
->>>>> On 20/03/2024 11:04, Andrej Picej wrote:
->>>>>> Document calibration properties and how to set them.
->>>>>
->>>>> Bindings are before users.
->>>>
->>>> will change patch order when I send a v2.
->>>>
->>>>>
->>>>> Please use subject prefixes matching the subsystem. You can get them for
->>>>> example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
->>>>> your patch is touching.
->>>>> There is no file extension in prefixes.
->>>>
->>>> So: dt-bindings: iio/adc: nxp,imx93-adc: Add calibration properties?
->>>
->>> Did you run the command I proposed? I don't see much of "/", but except
->>> that looks good.
->>
->> Ok noted.
->>
->>>
->>>>
->>>>>
->>>>>>
->>>>>> Signed-off-by: Andrej Picej <andrej.picej@norik.com>
->>>>>> ---
->>>>>>     .../bindings/iio/adc/nxp,imx93-adc.yaml           | 15 +++++++++++++++
->>>>>>     1 file changed, 15 insertions(+)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/iio/adc/nxp,imx93-adc.yaml b/Documentation/devicetree/bindings/iio/adc/nxp,imx93-adc.yaml
->>>>>> index dacc526dc695..64958be62a6a 100644
->>>>>> --- a/Documentation/devicetree/bindings/iio/adc/nxp,imx93-adc.yaml
->>>>>> +++ b/Documentation/devicetree/bindings/iio/adc/nxp,imx93-adc.yaml
->>>>>> @@ -46,6 +46,21 @@ properties:
->>>>>>       "#io-channel-cells":
->>>>>>         const: 1
->>>>>>     
->>>>>> +  nxp,calib-avg-en:
->>>>>> +    description:
->>>>>> +      Enable or disable averaging of calibration time.
->>>>>> +    enum: [ 0, 1 ]
->>>>>> +
->>>>>> +  nxp,calib-nr-samples:
->>>>>> +    description:
->>>>>> +      Selects the number of averaging samples to be used during calibration.
->>>>>> +    enum: [ 16, 32, 128, 512 ]
->>>>>> +
->>>>>> +  nxp,calib-t-samples:
->>>>>> +    description:
->>>>>> +      Specifies the sample time of calibration conversions.
->>>>>> +    enum: [ 8, 16, 22, 32 ]
->>>>>
->>>>> No, use existing, generic properties. Open other bindings for this.
->>>>
->>>> You mean I should use generic properties for the ADC calibration
->>>> settings? Is there already something in place? Because as I understand
->>>> it, these calib-* values only effect the calibration process of the ADC.
->>>
->>> Please take a look at other devices and dtschema. We already have some
->>> properties for this... but maybe they cannot be used?
->>>
->>
->> I did look into other ADC devices, grep across iio/adc, adc bindings
->> folders and couldn't find anything closely related to what we are
->> looking for. Could you please point me to the properties that you think
->> should be used for this?
-> 
-> Indeed, there are few device specific like qcom,avg-samples. We have
-> though oversampling-ratio, settling-time-us and min-sample-time (which
-> is not that good because does not use unit suffix).
-
-Ok, these are examples but I think I should not use them, since these 
-are i.MX93 ADC specific settings, which are used for configuration of 
-calibration process, and are not related to the standard conversion 
-process during runtime. Calibration process is the first step that 
-should be done after every power-on reset.
-
-> 
-> Then follow up questions:
->   - nxp,calib-avg-en: Why is it a board-level decision? I would assume
-> this depends on user choice and what kind of input you have (which could
-> be board dependent or could be runtime decision).
-
-Not really sure I get your question, so please elaborate if I missed the 
-point.
-This is a user choice, to enable or disable the averaging function in 
-calibration, but this is a board-level decision, probably relates on 
-external ADC regulators and input connections. The same options are used 
-for every ADC channel and this can not be a runtime decision, since 
-calibration is done before the ADC is even registered.
-
->   - nxp,calib-t-samples: what does it mean? Time is expressed in time
-> units, but there is nothing about units in the property name.
-> 
-
-You are right, basically this is "time" in cycles of AD_CLK. I should at 
-least add that to the property description.
-
-Best regards,
-Andrej Picej
+SGksIEphaQ0KDQo+IFtQQVRDSCBSRkMgMDMvMjFdIG1lZGlhOiBjYWRlbmNlOiBjc2kycng6IFN1
+cHBvcnQgcnVudGltZSBQTQ0KPiANCj4gRnJvbTogSmF5c2hyaSBQYXdhciA8anBhd2FyQGNhZGVu
+Y2UuY29tPg0KPiANCj4gVXNlIHJ1bnRpbWUgcG93ZXIgbWFuYWdlbWVudCBob29rcyB0byBzYXZl
+IHBvd2VyIHdoZW4gQ1NJLVJYIGlzIG5vdCBpbg0KPiB1c2UuIEFsc28gc3RvcC9zdGFydCBhbnkg
+aW4tcHJvZ3Jlc3Mgc3RyZWFtcywgd2hpY2ggbWlnaHQgaGFwcGVuIGR1cmluZyBhDQo+IHN5c3Rl
+bSBzdXNwZW5kL3Jlc3VtZSBjeWNsZS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEpheXNocmkgUGF3
+YXIgPGpwYXdhckBjYWRlbmNlLmNvbT4NCj4gQ28tZGV2ZWxvcGVkLWJ5OiBKYWkgTHV0aHJhIDxq
+LWx1dGhyYUB0aS5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IEphaSBMdXRocmEgPGotbHV0aHJhQHRp
+LmNvbT4NCg0KSSB3YW50IHRvIHNlbmQgYSBzZXJpZXMgY29udGFpbmluZyB0aGlzIHBhdGNoLCBT
+byBJIHdhbnQgdG8gaGVscCB5b3Ugc2VuZCB0aGlzIHBhdGNoLA0KV2hhdCBhYm91dCB5b3VyIG9w
+aW5pb24/DQoNClJlZ2FyZHMsDQpDaGFuZ2h1YW5nDQo=
