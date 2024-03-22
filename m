@@ -1,347 +1,137 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A7F446A0;
-	Fri, 22 Mar 2024 12:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7392C44C89
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 12:58:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711112305; cv=none; b=eV/S2cr2nOyw/Z1/Prlht7ig9u8a+RLxeo7HPADcyRircibMX7cNa+hXQ1OPHwnzuF06mYJJj1GVVgyVj/L+dsUpJEAI2OXgoxJ6+/ZahAkYuhrki1sYWONHfZwU4jLq5MuLd/93J2gATbw0UEkCxmqUnBV48CpDns8WMxMgRuc=
+	t=1711112323; cv=none; b=R1i2B+oj3pKwnflVGJh25oyRdwNT4vcJzWnysPfiera1QCaAntvlwekQbI8e0/YOr6ha49KW0ZyjdhYX6uTMOAYW/rvqfeYKXFeVRtlqSFUCfdqtnP/lGgFX00xhmbvdoBDsbMVP5OkSUarOBVBnXBEdd8fSaqYwTCzc9R65Eko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711112305; c=relaxed/simple;
-	bh=R8CEgZzdkISYvI1frNeDpEPHLFmDlh3VCwkh/8paHe4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O9JUQ/du9KLoKN7JmLpMKQzS/8CkL5VPrElkl8c4qKCmZwcRERpY6zOEOAoiJv/iwe7S2PDGq92+nJEnWtxSvzhJhNstZe85TrmWwUQurGSwBRleYL1kH/9vfUd21gVZZNe485pmBbqtQ9Q6suKY26m1UXt4ZkLkscyKlOf+WMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V1Mn01kzRz6K5sX;
-	Fri, 22 Mar 2024 20:57:40 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 92353140A90;
-	Fri, 22 Mar 2024 20:58:18 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 22 Mar
- 2024 12:58:17 +0000
-Date: Fri, 22 Mar 2024 12:58:17 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
-CC: Shradha Todi <shradha.t@samsung.com>, <bp@alien8.de>,
-	<tony.luck@intel.com>, <james.morse@arm.com>, <mchehab@kernel.org>,
-	<rric@kernel.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
-	<robh@kernel.org>, <bhelgaas@google.com>, <jingoohan1@gmail.com>,
-	<gustavo.pimentel@synopsys.com>, <josh@joshtriplett.org>,
-	<lukas.bulwahn@gmail.com>, <hongxing.zhu@nxp.com>,
-	<pankaj.dubey@samsung.com>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <vidyas@nvidia.com>, <gost.dev@samsung.com>,
-	<alim.akhtar@samsung.com>, <shiju.jose@huawei.com>, "Terry Bowman"
-	<Terry.Bowman@amd.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
- controller
-Message-ID: <20240322125817.0000791f@Huawei.com>
-In-Reply-To: <20240322103935.GD3638@thinkpad>
-References: <CGME20231130115055epcas5p4e29befa80877be45dbee308846edc0ba@epcas5p4.samsung.com>
-	<20231130115044.53512-1-shradha.t@samsung.com>
-	<20231130165514.GW3043@thinkpad>
-	<000601da3e07$c39e5e00$4adb1a00$@samsung.com>
-	<20240104055030.GA3031@thinkpad>
-	<0df701da5ff0$df1165a0$9d3430e0$@samsung.com>
-	<20240216134921.GH2559@thinkpad>
-	<120d01da657e$66b9d3b0$342d7b10$@samsung.com>
-	<20240319163315.GD3297@thinkpad>
-	<20240320100144.0000056c@Huawei.com>
-	<20240322103935.GD3638@thinkpad>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1711112323; c=relaxed/simple;
+	bh=aAswaIdmxvMSh25JKNEAx3mUmnA1VZ5cxwrrtABNFHI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sjboT5RJgGfDd2KlcVZaVKBlFH04pmw2cU4iZZRUtMIRACLUCVCz7yDrjbmMGiaWceQJ1szeHVySo2BotG1ML6/BuaQ9QKXiYeR/FPoJj6BC4OACk8lF5CL+m6ac17hNw0TylYKZGKOzdZtadD+2AZyAg0YNqac4wvWyNszmI1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dec6TVH1; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dec6TVH1"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-414689ba80eso16954775e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 05:58:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711112320; x=1711717120; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=YVyQMm8QpPiBgdk2MOVcgSZWNA9sQoBQ3kat6aE3a4Y=;
+        b=dec6TVH1QCd0syB9pQyIjgfQ5o/fe+Hp8Rr2Vs8zzEWcOLHoeesPOGYay4ploOqCTn
+         gUreVIakymig0abdCDHy2TL4EiUh2n/yn0jt5iP6gXVkfv3q8pQkUHpGXynP9TLhZXOY
+         8steE5dsAUFtH0BXC1nBIGb+RwsVJWk2ULqOVsUPO16foYqmu8gd+KE+TTKe2NvLWPkb
+         uAF+vkf4BV6ZjUqpmpydrCqr8t86FLFMTZxWJJRpdiZvp9cuLMTBsxvRFptvPST9m6ZU
+         2BAmvbvO9iAHbt0qUZMQYUm5wVul4imVuUir+pDvF6o8tfnO6w1gLRW0Tv9L4CAXd2uu
+         wjcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711112320; x=1711717120;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YVyQMm8QpPiBgdk2MOVcgSZWNA9sQoBQ3kat6aE3a4Y=;
+        b=XnxYpDzaNTnmLUyyZUzR0Ch7Erg3edXJ8db3BRToHZuEjwmecVrs4TM8dxMG5POErJ
+         9HOvU3pd+/eQl+kaupuEYj32ddExBsqz4OI3grOB9lcLf2YrTZ/h4rCbkjZ2SY9Y2d7b
+         7FvfmQozr4PscxgMuz+wl8XNpuvXgvhKX0onMQhk3uXbXLm1THFFDCAzO/tnBAgCVcJw
+         ayJAnHnwxcdRGcaJpULqXy1PT7tsHRTakkT6wrERdQJRl3+QhJBKaeRfyluBLaVLjCri
+         e1VfMZli4dfvL2/buaWHId6bK1m5e1LMD9ohAwnm3QSSSHxRMDoMoDLwk0Lom+jJTcrt
+         iQ0w==
+X-Forwarded-Encrypted: i=1; AJvYcCVdEYeIJVgIWDcep+yQSQZYn58J3bM6yk6UWtWbn8SGVGIqsBoyN3YBxXS8DqVvVDHZ03TdpX3EecnPi4CAT8FHUgGX40t68ah8aC6Z
+X-Gm-Message-State: AOJu0Yyxx7dItyTecDb2tBAqZXoqk5liuu3D923xmUr9Zg7BEMsaH/kH
+	GAbT/yo+IL2NxlH4k+x6TiLxYt1GG7rh+tLCRZ8m5GI5ylmxTwgsi5ZIK3BwE/4=
+X-Google-Smtp-Source: AGHT+IG1GXctvtc4AxO2wqsU81mOuUDYP4sQmFJKt4ISmtt46MX1aXQtv1ghCvfyet00WW8tsT0mCQ==
+X-Received: by 2002:a05:600c:3417:b0:414:b14:5654 with SMTP id y23-20020a05600c341700b004140b145654mr1663621wmp.21.1711112319599;
+        Fri, 22 Mar 2024 05:58:39 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id iv13-20020a05600c548d00b0041463334822sm3023218wmb.26.2024.03.22.05.58.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Mar 2024 05:58:39 -0700 (PDT)
+Date: Fri, 22 Mar 2024 15:58:35 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Kent Gibson <warthog618@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Alexey Dobriyan <adobriyan@gmail.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	stable@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH] gpio: cdev: sanitize the label before requesting the
+ interrupt
+Message-ID: <9d435e66-bb58-409e-aa30-9b89cb18dd9c@moroto.mountain>
+References: <20240320125945.16985-1-brgl@bgdev.pl>
+ <20240322013034.GA4572@rigel>
+ <CAMRc=MfQnZQU_t9-uDPp18vFikz_9eP6LtnWJYG0+KFgWjBcEg@mail.gmail.com>
+ <f529d746-f8c5-466b-860b-e2bfaeb2cc27@moroto.mountain>
+ <20240322115419.GA31273@rigel>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240322115419.GA31273@rigel>
 
-On Fri, 22 Mar 2024 16:09:35 +0530
-'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org> wrote:
+On Fri, Mar 22, 2024 at 07:54:19PM +0800, Kent Gibson wrote:
+> On Fri, Mar 22, 2024 at 12:31:36PM +0300, Dan Carpenter wrote:
+> > On Fri, Mar 22, 2024 at 08:46:50AM +0100, Bartosz Golaszewski wrote:
+> > > On Fri, Mar 22, 2024 at 2:30 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > >
+> > > > On Wed, Mar 20, 2024 at 01:59:44PM +0100, Bartosz Golaszewski wrote:
+> > > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > > >
+> > > > > Let's replace all "/" with "-".
+> > > > >
+> > > >
+> > > > I actually prefer the ":" you originally suggested, as it more clearly
+> > > > indicates a tier separation, whereas a hyphen is commonly used for
+> > > > multi-word names. And as the hyphen is more commonly used the sanitized
+> > > > name is more likely to conflict.
+> > > >
+> > >
+> > > Sounds good, will do.
+> > > > >
+> > > > > +     label = make_irq_label(le->label);
+> > > > > +     if (!label)
+> > > > > +             goto out_free_le;
+> > > > > +
+> > > >
+> > > > Need to set ret = -ENOMEM before the goto, else you will return 0.
+> > > >
+> > >
+> > > Eek, right, thanks.
+> >
+> > Smatch has a warning about this, btw.
+> > drivers/gpio/gpiolib-cdev.c:2221 lineevent_create() warn: missing error code 'ret'
+> >
+> 
+> And that triggered a "what the hell does that mean" warning in my
+> wetware error parser ;-).
+> 
+> That could be better worded - it isn't "missing", it hasn't been
+> appropriately set. So maybe "unset error code"?
+> 
 
-> On Wed, Mar 20, 2024 at 10:01:44AM +0000, Jonathan Cameron wrote:
-> > On Tue, 19 Mar 2024 22:03:15 +0530
-> > 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org> wrote:
-> >  =20
-> > > On Thu, Feb 22, 2024 at 04:30:47PM +0530, Shradha Todi wrote: =20
-> > > > + Borislav, Tony, James, Mauro, Robert
-> > > >=20
-> > > > Hi All,
-> > > >=20
-> > > > Synopsys DesignWare PCIe controllers have a vendor specific capabil=
-ity (which
-> > > > means that this set of registers are only present in DesignWare con=
-trollers)
-> > > > to perform debug operations called "RASDES".
-> > > > The functionalities provided by this extended capability are:
-> > > >=20
-> > > > 1. Debug: This has some debug related diagnostic features like hold=
-ing LTSSM
-> > > > in certain states, reading the status of lane detection, checking i=
-f any PCIe
-> > > > lanes are broken (RX Valid) and so on. It's a debug only feature us=
-ed for diagnostic
-> > > > use-cases.
-> > > >=20
-> > > > 2. Error Injection: This is a way to inject certain errors in PCIe =
-like LCRC, ECRC,
-> > > > Bad TLPs and so on. Again, this is a debug feature and generally no=
-t used in
-> > > > functional use-case.
-> > > >=20
-> > > > 3. Statistical counters: This has 3 parts
-> > > >  - Error counters
-> > > >  - Non error counters (covered as part of perf [1])
-> > > >  - Time based analysis counters (covered as part of perf [1])
-> > > >=20
-> > > > Selective features of  the above functionality has been implemented
-> > > > by vendor specific PCIe controller drivers (pcie-tegra194.c) that u=
-se
-> > > > Synopsys DesignWare PCIe controllers.
-> > > > In order to make it useful to all vendors using DWC controller, we =
-had
-> > > > proposed a common implementation in DWC PCIe controller directory
-> > > > (drivers/pci/controller/dwc/) and our original idea was based on de=
-bugfs
-> > > > filesystem. v1 and v2 are mentioned in [2] and [3].
-> > > >=20
-> > > > We got a suggestion to implement this as part of EDAC framework [3]=
- and
-> > > > we looked into the same. But as far as I understood, what I am tryi=
-ng to
-> > > > implement is a very specific feature (only valid for Synopsys DWC P=
-CIe controllers). =20
-> >=20
-> > For error part there are (at least superficially) similar features in t=
-he PCIe
-> > standard that we've started thinking about how to support.
-> >=20
-> > See Flit Logging Extended capablity (7.7.8 in PCIe Base Spec rev6.
-> > That has the benefit that they are part of the standard so we can
-> > support them directly in portdrv / EP drivers using some library code i=
-n the
-> > PCI core.
-> >  =20
->=20
-> Sounds good. But v6 is a relatively new version and the DWC RAS predates =
-that.
-> So we still need to support it somehow (either in EDAC or in
-> drivers/pci/controller/dwc).
->=20
-> > There are other interconnect and PCI PMU drivers that log retries etc w=
-hich are also basically error
-> > counts. At least some of that is done through perf today.=20
-> >  =20
->=20
-> IMO all the RAS support should be exposed through EDAC, otherwise it defe=
-ats the
-> purpose of the subsystem.
+It's kind of a pain to change the warning message after the fact because
+then they show up as new warnings for everyone...  I maybe should poll
+people to see if they care about the hassel of it.
 
-Some RAS flows go nowhere near EDAC today.  Individual drivers poke out
-the tracepoints and userspace tooling deals with it. One example is
-CXL but there are plenty of others.
+> > The other warning here is:
+> > drivers/gpio/gpiolib-cdev.c:2269 lineevent_create() warn: 'irq' from request_threaded_irq() not released on lines: 2258.
+> >
+> 
+> Looks like a false positive to me - as per the comment in the code, that path
+> (2258) results in lineevent_release() being called and that releases the irq.
 
-Perhaps that should not be the case, but there is definitely
-precedence for ignoring edac when considering error flows.
+Ah right.  Thanks!
 
-Jonathan
-
->=20
-> - Mani
->=20
-> >  =20
-> > > > This doesn't seem to fit in very well with the EDAC framework and w=
-e can=20
-> > > > hardly use any of the EDAC framework APIs. We tried implementing a
-> > > > "pci_driver" but since a function driver will already be running on=
- the EP and
-> > > > portdrv on the root-complex, we will not be able to bind 2 drivers =
-to a single
-> > > > PCI device (root-complex or endpoint). Ultimately, what I will be d=
-oing is
-> > > > writing a platform driver with debugfs entries which will be presen=
-t in EDAC
-> > > > directory instead of DWC directory. =20
-> >=20
-> > The addition of this type of functionality to pordrv is a long running =
-question.
-> > Everyone wants a solution, I believe some people are looking at it (+CC=
- Terry)
-> >=20
-> > Terry, another case for your long list.
-> >=20
-> > For the EP end, this should be fired up by the EP driver, whilst it mig=
-ht be
-> > infrastructure used on a bunch of devices,  it is a feature of that par=
-ticular
-> > EP - so you'd want to provide any functionality in a form that could be=
- used
-> > by both the EP driver and a nice shiny new portdrv replacement.
-> >  =20
-> > > >=20
-> > > > Can  you please help us out by going through this thread [3] and le=
-tting us
-> > > > know if our understanding is wrong at any point. If you think it is=
- a better
-> > > > idea to integrate this in the EDAC framework, can you guide me as
-> > > > to how I can utilize the framework better?
-> > > > Please let me know if you need any other information to conclude.
-> > > >=20
-> > > > [1] https://lore.kernel.org/linux-pci/20231121013400.18367-1-xueshu=
-ai@linux.alibaba.com/
-> > > > [2] https://lore.kernel.org/all/20210518174618.42089-1-shradha.t@sa=
-msung.com/T/
-> > > > [3] https://lore.kernel.org/all/20231130115044.53512-1-shradha.t@sa=
-msung.com/
-> > > >    =20
-> > >=20
-> > > Gentle ping for the EDAC maintainers.
-> > >=20
-> > > - Mani
-> > >  =20
-> > > > Thanks,
-> > > > Shradha
-> > > >    =20
-> > > > > -----Original Message-----
-> > > > > From: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
-> > > > > Sent: 16 February 2024 19:19
-> > > > > To: Shradha Todi <shradha.t@samsung.com>
-> > > > > Cc: lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > > > > bhelgaas@google.com; jingoohan1@gmail.com;
-> > > > > gustavo.pimentel@synopsys.com; josh@joshtriplett.org;
-> > > > > lukas.bulwahn@gmail.com; hongxing.zhu@nxp.com;
-> > > > > pankaj.dubey@samsung.com; linux-kernel@vger.kernel.org; linux-
-> > > > > pci@vger.kernel.org; vidyas@nvidia.com; gost.dev@samsung.com
-> > > > > Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PC=
-Ie DW
-> > > > > controller
-> > > > >=20
-> > > > > On Thu, Feb 15, 2024 at 02:55:06PM +0530, Shradha Todi wrote:   =
-=20
-> > > > > >
-> > > > > >   =20
-> > > > >=20
-> > > > > [...]
-> > > > >    =20
-> > > > > > > For the error injection and counters, we already have the EDAC
-> > > > > > > framework. So adding them in the DWC driver doesn't make sens=
-e to me.
-> > > > > > >   =20
-> > > > > >
-> > > > > > Sorry for late response, was going through the EDAC framework t=
-o understand   =20
-> > > > > better how we can fit RAS DES support in it. Below are some techn=
-ical challenges
-> > > > > found so far:   =20
-> > > > > > 1: This debugfs framework proposed [1] can run on both side of =
-the link i.e. RC   =20
-> > > > > and EP as it will be a part of the link controller platform drive=
-r. Here for the EP
-> > > > > side the assumption is that it has Linux running, which is primar=
-ily a use case for
-> > > > > chip-to-chip communication.  After your suggestion to migrate to =
-EDAC
-> > > > > framework we studied and here are the findings:   =20
-> > > > > > - If we move to EDAC framework, we need to have RAS DES as a
-> > > > > > pci_driver which will be binded based on vendor_id and device_i=
-d. Our
-> > > > > > observation is that on EP side system we are unable to bind two
-> > > > > > function driver (pci_driver), as pci_endpoint_test function dri=
-ver or
-> > > > > > some other chip-to-chip function driver will already be bound. =
-On the
-> > > > > > other hand, on RC side we observed that if we have portdrv enab=
-led in
-> > > > > > Linux running on RC system, it gets bound to RC controller and =
-then it
-> > > > > > does not allow EDAC pci_driver to bind. So basically we see a p=
-roblem
-> > > > > > here, that we can't have two pci_driver binding to same PCI dev=
-ice
-> > > > > > 2: Another point is even though we use EDAC driver framework, w=
-e may not be   =20
-> > > > > able to use any of EDAC framework APIs as they are mostly suitabl=
-e for memory
-> > > > > controller devices sitting on PCI BUS. We will end up using debug=
-fs entries just via
-> > > > > a pci_driver placed inside EDAC framework.
-> > > > >=20
-> > > > > Please wrap your replies to 80 characters.
-> > > > >=20
-> > > > > There is no need to bind the edac driver to VID:PID of the device=
-. The edac driver
-> > > > > can be a platform driver and you can instantiate the platform dev=
-ice from the
-> > > > > DWC driver. This way, the PCI device can be assocaited with whate=
-ver driver, but
-> > > > > still there can be a separate edac driver for handling errors.
-> > > > >=20
-> > > > > Regarding API limitation, you should ask the maintainer about the=
- possibility of
-> > > > > extending them.
-> > > > >    =20
-> > > > > >
-> > > > > > Please let me know if my understanding is wrong.
-> > > > > >   =20
-> > > > > > > But first check with the perf driver author if they have any =
-plans
-> > > > > > > on adding the proposed functionality. If they do not have any=
- plan
-> > > > > > > or not working on it, then look into EDAC.
-> > > > > > >
-> > > > > > > - Mani
-> > > > > > >   =20
-> > > > > >
-> > > > > > Since we already worked and posted patches [1], [2], we will co=
-ntinue to work   =20
-> > > > > on this and based on consent from community we will adopt to most=
- suitable
-> > > > > framework.   =20
-> > > > > > We see many subsystems like ethernet, usb, gpu, cxl having debu=
-gfs files that   =20
-> > > > > give information about the current status of the running system a=
-nd as of now
-> > > > > based on our findings, we still feel there is no harm in having d=
-ebugfs entry based
-> > > > > support in DesignWare controller driver itself.
-> > > > >=20
-> > > > > There is no issue in exposing the debug information through debug=
-fs, that's the
-> > > > > sole purpose of the interface. But here, you are trying to add su=
-pport for DWC
-> > > > > RAS feature for which a dedicated framework already exists.
-> > > > >=20
-> > > > > And there will be more similar requests coming for vendor specifi=
-c error protocols
-> > > > > as well. So your investigation could benefit everyone.
-> > > > >=20
-> > > > > From your above investigation, looks like there are some shortcom=
-ings of the
-> > > > > EDAC framework. So let's get that clarified by writing to the EDA=
-C maintainers
-> > > > > (keep us in CC). If the EDAC maintainer suggests you to add suppo=
-rt for this
-> > > > > feature in DWC driver itself citing some reasons, then no issues =
-with me.
-> > > > >=20
-> > > > > - Mani
-> > > > >=20
-> > > > > --
-> > > > > =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=
-=E0=AE=A9=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=
-=E0=AE=AE=E0=AF=8D   =20
-> > > >=20
-> > > >    =20
-> > >  =20
-> >  =20
->=20
-
+regards,
+dan carpenter
