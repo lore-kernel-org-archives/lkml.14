@@ -1,132 +1,96 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA5D19452;
-	Fri, 22 Mar 2024 08:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC6518057;
+	Fri, 22 Mar 2024 08:49:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711097387; cv=none; b=i6NGHouzsRCkhLaQDe3BnYpgwwOVICqwyFC1EQGdxArzOhBcpCwKFtvJ60Rw4gTiygs+Q1lKTHYvJuyhpKtuOfzo7EXLNv6X3kGEJrtzGZap6VhvuQGp6j9MKwfAHp7ocS9Ug3buic6uE9vuTT7Tkvve8CGIwWKRLILKtzmxRfw=
+	t=1711097395; cv=none; b=mbCpJ4Q9PnEdHdG+7f1UKhDdeEg0qRdJVgbBufCdMV2ZJAx82412VhJfcGqzrQY0KA4zp/xGBBxsey5RUmM1sLJf0SpuSLvPihalHuOG0EyrYEhxbWr/p8SkWK5nEmQncJIyZVigm41ozhpTqWUg6lpLP1S9U3eHnEOucWsuH1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711097387; c=relaxed/simple;
-	bh=Rus4EOlYjpMcjkHVpN+7Cwqd1GjzJuQxBDkGG/aunOE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=csYcT1BbFnWTREhTGKvqSuswm7ATlAe5xtTXMQKzwX1BqWRZuWC0dbdI0/H+GF1CLkOKUVlXwq86EdWv4zSiueDxNoH15rdhMoP5rIHnAA075c8csbjxIhCXJsPAqln/HfyYtS4yXMMnGAxdV1pRTKqVSf3FhawGATI7/x93hiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=y8CNUMnj; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=isbvmZQJ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=y8CNUMnj; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=isbvmZQJ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1711097395; c=relaxed/simple;
+	bh=LUo7IYr04GBx667e4z19W63l1+ZSfrQTXBaKA7AYx3Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qMba2WGfQ3i0KFEpwCm1PHF7l5z5bGSEMpak4CxIOQ0XFyjso5x0kElnys/9GQWUVKlZqEbtgLnZL8lVFMCOg2XTioGu1pdAjSHDQC8kOdLVRtUS7ea4wBrnk/jepkn8jIyRCJcVUSudbWLebnn7Rq9zWHRXqyAk81f/TdIbq6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nNyPnFMS; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="y8CNUMnj";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="isbvmZQJ";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="y8CNUMnj";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="isbvmZQJ"
-Received: from lion.mk-sys.cz (unknown [10.100.225.114])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 47F8D382B0;
-	Fri, 22 Mar 2024 08:49:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1711097383; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Rus4EOlYjpMcjkHVpN+7Cwqd1GjzJuQxBDkGG/aunOE=;
-	b=y8CNUMnjl7AtHfrpc0fCXd2UwyPa4Ub748sc5+GmKAVam87psdAIPAC7ikpP5+eNbW7kHV
-	nJQ/ucT/uxS5CUGdqtjhIrd2jWWSa7bqB0zuCGGAMQo5mseCdrFm8s8d2Dv2EPwi6lXfst
-	e9b/S8vyVN3RndrdOX/3WFH60+l0HuM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1711097383;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Rus4EOlYjpMcjkHVpN+7Cwqd1GjzJuQxBDkGG/aunOE=;
-	b=isbvmZQJNTnQ8jY7mycgQAJVRRIpIj2W+R+OvPTNzi0y/6D5y08b+GP73P30B7zP6HOvDg
-	p7WTxlqS90PS4DDw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1711097383; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Rus4EOlYjpMcjkHVpN+7Cwqd1GjzJuQxBDkGG/aunOE=;
-	b=y8CNUMnjl7AtHfrpc0fCXd2UwyPa4Ub748sc5+GmKAVam87psdAIPAC7ikpP5+eNbW7kHV
-	nJQ/ucT/uxS5CUGdqtjhIrd2jWWSa7bqB0zuCGGAMQo5mseCdrFm8s8d2Dv2EPwi6lXfst
-	e9b/S8vyVN3RndrdOX/3WFH60+l0HuM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1711097383;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Rus4EOlYjpMcjkHVpN+7Cwqd1GjzJuQxBDkGG/aunOE=;
-	b=isbvmZQJNTnQ8jY7mycgQAJVRRIpIj2W+R+OvPTNzi0y/6D5y08b+GP73P30B7zP6HOvDg
-	p7WTxlqS90PS4DDw==
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-	id 332CF2013C; Fri, 22 Mar 2024 09:49:43 +0100 (CET)
-Date: Fri, 22 Mar 2024 09:49:43 +0100
-From: Michal Kubecek <mkubecek@suse.cz>
-To: Jiri Pirko <jiri@resnulli.us>
-Cc: gaoxingwang <gaoxingwang1@huawei.com>, idosch@nvidia.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	yanan@huawei.com, liaichun@huawei.com
-Subject: Re: [PATCH] netlink: fix typo
-Message-ID: <20240322084943.5xodsuxt45jr5l3l@lion.mk-sys.cz>
-References: <20240322072456.1251387-1-gaoxingwang1@huawei.com>
- <Zf09wW36JcpObTPC@nanopsycho>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nNyPnFMS"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dddbe47ac1so19316985ad.1;
+        Fri, 22 Mar 2024 01:49:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711097393; x=1711702193; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eSJRJbc7Ms8BxI4u7jirBbWm4aboNputwfC65mYN+TQ=;
+        b=nNyPnFMScZ3Y/lrh9k/2d+Mlk2IGJP7Zl3lvMGKSJeFmNM4hPj/FjQ00vsYSTzWb8h
+         0+ceHT1IOTiiRRu3GNVwsMeZdsvz71aObg/NCN2R+BrH78OTDXZdMW8AknNkhkBHKVar
+         CeogR9Yl1u4O9t7IFOwkGDbub26BGkUgTpvN/bAc4IUazmNgBJRDlh6VOC1BoMaDcR80
+         73SZXh9rsV94ifMaqLpymE/4Ua/4wDGBsqOYY8piCm1kabtjl7yWqf6ekTk2warrSP0Y
+         CyThI+oihX1UWj6KhbuRqzPaGjRF8cGMorvNYmweXE2R40HqaJU4lZbw/MeghrK9g7iM
+         hCyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711097393; x=1711702193;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eSJRJbc7Ms8BxI4u7jirBbWm4aboNputwfC65mYN+TQ=;
+        b=gFBrZa1A4ZGey8EG2i1DcEyoN50H6ne6Ww5nT+KqSF10ZVI50MagSGeXu3W8cp+KlY
+         ZxOSDBl0UcgkrteYIK3MwQM/clzQb4Dgc9+8/F1iOL5cB8HDKBQxtdQxcwOtTOg/mXwa
+         tyo6giABj5MOq3d55TTIXR6QNZgt7MYbQqZdTdIEvHGDONn8RXFenHBzrT9a48NjmqV9
+         5fEelO5+MdSnMfsDCvmWCuFqIUHaVXWSC40FtV4hABfH+mY1kUq7OhMybD242Cw4siiT
+         AkMSFCeNjMtsloxbVyNcXQQhMQLZfnpgs+9qwTyhq7YhKbrWuB2rMJjokMjMkR4yGo8I
+         4q8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUEM3Pd7KDZUBi9DLbe07+MU4wu3TSuzIWgg0SmsQyVRd8Mvb+bNRzp+g6A0zjH5usaVK94GDW3xAt/aE0eSC0GkMEmnIdbNe7b78T93g3JPBSWoDLxUuFGJhBV55rT8TjAtgEU
+X-Gm-Message-State: AOJu0Yz4bKl6Fve20TNkzHRkm8ttA4t6ETaR4yHTlAipzf38J034IIwm
+	7yWLReQfEt0itqmS7yh97zqVoQc6vEIjZQx1AzP1o6nhLuEFo3UW
+X-Google-Smtp-Source: AGHT+IF8G0ze6xWxM5iSLw2ue1CqqKFhTxeqiNbW0UakQ9Ua7SxE59QWSirl1wdmOIzQtAHbnDw25Q==
+X-Received: by 2002:a17:902:684e:b0:1dd:a03d:8d54 with SMTP id f14-20020a170902684e00b001dda03d8d54mr1670405pln.24.1711097393543;
+        Fri, 22 Mar 2024 01:49:53 -0700 (PDT)
+Received: from localhost.localdomain ([2407:7000:8942:5500:aaa1:59ff:fe57:eb97])
+        by smtp.gmail.com with ESMTPSA id u4-20020a170902e5c400b001dd5a0a20d6sm1328165plf.287.2024.03.22.01.49.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Mar 2024 01:49:53 -0700 (PDT)
+From: Barry Song <21cnbao@gmail.com>
+To: corbet@lwn.net,
+	workflows@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	apw@canonical.com,
+	joe@perches.com,
+	dwaipayanray1@gmail.com,
+	lukas.bulwahn@gmail.com
+Cc: linux-kernel@vger.kernel.org,
+	Barry Song <v-songbaohua@oppo.com>
+Subject: [PATCH v3 0/2] codingstyle: avoid unused parameters for a function-like macro
+Date: Fri, 22 Mar 2024 21:49:35 +1300
+Message-Id: <20240322084937.66018-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ukcioxpoksvkjmav"
-Content-Disposition: inline
-In-Reply-To: <Zf09wW36JcpObTPC@nanopsycho>
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -3.50
-X-Spamd-Result: default: False [-3.50 / 50.00];
-	 TO_DN_SOME(0.00)[];
-	 NEURAL_HAM_SHORT(-0.18)[-0.900];
-	 RCPT_COUNT_SEVEN(0.00)[7];
-	 SIGNED_PGP(-2.00)[];
-	 RCVD_COUNT_ZERO(0.00)[0];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+,1:+,2:~];
-	 BAYES_HAM(-0.16)[69.36%];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-0.96)[-0.962];
-	 MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 FUZZY_BLOCKED(0.00)[rspamd.com]
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+
+From: Barry Song <v-songbaohua@oppo.com>
 
 
---ukcioxpoksvkjmav
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+A function-like macro could result in build warnings such as
+"unused variable." This patchset updates the guidance to
+recommend always using a static inline function instead
+and also provides checkpatch support for this new rule.
 
-On Fri, Mar 22, 2024 at 09:13:53AM +0100, Jiri Pirko wrote:
-> Please make clear indication which project/tree you target with your
-> patch by putting appropriate name in the [patch NAME] brackets
+Barry Song (1):
+  Documentation: coding-style: ask function-like macros to evaluate
+    parameters
 
-In this case, it should be "[PATCH ethtool]".
+Xining Xu (1):
+  scripts: checkpatch: Check unused parameters for function-like macro
 
-Michal
+ Documentation/process/coding-style.rst | 16 ++++++++++++++++
+ scripts/checkpatch.pl                  | 24 ++++++++++++++++++++++++
+ 2 files changed, 40 insertions(+)
 
---ukcioxpoksvkjmav
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.34.1
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEWN3j3bieVmp26mKO538sG/LRdpUFAmX9RiIACgkQ538sG/LR
-dpV54Qf9FtN1QlHG75yHE/hJz2aF1y3i5z0dOYv9E3lxYq+FZCZiJmupSZ8oprnw
-uU9WgpCodagxtfKvO3g9XQjAEe/wljfpoVebyHoKumDqQIh7RRUaVbPy1Vb+3I+J
-c/JrDUVGj5n360v0iFYVA6RP4Ss8dQRTLzVkZImrkuvMPP+Pw/+xENFHGrGRHca3
-1avhqxI3ypvNsA17+f9Nek4TRC+eGA/5JD28dW3LVshetkOmwFuyhauV++Cn/Yb/
-m+AiPuO+71cYNiMUgFbmhlu7Qe2pyGCPzW6nDQ75zi4il6dEJZ2szlUQOIWcdWH4
-h7MbPIvU4WHO16edrDyRUrZwGodz3A==
-=94wM
------END PGP SIGNATURE-----
-
---ukcioxpoksvkjmav--
