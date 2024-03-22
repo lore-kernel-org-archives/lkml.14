@@ -1,143 +1,244 @@
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.124.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F67168CC;
-	Fri, 22 Mar 2024 08:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.124.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17CA3171CD
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 08:22:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711095751; cv=none; b=El0mWLgzCeYHJmLcYgPgjN5dPyna5duNw3t7a2SyB6mAQPFz+bcVmHucXp99sA9XeVlY0VDy0dKFI9d7FGAz/GMN2vm3jMRq7fncKjDzSBetQMAKhUE+4Hjr32DGG2p8WZpD7PVZjQfy8Ew8bfFCr8To9yuJRfMQzchAI44YQoc=
+	t=1711095780; cv=none; b=WMHHYXQmHZlbJ2+9ovHvog0x1+qpRnzWbYXUi9bhhN7KKwZuPw32Z7ldtTGG1YD3zJlxTihftIa5XEmKbv52LcdJXEHDaSMQx43b17oH7pKGaCEwV9+ZEJkedgmcbedYZ5/WIgLmsjvhUbkrveyNH74pRcwk0oq7lBovUjUdvhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711095751; c=relaxed/simple;
-	bh=/JC9kH3/GXHoXGUSw1qcqJheDHHcI3KNF0aeQuH77fA=;
-	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
-	 MIME-Version:Content-Type; b=DEqnz0Ekju8LM0/5cwY3/ukrTwIL2ooQQcOJ48cyhGe6xQTNN0ss2/aOttbwq+avPjVRj0JRfDzA/omnQd2aBf21ndzriflHl7KDyPkEfhSjJ2bPqdtU90RC1ziK8bL+JaAQeeI8aStGOp2h+TYdAtztR5tdbNb0XfietbdGVnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-swift.com; spf=pass smtp.mailfrom=net-swift.com; arc=none smtp.client-ip=114.132.124.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-swift.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=net-swift.com
-X-QQ-mid:Yeas48t1711095605t408t26085
-Received: from 73E00E8BC808433CB9DB281092DFBE6B (duanqiangwen@net-swift.com [183.159.169.46])
-X-QQ-SSF:00400000000000F0FH4000000000000
-From: duanqiangwen@net-swift.com
-X-BIZMAIL-ID: 11884217184907262476
-To: "'Jiri Pirko'" <jiri@resnulli.us>
-Cc: <netdev@vger.kernel.org>,
-	<jiawenwu@trustnetic.com>,
-	<mengyuanlou@net-swift.com>,
-	<davem@davemloft.net>,
-	<edumazet@google.com>,
-	<kuba@kernel.org>,
-	<pabeni@redhat.com>,
-	<maciej.fijalkowski@intel.com>,
-	<andrew@lunn.ch>,
-	<wangxiongfeng2@huawei.com>,
-	<linux-kernel@vger.kernel.org>,
-	<michal.kubiak@intel.com>
-References: <20240322080416.470517-1-duanqiangwen@net-swift.com> <Zf09VnR2YI_WOchd@nanopsycho>
-In-Reply-To: <Zf09VnR2YI_WOchd@nanopsycho>
-Subject: RE: [PATCH net v5] net: txgbe: fix i2c dev name cannot match clkdev
-Date: Fri, 22 Mar 2024 16:20:04 +0800
-Message-ID: <000001da7c31$be2330f0$3a6992d0$@net-swift.com>
+	s=arc-20240116; t=1711095780; c=relaxed/simple;
+	bh=fpCoiLmXxI9qiJhzsLseFGJE1mlYGa6QJuto7FOwQ7s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Xgqge1wy2IEaqg/c1RAb2Ey2pgtZ6fNhof9V9GkYsAU+9SCx2U7/my4J0AEIZ9Ty/1vfk0cUGLkNUEYJvu+dEm/C3sunikIViqp6NmWPSGhn474kidKbk2QryN15l3eecjklvnUeBia3WMHnAkDOcr9ZdfIOHO97zvTjV1SY0kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RPyDmw9G; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RPyDmw9G"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6963cf14771so17181216d6.3
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 01:22:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711095777; x=1711700577; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0ob+YyW8fixoBQX9n6g1bpmXJDOp1r9Uolwp6GpqIv4=;
+        b=RPyDmw9Gp88AANEc270UUeILYJKls/v1L3/wOvgB+hTwN/Pqh6AhV2ZZO1fLSh8ZCF
+         xxPZIRT5Qa9kbKoZAYCHuPVNF98MYEpXpqegQy/P69lOrTplguamzhbecI+8DPrjHJZM
+         bJ1YVlZzN+i4KjVQJEt9tf/udg2IT/mzOlu/c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711095777; x=1711700577;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0ob+YyW8fixoBQX9n6g1bpmXJDOp1r9Uolwp6GpqIv4=;
+        b=uVmA3I15vECtrpZpwql/H++E+QuXqCg2IWBaBFJcwEasxlW7kRa7+dE8eWC5VJEeMv
+         OgChVW43OyS82naQSQiFar5Sd8Gqqu5vbFEyrkDO/VN1jCDwqeRf7neSKG5QQXNYmr8V
+         9/JmInzahxeVaemLZvzrpGNxacjgLs25utBXASwsRxLrF4gFXTBk75qE8c3dITYReKkO
+         qBT+1GxRA9BwS6R5PBDWrS8tCqALc68K3Rx/fcNP4ntiKikD17RSgVf4x570LJzhfE8Q
+         /sdUKIaYBFGA8mKtpFihq09K03FB6jb4VjYkkLN7iFaDKXex1O2QIDaA5XWjnBmKaIG1
+         NoVA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFeHxxJzUvbqKEZ/+MJEUOJOwWD0udzltUcwbBi5aKucPAWTOWBYYK+NOzDR4TxgMhisMoamylFj2Wyvj5Tm8hYAfki4dVu1sZFx0T
+X-Gm-Message-State: AOJu0Yyhg6PflOJiHmuAjvpRQkG9bhxrXIiLEjZ7Igc3QNMKr0Kd/aT6
+	5vgb7Bg5DlPZIO1b4pVEW6QxvELbADcjffRjbTdz3vQTFPvBQfrwQn6Ld1QRVTHKzWMY6lRUOUI
+	=
+X-Google-Smtp-Source: AGHT+IHJ9eJyIyRs6S0bWP2J56Sr46KtFgcLpGL1FpiyNVxTT6XdELFfmaKMTOi0ItVZmbAigx87xw==
+X-Received: by 2002:a05:6214:d4c:b0:690:e036:fcf1 with SMTP id 12-20020a0562140d4c00b00690e036fcf1mr1878456qvr.25.1711095777412;
+        Fri, 22 Mar 2024 01:22:57 -0700 (PDT)
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com. [209.85.219.43])
+        by smtp.gmail.com with ESMTPSA id f12-20020a056214076c00b00690d3bf9ea0sm841806qvz.141.2024.03.22.01.22.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Mar 2024 01:22:56 -0700 (PDT)
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6962e6fbf60so18830036d6.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 01:22:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV7wcJ59d8G+JvUH/epAorWG4CMWebioSHYfdpGjA8/ICoIyZVA+LT+xlSTASDeVKWXaLIEzy46svYvOMpj0pUhnk9yo6jUebN8CTK6
+X-Received: by 2002:a05:6214:1c0c:b0:691:873a:7753 with SMTP id
+ u12-20020a0562141c0c00b00691873a7753mr1427986qvc.38.1711095776052; Fri, 22
+ Mar 2024 01:22:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="gb2312"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFwLs5rgYGClTpBePjvbYMXpqMxXgKXsSFcsgNHLUA=
-Content-Language: zh-cn
-X-QQ-SENDSIZE: 520
-Feedback-ID: Yeas:net-swift.com:qybglogicsvrsz:qybglogicsvrsz3a-1
+References: <20220920-resend-hwtimestamp-v9-0-55a89f46f6be@chromium.org>
+ <20220920-resend-hwtimestamp-v9-2-55a89f46f6be@chromium.org> <20240321232602.GB20938@pendragon.ideasonboard.com>
+In-Reply-To: <20240321232602.GB20938@pendragon.ideasonboard.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Fri, 22 Mar 2024 09:22:39 +0100
+X-Gmail-Original-Message-ID: <CANiDSCt7Y4v3MUCoVyuzwLg6rq1=4MTUGtJ1+HkMMRY7sfjYjA@mail.gmail.com>
+Message-ID: <CANiDSCt7Y4v3MUCoVyuzwLg6rq1=4MTUGtJ1+HkMMRY7sfjYjA@mail.gmail.com>
+Subject: Re: [PATCH v9 2/6] media: uvcvideo: Ignore empty TS packets
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	linux-kernel@vger.kernel.org, "hn.chen" <hn.chen@sunplusit.com>, 
+	linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Laurent
 
------Original Message-----
-From: Jiri Pirko <jiri@resnulli.us>=20
-Sent: 2024=C4=EA3=D4=C222=C8=D5 16:12
-To: Duanqiang Wen <duanqiangwen@net-swift.com>
-Cc: netdev@vger.kernel.org; jiawenwu@trustnetic.com;
-mengyuanlou@net-swift.com; davem@davemloft.net; edumazet@google.com;
-kuba@kernel.org; pabeni@redhat.com; maciej.fijalkowski@intel.com;
-andrew@lunn.ch; wangxiongfeng2@huawei.com; linux-kernel@vger.kernel.org;
-michal.kubiak@intel.com
-Subject: Re: [PATCH net v5] net: txgbe: fix i2c dev name cannot match =
-clkdev
+Hi, I added some minor modifications, hope that it is fine with you.
 
-Fri, Mar 22, 2024 at 09:04:16AM CET, duanqiangwen@net-swift.com wrote:
->txgbe clkdev shortened clk_name, so i2c_dev info_name also need to=20
->shorten. Otherwise, i2c_dev cannot initialize clock.
+Thanks!!
+
+On Fri, 22 Mar 2024 at 00:26, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
 >
->Change log:
->v4-v5: address comments:
->	Jiri Pirko:
->	Well, since it is used in txgbe_phy.c, it should be probably
->	rather defined locally in txgbe_phy.c.
-
-Did you read Florian's comment? Please do.
-
-pw-bot: cr
---------
-I replied to Florian:=20
-" I want to shorten "i2c_desginware" to "i2c_dw" in txgbe driver, so =
-other
-drivers
-which use "i2c_designware" need another patch to use a define. "
-
-Sorry, this email forgot to cc the mailing list.
-
->v3->v4: address comments:
->	Jakub Kicinski:
->	No empty lines between Fixes and Signed-off... please.
->v2->v3: address comments:
->	Jiawen Wu:
->	Please add the define in txgbe_type.h
+> Hi Ricardo,
 >
->Fixes: e30cef001da2 ("net: txgbe: fix clk_name exceed MAX_DEV_ID=20
->limits")
->Signed-off-by: Duanqiang Wen <duanqiangwen@net-swift.com>
->---
-> drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c | 8 +++++---
-> 1 file changed, 5 insertions(+), 3 deletions(-)
+> Thank you for the patch.
 >
->diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c=20
->b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
->index 5b5d5e4310d1..2fa511227eac 100644
->--- a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
->+++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
->@@ -20,6 +20,8 @@
-> #include "txgbe_phy.h"
-> #include "txgbe_hw.h"
->=20
->+#define TXGBE_I2C_CLK_DEV_NAME "i2c_dw"
->+
-> static int txgbe_swnodes_register(struct txgbe *txgbe)  {
-> 	struct txgbe_nodes *nodes =3D &txgbe->nodes; @@ -571,8 +573,8 @@
-static=20
->int txgbe_clock_register(struct txgbe *txgbe)
-> 	char clk_name[32];
-> 	struct clk *clk;
->=20
->-	snprintf(clk_name, sizeof(clk_name), "i2c_dw.%d",
->-		 pci_dev_id(pdev));
->+	snprintf(clk_name, sizeof(clk_name), "%s.%d",
->+		 TXGBE_I2C_CLK_DEV_NAME, pci_dev_id(pdev));
->=20
-> 	clk =3D clk_register_fixed_rate(NULL, clk_name, NULL, 0, 156250000);
-> 	if (IS_ERR(clk))
->@@ -634,7 +636,7 @@ static int txgbe_i2c_register(struct txgbe *txgbe)
->=20
-> 	info.parent =3D &pdev->dev;
-> 	info.fwnode =3D software_node_fwnode(txgbe->nodes.group[SWNODE_I2C]);
->-	info.name =3D "i2c_designware";
->+	info.name =3D TXGBE_I2C_CLK_DEV_NAME;
-> 	info.id =3D pci_dev_id(pdev);
->=20
-> 	info.res =3D &DEFINE_RES_IRQ(pdev->irq);
->--
->2.27.0
+> On Wed, Mar 15, 2023 at 02:30:13PM +0100, Ricardo Ribalda wrote:
+> > Some SunplusIT cameras took a borderline interpretation of the UVC 1.5
+> > standard, and fill the PTS and SCR fields with invalid data if the
+> > package does not contain data.
+> >
+> > "STC must be captured when the first video data of a video frame is put
+> > on the USB bus."
+> >
+> > Eg:
 >
+> "Some SunplusIT devices send, e.g.,"
 >
-=20
+> >
+> > buffer: 0xa7755c00 len 000012 header:0x8c stc 00000000 sof 0000 pts 00000000
+> > buffer: 0xa7755c00 len 000012 header:0x8c stc 00000000 sof 0000 pts 00000000
+> > buffer: 0xa7755c00 len 000668 header:0x8c stc 73779dba sof 070c pts 7376d37a
+>
+> "while the UVC specification meant that the first two packets shouldn't
+> have had the SCR bit set in the header."
+>
+> >
+> > This borderline/buggy interpretation has been implemented in a variety
+> > of devices, from directly SunplusIT and from other OEMs that rebrand
+> > SunplusIT products. So quirking based on VID:PID will be problematic.
+> >
+> > All the affected modules have the following extension unit:
+> > VideoControl Interface Descriptor:
+> >   guidExtensionCode         {82066163-7050-ab49-b8cc-b3855e8d221d}
+> >
+> > But the vendor plans to use that GUID in the future and fix the bug,
+> > this means that we should use heuristic to figure out the broken
+> > packets.
+>
+> Because it would have been too easy otherwise of course :-)
+>
+> >
+> > This patch takes care of this.
+> >
+> > lsusb of one of the affected cameras:
+> >
+> > Bus 001 Device 003: ID 1bcf:2a01 Sunplus Innovation Technology Inc.
+> > Device Descriptor:
+> >   bLength                18
+> >   bDescriptorType         1
+> >   bcdUSB               2.01
+> >   bDeviceClass          239 Miscellaneous Device
+> >   bDeviceSubClass         2 ?
+> >   bDeviceProtocol         1 Interface Association
+> >   bMaxPacketSize0        64
+> >   idVendor           0x1bcf Sunplus Innovation Technology Inc.
+> >   idProduct          0x2a01
+> >   bcdDevice            0.02
+> >   iManufacturer           1 SunplusIT Inc
+> >   iProduct                2 HanChen Wise Camera
+> >   iSerial                 3 01.00.00
+> >   bNumConfigurations      1
+> >
+> > Tested-by: HungNien Chen <hn.chen@sunplusit.com>
+> > Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > ---
+> >  drivers/media/usb/uvc/uvc_video.c | 20 +++++++++++++++++++-
+> >  1 file changed, 19 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
+> > index 4ff4ab4471fe..1f416c494acc 100644
+> > --- a/drivers/media/usb/uvc/uvc_video.c
+> > +++ b/drivers/media/usb/uvc/uvc_video.c
+> > @@ -478,6 +478,7 @@ uvc_video_clock_decode(struct uvc_streaming *stream, struct uvc_buffer *buf,
+> >       ktime_t time;
+> >       u16 host_sof;
+> >       u16 dev_sof;
+> > +     u32 dev_stc;
+> >
+> >       switch (data[1] & (UVC_STREAM_PTS | UVC_STREAM_SCR)) {
+> >       case UVC_STREAM_PTS | UVC_STREAM_SCR:
+> > @@ -526,6 +527,23 @@ uvc_video_clock_decode(struct uvc_streaming *stream, struct uvc_buffer *buf,
+> >       if (dev_sof == stream->clock.last_sof)
+> >               return;
+> >
+> > +     dev_stc = get_unaligned_le32(&data[header_size - 6]);
+> > +
+> > +     /*
+> > +      * STC (Source Time Clock) is the clock used by the camera. The UVC 1.5
+> > +      * standard states that it "must be captured when the first video data
+> > +      * of a video frame is put on the USB bus".
+> > +      * Most of the vendors, clear the `UVC_STREAM_SCR` bit when the data is
+> > +      * not valid, other vendors always set the `UVC_STREAM_SCR` bit and
+> > +      * expect that the driver only samples the stc if there is data on the
+> > +      * packet.
+> > +      * Ignore all the hardware timestamp information if there is no data
+> > +      * and stc and sof are zero.
+> > +      */
+>
+> I'd like to expand this a bit (partly to make sure I understand the
+> issue correctly):
+>
+>         /*
+>          * STC (Source Time Clock) is the clock used by the camera. The UVC 1.5
+>          * standard states that it "must be captured when the first video data
+>          * of a video frame is put on the USB bus". This is generally understood
+>          * as requiring devices to clear the payload header's SCR bit before
+>          * the first packet containing video data.
+>          *
+>          * Most vendors follow that interpretation, but some (namely SunplusIT)
+namely SunplusIT on some devices
+>          * always set the `UVC_STREAM_SCR` bit, fill the SCR field with 0's,
+>          * and expect that the driver only processes the SCR if there is data in
+>          * the packet.
+>          *
+>          * Ignore all the hardware timestamp information if we haven't received
+>          * any data for this frame yet, the packet contains no data, and both
+>          * STC and SOF are zero. This heuristics should be safe on compliant
+>          * devices. This should be safe with compliant devices, as in the very
+>          * unlikely case where a UVC 1.1 device would send timing information
+>          * only before the first packet containing data, and both STC and SOF
+>          * happen to be zero for a particular frame, we would only miss one
+>          * clock sample and the clock recovery algorithm wouldn't suffer from
+one clock sample from many
+>          * this condition.
+>          */
+>
+> Is this correct (and fine with you) ? If so,
+>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>
+> > +     if (buf && buf->bytesused == 0 && len == header_size &&
+> > +         dev_stc == 0 && dev_sof == 0)
+> > +             return;
+> > +
+> >       stream->clock.last_sof = dev_sof;
+> >
+> >       host_sof = usb_get_current_frame_number(stream->dev->udev);
+> > @@ -564,7 +582,7 @@ uvc_video_clock_decode(struct uvc_streaming *stream, struct uvc_buffer *buf,
+> >       spin_lock_irqsave(&stream->clock.lock, flags);
+> >
+> >       sample = &stream->clock.samples[stream->clock.head];
+> > -     sample->dev_stc = get_unaligned_le32(&data[header_size - 6]);
+> > +     sample->dev_stc = dev_stc;
+> >       sample->dev_sof = dev_sof;
+> >       sample->host_sof = host_sof;
+> >       sample->host_time = time;
+> >
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
 
+
+
+-- 
+Ricardo Ribalda
