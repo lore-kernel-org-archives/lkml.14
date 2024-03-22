@@ -1,301 +1,310 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DAD4AEC1;
-	Fri, 22 Mar 2024 15:29:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE8A4CE13
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 15:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711121395; cv=none; b=ByBhh6xH1H8P8iTNZr2uArPI1EEUGR/PecJUWOLh+Apu1C9X8kQgMGY5wrlEy/ekupHLSyJmK2gU6Yo6p88IW7PFwmZcNmWIvbksklEjKyRd0y/OObQDxqYXhzc30dbgtwYGth7XiFVqw5LH6TTjL7WLdQlDOKk6gokGuIC7c4Y=
+	t=1711121480; cv=none; b=sbvF19wTs+JUvx/npCsTsp5PkSXbTIPibKEDzuno89BG1PmpjP03ScRUS+tj1Ykq2Fx1Rj2do4v8yQ72dv08H5Nvimb3VUuvj/cPivaPMINa/P4Xh/PJcrU4Pbvbb/9LFWpMQjjBlenQaDTdahW3QMxS/eiH2yf3W5xZleKMkbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711121395; c=relaxed/simple;
-	bh=Mf2oFjb7S9XAqtGL+NtsT6M1y20ulfMPk4zTNl4k1rY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=RLZSTrQv2KsmeoFKUotX8uCK5tiKBUiV0/NQWP6qnLLv6JmutiXH87xvdqqkWRx/iW9UT3HvVph6KinC/NpS7JoE+7aF6l5w5tobRzZh1N0XQOkELyfvr9t7N7I/UGe+sWTMUmP/M/duviixIQse+1+9WK7X5+7loQqcn5lDQOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=XHbGkUhR; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1711121480; c=relaxed/simple;
+	bh=Ox0mmPE49F9PP7cJKvrl5cvdsz9gdE/4hTLv1j41J24=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kTG9gU6UUYo42IsfYgCE+ZQm+ciSm+gZu9/VL6F+AuUESG9N/AxrZVs1vRZOcf687iREC2EFcGrd8NmS9uXYMMmWaGdvXx2RakkLmACJNJeV4RHBU/Kf9VGh+GwB0Ha71FBHvJa4C6tO5NhfX46E6P9aIpbD/I8qQ9SJrDcNP7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mytTlfzW; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XHbGkUhR"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42MFTIo6104288;
-	Fri, 22 Mar 2024 10:29:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1711121358;
-	bh=YDEh6vjq3UwcEBJ0N/6xSwcjv32TsahveBskrzcD3as=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=XHbGkUhRcB6pm27e3GHuf402qnkLWeMAYQDXMpafjQlNnQg47P6SiWLX4C3ASVWCn
-	 JiUZezeGQQ+FxKNhPgETwl+vOQmXaxXYgoU4Iif1mOPuNIq6EqCum3k86e3s9yy9v1
-	 B0wi8IoJP1nTnhSeW5SAPY7wnv1dThG72C9qD1dQ=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42MFTImX122885
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 22 Mar 2024 10:29:18 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 22
- Mar 2024 10:29:18 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 22 Mar 2024 10:29:18 -0500
-Received: from [172.24.227.193] (devarsht.dhcp.ti.com [172.24.227.193])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42MFTCj5015776;
-	Fri, 22 Mar 2024 10:29:13 -0500
-Message-ID: <03e2d653-731c-bb30-321b-b5477d7b82b2@ti.com>
-Date: Fri, 22 Mar 2024 20:59:12 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mytTlfzW"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dc6d8bd618eso2225034276.3
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 08:31:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711121477; x=1711726277; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6+zpz/0s08etd86Xo6qnUCY3UQn1+EUOk94+hs8faa0=;
+        b=mytTlfzWnsNU48/lbqAh7jW9ba08Up8PO3bB8dHxnotRpC0VL3F2IFZ5d4BZaUGUOl
+         W5i1t5mnCcYh65acsl/Nh6JU9N7C7R+rgd0XkRva/MbtLG3jkO/u9RtR1OIM1N7grvra
+         FV84gBHq/j19Xxtgh5r5r/GD5VQ4TIvTj3BDelCXoFMwzFK1N6I7/Q67XvZ2B7+cY8C3
+         jKmJsNqNckMM0WbJZSegU5CPHahyuOe9OQ1HhqA8zfflTlxVC9F2HcHAawE8NMNaSxcU
+         n3BbLMNeYZuqMcdSJDngAocK0IOIaiBD8Z58Z8etoTZxb6njh7mkCmbfmR58ypnzkFgc
+         nAqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711121477; x=1711726277;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6+zpz/0s08etd86Xo6qnUCY3UQn1+EUOk94+hs8faa0=;
+        b=uoIUARAA2hYHjBN2Q2sw7Uys2gtH2RBi0HeZ2nQyiAGfVwoGz2U3ufKJYKnUXMT1W6
+         j7L4GsaxlaRuFnVlNZI16GCCaLNGk7YAiISfAU0U3dPqHS5qsWpzztBGdchkqtgKdrnJ
+         SH88m4ptf6tgFBdYTC7y3VRksIHsS//GWnV8o1Jn4GVRwEHTGyX6ZMoiL9A5QKzHUzre
+         QqslSrY2Eyqk8sCefo64D776IiK/9d5zkgQ67eheJvLZSQjK2SmLy6MIKFWRxAzve/dS
+         UvMZ4B6BPVKiPzFuj7RoEA3dAgx1TSQb8WnZKGsX112ov3hhMEyihBEJ8luZc36ZtFJ9
+         7zkw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNQtk1EoQhl2V2QsQT5xXa8qe2iec1mjZhGC3tnrdEIaXOtewFH7fJ98/BPQHYiUb9hA/uYetNLtMU0JXfW2E8HdSfyRP0ESkBGnqr
+X-Gm-Message-State: AOJu0Yxulhtlt1/jKk3EszPLeEUGvpI2x0gT3m2r0yrxorbBBmhrky7T
+	XvKr6Zr5PgO+/Fs22L0sptF2j630vCjDSLo4jSLTJTKdRvUzSfxI7zmnTu4tWDafPWN4UMYsA88
+	=
+X-Google-Smtp-Source: AGHT+IFLY16MKppu2zecs7h+7oSpQlxQY1HhhVYugeIoJr77FKmAzqKcxjisNQan7xnx2xfIGv6v+w==
+X-Received: by 2002:a05:6a20:8f18:b0:1a3:6ee8:b84c with SMTP id b24-20020a056a208f1800b001a36ee8b84cmr3261446pzk.13.1711118510853;
+        Fri, 22 Mar 2024 07:41:50 -0700 (PDT)
+Received: from thinkpad ([103.28.246.103])
+        by smtp.gmail.com with ESMTPSA id kt3-20020a056a004ba300b006ea8152b657sm1617896pfb.69.2024.03.22.07.41.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Mar 2024 07:41:50 -0700 (PDT)
+Date: Fri, 22 Mar 2024 20:11:41 +0530
+From: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: Shradha Todi <shradha.t@samsung.com>, bp@alien8.de, tony.luck@intel.com,
+	james.morse@arm.com, mchehab@kernel.org, rric@kernel.org,
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, jingoohan1@gmail.com,
+	gustavo.pimentel@synopsys.com, josh@joshtriplett.org,
+	lukas.bulwahn@gmail.com, hongxing.zhu@nxp.com,
+	pankaj.dubey@samsung.com, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, vidyas@nvidia.com, gost.dev@samsung.com,
+	alim.akhtar@samsung.com, shiju.jose@huawei.com,
+	Terry Bowman <Terry.Bowman@amd.com>, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
+ controller
+Message-ID: <20240322144141.GC3333@thinkpad>
+References: <20231130165514.GW3043@thinkpad>
+ <000601da3e07$c39e5e00$4adb1a00$@samsung.com>
+ <20240104055030.GA3031@thinkpad>
+ <0df701da5ff0$df1165a0$9d3430e0$@samsung.com>
+ <20240216134921.GH2559@thinkpad>
+ <120d01da657e$66b9d3b0$342d7b10$@samsung.com>
+ <20240319163315.GD3297@thinkpad>
+ <20240320100144.0000056c@Huawei.com>
+ <20240322103935.GD3638@thinkpad>
+ <20240322125817.0000791f@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [RFC PATCH 2/3] drm/tidss: Add support for display sharing
-Content-Language: en-US
-To: Maxime Ripard <mripard@kernel.org>
-CC: <jyri.sarha@iki.fi>, <tomi.valkeinen@ideasonboard.com>,
-        <airlied@gmail.com>, <daniel@ffwll.ch>,
-        <maarten.lankhorst@linux.intel.com>, <tzimmermann@suse.de>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <nm@ti.com>, <vigneshr@ti.com>,
-        <kristo@kernel.org>, <praneeth@ti.com>, <a-bhatia1@ti.com>,
-        <j-luthra@ti.com>
-References: <20240116134142.2092483-1-devarsht@ti.com>
- <20240116134142.2092483-3-devarsht@ti.com>
- <vgfzhamtiwkpdyk5ndagsb63subclinotoe6tsi3wu6z7454ec@igxfzjc5gyqm>
- <88018f5f-a7db-7278-e5c3-bb1dbf0e3f14@ti.com>
- <qiqrhpqtnox47wj6az7t3fjp4vc6k32fw42tp5slqggrhe6utb@i7lkpaf3v3od>
- <2f4cf2a7-ce7a-bb34-f722-7e66ea41def7@ti.com>
- <20240314-hospitable-attractive-cuttlefish-a2f504@houat>
-From: Devarsh Thakkar <devarsht@ti.com>
-In-Reply-To: <20240314-hospitable-attractive-cuttlefish-a2f504@houat>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240322125817.0000791f@Huawei.com>
 
-Hi Maxime,
-
-On 14/03/24 20:04, Maxime Ripard wrote:
-> Hi,
+On Fri, Mar 22, 2024 at 12:58:17PM +0000, Jonathan Cameron wrote:
+> On Fri, 22 Mar 2024 16:09:35 +0530
+> 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org> wrote:
 > 
-> On Wed, Feb 14, 2024 at 09:17:12PM +0530, Devarsh Thakkar wrote:
->> On 13/02/24 19:34, Maxime Ripard wrote:
->>> On Thu, Feb 08, 2024 at 06:26:17PM +0530, Devarsh Thakkar wrote:
->>>> On 26/01/24 17:45, Maxime Ripard wrote:
->>>>> Hi,
->>>>>
->>>>> Thanks a lot for working on that.
->>>>>
->>>>> On Tue, Jan 16, 2024 at 07:11:41PM +0530, Devarsh Thakkar wrote:
->>>>>> Display subsystem present in TI Keystone family of devices supports sharing
->>>>>> of display between multiple hosts as it provides separate register space
->>>>>> (common* region) for each host to programming display controller and also a
->>>>>> unique interrupt line for each host.
->>>>>>
->>>>>> This adds support for display sharing, by allowing partitioning of
->>>>>> resources either at video port level or at video plane level as
->>>>>> described below :
->>>>>>
->>>>>> 1) Linux can own (i.e have write access) completely one or more of video
->>>>>> ports along with corresponding resources (viz. overlay managers,
->>>>>> video planes) used by Linux in context of those video ports.
->>>>>> Even if Linux is owning
->>>>>> these video ports it can still share this video port with a remote core
->>>>>> which can own one or more video planes associated with this video port.
->>>>>>
->>>>>> 2) Linux owns one or more of the video planes with video port
->>>>>> (along with corresponding overlay manager) associated with these planes
->>>>>> being owned and controlled by a remote core. Linux still has read-only
->>>>>> access to the associated video port and overlay managers so that it can
->>>>>> parse the settings made by remote core.
->>>>>
->>>>> So, just to make sure we're on the same page. 1) means Linux drives the
->>>>> whole display engine, but can lend planes to the R5? How does that work,
->>>>> is Linux aware of the workload being there (plane size, format, etc) ?
->>>>>
->>>>
->>>> Well, there is no dynamic procedure being followed for lending. The
->>>> partitioning scheme is decided and known before hand, and the remote
->>>> core firmware updated and compiled accordingly, and similarly the
->>>> device-tree overlay for Linux is also updated with partitioning
->>>> information before bootup.
->>>>
->>>> What would happen here is that Linux will know before-hand this
->>>> partitioning information via device-tree properties and won't enumerate
->>>> the plane owned by RTOS, but it will enumerate the rest of the display
->>>> components and initialize the DSS, after which user can load the DSS
->>>> firmware on remote core and this firmware will only have control of
->>>> plane as it was compiled with that configuration.
->>>
->>> Right. If the RTOS is in control of a single plane, how it is expected
->>> to deal with Linux shutting the CRTC down, or enforcing a configuration
->>> that isn't compatible with what the RTOS expects (like a plane with a
->>> higher zpos masking its plane), what is the mechanism to reconcile it?
->>>
->>
->> Just for the note, for this "RTOS control single plane" mode, we don't have a
->> firmware available to test (right now we are only supporting example for "RTOS
->> controlling the display mode" as shared here [1]) and hence this is not
->> validated but the idea was to keep dt-bindings generic enough to support them
->> in future and that's why I referred to it here.
->>
->> Coming back to your questions, with the current scheme the Linux (tidss) would
->> be expected to make sure the CRTC being shared with RTOS is never shutdown and
->> the RTOS plane should never gets masked.
+> > On Wed, Mar 20, 2024 at 10:01:44AM +0000, Jonathan Cameron wrote:
+> > > On Tue, 19 Mar 2024 22:03:15 +0530
+> > > 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org> wrote:
+> > >   
+> > > > On Thu, Feb 22, 2024 at 04:30:47PM +0530, Shradha Todi wrote:  
+> > > > > + Borislav, Tony, James, Mauro, Robert
+> > > > > 
+> > > > > Hi All,
+> > > > > 
+> > > > > Synopsys DesignWare PCIe controllers have a vendor specific capability (which
+> > > > > means that this set of registers are only present in DesignWare controllers)
+> > > > > to perform debug operations called "RASDES".
+> > > > > The functionalities provided by this extended capability are:
+> > > > > 
+> > > > > 1. Debug: This has some debug related diagnostic features like holding LTSSM
+> > > > > in certain states, reading the status of lane detection, checking if any PCIe
+> > > > > lanes are broken (RX Valid) and so on. It's a debug only feature used for diagnostic
+> > > > > use-cases.
+> > > > > 
+> > > > > 2. Error Injection: This is a way to inject certain errors in PCIe like LCRC, ECRC,
+> > > > > Bad TLPs and so on. Again, this is a debug feature and generally not used in
+> > > > > functional use-case.
+> > > > > 
+> > > > > 3. Statistical counters: This has 3 parts
+> > > > >  - Error counters
+> > > > >  - Non error counters (covered as part of perf [1])
+> > > > >  - Time based analysis counters (covered as part of perf [1])
+> > > > > 
+> > > > > Selective features of  the above functionality has been implemented
+> > > > > by vendor specific PCIe controller drivers (pcie-tegra194.c) that use
+> > > > > Synopsys DesignWare PCIe controllers.
+> > > > > In order to make it useful to all vendors using DWC controller, we had
+> > > > > proposed a common implementation in DWC PCIe controller directory
+> > > > > (drivers/pci/controller/dwc/) and our original idea was based on debugfs
+> > > > > filesystem. v1 and v2 are mentioned in [2] and [3].
+> > > > > 
+> > > > > We got a suggestion to implement this as part of EDAC framework [3] and
+> > > > > we looked into the same. But as far as I understood, what I am trying to
+> > > > > implement is a very specific feature (only valid for Synopsys DWC PCIe controllers).  
+> > > 
+> > > For error part there are (at least superficially) similar features in the PCIe
+> > > standard that we've started thinking about how to support.
+> > > 
+> > > See Flit Logging Extended capablity (7.7.8 in PCIe Base Spec rev6.
+> > > That has the benefit that they are part of the standard so we can
+> > > support them directly in portdrv / EP drivers using some library code in the
+> > > PCI core.
+> > >   
+> > 
+> > Sounds good. But v6 is a relatively new version and the DWC RAS predates that.
+> > So we still need to support it somehow (either in EDAC or in
+> > drivers/pci/controller/dwc).
+> > 
+> > > There are other interconnect and PCI PMU drivers that log retries etc which are also basically error
+> > > counts. At least some of that is done through perf today. 
+> > >   
+> > 
+> > IMO all the RAS support should be exposed through EDAC, otherwise it defeats the
+> > purpose of the subsystem.
 > 
-> I'm probably missing something then here, but if the Linux side of
-> things is expected to keep the current configuration and keep it active
-> for it to work, what use-case would it be useful for?
+> Some RAS flows go nowhere near EDAC today.  Individual drivers poke out
+> the tracepoints and userspace tooling deals with it. One example is
+> CXL but there are plenty of others.
 > 
 
-It's just one of the partitioning possibilities that I mentioned here, that
-Linux is in control of DSS as a whole and the user want the other host (be it
-RTOS or any other core) to control a single plane. For e.g it could be Linux
-(with GPU rendering) displaying the graphics and RTOS overlaying a real time
-clock or any other signs which need to be displayed in real-time.
-But more than the use-case this is inspired by the fact that we want to be
-flexible and support in the linux driver whatever partitioning scheme
-possibilities are there which are supported in hardware and we let user decide
-on the partitioning scheme.
+That's the problem. You'd end up with custom tooling for each individual
+drivers leading to userspace fragmentation.
 
->> I think the IPC based scheme would have been mainly needed for the case where
->> you have a single entity controlling the display for e.g you have a single
->> display controller register space and a single IRQ but you have multiple
->> planes and say you want to divide these planes to different host processors.
-> 
-> And with, I assume, different OS on those host processors? Otherwise why
-> would we need to handle some planes at the firmware level?
-> 
->> In that case you want a single entity to act as a main entity and be in
->> control of DSS and rest of the processors communicate with the "main entity"
->> to request display resources and plane updates and main entity also programs
->> dss on their behalf.
->>
->> But unlike above, TI DSS7 is designed to support static partitioning of
->> display resources among multiple hosts, where each host can program the
->> display hardware independently using separate register space and having a
->> separate irq and without requirement of any communication between the hosts.
->> Now as this feature is unique to TI DSS7 we want to support this feature in
->> tidss driver. The DSS resource partitioning feature is described in detail
->> here [2]
-> 
-> So, if I understand this properly, and in KMS terms, DSS7 can assign the
-> planes, CRTCs or encoders to a given VM or CPU, and you can segment the
-> hardware that way. It looks like a good way to split encoders between
-> VMs, but going back to the discussion about one plane being handled by
-> the firmware, I don't really see how it can work with something else
-> than splitting away the whole pipeline and having a VM claiming a CRTC
-> and encoder, and another VM claiming another pipeline.
-> 
-> Like, if they share either a CRTC or encoder, we will still go back to
-> the discussion about arbitration about who has the final word if the two
-> have conflicting requirements, or if it changes something the other
-> probably has to know about it.
+- Mani
 
-There should not be any conflicting requirements as this sharing scheme is a
-static one i.e. it is pre-negotiated or decided by the user before Linux
-kernel compilation or RTOS firmware compilation and resources are split
-statically and the sharing scheme is communicated to Linux via device-tree and
-RTOS side firmware configured and compiled accordingly, and this scheme stays
-intact without any change after device boots up. So for e.g. if Linux is
-assigned only one plane and RTOS is the DSS master controlling all other
-entities then this scheme will stay intact as long as device is up.
-
-Also there could be only a single DSS master (the one in control of global
-common0 reg space, i.e. having access to global DSS registers and also in
-control of dss clock and power domains) and whichever core is acting as DSS
-master will be knowing which of the CRTC and encoders are shared with other
-hosts so that it doesn't power them off given other cores may still be using it.
-
+> Perhaps that should not be the case, but there is definitely
+> precedence for ignoring edac when considering error flows.
 > 
->>>>> And 2) would mean that the display engine is under the R5 control and
->>>>> Linux only gets to fill the plane and let the firmware know of what it
->>>>> wants?
->>>>>
->>>>
->>>> Here too the partitioning information is pre-decided and remote core
->>>> firmware and device-tree overlay for Linux updated accordingly. But in
->>>> this case as remote core firmware owns the display (minus the plane
->>>> owned by Linux) it is started and initialized during the bootloader
->>>> phase itself where it initializes the DSS and starts rendering using the
->>>> plane owned by it and Linux just latches to the DSS without
->>>> re-initializing it, with write access only to the plane that is owned by
->>>> Linux. You can refer [1] for more details on this.
->>>>
->>>>> If so, do we even need the tidss driver in the second case? We could
->>>>> just write a fwkms driver of some sorts that could be used by multiple
->>>>> implementations of the same "defer to firmware" logic.
->>>>>
->>>>
->>>> This feature of static partitioning of DSS resources is specific to DSS7
->>>> hardware (which is controlled by tidss driver) which supports dedicated
->>>> register space and interrupt line for each of the hosts [0], so that
->>>> multiple hosts can drive the display controller simultaneously as  per
->>>> the desired static partitioning of resources, and so I don't think a
->>>> separate driver is required here and tidss seems the right place to
->>>> support this, where using this device-tree approach different resource
->>>> partitioning schemas can be achieved as described here [1]. This was
->>>> also aligned with Tomi too where we discussed that tidss is the right
->>>> place to support this as we are simply leveraging the DSS hardware
->>>> capabilities of static partitioning here.
->>>
->>> If the only thing tidss does in the "owned by RTOS" is forwarding KMS
->>> atomic states to the RTOS, then I'm still not sure why we need to
->>> involve tidss at all.
->>
->> I think maybe here is the point of misunderstanding. We are not forwarding
->> atomic states to RTOS here. Linux (tidss) is infact, accessing the display
->> register space assigned to it (common1 assigned to Linux, commmon0 assigned to
->> RTOS) and also writing to DSS plane registers for the plane assigned to it
->> (say VID assigned to Linux and VIDL assigned to RTOS).
->>
->>> It's not just about interrupts, it's also about how your arbitrate
->>> between what Linux wants and what the RTOS wants. Like if the RTOS still
->>> wants to output something but Linux wants to disable it, how do you
->>> reconcile the two?
->>>
->>
->> The scheme involves static partitioning of display resource which are assigned
->> compile-time to RTOS and Linux. Here the RTOS firmware is compiled with
->> specific ownership/display resources as desired by user and this assignment
->> stays intact.
->>
->> If there is a more complex use-case which requires dynamic
->> assignment/arbitration of resources then I agree those require some sort of
->> IPC scheme but this is not what we target with these series. This series is
->> simply to support static partitioning feature (separate register space,
->> separate irq, firewalling support etc) of TI DSS hardware across the multiple
->> hosts and there are use-cases too for which this scheme suffices.
+> Jonathan
 > 
-> I think you're right and we have a misunderstanding. My initial
-> assumption was that it was to prevent the Linux side of sides from
-> screwing up the output if it was to crash.
+> > 
+> > - Mani
+> > 
+> > >   
+> > > > > This doesn't seem to fit in very well with the EDAC framework and we can 
+> > > > > hardly use any of the EDAC framework APIs. We tried implementing a
+> > > > > "pci_driver" but since a function driver will already be running on the EP and
+> > > > > portdrv on the root-complex, we will not be able to bind 2 drivers to a single
+> > > > > PCI device (root-complex or endpoint). Ultimately, what I will be doing is
+> > > > > writing a platform driver with debugfs entries which will be present in EDAC
+> > > > > directory instead of DWC directory.  
+> > > 
+> > > The addition of this type of functionality to pordrv is a long running question.
+> > > Everyone wants a solution, I believe some people are looking at it (+CC Terry)
+> > > 
+> > > Terry, another case for your long list.
+> > > 
+> > > For the EP end, this should be fired up by the EP driver, whilst it might be
+> > > infrastructure used on a bunch of devices,  it is a feature of that particular
+> > > EP - so you'd want to provide any functionality in a form that could be used
+> > > by both the EP driver and a nice shiny new portdrv replacement.
+> > >   
+> > > > > 
+> > > > > Can  you please help us out by going through this thread [3] and letting us
+> > > > > know if our understanding is wrong at any point. If you think it is a better
+> > > > > idea to integrate this in the EDAC framework, can you guide me as
+> > > > > to how I can utilize the framework better?
+> > > > > Please let me know if you need any other information to conclude.
+> > > > > 
+> > > > > [1] https://lore.kernel.org/linux-pci/20231121013400.18367-1-xueshuai@linux.alibaba.com/
+> > > > > [2] https://lore.kernel.org/all/20210518174618.42089-1-shradha.t@samsung.com/T/
+> > > > > [3] https://lore.kernel.org/all/20231130115044.53512-1-shradha.t@samsung.com/
+> > > > >     
+> > > > 
+> > > > Gentle ping for the EDAC maintainers.
+> > > > 
+> > > > - Mani
+> > > >   
+> > > > > Thanks,
+> > > > > Shradha
+> > > > >     
+> > > > > > -----Original Message-----
+> > > > > > From: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
+> > > > > > Sent: 16 February 2024 19:19
+> > > > > > To: Shradha Todi <shradha.t@samsung.com>
+> > > > > > Cc: lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
+> > > > > > bhelgaas@google.com; jingoohan1@gmail.com;
+> > > > > > gustavo.pimentel@synopsys.com; josh@joshtriplett.org;
+> > > > > > lukas.bulwahn@gmail.com; hongxing.zhu@nxp.com;
+> > > > > > pankaj.dubey@samsung.com; linux-kernel@vger.kernel.org; linux-
+> > > > > > pci@vger.kernel.org; vidyas@nvidia.com; gost.dev@samsung.com
+> > > > > > Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
+> > > > > > controller
+> > > > > > 
+> > > > > > On Thu, Feb 15, 2024 at 02:55:06PM +0530, Shradha Todi wrote:    
+> > > > > > >
+> > > > > > >    
+> > > > > > 
+> > > > > > [...]
+> > > > > >     
+> > > > > > > > For the error injection and counters, we already have the EDAC
+> > > > > > > > framework. So adding them in the DWC driver doesn't make sense to me.
+> > > > > > > >    
+> > > > > > >
+> > > > > > > Sorry for late response, was going through the EDAC framework to understand    
+> > > > > > better how we can fit RAS DES support in it. Below are some technical challenges
+> > > > > > found so far:    
+> > > > > > > 1: This debugfs framework proposed [1] can run on both side of the link i.e. RC    
+> > > > > > and EP as it will be a part of the link controller platform driver. Here for the EP
+> > > > > > side the assumption is that it has Linux running, which is primarily a use case for
+> > > > > > chip-to-chip communication.  After your suggestion to migrate to EDAC
+> > > > > > framework we studied and here are the findings:    
+> > > > > > > - If we move to EDAC framework, we need to have RAS DES as a
+> > > > > > > pci_driver which will be binded based on vendor_id and device_id. Our
+> > > > > > > observation is that on EP side system we are unable to bind two
+> > > > > > > function driver (pci_driver), as pci_endpoint_test function driver or
+> > > > > > > some other chip-to-chip function driver will already be bound. On the
+> > > > > > > other hand, on RC side we observed that if we have portdrv enabled in
+> > > > > > > Linux running on RC system, it gets bound to RC controller and then it
+> > > > > > > does not allow EDAC pci_driver to bind. So basically we see a problem
+> > > > > > > here, that we can't have two pci_driver binding to same PCI device
+> > > > > > > 2: Another point is even though we use EDAC driver framework, we may not be    
+> > > > > > able to use any of EDAC framework APIs as they are mostly suitable for memory
+> > > > > > controller devices sitting on PCI BUS. We will end up using debugfs entries just via
+> > > > > > a pci_driver placed inside EDAC framework.
+> > > > > > 
+> > > > > > Please wrap your replies to 80 characters.
+> > > > > > 
+> > > > > > There is no need to bind the edac driver to VID:PID of the device. The edac driver
+> > > > > > can be a platform driver and you can instantiate the platform device from the
+> > > > > > DWC driver. This way, the PCI device can be assocaited with whatever driver, but
+> > > > > > still there can be a separate edac driver for handling errors.
+> > > > > > 
+> > > > > > Regarding API limitation, you should ask the maintainer about the possibility of
+> > > > > > extending them.
+> > > > > >     
+> > > > > > >
+> > > > > > > Please let me know if my understanding is wrong.
+> > > > > > >    
+> > > > > > > > But first check with the perf driver author if they have any plans
+> > > > > > > > on adding the proposed functionality. If they do not have any plan
+> > > > > > > > or not working on it, then look into EDAC.
+> > > > > > > >
+> > > > > > > > - Mani
+> > > > > > > >    
+> > > > > > >
+> > > > > > > Since we already worked and posted patches [1], [2], we will continue to work    
+> > > > > > on this and based on consent from community we will adopt to most suitable
+> > > > > > framework.    
+> > > > > > > We see many subsystems like ethernet, usb, gpu, cxl having debugfs files that    
+> > > > > > give information about the current status of the running system and as of now
+> > > > > > based on our findings, we still feel there is no harm in having debugfs entry based
+> > > > > > support in DesignWare controller driver itself.
+> > > > > > 
+> > > > > > There is no issue in exposing the debug information through debugfs, that's the
+> > > > > > sole purpose of the interface. But here, you are trying to add support for DWC
+> > > > > > RAS feature for which a dedicated framework already exists.
+> > > > > > 
+> > > > > > And there will be more similar requests coming for vendor specific error protocols
+> > > > > > as well. So your investigation could benefit everyone.
+> > > > > > 
+> > > > > > From your above investigation, looks like there are some shortcomings of the
+> > > > > > EDAC framework. So let's get that clarified by writing to the EDAC maintainers
+> > > > > > (keep us in CC). If the EDAC maintainer suggests you to add support for this
+> > > > > > feature in DWC driver itself citing some reasons, then no issues with me.
+> > > > > > 
+> > > > > > - Mani
+> > > > > > 
+> > > > > > --
+> > > > > > மணிவண்ணன் சதாசிவம்    
+> > > > > 
+> > > > >     
+> > > >   
+> > >   
+> > 
 > 
-> But it looks like it's not the main point of this series, so could you
-> share some use-cases you're trying to address?
-> 
 
-The end use-case we have demonstrated right now with this series is a
-proof-of-concept display cluster use-case where RTOS boots early on MCU core
-(launched at bootloader stage) and initializes the display (using the global
-common0 register space and irq) and starts displaying safety tell-tales on one
-plane, and once Linux boots up on application processor,
-Linux (using common1 register space and irq) controls the other plane with GPU
-rendering using a QT based application. And yes, we also support the scenario
-where Linux crashes but RTOS being the DSS master and in control of DSS power,
-clock domain and global register space is not impacted by the crash.
-This is demonstrated in this video [1] and steps to simulate the same are also
-documented here [2].
-
-[1]: https://www.youtube.com/watch?v=WIcds6HGeMI&t=884s
-[2]:
-https://software-dl.ti.com/processor-sdk-linux/esd/AM62PX/09_01_00_08/exports/docs/system/Demo_User_Guides/Display_Cluster_User_Guide.html
-
-Regards
-Devarsh
-
-> Thanks!
-> Maxime
+-- 
+மணிவண்ணன் சதாசிவம்
