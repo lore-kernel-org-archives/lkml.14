@@ -1,208 +1,111 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA396839FE;
-	Fri, 22 Mar 2024 23:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974BC8174C
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 23:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711150755; cv=none; b=kf4p56SC2vDfAXSMZtTj7YDWxpRp8sLiUyUjz16kVNinKWsqJ6gDsAoiU2HGH/xfF5aD7dbQR3SDY1h62YEockHseXRaXBSa2qN70w57M3PCWow+2WFwenbjjq3mHGY9BY/qs3LP7PMnAD/vgYSV2ELxuqC2j8oQp67ohSnYrUc=
+	t=1711150816; cv=none; b=q7jHphzkaaI+Xf1MvnB+pfEJfY9gHPl3aRNvRDMsuPbY3f+ND/6+oKnjaPZpZXE92QsyAmeFETNjqKy/7WPjZQ68PI4H1cr9eLBIxxcegjXZ8dlrbQ78I2Rz0LyAu/FtzBqFEuq/ueoI9qvbLkmWncpJMRWUUBIGKpMhobXYrYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711150755; c=relaxed/simple;
-	bh=qQ5oagRUQmpb8GABKAqxfq/Tg/yBhJf6ca7+7tUxq/A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CQhKln5RHcYqZp/e9XQbLsUEwsF/wB7islcXZmlVYgDWejEf8yWR8tt47p2jD01umcUUBwZxf5tR0Ky5myC4Wp3k7RnY4rwElOaolcSrNOLznjN2H1d/+Bv49LGIUV6qIU6Pq7eu5fZm3nsJYwM2/f/k8lO/6cCrWn6UkEAwV9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dDMwLfMX; arc=none smtp.client-ip=209.85.221.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711150816; c=relaxed/simple;
+	bh=eH0fgxAZoZKG2nG1if5jwZQ6PXT1CXjSRf2Ajj7jhHI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yta18KXSkXYL1ZZhkHf80Fr5jgeMjesq0YEITXggN8iPhhWcgU403yjQpmlNBM93CWnELBW+og9SHhWvy4ahFr82t+znL48Wat0caZwDXrfuAOzA8TTDFB75rusf48MBztD0ITdhyEg52jzc9aCUNBBn20gbqi34WqydywWdFm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NgDXZcnd; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dDMwLfMX"
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-4d453ae6af5so1246455e0c.2;
-        Fri, 22 Mar 2024 16:39:13 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NgDXZcnd"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6e6ee9e3cffso1701228b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 16:40:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711150753; x=1711755553; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:feedback-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=QZ2rrwnnSPuoyWFM6/wbqSx+XEHGNK8//eAAMbn2SLU=;
-        b=dDMwLfMXrAIntfyxsD7U/i+CyLeVvop5HCkJUXDxZ3E5Ox4MA2QEwrfgbc3hOnaRQ0
-         8P0NDpDw3HNqDhsCLGLqoemApY2JZ5SkKujRkkNtQYGdbXi2EDoqpz8XqH6vu66H3VXq
-         S/AN1WUsXKkmeupMb34U2zafIg0KFtox6/XDck1h7smrwW8m6hty48gwJJb0Jli9PeB7
-         cXhIfkeGM6wh1CCk8VfMQcJ991+RSPDSDGvAYHg6FMhfnacQ/5Ni4QLBoeb24gTEp5wt
-         +8nKdEBtEQEQTQ3OUNiN+gv5GEzML0GDpaOH6wpJ9OMLtKugkQOkixyT8xxpS7S6w27u
-         Okqg==
+        d=chromium.org; s=google; t=1711150814; x=1711755614; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=01sC/xb6KwRYYgbeCF1XVs83Gl9AibN3LKeqo3B8YE0=;
+        b=NgDXZcndmcTAqMjNZ8pZI5hhEanPOYZuuxwMQPLgril8EPJ+JCIQ2bu040ZgWjHGBU
+         m6z6Kn0w0oS9MLsLzwVthTYOYHikywiY/AZOFSf5SJpGFzTBIll+SEBMjMCUUf+N2oE3
+         A4RrnIhz6lV+lHq+9ow5WAE27r9QLWk6ktpDI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711150753; x=1711755553;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:feedback-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QZ2rrwnnSPuoyWFM6/wbqSx+XEHGNK8//eAAMbn2SLU=;
-        b=JNSsPCtmJHpsVFsB4T2qqgIICax3EvoqFll/5Pa8jGhDc3z4tVuItZKm+VS4R81gqd
-         zY86LvZiimkjsouOCALItWaqGwVwodSY2x6+43vqPFoNjKntjPVuOyG0omCnbIMhU8cW
-         wdXZfQo9dB1HNZHzogZv3fzaBlgtSQXz7D3J4n3Be79EtE/M0DI7c7xPu4Jy722RWxVW
-         lpO8oaiVvpv8emYQ/fEGmbqcDCertCU00gPKiO0lE50Z90azATaO3kNH6f4pI6U+8eLH
-         l4JiwlLBKE0UjeikgQKy7AVN7GJ2uSzIUMp3PE2FvJ6I2pIqyV4Rfx5Jafy7mePJ6oCz
-         j1EA==
-X-Forwarded-Encrypted: i=1; AJvYcCX0jY7H+lU535PTaP5PORM00USAbDk30DNgMhZ+ij6UMdRglItTr2FZHqt68qWe+541Lw5aj5c7zZKu7DJdU1jA/R+vOA5gkhwpdcJpYsYtORDuHCkmunC+ecJ1kHu23BQhvMqZ5dp0CdkbSJMtcDEobp8Vk/4qSX9Jx0IO9nBtT0Lj++3606A=
-X-Gm-Message-State: AOJu0Yz6CI/ekBopSa/bV0wb4BjPaHfITxfZ8mfcSxTOfjTU1CatVxQS
-	bevk+peHQuMKN4q4AAc/6PAMBBCdMdptjyPZ+4i+K2qb9Ba4HX8S
-X-Google-Smtp-Source: AGHT+IEaYQaJaeCZmztaSPVyvy8V/Vxeh4oBqEj4kwmvUweyQop95DXCqfqCPm+ZQJ2lS/7MtVUgAg==
-X-Received: by 2002:a05:6122:c9f:b0:4cb:fc25:7caa with SMTP id ba31-20020a0561220c9f00b004cbfc257caamr1351039vkb.14.1711150752858;
-        Fri, 22 Mar 2024 16:39:12 -0700 (PDT)
-Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id dd7-20020ad45807000000b0069675909982sm456994qvb.70.2024.03.22.16.39.11
+        d=1e100.net; s=20230601; t=1711150814; x=1711755614;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=01sC/xb6KwRYYgbeCF1XVs83Gl9AibN3LKeqo3B8YE0=;
+        b=ZBPC6CXw6DwDJrvxMwwNd9psCjQSos0jII52whlJCBcQKs6Nj9+jqVGdVLMlnc7oLO
+         fNdS3V+3RnN25G0BYTQGRzZjAr8KxEnRmk74B3cHruChrhSA0gcqceIXPYRigmmFKqPX
+         keGwWmefZe61aqakNUSJjyIwXC2jLhsM8o5qjrPlLpfDRJ5Vqc92JUla2ydKlTqs5lSb
+         6zpfC8OVbo32W9SuxUgxZxbW4/ausM15DXMmVrf0Ee/79JsWkQPY1QrWFZNruq0DDk1c
+         pYW08eJZyqLqO4RUCqFrMAc/Yn4qN88gyl5o5ZKOW1Bh+j85d7KVC5uZO/QZ+/YohvJ7
+         RMbA==
+X-Forwarded-Encrypted: i=1; AJvYcCWt4Ai/0DZ8t8yFCbfmI1Ow5iVZeviLwvkHgb2rRMiBHQTMqmF9zNK1rTTy5o/8b1GAi6XCcQ0nZ7L/p3d6rqxzT7cpE4GNfnC1ifZT
+X-Gm-Message-State: AOJu0Yz9ZPt2QcbLeqVOnxUKMp8/oYtAZL/5ROzUIXBoUic85bGghQ8S
+	AsQbXr2dbdJDX8Wi9yluaD9tkV2mVq66p6OHamg5JLhTUiRya3Gh+6/6olqD/w==
+X-Google-Smtp-Source: AGHT+IEO+1pDKccyjXXftW8MfSWlcPCA31OAxKRwJX85EE5gxj3s3ysAHiqZdwAdKfFcLHWDAhqeiw==
+X-Received: by 2002:a05:6a00:4b13:b0:6e7:1cd9:c032 with SMTP id kq19-20020a056a004b1300b006e71cd9c032mr592380pfb.6.1711150813958;
+        Fri, 22 Mar 2024 16:40:13 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id q18-20020a62e112000000b006e8f75d3b07sm310517pfh.181.2024.03.22.16.40.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 16:39:12 -0700 (PDT)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id 98CB91200032;
-	Fri, 22 Mar 2024 19:39:11 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 22 Mar 2024 19:39:11 -0400
-X-ME-Sender: <xms:nxb-ZXIx1aaow52e_WoDZFqnahY1bIzzv5Wxu7y5Bx3FCqaoacZKaw>
-    <xme:nxb-ZbKVQEyiu5t7Xp4_oUUScOcKEYzNSWnVzrOr-P_XBPKxvfNR9gvy-y3qaTfgd
-    B88TMJzA-sHCJuMcg>
-X-ME-Received: <xmr:nxb-ZfsAdtEQ6wxjKWrjG-mmoZH0kN4C1sOqF3vapgci3LBivqDLSJscBpEfvw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddtfedgudegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepuehoqhhu
-    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
-    htthgvrhhnpeegleejiedthedvheeggfejveefjeejkefgveffieeujefhueeigfegueeh
-    geeggfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    gsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdei
-    gedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfih
-    igmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:nxb-ZQZZZwqym68B78NpzEjDSIBXxqsT776nMUbyvIA4DeAUsNkvmA>
-    <xmx:nxb-ZeYPyMmA5Ie9kuz4ke_eNCTGF5Hy17FOBYmquZHMlJ3KUlIaVw>
-    <xmx:nxb-ZUAFZkXd54Zn9rr1tBaLwxLqHc0ZCPVMAyTQnanW_yNTyHsHwQ>
-    <xmx:nxb-ZcZNxf4TI3OmNTLXqYypNReK-w3xMoiOqTqRfhqRIPvgjUNKZA>
-    <xmx:nxb-ZeaMRH_yJkm0MFOiCC5_cBsqDl8eAbpKk1x-uyep6Kc4A-NFFUh1PGAvdpkV>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 22 Mar 2024 19:39:10 -0400 (EDT)
-From: Boqun Feng <boqun.feng@gmail.com>
-To: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	llvm@lists.linux.dev
-Cc: Miguel Ojeda <ojeda@kernel.org>,	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Andrea Parri <parri.andrea@gmail.com>,	Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Nicholas Piggin <npiggin@gmail.com>,	David Howells <dhowells@redhat.com>,
-	Jade Alglave <j.alglave@ucl.ac.uk>,	Luc Maranget <luc.maranget@inria.fr>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Akira Yokosawa <akiyks@gmail.com>,	Daniel Lustig <dlustig@nvidia.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,	kent.overstreet@gmail.com,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,	elver@google.com,
-	Mark Rutland <mark.rutland@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,	torvalds@linux-foundation.org,
-	linux-arm-kernel@lists.infradead.org,	linux-fsdevel@vger.kernel.org
-Subject: [WIP 3/3] rust: atomic: Add fetch_sub_release()
-Date: Fri, 22 Mar 2024 16:38:38 -0700
-Message-ID: <20240322233838.868874-4-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240322233838.868874-1-boqun.feng@gmail.com>
-References: <20240322233838.868874-1-boqun.feng@gmail.com>
+        Fri, 22 Mar 2024 16:40:12 -0700 (PDT)
+Date: Fri, 22 Mar 2024 16:40:11 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: tglx@linutronix.de, Guixiong Wei <weiguixiong@bytedance.com>,
+	jgross@suse.com, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, peterz@infradead.org,
+	gregkh@linuxfoundation.org, tony.luck@intel.com,
+	adobriyan@gmail.com, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] x86, relocs: Ignore relocations in .notes section on
+ walk_relocs
+Message-ID: <202403221622.6EA43547F@keescook>
+References: <20240317150547.24910-1-weiguixiong@bytedance.com>
+ <171079804927.224083.15609364452504732018.b4-ty@chromium.org>
+ <20240318215612.GDZfi4fG52DTgra51p@fat_crate.local>
+ <202403181644.690285D3@keescook>
+ <20240319081640.GAZflJ6IBQ7TEKD2Ll@fat_crate.local>
+ <202403190955.25E5E03E6@keescook>
+ <20240322194658.GCZf3gMphnWeR9upN6@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240322194658.GCZf3gMphnWeR9upN6@fat_crate.local>
 
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
----
- rust/kernel/sync/atomic.rs            | 23 +++++++++++++++++++++++
- rust/kernel/sync/atomic/arch/arm64.rs | 20 ++++++++++++++++++++
- rust/kernel/sync/atomic/arch/x86.rs   |  5 +++++
- 3 files changed, 48 insertions(+)
+On Fri, Mar 22, 2024 at 08:46:58PM +0100, Borislav Petkov wrote:
+> On Tue, Mar 19, 2024 at 09:56:29AM -0700, Kees Cook wrote:
+> > > Yes, please. Just send a Reviewed-by and it'll get picked up.
+> > 
+> > Okay, thanks!
+> 
+> Dammit, how did this commit land upstream and in stable?!
 
-diff --git a/rust/kernel/sync/atomic.rs b/rust/kernel/sync/atomic.rs
-index 280040705fb0..c3cae0d25e88 100644
---- a/rust/kernel/sync/atomic.rs
-+++ b/rust/kernel/sync/atomic.rs
-@@ -39,4 +39,27 @@ pub fn new(v: i32) -> Self {
-     pub fn fetch_add_relaxed(&self, i: i32) -> i32 {
-         arch::i32_fetch_add_relaxed(&self.0, i)
-     }
-+
-+    /// Subs `i` to the atomic variable with RELEASE ordering.
-+    ///
-+    /// Returns the old value before the sub.
-+    ///
-+    /// # Example
-+    ///
-+    /// ```rust
-+    /// use kernel::sync::atomic::AtomicI32;
-+    ///
-+    /// let a = AtomicI32::new(1);
-+    /// let b = a.fetch_sub_release(1);
-+    /// let c = a.fetch_sub_release(2);
-+    /// let d = a.fetch_sub_release(3);
-+    /// let e = a.fetch_sub_release(core::i32::MIN);
-+    ///
-+    /// assert_eq!(b, 1);
-+    /// assert_eq!(c, 0);
-+    /// assert_eq!(d, -2);
-+    /// ```
-+    pub fn fetch_sub_release(&self, i: i32) -> i32 {
-+        arch::i32_fetch_sub_release(&self.0, i)
-+    }
- }
-diff --git a/rust/kernel/sync/atomic/arch/arm64.rs b/rust/kernel/sync/atomic/arch/arm64.rs
-index 438f37cf7df6..beea77ecdb20 100644
---- a/rust/kernel/sync/atomic/arch/arm64.rs
-+++ b/rust/kernel/sync/atomic/arch/arm64.rs
-@@ -24,3 +24,23 @@ pub(crate) fn i32_fetch_add_relaxed(v: &UnsafeCell<i32>, i: i32) -> i32 {
- 
-     result
- }
-+
-+pub(crate) fn i32_fetch_sub_release(v: &UnsafeCell<i32>, i: i32) -> i32 {
-+    let mut result;
-+    unsafe {
-+        asm!(
-+            "prfm    pstl1strm, [{v}]",
-+            "1: ldxr {result:w}, [{v}]",
-+            "sub {val:w}, {result:w}, {i:w}",
-+            "stlxr {tmp:w}, {val:w}, [{v}]",
-+            "cbnz {tmp:w}, 1b",
-+            result = out(reg) result,
-+            tmp = out(reg) _,
-+            val = out(reg) _,
-+            v = in(reg) v.get(),
-+            i = in(reg) i,
-+        )
-+    }
-+
-+    result
-+}
-diff --git a/rust/kernel/sync/atomic/arch/x86.rs b/rust/kernel/sync/atomic/arch/x86.rs
-index 2d715f740b22..7f764cde4576 100644
---- a/rust/kernel/sync/atomic/arch/x86.rs
-+++ b/rust/kernel/sync/atomic/arch/x86.rs
-@@ -41,3 +41,8 @@ pub(crate) fn i32_fetch_add_relaxed(v: &UnsafeCell<i32>, i: i32) -> i32 {
-     // SAFETY: `v.get()` points to a valid `i32`.
-     unsafe { i32_xadd(v.get(), i) }
- }
-+
-+pub(crate) fn i32_fetch_sub_release(v: &UnsafeCell<i32>, i: i32) -> i32 {
-+    // SAFETY: `v.get()` points to a valid `i32`.
-+    unsafe { i32_xadd(v.get(), i.wrapping_neg()) }
-+}
+There are 2 related commits. This one ("... on walk_relocs") isn't in
+Linus's tree nor stable.
+
+(Thank you Ingo for taking it now.)
+
+> Forgot to zap it from your tree and sent the branch to Linus anyway?
+> 
+> Kees, please refrain from taking tip patches in the future. You know how
+> this works - get_maintainers.pl.
+
+The earlier patch, commit aaa8736370db ("x86, relocs: Ignore relocations
+in .notes section"), landed via my tree. It was sent out on Feb 22nd
+(v1[1]) and got a suggestion from HPA and a Review from Juergen Gross.
+I sent v2 Feb 27th[2] and it sat ignored for two weeks. Since it was a
+10 year old kernel address exposure, I sent it to Linus on Mar 12th[3].
+
+-Kees
+
+[1] https://lore.kernel.org/all/20240222171840.work.027-kees@kernel.org/
+[2] https://lore.kernel.org/all/20240227175746.it.649-kees@kernel.org/
+[3] https://lore.kernel.org/lkml/202403111702.828C918E55@keescook/
+
 -- 
-2.44.0
-
+Kees Cook
