@@ -1,110 +1,201 @@
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1024AEC1
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 15:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7C656763
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 15:46:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711122398; cv=none; b=R6ajfxZhmX/11C7n1DTJdqXlhAh2ANhWXKt1H/E4EfMZAQ6NS3cJI9bpgB4dMhq3fIJM2r/WmtWGMmgh/6sEFA+otUT1T8YVaSVtI41FxT6NYjzxp32x4wj3p2ivz2FQiq5wMYz8RvsDlNAZGNFnUa/tHyrA7sYI6XcUrsX7irQ=
+	t=1711122404; cv=none; b=M56hkV9eF5ZFWV0g5hWRM8YrocrMD58qJRyTA4wFc0TtRH2z3mxShpigi2DaRxlqd7Rb+qTo3pM1He8TG7f+ztIeSGjEAERwKKIs9GVgYcqGmKxNvJefQNHXlAsGQTp5FM9yEvJ5PUS+FZHkeL4LyQGtLuam62kMnlvNp6SAu7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711122398; c=relaxed/simple;
-	bh=8cwJ+D5ZreiSX5Jqa/29OHQBcbGwWAaifXZ2EAozcJ0=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z7DFexxqCRfqjB4/hgWOTc1fQ0VSeGXJ8n/gFLLGiRm/8LI/TgcVFDLqpsFIxbZZbVzMKH9iXdkP15ePXi5wOfj2nm54SzSZatCkdJFDbqx3i2GGiNjMqldz3GyeNH9OqkKkg+JTFV4di8qq/7on7PCb03+pHP1qfZFi5vc7+xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=frWhI6et; arc=none smtp.client-ip=209.85.217.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1711122404; c=relaxed/simple;
+	bh=GWiquWv5BJsZVf3ZW6VcRvKycvRpOApOWriPmdrub6c=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fEANBm9O59zVK6B43meADEMAuG5WiT63akxPVm9XxS43AJFyInQcBnC0Km2ZPK7DZ+VCW30npD9gFMUYpaoH3qyPwP0BPwtvCqTaUS/T6/N8oDFvmg35pybJ0n1hq2UKa/AhXJHQzI0KlQm+geVSUMMmGa8KuOOS1Ej30Xyz9IA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bz3+/dDi; arc=none smtp.client-ip=209.85.161.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="frWhI6et"
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-47695273c19so913534137.3
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 08:46:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bz3+/dDi"
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5a4e0859b65so311284eaf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 08:46:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1711122396; x=1711727196; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VXg7QrkxfLMQmYFlOdcOd+lF4krIJAEFq1gLrBxkmFU=;
-        b=frWhI6etT4Gfc67XBGHTJheRgnyNfU2J/w3TduImjr03IqU3OZqvlam0ARPLArAmO1
-         3DZ+taQrrIzyljugLqkCq6DWHJhjqbQRDfRmfRsRN+tZkPgqAGIDiQBNXYK0Ms5gof5k
-         NkBf4ydIl7VGsoXZwIAt8+HCrKNi1mNPSRc5w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711122396; x=1711727196;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1711122402; x=1711727202; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VXg7QrkxfLMQmYFlOdcOd+lF4krIJAEFq1gLrBxkmFU=;
-        b=KmWnGiv4/CsFD3pm00gubwtBM1WzLG8YVD67smeQgLM5FBtojrvxNRJoyRc7RwV1dU
-         iPgZhPk8Ifb9GB8a714qS1p7GsiHl7bdv92T4PdHtNVf7NcYA/6N3d0TmHRdpUx9jcEY
-         emajMtUcf/F6yne10rF4FT4gvgynsiSZ6JU5+0LL1krT5ztst8+vBC33YWLp80JILmgU
-         6mLFaBqUEbDoZqcWbDDFE2xRGNgcwHMedH7Kp3phWI2VZELH0ZfC6NktWLyCVMGOuRgA
-         IxaOdN/562Lp6O+zIUTOU5GbczTTojyRdhIro1h/C7vskCl+GLaiHJ45N/KQJCXcCAja
-         bNtA==
-X-Forwarded-Encrypted: i=1; AJvYcCW0YJfxCvcpcAwYPvKTKaOAotazm7pSjxylEa0Qs9QqstfHns1VapUXf1ppOYc7vPSRgNx3+6nAkevJ11l8gXoXZeeZMLi5BOb5mD5r
-X-Gm-Message-State: AOJu0YwceBenpJbO73c4XjTrxiAEoMuXeZ+FXhGgwQ4twrKSGAwC/Rb4
-	NKHr9WZjSkA0/fl22xGElB44Nvm6b4VRbjPrfPMQ1mKDdENZ+rLf6+FaIGPJbg==
-X-Google-Smtp-Source: AGHT+IGA72XQzWfCKmEK/9mQGJxYv5qJP4bEubF57rbo5s1eEhVNLj9joTwii7QMoNhBGrT61pwNfQ==
-X-Received: by 2002:a05:6102:240c:b0:476:6d3:dfc4 with SMTP id j12-20020a056102240c00b0047606d3dfc4mr2923858vsi.18.1711122395864;
-        Fri, 22 Mar 2024 08:46:35 -0700 (PDT)
-Received: from C02YVCJELVCG ([136.56.245.122])
-        by smtp.gmail.com with ESMTPSA id os6-20020a05620a810600b0078a012ca9d4sm858806qkn.83.2024.03.22.08.46.34
+        bh=96lv65PomJczPVcbCEzC4lSgtrlAVKdXmUyJYVWOjwA=;
+        b=Bz3+/dDiOjbWvrg9NW1mH6fyOZFbO3kq6w00UZxoqC8WcPa+hNU5H65H0ZxkNiDAax
+         DZvizfENKCN08JPTdxLWXMNyPdOV42JdLo5GF3TgD7LkB4GMzAvmCFw2Gu8LgK3/+8cl
+         HL6kETrid4Oh/En5s3/cTDFvxlcpD3gTBp9qeAKrKv1ExYU46JmF1KSQ7I1NhY2HiLYt
+         /ZDb+YV1qcLVvb5d8//rfkSzazBiJYwH+DzvunyqJ1KjzSAz+J4wyEeb013oOHnUv3+l
+         EEB/aaN31sTvBEfX2N/RDrQzvidMXlT6xER7o7yCoOOq3EdOSrz737XaCIsu2mUEFpoL
+         kbOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711122402; x=1711727202;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=96lv65PomJczPVcbCEzC4lSgtrlAVKdXmUyJYVWOjwA=;
+        b=D85Iydw/UMganXXTtyrMfiYA/fYCGqyPSWjm0ZPPO5WKbKsUbo8alhoU6jGno2LZnF
+         MJgz93gyGymRrLlEzNDhATGhQl8LxTNBvmNg4xraczIqXvECOFoBbLuTsJqClobxqo+k
+         1933LLmyaPqkzNjD7HXex44W2xgkJZ1NlXRHY9wAn0UmUtvKzkzjyblBTU7gO9m1Mgli
+         WHtVYcblPDUnDaTZRzdU2EGgo2W22BP6KyKlDTRpsr0yHs26BP8j4eJ4WQ2tbLu7xxAU
+         txUGerAhkQsLBBMEiUXr19XdkQo7W/d8/5lLdi3uN10GoDHszBT6LAzX+0J1C6h5IGVw
+         F3Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCX7qBa70+7d2iC9Q91aDg32574MCvgEGrvrTTyQfUSMU1eTJkBXHrb25tNlwPjRc0rbi0SmkKnrXIJF3VExAp9O3UoD82V2APJRuesw
+X-Gm-Message-State: AOJu0YytqoBCM6rxTYMXVTp5Su7crAtiJGVxRP6cokdeEM2iPPPUSaaL
+	DUVo+A4t5bPrA2p+gwImo0HrT87jr2zUyfHnaHXAXogk5rjtru5i
+X-Google-Smtp-Source: AGHT+IEv9ZxKcchGYyFvYPBWCNnIlMIW7NCeS2Ho7P/n+lG0Zf7uCRvbt7IEmfN0wg3auiwaxWph5g==
+X-Received: by 2002:a05:6808:158c:b0:3c3:b109:4e9e with SMTP id t12-20020a056808158c00b003c3b1094e9emr54438oiw.5.1711122401778;
+        Fri, 22 Mar 2024 08:46:41 -0700 (PDT)
+Received: from SDF-ThinkCentre-M93p.localdomain (c-76-17-255-148.hsd1.mn.comcast.net. [76.17.255.148])
+        by smtp.googlemail.com with ESMTPSA id ff19-20020a05622a4d9300b004312563cbb0sm971950qtb.83.2024.03.22.08.46.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 08:46:35 -0700 (PDT)
-From: Andy Gospodarek <andrew.gospodarek@broadcom.com>
-X-Google-Original-From: Andy Gospodarek <gospo@broadcom.com>
-Date: Fri, 22 Mar 2024 11:46:27 -0400
-To: David Ahern <dsahern@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Saeed Mahameed <saeed@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Leon Romanovsky <leonro@nvidia.com>, Jiri Pirko <jiri@nvidia.com>,
-	Leonid Bloch <lbloch@nvidia.com>, Itay Avraham <itayavr@nvidia.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Aron Silverton <aron.silverton@oracle.com>,
+        Fri, 22 Mar 2024 08:46:41 -0700 (PDT)
+From: Shimrra Shai <shimmyshai00@gmail.com>
+To: jonathan.cameron@huawei.com
+Cc: heiko@sntech.de,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>
-Subject: Re: [PATCH V4 0/5] mlx5 ConnectX control misc driver
-Message-ID: <Zf2n02q0GevGdS-Z@C02YVCJELVCG>
-References: <20240207072435.14182-1-saeed@kernel.org>
- <Zcx53N8lQjkpEu94@infradead.org>
- <ZczntnbWpxUFLxjp@C02YVCJELVCG.dhcp.broadcom.net>
- <20240214175735.GG1088888@nvidia.com>
- <20240304160237.GA2909161@nvidia.com>
- <9cc7127f-8674-43bc-b4d7-b1c4c2d96fed@kernel.org>
- <2024032248-ardently-ribcage-a495@gregkh>
- <510c1b6b-1738-4baa-bdba-54d478633598@kernel.org>
+	linux-rockchip@lists.infradead.org,
+	max.schwarz@online.de,
+	niyas.sait@huawei.com,
+	shimmyshai00@gmail.com
+Subject: Re: Re: [PATCH 0/0] (proposed?) Add ACPI binding to Rockchip RK3xxx I2C bus
+Date: Fri, 22 Mar 2024 10:51:46 -0500
+Message-Id: <20240322155146.22755-1-shimmyshai00@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240322103521.00001a12@Huawei.com>
+References: <20240322103521.00001a12@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <510c1b6b-1738-4baa-bdba-54d478633598@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 22, 2024 at 09:24:29AM -0600, David Ahern wrote:
-> On 3/22/24 1:32 AM, Greg Kroah-Hartman wrote:
-> > 
-> > It's the middle of the merge window, not much we can actually do and
-> > this patch series itself couldn't be applied as-is, so it's hard to see
-> > what could have happened on my end...
-> > 
-> 
-> The proposal was sent a week before the end of the last development
-> cycle, and I believe the intent was to motivate discussion around a
-> concrete proposal to converge on an acceptable solution before sending
-> patches.
-> 
-> On your end, what would be helpful is either a simple yes this seems
-> reasonable or no you don't like it for reasons X, Y, and Z.
-> 
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-Well said, David.
+For
 
-I would totally support doing something like this in a fairly generic
-way that could be leveraged/instantiated by drivers that will allow
-communication/inspection of hardware blocks in the datapath.  There are
-lots of different ways this could go, so feedback on this would help get
-us all moving in the right direction.
+> It would be good to highlight in this description what is missing for
+> doing a standard ACPI binding and not using any specific hacks in the
+> driver (get clocks as normal etc).
+> 
+> There are ACPI clock bindings, but Linux doesn't support the yet (I think?)
+> See ACPICA commit
+> https://github.com/acpica/acpica/commit/661feab5ee01a34af95a389a18c82e79f1aba05a
+> 
+> I've seen prototype code but was a while back.  I'd like to see that
+> work compled rather than having every driver need to paper over the hole.
+> 
+> The alias is a different question that needs to be addressed.
+> If this is a common pattern, push it up in to the i2c core, not
+> a specific driver.  I see there is already code related to that
+> in i2c_add_adapter - that just wants an ACPI option.
+> 
+> Jonathan
+
+and
+
+> That implies that the kernel can cope with the device tree wrapped up in
+> ACPI path.  If that's the case, why do you need RKCP3001 as you can
+> match on the compatible?
+
+This was all based on how the people working on the firmware project wrote
+the ACPI binding. That said, since I've got a foot in it too I can 
+definitely submit them an updated binding. The binding for the I2C in the
+project looks like this:
+
+  Device (I2C1) {
+    Name (_HID, "RKCP3001")
+    Name (_CID, "PRP0001")
+    Name (_UID, 1)
+    Name (_CCA, 0)
+
+    Method (_CRS, 0x0, Serialized) {
+      Name (RBUF, ResourceTemplate() {
+        Memory32Fixed (ReadWrite, 0xfea90000, 0x1000)
+        Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive) { 350 }
+      })
+      Return (RBUF)
+    }
+    Name (_DSD, Package () {
+      ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+      Package () {
+        Package (2) { "i2c,clk-rate", 198000000 },
+        Package (2) { "rockchip,bclk", 198000000 },
+        Package (2) { "#address-cells", 1 },
+        Package (2) { "#size-cells", 0 },
+      }
+    })
+  }
+  
+(there are others, e.g. I2C2, I2C3, etc. one for each I2C bus, with
+correspondingly different _UID and some different numbers for interrupts
+etc.)
+
+From what I'm gathering from reading the documentation at
+https://uefi.org/specs/ACPI/6.5/19_ASL_Reference.html
+which is admittedly quite terse and doesn't provide nearly enough examples
+for my liking, and given I have not been able to find a "in the wild" ACPI
+using ClockInput, I presume a better binding would be like this, correct?:
+
+  Device (I2C1) {
+    Name (_HID, "RKCP3001")
+    /* _CID is gone now because we are no longer assuming mirror of DT */
+    Name (_UID, 1)
+    Name (_CCA, 0)
+
+    Method (_CRS, 0x0, Serialized) {
+      Name (RBUF, ResourceTemplate() {
+        Memory32Fixed (ReadWrite, 0xfea90000, 0x1000)
+        Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive) { 350 }
+        ClockInput (198000000, 1, Hz, Fixed, "PCLK", 0)
+        ClockInput (198000000, 1, Hz, Fixed, "BCLK", 0)
+      })
+      Return (RBUF)
+    }
+    Name (_DSD, Package () {
+      ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+      Package () {
+        Package (2) { "#address-cells", 1 },
+        Package (2) { "#size-cells", 0 },
+      }
+    })
+
+    Device (PCLK) {
+      Name (_ADR, 0x0)
+    }
+
+    Device (BCLK) {
+      Name (_ADR, 0x1)
+    }
+  }
+
+Note now I added two device nodes for the clocks and use ClockInput to
+describe the frequencies. I'm unsure though about the device node part,
+however; I know that the .DTB has a central node for the CRU (the actual
+clock generator on the RK3588), so should we instead have a top-level
+Device node "CRU_" and reference the ClockInputs to that, e.g. something
+like
+
+        ClockInput (198000000, 1, Hz, Fixed, "CRU_", I2C1_PCLK)
+        ClockInput (198000000, 1, Hz, Fixed, "CRU_", I2C1_BCLK)
+
+? (Note the obvious analogy to rk3588s.dtsi for the labels, which would be
+#defined constants.) Though in this case I'd ask if someone here would be
+kind enough to supply the structure for the top-level CRU binding so that I
+don't have to guess the "best" form for the kernel like the makers of the
+firmware were doing which is what led to this disagreement in the first
+place.
+
+FWIW, I'd also be willing to help lend a hand to finish out the support for
+the ClockInput binding in the ACPI reader subsystem. There already seems to
+be some support, e.g. in drivers/acpi/acpica/rsinfo.c and a few other
+places, but I'm not sure what else is needed to get it going and would need
+to study that subsystem in much more depth.
+
+- Shimmy
 
