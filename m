@@ -1,43 +1,45 @@
 Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4CF664DD
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 13:27:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20016481DA
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 13:27:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711114052; cv=none; b=Qz6p6/jNKHskfboqbE/yvo6ICM1/3MH3L2FzOS7WXF/l9i8Q+ibTOzOuUByw+SoENww8VpR6IKynMQAXD0Ocg3d7esSWANQqFY1C40ss3ZDRHEFrAfysFRbNVS5ecQAZ3U+I/XytUGZl+sEf6FAAZD/GoEZpgOaZv27yvpAMu8c=
+	t=1711114054; cv=none; b=CMu5kNsS7svzfF+lepzOrqoYtZMEMHlzkby0h9kx7NG4WremBTppjmTvgGcrpAjXmJpcEIjYUoJLnLkZPChZlXVVqzkG32gcNwlnaF/OXBPsOywkU4qS4t/VjOvEOo6MArcs3NtXTvmoAEVJnvXrfIDuNUWoa1yXXNOp/nSfPP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711114052; c=relaxed/simple;
-	bh=keBBjANmZEAG5ti6G+/K6pZJny5cyPijU0Et7tidAZw=;
+	s=arc-20240116; t=1711114054; c=relaxed/simple;
+	bh=jhLyTeGZk3WHRGR+u+Pnghl/gFGCXwj7rHn2zZb+SRY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tDvJEwjLSPosQQ4MDu7vh+RkZy5JadaX27XNfBoEGPfHRjeLavg8gUuPyEb0TEtETE1L9llgHTEqyH0MBcGDFtP+n7GHqurfwEjW9ohb+dwnixBWXu1YF5JtZld0mWMmyiEC56VqAGxpowMCY/eEWDh+zksu1vLBBvhFRN54DD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=HHeNgDj5; arc=none smtp.client-ip=194.117.254.33
+	 MIME-Version; b=IJLaoPGgzIO06Rlmq8LhIo6Wr90vGBT1CWesBW0qhKN5B4gZ5CvxyxyKGA8yODvHY/1W4NjIBZXvsTJRQ3bxqrtNDhiT0ffq2sGLvr16PuC/EVBpcUHIDLuyl5h0bLugUfcc5JhmQZ5j4Y8hfuEcDctLEQDF9C2jJghl5raHbW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=GBR34C5f; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="HHeNgDj5"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="GBR34C5f"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
 	:in-reply-to:references:mime-version:content-transfer-encoding;
-	 s=k1; bh=LATMV+ftB6Wzcslw/1km6fP5fTaQpx9jv+n5ET3YDxA=; b=HHeNgD
-	j5Q79pRAf24P7ToKboQzgZB54htEVJNHQ2z7UAXO6JYvIa7lIPHgJtp3hC5TMbr3
-	oueR1jWNecd5as35NhQRPQ+7BHg6N++12j1zY5O5pXSBDV03/Q2ELCC/pKRfTogJ
-	fwJNZklq6pGMb3YFDnyBUjnABi1dGNwU1SE/QjgmwyLNR4illLNVgt9Us8Y3rgpC
-	SHkhcdhJpFQbb5FadzRs1QIvocpGLvwKXC2zb/mFVPRyx4/byC1/MqHndDJuDBHz
-	pB8/hkM8w+VqvJ7ELtTwksvWDgcccqmpZeXsuWK3nDItbdIcyFdt7YREBRJNRV3o
-	8OXOnKxElKCddO/w==
-Received: (qmail 3872103 invoked from network); 22 Mar 2024 14:27:08 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Mar 2024 14:27:08 +0100
-X-UD-Smtp-Session: l3s3148p1@OFDSxz8UVpRehhtF
+	 s=k1; bh=ojlShxYbza+SZYG05qx4dWS+cyKPvErSpiJUhDaAhvw=; b=GBR34C
+	5fRnZMFT00dyS/5pEocuK9pcD9YxRL7bfWCtpP9I8e5pKmx+AZcBca28bCKKCRSt
+	L+54jpaVEYtYE1y/yWzxZ02ftHaUzQvcTOQlN/cc9dMj/umLYUKgfMfGBn3L6QlK
+	8JmZY8i4uoy+FPbzk0MLBnBadkGRSytRjE70t14zCDhypDqcvUaGSSG2NkR/ObNd
+	WPbdS+G9W1KcsAIURiKpMcTPVU7+BPcfncvj3JoyTEWJDmQmdEKVStqoyqF0Jtbf
+	Ck7Kk+MWmmNTFxIpFCLmjeg2qSlRhcuVMNOsAeFQJS3T59f/tlaaj8b8/j7HOrzF
+	DOA7a0sRCLH18MWg==
+Received: (qmail 3872176 invoked from network); 22 Mar 2024 14:27:10 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Mar 2024 14:27:10 +0100
+X-UD-Smtp-Session: l3s3148p1@Bzrrxz8UgoVehhtF
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-i2c@vger.kernel.org
 Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Jean Delvare <jdelvare@suse.com>,
 	Andi Shyti <andi.shyti@kernel.org>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 57/64] i2c: taos-evm: reword according to newest specification
-Date: Fri, 22 Mar 2024 14:25:50 +0100
-Message-ID: <20240322132619.6389-58-wsa+renesas@sang-engineering.com>
+Subject: [PATCH 59/64] i2c: uniphier-f: reword according to newest specification
+Date: Fri, 22 Mar 2024 14:25:52 +0100
+Message-ID: <20240322132619.6389-60-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
 References: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
@@ -56,22 +58,104 @@ entity ("client") and a local one ("target").
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- drivers/i2c/busses/i2c-taos-evm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-uniphier-f.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-taos-evm.c b/drivers/i2c/busses/i2c-taos-evm.c
-index b0f0120793e1..cb97f72291bc 100644
---- a/drivers/i2c/busses/i2c-taos-evm.c
-+++ b/drivers/i2c/busses/i2c-taos-evm.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Driver for the TAOS evaluation modules
-- * These devices include an I2C master which can be controlled over the
-+ * These devices include an I2C controller which can be controlled over the
-  * serial port.
-  *
-  * Copyright (C) 2007 Jean Delvare <jdelvare@suse.de>
+diff --git a/drivers/i2c/busses/i2c-uniphier-f.c b/drivers/i2c/busses/i2c-uniphier-f.c
+index dbc91c7c3788..f075c83a81b9 100644
+--- a/drivers/i2c/busses/i2c-uniphier-f.c
++++ b/drivers/i2c/busses/i2c-uniphier-f.c
+@@ -12,15 +12,15 @@
+ #include <linux/platform_device.h>
+ 
+ #define UNIPHIER_FI2C_CR	0x00	/* control register */
+-#define     UNIPHIER_FI2C_CR_MST	BIT(3)	/* master mode */
++#define     UNIPHIER_FI2C_CR_MST	BIT(3)	/* host mode */
+ #define     UNIPHIER_FI2C_CR_STA	BIT(2)	/* start condition */
+ #define     UNIPHIER_FI2C_CR_STO	BIT(1)	/* stop condition */
+ #define     UNIPHIER_FI2C_CR_NACK	BIT(0)	/* do not return ACK */
+ #define UNIPHIER_FI2C_DTTX	0x04	/* TX FIFO */
+-#define     UNIPHIER_FI2C_DTTX_CMD	BIT(8)	/* send command (slave addr) */
++#define     UNIPHIER_FI2C_DTTX_CMD	BIT(8)	/* send command (client addr) */
+ #define     UNIPHIER_FI2C_DTTX_RD	BIT(0)	/* read transaction */
+ #define UNIPHIER_FI2C_DTRX	0x04	/* RX FIFO */
+-#define UNIPHIER_FI2C_SLAD	0x0c	/* slave address */
++#define UNIPHIER_FI2C_SLAD	0x0c	/* client address */
+ #define UNIPHIER_FI2C_CYC	0x10	/* clock cycle control */
+ #define UNIPHIER_FI2C_LCTL	0x14	/* clock low period control */
+ #define UNIPHIER_FI2C_SSUT	0x18	/* restart/stop setup time control */
+@@ -96,7 +96,7 @@ static void uniphier_fi2c_fill_txfifo(struct uniphier_fi2c_priv *priv,
+ 	int fifo_space = UNIPHIER_FI2C_FIFO_SIZE;
+ 
+ 	/*
+-	 * TX-FIFO stores slave address in it for the first access.
++	 * TX-FIFO stores client address in it for the first access.
+ 	 * Decrement the counter.
+ 	 */
+ 	if (first)
+@@ -252,7 +252,7 @@ static void uniphier_fi2c_tx_init(struct uniphier_fi2c_priv *priv, u16 addr,
+ 
+ 	/* do not use TX byte counter */
+ 	writel(0, priv->membase + UNIPHIER_FI2C_TBC);
+-	/* set slave address */
++	/* set client address */
+ 	writel(UNIPHIER_FI2C_DTTX_CMD | addr << 1,
+ 	       priv->membase + UNIPHIER_FI2C_DTTX);
+ 	/*
+@@ -288,7 +288,7 @@ static void uniphier_fi2c_rx_init(struct uniphier_fi2c_priv *priv, u16 addr)
+ 
+ 	uniphier_fi2c_set_irqs(priv);
+ 
+-	/* set slave address with RD bit */
++	/* set client address with RD bit */
+ 	writel(UNIPHIER_FI2C_DTTX_CMD | UNIPHIER_FI2C_DTTX_RD | addr << 1,
+ 	       priv->membase + UNIPHIER_FI2C_DTTX);
+ }
+@@ -310,7 +310,7 @@ static void uniphier_fi2c_recover(struct uniphier_fi2c_priv *priv)
+ 	i2c_recover_bus(&priv->adap);
+ }
+ 
+-static int uniphier_fi2c_master_xfer_one(struct i2c_adapter *adap,
++static int uniphier_fi2c_xfer_one(struct i2c_adapter *adap,
+ 					 struct i2c_msg *msg, bool repeat,
+ 					 bool stop)
+ {
+@@ -340,7 +340,7 @@ static int uniphier_fi2c_master_xfer_one(struct i2c_adapter *adap,
+ 		uniphier_fi2c_tx_init(priv, msg->addr, repeat);
+ 
+ 	/*
+-	 * For a repeated START condition, writing a slave address to the FIFO
++	 * For a repeated START condition, writing a client address to the FIFO
+ 	 * kicks the controller. So, the UNIPHIER_FI2C_CR register should be
+ 	 * written only for a non-repeated START condition.
+ 	 */
+@@ -404,7 +404,7 @@ static int uniphier_fi2c_check_bus_busy(struct i2c_adapter *adap)
+ 	return 0;
+ }
+ 
+-static int uniphier_fi2c_master_xfer(struct i2c_adapter *adap,
++static int uniphier_fi2c_xfer(struct i2c_adapter *adap,
+ 				     struct i2c_msg *msgs, int num)
+ {
+ 	struct i2c_msg *msg, *emsg = msgs + num;
+@@ -419,7 +419,7 @@ static int uniphier_fi2c_master_xfer(struct i2c_adapter *adap,
+ 		/* Emit STOP if it is the last message or I2C_M_STOP is set. */
+ 		bool stop = (msg + 1 == emsg) || (msg->flags & I2C_M_STOP);
+ 
+-		ret = uniphier_fi2c_master_xfer_one(adap, msg, repeat, stop);
++		ret = uniphier_fi2c_xfer_one(adap, msg, repeat, stop);
+ 		if (ret)
+ 			return ret;
+ 
+@@ -435,7 +435,7 @@ static u32 uniphier_fi2c_functionality(struct i2c_adapter *adap)
+ }
+ 
+ static const struct i2c_algorithm uniphier_fi2c_algo = {
+-	.master_xfer = uniphier_fi2c_master_xfer,
++	.xfer = uniphier_fi2c_xfer,
+ 	.functionality = uniphier_fi2c_functionality,
+ };
+ 
 -- 
 2.43.0
 
