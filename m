@@ -1,110 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D0621854;
-	Fri, 22 Mar 2024 00:30:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B81376
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 00:32:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711067415; cv=none; b=AerLcebugvLt3ReTGCrGDhoHn2OrigLhlYT1owvoxzPd/SgXt1iGJoPnmV4oxAOblMvwnRo+uboZ1al3stVNrLV04nlGF6UbPMiteP1rnyKB4h23Lg2f2B1ieWo8ImhHjXUAGBKC8R6nK2xVCf365ulD+hUIfXKLa7UvCUmdIhQ=
+	t=1711067559; cv=none; b=sm9hXlTLU7J1dyyMj2UHp+I1mkL/KktKrRoEfWJ6kOCOrSPKS8BN8h7Ph+qZ7YhTtLY9xU242wY8gMpvecpiD1agDxRG/ijzlN8uvQjEqawow1J/EdjQAFYPRHeIBEzKoLhKhfmKQ1L8/i03YHKkEVMDcGLYjxR+RNq0hC4wrKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711067415; c=relaxed/simple;
-	bh=2oS5/+OU7q2OVdHinwRnMsJrZA2/4MZ9QA2WdIlydEA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ct2HSBNxpMBJOqj5ZubH71ffjM8UHl1JZgaIA4mPi1kLnp/5E1IDxVWfWc/zODrxJF87NJH060zgrFnefVXLDkCXK3qdZEUvBpGzzY6VDt/JLyGCnbbrswr+HIrzJ6O1tNE5UpSf0Q5qZGwRhgPOaQ8fm2J5CvcQQBsFzX7i7As=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ux/nyWo9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711067559; c=relaxed/simple;
+	bh=UJ+IvcfplAEeZ4WEQ3DOOJwWhbS+5sC5iaRrAlOv4fc=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=kgKYgUpGIhOahkXuPn2mkvvMpjLjJLE7L5W8KXBBaz761VJy2oDfpGXSuFSpGs46K06rhWC97K6owUVoWfo/xIJiAJYx97lFvLx16Vg0GPIOWKAtt4MfW1SgTp1noeiyFCtjNJVKZDDDc6rsDnBOkykERyrIWZXFcSLBOXudxgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HHBOs5SH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ux/nyWo9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10E89C433C7;
-	Fri, 22 Mar 2024 00:30:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HHBOs5SH"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 896C2C433F1;
+	Fri, 22 Mar 2024 00:32:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711067415;
-	bh=2oS5/+OU7q2OVdHinwRnMsJrZA2/4MZ9QA2WdIlydEA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ux/nyWo9nNAkSf12AXlufQGQjR6V7ttQc9xl9gx/p5iTArqdmZXMBGtPgW8LmpqcJ
-	 QIWqdxP1xrH5fRJExj42Go19TsNTxsKnB9AIRR5PCqlNICsGBz6jCu3cd2Bf7hRV9k
-	 ERf8kU4Nx3BFNcHF8u94UrUcAyD4ZNebUcWKdJxCd0lwA6fQMObMjvneicaGrv25an
-	 oY44zmBPfcHaeAFUGHdH1NsNQqbQboZKYdm6HaRvR6wVuQ+kid18nZzsf4QbJvJsMS
-	 Z+ObLWcyu25o5ufHXi32nlxr9HqVemAB26AE+MdcJvdQVvMUfBxLGwiHhZDIFHc2qr
-	 UsDG6VlfVFZeQ==
-Date: Thu, 21 Mar 2024 17:30:13 -0700
-From: Jaegeuk Kim <jaegeuk@kernel.org>
-To: Light Hsieh =?utf-8?B?KOisneaYjueHiCk=?= <Light.Hsieh@mediatek.com>
-Cc: Ed Tsai =?utf-8?B?KOiUoeWul+i7kik=?= <Ed.Tsai@mediatek.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-f2fs-devel@lists.sourceforge.net" <linux-f2fs-devel@lists.sourceforge.net>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	Chun-Hung Wu =?utf-8?B?KOW3q+mnv+Wujyk=?= <Chun-hung.Wu@mediatek.com>
-Subject: Re: =?utf-8?B?5Zue6KaGOiDlm57opoY=?= =?utf-8?Q?=3A?= f2fs
- F2FS_IOC_SHUTDOWN hang issue
-Message-ID: <ZfzRFU_cXkToBoQ0@google.com>
-References: <0000000000000b4e27060ef8694c@google.com>
- <20240115120535.850-1-hdanton@sina.com>
- <4bbab168407600a07e1a0921a1569c96e4a1df31.camel@mediatek.com>
- <SI2PR03MB52600BD4AFAD1E324FD0430584332@SI2PR03MB5260.apcprd03.prod.outlook.com>
- <ZftBxmBFmGCFg35I@google.com>
- <SI2PR03MB526094D44AB0A536BD0D1F5B84332@SI2PR03MB5260.apcprd03.prod.outlook.com>
- <ZfuBt1QbfFfJ-IKz@google.com>
- <SI2PR03MB52605816252C9ABA3D8550F084322@SI2PR03MB5260.apcprd03.prod.outlook.com>
+	s=k20201202; t=1711067559;
+	bh=UJ+IvcfplAEeZ4WEQ3DOOJwWhbS+5sC5iaRrAlOv4fc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=HHBOs5SH0O4cbT+99O+YVg0kluFPRVLhPacoMR9kdF4sWjjGvyRqsAMqBmADUKnuk
+	 kX0GNKu/Ovnkl5M8nr5IETpsh7CN8hlVf6GcdnFvpogNoFPZmY7DNVVXZos3ZCgkGR
+	 D8S3HOls0sVbDWmukwVEWvgS2cSEu3Qnq+YM5X1FeY9e+WJUfTr5tfXcng7esv1cY2
+	 EIC2ajDpUWe7Qn140CRAZRZDS3RxrlEL0YW0Gp8o5YbJc0iPH6JeZuszwX+IqnHz18
+	 oT3fBOaT0nFdKBZ2kdoH+iI3Tyob8+fjFzR69xdi3rEfbUaOiCWYKu+3eIkOZSZld6
+	 V7BBr3GkNe8AQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8375ED84BA9;
+	Fri, 22 Mar 2024 00:32:39 +0000 (UTC)
+Subject: Re: [GIT PULL] arm64 fixes for 6.9-rc1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <ZfzMKqtxAfHwHY3p@arm.com>
+References: <ZfzMKqtxAfHwHY3p@arm.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <ZfzMKqtxAfHwHY3p@arm.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
+X-PR-Tracked-Commit-Id: 1d63d1d9e5c5cb2e7c7ca75751a5eaf67c5623a7
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 661dc19066ef0fdcb2db3e2542c45744a4067e87
+Message-Id: <171106755953.26768.8786185219134503802.pr-tracker-bot@kernel.org>
+Date: Fri, 22 Mar 2024 00:32:39 +0000
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <SI2PR03MB52605816252C9ABA3D8550F084322@SI2PR03MB5260.apcprd03.prod.outlook.com>
 
-On 03/21, Light Hsieh (謝明燈) wrote:
-> Do you mean:
-> 
-> +           /* Avoid the deadlock from F2FS_GOING_DOWN_NOSYNC. */
-> +           if (!sb_start_intwrite_trylock(sbi->sb))
-> +                 continue;
-> 
-> After failure of trylock,  the 'continue'  make code flow goto the line:
->       } while (!kthread_should_stop());
-> Since  kthrad_should_stop() is true now, so the issue_discard_thread will end?
+The pull request you sent on Fri, 22 Mar 2024 00:09:14 +0000:
 
-Yes, but now I'm confused who is taking write_sem. :(
+> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
 
-> 
-> Light
-> ________________________________
-> 寄件者: Jaegeuk Kim <jaegeuk@kernel.org>
-> 寄件日期: 2024年3月21日 上午 08:39
-> 收件者: Light Hsieh (謝明燈) <Light.Hsieh@mediatek.com>
-> 副本: Ed Tsai (蔡宗軒) <Ed.Tsai@mediatek.com>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>; linux-f2fs-devel@lists.sourceforge.net <linux-f2fs-devel@lists.sourceforge.net>; linux-fsdevel@vger.kernel.org <linux-fsdevel@vger.kernel.org>; Chun-Hung Wu (巫駿宏) <Chun-hung.Wu@mediatek.com>
-> 主旨: Re: 回覆: f2fs F2FS_IOC_SHUTDOWN hang issue
-> 
-> 
-> External email : Please do not click links or open attachments until you have verified the sender or the content.
-> 
-> 
-> On 03/20, Light Hsieh (謝明燈) wrote:
-> > On 2024/3/20 8:14, Jaegeuk Kim wrote:
-> > > f2fs_ioc_shutdown(F2FS_GOING_DOWN_NOSYNC)  issue_discard_thread
-> > >   - mnt_want_write_file()
-> > >     - sb_start_write(SB_FREEZE_WRITE)
-> > >                                               - sb_start_intwrite(SB_FREEZE_FS);
-> > >   - f2fs_stop_checkpoint(sbi, false,            : waiting
-> > >      STOP_CP_REASON_SHUTDOWN);
-> > >   - f2fs_stop_discard_thread(sbi);
-> > >     - kthread_stop()
-> > >       : waiting
-> > >
-> > >   - mnt_drop_write_file(filp);
-> > >
-> > > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> >
-> > The case I encounter is f2fs_ic_shutdown with arg  F2FS_GOING_DOWN_FULLSYNC, not  F2FS_GOING_DOWN_NOSYNC.
-> >
-> > Or you are meaning that: besides the kernel patch, I need to change the invoked F2FS_IOC_SHUTDOWN to use arg F2FS_GOING_DOWN_NOSYNC?
-> 
-> I think this patch also addresses your case by using trylock.
-> 
-> >
-> >
-> >
-> 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/661dc19066ef0fdcb2db3e2542c45744a4067e87
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
