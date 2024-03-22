@@ -1,175 +1,227 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2079.outbound.protection.outlook.com [40.107.94.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB6177F33
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 19:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711134811; cv=none; b=WP5QodLV3S4HDjZudZe6f0lJuBLPbizDllbfEGSKN5MPQTqmu87rgmug4tOixVEjEBJoW5td93KCxvgfMTHMPIW67nh1ibd6fj8XPraiKwyLekqZ/QTNwxVMIesava45H32/vQWyMePbS91+xFOlhPXXK7WZemDku3v1afeoYa4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711134811; c=relaxed/simple;
-	bh=3VXjUeNUXaxKamllEoPZR+mCbhv6y4uEoN3b+984HOk=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=HGHWcIHDrimU7GpOs3OQFGTB8cjl6Z/zosqNfIfuAqG8+A4zRr3P2qfIeX5JVZoR1RW7HUdNGeZ6DHOPPY8FW17XcSu0n557/KI4APeueeqxGu4Sns4f8kJT2zpevrCw8UxHAOekzIJkzsNQCFrO3ffY1ND6SiywGPa0XseGDfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7cbffd468acso237137139f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 12:13:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711134809; x=1711739609;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jiRxOdAU5Wa2MVR5+wP0HXBTzdvMEM9GRbYV4FRUKkw=;
-        b=RK99QVifqMCXGouP7aBWP7WeWwfn1O/BGwAJoNZx9hFn3VyvUi+8PqsTTcUxor+dtl
-         dh0wnuq+4gkCV4wwmY76OjKKb4AYgTamXuEE2GCZsGnw7+NYplpBkQ/mcpe2goWG6azs
-         7c7mUq43a42UJpUQel5i8i0e36ed9q65y34eNjB2UliXivbpY6y7hODs1Zy+DYNJKrGC
-         k0x2NBWh1A0f7v3d56doFAwN1XHmhMhOEt1GMXtTaGnE46yTI6j29qkUI+HgKgfnvJw/
-         0XAY/H7YNxs98bM9/B2hNFPJqlTHsu1p8jeC7Lmpm+QEkgxl/HBIpZFBAJTyPFf+Cn7k
-         vXVg==
-X-Forwarded-Encrypted: i=1; AJvYcCXDKLRFyeUOW517nXedE0ZnqvoX3VzsgwvZX3cxeNxlC67r/enY5jjhcSktwqUOYCRbeMHH80yVpt956ZMRrd69Ay9WUwbdtVN9pZPE
-X-Gm-Message-State: AOJu0Yz9h0MYf2Tch55wp/TAsdzTzfZQiGVw68Of0Yna1LDLc4+ZI9wm
-	0ayIBL9pz5iW1DernKj2KSmcQaTFO+C0S2IFKVRnQOYJz4iLY6iJn9OEq//6h6om/zgfTg2qQvC
-	NB+WVqJVki38+e4mKivqXvSi3G839NpajSM+igKd5a2YrTWBnh34rqkw=
-X-Google-Smtp-Source: AGHT+IH2cubx3TMqwhCFnytSkj1Z7xeM+RvWUsO3ulpYNPhX/sFprq8b3ykdRrV0AuqejoZEccp5btnVXvRVumE+8OtdkszDQnrV
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E717827D;
+	Fri, 22 Mar 2024 19:15:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711134924; cv=fail; b=kzPGc1udzO6Any0ynwJpy51Cyq47Yiql4AGbhyMQcfgVVsn079ew8mEB/I//3//h1y1myapG433tpPO6UY+/Q5aP3X8YVdwqad9UXPfJFJAyubSdQlwV6mFPpPhlb6viBYHCE2F56SJo4ykQ/hIUPhgpnA+/D8x8M+Mu1lU097M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711134924; c=relaxed/simple;
+	bh=WeyiG27G01fBtDxZerTB9sgCxS9FbYn14iaLc0NsPOc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=LPDghXg1C5bUUbMBcfdYbUHFnN8wXoAMN7M863zmix33dX//gvTfMBSFy/qMuY8giQLAHBKsZ7pVzCj+7QaX9cClyWq0vO6iaAe2rsn5l52CoeoS5msKF8OCqBgboN4LhH+JtQLTNkv1wSh4cZxqATq2VqcvwfwrXRbhinprNJo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PBwegXFB; arc=fail smtp.client-ip=40.107.94.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PBwegXFB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PK1ZbJx9DjmwOMhU30Klzm0ofl706Y37k902d6X2Sz67duUfkEiI7KEqJlM2jQGvTTQQGNHRuN/Avvqc7Uv0pVmPIYqB1vnrNEAzMzOs+38sbwjgrGZrzkDKVO+faRXPpySVInWgwgt6K926EcQXgyKC2d6/k26DEY8V+yarSTdRrrqHCSTDAjcGVF7yghuEd2yFDwy9BQTLxNiqy83WF21ygTDOJmXrLq/6mOkQW6asAjAUVmgxTfw7Y8PCWz4AgGAz8Pkis0pfRUxN23GDPoVhcR9QfEeQzFOusll2xMsRnMRyJlez1qP7nE2QIJ87RI++xeySoVC1pwnCGZSG5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MekdISDQ1TZM+qZpdyZAV0e7ISX0CrRPCmPcsenNYcc=;
+ b=QmXXRKdMI7sNxcRBGiE84yx2KTaRER/lSC/X9mBwia+VIvyEb3fO15FDoAHPgEJiXEpu4QAHRg9YGAAkQP9RPItoSKTMLJw58I7LOeVIW0bkvzaoC+cQRk/ZLQtIXyLQdZR2LdAwFSiXmdrECvfq3SLSeoNx48EIyNkv+uEzHOxib7RPi8Hf00vys6m4fiuQlyzqG4YaXNGt3TjPQYDldMHunv1NBs/ZkxLJf0B6nIxP8Syu9GzIrqATWsSokfzjhfPllS2Nt2wSG1qkVM74h61KVaL8y3QWciwAIVnWno65tlT7ejdCyWreH4VvEdhb8EGtIDg9JlJKNMn0K4VSAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MekdISDQ1TZM+qZpdyZAV0e7ISX0CrRPCmPcsenNYcc=;
+ b=PBwegXFBQ4ZXf2KRvu0pQWa31rrLPf6ZkBjHARlhOpb9xOzARz8N0D24fAN3Ur6iX28Vz10+Q3KzeFh1ilJQfJxUIiHE8+u0HY9vitvJ6ClZBInyVeqpPfOixwNvuxqGyO4TOKF5E5iwVqnzmkTqUmgAZ5lO40upNAKlpRL5DkE=
+Received: from MW4PR12MB7165.namprd12.prod.outlook.com (2603:10b6:303:21b::14)
+ by BY5PR12MB4116.namprd12.prod.outlook.com (2603:10b6:a03:210::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.24; Fri, 22 Mar
+ 2024 19:15:19 +0000
+Received: from MW4PR12MB7165.namprd12.prod.outlook.com
+ ([fe80::e039:187d:47be:afb7]) by MW4PR12MB7165.namprd12.prod.outlook.com
+ ([fe80::e039:187d:47be:afb7%4]) with mapi id 15.20.7386.031; Fri, 22 Mar 2024
+ 19:15:19 +0000
+From: "Klymenko, Anatoliy" <Anatoliy.Klymenko@amd.com>
+To: Maxime Ripard <mripard@kernel.org>
+CC: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, "Simek,
+ Michal" <michal.simek@amd.com>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil
+ Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Jonas
+ Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Rob
+ Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Tomi Valkeinen
+	<tomi.valkeinen@ideasonboard.com>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-media@vger.kernel.org"
+	<linux-media@vger.kernel.org>
+Subject: RE: [PATCH v3 7/9] drm/atomic-helper: Add select_output_bus_format
+ callback
+Thread-Topic: [PATCH v3 7/9] drm/atomic-helper: Add select_output_bus_format
+ callback
+Thread-Index: AQHae9CO/Tr0AMCKj0CJVuI96JUP97FDg30AgACewkA=
+Date: Fri, 22 Mar 2024 19:15:19 +0000
+Message-ID:
+ <MW4PR12MB71657AF1E6B7AC96647133D6E6312@MW4PR12MB7165.namprd12.prod.outlook.com>
+References: <20240321-dp-live-fmt-v3-0-d5090d796b7e@amd.com>
+ <20240321-dp-live-fmt-v3-7-d5090d796b7e@amd.com>
+ <20240322-passionate-lyrebird-of-trust-819718@houat>
+In-Reply-To: <20240322-passionate-lyrebird-of-trust-819718@houat>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW4PR12MB7165:EE_|BY5PR12MB4116:EE_
+x-ms-office365-filtering-correlation-id: c32740b9-8d54-4425-2007-08dc4aa46a08
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ BTsU6HnpezvyIbpzsncy5OTa/XtfPCSs3xDhqa9GNChQQi6fF7DyTvXnLA16NR0PJ2Ke+Yus3yqaHCcg7+zBzwSZrhWYOAePPtwvdRw5Mcf59eZn/Y4PviLuf8RJ2FJnay8J8n2EDtcEgqyngWPjKuviHtVR1bldF/2stWunXmqRDXtX4985MgjmL0UNnVO5hDWUe5RKnj5Buu2aHj8Rzx+OejYAiDwcjmSpi5CEmk3ihgSAfek4QFPCFlrq0oKEsbpTMVXVsYgkdo/5Q4H8iNSu4LZhSut5plpLmXvbs73wncq+4VC+GfGxi8flADFCCD37hWfl2qT23dWs/TeXxm7yX5LATMIXe3IhyJmDjyiQW+EO5jPpd7YErz94FrwH/IrrevfsDDlVQNE3FZVjd8TYrSFJucBZx5IHy+PDRYrujbFPPQHaXKF/uak8kZMAYbTsYXPR86rK6cn7Ib8FcAlf0xnXcbnvc7SF1qBzC3jdh1zCdO1H6xwFzu/wat2Rm8mdmVpOvmmgJY1DPnOKq8IwXcXkeYEYbIoEbQbu9UxP6TCZN/MDaVwy/5qzA31LcJ5q7kjjOUNnwluSLMtHi1BgsBGvTqNrFKWiAQq2HgwiRMTjDhXJUUWMD+lQRc4vmz68cOJ9P+yxS2a2OZFZcXUkfMVcMhzQMIUNW6ce9fuG0lWTjK9oenwo93aYxq/d6JNH9/Lsno6O3Ab3igz+Q63/a5Zx0T87J6EQ+g9F/HY=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR12MB7165.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(7416005)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?KwVGEThl6V86wqEtJ5G9O3uX7hgmT0GyVKgLZCMBA/BnvO6f2iW4UDohFzts?=
+ =?us-ascii?Q?OQOKZlg8XR4CpWG7H1RMIYIkNKDbOhEHU3iOBiKN4Tr0ShyxGrgncUzXkzlq?=
+ =?us-ascii?Q?IRPr3yjMOb8JdTmPkhzwRPiiqau4GTJc03NuVD0mDZDURgBr8Mb+0Y1QW+Ex?=
+ =?us-ascii?Q?wjMBLQWnzeqBkTN6CwEEtGeJk56Q+RyUSe6UJX0ivhwPYqCFJHQ8g+9tT0OA?=
+ =?us-ascii?Q?pw5kxJ5kxFj50Rj7kbN9RiKHPLsMQHw6Sby3Gs27fETEP2h9b/Ao905PVQEu?=
+ =?us-ascii?Q?A2e5xorCC7UvWUlZvSHXPm8NqbFub7mplDCwGbi3lIOttjZ2d0AXoJGobJ6k?=
+ =?us-ascii?Q?MBDgm7thnznKmLZuA9+qmhgWF7RTg8wtgBa/klpszrB0ZjqiJ8XTYin60Kut?=
+ =?us-ascii?Q?voobEM1P0NWnv16ZHiSpp2WZq/S2RTTax3xI4TuyoYU9ncyPbQmtDiHXHykJ?=
+ =?us-ascii?Q?HgJmmEZN7B+nedsxtNjF6O3KMpGpahrSm4Yy4XZ0UqLcq9nmRLUOH0GoGVBo?=
+ =?us-ascii?Q?fsHlTm2OsghosQW8/tjtVRWdWJhXoNUE3+gtLp7wxETYsDPx0DC2BgPXO2lv?=
+ =?us-ascii?Q?Bmv83rk+oliFgsvvYs+bcJcNfd+RoJrk1eESIH6lOIXWqkvrib5CdNidYzyz?=
+ =?us-ascii?Q?P1s2kriqcwYYvYQ2sHzUikxYH+s16l4UQLpHZHyMk89szTzQ0g65x01NpY/A?=
+ =?us-ascii?Q?tFHDYg2t7uQB/tG1OFUrROwaKvdExM2IcJw/w/Qr4arvucJYeYxcARiwIMoe?=
+ =?us-ascii?Q?xIvU4zkAfhYDSAUTOotjd9L7uyWCfYzSnpRh9PxubKCZbWtIPPgnb24zXxgQ?=
+ =?us-ascii?Q?HIHn8eATtPtymEJsMU3NHnHs/ETur/ERNHWtGHgTl0/2zweZVoL2SLa3ttVq?=
+ =?us-ascii?Q?MOxsLXPurFpSzcNNIAVRDahJsPYTDrngSnHP2AVkQbhJhTg0sHcLn5QOY8wR?=
+ =?us-ascii?Q?rohmbzJjMQ1amPkDMowRnKXN2++/SmlpNxhYYGl0mtxyoX4WcMflq07FPG+h?=
+ =?us-ascii?Q?f5A9CnH4E+zV7GEnqGTlijDPq37d3irdERuaj+oGBaqcar+d4GKFGkreXeom?=
+ =?us-ascii?Q?MfgJrmXqqcyBCaGmVQIBqtK1qUz0+4KhYmoGxJehdejnlFjeA0vnT0sdAkea?=
+ =?us-ascii?Q?p0mBCA2eHTR+D/LYm16c+4iA3YGxvR3plvOOY80W/S/ozeLrsF7BkMciK2sI?=
+ =?us-ascii?Q?NFacOvdojndK5pmAi3ulgsqYFRevIiSvkAsyMECw5yeRp+gnyE0nlDDrvOD0?=
+ =?us-ascii?Q?WcWhITgHPZloc+8jRV1tJYo9JUVGAFPkpzcYPmnb+a7dWBJS4GWOx8Xg+0Kr?=
+ =?us-ascii?Q?V+I93IKMjzL6J4dQXAxm8PTDGBkXJlFY0MOen5UpD/8Irju2ILx1VkYBHI6V?=
+ =?us-ascii?Q?trdirIkDOWVKGK6qVVZFoDkfaWJ0lLiwVgzNrIqypXSalK/5/fcqo4fk39zl?=
+ =?us-ascii?Q?tgYtnQZXKbRFQhxj3ehycStFkXfWX0ItI8+nn+iB6H/N7E/9oYv5HSRMJlgW?=
+ =?us-ascii?Q?qymyy+Ukq+NLOt9EDO0JPI3/D06HbIeZywPtURpGTmtAXFy/aJOW0xoqZ3Jz?=
+ =?us-ascii?Q?WV2kNRijHvOzoTrt6gY=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d18:b0:368:73b8:6321 with SMTP id
- i24-20020a056e021d1800b0036873b86321mr22939ila.3.1711134809132; Fri, 22 Mar
- 2024 12:13:29 -0700 (PDT)
-Date: Fri, 22 Mar 2024 12:13:29 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007628d60614449e5d@google.com>
-Subject: [syzbot] [bpf?] general protection fault in bpf_check (2)
-From: syzbot <syzbot+ba82760c63ba37799f70@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, martin.lau@linux.dev, netdev@vger.kernel.org, 
-	sdf@google.com, song@kernel.org, syzkaller-bugs@googlegroups.com, 
-	yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR12MB7165.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c32740b9-8d54-4425-2007-08dc4aa46a08
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2024 19:15:19.3705
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vs3wZcdgupwdjYK7S1camPKuIyqUx+QZDc5BHPVuDuGKXlksIlnUBz978UaEKQqEU53KP/9betpyP2qnn//ANA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4116
 
-Hello,
+Hi Maxime,
 
-syzbot found the following issue on:
+Thank you for the review.
 
-HEAD commit:    ddb2ffdc474a libbpf: Define MFD_CLOEXEC if not available
-git tree:       bpf
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=14ba06a5180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
-dashboard link: https://syzkaller.appspot.com/bug?extid=ba82760c63ba37799f70
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=115671f1180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14f14e31180000
+> -----Original Message-----
+> From: Maxime Ripard <mripard@kernel.org>
+> Sent: Friday, March 22, 2024 2:45 AM
+> To: Klymenko, Anatoliy <Anatoliy.Klymenko@amd.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>; Maarten Lankhor=
+st
+> <maarten.lankhorst@linux.intel.com>; Thomas Zimmermann
+> <tzimmermann@suse.de>; David Airlie <airlied@gmail.com>; Daniel Vetter
+> <daniel@ffwll.ch>; Simek, Michal <michal.simek@amd.com>; Andrzej Hajda
+> <andrzej.hajda@intel.com>; Neil Armstrong <neil.armstrong@linaro.org>; Ro=
+bert
+> Foss <rfoss@kernel.org>; Jonas Karlman <jonas@kwiboo.se>; Jernej Skrabec
+> <jernej.skrabec@gmail.com>; Rob Herring <robh+dt@kernel.org>; Krzysztof
+> Kozlowski <krzysztof.kozlowski+dt@linaro.org>; Conor Dooley
+> <conor+dt@kernel.org>; Mauro Carvalho Chehab <mchehab@kernel.org>; Tomi
+> Valkeinen <tomi.valkeinen@ideasonboard.com>; dri-devel@lists.freedesktop.=
+org;
+> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-media@vger.kernel.org
+> Subject: Re: [PATCH v3 7/9] drm/atomic-helper: Add select_output_bus_form=
+at
+> callback
+>=20
+> On Thu, Mar 21, 2024 at 01:43:45PM -0700, Anatoliy Klymenko wrote:
+> > diff --git a/drivers/gpu/drm/drm_crtc_helper.c
+> > b/drivers/gpu/drm/drm_crtc_helper.c
+> > index 2dafc39a27cb..f2e12a3c4e5f 100644
+> > --- a/drivers/gpu/drm/drm_crtc_helper.c
+> > +++ b/drivers/gpu/drm/drm_crtc_helper.c
+> > @@ -1055,3 +1055,39 @@ int drm_helper_force_disable_all(struct
+> drm_device *dev)
+> >  	return ret;
+> >  }
+> >  EXPORT_SYMBOL(drm_helper_force_disable_all);
+> > +
+> > +/**
+> > + * drm_helper_crtc_select_output_bus_format - Select output media bus
+> > +format
+> > + * @crtc: The CRTC to query
+> > + * @crtc_state: The new CRTC state
+> > + * @supported_fmts: List of media bus format options to pick from
+> > + * @num_supported_fmts: Number of media bus formats in
+> > +@supported_fmts list
+> > + *
+> > + * Encoder drivers may call this helper to give the connected CRTC a
+> > +chance to
+> > + * select compatible or preffered media bus format to use over the
+> > +CRTC encoder
+> > + * link. Encoders should provide list of supported input
+> > +MEDIA_BUS_FMT_* for
+> > + * CRTC to pick from. CRTC driver is expected to select preferred
+> > +media bus
+> > + * format from the list and, once enabled, generate the signal accordi=
+ngly.
+> > + *
+> > + * Returns:
+> > + * Selected preferred media bus format or 0 if CRTC does not support
+> > +any from
+> > + * @supported_fmts list.
+> > + */
+> > +u32 drm_helper_crtc_select_output_bus_format(struct drm_crtc *crtc,
+> > +					     struct drm_crtc_state *crtc_state,
+> > +					     const u32 *supported_fmts,
+> > +					     unsigned int num_supported_fmts) {
+> > +	if (!crtc || !supported_fmts || !num_supported_fmts)
+> > +		return 0;
+> > +
+> > +	if (!crtc->helper_private ||
+> > +	    !crtc->helper_private->select_output_bus_format)
+> > +		return supported_fmts[0];
+> > +
+> > +	return crtc->helper_private->select_output_bus_format(crtc,
+> > +							crtc_state,
+> > +							supported_fmts,
+> > +							num_supported_fmts);
+> > +}
+>=20
+> Again, the output of that selection must be found in the CRTC state, othe=
+rwise
+> CRTCs have no way to know which have been selected.
+>=20
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/1e40c56954a9/disk-ddb2ffdc.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/738240a7f62b/vmlinux-ddb2ffdc.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/2b2e360f1d3a/bzImage-ddb2ffdc.xz
+Yes, now I got it - thank you. I'll fix this in the next version.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ba82760c63ba37799f70@syzkaller.appspotmail.com
+> Maxime
 
-general protection fault, probably for non-canonical address 0xdffffc0000000006: 0000 [#1] PREEMPT SMP KASAN PTI
-KASAN: null-ptr-deref in range [0x0000000000000030-0x0000000000000037]
-CPU: 1 PID: 5066 Comm: syz-executor115 Not tainted 6.8.0-syzkaller-05232-gddb2ffdc474a #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024
-RIP: 0010:do_misc_fixups kernel/bpf/verifier.c:19609 [inline]
-RIP: 0010:bpf_check+0xa19b/0x19010 kernel/bpf/verifier.c:21294
-Code: 48 c1 e8 03 80 3c 08 00 74 12 48 89 df e8 2d 93 50 00 48 b9 00 00 00 00 00 fc ff df 48 8b 1b 48 83 c3 30 48 89 d8 48 c1 e8 03 <0f> b6 04 08 84 c0 0f 85 e3 4c 00 00 8b 1b be 00 00 04 00 21 de 31
-RSP: 0018:ffffc900039671e0 EFLAGS: 00010206
-RAX: 0000000000000006 RBX: 0000000000000030 RCX: dffffc0000000000
-RDX: ffff888018358000 RSI: 0000000000010000 RDI: 0000000000000001
-RBP: ffffc90003967b50 R08: ffffffff81a7a128 R09: ffffffff81a7a365
-R10: 0000000000000004 R11: ffff888018358000 R12: ffffc90000ace072
-R13: 1ffff92000159c0e R14: 1ffff92000159c0e R15: 0000000000010000
-FS:  000055555905c380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000111ed398 CR3: 000000002258e000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- bpf_prog_load+0x1667/0x20f0 kernel/bpf/syscall.c:2895
- __sys_bpf+0x4ee/0x810 kernel/bpf/syscall.c:5631
- __do_sys_bpf kernel/bpf/syscall.c:5738 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:5736 [inline]
- __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5736
- do_syscall_64+0xfb/0x240
- entry_SYSCALL_64_after_hwframe+0x6d/0x75
-RIP: 0033:0x7f425974e3e9
-Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffe73dd9d38 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 00007ffe73dd9f18 RCX: 00007f425974e3e9
-RDX: 0000000000000090 RSI: 00000000200000c0 RDI: 0000000000000005
-RBP: 00007f42597c1610 R08: 0000000000000000 R09: 0000000000000000
-R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000000001
-R13: 00007ffe73dd9f08 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:do_misc_fixups kernel/bpf/verifier.c:19609 [inline]
-RIP: 0010:bpf_check+0xa19b/0x19010 kernel/bpf/verifier.c:21294
-Code: 48 c1 e8 03 80 3c 08 00 74 12 48 89 df e8 2d 93 50 00 48 b9 00 00 00 00 00 fc ff df 48 8b 1b 48 83 c3 30 48 89 d8 48 c1 e8 03 <0f> b6 04 08 84 c0 0f 85 e3 4c 00 00 8b 1b be 00 00 04 00 21 de 31
-RSP: 0018:ffffc900039671e0 EFLAGS: 00010206
-RAX: 0000000000000006 RBX: 0000000000000030 RCX: dffffc0000000000
-RDX: ffff888018358000 RSI: 0000000000010000 RDI: 0000000000000001
-RBP: ffffc90003967b50 R08: ffffffff81a7a128 R09: ffffffff81a7a365
-R10: 0000000000000004 R11: ffff888018358000 R12: ffffc90000ace072
-R13: 1ffff92000159c0e R14: 1ffff92000159c0e R15: 0000000000010000
-FS:  000055555905c380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000111ed398 CR3: 000000002258e000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	48 c1 e8 03          	shr    $0x3,%rax
-   4:	80 3c 08 00          	cmpb   $0x0,(%rax,%rcx,1)
-   8:	74 12                	je     0x1c
-   a:	48 89 df             	mov    %rbx,%rdi
-   d:	e8 2d 93 50 00       	call   0x50933f
-  12:	48 b9 00 00 00 00 00 	movabs $0xdffffc0000000000,%rcx
-  19:	fc ff df
-  1c:	48 8b 1b             	mov    (%rbx),%rbx
-  1f:	48 83 c3 30          	add    $0x30,%rbx
-  23:	48 89 d8             	mov    %rbx,%rax
-  26:	48 c1 e8 03          	shr    $0x3,%rax
-* 2a:	0f b6 04 08          	movzbl (%rax,%rcx,1),%eax <-- trapping instruction
-  2e:	84 c0                	test   %al,%al
-  30:	0f 85 e3 4c 00 00    	jne    0x4d19
-  36:	8b 1b                	mov    (%rbx),%ebx
-  38:	be 00 00 04 00       	mov    $0x40000,%esi
-  3d:	21 de                	and    %ebx,%esi
-  3f:	31                   	.byte 0x31
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Thank you,
+Anatoliy
