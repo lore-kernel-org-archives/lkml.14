@@ -1,44 +1,43 @@
 Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7542F56444
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5135056B84
 	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 13:26:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711114009; cv=none; b=Quu41ONYbPfJzYt7/aB/8ePderc7uxsQInTwhaNiquwnpwOM1erNaxyvuo+XzOnwCIGgce2l6H9Oe0ZmIioNEypmADRbdae3L7AFe6yVwQIuxyNxTDgw/grtD7RfzOzl+hQJv31I7V0jJ4x6T3TK/j58wWwwGHtGNot+uITX7ss=
+	t=1711114010; cv=none; b=ADy0CD7tNol4I6CzJgW4iqwxbbckTT8O9C3EOs/aEYzqJ1CdOKAUfFZsLOR83y3h4EMxGi7LTnzi16+bVZuKucSdncjIMbnL/meHwGNjKZvDV5zRXACAcGelG9CZ1lmXtESsVByB6wmi3zRt98xgalKFGk679CfvpTHOtdYHSkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711114009; c=relaxed/simple;
-	bh=RdpvTecA4tz3IWeF3JWv+DS2tIVcREHLGWPjN6GdG0Q=;
+	s=arc-20240116; t=1711114010; c=relaxed/simple;
+	bh=7oQmmJVaprR+HZKpfHw09qchZeoWx9o84q9t9JP0HQU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pGjAIO0b3X2OWxt3YcObLZrYIptw6+/VineeABSbJCqpvLs458iNt21u8t1UfoCoLoeIGvTfDhngKN3TOsNct3aNPr+okolLVcXsVHhcJ6dwCvgYHVwwa8AYNfz6P/hruNRvryy3ikhYRkHU+ceAY98X5Q/WPakN243ca33SMbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=jgZFWcE8; arc=none smtp.client-ip=194.117.254.33
+	 MIME-Version; b=e9LRsKL9T1dR9+PpK4Nfndzs7Y5c9N/vIvzglHy3TEvSzaLphC+s5Ku8R8JN/ATBuH/2hd2HzCAudjd/Y0kQS2uZlCaRRQJh0FNdpBApv+OzpUtlr1+hwTVZJcHzgg8SDTFjpL07PxDuwGGnNQ07vBObXNqSXwhiBm36IfYu/cU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=ik6n/zO9; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="jgZFWcE8"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="ik6n/zO9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
 	:in-reply-to:references:mime-version:content-transfer-encoding;
-	 s=k1; bh=sPIndfoTUi+H7yC2Vw2N54ArxxcZ9SSScdyIHb5qHpg=; b=jgZFWc
-	E83WdTi0EfWJTud1ynqA2PplpkcyePEsxtQ20N51vsqmi7751ncZqB2hZfcSgEcR
-	M97D6YCIAedDg71nlBfDvaMYMC5pMR/zdTvAEYuFMihhZf7zkksHYU+lsvX5YBLG
-	oLny3r+tT+vkOGAabF/qJP32PiiehoOGiqoaa4bxQOQeicwUdhkiRzAcVWQYFwlP
-	wKTCMciq3j4A0eFnEgP8StB+eaEkpYcpSMLACW/Z5hEhHI0KuXB4RtNtIJcIVsxL
-	cZKJv71ldw6lYAiM3SRJ1XXuRiBcXbXpWF11UFGeRT1XrLtAFnkbfcRou8nbuGB+
-	Mg96S92tGG4xCD3w==
-Received: (qmail 3870265 invoked from network); 22 Mar 2024 14:26:30 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Mar 2024 14:26:30 +0100
-X-UD-Smtp-Session: l3s3148p1@phGJxT8UjuBehhtF
+	 s=k1; bh=fB9xqyjvQZDgbI6QWDiCYg5KgycLfSIzO8kZL2YkZsI=; b=ik6n/z
+	O95g0ZW+iWO3WBHgcOmzS2H9kvlN7IDVaaa2QC5byEgoCPdTymwQsS0AJ9MN5tq+
+	iy4akf9H9k60bZjtYqKtpuRZg9Mlw6vuRWdmNTcbQgziN49iAxahtNOMbzJdgBhA
+	NnnZ2ygFhmSHG5T8/TDofAl4iQsIIjNjHSQmL3FG0xhEBR0M3VD5JLbBZutUF7pp
+	pWXlyx1GIrjZMbCAct8Hu4IM0ZqZwKHnIHXCx0UuwH5JRZ992O+r94cYWinPgmPL
+	+NVjaan4grpMgjfgKJ3pCu+wFSzsRSiSBzhDjvvstKeZmNHndzESvUbTomiHtyiN
+	P97ewOqPWmMaKEAQ==
+Received: (qmail 3870333 invoked from network); 22 Mar 2024 14:26:31 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Mar 2024 14:26:31 +0100
+X-UD-Smtp-Session: l3s3148p1@bE6jxT8UquBehhtF
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-i2c@vger.kernel.org
 Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Michal Simek <michal.simek@amd.com>,
+	=?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <bence98@sch.bme.hu>,
 	Andi Shyti <andi.shyti@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 11/64] i2c: cadence: reword according to newest specification
-Date: Fri, 22 Mar 2024 14:25:04 +0100
-Message-ID: <20240322132619.6389-12-wsa+renesas@sang-engineering.com>
+Subject: [PATCH 13/64] i2c: cp2615: reword according to newest specification
+Date: Fri, 22 Mar 2024 14:25:06 +0100
+Message-ID: <20240322132619.6389-14-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
 References: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
@@ -57,62 +56,38 @@ entity ("client") and a local one ("target").
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- drivers/i2c/busses/i2c-cadence.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/i2c/busses/i2c-cp2615.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
-index 4bb7d6756947..91085e719689 100644
---- a/drivers/i2c/busses/i2c-cadence.c
-+++ b/drivers/i2c/busses/i2c-cadence.c
-@@ -808,7 +808,7 @@ static int cdns_i2c_process_msg(struct cdns_i2c *id, struct i2c_msg *msg,
+diff --git a/drivers/i2c/busses/i2c-cp2615.c b/drivers/i2c/busses/i2c-cp2615.c
+index cf3747d87034..91fffc39afa9 100644
+--- a/drivers/i2c/busses/i2c-cp2615.c
++++ b/drivers/i2c/busses/i2c-cp2615.c
+@@ -60,7 +60,7 @@ enum cp2615_i2c_status {
+ 	CP2615_CFG_LOCKED = -6,
+ 	/* read_len or write_len out of range */
+ 	CP2615_INVALID_PARAM = -4,
+-	/* I2C slave did not ACK in time */
++	/* I2C client did not ACK in time */
+ 	CP2615_TIMEOUT,
+ 	/* I2C bus busy */
+ 	CP2615_BUS_BUSY,
+@@ -211,7 +211,7 @@ static int cp2615_check_iop(struct usb_interface *usbif)
  }
  
- /**
-- * cdns_i2c_master_xfer - The main i2c transfer function
-+ * cdns_i2c_xfer - The main i2c transfer function
-  * @adap:	pointer to the i2c adapter driver instance
-  * @msgs:	pointer to the i2c message structure
-  * @num:	the number of messages to transfer
-@@ -817,7 +817,7 @@ static int cdns_i2c_process_msg(struct cdns_i2c *id, struct i2c_msg *msg,
-  *
-  * Return: number of msgs processed on success, negative error otherwise
-  */
--static int cdns_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
-+static int cdns_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
- 				int num)
+ static int
+-cp2615_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
++cp2615_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
  {
- 	int ret, count;
-@@ -947,7 +947,7 @@ static u32 cdns_i2c_func(struct i2c_adapter *adap)
+ 	struct usb_interface *usbif = adap->algo_data;
+ 	int i = 0, ret = 0;
+@@ -250,7 +250,7 @@ cp2615_i2c_func(struct i2c_adapter *adap)
  }
  
- #if IS_ENABLED(CONFIG_I2C_SLAVE)
--static int cdns_reg_slave(struct i2c_client *slave)
-+static int cdns_reg_target(struct i2c_client *slave)
- {
- 	int ret;
- 	struct cdns_i2c *id = container_of(slave->adapter, struct cdns_i2c,
-@@ -972,7 +972,7 @@ static int cdns_reg_slave(struct i2c_client *slave)
- 	return 0;
- }
- 
--static int cdns_unreg_slave(struct i2c_client *slave)
-+static int cdns_unreg_target(struct i2c_client *slave)
- {
- 	struct cdns_i2c *id = container_of(slave->adapter, struct cdns_i2c,
- 									adap);
-@@ -990,11 +990,11 @@ static int cdns_unreg_slave(struct i2c_client *slave)
- #endif
- 
- static const struct i2c_algorithm cdns_i2c_algo = {
--	.master_xfer	= cdns_i2c_master_xfer,
-+	.xfer	= cdns_i2c_xfer,
- 	.functionality	= cdns_i2c_func,
- #if IS_ENABLED(CONFIG_I2C_SLAVE)
--	.reg_slave	= cdns_reg_slave,
--	.unreg_slave	= cdns_unreg_slave,
-+	.reg_target	= cdns_reg_target,
-+	.unreg_target	= cdns_unreg_target,
- #endif
+ static const struct i2c_algorithm cp2615_i2c_algo = {
+-	.master_xfer	= cp2615_i2c_master_xfer,
++	.xfer	= cp2615_i2c_xfer,
+ 	.functionality	= cp2615_i2c_func,
  };
  
 -- 
