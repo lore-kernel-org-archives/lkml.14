@@ -1,153 +1,83 @@
-Received: from terminus.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4F8BA27;
-	Fri, 22 Mar 2024 05:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9FF4436;
+	Fri, 22 Mar 2024 05:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711086497; cv=none; b=TOo5lr5+1vQiGaifuk0xcCw2nhn8XlGqZlkpCqAJzFcvrT+ki18WMUGkIX/DWVG5lYt+A8seQixLRZuoFsMoFvdbCpEgtMOkiIoPXpspCfAvAQWkUMrg2uP4PuRcRbJFd0psYjXpKHkjbURomnD4EfubHBLueYmuD/orhmYAjf0=
+	t=1711086594; cv=none; b=jfGGap4v2l35XgD5eudPeWhAKiuzYwaHjtzKV69aOFpjV5oC4+dHgWHq9kAS5uiyZT8PvbGm21qbVLONNrxyh/3rUMpjQbXtnftLY9rZIh+btkVdNYlHDIFSecRKVsgRMUBtkmxeZ7QBaZp3Rk94TRd5QW+TOcz2wGsBQGAsOGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711086497; c=relaxed/simple;
-	bh=a/iNEg1I/52x03KYA2MFESAsRAP+X8GgId4sZuWP/KA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RuuGbi5ZiaQSfWmOvGhzSF6pWza8DXDEM0gtOD3et5ruvdKofgmAaGZRj5+ICKOp3tWEfWBXlVKcscVFhkUglEIqZ5rMXRVGRUEYjYYwVgApiEZYYyj4F/aLiU3L6vxVGdxCUI6jh2bdTTbXZwLAwo4letnJT2qvxvHwPBgMU2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=bLmwJ52H; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1711086594; c=relaxed/simple;
+	bh=3dxZ97h1bBewqFSrSCxZ0u2xq2+UB+rYnjeTo4PLAV8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XcrVCqdG4PfYYUXqV4UXWRjKuAoOD8L5o3C+80jiKU+qkI3hqM1E2vV7PW/N8VMgnSaMUEFv1L0DOe5d3O+t3FsHxKUksuhUNaBcD1Nt+r294rNsIq285NMfJiKwoAuFjQDfwa8an2hCQMAZD3Cj7UDqrDrnXUCC3vfawi9qpZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=nZ6LzF89; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="bLmwJ52H"
-Received: from [192.168.7.187] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 42M4xB6s3266343
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 21 Mar 2024 21:59:11 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 42M4xB6s3266343
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024031401; t=1711083552;
-	bh=fY4D2hQ2QLBqdcYPZo8wXFK6V0NwrraNImCOWbN9G1M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bLmwJ52HsZvjvwZI7xAbCQIwefstRlIDzfKRgERLFJENY/z/tyyTNNnTpqhuc/aiK
-	 clxQ6EEbg1W6W4oZmlJ4AXH6Mpen27E8MndGauzBTm/imG795TlTnGphGvESnP2jR6
-	 i6Kw9us1X678rgxJAaGd9aTDIbKXRADh2bnoSRl6srF1vOhuU/sbdyXOPETd1pgiBD
-	 mHqxCTaJLA8lCvItq5BYoPViJ7D+6+noLPFrVtKtiyRoeasU9plXNDXDVqrOLBhLzK
-	 0T/PxHOHJg8DbVTRC+i0y5h0uZQIeGYMTp7eeOoQWIa6EQ+tbDBFbFUIV+dPqpt8vo
-	 OTyLQV4DLLnuA==
-Message-ID: <e73850ef-f1f6-41a8-b64d-187325b868df@zytor.com>
-Date: Thu, 21 Mar 2024 21:59:08 -0700
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="nZ6LzF89"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1711086589;
+	bh=3dxZ97h1bBewqFSrSCxZ0u2xq2+UB+rYnjeTo4PLAV8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=nZ6LzF89AlrxXzDXd3QYUcFV677SbDrpe7d8wTOKSI9z4sQrwflKXJiuKHFQPldHU
+	 2zc466eC0WPNUECV45Sx3Xt0p3N3asRi0s9bzaBSan6JBwr3zOhhUVUrDs1T62ksm4
+	 /W+rwkWmzx4DevQBKw1AJzPA5t1pSanKbIirVQKOl1jZT0nVbCmeAEmBtTx/5gJ6ZV
+	 tqX6f6KtRH8uWu+PuXX29MEoCpJrX1QM48JFOi26G9jIV+8ciPHjHOwSGf2Y6qiB9B
+	 GXhmKc0DU09lOC4tOeZLYPTsZblimmwcieKRF01BNk/vB3B1f4up32uBu2biiUybfD
+	 VUSx1SnXOjBrQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4V1BHF6qs1z4wcF;
+	Fri, 22 Mar 2024 16:49:45 +1100 (AEDT)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Jason Gunthorpe <jgg@ziepe.ca>, Shivaprasad G Bhat <sbhat@linux.ibm.com>
+Cc: tpearson@raptorengineering.com, alex.williamson@redhat.com,
+ linuxppc-dev@lists.ozlabs.org, npiggin@gmail.com,
+ christophe.leroy@csgroup.eu, aneesh.kumar@kernel.org,
+ naveen.n.rao@linux.ibm.com, gbatra@linux.vnet.ibm.com,
+ brking@linux.vnet.ibm.com, aik@ozlabs.ru, robh@kernel.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org, aik@amd.com,
+ msuchanek@suse.de, jroedel@suse.de, vaibhav@linux.ibm.com,
+ svaidy@linux.ibm.com
+Subject: Re: [RFC PATCH 1/3] powerpc/pseries/iommu: Bring back userspace
+ view for single level TCE tables
+In-Reply-To: <20240319143202.GA66976@ziepe.ca>
+References: <171026724548.8367.8321359354119254395.stgit@linux.ibm.com>
+ <171026725393.8367.17497620074051138306.stgit@linux.ibm.com>
+ <20240319143202.GA66976@ziepe.ca>
+Date: Fri, 22 Mar 2024 16:49:43 +1100
+Message-ID: <877chuke88.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] x86: Rename __{start,end}_init_task to
- __{start,end}_init_stack
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-arch@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, jgross@suse.com, boris.ostrovsky@oracle.com,
-        arnd@arndb.de, Brian Gerst <brgerst@gmail.com>
-References: <20240318071429.910454-1-xin@zytor.com>
- <ZfyQfQrluph6GxLS@gmail.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <ZfyQfQrluph6GxLS@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On 3/21/2024 12:54 PM, Ingo Molnar wrote:
-> 
-> * Xin Li (Intel) <xin@zytor.com> wrote:
-> 
->> The stack of a task has been separated from the memory of a task_struct
->> struture for a long time on x86, as a result __{start,end}_init_task no
->> longer mark the start and end of the init_task structure, but its stack
->> only.
->>
->> Rename __{start,end}_init_task to __{start,end}_init_stack.
->>
->> Note other architectures are not affected because __{start,end}_init_task
->> are used on x86 only.
->>
->> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
->> ---
->>
->> Change since v1:
->> * Revert an accident insane change, init_task to init_stack (Jürgen Groß).
->> ---
->>   arch/x86/include/asm/processor.h  | 4 ++--
->>   arch/x86/kernel/head_64.S         | 2 +-
->>   arch/x86/xen/xen-head.S           | 2 +-
->>   include/asm-generic/vmlinux.lds.h | 6 +++---
->>   4 files changed, 7 insertions(+), 7 deletions(-)
-> 
-> Note that this is now in conflict with this cleanup by Brian Gerst:
-> 
->     2cb16181a1d1 x86/boot: Simplify boot stack setup
+Jason Gunthorpe <jgg@ziepe.ca> writes:
+> On Tue, Mar 12, 2024 at 01:14:20PM -0500, Shivaprasad G Bhat wrote:
+>> The commit 090bad39b237a ("powerpc/powernv: Add indirect levels to
+>> it_userspace") which implemented the tce indirect levels
+>> support for PowerNV ended up removing the single level support
+>> which existed by default(generic tce_iommu_userspace_view_alloc/free()
+>> calls). On pSeries the TCEs are single level, and the allocation
+>> of userspace view is lost with the removal of generic code.
+>
+> :( :(
+>
+> If this has been broken since 2018 and nobody cared till now can we
+> please go in a direction of moving this code to the new iommu APIs
+> instead of doubling down on more of this old stuff that apparently
+> almost nobody cares about ??
 
-I like this patch, which does something that I'm also doing, further 
-x86_64 doesn't have the concept of TOP_OF_KERNEL_STACK_PADDING, and
-I guess it was extended from x86_32 but defined to 0 just for code 
-consistency.
+It's broken *on pseries* (Linux as a guest), but it works fine on
+powernv (aka bare metal, aka Linux as Hypervisor).
 
-Yes, FRED code uses TOP_OF_KERNEL_STACK_PADDING, but a FRED event frame 
-could contain different amount of information for different event types,
-e.g., #MCE could push extra bytes of information, or perhaps even for 
-different instances of the same event type. Thus the size of an event 
-frame pushed by a FRED CPU is not fixed and the address of the pt_regs 
-structure that is used to save the user level context of current task is 
-not at a fixed offset from the top of current task kernel stack.
+What's changed is folks are now testing it on pseries with Linux as a
+nested hypervisor.
 
-> 
-> .. which removed __end_init_task[] entirely.
-
-
-Not really, but __end_init_task[] is only used to initialize 
-__top_init_kernel_stack.
-
-I will rebase and send v3.
-
-Thanks!
-     Xin
-
-
-
-
-
-
+cheers
