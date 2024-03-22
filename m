@@ -1,67 +1,66 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7485960B91
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 21:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DCF160B91
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 21:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711144096; cv=none; b=Byoowz1yOIpxEIwyR//fyKeZvlaOqOQO+03oIjqR8/JyNZtGxOriocwNW5OMGdsxfcQ/4r+QTXdE7ND9uBwq5vFYoKj4Oig4rr3meUOmny07CPddZhE5EDc4heuiRHTXmY2TGdoSujDoN6hkuIB9B/sLF0rCBMwS1mCGfmE5WnM=
+	t=1711144102; cv=none; b=Hff6p0OMZ/4s4T+liIWcRC3d6wEEj8fDzpFutHD+TtCG+OLDV6uQl9kfl4zxhDB1FJJJqECO8sM1zv79HBqoxWt7k2MYjcgYsrE6SOa7rraCkAcTpHfMD302XHL6VGXU7bcfd4U+f05iBsDn+deMwsGT9BEkymNzXxPUhaUyzUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711144096; c=relaxed/simple;
-	bh=r2JygysBSznEYrREqtBGYtwD29MF8jgYZVNy9hfOPrA=;
+	s=arc-20240116; t=1711144102; c=relaxed/simple;
+	bh=l3OY0t5HrjFFYgbxfL2wYmHwCTOY3qj2409bRuGg/PU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KfnA4QNws/1I1++RHnEFjGknJqX+ZXC3yRxf5Oub5Sxv78HoMKQpKrXmM2jyvyUyiHOD7wmj7o2YXdMWpqOCnDKLD/42zozpnhjF0AHrKZYg0B8TAQTvEf6at6Nb7fQLcT5iMWCtAyE6+p2Vr6AUI66vCI7FH7uEB5S/7W+r9n0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ifxMvzu1; arc=none smtp.client-ip=209.85.166.169
+	 Content-Type:Content-Disposition:In-Reply-To; b=OTAJdx+o+qK16RNox0dVcznHqzU7wa0OtM9lmbQJoKn1VS/gd722RXf+sA+35BTAhD+85UeOYtwGDfU+xXkPOxfBgsq/G1sY4sfDkfqZzw8BNfxxLoWNYyMDsE8bf/j+Aakwu2p9s5TMmapA/aNpet/yu1npIqau9f77TNogbvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PA8n1xsC; arc=none smtp.client-ip=209.85.160.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ifxMvzu1"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-36864f7c5cdso9206155ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 14:48:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PA8n1xsC"
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-221ce6cac3aso1360653fac.2
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 14:48:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711144093; x=1711748893; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1711144100; x=1711748900; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Qwc2S1fB5ESIk5rQRrelB9J3ow8t5FCTnSuALstuIMg=;
-        b=ifxMvzu1WkyAZFlPDR9q0b0DRF8bQeixL2JY88Y4L2eNKu3lSGwkDGamZeji41h8ZB
-         yLZ9flnKZzgl/fhX7qsYPDbZmGtpQ+MlMH6drDX3K0AcAoAPkRjeCBtOlBCsRQW/bcIY
-         MTjrjqLrH1qfAMrRzB7LThLNn1F4AhQcfLDaLKKVApGka98StBsqL21w+wD3hlonJYJv
-         UruT5JU+1mEESZCWiyhSMyNj0pxbEpk9Cn2aOYWSHF7hci95JUkrGeL/cjRQDC/aA2Io
-         uEarlIUVGS8jRvIX9si+ZDD6pnVahBfk37XRtt8O/P1iRPszAbSAzF+kR44h08+OmtqS
-         vKSg==
+        bh=On9llTVYskkD2vg9HqNwrK4CiExajRFrB31BlGuPc2w=;
+        b=PA8n1xsC8G0tjTKzA7EOkDUbWTJ2WnzBYP3zDN5SWE6p4/AoJDt5TUapL1OriDiMgX
+         UW8UU2JWn87Mx5syO+xqID/BcgXg5DKeAZV6TjksPvxceDSzu+ZU/H5fVxqK9O40KjyZ
+         H+Sj0qqAruDMxipfbtOY7sKvM8Iz3dK8IAGELQ3A2AG347aJegvGJ1syL7W+JZoQsZ8k
+         DrEN/pAW6u3TzE7L5xAdY03/KZkH57vvMO+I4ZdJLbhzs4fP7Whp7k35JKNhK1iIrCyg
+         U/Fys3UPt9X8Yxgfoij2X/GamzFzpqdmChWRg+NB5iA+hnAa7/VmdXX0Sy6Fgq+ZRChm
+         TUSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711144093; x=1711748893;
+        d=1e100.net; s=20230601; t=1711144100; x=1711748900;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Qwc2S1fB5ESIk5rQRrelB9J3ow8t5FCTnSuALstuIMg=;
-        b=SfYVR2jUCfvfhOp7SfxedX8ir7tViHI1RwlQPHduBiZa0wL6HSGOGwW13hzzN09fwL
-         2iP5471aDuALiV8drLw7gILZTKinRKJHlMhxEj/+7a73sHemtMTFjSey8ACFnZxyiYd4
-         0Bw6JGgJfcd/ytKA/N1lg9Fgph4JA/Z6y0BdEQbZ9K5QMzaeYLwj5lYvEvPacfF3jlqB
-         sRXhNQrm0v2Eepg1P4YFuRACCVHMiweGZwqJeilgM4jFCN5tK+rTnxaWHE8vZPKGoUB+
-         QbrW0LRrIFus+LOowVRn240H+XJiMLEMYZWhRIr/oCNPoE9uuo8H1a0v0IeraTGoyyQV
-         g3jA==
-X-Gm-Message-State: AOJu0YwDF5t5NyRKD3EluH/ecaJtA42G/v0hJdP+t6iO+8qswASSnV4D
-	jrSoyYrFvQmP4z/vtJ/ocRok6lwzmIqegI7Qvyddz3U61PkcJ0UCOAnoMj44
-X-Google-Smtp-Source: AGHT+IHv7JzzyKtLaB1Mfa2ZTimFOraoyUonWxUYUTMXvDQ9b4TQIAPKoFP1agrZeRwgZN5yr0YWEw==
-X-Received: by 2002:a05:6a20:3ca3:b0:1a3:a933:a9c7 with SMTP id b35-20020a056a203ca300b001a3a933a9c7mr1157474pzj.6.1711143677836;
-        Fri, 22 Mar 2024 14:41:17 -0700 (PDT)
+        bh=On9llTVYskkD2vg9HqNwrK4CiExajRFrB31BlGuPc2w=;
+        b=R7E65rQZ9tgOwgfcvpyrbwPsYzDe+gxHhtpmUaz5/Xlmk73LPeti6ckj5iALBb2m66
+         rteiN9NE27ZtOuoFvLCrvQp65ejzQkHNgTMC+xBt9pE/gnC84jN33Z5fjd1KnFAboX3p
+         tqp7lUvMUHoTWaHs4KqyUgdCCKrW4mygtgmB7Ivp1iyWk14OGJVCFuF1sDdurW4AGRui
+         b+P2BuVF2VQfIl6VKw9HlYy2EQFeTtR5rHLhzanELDY6O/bImLhJ3CLFDr3FVv6bU/e1
+         w4GYr1GizghZhTgSH/M8oNJf9DekXXuCskZhYIe1GY6Hw1/EMVooCDBSvnzmc3VGqqfs
+         a1dQ==
+X-Gm-Message-State: AOJu0YxVm3l5WCyYQzXIKrKlNzAc9pnCJChUbCO4XZ0x3q+KRljwGLMH
+	2vc/dqgfIGjuxEJxLNC4H1AT4SMzGEhbjtZJPNF65DKi2O77j1rnRxbehwFW
+X-Google-Smtp-Source: AGHT+IEmft39BYboziHPWalrb+Y10VsY/AedtggVadeU+vIflwxrTk5G0hW+MF+yXUcGj46f+dJx/w==
+X-Received: by 2002:a05:6358:2618:b0:17f:1d34:6253 with SMTP id l24-20020a056358261800b0017f1d346253mr802842rwc.15.1711143706147;
+        Fri, 22 Mar 2024 14:41:46 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id gl3-20020a17090b120300b00298cc4c56cdsm5977617pjb.22.2024.03.22.14.41.17
+        by smtp.gmail.com with ESMTPSA id r16-20020a63d910000000b005dc5129ba9dsm2050333pgg.72.2024.03.22.14.41.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 14:41:17 -0700 (PDT)
+        Fri, 22 Mar 2024 14:41:45 -0700 (PDT)
 Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Fri, 22 Mar 2024 14:41:16 -0700
+Date: Fri, 22 Mar 2024 14:41:44 -0700
 From: Guenter Roeck <linux@roeck-us.net>
 To: Thomas Gleixner <tglx@linutronix.de>
 Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
 	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [patch 2/4] x86/topology: Dont evaluate logical IDs during early
- boot
-Message-ID: <3e8c08e0-dbfe-42b8-9668-bdcaac9eef4f@roeck-us.net>
+Subject: Re: [patch 4/4] x86/mpparse: Register APIC address only once
+Message-ID: <349fbc82-162f-4905-bbd0-4101e1e7a6a2@roeck-us.net>
 References: <20240322184944.141421692@linutronix.de>
- <20240322185305.186943142@linutronix.de>
+ <20240322185305.297774848@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,16 +69,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240322185305.186943142@linutronix.de>
+In-Reply-To: <20240322185305.297774848@linutronix.de>
 
-On Fri, Mar 22, 2024 at 07:56:36PM +0100, Thomas Gleixner wrote:
-> The local APICs have not yet been enumerated so the logical ID evaluation
-> from the topology bitmaps does not work and would return an error code.
+On Fri, Mar 22, 2024 at 07:56:39PM +0100, Thomas Gleixner wrote:
+> The APIC address is registered twice. First during the early detection and
+> afterwards when actually scanning the table for APIC IDs. The APIC and
+> topology core warn about the second attempt.
 > 
-> Skip the evaluation during the early boot CPUID evaluation and only apply
-> it on the final run.
+> Restrict it to the early detection call.
 > 
-> Fixes: 380414be78bf ("x86/cpu/topology: Use topology logical mapping mechanism")
+> Fixes: 81287ad65da5 ("x86/apic: Sanitize APIC address setup")
 > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
 Tested-by: Guenter Roeck <linux@roeck-us.net>
