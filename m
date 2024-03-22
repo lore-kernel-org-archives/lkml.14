@@ -1,161 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1A53FE46;
-	Fri, 22 Mar 2024 14:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 908DC482F3
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 14:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711117931; cv=none; b=Dl2ilq215Mvp40JooRaTS9lzdQ14Q/cSc21Wy4tCFxqZ/3OjjbtS9imW6FFm5xO3zbogqwaJuySKf1f3Gxy367ph6yrAui6QXRsk3ruBwrjgS7JAYH6oONg0hP5C632S6rtr+7qmGtEdEE0NHp2fPZg2yM9mGc6y7Vg1BLP4Tf0=
+	t=1711117941; cv=none; b=WArqgzNu1gPM4zrmpy7g6HbeCw+giwHqSM5XprKWeKW45SdZXjafZfTeCI+e0rZGyWlCQufengZnxgrhjKQZq8nn1c5tyf7FkHlmu5VTAvidvmDZDb5vUU3kgdc7G0Knni7eMBLlJMy8k2GrwlVacYM46V30bFIs1wLH7a+aEUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711117931; c=relaxed/simple;
-	bh=HcR/KfHtr497K/J36yGxFPywFOL3JXOh2RoVycr/rM8=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=HBlpddg65pGHUjSJEwLwVAzA5haXL4v2oGif4N6Pw58bI5ga4TY8wdv0GaHLaWbvO7pC/srO1M/1M8K2KeVRP60GCI+biv9/l0S+TrZV66gC5rhR4mCAPwMjcDFD9hoouKlJFV0UfX3Z/3CXWSIBbKbAlT3SS6VLYC1cMt5Touc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=csPNjMSX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711117941; c=relaxed/simple;
+	bh=69ZdVrReaf8DDgejMv4nU6fGqoatnYxGMkDl317L/q0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WrlL8ajezaV+Y5S7z8j3fTpcDt7mG5CoZcJ/7DDp+y6mmW/6VAtz4Wgz5bngdD6sAuhej+BEQ4H+YES4mWIE8Fe/NPwrbKMJFmpq8WDRLmaevWekrF/qRZIeyyM3PNY0K3R4PZrdDueHHGWjVC6vURVyUSFPob8DpNwDvpDRBS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mOvwDaNf; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="csPNjMSX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 054E6C433F1;
-	Fri, 22 Mar 2024 14:32:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711117930;
-	bh=HcR/KfHtr497K/J36yGxFPywFOL3JXOh2RoVycr/rM8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=csPNjMSXByd8QmwnUmnR13XX4SSBkaPf8QyVjn5G+r0FRqOUs15nADom2bFfHPRrN
-	 JkkGcRkQgbH1TqS36JGbkcLc9ZgGPDL6+MXWd4UeWuHu/MJKmFb8+f2/1NpI/oUHL8
-	 /W8pGlaFHW5/Ml0/CIO2qhmjCU2olXd7JfIxcl6l0TJKa/PxHO1G30BdAGTvLfIMYl
-	 CnrkpxZWqA/oo/utbTqbU2ySNmRTU5Y/jHVFXJuN3inN9/asjTbUs/3QhvA80478uq
-	 wZbYY5I+ZucJBeEYakTM5+x/LjSyE00yGOe7W77X5QTks9/4tlpVeRzTyvMbmkqSaw
-	 00mDaeaSXZOKg==
-From: Mark Brown <broonie@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [GIT PULL] SPI fixes for v6.9-merge-window
-Date: Fri, 22 Mar 2024 14:32:02 +0000
-Message-Id: <20240322143210.054E6C433F1@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mOvwDaNf"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1dee5daa236so15660805ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 07:32:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711117938; x=1711722738; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=bsQoTDol9HPR9N3ln/StyK4/449TM2DZcvuKewqwWVs=;
+        b=mOvwDaNfg8VlqvhvBlpr/kYqGhx0zPOascdWwuU/dfNzTjQMP6eyJjweDUT2AKhhpa
+         raCRcmf4vIUPZ6XMPkeImLzcSneY1ZwQok4rR08vYS6Iucsa9DWe0q9fA7GsqdlspaWC
+         v2LcEQNEmmISMW1eB0CcKTXaq7tlbeds/Ibes2eRmt+uhuUrgDyBIy1KpSUyRj25TzQc
+         j+thRb6O45+Hz7wZi+afDMblRqfSCKG9x/Mv9WRGoQmQxZnyZJgscJktjBOc/sBKUqzT
+         vabjQkC4yGkaLcagzyvZDOmfEsabZfFGsoOmZJZPYD/r66fTuXI6Hj8JWRsVS5LKQiNB
+         tKQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711117938; x=1711722738;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bsQoTDol9HPR9N3ln/StyK4/449TM2DZcvuKewqwWVs=;
+        b=LNcO3hH+mPKk6zm70FeVYRqe8j0PaUpU81lZcfOkhXrybfPeDNtb2k5q85EOnScFr4
+         lHFikY9j5gUOYKrABLAVRCTUJna0/1UxP45rvmir0SR0+YPdNRb2a3tbqfoFmSWdoUdA
+         sX6s5HEazTkrl9xiDVrhylPfOrymLGrDELa1apGbpcRDnkMGzGbFQKhffPsCkNEAjQeI
+         dBvtMBtmEd2ZfcCrVkx0pm39AFqHTWDP88NtBxg9ZeOloq9Xvby+RCf/qva+55zD14iV
+         YZWz1lZxdJ96dI3Kekfx5pBiEQINVB1Zzgcov1DgChEpp1QzWgvqWIu7lC+sjy6YQ6X0
+         ikFA==
+X-Forwarded-Encrypted: i=1; AJvYcCXQ1aNUW67SnXwMSXa6fI2HDArURza1/b6VAjGyftx18UaEbFpXlV31GydsuuDT2LQmoCN4p13/F5TasIu7z7nnRq0r7he6k2rR0xdF
+X-Gm-Message-State: AOJu0Yy//1RHVtx/Ql5guxkWey1sryZUtSSGh+BNRuiGOXrWZm5fnshD
+	+SOZJCYS3vIjAIx/SM11XMWk9MVmgv36gBXW/6husXB7VPXwXrREEM6lqamffQ==
+X-Google-Smtp-Source: AGHT+IGjsRnNYOq/KugmVVWK06RZmJQVOgzrvCR0cZJUdpBKhV8wEEXZP7kz9AS2YSen6KzO7otn8Q==
+X-Received: by 2002:a17:903:1207:b0:1dd:2e6:b951 with SMTP id l7-20020a170903120700b001dd02e6b951mr3625855plh.12.1711117937731;
+        Fri, 22 Mar 2024 07:32:17 -0700 (PDT)
+Received: from thinkpad ([103.28.246.103])
+        by smtp.gmail.com with ESMTPSA id b15-20020a170902650f00b001dd7a97a266sm1987075plk.282.2024.03.22.07.32.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Mar 2024 07:32:17 -0700 (PDT)
+Date: Fri, 22 Mar 2024 20:02:11 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh@kernel.org>,
+	Zhang Jianhua <chris.zjh@huawei.com>, dmaengine@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] dmaengine: owl: fix register access functions
+Message-ID: <20240322143211.GA3333@thinkpad>
+References: <20240322132116.906475-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240322132116.906475-1-arnd@kernel.org>
 
-The following changes since commit e8f897f4afef0031fe618a8e94127a0934896aba:
+On Fri, Mar 22, 2024 at 02:21:07PM +0100, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> When building with 'make W=1', clang notices that the computed register
+> values are never actually written back but instead the wrong variable
+> is set:
+> 
+> drivers/dma/owl-dma.c:244:6: error: variable 'regval' set but not used [-Werror,-Wunused-but-set-variable]
+>   244 |         u32 regval;
+>       |             ^
+> drivers/dma/owl-dma.c:268:6: error: variable 'regval' set but not used [-Werror,-Wunused-but-set-variable]
+>   268 |         u32 regval;
+>       |             ^
+> 
+> Change these to what was most likely intended.
+> 
 
-  Linux 6.8 (2024-03-10 13:38:09 -0700)
+Wow... Thanks for spotting. Well thanks to Clang also ;)
 
-are available in the Git repository at:
+> Fixes: 47e20577c24d ("dmaengine: Add Actions Semi Owl family S900 DMA driver")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.9-merge-window
+Cc: stable@vger.kernel.org # 4.19
 
-for you to fetch changes up to a20ad45008a7c82f1184dc6dee280096009ece55:
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-  spi: spi-mt65xx: Fix NULL pointer access in interrupt handler (2024-03-21 11:28:21 +0000)
+- Mani
 
-----------------------------------------------------------------
-spi: Fixes for v6.9
+> ---
+>  drivers/dma/owl-dma.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
+> index 4e76c4ec2d39..e001f4f7aa64 100644
+> --- a/drivers/dma/owl-dma.c
+> +++ b/drivers/dma/owl-dma.c
+> @@ -250,7 +250,7 @@ static void pchan_update(struct owl_dma_pchan *pchan, u32 reg,
+>  	else
+>  		regval &= ~val;
+>  
+> -	writel(val, pchan->base + reg);
+> +	writel(regval, pchan->base + reg);
+>  }
+>  
+>  static void pchan_writel(struct owl_dma_pchan *pchan, u32 reg, u32 data)
+> @@ -274,7 +274,7 @@ static void dma_update(struct owl_dma *od, u32 reg, u32 val, bool state)
+>  	else
+>  		regval &= ~val;
+>  
+> -	writel(val, od->base + reg);
+> +	writel(regval, od->base + reg);
+>  }
+>  
+>  static void dma_writel(struct owl_dma *od, u32 reg, u32 data)
+> -- 
+> 2.39.2
+> 
 
-A small collection of fixes that came in since the merge window.  Most
-of it is relatively minor driver specific fixes, there's also fixes for
-error handling with SPI flash devices and a fix restoring delay control
-functionality for non-GPIO chip selects managed by the core.
-
-----------------------------------------------------------------
-Adam Butcher (1):
-      spi: spi-imx: fix off-by-one in mx51 CPU mode burst length
-
-Alexander Sverdlin (1):
-      spi: lpspi: Avoid potential use-after-free in probe()
-
-David Lechner (1):
-      spi: docs: spidev: fix echo command format
-
-Fei Shao (1):
-      spi: spi-mt65xx: Fix NULL pointer access in interrupt handler
-
-Florian Fainelli (1):
-      spi: Fix error code checking in spi_mem_exec_op()
-
-Janne Grunau (1):
-      spi: Restore delays for non-GPIO chip select
-
-Kousik Sanagavarapu (1):
-      spi: lm70llp: fix links in doc and comments
-
-Mark Brown (1):
-      spi: Merge up v6.8 release
-
- .../bindings/spi/atmel,at91rm9200-spi.yaml         |   1 -
- .../devicetree/bindings/spi/samsung,spi.yaml       |   4 +-
- .../devicetree/bindings/spi/spi-controller.yaml    |  27 +
- .../devicetree/bindings/spi/spi-fsl-lpspi.yaml     |   1 +
- .../devicetree/bindings/spi/spi-nxp-fspi.yaml      |  18 +-
- Documentation/driver-api/driver-model/devres.rst   |   2 +-
- Documentation/spi/spi-lm70llp.rst                  |   4 +-
- Documentation/spi/spi-summary.rst                  | 114 ++---
- Documentation/spi/spidev.rst                       |   2 +-
- drivers/char/tpm/tpm_tis_spi_main.c                |   4 +-
- drivers/fpga/ice40-spi.c                           |   4 +-
- drivers/iio/adc/ad_sigma_delta.c                   |  14 +-
- drivers/input/joystick/psxpad-spi.c                |   4 +-
- drivers/input/rmi4/rmi_spi.c                       |   2 +-
- drivers/media/pci/mgb4/mgb4_core.c                 |  14 +-
- drivers/media/pci/netup_unidvb/netup_unidvb_spi.c  |  48 +-
- drivers/media/usb/msi2500/msi2500.c                |  38 +-
- drivers/media/v4l2-core/v4l2-spi.c                 |   4 +-
- drivers/misc/gehc-achc.c                           |   8 +-
- drivers/mmc/host/mmc_spi.c                         |   6 +-
- drivers/mtd/devices/mtd_dataflash.c                |   2 +-
- drivers/net/ethernet/micrel/ks8851_spi.c           |   4 +-
- drivers/net/ethernet/vertexcom/mse102x.c           |   2 +-
- drivers/net/ieee802154/ca8210.c                    |   2 +-
- drivers/net/wireless/marvell/libertas/if_spi.c     |   2 +-
- drivers/platform/chrome/cros_ec_spi.c              |   8 +-
- drivers/spi/Kconfig                                |   2 +-
- drivers/spi/spi-ath79.c                            |   4 +-
- drivers/spi/spi-au1550.c                           |   2 +-
- drivers/spi/spi-axi-spi-engine.c                   | 138 ++----
- drivers/spi/spi-bcm2835.c                          |  27 +-
- drivers/spi/spi-bitbang.c                          |  64 +--
- drivers/spi/spi-butterfly.c                        |   6 +-
- drivers/spi/spi-cadence-quadspi.c                  |  21 +-
- drivers/spi/spi-cavium.c                           |   6 +-
- drivers/spi/spi-cavium.h                           |   2 +-
- drivers/spi/spi-cs42l43.c                          |  22 +-
- drivers/spi/spi-davinci.c                          |   6 +-
- drivers/spi/spi-dw-dma.c                           |   2 +-
- drivers/spi/spi-fsl-dspi.c                         |  15 +-
- drivers/spi/spi-fsl-lib.c                          |  14 +-
- drivers/spi/spi-fsl-lpspi.c                        |   8 +-
- drivers/spi/spi-geni-qcom.c                        |   2 +-
- drivers/spi/spi-gpio.c                             |   2 +-
- drivers/spi/spi-imx.c                              |   4 +-
- drivers/spi/spi-intel.c                            |  34 +-
- drivers/spi/spi-lm70llp.c                          |  10 +-
- drivers/spi/spi-loopback-test.c                    |   4 +-
- drivers/spi/spi-mem.c                              |  49 +-
- drivers/spi/spi-mt65xx.c                           |  27 +-
- drivers/spi/spi-nxp-fspi.c                         |   2 +-
- drivers/spi/spi-oc-tiny.c                          |   6 +-
- drivers/spi/spi-omap-uwire.c                       |   4 +-
- drivers/spi/spi-pci1xxxx.c                         | 510 ++++++++++++++++++-
- drivers/spi/spi-pic32.c                            |   2 +-
- drivers/spi/spi-ppc4xx.c                           |  14 +-
- drivers/spi/spi-rockchip.c                         |  13 +-
- drivers/spi/spi-s3c64xx.c                          | 301 +++++++++---
- drivers/spi/spi-sh-sci.c                           |  10 +-
- drivers/spi/spi-slave-mt27xx.c                     |   2 +-
- drivers/spi/spi-stm32-qspi.c                       |   2 +-
- drivers/spi/spi-stm32.c                            |  30 +-
- drivers/spi/spi-xilinx.c                           |   4 +-
- drivers/spi/spi-xtensa-xtfpga.c                    |   2 +-
- drivers/spi/spi.c                                  | 544 ++++++++++++---------
- drivers/spi/spidev.c                               |   2 +-
- drivers/staging/fbtft/fbtft-core.c                 |   4 +-
- drivers/staging/greybus/spilib.c                   |  66 +--
- drivers/usb/gadget/udc/max3420_udc.c               |   2 +-
- drivers/video/fbdev/mmp/hw/mmp_spi.c               |  26 +-
- include/linux/amba/pl022.h                         |   4 +-
- include/linux/spi/pxa2xx_spi.h                     |   3 +-
- include/linux/spi/spi.h                            |  64 +--
- include/linux/spi/spi_bitbang.h                    |   2 +-
- include/linux/spi/spi_gpio.h                       |   4 +-
- include/media/v4l2-common.h                        |   6 +-
- 76 files changed, 1606 insertions(+), 833 deletions(-)
+-- 
+மணிவண்ணன் சதாசிவம்
