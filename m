@@ -1,143 +1,168 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFFA4652D
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 13:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24FC45BED;
+	Fri, 22 Mar 2024 13:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711113762; cv=none; b=O74toau+Vgli/ecUqoscXBCMk9w61Xs4kPQ/6bkt72w+2pwZRA99VSNAZTyNeR+FielbI/VWJMZJSE5FjPZDekCJ0sSRjVsAMp905qLjaXO7zguP89BhVIVSSAbIHl0jjuV4Crq5wyrxYXjlggelSmJZ7ZieOGi4HGELxx8aSCc=
+	t=1711113785; cv=none; b=ARLlIcfO1AP6icJhYC1hImsZhdEO3ERggbZAVzUQX6YLT6QEiuIixCUpR/05beY0L7WKGY9DRolMvW50z3C3N+C4iKujDd/O31HtXtlNIcwKhfTzHXOj0osa0O2V2GWRms+uY7OdbJotjm3oAux4ljgZTloRXsUPRr0LrYhREiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711113762; c=relaxed/simple;
-	bh=VRvzJp7F3pTXsdpRrJnsX5QXf0DQXJcBRvykcAY4DxI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=P+sRuzvvIdrox5zGyi/o1Sqslv+2ID9Rll/vYQbLIgmHwI3m0PgDCIuC0vZF2x3L4oCeD22IgV/7Spsx3GjFtkbzCT+I9nRqPCcEPZBMKn03FmMWFOJqB792D90lYlCnOdtHAXFD2XcNSapAW8aasIzRNmUnn8cm2T2zy7RzQtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r+l4N9pL; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711113785; c=relaxed/simple;
+	bh=NuYAmabxa/yWXcfo3iLE1DlzpL+At+H+5WTtA6hN4Dk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eUSEqF2rpNXnZECrkfa8oBwuJJpOT2bM+/GviTOgBZu/lWuv59qprtImwlNysdH4p5Pa9nh/uMX43vc7BHjTZvDw+hhNENok9XsdN0/bpBbGWptAR6ZHuDg1o2Vwk0Tvet3nJcOEjIqZOHR9CPyQ71bYT+WBjd0/lO5PUOiRSpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BkvEbZJm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r+l4N9pL"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a4715d4c2cbso242726366b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 06:22:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711113759; x=1711718559; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6XUaenHWoXhfDkhnV0aXHNHBLry4TB9gcfVEB03TUiU=;
-        b=r+l4N9pLj/GZsD8fZHdz3I2EKHZkmPOXw+OZZrWzyHes0p5mDw5mgPnMHjVLI98+H3
-         TSlhEDUnPGrA6zddaBHhtPa11blzP7G85shh8u7fGAZ4o12TG5TEOEsQqa4TCGgisNUg
-         VMVqmtH2q8MimyUgVe3npsRFS+PGEKszxvwifXUwlztwrCX7xbbDz6pE51SKAdi6HyNR
-         bqTPWSmeFqCygHG6bKRIPesc1HV8b95TbpCgUvFZ74qhASSDwSTFaa//0ZOwky7I2aCH
-         BJA7N5zfQKGB3Zn4oiwnt2kWtu53m47dYL/RRyqykmaEw8/SqCSBV8jHu3iA1ABFYi8P
-         nTyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711113759; x=1711718559;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6XUaenHWoXhfDkhnV0aXHNHBLry4TB9gcfVEB03TUiU=;
-        b=MozP8pMQONbaLFd9f74FgwGf5O9nto5cy0h+cyuufmxPlSVyKu9gnfW1/+iZ3bS7pz
-         z+i1YK8W4K7TNelvoI0997mweN3qHgUZjFOmEnvSx2QOzjLJm4T+vOHAogp56xWtdP1M
-         E4MQdqwfi1k7SPg0E4pSQWZRAeEpmiFvjX4LLrKjdXSETvhNl0euTzzSR2POdIVNCsIG
-         24JGg3TI13CYqsX1AWVwpBd+aig0yGieUKAofi+klKeK/j9r09GkXEiXh9UY1GJFGeH1
-         snGpWgj4ZgDsYIocZSOMDanD5SGgmrCeOgvjKG94VDM4tVgieFiGOt5G9LZo6v+kSigZ
-         818w==
-X-Forwarded-Encrypted: i=1; AJvYcCU9aFVYTHeb6/a5Fcv1PSNw+pcPa8Sn7jD/PK81qQ2e/rpKNUqCywIULCvUbvbQOavejz8EpxecPpzSNbms5lbYprApiPQTOZm9Q7vG
-X-Gm-Message-State: AOJu0YwJFA7eAklZhpNdmhTjKuRmBgSqBlcDRHb9jKvhlwgWlRcHYLCr
-	4OiwnfCWagdN6kkh8GjlzzN/h3uum82p/IKnnVd9JjFpQmIqh8p8X2CfHibmxNE=
-X-Google-Smtp-Source: AGHT+IFMT7cq/p6U5lZbQ/UZ/wU2nRaG+ZU2xJOExzaN28htNK1eQGiRtGlQH9vKIq8cXLB+nbzu4w==
-X-Received: by 2002:a17:906:230e:b0:a46:d77f:37ca with SMTP id l14-20020a170906230e00b00a46d77f37camr1654728eja.66.1711113758864;
-        Fri, 22 Mar 2024 06:22:38 -0700 (PDT)
-Received: from [127.0.1.1] ([79.114.172.194])
-        by smtp.gmail.com with ESMTPSA id m22-20020a170906721600b00a461e206c00sm1014176ejk.20.2024.03.22.06.22.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 06:22:38 -0700 (PDT)
-From: Abel Vesa <abel.vesa@linaro.org>
-Date: Fri, 22 Mar 2024 15:22:23 +0200
-Subject: [PATCH v3 2/2] drm/msm/dp: Add support for the X1E80100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BkvEbZJm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D23A2C43394;
+	Fri, 22 Mar 2024 13:23:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711113784;
+	bh=NuYAmabxa/yWXcfo3iLE1DlzpL+At+H+5WTtA6hN4Dk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=BkvEbZJmtRbe8zFHBjVrFInPy52I6aGhzKaXqFHlrKAUWsMsi+D8KL9DKYbufNcv6
+	 ocF1bYVIBxkJeHx1+SmNh7vBWvoF6L1Tiqym+WheRPJQVwM/DNZdiWZaV+BaHhc0ur
+	 +N2+bsZ59xDKALfaahSZTsRHHUMbSU/YiZ3oZLxmRUf6eTnN5G/ACGB5oU/7Vgsh6g
+	 tJXr+0v0nY6xBsROKd/zewO3wwRJAm7CBhxME39jIHwipAbUVBfsiQXDBEm5ZqZr9Q
+	 ZOa2vQQtAhUkiLm1CpxFnnnsFRzoh1K6+k8xMwoD0iOtifC6WxSqpNxOyKfSkU7UJP
+	 pTHiSXC1h5JJw==
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-513edc88d3cso2193740e87.0;
+        Fri, 22 Mar 2024 06:23:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVveiIzMD4dEnX+fQR+TLrCp27B/m3ZSwF3RjgOFNclM+gU/RAswLAPwx2XsLFc80xYCAgz74LmZNqbH+mPOi+WaaHYtPx0nEe23Qj3j7nBVwJLMotVuwJ0wK/RZb141NF0kyLZ1lWsHA==
+X-Gm-Message-State: AOJu0YyynY9B/QOo41XOZ6SB2cWB3LnhbRn69AqiUKeMGrYow5apRFwu
+	Udc4S04wpfife991xN5SZZg7gt2sF/2UJCOFkMQOlTY8GGIvR77KnVBxl1Iom4aSmsnZf2VHOF3
+	2aJ/WfTaJplL0BXSrG6wSxSJaAA==
+X-Google-Smtp-Source: AGHT+IHyFZczWhGC6ve0i/5WXp/HVFxoVNnBJ4Urb8ygFY8b8o6uu8DSGBiXVedOzqpoWkoV6iKw2/m0pOvxfFx/aEY=
+X-Received: by 2002:a19:741a:0:b0:513:dac5:ee1a with SMTP id
+ v26-20020a19741a000000b00513dac5ee1amr1552133lfe.25.1711113783071; Fri, 22
+ Mar 2024 06:23:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240322-x1e80100-display-refactor-connector-v3-2-af14c29af665@linaro.org>
-References: <20240322-x1e80100-display-refactor-connector-v3-0-af14c29af665@linaro.org>
-In-Reply-To: <20240322-x1e80100-display-refactor-connector-v3-0-af14c29af665@linaro.org>
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Kuogee Hsieh <quic_khsieh@quicinc.com>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- Johan Hovold <johan@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1607; i=abel.vesa@linaro.org;
- h=from:subject:message-id; bh=VRvzJp7F3pTXsdpRrJnsX5QXf0DQXJcBRvykcAY4DxI=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBl/YYWHMWfb5XeXykySFpfSgfGEkbi/1xu5RtIP
- mFT/7v5JKqJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZf2GFgAKCRAbX0TJAJUV
- VpJmEACuCgSMFMohE+PmYWIPPDdU9bXmOOpIjgkIEhjwqm7w9Oha2buji2b+JyOiuz50Joux6CH
- KQikLlX+6EMMc5zwiaq3NMAjRxL4ofMWGcrQ6jFwowQs7xFMvRjWsEACQTL08gdkJBm1KJzh0TV
- vPU9KZcVR4brLS4xKD6MBlaJtFzpL7wXM697i5HHbyBr8pjAjBWVizntUgu0wWOJ9twd5VG7tX4
- SJeuJ5VLkJ1p3X1QmbIptBQrMsirEJKJ3Sy+2AzrfeC3/zJWTz0yJ7jC5cU0OiKF8PPuk0To8Xh
- hjYWBmLAlXAiImP7pfsDOWWoQnhms5RHonAUidXJJeR/3eYlnVqYnQbV8sZ2virffdkcz5jPfxD
- hi6r5mscDmgRub+yHCDrWbBGGfslDTyn6996Nr3urquLoHoUdYgWf6T0qgVGxNx93S5iPR730b/
- TnbA99VBhvKWrJg3+8tYxrhDioWoeZMV9+kETPKwoMLx4IscxrmBm0W/j+slZsavstQ42b8WpPL
- +1Frd53yRw4mCdE2GqMcNfLS4fUvulzu1yhvcUQKClViXdNB4BJdZW9lH5/2oku2f18k/9JguqB
- cufYg2+vD7dMdAnJbR+nt8VrDIX04sRlVWnTYK3N4dfkH3r89W8YoP7TRjbFlMpU2i0gE2x7slM
- IFvVOF7/nyPvJUw==
-X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
- fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
+References: <20240319143253.22317-1-sudanl@amazon.com> <23692c07-98bd-477d-b244-bba14c50352c@linaro.org>
+ <38aad6c0e698c8e804694276d1762d61f2068ce8.camel@infradead.org>
+ <20240320161531.GA1810860-robh@kernel.org> <60404403932a984d1f75d111ff53b9053af03579.camel@infradead.org>
+ <20240321133250.GA1600070-robh@kernel.org> <db5a1027-93b7-4630-b679-8a654905dc48@amazon.co.uk>
+ <17611183-f288-47fe-a5e1-91ee16168db0@linaro.org> <ee688cca986d95148a55e32fee48ceed8567f128.camel@infradead.org>
+In-Reply-To: <ee688cca986d95148a55e32fee48ceed8567f128.camel@infradead.org>
+From: Rob Herring <robh@kernel.org>
+Date: Fri, 22 Mar 2024 08:22:50 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJOn9yU_YC0+q=4DX9_=0+z8yTact0HAvOKbrUpcXHxkQ@mail.gmail.com>
+Message-ID: <CAL_JsqJOn9yU_YC0+q=4DX9_=0+z8yTact0HAvOKbrUpcXHxkQ@mail.gmail.com>
+Subject: Re: [PATCH v1 0/4] virt: vmgenid: Add devicetree bindings support
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, "Landge, Sudan" <sudanl@amazon.co.uk>, 
+	Sudan Landge <sudanl@amazon.com>, tytso@mit.edu, Jason@zx2c4.com, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	sathyanarayanan.kuppuswamy@linux.intel.com, thomas.lendacky@amd.com, 
+	dan.j.williams@intel.com, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, graf@amazon.de, bchalios@amazon.es, 
+	xmarcalx@amazon.co.uk, ardb@kernel.org, benh <benh@kernel.crashing.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add the X1E80100 DP descs and compatible. This platform will be using
-a single compatible for both eDP and DP mode. The actual mode will
-be set based on the presence of the panel node in DT.
+On Fri, Mar 22, 2024 at 3:21=E2=80=AFAM David Woodhouse <dwmw2@infradead.or=
+g> wrote:
+>
+> On Fri, 2024-03-22 at 06:40 +0100, Krzysztof Kozlowski wrote:
+> > On 21/03/2024 18:39, Landge, Sudan wrote:
+> > >
+> > >
+> > > On 21/03/2024 13:32, Rob Herring wrote:
+> > > > CAUTION: This email originated from outside of the organization. Do=
+ not click links or open attachments unless you can confirm the sender and =
+know the content is safe.
+> > > >
+> > > >
+> > > >
+> > > > On Wed, Mar 20, 2024 at 04:55:45PM +0000, David Woodhouse wrote:
+> > > > > On Wed, 2024-03-20 at 11:15 -0500, Rob Herring wrote:
+> > > > > > On Wed, Mar 20, 2024 at 01:50:43PM +0000, David Woodhouse wrote=
+:
+> > > > > > > On Tue, 2024-03-19 at 16:24 +0100, Krzysztof Kozlowski wrote:
+> > > > > > > > On 19/03/2024 15:32, Sudan Landge wrote:
+> > > > > > > > > This small series of patches aims to add devicetree bindi=
+ngs support for
+> > > > > > > > > the Virtual Machine Generation ID (vmgenid) driver.
+> > > > > > > > >
+> > > > > > > > > Virtual Machine Generation ID driver was introduced in co=
+mmit af6b54e2b5ba
+> > > > > > > > > ("virt: vmgenid: notify RNG of VM fork and supply generat=
+ion ID") as an
+> > > > > > > > > ACPI only device.
+> > > > > > > > > We would like to extend vmgenid to support devicetree bin=
+dings because:
+> > > > > > > > > 1. A device should not be defined as an ACPI or DT only d=
+evice.
+> > > > > >
+> > > > > > This (and the binding patch) tells me nothing about what "Virtu=
+al
+> > > > > > Machine Generation ID driver" is and isn't really justification=
+ for
+> > > > > > "why".
+> > > > >
+> > > > > It's a reference to a memory area which the OS can use to tell wh=
+ether
+> > > > > it's been snapshotted and restored (or 'forked'). A future submis=
+sion
+> > > > > should have a reference to something like
+> > > > > https://www.qemu.org/docs/master/specs/vmgenid.html or the Micros=
+oft
+> > > > > doc which is linked from there.
+> > > >
+> > > > That doc mentions fw_cfg for which we already have a binding. Why c=
+an't
+> > > > it be used/extended here?
+> > > QEMU has support for vmgenid but even they do not pass vmgenid direct=
+ly
+> > > to the guest kernel using fw_cfg. QEMU passes the vmgenid/UUID via
+> > > fw_cfg to an intermediate UEFI firmware. This UEFI firmware, running =
+as
+> > > a guest in QEMU, reads the UUID from fw_cfg and creates ACPI tables f=
+or
+> > > it. The UEFI firmware then passes the UUID information to the guest
+> > > kernel via ACPI.
+> > > This approach requires yet another intermediary which is UEFI firmwar=
+e
+> > > and adds more complexity than ACPI for minimalist hypervisors that do
+> > > not have an intermediate bootloader today.
+> >
+> > What stops you from passing fw_cfg not to UEFI FW? BTW, no actual VM
+> > name was used in your posting, but now suddenly it is a talk about QEMU=
+.
+>
+> That would be possible. But not ideal.
 
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
----
- drivers/gpu/drm/msm/dp/dp_display.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Why not ideal?
 
-diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
-index c9763f77c832..95f6cf949fe6 100644
---- a/drivers/gpu/drm/msm/dp/dp_display.c
-+++ b/drivers/gpu/drm/msm/dp/dp_display.c
-@@ -171,6 +171,14 @@ static const struct msm_dp_desc sm8650_dp_descs[] = {
- 	{}
- };
- 
-+static const struct msm_dp_desc x1e80100_dp_descs[] = {
-+	{ .io_start = 0x0ae90000, .id = MSM_DP_CONTROLLER_0, .wide_bus_supported = true },
-+	{ .io_start = 0x0ae98000, .id = MSM_DP_CONTROLLER_1, .wide_bus_supported = true },
-+	{ .io_start = 0x0ae9a000, .id = MSM_DP_CONTROLLER_2, .wide_bus_supported = true },
-+	{ .io_start = 0x0aea0000, .id = MSM_DP_CONTROLLER_3, .wide_bus_supported = true },
-+	{}
-+};
-+
- static const struct of_device_id dp_dt_match[] = {
- 	{ .compatible = "qcom,sc7180-dp", .data = &sc7180_dp_descs },
- 	{ .compatible = "qcom,sc7280-dp", .data = &sc7280_dp_descs },
-@@ -182,6 +190,7 @@ static const struct of_device_id dp_dt_match[] = {
- 	{ .compatible = "qcom,sdm845-dp", .data = &sc7180_dp_descs },
- 	{ .compatible = "qcom,sm8350-dp", .data = &sm8350_dp_descs },
- 	{ .compatible = "qcom,sm8650-dp", .data = &sm8650_dp_descs },
-+	{ .compatible = "qcom,x1e80100-dp", .data = &x1e80100_dp_descs },
- 	{}
- };
- 
+To rephrase the question, why is it fine for UEFI to read the vmgenid
+from fw_cfg, but the kernel can't use the same mechanism? The response
+that you'd have to use UEFI to use fw_cfg makes no sense to me. The
+only reason I can think of is just being lazy and wanting to have
+minimal changes to some existing driver. It looks to me like you could
+implement this entirely in userspace already with zero kernel or
+binding changes. From a quick look, we already have a fw_cfg driver
+exposing UUID (that's the same thing as vmgenid AIUI) to userspace,
+and you can feed that back into the random pool.
 
--- 
-2.34.1
+I am concerned that we already have a mechanism and you want to add a
+second way. When do we ever think that's a good idea? What happens on
+the next piece of fw_cfg data? We add yet another binding?
 
+> Just as exposing it via PCI
+> would be possible, but not ideal. Or forcing ACPI onto the guests in
+> question, and various other less efficient options.
+>
+> If what we're really looking at here is a hostile takeover of the DT
+> bindings repository, with a blanket "No, DT is dead. Go use something
+> else, preferably ACPI", than all those other options are possible. We
+> *never* have to add a new binding to DT ever again. Let's just set the
+> existing bindings in stone and move on.
+
+I'll refrain from all my snarky replies to this that aren't helpful to
+the discussion.
+
+Rob
