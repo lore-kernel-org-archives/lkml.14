@@ -1,63 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A14383;
-	Fri, 22 Mar 2024 00:32:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8274376;
+	Fri, 22 Mar 2024 00:34:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711067559; cv=none; b=qtPvunAbipjdP8emEvlmdtjqFDi/2qoR/OK2MblBCBQaBwdE/Sas4A5o32Lf4OYuHpjbiUPhHtnm7rwpbzV4xIxSLaIF7IjoRDEnlTBjXOJUvxthoFOuFAQIcZ2u+xOM+fQPxd9Uq71rhrDdR+p2l9aVSxUcEo9Yc5U196MKv3k=
+	t=1711067653; cv=none; b=HuCR724bT9dwPF5Qs9TexwHwbUIz3lGLGEE8lRBzEsDtbrGBfJwWhYo89QU+8tPDSbFnccP7TPL43qHwUsLjgiC8QBGdu9NMtZajRN4ZtGBy2BepcrIMGAbzxON5+VONsye0UCKpCDESv/ybxNYSDYFjaWbhg0kUQjvmjSncZ74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711067559; c=relaxed/simple;
-	bh=x0+8AmzBRGviO8IPcOrFG2bqhWkOhGq4CzF5UveoHmY=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=IQ+dTerDWrtTwnU0w8C42bAQ7dp3J85QZBvRtFskwj/U/WN+zvEgP5pKQftAQ712/ES43MOtbE7Xy0zqhipNpOnL9TVmzyRmMxAxGTS72Q8tvyh/T0BQW6ZbldtVI3OwOhgaSoz7tvb5LKZigs+aloF/DE5PNArDTOcbx+Vm4m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fx5wcy2/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711067653; c=relaxed/simple;
+	bh=g9qE9ZrvmfY+JWl+GB2nOwlauim2SCg0XAFY9dp141o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=foAlPsVxqlqFMnrieovn8gCapIe70QTps/d0LScRVb9f90BbBDbFvFFy3MDFgcpPyxkfCc8/CavtCapU7pgEnx7bU+SY26TGUa7htkSBdT3kxjBn5wDmQRlZ0/4odQ/N9X+ksg7OLVi1kr9lMZr/1VLTBWjvQQ5t/MfdU6Knt/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=insSwIgc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fx5wcy2/"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 587E7C433C7;
-	Fri, 22 Mar 2024 00:32:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="insSwIgc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C52AC433C7;
+	Fri, 22 Mar 2024 00:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711067559;
-	bh=x0+8AmzBRGviO8IPcOrFG2bqhWkOhGq4CzF5UveoHmY=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=fx5wcy2/JvFVK7RrPOjA7SC2kGcZqjcA+ANfF/zWJUu5oMl4F/2wGWrMQkTeEf6n2
-	 vaYmE3NZGoukyhsPx1koaMD3P+DL7eGk4xlF+DgNTqHyapfEkK9ie2H4MtrrRHha+n
-	 4ggbfkBp4GJcVA5t8XkQO3FUAmIa/z+oHjH/wF+REcqGvWRC3Txxjy1j8FpORn36R9
-	 6uzI0AjDgF4TZj0SZI9v+hvWxyVZ70Gspsyb1MwvaC4Q6fZsUH6pO67Ox0xPQDa01o
-	 d+tSbLk5HdWWE/1THFNLUxIb/vXYA3EDIovRmiOmv6c2DkOdJoKN+3jAt0hjgoqcp2
-	 M9MAIaioQrtqQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4FD74D95060;
-	Fri, 22 Mar 2024 00:32:39 +0000 (UTC)
-Subject: Re: [GIT PULL] RTC for 6.9
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <202403212253279f152664@mail.local>
-References: <202403212253279f152664@mail.local>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <202403212253279f152664@mail.local>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-6.9
-X-PR-Tracked-Commit-Id: f7cee094fb3b370e56b3c8aac89038de818d7aec
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3faae16b5aaed284c7de6f4c12240da67497d3a3
-Message-Id: <171106755931.26768.15494070991255004797.pr-tracker-bot@kernel.org>
-Date: Fri, 22 Mar 2024 00:32:39 +0000
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+	s=k20201202; t=1711067652;
+	bh=g9qE9ZrvmfY+JWl+GB2nOwlauim2SCg0XAFY9dp141o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=insSwIgc5eVFdeUDQ31YJ8tkkKRoUG9RiYQBMa0DbILuoAhtJYpRA6sA/ROkKbvJc
+	 MJ05Rh30x5+efK4EPiGCWItDc9Oxmwi/38pfkpyOkFoEmqLzznQFnh7HrFtBf3lOSr
+	 lmEorMp/Kk6yVOQ1/MRgTy1rQwuH0aieW5Qvbhl5SbMmpbEROOPoQcfINqmhrX6xDn
+	 EvQy96DxrIv9uirqpprhCAmqlSTOIFq+tHJALBrFCvQF9ZQqSVFXB/IlDqJ7LEG8u6
+	 J2Py5un9z313MiCgPi8OWCn/kUmNa4sw5geF+6c8r8uTRbG627KvrAglAONHoaH5mX
+	 xUl0xQWKvYGcg==
+Date: Fri, 22 Mar 2024 01:34:08 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Piyush Malgujar <pmalgujar@marvell.com>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	sgarapati@marvell.com, cchavva@marvell.com, jannadurai@marvell.com
+Subject: Re: [PATCH v4 4/4] i2c: thunderx: Adding ioclk support
+Message-ID: <kjba6tkjbdekmxsv4mz7wq4gmgd4grwwhzjlvjcyzyosvdts26@ahzdkylavaxy>
+References: <20240223125725.1709624-1-pmalgujar@marvell.com>
+ <20240223125725.1709624-5-pmalgujar@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240223125725.1709624-5-pmalgujar@marvell.com>
 
-The pull request you sent on Thu, 21 Mar 2024 23:53:27 +0100:
+Hi Piyush,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-6.9
+On Fri, Feb 23, 2024 at 04:57:25AM -0800, Piyush Malgujar wrote:
+> Read the ioclk property as reference clock if sclk not
+> present in acpi table to make it SOC agnostic.
+> In case, it's not populated from dts/acpi table, use 800MHz
+> as default clock.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3faae16b5aaed284c7de6f4c12240da67497d3a3
+Why change from 700MHz to 800MHz?
 
-Thank you!
+> Signed-off-by: Piyush Malgujar <pmalgujar@marvell.com>
+> ---
+>  drivers/i2c/busses/i2c-thunderx-pcidrv.c | 15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-thunderx-pcidrv.c b/drivers/i2c/busses/i2c-thunderx-pcidrv.c
+> index 31f11b77ab663626967c86086a03213876bf4a07..15cf794a776533d1b0dbb08597fc0d9acf791b44 100644
+> --- a/drivers/i2c/busses/i2c-thunderx-pcidrv.c
+> +++ b/drivers/i2c/busses/i2c-thunderx-pcidrv.c
+> @@ -27,7 +27,7 @@
+>  
+>  #define PCI_DEVICE_ID_THUNDER_TWSI	0xa012
+>  
+> -#define SYS_FREQ_DEFAULT		700000000
+> +#define SYS_FREQ_DEFAULT		800000000
+>  #define OTX2_REF_FREQ_DEFAULT		100000000
+>  
+>  #define TWSI_INT_ENA_W1C		0x1028
+> @@ -100,7 +100,8 @@ static void thunder_i2c_clock_enable(struct device *dev, struct octeon_i2c *i2c)
+>  		i2c->sys_freq = clk_get_rate(i2c->clk);
+>  	} else {
+>  		/* ACPI */
+> -		device_property_read_u32(dev, "sclk", &i2c->sys_freq);
+> +		if (device_property_read_u32(dev, "sclk", &i2c->sys_freq))
+> +			device_property_read_u32(dev, "ioclk", &i2c->sys_freq);
+>  	}
+>  
+>  skip:
+> @@ -182,7 +183,6 @@ static int thunder_i2c_probe_pci(struct pci_dev *pdev,
+>  	if (!i2c->twsi_base)
+>  		return -EINVAL;
+>  
+> -	thunder_i2c_clock_enable(dev, i2c);
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+This change and the related goto's are not described in the
+commit message. How are they related to this patch?
+
+Andi
+
+>  	ret = device_property_read_u32(dev, "clock-frequency", &i2c->twsi_freq);
+>  	if (ret)
+>  		i2c->twsi_freq = I2C_MAX_STANDARD_MODE_FREQ;
+> @@ -196,12 +196,12 @@ static int thunder_i2c_probe_pci(struct pci_dev *pdev,
+>  
+>  	ret = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_MSIX);
+>  	if (ret < 0)
+> -		goto error;
+> +		return ret;
+>  
+>  	ret = devm_request_irq(dev, pci_irq_vector(pdev, 0), octeon_i2c_isr, 0,
+>  			       DRV_NAME, i2c);
+>  	if (ret)
+> -		goto error;
+> +		return ret;
+>  
+>  	ret = octeon_i2c_init_lowlevel(i2c);
+>  	if (ret)
+> @@ -213,6 +213,9 @@ static int thunder_i2c_probe_pci(struct pci_dev *pdev,
+>  	 */
+>  	if (octeon_i2c_is_otx2(pdev) && IS_LS_FREQ(i2c->twsi_freq))
+>  		i2c->sys_freq = OTX2_REF_FREQ_DEFAULT;
+> +	else
+> +		thunder_i2c_clock_enable(dev, i2c);
+> +
+>  	octeon_i2c_set_clock(i2c);
+>  
+>  	i2c->adap = thunderx_i2c_ops;
+> @@ -240,6 +243,8 @@ static int thunder_i2c_probe_pci(struct pci_dev *pdev,
+>  
+>  error:
+>  	thunder_i2c_clock_disable(dev, i2c->clk);
+> +	if (!IS_LS_FREQ(i2c->twsi_freq))
+> +		thunder_i2c_clock_disable(dev, i2c->clk);
+>  	return ret;
+>  }
+>  
+> -- 
+> 2.43.0
+> 
