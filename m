@@ -1,53 +1,53 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A527FBB1
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 23:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 045DA80629
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 23:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711149232; cv=none; b=IeuKIMJC55CD8dlphVUqmIAZhB6FuOeHuHsDlL7AJkEAgon/5OAx1MS0jIhPH+c5Wzx3sTrSfVHWh1BLsZAlRrcrFWGjROgIEuBV2Ab6FxcFO4TYiYKTj5fRGuQ09I59wjeJrAFx4+G2ggyvL8JciWOk60H7jLWtvfFZMZFSOjM=
+	t=1711149285; cv=none; b=T0RDdRsB5C3gAJzQjQJi1yX3Oy1jO94sabUUADuDpWlecpLW+7lTVKpPjq0Ge75xENqofS7PnBdRWWBVriUy6yIF5+IFdqGt4hOFRVmIKpgNaDeJXlADr4wTOTZQ29A/+ae1Ksvk72RFYFgvjGYu1c7iE1X0mMsqkwynEBmj4yU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711149232; c=relaxed/simple;
-	bh=1uE2zdvbEe+AZwRFPYtL6/o3B5OUz0T2sF7SzAGB37U=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=aeiGqIDbsoH146p3Kv50n0wwkKnDfEFHyL28dMA7uUkG+zZ66tAEjcLYhVJ9iMXhnsosNjsSfCDOo08rtWmSlgdZ/pmgeCN2MC64dGJrcSloXddI+Q9eYAcDLttHa5XeUOV7P4/i721nTRiyNnoqZipe8jEGo3btnyNYUJHsaPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a+wQwGRz; arc=none smtp.client-ip=192.198.163.14
+	s=arc-20240116; t=1711149285; c=relaxed/simple;
+	bh=mFt9sTai3iFEvINDiRR7vT0SJxMtiNAwZ8okJHN4jjs=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=mlGrEyqkW65ncQdk2gU1Fe6Dykbl+XhkWIQaUG1pYZJEIPUbJG0Ny6+jkOO25dE7ThHaXJ5bG+pl8UXELkrf0ER5aoB5W9B8jQCGbV1ajg9WVhTJn0M5UVo5rjjNQ44o8vHPP3i15VthrHhY58Av5nX+6PzWV4NEUHdkqHeDdm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NV+lYgoL; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a+wQwGRz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NV+lYgoL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711149231; x=1742685231;
+  t=1711149283; x=1742685283;
   h=date:from:to:cc:subject:message-id;
-  bh=1uE2zdvbEe+AZwRFPYtL6/o3B5OUz0T2sF7SzAGB37U=;
-  b=a+wQwGRzS7oIcBLoKoV5+guHBBfA+TJ1NHGxCv4HdPTem4QQ+3OxfBLU
-   bCQJGCQvU58LRuRVQ8y7kmNJmb46rE7YFHsMnvHbAN2Ohu2jzLC7E0mxw
-   c/dVLkoz++pMBfZTuMfNVSblqbIUgJg/YHFvCzOWA09N/VKrKCvXE/2VW
-   QfMPeSrQ2V7qBBWCPmsOD7lPKtqxRpD3K491iFnoyHqW4X0+fCtBwyVYe
-   XZ5coJn8jC109OBTznrrM3wtchvzocgZlG97vvXGf96om0CebXgQDmlUT
-   24bOMjVa+OcZPUnwz6uTROapaPB6Rc4hLEQjTzrHmIhSxzYLs9nmtQqpn
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11021"; a="6425893"
+  bh=mFt9sTai3iFEvINDiRR7vT0SJxMtiNAwZ8okJHN4jjs=;
+  b=NV+lYgoLDqzaEVoQLXQ3zUEgnWN2av6JzKb59VKhRbHuUNOrkp1vc0XG
+   GTUybl9lGHGybojrBqJberB6Mg6rg61e47KrdEzsss/q0IUisleRaPtpx
+   ADGA4+GnBI4wnKVhJlENv6/wTUSCufZHzQzNz1J5ykTA6v/jhZKBDq4t8
+   m7QS0MB/Kdfux69i9XR+JYWUEDzW0tgjK9O3dI/qITe1Xi4HV872lOqSj
+   TpZbebPa3oXpI3u8UAa28E9h4U9+pw6gF/PPt9tdRbSg5ZxZFcyLJ9A7/
+   8bBO1sU85qGXIiJY7XNFj5AV48imnRSiFaNtXsQtlJiblmr+4HTkeiIMU
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11021"; a="10005115"
 X-IronPort-AV: E=Sophos;i="6.07,147,1708416000"; 
-   d="scan'208";a="6425893"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 16:13:43 -0700
+   d="scan'208";a="10005115"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 16:14:43 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,147,1708416000"; 
-   d="scan'208";a="19793621"
+   d="scan'208";a="15156789"
 Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 22 Mar 2024 16:13:41 -0700
+  by fmviesa008.fm.intel.com with ESMTP; 22 Mar 2024 16:14:41 -0700
 Received: from kbuild by b21307750695 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1rno4w-000Kgc-2z;
-	Fri, 22 Mar 2024 23:13:38 +0000
-Date: Sat, 23 Mar 2024 07:13:11 +0800
+	id 1rno5u-000Kgp-3B;
+	Fri, 22 Mar 2024 23:14:38 +0000
+Date: Sat, 23 Mar 2024 07:14:31 +0800
 From: kernel test robot <lkp@intel.com>
 To: "x86-ml" <x86@kernel.org>
 Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/shstk] BUILD SUCCESS
- 2883f01ec37dd8668e7222dfdb5980c86fdfe277
-Message-ID: <202403230707.BQRAmgSo-lkp@intel.com>
+Subject: [tip:x86/asm] BUILD SUCCESS
+ 4c9a93800121e90484cd07c8e5bde70e31cdb996
+Message-ID: <202403230727.Jct62s6Z-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -55,12 +55,12 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/shstk
-branch HEAD: 2883f01ec37dd8668e7222dfdb5980c86fdfe277  x86/shstk: Enable shadow stacks for x32
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/asm
+branch HEAD: 4c9a93800121e90484cd07c8e5bde70e31cdb996  x86/asm/64: Clean up memset16(), memset32(), memset64() assembly constraints in <asm/string_64.h>
 
-elapsed time: 733m
+elapsed time: 734m
 
-configs tested: 114
+configs tested: 101
 configs skipped: 135
 
 The following configs have been built successfully.
@@ -89,28 +89,15 @@ i386         buildonly-randconfig-004-20240322   clang
 i386         buildonly-randconfig-004-20240323   gcc  
 i386         buildonly-randconfig-005-20240322   gcc  
 i386         buildonly-randconfig-005-20240323   gcc  
-i386         buildonly-randconfig-006-20240322   clang
 i386                                defconfig   clang
-i386                  randconfig-001-20240322   clang
-i386                  randconfig-002-20240322   clang
-i386                  randconfig-003-20240322   gcc  
 i386                  randconfig-003-20240323   gcc  
-i386                  randconfig-004-20240322   gcc  
 i386                  randconfig-004-20240323   gcc  
-i386                  randconfig-005-20240322   clang
 i386                  randconfig-005-20240323   gcc  
-i386                  randconfig-006-20240322   clang
 i386                  randconfig-006-20240323   gcc  
-i386                  randconfig-011-20240322   gcc  
 i386                  randconfig-011-20240323   gcc  
-i386                  randconfig-012-20240322   clang
 i386                  randconfig-012-20240323   gcc  
-i386                  randconfig-013-20240322   clang
-i386                  randconfig-014-20240322   clang
 i386                  randconfig-014-20240323   gcc  
-i386                  randconfig-015-20240322   gcc  
 i386                  randconfig-015-20240323   gcc  
-i386                  randconfig-016-20240322   clang
 i386                  randconfig-016-20240323   gcc  
 loongarch                        allmodconfig   gcc  
 loongarch                         allnoconfig   gcc  
