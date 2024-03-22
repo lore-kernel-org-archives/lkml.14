@@ -1,119 +1,113 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ADBE14AAE
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 08:09:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAE715E80;
+	Fri, 22 Mar 2024 08:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711094994; cv=none; b=bQOrXSU51XSaeTofaLrJrXHc6IbvdBi6bQN0frj6snqAygpzdyCJW4ea74oe4SY4leG2vOb+27cOHFnuHCA1wQsanXPPyFLflquKfE5Ta848PqbTStxbvTu/Dpu8GwgJ/wIUplxzVlwGCbpbkMeLklJ+ZNgpfJJBcaN1WIFqUX8=
+	t=1711095042; cv=none; b=cX0r6nbWVVaaGe6w98H+y6iWBHq97qOYfTUBdkEmxyAbJ4BLBTBZ+vvNxV80znfQct9C0fJN9ez9jHBV2bdkVvu8N8Zy25eoM+e8O0shRTzI6PaZB+qjyava+prIDCR6rTdAPebF69hpw/zbBSjzjQBIEZb/TZp+yhgb7wUgU7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711094994; c=relaxed/simple;
-	bh=RXpY8uaT9EOvBi9I6yC5dPQJDGkDvO2f0RD5A5oINvM=;
+	s=arc-20240116; t=1711095042; c=relaxed/simple;
+	bh=YCnOfA/n2e27zR5vgkB9gg9Jx2TJzBRBGHJZDA9Wlo0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IUnjpkf7aI0LQRfNU7oZo6B2Ma/vqNB4afSj2FSfWDVmoSMnuxXWVPh3+JhYrE4DcS5SNoHlBuuw0Zlg2SIabzsiTAJgABXMHbo7sTQ27T5SCid3R/B0IwTLvtiUT95YCXsTy8mE7Dk33g7BMt4tvEYf9Xw0qZcOSlFyu8Mjkbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=B9InOQ+P; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=cVc5W2B4SJ33Wp6cIMkEI7kCBHWWIPKmd+0N3m0xXAqXuwFoo/iDdsMojHGD3znVudppZMjVoG7l9VBUI0vYsXyFMAQQa5brLEzFKqg1voJ+4P5qWDR6iFCPFsuC73PXb6Q3sYW9pJOmyBi9kpMhLNDmy4kbBdbxH1VR8CSXBTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r6UpjQ4F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="B9InOQ+P"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4147e283d1cso104345e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 01:09:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1711094991; x=1711699791; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GE5LhZmpwjg/Vlr/58M0lzDTSb9NjpNMdXrf3nX1bH4=;
-        b=B9InOQ+PPsQ4o98v6jbhqxusFM6ok4lzPoiplSY06dm5w1ilqY8EhDCfhNBiS9pvTA
-         iAZlf/9iraFY47KZXYHnhMl3m1P3YjZsTiOmpuyCMjkyBpa5pw7SdJL2ownJJiuDhqD1
-         8ahLsiAbIsgN0HXOqZ8vdbCFwvcCm9JlbFtYlc9Z/HIoae/mZwsGJcQFjTuOjJDkOxxP
-         qGAZMrOs8Cwm58s6c1XRf7hD8AT1CEvSveKp7sP7iEbI+FmvlOBmwMEIA1sJ/MsDKyqz
-         A6ABXwaxk22ujwn2lZxF54JaQZM1Cxbwzwdnd0WgDrvT8MWXjL6G1ZgBgjz7pTcxTBsD
-         /cdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711094991; x=1711699791;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GE5LhZmpwjg/Vlr/58M0lzDTSb9NjpNMdXrf3nX1bH4=;
-        b=T112gPMj8rSy6EOiW+WUDUgM3KU+jODQSlJDVOgWZ82jl+FcJbcvG9yG9eJ4zEi7ne
-         APFPScFhIi1w13+uYH967nsYmJp6w9iBA5wya4nfSjmvBuqnzeqZgC8S7dF4Y2EBZcVF
-         lxW8+TB9coBXergPkG87hKOUoNCVMeFBB9ZwKyAYggK5SEie2dUm7BUVGERLI3Wl76nq
-         MEAEQ6AuM+ZQ6NdW7fnriqRWxGTjyHCL7WV/uO3FL+CoRMS2wR0fQvRsJJrWKxN0iIiD
-         iblPc9AKCICQln8tu3IPhDgbpFrItP1mMjwtQgHl+1qHlNG1WVcGpOnuL+Ngg9zl8jGp
-         iRZw==
-X-Forwarded-Encrypted: i=1; AJvYcCXRBjfQliB69/vpqUseTEN2VCdAeyJQeuWoFbpk1RNE/LbT9bvDJApymlYf9LnZkvYcxbkLf9YAyArsff5TUP2cyeel60rtAE/UQKll
-X-Gm-Message-State: AOJu0Ywo0c4WBu/Gq9DmY1qVuP2ilLXQs0OhZWe8uy8AV1SSN9Qqqzlq
-	MIpRHQDIN263Gee63B0fzWz2d0kYo6XHwqRP+sEHQy6+1byDvN3jXf9KW4FMNZc=
-X-Google-Smtp-Source: AGHT+IHLQHBi7qQwYV/Vh2cMH5xV/FtpkfvFnaz2JqA5AbMTziv+62cDRdiytui2Ed6ojUwu7J0rsg==
-X-Received: by 2002:a05:600c:1c26:b0:414:a89:3443 with SMTP id j38-20020a05600c1c2600b004140a893443mr902935wms.25.1711094990861;
-        Fri, 22 Mar 2024 01:09:50 -0700 (PDT)
-Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
-        by smtp.gmail.com with ESMTPSA id s16-20020a05600c45d000b00413f4cb62e1sm2291207wmo.23.2024.03.22.01.09.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 01:09:50 -0700 (PDT)
-Date: Fri, 22 Mar 2024 09:09:49 +0100
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Deepak Gupta <debug@rivosinc.com>
-Cc: Samuel Holland <samuel.holland@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, tech-j-ext@lists.risc-v.org, 
-	Conor Dooley <conor@kernel.org>, kasan-dev@googlegroups.com, 
-	Evgenii Stepanov <eugenis@google.com>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Rob Herring <robh+dt@kernel.org>, Guo Ren <guoren@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
-	Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [RISC-V] [tech-j-ext] [RFC PATCH 5/9] riscv: Split per-CPU and
- per-thread envcfg bits
-Message-ID: <20240322-3c32873c4021477383a15f7d@orel>
-References: <20240319215915.832127-1-samuel.holland@sifive.com>
- <20240319215915.832127-6-samuel.holland@sifive.com>
- <CAKC1njSg9-hJo6hibcM9a-=FUmMWyR39QUYqQ1uwiWhpBZQb9A@mail.gmail.com>
- <40ab1ce5-8700-4a63-b182-1e864f6c9225@sifive.com>
- <CAKC1njQYZHbQJ71mapeG1DEw=A+aGx77xsuQGecsNFpoJ=tzGQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r6UpjQ4F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 403DFC433F1;
+	Fri, 22 Mar 2024 08:10:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711095041;
+	bh=YCnOfA/n2e27zR5vgkB9gg9Jx2TJzBRBGHJZDA9Wlo0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=r6UpjQ4FWlkaobX17/QSZHPkLwUGN8UPdo2UxJbEKxgonJN1wRJfjY4ytn0U57niD
+	 9wNTd30twOeABmsKXVooxX4wzk2tYdBylEKcz/VCjvd5UDSmuJfTXeJomj9k+Tl5XE
+	 uHF5KiqlDLCpRwmkPUL3iGTNiw4K7RVoMsfLfJ59VWpPl0YnRsRApT/+k82qHtSasq
+	 MpQNAF+CtaP81Gl7LM9Kwg5wzk6xDamkmhCg/kyJo0bLNu2aB+c92Aj4c6hoUYAwKi
+	 cZCYyocVdBm9kzOfhcEYTmbsqiML6XlWgsrNWT4OCn2pmNCZ7Nl4hpziyHIBwZ+ePU
+	 BXOGnB/R5scQg==
+Date: Fri, 22 Mar 2024 08:10:36 +0000
+From: Lee Jones <lee@kernel.org>
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Samuel Holland <samuel@sholland.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH 0/4] regulator: Add X-Powers AXP717 PMIC support
+Message-ID: <20240322081036.GL13211@google.com>
+References: <20240310010211.28653-1-andre.przywara@arm.com>
+ <20240321171048.GD13211@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAKC1njQYZHbQJ71mapeG1DEw=A+aGx77xsuQGecsNFpoJ=tzGQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240321171048.GD13211@google.com>
 
-On Tue, Mar 19, 2024 at 09:39:52PM -0700, Deepak Gupta wrote:
-...
-> I am not sure of the practicality of this heterogeneity for Zicboz and
-> for that matter any of the upcoming
-> features that'll be enabled via senvcfg (control flow integrity,
-> pointer masking, etc).
-> 
-> As an example if cache zeroing instructions are used by app binary, I
-> expect it to be used in following
-> manner
-> 
->  - Explicitly inserting cbo.zero by application developer
->  - Some compiler flag which ensures that structures larger than cache
-> line gets zeroed by cbo.zero
-> 
-> In either of the cases, the developer is not expecting to target it to
-> a specific hart on SoC and instead expect it to work.
-> There might be libraries (installed via sudo apt get) with cache zero
-> support in them which may run in different address spaces.
-> Should the library be aware of the CPU on which it's running. Now
-> whoever is running these binaries should be aware which CPUs
-> they get assigned to in order to avoid faults?
-> 
-> That seems excessive, doesn't it?
->
+On Thu, 21 Mar 2024, Lee Jones wrote:
 
-It might be safe to assume extensions like Zicboz will be on all harts if
-any, but I wouldn't expect all extensions in the future to be present on
-all available harts. For example, some Arm big.LITTLE boards only have
-virt extensions on big CPUs. When a VMM wants to launch a guest it must
-be aware of which CPUs it will use for the VCPU threads. For riscv, we
-have the which-cpus variant of the hwprobe syscall to try and make this
-type of thing easier to manage, but I agree it will still be a pain for
-software since it will need to make that query and then set its affinity,
-which is something it hasn't needed to do before.
+> On Sun, 10 Mar 2024, Andre Przywara wrote:
+> 
+> > This patch series adds support for the X-Powers AXP717 PMIC, which is 
+> > used recently on new boards with Allwinner SoCs.
+> > Allwinner's BSP code often speaks of the AXP2202, this seems to be the
+> > same chip, at least a boot0 AXP2202 driver happily drove a chip labelled
+> > AXP717.
+> > 
+> > Patch 1 fixes a typo in some macro names for the AXP313a PMIC, I just
+> > realised that during some copy&paste action. It's just an identifier
+> > rename, so not a backport candidate, I'd say.
+> > Patch 2 adds the compatible string to the binding document.
+> > Patch 3 is the MFD part, describing the regmap and all the interrupts.
+> > So far we support the regulator and power key devices, the USB and
+> > charging devices will follow later.
+> > Patch 4 adds the voltage regulator rails, this part is crucial to enable
+> > any board using this PMIC, as we depend on those rails even for basic
+> > devices.
+> > 
+> > Please note that I could not test this driver myself, but had success
+> > messages from others. It would be good to hear from Ryan and Chris
+> > here on the list, with a Tested-by: tag.
+> > 
+> > This series is based on next-20240308 for now. I will send a rebased
+> > update after the merge window, but wanted to start discussion and review
+> > now.
+> > 
+> > Please have a look!
+> > 
+> > Cheers,
+> > Andre
+> > 
+> > Andre Przywara (4):
+> >   regulator: axp20x: fix typo-ed identifier
+> >   dt-bindings: mfd: x-powers,axp152: document AXP717
+> >   mfd: axp20x: add support for AXP717 PMIC
+> >   regulator: axp20x: add support for the AXP717
+> > 
+> >  .../bindings/mfd/x-powers,axp152.yaml         |  2 +
+> >  drivers/mfd/axp20x-i2c.c                      |  2 +
+> >  drivers/mfd/axp20x-rsb.c                      |  1 +
+> >  drivers/mfd/axp20x.c                          | 90 +++++++++++++++++
+> >  drivers/regulator/axp20x-regulator.c          | 94 +++++++++++++++++-
+> >  include/linux/mfd/axp20x.h                    | 98 ++++++++++++++++++-
+> >  6 files changed, 277 insertions(+), 10 deletions(-)
+> 
+> All applied and sent for build testing.  If everything works out, I'll
+> send out a pull-request to an immutable branch shortly.
 
-Thanks,
-drew
+Okay, these are building okay based on v6.8.
+
+I'll send out a PR once I can rebase tem onto v6.9-rc1.
+
+Note to self: ib-mfd-regulator-6.9
+
+-- 
+Lee Jones [李琼斯]
