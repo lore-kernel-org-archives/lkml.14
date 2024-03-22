@@ -1,93 +1,86 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998FB15AD0
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 03:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C9CC4A2C
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 03:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711078751; cv=none; b=nRjxu3b61qM825dEXUz0UrsYjwYJ94H16NiegRQk+K6KjSUtHaEpSRFUvI5NXbZCWlnLW/BOR9q8mYIddbpR1zGIGZIgbVjd0suIg7R408CVKqJ469YCkfllv4CELBOUaibwCgrN1WjWnNyj2YkwstAd0q7MuWHsuRRmwc6JmlI=
+	t=1711078992; cv=none; b=J8NLdwj8bNYZIeawMBOPoYibsQHRE4PkmUQTo/1HzIJgCF8DRT1zoU/vFf74/3w4cpwYMN44r6e7CrxKDlw/3fhVdRwADEesyWZsr3hrKj6gPlDVVbd5LNqMv9ZcKD+1c+aeJXGloLsND6U98h0Xw7Wx255wUnPKsGw9+lVO3OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711078751; c=relaxed/simple;
-	bh=iSR4eVTv9vBjTyoy0u2zQ1BJB3q/2JhCssOVrTNtf8o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UmMzOdzQeyKSJzf8ync4j5h++53nGIH2AsQALLvtTub4zoddBLMdhvRDhqbsdNanf4MO5zjqUGcKv8n3+l2NrbSIkEwL7FJb7y9G4jwG2UmkWNaYQGKkbbSrQVW/S6I8crUMfunaLrZl+GJqgFJQlNiEsZQDJOvT5rFPbclad/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Atw759O9; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Atw759O9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711078748;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y5liH5XREjRdtzIi3oVOZVrr4OfiHuxXZ9yg0sczK48=;
-	b=Atw759O9Xo5fDlJSGK4noCn7U3dzjwXwri+qR3Y0vucAy7p/4mEJyNZ2PeeVdYrRiJa92z
-	8GFYK7KlWXk+9bZP5XYJiKN4y2y4Xq4ZBZpeMX26EGk8cLcRS8tds2PZ0+LHVcCGXj4Hs5
-	Y8Lu737A4MgE9eRRDgN03RYkiJ3/5ko=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-562-xgIKYZ3uPyOjt1NOjtfm7Q-1; Thu, 21 Mar 2024 23:39:04 -0400
-X-MC-Unique: xgIKYZ3uPyOjt1NOjtfm7Q-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 72E038AD561;
-	Fri, 22 Mar 2024 03:39:03 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.39.192.34])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 20A96200E1B2;
-	Fri, 22 Mar 2024 03:38:57 +0000 (UTC)
-From: Kate Hsuan <hpa@redhat.com>
-To: Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>,
-	linux-leds@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	=?UTF-8?q?Andr=C3=A9=20Apitzsch?= <git@apitzsch.eu>,
-	linux-kernel@vger.kernel.org,
-	Sebastian Reichel <sre@kernel.org>,
-	linux-pm@vger.kernel.org
-Cc: Kate Hsuan <hpa@redhat.com>
-Subject: [PATCH v5 6/6] platform: x86-android-tablets: others: Set the LED trigger to charging_red_full_green for Xiaomi pad2
-Date: Fri, 22 Mar 2024 11:37:36 +0800
-Message-ID: <20240322033736.9344-7-hpa@redhat.com>
-In-Reply-To: <20240322033736.9344-1-hpa@redhat.com>
-References: <20240322033736.9344-1-hpa@redhat.com>
+	s=arc-20240116; t=1711078992; c=relaxed/simple;
+	bh=DC68Fan9U1mDvvm9HS7/KL5cq/tCfXtYDl7pvERFoFo=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Liyjp2DMgSWMELwchD2YyN3jyX3SPnvzMmgTG9AJ826dTuDxFIbak8TCqBLKHMo/umsLOp/VFSpxqLEp3/XU1YICDHCiKaXPuxyb5eIjKRFJeLuFlPfbzKr0RXq4ysOvD/9hy8zdDcY+Kx5rk30ZXMD2it1C39Sfmv4gpVH6W4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7cf265b30e2so176523939f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2024 20:43:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711078990; x=1711683790;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DC68Fan9U1mDvvm9HS7/KL5cq/tCfXtYDl7pvERFoFo=;
+        b=J6JnwKIu1mgabKpIJuT1kz+YHnvge4r6sKE4qF0gQ2CqZLAjYAgdtPf0pWgNuOXccL
+         S+htLYWJhb5XBl9jbNoPb8oyABtTwEsmAF2dOVPFdb73h0NJfirZsj0vqwNik6daNnJw
+         g61vOAuMiYdYyPy4kmIJskcWeHdUaoWRLodiRWzhujLx7JnWzN2GYPlUdR3Hfm8R2a2r
+         754O2uTNw8Ex5tu3VqxW4jmI7Ov2TzwrIJRe5Frr8BJimVM0VfLz4kTUNtAsG/lpmi15
+         OnmN/BhESz3zcq50flpoenpV2pJvFQHwTe/JAORtskroQJNob9aHED9cSFPU9Rjv9AUv
+         qzhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVYDY3BaajZ4zOhgJkA3Phjbv1JLgjtpgMJJ7KuhUXHOu5zf5sb5XsjnYnmws7PZV7iQhh9AAIJPzBh0jBBARGZ9ZXgRaSV6NosIBKP
+X-Gm-Message-State: AOJu0Yzj4ypEgpgRSC533uNZL/3ti3wTy+cwYfKq5eaSuWMdV+97TEX4
+	S3X+tumjU2qlcUY53mNqS5P2C+tsv6y5ToVdN/CS2LFHXNivlmSzuAIK2fUx9lAwfv+gr0lOb1A
+	/4QsSWkCgQPTWUQqsg3VHAwqrRoOsrqGCzdKX6g2yCMUzLjwImy1JgrI=
+X-Google-Smtp-Source: AGHT+IEHxk8xSCWHhcDoCB7Keif1EAn8Bc3Wm7anJiX6s4lQ7mGl+EfpLANtSBAw8oWfeCh6UDat/0XrKUqX/usRC3mv5voXUGuX
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+X-Received: by 2002:a05:6638:270b:b0:474:c3b5:a8b7 with SMTP id
+ m11-20020a056638270b00b00474c3b5a8b7mr68265jav.6.1711078990482; Thu, 21 Mar
+ 2024 20:43:10 -0700 (PDT)
+Date: Thu, 21 Mar 2024 20:43:10 -0700
+In-Reply-To: <000000000000dfd6a105f71001d7@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000069222e0614379f1f@google.com>
+Subject: Re: [syzbot] kernel BUG in ext4_write_inline_data
+From: syzbot <syzbot+f4582777a19ec422b517@syzkaller.appspotmail.com>
+To: adilger.kernel@dilger.ca, eadavis@qq.com, linux-ext4@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	nogikh@google.com, syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 
-Set the default trigger to bq27520-0-charging-red-full-green. The LED
-will show red when the battery is charging. The LED will show green
-when the battery status is full.
+This bug is marked as fixed by commit:
+ext4: fix race condition between buffer write and page_mkwrite
 
-Signed-off-by: Kate Hsuan <hpa@redhat.com>
+But I can't find it in the tested trees[1] for more than 90 days.
+Is it a correct commit? Please update it by replying:
+
+#syz fix: exact-commit-title
+
+Until then the bug is still considered open and new crashes with
+the same signature are ignored.
+
+Kernel: Linux
+Dashboard link: https://syzkaller.appspot.com/bug?extid=f4582777a19ec422b517
+
 ---
- drivers/platform/x86/x86-android-tablets/other.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[1] I expect the commit to be present in:
 
-diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
-index 1012a158f7b7..eccfea7b01c0 100644
---- a/drivers/platform/x86/x86-android-tablets/other.c
-+++ b/drivers/platform/x86/x86-android-tablets/other.c
-@@ -610,7 +610,7 @@ static const struct property_entry ktd2026_rgb_led_props[] = {
- 	PROPERTY_ENTRY_U32("reg", 0),
- 	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_RGB),
- 	PROPERTY_ENTRY_STRING("function", "indicator"),
--	PROPERTY_ENTRY_STRING("linux,default-trigger", "bq27520-0-charging"),
-+	PROPERTY_ENTRY_STRING("linux,default-trigger", "bq27520-0-charging-red-full-green"),
- 	{ }
- };
- 
--- 
-2.44.0
+1. for-kernelci branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
 
+2. master branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git
+
+3. master branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git
+
+4. main branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git
+
+The full list of 9 trees can be found at
+https://syzkaller.appspot.com/upstream/repos
