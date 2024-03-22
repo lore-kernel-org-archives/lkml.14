@@ -1,114 +1,211 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078C645BFF;
-	Fri, 22 Mar 2024 13:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE8F5D733
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 13:36:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711114570; cv=none; b=dBHOJGUjMz1M6UeG4KNhYe2pybZ2h25C23vTh7oEaBZgpL8JgYZvddF95VFrFUPzYPZHl1KkWRycVxhfxLsorHJ+DYHc+no016wsWYv0n6MENhNOMySswa1fF7pewqkLO2+gFeG8Z/uFwvkV8HtXmD3SwnHIG9lFgYIs8JX1XIE=
+	t=1711114600; cv=none; b=COblFTftg36T5pKVhNrVzqHI+JVTm15zuHARHZqsDjSC3h+c89H9QYB0rDiArhHPABfpRCK28rmw+XB3EXCG3y1yxAJW0S5xKma/TBOrg+JRtCVt6/ZtiLtSMtJpp/ueBf/XZXeM4jDr3/T0aDWLIEzTdapI5VPJplIUu9L3qL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711114570; c=relaxed/simple;
-	bh=NfRx8CDuW51pFCmmfqak9U6I8Vq3ncrRG8KMibzqtyk=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=J8lwKG3HCwS0l349Sf/3h6dQWGwWDc68ZogM6w43CKfFdXIOfArd7uHqgN5Oown2ushxrX8d9yyxK5KzAgVcjBBRaN82Zb+NEOYFQXjiyJy00e7ldlEFwC9e+EaPYXD+Sg+PSzRipMj0F0fUv2qtHRq9MhIMSQo3TcaTtwOLGPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZnSRT1mu; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711114600; c=relaxed/simple;
+	bh=H4IlFCreru9OSShE7qeGlxe68zK3kQMdEUlVqZDaUOI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=elu7q/uIncCwFUuWDx8kQXzm3TyxD9uYncttj2Z1Nd6ttHgx1zqmuqqm2Xp7JikJYcgwKGOQ8Sek8kworCecnyFMASTAX4jSRWQbgV68zWVwGwhpKgtkPRT56ExccW9BafXMl2ghpmMJ1zHUTkgFKBx2RBvj/IFfisoxOv8wTU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aqzPxcCJ; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZnSRT1mu"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4141156f245so15375785e9.2;
-        Fri, 22 Mar 2024 06:36:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aqzPxcCJ"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-56bc753f58eso2549286a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 06:36:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711114567; x=1711719367; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=89J9FNeshMeUYJqlt0RIBQEumND/jE9mTsgfiNGVfzM=;
-        b=ZnSRT1muO+CTD9/5Se1uZb5k3rGliPlTpSFD5G0CptFPtyLlaLhCMXBpOkqEGy84UI
-         foySl81Hy2icfMcvZ2VnN9dhreYgtjGXbleqsOx3ZZrEtNgHTkCIIlG01BKggvxYpSKH
-         0yti8l6QKeGA6/H4gXyEP31PU+/9PJj/KtMNpW6Zm7ZTN9zkqsqwmRsL1vggspqq/WRp
-         TZk2S0EmU4TirgbfOfSJ3rg4WtgIGnsTFGr/ieho5dKuyMiSjleHwAwriyl6XDuyCJxs
-         aPAIKUrRAwDYqXLj1DIJDZyblhpjorUrdjjp/RKAG2HFGJTe0od8JZUAWAM34p5vMj5Z
-         ARKg==
+        d=linaro.org; s=google; t=1711114597; x=1711719397; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nnd6ibXxUQf/CK/aaQKXsb3cInWcKtPxZxIk6K6GCqM=;
+        b=aqzPxcCJXY03ffe+tmPbVYKnmA0jAoFmMF2MBPBklu16dLmaTvripDsrgbllTcZ8fa
+         MrpVYvJ2BUzGm4nivDq+ph1oX+cjZyFNLn9AK3kAuk4hrznft97Can1j0Sge/dzjKsS+
+         L9Y7DKEAviksVkzwraD8ECQpGo5AJ6tp2ENSqA+35eDLsT+JALc4+IoDK0BlJBd/4sHX
+         /LXCu6vzkVwzgdQHK4AZPI+3/aIpaRuvg5Ivl5xuAJBeh2I+8Fz5VYmRwgiTrugYJMGx
+         2Usqvag9qJKGQyukxIqGUdB9zv5TXISpuKb99hjuYh0TuGqOZHpg4wGgFzzJh1H7yPOE
+         Y6Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711114567; x=1711719367;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=89J9FNeshMeUYJqlt0RIBQEumND/jE9mTsgfiNGVfzM=;
-        b=b873NG56EVhxRt8rBebRicaPxLI2o3ckvrjPhTEpr4q5lzETetDP3KkYglAhYaxS5q
-         xW7WJHWwWkbJuAnhL/TNiFX7slcLS00SGliG5D8r4lTlBD+wXm+8+zajy4PoCukVioMk
-         a/G5Z3APc+OLp/55ZWKp/hg5uf0khNnjUA9HNfuj8Stan4HBi2pHF+9ubHHdArtur7GW
-         vNrCGYzWYNHT0+teIi7/InoA+XY7dYo3wi91xSUjvYyj9xx76GTkOKtOSmJqnrHMYi0U
-         vcWFhUrgaw91ky4bLHUM9yr3dE5Jzq7pM5paynQ3y4zklH3psrTrIMpXT9hF1DPeSAZJ
-         N6Pg==
-X-Forwarded-Encrypted: i=1; AJvYcCUTHEMymT0ttaVaazqLLD+QBwNbZ3Qr5Aqye5KJg4yWmU2d4g6ajrrClZPYOGKxyNVPh9NuXE9mP08vMX+xfGV/L8AuaAZFQOgNRPffNLot7PhGHqlLr8HNUociiD+tB1GXk619P77gPbbTlI01AY1whHLL4pPDp+PYR0A93U3dd54s
-X-Gm-Message-State: AOJu0Yxe7OU7O5HfuxawmJ00aDoT7m1ZBkwrZQ2CxAUjPGk0U/nJt0+5
-	+U1L6bdcvpotpHu287W2h1e2DsAQvQmjYxKS6fhMS6E/OB7PFpsw
-X-Google-Smtp-Source: AGHT+IFHWWCIm2FvVfLXD8MAk1Gtxae0467JGCEEHu7Yt9gcY27h73Rs8Nqg9TSXbZJchh4+SyahcQ==
-X-Received: by 2002:a05:600c:35d4:b0:414:7db3:5757 with SMTP id r20-20020a05600c35d400b004147db35757mr956306wmq.30.1711114567008;
-        Fri, 22 Mar 2024 06:36:07 -0700 (PDT)
-Received: from localhost (54-240-197-231.amazon.com. [54.240.197.231])
-        by smtp.gmail.com with ESMTPSA id h13-20020a05600c314d00b004146d736fcdsm8397220wmo.36.2024.03.22.06.36.06
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Mar 2024 06:36:06 -0700 (PDT)
-From: Puranjay Mohan <puranjay12@gmail.com>
-To: Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH bpf] selftests/bpf: verifier_arena: fix mmap address for arm64
-Date: Fri, 22 Mar 2024 13:35:52 +0000
-Message-Id: <20240322133552.70681-1-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.40.1
+        d=1e100.net; s=20230601; t=1711114597; x=1711719397;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nnd6ibXxUQf/CK/aaQKXsb3cInWcKtPxZxIk6K6GCqM=;
+        b=GvEGmDydxeUFiwHFyFPbVYMtZk0mTwQk4eHw/ucepMhU2zgkAOiL2dsDRwfs0hIceB
+         v7lIeo/4uH1UV2pdeH/zgdlQq36PtCcCkXCqacGdTgZMPLLsNHqctItmLP6g/UyfTflp
+         dRtzlrMxajg77LgMnv29+BGDtM5mTSPWMh4aANJ951HRao/WvxxvWpJAZZQTMvo+K7S/
+         JENeX0PTzyRfbTdPJtCC57pz0IWVk03Yrf2a1y5uDXhAcuRx/AGd1NhX0F5FEJTYKc7K
+         pv0KVsmctGKo2qClgvy2IfYnue5VTI+A3w/hxTqVWwUhqGoUPa5DgCvNfIepeH3QQfyh
+         J6cg==
+X-Forwarded-Encrypted: i=1; AJvYcCUcij45cI/P42poifGzs3WUOJCglUhIc1TP+ZPBIGIPluiCilsjwJ9NL5gpU8r37g+w9RLSK4Vu6ekaHGFQnCuZzNB7TvPy8iQ5at7p
+X-Gm-Message-State: AOJu0Yx/X96yh91fLZ4DWfoXTDedJ+ZmLYRtPmsUQPMr0mK+u/Wd1E3Z
+	iGcdFfXWkrJQqiMLtWLm5Mf+Qvwm79fnOLeQscbmFMmvr/w8dc+8c/m9s+rQbsk=
+X-Google-Smtp-Source: AGHT+IFoaXX1Dh5Xg/+nKkToAtA9OhmG/gb6cE5zvBDWJWXkJ4/21d6NlvsfBgwbrNf8MmMq9rhSlQ==
+X-Received: by 2002:a17:906:b6d2:b0:a46:cc94:1677 with SMTP id ec18-20020a170906b6d200b00a46cc941677mr1618611ejb.17.1711114596679;
+        Fri, 22 Mar 2024 06:36:36 -0700 (PDT)
+Received: from linaro.org ([79.114.172.194])
+        by smtp.gmail.com with ESMTPSA id ch11-20020a170906c2cb00b00a47090964casm1010680ejb.184.2024.03.22.06.36.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Mar 2024 06:36:36 -0700 (PDT)
+Date: Fri, 22 Mar 2024 15:36:34 +0200
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kuogee Hsieh <quic_khsieh@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Johan Hovold <johan@kernel.org>, linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] drm/msm/dp: Add support for determining the
+ eDP/DP mode from DT
+Message-ID: <Zf2JYmm3DEaR8vB5@linaro.org>
+References: <20240322-x1e80100-display-refactor-connector-v3-0-af14c29af665@linaro.org>
+ <20240322-x1e80100-display-refactor-connector-v3-1-af14c29af665@linaro.org>
+ <CAA8EJpp6V5qVzbYtnU=JjO8FX45fcxBvWsD3PWQ5bu5wuv-T=g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA8EJpp6V5qVzbYtnU=JjO8FX45fcxBvWsD3PWQ5bu5wuv-T=g@mail.gmail.com>
 
-The arena_list selftest uses (1ull << 32) in the mmap address
-computation for arm64. Use the same in the verifier_arena selftest.
+On 24-03-22 15:30:54, Dmitry Baryshkov wrote:
+> On Fri, 22 Mar 2024 at 15:22, Abel Vesa <abel.vesa@linaro.org> wrote:
+> >
+> > Instead of relying on different compatibles for eDP and DP, lookup
+> > the panel node in devicetree to figure out the connector type and
+> > then pass on that information to the PHY. External DP is not described
+> 
+> Nit: External DP doesn't have a panel described in DT...
+> 
 
-This makes the selftest pass for arm64 on the CI[1].
+Will fix.
 
-[1] https://github.com/kernel-patches/bpf/pull/6622
+> > in DT, therefore, assume it's eDP if panel node is present.
+> >
+> > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> > ---
+> >  drivers/gpu/drm/msm/dp/dp_display.c | 43 +++++++++++++++++++++++++++++++++----
+> >  1 file changed, 39 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
+> > index c4cb82af5c2f..c9763f77c832 100644
+> > --- a/drivers/gpu/drm/msm/dp/dp_display.c
+> > +++ b/drivers/gpu/drm/msm/dp/dp_display.c
+> > @@ -726,6 +726,14 @@ static int dp_init_sub_modules(struct dp_display_private *dp)
+> >         if (IS_ERR(phy))
+> >                 return PTR_ERR(phy);
+> >
+> > +       rc = phy_set_mode_ext(phy, PHY_MODE_DP,
+> > +                             dp->dp_display.is_edp ? PHY_SUBMODE_EDP : PHY_SUBMODE_DP);
+> > +       if (rc) {
+> > +               DRM_ERROR("failed to set phy submode, rc = %d\n", rc);
+> > +               dp->catalog = NULL;
+> > +               goto error;
+> > +       }
+> > +
+> >         dp->catalog = dp_catalog_get(dev);
+> >         if (IS_ERR(dp->catalog)) {
+> >                 rc = PTR_ERR(dp->catalog);
+> > @@ -734,9 +742,7 @@ static int dp_init_sub_modules(struct dp_display_private *dp)
+> >                 goto error;
+> >         }
+> >
+> > -       dp->aux = dp_aux_get(dev, dp->catalog,
+> > -                            phy,
+> > -                            dp->dp_display.is_edp);
+> > +       dp->aux = dp_aux_get(dev, dp->catalog, phy, dp->dp_display.is_edp);
+> 
+> Unrelated
+> 
 
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
----
- tools/testing/selftests/bpf/progs/verifier_arena.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Yep, will drop the change.
 
-diff --git a/tools/testing/selftests/bpf/progs/verifier_arena.c b/tools/testing/selftests/bpf/progs/verifier_arena.c
-index 5540b05ff9ee..91818a84e86d 100644
---- a/tools/testing/selftests/bpf/progs/verifier_arena.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_arena.c
-@@ -12,7 +12,11 @@ struct {
- 	__uint(type, BPF_MAP_TYPE_ARENA);
- 	__uint(map_flags, BPF_F_MMAPABLE);
- 	__uint(max_entries, 2); /* arena of two pages close to 32-bit boundary*/
--	__ulong(map_extra, (1ull << 44) | (~0u - __PAGE_SIZE * 2 + 1)); /* start of mmap() region */
-+#ifdef __TARGET_ARCH_arm64
-+        __ulong(map_extra, (1ull << 32) | (~0u - __PAGE_SIZE * 2 + 1)); /* start of mmap() region */
-+#else
-+        __ulong(map_extra, (1ull << 44) | (~0u - __PAGE_SIZE * 2 + 1)); /* start of mmap() region */
-+#endif
- } arena SEC(".maps");
- 
- SEC("syscall")
--- 
-2.40.1
+> >         if (IS_ERR(dp->aux)) {
+> >                 rc = PTR_ERR(dp->aux);
+> >                 DRM_ERROR("failed to initialize aux, rc = %d\n", rc);
+> > @@ -1241,6 +1247,35 @@ static int dp_auxbus_done_probe(struct drm_dp_aux *aux)
+> >         return dp_display_probe_tail(aux->dev);
+> >  }
+> >
+> > +static int dp_display_get_connector_type(struct platform_device *pdev,
+> > +                                        const struct msm_dp_desc *desc)
+> > +{
+> > +       struct device *dev = &pdev->dev;
+> > +       struct device_node *aux_bus;
+> > +       struct device_node *panel;
+> > +       int ret = DRM_MODE_CONNECTOR_DisplayPort;
+> > +
+> > +       /* legacy platforms specify connector type in match data */
+> > +       if (desc->connector_type == DRM_MODE_CONNECTOR_eDP ||
+> > +               desc->connector_type == DRM_MODE_CONNECTOR_DisplayPort)
+> 
+> misaligned
+> 
 
+Sure, will fix.
+
+> > +               return desc->connector_type;
+> 
+> Can we drop this part completely?
+> 
+
+You mean the whole if clause? How should we handle the legacy approach
+then?
+
+> > +
+> > +       aux_bus = of_get_child_by_name(dev->of_node, "aux-bus");
+> > +       if (!aux_bus)
+> > +               goto out;
+> > +
+> > +       panel = of_get_child_by_name(aux_bus, "panel");
+> > +       if (!panel)
+> > +               goto out;
+> > +
+> > +       ret = DRM_MODE_CONNECTOR_eDP;
+> > +
+> > +out:
+> > +       of_node_put(panel);
+> > +       of_node_put(aux_bus);
+> > +       return ret;
+> > +}
+> > +
+> >  static int dp_display_probe(struct platform_device *pdev)
+> >  {
+> >         int rc = 0;
+> > @@ -1263,7 +1298,7 @@ static int dp_display_probe(struct platform_device *pdev)
+> >         dp->dp_display.pdev = pdev;
+> >         dp->name = "drm_dp";
+> >         dp->id = desc->id;
+> > -       dp->dp_display.connector_type = desc->connector_type;
+> > +       dp->dp_display.connector_type = dp_display_get_connector_type(pdev, desc);
+> >         dp->wide_bus_supported = desc->wide_bus_supported;
+> >         dp->dp_display.is_edp =
+> >                 (dp->dp_display.connector_type == DRM_MODE_CONNECTOR_eDP);
+> >
+> > --
+> > 2.34.1
+> >
+> 
+> 
+> -- 
+> With best wishes
+> Dmitry
