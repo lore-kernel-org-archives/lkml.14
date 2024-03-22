@@ -1,62 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C304D51A;
-	Fri, 22 Mar 2024 06:48:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DDFAFBF2;
+	Fri, 22 Mar 2024 06:48:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711090101; cv=none; b=bh3lVdJQJxFlFa5elaoJc4KK6aET+lnhvONFPNACEEOZ1qNWZRs9L7rvWcM21FDEOhF2/PPEt5zDee6JtZFP/YkT88huQ9E/Xvq5Oq8apz7zubkldeBKnc0x5Uoi11fad67zEkW6Ox+X/V4foLaHShpE2UF7ZdUw12nvaIBBmN8=
+	t=1711090137; cv=none; b=fqzhnSuKUTbHvqinT+0Zm0LiBXgdvbtqP8RDXxcAiLN9+NkdqbennBKFb7RM0EVyF7bk+2a8pki43jIV5pOBx1V+OQgqBy5/WTbC/mFat8yNlrxsHGITVcl99uqkkH3SVvvC0+xog3gRsbaxnR0KNEuaZczaEWFpuXR0sTQC/4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711090101; c=relaxed/simple;
-	bh=MMToYGDlPx6M64cs/BtMBKCnEYYVKlgAvV4z9fQeu8Q=;
+	s=arc-20240116; t=1711090137; c=relaxed/simple;
+	bh=8Eepz+qxaMUM5Qg1zmuWcMPWkKYM9LnmBhHtrJqPpR8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tlRZ+pI90alfhsHOcFl+WJaE3BX7KKAQWZ2QG1ZMpRlhD1xHonwvb4jc/VbS54l7xD6RQh+fhIAEYFytZbrEXqrRJZS3UhO0gGPPt7qeFpTg7SvC2Fs1DDivE1G1bwzGW4X0hhNv7adahJOXBHVVKb8SKHQKdwCdCKPb5rALeRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lvYjq6KY; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=cyXW/Oo/+RvkuUWO4iOxXNld2Pn/Us8n9w6pxE86RRLm6gMrQOWIHabT9WGwcfmacR1ssk4b0Vr0INMY1BqkQbPd0F87pDO7+jLAVEFUunYuLKGMNlL6pmlQ3nXdyFh41pBQQ+TC6gaepLl/c2KeMYSggcmU7qigPEXPNM/tVZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=r7M/5C0j; arc=none smtp.client-ip=74.50.62.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lvYjq6KY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711090099; x=1742626099;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MMToYGDlPx6M64cs/BtMBKCnEYYVKlgAvV4z9fQeu8Q=;
-  b=lvYjq6KYMgq0JeyE9MVCMT28cMZDxJBIXOWm6LrYQX4GeJUwTL9CDrl/
-   CJp8fwI4iRTGfMwMvcUkh2TMpxibFZwjgu6gevLc8WypanU1nsKDmoHEF
-   JQ8NjztnMykm+CVcA4CMIiWTEtDLl/4hu/NKFL2BlYI5ZDWRAsMoY1L15
-   onE8QwOEvQCejW9i5vxUA6cg9tEmD8eLyJSkaWoekLYxgjV43tvh3gRwO
-   2Hi7JEFGtq9S5/B7C9KqVYm1dwZl+XsLlatjN9nLIWZxd/5UstorjSfMV
-   TgPBB9Q+alo8leAWrPYe9GHCEQAQLNOUVcs7u2zYbmdtyvp3QJJk0/KYF
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="5980684"
-X-IronPort-AV: E=Sophos;i="6.07,145,1708416000"; 
-   d="scan'208";a="5980684"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 23:48:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,145,1708416000"; 
-   d="scan'208";a="14834215"
-Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 21 Mar 2024 23:48:14 -0700
-Received: from kbuild by b21307750695 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rnYhI-000K5n-0c;
-	Fri, 22 Mar 2024 06:48:12 +0000
-Date: Fri, 22 Mar 2024 14:47:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andrej Picej <andrej.picej@norik.com>, haibo.chen@nxp.com,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, jic23@kernel.org, lars@metafoo.de,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, upstream@lists.phytec.de
-Subject: Re: [PATCH 2/2] dt-bindings: iio: adc: nxp,imx93-adc.yaml: Add
- calibration properties
-Message-ID: <202403221438.trdG8I0x-lkp@intel.com>
-References: <20240320100407.1639082-3-andrej.picej@norik.com>
+	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="r7M/5C0j"
+Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
+	by mail5.25mail.st (Postfix) with ESMTPSA id 9E893604D9;
+	Fri, 22 Mar 2024 06:48:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
+	s=25mailst; t=1711090135;
+	bh=8Eepz+qxaMUM5Qg1zmuWcMPWkKYM9LnmBhHtrJqPpR8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=r7M/5C0jiD13hl3IF5a4KmEGBBynwg/IygpT7+KpJpYcu1zi7dWIqAUj4EG0HgQUa
+	 sfSs32ScNtZK0dAqvB7M+Od9GFKDMJ+LmfUsVPysbi/uCpCN4pvT5CGxoPSeUfZDG7
+	 SfrS2hixMgQJJ6l1tHpAqo3Fbr8bX74EAZMVHHkieq4cFR39M6elltf8eWs8WdEYiW
+	 UbGcPy7hiI1vvRT9r3gmI/9SKetG4sFagQGpI+XyVKwj5qvypkhcBDBZCrelxwq/H6
+	 KqRukZzdWbcbfHngVf++FC9/Y/KYsyrrilITXgtd+XiZ99XepP7RToP2WVfC5R9SWJ
+	 zSmPSVAnDVOyg==
+Date: Fri, 22 Mar 2024 08:48:43 +0200
+From: Tony Lindgren <tony@atomide.com>
+To: Nick Bowler <nbowler@draconx.ca>
+Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
+	regressions@lists.linux.dev, linux-serial@vger.kernel.org
+Subject: Re: PROBLEM: Sun Ultra 60 hangs on boot since Linux 6.8
+Message-ID: <20240322064843.GC5132@atomide.com>
+References: <d84baa5d-a092-3647-8062-ed7081d329d4@draconx.ca>
+ <20240322051531.GA5132@atomide.com>
+ <d7337014-09ac-8a35-7159-e75ecd2707b6@draconx.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,36 +47,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240320100407.1639082-3-andrej.picej@norik.com>
+In-Reply-To: <d7337014-09ac-8a35-7159-e75ecd2707b6@draconx.ca>
 
-Hi Andrej,
+* Nick Bowler <nbowler@draconx.ca> [240322 06:36]:
+> On 2024-03-22 01:15, Tony Lindgren wrote:
+> > Can you please test if the following change to add back the check for
+> > !pm_runtime_active() is enough to fix the issue?
+> 
+> I applied the below patch on top of 6.8 and unfortunately it does _not_
+> fix the problem (no obvious change in behaviour).
 
-kernel test robot noticed the following build warnings:
+Hmm OK thanks for testing. I'll take a look and see if I can debug this
+with qemu sparc as I no longer have any sparc boxes around.
 
-[auto build test WARNING on jic23-iio/togreg]
-[also build test WARNING on linus/master v6.8 next-20240322]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Regards,
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Andrej-Picej/iio-adc-imx93-Make-calibration-properties-configurable/20240320-184314
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-patch link:    https://lore.kernel.org/r/20240320100407.1639082-3-andrej.picej%40norik.com
-patch subject: [PATCH 2/2] dt-bindings: iio: adc: nxp,imx93-adc.yaml: Add calibration properties
-compiler: loongarch64-linux-gcc (GCC) 13.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20240322/202403221438.trdG8I0x-lkp@intel.com/reproduce)
+Tony
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403221438.trdG8I0x-lkp@intel.com/
 
-dtcheck warnings: (new ones prefixed by >>)
-   Documentation/devicetree/bindings/net/snps,dwmac.yaml: mac-mode: missing type definition
->> Documentation/devicetree/bindings/iio/adc/nxp,imx93-adc.yaml: nxp,calib-avg-en: missing type definition
->> Documentation/devicetree/bindings/iio/adc/nxp,imx93-adc.yaml: nxp,calib-nr-samples: missing type definition
->> Documentation/devicetree/bindings/iio/adc/nxp,imx93-adc.yaml: nxp,calib-t-samples: missing type definition
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
