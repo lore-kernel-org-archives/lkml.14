@@ -1,347 +1,178 @@
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2076.outbound.protection.outlook.com [40.107.105.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3320C4D134;
-	Fri, 22 Mar 2024 14:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711119288; cv=fail; b=dEAOyYbwHDiQem6s75GpLx1LqbU6+YlnIDZuenOlAqRJ9MNvcO//TbwtPogwqls7a+GmL3Pi5JWxgg4nfNhduKOS0FGa0t9F/P4QRtWfuqujRHtqF2iob4J7mw/sCxmiu5hBazXzoRiIzbnyb1vhE0Gh7CMSKukJZEuvd8Nx/9w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711119288; c=relaxed/simple;
-	bh=TeteK8cJBrCIYtjxDfAsLmYamC39DEuU5IbajGIOh/8=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=OVjypVHJmg3/3cHmAtM7MFATwxVwnSvaLr+v96SyBV4+g5Kq5qH15nwLuUydpAvJ86T87aCA2u6IH+98LsyPhuiyfX8eCu1zwqijhfsElMqsn3JSloppwF8sBoGzhlOSk69exQ+FbOhQrUuvT8+82+jHdbkVS6Sg+D6woMbiknU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=si7V9sGH; arc=fail smtp.client-ip=40.107.105.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA7C4AEC3;
+	Fri, 22 Mar 2024 14:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711119397; cv=none; b=WyqP529zbylFAe4PqOHOtVyLF46U7iFGYSk9DqRHZ1dmw1Gv06rtfNwD272OEylJCjhhVWrOCUB1dKnnCxDRg50auEtu0j5IP+u3rAaVcwBgrH/EltcxxZVtMe8f8U4npImC35SXkyzFamX+UqUyhR38gvmy5xVmCGWHbQWqXmA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711119397; c=relaxed/simple;
+	bh=B3+9hbrYbOgrf7SwvZDCmpmOCm9dH1xA1Os15FGm0f8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eJHXfFkKoUWzhyjQmwtrwNY9/LkSbYkZwkq2DolkRtoMrNY1mSJ0tkUvvPznKtFCtbBIKiRig+9EizqXzw8I1ihCjxThfATraBxiBgdim561arpwkKwiicP84KX4hKlKDnDiOYKtEiPQbM09Z9rC4LrPNgwHbiCbF9/eAix4cAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VZJKC1A3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="si7V9sGH"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kmup1HcDvUmnFnjE8oI+vSCSklGgON5989fLXZQvNQFlblBFp9GrhlLLmRFw9nKrH8Y+NbcEN4ewicD0FjTqApsj8olbHk4jZv5bGz6BZpDKK0deAzVYSsIaL/h3TXFhSc+W8qZpYXuAR71muXC1qEhPfu9FMgP0Q7jj0wOp4ei/p3IFHpVBrrxlrOHyjbNMyFQAy43u2uvNXcNlFimDyQHuKrDY+wawe2F7MkOwlZh5uyBtjRUsDMbmBlKrwWw8e5j93MU8E06jZoSWQK7duOwALlfsTTRXAiGxDQupTEPji+DglZpwBCsU66JApiybL7yplK5ZiDT/WqF9qQAAFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7SOiV6oiYz8yuAUYVvq69PyZ3PZMVA2Nmb3g0834yas=;
- b=ogJJAIQkEHoo71Yw9Hr/pzxzROj9R9S22XE9RzdUFNo0KH6tJkQhhIN0xfk9EACOKDSM4uhTtD8I30ApMDvZrJzGCSsma9IxfKd+XJNa6Rpm7xHgbx1FACJ5hI4tsPJJYIrTXB98hjQYaefYed0/zc/qvwbby7f3T6xWN8sGffdbS9rmxUGQOkDAf+BxlAJ8V68POyNwa4clIjPhe2jqzppTpihi9059oxQdIPD1GzDeZzKCJ30uRQlz1viQOc0x4tMkw6+GaM+EGxhgDHrap8hHcucwF8TDVPe6Z1ag45J1fDxkGX5YcJ4iX+GRNg84JIs3y9BU4XlrsJ0nNho+kw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7SOiV6oiYz8yuAUYVvq69PyZ3PZMVA2Nmb3g0834yas=;
- b=si7V9sGH3m8nXchNEUA8FNVFDK5jpGznowRA/lx5nRyqxUqPGO1D7PkhEhJwYRZsRQDaxaCop7tsekj8NQ8bkDmdy2L0BC9rCpUz6BOfXQQpCRA2JTOOqEA5L4vF7nwavIQpCJlsjE9FwWneBq1P6TgX7/QnFtponv22ClvO7xI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DBAPR04MB7206.eurprd04.prod.outlook.com (2603:10a6:10:1a4::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.23; Fri, 22 Mar
- 2024 14:54:42 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7386.025; Fri, 22 Mar 2024
- 14:54:42 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shengjiu Wang <shengjiu.wang@nxp.com>,
-	linux-sound@vger.kernel.org (open list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM...),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list)
-Cc: imx@lists.linux.dev
-Subject: [PATCH v2 1/1] ASoC: dt-bindings: fsl-esai: Convert fsl,esai.txt to yaml
-Date: Fri, 22 Mar 2024 10:54:05 -0400
-Message-Id: <20240322145406.2613256-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR03CA0249.namprd03.prod.outlook.com
- (2603:10b6:a03:3a0::14) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VZJKC1A3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79ABEC433C7;
+	Fri, 22 Mar 2024 14:56:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711119396;
+	bh=B3+9hbrYbOgrf7SwvZDCmpmOCm9dH1xA1Os15FGm0f8=;
+	h=From:Subject:Date:To:Cc:From;
+	b=VZJKC1A3CVm0OJ8xGSmhf7SSk8nzq4ItyPvudRWKQcAsbfP2kX2NCu8epX4eQ1qfS
+	 4V/psdDu2COTE58DgYi7ogHeR7OZutZrKv+sSEj4iAWkKilXihB76XauZP0wKo+4qo
+	 zusumbbZEdXVhIU8RYTLU93TVE3iAtarIOfyjAs/Elmdv0sFuomZwGIqufgCrJ78dA
+	 kz7qh/r7xIoxGp/rPgQ58a3dDYE5PFAee/UgEnkd3xuJkbLvyB7xkpFI+jpBpFzctp
+	 oE5DVLpSw5uf0qL1E6O5MpKylJQ2c2ysEMuVybKVlFRoObF6CFaU0mG+Au1FIImiLU
+	 vD7po2W+E+BXQ==
+From: Benjamin Tissoires <bentiss@kernel.org>
+Subject: [PATCH bpf-next v5 0/6] sleepable bpf_timer (was: allow HID-BPF to
+ do device IOs)
+Date: Fri, 22 Mar 2024 15:56:20 +0100
+Message-Id: <20240322-hid-bpf-sleepable-v5-0-179c7b59eaaa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBAPR04MB7206:EE_
-X-MS-Office365-Filtering-Correlation-Id: 240709be-4dc1-4177-4c82-08dc4a8001b1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	JhpKqMVVzqqVxHGYngmkp3Msg8Cb7Pas1NKlKtuu1pXJY2hEnESbcJgyy9GWzpL2xF1a0dOAncJTqW2UU6xfcIix9VNwAke3NF0p+FEYWgLPx7jG7iARsndBE0AAoiir16+NF+6IpuYJsrzk+54KFUc4D0o3TFqIjqBZyMZ0JrYi+uvH6W4WhgL3qZzACOF8z6QWur7taofBQHHfT7c8dLoR3mQC2y9KYoroDPskhhzZ/qFI767jJFYzx50mvRK7/gZDGCycH5P/JAHLNGjH0HpD3+eqe92olHqWbRAH0NZFHYd/t3OD+Roz0Fz8EhAV+Aq0OPVDXqRTj8IXD/+vagTfCz+Ae4X+UPE7Az/nG0Trin5FEArcfkwSqHoOFX4J/NUL7qHv+4dFQBd/kbjfxOY5SOJj0mEHt7SlOTrOkKMU+RzI/4KSUbWeDQfpQzjht2laAU+6PS5r7qyxS8EoKx8f/JlaeNaClcuI08m2XVKJXcOCH7MCGvqeW2SSGypYQ7+oGgGq3nMQCqhjSWyi1Ka94h+jsicojK5JOoEVscAMLmp8GmUO6D0AMTvurRMIoW/YldxQq7O3gBigqF1mH63iSpYrDITkZr1jXCvdFocW4N37bA9e0EZEagqI0bzTYMzi1xKgaucRD82wv9T2Kn6k96NRfUh2ddS9uUL1TVE=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(52116005)(366007)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?gdSu6UgqtvEWIIt86VOrpSQZ8Jz0Tkvqf8f7WPFz+haJ7JdyEFwQVmr0vVPr?=
- =?us-ascii?Q?3N6olWD6jEUWOGvoM7USlyjFEt9P0OkOXYdHg1K8wkqIMNbQNMNNPYKF7SsO?=
- =?us-ascii?Q?UY4ITyYn+8UklxvlhYkCfVzyvaW3f+gjJk181m4qw2Tbs50hkC6BnrccW7wa?=
- =?us-ascii?Q?lPD3WFDvg4xIS5eZFYG8PD1ANz71916sdunQDiFxcUlv7lPWEwkdEwc/9uij?=
- =?us-ascii?Q?G9AGRtA0dr8o8dOijMwlSFjqrILKiMre0lWaAhK7IpwPm+aalw6S3JRXSi8D?=
- =?us-ascii?Q?RWFraIRnGNfIJInH9sAuNmnxKAbaQzewzycOAHbttkE5qVUtOSUGEtM1AT0r?=
- =?us-ascii?Q?Fc0FbD4sWQpDeemDZ4QX+UlcSdpreIQzshjGrC8vx4CZh2Rzq1Xo3W8sdLUF?=
- =?us-ascii?Q?wKUfzPMWPq6bZux67CInVtM5hTAmPBn0YiuPQ8IDWt3MRc74uCkonWs2OUmR?=
- =?us-ascii?Q?K+PgYVa9H/sEF12lzenY7ZzLysPbwG1vX7mEd4T6JNH4CGRgvdQKaziEdNar?=
- =?us-ascii?Q?MqEDNXw14afUR1P6XgsN1ApoC6dF6URNEFpfpl3NLF/sGyX/XaOQ/e/cnzoH?=
- =?us-ascii?Q?VDStQsUAFMFwglvnNmtlpXRTWiAbQAgX34UlWA1+7YwNGJXcN+4RtHebEOK/?=
- =?us-ascii?Q?Uymbn56N/dyoia2GVdkYdQErdVorm7HCUgnU8pOek5V1vZs4cJP6VTMaK7lH?=
- =?us-ascii?Q?dnghgi4NPFPbsO55GE52JDnse45NuWcKSyj64dK+QCS/JgupSK3KO5vvINKL?=
- =?us-ascii?Q?GbP6L8DF9Z3+uofn2c0rjtTMDaxKJgQiMwnSsKdYabdF4d+GL6KL+9g4gOJ3?=
- =?us-ascii?Q?C6dFJwlPyvp780V5HPQdy7cD3F0wu1BTcy23dqCJX6yFWR7FbPKXkfRtyW8p?=
- =?us-ascii?Q?NYQlHrgu1QxXqb6iDJc/5KAZQ+WiRt3Sh3uOwBcpD4Y5xKxEVfBKCwCxux56?=
- =?us-ascii?Q?2TbYRvRdeBfY6aT37F/YPalqxcV3dpHYb5anQaP5KL6MD4Uznqttem6dHTuk?=
- =?us-ascii?Q?DaWRJr7QjNwnuy1y8xtoOtDWTBdeVw/U2+/gpXkzYYSAYOzKMbEepxYgqLTV?=
- =?us-ascii?Q?QEo3ULAodLQ29fFFY2uVk9p2tDAe9bUQXj9zS6+92VODUfBlkh927CHXnDvU?=
- =?us-ascii?Q?8BfNbpaqjz3KuH9mbXVFrifrl0nIvjgSwl+7KG+JVYm9hGwtcp9B1XqSjFQb?=
- =?us-ascii?Q?phw0ifX3BtBtpxUrMTOtdoYjFLP1UEoxR6iEX6rQZgQjDXamHPlPLYME8t0y?=
- =?us-ascii?Q?wTwKmeGojs+RRhCwCQbV3ckoBMp7t0h7DrrimEtIDcQWvnVXcS5LmXj0vxx5?=
- =?us-ascii?Q?l6I+tRmzFWT0Feu1Rx/F9T37Kk0E+lMGHxiByM2Z65z/Gw6CoBi+tmyiIoWG?=
- =?us-ascii?Q?MMxRFTryfec/K1uUGUcADsF1KudnikGxEGBtjVCAlHulAGpxA5I3RsWjUzGi?=
- =?us-ascii?Q?Yt1JY18/JWFJN604miKek0ofghJ2OBMOMtCUjGmBqXqaBaIdmVYVb/uaYRsA?=
- =?us-ascii?Q?2tglk4hNxs5m973FzMwifBU6s9Wn6AhQa6yXl3oXoLIn+zpmk5QU/ELKsHwR?=
- =?us-ascii?Q?JIv3J4W3EYRkAH/XQkl5KdW+3pOu7IFobNg5HtMB?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 240709be-4dc1-4177-4c82-08dc4a8001b1
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Mar 2024 14:54:42.6041
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GVaNkMDi2BUwAjjv9mek32CFIpEY9J8/5ZzOPOMGkuCptt80SgxJGDTxEYRVjBVFZxFosrcorClHVRi0f2LcQA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7206
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABWc/WUC/23QzWrDMAwH8FcpPs/FH5KT7LT3KDvEttyYhSTYx
+ bSUvPvcMFhLc/wj6SehO8uUImX2ebizRCXmOE814MeBuaGfzsSjr5kpoUAogXyIntsl8DwSLb0
+ diTshlRHBd9IBq3NLohCvm3lij9aJrhf2XStDzJc53bZlRW71P7fbcYvkgoNzbYcWe2/91w+li
+ cbjnM4bV9QTIWGPUJXABo0VCI2Cd0I/EUruEboSMljdtK43Wsg3Av4JLfceVOBxhcE2KASBBl6
+ IdV1/AZNDiR2GAQAA
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: Benjamin Tissoires <bentiss@kernel.org>, bpf@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711119393; l=4779;
+ i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
+ bh=B3+9hbrYbOgrf7SwvZDCmpmOCm9dH1xA1Os15FGm0f8=;
+ b=N//ErnQ5quS/WeDbzudW1FZYPPK5FPfZ7IXc5QPNWx7ktW2p/aZcx+abWc1UC0QMDIoLZgln+
+ yWLKHjBtDREDMg+mMrYuQLaSUzLs8gO86c5qoxqUd6C8VUbZBfagj8h
+X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
+ pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
 
-Convert fsl,esai.txt to yaml. So DTB_CHECK tools can verify dts file about
-esai part.
+New version of the sleepable bpf_timer code, without the HID changes, as
+they can now go through the HID tree indepandantly.
 
-clock-names 'spba' is optional according to description. So minItems of
-clocks and clock-names is 3.
+For reference, the use cases I have in mind:
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
 
-Notes:
-    Change from v1 to v2
-    - alphabetical order compatible string according to rob's suggestion
-    - clock description move under 'clock' according to kryszof's suggestion
-    - fix descritpion indent according to rob's suggestion
-    
-    Pass dt_binding check
-     make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8  dt_binding_check DT_SCHEMA_FILES=fsl,esai.yaml
-      DTEX    Documentation/devicetree/bindings/sound/fsl,esai.example.dts
-      LINT    Documentation/devicetree/bindings
-      CHKDT   Documentation/devicetree/bindings/processed-schema.json
-      SCHEMA  Documentation/devicetree/bindings/processed-schema.json
-      DTC_CHK Documentation/devicetree/bindings/sound/fsl,esai.example.dtb
+Basically, I need to be able to defer a HID-BPF program for the
+following reasons (from the aforementioned patch):
+1. defer an event:
+   Sometimes we receive an out of proximity event, but the device can not
+   be trusted enough, and we need to ensure that we won't receive another
+   one in the following n milliseconds. So we need to wait those n
+   milliseconds, and eventually re-inject that event in the stack.
 
- .../devicetree/bindings/sound/fsl,esai.txt    |  68 ----------
- .../devicetree/bindings/sound/fsl,esai.yaml   | 116 ++++++++++++++++++
- 2 files changed, 116 insertions(+), 68 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/fsl,esai.txt
- create mode 100644 Documentation/devicetree/bindings/sound/fsl,esai.yaml
+2. inject new events in reaction to one given event:
+   We might want to transform one given event into several. This is the
+   case for macro keys where a single key press is supposed to send
+   a sequence of key presses. But this could also be used to patch a
+   faulty behavior, if a device forgets to send a release event.
 
-diff --git a/Documentation/devicetree/bindings/sound/fsl,esai.txt b/Documentation/devicetree/bindings/sound/fsl,esai.txt
-deleted file mode 100644
-index 90112ca1ff423..0000000000000
---- a/Documentation/devicetree/bindings/sound/fsl,esai.txt
-+++ /dev/null
-@@ -1,68 +0,0 @@
--Freescale Enhanced Serial Audio Interface (ESAI) Controller
--
--The Enhanced Serial Audio Interface (ESAI) provides a full-duplex serial port
--for serial communication with a variety of serial devices, including industry
--standard codecs, Sony/Phillips Digital Interface (S/PDIF) transceivers, and
--other DSPs. It has up to six transmitters and four receivers.
--
--Required properties:
--
--  - compatible		: Compatible list, should contain one of the following
--			  compatibles:
--			  "fsl,imx35-esai",
--			  "fsl,vf610-esai",
--			  "fsl,imx6ull-esai",
--			  "fsl,imx8qm-esai",
--
--  - reg			: Offset and length of the register set for the device.
--
--  - interrupts		: Contains the spdif interrupt.
--
--  - dmas		: Generic dma devicetree binding as described in
--			  Documentation/devicetree/bindings/dma/dma.txt.
--
--  - dma-names		: Two dmas have to be defined, "tx" and "rx".
--
--  - clocks		: Contains an entry for each entry in clock-names.
--
--  - clock-names		: Includes the following entries:
--	"core"		  The core clock used to access registers
--	"extal"		  The esai baud clock for esai controller used to
--			  derive HCK, SCK and FS.
--	"fsys"		  The system clock derived from ahb clock used to
--			  derive HCK, SCK and FS.
--	"spba"		  The spba clock is required when ESAI is placed as a
--			  bus slave of the Shared Peripheral Bus and when two
--			  or more bus masters (CPU, DMA or DSP) try to access
--			  it. This property is optional depending on the SoC
--			  design.
--
--  - fsl,fifo-depth	: The number of elements in the transmit and receive
--			  FIFOs. This number is the maximum allowed value for
--			  TFCR[TFWM] or RFCR[RFWM].
--
--  - fsl,esai-synchronous: This is a boolean property. If present, indicating
--			  that ESAI would work in the synchronous mode, which
--			  means all the settings for Receiving would be
--			  duplicated from Transmission related registers.
--
--Optional properties:
--
--  - big-endian		: If this property is absent, the native endian mode
--			  will be in use as default, or the big endian mode
--			  will be in use for all the device registers.
--
--Example:
--
--esai: esai@2024000 {
--	compatible = "fsl,imx35-esai";
--	reg = <0x02024000 0x4000>;
--	interrupts = <0 51 0x04>;
--	clocks = <&clks 208>, <&clks 118>, <&clks 208>;
--	clock-names = "core", "extal", "fsys";
--	dmas = <&sdma 23 21 0>, <&sdma 24 21 0>;
--	dma-names = "rx", "tx";
--	fsl,fifo-depth = <128>;
--	fsl,esai-synchronous;
--	big-endian;
--};
-diff --git a/Documentation/devicetree/bindings/sound/fsl,esai.yaml b/Documentation/devicetree/bindings/sound/fsl,esai.yaml
-new file mode 100644
-index 0000000000000..f167f1634d7e3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/fsl,esai.yaml
-@@ -0,0 +1,116 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/fsl,esai.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale Enhanced Serial Audio Interface (ESAI) Controller
-+
-+maintainers:
-+  - Shengjiu Wang <shengjiu.wang@nxp.com>
-+  - Frank Li <Frank.Li@nxp.com>
-+
-+description:
-+  The Enhanced Serial Audio Interface (ESAI) provides a full-duplex serial port
-+  for serial communication with a variety of serial devices, including industry
-+  standard codecs, Sony/Phillips Digital Interface (S/PDIF) transceivers, and
-+  other DSPs. It has up to six transmitters and four receivers.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,imx35-esai
-+      - fsl,imx6ull-esai
-+      - fsl,imx8qm-esai
-+      - fsl,vf610-esai
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 3
-+    items:
-+      - description:
-+          The core clock used to access registers.
-+      - description:
-+          The esai baud clock for esai controller used to
-+          derive HCK, SCK and FS.
-+      - description:
-+          The system clock derived from ahb clock used to
-+          derive HCK, SCK and FS.
-+      - description:
-+          The spba clock is required when ESAI is placed as a
-+          bus slave of the Shared Peripheral Bus and when two
-+          or more bus masters (CPU, DMA or DSP) try to access
-+          it. This property is optional depending on the SoC
-+          design.
-+
-+  clock-names:
-+    minItems: 3
-+    items:
-+      - const: core
-+      - const: extal
-+      - const: fsys
-+      - const: spba
-+
-+  dmas:
-+    minItems: 2
-+    maxItems: 2
-+
-+  dma-names:
-+    items:
-+      - const: rx
-+      - const: tx
-+
-+  fsl,fifo-depth:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      The number of elements in the transmit and receive
-+      FIFOs. This number is the maximum allowed value for
-+      TFCR[TFWM] or RFCR[RFWM].
-+
-+  fsl,esai-synchronous:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      This is a boolean property. If present, indicating
-+      that ESAI would work in the synchronous mode, which
-+      means all the settings for Receiving would be
-+      duplicated from Transmission related registers.
-+
-+  big-endian:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      If this property is absent, the native endian mode
-+      will be in use as default, or the big endian mode
-+      will be in use for all the device registers.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - dmas
-+  - dma-names
-+  - fsl,fifo-depth
-+  - fsl,esai-synchronous
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    esai@2024000 {
-+      compatible = "fsl,imx35-esai";
-+      reg = <0x02024000 0x4000>;
-+      interrupts = <0 51 0x04>;
-+      clocks = <&clks 208>, <&clks 118>, <&clks 208>;
-+      clock-names = "core", "extal", "fsys";
-+      dmas = <&sdma 23 21 0>, <&sdma 24 21 0>;
-+      dma-names = "rx", "tx";
-+      fsl,fifo-depth = <128>;
-+      fsl,esai-synchronous;
-+      big-endian;
-+    };
+3. communicate with the device in reaction to one event:
+   We might want to communicate back to the device after a given event.
+   For example a device might send us an event saying that it came back
+   from sleeping state and needs to be re-initialized.
+
+Currently we can achieve that by keeping a userspace program around,
+raise a bpf event, and let that userspace program inject the events and
+commands.
+However, we are just keeping that program alive as a daemon for just
+scheduling commands. There is no logic in it, so it doesn't really justify
+an actual userspace wakeup. So a kernel workqueue seems simpler to handle.
+
+bpf_timers are currently running in a soft IRQ context, this patch
+series implements a sleppable context for them.
+
+Cheers,
+Benjamin
+
+To: Alexei Starovoitov <ast@kernel.org>
+To: Daniel Borkmann <daniel@iogearbox.net>
+To: Andrii Nakryiko <andrii@kernel.org>
+To: Martin KaFai Lau <martin.lau@linux.dev>
+To: Eduard Zingerman <eddyz87@gmail.com>
+To: Song Liu <song@kernel.org>
+To: Yonghong Song <yonghong.song@linux.dev>
+To: John Fastabend <john.fastabend@gmail.com>
+To: KP Singh <kpsingh@kernel.org>
+To: Stanislav Fomichev <sdf@google.com>
+To: Hao Luo <haoluo@google.com>
+To: Jiri Olsa <jolsa@kernel.org>
+To: Mykola Lysenko <mykolal@fb.com>
+To: Shuah Khan <shuah@kernel.org>
+Cc: Benjamin Tissoires <bentiss@kernel.org>
+Cc: <bpf@vger.kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
+Cc: <linux-kselftest@vger.kernel.org>
+
+---
+Changes in v5:
+- took various reviews into account
+- rewrote the tests to be separated to not have a uggly include
+- Link to v4: https://lore.kernel.org/r/20240315-hid-bpf-sleepable-v4-0-5658f2540564@kernel.org
+
+Changes in v4:
+- dropped the HID changes, they can go independently from bpf-core
+- addressed Alexei's and Eduard's remarks
+- added selftests
+- Link to v3: https://lore.kernel.org/r/20240221-hid-bpf-sleepable-v3-0-1fb378ca6301@kernel.org
+
+Changes in v3:
+- fixed the crash from v2
+- changed the API to have only BPF_F_TIMER_SLEEPABLE for
+  bpf_timer_start()
+- split the new kfuncs/verifier patch into several sub-patches, for
+  easier reviews
+- Link to v2: https://lore.kernel.org/r/20240214-hid-bpf-sleepable-v2-0-5756b054724d@kernel.org
+
+Changes in v2:
+- make use of bpf_timer (and dropped the custom HID handling)
+- implemented bpf_timer_set_sleepable_cb as a kfunc
+- still not implemented global subprogs
+- no sleepable bpf_timer selftests yet
+- Link to v1: https://lore.kernel.org/r/20240209-hid-bpf-sleepable-v1-0-4cc895b5adbd@kernel.org
+
+---
+Benjamin Tissoires (6):
+      bpf/helpers: introduce sleepable bpf_timers
+      bpf/verifier: add bpf_timer as a kfunc capable type
+      bpf/helpers: introduce bpf_timer_set_sleepable_cb() kfunc
+      bpf/helpers: mark the callback of bpf_timer_set_sleepable_cb() as sleepable
+      tools: sync include/uapi/linux/bpf.h
+      selftests/bpf: add sleepable timer tests
+
+ include/linux/bpf_verifier.h                       |   1 +
+ include/uapi/linux/bpf.h                           |   4 +
+ kernel/bpf/helpers.c                               | 132 ++++++++++++++-
+ kernel/bpf/verifier.c                              |  96 ++++++++++-
+ tools/include/uapi/linux/bpf.h                     |   4 +
+ tools/testing/selftests/bpf/bpf_experimental.h     |   5 +
+ .../selftests/bpf/bpf_testmod/bpf_testmod.c        |   5 +
+ .../selftests/bpf/bpf_testmod/bpf_testmod_kfunc.h  |   1 +
+ tools/testing/selftests/bpf/prog_tests/timer.c     |  34 ++++
+ .../testing/selftests/bpf/progs/timer_sleepable.c  | 185 +++++++++++++++++++++
+ 10 files changed, 458 insertions(+), 9 deletions(-)
+---
+base-commit: 9187210eee7d87eea37b45ea93454a88681894a4
+change-id: 20240205-hid-bpf-sleepable-c01260fd91c4
+
+Best regards,
 -- 
-2.34.1
+Benjamin Tissoires <bentiss@kernel.org>
 
