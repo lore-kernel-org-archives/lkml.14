@@ -1,61 +1,60 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08463224FD
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 09:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50CD0C14F
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 09:42:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711100571; cv=none; b=WQFEJHVD7nkRrD/azF37TLpDQ3euZl7iNFYIk86zyWezMh13sQLUWHKUaY7khD+o0Dae2oV2ZycGGLkB9R1aqhkGOkrHThw7Fs110Hk2FuRvOT/ccK9igJnBw1gOyJhpVWGyqCl+Syx2xGGWBdMdNVPXBCprAUzo5cDR/2Du+YU=
+	t=1711100572; cv=none; b=Xe2O9SEnxPaehsPtwEeRlMnyFhhBD0TZKX77Vkiqjgz8EYGltuJoUJwWDX2JhCeHeDl06LvEOpELk1grvfLxH2wcWieGXCFCEyku17wTsw9YkK3R0+INsswRBtxcaMPjSP+9qH9G2a4mEGZ8BW7ew2w4AS7dJ41+TolIYklcCmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711100571; c=relaxed/simple;
-	bh=8/B+tWJIUShz0M+gAUIZn+3gLDyYGJDst8XwZRda3Rw=;
+	s=arc-20240116; t=1711100572; c=relaxed/simple;
+	bh=Kx4iMHJO5z5RGLzsJX88ltZJ+Wx+25o5A/I8DsYjDng=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rhITrDK3CkFxg1FA2Sd4FuNSo+CafLXIBucYuYKEVNGQfKC4owp5/x1zUDJs3Gnd/LuSxhSq20iMTMt3nwDs9LWCMFgl82ku45QHpmgBnB/A3knfrw/3SKaDEsm6ITbKip3p51FvM9KjhzM2jge+vpYo6NdblHSQ8mSrZV2fjvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jDpqOHQE; arc=none smtp.client-ip=209.85.128.49
+	 In-Reply-To:To:Cc; b=YNi/nIImNzDz+p9bgkyCYS4TDFB2ut2TAHf9AxfFXanmZgYQBQXA7INnmRHF0FHYBxEmoUcGOuoQ90PFQ815C3ZUAYnZEx4Mqit3SkUBOpcdgzY/LWdaMl3glsIt8fXBCCHg0D/f1PKB+KqqMY01NRFTiikgaspjwv3iruOz+xU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bxSbVXBJ; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jDpqOHQE"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-41412411622so13785705e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 02:42:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bxSbVXBJ"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-414701303f7so18370725e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 02:42:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711100568; x=1711705368; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1711100567; x=1711705367; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=lb/oBLLSq3Y47GgvH465o/0zrmlnVPupUFrj/+nzYaw=;
-        b=jDpqOHQEP495FpS60coCFTuolJlABQ5JZZXpNCYUhD/4tBfBHqsqWeK1gQilvKRIDM
-         I44dF/6tySq8AelsAb9Ehr1+eG3cagSG+hzeGNEhZunUGZO8itRp2dbJYH8UDQSsm0aA
-         YHUPSt2DfPg6UeKC0ZPWa6U9RjN4mqupHb23bDdSnPyEbk/DUIplAUXKjj/CgraoPD/8
-         OxmwWonS3YXt5gWk1PO63Gd2onkREbWbndUvy6mFLsClmMDvz5Hdy+vPZf6mWROhOZig
-         NPtT2PnW5PJoeBA86Fd76uYui4nsY9CvXo0vwiupvLnn4qcCzoRBPn+eEFQdCj4a42GJ
-         3BRw==
+        bh=SCVeYwWPRSz03B1OM4VXzQEUZALrlERjZIgaPDXj1aU=;
+        b=bxSbVXBJws315bLuoeUeFTBDZEWNGletHf3hZXt756ZSPYO/tHmQCp8d95iZQPDGuO
+         IEvGOlWotNdEDYVkAD8hLK4vqiD4mylz0NbP+WgV04EJGPmkfFUi2QBuwFgZBQ3dxzhQ
+         bqgi9WhEEim0Q1BdiMHjyvtD8gFLQkBTX81x+5cKCEFWOPa/tT0XsrJCKAb80Hv9Tc4s
+         LGB90QS87nxNAAmm5ea1HpM8tW0csCl2QhWtOZ7E36a5QiEPGIDkj2lQ1SvMSqWP7U6o
+         wm5L7jQZzRuitUUoxGYFACcxr9ObhqkLSzOk2iK8ZGI+flwx6shxLXCAhcraVjrpacOX
+         JP6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711100568; x=1711705368;
+        d=1e100.net; s=20230601; t=1711100567; x=1711705367;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lb/oBLLSq3Y47GgvH465o/0zrmlnVPupUFrj/+nzYaw=;
-        b=B8XcUypKSwFNVHbRmbyJCb8PojtQHVo59SukvM2mpEFl5O3cutJTGiXhYB+B0vdgZr
-         0ols7fGRAEhuuft98/LX+ZjvS7lBU2AEoU/NdC0wnglCCysjIGn/A/m+9/jApI1TMZwt
-         DqNklFIx+RAbusI4GJkt74xLxcfEjliZjRJvJ+i3uKR5/X3I5pJSqTA5PAxwirYVLba+
-         SGk3ve4AbGHxicITX0i/ytPm4+ZaTtzydy7A4PojteLe38OAUcEAosqgGsCKus3DG2nU
-         vnaWFEad1Z6UjeHz0Tf6f1Rtlh9P+iOQHzcF/Z9H1vsF5jeR2ROAxIw4t6Vqg2XWy8kf
-         WQqg==
-X-Forwarded-Encrypted: i=1; AJvYcCXjecThs3V89i22Sd1KsqQFGtrWcv9FJaYIqsI4uybIEUCTJE2IwTgcHWnvCT7VHoTvglGQfx4nHdQHt9lfzuWycXRe171gpAMOEpux
-X-Gm-Message-State: AOJu0YzBc7f5iaSVmm3Mwzbs+BQfZRYD1fibBjPtCriDMvaKaSTu9oM+
-	pLlJAYCinZ60fYP9dxIuvzk07tBfcoaJ4cGps5Xzx4QvVHhBCl5I/vnP+XpQ+xE=
-X-Google-Smtp-Source: AGHT+IFhE4WuO1ld2lVoDTkPPQv6d3HT+r0M5r+RWkj/TXlGNstu78Ey7pw4/2GYA85QgQZqG+O0hA==
-X-Received: by 2002:a05:600c:511c:b0:414:5ee1:76f0 with SMTP id o28-20020a05600c511c00b004145ee176f0mr1056762wms.25.1711100568408;
-        Fri, 22 Mar 2024 02:42:48 -0700 (PDT)
+        bh=SCVeYwWPRSz03B1OM4VXzQEUZALrlERjZIgaPDXj1aU=;
+        b=lePjf5QFyyHdl28hv4rkYuQ2xU3GxvGzyRAJzv608UD7ibw7cuQsvEnj/BzmIb7ZNF
+         1iA0vLfHwV0UEFdbAfCCLFULp9vhfr65Nc6/TMfnXx2z5uwmibrbQe5N6huK4g35DnVe
+         gek1hk2PSnyoiz8YoS9rS8Z6tdviK9ZgFik9Ew1EpQ0lVNOfWR+a9JAPNA9K/7bb2Ir+
+         m7zD3Ktc+TNuxrXabfaNFdazwjE5Jm4UfMAtP6XHXLuvHmgBXMB4TqzWiDlRXpHlxTqD
+         QT53VG9M+L/1Z9ew8LMYHAXEMHE+a7BvOvzvvgGTsAF+eYZvHGNFZJIbI+6OoRL/E+vh
+         A/hg==
+X-Forwarded-Encrypted: i=1; AJvYcCUP5F0qA0UKqfAKfKXVLjV8pac3GrIVJjFzf1Rih7Gbs2LZky9K2FWQDLwGw764W9X4Q6iHGhFMBbbkzoZ1Wq4QcVK8ck6Sp8jhkRQX
+X-Gm-Message-State: AOJu0YzcLMXIIFpRiSX7bR9JcEUGHT3nhDc9rtNH/ABS40dpMBPeSbUY
+	sk8HDTJgGpa2PanIyHALeLUDOqYC9P6DY10oTD/JmT00w9jFyQhnWuhwL8eGC3c=
+X-Google-Smtp-Source: AGHT+IHuvX98vufxnj4c0MPkLoSPVwneu2E3xOT/4wRhqnWE78lQbmyGtmWzSybZTB5mt/SGHh2JpQ==
+X-Received: by 2002:a05:600c:3b99:b0:413:286c:4fc0 with SMTP id n25-20020a05600c3b9900b00413286c4fc0mr1244065wms.34.1711100566636;
+        Fri, 22 Mar 2024 02:42:46 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id j9-20020a05600c190900b0041461a922c2sm2547845wmq.5.2024.03.22.02.42.47
+        by smtp.gmail.com with ESMTPSA id j9-20020a05600c190900b0041461a922c2sm2547845wmq.5.2024.03.22.02.42.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 02:42:48 -0700 (PDT)
+        Fri, 22 Mar 2024 02:42:46 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Fri, 22 Mar 2024 10:42:41 +0100
-Subject: [PATCH v2 4/7] phy: qcom: qmp-pcie: register PHY AUX clock for
- SM8[456]50 4x2 PCIe PHY
+Date: Fri, 22 Mar 2024 10:42:39 +0100
+Subject: [PATCH v2 2/7] phy: qcom: qmp-pcie: refactor clock register code
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +63,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240322-topic-sm8x50-upstream-pcie-1-phy-aux-clk-v2-4-3ec0a966d52f@linaro.org>
+Message-Id: <20240322-topic-sm8x50-upstream-pcie-1-phy-aux-clk-v2-2-3ec0a966d52f@linaro.org>
 References: <20240322-topic-sm8x50-upstream-pcie-1-phy-aux-clk-v2-0-3ec0a966d52f@linaro.org>
 In-Reply-To: <20240322-topic-sm8x50-upstream-pcie-1-phy-aux-clk-v2-0-3ec0a966d52f@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -74,70 +73,81 @@ To: Bjorn Andersson <andersson@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>
 Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+ Neil Armstrong <neil.armstrong@linaro.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1652;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1993;
  i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=8/B+tWJIUShz0M+gAUIZn+3gLDyYGJDst8XwZRda3Rw=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBl/VKSX0G2gVAGe+4VuJE+nNjLNKffJh3KLPtIucIn
- AKkO/z+JAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZf1SkgAKCRB33NvayMhJ0QolD/
- 0ZwywwKP3CIggFcboOnHfWwGFfJHpkbvVSlcFaSTIsVqQIh1NsG0NOgnaMs8K7kSCW4qldvyYSWJLx
- lUGlCw0sgB7r48+X0uPjMclw1c9hYL1VnnXD/auGKUVUFB1asZLcgsuth2+KxAgEu99YhJU8Dgu5Tt
- 2uwCXAEYmjj2WNHQc3E4xbmT8wlbj4waQZ+smw+pRc5PTbDDEfaHQ85NRqkI8GWbDVzTGUBZ2gpKmw
- wNqV+tXDriMtobAUVXyYUNHVbXMih9DlTRK+4nPGSMab9WKOsNuPsg3BdFfsWOlKzINunw3qGuzb3G
- uSerAlGZRI+jkz5qLSvIY76pUpgg3yekA+Sx4/Ov36NpVX1GlZN/uBinJJ8zKODLxpCGOaGObp8diI
- sXQWMW0oRaJLz2l9q29XySQFcR+v2igz9C9uTtt9p3/ntQxOT+eeFAYB2L+VpvnLaOxK+7rdEIs/n3
- XGLlZ5LLYZ4JBUBJBzieB0grQrKqFeXO0AcTAV4Q6AMPDtDcL8tVm71odmjMYY5A57TSKDa6stNLqU
- yNa6woS5qq8NKV302aGjFtfpeURAmZoZ0d+BXjE79kcuaY2iT4aMYOS5qHfsJ104pzCnj+jCGad5IH
- CnS3MFNtIHxAUXJvCd/5I3IrIy1gEQjIoHiphog0zRSVNJ9Cs+1l8FJHIXDw==
+ bh=Kx4iMHJO5z5RGLzsJX88ltZJ+Wx+25o5A/I8DsYjDng=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBl/VKRV3QKxg4v+M8JT2fAbX1GHt2A5QnD7QKumt8Z
+ s4yRYgKJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZf1SkQAKCRB33NvayMhJ0RfpD/
+ 4yoc9hDH+2tgpOUGvP8Jz8d3R1kJ7/9B9wDT3JPRVWRiBiP/dGO1eJl/Iwj+DgYHugvFp+iEPuCUHA
+ /xOMr9SDEZy85xLhmLDBYZCHAQZtLyoYNi02ZwyHJ+cJM1MGMzq8H0NFLoDYVWxVkYJWzVAPOybBwF
+ ojmpu7U1uJSMfycX6t9LfFetWI3+FUu0CZ+jchqV0vk9Io9hUEelywc7t7egRzf5r9XombNqjEaARg
+ 7MIC2yGMb4iC/0T8SOf8fE2w80fzJSgOQuF97GMuEsOCTagBoZTnk6bI8RgKoLbm3X1UewEQXIumaP
+ gw975Bfz02lsG02mE+eeehjA5kiZ8cw4/CUysHJbBMFtvXaCV2pp1ldMpt8l5lgH//+lJFw9/+Cryn
+ j5U9fJxmqF0Si79c1OPURBBqDp1/eluNm7MXx6eDBQ39NILu7Q3qtPolPXyhlQSnwJIz0+dKWkyS0m
+ Zlc3vsrtaoVF3kKYoYios8inatr8RQ8gRd9t/FisXA2OXBU2ylgPMVaavxpeyaGxqKGCuk6g0/o/51
+ 3w6Z1plxH2RdQYlv47OYSI0wae7mKQjttKsd/Gi4opqjTbpWuOeoYaDcakKNAblF7ySlLHYz1Ck616
+ N082i3ZTsAm26Wgulfz3NipQxmoU85imns6bilNEwAMOxMnuoxLnT4qvmfYA==
 X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
  fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
 The PCIe Gen4x2 PHY found in the SM8[456]50 SoCs have a second clock,
-enable this second clock by setting the proper 20MHz hardware rate in
-the Gen4x2 SM8[456]50 aux_clock_rate config fields.
+in order to expose it, split the current clock registering in two parts:
+- CCF clock registering
+- DT clock registering
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Keep the of_clk_add_hw_provider/devm_add_action_or_reset to keep
+compatibility with the legacy subnode bindings.
+
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-index 6c9a95e62429..e3103bcc24c4 100644
+index 8836bb1ff0cc..e8da2e9146dc 100644
 --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
 +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-@@ -3141,6 +3141,9 @@ static const struct qmp_phy_cfg sm8450_qmp_gen4x2_pciephy_cfg = {
+@@ -3664,7 +3664,7 @@ static int phy_pipe_clk_register(struct qmp_pcie *qmp, struct device_node *np)
+ 	struct clk_init_data init = { };
+ 	int ret;
  
- 	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
- 	.phy_status		= PHYSTATUS_4_20,
+-	ret = of_property_read_string(np, "clock-output-names", &init.name);
++	ret = of_property_read_string_index(np, "clock-output-names", 0, &init.name);
+ 	if (ret) {
+ 		dev_err(qmp->dev, "%pOFn: No clock-output-names\n", np);
+ 		return ret;
+@@ -3683,11 +3683,18 @@ static int phy_pipe_clk_register(struct qmp_pcie *qmp, struct device_node *np)
+ 
+ 	fixed->hw.init = &init;
+ 
+-	ret = devm_clk_hw_register(qmp->dev, &fixed->hw);
++	return devm_clk_hw_register(qmp->dev, &fixed->hw);
++}
 +
-+	/* 20MHz PHY AUX Clock */
-+	.aux_clock_rate		= 20000000,
- };
- 
- static const struct qmp_phy_cfg sm8550_qmp_gen3x2_pciephy_cfg = {
-@@ -3198,6 +3201,9 @@ static const struct qmp_phy_cfg sm8550_qmp_gen4x2_pciephy_cfg = {
- 	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
- 	.phy_status		= PHYSTATUS_4_20,
- 	.has_nocsr_reset	= true,
++static int qmp_pcie_register_clocks(struct qmp_pcie *qmp, struct device_node *np)
++{
++	int ret;
 +
-+	/* 20MHz PHY AUX Clock */
-+	.aux_clock_rate		= 20000000,
- };
++	ret = phy_pipe_clk_register(qmp, np);
+ 	if (ret)
+ 		return ret;
  
- static const struct qmp_phy_cfg sm8650_qmp_gen4x2_pciephy_cfg = {
-@@ -3228,6 +3234,9 @@ static const struct qmp_phy_cfg sm8650_qmp_gen4x2_pciephy_cfg = {
- 	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
- 	.phy_status		= PHYSTATUS_4_20,
- 	.has_nocsr_reset	= true,
-+
-+	/* 20MHz PHY AUX Clock */
-+	.aux_clock_rate		= 20000000,
- };
+-	ret = of_clk_add_hw_provider(np, of_clk_hw_simple_get, &fixed->hw);
++	ret = of_clk_add_hw_provider(np, of_clk_hw_simple_get, &qmp->pipe_clk_fixed.hw);
+ 	if (ret)
+ 		return ret;
  
- static const struct qmp_phy_cfg sa8775p_qmp_gen4x2_pciephy_cfg = {
+@@ -3899,7 +3906,7 @@ static int qmp_pcie_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_node_put;
+ 
+-	ret = phy_pipe_clk_register(qmp, np);
++	ret = qmp_pcie_register_clocks(qmp, np);
+ 	if (ret)
+ 		goto err_node_put;
+ 
 
 -- 
 2.34.1
