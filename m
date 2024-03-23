@@ -1,57 +1,58 @@
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A176179C5
-	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 10:48:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED5518E2E
+	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 10:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711190888; cv=none; b=tjvfqP2zazPxriOdoLf6cNRRz3WxIzBFY7RNmmlSq1NP42yINXoQYtMRcHEt3vGHVPOKz+lUXmTjrznoV5iKSexyUPogp39MeEoFaD4WjIkL9IcUuJPQg91yBpqOt6SqOP8mmZz4x50TZNF3aaVm5M4QAa0bZfRhUico5XVzRc8=
+	t=1711190890; cv=none; b=otdwJ0OK+ylQ4wVUtBUHWxtcQb9qsJM8f7DvsZKq/zNnaimSv7vpiRDNms3GSUmgQxWqLT2cYSkbfa/NWO6kmQ3LtST8bIMqAH46cXT0jO5SghqoygIhHIifMMg6LI7JokGmyU+JcEZBr4jSZBTW5iDP68VL3CP44NoDO8+5afs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711190888; c=relaxed/simple;
-	bh=jUhzlNFhX6VLg2eJT4mZMHsU4vH2Y2Iy4BIiWHu1avE=;
+	s=arc-20240116; t=1711190890; c=relaxed/simple;
+	bh=OG7cqgYYJHmKhCVqrEDvi6pknnHix48HG0gMtSmw6ow=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dq47ntkaLI3buRj68fXyqcDM0l6wFGn0RjFIw3D1y11EdvWPh3YJfgizR+AmwMPzeaBD+BE4i6sY/gSi2BS4b+9EZRHk+oHUPc+omBNM6FKMXSvUohmJhjeG4b0sCLjXIKIYs1jDrpsZfAWGKcpNCA8Tk2TisJMLlP/c9yiLXys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FBrSYmsP; arc=none smtp.client-ip=209.85.161.46
+	 In-Reply-To:To:Cc; b=A2kgdR1mJYz6CQgFaVSMWByTOtMqIi/I7MT38F3/pgo6yJq3k+snfkvMPm0lknFqbzz6v1+VoWHq7av5svxc/SsGTReqi+bl7nUsPYDwKvSRtzensJLA6emMUCpgIyGCnodJ6l4hIv7D6KryVCaj0j00t9rZMppwsElRf1rINAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=HVyLjloh; arc=none smtp.client-ip=209.85.160.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FBrSYmsP"
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5a5362ceb7bso128807eaf.1
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 03:48:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HVyLjloh"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-42ee23c64e3so13131341cf.2
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 03:48:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711190886; x=1711795686; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1711190887; x=1711795687; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Wd3E1TwsBVxXxjO5X+TlbHTEyF4pOTTTZIUznbdkT5Y=;
-        b=FBrSYmsPKFmEaUMdwoAn1zPjuQNmCyG6FmDCXnT4tSOClufmPX622Si3+vVq5vI/P6
-         pFR9nHw5IqwLxmYMolOqFDfIlc5Kwq6WS5hr4nHMWJJbZuVJnCsmOQPWRo31Z/Lkz+yt
-         0qawcX4I8AoIzJSz5BSOsdHX8SiypvJPBhGA4=
+        bh=x5G2djWTL13MD8rXHjsRG2jZyEe2Cc3TE16Y80waKos=;
+        b=HVyLjlohv+ScpexbtjpiuJvVNuVFz9MCsSLdi5rp+mlOigfCmYoRLwIv7zxEeUL1ZN
+         IR2UIJ+g8k8K0t++tiwTiV+1Key+Sl0Olp38+AXzH6kVj4TDG4oABXNiS4troUX7qzYO
+         FXRR6ZJA92tIfbmuNgFqCSR1PANDQlhfhGmDE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711190886; x=1711795686;
+        d=1e100.net; s=20230601; t=1711190887; x=1711795687;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Wd3E1TwsBVxXxjO5X+TlbHTEyF4pOTTTZIUznbdkT5Y=;
-        b=qQOdkjtThbNyg8I23lsUoNRZEQLtdD4wZKROzFE5StBDV0JdmZXiVknMg1A5MaJbfs
-         suFkMZs2alE+KgLX7tRGicZAHF2wM6OOaerFDIv/DdP3sSlk4qYekHW7DYovd01iwsIK
-         Dk+fVbusxGlqmINzLQOVvi7i4oBsDEOtqdb3eMy1G3LkRYdAtcIHEaIsQvVvkTsUEEIW
-         +o9slQbgRV7KNJwtiuyKQMdjVD6gt1fYYq1xhyItli3f5U/NuOBM/wBpt4Irj07PMImy
-         vF+v7vWMxSylfQVVwLC/yUn8e/MJVlNJZmyGpd9yhGVLvBdpT0E4t+JaA1mPvQQrpi0e
-         LAVw==
-X-Forwarded-Encrypted: i=1; AJvYcCXNBD2Lx+MFkPZ4HTwP7DsVXLlh+P1+sf4B48Y+vZpQ31wh+cGso0R1e6dO712WFZmT9owu31n6lvWDhiF9as2MtldgkZyvViWT2/sY
-X-Gm-Message-State: AOJu0YzryCTC1gNVZddfkKpVrrMrGC1hy0KKnqLuRC+5DjrXe7vE7Ngd
-	hMLjmvlgf9J5zG/10CPNrnoN5ISAjG8MrQKbo47GDhcsEYEaA1cnFULKEKV37A==
-X-Google-Smtp-Source: AGHT+IE/o2hvXUPG4jOgt3kiOW9zRFWN2whssbAEDbSI3G8HYZA+X6Qli1YQ4VNC2miKtLECj4BvyQ==
-X-Received: by 2002:a05:6820:2714:b0:5a5:2105:f209 with SMTP id db20-20020a056820271400b005a52105f209mr2317138oob.6.1711190885837;
-        Sat, 23 Mar 2024 03:48:05 -0700 (PDT)
+        bh=x5G2djWTL13MD8rXHjsRG2jZyEe2Cc3TE16Y80waKos=;
+        b=lwW3iGMS0IJ7vPwCYPRi08tOor30fp+wGdrBVx0wY5jNSvEoPuL499/AC2auyIVW91
+         YC0A0SnHAPYBEGdtvb2YwE2W9ymlO4h5Nd4yI0iZfapW7MIT49wuDHXdBtwB+tBnRNG2
+         AHlI9eCZ11dD+4+SiDUWKYm8j/2bcqxZHUHBjUyUfJMoeu0eo8LjkGRPGeytXcPYoFLk
+         PU+Wu0zfcS7xuDSdhRsb+er5YfL2ciclyWA4NRoK7+SZ7wcVNB0sdsijimF1TNWnGkUn
+         b8InIFa+Sldy8vL1CRkBma784zInzp726yxc84Swik+0MYLyPQPtEzMV//MIemdERlNj
+         hZvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVEZap/HsdiN0p9U0j3NFyFNZFwjHVXPPbXmOIkST0T4FanXRz4PNZ5dpJyAqUR0CSPltVL1z6NjerFfyrxqgtnr+nqc4vs04DMjN9M
+X-Gm-Message-State: AOJu0YwVDadgHDF79Ih13X214D7FCrxlNcqDmEOf85QI2c6nbolblqSD
+	ec/JEM/7c4VMhT2F+vdz/4ZHGSvGc9ZJcLw7PVtN+Dtm8W5fmioRXubOt5c7ig==
+X-Google-Smtp-Source: AGHT+IGV2xVcEtXv3Naga9cPOdOtYZ8nDLab0HgjSx57Ri1fvIE7ouxRMvuK5HgknCnei4ExDcNLwQ==
+X-Received: by 2002:a05:622a:1716:b0:431:33ec:be16 with SMTP id h22-20020a05622a171600b0043133ecbe16mr2085146qtk.51.1711190887472;
+        Sat, 23 Mar 2024 03:48:07 -0700 (PDT)
 Received: from denia.c.googlers.com (188.173.86.34.bc.googleusercontent.com. [34.86.173.188])
-        by smtp.gmail.com with ESMTPSA id gd14-20020a05622a5c0e00b0042f21fe66f7sm697213qtb.73.2024.03.23.03.48.04
+        by smtp.gmail.com with ESMTPSA id gd14-20020a05622a5c0e00b0042f21fe66f7sm697213qtb.73.2024.03.23.03.48.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Mar 2024 03:48:05 -0700 (PDT)
+        Sat, 23 Mar 2024 03:48:07 -0700 (PDT)
 From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Sat, 23 Mar 2024 10:48:03 +0000
-Subject: [PATCH v10 2/6] media: uvcvideo: Ignore empty TS packets
+Date: Sat, 23 Mar 2024 10:48:05 +0000
+Subject: [PATCH v10 4/6] media: uvcvideo: Allow hw clock updates with
+ buffers not full
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +61,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240323-resend-hwtimestamp-v10-2-b08e590d97c7@chromium.org>
+Message-Id: <20240323-resend-hwtimestamp-v10-4-b08e590d97c7@chromium.org>
 References: <20240323-resend-hwtimestamp-v10-0-b08e590d97c7@chromium.org>
 In-Reply-To: <20240323-resend-hwtimestamp-v10-0-b08e590d97c7@chromium.org>
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
@@ -71,119 +72,60 @@ Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
  Sergey Senozhatsky <senozhatsky@chromium.org>
 X-Mailer: b4 0.12.4
 
-Some SunplusIT cameras took a borderline interpretation of the UVC 1.5
-standard, and fill the PTS and SCR fields with invalid data if the
-package does not contain data.
+With UVC 1.5 we get as little as one clock sample per frame. Which means
+that it takes 32 frames to move from the software timestamp to the
+hardware timestamp method.
 
-"STC must be captured when the first video data of a video frame is put
-on the USB bus."
+This results in abrupt changes in the timestamping after 32 frames (~1
+second), resulting in noticeable artifacts when used for encoding.
 
-Some SunplusIT devices send, e.g.,
-
-buffer: 0xa7755c00 len 000012 header:0x8c stc 00000000 sof 0000 pts 00000000
-buffer: 0xa7755c00 len 000012 header:0x8c stc 00000000 sof 0000 pts 00000000
-buffer: 0xa7755c00 len 000668 header:0x8c stc 73779dba sof 070c pts 7376d37a
-
-While the UVC specification meant that the first two packets shouldn't
-have had the SCR bit set in the header.
-
-This borderline/buggy interpretation has been implemented in a variety
-of devices, from directly SunplusIT and from other OEMs that rebrand
-SunplusIT products. So quirking based on VID:PID will be problematic.
-
-All the affected modules have the following extension unit:
-VideoControl Interface Descriptor:
-  guidExtensionCode         {82066163-7050-ab49-b8cc-b3855e8d221d}
-
-But the vendor plans to use that GUID in the future and fix the bug,
-this means that we should use heuristic to figure out the broken
-packets.
-
-This patch takes care of this.
-
-lsusb of one of the affected cameras:
-
-Bus 001 Device 003: ID 1bcf:2a01 Sunplus Innovation Technology Inc.
-Device Descriptor:
-  bLength                18
-  bDescriptorType         1
-  bcdUSB               2.01
-  bDeviceClass          239 Miscellaneous Device
-  bDeviceSubClass         2 ?
-  bDeviceProtocol         1 Interface Association
-  bMaxPacketSize0        64
-  idVendor           0x1bcf Sunplus Innovation Technology Inc.
-  idProduct          0x2a01
-  bcdDevice            0.02
-  iManufacturer           1 SunplusIT Inc
-  iProduct                2 HanChen Wise Camera
-  iSerial                 3 01.00.00
-  bNumConfigurations      1
+With this patch we modify the update algorithm to work with whatever
+amount of values are available.
 
 Tested-by: HungNien Chen <hn.chen@sunplusit.com>
 Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- drivers/media/usb/uvc/uvc_video.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+ drivers/media/usb/uvc/uvc_video.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
-index 659c9e9880a99..b2e70fcf4eb4c 100644
+index d6ca383f643e3..af25b9f1b53fe 100644
 --- a/drivers/media/usb/uvc/uvc_video.c
 +++ b/drivers/media/usb/uvc/uvc_video.c
-@@ -478,6 +478,7 @@ uvc_video_clock_decode(struct uvc_streaming *stream, struct uvc_buffer *buf,
- 	ktime_t time;
- 	u16 host_sof;
- 	u16 dev_sof;
-+	u32 dev_stc;
+@@ -768,10 +768,10 @@ void uvc_video_clock_update(struct uvc_streaming *stream,
  
- 	switch (data[1] & (UVC_STREAM_PTS | UVC_STREAM_SCR)) {
- 	case UVC_STREAM_PTS | UVC_STREAM_SCR:
-@@ -526,6 +527,34 @@ uvc_video_clock_decode(struct uvc_streaming *stream, struct uvc_buffer *buf,
- 	if (dev_sof == stream->clock.last_sof)
- 		return;
+ 	spin_lock_irqsave(&clock->lock, flags);
  
-+	dev_stc = get_unaligned_le32(&data[header_size - 6]);
-+
+-	if (clock->count < clock->size)
++	if (clock->count < 2)
+ 		goto done;
+ 
+-	first = &clock->samples[clock->head];
++	first = &clock->samples[(clock->head - clock->count + clock->size) % clock->size];
+ 	last = &clock->samples[(clock->head - 1 + clock->size) % clock->size];
+ 
+ 	/* First step, PTS to SOF conversion. */
+@@ -786,6 +786,18 @@ void uvc_video_clock_update(struct uvc_streaming *stream,
+ 	if (y2 < y1)
+ 		y2 += 2048 << 16;
+ 
 +	/*
-+	 * STC (Source Time Clock) is the clock used by the camera. The UVC 1.5
-+	 * standard states that it "must be captured when the first video data
-+	 * of a video frame is put on the USB bus". This is generally understood
-+	 * as requiring devices to clear the payload header's SCR bit before
-+	 * the first packet containing video data.
++	 * Have at least 1/4 of a second of timestamps before we
++	 * try to do any calculation. Otherwise we do not have enough
++	 * precision. This value was determined by running Android CTS
++	 * on different devices.
 +	 *
-+	 * Most vendors follow that interpretation, but some (namely SunplusIT
-+	 * on some devices) always set the `UVC_STREAM_SCR` bit, fill the SCR
-+	 * field with 0's,and expect that the driver only processes the SCR if
-+	 * there is data in the packet.
-+	 *
-+	 * Ignore all the hardware timestamp information if we haven't received
-+	 * any data for this frame yet, the packet contains no data, and both
-+	 * STC and SOF are zero. This heuristics should be safe on compliant
-+	 * devices. This should be safe with compliant devices, as in the very
-+	 * unlikely case where a UVC 1.1 device would send timing information
-+	 * only before the first packet containing data, and both STC and SOF
-+	 * happen to be zero for a particular frame, we would only miss one
-+	 * clock sample from many and the clock recovery algorithm wouldn't
-+	 * suffer from this condition.
++	 * dev_sof runs at 1KHz, and we have a fixed point precision of
++	 * 16 bits.
 +	 */
-+	if (buf && buf->bytesused == 0 && len == header_size &&
-+	    dev_stc == 0 && dev_sof == 0)
-+		return;
++	if ((y2 - y1) < ((1000 / 4) << 16))
++		goto done;
 +
- 	stream->clock.last_sof = dev_sof;
- 
- 	host_sof = usb_get_current_frame_number(stream->dev->udev);
-@@ -564,7 +593,7 @@ uvc_video_clock_decode(struct uvc_streaming *stream, struct uvc_buffer *buf,
- 	spin_lock_irqsave(&stream->clock.lock, flags);
- 
- 	sample = &stream->clock.samples[stream->clock.head];
--	sample->dev_stc = get_unaligned_le32(&data[header_size - 6]);
-+	sample->dev_stc = dev_stc;
- 	sample->dev_sof = dev_sof;
- 	sample->host_sof = host_sof;
- 	sample->host_time = time;
+ 	y = (u64)(y2 - y1) * (1ULL << 31) + (u64)y1 * (u64)x2
+ 	  - (u64)y2 * (u64)x1;
+ 	y = div_u64(y, x2 - x1);
 
 -- 
 2.44.0.396.g6e790dbe36-goog
