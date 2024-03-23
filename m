@@ -1,187 +1,106 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C312E410
-	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 19:08:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C34863D;
+	Sat, 23 Mar 2024 19:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711220892; cv=none; b=BT+SteO77OCh9mNGVt4d/UvRH8lKMa9M2+2MUyrg2LIs0Ex8yNGia4tDwN26lFXXrXTcufWKRYK/xkbqfiV5vhitZ3DAsbQ3AleVr24Z9urBXkFDC5YKIwHYYN0MUYffo3eqNORK3kr8qjasXK446La2bUFXlN1y7nhdOOg7b0c=
+	t=1711221024; cv=none; b=tficyJZVrPhkJQDz0xXn9VG4B55gZIN30oBgTxL7aeZcrLhNjKnlZ8Qa6zlbTACybbub7gs5lOPudk8rz18cSvv/7ra6TCUtKG9eveCFvVudM/KGErkGgxZW5gas8XgXZp2NEQExmbqwyb8pNawBfykZ/SyW+lWZ7TV4BnhXXHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711220892; c=relaxed/simple;
-	bh=7Iro+9xDOqNg9CTZQBUlnao7XkvqozuGgTVgYnkNB/o=;
+	s=arc-20240116; t=1711221024; c=relaxed/simple;
+	bh=ueCTxwBoM4hJHV9z5OKPHfj7Mct2XSkw55kGkcJ/dgY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l4xKc3uIKoyQNvY5GtgcIxY5v6G1WvdhPE+46AL5i3+k6N6hap8jKTeSNqyMl63BYrZ5AXyrFFJX6Nwaox1gTxepM4SyeIdqG5Vyw5BWp/AS/5cOimUxyWnOglj1Zln+3c+zjvoLgziAYNQgAfL/eKcrhfzqYhHMPJcGIxakYZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=im5lK+KH; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=YP6nRtunY4KFRs3NqiqSxtuenCKUwcwZAaLhqsmtXVKwWwDt6ndxAs4mIq/aSvo35uvZWMwRg9ewa4oIdxyK6GZlIESgb1vT4tzPJ0NmKUzXwb08OHk7GBqlbkX6BPShNkOvfySvjy92C8xv151uLz1hI/+BKKGAWts1jgJXwqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gH2PGpXO; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="im5lK+KH"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-366abfd7b09so132165ab.0
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 12:08:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gH2PGpXO"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-29b7164eef6so2378456a91.2;
+        Sat, 23 Mar 2024 12:10:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711220889; x=1711825689; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1711221022; x=1711825822; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NRJv7CURqWbrAFFKuvlaXyG2Lcdz0F6vWumzCI2C+dQ=;
-        b=im5lK+KHbQkOu2JZ6acpS24yOCs+RcVUcgV4fOTW5buZRe6LIBBZOM7eEjX1xUiUmb
-         LIev3xd5GVSOPjGl+PkvKhvektM0+mI1nKJ8jlI8QgOIV0cyGZs9zLiNOLo7X3A8L8AE
-         LZ4BLKKgxAEP/wafgV2yaJhSqnX7HrSaeaAjVR5XK9lZujNf2uTTEWmdABRsuLFQSk3o
-         y5KjWwWNqJrMGANMD4k+e8kQduLG0a7eR1tf/PgGCBFDrdwsuY933RLQY76CG6KKS2Yb
-         y7q9lYzXJo8Yos5IwmLk3+RcpS9yL/ZLzz0v6js0W+1sc4XNv9oKhDYE8fbxnhxl5xgv
-         po+g==
+        bh=ueCTxwBoM4hJHV9z5OKPHfj7Mct2XSkw55kGkcJ/dgY=;
+        b=gH2PGpXOvYL/AV4fSRqSj4etmY+yAZCC+0xmFq8jzXgvyRHkRSnfKUpscXJ4ghA3EA
+         ef1xQtZ6qODMz1DvjD7ETJPjrJQvh2OxeXx0xGWZIBJsz9T5DhA75z7BVSZ2/6CO6fzX
+         zHjV1Xi8mEj5yQdIqEB5k87wD6dmVVT5gRftt0SOs+ZK3JSgFUtLptCeaGSFP37ycDQ5
+         u0MOFQSHqB1R3AgaRSf+TDOr+tIHNZ7xISwkwAYORXWhEjIpBGk0tXU1AUUxvtWkTMdT
+         Lq3p0ioCBFEYgi4UXL7ll1URBKqycBD/aTZbjN5NzjifSTgk/YUZZU7Xt8qLKKLaYZkx
+         b2EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711220889; x=1711825689;
+        d=1e100.net; s=20230601; t=1711221022; x=1711825822;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NRJv7CURqWbrAFFKuvlaXyG2Lcdz0F6vWumzCI2C+dQ=;
-        b=EXhNOoBD4JTt6a0NtdsoJMGP3Vj8qjAk0ZjW2BdH8ptJc35BjtCJsEyOE+2FFACAPB
-         kz4e33wyPdkevOWcKoT9fzZQHW/jzWyUmD2lV+sMmhiS1+Kj7vQiqB8PEjHFQnu10ci2
-         B6hvePBuu25KCD1rFZH/i+i0N4TMmIrfsDRgT8JpveLHX/IbbP+YLHumDMGGv0++u2Bk
-         lWDDgc3fbGzjw48w8wVsK9uJvhaTONTnea40/yxd6mdYGjFTNUYJsNiqt3dbVtDRPngm
-         ATTNt3DVax5LpZeTAzuwUqw8rEc+6zz3JIbwWPFNVqSSfqz6HFuBiRtpDcB1fTo3xWtu
-         TypQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVgbHHSgBrfOj54NqwrUcNmvz9MitxZ6kuBaZ5alavvXmR6rt+7/MyCT8UtKOeXAKnGVzOfX9Sb7FsUAhhOKCrFDlTAoCWYdWJsfSWs
-X-Gm-Message-State: AOJu0YzModS0Z1ouYvwzVSXw9eDNw5HiCny6jX6rh7oht3fXQnfKorgO
-	N3JdPFEkBiY3u7ZWZziwglctkc2AENMVKNbu2DrdNaJ+cNqAIXqvmI6DBp6h0Z0a3OveJ6TkcTE
-	tZ44wkjUAo8CQcUDRheNgFFXX6jXvYSUYTjqp
-X-Google-Smtp-Source: AGHT+IF5yAHfPJf5Nt+uwyVZ9kReMNd2EFfMpFYhXgWwSp95GTASf3aKWdk5kRFHu2rn19V8nBIHm/h5z67Z9NdhxDA=
-X-Received: by 2002:a05:6e02:20cc:b0:365:239a:e745 with SMTP id
- 12-20020a056e0220cc00b00365239ae745mr739834ilq.27.1711220889515; Sat, 23 Mar
- 2024 12:08:09 -0700 (PDT)
+        bh=ueCTxwBoM4hJHV9z5OKPHfj7Mct2XSkw55kGkcJ/dgY=;
+        b=qiNj0noY4XUgyZQiTGBC4UwO3YsLINIMOV3H2HeD3DyB81rPD6bBh9zQPqcAXelXbg
+         hIedEN/fNBUd03tFSNjzSJqh9iMxPrDXKp0jLl1hAKW9Tbrexy4bbHl8aB2OpPeaTCaP
+         OWwuwDO+Y2SqVdyaadlX+qJFT7q2FxG+mAXWt/FTobsZEb0JT8VbbaA36MlYeOnp/QUM
+         DWz2je90T+UftSodSWr4PGxxx50OXR1zfcPjMgFsdqG38iv7/IOS7ni2IN46E9/g0F0L
+         2l1/8xkVbjRooNDVcP4ZRZXIbap+EqreG4ohuz1jvzdCtEjtBsR5eL9vacA7sjgnKvsq
+         JDvA==
+X-Forwarded-Encrypted: i=1; AJvYcCXbYAc+rW5JobqTAwWKY0S4Bec+I/kGIfhEHXckPdwKvSSjbr2XxuJnASH5EgSpug6KBOsekvsQY3HdRlY0VqXXuC4O2ZqqYSJSg2likVXpZXcsPHgCyhImGAYuBhV5pSMd0jpE+sTiwixnLNrjI0YhNpOFMN1gNjPamh8fFhKQjd2GJA/yOJtOq2BHSeCTdhApNmnA0wJRo5Ovt+ZVxYtXfdN/q7aAqg==
+X-Gm-Message-State: AOJu0YzPEIFMWKXDTf39W/vZIugo3RN+PF9DGl/mYLUKoUa/ZmhSrW90
+	PSeCsS6iw6otgKhKnvVLMpdJKjJi8h+l9Q+ZV6qg1mX1lrvjPyP1QXKHKr3ew4VzngisWtwjR1D
+	BMTq50XLBrLobaPikdGadGv7eqfU=
+X-Google-Smtp-Source: AGHT+IGwahkkdd9J1rTcWINtRLDJq4UgsSSVueZO7bQhn7sYYNOp7aQF0yI108KG9KgG8wRB0n2yrE30IMHnBoQhcjw=
+X-Received: by 2002:a17:90a:4947:b0:2a0:2f8e:76fc with SMTP id
+ c65-20020a17090a494700b002a02f8e76fcmr2513410pjh.28.1711221021961; Sat, 23
+ Mar 2024 12:10:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240314063000.2139877-1-yangjihong@bytedance.com>
-In-Reply-To: <20240314063000.2139877-1-yangjihong@bytedance.com>
-From: Ian Rogers <irogers@google.com>
-Date: Sat, 23 Mar 2024 12:07:58 -0700
-Message-ID: <CAP-5=fV--O=QB8To+cbR=C06JzPqBFLFYTc1oh9gJZwBQ3BE=w@mail.gmail.com>
-Subject: Re: [PATCH] perf build: Add LIBTRACEEVENT_DIR build option
-To: Yang Jihong <yangjihong@bytedance.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20240322233838.868874-1-boqun.feng@gmail.com> <20240322233838.868874-2-boqun.feng@gmail.com>
+ <068a5983-8216-48a5-9eb5-784a42026836@lunn.ch> <CAH5fLggdVDccDwBa3z+3YfjKFLegh7ZvcSzfhnEbAGSk=THKrw@mail.gmail.com>
+ <497668ec-c2d5-4cb4-9c2d-8e6f7129a42e@lunn.ch>
+In-Reply-To: <497668ec-c2d5-4cb4-9c2d-8e6f7129a42e@lunn.ch>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sat, 23 Mar 2024 20:09:57 +0100
+Message-ID: <CANiq72m4n2B0K5t1ZESMcL_k=Wgttuwd8=THBbOYYPq_D+4hsg@mail.gmail.com>
+Subject: Re: [WIP 1/3] rust: Introduce atomic module
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Alice Ryhl <aliceryhl@google.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, llvm@lists.linux.dev, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Alan Stern <stern@rowland.harvard.edu>, Andrea Parri <parri.andrea@gmail.com>, 
+	Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Nicholas Piggin <npiggin@gmail.com>, David Howells <dhowells@redhat.com>, 
+	Jade Alglave <j.alglave@ucl.ac.uk>, Luc Maranget <luc.maranget@inria.fr>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Akira Yokosawa <akiyks@gmail.com>, 
+	Daniel Lustig <dlustig@nvidia.com>, Joel Fernandes <joel@joelfernandes.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, kent.overstreet@gmail.com, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, elver@google.com, 
+	Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Catalin Marinas <catalin.marinas@arm.com>, torvalds@linux-foundation.org, 
+	linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 13, 2024 at 11:30=E2=80=AFPM Yang Jihong <yangjihong@bytedance.=
-com> wrote:
+On Sat, Mar 23, 2024 at 3:10=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote:
 >
-> Currently, when libtraceevent is not linked,
-> perf does not support tracepoint:
->
->   # ./perf record -e sched:sched_switch -a sleep 10
->   event syntax error: 'sched:sched_switch'
->                        \___ unsupported tracepoint
->
->   libtraceevent is necessary for tracepoint support
->   Run 'perf list' for a list of valid events
->
->    Usage: perf record [<options>] [<command>]
->       or: perf record [<options>] -- <command> [<options>]
->
->       -e, --event <event>   event selector. use 'perf list' to list avail=
-able events
->
-> For cross-compilation scenario, library may not be installed in the defau=
-lt
-> system path. Based on the above requirements, add LIBTRACEEVENT_DIR build
-> option to support specifying path of libtraceevent.
->
-> Example:
->
->   1. Cross compile libtraceevent
->   # cd /opt/libtraceevent
->   # CROSS_COMPILE=3Daarch64-linux-gnu- make
->
->   2. Cross compile perf
->   # cd tool/perf
->   # make VF=3D1 ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu- NO_LIBELF=
-=3D1 LDFLAGS=3D--static LIBTRACEEVENT_DIR=3D/opt/libtraceevent
->   <SNIP>
->   Auto-detecting system features:
->   <SNIP>
->   ...                       LIBTRACEEVENT_DIR: /opt/libtraceevent
->
-> Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
+> Just looking down the road a bit, are there other features in the
+> standard library which are not applicable to Linux kernel space?
+> Ideally we want a solution not just for atomics but a generic solution
+> which can disable a collection of features? Maybe one by one?
 
-This all looks good to me, thanks!
+We requested a few of these in the past for both `core` [1] and
+`alloc` [2], and we got some which we use (see the `cfg(no_*)`s). It
+is what we called "modularization of `core`" too.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+[1] https://github.com/Rust-for-Linux/linux/issues/514
+[2] https://github.com/Rust-for-Linux/linux/issues/408
 
-> ---
->  tools/perf/Makefile.config | 20 ++++++++++++++++----
->  1 file changed, 16 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 1fe8df97fe88..7783479de691 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -182,6 +182,16 @@ endif
->  FEATURE_CHECK_CFLAGS-libzstd :=3D $(LIBZSTD_CFLAGS)
->  FEATURE_CHECK_LDFLAGS-libzstd :=3D $(LIBZSTD_LDFLAGS)
->
-> +# for linking with debug library, run like:
-> +# make DEBUG=3D1 LIBTRACEEVENT_DIR=3D/opt/libtraceevent/
-> +TRACEEVENTLIBS :=3D -ltraceevent
-> +ifdef LIBTRACEEVENT_DIR
-> +  LIBTRACEEVENT_CFLAGS  :=3D -I$(LIBTRACEEVENT_DIR)/include
-> +  LIBTRACEEVENT_LDFLAGS :=3D -L$(LIBTRACEEVENT_DIR)/lib
-> +endif
-> +FEATURE_CHECK_CFLAGS-libtraceevent :=3D $(LIBTRACEEVENT_CFLAGS)
-> +FEATURE_CHECK_LDFLAGS-libtraceevent :=3D $(LIBTRACEEVENT_LDFLAGS) $(TRAC=
-EEVENTLIBS)
-> +
->  FEATURE_CHECK_CFLAGS-bpf =3D -I. -I$(srctree)/tools/include -I$(srctree)=
-/tools/arch/$(SRCARCH)/include/uapi -I$(srctree)/tools/include/uapi
->  # include ARCH specific config
->  -include $(src-perf)/arch/$(SRCARCH)/Makefile
-> @@ -1165,9 +1175,10 @@ endif
->  ifneq ($(NO_LIBTRACEEVENT),1)
->    $(call feature_check,libtraceevent)
->    ifeq ($(feature-libtraceevent), 1)
-> -    CFLAGS +=3D -DHAVE_LIBTRACEEVENT
-> -    EXTLIBS +=3D -ltraceevent
-> -    LIBTRACEEVENT_VERSION :=3D $(shell $(PKG_CONFIG) --modversion libtra=
-ceevent)
-> +    CFLAGS +=3D -DHAVE_LIBTRACEEVENT $(LIBTRACEEVENT_CFLAGS)
-> +    LDFLAGS +=3D $(LIBTRACEEVENT_LDFLAGS)
-> +    EXTLIBS +=3D ${TRACEEVENTLIBS}
-> +    LIBTRACEEVENT_VERSION :=3D $(shell PKG_CONFIG_PATH=3D$(LIBTRACEEVENT=
-_DIR) $(PKG_CONFIG) --modversion libtraceevent)
->      LIBTRACEEVENT_VERSION_1 :=3D $(word 1, $(subst ., ,$(LIBTRACEEVENT_V=
-ERSION)))
->      LIBTRACEEVENT_VERSION_2 :=3D $(word 2, $(subst ., ,$(LIBTRACEEVENT_V=
-ERSION)))
->      LIBTRACEEVENT_VERSION_3 :=3D $(word 3, $(subst ., ,$(LIBTRACEEVENT_V=
-ERSION)))
-> @@ -1175,7 +1186,7 @@ ifneq ($(NO_LIBTRACEEVENT),1)
->      CFLAGS +=3D -DLIBTRACEEVENT_VERSION=3D$(LIBTRACEEVENT_VERSION_CPP)
->      $(call detected,CONFIG_LIBTRACEEVENT)
->    else
-> -    $(error ERROR: libtraceevent is missing. Please install libtraceeven=
-t-dev/libtraceevent-devel or build with NO_LIBTRACEEVENT=3D1)
-> +    $(error ERROR: libtraceevent is missing. Please install libtraceeven=
-t-dev/libtraceevent-devel and/or set LIBTRACEEVENT_DIR or build with NO_LIB=
-TRACEEVENT=3D1)
->    endif
->
->    $(call feature_check,libtracefs)
-> @@ -1301,6 +1312,7 @@ ifeq ($(VF),1)
->    $(call print_var,LIBUNWIND_DIR)
->    $(call print_var,LIBDW_DIR)
->    $(call print_var,JDIR)
-> +  $(call print_var,LIBTRACEEVENT_DIR)
->
->    ifeq ($(dwarf-post-unwind),1)
->      $(call feature_print_text,"DWARF post unwind library", $(dwarf-post-=
-unwind-text)) $(info $(MSG))
-> --
-> 2.25.1
->
+Cheers,
+Miguel
