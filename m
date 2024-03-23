@@ -1,35 +1,52 @@
-Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.220])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B91734C6B
-	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 06:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.220
+Received: from smtp.smtpout.orange.fr (smtp-27.smtpout.orange.fr [80.12.242.27])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323A246A0;
+	Sat, 23 Mar 2024 06:57:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711176973; cv=none; b=LAUQroTx4h4vNfqh/T1Ps+LrRbzOdaZprTeW7gb/E9H+mY3ejUa65hp73XoeMWeO2brt1e65YJiNbm/Hr9pVL814hRQDXVGHg3ZijJL8lS5uaJwzrZ/mqu8KxRHufvInZQRwHoMzwANIcF9q/iJT0BcKYBggd3JILgtB8el4RyI=
+	t=1711177053; cv=none; b=T0FKJjlpqJqp48IELSKuX1LQAjvPeLg3DNubdLDUPk4PiZhPbXEeydsNegBX/Ie6Hb21XHNH7+5fvIw1WmobzwXxS6mAQfGa0p2MYHm/YL0FDHWFBo/5p2rEnOiIysnuS0GghAcfDQSvYLHms8m85NZ1hOqFvhXIe7GQupGz0D8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711176973; c=relaxed/simple;
-	bh=Mg83579z+YfI26BJr+EMVKgNqskLLWbJSibN01Sq6KA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qOTfDJA6uFQmX/P5Hdrb0ECJ4SIy/0lGylV7/riMy1B66EipDOpwp3bspy4r04mxolZg4dsMjJm7sqQ3Pa6J/TGUHT67osFQ/4LlWoT7rjn6frGYnL46CLkk+nlmpcCIhoUf/m844wuEnEwxuc1flOExZhzLZfAJ4ZUPyP80cc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=g8o5R0RT; arc=none smtp.client-ip=45.254.50.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1711177053; c=relaxed/simple;
+	bh=Voz19KYzQOltPtFam3tB/1mEVOfoTTWvRX0X9iZJcNY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LPQhHLvG3jQXzHsstPTgr7rE94Nq63/9XSM5llwpccBNqNt1fPScG39Oc8wBOM7Bt+aW7DQcSOmMQdgXzrRGE3D7qaFQ9b2R5mhOxuNP0vWvLbVzsdNfK7hXxg2Fk8L5khR+F2gi2Gt2by2RIhd6JOP9+sfD08G5KuGG0X45GLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=VnG+P5F6; arc=none smtp.client-ip=80.12.242.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="g8o5R0RT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=/pTXn
-	hJNO0rvGZyVon+/V5qCy/Cr3WxVq6gLtqlZkAo=; b=g8o5R0RT/kDPU0GvBLxnE
-	K+hkDbeFydeoc5mb8f/JKws/yKxMu8eSpokVA6aln5vunMz2oLAUgPogv8/JvSC8
-	m1GOnFQfmxgKWkjlGUlyR4bn5ojWgflgHw+Lt0cEJO2TdJpklxkKRn+8TDRmdI5v
-	XqRxzEPME6paQdZz8XPC1g=
-Received: from localhost.localdomain (unknown [111.198.54.11])
-	by gzga-smtp-mta-g0-5 (Coremail) with SMTP id _____wD3H036fP5lMHXdBA--.31160S2;
-	Sat, 23 Mar 2024 14:55:55 +0800 (CST)
-From: LuMingYin <lumingyindetect@163.com>
-To: linux-kernel@vger.kernel.org
-Cc: peterz@infradead.org,
-	LuMingYin <lumingyindetect@163.com>
-Subject: [PATCH] tools:Fix a memory leak bug related to the cmd
-Date: Sat, 23 Mar 2024 14:55:50 +0800
-Message-Id: <20240323065550.603005-1-lumingyindetect@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="VnG+P5F6"
+Received: from fedora.home ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id nvJZrKeyIixjunvJhrMrfQ; Sat, 23 Mar 2024 07:57:21 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1711177041;
+	bh=wUyvvyJdTx1/XQHU+I6I8DZSGJvicxz4iaZppevGwzg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=VnG+P5F6DWNNqpoxfOdkl4yZLmfzeYi2LOnaowgKoaw3uou81NL+bv2B6dHJ3sv19
+	 yUPV3RBm7Gz+iOvf5r1Mqpk8pNZgHrHzRlkzKAHBwQGeK8lrApU7m1hdwiTR3qppSM
+	 /YMKBxwTBId1cs9QxyuGgMvh9l30ceTUtRM0PzJDccmZ6b/QVbhh66r6RX8fji/9hc
+	 16m5Qvj1TavkranrLpR9QmRi7pOgx1ZDMGVZJw1ULYOKiSBt0FIGGxc+kFKTx9KWyC
+	 r7m+YtXjd8EIoz+Q14s62wLCRWGntV+UjvBKOZOWCHBx8ZafKac6UfTs3aNdfAlFvQ
+	 zNAPR2EVhD6NQ==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 23 Mar 2024 07:57:21 +0100
+X-ME-IP: 86.243.17.157
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: gregkh@linuxfoundation.org,
+	jbrunet@baylibre.com,
+	ruslan.bilovol@gmail.com
+Cc: linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH 1/3] usb: gadget: u_audio: Fix the size of a buffer in a strscpy() call
+Date: Sat, 23 Mar 2024 07:57:03 +0100
+Message-ID: <bf8a9353319566624f653531b80e5caf3d346ba1.1711176700.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <cover.1711176700.git.christophe.jaillet@wanadoo.fr>
+References: <cover.1711176700.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,32 +54,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3H036fP5lMHXdBA--.31160S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrtrW3GF48uF43GrWxZr4rAFb_yoWfKwb_tF
-	yIgr97GrnYqF4ktas2yrW8Xr1xKFs5Xr1kAw4Sqr13u3W3J3ZxWF97ur9Iyrs3trWSyFy3
-	uFyrXw1fArnIkjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xREuc_JUUUUU==
-X-CM-SenderInfo: poxpx0hj1l0vphwhu3i6rwjhhfrp/xtbBoAuq92WXwXfQ3QAAs-
 
-In the function 'disas_funcs' defined in the file /linux/tools/objtool/check.c, a pointer variable named 'cmd' is declared (line 4583 of the file). This pointer variable allocates a block of dynamic memory using the 'malloc' function at line 4615. However, after using the memory area pointed to by 'cmd' (line 4619), it is not deallocated, resulting in a memory leak bug. This commit fixes the bug.
+The size given to strscpy() is not consistent with the destination buffer
+that is used. The size is related to 'driver' and the buffer is
+'mixername'.
 
-Signed-off-by: LuMingYin <lumingyindetect@163.com>
+sizeof(card->mixername) is 80 and sizeof(card->driver) is 16, so in
+theory this could lead to unneeded string truncation.
+
+In practice, this is not the case because g_audio_setup() has only 2
+callers. 'card_name' is either "UAC1_Gadget" or "UAC2_Gadget".
+
+Anyway, using the correct size is cleaner and more future proof.
+
+In order to be less verbose, use the new 2-argument version of strscpy()
+which computes auto-magically the size of the destination.
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- tools/objtool/check.c | 1 +
- 1 file changed, 1 insertion(+)
+Compile tested only.
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index eb7e12ebc1d0..486a2a6374f5 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -4617,6 +4617,7 @@ static int disas_funcs(const char *funcs)
- 	/* real snprintf() */
- 	snprintf(cmd, size, objdump_str, cross_compile, objname, funcs);
- 	ret = system(cmd);
-+	free(cmd);
- 	if (ret) {
- 		WARN("disassembly failed: %d", ret);
- 		return -1;
+As this doesn't fix anything in the real world, no Fixes tag is provided.
+Should one not agree with me, it is:
+Fixes: e89bb4288378 ("usb: gadget: u_audio: add real feedback implementation")
+---
+ drivers/usb/gadget/function/u_audio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/gadget/function/u_audio.c b/drivers/usb/gadget/function/u_audio.c
+index 4a42574b4a7f..00ff623b4ebb 100644
+--- a/drivers/usb/gadget/function/u_audio.c
++++ b/drivers/usb/gadget/function/u_audio.c
+@@ -1257,7 +1257,7 @@ int g_audio_setup(struct g_audio *g_audio, const char *pcm_name,
+ 	if ((c_chmask && g_audio->in_ep_fback)
+ 			|| (p_chmask && params->p_fu.id)
+ 			|| (c_chmask && params->c_fu.id))
+-		strscpy(card->mixername, card_name, sizeof(card->driver));
++		strscpy(card->mixername, card_name);
+ 
+ 	if (c_chmask && g_audio->in_ep_fback) {
+ 		kctl = snd_ctl_new1(&u_audio_controls[UAC_FBACK_CTRL],
 -- 
-2.25.1
+2.44.0
 
