@@ -1,93 +1,90 @@
-Received: from mail.nppct.ru (mail.nppct.ru [195.133.245.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F81443D
-	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 06:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.133.245.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2385382
+	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 06:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711174178; cv=none; b=VP+6YgTUshqvMGz5lddyYO7F74k61rT3qXK+mItfHcYHaVc4PWO3XLL089CvDaAhRrz7+dU66Y1yTI3CwSQyFZU2HhmAy5We0pc5Li7AIOT6zL9Q59i68rM4uCEXsiev1PJgOkG9jdQp76HmLLzSZ/unUjIVoGhFQUcs1VJoPCE=
+	t=1711174633; cv=none; b=Ri66juUHIwxf9vrHMRlTdiNn3TSyQaRCkw85m1siKJPxYw9D+12/RMFl9uc3SzrHYBn9QYLCf77mYSmX8V1TwGonn0vlPY4nSyu4GCPbP8HTrd+/0JmrdaYY1kG2Fcu2NSeHv8IWr/9NAhqAGzm9Vs4WZ7eVRrAaqvofAmLgxzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711174178; c=relaxed/simple;
-	bh=dqNdFzDav8LT0eeQGhnGEPZYDofLjfHq/dxayOwpeo4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=SF1gquKUBoKp/C/mcS8V7iRyh4AVZE11e7Gdq1F84JycuOig+MczhuXIZCYPo+BInbiF4qvfUHDXmgfJgrgxFELWShFkH+MOEP+o6C4x23p7W8ai3AHQprlouMhcAPdKXEaG09Fw0cREEERRLczhGLQna3lmoWBbauWS/QwyRBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru; spf=pass smtp.mailfrom=nppct.ru; dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b=YsHkIRqv; arc=none smtp.client-ip=195.133.245.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nppct.ru
+	s=arc-20240116; t=1711174633; c=relaxed/simple;
+	bh=dqG0Z288zz1kSYusNKw5auggaqGEU0D07aewlJFuyP0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qJyO1/vXL+oIvSDAlwxm++lKmndAJnSoAgE1NCqbXJ5Dfa8KBu3xAYJRZvPSkR71nG7tc7CEB5ZHJS16B9Isz+/CZDLVLSIfUAprz2Pl78Vu1kUCwf0CoUL/jt57RjjvDEg9r2ky0MQ2GreKCWk2p0eKBSL+id88YCZEFi1TdO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca; spf=none smtp.mailfrom=draconx.ca; dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b=N+9QMxOp; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=draconx.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b="YsHkIRqv"
-Received: from mail.nppct.ru (localhost [127.0.0.1])
-	by mail.nppct.ru (Postfix) with ESMTP id 8CA4B1C14A9
-	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 09:03:57 +0300 (MSK)
-Authentication-Results: mail.nppct.ru (amavisd-new); dkim=pass (1024-bit key)
-	reason="pass (just generated, assumed good)" header.d=nppct.ru
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nppct.ru; h=
-	content-transfer-encoding:content-type:content-type:mime-version
-	:x-mailer:message-id:date:date:subject:subject:to:from:from; s=
-	dkim; t=1711173832; x=1712037833; bh=dqNdFzDav8LT0eeQGhnGEPZYDof
-	LjfHq/dxayOwpeo4=; b=YsHkIRqvWQKYIMxnD97F0HIXWNpS6EkxErXonl3SSFP
-	p+c2GiRkYrjB6bKpRhk1uzvoY8PFbIVEtTZ+rW1t6JLE9Dw9J+WxSQxjekpsb5VY
-	p6q1UymDgt0st5IcHKoo7Wq24URe+bgcpGjqKmESGwBNDGvAs8kdKJccpOXHKZlk
-	=
-X-Virus-Scanned: Debian amavisd-new at mail.nppct.ru
-Received: from mail.nppct.ru ([127.0.0.1])
-	by mail.nppct.ru (mail.nppct.ru [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id DBzKpX5o9QAy for <linux-kernel@vger.kernel.org>;
-	Sat, 23 Mar 2024 09:03:52 +0300 (MSK)
-Received: from localhost.localdomain (mail.dev-ai-melanoma.ru [185.130.227.204])
-	by mail.nppct.ru (Postfix) with ESMTPSA id B46AC1C14A0;
-	Sat, 23 Mar 2024 09:03:50 +0300 (MSK)
-From: Andrey Shumilin <shum.sdl@nppct.ru>
-To: Clemens Ladisch <clemens@ladisch.de>
-Cc: Andrey Shumilin <shum.sdl@nppct.ru>,
-	Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	alsa-devel@alsa-project.org,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	khoroshilov@ispras.ru,
-	ykarpov@ispras.ru,
-	vmerzlyakov@ispras.ru,
-	vefanov@ispras.ru
-Subject: [PATCH] amdtp-stream: Checking a variable for zero before dividing
-Date: Sat, 23 Mar 2024 09:03:38 +0300
-Message-Id: <20240323060338.663707-1-shum.sdl@nppct.ru>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b="N+9QMxOp"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-42a029c8e62so21325631cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 23:17:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=draconx-ca.20230601.gappssmtp.com; s=20230601; t=1711174631; x=1711779431; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YUD52ht+HR3l3eedQqUGqKmwp+yFV4q4zkif3Vs2Vr0=;
+        b=N+9QMxOpE0VJj9HzfPOcRHSV6xmUV/bor65C35aNwmZxESfBFPV0AEBi++5mqP0UmB
+         9fTFz2RyhrPeotg95inB9669MVDiP7Uc6RyBIDyRdACUUdDBDCS1IACWuDrQG6OJwg8K
+         5zTDiIkh+RT90TNKdnUwcubnQ5aW5R9nDtkS3/iXNpDX84mZnXry75hFWr+2VTzZyL2f
+         i69Y5MNkTETI5j6z1Fo2rRNsNIx6jS9CfW34mwC8N7BThAbNyp5KJ/r2zQmPSSPJVbux
+         PY/T6xp2SuiVh9uccdivjOvDkLw9o4BZLewGj3sK1HFXsOw4autrDA9e7Kv8bcBVyVP1
+         Dlyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711174631; x=1711779431;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YUD52ht+HR3l3eedQqUGqKmwp+yFV4q4zkif3Vs2Vr0=;
+        b=WrctcvgUF3LfS9D0veRpsODYDkks4vj/kbn7L1ep/FtWxAtcwklDliTu8GGN8ZLZ19
+         dY/swIWCwlrTkzeN1NabSfGX5M53YNn6TLO+nOctYjxzdMaWRj39uPguUNJvVvIfOa+R
+         AbQMIfD6WolR92/WRc+CucNEyl18riwJz0d3UNdpZy2jzlWsmdA+7s7KV9pbBg2oONhL
+         n0zZ0tVZ/Vgb3t8+ZrESAUZR+zxCZOtqIrFHbO8bUG6UEHX2lIWhTaqWd1RCF3byULRj
+         VM6U1zbHrlG9piyiIXRPKfd/sOog3oemx3qxcMn7TEK3OXFcU0tLIeUxba8v5Vh2t7C4
+         dv2w==
+X-Forwarded-Encrypted: i=1; AJvYcCVXQnfF0thv/mnjtG6k6PG5hZ85h5JJNMnDpy0oulhoBMxYP8OeazwDRNRxiWms1oty7yyKgh5KhKMoDFt8NJPaCMWVYsrXfhWT7ZJl
+X-Gm-Message-State: AOJu0YwbChrfKSu3hQgK6kBxBjXa8wPVZeblZVhDpTuZ+Vr/NwblDE88
+	PbBYIHG8HRFOV6zS82o+mUnqzOorjdWcmHP1nENNmSsQwTIYm9QyMu+szSPgvNE=
+X-Google-Smtp-Source: AGHT+IHsW+rCkfYvisR1ygy31z8BZc9G7J8m+4nL2/pwwjaGvRY/EyVRR4S6gmRAATdetLzbqae2KA==
+X-Received: by 2002:ac8:7c47:0:b0:431:458a:8ea5 with SMTP id o7-20020ac87c47000000b00431458a8ea5mr220141qtv.55.1711174631036;
+        Fri, 22 Mar 2024 23:17:11 -0700 (PDT)
+Received: from [192.168.0.50] (dhcp-24-53-241-2.cable.user.start.ca. [24.53.241.2])
+        by smtp.gmail.com with ESMTPSA id bb40-20020a05622a1b2800b00431435c34b1sm196691qtb.60.2024.03.22.23.17.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Mar 2024 23:17:10 -0700 (PDT)
+Message-ID: <25ecf18b-7533-410a-9b1f-6c11343b8565@draconx.ca>
+Date: Sat, 23 Mar 2024 02:17:08 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fbdev: Select I/O-memory framebuffer ops for SBus
+Content-Language: en-US
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+ Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, stable@vger.kernel.org,
+ Javier Martinez Canillas <javierm@redhat.com>, deller@gmx.de
+References: <20240322083005.24269-1-tzimmermann@suse.de>
+ <877chu1r8s.fsf@minerva.mail-host-address-is-not-set>
+From: Nick Bowler <nbowler@draconx.ca>
+In-Reply-To: <877chu1r8s.fsf@minerva.mail-host-address-is-not-set>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-The step variable is initialized to zero.
-It changes in the loop, but if it doesn’t change
-it will remain zero.
-The patch added a variable check.
+On 2024-03-22 06:43, Javier Martinez Canillas wrote:
+> Thomas Zimmermann <tzimmermann@suse.de> writes:
+> 
+>> Framebuffer I/O on the Sparc Sbus requires read/write helpers for
+>> I/O memory. Select FB_IOMEM_FOPS accordingly.
+>>
+>> Reported-by: Nick Bowler <nbowler@draconx.ca>
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-Signed-off-by: Andrey Shumilin <shum.sdl@nppct.ru>
----
- sound/firewire/amdtp-stream.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Applied on top of 6.8 and the build is successful.
 
-diff --git a/sound/firewire/amdtp-stream.c b/sound/firewire/amdtp-stream.c
-index c9f153f85ae6..b61aa30f43a9 100644
---- a/sound/firewire/amdtp-stream.c
-+++ b/sound/firewire/amdtp-stream.c
-@@ -168,7 +168,8 @@ static int apply_constraint_to_size(struct snd_pcm_hw_params *params,
- 		if (snd_interval_test(r, amdtp_rate_table[i]))
- 			step = max(step, amdtp_syt_intervals[i]);
- 	}
--
-+	if (step == 0)
-+		return -EINVAL;
- 	t.min = roundup(s->min, step);
- 	t.max = rounddown(s->max, step);
- 	t.integer = 1;
--- 
-2.30.2
-
+Thanks,
+  Nick
