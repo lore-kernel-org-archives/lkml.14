@@ -1,47 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340DC54675
-	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 19:52:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11F65A10A
+	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 19:52:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711223525; cv=none; b=bytgAEExE6uaFg0mbkOC+vPX2LLSlYjlk3ZlVL/+1gt117R1wal+ip+pUCT27NdeGaPV3AReA6suyqsyzVvLfLDJ3p3dYnPEDGb+8F3mSG3yNTJiaVmFJ6gVUoKOdQAkL8JFBCtT4IBb370RrRVcvftUqjJ5piXyD5tESSoWezw=
+	t=1711223528; cv=none; b=F/vEmgl0NbvI3i+TrrPZld+ez/dIMjhDjoh2tqm6KhXqHoZ36+4lUjWh2AFxM0ZYr7xtWSjiAfQfp756Myg01T5nEBuluBGaWK7jgD8LH2LdhrTe0gKm11ZsdpgMGYPgNqpaCqTJp11YY+ReXTL5cWzuzfxSLFuEmZSjwCii0LU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711223525; c=relaxed/simple;
-	bh=3hBu6JGfwnANydjRy0qGyXicX1PZYHy+wpz5cmdmvYU=;
+	s=arc-20240116; t=1711223528; c=relaxed/simple;
+	bh=NSCoOxI47MPHSdqcnwxqUyAs8NrmmH6uq2ngkSmUA6Q=;
 	h=From:To:Cc:Subject:References:Message-ID:Content-Type:
-	 MIME-Version:Date; b=Axptjaha2T8LASa14VoRQ/3Ajfcg0EeV76Ya0S4ldjRaKYGMqofS+cTXc6Vn4bfdT3i8X7sM9fER+uxLB11PEXDsRilV+JE5Yy84W6bajNAfiNJbCjfnrL7VK1ecR9R7cHtvuaxbjnrp4lCR0ahN9dD//kQuJcqWBGIqb12BCU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=I3rtbZhi; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7ZumxDFc; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version:Date; b=WtWHCxxKu6Jq3N4Fc9c6EDWrKBu0IZ2rfPgqvqdINN84xipzd1gxtjrlQ+1MioFfFybbsizKu9zI3KOfmWGZbXdspi14n8OCwbrb51VTZJR0phl+BX18Qt2H1VUnXadSxLQurS8U/5QxeBmxGUCQLqF2j/9fn7uqYX0/XlOXGOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iHJPLAG2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=O/z/ck3P; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I3rtbZhi";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7ZumxDFc"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iHJPLAG2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="O/z/ck3P"
 From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1711223521;
+	s=2020; t=1711223524;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:  references:references;
-	bh=mnvLml7Sp1CnFF1iVOX2L/3pT5OaaPjoAsx4yR5NNCI=;
-	b=I3rtbZhijiPHd7fRDIXqqVBm0Bsx52Q0Q62l001d6X09Tw8Ly/h7QoxoiOrNW/bRaKTJYo
-	Wo6wRlBtGVe1WL9yQps6PyWm0Dkwn2QxL41k128LmdjMSlowmP2aimT3qjf3XTgNwtAiNe
-	Egl0bLXm215rVhrg+Arps0PY5kk76WwmyVfIjJkiCP/xCz2MXgTgkBIRV7o/++z9/m8Guh
-	7dfs1BJp2evpH6ohFPOzlU6YmWt5v+/g2rWtyrDZgRggiZ02a7igtiAAXInmfoXk2ICtlz
-	14GiBn6f+7PhvgryKtmoToi+kJNLOGtLROAeazuKISSbgiuCoSl+y5xfh9da0A==
+	bh=uISftncO67WoLzla+p8VY4NBfhy2gZdxyOPNUQz2wWU=;
+	b=iHJPLAG2GEaALt/nBYFq40KcGsCS39LgIICXkF4zwd2cdWo/LaVxuCSH0m+gY05nzSrqaL
+	emc2ccnjIJB38zOT0lbX/QJAfwAN2ak5xkWq3j6CYxkai+By5F43RA+yN6H+PU6x0hPTrQ
+	ihVouuLmFPu97mu5WQy2eIvsR8p7qQVc1Bu30+usdU5ozHyLWG0FaXWV6hxS+rICuyV94t
+	Vwnjlj3kCwxsldoG/Bosa8Yg21FhQu8U9s2K6ysEtmbD+DBhCS0dE9bKXR0SGyqYdg8j96
+	e2gW5G4kmzrMHZngAZHLgKpsWk3m2qD0aZ3KVq9gdgcERjHrxr9htIXng46tGA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1711223521;
+	s=2020e; t=1711223524;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:  references:references;
-	bh=mnvLml7Sp1CnFF1iVOX2L/3pT5OaaPjoAsx4yR5NNCI=;
-	b=7ZumxDFc6m3b+5S5iQyYw40XpqR/2VjUbKEB5i3dBxF9k7py2iHb/QuoI/StGEb90vfG9F
-	9htznvK1smR0sXAg==
+	bh=uISftncO67WoLzla+p8VY4NBfhy2gZdxyOPNUQz2wWU=;
+	b=O/z/ck3PGW1dROpeEnYJ2jxJ+khjsIYpHGe1XLVhLu/JwJ5LadvxH+Jx0I65Ehoa/Q3loa
+	uW8awNY+JirXY0Cw==
 To: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] irq/urgent for v6.9-rc1
+Subject: [GIT pull] timers/urgent for v6.9-rc1
 References: <171122346785.2772088.10596056144848184713.tglx@xen13>
-Message-ID: <171122346956.2772088.12525594748449004875.tglx@xen13>
+Message-ID: <171122347264.2772088.18245020534552619618.tglx@xen13>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -50,238 +50,111 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sat, 23 Mar 2024 20:52:00 +0100 (CET)
+Date: Sat, 23 Mar 2024 20:52:04 +0100 (CET)
 
 Linus,
 
-please pull the latest irq/urgent branch from:
+please pull the latest timers/urgent branch from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-urgent-2024-=
-03-23
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-20=
+24-03-23
 
-up to:  dce0919c83c3: irqchip/renesas-rzg2l: Do not set TIEN and TINT source =
-at the same time
+up to:  03877039863b: timers: Fix removed self-IPI on global timer's enqueue =
+in nohz_full
 
-A series of fixes for the Renesas RZG21 interrupt chip driver to prevent
-spurious and misrouted interrupts.
+Two regression fixes for the timer and timer migration code:
 
-  - Ensure that posted writes are flushed in the eoi() callback
+  1) Prevent endless timer requeuing which is caused by two CPUs racing out
+     of idle. This happens when the last CPU goes idle and therefore has to
+     ensure to expire the pending global timers and some other CPU come out
+     of idle at the same time and the other CPU wins the race and expires
+     the global queue. This causes the last CPU to chase ghost timers
+     forever and reprogramming it's clockevent device endlessly.
 
-  - Ensure that interrupts are masked at the chip level when the trigger
-    type is changed
+     Cure this by re-evaluating the wakeup time unconditionally.
 
-  - Clear the interrupt status register when setting up edge type trigger
-    modes.
+  2) The split into local (pinned) and global timers in the timer wheel
+     caused a regression for NOHZ full as it broke the idle tracking of
+     global timers. On NOHZ full this prevents an self IPI being sent which
+     in turn causes the timer to be not programmed and not being expired on
+     time.
 
-  - Ensure that the trigger type and routing information is set before the
-    interrupt is enabled.
+     Restore the idle tracking for the global timer base so that the self
+     IPI condition for NOHZ full is working correctly again.
 
 Thanks,
 
 	tglx
 
 ------------------>
-Biju Das (5):
-      irqchip/renesas-rzg2l: Flush posted write in irq_eoi()
-      irqchip/renesas-rzg2l: Rename rzg2l_tint_eoi()
-      irqchip/renesas-rzg2l: Rename rzg2l_irq_eoi()
-      irqchip/renesas-rzg2l: Prevent spurious interrupts when setting trigger=
- type
-      irqchip/renesas-rzg2l: Do not set TIEN and TINT source at the same time
+Frederic Weisbecker (2):
+      timers/migration: Fix endless timer requeue after idle interrupts
+      timers: Fix removed self-IPI on global timer's enqueue in nohz_full
 
 
- drivers/irqchip/irq-renesas-rzg2l.c | 72 +++++++++++++++++++++++++++--------=
---
- 1 file changed, 54 insertions(+), 18 deletions(-)
+ kernel/time/timer.c           | 12 +++++++++++-
+ kernel/time/timer_migration.c | 11 +++++++++--
+ 2 files changed, 20 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/irqchip/irq-renesas-rzg2l.c b/drivers/irqchip/irq-renesa=
-s-rzg2l.c
-index 9494fc26259c..ae67fec2ab46 100644
---- a/drivers/irqchip/irq-renesas-rzg2l.c
-+++ b/drivers/irqchip/irq-renesas-rzg2l.c
-@@ -85,10 +85,9 @@ static struct rzg2l_irqc_priv *irq_data_to_priv(struct irq=
-_data *data)
- 	return data->domain->host_data;
- }
-=20
--static void rzg2l_irq_eoi(struct irq_data *d)
-+static void rzg2l_clear_irq_int(struct rzg2l_irqc_priv *priv, unsigned int h=
-wirq)
- {
--	unsigned int hw_irq =3D irqd_to_hwirq(d) - IRQC_IRQ_START;
--	struct rzg2l_irqc_priv *priv =3D irq_data_to_priv(d);
-+	unsigned int hw_irq =3D hwirq - IRQC_IRQ_START;
- 	u32 bit =3D BIT(hw_irq);
- 	u32 iitsr, iscr;
-=20
-@@ -99,20 +98,30 @@ static void rzg2l_irq_eoi(struct irq_data *d)
- 	 * ISCR can only be cleared if the type is falling-edge, rising-edge or
- 	 * falling/rising-edge.
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index e69e75d3858c..dee29f1f5b75 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -642,7 +642,8 @@ trigger_dyntick_cpu(struct timer_base *base, struct timer=
+_list *timer)
+ 	 * the base lock:
  	 */
--	if ((iscr & bit) && (iitsr & IITSR_IITSEL_MASK(hw_irq)))
-+	if ((iscr & bit) && (iitsr & IITSR_IITSEL_MASK(hw_irq))) {
- 		writel_relaxed(iscr & ~bit, priv->base + ISCR);
+ 	if (base->is_idle) {
+-		WARN_ON_ONCE(!(timer->flags & TIMER_PINNED));
++		WARN_ON_ONCE(!(timer->flags & TIMER_PINNED ||
++			       tick_nohz_full_cpu(base->cpu)));
+ 		wake_up_nohz_cpu(base->cpu);
+ 	}
+ }
+@@ -2292,6 +2293,13 @@ static inline u64 __get_next_timer_interrupt(unsigned =
+long basej, u64 basem,
+ 		 */
+ 		if (!base_local->is_idle && time_after(nextevt, basej + 1)) {
+ 			base_local->is_idle =3D true;
++			/*
++			 * Global timers queued locally while running in a task
++			 * in nohz_full mode need a self-IPI to kick reprogramming
++			 * in IRQ tail.
++			 */
++			if (tick_nohz_full_cpu(base_local->cpu))
++				base_global->is_idle =3D true;
+ 			trace_timer_base_idle(true, base_local->cpu);
+ 		}
+ 		*idle =3D base_local->is_idle;
+@@ -2364,6 +2372,8 @@ void timer_clear_idle(void)
+ 	 * path. Required for BASE_LOCAL only.
+ 	 */
+ 	__this_cpu_write(timer_bases[BASE_LOCAL].is_idle, false);
++	if (tick_nohz_full_cpu(smp_processor_id()))
++		__this_cpu_write(timer_bases[BASE_GLOBAL].is_idle, false);
+ 	trace_timer_base_idle(false, smp_processor_id());
+=20
+ 	/* Activate without holding the timer_base->lock */
+diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
+index 611cd904f035..c63a0afdcebe 100644
+--- a/kernel/time/timer_migration.c
++++ b/kernel/time/timer_migration.c
+@@ -1038,8 +1038,15 @@ void tmigr_handle_remote(void)
+ 	 * in tmigr_handle_remote_up() anyway. Keep this check to speed up the
+ 	 * return when nothing has to be done.
+ 	 */
+-	if (!tmigr_check_migrator(tmc->tmgroup, tmc->childmask))
+-		return;
++	if (!tmigr_check_migrator(tmc->tmgroup, tmc->childmask)) {
 +		/*
-+		 * Enforce that the posted write is flushed to prevent that the
-+		 * just handled interrupt is raised again.
++		 * If this CPU was an idle migrator, make sure to clear its wakeup
++		 * value so it won't chase timers that have already expired elsewhere.
++		 * This avoids endless requeue from tmigr_new_timer().
 +		 */
-+		readl_relaxed(priv->base + ISCR);
++		if (READ_ONCE(tmc->wakeup) =3D=3D KTIME_MAX)
++			return;
 +	}
- }
 =20
--static void rzg2l_tint_eoi(struct irq_data *d)
-+static void rzg2l_clear_tint_int(struct rzg2l_irqc_priv *priv, unsigned int =
-hwirq)
- {
--	unsigned int hw_irq =3D irqd_to_hwirq(d) - IRQC_TINT_START;
--	struct rzg2l_irqc_priv *priv =3D irq_data_to_priv(d);
--	u32 bit =3D BIT(hw_irq);
-+	u32 bit =3D BIT(hwirq - IRQC_TINT_START);
- 	u32 reg;
+ 	data.now =3D get_jiffies_update(&data.basej);
 =20
- 	reg =3D readl_relaxed(priv->base + TSCR);
--	if (reg & bit)
-+	if (reg & bit) {
- 		writel_relaxed(reg & ~bit, priv->base + TSCR);
-+		/*
-+		 * Enforce that the posted write is flushed to prevent that the
-+		 * just handled interrupt is raised again.
-+		 */
-+		readl_relaxed(priv->base + TSCR);
-+	}
- }
-=20
- static void rzg2l_irqc_eoi(struct irq_data *d)
-@@ -122,9 +131,9 @@ static void rzg2l_irqc_eoi(struct irq_data *d)
-=20
- 	raw_spin_lock(&priv->lock);
- 	if (hw_irq >=3D IRQC_IRQ_START && hw_irq <=3D IRQC_IRQ_COUNT)
--		rzg2l_irq_eoi(d);
-+		rzg2l_clear_irq_int(priv, hw_irq);
- 	else if (hw_irq >=3D IRQC_TINT_START && hw_irq < IRQC_NUM_IRQ)
--		rzg2l_tint_eoi(d);
-+		rzg2l_clear_tint_int(priv, hw_irq);
- 	raw_spin_unlock(&priv->lock);
- 	irq_chip_eoi_parent(d);
- }
-@@ -142,7 +151,7 @@ static void rzg2l_irqc_irq_disable(struct irq_data *d)
-=20
- 		raw_spin_lock(&priv->lock);
- 		reg =3D readl_relaxed(priv->base + TSSR(tssr_index));
--		reg &=3D ~(TSSEL_MASK << TSSEL_SHIFT(tssr_offset));
-+		reg &=3D ~(TIEN << TSSEL_SHIFT(tssr_offset));
- 		writel_relaxed(reg, priv->base + TSSR(tssr_index));
- 		raw_spin_unlock(&priv->lock);
- 	}
-@@ -154,7 +163,6 @@ static void rzg2l_irqc_irq_enable(struct irq_data *d)
- 	unsigned int hw_irq =3D irqd_to_hwirq(d);
-=20
- 	if (hw_irq >=3D IRQC_TINT_START && hw_irq < IRQC_NUM_IRQ) {
--		unsigned long tint =3D (uintptr_t)irq_data_get_irq_chip_data(d);
- 		struct rzg2l_irqc_priv *priv =3D irq_data_to_priv(d);
- 		u32 offset =3D hw_irq - IRQC_TINT_START;
- 		u32 tssr_offset =3D TSSR_OFFSET(offset);
-@@ -163,7 +171,7 @@ static void rzg2l_irqc_irq_enable(struct irq_data *d)
-=20
- 		raw_spin_lock(&priv->lock);
- 		reg =3D readl_relaxed(priv->base + TSSR(tssr_index));
--		reg |=3D (TIEN | tint) << TSSEL_SHIFT(tssr_offset);
-+		reg |=3D TIEN << TSSEL_SHIFT(tssr_offset);
- 		writel_relaxed(reg, priv->base + TSSR(tssr_index));
- 		raw_spin_unlock(&priv->lock);
- 	}
-@@ -172,8 +180,10 @@ static void rzg2l_irqc_irq_enable(struct irq_data *d)
-=20
- static int rzg2l_irq_set_type(struct irq_data *d, unsigned int type)
- {
--	unsigned int hw_irq =3D irqd_to_hwirq(d) - IRQC_IRQ_START;
- 	struct rzg2l_irqc_priv *priv =3D irq_data_to_priv(d);
-+	unsigned int hwirq =3D irqd_to_hwirq(d);
-+	u32 iitseln =3D hwirq - IRQC_IRQ_START;
-+	bool clear_irq_int =3D false;
- 	u16 sense, tmp;
-=20
- 	switch (type & IRQ_TYPE_SENSE_MASK) {
-@@ -183,14 +193,17 @@ static int rzg2l_irq_set_type(struct irq_data *d, unsig=
-ned int type)
-=20
- 	case IRQ_TYPE_EDGE_FALLING:
- 		sense =3D IITSR_IITSEL_EDGE_FALLING;
-+		clear_irq_int =3D true;
- 		break;
-=20
- 	case IRQ_TYPE_EDGE_RISING:
- 		sense =3D IITSR_IITSEL_EDGE_RISING;
-+		clear_irq_int =3D true;
- 		break;
-=20
- 	case IRQ_TYPE_EDGE_BOTH:
- 		sense =3D IITSR_IITSEL_EDGE_BOTH;
-+		clear_irq_int =3D true;
- 		break;
-=20
- 	default:
-@@ -199,21 +212,40 @@ static int rzg2l_irq_set_type(struct irq_data *d, unsig=
-ned int type)
-=20
- 	raw_spin_lock(&priv->lock);
- 	tmp =3D readl_relaxed(priv->base + IITSR);
--	tmp &=3D ~IITSR_IITSEL_MASK(hw_irq);
--	tmp |=3D IITSR_IITSEL(hw_irq, sense);
-+	tmp &=3D ~IITSR_IITSEL_MASK(iitseln);
-+	tmp |=3D IITSR_IITSEL(iitseln, sense);
-+	if (clear_irq_int)
-+		rzg2l_clear_irq_int(priv, hwirq);
- 	writel_relaxed(tmp, priv->base + IITSR);
- 	raw_spin_unlock(&priv->lock);
-=20
- 	return 0;
- }
-=20
-+static u32 rzg2l_disable_tint_and_set_tint_source(struct irq_data *d, struct=
- rzg2l_irqc_priv *priv,
-+						  u32 reg, u32 tssr_offset, u8 tssr_index)
-+{
-+	u32 tint =3D (u32)(uintptr_t)irq_data_get_irq_chip_data(d);
-+	u32 tien =3D reg & (TIEN << TSSEL_SHIFT(tssr_offset));
-+
-+	/* Clear the relevant byte in reg */
-+	reg &=3D ~(TSSEL_MASK << TSSEL_SHIFT(tssr_offset));
-+	/* Set TINT and leave TIEN clear */
-+	reg |=3D tint << TSSEL_SHIFT(tssr_offset);
-+	writel_relaxed(reg, priv->base + TSSR(tssr_index));
-+
-+	return reg | tien;
-+}
-+
- static int rzg2l_tint_set_edge(struct irq_data *d, unsigned int type)
- {
- 	struct rzg2l_irqc_priv *priv =3D irq_data_to_priv(d);
- 	unsigned int hwirq =3D irqd_to_hwirq(d);
- 	u32 titseln =3D hwirq - IRQC_TINT_START;
-+	u32 tssr_offset =3D TSSR_OFFSET(titseln);
-+	u8 tssr_index =3D TSSR_INDEX(titseln);
- 	u8 index, sense;
--	u32 reg;
-+	u32 reg, tssr;
-=20
- 	switch (type & IRQ_TYPE_SENSE_MASK) {
- 	case IRQ_TYPE_EDGE_RISING:
-@@ -235,10 +267,14 @@ static int rzg2l_tint_set_edge(struct irq_data *d, unsi=
-gned int type)
- 	}
-=20
- 	raw_spin_lock(&priv->lock);
-+	tssr =3D readl_relaxed(priv->base + TSSR(tssr_index));
-+	tssr =3D rzg2l_disable_tint_and_set_tint_source(d, priv, tssr, tssr_offset,=
- tssr_index);
- 	reg =3D readl_relaxed(priv->base + TITSR(index));
- 	reg &=3D ~(IRQ_MASK << (titseln * TITSEL_WIDTH));
- 	reg |=3D sense << (titseln * TITSEL_WIDTH);
- 	writel_relaxed(reg, priv->base + TITSR(index));
-+	rzg2l_clear_tint_int(priv, hwirq);
-+	writel_relaxed(tssr, priv->base + TSSR(tssr_index));
- 	raw_spin_unlock(&priv->lock);
-=20
- 	return 0;
 
