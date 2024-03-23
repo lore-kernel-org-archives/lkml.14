@@ -1,71 +1,82 @@
-Received: from smtp.smtpout.orange.fr (smtp-27.smtpout.orange.fr [80.12.242.27])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D06046A0;
-	Sat, 23 Mar 2024 06:58:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.27
+Received: from mailrelay4-1.pub.mailoutpod2-cph3.one.com (mailrelay4-1.pub.mailoutpod2-cph3.one.com [46.30.211.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF1F8F6C
+	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 06:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711177105; cv=none; b=AVgNw+oWW/ga9tPW0tOStXhADjQDdArIuQwgCZSOwVG5vCSM9EVxr3ikpd3ifCynFu4e1GaY0k6Zc07Xf5LJ676yL6cJGSB0Zem/3ne8MDF+DqSXKPSTjhC4ZhyLYlhmoBxJ11P1GHH90SHlWWtVqaGmzyStpQcZxREI1LfJC3g=
+	t=1711177165; cv=none; b=GBVPTbXEQ3gMkAdzymLJuuhbQoE3a4c3jFjfSnzZt2NrSCd+ZMgQbfL/I1o/Zb0j4iOYrySHtq5D3t8J3t84p68wxOjVjR02ks91CUC0AKMld+El2utKDyC8hyepH0t7KDwQotsZoKI3/YFA47Ct0WZNvOnm9rypAZJq2ug5VkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711177105; c=relaxed/simple;
-	bh=Schhh1ve6wJUNgn1/lfBoSPo6hj6Yunp8gYcjsPdOuc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n6Z0DsjnakPgWCn1mRsgQRvk/QGJwZQ1wt+1AY95vypCBBu6EaITWv0sZB6lOvIAC033CyXJMxa6vM6tV3jiYx2L0tTEF3mu3Dvatn5tdnS0e8DtUL4iHr0hd1Au0I3e7CJuJ9P9rf7naC/FBr1ZR6K2lv35Zd2JzTxnP1RjBHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=LV4eFyY8; arc=none smtp.client-ip=80.12.242.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1711177165; c=relaxed/simple;
+	bh=nRJDueQBDn4xbmbB65HmUo5mxerLOF+EPeE6Yi0Vi9s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rRdXEqLX3rDq1Oc3UeULC7Ve6wV85f1a/8nCJ0J2vps1ALUN9f3EAUcdnOXjFVdyhmuTZnFk+l/vAkSx9rZWko8h1RK8TXTZPMCTjXtJbMtm8zodD/GXsKMuJpFS6wXfa7YOu8nlOn8J5Jwp2Tyru5nF/RVT09/vT0ehIEecZx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=i6jnN+xq; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=cVjUCt3q; arc=none smtp.client-ip=46.30.211.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="LV4eFyY8"
-Received: from fedora.home ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id nvJZrKeyIixjunvJZrMrek; Sat, 23 Mar 2024 07:57:14 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1711177034;
-	bh=zIEiZSYagjBeVyihcNf+XJegMipzYh1x7R7LSTamGZ4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=LV4eFyY8loUYYNskJclNqY/+asvPjt0rC093GmiXnwldLZOvTY0haDYH9XzPCvI/H
-	 CSmr2WKwsIAb1uCKHOGGerrCuRwOAr1toNrFwWJz/R9fJ64ZL3337GrhvQowDBnd4k
-	 10qKPLMtozpq8UkaFUseVjxrgbuRPI9FIicMFIvzmfybvFQDW55vZQ23/oJUyCpiII
-	 xK3GnY9RxBj1bVsJDzVDXq3kamok5u1rLseZEaKfv66pNuOwrnwzphTmE6S6/b4EE0
-	 HI8uSNZZzOgCagKPIytI8gqqd78GztySDKRpXddwVcgSSOgKUPXLqUyLgaXfBBPURc
-	 G6zKpQKnP+P6w==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 23 Mar 2024 07:57:14 +0100
-X-ME-IP: 86.243.17.157
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: gregkh@linuxfoundation.org,
-	jbrunet@baylibre.com,
-	ruslan.bilovol@gmail.com
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH 0/3] usb: gadget: u_audio:
-Date: Sat, 23 Mar 2024 07:57:02 +0100
-Message-ID: <cover.1711176700.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="i6jnN+xq";
+	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="cVjUCt3q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=ravnborg.org; s=rsa2;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=kHVpvatmACLIHkQBpgUbroXh+MVsVFpq6tArzu/ykOs=;
+	b=i6jnN+xq/VdVv+HkVL4ICMSlaFskB+k+43rEVsmWuJAGORLjqZZsVKaV5JWuTtZco2dadtZR3to5y
+	 srXJuv/2I75lVQj/mnuN94BytRg6V6uiKXOPWFFdA4OwAUmZdaPlaIbx3lVSxo3DgiMtY/yu/dGrXx
+	 Ba6KzApuIu+Tl8OeXqFTIW7Nthk1MHU8XI0ChjY7bWLpFWf7zLLa+yeeCCVqTx4tDVn7Y7mxpjI+nW
+	 vy6yFbjPZUVnbgPlarPlipdN16ijfQal4Cm5PAwQSeNbwB+DCIUOUu25XMmn+dQW7F5u7JaXSNAoLe
+	 4+YHY7YW1+iQv9YyHkWHGp6O8yIC+UA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
+	d=ravnborg.org; s=ed2;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=kHVpvatmACLIHkQBpgUbroXh+MVsVFpq6tArzu/ykOs=;
+	b=cVjUCt3qIpk1zz093kSoT9yNiAJtNN/6tMO6ofj+yw9LAoN5BEKt6xyNp3YuH+U6MZ5+0Xq5QAGoe
+	 mPps64CAw==
+X-HalOne-ID: b499b8b2-e8e2-11ee-9527-31e85a7fa845
+Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
+	by mailrelay4.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
+	id b499b8b2-e8e2-11ee-9527-31e85a7fa845;
+	Sat, 23 Mar 2024 06:58:10 +0000 (UTC)
+Date: Sat, 23 Mar 2024 07:58:09 +0100
+From: Sam Ravnborg <sam@ravnborg.org>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: nbowler@draconx.ca, deller@gmx.de, javierm@redhat.com,
+	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] fbdev: Select I/O-memory framebuffer ops for SBus
+Message-ID: <20240323065809.GA886373@ravnborg.org>
+References: <20240322083005.24269-1-tzimmermann@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240322083005.24269-1-tzimmermann@suse.de>
 
-The first patch is a fix that has no practital consequences in the real
-world. So I consider it more as a clean-up than as a fix.
-
-The 2 other patches are just clean-ups to be more consistent with
-string related API usages within this file.
-
-All 3 patches are compile tested only.
-
-Christophe JAILLET (3):
-  usb: gadget: u_audio: Fix the size of a buffer in a strscpy() call
-  usb: gadget: u_audio: Use the 2-argument version of strscpy()
-  usb: gadget: u_audio: Use snprintf() instead of sprintf()
-
- drivers/usb/gadget/function/u_audio.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
-
--- 
-2.44.0
-
+On Fri, Mar 22, 2024 at 09:29:46AM +0100, Thomas Zimmermann wrote:
+> Framebuffer I/O on the Sparc Sbus requires read/write helpers for
+> I/O memory. Select FB_IOMEM_FOPS accordingly.
+> 
+> Reported-by: Nick Bowler <nbowler@draconx.ca>
+> Closes: https://lore.kernel.org/lkml/5bc21364-41da-a339-676e-5bb0f4faebfb@draconx.ca/
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Fixes: 8813e86f6d82 ("fbdev: Remove default file-I/O implementations")
+> Cc: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: Javier Martinez Canillas <javierm@redhat.com>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Helge Deller <deller@gmx.de>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: linux-fbdev@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: <stable@vger.kernel.org> # v6.8+
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
