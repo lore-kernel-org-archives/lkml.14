@@ -1,48 +1,48 @@
-Received: from out203-205-251-80.mail.qq.com (out203-205-251-80.mail.qq.com [203.205.251.80])
+Received: from out203-205-221-209.mail.qq.com (out203-205-221-209.mail.qq.com [203.205.221.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84ECD3E48F;
-	Sat, 23 Mar 2024 12:13:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC9F18057;
+	Sat, 23 Mar 2024 12:13:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711195989; cv=none; b=hM4NCaWkQxd9sa9h2PtsYZk+vPeyL47LNp6C4KKR8dymx5O9GXPykzIljK6Y9N6oKSD+6oFgneHIhix291+T/Ur8jnGp8zJrxWDZomKjrQuUMW5yYUOOhsTbSc9mEsWx3R9wWZFukFxgs0gQYFShCJXlTFXuaI3goUmqk9iq5X0=
+	t=1711195996; cv=none; b=KVDRLM1WbRQUchNwGs92rYfkilERQdDg1fMrRKz22bHHIKRFc8SUjiIDl/y3m0AcKYld+cjn0VRV3JZGPGIGpEG89lnF24DNgcHFfzniDR8JygTzJuCzEoO+kQ+xXH4ljrWI/pyWoRvSaVzfeIEADr2lwWZqYNQXtU/TV2rgft8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711195989; c=relaxed/simple;
-	bh=fL44BHoWJuapWxF1vtqLCKXKI7WigSwRHJtvP3wbc2Y=;
+	s=arc-20240116; t=1711195996; c=relaxed/simple;
+	bh=ltIIjFq44lCINtdu+jtCNpd5iuP8k5qJZbXbXOcOLIs=;
 	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=opX+MwARtRk3sNJtncAqNmLw4erWNrtj4zPyuX/c8Cy5riaKfMQ2v+2iqowUgwW1WFg4Tp9SjrzKfdCoigESO+vsdRaPFT3XFbTZi6SvxwUqClGdoaJhZzWJtWs8QJDa2wMp0ufe7beObiZxyfcVg2gO4vRgcLqJe7mMVVYtb/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=MKC5HAdf; arc=none smtp.client-ip=203.205.251.80
+	 MIME-Version; b=G33RXr/PhdOWfOcAnUfdrKqm+F9c9+Fav5RcUWUg/zEMVOVyCx7/mHTyI8d74FMzt/T7f7V0nERUwdy0OONJJXt6w1Pg1I9wO+UO/T2utsnTnoNS0JpQI02aDmallbrRE3fAgCHnDG1XNYDRx9WhTaxwnmdlh3b8WamAspYGjXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=VEe9MiCE; arc=none smtp.client-ip=203.205.221.209
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="MKC5HAdf"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="VEe9MiCE"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1711195979; bh=egExra67k3YChMagH1xWaPLg0q0pmTviVHV20R/fW7o=;
+	t=1711195987; bh=zZkfplMllcGZXaAHOpijHZhZw8UR9G8J39uQSbllctQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=MKC5HAdfQsc2nrepUgBhWJnE/tL7b02SiKi0mo9FTAxMctQZDX15Oh9wuiLxzK/ZI
-	 sdHiO4O/+7ma8K/3AOKHVgDP8i+XKoqKVwI/Fk7iMjMykn6Q9tyCWFfcn+7+a7ZzCD
-	 93Uy3Tcxn42zE+6HWaBphoMX8QzW46XbWWQULazs=
+	b=VEe9MiCEtSL6XIltfGKIjLdJxBdxoTn2ftxcoAjvNgs8mgWi6Hc4ZFvXfxk4qV78v
+	 LMkqn9i5HrQSj9zqCSt4l3lCB1FeeNK+Jnl+q6QmuLUd0QeYaRynuZGVq6CL/Xo5EZ
+	 0LwnexVF/dJ2+3cU7B8emJDUWlk4Wc9DSjJZJwy0=
 Received: from cyy-pc.lan ([240e:379:225d:8e00:b91:b2e7:7c69:8554])
 	by newxmesmtplogicsvrsza7-0.qq.com (NewEsmtp) with SMTP
 	id 32594C7F; Sat, 23 Mar 2024 20:12:37 +0800
-X-QQ-mid: xmsmtpt1711195976tu1lz28yh
-Message-ID: <tencent_6D10A9C63E3E0F412EED33477B5CDB98C207@qq.com>
-X-QQ-XMAILINFO: NkHKfw09D6j8RA6sM/aK2Q/rOau4mOSO9cg/EhJ5mg7yFfp/oYnklKbxnc9Xml
-	 RjF3T8lkX7vUn4LpjxulPMX3NLCENF6YShfieexD96piot1adQWkeEPkyG3XfvcwnTNUaKAOH1/1
-	 cx4UGxRRe81wnfHJRJ5f/Iy1UQjpbnm/7am6aYwJdwUKfhE/LEa/cTNPrRKuFRRO1kxiJWfczI5D
-	 gP0XOQi9rHQXYiKTNrV62ln2IMuxkcLRafx5D8gw5dPhv50XDJk+ZX+qAVTmWBck/JIPQ1vUDsNN
-	 NaioEnqxq7csmhAzj6pK/E69MaKzrTVWtRwyI6Q+4AwECqjDDOLNgGEnAJOrS+/dKBKdqsxIaCPW
-	 tGf9NpWIYJ5cvo4JLK0Z620dhFZJiwnlpvF2MQOIJi0nWW5DazXZ9KLpf3AjrdiklumLHAFf6glf
-	 cyq8Cs8AWYbN3vd3c1/VcL8R9cVIokV1K1qb7g24/sfedFuQZg1C6yypM+b38LnxwZ9TBgyXQu6e
-	 j5paGDvYab9rBBSDO1eElUcjmeEdTZdJw4gVyyQCiQ+vzw6G7+9hq5pq5iEkT/lGeW0cNWFYikeF
-	 1/80kIa/gJ+eoja4LHpO9fMYmFbwwUZXnufVOMrLi3Ht9L5sBLsXG417r6IBA/KTEEQ/zNWwz+WJ
-	 Mdys69aenjTnGvwWnAj7WXHFV/6ANDvaA21AobrgaO0ypImlPNtUUVH0gJ2mbWy5h1z0SK9HrL0+
-	 H81Uv462A15s2nrEzwu+7bl+VeoG16V2qiX9YKrcjIIQuTKfOLXWkbTgxyyrAKGOSlArDsUMFCd4
-	 JLgbLfdZilP/dHZ6WXTWCETd3/aky0wnbK8PX9YKb7x/N+A7X27eUcejnsdoZK+jIpjRCw19OfLs
-	 z0TSnieQZqyxk2aFqraahR5yYgwhSHPQfjwvy9eUARMmf7WoOJEbchDQBdJzynHCXqMyeQQGhu5l
-	 6phj/wkl1FvQ2+ATXBIvoCVERXC7jHPbYXWRGKbwsRtxSeufy8F3jCPq2WVk5L7H7LtPFQhe//ls
-	 wpn3a9uzeRtVTQR8HS1pSuw18uPfAklNhF6+sWXqrxIbGenBOGFXGRiJ9Yjnk=
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-mid: xmsmtpt1711195983tnrpaiiik
+Message-ID: <tencent_E3E0973695E3306E5D4C41C84DA30F5FB506@qq.com>
+X-QQ-XMAILINFO: MR/iVh5QLeiexUNVyYWNTlxWuqPcHDTGFQ3bWaqzeOLy8Zyn+2kMxyOmMrE2U2
+	 rhfI7jZQWix3KgacKtk28pjhwFUQiLgDzU5037aHSyAs3/RXqBbGThIBIbA/eGmP6hZW5fA4wjlM
+	 PpH3YVcID2ZBakBIwLuuzMIuRXsdSOhoL5pnk1VRRrpdZHPDs9ZPKgIVpfiUKKu08OHqweEWQcB9
+	 Lq4Q/nSvRQoCXqrv3KO2Mp3h601TscUSkhdj9bOjQ9piDqkZXasTuxgbJrIm9veGmTtvT19fKi3P
+	 c1BwQevO35E6KGoeX/mTpfBkgIPiRqw79j2iOLtEU3WRGDBTOvspZ2sQYxJkGvkuu4BctknDajTO
+	 wvl+Khec4apVpV3fLqLJZAL/D8LhjN53S8qhS00UJqLmu58Qlx8jprnY8Fdme51PgvDw15VtoK3a
+	 Vmvt29QUZpVkqDQ7lAJ6AyeiomaUCN/yxQPgSQ1KiNPOes4Je3sHfJFyT+QVPeYKUofZztCEJY94
+	 yAOmAUUVFzVBU9h1VmqgIPWZ7kNT8U/cZ94jqXGhiUZncNpFZNjqilFKkVOmdgBvLMA4MkNItQLW
+	 pVKpZq/abV/uyxTK5H8b4IpcH9+nYJ4Dt6vD24GXkmvZfaLXkYjAWlyNIi8J8/FaPPGkVD3FpGj2
+	 wmxXzV/cBctc3lEyzcuTZHxdRjNzehljX0fewMO8WN/qcyMqBRybfRlNUF9zs0Pl57OeMm4Akifi
+	 RK1h54ASYwhVV48x3tfgcW6ub21X+xz2uhhNemVFgmk6zxASYR1TWYYn0+rI7YQLb5mmQSXWzCTN
+	 dlKa+ZC+qMmMBQJa7lDKmsRDxzSV1m0aaKcVMaMVPmCU7KUl/fYKvlCrAiPO4m3fuhLXBngJiBOq
+	 lKoKaYv7t4vvlRQf8AOyjfB1cEljZwGMzu4IR9tIj29vrCi3cQaFoc1UVAkGtRY5tFgTZuyFG8Vp
+	 lSqT3o+LCj5LY/WC9Ak0M73eRjjQkb3ObLk+Z0zU4TG/EFMqxFVbC0A72qNhar5/TyLolEi2TZMm
+	 r2+9PEpn35jlVcVI6AUQ6CioywxOo=
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
 From: Yangyu Chen <cyy@cyyself.name>
 To: linux-riscv@lists.infradead.org
 Cc: Conor Dooley <conor@kernel.org>,
@@ -61,10 +61,11 @@ Cc: Conor Dooley <conor@kernel.org>,
 	linux-clk@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Yangyu Chen <cyy@cyyself.name>
-Subject: [PATCH v6 08/11] pinctrl: k210: Deprecate SOC_CANAAN and use SOC_CANAAN_K210
-Date: Sat, 23 Mar 2024 20:12:20 +0800
-X-OQ-MSGID: <20240323121223.1729328-8-cyy@cyyself.name>
+	Yangyu Chen <cyy@cyyself.name>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v6 11/11] riscv: config: enable ARCH_CANAAN in defconfig
+Date: Sat, 23 Mar 2024 20:12:23 +0800
+X-OQ-MSGID: <20240323121223.1729328-11-cyy@cyyself.name>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <tencent_F76EB8D731C521C18D5D7C4F8229DAA58E08@qq.com>
 References: <tencent_F76EB8D731C521C18D5D7C4F8229DAA58E08@qq.com>
@@ -76,43 +77,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since SOC_FOO should be deprecated from patch [1], and cleanup for other
-SoCs is already on the mailing list [2,3,4], we remove the use of
-SOC_CANAAN and introduced SOC_CANAAN_K210 for K210-specific drivers,
-
-Thus, we replace its drivers depends on SOC_CANAAN_K210 and default select
-when it has the symbol SOC_CANAAN_K210.
-
-[1] https://lore.kernel.org/linux-riscv/20221121221414.109965-1-conor@kernel.org/
-[2] https://lore.kernel.org/linux-riscv/20240305-praying-clad-c4fbcaa7ed0a@spud/
-[3] https://lore.kernel.org/linux-riscv/20240305-fled-undrilled-41dc0c46bb29@spud/
-[4] https://lore.kernel.org/linux-riscv/20240305-stress-earflap-d7ddb8655a4d@spud/
+Since K230 has been supported, allow ARCH_CANAAN to be selected to build dt
+and drivers for it in defconfig.
 
 Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Reviewed-by: Guo Ren <guoren@kernel.org>
 ---
- drivers/pinctrl/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/riscv/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index d45657aa986a..1be05efccc29 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -235,13 +235,13 @@ config PINCTRL_INGENIC
- 
- config PINCTRL_K210
- 	bool "Pinctrl driver for the Canaan Kendryte K210 SoC"
--	depends on RISCV && SOC_CANAAN && OF
-+	depends on RISCV && SOC_CANAAN_K210 && OF
- 	select GENERIC_PINMUX_FUNCTIONS
- 	select GENERIC_PINCONF
- 	select GPIOLIB
- 	select OF_GPIO
- 	select REGMAP_MMIO
--	default SOC_CANAAN
-+	default SOC_CANAAN_K210
- 	help
- 	  Add support for the Canaan Kendryte K210 RISC-V SOC Field
- 	  Programmable IO Array (FPIOA) controller.
+diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+index eaf34e871e30..1d5524cdd47d 100644
+--- a/arch/riscv/configs/defconfig
++++ b/arch/riscv/configs/defconfig
+@@ -33,6 +33,7 @@ CONFIG_SOC_STARFIVE=y
+ CONFIG_ARCH_SUNXI=y
+ CONFIG_ARCH_THEAD=y
+ CONFIG_SOC_VIRT=y
++CONFIG_ARCH_CANAAN=y
+ CONFIG_SMP=y
+ CONFIG_HOTPLUG_CPU=y
+ CONFIG_PM=y
 -- 
 2.43.0
 
