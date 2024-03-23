@@ -1,189 +1,158 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B624F522E
-	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 01:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4EEA31
+	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 01:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711158876; cv=none; b=pCMC6WCG/PgbhHfbp5VTp1rDwhJHqafwqCiAnC6LneJHnc+b2tcd7yEVReKv/Ye2ybkrGdUXXBtsnu9exzztbwqTd/2Py3hK23wtZik+7aLZ4D/XCwDL0GSvpuykZbZNLzmU9J7TDejxqfCpVB3OkordyRHxB4uTDbsQdq0Bim4=
+	t=1711158953; cv=none; b=tuWQ1fYfHlSz3YzKcy3qQyg7dSXruUTo85wSqhdGeotEYDSojXMyRkAg8iWfSqTo/1e6VrsnE1M7kyhYg6W66KOoMySMSomrKdaadkW0mY6qWNeLwqoZwszGMYA7a3TVncsZKfmL+8VITpLC5J4dMBsbo3af9uu+Ai498beJmE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711158876; c=relaxed/simple;
-	bh=MRVrKLMuWBszjs8xV63cU/2mn4oUBSIImMtBXLzstns=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sfJJ2c9KcHuTP2QiI9UF7BuzP2IO5SRuHwYsoj6c5F0UTxo8rYb4k3nHd0VJQB2AFsrE3hBcxotlvyyeFlwcsY65V+33qZZ7TAOUGa1q9fgKzzwAfRlJWfr7BBzwkDlzEz9E5w3oJ85J2/Gqkydud8aKGZnYZhK+pIBUAqhyPdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hk+hKWJ9; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1711158953; c=relaxed/simple;
+	bh=+Pb1ToNhA16d1cgb8U1s+ZiuJiT2PGhXOZz6H18f0lc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U+v/TftvyKyYWisFkndoPnH4PnEsYTdAvC7W3dvo5b+FpF2JugaThK4RF3OB+FBIRy59C/GX6wK59TGhXUUnJs89q1As51j6rcyksH2krU3pHvHbe+dL0hnfPb606SROC1pVhf6VR8XDB08hMCVqJgUk2mK2/fSpPnmCAGBpwk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=VsEqUl5Q; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hk+hKWJ9"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-430d3fcc511so65451cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 18:54:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="VsEqUl5Q"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-430b870163eso32732671cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 18:55:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711158873; x=1711763673; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ugca23DDk1bNHPUabaB8d0i9NjKoaai/ycUEgKQclnI=;
-        b=hk+hKWJ9M/fJI9tImEsoYU4ZGd5SzkHC2XUtma2s1bkoNjxKT+2Q4wzKVvYHY/4Loo
-         q/R3/BI2Ss9N9EHaiANgKdxPAeFIGM0HkJx1wmHmd4EgeFMFqcAdw4KfPdun8C78FAjR
-         ODRHG2kLgsLEd1FnuT8GS16HjBI3Fm2t8AGfih0ZrqgGH2otZlt46aLd1oJBIko0W8+E
-         07k59mxzt3QfLNGh4oQ5oOWT9ZQsFdxJ228l2hhz1y0K+Fu/iJ1hZ5SPGrELsKt7LN7v
-         i0Bn7oFXv+yuYPPf1PULjvTahvD1tX6PTRi02d3eIJYf4NBAWQZeMMdhbTPxjT4FWcn/
-         SnvA==
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1711158949; x=1711763749; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3vsgiwxIesEweY/56xdcSGWn13L1TSsWr5GbRXDd3ts=;
+        b=VsEqUl5QnNPh40RtUowgRyWNuOnR9psvoEo754n0twwwQ4+DJKga3umCzhZwDBYcmZ
+         juEx1GOqUDUqb6YklohsftVhjHqkqFr861ar80Uer4ssOkA1rL5zhW7L46sxYEJGi240
+         14UbRHekxOBh+8TraTh7lF3Nh7x5k2psPBHbsSPjyc/uMR5jxdKJhYZ4XRPYu3Gx6uzF
+         +ttQXj2ufuTthmiIEVDbXhdz9uzeUg7IYzAGTz9cCDd7njEcR46j9BYhV4eL3V71281M
+         dTSt58ablt63oAFkCbzZl8tdMJ6EaUtYzOXUvhoKnLTHrjrXdU66+0kGvsiHi2Qf9dMh
+         yEQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711158873; x=1711763673;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ugca23DDk1bNHPUabaB8d0i9NjKoaai/ycUEgKQclnI=;
-        b=ZHZ4j2gNQgrHxa0FlyjCVSGrUNV3oWSnejzMXhXm+KmaM13E2AQcIK5DlUtgEjpAse
-         WaD0e0NY35aPGb71gSUDr9krdqrvqtJNXhWgx1kGx6KgTcGTN0GTu/xICEJ5LRB6zFMX
-         l4ttxFXHKllrSYmObmFZtyH2ujueEUC/V/elk+EaMomSvt1swMo9T4FZGxszzvqUe679
-         VHPtFj3lkXvV2tU0ninkbV+ZwRnw1mBYPa1VgianhP4cfsnisN+R0Jn+5i34aFe5Y7oD
-         6KZ3QOb86gtSYU8GBsZh/a+P8VpdxDLLTSBFJhdD5kMH2w0oltZpTURmyffzQcWJZf2j
-         MY6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV/XzCXgmlKoCn2TLy6K9AU0qz4OwXftQy/FvSkN8FgcimZJoK/csYwcbsQy8PluhYLKA/C8Bp/gBg8TxfGBfLTjiN8VDRCgWiSyxfw
-X-Gm-Message-State: AOJu0Yx/rXzPe7rgOuYDRozXh44cr7La4aCmFN3GXqOlN3k5n3wk1Y3u
-	ulLurS1z+6AnVj1coxTW+PWpUmg1G1OBkK+lCeSx39TXecxVVSXEaotO+D0F1oQVlgNqhOR5MRb
-	6A5E2iaPQXhjrpGm0hlQdIQnFjGwjU5cqICVK
-X-Google-Smtp-Source: AGHT+IFzIBb+r7DzCNc906s02/94DbigytEFLGsYFND2xTBDot/ogrkvddnbmb3E2U6uD+PDlPlePgNL+od6ESHOj7w=
-X-Received: by 2002:a05:622a:92:b0:430:a74f:b45e with SMTP id
- o18-20020a05622a009200b00430a74fb45emr784631qtw.17.1711158873468; Fri, 22 Mar
- 2024 18:54:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711158949; x=1711763749;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3vsgiwxIesEweY/56xdcSGWn13L1TSsWr5GbRXDd3ts=;
+        b=VPBBucKRGdf4YXLw2b2KwkLyYkEptUPAuxgNob30pyTfzhz9Z6gpc5oNj50G/WH9Lj
+         qKuAMQNQBYaEu+JsvhNjOeK2gTyvzTl9t0a2/jE7g/XMAB2+2JK9Sc6V5C0NmPHTGW8z
+         UQRfx6Cke+0FphsCslLPAvw8VwpazISM3FOQRF7J50QpE2bzdrSHM89JsAssXeg0Jbvl
+         JHdWup2Y4nMYKUIa9K5S9grXmVmXaIqDhdokm9E92vFuD7FPGpZII5yNJlefL0KGkQhw
+         1vC1DWBKahrxCalyijOtoqAMvodgpGsyRSvan9CMbYR65Gh4MxaE/pnG8j8BErG/qaT3
+         Qk2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXLflRVZexE/vUOd7iUHxOysQmy4wHqpBxhzmuAoDFZGjIBTPy31b+EuXZawTRd2XCOcrBs1O5uGhP5L01V4mVUr7tUvIrDg/ZFBq8J
+X-Gm-Message-State: AOJu0YwxK2SFqCW6k6M9snbDEAnfysg4riFpxYQ31KVp6pb9Bi322il6
+	IHOhQiXHz2Hccnz62Ua+ZZ0b/azM9p7/NOqNrNK4AzEMuM7pWmD66Kec41eMFNGUXdFAFsf4G5w
+	z
+X-Google-Smtp-Source: AGHT+IHtAO+0TiuhzdK5UOUufoT0yvPr6F2X4n0RODULlmM9+L2RicUEhrxu84JeLwvBBCoyWpfX1w==
+X-Received: by 2002:ac8:7dcd:0:b0:431:3803:eaf2 with SMTP id c13-20020ac87dcd000000b004313803eaf2mr1156393qte.7.1711158948633;
+        Fri, 22 Mar 2024 18:55:48 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:400::5:16be])
+        by smtp.gmail.com with ESMTPSA id he37-20020a05622a602500b00430bad81704sm374664qtb.52.2024.03.22.18.55.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Mar 2024 18:55:48 -0700 (PDT)
+Date: Fri, 22 Mar 2024 21:55:43 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: Barry Song <21cnbao@gmail.com>, chengming.zhou@linux.dev,
+	nphamcs@gmail.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Zhongkun He <hezhongkun.hzk@bytedance.com>
+Subject: Re: [RFC PATCH] mm: add folio in swapcache if swapin from zswap
+Message-ID: <20240323015543.GB448621@cmpxchg.org>
+References: <20240322163939.17846-1-chengming.zhou@linux.dev>
+ <CAJD7tkYuYEsKFvjKKRxOx3fCekA03jPpOpmV7T20q=9K=Jb2bA@mail.gmail.com>
+ <CAGsJ_4yc-XB3+FkcZTy1aZ0n6ZKEkfWVYk_TjqqrdcROa5VYtA@mail.gmail.com>
+ <Zf4HKUpKpDWZygni@google.com>
+ <20240322234826.GA448621@cmpxchg.org>
+ <CAJD7tkY2y_nGRq9ft80op6q0B3tfJvtyqYhS6t+x=TpyGy+AXg@mail.gmail.com>
+ <CAJD7tkZqrrXuYTMYOAP+arMLeNayafFeLocWu7bJtDFHCYjwDA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240224052436.3552333-1-saravanak@google.com> <ZfvN5jDrftG-YRG4@titan>
-In-Reply-To: <ZfvN5jDrftG-YRG4@titan>
-From: Saravana Kannan <saravanak@google.com>
-Date: Fri, 22 Mar 2024 18:53:57 -0700
-Message-ID: <CAGETcx8+vw0Vr0NWzjOAvxAZ07M4U7BWPAgO9avCngW0-9e_kA@mail.gmail.com>
-Subject: Re: [PATCH] of: property: fw_devlink: Fix stupid bug in
- remote-endpoint parsing
-To: John Watts <contact@jookia.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, 
-	=?UTF-8?Q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
-	Luca Ceresoli <luca.ceresoli@bootlin.com>, kernel-team@android.com, 
-	Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJD7tkZqrrXuYTMYOAP+arMLeNayafFeLocWu7bJtDFHCYjwDA@mail.gmail.com>
 
-On Wed, Mar 20, 2024 at 11:05=E2=80=AFPM John Watts <contact@jookia.org> wr=
-ote:
->
-> On Fri, Feb 23, 2024 at 09:24:35PM -0800, Saravana Kannan wrote:
-> > Introduced a stupid bug in commit 782bfd03c3ae ("of: property: Improve
-> > finding the supplier of a remote-endpoint property") due to a last minu=
-te
-> > incorrect edit of "index !=3D0" into "!index". This patch fixes it to b=
-e
-> > "index > 0" to match the comment right next to it.
+On Fri, Mar 22, 2024 at 05:14:37PM -0700, Yosry Ahmed wrote:
+> [..]
+> > > > I don't think we want to stop doing exclusive loads in zswap due to this
+> > > > interaction with zram, which shouldn't be common.
+> > > >
+> > > > I think we can solve this by just writing the folio back to zswap upon
+> > > > failure as I mentioned.
+> > >
+> > > Instead of storing again, can we avoid invalidating the entry in the
+> > > first place if the load is not "exclusive"?
+> > >
+> > > The reason for exclusive loads is that the ownership is transferred to
+> > > the swapcache, so there is no point in keeping our copy. With an
+> > > optimistic read that doesn't transfer ownership, this doesn't
+> > > apply. And we can easily tell inside zswap_load() if we're dealing
+> > > with a swapcache read or not by testing the folio.
+> > >
+> > > The synchronous read already has to pin the swp_entry_t to be safe,
+> > > using swapcache_prepare(). That blocks __read_swap_cache_async() which
+> > > means no other (exclusive) loads and no invalidates can occur.
+> > >
+> > > The zswap entry is freed during the regular swap_free() path, which
+> > > the sync fault calls on success. Otherwise we keep it.
 > >
-> > Reported-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> > Link: https://lore.kernel.org/lkml/20240223171849.10f9901d@booty/
-> > Fixes: 782bfd03c3ae ("of: property: Improve finding the supplier of a r=
-emote-endpoint property")
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> > Using Link: instead of Closes: because Luca reported two separate issue=
-s.
+> > I thought about this, but I was particularly worried about the need to
+> > bring back the refcount that was removed when we switched to only
+> > supporting exclusive loads:
+> > https://lore.kernel.org/lkml/20240201-b4-zswap-invalidate-entry-v2-6-99d4084260a0@bytedance.com/
 > >
-> > Sorry about introducing a stupid bug in an -rcX Rob.
+> > It seems to be that we don't need it, because swap_free() will free
+> > the entry as you mentioned before anyone else has the chance to load
+> > it or invalidate it. Writeback used to grab a reference as well, but
+> > it removes the entry from the tree anyway and takes full ownership of
+> > it then frees it, so that should be okay.
 > >
-> > -Saravana
->
-> Hi there,
->
-> Could this be reverted? It breaks my audio-graph-card2 setup:
->
-> [   17.116290] platform 2034000.i2s: deferred probe pending: platform: wa=
-it for supplier /sound/multi
-> [   17.125370] platform test_codec: deferred probe pending: platform: wai=
-t for supplier /sound/multi
-> [   17.134257] platform sound: deferred probe pending: asoc-audio-graph-c=
-ard2: parse error
+> > It makes me nervous though to be honest. For example, not long ago
+> > swap_free() didn't call zswap_invalidate() directly (used to happen to
+> > swap slots cache draining). Without it, a subsequent load could race
+> > with writeback without refcount protection, right? We would need to
+> > make sure to backport 0827a1fb143f ("mm/zswap: invalidate zswap entry
+> > when swap entry free") with the fix to stable for instance.
+> >
+> > I can't find a problem with your diff, but it just makes me nervous to
+> > have non-exclusive loads without a refcount.
+> >
+> > >
+> > > diff --git a/mm/zswap.c b/mm/zswap.c
+> > > index 535c907345e0..686364a6dd86 100644
+> > > --- a/mm/zswap.c
+> > > +++ b/mm/zswap.c
+> > > @@ -1622,6 +1622,7 @@ bool zswap_load(struct folio *folio)
+> > >         swp_entry_t swp = folio->swap;
+> > >         pgoff_t offset = swp_offset(swp);
+> > >         struct page *page = &folio->page;
+> > > +       bool swapcache = folio_test_swapcache(folio);
+> > >         struct zswap_tree *tree = swap_zswap_tree(swp);
+> > >         struct zswap_entry *entry;
+> > >         u8 *dst;
+> > > @@ -1634,7 +1635,8 @@ bool zswap_load(struct folio *folio)
+> > >                 spin_unlock(&tree->lock);
+> > >                 return false;
+> > >         }
+> > > -       zswap_rb_erase(&tree->rbroot, entry);
+> > > +       if (swapcache)
+> > > +               zswap_rb_erase(&tree->rbroot, entry);
+> 
+> On second thought, if we don't remove the entry from the tree here,
+> writeback could free the entry from under us after we drop the lock
+> here, right?
 
-Hmmm.... cycle detection should work here and not enforce probe
-ordering. I'd appreciate help with debugging that. Let me look at it
-on Monday. Can you enabled all the debug logs in drivers/base/core.c
-and tell me what cycle detection is telling about these nodes?
+The sync-swapin does swapcache_prepare() and holds SWAP_HAS_CACHE, so
+racing writeback would loop on the -EEXIST in __read_swap_cache_async().
+(Or, if writeback wins the race, sync-swapin fails on swapcache_prepare()
+instead and bails on the fault.)
 
-But the better fix would be to use the new "post-init-providers"
-property. See below.
-
->
-> / {
->         ...
->
->
->         test_codec {
->                 compatible =3D "test-codec";
->                 prefix =3D "Test codec";
->                 #sound-dai-cells =3D <0>;
-
-post-init-provider =3D <&multi>;
-
-Right now there's a cyclic dependency between test_codec and multi and
-this tells the kernel that test codec needs to probe first.
-
-Similar additions to the other nodes blocked on multi.
-
-Thanks,
-Saravana
-
->                 port {
->                         test_ep: endpoint {
->                                 remote-endpoint =3D <&card_ep_2>;
->                         };
->                 };
->         };
->
->         sound {
->                 compatible =3D "audio-graph-card2";
->                 label =3D "CS5368";
->                 links =3D <&i2s2_port>;
->                 multi {
->                         #address-cells =3D <1>;
->                         #size-cells =3D <0>;
->                         convert-channels =3D <16>;
->                         port@0 {
->                                 reg =3D <0>;
->                                 card_ep_0: endpoint {
->                                         remote-endpoint =3D <&i2s2_ep>;
->                                 };
->                         };
->                         //port@1 {
->                         //      reg =3D <1>;
->                         //      card_ep_1: endpoint {
->                         //              remote-endpoint =3D <&cs5368_ep>;
->                         //      };
->                         //};
->                         port@1 {
->                                 reg =3D <1>;
->                                 card_ep_2: endpoint {
->                                         remote-endpoint =3D <&test_ep>;
->                                 };
->                         };
->                 };
->         };
-> };
->
->
-> &i2s2 {
->         pinctrl-0 =3D <&i2s2_pins>, <&i2s2_din_pins>;
->         pinctrl-names =3D "default";
->         status =3D "okay";
->         i2s2_port: port {
->                 i2s2_ep: endpoint {
->                         format =3D "dsp_a";
->                         bitclock-master;
->                         frame-master;
->                         remote-endpoint =3D <&card_ep_0>;
->                 };
->         };
-> };
->
-> John.
+This isn't coincidental. The sync-swapin needs to, and does, serialize
+against the swap entry moving into swapcache or being invalidated for
+it to be safe. Which is the same requirement that zswap ops have.
