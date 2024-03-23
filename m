@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE6222625
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CABA159B40
 	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 21:56:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711230963; cv=none; b=Brd9MciIn4iieM0Lb+OS/U4AZ17UtTiJ1D0U2AlcgF228do3qfKRKQm8RREE2BuLMR9J1QBATd2V8Psa5XvvUPwLM+03zMBepPIf650nmuOOcypyDQYQZBk9sTRWXopLlg5fnS8I8alqcPgOBErWfFENSGTPLkLTsqIDgqUzV3c=
+	t=1711230963; cv=none; b=qhE6SwupeEIX07ul3kHTWcHzyoEFVH68DA4Qs1Apd69pt8zHTb6rvna3P+brZXZiuQCpJNqb8gnuMN5PXEUSB4Wex1xGZttlODWQkkZjHTFVUJziQvRvRlLiNLTwAv1bPTaVG7ff4lp5PS9Yi7d0o4jH4Fk8Ox14EbUHGke9MRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711230963; c=relaxed/simple;
-	bh=DCr0yd7NEaFQTfQiyE6bWQbizEnZXPBIBpT2hO5K0sg=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=WSOXkNEllET3UrYqoxtsiQIpkQC8gzbBuhT6IzEqLmNtXry+yYih77etqHYnx+jLtfcU+bX6ZdyXir8yL51bLMaOi1rcJYXewVvLt+GnrBZi/BepOLlwG1nV9+BG1BzL5hFB2tdBMm9Izdadbo6ziVLwBy85ZsqZ5wR4gYBGMr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jl+kQi1J; arc=none smtp.client-ip=10.30.226.201
+	bh=708R4ZlieJpl9itlERI17vQufgoFsRuuvTnmYB/VBV0=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=BvcoUtwSHe7uMOWZK5ZHJwxjh0jIWZvSdjLyCRnbpuuwoPl2eQQds5TdFFOFixntfCI03nssuqqjpW0by9mGl+OQmCdbg2WMLPXOg4bW7F4gUQN9gVP5R/hcMMEwJIdq9CvA7DBUZ6ulWbOBK5y/MluLwRe2dIikISxL3HbV0ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RsOylyeT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jl+kQi1J"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6DF6AC433C7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RsOylyeT"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9CCFAC43390;
 	Sat, 23 Mar 2024 21:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1711230963;
-	bh=DCr0yd7NEaFQTfQiyE6bWQbizEnZXPBIBpT2hO5K0sg=;
+	bh=708R4ZlieJpl9itlERI17vQufgoFsRuuvTnmYB/VBV0=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=jl+kQi1JF5h72IRhDTRzXP1WpK8A5hwCAiAzRqzoTJ9axFXtnbiFVxR/w9YHMdGwd
-	 RFscc25XKR/kEAzgvmQ2kIzNLa66gE0Qglg+cc+2ViJ8agIVDvCoJjzCvddb41R5fR
-	 Owzzufe3w21vyhwiIoRjiEmghTr1z29fQIENbyfGro9KCj99rG2WUpb4tIRT1EW0Lw
-	 m0AmYyz5iXEWYGhG13hDgcMd5LQNaqRcJ3DOVPM7M/TPOu0p5Vu1OZPPWLjT4JzutX
-	 jRO0RYz07PxCJnPGpJb2JDyDdwFvuWaHGjJwVFHM0NvwAwZb62+HOThduhNIghHj+S
-	 bEtbmocaa+iSQ==
+	b=RsOylyeTiuBbWf6OmiUs5Mh2EY2O/iSSgyEYD5PgWw9p6P9xvqt5nT6hBC1kFaTPF
+	 7+djj52gc87Zza3XXWNFaW+r2aot7G0C8ktCVYgYVhtR3+KDRZURVe9wz78oHJSiEm
+	 bnixuXtipy+1if/KcjEdKDGZ2xuMtqyMpDvOOVBwNvyTkrYGHjKanl/m8al6qLaC5t
+	 PrfnofzmNcegmcgvxtmpRfsYMWwe6NNOIsWyNdIsPw1t5zweiXmjMGu8F+bs4ubWns
+	 2/RQr8RoAB+BlR27Sju7M5ytIbvg7uUkQ2kltPTdLSE5xHLdLo7VnKuMB6I4iT76cf
+	 A80fxUoZOQnIw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5BB3AD8BCE4;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8B77ED8BCE3;
 	Sat, 23 Mar 2024 21:56:03 +0000 (UTC)
-Subject: Re: [GIT pull] core/entry for v6.9-rc1
+Subject: Re: [GIT pull] irq/urgent for v6.9-rc1
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <171122346785.2772088.10596056144848184713.tglx@xen13>
-References: <171122346785.2772088.10596056144848184713.tglx@xen13>
+In-Reply-To: <171122346956.2772088.12525594748449004875.tglx@xen13>
+References: <171122346785.2772088.10596056144848184713.tglx@xen13> <171122346956.2772088.12525594748449004875.tglx@xen13>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <171122346785.2772088.10596056144848184713.tglx@xen13>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-entry-2024-03-23
-X-PR-Tracked-Commit-Id: fb13b11d53875e28e7fbf0c26b288e4ea676aa9f
+X-PR-Tracked-Message-Id: <171122346956.2772088.12525594748449004875.tglx@xen13>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-urgent-2024-03-23
+X-PR-Tracked-Commit-Id: dce0919c83c325ac9dec5bc8838d5de6d32c01b1
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 976b029d06607f98f4156d8690d447ea8ed61c84
-Message-Id: <171123096336.10193.1782038362659043075.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 1a39193137e8dc35707990d8b28ea4211ca9c105
+Message-Id: <171123096356.10193.10027927293187920363.pr-tracker-bot@kernel.org>
 Date: Sat, 23 Mar 2024 21:56:03 +0000
 To: Thomas Gleixner <tglx@linutronix.de>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, x86@kernel.org
@@ -49,12 +49,12 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Sat, 23 Mar 2024 20:51:59 +0100 (CET):
+The pull request you sent on Sat, 23 Mar 2024 20:52:00 +0100 (CET):
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-entry-2024-03-23
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-urgent-2024-03-23
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/976b029d06607f98f4156d8690d447ea8ed61c84
+https://git.kernel.org/torvalds/c/1a39193137e8dc35707990d8b28ea4211ca9c105
 
 Thank you!
 
