@@ -1,118 +1,87 @@
-Received: from out203-205-221-209.mail.qq.com (out203-205-221-209.mail.qq.com [203.205.221.209])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804901113
-	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 04:48:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7265F522E
+	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 05:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711169309; cv=none; b=ndQ0uX0hg4pIUT9hggsWnAeutLkUl53yUMPWAzC19EUgk0n/4EQrcyi5+gKHXBBnWwozkAVAC2VlaHf85nP81P5fj8i18J0mdKEeRUIN5uVop5OmwIJ6HlnQH5YxMc9dKpdpnx2ISxXEtaQERxw4WjocDa98AZXW+7r46BLC03c=
+	t=1711172879; cv=none; b=oDlZTB6LMqgHzgk6F0SGcwqz12dgskCwaqswT5QNLNzoNPxlXmpGlGOOd4JSy6dx3/uDIPSVlik54HAP/kET+JZdxFgricsBHeAUJUwzZPKNtYzgOh0ZDQJJ6xVyquUWkMdhNKJdJFmkZvjNpmF5XhV5aZcworj90q0w6wc9FyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711169309; c=relaxed/simple;
-	bh=gYgpZRQDfZdvDxmkDmsuWvYvYS90C9lwtgM5EUPIV34=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=gqEsh42VlocZFWqtRKUeiq6BE4yVlTLV9/RHpIOC656kV37ZrUewNQSZRdmk3gjCfqXVcNlDXfCmJc7IwuenjDaVYUP1HtlS0i74mh2Q/htcPEYkYeBOGLGLePUY2/aQ21k7dar2RiF8dANs+h41udPHCU4wHDBy0fgRI/jqCmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=g8Pp+jVU; arc=none smtp.client-ip=203.205.221.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1711172879; c=relaxed/simple;
+	bh=QAuGX3tf8P2TdpQEsv1SIpFMKW5zutY6rkbdp1V6ZtY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Xo1Q3hyw/ctRj3u4Zraugec3ZGif2K6yAClp3TYicFFbsFXW1sxXQd2fExSIDpqBvOBbbRGgzTtvGIfIGGmuZMBCJP8vtiGzD0CYhlnGI4CV91P4ibEzqkOpYTlZNJ8uMGNh1Pm0oPq3lJ0mPZfgdVgjlhP1DosOB/GmeCOj2e8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zhj0itvl; arc=none smtp.client-ip=209.85.161.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="g8Pp+jVU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1711169299; bh=zIq4+4WqAxVN/mMsPefLIlKwl2DRZUKhkSkFnJqrUJs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=g8Pp+jVUZA1tatdn5g78xddaLDsdoGdUvrqIqargmCVNkdV/wxZ4FMV2+xRcs4XI1
-	 FX7o6tLu4SvpZmZRROUse5iasTwWYiyDX7IQkdYhnVrVSqGgFxDulLqHMhwId5Borz
-	 8Fkfi3G+ws3t+DmF5q866iUWmm95h6bru2iIkzJo=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
-	id A87294EA; Sat, 23 Mar 2024 12:42:07 +0800
-X-QQ-mid: xmsmtpt1711168927t18lb0ilx
-Message-ID: <tencent_D8BA24BB3B33559EDD1B644B2D1B16259808@qq.com>
-X-QQ-XMAILINFO: OZsapEVPoiO6pb6ZN/T6VITKzRnCRGE531fel4ubOsgunIZ37DlK4qSNBW1Gi9
-	 JBbKNVO8Os8Ipvo0YavsqByphAqZwp/h32MvYMs7QbXv75ZKeVh4WJO/TnZLL+YAinC+idKds34N
-	 hnmqP4HYHVUeoAsPpsZtXD6OHt7m2yftO7pP0NSb1ONHlovGBbIw7SEXBC+pJKJ94Ss4mkTYCMNj
-	 /ybJ5hhvSfNP7FKc0F43iFLAxLywBwPa7boEcb/6gniI7C78TnbRabGEMmZvEXbENII9POJe4lKr
-	 hueIx8NrvzW6VHU/7fiwQAoJmks3jeS7Pxn2md5j0p/hofqzNgQXzkLvmUBTEFcKr+/0xllRBw7+
-	 FY7k3P9MeFcE2HdUDlS2bozYiR+1R1AbVnU60rCasixbk3EMu5H7SquDm7sOzrjShxSWuIf2LFmp
-	 eDIn2zjA+C7OV5wJofFnP+ifHpj+x9cICq/xjNZ56RUAeCZBCu+emP+dq0cVJ5RVauHYP2XqXyQ+
-	 zaPQ1WFNlPdI8629DAgvR055mmzTXmxzKrDqTFc9AnP2W8xj8+KxvkN55d7joZTp05xy02wDBOCM
-	 k0OwluitPMJYm3edaeWSJDJl77ggkjpCNSkA4SSTJi6zUv+d/PgctRY1CaBMcx4OUCdA7/Fk2TK6
-	 DYUTuUQhVEtKus21kf7gsw4aqxqR7A1GCeIT+XYYXbB65sb2I99MDbKd1d0jr/aLI5EoEkGAmGkM
-	 fsem5jvyi+gCseB7I1r2i7JuLo5SeyagIG5gnnIvGT41NyRLmUksyoyTbIndOen6rfnFrCHtFXC+
-	 zveT8kmP7QCV2B7eFRYFbBHAxg//pM3lCd7hJ3oiHd+Wa31C4MbnSyiet3quwF6AHIlxnpc5GMD1
-	 e8Hl9DSVv9kB0NzfFSu6m3LC0oXm/RKOD3gR4zUAig4uHgEZ/KWi8FsufwYlYrow==
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+33f4297b5f927648741a@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [bpf?] UBSAN: array-index-out-of-bounds in check_stack_range_initialized
-Date: Sat, 23 Mar 2024 12:42:08 +0800
-X-OQ-MSGID: <20240323044207.3809847-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000003dc8e00614076ab6@google.com>
-References: <0000000000003dc8e00614076ab6@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zhj0itvl"
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5a5272035d3so494869eaf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2024 22:47:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711172877; x=1711777677; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QAuGX3tf8P2TdpQEsv1SIpFMKW5zutY6rkbdp1V6ZtY=;
+        b=Zhj0itvlBewl4t96nyU9+5BtWMNpMFXKKUcdFiJjlt1vBKjZZ8J1jalcAEh6sn+8Z5
+         lnAYsw0WCJ63+ADBo2rLPyj86ozk5BUOra9Ft3l9gi9T0sX/g95BADBw2wpMQXI0QSTo
+         yz8xv0VS5mqVp947JNNniMAZMmbMrsiF5LKIwbduEI/tq/LU9X+TMvG/+GWXfw32p6yg
+         uvMM1GcSuCYwjRfqlvWbF1KyOnDUABtqo56PuShzGuL/LEEdgdHoVqg9otJOIEXsmg53
+         mtLklzSTIzF/noQmtRWOqrQLE2USH+w+B/8V/+Keb9cA012/6hAAW9OsNaYtnVQLSw8S
+         mBPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711172877; x=1711777677;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QAuGX3tf8P2TdpQEsv1SIpFMKW5zutY6rkbdp1V6ZtY=;
+        b=m/LjEMtgTd0gDK/oLM9odZJqIbwcjgWY2h93H8cRmr9Va6vVEYDp5z6nbOQolwZWH0
+         uxGt10rjx6IBIuEa6ao+t2lZSSLZ+f3GRbrI7dp/qXEiAgu1Ravb2Sh9/8ryDa7IoKL/
+         K9MqhFlldYxChoIjyeH+IScvJiRDrUkfpDEe4N+IPLt7Hgix7psc3vbuD106v+zpmaXU
+         JnY4xm79ydagWwGkwUapx4SwZTIYxsATdicj5wRSCs4j3SBehz7CYV+fmL7bcduHbkMV
+         I63L6ZBlYzSHxcVhZdARlLgIocjD8lLbpqzit6kARiv5VOwtcW1WSV96wAdV81ZGbKpJ
+         ff1A==
+X-Forwarded-Encrypted: i=1; AJvYcCUPUx+odA5CuUKJ7MUj1SjeTUfNfHzyMglgJMzDK6N5PM9sAtX7iF6z7Rq4zaPnPyX28i5xo7+uKijFKVzV5Dq4ZXN/nmLg6DKp9t5M
+X-Gm-Message-State: AOJu0YyoQcY3I6ry/0l3VrQ+IWAcU7MKfqI6lQOxw0Sy5mFjSV1jHBe7
+	NF53r87HlUfPWMuXDpYGlyIvXW4KTZPLzOlfkc0mEwuXpVxCQWEij/UtSUaZ9YC1YzSjPvVtyEd
+	HRYAQ8BV0WLLqWm0WcNKfu1fJZlEWgf3dXBE=
+X-Google-Smtp-Source: AGHT+IGJuQX2iGfuUjborXV2RXTg4cvlqOj6eigknOA9Nw1r0mqmWiyMuva8xs8W9i1yeBUydj/AAnpRWkrzLkF23Vw=
+X-Received: by 2002:a05:6870:818f:b0:21f:236:a316 with SMTP id
+ k15-20020a056870818f00b0021f0236a316mr1914018oae.50.1711172877419; Fri, 22
+ Mar 2024 22:47:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <Zfk0UfLh3rRf6qDv@MOLeToid> <Zfs0+0C7nzKiBjGy@aschofie-mobl2>
+In-Reply-To: <Zfs0+0C7nzKiBjGy@aschofie-mobl2>
+From: Felix Kimbu <felixkimbu1@gmail.com>
+Date: Sat, 23 Mar 2024 06:47:46 +0100
+Message-ID: <CAK=vLx+bLg90jgWouqGQ8itsEsp5VNeV8tJuEzZHMm-D_0+bPA@mail.gmail.com>
+Subject: Re: [PATCH] staging: pi433: Correct comment typos in pi433_if.c
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-staging@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, outreachy@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-please test oob in check_stack_range_initialized
+On Wed, Mar 20, 2024 at 8:11=E2=80=AFPM Alison Schofield
+<alison.schofield@intel.com> wrote
+>
+>
+> Hi Felix,
+>
+> This commit msg and log can be trimmed. Please take a look at samples in
+> staging or here on the Outreachy list like this:
+> https://lore.kernel.org/outreachy/00be5f2a97b0c899279bd8f9cd27634186b77b9=
+d.1666299151.git.drv@mailo.com/
+>
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git master
+Greetings Alison,
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 1dd3b99d1bb9..29d7673d0e1f 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -7177,6 +7177,11 @@ static int check_stack_range_initialized(
- 		return 0;
- 	}
- 
-+	if (INT_MIN - access_size > max_off) {
-+		verbose(env, "invalid access size\n");
-+		return -EACCES;
-+	}
-+
- 	for (i = min_off; i < max_off + access_size; i++) {
- 		u8 *stype;
- 
-@@ -8589,6 +8594,8 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
- 		return 0;
- 	}
- 
-+	printk("1meta:%p, maptr:%p, %s\n",
-+		meta, meta->map_ptr, __func__);
- 	if (type_is_pkt_pointer(type) &&
- 	    !may_access_direct_pkt_data(env, meta, BPF_READ)) {
- 		verbose(env, "helper access to the packet is not allowed\n");
-@@ -8704,6 +8711,8 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
- 			verbose(env, "invalid map_ptr to access map->key\n");
- 			return -EACCES;
- 		}
-+		printk("meta:%p, maptr:%p, ks:%d, reg->map_ptr:%p, %s\n",
-+			meta, meta->map_ptr, meta->map_ptr->key_size, reg->map_ptr, __func__);
- 		err = check_helper_mem_access(env, regno,
- 					      meta->map_ptr->key_size, false,
- 					      NULL);
-@@ -8721,6 +8730,8 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
- 			return -EACCES;
- 		}
- 		meta->raw_mode = arg_type & MEM_UNINIT;
-+		printk("meta:%p, maptr:%p, vs:%d, reg->map_ptr:%p, %s\n",
-+			meta, meta->map_ptr, meta->map_ptr->value_size, reg->map_ptr, __func__);
- 		err = check_helper_mem_access(env, regno,
- 					      meta->map_ptr->value_size, false,
- 					      meta);
-@@ -10248,6 +10259,8 @@ static int check_helper_call(struct bpf_verifier_env *env, struct bpf_insn *insn
- 
- 	meta.func_id = func_id;
- 	/* check args */
-+	printk("meta:%p, maptr:%p, %s\n",
-+		&meta, meta.map_ptr, __func__);
- 	for (i = 0; i < MAX_BPF_FUNC_REG_ARGS; i++) {
- 		err = check_func_arg(env, i, &meta, fn, insn_idx);
- 		if (err)
-
+Thanks for the correction, let me fix that.
+Regards,
+Felix.
