@@ -1,207 +1,100 @@
-Received: from smtp.smtpout.orange.fr (smtp-17.smtpout.orange.fr [80.12.242.17])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49D4E1A38FC;
-	Sat, 23 Mar 2024 21:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.17
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450FB22625
+	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 21:22:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711228782; cv=none; b=LMuMvVJ+5eHDWM73SaRDDsAHT/3uoQvR7WJOmMCjepDVRXwqOo6DJSK7qBFRxduMcfm+xwZjFOjGE/0V/uroGX/77tOPlBrYyOr1QVDOUjCHxVJPBlAGsQjDCIA+VWju+yefAhRchiQtb/PoULt9SLKqZxXSxr7MjNU3KTb5gvY=
+	t=1711228973; cv=none; b=cbNi9RUwUb782QK2fVA8Elw2gAOtEzu/TpUKuj1PIdFYU+VICmkvgNkNXmpa3HYDm21aD2ppu7r8Bw2/Qb92ux4+GiM2xhXtZMHI71Z8o4Fqx01P0C/0+jaQHXxOdHjsK3Ku7u2l2U2ggc5TM3UoeMb+DT6Hj66CSplqSYSGBHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711228782; c=relaxed/simple;
-	bh=JpcrUJdmS/4IgI5QI+Qh0NIsgQcKWshPCe2Rjv293nQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=edMboeycqoIgsILczUWdTZooMvWkQJz8ljhjnea89AmCjceV96dRkq4N4/yMDIiN+ZRVF19SgURZc1fQaJodcR3ZHZncmGCcpVRSdRBv4TBoc24iohtqz1lgZ27frkmpYIMTDQpmQj1yXoMTtVb0PCeef4wk1Ye6XSclLvCNVTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=tjxl6TsD; arc=none smtp.client-ip=80.12.242.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="tjxl6TsD"
-Received: from [192.168.1.18] ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id o8dVrHyUaxF4io8dVrca32; Sat, 23 Mar 2024 22:10:50 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1711228250;
-	bh=081SY6ILS8irvUEzb5W45b7u/eR994khviHP2fr1g0A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=tjxl6TsDtbdkGl2tLHE6xT1nCWBNpCJxkYhH5EhzURMpl98mxH5rh5iW1uIXGGgyY
-	 0F803JrvMIAvwAh2Z488GCWwmvfkiL+3RAj2TYMt+kEBXcDiBRS2sFp8d1jCLtUiaX
-	 mxFrq8g5v7+JU859hvjnshTSmW6h1chPSdsZZ1LMrjc+pXwfVJxJvG2Cfbd1U2V7pA
-	 vXKhFIbY4Hl5OqhFhpCoAK4teirh91aSvoNFeufniFx682+SvITlGbOtK5WCr2k5nQ
-	 kfVrUkOr4GajYcShZlrY7Mtl/Ep3ijYJbl32vuZLUnAQ21aX75dEK0vpCzkT5eoTtd
-	 eSMZfdgQ7pqAg==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 23 Mar 2024 22:10:50 +0100
-X-ME-IP: 86.243.17.157
-Message-ID: <f7c64a5a-2abc-4b7e-95db-7ca57b5427c0@wanadoo.fr>
-Date: Sat, 23 Mar 2024 22:10:40 +0100
+	s=arc-20240116; t=1711228973; c=relaxed/simple;
+	bh=Was92oTx9Qdp+cCz+e7LV2mkVbHUkFYFsvLVJIDfAzk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=H5I0qzDcgUihtsJrsSxeod1vZ4GoHu2UVFFbMnYILsC9ZiVtQqHwPQk4kB9RZELV2ltGivInZ8aU/Zbdq3ZYdlWYkVK3isUru6IkX3cGNkO2rxw50xVJz/ERHHaWi1pVnF3hJt6he5daWnwiBxc/vbXOTy3d6NfDi82Ge0MPg2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7c7e21711d0so235909239f.3
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 14:22:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711228971; x=1711833771;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ukcmNO5QdCCXmLEZP1Y8y2188YS0sz6T0pRINK4qEio=;
+        b=LeELv6KC/8brZKVF3Ncuw/fJNZdkWaSgOK4o084U5ZFA5C8lrNID7VAZBA/hGF0Aal
+         EjsRyukiy7UdDLVj3XN4VgG028s6TzuzKsEpbFs5mGwIXdYt7yCYy4xqk2lnbdlc6VIW
+         MgH2I9QCneFmKEAYvEET+suVTTX286F4pE/l+H47930uyBrmqSBo0/ITkbcGZemXEhzo
+         nbqZmDk/SU1+OnbRzZPd18TH4FFy+84KBc5kdG8jJy6N0ovY//AYo0RL39WkPaeHX2ut
+         AjWGxDQ1uj2gBCPgtTxnKN9NnQcrS1EVWfjDN5QE3KpZNu8YhWqYyhROl3SykcNuFN8e
+         l7hw==
+X-Gm-Message-State: AOJu0YyIGRI80wFld2LkxysHcSZ+TJAqOpn58T8nevpmIhB7w/UZXWwt
+	G4m5Cg5qWtQLY5Vb4nzB7B/X2IC5OssZj6cBPAC5OL7nhfAmKgZueCc47Bth8M4Pyks98e2WdG5
+	i8NRrBK8wzb5jEkSjZLIuwgEv7VsRsBMaDo/1rJ/cKnokCP+Cc4xRsSVUVg==
+X-Google-Smtp-Source: AGHT+IFCH+MKcvUt48LwmBVq7KznRbgNFVpBpNBWfwIk7Dq/bOTWjZUQV+iVnnE6Pc6h7X35aWqH92KaTHdidzsTueu6RbKen7mT
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/11] devm-helpers: Add resource managed version of
- debugfs directory create function
-To: =?UTF-8?Q?Marek_Beh=C3=BAn?= <kabel@kernel.org>
-References: <20240323164359.21642-1-kabel@kernel.org>
- <20240323164359.21642-9-kabel__6885.49310886941$1711212291$gmane$org@kernel.org>
-Content-Language: en-MW
-Cc: Jonathan.Cameron@huawei.com, Laurent.pinchart@ideasonboard.com,
- airlied@gmail.com, andrzej.hajda@intel.com, arm@kernel.org, arnd@arndb.de,
- bamv2005@gmail.com, brgl@bgdev.pl, daniel@ffwll.ch, davem@davemloft.net,
- dianders@chromium.org, dri-devel@lists.freedesktop.org,
- eajames@linux.ibm.com, gaurav.jain@nxp.com, gregory.clement@bootlin.com,
- hdegoede@redhat.com, herbert@gondor.apana.org.au, horia.geanta@nxp.com,
- james.clark@arm.com, james@equiv.tech, jdelvare@suse.com,
- jernej.skrabec@gmail.com, jonas@kwiboo.se, linus.walleij@linaro.org,
- linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux@roeck-us.net, maarten.lankhorst@linux.intel.com,
- mazziesaccount@gmail.com, mripard@kernel.org, naresh.solanki@9elements.com,
- neil.armstrong@linaro.org, pankaj.gupta@nxp.com,
- patrick.rudolph@9elements.com, rfoss@kernel.org, soc@kernel.org,
- tzimmermann@suse.de
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240323164359.21642-9-kabel__6885.49310886941$1711212291$gmane$org@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:2b0f:b0:47c:540:4eee with SMTP id
+ fm15-20020a0566382b0f00b0047c05404eeemr199519jab.1.1711228971430; Sat, 23 Mar
+ 2024 14:22:51 -0700 (PDT)
+Date: Sat, 23 Mar 2024 14:22:51 -0700
+In-Reply-To: <0000000000000f823606139faa5d@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f8ca7706145a8a38@google.com>
+Subject: Re: [syzbot] [PATCH] fix array-index-out-of-bounds in bpf_prog_select_runtime
+From: syzbot <syzbot+d2a2c639d03ac200a4f1@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Le 23/03/2024 à 17:43, Marek Behún a écrit :
-> A few drivers register a devm action to remove a debugfs directory,
-> implementing a one-liner function that calls debufs_remove_recursive().
-> Help drivers avoid this repeated implementations by adding managed
-> version of debugfs directory create function.
-> 
-> Use the new function devm_debugfs_create_dir() in the following
-> drivers:
->    drivers/crypto/caam/ctrl.c
->    drivers/gpu/drm/bridge/ti-sn65dsi86.c
->    drivers/hwmon/hp-wmi-sensors.c
->    drivers/hwmon/mr75203.c
->    drivers/hwmon/pmbus/pmbus_core.c
-> 
-> Also use the action function devm_debugfs_dir_recursive_drop() in
-> driver
->    drivers/gpio/gpio-mockup.c
-> 
-> As per Dan Williams' request [1], do not touch the driver
->    drivers/cxl/mem.c
-> 
-> [1] https://lore.kernel.org/linux-gpio/65d7918b358a5_1ee3129432@dwillia2-mobl3.amr.corp.intel.com.notmuch/
-> 
-> Signed-off-by: Marek Behún <kabel@kernel.org>
-> ---
->   drivers/crypto/caam/ctrl.c            | 16 +++--------
->   drivers/gpio/gpio-mockup.c            | 11 ++------
->   drivers/gpu/drm/bridge/ti-sn65dsi86.c | 13 ++-------
->   drivers/hwmon/hp-wmi-sensors.c        | 15 ++--------
->   drivers/hwmon/mr75203.c               | 15 ++++------
->   drivers/hwmon/pmbus/pmbus_core.c      | 16 ++++-------
->   include/linux/devm-helpers.h          | 40 +++++++++++++++++++++++++++
->   7 files changed, 61 insertions(+), 65 deletions(-)
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-...
+***
 
-> diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-> index 455eecf6380e..adbe0fe09490 100644
-> --- a/drivers/gpio/gpio-mockup.c
-> +++ b/drivers/gpio/gpio-mockup.c
-> @@ -12,6 +12,7 @@
->   #include <linux/cleanup.h>
->   #include <linux/debugfs.h>
->   #include <linux/device.h>
-> +#include <linux/devm-helpers.h>
->   #include <linux/gpio/driver.h>
->   #include <linux/interrupt.h>
->   #include <linux/irq.h>
-> @@ -390,13 +391,6 @@ static void gpio_mockup_debugfs_setup(struct device *dev,
->   	}
->   }
->   
-> -static void gpio_mockup_debugfs_cleanup(void *data)
-> -{
-> -	struct gpio_mockup_chip *chip = data;
-> -
-> -	debugfs_remove_recursive(chip->dbg_dir);
-> -}
-> -
->   static void gpio_mockup_dispose_mappings(void *data)
->   {
->   	struct gpio_mockup_chip *chip = data;
-> @@ -480,7 +474,8 @@ static int gpio_mockup_probe(struct platform_device *pdev)
->   
->   	gpio_mockup_debugfs_setup(dev, chip);
->   
-> -	return devm_add_action_or_reset(dev, gpio_mockup_debugfs_cleanup, chip);
-> +	return devm_add_action_or_reset(dev, devm_debugfs_dir_recursive_drop,
-> +					chip->dbg_dir);
+Subject: [PATCH] fix array-index-out-of-bounds in bpf_prog_select_runtime
+Author: cam.alvarez.i@gmail.com
 
-This look strange. Shouldn't the debugfs_create_dir() call in 
-gpio_mockup_debugfs_setup() be changed, instead?
+#syz test
 
-(I've not look in the previous version if something was said about it, 
-so apologies if already discussed)
+BPF documentation specifies that the maximum stack depth for a BPF
+program is 512 bytes. This is not enforced when selecting a bpf
+interpreter, thus casuing an index out of bounds error when trying to
+obtain an interpreter with a bigger stack size.
 
->   }
->   
->   static const struct of_device_id gpio_mockup_of_match[] = {
+This patch enforces the stack size to be not bigger than
+512.
 
-...
+Signed-off-by: Camila Alvarez <cam.alvarez.i@gmail.com>
+---
+ kernel/bpf/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-
-> diff --git a/drivers/hwmon/mr75203.c b/drivers/hwmon/mr75203.c
-> index 50a8b9c3f94d..50f348fca108 100644
-> --- a/drivers/hwmon/mr75203.c
-> +++ b/drivers/hwmon/mr75203.c
-> @@ -10,6 +10,7 @@
->   #include <linux/bits.h>
->   #include <linux/clk.h>
->   #include <linux/debugfs.h>
-> +#include <linux/devm-helpers.h>
->   #include <linux/hwmon.h>
->   #include <linux/kstrtox.h>
->   #include <linux/module.h>
-> @@ -216,17 +217,11 @@ static const struct file_operations pvt_ts_coeff_j_fops = {
->   	.llseek = default_llseek,
->   };
->   
-> -static void devm_pvt_ts_dbgfs_remove(void *data)
-> -{
-> -	struct pvt_device *pvt = (struct pvt_device *)data;
-> -
-> -	debugfs_remove_recursive(pvt->dbgfs_dir);
-> -	pvt->dbgfs_dir = NULL;
-> -}
-> -
->   static int pvt_ts_dbgfs_create(struct pvt_device *pvt, struct device *dev)
->   {
-> -	pvt->dbgfs_dir = debugfs_create_dir(dev_name(dev), NULL);
-> +	pvt->dbgfs_dir = devm_debugfs_create_dir(dev, dev_name(dev), NULL);
-> +	if (IS_ERR(pvt->dbgfs_dir))
-> +		return PTR_ERR(pvt->dbgfs_dir);
-
-Not sure if the test and error handling should be added here.
-*If I'm correct*, functions related to debugfs already handle this case 
-and just do nothing. And failure in debugfs related code is not 
-considered as something that need to be reported and abort a probe function.
-
-Maybe the same other (already existing) tests in this patch should be 
-removed as well, in a separated patch.
-
-just my 2c
-
-CJ
-
->   
->   	debugfs_create_u32("ts_coeff_h", 0644, pvt->dbgfs_dir,
->   			   &pvt->ts_coeff.h);
-> @@ -237,7 +232,7 @@ static int pvt_ts_dbgfs_create(struct pvt_device *pvt, struct device *dev)
->   	debugfs_create_file("ts_coeff_j", 0644, pvt->dbgfs_dir, pvt,
->   			    &pvt_ts_coeff_j_fops);
->   
-> -	return devm_add_action_or_reset(dev, devm_pvt_ts_dbgfs_remove, pvt);
-> +	return 0;
->   }
-
-...
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index 696bc55de8e8..8167b3a721e9 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -2196,7 +2196,7 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn)
+ 		BUG_ON(1);
+ 		return 0;
+ }
+-
++#define BPF_MAX_STACK_SIZE 512
+ #define PROG_NAME(stack_size) __bpf_prog_run##stack_size
+ #define DEFINE_BPF_PROG_RUN(stack_size) \
+ static unsigned int PROG_NAME(stack_size)(const void *ctx, const struct bpf_insn *insn) \
+@@ -2345,7 +2345,7 @@ static void bpf_prog_select_func(struct bpf_prog *fp)
+ {
+ #ifndef CONFIG_BPF_JIT_ALWAYS_ON
+ 	u32 stack_depth = max_t(u32, fp->aux->stack_depth, 1);
+-
++	stack_depth = min_t(u32, stack_depth, BPF_MAX_STACK_SIZE);
+ 	fp->bpf_func = interpreters[(round_up(stack_depth, 32) / 32) - 1];
+ #else
+ 	fp->bpf_func = __bpf_prog_ret0_warn;
+-- 
+2.34.1
 
