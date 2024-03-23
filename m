@@ -1,138 +1,126 @@
-Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E48410A0C
-	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 15:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E97E45BF3;
+	Sat, 23 Mar 2024 15:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711208370; cv=none; b=ByPRJqPGJH9RDxQNY6+meCNioax31XmJ7NLa9/Y7aS5kFPxuezeWXvrk/83Rvt0kPIxVKkbAdFEG7BFxZhQIZhjqEpI/csUgxXK/XQyJu4aKNFGTiGj18SzScO9rr29AayGY8vaDW82sCClAOBmix91aERhIPqu5lRgC+Dv4/xc=
+	t=1711208838; cv=none; b=rr9wbWuJHUxvaH4GYcgFvdzmY74hQq3ByKWZ8TztLaLn80opJ+HpACLF2RyXgxsdKx5rr+OIYeU+DkL7rMl5fnczUSJ12Yjue6PgTZ6oJi637T9xkGdeaiOxdS61C1jgiHm2Nv+UQ2/BZTBsClkilmQEV4IdWAC4VZ3LSYcnLF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711208370; c=relaxed/simple;
-	bh=X5drTCGVnFNvYsWmKRrpMurp8YrmWqPIXfCQR0Sss14=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z2R3U77VpQhFbc9EnbW+biNkXK4Kdl+Two46jNKpGBemRR/jmyF6Hln5m1hwb9P7iHuZZ+2vnNSVFCkKqxzpYCH/FYKIhz480rs0wrjYpejGSfWZDcCGj3muBQ9CyV65FRS+hrBJR1f0SdlFtqm5X3TQGu0SsrQ71tgkUvcyOo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=hONCOWa2; arc=none smtp.client-ip=162.62.58.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1711208838; c=relaxed/simple;
+	bh=VwjJtGko5WC6moVs2lpU2UyRd2ZgOQn7/miu/V/CtNQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gw0VarNIEe1xc6gzNwILGOXFKgeuC4HDkyF97NmKyOUajXitTJb0buzQWjKO1RMZ8v8dl62uBuzU4pKEwdlcEkffcjLh2IVKQ8BDxpRYXefj/y1zYeXv6uQTwOOYCUh6nE0ieURGftwsDqI3iVrOp6LfUkSL1LqArx7VuKWfaWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=du1NX8mp; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="hONCOWa2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1711208358;
-	bh=Lonx8elIV9uUpMEDFAlZA3gic+/1fWuNBvPxLbnanGo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=hONCOWa2ziQfnvMdDb3KVFFPzx+7Ov9GBlCkG1yaJy7mH8F7wDokHf37xZNWzTVCj
-	 YG5mA8CHxTi/isndof+htq+Px7A/VJSjjXtGKCER0wiG4KFPDFyvELyKLCZ24o8EFY
-	 AFekDSzftd81sA+zJM/vcJqvH3vOMXELo7bZqzvw=
-Received: from [IPV6:2409:8a60:2a60:b160:9480:99e2:5707:aea7] ([2409:8a60:2a60:b160:9480:99e2:5707:aea7])
-	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
-	id 798AE2D3; Sat, 23 Mar 2024 23:30:24 +0800
-X-QQ-mid: xmsmtpt1711207824t75efaqzh
-Message-ID: <tencent_2A5F9506756CD0DC2443BA00339BDFCF3306@qq.com>
-X-QQ-XMAILINFO: MNsLylogNlqcpJ/isr7oWafWpQfMMlt6fQVFDbj0T2H0KQzFQJmn7vERKvR4BN
-	 zjJ4A4qIthI+/z3MWFAHRRB5xo8BO8D1u27QU086bTE6iDcAQN5gZsv+RD4Cfw/Avbvv1jZ2WsV5
-	 7W9C6TykK1r7FEiMbBySN8p8dXPQbynDG9esgAr8GvzoCLea4wxzOIN5g6vZuyOKnqvMZ1wjSELY
-	 eLfSbKCLkOzovmWjoojfJWCZpxXgv+tK09xLMjwM16RQjwUZDPM+K+k+1/d0dgQ8d1XFnJDcWshf
-	 ti7GKHWtS9i7Jemlaj90u9qbotpQHoTXg48pBOZtg1PUWiExSVSnIBgUsswbtuO2Sc9nZc6tl4VH
-	 ypta7fY2y0+3//KxeXwY/KBLGw3UDIWrQZOjDmO/ZXJq6VcuibEKDb3mq/tzAfjiyBo1TL4NG92E
-	 HYkca5U5x0nbb3dJMrsPmXKDlXH02JzfGHN7XnifD6WpIXpw0VzumwVn+p7FVhKnO3pdfYGUD3fN
-	 oVGPVgaOC6CiKJJaPfrr4bEY8jQHnMOlXLBYXy1Jt1Q2uo2O0rg7evlG8D+T8sdfJ0XDFBhjo62X
-	 /xdAYEF6tayBkod4i4Qm8U+BM2pXbWys+soDsjhI7lmkE1V6NCHWytoe64RyPcQDsN2gyL0JPPpG
-	 iC49dMtPJjtUgPyfSHTXC+d388w+8BzOPNd9zSJ2tPUDaQ0kvm7RgMQ6+PDHlwwPN0+ebxpwi3rP
-	 rYMqb30BocKamgOBxFff3vOvlEQbigAbcWXcXTf2cOkqTUpdLbvpp64xtb2GKuk2eGAKtL3f2Rkl
-	 omp++H+wXMM6z8VNP4lTNMzeR8Zkl8I2lfH4Ka96s4QXnVHXAFi/ECKmlwyfylMKuU86PIeIXrtC
-	 0DzGs21eGZoaoInTHUM3HwiPryAh046QHx6a+0z9iaKhpVuMTrGc9QBbfz1Xd0WDCQjWOTrcO8ku
-	 Zvvtygx+8+dthQ0xF2zqYQT1AwFHps/9o+CBH+FLuISxHsoCShyocSTdDuMEg09gxKQOfjbAX9de
-	 420TYWgozoNhbsW7tB
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-X-OQ-MSGID: <14e98e31-8cee-dcd6-f6ad-6f1fe707cd77@foxmail.com>
-Date: Sat, 23 Mar 2024 23:30:24 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="du1NX8mp"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-33ed7ba1a42so1897826f8f.2;
+        Sat, 23 Mar 2024 08:47:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711208835; x=1711813635; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tMU5gNAuADzB5Tcq4mD6yx393J+u7FkWid9t2/0ApH0=;
+        b=du1NX8mpkeEzlz81IZMPGWTnKJR4TpnysacGo/70vxEIRs6nxmDjicH5V7uYZ3PO6J
+         obDQBXHpwWnKrPngFDImcnHgI9Fmz1gqmihnGZsDx8dkUm3lnlbHPcLRWBkvT0haCLZz
+         5gORDJpfyKCufDo7q3+K20k+R0Yn0tUIR6AJyYMPQjjlzUy0LqIvmgRnI14cGAxBdGFj
+         vizyD6v3E/WD1MDycP7uVXmrB9/SB4fCFvynmfMhmuNfAPn5mLiiipiSjfloGQ0hxM0S
+         GH1JQ9m50Ab2wUqyy6rCc5j6mXFBCWzDF2+f6uyRXcyoCxhFB68DBe/4L1IeMDNoztoE
+         32AQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711208835; x=1711813635;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tMU5gNAuADzB5Tcq4mD6yx393J+u7FkWid9t2/0ApH0=;
+        b=IzV8zTCZDK0lIKXZGamhUfBwPiEe0NsNXEwLrlJlpLNvStFgKP1O5yF/FsUX6qMKXO
+         +U0vgTeswRRSXSvnI1Ls+8Bk4ksI7taiywPf1OtL0On/0b75K6kfO/MVWLixNrHvCof9
+         VMUs/O4N5BYnQfwHVIU+srZ4SlKklZEHVDxtdlVEeOza+5gywsq6/o3X5nlwPS3g9BK7
+         Hhmv2wKTSsUdvYX/lQX2Te6xnamhaB/FMfzdnwr9jD85iPjLnFWQLT9T9CsbwHpcGb8l
+         VkQMzzcmXy26sMfPKwGL29Lo9hj6LSa5hxgy8bV/ZJshpRqRtqdlCxQt8I7tZs2aATUd
+         Z4gw==
+X-Forwarded-Encrypted: i=1; AJvYcCVDIQ9CEkmVugb1Vvr5BMjk6MR28tQV7wcPGLEPfy8EwbpJIU1NOKPV11N73KEhlepPUjBNXC4hUD4Nn4z7dHfipsYVZwvz4qYmaqBikfq8dPM7qbOmWHMFcY2kvNeUQNDi
+X-Gm-Message-State: AOJu0YwFKMwZDhiEgrYCnhhPMsQqy6n3SWVit3X6ZSZTj5CL9n1RS3hA
+	w9MD0MpRDJDy84kXvnpleSgL7MzbohzVFSW0S8SaG1dcje8J0Qy6
+X-Google-Smtp-Source: AGHT+IH/IKbgeQ/i+N5Wg6tsT0hn/z/Fll6a4YCP+GxaBGqM4pQZ/LTjS10uSGbsNkzc/9U74IyS8g==
+X-Received: by 2002:a5d:6a0a:0:b0:33e:7979:edc6 with SMTP id m10-20020a5d6a0a000000b0033e7979edc6mr1887414wru.15.1711208834702;
+        Sat, 23 Mar 2024 08:47:14 -0700 (PDT)
+Received: from localhost (54-240-197-231.amazon.com. [54.240.197.231])
+        by smtp.gmail.com with ESMTPSA id df10-20020a5d5b8a000000b0033e756ed840sm4676011wrb.47.2024.03.23.08.47.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 23 Mar 2024 08:47:14 -0700 (PDT)
+From: Puranjay Mohan <puranjay12@gmail.com>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
+	Luke Nelson <luke.r.nels@gmail.com>,
+	Xi Wang <xi.wang@gmail.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	bpf@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: puranjay12@gmail.com
+Subject: [PATCH bpf-next 0/2] bpf,riscv: Add support for BPF Arena
+Date: Sat, 23 Mar 2024 15:46:50 +0000
+Message-Id: <20240323154652.54572-1-puranjay12@gmail.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v3] exit: move trace_sched_process_exit earlier in
- do_exit()
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
- Oleg Nesterov <oleg@redhat.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Christian Brauner <brauner@kernel.org>,
- Mel Gorman <mgorman@techsingularity.net>,
- Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
-References: <tencent_277EBFCF545587D4FD41EF932AE972CC6708@qq.com>
- <20240319145718.2bfb0d526ff441c8b37eab09@linux-foundation.org>
-Content-Language: en-US
-From: Wen Yang <wenyang.linux@foxmail.com>
-In-Reply-To: <20240319145718.2bfb0d526ff441c8b37eab09@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+This series adds the support for PROBE_MEM32 and bpf_addr_space_cast
+instructions to the RISCV BPF JIT. These two instructions allow the
+enablement of BPF Arena.
 
+All arena related selftests are passing:
 
-On 2024/3/20 05:57, Andrew Morton wrote:
-> On Sun, 10 Mar 2024 13:25:29 +0800 wenyang.linux@foxmail.com wrote:
-> 
->> From: Wen Yang <wenyang.linux@foxmail.com>
->>
->> Currently coredump_task_exit() takes some time to wait for the generation
->> of the dump file. But if the user-space wants to receive a notification
->> as soon as possible it maybe inconvenient.
-> 
-> If userspace is awaiting this notification to say "it's now OK to read
-> the dump file" then it could break things?
-> 
+  root@rv-tester:~/bpf# uname -p
+  riscv64
+  root@rv-tester:~/bpf# ./test_progs -a "*arena*"
+  #3/1     arena_htab/arena_htab_llvm:OK
+  #3/2     arena_htab/arena_htab_asm:OK
+  #3       arena_htab:OK
+  #4/1     arena_list/arena_list_1:OK
+  #4/2     arena_list/arena_list_1000:OK
+  #4       arena_list:OK
+  #434/1   verifier_arena/basic_alloc1:OK
+  #434/2   verifier_arena/basic_alloc2:OK
+  #434/3   verifier_arena/basic_alloc3:OK
+  #434/4   verifier_arena/iter_maps1:OK
+  #434/5   verifier_arena/iter_maps2:OK
+  #434/6   verifier_arena/iter_maps3:OK
+  #434     verifier_arena:OK
+  Summary: 3/10 PASSED, 0 SKIPPED, 0 FAILED
 
-Thanks for your comments.
+This needs the following commit in bpf/bpf.git to work correctly:
+https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git/commit/?id=f7f5d1808b1b66935a24dd796dd1a0612ca9c147
 
-This could also be achieved in the nearby proc_exit_connector().
+Puranjay Mohan (2):
+  bpf,riscv: Implement PROBE_MEM32 pseudo instructions
+  bpf,riscv: Implement bpf_addr_space_cast instruction
 
-In addition, this issue has been discussed in detail in the following link:
-https://lkml.org/lkml/2024/2/23/1018
+ arch/riscv/net/bpf_jit.h        |   2 +
+ arch/riscv/net/bpf_jit_comp64.c | 208 +++++++++++++++++++++++++++++++-
+ arch/riscv/net/bpf_jit_core.c   |   3 +
+ 3 files changed, 210 insertions(+), 3 deletions(-)
 
-
->> Move trace_sched_process_exit() earlier in do_exit().
->> This way a user-space monitor could detect the exits and
->> potentially make some preparations in advance.
->>
->> Oleg initially proposed this suggestion, and Steven further provided some
->> detailed suggestions, and Mathieu carefully checked the historical code
->> and said:
->> : I've checked with Matthew Khouzam (maintainer of Trace Compass)
->> : which care about this tracepoint, and we have not identified any
->> : significant impact of moving it on its model of the scheduler, other
->> : than slightly changing its timing.
->> : I've also checked quickly in lttng-analyses and have not found
->> : any code that care about its specific placement.
->> : So I would say go ahead and move it earlier in do_exit(), it's
->> : fine by me.
-> 
-> I'm not seeing a clear need for this change.  "maybe inconveniant" is
-> quite thin.  Please fully describe what motivated you to work on this?
-> 
-
-Thanks.
-We hope to address this issue in our Advanced Driver Assistance System:
-When certain critical processes exit abnormally, prompt information can 
-be reported to the monitoring program as soon as possible.
-
-We have also attempted to add a new TP, as follows:
-https://lkml.org/lkml/2024/2/23/5
-
-But after some discussion, it is still considered more reasonable to 
-move trace_sched_process_exit() earlier.
-
-We also look forward to your suggestions, thanks again.
-
-
---
-Best wishes,
-Wen
-
-
-
+-- 
+2.40.1
 
