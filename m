@@ -1,233 +1,146 @@
-Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
+Received: from out203-205-221-205.mail.qq.com (out203-205-221-205.mail.qq.com [203.205.221.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBBCB18EB4;
-	Sat, 23 Mar 2024 12:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0BACA6F
+	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 12:39:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711196598; cv=none; b=ROqDCBr9D0DTg+XTrrYxXvm9qx4Lk2pqBa13Ctw92KQHi6WAYfAj+g//egkZ7YN7QJu5sSJiZIKMXd9BYPoEkXnLnkZlWfhC21Ej3jiGV5AzhZ+6+jCutKJqNIVLgmnxw3SrwFpuI7tFcetkMjZ0+LMOPO0+9Iuiqu2We+hwqVU=
+	t=1711197594; cv=none; b=SS2Abh4ZHIiO7sUmaeeXSXlAhRriHu/NF+8E//N2ba4BoDaB6tTorDCtwNtgsteAPbHMcz91toDti7rm08RLdTite41WznteY7Ym5xcOBsxQt8c2hRqKEhtSL7A5rF1A7cHmb6r+XefGc01OEabr/GX/0OyGOkfQrlcCz/Ow17g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711196598; c=relaxed/simple;
-	bh=LGZmnx4kEYMKIxOiADFF+d27qH/RtDksq5NSSrkEVdA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XbfVLOaAWNa/m2oNmy1MzQfRgyJroPe7vx/zMz/zOzuEGq223gjHYJVJv8aw+zvTFfsE4bjp7RHa6XL1YsGL7h9hpF8qrkmkXFJg+g3qUoWX4StM3bFTGgNPjT921hFeqqJVzl4q9dHxpdPJk92XTgcJAJYYD9jSU6Ow0bXzD8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=pMJjZ7DU; arc=none smtp.client-ip=199.247.17.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
+	s=arc-20240116; t=1711197594; c=relaxed/simple;
+	bh=B/jAiF8VY/uocK1kJECN3SXXqitfg+zAL5Z6/SRJl6M=;
+	h=Message-ID:Content-Type:Mime-Version:Subject:From:In-Reply-To:
+	 Date:Cc:References:To; b=ey1Urwex0oHdvS4dUn/FC+G0JwN5IR2f83RlrJVVX/PCyq2X/FjyzxZ/BhTsH3Qu3jhTyf/SLMErayV2a4hV118kZW+r/lhQLR0F9NiEcY9TIWcmV0U5F+LeCpU4O3f0A9LA7Bhfc3h1B7Q8kiSrSmdjS1jCxcC0LqWk0XBkvmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=NLoMF8en; arc=none smtp.client-ip=203.205.221.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="pMJjZ7DU"
-Received: from spock.localnet (unknown [94.142.239.106])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by prime.voidband.net (Postfix) with ESMTPSA id DC1AC6165D86;
-	Sat, 23 Mar 2024 13:16:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-	s=dkim-20170712; t=1711196181;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=laMK9FaOj3uTTgORMDz9RWjBdjgfu6XCe/rl7QS8SZ8=;
-	b=pMJjZ7DUMccYviqhAeygl7vw4UDAExQ6cCegNgVmrjPvkcPDKmXoGPv5aOVtjwCDTT0XhJ
-	12U29t5UH6D2DV5eT8uOKk11bv/gq+tnOW5pPRq63DtOYZu4X0Upe/fZ6PRGlpgZrOPiqb
-	oeprGod9PYc+yZyYRGLPVWALSxgP3S8=
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Ricardo Ribalda <ribalda@chromium.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- "hn.chen" <hn.chen@sunplusit.com>, Hans Verkuil <hverkuil@xs4all.nl>,
- Ricardo Ribalda <ribalda@chromium.org>,
- Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject:
- Re: [PATCH v10 3/6] media: uvcvideo: Quirk for invalid dev_sof in Logitech
- C922
-Date: Sat, 23 Mar 2024 13:16:08 +0100
-Message-ID: <2722561.mvXUDI8C0e@natalenko.name>
-In-Reply-To: <20240323-resend-hwtimestamp-v10-3-b08e590d97c7@chromium.org>
-References:
- <20240323-resend-hwtimestamp-v10-0-b08e590d97c7@chromium.org>
- <20240323-resend-hwtimestamp-v10-3-b08e590d97c7@chromium.org>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="NLoMF8en"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1711197574; bh=4QAwHmLtmam4GpY5M1geCT/OMSnNUTDPePbkUBJaklk=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=NLoMF8enAFqjf01d9SzHNv95eYOAeFqS1KQdyQtg0GMBraKHXb+njaAlQpRiUbpfD
+	 vfmJIu7A3Qj+w79CGPfuA3keWQu0qVcmZtEhYgyQur1OKG72PT71kKwye35BDK87ok
+	 dUauFiYGI9BslO/mZsVK0rxOiw1VfMuzVl1tyPXw=
+Received: from smtpclient.apple ([240e:467:1bf4:3ea0:e479:c9a1:95aa:d444])
+	by newxmesmtplogicsvrszb6-0.qq.com (NewEsmtp) with SMTP
+	id 9DF97C22; Sat, 23 Mar 2024 20:39:31 +0800
+X-QQ-mid: xmsmtpt1711197571txj3ebjsu
+Message-ID: <tencent_BE1AABF8C6052FB4FD1DD9713962E0425609@qq.com>
+X-QQ-XMAILINFO: OKkKo7I1HxIeYsRDFAmm8SNn+E/R6zSHEkIhqlCo7BV7aYryBV9V/zL/PjuuAn
+	 bMxFX/trQWhKgEj09W+dtZ1fd18tQ+GxX3HIelQ0JcpLprrp+9Uc0Lzhl8IjRAd7XkqybMlZsNQ6
+	 dt9narQlT+bv/0SNmYPB7Z/fYdkhfFduFYNNFK4q2QfNUHsBqwOOudP/dv5q88CBB+pYNYRyE85L
+	 EKwVgBb7eVs7hKcINbKjBT+tuo1VwqVfqagn/TQPnfsftrFbDS26RvXTPHKSHQ7VucwBRxxOTVwE
+	 0en2jWtCJpC/mdqpB7GrDchr3+ciE+mePG4X0gnucNkdsg7sTYZjTt3W9QwASA6xbxWM+0Wnkvsm
+	 zDLnrEHOxzuE07UxhzgZHneNLkVBupp5UGIPJVwaSbE7UOtSvbd8qM5BnmtTsWEC0NwC2jsPbL5k
+	 NmOnLTyRRS/UzCKUGZh7z78Nps2Vx3mv2RJ4IOlahiR6kOHgWeExyJV8Y7mizHTfbi3LHVgaGDn2
+	 mPFWY6XNvEEsAyMO5wtG9NioCEBUGzqksDob78qlcGwALJt2dKZRniTfCCrI6M2Qpw5Re/oeUbu8
+	 0xMe1Nzva56/UDyZuO+Relk76LRrUd5j9xIalJfTN2VAh1NalaJHwV8G8s5cIjQ/v+LHYIWZOEHC
+	 fiVPsdzEBdqKd5NuW7+W7HFsKRL3sL3ys9AHph4eoFY7XNYqPssqrg0mRhsK91ZLkVNUz1cQOyqo
+	 EU6oEXNLpyAGIo77ZM5i4RT8Chzg8CAvAZYLTOY9J0ugSGiEYyd26gevbBSxBqOqw9kdNI8VKqRA
+	 CzBENb1ujJ+ek020HeycQ1x/5I3MCju+p7xTopK4l9xPE4gQQib2FK4hfFmBKgIISqvFI4fLx/n/
+	 Djko4NBNLy4KpGBGku7nvJLA6gtmVMTsuwRVXuvKkLrdSBiUmMUIzRukNiqx6jSCV3YNZasO9eIt
+	 oPUcvySbILJJ9xkZ1G3Jc6YN7ApAnr2+zd7FQ8+rE05Gy9fj035Mii+UOB+54YvenmFjIKfX2jNX
+	 ovOrm2Ug==
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart12402031.O9o76ZdvQC";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-
---nextPart12402031.O9o76ZdvQC
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
+Subject: Re: [PATCH] RISC-V: only flush icache when it has VM_EXEC set
+From: Yangyu Chen <cyy@cyyself.name>
+In-Reply-To: <CAHVXubiosOMnUghsaG_zDyX4wPQ3QGY_UhsUO+PGWQ8v2tDbFw@mail.gmail.com>
+Date: Sat, 23 Mar 2024 20:39:21 +0800
+Cc: Palmer Dabbelt <palmer@dabbelt.com>,
+ linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Albert Ou <aou@eecs.berkeley.edu>,
+ Conor Dooley <conor.dooley@microchip.com>,
+ jszhang@kernel.org,
+ Andrew Waterman <andrew@sifive.com>
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-Date: Sat, 23 Mar 2024 13:16:08 +0100
-Message-ID: <2722561.mvXUDI8C0e@natalenko.name>
-MIME-Version: 1.0
+X-OQ-MSGID: <29CFE66B-53EA-4AB7-94C5-840583BC9002@cyyself.name>
+References: <tencent_6D851035F6F2FD0B5A69FB391AE39AC6300A@qq.com>
+ <mhng-3e79924e-d965-4156-836d-19cc8fb8cafe@palmer-ri-x1c9a>
+ <CAHVXubiosOMnUghsaG_zDyX4wPQ3QGY_UhsUO+PGWQ8v2tDbFw@mail.gmail.com>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
 
-Hello.
 
-On sobota 23. b=C5=99ezna 2024 11:48:04, CET Ricardo Ribalda wrote:
-> Logitech C922 internal SOF does not increases at a stable rate of 1kHz.
-> This causes that the device_sof and the host_sof run at different rates,
-> breaking the clock domain conversion algorithm. Eg:
->=20
-> 30 (6) [-] none 30 614400 B 21.245557 21.395214 34.133 fps ts mono/SoE
-> 31 (7) [-] none 31 614400 B 21.275327 21.427246 33.591 fps ts mono/SoE
-> 32 (0) [-] none 32 614400 B 21.304739 21.459256 34.000 fps ts mono/SoE
-> 33 (1) [-] none 33 614400 B 21.334324 21.495274 33.801 fps ts mono/SoE
-> * 34 (2) [-] none 34 614400 B 21.529237 21.527297 5.130 fps ts mono/SoE
-> * 35 (3) [-] none 35 614400 B 21.649416 21.559306 8.321 fps ts mono/SoE
-> 36 (4) [-] none 36 614400 B 21.678789 21.595320 34.045 fps ts mono/SoE
-> ...
-> 99 (3) [-] none 99 614400 B 23.542226 23.696352 33.541 fps ts mono/SoE
-> 100 (4) [-] none 100 614400 B 23.571578 23.728404 34.069 fps ts mono/SoE
-> 101 (5) [-] none 101 614400 B 23.601425 23.760420 33.504 fps ts mono/SoE
-> * 102 (6) [-] none 102 614400 B 23.798324 23.796428 5.079 fps ts mono/SoE
-> * 103 (7) [-] none 103 614400 B 23.916271 23.828450 8.478 fps ts mono/SoE
-> 104 (0) [-] none 104 614400 B 23.945720 23.860479 33.957 fps ts mono/SoE
 
-How do I check whether C920 (046d:082d) is affected too? I have got one, I =
-can run tests on it as long as those will not blow the webcam up.
-
-Thanks.
-
-> Instead of disabling completely the hardware timestamping for such
-> hardware we take the assumption that the packet handling jitter is
-> under 2ms and use the host_sof as dev_sof.
+> On Mar 22, 2024, at 23:50, Alexandre Ghiti <alexghiti@rivosinc.com> =
+wrote:
 >=20
-> We can think of the UVC hardware clock as a system with a coarse clock
-> (the SOF) and a fine clock (the PTS). The coarse clock can be replaced
-> with a clock on the same frequency, if the jitter of such clock is
-> smaller than its sampling rate. That way we can save some of the
-> precision of the fine clock.
+> On Wed, Mar 20, 2024 at 1:48=E2=80=AFAM Palmer Dabbelt =
+<palmer@dabbelt.com> wrote:
+>>=20
+>> On Tue, 09 Jan 2024 10:48:59 PST (-0800), cyy@cyyself.name wrote:
+>>> As I-Cache flush on current RISC-V needs to send IPIs to every CPU =
+cores
+>>> in the system is very costly, limiting flush_icache_mm to be called =
+only
+>>> when vma->vm_flags has VM_EXEC can help minimize the frequency of =
+these
+>>> operations. It improves performance and reduces disturbances when
+>>> copy_from_user_page is needed such as profiling with perf.
+>>>=20
+>>> For I-D coherence concerns, it will not fail if such a page adds =
+VM_EXEC
+>>> flags in the future since we have checked it in the __set_pte_at =
+function.
+>>>=20
+>>> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+>>> ---
+>>> arch/riscv/include/asm/cacheflush.h | 7 +++++--
+>>> 1 file changed, 5 insertions(+), 2 deletions(-)
+>>>=20
+>>> diff --git a/arch/riscv/include/asm/cacheflush.h =
+b/arch/riscv/include/asm/cacheflush.h
+>>> index 3cb53c4df27c..915f532dc336 100644
+>>> --- a/arch/riscv/include/asm/cacheflush.h
+>>> +++ b/arch/riscv/include/asm/cacheflush.h
+>>> @@ -33,8 +33,11 @@ static inline void flush_dcache_page(struct page =
+*page)
+>>>  * so instead we just flush the whole thing.
+>>>  */
+>>> #define flush_icache_range(start, end) flush_icache_all()
+>>> -#define flush_icache_user_page(vma, pg, addr, len) \
+>>> -     flush_icache_mm(vma->vm_mm, 0)
+>>> +#define flush_icache_user_page(vma, pg, addr, len)   \
+>>> +do {                                                 \
+>>> +     if (vma->vm_flags & VM_EXEC)                    \
+>>> +             flush_icache_mm(vma->vm_mm, 0);         \
+>>> +} while (0)
+>>>=20
+>>> #ifdef CONFIG_64BIT
+>>> #define flush_cache_vmap(start, end) flush_tlb_kernel_range(start, =
+end)
+>>=20
+>> I'm not super worried about the benchmarks, I think we can just
+>> open-loop assume this is faster by avoiding the flushes.  I do think =
+we
+>> need a hook into at least tlb_update_vma_flags(), though, to insert =
+the
+>> fence.i when upgrading a mapping to include VM_EXEC.
 >=20
-> To probe this point we have run three experiments on the Logitech C922.
-> On that experiment we run the camera at 33fps and we analyse the
-> difference in msec between a frame and its predecessor. If we display
-> the histogram of that value, a thinner histogram will mean a better
-> meassurement. The results for:
-> - original hw timestamp: https://ibb.co/D1HJJ4x
-> - pure software timestamp: https://ibb.co/QC9MgVK
-> - modified hw timestamp: https://ibb.co/8s9dBdk
->=20
-> This bug in the camera firmware has been confirmed by the vendor.
->=20
-> lsusb -v
->=20
-> Bus 001 Device 044: ID 046d:085c Logitech, Inc. C922 Pro Stream Webcam
-> Device Descriptor:
->   bLength                18
->   bDescriptorType         1
->   bcdUSB               2.00
->   bDeviceClass          239 Miscellaneous Device
->   bDeviceSubClass         2
->   bDeviceProtocol         1 Interface Association
->   bMaxPacketSize0        64
->   idVendor           0x046d Logitech, Inc.
->   idProduct          0x085c C922 Pro Stream Webcam
->   bcdDevice            0.16
->   iManufacturer           0
->   iProduct                2 C922 Pro Stream Webcam
->   iSerial                 1 80B912DF
->   bNumConfigurations      1
->=20
-> Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->  drivers/media/usb/uvc/uvc_driver.c |  9 +++++++++
->  drivers/media/usb/uvc/uvc_video.c  | 11 +++++++++++
->  drivers/media/usb/uvc/uvcvideo.h   |  1 +
->  3 files changed, 21 insertions(+)
->=20
-> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/u=
-vc_driver.c
-> index bbd90123a4e76..723e6d5680c2e 100644
-> --- a/drivers/media/usb/uvc/uvc_driver.c
-> +++ b/drivers/media/usb/uvc/uvc_driver.c
-> @@ -2574,6 +2574,15 @@ static const struct usb_device_id uvc_ids[] =3D {
->  	  .bInterfaceSubClass	=3D 1,
->  	  .bInterfaceProtocol	=3D 0,
->  	  .driver_info		=3D UVC_INFO_QUIRK(UVC_QUIRK_RESTORE_CTRLS_ON_INIT) },
-> +	/* Logitech HD Pro Webcam C922 */
-> +	{ .match_flags		=3D USB_DEVICE_ID_MATCH_DEVICE
-> +				| USB_DEVICE_ID_MATCH_INT_INFO,
-> +	  .idVendor		=3D 0x046d,
-> +	  .idProduct		=3D 0x085c,
-> +	  .bInterfaceClass	=3D USB_CLASS_VIDEO,
-> +	  .bInterfaceSubClass	=3D 1,
-> +	  .bInterfaceProtocol	=3D 0,
-> +	  .driver_info		=3D UVC_INFO_QUIRK(UVC_QUIRK_INVALID_DEVICE_SOF) },
->  	/* Chicony CNF7129 (Asus EEE 100HE) */
->  	{ .match_flags		=3D USB_DEVICE_ID_MATCH_DEVICE
->  				| USB_DEVICE_ID_MATCH_INT_INFO,
-> diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uv=
-c_video.c
-> index b2e70fcf4eb4c..d6ca383f643e3 100644
-> --- a/drivers/media/usb/uvc/uvc_video.c
-> +++ b/drivers/media/usb/uvc/uvc_video.c
-> @@ -558,6 +558,17 @@ uvc_video_clock_decode(struct uvc_streaming *stream,=
- struct uvc_buffer *buf,
->  	stream->clock.last_sof =3D dev_sof;
-> =20
->  	host_sof =3D usb_get_current_frame_number(stream->dev->udev);
-> +
-> +	/*
-> +	 * On some devices, like the Logitech C922, the device SOF does not run
-> +	 * at a stable rate of 1kHz. For those devices use the host SOF instead.
-> +	 * In the tests performed so far, this improves the timestamp precision.
-> +	 * This is probably explained by a small packet handling jitter from the
-> +	 * host, but the exact reason hasn't been fully determined.
-> +	 */
-> +	if (stream->dev->quirks & UVC_QUIRK_INVALID_DEVICE_SOF)
-> +		dev_sof =3D host_sof;
-> +
->  	time =3D uvc_video_get_time();
-> =20
->  	/*
-> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvc=
-video.h
-> index 6fb0a78b1b009..cb9dd50bba8ac 100644
-> --- a/drivers/media/usb/uvc/uvcvideo.h
-> +++ b/drivers/media/usb/uvc/uvcvideo.h
-> @@ -73,6 +73,7 @@
->  #define UVC_QUIRK_FORCE_Y8		0x00000800
->  #define UVC_QUIRK_FORCE_BPP		0x00001000
->  #define UVC_QUIRK_WAKE_AUTOSUSPEND	0x00002000
-> +#define UVC_QUIRK_INVALID_DEVICE_SOF	0x00004000
-> =20
->  /* Format flags */
->  #define UVC_FMT_FLAG_COMPRESSED		0x00000001
->=20
+> I'd say Yangyu is right when he mentions in the commit log: "For I-D
+> coherence concerns, it will not fail if such a page adds VM_EXEC flags
+> in the future since we have checked it in the __set_pte_at function.".
+> If a region indeed becomes executable, the page table will be modified
+> to reflect that and then will pass in __set_pte_at() which, as Yangyu
+> mentions, does the right thing. Or am I missing something?
 >=20
 
+I think so. Unless we have any other way to update PTE rather than
+using __set_pte_at, I think it=E2=80=99s safe. I=E2=80=99m too busy =
+these days to
+provide a micro enough benchmark.
 
-=2D-=20
-Oleksandr Natalenko (post-factum)
---nextPart12402031.O9o76ZdvQC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmX+yAgACgkQil/iNcg8
-M0s+MRAAg2lbDDFv5wAwubZkpD73CX/5IFItET9QIux0st3lZoNBLjvE+UDw97fb
-GbRdXzXbtrt9hhsL9KA7mA5rx6ZTm4kudvNCCs+oyDbD03va0/Tw+LM4GpoxbKHB
-vOccP0nB+XJtyRXx3KcZKLQBP2HLRuK8bzIMRoP4GPzBG7IYOjZ1W4DKxxv8UWZp
-iUn2WwA57hWxFXBtjzaQSn9+emXaR2HetoonzTWaohs70kj6X6RpGmgWTq+/D+P6
-eftOEepDl2y/0vWdmsOSEJhcvIL/Zj2ddqPzwoWGS978Us39SNWxH/LdVMcmvQlm
-EaRziKkjLk4kV80FhGWFrRklpsHmNIt6jg7el8z2CTHXtkXil1UJhYbX2lSRMgYh
-AJV7a4FdurmBleoSZCJorIokGAqrmqRlxHZP9pxS0QDlxZdTC7Ju+rgpQ55sBxkD
-NEfmVJtO+z56StHGrBG6LXCNJgHGb+QH9y43BJICx8P//RFG0gaNSx3gLauD5S6z
-oTslJgNUdhmkJhjtJv/o53nATK0u6COsITjULNc2B6jlO0iEmdRoH/k5Vt/ZgIj2
-Uskrfr2quRMJi3GLdoTP1Wlj0oL953b9ZfRssFM8PjJ6VXX/HXU0qcP8YLXQT/Cy
-KH237EaR8UZ/cDD0bwPPw3zfnhzp0/c7poNKhntXECdDDPZr1Ms=
-=xLSN
------END PGP SIGNATURE-----
-
---nextPart12402031.O9o76ZdvQC--
-
-
+Thanks,
+Yangyu Chen
 
