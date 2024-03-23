@@ -1,175 +1,281 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sonata.ens-lyon.org (domu-toccata.ens-lyon.fr [140.77.166.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318D547A6F;
-	Sat, 23 Mar 2024 16:50:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FDB247A6F
+	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 16:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.77.166.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711212645; cv=none; b=n2qdVrnLknZ/muoIxr+x/7SExLVVVzJ1rYSkCCOdojm7kG8uBX/wwdAywJCWSR4O4pEkHvgvEVZAxX8WWlsSTvCHrqCMcuLdYhm6CJk9C/FAOxcBnwdkjd0Sbw6bajjvVvDwdCp8d2jGW8XQ1UpywcFwHhOc2z4Eq+9UiGrMnJE=
+	t=1711212664; cv=none; b=PuX7TXwhE/fIdCbhGPFdlbPPmjzZuX0aOylDCGzvWVH1/hWU9CBPys2fY4ORFIJMOFSCpPQTeasTjCIMXoQypbWiKi0FgO6kErQXaFT2oniPksF2h4CQeohiuuQnHBMJ5zl8f5VpgppMmrxlckxLKCp+qKEjh5gK0GhavwXst1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711212645; c=relaxed/simple;
-	bh=SnyQepQR9oeCnlhqBe2g7z3psoo2RmxgxTXormlnxsw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jr67sgq/e2oFHf5wxhsYvYRbsFTG7Ry0wQ2juS3G+zNt6gR1iiFtHNnFcH3s+bOpQIKf/PZupjUjaZlUwFxUiN08/KEiPZZtEBmF7cGFXziKbaEbZvglgvISOGTQmIguKkwEeD3ABWPpXmH1es0dbtITmDVUgDCOlvO4+7DSM8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JVXhiSvP; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JVXhiSvP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E40A2C433C7;
-	Sat, 23 Mar 2024 16:50:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1711212644;
-	bh=SnyQepQR9oeCnlhqBe2g7z3psoo2RmxgxTXormlnxsw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JVXhiSvP3kl0/4KeH4t8mmHVD7HB0XV1WBgSPFcSRJx15+swNaxFbNU9Fvw+/jMyW
-	 fqC5D//+HDAlBY3IWsxVCmn/76Ail2OH5zJQ5vL8h4YVWXknFf61Z9h5XNd9XH7d8N
-	 gy3aY0YHGhWZCI3+c2B+YJiqtl5ySUUUsYLNKi4g=
-Date: Sat, 23 Mar 2024 17:50:40 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	linux-modules@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [v2] module: don't ignore sysfs_create_link() failures
-Message-ID: <2024032349-corporate-detached-0dc9@gregkh>
-References: <20240322173930.947963-1-arnd@kernel.org>
+	s=arc-20240116; t=1711212664; c=relaxed/simple;
+	bh=w2CQJ2Jg/7zeoigbdpRY6k264Qu233ageVjq0p/H6T4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qnSpfqe3eMnn4bvFKBaoReBnIlBPm7rZlKHtbTTJqTZUHim4II4hHkiu6EPFeCNRH5dQp5BOty01PVskEO0zEbPkGuhaQQvIeHNtjB+rSI22F3JHtXE67STpmO3fT1o/SvY/ZMLtVJzG+mLD+u330UlMGoax2PCDuWa4J9GknEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ens-lyon.org; spf=pass smtp.mailfrom=bounce.ens-lyon.org; arc=none smtp.client-ip=140.77.166.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ens-lyon.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bounce.ens-lyon.org
+Received: from localhost (localhost [127.0.0.1])
+	by sonata.ens-lyon.org (Postfix) with ESMTP id 1F74DA0265;
+	Sat, 23 Mar 2024 17:42:54 +0100 (CET)
+Received: from sonata.ens-lyon.org ([127.0.0.1])
+	by localhost (sonata.ens-lyon.org [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id qoYpq7EczQUd; Sat, 23 Mar 2024 17:42:54 +0100 (CET)
+Received: from begin (aamiens-653-1-111-57.w83-192.abo.wanadoo.fr [83.192.234.57])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by sonata.ens-lyon.org (Postfix) with ESMTPSA id D2F8EA01A5;
+	Sat, 23 Mar 2024 17:42:53 +0100 (CET)
+Received: from samy by begin with local (Exim 4.97)
+	(envelope-from <samuel.thibault@ens-lyon.org>)
+	id 1ro4SL-00000005pMJ-20vz;
+	Sat, 23 Mar 2024 17:42:53 +0100
+From: Samuel Thibault <samuel.thibault@ens-lyon.org>
+To: gregkh@linuxfoundation.org
+Cc: Samuel Thibault <samuel.thibault@ens-lyon.org>,
+	linux-kernel@vger.kernel.org,
+	speakup@linux-speakup.org
+Subject: [PATCH] speakup: Turn i18n files utf-8
+Date: Sat, 23 Mar 2024 17:42:47 +0100
+Message-ID: <20240323164247.1388441-1-samuel.thibault@ens-lyon.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240322173930.947963-1-arnd@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 22, 2024 at 06:39:11PM +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> The sysfs_create_link() return code is marked as __must_check, but the
-> module_add_driver() function tries hard to not care, by assigning the
-> return code to a variable. When building with 'make W=1', gcc still
-> warns because this variable is only assigned but not used:
-> 
-> drivers/base/module.c: In function 'module_add_driver':
-> drivers/base/module.c:36:6: warning: variable 'no_warn' set but not used [-Wunused-but-set-variable]
-> 
-> Rework the code to properly unwind and return the error code to the
-> caller. My reading of the original code was that it tries to
-> not fail when the links already exist, so keep ignoring -EEXIST
-> errors.
-> 
-> Cc: Luis Chamberlain <mcgrof@kernel.org>
-> Cc: linux-modules@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Fixes: e17e0f51aeea ("Driver core: show drivers in /sys/module/")
-> See-also: 4a7fb6363f2d ("add __must_check to device management code")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> v2: rework to actually handle the error. I have not tested the
->     error handling beyond build testing, so please review carefully.
-> ---
->  drivers/base/base.h   |  2 +-
->  drivers/base/bus.c    |  7 ++++++-
->  drivers/base/module.c | 42 +++++++++++++++++++++++++++++++-----------
->  3 files changed, 38 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/base/base.h b/drivers/base/base.h
-> index 0738ccad08b2..0e04bfe02943 100644
-> --- a/drivers/base/base.h
-> +++ b/drivers/base/base.h
-> @@ -192,7 +192,7 @@ extern struct kset *devices_kset;
->  void devices_kset_move_last(struct device *dev);
->  
->  #if defined(CONFIG_MODULES) && defined(CONFIG_SYSFS)
-> -void module_add_driver(struct module *mod, struct device_driver *drv);
-> +int module_add_driver(struct module *mod, struct device_driver *drv);
->  void module_remove_driver(struct device_driver *drv);
->  #else
->  static inline void module_add_driver(struct module *mod,
-> diff --git a/drivers/base/bus.c b/drivers/base/bus.c
-> index daee55c9b2d9..7ef75b60d331 100644
-> --- a/drivers/base/bus.c
-> +++ b/drivers/base/bus.c
-> @@ -674,7 +674,12 @@ int bus_add_driver(struct device_driver *drv)
->  		if (error)
->  			goto out_del_list;
->  	}
-> -	module_add_driver(drv->owner, drv);
-> +	error = module_add_driver(drv->owner, drv);
-> +	if (error) {
-> +		printk(KERN_ERR "%s: failed to create module links for %s\n",
-> +			__func__, drv->name);
-> +		goto out_del_list;
+i18n currently assume latin1 encoding, which is not enough for most
+languages.
 
-Don't we need to walk back the driver_attach() call here if this fails?
+This separates out the utf-8 processing of /dev/synthu, and uses it for
+a new synth_writeu, which we make synth_printf now use. This has the
+effect of making all the i18 messages processed in utf-8.
 
-> +	}
->  
->  	error = driver_create_file(drv, &driver_attr_uevent);
->  	if (error) {
-> diff --git a/drivers/base/module.c b/drivers/base/module.c
-> index 46ad4d636731..61282eaed670 100644
-> --- a/drivers/base/module.c
-> +++ b/drivers/base/module.c
-> @@ -30,14 +30,14 @@ static void module_create_drivers_dir(struct module_kobject *mk)
->  	mutex_unlock(&drivers_dir_mutex);
->  }
->  
-> -void module_add_driver(struct module *mod, struct device_driver *drv)
-> +int module_add_driver(struct module *mod, struct device_driver *drv)
->  {
->  	char *driver_name;
-> -	int no_warn;
-> +	int ret;
->  	struct module_kobject *mk = NULL;
->  
->  	if (!drv)
-> -		return;
-> +		return 0;
->  
->  	if (mod)
->  		mk = &mod->mkobj;
-> @@ -56,17 +56,37 @@ void module_add_driver(struct module *mod, struct device_driver *drv)
->  	}
->  
->  	if (!mk)
-> -		return;
-> +		return 0;
-> +
-> +	ret = sysfs_create_link(&drv->p->kobj, &mk->kobj, "module");
-> +	if (ret && ret != -EEXIST)
+Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
+---
+ drivers/accessibility/speakup/devsynth.c | 59 ++++-----------
+ drivers/accessibility/speakup/speakup.h  |  2 +
+ drivers/accessibility/speakup/synth.c    | 92 ++++++++++++++++++++++--
+ 3 files changed, 102 insertions(+), 51 deletions(-)
 
-Why would EEXIST happen here?  How can this be called twice?
+diff --git a/drivers/accessibility/speakup/devsynth.c b/drivers/accessibility/speakup/devsynth.c
+index 674204ee5a85..e3d909bd0480 100644
+--- a/drivers/accessibility/speakup/devsynth.c
++++ b/drivers/accessibility/speakup/devsynth.c
+@@ -39,13 +39,13 @@ static ssize_t speakup_file_write(struct file *fp, const char __user *buffer,
+ static ssize_t speakup_file_writeu(struct file *fp, const char __user *buffer,
+ 				   size_t nbytes, loff_t *ppos)
+ {
+-	size_t count = nbytes, want;
++	size_t count = nbytes, consumed, want;
+ 	const char __user *ptr = buffer;
+ 	size_t bytes;
+ 	unsigned long flags;
+ 	unsigned char buf[256];
+ 	u16 ubuf[256];
+-	size_t in, in2, out;
++	size_t in, out;
+ 
+ 	if (!synth)
+ 		return -ENODEV;
+@@ -58,57 +58,24 @@ static ssize_t speakup_file_writeu(struct file *fp, const char __user *buffer,
+ 			return -EFAULT;
+ 
+ 		/* Convert to u16 */
+-		for (in = 0, out = 0; in < bytes; in++) {
+-			unsigned char c = buf[in];
+-			int nbytes = 8 - fls(c ^ 0xff);
+-			u32 value;
+-
+-			switch (nbytes) {
+-			case 8: /* 0xff */
+-			case 7: /* 0xfe */
+-			case 1: /* 0x80 */
+-				/* Invalid, drop */
+-				goto drop;
+-
+-			case 0:
+-				/* ASCII, copy */
+-				ubuf[out++] = c;
+-				continue;
++		for (in = 0, out = 0; in < bytes; in += consumed) {
++			s32 value;
+ 
+-			default:
+-				/* 2..6-byte UTF-8 */
++			value = synth_utf8_get(buf + in, bytes - in, &consumed, &want);
++			if (value == -1) {
++				/* Invalid or incomplete */
+ 
+-				if (bytes - in < nbytes) {
++				if (want > bytes - in)
+ 					/* We don't have it all yet, stop here
+ 					 * and wait for the rest
+ 					 */
+ 					bytes = in;
+-					want = nbytes;
+-					continue;
+-				}
+-
+-				/* First byte */
+-				value = c & ((1u << (7 - nbytes)) - 1);
+-
+-				/* Other bytes */
+-				for (in2 = 2; in2 <= nbytes; in2++) {
+-					c = buf[in + 1];
+-					if ((c & 0xc0) != 0x80)	{
+-						/* Invalid, drop the head */
+-						want = 1;
+-						goto drop;
+-					}
+-					value = (value << 6) | (c & 0x3f);
+-					in++;
+-				}
+-
+-				if (value < 0x10000)
+-					ubuf[out++] = value;
+-				want = 1;
+-				break;
++
++				continue;
+ 			}
+-drop:
+-			;
++
++			if (value < 0x10000)
++				ubuf[out++] = value;
+ 		}
+ 
+ 		count -= bytes;
+diff --git a/drivers/accessibility/speakup/speakup.h b/drivers/accessibility/speakup/speakup.h
+index 364fde99749e..54f1226ea061 100644
+--- a/drivers/accessibility/speakup/speakup.h
++++ b/drivers/accessibility/speakup/speakup.h
+@@ -76,7 +76,9 @@ int speakup_paste_selection(struct tty_struct *tty);
+ void speakup_cancel_paste(void);
+ void speakup_register_devsynth(void);
+ void speakup_unregister_devsynth(void);
++s32 synth_utf8_get(const char *buf, size_t count, size_t *consumed, size_t *want);
+ void synth_write(const char *buf, size_t count);
++void synth_writeu(const char *buf, size_t count);
+ int synth_supports_indexing(void);
+ 
+ extern struct vc_data *spk_sel_cons;
+diff --git a/drivers/accessibility/speakup/synth.c b/drivers/accessibility/speakup/synth.c
+index eea2a2fa4f01..c6339758fa67 100644
+--- a/drivers/accessibility/speakup/synth.c
++++ b/drivers/accessibility/speakup/synth.c
+@@ -215,10 +215,95 @@ void synth_write(const char *buf, size_t count)
+ 	synth_start();
+ }
+ 
++/* Consume one utf-8 character from buf (that contains up to count bytes),
++ * returns the unicode codepoint if valid, -1 otherwise.
++ * In all cases, returns the number of consumed bytes in *consumed,
++ * and the minimum number of bytes that would be needed for the next character
++ * in *want.
++ */
++s32 synth_utf8_get(const char *buf, size_t count, size_t *consumed, size_t *want)
++{
++	unsigned char c = buf[0];
++	int nbytes = 8 - fls(c ^ 0xff);
++	u32 value;
++	size_t i;
++
++	switch (nbytes) {
++	case 8: /* 0xff */
++	case 7: /* 0xfe */
++	case 1: /* 0x80 */
++		/* Invalid, drop */
++		*consumed = 1;
++		*want = 1;
++		return -1;
++
++	case 0:
++		/* ASCII, take as such */
++		*consumed = 1;
++		*want = 1;
++		return c;
++
++	default:
++		/* 2..6-byte UTF-8 */
++
++		if (count < nbytes) {
++			/* We don't have it all */
++			*consumed = 0;
++			*want = nbytes;
++			return -1;
++		}
++
++		/* First byte */
++		value = c & ((1u << (7 - nbytes)) - 1);
++
++		/* Other bytes */
++		for (i = 1; i < nbytes; i++) {
++			c = buf[i];
++			if ((c & 0xc0) != 0x80)	{
++				/* Invalid, drop the head */
++				*consumed = i;
++				*want = 1;
++				return -1;
++			}
++			value = (value << 6) | (c & 0x3f);
++		}
++
++		*consumed = nbytes;
++		*want = 1;
++		return value;
++	}
++}
++
++void synth_writeu(const char *buf, size_t count)
++{
++	size_t i, consumed, want;
++
++	/* Convert to u16 */
++	for (i = 0; i < count; i++) {
++		s32 value;
++
++		value = synth_utf8_get(buf + i, count - i, &consumed, &want);
++		if (value == -1) {
++			/* Invalid or incomplete */
++
++			if (want > count - i)
++				/* We don't have it all, stop */
++				count = i;
++
++			continue;
++		}
++
++		if (value < 0x10000)
++			synth_buffer_add(value);
++	}
++
++	synth_start();
++}
++
+ void synth_printf(const char *fmt, ...)
+ {
+ 	va_list args;
+-	unsigned char buf[160], *p;
++	unsigned char buf[160];
+ 	int r;
+ 
+ 	va_start(args, fmt);
+@@ -227,10 +312,7 @@ void synth_printf(const char *fmt, ...)
+ 	if (r > sizeof(buf) - 1)
+ 		r = sizeof(buf) - 1;
+ 
+-	p = buf;
+-	while (r--)
+-		synth_buffer_add(*p++);
+-	synth_start();
++	synth_writeu(buf, r);
+ }
+ EXPORT_SYMBOL_GPL(synth_printf);
+ 
+-- 
+2.39.2
 
-> +		return ret;
->  
-> -	/* Don't check return codes; these calls are idempotent */
-> -	no_warn = sysfs_create_link(&drv->p->kobj, &mk->kobj, "module");
->  	driver_name = make_driver_name(drv);
-> -	if (driver_name) {
-> -		module_create_drivers_dir(mk);
-> -		no_warn = sysfs_create_link(mk->drivers_dir, &drv->p->kobj,
-> -					    driver_name);
-> -		kfree(driver_name);
-> +	if (!driver_name) {
-> +		ret = -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	module_create_drivers_dir(mk);
-> +	if (!mk->drivers_dir) {
-> +		ret = -EINVAL;
-> +		goto out;
->  	}
-> +
-> +	ret = sysfs_create_link(mk->drivers_dir, &drv->p->kobj, driver_name);
-> +	if (ret && ret != -EEXIST)
-> +		goto out;
-
-Same EEXIST question here.
-
-thanks,
-
-greg k-h
