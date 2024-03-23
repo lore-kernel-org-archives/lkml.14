@@ -1,305 +1,138 @@
-Received: from a.peacevolution.org (a.peacevolution.org [206.189.193.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DC563D;
-	Sat, 23 Mar 2024 21:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.193.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC1758104;
+	Sat, 23 Mar 2024 21:40:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711229782; cv=none; b=s70cIqWi87a2ZqGWErJnAFpMkCsX7keH4GogpuMxLPkmosPV0n0WObGw9AqqWASnLKNT9YQ6/CclBef7/1Ao2YJ/SSkS9W/pkLkY29LLhTcZTaslFblSHqhwnThaL53i8naApIxej7sOrWx/H9tTc4YsZQfAUDyfu5+4feYABtM=
+	t=1711230038; cv=none; b=I6w12BvQ9ThWqE7Gzd2CMwUiPrzVS6e5OWAf+OLf20tlylLXssSOS25yhf/E/ay3jwg6UsfzsHIpCeuCry4SBeuTsV3ZXP0B8wy6RTjeDpjG9AdeFHcZc8Gwox53aVmMH627SZO5FTiWtyzUazVbrJD3PjHiypiKIquXRuEPbZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711229782; c=relaxed/simple;
-	bh=SOjwEita4xleHBrq6ZggCrx3xzRmKXFreSfxXqMtNdM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QxgkwTTCFrg5/GOiewm6T0wcJfZwhEWAFIXhp2rqMGU0osU/CYpdbqb1Nmr5+s9TqNxQ17muXAdPGFrId/2XQAD4+VrSFXFkk1/GMZ/5j99tGGeqJj2OlOZf6R5N/8gFWSmaqhhsOdxORcoWN8xOoVtFm84knPvIP/VX3BcC818=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=peacevolution.org; spf=pass smtp.mailfrom=peacevolution.org; dkim=pass (1024-bit key) header.d=peacevolution.org header.i=@peacevolution.org header.b=GVghcTCk; arc=none smtp.client-ip=206.189.193.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=peacevolution.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=peacevolution.org
+	s=arc-20240116; t=1711230038; c=relaxed/simple;
+	bh=cxJyvYom9rYpI3v6jLA3KnXUFhHsx7mMzeaboHDdGAw=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=gl4MeZISYW3rpyluuP5pfbpIIYVTvopi+pQdiIHhZW7Dw5RUX19BC/VNhdLMnE9FVUKmy3cioEix+OXanPeWyZPFGebew9ZEQSzag5C+H7C79hA8Y0jFLH+djz0IsXIHXBi3othZ+np2p1yHczEmYrjjMeDl1W44o9XScZEOXfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NXMb9yxg; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=peacevolution.org header.i=@peacevolution.org header.b="GVghcTCk"
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-	by a.peacevolution.org (Postfix) with ESMTPA id 84F384624A;
-	Sat, 23 Mar 2024 21:36:12 +0000 (UTC)
-Date: Sat, 23 Mar 2024 17:36:10 -0400
-From: Aren <aren@peacevolution.org>
-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Hans de Goede <j.w.r.degoede@gmail.com>, Aidan MacDonald <aidanmacdonald.0x0@gmail.com>, 
-	Chen-Yu Tsai <wens@csie.org>, Quentin Schulz <quentin.schulz@bootlin.com>, 
-	Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v2 5/5] power: supply: axp20x_usb_power: set input
- current limit in probe
-Message-ID: <5ulz6dcy5rqumj44hmka5ljdvx3tfvsqdpdsz3npcttb7ckf7j@53lxdl5koolz>
-References: <20240130203714.3020464-1-aren@peacevolution.org>
- <20240130203714.3020464-6-aren@peacevolution.org>
- <6nf7h3nc4q7fwrnm4spmgv2sdkczowkfpietcv2tyv4mixkq3b@svxgzkdqnzlq>
- <hlnzivsmt66icz4bsayv5wtlgbktq355m4qxj532lg4lgeimju@jammw2y6zpha>
- <uktr265th6h4btay765p33zgihuzgafu25rz7npwfm3ojhq2tm@wvrymmf3xtxy>
- <jzmibxh5avq4oxbldzayi754s6ir3e5zcphh4sfwzrl72j4msa@qersxklkpmtx>
- <73j4grggnygltxrw6l44w53bjdc2e52c5m2ld5s6dg2q4plmrf@oicpllrnw53c>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXMb9yxg"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-78822e21a9dso157923385a.2;
+        Sat, 23 Mar 2024 14:40:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711230036; x=1711834836; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gOFRvpRAI+VWx5nUCuNi2VPShTLUPuTZZjdFa31yQSs=;
+        b=NXMb9yxg9f1ThZQCvxH0Yz456i6L8sYWPjs6mdkgZ/4JogDXuGHkfmzFW7yIvRyv2r
+         QiiNLan+NOuazcUOz1FNm74EWGC1tE5Yci7lYNx/qhkv4X05bc4UhSmml7IBRJWjN4W9
+         GufUzB2bJYguFdZvDdk94K2etjwTFkAZThzUQBnaMRjSTx4LW9JkDrxxRGbRIq1wnZ4h
+         JqZvjcldI9XTxAIH7W7UZ+L8Ci6uOlURgLiRzLSyMR5Mvb2qZzseAZJq+m2qwMTr0yz6
+         afY2+fxqKhg7lVBc2rnNp2xpe2dzjP2tYq90NFFc627W8BTTCgyjXvxeUOSwkZSkAPKI
+         8QdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711230036; x=1711834836;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gOFRvpRAI+VWx5nUCuNi2VPShTLUPuTZZjdFa31yQSs=;
+        b=OgRRjadT4aqEJl2Zs3ZuHo+lN3/G6Cyfx/JEefG7zaDt6NUAJrzHNkbJXmbijz/PV0
+         mKLwubGRQ5oupv2LDjSgz/oQhXjQJEjsuCa6wP2uWT3HkeJx4OsMwgTvBOKEeXE6W6Dz
+         Vd8x9K+1SHDU85w6L+52ScixRrl1yOiZTGDqyRxYf47r/rDFKnLOwJUcKMAN/2qjHdzX
+         EFf/dHz6rCxtnXGTZ+X6rgNpam182YNzxftDpviGoo2G1L5hF7Gm9ZEnk9gZVgfP1cEX
+         lh3OYdU8nxg6fcsZqbpd01uYBK+N6PvKx2qG1eCER5Sr5k7KWUt0nIAauPP/V5ED1o6s
+         /y7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX5MTVgpLXUzR6nsuY+TfS2xXCIiyCr2fCWe7HwVz8crFY4rRC3cOu7xyZKEobHxFJdO0IjSoQpeIIHeQkR3eFDTQ6FvSRLRNZ4+z9k5ZqzFKfe2np+HwESjnVU64NW+A28PEkzF2TURnOQzHBXRD1AP1gE6VZJskqPQJndvmFcYvxQhT6rOnU3YbDcB0bYUpPzEKr+3ClOwe6AhUuNyNin0zy35kyBuw==
+X-Gm-Message-State: AOJu0YwPR8ed/kpvqOY8Zl4Qj/J6Tr35t5BjvYHzQo5v3ozxz5FqQQk8
+	ohyNLDcXvbjwvRCinPvVw7bk6HJRBTsWUu/7+cIJGMuAQhXOp8le
+X-Google-Smtp-Source: AGHT+IGOLTqbKp1+ap2QBx/UabVyQfa+NSRyVtYLu6fT31jIeVrXitOYJm1ymdmJk8ukaXuOsxroBg==
+X-Received: by 2002:a05:6214:1308:b0:691:e21:736c with SMTP id pn8-20020a056214130800b006910e21736cmr3799275qvb.30.1711230035924;
+        Sat, 23 Mar 2024 14:40:35 -0700 (PDT)
+Received: from smtpclient.apple (pool-162-84-172-44.nycmny.fios.verizon.net. [162.84.172.44])
+        by smtp.gmail.com with ESMTPSA id kc1-20020a056214410100b00695e602d356sm2450268qvb.46.2024.03.23.14.40.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 23 Mar 2024 14:40:35 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <73j4grggnygltxrw6l44w53bjdc2e52c5m2ld5s6dg2q4plmrf@oicpllrnw53c>
-X-Spamd-Bar: /
-Authentication-Results: auth=pass smtp.auth=aren@peacevolution.org smtp.mailfrom=aren@peacevolution.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=peacevolution.org;
-	s=dkim; t=1711229773;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:content-transfer-encoding:in-reply-to:references;
-	bh=DH6u5hueJXghx+HTd5Xf1afUfgYNMoexe68mmON4jws=;
-	b=GVghcTCk0wtMbNT5AyGT91Flb0R6u0J3HHtcsA0B8hPDDQB65eicZE7x3o/kK/6tfKSiI8
-	FT/bD6Q7dlWQNaRg+TQ+sDiW2PH7IblaN0n/Cf1LumAYbefTZkFDN3Cn4/aVvUXEsiwGF2
-	ChAZXPAGDbnmJCuBLjkKko3bMGy98Nk=
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
+Subject: Re: [WIP 0/3] Memory model and atomic API in Rust
+From: comex <comexk@gmail.com>
+In-Reply-To: <CAHk-=whY5A=S=bLwCFL=043DoR0TTgSDUmfPDx2rXhkk3KANPQ@mail.gmail.com>
+Date: Sat, 23 Mar 2024 17:40:23 -0400
+Cc: Kent Overstreet <kent.overstreet@linux.dev>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ rust-for-linux <rust-for-linux@vger.kernel.org>,
+ linux-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org,
+ llvm@lists.linux.dev,
+ Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Wedson Almeida Filho <wedsonaf@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@samsung.com>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Alan Stern <stern@rowland.harvard.edu>,
+ Andrea Parri <parri.andrea@gmail.com>,
+ Will Deacon <will@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Nicholas Piggin <npiggin@gmail.com>,
+ David Howells <dhowells@redhat.com>,
+ Jade Alglave <j.alglave@ucl.ac.uk>,
+ Luc Maranget <luc.maranget@inria.fr>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Akira Yokosawa <akiyks@gmail.com>,
+ Daniel Lustig <dlustig@nvidia.com>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>,
+ kent.overstreet@gmail.com,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ elver@google.com,
+ Mark Rutland <mark.rutland@arm.com>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ linux-arm-kernel@lists.infradead.org,
+ linux-fsdevel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C85BE4F4-5847-45B4-A973-76B184B35EDE@gmail.com>
+References: <20240322233838.868874-1-boqun.feng@gmail.com>
+ <s2jeqq22n5ef5jknaps37mfdjvuqrns4w7i22qp2r7r4bzjqs2@my3eyxoa3pl3>
+ <CAHk-=whY5A=S=bLwCFL=043DoR0TTgSDUmfPDx2rXhkk3KANPQ@mail.gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
 
-Hi Ondřej,
 
-On Wed, Mar 20, 2024 at 01:12:31AM +0100, Ondřej Jirman wrote:
-> Hi Aren,
-> 
-> On Thu, Mar 14, 2024 at 06:39:52PM -0400, Aren wrote:
-> > > Also in Pinephone case, you'll not really have a case where the battery has
-> > > < 2V not loaded. That's not going to happen. PMIC will shut off at 3V battery
-> > > voltage when loaded. It will not discharge further, and after shutoff battery
-> > > voltage will jump to 3.4V or so, and it will not drop below 2V after that, ever.
-> > > So the battery will pretty much always be detected as long as it's present.
-> > 
-> > The most likely case I can think of is if someone intentionally tries to
-> > boot the device without the battery. I suspect it's also possible for a
-> > battery to degrade to the point where it won't hold a charge.
-> 
-> Yes, that's my usecase that I'd like to preserve. Pinephone has removable
-> battery and using it without battery is quite reasonable. It works fine
-> currently for me and this patch will break this if there's no opt out. And
-> there's no opt out other than patching and re-building the kernel.
-> 
-> > > What actual problem have you seen that this patch is trying to solve?
-> > 
-> > The problem, in theory, is that the pmic ignores the USB BC
-> > specification and sets the current limit to 3A instead of 500mA. In
-> > practice (as long as the power supply is implemented properly) if this
-> > is too much power, it should just cause the power supply to shut off.
-> > I'm not sure how likely / what the risks of a power supply cutting
-> > corners are.
-> 
-> Pinephone with no battery takes between 0.5-1A from VBUS. Even under full
-> load, it's not enough to damage even a USB 3.0 SDP port. It's only a
-> slight problem for unprotected USB 2.0 SDP ports. On protected 2.0 ports
-> or ports with overdesigned output power, it will either shut down due
-> to brownout, or just work.
-> 
-> It's not enough to overload any actual USB charger.
-> 
-> In any case, people wanting to run Pinephone without a battery probably
-> will not do so from a USB 2.0 computer port. Maybe for FEL USB mode, for
-> development or flashing, but at that stage the power consumption is still
-> very low, well below 2.5W.
-> 
-> > I find it surprising that the hardware/driver takes a lot of care to
-> > figure out what the proper current is and stick to that, except when
-> > there isn't a battery.
-> 
-> It seems to have apparent purpose documented in the datasheet:
-> 
->   https://megous.com/dl/tmp/78d4c0771fc6d2c8.png
-> 
-> "If Battery not present, and this bit is 0,the VBUS current limit set to 3A,
-> for the F/W update in factory"
-> 
-> You can also get rid of the issue by writing 1 to:
-> 
->   "REG 2DH: BC Module VBUS Control and Status Register" bit 6
-> 
-> in the bootloader very early on before enabling BC. That should fix the issue,
-> too in a more proper way than forcing 500mA limit halfway during boot, when
-> BC1.2 detection might have detected something higher earlier on and the boot
-> success depends on the higher value.
+> On Mar 22, 2024, at 8:12=E2=80=AFPM, Linus Torvalds =
+<torvalds@linux-foundation.org> wrote:
+>=20
+> And when the compiler itself is fundamentally buggy, you're kind of
+> screwed. When you roll your own, you can work around the bugs in
+> compilers.
 
-I agree this is a better way of handling this, I made an attempt
-previously to get USB BC working without a battery connected, but I was
-has having problems with USB BC hanging. Based on what you describe
-below, I now suspect that had to do with leaving dead battery detection
-enabled (0x2E bit 6). I'll take a look through the code again to see if
-I can get it working.
+That may be true, but the LLVM issue you cited isn=E2=80=99t a good =
+example.  In that issue, the function being miscompiled doesn=E2=80=99t =
+actually use any barriers or atomics itself; only the scaffolding around =
+it does.  The same issue would happen even if the scaffolding used LKMM =
+atomics.
 
-Thanks
- - Aren
-
-> > battery. The datasheet says that register 0x2D bit 6 is used to indicate
-> > first power on status. According to it, if that bit is 0 and the battery
-> > is not detected, it will set the input current limit to 3A, however
-> > setting that bit to 1 doesn't to prevent the pmic from setting the
-> > current limit to 3A.
-> 
-> Actually it does (I made a quick test with Pinephone with no battery being
-> plugged to the PC's USB port and executing a test program over FEL that talks to
-> the PMIC):
-> 
-> PMIC registers: (initial values post-powerup with no battery)
-> 
-> 2c: 0    - BC disabled by default, something has to enable it
-> 2d: b0   - bit 6 not set (*not* first boot bit)
-> 2e: 40
-> 2f: 0
-> 30: 1
-> 31: 3
-> 32: 43
-> 33: c5
-> 34: 45
-> 35: 68   - initially 3A limit
-> 36: 59
-> 37: 0
-> 38: a5
-> 39: 1f
-> 3a: 80
-> 
-> changed values
-> 
-> 2c: 5    - test program enables BC
-> 2e: 0    - disable DB detection (otherwise with no battery DB detection will
->            prolong BC detection result by 45minutes or whatever is the timeout)
-> 	   see DBP_Timeout_CTL(DBP Hardware Timeout Control)
-> 2f: 10
-> 30: 2a
-> 35: 38   - test program sets 1.5A limit
-> 36: 8
-> 
-> ... about 400 ms later
-> 
-> 2c: 1    - BC complete
-> 2f: 30   - BC result = SDP (matches reality)
-> 35: 68   - 3A VBUS limit set by PMIC itself
-> 
-> 
-> Another run with 2d.6 bit set:
-> 
-> (initial values omitted, same as above)
-> 
-> 
-> changed values
-> 
-> 2c: 5   - enable BC
-> 2d: f0  - bit 6 set (*not* first boot)
-> 2e: 0
-> 2f: 10
-> 30: 2a
-> 35: 38   - test program sets 1.5A limit
-> 36: 8
-> 
-> ... after about 400 ms
-> 
-> 2c: 1   - BC complete
-> 2f: 30  - BC result = SDP
-> 35: 18  - 500mA VBUS limit set by PMIC itself
-> 
-> 
-> So the detection works with no battery inserted. PMIC's BC correcly detects
-> regular USB 2.0 data port and configures a correct limit in about 400ms
-> after cable plug in. So I don't see a problem with the HW, that you're
-> describing in the commit message.
-> 
-> The proper way to handle this issue is to fix whichever component is configuring
-> the BC detection initially (it's disabled by default, apparently), to properly
-> set the first boot bit before enabling BC. IMO, that place should be the
-> platform firmware. Then the detection will work from the get go and proper limit
-> will be always set correctly and will match the USB charger, and there will be
-> no need for any kernel hacks.
-> 
-> Pretty much what platform FW should do is to:
-> 
-> - set "not first boot bit" in 0x2d register
-> - check if battery is present
->   - if not clear 0x2e register
->   - otherwise configure DBD in 0x2e
-> - configure DCP/CDP current limit to 1.5A or 2A (1.5A maybe safer)
-> - configure VBUS Vhold to 4.5V (Pinephone needs this for powered USB dock to
->   work with in general with arbitrary chargers, and it will overload weaker
->   USB PSU's less)
-> - configure BC detection and start it
-> 
-> My usecase of using Pinephone without battery will still work, too, and will
-> not be broken by this patch.
-> 
-> > The point of this patch (after a revision) should be to make it explicit
-> > when and why this driver ignores the USB BC specification. And to reduce
-> > the cases where it does, if possible.
-> 
-> The kernel has no business forcing the limit to some fixed low value that
-> has no relationship to the last BC detection result and breaks boot in
-> the exact scenario this patch is targetting (no battery -> too high current
-> limit).
-> 
-> This doesn't make any sense to me.
-> 
-> kind regards,
-> 	o.
-> 
-> > With the goal of making it explicit what cases ignore the spec, I would
-> > prefer to have an opt-out mechanism. I compiled what I believe to be a
-> > full list of devices that use this driver with usb bc enabled (detailed
-> > notes below), and there's only a handful of them. It shouldn't be too
-> > difficult to out-out the boards that need it.
-> > 
-> > > 
-> > > Thank you and kind regards,
-> > > 	o.
-> > 
-> > Sorry it took me a while to respond, I haven't had much time to work on
-> > this in the past few weeks.
-> > 
-> > Regards
-> >  - Aren
-> > 
-> > p.s. the notes on what devices use this functionality:
-> > 
-> > These devices include the axp803 or axp81x dtsi:
-> > $ rg -l 'include "axp(803|81x).dtsi"'
-> >  - sun50i-a100-allwinner-perf1.dts
-> >  - sun50i-a64-amarula-relic.dts
-> >  - sun50i-a64-bananapi-m64.dts
-> >  - sun50i-a64-nanopi-a64.dts
-> >  - sun50i-a64-olinuxino.dts
-> >  - sun50i-a64-orangepi-win.dts
-> >  - sun50i-a64-pine64.dts
-> >  - sun50i-a64-pinebook.dts
-> >  - sun50i-a64-pinephone.dtsi
-> >  - sun50i-a64-pinetab.dts
-> >  - sun50i-a64-sopine.dtsi
-> >  - sun50i-a64-teres-i.dts
-> >  - sun8i-a83t-allwinner-h8homlet-v2.dts
-> >  - sun8i-a83t-bananapi-m3.dts
-> >  - sun8i-a83t-cubietruck-plus.dts
-> >  - sun8i-a83t-tbs-a711.dts
-> > 
-> > Out of those only these enable usb_power_supply:
-> > $ rg -l 'include "axp(803|81x).dtsi"' | xargs rg -l 'usb_power_supply'
-> >  - sun50i-a64-bananapi-m64.dts
-> >  - sun50i-a64-pinetab.dts
-> >  - sun50i-a64-pinephone.dtsi
-> >  - sun8i-a83t-tbs-a711.dts
-> >  - sun8i-a83t-cubietruck-plus.dts
-> >  - sun8i-a83t-bananapi-m3.dts
-> > 
-> > sun50i-a64-bananapi-m64.dts: The barrel jack is connected to acin, so
-> > will be unaffected. Banannapi docs say it's not possible to power over
-> > usb, but schematic suggests it should work. Probably needs to opt-out of
-> > the lower current limit.
-> > 
-> > sun50i-a64-pinetab.dts: unclear if charging is supported via usb, vbus
-> > is connected through a component listed as "NC/0R". Regardless device
-> > has barrel jack and battery for power, shouldn't need to run exclusively
-> > from usb.
-> > 
-> > sun50i-a64-pinephone.dtsi: is typically booted with a battery connected,
-> > shouldn't need to run exclusively from usb.
-> > 
-> > sun8i-a83t-tbs-a711.dts: has an internal battery, shouldn't need to run
-> > exclusively from usb.
-> > 
-> > sun8i-a83t-cubietruck-plus.dts and sun8i-a83t-bananapi-m3.dts: Both
-> > appear to support being powered over usb and a barrel jack. These will
-> > need to opt-out to be able to run from usb.
+For anyone curious: The problematic optimization involves an allocation =
+(=E2=80=98p=E2=80=99) that is initially private to the function, but is =
+returned at the end of the function.   LLVM moves a non-atomic store to =
+that allocation across an external function call (to =E2=80=98foo=E2=80=99=
+).  This reordering would be blatantly invalid if any other code could =
+observe the contents of the allocation, but is valid if the allocation =
+is private to the function.  LLVM assumes the latter: after all, the =
+pointer to it hasn=E2=80=99t escaped.  Yet.  Except that in a weak =
+memory model, the escape can =E2=80=98time travel=E2=80=99...=
