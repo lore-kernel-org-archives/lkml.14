@@ -1,69 +1,130 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA243B193;
-	Sat, 23 Mar 2024 20:45:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E48B1A38FC
+	for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 21:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711226704; cv=none; b=ZdtjH6pTLex0wwViFEvNBBF6gzMYuZV3sv8j+OCv25kV6wUVQWsS6u63hNIRaTNrQFmyn90Ey0Mwtv9XNDuWO/aDepGX5PhKwomUdkLbahl3u+ooQJ3YUDbVz6yE4+SY6pRWukTsuBZkbQ1/rpvCylE780cvEcGMJVyesOdJjuE=
+	t=1711228345; cv=none; b=MJxPErtCAGoTr4kTgUcWj0VLO4hCYeE8kEoT5NKUDpTJMZGeTCHjKuMKiqANt3Il+Gp2RjdR16CPDjY59COR5WWkcKQIXpXKcOabsyFnhne2Z9bIe+umTqtJqobfnuzvsxVX8MB/pXTEDPlNpG6y5NFsoaCqAdyHa1FuTUuw7bQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711226704; c=relaxed/simple;
-	bh=e0it6zWyRhUl6CsgJZa+SyAT+lNOfGgzSfE1aPkratA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IJ13mYhpNf//Uki1y0EyrkjnW+zU5CJDy4PvGlBrJAs1BmT5K3LMYn9itMlN24zFDaGSAezq0BEiiAMN2GzfbYFqIQVYh/b7bkrfCMdIVxMyu3vbJEfQS/+gNuqpy8IstvdNUBLNdO9ckjjRCKVfUcJaCKHyf7WykrgvoQaKQnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=j3jyiCkY; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1711228345; c=relaxed/simple;
+	bh=8KR4aIuTObNMIZnYJHEp/oGzvWujJwiW9zUrN00Y0aI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NotVMcBd+VkbOgVoES8CGtUMzJRZ2GIZDZg497LR5stkayr6i+NH4BEfEkRsdhSAo/aVRXrcdVKfgPdN92c2GiCdc03YY3YlAZiQMP3IzKqN3Gj38JZRWA5kc+rvQWYAZ+g2XNQY/qRHyjvHBJ0e0mjSSIUhvSpx+wtvgKDQVzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Dfit5m+P; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j3jyiCkY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=YFrRirU/iGoOz+WkYBm22sZJCyVBMxy3NWhi3BHjlxI=; b=j3jyiCkYeVm21Mh9hQY0bv7GqD
-	jEgGvIQHy2fWJLA6ZluG4W/weDDBi9B8V5N7CZxs2BYM8uzl4uyj8l2YijTzlnOPttgzGJRziKJOs
-	ipMr1xCEtMu0UZ1AquCdnWFHS7S+UceILDAcL/JxV9+z8u+z7dqsaZ8pOjwVElU0Liu96LtcCaIqk
-	SrNkzAIrNAO9tv9qIHfq2tR7VYSdpmBvkt8DPSRqzPE7XUsa6Wi9d8Kx8DbboD/9TUa/3vZr1EWAO
-	HAoNVWxM3O8Le3JUdYknjEjVjFDWVMPv4mcboIpUjX8tAitrEU5rmDj+13YJMz/VLNAMGpqT04UZu
-	+MSWst4Q==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1ro8EY-0000000CWEi-0837;
-	Sat, 23 Mar 2024 20:44:54 +0000
-Date: Sat, 23 Mar 2024 20:44:53 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, torvalds@linux-foundation.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Lukas Wunner <lukas.wunner@intel.com>,
-	Jonathan Corbet <corbet@lwn.net>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH] cleanup: Add usage and style documentation
-Message-ID: <Zf8_RYHW7QmCzl2-@casper.infradead.org>
-References: <171097196970.1011049.9726486429680041876.stgit@dwillia2-xfh.jf.intel.com>
- <20240322090630.GA40102@noisy.programming.kicks-ass.net>
- <65fdd7ae82934_4a98a29429@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Dfit5m+P"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-60a0599f647so30256227b3.1
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 14:12:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711228343; x=1711833143; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=1Y3ciYm0VxZfrPijrgMTJyMdjg8ZrAzLnw8EK162/0c=;
+        b=Dfit5m+Pmr3dpiSh9d2JXKJRXjte4Y6efZAXVNdneO3ljOmWNifAjRBLxexUC4ZpJ7
+         vCXVhw8xH5hCTIPt+KH79RqvTJLhBefHdGSLl1A/gOfix9SgH/jvH65aPsnISuQ7cK8U
+         U9ozo86o8OgJVb22J3Rav3u3SPUIk1YaQTa0A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711228343; x=1711833143;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1Y3ciYm0VxZfrPijrgMTJyMdjg8ZrAzLnw8EK162/0c=;
+        b=TyjnDUs5RGwDuE1TEGvWj/r+xeibmgOd0v1I8gIuyTqd1GdeRx8MDQCstWCX3yJ9Uu
+         faVw9ITNYPX/AASUpT1G9QctX8mcBHoA1VypgEwp3ck3X9Qw41It3SwGpzWdcdSTDjS0
+         mPQtd+tb+skDTFZ+8Ev/kwMt2pSw8qpaWogSuyrGY8UXhgSNJqczF/NX26ygPKA3ZXs+
+         Wf3FWR2UNNNCqeOxc0aldfLpDAAK5+gOobDGCx5BElvpk6hlrITFQOQSnxoMOc/0+YjU
+         PXf3jNN/pdwDteFMuA8irnNW1aPYrZd50Bg5gW69W2p22XlQkQ9aHNLja2sMumGPkVZq
+         x8MA==
+X-Forwarded-Encrypted: i=1; AJvYcCXoYWvl7iqYIFx6Je3FRtrUpR8BLsyRiHt88mXiAnAqdK7j0+tH2v2ZdnMcxi0g1JZ/Cvff+9DYdUWc/VYuOy/v6IU2fsZz75AiyIPh
+X-Gm-Message-State: AOJu0YzN/dEVcwYDZrY+UCSMkMaptovVUpF471k3qUgSwGAoMaKRAEuD
+	QjLQA9au26wYwKxQWOiMe92rlE02Clb+K9Hyi1ZHdbyQ9GQeauytexZTEVqBJcaYpuFS5ZY8T5J
+	XHkJ4seSftbjUpdxbO9/zBNF4Mnw2b+4akA+H
+X-Google-Smtp-Source: AGHT+IEDJszqpW1tP+cv5jXC4Oabaq1P2MqF2oGnuJi80CpG95eHJKzJDW7qqZ8SP+4LnF8HV/fDKJZxwXd9lg8KfQI=
+X-Received: by 2002:a81:8404:0:b0:609:f898:9832 with SMTP id
+ u4-20020a818404000000b00609f8989832mr2972227ywf.23.1711228343188; Sat, 23 Mar
+ 2024 14:12:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <65fdd7ae82934_4a98a29429@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20240320052449.175786-1-sjg@chromium.org> <20240321133905.GA1622174-robh@kernel.org>
+In-Reply-To: <20240321133905.GA1622174-robh@kernel.org>
+From: Simon Glass <sjg@chromium.org>
+Date: Sun, 24 Mar 2024 10:12:12 +1300
+Message-ID: <CAFLszTg4UUhcs_oG=vq6ZuiyGfAGn015Usn58gYtGqKqLvNWUg@mail.gmail.com>
+Subject: Re: [PATCH v9 1/2] dt-bindings: mtd: fixed-partitions: Add alignment properties
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, 
+	Michael Walle <mwalle@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
+	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Mar 22, 2024 at 12:10:38PM -0700, Dan Williams wrote:
-> Peter Zijlstra wrote:
-> > So I despise all that RST stuff. It makes what should be trivially
-> > readable text into a trainwreck. We're coders, we use text editors to
-> > read comments.
-> 
-> Ok, I will rip out the RST stuff and just make this a standalone comment.
+Hi Rob,
 
-I would rather you ignored Peter's persistent whining about RST and
-kept the formatting.
+On Fri, 22 Mar 2024 at 02:39, Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, Mar 20, 2024 at 06:24:48PM +1300, Simon Glass wrote:
+> > Add three properties for controlling alignment of partitions, aka
+> > 'entries' in fixed-partition.
+> >
+> > For now there is no explicit mention of hierarchy, so a 'section' is
+> > just the 'fixed-partitions' node.
+> >
+> > These new properties are inputs to the Binman packaging process, but are
+> > also needed if the firmware is repacked, to ensure that alignment
+> > constraints are not violated. Therefore they are provided as part of
+> > the schema.
+> >
+> > Signed-off-by: Simon Glass <sjg@chromium.org>
+> > ---
+> >
+> > Changes in v9:
+> > - Move binding example to next batch to avoid build error
+> >
+> > Changes in v7:
+> > - Drop patch 'Add binman compatible'
+> > - Put the alignment properties into the fixed-partition binding
+> >
+> > Changes in v6:
+> > - Correct schema-validation errors missed due to older dt-schema
+> >   (enum fix and reg addition)
+> >
+> > Changes in v5:
+> > - Add value ranges
+> > - Consistently mention alignment must be power-of-2
+> > - Mention that alignment refers to bytes
+> >
+> > Changes in v2:
+> > - Fix 'a' typo in commit message
+> >
+> >  .../bindings/mtd/partitions/partition.yaml    | 51 +++++++++++++++++++
+> >  1 file changed, 51 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/mtd/partitions/partition.yaml b/Documentation/devicetree/bindings/mtd/partitions/partition.yaml
+> > index 1ebe9e2347ea..39c7d7672783 100644
+> > --- a/Documentation/devicetree/bindings/mtd/partitions/partition.yaml
+> > +++ b/Documentation/devicetree/bindings/mtd/partitions/partition.yaml
+> > @@ -57,6 +57,57 @@ properties:
+> >        user space from
+> >      type: boolean
+> >
+> > +  align:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    minimum: 1
+>
+> Shouldn't this and the others be 2?
+
+It could be, but 1 means that there is no alignment and is a valid
+value. I don't mind changing it if you like.
+
+>
+> Otherwise,
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
