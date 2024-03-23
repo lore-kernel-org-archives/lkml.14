@@ -1,55 +1,57 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F04B440C;
-	Sat, 23 Mar 2024 08:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24586FC05;
+	Sat, 23 Mar 2024 08:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711184351; cv=none; b=t+rOrXJEkTFg3rcp2BDgPAvM20hTo20vLpvnTBffFW+WHVdViuy9W0LtrXT6eKoIBhwoJWkyz0l78cEhGt2XL0Dfw/obZwGOEARPJa3nJHeo8Xq+URbTt/64ZGlrrA5ctdtcor+S3v1xTtK2w0t4Cdcs3EZd3hUhPp25gMtqd0s=
+	t=1711184353; cv=none; b=dvGnlqhNaBN+R+Xk9z5qpAIQzqoKmVILXnx40KZfXf5hcH0X5+6dUO6WzEktW7kRkvMLLYkWVriv54xj5FbI0Q4gj2Ae193lYLvyu/t5wa9+iZo0ZXtgyYpvemV1lqriuJP9KlUSklMtAmHPCcnK3AEboMMCm0WDnUIATl3lfHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711184351; c=relaxed/simple;
-	bh=ZF7BygSUYovg9SblZ0QPIcT6MWiSeuKLQERl2UIN+fI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TkOSRI9PNSIcD2IHgjGl1UnYxttE9y0yJ6GOkZITf6D8U2MeQHjtbOK5PG/ELBVmMH/6k2D0Q33z0Jf8nwMsn3NZXGzH3ujtcLPl7BB+ACIKOhYCmMBWe+1YddoxljK6fTn2jAYHsiyHRLRSRIGlg1yGMJnYjZcqOntcgs5xsFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Up0kFY8X; arc=none smtp.client-ip=209.85.208.180
+	s=arc-20240116; t=1711184353; c=relaxed/simple;
+	bh=yFDUI6x6hmSF8fS6smv8BmO9sfjw/v+7224JoNNkZZY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=T4XdHRgjygCeCUq+gOJj/5JZvk2vHbq8kyKoDsq0rcoij+aHxNicxuIu8dUkjVyqBEpADmUu7stpAxGz7ECAFw3Pti5KDrHy45KJTzyb2AO4gppLuonCliuIlRivRDfFP0WhngWYM4TCFm+HbyK+GBejvHHUt4YNvDUqjJ4OyIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mi+CYqNL; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Up0kFY8X"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2d46dd5f222so36154061fa.1;
-        Sat, 23 Mar 2024 01:59:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mi+CYqNL"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-41464711dc8so23454265e9.1;
+        Sat, 23 Mar 2024 01:59:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711184347; x=1711789147; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xJ9+KdXwScarwq3eZMEvlp2qSxDqomLTVGyznQMchR8=;
-        b=Up0kFY8XHHnScoFm/eueXph5caWBEzkoHN2sdQEqHNz7Bjpchox9bSATSWQ2YpEHae
-         09P0SSBdleu7WBQbcQ4ZIdSG38VP6MisMO/rqkAJZCrk79feOM1cW3WaFudiEBlf4JWa
-         A+eJcYf1W8p7VqJOAroda+rxgDADlgn1Wsl4Iq8cQ5JLBfMeKJ6dmDEzteSgbWybaN56
-         kX0vMGFbnrVnm3AuYZX11l+3f+RS+UYM3iJpJxbQmbud3dkVbtceI4KeiXoXSqKWHP2u
-         ehfvFllMj4shec1mLYbs8UTUNJSPHPX78XEDncoV1UMIufaN8xrubxNJzYvM8yLIOl84
-         vVrw==
+        d=gmail.com; s=20230601; t=1711184350; x=1711789150; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8zwG1vyYusOfDUs/yU9E4qQ9XIYsM0NPCoK6QrfbLsc=;
+        b=Mi+CYqNLMHsIgiWPWpLvtVdH7NyUrUxDa13ckI9ipx0mnueccGCTWYU1HM7cZkIQO1
+         Koq/cQCoLv2GZrq8E1mvUSS1GIJf+uHGnjp5WddRHtMUNrQH7OlpRUCCjSbhGpRY28LU
+         /ELSy3U/ATcVm/YEh0nOhc+2gWiX3DtdgZUlT0aKe903pYz2Iv5B23nefzD8r2XWKIzr
+         NJNh/MryONm6X8txFYR7h3s5mFwGKTaBVNBrGEC9B4UEOYiH/LCTwmiEj6SIM981+Icg
+         rnoZfzvlar7dnDTLGtDF8cNbF8cTVtqN7Xrvxy/kTleCIB27Jyy0poKTx6jAYO0JrWpZ
+         jI1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711184347; x=1711789147;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xJ9+KdXwScarwq3eZMEvlp2qSxDqomLTVGyznQMchR8=;
-        b=F7lZ5rtTwwlrWqgBZgvINBizAz5rM1DDJVlr7dvy1qqDQ8C7ad+DklJ0NylMQwpAlA
-         sxihCv2OY1k4NChdAOigOw7p4e0MR5XlgSD+TmVOnEFGLJLs/pSSyBCICiKbeYajE4Ll
-         +TEAAmNPwV9VTgpMRH1w9aOpHHIJuqI5nOZAo/F2vb4KFGzVzR+cLAnP3WLY7+7Tvsfh
-         ow1qNseU3LhWpA/0NsN2vhVaDGT5qtANVetGcV5OgCo4Vct830hTGdArw29o/QssvLaF
-         jeJLyz2+B5i8eksjUlihVwWXwqGBML9rZTG0fmw2XkosqYzITI3HNaKakpZRa3M89dRR
-         hmrA==
-X-Forwarded-Encrypted: i=1; AJvYcCVSmWDZfEWErkViTgrleRiWobT3rEgZgXTOQo9zwWP+CKa8NrJNk/OWygruCE7JtX5bUlGljuTrc3dhHJMhxWlXek/4xCkdJ/yt8+XLA3pWZpanjTx5uYh2uVbgP8aB5zp1+WutyLf/TYet2FTLbVgleafT3x9S7MUHQH1YFRehoVc6ajY=
-X-Gm-Message-State: AOJu0YywXQiwdITF8Q6ZjZdMbwlxakc7fPVkAq/5Z2x1WdHr8Lc4TWMg
-	TnSz4d3YcIaHQ6vrPBASR0kOzdd00J+nrTId1yNQ9bJ2/7MAhe0=
-X-Google-Smtp-Source: AGHT+IGg0Fs7Ikhhf8Mkdjx09JhICxh/CwvAQBZW6CoPdutXLKfdUq9oRvKyht996A+Ebz9GhYfLBA==
-X-Received: by 2002:a2e:934b:0:b0:2d4:d50:2358 with SMTP id m11-20020a2e934b000000b002d40d502358mr989680ljh.18.1711184347509;
-        Sat, 23 Mar 2024 01:59:07 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711184350; x=1711789150;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8zwG1vyYusOfDUs/yU9E4qQ9XIYsM0NPCoK6QrfbLsc=;
+        b=Le9p9ckkwhLKphTUT07DgJIySe+XkW1nOGAdnU2A4C11LyAEpFrcvsD8eB8NZ6XZj7
+         QQ48fS6a+piv/vwkdunF33Czjap7Vnkn4xLJ6aCIFVadoVFrE4xeSyIaB6mXncfk8TPi
+         NwEjIKwADeV1MBJigjy32YA9sVhIdeKBXibt8YIqy3dmPND/YhJZ+uIk3Yk7W2hngeT0
+         S52/2sSxnFnpstpCL1LqtJiPj1LISq2H1mRBH9QCD3dveFfKvbBVApM3nUeJkAzdoYc4
+         /Az8v5huY203UX4Nzy79BdZU6MWgJlhHxB/isT7Xx3Q4ZcLhuVorUFWRUZXWEJW8bs70
+         YRJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVx28KVB8ilALlpv08kqWZLVBJ0BIUvcIbzEk2HM6FywhCUwZaOp2h8L82nXH+yBfA7lVZVetAvrfnRCS+NuyY/NFl1d7t/KeREBv7R6vbgyfJ5t3MRBC18JRbi9a9d5MHHrFoEELgW4lWP7aMgXLeiE4hpdCZ1G+/6roGYUp2+mKbN4/k=
+X-Gm-Message-State: AOJu0YwIMrcwW9q+/aC/gAqRrOq63aJv6CKtvLu0nHxoFuBOk2EGoE+p
+	o/WwJGNN4c4miQf4/P27HfGndARRHyuOd7ntnMGzwlWr69+TRV0=
+X-Google-Smtp-Source: AGHT+IHznD+9+YL+PhMqu1olEuo7dDG11iwTI/3gJ3ZJPkykeHsdd1UQWmv/cHmdTlExvD0zfoxT+Q==
+X-Received: by 2002:adf:cd0e:0:b0:33e:7065:78f2 with SMTP id w14-20020adfcd0e000000b0033e706578f2mr1187446wrm.40.1711184350521;
+        Sat, 23 Mar 2024 01:59:10 -0700 (PDT)
 Received: from U4.lan ([2a02:810b:f40:4600:fbb8:7547:139d:a40f])
-        by smtp.gmail.com with ESMTPSA id x16-20020a5d6b50000000b0033e93e00f68sm3965031wrw.61.2024.03.23.01.59.06
+        by smtp.gmail.com with ESMTPSA id x16-20020a5d6b50000000b0033e93e00f68sm3965031wrw.61.2024.03.23.01.59.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Mar 2024 01:59:07 -0700 (PDT)
+        Sat, 23 Mar 2024 01:59:10 -0700 (PDT)
 From: Alex Bee <knaerzche@gmail.com>
 To: Lee Jones <lee@kernel.org>,
 	Rob Herring <robh@kernel.org>,
@@ -67,10 +69,12 @@ Cc: Chris Zhong <zyw@rock-chips.com>,
 	linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	Alex Bee <knaerzche@gmail.com>
-Subject: [PATCH v2 0/5] Add RK816 PMIC support
-Date: Sat, 23 Mar 2024 09:58:47 +0100
-Message-ID: <20240323085852.116756-1-knaerzche@gmail.com>
+Subject: [PATCH v2 4/5] regulator: rk808: Support apply_bit for rk808_set_suspend_voltage_range
+Date: Sat, 23 Mar 2024 09:58:51 +0100
+Message-ID: <20240323085852.116756-5-knaerzche@gmail.com>
 X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240323085852.116756-1-knaerzche@gmail.com>
+References: <20240323085852.116756-1-knaerzche@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,55 +83,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series aims to add support for Rockchip RK816 PMIC series. As per
-datasheet it's targeted for RK3126/RK3128 (RK816-1), RK1108 (RK816-2) and
-PX3-SE (RK816-3) but might be used for other SoCs as well. The MFD consists
-of an integrated RTC, a GPIO controller, two 32k clock outputs, a power
-key, 3 buck- and 6 ldo regulators, 3 regulator-switches, and charger with
-integrated fuel gauge. Charger and fuel gauge are not part of this series.
-Two of the switches (otg/boost) are part of the binding, but not of
-the driver. They must only ever be enabled if no battery charging is
-happening, but it will be enabled automatically if a battery is attached
-and an external power source is connected. Thus that needs some
-incorporation of a yet to be added charger driver.
-Integration in the existing rk8xx-infrastructure was pretty straightforward
-and only needed very little tweaking. In order to not further bloat the
-driver(s) too much with additional `#define`s I tried to re-use existing
-ones wherever possible.
+rk808_set_suspend_voltage_range currently does not account the existence of
+apply_bit/apply_reg.
 
-The patches are loosely based on the vendor's implementation, verified
-against the datasheet and tested/measured on a RK3126 board. As they are
-touching several subsystems I'm sending them (very) early for the
-6.10.-cycle.
+This adds support for those in same way it is done in
+regulator_set_voltage_sel_regmap and is required for the upcoming RK816
+support
 
+Signed-off-by: Alex Bee <knaerzche@gmail.com>
+---
 changes since v1:
-  - integrated Krzysztof's feedback for the bindings and the resulting
-    driver changes
-  - fixed a sparse warning 
+  - none
 
-link to v1:
-https://lore.kernel.org/lkml/20240321143911.90210-2-knaerzche@gmail.com/
+ drivers/regulator/rk808-regulator.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-Please see individual patches for details about the changes.
-
-Alex Bee (5):
-  dt-bindings: mfd: Add rk816 binding
-  mfd: rk8xx: Add RK816 support
-  pinctrl: rk805: Add rk816 pinctrl support
-  regulator: rk808: Support apply_bit for
-    rk808_set_suspend_voltage_range
-  regulator: rk808: Add RK816 support
-
- .../bindings/mfd/rockchip,rk816.yaml          | 269 ++++++++++++++++++
- drivers/mfd/Kconfig                           |   4 +-
- drivers/mfd/rk8xx-core.c                      | 103 +++++++
- drivers/mfd/rk8xx-i2c.c                       |  45 ++-
- drivers/pinctrl/pinctrl-rk805.c               |  69 +++++
- drivers/regulator/rk808-regulator.c           | 218 +++++++++++++-
- include/linux/mfd/rk808.h                     | 141 +++++++++
- 7 files changed, 842 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/rockchip,rk816.yaml
-
+diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
+index d89ae7f16d7a..a6a563e402d0 100644
+--- a/drivers/regulator/rk808-regulator.c
++++ b/drivers/regulator/rk808-regulator.c
+@@ -534,15 +534,25 @@ static int rk808_set_suspend_voltage_range(struct regulator_dev *rdev, int uv)
+ {
+ 	unsigned int reg;
+ 	int sel = regulator_map_voltage_linear_range(rdev, uv, uv);
++	int ret;
+ 
+ 	if (sel < 0)
+ 		return -EINVAL;
+ 
+ 	reg = rdev->desc->vsel_reg + RK808_SLP_REG_OFFSET;
+ 
+-	return regmap_update_bits(rdev->regmap, reg,
+-				  rdev->desc->vsel_mask,
+-				  sel);
++	ret = regmap_update_bits(rdev->regmap, reg,
++				 rdev->desc->vsel_mask,
++				 sel);
++	if (ret)
++		return ret;
++
++	if (rdev->desc->apply_bit)
++		ret = regmap_update_bits(rdev->regmap, rdev->desc->apply_reg,
++					 rdev->desc->apply_bit,
++					 rdev->desc->apply_bit);
++
++	return ret;
+ }
+ 
+ static int rk805_set_suspend_enable(struct regulator_dev *rdev)
 -- 
 2.43.2
 
