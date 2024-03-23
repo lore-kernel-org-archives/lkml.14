@@ -1,95 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43330224C7;
-	Sat, 23 Mar 2024 12:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94770F9EC;
+	Sat, 23 Mar 2024 12:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711196164; cv=none; b=U4tiTGvsyfbMdqrFfCgntP0aktCtlixhPhK9ErR2rvTguq4TGbS/kUi3RVU4LI3MpBTJ9zbQCdDXjaHq8ysfr5B5+n620EDnRjNlZLNG2XfYFuDvuARwvZoTYDfXJGHrmJqsYhxJ2q/x51KweWHHPg0uRztlSKXPEl/E9HYtApg=
+	t=1711196195; cv=none; b=W0jNwPFfabX3NsERgXRMebG1DMF8Bhi4F4rOs9gV/5n1U9xO27f6yTDQO0r4wKh8xehGGvcDuU/WaDeGtjv5ersc53W/yDPgh4Bvk6MJPWKv+NAyYxmNWclIcTlsQEfJ23PqpHlXXJMt421kXAnSWVURFJJpQJ7bQf5eO3cOnZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711196164; c=relaxed/simple;
-	bh=298pc/6jgFUt0TwsCfTIdMnWzb5pr9qYj3xJKL5h9b4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dtbwy+Ga88SjO2IQI59Nv9Owz1dc7BsltlYNmbR40DTppbvhV7ipLFAi6P7H5Q0zFivlLQ1LG3oHlH7UK8Q8wtwhX9Atgc1s48QefMPqOGIKVkATJCIWhqjHVSZpTqD3nNb1xHRSM924gdaqcv4tbRLyk14q0LSg4d5SAHuluZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QMax+p5K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711196195; c=relaxed/simple;
+	bh=VY/sGrXKFyoKGGx/9bHqzS7Eglr7oAp1+7lX9qZ4AZg=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=QhqIgGIBPsosZ9rRtDIHKGf2jN6RS4J11qf911HEZXFHfuzzh5p/MWdMEX5/jcIdOZQr5tLCjdHMGAmF+6bfbMKX2jqDcZXedYFx7z7BiiKr0vYzuoRVLxQ/vivN9DzXn+BeDBefV7uzqMdNw2KqnJlwA/n19TU/kOmS+99c6z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=a8s4ZS8k; arc=none smtp.client-ip=162.62.57.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QMax+p5K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB1D8C43390;
-	Sat, 23 Mar 2024 12:16:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711196163;
-	bh=298pc/6jgFUt0TwsCfTIdMnWzb5pr9qYj3xJKL5h9b4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QMax+p5KYlB+npS6Z4iPkf+3iwEXX34LNFxzva2NMTymhzQ2p+A1obKHyBhQUGOwZ
-	 Qw4sJkEcc3vIUBZBNOalhDX+nRpzY31zZ2C85/vzZVv6NTlNDvcO/SSMg06pSdCsOp
-	 ydxnEkcB+4mCsJqZLeEx5ndCIkfL3qM/K/Q7kLLvgJV3rk7EJWT8l+TFE9xznwV05i
-	 9YsYB3UDpdh4o3QwLiH7Ab+9iMXEZLSGMOAyYK7EU/oVyZjOJOP9qiP0nOF6TIHKWu
-	 VU4ov1y4QOxbxkLSWLJ3LAKwUbgRoQH4eChYDR2ONZ/bcEOdvagoWLXG5ISzepx4Rj
-	 Adg8I+HgUrgbg==
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d6a1af9c07so41272071fa.3;
-        Sat, 23 Mar 2024 05:16:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW6AxBjmvSJOmpM+Ch9gvalN4wLqx013Ep/e2k+2P+FKAAy+bX2dQKOPFq8ThZd+UtuFEquy8BDpuoniad6nN5CrRUwhcpbU2YdzXoi/n4uUPcH9CUhdz0v+nDnFBDKTWheSAV7NfbYDeUsCjQuEACxjK0HZfR+ehg5YD9wnJP+
-X-Gm-Message-State: AOJu0YwZ8PgLbc4G4ilTQHuFfRB+Buv2aNCZdPcxvSkG+DeEl3hpsR3g
-	S+w0fZvBbYhC85gJne2VGcoL4uKU3KTpjmrGS7nR+logM9Cdhz+ZIYoHdtL434Mvcvo42TeHeiN
-	kQEXEEyfBDTUtVmyxxyzxpo6EHeg=
-X-Google-Smtp-Source: AGHT+IHUBS5vtwn45KMvgPpQE099s2U9NrhFU0h6pQa4pjHfgrf1U2XXsDqbwTu0oIxWu3ZZUniBzF45ZNzdWf2sx2s=
-X-Received: by 2002:a05:651c:11c9:b0:2d3:ada4:1228 with SMTP id
- z9-20020a05651c11c900b002d3ada41228mr1357649ljo.18.1711196162074; Sat, 23 Mar
- 2024 05:16:02 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="a8s4ZS8k"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1711196180; bh=prkqax1s/YPOiuAZGsCqzxUs5Mq7p8+18pkZu3zCxio=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=a8s4ZS8kCinMQEBfC4n1k5obHtzBvp5gzvBzqed8Nnssq0rwTndxYacsxzyXUW+st
+	 wHy/n0YQL4EP9q9C4S3jic7TMRZVRnccfac6+vjlcNQmI83SmVI6clLZHHivyscsTF
+	 Uh2cxZ7phT1z2gGyrjbwNwt1nItJTSmEhLK81N9E=
+Received: from cyy-pc.lan ([240e:379:225d:8e00:b91:b2e7:7c69:8554])
+	by newxmesmtplogicsvrsza7-0.qq.com (NewEsmtp) with SMTP
+	id 32594C7F; Sat, 23 Mar 2024 20:12:37 +0800
+X-QQ-mid: xmsmtpt1711195978tnmlc3wz9
+Message-ID: <tencent_09DCFC98C510B846023E004101ED10C70A07@qq.com>
+X-QQ-XMAILINFO: OakVxA/3u/8RJY9aJxFZniVxmyjuv+LnRwH4BurKFJB3iN1qA6IOmp0/dMwmGq
+	 INFrrIaazWaGFoEuymArxkohE6PFoK5yiXKOvxcdoT8D5n8yfqfYPpSw9lGIHfmkVheMdL2z5pt0
+	 9vYFjBFTEAEY+EHInLHRem7AesRCeGKMrAqbPsGPm+TSdIzUg3V1oZdW8RxDYENgg9ZXCa172B0X
+	 Gz9E7NicSdmTzdY63OFO0IpMvqmIYKgU9zdp4rBlsI8Qk/KLBkv1h9B5kv6aQ0SaKP5741c6C4S5
+	 E3Iq2mOMUkKqWKHwYZg1gor5WBdZu8ZVnBQIzqYtoov5VFQ1c4HmlJyPm4UFb2WFhUi9aAnPuFSp
+	 KN0SpzT/ThmgnQAyKWIeXWocwRzmbCywWu44Xz2K5uVNTvecAfNCJU9ix6OL6tYUK2q8HpbX83GH
+	 gViqq84mYBnl+Bm363O6gQC4zoWydpo4DkEn6LOkYviXPxA0Qqzb5pDTPrbkf992jDcYTam1oAfe
+	 foBX6gMtX3rrhkDzUaSe+VaPutNlIArRzaZxkQIAB/FSiabGD46XrQw4k69xJjbq5eZNwBxgLPuJ
+	 hH51Kge4KnM0dXNQ9backIuoneNkl4OOY2aq7RtHibNy6QPDNJTXz0Gu77EOm9hmlK+b35BpZ5Ju
+	 x3CIFB8ZFxyg7XWghwzcbFwhZP4nB02cDxH6ykrVePXY3xsCOsCJWqt6eZaw42KDtBfc3+WSjkhA
+	 EiEgZyMUFMOxicnQKkk76Q1Sp7AaqA7KL68slHTRz+1Mcgr5EfjPVjhAKaZNl5v8zOg9KpT4dUGJ
+	 y2qv4l97K1/Y6Yi59CMw/oJp1UGHwgv1aFrDOoGJCC8A+0WvSw8fqjjIWHvaAup+IBbPXpKov/sj
+	 WKND29wrN3sXj/qLz8nerguDF8O3J7BK6292HjwkRrqMI43CiUABAbmOkDEV20yniYCkedSicui7
+	 4tIllPcH6NX0I8haL2cqKlQGACvNOVHe3nC6DzRoUjkkQbXcCz797BdLeuxoyVKqfKc4azC6aRlf
+	 0ZPUJNzOvSY7aatIEhBh2IOxOy3OZPVkBVmsCYLPt0JNw1gx6P5OrZEaBgF2+9awiLpvTbWWx00E
+	 pnjcW2v7rt+3Y9oUA=
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+From: Yangyu Chen <cyy@cyyself.name>
+To: linux-riscv@lists.infradead.org
+Cc: Conor Dooley <conor@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Guo Ren <guoren@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	linux-gpio@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yangyu Chen <cyy@cyyself.name>
+Subject: [PATCH v6 09/11] reset: k210: Deprecate SOC_CANAAN and use SOC_CANAAN_K210
+Date: Sat, 23 Mar 2024 20:12:21 +0800
+X-OQ-MSGID: <20240323121223.1729328-9-cyy@cyyself.name>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <tencent_F76EB8D731C521C18D5D7C4F8229DAA58E08@qq.com>
+References: <tencent_F76EB8D731C521C18D5D7C4F8229DAA58E08@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240323063334.735219-1-ovt@google.com>
-In-Reply-To: <20240323063334.735219-1-ovt@google.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Sat, 23 Mar 2024 14:15:50 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXF0oM4CZM6GBQ+JNdk0ipf62cVJWjaR7Qy8YEU2B6=MVg@mail.gmail.com>
-Message-ID: <CAMj1kXF0oM4CZM6GBQ+JNdk0ipf62cVJWjaR7Qy8YEU2B6=MVg@mail.gmail.com>
-Subject: Re: [PATCH v2] efi: fix panic in kdump kernel
-To: Oleksandr Tymoshenko <ovt@google.com>
-Cc: Johan Hovold <johan+linaro@kernel.org>, stable@vger.kernel.org, 
-	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Sat, 23 Mar 2024 at 08:33, Oleksandr Tymoshenko <ovt@google.com> wrote:
->
-> Check if get_next_variable() is actually valid pointer before
-> calling it. In kdump kernel this method is set to NULL that causes
-> panic during the kexec-ed kernel boot.
->
-> Tested with QEMU and OVMF firmware.
->
-> Fixes: bad267f9e18f ("efi: verify that variable services are supported")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Oleksandr Tymoshenko <ovt@google.com>
+Since SOC_FOO should be deprecated from patch [1], and cleanup for other
+SoCs is already on the mailing list [2,3,4,5], we remove the use of
+SOC_CANAAN and introduced SOC_CANAAN_K210 for K210-specific drivers,
 
-Thanks. Queued as a fix.
+Thus, we replace its drivers depends on SOC_CANAAN_K210 and default select
+when it has the symbol SOC_CANAAN_K210.
 
-> ---
-> Changes in v2:
->   - Style fix
->   - Added Cc: stable
->   - Added Fixes: trailer
-> ---
->  drivers/firmware/efi/efi.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> index 8859fb0b006d..fdf07dd6f459 100644
-> --- a/drivers/firmware/efi/efi.c
-> +++ b/drivers/firmware/efi/efi.c
-> @@ -203,6 +203,8 @@ static bool generic_ops_supported(void)
->
->         name_size = sizeof(name);
->
-> +       if (!efi.get_next_variable)
-> +               return false;
->         status = efi.get_next_variable(&name_size, &name, &guid);
->         if (status == EFI_UNSUPPORTED)
->                 return false;
-> --
-> 2.44.0.396.g6e790dbe36-goog
->
+[1] https://lore.kernel.org/linux-riscv/20221121221414.109965-1-conor@kernel.org/
+[2] https://lore.kernel.org/linux-riscv/20240305-praying-clad-c4fbcaa7ed0a@spud/
+[3] https://lore.kernel.org/linux-riscv/20240305-fled-undrilled-41dc0c46bb29@spud/
+[4] https://lore.kernel.org/linux-riscv/20240305-stress-earflap-d7ddb8655a4d@spud/
+[5] https://lore.kernel.org/linux-riscv/20240305-praying-clad-c4fbcaa7ed0a@spud/
+
+Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+---
+ drivers/reset/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index 85b27c42cf65..7112f5932609 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -103,9 +103,9 @@ config RESET_INTEL_GW
+ 
+ config RESET_K210
+ 	bool "Reset controller driver for Canaan Kendryte K210 SoC"
+-	depends on (SOC_CANAAN || COMPILE_TEST) && OF
++	depends on (SOC_CANAAN_K210 || COMPILE_TEST) && OF
+ 	select MFD_SYSCON
+-	default SOC_CANAAN
++	default SOC_CANAAN_K210
+ 	help
+ 	  Support for the Canaan Kendryte K210 RISC-V SoC reset controller.
+ 	  Say Y if you want to control reset signals provided by this
+-- 
+2.43.0
+
