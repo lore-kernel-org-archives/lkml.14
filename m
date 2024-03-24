@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E6F15B153;
-	Sun, 24 Mar 2024 23:15:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFC615B136;
+	Sun, 24 Mar 2024 23:15:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322159; cv=none; b=ooMUaBTI9AafKVE4SfLhu54Aynu+Z70G76Zj3qFU6XYZwbGmaaSYY9mq3qXwT5+IYmL24cYD68LChPvj2r95Q4B8hODM89OgkcA4D3etqpXbFXPQolFBHrt7fD8lIDUuZb85NLxU78eScb0GR2BFNhXbRmnNf/JviikpkcMmp3w=
+	t=1711322147; cv=none; b=M60nr21RBQn+2Z9W5S7H9US08583qzZ82agD1j76ZNzJRoo+7s6mX4M38ll2Ku7Gtb3YMuT8kV2o1MViMdAlI9poQ4a8VT7/h09ikbqfzD8WqIFqo6+sGclYIh8og7saPhqYjdGC20OMmPCDWdWdUaU934TZL/tTe3msNgAfUIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322159; c=relaxed/simple;
-	bh=I5IZLXRovJJX137SJGnoEbJCPVfKKUehgGid1mWVd0k=;
+	s=arc-20240116; t=1711322147; c=relaxed/simple;
+	bh=Yc+sAjpbVNJuVec430jNGeE7JI6m7qT9zhuwoq1Ihu4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mFHStgCk88XNzlQiyRM9pkGACn2Le/IHXc4p9HxRUzqPEtlWh60LkJiSJsffunG6yfuP7zMX1E0hINS+zwX9PVvpJ5LnEijJ8u2rWwVus7KNMXgihShkVyVqfAh8yTf8Bmp9uqKu4cAoU7dtRpHk5iKadM031xrgJnL10jWhbgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZI9jf4d9; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=MsGIBHYctoPcl17j4C8TcOiZrAEeS3GOs57WF7CTivwYeTtfFiM4gIaSvVwYfuKI6hUaeT2A0Uc58vVquo2GyCLLetyAAQrKLio0ZO4zLzFJ0BgEI4KOqvobAxYUKQr0mK/HKcFQaUuU6yGBeCunF+OSF4AVpLmUCxTbwyNWZ04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aKGT/BiW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZI9jf4d9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CC63C433C7;
-	Sun, 24 Mar 2024 23:15:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aKGT/BiW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 715A4C43390;
+	Sun, 24 Mar 2024 23:15:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322158;
-	bh=I5IZLXRovJJX137SJGnoEbJCPVfKKUehgGid1mWVd0k=;
+	s=k20201202; t=1711322146;
+	bh=Yc+sAjpbVNJuVec430jNGeE7JI6m7qT9zhuwoq1Ihu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZI9jf4d9k+9oqlbU72c+O5IqXpXuxaq49WNB5N2I1LOuZB1jlfubP7GTYhKEMrLxH
-	 mEK82p7rgtdWQazZQcDZikjElaHLUnmrbxypJmyHZQHuUxSH/H3DzIxsVLs0CZPA4N
-	 T92xGICnyALVjRpFG194BrCRYmqCCLeswp/SiIGmEkpFC5Qqt6/jPjvwI0QvUBmUEq
-	 ACdXw6OhBXUCpZQxUAKwjocL0T26Wc3bTE13oLnnF/fLEJhl2BFfYWvvBwlgsxqiSL
-	 fhWBRAoCP+RVUsEni7YW6SOx6bevVu8/Mp7F1ssgylG1iWDmTU7wT6XAIeYA5tNiwX
-	 99INiwvpcuCVw==
+	b=aKGT/BiWFZVbwM2GeS9CVPkxu7ZN86P+7pJUBREbOscYb9VNTfqD0LzjExAKteKgW
+	 PI4hbMCJgBxptNqiK4HUQVGaka73guY89DA6ictYpUP06QWK4AGmncXlZ3kJ2PYAXn
+	 QXFo59HHuWCRzTbHmR0qPMvfzrLDgpG9r6mE/H6AmQ93uAmxMp8K2bOLZleTzm9JBf
+	 JnV+JppXYbF6sXgyD5GK+OavInPwBr5s2a+u2dcIdNTXwHTv09hAIn+Za44ij0Fhz4
+	 KKBVWrYuJicfvSPDdUsZZVMfBwM9KPP0KbHTQ/cVxoEob44++yiWLbrxGHqhQZILT6
+	 GId9iCQOBVQ2w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Cai Huoqing <caihuoqing@baidu.com>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Viresh Kumar <viresh.kumar@linaro.org>,
+	kernel test robot <lkp@intel.com>,
+	Dhruva Gole <d-gole@ti.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 236/451] drm/tegra: dsi: Make use of the helper function dev_err_probe()
-Date: Sun, 24 Mar 2024 19:08:32 -0400
-Message-ID: <20240324231207.1351418-237-sashal@kernel.org>
+Subject: [PATCH 6.1 223/451] OPP: debugfs: Fix warning around icc_get_name()
+Date: Sun, 24 Mar 2024 19:08:19 -0400
+Message-ID: <20240324231207.1351418-224-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,69 +49,48 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Cai Huoqing <caihuoqing@baidu.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-[ Upstream commit fc75e4fcbd1e4252a0481ebb23cd4516c127a8e2 ]
+[ Upstream commit 28330ceb953e39880ea77da4895bb902a1244860 ]
 
-When possible use dev_err_probe help to properly deal with the
-PROBE_DEFER error, the benefit is that DEFER issue will be logged
-in the devices_deferred debugfs file.
-And using dev_err_probe() can reduce code size, the error value
-gets printed.
+If the kernel isn't built with interconnect support, icc_get_name()
+returns NULL and we get following warning:
 
-Signed-off-by: Cai Huoqing <caihuoqing@baidu.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Stable-dep-of: 830c1ded3563 ("drm/tegra: dsi: Fix some error handling paths in tegra_dsi_probe()")
+drivers/opp/debugfs.c: In function 'bw_name_read':
+drivers/opp/debugfs.c:43:42: error: '%.62s' directive argument is null [-Werror=format-overflow=]
+         i = scnprintf(buf, sizeof(buf), "%.62s\n", icc_get_name(path));
+
+Fix it.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202402141313.81ltVF5g-lkp@intel.com/
+Fixes: 0430b1d5704b0 ("opp: Expose bandwidth information via debugfs")
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/dsi.c | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+ drivers/opp/debugfs.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
-index 0adce882f157b..6cbba2adb6e5a 100644
---- a/drivers/gpu/drm/tegra/dsi.c
-+++ b/drivers/gpu/drm/tegra/dsi.c
-@@ -1591,28 +1591,24 @@ static int tegra_dsi_probe(struct platform_device *pdev)
- 	}
+diff --git a/drivers/opp/debugfs.c b/drivers/opp/debugfs.c
+index 2c7fb683441ef..de81bbf4be100 100644
+--- a/drivers/opp/debugfs.c
++++ b/drivers/opp/debugfs.c
+@@ -37,10 +37,12 @@ static ssize_t bw_name_read(struct file *fp, char __user *userbuf,
+ 			    size_t count, loff_t *ppos)
+ {
+ 	struct icc_path *path = fp->private_data;
++	const char *name = icc_get_name(path);
+ 	char buf[64];
+-	int i;
++	int i = 0;
  
- 	dsi->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(dsi->clk)) {
--		dev_err(&pdev->dev, "cannot get DSI clock\n");
--		return PTR_ERR(dsi->clk);
--	}
-+	if (IS_ERR(dsi->clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk),
-+				     "cannot get DSI clock\n");
+-	i = scnprintf(buf, sizeof(buf), "%.62s\n", icc_get_name(path));
++	if (name)
++		i = scnprintf(buf, sizeof(buf), "%.62s\n", name);
  
- 	dsi->clk_lp = devm_clk_get(&pdev->dev, "lp");
--	if (IS_ERR(dsi->clk_lp)) {
--		dev_err(&pdev->dev, "cannot get low-power clock\n");
--		return PTR_ERR(dsi->clk_lp);
--	}
-+	if (IS_ERR(dsi->clk_lp))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_lp),
-+				     "cannot get low-power clock\n");
- 
- 	dsi->clk_parent = devm_clk_get(&pdev->dev, "parent");
--	if (IS_ERR(dsi->clk_parent)) {
--		dev_err(&pdev->dev, "cannot get parent clock\n");
--		return PTR_ERR(dsi->clk_parent);
--	}
-+	if (IS_ERR(dsi->clk_parent))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_parent),
-+				     "cannot get parent clock\n");
- 
- 	dsi->vdd = devm_regulator_get(&pdev->dev, "avdd-dsi-csi");
--	if (IS_ERR(dsi->vdd)) {
--		dev_err(&pdev->dev, "cannot get VDD supply\n");
--		return PTR_ERR(dsi->vdd);
--	}
-+	if (IS_ERR(dsi->vdd))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->vdd),
-+				     "cannot get VDD supply\n");
- 
- 	err = tegra_dsi_setup_clocks(dsi);
- 	if (err < 0) {
+ 	return simple_read_from_buffer(userbuf, count, ppos, buf, i);
+ }
 -- 
 2.43.0
 
