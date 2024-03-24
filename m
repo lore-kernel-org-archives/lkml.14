@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28791EFE28;
-	Sun, 24 Mar 2024 22:57:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439A11EF7ED;
+	Sun, 24 Mar 2024 22:57:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321048; cv=none; b=nC86LOKB2CZpIB36J4XfwQO+2LhIIGzZHh5OyAcpMU9crfHJ9hPBbFCF9jBAiulL8VZPk3VUQhZ1MU6M+uV4bGcJnehKym8Lht7axohH3OR2fLJxCA3oMbQ3u+OCQU7vXe8gOtD4BQuMt17MG0WwvLSBcEwXZuhvIZX72ti45NA=
+	t=1711321043; cv=none; b=UCN4Cod8j4z+UQcB8Gro1IYimlMQXdlzjLsWBMzWC3/D3OjMjknsN408rOcI3JVyMY5J9r7vubzEzZrBKKtkxnRxkSwwfuG1Ol21pEuGIHp5JSBrSqjjoczKQIctxhr9xM5HzPszdfmoLxVPh5PPGulgHtpKiBMGA/RDul4D6Bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321048; c=relaxed/simple;
-	bh=A+Xsytz4MnzIXKoWB28lM3p54mT0uJ1kwuAxvS4h74I=;
+	s=arc-20240116; t=1711321043; c=relaxed/simple;
+	bh=cF+ZlEv5c4xe2wZ0s4b2rD6/X4UJuIYLkFnfRjxTJBM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K+jTcGbJF/z5xsk0iBoSwV8tjgU5EC3Y/Oq/VCqgVtvf9MpphwCk3q/Jj5oAZVnh7cicObV94NxKFk/b/gigNB7JPBZDgdaiZ1kLjX6aGgWD5jS3Wv9ZdR6FVVDopx1GrikUBWOBxAuzSsy7avDgTWwOxWcUyFO6s37KpB2yIYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbBmmgWz; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FeKNIcZ+Crw+RMJTqeiENaMhh/1MuI0X12ZNlz2bFHu3hWWnXkpY2MAFU684IaDD71KXuAP6gvK8GThWwZQ8rONhGenDPEUdi5czmL+zqBjsNovUV6Chek3mlJ47DsVeNDvZMFYuUCs1DZtb0i2c6tN9I/ZAUeZHllIgvQgtEpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jMLozgVF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbBmmgWz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBA9DC433F1;
-	Sun, 24 Mar 2024 22:57:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jMLozgVF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BF23C433F1;
+	Sun, 24 Mar 2024 22:57:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321048;
-	bh=A+Xsytz4MnzIXKoWB28lM3p54mT0uJ1kwuAxvS4h74I=;
+	s=k20201202; t=1711321042;
+	bh=cF+ZlEv5c4xe2wZ0s4b2rD6/X4UJuIYLkFnfRjxTJBM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fbBmmgWzXxpkZIpfoXja7RoH0LyRXEBUI7YFXb8/faXu873KF2nK53UHzUtTHhRnY
-	 OPa/8R0RTl0dNLJf7dYtb3pwfl6TYKC0ey1AI4eXcqwyNws9R+i7NjZ8qSzZ9DilWf
-	 F28G1aWcxn0Sy5mpJUpXVsga+iFtZNlCA5A2tjsO0lQ2CMk7J/RLk0lhqwnqu+KGaC
-	 T1JoDn+U4ma1SiZp3RQugiVTrbbl6Di+mrVHnvwkmheT6/KZD91HGocuilK1yVBxmF
-	 ZkjpYi+AUIqeyS/THntaiIV1UDU+vEZFMWCThA2icEaKewHWhvJKpI1aua8vE9p28m
-	 pozqSZMGvi31w==
+	b=jMLozgVF+xfQoufxxiY2Xzf5CEjVKZz0VcMTtyZOjGwKvyao39SnYuHGN2nI5guv/
+	 ee/0SwIE03rZvvIbFgcWQYaQC2XocDbE1L8Uw0fao8bCZl2+shAdUz5WWkpnIeARv2
+	 w2q52bfgvQD1cbP/shypk7y6ad6CginzrtLp/K+YLJDEZoPcbSmWkKSUf/r8rXiOXk
+	 qfVkiB7+cCz7+VJNM9BWtMV0guNCRrzNO734+9R2sYHTeGbqG2PJ9bKOZXQWnqBdqy
+	 vveTdxqfiTv500w29I4M7jcoGXLILMFcqBaMG4EVI+9O1ULgsg2dFqo8t0IVjSSz1n
+	 L94XJGY02ifKg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Helge Deller <deller@kernel.org>,
-	Helge Deller <deller@gmx.de>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 6.7 611/713] bcachefs: Fix build on parisc by avoiding __multi3()
-Date: Sun, 24 Mar 2024 18:45:37 -0400
-Message-ID: <20240324224720.1345309-612-sashal@kernel.org>
+Cc: Chao Yu <chao@kernel.org>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.7 605/713] f2fs: fix to truncate meta inode pages forcely
+Date: Sun, 24 Mar 2024 18:45:31 -0400
+Message-ID: <20240324224720.1345309-606-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,44 +48,138 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Helge Deller <deller@kernel.org>
+From: Chao Yu <chao@kernel.org>
 
-commit eba38cc7578bef94865341c73608bdf49193a51d upstream.
+[ Upstream commit 9f0c4a46be1fe9b97dbe66d49204c1371e3ece65 ]
 
-The gcc compiler on paric does support the __int128 type, although the
-architecture does not have native 128-bit support.
+Below race case can cause data corruption:
 
-The effect is, that the bcachefs u128_square() function will pull in the
-libgcc __multi3() helper, which breaks the kernel build when bcachefs is
-built as module since this function isn't currently exported in
-arch/parisc/kernel/parisc_ksyms.c.
-The build failure can be seen in the latest debian kernel build at:
-https://buildd.debian.org/status/fetch.php?pkg=linux&arch=hppa&ver=6.7.1-1%7Eexp1&stamp=1706132569&raw=0
+Thread A				GC thread
+					- gc_data_segment
+					 - ra_data_block
+					  - locked meta_inode page
+- f2fs_inplace_write_data
+ - invalidate_mapping_pages
+ : fail to invalidate meta_inode page
+   due to lock failure or dirty|writeback
+   status
+ - f2fs_submit_page_bio
+ : write last dirty data to old blkaddr
+					 - move_data_block
+					  - load old data from meta_inode page
+					  - f2fs_submit_page_write
+					  : write old data to new blkaddr
 
-We prefer to not export that symbol, so fall back to the optional 64-bit
-implementation provided by bcachefs and thus avoid usage of __multi3().
+Because invalidate_mapping_pages() will skip invalidating page which
+has unclear status including locked, dirty, writeback and so on, so
+we need to use truncate_inode_pages_range() instead of
+invalidate_mapping_pages() to make sure meta_inode page will be dropped.
 
-Signed-off-by: Helge Deller <deller@gmx.de>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>
-Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 6aa58d8ad20a ("f2fs: readahead encrypted block during GC")
+Fixes: e3b49ea36802 ("f2fs: invalidate META_MAPPING before IPU/DIO write")
+Signed-off-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/bcachefs/mean_and_variance.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/checkpoint.c    |  5 +++--
+ fs/f2fs/f2fs.h          | 28 +++++++++++++++++++++++++++-
+ fs/f2fs/segment.c       |  5 ++---
+ include/linux/f2fs_fs.h |  1 +
+ 4 files changed, 33 insertions(+), 6 deletions(-)
 
-diff --git a/fs/bcachefs/mean_and_variance.h b/fs/bcachefs/mean_and_variance.h
-index 647505010b397..056e797383fb5 100644
---- a/fs/bcachefs/mean_and_variance.h
-+++ b/fs/bcachefs/mean_and_variance.h
-@@ -14,7 +14,7 @@
-  * type
-  */
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index b0597a539fc54..9afc8d24dc369 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -1587,8 +1587,9 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+ 	 */
+ 	if (f2fs_sb_has_encrypt(sbi) || f2fs_sb_has_verity(sbi) ||
+ 		f2fs_sb_has_compression(sbi))
+-		invalidate_mapping_pages(META_MAPPING(sbi),
+-				MAIN_BLKADDR(sbi), MAX_BLKADDR(sbi) - 1);
++		f2fs_bug_on(sbi,
++			invalidate_inode_pages2_range(META_MAPPING(sbi),
++				MAIN_BLKADDR(sbi), MAX_BLKADDR(sbi) - 1));
  
--#ifdef __SIZEOF_INT128__
-+#if defined(__SIZEOF_INT128__) && defined(__KERNEL__) && !defined(CONFIG_PARISC)
+ 	f2fs_release_ino_entry(sbi, false);
  
- typedef struct {
- 	unsigned __int128 v;
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 67e37b3968c05..200e1e43ef9bb 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -4628,10 +4628,36 @@ static inline bool f2fs_is_readonly(struct f2fs_sb_info *sbi)
+ 	return f2fs_sb_has_readonly(sbi) || f2fs_readonly(sbi->sb);
+ }
+ 
++static inline void f2fs_truncate_meta_inode_pages(struct f2fs_sb_info *sbi,
++					block_t blkaddr, unsigned int cnt)
++{
++	bool need_submit = false;
++	int i = 0;
++
++	do {
++		struct page *page;
++
++		page = find_get_page(META_MAPPING(sbi), blkaddr + i);
++		if (page) {
++			if (PageWriteback(page))
++				need_submit = true;
++			f2fs_put_page(page, 0);
++		}
++	} while (++i < cnt && !need_submit);
++
++	if (need_submit)
++		f2fs_submit_merged_write_cond(sbi, sbi->meta_inode,
++							NULL, 0, DATA);
++
++	truncate_inode_pages_range(META_MAPPING(sbi),
++			F2FS_BLK_TO_BYTES((loff_t)blkaddr),
++			F2FS_BLK_END_BYTES((loff_t)(blkaddr + cnt - 1)));
++}
++
+ static inline void f2fs_invalidate_internal_cache(struct f2fs_sb_info *sbi,
+ 								block_t blkaddr)
+ {
+-	invalidate_mapping_pages(META_MAPPING(sbi), blkaddr, blkaddr);
++	f2fs_truncate_meta_inode_pages(sbi, blkaddr, 1);
+ 	f2fs_invalidate_compress_page(sbi, blkaddr);
+ }
+ 
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 4dde164254ec2..dfc7fd8aa1e8f 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -3651,8 +3651,7 @@ int f2fs_inplace_write_data(struct f2fs_io_info *fio)
+ 	}
+ 
+ 	if (fio->post_read)
+-		invalidate_mapping_pages(META_MAPPING(sbi),
+-				fio->new_blkaddr, fio->new_blkaddr);
++		f2fs_truncate_meta_inode_pages(sbi, fio->new_blkaddr, 1);
+ 
+ 	stat_inc_inplace_blocks(fio->sbi);
+ 
+@@ -3842,7 +3841,7 @@ void f2fs_wait_on_block_writeback_range(struct inode *inode, block_t blkaddr,
+ 	for (i = 0; i < len; i++)
+ 		f2fs_wait_on_block_writeback(inode, blkaddr + i);
+ 
+-	invalidate_mapping_pages(META_MAPPING(sbi), blkaddr, blkaddr + len - 1);
++	f2fs_truncate_meta_inode_pages(sbi, blkaddr, len);
+ }
+ 
+ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
+diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
+index 039fe0ce8d83d..1812b7ec8491a 100644
+--- a/include/linux/f2fs_fs.h
++++ b/include/linux/f2fs_fs.h
+@@ -27,6 +27,7 @@
+ 
+ #define F2FS_BYTES_TO_BLK(bytes)	((bytes) >> F2FS_BLKSIZE_BITS)
+ #define F2FS_BLK_TO_BYTES(blk)		((blk) << F2FS_BLKSIZE_BITS)
++#define F2FS_BLK_END_BYTES(blk)		(F2FS_BLK_TO_BYTES(blk + 1) - 1)
+ 
+ /* 0, 1(node nid), 2(meta nid) are reserved node id */
+ #define F2FS_RESERVED_NODE_NUM		3
 -- 
 2.43.0
 
