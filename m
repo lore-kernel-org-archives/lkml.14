@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D2EA14532D;
-	Sun, 24 Mar 2024 23:12:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88B114533D;
+	Sun, 24 Mar 2024 23:13:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321976; cv=none; b=tG9awgrb385HNY09VZaIgLllUHHUe7s9GWEjfrFwDRTSQrsDzll4zMBCif8qQAsrgi89GQQkk09GwgY+ayGa8xUwGvrURj+zelnDYIz93jK7mrPBV62eJQ2GJ1hjLuS1A/HDqqjwzEF9+VrhkpfG8d7qe5CB29W01JxCY/PapL4=
+	t=1711321981; cv=none; b=SrFDoMbnHNdCNm4/yXb5tvr8Q/pszRR2ZEyZNue1LmGnZFQVIGvw7y9DTIAsWNNnzmkHJxnSPygnzMZRRxpQj53TCTmUsVrCq3IBwCzqQYA5Osvkt92Dcwtad1V/qXe6Bs3H6HM+49r8I1HHfWM8HtrUgZ5Ock5c9u0KKxE7scE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321976; c=relaxed/simple;
-	bh=pXzBRU0ZX7LOA6s9J9tgTTGpBz2qJ1n+h5JdCsC+IRk=;
+	s=arc-20240116; t=1711321981; c=relaxed/simple;
+	bh=h13E3I/67aiIVBnOSCOdgSWe9t1VwoTldhgwrMtJGUA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dGokZpWbAZ7BTWaMf24sTmu+7BhNZmSxlCGPVk3k48ON9yeJy2zptJ/Cgym2mzQPbCTkeWriS/YWIngjxJOolG008Kk9TMsgUuXCSoEkZa543otir4cgaJQfICoK5zr+812WF1iQCFrNpWga0dYtRxPWHS8QiOSD/grOttg9Nrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iD0p4BeS; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=KzI8szPx6BbDmjG6c1NhFfS0glnLzWoYiiEHp/jmmkqoFsrVzMYkniJSzpjzck6gLPXjfBbCwhWyycGPzu6DSaKwPPJf36vQL8iOprR5PBxf7Rnef55Wo+UZUBr4CYVbLq+d+pdxis+8twSY2tdyODicN4MjYOgSaBoN4AuvQ/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mNl/NnCD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iD0p4BeS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B552C433C7;
-	Sun, 24 Mar 2024 23:12:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mNl/NnCD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C84E7C433F1;
+	Sun, 24 Mar 2024 23:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321975;
-	bh=pXzBRU0ZX7LOA6s9J9tgTTGpBz2qJ1n+h5JdCsC+IRk=;
+	s=k20201202; t=1711321980;
+	bh=h13E3I/67aiIVBnOSCOdgSWe9t1VwoTldhgwrMtJGUA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iD0p4BeStSJK5VTUkid2+k8zXIFbBzqi7H1xremZKf7wXDw3dTSQ8hFmPVJN/8+ut
-	 9WtLz1LafbSsM7VUFg3BUseohcbhLAOQIH+ZDkZuiS0hdKnc+iXmLvCnziC/FIoSM0
-	 Dzuar5imwTcByY991yop02aITq54oavasEfDzQzo25t2Cf/eqtgCsIU6lKw5UyFSAy
-	 nRej8EwhnamQhP/BUX4ZqafED11BBE0TgusJw08d6qYdGsxJ9g++PaX5Dy3f8pcN/c
-	 pFf5ZkJRb7rQP9FnkqYwt5YaCh1yOEJOKoy2hA+E8pnqnMZjPvD2admOKoywUbVwdp
-	 Vm31S6caE6Msw==
+	b=mNl/NnCDnbHPL/J8ujT5/D/yqZ4ggD5/7pBmF87kEhIquN9tFaio4Va5qLCQZVoWT
+	 ebOKsyTOaeBkMfa8AXMGBvhp2SSahpnEuFy8psEMEied8ItAB4dD986FPhzitAPk8v
+	 GJQmEqsRDtc02jmCkWvFkmgPCvG1P3ltcNfF8lpyh0JO2s6bYTZbhUGgW8lz66ak21
+	 Hn2CG+EdLBuq6X0pp6ESDSd6pfp8M80TqzWyNKGWCEdR2ft1hz5OYEhmTmmrRnF3Uh
+	 /1DjQ1VhiGirSs/3N58NPi5P11PB/cbTsKwT/dbOYbgBJnop+ktzy6iOHRF7yP5xNm
+	 3nRMiR22JwQeQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jiawei Wang <me@jwang.link>,
+Cc: =?UTF-8?q?Alban=20Boy=C3=A9?= <alban.boye@protonmail.com>,
+	Cezary Rojewski <cezary.rojewski@intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
 	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 048/451] ASoC: amd: yc: Fix non-functional mic on Lenovo 21J2
-Date: Sun, 24 Mar 2024 19:05:24 -0400
-Message-ID: <20240324231207.1351418-49-sashal@kernel.org>
+Subject: [PATCH 6.1 053/451] ASoC: Intel: bytcr_rt5640: Add an extra entry for the Chuwi Vi8 tablet
+Date: Sun, 24 Mar 2024 19:05:29 -0400
+Message-ID: <20240324231207.1351418-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -44,42 +46,50 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jiawei Wang <me@jwang.link>
+From: Alban Boyé <alban.boye@protonmail.com>
 
-[ Upstream commit ed00a6945dc32462c2d3744a3518d2316da66fcc ]
+[ Upstream commit f8b0127aca8c60826e7354e504a12d4a46b1c3bb ]
 
-Like many other models, the Lenovo 21J2 (ThinkBook 16 G5+ APO)
-needs a quirk entry for the internal microphone to function.
+The bios version can differ depending if it is a dual-boot variant of the tablet.
+Therefore another DMI match is required.
 
-Signed-off-by: Jiawei Wang <me@jwang.link>
-Link: https://msgid.link/r/20240228073914.232204-2-me@jwang.link
+Signed-off-by: Alban Boyé <alban.boye@protonmail.com>
+Reviewed-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://msgid.link/r/20240228192807.15130-1-alban.boye@protonmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/amd/yc/acp6x-mach.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ sound/soc/intel/boards/bytcr_rt5640.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/sound/soc/amd/yc/acp6x-mach.c b/sound/soc/amd/yc/acp6x-mach.c
-index 0568e64d10150..e0f406b6646ba 100644
---- a/sound/soc/amd/yc/acp6x-mach.c
-+++ b/sound/soc/amd/yc/acp6x-mach.c
-@@ -199,6 +199,13 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "21HY"),
- 		}
+diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
+index 797d0a48d6066..094445036c20f 100644
+--- a/sound/soc/intel/boards/bytcr_rt5640.c
++++ b/sound/soc/intel/boards/bytcr_rt5640.c
+@@ -685,6 +685,18 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
+ 					BYT_RT5640_SSP0_AIF1 |
+ 					BYT_RT5640_MCLK_EN),
  	},
-+	{
-+		.driver_data = &acp6x_card,
++	{	/* Chuwi Vi8 dual-boot (CWI506) */
 +		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "21J2"),
-+		}
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Insyde"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "i86"),
++			/* The above are too generic, also match BIOS info */
++			DMI_MATCH(DMI_BIOS_VERSION, "CHUWI2.D86JHBNR02"),
++		},
++		.driver_data = (void *)(BYTCR_INPUT_DEFAULTS |
++					BYT_RT5640_MONO_SPEAKER |
++					BYT_RT5640_SSP0_AIF1 |
++					BYT_RT5640_MCLK_EN),
 +	},
  	{
- 		.driver_data = &acp6x_card,
+ 		/* Chuwi Vi10 (CWI505) */
  		.matches = {
 -- 
 2.43.0
