@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA82E14BF92;
-	Sun, 24 Mar 2024 22:58:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4332412D218;
+	Sun, 24 Mar 2024 22:58:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321136; cv=none; b=kB7/7CE1EvKmbZ/1EvvAWxjXlqcZ4SMmX0Z18r8aDZUYEBsrv8lu+cWJAnm39UzZ3cYRANI4kJmIGHxeLIqk9kdpb/7P0CgZyg7NREvk6Xn+ZAyDldHH2vbKbIKDJIXCEi/3n8LmFcuzeQUi0G6qOdBdbhqnqbYL4tMT3ujF94U=
+	t=1711321114; cv=none; b=TK0hm0/V5OPGkNEaoB9r8h2F9nEpujBOjIcQVMrl5JhzT3tP3o468csdSKNQ+777R3jZfb4GIDRjeZ6M6tr0qC/w2DLXtLwrMF8y75hqOUPME5hMPNnVGor31Vm/CF4i7d6cvi8LVSFZm73roT1CqF9f/p5KX4afGGNEb3onRac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321136; c=relaxed/simple;
-	bh=+QcmLcmnjuhqAeaN6Zyve029BFTLrip7akLENzC+Dls=;
+	s=arc-20240116; t=1711321114; c=relaxed/simple;
+	bh=oPWSx8SdfdjsEVzy+Z5jo84gY+npncO8mSnmQcUnbCs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Kg+xTn5NGJ4q7ZkKuWTx54te3E/XHmsoK06ord8P6IpGna3Ml5RLh7V5aPEvx2NDblT6MEpfDiV1gThuDjJLZEI8bzGFJ7Y7i7WJWWMepz+fmShrzKeL4ouAN71uWaXsY2fwh8wyZ8foavwDdCzkTGsWipdhcK3g+94sL/FurvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iOmWUHzg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=J+tRHImzVX2ucWPXysm/ucp4zZzAB6uBc+NwlNEyZ7FltJyl2+wapLlsj9kN66n5k/k5A3vfdbqghJjkggYHmgldhfSoXXtutUzbZIzsi1YXAqyufp+ZlVq8+VAdLRqQOK8HdT3e1TN9crboqnn7mlYlJTLAvWnbPQdrEyqhDYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXTgSXiV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iOmWUHzg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F0EAC43394;
-	Sun, 24 Mar 2024 22:58:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXTgSXiV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37DEAC433C7;
+	Sun, 24 Mar 2024 22:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321135;
-	bh=+QcmLcmnjuhqAeaN6Zyve029BFTLrip7akLENzC+Dls=;
+	s=k20201202; t=1711321114;
+	bh=oPWSx8SdfdjsEVzy+Z5jo84gY+npncO8mSnmQcUnbCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iOmWUHzgQl3SvGF7qCF05cUlRfkw8IJ9ZDcGqOeZqFfKiN/VxMG3fqfmyExz1DlC9
-	 saYyaBOqqJA5WHpoTU86hGO5nLNfFLRoEHCA8m6Q8LbejktTivJVqLoo1Vw2jfe4vV
-	 55ENByI5pqwbCFrd29/cvi42PsqHjMc88F8bddHzNwc/VsgiyHPrNuBBMxg79/OCdP
-	 81wveHfrhRZv1VTi6dcpG1hrj2/WNgPLz/KJgy+rIFp4DQu1VxL97cgf/NUONKwy6/
-	 kmHgVqvyWjxoO+PTtX06oYaB+YUWNwvn4HT2Fw49udVk3A2Khc9GaeBJTe3NS9KP9V
-	 OTPQXwNxbsHMQ==
+	b=cXTgSXiVJSJELbQZBicNsQkP1h4J4D+9Xfo4sN1Fd2YHm0sInpADWRFAPkFRTurwA
+	 xztXM/Vcp95DOhqAO1i3XGswO8XSGhJ3I7tRlpF2KZ3lk0BFvABd6wAgUrFVVWcF61
+	 wBl0VcEBdvyxSV5hgnTRocZZwa8irkMr8GIymsms749tbafUwca3UiL2Lggn6WCwhe
+	 B2mgihWnR3KM2AgBOsdp+MfVuWhpO1gjkDnLON3ShpVwj3H6wECp5iy9o8pP/yoAzv
+	 jhk9mUenwy9hTGndu1VrVfDl+rBDA+QTfj00lE118SjWI3Ud0CFxNOnDC8MFDIOHQ5
+	 3Jdwr7aZF0Txg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Le Ma <le.ma@amd.com>,
-	Hawking Zhang <Hawking.Zhang@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Arthur Grillo <arthurgrillo@riseup.net>,
+	Pekka Paalanen <pekka.paalanen@collabora.com>,
+	Harry Wentland <harry.wentland@amd.com>,
+	Melissa Wen <mwen@igalia.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 697/713] drm/amdgpu: drop setting buffer funcs in sdma442
-Date: Sun, 24 Mar 2024 18:47:03 -0400
-Message-ID: <20240324224720.1345309-698-sashal@kernel.org>
+Subject: [PATCH 6.7 676/713] drm: Fix drm_fixp2int_round() making it add 0.5
+Date: Sun, 24 Mar 2024 18:46:42 -0400
+Message-ID: <20240324224720.1345309-677-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,79 +51,49 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Le Ma <le.ma@amd.com>
+From: Arthur Grillo <arthurgrillo@riseup.net>
 
-[ Upstream commit ad550dbe8ae4ba833371a018265c1c3ae88559f0 ]
+[ Upstream commit 807f96abdf14c80f534c78f2d854c2590963345c ]
 
-To fix the entity rq NULL issue. This setting has been moved
-to upper level.
+As well noted by Pekka[1], the rounding of drm_fixp2int_round is wrong.
+To round a number, you need to add 0.5 to the number and floor that,
+drm_fixp2int_round() is adding 0.0000076. Make it add 0.5.
 
-Fixes: b70438004a14 ("drm/amdgpu: move buffer funcs setting up a level")
-Signed-off-by: Le Ma <le.ma@amd.com>
-Reviewed-by: Hawking Zhang <Hawking.Zhang@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+[1]: https://lore.kernel.org/all/20240301135327.22efe0dd.pekka.paalanen@collabora.com/
+
+Fixes: 8b25320887d7 ("drm: Add fixed-point helper to get rounded integer values")
+Suggested-by: Pekka Paalanen <pekka.paalanen@collabora.com>
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+Reviewed-by: Melissa Wen <mwen@igalia.com>
+Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
+Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20240316-drm_fixed-v2-1-c1bc2665b5ed@riseup.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/sdma_v4_4_2.c | 23 +----------------------
- 1 file changed, 1 insertion(+), 22 deletions(-)
+ include/drm/drm_fixed.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v4_4_2.c b/drivers/gpu/drm/amd/amdgpu/sdma_v4_4_2.c
-index 0f24af6f28102..8eed9a73d0355 100644
---- a/drivers/gpu/drm/amd/amdgpu/sdma_v4_4_2.c
-+++ b/drivers/gpu/drm/amd/amdgpu/sdma_v4_4_2.c
-@@ -429,16 +429,11 @@ static void sdma_v4_4_2_inst_gfx_stop(struct amdgpu_device *adev,
- 	struct amdgpu_ring *sdma[AMDGPU_MAX_SDMA_INSTANCES];
- 	u32 doorbell_offset, doorbell;
- 	u32 rb_cntl, ib_cntl;
--	int i, unset = 0;
-+	int i;
+diff --git a/include/drm/drm_fixed.h b/include/drm/drm_fixed.h
+index 0c9f917a4d4be..81572d32db0c2 100644
+--- a/include/drm/drm_fixed.h
++++ b/include/drm/drm_fixed.h
+@@ -71,7 +71,6 @@ static inline u32 dfixed_div(fixed20_12 A, fixed20_12 B)
+ }
  
- 	for_each_inst(i, inst_mask) {
- 		sdma[i] = &adev->sdma.instance[i].ring;
+ #define DRM_FIXED_POINT		32
+-#define DRM_FIXED_POINT_HALF	16
+ #define DRM_FIXED_ONE		(1ULL << DRM_FIXED_POINT)
+ #define DRM_FIXED_DECIMAL_MASK	(DRM_FIXED_ONE - 1)
+ #define DRM_FIXED_DIGITS_MASK	(~DRM_FIXED_DECIMAL_MASK)
+@@ -90,7 +89,7 @@ static inline int drm_fixp2int(s64 a)
  
--		if ((adev->mman.buffer_funcs_ring == sdma[i]) && unset != 1) {
--			amdgpu_ttm_set_buffer_funcs_status(adev, false);
--			unset = 1;
--		}
--
- 		rb_cntl = RREG32_SDMA(i, regSDMA_GFX_RB_CNTL);
- 		rb_cntl = REG_SET_FIELD(rb_cntl, SDMA_GFX_RB_CNTL, RB_ENABLE, 0);
- 		WREG32_SDMA(i, regSDMA_GFX_RB_CNTL, rb_cntl);
-@@ -485,20 +480,10 @@ static void sdma_v4_4_2_inst_rlc_stop(struct amdgpu_device *adev,
- static void sdma_v4_4_2_inst_page_stop(struct amdgpu_device *adev,
- 				       uint32_t inst_mask)
+ static inline int drm_fixp2int_round(s64 a)
  {
--	struct amdgpu_ring *sdma[AMDGPU_MAX_SDMA_INSTANCES];
- 	u32 rb_cntl, ib_cntl;
- 	int i;
--	bool unset = false;
+-	return drm_fixp2int(a + (1 << (DRM_FIXED_POINT_HALF - 1)));
++	return drm_fixp2int(a + DRM_FIXED_ONE / 2);
+ }
  
- 	for_each_inst(i, inst_mask) {
--		sdma[i] = &adev->sdma.instance[i].page;
--
--		if ((adev->mman.buffer_funcs_ring == sdma[i]) &&
--			(!unset)) {
--			amdgpu_ttm_set_buffer_funcs_status(adev, false);
--			unset = true;
--		}
--
- 		rb_cntl = RREG32_SDMA(i, regSDMA_PAGE_RB_CNTL);
- 		rb_cntl = REG_SET_FIELD(rb_cntl, SDMA_PAGE_RB_CNTL,
- 					RB_ENABLE, 0);
-@@ -948,13 +933,7 @@ static int sdma_v4_4_2_inst_start(struct amdgpu_device *adev,
- 			r = amdgpu_ring_test_helper(page);
- 			if (r)
- 				return r;
--
--			if (adev->mman.buffer_funcs_ring == page)
--				amdgpu_ttm_set_buffer_funcs_status(adev, true);
- 		}
--
--		if (adev->mman.buffer_funcs_ring == ring)
--			amdgpu_ttm_set_buffer_funcs_status(adev, true);
- 	}
- 
- 	return r;
+ static inline int drm_fixp2int_ceil(s64 a)
 -- 
 2.43.0
 
