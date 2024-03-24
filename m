@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BE817B519;
-	Sun, 24 Mar 2024 23:42:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0710217AFA0;
+	Sun, 24 Mar 2024 23:42:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323727; cv=none; b=dYFYCJPBXcns4gn8CslKmUBzpwivohUraMMxxxprfxQGLPti3XFyvICPnVnEPbyaaNvhjXa40uMgYdNFLDWZI5UMT0Gfb0RQlOtfrmE85C3jYUNsmj+tNEIXH+vo96XtNOIORQtf+qkrddXzzu7WRTOuilEoXcG78dV9g+mjhmE=
+	t=1711323730; cv=none; b=U4StVO5Yvb6knniiwZP7ZLDaPNG8UBpdhW/XfFOhqX2MdCPLJkeIf3viAB+9LaQ3sptgn+uUT78cUIvJB/pLLdUw3knqbZJXM57gKWjMVWQntM+P6bJmmagC9P7v1A6Mye6msLU9jOamspoDxbpvXYOsNqDknZcUbywsOXtcHo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323727; c=relaxed/simple;
-	bh=FU8bOYJOpA7z5HZUBn8V79nlonCFP1MChAiD587xR18=;
+	s=arc-20240116; t=1711323730; c=relaxed/simple;
+	bh=04JXsG15q47bxJ2l1x5tF5lHZqAY//KUUy2ZJRWCw7w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ArCZGgWRnS5h0CYhpyWoxt0joBX3I/GejCwzt+31KcneP4REJLFXjxL0UQQnGcXi8RYgPRDEYyZvOMv/yuTB0WT5UJ1Q1AisTzbi9fmX7J7gxiTe6IL70ZK5VCR1RZFKKZAylZIOtx/44Top8/OEeWZZAfNvs73zj32LyKiU0Pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DzpW7mxr; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JmhxVGN1X9w6x5yDKK6t3xtWF0a1lLU2su8JxbkXUvNRHVraMcd+f4zakPvc6HNETF4c5uXyevhCKGHY0PPigyoiR0xcrqEp/MHWVI9r4xHXKXcal2ee9wPvllWHBY4rls7NQ/sjMunSBhw/zf7Ls8D1KdFQO7dGUhcVNr0+R+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sGjUcDrD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DzpW7mxr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 573A4C433C7;
-	Sun, 24 Mar 2024 23:42:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sGjUcDrD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3730AC433A6;
+	Sun, 24 Mar 2024 23:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323726;
-	bh=FU8bOYJOpA7z5HZUBn8V79nlonCFP1MChAiD587xR18=;
+	s=k20201202; t=1711323728;
+	bh=04JXsG15q47bxJ2l1x5tF5lHZqAY//KUUy2ZJRWCw7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DzpW7mxrH+GLwsfSeFj+kW9LBbzI2zpw//kPq5gGrBAWVMHLstju8CdLd1zaRojPH
-	 jq+xBt8LCP3vaG5BytdyibwPOVJDIZLr3l5judsz/88QHmmGtPpElkgl3UE0zajW+9
-	 zTb6C1eJZcK9oykD8W0tzUmc/70y+MmGbtzRaoFeg7dMSJ+9AIedee97b2UTua3XxS
-	 VnlTyfYBIRMBRmapWbPRVupi4lKPLbLY/MPRMs51brmqZzKT6R9cGSnulFbXGvF30t
-	 5UyW2zzG4fVpg3ckQDTz6wX6CKwOLXhfgEPxgS5qgZob56kkwyxOPvxihPa94cW8oB
-	 P+gAGxHY29lfg==
+	b=sGjUcDrDQ3f+UA+7wHqKnyCJR+wyZtn4MljbNsO6O/gzyBarlz4/0XLTLWd//kLRV
+	 M4TWR3BNnNoMNGYmAXFxPc+DlRw6u/7dY7e9RAu12p6xLqn1pctG3ARgZkjjsnkHJM
+	 Ef4y4jSIXlxq+/AhesBNp5vWaj6rtg+Ybv6cQFo9wtKgXhnbWEPzPqTSgIEfEvl/5q
+	 wW7YBSx+hlt/CxcdjozWormtC4B2P3VgYxhqC11Jcgya1BBBOceoux2QYE7zNE1/kc
+	 ZUDNFraeHnnExphJwCuCsTTf9TX6Fj5WRF/pFleb6gq4pwxanH1+YCmSNRAPJZg+tm
+	 oPUmSPqDoZZAw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Viresh Kumar <viresh.kumar@linaro.org>,
-	kernel test robot <lkp@intel.com>,
-	Dhruva Gole <d-gole@ti.com>,
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 099/238] OPP: debugfs: Fix warning around icc_get_name()
-Date: Sun, 24 Mar 2024 19:38:07 -0400
-Message-ID: <20240324234027.1354210-100-sashal@kernel.org>
+Subject: [PATCH 5.10 102/238] net/ipv4: Revert use of struct_size() helper
+Date: Sun, 24 Mar 2024 19:38:10 -0400
+Message-ID: <20240324234027.1354210-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -49,48 +48,91 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
 
-[ Upstream commit 28330ceb953e39880ea77da4895bb902a1244860 ]
+[ Upstream commit 4167a960574fcadc9067f4280951a35b8c021c68 ]
 
-If the kernel isn't built with interconnect support, icc_get_name()
-returns NULL and we get following warning:
+Revert the use of structr_size() and stay with IP_MSFILTER_SIZE() for
+now, as in this case, the size of struct ip_msfilter didn't change with
+the addition of the flexible array imsf_slist_flex[]. So, if we use
+struct_size() we will be allocating and calculating the size of
+struct ip_msfilter with one too many items for imsf_slist_flex[].
 
-drivers/opp/debugfs.c: In function 'bw_name_read':
-drivers/opp/debugfs.c:43:42: error: '%.62s' directive argument is null [-Werror=format-overflow=]
-         i = scnprintf(buf, sizeof(buf), "%.62s\n", icc_get_name(path));
+We might use struct_size() in the future, but for now let's stay
+with IP_MSFILTER_SIZE().
 
-Fix it.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202402141313.81ltVF5g-lkp@intel.com/
-Fixes: 0430b1d5704b0 ("opp: Expose bandwidth information via debugfs")
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Reviewed-by: Dhruva Gole <d-gole@ti.com>
+Fixes: 2d3e5caf96b9 ("net/ipv4: Replace one-element array with flexible-array member")
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Stable-dep-of: 5c3be3e0eb44 ("ipmr: fix incorrect parameter validation in the ip_mroute_getsockopt() function")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/opp/debugfs.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/ipv4/igmp.c        |  4 ++--
+ net/ipv4/ip_sockglue.c | 12 +++++-------
+ 2 files changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/opp/debugfs.c b/drivers/opp/debugfs.c
-index 60f4ff8e044d1..016dea5a412be 100644
---- a/drivers/opp/debugfs.c
-+++ b/drivers/opp/debugfs.c
-@@ -36,10 +36,12 @@ static ssize_t bw_name_read(struct file *fp, char __user *userbuf,
- 			    size_t count, loff_t *ppos)
- {
- 	struct icc_path *path = fp->private_data;
-+	const char *name = icc_get_name(path);
- 	char buf[64];
--	int i;
-+	int i = 0;
+diff --git a/net/ipv4/igmp.c b/net/ipv4/igmp.c
+index 134f1682a7e9b..4ba1c92fb3524 100644
+--- a/net/ipv4/igmp.c
++++ b/net/ipv4/igmp.c
+@@ -2573,8 +2573,8 @@ int ip_mc_msfget(struct sock *sk, struct ip_msfilter *msf,
+ 	copycount = count < msf->imsf_numsrc ? count : msf->imsf_numsrc;
+ 	len = flex_array_size(psl, sl_addr, copycount);
+ 	msf->imsf_numsrc = count;
+-	if (put_user(struct_size(optval, imsf_slist_flex, copycount), optlen) ||
+-	    copy_to_user(optval, msf, struct_size(optval, imsf_slist_flex, 0))) {
++	if (put_user(IP_MSFILTER_SIZE(copycount), optlen) ||
++	    copy_to_user(optval, msf, IP_MSFILTER_SIZE(0))) {
+ 		return -EFAULT;
+ 	}
+ 	if (len &&
+diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
+index 2cfc507712300..28b9b2e85f0be 100644
+--- a/net/ipv4/ip_sockglue.c
++++ b/net/ipv4/ip_sockglue.c
+@@ -674,7 +674,7 @@ static int set_mcast_msfilter(struct sock *sk, int ifindex,
+ 	struct sockaddr_in *psin;
+ 	int err, i;
  
--	i = scnprintf(buf, sizeof(buf), "%.62s\n", icc_get_name(path));
-+	if (name)
-+		i = scnprintf(buf, sizeof(buf), "%.62s\n", name);
+-	msf = kmalloc(struct_size(msf, imsf_slist_flex, numsrc), GFP_KERNEL);
++	msf = kmalloc(IP_MSFILTER_SIZE(numsrc), GFP_KERNEL);
+ 	if (!msf)
+ 		return -ENOBUFS;
  
- 	return simple_read_from_buffer(userbuf, count, ppos, buf, i);
- }
+@@ -1235,7 +1235,7 @@ static int do_ip_setsockopt(struct sock *sk, int level, int optname,
+ 	{
+ 		struct ip_msfilter *msf;
+ 
+-		if (optlen < struct_size(msf, imsf_slist_flex, 0))
++		if (optlen < IP_MSFILTER_SIZE(0))
+ 			goto e_inval;
+ 		if (optlen > READ_ONCE(sysctl_optmem_max)) {
+ 			err = -ENOBUFS;
+@@ -1253,8 +1253,7 @@ static int do_ip_setsockopt(struct sock *sk, int level, int optname,
+ 			err = -ENOBUFS;
+ 			break;
+ 		}
+-		if (struct_size(msf, imsf_slist_flex, msf->imsf_numsrc) >
+-		    optlen) {
++		if (IP_MSFILTER_SIZE(msf->imsf_numsrc) > optlen) {
+ 			kfree(msf);
+ 			err = -EINVAL;
+ 			break;
+@@ -1667,12 +1666,11 @@ static int do_ip_getsockopt(struct sock *sk, int level, int optname,
+ 	{
+ 		struct ip_msfilter msf;
+ 
+-		if (len < struct_size(&msf, imsf_slist_flex, 0)) {
++		if (len < IP_MSFILTER_SIZE(0)) {
+ 			err = -EINVAL;
+ 			goto out;
+ 		}
+-		if (copy_from_user(&msf, optval,
+-				   struct_size(&msf, imsf_slist_flex, 0))) {
++		if (copy_from_user(&msf, optval, IP_MSFILTER_SIZE(0))) {
+ 			err = -EFAULT;
+ 			goto out;
+ 		}
 -- 
 2.43.0
 
