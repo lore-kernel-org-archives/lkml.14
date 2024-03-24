@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38938153833;
-	Sun, 24 Mar 2024 23:08:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B0313A87C;
+	Sun, 24 Mar 2024 23:08:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321703; cv=none; b=Cyl2fpDhu+tZWX6XaaC6K7ws5GV7WRpuKHFfCnS2cK6sbxtUONL425URpxsnJXTeqC5/VF9kTcGRejnu3gZTCqWueJzj0K1Vs23KXiFA78OSfekdkiiXdQgwJcbPgUtvBlJqom40c93ux0GKb6+K0gElOnXiKb1VGB3bnsTIJmI=
+	t=1711321705; cv=none; b=MF8emsnJ1f4i6ubxIF5qS70d3wFUs27Dc+OfZVhYYX99Ba6rWU0KNHtQeWk7z4rthv4A9c9KTxU/et2N7OZ7+Xyb3bk7j31CIG9zLIkmAw0IZgXLgEgRazN+FZgbCNCIaERerEApzYQSge94/tJuyQlA6dZeEEfujuqRW31hKes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321703; c=relaxed/simple;
-	bh=HTrrK1pFvDc5N5gNcuLAGS1bbir5cq4s591h36R7SGE=;
+	s=arc-20240116; t=1711321705; c=relaxed/simple;
+	bh=W1qnD+PQflFLeBQuy72HrEwLuX68/y0GgttfO4r6uQ4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mUvwEO1p2lgN5rx7QDCPzPfPmGWmPi/NlkQJZS4dUTu6cYm3TmAxAdmOMfMXFexhzUnGS75MurznLxW4Ro8YsJr9+FPlL7LdxFMF1r800tMq8ey0Viw3bNGHUG0r/lgGhxq6bAxL+UTwysS+MeWpX2cBDzuojzu4B6upF9YIgwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qx6gaTIF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tCL0vnW6JLGIwXz65oyR+jcg4PGuXS88OpE5K3FK70eSgFaKohYHYMrWxN0X/8ONz0173iM6O59bCyEl+2zgdo7cldxFfWCsUutXsvoZkineE0ZoDSKuKOpZerzDYSFIXZoiEMClWNWyqSn7CmndKd8XiftksyiEzL4U9jomzkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qm56cFqR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qx6gaTIF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2376CC43399;
-	Sun, 24 Mar 2024 23:08:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qm56cFqR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E72B4C433F1;
+	Sun, 24 Mar 2024 23:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321702;
-	bh=HTrrK1pFvDc5N5gNcuLAGS1bbir5cq4s591h36R7SGE=;
+	s=k20201202; t=1711321704;
+	bh=W1qnD+PQflFLeBQuy72HrEwLuX68/y0GgttfO4r6uQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qx6gaTIFHvjWKUnZeP59ndL32UmsBrX6avmWyXjT/Gyq7rTP0htW8M8rPCoseYXcC
-	 eb8Y7yWtF9OwsLC3w6qKgN+84usUJxum3fJEY7v3igu69Fhy5vJRl8CHt96Xc5yML+
-	 z2VcGfIZx5jiWjOrbAbcMzFTbPnBIcMmLKQibGCLo/a4fC/dWTJ93BxOt3QeWB5zde
-	 Q6LmGBl6fAEaLSnkhjZ4RXumyM0MI5eqBBVHOJ50iQkGMSMUHtQdVthNMtW3Lw6f3V
-	 OUx/NgokabcTCml11jBq+aWqrA4XsjBZ31ryuh38KYB/Y8I6o9NBdNbOl6khz7vAoc
-	 wFdZesbqfFdGQ==
+	b=Qm56cFqRdnf+lL4L6q3m5K/Mf5In1vGR/E2mNZORE7hyM3Zkp8asO+uBNW/dF1/lA
+	 MgqNr/Cz43pVbMC5gatjE/arPAEPedrkDMlyOlXgmsSWJ6QPpgbXzbrgKAMO4RzziC
+	 ZvbXE5ZimJrxfC3vxXN0amUO3vpHIrz0NVP8vWhPqxKKyj//rZC48ORcUVd8dMwDjB
+	 cJVYXOIyd0PfMGqOa8Z9eIynBrvQNhVT2+V537ajqGVnns6mxdByMgPYFd+27h3WwP
+	 OIjgFX5Iv/f3r+EBqDgCt15k8soQogg1Q6O4Bqq9LKf+4cA3RGXBP2xxgu8tf1vZ6+
+	 WCPWC+t2wpTHw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Stephen Boyd <sboyd@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 431/638] pinctrl: renesas: Allow the compiler to optimize away sh_pfc_pm
-Date: Sun, 24 Mar 2024 18:57:48 -0400
-Message-ID: <20240324230116.1348576-432-sashal@kernel.org>
+Subject: [PATCH 6.6 433/638] clk: hisilicon: hi3559a: Fix an erroneous devm_kfree()
+Date: Sun, 24 Mar 2024 18:57:50 -0400
+Message-ID: <20240324230116.1348576-434-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,51 +48,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit a6f06b909fee72c679c565adfa7f080f9595e336 ]
+[ Upstream commit 64c6a38136b74a2f18c42199830975edd9fbc379 ]
 
-The conversion to DEFINE_NOIRQ_DEV_PM_OPS() lost the ability of the
-compiler to optimize away the struct dev_pm_ops object when it is not
-needed.
+'p_clk' is an array allocated just before the for loop for all clk that
+need to be registered.
+It is incremented at each loop iteration.
 
-Fix this by replacing the use of pm_sleep_ptr() by a custom wrapper.
+If a clk_register() call fails, 'p_clk' may point to something different
+from what should be freed.
 
-Fixes: 727eb02eb753375e ("pinctrl: renesas: Switch to use DEFINE_NOIRQ_DEV_PM_OPS() helper")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Link: https://lore.kernel.org/r/6238a78e32fa21f0c795406b6cba7bce7af92577.1708513940.git.geert+renesas@glider.be
+The best we can do, is to avoid this wrong release of memory.
+
+Fixes: 6c81966107dc ("clk: hisilicon: Add clock driver for hi3559A SoC")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Link: https://lore.kernel.org/r/773fc8425c3b8f5b0ca7c1d89f15b65831a85ca9.1705850155.git.christophe.jaillet@wanadoo.fr
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/renesas/core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/clk/hisilicon/clk-hi3559a.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/pinctrl/renesas/core.c b/drivers/pinctrl/renesas/core.c
-index 93e51abbf519a..d1e92bbed33ad 100644
---- a/drivers/pinctrl/renesas/core.c
-+++ b/drivers/pinctrl/renesas/core.c
-@@ -731,10 +731,12 @@ static int sh_pfc_resume_noirq(struct device *dev)
- 		sh_pfc_walk_regs(pfc, sh_pfc_restore_reg);
- 	return 0;
- }
-+#define pm_psci_sleep_ptr(_ptr)	pm_sleep_ptr(_ptr)
- #else
- static int sh_pfc_suspend_init(struct sh_pfc *pfc) { return 0; }
- static int sh_pfc_suspend_noirq(struct device *dev) { return 0; }
- static int sh_pfc_resume_noirq(struct device *dev) { return 0; }
-+#define pm_psci_sleep_ptr(_ptr)	PTR_IF(false, (_ptr))
- #endif	/* CONFIG_ARM_PSCI_FW */
+diff --git a/drivers/clk/hisilicon/clk-hi3559a.c b/drivers/clk/hisilicon/clk-hi3559a.c
+index ff4ca0edce06a..4623befafaec4 100644
+--- a/drivers/clk/hisilicon/clk-hi3559a.c
++++ b/drivers/clk/hisilicon/clk-hi3559a.c
+@@ -491,7 +491,6 @@ static void hisi_clk_register_pll(struct hi3559av100_pll_clock *clks,
  
- static DEFINE_NOIRQ_DEV_PM_OPS(sh_pfc_pm, sh_pfc_suspend_noirq, sh_pfc_resume_noirq);
-@@ -1415,7 +1417,7 @@ static struct platform_driver sh_pfc_driver = {
- 	.driver		= {
- 		.name	= DRV_NAME,
- 		.of_match_table = of_match_ptr(sh_pfc_of_table),
--		.pm	= pm_sleep_ptr(&sh_pfc_pm),
-+		.pm	= pm_psci_sleep_ptr(&sh_pfc_pm),
- 	},
- };
- 
+ 		clk = clk_register(NULL, &p_clk->hw);
+ 		if (IS_ERR(clk)) {
+-			devm_kfree(dev, p_clk);
+ 			dev_err(dev, "%s: failed to register clock %s\n",
+ 			       __func__, clks[i].name);
+ 			continue;
 -- 
 2.43.0
 
