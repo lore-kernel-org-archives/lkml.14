@@ -1,41 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6452E1DE124;
-	Sun, 24 Mar 2024 22:52:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0931DF0FF;
+	Sun, 24 Mar 2024 22:52:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320734; cv=none; b=NlIHfLhJXxeWLpNBnfovU8frofUiPQWnyIiWCutliVzpaAWjd3ub8XQwYl+MekYH7s/iftbHUGm6XSV9BZxxHLZxniVFz2NelbB9nSWV2SCVKVBuiZ2T4czIfHL+pufhLa3erorniptteShj+QG2/xAfowGbryhyAJfGDW+f2qU=
+	t=1711320744; cv=none; b=KRoWCvK2cy4+RM79DtyMofehtQ19thLiFG0AmZ1HVTVsxYufWrwsoIdOVvDTef4tEged/Y8XQ2APPiFjd0UJKJmfOjWvbLChjp5pC2BcMPXmLRgpUNt6v7TBH3N3iA2g1oqVJHBDwIWIE3TjoVXr3TO/MUI2OBrATgHB6Zbj2vU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320734; c=relaxed/simple;
-	bh=9dvy687CtwURzfVHw6lTuPxhxIja+b8C9bxt43jmUvw=;
+	s=arc-20240116; t=1711320744; c=relaxed/simple;
+	bh=hmQWRWL7arDI/JH7/+hDhSSggeI1GZPVqcl3qHGLP78=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MOKhF9HWKVSrnn/a5ZUWKyZaMU9qUTSGZXe9M3uJhUNbHNRxONcckSl1yjGd1CLvrprweZlh/CEd/6XYGT8I5L0EdwJ8fS5y7stbE+gfAErzoP7zx0xLz83xwGu9oibA1ac21w5c/9SIBon3a249xxVZq63fXWO+mLC3REQTbzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R3Kby8No; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nIAPEi7tx7VCz3640aHcAgAvfdX4W1LViQsEVjlP/rNJPBvTc+yPsZsDG4xm4LklUOmwMgwbprI99XXBNbVtTp4lqqukp3UmH9l2/G/P3vGpqL1gYU0c8GKqh4t/4V0aavRKW9AUbaW+p5OIRc2JYSDPHARVnj6+dvgVwaosJw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uKcuileL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R3Kby8No"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86DA3C433C7;
-	Sun, 24 Mar 2024 22:52:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uKcuileL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D57DC433F1;
+	Sun, 24 Mar 2024 22:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320733;
-	bh=9dvy687CtwURzfVHw6lTuPxhxIja+b8C9bxt43jmUvw=;
+	s=k20201202; t=1711320743;
+	bh=hmQWRWL7arDI/JH7/+hDhSSggeI1GZPVqcl3qHGLP78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=R3Kby8NogT9NJA4agJjV3n0WJ7CuNuZjCBYXCxyZ98lSdhYgDrM8nxFCu42TtxIUL
-	 Ape/sVJWrtCX2k96iIjqACFhMbcTFhXxyLVNSyJcBLONhuw05514/Ez3nYcSa4wNYZ
-	 5xJhe4gL4xJAKv0ClTiGWnXflroxgxorVStIRw9iWOCp38ApDdv5ONdunIAuRxIBhr
-	 U9X59FdTc/KlntaYnJ17YSYlJ0ow67ew9PHVzHAqA/reIU6nEOdMQgPAoEFJS948pq
-	 9QDU0v9JUodGn4Cae7OwiWkT0cn+StoVMIcGMRZ31MP+V8nAX0WbOQEHwZUnRfSi7u
-	 Hg4kMgcmqt73g==
+	b=uKcuileLlrm42CzTPBs2hsUg8Cys8mAGKL0I6q0exdFpRiRaXusyDwBrSe38+lYod
+	 P+7w7+eQWvTtUA07lWoxsa8N6o2nr8cfSwzlZDGgOs9edeZylMJW92lF4Tjoh0YeZv
+	 hSOZFPGAZG9H63OwFjfEbYFLsrHkImERXnAsspxerAJZ60PzGHQhdfEYvoJ5Zrl+8n
+	 0iF2dRE5AkOZtHAPDNFySUrKotusUOomhHVr85FnwsmhZinV1zkNWJi4ampSSEYZKJ
+	 hjbQNgxTl/MoLmO0WnuWFm1dwnEyARAuqu0WGgvPJ7YFwXPXzLkFaRqiuH/iJjhEPc
+	 bw5TlUZecCa4Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Howard Hsu <howard-yh.hsu@mediatek.com>,
-	Shayne Chen <shayne.chen@mediatek.com>,
-	Felix Fietkau <nbd@nbd.name>,
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 296/713] wifi: mt76: mt7996: fix HE beamformer phy cap for station vif
-Date: Sun, 24 Mar 2024 18:40:22 -0400
-Message-ID: <20240324224720.1345309-297-sashal@kernel.org>
+Subject: [PATCH 6.7 307/713] arm64: dts: renesas: r8a779g0: Correct avb[01] reg sizes
+Date: Sun, 24 Mar 2024 18:40:33 -0400
+Message-ID: <20240324224720.1345309-308-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,41 +47,46 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Howard Hsu <howard-yh.hsu@mediatek.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit e1a491e856a8a36c46b39ecd07f3bba5a119d83a ]
+[ Upstream commit 7edbb5880dc3317a5eaec2166de71ff394598e6b ]
 
-Set correct beamformer capabilities for station vif in HE PHY
-capability IE.
+All Ethernet AVB instances on R-Car V4H have registers related to UDP/IP
+support, but the declared register blocks for the first two instances
+are too small to cover them.
 
-Fixes: 98686cd21624 ("wifi: mt76: mt7996: add driver for MediaTek Wi-Fi 7 (802.11be) devices")
-Signed-off-by: Howard Hsu <howard-yh.hsu@mediatek.com>
-Signed-off-by: Shayne Chen <shayne.chen@mediatek.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Fix this by extending the register block sizes.
+
+Fixes: 848c82db56923a8b ("arm64: dts: renesas: r8a779g0: Add RAVB nodes")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/83437778614a7c96f4d8f1be98dffeee29bb4a0b.1707660323.git.geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt7996/init.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a779g0.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7996/init.c b/drivers/net/wireless/mediatek/mt76/mt7996/init.c
-index 55cb1770fa34e..1d75bf23a02d4 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7996/init.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7996/init.c
-@@ -578,11 +578,12 @@ mt7996_set_stream_he_txbf_caps(struct mt7996_phy *phy,
- 	/* the maximum cap is 4 x 3, (Nr, Nc) = (3, 2) */
- 	elem->phy_cap_info[7] |= min_t(int, sts - 1, 2) << 3;
- 
--	if (vif != NL80211_IFTYPE_AP)
-+	if (!(vif == NL80211_IFTYPE_AP || vif == NL80211_IFTYPE_STATION))
- 		return;
- 
- 	elem->phy_cap_info[3] |= IEEE80211_HE_PHY_CAP3_SU_BEAMFORMER;
--	elem->phy_cap_info[4] |= IEEE80211_HE_PHY_CAP4_MU_BEAMFORMER;
-+	if (vif == NL80211_IFTYPE_AP)
-+		elem->phy_cap_info[4] |= IEEE80211_HE_PHY_CAP4_MU_BEAMFORMER;
- 
- 	c = FIELD_PREP(IEEE80211_HE_PHY_CAP5_BEAMFORMEE_NUM_SND_DIM_UNDER_80MHZ_MASK,
- 		       sts - 1) |
+diff --git a/arch/arm64/boot/dts/renesas/r8a779g0.dtsi b/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
+index 0c83940b3d8a1..d7677595204dc 100644
+--- a/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
+@@ -767,7 +767,7 @@ channel7 {
+ 		avb0: ethernet@e6800000 {
+ 			compatible = "renesas,etheravb-r8a779g0",
+ 				     "renesas,etheravb-rcar-gen4";
+-			reg = <0 0xe6800000 0 0x800>;
++			reg = <0 0xe6800000 0 0x1000>;
+ 			interrupts = <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>,
+@@ -814,7 +814,7 @@ avb0: ethernet@e6800000 {
+ 		avb1: ethernet@e6810000 {
+ 			compatible = "renesas,etheravb-r8a779g0",
+ 				     "renesas,etheravb-rcar-gen4";
+-			reg = <0 0xe6810000 0 0x800>;
++			reg = <0 0xe6810000 0 0x1000>;
+ 			interrupts = <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 361 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 362 IRQ_TYPE_LEVEL_HIGH>,
 -- 
 2.43.0
 
