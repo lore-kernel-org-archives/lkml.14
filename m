@@ -1,87 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2575D15ECC1;
-	Sun, 24 Mar 2024 23:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322310; cv=none; b=a1FVPr2/taDlsaaFmYEskT1+ZFVlo2ncFsgsEcT888vuf+++uu1OvkcXpcljDJd3rW/t1YzcpEh1tIZgHiI9QKTqAyiZAYbN5jbVBA8DHFPgE0V7s2yI0KqwTb4v4W/NhJjbpc998yRNFXe1h372f/YmJOiKOkfQAYAsjbpSRE4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322310; c=relaxed/simple;
-	bh=mak0ga7Yr91BHq0DwvHo0cEhFpzKXI8ueUt7PKSBons=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O0K0emObTtlvn5g4C3MwJ1I5iaA7a0fZ9RXQStezBLhFsehnImmDYTxGjE2o2pb79OxgyP9ziASR03HBJ6vXKUZBo4kEPicwybGo+WOzyeX6mV/djc6nMO4Fq4C2splYnkvfRyKFWMwTePfAhgdl1cZv6c6BXSptg5UXqiBlwKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ss+Lmdhx; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ss+Lmdhx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63FD4C433B1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D9615ECC0;
 	Sun, 24 Mar 2024 23:18:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322310;
-	bh=mak0ga7Yr91BHq0DwvHo0cEhFpzKXI8ueUt7PKSBons=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ss+LmdhxUQ+/eT2rx8CvQE5D4pUBibbDIez9FVWgQt43oSajzS46VdfDTRa0aNmOi
-	 pfOEu7+qN9pjy8etMgeKhdolyWlfJdlAaLCZScBDNDgQbnLMwRs3IeRMmKkMnGgjYJ
-	 IIcJI94IOz2R118JNOPlzw0Z6EnsE5GDVdL6lDItQGUS3xRzuvRS5tkgykfhYx3IPv
-	 ZZAXfm/5XO6t0JzmbMHmvMDj1eGEClh3204qsL4g2ma3xy6Y2zMKQgr5e4SYuau4iU
-	 wQzU7M/vwWLedhNTDafKQaZn0I3u81WrIDcTjvndpz8D65r+SUmn4Efwqc78WvwYrj
-	 MM/qm5qaqmh+g==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 393/451] arm64: dts: broadcom: bcmbca: bcm4908: drop invalid switch cells
-Date: Sun, 24 Mar 2024 19:11:09 -0400
-Message-ID: <20240324231207.1351418-394-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
-References: <20240324231207.1351418-1-sashal@kernel.org>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711322311; cv=none; b=Z0uaTI2BWlGO7Em47VYKLw8Pz0BFcuVHotHuT+HKhPZ5U7GpBmbQM0rZDv31tU+RXyKlsx2kNilp6ZYo/4nBBgzWAyIdug70uwNv8xer+RrttKJxuNC7RPV8iDBVKMT81yyuNE0Pl+jrTQNhiQRV4t8JAA1LKTBub8dTjFQf8WQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711322311; c=relaxed/simple;
+	bh=SdKJxNmCpZI7diYOjhg3gzpenx7d7Y4+UcdBECqzHV0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Ud5NSveDl3AzT1laHz+61lEx/cYkQ4J6Ppb21acp9KHVgX5k7J1Yj63PkH+3AvDmpsP3tpT86P4uaSITO+OlFethqiG/a0JJb45Sjok7ijwkSsYOitg6igNRjJUJiu1G8kdwgk6faCD4xEAmhs7rYKCcJ9Kp1n9lWYsrxfUkkHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k6C3eXtT; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k6C3eXtT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711322310; x=1742858310;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=SdKJxNmCpZI7diYOjhg3gzpenx7d7Y4+UcdBECqzHV0=;
+  b=k6C3eXtTKZAHwUUpne0qIJ3GxNE32ymGILouBC4ZsC2jClwp12b9KNfb
+   SUndVFsiEnc9ZdHxEWhAT7HVaJVzEJ8fYFCw00oB8EZJlgo0Cy77k0I2Q
+   jLN7d3yjBD++Owwp4yRqMWKmrQxs5b1eAC+DLfO6VP1hpQSHGYW9TzRM/
+   yDgD7rUPFi3412xj0jh9YOqUgXhYVHGH9EJTpHxfv+7UObzHGx18xhJMw
+   w60xRzKThrd4vFHOdiu1K7VQlRVWtZJzkYAYSWSTFxZTaeYAMK6315fWL
+   bmEtggX88p3ofqEAdC9ypUyad3DI6rsT6u4H6DHpoW4/COOz1oJkCtdB1
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6431762"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="6431762"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="15464730"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.213.186.165])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:22 -0700
+From: Ira Weiny <ira.weiny@intel.com>
+Date: Sun, 24 Mar 2024 16:18:24 -0700
+Subject: [PATCH 21/26] dax/region: Prevent range mapping allocation on
+ sparse regions
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240324-dcd-type2-upstream-v1-21-b7b00d623625@intel.com>
+References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+In-Reply-To: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Navneet Singh <navneet.singh@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, 
+ Davidlohr Bueso <dave@stgolabs.net>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+X-Mailer: b4 0.13-dev-2d940
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711322284; l=925;
+ i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
+ bh=SdKJxNmCpZI7diYOjhg3gzpenx7d7Y4+UcdBECqzHV0=;
+ b=j4GxZzdCdz6VRtuvgsE/aGqiV1S2P6y/VmyhkFz9BzgBE5/gjCqHSjGiLoXM/n/CvC2x1f70n
+ cy40TEvGDUfAFuMAbbNUF0ZJGaG9zb4THvgqpVqx+28odB3iqzjByie
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
-From: Rafał Miłecki <rafal@milecki.pl>
+Sparse regions are not fully populated with memory and this complicates
+range mapping of dax devices on those regions.  There is no use case for
+range mapping on sparse regions.
 
-[ Upstream commit 27058b95fbb784406ea4c40b20caa3f04937140c ]
+Avoid the complication by prevent range mapping of dax devices on sparse
+regions.
 
-Ethernet switch does not have addressable subnodes.
-
-This fixes:
-arch/arm64/boot/dts/broadcom/bcmbca/bcm4908-asus-gt-ac5300.dtb: ethernet-switch@0: '#address-cells', '#size-cells' do not match any of the regexes: 'pinctrl-[0-9]+'
-        from schema $id: http://devicetree.org/schemas/net/dsa/brcm,sf2.yaml#
-
-Fixes: 527a3ac9bdf8 ("arm64: dts: broadcom: bcm4908: describe internal switch")
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-Link: https://lore.kernel.org/r/20240111115636.12095-1-zajec5@gmail.com
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
- arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/dax/bus.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi b/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
-index df71348542064..a4c5a38905b03 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
-@@ -180,9 +180,6 @@ ethernet-switch@0 {
- 				brcm,num-gphy = <5>;
- 				brcm,num-rgmii-ports = <2>;
- 
--				#address-cells = <1>;
--				#size-cells = <0>;
--
- 				ports: ports {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
+diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+index bab19fc578d0..56dddaceeccb 100644
+--- a/drivers/dax/bus.c
++++ b/drivers/dax/bus.c
+@@ -1452,6 +1452,8 @@ static umode_t dev_dax_visible(struct kobject *kobj, struct attribute *a, int n)
+ 		return 0;
+ 	if (a == &dev_attr_mapping.attr && is_static(dax_region))
+ 		return 0;
++	if (a == &dev_attr_mapping.attr && is_sparse(dax_region))
++		return 0;
+ 	if ((a == &dev_attr_align.attr ||
+ 	     a == &dev_attr_size.attr) && is_static(dax_region))
+ 		return 0444;
+
 -- 
-2.43.0
+2.44.0
 
