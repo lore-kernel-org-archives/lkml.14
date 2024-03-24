@@ -1,41 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B34215941;
-	Sun, 24 Mar 2024 23:09:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A0F21731A;
+	Sun, 24 Mar 2024 23:09:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321755; cv=none; b=QBb30LnSFIBapmUw9HszNotJmoJNSsfqLoGVfL/QFnlu0xcuHXL1WNCCy24W6WnhHTD4DCvfbTB7qhR67NIu4Lk8duCb5oPsK1y1DJhkWhXHFyE5Fdpe23A/Ma+sW314Gy64ueOBqvXw2oSAvGkFMrNOF2NwDZwUYdJfILDFW9Y=
+	t=1711321770; cv=none; b=XoXRT7BKATQGOFkLnKz19ftiJcbDrHIiPsiI5E28asxF5XmT2oVBWc5GBnOrZ5okUpXQHTVEY5SSHdESX5mfXbiFbTWYtP0qMxhQ+RqsrqyrEM2Oz/hdwcHC1rpGw82f9QrFH4pWcwfTOp7ocwVxaddYG+xORll5R6XJZsfDzfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321755; c=relaxed/simple;
-	bh=1L5gyKnUNDWV2C0YYKufGqLKY6PpoYok9dEErj71eac=;
+	s=arc-20240116; t=1711321770; c=relaxed/simple;
+	bh=XAPFzGb1sl2VWk/bnvkz1Ec81SxdjoxCg3bMh16LBlw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lrYlUE9h4LnaXOuo51tkTt7m19DYQhaXSsutwomuoScHyySXo8qHBWtVtDStQUT3C8whrIJkjh3oQiz3/S8UzpdUJnlawXoxNcYSVrf8wLfqDKZrJsAGNIPF+/Bk75wQjj/LOGLgidGA4s1vA7B8inYV/8sSntq/j3NuQLweMrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3gfVVlK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Yr5DDx869Mfx41liT/i+q45aFOJuHabc35ruj3WOCaKA8nhoXocHLCU50GWEZWnofDwDh1bzCRuWbAq9qjaEsT2Lm7uYnPXmqPmwr1UBO/O1ilqv+jyMQ/AFsxWk+ABwVC83F9A5m8CFz/LmYzntjRfsMFyBEES/ay/3VBvGbLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dl1UvfUY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3gfVVlK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA281C43390;
-	Sun, 24 Mar 2024 23:09:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dl1UvfUY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F415C43394;
+	Sun, 24 Mar 2024 23:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321754;
-	bh=1L5gyKnUNDWV2C0YYKufGqLKY6PpoYok9dEErj71eac=;
+	s=k20201202; t=1711321768;
+	bh=XAPFzGb1sl2VWk/bnvkz1Ec81SxdjoxCg3bMh16LBlw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=g3gfVVlKQuPZyd03FhasSKZmgBr+vvOyUmiNOAXHmUAgeh07cth3jPdOZkIIbpOUK
-	 hpup9yC1ZCyIrzOjGxyw7tFpGhSc5MtoMMzks0nf9XVrxxdAeOPx+HTuYomu5jnEWS
-	 v9/z2ErZO1SNs8l45JzmbsdGqO25CTKO2jkpq1n99rRdfUzKSV1xkuJ6mM8jdUzxgZ
-	 gmQW0/BlTRrJ4YjhOjYaRuVXT7Ycx8jN8gPRpZnX7mPXksRh10xw3uE26z2ElNeps7
-	 k3iKzBZB8pgv6qxHYgvkfpR3okFeepRGusTHDjRoq3WSc/x7rKg9LWGz2SB+Cx1l6F
-	 QH0RDldxFjQ0w==
+	b=Dl1UvfUY39RRYBowjIQMDWxgDQF9PoLcA7HojiqaIRV94iG3/A8d5CuK5kTYAFWw/
+	 oXQ++64WkQP85FsXjWB86ck0l8rr5GThWcP5V2pq+doKKXZOy2zmiKVVXziKgrmS+D
+	 yriSHQeC6xVsqs+CpGtb54nnh77Zi1yaL+e56bXpJdLKXC+bt9tHtpWORTz/df1jDe
+	 FaHYylc/ovWrQjmhQWxz/chd68FKCzPyJBQYNfs+L4QtIBnY45YPJokfTrr3f47pB4
+	 7w8bi5gtLnekjqjfmtFtBjL/vpKor5MBkF5t88jIohsW2GxS1cPWFl55YGkq8P/1SC
+	 n/71NXXBKQ+3A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: George Stark <gnstark@salutedevices.com>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Lee Jones <lee@kernel.org>,
+Cc: David Howells <dhowells@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Steve French <sfrench@samba.org>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Ronnie Sahlberg <lsahlber@redhat.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	linux-cifs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 482/638] leds: aw2013: Unlock mutex before destroying it
-Date: Sun, 24 Mar 2024 18:58:39 -0400
-Message-ID: <20240324230116.1348576-483-sashal@kernel.org>
+Subject: [PATCH 6.6 496/638] cifs: Don't use certain unnecessary folio_*() functions
+Date: Sun, 24 Mar 2024 18:58:53 -0400
+Message-ID: <20240324230116.1348576-497-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,35 +56,85 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: George Stark <gnstark@salutedevices.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 6969d0a2ba1adc9ba6a49b9805f24080896c255c ]
+[ Upstream commit c40497d82387188f14d9adc4caa58ee1cb1999e1 ]
 
-In the probe() callback in case of error mutex is destroyed being locked
-which is not allowed so unlock the mutex before destroying.
+Filesystems should use folio->index and folio->mapping, instead of
+folio_index(folio), folio_mapping() and folio_file_mapping() since
+they know that it's in the pagecache.
 
-Fixes: 59ea3c9faf32 ("leds: add aw2013 driver")
-Signed-off-by: George Stark <gnstark@salutedevices.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Link: https://lore.kernel.org/r/20231214173614.2820929-2-gnstark@salutedevices.com
-Signed-off-by: Lee Jones <lee@kernel.org>
+Change this automagically with:
+
+perl -p -i -e 's/folio_mapping[(]([^)]*)[)]/\1->mapping/g' fs/smb/client/*.c
+perl -p -i -e 's/folio_file_mapping[(]([^)]*)[)]/\1->mapping/g' fs/smb/client/*.c
+perl -p -i -e 's/folio_index[(]([^)]*)[)]/\1->index/g' fs/smb/client/*.c
+
+Reported-by: Matthew Wilcox <willy@infradead.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: Steve French <sfrench@samba.org>
+cc: Paulo Alcantara <pc@manguebit.com>
+cc: Ronnie Sahlberg <lsahlber@redhat.com>
+cc: Shyam Prasad N <sprasad@microsoft.com>
+cc: Tom Talpey <tom@talpey.com>
+cc: linux-cifs@vger.kernel.org
+cc: linux-fsdevel@vger.kernel.org
+Stable-dep-of: f3dc1bdb6b0b ("cifs: Fix writeback data corruption")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/leds-aw2013.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/smb/client/file.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/leds/leds-aw2013.c b/drivers/leds/leds-aw2013.c
-index 91f44b23cb113..17235a5e576ae 100644
---- a/drivers/leds/leds-aw2013.c
-+++ b/drivers/leds/leds-aw2013.c
-@@ -405,6 +405,7 @@ static int aw2013_probe(struct i2c_client *client)
- 			       chip->regulators);
+diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
+index 043bee4020a91..7320272ef0074 100644
+--- a/fs/smb/client/file.c
++++ b/fs/smb/client/file.c
+@@ -87,7 +87,7 @@ void cifs_pages_written_back(struct inode *inode, loff_t start, unsigned int len
+ 			continue;
+ 		if (!folio_test_writeback(folio)) {
+ 			WARN_ONCE(1, "bad %x @%llx page %lx %lx\n",
+-				  len, start, folio_index(folio), end);
++				  len, start, folio->index, end);
+ 			continue;
+ 		}
  
- error:
-+	mutex_unlock(&chip->mutex);
- 	mutex_destroy(&chip->mutex);
- 	return ret;
- }
+@@ -120,7 +120,7 @@ void cifs_pages_write_failed(struct inode *inode, loff_t start, unsigned int len
+ 			continue;
+ 		if (!folio_test_writeback(folio)) {
+ 			WARN_ONCE(1, "bad %x @%llx page %lx %lx\n",
+-				  len, start, folio_index(folio), end);
++				  len, start, folio->index, end);
+ 			continue;
+ 		}
+ 
+@@ -151,7 +151,7 @@ void cifs_pages_write_redirty(struct inode *inode, loff_t start, unsigned int le
+ 	xas_for_each(&xas, folio, end) {
+ 		if (!folio_test_writeback(folio)) {
+ 			WARN_ONCE(1, "bad %x @%llx page %lx %lx\n",
+-				  len, start, folio_index(folio), end);
++				  len, start, folio->index, end);
+ 			continue;
+ 		}
+ 
+@@ -2652,7 +2652,7 @@ static void cifs_extend_writeback(struct address_space *mapping,
+ 				continue;
+ 			if (xa_is_value(folio))
+ 				break;
+-			if (folio_index(folio) != index)
++			if (folio->index != index)
+ 				break;
+ 			if (!folio_try_get_rcu(folio)) {
+ 				xas_reset(&xas);
+@@ -2900,7 +2900,7 @@ static int cifs_writepages_region(struct address_space *mapping,
+ 					goto skip_write;
+ 			}
+ 
+-			if (folio_mapping(folio) != mapping ||
++			if (folio->mapping != mapping ||
+ 			    !folio_test_dirty(folio)) {
+ 				start += folio_size(folio);
+ 				folio_unlock(folio);
 -- 
 2.43.0
 
