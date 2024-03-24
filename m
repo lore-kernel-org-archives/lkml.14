@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FF8208961;
-	Sun, 24 Mar 2024 23:05:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C308208979;
+	Sun, 24 Mar 2024 23:05:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321544; cv=none; b=mdY15Nwe8+wUDAdvRzH+xtH2nchWdsIYvKbf7+XBfewT9VnKC5WvctrlwWWJzGV56HjH7WSTUOSFK5Q4NvU1fN52Unxzp17paRZO3T1SrqKiXiVMgvyyxKm+N9CVazsmZt85kUz7yrWprkRkSgJvMSKYHJ1Q5ZIgEqKTLiMTAM4=
+	t=1711321546; cv=none; b=Gf1wSXo3CAxNCJkIx/mt24ZNwrrt9V6UK7GT4Pch5c0NXMU+3nkzNEQt1WbHHlJwbCLhaBUBbylplid4VC51xnD7vdDH62QYYUArkCGvd//P9QzjKhmtzA4L7ZcHhahWiwCwmgDB2eFqhC109TsIW3HQIf3A5kpyoCxdbZ0+8Yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321544; c=relaxed/simple;
-	bh=Ta11fKnZobjyFkQcnU/qNvjknrk6rRLtjqxBTTMP/JQ=;
+	s=arc-20240116; t=1711321546; c=relaxed/simple;
+	bh=gnliY6VElyIEbYJAxbLMX+CdhNylV1UaV2epdCmgx4k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nTU0K7sSWnCOSPAI6x0pV7inTUBpgyKj7XzHSKa4xCidzD8rbfKryJrVpwnhoADXpfsZj1Q15yZFqSYy7Ga8x7i7GPCGaFU/cqsYNyoZ/A4c3n6Eu2VtK5QnUL/Sv1fDKsW/8GnyLkLBnrBop0M8JseJzGmRxiC9vjrj3Bfhfko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rEmUqNBc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=F28bi7S5BRA6e4b191H43XN2K5fn82qBaDXcwT2hRK6xj2gvz+zKFz6Jbdxu2pR1PCPzeeAMyrmbnxV6RWggctLYAoP4seyxJZunVrNAH8lGa/Fu+O6IjKtcfhgs+Zwek4NTESssY9plqLuA3aeY8nyvC8SRnTu4oM6+WSRTTug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SA6/KYzm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rEmUqNBc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6D16C43601;
-	Sun, 24 Mar 2024 23:05:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SA6/KYzm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7313DC43399;
+	Sun, 24 Mar 2024 23:05:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321543;
-	bh=Ta11fKnZobjyFkQcnU/qNvjknrk6rRLtjqxBTTMP/JQ=;
+	s=k20201202; t=1711321546;
+	bh=gnliY6VElyIEbYJAxbLMX+CdhNylV1UaV2epdCmgx4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rEmUqNBc5HCwXIYY7LHvDU7ZPPxUuOujHc4hmtGx/iAgtEGGvqe2e0rrGoD6BtKNY
-	 2ejP/KgIKhCgrgM3ajzfTta6sY/sayyGO8CTiSNND5PrrrvHUp3LT/uvob0tqcUxnS
-	 BxQFzphrNOVDbp9owOTxe/qIBTRGWJie4bpSGDhOrPJLkCp3hqgsRTInEL/VK14T5x
-	 YxFYt9q29btTkPOyErsk8OmOw6BkX2aIMpNd7giuYDx2CvIreIpfsWXAn2vaUJIq2M
-	 pfz2aIpDCTeBPjSDbZD6tttUJsHqbSwaxZERBI+hF93s6bEuWb4Z2Can+zU/P/b26j
-	 3fpBTok+0Y+qA==
+	b=SA6/KYzm9Po6Tg6BDrlzDjtWi+5c5SLJCi28DHBvcReG8GYDSkCAF4in2fLSoW+Vn
+	 Xp+7HgSZ6gUel6rdpqW5ESBcHssqgWuIp47Y/3SCd1ySkdBpMxIRt9nGbz6er1TRKd
+	 Dkf06E6vSb7NG3qQ02WHPCCNNkrpDdJS2Vb8QGszuFbsFJYKrH0xLrusH0DPgQNxH6
+	 tLtSxAL9XaFEykYH9IiRuxRSwC4lv1N3cF7EPbvV/D6wAb6/ncj6AxChaxjSgXeCuo
+	 ZCyQp5I+Xhb5Bc/70GiI4uaREFc04H/4/AkUppzo9I6ugyI31KqN2N5GVmm6TLzG+Q
+	 I02RshSGfGgRg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: John Keeping <jkeeping@inmusicbrands.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: David McFarland <corngood@gmail.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 271/638] regulator: userspace-consumer: add module device table
-Date: Sun, 24 Mar 2024 18:55:08 -0400
-Message-ID: <20240324230116.1348576-272-sashal@kernel.org>
+Subject: [PATCH 6.6 274/638] ACPI: resource: Add Infinity laptops to irq1_edge_low_force_override
+Date: Sun, 24 Mar 2024 18:55:11 -0400
+Message-ID: <20240324230116.1348576-275-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,37 +48,49 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: John Keeping <jkeeping@inmusicbrands.com>
+From: David McFarland <corngood@gmail.com>
 
-[ Upstream commit 531a0c0cdbff9cecf41073220a826f8b1132f9ab ]
+[ Upstream commit e2605d4039a42a03000856b3229932455717b48b ]
 
-The userspace consumer can be built as a module but it cannot be
-automatically probed as there is no device table to match it up with
-device tree nodes.
+A user reported a keyboard problem similar to ones reported with other
+Zen laptops, on an Infinity E15-5A165-BM.
 
-Add the missing macro so that the module can load automatically.
+Add board name matches for this model and one (untested) close relative
+to irq1_edge_low_force_override.
 
-Fixes: 5c51d4afcf3fd ("regulator: userspace-consumer: Handle regulator-output DT nodes")
-Signed-off-by: John Keeping <jkeeping@inmusicbrands.com>
-Link: https://msgid.link/r/20240226160554.1453283-1-jkeeping@inmusicbrands.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: https://lemmy.ml/post/9864736
+Link: https://www.infinitygaming.com.au/bios/
+Link: https://lore.kernel.org/linux-acpi/20231006123304.32686-1-hdegoede@redhat.com
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Stable-dep-of: 021a67d09615 ("ACPI: resource: Add MAIBENBEN X577 to irq1_edge_low_force_override")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/userspace-consumer.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/acpi/resource.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/regulator/userspace-consumer.c b/drivers/regulator/userspace-consumer.c
-index 97f075ed68c95..cb1de24b98626 100644
---- a/drivers/regulator/userspace-consumer.c
-+++ b/drivers/regulator/userspace-consumer.c
-@@ -210,6 +210,7 @@ static const struct of_device_id regulator_userspace_consumer_of_match[] = {
- 	{ .compatible = "regulator-output", },
- 	{},
+diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+index 85ae394e793e6..b8378033117d4 100644
+--- a/drivers/acpi/resource.c
++++ b/drivers/acpi/resource.c
+@@ -550,6 +550,18 @@ static const struct dmi_system_id pcspecialist_laptop[] = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "GM6BG0Q"),
+ 		},
+ 	},
++	{
++		/* Infinity E15-5A165-BM */
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GM5RG1E0009COM"),
++		},
++	},
++	{
++		/* Infinity E15-5A305-1M */
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GM5RGEE0016COM"),
++		},
++	},
+ 	{ }
  };
-+MODULE_DEVICE_TABLE(of, regulator_userspace_consumer_of_match);
  
- static struct platform_driver regulator_userspace_consumer_driver = {
- 	.probe		= regulator_userspace_consumer_probe,
 -- 
 2.43.0
 
