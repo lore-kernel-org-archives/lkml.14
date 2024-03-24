@@ -1,40 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 641471311A9;
-	Sun, 24 Mar 2024 23:41:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 409C617AF82;
+	Sun, 24 Mar 2024 23:41:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323703; cv=none; b=hOTqp17ar71h9JJu76AaAhXGGqF3n3VjT33sz3OsyEs8MdylvnkUbjnnfrrrIjQ1Tzdop+/fcrzYjtAcXdLAxOAWZOvhlVKQiFwIM9EpqGoTfxZrQz/JIT/DZLUMaA+2THlujWEd9RaWU1LnrZMlZV7YTwSauDXK/hJoM/IXMVQ=
+	t=1711323710; cv=none; b=g5hTGG3XC4zX5TbhMxsssqICQIDKt8L74Nrj8UBXGF8c/EkLMbRmSVkDlib/VK4aDJ/2WstaflQmK8FCc7zNn3n/61GfBQW56LqaC9ALPlAV4cMaZuiTMZ4Vjvh4wcyykiGY1Zp+MvYrx3RGmchRV5urlw0pNzLfl1N8GodVdd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323703; c=relaxed/simple;
-	bh=IrK+mD+2Z3bW8shY55OCC5+ywxgQWIUrG6/9PcXJ0tU=;
+	s=arc-20240116; t=1711323710; c=relaxed/simple;
+	bh=T+nOVCSzRnGTdI5P8M9Z7cq6C1PiVUrKiwdyHWmFwZo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=l4FX8m+zkAmItgzLysSDHeTvTGM3U2tpAMJA/2Iaj4+jN/ztqG0TFrJFHhbPMocTbG+pOYnok3h3q0JCZhfyRA/aQg+HDpamlkmr17N6iQyQtprJv1+LvRCcr51TV1m7fqxS377iJoZHdK2gdO9eqgqXWtMOIsAPLFAVBEkEwG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qv5YTG6Q; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Q68vbM8MQbObw3VsdgdVUh1oOJIu7Fg/cDVKWEZGkwUcqakx+TUHaBJ3rP5YWcGPNDU0RXDEdq/pgZQD2/um9j+gtE8541yyfaK8Q8R/jEdGlyFLnAeNzJcq6rgbzasmByLHzTt1FblbEeWNvtPuCVmlOH+BHpSlSfdR+yEYX/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rLmyZBLP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qv5YTG6Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A256FC43399;
-	Sun, 24 Mar 2024 23:41:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rLmyZBLP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17DD2C43390;
+	Sun, 24 Mar 2024 23:41:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323702;
-	bh=IrK+mD+2Z3bW8shY55OCC5+ywxgQWIUrG6/9PcXJ0tU=;
+	s=k20201202; t=1711323709;
+	bh=T+nOVCSzRnGTdI5P8M9Z7cq6C1PiVUrKiwdyHWmFwZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Qv5YTG6QlamwOKu3LpCA2VeNXfNPJw7mB+nIuMJQwRbXuJKIIkO/ZWIgnqjeSrNED
-	 Wgs9c/DQIhmXsRQ7vUT1SRYcUjWednu2DeOi429T6xXB1E3PRygWZUXBs0Ntriq3uN
-	 yeQNC3FR+FBjuPsyj52H/66MxajoccNGsrWKfLKslJXKADgpNkWK17NWvfQ0d6EPbz
-	 P4OmSvoENi69/9lnTYyXvdvM1vmeNUi/OA8u5wvw85UcN3wT52akOKDjpvlyZN28Xu
-	 PJsLa9lu66JPhMnLMjKRT18ZAq07qShWNm2uMCsK4OKjnB6pFlkEcCf7LbhYE9j/1A
-	 KzogEqesId7iA==
+	b=rLmyZBLPc/wikNz+h7Vic52CcsI2I/WNTGqOJjEMOlfxjIkucdCdJGu01hYiTbLRI
+	 c8qOyFxewo0LGfnj7o5r1wAVDENCc7cFCEf5rKBe5lX6DH0Jl5mBdsHjTofaF1tNNm
+	 mDO+ljTGMNA4u7pZg8irSD9J1Ifzf0KrQpxFkrE65/xB1rQrXcN77Q9l5CQKqFwWTI
+	 +wAzv4LXPoB6EZRs5fHOHqzlGsC803/zqZzvMZuzfq3wfGLsviyt6Eb+w5qckYnznj
+	 L8GEJa24qwnTBkR/h7y3p8x3Z/79DRxoE1H2v/Xb/bPNektJ57C0bqywbhZHsxn+Qx
+	 aRX8wSFYItCdQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
-	Shawn Guo <shawnguo@kernel.org>,
+Cc: Ethan Zhao <haifeng.zhao@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Haorong Ye <yehaorong@bytedance.com>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Joerg Roedel <jroedel@suse.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 075/238] ARM: dts: imx6dl-yapp4: Move the internal switch PHYs under the switch node
-Date: Sun, 24 Mar 2024 19:37:43 -0400
-Message-ID: <20240324234027.1354210-76-sashal@kernel.org>
+Subject: [PATCH 5.10 082/238] PCI: Make pci_dev_is_disconnected() helper public for other drivers
+Date: Sun, 24 Mar 2024 19:37:50 -0400
+Message-ID: <20240324234027.1354210-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -44,97 +48,69 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Michal Vokáč <michal.vokac@ysoft.com>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
 
-[ Upstream commit 79978bff2e4b8e05ebdf5fc3ee6b794002393484 ]
+[ Upstream commit 39714fd73c6b60a8d27bcc5b431afb0828bf4434 ]
 
-We identified that the PHYs actually do not work since commit 7da7b84fee58
-("ARM: dts: imx6dl-yapp4: Move phy reset into switch node") as
-a coincidence of several circumstances.
+Make pci_dev_is_disconnected() public so that it can be called from
+Intel VT-d driver to quickly fix/workaround the surprise removal
+unplug hang issue for those ATS capable devices on PCIe switch downstream
+hotplug capable ports.
 
-The reset signal is kept asserted by a pull-down resistor on the board
-unless it is deasserted by GPIO from the SoC. This is to keep the switch
-dead until it is configured properly by the kernel and user space.
+Beside pci_device_is_present() function, this one has no config space
+space access, so is light enough to optimize the normal pure surprise
+removal and safe removal flow.
 
-Prior to the referenced commit the switch was reset by the FEC driver
-and the reset GPIO was actively deasserted. The mdio-bus was scanned
-and the attached switch and its PHYs were found and configured.
-
-With the referenced commit the switch is reset by the qca8k driver.
-Because of another bug in the qca8k driver, functionality of the reset
-pin depends on its pre-kernel configuration. See commit c44fc98f0a8f
-("net: dsa: qca8k: fix illegal usage of GPIO")
-
-The problem did not appear until we removed support for the switch
-and configuration of its reset pin from the bootloader.
-
-To fix that, properly describe the internal mdio-bus configuration of
-the qca8334 switch. The PHYs are internal to the switch and sit on its
-internal mdio-bus.
-
-Fixes: 7da7b84fee58 ("ARM: dts: imx6dl-yapp4: Move phy reset into switch node")
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
+Tested-by: Haorong Ye <yehaorong@bytedance.com>
+Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
+Link: https://lore.kernel.org/r/20240301080727.3529832-2-haifeng.zhao@linux.intel.com
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Stable-dep-of: 4fc82cd907ac ("iommu/vt-d: Don't issue ATS Invalidation request when device is disconnected")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 23 ++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
+ drivers/pci/pci.h   | 5 -----
+ include/linux/pci.h | 5 +++++
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-index b636faaddc510..cbf5a76625e69 100644
---- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-+++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-@@ -115,14 +115,6 @@ mdio {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 72436000ff252..32fa07bfc448e 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -399,11 +399,6 @@ static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
+ 	return 0;
+ }
  
--		phy_port2: phy@1 {
--			reg = <1>;
--		};
+-static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
+-{
+-	return dev->error_state == pci_channel_io_perm_failure;
+-}
 -
--		phy_port3: phy@2 {
--			reg = <2>;
--		};
--
- 		switch@10 {
- 			compatible = "qca,qca8334";
- 			reg = <0x10>;
-@@ -147,15 +139,30 @@ fixed-link {
- 				eth2: port@2 {
- 					reg = <2>;
- 					label = "eth2";
-+					phy-mode = "internal";
- 					phy-handle = <&phy_port2>;
- 				};
+ /* pci_dev priv_flags */
+ #define PCI_DEV_ADDED 0
+ #define PCI_DPC_RECOVERED 1
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 550e1cdb473fa..bf46453475e31 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2191,6 +2191,11 @@ static inline struct pci_dev *pcie_find_root_port(struct pci_dev *dev)
+ 	return NULL;
+ }
  
- 				eth1: port@3 {
- 					reg = <3>;
- 					label = "eth1";
-+					phy-mode = "internal";
- 					phy-handle = <&phy_port3>;
- 				};
- 			};
++static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
++{
++	return dev->error_state == pci_channel_io_perm_failure;
++}
 +
-+			mdio {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				phy_port2: ethernet-phy@1 {
-+					reg = <1>;
-+				};
-+
-+				phy_port3: ethernet-phy@2 {
-+					reg = <2>;
-+				};
-+			};
- 		};
- 	};
- };
+ void pci_request_acs(void);
+ bool pci_acs_enabled(struct pci_dev *pdev, u16 acs_flags);
+ bool pci_acs_path_enabled(struct pci_dev *start,
 -- 
 2.43.0
 
