@@ -1,42 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7E01EF7F9;
-	Sun, 24 Mar 2024 22:57:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB77B1EFE2C;
+	Sun, 24 Mar 2024 22:57:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321041; cv=none; b=G8mamIYKFTKcu/8FjPYfQWSUMMoHioqaGpCQtIBhIFG6JjueR+I0ATL/Q/Yq9tiiKxrI7avjW2Tb6QiaChcJPdfabBAs1zbwDsnmV5GQF0U77DhdkesbnJ6xc1e4/fdZHPpp0ErcWvwu5VtdoScr+MiCxN0EcorNKCvTDQVb+XY=
+	t=1711321046; cv=none; b=lqVhj/c9mS0vqAuRG/EZ2vFoCqnQCjZADLqClJqGHUslrSOFvz78PzUs5eJ9UtSN1TxAYDgmCbtY2poQsFedMNJEooUPnx6bBfhurt8ufXOxmIMaECzrYJp9clcYe0yKBaa9DcSB5oHIlCMua1inySCEgBjNd6xsUlQmeeBevS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321041; c=relaxed/simple;
-	bh=Dy6uae8FWce3WOWZYC2UBv4i5gNPJyNQKDnbKCQBSHo=;
+	s=arc-20240116; t=1711321046; c=relaxed/simple;
+	bh=BroqL4wt3XGrSBh3ZgxA62aqbr1qN7CVe7ICPyVqjDk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rT7zCYjXje6Wuh4zmNlzItRRxWG9CcPCCJ95UsqhzjHaiU/o/i1gdSAWkPEqkwIWtwHAl8CegFvhsYX2XJeF4XIxopUf7xzs3IIF8ORh8VD2rC5kmeoY0QAEB6uvMVRsLr9BUjk8l4bUeX4UFW/gshVxkt1o7sLyW1Hgb84X484=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G/fCWzKK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=je7ApIcHzj1da4x3RLL11TgQpUeEI6Zo+5kTclervQVxqLfD3KI28fuKZ4GrcYU4pfR+YMQGIIb4PD9BK8wenYDOS4r0aN/REZJCWt7Qe5Hy9ZEPhd0rcZw635CTDr84Sk7UplyRjLVC57bECI7+rF8MDdwN48aZL2GrpjsY8+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lYaVSnMz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G/fCWzKK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F606C43390;
-	Sun, 24 Mar 2024 22:57:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lYaVSnMz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97C3FC433C7;
+	Sun, 24 Mar 2024 22:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321040;
-	bh=Dy6uae8FWce3WOWZYC2UBv4i5gNPJyNQKDnbKCQBSHo=;
+	s=k20201202; t=1711321045;
+	bh=BroqL4wt3XGrSBh3ZgxA62aqbr1qN7CVe7ICPyVqjDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=G/fCWzKKluiJ5eKIKIVn8zf7N1uHlgxPPjyQTe8ouwg2xrs/qwn3XGBR+qYUYHrLx
-	 sMvoK/BWkW46akHDURhKND532dOGenAFmeh0eAj/v2xJ79nqvx7U6xd/lJNGWfZE8o
-	 lxpMO3mcb2X0HVoYQm9Xa0jl4rjQZltnP4hWDj/t0LaDUMRhDD9AhmQWv3vtKmP9z3
-	 GVLYP/2rPYuHVsTzKCGAhhBVzGQx5JrLw3DG+ew3M57EieZ4IyC7iHIFXaZHeEHRX6
-	 c9NNAcIbDCZzVBSnJwuv1IP+H0j1+2UbRwXoHz8w9VaEDccbzHFuh1GOwzF2Aop2ln
-	 A/rrmwkaKde5g==
+	b=lYaVSnMzF7a/ygFtB8iBQEzYC0+ClpX0nkfofNkLNTgq9BzocxK6ySWXLgxMOPa9W
+	 7yI8ud6bw531YmGroGVjqVUQvWicl1EBhmcBmLmHe6VfLHkTymiBn/fVmJHuxJs0Yj
+	 tzxR5hk7bKYZuCAuchocQpCGqOH/73oNQIcwd/uU5CA9kKkjb6ecOS5XGuEwyW2NmV
+	 q3yqrmJ5cmpLissWMVruz7lAo/R5Fn4TJsbTO9EIr72EU2FKxRYr9FEv8bmU6FNmxz
+	 SVJ5ZdyJW1uUDMWiG/5cZBfr0wd9y3lESA2sE0ZWg5B8xWd5978JCXnD4qrAMifFt1
+	 VkHNLmjuugtCQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Xiuhong Wang <xiuhong.wang@unisoc.com>,
-	Zhiguo Niu <zhiguo.niu@unisoc.com>,
-	Chao Yu <chao@kernel.org>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc: David Howells <dhowells@redhat.com>,
+	Markus Suvanto <markus.suvanto@gmail.com>,
+	Jeffrey E Altman <jaltman@auristor.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	linux-afs@lists.infradead.org,
+	Christian Brauner <brauner@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 603/713] f2fs: compress: fix reserve_cblocks counting error when out of space
-Date: Sun, 24 Mar 2024 18:45:29 -0400
-Message-ID: <20240324224720.1345309-604-sashal@kernel.org>
+Subject: [PATCH 6.7 608/713] afs: Revert "afs: Hide silly-rename files from userspace"
+Date: Sun, 24 Mar 2024 18:45:34 -0400
+Message-ID: <20240324224720.1345309-609-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,130 +52,53 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Xiuhong Wang <xiuhong.wang@unisoc.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 2f6d721e14b69d6e1251f69fa238b48e8374e25f ]
+[ Upstream commit 0aec3847d044273733285dcff90afda89ad461d2 ]
 
-When a file only needs one direct_node, performing the following
-operations will cause the file to be unrepairable:
+This reverts commit 57e9d49c54528c49b8bffe6d99d782ea051ea534.
 
-unisoc # ./f2fs_io compress test.apk
-unisoc #df -h | grep dm-48
-/dev/block/dm-48 112G 112G 1.2M 100% /data
+This undoes the hiding of .__afsXXXX silly-rename files.  The problem with
+hiding them is that rm can't then manually delete them.
 
-unisoc # ./f2fs_io release_cblocks test.apk
-924
-unisoc # df -h | grep dm-48
-/dev/block/dm-48 112G 112G 4.8M 100% /data
+This also reverts commit 5f7a07646655fb4108da527565dcdc80124b14c4 ("afs: Fix
+endless loop in directory parsing") as that's a bugfix for the above.
 
-unisoc # dd if=/dev/random of=file4 bs=1M count=3
-3145728 bytes (3.0 M) copied, 0.025 s, 120 M/s
-unisoc # df -h | grep dm-48
-/dev/block/dm-48 112G 112G 1.8M 100% /data
-
-unisoc # ./f2fs_io reserve_cblocks test.apk
-F2FS_IOC_RESERVE_COMPRESS_BLOCKS failed: No space left on device
-
-adb reboot
-unisoc # df -h  | grep dm-48
-/dev/block/dm-48             112G 112G   11M 100% /data
-unisoc # ./f2fs_io reserve_cblocks test.apk
-0
-
-This is because the file has only one direct_node. After returning
-to -ENOSPC, reserved_blocks += ret will not be executed. As a result,
-the reserved_blocks at this time is still 0, which is not the real
-number of reserved blocks. Therefore, fsck cannot be set to repair
-the file.
-
-After this patch, the fsck flag will be set to fix this problem.
-
-unisoc # df -h | grep dm-48
-/dev/block/dm-48             112G 112G  1.8M 100% /data
-unisoc # ./f2fs_io reserve_cblocks test.apk
-F2FS_IOC_RESERVE_COMPRESS_BLOCKS failed: No space left on device
-
-adb reboot then fsck will be executed
-unisoc # df -h  | grep dm-48
-/dev/block/dm-48             112G 112G   11M 100% /data
-unisoc # ./f2fs_io reserve_cblocks test.apk
-924
-
-Fixes: c75488fb4d82 ("f2fs: introduce F2FS_IOC_RESERVE_COMPRESS_BLOCKS")
-Signed-off-by: Xiuhong Wang <xiuhong.wang@unisoc.com>
-Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-Reviewed-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 57e9d49c5452 ("afs: Hide silly-rename files from userspace")
+Reported-by: Markus Suvanto <markus.suvanto@gmail.com>
+Link: https://lists.infradead.org/pipermail/linux-afs/2024-February/008102.html
+Signed-off-by: David Howells <dhowells@redhat.com>
+Link: https://lore.kernel.org/r/3085695.1710328121@warthog.procyon.org.uk
+Reviewed-by: Jeffrey E Altman <jaltman@auristor.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: linux-afs@lists.infradead.org
+Signed-off-by: Christian Brauner <brauner@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/file.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ fs/afs/dir.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index f44c29a6bc24b..caeae900f797a 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -3583,10 +3583,10 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
- 	return ret;
- }
+diff --git a/fs/afs/dir.c b/fs/afs/dir.c
+index c097da6e9c5b2..7761f25a77f39 100644
+--- a/fs/afs/dir.c
++++ b/fs/afs/dir.c
+@@ -474,16 +474,6 @@ static int afs_dir_iterate_block(struct afs_vnode *dvnode,
+ 			continue;
+ 		}
  
--static int reserve_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
-+static int reserve_compress_blocks(struct dnode_of_data *dn, pgoff_t count,
-+		unsigned int *reserved_blocks)
- {
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(dn->inode);
--	unsigned int reserved_blocks = 0;
- 	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
- 	block_t blkaddr;
- 	int i;
-@@ -3650,12 +3650,12 @@ static int reserve_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
- 
- 		f2fs_i_compr_blocks_update(dn->inode, compr_blocks, true);
- 
--		reserved_blocks += reserved;
-+		*reserved_blocks += reserved;
- next:
- 		count -= cluster_size;
- 	}
- 
--	return reserved_blocks;
-+	return 0;
- }
- 
- static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
-@@ -3716,7 +3716,7 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
- 		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
- 		count = round_up(count, F2FS_I(inode)->i_cluster_size);
- 
--		ret = reserve_compress_blocks(&dn, count);
-+		ret = reserve_compress_blocks(&dn, count, &reserved_blocks);
- 
- 		f2fs_put_dnode(&dn);
- 
-@@ -3724,13 +3724,12 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
- 			break;
- 
- 		page_idx += count;
--		reserved_blocks += ret;
- 	}
- 
- 	filemap_invalidate_unlock(inode->i_mapping);
- 	f2fs_up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
- 
--	if (ret >= 0) {
-+	if (!ret) {
- 		clear_inode_flag(inode, FI_COMPRESS_RELEASED);
- 		inode_set_ctime_current(inode);
- 		f2fs_mark_inode_dirty_sync(inode, true);
-@@ -3739,7 +3738,7 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
- 	inode_unlock(inode);
- 	mnt_drop_write_file(filp);
- 
--	if (ret >= 0) {
-+	if (!ret) {
- 		ret = put_user(reserved_blocks, (u64 __user *)arg);
- 	} else if (reserved_blocks &&
- 			atomic_read(&F2FS_I(inode)->i_compr_blocks)) {
+-		/* Don't expose silly rename entries to userspace. */
+-		if (nlen > 6 &&
+-		    dire->u.name[0] == '.' &&
+-		    ctx->actor != afs_lookup_filldir &&
+-		    ctx->actor != afs_lookup_one_filldir &&
+-		    memcmp(dire->u.name, ".__afs", 6) == 0) {
+-			ctx->pos = blkoff + next * sizeof(union afs_xdr_dirent);
+-			continue;
+-		}
+-
+ 		/* found the next entry */
+ 		if (!dir_emit(ctx, dire->u.name, nlen,
+ 			      ntohl(dire->u.vnode),
 -- 
 2.43.0
 
