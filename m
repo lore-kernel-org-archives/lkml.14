@@ -1,41 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537C41D8BB6;
-	Sun, 24 Mar 2024 22:50:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745BF1D8BD9;
+	Sun, 24 Mar 2024 22:50:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320642; cv=none; b=GaETd+bLJ3vYYTPHUyENVvSB5cR720uYhu9SOmYxrrgA0Gpq9mA/tjw32b0Rw0LEfyVaVKykP4YeCy2jlxWBcAvDILVQYX+BlfkkzvQL8OpmmWbdWt0BHvA2VEyGUtuANPHspUqxWqCDJrBlyoN2nWuI2EleQOb2VDdbfupK4Z4=
+	t=1711320647; cv=none; b=GIcio6Fh0zFM+9669nuMoIIJkVaN3vne9U9sxBB6q7FDTaCjA344YmkIik+Er3lBTLwRM+fNnM1i0LmAtsd+S+F9Wt2YA59iQ6vc6QawSsDBxb0myZW3Tn1Nc0S/mn2XrK0IyTgWh9/rdu771Rw6UEa2fFW85INcqHUjMNnLb+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320642; c=relaxed/simple;
-	bh=k7YMyN9XUWIVYZrAOUT9qbPDF7I17RHxw0+eDlMF5jg=;
+	s=arc-20240116; t=1711320647; c=relaxed/simple;
+	bh=PRDR/PMenEpU2rk6usu6sYB/5zgkZIR5qd7nhUTXkT8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VWdRH5AVmZXkHrSu7FvrYVnJBubKNHna/fb7bEm+sprUORXb+0s9ohvrC2zbqRhmEYsKGxQSjjCNluQ9DzDVj20mWUEbmN8WJrAsaO/VYVf7K14Ft0QfB4xvXtCi6Al2cuQnJgfKCLxYpW8u+eomsySM4zHD4q8fpH57L63QGB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wcx6Sj2I; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XRpMrQoIJ6X1a1hCpE+L8DerGeM9fHzf36Eb4IETskUeNNOFdTAUlvPSDL5WLDdQz2zi9wST8kGQYSwdVTGgS1aF1xumsla5jkdBLOoktS81Vf9PMS+OmyOUtfT3fUIDeghOsiTYPZ7b3cost/10iEmeeTJEoqG189yy9KhN2M0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MZ8Ix4Ze; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wcx6Sj2I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B6DAC433C7;
-	Sun, 24 Mar 2024 22:50:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MZ8Ix4Ze"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05733C433F1;
+	Sun, 24 Mar 2024 22:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320640;
-	bh=k7YMyN9XUWIVYZrAOUT9qbPDF7I17RHxw0+eDlMF5jg=;
+	s=k20201202; t=1711320646;
+	bh=PRDR/PMenEpU2rk6usu6sYB/5zgkZIR5qd7nhUTXkT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Wcx6Sj2IW/HvBJkc6Rt01KJq+hD9x9jNxlSb8fvO34sA/hgrHmwvTANOevjpSPbFr
-	 jPjQSg/urYqN95uRTHgZs5tIECh5+QD8Ammh2M3tUzsczdnclFr1tH2xpgWe/j7i4E
-	 6rXwj4dc1pyiqBRDfFarx1RMDB3z9t2r/d3iO5xdqNtoCfotRRnSrgXr8UyNAxduGC
-	 Weqqb4D6YPGjg3WRe+ruadnr9WSsJVfTlstXee3FB3Gw9BLln2/DNJodq7zRMSsTAH
-	 6YNnevi7AEM263DlJooErCXOQ/QExIw4HmcxVFH/7dqhZM/fapYaf09BVzQBbsz6iU
-	 /Kro8kMO8116w==
+	b=MZ8Ix4ZejDJ7xsE5Ja9Mjpx/vJwPvYZ2cibj8UV1AywsOjLSzBAM5F47RJwGG/biq
+	 NLv72ryyA8kwtBTOUmnH+RUpfJ5ryE/JU3MUzwxCxVWcVOrXgjonyzpeVgHHh10IGB
+	 RtI97+9EhqMvJqcKnFUu0KpgcvV9PidDIvEsAtg0I5NobQkLtZqkdY2w8wBPc4IMpg
+	 eINGrB1sstMGHNJ9xxsrGKFPYxBB8RoCocAC60FkpzovqEweuuuqU/UX3Tsbla3F8a
+	 cTWSgwHiEND6Fv/LqHSduSuSPvnIi0az+5ucBR/lZ6ZZHrnqP2wsxn6MBWK1thNmMp
+	 nNKR4/fbYr2tA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ravi Gunasekaran <r-gunasekaran@ti.com>,
-	Jai Luthra <j-luthra@ti.com>,
+Cc: Jayesh Choudhary <j-choudhary@ti.com>,
+	Nishanth Menon <nm@ti.com>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Aradhya Bhatia <a-bhatia1@ti.com>,
+	Enric Balletbo i Serra <eballetbo@redhat.com>,
 	Vignesh Raghavendra <vigneshr@ti.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 202/713] arm64: dts: ti: k3-am62p5-sk: Enable CPSW MDIO node
-Date: Sun, 24 Mar 2024 18:38:48 -0400
-Message-ID: <20240324224720.1345309-203-sashal@kernel.org>
+Subject: [PATCH 6.7 207/713] arm64: dts: ti: k3-am69-sk: remove assigned-clock-parents for unused VP
+Date: Sun, 24 Mar 2024 18:38:53 -0400
+Message-ID: <20240324224720.1345309-208-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,42 +52,52 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ravi Gunasekaran <r-gunasekaran@ti.com>
+From: Jayesh Choudhary <j-choudhary@ti.com>
 
-[ Upstream commit 8839a9af397e803e0447a6b3e69fad54ed22d26d ]
+[ Upstream commit cfdb4f7ffdb855c1a3d274dc7757e780dcbf2d55 ]
 
-Enable the CPSW MDIO node, and link the pinctrl information to enable
-ethernet on SK-AM62P.
+VP2 and VP3 are unused video ports and VP3 share the same parent
+clock as VP1 causing issue with pixel clock setting for HDMI (VP1).
+The current DM firmware does not support changing parent clock if it
+is shared by another component. It returns 0 for the determine_rate
+query before causing set_rate to set the clock at default maximum of
+1.8GHz which is a lot more than the maximum frequency videoports can
+support (600MHz) causing SYNC LOST issues.
+So remove the parent clocks for unused VPs to avoid conflict.
 
-Ethernet was unintentally broken on this board, even though these nodes
-were already present, as enabling them was missed in the original
-patch.
-
-Fixes: c00504ea42c0 ("arm64: dts: ti: k3-am62p5-sk: Updates for SK EVM")
-Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
-Signed-off-by: Jai Luthra <j-luthra@ti.com>
-Link: https://lore.kernel.org/r/20240201-am62p_cpsw_mdio-v1-1-05f758300f6e@ti.com
+Fixes: 6f8605fd7d11 ("arm64: dts: ti: k3-am69-sk: Add DP and HDMI support")
+Reported-by: Nishanth Menon <nm@ti.com>
+Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Reviewed-by: Aradhya Bhatia <a-bhatia1@ti.com>
+Tested-by: Enric Balletbo i Serra <eballetbo@redhat.com>
+Link: https://lore.kernel.org/r/20240201142308.4954-1-j-choudhary@ti.com
 Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/ti/k3-am62p5-sk.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/ti/k3-am69-sk.dts | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-index f377eadef0c12..04e51934d24ca 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-@@ -445,6 +445,10 @@ &cpsw_port2 {
+diff --git a/arch/arm64/boot/dts/ti/k3-am69-sk.dts b/arch/arm64/boot/dts/ti/k3-am69-sk.dts
+index 9868c7049bfb9..fafa09d6dcc64 100644
+--- a/arch/arm64/boot/dts/ti/k3-am69-sk.dts
++++ b/arch/arm64/boot/dts/ti/k3-am69-sk.dts
+@@ -824,13 +824,9 @@ &dss {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&dss_vout0_pins_default>;
+ 	assigned-clocks = <&k3_clks 218 2>,
+-			  <&k3_clks 218 5>,
+-			  <&k3_clks 218 14>,
+-			  <&k3_clks 218 18>;
++			  <&k3_clks 218 5>;
+ 	assigned-clock-parents = <&k3_clks 218 3>,
+-				 <&k3_clks 218 7>,
+-				 <&k3_clks 218 16>,
+-				 <&k3_clks 218 22>;
++				 <&k3_clks 218 7>;
  };
  
- &cpsw3g_mdio {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&main_mdio1_pins_default>;
-+	status = "okay";
-+
- 	cpsw3g_phy0: ethernet-phy@0 {
- 		reg = <0>;
- 		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
+ &serdes_wiz4 {
 -- 
 2.43.0
 
