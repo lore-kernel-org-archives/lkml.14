@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB89012BE94;
-	Sun, 24 Mar 2024 22:36:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6DE12BF16;
+	Sun, 24 Mar 2024 22:36:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711319790; cv=none; b=MMBXmTvAqG0C3E7khJZZyv+x1qrSo3PCpY3ExYenlzpTKhrcaeobDYYnoiAH53i2WFQZjJesqe9zFJpWkdTTs3ZMnuBKwyeEOrPZmePbwVR+eckT0UEwY8PasGu8xFTIFU0raI3xSiAZEqCOqQ1RpjPaPV3FXqItExH9YwUxarw=
+	t=1711319792; cv=none; b=MdWdVpGiMmd8m+TA1pykoYSk0PJvK2JVYW63LLhz7+NTXT4ZEmEFprTcujPBBa7G5TxKZms1q/08NO3ipjaUuZ3Ly5Gx4Q/OFCxi9M4AR5VkbGzKwAEJHLCMK6zalbIVE4OScgNOPHlfMtRbAtFkirnhhj3Q6VXpnoyx92aqtzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711319790; c=relaxed/simple;
-	bh=K757j1h2gj/8YT/wZT3TO9lwrI+Py+jNR2IhmZioBqg=;
+	s=arc-20240116; t=1711319792; c=relaxed/simple;
+	bh=FWe9WRlEAvGjT19jcAwd238r8ebAAw8RYSXfaycOTi4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sFw1Ji7SsX0Rbcnep4eW/4mZ/Y2+/6eiX00IuoFb/KEn6zetiO2+4zv7UeLLxfuMJG9z8leZ4/w/2DHjmE0sokrdQ5VWKB3+8isa04AdXuaH0B+RDh/UAA1spkEToNMtzX0GjHijXALgeEqtAsaPDLhuI1Rt3UCIli/06Af0ZHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KZUGYMM8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=K4en68KYkJvqm20Stjn3s2ZlCQ4YppDcA91FRC+kjbQyjivpFC1eqUZ0Z4+08998epfQVMADvUTDxUXP8cLkrxpCLGiB8PTysI47m62T0npolzrr3syBeGfPSJHncG7KXAnpctcWQyLpCuHPG2DsGP+jIcVYkIcqOIan9kX9aGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DX7AAySb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KZUGYMM8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEC4FC433C7;
-	Sun, 24 Mar 2024 22:36:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DX7AAySb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE8B9C43394;
+	Sun, 24 Mar 2024 22:36:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711319789;
-	bh=K757j1h2gj/8YT/wZT3TO9lwrI+Py+jNR2IhmZioBqg=;
+	s=k20201202; t=1711319791;
+	bh=FWe9WRlEAvGjT19jcAwd238r8ebAAw8RYSXfaycOTi4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KZUGYMM8v+8dPIYa5EiZBT5xohrlD4tPCpmAqISi24HTOibmS8XgJ4KjD1i1zay1c
-	 KbD82yE/nScCQIvD56HDNOBKypKpT48ja93J2T6DAM3wCE4gMCqYBlghVIBnXCbfkW
-	 KLjljs6opq3lGV8ZzQ2rhBs/3Np3UU1UWJa/8WY3OjPP4QcsT9HnJDY/HQCXBmksiV
-	 lRJocuToIjsnY1YCLWu7PSkopXulGQkjS83IBiCU9WXLpmUnckfhfz5tUHRia6NiHm
-	 5zQ1NhtXOj/EmoDaLszSJ2vDXvslzjYJNtyRfRu7JHkFo13xA3pf2JBpB2//FZQX8a
-	 C3hfTaItvXdGA==
+	b=DX7AAySbcDl6ynvue4E5RWH/Id+rg1JyYFX6+azWIDfo1wgiE2eFHwcEO2IG1RDIh
+	 RMjS8OF5sp3rGQnJmDOuWnem/YDbwNdWP10n0mZlHlDjvHi2exyOaSrrcSCIQ0T4+K
+	 Ksnvtl/CT/p4ktn50M8F4zr96P0kVGvOih/hucGEz5f5TVPfooLtSmuY/g7otw3sjA
+	 t2MIaa5agdKKGr4jxdx7qqszvSo/6ic0+i4/J+ZK5zDor66VGpnbM+WyRtfSiT2QHZ
+	 3naRXf4OXKhqmDUEj8Vghc/rp076jHYpzVUvqdL+ubtCKXUrJiapkMtfwokCVA4mJz
+	 P0DJFjUfr2O2A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Martin KaFai Lau <martin.lau@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
+Cc: Benjamin Berg <benjamin.berg@intel.com>,
+	Ilan Peer <ilan.peer@intel.com>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Johannes Berg <johannes.berg@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.8 090/715] selftests/bpf: Wait for the netstamp_needed_key static key to be turned on
-Date: Sun, 24 Mar 2024 18:24:29 -0400
-Message-ID: <20240324223455.1342824-91-sashal@kernel.org>
+Subject: [PATCH 6.8 092/715] wifi: mac80211: use deflink and fix typo in link ID check
+Date: Sun, 24 Mar 2024 18:24:31 -0400
+Message-ID: <20240324223455.1342824-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324223455.1342824-1-sashal@kernel.org>
 References: <20240324223455.1342824-1-sashal@kernel.org>
@@ -48,183 +50,42 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Martin KaFai Lau <martin.lau@kernel.org>
+From: Benjamin Berg <benjamin.berg@intel.com>
 
-[ Upstream commit ce6f6cffaeaa0a3bcdafcae7fe03c68c3afae631 ]
+[ Upstream commit e10322810ce0d0d4a5a319458c4e1e052c6fe9be ]
 
-After the previous patch that speeded up the test (by avoiding neigh
-discovery in IPv6), the BPF CI occasionally hits this error:
+This does not change anything effectively, but it is closer to what the
+code is trying to achieve here. i.e. select the link data if it is an
+MLD and fall back to using the deflink otherwise.
 
-rcv tstamp unexpected pkt rcv tstamp: actual 0 == expected 0
-
-The test complains about the cmsg returned from the recvmsg() does not
-have the rcv timestamp. Setting skb->tstamp or not is
-controlled by a kernel static key "netstamp_needed_key". The static
-key is enabled whenever this is at least one sk with the SOCK_TIMESTAMP
-set.
-
-The test_redirect_dtime does use setsockopt() to turn on
-the SOCK_TIMESTAMP for the reading sk. In the kernel
-net_enable_timestamp() has a delay to enable the "netstamp_needed_key"
-when CONFIG_JUMP_LABEL is set. This potential delay is the likely reason
-for packet missing rcv timestamp occasionally.
-
-This patch is to create udp sockets with SOCK_TIMESTAMP set.
-It sends and receives some packets until the received packet
-has a rcv timestamp. It currently retries at most 5 times with 1s
-in between. This should be enough to wait for the "netstamp_needed_key".
-It then holds on to the socket and only closes it at the end of the test.
-This guarantees that the test has the "netstamp_needed_key" key turned
-on from the beginning.
-
-To simplify the udp sockets setup, they are sending/receiving packets
-in the same netns (ns_dst is used) and communicate over the "lo" dev.
-Hence, the patch enables the "lo" dev in the ns_dst.
-
-Fixes: c803475fd8dd ("bpf: selftests: test skb->tstamp in redirect_neigh")
-Signed-off-by: Martin KaFai Lau <martin.lau@kernel.org>
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-Link: https://lore.kernel.org/bpf/20240120060518.3604920-2-martin.lau@linux.dev
+Fixes: 0f99f0878350 ("wifi: mac80211: Print local link address during authentication")
+Signed-off-by: Benjamin Berg <benjamin.berg@intel.com>
+Reviewed-by: Ilan Peer <ilan.peer@intel.com>
+Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Link: https://msgid.link/20240111181514.4c4b1c40eb3c.I2771621dee328c618536596b7e56232df42a79c8@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/bpf/prog_tests/tc_redirect.c    | 79 ++++++++++++++++++-
- 1 file changed, 75 insertions(+), 4 deletions(-)
+ net/mac80211/mlme.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/tc_redirect.c b/tools/testing/selftests/bpf/prog_tests/tc_redirect.c
-index 610887157fd85..dbe06aeaa2b27 100644
---- a/tools/testing/selftests/bpf/prog_tests/tc_redirect.c
-+++ b/tools/testing/selftests/bpf/prog_tests/tc_redirect.c
-@@ -291,6 +291,7 @@ static int netns_setup_links_and_routes(struct netns_setup_result *result)
- 	SYS(fail, "ip addr add " IP4_DST "/32 dev dst");
- 	SYS(fail, "ip addr add " IP6_DST "/128 dev dst nodad");
- 	SYS(fail, "ip link set dev dst up");
-+	SYS(fail, "ip link set dev lo up");
+diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
+index 2022a26eb8811..20d863370796d 100644
+--- a/net/mac80211/mlme.c
++++ b/net/mac80211/mlme.c
+@@ -7523,10 +7523,10 @@ int ieee80211_mgd_auth(struct ieee80211_sub_if_data *sdata,
+ 	if (err)
+ 		goto err_clear;
  
- 	SYS(fail, "ip route add " IP4_SRC "/32 dev dst scope global");
- 	SYS(fail, "ip route add " IP4_NET "/16 dev dst scope global");
-@@ -468,7 +469,7 @@ static int set_forwarding(bool enable)
- 	return 0;
- }
+-	if (req->link_id > 0)
++	if (req->link_id >= 0)
+ 		link = sdata_dereference(sdata->link[req->link_id], sdata);
+ 	else
+-		link = sdata_dereference(sdata->link[0], sdata);
++		link = &sdata->deflink;
  
--static void rcv_tstamp(int fd, const char *expected, size_t s)
-+static int __rcv_tstamp(int fd, const char *expected, size_t s, __u64 *tstamp)
- {
- 	struct __kernel_timespec pkt_ts = {};
- 	char ctl[CMSG_SPACE(sizeof(pkt_ts))];
-@@ -489,7 +490,7 @@ static void rcv_tstamp(int fd, const char *expected, size_t s)
- 
- 	ret = recvmsg(fd, &msg, 0);
- 	if (!ASSERT_EQ(ret, s, "recvmsg"))
--		return;
-+		return -1;
- 	ASSERT_STRNEQ(data, expected, s, "expected rcv data");
- 
- 	cmsg = CMSG_FIRSTHDR(&msg);
-@@ -498,6 +499,12 @@ static void rcv_tstamp(int fd, const char *expected, size_t s)
- 		memcpy(&pkt_ts, CMSG_DATA(cmsg), sizeof(pkt_ts));
- 
- 	pkt_ns = pkt_ts.tv_sec * NSEC_PER_SEC + pkt_ts.tv_nsec;
-+	if (tstamp) {
-+		/* caller will check the tstamp itself */
-+		*tstamp = pkt_ns;
-+		return 0;
-+	}
-+
- 	ASSERT_NEQ(pkt_ns, 0, "pkt rcv tstamp");
- 
- 	ret = clock_gettime(CLOCK_REALTIME, &now_ts);
-@@ -507,6 +514,60 @@ static void rcv_tstamp(int fd, const char *expected, size_t s)
- 	if (ASSERT_GE(now_ns, pkt_ns, "check rcv tstamp"))
- 		ASSERT_LT(now_ns - pkt_ns, 5 * NSEC_PER_SEC,
- 			  "check rcv tstamp");
-+	return 0;
-+}
-+
-+static void rcv_tstamp(int fd, const char *expected, size_t s)
-+{
-+	__rcv_tstamp(fd, expected, s, NULL);
-+}
-+
-+static int wait_netstamp_needed_key(void)
-+{
-+	int opt = 1, srv_fd = -1, cli_fd = -1, nretries = 0, err, n;
-+	char buf[] = "testing testing";
-+	struct nstoken *nstoken;
-+	__u64 tstamp = 0;
-+
-+	nstoken = open_netns(NS_DST);
-+	if (!nstoken)
-+		return -1;
-+
-+	srv_fd = start_server(AF_INET6, SOCK_DGRAM, "::1", 0, 0);
-+	if (!ASSERT_GE(srv_fd, 0, "start_server"))
-+		goto done;
-+
-+	err = setsockopt(srv_fd, SOL_SOCKET, SO_TIMESTAMPNS_NEW,
-+			 &opt, sizeof(opt));
-+	if (!ASSERT_OK(err, "setsockopt(SO_TIMESTAMPNS_NEW)"))
-+		goto done;
-+
-+	cli_fd = connect_to_fd(srv_fd, TIMEOUT_MILLIS);
-+	if (!ASSERT_GE(cli_fd, 0, "connect_to_fd"))
-+		goto done;
-+
-+again:
-+	n = write(cli_fd, buf, sizeof(buf));
-+	if (!ASSERT_EQ(n, sizeof(buf), "send to server"))
-+		goto done;
-+	err = __rcv_tstamp(srv_fd, buf, sizeof(buf), &tstamp);
-+	if (!ASSERT_OK(err, "__rcv_tstamp"))
-+		goto done;
-+	if (!tstamp && nretries++ < 5) {
-+		sleep(1);
-+		printf("netstamp_needed_key retry#%d\n", nretries);
-+		goto again;
-+	}
-+
-+done:
-+	if (!tstamp && srv_fd != -1) {
-+		close(srv_fd);
-+		srv_fd = -1;
-+	}
-+	if (cli_fd != -1)
-+		close(cli_fd);
-+	close_netns(nstoken);
-+	return srv_fd;
- }
- 
- static void snd_tstamp(int fd, char *b, size_t s)
-@@ -843,11 +904,20 @@ static void test_tc_redirect_dtime(struct netns_setup_result *setup_result)
- {
- 	struct test_tc_dtime *skel;
- 	struct nstoken *nstoken;
--	int err;
-+	int hold_tstamp_fd, err;
-+
-+	/* Hold a sk with the SOCK_TIMESTAMP set to ensure there
-+	 * is no delay in the kernel net_enable_timestamp().
-+	 * This ensures the following tests must have
-+	 * non zero rcv tstamp in the recvmsg().
-+	 */
-+	hold_tstamp_fd = wait_netstamp_needed_key();
-+	if (!ASSERT_GE(hold_tstamp_fd, 0, "wait_netstamp_needed_key"))
-+		return;
- 
- 	skel = test_tc_dtime__open();
- 	if (!ASSERT_OK_PTR(skel, "test_tc_dtime__open"))
--		return;
-+		goto done;
- 
- 	skel->rodata->IFINDEX_SRC = setup_result->ifindex_src_fwd;
- 	skel->rodata->IFINDEX_DST = setup_result->ifindex_dst_fwd;
-@@ -892,6 +962,7 @@ static void test_tc_redirect_dtime(struct netns_setup_result *setup_result)
- 
- done:
- 	test_tc_dtime__destroy(skel);
-+	close(hold_tstamp_fd);
- }
- 
- static void test_tc_redirect_neigh_fib(struct netns_setup_result *setup_result)
+ 	if (WARN_ON(!link)) {
+ 		err = -ENOLINK;
 -- 
 2.43.0
 
