@@ -1,42 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDD7131BB3;
-	Sun, 24 Mar 2024 23:44:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFCA131BC2;
+	Sun, 24 Mar 2024 23:44:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323858; cv=none; b=GaRBGr3XW5nLCjbwzeAmHu0Kf8WFJQg2o5PKGnENZ2U+sW48NDXjYerZTnTWyG5BNQakM66scnwbZQBu4lO4gUUdOHTGL2WHPTB+F9Jjsa+Dz2qJxQejUABm2IzRjto6dyaMu5T+yAnVjVFtG3vZJ5WPzjkrZZjfqA18kTpzvdQ=
+	t=1711323861; cv=none; b=Y92A86oKiJaM5xyr1+hc2Av3toFRdk7PAhEsPYdXBFQjgF5NONDf9cSiUz4lIlV0Dh/LLIbS+2pnbcyU6oldZLtSDjGjjh/5mKm3o2o7euiGWzS5AXtn6tPSEZN7nIlGB63T74ex34RKbnOqHglLDgIuF+zLuT9mAkCG1PLbpMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323858; c=relaxed/simple;
-	bh=QMGPU9v5zCezGY7dbzADYR4mYAy++b+NW7nLcEaX8zA=;
+	s=arc-20240116; t=1711323861; c=relaxed/simple;
+	bh=rDm185Bh1EDMtEJsFpi2CDlhDA/68UEtjAVW+yRFrLM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KMrG1MYWvqipyO8cfrGyeeShBXIr0evFNFMnfgHpEKgrPegIxW2TN2CJf62+XKeBO5u7i6iG5GqVbj7vyg4bBkl3yDx+Ei2VoxIDrJxvO5SJLHEadGOARND4OwqN2/RQDKj9Zv3u64uB/6nwMyNVgv+G2iENdxsCUjlewPb0BpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZfIW+jeC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mw+ROW6LJFxrhXYHuCuIUCQiAa3757oXIed/0kcq9DDpFILGDXKk8dHpAyi//dnzXAn2eyCe6XGhxXRSuViPdsh9VQeqZ+/K4U1n5vVMVstTBVQcR1QD4BGt2mVCmOcn6mVxY6fiLeHAahOfHB9zPBMi1xqj32Xh/qtfInnKcxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ikQ7Cyxi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZfIW+jeC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B69BC43390;
-	Sun, 24 Mar 2024 23:44:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ikQ7Cyxi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1242C43390;
+	Sun, 24 Mar 2024 23:44:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323857;
-	bh=QMGPU9v5zCezGY7dbzADYR4mYAy++b+NW7nLcEaX8zA=;
+	s=k20201202; t=1711323860;
+	bh=rDm185Bh1EDMtEJsFpi2CDlhDA/68UEtjAVW+yRFrLM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZfIW+jeCP6Ic8m1ilPF9oe0K2Qw7QsrD1f0Lh4HucExe2pEENJLV3L8WwPdWh5l2M
-	 +51usPwbKBk+Abtg4k6yp3U+welj7cbNw06EjaXH/oNYSCsg7CNztC1c56bMn4T7Tu
-	 zfYY+Vc22LY6itA5pYs3tatsdtfQCL0WAyPbMRnW5Xxeqk6N9W7uQoINql/9bEQvDn
-	 dmWJtxFMMUsF7JYEvRlaqT6tYIkQiNKqQF/qdZ2aBMojNB/I9g4lvFL9A1yFRe5fAW
-	 Bobb8QBxXQDCRDO99nYqv0hR0IyTMnCGyj8a9f1t8RXO+oMq4BjKq7F0H6JzxSgOv0
-	 60LaCSIrFl7FQ==
+	b=ikQ7CyxiOU+KslErxGaqVqJ79XJsHMaZ5zlBR1PrmPFyeXmVVWhkFli+iF14w3eJg
+	 7Q+YLIwjTL/ofWx3LHhfp9/x7kp3S+OA+AEWuL1lmlWXz0ArEJtc5uee2PUiuQsbcV
+	 L6w27FkYv23dJ7Y+KlZ+vI1rXbtDNuPBybKqp1q5CTagm6UqtwGahz6YXvXmvKilLP
+	 r91rQN95d59wEfVRs3ytqQsx2IAq/vzz0eEaGOAT26u0wp2Bt6rp+GtBk3txPJVR9K
+	 MaHClbRM4UD5nMGTpIubbz3tcMQ97/yhozq1fuZj8cc1oxwC0GJ1/IkrRh8jUROM1H
+	 WLKX5Pugrl86g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yan Zhai <yan@cloudflare.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 235/238] bpf: report RCU QS in cpumap kthread
-Date: Sun, 24 Mar 2024 19:40:23 -0400
-Message-ID: <20240324234027.1354210-236-sashal@kernel.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.10 238/238] Linux 5.10.214-rc1
+Date: Sun, 24 Mar 2024 19:40:26 -0400
+Message-ID: <20240324234027.1354210-239-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -50,53 +46,26 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yan Zhai <yan@cloudflare.com>
-
-[ Upstream commit 00bf63122459e87193ee7f1bc6161c83a525569f ]
-
-When there are heavy load, cpumap kernel threads can be busy polling
-packets from redirect queues and block out RCU tasks from reaching
-quiescent states. It is insufficient to just call cond_resched() in such
-context. Periodically raise a consolidated RCU QS before cond_resched
-fixes the problem.
-
-Fixes: 6710e1126934 ("bpf: introduce new bpf cpu map type BPF_MAP_TYPE_CPUMAP")
-Reviewed-by: Jesper Dangaard Brouer <hawk@kernel.org>
-Signed-off-by: Yan Zhai <yan@cloudflare.com>
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
-Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
-Link: https://lore.kernel.org/r/c17b9f1517e19d813da3ede5ed33ee18496bb5d8.1710877680.git.yan@cloudflare.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/cpumap.c | 3 +++
- 1 file changed, 3 insertions(+)
+ Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
-index 2dcc04b2f330e..9a4378df45998 100644
---- a/kernel/bpf/cpumap.c
-+++ b/kernel/bpf/cpumap.c
-@@ -299,6 +299,7 @@ static int cpu_map_bpf_prog_run_xdp(struct bpf_cpu_map_entry *rcpu,
- static int cpu_map_kthread_run(void *data)
- {
- 	struct bpf_cpu_map_entry *rcpu = data;
-+	unsigned long last_qs = jiffies;
+diff --git a/Makefile b/Makefile
+index b6af62d53d7a6..980bbbcfc2605 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,8 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0
+ VERSION = 5
+ PATCHLEVEL = 10
+-SUBLEVEL = 213
+-EXTRAVERSION =
++SUBLEVEL = 214
++EXTRAVERSION = -rc1
+ NAME = Dare mighty things
  
- 	set_current_state(TASK_INTERRUPTIBLE);
- 
-@@ -322,10 +323,12 @@ static int cpu_map_kthread_run(void *data)
- 			if (__ptr_ring_empty(rcpu->queue)) {
- 				schedule();
- 				sched = 1;
-+				last_qs = jiffies;
- 			} else {
- 				__set_current_state(TASK_RUNNING);
- 			}
- 		} else {
-+			rcu_softirq_qs_periodic(last_qs);
- 			sched = cond_resched();
- 		}
- 
+ # *DOCUMENTATION*
 -- 
 2.43.0
 
