@@ -1,44 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5EE1E16AE;
-	Sun, 24 Mar 2024 22:52:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30E81E065D;
+	Sun, 24 Mar 2024 22:52:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320775; cv=none; b=XkaVhs/+9hH5VRig8MBF5PlXJTJMx42y83LQ4yj43w8+ITYtAPzwDx2f3X3CwtMQNILDKLROstO7EKborCBf/axACDONYiIUMDB84RfcJ8bd5r2Ii+UttrJ2HdElzPAVPFBfg7Ri/4LpUlRlVXVVAcA0XKO/O3f84k1EtqUPW1o=
+	t=1711320763; cv=none; b=aUjn1F9bWkJjmBG+UoGdZLpw4Q4BxTv205KBXL44Fz6SF4wxBUrsqz5HSNQo9ek2BLRwJbWUuHYE0JDCmV5s9H5uz3FcSG9I8E8rVm9FLmvGFpqGVoU/DJMhvDu9KRVm/ksclWUU92ug+kqN2sE8Aukyxl20KBZ3a6TGMfpdKnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320775; c=relaxed/simple;
-	bh=7z9VKnEcVKttCYMNNEZ3RltWsrm5wlUFur33f2x7As0=;
+	s=arc-20240116; t=1711320763; c=relaxed/simple;
+	bh=FwRUlJdf2CwufbTEJaPahXujuWP54HzSK35Xuao6dhE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Tos6bC4GRbyLc4WoKgfJjxPNk6KUw/AYtLxlVYh4QMBQyVJQbqzJqiJkXrtFCWWLWLPXKSO9ZSga8/l3B6IkXNHri8AEQ3ElP44cz4oDN/e91+x/7nCl6TAjS6Hxoy/KpDDYkhy7gUNqORM064yDza13MmnhDdE77TAt3xNwfAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QQ59bnhP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=MtTgyt10MTobZiDyLSlfXlL1Ge0EKSHHG6nazyV2JTYOkS04d557JyOZhyDUQMRyFvf93RNHE5JyL+W+uKVaAvhq/n2Ep2iGth3zF1A2ZYR7+lVfjcHJ86oTLDz8dEbOziCLrtmWPmlvXFWjd4otu5QmG1ubl8IfysT8HH1ZlqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NqmmXN+h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QQ59bnhP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD4C7C433F1;
-	Sun, 24 Mar 2024 22:52:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NqmmXN+h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66E14C433F1;
+	Sun, 24 Mar 2024 22:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320774;
-	bh=7z9VKnEcVKttCYMNNEZ3RltWsrm5wlUFur33f2x7As0=;
+	s=k20201202; t=1711320762;
+	bh=FwRUlJdf2CwufbTEJaPahXujuWP54HzSK35Xuao6dhE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QQ59bnhP6kTC+L6442cpzj9iCPzFPEBoL07n5ptFo7EsPZKbzUdwboJggyE3xSCvF
-	 8TGC236b+edv1ILwwwrqCWNcucj36t5j7NZ+J28k7OB6YthoPamnL5kgQ51wyGt3gr
-	 1E18uVVbPmS7ADVMlaGnnLt1m3K5ZBaDRTasExIkeCAyDkO5LVOquxarOB6gr+KCwl
-	 hAfptTBkYHPtJZykLNkfGWdEmwWw3/fDjkbbMdt/orBwVWpa9LRLoPNsVcBJhB18Gv
-	 5O6b/4p/vmlXDQn0u4mSGMCczgW38aIz+6I2Anthawjf9VycdlNVDJzkv/U1FhV3ss
-	 dLCA2HE+gA+Xg==
+	b=NqmmXN+hCf66Tpu45HAUgWsve5ZD6dEsoIJha0Qxyl1NeB3UdWa1j35sytKtRvhAG
+	 fY2uu2O/uq1XHorh4rWfsu3vKTBm018XmP/++fDidevrCJR/KPi/s/Soy+g8m4EJiS
+	 cQ5QsJ9WaZewex33c2ZoY9OphSNZ39sKvzkLzmLnYPpurtpJYfbv9xVpuD+HlxBeaF
+	 7dfTyvbM6eJk7NuoyUpUHptOPOd9Q+0AEVYYdHfa+4LUUxO9Klx/wdKrIWgWHdHId5
+	 x1DFq440VJKrQMFdkpSE6gdnPodZFGduF7EliVZM+24Z8rNzHRX2I7VVs84Fgf/bQg
+	 b4JaFt4Uk/6BQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ethan Zhao <haifeng.zhao@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Haorong Ye <yehaorong@bytedance.com>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Joerg Roedel <jroedel@suse.de>,
+Cc: Jason Gunthorpe <jgg@nvidia.com>,
+	Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
+	Nicolin Chen <nicolinc@nvidia.com>,
+	Will Deacon <will@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 338/713] PCI: Make pci_dev_is_disconnected() helper public for other drivers
-Date: Sun, 24 Mar 2024 18:41:04 -0400
-Message-ID: <20240324224720.1345309-339-sashal@kernel.org>
+Subject: [PATCH 6.7 326/713] iommu/arm-smmu-v3: Check that the RID domain is S1 in SVA
+Date: Sun, 24 Mar 2024 18:40:52 -0400
+Message-ID: <20240324224720.1345309-327-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -52,65 +50,59 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+From: Jason Gunthorpe <jgg@nvidia.com>
 
-[ Upstream commit 39714fd73c6b60a8d27bcc5b431afb0828bf4434 ]
+[ Upstream commit ae91f6552c301e5e8569667e9d5440d5f75a90c4 ]
 
-Make pci_dev_is_disconnected() public so that it can be called from
-Intel VT-d driver to quickly fix/workaround the surprise removal
-unplug hang issue for those ATS capable devices on PCIe switch downstream
-hotplug capable ports.
+The SVA code only works if the RID domain is a S1 domain and has already
+installed the cdtable.
 
-Beside pci_device_is_present() function, this one has no config space
-space access, so is light enough to optimize the normal pure surprise
-removal and safe removal flow.
+Originally the check for this was in arm_smmu_sva_bind() but when the op
+was removed the test didn't get copied over to the new
+arm_smmu_sva_set_dev_pasid().
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
-Tested-by: Haorong Ye <yehaorong@bytedance.com>
-Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
-Link: https://lore.kernel.org/r/20240301080727.3529832-2-haifeng.zhao@linux.intel.com
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Stable-dep-of: 4fc82cd907ac ("iommu/vt-d: Don't issue ATS Invalidation request when device is disconnected")
+Without the test wrong usage usually will hit a WARN_ON() in
+arm_smmu_write_ctx_desc() due to a missing ctx table.
+
+However, the next patches wil change things so that an IDENTITY domain is
+not a struct arm_smmu_domain and this will get into memory corruption if
+the struct is wrongly casted.
+
+Fail in arm_smmu_sva_set_dev_pasid() if the STE does not have a S1, which
+is a proxy for the STE having a pointer to the CD table. Write it in a way
+that will be compatible with the next patches.
+
+Fixes: 386fa64fd52b ("arm-smmu-v3/sva: Add SVA domain support")
+Reported-by: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+Closes: https://lore.kernel.org/linux-iommu/2a828e481416405fb3a4cceb9e075a59@huawei.com/
+Tested-by: Nicolin Chen <nicolinc@nvidia.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Link: https://lore.kernel.org/r/11-v6-96275f25c39d+2d4-smmuv3_newapi_p1_jgg@nvidia.com
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.h   | 5 -----
- include/linux/pci.h | 5 +++++
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 24ae29f0d36d7..1697cb8289d49 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -366,11 +366,6 @@ static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
- 	return 0;
- }
- 
--static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
--{
--	return dev->error_state == pci_channel_io_perm_failure;
--}
--
- /* pci_dev priv_flags */
- #define PCI_DEV_ADDED 0
- #define PCI_DPC_RECOVERED 1
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 675937a5bd7ce..ca0e61c838e83 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2511,6 +2511,11 @@ static inline struct pci_dev *pcie_find_root_port(struct pci_dev *dev)
- 	return NULL;
- }
- 
-+static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
-+{
-+	return dev->error_state == pci_channel_io_perm_failure;
-+}
+diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c
+index 4a27fbdb2d844..2610e82c0ecd0 100644
+--- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c
++++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c
+@@ -364,7 +364,13 @@ static int __arm_smmu_sva_bind(struct device *dev, ioasid_t pasid,
+ 	struct arm_smmu_bond *bond;
+ 	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
+ 	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+-	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
++	struct arm_smmu_domain *smmu_domain;
 +
- void pci_request_acs(void);
- bool pci_acs_enabled(struct pci_dev *pdev, u16 acs_flags);
- bool pci_acs_path_enabled(struct pci_dev *start,
++	if (!(domain->type & __IOMMU_DOMAIN_PAGING))
++		return -ENODEV;
++	smmu_domain = to_smmu_domain(domain);
++	if (smmu_domain->stage != ARM_SMMU_DOMAIN_S1)
++		return -ENODEV;
+ 
+ 	if (!master || !master->sva_enabled)
+ 		return -ENODEV;
 -- 
 2.43.0
 
