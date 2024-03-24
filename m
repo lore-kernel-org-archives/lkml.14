@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A582917C6D9;
-	Sun, 24 Mar 2024 23:43:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B2317CF42;
+	Sun, 24 Mar 2024 23:43:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323802; cv=none; b=t4JQV2rd9nkyMNxOVj7ArhcripbBnwjjuqlpQlG50bDeCATfQbdQ1uI+CtYg90/qagMX3nTMD2Itgu3qdTlsobx3wp83ISqxWyddS9UMwwStWm1AbOjQzNaHf7W/DemE4CprXCJGpMaurxiYKybUwjJwXVKbNX4gsW1msBUhYfo=
+	t=1711323804; cv=none; b=vAENiqVImNznDP/oZnFqTVwDFWcKp9dW2xYzdM5wvM7QU9IpYc5dPB9+nIk/2g7LSrsm4wfhN4RfhxXxagPFQEMHBdFBjnLIsoNn7pekVDCSRBmPGvtZtzFQ/ERbcTT6i/yUe73t5dpl76p2nSfxhZk/nazcSfau67UBjg8QRB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323802; c=relaxed/simple;
-	bh=ljODnJprINJouMOUr8OzHtLvij5iu2kW/2nFcfMeJ7A=;
+	s=arc-20240116; t=1711323804; c=relaxed/simple;
+	bh=WcWIkH5q7zZPWwW1JMd5ars6aARZtyMpPCQlr0PEIBc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z/0l+xjfhdqmi5bCO+SoNuObCRH36js20NBtxeAlxJx+eCODbVRhBbSAOAo3ty9irz0bcgmMo4WYC+5MQrO1JWX0s6xNygWVyrTM8tjVxQ00OHB/1ZxxEbgGwDcnrR26nattEUcKv/Z/NDG6bFln4tCYaRnunFdx+IOIFHfuJ6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pIsHpqcK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IVGd2e9JQHd2XN31c6efWSNakK7yTZrj8KR/JXTlzd1f7/RAjy9nMInq+oQkZ3kSX774WbsIgkmAzalfdb3APCYxBYJ3OVusCSdbiJwo/qExIFPiLGeBWMRcY0AKeHE2261jPbOQztGWSVk8/GHG2V+cf+Kl0q1/fqr7+lR1vJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a53+j1mb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pIsHpqcK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4CDEC433A6;
-	Sun, 24 Mar 2024 23:43:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a53+j1mb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C3D7C433C7;
+	Sun, 24 Mar 2024 23:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323801;
-	bh=ljODnJprINJouMOUr8OzHtLvij5iu2kW/2nFcfMeJ7A=;
+	s=k20201202; t=1711323803;
+	bh=WcWIkH5q7zZPWwW1JMd5ars6aARZtyMpPCQlr0PEIBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pIsHpqcKNo69LmjozyN9ZLy+qWIGeX7Qm5aWqgPxnMw45Baa+USU4hO+vYTdIz4r9
-	 6o0yDsFkbC+cAE/teXlJo4IbZTNI5hTWztBNn7uDOs3zz/mEz2BfKfh1QUz48sWUnx
-	 hUz6jmiod05GXEs3ruBNcabeA6Wb2wfvVHkZvi11zM7o2O6j8vHMQPOGJAEPVFE33A
-	 odwF4DrToAmnSewYoWCrxsTpLTS/8wLYzKx8bzGFPGtHaqzGjfroKA440E4v03Z2nP
-	 iqAqGtbT0y4ZbGmh/6YbEUb7KlxviiIsFjUqFkoSPe3hRjO+Gj1hgu3TVQnRBbpgFO
-	 aUL6knntn/Psg==
+	b=a53+j1mbcbREPT+ZymrcXBLGiwGKAIqG8MhRCH701AMZ+CPtTq2TZQrHVthR2+CIX
+	 6lC87cHq21gOp2o+MiihZT+cSk4A/gPthN7yg6pHSRPgrCbLyB6WCtE9eL6EcCjVtu
+	 Tq07ziyQbVvESXZfGKWbumdlFt67zREkKIsGyx86audBrHh4jo/txmnWJoT3mndxXH
+	 CHU4/oIJjQPRcF7Ore+dggJE+uRYHtGbnEJHEJWqb8ZxBbDt06oZ4Gdhasb+XjeOf5
+	 1uVobJu6FYqHnbQLJbfAM2JDJVibOhOJ2ZpGDDfjXNlVqYrpteTqlb0Rlljo2BcYZt
+	 0WQ2djNZvrFLA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Paloma Arellano <quic_parellan@quicinc.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+Cc: George Stark <gnstark@salutedevices.com>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Lee Jones <lee@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 179/238] drm/msm/dpu: add division of drm_display_mode's hskew parameter
-Date: Sun, 24 Mar 2024 19:39:27 -0400
-Message-ID: <20240324234027.1354210-180-sashal@kernel.org>
+Subject: [PATCH 5.10 181/238] leds: aw2013: Unlock mutex before destroying it
+Date: Sun, 24 Mar 2024 19:39:29 -0400
+Message-ID: <20240324234027.1354210-182-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,47 +49,35 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Paloma Arellano <quic_parellan@quicinc.com>
+From: George Stark <gnstark@salutedevices.com>
 
-[ Upstream commit 551ee0f210991d25f336bc27262353bfe99d3eed ]
+[ Upstream commit 6969d0a2ba1adc9ba6a49b9805f24080896c255c ]
 
-Setting up the timing engine when the physical encoder has a split role
-neglects dividing the drm_display_mode's hskew parameter. Let's fix this
-since this must also be done in preparation for implementing YUV420 over
-DP.
+In the probe() callback in case of error mutex is destroyed being locked
+which is not allowed so unlock the mutex before destroying.
 
-Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
-Signed-off-by: Paloma Arellano <quic_parellan@quicinc.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Patchwork: https://patchwork.freedesktop.org/patch/579605/
-Link: https://lore.kernel.org/r/20240222194025.25329-3-quic_parellan@quicinc.com
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Fixes: 59ea3c9faf32 ("leds: add aw2013 driver")
+Signed-off-by: George Stark <gnstark@salutedevices.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Link: https://lore.kernel.org/r/20231214173614.2820929-2-gnstark@salutedevices.com
+Signed-off-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/leds/leds-aw2013.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-index 805e059b50b71..33880f66625e6 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-@@ -265,12 +265,14 @@ static void dpu_encoder_phys_vid_setup_timing_engine(
- 		mode.htotal >>= 1;
- 		mode.hsync_start >>= 1;
- 		mode.hsync_end >>= 1;
-+		mode.hskew >>= 1;
+diff --git a/drivers/leds/leds-aw2013.c b/drivers/leds/leds-aw2013.c
+index 80d937454aeef..f7d9795ce5e1f 100644
+--- a/drivers/leds/leds-aw2013.c
++++ b/drivers/leds/leds-aw2013.c
+@@ -397,6 +397,7 @@ static int aw2013_probe(struct i2c_client *client)
+ 	regulator_disable(chip->vcc_regulator);
  
- 		DPU_DEBUG_VIDENC(phys_enc,
--			"split_role %d, halve horizontal %d %d %d %d\n",
-+			"split_role %d, halve horizontal %d %d %d %d %d\n",
- 			phys_enc->split_role,
- 			mode.hdisplay, mode.htotal,
--			mode.hsync_start, mode.hsync_end);
-+			mode.hsync_start, mode.hsync_end,
-+			mode.hskew);
- 	}
- 
- 	drm_mode_to_intf_timing_params(phys_enc, &mode, &timing_params);
+ error:
++	mutex_unlock(&chip->mutex);
+ 	mutex_destroy(&chip->mutex);
+ 	return ret;
+ }
 -- 
 2.43.0
 
