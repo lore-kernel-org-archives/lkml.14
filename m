@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C7D1EFE42;
-	Sun, 24 Mar 2024 22:57:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2FF14B06E;
+	Sun, 24 Mar 2024 22:57:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321050; cv=none; b=KuLZzJI8ST5uEgQviNxW1VltuuNEVn1GTBfU0ZgXHDLwkU54XWSB4TQ7mRtdZWZ9m6lUCmLpHq8GTmKpv++wp+74GJYNI3GaMbkbIFm2ZfpYOeu5ZQwz4sxjZnO/tzQKzIA8oZDJJHokk9yCSnjqNPwqPCb9g4aTZzA34rL7Txo=
+	t=1711321061; cv=none; b=MyXzWHGl/AtmmnOaCG/5eVU90PbItR5+20M2H8+sWWu46HMLXZmMq94z8LvnF3wypPItqmh0UIf6cEsJiY2WbLFeHQlKto/frS7N1ZXFL/t0QFAG0fbxHH/TsI4f+n3X9Muf+TpxEenVwHj0LXmCPyTHrl0Gfil6EWdXMLukBdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321050; c=relaxed/simple;
-	bh=B3ZXGUAXx6lcWfqf2PJBVUj7BbEtjMdTv8BrH5L1FWw=;
+	s=arc-20240116; t=1711321061; c=relaxed/simple;
+	bh=xxDvHxkCalMd9F6E6Mmn95dhRe41RK/Aqqey8Y7vTkw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PzvVswoRv9cNpmrTThptXPOZ/mWIoMUvi7c7uahZN6sB0JJ7rF3XUkIqS1FowlsjKBEErKWnRYrOhwSHe3yQ7HyjQe+gpmHA75GeF8O66q35eK6NJLCTF4Ec+NgU5q/6y2dVRpnftuWkdZsFJJV5abcu/Y4yPOSt1p2E2k2h4F0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fGggEiae; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=p0Fp0h1LEHNhWR0AwZ5wo11gSwDY2gTXK6PdMh8uBbxULDEXcgYq3KPL+LXywvAkpHYeUYZt1k06cnmOxpaXzSSAMBKa5BFZ9FMKJqXeCQnAfuDrF/FbihcWg5VM0hj2GlcqK3sm7GYsVOPkCRTMEvPIw9TEfiSeICa9xAQ87mI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXPfU2V4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fGggEiae"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9D43C43394;
-	Sun, 24 Mar 2024 22:57:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXPfU2V4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89A68C433A6;
+	Sun, 24 Mar 2024 22:57:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321049;
-	bh=B3ZXGUAXx6lcWfqf2PJBVUj7BbEtjMdTv8BrH5L1FWw=;
+	s=k20201202; t=1711321060;
+	bh=xxDvHxkCalMd9F6E6Mmn95dhRe41RK/Aqqey8Y7vTkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fGggEiaeJpAKXqTHDdR3oqOZ9OR/HpBSgouKwxarp3AJG2eJ+7UsQEYXgEnZtjxsQ
-	 i7uzvShBhnyGETWIhAskn192UU5jHYfVj3gNNR+INqxp13FgDLfGuh5K7dyfjLwLq0
-	 2tm1T8h71q4E/bRmjsGPu+rrD3dusvSqqVKhV+auAKOPd+r6QzJS2o+p3k/Qo6+O91
-	 Z73nHGr5TVyebMSQCGdMnhJADe3RGSNBuP19feQ70ETPL2xax/fy0rJax7bAGql7lE
-	 EPiJpIV5SgRlCI53p0mZ8oYg5MbLCQA/vnM2zmD5CpsS+6Tlfq0agbxVwSDCPOIE6U
-	 Yds3StJ4NGe8Q==
+	b=cXPfU2V4wf/rEVhOIHCUE2z+NwEDipG95DsxkBXZJ9TObFr0LWO6x3gGy/2m4z46V
+	 cpNi14ITdnpKGBfmSU2HY9XJbweo+H+k7foMdLLIDU1fC6WdJyiJD1uV6rcsT9bWVs
+	 gwnEjIdMXgHoSpMPR0tikzjD1RHuUOGuTe86LOVWqXHYKFwPNAQh4R6Gu+QrsAs8FN
+	 msgKIxm/My4D4o3MKFc84j3WVu8p5iPz52Xkekaorcd47D2z5xS6jp5vprxYh8i9z8
+	 2LsUjxnM5tXnZoPqTlic+dAhh4Y9S+oPjPGoByzrD/98IZGGA7HsUGwjEZC1HdfGYm
+	 9BI2kgkYKSepA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mathias Krause <minipli@grsecurity.net>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 6.7 612/713] bcachefs: install fd later to avoid race with close
-Date: Sun, 24 Mar 2024 18:45:38 -0400
-Message-ID: <20240324224720.1345309-613-sashal@kernel.org>
+Cc: Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.7 624/713] serial: max310x: fix syntax error in IRQ error message
+Date: Sun, 24 Mar 2024 18:45:50 -0400
+Message-ID: <20240324224720.1345309-625-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,44 +49,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Mathias Krause <minipli@grsecurity.net>
+From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 
-commit dd839f31d7cd5e04f4111a219024268c6f6973f0 upstream.
+[ Upstream commit 8ede8c6f474255b2213cccd7997b993272a8e2f9 ]
 
-Calling fd_install() makes a file reachable for userland, including the
-possibility to close the file descriptor, which leads to calling its
-'release' hook. If that happens before the code had a chance to bump the
-reference of the newly created task struct, the release callback will
-call put_task_struct() too early, leading to the premature destruction
-of the kernel thread.
+Replace g with q.
 
-Avoid that race by calling fd_install() later, after all the setup is
-done.
+Helpful when grepping thru source code or logs for
+"request" keyword.
 
-Fixes: 1c6fdbd8f246 ("bcachefs: Initial commit")
-Signed-off-by: Mathias Krause <minipli@grsecurity.net>
-Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+Fixes: f65444187a66 ("serial: New serial driver MAX310X")
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Link: https://lore.kernel.org/r/20240118152213.2644269-6-hugo@hugovil.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/bcachefs/chardev.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/tty/serial/max310x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/bcachefs/chardev.c b/fs/bcachefs/chardev.c
-index 4bb88aefed121..64000c8da5ee6 100644
---- a/fs/bcachefs/chardev.c
-+++ b/fs/bcachefs/chardev.c
-@@ -392,10 +392,9 @@ static long bch2_ioctl_data(struct bch_fs *c,
- 		goto err;
- 	}
+diff --git a/drivers/tty/serial/max310x.c b/drivers/tty/serial/max310x.c
+index 07f7b48bad13d..5aff179bf2978 100644
+--- a/drivers/tty/serial/max310x.c
++++ b/drivers/tty/serial/max310x.c
+@@ -1461,7 +1461,7 @@ static int max310x_probe(struct device *dev, const struct max310x_devtype *devty
+ 	if (!ret)
+ 		return 0;
  
--	fd_install(fd, file);
--
- 	get_task_struct(ctx->thread);
- 	wake_up_process(ctx->thread);
-+	fd_install(fd, file);
+-	dev_err(dev, "Unable to reguest IRQ %i\n", irq);
++	dev_err(dev, "Unable to request IRQ %i\n", irq);
  
- 	return fd;
- err:
+ out_uart:
+ 	for (i = 0; i < devtype->nr; i++) {
 -- 
 2.43.0
 
