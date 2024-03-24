@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4168D22520A;
-	Sun, 24 Mar 2024 23:12:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297A6225219;
+	Sun, 24 Mar 2024 23:12:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321939; cv=none; b=CmrYL/CEH3k/eyZL+VqYjFB7df8QCUhSaIXJWhnUUkhqLk7MPlgjSiliLfZfWi/xAmlkV66f60U9sCSSEj/S3en0X/EG4L4zkq/EyIPZB8fYZW5tCR4zDQ+8hHqC4UFmjMB9oOwFzfhKZHFdZFQK7jwJs54YV5EQqhwneDRy+jI=
+	t=1711321941; cv=none; b=lWav+pCX+36Wabd8NGaVfo4aeUU8JbCPzapTvNyC5zB26h7spNtAvFmZj1YfifOuwGDJzDSw4hlmgvlmwVd7wRfmBXpjAdMxHs+NyERnssK4wadVajF6FeaC1LRb8Pfyd+Ts3KodtaSlHZcqZKVJCaSNEMN/7EKtQj/zhfDWTSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321939; c=relaxed/simple;
-	bh=3PXM6/UlYfxz9RIjba/zaF2YNNRDwgTifOocEtHlPWs=;
+	s=arc-20240116; t=1711321941; c=relaxed/simple;
+	bh=QojNL+Cb9RditocGthFN/Ct6+fVG+hVShAGwJAb8Xxg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dyWGS7h240x1Ba+dXUHkORRpicszecNn3fNXyghkW2nDmjEma8NrEQOHalfuPQ+iiQE29W8OUHU+D+KHWi0B83zyN7AIPlu5J4aT13lZ7XyCEgjvf/Zs7vHLAu1JqPggqtF/K2bEzYgPtMb29u1WuiNFBNUPFCzlFfXzJr+2y3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yqzd3WR+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=G2TmIAaw0EdTt9/ddQKhd7ooC/KyegKT5p2mRC2SOQAtVwkyrWtiIqkWuYymJ3qo1eYwaHfRU7udyi9lVMZu/l6iBJuCn8V+XRCx0GDX0x0ZSovmqoxLvkWV354EySRJPk+F0X2xNVBnRn5ja7Sb0lUt/tvhYkQ7dqm7CiXAbYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XHdsgDvk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yqzd3WR+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E1D7C433C7;
-	Sun, 24 Mar 2024 23:12:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XHdsgDvk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6590DC43399;
+	Sun, 24 Mar 2024 23:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321938;
-	bh=3PXM6/UlYfxz9RIjba/zaF2YNNRDwgTifOocEtHlPWs=;
+	s=k20201202; t=1711321940;
+	bh=QojNL+Cb9RditocGthFN/Ct6+fVG+hVShAGwJAb8Xxg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Yqzd3WR+YPBok7xYL2Vkg16aOKF5P8j+9gLJ9QwsdMHqgdMri71rg0h5Bcu+T7zCX
-	 3K4RV3e0l8hXA12UHPLaUFnln6AMxnIQ8jkL8eZRbrQhIw5gKNWb3+gFAetwUxXzP+
-	 lN03rfLU73+1ksPNxV9CgoJ8GXeG0xIg7w4XvE0conNZnC8ckAhYD7PkD5Reby1yVo
-	 VaO3zxoQdI0+8TnlTAAADtyFIzWpz15iq/6MINXcmT14YZIDVQR5Kya+n/0lsLzKRx
-	 dixSZCtHRh/7GT5ail98WgXVmcRLcS5yW4525sCgjg33GA4k+qbrgp6e5pPBZGWtIo
-	 CCrxX+6+IzpVA==
+	b=XHdsgDvkGy0+I1RuocdNrYvbS/KbygKFD/HQP9yVMTW2aQ9np3piVh/ejZJRNAcnV
+	 cqTrOgh9JMPJavXilP8HdddEHJPXVbLI2Q97OWM2WijvjajXWt2JoIodKwC2cd0kJp
+	 0HaIdDwZdcfnnmi++zmXIyGSIuFGW8QIm0rsoX1eXeEBLffTSH8MvYBqlAP21tbqfw
+	 P2sM8llO+5Vd95da+glMMTJRW1tqEo7S44we2hr1duJFi2JnQ7m+VkPaQAK9B/n/gu
+	 Te2Yc7kTxVpGEcs60sonmZai1LMwsKqqzJWi3Cjt3Zed9oBtDUm7DWna4a1FP0nuVu
+	 lQnk63e1Y0B5w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Jeff Layton <jlayton@kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 009/451] nfsd: don't kill nfsd_files because of lease break error
-Date: Sun, 24 Mar 2024 19:04:45 -0400
-Message-ID: <20240324231207.1351418-10-sashal@kernel.org>
+Subject: [PATCH 6.1 011/451] nfsd: don't take/put an extra reference when putting a file
+Date: Sun, 24 Mar 2024 19:04:47 -0400
+Message-ID: <20240324231207.1351418-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -50,97 +50,34 @@ Content-Transfer-Encoding: 8bit
 
 From: Jeff Layton <jlayton@kernel.org>
 
-[ Upstream commit c6593366c0bf222be9c7561354dfb921c611745e ]
+[ Upstream commit b2ff1bd71db2a1b193a6dde0845adcd69cbcf75e ]
 
-An error from break_lease is non-fatal, so we needn't destroy the
-nfsd_file in that case. Just put the reference like we normally would
-and return the error.
+The last thing that filp_close does is an fput, so don't bother taking
+and putting the extra reference.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/filecache.c | 29 +++++++++++++++--------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+ fs/nfsd/filecache.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index 568963b8a4777..ab37b85b72077 100644
+index 50349449a4e52..51e2947c21a7d 100644
 --- a/fs/nfsd/filecache.c
 +++ b/fs/nfsd/filecache.c
-@@ -1102,7 +1102,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	nf = nfsd_file_alloc(&key, may_flags);
- 	if (!nf) {
- 		status = nfserr_jukebox;
--		goto out_status;
-+		goto out;
- 	}
- 
- 	ret = rhashtable_lookup_insert_key(&nfsd_file_rhash_tbl,
-@@ -1111,13 +1111,11 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	if (likely(ret == 0))
- 		goto open_file;
- 
--	nfsd_file_slab_free(&nf->nf_rcu);
--	nf = NULL;
- 	if (ret == -EEXIST)
- 		goto retry;
- 	trace_nfsd_file_insert_err(rqstp, key.inode, may_flags, ret);
- 	status = nfserr_jukebox;
--	goto out_status;
-+	goto construction_err;
- 
- wait_for_construction:
- 	wait_on_bit(&nf->nf_flags, NFSD_FILE_PENDING, TASK_UNINTERRUPTIBLE);
-@@ -1127,29 +1125,25 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 		trace_nfsd_file_cons_err(rqstp, key.inode, may_flags, nf);
- 		if (!open_retry) {
- 			status = nfserr_jukebox;
--			goto out;
-+			goto construction_err;
- 		}
- 		open_retry = false;
--		if (refcount_dec_and_test(&nf->nf_ref))
--			nfsd_file_free(nf);
- 		goto retry;
- 	}
--
- 	this_cpu_inc(nfsd_file_cache_hits);
- 
- 	status = nfserrno(nfsd_open_break_lease(file_inode(nf->nf_file), may_flags));
-+	if (status != nfs_ok) {
-+		nfsd_file_put(nf);
-+		nf = NULL;
-+	}
-+
- out:
- 	if (status == nfs_ok) {
- 		this_cpu_inc(nfsd_file_acquisitions);
+@@ -382,10 +382,8 @@ nfsd_file_free(struct nfsd_file *nf)
+ 	if (nf->nf_mark)
+ 		nfsd_file_mark_put(nf->nf_mark);
+ 	if (nf->nf_file) {
+-		get_file(nf->nf_file);
+-		filp_close(nf->nf_file, NULL);
  		nfsd_file_check_write_error(nf);
- 		*pnf = nf;
--	} else {
--		if (refcount_dec_and_test(&nf->nf_ref))
--			nfsd_file_free(nf);
--		nf = NULL;
+-		fput(nf->nf_file);
++		filp_close(nf->nf_file, NULL);
  	}
--
--out_status:
- 	put_cred(key.cred);
- 	trace_nfsd_file_acquire(rqstp, key.inode, may_flags, nf, status);
- 	return status;
-@@ -1179,6 +1173,13 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	if (status != nfs_ok)
- 		nfsd_file_unhash(nf);
- 	clear_and_wake_up_bit(NFSD_FILE_PENDING, &nf->nf_flags);
-+	if (status == nfs_ok)
-+		goto out;
-+
-+construction_err:
-+	if (refcount_dec_and_test(&nf->nf_ref))
-+		nfsd_file_free(nf);
-+	nf = NULL;
- 	goto out;
- }
  
+ 	/*
 -- 
 2.43.0
 
