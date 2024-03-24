@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445D8144314;
-	Sun, 24 Mar 2024 22:51:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E288A1D8BC0;
+	Sun, 24 Mar 2024 22:50:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320661; cv=none; b=H1Xpj8idjDv7dRwLygQ1u98DEoDZ6MaFdTpMfzqxhbbReCj/An6jNL7mTbkbCUyh4Hxg0zkZbYjOlgup/ZagoJjnDobJoA/0NTqkValEZeqNOLyFJmbyn+uxYg46wrj1I8hfdPcxAGdIvDuzqPC3zCnHTKcxEwGcfDeTcMsT55w=
+	t=1711320644; cv=none; b=UzqDi3T1yqXIDkFRg5CxZNzJCB5xk3GtVr7OwGz/6VCz8xxJACduShsxFWkWWYEE3SCDzEfuSR+ws2ysRqidZlBGLcS9t2rkaGcSXsOFa/36yW7iMHYNtzPSdkXJv7n2YMri4D8+W0sWKH7bqVsdpNYDE/DsmK0tXDJEvXgZYio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320661; c=relaxed/simple;
-	bh=Jb7k3GoU6Ve+LODOIYdKGbcfDg48IkkmThzdS/zf9lE=;
+	s=arc-20240116; t=1711320644; c=relaxed/simple;
+	bh=4f1erUva8FFOMSrg8Cy7B/IPul9QQ0jPoIHd+IvGvak=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CF/WMfW4R06xa5bWnJq+fGUfVSMHka8yQk+HKyZtFiCgZ2lmAAR8Uz+8VtBr6Fp1gw6vkSR6qPxAFD2kbC114DBiT4iGvLqC+83+alSn8Tp5wJ2Uz8FCJdwq78CQiu3aSmEysPIToP00lwN9pLghJ7y+7evi+STOxQzPu1GGF+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gfdX2r4s; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AurF4XFnqsQHTA7q3M0/XHp0X0CyaSpskURwPf2/D/ySni3N8zLV5zcRosUSrxsoi1baZdwvGKylhgz5JCcBjEDBV0mTbEAzazbAT0kzyDNep0hJmhoXnFsqEI11aLcgmss6uYH+6zbDCrJPaSedA+SIFb5DNCbr80+J1z9MT9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JeLinGK2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gfdX2r4s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86A85C43390;
-	Sun, 24 Mar 2024 22:50:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JeLinGK2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16E70C43390;
+	Sun, 24 Mar 2024 22:50:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320660;
-	bh=Jb7k3GoU6Ve+LODOIYdKGbcfDg48IkkmThzdS/zf9lE=;
+	s=k20201202; t=1711320642;
+	bh=4f1erUva8FFOMSrg8Cy7B/IPul9QQ0jPoIHd+IvGvak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gfdX2r4sRIPAv7qjLC5GhlU7McK1g4FfG79i4PJtapCsscneeE4L1z/hZh7cyEnOi
-	 Rqx3mpkaHjmhqCfTEMimczR98d4bXTbAIBGchv3kZlzzcgoCBB21xLUIh5/YaU5aVn
-	 WPt3uXhSOm8GOEA/KXWulpWuFRrC3/ttQ9gk0FZ7FAuIgmwCUg9EN5qtUtJQ27ccbL
-	 q363AgkzEXqCjj1QfZLYGSpW87lc+GKpV53FcEHbSdLA98bvy5DkcG8oppeN0FQjAW
-	 /4LFcRPx48RJ0fyq17EEQfdr+30eRiwg26Jqv3saI4alDBptWScZEKG1MrZYce7y1s
-	 mC4bf1nmWZYAw==
+	b=JeLinGK2WElkcGqglxYidGKWe0AjYdaFAMN+RQ0zWSGxurDawA/8DmNyWFqaT6H1r
+	 CE125I2Ibh0m6rCwsTRxJ75RmcpWGyuyTgl+PgnQ1Szb7wVbzmRcmuqtHe3hYSIBAm
+	 f3G4O782GJJkjthqjL6P0d4+1sZGZ+E7ndt1sN54pJ2GcYmwYUqAYPrzh3O/BzVSiW
+	 nvqBhcJxH8SVkONq1tdGHMzo5xurTuTvV7siBtdJLAB0+LojXaG4FaTupIMyuiQAj3
+	 j/4Ba5hxnQJKWGsOi2vZDA7aNKOeG1pu/DwquEaUSorVDNNdCnAtiE7BoKuyIl6bW5
+	 mu4hehqyIlFbw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Petr Mladek <pmladek@suse.com>,
-	John Ogness <john.ogness@linutronix.de>,
+Cc: Manorit Chawdhry <m-chawdhry@ti.com>,
+	Andrew Davis <afd@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 222/713] printk: Disable passing console lock owner completely during panic()
-Date: Sun, 24 Mar 2024 18:39:08 -0400
-Message-ID: <20240324224720.1345309-223-sashal@kernel.org>
+Subject: [PATCH 6.7 204/713] arm64: dts: ti: k3-j784s4: Fix power domain for VTM node
+Date: Sun, 24 Mar 2024 18:38:50 -0400
+Message-ID: <20240324224720.1345309-205-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,114 +49,36 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Petr Mladek <pmladek@suse.com>
+From: Manorit Chawdhry <m-chawdhry@ti.com>
 
-[ Upstream commit d04d5882cd678b898a9d7c5aee6afbe9e6e77fcd ]
+[ Upstream commit e4d252e6d29208aea56d4c04270523e306b1e3c2 ]
 
-The commit d51507098ff91 ("printk: disable optimistic spin
-during panic") added checks to avoid becoming a console waiter
-if a panic is in progress.
+Fix the power domain device ID for wkup_vtm0 node.
 
-However, the transition to panic can occur while there is
-already a waiter. The current owner should not pass the lock to
-the waiter because it might get stopped or blocked anytime.
-
-Also the panic context might pass the console lock owner to an
-already stopped waiter by mistake. It might happen when
-console_flush_on_panic() ignores the current lock owner, for
-example:
-
-CPU0                                CPU1
-----                                ----
-console_lock_spinning_enable()
-                                    console_trylock_spinning()
-                                      [CPU1 now console waiter]
-NMI: panic()
-  panic_other_cpus_shutdown()
-                                    [stopped as console waiter]
-  console_flush_on_panic()
-    console_lock_spinning_enable()
-    [print 1 record]
-    console_lock_spinning_disable_and_check()
-      [handover to stopped CPU1]
-
-This results in panic() not flushing the panic messages.
-
-Fix these problems by disabling all spinning operations
-completely during panic().
-
-Another advantage is that it prevents possible deadlocks caused
-by "console_owner_lock". The panic() context does not need to
-take it any longer. The lockless checks are safe because the
-functions become NOPs when they see the panic in progress. All
-operations manipulating the state are still synchronized by the
-lock even when non-panic CPUs would notice the panic
-synchronously.
-
-The current owner might stay spinning. But non-panic() CPUs
-would get stopped anyway and the panic context will never start
-spinning.
-
-Fixes: dbdda842fe96 ("printk: Add console owner and waiter logic to load balance console writes")
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
-Link: https://lore.kernel.org/r/20240207134103.1357162-12-john.ogness@linutronix.de
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+Link: https://software-dl.ti.com/tisci/esd/latest/5_soc_doc/j784s4/devices.html
+Fixes: 64821fbf6738 ("arm64: dts: ti: j784s4: Add VTM node")
+Signed-off-by: Manorit Chawdhry <m-chawdhry@ti.com>
+Reviewed-by: Andrew Davis <afd@ti.com>
+Link: https://lore.kernel.org/r/20240201-b4-upstream-j721s2-fix-vtm-devid-v2-2-85fd568b77e3@ti.com
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/printk/printk.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index b7e50f8438df3..72f6a564e832f 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -1869,10 +1869,23 @@ static bool console_waiter;
-  */
- static void console_lock_spinning_enable(void)
- {
-+	/*
-+	 * Do not use spinning in panic(). The panic CPU wants to keep the lock.
-+	 * Non-panic CPUs abandon the flush anyway.
-+	 *
-+	 * Just keep the lockdep annotation. The panic-CPU should avoid
-+	 * taking console_owner_lock because it might cause a deadlock.
-+	 * This looks like the easiest way how to prevent false lockdep
-+	 * reports without handling races a lockless way.
-+	 */
-+	if (panic_in_progress())
-+		goto lockdep;
-+
- 	raw_spin_lock(&console_owner_lock);
- 	console_owner = current;
- 	raw_spin_unlock(&console_owner_lock);
+diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi
+index adb5ea6b97321..37fc48aae6945 100644
+--- a/arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi
+@@ -616,7 +616,7 @@ wkup_vtm0: temperature-sensor@42040000 {
+ 		compatible = "ti,j7200-vtm";
+ 		reg = <0x00 0x42040000 0x00 0x350>,
+ 		      <0x00 0x42050000 0x00 0x350>;
+-		power-domains = <&k3_pds 154 TI_SCI_PD_SHARED>;
++		power-domains = <&k3_pds 243 TI_SCI_PD_SHARED>;
+ 		#thermal-sensor-cells = <1>;
+ 	};
  
-+lockdep:
- 	/* The waiter may spin on us after setting console_owner */
- 	spin_acquire(&console_owner_dep_map, 0, 0, _THIS_IP_);
- }
-@@ -1897,6 +1910,22 @@ static int console_lock_spinning_disable_and_check(int cookie)
- {
- 	int waiter;
- 
-+	/*
-+	 * Ignore spinning waiters during panic() because they might get stopped
-+	 * or blocked at any time,
-+	 *
-+	 * It is safe because nobody is allowed to start spinning during panic
-+	 * in the first place. If there has been a waiter then non panic CPUs
-+	 * might stay spinning. They would get stopped anyway. The panic context
-+	 * will never start spinning and an interrupted spin on panic CPU will
-+	 * never continue.
-+	 */
-+	if (panic_in_progress()) {
-+		/* Keep lockdep happy. */
-+		spin_release(&console_owner_dep_map, _THIS_IP_);
-+		return 0;
-+	}
-+
- 	raw_spin_lock(&console_owner_lock);
- 	waiter = READ_ONCE(console_waiter);
- 	console_owner = NULL;
 -- 
 2.43.0
 
