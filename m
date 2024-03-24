@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42880145B1D;
-	Sun, 24 Mar 2024 23:13:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8779B535AC;
+	Sun, 24 Mar 2024 23:13:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322020; cv=none; b=e2krg7GEpM5x2iSFtAayqL1FmYxl4k2eWk5XJBtJ/43SrLPBDCZlcRAGwcK+cecR6YAHNPC1xpf99C2XA+/FDkOZ3ExsvirSspLCzYA+R3r4BoRPzUw2GVnAPZmY3uyH/N/JsqQi3yZS4NHyUv9QuYL30iXESwsCuDRuZeK/ORw=
+	t=1711322029; cv=none; b=jz4cd3Y5/vLhcncTH53s28COI3A9wZCGyjhzi+JLsVdnv0qUHytwx4ZoJhfN2rnXJHh9nLMVzostb8yHceKzq8nHxgahF6QsFu75kvQd1bhS301JbxzWG1W9kjSAK1a2RFAR6ldCYrcPDjW+OmG+oyAEe4lL3TAG7frSJC6a9ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322020; c=relaxed/simple;
-	bh=LOdq1mNqCD1OLC2zN1bxNCWDll0+7fgycknYNHN/tG0=;
+	s=arc-20240116; t=1711322029; c=relaxed/simple;
+	bh=uq/8y/d2mm1LK4gZZU9rrLc3HRKyMlwRIrSKlVi9Lr4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LXe+Mvlt906xbGc9pyaA+Hrm0imp7966Do8B3/J2mD9RXQkWQ+N1DlJneC1AjdVz2VPJhoOw545dC9LR6ioxzWAGAk9WmwA+RvRrwI1hf9ML5gvcCLzqjSBDUIo8O+YQgisZs7XM+1hb0T2Y26JX8fUBPnmChtzYA6qxv8EQwe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQs6+edn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=KuPl6o0PEiyo1HRZDbm1IW2iOEnYEDz0zJZ1G8WtXH9RYTUv/Hzp8qWgj8bGWav10RKk1gGObFbC10Hz168B+LCStGHf0P31psl/nzzLArbcgHqAvMCjh7gftjWg8N38MoR/HerOK7ktH8d7EzBm4SnP1AJh5PNiATgLfdWso3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PdSMPKz1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQs6+edn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DDD0C433C7;
-	Sun, 24 Mar 2024 23:13:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PdSMPKz1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9815CC43390;
+	Sun, 24 Mar 2024 23:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322020;
-	bh=LOdq1mNqCD1OLC2zN1bxNCWDll0+7fgycknYNHN/tG0=;
+	s=k20201202; t=1711322028;
+	bh=uq/8y/d2mm1LK4gZZU9rrLc3HRKyMlwRIrSKlVi9Lr4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rQs6+ednZ8g7vYVKrXlocmMWbS/dwgPipez23y34FkC4upMwFeUZ9dNyU1OcbgG95
-	 PJtY7oppTonrZb2dxZZvLr6MgE0cxkOgPPSg6USxG/OwwScpI1Wr9cf1EIAdwqmbPn
-	 YQ9cTVdZ7IcAhX7hguMwOOGpX6TYb9CUZFaOMmQ1dg3VSGdFGqCIqIOshJQ2i4LoA+
-	 iXzRMXrVWrJ6is4nHZE95uP6zmNzPZBfni32RVAf4EOJmcTwQRy3BpipLdXUcSxiwe
-	 w7vmLKirBTSVDHMj4GDhUky2sNwZo/I6O7Pe3dGlKlNFeYIRJG2B36zMMcxCwcnWLq
-	 dYG2FB+y7CVDg==
+	b=PdSMPKz17jVKo+SF1cWfpUxFS+NbvAXyEulrUmLpS+nubpbQ7oPWws6a/UgRFEcak
+	 kZHPU5z4MO/WlQbd5cDjylRis4dFFUKaNQ6VUNPiTViEn+y36baVrcLc+s26DiLd7i
+	 lu+8696blUtPk8tfK5y2kQ4rL3lWaoogevRk54ZyTwk7ruCwT/e9zraRlbE4uX6XNl
+	 ciGfT94KCzqBdLuYLXgooDLgNHpHITeB1cjZKKM76M57o7GpkajVLysejps+/wpc6U
+	 eLj7w9kgEQri64guxJZ483USA2zId2iFn1SU4Fa4ZFxw0FCQQBYyob6qQSXzuLBrOU
+	 I5JhggFbDqVXg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ajay Singh <ajay.kathat@microchip.com>,
-	=?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Quentin Monnet <quentin@isovalent.com>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 092/451] wifi: wilc1000: fix multi-vif management when deleting a vif
-Date: Sun, 24 Mar 2024 19:06:08 -0400
-Message-ID: <20240324231207.1351418-93-sashal@kernel.org>
+Subject: [PATCH 6.1 100/451] bpftool: Silence build warning about calloc()
+Date: Sun, 24 Mar 2024 19:06:16 -0400
+Message-ID: <20240324231207.1351418-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -50,49 +51,49 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ajay Singh <ajay.kathat@microchip.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-[ Upstream commit 12cfc9c8d3faf887a202c89bc312202445fca7e8 ]
+[ Upstream commit f5f30386c78105cba520e443a6a9ee945ec1d066 ]
 
-Adding then removing a second vif currently makes the first vif not working
-anymore. This is visible for example when we have a first interface
-connected to some access point:
-- create a wpa_supplicant.conf with some AP credentials
-- wpa_supplicant -Dnl80211 -c /etc/wpa_supplicant.conf -i wlan0
-- dhclient wlan0
-- iw phy phy0 interface add wlan1 type managed
-- iw dev wlan1 del
-wlan0 does not manage properly traffic anymore (eg: ping not working)
+There exists the following warning when building bpftool:
 
-This is due to vif mode being incorrectly reconfigured with some default
-values in del_virtual_intf, affecting by default first vif.
+  CC      prog.o
+prog.c: In function ‘profile_open_perf_events’:
+prog.c:2301:24: warning: ‘calloc’ sizes specified with ‘sizeof’ in the earlier argument and not in the later argument [-Wcalloc-transposed-args]
+ 2301 |                 sizeof(int), obj->rodata->num_cpu * obj->rodata->num_metric);
+      |                        ^~~
+prog.c:2301:24: note: earlier argument should specify number of elements, later size of each element
 
-Prevent first vif from being affected on second vif removal by removing vif
-mode change command in del_virtual_intf
+Tested with the latest upstream GCC which contains a new warning option
+-Wcalloc-transposed-args. The first argument to calloc is documented to
+be number of elements in array, while the second argument is size of each
+element, just switch the first and second arguments of calloc() to silence
+the build warning, compile tested only.
 
-Fixes: 9bc061e88054 ("staging: wilc1000: added support to dynamically add/remove interfaces")
-Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
-Co-developed-by: Alexis Lothoré <alexis.lothore@bootlin.com>
-Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20240115-wilc_1000_fixes-v1-5-54d29463a738@bootlin.com
+Fixes: 47c09d6a9f67 ("bpftool: Introduce "prog profile" command")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Reviewed-by: Quentin Monnet <quentin@isovalent.com>
+Link: https://lore.kernel.org/bpf/20240116061920.31172-1-yangtiezhu@loongson.cn
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/microchip/wilc1000/cfg80211.c | 1 -
- 1 file changed, 1 deletion(-)
+ tools/bpf/bpftool/prog.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/microchip/wilc1000/cfg80211.c b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-index 2f75dc4b47975..6f3245a43aef1 100644
---- a/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-+++ b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-@@ -1615,7 +1615,6 @@ static int del_virtual_intf(struct wiphy *wiphy, struct wireless_dev *wdev)
- 	cfg80211_unregister_netdevice(vif->ndev);
- 	vif->monitor_flag = 0;
+diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
+index 41c02b6f6f043..7e0b846e17eef 100644
+--- a/tools/bpf/bpftool/prog.c
++++ b/tools/bpf/bpftool/prog.c
+@@ -2200,7 +2200,7 @@ static int profile_open_perf_events(struct profiler_bpf *obj)
+ 	int map_fd;
  
--	wilc_set_operation_mode(vif, 0, 0, 0);
- 	mutex_lock(&wl->vif_mutex);
- 	list_del_rcu(&vif->list);
- 	wl->vif_num--;
+ 	profile_perf_events = calloc(
+-		sizeof(int), obj->rodata->num_cpu * obj->rodata->num_metric);
++		obj->rodata->num_cpu * obj->rodata->num_metric, sizeof(int));
+ 	if (!profile_perf_events) {
+ 		p_err("failed to allocate memory for perf_event array: %s",
+ 		      strerror(errno));
 -- 
 2.43.0
 
