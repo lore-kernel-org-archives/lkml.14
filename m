@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71FCF18183F;
-	Sun, 24 Mar 2024 23:48:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ECEA18148E;
+	Sun, 24 Mar 2024 23:48:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324099; cv=none; b=jYxF8Regc5cz6VNYQTyjriTrs4NSUj8D4Vr7EXQb//YQdTDJVhETAuR1Wb0ChSnKTJbqwzrEcOIZR0uA3Om5l9SbRD/K8hKhStXeC4enfNSdryVBVZMUu+hQz/3DBwsUzf9JmCmqJetXzsPuARb7pUEEW2HqHEcVhKAV7bazto8=
+	t=1711324109; cv=none; b=fQIinS82k0PunnY+sZ15ZBe5Knt7puZtVtVhp6qpwffMZeSC5n47LOYp+58MmITOfidCfQxbU6VdrEUoXLwNbsvXddRsN/fpmOmaObaifz2X0nL7BAjDl4nH9CAlle/LfpsXRqH1sQ5d7RZUgSh4Nb4stKPXucVa4Tc+hDyHwcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324099; c=relaxed/simple;
-	bh=erTOiUpc+GJ+cEYmFzYUyNrdLp5zH1m8Gi2IAi7tp90=;
+	s=arc-20240116; t=1711324109; c=relaxed/simple;
+	bh=uUMJHqCxVT9ofhG3d/fUgp/JOjM1SGM0dfthTgoH290=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H61HEEfpQ90JkwothMrPCRTJkYzMnbwc/rv7Sm8wlGP2+TCZpBvgzlcNo6v1xqi8WQk0S4W4WoSBHM6lRZvsjfhU9wNtWLj3Mrsq+yC8w4YJgomEQBjDqzXxASUM/s4D1hs4VHRFI5VhmMiF75oNf0HlNyPxNL8cJ8oIQ0sfQ3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hCnewe/v; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=E2/gnimHzvHdHd4kRh/Cj4SIyKG1S4eFGGGPn7Yq0CQ2pYNYl3V5gRBYKo8Jfsyaj6ZC5jXLgNK9qlYtU/Sme/T2M+4GFjYuujnKdbDdvQ3XLyvz0cu1tA2RM/7uljStVLSo7xd0JjJaQtLzjPhU15P0i46Tpx795HJeexi9mIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hUf6UoI8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hCnewe/v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D209C433F1;
-	Sun, 24 Mar 2024 23:48:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hUf6UoI8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6261CC433C7;
+	Sun, 24 Mar 2024 23:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324098;
-	bh=erTOiUpc+GJ+cEYmFzYUyNrdLp5zH1m8Gi2IAi7tp90=;
+	s=k20201202; t=1711324108;
+	bh=uUMJHqCxVT9ofhG3d/fUgp/JOjM1SGM0dfthTgoH290=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hCnewe/vvtQ1xHI3enAkZ6QoC79y0NxA7eBrKfS9uMx25CoDacINufExtDoEI8v5T
-	 SN5t5+aOkyZtnI1yK+xrsGQhHzKn9AjrqkCFT+6ViOZyqjbcX12GxQACmMlRnznih5
-	 uttJse1l/Kiqzgq8svut3y/3gWMMX9Z6QSn4Kp/upDYjwrfI3+Pac5sdd2Zg8avFJU
-	 9dplubA1Fq/eqC5qo5f8g93MDSRcz5xB40i5VuIrkX7SqeangDadtvfAgDBW7Z3mcu
-	 u118SRY4ne6yg7lfl1mFVsIH01fgG1Bns/m2C+Rev9QY7axWDTnhKGoky/dE5HvpOg
-	 rjzFMnMm0xaLA==
+	b=hUf6UoI8kwIb2Inw8PI2r114Y9ayw2wWdKisEaa0F91Bu8jqZ5dovGRbaRjF7uWJ8
+	 CEJjYHjn8aI+bCnN/Vw1JbwdMyGktyO6swHt3Pyb8A8tV9q9jj4pSHhx0yTruXmzGU
+	 /P60GbPQ4OS4kXNMXiyjJ1mffAgWKdhOGglXzpC0ysPl/BQ0rzp2EMf7xrJqEBcqdd
+	 p6kat2XubrtfO5gSpM/XsIhmDslRm7C6KLRFJ/BuV/9v62K6w058nzx97gKfdZW4YS
+	 hkG9d7UEzC1KbKrQ0rd0kKxvercs/BxoC94Z4DoW1yGPoPyzISKgqQJuhDoOzFu6ec
+	 fqAV6qp0SoFYg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yang Jihong <yangjihong1@huawei.com>,
-	Namhyung Kim <namhyung@kernel.org>,
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 097/183] perf record: Fix possible incorrect free in record__switch_output()
-Date: Sun, 24 Mar 2024 19:45:10 -0400
-Message-ID: <20240324234638.1355609-98-sashal@kernel.org>
+Subject: [PATCH 5.4 107/183] clk: qcom: reset: Commonize the de/assert functions
+Date: Sun, 24 Mar 2024 19:45:20 -0400
+Message-ID: <20240324234638.1355609-108-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,38 +49,67 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yang Jihong <yangjihong1@huawei.com>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-[ Upstream commit aff10a165201f6f60cff225083ce301ad3f5d8f1 ]
+[ Upstream commit eda40d9c583e95e0b6ac69d2950eec10f802e0e8 ]
 
-perf_data__switch() may not assign a legal value to 'new_filename'.
-In this case, 'new_filename' uses the on-stack value, which may cause a
-incorrect free and unexpected result.
+They do the same thing, except the last argument of the last function
+call differs. Commonize them.
 
-Fixes: 03724b2e9c45 ("perf record: Allow to limit number of reported perf.data files")
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/r/20240119040304.3708522-2-yangjihong1@huawei.com
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Link: https://lore.kernel.org/r/20240105-topic-venus_reset-v2-2-c37eba13b5ce@linaro.org
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Stable-dep-of: 2f8cf2c3f3e3 ("clk: qcom: reset: Ensure write completion on reset de/assertion")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-record.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/qcom/reset.c | 22 +++++++++-------------
+ 1 file changed, 9 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index a9891c9fe94d5..9c03f67398cb2 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1110,8 +1110,8 @@ static int
- record__switch_output(struct record *rec, bool at_exit)
- {
- 	struct perf_data *data = &rec->data;
-+	char *new_filename = NULL;
- 	int fd, err;
--	char *new_filename;
+diff --git a/drivers/clk/qcom/reset.c b/drivers/clk/qcom/reset.c
+index 0e914ec7aeae1..338b1210c8f87 100644
+--- a/drivers/clk/qcom/reset.c
++++ b/drivers/clk/qcom/reset.c
+@@ -21,8 +21,8 @@ static int qcom_reset(struct reset_controller_dev *rcdev, unsigned long id)
+ 	return 0;
+ }
  
- 	/* Same Size:      "2015122520103046"*/
- 	char timestamp[] = "InvalidTimestamp";
+-static int
+-qcom_reset_assert(struct reset_controller_dev *rcdev, unsigned long id)
++static int qcom_reset_set_assert(struct reset_controller_dev *rcdev,
++				 unsigned long id, bool assert)
+ {
+ 	struct qcom_reset_controller *rst;
+ 	const struct qcom_reset_map *map;
+@@ -32,21 +32,17 @@ qcom_reset_assert(struct reset_controller_dev *rcdev, unsigned long id)
+ 	map = &rst->reset_map[id];
+ 	mask = map->bitmask ? map->bitmask : BIT(map->bit);
+ 
+-	return regmap_update_bits(rst->regmap, map->reg, mask, mask);
++	return regmap_update_bits(rst->regmap, map->reg, mask, assert ? mask : 0);
+ }
+ 
+-static int
+-qcom_reset_deassert(struct reset_controller_dev *rcdev, unsigned long id)
++static int qcom_reset_assert(struct reset_controller_dev *rcdev, unsigned long id)
+ {
+-	struct qcom_reset_controller *rst;
+-	const struct qcom_reset_map *map;
+-	u32 mask;
+-
+-	rst = to_qcom_reset_controller(rcdev);
+-	map = &rst->reset_map[id];
+-	mask = map->bitmask ? map->bitmask : BIT(map->bit);
++	return qcom_reset_set_assert(rcdev, id, true);
++}
+ 
+-	return regmap_update_bits(rst->regmap, map->reg, mask, 0);
++static int qcom_reset_deassert(struct reset_controller_dev *rcdev, unsigned long id)
++{
++	return qcom_reset_set_assert(rcdev, id, false);
+ }
+ 
+ const struct reset_control_ops qcom_reset_ops = {
 -- 
 2.43.0
 
