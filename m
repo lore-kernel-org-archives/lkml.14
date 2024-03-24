@@ -1,44 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1152C17C180;
-	Sun, 24 Mar 2024 23:42:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED09317C18E;
+	Sun, 24 Mar 2024 23:42:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323756; cv=none; b=LKwELuS530vjDxTYPVxJE/tdh9e2JPSU8Ja7uLnCr+iVT+2FRZp2dQoLac5QIazaAxYsof6WyZkf/pQkjLkVnThPb8c4Fsb+gOpVQ3PaOfFvVSejvTtYKVaKBMUFtUsoT37rs8VsQuAp+yHt+4Vl6rmfKM/WQTTKiv8ETET19ik=
+	t=1711323759; cv=none; b=e91Hq+FYrbAgUtH0Ktzwd68ACcdNgz4wSvPlWJb/B2hj/AbhmT4u5Qfa4XmZ9XXOv1jxtPj62xW/1TOR9hfjfEziqt0Na0wv5h9IuY3Sg+AAj5eJFD7Ragyq2R2BiAEB+f5bEQjCH8LK/Au7e0ZqQdqzimmFNPwa+HEq4CObcIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323756; c=relaxed/simple;
-	bh=2rcsvd97JtGVplEBrVhPiZV3D81CDlfHGkt6mfZmiLY=;
+	s=arc-20240116; t=1711323759; c=relaxed/simple;
+	bh=MVy30skJmr/gnrE3NXzsrkaw9rfY27uWDHKUBovWHjA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IJ6WATWvJDUcw4LITAqtCmHd5OU6sZPt3TndB1OvdYmnRHimh8aIY+n4viKmzkPh1vKF3QqqW6rvugMzzL1Aq80OSgfrJDKxigU89oz1rnGrJyAxFbbvQCxSRm1uKhu6k10FSJs65NfcB1rf8faaRQgHNLWohEbg8DyUOioe638=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oUKQh40o; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FsfOsWfeFW8dYPn3HI7eSiRfLDZNe5wHpIOSZ1UFQoO1SciNtIt258/rsY/I+UN8FqQWBq2QTaFu/xm/h2522imKsYQj+FwlBlRhi8hm8Wg2ED0DNPZWoLd9PFX4XyNNDzOkA1otRfwyZx3+RKP2oCMb99P4s7KKVzTbRk5Fy/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZPBfR0bx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oUKQh40o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF057C433C7;
-	Sun, 24 Mar 2024 23:42:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZPBfR0bx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20B8BC433A6;
+	Sun, 24 Mar 2024 23:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323754;
-	bh=2rcsvd97JtGVplEBrVhPiZV3D81CDlfHGkt6mfZmiLY=;
+	s=k20201202; t=1711323757;
+	bh=MVy30skJmr/gnrE3NXzsrkaw9rfY27uWDHKUBovWHjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oUKQh40oaAJj75CyMDmD3YbyMEY2uBTTX1pa2b3LP1jpjRxS9KPPL6VVIfQyYLeVs
-	 RweeysyaTkub11SQhq3YjOvUvqbI9151dbbHzX5GgNUc38kddfSYTzrtdDUvkvEyyI
-	 AtS3oxxpLM4tGn7dtADRjkHo9NWlTEwzgAW6cZGr1FXWXRYMujZmiLeSPt3Dr4Rb2k
-	 PwRWWg89jX3js3RycTVJI+JthYsnqF6x9XCLIp4qtp9ODUTt1HC/IHARWXTBxBbIhg
-	 N20q7bvLljT4R0sltP07sXhckCrxM+yjSsbtHSYWrESCDIUCj6+eykRmyvst6JbSge
-	 6MYzUeS2+d45w==
+	b=ZPBfR0bxtw9yjR0nJeqRIatwE4je79zUOEufcped2TQorl0ugAZoSyt221j7grr0/
+	 umGLwdBT9wdT64jfLlvd2Ns3D4keZc1uB+qHR46tHCvClYb7Xh7njO0a8vs5dTKlCa
+	 nC65ZVAPI8J8iCrx99gBjNx1w88CeCT/e3l7UnraFThHv6MG8R477OpQd+4eoG5Xni
+	 TQRRACkD+5AuyVhrQk1GuGMZQUdHtWgU5AWEqMeuv9LBn9FuGrYVxwLD8iSOrpp2js
+	 ey8IQvgBBM8ObE/xuj/n4zr2N9YiJihlLOgczAVshAWmuFDbJdV9LarM/rh9L49bX2
+	 PkcZGqXwFHctw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
-	Wyatt Wood <wyatt.wood@amd.com>,
-	Anthony Koo <Anthony.Koo@amd.com>,
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-	Aurabindo Pillai <aurabindo.pillai@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 129/238] drm/amd/display: Fix potential NULL pointer dereferences in 'dcn10_set_output_transfer_func()'
-Date: Sun, 24 Mar 2024 19:38:37 -0400
-Message-ID: <20240324234027.1354210-130-sashal@kernel.org>
+Subject: [PATCH 5.10 132/238] media: em28xx: annotate unchecked call to media_device_register()
+Date: Sun, 24 Mar 2024 19:38:40 -0400
+Message-ID: <20240324234027.1354210-133-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -52,54 +49,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
 
-[ Upstream commit 9ccfe80d022df7c595f1925afb31de2232900656 ]
+[ Upstream commit fd61d77a3d28444b2635f0c8b5a2ecd6a4d94026 ]
 
-The 'stream' pointer is used in dcn10_set_output_transfer_func() before
-the check if 'stream' is NULL.
+Static analyzers generate alerts for an unchecked call to
+`media_device_register()`. However, in this case, the device will work
+reliably without the media controller API.
 
-Fixes the below:
-drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn10_hwseq.c:1892 dcn10_set_output_transfer_func() warn: variable dereferenced before check 'stream' (see line 1875)
+Add a comment above the call to prevent future unnecessary changes.
 
-Fixes: ddef02de0d71 ("drm/amd/display: add null checks before logging")
-Cc: Wyatt Wood <wyatt.wood@amd.com>
-Cc: Anthony Koo <Anthony.Koo@amd.com>
-Cc: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Cc: Aurabindo Pillai <aurabindo.pillai@amd.com>
-Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
-Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Suggested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Fixes: 37ecc7b1278f ("[media] em28xx: add media controller support")
+Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/media/usb/em28xx/em28xx-cards.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-index 1c669f115dd80..8cf6e307ae36e 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-@@ -1669,6 +1669,9 @@ bool dcn10_set_output_transfer_func(struct dc *dc, struct pipe_ctx *pipe_ctx,
- {
- 	struct dpp *dpp = pipe_ctx->plane_res.dpp;
+diff --git a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/em28xx-cards.c
+index 26408a972b443..5deee83132c62 100644
+--- a/drivers/media/usb/em28xx/em28xx-cards.c
++++ b/drivers/media/usb/em28xx/em28xx-cards.c
+@@ -4049,6 +4049,10 @@ static int em28xx_usb_probe(struct usb_interface *intf,
+ 	 * topology will likely change after the load of the em28xx subdrivers.
+ 	 */
+ #ifdef CONFIG_MEDIA_CONTROLLER
++	/*
++	 * No need to check the return value, the device will still be
++	 * usable without media controller API.
++	 */
+ 	retval = media_device_register(dev->media_dev);
+ #endif
  
-+	if (!stream)
-+		return false;
-+
- 	if (dpp == NULL)
- 		return false;
- 
-@@ -1691,8 +1694,8 @@ bool dcn10_set_output_transfer_func(struct dc *dc, struct pipe_ctx *pipe_ctx,
- 	} else
- 		dpp->funcs->dpp_program_regamma_pwl(dpp, NULL, OPP_REGAMMA_BYPASS);
- 
--	if (stream != NULL && stream->ctx != NULL &&
--			stream->out_transfer_func != NULL) {
-+	if (stream->ctx &&
-+	    stream->out_transfer_func) {
- 		log_tf(stream->ctx,
- 				stream->out_transfer_func,
- 				dpp->regamma_params.hw_points_num);
 -- 
 2.43.0
 
