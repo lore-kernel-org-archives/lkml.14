@@ -1,71 +1,176 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A8516F27B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFED316F285;
 	Sun, 24 Mar 2024 22:39:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711319952; cv=none; b=JlvgOaEmILgv0bDupDKZDgmhfnbMp/J/YFmIWMYhj21PD5K/FyAT5oLw+mtIq7TsIlZjkRdWZSTjNYmQAAg9/M0jEHgRmxTa7Q2jW0BNbDt/pbXbRR16XRYjp18QYQ3n/xcgvWhN4a7bj9ZRHeqGp9Qtc9hwB9uPeyFtlHsWoEg=
+	t=1711319950; cv=none; b=seXtRqDTKzkdnQ+ijbxUEN8MIfIYneVP8fitR0Zl8piFiJOnolBD8RrcBMHMHqZuhgO5+T8b90Jv12FLrK2MIIeZdKwcuOvEpkgyeuPdh4s7nWfOtUGWW43XwouKdk8b628mh7Dhh0DNAW69nsuft+K74a6Zu2oQq+fq1GSNj6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711319952; c=relaxed/simple;
-	bh=I0mhYcl8koJcmMr0smHHtwWOzozd5ZColjHDquYJP78=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tfwQib2Obx+DcqBO+qKGUWeDxT3nYkQD/fOxs/MKT4lB6WLVMQmkSUJu8rfaA40pEvYLujS0vas+grFmBiSlY0INAydoIWuu6+7iDLeSEBCuht03ckeJsZ92zC5lwsEC9b1Bc6USDQVndReHkSbammWIvrJVoGhBzvkfau11Qmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i53875a9e.versanet.de ([83.135.90.158] helo=phil.lan)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1roWUX-0007sn-QW; Sun, 24 Mar 2024 23:39:01 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: Iskander Amara <iskander.amara@theobroma-systems.com>,
-	krzysztof.kozlowski+dt@linaro.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	conor+dt@kernel.org,
-	angelogioacchino.delregno@collabora.com,
-	devicetree@vger.kernel.org,
-	robh+dt@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	dsimic@manjaro.org,
-	alexander.stein@ew.tq-group.com,
-	vahe.grigoryan@theobroma-systems.com
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	quentin.schulz@theobroma-systems.com
-Subject: Re: [PATCH 1/2] arm64: dts: rockchip: enable internal pull-up for Q7_THRM# on RK3399 Puma
-Date: Sun, 24 Mar 2024 23:38:56 +0100
-Message-Id: <171131986743.918919.2940634887265030927.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240308085243.69903-1-iskander.amara@theobroma-systems.com>
-References: <20240308085243.69903-1-iskander.amara@theobroma-systems.com>
+	s=arc-20240116; t=1711319950; c=relaxed/simple;
+	bh=iBV/5/Z+cGNqIANUq+vBJr418QFN4hXW/Rfok5Qg3Zw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=s1frewNxDCLVC1SBXli46RQyKiFcrTgzH+zDYKK+dkULtVZnJVSdpWQdi5j2L6ZqVWzhn477iiixI/ki5vehS+LL2pLGZBOZM22WMU901vsNcV+Uy6QFhXsjKJXg3QgLiZc5lNeIdvzveDTe4rsv79Wmntu+z7jWk63E8T4nWi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s/rgaTGC; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s/rgaTGC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91D9DC43601;
+	Sun, 24 Mar 2024 22:39:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711319950;
+	bh=iBV/5/Z+cGNqIANUq+vBJr418QFN4hXW/Rfok5Qg3Zw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=s/rgaTGCFxpIAPMeKE+uxOs+nww6ViGiKFsc+u2mM7l0nrKS1tRUrVddEFtu6bt6I
+	 cE8KKmWiZiRsOe0zjPBrL/MScZhhcXEk8XinfhadQNKoTVZR7vcv0A4RD/JPYS5Qr5
+	 NxKF/Bb77Q6Iyg/YholWjR8jWn0rWlf6AZ5bjq357jrUTHtTrP9CsPo2FBtjNFANS7
+	 QYT2GERGGMM5wYme7P4j1VbLHpUJqVlUy7N9E9+h23b35bQHfaAS/yW2kUib6IkqlB
+	 wxsNMCuIDseMRcImIY9u3eeCj34v271hu956I2JzUKsVz34Sa11mNRrzvof0Q6E2J1
+	 kzc/E1o3n84Bg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.8 256/715] arm64: dts: renesas: rzg2l: Add missing interrupts to IRQC nodes
+Date: Sun, 24 Mar 2024 18:27:15 -0400
+Message-ID: <20240324223455.1342824-257-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240324223455.1342824-1-sashal@kernel.org>
+References: <20240324223455.1342824-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-On Fri, 8 Mar 2024 09:52:42 +0100, Iskander Amara wrote:
-> Q7_THRM# pin is connected to a diode on the module which is used
-> as a level shifter, and the pin have a pull-down enabled by
-> default. We need to configure it to internal pull-up, other-
-> wise whenever the pin is configured as INPUT and we try to
-> control it externally the value will always remain zero.
-> 
-> 
-> [...]
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Applied, thanks!
+[ Upstream commit 14fe225dd5fcd5928583b0bcc34398a581f51602 ]
 
-[1/2] arm64: dts: rockchip: enable internal pull-up for Q7_THRM# on RK3399 Puma
-      commit: 0ac417b8f124427c90ec8c2ef4f632b821d924cc
-[2/2] arm64: dts: rockchip: fix alphabetical ordering RK3399 puma
-      commit: f0abb4b2c7acf3c3e4130dc3f54cd90cf2ae62bc
+The IRQC IP block supports Bus error and ECCRAM interrupts on RZ/G2L and
+alike SoC's (listed below).  Update the IRQC nodes with the missing
+interrupts, and additionally, include the 'interrupt-names' properties
+in the IRQC nodes so that the driver can parse interrupts by name.
 
-Best regards,
+  - R9A07G043U              - RZ/G2UL
+  - R9A07G044L/R9A07G044LC  - RZ/{G2L,G2LC}
+  - R9A07G054               - RZ/V2L
+
+Fixes: 5edc51af5b30 ("arm64: dts: renesas: r9a07g044: Add IRQC node")
+Fixes: 48ab6eddd8bb ("arm64: dts: renesas: r9a07g043u: Add IRQC node")
+Fixes: 379478ab09e0 ("arm64: dts: renesas: r9a07g054: Add IRQC node")
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20240205144421.51195-3-prabhakar.mahadev-lad.rj@bp.renesas.com
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/renesas/r9a07g043u.dtsi | 12 +++++++++--
+ arch/arm64/boot/dts/renesas/r9a07g044.dtsi  | 22 ++++++++++++++++++++-
+ arch/arm64/boot/dts/renesas/r9a07g054.dtsi  | 22 ++++++++++++++++++++-
+ 3 files changed, 52 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/renesas/r9a07g043u.dtsi b/arch/arm64/boot/dts/renesas/r9a07g043u.dtsi
+index 2ab231572d95f..b3f83d0ebcbb5 100644
+--- a/arch/arm64/boot/dts/renesas/r9a07g043u.dtsi
++++ b/arch/arm64/boot/dts/renesas/r9a07g043u.dtsi
+@@ -109,7 +109,13 @@ irqc: interrupt-controller@110a0000 {
+ 			     <SOC_PERIPHERAL_IRQ(473) IRQ_TYPE_LEVEL_HIGH>,
+ 			     <SOC_PERIPHERAL_IRQ(474) IRQ_TYPE_LEVEL_HIGH>,
+ 			     <SOC_PERIPHERAL_IRQ(475) IRQ_TYPE_LEVEL_HIGH>,
+-			     <SOC_PERIPHERAL_IRQ(25) IRQ_TYPE_EDGE_RISING>;
++			     <SOC_PERIPHERAL_IRQ(25) IRQ_TYPE_EDGE_RISING>,
++			     <SOC_PERIPHERAL_IRQ(34) IRQ_TYPE_EDGE_RISING>,
++			     <SOC_PERIPHERAL_IRQ(35) IRQ_TYPE_EDGE_RISING>,
++			     <SOC_PERIPHERAL_IRQ(36) IRQ_TYPE_EDGE_RISING>,
++			     <SOC_PERIPHERAL_IRQ(37) IRQ_TYPE_EDGE_RISING>,
++			     <SOC_PERIPHERAL_IRQ(38) IRQ_TYPE_EDGE_RISING>,
++			     <SOC_PERIPHERAL_IRQ(39) IRQ_TYPE_EDGE_RISING>;
+ 		interrupt-names = "nmi",
+ 				  "irq0", "irq1", "irq2", "irq3",
+ 				  "irq4", "irq5", "irq6", "irq7",
+@@ -121,7 +127,9 @@ irqc: interrupt-controller@110a0000 {
+ 				  "tint20", "tint21", "tint22", "tint23",
+ 				  "tint24", "tint25", "tint26", "tint27",
+ 				  "tint28", "tint29", "tint30", "tint31",
+-				  "bus-err";
++				  "bus-err", "ec7tie1-0", "ec7tie2-0",
++				  "ec7tiovf-0", "ec7tie1-1", "ec7tie2-1",
++				  "ec7tiovf-1";
+ 		clocks = <&cpg CPG_MOD R9A07G043_IA55_CLK>,
+ 			<&cpg CPG_MOD R9A07G043_IA55_PCLK>;
+ 		clock-names = "clk", "pclk";
+diff --git a/arch/arm64/boot/dts/renesas/r9a07g044.dtsi b/arch/arm64/boot/dts/renesas/r9a07g044.dtsi
+index 66f68fc2b2411..081d8f49db879 100644
+--- a/arch/arm64/boot/dts/renesas/r9a07g044.dtsi
++++ b/arch/arm64/boot/dts/renesas/r9a07g044.dtsi
+@@ -905,7 +905,27 @@ irqc: interrupt-controller@110a0000 {
+ 				     <GIC_SPI 472 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 473 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 474 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 475 IRQ_TYPE_LEVEL_HIGH>;
++				     <GIC_SPI 475 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 25 IRQ_TYPE_EDGE_RISING>,
++				     <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>,
++				     <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>,
++				     <GIC_SPI 36 IRQ_TYPE_EDGE_RISING>,
++				     <GIC_SPI 37 IRQ_TYPE_EDGE_RISING>,
++				     <GIC_SPI 38 IRQ_TYPE_EDGE_RISING>,
++				     <GIC_SPI 39 IRQ_TYPE_EDGE_RISING>;
++			interrupt-names = "nmi", "irq0", "irq1", "irq2", "irq3",
++					  "irq4", "irq5", "irq6", "irq7",
++					  "tint0", "tint1", "tint2", "tint3",
++					  "tint4", "tint5", "tint6", "tint7",
++					  "tint8", "tint9", "tint10", "tint11",
++					  "tint12", "tint13", "tint14", "tint15",
++					  "tint16", "tint17", "tint18", "tint19",
++					  "tint20", "tint21", "tint22", "tint23",
++					  "tint24", "tint25", "tint26", "tint27",
++					  "tint28", "tint29", "tint30", "tint31",
++					  "bus-err", "ec7tie1-0", "ec7tie2-0",
++					  "ec7tiovf-0", "ec7tie1-1", "ec7tie2-1",
++					  "ec7tiovf-1";
+ 			clocks = <&cpg CPG_MOD R9A07G044_IA55_CLK>,
+ 				 <&cpg CPG_MOD R9A07G044_IA55_PCLK>;
+ 			clock-names = "clk", "pclk";
+diff --git a/arch/arm64/boot/dts/renesas/r9a07g054.dtsi b/arch/arm64/boot/dts/renesas/r9a07g054.dtsi
+index 1f1d481dc7830..0d327464d2baf 100644
+--- a/arch/arm64/boot/dts/renesas/r9a07g054.dtsi
++++ b/arch/arm64/boot/dts/renesas/r9a07g054.dtsi
+@@ -912,7 +912,27 @@ irqc: interrupt-controller@110a0000 {
+ 				     <GIC_SPI 472 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 473 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 474 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 475 IRQ_TYPE_LEVEL_HIGH>;
++				     <GIC_SPI 475 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 25 IRQ_TYPE_EDGE_RISING>,
++				     <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>,
++				     <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>,
++				     <GIC_SPI 36 IRQ_TYPE_EDGE_RISING>,
++				     <GIC_SPI 37 IRQ_TYPE_EDGE_RISING>,
++				     <GIC_SPI 38 IRQ_TYPE_EDGE_RISING>,
++				     <GIC_SPI 39 IRQ_TYPE_EDGE_RISING>;
++			interrupt-names = "nmi", "irq0", "irq1", "irq2", "irq3",
++					  "irq4", "irq5", "irq6", "irq7",
++					  "tint0", "tint1", "tint2", "tint3",
++					  "tint4", "tint5", "tint6", "tint7",
++					  "tint8", "tint9", "tint10", "tint11",
++					  "tint12", "tint13", "tint14", "tint15",
++					  "tint16", "tint17", "tint18", "tint19",
++					  "tint20", "tint21", "tint22", "tint23",
++					  "tint24", "tint25", "tint26", "tint27",
++					  "tint28", "tint29", "tint30", "tint31",
++					  "bus-err", "ec7tie1-0", "ec7tie2-0",
++					  "ec7tiovf-0", "ec7tie1-1", "ec7tie2-1",
++					  "ec7tiovf-1";
+ 			clocks = <&cpg CPG_MOD R9A07G054_IA55_CLK>,
+ 				 <&cpg CPG_MOD R9A07G054_IA55_PCLK>;
+ 			clock-names = "clk", "pclk";
 -- 
-Heiko Stuebner <heiko@sntech.de>
+2.43.0
+
