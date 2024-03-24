@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCED71E61FF;
-	Sun, 24 Mar 2024 22:53:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562841E61F8;
+	Sun, 24 Mar 2024 22:53:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320839; cv=none; b=pEjW6mVTTBBoKDxIhSuPbIGd/RbvDxyM9XN2hKoZRrRxDv6Vg8SF9oTUxs558DukJ2TQuvBq9OpZXgykuTnQiqt9DVThYeCZqdyo3+y50vIAUKedoALcGG9aTqLXEamMVmFQBcBvX+Rm2Y3FuhrFcSeoyJXiZ5yZfYWJeNm9Z0s=
+	t=1711320838; cv=none; b=BzkWDkS1cY7ZdwjUG3/aHMnY89sCyj18HgXPoQ/Ol+EJ59dCF8YU166sEmuinBVt+h7QjBsZZuXBPcVNpeeNSTzT7LIEwvO2YXj0SEJTxq00CXt/9URLUX3hakckOG6Uf6s6+TzDZM5mkSqbNq+5/6g/UqqLuc3TXrucoiM6nII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320839; c=relaxed/simple;
-	bh=0nT6+dnLat5eW46YYuat1egqogoXhgAReEx7/an+0Fs=;
+	s=arc-20240116; t=1711320838; c=relaxed/simple;
+	bh=MoV3PrzF8eB1c5ICEbjAs9c9Zmtha4fDS5vYVtWkFGc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UppSbODaXy78PCijEdgC2trSuxXjEJjCu0lHjA5d8Vv14V3+sN4EI73od/egLm7E55pegljyjD/KR/QXj81FQtbres/stYJ41SihBS+PGU9t+uSvpbyIDA+VxPwkMsAjIaaRm9lS19iy4JD2WDAxetETBCF2dzh7Vjp/FB7N3RU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O7Ba0mvY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=b4RP/Dj3nk4yzs8APUtvAJNv1gSxEQ9fxUSvPleTiJtGTDDc7dDwjYaapb7uPhG8k6hRfDfQYBBCC4OVxdnaP4ja/MjQDG2+PZVBji/6FWQbYioogVRv5oxB44ot1yrrhFOi+h7YKm1dZ1HjgHLwgugfYE1Hxj5O4zMxeqG1E2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S/H8ud4m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O7Ba0mvY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25D20C433C7;
-	Sun, 24 Mar 2024 22:53:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S/H8ud4m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44E7AC43390;
+	Sun, 24 Mar 2024 22:53:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320838;
-	bh=0nT6+dnLat5eW46YYuat1egqogoXhgAReEx7/an+0Fs=;
+	s=k20201202; t=1711320837;
+	bh=MoV3PrzF8eB1c5ICEbjAs9c9Zmtha4fDS5vYVtWkFGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=O7Ba0mvYpJJeFs4IiFspi0Ze5kfL5K1OxejZ9G81/F19AThiAYzyIoRRNjz4Fo1su
-	 zb7LmU0yjNT7zRAo2dg08iVDrW4wGrny0q9PqW0mwroqD5/haKvMGf7rmuCj9MLkPd
-	 cl/6j4vWYm5qYqyfOrD6CPQx2oR3w5a/be0tdLMBDCfPUQHxv7PvGVZjXunzLl9cCg
-	 Zq4+M6ixc341+i5WcGPrw1vGWgXppYIbPJieI2PgBmBPZyY39p93pqM8yvISFSTeql
-	 g8C5KsRq5QNl4fdIEWL4C2KKu7w+W6Qh50dX19UehDsCkqNIYqqfhgu//RbSndoW9p
-	 Aj8bKfsd1CFeQ==
+	b=S/H8ud4mqrnPykiqYk2YgphjjBZntPuHzujlk/NDjEUfTNa+dpGAbs+sUQOsxVSye
+	 C9dVD4yrVzguVSmEYz0yx35oLADg54/6UJ8o61/wMRN8f2yXM2ipbHsFmEcCn/5Ayd
+	 okmiWs8woZIqU4ab5LghC5NMXlmNcZaeqRCC73yl/FH1i9JcQ7Ry3aE/qhlpOR6uav
+	 2wflAwVn16J8N869E5EKKOKCxEB7srtWCIU5XlQpjGoWJJINiy6VARV0mI4dIr65TY
+	 9ikeqcHYm3eBoWk5Am+HDp1iUiP1KXJVJCE9eQztf6PSvj9DVKNFmpqFnI6WAv5Yxb
+	 +vfNCR8nIxY+w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zhipeng Lu <alexious@zju.edu.cn>,
-	Qiang Yu <yuq825@gmail.com>,
+Cc: Quentin Schulz <quentin.schulz@theobroma-systems.com>,
+	Quentin Schulz <foss+kernel@0leil.net>,
+	Heiko Stuebner <heiko@sntech.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 404/713] drm/lima: fix a memleak in lima_heap_alloc
-Date: Sun, 24 Mar 2024 18:42:10 -0400
-Message-ID: <20240324224720.1345309-405-sashal@kernel.org>
+Subject: [PATCH 6.7 402/713] drm/rockchip: lvds: do not print scary message when probing defer
+Date: Sun, 24 Mar 2024 18:42:08 -0400
+Message-ID: <20240324224720.1345309-403-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,70 +49,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Zhipeng Lu <alexious@zju.edu.cn>
+From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
 
-[ Upstream commit 04ae3eb470e52a3c41babe85ff8cee195e4dcbea ]
+[ Upstream commit 52d11c863ac92e36a0365249f7f6d27ac48c78bc ]
 
-When lima_vm_map_bo fails, the resources need to be deallocated, or
-there will be memleaks.
+This scary message can misled the user into thinking something bad has
+happened and needs to be fixed, however it could simply be part of a
+normal boot process where EPROBE_DEFER is taken into account. Therefore,
+let's use dev_err_probe so that this message doesn't get shown (by
+default) when the return code is EPROBE_DEFER.
 
-Fixes: 6aebc51d7aef ("drm/lima: support heap buffer creation")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
-Signed-off-by: Qiang Yu <yuq825@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20240117071328.3811480-1-alexious@zju.edu.cn
+Fixes: 34cc0aa25456 ("drm/rockchip: Add support for Rockchip Soc LVDS")
+Cc: Quentin Schulz <foss+kernel@0leil.net>
+Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231120-rk-lvds-defer-msg-v2-2-9c59a5779cf9@theobroma-systems.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/lima/lima_gem.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/rockchip/rockchip_lvds.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/lima/lima_gem.c b/drivers/gpu/drm/lima/lima_gem.c
-index 4f9736e5f929b..7ea244d876ca6 100644
---- a/drivers/gpu/drm/lima/lima_gem.c
-+++ b/drivers/gpu/drm/lima/lima_gem.c
-@@ -75,29 +75,34 @@ int lima_heap_alloc(struct lima_bo *bo, struct lima_vm *vm)
- 	} else {
- 		bo->base.sgt = kmalloc(sizeof(*bo->base.sgt), GFP_KERNEL);
- 		if (!bo->base.sgt) {
--			sg_free_table(&sgt);
--			return -ENOMEM;
-+			ret = -ENOMEM;
-+			goto err_out0;
- 		}
+diff --git a/drivers/gpu/drm/rockchip/rockchip_lvds.c b/drivers/gpu/drm/rockchip/rockchip_lvds.c
+index 17d8fc797151a..f2831d304e7bd 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_lvds.c
++++ b/drivers/gpu/drm/rockchip/rockchip_lvds.c
+@@ -577,7 +577,7 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
+ 		ret = -EINVAL;
+ 		goto err_put_port;
+ 	} else if (ret) {
+-		DRM_DEV_ERROR(dev, "failed to find panel and bridge node\n");
++		dev_err_probe(dev, ret, "failed to find panel and bridge node\n");
+ 		goto err_put_port;
  	}
- 
- 	ret = dma_map_sgtable(dev, &sgt, DMA_BIDIRECTIONAL, 0);
--	if (ret) {
--		sg_free_table(&sgt);
--		kfree(bo->base.sgt);
--		bo->base.sgt = NULL;
--		return ret;
--	}
-+	if (ret)
-+		goto err_out1;
- 
- 	*bo->base.sgt = sgt;
- 
- 	if (vm) {
- 		ret = lima_vm_map_bo(vm, bo, old_size >> PAGE_SHIFT);
- 		if (ret)
--			return ret;
-+			goto err_out2;
- 	}
- 
- 	bo->heap_size = new_size;
- 	return 0;
-+
-+err_out2:
-+	dma_unmap_sgtable(dev, &sgt, DMA_BIDIRECTIONAL, 0);
-+err_out1:
-+	kfree(bo->base.sgt);
-+	bo->base.sgt = NULL;
-+err_out0:
-+	sg_free_table(&sgt);
-+	return ret;
- }
- 
- int lima_gem_create_handle(struct drm_device *dev, struct drm_file *file,
+ 	if (lvds->panel)
 -- 
 2.43.0
 
