@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53C514883D;
-	Sun, 24 Mar 2024 22:55:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700F7148850;
+	Sun, 24 Mar 2024 22:55:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320924; cv=none; b=Y6Ydxwn03dfrpwCyn3TIPwuRzbLjvzYjCUNn3A+DChYib5EsSL4jY94vq+d8Hjh9xA9bJ82iUz3DF4X5jITLXxBOFJe/uh82hbzJ8vXV5mki0tEi7lPFxBHpiqBwsklxK9a5ahjFol9jjd7+6CtfKuub2JuY/MJHQVPJHP0DkxU=
+	t=1711320926; cv=none; b=JjpEOSHn4G15dvbVZ/32Tl9pKfH5dgZGQMbM2RPHx++hK491Viro8NCFDcBAkHgcU4R55DOi5NDbB7V0TbR+0uG+2uorT+x+yUqJAFiqvmOFuC1PuYIa2qoR8hcfKe2+QfQCvSs4EngPS/G0IHzvx/IPuJIWMV7Vv+rHMyMC2fQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320924; c=relaxed/simple;
-	bh=aoaVGp9uRd7q1yvISqaBgafhKrn8LdUJODoUaqJwLec=;
+	s=arc-20240116; t=1711320926; c=relaxed/simple;
+	bh=H2gboN4lFyZoPhuYF6uDqvUvDVm/a9twxrSa4OJarhM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Af1RgO7MRIYB2ydpmEk3e+2yZ6MQKro2xaKN3TsfMIkOb+P4EJyunoCB4FuPB8kT/lvwdYF0YpHS4z4ryVeB60wunkj15mFaKq7r7mrfkgn2peQLS2yrLcE7ml3GuwXB5ug5svqKY0dO2JOcM9nwghFpezxDlY5O3KcHOxtJJCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QOAd6+Qr; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=c6za1B0xWebw6iMzU9frpy/h8rBWN6eymt6Qv3uSsHoBzmbB+MsTMX7uYRS00n+qX+y+NvW/QThrzBH7CvRU2y6fpKjCHXgIpKQ7vyqgQakOPgG5+K5wCJDJ5ZkMXPQ4AFPk2eVU956JR7mNCeZAiiqZXc3HW0JjeaqAhrWLZBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJaPDUYd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QOAd6+Qr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D1A3C43399;
-	Sun, 24 Mar 2024 22:55:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJaPDUYd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95FB5C43390;
+	Sun, 24 Mar 2024 22:55:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320923;
-	bh=aoaVGp9uRd7q1yvISqaBgafhKrn8LdUJODoUaqJwLec=;
+	s=k20201202; t=1711320925;
+	bh=H2gboN4lFyZoPhuYF6uDqvUvDVm/a9twxrSa4OJarhM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QOAd6+QrSb4u3H+H/7qdgYhtpHImCdoWD4K9/luPBb8xgnqptIQ0pHu7QibKNk3Ne
-	 jrLfvnk5y8hqgkSrNwMvbmf9ruo65qlrklnJhQvqkCjfIy9FKirNS9gvfb7tVv9QuB
-	 6zVOuTAKpcuRYA39ZkaiStDvJWwivH5r3c8IylIKb2b+I9FQQsYAxW4naWaNv8ejEf
-	 PCD/9c2eEZ8QffHVmNDMLUdukAWYz57ajd063gkqxU2zrFwljdcIj38DJUiwT90iQi
-	 OB69XK9EPi97awSDpTGlBil6xqHgCQrvNhyMwN91yh+UaNrcR9mJ99fsFwm3TosroC
-	 MTOAfs7Vy3liw==
+	b=oJaPDUYduW2dep3qRu6xEl9rpM7ItRo/sr0T+7NXRZntC1mIfDI8ci6TYPA5Xl2Fs
+	 BYdey5UEwcsIKRv+h0lIYKIZviIYrSc0VRRbLF3elG8vEyOq6MIWBp9zaAH+JIfkYF
+	 2cg1j/Gkud7tDO2rw3P+MJxuPhT2B5oGvXAN1AK25nZjiRrY9fNAop5Io7AmWCvZdU
+	 dVHRtBZlfCR+yth1z8pIehiFDOSLuMRAhKE4c2+WcGlUJIo0DnZdc8+ZnSSXTDFAYn
+	 s4zenCwATzOrpX/cfzgYtdTHh80+JQbw9t/TOgO8dwPrdQ06VNPE1ti7GNIrHjp/Q1
+	 Crkt9hhUkuBeQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+Cc: Daniel Golle <daniel@makrotopia.org>,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
 	Stephen Boyd <sboyd@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 487/713] clk: mediatek: mt7622-apmixedsys: Fix an error handling path in clk_mt8135_apmixed_probe()
-Date: Sun, 24 Mar 2024 18:43:33 -0400
-Message-ID: <20240324224720.1345309-488-sashal@kernel.org>
+Subject: [PATCH 6.7 489/713] clk: mediatek: mt7981-topckgen: flag SGM_REG_SEL as critical
+Date: Sun, 24 Mar 2024 18:43:35 -0400
+Message-ID: <20240324224720.1345309-490-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,38 +49,42 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Daniel Golle <daniel@makrotopia.org>
 
-[ Upstream commit a32e88f2b20259f5fe4f8eed598bbc85dc4879ed ]
+[ Upstream commit aa690050c00a251ab69e3c5204d582833d0b958c ]
 
-'clk_data' is allocated with mtk_devm_alloc_clk_data(). So calling
-mtk_free_clk_data() explicitly in the remove function would lead to a
-double-free.
+Without the SGM_REG_SEL clock enabled the cpu freezes if trying to
+access registers used by MT7981 clock drivers itself.
+Mark SGM_REG_SEL as critical to make sure it is always enabled to
+prevent freezes on boot even if the Ethernet driver which prepares
+and enables the clock is not loaded or probed at a later point.
 
-Remove the redundant call.
-
-Fixes: c50e2ea6507b ("clk: mediatek: mt7622-apmixedsys: Add .remove() callback for module build")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Link: https://lore.kernel.org/r/2c553c2a5077757e4f7af0bb895acc43881cf62c.1704616152.git.christophe.jaillet@wanadoo.fr
+Fixes: 813c3b53b55b ("clk: mediatek: add MT7981 clock support")
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+Link: https://lore.kernel.org/r/fc157139e6b7f8dfb6430ac7191ba754027705e8.1708221995.git.daniel@makrotopia.org
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/mediatek/clk-mt7622-apmixedsys.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/clk/mediatek/clk-mt7981-topckgen.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/mediatek/clk-mt7622-apmixedsys.c b/drivers/clk/mediatek/clk-mt7622-apmixedsys.c
-index 9cffd278e9a43..1b8f859b6b6cc 100644
---- a/drivers/clk/mediatek/clk-mt7622-apmixedsys.c
-+++ b/drivers/clk/mediatek/clk-mt7622-apmixedsys.c
-@@ -127,7 +127,6 @@ static void clk_mt7622_apmixed_remove(struct platform_device *pdev)
- 	of_clk_del_provider(node);
- 	mtk_clk_unregister_gates(apmixed_clks, ARRAY_SIZE(apmixed_clks), clk_data);
- 	mtk_clk_unregister_plls(plls, ARRAY_SIZE(plls), clk_data);
--	mtk_free_clk_data(clk_data);
- }
- 
- static const struct of_device_id of_match_clk_mt7622_apmixed[] = {
+diff --git a/drivers/clk/mediatek/clk-mt7981-topckgen.c b/drivers/clk/mediatek/clk-mt7981-topckgen.c
+index 682f4ca9e89ad..493aa11d3a175 100644
+--- a/drivers/clk/mediatek/clk-mt7981-topckgen.c
++++ b/drivers/clk/mediatek/clk-mt7981-topckgen.c
+@@ -357,8 +357,9 @@ static const struct mtk_mux top_muxes[] = {
+ 	MUX_GATE_CLR_SET_UPD(CLK_TOP_SGM_325M_SEL, "sgm_325m_sel",
+ 			     sgm_325m_parents, 0x050, 0x054, 0x058, 8, 1, 15,
+ 			     0x1C0, 21),
+-	MUX_GATE_CLR_SET_UPD(CLK_TOP_SGM_REG_SEL, "sgm_reg_sel", sgm_reg_parents,
+-			     0x050, 0x054, 0x058, 16, 1, 23, 0x1C0, 22),
++	MUX_GATE_CLR_SET_UPD_FLAGS(CLK_TOP_SGM_REG_SEL, "sgm_reg_sel", sgm_reg_parents,
++				   0x050, 0x054, 0x058, 16, 1, 23, 0x1C0, 22,
++				   CLK_IS_CRITICAL | CLK_SET_RATE_PARENT),
+ 	MUX_GATE_CLR_SET_UPD(CLK_TOP_EIP97B_SEL, "eip97b_sel", eip97b_parents,
+ 			     0x050, 0x054, 0x058, 24, 3, 31, 0x1C0, 23),
+ 	/* CLK_CFG_6 */
 -- 
 2.43.0
 
