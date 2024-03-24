@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F021E8E22;
-	Sun, 24 Mar 2024 22:54:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362C81E85DA;
+	Sun, 24 Mar 2024 22:54:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320886; cv=none; b=RT40KF++pMQ4gsIG/zHbpSpKNCmTEojAjfzuXiv8xXCKugqaBJswCzWkruIsv+Wczbg6mngoVAz4QxZEqkUyoVIWWMlq5KPT+vhn0S4YuUhktV4V+hfRLRHxc8d9rh32SIxcZ/9k2gUZ+TKnJxa7BgaUBWqFiUjv94FjAUiY9uU=
+	t=1711320889; cv=none; b=rA12k4FTZZKtxmE+lHn3Xl++3zhySacmfmJcBrb+9vSVXQEbqUgItxjrUrrh0A1b6ANYveuBjJ8LUSKiDrsYhR9RF3LVAOKAcmwY84bJjosCZuHN1vplMsbFjMAYy4Z4itOzkN3FUwi4tVhvzNkQn4LNgb0W+teX0kfJUsa2/ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320886; c=relaxed/simple;
-	bh=V+exzm1680Qq3G/AZ3EOjqsgmTXfXHcSj3o1Kk9ZpvI=;
+	s=arc-20240116; t=1711320889; c=relaxed/simple;
+	bh=EwpQiZTZb60HWNqw7nmbTZpT6J3V+5xuYnr9mw2QicA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mw53K4GUrnwsDWX2Gx/wb4KdwSUEuqJYaCvS/z+cNIGh6mI8T63AdRjI61FqFU095p4E3ePAvFn2K5fR9d/V3SZQ4ZsG3BUC0jbcDG6zhc6PKQFdlq5q8K9fJfM48mcZkq3NQCQVbpaaIg4ooc+9Aa+Sg0WY7JOD2bkTaThBw8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gsb7WeiX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=LDyntp91Q3tQZQUeBmTCAQLnUmu0x1O0/nfYQRl5NTyMW5SMZgNGK6GBOz6rtVmTd+pNZ2syoylhmHtQRmpOsh+xLEpW+LqAp/aHVldHS4xPg0jhp/xIHMhTJB6v8ul45zWFmb6cAEQ4LulYWzSyIgzPBR0UMPDI6iFut6zReu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qw+O1zPf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gsb7WeiX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D59B7C433C7;
-	Sun, 24 Mar 2024 22:54:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qw+O1zPf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DF01C43390;
+	Sun, 24 Mar 2024 22:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320885;
-	bh=V+exzm1680Qq3G/AZ3EOjqsgmTXfXHcSj3o1Kk9ZpvI=;
+	s=k20201202; t=1711320888;
+	bh=EwpQiZTZb60HWNqw7nmbTZpT6J3V+5xuYnr9mw2QicA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Gsb7WeiX0JGmi/iNPmUeoc7d9lWP/gdxFyN3j2xECKugdqZStcpcJBWby4UIkPXl1
-	 0dmqM7vho8wbK1JkGVwyclqctBbBMziyTlSX4+ve5eWqjtDTikHQXOSaPOT9+jYGpe
-	 2oWo8u/EUC2mIq67f1w+pMFKehI+SVDRP7eU6cIiURkTD5ZFCw/A/aFTmv/bff2oEN
-	 SlZ4FifBZ/45aXLrCA/Us9FU59IOdiFPzQfvV7l2Wnsmu4NG3Y0OOJk0bpqSxKg7k6
-	 8l7N493Hr6U2qbCczcUF9DLjz/mYCKYUBRS2EiC5hhbi/o5yVgLKiBNk+eB4m7rw2Y
-	 PPEV8kG4RNQ6g==
+	b=Qw+O1zPfixfWs69KtAgDG5MS0WeGGiSm2M/YcW3OK70bvo44GrlWn5gRo4it2f8i3
+	 zrq58cyqlPXb5dzzhUuVWvDIbvtXp6b+R7VAUkRDY5eqB8gLaX8LC9fO44PvkipAMX
+	 pJLOeyQNYsWV6kmCFEkip0gDsKhAbD1DfFDzQx1RzocHA8s/OxPMqvkl/Ux6sFF8eV
+	 hDIxLCUSIfCSE4/SdczcihaB1g1Uv3LPNsF6j8DggjEMPsEohRoOVC1fr1ZqjXIOQa
+	 V2b9J4q4jFflLxFdYgjnyP3qN2J164Tw6i8yzWCWkavGDPdjFZMHqEgQK1vViw3xrU
+	 0WLPD3FGIqc/w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Marijn Suijten <marijn.suijten@somainline.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 449/713] drm/msm/dpu: Only enable DSC_MODE_MULTIPLEX if dsc_merge is enabled
-Date: Sun, 24 Mar 2024 18:42:55 -0400
-Message-ID: <20240324224720.1345309-450-sashal@kernel.org>
+Subject: [PATCH 6.7 452/713] clk: renesas: r8a779g0: Correct PFC/GPIO parent clocks
+Date: Sun, 24 Mar 2024 18:42:58 -0400
+Message-ID: <20240324224720.1345309-453-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -44,48 +43,78 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Marijn Suijten <marijn.suijten@somainline.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 06267d22f9ee6fd34150b6dcdb2fa6983e1a85bc ]
+[ Upstream commit abb3fa662b8f8eaed1590b0e7a4e19eda467cdd3 ]
 
-When the topology calls for two interfaces on the current fixed topology
-of 2 DSC blocks, or uses 1 DSC block for a single interface (e.g. SC7280
-with only one DSC block), there should be no merging of DSC output.
+According to the R-Car V4H Series Hardware User’s Manual Rev.1.00, the
+parent clock of the Pin Function (PFC/GPIO) module clocks is the CP
+clock.
 
-This is already represented by the return value of
-dpu_encoder_use_dsc_merge(), but not yet used to correctly configure
-this flag.
+Fix this by adding the missing CP clock, and correcting the PFC parents.
 
-Fixes: 58dca9810749 ("drm/msm/disp/dpu1: Add support for DSC in encoder")
-Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Patchwork: https://patchwork.freedesktop.org/patch/577067/
-Link: https://lore.kernel.org/r/20240204-dpu-dsc-multiplex-v1-1-080963233c52@somainline.org
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Fixes: f2afa78d5a0c0b0b ("dt-bindings: clock: Add r8a779g0 CPG Core Clock Definitions")
+Fixes: 36ff366033f0dde1 ("clk: renesas: r8a779g0: Add PFC/GPIO clocks")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/5401fccd204dc90b44f0013e7f53b9eff8df8214.1706197297.git.geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/clk/renesas/r8a779g0-cpg-mssr.c       | 11 ++++++-----
+ include/dt-bindings/clock/r8a779g0-cpg-mssr.h |  1 +
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 86bfc109b2fae..b26d23b2ab6af 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -1867,7 +1867,9 @@ static void dpu_encoder_prep_dsc(struct dpu_encoder_virt *dpu_enc,
- 	dsc_common_mode = 0;
- 	pic_width = dsc->pic_width;
+diff --git a/drivers/clk/renesas/r8a779g0-cpg-mssr.c b/drivers/clk/renesas/r8a779g0-cpg-mssr.c
+index 7cc580d673626..7999faa9a921b 100644
+--- a/drivers/clk/renesas/r8a779g0-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a779g0-cpg-mssr.c
+@@ -22,7 +22,7 @@
  
--	dsc_common_mode = DSC_MODE_MULTIPLEX | DSC_MODE_SPLIT_PANEL;
-+	dsc_common_mode = DSC_MODE_SPLIT_PANEL;
-+	if (dpu_encoder_use_dsc_merge(enc_master->parent))
-+		dsc_common_mode |= DSC_MODE_MULTIPLEX;
- 	if (enc_master->intf_mode == INTF_MODE_VIDEO)
- 		dsc_common_mode |= DSC_MODE_VIDEO;
+ enum clk_ids {
+ 	/* Core Clock Outputs exported to DT */
+-	LAST_DT_CORE_CLK = R8A779G0_CLK_R,
++	LAST_DT_CORE_CLK = R8A779G0_CLK_CP,
  
+ 	/* External Input Clocks */
+ 	CLK_EXTAL,
+@@ -141,6 +141,7 @@ static const struct cpg_core_clk r8a779g0_core_clks[] __initconst = {
+ 	DEF_FIXED("svd2_vip",	R8A779G0_CLK_SVD2_VIP,	CLK_SV_VIP,	2, 1),
+ 	DEF_FIXED("cbfusa",	R8A779G0_CLK_CBFUSA,	CLK_EXTAL,	2, 1),
+ 	DEF_FIXED("cpex",	R8A779G0_CLK_CPEX,	CLK_EXTAL,	2, 1),
++	DEF_FIXED("cp",		R8A779G0_CLK_CP,	CLK_EXTAL,	2, 1),
+ 	DEF_FIXED("viobus",	R8A779G0_CLK_VIOBUS,	CLK_VIO,	1, 1),
+ 	DEF_FIXED("viobusd2",	R8A779G0_CLK_VIOBUSD2,	CLK_VIO,	2, 1),
+ 	DEF_FIXED("vcbus",	R8A779G0_CLK_VCBUS,	CLK_VC,		1, 1),
+@@ -230,10 +231,10 @@ static const struct mssr_mod_clk r8a779g0_mod_clks[] __initconst = {
+ 	DEF_MOD("cmt1",		911,	R8A779G0_CLK_R),
+ 	DEF_MOD("cmt2",		912,	R8A779G0_CLK_R),
+ 	DEF_MOD("cmt3",		913,	R8A779G0_CLK_R),
+-	DEF_MOD("pfc0",		915,	R8A779G0_CLK_CL16M),
+-	DEF_MOD("pfc1",		916,	R8A779G0_CLK_CL16M),
+-	DEF_MOD("pfc2",		917,	R8A779G0_CLK_CL16M),
+-	DEF_MOD("pfc3",		918,	R8A779G0_CLK_CL16M),
++	DEF_MOD("pfc0",		915,	R8A779G0_CLK_CP),
++	DEF_MOD("pfc1",		916,	R8A779G0_CLK_CP),
++	DEF_MOD("pfc2",		917,	R8A779G0_CLK_CP),
++	DEF_MOD("pfc3",		918,	R8A779G0_CLK_CP),
+ 	DEF_MOD("tsc",		919,	R8A779G0_CLK_CL16M),
+ 	DEF_MOD("ssiu",		2926,	R8A779G0_CLK_S0D6_PER),
+ 	DEF_MOD("ssi",		2927,	R8A779G0_CLK_S0D6_PER),
+diff --git a/include/dt-bindings/clock/r8a779g0-cpg-mssr.h b/include/dt-bindings/clock/r8a779g0-cpg-mssr.h
+index 754c54a6eb06a..7850cdc62e285 100644
+--- a/include/dt-bindings/clock/r8a779g0-cpg-mssr.h
++++ b/include/dt-bindings/clock/r8a779g0-cpg-mssr.h
+@@ -86,5 +86,6 @@
+ #define R8A779G0_CLK_CPEX		74
+ #define R8A779G0_CLK_CBFUSA		75
+ #define R8A779G0_CLK_R			76
++#define R8A779G0_CLK_CP			77
+ 
+ #endif /* __DT_BINDINGS_CLOCK_R8A779G0_CPG_MSSR_H__ */
 -- 
 2.43.0
 
