@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20B8206C8A;
-	Sun, 24 Mar 2024 23:05:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1538313776A;
+	Sun, 24 Mar 2024 23:05:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321509; cv=none; b=C+WQGtURJFU3JT5ReVsldFBolSx8gYQjALGjnxVgk6eK0x/8cOD5fm3cfIbOU+iSP/x+iORUFLXOfOdjw2C0x34gtCCof9jL5JOx1hoy0L87+oe00w2G/+tiHzAekvISuQsRUBqJ+v/FlADuwjELDU2gSpuUDxyOwJ9plKGpaV4=
+	t=1711321524; cv=none; b=YVoariFAZB54Sxg+M3nG7vC6EdXr+YXwgaGU6yRgxnl3v3YEQEdwGujMBba7kd8/hlE/yMd0nLLYSvDPxAFkwogA71FWPV3Gd22bN55ky1BpY8aYKUY08SIbrr0ee89Vemnhes/dFijZTLZE4BNS+AzvrX3FrXFbeZlmOJTOGGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321509; c=relaxed/simple;
-	bh=PLMeTWfzCTYAVAuh1bq/F318sAMTXN+WWdgNpObteoQ=;
+	s=arc-20240116; t=1711321524; c=relaxed/simple;
+	bh=IIAH9R+wJulgFrXMraygEhGyRL+cuXpt2/Ip4olD4X8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tkCZgh8T6ymDiTeCQ8tmT8N8GhUb0SIfi6LM1UhEcKywZ+PsK+wZb09RFxHEcDzCgwBayh35KX1l5Xr26UclHrRBKEMzzvb0IrholxM6BckrpufIw3j0WCf4duTp03r2HP+5zLPbBuOTuDuuzpSP0My2noSSkNOk1NXFd1WTMGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R0Co4GfC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=l20Q6260fjDQjdEhPr1s/vYryxZ/pesqddHxJ2MeV/Psz1a3MTZr4Epq4jN7NCN6SXvIR2950LBzktLThqw1wPfpw+A4Cft8rwAy6Au0vTtDVB8veWOqG+W6qkW9DPkHRri5z0OrkahVBUI8PnmmSX3miI6Ye2m6U5audBrINzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RwLnOb3j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R0Co4GfC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA852C43394;
-	Sun, 24 Mar 2024 23:05:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RwLnOb3j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21986C433C7;
+	Sun, 24 Mar 2024 23:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321509;
-	bh=PLMeTWfzCTYAVAuh1bq/F318sAMTXN+WWdgNpObteoQ=;
+	s=k20201202; t=1711321523;
+	bh=IIAH9R+wJulgFrXMraygEhGyRL+cuXpt2/Ip4olD4X8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=R0Co4GfCKR6eCnE8fzV6YOsp7OvYjJZRg5lp+dN5VF2dI/oWhuNd/iMMCh7b5JmWT
-	 s1FIGT9SbewmKWCPQKBaV36V/jKBAguN8u5/mMLyeZFhrNurMJ9MwoyUF7vktku40t
-	 ZGuKII1G+JSUYtv/h/zyHPdTndG6gYmT9mpQN38lJVIkPfnRN7wv8BbWOzSB6Ai8ns
-	 GaEdIXCkWrYWFmZPlzn7DIgnowajz/H3AFa5geanHocLb+Y+fH7GnpK9BYYwQYsfYV
-	 BwqOm5uhm32R3xCtuyMiN4aVicFFo+Oy1QVJTk5/p2MJFvRLzxCXeot2PZN1vJr152
-	 A6lxk6w3tom5A==
+	b=RwLnOb3j1sEEhEaciC6xziDk6KIcsc0mC5ZAvSz5qapLubIgnFPh1/DZp69Vlf0s/
+	 yae2CuxgfQQFhy2D58MaR5KTYN1aW1BW5ttlRwgmjRepRN3zBpSv7hP98DyoM/tCgJ
+	 wRh80mJwcjEmAi5O3vWbz96/4RqvaU2rM3iUE9q0jhEHvq6c5kf/MkaKoQWHDnQyCJ
+	 xo11Q/98/ocU4GKFNOEG/hp/bQILyCbpMursjrtIMmc1ehKdCUs8x1kCutieBJf3pj
+	 q7Ym8Ih2/OGT88GZk2FMMlBfcCgNjRGjOtmwGDq+Ytbu1G4sg2/Q9cKgnt6NeMEEKk
+	 TqAsR5U8/JP8w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kamal Heib <kheib@redhat.com>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: =?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Ajay Singh <ajay.kathat@microchip.com>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 235/638] net: ena: Remove ena_select_queue
-Date: Sun, 24 Mar 2024 18:54:32 -0400
-Message-ID: <20240324230116.1348576-236-sashal@kernel.org>
+Subject: [PATCH 6.6 249/638] wifi: wilc1000: revert reset line logic flip
+Date: Sun, 24 Mar 2024 18:54:46 -0400
+Message-ID: <20240324230116.1348576-250-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -45,68 +46,70 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kamal Heib <kheib@redhat.com>
+From: Alexis Lothoré <alexis.lothore@bootlin.com>
 
-[ Upstream commit 78e886ba2b549945ecada055ee0765f0ded5707a ]
+[ Upstream commit f3ec643947634bed41b97bd56b248f7c78498eab ]
 
-Avoid the following warnings by removing the ena_select_queue() function
-and rely on the net core to do the queue selection, The issue happen
-when an skb received from an interface with more queues than ena is
-forwarded to the ena interface.
+This reverts commit fcf690b0b47494df51d214db5c5a714a400b0257.
 
-[ 1176.159959] eth0 selects TX queue 11, but real number of TX queues is 8
-[ 1176.863976] eth0 selects TX queue 14, but real number of TX queues is 8
-[ 1180.767877] eth0 selects TX queue 14, but real number of TX queues is 8
-[ 1188.703742] eth0 selects TX queue 14, but real number of TX queues is 8
+When using a wilc1000 chip over a spi bus, users can optionally define a
+reset gpio and a chip enable gpio. The reset line of wilc1000 is active
+low, so to hold the chip in reset, a low (physical) value must be applied.
 
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Kamal Heib <kheib@redhat.com>
-Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The corresponding device tree binding documentation was introduced by
+commit f31ee3c0a555 ("wilc1000: Document enable-gpios and reset-gpios
+properties") and correctly indicates that the reset line is an active-low
+signal. The corresponding driver part, brought by commit ec031ac4792c
+("wilc1000: Add reset/enable GPIO support to SPI driver") was applying the
+correct logic. But commit fcf690b0b474 ("wifi: wilc1000: use correct
+sequence of RESET for chip Power-UP/Down") eventually flipped this logic
+and started misusing the gpiod APIs, applying an inverted logic when
+powering up/down the chip (for example, setting the reset line to a logic
+"1" during power up, which in fact asserts the reset line when device tree
+describes the reset line as GPIO_ACTIVE_LOW). As a consequence, any
+platform currently using the driver in SPI mode must use a faulty reset
+line description in device tree, or else chip will be maintained in reset
+and will not even allow to bring up the chip.
+
+Fix reset line usage by inverting back the gpiod APIs usage, setting the
+reset line to the logic value "0" when powering the chip, and the logic
+value "1" when powering off the chip.
+
+Fixes: fcf690b0b474 ("wifi: wilc1000: use correct sequence of RESET for chip Power-UP/Down")
+Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Acked-by: Ajay Singh <ajay.kathat@microchip.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20240217-wilc_1000_reset_line-v2-1-b216f433d7d5@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.c | 17 -----------------
- 1 file changed, 17 deletions(-)
+ drivers/net/wireless/microchip/wilc1000/spi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-index 14e41eb57731b..cc39707a80598 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -3238,22 +3238,6 @@ static netdev_tx_t ena_start_xmit(struct sk_buff *skb, struct net_device *dev)
- 	return NETDEV_TX_OK;
- }
- 
--static u16 ena_select_queue(struct net_device *dev, struct sk_buff *skb,
--			    struct net_device *sb_dev)
--{
--	u16 qid;
--	/* we suspect that this is good for in--kernel network services that
--	 * want to loop incoming skb rx to tx in normal user generated traffic,
--	 * most probably we will not get to this
--	 */
--	if (skb_rx_queue_recorded(skb))
--		qid = skb_get_rx_queue(skb);
--	else
--		qid = netdev_pick_tx(dev, skb, NULL);
--
--	return qid;
--}
--
- static void ena_config_host_info(struct ena_com_dev *ena_dev, struct pci_dev *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -3424,7 +3408,6 @@ static const struct net_device_ops ena_netdev_ops = {
- 	.ndo_open		= ena_open,
- 	.ndo_stop		= ena_close,
- 	.ndo_start_xmit		= ena_start_xmit,
--	.ndo_select_queue	= ena_select_queue,
- 	.ndo_get_stats64	= ena_get_stats64,
- 	.ndo_tx_timeout		= ena_tx_timeout,
- 	.ndo_change_mtu		= ena_change_mtu,
+diff --git a/drivers/net/wireless/microchip/wilc1000/spi.c b/drivers/net/wireless/microchip/wilc1000/spi.c
+index 77b4cdff73c37..4cf8586ed55ae 100644
+--- a/drivers/net/wireless/microchip/wilc1000/spi.c
++++ b/drivers/net/wireless/microchip/wilc1000/spi.c
+@@ -192,11 +192,11 @@ static void wilc_wlan_power(struct wilc *wilc, bool on)
+ 		/* assert ENABLE: */
+ 		gpiod_set_value(gpios->enable, 1);
+ 		mdelay(5);
+-		/* assert RESET: */
+-		gpiod_set_value(gpios->reset, 1);
+-	} else {
+ 		/* deassert RESET: */
+ 		gpiod_set_value(gpios->reset, 0);
++	} else {
++		/* assert RESET: */
++		gpiod_set_value(gpios->reset, 1);
+ 		/* deassert ENABLE: */
+ 		gpiod_set_value(gpios->enable, 0);
+ 	}
 -- 
 2.43.0
 
