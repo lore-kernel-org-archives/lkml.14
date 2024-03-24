@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D45F145B16;
-	Sun, 24 Mar 2024 23:13:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B62145B18;
+	Sun, 24 Mar 2024 23:13:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322012; cv=none; b=cjkbBDGAwOS+Si2AnEA35YyM16bOQZnX0CL4mkOMtD3m2Y7jy8fo+GgHv2VDsHsAQ3DSF4maoEvotwan48rKJikWfyYKZ7QFnu2TPDuFq2Gr5KGYFnmornzw2iJXDcnm8S9ZINEOmVIjMjepSyn6KzP10Wu4OqUSy4UtCsgg5EU=
+	t=1711322015; cv=none; b=i4YP2D8JCQQfCf76cSpVE7gzF7TIQQBGDyAM0s4OTv8AWL1YzRPNCIgv/JcbTemhB/7LFoCZyxK73p0a4bMS8I0KoTRSh8XUJeZuR03VfY+HjH5D5tJyt9W5tvUEZF9IZptpJqDwlikqENk1U5v/lHU/FSdyJqphRmvRGKG3BPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322012; c=relaxed/simple;
-	bh=b/5s7QGVGOrCuOtXOJt/WL9bT1hmlf6/D8yCh5Oa4Bo=;
+	s=arc-20240116; t=1711322015; c=relaxed/simple;
+	bh=zQ5wxmNpbd3WSFrz+qocDNHMJWnyrsVqqvvobDxOQsM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g5aO3nX1yjLMvpiWRkcbN1HzEHH00tDE2mO4Gj/VC7H6HjxBQ8Kh8OEc9Mt2vHMxuXLb14KRnEL4V5T2E0O7hRrKCcVDwXyVDzbxQcyb2s5qWx8COh6oXsDC2Dtd/HWhXPWH9ARyBX3XhGEJahM16A++t1nbFGXZ/8W3T0jNzOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pUCRriCr; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PUwU9WuUeVQwYyMIxNe3Qa8dbzuCQBi9GIAHdhJrSvm4MeuU2703diPXaeKdJmPPBq8BXCpzS+CFXIa87zj9zC8eIa5l14ELPXXr0Yaf6GgMqyWeCFdlOz23HJYtpgTwYX85KS/dnifKOB7ltEFpa1OXGwshOmzfkTSpNLblWao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TAbTd0l+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pUCRriCr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B126AC433C7;
-	Sun, 24 Mar 2024 23:13:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TAbTd0l+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE464C433F1;
+	Sun, 24 Mar 2024 23:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322012;
-	bh=b/5s7QGVGOrCuOtXOJt/WL9bT1hmlf6/D8yCh5Oa4Bo=;
+	s=k20201202; t=1711322015;
+	bh=zQ5wxmNpbd3WSFrz+qocDNHMJWnyrsVqqvvobDxOQsM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pUCRriCr5Kn+uBKzNaPuI5UTkLGmLTOhGE6lWCG71yH7SpyNYZPaid9yv+1w6Ijct
-	 9VPB6YTUWg/uEUb5LJ4yiFvNfhldvm46YE8FxbbT7Dqvyk02zwZBY5VB8RvJ3QlGN8
-	 Laz/7L/OJ4ZgAl+lGAzfX19TctWjBKSjWriCwdUO0NZZprU/RqHos2TpeRU6YlV+Iq
-	 iJn3TZQWU6XpYmjj8frCzYFom8eaFpQ+Mam7leVJGi5LKi5HWcP2Sye/zqnVFZsY1B
-	 bJ3FIYuo8jR1OxxThwlozJOni2XSgN81xOBqErZxUTBfGC9/d+gIEckPpUjgVL5XbI
-	 rz+HOqJKzrDHA==
+	b=TAbTd0l+vmyOe9xkVRaL4bnKVS+JHL3ZxkGxjN44EKnc5eiT7MnscBikuTKevTnAE
+	 xKaCwvz1QhxZr22FPttOHocRD1hKuG2DjRvgfe/fEUhIWsNY7qBABm6bNhrikwVyIN
+	 +5ys7p/K+1vO8dCCfxSJrV9MJeQakg0lXGarDuy4iPXeTLlUQ1XJEt7wy7SCw2c1/h
+	 zKi9TLFZ6vxj/c1NEWBlyCClVy77Pms0advXkqiuo2bQjypDGjc/XgI2jG7pUeaYwN
+	 JszTJa7rerweGZUrRcy2dLJoIRNe54fcF0QnVvjjI780tAel4LAAlEufgx5DbKOFO6
+	 B9pUDGCLQizTA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -33,9 +33,9 @@ Cc: Rahul Rameshbabu <sergeantsagara@protonmail.com>,
 	Julian Calaby <julian.calaby@gmail.com>,
 	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 084/451] wifi: b43: Stop/wake correct queue in DMA Tx path when QoS is disabled
-Date: Sun, 24 Mar 2024 19:06:00 -0400
-Message-ID: <20240324231207.1351418-85-sashal@kernel.org>
+Subject: [PATCH 6.1 087/451] wifi: b43: Disable QoS for bcm4331
+Date: Sun, 24 Mar 2024 19:06:03 -0400
+Message-ID: <20240324231207.1351418-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -47,251 +47,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
 From: Rahul Rameshbabu <sergeantsagara@protonmail.com>
 
-[ Upstream commit 9636951e4468f02c72cc75a82dc65d003077edbc ]
+[ Upstream commit 09795bded2e725443fe4a4803cae2079cdaf7b26 ]
 
-When QoS is disabled, the queue priority value will not map to the correct
-ieee80211 queue since there is only one queue. Stop/wake queue 0 when QoS
-is disabled to prevent trying to stop/wake a non-existent queue and failing
-to stop/wake the actual queue instantiated.
+bcm4331 seems to not function correctly with QoS support. This may be due
+to issues with currently available firmware or potentially a device
+specific issue.
 
-Log of issue before change (with kernel parameter qos=3D0):
-    [  +5.112651] ------------[ cut here ]------------
-    [  +0.000005] WARNING: CPU: 7 PID: 25513 at net/mac80211/util.c:449 __i=
-eee80211_wake_queue+0xd5/0x180 [mac80211]
-    [  +0.000067] Modules linked in: b43(O) snd_seq_dummy snd_hrtimer snd_s=
-eq snd_seq_device nft_chain_nat xt_MASQUERADE nf_nat xfrm_user xfrm_algo xt=
-_addrtype overlay ccm af_packet amdgpu snd_hda_codec_cirrus snd_hda_codec_g=
-eneric ledtrig_audio drm_exec amdxcp gpu_sched xt_conntrack nf_conntrack nf=
-_defrag_ipv6 nf_defrag_ipv4 ip6t_rpfilter ipt_rpfilter xt_pkttype xt_LOG nf=
-_log_syslog xt_tcpudp nft_compat nf_tables nfnetlink sch_fq_codel btusb uin=
-put iTCO_wdt ctr btrtl intel_pmc_bxt i915 intel_rapl_msr mei_hdcp mei_pxp j=
-oydev at24 watchdog btintel atkbd libps2 serio radeon btbcm vivaldi_fmap bt=
-mtk intel_rapl_common snd_hda_codec_hdmi bluetooth uvcvideo nls_iso8859_1 a=
-pplesmc nls_cp437 x86_pkg_temp_thermal snd_hda_intel intel_powerclamp vfat =
-videobuf2_vmalloc coretemp fat snd_intel_dspcfg crc32_pclmul uvc polyval_cl=
-mulni snd_intel_sdw_acpi loop videobuf2_memops snd_hda_codec tun drm_suball=
-oc_helper polyval_generic drm_ttm_helper drm_buddy tap ecdh_generic videobu=
-f2_v4l2 gf128mul macvlan ttm ghash_clmulni_intel ecc tg3
-    [  +0.000044]  videodev bridge snd_hda_core rapl crc16 drm_display_help=
-er cec mousedev snd_hwdep evdev intel_cstate bcm5974 hid_appleir videobuf2_=
-common stp mac_hid libphy snd_pcm drm_kms_helper acpi_als mei_me intel_unco=
-re llc mc snd_timer intel_gtt industrialio_triggered_buffer apple_mfi_fastc=
-harge i2c_i801 mei snd lpc_ich agpgart ptp i2c_smbus thunderbolt apple_gmux=
- i2c_algo_bit kfifo_buf video industrialio soundcore pps_core wmi tiny_powe=
-r_button sbs sbshc button ac cordic bcma mac80211 cfg80211 ssb rfkill libar=
-c4 kvm_intel kvm drm irqbypass fuse backlight firmware_class efi_pstore con=
-figfs efivarfs dmi_sysfs ip_tables x_tables autofs4 dm_crypt cbc encrypted_=
-keys trusted asn1_encoder tee tpm rng_core input_leds hid_apple led_class h=
-id_generic usbhid hid sd_mod t10_pi crc64_rocksoft crc64 crc_t10dif crct10d=
-if_generic ahci libahci libata uhci_hcd ehci_pci ehci_hcd crct10dif_pclmul =
-crct10dif_common sha512_ssse3 sha512_generic sha256_ssse3 sha1_ssse3 aesni_=
-intel usbcore scsi_mod libaes crypto_simd cryptd scsi_common
-    [  +0.000055]  usb_common rtc_cmos btrfs blake2b_generic libcrc32c crc3=
-2c_generic crc32c_intel xor raid6_pq dm_snapshot dm_bufio dm_mod dax [last =
-unloaded: b43(O)]
-    [  +0.000009] CPU: 7 PID: 25513 Comm: irq/17-b43 Tainted: G        W  O=
-       6.6.7 #1-NixOS
-    [  +0.000003] Hardware name: Apple Inc. MacBookPro8,3/Mac-942459F5819B1=
-71B, BIOS 87.0.0.0.0 06/13/2019
-    [  +0.000001] RIP: 0010:__ieee80211_wake_queue+0xd5/0x180 [mac80211]
-    [  +0.000046] Code: 00 45 85 e4 0f 85 9b 00 00 00 48 8d bd 40 09 00 00 =
-f0 48 0f ba ad 48 09 00 00 00 72 0f 5b 5d 41 5c 41 5d 41 5e e9 cb 6d 3c d0 =
-<0f> 0b 5b 5d 41 5c 41 5d 41 5e c3 cc cc cc cc 48 8d b4 16 94 00 00
-    [  +0.000002] RSP: 0018:ffffc90003c77d60 EFLAGS: 00010097
-    [  +0.000001] RAX: 0000000000000001 RBX: 0000000000000002 RCX: 00000000=
-00000000
-    [  +0.000001] RDX: 0000000000000000 RSI: 0000000000000002 RDI: ffff8882=
-0b924900
-    [  +0.000002] RBP: ffff88820b924900 R08: ffffc90003c77d90 R09: 00000000=
-0003bfd0
-    [  +0.000001] R10: ffff88820b924900 R11: ffffc90003c77c68 R12: 00000000=
-00000000
-    [  +0.000001] R13: 0000000000000000 R14: ffffc90003c77d90 R15: ffffffff=
-c0fa6f40
-    [  +0.000001] FS:  0000000000000000(0000) GS:ffff88846fb80000(0000) knl=
-GS:0000000000000000
-    [  +0.000001] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    [  +0.000001] CR2: 00007fafda7ae008 CR3: 000000046d220005 CR4: 00000000=
-000606e0
-    [  +0.000002] Call Trace:
-    [  +0.000003]  <TASK>
-    [  +0.000001]  ? __ieee80211_wake_queue+0xd5/0x180 [mac80211]
-    [  +0.000044]  ? __warn+0x81/0x130
-    [  +0.000005]  ? __ieee80211_wake_queue+0xd5/0x180 [mac80211]
-    [  +0.000045]  ? report_bug+0x171/0x1a0
-    [  +0.000004]  ? handle_bug+0x41/0x70
-    [  +0.000004]  ? exc_invalid_op+0x17/0x70
-    [  +0.000003]  ? asm_exc_invalid_op+0x1a/0x20
-    [  +0.000005]  ? __ieee80211_wake_queue+0xd5/0x180 [mac80211]
-    [  +0.000043]  ieee80211_wake_queue+0x4a/0x80 [mac80211]
-    [  +0.000044]  b43_dma_handle_txstatus+0x29c/0x3a0 [b43]
-    [  +0.000016]  ? __pfx_irq_thread_fn+0x10/0x10
-    [  +0.000002]  b43_handle_txstatus+0x61/0x80 [b43]
-    [  +0.000012]  b43_interrupt_thread_handler+0x3f9/0x6b0 [b43]
-    [  +0.000011]  irq_thread_fn+0x23/0x60
-    [  +0.000002]  irq_thread+0xfe/0x1c0
-    [  +0.000002]  ? __pfx_irq_thread_dtor+0x10/0x10
-    [  +0.000001]  ? __pfx_irq_thread+0x10/0x10
-    [  +0.000001]  kthread+0xe8/0x120
-    [  +0.000003]  ? __pfx_kthread+0x10/0x10
-    [  +0.000003]  ret_from_fork+0x34/0x50
-    [  +0.000002]  ? __pfx_kthread+0x10/0x10
-    [  +0.000002]  ret_from_fork_asm+0x1b/0x30
-    [  +0.000004]  </TASK>
-    [  +0.000001] ---[ end trace 0000000000000000 ]---
+When queues that are not of the default "best effort" priority are
+selected, traffic appears to not transmit out of the hardware while no
+errors are returned. This behavior is present among all the other priority
+queues: video, voice, and background. While this can be worked around by
+setting a kernel parameter, the default behavior is problematic for most
+users and may be difficult to debug. This patch offers a working out-of-box
+experience for bcm4331 users.
 
-    [  +0.000065] ------------[ cut here ]------------
-    [  +0.000001] WARNING: CPU: 0 PID: 56077 at net/mac80211/util.c:514 __i=
-eee80211_stop_queue+0xcc/0xe0 [mac80211]
-    [  +0.000077] Modules linked in: b43(O) snd_seq_dummy snd_hrtimer snd_s=
-eq snd_seq_device nft_chain_nat xt_MASQUERADE nf_nat xfrm_user xfrm_algo xt=
-_addrtype overlay ccm af_packet amdgpu snd_hda_codec_cirrus snd_hda_codec_g=
-eneric ledtrig_audio drm_exec amdxcp gpu_sched xt_conntrack nf_conntrack nf=
-_defrag_ipv6 nf_defrag_ipv4 ip6t_rpfilter ipt_rpfilter xt_pkttype xt_LOG nf=
-_log_syslog xt_tcpudp nft_compat nf_tables nfnetlink sch_fq_codel btusb uin=
-put iTCO_wdt ctr btrtl intel_pmc_bxt i915 intel_rapl_msr mei_hdcp mei_pxp j=
-oydev at24 watchdog btintel atkbd libps2 serio radeon btbcm vivaldi_fmap bt=
-mtk intel_rapl_common snd_hda_codec_hdmi bluetooth uvcvideo nls_iso8859_1 a=
-pplesmc nls_cp437 x86_pkg_temp_thermal snd_hda_intel intel_powerclamp vfat =
-videobuf2_vmalloc coretemp fat snd_intel_dspcfg crc32_pclmul uvc polyval_cl=
-mulni snd_intel_sdw_acpi loop videobuf2_memops snd_hda_codec tun drm_suball=
-oc_helper polyval_generic drm_ttm_helper drm_buddy tap ecdh_generic videobu=
-f2_v4l2 gf128mul macvlan ttm ghash_clmulni_intel ecc tg3
-    [  +0.000073]  videodev bridge snd_hda_core rapl crc16 drm_display_help=
-er cec mousedev snd_hwdep evdev intel_cstate bcm5974 hid_appleir videobuf2_=
-common stp mac_hid libphy snd_pcm drm_kms_helper acpi_als mei_me intel_unco=
-re llc mc snd_timer intel_gtt industrialio_triggered_buffer apple_mfi_fastc=
-harge i2c_i801 mei snd lpc_ich agpgart ptp i2c_smbus thunderbolt apple_gmux=
- i2c_algo_bit kfifo_buf video industrialio soundcore pps_core wmi tiny_powe=
-r_button sbs sbshc button ac cordic bcma mac80211 cfg80211 ssb rfkill libar=
-c4 kvm_intel kvm drm irqbypass fuse backlight firmware_class efi_pstore con=
-figfs efivarfs dmi_sysfs ip_tables x_tables autofs4 dm_crypt cbc encrypted_=
-keys trusted asn1_encoder tee tpm rng_core input_leds hid_apple led_class h=
-id_generic usbhid hid sd_mod t10_pi crc64_rocksoft crc64 crc_t10dif crct10d=
-if_generic ahci libahci libata uhci_hcd ehci_pci ehci_hcd crct10dif_pclmul =
-crct10dif_common sha512_ssse3 sha512_generic sha256_ssse3 sha1_ssse3 aesni_=
-intel usbcore scsi_mod libaes crypto_simd cryptd scsi_common
-    [  +0.000084]  usb_common rtc_cmos btrfs blake2b_generic libcrc32c crc3=
-2c_generic crc32c_intel xor raid6_pq dm_snapshot dm_bufio dm_mod dax [last =
-unloaded: b43]
-    [  +0.000012] CPU: 0 PID: 56077 Comm: kworker/u16:17 Tainted: G        =
-W  O       6.6.7 #1-NixOS
-    [  +0.000003] Hardware name: Apple Inc. MacBookPro8,3/Mac-942459F5819B1=
-71B, BIOS 87.0.0.0.0 06/13/2019
-    [  +0.000001] Workqueue: phy7 b43_tx_work [b43]
-    [  +0.000019] RIP: 0010:__ieee80211_stop_queue+0xcc/0xe0 [mac80211]
-    [  +0.000076] Code: 74 11 48 8b 78 08 0f b7 d6 89 e9 4c 89 e6 e8 ab f4 =
-00 00 65 ff 0d 9c b7 34 3f 0f 85 55 ff ff ff 0f 1f 44 00 00 e9 4b ff ff ff =
-<0f> 0b 5b 5d 41 5c 41 5d c3 cc cc cc cc 0f 1f 80 00 00 00 00 90 90
-    [  +0.000002] RSP: 0000:ffffc90004157d50 EFLAGS: 00010097
-    [  +0.000002] RAX: 0000000000000001 RBX: 0000000000000002 RCX: 00000000=
-00000000
-    [  +0.000002] RDX: 0000000000000000 RSI: 0000000000000002 RDI: ffff8882=
-d65d0900
-    [  +0.000002] RBP: 0000000000000000 R08: 0000000000000001 R09: 00000000=
-00000001
-    [  +0.000001] R10: 00000000000000ff R11: ffff88814d0155a0 R12: ffff8882=
-d65d0900
-    [  +0.000002] R13: 0000000000000000 R14: ffff8881002d2800 R15: 00000000=
-000000d0
-    [  +0.000002] FS:  0000000000000000(0000) GS:ffff88846f800000(0000) knl=
-GS:0000000000000000
-    [  +0.000003] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    [  +0.000002] CR2: 00007f2e8c10c880 CR3: 0000000385b66005 CR4: 00000000=
-000606f0
-    [  +0.000002] Call Trace:
-    [  +0.000001]  <TASK>
-    [  +0.000001]  ? __ieee80211_stop_queue+0xcc/0xe0 [mac80211]
-    [  +0.000075]  ? __warn+0x81/0x130
-    [  +0.000004]  ? __ieee80211_stop_queue+0xcc/0xe0 [mac80211]
-    [  +0.000075]  ? report_bug+0x171/0x1a0
-    [  +0.000005]  ? handle_bug+0x41/0x70
-    [  +0.000003]  ? exc_invalid_op+0x17/0x70
-    [  +0.000004]  ? asm_exc_invalid_op+0x1a/0x20
-    [  +0.000004]  ? __ieee80211_stop_queue+0xcc/0xe0 [mac80211]
-    [  +0.000076]  ieee80211_stop_queue+0x36/0x50 [mac80211]
-    [  +0.000077]  b43_dma_tx+0x550/0x780 [b43]
-    [  +0.000023]  b43_tx_work+0x90/0x130 [b43]
-    [  +0.000018]  process_one_work+0x174/0x340
-    [  +0.000003]  worker_thread+0x27b/0x3a0
-    [  +0.000004]  ? __pfx_worker_thread+0x10/0x10
-    [  +0.000002]  kthread+0xe8/0x120
-    [  +0.000003]  ? __pfx_kthread+0x10/0x10
-    [  +0.000004]  ret_from_fork+0x34/0x50
-    [  +0.000002]  ? __pfx_kthread+0x10/0x10
-    [  +0.000003]  ret_from_fork_asm+0x1b/0x30
-    [  +0.000006]  </TASK>
-    [  +0.000001] ---[ end trace 0000000000000000 ]---
+Log of the issue (using ssh low-priority traffic as an example):
+    ssh -T -vvvv git@github.com
+    OpenSSH_9.6p1, OpenSSL 3.0.12 24 Oct 2023
+    debug1: Reading configuration data /etc/ssh/ssh_config
+    debug2: checking match for 'host * exec "/nix/store/q1c2flcykgr4wwg5a6h450hxbk4ch589-bash-5.2-p15/bin/bash -c '/nix/store/c015armnkhr6v18za0rypm7sh1i8js8w-gnupg-2.4.1/bin/gpg-connect-agent --quiet updatestartuptty /bye >/dev/null 2>&1'"' host github.com originally github.com
+    debug3: /etc/ssh/ssh_config line 5: matched 'host "github.com"'
+    debug1: Executing command: '/nix/store/q1c2flcykgr4wwg5a6h450hxbk4ch589-bash-5.2-p15/bin/bash -c '/nix/store/c015armnkhr6v18za0rypm7sh1i8js8w-gnupg-2.4.1/bin/gpg-connect-agent --quiet updatestartuptty /bye >/dev/null 2>&1''
+    debug3: command returned status 0
+    debug3: /etc/ssh/ssh_config line 5: matched 'exec "/nix/store/q1c2flcykgr4wwg5a6h450hxbk4ch589-bash-5.2-p15/bin/bash -c '/nix/store/c015armnkhr6v18za0r"'
+    debug2: match found
+    debug1: /etc/ssh/ssh_config line 9: Applying options for *
+    debug3: expanded UserKnownHostsFile '~/.ssh/known_hosts' -> '/home/binary-eater/.ssh/known_hosts'
+    debug3: expanded UserKnownHostsFile '~/.ssh/known_hosts2' -> '/home/binary-eater/.ssh/known_hosts2'
+    debug2: resolving "github.com" port 22
+    debug3: resolve_host: lookup github.com:22
+    debug3: channel_clear_timeouts: clearing
+    debug3: ssh_connect_direct: entering
+    debug1: Connecting to github.com [192.30.255.113] port 22.
+    debug3: set_sock_tos: set socket 3 IP_TOS 0x48
 
 Fixes: e6f5b934fba8 ("b43: Add QOS support")
 Signed-off-by: Rahul Rameshbabu <sergeantsagara@protonmail.com>
 Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
 Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20231231050300.122806-2-sergeantsagara@protonmail.=
-com
+Link: https://msgid.link/20231231050300.122806-5-sergeantsagara@protonmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/b43/b43.h | 16 ++++++++++++++++
- drivers/net/wireless/broadcom/b43/dma.c |  4 ++--
- 2 files changed, 18 insertions(+), 2 deletions(-)
+ drivers/net/wireless/broadcom/b43/main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/broadcom/b43/b43.h b/drivers/net/wireless=
-/broadcom/b43/b43.h
-index 67b4bac048e58..c0d8fc0b22fb2 100644
---- a/drivers/net/wireless/broadcom/b43/b43.h
-+++ b/drivers/net/wireless/broadcom/b43/b43.h
-@@ -1082,6 +1082,22 @@ static inline bool b43_using_pio_transfers(struct b4=
-3_wldev *dev)
- 	return dev->__using_pio_transfers;
- }
-=20
-+static inline void b43_wake_queue(struct b43_wldev *dev, int queue_prio)
-+{
-+	if (dev->qos_enabled)
-+		ieee80211_wake_queue(dev->wl->hw, queue_prio);
-+	else
-+		ieee80211_wake_queue(dev->wl->hw, 0);
-+}
-+
-+static inline void b43_stop_queue(struct b43_wldev *dev, int queue_prio)
-+{
-+	if (dev->qos_enabled)
-+		ieee80211_stop_queue(dev->wl->hw, queue_prio);
-+	else
-+		ieee80211_stop_queue(dev->wl->hw, 0);
-+}
-+
- /* Message printing */
- __printf(2, 3) void b43info(struct b43_wl *wl, const char *fmt, ...);
- __printf(2, 3) void b43err(struct b43_wl *wl, const char *fmt, ...);
-diff --git a/drivers/net/wireless/broadcom/b43/dma.c b/drivers/net/wireless=
-/broadcom/b43/dma.c
-index 9a7c62bd5e431..cfaf2f9d67b22 100644
---- a/drivers/net/wireless/broadcom/b43/dma.c
-+++ b/drivers/net/wireless/broadcom/b43/dma.c
-@@ -1399,7 +1399,7 @@ int b43_dma_tx(struct b43_wldev *dev, struct sk_buff =
-*skb)
- 	    should_inject_overflow(ring)) {
- 		/* This TX ring is full. */
- 		unsigned int skb_mapping =3D skb_get_queue_mapping(skb);
--		ieee80211_stop_queue(dev->wl->hw, skb_mapping);
-+		b43_stop_queue(dev, skb_mapping);
- 		dev->wl->tx_queue_stopped[skb_mapping] =3D true;
- 		ring->stopped =3D true;
- 		if (b43_debug(dev, B43_DBG_DMAVERBOSE)) {
-@@ -1570,7 +1570,7 @@ void b43_dma_handle_txstatus(struct b43_wldev *dev,
- 	} else {
- 		/* If the driver queue is running wake the corresponding
- 		 * mac80211 queue. */
--		ieee80211_wake_queue(dev->wl->hw, ring->queue_prio);
-+		b43_wake_queue(dev, ring->queue_prio);
- 		if (b43_debug(dev, B43_DBG_DMAVERBOSE)) {
- 			b43dbg(dev->wl, "Woke up TX ring %d\n", ring->index);
- 		}
---=20
+diff --git a/drivers/net/wireless/broadcom/b43/main.c b/drivers/net/wireless/broadcom/b43/main.c
+index c75f294ca1bc9..bdfa68cc7ee2a 100644
+--- a/drivers/net/wireless/broadcom/b43/main.c
++++ b/drivers/net/wireless/broadcom/b43/main.c
+@@ -2587,7 +2587,8 @@ static void b43_request_firmware(struct work_struct *work)
+ 
+ start_ieee80211:
+ 	wl->hw->queues = B43_QOS_QUEUE_NUM;
+-	if (!modparam_qos || dev->fw.opensource)
++	if (!modparam_qos || dev->fw.opensource ||
++	    dev->dev->chip_id == BCMA_CHIP_ID_BCM4331)
+ 		wl->hw->queues = 1;
+ 
+ 	err = ieee80211_register_hw(wl->hw);
+-- 
 2.43.0
 
