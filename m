@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC6A1350E3;
-	Sun, 24 Mar 2024 23:05:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB571514CC;
+	Sun, 24 Mar 2024 23:05:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321525; cv=none; b=OInW74bscTYPDbcX1aU8Nv9EtYckjb1tLsZYMsljMStqapIsHsEAeW3k2mxjqQjCUSIMne5075WM11qYh+Yz6GqSNjWrLmoBPu8NdyCRqX+rQe2IlhoxF/36p4w42u+0qpIawml+mY0d5a65SPhM7sERLc1LjX2UPZlbTm77PEA=
+	t=1711321527; cv=none; b=o8oisPB5uKlbhKfkocEPP5klp8J8SV8aeekE+egfFI4GtVHBBhiIe2sbqc1PHw4PxaDJK7d7yMK8Db90be5l5dzQ0Dp4/jBIBQuAJ4NHHIflPl2DAXPwxEgWS4tmyv7nSigbhqSaAP4r20CB8h0Z8i/8TAvR3/mF+fE6aHhBj/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321525; c=relaxed/simple;
-	bh=/a1WHaJ3M+aXmVmWxz7JExxl6J9UcQdq0czcxVxW7vw=;
+	s=arc-20240116; t=1711321527; c=relaxed/simple;
+	bh=nSr7b2uTkn/7dZtBoetN/blKXW6NY8/MtrK9mjN0nGo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U2jKerM8NJEmkFv3QcrEhr46GpM1wuqdYiJJr4MXh8teKjOUzaHetzx3KdduFQEA+nzIAkYTgf6/HiS+LEAlCeGBOx7k8Al8xguHZ5oqwt5rHRc8H52lzS9JdIM1zf9znWbwUzC5PFPZMlUtR7/oI1JPb3eEqzjIKRNzHcUzP98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CiGFJYGN; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=EksGhLJnl6a3fuMZfvg1EMZF50XZ9/HPN4M/LhEDzxGFztH+0FMjizAxelnCw8Rbz2SsyCX94GIvUYIA5ADxU1fR/unU9d0j60JmZQ3i9AEqhAq0tXx7/bTNJ3/annx+EQvEwTPMOeAv+bbK0+0gWCXfae1YKO7yKxacjRgs+aU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m5V5JUN2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CiGFJYGN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D13DC43399;
-	Sun, 24 Mar 2024 23:05:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m5V5JUN2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6B63C43394;
+	Sun, 24 Mar 2024 23:05:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321524;
-	bh=/a1WHaJ3M+aXmVmWxz7JExxl6J9UcQdq0czcxVxW7vw=;
+	s=k20201202; t=1711321527;
+	bh=nSr7b2uTkn/7dZtBoetN/blKXW6NY8/MtrK9mjN0nGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CiGFJYGNBZFfXCKcIQtg4QA7lixdN9YbI2/+Vn7cxyk8TnoX/2bY0YpZal75FDRRB
-	 KEDKHWAufQnahHMQLzvdABwZaZ4uSZZx6l7jMXmVIGGButM4Tqzp2/i6ElxNHXSH8B
-	 sPlfW5sWMakVNAm3oU0YhG9pgiIYnPQbNf+V0TSqcJsybTFRLbnjtROoMmS79l+Fmj
-	 L02YuIO5RYxZgBMX8qW9rpnUUFIVuJWWXbm3TsUsrNjh3PlBJ2y9SaXLN4H1ENoNiE
-	 L3Qk4VsE56kXa1tXj2OBSGHq3sSEv5Yk0W1HHQmBuhSQ0w+7qommOoNiTnD1/+LcWy
-	 atAYDbHolDXTA==
+	b=m5V5JUN25smPUD8e8efx/7z+ANOatWLUwYpL8R4GchYp3gPyo94gTdJ1d73UnykOg
+	 X3HC5zlhWQPN+rrObWe59dFfMMaIQdax5AkQRkQtB8KWadNzYj6mOdH3r+SAzC7NT7
+	 FILXr4m3M2JmZjDH5z4S2Kp0dJIW1yxfmRFdHSRgD3FmXOJGKfOLl3tjp00CPWnOMb
+	 dMc/+ML1Gqw7JxF1Lh7H+yg2OrQNHq+GESHWoJOTeqwv6DJZ51SPN2A8m58pa283Y+
+	 t02+ZF7h/X8g95cOdjsboQ8tukO9tLGMkJwFVj34e0SuzOM09wrHJeKEgPRXhIsLud
+	 rtXm3e7Cl4x3Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jon Hunter <jonathanh@nvidia.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+Cc: Howard Hsu <howard-yh.hsu@mediatek.com>,
+	Shayne Chen <shayne.chen@mediatek.com>,
+	Felix Fietkau <nbd@nbd.name>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 251/638] memory: tegra: Correct DLA client names
-Date: Sun, 24 Mar 2024 18:54:48 -0400
-Message-ID: <20240324230116.1348576-252-sashal@kernel.org>
+Subject: [PATCH 6.6 254/638] wifi: mt76: mt7996: fix HE beamformer phy cap for station vif
+Date: Sun, 24 Mar 2024 18:54:51 -0400
+Message-ID: <20240324230116.1348576-255-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,105 +49,41 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jon Hunter <jonathanh@nvidia.com>
+From: Howard Hsu <howard-yh.hsu@mediatek.com>
 
-[ Upstream commit 51d915cbeef4c7a154f5d810b1e10d8125f2b0cc ]
+[ Upstream commit e1a491e856a8a36c46b39ecd07f3bba5a119d83a ]
 
-Some of the names for the Tegra234 DLA clients are not unique and do not
-align with the name of the client ID definitions. Therefore, it is not
-possible to determine the exact DLA client from messages that print the
-client name. Fix this by correcting the DLA memory client names for
-Tegra234 to align with the name of the corresponding memory client ID.
+Set correct beamformer capabilities for station vif in HE PHY
+capability IE.
 
-Note that although the client names are also used by the interconnect
-framework, interconnect support for the DLA clients has not been added
-and so this issue does not impact the interconnect support.
-
-Fixes: 5cd24ca0985f ("memory: tegra: Add DLA clients for Tegra234")
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Link: https://lore.kernel.org/r/20240220124430.19072-1-jonathanh@nvidia.com
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Fixes: 98686cd21624 ("wifi: mt76: mt7996: add driver for MediaTek Wi-Fi 7 (802.11be) devices")
+Signed-off-by: Howard Hsu <howard-yh.hsu@mediatek.com>
+Signed-off-by: Shayne Chen <shayne.chen@mediatek.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/memory/tegra/tegra234.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/net/wireless/mediatek/mt76/mt7996/init.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/memory/tegra/tegra234.c b/drivers/memory/tegra/tegra234.c
-index 2845041f32d69..fa40c49b070d0 100644
---- a/drivers/memory/tegra/tegra234.c
-+++ b/drivers/memory/tegra/tegra234.c
-@@ -121,7 +121,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
- 		},
- 	}, {
- 		.id = TEGRA234_MEMORY_CLIENT_DLA1RDB,
--		.name = "dla0rdb",
-+		.name = "dla1rdb",
- 		.sid = TEGRA234_SID_NVDLA1,
- 		.regs = {
- 			.sid = {
-@@ -407,7 +407,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
- 		},
- 	}, {
- 		.id = TEGRA234_MEMORY_CLIENT_DLA1RDB1,
--		.name = "dla0rdb1",
-+		.name = "dla1rdb1",
- 		.sid = TEGRA234_SID_NVDLA1,
- 		.regs = {
- 			.sid = {
-@@ -417,7 +417,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
- 		},
- 	}, {
- 		.id = TEGRA234_MEMORY_CLIENT_DLA1WRB,
--		.name = "dla0wrb",
-+		.name = "dla1wrb",
- 		.sid = TEGRA234_SID_NVDLA1,
- 		.regs = {
- 			.sid = {
-@@ -663,7 +663,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
- 		},
- 	}, {
- 		.id = TEGRA234_MEMORY_CLIENT_DLA1RDA,
--		.name = "dla0rda",
-+		.name = "dla1rda",
- 		.sid = TEGRA234_SID_NVDLA1,
- 		.regs = {
- 			.sid = {
-@@ -673,7 +673,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
- 		},
- 	}, {
- 		.id = TEGRA234_MEMORY_CLIENT_DLA1FALRDB,
--		.name = "dla0falrdb",
-+		.name = "dla1falrdb",
- 		.sid = TEGRA234_SID_NVDLA1,
- 		.regs = {
- 			.sid = {
-@@ -683,7 +683,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
- 		},
- 	}, {
- 		.id = TEGRA234_MEMORY_CLIENT_DLA1WRA,
--		.name = "dla0wra",
-+		.name = "dla1wra",
- 		.sid = TEGRA234_SID_NVDLA1,
- 		.regs = {
- 			.sid = {
-@@ -693,7 +693,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
- 		},
- 	}, {
- 		.id = TEGRA234_MEMORY_CLIENT_DLA1FALWRB,
--		.name = "dla0falwrb",
-+		.name = "dla1falwrb",
- 		.sid = TEGRA234_SID_NVDLA1,
- 		.regs = {
- 			.sid = {
-@@ -857,7 +857,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
- 		},
- 	}, {
- 		.id = TEGRA234_MEMORY_CLIENT_DLA1RDA1,
--		.name = "dla0rda1",
-+		.name = "dla1rda1",
- 		.sid = TEGRA234_SID_NVDLA1,
- 		.regs = {
- 			.sid = {
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7996/init.c b/drivers/net/wireless/mediatek/mt76/mt7996/init.c
+index 66d8cc0eeabee..e843d40df5bb4 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7996/init.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7996/init.c
+@@ -557,11 +557,12 @@ mt7996_set_stream_he_txbf_caps(struct mt7996_phy *phy,
+ 	/* the maximum cap is 4 x 3, (Nr, Nc) = (3, 2) */
+ 	elem->phy_cap_info[7] |= min_t(int, sts - 1, 2) << 3;
+ 
+-	if (vif != NL80211_IFTYPE_AP)
++	if (!(vif == NL80211_IFTYPE_AP || vif == NL80211_IFTYPE_STATION))
+ 		return;
+ 
+ 	elem->phy_cap_info[3] |= IEEE80211_HE_PHY_CAP3_SU_BEAMFORMER;
+-	elem->phy_cap_info[4] |= IEEE80211_HE_PHY_CAP4_MU_BEAMFORMER;
++	if (vif == NL80211_IFTYPE_AP)
++		elem->phy_cap_info[4] |= IEEE80211_HE_PHY_CAP4_MU_BEAMFORMER;
+ 
+ 	c = FIELD_PREP(IEEE80211_HE_PHY_CAP5_BEAMFORMEE_NUM_SND_DIM_UNDER_80MHZ_MASK,
+ 		       sts - 1) |
 -- 
 2.43.0
 
