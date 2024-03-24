@@ -1,52 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C2A17D257;
-	Sun, 24 Mar 2024 23:43:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0E217CF59;
+	Sun, 24 Mar 2024 23:43:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323837; cv=none; b=nzdxPuydBmxf4Y4FkR4vBzMbMQwtC7KlSafFjNLd0Xk/MQxopro4YIZi6wkeQ928tAQnAptLd4YQdRfedI5rnGCngfie67Q3gwarc27n7a+ZpyzTpHmFME1QWedXV7sKeKw8pcGtFiSZx44UosKJgOuZzgeAn04VMc7pX3ffK30=
+	t=1711323808; cv=none; b=gTthXcjy9piKcNC+csOITM9AGCfpDcpnB493qggMvNd0HRujydcZ9nT0iVfepBp7pPxeyXevm+xgO+t/l9yj5tV0uY3whQfl6m2Pr4miyiCLPMNfbVLgSVXPxXV8+eqmK+IXU13QuniDJ+UHQ0+/munR+k43C/TOnOUwe8D1GBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323837; c=relaxed/simple;
-	bh=epx3Knk9RNJ4Vo/NPzLzQAq4psMUnGkQ7mnl0Vhi1Sc=;
+	s=arc-20240116; t=1711323808; c=relaxed/simple;
+	bh=3seKHVoN8/gBs3/qRcJQnELvobzcetvAIc5iZRBAZi0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k9u+aDCDE91jeF9K7G2f643vJUeHj4fP5zzgC/B3pr00Yo/S226fdfIAMndiK6oQV7Sc0H4/1gkTUGRu56phqFrXuj5VxAZJckSeAXzaxdB0yLTd9WZ7Bo39nt0zyExORZd8ftEC8YUBIVmo05Gveacjx53z1+WWr/gp/CVLeqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hKlrWTLm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=f0NsW2OZuRZAj5+QFjl6FE0XoTrvwGU82aMTgGylbETI/JiL25Ual6XE1ZlblVCHNTYw3yNMFySNIagALr1e88rIT5YoNgHC7Zjo7E5eTjwx/2LVIoXjtcmOiYRLW0DMVK5VYktw50teXTuo1IL8KPCETNAF2smjeg/pPSVvfTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c2/LG0j6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hKlrWTLm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B78AFC433C7;
-	Sun, 24 Mar 2024 23:43:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c2/LG0j6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75EA7C433A6;
+	Sun, 24 Mar 2024 23:43:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323836;
-	bh=epx3Knk9RNJ4Vo/NPzLzQAq4psMUnGkQ7mnl0Vhi1Sc=;
+	s=k20201202; t=1711323807;
+	bh=3seKHVoN8/gBs3/qRcJQnELvobzcetvAIc5iZRBAZi0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hKlrWTLmEscDOfPpWVywVvVIZU2bGAYt34gz+mDRWZPTettUsCAAwMDgCjaaITnM3
-	 iqcTmCmliLdmI3PusAQ7bqM7g7XqmHwLv/a+XzcjtSfGea8IcDvuNX+ti4lb9hrbVB
-	 UO4PmfHtjqREQW6y3ypUVBSGrt0+grqHT/8zNNOMREmKc1kW31jCqYDIxuAbNh6Oaf
-	 MNRCfAQY3KvvSo7MRDeCDWR4OZitjXG36MqmTjw1SAOa0DFg38tWGLSyVzhSO2MkDF
-	 PPN2rlE7Iwe4PFQKIVps7g9Q425T0zBz0b5/VSwc9MwnGUggw0QtlEk8DMRjmESyKG
-	 fueQjfBW1/SBQ==
+	b=c2/LG0j6kqMt77qnX4DZLavIBiGLyyFQRZY0MxGfCFqiRHvKanRlHfiJVzsl3is4N
+	 0J2b+GHKgb1TYwfglhEjlFBn+7xEd8gqDbh6DOCe93E1sjvhIgLax5LkIFxNUTzTvX
+	 +Al6CcqRDuP/O5PSXDrpD2e2W0srrjqV3Ogx1XQPfuGbbUhQZdk/0kMAw05MPJwUC5
+	 h+p802ZfDc6E3tb85Iq8FUPV0FIgvJr0tZuIxwf2+lYYV/MwYg/PYjEEJy69XW0bT3
+	 +lU/PK1cWjYciI1ZELlxCHjZODbXBHQpbUTUFHp0trypsnYtmsU8Sgbb3hWePJXdq3
+	 D/zi0WtHIpn5A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Eddie Huang <eddie.huang@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Alessandro Zummo <a.zummo@towertech.it>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-rtc@vger.kernel.org,
-	Marc Zyngier <maz@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Peter Rosin <peda@axentia.se>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+Cc: Daniel Thompson <daniel.thompson@linaro.org>,
+	Lee Jones <lee@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 214/238] rtc: mt6397: select IRQ_DOMAIN instead of depending on it
-Date: Sun, 24 Mar 2024 19:40:02 -0400
-Message-ID: <20240324234027.1354210-215-sashal@kernel.org>
+Subject: [PATCH 5.10 185/238] backlight: da9052: Fully initialize backlight_properties during probe
+Date: Sun, 24 Mar 2024 19:39:33 -0400
+Message-ID: <20240324234027.1354210-186-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -60,57 +48,35 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Daniel Thompson <daniel.thompson@linaro.org>
 
-[ Upstream commit 544c42f798e1651dcb04fb0395219bf0f1c2607e ]
+[ Upstream commit 0285e9efaee8276305db5c52a59baf84e9731556 ]
 
-IRQ_DOMAIN is a hidden (not user visible) symbol. Users cannot set
-it directly thru "make *config", so drivers should select it instead
-of depending on it if they need it.
-Relying on it being set for a dependency is risky.
+props is stack allocated and the fields that are not explcitly set
+by the probe function need to be zeroed or we'll get undefined behaviour
+(especially so power/blank states)!
 
-Consistently using "select" or "depends on" can also help reduce
-Kconfig circular dependency issues.
-
-Therefore, change the use of "depends on" for IRQ_DOMAIN to
-"select" for RTC_DRV_MT6397.
-
-Fixes: 04d3ba70a3c9 ("rtc: mt6397: add IRQ domain dependency")
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Eddie Huang <eddie.huang@mediatek.com>
-Cc: Sean Wang <sean.wang@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-mediatek@lists.infradead.org
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: linux-rtc@vger.kernel.org
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Peter Rosin <peda@axentia.se>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Link: https://lore.kernel.org/r/20240213050258.6167-1-rdunlap@infradead.org
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 6ede3d832aaa ("backlight: add driver for DA9052/53 PMIC v1")
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Link: https://lore.kernel.org/r/20240220153532.76613-2-daniel.thompson@linaro.org
+Signed-off-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/video/backlight/da9052_bl.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 54cf5ec8f4019..8ddd334e049e1 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1833,7 +1833,8 @@ config RTC_DRV_MT2712
+diff --git a/drivers/video/backlight/da9052_bl.c b/drivers/video/backlight/da9052_bl.c
+index 882359dd288c0..aa00379392a0f 100644
+--- a/drivers/video/backlight/da9052_bl.c
++++ b/drivers/video/backlight/da9052_bl.c
+@@ -117,6 +117,7 @@ static int da9052_backlight_probe(struct platform_device *pdev)
+ 	wleds->led_reg = platform_get_device_id(pdev)->driver_data;
+ 	wleds->state = DA9052_WLEDS_OFF;
  
- config RTC_DRV_MT6397
- 	tristate "MediaTek PMIC based RTC"
--	depends on MFD_MT6397 || (COMPILE_TEST && IRQ_DOMAIN)
-+	depends on MFD_MT6397 || COMPILE_TEST
-+	select IRQ_DOMAIN
- 	help
- 	  This selects the MediaTek(R) RTC driver. RTC is part of MediaTek
- 	  MT6397 PMIC. You should enable MT6397 PMIC MFD before select
++	memset(&props, 0, sizeof(struct backlight_properties));
+ 	props.type = BACKLIGHT_RAW;
+ 	props.max_brightness = DA9052_MAX_BRIGHTNESS;
+ 
 -- 
 2.43.0
 
