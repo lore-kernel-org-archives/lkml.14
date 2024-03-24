@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08097177A8B;
-	Sun, 24 Mar 2024 23:38:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8AF7177A92;
+	Sun, 24 Mar 2024 23:38:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323514; cv=none; b=DlGTxT57s2hM5kv853Gz1lQtNhUVgVOngSozH9VG2q3qDpVnoIOpoPKH0ULqC9B8grU6fdjNYVGKCfRduOyhifcNHL4PEyfd8M1DKBZzxvM2uBD8GfqFnvXz7yHpADv/xwLMxwcuk/kDnPNX5Oii8wGAMRvMz9vm2r3hh1zDJm0=
+	t=1711323515; cv=none; b=TXj0SmdglolPlU098B/PHMEGnaImJCyCBafF7E/5QrZOb6YoAjhq7hCk1OqIOEF0j1AO8In0cUEVIo3rbX7PQJJ7hO01o88/XRjTb92mT7FHhETcN+3D2fObznwWFDRfuNVvX6edbbS/rN93fe0l3qhmG+s88N5CSGV8toy4o8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323514; c=relaxed/simple;
-	bh=+7+48+cUDSwonUDB2uW8//TEeC+7Ah5z8bAa9KDm8yU=;
+	s=arc-20240116; t=1711323515; c=relaxed/simple;
+	bh=TYK28TeZGa/OFOO34UMom8LLO0Z98SnbL7GGLyYtOWM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ksAiyd0Hqx7ZU4NwdJ4JqFQNXQ1t1ilryKuAZGjXoW5+1zk0Sxow1St48YvqJgBs5+S2u8GuFHHfKuUuJnN7Gh3fa/HvOm8MzbYadiNix899MGY2cfMJw+Np2SGyR0e5V6bOkmAs8dimpRKPhO3/NYNiDl1zCOUHGYjo5uLdhQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MwcWexz6; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=SF6zRpaamUDag+D/4d43xozM36OH7R+XS7r4hTU2AhqCGQd8EK0KchYRayIIagfw0swSqJURU3Bfg5fvT/Dr7tsYt4vXxBPffggNMl7FENUlBfuO5W1hc5AFyfgELgg7rII/YBIIlQmzXujW3AbvdIstZvzslTfMquNt/nSfhQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IDgmKIul; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MwcWexz6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44D9BC43394;
-	Sun, 24 Mar 2024 23:38:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IDgmKIul"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F569C433F1;
+	Sun, 24 Mar 2024 23:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323512;
-	bh=+7+48+cUDSwonUDB2uW8//TEeC+7Ah5z8bAa9KDm8yU=;
+	s=k20201202; t=1711323514;
+	bh=TYK28TeZGa/OFOO34UMom8LLO0Z98SnbL7GGLyYtOWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MwcWexz6NhKP78gj6OBMxyZ0bz0V6sE0t7MApqcrjS+LU7TtR7to/eTzAXIKM7Bel
-	 gfD7nLAtj2l5tzTmf3zJ9SHPHDmvYUwywLPujg/L6BjPaEpP3lgpjfMb3ybvyDMlM5
-	 1zxjfWroEWKvi7h1De7vmH1UQ5lipt1Hdx1kMZDXp+GLQAARDjQnWdQRsl+oh3PW1I
-	 1m4ewAXvuNlpxdH7Dlol29N2Gy8PPAywMoGF0tcDIyjf38fst0/at0Gkr97wtFdzQT
-	 WFo1yzZTvBzfxUyxJw7KFYmsGMqjp6IvnJoDQvICCze/RprHuDh6yMs2Ek/c5Ramf+
-	 7Q9kwWCAZjiIw==
+	b=IDgmKIultAl6dQzE95GpaQPaz8Am2oK+j5W++wfRnieCjg0Mfsndz4iLH6Ro63pUc
+	 UwRYfoxN6vit44P1LDhiEBByK/8HMtE0i57Ru4EOmOMYws1oXw/nWN+LkeHZb5UtV/
+	 KAGpO3ZstKAxlBPqSmnqz3dR6ssGkrwBk2QBQne8izoZRsktAxeGWxPTE0BPl2DLhR
+	 hR1+uJLE4kKo8N+zVDh9J4g/hJZtXAq+djNIHMxZN3aaImJ6YXvfNsxNx4/GoSkfWc
+	 e+76GmOQImch6+Im5asNPfdUwifh0HLr/zCVRax1Fs9JHb+xxUGC8kHudHYsJEmuGF
+	 ilqSQwhQXUgPQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Peter Griffin <peter.griffin@linaro.org>,
+	Lee Jones <lee@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 219/317] drm/tegra: put drm_gem_object ref on error in tegra_fb_create
-Date: Sun, 24 Mar 2024 19:33:19 -0400
-Message-ID: <20240324233458.1352854-220-sashal@kernel.org>
+Subject: [PATCH 5.15 221/317] mfd: altera-sysmgr: Call of_node_put() only when of_parse_phandle() takes a ref
+Date: Sun, 24 Mar 2024 19:33:21 -0400
+Message-ID: <20240324233458.1352854-222-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,37 +48,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Fedor Pchelkin <pchelkin@ispras.ru>
+From: Peter Griffin <peter.griffin@linaro.org>
 
-[ Upstream commit 32e5a120a5105bce01561978ee55aee8e40ac0dc ]
+[ Upstream commit e28c28a34ee9fa2ea671a20e5e7064e6220d55e7 ]
 
-Inside tegra_fb_create(), drm_gem_object_lookup() increments ref count of
-the found object. But if the following size check fails then the last
-found object's ref count should be put there as the unreferencing loop
-can't detect this situation.
+of_parse_phandle() returns a device_node with refcount incremented, which
+the callee needs to call of_node_put() on when done. We should only call
+of_node_put() when the property argument is provided though as otherwise
+nothing has taken a reference on the node.
 
-Found by Linux Verification Center (linuxtesting.org).
-
-Fixes: de2ba664c30f ("gpu: host1x: drm: Add memory manager and fb")
-Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231215093356.12067-1-pchelkin@ispras.ru
+Fixes: f36e789a1f8d ("mfd: altera-sysmgr: Add SOCFPGA System Manager")
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Link: https://lore.kernel.org/r/20240220115012.471689-4-peter.griffin@linaro.org
+Signed-off-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/fb.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mfd/altera-sysmgr.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/tegra/fb.c b/drivers/gpu/drm/tegra/fb.c
-index cae8b8cbe9dd0..6e35c7951dfb2 100644
---- a/drivers/gpu/drm/tegra/fb.c
-+++ b/drivers/gpu/drm/tegra/fb.c
-@@ -165,6 +165,7 @@ struct drm_framebuffer *tegra_fb_create(struct drm_device *drm,
+diff --git a/drivers/mfd/altera-sysmgr.c b/drivers/mfd/altera-sysmgr.c
+index 5d3715a28b28e..dbe1009943718 100644
+--- a/drivers/mfd/altera-sysmgr.c
++++ b/drivers/mfd/altera-sysmgr.c
+@@ -110,7 +110,9 @@ struct regmap *altr_sysmgr_regmap_lookup_by_phandle(struct device_node *np,
  
- 		if (gem->size < size) {
- 			err = -EINVAL;
-+			drm_gem_object_put(gem);
- 			goto unreference;
- 		}
+ 	dev = driver_find_device_by_of_node(&altr_sysmgr_driver.driver,
+ 					    (void *)sysmgr_np);
+-	of_node_put(sysmgr_np);
++	if (property)
++		of_node_put(sysmgr_np);
++
+ 	if (!dev)
+ 		return ERR_PTR(-EPROBE_DEFER);
  
 -- 
 2.43.0
