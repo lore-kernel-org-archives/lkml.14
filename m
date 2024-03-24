@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F18156F41;
-	Sun, 24 Mar 2024 23:11:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C1E2251E5;
+	Sun, 24 Mar 2024 23:12:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321907; cv=none; b=BicSaRhT8h0j0ta9dXTLJ5kdqqTkRuVFqT8Ef/ff8XDZwCzd6cVcyMkrcWrXGOWL3Dfh+yiPmEl0d2a7XomiOkoFyD+52OAoxf828h5Eb9BlokOGWACYSUzosXodY+haZxuTXlOyBq3OMlUNj7p98LAAL6AKD6xIkYDd7cQ6e9U=
+	t=1711321936; cv=none; b=KvxYz/vsY1bmPfuxa6rb0WAicW1VeYf30/fX1ZU99Yd70lBxdzHcPAoMb9tKQO5ANz6m0+AgszXuqMI8KlsjO6IHVU/LsfLNa65H8vBSEv4Dzdsncq3v4mhNtfbcMQEpl73sAtM4hAUEVHlYKBugPr3Qadt5WXDMt7LIuzCxLO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321907; c=relaxed/simple;
-	bh=mzQypdRQqwHtug1bhUTv6rpPGwe7Il+eUxhskgq8Mck=;
+	s=arc-20240116; t=1711321936; c=relaxed/simple;
+	bh=dtNOvme6ogz8oy0RlFfXP0mN36Z6AcIzo+gAkw5HKh0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VRuGqhtmxNPyEBiF9eegHHocvVes5xGBGCkLdzwHsuSiyoZsm4bguk6NqFHXz84v8F8ypCVrrV3zDVGwioIfspyXTRD/PzH+6fwFI98dETaaSMvDBOi1akvLpSLbBNzM3Szc5oH/nBj/fHEgFHEerpYCd/YIv21bTNA7q48Jtjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rDU2SSI6; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WgCp+r7nNv2ewuDIoCFcby4RvBZRhMtSwCcfeFyDHK42hpADJff+gCvuPq01JhBxeKbq3WpeaJQ1QUhcYzykyVizLIQ8utMZpAlLY4gPApRz8CInf4eNSmZST2b5wzdUj8HDU24Z8blyx1vcaMXsicP8l+50L6i9AtdgArxe2UM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cCYirlPm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rDU2SSI6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72EA2C433B1;
-	Sun, 24 Mar 2024 23:11:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cCYirlPm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4CA6C433C7;
+	Sun, 24 Mar 2024 23:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321907;
-	bh=mzQypdRQqwHtug1bhUTv6rpPGwe7Il+eUxhskgq8Mck=;
+	s=k20201202; t=1711321936;
+	bh=dtNOvme6ogz8oy0RlFfXP0mN36Z6AcIzo+gAkw5HKh0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rDU2SSI6scyh2+kyt7pFVfkj53A/XYFoTRvDQsEMEsduWyf5nEzXvvwBmwdTG3hVy
-	 btZ2tblo+OiEHgnSQuhg2IgSIO3vH1e1SAglH1AmVXIeIEFLBfBZvMHEr+juYN61mL
-	 M/p/JiN1sTVXH05AmeDIy62vjElvQq2KNETVdNOaJwil4up3p4z3WjPi9tOS21pAzY
-	 Mift+hAwGsIi81tUHJHXaqqcNw7Xa41f0FVoh0sxLmkECaSP2nFnMmGJ4hnYMpDM2h
-	 U+g2XteiHo2t8OrYzojpaQHfiVcFzbTJAe7oZImImqEN5mcxSF5jqDCREYGqcqGVJo
-	 UTsMwuJ8zfhHQ==
+	b=cCYirlPmgSQKS3WrK5nIHEc00sgJeCD5DUCUvqF7WwN1ZWyHiQBBk38OUrZoIIdLd
+	 wsBICc31aFkd8xhpZhhTC33sAkrm4LFvbJ9WKY1YWc2ArP79O/vqQj4G75KIDbZdF9
+	 OMTXOq+Fbh7s4Gtq6rhXnbXFMaZqcnL66ads7Tpihu4S+XV/vX81af0txUuw0rNuVI
+	 3YXVkBu74jwYJM4+I+9KyMhb6pLWwTqsxwlF6HChMyZdlM0atjiLiQvCwwdu/n8n25
+	 cyEES3U30F4VOVpCZu2jHXO4NZqcjrtHbYbyVY3BW59nQ0+nkHP+R4XBLAiyIXPjx9
+	 F4f2sN8mLKoZQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>,
-	stable@kernel.org,
-	Radek Podgorny <radek@podgorny.cz>,
+Cc: Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 636/638] x86/efistub: Clear decompressor BSS in native EFI entrypoint
-Date: Sun, 24 Mar 2024 19:01:13 -0400
-Message-ID: <20240324230116.1348576-637-sashal@kernel.org>
+Subject: [PATCH 6.1 007/451] nfsd: NFSD_FILE_KEY_INODE only needs to find GC'ed entries
+Date: Sun, 24 Mar 2024 19:04:43 -0400
+Message-ID: <20240324231207.1351418-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
-References: <20240324230116.1348576-1-sashal@kernel.org>
+In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
+References: <20240324231207.1351418-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,68 +48,53 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Jeff Layton <jlayton@kernel.org>
 
-[ Upstream commit b3810c5a2cc4a6665f7a65bed5393c75ce3f3aa2 ]
+[ Upstream commit 6c31e4c98853a4ba47355ea151b36a77c42b7734 ]
 
-The EFI stub on x86 no longer invokes the decompressor as a subsequent
-boot stage, but calls into the decompression code directly while running
-in the context of the EFI boot services.
+Since v4 files are expected to be long-lived, there's little value in
+closing them out of the cache when there is conflicting access.
 
-This means that when using the native EFI entrypoint (as opposed to the
-EFI handover protocol, which clears BSS explicitly), the firmware PE
-image loader is being relied upon to ensure that BSS is zeroed before
-the EFI stub is entered from the firmware.
+Change the comparator to also match the gc value in the key. Change both
+of the current users of that key to set the gc value in the key to
+"true".
 
-As Radek's report proves, this is a bad idea. Not all loaders do this
-correctly, which means some global variables that should be statically
-initialized to 0x0 may have junk in them.
-
-So clear BSS explicitly when entering via efi_pe_entry(). Note that
-zeroing BSS from C code is not generally safe, but in this case, the
-following assignment and dereference of a global pointer variable
-ensures that the memset() cannot be deferred or reordered.
-
-Cc: <stable@kernel.org> # v6.1+
-Reported-by: Radek Podgorny <radek@podgorny.cz>
-Closes: https://lore.kernel.org/all/a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/libstub/x86-stub.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/nfsd/filecache.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-index 7bcc5170043fc..90f18315e0247 100644
---- a/drivers/firmware/efi/libstub/x86-stub.c
-+++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -21,6 +21,8 @@
- #include "efistub.h"
- #include "x86-stub.h"
+diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+index 5b5d39ec7b010..c36e3032d4386 100644
+--- a/fs/nfsd/filecache.c
++++ b/fs/nfsd/filecache.c
+@@ -175,6 +175,8 @@ static int nfsd_file_obj_cmpfn(struct rhashtable_compare_arg *arg,
  
-+extern char _bss[], _ebss[];
-+
- const efi_system_table_t *efi_system_table;
- const efi_dxe_services_table_t *efi_dxe_table;
- static efi_loaded_image_t *image = NULL;
-@@ -465,6 +467,8 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
- 	efi_status_t status;
- 	char *cmdline_ptr;
+ 	switch (key->type) {
+ 	case NFSD_FILE_KEY_INODE:
++		if (test_bit(NFSD_FILE_GC, &nf->nf_flags) != key->gc)
++			return 1;
+ 		if (nf->nf_inode != key->inode)
+ 			return 1;
+ 		break;
+@@ -695,6 +697,7 @@ nfsd_file_queue_for_close(struct inode *inode, struct list_head *dispose)
+ 	struct nfsd_file_lookup_key key = {
+ 		.type	= NFSD_FILE_KEY_INODE,
+ 		.inode	= inode,
++		.gc	= true,
+ 	};
+ 	struct nfsd_file *nf;
  
-+	memset(_bss, 0, _ebss - _bss);
-+
- 	efi_system_table = sys_table_arg;
+@@ -1049,6 +1052,7 @@ nfsd_file_is_cached(struct inode *inode)
+ 	struct nfsd_file_lookup_key key = {
+ 		.type	= NFSD_FILE_KEY_INODE,
+ 		.inode	= inode,
++		.gc	= true,
+ 	};
+ 	bool ret = false;
  
- 	/* Check if we were booted by the EFI firmware */
-@@ -956,8 +960,6 @@ void __noreturn efi_stub_entry(efi_handle_t handle,
- void efi_handover_entry(efi_handle_t handle, efi_system_table_t *sys_table_arg,
- 			struct boot_params *boot_params)
- {
--	extern char _bss[], _ebss[];
--
- 	memset(_bss, 0, _ebss - _bss);
- 	efi_stub_entry(handle, sys_table_arg, boot_params);
- }
 -- 
 2.43.0
 
