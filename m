@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C6313A89B;
-	Sun, 24 Mar 2024 23:08:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91B213AA32;
+	Sun, 24 Mar 2024 23:08:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321687; cv=none; b=csy4Q0gillaiq4eE1diKAmaqjaWS7ckWtLV+Qm80+f0wXwILrnllL9YrjFkvuNDTJazRD3RouGH5e78FaoywCImkzKHjPUj0c/ePUcINdRKNQ6FK84yKK7xajptNcnkZKP2F9AewjsTbuoxUE5Mvf/PIcMUH/XQPDVpUFeO3H4E=
+	t=1711321694; cv=none; b=iOKVXJ4q3DOd+vjJLUEv4XwDJ3TSErM8eXw611/95rErFuOOhkcrhG2ItkHQX/znBG7DLPI49ucS9goFVVpB4C4jZ3ugkN8YZe/omzNyjtUBA/PZIpGBRybjgEiMSxoNYmQB4RrHl6SnJFJtgQRrR+w+NGNVlyMKowEiLMYHeCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321687; c=relaxed/simple;
-	bh=rKYlC7jVDqXNr3hDf0STuqNXitRGrhJcxmC1di3E12E=;
+	s=arc-20240116; t=1711321694; c=relaxed/simple;
+	bh=lh1tWZ+Q5ip5maxsWS3cRTsoCijckQtevMH31uUa3aI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Nv7vtP0Jl41jgP5x9SitW2sMxP1VrWCpJ4YNtSqfJKw7mhH9FicIzaYr8CI2FOn7ICT6nMOnuYJF/KC7ipSVRv1wpQoRBLbcgXdeGGJgHksTY1nTeK8R+UWSMdhueKn5IL72uuRRjRL5bRbYg4dH6RxYyGIkoN/jlvK/c9wo4NM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OHct1SrK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LuGWHms2Tjozno+7e0Neil4gHPEjmuN6UH0prA80i3L3iXHrpxSI9xDXfKNBQOXcQA7xYv09PBMGHoYwQSwu8EcYSXd7J4kQNWK5GwJmdxoQPow+X8AsbmW62tE5E8yCIbHlWMW5fsuYykgyLgfeGGmwBFcWX4rpGYAD8+Lg0gM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hfqzenrq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OHct1SrK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66266C433F1;
-	Sun, 24 Mar 2024 23:08:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hfqzenrq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05CD8C433C7;
+	Sun, 24 Mar 2024 23:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321687;
-	bh=rKYlC7jVDqXNr3hDf0STuqNXitRGrhJcxmC1di3E12E=;
+	s=k20201202; t=1711321694;
+	bh=lh1tWZ+Q5ip5maxsWS3cRTsoCijckQtevMH31uUa3aI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OHct1SrKKndNr8vZ3WwRsQHvfRtthGA1iv3P1r510pBnftRzRw9mDqnS2IKMSA1Ps
-	 DmPERuWHnNJ4uvoYgIEM20UX8MgotbF3En/q9j8Oxud77tzAe7TakO2NKevSJNc0ms
-	 fYEjdqHx5KFB5pQWAPdHduNfD/+NyWRCyiQToi29Q1oqEfMLtJnnnmoBDUIWCWy0yX
-	 saqy081QwFui0rvvRc3563fQzAzcf8eSHRmm3gDRIXeEIfpDn+BTfB2snUfXfbRqSJ
-	 Q+eZRGAjzBjQmEo637X1T/G2za/X0o7UdKAEWTIC/FpT7cDKddU8oZUWE0KQGAT4rO
-	 lFKHmFVNEDmIg==
+	b=hfqzenrqT5UvKV0nxfmArzwq3OgpFPSW5psssnZkjh7/pjc82+O319Qdr7bhr69Sp
+	 xMNeE58wwjhoJEFCdiAdz2JgpHVCH1MG6nl4VcaA+uvHHpu3vuWyCLOrqITbkbDMmR
+	 G2B0HHfcNa5urFAXU7qfM9g8kpxKEb2qRBdM/QcrWgpCjESjueEtnUecF7J2IMEvoT
+	 QmduSfVeQwcm8CDQ69mz5ckKscfcgsQ87WLRwa8oWIdz+7+JTaMs6ATrohnSUMOTLp
+	 BzxyE9vRdvuXJ5JIEZnBocmCCqIVIKTDTneaIwknR0VvydA40BGfTgZV25bHlqiJf/
+	 1Xx7fZbs9CoHg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Helen Koike <helen.koike@collabora.com>,
+Cc: Daniil Dulov <d.dulov@aladdin.ru>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 415/638] drm: ci: use clk_ignore_unused for apq8016
-Date: Sun, 24 Mar 2024 18:57:32 -0400
-Message-ID: <20240324230116.1348576-416-sashal@kernel.org>
+Subject: [PATCH 6.6 423/638] media: pvrusb2: remove redundant NULL check
+Date: Sun, 24 Mar 2024 18:57:40 -0400
+Message-ID: <20240324230116.1348576-424-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,47 +48,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+From: Daniil Dulov <d.dulov@aladdin.ru>
 
-[ Upstream commit aa1267e673fe5307cf00d02add4017d2878598b6 ]
+[ Upstream commit 95ac1210fb2753f968ebce0730d4fbc553c2a3dc ]
 
-If the ADV7511 bridge driver is compiled as a module, while DRM_MSM is
-built-in, the clk_disable_unused congests with the runtime PM handling
-of the DSI PHY for the clk_prepare_lock(). This causes apq8016 runner to
-fail without completing any jobs ([1]). Drop the BM_CMDLINE which
-duplicate the command line from the .baremetal-igt-arm64 clause and
-enforce the clk_ignore_unused kernelarg instead to make apq8016 runner
-work.
+Pointer dip->stream cannot be NULL due to a shift, thus remove redundant
+NULL check.
 
-[1] https://gitlab.freedesktop.org/drm/msm/-/jobs/54990475
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-Fixes: 0119c894ab0d ("drm: Add initial ci/ subdirectory")
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Acked-by: Helen Koike <helen.koike@collabora.com>
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20240214083708.2323967-1-dmitry.baryshkov@linaro.org
+Fixes: c74e0062684b ("V4L/DVB (5059): Pvrusb2: Be smarter about mode restoration")
+Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/ci/test.yml | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/media/usb/pvrusb2/pvrusb2-v4l2.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
-index 6473cddaa7a96..e5b7d309ca186 100644
---- a/drivers/gpu/drm/ci/test.yml
-+++ b/drivers/gpu/drm/ci/test.yml
-@@ -104,7 +104,10 @@ msm:apq8016:
-     DRIVER_NAME: msm
-     BM_DTB: https://${PIPELINE_ARTIFACTS_BASE}/arm64/apq8016-sbc.dtb
-     GPU_VERSION: apq8016
--    BM_CMDLINE: "ip=dhcp console=ttyMSM0,115200n8 $BM_KERNEL_EXTRA_ARGS root=/dev/nfs rw nfsrootdebug nfsroot=,tcp,nfsvers=4.2 init=/init $BM_KERNELARGS"
-+    # disabling unused clocks congests with the MDSS runtime PM trying to
-+    # disable those clocks and causes boot to fail.
-+    # Reproducer: DRM_MSM=y, DRM_I2C_ADV7511=m
-+    BM_KERNEL_EXTRA_ARGS: clk_ignore_unused
-     RUNNER_TAG: google-freedreno-db410c
-   script:
-     - ./install/bare-metal/fastboot.sh
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+index c04ab7258d645..d195bd6a2248b 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+@@ -1198,11 +1198,6 @@ static void pvr2_v4l2_dev_init(struct pvr2_v4l2_dev *dip,
+ 		dip->minor_type = pvr2_v4l_type_video;
+ 		nr_ptr = video_nr;
+ 		caps |= V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_AUDIO;
+-		if (!dip->stream) {
+-			pr_err(KBUILD_MODNAME
+-				": Failed to set up pvrusb2 v4l video dev due to missing stream instance\n");
+-			return;
+-		}
+ 		break;
+ 	case VFL_TYPE_VBI:
+ 		dip->config = pvr2_config_vbi;
 -- 
 2.43.0
 
