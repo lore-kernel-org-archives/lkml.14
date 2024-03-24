@@ -1,48 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8332002D3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 013512002DB;
 	Sun, 24 Mar 2024 23:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322299; cv=none; b=hTvqQ3i7Rn2oMWGAB1hd7qgl0wYYu7T5t1h/dy5DaK3DycOadbdVjR3HDTZTxJporNDoVHsxlND96/tnwJ9x9iTEQ2YkvAbZnxcO8SLv3hoD4IvG5A8ND7OPd5qKtdO7XOB/0gaurb54kGCF8FIvNwcdKvLDMFg7Wvvdv117FcM=
+	t=1711322300; cv=none; b=md+NEWTZHDMqiyGQSQ7LYErFAXvesn3fjaPQxAamF9kklLCgdjZ0uN0mdrSVjjKuFHGhFCdAAy8UKzjhAfsvgbtrxDFcqGqBJyshoMM7mjRkDwJvNhEq2mVO4sG53RkcV1NW+P51RuQBMtv2bj7ouQGUhklauVs/unkP2AJqcAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322299; c=relaxed/simple;
-	bh=4Qg+7frpmwyiZY8ppzNptIOhkREvQjfxzi0VbQ1rbRM=;
+	s=arc-20240116; t=1711322300; c=relaxed/simple;
+	bh=LU3mMInKh8CA4wuJytrcoR1TJCTXH8qvdHqcPiWRSYc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RorTH9HXNFhh8usmRpIWJXDCpGEfggWzwDuzRUc2DBinYzfp+qVaCyf7hraD9PbjgCiSfh4MpZNKs9aKO73U/q+hRCHx7EhcEl5rmETxXouXvYfpmqyBOfllstrROHktVrjPgjyMQxWkFahuzbYko/JqtjO7F30KTl3fO0QjKfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IMQnLHxI; arc=none smtp.client-ip=192.198.163.12
+	 In-Reply-To:To:Cc; b=aUrHR51a8/67c4/hUkFrZmPGMmIy5Dg9CTrHocBrdp+ivbgvRfKTtToB9+HSFbEIzQlqbbRdeyT1HAA+u1Atnf2Y8Zdsdn6EbGCOmP3+Vk+uiNITBCoop/jT4voWZCqxVmsoh/HMsPYVkEQhI9M/oWn/b4xEESzbUxoPC+uh5EI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hZFUAwJ6; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IMQnLHxI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hZFUAwJ6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711322297; x=1742858297;
+  t=1711322298; x=1742858298;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=4Qg+7frpmwyiZY8ppzNptIOhkREvQjfxzi0VbQ1rbRM=;
-  b=IMQnLHxIwhYQJMMyRpu1Iwn3yvQiVf0Fd1XMdwMO1XHf5lfe6UVhPasO
-   EmOrw0yVJJSEFO/ZTSSewVPwdAz5rjWUuE6Fz1i4BHKmqCSa6l0Mh54CN
-   qL6w/hrDG8Fk+8+FCC8cSTPBAw0U9sCj1+xY8KkpzIuS00zjQHx1BHqvb
-   CCy9/Gi+FxfeP25huAdL6Vo0NIhUTrwCbvCrd0LCnqkuL9azztAnnvmQy
-   d+huX7pooliPH9cHU0VoGegWOLLzgxIY/5njB5FiYeRHedeOHsiCeHubz
-   w6NWMhbImjIDOYbWPiYvm4GL++qNwb92Iujad562H+2woHQ03tKOmhnsx
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="10078009"
+  bh=LU3mMInKh8CA4wuJytrcoR1TJCTXH8qvdHqcPiWRSYc=;
+  b=hZFUAwJ6Q2bo04pS8Zm5jngomqyBbSCaSOV8jJzjSs9fyIdQkXy1C3Dc
+   18r4Knn04i9R9B77w/BGYwfoIynP/nrSBDqqdrqRO5Yd8U256giJGMazQ
+   Lz/jYhUM06U8m3WfAJ716O/pJX9bbO4aNIITNuIM16aFVy8Ks8bM1Rkek
+   i1EGs++PvZLYzQFTtcvncZ6no66SdqaINDa0bAJji5y3aCIDdqUoKXWc3
+   s8yz9GN61vuJR9tldzKtZpCu1FASZYIiSLcWANxQp+BJuCqIAr6bFE4c+
+   YiTad9/HNCF20LbFGafPdm4wKp+9qZNcGMAU0oaIelLTstNwflEOk/LAu
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6431709"
 X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="10078009"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:13 -0700
+   d="scan'208";a="6431709"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:16 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="15869358"
+   d="scan'208";a="15464682"
 Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.213.186.165])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:12 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:16 -0700
 From: ira.weiny@intel.com
-Date: Sun, 24 Mar 2024 16:18:10 -0700
-Subject: [PATCH 07/26] cxl/port: Add dynamic capacity size support to
- endpoint decoders
+Date: Sun, 24 Mar 2024 16:18:12 -0700
+Subject: [PATCH 09/26] cxl/region: Add Dynamic Capacity CXL region support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,7 +50,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240324-dcd-type2-upstream-v1-7-b7b00d623625@intel.com>
+Message-Id: <20240324-dcd-type2-upstream-v1-9-b7b00d623625@intel.com>
 References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
 In-Reply-To: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
 To: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, 
@@ -64,70 +63,31 @@ Cc: Dan Williams <dan.j.williams@intel.com>,
  linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org, 
  linux-kernel@vger.kernel.org
 X-Mailer: b4 0.13-dev-2d940
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711322284; l=13589;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711322284; l=8897;
  i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=E1IYYAgxO2k5XOaXMcJIWvlNr7YyMQC22ygo4DnQ/fM=;
- b=H+8hjpH17J8cou6hHSjplDOF/w7mRZVS3tXy6K/CPYDgQqp39USvmByu+5V/OA8BugMRCCsyi
- 6KLiSRcdlxCD3Lc7zmeU/8ZuWSMi4S4UzlhVUitUKB9WWKy5V2guWSm
+ bh=+w44ZaRnnuSgyXxYYZ37HJrVw/1eUidIfwSam5HwsWQ=;
+ b=I6krxIl+DxVHMk247UcvYhObxjCvUUasSgFqtxiAN9orUhOHzPVLzRdzGl+IMtUkxHAVY6ZwA
+ 4Ll8mzfGHTtC4nmGDNaZ7tYLrBdfb2DiNAhF34CWK+5JJMNBj9Okpf+
 X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
  pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
 From: Navneet Singh <navneet.singh@intel.com>
 
-To support Dynamic Capacity Devices (DCD) endpoint decoders will need to
-map DC partitions (regions).  In addition to assigning the size of the
-DC partition, the decoder must assign any skip value from the previous
-decoder.  This must be done within a contiguous DPA space.
+CXL devices optionally support dynamic capacity.  CXL Regions must be
+configured correctly to access this capacity.  Similar to ram and pmem
+partitions, DC Regions, as they are called in CXL 3.1, represent
+different partitions of the DPA space.
 
-Two complications arise with Dynamic Capacity regions which did not
-exist with Ram and PMEM partitions.  First, gaps in the DPA space can
-exist between and around the DC Regions.  Second, the Linux resource
-tree does not allow a resource to be marked across existing nodes within
-a tree.
+Introduce the concept of a sparse DAX region.  Add the create_dc_region
+sysfs entry to create sparse DC DAX regions.  Special case DC capable
+regions to create a 0 sized seed DAX device to maintain backwards
+compatibility with older software which needs a default DAX device to
+hold the region reference.
 
-For clarity, below is an example of an 60GB device with 10GB of RAM,
-10GB of PMEM and 10GB for each of 2 DC Regions.  The desired CXL mapping
-is 5GB of RAM, 5GB of PMEM, and all 10GB of DC1.
+Flag sparse DAX regions to indicate 0 capacity available until such time
+as DC capacity is added.
 
-     DPA RANGE
-     (dpa_res)
-0GB        10GB       20GB       30GB       40GB       50GB       60GB
-|----------|----------|----------|----------|----------|----------|
-
-RAM         PMEM                  DC0                   DC1
- (ram_res)  (pmem_res)            (dc_res[0])           (dc_res[1])
-|----------|----------|   <gap>  |----------|   <gap>  |----------|
-
- RAM        PMEM                                        DC1
-|XXXXX|----|XXXXX|----|----------|----------|----------|XXXXXXXXXX|
-0GB   5GB  10GB  15GB 20GB       30GB       40GB       50GB       60GB
-
-The previous skip resource between RAM and PMEM was always a child of
-the RAM resource and fit nicely [see (S) below].  Because of this
-simplicity this skip resource reference was not stored in any CXL state.
-On release the skip range could be calculated based on the endpoint
-decoders stored values.
-
-Now when DC1 is being mapped 4 skip resources must be created as
-children.  One for the PMEM resource (A), two of the parent DPA resource
-(B,D), and one more child of the DC0 resource (C).
-
-0GB        10GB       20GB       30GB       40GB       50GB       60GB
-|----------|----------|----------|----------|----------|----------|
-                           |                     |
-|----------|----------|    |     |----------|    |     |----------|
-        |          |       |          |          |
-       (S)        (A)     (B)        (C)        (D)
-	v          v       v          v          v
-|XXXXX|----|XXXXX|----|----------|----------|----------|XXXXXXXXXX|
-       skip       skip  skip        skip      skip
-
-Expand the calculation of DPA freespace and enhance the logic to support
-mapping/unmapping DC DPA space.  To track the potential of multiple skip
-resources an xarray is attached to the endpoint decoder.  The existing
-algorithm between RAM and PMEM is consolidated within the new one to
-streamline the code even though the result is the storage of a single
-skip resource in the xarray.
+Interleaving is deferred in this series.  Add an early check.
 
 Signed-off-by: Navneet Singh <navneet.singh@intel.com>
 Co-developed-by: Ira Weiny <ira.weiny@intel.com>
@@ -135,333 +95,219 @@ Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
 ---
 Changes for v1:
-[iweiny: Update cover letter]
+[djiang: mark sysfs entries to be in 6.10 kernel including date]
+[djbw: change dax region typing to be 'sparse' rather than 'dynamic']
+[iweiny: rebase changes to master instead of type2 patches]
 ---
- drivers/cxl/core/hdm.c  | 192 +++++++++++++++++++++++++++++++++++++++++++-----
- drivers/cxl/core/port.c |   2 +
- drivers/cxl/cxl.h       |   2 +
- 3 files changed, 179 insertions(+), 17 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-cxl | 22 +++++++++++-----------
+ drivers/cxl/core/core.h                 |  1 +
+ drivers/cxl/core/port.c                 |  1 +
+ drivers/cxl/core/region.c               | 33 +++++++++++++++++++++++++++++++++
+ drivers/dax/bus.c                       |  8 ++++++++
+ drivers/dax/bus.h                       |  1 +
+ drivers/dax/cxl.c                       | 15 +++++++++++++--
+ 7 files changed, 68 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index e22b6f4f7145..da7d58184490 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -210,6 +210,25 @@ void cxl_dpa_debug(struct seq_file *file, struct cxl_dev_state *cxlds)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_dpa_debug, CXL);
+diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+index 8a4f572c8498..f0cf52fff9fa 100644
+--- a/Documentation/ABI/testing/sysfs-bus-cxl
++++ b/Documentation/ABI/testing/sysfs-bus-cxl
+@@ -411,20 +411,20 @@ Description:
+ 		interleave_granularity).
  
-+static void cxl_skip_release(struct cxl_endpoint_decoder *cxled)
-+{
-+	struct cxl_dev_state *cxlds = cxled_to_memdev(cxled)->cxlds;
-+	struct cxl_port *port = cxled_to_port(cxled);
-+	struct device *dev = &port->dev;
-+	unsigned long index;
-+	void *entry;
-+
-+	xa_for_each(&cxled->skip_res, index, entry) {
-+		struct resource *res = entry;
-+
-+		dev_dbg(dev, "decoder%d.%d: releasing skipped space; %pr\n",
-+			port->id, cxled->cxld.id, res);
-+		__release_region(&cxlds->dpa_res, res->start,
-+				 resource_size(res));
-+		xa_erase(&cxled->skip_res, index);
-+	}
-+}
-+
- /*
-  * Must be called in a context that synchronizes against this decoder's
-  * port ->remove() callback (like an endpoint decoder sysfs attribute)
-@@ -220,15 +239,11 @@ static void __cxl_dpa_release(struct cxl_endpoint_decoder *cxled)
- 	struct cxl_port *port = cxled_to_port(cxled);
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 	struct resource *res = cxled->dpa_res;
--	resource_size_t skip_start;
  
- 	lockdep_assert_held_write(&cxl_dpa_rwsem);
+-What:		/sys/bus/cxl/devices/decoderX.Y/create_{pmem,ram}_region
+-Date:		May, 2022, January, 2023
+-KernelVersion:	v6.0 (pmem), v6.3 (ram)
++What:		/sys/bus/cxl/devices/decoderX.Y/create_{pmem,ram,dc}_region
++Date:		May, 2022, January, 2023, June 2024
++KernelVersion:	v6.0 (pmem), v6.3 (ram), v6.10 (dc)
+ Contact:	linux-cxl@vger.kernel.org
+ Description:
+ 		(RW) Write a string in the form 'regionZ' to start the process
+-		of defining a new persistent, or volatile memory region
+-		(interleave-set) within the decode range bounded by root decoder
+-		'decoderX.Y'. The value written must match the current value
+-		returned from reading this attribute. An atomic compare exchange
+-		operation is done on write to assign the requested id to a
+-		region and allocate the region-id for the next creation attempt.
+-		EBUSY is returned if the region name written does not match the
+-		current cached value.
++		of defining a new persistent, volatile, or Dynamic Capacity
++		(DC) memory region (interleave-set) within the decode range
++		bounded by root decoder 'decoderX.Y'. The value written must
++		match the current value returned from reading this attribute.
++		An atomic compare exchange operation is done on write to assign
++		the requested id to a region and allocate the region-id for the
++		next creation attempt.  EBUSY is returned if the region name
++		written does not match the current cached value.
  
--	/* save @skip_start, before @res is released */
--	skip_start = res->start - cxled->skip;
- 	__release_region(&cxlds->dpa_res, res->start, resource_size(res));
--	if (cxled->skip)
--		__release_region(&cxlds->dpa_res, skip_start, cxled->skip);
-+	cxl_skip_release(cxled);
- 	cxled->skip = 0;
- 	cxled->dpa_res = NULL;
- 	put_device(&cxled->cxld.dev);
-@@ -263,6 +278,100 @@ static int dc_mode_to_region_index(enum cxl_decoder_mode mode)
- 	return mode - CXL_DECODER_DC0;
- }
  
-+static int cxl_request_skip(struct cxl_endpoint_decoder *cxled,
-+			    resource_size_t skip_base, resource_size_t skip_len)
-+{
-+	struct cxl_dev_state *cxlds = cxled_to_memdev(cxled)->cxlds;
-+	const char *name = dev_name(&cxled->cxld.dev);
-+	struct cxl_port *port = cxled_to_port(cxled);
-+	struct resource *dpa_res = &cxlds->dpa_res;
-+	struct device *dev = &port->dev;
-+	struct resource *res;
-+	int rc;
-+
-+	res = __request_region(dpa_res, skip_base, skip_len, name, 0);
-+	if (!res)
-+		return -EBUSY;
-+
-+	rc = xa_insert(&cxled->skip_res, skip_base, res, GFP_KERNEL);
-+	if (rc) {
-+		__release_region(dpa_res, skip_base, skip_len);
-+		return rc;
-+	}
-+
-+	dev_dbg(dev, "decoder%d.%d: skipped space; %pr\n",
-+		port->id, cxled->cxld.id, res);
-+	return 0;
-+}
-+
-+static int cxl_reserve_dpa_skip(struct cxl_endpoint_decoder *cxled,
-+				resource_size_t base, resource_size_t skipped)
-+{
-+	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-+	struct cxl_port *port = cxled_to_port(cxled);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	resource_size_t skip_base = base - skipped;
-+	struct device *dev = &port->dev;
-+	resource_size_t skip_len = 0;
-+	int rc, index;
-+
-+	if (resource_size(&cxlds->ram_res) && skip_base <= cxlds->ram_res.end) {
-+		skip_len = cxlds->ram_res.end - skip_base + 1;
-+		rc = cxl_request_skip(cxled, skip_base, skip_len);
-+		if (rc)
-+			return rc;
-+		skip_base += skip_len;
-+	}
-+
-+	if (skip_base == base) {
-+		dev_dbg(dev, "skip done ram!\n");
-+		return 0;
-+	}
-+
-+	if (resource_size(&cxlds->pmem_res) &&
-+	    skip_base <= cxlds->pmem_res.end) {
-+		skip_len = cxlds->pmem_res.end - skip_base + 1;
-+		rc = cxl_request_skip(cxled, skip_base, skip_len);
-+		if (rc)
-+			return rc;
-+		skip_base += skip_len;
-+	}
-+
-+	index = dc_mode_to_region_index(cxled->mode);
-+	for (int i = 0; i <= index; i++) {
-+		struct resource *dcr = &cxlds->dc_res[i];
-+
-+		if (skip_base < dcr->start) {
-+			skip_len = dcr->start - skip_base;
-+			rc = cxl_request_skip(cxled, skip_base, skip_len);
-+			if (rc)
-+				return rc;
-+			skip_base += skip_len;
-+		}
-+
-+		if (skip_base == base) {
-+			dev_dbg(dev, "skip done DC region %d!\n", i);
-+			break;
-+		}
-+
-+		if (resource_size(dcr) && skip_base <= dcr->end) {
-+			if (skip_base > base) {
-+				dev_err(dev, "Skip error DC region %d; skip_base %pa; base %pa\n",
-+					i, &skip_base, &base);
-+				return -ENXIO;
-+			}
-+
-+			skip_len = dcr->end - skip_base + 1;
-+			rc = cxl_request_skip(cxled, skip_base, skip_len);
-+			if (rc)
-+				return rc;
-+			skip_base += skip_len;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
- 			     resource_size_t base, resource_size_t len,
- 			     resource_size_t skipped)
-@@ -300,13 +409,12 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
- 	}
- 
- 	if (skipped) {
--		res = __request_region(&cxlds->dpa_res, base - skipped, skipped,
--				       dev_name(&cxled->cxld.dev), 0);
--		if (!res) {
--			dev_dbg(dev,
--				"decoder%d.%d: failed to reserve skipped space\n",
--				port->id, cxled->cxld.id);
--			return -EBUSY;
-+		int rc = cxl_reserve_dpa_skip(cxled, base, skipped);
-+
-+		if (rc) {
-+			dev_dbg(dev, "decoder%d.%d: failed to reserve skipped space; %pa - %pa\n",
-+				port->id, cxled->cxld.id, &base, &skipped);
-+			return rc;
- 		}
- 	}
- 	res = __request_region(&cxlds->dpa_res, base, len,
-@@ -314,14 +422,20 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
- 	if (!res) {
- 		dev_dbg(dev, "decoder%d.%d: failed to reserve allocation\n",
- 			port->id, cxled->cxld.id);
--		if (skipped)
--			__release_region(&cxlds->dpa_res, base - skipped,
--					 skipped);
-+		cxl_skip_release(cxled);
- 		return -EBUSY;
- 	}
- 	cxled->dpa_res = res;
- 	cxled->skip = skipped;
- 
-+	for (int mode = CXL_DECODER_DC0; mode <= CXL_DECODER_DC7; mode++) {
-+		int index = dc_mode_to_region_index(mode);
-+
-+		if (resource_contains(&cxlds->dc_res[index], res)) {
-+			cxled->mode = mode;
-+			goto success;
-+		}
-+	}
- 	if (resource_contains(&cxlds->pmem_res, res))
- 		cxled->mode = CXL_DECODER_PMEM;
- 	else if (resource_contains(&cxlds->ram_res, res))
-@@ -332,6 +446,9 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
- 		cxled->mode = CXL_DECODER_MIXED;
- 	}
- 
-+success:
-+	dev_dbg(dev, "decoder%d.%d: %pr mode: %d\n", port->id, cxled->cxld.id,
-+		cxled->dpa_res, cxled->mode);
- 	port->hdm_end++;
- 	get_device(&cxled->cxld.dev);
- 	return 0;
-@@ -463,14 +580,14 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
- 
- int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
- {
-+	resource_size_t free_ram_start, free_pmem_start, free_dc_start;
- 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
--	resource_size_t free_ram_start, free_pmem_start;
- 	struct cxl_port *port = cxled_to_port(cxled);
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 	struct device *dev = &cxled->cxld.dev;
- 	resource_size_t start, avail, skip;
- 	struct resource *p, *last;
--	int rc;
-+	int rc, dc_index;
- 
- 	down_write(&cxl_dpa_rwsem);
- 	if (cxled->cxld.region) {
-@@ -500,6 +617,21 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
- 	else
- 		free_pmem_start = cxlds->pmem_res.start;
- 
-+	/*
-+	 * Limit each decoder to a single DC region to map memory with
-+	 * different DSMAS entry.
-+	 */
-+	dc_index = dc_mode_to_region_index(cxled->mode);
-+	if (dc_index >= 0) {
-+		if (cxlds->dc_res[dc_index].child) {
-+			dev_err(dev, "Cannot allocate DPA from DC Region: %d\n",
-+				dc_index);
-+			rc = -EINVAL;
-+			goto out;
-+		}
-+		free_dc_start = cxlds->dc_res[dc_index].start;
-+	}
-+
- 	if (cxled->mode == CXL_DECODER_RAM) {
- 		start = free_ram_start;
- 		avail = cxlds->ram_res.end - start + 1;
-@@ -521,12 +653,38 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
- 		else
- 			skip_end = start - 1;
- 		skip = skip_end - skip_start + 1;
-+	} else if (cxl_decoder_mode_is_dc(cxled->mode)) {
-+		resource_size_t skip_start, skip_end;
-+
-+		start = free_dc_start;
-+		avail = cxlds->dc_res[dc_index].end - start + 1;
-+		if ((resource_size(&cxlds->pmem_res) == 0) || !cxlds->pmem_res.child)
-+			skip_start = free_ram_start;
-+		else
-+			skip_start = free_pmem_start;
-+		/*
-+		 * If any dc region is already mapped, then that allocation
-+		 * already handled the RAM and PMEM skip.  Check for DC region
-+		 * skip.
-+		 */
-+		for (int i = dc_index - 1; i >= 0 ; i--) {
-+			if (cxlds->dc_res[i].child) {
-+				skip_start = cxlds->dc_res[i].child->end + 1;
-+				break;
-+			}
-+		}
-+
-+		skip_end = start - 1;
-+		skip = skip_end - skip_start + 1;
- 	} else {
- 		dev_dbg(dev, "mode not set\n");
- 		rc = -EINVAL;
- 		goto out;
- 	}
- 
-+	dev_dbg(dev, "DPA Allocation start: %pa len: %#llx Skip: %pa\n",
-+		&start, size, &skip);
-+
- 	if (size > avail) {
- 		dev_dbg(dev, "%pa exceeds available %s capacity: %pa\n", &size,
- 			cxled->mode == CXL_DECODER_RAM ? "ram" : "pmem",
+ What:		/sys/bus/cxl/devices/decoderX.Y/delete_region
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index 3b64fb1b9ed0..91abeffbe985 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -13,6 +13,7 @@ extern struct attribute_group cxl_base_attribute_group;
+ #ifdef CONFIG_CXL_REGION
+ extern struct device_attribute dev_attr_create_pmem_region;
+ extern struct device_attribute dev_attr_create_ram_region;
++extern struct device_attribute dev_attr_create_dc_region;
+ extern struct device_attribute dev_attr_delete_region;
+ extern struct device_attribute dev_attr_region;
+ extern const struct device_type cxl_pmem_region_type;
 diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 80c0651794eb..036b61cb3007 100644
+index 036b61cb3007..661177b575f7 100644
 --- a/drivers/cxl/core/port.c
 +++ b/drivers/cxl/core/port.c
-@@ -434,6 +434,7 @@ static void cxl_endpoint_decoder_release(struct device *dev)
- 	struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(dev);
+@@ -335,6 +335,7 @@ static struct attribute *cxl_decoder_root_attrs[] = {
+ 	&dev_attr_qos_class.attr,
+ 	SET_CXL_REGION_ATTR(create_pmem_region)
+ 	SET_CXL_REGION_ATTR(create_ram_region)
++	SET_CXL_REGION_ATTR(create_dc_region)
+ 	SET_CXL_REGION_ATTR(delete_region)
+ 	NULL,
+ };
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index ec3b8c6948e9..0d7b09a49dcf 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2205,6 +2205,7 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
+ 	switch (mode) {
+ 	case CXL_REGION_RAM:
+ 	case CXL_REGION_PMEM:
++	case CXL_REGION_DC:
+ 		break;
+ 	default:
+ 		dev_err(&cxlrd->cxlsd.cxld.dev, "unsupported mode %s\n",
+@@ -2314,6 +2315,32 @@ static ssize_t create_ram_region_store(struct device *dev,
+ }
+ DEVICE_ATTR_RW(create_ram_region);
  
- 	__cxl_decoder_release(&cxled->cxld);
-+	xa_destroy(&cxled->skip_res);
- 	kfree(cxled);
++static ssize_t create_dc_region_show(struct device *dev,
++				     struct device_attribute *attr, char *buf)
++{
++	return __create_region_show(to_cxl_root_decoder(dev), buf);
++}
++
++static ssize_t create_dc_region_store(struct device *dev,
++				      struct device_attribute *attr,
++				      const char *buf, size_t len)
++{
++	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev);
++	struct cxl_region *cxlr;
++	int rc, id;
++
++	rc = sscanf(buf, "region%d\n", &id);
++	if (rc != 1)
++		return -EINVAL;
++
++	cxlr = __create_region(cxlrd, CXL_REGION_DC, id);
++	if (IS_ERR(cxlr))
++		return PTR_ERR(cxlr);
++
++	return len;
++}
++DEVICE_ATTR_RW(create_dc_region);
++
+ static ssize_t region_show(struct device *dev, struct device_attribute *attr,
+ 			   char *buf)
+ {
+@@ -2759,6 +2786,11 @@ static int devm_cxl_add_dax_region(struct cxl_region *cxlr)
+ 	struct device *dev;
+ 	int rc;
+ 
++	if (cxlr->mode == CXL_REGION_DC && cxlr->params.interleave_ways != 1) {
++		dev_err(&cxlr->dev, "Interleaving DC not supported\n");
++		return -EINVAL;
++	}
++
+ 	cxlr_dax = cxl_dax_region_alloc(cxlr);
+ 	if (IS_ERR(cxlr_dax))
+ 		return PTR_ERR(cxlr_dax);
+@@ -3040,6 +3072,7 @@ static int cxl_region_probe(struct device *dev)
+ 	case CXL_REGION_PMEM:
+ 		return devm_cxl_add_pmem_region(cxlr);
+ 	case CXL_REGION_RAM:
++	case CXL_REGION_DC:
+ 		/*
+ 		 * The region can not be manged by CXL if any portion of
+ 		 * it is already online as 'System RAM'
+diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+index cb148f74ceda..903566aff5eb 100644
+--- a/drivers/dax/bus.c
++++ b/drivers/dax/bus.c
+@@ -181,6 +181,11 @@ static bool is_static(struct dax_region *dax_region)
+ 	return (dax_region->res.flags & IORESOURCE_DAX_STATIC) != 0;
  }
  
-@@ -1896,6 +1897,7 @@ struct cxl_endpoint_decoder *cxl_endpoint_decoder_alloc(struct cxl_port *port)
- 		return ERR_PTR(-ENOMEM);
++static bool is_sparse(struct dax_region *dax_region)
++{
++	return (dax_region->res.flags & IORESOURCE_DAX_SPARSE_CAP) != 0;
++}
++
+ bool static_dev_dax(struct dev_dax *dev_dax)
+ {
+ 	return is_static(dev_dax->region);
+@@ -304,6 +309,9 @@ static unsigned long long dax_region_avail_size(struct dax_region *dax_region)
  
- 	cxled->pos = -1;
-+	xa_init(&cxled->skip_res);
- 	cxld = &cxled->cxld;
- 	rc = cxl_decoder_init(port, cxld);
- 	if (rc)	 {
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 3b8935089c0c..15d418b3bc9b 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -441,6 +441,7 @@ enum cxl_decoder_state {
-  * @cxld: base cxl_decoder_object
-  * @dpa_res: actively claimed DPA span of this decoder
-  * @skip: offset into @dpa_res where @cxld.hpa_range maps
-+ * @skip_res: array of skipped resources from the previous decoder end
-  * @mode: which memory type / access-mode-partition this decoder targets
-  * @state: autodiscovery state
-  * @pos: interleave position in @cxld.region
-@@ -449,6 +450,7 @@ struct cxl_endpoint_decoder {
- 	struct cxl_decoder cxld;
- 	struct resource *dpa_res;
- 	resource_size_t skip;
-+	struct xarray skip_res;
- 	enum cxl_decoder_mode mode;
- 	enum cxl_decoder_state state;
- 	int pos;
+ 	WARN_ON_ONCE(!rwsem_is_locked(&dax_region_rwsem));
+ 
++	if (is_sparse(dax_region))
++		return 0;
++
+ 	for_each_dax_region_resource(dax_region, res)
+ 		size -= resource_size(res);
+ 	return size;
+diff --git a/drivers/dax/bus.h b/drivers/dax/bus.h
+index cbbf64443098..783bfeef42cc 100644
+--- a/drivers/dax/bus.h
++++ b/drivers/dax/bus.h
+@@ -13,6 +13,7 @@ struct dax_region;
+ /* dax bus specific ioresource flags */
+ #define IORESOURCE_DAX_STATIC BIT(0)
+ #define IORESOURCE_DAX_KMEM BIT(1)
++#define IORESOURCE_DAX_SPARSE_CAP BIT(2)
+ 
+ struct dax_region *alloc_dax_region(struct device *parent, int region_id,
+ 		struct range *range, int target_node, unsigned int align,
+diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
+index c696837ab23c..415d03fbf9b6 100644
+--- a/drivers/dax/cxl.c
++++ b/drivers/dax/cxl.c
+@@ -13,19 +13,30 @@ static int cxl_dax_region_probe(struct device *dev)
+ 	struct cxl_region *cxlr = cxlr_dax->cxlr;
+ 	struct dax_region *dax_region;
+ 	struct dev_dax_data data;
++	resource_size_t dev_size;
++	unsigned long flags;
+ 
+ 	if (nid == NUMA_NO_NODE)
+ 		nid = memory_add_physaddr_to_nid(cxlr_dax->hpa_range.start);
+ 
++	flags = IORESOURCE_DAX_KMEM;
++	if (cxlr->mode == CXL_REGION_DC)
++		flags |= IORESOURCE_DAX_SPARSE_CAP;
++
+ 	dax_region = alloc_dax_region(dev, cxlr->id, &cxlr_dax->hpa_range, nid,
+-				      PMD_SIZE, IORESOURCE_DAX_KMEM);
++				      PMD_SIZE, flags);
+ 	if (!dax_region)
+ 		return -ENOMEM;
+ 
++	dev_size = range_len(&cxlr_dax->hpa_range);
++	/* Add empty seed dax device */
++	if (cxlr->mode == CXL_REGION_DC)
++		dev_size = 0;
++
+ 	data = (struct dev_dax_data) {
+ 		.dax_region = dax_region,
+ 		.id = -1,
+-		.size = range_len(&cxlr_dax->hpa_range),
++		.size = dev_size,
+ 		.memmap_on_memory = true,
+ 	};
+ 
 
 -- 
 2.44.0
