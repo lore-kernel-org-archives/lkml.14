@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57EC31DD2DF;
-	Sun, 24 Mar 2024 22:52:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89AD086AEE;
+	Sun, 24 Mar 2024 22:52:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320730; cv=none; b=s5/Ng4bq2a9RocwSQLszS4hpgjPn0RXb9kL4U6bQR+1ADsGSczjWLyTYZmZaWAB56QNsYQiZ7UILE/QW6gTy1KdKepbVO8kJPyULSJEfGSCB3zgbJyUNHFyqR3ggT82y/bFg21rv2wRd5vEcEsryTWGIRiFje2Hf6FzxkZs0be8=
+	t=1711320723; cv=none; b=qKOl4+Ej7E14/dcJq3YewyMi/gOHxmy+weHV/HzCginCdYlWPlm+t2sw6ZH9E6Yog5drbE+zj7RNywJNwB6KV4Ta/iLLol3JknuT67GE6jPahoY6kpe07K1NMGgqKwXkgtRE8ITtcEiTxo+j17CHEg6NRruVlTlRTVUO9dtGvsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320730; c=relaxed/simple;
-	bh=v/fESFmUSW40UM2hj5S3JboOxncvfxWDP/34gyFSfCA=;
+	s=arc-20240116; t=1711320723; c=relaxed/simple;
+	bh=hOu54R0CvjRNb00hBid0gj+TQQnq3KD9I1H5Vd8dGLg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uevon26qrrRoNrpPIUYjrVPKVZifsdwslCg2mczldQaxqWo/y9Vx0jCEYeGWWwsbX0blPo60lfQfToTqhqbghKc115KSAwSOyPC9fp4u1/EfNl37HWRiGxWaCpKFH7reXvAxLZvk11uruO4fNv9c0saeHJZWphkUmLLKZH8aWFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NSIvHMr7; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FOi+gWHO9Br2PUv6PlAZjFxjvy+63Pbzyrn+hPgTJA1pjRAcaubLxCvL8nIMEe2f2DsmC8WLMpHdaq/OvV2xSrGwWNLXBsZd6gkheOnWYwVWIKhWzpX4eVZmg9QV4YGu6R9HAUc7zfxgUh87dEPoPpRabq5sL+iXLQ4fJgZxC7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fNblo+vR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NSIvHMr7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E2FFC433C7;
-	Sun, 24 Mar 2024 22:52:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fNblo+vR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF8CFC433C7;
+	Sun, 24 Mar 2024 22:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320729;
-	bh=v/fESFmUSW40UM2hj5S3JboOxncvfxWDP/34gyFSfCA=;
+	s=k20201202; t=1711320722;
+	bh=hOu54R0CvjRNb00hBid0gj+TQQnq3KD9I1H5Vd8dGLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NSIvHMr7wkxmtcwG8MCgDQbypkqe9ockD+NHzoHmfjZYyPupVT/Mlu1MKBjmkP3xM
-	 btodU8YhsqQwqYn0O1fsskyVS+o1BLiInhdr/xzHNINiAygLXf9ExqR4ElZ0Fxalgi
-	 p+jp3I8KKUd1pmPumzNdXNbYyMxHFYJJzUmBXwszBONFIaciQxy/JJDaUIuQrq11dy
-	 B3P7nhya0H+egFPMKZpXB1qYSvlMYbOD8Lcldej7T47GwfsFjGAxrgAevEbVtmNNHW
-	 4tNt7A258yAsw67JfV6MgYmT9VcM+NigF4eCt/eFvfgV8/XPKVP0mqzWkcnRvseIn6
-	 qViBoeWPGQBHw==
+	b=fNblo+vRE7ajKnkS8LD9HzhyP/AZuA3tEiLzrKmsFH9fnCa9Ubiaw7OP2HZgK1+3t
+	 yQu+rmCnlsBkeYdsYaioFEUtGiLF3JzdUTTYBZ0T27Ph8HTjTdOzVSCENyr2HrPE7H
+	 /XQ7vuch54UchbE3K0YCKal6FBdVS0eo5qrh4xGMXsMM9Ck3TworJ7XfyDbuM9gduK
+	 /Nry2gXigg+qXGyFpkOWp9fHBSbtk4jb38NYmoMubhEPEZ4AtlfiiOmn84UocxmopM
+	 KIfrpB8O6jTf+cMEQktjWQsAnFYkaD6VPnWW+Vcq4TMDbkHJipEGV9ffzYzR1K0IV4
+	 3EwRebPqDEtHA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Deren Wu <deren.wu@mediatek.com>,
+Cc: Hao Zhang <hao.zhang@mediatek.com>,
 	Ming Yen Hsieh <mingyen.hsieh@mediatek.com>,
 	Felix Fietkau <nbd@nbd.name>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 292/713] wifi: mt76: mt7925: update PCIe DMA settings
-Date: Sun, 24 Mar 2024 18:40:18 -0400
-Message-ID: <20240324224720.1345309-293-sashal@kernel.org>
+Subject: [PATCH 6.7 285/713] wifi: mt76: mt7925: fix mcu query command fail
+Date: Sun, 24 Mar 2024 18:40:11 -0400
+Message-ID: <20240324224720.1345309-286-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,90 +49,44 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Deren Wu <deren.wu@mediatek.com>
+From: Hao Zhang <hao.zhang@mediatek.com>
 
-[ Upstream commit 0844947ccf64ea45edf6619ae2ba6dd9098b3308 ]
+[ Upstream commit 2f475cb63eb304bdbb58c9b07b0547ca6c343012 ]
 
-Fix the wrong WFDMA settings to improve TX performance.
+Apply query command type properly to make the chip send the response back.
+Otherwise, we may see the command timeout in driver side.
 
 Fixes: c948b5da6bbe ("wifi: mt76: mt7925: add Mediatek Wi-Fi7 driver for mt7925 chips")
-Signed-off-by: Deren Wu <deren.wu@mediatek.com>
+Signed-off-by: Hao Zhang <hao.zhang@mediatek.com>
 Signed-off-by: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
 Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt792x_dma.c  | 13 ++++++++++---
- drivers/net/wireless/mediatek/mt76/mt792x_regs.h |  5 +++++
- 2 files changed, 15 insertions(+), 3 deletions(-)
+ drivers/net/wireless/mediatek/mt76/mt7925/mcu.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt792x_dma.c b/drivers/net/wireless/mediatek/mt76/mt792x_dma.c
-index 488326ce5ed4d..8fa36b59e738d 100644
---- a/drivers/net/wireless/mediatek/mt76/mt792x_dma.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt792x_dma.c
-@@ -123,14 +123,13 @@ static void mt792x_dma_prefetch(struct mt792x_dev *dev)
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
+index 322198b20c0d3..8474b6d215dc3 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
+@@ -2850,12 +2850,16 @@ int mt7925_mcu_fill_message(struct mt76_dev *mdev, struct sk_buff *skb,
+ 	if (cmd & __MCU_CMD_FIELD_UNI) {
+ 		uni_txd = (struct mt76_connac2_mcu_uni_txd *)txd;
+ 		uni_txd->len = cpu_to_le16(skb->len - sizeof(uni_txd->txd));
+-		uni_txd->option = MCU_CMD_UNI_EXT_ACK;
+ 		uni_txd->cid = cpu_to_le16(mcu_cmd);
+ 		uni_txd->s2d_index = MCU_S2D_H2N;
+ 		uni_txd->pkt_type = MCU_PKT_ID;
+ 		uni_txd->seq = seq;
  
- int mt792x_dma_enable(struct mt792x_dev *dev)
- {
--	if (is_mt7925(&dev->mt76))
--		mt76_rmw(dev, MT_UWFDMA0_GLO_CFG_EXT1, BIT(28), BIT(28));
--
- 	/* configure perfetch settings */
- 	mt792x_dma_prefetch(dev);
++		if (cmd & __MCU_CMD_FIELD_QUERY)
++			uni_txd->option = MCU_CMD_UNI_QUERY_ACK;
++		else
++			uni_txd->option = MCU_CMD_UNI_EXT_ACK;
++
+ 		goto exit;
+ 	}
  
- 	/* reset dma idx */
- 	mt76_wr(dev, MT_WFDMA0_RST_DTX_PTR, ~0);
-+	if (is_mt7925(&dev->mt76))
-+		mt76_wr(dev, MT_WFDMA0_RST_DRX_PTR, ~0);
- 
- 	/* configure delay interrupt */
- 	mt76_wr(dev, MT_WFDMA0_PRI_DLY_INT_CFG0, 0);
-@@ -140,12 +139,20 @@ int mt792x_dma_enable(struct mt792x_dev *dev)
- 		 MT_WFDMA0_GLO_CFG_FIFO_LITTLE_ENDIAN |
- 		 MT_WFDMA0_GLO_CFG_CLK_GAT_DIS |
- 		 MT_WFDMA0_GLO_CFG_OMIT_TX_INFO |
-+		 FIELD_PREP(MT_WFDMA0_GLO_CFG_DMA_SIZE, 3) |
-+		 MT_WFDMA0_GLO_CFG_FIFO_DIS_CHECK |
-+		 MT_WFDMA0_GLO_CFG_RX_WB_DDONE |
- 		 MT_WFDMA0_GLO_CFG_CSR_DISP_BASE_PTR_CHAIN_EN |
- 		 MT_WFDMA0_GLO_CFG_OMIT_RX_INFO_PFET2);
- 
- 	mt76_set(dev, MT_WFDMA0_GLO_CFG,
- 		 MT_WFDMA0_GLO_CFG_TX_DMA_EN | MT_WFDMA0_GLO_CFG_RX_DMA_EN);
- 
-+	if (is_mt7925(&dev->mt76)) {
-+		mt76_rmw(dev, MT_UWFDMA0_GLO_CFG_EXT1, BIT(28), BIT(28));
-+		mt76_set(dev, MT_WFDMA0_INT_RX_PRI, 0x0F00);
-+		mt76_set(dev, MT_WFDMA0_INT_TX_PRI, 0x7F00);
-+	}
- 	mt76_set(dev, MT_WFDMA_DUMMY_CR, MT_WFDMA_NEED_REINIT);
- 
- 	/* enable interrupts for TX/RX rings */
-diff --git a/drivers/net/wireless/mediatek/mt76/mt792x_regs.h b/drivers/net/wireless/mediatek/mt76/mt792x_regs.h
-index d7f9b24cd665f..458cfd0260b13 100644
---- a/drivers/net/wireless/mediatek/mt76/mt792x_regs.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt792x_regs.h
-@@ -292,9 +292,12 @@
- #define MT_WFDMA0_GLO_CFG_TX_DMA_BUSY	BIT(1)
- #define MT_WFDMA0_GLO_CFG_RX_DMA_EN	BIT(2)
- #define MT_WFDMA0_GLO_CFG_RX_DMA_BUSY	BIT(3)
-+#define MT_WFDMA0_GLO_CFG_DMA_SIZE	GENMASK(5, 4)
- #define MT_WFDMA0_GLO_CFG_TX_WB_DDONE	BIT(6)
- #define MT_WFDMA0_GLO_CFG_FW_DWLD_BYPASS_DMASHDL BIT(9)
-+#define MT_WFDMA0_GLO_CFG_FIFO_DIS_CHECK	BIT(11)
- #define MT_WFDMA0_GLO_CFG_FIFO_LITTLE_ENDIAN	BIT(12)
-+#define MT_WFDMA0_GLO_CFG_RX_WB_DDONE	BIT(13)
- #define MT_WFDMA0_GLO_CFG_CSR_DISP_BASE_PTR_CHAIN_EN BIT(15)
- #define MT_WFDMA0_GLO_CFG_OMIT_RX_INFO_PFET2	BIT(21)
- #define MT_WFDMA0_GLO_CFG_OMIT_RX_INFO	BIT(27)
-@@ -322,6 +325,8 @@
- 
- #define MT_WFDMA0_RST_DTX_PTR		MT_WFDMA0(0x20c)
- #define MT_WFDMA0_RST_DRX_PTR		MT_WFDMA0(0x280)
-+#define MT_WFDMA0_INT_RX_PRI		MT_WFDMA0(0x298)
-+#define MT_WFDMA0_INT_TX_PRI		MT_WFDMA0(0x29c)
- #define MT_WFDMA0_GLO_CFG_EXT0		MT_WFDMA0(0x2b0)
- #define MT_WFDMA0_CSR_TX_DMASHDL_ENABLE	BIT(6)
- #define MT_WFDMA0_PRI_DLY_INT_CFG0	MT_WFDMA0(0x2f0)
 -- 
 2.43.0
 
