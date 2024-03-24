@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C826273DBB;
-	Sun, 24 Mar 2024 23:35:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9042821953A;
+	Sun, 24 Mar 2024 23:35:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323332; cv=none; b=BUlBQj+lIqaFUe8dOIiZfv9Zi1WNyi2rqsuj01N7gZMhqJvXtzTzTP36Dx5TuOlT7kdtXq7a+SYCb0hMjX2aU1QFzNOQW2VyHUsWq9hEqVYjHJGDub8C9vJ3K3AQPVhi9F/JpTgvsKIc49n8Ll9H+gxFzsRzs1B/mAfIzJsR02U=
+	t=1711323349; cv=none; b=LfUvWYuRgOtOQyRzYQLpw5/o9kprUB7EX7GaSMckYHS2rVnDslRnQEJz5S9Ei38wGH1Swt/+tIF558DlJcZ7HEXfSvwYUXkBrNDp9xpeenvWA8mR79mXggUIkKijI0Yu39d7LH6cDAND5XP+U2LiyyHjk7aF10Nk3VeUHeGwOZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323332; c=relaxed/simple;
-	bh=6p7GtlaV3i7BYeRheWHSBY+UMq556/KqSfeQ7J31cXQ=;
+	s=arc-20240116; t=1711323349; c=relaxed/simple;
+	bh=2REYRR3vG1n+VWSclweLeQyiFhonzjceeaMjCWgigcQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YAk4Nhr8LuMh3lFOIseM7xxeP9QWYBokTZVSUVdr9GOkMR4gDI2chj33qjDxFXxK8f7QjqxXyEhYvKx+GIRYv2S1xm/eBapjBL8a6VYZTZHQu4ky4r0TDAObdoa+9pQQg9OKFkpsA5iqkfkLtkuyg/yt/6m/q1p2+U+zBGPS1QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IdRJcqiW; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WQW6DXAa8QqWgBpNxTxoWmmUZimgYmkgaWwZMwCqFJJz/8t+ERMaSzaBhNlCXzjxYhb8fRVwHp3W4A+8lzhXcNv3QRcSa1cOfj2WMAt5dlGk7t+FEl7Oouu4xFVvV1UNrtPOMy/IEQ1LNdLIFqnzpDJWD9f1nl4UfYLYN0L16E8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EuFP+JKw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IdRJcqiW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F149BC3277D;
-	Sun, 24 Mar 2024 23:35:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EuFP+JKw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B12A9C43399;
+	Sun, 24 Mar 2024 23:35:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323330;
-	bh=6p7GtlaV3i7BYeRheWHSBY+UMq556/KqSfeQ7J31cXQ=;
+	s=k20201202; t=1711323348;
+	bh=2REYRR3vG1n+VWSclweLeQyiFhonzjceeaMjCWgigcQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IdRJcqiWy6UsnxLPkBeN33c9l+l10a2ahaO1CJmqzZ8ApebmgY5cFumCZNIjfk+2Z
-	 7ZPpID3Gc1aQ53SXBWt/p264DAmt+aN/9FB82Zp8amJ+icDp56buQ0CXyK3w8D+dlN
-	 TRDX6LGPW7ZZISErlXGXjMlhgTPJKxd9keG7mOlM30fFrKPJrstzzVokw0WZ0eStLO
-	 vW2FrxNyidyyzrPsoYJuHT1gvI5vQPwrR38G7Gt7r8Kr4wylyTHsJ5hateVaapoWlg
-	 VqC0cK5ah9dmIxv3UYPQb19zUnhL24avS+rvbhkLCCRNARhj/SQJMgG35B9iDerhiV
-	 JgotoCfkWwmjQ==
+	b=EuFP+JKwDWZ2QMxy3PlPHv9vBrij9FvmvMZrzwgHa2UxoEbo4FAo4obU4ljN9NzXy
+	 QLer94242o2sxl0ww4i2AIMS+vQAxuowBaaUbYRknp5YnTcID2Pd7xgsaTdRuSgqPB
+	 qCBU7WrUlnIY97Vmoa+44MCS3pbGULXWPObuBcTzclwpnuXgJecismKhnk5SdryZlq
+	 naxs/BAh+KEBvVceKdOWbCZbBAK4oPHXcqyH3p6YXVBru0NoYVm2PKiBhMywcAKpBY
+	 oX+BgWNG5cq2Wj0zexOAYeDC8H4leEV3d9gbq5waJH31wNQH+KvQlHAOuEycGQ4zAD
+	 MoIzDaw+lJJvA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	Chuck Lever III <chuck.lever@oracle.com>,
-	syzbot+09b349b3066c2e0b1e96@syzkaller.appspotmail.com,
-	Jan Kara <jack@suse.cz>,
-	Christian Brauner <brauner@kernel.org>,
+Cc: Peter Hilber <peter.hilber@opensynergy.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	John Stultz <jstultz@google.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 031/317] do_sys_name_to_handle(): use kzalloc() to fix kernel-infoleak
-Date: Sun, 24 Mar 2024 19:30:11 -0400
-Message-ID: <20240324233458.1352854-32-sashal@kernel.org>
+Subject: [PATCH 5.15 048/317] timekeeping: Fix cross-timestamp interpolation for non-x86
+Date: Sun, 24 Mar 2024 19:30:28 -0400
+Message-ID: <20240324233458.1352854-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -51,70 +49,56 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+From: Peter Hilber <peter.hilber@opensynergy.com>
 
-[ Upstream commit 3948abaa4e2be938ccdfc289385a27342fb13d43 ]
+[ Upstream commit 14274d0bd31b4debf28284604589f596ad2e99f2 ]
 
-syzbot identified a kernel information leak vulnerability in
-do_sys_name_to_handle() and issued the following report [1].
+So far, get_device_system_crosststamp() unconditionally passes
+system_counterval.cycles to timekeeping_cycles_to_ns(). But when
+interpolating system time (do_interp == true), system_counterval.cycles is
+before tkr_mono.cycle_last, contrary to the timekeeping_cycles_to_ns()
+expectations.
 
-[1]
-"BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
-BUG: KMSAN: kernel-infoleak in _copy_to_user+0xbc/0x100 lib/usercopy.c:40
- instrument_copy_to_user include/linux/instrumented.h:114 [inline]
- _copy_to_user+0xbc/0x100 lib/usercopy.c:40
- copy_to_user include/linux/uaccess.h:191 [inline]
- do_sys_name_to_handle fs/fhandle.c:73 [inline]
- __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]
- __se_sys_name_to_handle_at+0x949/0xb10 fs/fhandle.c:94
- __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94
- ...
+On x86, CONFIG_CLOCKSOURCE_VALIDATE_LAST_CYCLE will mitigate on
+interpolating, setting delta to 0. With delta == 0, xtstamp->sys_monoraw
+and xtstamp->sys_realtime are then set to the last update time, as
+implicitly expected by adjust_historical_crosststamp(). On other
+architectures, the resulting nonsense xtstamp->sys_monoraw and
+xtstamp->sys_realtime corrupt the xtstamp (ts) adjustment in
+adjust_historical_crosststamp().
 
-Uninit was created at:
- slab_post_alloc_hook+0x129/0xa70 mm/slab.h:768
- slab_alloc_node mm/slub.c:3478 [inline]
- __kmem_cache_alloc_node+0x5c9/0x970 mm/slub.c:3517
- __do_kmalloc_node mm/slab_common.c:1006 [inline]
- __kmalloc+0x121/0x3c0 mm/slab_common.c:1020
- kmalloc include/linux/slab.h:604 [inline]
- do_sys_name_to_handle fs/fhandle.c:39 [inline]
- __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]
- __se_sys_name_to_handle_at+0x441/0xb10 fs/fhandle.c:94
- __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94
- ...
+Fix this by deriving xtstamp->sys_monoraw and xtstamp->sys_realtime from
+the last update time when interpolating, by using the local variable
+"cycles". The local variable already has the right value when
+interpolating, unlike system_counterval.cycles.
 
-Bytes 18-19 of 20 are uninitialized
-Memory access of size 20 starts at ffff888128a46380
-Data copied to user address 0000000020000240"
-
-Per Chuck Lever's suggestion, use kzalloc() instead of kmalloc() to
-solve the problem.
-
-Fixes: 990d6c2d7aee ("vfs: Add name to file handle conversion support")
-Suggested-by: Chuck Lever III <chuck.lever@oracle.com>
-Reported-and-tested-by: <syzbot+09b349b3066c2e0b1e96@syzkaller.appspotmail.com>
-Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Link: https://lore.kernel.org/r/20240119153906.4367-1-n.zhandarovich@fintech.ru
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+Fixes: 2c756feb18d9 ("time: Add history to cross timestamp interface supporting slower devices")
+Signed-off-by: Peter Hilber <peter.hilber@opensynergy.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: John Stultz <jstultz@google.com>
+Link: https://lore.kernel.org/r/20231218073849.35294-4-peter.hilber@opensynergy.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fhandle.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/time/timekeeping.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/fs/fhandle.c b/fs/fhandle.c
-index 6630c69c23a2a..55e5ffacc0e40 100644
---- a/fs/fhandle.c
-+++ b/fs/fhandle.c
-@@ -37,7 +37,7 @@ static long do_sys_name_to_handle(struct path *path,
- 	if (f_handle.handle_bytes > MAX_HANDLE_SZ)
- 		return -EINVAL;
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index d21280b3b2ea7..dfa6649c490de 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -1244,10 +1244,8 @@ int get_device_system_crosststamp(int (*get_time_fn)
+ 				      tk_core.timekeeper.offs_real);
+ 		base_raw = tk->tkr_raw.base;
  
--	handle = kmalloc(sizeof(struct file_handle) + f_handle.handle_bytes,
-+	handle = kzalloc(sizeof(struct file_handle) + f_handle.handle_bytes,
- 			 GFP_KERNEL);
- 	if (!handle)
- 		return -ENOMEM;
+-		nsec_real = timekeeping_cycles_to_ns(&tk->tkr_mono,
+-						     system_counterval.cycles);
+-		nsec_raw = timekeeping_cycles_to_ns(&tk->tkr_raw,
+-						    system_counterval.cycles);
++		nsec_real = timekeeping_cycles_to_ns(&tk->tkr_mono, cycles);
++		nsec_raw = timekeeping_cycles_to_ns(&tk->tkr_raw, cycles);
+ 	} while (read_seqcount_retry(&tk_core.seq, seq));
+ 
+ 	xtstamp->sys_realtime = ktime_add_ns(base_real, nsec_real);
 -- 
 2.43.0
 
