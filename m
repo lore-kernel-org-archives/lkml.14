@@ -1,41 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC97923A758;
-	Sun, 24 Mar 2024 23:19:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFCEB15FA64;
+	Sun, 24 Mar 2024 23:19:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322346; cv=none; b=RydoWUBibvhtpNnAREGkILxswXaRjKvGxw+pXKpzEhI0mqg+5jNK/X/0elOI/LB0nXxgnhDjaOv9D4EWELLvX7dJMjWznLRrUIhNtuZ78MDAilMX2Gw92xDVTQLyfOnMFY569rsRrkqP8Bm9YcmU+b4YNPSvbN62Q9QVUXWaESo=
+	t=1711322351; cv=none; b=NBL1GhxOY1u42w1/Ia9ap9LaYIPPKRI5RPBNmuBRsYf/fN7px0T4eLX8UVk9B9JSvnpIg+1d2DGeKCxrgJ8sLhcShqmpHRtCh7ZWwXd+sVw7vkI0B2SV43dKMKA3c2PCaqBUy8EA49x7EbNBWS6N2yDiIyQe5IFGODfN7A3JJIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322346; c=relaxed/simple;
-	bh=ImYJx3//S3lb8pzEBjnxmyZSCu8/oqDudWFtAKGWTJA=;
+	s=arc-20240116; t=1711322351; c=relaxed/simple;
+	bh=D3t/h4cU9xGd0/TqJ899dIcJhh3AC3fyHdtPtypVFXM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mDaXHUR0rnideGPfxYcQcXTwOhBPoNERUwnqb/5XgGevQ1UWj/oWWFfocEqiVr6bBcY6riGwhXc5hFa47ThmNYSx7PzoDMzR1C9E2cLeCNoDW3XBvVQUyuj+D2+qhA5d+uAAd1P68Pq/QkpG8NAkd2tZKDg9Zx/9DR6d/eEokf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VteGJ2eb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AVJum1w3dnv9EDpohPQ/3FPuqL9Kud99tf2dK5di/81eqz/wqEeHJx/gE0YueOjht4oVrFmpX7Ro7OkUA0x38XEDoY/aKJNN/DJjPAa3JhP/OtlAlNWcitF8HnBjSCLx5p/hCWO58KY4OwieRmGBAMjpJhvowNiwLC0/FCzoreQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BJ/RjUPI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VteGJ2eb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4AAEC433C7;
-	Sun, 24 Mar 2024 23:19:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BJ/RjUPI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41C74C433C7;
+	Sun, 24 Mar 2024 23:19:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322345;
-	bh=ImYJx3//S3lb8pzEBjnxmyZSCu8/oqDudWFtAKGWTJA=;
+	s=k20201202; t=1711322351;
+	bh=D3t/h4cU9xGd0/TqJ899dIcJhh3AC3fyHdtPtypVFXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VteGJ2ebgRY6OLMo9UFXVJdOOsTL/mwqcwqv4C/IzvGdQCYERtNjl+mIG7OHqRzuY
-	 2pUj3mf0t1J4fafMeq0Gp3OrCSioaXegnIGevM+0R/Er45qlcNypEKsRpJo8wAwJX6
-	 sCYTsFZWf73OSx7tq2LXfWsmE34S51Mu+jlovTrKhxOQkwHVeAyt/Y+3f/R3Fco++q
-	 rS5a/t3uO+/c7wmtQDg6tYNmwboMylk57HV2Rr66n9PKnM5zwMg5JpTgUtd1CcYKex
-	 A6HlUnXJGA2P+GI5OII+Zgwop4Wf+aqfVOZ/E497mz41VuMOvwvsP8sth0tKWtoqlW
-	 fngNOC/YdEYZQ==
+	b=BJ/RjUPIXNAVv3xnHrkg74uV6hNdoTjadDFhH/K3/G9h5yZmlmNyqg6uycdP300j5
+	 bPtV6j9d+3YmgXAgApwsq7bKBR4yZvCAJpv8NffSAdlMAnjbl0Ca+2UVOkqFXMJHZC
+	 9w9kbndtA71YnA0wzuHVswzCUWvdFLJLFh2+1QnSrSHKV9j6xKvh2xJBcRo4GUbcCT
+	 uGH4mCtkDThkB37vbkVxgo3IROj29FYeRe7WXrMZr5WCLYq+MdG95AaXU8ciPRvgDQ
+	 wswjB2Q3jE5dpVnRaw0jikvRJKC8O7VStSFIEa47CtMOuHKiqw9HCxmBVJY/x2Ge1/
+	 bzK3Ll4w2xVhg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Thinh Tran <thinhtr@linux.ibm.com>,
-	Jiri Pirko <jiri@nvidia.com>,
+Cc: Tejun Heo <tj@kernel.org>,
+	Sunil Goutham <sgoutham@marvell.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Ratheesh Kannoth <rkannoth@marvell.com>,
+	Srujana Challa <schalla@marvell.com>,
+	Geetha sowjanya <gakula@marvell.com>,
+	netdev@vger.kernel.org,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 427/451] net/bnx2x: Prevent access to a freed page in page_pool
-Date: Sun, 24 Mar 2024 19:11:43 -0400
-Message-ID: <20240324231207.1351418-428-sashal@kernel.org>
+Subject: [PATCH 6.1 433/451] net: octeontx2: Use alloc_ordered_workqueue() to create ordered workqueues
+Date: Sun, 24 Mar 2024 19:11:49 -0400
+Message-ID: <20240324231207.1351418-434-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,86 +56,149 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Thinh Tran <thinhtr@linux.ibm.com>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit d27e2da94a42655861ca4baea30c8cd65546f25d ]
+[ Upstream commit 289f97467480266f9bd8cac7f1e05a478d523f79 ]
 
-Fix race condition leading to system crash during EEH error handling
+BACKGROUND
+==========
 
-During EEH error recovery, the bnx2x driver's transmit timeout logic
-could cause a race condition when handling reset tasks. The
-bnx2x_tx_timeout() schedules reset tasks via bnx2x_sp_rtnl_task(),
-which ultimately leads to bnx2x_nic_unload(). In bnx2x_nic_unload()
-SGEs are freed using bnx2x_free_rx_sge_range(). However, this could
-overlap with the EEH driver's attempt to reset the device using
-bnx2x_io_slot_reset(), which also tries to free SGEs. This race
-condition can result in system crashes due to accessing freed memory
-locations in bnx2x_free_rx_sge()
+When multiple work items are queued to a workqueue, their execution order
+doesn't match the queueing order. They may get executed in any order and
+simultaneously. When fully serialized execution - one by one in the queueing
+order - is needed, an ordered workqueue should be used which can be created
+with alloc_ordered_workqueue().
 
-799  static inline void bnx2x_free_rx_sge(struct bnx2x *bp,
-800				struct bnx2x_fastpath *fp, u16 index)
-801  {
-802	struct sw_rx_page *sw_buf = &fp->rx_page_ring[index];
-803     struct page *page = sw_buf->page;
-....
-where sw_buf was set to NULL after the call to dma_unmap_page()
-by the preceding thread.
+However, alloc_ordered_workqueue() was a later addition. Before it, an
+ordered workqueue could be obtained by creating an UNBOUND workqueue with
+@max_active==1. This originally was an implementation side-effect which was
+broken by 4c16bd327c74 ("workqueue: restore WQ_UNBOUND/max_active==1 to be
+ordered"). Because there were users that depended on the ordered execution,
+5c0338c68706 ("workqueue: restore WQ_UNBOUND/max_active==1 to be ordered")
+made workqueue allocation path to implicitly promote UNBOUND workqueues w/
+@max_active==1 to ordered workqueues.
 
-    EEH: Beginning: 'slot_reset'
-    PCI 0011:01:00.0#10000: EEH: Invoking bnx2x->slot_reset()
-    bnx2x: [bnx2x_io_slot_reset:14228(eth1)]IO slot reset initializing...
-    bnx2x 0011:01:00.0: enabling device (0140 -> 0142)
-    bnx2x: [bnx2x_io_slot_reset:14244(eth1)]IO slot reset --> driver unload
-    Kernel attempted to read user page (0) - exploit attempt? (uid: 0)
-    BUG: Kernel NULL pointer dereference on read at 0x00000000
-    Faulting instruction address: 0xc0080000025065fc
-    Oops: Kernel access of bad area, sig: 11 [#1]
-    .....
-    Call Trace:
-    [c000000003c67a20] [c00800000250658c] bnx2x_io_slot_reset+0x204/0x610 [bnx2x] (unreliable)
-    [c000000003c67af0] [c0000000000518a8] eeh_report_reset+0xb8/0xf0
-    [c000000003c67b60] [c000000000052130] eeh_pe_report+0x180/0x550
-    [c000000003c67c70] [c00000000005318c] eeh_handle_normal_event+0x84c/0xa60
-    [c000000003c67d50] [c000000000053a84] eeh_event_handler+0xf4/0x170
-    [c000000003c67da0] [c000000000194c58] kthread+0x1c8/0x1d0
-    [c000000003c67e10] [c00000000000cf64] ret_from_kernel_thread+0x5c/0x64
+While this has worked okay, overloading the UNBOUND allocation interface
+this way creates other issues. It's difficult to tell whether a given
+workqueue actually needs to be ordered and users that legitimately want a
+min concurrency level wq unexpectedly gets an ordered one instead. With
+planned UNBOUND workqueue updates to improve execution locality and more
+prevalence of chiplet designs which can benefit from such improvements, this
+isn't a state we wanna be in forever.
 
-To solve this issue, we need to verify page pool allocations before
-freeing.
+This patch series audits all callsites that create an UNBOUND workqueue w/
+@max_active==1 and converts them to alloc_ordered_workqueue() as necessary.
 
-Fixes: 4cace675d687 ("bnx2x: Alloc 4k fragment for each rx ring buffer element")
-Signed-off-by: Thinh Tran <thinhtr@linux.ibm.com>
-Reviewed-by: Jiri Pirko <jiri@nvidia.com>
-Link: https://lore.kernel.org/r/20240315205535.1321-1-thinhtr@linux.ibm.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+WHAT TO LOOK FOR
+================
+
+The conversions are from
+
+  alloc_workqueue(WQ_UNBOUND | flags, 1, args..)
+
+to
+
+  alloc_ordered_workqueue(flags, args...)
+
+which don't cause any functional changes. If you know that fully ordered
+execution is not ncessary, please let me know. I'll drop the conversion and
+instead add a comment noting the fact to reduce confusion while conversion
+is in progress.
+
+If you aren't fully sure, it's completely fine to let the conversion
+through. The behavior will stay exactly the same and we can always
+reconsider later.
+
+As there are follow-up workqueue core changes, I'd really appreciate if the
+patch can be routed through the workqueue tree w/ your acks. Thanks.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reviewed-by: Sunil Goutham <sgoutham@marvell.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Ratheesh Kannoth <rkannoth@marvell.com>
+Cc: Srujana Challa <schalla@marvell.com>
+Cc: Geetha sowjanya <gakula@marvell.com>
+Cc: netdev@vger.kernel.org
+Stable-dep-of: 7558ce0d974c ("octeontx2-pf: Use default max_active works instead of one")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/marvell/octeontx2/af/rvu.c     |  5 ++---
+ .../net/ethernet/marvell/octeontx2/nic/otx2_pf.c    | 13 +++++--------
+ .../net/ethernet/marvell/octeontx2/nic/otx2_vf.c    |  5 ++---
+ 3 files changed, 9 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
-index d8b1824c334d3..0bc1367fd6492 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
-@@ -1002,9 +1002,6 @@ static inline void bnx2x_set_fw_mac_addr(__le16 *fw_hi, __le16 *fw_mid,
- static inline void bnx2x_free_rx_mem_pool(struct bnx2x *bp,
- 					  struct bnx2x_alloc_pool *pool)
- {
--	if (!pool->page)
--		return;
--
- 	put_page(pool->page);
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
+index 59e6442ddf4a4..a7965b457bee9 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
+@@ -3055,9 +3055,8 @@ static int rvu_flr_init(struct rvu *rvu)
+ 			    cfg | BIT_ULL(22));
+ 	}
  
- 	pool->page = NULL;
-@@ -1015,6 +1012,9 @@ static inline void bnx2x_free_rx_sge_range(struct bnx2x *bp,
- {
- 	int i;
+-	rvu->flr_wq = alloc_workqueue("rvu_afpf_flr",
+-				      WQ_UNBOUND | WQ_HIGHPRI | WQ_MEM_RECLAIM,
+-				       1);
++	rvu->flr_wq = alloc_ordered_workqueue("rvu_afpf_flr",
++					      WQ_HIGHPRI | WQ_MEM_RECLAIM);
+ 	if (!rvu->flr_wq)
+ 		return -ENOMEM;
  
-+	if (!fp->page_pool.page)
-+		return;
-+
- 	if (fp->mode == TPA_MODE_DISABLED)
- 		return;
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
+index 05ee55022b92c..3f044b161e8bf 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
+@@ -272,8 +272,7 @@ static int otx2_pf_flr_init(struct otx2_nic *pf, int num_vfs)
+ {
+ 	int vf;
+ 
+-	pf->flr_wq = alloc_workqueue("otx2_pf_flr_wq",
+-				     WQ_UNBOUND | WQ_HIGHPRI, 1);
++	pf->flr_wq = alloc_ordered_workqueue("otx2_pf_flr_wq", WQ_HIGHPRI);
+ 	if (!pf->flr_wq)
+ 		return -ENOMEM;
+ 
+@@ -584,9 +583,8 @@ static int otx2_pfvf_mbox_init(struct otx2_nic *pf, int numvfs)
+ 	if (!pf->mbox_pfvf)
+ 		return -ENOMEM;
+ 
+-	pf->mbox_pfvf_wq = alloc_workqueue("otx2_pfvf_mailbox",
+-					   WQ_UNBOUND | WQ_HIGHPRI |
+-					   WQ_MEM_RECLAIM, 1);
++	pf->mbox_pfvf_wq = alloc_ordered_workqueue("otx2_pfvf_mailbox",
++						   WQ_HIGHPRI | WQ_MEM_RECLAIM);
+ 	if (!pf->mbox_pfvf_wq)
+ 		return -ENOMEM;
+ 
+@@ -1088,9 +1086,8 @@ static int otx2_pfaf_mbox_init(struct otx2_nic *pf)
+ 	int err;
+ 
+ 	mbox->pfvf = pf;
+-	pf->mbox_wq = alloc_workqueue("otx2_pfaf_mailbox",
+-				      WQ_UNBOUND | WQ_HIGHPRI |
+-				      WQ_MEM_RECLAIM, 1);
++	pf->mbox_wq = alloc_ordered_workqueue("otx2_pfaf_mailbox",
++					      WQ_HIGHPRI | WQ_MEM_RECLAIM);
+ 	if (!pf->mbox_wq)
+ 		return -ENOMEM;
+ 
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
+index 68fef947ccced..dcb8190de2407 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
+@@ -308,9 +308,8 @@ static int otx2vf_vfaf_mbox_init(struct otx2_nic *vf)
+ 	int err;
+ 
+ 	mbox->pfvf = vf;
+-	vf->mbox_wq = alloc_workqueue("otx2_vfaf_mailbox",
+-				      WQ_UNBOUND | WQ_HIGHPRI |
+-				      WQ_MEM_RECLAIM, 1);
++	vf->mbox_wq = alloc_ordered_workqueue("otx2_vfaf_mailbox",
++					      WQ_HIGHPRI | WQ_MEM_RECLAIM);
+ 	if (!vf->mbox_wq)
+ 		return -ENOMEM;
  
 -- 
 2.43.0
