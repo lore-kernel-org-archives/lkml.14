@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51303130AFA;
-	Sun, 24 Mar 2024 23:02:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCAD91FF5AD;
+	Sun, 24 Mar 2024 23:02:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321367; cv=none; b=ZyPt7l4sOWxXq6oUoYlxT8aVQ7bjeyWo5jzhXmNk9UDEFUKf8YjqzSPwaApTE1Pu+02H1QAU9nS+asOxCJSRDcm8by81m/BQTm/RLMjqkz0aYxt2DxnJKvgVaCn7mVMU/v/gO10/hEQBN46QXYp+gTfRXe73gJ2df4Zbz4EEovY=
+	t=1711321370; cv=none; b=Byga18L6CmBm2yLst8SQmKaU9BKWvkrBbjMUIe2CTJHUf9QcskMga3QYNP6wY+kwr7p3S+AkTjgrEG+itEHRv72CdcKy+ZEQ9yYZ62iOEgXMTWPNbrtWxG3WUZt6VkoK5xYDVEn2xRTEJFyFXVSFB+FViNQWXBzAGyyhOzMSl2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321367; c=relaxed/simple;
-	bh=+qbaCAofjncVFu4+vwJQ5PxTT816Cw4fc9hpPcujUto=;
+	s=arc-20240116; t=1711321370; c=relaxed/simple;
+	bh=8fU73GsXD4fyKBYelWUK+JkQu+e2BAW/YaOrm/gOTQs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Toi1Gfnfq8QpVu0arX2Sdr1Lzj/ldYqQPcUV7Xn8bhR2peEuniFStAflQTaGNpN3FN1GMS+rMDniaaaNEujn58eUZTAAUAplgFLRa7yS0fIOIY9CCCGMDuBSjrammXlfLsKViYrb59EUE+xdaa5yz1iQA0+6vZSQ6SrDv1RFNIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j6nUrM4T; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KsAfiPgBJ4xA2PMsKa5BIVnqYNGdqrVjE4caMefrX2/vfNwec8c4K90tlinoJPfA4b34Xi99ax3l10jelb1uZjMFoOb05KZbzdgsXWIDrQZe3oVk+F7nMP/G51FzJkc5ZaMfaOH3oPTxw43cvuv0Bct9+YSP1kv1KLyptgnb/F8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=abaxcmqG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j6nUrM4T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D786C43399;
-	Sun, 24 Mar 2024 23:02:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="abaxcmqG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12DDCC433F1;
+	Sun, 24 Mar 2024 23:02:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321366;
-	bh=+qbaCAofjncVFu4+vwJQ5PxTT816Cw4fc9hpPcujUto=;
+	s=k20201202; t=1711321368;
+	bh=8fU73GsXD4fyKBYelWUK+JkQu+e2BAW/YaOrm/gOTQs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j6nUrM4TixKJfqyL3tJ+UwVDWQy4BZvxsHh0SvgrDu0Nk9H125VubcM0W7nOLeLsB
-	 YgHym2ml/lhfY9lccxma1cFqN8Op4fY18sJIHPNFQmSxAaZ1QN/4JvuQPOV8TBlwsf
-	 nugvgiid19SSAIk1O4AIdrC43bmILipZijnCi8nvbg42xhwXrlOYaocPf6xcxktbb/
-	 aVSZei7SCX9+uwaRf5vn3QNrMgUM7oJcILyYzEh5m2sowS4UiLaBNe5QTPX/7VnuSE
-	 CF7d03fGSTk03r/d5GOYeyvRdvyR7jTXV+58iZDW1dFDTZkHp5XZJJRhY/E+c06ffm
-	 MgruhU27gi+lA==
+	b=abaxcmqGdm7AZiy5FVJJhxCxz/BhMLnSlakOmZeb1eGOLCDZcc+2Guek0w20U7elk
+	 tcSG3W3W1zDsq0iBxttTK0kDt4h9OJtAoJP3FZpnb2O8EHASGUmVO/xIHLv8Zi7sTN
+	 SxsdT6WUBLYRmFQTSlDdyxWpwtHeF29U7Qrb57psH2f7OIIu45EyFMrLa6b+IdWGTR
+	 yHE9qkiPBwLo3MMpvvwJpoW/adL66Zx5NmSWOH72U0eoE5Z8koMPTA2eGi4qwAtr+K
+	 Tsfab37+cYW1m4/QEYGRYZgdLOHXDOLhD2oI32dpXOUwZCPIt3UjNpHMM7zflVWW2f
+	 H8D/k869Fz/qg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Amir Goldstein <amir73il@gmail.com>,
-	Miklos Szeredi <miklos@szeredi.hu>,
+Cc: Gabriel Krisman Bertazi <krisman@suse.de>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Eric Biggers <ebiggers@google.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 091/638] ovl: refactor layer parsing helpers
-Date: Sun, 24 Mar 2024 18:52:08 -0400
-Message-ID: <20240324230116.1348576-92-sashal@kernel.org>
+Subject: [PATCH 6.6 093/638] ovl: Always reject mounting over case-insensitive directories
+Date: Sun, 24 Mar 2024 18:52:10 -0400
+Message-ID: <20240324230116.1348576-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,210 +49,96 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Gabriel Krisman Bertazi <krisman@suse.de>
 
-[ Upstream commit 819829f0319a759e8a6ccb7e4f1113f3f9f07aa3 ]
+[ Upstream commit 2824083db76cb9d4b7910607b367e93b02912865 ]
 
-In preparation for new mount options to add lowerdirs one by one,
-generalize ovl_parse_param_upperdir() into helper ovl_parse_layer()
-that will be used for parsing a single lower layers.
+overlayfs relies on the filesystem setting DCACHE_OP_HASH or
+DCACHE_OP_COMPARE to reject mounting over case-insensitive directories.
 
-Suggested-by: Miklos Szeredi <miklos@szeredi.hu>
-Link: https://lore.kernel.org/r/CAJfpegt7VC94KkRtb1dfHG8+4OzwPBLYqhtc8=QFUxpFJE+=RQ@mail.gmail.com/
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Stable-dep-of: 2824083db76c ("ovl: Always reject mounting over case-insensitive directories")
+Since commit bb9cd9106b22 ("fscrypt: Have filesystems handle their
+d_ops"), we set ->d_op through a hook in ->d_lookup, which
+means the root dentry won't have them, causing the mount to accidentally
+succeed.
+
+In v6.7-rc7, the following sequence will succeed to mount, but any
+dentry other than the root dentry will be a "weird" dentry to ovl and
+fail with EREMOTE.
+
+  mkfs.ext4 -O casefold lower.img
+  mount -O loop lower.img lower
+  mount -t overlay -o lowerdir=lower,upperdir=upper,workdir=work ovl /mnt
+
+Mounting on a subdirectory fails, as expected, because DCACHE_OP_HASH
+and DCACHE_OP_COMPARE are properly set by ->lookup.
+
+Fix by explicitly rejecting superblocks that allow case-insensitive
+dentries. Yes, this will be solved when we move d_op configuration back
+to ->s_d_op. Yet, we better have an explicit fix to avoid messing up
+again.
+
+While there, re-sort the entries to have more descriptive error messages
+first.
+
+Fixes: bb9cd9106b22 ("fscrypt: Have filesystems handle their d_ops")
+Acked-by: Amir Goldstein <amir73il@gmail.com>
+Reviewed-by: Eric Biggers <ebiggers@google.com>
+Link: https://lore.kernel.org/r/20240221171412.10710-2-krisman@suse.de
+Signed-off-by: Gabriel Krisman Bertazi <krisman@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/overlayfs/params.c | 121 +++++++++++++++++++++++-------------------
- 1 file changed, 67 insertions(+), 54 deletions(-)
+ fs/overlayfs/params.c | 14 +++++++++++---
+ include/linux/fs.h    |  9 +++++++++
+ 2 files changed, 20 insertions(+), 3 deletions(-)
 
 diff --git a/fs/overlayfs/params.c b/fs/overlayfs/params.c
-index 0bf754a69e919..88725982b6dd3 100644
+index ddab9ea267d12..ad3593a41fb5f 100644
 --- a/fs/overlayfs/params.c
 +++ b/fs/overlayfs/params.c
-@@ -43,7 +43,7 @@ module_param_named(metacopy, ovl_metacopy_def, bool, 0644);
- MODULE_PARM_DESC(metacopy,
- 		 "Default to on or off for the metadata only copy up feature");
- 
--enum {
-+enum ovl_opt {
- 	Opt_lowerdir,
- 	Opt_upperdir,
- 	Opt_workdir,
-@@ -238,19 +238,8 @@ static int ovl_mount_dir_noesc(const char *name, struct path *path)
- 		pr_err("failed to resolve '%s': %i\n", name, err);
- 		goto out;
- 	}
--	err = -EINVAL;
--	if (ovl_dentry_weird(path->dentry)) {
--		pr_err("filesystem on '%s' not supported\n", name);
--		goto out_put;
--	}
--	if (!d_is_dir(path->dentry)) {
--		pr_err("'%s' not a directory\n", name);
--		goto out_put;
--	}
- 	return 0;
- 
--out_put:
--	path_put_init(path);
- out:
- 	return err;
- }
-@@ -268,7 +257,7 @@ static void ovl_unescape(char *s)
- 	}
- }
- 
--static int ovl_mount_dir(const char *name, struct path *path, bool upper)
-+static int ovl_mount_dir(const char *name, struct path *path)
+@@ -280,12 +280,20 @@ static int ovl_mount_dir_check(struct fs_context *fc, const struct path *path,
  {
- 	int err = -ENOMEM;
- 	char *tmp = kstrdup(name, GFP_KERNEL);
-@@ -276,60 +265,82 @@ static int ovl_mount_dir(const char *name, struct path *path, bool upper)
- 	if (tmp) {
- 		ovl_unescape(tmp);
- 		err = ovl_mount_dir_noesc(tmp, path);
+ 	struct ovl_fs_context *ctx = fc->fs_private;
+ 
+-	if (ovl_dentry_weird(path->dentry))
+-		return invalfc(fc, "filesystem on %s not supported", name);
 -
--		if (!err && upper && path->dentry->d_flags & DCACHE_OP_REAL) {
--			pr_err("filesystem on '%s' not supported as upperdir\n",
--			       tmp);
--			path_put_init(path);
--			err = -EINVAL;
--		}
- 		kfree(tmp);
- 	}
- 	return err;
- }
+ 	if (!d_is_dir(path->dentry))
+ 		return invalfc(fc, "%s is not a directory", name);
  
--static int ovl_parse_param_upperdir(const char *name, struct fs_context *fc,
--				    bool workdir)
-+static int ovl_mount_dir_check(struct fs_context *fc, const struct path *path,
-+			       enum ovl_opt layer, const char *name, bool upper)
- {
--	int err;
--	struct ovl_fs *ofs = fc->s_fs_info;
--	struct ovl_config *config = &ofs->config;
--	struct ovl_fs_context *ctx = fc->fs_private;
--	struct path path;
--	char *dup;
++	/*
++	 * Root dentries of case-insensitive capable filesystems might
++	 * not have the dentry operations set, but still be incompatible
++	 * with overlayfs.  Check explicitly to prevent post-mount
++	 * failures.
++	 */
++	if (sb_has_encoding(path->mnt->mnt_sb))
++		return invalfc(fc, "case-insensitive capable filesystem on %s not supported", name);
++
 +	if (ovl_dentry_weird(path->dentry))
 +		return invalfc(fc, "filesystem on %s not supported", name);
  
--	err = ovl_mount_dir(name, &path, true);
--	if (err)
--		return err;
-+	if (!d_is_dir(path->dentry))
-+		return invalfc(fc, "%s is not a directory", name);
- 
  	/*
  	 * Check whether upper path is read-only here to report failures
- 	 * early. Don't forget to recheck when the superblock is created
- 	 * as the mount attributes could change.
- 	 */
--	if (__mnt_is_readonly(path.mnt)) {
--		path_put(&path);
--		return -EINVAL;
-+	if (upper) {
-+		if (path->dentry->d_flags & DCACHE_OP_REAL)
-+			return invalfc(fc, "filesystem on %s not supported as upperdir", name);
-+		if (__mnt_is_readonly(path->mnt))
-+			return invalfc(fc, "filesystem on %s is read-only", name);
- 	}
-+	return 0;
-+}
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 6e558264b4ab1..62102f8697946 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3195,6 +3195,15 @@ extern int generic_check_addressable(unsigned, u64);
  
--	dup = kstrdup(name, GFP_KERNEL);
--	if (!dup) {
--		path_put(&path);
--		return -ENOMEM;
--	}
-+static void ovl_add_layer(struct fs_context *fc, enum ovl_opt layer,
-+			 struct path *path, char **pname)
+ extern void generic_set_encrypted_ci_d_ops(struct dentry *dentry);
+ 
++static inline bool sb_has_encoding(const struct super_block *sb)
 +{
-+	struct ovl_fs *ofs = fc->s_fs_info;
-+	struct ovl_config *config = &ofs->config;
-+	struct ovl_fs_context *ctx = fc->fs_private;
- 
--	if (workdir) {
--		kfree(config->workdir);
--		config->workdir = dup;
--		path_put(&ctx->work);
--		ctx->work = path;
--	} else {
--		kfree(config->upperdir);
--		config->upperdir = dup;
--		path_put(&ctx->upper);
--		ctx->upper = path;
-+	switch (layer) {
-+	case Opt_workdir:
-+		swap(config->workdir, *pname);
-+		swap(ctx->work, *path);
-+		break;
-+	case Opt_upperdir:
-+		swap(config->upperdir, *pname);
-+		swap(ctx->upper, *path);
-+		break;
-+	default:
-+		WARN_ON(1);
- 	}
--	return 0;
++#if IS_ENABLED(CONFIG_UNICODE)
++	return !!sb->s_encoding;
++#else
++	return false;
++#endif
 +}
 +
-+static int ovl_parse_layer(struct fs_context *fc, struct fs_parameter *param,
-+			   enum ovl_opt layer)
-+{
-+	char *name = kstrdup(param->string, GFP_KERNEL);
-+	bool upper = (layer == Opt_upperdir || layer == Opt_workdir);
-+	struct path path;
-+	int err;
-+
-+	if (!name)
-+		return -ENOMEM;
-+
-+	err = ovl_mount_dir(name, &path);
-+	if (err)
-+		goto out_free;
-+
-+	err = ovl_mount_dir_check(fc, &path, layer, name, upper);
-+	if (err)
-+		goto out_put;
-+
-+	/* Store the user provided path string in ctx to show in mountinfo */
-+	ovl_add_layer(fc, layer, &path, &name);
-+
-+out_put:
-+	path_put(&path);
-+out_free:
-+	kfree(name);
-+	return err;
- }
- 
- static void ovl_reset_lowerdirs(struct ovl_fs_context *ctx)
-@@ -417,7 +428,11 @@ static int ovl_parse_param_lowerdir(const char *name, struct fs_context *fc)
- 	for (nr = 0; nr < nr_lower; nr++, l++) {
- 		memset(l, 0, sizeof(*l));
- 
--		err = ovl_mount_dir(iter, &l->path, false);
-+		err = ovl_mount_dir(iter, &l->path);
-+		if (err)
-+			goto out_put;
-+
-+		err = ovl_mount_dir_check(fc, &l->path, Opt_lowerdir, iter, false);
- 		if (err)
- 			goto out_put;
- 
-@@ -505,10 +520,8 @@ static int ovl_parse_param(struct fs_context *fc, struct fs_parameter *param)
- 		err = ovl_parse_param_lowerdir(param->string, fc);
- 		break;
- 	case Opt_upperdir:
--		fallthrough;
- 	case Opt_workdir:
--		err = ovl_parse_param_upperdir(param->string, fc,
--					       (Opt_workdir == opt));
-+		err = ovl_parse_layer(fc, param, opt);
- 		break;
- 	case Opt_default_permissions:
- 		config->default_permissions = true;
+ int may_setattr(struct mnt_idmap *idmap, struct inode *inode,
+ 		unsigned int ia_valid);
+ int setattr_prepare(struct mnt_idmap *, struct dentry *, struct iattr *);
 -- 
 2.43.0
 
