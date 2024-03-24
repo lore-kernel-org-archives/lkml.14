@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C0F0212D3D;
-	Sun, 24 Mar 2024 23:08:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2B5213427;
+	Sun, 24 Mar 2024 23:08:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321727; cv=none; b=fGJauCfj4ut34RO6pU3QQuXwGrONWsswdqLcKjGPcCetNzrLQaSfehWSaos+k46ZNblB+hy+ehJhJqQQf+/nrxT6BxYNFJqtqFVpEz5/uw7fit+hoEnBpLvO+KxOTRQCNUFpG68VKhk7edy0LANXU0laViLr2uw7EA3X/3SAgu8=
+	t=1711321729; cv=none; b=kHRlyQD3yrK18iFwxAgaA2tcKZ600pjFS+hzWlTDcntRWyVCr4o87gjZlsNqoj5WD6tYfLNhY/CsVAd7nJKw+89rNAodG3ctbqoZNNCbO/s2NIOieqi8FpK/iO2TKDkHG1XyI67XpWvVXvLH5MGMK1VZpuarMlRiacPQnP4CHwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321727; c=relaxed/simple;
-	bh=Oco3c/Bg9op619lpmtlAzub1MxgaQSQT+eBfoTPStLY=;
+	s=arc-20240116; t=1711321729; c=relaxed/simple;
+	bh=M1XBoXiOTq0p7mgERHXcig2Q0cM/9V/unK6ZP5x0oO0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CCDZsEXn9Qxt4z24EakyHXw+f8c+/skPgqwsrWIej91MfQvd3Px7KDU9DPzHxu0Jy4DFLbba6eAFmnB7/zUxhD96KRSfYPujrG106f7B+lqHsUxztuACJQY92OjR9UQ2uG9bS4k80axViazunbpH/SDSLwAS7t/vI2uIUMvZImc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m9ib1DHf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=rPv//Ec8GJT5snAGZM3U3SuFB1FCIEmq7QRIQuDgS2anV5t+oEddmOhaqUK+y8JInexAdUconPsvEnNRSz6e78Nc9TXq4jiMVSu05n0MrR7ONpTlBnU4WrJPLKs5qmt6U0+YLOxZycsDkW0iRTUlynFzpgOo0ee9mJZuriol0Us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kI2ZMNuC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m9ib1DHf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60B92C433A6;
-	Sun, 24 Mar 2024 23:08:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kI2ZMNuC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29AA9C43330;
+	Sun, 24 Mar 2024 23:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321726;
-	bh=Oco3c/Bg9op619lpmtlAzub1MxgaQSQT+eBfoTPStLY=;
+	s=k20201202; t=1711321727;
+	bh=M1XBoXiOTq0p7mgERHXcig2Q0cM/9V/unK6ZP5x0oO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=m9ib1DHf0XCV1RSCgdLilM/ptqiYyKstS+OikHIQ/g88M9EuqfiPv1uKcy3xIQdz+
-	 xsn5GzYvIzzs1TLjkZd5/j26PqKVfxYlXKzY5jsraLbKYK9RXsJlyxsKwW8+1d9vli
-	 eOBK8T1SIlWS0EYz7pPW+J+KFd5mGCNHERpmNAW4wRUibkfhMocK6QIA3Qp0QET6e6
-	 wdSpicT4NVwanH6xNixtRI4pR/JicfKOb5Nv28PgQIzraoaFnMamCYQCujr4mUaxyQ
-	 pXU4ffgmBTeiHUuehzxGqzR4MXV00iIhs6Tr6Upz2l+LVB6kVml0DhEm0mUVwWtFHy
-	 i2zkrtAe7seIg==
+	b=kI2ZMNuCDyrgK2hxdOo/vD5gVKy4yapW4SR2pGrv0iyImNksDheDYguzwLcQKvqjq
+	 u7F7b+ag3ObVkE9z5PnLRP3sCE1aC9G2DnqA9N9a/aoNW/tQCr+7h9qtnNwuDIkrFW
+	 SpgkhLmEZPqRgqrI5iIVfnQZ4HwuHmxSx+nhbJMW3bikCggrIfUswGY4Td6SDd91IW
+	 l4FX7RJqZFYmNUvSo27OuQn/+MbhbsEAJJ92mNlbo1W7aNDe02cyKhbsyj0M0ayLiP
+	 pEdVtOUb/bii/WGjGKTymxr49ajCvAdpj92ipwoH3XyHHTHL80t+tdJh/emnInM+77
+	 ArRUaXUjsjjVg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Baruch Siach <baruch@tkos.co.il>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
+Cc: Jerome Brunet <jbrunet@baylibre.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 454/638] mtd: maps: physmap-core: fix flash size larger than 32-bit
-Date: Sun, 24 Mar 2024 18:58:11 -0400
-Message-ID: <20240324230116.1348576-455-sashal@kernel.org>
+Subject: [PATCH 6.6 456/638] ASoC: meson: axg-tdm-interface: fix mclk setup without mclk-fs
+Date: Sun, 24 Mar 2024 18:58:13 -0400
+Message-ID: <20240324230116.1348576-457-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,37 +48,47 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Baruch Siach <baruch@tkos.co.il>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 3884f03edd34887514a0865a80769cd5362d5c3b ]
+[ Upstream commit e3741a8d28a1137f8b19ae6f3d6e3be69a454a0a ]
 
-mtd-ram can potentially be larger than 4GB. get_bitmask_order() uses
-fls() that is not guaranteed to work with values larger than 32-bit.
-Specifically on aarch64 fls() returns 0 when all 32 LSB bits are clear.
-Use fls64() instead.
+By default, when mclk-fs is not provided, the tdm-interface driver
+requests an MCLK that is 4x the bit clock, SCLK.
 
-Fixes: ba32ce95cbd987 ("mtd: maps: Merge gpio-addr-flash.c into physmap-core.c")
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/9fbf3664ce00f8b07867f1011834015f21d162a5.1707388458.git.baruch@tkos.co.il
+However there is no justification for this:
+
+* If the codec needs MCLK for its operation, mclk-fs is expected to be set
+  according to the codec requirements.
+* If the codec does not need MCLK the minimum is 2 * SCLK, because this is
+  minimum the divider between SCLK and MCLK can do.
+
+Multiplying by 4 may cause problems because the PLL limit may be reached
+sooner than it should, so use 2x instead.
+
+Fixes: d60e4f1e4be5 ("ASoC: meson: add tdm interface driver")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://msgid.link/r/20240223175116.2005407-2-jbrunet@baylibre.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/maps/physmap-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/meson/axg-tdm-interface.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mtd/maps/physmap-core.c b/drivers/mtd/maps/physmap-core.c
-index fc87213392824..9be71b045b259 100644
---- a/drivers/mtd/maps/physmap-core.c
-+++ b/drivers/mtd/maps/physmap-core.c
-@@ -523,7 +523,7 @@ static int physmap_flash_probe(struct platform_device *dev)
- 		if (!info->maps[i].phys)
- 			info->maps[i].phys = res->start;
+diff --git a/sound/soc/meson/axg-tdm-interface.c b/sound/soc/meson/axg-tdm-interface.c
+index 1c3d433cefd23..cd5168e826df4 100644
+--- a/sound/soc/meson/axg-tdm-interface.c
++++ b/sound/soc/meson/axg-tdm-interface.c
+@@ -264,8 +264,8 @@ static int axg_tdm_iface_set_sclk(struct snd_soc_dai *dai,
+ 	srate = iface->slots * iface->slot_width * params_rate(params);
  
--		info->win_order = get_bitmask_order(resource_size(res)) - 1;
-+		info->win_order = fls64(resource_size(res)) - 1;
- 		info->maps[i].size = BIT(info->win_order +
- 					 (info->gpios ?
- 					  info->gpios->ndescs : 0));
+ 	if (!iface->mclk_rate) {
+-		/* If no specific mclk is requested, default to bit clock * 4 */
+-		clk_set_rate(iface->mclk, 4 * srate);
++		/* If no specific mclk is requested, default to bit clock * 2 */
++		clk_set_rate(iface->mclk, 2 * srate);
+ 	} else {
+ 		/* Check if we can actually get the bit clock from mclk */
+ 		if (iface->mclk_rate % srate) {
 -- 
 2.43.0
 
