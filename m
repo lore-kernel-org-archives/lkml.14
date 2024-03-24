@@ -1,135 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C756247A6F;
-	Sun, 24 Mar 2024 17:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C07481B9
+	for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 17:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711300011; cv=none; b=MS07d/U1zEQ3BACFxGH3MsM9st85q4+aJca0wb6LFsRe9CCM6qchw0nopY8mu0KgRPVZWO8fd3a7ogmiBvvcQwoaWRdKEYMXuXqCn0br6oouQmnI/qUW3bFqol0pA1YC2g6WIRY+7e+t01pMcjEinYnEdTo2BAzhKOS98Lc6F/s=
+	t=1711300014; cv=none; b=iePUldfYOMlLl4fHyffHWk+TpoWtt60zCTTXz+0tgmWGSK71rWigNnzcZgsCzY+P7dv9yWt0orqiAdoHXfpo71VxYnVhf6zGVzca6Y0R9v2hKlpKZR9UJmJ3Bfvcsv11nEB2K7BAffidKJofTsc7814+vlhjfW+hkOxB8uxjuX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711300011; c=relaxed/simple;
-	bh=OtAGbeU5mxTavpUec3StFvPEE4SSEplTjeR8N2SdDAE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FKdMhO++4BDT8SdK7EQiXBTXRo/Qyix3KQ83LCqx7wSV+i3x1Ce9ML1gNyeFpPcLh1QG4JHnfVlap3pIBjseDwp/3yWzLZWfXCdBcv/00TX5KVO8PUd11bN99nuaaahFvTalX5jtq75D9ICcl0sqnP0HUBpc0R2s0/xuZYqvsqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YgNQMkVv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711300014; c=relaxed/simple;
+	bh=nmOulUcc9l/hTjA8emsER/2x+28dkEwIk8p2JOkhcXs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SLM2ELZz5gVaASXj0yFp9qviQJYMJVGXtIMlZZN7R/rQDIfYHDPzbQk0ALXpT9woB0T5e3qZH90CwflAPY7jBupm7gw3Hk52jV41m3qPNTtQV2FwTeS/p3gcRN7qtL+JAqOhhJMCw8c27fFad0TGkA7vi6xxyCY+hhvHFAXvXrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=Eh2oGUIJ; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YgNQMkVv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A376AC433C7;
-	Sun, 24 Mar 2024 17:06:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711300011;
-	bh=OtAGbeU5mxTavpUec3StFvPEE4SSEplTjeR8N2SdDAE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YgNQMkVvRTxAi9UIP0yYkbIB/3k2b6+1/nXj6yVLEMqCzFadVn1DdSABSzYVcVtGA
-	 kQvyZIKvSrpOfu+A2Jv3vbSbDTE9+cmqNNqRHRvnyU5eqaQ4QlDM5BIB3f9VwSND7B
-	 lkcERyy8uOGIv13Z6R4HcqA5v7c40TxOjHqqMjdCsazqE3hb9zoEpyYdO28Q50OlEv
-	 PpyCLeG1Ik6a3UEJjwyABouIngx+wUM9sVB5deF6MX56deoguWhwQRULRAuFobjmmO
-	 59UO1rCjkBQinoYzVr96Gckg7c40wTFPQVUuLmdpHhh0Q4YVTG/XbuH5LY2VkyrjO8
-	 RgOX1RQU7Ha0A==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
-	Chen Zhongjin <chenzhongjin@huawei.com>,
-	Yang Jihong <yangjihong1@huawei.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Sasha Levin <sashal@kernel.org>,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	quic_neeraju@quicinc.com,
-	joel@joelfernandes.org,
-	josh@joshtriplett.org,
-	rcu@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 03/11] rcu-tasks: Add data to eliminate RCU-tasks/do_exit() deadlocks
-Date: Sun, 24 Mar 2024 13:06:33 -0400
-Message-ID: <20240324170645.546220-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240324170645.546220-1-sashal@kernel.org>
-References: <20240324170645.546220-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="Eh2oGUIJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1711300007;
+	bh=nmOulUcc9l/hTjA8emsER/2x+28dkEwIk8p2JOkhcXs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Eh2oGUIJwxGLPtExxvk402z8bdPMJJ4m4Yp8Ipep7IrXUI8YrUr79bwtRQKzWxw+g
+	 WgK8L2bvEO8xMOHhmm1XfrZphrQW4np615lfVBVhk5UomDGDcqW+f4OzXS1WI1YFqy
+	 PW9wybo3iy/RHd5fbitkBmiLDi2AWQZ76mNAzs8M=
+Received: from stargazer.. (unknown [IPv6:240e:358:11fe:a000:dc73:854d:832e:8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id E5EE166BF3;
+	Sun, 24 Mar 2024 13:06:42 -0400 (EDT)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: [PATCH] x86/mm: Don't disable INVLPG if "incomplete Global INVLPG flushes" is fixed by microcode
+Date: Mon, 25 Mar 2024 01:06:30 +0800
+Message-ID: <20240324170630.76084-1-xry111@xry111.site>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.22
 Content-Transfer-Encoding: 8bit
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+Per the "Processor Specification Update" documentations referred by the
+intel-microcode-20240312 release note, this microcode release has fixed
+the issue for all affected models.
 
-[ Upstream commit bfe93930ea1ea3c6c115a7d44af6e4fea609067e ]
+So don't disable INVLPG if the microcode is new enough.
 
-Holding a mutex across synchronize_rcu_tasks() and acquiring
-that same mutex in code called from do_exit() after its call to
-exit_tasks_rcu_start() but before its call to exit_tasks_rcu_stop()
-results in deadlock.  This is by design, because tasks that are far
-enough into do_exit() are no longer present on the tasks list, making
-it a bit difficult for RCU Tasks to find them, let alone wait on them
-to do a voluntary context switch.  However, such deadlocks are becoming
-more frequent.  In addition, lockdep currently does not detect such
-deadlocks and they can be difficult to reproduce.
-
-In addition, if a task voluntarily context switches during that time
-(for example, if it blocks acquiring a mutex), then this task is in an
-RCU Tasks quiescent state.  And with some adjustments, RCU Tasks could
-just as well take advantage of that fact.
-
-This commit therefore adds the data structures that will be needed
-to rely on these quiescent states and to eliminate these deadlocks.
-
-Link: https://lore.kernel.org/all/20240118021842.290665-1-chenzhongjin@huawei.com/
-
-Reported-by: Chen Zhongjin <chenzhongjin@huawei.com>
-Reported-by: Yang Jihong <yangjihong1@huawei.com>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Tested-by: Yang Jihong <yangjihong1@huawei.com>
-Tested-by: Chen Zhongjin <chenzhongjin@huawei.com>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lore.kernel.org/all/168436059559.404.13934972543631851306.tip-bot2@tip-bot2/
+Link: https://github.com/intel/Intel-Linux-Processor-Microcode-Data-Files/releases/tag/microcode-20240312
+Link: https://cdrdv2.intel.com/v1/dl/getContent/740518 # RPL042, rev. 13
+Link: https://cdrdv2.intel.com/v1/dl/getContent/682436 # ADL063, rev. 24
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
 ---
- include/linux/sched.h | 2 ++
- kernel/rcu/tasks.h    | 2 ++
- 2 files changed, 4 insertions(+)
+ arch/x86/mm/init.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 77f01ac385f7a..3d83cc397eac1 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -854,6 +854,8 @@ struct task_struct {
- 	u8				rcu_tasks_idx;
- 	int				rcu_tasks_idle_cpu;
- 	struct list_head		rcu_tasks_holdout_list;
-+	int				rcu_tasks_exit_cpu;
-+	struct list_head		rcu_tasks_exit_list;
- #endif /* #ifdef CONFIG_TASKS_RCU */
- 
- #ifdef CONFIG_TASKS_TRACE_RCU
-diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-index 65e000ca332cc..cce0604f6fcc1 100644
---- a/kernel/rcu/tasks.h
-+++ b/kernel/rcu/tasks.h
-@@ -32,6 +32,7 @@ typedef void (*postgp_func_t)(struct rcu_tasks *rtp);
-  * @rtp_irq_work: IRQ work queue for deferred wakeups.
-  * @barrier_q_head: RCU callback for barrier operation.
-  * @rtp_blkd_tasks: List of tasks blocked as readers.
-+ * @rtp_exit_list: List of tasks in the latter portion of do_exit().
-  * @cpu: CPU number corresponding to this entry.
-  * @rtpp: Pointer to the rcu_tasks structure.
-  */
-@@ -46,6 +47,7 @@ struct rcu_tasks_percpu {
- 	struct irq_work rtp_irq_work;
- 	struct rcu_head barrier_q_head;
- 	struct list_head rtp_blkd_tasks;
-+	struct list_head rtp_exit_list;
- 	int cpu;
- 	struct rcu_tasks *rtpp;
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index 679893ea5e68..a6a2f38c3999 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -279,6 +279,25 @@ static const struct x86_cpu_id invlpg_miss_ids[] = {
+ 	{}
  };
+ 
++/*
++ * INVLPG issue is fixed with intel-microcode-20240312 for all
++ * affected models.  This table is taken from the release note
++ * of this microcode release.
++ */
++static const struct x86_cpu_desc invlpg_miss_fixed_ucode[] = {
++	INTEL_CPU_DESC(INTEL_FAM6_ALDERLAKE,		2, 0x34),
++	INTEL_CPU_DESC(INTEL_FAM6_ALDERLAKE,		5, 0x34),
++	INTEL_CPU_DESC(INTEL_FAM6_ALDERLAKE_L,		3, 0x432),
++	INTEL_CPU_DESC(INTEL_FAM6_ALDERLAKE_L,		4, 0x432),
++	INTEL_CPU_DESC(INTEL_FAM6_ATOM_GRACEMONT,	0, 0x15),
++	INTEL_CPU_DESC(INTEL_FAM6_RAPTORLAKE,		1, 0x122),
++	INTEL_CPU_DESC(INTEL_FAM6_RAPTORLAKE_P,		2, 0x4121),
++	INTEL_CPU_DESC(INTEL_FAM6_RAPTORLAKE_P,		3, 0x4121),
++	INTEL_CPU_DESC(INTEL_FAM6_RAPTORLAKE_S,		2, 0x34),
++	INTEL_CPU_DESC(INTEL_FAM6_RAPTORLAKE_S,		5, 0x34),
++	{}
++};
++
+ static void setup_pcid(void)
+ {
+ 	if (!IS_ENABLED(CONFIG_X86_64))
+@@ -287,7 +306,8 @@ static void setup_pcid(void)
+ 	if (!boot_cpu_has(X86_FEATURE_PCID))
+ 		return;
+ 
+-	if (x86_match_cpu(invlpg_miss_ids)) {
++	if (x86_match_cpu(invlpg_miss_ids) &&
++	    !x86_cpu_has_min_microcode_rev(invlpg_miss_fixed_ucode)) {
+ 		pr_info("Incomplete global flushes, disabling PCID");
+ 		setup_clear_cpu_cap(X86_FEATURE_PCID);
+ 		return;
 -- 
-2.43.0
+2.44.0
 
