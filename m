@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2AF80041;
-	Sun, 24 Mar 2024 22:48:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4007A80055;
+	Sun, 24 Mar 2024 22:48:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320505; cv=none; b=s1y3AvQE2wBUruuR177QBpsZn0IebTHT9tdybKqArN2zAKHB1PNilkI5GtU4PVv357cWWo0DuagLaCDxt1rHnkxF5+nGUYEGRU0hCHwaf8B69kaeYPdfIuIO0cQp5WiaEl0dgVpknFaGU4woqF+cvUcGODg3UbX+XSFe3PnCOko=
+	t=1711320511; cv=none; b=Mlkfun4GE42+PGB/7Ao2BaZyZMcaEqm1Ec/lb3bkei66KEAMUnM0bJlZqJX+l6eWmDo1GoO16wFg14aPITWjf+/90+Zd06mISmdlHSNSY09yQoVLcVgByvBTECl1Knsg/bmTNWvFt48MWkGoPqc8LcUXHCB6zwIkOyb9l8e4l7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320505; c=relaxed/simple;
-	bh=rd9CTn5d36v+u366AsJVE1eQgwQIsnkSjg/Q6MfoA3Y=;
+	s=arc-20240116; t=1711320511; c=relaxed/simple;
+	bh=d3YjCGegKBiNlaqnlaRwjobA7R6W5+YKEQ2B++yBx3M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kbVV6NWjyDtGdxBjIT5G9ELBpEu2AHrUm1Q0hLwbJS/nBnf9K9FEJoNQ5rMDeOf8FSwr1A2Vl1SdQN1nX26shH8oSGvaJSi3Q4b4e8+iMsEeEq4XqlXvP3iCPtRWud5msiFZuesqIOOkHWH9a3Iylk1BiaFckFjDgV4bgWOoIcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VmkyPNLG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dFfk2MsR2R0AGSrPV9ppBhde5cdAvvq44W4+jGoXn7T4Ho0+f0WHlI9l+uUWRwzGwSJDD9ukZotR91XOeoT/MBUhI3UnVn26SDT16+n8pFwxUY7ACkT6Z2bfdTPfhEstQ0xn4epOj2ho+rRoWYhQJK1zdRHN5ROZlaCDMhLyC9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a63LtQ44; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VmkyPNLG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E946C433C7;
-	Sun, 24 Mar 2024 22:48:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a63LtQ44"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60A1BC433C7;
+	Sun, 24 Mar 2024 22:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320505;
-	bh=rd9CTn5d36v+u366AsJVE1eQgwQIsnkSjg/Q6MfoA3Y=;
+	s=k20201202; t=1711320511;
+	bh=d3YjCGegKBiNlaqnlaRwjobA7R6W5+YKEQ2B++yBx3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VmkyPNLGkyaJfYuSbRWUzmLlpgJ2am+gF3IQ46c5OlykmAuf1w8zanSYRbrqc4kgM
-	 NOJi4+IDSc5mJRQv6PPQ7x12Rsl1GC1oPnOS3iusr17bFohrwDWl8XIXUCl2AvmsOG
-	 zHESEUTfkjisub6A3U5xZPSSmgaA/CkdkI4UsHXAm4U7MyiWX2KRP/aBVHieGGsIcF
-	 1LuwSs3MbSpYyhcFXA+vQGTmnckW/fEy7qWCOPa1GVFRJdnj+xYnNaK0QFYVkcGKgG
-	 VfXp8UdWKBF5MP+wMGbmmUsT2XioLtliA3VBdIOH2UAw9ZVvCzAHjZJ4pWv8s0kMOH
-	 4jvh3jhN/TarQ==
+	b=a63LtQ44XNG1WBdCJadl0NmlZG0y9zcmAlUtVbAly1Ba4VOpN5S3CqpDGRaZdOnuV
+	 DMWNcrGh9gLYL79v2ft54s22xynCF8zAIE10JjHUBczIrFUUYmuUYngGDhHWL+MMKH
+	 zUZtv4eAxpf/mgP9jtPP7J1w2hkFHVUJfuOLRVnK2LR8Tok+/s4GO1keMCIhYMuiZu
+	 T2PkwIYF90cmGMuZMMSgXQFw7AsaTZZxXXUSrIAfaObcbgMBdpz72iCG/nFK+sc37j
+	 wF/UzsUXxKwQVoXg5znBQ5Ig2XQK+yg7D+oCCaiCFrEhH1OTRYZXfcMsBi3X/pyjdW
+	 +ULDwC2idf/xw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yuxuan Hu <20373622@buaa.edu.cn>,
-	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+Cc: Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Wei Liu <wei.liu@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 065/713] Bluetooth: rfcomm: Fix null-ptr-deref in rfcomm_check_security
-Date: Sun, 24 Mar 2024 18:36:31 -0400
-Message-ID: <20240324224720.1345309-66-sashal@kernel.org>
+Subject: [PATCH 6.7 071/713] x86/hyperv: Allow 15-bit APIC IDs for VTL platforms
+Date: Sun, 24 Mar 2024 18:36:37 -0400
+Message-ID: <20240324224720.1345309-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,56 +49,56 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yuxuan Hu <20373622@buaa.edu.cn>
+From: Saurabh Sengar <ssengar@linux.microsoft.com>
 
-[ Upstream commit 2535b848fa0f42ddff3e5255cf5e742c9b77bb26 ]
+[ Upstream commit 0d63e4c0ebc2b5c329babde44fd61d3f08db814d ]
 
-During our fuzz testing of the connection and disconnection process at the
-RFCOMM layer, we discovered this bug. By comparing the packets from a
-normal connection and disconnection process with the testcase that
-triggered a KASAN report. We analyzed the cause of this bug as follows:
+The current method for signaling the compatibility of a Hyper-V host
+with MSIs featuring 15-bit APIC IDs relies on a synthetic cpuid leaf.
+However, for higher VTLs, this leaf is not reported, due to the absence
+of an IO-APIC.
 
-1. In the packets captured during a normal connection, the host sends a
-`Read Encryption Key Size` type of `HCI_CMD` packet
-(Command Opcode: 0x1408) to the controller to inquire the length of
-encryption key.After receiving this packet, the controller immediately
-replies with a Command Completepacket (Event Code: 0x0e) to return the
-Encryption Key Size.
+As an alternative, assume that when running at a high VTL, the host
+supports 15-bit APIC IDs. This assumption is safe, as Hyper-V does not
+employ any architectural MSIs at higher VTLs
 
-2. In our fuzz test case, the timing of the controller's response to this
-packet was delayed to an unexpected point: after the RFCOMM and L2CAP
-layers had disconnected but before the HCI layer had disconnected.
+This unblocks startup of VTL2 environments with more than 256 CPUs.
 
-3. After receiving the Encryption Key Size Response at the time described
-in point 2, the host still called the rfcomm_check_security function.
-However, by this time `struct l2cap_conn *conn = l2cap_pi(sk)->chan->conn;`
-had already been released, and when the function executed
-`return hci_conn_security(conn->hcon, d->sec_level, auth_type, d->out);`,
-specifically when accessing `conn->hcon`, a null-ptr-deref error occurred.
-
-To fix this bug, check if `sk->sk_state` is BT_CLOSED before calling
-rfcomm_recv_frame in rfcomm_process_rx.
-
-Signed-off-by: Yuxuan Hu <20373622@buaa.edu.cn>
-Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+Link: https://lore.kernel.org/r/1705341460-18394-1-git-send-email-ssengar@linux.microsoft.com
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Message-ID: <1705341460-18394-1-git-send-email-ssengar@linux.microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/rfcomm/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/hyperv/hv_vtl.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/net/bluetooth/rfcomm/core.c b/net/bluetooth/rfcomm/core.c
-index 053ef8f25fae4..1d34d84970332 100644
---- a/net/bluetooth/rfcomm/core.c
-+++ b/net/bluetooth/rfcomm/core.c
-@@ -1941,7 +1941,7 @@ static struct rfcomm_session *rfcomm_process_rx(struct rfcomm_session *s)
- 	/* Get data directly from socket receive queue without copying it. */
- 	while ((skb = skb_dequeue(&sk->sk_receive_queue))) {
- 		skb_orphan(skb);
--		if (!skb_linearize(skb)) {
-+		if (!skb_linearize(skb) && sk->sk_state != BT_CLOSED) {
- 			s = rfcomm_recv_frame(s, skb);
- 			if (!s)
- 				break;
+diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+index 96e6c51515f50..cf1b78cb2d043 100644
+--- a/arch/x86/hyperv/hv_vtl.c
++++ b/arch/x86/hyperv/hv_vtl.c
+@@ -16,6 +16,11 @@
+ extern struct boot_params boot_params;
+ static struct real_mode_header hv_vtl_real_mode_header;
+ 
++static bool __init hv_vtl_msi_ext_dest_id(void)
++{
++	return true;
++}
++
+ void __init hv_vtl_init_platform(void)
+ {
+ 	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
+@@ -38,6 +43,8 @@ void __init hv_vtl_init_platform(void)
+ 	x86_platform.legacy.warm_reset = 0;
+ 	x86_platform.legacy.reserve_bios_regions = 0;
+ 	x86_platform.legacy.devices.pnpbios = 0;
++
++	x86_init.hyper.msi_ext_dest_id = hv_vtl_msi_ext_dest_id;
+ }
+ 
+ static inline u64 hv_vtl_system_desc_base(struct ldttss_desc *desc)
 -- 
 2.43.0
 
