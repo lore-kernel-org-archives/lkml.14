@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CABD1FC97E;
-	Sun, 24 Mar 2024 23:16:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D531FC996;
+	Sun, 24 Mar 2024 23:16:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322185; cv=none; b=a+teTTb9aDUdvDfDYX0sgwH1hPSf5yZvUYv2PNq02nIB9FIjoHrIsGdqEXn6y51Mtca0QW5Ywp/OFhIgPScomtYfLJv3GT0L8sobCCMy51pox1rSPEu9xwD6mdK+ZaKhzDDt9NoDiwr0aBekbhoFuAOPZuoqsd98+vfEVvq5GDY=
+	t=1711322187; cv=none; b=WtXQW3Scx0hoyTiVLYLX+b8Y2vUv1KFAeKH0Mkqd4F6Dn+aLKsmWGXTh1jzyjXT743WbxLhMd3pDix7XMDV2uBFhGia3elA/bfz1SPe3J/bfM9DjGx50BIdaVvV/htUWwg5jJzUj3Buv552TuJHr7MoFNqC6dzU6ukwWAcncODM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322185; c=relaxed/simple;
-	bh=s5G9SyYvaSF3IDSDoqV16NIoamNss3JTyRG4TX3xICY=;
+	s=arc-20240116; t=1711322187; c=relaxed/simple;
+	bh=1DhKusQ9HhD6fC5v6ak+Lgulwfz5amcq1rUMjvB5gtY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bACjBIA3GpJ03EhzRQqqiskb0m8muScp7fXirXCGw0mYXZsvDwm1IozH17RGJLfVPgV4IzCX21v87Ziolx2KciPSbRDqnIobS86d7XcTvdwgn9/qJumk0zpHZhQ6gqALRAPpdzsYPTuxLVIUkWvnl59nuchd8aaJdsaqrsD7mpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sxp0kCJu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=G57q0HawB8Xm2YeTC/aaoE3pn7+qi6wIwbTSJsfiRGjmHkUc8vZWNXwRnG0Tmo506400prlVPpbfWsMeItbWj+amvo0RoOLz5G1lMf3C5yBfN6tb4IBa9UV4XvRJ5IA2KBVLu6fOrraZJrzvnTV0vq8LmHhTlL7l4/Oce2csi5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y51x9pCB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sxp0kCJu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B2A4C43399;
-	Sun, 24 Mar 2024 23:16:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y51x9pCB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17E06C43394;
+	Sun, 24 Mar 2024 23:16:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322183;
-	bh=s5G9SyYvaSF3IDSDoqV16NIoamNss3JTyRG4TX3xICY=;
+	s=k20201202; t=1711322185;
+	bh=1DhKusQ9HhD6fC5v6ak+Lgulwfz5amcq1rUMjvB5gtY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sxp0kCJuXzTZEoyGy82JceiGyTCHj+95wUeBS1ogrgeJWDHUeFoJJnHLobSp9b2St
-	 MqyEPO5YeG/WQRzXTUHV1jiQav9JJeLGeuoQNbQ8s06o5QN3QNQzc2gzwKoT1Foc3+
-	 l7uXmJjzLyi9NYQqQ9iBe5ypPJaax8z+IH+Ov7KgfvnRnh2AAGzytvQwMGNNLXC3wq
-	 +9Y7SYczemxZ1z5AFnClQz2yAkxdFz35FqhDj7be+gSdCNYYYbQONzWxga4lWtJtoz
-	 0wBfHF11qZ6EMsTejR8PYHCw6cGAO12N/a38NZWELklGd99x1j7jPee2I8/webO33c
-	 HG5vcQ14sHhTg==
+	b=Y51x9pCBNMzE5nyxGzEnEcDuWxlvvWU0YRSa+N4QNzPeJTLtTf00dyhNjQ6k45sEr
+	 x0JwCnUIQVl76Z5vlmyufsTaeWz5/KBwOiWJhzUClI/+oxX+SEWR+okqNYB8BlgfGX
+	 NW8fy8ps4aRp3/WxFG2kaeiaril+a3KOVrgeieNydsatZG4YluiAs6MnsoBb9+xK8t
+	 I0wg4UXqH8qmzZTgV8Hd0iQNPew1tFKqAkY8iJUF2LkaVGdTN641ui3KFpTLs0ZGj0
+	 JWiVRUfNDr5hhedU7FRWtUiEOtdbMBVPtQKVKNM2zD+OwNfI8r2rsE6Snt/uQD6GVM
+	 92Ne426aElJ8A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yang Jihong <yangjihong1@huawei.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Ian Rogers <irogers@google.com>,
-	Namhyung Kim <namhyung@kernel.org>,
+Cc: Igor Prusov <ivprusov@salutedevices.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 262/451] perf evsel: Fix duplicate initialization of data->id in evsel__parse_sample()
-Date: Sun, 24 Mar 2024 19:08:58 -0400
-Message-ID: <20240324231207.1351418-263-sashal@kernel.org>
+Subject: [PATCH 6.1 264/451] clk: meson: Add missing clocks to axg_clk_regmaps
+Date: Sun, 24 Mar 2024 19:09:00 -0400
+Message-ID: <20240324231207.1351418-265-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -50,35 +48,81 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yang Jihong <yangjihong1@huawei.com>
+From: Igor Prusov <ivprusov@salutedevices.com>
 
-[ Upstream commit 4962aec0d684c8edb14574ccd0da53e4926ff834 ]
+[ Upstream commit ba535bce57e71463a86f8b33a0ea88c26e3a6418 ]
 
-data->id has been initialized at line 2362, remove duplicate initialization.
+Some clocks were missing from axg_clk_regmaps, which caused kernel panic
+during cat /sys/kernel/debug/clk/clk_summary
 
-Fixes: 3ad31d8a0df2 ("perf evsel: Centralize perf_sample initialization")
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/r/20240127025756.4041808-1-yangjihong1@huawei.com
+[   57.349402] Unable to handle kernel NULL pointer dereference at virtual address 00000000000001fc
+...
+[   57.430002] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   57.436900] pc : regmap_read+0x1c/0x88
+[   57.440608] lr : clk_regmap_gate_is_enabled+0x3c/0xb0
+[   57.445611] sp : ffff800082f1b690
+[   57.448888] x29: ffff800082f1b690 x28: 0000000000000000 x27: ffff800080eb9a70
+[   57.455961] x26: 0000000000000007 x25: 0000000000000016 x24: 0000000000000000
+[   57.463033] x23: ffff800080e8b488 x22: 0000000000000015 x21: ffff00000e7e7000
+[   57.470106] x20: ffff00000400ec00 x19: 0000000000000000 x18: ffffffffffffffff
+[   57.477178] x17: 0000000000000000 x16: 0000000000000000 x15: ffff0000042a3000
+[   57.484251] x14: 0000000000000000 x13: ffff0000042a2fec x12: 0000000005f5e100
+[   57.491323] x11: abcc77118461cefd x10: 0000000000000020 x9 : ffff8000805e4b24
+[   57.498396] x8 : ffff0000028063c0 x7 : ffff800082f1b710 x6 : ffff800082f1b710
+[   57.505468] x5 : 00000000ffffffd0 x4 : ffff800082f1b6e0 x3 : 0000000000001000
+[   57.512541] x2 : ffff800082f1b6e4 x1 : 000000000000012c x0 : 0000000000000000
+[   57.519615] Call trace:
+[   57.522030]  regmap_read+0x1c/0x88
+[   57.525393]  clk_regmap_gate_is_enabled+0x3c/0xb0
+[   57.530050]  clk_core_is_enabled+0x44/0x120
+[   57.534190]  clk_summary_show_subtree+0x154/0x2f0
+[   57.538847]  clk_summary_show_subtree+0x220/0x2f0
+[   57.543505]  clk_summary_show_subtree+0x220/0x2f0
+[   57.548162]  clk_summary_show_subtree+0x220/0x2f0
+[   57.552820]  clk_summary_show_subtree+0x220/0x2f0
+[   57.557477]  clk_summary_show_subtree+0x220/0x2f0
+[   57.562135]  clk_summary_show_subtree+0x220/0x2f0
+[   57.566792]  clk_summary_show_subtree+0x220/0x2f0
+[   57.571450]  clk_summary_show+0x84/0xb8
+[   57.575245]  seq_read_iter+0x1bc/0x4b8
+[   57.578954]  seq_read+0x8c/0xd0
+[   57.582059]  full_proxy_read+0x68/0xc8
+[   57.585767]  vfs_read+0xb0/0x268
+[   57.588959]  ksys_read+0x70/0x108
+[   57.592236]  __arm64_sys_read+0x24/0x38
+[   57.596031]  invoke_syscall+0x50/0x128
+[   57.599740]  el0_svc_common.constprop.0+0x48/0xf8
+[   57.604397]  do_el0_svc+0x28/0x40
+[   57.607675]  el0_svc+0x34/0xb8
+[   57.610694]  el0t_64_sync_handler+0x13c/0x158
+[   57.615006]  el0t_64_sync+0x190/0x198
+[   57.618635] Code: a9bd7bfd 910003fd a90153f3 aa0003f3 (b941fc00)
+[   57.624668] ---[ end trace 0000000000000000 ]---
+
+[jbrunet: add missing Fixes tag]
+Signed-off-by: Igor Prusov <ivprusov@salutedevices.com>
+Link: https://lore.kernel.org/r/20240202172537.1.I64656c75d84284bc91e6126b50b33c502be7c42a@changeid
+Fixes: 14ebb3154b8f ("clk: meson: axg: add Video Clocks")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/evsel.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/clk/meson/axg.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 76605fde35078..7db35dbdfcefe 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2375,7 +2375,6 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 	data->period = evsel->core.attr.sample_period;
- 	data->cpumode = event->header.misc & PERF_RECORD_MISC_CPUMODE_MASK;
- 	data->misc    = event->header.misc;
--	data->id = -1ULL;
- 	data->data_src = PERF_MEM_DATA_SRC_NONE;
- 	data->vcpu = -1;
- 
+diff --git a/drivers/clk/meson/axg.c b/drivers/clk/meson/axg.c
+index 2ad3801398dc1..7802dabb26f6d 100644
+--- a/drivers/clk/meson/axg.c
++++ b/drivers/clk/meson/axg.c
+@@ -2144,7 +2144,9 @@ static struct clk_regmap *const axg_clk_regmaps[] = {
+ 	&axg_vclk_input,
+ 	&axg_vclk2_input,
+ 	&axg_vclk_div,
++	&axg_vclk_div1,
+ 	&axg_vclk2_div,
++	&axg_vclk2_div1,
+ 	&axg_vclk_div2_en,
+ 	&axg_vclk_div4_en,
+ 	&axg_vclk_div6_en,
 -- 
 2.43.0
 
