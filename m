@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118EE128387;
-	Sun, 24 Mar 2024 22:53:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33BB71E5856;
+	Sun, 24 Mar 2024 22:53:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320807; cv=none; b=D7SzlXZZnIVTdFmUR+o+7te1o1uzk3V3Ts9zWFL0gECLeZRmIg6thMxVS3+WC7SDHdombUizPD4s3VBJODMPnbpfASysKUOmWWEBVCi9/T2ineDHN8XVZOj5bxR8hZCqt9XH8av0Npzg2sS0qDuD3mCtVVSB3b+bigzv59zJph4=
+	t=1711320831; cv=none; b=kQQVurSB1D0oDrwNOoaLps8E4GZPa3Hh9Y2hT1YvAqoNvxsgqsdViZEfmxT+7HyOMJjKQnRkyxoKSfNfkZpAaP/U+1ucHuriCkhkrP3+oq0nFImJFEZVvac4U9Oa6mLN3EwoijuvyPDqe/tXdWmcCYfUj+W9tzN5f96/+FrvRgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320807; c=relaxed/simple;
-	bh=vP825Ku2Y5fpQtvsySFA7Z6w4KP+omheovnqVtB+F0Y=;
+	s=arc-20240116; t=1711320831; c=relaxed/simple;
+	bh=xx4kwvzAxT8EfZAIHWdVzcLqTUvuj8Q6VMgCYvPhFCo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GOWUv6niJnwPUmwVp6ZMr6FKJ6e08pAfVWa97jNID7hdXgrFC3TE2ZVP6DYvM+JUDBq6gvqnZghlFfWsNyXJOKwOKZGxtccUeyZSuzTnem0lIGjVfrAVH5AJZ8FX3dDB0X/QEN/Dae79I8nHkmKQEVWxEyTkvpSc4jiPom/v8pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aOkHQqq4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=acSbmWXurrpKeZm5X2sIvigayx5w4Ic/Bkf+Dvhxvcvw7xduEIFVcjIOoKEW6N2R1/dsMQIy1bpEMZuAFvqIKOOAHnebANH1TQfSbpnc83DiW73jEjK587jgvu3lx6r8mkKmxhpLN2VqbQbpddhPirX6TiFR0ccZc4nMG8eVkMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tjAbnaui; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aOkHQqq4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50EB4C433F1;
-	Sun, 24 Mar 2024 22:53:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tjAbnaui"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7191CC43394;
+	Sun, 24 Mar 2024 22:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320805;
-	bh=vP825Ku2Y5fpQtvsySFA7Z6w4KP+omheovnqVtB+F0Y=;
+	s=k20201202; t=1711320830;
+	bh=xx4kwvzAxT8EfZAIHWdVzcLqTUvuj8Q6VMgCYvPhFCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aOkHQqq43/VKJKvJ/yDp5mXXOjSblQKx5PND+3hpWDWkxxN0IDfVqbGeozV9Zfm++
-	 v2dVEhRG9kmUS/TCXQ/gH8JV/6mAM0ZdKPLTvnghacjAhUqdoCmdhLW0KHyUkFDPc5
-	 bDk1lT4Ywixz31QEF3+DB7f0deqvYagOxjauYUauo0a5LDFpWbACSbebq2FRhRKgU8
-	 BG7SyCNKW09wCegHE4uVkAhLRoAUSY8+Iol84QdLghFhMBhyGSOCWRtSahdHgh1KU+
-	 WNJ1OXtSPJT0mqeumFzt/HVXk9eBnROi4269jsWFgVS6B8xwNcfAdCFogFFOIRrEqa
-	 RdJGzx+qOySiQ==
+	b=tjAbnauiifz0+8vEmJCbUZWjB2HNSWNBHvNEf4i4XkdywBUAouD8Dz2V6l9u6Btem
+	 JAQr1NKCqptJP0FbqoGPhgBsrm7/roFvLEEX4uMxi+uXOKesXv8Tw8EyM7z67nkBjc
+	 dfzAD6eZOqCNnlkWtlxZIMtI9XiBdH5m5Sn4BPfW7wmKTj5qvWcXKbKjUDgq3bUOth
+	 cJywLWkvxI0mVBXnlzX21E2dZBpUwdYyJvWz9uY6t4whv4onIgy5MuAfnNPXqPgjqd
+	 4aYAr/CHzOgQzrqrkG08cTxI3k4i/VcU3tRKTDWtnyveuqx40HKIPMZDUFXkC7MLuO
+	 ORVHnfD8YHwbg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jijie Shao <shaojijie@huawei.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 370/713] net: hns3: fix wrong judgment condition issue
-Date: Sun, 24 Mar 2024 18:41:36 -0400
-Message-ID: <20240324224720.1345309-371-sashal@kernel.org>
+Subject: [PATCH 6.7 395/713] drm/tegra: rgb: Fix missing clk_put() in the error handling paths of tegra_dc_rgb_probe()
+Date: Sun, 24 Mar 2024 18:42:01 -0400
+Message-ID: <20240324224720.1345309-396-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,34 +48,47 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jijie Shao <shaojijie@huawei.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 07a1d6dc90baedcf5d713e2b003b9e387130ee30 ]
+[ Upstream commit 45c8034db47842b25a3ab6139d71e13b4e67b9b3 ]
 
-In hns3_dcbnl_ieee_delapp, should check ieee_delapp not ieee_setapp.
-This path fix the wrong judgment.
+If clk_get_sys(..., "pll_d2_out0") fails, the clk_get_sys() call must be
+undone.
 
-Fixes: 0ba22bcb222d ("net: hns3: add support config dscp map to tc")
-Signed-off-by: Jijie Shao <shaojijie@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Add the missing clk_put and a new 'put_pll_d_out0' label in the error
+handling path, and use it.
+
+Fixes: 0c921b6d4ba0 ("drm/tegra: dc: rgb: Allow changing PLLD rate on Tegra30+")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/0182895ead4e4730426616b0d9995954c960b634.1693667005.git.christophe.jaillet@wanadoo.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_dcbnl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/tegra/rgb.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_dcbnl.c b/drivers/net/ethernet/hisilicon/hns3/hns3_dcbnl.c
-index 3b6dbf158b98d..f72dc0cee30e5 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_dcbnl.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_dcbnl.c
-@@ -76,7 +76,7 @@ static int hns3_dcbnl_ieee_delapp(struct net_device *ndev, struct dcb_app *app)
- 	if (hns3_nic_resetting(ndev))
- 		return -EBUSY;
+diff --git a/drivers/gpu/drm/tegra/rgb.c b/drivers/gpu/drm/tegra/rgb.c
+index 53c492b13d129..1e8ec50b759e4 100644
+--- a/drivers/gpu/drm/tegra/rgb.c
++++ b/drivers/gpu/drm/tegra/rgb.c
+@@ -254,7 +254,7 @@ int tegra_dc_rgb_probe(struct tegra_dc *dc)
+ 		if (IS_ERR(rgb->pll_d2_out0)) {
+ 			err = PTR_ERR(rgb->pll_d2_out0);
+ 			dev_err(dc->dev, "failed to get pll_d2_out0: %d\n", err);
+-			goto remove;
++			goto put_pll;
+ 		}
+ 	}
  
--	if (h->kinfo.dcb_ops->ieee_setapp)
-+	if (h->kinfo.dcb_ops->ieee_delapp)
- 		return h->kinfo.dcb_ops->ieee_delapp(h, app);
+@@ -262,6 +262,8 @@ int tegra_dc_rgb_probe(struct tegra_dc *dc)
  
- 	return -EOPNOTSUPP;
+ 	return 0;
+ 
++put_pll:
++	clk_put(rgb->pll_d_out0);
+ remove:
+ 	tegra_output_remove(&rgb->output);
+ 	return err;
 -- 
 2.43.0
 
