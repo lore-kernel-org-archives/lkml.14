@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC08784047;
-	Sun, 24 Mar 2024 22:50:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90231D8BB4;
+	Sun, 24 Mar 2024 22:50:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320640; cv=none; b=gGHcfEvNYImP0BxpJiae8apxLkqHY/rZmMW/wZ7uUjI9hcrA/b05pMCBxmEtiJahiFQsUy9n/7jgKz/3X92aFmGuTp1NF30ZdCS45PJeNdqPliaQ+0diXdNmTo4PKx0KTb9iHH/NKnLga+XCNpcjshOJQjk/+W1CuYFIjYTbSVs=
+	t=1711320642; cv=none; b=kO1Ulbpp+qZZ1mVpdorkHHJq14mm95Y98uKaTjQT2szQIcMiDzX2CUt1Xs0QZ3AHVAJEDDUDnQSaRK/K1cqdwuhOGmOP6rCcOiy7HGGYtmxYll/ksTlhFqUe8Ak/ZLs7y9oS5kFChG4x/u8WmMbWTxkxC7d8/Jem62V94Mjc4RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320640; c=relaxed/simple;
-	bh=LvtZg5e0VQtOBT+DmVlIpjevxUc7VebV46SOEb3fPHw=;
+	s=arc-20240116; t=1711320642; c=relaxed/simple;
+	bh=uRQPRQbfvlKBilQqRImAjQMGdfGSTQ5pK9uohbD4dss=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QLycyzcAHw2g+7HBhA2V1TqYkE1CFYFMBZZ2+VmvtkcJkzKLika3pC86tEyFjWiVXWeL/yA9BptKmT3edTxVyXh//xpQeUmaNv/sG55HggYWceJVQlP8Ak2FFzsp72wlaGq2Tbs3RfIK3DATGS3z5whTUHHb0u7PkAnyc0hTfIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c6rzQ1jR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=aWav/T4O2/rCx95Uq5fN3Vze+J5ftjowl3O0Hw/ncpdBHvJCwgmkPDZdIvTp4WPLl1v6Vw6rzusyeYzpRX4vRboIyYU9VOgVoK7HnlwRlgUeiIOmtWctJ5HnIAyNWwvOeX86NpZZ9EGZ8HcRV75PBCz4ud6ZTsueHKzcRCQT9Mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UvDMbvD5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c6rzQ1jR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EA7CC433B1;
-	Sun, 24 Mar 2024 22:50:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UvDMbvD5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B62CC43394;
+	Sun, 24 Mar 2024 22:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320639;
-	bh=LvtZg5e0VQtOBT+DmVlIpjevxUc7VebV46SOEb3fPHw=;
+	s=k20201202; t=1711320641;
+	bh=uRQPRQbfvlKBilQqRImAjQMGdfGSTQ5pK9uohbD4dss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=c6rzQ1jR/j6Vu8Q+oh0JhB39hL4yDo1aSIY6nbM0kQ8x39AS3E8KH7LA8ndcsZaL0
-	 jr//6Y5XWid0P5XjFTNjxAVMdKKinnM9ytLNwU1WyHeurmx5lfb5lrrXGwQorart63
-	 xXrzIUmu7rJcDgw3LscaFi1o8Cd1B8EDgX3kpLOM6R00jS4UjxDrIRb1dhP6uhXE9k
-	 a8mXgDc2BCSw1Yxw6IjSc2vDGW6tOr5yRPE3b/GNnSD6XJANLw4eCATzevNArVXxdZ
-	 lG0oaM+PxHeaL/B8x+Mj3568TtlOYrdAAZRvx4lnv4i5KXrCDggD2LhmwLYIzdXyZN
-	 218peJjY5qAJg==
+	b=UvDMbvD5D262khLZ8MufYr/WyEMS9QclciJM2dyMs+KgJ4d7X+KvgSr1TymH8v/Fd
+	 uohk4rppdvQPEOiSDV7HakwxJDUQgZFKnV5MPZ9FERUw+w6LEPO1ZT+bLl1XlV9sQ4
+	 l4YYQgrMkyY3IUTsXLWI7PjSZj+8VY2qT1tYwR6FjeAM0oTBPeYCtJSk1xgOREsH/w
+	 UT3HJ7VcQiZhZCCCDKtPneROd7HBy7IWIPPDjg/f0/TFZ6huVCqwRlbEtAVh01jher
+	 StSVdpqOws9lL6t5bv/zRs1fsvzuCKYJcZ2ndMa/qDDdtFiW89LYnYWzcEbzq/WRHt
+	 wGKTJg2f5rACw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Breno Leitao <leitao@debian.org>,
-	Jiri Pirko <jiri@nvidia.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Manorit Chawdhry <m-chawdhry@ti.com>,
+	Andrew Davis <afd@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 201/713] net: blackhole_dev: fix build warning for ethh set but not used
-Date: Sun, 24 Mar 2024 18:38:47 -0400
-Message-ID: <20240324224720.1345309-202-sashal@kernel.org>
+Subject: [PATCH 6.7 203/713] arm64: dts: ti: k3-j721s2: Fix power domain for VTM node
+Date: Sun, 24 Mar 2024 18:38:49 -0400
+Message-ID: <20240324224720.1345309-204-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,47 +49,36 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Breno Leitao <leitao@debian.org>
+From: Manorit Chawdhry <m-chawdhry@ti.com>
 
-[ Upstream commit 843a8851e89e2e85db04caaf88d8554818319047 ]
+[ Upstream commit 5ef196ed912e80a1e64936119ced8d7eb5635f0f ]
 
-lib/test_blackhole_dev.c sets a variable that is never read, causing
-this following building warning:
+Fix the power domain device ID for wkup_vtm0 node.
 
-	lib/test_blackhole_dev.c:32:17: warning: variable 'ethh' set but not used [-Wunused-but-set-variable]
-
-Remove the variable struct ethhdr *ethh, which is unused.
-
-Fixes: 509e56b37cc3 ("blackhole_dev: add a selftest")
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Reviewed-by: Jiri Pirko <jiri@nvidia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: https://software-dl.ti.com/tisci/esd/latest/5_soc_doc/j721s2/devices.html
+Fixes: d148e3fe52c8 ("arm64: dts: ti: j721s2: Add VTM node")
+Signed-off-by: Manorit Chawdhry <m-chawdhry@ti.com>
+Reviewed-by: Andrew Davis <afd@ti.com>
+Link: https://lore.kernel.org/r/20240201-b4-upstream-j721s2-fix-vtm-devid-v2-1-85fd568b77e3@ti.com
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/test_blackhole_dev.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/test_blackhole_dev.c b/lib/test_blackhole_dev.c
-index 4c40580a99a36..f247089d63c08 100644
---- a/lib/test_blackhole_dev.c
-+++ b/lib/test_blackhole_dev.c
-@@ -29,7 +29,6 @@ static int __init test_blackholedev_init(void)
- {
- 	struct ipv6hdr *ip6h;
- 	struct sk_buff *skb;
--	struct ethhdr *ethh;
- 	struct udphdr *uh;
- 	int data_len;
- 	int ret;
-@@ -61,7 +60,7 @@ static int __init test_blackholedev_init(void)
- 	ip6h->saddr = in6addr_loopback;
- 	ip6h->daddr = in6addr_loopback;
- 	/* Ether */
--	ethh = (struct ethhdr *)skb_push(skb, sizeof(struct ethhdr));
-+	skb_push(skb, sizeof(struct ethhdr));
- 	skb_set_mac_header(skb, 0);
+diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi
+index 7254f3bd3634d..c9cf1dc04f7d9 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi
+@@ -652,7 +652,7 @@ wkup_vtm0: temperature-sensor@42040000 {
+ 		compatible = "ti,j7200-vtm";
+ 		reg = <0x00 0x42040000 0x0 0x350>,
+ 		      <0x00 0x42050000 0x0 0x350>;
+-		power-domains = <&k3_pds 154 TI_SCI_PD_SHARED>;
++		power-domains = <&k3_pds 180 TI_SCI_PD_SHARED>;
+ 		#thermal-sensor-cells = <1>;
+ 	};
  
- 	skb->protocol = htons(ETH_P_IPV6);
 -- 
 2.43.0
 
