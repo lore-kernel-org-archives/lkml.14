@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F08839F4;
-	Sun, 24 Mar 2024 22:50:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2231D6855;
+	Sun, 24 Mar 2024 22:51:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320615; cv=none; b=uip22V2ST9Syer/OwXLEqrdDbJ88Y7FoEO4NDMSQg2rMYW+D0ZrYftfmIUtRP+EaNiTib00HMVgxHk36/NafEMYJpopZoH/guUHh8HIF70GS+SgnyNnN5LSE996f4OCI59XVZuZ5BtNnh/8NNybm9cLQNzoRoNdd77lZlpo4xkU=
+	t=1711320719; cv=none; b=glYPAjgx+5iDqzz40xca/imiLcg4cmVUaASLn/V10G722Sjg2m1xEdTz7VC3SzFTqzU+8I+EnUgvPFpOAui9D9Cz8S08PyHERkydPgJJxBFqg4cI0X5jIP61bJsDwrvnPl4avfeffXKZu6M2HmeiEmHogMuSGegzcRhxKThvSUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320615; c=relaxed/simple;
-	bh=5jaLuzVu03LfcgTNCeqDwZBUUHqQVrNeybRDDhk2+Y0=;
+	s=arc-20240116; t=1711320719; c=relaxed/simple;
+	bh=YKVcdpL5+OrlaJ4q8k+EUbtblJGBjMh/yaBxJ7pH7dk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ccg085dFVXmplQQwIF4arnqXp1tmarLAgG/BvodOSeV9TxPAKDMHSa5nfzkcXiG9+RwHnLw5E+HndtLYNd+22MGwhCcp5rMbGWSxC++UWERvrrqAGmSqUNtPuBXWqOIY2yQOlsdOHep442TlwcPfT9mV18xpHFfug7DJ2np/2Cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PFGNyECk; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=khyi3vsr73j27Qy5y6F5rYCXJnTWt1RMzwJRZJ1Ke+GoPzv1tgl8NHA68tgzyrR9+76pammFBApj6CIYomYskzgErNPD92wH3nTOefrtoZCShewtLMfpKMqEo/A95Kt1xwh7UC0MoEU8ppKIYEKVLIoaA1g6RfKa3mQtIiTpPLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=byMzNYNn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PFGNyECk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BD4EC433A6;
-	Sun, 24 Mar 2024 22:50:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="byMzNYNn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09277C433A6;
+	Sun, 24 Mar 2024 22:51:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320614;
-	bh=5jaLuzVu03LfcgTNCeqDwZBUUHqQVrNeybRDDhk2+Y0=;
+	s=k20201202; t=1711320718;
+	bh=YKVcdpL5+OrlaJ4q8k+EUbtblJGBjMh/yaBxJ7pH7dk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PFGNyECkU6NIXS2EjoQ5dQAY49VepYYwqJMJUYX3toXqNUSuq4UEhyAVIJxhZzGiz
-	 icraJZyYaCiWtLS8j6Wk0QwnKp+4E07O5ubwWsFiAN6eA9E1VHn14eUyZ1ksmd4ipv
-	 GkHL/IdHrqo+QwWubpQEa3g/6NPIVPV1EmKfieN0Jg3h19TovTx8+BcylyrtM9Tlb+
-	 ZQpcapJwVgi9ebWBK+9QzUy6nQmeqrhSn/nfJTBTlVsILn081aN2ZCYy1twxvc2wj4
-	 t3aTRIdddgjmvPPWmN3Qxak/r+5L30BCH3wgcz3kGGn/+ghEzy9Jdc/vJoBQk55Bn7
-	 KiEKl8mR5wlXQ==
+	b=byMzNYNny8a9422ENTyhBNNQ6TopQIBMcqrNzoakznLMzsBavyQpQWBF3hHueQ+N/
+	 jd7EchcS6Mh1kIflLNTIkDmRHbTNVSnXn0vnxEzcT4R7uMeGX8LOw5gGBWIcjiMV5b
+	 NTm8I69NDO8LOoy+k22zO6Ex66b0SvcjiguLUxSHjERDFt6go2VEH+4DA0EMrS5YTt
+	 q8+IIN0s0m0wK2TypIHeH2u2EYjVMfOQEeNZMFyrjQW6qOd2e4biP2112WNUrCSv9j
+	 +mTgHwJDzmybuxiUEHiZZgVadV4AbmvxmHE7zXByvTiqC6p347phCgPg1qnFvJTqyB
+	 jebBjLHvKOK1g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Shawn Guo <shawnguo@kernel.org>,
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 175/713] arm64: dts: imx8mm-kontron: Disable pullups for I2C signals on SL/BL i.MX8MM
-Date: Sun, 24 Mar 2024 18:38:21 -0400
-Message-ID: <20240324224720.1345309-176-sashal@kernel.org>
+Subject: [PATCH 6.7 281/713] ARM: dts: arm: realview: Fix development chip ROM compatible value
+Date: Sun, 24 Mar 2024 18:40:07 -0400
+Message-ID: <20240324224720.1345309-282-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,53 +48,41 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit f19e5bb91d53264d7dac5d845a4825afadf72440 ]
+[ Upstream commit 3baa4c5143d65ebab2de0d99a395e5f4f1f46608 ]
 
-There are external pullup resistors on the board and due to silicon
-errata ERR050080 let's disable the internal ones to prevent any
-unwanted behavior in case they wear out.
+When the development chip ROM was added, the "direct-mapped" compatible
+value was already obsolete.  In addition, the device node lacked the
+accompanying "probe-type" property, causing the old physmap_of_core
+driver to fall back to trying all available probe types.
+Unfortunately this fallback was lost when the DT and pdata cases were
+merged.
 
-Fixes: 8668d8b2e67f ("arm64: dts: Add the Kontron i.MX8M Mini SoMs and baseboards")
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fix this by using the modern "mtd-rom" compatible value instead.
+
+Fixes: 5c3f5edbe0a1dff3 ("ARM: realview: add flash devices to the PB1176 DTS")
+Fixes: 642b1e8dbed7bbbf ("mtd: maps: Merge physmap_of.c into physmap-core.c")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts  | 4 ++--
- arch/arm64/boot/dts/freescale/imx8mm-kontron-sl.dtsi | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/arm/arm-realview-pb1176.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts
-index dcec57c20399e..5fd2e45258b11 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts
-@@ -279,8 +279,8 @@ MX8MM_IOMUXC_SAI3_MCLK_GPIO5_IO2		0x19
+diff --git a/arch/arm/boot/dts/arm/arm-realview-pb1176.dts b/arch/arm/boot/dts/arm/arm-realview-pb1176.dts
+index efed325af88d2..d99bac02232b3 100644
+--- a/arch/arm/boot/dts/arm/arm-realview-pb1176.dts
++++ b/arch/arm/boot/dts/arm/arm-realview-pb1176.dts
+@@ -451,7 +451,7 @@ pb1176_serial3: serial@1010f000 {
  
- 	pinctrl_i2c4: i2c4grp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_I2C4_SCL_I2C4_SCL			0x400001c3
--			MX8MM_IOMUXC_I2C4_SDA_I2C4_SDA			0x400001c3
-+			MX8MM_IOMUXC_I2C4_SCL_I2C4_SCL			0x40000083
-+			MX8MM_IOMUXC_I2C4_SDA_I2C4_SDA			0x40000083
- 		>;
- 	};
- 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-sl.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-kontron-sl.dtsi
-index 1f8326613ee9e..2076148e08627 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-sl.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-sl.dtsi
-@@ -237,8 +237,8 @@ MX8MM_IOMUXC_ECSPI1_SS0_GPIO5_IO9		0x19
- 
- 	pinctrl_i2c1: i2c1grp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_I2C1_SCL_I2C1_SCL			0x400001c3
--			MX8MM_IOMUXC_I2C1_SDA_I2C1_SDA			0x400001c3
-+			MX8MM_IOMUXC_I2C1_SCL_I2C1_SCL			0x40000083
-+			MX8MM_IOMUXC_I2C1_SDA_I2C1_SDA			0x40000083
- 		>;
- 	};
- 
+ 		/* Direct-mapped development chip ROM */
+ 		pb1176_rom@10200000 {
+-			compatible = "direct-mapped";
++			compatible = "mtd-rom";
+ 			reg = <0x10200000 0x4000>;
+ 			bank-width = <1>;
+ 		};
 -- 
 2.43.0
 
