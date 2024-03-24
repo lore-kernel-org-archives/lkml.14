@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38DC21774CE;
-	Sun, 24 Mar 2024 23:37:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4231627A820;
+	Sun, 24 Mar 2024 23:38:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323481; cv=none; b=srzDOJk3GvQGDU9JePmksgvm9Om2sENv6Mfe3LoXJOl0+CGMPZ9sMg0Q6iu5UCohsiIhqdPVuAAhgBEFUv2RfW2pliK0muI8iTWTkW5afflSYnwAacVh9Q7T8HNN9+9UVeq67c8ZmKGSi9SyYJFHShktZM2MANZdkcH23MC/Eh4=
+	t=1711323489; cv=none; b=hZ14bLAG5krcbKs7NBMWP29MmiogoejNKzHs0etZS2KPjlt3XXq2UkuULIqRScl/BXHRuHAQx51Bwo4rjAdUjfxwSSN+YR4p7H1DWUCEMcnP4lEqDFKD18CwduOmnB9espS9MbneEGR1B/M0WMyEUWNz6uOwlnKrzi20vnzqR2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323481; c=relaxed/simple;
-	bh=VybEtaiHM3RUVHWaxHA3J6K57xG86oXNEcOzIuXJSE4=;
+	s=arc-20240116; t=1711323489; c=relaxed/simple;
+	bh=vHZPofxw8AN48sAFxEHgXaF8fZSmhRexjjuE+y/44oY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uetNfV3hP1PjG6gj3JNM3Zj1OjfXwVyEDMIbVTHWFtdPUfeRweF168Hj1h04OOJYwNDBBpnToHuWrB3Wo3MlVaQ6To9F7Mfwo9Hn2HdbeLNZUwgiPpX7ZYKOZILLxoeKR4OyJM0FCNdaxdw2GH5CM9QvgEjwqrXXP+3BIkLUOiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJuiESTM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Wfy8pMiwKeDWFcZObo/5vzfLYQnqOjKAtBEEs4nJjJZf8NMnnw1xDSMFXfO3/U9oBg8Zlr3aa7c4y02lJvTRfYGONsBS0jSH9hUjM5WTFGIQvoOfWw+PqAWASXccbCCn0Nf9sutFFqKySf2xNKSuTlTEVWLyMrI0vpaJeJYX/XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A1uVzA2N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJuiESTM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DA52C43399;
-	Sun, 24 Mar 2024 23:37:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A1uVzA2N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D6C3C43390;
+	Sun, 24 Mar 2024 23:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323479;
-	bh=VybEtaiHM3RUVHWaxHA3J6K57xG86oXNEcOzIuXJSE4=;
+	s=k20201202; t=1711323488;
+	bh=vHZPofxw8AN48sAFxEHgXaF8fZSmhRexjjuE+y/44oY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gJuiESTMWWqJ8IzynIsmDvFFfiReT8BTDRI8sAtDhaKMQFTHKovH1VyYhh2eUkSxx
-	 Os8v1hohmTWEGg/UfELsOozi8IlGTgmuXE6zV+m4LQ7aNlImUVXv3c9aQIYf/l8oA3
-	 BEHhIhHDXakb7FGP0nOCb3jVGvKGLmVdIYWXGsxcfCeeRy1OarC4oZSbDsW1HNNQlk
-	 eMYBHaxi2f/gWm8ZM93TqTtn8rxeAJVIYR1RCtUYw9TjWJhAs6c7ZLa6J8xHED/iKj
-	 PdaT6ml/rm1qPO2++rWafP4zpGM5Uyq1Dk3Ca+avG2OiB1hDNGYG09iXwxQfu4rHn1
-	 esE/D65Ttb7Zw==
+	b=A1uVzA2NDv7+OyFn/bIjCv7PoJbWvxWZkHJKu7CmLvrGwd76FNBDhlcrs38Zhfy5g
+	 1S4fGu06tWRNb87wGoZyAXS22TA2c59n6eUb4p2AjpjRyNBqlBa8Aw+3VT8oM02U3w
+	 8gtk5iBQZB21Q/0lL5sLa8AMsX22hGXP2ogJbQkuVjAOSRsG1v9LT0zAYXHvLoe0uC
+	 IZKVIXP6zmEVp2767g0h+TdAjmEdBn+ydLYkwJ2ruS7a7cieyvtVFWRK1eKO/vGBYe
+	 02rIVrEMK3qQlFDmGoQ4L9NpRgqXakv9z1MG71VQl+2WpzkxAIZYeGtqPOA66zJmuV
+	 XuhnXi6TKjmPQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zhipeng Lu <alexious@zju.edu.cn>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 184/317] media: v4l2-tpg: fix some memleaks in tpg_alloc
-Date: Sun, 24 Mar 2024 19:32:44 -0400
-Message-ID: <20240324233458.1352854-185-sashal@kernel.org>
+Subject: [PATCH 5.15 193/317] PCI/P2PDMA: Fix a sleeping issue in a RCU read section
+Date: Sun, 24 Mar 2024 19:32:53 -0400
+Message-ID: <20240324233458.1352854-194-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,110 +49,36 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Zhipeng Lu <alexious@zju.edu.cn>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 8cf9c5051076e0eb958f4361d50d8b0c3ee6691c ]
+[ Upstream commit 1e5c66afd4a40bb7be17cb33cbb1a1085f727730 ]
 
-In tpg_alloc, resources should be deallocated in each and every
-error-handling paths, since they are allocated in for statements.
-Otherwise there would be memleaks because tpg_free is called only when
-tpg_alloc return 0.
+It is not allowed to sleep within a RCU read section, so use GFP_ATOMIC
+instead of GFP_KERNEL here.
 
-Fixes: 63881df94d3e ("[media] vivid: add the Test Pattern Generator")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Link: https://lore.kernel.org/r/02d9ec4a10235def0e764ff1f5be881ba12e16e8.1704397858.git.christophe.jaillet@wanadoo.fr
+Fixes: ae21f835a5bd ("PCI/P2PDMA: Finish RCU conversion of pdev->p2pdma")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 52 +++++++++++++++----
- 1 file changed, 42 insertions(+), 10 deletions(-)
+ drivers/pci/p2pdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-index 7607b516a7c43..68968bfa2edc1 100644
---- a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-+++ b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-@@ -113,6 +113,7 @@ int tpg_alloc(struct tpg_data *tpg, unsigned max_w)
- {
- 	unsigned pat;
- 	unsigned plane;
-+	int ret = 0;
- 
- 	tpg->max_line_width = max_w;
- 	for (pat = 0; pat < TPG_MAX_PAT_LINES; pat++) {
-@@ -121,14 +122,18 @@ int tpg_alloc(struct tpg_data *tpg, unsigned max_w)
- 
- 			tpg->lines[pat][plane] =
- 				vzalloc(array3_size(max_w, 2, pixelsz));
--			if (!tpg->lines[pat][plane])
--				return -ENOMEM;
-+			if (!tpg->lines[pat][plane]) {
-+				ret = -ENOMEM;
-+				goto free_lines;
-+			}
- 			if (plane == 0)
- 				continue;
- 			tpg->downsampled_lines[pat][plane] =
- 				vzalloc(array3_size(max_w, 2, pixelsz));
--			if (!tpg->downsampled_lines[pat][plane])
--				return -ENOMEM;
-+			if (!tpg->downsampled_lines[pat][plane]) {
-+				ret = -ENOMEM;
-+				goto free_lines;
-+			}
- 		}
- 	}
- 	for (plane = 0; plane < TPG_MAX_PLANES; plane++) {
-@@ -136,18 +141,45 @@ int tpg_alloc(struct tpg_data *tpg, unsigned max_w)
- 
- 		tpg->contrast_line[plane] =
- 			vzalloc(array_size(pixelsz, max_w));
--		if (!tpg->contrast_line[plane])
--			return -ENOMEM;
-+		if (!tpg->contrast_line[plane]) {
-+			ret = -ENOMEM;
-+			goto free_contrast_line;
-+		}
- 		tpg->black_line[plane] =
- 			vzalloc(array_size(pixelsz, max_w));
--		if (!tpg->black_line[plane])
--			return -ENOMEM;
-+		if (!tpg->black_line[plane]) {
-+			ret = -ENOMEM;
-+			goto free_contrast_line;
-+		}
- 		tpg->random_line[plane] =
- 			vzalloc(array3_size(max_w, 2, pixelsz));
--		if (!tpg->random_line[plane])
--			return -ENOMEM;
-+		if (!tpg->random_line[plane]) {
-+			ret = -ENOMEM;
-+			goto free_contrast_line;
-+		}
- 	}
- 	return 0;
-+
-+free_contrast_line:
-+	for (plane = 0; plane < TPG_MAX_PLANES; plane++) {
-+		vfree(tpg->contrast_line[plane]);
-+		vfree(tpg->black_line[plane]);
-+		vfree(tpg->random_line[plane]);
-+		tpg->contrast_line[plane] = NULL;
-+		tpg->black_line[plane] = NULL;
-+		tpg->random_line[plane] = NULL;
-+	}
-+free_lines:
-+	for (pat = 0; pat < TPG_MAX_PAT_LINES; pat++)
-+		for (plane = 0; plane < TPG_MAX_PLANES; plane++) {
-+			vfree(tpg->lines[pat][plane]);
-+			tpg->lines[pat][plane] = NULL;
-+			if (plane == 0)
-+				continue;
-+			vfree(tpg->downsampled_lines[pat][plane]);
-+			tpg->downsampled_lines[pat][plane] = NULL;
-+		}
-+	return ret;
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index 316fd2f44df45..57654c82b08e8 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -536,7 +536,7 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+ 	p2pdma = rcu_dereference(provider->p2pdma);
+ 	if (p2pdma)
+ 		xa_store(&p2pdma->map_types, map_types_idx(client),
+-			 xa_mk_value(map_type), GFP_KERNEL);
++			 xa_mk_value(map_type), GFP_ATOMIC);
+ 	rcu_read_unlock();
+ 	return map_type;
  }
- EXPORT_SYMBOL_GPL(tpg_alloc);
- 
 -- 
 2.43.0
 
