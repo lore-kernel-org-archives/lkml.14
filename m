@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8523913C905;
-	Sun, 24 Mar 2024 23:50:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8064722BF90;
+	Sun, 24 Mar 2024 23:50:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324241; cv=none; b=mvn2t5iAcF/+lgUW7SkUVLbGqYGUxi/4KoWgq1BrwEaA5aMqWz1a9FFjQyc2QmlBfxL1TFUnNdxPHueAl8oajjskoza+1KLYo1xjdn8sRU3YBd1IGoRV8bO2CWGawmKfZlsaXvNVyVKxdv6Rv1rELN1p/Binli2XANVg9Pw5tFU=
+	t=1711324233; cv=none; b=D5uFm20JihbRb0UCJ7J37VwrDLUV765j1sokGVErnKIoaX+YNWB5Cx2hAxAW+z9xjhJWjhO8toUoAobVAOkcgWlB8SGH50xWCdlF9HuTtl6WLv2XFyyq9HspkU7ZUuRi1LotmKZFQCQ64WfThGhTPWvd9iEIKz8Rga/oPUE23Hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324241; c=relaxed/simple;
-	bh=TguXJKuy5CaVUAV88Cbuqnahj5AOGBnq+XeOpYY/+Hk=;
+	s=arc-20240116; t=1711324233; c=relaxed/simple;
+	bh=QMhrV214RLPZ2ZrKumKQA+aTfeZeVAws8l4YnWi2/c8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rZcNlic9Ved6sN1b1VQ7LhwpNwseTeIwIvx7OaiS5Y3E/34/Os3BApeiWziXFxvftMn7+Nw8OzI2/33Gj19rwJGSZlbOG06ZkE//u/5yLjYklKdJpWW/+xLI1M0qCTWERoUL4e9+FhjOCzWqwIjsoXWGqH/253PTJdXeXWfz0tI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MGKO8QGw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bVvcPtK7JVMCHehPMUMROjbllDhlL39PVgZKK+JVuVUznEsiOJcrUjrsUnWbi2AHCW3Sz0umLZWD1PlDRPKEazFUCxgtiPVU/XvpSRMiAMKz1QIWMF9HQc0MAPxMi7krANVZmqjGeeXEiLvwbdCj4C8wUPZDifX6g6DGzciBLMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KZjJGZJF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MGKO8QGw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C20AAC433F1;
-	Sun, 24 Mar 2024 23:50:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KZjJGZJF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BADCC43390;
+	Sun, 24 Mar 2024 23:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324241;
-	bh=TguXJKuy5CaVUAV88Cbuqnahj5AOGBnq+XeOpYY/+Hk=;
+	s=k20201202; t=1711324232;
+	bh=QMhrV214RLPZ2ZrKumKQA+aTfeZeVAws8l4YnWi2/c8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MGKO8QGwgVySskkac3zsU2JLAJH4QEgqEB0tYIFZ2xSi3ghUuwglV4EkGXsJsY8Zg
-	 mcY2MHcYm8jAVJuHFvV3I54QDKzvdP/FwK5QtZrTFNUqX557gpYw/ZklJbio1/2wsB
-	 F3aUujsL4Qshc733o0b09t/sLswYfLQM/vRaS0CjEXZR0bzYEft/0MBazeoBYZY0Vl
-	 Ik42au7yTanPCTE+YVdVHgdNRMoAyc0w/Z0SMcy/YFRWpTPFOkXCbyk5XgOIy9qtSI
-	 ieGygiXSZs7oKn+21rh1Mk2aCH9i6CMv2ML4cxScJJwmYlVBnfT+eLtkSUb+wKRDQw
-	 a+QvS4E61fiwg==
+	b=KZjJGZJFqiMO36edUgziFClUgUPtsW6w/AgWHjBnZiN2jD6NPX2D7204w6NSB/ZTC
+	 KmFXw8vHdSN8CnI2A4p6HGk5dRAVcsYeIQ/wCdQIoSkcrFkNFFnTWMC9UspxdIEmgo
+	 do51sN1Ujexsl2YwgvsGiX4FTtqyxrJ/iNn0HXLW7Aouaa29BYyK/tZ5oDx4XccOsr
+	 xHLpEbXDbavvb30TXQj3KkGRkJIfzIlYgyv31WJePEA7RPlF6h56fNB9FqH5B2TLqo
+	 FSVR/zvjw6YKMNyF8ArkgU0v2SXQx7n5Z496+pBq9sEhSh4IfCKuNcicK5iJIqRenf
+	 xJfOHzrhnk2fA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chun-Yi Lee <jlee@suse.com>,
-	Jens Axboe <axboe@kernel.dk>,
+Cc: Ondrej Mosnacek <omosnace@redhat.com>,
+	Stephan Mueller <smueller@chronox.de>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 024/148] aoe: fix the potential use-after-free problem in aoecmd_cfg_pkts
-Date: Sun, 24 Mar 2024 19:48:08 -0400
-Message-ID: <20240324235012.1356413-25-sashal@kernel.org>
+Subject: [PATCH 4.19 015/148] crypto: algif_aead - fix uninitialized ctx->init
+Date: Sun, 24 Mar 2024 19:47:59 -0400
+Message-ID: <20240324235012.1356413-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -48,86 +49,78 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chun-Yi Lee <jlee@suse.com>
+From: Ondrej Mosnacek <omosnace@redhat.com>
 
-[ Upstream commit f98364e926626c678fb4b9004b75cacf92ff0662 ]
+[ Upstream commit 21dfbcd1f5cbff9cf2f9e7e43475aed8d072b0dd ]
 
-This patch is against CVE-2023-6270. The description of cve is:
+In skcipher_accept_parent_nokey() the whole af_alg_ctx structure is
+cleared by memset() after allocation, so add such memset() also to
+aead_accept_parent_nokey() so that the new "init" field is also
+initialized to zero. Without that the initial ctx->init checks might
+randomly return true and cause errors.
 
-  A flaw was found in the ATA over Ethernet (AoE) driver in the Linux
-  kernel. The aoecmd_cfg_pkts() function improperly updates the refcnt on
-  `struct net_device`, and a use-after-free can be triggered by racing
-  between the free on the struct and the access through the `skbtxq`
-  global queue. This could lead to a denial of service condition or
-  potential code execution.
+While there, also remove the redundant zero assignments in both
+functions.
 
-In aoecmd_cfg_pkts(), it always calls dev_put(ifp) when skb initial
-code is finished. But the net_device ifp will still be used in
-later tx()->dev_queue_xmit() in kthread. Which means that the
-dev_put(ifp) should NOT be called in the success path of skb
-initial code in aoecmd_cfg_pkts(). Otherwise tx() may run into
-use-after-free because the net_device is freed.
+Found via libkcapi testsuite.
 
-This patch removed the dev_put(ifp) in the success path in
-aoecmd_cfg_pkts(), and added dev_put() after skb xmit in tx().
-
-Link: https://nvd.nist.gov/vuln/detail/CVE-2023-6270
-Fixes: 7562f876cd93 ("[NET]: Rework dev_base via list_head (v3)")
-Signed-off-by: Chun-Yi Lee <jlee@suse.com>
-Link: https://lore.kernel.org/r/20240305082048.25526-1-jlee@suse.com
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: Stephan Mueller <smueller@chronox.de>
+Fixes: f3c802a1f300 ("crypto: algif_aead - Only wake up when ctx->more is zero")
+Suggested-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/aoe/aoecmd.c | 12 ++++++------
- drivers/block/aoe/aoenet.c |  1 +
- 2 files changed, 7 insertions(+), 6 deletions(-)
+ crypto/algif_aead.c     | 6 ------
+ crypto/algif_skcipher.c | 7 +------
+ 2 files changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/drivers/block/aoe/aoecmd.c b/drivers/block/aoe/aoecmd.c
-index 136dc507d0206..c2b32c53da2bb 100644
---- a/drivers/block/aoe/aoecmd.c
-+++ b/drivers/block/aoe/aoecmd.c
-@@ -420,13 +420,16 @@ aoecmd_cfg_pkts(ushort aoemajor, unsigned char aoeminor, struct sk_buff_head *qu
- 	rcu_read_lock();
- 	for_each_netdev_rcu(&init_net, ifp) {
- 		dev_hold(ifp);
--		if (!is_aoe_netif(ifp))
--			goto cont;
-+		if (!is_aoe_netif(ifp)) {
-+			dev_put(ifp);
-+			continue;
-+		}
+diff --git a/crypto/algif_aead.c b/crypto/algif_aead.c
+index 182783801ffa6..4cb2b12175490 100644
+--- a/crypto/algif_aead.c
++++ b/crypto/algif_aead.c
+@@ -563,12 +563,6 @@ static int aead_accept_parent_nokey(void *private, struct sock *sk)
  
- 		skb = new_skb(sizeof *h + sizeof *ch);
- 		if (skb == NULL) {
- 			printk(KERN_INFO "aoe: skb alloc failure\n");
--			goto cont;
-+			dev_put(ifp);
-+			continue;
- 		}
- 		skb_put(skb, sizeof *h + sizeof *ch);
- 		skb->dev = ifp;
-@@ -441,9 +444,6 @@ aoecmd_cfg_pkts(ushort aoemajor, unsigned char aoeminor, struct sk_buff_head *qu
- 		h->major = cpu_to_be16(aoemajor);
- 		h->minor = aoeminor;
- 		h->cmd = AOECMD_CFG;
+ 	INIT_LIST_HEAD(&ctx->tsgl_list);
+ 	ctx->len = len;
+-	ctx->used = 0;
+-	atomic_set(&ctx->rcvused, 0);
+-	ctx->more = 0;
+-	ctx->merge = 0;
+-	ctx->enc = 0;
+-	ctx->aead_assoclen = 0;
+ 	crypto_init_wait(&ctx->wait);
+ 
+ 	ask->private = ctx;
+diff --git a/crypto/algif_skcipher.c b/crypto/algif_skcipher.c
+index 9d2e9783c0d4e..af08fc18a4926 100644
+--- a/crypto/algif_skcipher.c
++++ b/crypto/algif_skcipher.c
+@@ -337,6 +337,7 @@ static int skcipher_accept_parent_nokey(void *private, struct sock *sk)
+ 	ctx = sock_kmalloc(sk, len, GFP_KERNEL);
+ 	if (!ctx)
+ 		return -ENOMEM;
++	memset(ctx, 0, len);
+ 
+ 	ctx->iv = sock_kmalloc(sk, crypto_skcipher_ivsize(tfm),
+ 			       GFP_KERNEL);
+@@ -344,16 +345,10 @@ static int skcipher_accept_parent_nokey(void *private, struct sock *sk)
+ 		sock_kfree_s(sk, ctx, len);
+ 		return -ENOMEM;
+ 	}
 -
--cont:
--		dev_put(ifp);
- 	}
- 	rcu_read_unlock();
- }
-diff --git a/drivers/block/aoe/aoenet.c b/drivers/block/aoe/aoenet.c
-index 63773a90581dd..1e66c7a188a12 100644
---- a/drivers/block/aoe/aoenet.c
-+++ b/drivers/block/aoe/aoenet.c
-@@ -64,6 +64,7 @@ tx(int id) __must_hold(&txlock)
- 			pr_warn("aoe: packet could not be sent on %s.  %s\n",
- 				ifp ? ifp->name : "netif",
- 				"consider increasing tx_queue_len");
-+		dev_put(ifp);
- 		spin_lock_irq(&txlock);
- 	}
- 	return 0;
+ 	memset(ctx->iv, 0, crypto_skcipher_ivsize(tfm));
+ 
+ 	INIT_LIST_HEAD(&ctx->tsgl_list);
+ 	ctx->len = len;
+-	ctx->used = 0;
+-	atomic_set(&ctx->rcvused, 0);
+-	ctx->more = 0;
+-	ctx->merge = 0;
+-	ctx->enc = 0;
+ 	crypto_init_wait(&ctx->wait);
+ 
+ 	ask->private = ctx;
 -- 
 2.43.0
 
