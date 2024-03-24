@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD54921AFE2;
-	Sun, 24 Mar 2024 23:10:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3BB15574C;
+	Sun, 24 Mar 2024 23:10:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321828; cv=none; b=i/oe8HySi3ADeMZrtQvb8ip3LczTJp/XihA4OJ/50ceVfPzlGhWTITErh58RSp28ihnw+22ZgEOQKkt3vkMlgb1pJxGu6+VHX71tpESTP/N88MRcFGFVqIm3ofweRBJGZt1gGTYUXo2NUCvT3bcbOn+5iO/tKwM1fpCQ3bQcLOE=
+	t=1711321833; cv=none; b=eGXxX4VdFMvHS/dmhRb+BLG9RsF1gIUMdYzG+dE/d7dbDAYgdtM0CFlMfaiAOkC35l9MBq+N3143NEhg5vLxZvm538CbKFsgwYIMvNegp2tQ8paxs8bdZBRdLKEuRNHdmFV0CQHtElQE8S5jPfHAO4dyQifOUUQJY9PfiAu0JVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321828; c=relaxed/simple;
-	bh=P1mp+ZwetPBcCADLeYgfqN8Hv3VfpT4y4hGzyfyub5M=;
+	s=arc-20240116; t=1711321833; c=relaxed/simple;
+	bh=5zjY/KlVyzCbKB6HOQyFACW1AXvTWRQ0DVbNGJ0liSY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WNRpJppS2PPJCZ8BjDuLumItdjAIizv73lOh7rOvY5m3DBGK4s+i8ZXs41et5Gg+raZskXeTinnAUuukqpCvqkBzXxeO95TbGzr9cF8Pol4afFOGG/l+YWYkcMjHde/QB2+FEiiYpVbXKPxXtibATjuVXIjfURO9ofPpTUkc4bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cDfK+lBR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=RaNGdgn9tYRABgjC2ux0yxvoIQUDkYvDmPkGJJKH2kN4DbUJiNyulJMaaICGoyD37uhI6OBdHKAv5N/RA6fPlEt9QRll2pZCvy7tqMEwYt5bC/mfcfVav+0FqsrbPZRQbSvbqPLqLmg/veeTfXzNiGfMzyixqyG7DA50YGuSr/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xy89rkbD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cDfK+lBR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CAF2C43390;
-	Sun, 24 Mar 2024 23:10:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xy89rkbD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BFCEC43394;
+	Sun, 24 Mar 2024 23:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321827;
-	bh=P1mp+ZwetPBcCADLeYgfqN8Hv3VfpT4y4hGzyfyub5M=;
+	s=k20201202; t=1711321833;
+	bh=5zjY/KlVyzCbKB6HOQyFACW1AXvTWRQ0DVbNGJ0liSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cDfK+lBRm8FTuuU6Bpq0+q4rCeBRu+09B5p+nr2YpeCC84phuiaiSdmzhHPTLeH8K
-	 bODn0rwrz5wpf70MqRC7hMhh+dGBPHgleZRS2KYm/EjAkRZC/sooW+T1Lc94QY7o8u
-	 rq2DU8aLHwSo0GiqnAJH2Iz2dTqzJjlCyoZBHK4y5x6f9VdK4pPaMWp2LESduiJ/Vq
-	 sNpUJmizk83n989yAOwAxjRYYU+OfF1J6yOyBSbrtQTXc9iYQVK1jTeHjo3hO06Vw0
-	 1dWLruvNu10JgSnXUEB90WbcT0H3E5KvuNf0lyEVeWNoosbKvXBbxl+YEyyzCFIrw5
-	 wXk9vP0+6hv7g==
+	b=Xy89rkbDxI+IX/d2bTSC2pWKDDwK5EfNWSSpJmgMtOd/55aZcU2JVfflhNGEM+c2K
+	 zG8DefW85mTVt3C2q3fR+6KtgLF7cooMfmEs5Ir2Tjp1OrNy95w4mi6W5BBInNXKn4
+	 SnZ0Pk5eaJiavaAUA/PUh5Rmy9Pysj9aBUZziIMEL8368G/pvMCXQrQ467Iu7g7ZcK
+	 dIkBGBEnyL4Ilp9Y0Clvcv8/wZHM1hA+yiqNaEnK8HNJJD9hovDBZJwPB7zFzIBLnF
+	 kQsY1ZNdwbjYB/VK6vUFrOxgCE/MAxVCHs2fy/Z2sS+EO2EfNua/aSCUED0U8edjHD
+	 WsJKFkKHE6jYQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
+Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 556/638] remoteproc: stm32: Fix incorrect type assignment returned by stm32_rproc_get_loaded_rsc_tablef
-Date: Sun, 24 Mar 2024 18:59:53 -0400
-Message-ID: <20240324230116.1348576-557-sashal@kernel.org>
+Subject: [PATCH 6.6 562/638] arm64: dts: broadcom: bcmbca: bcm4908: drop invalid switch cells
+Date: Sun, 24 Mar 2024 18:59:59 -0400
+Message-ID: <20240324230116.1348576-563-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -44,45 +44,44 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+From: Rafał Miłecki <rafal@milecki.pl>
 
-[ Upstream commit c77b35ce66af25bdd6fde60b62e35b9b316ea5c2 ]
+[ Upstream commit 27058b95fbb784406ea4c40b20caa3f04937140c ]
 
-The sparse tool complains about the remove of the _iomem attribute.
+Ethernet switch does not have addressable subnodes.
 
-stm32_rproc.c:660:17: warning: cast removes address space '__iomem' of expression
+This fixes:
+arch/arm64/boot/dts/broadcom/bcmbca/bcm4908-asus-gt-ac5300.dtb: ethernet-switch@0: '#address-cells', '#size-cells' do not match any of the regexes: 'pinctrl-[0-9]+'
+        from schema $id: http://devicetree.org/schemas/net/dsa/brcm,sf2.yaml#
 
-Add '__force' to explicitly specify that the cast is intentional.
-This conversion is necessary to cast to addresses pointer,
-which are then managed by the remoteproc core as a pointer to a
-resource_table structure.
-
-Fixes: 8a471396d21c ("remoteproc: stm32: Move resource table setup to rproc_ops")
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-Link: https://lore.kernel.org/r/20240117135312.3381936-3-arnaud.pouliquen@foss.st.com
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Fixes: 527a3ac9bdf8 ("arm64: dts: broadcom: bcm4908: describe internal switch")
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+Link: https://lore.kernel.org/r/20240111115636.12095-1-zajec5@gmail.com
+Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/stm32_rproc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-index 11bbd6018e984..61794c9c080fb 100644
---- a/drivers/remoteproc/stm32_rproc.c
-+++ b/drivers/remoteproc/stm32_rproc.c
-@@ -657,7 +657,7 @@ stm32_rproc_get_loaded_rsc_table(struct rproc *rproc, size_t *table_sz)
- 	 * entire area by overwriting it with the initial values stored in rproc->clean_table.
- 	 */
- 	*table_sz = RSC_TBL_SIZE;
--	return (struct resource_table *)ddata->rsc_va;
-+	return (__force struct resource_table *)ddata->rsc_va;
- }
+diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi b/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
+index 2f124b027bbf0..aadfa0ae05252 100644
+--- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
++++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
+@@ -227,9 +227,6 @@ ethernet-switch@0 {
+ 				brcm,num-gphy = <5>;
+ 				brcm,num-rgmii-ports = <2>;
  
- static const struct rproc_ops st_rproc_ops = {
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-
+ 				ports: ports {
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
 -- 
 2.43.0
 
