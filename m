@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F323B137769;
-	Sun, 24 Mar 2024 23:05:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC6A1350E3;
+	Sun, 24 Mar 2024 23:05:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321522; cv=none; b=nxz+f8MXU99cwgPhxWKfUf5yhRnOouxdLBYjb4wYm42cQgJExUIdRIeQdWr1TQoqhIdEN8TAczCvt2lMK5ZzngbYiaFiJRz2GrjbhpcLPMc0G+c7ZoSpBWO2dO8h1E523n2yk/60po+3F/ZnLnOF0mL8RiUWE8i3wTiFFRiUt5U=
+	t=1711321525; cv=none; b=OInW74bscTYPDbcX1aU8Nv9EtYckjb1tLsZYMsljMStqapIsHsEAeW3k2mxjqQjCUSIMne5075WM11qYh+Yz6GqSNjWrLmoBPu8NdyCRqX+rQe2IlhoxF/36p4w42u+0qpIawml+mY0d5a65SPhM7sERLc1LjX2UPZlbTm77PEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321522; c=relaxed/simple;
-	bh=W+vSHSS1I2tFPRYqKmbBYM9lrczidUOc7amNlVk6rGI=;
+	s=arc-20240116; t=1711321525; c=relaxed/simple;
+	bh=/a1WHaJ3M+aXmVmWxz7JExxl6J9UcQdq0czcxVxW7vw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gybJBUsartW9wmaJ8+yKT/IkemuwBc7x7z7/m46ntJy82vIH8a0hWOUDpz4dhHPfMEOK1W09TmGkzuAsBokec8eiKxXVAQnlJnzWZitdvaKIQgFH2Rm1dWgYg5K3jAgrMoh2EaUSYZFyf/av/m0Czw0zeKIICejOWxK7IUl+OCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ut8nuO7p; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=U2jKerM8NJEmkFv3QcrEhr46GpM1wuqdYiJJr4MXh8teKjOUzaHetzx3KdduFQEA+nzIAkYTgf6/HiS+LEAlCeGBOx7k8Al8xguHZ5oqwt5rHRc8H52lzS9JdIM1zf9znWbwUzC5PFPZMlUtR7/oI1JPb3eEqzjIKRNzHcUzP98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CiGFJYGN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ut8nuO7p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25DFAC433C7;
-	Sun, 24 Mar 2024 23:05:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CiGFJYGN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D13DC43399;
+	Sun, 24 Mar 2024 23:05:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321520;
-	bh=W+vSHSS1I2tFPRYqKmbBYM9lrczidUOc7amNlVk6rGI=;
+	s=k20201202; t=1711321524;
+	bh=/a1WHaJ3M+aXmVmWxz7JExxl6J9UcQdq0czcxVxW7vw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ut8nuO7pAnKWbIQziYusto9WyWHMAr9yLtYfiyDTRMSUT5MeetPrXFyRgb7SMAa6Z
-	 lQOSuQQtAPQajmBdM0wi8+sexk7HYypdwibdjECLbtOUgL6tHsUxHDnqbgkF1Q3UFZ
-	 +y3b+fm9J29bxXrkRZZhYqh3NLl6X0fSShQHbx6k11o1LtCY3xff6zMF4/tn00m4+q
-	 3c7NMU9wfKnpnybQDMYUOjzHBD5vhbbNMWHHZM60C/uxEtpMRhqnjbp112iWrdy0jx
-	 /kmQF3bGHsz1QlnlSCXDSVD5GDgwgZuSTFU5rNKSbSW1fHYDfbeMZfA/zsmnvMzFHx
-	 ageUheoROqc7w==
+	b=CiGFJYGNBZFfXCKcIQtg4QA7lixdN9YbI2/+Vn7cxyk8TnoX/2bY0YpZal75FDRRB
+	 KEDKHWAufQnahHMQLzvdABwZaZ4uSZZx6l7jMXmVIGGButM4Tqzp2/i6ElxNHXSH8B
+	 sPlfW5sWMakVNAm3oU0YhG9pgiIYnPQbNf+V0TSqcJsybTFRLbnjtROoMmS79l+Fmj
+	 L02YuIO5RYxZgBMX8qW9rpnUUFIVuJWWXbm3TsUsrNjh3PlBJ2y9SaXLN4H1ENoNiE
+	 L3Qk4VsE56kXa1tXj2OBSGHq3sSEv5Yk0W1HHQmBuhSQ0w+7qommOoNiTnD1/+LcWy
+	 atAYDbHolDXTA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andre Przywara <andre.przywara@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
+Cc: Jon Hunter <jonathanh@nvidia.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 247/638] firmware: arm_scmi: Fix double free in SMC transport cleanup path
-Date: Sun, 24 Mar 2024 18:54:44 -0400
-Message-ID: <20240324230116.1348576-248-sashal@kernel.org>
+Subject: [PATCH 6.6 251/638] memory: tegra: Correct DLA client names
+Date: Sun, 24 Mar 2024 18:54:48 -0400
+Message-ID: <20240324230116.1348576-252-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,97 +48,105 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Andre Przywara <andre.przywara@arm.com>
+From: Jon Hunter <jonathanh@nvidia.com>
 
-[ Upstream commit f1d71576d2c9ec8fdb822173fa7f3de79475e9bd ]
+[ Upstream commit 51d915cbeef4c7a154f5d810b1e10d8125f2b0cc ]
 
-When the generic SCMI code tears down a channel, it calls the chan_free
-callback function, defined by each transport. Since multiple protocols
-might share the same transport_info member, chan_free() might want to
-clean up the same member multiple times within the given SCMI transport
-implementation. In this case, it is SMC transport. This will lead to a NULL
-pointer dereference at the second time:
+Some of the names for the Tegra234 DLA clients are not unique and do not
+align with the name of the client ID definitions. Therefore, it is not
+possible to determine the exact DLA client from messages that print the
+client name. Fix this by correcting the DLA memory client names for
+Tegra234 to align with the name of the corresponding memory client ID.
 
-    | scmi_protocol scmi_dev.1: Enabled polling mode TX channel - prot_id:16
-    | arm-scmi firmware:scmi: SCMI Notifications - Core Enabled.
-    | arm-scmi firmware:scmi: unable to communicate with SCMI
-    | Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-    | Mem abort info:
-    |   ESR = 0x0000000096000004
-    |   EC = 0x25: DABT (current EL), IL = 32 bits
-    |   SET = 0, FnV = 0
-    |   EA = 0, S1PTW = 0
-    |   FSC = 0x04: level 0 translation fault
-    | Data abort info:
-    |   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-    |   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-    |   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-    | user pgtable: 4k pages, 48-bit VAs, pgdp=0000000881ef8000
-    | [0000000000000000] pgd=0000000000000000, p4d=0000000000000000
-    | Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
-    | Modules linked in:
-    | CPU: 4 PID: 1 Comm: swapper/0 Not tainted 6.7.0-rc2-00124-g455ef3d016c9-dirty #793
-    | Hardware name: FVP Base RevC (DT)
-    | pstate: 61400009 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
-    | pc : smc_chan_free+0x3c/0x6c
-    | lr : smc_chan_free+0x3c/0x6c
-    | Call trace:
-    |  smc_chan_free+0x3c/0x6c
-    |  idr_for_each+0x68/0xf8
-    |  scmi_cleanup_channels.isra.0+0x2c/0x58
-    |  scmi_probe+0x434/0x734
-    |  platform_probe+0x68/0xd8
-    |  really_probe+0x110/0x27c
-    |  __driver_probe_device+0x78/0x12c
-    |  driver_probe_device+0x3c/0x118
-    |  __driver_attach+0x74/0x128
-    |  bus_for_each_dev+0x78/0xe0
-    |  driver_attach+0x24/0x30
-    |  bus_add_driver+0xe4/0x1e8
-    |  driver_register+0x60/0x128
-    |  __platform_driver_register+0x28/0x34
-    |  scmi_driver_init+0x84/0xc0
-    |  do_one_initcall+0x78/0x33c
-    |  kernel_init_freeable+0x2b8/0x51c
-    |  kernel_init+0x24/0x130
-    |  ret_from_fork+0x10/0x20
-    | Code: f0004701 910a0021 aa1403e5 97b91c70 (b9400280)
-    | ---[ end trace 0000000000000000 ]---
+Note that although the client names are also used by the interconnect
+framework, interconnect support for the DLA clients has not been added
+and so this issue does not impact the interconnect support.
 
-Simply check for the struct pointer being NULL before trying to access
-its members, to avoid this situation.
-
-This was found when a transport doesn't really work (for instance no SMC
-service), the probe routines then tries to clean up, and triggers a crash.
-
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Fixes: 1dc6558062da ("firmware: arm_scmi: Add smc/hvc transport")
-Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
-Link: https://lore.kernel.org/r/20240126122325.2039669-1-andre.przywara@arm.com
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Fixes: 5cd24ca0985f ("memory: tegra: Add DLA clients for Tegra234")
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Link: https://lore.kernel.org/r/20240220124430.19072-1-jonathanh@nvidia.com
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/arm_scmi/smc.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/memory/tegra/tegra234.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/smc.c b/drivers/firmware/arm_scmi/smc.c
-index c193516a254d9..771797b6e2680 100644
---- a/drivers/firmware/arm_scmi/smc.c
-+++ b/drivers/firmware/arm_scmi/smc.c
-@@ -196,6 +196,13 @@ static int smc_chan_free(int id, void *p, void *data)
- 	struct scmi_chan_info *cinfo = p;
- 	struct scmi_smc *scmi_info = cinfo->transport_info;
- 
-+	/*
-+	 * Different protocols might share the same chan info, so a previous
-+	 * smc_chan_free call might have already freed the structure.
-+	 */
-+	if (!scmi_info)
-+		return 0;
-+
- 	/* Ignore any possible further reception on the IRQ path */
- 	if (scmi_info->irq > 0)
- 		free_irq(scmi_info->irq, scmi_info);
+diff --git a/drivers/memory/tegra/tegra234.c b/drivers/memory/tegra/tegra234.c
+index 2845041f32d69..fa40c49b070d0 100644
+--- a/drivers/memory/tegra/tegra234.c
++++ b/drivers/memory/tegra/tegra234.c
+@@ -121,7 +121,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 		},
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_DLA1RDB,
+-		.name = "dla0rdb",
++		.name = "dla1rdb",
+ 		.sid = TEGRA234_SID_NVDLA1,
+ 		.regs = {
+ 			.sid = {
+@@ -407,7 +407,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 		},
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_DLA1RDB1,
+-		.name = "dla0rdb1",
++		.name = "dla1rdb1",
+ 		.sid = TEGRA234_SID_NVDLA1,
+ 		.regs = {
+ 			.sid = {
+@@ -417,7 +417,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 		},
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_DLA1WRB,
+-		.name = "dla0wrb",
++		.name = "dla1wrb",
+ 		.sid = TEGRA234_SID_NVDLA1,
+ 		.regs = {
+ 			.sid = {
+@@ -663,7 +663,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 		},
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_DLA1RDA,
+-		.name = "dla0rda",
++		.name = "dla1rda",
+ 		.sid = TEGRA234_SID_NVDLA1,
+ 		.regs = {
+ 			.sid = {
+@@ -673,7 +673,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 		},
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_DLA1FALRDB,
+-		.name = "dla0falrdb",
++		.name = "dla1falrdb",
+ 		.sid = TEGRA234_SID_NVDLA1,
+ 		.regs = {
+ 			.sid = {
+@@ -683,7 +683,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 		},
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_DLA1WRA,
+-		.name = "dla0wra",
++		.name = "dla1wra",
+ 		.sid = TEGRA234_SID_NVDLA1,
+ 		.regs = {
+ 			.sid = {
+@@ -693,7 +693,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 		},
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_DLA1FALWRB,
+-		.name = "dla0falwrb",
++		.name = "dla1falwrb",
+ 		.sid = TEGRA234_SID_NVDLA1,
+ 		.regs = {
+ 			.sid = {
+@@ -857,7 +857,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 		},
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_DLA1RDA1,
+-		.name = "dla0rda1",
++		.name = "dla1rda1",
+ 		.sid = TEGRA234_SID_NVDLA1,
+ 		.regs = {
+ 			.sid = {
 -- 
 2.43.0
 
