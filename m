@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA98149E05;
-	Sun, 24 Mar 2024 23:15:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C676D229D9F;
+	Sun, 24 Mar 2024 23:15:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322158; cv=none; b=AyBVodA8RNfDBSmXq6tomYCmLl/qWvvmayO+ortt3xZ3/vb8Gf3CkwGKm7MYRtlMQ/ILbORiWDAoF2tFUm64WRjwU+/B5KzF6br2ryEjz5P0zWHfqBCEw3eRdLMghns+aIl/V2l4XTJOwshcXr6xfJCB5YL5ZhmuEoBa0k/bDOQ=
+	t=1711322144; cv=none; b=PpEI8a2gvj/JaoYr+xGUJsDzOAviv6nrAa5UkLRHrc9MJZzPA2S8srvnmzmKriCm4a5HipkaxUZE/2J0g06/GPTNbWx198Oph1HzE6Kb6EIptlRYr8scQwJ60R/a4ROCxLRsU2ooOwq91LZIRmLEpbhg4yt+MwgA1zJ4MXpD9X8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322158; c=relaxed/simple;
-	bh=V+QTxs8ZNX2e9Unfo7ANnUqWpeXj6vfwQlIB3jSMCBw=;
+	s=arc-20240116; t=1711322144; c=relaxed/simple;
+	bh=kfXkjTP31j7etGaIsLsHiZobHHvwuXXdZmmHkitp3zs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fhZhrXSR2F48UaRa0ISeaIIGTZiNvuU6wlVCLDb3VJLgYhiuSpbjVbabeic5ylhS4BcZamp4kdIXbQG2CSFueGg2ERC9XswvQcWT25hu8yxdvGW0+ST+rrfN5QsvqkCl8TamBfYGeD3+M4IQIIsLBuLPGotLgJCjf+b34Uee9Pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=czW1NO2l; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=kyzsafkhkuqOOSsp1U92wGHqNWWnpUI0jybsn3Hag+LROwV0bI+hzEkm93zJrJRo7Na66UyPGzJhhuWlLcJHBgB0e0l/7Sy85kPtEL16ULZxwDRY8MybrSUvo94VZ+idu8CybMg4X9XMsptJto334HroV+IwL+vDGC6SjDKxv1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MDhMsVqC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="czW1NO2l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B912C43394;
-	Sun, 24 Mar 2024 23:15:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MDhMsVqC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D12E4C43390;
+	Sun, 24 Mar 2024 23:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322156;
-	bh=V+QTxs8ZNX2e9Unfo7ANnUqWpeXj6vfwQlIB3jSMCBw=;
+	s=k20201202; t=1711322143;
+	bh=kfXkjTP31j7etGaIsLsHiZobHHvwuXXdZmmHkitp3zs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=czW1NO2lJ9Hlq4BgwGj988gfqzYAwENlCWnOssi45yP8hXQErQXDQak0SwqFQsXZz
-	 gU2lU092n+HBW8KfgHJceT8VtQSR4iLUdKbOfajBnujFG5HFF5YKqAGuBmxRfbUzSl
-	 F/1yOATnjwk0xolRw90URp6G5Clm2Zvcnq7ODfJeAsoucXpMU0tRPF6KXk36+nP2SH
-	 YiALN2kXF1rGy01vRZfQAC0oWABvf15k5E78Wu2QyZl+5WVrUxa6H5SUY8QB4J5TR6
-	 yfEGGirEyA5pcoq8cPbkXIqLEavYm/SanHG296ePcRAtl2oyBkhUzdoL0B3slhxEVO
-	 kU4J/fvQYpOHw==
+	b=MDhMsVqCD2BTCjmDsvFawbAf8wE/11TbrQp2eemKdfkuXczJ/WNdI0hc/Winxp8zY
+	 yECl+nV6pvjkWbjevEvb2l9ykiwVipYTJKf8uJFrLjLk9FTL2YC8mV753vX+EDXONk
+	 eYqZYHrJb6uXzGiLgEu32gmqtnnY3wFA+n/5kw4PcWo9r+54zs+F2IyiUf2iUzWR0y
+	 +z/evjozbrgeibtyCYcQZFlC3+NyOnVn+KfPu8c+ZQ22TsoQIKE+keLiy3Z7tlgr4l
+	 nkUs6j1G8H2jKegMObIMfrsSAk0uvfkoRJ70tTUhIWm6TH4t/bhLljhl/mjx9wJVtl
+	 pfua+AxE+GGUw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chen Ni <nichen@iscas.ac.cn>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 234/451] drm/tegra: dsi: Add missing check for of_find_device_by_node
-Date: Sun, 24 Mar 2024 19:08:30 -0400
-Message-ID: <20240324231207.1351418-235-sashal@kernel.org>
+Subject: [PATCH 6.1 220/451] Bluetooth: hci_core: Fix missing instances using HCI_MAX_AD_LENGTH
+Date: Sun, 24 Mar 2024 19:08:16 -0400
+Message-ID: <20240324231207.1351418-221-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,39 +47,85 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chen Ni <nichen@iscas.ac.cn>
+From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 
-[ Upstream commit afe6fcb9775882230cd29b529203eabd5d2a638d ]
+[ Upstream commit db08722fc7d46168fe31d9b8a7b29229dd959f9f ]
 
-Add check for the return value of of_find_device_by_node() and return
-the error if it fails in order to avoid NULL pointer dereference.
+There a few instances still using HCI_MAX_AD_LENGTH instead of using
+max_adv_len which takes care of detecting what is the actual maximum
+length depending on if the controller supports EA or not.
 
-Fixes: e94236cde4d5 ("drm/tegra: dsi: Add ganged mode support")
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231024080738.825553-1-nichen@iscas.ac.cn
+Fixes: 112b5090c219 ("Bluetooth: MGMT: Fix always using HCI_MAX_AD_LENGTH")
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Stable-dep-of: 2ab3e8d67fc1 ("Bluetooth: Fix eir name length")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/dsi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ include/net/bluetooth/hci_core.h | 6 +++---
+ net/bluetooth/eir.c              | 2 +-
+ net/bluetooth/mgmt.c             | 6 +++---
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
-index de1333dc0d867..0adce882f157b 100644
---- a/drivers/gpu/drm/tegra/dsi.c
-+++ b/drivers/gpu/drm/tegra/dsi.c
-@@ -1534,9 +1534,11 @@ static int tegra_dsi_ganged_probe(struct tegra_dsi *dsi)
- 	np = of_parse_phandle(dsi->dev->of_node, "nvidia,ganged-mode", 0);
- 	if (np) {
- 		struct platform_device *gangster = of_find_device_by_node(np);
-+		of_node_put(np);
-+		if (!gangster)
-+			return -EPROBE_DEFER;
+diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+index 53155cb703b5d..c50a41f1782a4 100644
+--- a/include/net/bluetooth/hci_core.h
++++ b/include/net/bluetooth/hci_core.h
+@@ -81,7 +81,7 @@ struct discovery_state {
+ 	u8			last_adv_addr_type;
+ 	s8			last_adv_rssi;
+ 	u32			last_adv_flags;
+-	u8			last_adv_data[HCI_MAX_AD_LENGTH];
++	u8			last_adv_data[HCI_MAX_EXT_AD_LENGTH];
+ 	u8			last_adv_data_len;
+ 	bool			report_invalid_rssi;
+ 	bool			result_filtering;
+@@ -293,7 +293,7 @@ struct adv_pattern {
+ 	__u8 ad_type;
+ 	__u8 offset;
+ 	__u8 length;
+-	__u8 value[HCI_MAX_AD_LENGTH];
++	__u8 value[HCI_MAX_EXT_AD_LENGTH];
+ };
  
- 		dsi->slave = platform_get_drvdata(gangster);
--		of_node_put(np);
+ struct adv_rssi_thresholds {
+@@ -727,7 +727,7 @@ struct hci_conn {
+ 	__u16		le_conn_interval;
+ 	__u16		le_conn_latency;
+ 	__u16		le_supv_timeout;
+-	__u8		le_adv_data[HCI_MAX_AD_LENGTH];
++	__u8		le_adv_data[HCI_MAX_EXT_AD_LENGTH];
+ 	__u8		le_adv_data_len;
+ 	__u8		le_per_adv_data[HCI_MAX_PER_AD_LENGTH];
+ 	__u8		le_per_adv_data_len;
+diff --git a/net/bluetooth/eir.c b/net/bluetooth/eir.c
+index 8a85f6cdfbc16..9214189279e80 100644
+--- a/net/bluetooth/eir.c
++++ b/net/bluetooth/eir.c
+@@ -33,7 +33,7 @@ u8 eir_append_local_name(struct hci_dev *hdev, u8 *ptr, u8 ad_len)
+ 	size_t complete_len;
  
- 		if (!dsi->slave) {
- 			put_device(&gangster->dev);
+ 	/* no space left for name (+ NULL + type + len) */
+-	if ((HCI_MAX_AD_LENGTH - ad_len) < HCI_MAX_SHORT_NAME_LENGTH + 3)
++	if ((max_adv_len(hdev) - ad_len) < HCI_MAX_SHORT_NAME_LENGTH + 3)
+ 		return ad_len;
+ 
+ 	/* use complete name if present and fits */
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index 1486fb9bb78f7..21c0924787e22 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -5378,9 +5378,9 @@ static u8 parse_adv_monitor_pattern(struct adv_monitor *m, u8 pattern_count,
+ 	for (i = 0; i < pattern_count; i++) {
+ 		offset = patterns[i].offset;
+ 		length = patterns[i].length;
+-		if (offset >= HCI_MAX_AD_LENGTH ||
+-		    length > HCI_MAX_AD_LENGTH ||
+-		    (offset + length) > HCI_MAX_AD_LENGTH)
++		if (offset >= HCI_MAX_EXT_AD_LENGTH ||
++		    length > HCI_MAX_EXT_AD_LENGTH ||
++		    (offset + length) > HCI_MAX_EXT_AD_LENGTH)
+ 			return MGMT_STATUS_INVALID_PARAMS;
+ 
+ 		p = kmalloc(sizeof(*p), GFP_KERNEL);
 -- 
 2.43.0
 
