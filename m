@@ -1,40 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B29181470;
-	Sun, 24 Mar 2024 23:48:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA41C28CE4C;
+	Sun, 24 Mar 2024 23:48:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324090; cv=none; b=QJ/Sg7WpARbc828R0xJUMwaourH+3gkOAuvpX1MLLpdLAmbjBsX4M1JcFT4bg5047HTcdmSbZ5fuopCQYhyCpOsLDFIqxYIxYrG6rWKZBxrKf8c9QCObuJoPayT38vFrPBGxw5oKHYH/0357pb0ccNAsLd7pM7uo+VvsBQwq19Q=
+	t=1711324100; cv=none; b=TiQVDcV3lyiw4CZJ4x2qKFAvcE69B0h/ZnWNftPr9NmXp2SK3pX6wrwBjARfL165D8OLSkxmLPd4VERX53GfxWzbUl/yugfsfWokzO5KM5Yhp3QbvAVaqwwV2haNSDh1wl1qevGoL4pdLEn1+xQewnX+vcktMMiGjJDIVH8Ww80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324090; c=relaxed/simple;
-	bh=+X/wB7FFU9/O/mKVEwyniykC9TrsoAe0oE0bRh21QVk=;
+	s=arc-20240116; t=1711324100; c=relaxed/simple;
+	bh=NhapjfnB4Eeq7LvrvruOrdqknPKBH/KR7oS/O09bMzI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=swL87xcf+/N8X/Ba2OVcrGGtn37uPOSjtF7u5qlhL17689hFzMQyZ6eZnEjcHnwB6o0eFF5EB16I8HcGn5Ktx7AXMU7ZHK3B+lW8EiIrGqUwf8BbfvWUXz5PfoWtetQR1O9kr5UF8IrfBK/bRPUJa7ri7ZW9o91Ob9kwjx5lKv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gpa/sAv2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WOF2FYbFzF0SkjrjWCuqEYQb4K4D3htI5Ef+tVQpeMu4uYLo9jnt19FT/Dphe5VMOvgwRicdivJP2SAlNZ5nkUTqgGUmdizwcOHyitVuaylM9HBNj1tKb1TCVxhmv/hWVdL/yhTzhUzxuqXlcVOQPkjvcMwgOMeWNUkcH4Mg0P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iGhb/Dja; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gpa/sAv2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4951DC43394;
-	Sun, 24 Mar 2024 23:48:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iGhb/Dja"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97656C43394;
+	Sun, 24 Mar 2024 23:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324088;
-	bh=+X/wB7FFU9/O/mKVEwyniykC9TrsoAe0oE0bRh21QVk=;
+	s=k20201202; t=1711324099;
+	bh=NhapjfnB4Eeq7LvrvruOrdqknPKBH/KR7oS/O09bMzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Gpa/sAv2sDuHDUIvUeCAAp+FYCp0oUlelaCUhVHftQHTuvLhFDEI/kcHulwMKXCcb
-	 203luG0oHxXOlCnXDl8wKFZE6pjZyZaHqZuPa3Psssw8QwEnq+DEa9CI27hV5wlMlC
-	 IeIYLLiK+SV9G6b0jVxGxU58Vb/67a2ugPmGRHqYhmWKf/VFhab5JvfrnKX74iOMu0
-	 dqYXTy/DX8qDFNk+y4J9F/uW9y01GQZ0D3ixlJrahyjYvq8RU//HGpkcQYM1VOUKax
-	 AJHwZu94cHPuxoQmNge51/xYGQJq9ne8HRt1cv3tiQyMbAYxG4cGDpg3pid6Alucci
-	 DHEso72jDFNNA==
+	b=iGhb/DjaKHsjc22UIoRppEf1y5FI3Lq88zmWlYSWN39dxv4k4T3S9cXsNIObONB/W
+	 33tjNi2VjUQgmBrUfRospQnol28wdlMvzryclJGOKk9nVfgxx90poHtbwHAXUfyWGG
+	 GRu89x0wlUmRdBS3mrnni/K484E8cwGohCI8esF96LRzss27r4O/Ecj1mK+8TMXWj4
+	 AuczcPnfGOzk8I7f+TKy4dTRNRbUr2ex5LLctqNqt+Kvw2e68KDO1s7WwQYbpX6z1n
+	 3MbSLeH+km2u+1bkVAaSx8DX+Vl/knXk2gK0QQFp/ya9/rRyxramfl+AEtTvQeJ2a1
+	 03G27tofgGvgw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
+	Wyatt Wood <wyatt.wood@amd.com>,
+	Anthony Koo <Anthony.Koo@amd.com>,
+	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+	Aurabindo Pillai <aurabindo.pillai@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 089/183] drm/tegra: dsi: Fix missing pm_runtime_disable() in the error handling path of tegra_dsi_probe()
-Date: Sun, 24 Mar 2024 19:45:02 -0400
-Message-ID: <20240324234638.1355609-90-sashal@kernel.org>
+Subject: [PATCH 5.4 098/183] drm/amd/display: Fix potential NULL pointer dereferences in 'dcn10_set_output_transfer_func()'
+Date: Sun, 24 Mar 2024 19:45:11 -0400
+Message-ID: <20240324234638.1355609-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,34 +52,54 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
 
-[ Upstream commit 5286a9fc280c45b6b307ee1b07f7a997e042252c ]
+[ Upstream commit 9ccfe80d022df7c595f1925afb31de2232900656 ]
 
-If an error occurs after calling pm_runtime_enable(), pm_runtime_disable()
-should be called as already done in the remove function.
+The 'stream' pointer is used in dcn10_set_output_transfer_func() before
+the check if 'stream' is NULL.
 
-Fixes: ef8187d75265 ("drm/tegra: dsi: Implement runtime PM")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/ee4a15c9cd4b574a55cd67c30d2411239ba2cee9.1693667005.git.christophe.jaillet@wanadoo.fr
+Fixes the below:
+drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn10_hwseq.c:1892 dcn10_set_output_transfer_func() warn: variable dereferenced before check 'stream' (see line 1875)
+
+Fixes: ddef02de0d71 ("drm/amd/display: add null checks before logging")
+Cc: Wyatt Wood <wyatt.wood@amd.com>
+Cc: Anthony Koo <Anthony.Koo@amd.com>
+Cc: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Cc: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/dsi.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
-index 072a4c1d8eff4..03ccfb6ce8a89 100644
---- a/drivers/gpu/drm/tegra/dsi.c
-+++ b/drivers/gpu/drm/tegra/dsi.c
-@@ -1582,6 +1582,7 @@ static int tegra_dsi_probe(struct platform_device *pdev)
- 	return 0;
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+index c4c99bc7f2890..3059739695d8c 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+@@ -1470,6 +1470,9 @@ dcn10_set_output_transfer_func(struct pipe_ctx *pipe_ctx,
+ {
+ 	struct dpp *dpp = pipe_ctx->plane_res.dpp;
  
- unregister:
-+	pm_runtime_disable(&pdev->dev);
- 	mipi_dsi_host_unregister(&dsi->host);
- mipi_free:
- 	tegra_mipi_free(dsi->mipi);
++	if (!stream)
++		return false;
++
+ 	if (dpp == NULL)
+ 		return false;
+ 
+@@ -1492,8 +1495,8 @@ dcn10_set_output_transfer_func(struct pipe_ctx *pipe_ctx,
+ 	} else
+ 		dpp->funcs->dpp_program_regamma_pwl(dpp, NULL, OPP_REGAMMA_BYPASS);
+ 
+-	if (stream != NULL && stream->ctx != NULL &&
+-			stream->out_transfer_func != NULL) {
++	if (stream->ctx &&
++	    stream->out_transfer_func) {
+ 		log_tf(stream->ctx,
+ 				stream->out_transfer_func,
+ 				dpp->regamma_params.hw_points_num);
 -- 
 2.43.0
 
