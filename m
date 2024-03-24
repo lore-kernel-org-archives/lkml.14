@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7641C82D85;
-	Sun, 24 Mar 2024 22:50:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074C314386D;
+	Sun, 24 Mar 2024 22:50:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320618; cv=none; b=smY1uEVkcDnR/PnhIquBM+boDlPObvYgyLVq7+v2E9mSt5pBslecupcrWErsiayD0xZaCWFMOBOBVtA7DiKEokCaU8O38NZd7XCZHQGQh8bQICu60hocYB31dlhGPNFqf0IblUxxlm+eRwpM5MVdUEv1bcvQSuwY6E4K8emC+Eg=
+	t=1711320621; cv=none; b=BMbnyYdPrw9OGX9IOrBNZ2+u5MG476lU7rWJL7F21e4QLfhw1ByjVVgVWY5zUCQB4wxdm/5/1iBtwdOSjy2GgOxdeql4AZ0OQ2fMAwCPay7s9x+0GkdfgaCBX1ZteZwrzLo3jPciLrejY9l8ideX8mmw7Zjbf2I38deNOIVoyMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320618; c=relaxed/simple;
-	bh=xPRqP6qMDypdxzrwhFJPn3DwXf9dhukUsTYwU4wACgE=;
+	s=arc-20240116; t=1711320621; c=relaxed/simple;
+	bh=5wfng/s2DhfKcXbjgEZ62QFxd9CeNrVqaQKaNQoR5/4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iQ8T/+DyYXp1H2vaqkxPOjpxdEDEoUYq5XaPysKth+lBvjo1LvGGTfhh3SDfP0wSP1xzkt5KFePu/qTbwfDKf1Rn/Q4Dv9tKXc0ob+rcst2AOwcK8yuXJYWIV79lPKGLiNCk2ERt6RfrTjg7/HN/RzaBAAEiZ/K2Z7TBFRpqny4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SeQwloAp; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=N4QdN/hTW304Uxw74E/zbQ1eB//sHe9BUKE3WhOLKfyelUzxTQ8ZlHzIfqXZ4bbaqy8VZH5OerOakwqF+DWaPWFMy7lSwXax2xJXL3RIL2F/UoUWk1OQInlHdsK1j5Rb3VSLiUEJvd2G5VH29GNehto3aaH/ap60Ca9wGHJ2vH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jAq8PvwY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SeQwloAp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7788EC43390;
-	Sun, 24 Mar 2024 22:50:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jAq8PvwY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43601C43390;
+	Sun, 24 Mar 2024 22:50:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320618;
-	bh=xPRqP6qMDypdxzrwhFJPn3DwXf9dhukUsTYwU4wACgE=;
+	s=k20201202; t=1711320619;
+	bh=5wfng/s2DhfKcXbjgEZ62QFxd9CeNrVqaQKaNQoR5/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SeQwloApgFI8LRlMmOvFFdvbY69vzLZDvYMqZtmIwR4jlI6MIqjCbZIDHSyCeSXCm
-	 VUMQjjUBoler5bIFbKl9PzJ35XBxsk7wsmS/osqKPlF0VSgNwc0ndyrt/ViqLN1TH2
-	 X20+ANOxRBWURYrTKWWgjhxCLhv3ReggEp3uBVx3pe8skQ/xY3aYzqz8dQG5F6DDoA
-	 RxGuNQhl6niK6/0M19xk49U5MxSNMD6Fphv0wbdXRNFaDIH5BlbHGS74IfSNOdMSRT
-	 HcymU7Rsm8hQ3i8SgOU6mjvaUe/yZ3nrxebjlY6t+TdK77DSJk8nZYNAcp8SqVYb/v
-	 eK2izxcW2HhYw==
+	b=jAq8PvwY0GGXP/hnHqvGmEhfHFznaasG4B5/3jcA6uWjC/V9+z6YeEV8x93XzePe0
+	 s10zu0TNfMNOozaGUoleBzymJ7nRbp9tLk19Qf6Xh5bqbwvffQoHpHGfClQxx3Asop
+	 nNdN4DHoHqwviIGUBNbgj2kc2zzZFmx0Tqu1DGaWghgbH8Vg8lQ53HysDedealcQJo
+	 Pv1CtsgdzV/hGMwA0UXCVzwJhGzR1K+f7f1ENl7EG6/rf60vzGT+2vgN0nVBfKMdc1
+	 KYAhwyPFVQuo5ZMWdXQB+QBL4+Xy5zuaZdKXbYMtworndJucAMmuSS0tyvzPSpDC8V
+	 oZFyjGa3CQqvg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
+Cc: Frank Li <Frank.Li@nxp.com>,
 	Shawn Guo <shawnguo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 179/713] arm64: dts: imx8mm-kontron: Disable pull resistors for SD card signals on BL board
-Date: Sun, 24 Mar 2024 18:38:25 -0400
-Message-ID: <20240324224720.1345309-180-sashal@kernel.org>
+Subject: [PATCH 6.7 181/713] arm64: dts: imx8qm: Align edma3 power-domains resources indentation
+Date: Sun, 24 Mar 2024 18:38:27 -0400
+Message-ID: <20240324224720.1345309-182-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,77 +48,46 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+From: Frank Li <Frank.Li@nxp.com>
 
-[ Upstream commit 008820524844326ffb3123cebceba1960c0ad0dc ]
+[ Upstream commit 7edee2b297e5a4f805e5b945c0c0e6f4f8f719b5 ]
 
-Some signals have external pullup resistors on the board and don't need
-the internal ones to be enabled. Due to silicon errata ERR050080 let's
-disable the internal pull resistors whererever possible and prevent
-any unwanted behavior in case they wear out.
+<&pd IMX_SC_R_DMA_1_CH*> is now properly aligned with the previous line
+for improved code readability.
 
-Fixes: 8668d8b2e67f ("arm64: dts: Add the Kontron i.MX8M Mini SoMs and baseboards")
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Stable-dep-of: 5136ea6b109d ("arm64: dts: imx8qm: Correct edma3 power-domains and interrupt numbers")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../boot/dts/freescale/imx8mm-kontron-bl.dts   | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8qm-ss-dma.dtsi | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts
-index ee93db11c0d06..aab8e24216501 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts
-@@ -316,40 +316,40 @@ MX8MM_IOMUXC_NAND_CE1_B_GPIO3_IO2		0x19
+diff --git a/arch/arm64/boot/dts/freescale/imx8qm-ss-dma.dtsi b/arch/arm64/boot/dts/freescale/imx8qm-ss-dma.dtsi
+index 8439dd6b39353..13a3531873401 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qm-ss-dma.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qm-ss-dma.dtsi
+@@ -98,13 +98,13 @@ &edma2 {
  
- 	pinctrl_usdhc2: usdhc2grp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x190
-+			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x90
- 			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d0
- 			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d0
- 			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d0
- 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d0
- 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d0
--			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x019
--			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
-+			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
-+			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xd0
- 		>;
- 	};
- 
- 	pinctrl_usdhc2_100mhz: usdhc2-100mhzgrp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x194
-+			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x94
- 			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d4
- 			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d4
- 			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d4
- 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d4
- 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d4
--			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x019
--			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
-+			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
-+			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xd0
- 		>;
- 	};
- 
- 	pinctrl_usdhc2_200mhz: usdhc2-200mhzgrp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x196
-+			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x96
- 			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d6
- 			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d6
- 			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d6
- 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d6
- 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d6
--			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x019
--			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
-+			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
-+			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xd0
- 		>;
- 	};
+ &edma3 {
+ 	power-domains = <&pd IMX_SC_R_DMA_1_CH0>,
+-		     <&pd IMX_SC_R_DMA_1_CH1>,
+-		     <&pd IMX_SC_R_DMA_1_CH2>,
+-		     <&pd IMX_SC_R_DMA_1_CH3>,
+-		     <&pd IMX_SC_R_DMA_1_CH4>,
+-		     <&pd IMX_SC_R_DMA_1_CH5>,
+-		     <&pd IMX_SC_R_DMA_1_CH6>,
+-		     <&pd IMX_SC_R_DMA_1_CH7>;
++			<&pd IMX_SC_R_DMA_1_CH1>,
++			<&pd IMX_SC_R_DMA_1_CH2>,
++			<&pd IMX_SC_R_DMA_1_CH3>,
++			<&pd IMX_SC_R_DMA_1_CH4>,
++			<&pd IMX_SC_R_DMA_1_CH5>,
++			<&pd IMX_SC_R_DMA_1_CH6>,
++			<&pd IMX_SC_R_DMA_1_CH7>;
  };
+ 
+ &flexcan1 {
 -- 
 2.43.0
 
