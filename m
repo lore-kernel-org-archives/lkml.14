@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A053817497A;
-	Sun, 24 Mar 2024 23:36:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF37175C8E;
+	Sun, 24 Mar 2024 23:36:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323380; cv=none; b=NenRB2kfkPHJe1B7B2tnjz8jcAs+t44HYO9MyCRGDh6oIiCyK2OHSiBybnmcZhz1DAMRGEYbqhAgnpMJ5+K7NclZTtqBcGDFD1JN0KMlO1LbocPTlxMcvlyHsQsx3tBrScUhBU84xgCULHR8I9srYmWdoS+8I1GpBp639e5nAl8=
+	t=1711323390; cv=none; b=cGwnlPKLvBdatKG4nf6IHhzb0SYRfIznWj6EN5GBSWlUDa8Ul1kV1HUHykptxylG1Mb0W0WM8gC6w3S8MNCuwhsgnGnJX77VrnTg3afTsv6baxwXjUbtYaq8pjCNwR+aLqEH+OqNEw5A0eLVOTN4RkO3XxiF91tcgSnG8qn8pBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323380; c=relaxed/simple;
-	bh=p3oAQAnj1GeDzvAmW03RGagMjnmZp0YNL59rgkbV4Sw=;
+	s=arc-20240116; t=1711323390; c=relaxed/simple;
+	bh=uyYm/hTPynukJH3N+FZgPpV/0Ja5FnJGYAm2qYYs7Qo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ptsMFwkQghPQRgnZO+SFAbhWsR5OJu25GqbULojFC9YyJwruVfhEVE/50ufeX81+QuHU/xEIRvyzcAOhPosGvgaDd9cRNw9kdjrXFlHacaiKrsGKDjkC/qmqzjgCm5a1JJzapCch04OBzGXVDzqNCnPmVjQLjp7B6ekgkd4X+jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aFSKgKOV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Hhd68pIQpx1hAmmGz/mSrKBi/q0egW9SPlJXbhbS+d/QKaKl2IY/CQ36pa9BKREvGMcozFSDXfKa3kkY67jg9dRRMSA828vr29P0r9BHP+6wHvljljwl+vPaA34Kjqdw63FOe8QlTf338BGpGExnojJz2rKuf9Sgfm3Ps2LzP54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B8/O3aTR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aFSKgKOV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF6FAC433C7;
-	Sun, 24 Mar 2024 23:36:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B8/O3aTR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55CCEC43390;
+	Sun, 24 Mar 2024 23:36:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323380;
-	bh=p3oAQAnj1GeDzvAmW03RGagMjnmZp0YNL59rgkbV4Sw=;
+	s=k20201202; t=1711323390;
+	bh=uyYm/hTPynukJH3N+FZgPpV/0Ja5FnJGYAm2qYYs7Qo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aFSKgKOVPb0wkPyJBc2qnfuHCBWRbCjYwNgwJP99eyE+slEQqoC0K2T4Lk5Mn8fJm
-	 baIMqjEwcHeRnnJAwQ4TtL0PsikGJm6EJzmFItPb++Q4GK51uoI9KmCwhGSd+2liGh
-	 knaxYblz322uNoQlmasDzk9PtEhkvqjRoGfHe7eNjN3nQWeXloXtiuzFQ5EMAw5XCG
-	 wWbs1zqsGFdDY1dFIJ1t9/8GVhz2nKAAWh4s7QQNRq2I3J6eoxGmO9rQURbDIUxxJh
-	 OgKJpaGCZtgeBZOWlcPui9BdQ7loVI47nVd6A7m164JfEaxCk/0cish88TYNVp76Mm
-	 Z3KBgz+CDKKuA==
+	b=B8/O3aTRSkKRi9YNVzlYRQGwm71/oUb8nrEZ9pilMtJqKQJEjEwre5ojmILFv6LeN
+	 qXUrZmercaIa4ClnMBS1KrQYY5RlVF8G1VYNDti/+qRNRNCrmaLNY2TPOzn+IVuXT0
+	 TBJyXZT3w4Opl5yT1+4kNHkf1fph/Ht0C/5Fr8/5q7AoUrHFaQI4DaDiUYTucutSW6
+	 kWLxt16PrjCs/P3a22PNnQc3c663z0sOSOvXELSRQ3p3kKFnuCq7eJxIQdA6bsL+no
+	 BcFZDgv9lA7qs+7LT5jyKFPwxgLPlFufYNGLHfzqvd+8ZlIO2TDMx2pQ6uSxCCE2LA
+	 m5BBeDdKmMvUg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tim Harvey <tharvey@gateworks.com>,
-	Shawn Guo <shawnguo@kernel.org>,
+Cc: Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Petr Mladek <pmladek@suse.com>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 080/317] arm64: dts: imx8mm-venice-gw71xx: fix USB OTG VBUS
-Date: Sun, 24 Mar 2024 19:31:00 -0400
-Message-ID: <20240324233458.1352854-81-sashal@kernel.org>
+Subject: [PATCH 5.15 090/317] printk: Add panic_in_progress helper
+Date: Sun, 24 Mar 2024 19:31:10 -0400
+Message-ID: <20240324233458.1352854-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,83 +49,44 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Tim Harvey <tharvey@gateworks.com>
+From: Stephen Brennan <stephen.s.brennan@oracle.com>
 
-[ Upstream commit ec2cb52fcfef5d58574f2cfbc9a99ffc20ae5a9d ]
+[ Upstream commit 77498617857f68496b360081dde1a492d40c28b2 ]
 
-The GW71xx does not have a gpio controlled vbus regulator but it does
-require some pinctrl. Remove the regulator and move the valid pinctrl
-into the usbotg1 node.
+This will be used help avoid deadlocks during panics. Although it would
+be better to include this in linux/panic.h, it would require that header
+to include linux/atomic.h as well. On some architectures, this results
+in a circular dependency as well. So instead add the helper directly to
+printk.c.
 
-Fixes: bd306fdb4e60 ("arm64: dts: imx8mm-venice-gw71xx: fix USB OTG VBUS")
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Suggested-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Stephen Brennan <stephen.s.brennan@oracle.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+Link: https://lore.kernel.org/r/20220202171821.179394-2-stephen.s.brennan@oracle.com
+Stable-dep-of: d04d5882cd67 ("printk: Disable passing console lock owner completely during panic()")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../dts/freescale/imx8mm-venice-gw71xx.dtsi   | 29 ++++++-------------
- 1 file changed, 9 insertions(+), 20 deletions(-)
+ kernel/printk/printk.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-venice-gw71xx.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-venice-gw71xx.dtsi
-index 7ea909a4c1d5e..6de00c9dcd349 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-venice-gw71xx.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-venice-gw71xx.dtsi
-@@ -40,17 +40,6 @@ pps {
- 		gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
- 		status = "okay";
- 	};
--
--	reg_usb_otg1_vbus: regulator-usb-otg1 {
--		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_reg_usb1_en>;
--		compatible = "regulator-fixed";
--		regulator-name = "usb_otg1_vbus";
--		gpio = <&gpio1 10 GPIO_ACTIVE_HIGH>;
--		enable-active-high;
--		regulator-min-microvolt = <5000000>;
--		regulator-max-microvolt = <5000000>;
--	};
- };
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 8b110b245d92c..de44ccf9743c1 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -258,6 +258,11 @@ static void __up_console_sem(unsigned long ip)
+ }
+ #define up_console_sem() __up_console_sem(_RET_IP_)
  
- /* off-board header */
-@@ -102,9 +91,10 @@ &uart3 {
- };
- 
- &usbotg1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg1>;
- 	dr_mode = "otg";
- 	over-current-active-low;
--	vbus-supply = <&reg_usb_otg1_vbus>;
- 	status = "okay";
- };
- 
-@@ -156,14 +146,6 @@ MX8MM_IOMUXC_GPIO1_IO15_GPIO1_IO15	0x41
- 		>;
- 	};
- 
--	pinctrl_reg_usb1_en: regusb1grp {
--		fsl,pins = <
--			MX8MM_IOMUXC_GPIO1_IO10_GPIO1_IO10	0x41
--			MX8MM_IOMUXC_GPIO1_IO12_GPIO1_IO12	0x141
--			MX8MM_IOMUXC_GPIO1_IO13_USB1_OTG_OC	0x41
--		>;
--	};
--
- 	pinctrl_spi2: spi2grp {
- 		fsl,pins = <
- 			MX8MM_IOMUXC_ECSPI2_SCLK_ECSPI2_SCLK	0xd6
-@@ -186,4 +168,11 @@ MX8MM_IOMUXC_UART3_RXD_UART3_DCE_RX	0x140
- 			MX8MM_IOMUXC_UART3_TXD_UART3_DCE_TX	0x140
- 		>;
- 	};
++static bool panic_in_progress(void)
++{
++	return unlikely(atomic_read(&panic_cpu) != PANIC_CPU_INVALID);
++}
 +
-+	pinctrl_usbotg1: usbotg1grp {
-+		fsl,pins = <
-+			MX8MM_IOMUXC_GPIO1_IO12_GPIO1_IO12	0x141
-+			MX8MM_IOMUXC_GPIO1_IO13_USB1_OTG_OC	0x41
-+		>;
-+	};
- };
+ /*
+  * This is used for debugging the mess that is the VT code by
+  * keeping track if we have the console semaphore held. It's
 -- 
 2.43.0
 
