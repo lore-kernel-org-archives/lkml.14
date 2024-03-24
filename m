@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F98A2811DC;
-	Sun, 24 Mar 2024 23:41:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E88B131192;
+	Sun, 24 Mar 2024 23:41:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323680; cv=none; b=LiRYPfXdPKSmZ6WRFiBo+de2trfMwG/3D0xvqMiT4IHKgWCBrh9EWE/4DiDkgZ+Pvnon6ItVfHA1mludFSilopTcNBjkPap+8eonGEhyLzgHyum21p5nIJZnBQK9XwJbt0iJ2XE1dxz9dxXmXo8B9A2Uxw1DJ3LN5H1vJ6HBi5o=
+	t=1711323684; cv=none; b=ayix6cW4LIpUm9WAXjo81CIYpMXBSxwdHUdyXMeUvo+92yy4v9q5ndUskeV4YjUldGExXf4duNFpKzMzIi2Do/lRnHy/ttW4tIGJ10VooRx4t+kNpcTrofM4AdlVuwaOBqCOJ4/z1M7M3nRNoIk505nOy+RXIoyB/fPYeqe8l7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323680; c=relaxed/simple;
-	bh=6m+hw0ytwK8q3A+8x1/O6dFDlxarc7SQSSmQSXbygAM=;
+	s=arc-20240116; t=1711323684; c=relaxed/simple;
+	bh=koVwPrZQUSvcHiiHHSXm4PoGQaBqY7IyOELR1RuD3Vo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dAiDapxYRHykxgbaDicJM2yxwzrShV6TK05ibI4jHvzxRkvsFWGas3NQ2TpCv+4qv9PEHGFJJKWHKMPxpLrGtKnQTOEdlJrHH4m7PmFnYjcIS46fWaiwDkohloHBcQAae4h+JHq/h2aHj9AOi1slkkTF6FRcmT2c1LUCTc3oV+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U6YDQhwv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=auFFCrxOCh3NdCkyPlpLihq9hwGlxtCG/yN1H0YTLzJ25c7YN29WO73tY1px1y4B4GHeFfNzOsE2TlhHqJkSQH0mYgR9wqu74N3ZgKLPTz2yv2o2YkdzU7hSUzIer5f07bu2GiuJAR4nRQgWdMT6FznvmP7Fxq8LH+4x8nJfqqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DNVkhzZH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U6YDQhwv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46D4FC43390;
-	Sun, 24 Mar 2024 23:41:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DNVkhzZH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62FBCC43394;
+	Sun, 24 Mar 2024 23:41:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323680;
-	bh=6m+hw0ytwK8q3A+8x1/O6dFDlxarc7SQSSmQSXbygAM=;
+	s=k20201202; t=1711323684;
+	bh=koVwPrZQUSvcHiiHHSXm4PoGQaBqY7IyOELR1RuD3Vo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=U6YDQhwvcC+68Tf87qV1KYAWdKjkFx85pm4lN1QGizsmpuApoZGKG6wTMR5eA6QeO
-	 E/yCd2YWCeCSduLqB5Q6be5VWaiVwZlVoo8NyPtNeEiRy33qEOQKJM0g7qvkBtkeJE
-	 M/xGW5FMU4TvjsGNzYfZILlqhWa5Uyxh+zFLGvAJUNJGZ4TTozMLDL7Bmtkj8c0KMk
-	 3PZ8n8ja/BqF6iMO+PFd85O+400G9bIORyn9lMwdGFjV+EAGOkEaPK0gQm5xgTqjpz
-	 I9EhT1zZEUQQnSZ05WS28nup1yCS+iPfd/VI5ajWpwQuG06D1kH+mEpPJZ2/+fE/+M
-	 KzozOTKl/PiPg==
+	b=DNVkhzZHJ+rAlFQxV9qXDbTKF/jWQydx3U7Bcs2AdVplET0ASRhVZ7WbbNOZjmNYc
+	 yWc2F11pro1FwPpe6lNXZigmMvzd3KCyKQovbjYSoRJenQhTKWDWBnBzudCDpXr4pM
+	 L+R2cgi3DS41K4jd4i5XVt67AHN23+tBwkOiiihaySdYUG1asHqSFPD/QeWsZNArK+
+	 Q0vFEOgL6Gw9rfUoqtKz4BMVnA4Tl9nuVZcreF02yl6+lmN6p6pLppG339wEi0zX2I
+	 ErYI2pEBOD5eCMmh5qYsx4wQ4AY2fZ6ZZgKKz8axqFIwGZBaHWr07UAeF5LGyaA1r1
+	 lJQO0pO2GgzLQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>,
-	Guillaume Nault <gnault@redhat.com>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Willem de Bruijn <willemb@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: Johannes Berg <johannes.berg@intel.com>,
+	Gregory Greenman <gregory.greenman@intel.com>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 052/238] inet_diag: annotate data-races around inet_diag_table[]
-Date: Sun, 24 Mar 2024 19:37:20 -0400
-Message-ID: <20240324234027.1354210-53-sashal@kernel.org>
+Subject: [PATCH 5.10 056/238] wifi: iwlwifi: dbg-tlv: ensure NUL termination
+Date: Sun, 24 Mar 2024 19:37:24 -0400
+Message-ID: <20240324234027.1354210-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -51,56 +49,41 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Eric Dumazet <edumazet@google.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit e50e10ae5d81ddb41547114bfdc5edc04422f082 ]
+[ Upstream commit ea1d166fae14e05d49ffb0ea9fcd4658f8d3dcea ]
 
-inet_diag_lock_handler() reads inet_diag_table[proto] locklessly.
+The iwl_fw_ini_debug_info_tlv is used as a string, so we must
+ensure the string is terminated correctly before using it.
 
-Use READ_ONCE()/WRITE_ONCE() annotations to avoid potential issues.
-
-Fixes: d523a328fb02 ("[INET]: Fix inet_diag dead-lock regression")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reviewed-by: Guillaume Nault <gnault@redhat.com>
-Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Reviewed-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Fixes: a9248de42464 ("iwlwifi: dbg_ini: add TLV allocation new API support")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Reviewed-by: Gregory Greenman <gregory.greenman@intel.com>
+Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Link: https://msgid.link/20240128084842.be15e858ee89.Ibff93429cf999eafc7b26f3eef4c055dc84984a0@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/inet_diag.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/net/ipv4/inet_diag.c b/net/ipv4/inet_diag.c
-index fa9f1de58df46..27a5a7d66d184 100644
---- a/net/ipv4/inet_diag.c
-+++ b/net/ipv4/inet_diag.c
-@@ -57,7 +57,7 @@ static const struct inet_diag_handler *inet_diag_lock_handler(int proto)
- 		return ERR_PTR(-ENOENT);
- 	}
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c b/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
+index bcaec8a184cd6..299819d2d1904 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
+@@ -155,6 +155,12 @@ static int iwl_dbg_tlv_alloc_debug_info(struct iwl_trans *trans,
+ 	if (le32_to_cpu(tlv->length) != sizeof(*debug_info))
+ 		return -EINVAL;
  
--	if (!inet_diag_table[proto])
-+	if (!READ_ONCE(inet_diag_table[proto]))
- 		sock_load_diag_module(AF_INET, proto);
++	/* we use this as a string, ensure input was NUL terminated */
++	if (strnlen(debug_info->debug_cfg_name,
++		    sizeof(debug_info->debug_cfg_name)) ==
++			sizeof(debug_info->debug_cfg_name))
++		return -EINVAL;
++
+ 	IWL_DEBUG_FW(trans, "WRT: Loading debug cfg: %s\n",
+ 		     debug_info->debug_cfg_name);
  
- 	mutex_lock(&inet_diag_table_mutex);
-@@ -1413,7 +1413,7 @@ int inet_diag_register(const struct inet_diag_handler *h)
- 	mutex_lock(&inet_diag_table_mutex);
- 	err = -EEXIST;
- 	if (!inet_diag_table[type]) {
--		inet_diag_table[type] = h;
-+		WRITE_ONCE(inet_diag_table[type], h);
- 		err = 0;
- 	}
- 	mutex_unlock(&inet_diag_table_mutex);
-@@ -1430,7 +1430,7 @@ void inet_diag_unregister(const struct inet_diag_handler *h)
- 		return;
- 
- 	mutex_lock(&inet_diag_table_mutex);
--	inet_diag_table[type] = NULL;
-+	WRITE_ONCE(inet_diag_table[type], NULL);
- 	mutex_unlock(&inet_diag_table_mutex);
- }
- EXPORT_SYMBOL_GPL(inet_diag_unregister);
 -- 
 2.43.0
 
