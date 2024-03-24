@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F86F1ED73F;
-	Sun, 24 Mar 2024 22:56:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4592C1DE12D;
+	Sun, 24 Mar 2024 22:56:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320995; cv=none; b=Nme9D9ez6o9c3P/okjOWff7h3jXwQSFEDyL6hv28h4ye6AMLweBiBBbTCq9qZslZowCyHzKNsKUGR1mEfGqCfHfo8dpu+WNVf9TGybuIfoWCdpwiwS9ppqxKhaVZo619jUH+tCodGEc/KvhQiyBvaC8dbjMSAVaUlbxVYuFlnkM=
+	t=1711320967; cv=none; b=riOwTA256LSreZ9AdoeYLauKjyfQRKh48b9h7mfPN7EkhmreiCKUrbmVjDA4w8YIUlpDlL5mkFMSGzcEJgjvTIJjgmCIk+yOaiLRy+O4u2lXKZkH/oLw2+fMBoizG9AOlLUR0gO0RuJa0y/KzwJTa9iel/0aZukcLfSwNNPVdRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320995; c=relaxed/simple;
-	bh=E5Wrq7Gz9HeqfWiBi72Qv+1hoPP8IyLLFnOGhZKyAPw=;
+	s=arc-20240116; t=1711320967; c=relaxed/simple;
+	bh=6d8vYBUrO4Vbhqa++pTzSboo0d76L1VMT2hA2lPcTZM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eJ46DYddNtZ26hqYzqmctpKEOHGRA24i9Jtk/FAMy5ZmET9s9FXIqXd7g8SK+Y+tAplUtj/jdBC/SvbB7DYr+eeIOQOC/TeR0gUTSbEAExr009d2iE9HoPo6o1vGBJa1TWybq55zhq35KNDd1KQgGZcwIHTNuyIEfQfub8M9QPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pRxXWc/v; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=MZM0ktLJatT/DSC9tgCwAhCmAywvLebUCyRObTaMpId3H39ex4wQyxlWghzOqb1Ht5FViPE0rX8fdsXe+YPUniGDNxqCx2Hov0H8O0D6a7dx5nI2HBcsgqKWQgvITQjhSWfRL+iaebMrwm5KKNL34ArtD9FQdWszXjnJnDmXLf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=igb0Ngjt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pRxXWc/v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0324C43394;
-	Sun, 24 Mar 2024 22:56:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="igb0Ngjt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DE74C43399;
+	Sun, 24 Mar 2024 22:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320994;
-	bh=E5Wrq7Gz9HeqfWiBi72Qv+1hoPP8IyLLFnOGhZKyAPw=;
+	s=k20201202; t=1711320966;
+	bh=6d8vYBUrO4Vbhqa++pTzSboo0d76L1VMT2hA2lPcTZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pRxXWc/vXHA0KtgXWgq9pUEptkPgY2GcjL0GLMfOJYropB96xk+uLzMnv3s4+t/2g
-	 kyhHJOtQhm6HCo0USELvNQFEK0Xz+3tXW7dv3nwnPy6/EmtGMfkrdBflh/X0Ka/j5f
-	 8tnxjZfjL9D9Ek1ey/TN88PgUfJVl9wuPGbUqPyDdKz7uWpyOdARMaLzTbjTPGn+fZ
-	 kmJZrqOqkTuACI0wOzEbfbbhfPO4ckXAMhaX+y5n7EYen9bceft2R3WwiCeyXNkdVJ
-	 VOXP7XIA861u+0mTWj05RbWl7hOiPT5N7d/KUkjC57XzZi0Mb9Y60yWZHVoAxHERiM
-	 ORY4BkaU17NNA==
+	b=igb0Ngjt2StsmmdP4cGnMXA8g+jLYcZTieh8s9Mia0PRmRxfmlRxc+MIHbUhpmyYX
+	 lfKwJVjT5bhZCA0JZmFm+EIuFpsEvwZ4isKmzRjYiDmDZ7zbMS/usnkkVvmTvsQaSS
+	 Mv6v1ceUwoqD2XRq1gQXTbJPNelpi4aKy/1kOhhYYD/G1W2+TmJZAKu5XVY7fVYi6u
+	 0EQ3rNfVHlYlvyBb+0YnjBUDVZcPDPQMiOs9qPOdOg9ApW/vgSEY24Y4QTD7gBE39c
+	 O0iAvIza9tAjAVVs421Xav2R0tRfP4urnEF6wTUYFpuavZMOQjLgeJVsKr8rAyTrNi
+	 d4RluC9PjMEkQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Gergo Koteles <soyer@irl.hu>,
-	Takashi Iwai <tiwai@suse.de>,
+Cc: Qiheng Lin <linqiheng@huawei.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 556/713] ALSA: hda/tas2781: use dev_dbg in system_resume
-Date: Sun, 24 Mar 2024 18:44:42 -0400
-Message-ID: <20240324224720.1345309-557-sashal@kernel.org>
+Subject: [PATCH 6.7 529/713] powerpc/pseries: Fix potential memleak in papr_get_attr()
+Date: Sun, 24 Mar 2024 18:44:15 -0400
+Message-ID: <20240324224720.1345309-530-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,37 +48,42 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Gergo Koteles <soyer@irl.hu>
+From: Qiheng Lin <linqiheng@huawei.com>
 
-[ Upstream commit c850c9121cc8de867ce3ac36b9ae9d05f62bef14 ]
+[ Upstream commit cda9c0d556283e2d4adaa9960b2dc19b16156bae ]
 
-The system_resume function uses dev_info for tracing, but the other pm
-functions use dev_dbg.
+`buf` is allocated in papr_get_attr(), and krealloc() of `buf`
+could fail. We need to free the original `buf` in the case of failure.
 
-Use dev_dbg as the other pm functions.
-
-Fixes: 5be27f1e3ec9 ("ALSA: hda/tas2781: Add tas2781 HDA driver")
-Signed-off-by: Gergo Koteles <soyer@irl.hu>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Message-ID: <140f3c689c9eb5874e6eb48a570fcd8207f06a41.1709918447.git.soyer@irl.hu>
+Fixes: 3c14b73454cf ("powerpc/pseries: Interface to represent PAPR firmware attributes")
+Signed-off-by: Qiheng Lin <linqiheng@huawei.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://msgid.link/20221208133449.16284-1-linqiheng@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/tas2781_hda_i2c.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/papr_platform_attributes.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/sound/pci/hda/tas2781_hda_i2c.c b/sound/pci/hda/tas2781_hda_i2c.c
-index 9f98965742e83..c39a5404fb392 100644
---- a/sound/pci/hda/tas2781_hda_i2c.c
-+++ b/sound/pci/hda/tas2781_hda_i2c.c
-@@ -813,7 +813,7 @@ static int tas2781_system_resume(struct device *dev)
- 		tas_hda->priv->ndev * TASDEVICE_SPEAKER_CALIBRATION_SIZE;
- 	int i, ret;
+diff --git a/arch/powerpc/platforms/pseries/papr_platform_attributes.c b/arch/powerpc/platforms/pseries/papr_platform_attributes.c
+index 526c621b098be..eea2041b270b5 100644
+--- a/arch/powerpc/platforms/pseries/papr_platform_attributes.c
++++ b/arch/powerpc/platforms/pseries/papr_platform_attributes.c
+@@ -101,10 +101,12 @@ static int papr_get_attr(u64 id, struct energy_scale_attribute *esi)
+ 		esi_buf_size = ESI_HDR_SIZE + (CURR_MAX_ESI_ATTRS * max_esi_attrs);
  
--	dev_info(tas_hda->priv->dev, "System Resume\n");
-+	dev_dbg(tas_hda->priv->dev, "System Resume\n");
+ 		temp_buf = krealloc(buf, esi_buf_size, GFP_KERNEL);
+-		if (temp_buf)
++		if (temp_buf) {
+ 			buf = temp_buf;
+-		else
+-			return -ENOMEM;
++		} else {
++			ret = -ENOMEM;
++			goto out_buf;
++		}
  
- 	ret = pm_runtime_force_resume(dev);
- 	if (ret)
+ 		goto retry;
+ 	}
 -- 
 2.43.0
 
