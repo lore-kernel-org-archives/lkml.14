@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150C7144D33;
-	Sun, 24 Mar 2024 22:51:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0BE8562D;
+	Sun, 24 Mar 2024 22:51:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320687; cv=none; b=rh0HRwc3fjrZP0WtyZ0BauLVOevEN6JYnbh32K5VLjQZMUZe8vaq571OBX0AU+pJL1lpebNbgQjsRV0nLDpEwC/dCeJ0BRF9njW1Cha02vyM/EXGu8Mb6rZNpwXP9T209Zl3uoPW2yn3E/EwxzsSfXFBo7QVzQqCDhSP18VhGv8=
+	t=1711320668; cv=none; b=iQLk6andfOMdXgISgEg93Ipoccru7WRlfbfTzhcV/qSipcbMFN/uZLc5BG58/eG18kr+NoTUF3K0slP/wy8h+03dn+T1XGc7MkBu3c1QiQv1QS2V0o7EZxT2mB7gI+x09+WfI+i9bv8YBFKeKfGqFnE+aivdVSRl6PqFtprYP7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320687; c=relaxed/simple;
-	bh=0lwUrRExluHks6ybPWjrs9YUurAMcTJFMoLDlXpgg5U=;
+	s=arc-20240116; t=1711320668; c=relaxed/simple;
+	bh=CbQovSnh/dktStb/N3qtE47FhWbJduvRic0p8lPpiL4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MPACVjaRoC2QcZFJ9PQ24vrjctM2BHobLOyNUxjlFejseP3mcirfaQrmgYbXLeeS8IPLFXw/jKfM2ap07kjwGWECNG0BsTk2y0DEqIJTmfwdiodbj4kBPWKqAll+mtV1acALc5wzNs3WAntOJNbbMNB2Jn3nxxsu9OWPz7dBvic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hVVek/cb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=URL1UkjysjxeB/FlFFHq9lnDZHwxLCwet/2B0f5biUQTNUhov4v/LSOQgiQ7Omi+/b+tfQ5slr2H9jzpfJ1q4LYoymFEnIKVmx3WoetQUO9O7Nxm3rDKkEkn759hTx12XhVb6mDOPIx+F42o5oIWCXpHxLaueWTy9zuCp1o4TzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bbliT4kx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hVVek/cb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36ED9C433F1;
-	Sun, 24 Mar 2024 22:51:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bbliT4kx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCAA7C433C7;
+	Sun, 24 Mar 2024 22:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320686;
-	bh=0lwUrRExluHks6ybPWjrs9YUurAMcTJFMoLDlXpgg5U=;
+	s=k20201202; t=1711320667;
+	bh=CbQovSnh/dktStb/N3qtE47FhWbJduvRic0p8lPpiL4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hVVek/cbBI58eEWvaAYEt2YGgF/bwjtqcg22UBVsKsLBfzLK97i3RvPzFhAigFT13
-	 Cs7xEJ9kwjMTdh0vNIGJIeGDFgpjCpVFtDNAdDYKH+21m+FiU6nj3t9NpvQhntoAf7
-	 AZOy+hHgVrFs3qWRWiSqtytYlJE+BPu45Xot5PEy9KBdbbozMWFFabVmltbN/hztsA
-	 7T4wucVeHEv2wudamrGyTW2TZcc1lwQ2kBwR7MPmwFkbJxoiUswGTxCEQL0SIdRzTb
-	 G/aTQTjLnETrcMSq4aTGqBrYVw7mSoC0ZePnGrJpbL6RzzmLpi18va2BLYAiIGFviF
-	 9EcTMjzz9Rp5w==
+	b=bbliT4kxIxD9FH8NR6dKQiUcdvjQYY7zg0PE4UF7P0REIoumleuFy0Mtj7L3cvIrj
+	 TJznvPgKLLsnwLKs6zCASKVyBfWtZdk2bHfYlvDP6pMu8mD05zqUc10+El7Eiz6OPd
+	 fItVfobIdOQIpucFUoMbMtN0kYlJMqkg8EhfIAeaRUhi6M9DFjVvRGvoeaJrS3+lnd
+	 0ycDNQLE2iUPG24ZQ33sHzq6YTVak7MZA8z7oJL0OI911knQp3RqL4QVdeaYENAv07
+	 mO01MwomI//94uFn8V9+dOUSqA4q2ITltLZSH0fhK6G6OWPLwpNrX91SMBGjgFAM8j
+	 BBZLUlJJLkKzg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yonghong Song <yonghong.song@linux.dev>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
+Cc: Johannes Berg <johannes.berg@intel.com>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 249/713] bpf: Mark bpf_spin_{lock,unlock}() helpers with notrace correctly
-Date: Sun, 24 Mar 2024 18:39:35 -0400
-Message-ID: <20240324224720.1345309-250-sashal@kernel.org>
+Subject: [PATCH 6.7 230/713] wifi: iwlwifi: mvm: don't set replay counters to 0xff
+Date: Sun, 24 Mar 2024 18:39:16 -0400
+Message-ID: <20240324224720.1345309-231-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,131 +48,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yonghong Song <yonghong.song@linux.dev>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 178c54666f9c4d2f49f2ea661d0c11b52f0ed190 ]
+[ Upstream commit d5bd4041cd70faf26fc9a54bd6f172537bbe77f3 ]
 
-Currently tracing is supposed not to allow for bpf_spin_{lock,unlock}()
-helper calls. This is to prevent deadlock for the following cases:
-  - there is a prog (prog-A) calling bpf_spin_{lock,unlock}().
-  - there is a tracing program (prog-B), e.g., fentry, attached
-    to bpf_spin_lock() and/or bpf_spin_unlock().
-  - prog-B calls bpf_spin_{lock,unlock}().
-For such a case, when prog-A calls bpf_spin_{lock,unlock}(),
-a deadlock will happen.
+The firmware (later) actually uses the values even for keys
+that are invalid as far as the host is concerned, later in
+rekeying, and then only sets the low 48 bits since the PNs
+are only 48 bits over the air. It does, however, compare the
+full 64 bits later, obviously causing problems.
 
-The related source codes are below in kernel/bpf/helpers.c:
-  notrace BPF_CALL_1(bpf_spin_lock, struct bpf_spin_lock *, lock)
-  notrace BPF_CALL_1(bpf_spin_unlock, struct bpf_spin_lock *, lock)
-notrace is supposed to prevent fentry prog from attaching to
-bpf_spin_{lock,unlock}().
+Remove the memset and use kzalloc instead to avoid any old
+heap data leaking to the firmware. We already init all the
+other fields in the struct anyway. This leaves the data set
+to zero for any unused fields, so the firmware can look at
+them safely even if they're not used right now.
 
-But actually this is not the case and fentry prog can successfully
-attached to bpf_spin_lock(). Siddharth Chintamaneni reported
-the issue in [1]. The following is the macro definition for
-above BPF_CALL_1:
-  #define BPF_CALL_x(x, name, ...)                                               \
-        static __always_inline                                                 \
-        u64 ____##name(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__));   \
-        typedef u64 (*btf_##name)(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__)); \
-        u64 name(__BPF_REG(x, __BPF_DECL_REGS, __BPF_N, __VA_ARGS__));         \
-        u64 name(__BPF_REG(x, __BPF_DECL_REGS, __BPF_N, __VA_ARGS__))          \
-        {                                                                      \
-                return ((btf_##name)____##name)(__BPF_MAP(x,__BPF_CAST,__BPF_N,__VA_ARGS__));\
-        }                                                                      \
-        static __always_inline                                                 \
-        u64 ____##name(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__))
-
-  #define BPF_CALL_1(name, ...)   BPF_CALL_x(1, name, __VA_ARGS__)
-
-The notrace attribute is actually applied to the static always_inline function
-____bpf_spin_{lock,unlock}(). The actual callback function
-bpf_spin_{lock,unlock}() is not marked with notrace, hence
-allowing fentry prog to attach to two helpers, and this
-may cause the above mentioned deadlock. Siddharth Chintamaneni
-actually has a reproducer in [2].
-
-To fix the issue, a new macro NOTRACE_BPF_CALL_1 is introduced which
-will add notrace attribute to the original function instead of
-the hidden always_inline function and this fixed the problem.
-
-  [1] https://lore.kernel.org/bpf/CAE5sdEigPnoGrzN8WU7Tx-h-iFuMZgW06qp0KHWtpvoXxf1OAQ@mail.gmail.com/
-  [2] https://lore.kernel.org/bpf/CAE5sdEg6yUc_Jz50AnUXEEUh6O73yQ1Z6NV2srJnef0ZrQkZew@mail.gmail.com/
-
-Fixes: d83525ca62cf ("bpf: introduce bpf_spin_lock")
-Signed-off-by: Yonghong Song <yonghong.song@linux.dev>
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: https://lore.kernel.org/bpf/20240207070102.335167-1-yonghong.song@linux.dev
+Fixes: 79e561f0f05a ("iwlwifi: mvm: d3: implement RSC command version 5")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Link: https://msgid.link/20240206175739.462101146fef.I10f3855b99417af4247cff04af78dcbc6cb75c9c@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/filter.h | 21 ++++++++++++---------
- kernel/bpf/helpers.c   |  4 ++--
- 2 files changed, 14 insertions(+), 11 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/d3.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index a4953fafc8cb8..02e043bd93b1a 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -547,24 +547,27 @@ static inline bool insn_is_zext(const struct bpf_insn *insn)
- 	__BPF_MAP(n, __BPF_DECL_ARGS, __BPF_N, u64, __ur_1, u64, __ur_2,       \
- 		  u64, __ur_3, u64, __ur_4, u64, __ur_5)
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+index 626e9b94a6624..d99a712e7f44d 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+@@ -461,12 +461,10 @@ static int iwl_mvm_wowlan_config_rsc_tsc(struct iwl_mvm *mvm,
+ 		struct wowlan_key_rsc_v5_data data = {};
+ 		int i;
  
--#define BPF_CALL_x(x, name, ...)					       \
-+#define BPF_CALL_x(x, attr, name, ...)					       \
- 	static __always_inline						       \
- 	u64 ____##name(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__));   \
- 	typedef u64 (*btf_##name)(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__)); \
--	u64 name(__BPF_REG(x, __BPF_DECL_REGS, __BPF_N, __VA_ARGS__));	       \
--	u64 name(__BPF_REG(x, __BPF_DECL_REGS, __BPF_N, __VA_ARGS__))	       \
-+	attr u64 name(__BPF_REG(x, __BPF_DECL_REGS, __BPF_N, __VA_ARGS__));    \
-+	attr u64 name(__BPF_REG(x, __BPF_DECL_REGS, __BPF_N, __VA_ARGS__))     \
- 	{								       \
- 		return ((btf_##name)____##name)(__BPF_MAP(x,__BPF_CAST,__BPF_N,__VA_ARGS__));\
- 	}								       \
- 	static __always_inline						       \
- 	u64 ____##name(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__))
+-		data.rsc = kmalloc(sizeof(*data.rsc), GFP_KERNEL);
++		data.rsc = kzalloc(sizeof(*data.rsc), GFP_KERNEL);
+ 		if (!data.rsc)
+ 			return -ENOMEM;
  
--#define BPF_CALL_0(name, ...)	BPF_CALL_x(0, name, __VA_ARGS__)
--#define BPF_CALL_1(name, ...)	BPF_CALL_x(1, name, __VA_ARGS__)
--#define BPF_CALL_2(name, ...)	BPF_CALL_x(2, name, __VA_ARGS__)
--#define BPF_CALL_3(name, ...)	BPF_CALL_x(3, name, __VA_ARGS__)
--#define BPF_CALL_4(name, ...)	BPF_CALL_x(4, name, __VA_ARGS__)
--#define BPF_CALL_5(name, ...)	BPF_CALL_x(5, name, __VA_ARGS__)
-+#define __NOATTR
-+#define BPF_CALL_0(name, ...)	BPF_CALL_x(0, __NOATTR, name, __VA_ARGS__)
-+#define BPF_CALL_1(name, ...)	BPF_CALL_x(1, __NOATTR, name, __VA_ARGS__)
-+#define BPF_CALL_2(name, ...)	BPF_CALL_x(2, __NOATTR, name, __VA_ARGS__)
-+#define BPF_CALL_3(name, ...)	BPF_CALL_x(3, __NOATTR, name, __VA_ARGS__)
-+#define BPF_CALL_4(name, ...)	BPF_CALL_x(4, __NOATTR, name, __VA_ARGS__)
-+#define BPF_CALL_5(name, ...)	BPF_CALL_x(5, __NOATTR, name, __VA_ARGS__)
-+
-+#define NOTRACE_BPF_CALL_1(name, ...)	BPF_CALL_x(1, notrace, name, __VA_ARGS__)
- 
- #define bpf_ctx_range(TYPE, MEMBER)						\
- 	offsetof(TYPE, MEMBER) ... offsetofend(TYPE, MEMBER) - 1
-diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-index ce4729ef1ad2d..b912d055a8470 100644
---- a/kernel/bpf/helpers.c
-+++ b/kernel/bpf/helpers.c
-@@ -334,7 +334,7 @@ static inline void __bpf_spin_lock_irqsave(struct bpf_spin_lock *lock)
- 	__this_cpu_write(irqsave_flags, flags);
- }
- 
--notrace BPF_CALL_1(bpf_spin_lock, struct bpf_spin_lock *, lock)
-+NOTRACE_BPF_CALL_1(bpf_spin_lock, struct bpf_spin_lock *, lock)
- {
- 	__bpf_spin_lock_irqsave(lock);
- 	return 0;
-@@ -357,7 +357,7 @@ static inline void __bpf_spin_unlock_irqrestore(struct bpf_spin_lock *lock)
- 	local_irq_restore(flags);
- }
- 
--notrace BPF_CALL_1(bpf_spin_unlock, struct bpf_spin_lock *, lock)
-+NOTRACE_BPF_CALL_1(bpf_spin_unlock, struct bpf_spin_lock *, lock)
- {
- 	__bpf_spin_unlock_irqrestore(lock);
- 	return 0;
+-		memset(data.rsc, 0xff, sizeof(*data.rsc));
+-
+ 		for (i = 0; i < ARRAY_SIZE(data.rsc->mcast_key_id_map); i++)
+ 			data.rsc->mcast_key_id_map[i] =
+ 				IWL_MCAST_KEY_MAP_INVALID;
 -- 
 2.43.0
 
