@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 268DA1F23E2;
-	Sun, 24 Mar 2024 22:58:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E831F23EC;
+	Sun, 24 Mar 2024 22:58:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321103; cv=none; b=jzTsrplI4c6X5fAs88o9YboERtm4gVTJLXg1MOBjhs90Mlhan1jzWgF/6kyF1QKzGisSYK8Boul3j1FCGVDV1cYzGWjRwTE4QPMPdx8YeiWb/nVg5jN5iIdxtQtHuPzE10K5AN2Y5GVSgtxIGpJ3Odo5rpIyOsDXNd3TH9nGcEs=
+	t=1711321105; cv=none; b=cwOCyEKtLDB5RNy4rlVaT/D6Kpt0Mo9f6AQyV2mUUpSP2ZWsd9qjjPRD7RWCM4DXNAjGAJ3pvdtiuW2TE6luGyTTNWkiTx8tYSrn21//jihVAywyNaAzlg7adH8bwuF9UINXV2icSbkXGQNuGZTTPhJQcgeoRPIHb/oNnbscrFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321103; c=relaxed/simple;
-	bh=POaKdfmor0NY4YSUCWCOe5t3Q6ZXFcgf7ehO2+D6GTE=;
+	s=arc-20240116; t=1711321105; c=relaxed/simple;
+	bh=pw65f5Q9+o8i87PqoOxrSEIV2LHqb+mEj085S/f9BX8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ln9ARLjG/WmO7m75VBnvMZOR8pb5UoWayHIA9eMa8OodZharV+GK28nU6xY4268rAnIbuQGebCFG+43NQH5UC9YPq7pa/7byMtza0AK3nFlhxRhMYLjgWGGMulb+SNgqGfFgaK72K/BQAEO2tvbPD4p9AJK5vs/Qc2lXpTBy3UM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sJqEEWOc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OPtOu7KsCrcnsVbaUc8sa5QROo0YRrbQAsDOR/Is4ycdlcA1pOXeXnvahyPZ8GHLR8PyuBgnpHP+DAq47hmlbD8rqjjdSJDSwsk1VGUQ4Hx6bo4mOELkhM//dw4hRJ2g3Mv74fKh46mgh0qQhko2DO8ZIU+KOuNDNOEOZwmC/Bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MsMgkXaC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sJqEEWOc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D6C9C43394;
-	Sun, 24 Mar 2024 22:58:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MsMgkXaC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 467BCC43394;
+	Sun, 24 Mar 2024 22:58:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321102;
-	bh=POaKdfmor0NY4YSUCWCOe5t3Q6ZXFcgf7ehO2+D6GTE=;
+	s=k20201202; t=1711321104;
+	bh=pw65f5Q9+o8i87PqoOxrSEIV2LHqb+mEj085S/f9BX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sJqEEWOccZvsNr1eOLCak8WtDpW76xAD02liMHfkTXNTgUXyaU886qiN5jjI2DUdy
-	 ilwZv1D7AILElJzqLANXR9zHtaVSZOTl3GZBlCNbolpR9q9u3T/c7VvFRY8r9Rv9WB
-	 aW3saI7iH5KiphwdfMHnYwDU3CjNk4WGPDAMWD9TPL2R4XvaXar4Wz3BUZAjT4BSCA
-	 kjT6hos2qcYx+YqGiSHcoqqHJafimnDQhvkma7Yp6pokKFI2Ska9eG68wTmLQx5O/a
-	 JDit5oZJx2Sm+eOyiVlwHl8jdea2GMs3YnzliJ8YiQ2X7t7eDcF9mJ6lT1LA6Es9vq
-	 iLLF4fm76K0Dw==
+	b=MsMgkXaCGTOPx8bue60aDHvwe6+qaGYdyAlIyshRYbQF8mBgiQRdAivTM39i6qkGN
+	 suJUkY/7aR8jX7xik7xwqCMuasmwJ5NaYOcsa0H387jp4ot2ZM0tByyrUDW8VxXvye
+	 dE8tNZK32K4hyxkTpkU6sHWRheZWSQGZKjyTuj4sw2Q98XHZNgXUEpvImLGGexP9LC
+	 jsJMj5dg7wrxy9plvxiA4e7vAJjcMqau1chWqOsCtKSCGSNTuElr0L4JaDyqlGV8xy
+	 mxNcHWnSr5bUhALlx7SgkcRjWbD7z4IURboo+orC0KKheOBD5tuhzT0dfSVEAqFiVw
+	 GlkhtaQc1obaw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chunguang Xu <chunguang.xu@shopee.com>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>,
+Cc: Daniel Golle <daniel@makrotopia.org>,
+	Bc-bocun Chen <bc-bocun.chen@mediatek.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 664/713] nvme: fix reconnection fail due to reserved tag allocation
-Date: Sun, 24 Mar 2024 18:46:30 -0400
-Message-ID: <20240324224720.1345309-665-sashal@kernel.org>
+Subject: [PATCH 6.7 666/713] net: ethernet: mtk_eth_soc: fix PPE hanging issue
+Date: Sun, 24 Mar 2024 18:46:32 -0400
+Message-ID: <20240324224720.1345309-667-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -51,76 +49,68 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chunguang Xu <chunguang.xu@shopee.com>
+From: Daniel Golle <daniel@makrotopia.org>
 
-[ Upstream commit de105068fead55ed5c07ade75e9c8e7f86a00d1d ]
+[ Upstream commit ea80e3ed09ab2c2b75724faf5484721753e92c31 ]
 
-We found a issue on production environment while using NVMe over RDMA,
-admin_q reconnect failed forever while remote target and network is ok.
-After dig into it, we found it may caused by a ABBA deadlock due to tag
-allocation. In my case, the tag was hold by a keep alive request
-waiting inside admin_q, as we quiesced admin_q while reset ctrl, so the
-request maked as idle and will not process before reset success. As
-fabric_q shares tagset with admin_q, while reconnect remote target, we
-need a tag for connect command, but the only one reserved tag was held
-by keep alive command which waiting inside admin_q. As a result, we
-failed to reconnect admin_q forever. In order to fix this issue, I
-think we should keep two reserved tags for admin queue.
+A patch to resolve an issue was found in MediaTek's GPL-licensed SDK:
+In the mtk_ppe_stop() function, the PPE scan mode is not disabled before
+disabling the PPE. This can potentially lead to a hang during the process
+of disabling the PPE.
 
-Fixes: ed01fee283a0 ("nvme-fabrics: only reserve a single tag")
-Signed-off-by: Chunguang Xu <chunguang.xu@shopee.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+Without this patch, the PPE may experience a hang during the reboot test.
+
+Link: https://git01.mediatek.com/plugins/gitiles/openwrt/feeds/mtk-openwrt-feeds/+/b40da332dfe763932a82f9f62a4709457a15dd6c
+Fixes: ba37b7caf1ed ("net: ethernet: mtk_eth_soc: add support for initializing the PPE")
+Suggested-by: Bc-bocun Chen <bc-bocun.chen@mediatek.com>
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c    | 6 ++++--
- drivers/nvme/host/fabrics.h | 7 -------
- 2 files changed, 4 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/mediatek/mtk_ppe.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 86149275ccb8e..771eac141298c 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -4272,7 +4272,8 @@ int nvme_alloc_admin_tag_set(struct nvme_ctrl *ctrl, struct blk_mq_tag_set *set,
- 	set->ops = ops;
- 	set->queue_depth = NVME_AQ_MQ_TAG_DEPTH;
- 	if (ctrl->ops->flags & NVME_F_FABRICS)
--		set->reserved_tags = NVMF_RESERVED_TAGS;
-+		/* Reserved for fabric connect and keep alive */
-+		set->reserved_tags = 2;
- 	set->numa_node = ctrl->numa_node;
- 	set->flags = BLK_MQ_F_NO_SCHED;
- 	if (ctrl->ops->flags & NVME_F_BLOCKING)
-@@ -4341,7 +4342,8 @@ int nvme_alloc_io_tag_set(struct nvme_ctrl *ctrl, struct blk_mq_tag_set *set,
- 	if (ctrl->quirks & NVME_QUIRK_SHARED_TAGS)
- 		set->reserved_tags = NVME_AQ_DEPTH;
- 	else if (ctrl->ops->flags & NVME_F_FABRICS)
--		set->reserved_tags = NVMF_RESERVED_TAGS;
-+		/* Reserved for fabric connect */
-+		set->reserved_tags = 1;
- 	set->numa_node = ctrl->numa_node;
- 	set->flags = BLK_MQ_F_SHOULD_MERGE;
- 	if (ctrl->ops->flags & NVME_F_BLOCKING)
-diff --git a/drivers/nvme/host/fabrics.h b/drivers/nvme/host/fabrics.h
-index fbaee5a7be196..e4acccc315bd9 100644
---- a/drivers/nvme/host/fabrics.h
-+++ b/drivers/nvme/host/fabrics.h
-@@ -18,13 +18,6 @@
- /* default is -1: the fail fast mechanism is disabled  */
- #define NVMF_DEF_FAIL_FAST_TMO		-1
+diff --git a/drivers/net/ethernet/mediatek/mtk_ppe.c b/drivers/net/ethernet/mediatek/mtk_ppe.c
+index b2a5d9c3733d4..6ce0db3a1a920 100644
+--- a/drivers/net/ethernet/mediatek/mtk_ppe.c
++++ b/drivers/net/ethernet/mediatek/mtk_ppe.c
+@@ -994,7 +994,7 @@ void mtk_ppe_start(struct mtk_ppe *ppe)
+ 			 MTK_PPE_KEEPALIVE_DISABLE) |
+ 	      FIELD_PREP(MTK_PPE_TB_CFG_HASH_MODE, 1) |
+ 	      FIELD_PREP(MTK_PPE_TB_CFG_SCAN_MODE,
+-			 MTK_PPE_SCAN_MODE_KEEPALIVE_AGE) |
++			 MTK_PPE_SCAN_MODE_CHECK_AGE) |
+ 	      FIELD_PREP(MTK_PPE_TB_CFG_ENTRY_NUM,
+ 			 MTK_PPE_ENTRIES_SHIFT);
+ 	if (mtk_is_netsys_v2_or_greater(ppe->eth))
+@@ -1090,17 +1090,21 @@ int mtk_ppe_stop(struct mtk_ppe *ppe)
  
--/*
-- * Reserved one command for internal usage.  This command is used for sending
-- * the connect command, as well as for the keep alive command on the admin
-- * queue once live.
-- */
--#define NVMF_RESERVED_TAGS	1
+ 	mtk_ppe_cache_enable(ppe, false);
+ 
+-	/* disable offload engine */
+-	ppe_clear(ppe, MTK_PPE_GLO_CFG, MTK_PPE_GLO_CFG_EN);
+-	ppe_w32(ppe, MTK_PPE_FLOW_CFG, 0);
 -
- /*
-  * Define a host as seen by the target.  We allocate one at boot, but also
-  * allow the override it when creating controllers.  This is both to provide
+ 	/* disable aging */
+ 	val = MTK_PPE_TB_CFG_AGE_NON_L4 |
+ 	      MTK_PPE_TB_CFG_AGE_UNBIND |
+ 	      MTK_PPE_TB_CFG_AGE_TCP |
+ 	      MTK_PPE_TB_CFG_AGE_UDP |
+-	      MTK_PPE_TB_CFG_AGE_TCP_FIN;
++	      MTK_PPE_TB_CFG_AGE_TCP_FIN |
++		  MTK_PPE_TB_CFG_SCAN_MODE;
+ 	ppe_clear(ppe, MTK_PPE_TB_CFG, val);
+ 
+-	return mtk_ppe_wait_busy(ppe);
++	if (mtk_ppe_wait_busy(ppe))
++		return -ETIMEDOUT;
++
++	/* disable offload engine */
++	ppe_clear(ppe, MTK_PPE_GLO_CFG, MTK_PPE_GLO_CFG_EN);
++	ppe_w32(ppe, MTK_PPE_FLOW_CFG, 0);
++
++	return 0;
+ }
 -- 
 2.43.0
 
