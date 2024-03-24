@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBC61EC4C6;
-	Sun, 24 Mar 2024 23:07:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF0F20CE13;
+	Sun, 24 Mar 2024 23:07:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321638; cv=none; b=r2oHDUyjFtdfuOJHj7vxCrftgvkWrzOwSj+fz5d1HO1b8ThMeHxnoRwATDjXcQDSZGLMjBxSZv6AjJraJ7pjiSQSjKDMmbBPszoOHnuvMkuyE4WrMzlnCG69OQBrGvmCAgh3eUOghj6agfi4K5Fo+9ZLFqwFxWJGiQt0n3ABzZ4=
+	t=1711321646; cv=none; b=Bin3mxzmTtQkhPl8WTAcFvv+B8AKd72RHGuOPuJUDj8LaMxZZcQK+B1UwnrmC4ptMUNqpcYht8AVb5kFhvAhjEXMgPDuDCpSxRkW8LmVGAWUGKHAqZBG9zcsDqQzPNTFaFcT6OQ2r04oobjFBe+7w87L7lCHMvDoqx5LvuQj334=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321638; c=relaxed/simple;
-	bh=k0CHCQeQYAxizY/a36oGNxW78++AXdIg+U+sNWUr7Wc=;
+	s=arc-20240116; t=1711321646; c=relaxed/simple;
+	bh=C2Ua5kReEzwTd2V431PjK4bLeRHqCCInHnmeMP3BwsE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qb/aYgo9iHJv4anQPc6PbTXL5t1QrGzekCxsF6+qAcdECBvm1BFtVkoZxx8Ux4yDrMIqK7CTEuv7VrhvEoDkm5s3XcyBeuPuESlVRTklDwpO4+Nov6qt7jcqAz4jClqlr5K5q6UpYWmmdfU0YksJbxQEsdZj5Xj9xVw3t68mvqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J56pYPZu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=vA5Zz8CiiZgCwLhwPutJHs2i4FVZq+TWEorXhnhx89tcqy9RGKyZxN1oAZ141zDcm/zkASt7uVc6LOyiGbOWsdN+LzMY1cBQ+/2B/1OeR3BAPe8JPFvG+4f0PuizTUAXhULvl7ezwLUzzAlXqhpfHHR6bl75+FH1w3clHhMPVNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uqwqMukQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J56pYPZu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 289FAC433F1;
-	Sun, 24 Mar 2024 23:07:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uqwqMukQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F70CC43390;
+	Sun, 24 Mar 2024 23:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321637;
-	bh=k0CHCQeQYAxizY/a36oGNxW78++AXdIg+U+sNWUr7Wc=;
+	s=k20201202; t=1711321644;
+	bh=C2Ua5kReEzwTd2V431PjK4bLeRHqCCInHnmeMP3BwsE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=J56pYPZuSNGx389dSwIBAdTwkrBfcC9dAquOCKZ4PsVoWXepuIfVQ9oKyLN7c66ZD
-	 R4FSlHJvQAW+Pj+0Do8wsyWmpOUJITzEOogI/+ql9BaOOlHxOYhNeS69Vxs24UlvEV
-	 O9alZJ/f84JiojPguuLmQkV2bDJX6Q+EEGOoiiT6DIaV1MWn1W9BnCJsr8QQxucnZq
-	 tPCuCdLxSWW4GOHjmYLrK1BrVqBh9UOhrt1DoCG0BH6tBy7ujL6KrBCZYLLkzq7EF9
-	 aWq5KxG0EJzAyGy1kGSkOO52ez1rL9oU0LYT916iWzAozP2fSzpLyFn1GH0e2N/Lea
-	 +Y67TExneq5ZA==
+	b=uqwqMukQs0FYLa2H4C0BC8Q9m5Y62c/ppNEApdR2U6tS30SF34we1NrL6cZHoBHGD
+	 BNl4NX4wxDKJcxQAp1LDKY2akVXMPEyDVsJCQjqbAOAYMgXgfL63AO5rrhH7fq4qTZ
+	 QvJVrsj7pn6x4QdwZnXL+wg0eVowy9tXw1yEMh/AwHG7PDgmCXqP2jxQtGmE4Ic8Fz
+	 JqswRBXqmIsJ7uve2lBhJ7q5syxdI0Z/x6FTqtCwsG36747njiFdbaczypEemFtuZJ
+	 l/2UQ0i7niaVuWaskS+nO+BcAIcne3PYUebV+bUOFrIdu/H+M50uNlrP1v/rlN7Lr9
+	 dOYYY4oo86p2A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mikhail Khvainitski <me@khvoinitsky.org>,
-	Jiri Kosina <jkosina@suse.com>,
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 368/638] HID: lenovo: Add middleclick_workaround sysfs knob for cptkbd
-Date: Sun, 24 Mar 2024 18:56:45 -0400
-Message-ID: <20240324230116.1348576-369-sashal@kernel.org>
+Subject: [PATCH 6.6 374/638] pinctrl: renesas: r8a779g0: Add missing SCIF_CLK2 pin group/function
+Date: Sun, 24 Mar 2024 18:56:51 -0400
+Message-ID: <20240324230116.1348576-375-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,132 +47,67 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Mikhail Khvainitski <me@khvoinitsky.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 2814646f76f8518326964f12ff20aaee70ba154d ]
+[ Upstream commit 68540257cdf1d07ff8a649aa94c21c5804bbb9b0 ]
 
-Previous attempt to autodetect well-behaving patched firmware
-introduced in commit 46a0a2c96f0f ("HID: lenovo: Detect quirk-free fw
-on cptkbd and stop applying workaround") has shown that there are
-false-positives on original firmware (on both 1st gen and 2nd gen
-keyboards) which causes the middle button click workaround to be
-mistakenly disabled.
+R-Car V4H actually has two SCIF_CLK pins.
+The second pin provides the SCIF_CLK signal for HSCIF2 and SCIF4.
 
-This commit adds explicit parameter to sysfs to control this
-workaround.
-
-Fixes: 46a0a2c96f0f ("HID: lenovo: Detect quirk-free fw on cptkbd and stop applying workaround")
-Fixes: 43527a0094c1 ("HID: lenovo: Restrict detection of patched firmware only to USB cptkbd")
-Signed-off-by: Mikhail Khvainitski <me@khvoinitsky.org>
-Signed-off-by: Jiri Kosina <jkosina@suse.com>
+Fixes: 050442ae4c74f830 ("pinctrl: renesas: r8a779g0: Add pins, groups and functions")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/6352ec9b63fdd38c2c70d8d203e46f21fbfeccdc.1705589612.git.geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-lenovo.c | 57 +++++++++++++++++++++++++++-------------
- 1 file changed, 39 insertions(+), 18 deletions(-)
+ drivers/pinctrl/renesas/pfc-r8a779g0.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
-index 149a3c74346b4..f86c1ea83a037 100644
---- a/drivers/hid/hid-lenovo.c
-+++ b/drivers/hid/hid-lenovo.c
-@@ -54,10 +54,10 @@ struct lenovo_drvdata {
- 	/* 0: Up
- 	 * 1: Down (undecided)
- 	 * 2: Scrolling
--	 * 3: Patched firmware, disable workaround
- 	 */
- 	u8 middlebutton_state;
- 	bool fn_lock;
-+	bool middleclick_workaround_cptkbd;
+diff --git a/drivers/pinctrl/renesas/pfc-r8a779g0.c b/drivers/pinctrl/renesas/pfc-r8a779g0.c
+index acdea6ac15253..d2de526a3b588 100644
+--- a/drivers/pinctrl/renesas/pfc-r8a779g0.c
++++ b/drivers/pinctrl/renesas/pfc-r8a779g0.c
+@@ -2384,6 +2384,14 @@ static const unsigned int scif_clk_mux[] = {
+ 	SCIF_CLK_MARK,
  };
  
- #define map_key_clear(c) hid_map_usage_clear(hi, usage, bit, max, EV_KEY, (c))
-@@ -621,6 +621,36 @@ static ssize_t attr_sensitivity_store_cptkbd(struct device *dev,
- 	return count;
- }
++static const unsigned int scif_clk2_pins[] = {
++	/* SCIF_CLK2 */
++	RCAR_GP_PIN(8, 11),
++};
++static const unsigned int scif_clk2_mux[] = {
++	SCIF_CLK2_MARK,
++};
++
+ /* - SSI ------------------------------------------------- */
+ static const unsigned int ssi_data_pins[] = {
+ 	/* SSI_SD */
+@@ -2694,6 +2702,7 @@ static const struct sh_pfc_pin_group pinmux_groups[] = {
+ 	SH_PFC_PIN_GROUP(scif4_clk),
+ 	SH_PFC_PIN_GROUP(scif4_ctrl),
+ 	SH_PFC_PIN_GROUP(scif_clk),
++	SH_PFC_PIN_GROUP(scif_clk2),
  
-+static ssize_t attr_middleclick_workaround_show_cptkbd(struct device *dev,
-+		struct device_attribute *attr,
-+		char *buf)
-+{
-+	struct hid_device *hdev = to_hid_device(dev);
-+	struct lenovo_drvdata *cptkbd_data = hid_get_drvdata(hdev);
-+
-+	return snprintf(buf, PAGE_SIZE, "%u\n",
-+		cptkbd_data->middleclick_workaround_cptkbd);
-+}
-+
-+static ssize_t attr_middleclick_workaround_store_cptkbd(struct device *dev,
-+		struct device_attribute *attr,
-+		const char *buf,
-+		size_t count)
-+{
-+	struct hid_device *hdev = to_hid_device(dev);
-+	struct lenovo_drvdata *cptkbd_data = hid_get_drvdata(hdev);
-+	int value;
-+
-+	if (kstrtoint(buf, 10, &value))
-+		return -EINVAL;
-+	if (value < 0 || value > 1)
-+		return -EINVAL;
-+
-+	cptkbd_data->middleclick_workaround_cptkbd = !!value;
-+
-+	return count;
-+}
-+
- 
- static struct device_attribute dev_attr_fn_lock =
- 	__ATTR(fn_lock, S_IWUSR | S_IRUGO,
-@@ -632,10 +662,16 @@ static struct device_attribute dev_attr_sensitivity_cptkbd =
- 			attr_sensitivity_show_cptkbd,
- 			attr_sensitivity_store_cptkbd);
- 
-+static struct device_attribute dev_attr_middleclick_workaround_cptkbd =
-+	__ATTR(middleclick_workaround, S_IWUSR | S_IRUGO,
-+			attr_middleclick_workaround_show_cptkbd,
-+			attr_middleclick_workaround_store_cptkbd);
-+
- 
- static struct attribute *lenovo_attributes_cptkbd[] = {
- 	&dev_attr_fn_lock.attr,
- 	&dev_attr_sensitivity_cptkbd.attr,
-+	&dev_attr_middleclick_workaround_cptkbd.attr,
- 	NULL
+ 	SH_PFC_PIN_GROUP(ssi_data),
+ 	SH_PFC_PIN_GROUP(ssi_ctrl),
+@@ -3015,6 +3024,10 @@ static const char * const scif_clk_groups[] = {
+ 	"scif_clk",
  };
  
-@@ -686,23 +722,7 @@ static int lenovo_event_cptkbd(struct hid_device *hdev,
- {
- 	struct lenovo_drvdata *cptkbd_data = hid_get_drvdata(hdev);
++static const char * const scif_clk2_groups[] = {
++	"scif_clk2",
++};
++
+ static const char * const ssi_groups[] = {
+ 	"ssi_data",
+ 	"ssi_ctrl",
+@@ -3102,6 +3115,7 @@ static const struct sh_pfc_function pinmux_functions[] = {
+ 	SH_PFC_FUNCTION(scif3),
+ 	SH_PFC_FUNCTION(scif4),
+ 	SH_PFC_FUNCTION(scif_clk),
++	SH_PFC_FUNCTION(scif_clk2),
  
--	if (cptkbd_data->middlebutton_state != 3) {
--		/* REL_X and REL_Y events during middle button pressed
--		 * are only possible on patched, bug-free firmware
--		 * so set middlebutton_state to 3
--		 * to never apply workaround anymore
--		 */
--		if (hdev->product == USB_DEVICE_ID_LENOVO_CUSBKBD &&
--				cptkbd_data->middlebutton_state == 1 &&
--				usage->type == EV_REL &&
--				(usage->code == REL_X || usage->code == REL_Y)) {
--			cptkbd_data->middlebutton_state = 3;
--			/* send middle button press which was hold before */
--			input_event(field->hidinput->input,
--				EV_KEY, BTN_MIDDLE, 1);
--			input_sync(field->hidinput->input);
--		}
--
-+	if (cptkbd_data->middleclick_workaround_cptkbd) {
- 		/* "wheel" scroll events */
- 		if (usage->type == EV_REL && (usage->code == REL_WHEEL ||
- 				usage->code == REL_HWHEEL)) {
-@@ -1166,6 +1186,7 @@ static int lenovo_probe_cptkbd(struct hid_device *hdev)
- 	cptkbd_data->middlebutton_state = 0;
- 	cptkbd_data->fn_lock = true;
- 	cptkbd_data->sensitivity = 0x05;
-+	cptkbd_data->middleclick_workaround_cptkbd = true;
- 	lenovo_features_set_cptkbd(hdev);
+ 	SH_PFC_FUNCTION(ssi),
  
- 	ret = sysfs_create_group(&hdev->dev.kobj, &lenovo_attr_group_cptkbd);
 -- 
 2.43.0
 
