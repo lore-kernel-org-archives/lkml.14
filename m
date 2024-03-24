@@ -1,63 +1,81 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E2C3DABE9
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 15:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE14C128395;
+	Mon, 25 Mar 2024 15:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711379303; cv=none; b=UoDc16/v+8zRhOpy7fR33yDVCvaBjKjgewyH+YIuRBfi6/UC/xrQqNgPpvOy6hqNz/VPlhnhbZ8VMDi0acdXja72BGi86N7wubhdO/4RxO6I8wvaUH5Lkn5c4GvTpn0RRg5sRg9exI66gdUQG6W3/bN8wsE32ilfD+C+YmrEuPw=
+	t=1711379322; cv=none; b=Rr1TsCyFCcHAzrcbfrjPuonuWTDiVV2ibtMqBZWKK4/1wFXPEUm/VU08mQe704VrRKiQFUgkdAZSHEKuYvLVfltLzGEN44nixFroCYQum6748WPrxQ5C4dDNH4H2kHTUeR+GmICAFYiZBQI/G7ErIxnMBoXxl85ljJYIkMJj2OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711379303; c=relaxed/simple;
-	bh=fYekI51MqTGBNdRqzrAp4Nb1sLztp60fGzNOTQ8ncS8=;
-	h=Date:To:From:Subject:Message-ID:MIME-Version:Content-Type; b=TbRHV/7dz9WNedkzoh9+/uaiOCvdCd9lKDDG0dqtAu55fFqJ5YNu4T7gPQ3qNkktVrnBpLUehH1MXp0g/3SzSty/wMYPC//MBoIjTDT1qzWWWRBdXCOtooL2Dxd+7XGZAsM0nte34iet2a5WLXANnBUCW6oxGj1UvFSmV5c5R9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=T02H3tnj; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1711379322; c=relaxed/simple;
+	bh=4eUXmKM7SyiyHM/IxR2x3wjvf4JQ3Ytj0cbIwS+59Tc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TdJHqmPo5Vu+ddJfKWvSJy9BEIFwfw2hePl9snZBWAmQ1H17Oy/gxbjsSp+Pp7QG/cE4FevA1yOi/uy9TciYoo9ohdnyUz9/7yfKu5agVbKPchMxXWE8CcqpLi7nCQnbHbNMjG/9OHz5dNWRa+0+54tC6o0iibVG3fDHM7hW9+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=W9qFDpeK; arc=none smtp.client-ip=161.97.139.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="T02H3tnj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1711379295; x=1711638495;
-	bh=fYekI51MqTGBNdRqzrAp4Nb1sLztp60fGzNOTQ8ncS8=;
-	h=Date:To:From:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=T02H3tnjVxQB3UA59iZBkru3PY+aEdDxxncsg788qVjGlksWUtUOtPG+1WHFX1O1S
-	 nheWDkVKf4vn3hEubyhZOjVCfDyfVZ6N21/UgimpS37U+OxJerecfXdqtyuyiWrSPi
-	 cLQStnZLK25wSgScK12/cuxrXuwh5ZmXxNGIHgldxqj2LP+52LtX0PQCrA58kGUvC2
-	 5rMakqskzrmoPk8zWGew8XW/YBG/HCEHZbRVb/roFIcFolufU1WQyNzK4FEhns3z3n
-	 7tbNjhSVa0h6SkixEpx7JB3kMl1WRUgquWn6YTp5M+DfSCxb9Ytjscolx4t+/PA6/3
-	 0T3ceazIpWK4g==
-Date: Mon, 25 Mar 2024 15:08:09 +0000
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From: A <akira.2020@protonmail.com>
-Subject: kernel 6.9-rc1 fails to compile if debugfs is disabled
-Message-ID: <90Yi8Mi97ZeyRKpA5Yq9JkCtpOyEzgd9Qlbx2wwZwnO-C6dMiRZs6H3SV2vCAeDhFYl4ZZzSlG8jbu0RY_2jRp0Ka5oh9RqruW-6Nyypr98=@protonmail.com>
-Feedback-ID: 7267082:user:proton
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="W9qFDpeK"
+Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
+	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <andreas@kemnade.info>)
+	id 1rolwF-003KEw-0u;
+	Mon, 25 Mar 2024 16:08:39 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:MIME-Version:
+	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=sWnFDfi1/XqxIpOEFodQssSrAAdigmg6P7HROJwwOI4=; b=W9qFDpeKt57pNsUuHdG4rbVqS/
+	Xia3MmBHHQ9FIzT5KmUnjwn/B0O9nIDIaZCGsj4hIPyfUSsSb+5ERzwkPjHcj878yfoHGjNbaQlax
+	3uOdBAhZvlLI+5VHhnzRRj/U0E5S4f14dWPCvqT0eUGLUlQpzC0oUQAydZSO4T4dEklNfwwbz6Rxw
+	MAFAm/FOITk5X+XjUD180WE89gr1z7WfBFA1/Rl2EZ3zScpmS4ggYM0kWru/P5HmEKq7JQZiYyTyl
+	L/zBTpSnspJeoFozbvR8k/i6FDIIMwisiJa9DBdl8MpXhfuIXsh2fA4CGqe6MHXe4xk/DkgZQ+c0c
+	V1yFjzXw==;
+Received: from p2003010777026a001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:107:7702:6a00:1a3d:a2ff:febf:d33a] helo=aktux)
+	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <andreas@kemnade.info>)
+	id 1roUCT-000Y9b-VS; Sun, 24 Mar 2024 21:12:13 +0100
+Received: from andi by aktux with local (Exim 4.96)
+	(envelope-from <andreas@kemnade.info>)
+	id 1roUCS-000yR4-21;
+	Sun, 24 Mar 2024 21:12:12 +0100
+From: Andreas Kemnade <andreas@kemnade.info>
+To: lee@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	mazziesaccount@gmail.com,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev
+Cc: Andreas Kemnade <andreas@kemnade.info>
+Subject: [RFC PATCH 0/2] mfd: rohm-bd71828: Add power off
+Date: Sun, 24 Mar 2024 21:12:08 +0100
+Message-Id: <20240324201210.232301-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218640
+Add power off functionality. Marked as RFC because of magic numbers
+without a good source and strange delays. The only information source is
+only a vendor kernel.
 
-Bug 218640 - kernel 6.9-rc1 fails to compile if debugfs is disabled=20
+Andreas Kemnade (2):
+  dt-bindings: mfd: Add ROHM BD71828 system-power-controller property
+  mfd: rohm-bd71828: Add power off functionality
 
-kernel 6.9-rc1 fails to compile if debugfs is disabled (CONFIG_DEBUG_FS):
+ .../bindings/mfd/rohm,bd71828-pmic.yaml       |  2 ++
+ drivers/mfd/rohm-bd71828.c                    | 31 ++++++++++++++++++-
+ 2 files changed, 32 insertions(+), 1 deletion(-)
 
-it fails here:
+-- 
+2.39.2
 
-```ERROR: modpost: "ras_get_debugfs_root" [drivers/ras/amd/fmpm.ko] undefin=
-ed!
-make[5]: *** [scripts/Makefile.modpost:145: Module.symvers] Error 1
-make[4]: *** [Makefile:1871: modpost] Error 2
-make[3]: *** [debian/rules:74: build-arch] Error 2
-dpkg-buildpackage: error: make -f debian/rules binary subprocess returned e=
-xit status 2
-make[2]: *** [scripts/Makefile.package:121: bindeb-pkg] Error 2
-make[1]: *** [/ram/linux-6.9-rc1/Makefile:1541: bindeb-pkg] Error 2
-make: *** [Makefile:240: __sub-make] Error 2```
-
-if i enable debugfs, it compiles without failing.
