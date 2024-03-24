@@ -1,46 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE901FEC4C;
-	Sun, 24 Mar 2024 23:02:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B251FEC6B;
+	Sun, 24 Mar 2024 23:02:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321356; cv=none; b=e5+w6s+oox1DL5EvOdxn+EnByQh+Jv5UK3CC6nzJhjTBxM5hb9JngiXJDxDAhTsgr34/VdfBBoMIwXss0y1P3DJ2I9N+iZTFt+ThJa0OFF4PlLW6l6arZUYY+E8BawiRrbsVjbin5PFkPjZSiRxWXtUniLT8vH/HapniG7pRLH0=
+	t=1711321359; cv=none; b=lbAEBNF1biCCV7ACM72SlQHhoN6aXXWk4jy9Vq2grYPSsb1IpAwlvCe20BrsBHZFSc8fb+AG5MNvDdFasleZdGjP1E8170K/GOUybKPhmjSKFAhh3LOjZ/PYzOcrdx0TtbYk7bYL/Q9AFLCGmOhZ8HoYXsTcX76eGHN9wBz+ErA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321356; c=relaxed/simple;
-	bh=onkvyguq4HFdPtigEVPnPbofRG4g4WsxNdnGYH6yWSI=;
+	s=arc-20240116; t=1711321359; c=relaxed/simple;
+	bh=aArt0ecVKv1x3uKidFVlDH6gZHaPAKnhEVj+hI42SJU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uhiUSztAHFXcbBhwBMdBmHq6cSs5cujUMOTFwfc+IbxcF3IoTV/EJD8vmE40byvN63QOn0pjnGhjbONX9YNI+CGfnIZ81nodRHSuLbCIv1BQG3W5caMVFXLdnQDmQP/7yhEYgrmxm/9InxSWD/gv4cleQbSDFA440g9sby4gvmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=deCH9EC8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=BS7cyl9k4uk/l+FbT5dqlrvKlPtkOJEIzXX10b4xj9Y/BMNfRi+DHODdYiVCVBGRXuzZxgVk3JKRC+83uGo1+zgn9bLnWgiNnhhjjXrngnWjUhNV0HTKhpm6limviRUE92dGzRCAqgBICFGGkZHN8PndKA+POcTO2SM7fELfqvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=desb2Z4D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="deCH9EC8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2407C433A6;
-	Sun, 24 Mar 2024 23:02:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="desb2Z4D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB2E2C433F1;
+	Sun, 24 Mar 2024 23:02:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321354;
-	bh=onkvyguq4HFdPtigEVPnPbofRG4g4WsxNdnGYH6yWSI=;
+	s=k20201202; t=1711321358;
+	bh=aArt0ecVKv1x3uKidFVlDH6gZHaPAKnhEVj+hI42SJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=deCH9EC8/2r3bZH56nxV6fBCbWeqtLX2Lk6IFsUK5IECz6PtvYwexwsbnOFfFAVcT
-	 FzWNlVqg20Gko6PQe1cI0dIETzlhuWTvYCnaMqPA+lO2gyS5/GFHYZv6jXBRRCRs2r
-	 s+z5M32zTwb8LmYR7QrCvPoJl/RWI5sVA7ZFxn36XwDUKkzAGYoqchmOSkHlQQQ+WT
-	 MzjVAeTk/LX9A+VUj9zw8yXDl3DHvtjdGVjgYP4sYIfVnYg++4ij9bFS0izncJ4nHh
-	 /TKtk2nUWbiCUcly/dOm1oIZzB5lv+/8EFMR+ztU2nJZ5R/D2ES6YujRP/L0LekFgn
-	 jrmIaPJzcpMoA==
+	b=desb2Z4D+n08KZ5yEuE49wRBZ3D0d4ic1zW8srWRoc1JLog0+qDcip6LDpNaQ2Tso
+	 pgvxuVCgWzr1gLUJ/kai6jBRFbSrcL7qUvtw8OVhx+uJbAM4KduWtcZgdLdNOblDHq
+	 AKMqMra1Mw9CaevsnRaPiAHzMzqH+oNvLVn0rCeoba3THQudkiLpy16Nn5DV0lHgA4
+	 DLiwXkSfLwJtlgIQ+sFWvQ8Px9WBSfR4TcukH6MhhTK1Blf0di2ae/VEAyCgeQvxNc
+	 lDEPABvonfFj1FAnuOtX2JrO9/PlyoNLu7U7ErGo86XwBN6cncKga2LX62nFX2yre6
+	 lGUYwDIkxRnSA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bart Van Assche <bvanassche@acm.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
+Cc: Miroslav Franc <mfranc@suse.cz>,
+	=?UTF-8?q?Jan=20H=C3=B6ppner?= <hoeppner@linux.ibm.com>,
+	Stefan Haberland <sth@linux.ibm.com>,
 	Jens Axboe <axboe@kernel.dk>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Christian Brauner <brauner@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 079/638] fs: Fix rw_hint validation
-Date: Sun, 24 Mar 2024 18:51:56 -0400
-Message-ID: <20240324230116.1348576-80-sashal@kernel.org>
+Subject: [PATCH 6.6 083/638] s390/dasd: fix double module refcount decrement
+Date: Sun, 24 Mar 2024 18:52:00 -0400
+Message-ID: <20240324230116.1348576-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,69 +46,58 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Miroslav Franc <mfranc@suse.cz>
 
-[ Upstream commit ec16b147a55bfa14e858234eb7b1a7c8e7cd5021 ]
+[ Upstream commit c3116e62ddeff79cae342147753ce596f01fcf06 ]
 
-Reject values that are valid rw_hints after truncation but not before
-truncation by passing an untruncated value to rw_hint_valid().
+Once the discipline is associated with the device, deleting the device
+takes care of decrementing the module's refcount.  Doing it manually on
+this error path causes refcount to artificially decrease on each error
+while it should just stay the same.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Kanchan Joshi <joshi.k@samsung.com>
-Cc: Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Fixes: 5657cb0797c4 ("fs/fcntl: use copy_to/from_user() for u64 types")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Link: https://lore.kernel.org/r/20240202203926.2478590-2-bvanassche@acm.org
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+Fixes: c020d722b110 ("s390/dasd: fix panic during offline processing")
+Signed-off-by: Miroslav Franc <mfranc@suse.cz>
+Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
+Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
+Link: https://lore.kernel.org/r/20240209124522.3697827-3-sth@linux.ibm.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fcntl.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ drivers/s390/block/dasd.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/fs/fcntl.c b/fs/fcntl.c
-index e871009f6c889..9f606714d081b 100644
---- a/fs/fcntl.c
-+++ b/fs/fcntl.c
-@@ -268,7 +268,7 @@ static int f_getowner_uids(struct file *filp, unsigned long arg)
- }
- #endif
+diff --git a/drivers/s390/block/dasd.c b/drivers/s390/block/dasd.c
+index 96f4c94865846..6f97456798917 100644
+--- a/drivers/s390/block/dasd.c
++++ b/drivers/s390/block/dasd.c
+@@ -3528,12 +3528,11 @@ int dasd_generic_set_online(struct ccw_device *cdev,
+ 		dasd_delete_device(device);
+ 		return -EINVAL;
+ 	}
++	device->base_discipline = base_discipline;
+ 	if (!try_module_get(discipline->owner)) {
+-		module_put(base_discipline->owner);
+ 		dasd_delete_device(device);
+ 		return -EINVAL;
+ 	}
+-	device->base_discipline = base_discipline;
+ 	device->discipline = discipline;
  
--static bool rw_hint_valid(enum rw_hint hint)
-+static bool rw_hint_valid(u64 hint)
- {
- 	switch (hint) {
- 	case RWH_WRITE_LIFE_NOT_SET:
-@@ -288,19 +288,17 @@ static long fcntl_rw_hint(struct file *file, unsigned int cmd,
- {
- 	struct inode *inode = file_inode(file);
- 	u64 __user *argp = (u64 __user *)arg;
--	enum rw_hint hint;
--	u64 h;
-+	u64 hint;
- 
- 	switch (cmd) {
- 	case F_GET_RW_HINT:
--		h = inode->i_write_hint;
--		if (copy_to_user(argp, &h, sizeof(*argp)))
-+		hint = inode->i_write_hint;
-+		if (copy_to_user(argp, &hint, sizeof(*argp)))
- 			return -EFAULT;
- 		return 0;
- 	case F_SET_RW_HINT:
--		if (copy_from_user(&h, argp, sizeof(h)))
-+		if (copy_from_user(&hint, argp, sizeof(hint)))
- 			return -EFAULT;
--		hint = (enum rw_hint) h;
- 		if (!rw_hint_valid(hint))
- 			return -EINVAL;
- 
+ 	/* check_device will allocate block device if necessary */
+@@ -3541,8 +3540,6 @@ int dasd_generic_set_online(struct ccw_device *cdev,
+ 	if (rc) {
+ 		dev_warn(dev, "Setting the DASD online with discipline %s failed with rc=%i\n",
+ 			 discipline->name, rc);
+-		module_put(discipline->owner);
+-		module_put(base_discipline->owner);
+ 		dasd_delete_device(device);
+ 		return rc;
+ 	}
 -- 
 2.43.0
 
