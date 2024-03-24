@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C69521D126;
-	Sun, 24 Mar 2024 23:39:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6A91788B9;
+	Sun, 24 Mar 2024 23:39:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323551; cv=none; b=J1aeFHcday8otyCwXFahcrpjv2YOnAXZsGY9BIvg8dy/oBwFyPZd5cHvu6Bhu2jBYQ+MdcfOTLkviJEw2bkNUvWeh5CUTkwYwFTLD8qflY5aMb5HVBSaRzQtO7ZWXoj6tz7U5OQ3ngROtAIvOgaS3wplrRi2OcL0wHOJ2LkRo08=
+	t=1711323561; cv=none; b=MoplVxO1KUav0bsBbsca52ga6kJU71SYAKiezeqgnGmKjRz3U2IQVYL9LWMbERAS3dGm8z3pO9pWKcBNyndVaC8dJhZBHh/kIb1VCDkrNMPX2Nvbfs6NC4mt/GtLSvEw4SbDjFPuKpK150Bz3iogNj9AEmRBHadNF6OYGpzXYPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323551; c=relaxed/simple;
-	bh=uiqPJg8auQcg76ESCu0NC3QK9mTOBml9r1ZYFqMNJT0=;
+	s=arc-20240116; t=1711323561; c=relaxed/simple;
+	bh=ESxnT3azxj7fY9dw/YjvEExGfkTGb4fuQlPcFWOehpA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NoJM2rzhW6OSsTp1puYF65EpRiWU/bYIA8qrxazxep51HLH0MCZ0jUQ2k2VubUqFJ2r0HJAdOqKslfVoEKByOJrXBsduBeRopzJbWBaoo10xcBhgn1KxXg9LvsrUgs9Zmc7SIySCpv4Wy9ggu8jNLaYVAGmwstn8ACmN/i9kkhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BuCANUz/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=sd7Ua9+XgAP9X5DP7zPH96hUOLCvoQu61f818uPXoBr4cRtjI3Ko+zSgMw9qKSC8i/M8C4sQdpEA4mzW6Bkul5kevsm4OodugxgshZh4g63myc5yrsXdyUJ2K+gn1cJOd6FgGVAiemFFAWO9CV0MchrFJ1nXd86qNtoM1+Cv81c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rtoexa6/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BuCANUz/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FDB4C433B2;
-	Sun, 24 Mar 2024 23:39:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rtoexa6/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E9AEC43394;
+	Sun, 24 Mar 2024 23:39:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323551;
-	bh=uiqPJg8auQcg76ESCu0NC3QK9mTOBml9r1ZYFqMNJT0=;
+	s=k20201202; t=1711323561;
+	bh=ESxnT3azxj7fY9dw/YjvEExGfkTGb4fuQlPcFWOehpA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BuCANUz//9wR8CCT/bDgbMLPWaK8tOq76c78/XITjTFDWvjVaen+8UjYepLnC9N2n
-	 E6pObbtCMlRdMlNMdZp5mDHMpzzArk9wjxH/5XaA1WxSlSsqnUTHP14z3Roec2bLiG
-	 S0L+V+X4Ge8o7YR3jX3KZK5wAVHYMlkEdeJiyTO90m0KNjKLm+z5WFkWUc+WcEAXei
-	 tu/YKyqssHPMW/expulDh2zJw2UXu7vAhoyl0oNzFHBXNaNNH4wQ75ELueBXSIm5yp
-	 ft3nQ4d4dthzSlRojbs1Gp1aJ3TUE+8E+3uZVFLhRwvJm2mMaYVBweh2gzEzMUkzrE
-	 vg7JRfCRiNzlA==
+	b=rtoexa6/8rRKcf4SFZ7zxSpMPj1q3T2JwCJQvZ2YnOfipV6+Yuomv79qX/EGMfwfk
+	 JWqRrJ7XCR66uimYAW4n3+kGqn94MJj+Izu4x8AXOJw9InVT22tOjJROt0heYohQvp
+	 run7yKm4Tkx11dQCsZH90Lgu0/ZmsF+EuTAvQkCdWEDUJmujsqX6+twz0bOc3BGdPS
+	 ztpxLKyNetb/c0RnNGBKPDoyTy6O/QQJ2YO8AYmjdyuPzQwfBNWWJ+FMjoQWKJYeGr
+	 T6VO8JQGrFY5JUsqEPHzCmxNQyvLZBnR7xJViN21RHw6EccAif15sAWcaTGZgPk76M
+	 pJ+mv9gQ2Ik0w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chao Yu <chao@kernel.org>,
-	Hyeong-Jun Kim <hj514.kim@samsung.com>,
-	Chao Yu <chao.yu@oppo.com>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc: Jorge Mora <jmora1300@gmail.com>,
+	Jorge Mora <mora@netapp.com>,
+	Benjamin Coddington <bcodding@redhat.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 258/317] f2fs: fix to invalidate META_MAPPING before DIO write
-Date: Sun, 24 Mar 2024 19:33:58 -0400
-Message-ID: <20240324233458.1352854-259-sashal@kernel.org>
+Subject: [PATCH 5.15 268/317] NFSv4.2: fix nfs4_listxattr kernel BUG at mm/usercopy.c:102
+Date: Sun, 24 Mar 2024 19:34:08 -0400
+Message-ID: <20240324233458.1352854-269-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -50,87 +50,97 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chao Yu <chao@kernel.org>
+From: Jorge Mora <jmora1300@gmail.com>
 
-[ Upstream commit 67ca06872eb02944b4c6f92cffa9242e92c63109 ]
+[ Upstream commit 251a658bbfceafb4d58c76b77682c8bf7bcfad65 ]
 
-Quoted from commit e3b49ea36802 ("f2fs: invalidate META_MAPPING before
-IPU/DIO write")
+A call to listxattr() with a buffer size = 0 returns the actual
+size of the buffer needed for a subsequent call. When size > 0,
+nfs4_listxattr() does not return an error because either
+generic_listxattr() or nfs4_listxattr_nfs4_label() consumes
+exactly all the bytes then size is 0 when calling
+nfs4_listxattr_nfs4_user() which then triggers the following
+kernel BUG:
 
-"
-Encrypted pages during GC are read and cached in META_MAPPING.
-However, due to cached pages in META_MAPPING, there is an issue where
-newly written pages are lost by IPU or DIO writes.
+  [   99.403778] kernel BUG at mm/usercopy.c:102!
+  [   99.404063] Internal error: Oops - BUG: 00000000f2000800 [#1] SMP
+  [   99.408463] CPU: 0 PID: 3310 Comm: python3 Not tainted 6.6.0-61.fc40.aarch64 #1
+  [   99.415827] Call trace:
+  [   99.415985]  usercopy_abort+0x70/0xa0
+  [   99.416227]  __check_heap_object+0x134/0x158
+  [   99.416505]  check_heap_object+0x150/0x188
+  [   99.416696]  __check_object_size.part.0+0x78/0x168
+  [   99.416886]  __check_object_size+0x28/0x40
+  [   99.417078]  listxattr+0x8c/0x120
+  [   99.417252]  path_listxattr+0x78/0xe0
+  [   99.417476]  __arm64_sys_listxattr+0x28/0x40
+  [   99.417723]  invoke_syscall+0x78/0x100
+  [   99.417929]  el0_svc_common.constprop.0+0x48/0xf0
+  [   99.418186]  do_el0_svc+0x24/0x38
+  [   99.418376]  el0_svc+0x3c/0x110
+  [   99.418554]  el0t_64_sync_handler+0x120/0x130
+  [   99.418788]  el0t_64_sync+0x194/0x198
+  [   99.418994] Code: aa0003e3 d000a3e0 91310000 97f49bdb (d4210000)
 
-Thread A - f2fs_gc()            Thread B
-/* phase 3 */
-down_write(i_gc_rwsem)
-ra_data_block()       ---- (a)
-up_write(i_gc_rwsem)
-                                f2fs_direct_IO() :
-                                 - down_read(i_gc_rwsem)
-                                 - __blockdev_direct_io()
-                                 - get_data_block_dio_write()
-                                 - f2fs_dio_submit_bio()  ---- (b)
-                                 - up_read(i_gc_rwsem)
-/* phase 4 */
-down_write(i_gc_rwsem)
-move_data_block()     ---- (c)
-up_write(i_gc_rwsem)
+Issue is reproduced when generic_listxattr() returns 'system.nfs4_acl',
+thus calling lisxattr() with size = 16 will trigger the bug.
 
-(a) In phase 3 of f2fs_gc(), up-to-date page is read from storage and
-    cached in META_MAPPING.
-(b) In thread B, writing new data by IPU or DIO write on same blkaddr as
-    read in (a). cached page in META_MAPPING become out-dated.
-(c) In phase 4 of f2fs_gc(), out-dated page in META_MAPPING is copied to
-    new blkaddr. In conclusion, the newly written data in (b) is lost.
+Add check on nfs4_listxattr() to return ERANGE error when it is
+called with size > 0 and the return value is greater than size.
 
-To address this issue, invalidating pages in META_MAPPING before IPU or
-DIO write.
-"
-
-In previous commit, we missed to cover extent cache hit case, and passed
-wrong value for parameter @end of invalidate_mapping_pages(), fix both
-issues.
-
-Fixes: 6aa58d8ad20a ("f2fs: readahead encrypted block during GC")
-Fixes: e3b49ea36802 ("f2fs: invalidate META_MAPPING before IPU/DIO write")
-Cc: Hyeong-Jun Kim <hj514.kim@samsung.com>
-Signed-off-by: Chao Yu <chao.yu@oppo.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Stable-dep-of: fd244524c2cf ("f2fs: compress: fix to cover normal cluster write with cp_rwsem")
+Fixes: 012a211abd5d ("NFSv4.2: hook in the user extended attribute handlers")
+Signed-off-by: Jorge Mora <mora@netapp.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/data.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ fs/nfs/nfs4proc.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 19b595488a27b..222af7d5f91b7 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -1496,9 +1496,12 @@ int f2fs_map_blocks(struct inode *inode, struct f2fs_map_blocks *map,
- 			*map->m_next_extent = pgofs + map->m_len;
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index a865b384f0fc0..925ad7dbe6a0d 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -10517,29 +10517,33 @@ const struct nfs4_minor_version_ops *nfs_v4_minor_ops[] = {
+ static ssize_t nfs4_listxattr(struct dentry *dentry, char *list, size_t size)
+ {
+ 	ssize_t error, error2, error3;
++	size_t left = size;
  
- 		/* for hardware encryption, but to avoid potential issue in future */
--		if (flag == F2FS_GET_BLOCK_DIO)
-+		if (flag == F2FS_GET_BLOCK_DIO) {
- 			f2fs_wait_on_block_writeback_range(inode,
- 						map->m_pblk, map->m_len);
-+			invalidate_mapping_pages(META_MAPPING(sbi),
-+				map->m_pblk, map->m_pblk + map->m_len - 1);
-+		}
+-	error = generic_listxattr(dentry, list, size);
++	error = generic_listxattr(dentry, list, left);
+ 	if (error < 0)
+ 		return error;
+ 	if (list) {
+ 		list += error;
+-		size -= error;
++		left -= error;
+ 	}
  
- 		if (map->m_multidev_dio) {
- 			block_t blk_addr = map->m_pblk;
-@@ -1712,7 +1715,7 @@ int f2fs_map_blocks(struct inode *inode, struct f2fs_map_blocks *map,
- 		f2fs_wait_on_block_writeback_range(inode,
- 						map->m_pblk, map->m_len);
- 		invalidate_mapping_pages(META_MAPPING(sbi),
--						map->m_pblk, map->m_pblk);
-+				map->m_pblk, map->m_pblk + map->m_len - 1);
+-	error2 = nfs4_listxattr_nfs4_label(d_inode(dentry), list, size);
++	error2 = nfs4_listxattr_nfs4_label(d_inode(dentry), list, left);
+ 	if (error2 < 0)
+ 		return error2;
  
- 		if (map->m_multidev_dio) {
- 			block_t blk_addr = map->m_pblk;
+ 	if (list) {
+ 		list += error2;
+-		size -= error2;
++		left -= error2;
+ 	}
+ 
+-	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, size);
++	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, left);
+ 	if (error3 < 0)
+ 		return error3;
+ 
+-	return error + error2 + error3;
++	error += error2 + error3;
++	if (size && error > size)
++		return -ERANGE;
++	return error;
+ }
+ 
+ static void nfs4_enable_swap(struct inode *inode)
 -- 
 2.43.0
 
