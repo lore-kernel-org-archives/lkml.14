@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B20C1494DE;
-	Sun, 24 Mar 2024 22:56:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0811494D4;
+	Sun, 24 Mar 2024 22:56:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320978; cv=none; b=KyBW0sEuUqRS8CTE76X/0hIUvBMFxfbaqikgOthYIqipKAcmD8SYCM87sFAPKxUIMSl+zuRSeUFIVnqLdq93REFnDovTmpGnHg0lXF4kYUs8u4me58lOsRXRKOaqspB2xg7TFx3/4HChXMpW+m2yr+sibw7Pk+FKzCvs8r9cTog=
+	t=1711320977; cv=none; b=KdsIcP4kJGyjUVibvJOWtbUrgU3jb2qfa9hhtZ/IPkmYZgI8WABlArMroiOiDCizckZmFNm2CK6XX15NVcNX8fZUOUA6/dmPaH4LbIepYV6vMrEE6n4dLqqvZNhP0iDyNhfkVDfJ4uUJK/k2gDydhkCWM9pgGAbrZbkFHeW/LhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320978; c=relaxed/simple;
-	bh=bp1Fpbg0r4rOlDDELyrOjAlejZsZMctkuCGncAfZ4/Q=;
+	s=arc-20240116; t=1711320977; c=relaxed/simple;
+	bh=1L5gyKnUNDWV2C0YYKufGqLKY6PpoYok9dEErj71eac=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OUS2xQD7ffaksVSa5lXleCgYTbj93ksmUT+Rq/1grtH7GJMgCvOvpfwGV1Air+ErErW3y3s8ExbnHeB6lmURaRs0lh3qPoVvE9qbccNvjmytpWgTUJlDqRgzpgTzN22kEi6M7slcB9JhXmh4qNOHv1hj734y3Y9WYD8I/Y584dA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qgBmxIDX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AwEwNtcdPr9fFZwqHVcVfNxAuX9IDudD5yedNGxbeKVOB8SyF0ZR1/R8BbnZRiujdqtkeKHSxpI++tk8+6UVkft3h18Qy7s/RPFt24/brm7efsH0O3/ZOdqdOvRnnt2UTLfeOLlV1kP5hu6tYK4xp1LaDifcVCgD8LNNKQbnLNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Msof+9h+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qgBmxIDX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47987C43394;
-	Sun, 24 Mar 2024 22:56:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Msof+9h+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64B60C43390;
+	Sun, 24 Mar 2024 22:56:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320978;
-	bh=bp1Fpbg0r4rOlDDELyrOjAlejZsZMctkuCGncAfZ4/Q=;
+	s=k20201202; t=1711320976;
+	bh=1L5gyKnUNDWV2C0YYKufGqLKY6PpoYok9dEErj71eac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qgBmxIDX+AC7z+k2w0Z9spqg/6FwpMkhJ6oHu3OwhCNCpeO+32DSXheXxF7mn1Bsf
-	 Gj+SCe8IaK772SKGnGFwzdwWHZS1X76P3edOd+QYC5w8Hxjyze5Z72X3Vai0RsDzR9
-	 Ywds28DNUIg3JixvsbRI2Bx5zSiPXrroXrcW++AB9Q6gXnvUmKA6CDI0L6GLSl+80c
-	 LJiLjQg6GdxPhXIK3gBDAM+373706KysxzK2NX6S9Xs5fnaPRj0U920JOcEgCDsgh9
-	 Y2uvfeLqkxJ2jc7cxUX2xMf8Rrlelx0f8Bcu0zP21bt09/afCTnYCLwaqIcFwr310I
-	 VyqtapI1ycuIQ==
+	b=Msof+9h+vA3zF9+SnUOy6G/WmX2lrLjG62KbpDl00P0/BIZAnixYLjmL0ove8zy4z
+	 MWsnAKTrm7OHIT30aPVmbuoW8n7o4rYTBwahT6XoVzVqb2eI4BUxMgj0ubZJSaSFBy
+	 oY0cqxzgVI6xHYV0Y4Y8qHMEt1AjpJZ7Meh3NaOsuY+Mo7Qrkkh+ez6KAKhbFxiQtf
+	 1deXkf/sQMKLA/LGfpbtxXJtmxXRC23nwYinm4OjZXE2LkHl0ct3PhMAhdP0uZ8ijT
+	 YFgJQ4uveAOrVE+UCpKhTu/z69YWIAU7CFOmmnnGwk6CuzE3DhOMYRM2cQ3PT+AWrd
+	 thbNHvCmdXs7Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jianhua Lu <lujianhua000@gmail.com>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
+Cc: George Stark <gnstark@salutedevices.com>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
 	Lee Jones <lee@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 541/713] backlight: ktz8866: Correct the check for of_property_read_u32
-Date: Sun, 24 Mar 2024 18:44:27 -0400
-Message-ID: <20240324224720.1345309-542-sashal@kernel.org>
+Subject: [PATCH 6.7 539/713] leds: aw2013: Unlock mutex before destroying it
+Date: Sun, 24 Mar 2024 18:44:25 -0400
+Message-ID: <20240324224720.1345309-540-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,51 +49,35 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jianhua Lu <lujianhua000@gmail.com>
+From: George Stark <gnstark@salutedevices.com>
 
-[ Upstream commit f1ac3c9825f99c93a9833beee6b78aa386e55b0b ]
+[ Upstream commit 6969d0a2ba1adc9ba6a49b9805f24080896c255c ]
 
-of_property_read_u32 returns 0 when success, so reverse the
-return value to get the true value.
+In the probe() callback in case of error mutex is destroyed being locked
+which is not allowed so unlock the mutex before destroying.
 
-Fixes: f8449c8f7355 ("backlight: ktz8866: Add support for Kinetic KTZ8866 backlight")
-Signed-off-by: Jianhua Lu <lujianhua000@gmail.com>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Link: https://lore.kernel.org/r/20240129122829.16248-1-lujianhua000@gmail.com
+Fixes: 59ea3c9faf32 ("leds: add aw2013 driver")
+Signed-off-by: George Stark <gnstark@salutedevices.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Link: https://lore.kernel.org/r/20231214173614.2820929-2-gnstark@salutedevices.com
 Signed-off-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/ktz8866.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/leds/leds-aw2013.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/video/backlight/ktz8866.c b/drivers/video/backlight/ktz8866.c
-index 9c980f2571ee3..014877b5a9848 100644
---- a/drivers/video/backlight/ktz8866.c
-+++ b/drivers/video/backlight/ktz8866.c
-@@ -97,20 +97,20 @@ static void ktz8866_init(struct ktz8866 *ktz)
- {
- 	unsigned int val = 0;
+diff --git a/drivers/leds/leds-aw2013.c b/drivers/leds/leds-aw2013.c
+index 91f44b23cb113..17235a5e576ae 100644
+--- a/drivers/leds/leds-aw2013.c
++++ b/drivers/leds/leds-aw2013.c
+@@ -405,6 +405,7 @@ static int aw2013_probe(struct i2c_client *client)
+ 			       chip->regulators);
  
--	if (of_property_read_u32(ktz->client->dev.of_node, "current-num-sinks", &val))
-+	if (!of_property_read_u32(ktz->client->dev.of_node, "current-num-sinks", &val))
- 		ktz8866_write(ktz, BL_EN, BIT(val) - 1);
- 	else
- 		/* Enable all 6 current sinks if the number of current sinks isn't specified. */
- 		ktz8866_write(ktz, BL_EN, BIT(6) - 1);
- 
--	if (of_property_read_u32(ktz->client->dev.of_node, "kinetic,current-ramp-delay-ms", &val)) {
-+	if (!of_property_read_u32(ktz->client->dev.of_node, "kinetic,current-ramp-delay-ms", &val)) {
- 		if (val <= 128)
- 			ktz8866_write(ktz, BL_CFG2, BIT(7) | (ilog2(val) << 3) | PWM_HYST);
- 		else
- 			ktz8866_write(ktz, BL_CFG2, BIT(7) | ((5 + val / 64) << 3) | PWM_HYST);
- 	}
- 
--	if (of_property_read_u32(ktz->client->dev.of_node, "kinetic,led-enable-ramp-delay-ms", &val)) {
-+	if (!of_property_read_u32(ktz->client->dev.of_node, "kinetic,led-enable-ramp-delay-ms", &val)) {
- 		if (val == 0)
- 			ktz8866_write(ktz, BL_DIMMING, 0);
- 		else {
+ error:
++	mutex_unlock(&chip->mutex);
+ 	mutex_destroy(&chip->mutex);
+ 	return ret;
+ }
 -- 
 2.43.0
 
