@@ -1,88 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40109236CF1;
-	Sun, 24 Mar 2024 23:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26822365B2;
+	Sun, 24 Mar 2024 23:18:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322306; cv=none; b=BSOrWVQfQBNJXfdzcPUOzxg87XwrBDVMAYhpMc0ytxqoOyZQKp+IefWX0livu7ZgQaWvKyugiVBR/UkGjh8S8f2M3ybS9o4pqplDfIdwB0o9WSP0AgGLGn4yQBm7+ICKR34U6WRIu10yxIQTVlbQ96C875exYqn4ykE+xorpe7o=
+	t=1711322305; cv=none; b=gpRq0VqV5qcUa6CCFOlQ8m/W4XIo+mzOw+RQauSbE+gAg8VxPYP+THojz7L61nLSIBfiFbG7cnSMAkfqK5AHPCoUbNcGO/vZcfq3d6nwZ3BSHV74+x58LtSKzX5ep3igPL67HNLZOGOfAJn5X8JKxKxaoia76eZjXjgYYv1nOIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322306; c=relaxed/simple;
-	bh=8OV+VAZZ7dNDf3Whe2RC4s0eAI8cTeKw9wnvWG2aWTg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tKV7wDqcLPN9Dp/y5av3xK2lAvRVLVkkbWysfL30CEfPUaypae9E7TKbB7+TF0eM4fJlRcHQo77KpSbSzI+6xdhqbyxMj54MNcstb2eSYOOeg5OmXceNmK+MjbXHT7FzTc7ySQPC7itfJudfldrryi2++IlrJ3wVQl4PtlIlr+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LdzJMhJ9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711322305; c=relaxed/simple;
+	bh=jVPxGR5BgM9vA0s1brpDXZj2La8xlSIyBw8kpmZZV6w=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=reiAtqHXICb9XUL9tvIOLpZ8MEruM0oR/o+nmMmMDZv4qkdhpYyiJwrFQgqas7wq3jZtFeyDcg2hmKbMhT0NJTZ3I2COqcEZaRWsye3lkFnjnvFQK11o6VJROpwUwUpH14fUaW1gho4Fjf2foHyuo5dCOgkeIG5bBT9Q2J9z7Xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MfPqms57; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LdzJMhJ9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8157FC43390;
-	Sun, 24 Mar 2024 23:18:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322306;
-	bh=8OV+VAZZ7dNDf3Whe2RC4s0eAI8cTeKw9wnvWG2aWTg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LdzJMhJ9jwl67j/D7H+uoVAgu/bb7YyDKdY0ROy+xqDWnAU7/uUSx1qdUbbRGuVve
-	 6IgxBKteKqlnoMci3TWQgR/mJD8tATRC+kR2f9pESxD25TjM5w50SXMrTdx1UJ7qKu
-	 ri2Slpt1QvOCQDIN/q8HresfTZ+5o3y6F3ebnpTRf++xeBEpIf+dOKHPp4IGLZKSXW
-	 rLt03zawUYFD3x7fH5xrtyxveMx6+2Jzz82SmD9DFKRgL0gvzhpvHqg/KcDsMgbWnt
-	 cjYTEd3YnBiKceZJ6otwMGJ4mvD594V49zIv6i5XKcf8S7RgW1EcgUMuIxKuhCeTG/
-	 S0Qb0GGTEQpVw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Sean Anderson <sean.anderson@seco.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 389/451] usb: phy: generic: Get the vbus supply
-Date: Sun, 24 Mar 2024 19:11:05 -0400
-Message-ID: <20240324231207.1351418-390-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
-References: <20240324231207.1351418-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MfPqms57"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711322304; x=1742858304;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=jVPxGR5BgM9vA0s1brpDXZj2La8xlSIyBw8kpmZZV6w=;
+  b=MfPqms57nDAHyOU65vEHcPUe3gnrGc8xmcSUPBLWtp2V2Rrhu8BaN9gr
+   2THhUKHilOo7JfNAa7A8upBU8fPrgewYYe1ou7WE3BEca6zPruznM0oMb
+   86WNDZiseQxtt3P7eXTEQzU/hz/dENdQeC2RFu/JsQL39OKIDo3vl8imU
+   paWUQfbPGHDlRsuzuQuhkTswt0X6sEkTv5N5pOdvVAQ+Zo35R8oz9nvYi
+   OgvebLsLSJRYH0AeZ1vYzFr6QUDzt1Ra3Xk0LVnCBEQN0/FkbSTT0RqGx
+   KvEWzLwpq1lC9V40Zz1rwcXQAT+3YUrehmdcPybARkFTlXcXDYCbbeZbe
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6431733"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="6431733"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="15464701"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.213.186.165])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:19 -0700
+From: Ira Weiny <ira.weiny@intel.com>
+Date: Sun, 24 Mar 2024 16:18:18 -0700
+Subject: [PATCH 15/26] range: Add range_overlaps()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240324-dcd-type2-upstream-v1-15-b7b00d623625@intel.com>
+References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+In-Reply-To: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Navneet Singh <navneet.singh@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, 
+ Davidlohr Bueso <dave@stgolabs.net>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>, 
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>
+X-Mailer: b4 0.13-dev-2d940
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711322284; l=3117;
+ i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
+ bh=jVPxGR5BgM9vA0s1brpDXZj2La8xlSIyBw8kpmZZV6w=;
+ b=53iCHLJ/xWLPJlIgzSANBdAyM7tqEPc2zNiSaLKJv/ddYCJwR6n/w4cTZhkxgLdxBdAy9OS1f
+ AobHeXQ6eQTD+GzTSt916xd9MiMVrNMwMNBn+yOb85x9/HEwj20voeQ
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
-From: Sean Anderson <sean.anderson@seco.com>
+Code to support CXL Dynamic Capacity devices will have extent ranges
+which need to be compared for intersection not a subset as is being
+checked in range_contains().
 
-[ Upstream commit 75fd6485cccef269ac9eb3b71cf56753341195ef ]
+range_overlaps() is defined in btrfs with a different meaning from what
+is required in the standard range code.  Dan Williams pointed this out
+in [1].  Adjust the btrfs call according to his suggestion there.
 
-While support for working with a vbus was added, the regulator was never
-actually gotten (despite what was documented). Fix this by actually
-getting the supply from the device tree.
+Then add a generic range_overlaps().
 
-Fixes: 7acc9973e3c4 ("usb: phy: generic: add vbus support")
-Signed-off-by: Sean Anderson <sean.anderson@seco.com>
-Link: https://lore.kernel.org/r/20240123225111.1629405-3-sean.anderson@seco.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Chris Mason <clm@fb.com>
+Cc: Josef Bacik <josef@toxicpanda.com>
+Cc: David Sterba <dsterba@suse.com>
+Cc: linux-btrfs@vger.kernel.org
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
+[1] https://lore.kernel.org/all/65949f79ef908_8dc68294f2@dwillia2-xfh.jf.intel.com.notmuch/
 ---
- drivers/usb/phy/phy-generic.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ fs/btrfs/ordered-data.c | 10 +++++-----
+ include/linux/range.h   |  7 +++++++
+ 2 files changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/phy/phy-generic.c b/drivers/usb/phy/phy-generic.c
-index 3dc5c04e7cbf9..953df04b40d40 100644
---- a/drivers/usb/phy/phy-generic.c
-+++ b/drivers/usb/phy/phy-generic.c
-@@ -265,6 +265,13 @@ int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_generic *nop)
- 			return -EPROBE_DEFER;
- 	}
+diff --git a/fs/btrfs/ordered-data.c b/fs/btrfs/ordered-data.c
+index 59850dc17b22..032d30a49edc 100644
+--- a/fs/btrfs/ordered-data.c
++++ b/fs/btrfs/ordered-data.c
+@@ -111,8 +111,8 @@ static struct rb_node *__tree_search(struct rb_root *root, u64 file_offset,
+ 	return NULL;
+ }
  
-+	nop->vbus_draw = devm_regulator_get_exclusive(dev, "vbus");
-+	if (PTR_ERR(nop->vbus_draw) == -ENODEV)
-+		nop->vbus_draw = NULL;
-+	if (IS_ERR(nop->vbus_draw))
-+		return dev_err_probe(dev, PTR_ERR(nop->vbus_draw),
-+				     "could not get vbus regulator\n");
+-static int range_overlaps(struct btrfs_ordered_extent *entry, u64 file_offset,
+-			  u64 len)
++static int btrfs_range_overlaps(struct btrfs_ordered_extent *entry, u64 file_offset,
++				u64 len)
+ {
+ 	if (file_offset + len <= entry->file_offset ||
+ 	    entry->file_offset + entry->num_bytes <= file_offset)
+@@ -914,7 +914,7 @@ struct btrfs_ordered_extent *btrfs_lookup_ordered_range(
+ 
+ 	while (1) {
+ 		entry = rb_entry(node, struct btrfs_ordered_extent, rb_node);
+-		if (range_overlaps(entry, file_offset, len))
++		if (btrfs_range_overlaps(entry, file_offset, len))
+ 			break;
+ 
+ 		if (entry->file_offset >= file_offset + len) {
+@@ -1043,12 +1043,12 @@ struct btrfs_ordered_extent *btrfs_lookup_first_ordered_range(
+ 	}
+ 	if (prev) {
+ 		entry = rb_entry(prev, struct btrfs_ordered_extent, rb_node);
+-		if (range_overlaps(entry, file_offset, len))
++		if (btrfs_range_overlaps(entry, file_offset, len))
+ 			goto out;
+ 	}
+ 	if (next) {
+ 		entry = rb_entry(next, struct btrfs_ordered_extent, rb_node);
+-		if (range_overlaps(entry, file_offset, len))
++		if (btrfs_range_overlaps(entry, file_offset, len))
+ 			goto out;
+ 	}
+ 	/* No ordered extent in the range */
+diff --git a/include/linux/range.h b/include/linux/range.h
+index 6ad0b73cb7ad..9a46f3212965 100644
+--- a/include/linux/range.h
++++ b/include/linux/range.h
+@@ -13,11 +13,18 @@ static inline u64 range_len(const struct range *range)
+ 	return range->end - range->start + 1;
+ }
+ 
++/* True if r1 completely contains r2 */
+ static inline bool range_contains(struct range *r1, struct range *r2)
+ {
+ 	return r1->start <= r2->start && r1->end >= r2->end;
+ }
+ 
++/* True if any part of r1 overlaps r2 */
++static inline bool range_overlaps(struct range *r1, struct range *r2)
++{
++	return r1->start <= r2->end && r1->end >= r2->start;
++}
 +
- 	nop->vbus_draw = devm_regulator_get_exclusive(dev, "vbus");
- 	if (PTR_ERR(nop->vbus_draw) == -ENODEV)
- 		nop->vbus_draw = NULL;
+ int add_range(struct range *range, int az, int nr_range,
+ 		u64 start, u64 end);
+ 
+
 -- 
-2.43.0
+2.44.0
 
