@@ -1,41 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6599C182719;
-	Sun, 24 Mar 2024 23:49:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E400B28ECD6;
+	Sun, 24 Mar 2024 23:49:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324159; cv=none; b=AFRtrIW/AyhVWAxKzBxwtxj113DQ1B/Y3aDWUD4efeBOuu3uDQ37ggs1prymkFlKCchVRqV74MIncqyW0zlZUzZRrW86TpKffBMt8OIiJkV+3KUfkkwr/4mYa3dzQVwJXCf0tXyrvzJw+enEfflXM9cFUkXicmIzQqiF9Z3kLhI=
+	t=1711324173; cv=none; b=KbTenzeg64/eiX+L8UTO5VT28SbaSj5Y3cwoXA9/Hp1VxM6NgfwrhAG81M/Jib/KduSz/6oo8E4i0tWjXzryxs8kMnC/z0ekGAPTJoB6NkU6MabnTIYncxTodHXn1ewMDLZwmeqBZIEcxMS/hBCmPJXV3Dl0HTvSbRAjAqthoWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324159; c=relaxed/simple;
-	bh=YMMs4rKE/JrIxOl9vv/9pBf6Z6Drk20xRncw7/KxpV8=;
+	s=arc-20240116; t=1711324173; c=relaxed/simple;
+	bh=B3AEFgsF6eEwX1vG9pSxc1+bF7vd44baeJOC8d+07Rw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cWAgHjIJWpHrp2rFHZqss+lSlzlfaq52FPTQcKDpPYJTce9sm9D1kq7qc+xPXWltf/aci8O0F0X/StNs4d+5KkBrkhVcKOfUrFKhlFodzKvKFF+9ZYB6TicoFZRIwBi5H5s+glP1HVpEyopBsCeMWzawalPZvJl24mNn2cksKEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XFxY+sUS; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=k1Xt9bAJ96vAcwCN78WfQ1fzFWIswgb8nQQEDkTEv2kMM3nSLrXWi7MANfD0kqoj8vJ91QFzuiHx1/xZ+zvU5YZybQlcL7lPOdRCktNv7W92lp0b1b6YxbG/j2ZRRhm63OxdrbQV2vPgnh4sMMojPwSUIbxGQBmgDOabWLYNISQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TAixVkCe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XFxY+sUS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A070C43390;
-	Sun, 24 Mar 2024 23:49:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TAixVkCe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0E5DC43390;
+	Sun, 24 Mar 2024 23:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324159;
-	bh=YMMs4rKE/JrIxOl9vv/9pBf6Z6Drk20xRncw7/KxpV8=;
+	s=k20201202; t=1711324171;
+	bh=B3AEFgsF6eEwX1vG9pSxc1+bF7vd44baeJOC8d+07Rw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XFxY+sUSvL3HmFEDlxmZu5UEWsornYZI+U5MkXQj1n92eOSnIifxDKexf4Lz+qQej
-	 oXdNveqWx6T+5qrvaTZ2s8iTZZtyXfZrJHhQRqGj24MtGf/+BNEUOm10wVRsbAGjSt
-	 8h5pq0Dw8uqDnEhorr3lT/zLQEwb30YCLCQ45UXEzfAdWK2tS89FuL4pbQP6J+qwKf
-	 Yq+7h8yDRIKBfzfZ3im5I7hz2O0Icm6F/ghBuVsaU635m07uPsdhb7pZCiX8C4NMdb
-	 LhtMVqPuFkoVBZxMLtQXXoTWAobkcwX+5RhozAWmY5H8OkHb3u2XlKNFtIjYmzzpLZ
-	 ENgvMa6/9l2Sw==
+	b=TAixVkCeQl2VExY3b2hJoLmE8jBYhiKogd6/lE3/fCtVt+ajoP5yLQTpcApMi/uFT
+	 X5d4C8y4lOnX19rtx5Z8lqx+U9HDuVNMUK3YmhWb7tjwZGnDLo5ay3LznGR/CTgzXm
+	 4mZ7fa5DozIVj2a3VF9xZyXvCyWLOFf1ab2gchpjsIo2HoBVE2ZpHBvzJWNuYJ/PfZ
+	 MVBrYJSzR5Sv6TgOuPQO7+jBROfQBrvfRbb2ghqJVS3FOQ4JJj4YGCE2Yc502ImGvL
+	 0/GhnRn518VO5VnZv1FLxwcVWyhFjjTjUuO3m1zpY2mKUlc/DYrNtyp7uezVQ7klCj
+	 jrphjkt2UWLMg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Kees Cook <keescook@chromium.org>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 155/183] scsi: bfa: Fix function pointer type mismatch for hcb_qe->cbfn
-Date: Sun, 24 Mar 2024 19:46:08 -0400
-Message-ID: <20240324234638.1355609-156-sashal@kernel.org>
+Subject: [PATCH 5.4 164/183] kconfig: fix infinite loop when expanding a macro at the end of file
+Date: Sun, 24 Mar 2024 19:46:17 -0400
+Message-ID: <20240324234638.1355609-165-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -49,150 +47,45 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit b69600231f751304db914c63b937f7098ed2895c ]
+[ Upstream commit af8bbce92044dc58e4cc039ab94ee5d470a621f5 ]
 
-Some callback functions used here take a boolean argument, others take a
-status argument. This breaks KCFI type checking, so clang now warns about
-the function pointer cast:
+A macro placed at the end of a file with no newline causes an infinite
+loop.
 
-drivers/scsi/bfa/bfad_bsg.c:2138:29: error: cast from 'void (*)(void *, enum bfa_status)' to 'bfa_cb_cbfn_t' (aka 'void (*)(void *, enum bfa_boolean)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+[Test Kconfig]
+  $(info,hello)
+  \ No newline at end of file
 
-Assuming the code is actually correct here and the callers always match the
-argument types of the callee, rework this to replace the explicit cast with
-a union of the two pointer types. This does not change the behavior of the
-code, so if something is actually broken here, a larger rework may be
-necessary.
+I realized that flex-provided input() returns 0 instead of EOF when it
+reaches the end of a file.
 
-Fixes: 37ea0558b87a ("[SCSI] bfa: Added support to collect and reset fcport stats")
-Fixes: 3ec4f2c8bff2 ("[SCSI] bfa: Added support to configure QOS and collect stats.")
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20240222124433.2046570-1-arnd@kernel.org
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 104daea149c4 ("kconfig: reference environment variables directly and remove 'option env='")
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/bfa/bfa.h      |  9 ++++++++-
- drivers/scsi/bfa/bfa_core.c |  4 +---
- drivers/scsi/bfa/bfa_ioc.h  |  8 ++++++--
- drivers/scsi/bfa/bfad_bsg.c | 11 ++++-------
- 4 files changed, 19 insertions(+), 13 deletions(-)
+ scripts/kconfig/lexer.l | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/bfa/bfa.h b/drivers/scsi/bfa/bfa.h
-index 7bd2ba1ad4d11..f30fe324e6ecc 100644
---- a/drivers/scsi/bfa/bfa.h
-+++ b/drivers/scsi/bfa/bfa.h
-@@ -20,7 +20,6 @@
- struct bfa_s;
+diff --git a/scripts/kconfig/lexer.l b/scripts/kconfig/lexer.l
+index 6354c905b006f..3bf90d01c39f9 100644
+--- a/scripts/kconfig/lexer.l
++++ b/scripts/kconfig/lexer.l
+@@ -305,8 +305,11 @@ static char *expand_token(const char *in, size_t n)
+ 	new_string();
+ 	append_string(in, n);
  
- typedef void (*bfa_isr_func_t) (struct bfa_s *bfa, struct bfi_msg_s *m);
--typedef void (*bfa_cb_cbfn_status_t) (void *cbarg, bfa_status_t status);
- 
- /*
-  * Interrupt message handlers
-@@ -437,4 +436,12 @@ struct bfa_cb_pending_q_s {
- 	(__qe)->data = (__data);				\
- } while (0)
- 
-+#define bfa_pending_q_init_status(__qe, __cbfn, __cbarg, __data) do {	\
-+	bfa_q_qe_init(&((__qe)->hcb_qe.qe));			\
-+	(__qe)->hcb_qe.cbfn_status = (__cbfn);			\
-+	(__qe)->hcb_qe.cbarg = (__cbarg);			\
-+	(__qe)->hcb_qe.pre_rmv = BFA_TRUE;			\
-+	(__qe)->data = (__data);				\
-+} while (0)
-+
- #endif /* __BFA_H__ */
-diff --git a/drivers/scsi/bfa/bfa_core.c b/drivers/scsi/bfa/bfa_core.c
-index 0f554ebb8f2c6..09819f076699f 100644
---- a/drivers/scsi/bfa/bfa_core.c
-+++ b/drivers/scsi/bfa/bfa_core.c
-@@ -1907,15 +1907,13 @@ bfa_comp_process(struct bfa_s *bfa, struct list_head *comp_q)
- 	struct list_head		*qe;
- 	struct list_head		*qen;
- 	struct bfa_cb_qe_s	*hcb_qe;
--	bfa_cb_cbfn_status_t	cbfn;
- 
- 	list_for_each_safe(qe, qen, comp_q) {
- 		hcb_qe = (struct bfa_cb_qe_s *) qe;
- 		if (hcb_qe->pre_rmv) {
- 			/* qe is invalid after return, dequeue before cbfn() */
- 			list_del(qe);
--			cbfn = (bfa_cb_cbfn_status_t)(hcb_qe->cbfn);
--			cbfn(hcb_qe->cbarg, hcb_qe->fw_status);
-+			hcb_qe->cbfn_status(hcb_qe->cbarg, hcb_qe->fw_status);
- 		} else
- 			hcb_qe->cbfn(hcb_qe->cbarg, BFA_TRUE);
- 	}
-diff --git a/drivers/scsi/bfa/bfa_ioc.h b/drivers/scsi/bfa/bfa_ioc.h
-index 933a1c3890ff5..5e568d6d7b261 100644
---- a/drivers/scsi/bfa/bfa_ioc.h
-+++ b/drivers/scsi/bfa/bfa_ioc.h
-@@ -361,14 +361,18 @@ struct bfa_reqq_wait_s {
- 	void	*cbarg;
- };
- 
--typedef void	(*bfa_cb_cbfn_t) (void *cbarg, bfa_boolean_t complete);
-+typedef void (*bfa_cb_cbfn_t) (void *cbarg, bfa_boolean_t complete);
-+typedef void (*bfa_cb_cbfn_status_t) (void *cbarg, bfa_status_t status);
- 
- /*
-  * Generic BFA callback element.
-  */
- struct bfa_cb_qe_s {
- 	struct list_head	qe;
--	bfa_cb_cbfn_t	cbfn;
-+	union {
-+		bfa_cb_cbfn_status_t	cbfn_status;
-+		bfa_cb_cbfn_t		cbfn;
-+	};
- 	bfa_boolean_t	once;
- 	bfa_boolean_t	pre_rmv;	/* set for stack based qe(s) */
- 	bfa_status_t	fw_status;	/* to access fw status in comp proc */
-diff --git a/drivers/scsi/bfa/bfad_bsg.c b/drivers/scsi/bfa/bfad_bsg.c
-index a76c968dbac59..9f5964944d787 100644
---- a/drivers/scsi/bfa/bfad_bsg.c
-+++ b/drivers/scsi/bfa/bfad_bsg.c
-@@ -2135,8 +2135,7 @@ bfad_iocmd_fcport_get_stats(struct bfad_s *bfad, void *cmd)
- 	struct bfa_cb_pending_q_s cb_qe;
- 
- 	init_completion(&fcomp.comp);
--	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp,
--			   &fcomp, &iocmd->stats);
-+	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, &iocmd->stats);
- 	spin_lock_irqsave(&bfad->bfad_lock, flags);
- 	iocmd->status = bfa_fcport_get_stats(&bfad->bfa, &cb_qe);
- 	spin_unlock_irqrestore(&bfad->bfad_lock, flags);
-@@ -2159,7 +2158,7 @@ bfad_iocmd_fcport_reset_stats(struct bfad_s *bfad, void *cmd)
- 	struct bfa_cb_pending_q_s cb_qe;
- 
- 	init_completion(&fcomp.comp);
--	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp, &fcomp, NULL);
-+	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, NULL);
- 
- 	spin_lock_irqsave(&bfad->bfad_lock, flags);
- 	iocmd->status = bfa_fcport_clear_stats(&bfad->bfa, &cb_qe);
-@@ -2443,8 +2442,7 @@ bfad_iocmd_qos_get_stats(struct bfad_s *bfad, void *cmd)
- 	struct bfa_fcport_s *fcport = BFA_FCPORT_MOD(&bfad->bfa);
- 
- 	init_completion(&fcomp.comp);
--	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp,
--			   &fcomp, &iocmd->stats);
-+	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, &iocmd->stats);
- 
- 	spin_lock_irqsave(&bfad->bfad_lock, flags);
- 	WARN_ON(!bfa_ioc_get_fcmode(&bfad->bfa.ioc));
-@@ -2474,8 +2472,7 @@ bfad_iocmd_qos_reset_stats(struct bfad_s *bfad, void *cmd)
- 	struct bfa_fcport_s *fcport = BFA_FCPORT_MOD(&bfad->bfa);
- 
- 	init_completion(&fcomp.comp);
--	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp,
--			   &fcomp, NULL);
-+	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, NULL);
- 
- 	spin_lock_irqsave(&bfad->bfad_lock, flags);
- 	WARN_ON(!bfa_ioc_get_fcmode(&bfad->bfa.ioc));
+-	/* get the whole line because we do not know the end of token. */
+-	while ((c = input()) != EOF) {
++	/*
++	 * get the whole line because we do not know the end of token.
++	 * input() returns 0 (not EOF!) when it reachs the end of file.
++	 */
++	while ((c = input()) != 0) {
+ 		if (c == '\n') {
+ 			unput(c);
+ 			break;
 -- 
 2.43.0
 
