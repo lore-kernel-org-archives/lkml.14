@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E37149E0F;
-	Sun, 24 Mar 2024 23:15:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE2215B54B;
+	Sun, 24 Mar 2024 23:16:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322151; cv=none; b=gPQfGZs/VkDYUUd8B7XJ6K/Qid3qXP5Em1C8Fwm9PLaaHPUeAwT2em5BRtcV8s6ry5mbCCCmfqBKtw7e6+G1P6pO2n4zgUqtmoSmxrSYOTm37FYZ6Ovo3lAWM/LKcnTTf1owQcx7w/v2aPqzoSePe3nqQ4Yjs5MjnXmiVytWGDw=
+	t=1711322161; cv=none; b=KBre6xeOgIpK1XSCHNfADa05X4oyZxIMQdkhS7nlYNpXcviFJpczDrxvEgjxocnbYBbFG+rUNHrwKkXBQHMKj+SWV6wfGXkWWaGv5+OH4oZuO10JReAE/8TLeO9O/NIhKb4PAzmctRlUrM1I3o615dLfNrU9m5L4V3yDZvPD59g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322151; c=relaxed/simple;
-	bh=fl7NnVGSSlcrH+GcOWmHYXsxcie4uE+LpNiwHizCaBk=;
+	s=arc-20240116; t=1711322161; c=relaxed/simple;
+	bh=8KG5Kv9xE8+BSzUzijXLHGU0DSDjDPk4VPFVL8rFUuk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kMrLRTiAW5+fmupgZ+oa44dEvzZVUqjkGzQPBrUxFz1frGe5c/J6ChYIRUY9/FpaoK7a7CVh6GBKkil7VVIVWLt6ju3DfchHE0DGx/RhzW9YEZ0ZG1QiYvCH1nhyCHvCxiftLwBao5x46p245ggVo1mUcRmlSGOfKIpNh3UANck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TIOImOAf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=YrsCYPtLRFilVxXkroLSleKZ+SUJ9Jwr+XMy2LIpe76KsjXFFjDmQ9t54eZgI/dg49IRDjAQZlXssiGw2v04OewyHwoywN3td3uIyioaMv6b+U0ZD3x72JhscYcfJn5uZEfJlXwlgE7Z3lKOYhacgrywq/Jx4YrDj5mJj0g3oZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q9P/0/6w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TIOImOAf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E397C433F1;
-	Sun, 24 Mar 2024 23:15:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q9P/0/6w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0BF3C43394;
+	Sun, 24 Mar 2024 23:16:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322150;
-	bh=fl7NnVGSSlcrH+GcOWmHYXsxcie4uE+LpNiwHizCaBk=;
+	s=k20201202; t=1711322161;
+	bh=8KG5Kv9xE8+BSzUzijXLHGU0DSDjDPk4VPFVL8rFUuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TIOImOAfMrgc99r8TYQy+VsvHErvxeZnQ1IK4LG3k7dNHp0bapGxan2PBy7ukK6ij
-	 qxhP8zaiva9jQK3lbIt1gw8g1teYSgAu6ZGokHyHdtsrbF2zLy3HGPxkED4I4Lfua6
-	 uLL2LUzBPSyt7HPereTvWCfMb+xCBtsqHJVuPCHmsUIu9zlDtzShIEBwfVLcG3toSV
-	 4Mhtei8L/g2mU/3sRxWenLDTahxvHSdSxtwdPyLJkfNz3r3hQNTAr/ybcbZwT1kWTI
-	 bnveHM7wofL8ATrIRaOKMX5aLoLmbRtC2I13YQr7k/3gpwi1hTktOcO+1TT4BaG0kn
-	 dOTEiazCunlXg==
+	b=Q9P/0/6wwhrj7QPYP100FqNnsnE7LS5A5htXRnpgonGZ9agymHxkX8oWeO6M2MUS6
+	 w5691TzeBKRi0Nzz66owVkZ7mGTTEcxdadktHYvXA++YSswUOEN5E0bI8levmtO7m9
+	 2XkPfxLiYQB7KNwjkQvIADInUV1pn0Lz3MPU2dV4d3zTqRxZnSTiAnzlurLtw2NT65
+	 8KEn+VLepRNCMEoA3pIe8xkAgquwF5MwNVP6f2YH5yEsNyTsZgJ8DbUysugkfRxQ3W
+	 3UsSDySPgqvD4ouumPR/JVdPJM4VYGko1Y87aHnCNf7+ZObns1Ez+su+IvtTrjJUQ9
+	 a/86jOQfZ/2ZA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
-	Willem de Bruijn <willemb@google.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Yangtao Li <frank.li@vivo.com>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 227/451] udp: fix incorrect parameter validation in the udp_lib_getsockopt() function
-Date: Sun, 24 Mar 2024 19:08:23 -0400
-Message-ID: <20240324231207.1351418-228-sashal@kernel.org>
+Subject: [PATCH 6.1 239/451] drm/tegra: hdmi: Convert to devm_platform_ioremap_resource()
+Date: Sun, 24 Mar 2024 19:08:35 -0400
+Message-ID: <20240324231207.1351418-240-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,44 +48,43 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+From: Yangtao Li <frank.li@vivo.com>
 
-[ Upstream commit 4bb3ba7b74fceec6f558745b25a43c6521cf5506 ]
+[ Upstream commit faae5646c13f4697fd2ba29b10e38f9be5aa890a ]
 
-The 'len' variable can't be negative when assigned the result of
-'min_t' because all 'min_t' parameters are cast to unsigned int,
-and then the minimum one is chosen.
+Use devm_platform_ioremap_resource() to simplify code.
 
-To fix the logic, check 'len' as read from 'optlen',
-where the types of relevant variables are (signed) int.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reviewed-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Yangtao Li <frank.li@vivo.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20230710032355.72914-5-frank.li@vivo.com
+Stable-dep-of: 643ae131b859 ("drm/tegra: hdmi: Fix some error handling paths in tegra_hdmi_probe()")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/udp.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/tegra/hdmi.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
-index 87d759bab0012..7856b7a3e0ee9 100644
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -2790,11 +2790,11 @@ int udp_lib_getsockopt(struct sock *sk, int level, int optname,
- 	if (get_user(len, optlen))
- 		return -EFAULT;
+diff --git a/drivers/gpu/drm/tegra/hdmi.c b/drivers/gpu/drm/tegra/hdmi.c
+index bf240767dad9f..f83d9041327f0 100644
+--- a/drivers/gpu/drm/tegra/hdmi.c
++++ b/drivers/gpu/drm/tegra/hdmi.c
+@@ -1776,7 +1776,6 @@ static irqreturn_t tegra_hdmi_irq(int irq, void *data)
+ static int tegra_hdmi_probe(struct platform_device *pdev)
+ {
+ 	struct tegra_hdmi *hdmi;
+-	struct resource *regs;
+ 	int err;
  
--	len = min_t(unsigned int, len, sizeof(int));
--
- 	if (len < 0)
- 		return -EINVAL;
+ 	hdmi = devm_kzalloc(&pdev->dev, sizeof(*hdmi), GFP_KERNEL);
+@@ -1838,8 +1837,7 @@ static int tegra_hdmi_probe(struct platform_device *pdev)
+ 	if (err < 0)
+ 		return err;
  
-+	len = min_t(unsigned int, len, sizeof(int));
-+
- 	switch (optname) {
- 	case UDP_CORK:
- 		val = udp_test_bit(CORK, sk);
+-	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	hdmi->regs = devm_ioremap_resource(&pdev->dev, regs);
++	hdmi->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(hdmi->regs))
+ 		return PTR_ERR(hdmi->regs);
+ 
 -- 
 2.43.0
 
