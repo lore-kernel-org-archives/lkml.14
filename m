@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E0A1E6202;
-	Sun, 24 Mar 2024 22:53:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278631E6F5E;
+	Sun, 24 Mar 2024 22:54:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320839; cv=none; b=GkHtD0YLA2ZiZGlyxkdrAsA4lCtpnDTie0LQ3xn8xr8AhMsQVwygMV4Xa+oQ903bYUm0c+70scRdfvB5a88WCn4A4nqG6hBG8HSRC2aqdd7fIfnpMaty5+2XZ3W6DCWF8akOzuWaUHDZdcOKJ1+f2HIeqqXImKtCBdyTIUyRW+w=
+	t=1711320858; cv=none; b=QPrdfizGRLxQfN5lgrYvHrIzZEneph7z6UcEff9KrZIBW3+KI5hLIRa9wYAil4Gq/xjfj+jwQfUiXq8e6G6iPKNEAwrW1snuBjB+LTblMTsOvKKXAP3wtX5NXddZEhxUb88EGpfc0rWdsPpvFMuPWuz6MzV+B+Ud2M5gO9++9Cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320839; c=relaxed/simple;
-	bh=O945Y65RtR8IS6CkelHaCAjziwhmZ9c1i9x5V/q+Yf4=;
+	s=arc-20240116; t=1711320858; c=relaxed/simple;
+	bh=C2Ua5kReEzwTd2V431PjK4bLeRHqCCInHnmeMP3BwsE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XmZsa1Fvt42xtgvoud/0+0hfqrnJFm2vJFgOkj5OfRHJMzk2/jkhrQXVXTGXqWLdmwnQCF8Q5zcUFY7NzZemtAa9nuKa5ofB43rpaimycREFAAuHQ/Kymg1mqUjGpfyBP//2BGpUctQ4LHiikl+MtotfwObWJSccYMosBb/sGRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lw2LP5oU; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hY7cMH/oaU4uodvAW7Htv8Nw0W3Jk68kNsOZu+0AgpU8sG8fqFlJyQqKoJLmWi+DPC00dPg/6LFbneMkG/St0i/n1U0zUfSRaVIhsDmuFRlcO2ttFqhP/4zj77xF2sCCmizCj22cJk4E7w4S5yErhhplUbD0cSsHbdY64Wrktpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sxM6jxoh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lw2LP5oU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42351C43399;
-	Sun, 24 Mar 2024 22:53:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sxM6jxoh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E524C43390;
+	Sun, 24 Mar 2024 22:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320837;
-	bh=O945Y65RtR8IS6CkelHaCAjziwhmZ9c1i9x5V/q+Yf4=;
+	s=k20201202; t=1711320857;
+	bh=C2Ua5kReEzwTd2V431PjK4bLeRHqCCInHnmeMP3BwsE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lw2LP5oUACyVvilbBXRuQkB0Xk4dQodpsSv84uUe9IHFJSHoCt+kEJYhqI5s6xEYn
-	 88tNcq2AO6SCQ83zUGQiRVm4t/UM3F4CZO4xDez1MX8S3B+hGJ61dQnz6EewaP+TXI
-	 /Ac48PJ+SWiUSc5I36LDZuXN0o5loHRp7xyX/Yie5gx0aoGsRkh3AP3TuAF0Z50/M9
-	 gf9ZgaVJ0V6ArIzcMc8UYihdrhVAXFqkuC96lR3a9YMpukkTRGj5P2l5KulOSAS/ul
-	 0BWARI9zkZn2eUIgVx26DIYLeDXpuEsrX7OQfY/M6TQgFyB2a2FrVWLj9UIQI2/jQj
-	 CHLJNZ9EYgbxw==
+	b=sxM6jxohRztoFxg+LK2x7oYaJ/EReQ28NsQewXit1aAY/13NU8cB2QRRcDxfRH+34
+	 uOJiT28FWDV+aVRlaR1380OejI6nw0ek6xyvNk/6budx1fcAnf5PGkrYarB1oKFREf
+	 1geXqvXkk1IYbYHWR3a4fWqIRJ5qFPNcC1G63VPfDW0fawlIK+4WSDWPt8tK3rOAEt
+	 ZJIJB9G4IInFLbdBVVwAUGd1CCIknx3f/SLxTvelwfXl+B1UX2g8ebs2hFiS0tYAfD
+	 qm5IJyWFg+FiK9QD13juMMykMwJS66GWOLX1GY6kliHOZGGvUUTQ7MvcJDvsn8G2Wu
+	 Yqo2ooHue+22w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hsin-Yi Wang <hsinyi@chromium.org>,
-	Douglas Anderson <dianders@chromium.org>,
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 403/713] drm/panel-edp: use put_sync in unprepare
-Date: Sun, 24 Mar 2024 18:42:09 -0400
-Message-ID: <20240324224720.1345309-404-sashal@kernel.org>
+Subject: [PATCH 6.7 421/713] pinctrl: renesas: r8a779g0: Add missing SCIF_CLK2 pin group/function
+Date: Sun, 24 Mar 2024 18:42:27 -0400
+Message-ID: <20240324224720.1345309-422-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,42 +47,67 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Hsin-Yi Wang <hsinyi@chromium.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 49ddab089611ae5ddd0201ddbbf633da75bfcc25 ]
+[ Upstream commit 68540257cdf1d07ff8a649aa94c21c5804bbb9b0 ]
 
-Some edp panel requires T10 (Delay from end of valid video data transmitted
-by the Source device to power-off) less than 500ms. Using autosuspend with
-delay set as 1000 violates this requirement.
+R-Car V4H actually has two SCIF_CLK pins.
+The second pin provides the SCIF_CLK signal for HSCIF2 and SCIF4.
 
-Use put_sync_suspend in unprepare to meet the spec. For other cases (such
-as getting EDID), it still uses autosuspend.
-
-Suggested-by: Douglas Anderson <dianders@chromium.org>
-Fixes: 3235b0f20a0a ("drm/panel: panel-simple: Use runtime pm to avoid excessive unprepare / prepare")
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231220221418.2610185-1-hsinyi@chromium.org
+Fixes: 050442ae4c74f830 ("pinctrl: renesas: r8a779g0: Add pins, groups and functions")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/6352ec9b63fdd38c2c70d8d203e46f21fbfeccdc.1705589612.git.geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/panel/panel-edp.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/pinctrl/renesas/pfc-r8a779g0.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
-index cba5a93e60822..70feee7876114 100644
---- a/drivers/gpu/drm/panel/panel-edp.c
-+++ b/drivers/gpu/drm/panel/panel-edp.c
-@@ -413,8 +413,7 @@ static int panel_edp_unprepare(struct drm_panel *panel)
- 	if (!p->prepared)
- 		return 0;
+diff --git a/drivers/pinctrl/renesas/pfc-r8a779g0.c b/drivers/pinctrl/renesas/pfc-r8a779g0.c
+index acdea6ac15253..d2de526a3b588 100644
+--- a/drivers/pinctrl/renesas/pfc-r8a779g0.c
++++ b/drivers/pinctrl/renesas/pfc-r8a779g0.c
+@@ -2384,6 +2384,14 @@ static const unsigned int scif_clk_mux[] = {
+ 	SCIF_CLK_MARK,
+ };
  
--	pm_runtime_mark_last_busy(panel->dev);
--	ret = pm_runtime_put_autosuspend(panel->dev);
-+	ret = pm_runtime_put_sync_suspend(panel->dev);
- 	if (ret < 0)
- 		return ret;
- 	p->prepared = false;
++static const unsigned int scif_clk2_pins[] = {
++	/* SCIF_CLK2 */
++	RCAR_GP_PIN(8, 11),
++};
++static const unsigned int scif_clk2_mux[] = {
++	SCIF_CLK2_MARK,
++};
++
+ /* - SSI ------------------------------------------------- */
+ static const unsigned int ssi_data_pins[] = {
+ 	/* SSI_SD */
+@@ -2694,6 +2702,7 @@ static const struct sh_pfc_pin_group pinmux_groups[] = {
+ 	SH_PFC_PIN_GROUP(scif4_clk),
+ 	SH_PFC_PIN_GROUP(scif4_ctrl),
+ 	SH_PFC_PIN_GROUP(scif_clk),
++	SH_PFC_PIN_GROUP(scif_clk2),
+ 
+ 	SH_PFC_PIN_GROUP(ssi_data),
+ 	SH_PFC_PIN_GROUP(ssi_ctrl),
+@@ -3015,6 +3024,10 @@ static const char * const scif_clk_groups[] = {
+ 	"scif_clk",
+ };
+ 
++static const char * const scif_clk2_groups[] = {
++	"scif_clk2",
++};
++
+ static const char * const ssi_groups[] = {
+ 	"ssi_data",
+ 	"ssi_ctrl",
+@@ -3102,6 +3115,7 @@ static const struct sh_pfc_function pinmux_functions[] = {
+ 	SH_PFC_FUNCTION(scif3),
+ 	SH_PFC_FUNCTION(scif4),
+ 	SH_PFC_FUNCTION(scif_clk),
++	SH_PFC_FUNCTION(scif_clk2),
+ 
+ 	SH_PFC_FUNCTION(ssi),
+ 
 -- 
 2.43.0
 
