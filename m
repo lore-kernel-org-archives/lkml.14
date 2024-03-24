@@ -1,187 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487B515ECD7;
-	Sun, 24 Mar 2024 23:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78B615ECE6;
+	Sun, 24 Mar 2024 23:18:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322313; cv=none; b=Vt0UrW2rvZ48j1wyeJJeJVmn31oq90YWmDElpYI/flIKC9lVvT2+IJu/3pmb8ppTL7U6hhHaZY/IhlIiz2qKksh0oJ78Db5Oe0gLvtbneX7ag/Mz4BeGEZ8hezrUT1JkiGwEkOlVURbBwSCmXTm8RH8UHi7fMazDyYFUujEhUYU=
+	t=1711322311; cv=none; b=HAAHU9DcvGc9G8k+l2ISE1fNpSh/ns/TTLupfCJ1R4txes2eNwwFghV1bS9n4YW7M0pGMSMsZ7mo3Oflubigh/C4asuDQe4P2dRnUVXNsapYJU7tLjovYKbvxs3jYm+xwub8BGHpfo7MrnLqwsmktIBOByEO7enhi1WcIYK0AwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322313; c=relaxed/simple;
-	bh=pNPNa0Vz/2FAaxcjyzojaOJ1PyeVu+MD+20K6Q2OzsU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VioB5Pf3EAj4LxxICNEZa2C4MtRVynUQs4C86jK8WXAjPbYGWGaby58m+m4SqQQQBnsI1dRX8XxMxBjWKSqGmnYIsEpIdnigE2Qo3HHd9hrY4NJ5BTxvICM4cDkQbIgck93iXYZA2/k0EsiwuHrC5VBQaXWxDK5JVQsz7wZTJYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TdJyXdAs; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711322311; c=relaxed/simple;
+	bh=0kQe5i0v4EzY2JFCyYouDdAzyy+xhdCnAy0nMcN5xf4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ewWlrli8xvDNAqTQZk0dJAZseMw01csb8z6hOjuwh9+Fni1jvRlAXQoTcB01NZWZDDHhbfVsvhj6+n3Sd84kw7PlRElX9Po+m6O3M5em+Ba49IYg9OzrGiRCyxT1Fys951BG00h+7ooWLih0uOLxwe0of8ngtdw5kiZkishMkdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BAMzxlEd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TdJyXdAs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711322311; x=1742858311;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=pNPNa0Vz/2FAaxcjyzojaOJ1PyeVu+MD+20K6Q2OzsU=;
-  b=TdJyXdAseflgduYLXTQJi+4f5cHpA5n+LebU7Zx/2Ghug52skTHzJ6GG
-   FctlBRDDf0HQnPkiBfGC+mrym8SXIDg2+yDdft+fVq5yqXkmYOPhHGKJK
-   5I0CD8tK7tJ23EkMYo7bv7GVzwhkNCDW0lfM5pxHm46vcM9Qint03i7pt
-   qdXfeHP25jrq1cNc+T0vNXFq/1MVttNHIe5ztXN7j7lRMUKPAaMDLIsTS
-   +Jjx96f6dPE5r72r/gtPnwoJfmzHojUZn2/JYowlwBfge1agaR+oTT1PO
-   1s90C+jv5XS0z2HwqkEPrRdmViLi9VCpj1vFG8MTBI3UTkL8tfcVM+HDU
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6431769"
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="6431769"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="15464736"
-Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.213.186.165])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:23 -0700
-From: ira.weiny@intel.com
-Date: Sun, 24 Mar 2024 16:18:26 -0700
-Subject: [PATCH 23/26] cxl/mem: Trace Dynamic capacity Event Record
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BAMzxlEd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10C1CC43390;
+	Sun, 24 Mar 2024 23:18:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711322311;
+	bh=0kQe5i0v4EzY2JFCyYouDdAzyy+xhdCnAy0nMcN5xf4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=BAMzxlEdALUTVcmAmki4u9tMAjvaJvl2DDfvxGHEZsXweKhZCnpjivwRJuE6vNre4
+	 SjYs8Buk7wYGjXOasGV/6iTM6v3SiNRVN2iXuWawhStktWYcxGRqmmn+NQthios7kL
+	 B96n7m0pU57KXk28W4cqCcgnnzm1Ys1PkcfQzBC8Oq0BX46FbeZ6ExbuHiUPRSisyE
+	 qUaltFT90frWAJOyhYlM662ceyZfoJgBwvJZZI4XoMEMnrzMgOlLAWPL9GH8Kxbwnj
+	 DVikY5tYh/JSoRIdFz+tnu5QYj4+yr6gCYOzVVb0z8PCfnARxZIa6N8GjcEIps5ZBA
+	 BAAj77AE69JWA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Yang Jihong <yangjihong1@huawei.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.1 395/451] hwtracing: hisi_ptt: Move type check to the beginning of hisi_ptt_pmu_event_init()
+Date: Sun, 24 Mar 2024 19:11:11 -0400
+Message-ID: <20240324231207.1351418-396-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
+References: <20240324231207.1351418-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240324-dcd-type2-upstream-v1-23-b7b00d623625@intel.com>
-References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
-In-Reply-To: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, 
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- Navneet Singh <navneet.singh@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, 
- Davidlohr Bueso <dave@stgolabs.net>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
- linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-X-Mailer: b4 0.13-dev-2d940
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711322284; l=3453;
- i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=5XTbxRhNm2c6lB8ckOSWSRy74o/IK7D9ey1y7O1QDZc=;
- b=XLx7Ic9m9LZoZXzIb3TSREdQX3qbEzBgVJ7tNOfbzEsn6szfaFsIkskSLYoKDGXyjA0LQa2P2
- sFqWG+8D0XyDLd5dPNtPXZUVHTGJDNrxd1YExWpT9z20z25ezydKBoP
-X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
- pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 
-From: Navneet Singh <navneet.singh@intel.com>
+From: Yang Jihong <yangjihong1@huawei.com>
 
-CXL rev 3.1 section 8.2.9.2.1 adds the Dynamic Capacity Event Records.
-Notify the host of extents being added or removed.  User space has
-little use for these events other than for debugging.
+[ Upstream commit 06226d120a28f146abd3637799958a4dc4dbb7a1 ]
 
-Add DC trace points to the trace log for debugging purposes.
+When perf_init_event() calls perf_try_init_event() to init pmu driver,
+searches for the next pmu driver only when the return value is -ENOENT.
+Therefore, hisi_ptt_pmu_event_init() needs to check the type at the
+beginning of the function.
+Otherwise, in the case of perf-task mode, perf_try_init_event() returns
+-EOPNOTSUPP and skips subsequent pmu drivers, causes perf_init_event() to
+fail.
 
-Signed-off-by: Navneet Singh <navneet.singh@intel.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
+Fixes: ff0de066b463 ("hwtracing: hisi_ptt: Add trace function support for HiSilicon PCIe Tune and Trace device")
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+Reviewed-by: Yicong Yang <yangyicong@hisilicon.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Link: https://lore.kernel.org/r/20240108121906.3514820-1-yangjihong1@huawei.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Changes for v1
-[iweiny: Adjust to new trace code]
----
- drivers/cxl/core/mbox.c  |  4 +++
- drivers/cxl/core/trace.h | 65 ++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 69 insertions(+)
+ drivers/hwtracing/ptt/hisi_ptt.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 7babac2d1c95..cb4576890187 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -978,6 +978,10 @@ static void __cxl_event_trace_record(const struct cxl_memdev *cxlmd,
- 		ev_type = CXL_CPER_EVENT_DRAM;
- 	else if (uuid_equal(uuid, &CXL_EVENT_MEM_MODULE_UUID))
- 		ev_type = CXL_CPER_EVENT_MEM_MODULE;
-+	else if (uuid_equal(uuid, &CXL_EVENT_DC_EVENT_UUID)) {
-+		trace_cxl_dynamic_capacity(cxlmd, type, &record->event.dcd);
-+		return;
-+	}
+diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
+index 8d8fa8e8afe04..20a9cddb3723a 100644
+--- a/drivers/hwtracing/ptt/hisi_ptt.c
++++ b/drivers/hwtracing/ptt/hisi_ptt.c
+@@ -654,6 +654,9 @@ static int hisi_ptt_pmu_event_init(struct perf_event *event)
+ 	int ret;
+ 	u32 val;
  
- 	cxl_event_trace_record(cxlmd, type, ev_type, uuid, &record->event);
- }
-diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-index bdf117a33744..7646fdd9aee3 100644
---- a/drivers/cxl/core/trace.h
-+++ b/drivers/cxl/core/trace.h
-@@ -707,6 +707,71 @@ TRACE_EVENT(cxl_poison,
- 	)
- );
++	if (event->attr.type != hisi_ptt->hisi_ptt_pmu.type)
++		return -ENOENT;
++
+ 	if (event->cpu < 0) {
+ 		dev_dbg(event->pmu->dev, "Per-task mode not supported\n");
+ 		return -EOPNOTSUPP;
+@@ -662,9 +665,6 @@ static int hisi_ptt_pmu_event_init(struct perf_event *event)
+ 	if (event->attach_state & PERF_ATTACH_TASK)
+ 		return -EOPNOTSUPP;
  
-+/*
-+ * DYNAMIC CAPACITY Event Record - DER
-+ *
-+ * CXL rev 3.0 section 8.2.9.2.1.5 Table 8-47
-+ */
-+
-+#define CXL_DC_ADD_CAPACITY			0x00
-+#define CXL_DC_REL_CAPACITY			0x01
-+#define CXL_DC_FORCED_REL_CAPACITY		0x02
-+#define CXL_DC_REG_CONF_UPDATED			0x03
-+#define show_dc_evt_type(type)	__print_symbolic(type,		\
-+	{ CXL_DC_ADD_CAPACITY,	"Add capacity"},		\
-+	{ CXL_DC_REL_CAPACITY,	"Release capacity"},		\
-+	{ CXL_DC_FORCED_REL_CAPACITY,	"Forced capacity release"},	\
-+	{ CXL_DC_REG_CONF_UPDATED,	"Region Configuration Updated"	} \
-+)
-+
-+TRACE_EVENT(cxl_dynamic_capacity,
-+
-+	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type log,
-+		 struct cxl_event_dcd *rec),
-+
-+	TP_ARGS(cxlmd, log, rec),
-+
-+	TP_STRUCT__entry(
-+		CXL_EVT_TP_entry
-+
-+		/* Dynamic capacity Event */
-+		__field(u8, event_type)
-+		__field(u16, hostid)
-+		__field(u8, region_id)
-+		__field(u64, dpa_start)
-+		__field(u64, length)
-+		__array(u8, tag, CXL_DC_EXTENT_TAG_LEN)
-+		__field(u16, sh_extent_seq)
-+	),
-+
-+	TP_fast_assign(
-+		CXL_EVT_TP_fast_assign(cxlmd, log, rec->hdr);
-+
-+		/* Dynamic_capacity Event */
-+		__entry->event_type = rec->event_type;
-+
-+		/* DCD event record data */
-+		__entry->hostid = le16_to_cpu(rec->host_id);
-+		__entry->region_id = rec->region_index;
-+		__entry->dpa_start = le64_to_cpu(rec->extent.start_dpa);
-+		__entry->length = le64_to_cpu(rec->extent.length);
-+		memcpy(__entry->tag, &rec->extent.tag, CXL_DC_EXTENT_TAG_LEN);
-+		__entry->sh_extent_seq = le16_to_cpu(rec->extent.shared_extn_seq);
-+	),
-+
-+	CXL_EVT_TP_printk("event_type='%s' host_id='%d' region_id='%d' " \
-+		"starting_dpa=%llx length=%llx tag=%s " \
-+		"shared_extent_sequence=%d",
-+		show_dc_evt_type(__entry->event_type),
-+		__entry->hostid,
-+		__entry->region_id,
-+		__entry->dpa_start,
-+		__entry->length,
-+		__print_hex(__entry->tag, CXL_DC_EXTENT_TAG_LEN),
-+		__entry->sh_extent_seq
-+	)
-+);
-+
- #endif /* _CXL_EVENTS_H */
- 
- #define TRACE_INCLUDE_FILE trace
-
+-	if (event->attr.type != hisi_ptt->hisi_ptt_pmu.type)
+-		return -ENOENT;
+-
+ 	ret = hisi_ptt_trace_valid_filter(hisi_ptt, event->attr.config);
+ 	if (ret < 0)
+ 		return ret;
 -- 
-2.44.0
+2.43.0
 
