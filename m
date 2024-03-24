@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 114E62310C2;
-	Sun, 24 Mar 2024 23:17:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645732308B7;
+	Sun, 24 Mar 2024 23:17:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322239; cv=none; b=P+NJOnCVkexDWZLJNW5Em1ugI9tpzMU9xNKBbaGQHKz36NjV2GJ1BRrPUwHY0eN2xy1ihI0ONDnpLSXALWyR2ZZZoWjJYpZtq0A0Gtz2hPLG4nWqhv0BxryNsY4Gescjft7ZWwb7E5TN1EOFgJA6T+kL7KrPFnlVo6qBhl4k3ls=
+	t=1711322230; cv=none; b=HAUFpja1fK2vZkvtNsyJbZuKlYi26CtyFoVD3CwQhrI37GEgzpROiwFLOwMe3EOOkSfdrcTm+Yq/PDGBMz2bzlIDGldCqYoXCl+1vjxtxD1/InfspFWVqgoAYj0siRJdNbKGK3lmdFM8XvVhncodJo+Uui+BGIilQ7gO4c7pg/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322239; c=relaxed/simple;
-	bh=7V/ou0JHyZfb2bXwkJZOV950h06hGRhDhCaWaRkIyps=;
+	s=arc-20240116; t=1711322230; c=relaxed/simple;
+	bh=dAQrxaCSZeCHMiNKS+UjJmKdlyaqXI9/Lqt8o/r3/Rw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NX9Tor+VSpRRyoHH43B2DmKD8wxMRuLmeAFQC/mVXJ71pPmB1Jm9oWeA/OXLe2bHios3iXDuWKSC4SyQ9R7fVTwsgui1xrS/ISq0/IJDBX5gVC1m2xSorm3lEZXEf7+II1u2y4n0AdYDgEqT7UOdIjFf7iEAc0x6wRV6q6n2P9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQ77KIhc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=HrKXL/GNNDxVRcykkkVQLTXrTzxumgrxOZ26U35hYmmKOTvZ2B+MBF5+gf9kIvaRenk8LpB/7hW75Txvhy3TfV4rmIEV8RXv3R4qyWaGemH1JDo9f49QtqR8Zg0bjYD6MidLuoB/zZ2RZUL95kK110nxBb1vFFaE8xye4xAlUYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bYU/dOK+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQ77KIhc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CB07C433A6;
-	Sun, 24 Mar 2024 23:17:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bYU/dOK+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2BA2C43390;
+	Sun, 24 Mar 2024 23:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322237;
-	bh=7V/ou0JHyZfb2bXwkJZOV950h06hGRhDhCaWaRkIyps=;
+	s=k20201202; t=1711322230;
+	bh=dAQrxaCSZeCHMiNKS+UjJmKdlyaqXI9/Lqt8o/r3/Rw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rQ77KIhcp+KsAkjt3igr8RHfll1kPLK+tkI+WnVovHz0TddVB1N/rcp6tFbYrBegi
-	 Ne2/mLf8WlBK1xMbXjzV0zm1++9wthTC5AOQr6FLnJnKbxn3t3CXgVrjZIPMwzgEmC
-	 kNDRFAEygIn6gkQW0dLaYo2IE/7Urm283y6kwDVAXrz1YaqE6URkRA/tcpNDtppdo9
-	 rmnXZVvZIC5uIlOlu3kDho1we23cffWW6JyIVdBOmAgPJpov/SCxpoMV+naYMrUyN/
-	 90nO6KmcqzZExHlmYEKNI/u6xanCJomw4abgQhiLQsqFnWDwqrhcKYHnKyD6Cqe+Wq
-	 cT2MU6Mu9Hsbg==
+	b=bYU/dOK+XAwkARby5GrYiiLj64gYtIM5MtHlkHWQPUvA1BgrWAQLZBCUbD9iStj0a
+	 Ip9DqTL71y/BQKSZgPQ2al8cOotFgBASmm1NekjcGyKsKKwbFHuTXMDZHvMufdgbrz
+	 7pSPI7qtxBaWBBVip8WHGNMwNhvsNXeTXrQrGHBLugdX7gWn6k4wHxFjIK7DpoqTHV
+	 BKxwG+I/qIYY3/U5pVSeHlP0rSqRl16XKnBu8yBDiNpnNDtSDzGdgB5zGPKwreA1Ky
+	 ziA7/MeDDF8K0VoN3i17FXpx/YisPfSc3XJPH3qz3tOKCwQvXx+5LxWd4xM51LSFHN
+	 mLRvvq/SjZSPQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jerome Brunet <jbrunet@baylibre.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Peter Griffin <peter.griffin@linaro.org>,
+	Lee Jones <lee@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 319/451] ASoC: meson: axg-tdm-interface: fix mclk setup without mclk-fs
-Date: Sun, 24 Mar 2024 19:09:55 -0400
-Message-ID: <20240324231207.1351418-320-sashal@kernel.org>
+Subject: [PATCH 6.1 311/451] mfd: syscon: Call of_node_put() only when of_parse_phandle() takes a ref
+Date: Sun, 24 Mar 2024 19:09:47 -0400
+Message-ID: <20240324231207.1351418-312-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,47 +48,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Peter Griffin <peter.griffin@linaro.org>
 
-[ Upstream commit e3741a8d28a1137f8b19ae6f3d6e3be69a454a0a ]
+[ Upstream commit d2b0680cf3b05490b579e71b0df6e07451977745 ]
 
-By default, when mclk-fs is not provided, the tdm-interface driver
-requests an MCLK that is 4x the bit clock, SCLK.
+of_parse_phandle() returns a device_node with refcount incremented, which
+the callee needs to call of_node_put() on when done. We should only call
+of_node_put() when the property argument is provided though as otherwise
+nothing has taken a reference on the node.
 
-However there is no justification for this:
-
-* If the codec needs MCLK for its operation, mclk-fs is expected to be set
-  according to the codec requirements.
-* If the codec does not need MCLK the minimum is 2 * SCLK, because this is
-  minimum the divider between SCLK and MCLK can do.
-
-Multiplying by 4 may cause problems because the PLL limit may be reached
-sooner than it should, so use 2x instead.
-
-Fixes: d60e4f1e4be5 ("ASoC: meson: add tdm interface driver")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://msgid.link/r/20240223175116.2005407-2-jbrunet@baylibre.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 45330bb43421 ("mfd: syscon: Allow property as NULL in syscon_regmap_lookup_by_phandle")
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Link: https://lore.kernel.org/r/20240220115012.471689-2-peter.griffin@linaro.org
+Signed-off-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/meson/axg-tdm-interface.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mfd/syscon.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/meson/axg-tdm-interface.c b/sound/soc/meson/axg-tdm-interface.c
-index c040c83637e02..eb188ee950557 100644
---- a/sound/soc/meson/axg-tdm-interface.c
-+++ b/sound/soc/meson/axg-tdm-interface.c
-@@ -266,8 +266,8 @@ static int axg_tdm_iface_set_sclk(struct snd_soc_dai *dai,
- 	srate = iface->slots * iface->slot_width * params_rate(params);
+diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+index 6196724ef39bb..ecfe151220919 100644
+--- a/drivers/mfd/syscon.c
++++ b/drivers/mfd/syscon.c
+@@ -223,7 +223,9 @@ struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
+ 		return ERR_PTR(-ENODEV);
  
- 	if (!iface->mclk_rate) {
--		/* If no specific mclk is requested, default to bit clock * 4 */
--		clk_set_rate(iface->mclk, 4 * srate);
-+		/* If no specific mclk is requested, default to bit clock * 2 */
-+		clk_set_rate(iface->mclk, 2 * srate);
- 	} else {
- 		/* Check if we can actually get the bit clock from mclk */
- 		if (iface->mclk_rate % srate) {
+ 	regmap = syscon_node_to_regmap(syscon_np);
+-	of_node_put(syscon_np);
++
++	if (property)
++		of_node_put(syscon_np);
+ 
+ 	return regmap;
+ }
 -- 
 2.43.0
 
