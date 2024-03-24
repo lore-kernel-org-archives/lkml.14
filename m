@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 514591FF5C3;
-	Sun, 24 Mar 2024 23:02:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746DD14F10C;
+	Sun, 24 Mar 2024 23:02:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321373; cv=none; b=eI2k76AhDUl7xlavcF+0Aaf6XdLBuojO4155rgJfxdkg6QRPGQKLYJWqRTZIuCICN1phmFDQi6OrroICUxIExjey4FOZDYDKLG3SNrSmMlfHJK5cgxsvaYtRsVNlLV2k5Yqlbq/q91NSjXjufvGLwy9AYvPnhUyyV46u0bgDyBI=
+	t=1711321343; cv=none; b=PcHrPBsyIQcA9aVNQMNx5sz/HVD9S8uIGZJEbw4LVXDyWn/ySotZ1/TBkkA7WClstslckQ0shPgFM+w0zguzzDslav7+x8xolbShv8D1uiIEQf46LbtCgu/d+fpfMP5iWiGlLw8/mOU0CSJA8Ud47hgejJVgp9+xy8WzdoDevOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321373; c=relaxed/simple;
-	bh=//otllxWTZARqxoMNJaZWiaXPi8swLKbFrMrfBueuy4=;
+	s=arc-20240116; t=1711321343; c=relaxed/simple;
+	bh=6i6wxaZzYQIHnPtoUFQzJHucGTNeOHrxMItXv93pAgw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KElw4IfUhoAODuPELt7lSlmv/P4OYff57GGREPgTjMEVQYazCWtdjHTbSO5uJ1hRKS7JWwoM26C3QxnCZpAiOcHlxv+ItT2JNy9O76XiKC8h7erGkFlUNc1MlAnnA18zxnBDZVgvW3nZqOHGC4HiCTeQXQoDxkbysuuA8r1adLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=peXKdlXz; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hTNFIlr9Iy2uwr0NbIUAyy53EB98MFQ4KPB+nLXQ9b1pOG+9+urRcQtir8IrU+axvRfdP1/vxrU/oL8NiXa7sh4dM5ewlwG0fer1mHuMAAbQ5mZcpqZPux3ZD2xSVdZadExsuPPfdfme5/EPeApcllST2cyVcWrZZHVSGNzSAAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W3EiC3Yy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="peXKdlXz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F9C2C433F1;
-	Sun, 24 Mar 2024 23:02:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W3EiC3Yy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B515CC433F1;
+	Sun, 24 Mar 2024 23:02:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321372;
-	bh=//otllxWTZARqxoMNJaZWiaXPi8swLKbFrMrfBueuy4=;
+	s=k20201202; t=1711321342;
+	bh=6i6wxaZzYQIHnPtoUFQzJHucGTNeOHrxMItXv93pAgw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=peXKdlXzu+eh2hkq2t7z1OhJydGipYsZB1xasrWWh0flZ61z1tx6HmOjqBu69QTuT
-	 EAtuaUZVnhZwBaq6hqR5vXZuQ3B51uEKvu2xGhxnvf/0VQ3DoW/A3jVzEyxXTiv6/K
-	 BQMB+RF9pqWylE04nA5TTdrhvj0X9Tb5j8DrWsEX0Hiu88Tqa6/8BMPOUz2u9NAEH0
-	 XcOlEvEXxYgRJYikxgxFWE6k93sKcvnQhyRD1bnQhM9Igwald9AFZLbP03wpsaFIh6
-	 d6DXzy1g7eY9bi4Zo5mWrR+pNRmG3oECGfAdbwTUA0WPU0oRvDorb8Sxvk9GYaAH5M
-	 jCku04CgDauag==
+	b=W3EiC3YynrLOMpX7NFZvLh/vCMWmGrGuwvqxxWoP0fYZMPF0AqlFT0na6BHCohE/j
+	 tj71hmoDhtkfIqgVGdEe90aBKxmYIH72bDeEVWVfiKwqrvg3Xv8F1ckmVkpLFcuScK
+	 wU9s7PmoCFgiQ11UpQns2uR1LT28hFAqBG710WwchJTQhyxukaNNwz/WHXsUou+PBE
+	 1KkNFZUDUReu4HYB7bisYWNW46DhtQxBHm5hxsuYU9OlolZV2Adan7lb9uYUnbG/I9
+	 1GHlxKJZszhtKYz4GRLrANVxREdD0Zeck/Tg5YxaonRyJt2ooM5KrhzbMOu+XBFDw6
+	 oLiHOmuhtKuHg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: David Gow <davidgow@google.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Justin Stitt <justinstitt@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
+Cc: Stuart Henderson <stuarth@opensource.cirrus.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 096/638] lib: memcpy_kunit: Fix an invalid format specifier in an assertion msg
-Date: Sun, 24 Mar 2024 18:52:13 -0400
-Message-ID: <20240324230116.1348576-97-sashal@kernel.org>
+Subject: [PATCH 6.6 066/638] ASoC: wm8962: Fix up incorrect error message in wm8962_set_fll
+Date: Sun, 24 Mar 2024 18:51:43 -0400
+Message-ID: <20240324230116.1348576-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,48 +48,34 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: David Gow <davidgow@google.com>
+From: Stuart Henderson <stuarth@opensource.cirrus.com>
 
-[ Upstream commit 0a549ed22c3c7cc6da5c5f5918efd019944489a5 ]
+[ Upstream commit 96e202f8c52ac49452f83317cf3b34cd1ad81e18 ]
 
-The 'i' passed as an assertion message is a size_t, so should use '%zu',
-not '%d'.
+Use source instead of ret, which seems to be unrelated and will always
+be zero.
 
-This was found by annotating the _MSG() variants of KUnit's assertions
-to let gcc validate the format strings.
-
-Fixes: bb95ebbe89a7 ("lib: Introduce CONFIG_MEMCPY_KUNIT_TEST")
-Signed-off-by: David Gow <davidgow@google.com>
-Tested-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Justin Stitt <justinstitt@google.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
+Link: https://msgid.link/r/20240306161439.1385643-5-stuarth@opensource.cirrus.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/memcpy_kunit.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/codecs/wm8962.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
-index 440aee705ccca..30e00ef0bf2e0 100644
---- a/lib/memcpy_kunit.c
-+++ b/lib/memcpy_kunit.c
-@@ -32,7 +32,7 @@ struct some_bytes {
- 	BUILD_BUG_ON(sizeof(instance.data) != 32);	\
- 	for (size_t i = 0; i < sizeof(instance.data); i++) {	\
- 		KUNIT_ASSERT_EQ_MSG(test, instance.data[i], v, \
--			"line %d: '%s' not initialized to 0x%02x @ %d (saw 0x%02x)\n", \
-+			"line %d: '%s' not initialized to 0x%02x @ %zu (saw 0x%02x)\n", \
- 			__LINE__, #instance, v, i, instance.data[i]);	\
- 	}	\
- } while (0)
-@@ -41,7 +41,7 @@ struct some_bytes {
- 	BUILD_BUG_ON(sizeof(one) != sizeof(two)); \
- 	for (size_t i = 0; i < sizeof(one); i++) {	\
- 		KUNIT_EXPECT_EQ_MSG(test, one.data[i], two.data[i], \
--			"line %d: %s.data[%d] (0x%02x) != %s.data[%d] (0x%02x)\n", \
-+			"line %d: %s.data[%zu] (0x%02x) != %s.data[%zu] (0x%02x)\n", \
- 			__LINE__, #one, i, one.data[i], #two, i, two.data[i]); \
- 	}	\
- 	kunit_info(test, "ok: " TEST_OP "() " name "\n");	\
+diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
+index 914f8eb418357..4f50b07848fd8 100644
+--- a/sound/soc/codecs/wm8962.c
++++ b/sound/soc/codecs/wm8962.c
+@@ -2933,7 +2933,7 @@ static int wm8962_set_fll(struct snd_soc_component *component, int fll_id, int s
+ 				    WM8962_FLL_FRC_NCO, WM8962_FLL_FRC_NCO);
+ 		break;
+ 	default:
+-		dev_err(component->dev, "Unknown FLL source %d\n", ret);
++		dev_err(component->dev, "Unknown FLL source %d\n", source);
+ 		return -EINVAL;
+ 	}
+ 
 -- 
 2.43.0
 
