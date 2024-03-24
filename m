@@ -1,44 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA41C28CE4C;
-	Sun, 24 Mar 2024 23:48:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D617E18180F;
+	Sun, 24 Mar 2024 23:48:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324100; cv=none; b=TiQVDcV3lyiw4CZJ4x2qKFAvcE69B0h/ZnWNftPr9NmXp2SK3pX6wrwBjARfL165D8OLSkxmLPd4VERX53GfxWzbUl/yugfsfWokzO5KM5Yhp3QbvAVaqwwV2haNSDh1wl1qevGoL4pdLEn1+xQewnX+vcktMMiGjJDIVH8Ww80=
+	t=1711324091; cv=none; b=MDGvjX/MzfJ4bT0GxcraZ55wUQ5kmpmhWlbYGDH5+uGfQCX2ueyvp62aIWklmFmmiwE+PCF9pGq8MiKWyux1iuG8voglzHys+UVyRngl4EklcXgao8W27CRi+Rk4L9scZjNDHZOWaZY9cTC4XL1XOD980UmyFN5mFKkKZi0RVwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324100; c=relaxed/simple;
-	bh=NhapjfnB4Eeq7LvrvruOrdqknPKBH/KR7oS/O09bMzI=;
+	s=arc-20240116; t=1711324091; c=relaxed/simple;
+	bh=GMvWa03Qa7FSPRuDtAM5CuxjChNnwKQlEtknCNEXyko=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WOF2FYbFzF0SkjrjWCuqEYQb4K4D3htI5Ef+tVQpeMu4uYLo9jnt19FT/Dphe5VMOvgwRicdivJP2SAlNZ5nkUTqgGUmdizwcOHyitVuaylM9HBNj1tKb1TCVxhmv/hWVdL/yhTzhUzxuqXlcVOQPkjvcMwgOMeWNUkcH4Mg0P8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iGhb/Dja; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tk2GFWFk3fIvfHKK4cArQArp+dbrTbIsvgjAoyo96qZdXBiZTEYzQf2+nx54eQtm9OyrW3QbwLwy0GW2FgSVI7PJ0KsuxAgpm82QnjUR0PBRPfZkjEdzDmMStHRHSl9PZdJGnFezjqXOxSUYdlPWA6JPFE6FKJSLvoC7EdIXpo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BFzzlmyl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iGhb/Dja"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97656C43394;
-	Sun, 24 Mar 2024 23:48:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BFzzlmyl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D06FC433C7;
+	Sun, 24 Mar 2024 23:48:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324099;
-	bh=NhapjfnB4Eeq7LvrvruOrdqknPKBH/KR7oS/O09bMzI=;
+	s=k20201202; t=1711324090;
+	bh=GMvWa03Qa7FSPRuDtAM5CuxjChNnwKQlEtknCNEXyko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iGhb/DjaKHsjc22UIoRppEf1y5FI3Lq88zmWlYSWN39dxv4k4T3S9cXsNIObONB/W
-	 33tjNi2VjUQgmBrUfRospQnol28wdlMvzryclJGOKk9nVfgxx90poHtbwHAXUfyWGG
-	 GRu89x0wlUmRdBS3mrnni/K484E8cwGohCI8esF96LRzss27r4O/Ecj1mK+8TMXWj4
-	 AuczcPnfGOzk8I7f+TKy4dTRNRbUr2ex5LLctqNqt+Kvw2e68KDO1s7WwQYbpX6z1n
-	 3MbSLeH+km2u+1bkVAaSx8DX+Vl/knXk2gK0QQFp/ya9/rRyxramfl+AEtTvQeJ2a1
-	 03G27tofgGvgw==
+	b=BFzzlmylG7B8NxXmXHt5haHAc5w/h4TRI7Lbekarl431HUTdDqta+DCP6CcLZNDkW
+	 p3fwEqC8luPddf7XrsAJWHP0LSXJTXHtVRkbfUjzoUfrn7Qo6DZ6CzLzpr0C3LDBZX
+	 BApJO2Zz5YCk1t1oJZf4RVd/t4KNYirDondxcCBOhUA8j4sPrbU2vTaKEZqNjqDkK1
+	 iDT3cme8gPck9wzVo2TyMJX01d6cOz94emke7hm48A9Mw+wr0Ln2rUQ+WzllHXBl5l
+	 JODUw9kwq/PtRWtdUjyuFUPR5JNr8rYbE8sw4stn9L4AT3734oAnwESAQHy779TWEs
+	 fnK8kI7kZ+I2Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
-	Wyatt Wood <wyatt.wood@amd.com>,
-	Anthony Koo <Anthony.Koo@amd.com>,
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-	Aurabindo Pillai <aurabindo.pillai@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Alex Bee <knaerzche@gmail.com>,
+	Zheng Yang <zhengyang@rock-chips.com>,
+	Heiko Stuebner <heiko@sntech.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 098/183] drm/amd/display: Fix potential NULL pointer dereferences in 'dcn10_set_output_transfer_func()'
-Date: Sun, 24 Mar 2024 19:45:11 -0400
-Message-ID: <20240324234638.1355609-99-sashal@kernel.org>
+Subject: [PATCH 5.4 091/183] drm/rockchip: inno_hdmi: Fix video timing
+Date: Sun, 24 Mar 2024 19:45:04 -0400
+Message-ID: <20240324234638.1355609-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -52,54 +49,49 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+From: Alex Bee <knaerzche@gmail.com>
 
-[ Upstream commit 9ccfe80d022df7c595f1925afb31de2232900656 ]
+[ Upstream commit 47a145c03484d33e65d773169d5ca1b9fe2a492e ]
 
-The 'stream' pointer is used in dcn10_set_output_transfer_func() before
-the check if 'stream' is NULL.
+The controller wants the difference between *total and *sync_start in the
+HDMI_VIDEO_EXT_*DELAY registers. Otherwise the signal is very unstable for
+certain non-VIC modes. See downstream commit [0].
 
-Fixes the below:
-drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn10_hwseq.c:1892 dcn10_set_output_transfer_func() warn: variable dereferenced before check 'stream' (see line 1875)
+[0] https://github.com/rockchip-linux/kernel/commit/8eb559f2502c
 
-Fixes: ddef02de0d71 ("drm/amd/display: add null checks before logging")
-Cc: Wyatt Wood <wyatt.wood@amd.com>
-Cc: Anthony Koo <Anthony.Koo@amd.com>
-Cc: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Cc: Aurabindo Pillai <aurabindo.pillai@amd.com>
-Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
-Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 412d4ae6b7a5 ("drm/rockchip: hdmi: add Innosilicon HDMI support")
+Co-developed-by: Zheng Yang <zhengyang@rock-chips.com>
+Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
+Signed-off-by: Alex Bee <knaerzche@gmail.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231222174220.55249-4-knaerzche@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/rockchip/inno_hdmi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-index c4c99bc7f2890..3059739695d8c 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-@@ -1470,6 +1470,9 @@ dcn10_set_output_transfer_func(struct pipe_ctx *pipe_ctx,
- {
- 	struct dpp *dpp = pipe_ctx->plane_res.dpp;
+diff --git a/drivers/gpu/drm/rockchip/inno_hdmi.c b/drivers/gpu/drm/rockchip/inno_hdmi.c
+index f2e2cc66f4897..95888e64bd8bc 100644
+--- a/drivers/gpu/drm/rockchip/inno_hdmi.c
++++ b/drivers/gpu/drm/rockchip/inno_hdmi.c
+@@ -401,7 +401,7 @@ static int inno_hdmi_config_video_timing(struct inno_hdmi *hdmi,
+ 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HBLANK_L, value & 0xFF);
+ 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HBLANK_H, (value >> 8) & 0xFF);
  
-+	if (!stream)
-+		return false;
-+
- 	if (dpp == NULL)
- 		return false;
+-	value = mode->hsync_start - mode->hdisplay;
++	value = mode->htotal - mode->hsync_start;
+ 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HDELAY_L, value & 0xFF);
+ 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HDELAY_H, (value >> 8) & 0xFF);
  
-@@ -1492,8 +1495,8 @@ dcn10_set_output_transfer_func(struct pipe_ctx *pipe_ctx,
- 	} else
- 		dpp->funcs->dpp_program_regamma_pwl(dpp, NULL, OPP_REGAMMA_BYPASS);
+@@ -416,7 +416,7 @@ static int inno_hdmi_config_video_timing(struct inno_hdmi *hdmi,
+ 	value = mode->vtotal - mode->vdisplay;
+ 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_VBLANK, value & 0xFF);
  
--	if (stream != NULL && stream->ctx != NULL &&
--			stream->out_transfer_func != NULL) {
-+	if (stream->ctx &&
-+	    stream->out_transfer_func) {
- 		log_tf(stream->ctx,
- 				stream->out_transfer_func,
- 				dpp->regamma_params.hw_points_num);
+-	value = mode->vsync_start - mode->vdisplay;
++	value = mode->vtotal - mode->vsync_start;
+ 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_VDELAY, value & 0xFF);
+ 
+ 	value = mode->vsync_end - mode->vsync_start;
 -- 
 2.43.0
 
