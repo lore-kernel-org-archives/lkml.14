@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4DF4145B06;
-	Sun, 24 Mar 2024 23:13:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A851B145B00;
+	Sun, 24 Mar 2024 23:13:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321998; cv=none; b=LovQtAl38V0xC9FzJ68ENpeVCqU+WZmAL9JkVKTDbnTrj6f+P7Kb2mufvTW5IzHJItsnOs/pLS4xzPbco+Yc7bzCeQR/mz5mtNeb5coK9hpkt43B8TZWvPO2vdMlwcjaNhSkeLHQ/LwaB24mDoKq8Ex42KkYx6SgFP5InUAlGP8=
+	t=1711321995; cv=none; b=tWVNNy9zLqTXfR3PK3ppsR9iqhsP8wROhnN10gvBR6sM6LkJFBceLNDEcCW9yd23plVDb8WqIFK9WKo9J3txOFKZTQigON7JsNXgNJXo7b79+pcm3jTCyQ/j8mqHp48KKTLv8t2vKfkmbuPcXc83p3F80HkrL+ZMP6avoyoOHVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321998; c=relaxed/simple;
-	bh=aRaLv0aWTnLotsxN5UN9UBm7Px06ZsdF21YYz4MEXPA=;
+	s=arc-20240116; t=1711321995; c=relaxed/simple;
+	bh=jIptx+OrhAJEUycGNaeZuUXXxTYLSRbvWIRxbfnIVJA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RRcRscCIAnD5DTylEAn+0eeo07a0ACy43XFCJfEBlUj1/OL2cTLIXXLmxYuqclmu144JL82tIZk11wXsa4FAPb+hR30rVcEwEjNYwDdzkCCOPVVni/K8wuADG7Z2byti1FtSuvGPU39KMtBkLxjfMQ/QfJbRa4knQlchfjbCjgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=deb9pJ1b; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IfL/O42aBCBeJHniOTLtJH8KjdpZn7HoL402zLvLvc+GW6UPGZXFw7Vr29I3CvRZsgCVPBiiNFzR6rM0l+v36laKhC927xXcHTGz0uRJ8lBY6IUMc0YLH3Yyk1DLqzpCjm1tp4IZM0aItvqB9pwzjvSjcgNFkO/+CoJvEHbaJfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wwsfp/0R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="deb9pJ1b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E46C9C433F1;
-	Sun, 24 Mar 2024 23:13:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wwsfp/0R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCEB5C433C7;
+	Sun, 24 Mar 2024 23:13:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321997;
-	bh=aRaLv0aWTnLotsxN5UN9UBm7Px06ZsdF21YYz4MEXPA=;
+	s=k20201202; t=1711321995;
+	bh=jIptx+OrhAJEUycGNaeZuUXXxTYLSRbvWIRxbfnIVJA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=deb9pJ1bxjwbAuVo3MJgaXIo3V45jKv0H+PHPrd4l+v0FwW1rEgP+6flG9hJmD1kq
-	 yfuXTOxy8ES7FtdSJ3bOUpUx71k3OLRdPWh1/Se4uG3XZOruRRiqYycRv02xDBQAuo
-	 huvLTKnkWWZqR2ReXgLum7tMWiaMYSYHZlsElzueFq05RFQL5zpPtns+pz0T73h+3x
-	 km/r0VS7dESDN8RdR/DPnp/mHvQ4moEsUmEQPFdM8gbaMQsXDez5Ibhln971RlfDVU
-	 /NQJM3G4d79C6KANIlSVdvltlejZ81x/561h7YOkpk163QsoUmSF2WwIyAPNvU3Pg4
-	 E+Do4LSOA/fQg==
+	b=Wwsfp/0RjLv6i/F3cINeaV5RA/fTK+1KrIXzHVnOO6Cuqafd4GBn6oknKkevsiSiz
+	 dGdxcIKFSDZPV3zuvi5dyiMa9fpdGjrtsnVcS1mJR4/qC4W/RnN1SU8exg8SoiN1fd
+	 HXLBo6TWZ5gwLNMe9FZZsabHM1GhZZ9DZfEckqXowLZa3pqYulnuM31A719atp6Avt
+	 GOjJIYQ7g05YFeY84GKpXs9jXxqKLzzby1BVPwoiMIZxzBaPXz8qHlp5QtqyubwSRN
+	 uNkAO3FUEGmZ6GjL0gkPIzSXMcmhafP0GSWErhFH6+I/1QP6BJqyVZFto+BBVhQ0iu
+	 da0/NtfoaWdLg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: David Gow <davidgow@google.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Justin Stitt <justinstitt@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
+Cc: Li Nan <linan122@huawei.com>,
+	Yu Kuai <yukuai3@huawei.com>,
+	Song Liu <song@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 069/451] lib: memcpy_kunit: Fix an invalid format specifier in an assertion msg
-Date: Sun, 24 Mar 2024 19:05:45 -0400
-Message-ID: <20240324231207.1351418-70-sashal@kernel.org>
+Subject: [PATCH 6.1 067/451] md: Don't clear MD_CLOSING when the raid is about to stop
+Date: Sun, 24 Mar 2024 19:05:43 -0400
+Message-ID: <20240324231207.1351418-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -50,48 +49,71 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: David Gow <davidgow@google.com>
+From: Li Nan <linan122@huawei.com>
 
-[ Upstream commit 0a549ed22c3c7cc6da5c5f5918efd019944489a5 ]
+[ Upstream commit 9674f54e41fffaf06f6a60202e1fa4cc13de3cf5 ]
 
-The 'i' passed as an assertion message is a size_t, so should use '%zu',
-not '%d'.
+The raid should not be opened anymore when it is about to be stopped.
+However, other processes can open it again if the flag MD_CLOSING is
+cleared before exiting. From now on, this flag will not be cleared when
+the raid will be stopped.
 
-This was found by annotating the _MSG() variants of KUnit's assertions
-to let gcc validate the format strings.
-
-Fixes: bb95ebbe89a7 ("lib: Introduce CONFIG_MEMCPY_KUNIT_TEST")
-Signed-off-by: David Gow <davidgow@google.com>
-Tested-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Justin Stitt <justinstitt@google.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: 065e519e71b2 ("md: MD_CLOSING needs to be cleared after called md_set_readonly or do_md_stop")
+Signed-off-by: Li Nan <linan122@huawei.com>
+Reviewed-by: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Song Liu <song@kernel.org>
+Link: https://lore.kernel.org/r/20240226031444.3606764-6-linan666@huaweicloud.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/memcpy_kunit.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/md/md.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
-index 2b5cc70ac53fc..dbedd99aa6163 100644
---- a/lib/memcpy_kunit.c
-+++ b/lib/memcpy_kunit.c
-@@ -32,7 +32,7 @@ struct some_bytes {
- 	BUILD_BUG_ON(sizeof(instance.data) != 32);	\
- 	for (size_t i = 0; i < sizeof(instance.data); i++) {	\
- 		KUNIT_ASSERT_EQ_MSG(test, instance.data[i], v, \
--			"line %d: '%s' not initialized to 0x%02x @ %d (saw 0x%02x)\n", \
-+			"line %d: '%s' not initialized to 0x%02x @ %zu (saw 0x%02x)\n", \
- 			__LINE__, #instance, v, i, instance.data[i]);	\
- 	}	\
- } while (0)
-@@ -41,7 +41,7 @@ struct some_bytes {
- 	BUILD_BUG_ON(sizeof(one) != sizeof(two)); \
- 	for (size_t i = 0; i < sizeof(one); i++) {	\
- 		KUNIT_EXPECT_EQ_MSG(test, one.data[i], two.data[i], \
--			"line %d: %s.data[%d] (0x%02x) != %s.data[%d] (0x%02x)\n", \
-+			"line %d: %s.data[%zu] (0x%02x) != %s.data[%zu] (0x%02x)\n", \
- 			__LINE__, #one, i, one.data[i], #two, i, two.data[i]); \
- 	}	\
- 	kunit_info(test, "ok: " TEST_OP "() " name "\n");	\
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 1c87f3e708094..788acc81e7a84 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -6243,7 +6243,15 @@ static void md_clean(struct mddev *mddev)
+ 	mddev->persistent = 0;
+ 	mddev->level = LEVEL_NONE;
+ 	mddev->clevel[0] = 0;
+-	mddev->flags = 0;
++	/*
++	 * Don't clear MD_CLOSING, or mddev can be opened again.
++	 * 'hold_active != 0' means mddev is still in the creation
++	 * process and will be used later.
++	 */
++	if (mddev->hold_active)
++		mddev->flags = 0;
++	else
++		mddev->flags &= BIT_ULL_MASK(MD_CLOSING);
+ 	mddev->sb_flags = 0;
+ 	mddev->ro = MD_RDWR;
+ 	mddev->metadata_type[0] = 0;
+@@ -7571,7 +7579,6 @@ static int md_ioctl(struct block_device *bdev, fmode_t mode,
+ 	int err = 0;
+ 	void __user *argp = (void __user *)arg;
+ 	struct mddev *mddev = NULL;
+-	bool did_set_md_closing = false;
+ 
+ 	if (!md_ioctl_valid(cmd))
+ 		return -ENOTTY;
+@@ -7658,7 +7665,6 @@ static int md_ioctl(struct block_device *bdev, fmode_t mode,
+ 			err = -EBUSY;
+ 			goto out;
+ 		}
+-		did_set_md_closing = true;
+ 		mutex_unlock(&mddev->open_mutex);
+ 		sync_blockdev(bdev);
+ 	}
+@@ -7821,7 +7827,7 @@ static int md_ioctl(struct block_device *bdev, fmode_t mode,
+ 		mddev->hold_active = 0;
+ 	mddev_unlock(mddev);
+ out:
+-	if(did_set_md_closing)
++	if (cmd == STOP_ARRAY_RO || (err && cmd == STOP_ARRAY))
+ 		clear_bit(MD_CLOSING, &mddev->flags);
+ 	return err;
+ }
 -- 
 2.43.0
 
