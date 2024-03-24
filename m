@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F993296BA2;
-	Sun, 24 Mar 2024 23:52:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2156122E80E;
+	Sun, 24 Mar 2024 23:51:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324321; cv=none; b=r6ci0/iW+MnEIcnCWJ/abztLUktCyiClgl9JPeF9mLFlMbRoWYFjpkwTcbM+tZEThrnfLxC8A+T4R+/MC9POq2CBwC6LhmmPBLmNJ2JMFEF69SiQSCoOH0/osmDxDq169gVUtPWRDPra5tCc3VCp0kt9IHVx5I2PUO8nk9ekMGg=
+	t=1711324306; cv=none; b=WBdZGU26pAJUmsQYHsfrD9tSRlrYYd9DVZjAo+gS4XMLVKKYU4CNRUhUlDcWhrwhVfzSsFHcQlQFqs8sZ/FZh9mq/styUWjX2F0Ui7ydl1ozBovBHgpvw0jTo3hmKU6Br7mmUJsSPAKm0RkirGNEZZNUj5qIT9Y05riOVuMsVJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324321; c=relaxed/simple;
-	bh=j88f6MVWIj6QWwWfbnjDtoeTnPFD2JD3YzW5KfJVf3k=;
+	s=arc-20240116; t=1711324306; c=relaxed/simple;
+	bh=UqehTMGg7Fn+zZSiEgY3XgpNnzC1QL9aW+I7SEnJRHo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SO7SERxzb6ZknVqc5oXRlc4U9NYxJ+KTNhHrTb1Wtyks2lGBlGICqIbN7zrHkxTuV87qnKbwvWehOMBO0aS5J1UBPLwsXH8DAZ7GMTPzVKM8H0kP4cWxwy0U79pj+wm+UPGlFfAhle/cbRcgq/o6YzcGX8itBrQ0QQpisMjyAfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M4l/D5Bc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nOdxGLikbf2kRsjJ6JKL24oWswtaU6i2UTB7EFpFatgzgt7n4sMEGRzSK1M+GkrAZGCb9XebWYNhzXOwmLzvM91x4KoCuoVS537s8R04arHcQcOcwcrIhYtJSUwhO5EWgvA0RL5mZi5Ic2FDo/HTItV+Pm19EgzX8eH8WxWJFjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SzF9qJY/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M4l/D5Bc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2293C433C7;
-	Sun, 24 Mar 2024 23:52:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SzF9qJY/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 474F8C43399;
+	Sun, 24 Mar 2024 23:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324321;
-	bh=j88f6MVWIj6QWwWfbnjDtoeTnPFD2JD3YzW5KfJVf3k=;
+	s=k20201202; t=1711324306;
+	bh=UqehTMGg7Fn+zZSiEgY3XgpNnzC1QL9aW+I7SEnJRHo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=M4l/D5Bct9FjdDNI0UfIiNAI2AHaeo3YFVGUafl62Za/pCyWwYRUND0oLBvcvVw7G
-	 0xcjbsgh9Eq00UfXgxH1IICnfZuKiwKjKb+R7D2RSSx8OBs+OaJPvFp/cdpMYaU8lP
-	 k2RWIXRaB/QEVL7MTq0I8UFvqSME1WIVIcAzjPP7NjCRJQQ/VMws0jzeL8uH+Za+rf
-	 JNRpPDv28lwbA+ojCJfRGHQ+9t4TLNepvUIOLHc5d1z/CrbNVf4FQvLLfiJP+cr4vi
-	 FXrCCZLMJ4ywtk9JfjXJgkbh9CBMcq0o2WI3c5yxQGtrOYAhnzSxFRsVGnNsQHhujq
-	 oc7eNJChpKzxQ==
+	b=SzF9qJY/ugHK/bQy+4hVktAiVNM6neb7H0CiFwKw//GA6EnU3NTqa5U1TFW9tayke
+	 IjsyuFYq3H+OGBYbfX+dd56jlapeQNY6SDyEPsLgToilsJrzsgue2Q+PxTuYrAbmgm
+	 qxxw0gsP+fkqS9TbUkKE/NXuum20kb5nAiaqD00SFwCujCUkSr/94lxlHKVviUShmW
+	 317ug93vWTLnHtzYsjKVJ1grCVYmX14jVgpQkdjssHo2T+fXJVGWA6Sb35pl6AznrL
+	 wv5EsPzocYhnAYylx82IseAL44lbS+yxrona2QsJ12bBe0VMJJOTqrs6RIvlM3F3rF
+	 0RwEI3480Q2vA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chengguang Xu <cgxu519@gmx.com>,
-	Jan Kara <jack@suse.cz>,
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 092/148] quota: code cleanup for __dquot_alloc_space()
-Date: Sun, 24 Mar 2024 19:49:16 -0400
-Message-ID: <20240324235012.1356413-93-sashal@kernel.org>
+Subject: [PATCH 4.19 078/148] PCI/AER: Fix rootport attribute paths in ABI docs
+Date: Sun, 24 Mar 2024 19:49:02 -0400
+Message-ID: <20240324235012.1356413-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -48,43 +48,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chengguang Xu <cgxu519@gmx.com>
+From: Johan Hovold <johan+linaro@kernel.org>
 
-[ Upstream commit df15a2a59d0b29d86e17140b83ed231adaded12f ]
+[ Upstream commit 0e7d29a39a546161ea3a49e8e282a43212d7ff68 ]
 
-Replace (flags & DQUOT_SPACE_RESERVE) with
-variable reserve.
+The 'aer_stats' directory never made it into the sixth and final revision
+of the series adding the sysfs AER attributes.
 
-Signed-off-by: Chengguang Xu <cgxu519@gmx.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Stable-dep-of: 179b8c97ebf6 ("quota: Fix rcu annotations of inode dquot pointers")
+Link: https://lore.kernel.org/r/20240202131635.11405-2-johan+linaro@kernel.org
+Link: https://lore.kernel.org/lkml/20180621184822.GB14136@bhelgaas-glaptop.roam.corp.google.com/
+Fixes: 12833017e581 ("PCI/AER: Add sysfs attributes for rootport cumulative stats")
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/quota/dquot.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-index 868936076f41d..683727c5758c0 100644
---- a/fs/quota/dquot.c
-+++ b/fs/quota/dquot.c
-@@ -1743,7 +1743,7 @@ int __dquot_alloc_space(struct inode *inode, qsize_t number, int flags)
- 	for (cnt = 0; cnt < MAXQUOTAS; cnt++) {
- 		if (!dquots[cnt])
- 			continue;
--		if (flags & DQUOT_SPACE_RESERVE) {
-+		if (reserve) {
- 			ret = dquot_add_space(dquots[cnt], 0, number, flags,
- 					      &warn[cnt]);
- 		} else {
-@@ -1756,7 +1756,7 @@ int __dquot_alloc_space(struct inode *inode, qsize_t number, int flags)
- 				if (!dquots[cnt])
- 					continue;
- 				spin_lock(&dquots[cnt]->dq_dqb_lock);
--				if (flags & DQUOT_SPACE_RESERVE) {
-+				if (reserve) {
- 					dquots[cnt]->dq_dqb.dqb_rsvspace -=
- 									number;
- 				} else {
+diff --git a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+index ff229d71961c3..afe7bdf4f9ad0 100644
+--- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
++++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+@@ -103,19 +103,19 @@ collectors) that are AER capable. These indicate the number of error messages as
+ device, so these counters include them and are thus cumulative of all the error
+ messages on the PCI hierarchy originating at that root port.
+ 
+-What:		/sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_cor
++What:		/sys/bus/pci/devices/<dev>/aer_rootport_total_err_cor
+ Date:		July 2018
+ Kernel Version: 4.19.0
+ Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+ Description:	Total number of ERR_COR messages reported to rootport.
+ 
+-What:	    /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_fatal
++What:		/sys/bus/pci/devices/<dev>/aer_rootport_total_err_fatal
+ Date:		July 2018
+ Kernel Version: 4.19.0
+ Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+ Description:	Total number of ERR_FATAL messages reported to rootport.
+ 
+-What:	    /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_nonfatal
++What:		/sys/bus/pci/devices/<dev>/aer_rootport_total_err_nonfatal
+ Date:		July 2018
+ Kernel Version: 4.19.0
+ Contact:	linux-pci@vger.kernel.org, rajatja@google.com
 -- 
 2.43.0
 
