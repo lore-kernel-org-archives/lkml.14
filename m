@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B22712C809;
-	Sun, 24 Mar 2024 22:57:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994D012C55B;
+	Sun, 24 Mar 2024 22:57:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321056; cv=none; b=D7iBI/jWCjXm+MttmKUzL77LlGtKsimsJPeo17imEuMk29+3q01ZEzBTTgVNoOdw2vqh0jmth/qXEAj5LxQ2yP2XN49LQ1r+HQ6ts6PY7hxM7MvfCNymPQzXR28HIs32MCSJZ+8Sn5CxaGggFNYIG8qJuQDxnMAG8Xrcl/2KxXQ=
+	t=1711321031; cv=none; b=aLVXZiKoxwLZU5poo/IsIlRnrDqFd5ysFIBE6H7UjQEfkza+tVXFdFvwNSxoYIdfwVk0wq5NRxbEDiXemR3l8/AFD9K2N7tdB/mT9qTzcRQO+6/HWpCrCdjyikW1WQjzHR3cr4MaBcv/bcnLGRA8Zq0g3E4GxwYtJ+dA4iSqNUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321056; c=relaxed/simple;
-	bh=AMkb6V5/8OzM2qunQBvo0Q2DSac62dcJLz4Z4OClx3g=;
+	s=arc-20240116; t=1711321031; c=relaxed/simple;
+	bh=HRP3kp5d/QQUx83KUISyCFGfDCNtJT2pfGqFiM0BbWQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Qbr2b/KqGBYjukUlTO28U1w4H/n7b164l5pXxFz9ZPF4cf2fDZVwWfJl+gyNk6pWVCTq9mtm6HIW9WSezbIYj7LkF4RfhWvRJe7iKOsC3Q7qL83kgowpOsvkjiS79oEE5bZlvRYaApERSssYT9Fq0TPQJBHnOiQkYu/q7kugaNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K6s2ya4o; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ld5WYUdgV3Tvl/dugVnnF4MfayL9J9z3nyExTjh812LrKj+Gz0Jtn/tMm73nVl0Mp1zxvTturgcrhzPX3U46ImitBALl7F9WQHWHeWClcJgK55joZ+dgnA9BGmFbmci1CPl/HSgo6brUkNbl9YqS+jGZ1wHvgSwVShmVmD6afgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cmlrELFW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K6s2ya4o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2AADC433F1;
-	Sun, 24 Mar 2024 22:57:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cmlrELFW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93EDBC43399;
+	Sun, 24 Mar 2024 22:57:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321055;
-	bh=AMkb6V5/8OzM2qunQBvo0Q2DSac62dcJLz4Z4OClx3g=;
+	s=k20201202; t=1711321030;
+	bh=HRP3kp5d/QQUx83KUISyCFGfDCNtJT2pfGqFiM0BbWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=K6s2ya4okzdODZY7T+oqsDP+yE51mKVQ0SuobDKTguNO5eCUrZ99lE0mF78o/IcUL
-	 8IbtHRhX36TAvDQjcx6AxcZQukq/1xCqj8bmv7rkMw7bTsJZZIWFASAkpmVqDrQ3pi
-	 BWGcUm/5hrvSWY921dpyo4z8ewQQ9tBpIfRAFTMRQ8TDxkl0yVE260gNaVBRF1YEto
-	 hg44II+AAjiEzLLcjvTUEG3Lm549S4SzKBqB+nz99Bcuiaj3HPxBFOSUjAfxLNQOb+
-	 H+kIJsoTXuzfNMtVByjh9mTSuegrOgfigj9IwoYAkGDXQeksxcIe/6YxHSR3HQ7hbE
-	 cTY2Lv6BylRcw==
+	b=cmlrELFWcwS8WXyTFlSvotdPIvRcJpHjldCtS7NJHxUvWzzPwm9Fiqe9Se2EivAaU
+	 1ArV7UodxmzRRGDzFzHW7HigJgivvYkAEiAoz2r/RU5JrWJNXPW+VQfkw+4XkcWPg5
+	 5P6ChemHxLr3Av+bbMsDJ5gu9iL7QeSHSiiZ1C9GbLtR1z4tXHAZEhkaA3Tmx1TZOo
+	 VqZjMtBK71DLhZNA2AxfQIE3JpS4RLGszCW7aA2pds8CsQNa+VOx9xBMypbP9ixfkQ
+	 8DQwbUnjImKSK/PT5zQh/BjZoCD6BrFBA0va9y8gG9NDnOW/xIGUNbnKtA7IGzry6m
+	 sTrB1c9cSyyfw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>,
-	kernel test robot <lkp@intel.com>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
+Cc: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+	Xingyu Wu <xingyu.wu@starfivetech.com>,
+	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 619/713] remoteproc: stm32: Fix incorrect type in assignment for va
-Date: Sun, 24 Mar 2024 18:45:45 -0400
-Message-ID: <20240324224720.1345309-620-sashal@kernel.org>
+Subject: [PATCH 6.7 593/713] watchdog: starfive: Check pm_runtime_enabled() before decrementing usage counter
+Date: Sun, 24 Mar 2024 18:45:19 -0400
+Message-ID: <20240324224720.1345309-594-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,54 +51,48 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+From: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
 
-[ Upstream commit 32381bbccba4c21145c571701f8f7fb1d9b3a92e ]
+[ Upstream commit 8bc22a2f1bf0f402029087fcb53130233a544fed ]
 
-The sparse tool complains about the attribute conversion between
-a _iomem void * and a void *:
+In the probe function, pm_runtime_put_sync() will fail on platform with
+runtime PM disabled.
+Check if runtime PM is enabled before calling pm_runtime_put_sync() to
+fix it.
 
-stm32_rproc.c:122:12: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void *va @@     got void [noderef] __iomem * @@
-stm32_rproc.c:122:12: sparse:     expected void *va
-stm32_rproc.c:122:12: sparse:     got void [noderef] __iomem *
-
-Add '__force' to explicitly specify that the cast is intentional.
-This conversion is necessary to cast to virtual addresses pointer,used,
-by the remoteproc core.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202312150052.HCiNKlqB-lkp@intel.com/
-Fixes: 13140de09cc2 ("remoteproc: stm32: add an ST stm32_rproc driver")
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-Link: https://lore.kernel.org/r/20240117135312.3381936-2-arnaud.pouliquen@foss.st.com
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Fixes: db728ea9c7be ("drivers: watchdog: Add StarFive Watchdog driver")
+Signed-off-by: Xingyu Wu <xingyu.wu@starfivetech.com>
+Signed-off-by: Ley Foon Tan <leyfoon.tan@starfivetech.com>
+Signed-off-by: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20240119082722.1133024-1-jisheng.teoh@starfivetech.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/stm32_rproc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/watchdog/starfive-wdt.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-index 4f469f0bcf8b2..2c28635219ebf 100644
---- a/drivers/remoteproc/stm32_rproc.c
-+++ b/drivers/remoteproc/stm32_rproc.c
-@@ -120,7 +120,7 @@ static int stm32_rproc_mem_alloc(struct rproc *rproc,
- 	void *va;
+diff --git a/drivers/watchdog/starfive-wdt.c b/drivers/watchdog/starfive-wdt.c
+index 49b38ecc092dd..e4b344db38030 100644
+--- a/drivers/watchdog/starfive-wdt.c
++++ b/drivers/watchdog/starfive-wdt.c
+@@ -494,8 +494,13 @@ static int starfive_wdt_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_exit;
  
- 	dev_dbg(dev, "map memory: %pad+%zx\n", &mem->dma, mem->len);
--	va = ioremap_wc(mem->dma, mem->len);
-+	va = (__force void *)ioremap_wc(mem->dma, mem->len);
- 	if (IS_ERR_OR_NULL(va)) {
- 		dev_err(dev, "Unable to map memory region: %pad+0x%zx\n",
- 			&mem->dma, mem->len);
-@@ -137,7 +137,7 @@ static int stm32_rproc_mem_release(struct rproc *rproc,
- 				   struct rproc_mem_entry *mem)
- {
- 	dev_dbg(rproc->dev.parent, "unmap memory: %pa\n", &mem->dma);
--	iounmap(mem->va);
-+	iounmap((__force __iomem void *)mem->va);
+-	if (!early_enable)
+-		pm_runtime_put_sync(&pdev->dev);
++	if (!early_enable) {
++		if (pm_runtime_enabled(&pdev->dev)) {
++			ret = pm_runtime_put_sync(&pdev->dev);
++			if (ret)
++				goto err_exit;
++		}
++	}
  
  	return 0;
- }
+ 
 -- 
 2.43.0
 
