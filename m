@@ -1,44 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932381448F3;
-	Sun, 24 Mar 2024 23:12:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BDD452F8A;
+	Sun, 24 Mar 2024 23:12:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321962; cv=none; b=bsXZoCADA5XYoO4BOPfZieURBvQAnM5ceI9VUM8s6g6ixFt3cPwScaTe7eMQGACGULD2R+pIa/rnMp/KswKQIc87TasPb8FfBSrUGcx4dNh5r9rrQiWIKzkM2Erz3rkIaZIo+6ax6Vp4ug5te/dVLDiC2K8Fs64/Mx2LXqnHr8M=
+	t=1711321958; cv=none; b=CKUY7n+J26mqBZiKdIJ01Q3CaKRwRt7G0nRaZZOAMa7vN2gQ2DjVqoRyLLnhgqpwLd3Dz1Co3KjdsLhJX5xwk6mxP28P6OqO0uUe2XIgJ+5HwaD+3AGvBxZzPdB2mXm93SR72LIx1K2unrm4m5qxjeV3s3HbVAnz6Rrm7pVGm2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321962; c=relaxed/simple;
-	bh=Vo3k/UgoRrmyUGzlldwCCqinbenvGMIr4yM+BJI4MQQ=;
+	s=arc-20240116; t=1711321958; c=relaxed/simple;
+	bh=yblZdlPa+A9wWipbOumptZlARm3EGoaVGcYsVoiSfD0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jEf6EEIxviDzB6cLnnrpZMbcUO/W+mWxU1SV7Xn+fpWmdZ5J4gWvvZTzfh88bMXbwXcB1QRZAd8cBdMxv6+R6DIdOIiVgHRDVaml1WwLO7ZK5HkJF2LZ+ge8ozAiznnFhrlo72V4PLXgBlFEN1UwiZywDgLM/85o10BkNQrxtI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bTXkPs81; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=R4p54MgDyXs9ACFgus+qDua+2DNUDVjnmzqSH3tixQP6JlnJj/HVrxdbiGE5Q4pFUXaJHScInd0MwD0Ct1/2gTde41W8G7gd9T5UHeZHq4mXF1VJe0/wnxUpQGJ8lavwozwcj3lMWH428KKmurIEJkQ0NFxEQXVRJ4u7n7a1Qfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bJl5S79f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bTXkPs81"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63977C43390;
-	Sun, 24 Mar 2024 23:12:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bJl5S79f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FDD3C43399;
+	Sun, 24 Mar 2024 23:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321962;
-	bh=Vo3k/UgoRrmyUGzlldwCCqinbenvGMIr4yM+BJI4MQQ=;
+	s=k20201202; t=1711321958;
+	bh=yblZdlPa+A9wWipbOumptZlARm3EGoaVGcYsVoiSfD0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bTXkPs81CXozYOzNZe3xBZn/aaA0c3LUnZjiue/2RVt3KKXaRpf/RQWk7Yb7njyww
-	 nP0uj8h2n8X6GILpkMsK3rn3Soj9d8e+9guTV2i7FArwJMl6LZTHbkq5H+EsYcn6IS
-	 xEVd8lMYEXEmmCRxrr0+I50HQeboST8hXTID7SiYLZ/SKd5UWT1LXVrEAD1IEkwoBT
-	 H3GwuMlqgZaXdlJPC5ZBUKYVsGlNPnsE/+4+Bk+QvZuXyHsn9A/yV1JPV/fiUK+SyH
-	 L0AKAd3HXvUsk4fqEayrWSTpBHymbY/UT/bR876Leroa8r4HivLT7Q/SdT5edVYCa5
-	 O96H/aRepgShw==
+	b=bJl5S79fqqIjbjQnkJfw+cwbcNnnOrg9RRPyI2SFpNLP371eT4QH4CWy1Jdhu1IiG
+	 eelKEQWCQqD1DLWoL0k7S1cFDXFtCfE8Ha1WP/Pd3/6scarDuf1vr0nYcQ28a76QzH
+	 kniJEX1bklk0bKccS+5/XUqLerQBbF0uXhS5gOLz0WHzYtfA27nWNQpsS5QarWVszx
+	 6tprDTqxYHp5Jp7kV1JQkzRCIQc0zfzK6Yr+CgvwYhlmNJKCiSbIo5AsMmIISvixGe
+	 yXWN1aGxDg+R3sf/p1I0eoqjgCWUjgfslrcd3WttiC0MD9ljHoGnIJNou+/DZy9U9n
+	 /hm5DG0kZJEkg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hou Tao <houtao1@huawei.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	syzbot+72aa0161922eba61b50e@syzkaller.appspotmail.com,
-	xingwei lee <xrivendell7@gmail.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Alexei Starovoitov <ast@kernel.org>,
+Cc: Leon Romanovsky <leonro@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 034/451] x86/mm: Disallow vsyscall page read for copy_from_kernel_nofault()
-Date: Sun, 24 Mar 2024 19:05:10 -0400
-Message-ID: <20240324231207.1351418-35-sashal@kernel.org>
+Subject: [PATCH 6.1 030/451] RDMA/mlx5: Fix fortify source warning while accessing Eth segment
+Date: Sun, 24 Mar 2024 19:05:06 -0400
+Message-ID: <20240324231207.1351418-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -52,98 +47,129 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Hou Tao <houtao1@huawei.com>
+From: Leon Romanovsky <leonro@nvidia.com>
 
-[ Upstream commit 32019c659ecfe1d92e3bf9fcdfbb11a7c70acd58 ]
+[ Upstream commit 4d5e86a56615cc387d21c629f9af8fb0e958d350 ]
 
-When trying to use copy_from_kernel_nofault() to read vsyscall page
-through a bpf program, the following oops was reported:
+ ------------[ cut here ]------------
+ memcpy: detected field-spanning write (size 56) of single field "eseg->inline_hdr.start" at /var/lib/dkms/mlnx-ofed-kernel/5.8/build/drivers/infiniband/hw/mlx5/wr.c:131 (size 2)
+ WARNING: CPU: 0 PID: 293779 at /var/lib/dkms/mlnx-ofed-kernel/5.8/build/drivers/infiniband/hw/mlx5/wr.c:131 mlx5_ib_post_send+0x191b/0x1a60 [mlx5_ib]
+ Modules linked in: 8021q garp mrp stp llc rdma_ucm(OE) rdma_cm(OE) iw_cm(OE) ib_ipoib(OE) ib_cm(OE) ib_umad(OE) mlx5_ib(OE) ib_uverbs(OE) ib_core(OE) mlx5_core(OE) pci_hyperv_intf mlxdevm(OE) mlx_compat(OE) tls mlxfw(OE) psample nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip_set nf_tables libcrc32c nfnetlink mst_pciconf(OE) knem(OE) vfio_pci vfio_pci_core vfio_iommu_type1 vfio iommufd irqbypass cuse nfsv3 nfs fscache netfs xfrm_user xfrm_algo ipmi_devintf ipmi_msghandler binfmt_misc crct10dif_pclmul crc32_pclmul polyval_clmulni polyval_generic ghash_clmulni_intel sha512_ssse3 snd_pcsp aesni_intel crypto_simd cryptd snd_pcm snd_timer joydev snd soundcore input_leds serio_raw evbug nfsd auth_rpcgss nfs_acl lockd grace sch_fq_codel sunrpc drm efi_pstore ip_tables x_tables autofs4 psmouse virtio_net net_failover failover floppy
+  [last unloaded: mlx_compat(OE)]
+ CPU: 0 PID: 293779 Comm: ssh Tainted: G           OE      6.2.0-32-generic #32~22.04.1-Ubuntu
+ Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
+ RIP: 0010:mlx5_ib_post_send+0x191b/0x1a60 [mlx5_ib]
+ Code: 0c 01 00 a8 01 75 25 48 8b 75 a0 b9 02 00 00 00 48 c7 c2 10 5b fd c0 48 c7 c7 80 5b fd c0 c6 05 57 0c 03 00 01 e8 95 4d 93 da <0f> 0b 44 8b 4d b0 4c 8b 45 c8 48 8b 4d c0 e9 49 fb ff ff 41 0f b7
+ RSP: 0018:ffffb5b48478b570 EFLAGS: 00010046
+ RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
+ RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+ RBP: ffffb5b48478b628 R08: 0000000000000000 R09: 0000000000000000
+ R10: 0000000000000000 R11: 0000000000000000 R12: ffffb5b48478b5e8
+ R13: ffff963a3c609b5e R14: ffff9639c3fbd800 R15: ffffb5b480475a80
+ FS:  00007fc03b444c80(0000) GS:ffff963a3dc00000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000556f46bdf000 CR3: 0000000006ac6003 CR4: 00000000003706f0
+ DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ Call Trace:
+  <TASK>
+  ? show_regs+0x72/0x90
+  ? mlx5_ib_post_send+0x191b/0x1a60 [mlx5_ib]
+  ? __warn+0x8d/0x160
+  ? mlx5_ib_post_send+0x191b/0x1a60 [mlx5_ib]
+  ? report_bug+0x1bb/0x1d0
+  ? handle_bug+0x46/0x90
+  ? exc_invalid_op+0x19/0x80
+  ? asm_exc_invalid_op+0x1b/0x20
+  ? mlx5_ib_post_send+0x191b/0x1a60 [mlx5_ib]
+  mlx5_ib_post_send_nodrain+0xb/0x20 [mlx5_ib]
+  ipoib_send+0x2ec/0x770 [ib_ipoib]
+  ipoib_start_xmit+0x5a0/0x770 [ib_ipoib]
+  dev_hard_start_xmit+0x8e/0x1e0
+  ? validate_xmit_skb_list+0x4d/0x80
+  sch_direct_xmit+0x116/0x3a0
+  __dev_xmit_skb+0x1fd/0x580
+  __dev_queue_xmit+0x284/0x6b0
+  ? _raw_spin_unlock_irq+0xe/0x50
+  ? __flush_work.isra.0+0x20d/0x370
+  ? push_pseudo_header+0x17/0x40 [ib_ipoib]
+  neigh_connected_output+0xcd/0x110
+  ip_finish_output2+0x179/0x480
+  ? __smp_call_single_queue+0x61/0xa0
+  __ip_finish_output+0xc3/0x190
+  ip_finish_output+0x2e/0xf0
+  ip_output+0x78/0x110
+  ? __pfx_ip_finish_output+0x10/0x10
+  ip_local_out+0x64/0x70
+  __ip_queue_xmit+0x18a/0x460
+  ip_queue_xmit+0x15/0x30
+  __tcp_transmit_skb+0x914/0x9c0
+  tcp_write_xmit+0x334/0x8d0
+  tcp_push_one+0x3c/0x60
+  tcp_sendmsg_locked+0x2e1/0xac0
+  tcp_sendmsg+0x2d/0x50
+  inet_sendmsg+0x43/0x90
+  sock_sendmsg+0x68/0x80
+  sock_write_iter+0x93/0x100
+  vfs_write+0x326/0x3c0
+  ksys_write+0xbd/0xf0
+  ? do_syscall_64+0x69/0x90
+  __x64_sys_write+0x19/0x30
+  do_syscall_64+0x59/0x90
+  ? do_user_addr_fault+0x1d0/0x640
+  ? exit_to_user_mode_prepare+0x3b/0xd0
+  ? irqentry_exit_to_user_mode+0x9/0x20
+  ? irqentry_exit+0x43/0x50
+  ? exc_page_fault+0x92/0x1b0
+  entry_SYSCALL_64_after_hwframe+0x72/0xdc
+ RIP: 0033:0x7fc03ad14a37
+ Code: 10 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89 74 24
+ RSP: 002b:00007ffdf8697fe8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+ RAX: ffffffffffffffda RBX: 0000000000008024 RCX: 00007fc03ad14a37
+ RDX: 0000000000008024 RSI: 0000556f46bd8270 RDI: 0000000000000003
+ RBP: 0000556f46bb1800 R08: 0000000000007fe3 R09: 0000000000000000
+ R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000002
+ R13: 0000556f46bc66b0 R14: 000000000000000a R15: 0000556f46bb2f50
+  </TASK>
+ ---[ end trace 0000000000000000 ]---
 
-  BUG: unable to handle page fault for address: ffffffffff600000
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD 3231067 P4D 3231067 PUD 3233067 PMD 3235067 PTE 0
-  Oops: 0000 [#1] PREEMPT SMP PTI
-  CPU: 1 PID: 20390 Comm: test_progs ...... 6.7.0+ #58
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996) ......
-  RIP: 0010:copy_from_kernel_nofault+0x6f/0x110
-  ......
-  Call Trace:
-   <TASK>
-   ? copy_from_kernel_nofault+0x6f/0x110
-   bpf_probe_read_kernel+0x1d/0x50
-   bpf_prog_2061065e56845f08_do_probe_read+0x51/0x8d
-   trace_call_bpf+0xc5/0x1c0
-   perf_call_bpf_enter.isra.0+0x69/0xb0
-   perf_syscall_enter+0x13e/0x200
-   syscall_trace_enter+0x188/0x1c0
-   do_syscall_64+0xb5/0xe0
-   entry_SYSCALL_64_after_hwframe+0x6e/0x76
-   </TASK>
-  ......
-  ---[ end trace 0000000000000000 ]---
-
-The oops is triggered when:
-
-1) A bpf program uses bpf_probe_read_kernel() to read from the vsyscall
-page and invokes copy_from_kernel_nofault() which in turn calls
-__get_user_asm().
-
-2) Because the vsyscall page address is not readable from kernel space,
-a page fault exception is triggered accordingly.
-
-3) handle_page_fault() considers the vsyscall page address as a user
-space address instead of a kernel space address. This results in the
-fix-up setup by bpf not being applied and a page_fault_oops() is invoked
-due to SMAP.
-
-Considering handle_page_fault() has already considered the vsyscall page
-address as a userspace address, fix the problem by disallowing vsyscall
-page read for copy_from_kernel_nofault().
-
-Originally-by: Thomas Gleixner <tglx@linutronix.de>
-Reported-by: syzbot+72aa0161922eba61b50e@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/bpf/CAG48ez06TZft=ATH1qh2c5mpS5BT8UakwNkzi6nvK5_djC-4Nw@mail.gmail.com
-Reported-by: xingwei lee <xrivendell7@gmail.com>
-Closes: https://lore.kernel.org/bpf/CABOYnLynjBoFZOf3Z4BhaZkc5hx_kHfsjiW+UWLoB=w33LvScw@mail.gmail.com
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20240202103935.3154011-3-houtao@huaweicloud.com
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/r/8228ad34bd1a25047586270f7b1fb4ddcd046282.1706433934.git.leon@kernel.org
+Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/maccess.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/infiniband/hw/mlx5/wr.c | 2 +-
+ include/linux/mlx5/qp.h         | 5 ++++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/mm/maccess.c b/arch/x86/mm/maccess.c
-index 6993f026adec9..42115ac079cfe 100644
---- a/arch/x86/mm/maccess.c
-+++ b/arch/x86/mm/maccess.c
-@@ -3,6 +3,8 @@
- #include <linux/uaccess.h>
- #include <linux/kernel.h>
- 
-+#include <asm/vsyscall.h>
-+
- #ifdef CONFIG_X86_64
- bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
- {
-@@ -15,6 +17,14 @@ bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
- 	if (vaddr < TASK_SIZE_MAX + PAGE_SIZE)
- 		return false;
- 
-+	/*
-+	 * Reading from the vsyscall page may cause an unhandled fault in
-+	 * certain cases.  Though it is at an address above TASK_SIZE_MAX, it is
-+	 * usually considered as a user space address.
-+	 */
-+	if (is_vsyscall_vaddr(vaddr))
-+		return false;
-+
- 	/*
- 	 * Allow everything during early boot before 'x86_virt_bits'
- 	 * is initialized.  Needed for instruction decoding in early
+diff --git a/drivers/infiniband/hw/mlx5/wr.c b/drivers/infiniband/hw/mlx5/wr.c
+index 855f3f4fefadd..737db67a9ce1d 100644
+--- a/drivers/infiniband/hw/mlx5/wr.c
++++ b/drivers/infiniband/hw/mlx5/wr.c
+@@ -78,7 +78,7 @@ static void set_eth_seg(const struct ib_send_wr *wr, struct mlx5_ib_qp *qp,
+ 		 */
+ 		copysz = min_t(u64, *cur_edge - (void *)eseg->inline_hdr.start,
+ 			       left);
+-		memcpy(eseg->inline_hdr.start, pdata, copysz);
++		memcpy(eseg->inline_hdr.data, pdata, copysz);
+ 		stride = ALIGN(sizeof(struct mlx5_wqe_eth_seg) -
+ 			       sizeof(eseg->inline_hdr.start) + copysz, 16);
+ 		*size += stride / 16;
+diff --git a/include/linux/mlx5/qp.h b/include/linux/mlx5/qp.h
+index 4657d5c54abef..ca0eee571ad7b 100644
+--- a/include/linux/mlx5/qp.h
++++ b/include/linux/mlx5/qp.h
+@@ -269,7 +269,10 @@ struct mlx5_wqe_eth_seg {
+ 	union {
+ 		struct {
+ 			__be16 sz;
+-			u8     start[2];
++			union {
++				u8     start[2];
++				DECLARE_FLEX_ARRAY(u8, data);
++			};
+ 		} inline_hdr;
+ 		struct {
+ 			__be16 type;
 -- 
 2.43.0
 
