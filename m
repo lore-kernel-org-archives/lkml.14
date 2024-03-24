@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D366315216A;
-	Sun, 24 Mar 2024 23:06:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625D3209E24;
+	Sun, 24 Mar 2024 23:06:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321593; cv=none; b=o8kqd0PyHt1yLE4iA3u1nW6KSzH6BQ0Q7DBI8JIGnVQ0JWPd+B1d12uv5rpORGf8Y6m3QzXpeJhWFyxaiuiIWbGZw30oh5uNiT15Wt7KPh+symHDlQu3LSU4bJ0R2orAl8XsQqUgXzcpHdHgcG6GiT6t8wRrbQ8u40Gx5VSsxPM=
+	t=1711321581; cv=none; b=MOLCNd/Nh3xLrkMGrdnr27Mr5Vhl+hSGTL8jSOzIe4Y6ivevnXX7cDKVNIbJhEK77cvnLw27IpjKmYZsUX1KKlxrLXti7BOltCgFhReocASBNakK6wZG9892gS1apmcQDNesC6SoVF4qD/Ip466Yn6s3rF5nKhS/fNS444PyK/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321593; c=relaxed/simple;
-	bh=AFtDp0I19989MUL6aaJ2DsxhejQl4XuhXqLEYgx6LVo=;
+	s=arc-20240116; t=1711321581; c=relaxed/simple;
+	bh=937m8QQtPhg4Yw4d9wkhLHxuM3X2FKfxaRJBMMb9aLQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ORvRw0weGkqS+6jJrGj25Abtp9T7dBYZLRwpJxP5+VoZ0hJak70K5aLnmUBwgrCRaL/qqgWL9PVWx6nNjB3A1wurpBdMLOZQLCIE57YBZYBYKN631U7XcfaUO+WTp49FSQT6CrtBDPYJpj+d5sFRnIgrpOlL5nhb3W4BuGG8Bcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qnVco60t; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=HeTIaTI0sJdgq4+ZYD6nAH1JEcksIUChrMQuioIarjwENptvg8hbWlraVMiN3lj41WFybk7ZkWieu92PgcCeks4weGB0s2ZeZa2JWHZN8Fs4iv1CusPxCamB3Vr1Kr9+2G4WQslKs+tDrSLbxp1PA+8V1eSOQoif5dZ4DBpzJVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h+u9Dgns; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qnVco60t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E244EC43390;
-	Sun, 24 Mar 2024 23:06:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h+u9Dgns"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FF01C43394;
+	Sun, 24 Mar 2024 23:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321592;
-	bh=AFtDp0I19989MUL6aaJ2DsxhejQl4XuhXqLEYgx6LVo=;
+	s=k20201202; t=1711321580;
+	bh=937m8QQtPhg4Yw4d9wkhLHxuM3X2FKfxaRJBMMb9aLQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qnVco60toYoDibtZxwkdJXiY0iA4nk8AhUUxwvS2smH3W4fsUQrsdEoylBKTEnv91
-	 ztGXgK16ugXhUGjIPK6n88B1Do+7lX3cEgTOAlytxhOETUveH9cuiBKDyaHoPr+imh
-	 P1M5d558q/Len9ovTS5pkErVZPpjiKf7u6jB6Uj40D5gQ3yUTtKPUwNQUsSO2VvMOg
-	 cISst1OaD2vlS/H0T5xiivELEcrbb+qi/mqpzHlTvp+zgW3zD+g9yvlZxUq3GJkuEM
-	 yJ+FvLfuy9u9rhYUShBMNCBsV3wjJMPclK7Vzdn4/4My67vXIo58iIAXN65b3rO2mx
-	 lACEywmOsPHBw==
+	b=h+u9DgnsptR5rZiNTZtAzNpBWekvafb5PCCN7esw2yj0d+6n3PvlZZJNcVcJw3+kL
+	 lEbL+ho/z6Z5ZLix4n2GqcpiSfqsu3z8okapwRCs5KnjiUSXTiZm7sjD3WJ8qf3xjK
+	 8YmelLNHQ2zRUq6VKIgN5iJPMqrQbAt+7Wxslp3zjNUrXyQ+/9siI5wTnjRSE3xA0L
+	 I5xIH3gf8YDnh6YahbtvXbn4amiNCmahd79pNACJrbM+uqTTu9YlL1kK9hUhSQBtPO
+	 zVqGTrhH8hPfzDc9559t8iMl7geAqXLXfg+2DdMDZeK+iw1pqmThpWGMB1hBHgJOVe
+	 5vrh2uAuquGHQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?K=C3=A9vin=20L=27h=C3=B4pital?= <kevin.lhopital@savoirfairelinux.com>,
-	Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>,
-	Russell King <rmk+kernel@armlinux.org.uk>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 322/638] net: phy: fix phy_get_internal_delay accessing an empty array
-Date: Sun, 24 Mar 2024 18:55:59 -0400
-Message-ID: <20240324230116.1348576-323-sashal@kernel.org>
+Subject: [PATCH 6.6 309/638] Bluetooth: msft: __hci_cmd_sync() doesn't return NULL
+Date: Sun, 24 Mar 2024 18:55:46 -0400
+Message-ID: <20240324230116.1348576-310-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -46,48 +44,113 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kévin L'hôpital <kevin.lhopital@savoirfairelinux.com>
+From: Dan Carpenter <dan.carpenter@linaro.org>
 
-[ Upstream commit 4469c0c5b14a0919f5965c7ceac96b523eb57b79 ]
+[ Upstream commit 41c56aa94c647a0f84c5c33fffb3f283e6f0e5bf ]
 
-The phy_get_internal_delay function could try to access to an empty
-array in the case that the driver is calling phy_get_internal_delay
-without defining delay_values and rx-internal-delay-ps or
-tx-internal-delay-ps is defined to 0 in the device-tree.
-This will lead to "unable to handle kernel NULL pointer dereference at
-virtual address 0". To avoid this kernel oops, the test should be delay
->= 0. As there is already delay < 0 test just before, the test could
-only be size == 0.
+The __hci_cmd_sync() function doesn't return NULL.  Checking for NULL
+doesn't make the code safer, it just confuses people.
 
-Fixes: 92252eec913b ("net: phy: Add a helper to return the index for of the internal delay")
-Co-developed-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
-Signed-off-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
-Signed-off-by: Kévin L'hôpital <kevin.lhopital@savoirfairelinux.com>
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+When a function returns both error pointers and NULL then generally the
+NULL is a kind of success case.  For example, maybe we look up an item
+then errors mean we ran out of memory but NULL means the item is not
+found.  Or if we request a feature, then error pointers mean that there
+was an error but NULL means that the feature has been deliberately
+turned off.
+
+In this code it's different.  The NULL is handled as if there is a bug
+in __hci_cmd_sync() where it accidentally returns NULL instead of a
+proper error code.  This was done consistently until commit 9e14606d8f38
+("Bluetooth: msft: Extended monitor tracking by address filter") which
+deleted the work around for the potential future bug and treated NULL as
+success.
+
+Predicting potential future bugs is complicated, but we should just fix
+them instead of working around them.  Instead of debating whether NULL
+is failure or success, let's just say it's currently impossible and
+delete the dead code.
+
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Stable-dep-of: a6e06258f4c3 ("Bluetooth: msft: Fix memory leak")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/phy_device.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/bluetooth/msft.c | 20 +++++++-------------
+ 1 file changed, 7 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index a42df2c1bd043..bbc459f97b7b0 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -2954,7 +2954,7 @@ s32 phy_get_internal_delay(struct phy_device *phydev, struct device *dev,
- 	if (delay < 0)
- 		return delay;
+diff --git a/net/bluetooth/msft.c b/net/bluetooth/msft.c
+index abbafa6194ca1..630e3023273b2 100644
+--- a/net/bluetooth/msft.c
++++ b/net/bluetooth/msft.c
+@@ -150,10 +150,7 @@ static bool read_supported_features(struct hci_dev *hdev,
  
--	if (delay && size == 0)
-+	if (size == 0)
- 		return delay;
+ 	skb = __hci_cmd_sync(hdev, hdev->msft_opcode, sizeof(cp), &cp,
+ 			     HCI_CMD_TIMEOUT);
+-	if (IS_ERR_OR_NULL(skb)) {
+-		if (!skb)
+-			skb = ERR_PTR(-EIO);
+-
++	if (IS_ERR(skb)) {
+ 		bt_dev_err(hdev, "Failed to read MSFT supported features (%ld)",
+ 			   PTR_ERR(skb));
+ 		return false;
+@@ -353,7 +350,7 @@ static void msft_remove_addr_filters_sync(struct hci_dev *hdev, u8 handle)
  
- 	if (delay < delay_values[0] || delay > delay_values[size - 1]) {
+ 		skb = __hci_cmd_sync(hdev, hdev->msft_opcode, sizeof(cp), &cp,
+ 				     HCI_CMD_TIMEOUT);
+-		if (IS_ERR_OR_NULL(skb)) {
++		if (IS_ERR(skb)) {
+ 			kfree(address_filter);
+ 			continue;
+ 		}
+@@ -442,11 +439,8 @@ static int msft_remove_monitor_sync(struct hci_dev *hdev,
+ 
+ 	skb = __hci_cmd_sync(hdev, hdev->msft_opcode, sizeof(cp), &cp,
+ 			     HCI_CMD_TIMEOUT);
+-	if (IS_ERR_OR_NULL(skb)) {
+-		if (!skb)
+-			return -EIO;
++	if (IS_ERR(skb))
+ 		return PTR_ERR(skb);
+-	}
+ 
+ 	return msft_le_cancel_monitor_advertisement_cb(hdev, hdev->msft_opcode,
+ 						       monitor, skb);
+@@ -559,7 +553,7 @@ static int msft_add_monitor_sync(struct hci_dev *hdev,
+ 	skb = __hci_cmd_sync(hdev, hdev->msft_opcode, total_size, cp,
+ 			     HCI_CMD_TIMEOUT);
+ 
+-	if (IS_ERR_OR_NULL(skb)) {
++	if (IS_ERR(skb)) {
+ 		err = PTR_ERR(skb);
+ 		goto out_free;
+ 	}
+@@ -740,10 +734,10 @@ static int msft_cancel_address_filter_sync(struct hci_dev *hdev, void *data)
+ 
+ 	skb = __hci_cmd_sync(hdev, hdev->msft_opcode, sizeof(cp), &cp,
+ 			     HCI_CMD_TIMEOUT);
+-	if (IS_ERR_OR_NULL(skb)) {
++	if (IS_ERR(skb)) {
+ 		bt_dev_err(hdev, "MSFT: Failed to cancel address (%pMR) filter",
+ 			   &address_filter->bdaddr);
+-		err = -EIO;
++		err = PTR_ERR(skb);
+ 		goto done;
+ 	}
+ 	kfree_skb(skb);
+@@ -893,7 +887,7 @@ static int msft_add_address_filter_sync(struct hci_dev *hdev, void *data)
+ 
+ 	skb = __hci_cmd_sync(hdev, hdev->msft_opcode, size, cp,
+ 			     HCI_CMD_TIMEOUT);
+-	if (IS_ERR_OR_NULL(skb)) {
++	if (IS_ERR(skb)) {
+ 		bt_dev_err(hdev, "Failed to enable address %pMR filter",
+ 			   &address_filter->bdaddr);
+ 		skb = NULL;
 -- 
 2.43.0
 
