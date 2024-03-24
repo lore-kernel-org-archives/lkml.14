@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0884A217DE9;
-	Sun, 24 Mar 2024 23:09:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC13C217DE7;
+	Sun, 24 Mar 2024 23:09:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321778; cv=none; b=fyDYimmmFnEKXoxjrncd8BDZB923j3aWp5Wle9B7BLmUyQpf6FY7s/lhUKIbqmm5TCe1LTZhjnhqPkuxhZRmbIQ51a4LAtKLNsoivqZqXPgKsD08HEgx0MIPpuE+Nkj8F8wvdTkugFQKj4ECN8fowvvoQOEzuxukelYwke2RvKg=
+	t=1711321779; cv=none; b=m+tq/josuztnvbB2a9lWPGdhD0hFXLbSIMwAXSOhVY4v2K7xmWzoVJK4kIj7UmwOx4vAx9othQyF6kslGInm4XJUNO5AYX12xC84EYf43cJ00xj3DXeq7KEAMokOxrr/2wwBfq6JFJ/x9xn6jAlv+P/+nMWFkVGVubmrAQ4MOqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321778; c=relaxed/simple;
-	bh=t5k8VbrrI3dDuxkErCjj7dA7KEoptyLScVabWaDsg1A=;
+	s=arc-20240116; t=1711321779; c=relaxed/simple;
+	bh=c+A4NeIGq37Vm8i5Cry9H8iEiSFWR9RE6zV+f7W98mQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jrZnQPIfAYoEy6iwMtiZPyg/BBfj+yc9pTGaxs8+PmyaJuL/0WwZ/SGUlrNy05hmpzTY1F53c4WS2jbH+iWWgw8rBVebfBE5F4MJzDSiGWCAvXoc2FAmRWgTIddJ+cRccQLXp6BPgBLyPT/oivhRX+nDgmDi5yaUgzgxF09Un7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tov/2cPb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mjI95Lubcv6JdnBdv8y0idMOPiR+NhJK8oWifHC07THm3iWcU9ibVGfnxGhH+bgO0Aot0CEMCMgfi2vBl3FekWrskNJpIgv+IBMYRi1wYv0o7ks2NVgUqdctEq2TAPy3agZhQt9RMsnxhHmVh+vkN0AExAvEVRI1z4dVn+G1WHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G4MOw5xf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tov/2cPb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BE40C43394;
-	Sun, 24 Mar 2024 23:09:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G4MOw5xf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16DCAC433F1;
+	Sun, 24 Mar 2024 23:09:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321776;
-	bh=t5k8VbrrI3dDuxkErCjj7dA7KEoptyLScVabWaDsg1A=;
+	s=k20201202; t=1711321778;
+	bh=c+A4NeIGq37Vm8i5Cry9H8iEiSFWR9RE6zV+f7W98mQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tov/2cPboM5741rO/i70CJBoIgSenBjR8YSrI0/KJk+n/nZrN3jq76Qbu6xLJ9Pcz
-	 gZJcR3rfuWImYyciA8ZgeE1Z4JHOA+vmGRrTnpQgV6zcCyFOfb5u0IqYeZVi4rPru6
-	 H0pbR+UAvs4dNT4Z4T0eKDO63f/VN/n4yfFYr1N6yQp/TT7aAPefjZ8D2GfGzsxWr6
-	 NcshTPTwsyyvGJVgfPpR8oKyPic6fZfNjJRrdXy7csAzVhQQ6daBneD47LqLsJnc1c
-	 WDcEi0t/dk2yWG+sNqdFcOCsML8llmg8H/3HeJHPXlkg7UeetBI3xpiy8aqCFI9wFK
-	 yQu7/ZCpVFJ/A==
+	b=G4MOw5xfA+MGoYgq8LP/JkHZXlaj6/NgEQqJenmJUBJVXKIaVertdRUAxEg6ymoo9
+	 spAJhBWJID+AgS3E52wxmwIYeHmr50bEKrvUqW+UPrSA9PXE+a3LcvtNwAfztSM16p
+	 q1dZiy6POUmXt0P6FeeY54PGAA2jYf13tjJCAXwoJQikf4L7og7CkaQ4MbpJrTDHa7
+	 ZVnfLxBysTeez8j3n8n3uARO4jazK0AmMnQsWALxN9xr2NoY0UQIqsaRcDl9YrN0Qs
+	 aEiQizDg60YEdQuvrzwVXCg4PpGh/SykgV7BR1hwDYViB2P0qDxzJ7VDTxplkNcic/
+	 nsTN8Z7+Av0FQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Gergo Koteles <soyer@irl.hu>,
+Cc: Johan Carlsson <johan.carlsson@teenage.engineering>,
 	Takashi Iwai <tiwai@suse.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 504/638] ALSA: hda/tas2781: configure the amp after firmware load
-Date: Sun, 24 Mar 2024 18:59:01 -0400
-Message-ID: <20240324230116.1348576-505-sashal@kernel.org>
+Subject: [PATCH 6.6 506/638] ALSA: usb-audio: Stop parsing channels bits when all channels are found.
+Date: Sun, 24 Mar 2024 18:59:03 -0400
+Message-ID: <20240324230116.1348576-507-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,37 +48,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Gergo Koteles <soyer@irl.hu>
+From: Johan Carlsson <johan.carlsson@teenage.engineering>
 
-[ Upstream commit 68f7f3ff6c2a0998be9dc07622bd0d16fd1fda20 ]
+[ Upstream commit a39d51ff1f52cd0b6fe7d379ac93bd8b4237d1b7 ]
 
-Make the amp available immediately after a module
-load to avoid having to wait for a PCM hook action.
-(eg. unloading & loading the module while listening
-music)
+If a usb audio device sets more bits than the amount of channels
+it could write outside of the map array.
 
-Signed-off-by: Gergo Koteles <soyer@irl.hu>
-Link: https://lore.kernel.org/r/7f2f65d9212aa16edd4db8725489ae59dbe74c66.1703895108.git.soyer@irl.hu
+Signed-off-by: Johan Carlsson <johan.carlsson@teenage.engineering>
+Fixes: 04324ccc75f9 ("ALSA: usb-audio: add channel map support")
+Message-ID: <20240313081509.9801-1-johan.carlsson@teenage.engineering>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Stable-dep-of: 9fc91a6fe37c ("ALSA: hda/tas2781: restore power state after system_resume")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/tas2781_hda_i2c.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/usb/stream.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/tas2781_hda_i2c.c b/sound/pci/hda/tas2781_hda_i2c.c
-index 57070a1364dd0..a63860f0e283d 100644
---- a/sound/pci/hda/tas2781_hda_i2c.c
-+++ b/sound/pci/hda/tas2781_hda_i2c.c
-@@ -584,6 +584,8 @@ static void tasdev_fw_ready(const struct firmware *fmw, void *context)
- 	 */
- 	tasdevice_save_calibration(tas_priv);
+diff --git a/sound/usb/stream.c b/sound/usb/stream.c
+index 3d4add94e367d..d5409f3879455 100644
+--- a/sound/usb/stream.c
++++ b/sound/usb/stream.c
+@@ -300,9 +300,12 @@ static struct snd_pcm_chmap_elem *convert_chmap(int channels, unsigned int bits,
+ 	c = 0;
  
-+	tasdevice_tuning_switch(tas_hda->priv, 0);
-+
- out:
- 	mutex_unlock(&tas_hda->priv->codec_lock);
- 	if (fmw)
+ 	if (bits) {
+-		for (; bits && *maps; maps++, bits >>= 1)
++		for (; bits && *maps; maps++, bits >>= 1) {
+ 			if (bits & 1)
+ 				chmap->map[c++] = *maps;
++			if (c == chmap->channels)
++				break;
++		}
+ 	} else {
+ 		/* If we're missing wChannelConfig, then guess something
+ 		    to make sure the channel map is not skipped entirely */
 -- 
 2.43.0
 
