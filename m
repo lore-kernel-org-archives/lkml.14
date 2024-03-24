@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2553D1292F9;
-	Sun, 24 Mar 2024 22:54:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00C8129A61;
+	Sun, 24 Mar 2024 22:54:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320859; cv=none; b=GB9F9gCR4lQttWKeZbmvP/mu/vKeO9Df5M/ExZv2AhMM3YOT9mIkwQkVMQkcUQHZZEz9FII8KDHuYdpLzh9izx+UDjpA+3fi2MtRu7SxIRnGiZFIiAqt6Uln7TNQmoDahOtL8cdFezKe3wK+AWZxN3umN8K6r4x9M2AxLHft3Wg=
+	t=1711320863; cv=none; b=sVX4J7iWt/umuMaEIbEkkeWHB1BSQRkOdspH9mAlQqvmQPWKwFt1do2V9vGoA1HF9Dah2lJcpFPh8T8kzti091QxqhLqcGSJkD8bDFzyC23x7VNv/GihRy2qRF+gUskgXzpTpQC3UJ/nmYaB4q5N4cf31ckpvJX4w/NZlmQOGKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320859; c=relaxed/simple;
-	bh=k1718tIRVtyBuPuPME4HoGIOwyBFb8V0fUYLmvZcUbM=;
+	s=arc-20240116; t=1711320863; c=relaxed/simple;
+	bh=8aj/goXBmUnz9yrgHDqGWbx3hqheBb4xsQdBsUfe4oM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AJkBByd5l12dXgkFZlg7WmEcAeUr9GFjVOCfj9X4l56UlV3vK8LfKAJonJMRcXQkist0I7zcrWmLoMlKBJJ+cbw6S9D6v6nB6lMfBptvHLhKCu4UiAF0LoFxdn6zGjxtFHQrznILbQKInYX3v7Yc4k0qhYohrJdNOMMbppmqMro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kfC3mC3e; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=c7PfVnxd2f+Wyb0ll2Sj/Z5Uzi+GUJ2clqV8f6QTMH4JYIQANdd29QZ4Fj4NGTI6IcRu2HiKS4GxuZzSc51lE5cuzqDfIF80Hj7F6y2DQ2PhWV0kLwr+PCtu11z1CuAjKUAw3JrEJNm5k9bEEnBw6haCPZ/xus2Arh2Yfu7X06c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kz0s3qIN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kfC3mC3e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B927C43394;
-	Sun, 24 Mar 2024 22:54:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kz0s3qIN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC348C43390;
+	Sun, 24 Mar 2024 22:54:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320858;
-	bh=k1718tIRVtyBuPuPME4HoGIOwyBFb8V0fUYLmvZcUbM=;
+	s=k20201202; t=1711320863;
+	bh=8aj/goXBmUnz9yrgHDqGWbx3hqheBb4xsQdBsUfe4oM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kfC3mC3eEA85ZKl85akClyeuxUBFaHXxhZZT9U+rmGe/bZ/lpbjanKWXJNJeDJXXC
-	 xpetubJh1fYU1Dr73hOkSnh/L40gEr4RKVshT8o0IdvxbV1BO/9lOsKGY28Up6jDS3
-	 JqyCTjFHXuznJIQaSP5SvCadVpYeq2pmB56nMzu5irEzkDIREms70i8b3+aAi/IQSr
-	 rukeBKMa7zx+bi7ynBm7lFV0TH02uDLOK3rZvY/ZOVnwoB0x+18Jexw39lpOJS83xf
-	 tcMs9ZL2cOo0VR/qOUZO4qsVdvrZhDWY4WByE1ozbI5CtKoRIHM7SOKUInYgJNxoZO
-	 R6nkVVlTvOndA==
+	b=kz0s3qINGJu2nIcl31E30O/s6H/yi7xqiL0d2Oq4cZROg3iQkXSwIzydmWPG5wFDb
+	 rCcCH2A1SrUeTRkpQAuaMUcDLKJh0TioR/b2u66ock+gvR+ZYsf9WjSlJUPNQ0ZgeT
+	 vNHhRExOpMY+NQSbmxdsLK4vqo08d/FpSoyUNezwry/U7Ie18NGa8ULN7pDbW6oHRV
+	 3kcYHNvBONJxuYLqKXV+5n6apB5DGsorS5xVXEF+E+RtvyjkmD8wGKCyj0UjLYL/Ao
+	 wprvJuvZEYPU9reknoqU2DQoSd3NcqQGuD0WiLF1DYYsoEBO5MW/fqG5mivi/NAdiR
+	 Qe/WzR+OVkn2A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Sam Protsenko <semen.protsenko@linaro.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+Cc: Igor Prusov <ivprusov@salutedevices.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 422/713] clk: samsung: exynos850: Propagate SPI IPCLK rate change
-Date: Sun, 24 Mar 2024 18:42:28 -0400
-Message-ID: <20240324224720.1345309-423-sashal@kernel.org>
+Subject: [PATCH 6.7 427/713] clk: meson: Add missing clocks to axg_clk_regmaps
+Date: Sun, 24 Mar 2024 18:42:33 -0400
+Message-ID: <20240324224720.1345309-428-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,171 +48,81 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Sam Protsenko <semen.protsenko@linaro.org>
+From: Igor Prusov <ivprusov@salutedevices.com>
 
-[ Upstream commit 67c15187d4910ee353374676d4dddf09d8cb227e ]
+[ Upstream commit ba535bce57e71463a86f8b33a0ea88c26e3a6418 ]
 
-When SPI transfer is being prepared, the spi-s3c64xx driver will call
-clk_set_rate() to change the rate of SPI source clock (IPCLK). But IPCLK
-is a gate (leaf) clock, so it must propagate the rate change up the
-clock tree, so that corresponding DIV clocks can actually change their
-divider values. Add CLK_SET_RATE_PARENT flag to corresponding clocks for
-all SPI instances in Exynos850 (spi_0, spi_1 and spi_2) to make it
-possible. This change involves next clocks:
+Some clocks were missing from axg_clk_regmaps, which caused kernel panic
+during cat /sys/kernel/debug/clk/clk_summary
 
-usi_spi_0:
+[   57.349402] Unable to handle kernel NULL pointer dereference at virtual address 00000000000001fc
+...
+[   57.430002] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   57.436900] pc : regmap_read+0x1c/0x88
+[   57.440608] lr : clk_regmap_gate_is_enabled+0x3c/0xb0
+[   57.445611] sp : ffff800082f1b690
+[   57.448888] x29: ffff800082f1b690 x28: 0000000000000000 x27: ffff800080eb9a70
+[   57.455961] x26: 0000000000000007 x25: 0000000000000016 x24: 0000000000000000
+[   57.463033] x23: ffff800080e8b488 x22: 0000000000000015 x21: ffff00000e7e7000
+[   57.470106] x20: ffff00000400ec00 x19: 0000000000000000 x18: ffffffffffffffff
+[   57.477178] x17: 0000000000000000 x16: 0000000000000000 x15: ffff0000042a3000
+[   57.484251] x14: 0000000000000000 x13: ffff0000042a2fec x12: 0000000005f5e100
+[   57.491323] x11: abcc77118461cefd x10: 0000000000000020 x9 : ffff8000805e4b24
+[   57.498396] x8 : ffff0000028063c0 x7 : ffff800082f1b710 x6 : ffff800082f1b710
+[   57.505468] x5 : 00000000ffffffd0 x4 : ffff800082f1b6e0 x3 : 0000000000001000
+[   57.512541] x2 : ffff800082f1b6e4 x1 : 000000000000012c x0 : 0000000000000000
+[   57.519615] Call trace:
+[   57.522030]  regmap_read+0x1c/0x88
+[   57.525393]  clk_regmap_gate_is_enabled+0x3c/0xb0
+[   57.530050]  clk_core_is_enabled+0x44/0x120
+[   57.534190]  clk_summary_show_subtree+0x154/0x2f0
+[   57.538847]  clk_summary_show_subtree+0x220/0x2f0
+[   57.543505]  clk_summary_show_subtree+0x220/0x2f0
+[   57.548162]  clk_summary_show_subtree+0x220/0x2f0
+[   57.552820]  clk_summary_show_subtree+0x220/0x2f0
+[   57.557477]  clk_summary_show_subtree+0x220/0x2f0
+[   57.562135]  clk_summary_show_subtree+0x220/0x2f0
+[   57.566792]  clk_summary_show_subtree+0x220/0x2f0
+[   57.571450]  clk_summary_show+0x84/0xb8
+[   57.575245]  seq_read_iter+0x1bc/0x4b8
+[   57.578954]  seq_read+0x8c/0xd0
+[   57.582059]  full_proxy_read+0x68/0xc8
+[   57.585767]  vfs_read+0xb0/0x268
+[   57.588959]  ksys_read+0x70/0x108
+[   57.592236]  __arm64_sys_read+0x24/0x38
+[   57.596031]  invoke_syscall+0x50/0x128
+[   57.599740]  el0_svc_common.constprop.0+0x48/0xf8
+[   57.604397]  do_el0_svc+0x28/0x40
+[   57.607675]  el0_svc+0x34/0xb8
+[   57.610694]  el0t_64_sync_handler+0x13c/0x158
+[   57.615006]  el0t_64_sync+0x190/0x198
+[   57.618635] Code: a9bd7bfd 910003fd a90153f3 aa0003f3 (b941fc00)
+[   57.624668] ---[ end trace 0000000000000000 ]---
 
-    Clock                  Block       Div range
-    --------------------------------------------
-    gout_spi0_ipclk        CMU_PERI    -
-    dout_peri_spi0         CMU_PERI    /1..32
-    mout_peri_spi_user     CMU_PERI    -
-    dout_peri_ip           CMU_TOP     /1..16
-
-usi_cmgp0:
-
-    Clock                  Block       Div range
-    --------------------------------------------
-    gout_cmgp_usi0_ipclk   CMU_CMGP    -
-    dout_cmgp_usi0         CMU_CMGP    /1..32
-    mout_cmgp_usi0         CMU_CMGP    -
-    gout_clkcmu_cmgp_bus   CMU_APM     -
-    dout_apm_bus           CMU_APM     /1..8
-
-usi_cmgp1:
-
-    Clock                  Block       Div range
-    --------------------------------------------
-    gout_cmgp_usi1_ipclk   CMU_CMGP    -
-    dout_cmgp_usi1         CMU_CMGP    /1..32
-    mout_cmgp_usi1         CMU_CMGP    -
-    gout_clkcmu_cmgp_bus   CMU_APM     -
-    dout_apm_bus           CMU_APM     /1..8
-
-With input clock of 400 MHz, this scheme provides next IPCLK rate range,
-for each SPI block:
-
-    SPI0:   781 kHz ... 400 MHz
-    SPI1/2: 1.6 MHz ... 400 MHz
-
-Accounting for internal /4 divider in SPI blocks, and because the max
-SPI frequency is limited at 50 MHz, it gives us next SPI SCK rates:
-
-    SPI0:   200 kHz ... 49.9 MHz
-    SPI1/2: 400 kHz ... 49.9 MHz
-
-Which should cover all possible applications of SPI bus. Of course,
-setting SPI frequency to values as low as 500 kHz will also affect the
-common bus dividers (dout_apm_bus or dout_peri_ip), which in turn
-effectively lowers the rates for all leaf bus clocks derived from those
-dividers, like HSI2C and I3C clocks. But at least it gives the board
-designer a choice, whether to keep all clocks (SPI/HSI2C/I3C) at high
-frequencies, or make all those clocks have lower frequencies. Not
-propagating the rate change to those common dividers would limit this
-choice to "only high frequencies are allowed for SPI/HSI2C/I3C" option,
-making the common dividers useless. This decision follows the "Worse is
-better" approach, relying on the users/engineers to know the system
-internals when working with such low-level features, instead of trying
-to account for all possible use-cases.
-
-Fixes: 7dd05578198b ("clk: samsung: Introduce Exynos850 clock driver")
-Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
-Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-Link: https://lore.kernel.org/r/20240125013858.3986-2-semen.protsenko@linaro.org
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+[jbrunet: add missing Fixes tag]
+Signed-off-by: Igor Prusov <ivprusov@salutedevices.com>
+Link: https://lore.kernel.org/r/20240202172537.1.I64656c75d84284bc91e6126b50b33c502be7c42a@changeid
+Fixes: 14ebb3154b8f ("clk: meson: axg: add Video Clocks")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/samsung/clk-exynos850.c | 33 +++++++++++++++--------------
- 1 file changed, 17 insertions(+), 16 deletions(-)
+ drivers/clk/meson/axg.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/clk/samsung/clk-exynos850.c b/drivers/clk/samsung/clk-exynos850.c
-index bdc1eef7d6e54..c7b0b9751307b 100644
---- a/drivers/clk/samsung/clk-exynos850.c
-+++ b/drivers/clk/samsung/clk-exynos850.c
-@@ -605,7 +605,7 @@ static const struct samsung_div_clock apm_div_clks[] __initconst = {
- 
- static const struct samsung_gate_clock apm_gate_clks[] __initconst = {
- 	GATE(CLK_GOUT_CLKCMU_CMGP_BUS, "gout_clkcmu_cmgp_bus", "dout_apm_bus",
--	     CLK_CON_GAT_CLKCMU_CMGP_BUS, 21, 0, 0),
-+	     CLK_CON_GAT_CLKCMU_CMGP_BUS, 21, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_GOUT_CLKCMU_CHUB_BUS, "gout_clkcmu_chub_bus",
- 	     "mout_clkcmu_chub_bus",
- 	     CLK_CON_GAT_GATE_CLKCMU_CHUB_BUS, 21, 0, 0),
-@@ -974,19 +974,19 @@ static const struct samsung_fixed_rate_clock cmgp_fixed_clks[] __initconst = {
- static const struct samsung_mux_clock cmgp_mux_clks[] __initconst = {
- 	MUX(CLK_MOUT_CMGP_ADC, "mout_cmgp_adc", mout_cmgp_adc_p,
- 	    CLK_CON_MUX_CLK_CMGP_ADC, 0, 1),
--	MUX(CLK_MOUT_CMGP_USI0, "mout_cmgp_usi0", mout_cmgp_usi0_p,
--	    CLK_CON_MUX_MUX_CLK_CMGP_USI_CMGP0, 0, 1),
--	MUX(CLK_MOUT_CMGP_USI1, "mout_cmgp_usi1", mout_cmgp_usi1_p,
--	    CLK_CON_MUX_MUX_CLK_CMGP_USI_CMGP1, 0, 1),
-+	MUX_F(CLK_MOUT_CMGP_USI0, "mout_cmgp_usi0", mout_cmgp_usi0_p,
-+	      CLK_CON_MUX_MUX_CLK_CMGP_USI_CMGP0, 0, 1, CLK_SET_RATE_PARENT, 0),
-+	MUX_F(CLK_MOUT_CMGP_USI1, "mout_cmgp_usi1", mout_cmgp_usi1_p,
-+	      CLK_CON_MUX_MUX_CLK_CMGP_USI_CMGP1, 0, 1, CLK_SET_RATE_PARENT, 0),
- };
- 
- static const struct samsung_div_clock cmgp_div_clks[] __initconst = {
- 	DIV(CLK_DOUT_CMGP_ADC, "dout_cmgp_adc", "gout_clkcmu_cmgp_bus",
- 	    CLK_CON_DIV_DIV_CLK_CMGP_ADC, 0, 4),
--	DIV(CLK_DOUT_CMGP_USI0, "dout_cmgp_usi0", "mout_cmgp_usi0",
--	    CLK_CON_DIV_DIV_CLK_CMGP_USI_CMGP0, 0, 5),
--	DIV(CLK_DOUT_CMGP_USI1, "dout_cmgp_usi1", "mout_cmgp_usi1",
--	    CLK_CON_DIV_DIV_CLK_CMGP_USI_CMGP1, 0, 5),
-+	DIV_F(CLK_DOUT_CMGP_USI0, "dout_cmgp_usi0", "mout_cmgp_usi0",
-+	      CLK_CON_DIV_DIV_CLK_CMGP_USI_CMGP0, 0, 5, CLK_SET_RATE_PARENT, 0),
-+	DIV_F(CLK_DOUT_CMGP_USI1, "dout_cmgp_usi1", "mout_cmgp_usi1",
-+	      CLK_CON_DIV_DIV_CLK_CMGP_USI_CMGP1, 0, 5, CLK_SET_RATE_PARENT, 0),
- };
- 
- static const struct samsung_gate_clock cmgp_gate_clks[] __initconst = {
-@@ -1001,12 +1001,12 @@ static const struct samsung_gate_clock cmgp_gate_clks[] __initconst = {
- 	     "gout_clkcmu_cmgp_bus",
- 	     CLK_CON_GAT_GOUT_CMGP_GPIO_PCLK, 21, CLK_IGNORE_UNUSED, 0),
- 	GATE(CLK_GOUT_CMGP_USI0_IPCLK, "gout_cmgp_usi0_ipclk", "dout_cmgp_usi0",
--	     CLK_CON_GAT_GOUT_CMGP_USI_CMGP0_IPCLK, 21, 0, 0),
-+	     CLK_CON_GAT_GOUT_CMGP_USI_CMGP0_IPCLK, 21, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_GOUT_CMGP_USI0_PCLK, "gout_cmgp_usi0_pclk",
- 	     "gout_clkcmu_cmgp_bus",
- 	     CLK_CON_GAT_GOUT_CMGP_USI_CMGP0_PCLK, 21, 0, 0),
- 	GATE(CLK_GOUT_CMGP_USI1_IPCLK, "gout_cmgp_usi1_ipclk", "dout_cmgp_usi1",
--	     CLK_CON_GAT_GOUT_CMGP_USI_CMGP1_IPCLK, 21, 0, 0),
-+	     CLK_CON_GAT_GOUT_CMGP_USI_CMGP1_IPCLK, 21, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_GOUT_CMGP_USI1_PCLK, "gout_cmgp_usi1_pclk",
- 	     "gout_clkcmu_cmgp_bus",
- 	     CLK_CON_GAT_GOUT_CMGP_USI_CMGP1_PCLK, 21, 0, 0),
-@@ -1557,8 +1557,9 @@ static const struct samsung_mux_clock peri_mux_clks[] __initconst = {
- 	    mout_peri_uart_user_p, PLL_CON0_MUX_CLKCMU_PERI_UART_USER, 4, 1),
- 	MUX(CLK_MOUT_PERI_HSI2C_USER, "mout_peri_hsi2c_user",
- 	    mout_peri_hsi2c_user_p, PLL_CON0_MUX_CLKCMU_PERI_HSI2C_USER, 4, 1),
--	MUX(CLK_MOUT_PERI_SPI_USER, "mout_peri_spi_user", mout_peri_spi_user_p,
--	    PLL_CON0_MUX_CLKCMU_PERI_SPI_USER, 4, 1),
-+	MUX_F(CLK_MOUT_PERI_SPI_USER, "mout_peri_spi_user",
-+	      mout_peri_spi_user_p, PLL_CON0_MUX_CLKCMU_PERI_SPI_USER, 4, 1,
-+	      CLK_SET_RATE_PARENT, 0),
- };
- 
- static const struct samsung_div_clock peri_div_clks[] __initconst = {
-@@ -1568,8 +1569,8 @@ static const struct samsung_div_clock peri_div_clks[] __initconst = {
- 	    CLK_CON_DIV_DIV_CLK_PERI_HSI2C_1, 0, 5),
- 	DIV(CLK_DOUT_PERI_HSI2C2, "dout_peri_hsi2c2", "gout_peri_hsi2c2",
- 	    CLK_CON_DIV_DIV_CLK_PERI_HSI2C_2, 0, 5),
--	DIV(CLK_DOUT_PERI_SPI0, "dout_peri_spi0", "mout_peri_spi_user",
--	    CLK_CON_DIV_DIV_CLK_PERI_SPI_0, 0, 5),
-+	DIV_F(CLK_DOUT_PERI_SPI0, "dout_peri_spi0", "mout_peri_spi_user",
-+	      CLK_CON_DIV_DIV_CLK_PERI_SPI_0, 0, 5, CLK_SET_RATE_PARENT, 0),
- };
- 
- static const struct samsung_gate_clock peri_gate_clks[] __initconst = {
-@@ -1611,7 +1612,7 @@ static const struct samsung_gate_clock peri_gate_clks[] __initconst = {
- 	     "mout_peri_bus_user",
- 	     CLK_CON_GAT_GOUT_PERI_PWM_MOTOR_PCLK, 21, 0, 0),
- 	GATE(CLK_GOUT_SPI0_IPCLK, "gout_spi0_ipclk", "dout_peri_spi0",
--	     CLK_CON_GAT_GOUT_PERI_SPI_0_IPCLK, 21, 0, 0),
-+	     CLK_CON_GAT_GOUT_PERI_SPI_0_IPCLK, 21, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_GOUT_SPI0_PCLK, "gout_spi0_pclk", "mout_peri_bus_user",
- 	     CLK_CON_GAT_GOUT_PERI_SPI_0_PCLK, 21, 0, 0),
- 	GATE(CLK_GOUT_SYSREG_PERI_PCLK, "gout_sysreg_peri_pclk",
+diff --git a/drivers/clk/meson/axg.c b/drivers/clk/meson/axg.c
+index c12f81dfa6745..5f60f2bcca592 100644
+--- a/drivers/clk/meson/axg.c
++++ b/drivers/clk/meson/axg.c
+@@ -2142,7 +2142,9 @@ static struct clk_regmap *const axg_clk_regmaps[] = {
+ 	&axg_vclk_input,
+ 	&axg_vclk2_input,
+ 	&axg_vclk_div,
++	&axg_vclk_div1,
+ 	&axg_vclk2_div,
++	&axg_vclk2_div1,
+ 	&axg_vclk_div2_en,
+ 	&axg_vclk_div4_en,
+ 	&axg_vclk_div6_en,
 -- 
 2.43.0
 
