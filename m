@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078247FBD4;
-	Sun, 24 Mar 2024 22:48:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E437F7D6;
+	Sun, 24 Mar 2024 22:48:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320497; cv=none; b=DA31F9ND8olypBoc9qdu37hxos7Wagn1GrjoP/3HoHCbZ2+36A706nit+5JXXTAgIg82Fdny84k0VeeA9X+ecRufCLAxZC5Zrnz7i3BbfKP4b9+C5mrve5BWtaV8fooRsPYh75aTmyo1Z0MYjZPI5TuS6/GeiU3gg9+vYnazO7U=
+	t=1711320492; cv=none; b=Hi7alKC/cfx2nL+IXouuikTbsU2wG/9rWRvVBmOKIe3fmR8KJTmAVw2pX2OQ/XQLFqH0ciBXcIhkBlQvlMrS5wWg+uOH4PsWx9JFH51tkDsU+rKJVkEkAjGeXPHlgnV4lYMzBQP/Auh0yZNQ4GXBWJdoOtHl1A18NvKj0trSaDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320497; c=relaxed/simple;
-	bh=d+U/DMyqrJmz9isk37XQbdH4HzIhR5FvXPZ0QF5sqY0=;
+	s=arc-20240116; t=1711320492; c=relaxed/simple;
+	bh=vOIDdeDxdOI0karp+xCw4ebzSWVXYKI3oMsxVYitKmI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aZ1lIL484fyrFHAu+JxbjG5jkaR7fBUTPK3tmYzRHDCYJRpo8rf7Ua4ntpgt14bLIHWswnFIaZv3r2RDMF4KcimQqJ6cnQUnANg3BZeC3W+13blLNBVi9eX/GyrWcVChHLXXmRNJ6jI8UjojQEDnSGNmqnM1QyPB1MdBPG6NI8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n9WEDvkF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=F7UnEx/gJUTzXO2qB844ee7/77JKHf4YKErIPKMso+wXIuq/HsWX4l6PZCRjeijjTBhcQC9eBtjjeAMkXefiZHmqHfPpf6iphFgiC8w+A9G1WrwC0lEmqGIynJxTOPgZbi6Kj6YbC92jhvHo8j1ZVR+3D1TdIMRdJKNU6Cd3tN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=drkJB0sr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n9WEDvkF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45641C43394;
-	Sun, 24 Mar 2024 22:48:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="drkJB0sr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59CEFC43390;
+	Sun, 24 Mar 2024 22:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320496;
-	bh=d+U/DMyqrJmz9isk37XQbdH4HzIhR5FvXPZ0QF5sqY0=;
+	s=k20201202; t=1711320492;
+	bh=vOIDdeDxdOI0karp+xCw4ebzSWVXYKI3oMsxVYitKmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=n9WEDvkFgXAwys3Lht6ES1yXnFl/UwOG3Unq1nU0NxcUfJ+8wlNlZv8ud5c9zeuNm
-	 1W2pZfcOhdoO54AlZ1w8qp3/BgfiEOdkx9EBCaRGpEmfT2ZAMCkdU7Sg4oX/1qVFgn
-	 TZh2TxscAmQZMvDtekPdW4x2+KChsPTTIwKwor0D7PwX4NTLut/4hL4QWF11yHAQLX
-	 tAW7OdAUmlvg8M9szuqDPIeqQ2GtLzfAj1Uezqp3qvWCLcEVVH97+S+E5L1urIpDSj
-	 zf41RUnob/iPKwNMA+5whWcqTfkYtZKxDXYbJjcv6X5/LYB9wV/Zsdb+wqkLquM3az
-	 0tywKj4ObgsNQ==
+	b=drkJB0srBDBGlhAsUfB5261i06MGd9xWqMUuVxuaGRLBCG4EYloNUZD3GUH6b/z+D
+	 mfJQIREIpO4s5PotHeBUlW+lL4yYoJ5Jvoub2zPxCzGCWxridROwJ/OMghTHGjA+Dj
+	 U+Bfe50ny1tJs4VGu0i4vQDvQMQSDHB4HmdokvpjyESc30aA0I1ql1AAmyvBfoVgLN
+	 tqqO0JeJjwLfStJk6+fXIPJtTCV5jGPoZAcwzr0VL1MizKjKPSyfu+0uXSw5ZYO8b5
+	 XHklKD28EghH2dt0NiPklm5Rxx2YK0+f+69Rx/XOWP9pps2mbwjn+z/+LL6CH/FFbo
+	 0R10p43mbytJg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andre Werner <andre.werner@systec-electronic.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+	HAN Yuwei <hrx@bupt.moe>,
+	Boris Burkov <boris@bur.io>,
+	Naohiro Aota <naohiro.aota@wdc.com>,
+	David Sterba <dsterba@suse.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 056/713] net: smsc95xx: add support for SYS TEC USB-SPEmodule1
-Date: Sun, 24 Mar 2024 18:36:22 -0400
-Message-ID: <20240324224720.1345309-57-sashal@kernel.org>
+Subject: [PATCH 6.7 051/713] btrfs: zoned: don't skip block group profile checks on conventional zones
+Date: Sun, 24 Mar 2024 18:36:17 -0400
+Message-ID: <20240324224720.1345309-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,38 +51,53 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Andre Werner <andre.werner@systec-electronic.com>
+From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 
-[ Upstream commit 45532b21dc2a692444b6ad5f71c253cca53e8103 ]
+[ Upstream commit 5906333cc4af7b3fdb8cfff1cb3e8e579bd13174 ]
 
-This patch adds support for the SYS TEC USB-SPEmodule1 10Base-T1L
-ethernet device to the existing smsc95xx driver by adding the new
-USB VID/PID pair.
+On a zoned filesystem with conventional zones, we're skipping the block
+group profile checks for the conventional zones.
 
-Signed-off-by: Andre Werner <andre.werner@systec-electronic.com>
-Link: https://lore.kernel.org/r/20240219053413.4732-1-andre.werner@systec-electronic.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+This allows converting a zoned filesystem's data block groups to RAID when
+all of the zones backing the chunk are on conventional zones.  But this
+will lead to problems, once we're trying to allocate chunks backed by
+sequential zones.
+
+So also check for conventional zones when loading a block group's profile
+on them.
+
+Reported-by: HAN Yuwei <hrx@bupt.moe>
+Link: https://lore.kernel.org/all/1ACD2E3643008A17+da260584-2c7f-432a-9e22-9d390aae84cc@bupt.moe/#t
+Reviewed-by: Boris Burkov <boris@bur.io>
+Reviewed-by: Naohiro Aota <naohiro.aota@wdc.com>
+Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/smsc95xx.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/btrfs/zoned.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
-index a530f20ee2575..2fa46baa589e5 100644
---- a/drivers/net/usb/smsc95xx.c
-+++ b/drivers/net/usb/smsc95xx.c
-@@ -2104,6 +2104,11 @@ static const struct usb_device_id products[] = {
- 		USB_DEVICE(0x0424, 0x9E08),
- 		.driver_info = (unsigned long) &smsc95xx_info,
- 	},
-+	{
-+		/* SYSTEC USB-SPEmodule1 10BASE-T1L Ethernet Device */
-+		USB_DEVICE(0x0878, 0x1400),
-+		.driver_info = (unsigned long)&smsc95xx_info,
-+	},
- 	{
- 		/* Microchip's EVB-LAN8670-USB 10BASE-T1S Ethernet Device */
- 		USB_DEVICE(0x184F, 0x0051),
+diff --git a/fs/btrfs/zoned.c b/fs/btrfs/zoned.c
+index 3779e76a15d64..524532f992746 100644
+--- a/fs/btrfs/zoned.c
++++ b/fs/btrfs/zoned.c
+@@ -1661,6 +1661,15 @@ int btrfs_load_block_group_zone_info(struct btrfs_block_group *cache, bool new)
+ 	}
+ 
+ out:
++	/* Reject non SINGLE data profiles without RST */
++	if ((map->type & BTRFS_BLOCK_GROUP_DATA) &&
++	    (map->type & BTRFS_BLOCK_GROUP_PROFILE_MASK) &&
++	    !fs_info->stripe_root) {
++		btrfs_err(fs_info, "zoned: data %s needs raid-stripe-tree",
++			  btrfs_bg_type_to_raid_name(map->type));
++		return -EINVAL;
++	}
++
+ 	if (cache->alloc_offset > cache->zone_capacity) {
+ 		btrfs_err(fs_info,
+ "zoned: invalid write pointer %llu (larger than zone capacity %llu) in block group %llu",
 -- 
 2.43.0
 
