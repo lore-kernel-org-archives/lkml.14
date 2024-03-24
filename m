@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12F7153832;
-	Sun, 24 Mar 2024 23:08:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D02D211D12;
+	Sun, 24 Mar 2024 23:08:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321703; cv=none; b=WLDdxFX0+IxZVw1Wn2WuN03lOwSCWx0h9k45X2v154ceNjpI4JoWTikE6Wh6YPElFosP1iBBLY5cr14h6Kw6kLaZ12JfLUZYcEyO8r8iG6kCrtRhELrVOgSuS5yBDKoh53eXsOYC5Uz8BMPb3v/F/pv7rBwt5KVG3oP/2WRH3Zo=
+	t=1711321713; cv=none; b=E9cKs1dQPtinmGICXt2TtgT/b/CTAKpZ34LnqygKxrVPaegNPs3nwSnCrPVReaxgQbk5J+dcoEWB7YQWObZhCOOGQXoylt2m9j5au2AoTp0TF3sJAKmtFMomHw94IhCa65r7Qck7i27pCiyPxzQx/4SK74vWiZb8li14h1Tr2e4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321703; c=relaxed/simple;
-	bh=jyV1TX5A+7iSqnqRUOa2/4OWZvNsUm6BFOPjlQ3iHEY=;
+	s=arc-20240116; t=1711321713; c=relaxed/simple;
+	bh=IHQKUG65SlounuAeFf6b0YURdCZEgBFW9Po4H7Hhhfs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gtbNlRQ46w0mEP7tMX8zerTShS4yuDIRvJ0nCumyKOLAfq9V11FR72I3UOAbiAsc222QYzASqcyVjjPvzgDznD09UGimDNlUlZmm1I8AryW7QEEiEQoxSNRmFZAQFci67B1OfCRZufA5gagXcM73zVOIHyeDahPjoqs/yro2WS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=stxtTzvg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=vD9RKuJ1/p97PdlQ7LkCRrWxKzCeYkul/IXnCWQzpgk7f90bvvgn9BHkPIdfwP2lzQVAprBVSvrQx0F6QSmxOWFSS/VB1C11DFAd3RDU1VWEQ7HmCgW/6CkynAVh9UV7iVorKVJ9LG/YsXqI5kaFw3vW2lLrHlMEd5mu2rIzLdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xzn032Nd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="stxtTzvg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21782C433C7;
-	Sun, 24 Mar 2024 23:08:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xzn032Nd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EBBFC433F1;
+	Sun, 24 Mar 2024 23:08:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321701;
-	bh=jyV1TX5A+7iSqnqRUOa2/4OWZvNsUm6BFOPjlQ3iHEY=;
+	s=k20201202; t=1711321713;
+	bh=IHQKUG65SlounuAeFf6b0YURdCZEgBFW9Po4H7Hhhfs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=stxtTzvgVYWKDjo5VfteUOxUrgvZsYpbnwcHIh6uHktSWG/tMWI7IALqmkksTZ0eG
-	 d+9G8qTjyTVUcymeijDGYsNkNZGB+yfxHdF610HpIqCXhFTU4fn0x4PP6zL/7BAlHb
-	 Z/ai/57/hUy4JJbtr4Psjrjb3IcD7pGpxh8TNNODA0Bz0+IwMyxUfWP7mOCxuANfHl
-	 AmOHxppxRzAmVfbBNz3lNGrvzlDr3jcgo88U8PmbXxzk7MHZmuUESrUi1xH2GERsiG
-	 wWT+JIU9mOXmFS7CEYlj5RtzDMmw1I1PAnhRfkNaRf+K/006M6rv3fru9J2SZNPkjF
-	 ukQXsoV3ewrIw==
+	b=Xzn032NdD0z+o3XLYAI+/sApyvW3L2666JQPUAflzwu3m+vxMOidGlMfYyDiuZgSG
+	 Eu1tmb230SsrE5QduBafR44syZeoEBarBmz5YTT+2zzP9A58vylafD83tTwdZLS36O
+	 JbDOZvmxCvCrRcym2g3AqVpYAfCp4xah+g2u0mKkUsvO3isttpqOKZZBk6rsl14h5g
+	 FUd26H0l/jwyifeL1Qa5S73yPtQsDneEYvxnm5Et1IAoLuJuxxtwkoKlzBmu6rTpMi
+	 AZaLVv+fbBeCtNoVU0C85xVhygPOdElde38DvUYcXKbY4D+ewsF6VvnDW/H2rZIIpJ
+	 i5o+tXKfB69CQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Nicholas Piggin <npiggin@gmail.com>,
-	Geoff Levand <geoff@infradead.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
+Cc: Peter Griffin <peter.griffin@linaro.org>,
+	Lee Jones <lee@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 430/638] powerpc/ps3: Fix lv1 hcall assembly for ELFv2 calling convention
-Date: Sun, 24 Mar 2024 18:57:47 -0400
-Message-ID: <20240324230116.1348576-431-sashal@kernel.org>
+Subject: [PATCH 6.6 442/638] mfd: altera-sysmgr: Call of_node_put() only when of_parse_phandle() takes a ref
+Date: Sun, 24 Mar 2024 18:57:59 -0400
+Message-ID: <20240324230116.1348576-443-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,97 +48,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Peter Griffin <peter.griffin@linaro.org>
 
-[ Upstream commit 6735fef14c1f089ae43fd6d43add818b7ff682a8 ]
+[ Upstream commit e28c28a34ee9fa2ea671a20e5e7064e6220d55e7 ]
 
-Stack-passed parameters begin at a different offset in the caller's
-stack in the ELFv2 ABI.
+of_parse_phandle() returns a device_node with refcount incremented, which
+the callee needs to call of_node_put() on when done. We should only call
+of_node_put() when the property argument is provided though as otherwise
+nothing has taken a reference on the node.
 
-Reported-by: Geoff Levand <geoff@infradead.org>
-Fixes: 8c5fa3b5c4df ("powerpc/64: Make ELFv2 the default for big-endian builds")
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Tested-by: Geoff Levand <geoff@infradead.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://msgid.link/20231227072405.63751-2-npiggin@gmail.com
+Fixes: f36e789a1f8d ("mfd: altera-sysmgr: Add SOCFPGA System Manager")
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Link: https://lore.kernel.org/r/20240220115012.471689-4-peter.griffin@linaro.org
+Signed-off-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/ppc_asm.h  |  6 ++++--
- arch/powerpc/platforms/ps3/hvcall.S | 18 +++++++++---------
- 2 files changed, 13 insertions(+), 11 deletions(-)
+ drivers/mfd/altera-sysmgr.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/ppc_asm.h b/arch/powerpc/include/asm/ppc_asm.h
-index e7792aa135105..041ee25955205 100644
---- a/arch/powerpc/include/asm/ppc_asm.h
-+++ b/arch/powerpc/include/asm/ppc_asm.h
-@@ -201,11 +201,13 @@
+diff --git a/drivers/mfd/altera-sysmgr.c b/drivers/mfd/altera-sysmgr.c
+index 0e52bd2ebd74b..fb5f988e61f37 100644
+--- a/drivers/mfd/altera-sysmgr.c
++++ b/drivers/mfd/altera-sysmgr.c
+@@ -109,7 +109,9 @@ struct regmap *altr_sysmgr_regmap_lookup_by_phandle(struct device_node *np,
  
- #ifdef CONFIG_PPC64_ELF_ABI_V2
- #define STK_GOT		24
--#define __STK_PARAM(i)	(32 + ((i)-3)*8)
-+#define STK_PARAM_AREA	32
- #else
- #define STK_GOT		40
--#define __STK_PARAM(i)	(48 + ((i)-3)*8)
-+#define STK_PARAM_AREA	48
- #endif
+ 	dev = driver_find_device_by_of_node(&altr_sysmgr_driver.driver,
+ 					    (void *)sysmgr_np);
+-	of_node_put(sysmgr_np);
++	if (property)
++		of_node_put(sysmgr_np);
 +
-+#define __STK_PARAM(i)	(STK_PARAM_AREA + ((i)-3)*8)
- #define STK_PARAM(i)	__STK_PARAM(__REG_##i)
+ 	if (!dev)
+ 		return ERR_PTR(-EPROBE_DEFER);
  
- #ifdef CONFIG_PPC64_ELF_ABI_V2
-diff --git a/arch/powerpc/platforms/ps3/hvcall.S b/arch/powerpc/platforms/ps3/hvcall.S
-index 509e30ad01bb4..59ea569debf47 100644
---- a/arch/powerpc/platforms/ps3/hvcall.S
-+++ b/arch/powerpc/platforms/ps3/hvcall.S
-@@ -714,7 +714,7 @@ _GLOBAL(_##API_NAME)				\
- 	std	r4, 0(r11);			\
- 	ld	r11, -16(r1);			\
- 	std	r5, 0(r11);			\
--	ld	r11, 48+8*8(r1);		\
-+	ld	r11, STK_PARAM_AREA+8*8(r1);	\
- 	std	r6, 0(r11);			\
- 						\
- 	ld	r0, 16(r1);			\
-@@ -746,22 +746,22 @@ _GLOBAL(_##API_NAME)				\
- 	mflr	r0;				\
- 	std	r0, 16(r1);			\
- 						\
--	std	r10, 48+8*7(r1);		\
-+	std	r10, STK_PARAM_AREA+8*7(r1);	\
- 						\
- 	li	r11, API_NUMBER;		\
- 	lv1call;				\
- 						\
--	ld	r11, 48+8*7(r1);		\
-+	ld	r11, STK_PARAM_AREA+8*7(r1);	\
- 	std	r4, 0(r11);			\
--	ld	r11, 48+8*8(r1);		\
-+	ld	r11, STK_PARAM_AREA+8*8(r1);	\
- 	std	r5, 0(r11);			\
--	ld	r11, 48+8*9(r1);		\
-+	ld	r11, STK_PARAM_AREA+8*9(r1);	\
- 	std	r6, 0(r11);			\
--	ld	r11, 48+8*10(r1);		\
-+	ld	r11, STK_PARAM_AREA+8*10(r1);	\
- 	std	r7, 0(r11);			\
--	ld	r11, 48+8*11(r1);		\
-+	ld	r11, STK_PARAM_AREA+8*11(r1);	\
- 	std	r8, 0(r11);			\
--	ld	r11, 48+8*12(r1);		\
-+	ld	r11, STK_PARAM_AREA+8*12(r1);	\
- 	std	r9, 0(r11);			\
- 						\
- 	ld	r0, 16(r1);			\
-@@ -777,7 +777,7 @@ _GLOBAL(_##API_NAME)				\
- 	li      r11, API_NUMBER;		\
- 	lv1call;				\
- 						\
--	ld	r11, 48+8*8(r1);		\
-+	ld	r11, STK_PARAM_AREA+8*8(r1);	\
- 	std	r4, 0(r11);			\
- 						\
- 	ld	r0, 16(r1);			\
 -- 
 2.43.0
 
