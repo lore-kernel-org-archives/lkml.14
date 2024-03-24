@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4F917AF97;
-	Sun, 24 Mar 2024 23:42:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD53B28452B;
+	Sun, 24 Mar 2024 23:43:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323779; cv=none; b=AmZH+z0HR69AGhc46ObCUbW2ugyxBLepvDTQgXwSFMK49xzIiCwMxOn4iQZfG3XB45ny+FRumPYnhIpWDHuWQHF147R7KiBJ93llAjk/qoMPmvZsFGU7xkqYM9qnrGCUFg40ahr7DyzbPTDEvPuatQer0JOEUpvqlyBnwhYuMWw=
+	t=1711323785; cv=none; b=skAI6R/ek4naf0nsWXkf8aETN6vpcm9HiieBqCtLIHrR4IoZRJX3QoBZ3tS/XI68VNiZwfcEizMxrFO/x3JuQCnEEqEOriJTnz/qOV8iv4SBzt3mCbxWj4QqlivdZWEv2Hsbnd8phT28SeA8fk0+C8fuDiUMNW1+q2csV4Vu+1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323779; c=relaxed/simple;
-	bh=Yjr34TEgyp7PzJaC3I+2zo5LTxg0MGz/MCnfuX7bBrE=;
+	s=arc-20240116; t=1711323785; c=relaxed/simple;
+	bh=Ahjw586ptN4sdwzK489e5WfNo6aZ+MPOLgqVLZPcfa4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BFHIFh5+dfQVcqGqDzK2G+kdRzaLmpm1Po0yhHKGZSPEOWYxXuym8/0b/UZHRCZEVn6Hwl9itFqRkRgdUZ+7p0RVMCQrlQb7r55NUI0+LSMWmIvpN99nBZCneEmdDajoy4cyz9oknNVVgpCAGqVumQrFCqsGZPgK//5NZAYzvjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nd8YSegg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PjBQmEjUTJhITcRu5lEV/DXPaoQdhqKAzhTupaejtG7AFp0PN1NUUXAlyb8BePJTyZYPKUm75bRNYSxGE7gdYk5wRMXk3ridX0PZ+jGdLydMYI4XNTNQU9RleC0k71KR3uE3AiwL3YN3u/cJ1VHnckWpDUFq7fy0Ni03v2mGiSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pmSL00rl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nd8YSegg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7B41C43390;
-	Sun, 24 Mar 2024 23:42:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pmSL00rl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19BD3C433C7;
+	Sun, 24 Mar 2024 23:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323778;
-	bh=Yjr34TEgyp7PzJaC3I+2zo5LTxg0MGz/MCnfuX7bBrE=;
+	s=k20201202; t=1711323785;
+	bh=Ahjw586ptN4sdwzK489e5WfNo6aZ+MPOLgqVLZPcfa4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nd8YSegg7SFa63979CKMDGNWhszdExIMEztbL/j6hXyei+3v8lUOflyj8SnYBk665
-	 fog/K+ti74oL8H/SFCJc6GyyDjpgER4nct08uQq2NuPaN3U3Ehvl10e66iKJuOSGC/
-	 r57UOgrKzH/x8R0CURBVuLibPS7YPhnofvPiJEOz0rOim1cN2c4y+tBAkJIWRMlyCy
-	 qAsI4hPmCaDz+5nKeGp328bPvteoPlyRXReRs+CQbS2CjC3ZHFQXR6XLyHSlTK3VPj
-	 ujXB9YC6xEd6SFuTMTTfnoCoQlMkI3Wk5b4Df9AEn3ZDb7fsqz/bOenyHwejyurP7N
-	 U08oxskwA6KNw==
+	b=pmSL00rlO9e8s7kBynQrlJ8UHI1Ar/gMgRHoUNNXjemrZMNQGhQse4kTEezW/dDJs
+	 rTdEfjpK3QzZkzmIY58avGyuesPq5H3P3IOfOJRPSr1Y91Rv+ag5T1hqi9yjg3IrUR
+	 CoAj1cAHvi7DYWQz2ELPQVlv3KnjDZvGoNqggdOvqOl17/v5cH1Z1rX8+z3B6eJ2O0
+	 SMf8IVNDlgIuvJoFBiBQihP29Bmic9pq79RbDSRbnW0lp5nGqg3zbTfK+wcAW0Tt1M
+	 2fi1hMieN+TaRq47cBqPV5lvV3rZ8LEV/0dymMhi1k3QHU8pUi0mNxD0Wk7RPMkeT7
+	 2RfNAgA1z1Ztw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Lucas Stach <l.stach@pengutronix.de>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 154/238] media: imx: csc/scaler: fix v4l2_ctrl_handler memory leak
-Date: Sun, 24 Mar 2024 19:39:02 -0400
-Message-ID: <20240324234027.1354210-155-sashal@kernel.org>
+Subject: [PATCH 5.10 162/238] drm/tegra: put drm_gem_object ref on error in tegra_fb_create
+Date: Sun, 24 Mar 2024 19:39:10 -0400
+Message-ID: <20240324234027.1354210-163-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -49,33 +48,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Fedor Pchelkin <pchelkin@ispras.ru>
 
-[ Upstream commit 4797a3dd46f220e6d83daf54d70c5b33db6deb01 ]
+[ Upstream commit 32e5a120a5105bce01561978ee55aee8e40ac0dc ]
 
-Free the memory allocated in v4l2_ctrl_handler_init on release.
+Inside tegra_fb_create(), drm_gem_object_lookup() increments ref count of
+the found object. But if the following size check fails then the last
+found object's ref count should be put there as the unreferencing loop
+can't detect this situation.
 
-Fixes: a8ef0488cc59 ("media: imx: add csc/scaler mem2mem device")
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Found by Linux Verification Center (linuxtesting.org).
+
+Fixes: de2ba664c30f ("gpu: host1x: drm: Add memory manager and fb")
+Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231215093356.12067-1-pchelkin@ispras.ru
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/imx/imx-media-csc-scaler.c | 1 +
+ drivers/gpu/drm/tegra/fb.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/staging/media/imx/imx-media-csc-scaler.c b/drivers/staging/media/imx/imx-media-csc-scaler.c
-index 63a0204502a8b..939843b895440 100644
---- a/drivers/staging/media/imx/imx-media-csc-scaler.c
-+++ b/drivers/staging/media/imx/imx-media-csc-scaler.c
-@@ -803,6 +803,7 @@ static int ipu_csc_scaler_release(struct file *file)
+diff --git a/drivers/gpu/drm/tegra/fb.c b/drivers/gpu/drm/tegra/fb.c
+index 01939c57fc74d..2040dbfed7e21 100644
+--- a/drivers/gpu/drm/tegra/fb.c
++++ b/drivers/gpu/drm/tegra/fb.c
+@@ -155,6 +155,7 @@ struct drm_framebuffer *tegra_fb_create(struct drm_device *drm,
  
- 	dev_dbg(priv->dev, "Releasing instance %p\n", ctx);
+ 		if (gem->size < size) {
+ 			err = -EINVAL;
++			drm_gem_object_put(gem);
+ 			goto unreference;
+ 		}
  
-+	v4l2_ctrl_handler_free(&ctx->ctrl_hdlr);
- 	v4l2_m2m_ctx_release(ctx->fh.m2m_ctx);
- 	v4l2_fh_del(&ctx->fh);
- 	v4l2_fh_exit(&ctx->fh);
 -- 
 2.43.0
 
