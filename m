@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57DD317A903;
-	Sun, 24 Mar 2024 23:41:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EDD113119C;
+	Sun, 24 Mar 2024 23:41:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323690; cv=none; b=SK/YuKEnpAAbckf2bZ0NzP5Q1Wb9lwfmaqfcn/Y0XZB9OGB11bl6G8QY2ahPxZm7ZkzkBY2w44H8b2woMBYmhiqCzQXm/hMAAzqltdylVnXCLxOEjC9CPeAYvfR2Z0OnJH8DUEkAFtOrUO3QGiRtbdRanRBV0zA8JFe2Jxube+o=
+	t=1711323686; cv=none; b=mS6k9ki178eTLm6+xvrj1amsElhrDEWReR4pvx1muq0yqibhl4e2Ybt6cB5Dr9lv4et3dTZ6s8rZGn9X1WdblRgxrrh6bhG6QgWyHom8na9It60FHIt8lTOCKiphDoDLXLtEhdxdwjoM86D0UF/MmYU4FwVgZHm3LowG4Tg000Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323690; c=relaxed/simple;
-	bh=Ml/gtYfi61s3A8PLBWk0zIxaNJs6FKIYlP18FdEQ12w=;
+	s=arc-20240116; t=1711323686; c=relaxed/simple;
+	bh=LvtZg5e0VQtOBT+DmVlIpjevxUc7VebV46SOEb3fPHw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FI5D/3Lzb8fLuNAvhGmpCf1DdFJ3MTe7EaSCL1ijypLDA4Wm6IdI/f5c1c7TmrT726a5xSjYdXF3llf9pCkugLLccxxPNc3PEAPw0r+UE+OcYkiEJiwcQXIHvFChkLyROi99Yl/RK7rP7GwUJBlGdKg0lMc2mp4Vvf17x/h7ATs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z/YEbClp; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cDw+egEndqdu6xwwVHzCy8/yWXoOdcm0CYueZCjvIdr1QE1Cc04Vq+LFCMv4J12WKAfR0FU4OnFKN/Zgg1mdBvqD6vqJpjh3x7Isv+yqBOoqEfsu5XwOH7QV0wGVglsbwjz+Jqqfy81ia2Svwq2wDrm2vEg1cIOhXNQ/zKLysp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SsW2/dRK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z/YEbClp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CE85C433F1;
-	Sun, 24 Mar 2024 23:41:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SsW2/dRK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61FC3C433F1;
+	Sun, 24 Mar 2024 23:41:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323688;
-	bh=Ml/gtYfi61s3A8PLBWk0zIxaNJs6FKIYlP18FdEQ12w=;
+	s=k20201202; t=1711323686;
+	bh=LvtZg5e0VQtOBT+DmVlIpjevxUc7VebV46SOEb3fPHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Z/YEbClp0RYFIEjpYwILYOli2jp/8hJuPWEvO0Ik3AFjT7aH2yzdwq+YNkRwhghq5
-	 vGqKryi7yUXtXRicKJnQ/26GZGtEa0gS589p85fSGhANvYfIoiRTZVCeHPzmkZeA1r
-	 vQqRIuwj+9/kverQ4nzzymrMGHXY8BJgVfD4Cy2q5SVGN4fVnc5ITUvpTCHTC8/TpU
-	 a43EqaME2JvgsXE6tWPY22FnfNg3ScIWNBuadhC7AL9485UqTB+AgOduIZkfAKxEqK
-	 I94bLznruOdwFjErx/hsAMttISBMzUfdyf3wwhI2kgUwQbwBD3DPsjBFU3Ko5YTXu8
-	 IdlxzJYUpuVuA==
+	b=SsW2/dRKCLpVeAH6HKD6a8oClmZ+NNuPNMr+ATjxjb/+0AcUAUGYcBICZKsRbQJRu
+	 xaZ4/ssE+AI1Ac929igPkUbw1CqHL7XJ6IjBpF5x+yM3qeTdd2ihYMIwbfHufSPsoV
+	 ieWnYKVC2/BSw+GbkOHGRu28teXLVOcNi54e7ddOBlJl/B62pp8mhpyemq0yGOIhNa
+	 CkGM4VH3BGBQeThOQVv599L9kDrV+FyURmPff1e8ZGQU9lon6ZQVigQxOS0gh+9buR
+	 c7ehYmIZBllBO/0odIpTBbLR0wbZDtB90Owl4FRtkZkgDqpz9si4lqp9aBAf1y53ht
+	 ClwgL0p2LAQJw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Petr Mladek <pmladek@suse.com>,
-	John Ogness <john.ogness@linutronix.de>,
+Cc: Breno Leitao <leitao@debian.org>,
+	Jiri Pirko <jiri@nvidia.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 061/238] printk: Disable passing console lock owner completely during panic()
-Date: Sun, 24 Mar 2024 19:37:29 -0400
-Message-ID: <20240324234027.1354210-62-sashal@kernel.org>
+Subject: [PATCH 5.10 058/238] net: blackhole_dev: fix build warning for ethh set but not used
+Date: Sun, 24 Mar 2024 19:37:26 -0400
+Message-ID: <20240324234027.1354210-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,114 +49,47 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Petr Mladek <pmladek@suse.com>
+From: Breno Leitao <leitao@debian.org>
 
-[ Upstream commit d04d5882cd678b898a9d7c5aee6afbe9e6e77fcd ]
+[ Upstream commit 843a8851e89e2e85db04caaf88d8554818319047 ]
 
-The commit d51507098ff91 ("printk: disable optimistic spin
-during panic") added checks to avoid becoming a console waiter
-if a panic is in progress.
+lib/test_blackhole_dev.c sets a variable that is never read, causing
+this following building warning:
 
-However, the transition to panic can occur while there is
-already a waiter. The current owner should not pass the lock to
-the waiter because it might get stopped or blocked anytime.
+	lib/test_blackhole_dev.c:32:17: warning: variable 'ethh' set but not used [-Wunused-but-set-variable]
 
-Also the panic context might pass the console lock owner to an
-already stopped waiter by mistake. It might happen when
-console_flush_on_panic() ignores the current lock owner, for
-example:
+Remove the variable struct ethhdr *ethh, which is unused.
 
-CPU0                                CPU1
-----                                ----
-console_lock_spinning_enable()
-                                    console_trylock_spinning()
-                                      [CPU1 now console waiter]
-NMI: panic()
-  panic_other_cpus_shutdown()
-                                    [stopped as console waiter]
-  console_flush_on_panic()
-    console_lock_spinning_enable()
-    [print 1 record]
-    console_lock_spinning_disable_and_check()
-      [handover to stopped CPU1]
-
-This results in panic() not flushing the panic messages.
-
-Fix these problems by disabling all spinning operations
-completely during panic().
-
-Another advantage is that it prevents possible deadlocks caused
-by "console_owner_lock". The panic() context does not need to
-take it any longer. The lockless checks are safe because the
-functions become NOPs when they see the panic in progress. All
-operations manipulating the state are still synchronized by the
-lock even when non-panic CPUs would notice the panic
-synchronously.
-
-The current owner might stay spinning. But non-panic() CPUs
-would get stopped anyway and the panic context will never start
-spinning.
-
-Fixes: dbdda842fe96 ("printk: Add console owner and waiter logic to load balance console writes")
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
-Link: https://lore.kernel.org/r/20240207134103.1357162-12-john.ogness@linutronix.de
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+Fixes: 509e56b37cc3 ("blackhole_dev: add a selftest")
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Reviewed-by: Jiri Pirko <jiri@nvidia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/printk/printk.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ lib/test_blackhole_dev.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 94af80b7fa9b5..d109411f108f9 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -1760,10 +1760,23 @@ static bool console_waiter;
-  */
- static void console_lock_spinning_enable(void)
+diff --git a/lib/test_blackhole_dev.c b/lib/test_blackhole_dev.c
+index 4c40580a99a36..f247089d63c08 100644
+--- a/lib/test_blackhole_dev.c
++++ b/lib/test_blackhole_dev.c
+@@ -29,7 +29,6 @@ static int __init test_blackholedev_init(void)
  {
-+	/*
-+	 * Do not use spinning in panic(). The panic CPU wants to keep the lock.
-+	 * Non-panic CPUs abandon the flush anyway.
-+	 *
-+	 * Just keep the lockdep annotation. The panic-CPU should avoid
-+	 * taking console_owner_lock because it might cause a deadlock.
-+	 * This looks like the easiest way how to prevent false lockdep
-+	 * reports without handling races a lockless way.
-+	 */
-+	if (panic_in_progress())
-+		goto lockdep;
-+
- 	raw_spin_lock(&console_owner_lock);
- 	console_owner = current;
- 	raw_spin_unlock(&console_owner_lock);
+ 	struct ipv6hdr *ip6h;
+ 	struct sk_buff *skb;
+-	struct ethhdr *ethh;
+ 	struct udphdr *uh;
+ 	int data_len;
+ 	int ret;
+@@ -61,7 +60,7 @@ static int __init test_blackholedev_init(void)
+ 	ip6h->saddr = in6addr_loopback;
+ 	ip6h->daddr = in6addr_loopback;
+ 	/* Ether */
+-	ethh = (struct ethhdr *)skb_push(skb, sizeof(struct ethhdr));
++	skb_push(skb, sizeof(struct ethhdr));
+ 	skb_set_mac_header(skb, 0);
  
-+lockdep:
- 	/* The waiter may spin on us after setting console_owner */
- 	spin_acquire(&console_owner_dep_map, 0, 0, _THIS_IP_);
- }
-@@ -1787,6 +1800,22 @@ static int console_lock_spinning_disable_and_check(void)
- {
- 	int waiter;
- 
-+	/*
-+	 * Ignore spinning waiters during panic() because they might get stopped
-+	 * or blocked at any time,
-+	 *
-+	 * It is safe because nobody is allowed to start spinning during panic
-+	 * in the first place. If there has been a waiter then non panic CPUs
-+	 * might stay spinning. They would get stopped anyway. The panic context
-+	 * will never start spinning and an interrupted spin on panic CPU will
-+	 * never continue.
-+	 */
-+	if (panic_in_progress()) {
-+		/* Keep lockdep happy. */
-+		spin_release(&console_owner_dep_map, _THIS_IP_);
-+		return 0;
-+	}
-+
- 	raw_spin_lock(&console_owner_lock);
- 	waiter = READ_ONCE(console_waiter);
- 	console_owner = NULL;
+ 	skb->protocol = htons(ETH_P_IPV6);
 -- 
 2.43.0
 
