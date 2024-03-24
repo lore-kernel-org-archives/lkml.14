@@ -1,44 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327321FC10D;
-	Sun, 24 Mar 2024 23:01:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19AC714EC43;
+	Sun, 24 Mar 2024 23:01:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321316; cv=none; b=DhOsX60xQnvIbEYw6Jkr0jHmPWTqQK4Y1CiTpTI0mwcs2NdLdiB6arPoxcx4KQL9f1gUlTPsVjHAdj/4PHCngXCw2XUO2V2ByPeoAcOowABV3HI2KILZFihIc+1kkt5jTstT6KX8FErs++GvsoCXBkG/SF9CtQevEcimN6t+0aM=
+	t=1711321320; cv=none; b=QoR1ClPlveyYyOYJsQA7QiBTCmcxSIXWl/3lt3bJRVRm2D1m2OrdG+4t7o4QOKcxZrWWfRdm4ZXY7okePCNDjv6cjN5U+6QBvC8cEADOLpnifnNhuPPqDChJZQnUHm8WoKmpoyPM93VXd0PMBF6Fqo5SCR9or3sJejdu0OaEqE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321316; c=relaxed/simple;
-	bh=v72yR9TvJL75rbdEOwqmwC5IEhpmO5X238jNeAFXJaU=;
+	s=arc-20240116; t=1711321320; c=relaxed/simple;
+	bh=dvp3JZnerkFLlEWRHHtB5NZ0FgULvDL+8ioxJBeGMeg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OYeHMrjbHahSpRnUBIvaKPGFHM76OPe79/Qi5DK4xHYrCa5H97+EFAWbI6sAQcOmy418K8KgDe4LqPtyOvB1tAe+yVOyoICE8FRaB6zwQ7pNExa04vIwbF5/q7TyDAf6okeURSSi0OhbT2k07dJsRqSmyqZ0iwv2nGN63sp18Ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UfzpfU6X; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=MDVT7w07bYRepmze5Okn0z4Pf3SNco3vJ8MEWUu9pAekbsOMFn29waglqlttF+ppcGt1mIHnRQPyL6kHusrFsV92rFPJWjg6znB9mmi8c64FycA799dVFhBo6hsrsZJisXQnVrVIVn66/IxheRlsl7xrZNqcvedN+dpW/DvYnsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nBVUibvZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UfzpfU6X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EABCEC43399;
-	Sun, 24 Mar 2024 23:01:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nBVUibvZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C42AC433C7;
+	Sun, 24 Mar 2024 23:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321316;
-	bh=v72yR9TvJL75rbdEOwqmwC5IEhpmO5X238jNeAFXJaU=;
+	s=k20201202; t=1711321319;
+	bh=dvp3JZnerkFLlEWRHHtB5NZ0FgULvDL+8ioxJBeGMeg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UfzpfU6X/39amirxvLfVsz+n+qjkr3BHvx4bjndZPe1kHR7ivJ3ddnnN3TV8dSEOT
-	 J9LCSg63+/CB8ESQ2OvPfct7LT1CUT6dUfXCS0NPeCYHKAhaSw+I5Ql7GXx+gBpQlC
-	 TzJzJQ4N+LXpEaYFSnHwy60Zhv6rfURqBta9SmI7ZAnY3opnA1bKHcKX5bcFmNxQ+B
-	 ZvcZXfSvu/V3+03f7RB0xAR8ZblyZ6Is7CJaEKkOrxIWnN7USRfGou+bSgtDDdaieX
-	 WV/3uURN4pRdylr1+uvB+cx9dQNmLOKJXGNTPYLd46odTxtu+wDPxsYsQ15uAo0Ca7
-	 i13uUtaWO0Cyg==
+	b=nBVUibvZ6ei60oT41deCfGvnTSJCkxtHm9vxvTMuDMqlDUTYYXHUoafaMCn2U8NdN
+	 5yMWCiaQgwQbAPU0LqYG+uEsPBwUM2mTwyj4010n2WvcsQcrwwrbg8wEXcZDE7vFLp
+	 gGmidAEqZ48SwcWP9dfNaj0KhHlsqLgUmwtvsRHfFpHTc+knGwYRYNoWPKfYoMp0vg
+	 1Qv1pOzshaMFV4qQ5/bbD09sOvox8ZGQe9wCRsVA8cccgQmaBQbvPNQNIPUDURAoM7
+	 UQ4Z0diNSEN+D2H46Ri/3Yfy0fG9OHi+Rgm+WZgSWL57mrqtqdKVBrRgzXi9yu/tgk
+	 FPr7ctz8vQylw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Chanho Min <chanho.min@lge.com>,
-	Arnd Bergmann <arnd@arndb.de>,
+Cc: Naresh Solanki <naresh.solanki@9elements.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 038/638] arm64: dts: Fix dtc interrupt_provider warnings
-Date: Sun, 24 Mar 2024 18:51:15 -0400
-Message-ID: <20240324230116.1348576-39-sashal@kernel.org>
+Subject: [PATCH 6.6 042/638] regulator: max5970: Fix regulator child node name
+Date: Sun, 24 Mar 2024 18:51:19 -0400
+Message-ID: <20240324230116.1348576-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -52,166 +48,47 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rob Herring <robh@kernel.org>
+From: Naresh Solanki <naresh.solanki@9elements.com>
 
-[ Upstream commit 91adecf911e5df78ea3e8f866e69db2c33416a5c ]
+[ Upstream commit e5d40e9afd84cec01cdbbbfe62d52f89959ab3ee ]
 
-The dtc interrupt_provider warning is off by default. Fix all the warnings
-so it can be enabled.
+Update regulator child node name to lower case i.e., sw0 & sw1 as
+descibed in max5970 dt binding.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-Reviewed-By: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com> #
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Florian Fainelli <florian.fainelli@broadcom.com> #Broadcom
-Acked-by: Chanho Min <chanho.min@lge.com>
-Link: https://lore.kernel.org/r/20240213-arm-dt-cleanups-v1-3-f2dee1292525@kernel.org
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
+Link: https://msgid.link/r/20240213145801.2564518-1-naresh.solanki@9elements.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amazon/alpine-v2.dtsi           | 1 -
- arch/arm64/boot/dts/amazon/alpine-v3.dtsi           | 1 -
- arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi    | 1 +
- arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi | 1 +
- arch/arm64/boot/dts/lg/lg1312.dtsi                  | 1 -
- arch/arm64/boot/dts/lg/lg1313.dtsi                  | 1 -
- arch/arm64/boot/dts/marvell/armada-ap80x.dtsi       | 1 -
- arch/arm64/boot/dts/mediatek/mt8195-demo.dts        | 1 +
- arch/arm64/boot/dts/renesas/ulcb-kf.dtsi            | 4 ++++
- 9 files changed, 7 insertions(+), 5 deletions(-)
+ drivers/regulator/max5970-regulator.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amazon/alpine-v2.dtsi b/arch/arm64/boot/dts/amazon/alpine-v2.dtsi
-index dccbba6e7f98e..dbf2dce8d1d68 100644
---- a/arch/arm64/boot/dts/amazon/alpine-v2.dtsi
-+++ b/arch/arm64/boot/dts/amazon/alpine-v2.dtsi
-@@ -145,7 +145,6 @@ pci@fbc00000 {
- 		msix: msix@fbe00000 {
- 			compatible = "al,alpine-msix";
- 			reg = <0x0 0xfbe00000 0x0 0x100000>;
--			interrupt-controller;
- 			msi-controller;
- 			al,msi-base-spi = <160>;
- 			al,msi-num-spis = <160>;
-diff --git a/arch/arm64/boot/dts/amazon/alpine-v3.dtsi b/arch/arm64/boot/dts/amazon/alpine-v3.dtsi
-index 39481d7fd7d4d..3ea178acdddfe 100644
---- a/arch/arm64/boot/dts/amazon/alpine-v3.dtsi
-+++ b/arch/arm64/boot/dts/amazon/alpine-v3.dtsi
-@@ -355,7 +355,6 @@ pcie@fbd00000 {
- 		msix: msix@fbe00000 {
- 			compatible = "al,alpine-msix";
- 			reg = <0x0 0xfbe00000 0x0 0x100000>;
--			interrupt-controller;
- 			msi-controller;
- 			al,msi-base-spi = <336>;
- 			al,msi-num-spis = <959>;
-diff --git a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-index 9dcd25ec2c041..896d1f33b5b61 100644
---- a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-@@ -586,6 +586,7 @@ gpio_g: gpio@660a0000 {
- 			#gpio-cells = <2>;
- 			gpio-controller;
- 			interrupt-controller;
-+			#interrupt-cells = <2>;
- 			interrupts = <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH>;
- 		};
+diff --git a/drivers/regulator/max5970-regulator.c b/drivers/regulator/max5970-regulator.c
+index 5c2d49ae332fb..4362f332f746b 100644
+--- a/drivers/regulator/max5970-regulator.c
++++ b/drivers/regulator/max5970-regulator.c
+@@ -28,8 +28,8 @@ struct max5970_regulator {
+ };
  
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-index f049687d6b96d..d8516ec0dae74 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-@@ -450,6 +450,7 @@ gpio_hsls: gpio@d0000 {
- 			#gpio-cells = <2>;
- 			gpio-controller;
- 			interrupt-controller;
-+			#interrupt-cells = <2>;
- 			interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
- 			gpio-ranges = <&pinmux 0 0 16>,
- 					<&pinmux 16 71 2>,
-diff --git a/arch/arm64/boot/dts/lg/lg1312.dtsi b/arch/arm64/boot/dts/lg/lg1312.dtsi
-index 48ec4ebec0a83..b864ffa74ea8b 100644
---- a/arch/arm64/boot/dts/lg/lg1312.dtsi
-+++ b/arch/arm64/boot/dts/lg/lg1312.dtsi
-@@ -126,7 +126,6 @@ eth0: ethernet@c1b00000 {
- 	amba {
- 		#address-cells = <2>;
- 		#size-cells = <1>;
--		#interrupt-cells = <3>;
+ enum max597x_regulator_id {
+-	MAX597X_SW0,
+-	MAX597X_SW1,
++	MAX597X_sw0,
++	MAX597X_sw1,
+ };
  
- 		compatible = "simple-bus";
- 		interrupt-parent = <&gic>;
-diff --git a/arch/arm64/boot/dts/lg/lg1313.dtsi b/arch/arm64/boot/dts/lg/lg1313.dtsi
-index 3869460aa5dcb..996fb39bb50c1 100644
---- a/arch/arm64/boot/dts/lg/lg1313.dtsi
-+++ b/arch/arm64/boot/dts/lg/lg1313.dtsi
-@@ -126,7 +126,6 @@ eth0: ethernet@c3700000 {
- 	amba {
- 		#address-cells = <2>;
- 		#size-cells = <1>;
--		#interrupt-cells = <3>;
+ static int max597x_uvp_ovp_check_mode(struct regulator_dev *rdev, int severity)
+@@ -251,8 +251,8 @@ static int max597x_dt_parse(struct device_node *np,
+ }
  
- 		compatible = "simple-bus";
- 		interrupt-parent = <&gic>;
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi b/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
-index 2c920e22cec2b..7ec7c789d87ef 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
-@@ -138,7 +138,6 @@ pmu {
+ static const struct regulator_desc regulators[] = {
+-	MAX597X_SWITCH(SW0, MAX5970_REG_CHXEN, 0, "vss1"),
+-	MAX597X_SWITCH(SW1, MAX5970_REG_CHXEN, 1, "vss2"),
++	MAX597X_SWITCH(sw0, MAX5970_REG_CHXEN, 0, "vss1"),
++	MAX597X_SWITCH(sw1, MAX5970_REG_CHXEN, 1, "vss2"),
+ };
  
- 			odmi: odmi@300000 {
- 				compatible = "marvell,odmi-controller";
--				interrupt-controller;
- 				msi-controller;
- 				marvell,odmi-frames = <4>;
- 				reg = <0x300000 0x4000>,
-diff --git a/arch/arm64/boot/dts/mediatek/mt8195-demo.dts b/arch/arm64/boot/dts/mediatek/mt8195-demo.dts
-index 5d635085fe3fd..9079e48aea23e 100644
---- a/arch/arm64/boot/dts/mediatek/mt8195-demo.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8195-demo.dts
-@@ -128,6 +128,7 @@ mt6360: pmic@34 {
- 		compatible = "mediatek,mt6360";
- 		reg = <0x34>;
- 		interrupt-controller;
-+		#interrupt-cells = <1>;
- 		interrupts-extended = <&pio 101 IRQ_TYPE_EDGE_FALLING>;
- 		interrupt-names = "IRQB";
- 
-diff --git a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-index 3885ef3454ff6..50de17e4fb3f2 100644
---- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-+++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-@@ -234,6 +234,7 @@ gpio_exp_74: gpio@74 {
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 		interrupt-parent = <&gpio6>;
- 		interrupts = <8 IRQ_TYPE_EDGE_FALLING>;
- 
-@@ -294,6 +295,7 @@ gpio_exp_75: gpio@75 {
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 		interrupt-parent = <&gpio6>;
- 		interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
- 	};
-@@ -314,6 +316,7 @@ gpio_exp_76: gpio@76 {
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 		interrupt-parent = <&gpio7>;
- 		interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
- 	};
-@@ -324,6 +327,7 @@ gpio_exp_77: gpio@77 {
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 		interrupt-parent = <&gpio5>;
- 		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;
- 	};
+ static int max597x_regmap_read_clear(struct regmap *map, unsigned int reg,
 -- 
 2.43.0
 
