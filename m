@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CFCE14BFAD;
-	Sun, 24 Mar 2024 22:58:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFD612D76B;
+	Sun, 24 Mar 2024 22:59:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321139; cv=none; b=ImxrsBczbryJ6BLSuZUhiHYevwj3QfGQa4r+KiQsBFxhllIT2FqW+pvhjO0S+fUMOE/AbiTLEevGdT/oAjBMX0hRg4gPh5ao0kar3rR2OBmykpGKQMiHZYxcvzpqZyLdtLBy2cQtP+WrWxNafO4F9Uyep9wPEUw0looPuZH/EWU=
+	t=1711321142; cv=none; b=U5dHuFA4TZlw3difVDuRnG5rjA3QQvAIypuw/9ac3/tAaGZNLpl3BnL2AuGQ9T80FL9pnjv8FvaSHLF+IlfG9eD9AUOEboJ/aWT9Erd1cTMl2wsm+HipdgwVoH9e5+ouHpWXJis8HmslJyWcP0IYXWolTWYGRqaR+HUJwIp1JWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321139; c=relaxed/simple;
-	bh=HYvPSrJYkMOLDJbWOZWqQRcdACTOqAYwH1ch5BNzM4c=;
+	s=arc-20240116; t=1711321142; c=relaxed/simple;
+	bh=3V3Y8Z3T/2ffOncnPPsWGzqaz/UacQ7HKa0i63JPH1g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RKeYWuYukDvOIbfJndEpPF1Nt9i2QCNmd/vARmfls4UOT8cHRSDl64mK00o7gVSwv1mtwnQ8ajg42hScbWc7O581v518g4yPCTlnK2o6Tszes5aRIbBLd/kR+vlx3wIlugHM5fEwYtfAxquGPGTMdnrh+So/qwEi01UVEiXFIGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fAwO6z8S; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=DTkw4tsSvtB0uFR/yDmTG6o9y2FKM6Zx4niJHFWwZKx8sYv0Oguq1AyEPmtBTgzW2/SxguHkMSLqRHicUotRzPj/unZ//qaiqeWA00r2Fij4mGQ8kYfyg5g15paFQI3d8+PC3SURknx83ERCFmVjWI4rqOrDQyVEOX9e9DPxaeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n1day8qD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fAwO6z8S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACE3BC433C7;
-	Sun, 24 Mar 2024 22:58:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n1day8qD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA447C43394;
+	Sun, 24 Mar 2024 22:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321139;
-	bh=HYvPSrJYkMOLDJbWOZWqQRcdACTOqAYwH1ch5BNzM4c=;
+	s=k20201202; t=1711321141;
+	bh=3V3Y8Z3T/2ffOncnPPsWGzqaz/UacQ7HKa0i63JPH1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fAwO6z8SeUcEw4/j/txUDv9ZxQaWtrH+GW1wSBGZ4Y8UI/2AAt4avXY9yRFLN0GYA
-	 vjVMunpbjY//bKFTTRrpyEypW00ngmRcWX1cEHxVhVPuUyKI0M8KP8N0+GCFrwD1IX
-	 fGlME+XG1krRs6ykRGxM+YTEF6War/r8NvrDUlarUUzI6xcHEopmnz7gUcM3g3URh1
-	 FQUB/WxAHyHruaPvbdQEUwPCqPtd/mM+qyBzfsKcOfA/hqOpOHpoNFyIBc5ftjLzff
-	 dPnw2CYOuzZYNQ87nLhxjb5EMlmJqMgEnPWTVTN1QbbTI7N63M38exRIPnNpb6ZJF+
-	 lBmpBSF+Bw3tw==
+	b=n1day8qDctDTKFY8AC1sAQFp0mUJuQJ+v8O96An+qppz2morNXbraRaKw8gND2eWN
+	 zhe5tJKFugqA4fUMgKyfRilt69QLrNyuTjEfayX8c0bhflyoritTD6VEIgCqkTLFBj
+	 onI59iNEqBxvq19jKzaSxT0xiFzj27Cs2bbO1Nieeofen2Ax60qNNfvJ4Gq7/JD9y+
+	 +Fye3UE/H5z0igsMxWQ0rb8wVjk1OeUTfLxl5EcaccM0Y6nFBBdcS0GFMeh75AyLuv
+	 rdsAH//5bEY9EbVjl5vlp58aL20+v33eREtCFi3kYmm+AJYZe3oMucqOuCzeAT5pPW
+	 MZHKUuZNpFKNQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Yan Zhai <yan@cloudflare.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
 	Jesper Dangaard Brouer <hawk@kernel.org>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
 	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 701/713] rcu: add a helper to report consolidated flavor QS
-Date: Sun, 24 Mar 2024 18:47:07 -0400
-Message-ID: <20240324224720.1345309-702-sashal@kernel.org>
+Subject: [PATCH 6.7 703/713] bpf: report RCU QS in cpumap kthread
+Date: Sun, 24 Mar 2024 18:47:09 -0400
+Message-ID: <20240324224720.1345309-704-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -52,72 +52,51 @@ Content-Transfer-Encoding: 8bit
 
 From: Yan Zhai <yan@cloudflare.com>
 
-[ Upstream commit 1a77557d48cff187a169c2aec01c0dd78a5e7e50 ]
+[ Upstream commit 00bf63122459e87193ee7f1bc6161c83a525569f ]
 
-When under heavy load, network processing can run CPU-bound for many
-tens of seconds. Even in preemptible kernels (non-RT kernel), this can
-block RCU Tasks grace periods, which can cause trace-event removal to
-take more than a minute, which is unacceptably long.
+When there are heavy load, cpumap kernel threads can be busy polling
+packets from redirect queues and block out RCU tasks from reaching
+quiescent states. It is insufficient to just call cond_resched() in such
+context. Periodically raise a consolidated RCU QS before cond_resched
+fixes the problem.
 
-This commit therefore creates a new helper function that passes through
-both RCU and RCU-Tasks quiescent states every 100 milliseconds. This
-hard-coded value suffices for current workloads.
-
-Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+Fixes: 6710e1126934 ("bpf: introduce new bpf cpu map type BPF_MAP_TYPE_CPUMAP")
 Reviewed-by: Jesper Dangaard Brouer <hawk@kernel.org>
 Signed-off-by: Yan Zhai <yan@cloudflare.com>
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+Acked-by: Paul E. McKenney <paulmck@kernel.org>
 Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
-Link: https://lore.kernel.org/r/90431d46ee112d2b0af04dbfe936faaca11810a5.1710877680.git.yan@cloudflare.com
+Link: https://lore.kernel.org/r/c17b9f1517e19d813da3ede5ed33ee18496bb5d8.1710877680.git.yan@cloudflare.com
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Stable-dep-of: d6dbbb11247c ("net: report RCU QS on threaded NAPI repolling")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/rcupdate.h | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ kernel/bpf/cpumap.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index 31d523c4e0893..e1bb04e578d8a 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -250,6 +250,37 @@ do { \
- 	cond_resched(); \
- } while (0)
+diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
+index ef82ffc90cbe9..8f1d390bcbdeb 100644
+--- a/kernel/bpf/cpumap.c
++++ b/kernel/bpf/cpumap.c
+@@ -262,6 +262,7 @@ static int cpu_map_bpf_prog_run(struct bpf_cpu_map_entry *rcpu, void **frames,
+ static int cpu_map_kthread_run(void *data)
+ {
+ 	struct bpf_cpu_map_entry *rcpu = data;
++	unsigned long last_qs = jiffies;
  
-+/**
-+ * rcu_softirq_qs_periodic - Report RCU and RCU-Tasks quiescent states
-+ * @old_ts: jiffies at start of processing.
-+ *
-+ * This helper is for long-running softirq handlers, such as NAPI threads in
-+ * networking. The caller should initialize the variable passed in as @old_ts
-+ * at the beginning of the softirq handler. When invoked frequently, this macro
-+ * will invoke rcu_softirq_qs() every 100 milliseconds thereafter, which will
-+ * provide both RCU and RCU-Tasks quiescent states. Note that this macro
-+ * modifies its old_ts argument.
-+ *
-+ * Because regions of code that have disabled softirq act as RCU read-side
-+ * critical sections, this macro should be invoked with softirq (and
-+ * preemption) enabled.
-+ *
-+ * The macro is not needed when CONFIG_PREEMPT_RT is defined. RT kernels would
-+ * have more chance to invoke schedule() calls and provide necessary quiescent
-+ * states. As a contrast, calling cond_resched() only won't achieve the same
-+ * effect because cond_resched() does not provide RCU-Tasks quiescent states.
-+ */
-+#define rcu_softirq_qs_periodic(old_ts) \
-+do { \
-+	if (!IS_ENABLED(CONFIG_PREEMPT_RT) && \
-+	    time_after(jiffies, (old_ts) + HZ / 10)) { \
-+		preempt_disable(); \
-+		rcu_softirq_qs(); \
-+		preempt_enable(); \
-+		(old_ts) = jiffies; \
-+	} \
-+} while (0)
-+
- /*
-  * Infrastructure to implement the synchronize_() primitives in
-  * TREE_RCU and rcu_barrier_() primitives in TINY_RCU.
+ 	complete(&rcpu->kthread_running);
+ 	set_current_state(TASK_INTERRUPTIBLE);
+@@ -287,10 +288,12 @@ static int cpu_map_kthread_run(void *data)
+ 			if (__ptr_ring_empty(rcpu->queue)) {
+ 				schedule();
+ 				sched = 1;
++				last_qs = jiffies;
+ 			} else {
+ 				__set_current_state(TASK_RUNNING);
+ 			}
+ 		} else {
++			rcu_softirq_qs_periodic(last_qs);
+ 			sched = cond_resched();
+ 		}
+ 
 -- 
 2.43.0
 
