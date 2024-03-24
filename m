@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACBE31F30B0;
-	Sun, 24 Mar 2024 22:58:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE8B12D749;
+	Sun, 24 Mar 2024 22:58:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321124; cv=none; b=KWjXpuWMW1NrvRLLXjgi1zczzAHs8hut1T2vd8VPD64L22EpizMW7prKwJEZK1cny54jTFwLGYhsvf0w7Ikdt8yglPHh8tWG4ARcynrNUISqUi8eAlpYZ2efDxODM6yYa5GdiXeOQdHLYcjNXf199BWWVIkK8B2FRetdr3zFOQk=
+	t=1711321129; cv=none; b=OwrSRlyjxLWQzw18PWtFDXf1LNK0Y+fxORVeyFcvUYppa5FjzUOFsmXjkTLwWMTSHhj5A6RvNZPZk/mGkwr/FQ0SJQeMwurcGWbVtHTuXJTFQ81eo7YKvultPrYhoI7ZJcq0FyqLcdvL2XXW79JUNzPA+esS1mCix5BGy1IV0Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321124; c=relaxed/simple;
-	bh=klOIANNcSD6uUUBwawVG7HMyBUU/vv9lKS8+Lyajj6c=;
+	s=arc-20240116; t=1711321129; c=relaxed/simple;
+	bh=bmFoJjVU2AEf7TV1FyCbH/W1afH2kBekjgg9DWjUQ9M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fb/k1lxzIFZZ7yJiwi7YyVbcBtUuJxe01CA7tKuMuBkJb380UwIVOcPQFBA6CM9YPwq/NuuDvQbE9+FUq1toBZm131Lq3agK07xyON/0vuJDIA5RG/3sjFDsoZqyb0yleImGwcdpfWnHl5/LkfoM1Vxvsa9Zxage1KHjysJbIkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hNyPaLEF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=iiYqBZaOCSXGtzPKuLN4DJCodnsGGi1/KyhrEZFBJLZT7NBTd4xbrqRfZmcAT3LD4rTJaiNtZcKR3H49I4UGxiHl9Xc3q9iWCzacAYBjlhnAQmFtFKdPTTqQP36xy/58I6efOfiIsW1yM0Fot6+40Kudk5LuckWs75VZX59m+To=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i9lB33lS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hNyPaLEF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 807B1C43390;
-	Sun, 24 Mar 2024 22:58:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i9lB33lS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 788F9C433F1;
+	Sun, 24 Mar 2024 22:58:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321124;
-	bh=klOIANNcSD6uUUBwawVG7HMyBUU/vv9lKS8+Lyajj6c=;
+	s=k20201202; t=1711321128;
+	bh=bmFoJjVU2AEf7TV1FyCbH/W1afH2kBekjgg9DWjUQ9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hNyPaLEFkeqMafYXZZVEcQva2G1DGGDihJ0qQI6fCDH1xufIeuELWSO+fL92zUOuF
-	 F2WIpqBlPgqdCXcEoHiRvir6C19clboRGifI4M6J5+zAzPdPvb/M0alCSihHtGi2eK
-	 sAOGIiD2muH9axy2/NT6qSM5i3JK4Vlth34de15LJpz06gaG9901z6myZMmcKqfi/c
-	 0ikmXVLJmJPWJLHbJF/YkMasPMAtcZubJHUbcOQOsMOFrDnhPFoHRsWuPMIbDvy9j2
-	 ILc6xBLfqgCDHlVcrNg32TYhCSNQ9kpVO3ir75ru4dTrwkcbpk+2njPP6mGbhs0/OJ
-	 dQCG0rHMn5CGg==
+	b=i9lB33lSDLgvVuLcAhHyqLvRYYVt9aWh33X2FuKjxSvYEmlbA3D3RB3u4lyvjpc7y
+	 GH2qwAVI2VMgdUV0KMamJoscN20X9c0c9gbT+WWPm2yJOGJ1b1l+rtmcVtdR/Y67QY
+	 r3qjY0tMY1+zFe6H0wGkrrVlL4qiWMZUO04Wdh5DgAs92HIgHShFaCBQ0OHrMr/r7n
+	 bJmQhEe3IXMBYHgpguTFdjxVDYAwMEw7GGp6NJMIRAz3xQCCm/2vstkh8QMAvY4Ylg
+	 lBrdSXbZTMMAXRCO7kXCInnenjiNzQlif015+c6vA+nTZV1eI5iyLCubX1qg3VWYRc
+	 bbDYikeu2qToQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Xiubo Li <xiubli@redhat.com>,
-	Frank Hsiao <frankhsiao@qnap.com>,
-	Ilya Dryomov <idryomov@gmail.com>,
+Cc: Jiri Pirko <jiri@nvidia.com>,
+	Chenyuan Yang <chenyuan0y@gmail.com>,
+	Parav Pandit <parav@nvidia.com>,
+	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 685/713] ceph: stop copying to iter at EOF on sync reads
-Date: Sun, 24 Mar 2024 18:46:51 -0400
-Message-ID: <20240324224720.1345309-686-sashal@kernel.org>
+Subject: [PATCH 6.7 689/713] devlink: fix port new reply cmd type
+Date: Sun, 24 Mar 2024 18:46:55 -0400
+Message-ID: <20240324224720.1345309-690-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,71 +51,44 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Xiubo Li <xiubli@redhat.com>
+From: Jiri Pirko <jiri@nvidia.com>
 
-[ Upstream commit 1065da21e5df9d843d2c5165d5d576be000142a6 ]
+[ Upstream commit 78a2f5e6c15d8dcbd6495bb9635c7cb89235dfc5 ]
 
-If EOF is encountered, ceph_sync_read() return value is adjusted down
-according to i_size, but the "to" iter is advanced by the actual number
-of bytes read.  Then, when retrying, the remainder of the range may be
-skipped incorrectly.
+Due to a c&p error, port new reply fills-up cmd with wrong value,
+any other existing port command replies and notifications.
 
-Ensure that the "to" iter is advanced only until EOF.
+Fix it by filling cmd with value DEVLINK_CMD_PORT_NEW.
 
-[ idryomov: changelog ]
+Skimmed through devlink userspace implementations, none of them cares
+about this cmd value.
 
-Fixes: c3d8e0b5de48 ("ceph: return the real size read when it hits EOF")
-Reported-by: Frank Hsiao <frankhsiao@qnap.com>
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
-Tested-by: Frank Hsiao <frankhsiao@qnap.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Reported-by: Chenyuan Yang <chenyuan0y@gmail.com>
+Closes: https://lore.kernel.org/all/ZfZcDxGV3tSy4qsV@cy-server/
+Fixes: cd76dcd68d96 ("devlink: Support add and delete devlink port")
+Signed-off-by: Jiri Pirko <jiri@nvidia.com>
+Reviewed-by: Parav Pandit <parav@nvidia.com>
+Reviewed-by: Kalesh AP <kalesh-anakkur.purayil@broadcom.com>
+Link: https://lore.kernel.org/r/20240318091908.2736542-1-jiri@resnulli.us
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/file.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ net/devlink/port.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-index 3b5aae29e9447..523debc6f23e0 100644
---- a/fs/ceph/file.c
-+++ b/fs/ceph/file.c
-@@ -1135,7 +1135,12 @@ ssize_t __ceph_sync_read(struct inode *inode, loff_t *ki_pos,
- 		}
- 
- 		idx = 0;
--		left = ret > 0 ? ret : 0;
-+		if (ret <= 0)
-+			left = 0;
-+		else if (off + ret > i_size)
-+			left = i_size - off;
-+		else
-+			left = ret;
- 		while (left > 0) {
- 			size_t plen, copied;
- 
-@@ -1164,15 +1169,13 @@ ssize_t __ceph_sync_read(struct inode *inode, loff_t *ki_pos,
+diff --git a/net/devlink/port.c b/net/devlink/port.c
+index d39ee6053cc7b..2b3c2b1a3eb37 100644
+--- a/net/devlink/port.c
++++ b/net/devlink/port.c
+@@ -887,7 +887,7 @@ int devlink_nl_port_new_doit(struct sk_buff *skb, struct genl_info *info)
+ 		err = -ENOMEM;
+ 		goto err_out_port_del;
  	}
- 
- 	if (ret > 0) {
--		if (off > *ki_pos) {
--			if (off >= i_size) {
--				*retry_op = CHECK_EOF;
--				ret = i_size - *ki_pos;
--				*ki_pos = i_size;
--			} else {
--				ret = off - *ki_pos;
--				*ki_pos = off;
--			}
-+		if (off >= i_size) {
-+			*retry_op = CHECK_EOF;
-+			ret = i_size - *ki_pos;
-+			*ki_pos = i_size;
-+		} else {
-+			ret = off - *ki_pos;
-+			*ki_pos = off;
- 		}
- 
- 		if (last_objver)
+-	err = devlink_nl_port_fill(msg, devlink_port, DEVLINK_CMD_NEW,
++	err = devlink_nl_port_fill(msg, devlink_port, DEVLINK_CMD_PORT_NEW,
+ 				   info->snd_portid, info->snd_seq, 0, NULL);
+ 	if (WARN_ON_ONCE(err))
+ 		goto err_out_msg_free;
 -- 
 2.43.0
 
