@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BBDA17B509;
-	Sun, 24 Mar 2024 23:42:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BE817B519;
+	Sun, 24 Mar 2024 23:42:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323724; cv=none; b=Lip1Aauxc1FttVTL0b5YPpgzRqoV6CiaCp24Opyc7pQDwvxzV12FannsprT+bh+YAbyPpKjRBcnzq5gyBpbNhArM3zYpkQ39oLHc5uXqydFvZCEBIszkOfboY7n6bnxXGp39q6aTR5eMwoVvz6nm0q9v6d9rQmSsfBLj+ZGd7Ik=
+	t=1711323727; cv=none; b=dYFYCJPBXcns4gn8CslKmUBzpwivohUraMMxxxprfxQGLPti3XFyvICPnVnEPbyaaNvhjXa40uMgYdNFLDWZI5UMT0Gfb0RQlOtfrmE85C3jYUNsmj+tNEIXH+vo96XtNOIORQtf+qkrddXzzu7WRTOuilEoXcG78dV9g+mjhmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323724; c=relaxed/simple;
-	bh=wTx2CP0rQOPjoKpSAi8r0GICFQMvOfBkNPFf9R3b24w=;
+	s=arc-20240116; t=1711323727; c=relaxed/simple;
+	bh=FU8bOYJOpA7z5HZUBn8V79nlonCFP1MChAiD587xR18=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BwIbj8OHjYIwudEZSXS78H+qd6PIe24VBSO74HrtKZR9MT8wh/cSwzYIOQnd2Cr2s6hFmY7wRRQHMF43Drb+H9eL9QU5iOfu2QQ+c6N7UktWdnoBKq9716iRGs+vLjeJLwSJ7UNPxOiLCahKEI+fPhQ7kC25dU3taP6ARYVEOXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oKVDcEXm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ArCZGgWRnS5h0CYhpyWoxt0joBX3I/GejCwzt+31KcneP4REJLFXjxL0UQQnGcXi8RYgPRDEYyZvOMv/yuTB0WT5UJ1Q1AisTzbi9fmX7J7gxiTe6IL70ZK5VCR1RZFKKZAylZIOtx/44Top8/OEeWZZAfNvs73zj32LyKiU0Pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DzpW7mxr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oKVDcEXm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47AA8C433A6;
-	Sun, 24 Mar 2024 23:42:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DzpW7mxr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 573A4C433C7;
+	Sun, 24 Mar 2024 23:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323724;
-	bh=wTx2CP0rQOPjoKpSAi8r0GICFQMvOfBkNPFf9R3b24w=;
+	s=k20201202; t=1711323726;
+	bh=FU8bOYJOpA7z5HZUBn8V79nlonCFP1MChAiD587xR18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oKVDcEXmVTlUt+yV/kg46kkOkfErAaoyRqcHMQxZrk4MzeEcqM7GWFu2FeNBavRvw
-	 5NdKjWHpl3/ggAwZDyi8LpKdgjna+/czSRh2fEgVnxV1yHqV/b9vElA4ripPUs2nYU
-	 606KIEXeKW1FrZkq4M9K78Sfmyevv28CGclI5MPpYaDaSUD9NYE5gE4Db0X7kagGeO
-	 7I8BB9od03YPgzkv5VW0QlckyHdiUKkj1Av2ZyLhCHdmuXRBlMF0QcuIYJqagXy6Yw
-	 4ZW5BFfvBCRExTIh9aGrUqnR+pAtAi3oJALbkzMIOwwnhyjhZRK9UgJT4WePVlIrWc
-	 QX/IxG29/SH1g==
+	b=DzpW7mxrH+GLwsfSeFj+kW9LBbzI2zpw//kPq5gGrBAWVMHLstju8CdLd1zaRojPH
+	 jq+xBt8LCP3vaG5BytdyibwPOVJDIZLr3l5judsz/88QHmmGtPpElkgl3UE0zajW+9
+	 zTb6C1eJZcK9oykD8W0tzUmc/70y+MmGbtzRaoFeg7dMSJ+9AIedee97b2UTua3XxS
+	 VnlTyfYBIRMBRmapWbPRVupi4lKPLbLY/MPRMs51brmqZzKT6R9cGSnulFbXGvF30t
+	 5UyW2zzG4fVpg3ckQDTz6wX6CKwOLXhfgEPxgS5qgZob56kkwyxOPvxihPa94cW8oB
+	 P+gAGxHY29lfg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tommaso Merciai <tommaso.merciai@amarulasolutions.com>,
-	Michael Trimarchi <michael@amarulasolutions.com>,
-	Alberto Bianchi <alberto.bianchi@amarulasolutions.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Viresh Kumar <viresh.kumar@linaro.org>,
+	kernel test robot <lkp@intel.com>,
+	Dhruva Gole <d-gole@ti.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 097/238] net: phy: DP83822: enable rgmii mode if phy_interface_is_rgmii
-Date: Sun, 24 Mar 2024 19:38:05 -0400
-Message-ID: <20240324234027.1354210-98-sashal@kernel.org>
+Subject: [PATCH 5.10 099/238] OPP: debugfs: Fix warning around icc_get_name()
+Date: Sun, 24 Mar 2024 19:38:07 -0400
+Message-ID: <20240324234027.1354210-100-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -51,57 +49,48 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Tommaso Merciai <tommaso.merciai@amarulasolutions.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-[ Upstream commit 621427fbdada788f18f77238e1c36f463c2cb9d1 ]
+[ Upstream commit 28330ceb953e39880ea77da4895bb902a1244860 ]
 
-RGMII mode can be enable from dp83822 straps, and also writing bit 9
-of register 0x17 - RMII and Status Register (RCSR).
-When phy_interface_is_rgmii rgmii mode must be enabled, same for
-contrary, this prevents malconfigurations of hw straps
+If the kernel isn't built with interconnect support, icc_get_name()
+returns NULL and we get following warning:
 
-References:
- - https://www.ti.com/lit/gpn/dp83822i p66
+drivers/opp/debugfs.c: In function 'bw_name_read':
+drivers/opp/debugfs.c:43:42: error: '%.62s' directive argument is null [-Werror=format-overflow=]
+         i = scnprintf(buf, sizeof(buf), "%.62s\n", icc_get_name(path));
 
-Signed-off-by: Tommaso Merciai <tommaso.merciai@amarulasolutions.com>
-Co-developed-by: Michael Trimarchi <michael@amarulasolutions.com>
-Suggested-by: Alberto Bianchi <alberto.bianchi@amarulasolutions.com>
-Tested-by: Tommaso Merciai <tommaso.merciai@amarulasolutions.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Stable-dep-of: c8a5c731fd12 ("net: phy: dp83822: Fix RGMII TX delay configuration")
+Fix it.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202402141313.81ltVF5g-lkp@intel.com/
+Fixes: 0430b1d5704b0 ("opp: Expose bandwidth information via debugfs")
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/dp83822.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/opp/debugfs.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/dp83822.c b/drivers/net/phy/dp83822.c
-index 81412999445d8..dce87589b1120 100644
---- a/drivers/net/phy/dp83822.c
-+++ b/drivers/net/phy/dp83822.c
-@@ -94,7 +94,8 @@
- #define DP83822_WOL_INDICATION_SEL BIT(8)
- #define DP83822_WOL_CLR_INDICATION BIT(11)
+diff --git a/drivers/opp/debugfs.c b/drivers/opp/debugfs.c
+index 60f4ff8e044d1..016dea5a412be 100644
+--- a/drivers/opp/debugfs.c
++++ b/drivers/opp/debugfs.c
+@@ -36,10 +36,12 @@ static ssize_t bw_name_read(struct file *fp, char __user *userbuf,
+ 			    size_t count, loff_t *ppos)
+ {
+ 	struct icc_path *path = fp->private_data;
++	const char *name = icc_get_name(path);
+ 	char buf[64];
+-	int i;
++	int i = 0;
  
--/* RSCR bits */
-+/* RCSR bits */
-+#define DP83822_RGMII_MODE_EN	BIT(9)
- #define DP83822_RX_CLK_SHIFT	BIT(12)
- #define DP83822_TX_CLK_SHIFT	BIT(11)
+-	i = scnprintf(buf, sizeof(buf), "%.62s\n", icc_get_name(path));
++	if (name)
++		i = scnprintf(buf, sizeof(buf), "%.62s\n", name);
  
-@@ -386,6 +387,12 @@ static int dp83822_config_init(struct phy_device *phydev)
- 			if (err)
- 				return err;
- 		}
-+
-+		phy_set_bits_mmd(phydev, DP83822_DEVADDR,
-+					MII_DP83822_RCSR, DP83822_RGMII_MODE_EN);
-+	} else {
-+		phy_clear_bits_mmd(phydev, DP83822_DEVADDR,
-+					MII_DP83822_RCSR, DP83822_RGMII_MODE_EN);
- 	}
- 
- 	if (dp83822->fx_enabled) {
+ 	return simple_read_from_buffer(userbuf, count, ppos, buf, i);
+ }
 -- 
 2.43.0
 
