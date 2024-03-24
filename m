@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB5417653A;
-	Sun, 24 Mar 2024 23:37:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B02176544;
+	Sun, 24 Mar 2024 23:37:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323434; cv=none; b=pYuZXn6zXpUKXJot3H4C6PijyywL6XWFZpkQP1+k5669R0pqW/Kw7T812IvzYP5S/l6TRO99+TTm1/1kZ91yBa30gGMtUwQcRmJVGVvlJKnOilssJ0OgAun3TZ4p6c2Kp5liE+3jrlGZydhfOYb0SW0cGXQOYJC64roaYkQ5GEA=
+	t=1711323436; cv=none; b=ujCIKAXz4hF0A0Or6zXjtRjeySC6f7SwPxlsVagPyR0mffRImuZVMk8LsPnbEUhZMHxVwg2fhVDqvmhPBaep4urJpLNrCbO8o3Qa9GoIc4P+F9ZcUdDxfix28fHyiz0VNvC7Ohrwhf+ZPxy6Ggq8Ly0TCjSig0tjAgJu1HvY1NE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323434; c=relaxed/simple;
-	bh=vHQWxmR2KBzDLTijSawxGqzNKDYiaWW7CDZBDWPM3Bs=;
+	s=arc-20240116; t=1711323436; c=relaxed/simple;
+	bh=y0/SDoJTHZbC2KUnfOWqbDLyT9cqRrJ5ZiUthqZIIxs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W05YbJGq8ITQMQ+gVvTtZ4uQpZX5252+S7izWX11lANLo9NLXrFsDL1Zq7w11pitxnkPfVjiHBMb3TmaHH6rrFS70ooVTE81fJ+ektESHa94mHV4/EI3el7DLLPQY7VqffndvQd2hTMS+ECW0XpUVFFMQvjJRwhFgyg6pKhfrJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YKhrZt4F; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Xc+Ffx8O96Hu+xh4nCTuSoIUSvUk+CPXAWrUSKZwq70r+B1d/bzUq8OmiuamY5dwOJYQet1lljjv7v6mxzbcxjfpp8+Qfu7CDAd3bs+qWW9JewoGMV7aPZTkRp4Wivfk7vCcnXRQFAVpnz3+01c/KcAt1ZEVUe6tAreQA+BakuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uAsueXXr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YKhrZt4F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06CF5C433C7;
-	Sun, 24 Mar 2024 23:37:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uAsueXXr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15687C43390;
+	Sun, 24 Mar 2024 23:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323433;
-	bh=vHQWxmR2KBzDLTijSawxGqzNKDYiaWW7CDZBDWPM3Bs=;
+	s=k20201202; t=1711323435;
+	bh=y0/SDoJTHZbC2KUnfOWqbDLyT9cqRrJ5ZiUthqZIIxs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YKhrZt4FPrPUQ6J0QvQ9l+4plGds6Xv6AaHs2fmNhlEUMVN206neUIeU3NJruTPYP
-	 ywjsIuzCW82oey6YqQO46UAMHjbmLelvCF70aTI6ck5hJtz0nS/KUh7qFvuMpM7v1r
-	 a58gOiBptHfBkKP0qoRAIRUiWOLAMNULIiCnwcaOvjQw/5hotM3fW21u8hUdDwp6z2
-	 wiBRv9bauvfDyrnN6FFv9WrXoxJQKIAPQIM1rOmrRZUDRP46TBRHzzbEAD/K0LW1KX
-	 v1K6lKY4pp2kIhBQztaAwvlF0YyecPisAX88Y5m6sLSgK7RGqLUoRE6sbz3fzNjda4
-	 WnxealhnLxN/g==
+	b=uAsueXXrqlxtkmtCegohlMdBMa0KvMyiuXboYgw6/KobejZHUnZit6ULtpaV/CUDo
+	 7RHQqdFZOvIjBxM+FnygNuMsBdas+/xTowNtDTcaOPj/qfauODh6Mc9bhMEw9mgaMT
+	 myV72TuYJCeEXwP04Z2R/GYugy8CjMliAa9sZs1s7vscu7aCcc2Ett+S75VxMcwM8R
+	 PpgnQnL3RkNoxdSLmi96AOwKGPxSDl3z0FbxAy1mYp29C1vxlow/bDFwEGtEO185Wy
+	 p7FMaGAiBnYLn5fFtUvsRBJnV3LKX+bli6sk7ykQVz+NVbudCptHJ+CrJ/aPoBqLPa
+	 QnJe2zM5sG6WQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Shiming Cheng <shiming.cheng@mediatek.com>,
-	Lena Wang <lena.wang@mediatek.com>,
-	David Ahern <dsahern@kernel.org>,
+Cc: =?UTF-8?q?K=C3=A9vin=20L=27h=C3=B4pital?= <kevin.lhopital@savoirfairelinux.com>,
+	Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>,
+	Russell King <rmk+kernel@armlinux.org.uk>,
 	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 136/317] ipv6: fib6_rules: flush route cache when rule is changed
-Date: Sun, 24 Mar 2024 19:31:56 -0400
-Message-ID: <20240324233458.1352854-137-sashal@kernel.org>
+Subject: [PATCH 5.15 138/317] net: phy: fix phy_get_internal_delay accessing an empty array
+Date: Sun, 24 Mar 2024 19:31:58 -0400
+Message-ID: <20240324233458.1352854-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -46,57 +46,48 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Shiming Cheng <shiming.cheng@mediatek.com>
+From: Kévin L'hôpital <kevin.lhopital@savoirfairelinux.com>
 
-[ Upstream commit c4386ab4f6c600f75fdfd21143f89bac3e625d0d ]
+[ Upstream commit 4469c0c5b14a0919f5965c7ceac96b523eb57b79 ]
 
-When rule policy is changed, ipv6 socket cache is not refreshed.
-The sock's skb still uses a outdated route cache and was sent to
-a wrong interface.
+The phy_get_internal_delay function could try to access to an empty
+array in the case that the driver is calling phy_get_internal_delay
+without defining delay_values and rx-internal-delay-ps or
+tx-internal-delay-ps is defined to 0 in the device-tree.
+This will lead to "unable to handle kernel NULL pointer dereference at
+virtual address 0". To avoid this kernel oops, the test should be delay
+>= 0. As there is already delay < 0 test just before, the test could
+only be size == 0.
 
-To avoid this error we should update fib node's version when
-rule is changed. Then skb's route will be reroute checked as
-route cache version is already different with fib node version.
-The route cache is refreshed to match the latest rule.
-
-Fixes: 101367c2f8c4 ("[IPV6]: Policy Routing Rules")
-Signed-off-by: Shiming Cheng <shiming.cheng@mediatek.com>
-Signed-off-by: Lena Wang <lena.wang@mediatek.com>
-Reviewed-by: David Ahern <dsahern@kernel.org>
+Fixes: 92252eec913b ("net: phy: Add a helper to return the index for of the internal delay")
+Co-developed-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
+Signed-off-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
+Signed-off-by: Kévin L'hôpital <kevin.lhopital@savoirfairelinux.com>
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/fib6_rules.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/phy/phy_device.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ipv6/fib6_rules.c b/net/ipv6/fib6_rules.c
-index dcedfe29d9d93..8e9e80eb0f329 100644
---- a/net/ipv6/fib6_rules.c
-+++ b/net/ipv6/fib6_rules.c
-@@ -446,6 +446,11 @@ static size_t fib6_rule_nlmsg_payload(struct fib_rule *rule)
- 	       + nla_total_size(16); /* src */
- }
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 0429825a7179d..c1d6ebf12ec74 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -2904,7 +2904,7 @@ s32 phy_get_internal_delay(struct phy_device *phydev, struct device *dev,
+ 	if (delay < 0)
+ 		return delay;
  
-+static void fib6_rule_flush_cache(struct fib_rules_ops *ops)
-+{
-+	rt_genid_bump_ipv6(ops->fro_net);
-+}
-+
- static const struct fib_rules_ops __net_initconst fib6_rules_ops_template = {
- 	.family			= AF_INET6,
- 	.rule_size		= sizeof(struct fib6_rule),
-@@ -458,6 +463,7 @@ static const struct fib_rules_ops __net_initconst fib6_rules_ops_template = {
- 	.compare		= fib6_rule_compare,
- 	.fill			= fib6_rule_fill,
- 	.nlmsg_payload		= fib6_rule_nlmsg_payload,
-+	.flush_cache		= fib6_rule_flush_cache,
- 	.nlgroup		= RTNLGRP_IPV6_RULE,
- 	.policy			= fib6_rule_policy,
- 	.owner			= THIS_MODULE,
+-	if (delay && size == 0)
++	if (size == 0)
+ 		return delay;
+ 
+ 	if (delay < delay_values[0] || delay > delay_values[size - 1]) {
 -- 
 2.43.0
 
