@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F87215667C;
-	Sun, 24 Mar 2024 23:11:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1150A1420A0;
+	Sun, 24 Mar 2024 23:11:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321875; cv=none; b=YmrT8G/+1een1qu6kzkJvHd3vxWyH2f7+E8dRj4YdpcSv6ZTAc5BBbl31SXPV+DNp+zkYsS1pNTy1K3pTBeKcKU34O/uUOQgLhb3BJRe05aL4g/eS6O3TXefmAPj3gN1bjeEBhRjttAQNUDIvtQWOcxQFlHqOAlYb/qP1MlZtAk=
+	t=1711321870; cv=none; b=BHgpSc7UW6+ctbsWLqYNEJUN0+UVS1T/g7lY7TBDmhCQUBr+mbt5o0G1U5aYtDQGOfCM/6GFHuGnAbkd9zm5kQ8Q21NdPzZbRgmavMSqwg9P+Vh16+UFSAt2qgoSvnVn5Qmj7UfkypfLSAfL8ZRST7EVJheMjgEOaWjc8n2e1Vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321875; c=relaxed/simple;
-	bh=b+cfHwYVmcb6v1xtWQRDN7EJ5eGD1+aoCdknQYizZ+Q=;
+	s=arc-20240116; t=1711321870; c=relaxed/simple;
+	bh=ELHBAbs1fF3g04g0c/StxuFke/EZ7CLJiWHlfB2oJnE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qjTHMBSQ2cBwAqtg93T8TNvkgjjn8Sgv843ckKKf5DRJiG8uFbg9dv6L4VVC+sNqgWZ/ZXhzLQUzCRH0ZmWxIgslyMedlhK+uWFGUipfOTbi4/hc1psg4Hzbi6WIL5+JOq3mNKgbLNnnfDld0Yb6KSd0wKqYjI9CpMaKc2BFO8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O/rYENFb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=chgN7RBf3WpP8zOC6s7RN7beF/xsbsz3iBmBt+wRaT0hpchKEiN0gQ3g3NvhYNtW4ZAHQcu6qjmXWN5MBZlYm8hOjUF+xQntjt4t26ekK3I3GQWi4a+qurncPOLcEH7CyTCuxypfh82ueNNzc1P3vtGmGbiMAoJeV83TrEIPgZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qO7zpYPw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O/rYENFb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41F47C43394;
-	Sun, 24 Mar 2024 23:11:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qO7zpYPw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 352C7C43390;
+	Sun, 24 Mar 2024 23:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321875;
-	bh=b+cfHwYVmcb6v1xtWQRDN7EJ5eGD1+aoCdknQYizZ+Q=;
+	s=k20201202; t=1711321868;
+	bh=ELHBAbs1fF3g04g0c/StxuFke/EZ7CLJiWHlfB2oJnE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=O/rYENFbFKbLYBgFrmFEdp4SxUEM9fD2Kk0D6IcqklAE2vOP2o2EZUsScWPzp8Mju
-	 B4BESfzwU4lixJ7XQrIpJd9c3wQGPk/BfCuoLTS+LoStBq8iA4R+McBNRdjTcm8/UJ
-	 YqErsksUS4B/5tTLAdXEzLPWhR9VkQtgqcLe1fPwpsSd6udL5eTe6WDlZqTZclEv/r
-	 jnbweZc1V61kdxFaSWI0EL+hTIKKhARZ0rB2iPY0x4ef4/Svn01GqZjUdtzH1IvI6R
-	 VURAyKjD/oTwpG8cRB2IBbn9oPUNAhsmkvOaBQN26gNyHWSEA6bapaZR7nf/dAxcsS
-	 pcme0FfLHzlew==
+	b=qO7zpYPwLhsajtTLX9YBVPtzZ7dAk4NrOVJUXgsLOw1ZLUcHYko/N0JF3f4dDBOJb
+	 QOa1RxYZy8aHwoWIlRzSTmJlQ5GZyP3jpH9eXx5N1LJJjCt3EbO+3/Kadx2JfZ80m4
+	 zpgDEvx6/NwURiJO3+GRixlInTiZYpjwzVq3dtjBA7NuNEyaOwIRYN7V/qCDVJLibh
+	 4MawjCypE3DPhyh2UPVz0scIGLBEXtctPzQQnhs+ORr/jKHX6n/4QjaMQ7Q+fPMHhq
+	 zS7GxmHNKZoKTEMrgUHwps1Cgb++vp8C0OW0U8VyJScCYF9fTvq1tyvfOOHtCNwPTx
+	 YFpuUD/aC5dCg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
-	Justin Swartz <justin.swartz@risingedge.co.za>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 603/638] net: dsa: mt7530: prevent possible incorrect XTAL frequency selection
-Date: Sun, 24 Mar 2024 19:00:40 -0400
-Message-ID: <20240324230116.1348576-604-sashal@kernel.org>
+Subject: [PATCH 6.6 597/638] riscv: Fix compilation error with FAST_GUP and rv32
+Date: Sun, 24 Mar 2024 19:00:34 -0400
+Message-ID: <20240324230116.1348576-598-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -45,178 +45,44 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arınç ÜNAL <arinc.unal@arinc9.com>
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
 
-[ Upstream commit f490c492e946d8ffbe65ad4efc66de3c5ede30a4 ]
+[ Upstream commit 2bb7e0c49302feec1c2f777bbfe8726169986ed8 ]
 
-On MT7530, the HT_XTAL_FSEL field of the HWTRAP register stores a 2-bit
-value that represents the frequency of the crystal oscillator connected to
-the switch IC. The field is populated by the state of the ESW_P4_LED_0 and
-ESW_P4_LED_0 pins, which is done right after reset is deasserted.
+By surrounding the definition of pte_leaf_size() with a ifdef napot as
+it should have been.
 
-  ESW_P4_LED_0    ESW_P3_LED_0    Frequency
-  -----------------------------------------
-  0               0               Reserved
-  0               1               20MHz
-  1               0               40MHz
-  1               1               25MHz
-
-On MT7531, the XTAL25 bit of the STRAP register stores this. The LAN0LED0
-pin is used to populate the bit. 25MHz when the pin is high, 40MHz when
-it's low.
-
-These pins are also used with LEDs, therefore, their state can be set to
-something other than the bootstrapping configuration. For example, a link
-may be established on port 3 before the DSA subdriver takes control of the
-switch which would set ESW_P3_LED_0 to high.
-
-Currently on mt7530_setup() and mt7531_setup(), 1000 - 1100 usec delay is
-described between reset assertion and deassertion. Some switch ICs in real
-life conditions cannot always have these pins set back to the bootstrapping
-configuration before reset deassertion in this amount of delay. This causes
-wrong crystal frequency to be selected which puts the switch in a
-nonfunctional state after reset deassertion.
-
-The tests below are conducted on an MT7530 with a 40MHz crystal oscillator
-by Justin Swartz.
-
-With a cable from an active peer connected to port 3 before reset, an
-incorrect crystal frequency (0b11 = 25MHz) is selected:
-
-                      [1]                  [3]     [5]
-                      :                    :       :
-              _____________________________         __________________
-ESW_P4_LED_0                               |_______|
-              _____________________________
-ESW_P3_LED_0                               |__________________________
-
-                       :                  : :     :
-                       :                  : [4]...:
-                       :                  :
-                       [2]................:
-
-[1] Reset is asserted.
-[2] Period of 1000 - 1100 usec.
-[3] Reset is deasserted.
-[4] Period of 315 usec. HWTRAP register is populated with incorrect
-    XTAL frequency.
-[5] Signals reflect the bootstrapped configuration.
-
-Increase the delay between reset_control_assert() and
-reset_control_deassert(), and gpiod_set_value_cansleep(priv->reset, 0) and
-gpiod_set_value_cansleep(priv->reset, 1) to 5000 - 5100 usec. This amount
-ensures a higher possibility that the switch IC will have these pins back
-to the bootstrapping configuration before reset deassertion.
-
-With a cable from an active peer connected to port 3 before reset, the
-correct crystal frequency (0b10 = 40MHz) is selected:
-
-                      [1]        [2-1]     [3]     [5]
-                      :          :         :       :
-              _____________________________         __________________
-ESW_P4_LED_0                               |_______|
-              ___________________           _______
-ESW_P3_LED_0                     |_________|       |__________________
-
-                       :          :       : :     :
-                       :          [2-2]...: [4]...:
-                       [2]................:
-
-[1] Reset is asserted.
-[2] Period of 5000 - 5100 usec.
-[2-1] ESW_P3_LED_0 goes low.
-[2-2] Remaining period of 5000 - 5100 usec.
-[3] Reset is deasserted.
-[4] Period of 310 usec. HWTRAP register is populated with bootstrapped
-    XTAL frequency.
-[5] Signals reflect the bootstrapped configuration.
-
-ESW_P3_LED_0 low period before reset deassertion:
-
-              5000 usec
-            - 5100 usec
-    TEST     RESET HOLD
-       #         (usec)
-  ---------------------
-       1           5410
-       2           5440
-       3           4375
-       4           5490
-       5           5475
-       6           4335
-       7           4370
-       8           5435
-       9           4205
-      10           4335
-      11           3750
-      12           3170
-      13           4395
-      14           4375
-      15           3515
-      16           4335
-      17           4220
-      18           4175
-      19           4175
-      20           4350
-
-     Min           3170
-     Max           5490
-
-  Median       4342.500
-     Avg       4466.500
-
-Revert commit 2920dd92b980 ("net: dsa: mt7530: disable LEDs before reset").
-Changing the state of pins via reset assertion is simpler and more
-efficient than doing so by setting the LED controller off.
-
-Fixes: b8f126a8d543 ("net-next: dsa: add dsa support for Mediatek MT7530 switch")
-Fixes: c288575f7810 ("net: dsa: mt7530: Add the support of MT7531 switch")
-Co-developed-by: Justin Swartz <justin.swartz@risingedge.co.za>
-Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: e0fe5ab4192c ("riscv: Fix pte_leaf_size() for NAPOT")
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Link: https://lore.kernel.org/r/20240304080247.387710-1-alexghiti@rivosinc.com
+Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mt7530.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/riscv/include/asm/pgtable.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 4b6ac3f29f8f1..38fc968cd6d21 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -2244,11 +2244,11 @@ mt7530_setup(struct dsa_switch *ds)
- 	 */
- 	if (priv->mcm) {
- 		reset_control_assert(priv->rstc);
--		usleep_range(1000, 1100);
-+		usleep_range(5000, 5100);
- 		reset_control_deassert(priv->rstc);
- 	} else {
- 		gpiod_set_value_cansleep(priv->reset, 0);
--		usleep_range(1000, 1100);
-+		usleep_range(5000, 5100);
- 		gpiod_set_value_cansleep(priv->reset, 1);
- 	}
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index c00bd5377db9a..2793304bf1b76 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -438,9 +438,11 @@ static inline pte_t pte_mkhuge(pte_t pte)
+ 	return pte;
+ }
  
-@@ -2450,11 +2450,11 @@ mt7531_setup(struct dsa_switch *ds)
- 	 */
- 	if (priv->mcm) {
- 		reset_control_assert(priv->rstc);
--		usleep_range(1000, 1100);
-+		usleep_range(5000, 5100);
- 		reset_control_deassert(priv->rstc);
- 	} else {
- 		gpiod_set_value_cansleep(priv->reset, 0);
--		usleep_range(1000, 1100);
-+		usleep_range(5000, 5100);
- 		gpiod_set_value_cansleep(priv->reset, 1);
- 	}
++#ifdef CONFIG_RISCV_ISA_SVNAPOT
+ #define pte_leaf_size(pte)	(pte_napot(pte) ?				\
+ 					napot_cont_size(napot_cont_order(pte)) :\
+ 					PAGE_SIZE)
++#endif
  
+ #ifdef CONFIG_NUMA_BALANCING
+ /*
 -- 
 2.43.0
 
