@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFE91DF10B;
-	Sun, 24 Mar 2024 22:52:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B311DEA0C;
+	Sun, 24 Mar 2024 22:52:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320745; cv=none; b=SA4biUFs3v4uzUJBSU8hI2WVDZX4Kfw2JLQHoYuW/x7a6wb4Ng2knGCGZfmIw5ddVtYQv9WEJnxC1upMtmvP8NtkVwUnmMWX1GBA9IHueykX+3kNv2VrzIOnfLHBHwX2yVcU42+TuWrV/9ROGcnWMw/JB9cULrLicCNtPJPoJ2M=
+	t=1711320740; cv=none; b=R1Wt2KsNZyyItuXvJWxxEW8P15WaK8zjXyEWn+hW4UVeFcBU2HY5zhdXFTAqzczLcsLwM0Xt1t/nXNgU9s+L8MQjfgSkVmcAdx8TIJKYwQRzQhaAwTz2vd5k8tXHLlyLuk9+4zNRPpgc11gbmz5C6MUVB1LNAbjCqiZLMVCTCXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320745; c=relaxed/simple;
-	bh=dnKtJv9o0MbAL+MDMRs+y5NYGE3Zb6APtJ9KUpq6zsQ=;
+	s=arc-20240116; t=1711320740; c=relaxed/simple;
+	bh=TQXYspbfT+moCuXb5jEZWh2Vb5Vn0eF+7P6IyRXaoAE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kbn5w9v9Tx9b9bcgfJMi/PXre+ryvgK1UD5aVAdI54p4GIl2m3vAna+mFct41w/IAnaGcQQvXq9fxZzG8SGMVAeLIIePijNg4EK1FhCx/FDiSFtNi7SnxzqH7m2q2Zn3tEbFpkFvH2Hm+2/hYYh3SFq5zZwcPl8b6Jp5Rih+cac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=msp3UF/t; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PIkiV0Bphvb8GWW5EpbwSggiahXqXyyQHmy5xYW1kdunwq55qHZ93CpGfmYvYkVQmxFZwhMqN5RCPHgmj9qp/CAy9lgMKjXV4EF1MzV0+xwEUeiuKn/XzaXuoIUhWRhaVGqCkvxZCaIShZkpnLXgDOfwWNxYukfLhjh9Z4xHw7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mvd1mos8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="msp3UF/t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3477C43394;
-	Sun, 24 Mar 2024 22:52:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mvd1mos8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61903C433C7;
+	Sun, 24 Mar 2024 22:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320744;
-	bh=dnKtJv9o0MbAL+MDMRs+y5NYGE3Zb6APtJ9KUpq6zsQ=;
+	s=k20201202; t=1711320739;
+	bh=TQXYspbfT+moCuXb5jEZWh2Vb5Vn0eF+7P6IyRXaoAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=msp3UF/tbr7HuK5GsxFu4rEXCxZdYGSiapU2mo1g1hmFIaxTHapXeGfBEllxrpkPi
-	 2tfjuwUa+0P+O3zLNO8GGbB7ocbUL/JZ8IelmkFJY6Zi1M1IBE82ts+fkp/7sw29K/
-	 IqExkl9pi41ge5D+sFc3v7Ydthk4q0mfs0hibITlO5fBE0WQM7p4KxmyRJarAQNJb2
-	 1/sF4pFJ/9lehqrpC4Uy8jVq8zQm0XWvlqyt01ZIEIpXvQqLSA7IlKr6zZ6iJS8py4
-	 6GEZ5sc4xeWgIyHtRoXjhh5cdOwkcxH7pUHtCXcE0OXzKLYoyuALi3rcQPQISN/ksr
-	 EoKJItn65UMkA==
+	b=mvd1mos88x1TDU8EPJpxeN19C5Cgy7S9h6MFGJlSIFidM9Y+WrK26NF9GfA/ByDqO
+	 8kmPxTP/7RE0duMHerrKycCKRvLw64mB6FaJp5ZZGWeN+7Q2Zfs57jwSz+U8GVtAUa
+	 9wkrAFOUtiAcbsjF9iYvwj8SQ25A1T5XMfMwRpBxR+aJI9wqcNpOsbLkSdjRsViV9E
+	 JybMMlX2mIle3F6Y3Yg7xjOL/anFnRnGH+ZijHig2dc2uVMKEjnhhsLJoqv+dQz31V
+	 lvEAyKx7FHE4v2b4cb5kMJ1Mat9sm8FcU8CiD7uKLOyPjkH96ZDKoGQlOJgBkwV/9T
+	 2+0hiMdz2qQOA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jeremy Kerr <jk@codeconstruct.com.au>,
-	Jian Zhang <zhangjian.3032@bytedance.com>,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>,
+	kernel test robot <lkp@intel.com>,
+	Felix Fietkau <nbd@nbd.name>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 308/713] net: mctp: copy skb ext data when fragmenting
-Date: Sun, 24 Mar 2024 18:40:34 -0400
-Message-ID: <20240324224720.1345309-309-sashal@kernel.org>
+Subject: [PATCH 6.7 302/713] wifi: mt76: mt7921: fix incorrect type conversion for CLC command
+Date: Sun, 24 Mar 2024 18:40:28 -0400
+Message-ID: <20240324224720.1345309-303-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,60 +49,45 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jeremy Kerr <jk@codeconstruct.com.au>
+From: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
 
-[ Upstream commit 1394c1dec1c619a46867ed32791a29695372bff8 ]
+[ Upstream commit b6351ef9994ccb93b2447d396a0c517964dff2bc ]
 
-If we're fragmenting on local output, the original packet may contain
-ext data for the MCTP flows. We'll want this in the resulting fragment
-skbs too.
+clc->len is defined as 32 bits in length, so it must also be
+operated on with 32 bits, not 16 bits.
 
-So, do a skb_ext_copy() in the fragmentation path, and implement the
-MCTP-specific parts of an ext copy operation.
-
-Fixes: 67737c457281 ("mctp: Pass flow data & flow release events to drivers")
-Reported-by: Jian Zhang <zhangjian.3032@bytedance.com>
-Signed-off-by: Jeremy Kerr <jk@codeconstruct.com.au>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Fixes: fa6ad88e023d ("wifi: mt76: mt7921: fix country count limitation for CLC")
+Signed-off-by: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202312112104.Zkc3QUHr-lkp@intel.com/
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/skbuff.c | 8 ++++++++
- net/mctp/route.c  | 3 +++
- 2 files changed, 11 insertions(+)
+ drivers/net/wireless/mediatek/mt76/mt7921/mcu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 94cc40a6f7975..78cb3304fb353 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -6676,6 +6676,14 @@ static struct skb_ext *skb_ext_maybe_cow(struct skb_ext *old,
- 		for (i = 0; i < sp->len; i++)
- 			xfrm_state_hold(sp->xvec[i]);
- 	}
-+#endif
-+#ifdef CONFIG_MCTP_FLOWS
-+	if (old_active & (1 << SKB_EXT_MCTP)) {
-+		struct mctp_flow *flow = skb_ext_get_ptr(old, SKB_EXT_MCTP);
-+
-+		if (flow->key)
-+			refcount_inc(&flow->key->refs);
-+	}
- #endif
- 	__skb_ext_put(old);
- 	return new;
-diff --git a/net/mctp/route.c b/net/mctp/route.c
-index ceee44ea09d97..01c530dbc1a65 100644
---- a/net/mctp/route.c
-+++ b/net/mctp/route.c
-@@ -843,6 +843,9 @@ static int mctp_do_fragment_route(struct mctp_route *rt, struct sk_buff *skb,
- 		/* copy message payload */
- 		skb_copy_bits(skb, pos, skb_transport_header(skb2), size);
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7921/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7921/mcu.c
+index 399d7ca6bebcb..18056045d9759 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7921/mcu.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7921/mcu.c
+@@ -1270,7 +1270,7 @@ int __mt7921_mcu_set_clc(struct mt792x_dev *dev, u8 *alpha2,
+ 		.acpi_conf = mt792x_acpi_get_flags(&dev->phy),
+ 	};
+ 	int ret, valid_cnt = 0;
+-	u16 buf_len = 0;
++	u32 buf_len = 0;
+ 	u8 *pos;
  
-+		/* we need to copy the extensions, for MCTP flow data */
-+		skb_ext_copy(skb2, skb);
-+
- 		/* do route */
- 		rc = rt->output(rt, skb2);
- 		if (rc)
+ 	if (!clc)
+@@ -1281,7 +1281,7 @@ int __mt7921_mcu_set_clc(struct mt792x_dev *dev, u8 *alpha2,
+ 	if (mt76_find_power_limits_node(&dev->mt76))
+ 		req.cap |= CLC_CAP_DTS_EN;
+ 
+-	buf_len = le16_to_cpu(clc->len) - sizeof(*clc);
++	buf_len = le32_to_cpu(clc->len) - sizeof(*clc);
+ 	pos = clc->data;
+ 	while (buf_len > 16) {
+ 		struct mt7921_clc_rule *rule = (struct mt7921_clc_rule *)pos;
 -- 
 2.43.0
 
