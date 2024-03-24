@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB9A1856D9;
-	Sun, 24 Mar 2024 23:52:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9237122F500;
+	Sun, 24 Mar 2024 23:52:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324368; cv=none; b=NYbxvLg9nX3gzaB+y8FEeUqLgPhAdMCuXuQjlW5hT+Vjt06fUNvHDsYYmpXX5jgjW3WHw4l7lwM2HdlGaPCJ3IYfSBqM4ceWGHVbDgg79EcKRDjyxzmmVm6WdoL4B5EFdi2EimgGMoPxQwstIH0ZhJ0VxrADUkAV1cVc0TwYJ/0=
+	t=1711324374; cv=none; b=cqizvOu/Ejw1NO2wo3ssKqNDtvw3Xsjyr/ievLKVPIGl1QmIwzDYfhjs9lejnAymv7vzZIOKKMUYYctK6MiKQxFazysFNIemR8ytS2NMVdjiGonnnMgfRKLURxuAmnIWvxdWq1X7sx4K98+agRq7Xg7nW7jPHfQvnWYLLikZzCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324368; c=relaxed/simple;
-	bh=nKQoc1DwiUrnUcoKk605gJP8MdHJHIWy+wH2tgP474o=;
+	s=arc-20240116; t=1711324374; c=relaxed/simple;
+	bh=wzcLOFErmxgbR3bL6+t3Pc8OhoA272ipSkVOSgI3vBc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z/mTGMxkSvEbu+P/0+ssd5vxBeH5Q2QXNRwCJ7bQh8DB6IXW84DweaEzDr1aT7xDJUtIc4Mkl8cE8ho6BZWA4oC/av3gJMA2mcuAO1KmZUf3GojMl0PcMnNm6fB1UpYsFFYy3Pu02lSTxQHu6nxR84R0AiXO5CDm5/uGfv12qrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JxDniNk9; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XaEjE4dfIldJK1BH0APA0D5+AIdK1JYYz9iGF//IWX8jo3IJv+CnSs/Po53aRfDI8p8Tv4dBZ+1uaYBxzrQ1cI4Dtb5eQlSmWoAeRKCqyhO4xwRnTmcdHcpaeIhtZx5RcChciMSHhSnccAfv6lsma3XVtdzQXKqqDsMBFO6tMsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZbF28nGh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JxDniNk9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD9CBC433F1;
-	Sun, 24 Mar 2024 23:52:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZbF28nGh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D06E8C43390;
+	Sun, 24 Mar 2024 23:52:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324367;
-	bh=nKQoc1DwiUrnUcoKk605gJP8MdHJHIWy+wH2tgP474o=;
+	s=k20201202; t=1711324373;
+	bh=wzcLOFErmxgbR3bL6+t3Pc8OhoA272ipSkVOSgI3vBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JxDniNk9JZDTBIyaAu2ezjBLnglSRHnyrFoVrwOwgsLC7zLc2wQzQ9ZEF+lX131x3
-	 +BPmtrD2X3zZDG450mLhVXKMhXQ7CxpJjdSS83KxgGo0hu0XbSMiOJgHwGMqHegj4g
-	 9YLbiBMD48RMMXQBVSJCNME3mNHaDg7pqcECeaVj7DlHiQ6pcs+PRAGboMlOruEXRE
-	 pFB415D6xdqmVcr6MAS8EV/BPBc6XmB3ilUF1ClusdiR9SWXmpD0p3yWHe5tDQBIy/
-	 fBe4Z2GgYO94nZmM15ndXGxvNTLThBqJ3idW+Keucs4olLGc+6hAcrOd/ek0hHxjml
-	 3lioDmmD98Zow==
+	b=ZbF28nGhCuR3MY2+7xLBYV7jhjWPcvJbuKMuQD4TULYie8RYZMJMxF4IiFRLI+wTm
+	 CjjKnbEFgbu4kZJfHbxpVgt6yVd9Z8eFwlyeyxmJpLd3SJFX5WZlp4E2UQCnm8pteE
+	 c1CxsWU1s4UD9gwTd/ofnKO9j3dGHXwOdwaQEmzmepLqxtvVo+sUbDVjhqBdHQAbh2
+	 HSeY1cVantcGmU2KZM7LKicvUAp1mali/6SM7ZyjEFbz/iouqZtWkZzMEOiMCIeYdf
+	 /ZsRbPnOMy8ahjtzhroJeEQtoKJmX4tL3u5U6ijaYXntjH32MuvJoENJfD1d+SV1Rx
+	 WUCKe4lLa5C5w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Sean Anderson <sean.anderson@seco.com>,
-	stable <stable@kernel.org>,
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 134/148] usb: phy: generic: Get the vbus supply
-Date: Sun, 24 Mar 2024 19:49:58 -0400
-Message-ID: <20240324235012.1356413-135-sashal@kernel.org>
+Subject: [PATCH 4.19 139/148] serial: 8250_exar: Don't remove GPIO device on suspend
+Date: Sun, 24 Mar 2024 19:50:03 -0400
+Message-ID: <20240324235012.1356413-140-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -49,42 +48,47 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Sean Anderson <sean.anderson@seco.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 03e607cbb2931374db1825f371e9c7f28526d3f4 ]
+[ Upstream commit 73b5a5c00be39e23b194bad10e1ea8bb73eee176 ]
 
-While support for working with a vbus was added, the regulator was never
-actually gotten (despite what was documented). Fix this by actually
-getting the supply from the device tree.
+It seems a copy&paste mistake that suspend callback removes the GPIO
+device. There is no counterpart of this action, means once suspended
+there is no more GPIO device available untile full unbind-bind cycle
+is performed. Remove suspicious GPIO device removal in suspend.
 
-Fixes: 7acc9973e3c4 ("usb: phy: generic: add vbus support")
-Cc: stable <stable@kernel.org>
-Signed-off-by: Sean Anderson <sean.anderson@seco.com>
-Link: https://lore.kernel.org/r/20220425171412.1188485-3-sean.anderson@seco.com
+Fixes: d0aeaa83f0b0 ("serial: exar: split out the exar code from 8250_pci")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20240219150627.2101198-2-andriy.shevchenko@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/phy/phy-generic.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/tty/serial/8250/8250_exar.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/usb/phy/phy-generic.c b/drivers/usb/phy/phy-generic.c
-index a53b89be53248..8a04b157f19f3 100644
---- a/drivers/usb/phy/phy-generic.c
-+++ b/drivers/usb/phy/phy-generic.c
-@@ -283,6 +283,13 @@ int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_generic *nop,
- 			return -EPROBE_DEFER;
- 	}
+diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
+index 195f58c5b477f..319737919381d 100644
+--- a/drivers/tty/serial/8250/8250_exar.c
++++ b/drivers/tty/serial/8250/8250_exar.c
+@@ -553,6 +553,7 @@ static void exar_pci_remove(struct pci_dev *pcidev)
+ 	for (i = 0; i < priv->nr; i++)
+ 		serial8250_unregister_port(priv->line[i]);
  
-+	nop->vbus_draw = devm_regulator_get_exclusive(dev, "vbus");
-+	if (PTR_ERR(nop->vbus_draw) == -ENODEV)
-+		nop->vbus_draw = NULL;
-+	if (IS_ERR(nop->vbus_draw))
-+		return dev_err_probe(dev, PTR_ERR(nop->vbus_draw),
-+				     "could not get vbus regulator\n");
-+
- 	nop->dev		= dev;
- 	nop->phy.dev		= nop->dev;
- 	nop->phy.label		= "nop-xceiv";
++	/* Ensure that every init quirk is properly torn down */
+ 	if (priv->board->exit)
+ 		priv->board->exit(pcidev);
+ }
+@@ -567,10 +568,6 @@ static int __maybe_unused exar_suspend(struct device *dev)
+ 		if (priv->line[i] >= 0)
+ 			serial8250_suspend_port(priv->line[i]);
+ 
+-	/* Ensure that every init quirk is properly torn down */
+-	if (priv->board->exit)
+-		priv->board->exit(pcidev);
+-
+ 	return 0;
+ }
+ 
 -- 
 2.43.0
 
