@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F093137923;
-	Sun, 24 Mar 2024 23:05:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06920137936;
+	Sun, 24 Mar 2024 23:05:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321543; cv=none; b=Hf4c12VrMqiSArJ4KUIli9HIPRONNuFKtp1ruR2//N972P3eJLtM8vRVdQB33yysrCjCDtTNWE76adZMP57l/JoU/hqN6NrL8Qsr/xFBl/5KswPA9ltlEzJ5JkWA1qyQF+urmgUFvUCGIO3YNeiV9aQPlJJZtvzFBtZwwM5O1LU=
+	t=1711321553; cv=none; b=EuckhKTqLniqPl5ysGflEy8qW7T8wS9KZKt5dOguMIj4naAeV3E3m3/45Kr0jtHkOPWiCwYqi071EOehaiHY44KgpUbZpvr9Ppy5XVHKpdK9nKlApJ4G0qQ/rQCGGRmF+DTGdoWhvXj2yExWW6mtdKr9NROTQ6h/Ja9mpP1x/JA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321543; c=relaxed/simple;
-	bh=y5w/BJhZ9ZAo7JQPzIZug2Ac9FBly8WTfC9ZuWIKE8w=;
+	s=arc-20240116; t=1711321553; c=relaxed/simple;
+	bh=fEwnBI35cXTjGoBBgXolNQPB6xmc4Wr8Ex5Lp9+T2DU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rwYn7lRwCCqAqx7aYfhvZU88s/T83jjWEBSlteAf76pekDcI9FWdj6CLXB2nk4ugET0RuN+/mDMe0NVZ/FStzU+NDR/mfDGFRM3LbHENaIyKo6DbreqKjp8xHnUYNianlSqAMIvUgx2XuwJ5K43NGtCE3gr2pEHQtKHk3H/UFeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TAV/67AB; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=eqVUGeNEBpqYc1rEgF1/ah3PXhtYOECqOeAcFemL10S0QpMptdQS7io2vcMU2aX7aKEA4aHK1ABTt6lMULBMmz59MrjFPMuLg8WfIaiSD416o/0p2jdpDpmJwif6HStiR6fqD+hIsErzciA/FJHFjtzOHHQqNcpepOb8HQbNeS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nAHubKPM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TAV/67AB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C22F3C43390;
-	Sun, 24 Mar 2024 23:05:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nAHubKPM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 020E9C433C7;
+	Sun, 24 Mar 2024 23:05:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321542;
-	bh=y5w/BJhZ9ZAo7JQPzIZug2Ac9FBly8WTfC9ZuWIKE8w=;
+	s=k20201202; t=1711321551;
+	bh=fEwnBI35cXTjGoBBgXolNQPB6xmc4Wr8Ex5Lp9+T2DU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TAV/67AB6cj4AnmwbP4BdzqBuJ1gvuZ8A/xbFUudD5SWWeUb/MIK3Hga6op8XsyTN
-	 KlhjRjGZwRJFhe/dv6WCKXNAYSP+YYPBfmgIOCa1AAdTemQROHS8O60r4bvl6P6XLL
-	 UyMXGV+r3MRUbj1rN6kLmHuE/o4j+LxY1t43hJEK3GaCrKEAZkFO9jkkMhtPf0OMfz
-	 L8M1fNJrZU9OUJWrY0MWvFpJ/03Lm+E77PKvAsDLmiimVbrcxHPDfWGNln3UhIvMWm
-	 fQfkPKKKb/wOLGzvcVWYXqTbjMvk3OBpx0vip7QadVnnsm3vPZAVOVkXvL33VBS5eo
-	 HMXiwLK3QXzwg==
+	b=nAHubKPMxnbdN901JwDofDfaaonz3WdiYhPnHre3TiHEWFaferRCgBjS4fU8BmuYb
+	 j6wd7PfFsMtEQuWXQRBFUTL2deYcMCeKTHaJgpCXOmDVd++GnbDcbYGISGk+LmvBti
+	 Pv7H5mvIYFuQtT8h3KtnwyJPFY6S4v+seqUlAFB05p37EujbCz1XXctryWvClV0QTZ
+	 /bBcVKU0hNfYFN7v3i9NFWw5CT9+EmfW4KNg1GC/abBj80eRHDREnPo1GlA2obo301
+	 JM88EYx+iDNJZYtdTakOzts/vA+C/I04pTGe3bPiPQNPvOsKCvGFnqac9ZIndE8Z3E
+	 aZ1Et+wPnPvvA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Liu Ying <victor.liu@nxp.com>,
-	Shawn Guo <shawnguo@kernel.org>,
+Cc: Heiko Stuebner <heiko.stuebner@cherry.de>,
+	Sugar Zhang <sugar.zhang@rock-chips.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Quentin Schulz <quentin.schulz@theobroma-systems.com>,
+	Heiko Stuebner <heiko@sntech.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 270/638] arm64: dts: imx8mp-evk: Fix hdmi@3d node
-Date: Sun, 24 Mar 2024 18:55:07 -0400
-Message-ID: <20240324230116.1348576-271-sashal@kernel.org>
+Subject: [PATCH 6.6 280/638] arm64: dts: rockchip: drop rockchip,trcm-sync-tx-only from rk3588 i2s
+Date: Sun, 24 Mar 2024 18:55:17 -0400
+Message-ID: <20240324230116.1348576-281-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,117 +51,53 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Liu Ying <victor.liu@nxp.com>
+From: Heiko Stuebner <heiko.stuebner@cherry.de>
 
-[ Upstream commit 0ff08803eca417dfa9372194bebf3d1b1f501f98 ]
+[ Upstream commit a8037ceb89649659831e86a87a9329d1bb43c735 ]
 
-The hdmi@3d node's compatible string is "adi,adv7535" instead of
-"adi,adv7533" or "adi,adv751*".
+The rockchip,trcm-sync-tx-only property is at this time only documented
+for the tdm variant of Rockchip i2s controllers.
 
-Fix the hdmi@3d node by means of:
-* Use default register addresses for "cec", "edid" and "packet", because
-  there is no need to use a non-default address map.
-* Add missing interrupt related properties.
-* Drop "adi,input-*" properties which are only valid for adv751*.
-* Add VEXT_3V3 fixed regulator.
-* Add "*-supply" properties, since most are required.
-* Fix label names - s/adv7533/adv7535/.
+While there was a series [0] adding code and binding for the property,
+it doesn't seem to have gone forward back in 2021.
 
-Fixes: 65344b9bed3a ("arm64: dts: imx8mp-evk: Add HDMI support")
-Signed-off-by: Liu Ying <victor.liu@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+So for now fix the devicetree check by removing the property from rk3588
+i2s controllers until support for it gets merged.
+
+[0] https://patchwork.kernel.org/project/linux-rockchip/patch/1629796734-4243-5-git-send-email-sugar.zhang@rock-chips.com/
+
+Fixes: 8ae112a5554f ("arm64: dts: rockchip: Add rk3588s I2S nodes")
+Cc: Sugar Zhang <sugar.zhang@rock-chips.com>
+Cc: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
+Reviewed-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+Link: https://lore.kernel.org/r/20240227164659.705271-2-heiko@sntech.de
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mp-evk.dts | 33 +++++++++++++-------
- 1 file changed, 21 insertions(+), 12 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3588s.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-index cc9d468b43ab8..92f8cc05fe9da 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-@@ -23,7 +23,7 @@ hdmi-connector {
- 
- 		port {
- 			hdmi_connector_in: endpoint {
--				remote-endpoint = <&adv7533_out>;
-+				remote-endpoint = <&adv7535_out>;
- 			};
- 		};
- 	};
-@@ -107,6 +107,13 @@ reg_usdhc2_vmmc: regulator-usdhc2 {
- 		enable-active-high;
- 	};
- 
-+	reg_vext_3v3: regulator-vext-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VEXT_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
- 	sound {
- 		compatible = "simple-audio-card";
- 		simple-audio-card,name = "wm8960-audio";
-@@ -342,7 +349,7 @@ BUCK4 {
- 				regulator-always-on;
- 			};
- 
--			BUCK5 {
-+			reg_buck5: BUCK5 {
- 				regulator-name = "BUCK5";
- 				regulator-min-microvolt = <1650000>;
- 				regulator-max-microvolt = <1950000>;
-@@ -393,14 +400,16 @@ &i2c2 {
- 
- 	hdmi@3d {
- 		compatible = "adi,adv7535";
--		reg = <0x3d>, <0x3c>, <0x3e>, <0x3f>;
--		reg-names = "main", "cec", "edid", "packet";
-+		reg = <0x3d>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;
- 		adi,dsi-lanes = <4>;
--		adi,input-depth = <8>;
--		adi,input-colorspace = "rgb";
--		adi,input-clock = "1x";
--		adi,input-style = <1>;
--		adi,input-justification = "evenly";
-+		avdd-supply = <&reg_buck5>;
-+		dvdd-supply = <&reg_buck5>;
-+		pvdd-supply = <&reg_buck5>;
-+		a2vdd-supply = <&reg_buck5>;
-+		v3p3-supply = <&reg_vext_3v3>;
-+		v1p2-supply = <&reg_buck5>;
- 
- 		ports {
- 			#address-cells = <1>;
-@@ -409,7 +418,7 @@ ports {
- 			port@0 {
- 				reg = <0>;
- 
--				adv7533_in: endpoint {
-+				adv7535_in: endpoint {
- 					remote-endpoint = <&dsi_out>;
- 				};
- 			};
-@@ -417,7 +426,7 @@ adv7533_in: endpoint {
- 			port@1 {
- 				reg = <1>;
- 
--				adv7533_out: endpoint {
-+				adv7535_out: endpoint {
- 					remote-endpoint = <&hdmi_connector_in>;
- 				};
- 			};
-@@ -502,7 +511,7 @@ port@1 {
- 			reg = <1>;
- 
- 			dsi_out: endpoint {
--				remote-endpoint = <&adv7533_in>;
-+				remote-endpoint = <&adv7535_in>;
- 				data-lanes = <1 2 3 4>;
- 			};
- 		};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+index 4aa516ff156df..aa18cf1d1afaa 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+@@ -1542,7 +1542,6 @@ i2s2_2ch: i2s@fe490000 {
+ 		dmas = <&dmac1 0>, <&dmac1 1>;
+ 		dma-names = "tx", "rx";
+ 		power-domains = <&power RK3588_PD_AUDIO>;
+-		rockchip,trcm-sync-tx-only;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2s2m1_lrck
+ 			     &i2s2m1_sclk
+@@ -1563,7 +1562,6 @@ i2s3_2ch: i2s@fe4a0000 {
+ 		dmas = <&dmac1 2>, <&dmac1 3>;
+ 		dma-names = "tx", "rx";
+ 		power-domains = <&power RK3588_PD_AUDIO>;
+-		rockchip,trcm-sync-tx-only;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2s3_lrck
+ 			     &i2s3_sclk
 -- 
 2.43.0
 
