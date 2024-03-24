@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58687202B84;
-	Sun, 24 Mar 2024 23:03:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84CA20239E;
+	Sun, 24 Mar 2024 23:03:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321436; cv=none; b=DmGEQhN3IVoWFgwB2HmjI8fw5XKP15ZMyuxwLm0NYU0tQNcXINqUEEtCeYWwQeNGKT70DeyWYh/jZEEaHHnJOI6fTua3slboeqbBoHjwGhWr0JTAWX42SPJp0r7+SvgMkMwZBZIoE0oOYcXbS6lHXFmrSRf1M6Ldtgvx0uJB0fY=
+	t=1711321430; cv=none; b=PhaNefMK4nFMR1SymcJiSFGe1g7RuwMpmcLudGp4UVfw/r1t6SNCF8tZnFpSIWuD02U0GMJeuv1U+4xSCiBYXAEyUdJIPNXIup1Cpx60a636VSzqDKxHQ2zoHMANubDqloTlQz/CD3Wm5GD/ST6v7cn/YuG+bcLywq97wnSFbb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321436; c=relaxed/simple;
-	bh=C5+iWgv1WmZKo9V89Vlt5pXL8s+c771eDGwih5584Qk=;
+	s=arc-20240116; t=1711321430; c=relaxed/simple;
+	bh=+4AiABqnksxNdiMVZMOXIxNcwiZbJbOVBDo6C4zJjWs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZM79YTVboRh+jYRDvx7zFC17BjRUB1F3JBpJiwFAGGMFw904/08f0o/LPhSL1wTJmhr3/x1vfG/rtD3/MK66rJYm9D+XUqKwptJNRthJU9ky+bvgGvd/84z5WYEY0Wi5CXuQ+sYG6B8DeiDlJP0De8oEah7jHB0q3AJ7wl7T/a4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KNrwGHIM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QxTKy4O6OuA7q/edSEDLjgIjfZOmAtQSs29ezNjKt0XiGgU5qqK8SNrhClZebPRdksPVGeZbCrPVCIymVIOWMvmSENAsHRk011rzKs+Y7ZHnwZXYbjLxO1DPidfbM1E6TvhY8w6G+Iida9sQBY6iwgGE14ba8Zz3oS+pivgb4i4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dgWoFn+J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KNrwGHIM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9034AC433C7;
-	Sun, 24 Mar 2024 23:03:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dgWoFn+J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B839C433F1;
+	Sun, 24 Mar 2024 23:03:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321436;
-	bh=C5+iWgv1WmZKo9V89Vlt5pXL8s+c771eDGwih5584Qk=;
+	s=k20201202; t=1711321429;
+	bh=+4AiABqnksxNdiMVZMOXIxNcwiZbJbOVBDo6C4zJjWs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KNrwGHIMreKV3D1VL7Qo+icOWwY7xPBkE0Vq9riq3LP534xjtWrf5c+uEnuoKKjKL
-	 ddM/Wq3SBjUbn3J9SFjr/4yWqmJrKkNJaqNdLywtEXXO0l670op2S0O5v+drAFU+Rk
-	 b7dHG+j9cBMolfLWe26QJD4PgfwYbKXqc/U3nZhAwA9YvKUI3TFupGA5MlnqOspoDp
-	 sZCo/THag1QXkmCV2iJ7XgWn3D6R4Q/vnvc2r0aGd0Yiq5tFUwS9HFH4WW8VH/K1j2
-	 4NQneyMOJ/XT+CcgVBfdBnya/EJrBvMDUmlG3Dvy6NFajbnSrlugRKCzUPw64RpRrO
-	 Hx1stPNtbRQBQ==
+	b=dgWoFn+JtYkrsie3Iim3VBF9Lsh1sAxZ3gxTYCbG3NRmUBeE9MLpYBUjgzCoDiOob
+	 4rD8qP0kP1ajpf0icrGefosSIpCEADsGBec+hG4kqEkB9RrWpDwUcNx93nRQJkMozl
+	 +VI3Y8Cqw1xCgJg6Ddh7mw8u8qMwxPhKNc9JsYezwZUKLJ6Y9dnBLU5dTcGPxcPTQN
+	 vAoEC+VVKivvJzAuGxD30FGrKrlwn4VFqMh3N4fQkaOgOVNuZfxCWSjdPEJ1m/LM8w
+	 rW4T2icgQhn6HzivQgUk6Ac35NLdv1WfQrGFXb7bFGtcg5N8kjAX7wdbTB7xuWpDLu
+	 XOxvVxDLnzBxQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Shawn Guo <shawnguo@kernel.org>,
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 160/638] arm64: dts: imx8mm-kontron: Disable pull resistors for SD card signals on BL OSM-S board
-Date: Sun, 24 Mar 2024 18:53:17 -0400
-Message-ID: <20240324230116.1348576-161-sashal@kernel.org>
+Subject: [PATCH 6.6 153/638] arm64: dts: renesas: r8a779g0: Restore sort order
+Date: Sun, 24 Mar 2024 18:53:10 -0400
+Message-ID: <20240324230116.1348576-154-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,77 +47,124 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 5a940ba3e4d7c8710c9073ff5d0ca4644d4da9db ]
+[ Upstream commit 8b93657c976a61726d7ffbe8d019b84b4abfb673 ]
 
-Some signals have external pullup resistors on the board and don't need
-the internal ones to be enabled. Due to silicon errata ERR050080 let's
-disable the internal pull resistors whererever possible and prevent
-any unwanted behavior in case they wear out.
+Numerical by unit address, alphabetical by node name.
 
-Fixes: de9618e84f76 ("arm64: dts: Add support for Kontron SL/BL i.MX8MM OSM-S")
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/f00ef274a73c8fd60f940a1649423a8927b9ae8a.1705324708.git.geert+renesas@glider.be
+Stable-dep-of: 08e799f6bce8 ("arm64: dts: renesas: r8a779g0: Add missing SCIF_CLK2")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../dts/freescale/imx8mm-kontron-bl-osm-s.dts  | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a779g0.dtsi | 72 +++++++++++------------
+ 1 file changed, 36 insertions(+), 36 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
-index 1dd03ef0a7835..d9fa0deea7002 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
-@@ -337,40 +337,40 @@ MX8MM_IOMUXC_NAND_CE1_B_GPIO3_IO2		0x19
- 
- 	pinctrl_usdhc2: usdhc2grp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x190
-+			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x90
- 			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d0
- 			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d0
- 			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d0
- 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d0
- 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d0
--			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x019
--			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
-+			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
-+			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xd0
- 		>;
+diff --git a/arch/arm64/boot/dts/renesas/r8a779g0.dtsi b/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
+index d3d25e077c5d5..3be1159982b20 100644
+--- a/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
+@@ -161,11 +161,6 @@ L3_CA76_1: cache-controller-1 {
+ 		};
  	};
  
- 	pinctrl_usdhc2_100mhz: usdhc2-100mhzgrp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x194
-+			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x94
- 			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d4
- 			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d4
- 			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d4
- 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d4
- 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d4
--			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x019
--			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
-+			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
-+			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xd0
- 		>;
+-	psci {
+-		compatible = "arm,psci-1.0", "arm,psci-0.2";
+-		method = "smc";
+-	};
+-
+ 	extal_clk: extal {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+@@ -185,6 +180,11 @@ pmu_a76 {
+ 		interrupts-extended = <&gic GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
  	};
  
- 	pinctrl_usdhc2_200mhz: usdhc2-200mhzgrp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x196
-+			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x96
- 			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d6
- 			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d6
- 			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d6
- 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d6
- 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d6
--			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x019
--			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
-+			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
-+			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xd0
- 		>;
- 	};
- };
++	psci {
++		compatible = "arm,psci-1.0", "arm,psci-0.2";
++		method = "smc";
++	};
++
+ 	/* External SCIF clock - to be overridden by boards that provide it */
+ 	scif_clk: scif {
+ 		compatible = "fixed-clock";
+@@ -1777,6 +1777,37 @@ ssi0: ssi-0 {
+ 			};
+ 		};
+ 
++		mmc0: mmc@ee140000 {
++			compatible = "renesas,sdhi-r8a779g0",
++				     "renesas,rcar-gen4-sdhi";
++			reg = <0 0xee140000 0 0x2000>;
++			interrupts = <GIC_SPI 440 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 706>,
++				 <&cpg CPG_CORE R8A779G0_CLK_SD0H>;
++			clock-names = "core", "clkh";
++			power-domains = <&sysc R8A779G0_PD_ALWAYS_ON>;
++			resets = <&cpg 706>;
++			max-frequency = <200000000>;
++			iommus = <&ipmmu_ds0 32>;
++			status = "disabled";
++		};
++
++		rpc: spi@ee200000 {
++			compatible = "renesas,r8a779g0-rpc-if",
++				     "renesas,rcar-gen4-rpc-if";
++			reg = <0 0xee200000 0 0x200>,
++			      <0 0x08000000 0 0x04000000>,
++			      <0 0xee208000 0 0x100>;
++			reg-names = "regs", "dirmap", "wbuf";
++			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 629>;
++			power-domains = <&sysc R8A779G0_PD_ALWAYS_ON>;
++			resets = <&cpg 629>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
+ 		ipmmu_rt0: iommu@ee480000 {
+ 			compatible = "renesas,ipmmu-r8a779g0",
+ 				     "renesas,rcar-gen4-ipmmu-vmsa";
+@@ -1886,37 +1917,6 @@ ipmmu_mm: iommu@eefc0000 {
+ 			#iommu-cells = <1>;
+ 		};
+ 
+-		mmc0: mmc@ee140000 {
+-			compatible = "renesas,sdhi-r8a779g0",
+-				     "renesas,rcar-gen4-sdhi";
+-			reg = <0 0xee140000 0 0x2000>;
+-			interrupts = <GIC_SPI 440 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&cpg CPG_MOD 706>,
+-				 <&cpg CPG_CORE R8A779G0_CLK_SD0H>;
+-			clock-names = "core", "clkh";
+-			power-domains = <&sysc R8A779G0_PD_ALWAYS_ON>;
+-			resets = <&cpg 706>;
+-			max-frequency = <200000000>;
+-			iommus = <&ipmmu_ds0 32>;
+-			status = "disabled";
+-		};
+-
+-		rpc: spi@ee200000 {
+-			compatible = "renesas,r8a779g0-rpc-if",
+-				     "renesas,rcar-gen4-rpc-if";
+-			reg = <0 0xee200000 0 0x200>,
+-			      <0 0x08000000 0 0x04000000>,
+-			      <0 0xee208000 0 0x100>;
+-			reg-names = "regs", "dirmap", "wbuf";
+-			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&cpg CPG_MOD 629>;
+-			power-domains = <&sysc R8A779G0_PD_ALWAYS_ON>;
+-			resets = <&cpg 629>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			status = "disabled";
+-		};
+-
+ 		gic: interrupt-controller@f1000000 {
+ 			compatible = "arm,gic-v3";
+ 			#interrupt-cells = <3>;
 -- 
 2.43.0
 
