@@ -1,43 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04121CA4E6;
-	Sun, 24 Mar 2024 22:46:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51B274E3F;
+	Sun, 24 Mar 2024 22:46:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320386; cv=none; b=Ewq2zpEgIdJKj8xFgdkIy7u40RAOKqGO90m5Ie1HbMMHkTjJQ1Lbt0Iut8bm6kNOuU070WpQNzgja3fqGgsEYIKppl4R/tXbXxkBdLL+XXvbijzJupPeg+AtZ0FUCFl/b2RgQThREec9VCIl67ryZ1B8H4Gg6OLV0gpNM3Z88LY=
+	t=1711320388; cv=none; b=eAKYiqGUKVBd4at67XxDav00XbPraLlEf3fUwOneawkvnEagj0MJYKgcd6SS0GqAJeLqDUkTrdHsTKueAepx/NLj5p/9133Y4qwKZOCoxw86vD3Q9tQf4zvrhalYJ9Ry+BTsHptnzReIOkyOiVTa6h0ExdKgHz7urS2mwrGGSyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320386; c=relaxed/simple;
-	bh=M3RyVEmAdG18Uf98CnWxfJEQF+9AM22OpQEfaCG5vEs=;
+	s=arc-20240116; t=1711320388; c=relaxed/simple;
+	bh=vwZ5D5SxX73diJEFAtTAeHLjd4n9ybGa/CBUkh1hVtU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RKMnhN/DrYbMlHgUEIRq7L26nPBnl/Iys1xzZsRE2cOEpT8qcZ+wAwi2VAuccAahaXcYvYmOZ2HY57mIHgzM7ptyUO/Rja3Hdo7Rzpu8astRTF8yqZb3cq9MgcyfmX0ibPGV+wGOlnheE0Whna8IkMZdZROxPPqCMDIG6G1E9ZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ciz9SzHL; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Yt5par6kFy6bcNlgwEURzJ0xvbD5buujlUVwZEhqFvpZ0mHhg37smpjcHl8rJ1m6JbarPeVqy/irfWOp8t9nD0Uv2SFpoHR/K+NblL0xpGQCmnYAfYEHFpIpGUhezm0p7LbW8DxhoqaPR3ctWokTR/vHLXJWUrkDEzvDhHQfBhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZI+J+dRy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ciz9SzHL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB982C433C7;
-	Sun, 24 Mar 2024 22:46:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZI+J+dRy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECC60C433F1;
+	Sun, 24 Mar 2024 22:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320385;
-	bh=M3RyVEmAdG18Uf98CnWxfJEQF+9AM22OpQEfaCG5vEs=;
+	s=k20201202; t=1711320387;
+	bh=vwZ5D5SxX73diJEFAtTAeHLjd4n9ybGa/CBUkh1hVtU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ciz9SzHLi4mD3stnIFjkQSJuTDCPC5qhpAvFjUapvBU6OE7x4ule3ObgwiQISZC0T
-	 ujBuIyTaZfLuRY3tOV5HjIKvAGIgF4nopD2f9QTBsMt2Bi0QU3UtlNZQcJCHHmuUsD
-	 +bmnrDG6gdaNk9SFt/s5fLMksrSQqO7NO5IXCuU9laMc5L0emKgh3pE0Iwc45TutZT
-	 PJ4eTu9H300urfkS/riyliRvJQ3n3IAYni9yfoq3DzFRCsu2P2W05TNJE90B01pmNu
-	 l05Q3hjwnktCaBbhBnPhYh0gDPPY9WJ7iI/KSzHBl3AvFBYfj/W2rGEahSgw4vJHxa
-	 owgBwap1inb4g==
+	b=ZI+J+dRyfocEZoQPIHnPuz2rrNBEdd98x2lpA3bt6NFU81ZLLMIfl/f9YuIiNIhAq
+	 xPG3clDpbtk/9N+XCAvNOWzTD/9vSodN1jKM7iGKUYKvwYjtdw4fs5ArMHGq6wsTj3
+	 dXGVo7b4ZqCSk6HpvFqkjCUl6EqadNlcAwKlKP2xHq5YkHBDxxushYVS+6NtladZsd
+	 gh+PRg5JzTm8TkD/zB0iqUrNTmJUfJPwX3InvCEUORqaLJ9qJYxE3dDZtLIU+ssg5o
+	 2TwsrngJ4eJ20gK8MuM8UbjXB9ZiMShBS7jKuGNbIkRjXg1kqFoAGthat5lQ4akVQ8
+	 VJuQOatcc6FTw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jiri Pirko <jiri@nvidia.com>,
-	Chenyuan Yang <chenyuan0y@gmail.com>,
-	Parav Pandit <parav@nvidia.com>,
-	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Subbaraya Sundeep <sbhatta@marvell.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.8 691/715] devlink: fix port new reply cmd type
-Date: Sun, 24 Mar 2024 18:34:30 -0400
-Message-ID: <20240324223455.1342824-692-sashal@kernel.org>
+Subject: [PATCH 6.8 693/715] octeontx2-pf: Wait till detach_resources msg is complete
+Date: Sun, 24 Mar 2024 18:34:32 -0400
+Message-ID: <20240324223455.1342824-694-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324223455.1342824-1-sashal@kernel.org>
 References: <20240324223455.1342824-1-sashal@kernel.org>
@@ -51,44 +48,52 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jiri Pirko <jiri@nvidia.com>
+From: Subbaraya Sundeep <sbhatta@marvell.com>
 
-[ Upstream commit 78a2f5e6c15d8dcbd6495bb9635c7cb89235dfc5 ]
+[ Upstream commit cbf2f24939a5dafce6de4dd4422e543ce8f610cf ]
 
-Due to a c&p error, port new reply fills-up cmd with wrong value,
-any other existing port command replies and notifications.
+During VF driver remove, a message is sent to detach VF
+resources to PF but VF is not waiting until message is
+complete. Also mailbox interrupts need to be turned off
+after the detach resource message is complete. This patch
+fixes that problem.
 
-Fix it by filling cmd with value DEVLINK_CMD_PORT_NEW.
-
-Skimmed through devlink userspace implementations, none of them cares
-about this cmd value.
-
-Reported-by: Chenyuan Yang <chenyuan0y@gmail.com>
-Closes: https://lore.kernel.org/all/ZfZcDxGV3tSy4qsV@cy-server/
-Fixes: cd76dcd68d96 ("devlink: Support add and delete devlink port")
-Signed-off-by: Jiri Pirko <jiri@nvidia.com>
-Reviewed-by: Parav Pandit <parav@nvidia.com>
-Reviewed-by: Kalesh AP <kalesh-anakkur.purayil@broadcom.com>
-Link: https://lore.kernel.org/r/20240318091908.2736542-1-jiri@resnulli.us
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: 05fcc9e08955 ("octeontx2-pf: Attach NIX and NPA block LFs")
+Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/devlink/port.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c | 2 +-
+ drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/devlink/port.c b/net/devlink/port.c
-index 4b2d46ccfe484..118d130d2afd5 100644
---- a/net/devlink/port.c
-+++ b/net/devlink/port.c
-@@ -889,7 +889,7 @@ int devlink_nl_port_new_doit(struct sk_buff *skb, struct genl_info *info)
- 		err = -ENOMEM;
- 		goto err_out_port_del;
- 	}
--	err = devlink_nl_port_fill(msg, devlink_port, DEVLINK_CMD_NEW,
-+	err = devlink_nl_port_fill(msg, devlink_port, DEVLINK_CMD_PORT_NEW,
- 				   info->snd_portid, info->snd_seq, 0, NULL);
- 	if (WARN_ON_ONCE(err))
- 		goto err_out_msg_free;
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+index 02d0b707aea5b..a85ac039d779b 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+@@ -1592,7 +1592,7 @@ int otx2_detach_resources(struct mbox *mbox)
+ 	detach->partial = false;
+ 
+ 	/* Send detach request to AF */
+-	otx2_mbox_msg_send(&mbox->mbox, 0);
++	otx2_sync_mbox_msg(mbox);
+ 	mutex_unlock(&mbox->lock);
+ 	return 0;
+ }
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
+index ced456cec8baf..cf0aa16d75407 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
+@@ -775,8 +775,8 @@ static void otx2vf_remove(struct pci_dev *pdev)
+ 	otx2_mcam_flow_del(vf);
+ 	otx2_shutdown_tc(vf);
+ 	otx2_shutdown_qos(vf);
+-	otx2vf_disable_mbox_intr(vf);
+ 	otx2_detach_resources(&vf->mbox);
++	otx2vf_disable_mbox_intr(vf);
+ 	free_percpu(vf->hw.lmt_info);
+ 	if (test_bit(CN10K_LMTST, &vf->hw.cap_flag))
+ 		qmem_free(vf->dev, vf->dync_lmt);
 -- 
 2.43.0
 
