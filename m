@@ -1,71 +1,109 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1E416F8E4;
-	Sun, 24 Mar 2024 22:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F95016F910;
+	Sun, 24 Mar 2024 22:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711319953; cv=none; b=W/c0V9xfJ4IGPiCwSn3lCy3vdoF1wgffgcC61A0lxuVSGlGeJ+JwmMe+fGsUHJ4hGbpjnMUQGsNQ9y14epGl6ab0JFQi9lQrDln8NGXGDWDagLaIOLNQcwtCS07oqln7M3hyE4+5KDype4LsYwUs5puzC108PVdMUmxIKmlB4e8=
+	t=1711319952; cv=none; b=NTZNMRsVXSxNHwuAkVsYASPaDSCvZrCrW3tD74N/lfWFbjfMVxTKESj6T7jgr49OBbm0kijke1XjkTg9GooizZcBIJC89t408qRwg5Od2rtuuDzB+LRYdx9UJMMwchXXHn1oLtBsZgs+IV8hKJZwC9zG5SV9Zji7ekaGh34X4vQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711319953; c=relaxed/simple;
-	bh=YBBrOOVm0QiVbvlKLxwCTvyT1oPnkka44VZl1bf1EYk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pYBOnBheWBqi681QESUIxXy6cC2CXjBnpkTxbKXt8fX7L7exzbjDgHaIuN8kMgyMPS2icnyrZPfcSmn/M97UOC6RxOfZRLiDC9VLZKP7C6iehZpQV/h3E0KCO8Ff83XXTvdJuptIZjuTGlJE6k5CLQ9rjRm09xMiH8BqGWCXb8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i53875a9e.versanet.de ([83.135.90.158] helo=phil.lan)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1roWUX-0007sn-4U; Sun, 24 Mar 2024 23:39:01 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: Rob Herring <robh+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Quentin Schulz <foss+kernel@0leil.net>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	Dragan Simic <dsimic@manjaro.org>,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	Quentin Schulz <quentin.schulz@theobroma-systems.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Klaus Goger <klaus.goger@theobroma-systems.com>
-Subject: Re: [PATCH v2 0/3] rockchip: small DTS fixes for RK3399 Puma
-Date: Sun, 24 Mar 2024 23:38:55 +0100
-Message-Id: <171131986744.918919.9548916004778456551.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240308-puma-diode-pu-v2-0-309f83da110a@theobroma-systems.com>
-References: <20240308-puma-diode-pu-v2-0-309f83da110a@theobroma-systems.com>
+	s=arc-20240116; t=1711319952; c=relaxed/simple;
+	bh=Xr8kLLrVwgeoPlmaIABADrI/R7hOw5vbzs+NXDMVYOw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ehhMvj1VHFaTqxD8QStPhUFg5xBIh74CNdBviEQ2sDhg2qD1axWIe2t/Gztd6zWXt9Qd7ernQ/pveQ9h7MEG48vU10Nu5UeiNc8Jm4y9wjns1kyTGnkV2vYRqr1bvPUtom3yWgRXz1Fltub9ZLg+L9eWXcHLolXe9Icvr/DKCgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kdVtbNoo; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kdVtbNoo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 983E7C433A6;
+	Sun, 24 Mar 2024 22:39:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711319952;
+	bh=Xr8kLLrVwgeoPlmaIABADrI/R7hOw5vbzs+NXDMVYOw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=kdVtbNooXZqDUSJQ/PcW4kEBfIcJrWhI3Mqf4QSYbB1mVh3wPuPJglV0Zd1oWMbqf
+	 ipGn7upTCCS/264CUhevNHa7DNQGv/zJetLIUgyjExyWidly8bh72LqEGAORi+l97s
+	 6V6j0NCc1zQlXGxQbY+jb2DTXDJ4ziBK3U7GNY49eAZpXYvR3OuKs31pmmbS3Ro2Lq
+	 VRFdDkwhighAN33f9+l0GXJ8NmCdWgwcddGi1rlfMkBkPUgesCE4tv5AcLxDq7NhkQ
+	 HN6pa/cHawxbFP2Zgc8ZnqJ2hPPy1yJ+S+dIs6/nbWvyPYpQDU5NSAqHrWKFP4PZFx
+	 x9TYyot9tWzgQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.8 258/715] arm64: dts: renesas: rzg3s-smarc-som: Guard Ethernet IRQ GPIO hogs
+Date: Sun, 24 Mar 2024 18:27:17 -0400
+Message-ID: <20240324223455.1342824-259-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240324223455.1342824-1-sashal@kernel.org>
+References: <20240324223455.1342824-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-On Fri, 08 Mar 2024 16:46:06 +0100, Quentin Schulz wrote:
-> There's a pull-up missing on a pin that is used as GPIO input for PCIe
-> which will make the diode/level-shifter not let voltage pass and thus
-> not allowing the state of the pin to change.
-> 
-> Also add the missing regulators for the PCIe PHY+connector though this
-> is purely cosmetic.
-> 
-> [...]
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Applied, thanks!
+[ Upstream commit 150d81f7a260f36c118cbec253fdd493c671dc29 ]
 
-[1/3] arm64: dts: rockchip: enable internal pull-up on Q7_USB_ID for RK3399 Puma
-      commit: e6b1168f37e3f86d9966276c5a3fff9eb0df3e5f
-[2/3] arm64: dts: rockchip: enable internal pull-up on PCIE_WAKE# for RK3399 Puma
-      commit: 945a7c8570916650a415757d15d83e0fa856a686
-[3/3] arm64: dts: rockchip: add regulators for PCIe on RK3399 Puma Haikou
-      commit: d7ed698abc28b2886c9fc71d17ca6b023fcf47f3
+Ethernet IRQ GPIOs are marked as GPIO hogs.  Thus, these GPIOs are
+requested at probe time without considering if there are other
+peripherals that need them.  The Ethernet IRQ GPIOs are shared with
+SDHI2.  Selection between Ethernet and SDHI2 is done through a hardware
+switch.  To avoid scenarios where one wants to boot with SDHI2 support
+and some SDHI pins are not propertly configured because of the GPIO
+hogs, guard the Ethernet IRQ GPIO hogs with the proper build flag.
 
-Best regards,
+Fixes: 932ff0c802c6 ("arm64: dts: renesas: rzg3s-smarc-som: Enable the Ethernet interfaces")
+Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20240208124300.2740313-13-claudiu.beznea.uj@bp.renesas.com
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
+index f062d4ad78b79..d33ab4c887878 100644
+--- a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
++++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
+@@ -193,12 +193,14 @@ &sdhi2 {
+ #endif
+ 
+ &pinctrl {
++#if SW_CONFIG3 == SW_ON
+ 	eth0-phy-irq-hog {
+ 		gpio-hog;
+ 		gpios = <RZG2L_GPIO(12, 0) GPIO_ACTIVE_LOW>;
+ 		input;
+ 		line-name = "eth0-phy-irq";
+ 	};
++#endif
+ 
+ 	eth0_pins: eth0 {
+ 		txc {
+@@ -234,12 +236,14 @@ mux {
+ 		};
+ 	};
+ 
++#if SW_CONFIG3 == SW_ON
+ 	eth1-phy-irq-hog {
+ 		gpio-hog;
+ 		gpios = <RZG2L_GPIO(12, 1) GPIO_ACTIVE_LOW>;
+ 		input;
+ 		line-name = "eth1-phy-irq";
+ 	};
++#endif
+ 
+ 	eth1_pins: eth1 {
+ 		txc {
 -- 
-Heiko Stuebner <heiko@sntech.de>
+2.43.0
+
