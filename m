@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094701E5F4D;
-	Sun, 24 Mar 2024 23:01:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044CE1FB711;
+	Sun, 24 Mar 2024 23:01:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321297; cv=none; b=TQqKixEw61tlY7miunYbB5dmoD/UwTR4OGl316v9M2i9glg4WHDKwtdgTD11tye3m5N0A7UqWiltcQynx+i1djY6t4vZ2gwQ+P47jnsi2UEpf9wixtjOImjNcH+jnk43nf0A4Tn0VFIpTosGJPxsAj+f5/k/KaD58sULK5prQoU=
+	t=1711321307; cv=none; b=IJRwDdDQSzEmdQW6QpwiAkvsId5eMyhv5rQLdZFeXFjMdRldCamq3rLtaDR19SkMvIgZ5B/Nup6sNSQZskwozVL21yCFysnroGflxznI/sc69/eU001NF5AmQQXpg+h8Vecw5ykk6U1Zqq8cRg+/5PKn5xdZf3ZbOdBaueiZ/PA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321297; c=relaxed/simple;
-	bh=BTstNTU4rdjYfmXZ3VWwYPtnTndcYv9QQpk64ZexWUo=;
+	s=arc-20240116; t=1711321307; c=relaxed/simple;
+	bh=74kBJTUxv1Q4HgbcKWpYMeYUi0KuiFLvBp1n22KuFJM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D11m9NqdwupslmJpQ8SI6MKxwKGord2OLmRT74vOxeyG6v8Uc1kWA0FHZRS0xnlhUT3LdGkrFI5BKtGSF4BVyjv0SimLez1m8chSkBuoVbmVxvexc3suWPB91uHlE7Ej+YwdwOswLkQVTj6yb6yhlYe4Vfvkg2qIP9QAFQBN/3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jKd+DjPs; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=CoYZHeA7L31hdygopoiihcV1b2oZ4X5MyhPv4tz/QLEm+mWdIhY8TNqvdnakz63ag+fSbgjuEvUv2TAPoYIpIO0EjAFqahyOPQV4SfdZBDswHTczsKsOQB5xkduXWTd0OAVAJGkFMr2hA8Yi/7DwZX9UZ6uqEzFInDPiwNAloQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sj2iaNlD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jKd+DjPs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDDD8C433F1;
-	Sun, 24 Mar 2024 23:01:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sj2iaNlD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D429AC433C7;
+	Sun, 24 Mar 2024 23:01:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321295;
-	bh=BTstNTU4rdjYfmXZ3VWwYPtnTndcYv9QQpk64ZexWUo=;
+	s=k20201202; t=1711321306;
+	bh=74kBJTUxv1Q4HgbcKWpYMeYUi0KuiFLvBp1n22KuFJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jKd+DjPsi9d8OytFZCg1b6qIQ5gdwXVRR5qXwjU89TUN8eG1P/FIxylQZHc+XdiFh
-	 iUcyODz5JKwyIbqcf0Ga5ieJVxw2gXLfeWvsCS+JoviG66W+Y6BCJDXYr7vFa10kvx
-	 /OGAMx1iRkscNYxNWm77uNBZXWzee/kEoHrgVp35ldwLeoMHFvltBrFrW1Vxjeomo7
-	 uIKgS2v9WA0DvG7B2VzM2SUTegJL/jnV1+js9w2GpH1gQ+b/bLpz2ZWsvB+tNCrwTn
-	 prJ3UrsY3F6IOurGRJJGhVE00DUspjD32YQTvw6Qv69w8rjSvQ3ijKv0VINTbv0Kyo
-	 /uBx6uLpPlsOQ==
+	b=Sj2iaNlDZFeJT3jT66ppwvepPePxrw4F/qxUz0yboGgGElS3AKaDWv1fXNwcK06Gf
+	 p3nAFM6YN1+4Ds1xBI9DO3ONI259WfY0QJEvp/zbQwA82G1/RtCa/ZRPvVA/SWQwkg
+	 jqUu0ACYx2Rftl2uP8fYQP06htHoXzFKr+5Dc5KcPP4bXY4iJe6kcy7kSug04183I3
+	 GcO27dNdcZfDAdlB5GHGNrk1d5VNCP3DldjF6pYYKqGsjPZXUCIHm23FaqBlaJP4rj
+	 2V6OSQdx+dYk0OMh+yAvAyet0GlRGVPycBBTKzVHdeaiSkeAvWHv0AsHNtMHTVUGCp
+	 vguDFYmbANm7A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+	Alexandra Winter <wintera@linux.ibm.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 018/638] ASoC: SOF: ipc4-pcm: Workaround for crashed firmware on system suspend
-Date: Sun, 24 Mar 2024 18:50:55 -0400
-Message-ID: <20240324230116.1348576-19-sashal@kernel.org>
+Subject: [PATCH 6.6 029/638] net/iucv: fix the allocation size of iucv_path_table array
+Date: Sun, 24 Mar 2024 18:51:06 -0400
+Message-ID: <20240324230116.1348576-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -51,66 +49,44 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+From: Alexander Gordeev <agordeev@linux.ibm.com>
 
-[ Upstream commit c40aad7c81e5fba34b70123ed7ce3397fa62a4d2 ]
+[ Upstream commit b4ea9b6a18ebf7f9f3a7a60f82e925186978cfcf ]
 
-When the system is suspended while audio is active, the
-sof_ipc4_pcm_hw_free() is invoked to reset the pipelines since during
-suspend the DSP is turned off, streams will be re-started after resume.
+iucv_path_table is a dynamically allocated array of pointers to
+struct iucv_path items. Yet, its size is calculated as if it was
+an array of struct iucv_path items.
 
-If the firmware crashes during while audio is running (or when we reset
-the stream before suspend) then the sof_ipc4_set_multi_pipeline_state()
-will fail with IPC error and the state change is interrupted.
-This will cause misalignment between the kernel and firmware state on next
-DSP boot resulting errors returned by firmware for IPC messages, eventually
-failing the audio resume.
-On stream close the errors are ignored so the kernel state will be
-corrected on the next DSP boot, so the second boot after the DSP panic.
-
-If sof_ipc4_trigger_pipelines() is called from sof_ipc4_pcm_hw_free() then
-state parameter is SOF_IPC4_PIPE_RESET and only in this case.
-
-Treat a forced pipeline reset similarly to how we treat a pcm_free by
-ignoring error on state sending to allow the kernel's state to be
-consistent with the state the firmware will have after the next boot.
-
-Link: https://github.com/thesofproject/sof/issues/8721
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
-Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Link: https://msgid.link/r/20240213115233.15716-1-peter.ujfalusi@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sof/ipc4-pcm.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ net/iucv/iucv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/sof/ipc4-pcm.c b/sound/soc/sof/ipc4-pcm.c
-index db19cd03ecad8..e8acf60c27a74 100644
---- a/sound/soc/sof/ipc4-pcm.c
-+++ b/sound/soc/sof/ipc4-pcm.c
-@@ -377,7 +377,18 @@ static int sof_ipc4_trigger_pipelines(struct snd_soc_component *component,
- 	ret = sof_ipc4_set_multi_pipeline_state(sdev, state, trigger_list);
- 	if (ret < 0) {
- 		dev_err(sdev->dev, "failed to set final state %d for all pipelines\n", state);
--		goto free;
-+		/*
-+		 * workaround: if the firmware is crashed while setting the
-+		 * pipelines to reset state we must ignore the error code and
-+		 * reset it to 0.
-+		 * Since the firmware is crashed we will not send IPC messages
-+		 * and we are going to see errors printed, but the state of the
-+		 * widgets will be correct for the next boot.
-+		 */
-+		if (sdev->fw_state != SOF_FW_CRASHED || state != SOF_IPC4_PIPE_RESET)
-+			goto free;
-+
-+		ret = 0;
- 	}
+diff --git a/net/iucv/iucv.c b/net/iucv/iucv.c
+index fc3fddeb6f36d..f66b5f74cd83a 100644
+--- a/net/iucv/iucv.c
++++ b/net/iucv/iucv.c
+@@ -156,7 +156,7 @@ static char iucv_error_pathid[16] = "INVALID PATHID";
+ static LIST_HEAD(iucv_handler_list);
  
- 	/* update RUNNING/RESET state for all pipelines that were just triggered */
+ /*
+- * iucv_path_table: an array of iucv_path structures.
++ * iucv_path_table: array of pointers to iucv_path structures.
+  */
+ static struct iucv_path **iucv_path_table;
+ static unsigned long iucv_max_pathid;
+@@ -544,7 +544,7 @@ static int iucv_enable(void)
+ 
+ 	cpus_read_lock();
+ 	rc = -ENOMEM;
+-	alloc_size = iucv_max_pathid * sizeof(struct iucv_path);
++	alloc_size = iucv_max_pathid * sizeof(*iucv_path_table);
+ 	iucv_path_table = kzalloc(alloc_size, GFP_KERNEL);
+ 	if (!iucv_path_table)
+ 		goto out;
 -- 
 2.43.0
 
