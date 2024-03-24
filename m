@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A215A18413E;
-	Sun, 24 Mar 2024 23:51:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C5A292B99;
+	Sun, 24 Mar 2024 23:50:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324266; cv=none; b=c6SKBNksOsNz0SCQOelxfIJ6f4/CNJpA/5YG63L7nbhFcpq32HtrPyhc5OkE5q8iMZeuLn3b8NYXATIe629GfD9psjbNLCaMqhgFdnhI3DrN52af+Zu2sPKsFBlbAKf7nM8LMjrnF0juGsuEI04fmwyoJYhYBc8fsWz2Sk0thP4=
+	t=1711324257; cv=none; b=sYPBybo4+CDQKeri2xOAU2twfNIN8+hOX7qjnN8KlWy8zEjMubECkJGfI1V/VSsyKBrx9/EmKpa8mKhKPWAu31gQd+q+nFKP3eYDAWbkStGWLs6MZhUbC83lTYjN3Z38PGR6YuVrMFSBbwlqJ9qiO63FF4Eh48wIhosrFiCWeFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324266; c=relaxed/simple;
-	bh=+aq8RLJbLgc5VXsalxjuBQSCjf84gqPif4nLSjN1eYE=;
+	s=arc-20240116; t=1711324257; c=relaxed/simple;
+	bh=nF8gTecMHJ28MLnw2KqbYOA6uuPsOhH922znxV+wWrY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jD/d45iKzh4TqFTNEJGtFdzOGbzzqggLnwOGAnwx91Q6H17cx8aACa6HmLHh+Tz+ms1ju7IjmUt8LMoUclNSeWPj6AkVEaQg0uP7Pg1zbKdo0TVplcZQDTR0epsgnVouPipkzqCxCzg1hxNZyHdj0Kv2xSintsaszmq3nVnXuNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H/jMGFHB; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=b5u7luy0lCcg+f8o6GnPHmOs16JJTL5IdfIz8Y/BCZ2DEjSWlWULsCFMwBqFxjZDs+tLZMQu/fABB6YG+T00e5jrNcoXE/xB3iHAZfQ8Ae9xQQPLIpe2Gru1EdFS0L5vIeHVk2m5ZrXtKvnCt2KQkOIhy5j7P2ci+ZjEmBOmQtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Akq55MEu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H/jMGFHB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D81A2C43390;
-	Sun, 24 Mar 2024 23:51:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Akq55MEu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15407C433F1;
+	Sun, 24 Mar 2024 23:50:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324265;
-	bh=+aq8RLJbLgc5VXsalxjuBQSCjf84gqPif4nLSjN1eYE=;
+	s=k20201202; t=1711324256;
+	bh=nF8gTecMHJ28MLnw2KqbYOA6uuPsOhH922znxV+wWrY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=H/jMGFHBSZ/oQJt1+OUQ4Hs7y0E7EJZIrymcomZt+IfYZqiknljxA8FnFg9dxRzp6
-	 9R03o7QgwxI2rUzY5g4P5x3gy1kPd0YY1QRIDtMajqSwxwm8YAMxajxjWrlY+qpzs6
-	 Yo6GB5RoHE86w2GV8MRwB8Zus1UYjY/2Iy1G7l+rhjBSrZtXm7oiEnTTw3wq55LqqQ
-	 aEP1Lbt6YOkoNhK5yIULnImW/i71Wb8lW7TXMAMXXRKqu/75YojZuuLxKQLupieDQx
-	 0fvV/SyDVSNADKhU1rA+rF3iGG4Jf6X/Up2meD35DfWFIyCwKRLfIrkEg6JM8GAu1q
-	 tQcZ1mFqjSxWg==
+	b=Akq55MEuFkoWK/MWpaH/985nXOmA1k3XYtFG/5NOMAF2UCt0lMjhnfmVUdj+R7CXz
+	 EOJVv21KGII3jys0of+D0bvMvRew97K+2pcst4J+9nQdWEQz/3x02TTDOuHR0WrbDF
+	 t0MBKZLOGsGUvr2ehvxoaixH7Ly5oOqs55aEseb8270hBEoCKeiHh3L6rpsyHHvtlN
+	 QxZolg6g2lTVDTAo4wNDiJU60lZoYIpY4ed8+77bgyofwPlBr5BkiDzxHmZhURNn1O
+	 T61or+lf6PRoRuVwmsyEzSHW3e2znRdmplcNtoGOmQqw1t6My4Oie1MyOwkW97Vecx
+	 CtftkcROU3ZEQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
+	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 045/148] ARM: dts: arm: realview: Fix development chip ROM compatible value
-Date: Sun, 24 Mar 2024 19:48:29 -0400
-Message-ID: <20240324235012.1356413-46-sashal@kernel.org>
+Subject: [PATCH 4.19 036/148] ARM: dts: renesas: r8a73a4: Fix external clocks and clock rate
+Date: Sun, 24 Mar 2024 19:48:20 -0400
+Message-ID: <20240324235012.1356413-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -44,45 +44,82 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 3baa4c5143d65ebab2de0d99a395e5f4f1f46608 ]
+[ Upstream commit 090c4094574705b0afc7d37825cdc5d06f0e7e02 ]
 
-When the development chip ROM was added, the "direct-mapped" compatible
-value was already obsolete.  In addition, the device node lacked the
-accompanying "probe-type" property, causing the old physmap_of_core
-driver to fall back to trying all available probe types.
-Unfortunately this fallback was lost when the DT and pdata cases were
-merged.
+External clocks should be defined as zero-Hz clocks in the SoC .dtsi,
+and overridden in the board .dts when present.
 
-Fix this by using the modern "mtd-rom" compatible value instead.
+Correct the clock rate of extal1 from 25 to 26 MHz, to match the crystal
+oscillator present on the APE6-EVM board.
 
-Fixes: 5c3f5edbe0a1dff3 ("ARM: realview: add flash devices to the PB1176 DTS")
-Fixes: 642b1e8dbed7bbbf ("mtd: maps: Merge physmap_of.c into physmap-core.c")
+Fixes: a76809a329d6ebae ("ARM: shmobile: r8a73a4: Common clock framework DT description")
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Link: https://lore.kernel.org/r/1692bc8cd465d62168cbf110522ad62a7af3f606.1705315614.git.geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/arm-realview-pb1176.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/r8a73a4-ape6evm.dts | 12 ++++++++++++
+ arch/arm/boot/dts/r8a73a4.dtsi        |  9 ++++++---
+ 2 files changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/arm-realview-pb1176.dts b/arch/arm/boot/dts/arm-realview-pb1176.dts
-index 83e0fbc4a1a10..350a5dbd36130 100644
---- a/arch/arm/boot/dts/arm-realview-pb1176.dts
-+++ b/arch/arm/boot/dts/arm-realview-pb1176.dts
-@@ -427,7 +427,7 @@ pb1176_serial3: serial@1010f000 {
+diff --git a/arch/arm/boot/dts/r8a73a4-ape6evm.dts b/arch/arm/boot/dts/r8a73a4-ape6evm.dts
+index d530f451467e2..c077a7c1874a6 100644
+--- a/arch/arm/boot/dts/r8a73a4-ape6evm.dts
++++ b/arch/arm/boot/dts/r8a73a4-ape6evm.dts
+@@ -184,6 +184,18 @@ &cmt1 {
+ 	status = "okay";
+ };
  
- 		/* Direct-mapped development chip ROM */
- 		pb1176_rom@10200000 {
--			compatible = "direct-mapped";
-+			compatible = "mtd-rom";
- 			reg = <0x10200000 0x4000>;
- 			bank-width = <1>;
++&extal1_clk {
++	clock-frequency = <26000000>;
++};
++
++&extal2_clk {
++	clock-frequency = <48000000>;
++};
++
++&extalr_clk {
++	clock-frequency = <32768>;
++};
++
+ &pfc {
+ 	scifa0_pins: scifa0 {
+ 		groups = "scifa0_data";
+diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
+index 4447f45f0cba9..48121ef690c9d 100644
+--- a/arch/arm/boot/dts/r8a73a4.dtsi
++++ b/arch/arm/boot/dts/r8a73a4.dtsi
+@@ -494,17 +494,20 @@ clocks {
+ 		extalr_clk: extalr {
+ 			compatible = "fixed-clock";
+ 			#clock-cells = <0>;
+-			clock-frequency = <32768>;
++			/* This value must be overridden by the board. */
++			clock-frequency = <0>;
  		};
+ 		extal1_clk: extal1 {
+ 			compatible = "fixed-clock";
+ 			#clock-cells = <0>;
+-			clock-frequency = <25000000>;
++			/* This value must be overridden by the board. */
++			clock-frequency = <0>;
+ 		};
+ 		extal2_clk: extal2 {
+ 			compatible = "fixed-clock";
+ 			#clock-cells = <0>;
+-			clock-frequency = <48000000>;
++			/* This value must be overridden by the board. */
++			clock-frequency = <0>;
+ 		};
+ 		fsiack_clk: fsiack {
+ 			compatible = "fixed-clock";
 -- 
 2.43.0
 
