@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815FC216199;
-	Sun, 24 Mar 2024 23:09:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED6E216904;
+	Sun, 24 Mar 2024 23:09:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321759; cv=none; b=bLzKR9LsL0fvLxj0GIpIDx+LhCEjE9sKlxSZ0DKOmGEAhWX+rAwUdPOOmcIacBrqGnjPW39B1JHsqHX7JOPHj47/J1RGY8b1yD2APDYOwYHxj2bmU8pTFC8U6inazN32oLhemlAFtF+hBy/Vih1NOFWKtUiGoxwpt6x3Q0v+Res=
+	t=1711321761; cv=none; b=A4lPa31vI1pYW35zeSwhDb7Xq1Kfn4cqiGlJzv6Sf39aa0hkesiydjwE2WLS82mD71NtB1wYCda/vsMQFuBtki/LZVqkaunQLDBl9NVTZxG924mq9C3+/rotMhmu8QQM6HKdzk2nxvGhAhvoxj02tv0OYVdF1KxE7ZcLh9WE2dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321759; c=relaxed/simple;
-	bh=ZvvuP1gdaEvy16AYadR6zQ+/sr0t4GLSEw8KeAIDwLk=;
+	s=arc-20240116; t=1711321761; c=relaxed/simple;
+	bh=4PlkdmqB6yZ6noXjc3qFkk6SADhbWCGGBO9b/AhRtr0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CaVAUSzmbp5AWrRDUUfWRqxZm3oBZGMHtRCaGmN3BUTU2oeCDfj5T6h7zCpADA3XWuqrtHLsQNoHTYBViDQULtWYGXKlNBNB/WIUJbg4x+jnBOEx3nmyzQ9OSsKVtWqds2XfdVG4gnLlKKGvOnkhOn/QT+Pj6fvdkH9rEmds7PQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=icIUBOjq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hFY0TcuuW+J9PF5I1tnaZekQQFJRmYYPt1Pmyhr8GtHDXc17KrR6f7X22+bH/V+x0u3BaGeBh42W29Ns/7WLnrDaownBOm+u5Q2QEWTecyWArGTSmaZ/YLhSsF/ZFvr6yx0O9fw1vpreyNAcT0IOpFSuNA93MgCpo/k3LlGsF2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q4gu9epe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="icIUBOjq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACCA5C433C7;
-	Sun, 24 Mar 2024 23:09:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q4gu9epe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ECCFC433F1;
+	Sun, 24 Mar 2024 23:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321758;
-	bh=ZvvuP1gdaEvy16AYadR6zQ+/sr0t4GLSEw8KeAIDwLk=;
+	s=k20201202; t=1711321760;
+	bh=4PlkdmqB6yZ6noXjc3qFkk6SADhbWCGGBO9b/AhRtr0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=icIUBOjqvG5rMGQ46odkFZ0NLlLqSlXzF0BYsfA+RaY75ZHTvmDh6CH/x1dtC1Pql
-	 kkALG0Klf/Jaib4yj7MEe0PUaBvEM/tvi0pCV61/f8kKh/iaxB+szWk5VaIi4u5t3Q
-	 AayHZWwndk25JUBtwc1gVvLEPrquUU0hXJX4JE5hiyuOoAMPPqK2K0+BC2Iqgkt1XQ
-	 iZ6qfPLq2R/M6mlFhKcRmKIqzp6BQUf6cyWfgH8RPcFDgBeotFxBP+Tf4Ak1ql5OYh
-	 iysQwMQoPkN+STTrq5C6la5D2xGzsW/40h0nJmgx0rmraGjGk0qOimp3YKW9Mv7oFT
-	 2nDwM1pFyBV8A==
+	b=Q4gu9epeenoorRwzk3rdwoJHMs8ti60uLTBEJdpYB+sp+dq7g9MVHQQJcgkkumitJ
+	 awLJBKuJKAdvt/dKzTeoVYjMkmFfE4QfzP+JwbAQO1UITeWllQfp3uKaFCpRYcGK9i
+	 mfz35RCi/OZS6oxc84X5Lxgkj8sE2SJeAnL9hGjhUrocY+qhR6i19TcSsoYY60ZmYK
+	 g4EqKeqwBEybMUdFLpnAw/hDKEBAc+htVFuXkOOY3vLyxbY9josQqBZbsmZfMYLuNJ
+	 3h0vNoFdBcgpSXxCJy1frUMcV2ETbwZmXzf/ojRK8lEK6Y9CvZ7ZUAR3NsBUwcT5Jf
+	 cd/89Rylyw4Hg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Luca Weiss <luca@z3ntu.xyz>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
+Cc: Daniel Thompson <daniel.thompson@linaro.org>,
 	Lee Jones <lee@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 486/638] backlight: lm3630a: Don't set bl->props.brightness in get_brightness
-Date: Sun, 24 Mar 2024 18:58:43 -0400
-Message-ID: <20240324230116.1348576-487-sashal@kernel.org>
+Subject: [PATCH 6.6 488/638] backlight: lm3639: Fully initialize backlight_properties during probe
+Date: Sun, 24 Mar 2024 18:58:45 -0400
+Message-ID: <20240324230116.1348576-489-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,75 +48,35 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Luca Weiss <luca@z3ntu.xyz>
+From: Daniel Thompson <daniel.thompson@linaro.org>
 
-[ Upstream commit 4bf7ddd2d2f0f8826f25f74c7eba4e2c323a1446 ]
+[ Upstream commit abb5a5d951fbea3feb5c4ba179b89bb96a1d3462 ]
 
-There's no need to set bl->props.brightness, the get_brightness function
-is just supposed to return the current brightness and not touch the
-struct.
+props is stack allocated and the fields that are not explcitly set
+by the probe function need to be zeroed or we'll get undefined behaviour
+(especially so power/blank states)!
 
-With that done we can also remove the 'goto out' and just return the
-value.
-
-Fixes: 0c2a665a648e ("backlight: add Backlight driver for lm3630 chip")
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Link: https://lore.kernel.org/r/20240220-lm3630a-fixups-v1-2-9ca62f7e4a33@z3ntu.xyz
+Fixes: 0f59858d5119 ("backlight: add new lm3639 backlight driver")
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Link: https://lore.kernel.org/r/20240220153532.76613-3-daniel.thompson@linaro.org
 Signed-off-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/lm3630a_bl.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+ drivers/video/backlight/lm3639_bl.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-index 2e2240b278482..7115d7bb2a141 100644
---- a/drivers/video/backlight/lm3630a_bl.c
-+++ b/drivers/video/backlight/lm3630a_bl.c
-@@ -233,7 +233,7 @@ static int lm3630a_bank_a_get_brightness(struct backlight_device *bl)
- 		if (rval < 0)
- 			goto out_i2c_err;
- 		brightness |= rval;
--		goto out;
-+		return brightness;
+diff --git a/drivers/video/backlight/lm3639_bl.c b/drivers/video/backlight/lm3639_bl.c
+index 5246c171497d6..564f62acd7211 100644
+--- a/drivers/video/backlight/lm3639_bl.c
++++ b/drivers/video/backlight/lm3639_bl.c
+@@ -338,6 +338,7 @@ static int lm3639_probe(struct i2c_client *client)
  	}
  
- 	/* disable sleep */
-@@ -244,11 +244,8 @@ static int lm3630a_bank_a_get_brightness(struct backlight_device *bl)
- 	rval = lm3630a_read(pchip, REG_BRT_A);
- 	if (rval < 0)
- 		goto out_i2c_err;
--	brightness = rval;
-+	return rval;
- 
--out:
--	bl->props.brightness = brightness;
--	return bl->props.brightness;
- out_i2c_err:
- 	dev_err(pchip->dev, "i2c failed to access register\n");
- 	return 0;
-@@ -310,7 +307,7 @@ static int lm3630a_bank_b_get_brightness(struct backlight_device *bl)
- 		if (rval < 0)
- 			goto out_i2c_err;
- 		brightness |= rval;
--		goto out;
-+		return brightness;
- 	}
- 
- 	/* disable sleep */
-@@ -321,11 +318,8 @@ static int lm3630a_bank_b_get_brightness(struct backlight_device *bl)
- 	rval = lm3630a_read(pchip, REG_BRT_B);
- 	if (rval < 0)
- 		goto out_i2c_err;
--	brightness = rval;
-+	return rval;
- 
--out:
--	bl->props.brightness = brightness;
--	return bl->props.brightness;
- out_i2c_err:
- 	dev_err(pchip->dev, "i2c failed to access register\n");
- 	return 0;
+ 	/* backlight */
++	memset(&props, 0, sizeof(struct backlight_properties));
+ 	props.type = BACKLIGHT_RAW;
+ 	props.brightness = pdata->init_brt_led;
+ 	props.max_brightness = pdata->max_brt_led;
 -- 
 2.43.0
 
