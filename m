@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1382014B060;
-	Sun, 24 Mar 2024 23:10:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F8A13F43F;
+	Sun, 24 Mar 2024 23:10:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321813; cv=none; b=uWz0MJAYx9km7BRbndgLRjTCVeIc2zwjeBOQgJq418+8ETv/sR8QW8Q6vJAXggpKnEKCo+Xyp8T4BC2JdWZNdLthIWV8xOhOXyp1rxiUZ9ZHdu5xHs4z8lyN9A/0OWPPBR3YtxZe4+CuOEEjs9Mhp04H3m3hmhozdXBN21sNABg=
+	t=1711321819; cv=none; b=a00h6Dz1I/ZDkqvisEXL0b/J1Yt33Y7C/wuJMlDA/KopGROeSbTVfNnTC2R5utPN4u2fn8AYv/c7alow2J+u2qd2KTbA/pnrxWqsYB7FjLQ3eRXSZkFFBFkSLyqga8KFYOjx3R3+8yGjtgDkL7crFBOXLnz3e7B5G1f/JgTvpVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321813; c=relaxed/simple;
-	bh=yUS06+jBKCnlD25vjcbgsGFLnvBZQdDnVaI/PR/gXtk=;
+	s=arc-20240116; t=1711321819; c=relaxed/simple;
+	bh=tMWicbAIr0g5I0MKO7SqV44s6RC0VEGCES+SJOJX4vU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=brIVVgNjZwbA0bhg6jUKahEoENl/KiaFiiCxJA320QlGlAB9YbIrvpKocR4sb4AK9ZvfCXMrVLAsllhQxRLv9gQV1GWWHXflO3QSy61fxHniihUNAqMp9jCqTPEE2C/1Zl12Ybyg+wQBlUkt6qvOUjB2A0oWn2akNw7+UvHrKcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nBzyL23L; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=co/aSHv1ZrMMr6a1EX64Jkg5khDotCHrcw7E5vC0+rBq4MWyeSew+IGax76ltiUr4++IkCOy4l3uupUX5Dmp91S5srOIM4QIl0CAhO2KZRzijUwBzlWwGxnAfaQDExeZNZeM1PmEJxVqB3yVkGpLsBRnGzeGGgoICPp7UCHKQ6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HRuV1gJN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nBzyL23L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 535A6C4166B;
-	Sun, 24 Mar 2024 23:10:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HRuV1gJN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58D3FC433F1;
+	Sun, 24 Mar 2024 23:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321811;
-	bh=yUS06+jBKCnlD25vjcbgsGFLnvBZQdDnVaI/PR/gXtk=;
+	s=k20201202; t=1711321819;
+	bh=tMWicbAIr0g5I0MKO7SqV44s6RC0VEGCES+SJOJX4vU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nBzyL23LHmQp2/G+uS0BAmENV71gsqDhzQCMvwBoJONjBoPaeC3GLglIslMd8Kq2R
-	 9utyS2UwkkqrYG2RmU0MKIu2CxRcyqSvF8+NrUYQiL072LXQvKjTp6qsPNDE/3Nuch
-	 WWDCIbZPbhcYSlsNlSNZj0x10n8Z3WNw2xklH7NnN2w+hBgYBMqsWT/J6b3hxV1b2Y
-	 N2p0ChEn9XRIinOePIGC3rlLNLGPGdmcgOfaRnNl9RuHIQBjkZXYM7ypoO7pkUtWPq
-	 mrHUsQO/rHama1m+l9X+mYyNvxKWtomei67CW9k/ONEoAv9jr4VPlPMgZVYwYc63KY
-	 Gkd6HHACOWRnw==
+	b=HRuV1gJNzLOo/uU7UkB0Q6S1TYcdgMhgfNVBB9f7wnG8UvZBy8SqK/G9Ow02qi7Ca
+	 X4A08/u9ZwZM5TfYxVsGvA5rE0FPetSroWBrc1l/1GgGMR+9Us6QmAIFhktX64AZ4T
+	 jARmsxbkyCRajQdKVVjHKRVPxGu9lJFDuNPH2awVWRIyPR7XUkBJWgRzp7Wn403Bkw
+	 ONYySjzygnwZMtKExOFA3segCSGyI7axhJYKRvjGoD2dCbDKaIsW49dMlTFBQKG/t4
+	 M7s2dtk/4vTGTl5sdiHnyJEDRDOG5l9JJqan49xs8S73R/TVbQox74aco81NMlYOSo
+	 /7xivRrZHQUKw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jeff LaBundy <jeff@labundy.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+Cc: Chao Yu <chao@kernel.org>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 540/638] Input: iqs7222 - add support for IQS7222D v1.1 and v1.2
-Date: Sun, 24 Mar 2024 18:59:37 -0400
-Message-ID: <20240324230116.1348576-541-sashal@kernel.org>
+Subject: [PATCH 6.6 547/638] f2fs: fix to truncate meta inode pages forcely
+Date: Sun, 24 Mar 2024 18:59:44 -0400
+Message-ID: <20240324230116.1348576-548-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,145 +48,138 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jeff LaBundy <jeff@labundy.com>
+From: Chao Yu <chao@kernel.org>
 
-[ Upstream commit 992cf65674778e22436807796b2df927de21bb75 ]
+[ Upstream commit 9f0c4a46be1fe9b97dbe66d49204c1371e3ece65 ]
 
-The vendor has introduced two new revisions with slightly different
-memory maps; update the driver to support them.
+Below race case can cause data corruption:
 
-Fixes: dd24e202ac72 ("Input: iqs7222 - add support for Azoteq IQS7222D")
-Signed-off-by: Jeff LaBundy <jeff@labundy.com>
-Link: https://lore.kernel.org/r/ZelTRYX3fenMQuhF@nixie71
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Thread A				GC thread
+					- gc_data_segment
+					 - ra_data_block
+					  - locked meta_inode page
+- f2fs_inplace_write_data
+ - invalidate_mapping_pages
+ : fail to invalidate meta_inode page
+   due to lock failure or dirty|writeback
+   status
+ - f2fs_submit_page_bio
+ : write last dirty data to old blkaddr
+					 - move_data_block
+					  - load old data from meta_inode page
+					  - f2fs_submit_page_write
+					  : write old data to new blkaddr
+
+Because invalidate_mapping_pages() will skip invalidating page which
+has unclear status including locked, dirty, writeback and so on, so
+we need to use truncate_inode_pages_range() instead of
+invalidate_mapping_pages() to make sure meta_inode page will be dropped.
+
+Fixes: 6aa58d8ad20a ("f2fs: readahead encrypted block during GC")
+Fixes: e3b49ea36802 ("f2fs: invalidate META_MAPPING before IPU/DIO write")
+Signed-off-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/misc/iqs7222.c | 112 +++++++++++++++++++++++++++++++++++
- 1 file changed, 112 insertions(+)
+ fs/f2fs/checkpoint.c    |  5 +++--
+ fs/f2fs/f2fs.h          | 28 +++++++++++++++++++++++++++-
+ fs/f2fs/segment.c       |  5 ++---
+ include/linux/f2fs_fs.h |  1 +
+ 4 files changed, 33 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/input/misc/iqs7222.c b/drivers/input/misc/iqs7222.c
-index 36aeeae776110..9ca5a743f19fe 100644
---- a/drivers/input/misc/iqs7222.c
-+++ b/drivers/input/misc/iqs7222.c
-@@ -620,6 +620,118 @@ static const struct iqs7222_dev_desc iqs7222_devs[] = {
- 			},
- 		},
- 	},
-+	{
-+		.prod_num = IQS7222_PROD_NUM_D,
-+		.fw_major = 1,
-+		.fw_minor = 2,
-+		.touch_link = 1770,
-+		.allow_offset = 9,
-+		.event_offset = 10,
-+		.comms_offset = 11,
-+		.reg_grps = {
-+			[IQS7222_REG_GRP_STAT] = {
-+				.base = IQS7222_SYS_STATUS,
-+				.num_row = 1,
-+				.num_col = 7,
-+			},
-+			[IQS7222_REG_GRP_CYCLE] = {
-+				.base = 0x8000,
-+				.num_row = 7,
-+				.num_col = 2,
-+			},
-+			[IQS7222_REG_GRP_GLBL] = {
-+				.base = 0x8700,
-+				.num_row = 1,
-+				.num_col = 3,
-+			},
-+			[IQS7222_REG_GRP_BTN] = {
-+				.base = 0x9000,
-+				.num_row = 14,
-+				.num_col = 3,
-+			},
-+			[IQS7222_REG_GRP_CHAN] = {
-+				.base = 0xA000,
-+				.num_row = 14,
-+				.num_col = 4,
-+			},
-+			[IQS7222_REG_GRP_FILT] = {
-+				.base = 0xAE00,
-+				.num_row = 1,
-+				.num_col = 2,
-+			},
-+			[IQS7222_REG_GRP_TPAD] = {
-+				.base = 0xB000,
-+				.num_row = 1,
-+				.num_col = 24,
-+			},
-+			[IQS7222_REG_GRP_GPIO] = {
-+				.base = 0xC000,
-+				.num_row = 3,
-+				.num_col = 3,
-+			},
-+			[IQS7222_REG_GRP_SYS] = {
-+				.base = IQS7222_SYS_SETUP,
-+				.num_row = 1,
-+				.num_col = 12,
-+			},
-+		},
-+	},
-+	{
-+		.prod_num = IQS7222_PROD_NUM_D,
-+		.fw_major = 1,
-+		.fw_minor = 1,
-+		.touch_link = 1774,
-+		.allow_offset = 9,
-+		.event_offset = 10,
-+		.comms_offset = 11,
-+		.reg_grps = {
-+			[IQS7222_REG_GRP_STAT] = {
-+				.base = IQS7222_SYS_STATUS,
-+				.num_row = 1,
-+				.num_col = 7,
-+			},
-+			[IQS7222_REG_GRP_CYCLE] = {
-+				.base = 0x8000,
-+				.num_row = 7,
-+				.num_col = 2,
-+			},
-+			[IQS7222_REG_GRP_GLBL] = {
-+				.base = 0x8700,
-+				.num_row = 1,
-+				.num_col = 3,
-+			},
-+			[IQS7222_REG_GRP_BTN] = {
-+				.base = 0x9000,
-+				.num_row = 14,
-+				.num_col = 3,
-+			},
-+			[IQS7222_REG_GRP_CHAN] = {
-+				.base = 0xA000,
-+				.num_row = 14,
-+				.num_col = 4,
-+			},
-+			[IQS7222_REG_GRP_FILT] = {
-+				.base = 0xAE00,
-+				.num_row = 1,
-+				.num_col = 2,
-+			},
-+			[IQS7222_REG_GRP_TPAD] = {
-+				.base = 0xB000,
-+				.num_row = 1,
-+				.num_col = 24,
-+			},
-+			[IQS7222_REG_GRP_GPIO] = {
-+				.base = 0xC000,
-+				.num_row = 3,
-+				.num_col = 3,
-+			},
-+			[IQS7222_REG_GRP_SYS] = {
-+				.base = IQS7222_SYS_SETUP,
-+				.num_row = 1,
-+				.num_col = 12,
-+			},
-+		},
-+	},
- 	{
- 		.prod_num = IQS7222_PROD_NUM_D,
- 		.fw_major = 0,
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index b0597a539fc54..9afc8d24dc369 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -1587,8 +1587,9 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+ 	 */
+ 	if (f2fs_sb_has_encrypt(sbi) || f2fs_sb_has_verity(sbi) ||
+ 		f2fs_sb_has_compression(sbi))
+-		invalidate_mapping_pages(META_MAPPING(sbi),
+-				MAIN_BLKADDR(sbi), MAX_BLKADDR(sbi) - 1);
++		f2fs_bug_on(sbi,
++			invalidate_inode_pages2_range(META_MAPPING(sbi),
++				MAIN_BLKADDR(sbi), MAX_BLKADDR(sbi) - 1));
+ 
+ 	f2fs_release_ino_entry(sbi, false);
+ 
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index bf4a7f98e3476..5c87f472da3d3 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -4625,10 +4625,36 @@ static inline bool f2fs_is_readonly(struct f2fs_sb_info *sbi)
+ 	return f2fs_sb_has_readonly(sbi) || f2fs_readonly(sbi->sb);
+ }
+ 
++static inline void f2fs_truncate_meta_inode_pages(struct f2fs_sb_info *sbi,
++					block_t blkaddr, unsigned int cnt)
++{
++	bool need_submit = false;
++	int i = 0;
++
++	do {
++		struct page *page;
++
++		page = find_get_page(META_MAPPING(sbi), blkaddr + i);
++		if (page) {
++			if (PageWriteback(page))
++				need_submit = true;
++			f2fs_put_page(page, 0);
++		}
++	} while (++i < cnt && !need_submit);
++
++	if (need_submit)
++		f2fs_submit_merged_write_cond(sbi, sbi->meta_inode,
++							NULL, 0, DATA);
++
++	truncate_inode_pages_range(META_MAPPING(sbi),
++			F2FS_BLK_TO_BYTES((loff_t)blkaddr),
++			F2FS_BLK_END_BYTES((loff_t)(blkaddr + cnt - 1)));
++}
++
+ static inline void f2fs_invalidate_internal_cache(struct f2fs_sb_info *sbi,
+ 								block_t blkaddr)
+ {
+-	invalidate_mapping_pages(META_MAPPING(sbi), blkaddr, blkaddr);
++	f2fs_truncate_meta_inode_pages(sbi, blkaddr, 1);
+ 	f2fs_invalidate_compress_page(sbi, blkaddr);
+ }
+ 
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 311769872b84e..0edd9feff6185 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -3651,8 +3651,7 @@ int f2fs_inplace_write_data(struct f2fs_io_info *fio)
+ 	}
+ 
+ 	if (fio->post_read)
+-		invalidate_mapping_pages(META_MAPPING(sbi),
+-				fio->new_blkaddr, fio->new_blkaddr);
++		f2fs_truncate_meta_inode_pages(sbi, fio->new_blkaddr, 1);
+ 
+ 	stat_inc_inplace_blocks(fio->sbi);
+ 
+@@ -3842,7 +3841,7 @@ void f2fs_wait_on_block_writeback_range(struct inode *inode, block_t blkaddr,
+ 	for (i = 0; i < len; i++)
+ 		f2fs_wait_on_block_writeback(inode, blkaddr + i);
+ 
+-	invalidate_mapping_pages(META_MAPPING(sbi), blkaddr, blkaddr + len - 1);
++	f2fs_truncate_meta_inode_pages(sbi, blkaddr, len);
+ }
+ 
+ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
+diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
+index cf1adceb02697..5aa00bcd42fe9 100644
+--- a/include/linux/f2fs_fs.h
++++ b/include/linux/f2fs_fs.h
+@@ -27,6 +27,7 @@
+ 
+ #define F2FS_BYTES_TO_BLK(bytes)	((bytes) >> F2FS_BLKSIZE_BITS)
+ #define F2FS_BLK_TO_BYTES(blk)		((blk) << F2FS_BLKSIZE_BITS)
++#define F2FS_BLK_END_BYTES(blk)		(F2FS_BLK_TO_BYTES(blk + 1) - 1)
+ 
+ /* 0, 1(node nid), 2(meta nid) are reserved node id */
+ #define F2FS_RESERVED_NODE_NUM		3
 -- 
 2.43.0
 
