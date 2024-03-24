@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF7D1E5F65;
-	Sun, 24 Mar 2024 23:01:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A8312FB23;
+	Sun, 24 Mar 2024 23:01:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321297; cv=none; b=btRjn9jEXeuXJQd8jyi+qUjHDI1SWXVrd4FDfzpqgYxuZVoklwLny1y/VqyroXOO05pzToSnsuA7r8WjcPlqaDlp1QP5W6K5YajAnPRHYp3aOIUx/H17iBk4clCmeeN3oPx/KJubx6/WaTKle7Xx+vZY2uTAD7t5isAQ/1CsqA8=
+	t=1711321300; cv=none; b=rha6qbzC2kpdK0d46pmcBYn3snzhZGZKf40/nVdhSfXP5cuzKs39FaGvngxhCxVKFpntaS+90mRiHzF8xpPJNCrOVzmy3nNe5X+vr0h0ghb8r3071t2+/x9dDiv6kkUM5+2P01H6ju75Jd9Eppf6iXMOJSUf9TeVxsnOpw9c3+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321297; c=relaxed/simple;
-	bh=gIBzsxEfqCELs+orQBkAqqxwLcIB/dzP3lehUdOAuRs=;
+	s=arc-20240116; t=1711321300; c=relaxed/simple;
+	bh=2BdqdFEP9DNIj4Ti/gNcxrXdKA23Zc1z1zE0/5TQH0U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iO2K3ugOPj15grBDvMYctiCzjbaKi8ggQnmbrBMSwQUgnlGB3qbSgr5QEuo/mTG/qg4drMofNzrDLDSoXkXEny+HbX/gueAMoPap2vuktQebZknQe0XgvGVCKFg/F1kU1qv9CT1j+RjC/qB/URmsv94+GUq2aoF2AZ8CjbUN8ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uYAfcsho; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=n2Kw5h5adDr9QvMlohJ5YRnfxWTyuizaOHGpGGz5mgeUw+VF/Q6vD6fsVFKOYKvsgnWwWzL9/yoyhdtGPSo4EmvSDiZyO6jco4FhNmYbEOxfdEFU74V4tcUXXNpOC8VYW285qmsHaKPmj/h5n+e8SV/nIsxxbpy61f8DbVg4Go0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vhx+wykr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uYAfcsho"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 291C6C43399;
-	Sun, 24 Mar 2024 23:01:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vhx+wykr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12B45C433C7;
+	Sun, 24 Mar 2024 23:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321296;
-	bh=gIBzsxEfqCELs+orQBkAqqxwLcIB/dzP3lehUdOAuRs=;
+	s=k20201202; t=1711321299;
+	bh=2BdqdFEP9DNIj4Ti/gNcxrXdKA23Zc1z1zE0/5TQH0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uYAfcshoB2ixfBStZKMNi24jYwPAZHXZyoZ4Xv1CZP62Hb3Em2s05josGDSPHFcll
-	 Lj8XXNioblGS/nHK2qQMGJ7hkz8pqmeJtXzhJeNznDjUIGOp4JQT8OOCT1nusmrZRv
-	 TP5iaxreTL+M3YZCVz1wo0Ps/HWelWPLB5hYzlAANdtyW7CRWmsUERjlBAy+tuhV+D
-	 HjfvWEK6FYUctcqzOzixsedbIp3CV1v7qhsFGk+Wj0GH2zmOmcgFZvgxqbiqSj5IxB
-	 Fv4+hEmjl4MldfgalmiPdvoj7BUjovfkbzXSvdBsJP7B7JSdH59aPggKDvNWI5lA8c
-	 2Vzdnn2fIq2ow==
+	b=Vhx+wykrgUUz6HZT8pMHcdVisPk1R6lavShNCI+oXE2O/w8csaRNLcLet4WZ8XTsT
+	 1tH6lKd70nyRK7u6GLPUCM5O9LztAklFQtFRoW3N2yWxVq+EQRV14IFL5qnHnJOkxL
+	 Ehz5QHTDIXrKgdrUOzhhgP13sXBYDc2VgRleoXj5UI1zoBshQaXUfldJDMbVTXLfaR
+	 DO7FAOfvtkDmYLZ7Dquz1AwK582utKh0njEunBQMLMb4hXbd7eFWhxHNuK4CcG2YWO
+	 DuoonJzmYOe1dB3TJsH/aV78Nu77wLXSNEK8rF/C4x2hDymGXpSgKr9K1fR4VQ8HE3
+	 PU01XxyxFZVew==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andrew Ballance <andrewjballance@gmail.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Heiko Stuebner <heiko@sntech.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 019/638] gen_compile_commands: fix invalid escape sequence warning
-Date: Sun, 24 Mar 2024 18:50:56 -0400
-Message-ID: <20240324230116.1348576-20-sashal@kernel.org>
+Subject: [PATCH 6.6 022/638] arm64: dts: rockchip: mark system power controller on rk3588-evb1
+Date: Sun, 24 Mar 2024 18:50:59 -0400
+Message-ID: <20240324230116.1348576-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,34 +48,33 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Andrew Ballance <andrewjballance@gmail.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-[ Upstream commit dae4a0171e25884787da32823b3081b4c2acebb2 ]
+[ Upstream commit fc4657971be31ae679e2bbeee2fb8e93a7a063eb ]
 
-With python 3.12, '\#' results in this warning
-    SyntaxWarning: invalid escape sequence '\#'
+Mark the primary PMIC as system-power-controller, so that the
+system properly shuts down on poweroff.
 
-Signed-off-by: Andrew Ballance <andrewjballance@gmail.com>
-Reviewed-by: Justin Stitt <justinstitt@google.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Link: https://lore.kernel.org/r/20240117191555.86138-1-sebastian.reichel@collabora.com
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/clang-tools/gen_compile_commands.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/scripts/clang-tools/gen_compile_commands.py b/scripts/clang-tools/gen_compile_commands.py
-index a84cc5737c2c6..bc005cac19441 100755
---- a/scripts/clang-tools/gen_compile_commands.py
-+++ b/scripts/clang-tools/gen_compile_commands.py
-@@ -170,7 +170,7 @@ def process_line(root_directory, command_prefix, file_path):
-     # escape the pound sign '#', either as '\#' or '$(pound)' (depending on the
-     # kernel version). The compile_commands.json file is not interepreted
-     # by Make, so this code replaces the escaped version with '#'.
--    prefix = command_prefix.replace('\#', '#').replace('$(pound)', '#')
-+    prefix = command_prefix.replace(r'\#', '#').replace('$(pound)', '#')
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts b/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
+index 229a9111f5eb0..fa8286a325af7 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
+@@ -215,6 +215,7 @@ pmic@0 {
+ 			    <&rk806_dvs2_null>, <&rk806_dvs3_null>;
+ 		pinctrl-names = "default";
+ 		spi-max-frequency = <1000000>;
++		system-power-controller;
  
-     # Use os.path.abspath() to normalize the path resolving '.' and '..' .
-     abs_path = os.path.abspath(os.path.join(root_directory, file_path))
+ 		vcc1-supply = <&vcc5v0_sys>;
+ 		vcc2-supply = <&vcc5v0_sys>;
 -- 
 2.43.0
 
