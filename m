@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD321EFE4A;
-	Sun, 24 Mar 2024 22:57:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F7112C7FA;
+	Sun, 24 Mar 2024 22:57:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321052; cv=none; b=eOl0E6/dxAX6HCrCk5YVne1wSubbnrnOCWiMLdLx4Wfa12VY9uIdcUcLWeubyA2kXHy+FUr7nXv99qsX1to9za0oaPt9fjmpTMK5uVH31c3Ebp7eQtCj16aojvUesaYlTQVPW+MOHiPSbo/E+M3VD+f2oOoaH49H9GD2DK0XuWA=
+	t=1711321059; cv=none; b=pZlT9+eXzd/J8ZnUIGVuwfr8Ihyb4vpSlKjPW+HUbiO8Gv+7Kgnvjbay1fQXiMvizPNRlvdtkvM4LdFZVVAvXf4ytQrTZ0oiqsi+rx7OtU15sIfzwlJuEwrifJtwTuRPRLOsxMmDpV/VaxbSfKmRqMAcqVPyVJqbHNUX1GSsZiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321052; c=relaxed/simple;
-	bh=xa7ePW4ady5XdO1D6A2FpWznMZhwdTOySy8uwauuTIo=;
+	s=arc-20240116; t=1711321059; c=relaxed/simple;
+	bh=zwUzAYaODXUuLSoh8bMxnP8uZUATi/z+9DEgZAogWqg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kUFBceVl9CS9JuXuKIM60lM4D8fwxr1kNoNsHqpJcsvojShdTvOfUml8GTuY7drjW5M0pN5xFjYvPM8QYlohONQCuV64Qsv2jxI2Bf8e6RnneV4iE2a9r39rqgRbdzMmx/jAIuMrmYW2MXKTPp1Pd5Ft5najJSI1Fy6oWOIQJpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EXuERLwZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=G2D+sItm0d8ZYD1crh0HfVKDJ2SlCcb5CKvMOwC5PzaDqTn8UCx/tU7FiSZ2TlbtZw8DoDnCu2tPeT5AlshwA2lUKOYE0azumRO7h3pXKtU8bkCtQXtauFrDMwWPuWOtPZWHv2oreaXG+jjYxtPBd8S8tSUOy1u9dR9G02vyT4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eq4GcX9I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EXuERLwZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DF20C43390;
-	Sun, 24 Mar 2024 22:57:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eq4GcX9I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91EB6C433F1;
+	Sun, 24 Mar 2024 22:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321051;
-	bh=xa7ePW4ady5XdO1D6A2FpWznMZhwdTOySy8uwauuTIo=;
+	s=k20201202; t=1711321058;
+	bh=zwUzAYaODXUuLSoh8bMxnP8uZUATi/z+9DEgZAogWqg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EXuERLwZ71WhlTD1CIyMlbVVZD3ikuUOY774ypWG8F7EjZtihK5HjRO9gmCdrVwcw
-	 Zx9Zb8q0sUQEa9UXnXnqPvKp/EVd0izAEBU978coMlzQYYHWWUmJ2irzYZPYnCp0x3
-	 NkVl52rCCAkBvWaHfjDd3mfFlVVRmoYEu8AbRZT8OJ5PRTKM2a4f2oQD+4RVvnS9rR
-	 BIp1woG9HilUfcJ0AJ8rdIijiaq0p5t+a1yViXJWPkOJACEcUqKGbZOwwdqkgjheyX
-	 4ln8PIFWV6R2Qsgn3KFerKWl2xsQbHVQA5JduTtGmbYuYxEgj7X0TWM+Rm3nTeeT0N
-	 96tknUyIF0chw==
+	b=Eq4GcX9IzRIEbPArSzuGyHf3q9PPmm/OvoMVxx/UKB9Yx9VfPUC6yGd+XyrxDtuNo
+	 zv44VMtrv9kDI96l4vSRvZ3vYT6BbwaVMNqFSlySM90EwXn/RlWHtUZyqaLg83AgC0
+	 vCvbepowgYd/JkXP0BbCTCTHBADM8M28aKiu9XywDOtJJbdKZ/e62/KENigxAdHgha
+	 JEJVqn+Wifi+jwqZU5JZZphUapdBtsjSOVbT+3atGFYXUNHbEgo0BZUOOZzf5kUPXb
+	 3oy1CmN2YXnClQUwm+0tfINIwrBY0z8VBqQ5TGIQW51O4BN1hUDHNVbfk9abngq/8x
+	 BqhazniTKSIWg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kent Overstreet <kent.overstreet@linux.dev>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 6.7 614/713] bcachefs: fix simulateously upgrading & downgrading
-Date: Sun, 24 Mar 2024 18:45:40 -0400
-Message-ID: <20240324224720.1345309-615-sashal@kernel.org>
+Cc: Sean Anderson <sean.anderson@seco.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.7 622/713] usb: phy: generic: Get the vbus supply
+Date: Sun, 24 Mar 2024 18:45:48 -0400
+Message-ID: <20240324224720.1345309-623-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -47,46 +48,41 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kent Overstreet <kent.overstreet@linux.dev>
+From: Sean Anderson <sean.anderson@seco.com>
 
-commit e7999235e6c437b99fad03d8301a4341be0d2bb5 upstream.
+[ Upstream commit 75fd6485cccef269ac9eb3b71cf56753341195ef ]
 
-Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+While support for working with a vbus was added, the regulator was never
+actually gotten (despite what was documented). Fix this by actually
+getting the supply from the device tree.
+
+Fixes: 7acc9973e3c4 ("usb: phy: generic: add vbus support")
+Signed-off-by: Sean Anderson <sean.anderson@seco.com>
+Link: https://lore.kernel.org/r/20240123225111.1629405-3-sean.anderson@seco.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/bcachefs/super-io.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/usb/phy/phy-generic.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/bcachefs/super-io.c b/fs/bcachefs/super-io.c
-index 6405cc1d651fd..c925dc5742fa4 100644
---- a/fs/bcachefs/super-io.c
-+++ b/fs/bcachefs/super-io.c
-@@ -1085,13 +1085,22 @@ bool bch2_check_version_downgrade(struct bch_fs *c)
- 	/*
- 	 * Downgrade, if superblock is at a higher version than currently
- 	 * supported:
-+	 *
-+	 * c->sb will be checked before we write the superblock, so update it as
-+	 * well:
- 	 */
--	if (BCH_SB_VERSION_UPGRADE_COMPLETE(c->disk_sb.sb) > bcachefs_metadata_version_current)
-+	if (BCH_SB_VERSION_UPGRADE_COMPLETE(c->disk_sb.sb) > bcachefs_metadata_version_current) {
- 		SET_BCH_SB_VERSION_UPGRADE_COMPLETE(c->disk_sb.sb, bcachefs_metadata_version_current);
--	if (c->sb.version > bcachefs_metadata_version_current)
-+		c->sb.version_upgrade_complete = bcachefs_metadata_version_current;
-+	}
-+	if (c->sb.version > bcachefs_metadata_version_current) {
- 		c->disk_sb.sb->version = cpu_to_le16(bcachefs_metadata_version_current);
--	if (c->sb.version_min > bcachefs_metadata_version_current)
-+		c->sb.version = bcachefs_metadata_version_current;
-+	}
-+	if (c->sb.version_min > bcachefs_metadata_version_current) {
- 		c->disk_sb.sb->version_min = cpu_to_le16(bcachefs_metadata_version_current);
-+		c->sb.version_min = bcachefs_metadata_version_current;
-+	}
- 	c->disk_sb.sb->compat[0] &= cpu_to_le64((1ULL << BCH_COMPAT_NR) - 1);
- 	return ret;
- }
+diff --git a/drivers/usb/phy/phy-generic.c b/drivers/usb/phy/phy-generic.c
+index 770081b828a42..b855d291dfe6b 100644
+--- a/drivers/usb/phy/phy-generic.c
++++ b/drivers/usb/phy/phy-generic.c
+@@ -268,6 +268,13 @@ int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_generic *nop)
+ 		return dev_err_probe(dev, PTR_ERR(nop->vbus_draw),
+ 				     "could not get vbus regulator\n");
+ 
++	nop->vbus_draw = devm_regulator_get_exclusive(dev, "vbus");
++	if (PTR_ERR(nop->vbus_draw) == -ENODEV)
++		nop->vbus_draw = NULL;
++	if (IS_ERR(nop->vbus_draw))
++		return dev_err_probe(dev, PTR_ERR(nop->vbus_draw),
++				     "could not get vbus regulator\n");
++
+ 	nop->dev		= dev;
+ 	nop->phy.dev		= nop->dev;
+ 	nop->phy.label		= "nop-xceiv";
 -- 
 2.43.0
 
