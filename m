@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5CB130AC3;
-	Sun, 24 Mar 2024 23:02:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25441FD12A;
+	Sun, 24 Mar 2024 23:02:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321341; cv=none; b=txs6RiukfeisG0PRpbcR/nPPZGCUrXZNEAlS6cU7Xw85HVN13yoCjfohRXA0sZZLNIuHZYj7uqCI9PTYyYJ1g08X8TdqocGxcNkgGc61mFHX9vgxhuNARvPw8p4DU1V/tTA/stxO8tknSu4Qaw4/jcEraUoClDB/XRdEx2RRUgk=
+	t=1711321331; cv=none; b=eiSCxOHr7u5ixB6am2tBDCMjWRRGfUOztsZHY+DoTl6t5V6yejxp4JbMi3ktAQTz8433CqYH8grPvgGUMp1HeHNPBONDa8/k/NE0JmmVhxKKy279n9EcjXQTXx2svl2HS60faNHCQBe+4pJ8v3UAuxaL6t/Yo0O6ETPio6bz1ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321341; c=relaxed/simple;
-	bh=g0bIDGsnLq4XPpGnk9HQAmPP+fiIyU1Ypk3bcF0ztd4=;
+	s=arc-20240116; t=1711321331; c=relaxed/simple;
+	bh=ee4JVX+b0jEgqSk/X+DrWDhtXvtITEYxbWllb2TfOyI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YSL1JynK5BOCUQtUcPu3kE2LRiteWGxQPt9d77ToZbcATfQwjHjQznqyrZW5gW722eY48OGnXzURVSDW31ndf1OZz40KwJxMGVAsVPtC/h6/YQAXZlNqr1OX6nx7zktSjEVghOkAz3LbU6DhGyOCnBR/PN63BeIiDSXIGRCM88c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VPjyfK2G; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=oQC3qCkYHaIGIhHauwX+e611l6GuaotsRTx87ZamqcYVIMAgyTu2ikPI0IXfTZChXUuHs96rUC1D0Uag2S8qw2yQlH0DUMn8Chh6bfHUpPJ5ESRw7rVsJN/saVgKRLEKvWHyA+6tuUBbf3PxzZecFaE8BLgWPvyg4utiqSlBDwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SwKKtf4H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VPjyfK2G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6DA1C433C7;
-	Sun, 24 Mar 2024 23:02:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SwKKtf4H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCAD3C433F1;
+	Sun, 24 Mar 2024 23:02:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321340;
-	bh=g0bIDGsnLq4XPpGnk9HQAmPP+fiIyU1Ypk3bcF0ztd4=;
+	s=k20201202; t=1711321330;
+	bh=ee4JVX+b0jEgqSk/X+DrWDhtXvtITEYxbWllb2TfOyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VPjyfK2Gja47pXwH4Gbb/wQhgLhvneFGSDTyyS8lsWRD98er6yr/FrRWZMwom8B+u
-	 UN+R6pxXL77afQ+6iqr3WYKKHvJqN8fCbvJVWCZ4Bf/OiM4PsHA+5VBsyJMsPx1DME
-	 iooSbHeD3TsDgBaVZGgAE+lOO5DepiQsTyksWHji3Z9gJEYh+5udeSS/8qc5mBcjB8
-	 GOkf75GqYAcj+cArw/I0ld4RJN2lL9B/sixUJuNn4plBBcf4m5KsyqNypcWC8PDcmG
-	 ivv5roVSsQKbxr3k2bDeSscaO/u+vM4vJG/u/s/xIQH0fuynCYiVzi5kZsOeejPM3V
-	 /y2biPaPbmsoA==
+	b=SwKKtf4HdpKbp4HrjrPwXWQhA/XKFkijugYajkdMmBWHBUgKMegGMfUZnN6FPU+sd
+	 31sz3Y/b8oh24ma9Lr/MLD+Cr897ttdusoqxC3rvBBHcNMJSZAEjFbSuZzInwYsAyz
+	 532XZDEibnizEvlXaRalTfKmrx7O4JlHhQ1mpiYVH25B92yRU7qf7krHIKahBA8gK5
+	 Z4umELK9N2bhigkmp3QhS6KLk1UBFC5sNVdqCk9OiSMjx29A3fSVFYUnFl1X2WMRAb
+	 ErEyrvx4srNUbo8LzVU66CU3vGSck23fr/oC5DGQJR8+rLTFrLCc7KMmbZthONjdha
+	 L25Nm8sVZ9GZQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stuart Henderson <stuarth@opensource.cirrus.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: =?UTF-8?q?Fr=C3=A9d=C3=A9ric=20Danis?= <frederic.danis@collabora.com>,
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 064/638] ASoC: wm8962: Enable oscillator if selecting WM8962_FLL_OSC
-Date: Sun, 24 Mar 2024 18:51:41 -0400
-Message-ID: <20240324230116.1348576-65-sashal@kernel.org>
+Subject: [PATCH 6.6 054/638] Bluetooth: mgmt: Fix limited discoverable off timeout
+Date: Sun, 24 Mar 2024 18:51:31 -0400
+Message-ID: <20240324230116.1348576-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -44,39 +44,51 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Stuart Henderson <stuarth@opensource.cirrus.com>
+From: Frédéric Danis <frederic.danis@collabora.com>
 
-[ Upstream commit 03c7874106ca5032a312626b927b1c35f07b1f35 ]
+[ Upstream commit 0bd1fb586235224048c726922db048d1bce6354a ]
 
-Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
-Link: https://msgid.link/r/20240306161439.1385643-1-stuarth@opensource.cirrus.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+LIMITED_DISCOVERABLE flag is not reset from Class of Device and
+advertisement on limited discoverable timeout. This prevents to pass PTS
+test GAP/DISC/LIMM/BV-02-C
+
+Calling set_discoverable_sync as when the limited discovery is set
+correctly update the Class of Device and advertisement.
+
+Signed-off-by: Frédéric Danis <frederic.danis@collabora.com>
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8962.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/bluetooth/mgmt.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
-index 83ce5dbecc45d..d444b7776ece1 100644
---- a/sound/soc/codecs/wm8962.c
-+++ b/sound/soc/codecs/wm8962.c
-@@ -2914,8 +2914,12 @@ static int wm8962_set_fll(struct snd_soc_component *component, int fll_id, int s
- 	switch (fll_id) {
- 	case WM8962_FLL_MCLK:
- 	case WM8962_FLL_BCLK:
-+		fll1 |= (fll_id - 1) << WM8962_FLL_REFCLK_SRC_SHIFT;
-+		break;
- 	case WM8962_FLL_OSC:
- 		fll1 |= (fll_id - 1) << WM8962_FLL_REFCLK_SRC_SHIFT;
-+		snd_soc_component_update_bits(component, WM8962_PLL2,
-+					      WM8962_OSC_ENA, WM8962_OSC_ENA);
- 		break;
- 	case WM8962_FLL_INT:
- 		snd_soc_component_update_bits(component, WM8962_FLL_CONTROL_1,
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index 9dd815b6603fe..2448a154a4069 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -1045,6 +1045,8 @@ static void rpa_expired(struct work_struct *work)
+ 	hci_cmd_sync_queue(hdev, rpa_expired_sync, NULL, NULL);
+ }
+ 
++static int set_discoverable_sync(struct hci_dev *hdev, void *data);
++
+ static void discov_off(struct work_struct *work)
+ {
+ 	struct hci_dev *hdev = container_of(work, struct hci_dev,
+@@ -1063,7 +1065,7 @@ static void discov_off(struct work_struct *work)
+ 	hci_dev_clear_flag(hdev, HCI_DISCOVERABLE);
+ 	hdev->discov_timeout = 0;
+ 
+-	hci_update_discoverable(hdev);
++	hci_cmd_sync_queue(hdev, set_discoverable_sync, NULL, NULL);
+ 
+ 	mgmt_new_settings(hdev);
+ 
 -- 
 2.43.0
 
