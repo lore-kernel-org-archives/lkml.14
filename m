@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E516185236;
-	Sun, 24 Mar 2024 23:52:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 350F5184F0A;
+	Sun, 24 Mar 2024 23:52:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324337; cv=none; b=t6dm/yNjQu41eZCitDOtV4RSNbTrhURAe+76WWBfRu2nzfsK++SbbNvsdRh7SFk0qy84L3ug7sC+h9NEErQUG3LIUNJaDGdHqLP83zeiHu1+b6g1A1XfYqfvprMrNM1F0BSX9j5q4xsuxWCNJvhcxkhxZ9zxIQnTJucorlUWtnw=
+	t=1711324340; cv=none; b=pZH4+WDsoktXrHoPoN/jtlJl/DYOdzyWPZ+3Rd9aNnD2TSk5ptbEqDqkCx6swUUBDFdWhbagKToJvjg3bjyFhYHr9O6/XkBvmGDkJt9GsY3VMA2J74972g7v0ZOOMHgkrpFHwQXUhYn26QQnvjqTw3TfLaYVwmS8V4jtHtUIhfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324337; c=relaxed/simple;
-	bh=HjJ/dTR++zAMfVXYPFsG/0p7h3CxF6pmnwiIwdiU8Ng=;
+	s=arc-20240116; t=1711324340; c=relaxed/simple;
+	bh=5bMpDei5pQBV7TFItVqG+PgNFyz4lHjg/J19IK10tro=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lN6vO8HOQCGkK8P+YjqFiB8EZD/1QVkvFGsB/UUAjUB2A6ngor7hapeypGGH4mBCBJVEiXBnGGmy6hmqesRHEi0BA+ox+GNj00e5D5FfnRCIygDqKOjldfj4nL2UtwVocvhI0Ow4KqzzzdLiUQsiwYfIVVwWQ6dw67ZIUCyhJOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ptXdiobx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=L9o6FW4yUOlJbz5/R8bDL5aazHjuKIABpjuz6HiwKVcBdFoUsdVyVfdKqid+qwY1Yu0pHRFmVFT2zN3uj1vQzFJR3jvJZd4lRLKEkPiP4jlIuI/SliFAwjtRz0W5uvpvplLdAu2PHx4jRnw+msnuvhma1koiQ37x26QzOeVO4iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sPi/vjOW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ptXdiobx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF3BEC433A6;
-	Sun, 24 Mar 2024 23:52:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sPi/vjOW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76538C433C7;
+	Sun, 24 Mar 2024 23:52:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324336;
-	bh=HjJ/dTR++zAMfVXYPFsG/0p7h3CxF6pmnwiIwdiU8Ng=;
+	s=k20201202; t=1711324340;
+	bh=5bMpDei5pQBV7TFItVqG+PgNFyz4lHjg/J19IK10tro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ptXdiobxMI2okkptNbeTZP3AFnGJsAUiZJyDRyMYdVLz2dkfTMIINNb7YbcrLX593
-	 qlHnsAhTJoCGNC1pQCajeO1L64uOUWcJVCM56AxbpF7piEQ+hx1DCjJ8yXhXtbuNo1
-	 QZToqx5x+4IdrzAYfomLFSvd9iZf/fNYnsQofus1dYYddF/XpHVPc0ZpDa021Ruk2e
-	 kAXwDDbwdJmQmFA+NJdRImxd3Jll1sWz0CvToRl5XcPjswgiE2ud7YzA9PylIn7MUj
-	 A9M5dE27J03ghS5yo+b4MXcmcA6CM4FYCgM9ZyIQNcmiPORtsLu9676WOstWZ4jL0F
-	 8oBRB3OUrpDaA==
+	b=sPi/vjOWoDdkz8HlmaIZrC3Zg9MG0POta1VI8MFT4IMwgAcrGrS1umb3LDw6bNw2O
+	 JzHV4mDqWpeFbP+MPtgUtbjyEAEbLE01dQ3EtrnuwkW3+i/87H4KHE+nlrtyO032LX
+	 +RVEu18AJ7pfngedLQzlwEOhTOOqzSZPSv0o5nuGIS/K09uxQhpoj41TQvbrjRTR6e
+	 l6QuYm8WgpZQkcKa0nNC2Rzh+M6Fo6pcRwsEVzXE/ecq7tE/ZxEX4UY9n6/liH5PDX
+	 s5dMV4yL+ReF1+UT+fBJKmvqb6n+3VUl6F/mJggw2J2dfmLAJvKxcbRy1/CWfJfhR3
+	 f/xXgdG4U8dbg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?J=C3=B6rg=20Wedekind?= <joerg@wedekind.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 106/148] PCI: Mark 3ware-9650SE Root Port Extended Tags as broken
-Date: Sun, 24 Mar 2024 19:49:30 -0400
-Message-ID: <20240324235012.1356413-107-sashal@kernel.org>
+Subject: [PATCH 4.19 110/148] crypto: arm - Rename functions to avoid conflict with crypto/sha256.h
+Date: Sun, 24 Mar 2024 19:49:34 -0400
+Message-ID: <20240324235012.1356413-111-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -44,56 +44,130 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jörg Wedekind <joerg@wedekind.de>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit baf67aefbe7d7deafa59ca49612d163f8889934c ]
+[ Upstream commit e4dcc1be15268b6d34de3968f906577591521bd5 ]
 
-Per PCIe r6.1, sec 2.2.6.2 and 7.5.3.4, a Requester may not use 8-bit Tags
-unless its Extended Tag Field Enable is set, but all Receivers/Completers
-must handle 8-bit Tags correctly regardless of their Extended Tag Field
-Enable.
+Rename static / file-local functions so that they do not conflict with
+the functions declared in crypto/sha256.h.
 
-Some devices do not handle 8-bit Tags as Completers, so add a quirk for
-them.  If we find such a device, we disable Extended Tags for the entire
-hierarchy to make peer-to-peer DMA possible.
+This is a preparation patch for folding crypto/sha256.h into crypto/sha.h.
 
-The 3ware 9650SE seems to have issues with handling 8-bit tags. Mark it as
-broken.
-
-This fixes PCI Parity Errors like :
-
-  3w-9xxx: scsi0: ERROR: (0x06:0x000C): PCI Parity Error: clearing.
-  3w-9xxx: scsi0: ERROR: (0x06:0x000D): PCI Abort: clearing.
-  3w-9xxx: scsi0: ERROR: (0x06:0x000E): Controller Queue Error: clearing.
-  3w-9xxx: scsi0: ERROR: (0x06:0x0010): Microcontroller Error: clearing.
-
-Link: https://lore.kernel.org/r/20240219132811.8351-1-joerg@wedekind.de
-Fixes: 60db3a4d8cc9 ("PCI: Enable PCIe Extended Tags if supported")
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=202425
-Signed-off-by: Jörg Wedekind <joerg@wedekind.de>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Stable-dep-of: 53cc9baeb9bc ("crypto: arm/sha - fix function cast warnings")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/crypto/sha256_glue.c      |  8 ++++----
+ arch/arm/crypto/sha256_neon_glue.c | 24 ++++++++++++------------
+ 2 files changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 99a8a24ea79dc..bb51820890965 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5189,6 +5189,7 @@ static void quirk_no_ext_tags(struct pci_dev *pdev)
- 
- 	pci_walk_bus(bridge->bus, pci_configure_extended_tags, NULL);
+diff --git a/arch/arm/crypto/sha256_glue.c b/arch/arm/crypto/sha256_glue.c
+index 0ae900e778f3b..040c744ef9f50 100644
+--- a/arch/arm/crypto/sha256_glue.c
++++ b/arch/arm/crypto/sha256_glue.c
+@@ -44,7 +44,7 @@ int crypto_sha256_arm_update(struct shash_desc *desc, const u8 *data,
  }
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_3WARE, 0x1004, quirk_no_ext_tags);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0132, quirk_no_ext_tags);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0140, quirk_no_ext_tags);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0141, quirk_no_ext_tags);
+ EXPORT_SYMBOL(crypto_sha256_arm_update);
+ 
+-static int sha256_final(struct shash_desc *desc, u8 *out)
++static int crypto_sha256_arm_final(struct shash_desc *desc, u8 *out)
+ {
+ 	sha256_base_do_finalize(desc,
+ 				(sha256_block_fn *)sha256_block_data_order);
+@@ -56,7 +56,7 @@ int crypto_sha256_arm_finup(struct shash_desc *desc, const u8 *data,
+ {
+ 	sha256_base_do_update(desc, data, len,
+ 			      (sha256_block_fn *)sha256_block_data_order);
+-	return sha256_final(desc, out);
++	return crypto_sha256_arm_final(desc, out);
+ }
+ EXPORT_SYMBOL(crypto_sha256_arm_finup);
+ 
+@@ -64,7 +64,7 @@ static struct shash_alg algs[] = { {
+ 	.digestsize	=	SHA256_DIGEST_SIZE,
+ 	.init		=	sha256_base_init,
+ 	.update		=	crypto_sha256_arm_update,
+-	.final		=	sha256_final,
++	.final		=	crypto_sha256_arm_final,
+ 	.finup		=	crypto_sha256_arm_finup,
+ 	.descsize	=	sizeof(struct sha256_state),
+ 	.base		=	{
+@@ -78,7 +78,7 @@ static struct shash_alg algs[] = { {
+ 	.digestsize	=	SHA224_DIGEST_SIZE,
+ 	.init		=	sha224_base_init,
+ 	.update		=	crypto_sha256_arm_update,
+-	.final		=	sha256_final,
++	.final		=	crypto_sha256_arm_final,
+ 	.finup		=	crypto_sha256_arm_finup,
+ 	.descsize	=	sizeof(struct sha256_state),
+ 	.base		=	{
+diff --git a/arch/arm/crypto/sha256_neon_glue.c b/arch/arm/crypto/sha256_neon_glue.c
+index 1d82c6cd31a41..8d296529c8ba7 100644
+--- a/arch/arm/crypto/sha256_neon_glue.c
++++ b/arch/arm/crypto/sha256_neon_glue.c
+@@ -29,8 +29,8 @@
+ asmlinkage void sha256_block_data_order_neon(u32 *digest, const void *data,
+ 					     unsigned int num_blks);
+ 
+-static int sha256_update(struct shash_desc *desc, const u8 *data,
+-			 unsigned int len)
++static int crypto_sha256_neon_update(struct shash_desc *desc, const u8 *data,
++				     unsigned int len)
+ {
+ 	struct sha256_state *sctx = shash_desc_ctx(desc);
+ 
+@@ -46,8 +46,8 @@ static int sha256_update(struct shash_desc *desc, const u8 *data,
+ 	return 0;
+ }
+ 
+-static int sha256_finup(struct shash_desc *desc, const u8 *data,
+-			unsigned int len, u8 *out)
++static int crypto_sha256_neon_finup(struct shash_desc *desc, const u8 *data,
++				    unsigned int len, u8 *out)
+ {
+ 	if (!may_use_simd())
+ 		return crypto_sha256_arm_finup(desc, data, len, out);
+@@ -63,17 +63,17 @@ static int sha256_finup(struct shash_desc *desc, const u8 *data,
+ 	return sha256_base_finish(desc, out);
+ }
+ 
+-static int sha256_final(struct shash_desc *desc, u8 *out)
++static int crypto_sha256_neon_final(struct shash_desc *desc, u8 *out)
+ {
+-	return sha256_finup(desc, NULL, 0, out);
++	return crypto_sha256_neon_finup(desc, NULL, 0, out);
+ }
+ 
+ struct shash_alg sha256_neon_algs[] = { {
+ 	.digestsize	=	SHA256_DIGEST_SIZE,
+ 	.init		=	sha256_base_init,
+-	.update		=	sha256_update,
+-	.final		=	sha256_final,
+-	.finup		=	sha256_finup,
++	.update		=	crypto_sha256_neon_update,
++	.final		=	crypto_sha256_neon_final,
++	.finup		=	crypto_sha256_neon_finup,
+ 	.descsize	=	sizeof(struct sha256_state),
+ 	.base		=	{
+ 		.cra_name	=	"sha256",
+@@ -85,9 +85,9 @@ struct shash_alg sha256_neon_algs[] = { {
+ }, {
+ 	.digestsize	=	SHA224_DIGEST_SIZE,
+ 	.init		=	sha224_base_init,
+-	.update		=	sha256_update,
+-	.final		=	sha256_final,
+-	.finup		=	sha256_finup,
++	.update		=	crypto_sha256_neon_update,
++	.final		=	crypto_sha256_neon_final,
++	.finup		=	crypto_sha256_neon_finup,
+ 	.descsize	=	sizeof(struct sha256_state),
+ 	.base		=	{
+ 		.cra_name	=	"sha224",
 -- 
 2.43.0
 
