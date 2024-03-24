@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292051D8BA0;
-	Sun, 24 Mar 2024 22:50:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445D8144314;
+	Sun, 24 Mar 2024 22:51:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320637; cv=none; b=TfBu2OGIWASp2Pnamfy5n2bb3iXJmkLIQHnDxomceSKpqepmFe6QX8zBW8kVJGe7Yt2lshGQ7etV4Q+LfTDOvW1vpF0JZ09nOUvGgn0FMJkNJc/D6TJ1hT6Q4RglONygg7ByZVMyFHzb6+cYBfFAjxjUM3yT5e9JwGa604CWKvg=
+	t=1711320661; cv=none; b=H1Xpj8idjDv7dRwLygQ1u98DEoDZ6MaFdTpMfzqxhbbReCj/An6jNL7mTbkbCUyh4Hxg0zkZbYjOlgup/ZagoJjnDobJoA/0NTqkValEZeqNOLyFJmbyn+uxYg46wrj1I8hfdPcxAGdIvDuzqPC3zCnHTKcxEwGcfDeTcMsT55w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320637; c=relaxed/simple;
-	bh=Rk1Q+Aok+VkjPFU/uEYsGNr2WdeCIZyK5WHjnMJWslQ=;
+	s=arc-20240116; t=1711320661; c=relaxed/simple;
+	bh=Jb7k3GoU6Ve+LODOIYdKGbcfDg48IkkmThzdS/zf9lE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SFjAxv1lVQX5f69g3sNM7KR0GwkLWQ52vT9Wi/K9zGs/ELF9314Xg25XxrGZyXVUrTGinweafa3/SfJADk7x0WPdoxyEswnh64YsaJxvnEXokoSAGysnxRnaRFktvk8EJ8adCWAJyu9bnTOg6dvNtNnf3DWuwVASmIuluHMaWds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O4/ZxaO8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=CF/WMfW4R06xa5bWnJq+fGUfVSMHka8yQk+HKyZtFiCgZ2lmAAR8Uz+8VtBr6Fp1gw6vkSR6qPxAFD2kbC114DBiT4iGvLqC+83+alSn8Tp5wJ2Uz8FCJdwq78CQiu3aSmEysPIToP00lwN9pLghJ7y+7evi+STOxQzPu1GGF+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gfdX2r4s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O4/ZxaO8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48984C433F1;
-	Sun, 24 Mar 2024 22:50:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gfdX2r4s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86A85C43390;
+	Sun, 24 Mar 2024 22:50:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320637;
-	bh=Rk1Q+Aok+VkjPFU/uEYsGNr2WdeCIZyK5WHjnMJWslQ=;
+	s=k20201202; t=1711320660;
+	bh=Jb7k3GoU6Ve+LODOIYdKGbcfDg48IkkmThzdS/zf9lE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=O4/ZxaO8PMqliNl+7KLodkuLq1XbIWvKzXQZfRh8Ow67nbbY4EQj6dtoUhC0zh5tg
-	 c9cPNoHxdOADPutAcKqIJk/zs3RmF7xADoTTRW/LUQ7GS9Jvb+bu+4ID8NpgQtXHRJ
-	 yL+9eLCAhLP2vBghXO8jcWrlDe4NJAatriUUI6/S8Bar12orYV0FgTNUDc41FQO4j5
-	 LIjDPyn5DFZeUZVk5YDNFfSXSB+hFCuOsRj1fTzuCbJsV5Dgn9pk8r482C+SKLZIvE
-	 7xNU+z5tZulkiavoAsJW6Fki0RvzBLcqI+1RRkwUjIa4yP0YsO5kTQQWZhQB/LlQsF
-	 iDCbaufmFv8kQ==
+	b=gfdX2r4sRIPAv7qjLC5GhlU7McK1g4FfG79i4PJtapCsscneeE4L1z/hZh7cyEnOi
+	 Rqx3mpkaHjmhqCfTEMimczR98d4bXTbAIBGchv3kZlzzcgoCBB21xLUIh5/YaU5aVn
+	 WPt3uXhSOm8GOEA/KXWulpWuFRrC3/ttQ9gk0FZ7FAuIgmwCUg9EN5qtUtJQ27ccbL
+	 q363AgkzEXqCjj1QfZLYGSpW87lc+GKpV53FcEHbSdLA98bvy5DkcG8oppeN0FQjAW
+	 /4LFcRPx48RJ0fyq17EEQfdr+30eRiwg26Jqv3saI4alDBptWScZEKG1MrZYce7y1s
+	 mC4bf1nmWZYAw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Shung-Hsi Yu <shung-hsi.yu@suse.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Martin KaFai Lau <martin.lau@kernel.org>,
+Cc: Petr Mladek <pmladek@suse.com>,
+	John Ogness <john.ogness@linutronix.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 198/713] selftests/bpf: trace_helpers.c: do not use poisoned type
-Date: Sun, 24 Mar 2024 18:38:44 -0400
-Message-ID: <20240324224720.1345309-199-sashal@kernel.org>
+Subject: [PATCH 6.7 222/713] printk: Disable passing console lock owner completely during panic()
+Date: Sun, 24 Mar 2024 18:39:08 -0400
+Message-ID: <20240324224720.1345309-223-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,41 +48,114 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Shung-Hsi Yu <shung-hsi.yu@suse.com>
+From: Petr Mladek <pmladek@suse.com>
 
-[ Upstream commit a68b50f47bec8bd6a33b07b7e1562db2553981a7 ]
+[ Upstream commit d04d5882cd678b898a9d7c5aee6afbe9e6e77fcd ]
 
-After commit c698eaebdf47 ("selftests/bpf: trace_helpers.c: Optimize
-kallsyms cache") trace_helpers.c now includes libbpf_internal.h, and
-thus can no longer use the u32 type (among others) since they are poison
-in libbpf_internal.h. Replace u32 with __u32 to fix the following error
-when building trace_helpers.c on powerpc:
+The commit d51507098ff91 ("printk: disable optimistic spin
+during panic") added checks to avoid becoming a console waiter
+if a panic is in progress.
 
-  error: attempt to use poisoned "u32"
+However, the transition to panic can occur while there is
+already a waiter. The current owner should not pass the lock to
+the waiter because it might get stopped or blocked anytime.
 
-Fixes: c698eaebdf47 ("selftests/bpf: trace_helpers.c: Optimize kallsyms cache")
-Signed-off-by: Shung-Hsi Yu <shung-hsi.yu@suse.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: https://lore.kernel.org/r/20240202095559.12900-1-shung-hsi.yu@suse.com
-Signed-off-by: Martin KaFai Lau <martin.lau@kernel.org>
+Also the panic context might pass the console lock owner to an
+already stopped waiter by mistake. It might happen when
+console_flush_on_panic() ignores the current lock owner, for
+example:
+
+CPU0                                CPU1
+----                                ----
+console_lock_spinning_enable()
+                                    console_trylock_spinning()
+                                      [CPU1 now console waiter]
+NMI: panic()
+  panic_other_cpus_shutdown()
+                                    [stopped as console waiter]
+  console_flush_on_panic()
+    console_lock_spinning_enable()
+    [print 1 record]
+    console_lock_spinning_disable_and_check()
+      [handover to stopped CPU1]
+
+This results in panic() not flushing the panic messages.
+
+Fix these problems by disabling all spinning operations
+completely during panic().
+
+Another advantage is that it prevents possible deadlocks caused
+by "console_owner_lock". The panic() context does not need to
+take it any longer. The lockless checks are safe because the
+functions become NOPs when they see the panic in progress. All
+operations manipulating the state are still synchronized by the
+lock even when non-panic CPUs would notice the panic
+synchronously.
+
+The current owner might stay spinning. But non-panic() CPUs
+would get stopped anyway and the panic context will never start
+spinning.
+
+Fixes: dbdda842fe96 ("printk: Add console owner and waiter logic to load balance console writes")
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Link: https://lore.kernel.org/r/20240207134103.1357162-12-john.ogness@linutronix.de
+Signed-off-by: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/trace_helpers.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/printk/printk.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/tools/testing/selftests/bpf/trace_helpers.c b/tools/testing/selftests/bpf/trace_helpers.c
-index 4faa898ff7fc4..27fd7ed3e4b0c 100644
---- a/tools/testing/selftests/bpf/trace_helpers.c
-+++ b/tools/testing/selftests/bpf/trace_helpers.c
-@@ -271,7 +271,7 @@ ssize_t get_uprobe_offset(const void *addr)
- 	 * addi  r2,r2,XXXX
- 	 */
- 	{
--		const u32 *insn = (const u32 *)(uintptr_t)addr;
-+		const __u32 *insn = (const __u32 *)(uintptr_t)addr;
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index b7e50f8438df3..72f6a564e832f 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -1869,10 +1869,23 @@ static bool console_waiter;
+  */
+ static void console_lock_spinning_enable(void)
+ {
++	/*
++	 * Do not use spinning in panic(). The panic CPU wants to keep the lock.
++	 * Non-panic CPUs abandon the flush anyway.
++	 *
++	 * Just keep the lockdep annotation. The panic-CPU should avoid
++	 * taking console_owner_lock because it might cause a deadlock.
++	 * This looks like the easiest way how to prevent false lockdep
++	 * reports without handling races a lockless way.
++	 */
++	if (panic_in_progress())
++		goto lockdep;
++
+ 	raw_spin_lock(&console_owner_lock);
+ 	console_owner = current;
+ 	raw_spin_unlock(&console_owner_lock);
  
- 		if ((((*insn & OP_RT_RA_MASK) == ADDIS_R2_R12) ||
- 		     ((*insn & OP_RT_RA_MASK) == LIS_R2)) &&
++lockdep:
+ 	/* The waiter may spin on us after setting console_owner */
+ 	spin_acquire(&console_owner_dep_map, 0, 0, _THIS_IP_);
+ }
+@@ -1897,6 +1910,22 @@ static int console_lock_spinning_disable_and_check(int cookie)
+ {
+ 	int waiter;
+ 
++	/*
++	 * Ignore spinning waiters during panic() because they might get stopped
++	 * or blocked at any time,
++	 *
++	 * It is safe because nobody is allowed to start spinning during panic
++	 * in the first place. If there has been a waiter then non panic CPUs
++	 * might stay spinning. They would get stopped anyway. The panic context
++	 * will never start spinning and an interrupted spin on panic CPU will
++	 * never continue.
++	 */
++	if (panic_in_progress()) {
++		/* Keep lockdep happy. */
++		spin_release(&console_owner_dep_map, _THIS_IP_);
++		return 0;
++	}
++
+ 	raw_spin_lock(&console_owner_lock);
+ 	waiter = READ_ONCE(console_waiter);
+ 	console_owner = NULL;
 -- 
 2.43.0
 
