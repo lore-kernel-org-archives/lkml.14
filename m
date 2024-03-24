@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9496B22D89D;
-	Sun, 24 Mar 2024 23:16:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECEC122EAB9;
+	Sun, 24 Mar 2024 23:16:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322191; cv=none; b=nBQFeA8Sw8QN4if+ACcruKsOW2LT0/OCwNdAT5P98qKwAkhBvDLqlk8IyTry8/GTtpou+IClDYki/1/to1zeET/8QVoHYVvfNkffR4c8Kl86KcQOPZxnbJfrnSViuGm5WbccgmKPtHgxdjxI/IjontGlvT3rleIEm597uv1QFGw=
+	t=1711322204; cv=none; b=Qfy1dA0H2ETL5hRR/97JPU9mOhl0+28pRrfvl1SkzlLzdKquj5efJrl2l0PpCzJau4iiuQDibNcfWUkbXOcLGClgIoH6ojrOrsvcD3S8Z0ZC4w754wneGrukh4RQHLiuy6VYnsuyGcxw0efgVhRVaIqd9V3Z1f6xRAYSofYYflo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322191; c=relaxed/simple;
-	bh=RjDm9ULGYGXR/Ui5vm0FWksgcl8NMVnW5oGvvsNB4/4=;
+	s=arc-20240116; t=1711322204; c=relaxed/simple;
+	bh=j0BsWfsz/7LR1h9iVniZvi0VCdSuwLjHwSQAz1P8cxs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cfMW/dff9hn8sPI1+JvGvOx51q6nMEooOWavFJPxsh0nbrCSOuF3CQZ/fFLIvu4tMPheHq6qlzzOHnLB/ybK4ENxCdLja3sMtJgoKrEdVYiODN3rzeyrpIFXxhevT3qoCJww7JzyoGSn47yg6kWy4upklpr/HuJK7BFCV9FRaeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o9Is21ta; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=M8IrUyOshxlJRKc1u2Tndk7kfGGWr9u9oQSbQlqqIBhv13Q91uFbrnHEGJr15BmS0nVlLW2okdJzednMkyU7evKGQdXP+NDPpt+mpSDZmJ9jIeQp1MHWn3RXu5R60MgEkBSjBJd59aD8STJ4dgDc61YXzAr6IZG5bRQ/4WJwZA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lb0focdz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o9Is21ta"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3706C433B1;
-	Sun, 24 Mar 2024 23:16:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lb0focdz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2EFBC43390;
+	Sun, 24 Mar 2024 23:16:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322190;
-	bh=RjDm9ULGYGXR/Ui5vm0FWksgcl8NMVnW5oGvvsNB4/4=;
+	s=k20201202; t=1711322203;
+	bh=j0BsWfsz/7LR1h9iVniZvi0VCdSuwLjHwSQAz1P8cxs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=o9Is21taKvL3UXPK5qVKY7guQA8XpkKq1K+XCk1JWmJDchhbAu5941UVbzUCmiyY3
-	 6oOl2asS1evoKgsiBDcqQBBG73siY3D5EVI2mpo/39NF4DQfsazx2c62WDCReNAlEw
-	 q/Kv3n+zRKO0cK6wbQCU47zZmyKQITaY7ubaI6GC/HnApCLFbUwfoV2JZd47Dr0Wg0
-	 d7WYHDD4LYbWw8zGOFkMdB1KxrgycU5bvq46SzJBwjeNcse/3RdZsZorzKExxKtmSR
-	 Jo67Mm/6Saj93lZJVSl4P4RoCbiYJaCK3ox/Dp6J0PX6H1MPSbf/GO4I7uwpebEXhT
-	 PEjLmeBgbfxvQ==
+	b=lb0focdzvzY5z+bv2I9kn5ZJCAaelM5kKTCmYt8eghGGpZkQsbpUtm2BWbykNbwGB
+	 mx1RLVBQGUPndbzeq7XLxhthg1AQRc6PFWsZ7qEfCPYhw4Da/wPlwNNJ+ZvhUJhFBp
+	 zkKrFluSN/rEPbGP83UAPBpS3JibUNcOV8UjgkSqWmjeYHqmtXWfmknt1C+NzxaCed
+	 LkFlOhugM2HG2TxwYi9vxr+xerJMWjQZfSg6f1qUaJ6zCB2oWAuRWPVKDLqvAzBkYD
+	 JairGPIFJmlClBcfAlCFmWAF1lErZPXbZgGJyVmDLOTt/SILnTZzDsn6HI/IojXDAa
+	 3q9HNFMY2sMFg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 269/451] pinctrl: mediatek: Drop bogus slew rate register range for MT8186
-Date: Sun, 24 Mar 2024 19:09:05 -0400
-Message-ID: <20240324231207.1351418-270-sashal@kernel.org>
+Subject: [PATCH 6.1 283/451] clk: renesas: r8a779g0: Add Audio clocks
+Date: Sun, 24 Mar 2024 19:09:19 -0400
+Message-ID: <20240324231207.1351418-284-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,38 +48,36 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chen-Yu Tsai <wenst@chromium.org>
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-[ Upstream commit 3a29c87548809405bcbc66acc69cbe6f15184d94 ]
+[ Upstream commit 8dffb520ace48bcb996db049540c78261730213c ]
 
-The MT8186 does not support configuring pin slew rate. This is evident
-from both the datasheet, and the fact that the driver points the slew
-rate register range at the GPIO direction register range.
+Add module clocks for the Audio (SSI/SSIU) blocks on the Renesas R-Car
+V4H (R8A779G0) SoC.
 
-Drop the bogus setting.
-
-Fixes: 8b483bda1e46 ("pinctrl: add pinctrl driver on mt8186")
-Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Link: https://lore.kernel.org/r/20240131071910.3950450-1-wenst@chromium.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/878rhganfo.wl-kuninori.morimoto.gx@renesas.com
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Stable-dep-of: abb3fa662b8f ("clk: renesas: r8a779g0: Correct PFC/GPIO parent clocks")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/mediatek/pinctrl-mt8186.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/clk/renesas/r8a779g0-cpg-mssr.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8186.c b/drivers/pinctrl/mediatek/pinctrl-mt8186.c
-index a02f7c3269707..09edcf47effec 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt8186.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt8186.c
-@@ -1198,7 +1198,6 @@ static const struct mtk_pin_reg_calc mt8186_reg_cals[PINCTRL_PIN_REG_MAX] = {
- 	[PINCTRL_PIN_REG_DIR] = MTK_RANGE(mt8186_pin_dir_range),
- 	[PINCTRL_PIN_REG_DI] = MTK_RANGE(mt8186_pin_di_range),
- 	[PINCTRL_PIN_REG_DO] = MTK_RANGE(mt8186_pin_do_range),
--	[PINCTRL_PIN_REG_SR] = MTK_RANGE(mt8186_pin_dir_range),
- 	[PINCTRL_PIN_REG_SMT] = MTK_RANGE(mt8186_pin_smt_range),
- 	[PINCTRL_PIN_REG_IES] = MTK_RANGE(mt8186_pin_ies_range),
- 	[PINCTRL_PIN_REG_PU] = MTK_RANGE(mt8186_pin_pu_range),
+diff --git a/drivers/clk/renesas/r8a779g0-cpg-mssr.c b/drivers/clk/renesas/r8a779g0-cpg-mssr.c
+index f89cda70f2cbb..d0e8deacdd0be 100644
+--- a/drivers/clk/renesas/r8a779g0-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a779g0-cpg-mssr.c
+@@ -177,6 +177,8 @@ static const struct mssr_mod_clk r8a779g0_mod_clks[] __initconst = {
+ 	DEF_MOD("pfc1",		916,	R8A779G0_CLK_CL16M),
+ 	DEF_MOD("pfc2",		917,	R8A779G0_CLK_CL16M),
+ 	DEF_MOD("pfc3",		918,	R8A779G0_CLK_CL16M),
++	DEF_MOD("ssiu",		2926,	R8A779G0_CLK_S0D6_PER),
++	DEF_MOD("ssi",		2927,	R8A779G0_CLK_S0D6_PER),
+ };
+ 
+ /*
 -- 
 2.43.0
 
