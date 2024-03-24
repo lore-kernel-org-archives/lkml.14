@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306B41D6850;
-	Sun, 24 Mar 2024 22:51:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527E41DE11E;
+	Sun, 24 Mar 2024 22:52:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320719; cv=none; b=rykb2vB3WzbWuKBPfhxa+AX+YXAB+dV5DuedUHR25itT3TQMpvAYvaWy85cgUDeDCvkCRQcpY7fPJ80zTeUzUMnJX2+Uj91ZiCfVjZPzPX+3FZWN17QoU0XUKk3vRfcLeW3v2s7C7nEK83rMEtgaq3KUCE7LwcjxsYAjY8eGNGw=
+	t=1711320736; cv=none; b=oVtF465VFWUjWatt8LjLnlOw++ux6K8HGtv04GMOrpZmy4c5fUwnJg4LrJhFYQcpzmhrZ04zuTLLKgqlRtg+o+kLPR+RzRf3reMTZkGpBnx9K0ulmyEUlieGlMtBRW1CugSu/Tz/TWdkMvD9cO9SiIlhIrQzltm0VVyUrqoXUfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320719; c=relaxed/simple;
-	bh=IIAH9R+wJulgFrXMraygEhGyRL+cuXpt2/Ip4olD4X8=;
+	s=arc-20240116; t=1711320736; c=relaxed/simple;
+	bh=DIaY63F6+qP+Kys6KjDibBgqTTc6/AjrEVqel/3Y1lE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ilPU06a030cS6i5byxIWwBPaR1wJMcGvfR9vAHoG8/OPbf31619e/COsX5Mm0gb6UfMdryTTrNr6Hz/9zdruu+y001cpErBdx1PaLmDi0yi54ypVUEITvZ9pIPB+ny3wOKA4A+IsZvzTVHRVRaol8OicmWH9NFBGL8CstURiGnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZadyfjM/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=lxt5Kxf1j8bRqhkCVdXD8gYcJZVXSb+eG3kdnhuRZaWLskPzOB5gEpeDXGqN5Mp1nRW9Abz+5Y/bMPURdTYIdtuaHchA+7aTaCDxicQONVGW3jf/xyHFbU7FipvBYQTDWktB3MjQeGG60fqQuJW2DGYuPRwGhhnjZHuquQY8YO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dZOlgMBR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZadyfjM/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA9E9C43394;
-	Sun, 24 Mar 2024 22:51:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dZOlgMBR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F307C433F1;
+	Sun, 24 Mar 2024 22:52:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320717;
-	bh=IIAH9R+wJulgFrXMraygEhGyRL+cuXpt2/Ip4olD4X8=;
+	s=k20201202; t=1711320736;
+	bh=DIaY63F6+qP+Kys6KjDibBgqTTc6/AjrEVqel/3Y1lE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZadyfjM/b0fd4VhwgEW9IfUZCkhOnu1RTYdjYYdSp7GtLezDhajyeHYPEuquyTvCS
-	 m9PCwYX6hq/w9i5P+ofUW76EhE5lsrQ3aAs9RK7spfOTK3zKwDIppMxJ4rFNlZbxe7
-	 WsOc3o49VK956s06LmgvSI1kwmRMBW0ssOTeWO7egpceVfpEPDbLlfs67V7HiIvEmO
-	 SMZZNY+1xSAUAWSTERXABLpH9Uwe4O4MCRBCm651S3yaPHAHTmOMaKmKkhmfy/rM9u
-	 cPyCxRQ6ID3Nqg4nbgwp80CAzM4bHGlpHMbTzTxc0GAH+Vr+BYO1/EQkwdk89TC3qF
-	 dm0qTAjXXGmDQ==
+	b=dZOlgMBRiyT0N4CI0Ax3rwxAYoo+BMzZEi76uz0HBSFdDuZ/e2Cv/VmrA0ST13i4w
+	 kx1Oxs8FPlshKfP2WjmnQXb3Mw70oCN7mbTsAnSL8GjStsVa2tC/5OPq4RHCy+Ig+L
+	 BLKvzo8D5lgRiP3BaASbdJjnqIE4AJHA4NqsyeJWpcOBjaNRsWiBn06JE/9r3YGaDw
+	 WR+HpTtUKDWtRKhzhJGCnadQSFxmc8pLfaUfa0e3dnXPtBQN/79QjRsbx65IregdUk
+	 NLrzw/1G421XJw368b4cygjCdryYCBJeq6UwLNuRyGO8EkOnXIq/AFVwtPhDOpj6hw
+	 1Ie3crAQHER4w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Ajay Singh <ajay.kathat@microchip.com>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: Gen Xu <genxu6@gmail.com>,
+	Felix Fietkau <nbd@nbd.name>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 280/713] wifi: wilc1000: revert reset line logic flip
-Date: Sun, 24 Mar 2024 18:40:06 -0400
-Message-ID: <20240324224720.1345309-281-sashal@kernel.org>
+Subject: [PATCH 6.7 299/713] wifi: mt76: mt792x: fix ethtool warning
+Date: Sun, 24 Mar 2024 18:40:25 -0400
+Message-ID: <20240324224720.1345309-300-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -46,70 +44,37 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alexis Lothoré <alexis.lothore@bootlin.com>
+From: Gen Xu <genxu6@gmail.com>
 
-[ Upstream commit f3ec643947634bed41b97bd56b248f7c78498eab ]
+[ Upstream commit 7b4f9cd6a5fc221895b1d9be83ee3c13c00d09ab ]
 
-This reverts commit fcf690b0b47494df51d214db5c5a714a400b0257.
+Add a missing EHT related field to fix the following ethtool warning:
+[98179.287352] mt7921e 0003:01:00.0: ei: 74  SSTATS_LEN: 73
 
-When using a wilc1000 chip over a spi bus, users can optionally define a
-reset gpio and a chip enable gpio. The reset line of wilc1000 is active
-low, so to hold the chip in reset, a low (physical) value must be applied.
-
-The corresponding device tree binding documentation was introduced by
-commit f31ee3c0a555 ("wilc1000: Document enable-gpios and reset-gpios
-properties") and correctly indicates that the reset line is an active-low
-signal. The corresponding driver part, brought by commit ec031ac4792c
-("wilc1000: Add reset/enable GPIO support to SPI driver") was applying the
-correct logic. But commit fcf690b0b474 ("wifi: wilc1000: use correct
-sequence of RESET for chip Power-UP/Down") eventually flipped this logic
-and started misusing the gpiod APIs, applying an inverted logic when
-powering up/down the chip (for example, setting the reset line to a logic
-"1" during power up, which in fact asserts the reset line when device tree
-describes the reset line as GPIO_ACTIVE_LOW). As a consequence, any
-platform currently using the driver in SPI mode must use a faulty reset
-line description in device tree, or else chip will be maintained in reset
-and will not even allow to bring up the chip.
-
-Fix reset line usage by inverting back the gpiod APIs usage, setting the
-reset line to the logic value "0" when powering the chip, and the logic
-value "1" when powering off the chip.
-
-Fixes: fcf690b0b474 ("wifi: wilc1000: use correct sequence of RESET for chip Power-UP/Down")
-Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Acked-by: Ajay Singh <ajay.kathat@microchip.com>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20240217-wilc_1000_reset_line-v2-1-b216f433d7d5@bootlin.com
+Fixes: c74df1c067f2 ("wifi: mt76: mt792x: introduce mt792x-lib module")
+Signed-off-by: Gen Xu <genxu6@gmail.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/microchip/wilc1000/spi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/wireless/mediatek/mt76/mt792x_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/microchip/wilc1000/spi.c b/drivers/net/wireless/microchip/wilc1000/spi.c
-index 77b4cdff73c37..4cf8586ed55ae 100644
---- a/drivers/net/wireless/microchip/wilc1000/spi.c
-+++ b/drivers/net/wireless/microchip/wilc1000/spi.c
-@@ -192,11 +192,11 @@ static void wilc_wlan_power(struct wilc *wilc, bool on)
- 		/* assert ENABLE: */
- 		gpiod_set_value(gpios->enable, 1);
- 		mdelay(5);
--		/* assert RESET: */
--		gpiod_set_value(gpios->reset, 1);
--	} else {
- 		/* deassert RESET: */
- 		gpiod_set_value(gpios->reset, 0);
-+	} else {
-+		/* assert RESET: */
-+		gpiod_set_value(gpios->reset, 1);
- 		/* deassert ENABLE: */
- 		gpiod_set_value(gpios->enable, 0);
- 	}
+diff --git a/drivers/net/wireless/mediatek/mt76/mt792x_core.c b/drivers/net/wireless/mediatek/mt76/mt792x_core.c
+index 502be22dbe367..fb35eff6dc7b3 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt792x_core.c
++++ b/drivers/net/wireless/mediatek/mt76/mt792x_core.c
+@@ -354,6 +354,7 @@ static const char mt792x_gstrings_stats[][ETH_GSTRING_LEN] = {
+ 	"v_tx_bw_40",
+ 	"v_tx_bw_80",
+ 	"v_tx_bw_160",
++	"v_tx_bw_320",
+ 	"v_tx_mcs_0",
+ 	"v_tx_mcs_1",
+ 	"v_tx_mcs_2",
 -- 
 2.43.0
 
