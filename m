@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6299E15253E;
-	Sun, 24 Mar 2024 23:06:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15A71386B2;
+	Sun, 24 Mar 2024 23:06:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321616; cv=none; b=dADB50xKKPCX8TDXfmMKr7fjKzmTt+yO6Bh2mc5Iay5pYnLnJbjx8rDA0V5abel8KR3fWWeMb2WGuNepZ9Fsk/esVRHB0D2UbOiV9jvGVI/f7UwStOwOII6fs+QLZ21wLjNwfvjjY6nURSceYheVzaDrnWWt3eeOOTghFGnqDi0=
+	t=1711321609; cv=none; b=aSZRohHzIhOWMqidOMd9pJjIueCgkdwbBACUTb8djrKDg4ugpO3gXJJrfKh4qTN4mxAofcGcKO0V88RC/kabHJd4Jg9AlB0RHfZNpXG5qUjSvQuk3yqRJsdvGuobxuFwnWH19Vt9qvsITSgxrRyITxdGwizFmShk44eERSTWPxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321616; c=relaxed/simple;
-	bh=9KoTyKZMdOpJ3nZPvA+0T1wrCcCKP0ECAirf3EuzbG4=;
+	s=arc-20240116; t=1711321609; c=relaxed/simple;
+	bh=xKWY9aIWFlX1S7/Ym5PK8074P1HxyujIzFzS5hsnloo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=szRMGUYfWHoPwrbFjEak/7RcOXBKnZdJkBQsThFneLxgmwepzM/wdvM2ZceTKx0PuIRpGnfXam5otsxlxenO4lRXjFo21hNpOfoxob9Ee1+U+6+7mYKNNvmdEBRlBI+1sC/tXSKw4MSzDyFTD33kfAxGp9S52Dp3lsPtdhyb33Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hWjXm+TE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=F7TfIusDp9c6hoAx44KuaDhVN7yNvB36UxbnBVCgNmLswuGIWJzA0P8o2PmJOinKcmH8Fe1iWV30Admu3QvGTOBAU0Mg1cN2j+t/r14+ZqRl27qjjEUcnOI4Wow8lSngKuO91BjlgFJxTvhWG1V3FzHR5WOiEM6UaAZZrsWm3lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q48AV5dV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hWjXm+TE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A01B9C433A6;
-	Sun, 24 Mar 2024 23:06:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q48AV5dV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6A1DC433C7;
+	Sun, 24 Mar 2024 23:06:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321615;
-	bh=9KoTyKZMdOpJ3nZPvA+0T1wrCcCKP0ECAirf3EuzbG4=;
+	s=k20201202; t=1711321608;
+	bh=xKWY9aIWFlX1S7/Ym5PK8074P1HxyujIzFzS5hsnloo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hWjXm+TEpq1m4xFNrXhF4nNMW1noZYOhJEM2zKhIE5Nlo2kC8iKtWUWOmgcoKfdnh
-	 5BRd3bbrn2vFYN6/MVYmiZ4p0cri327q0HnInuVlwE6txcKM4pG15wahTk9pqC837o
-	 R0/nltTX2zuU7sPW0mS36DP0FvnMoOUiPIFccNc6dd1K+RFs5vhvwh2ssB6ZbNSSbB
-	 oFnjcMKamPt1R2odu1bwVtY+z2R+tV26DYzhNt5j+BRfYnJ7+0SPYGwuu5QX7yQfpY
-	 mf0/unX3XWYB85TPjqI9NEjQJf+01qNb4SeTtZEeh0/ud/vri7lrdAikgG5B/yWwSG
-	 RCVfEfIG6BAag==
+	b=q48AV5dVuR3D52hm85Gf5+RtwLuDDV2X+BM+Mmwc1JEAMb8AJ4bbbiqFlCNP2BOre
+	 WLnRG6Sx7Dwzgk6FY679Z37LDVDayoO4W+fRnWfl+aCZQRqFwPpYfG2iz0wNkFZX+s
+	 Y2AWpyc82TkBfSRXUvOHsYNs6zEyGNuOrwzeW/qqOPVSlnHbjsjVmRNr9GmuRvqzHv
+	 +pnXz3qy3t7bRUxp/30Vm3awDCUAZ9rdX+hW5N9u507QOSciTUL731Umr223bzCXQW
+	 A2d9tUUYti4MLISgVvw5JeX+6LQTFrQDYte8xw0r7xzyk2SKnMce2FS/rojdsb2THt
+	 ij16BDmCxya8A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 345/638] drm/tegra: dsi: Fix some error handling paths in tegra_dsi_probe()
-Date: Sun, 24 Mar 2024 18:56:22 -0400
-Message-ID: <20240324230116.1348576-346-sashal@kernel.org>
+Subject: [PATCH 6.6 338/638] net/x25: fix incorrect parameter validation in the x25_getsockopt() function
+Date: Sun, 24 Mar 2024 18:56:15 -0400
+Message-ID: <20240324230116.1348576-339-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,114 +48,44 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
 
-[ Upstream commit 830c1ded356369cd1303e8bb87ce3fea6e744de8 ]
+[ Upstream commit d6eb8de2015f0c24822e47356f839167ebde2945 ]
 
-If an error occurs after calling tegra_output_probe(),
-tegra_output_remove() should be called as already done in the remove
-function.
+The 'len' variable can't be negative when assigned the result of
+'min_t' because all 'min_t' parameters are cast to unsigned int,
+and then the minimum one is chosen.
 
-Fixes: dec727399a4b ("drm/tegra: Add DSI support")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/16820073278d031f6c474a08d5f22a255158585e.1693667005.git.christophe.jaillet@wanadoo.fr
+To fix the logic, check 'len' as read from 'optlen',
+where the types of relevant variables are (signed) int.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/dsi.c | 54 ++++++++++++++++++++++++-------------
- 1 file changed, 35 insertions(+), 19 deletions(-)
+ net/x25/af_x25.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
-index 4101b2e012118..b76b9b0232250 100644
---- a/drivers/gpu/drm/tegra/dsi.c
-+++ b/drivers/gpu/drm/tegra/dsi.c
-@@ -1595,44 +1595,58 @@ static int tegra_dsi_probe(struct platform_device *pdev)
+diff --git a/net/x25/af_x25.c b/net/x25/af_x25.c
+index 0fb5143bec7ac..f15a4493eb0bf 100644
+--- a/net/x25/af_x25.c
++++ b/net/x25/af_x25.c
+@@ -460,12 +460,12 @@ static int x25_getsockopt(struct socket *sock, int level, int optname,
+ 	if (get_user(len, optlen))
+ 		goto out;
  
- 	if (!pdev->dev.pm_domain) {
- 		dsi->rst = devm_reset_control_get(&pdev->dev, "dsi");
--		if (IS_ERR(dsi->rst))
--			return PTR_ERR(dsi->rst);
-+		if (IS_ERR(dsi->rst)) {
-+			err = PTR_ERR(dsi->rst);
-+			goto remove;
-+		}
- 	}
+-	len = min_t(unsigned int, len, sizeof(int));
+-
+ 	rc = -EINVAL;
+ 	if (len < 0)
+ 		goto out;
  
- 	dsi->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(dsi->clk))
--		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk),
--				     "cannot get DSI clock\n");
-+	if (IS_ERR(dsi->clk)) {
-+		err = dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk),
-+				    "cannot get DSI clock\n");
-+		goto remove;
-+	}
- 
- 	dsi->clk_lp = devm_clk_get(&pdev->dev, "lp");
--	if (IS_ERR(dsi->clk_lp))
--		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_lp),
--				     "cannot get low-power clock\n");
-+	if (IS_ERR(dsi->clk_lp)) {
-+		err = dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_lp),
-+				    "cannot get low-power clock\n");
-+		goto remove;
-+	}
- 
- 	dsi->clk_parent = devm_clk_get(&pdev->dev, "parent");
--	if (IS_ERR(dsi->clk_parent))
--		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_parent),
--				     "cannot get parent clock\n");
-+	if (IS_ERR(dsi->clk_parent)) {
-+		err = dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_parent),
-+				    "cannot get parent clock\n");
-+		goto remove;
-+	}
- 
- 	dsi->vdd = devm_regulator_get(&pdev->dev, "avdd-dsi-csi");
--	if (IS_ERR(dsi->vdd))
--		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->vdd),
--				     "cannot get VDD supply\n");
-+	if (IS_ERR(dsi->vdd)) {
-+		err = dev_err_probe(&pdev->dev, PTR_ERR(dsi->vdd),
-+				    "cannot get VDD supply\n");
-+		goto remove;
-+	}
- 
- 	err = tegra_dsi_setup_clocks(dsi);
- 	if (err < 0) {
- 		dev_err(&pdev->dev, "cannot setup clocks\n");
--		return err;
-+		goto remove;
- 	}
- 
- 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	dsi->regs = devm_ioremap_resource(&pdev->dev, regs);
--	if (IS_ERR(dsi->regs))
--		return PTR_ERR(dsi->regs);
-+	if (IS_ERR(dsi->regs)) {
-+		err = PTR_ERR(dsi->regs);
-+		goto remove;
-+	}
- 
- 	dsi->mipi = tegra_mipi_request(&pdev->dev, pdev->dev.of_node);
--	if (IS_ERR(dsi->mipi))
--		return PTR_ERR(dsi->mipi);
-+	if (IS_ERR(dsi->mipi)) {
-+		err = PTR_ERR(dsi->mipi);
-+		goto remove;
-+	}
- 
- 	dsi->host.ops = &tegra_dsi_host_ops;
- 	dsi->host.dev = &pdev->dev;
-@@ -1663,6 +1677,8 @@ static int tegra_dsi_probe(struct platform_device *pdev)
- 	mipi_dsi_host_unregister(&dsi->host);
- mipi_free:
- 	tegra_mipi_free(dsi->mipi);
-+remove:
-+	tegra_output_remove(&dsi->output);
- 	return err;
- }
- 
++	len = min_t(unsigned int, len, sizeof(int));
++
+ 	rc = -EFAULT;
+ 	if (put_user(len, optlen))
+ 		goto out;
 -- 
 2.43.0
 
