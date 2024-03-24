@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD0E4D595;
-	Sun, 24 Mar 2024 23:03:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96DBC13248B;
+	Sun, 24 Mar 2024 23:03:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321430; cv=none; b=ksPPVsYK7bbninpiTq3X1SwEZviiA/KZsMcaKa/P0xq6JLQF5HPMbL5XGWkWxOk2PkJ53WIFYrpW0XUbjQ5plhyQas1AFznyWOxNSYe+rbVQfPYGVrGfqQDAEgZKZ2VG7Dolj9g7KrSiyl+BpHvF+EZgI6qC3HQc+ZNSb1dvxm0=
+	t=1711321435; cv=none; b=GTmwGHU4nODldoX5GGb9uL8QM5FGcUe8cS23bAWXm5aa1iL5KdLa1Wkd6PLlbKR6JHH0qeTkkzQa06rT63PcaTOK1WqhJrijF6UJibi6ORzRcJnnq7Yi8OtNYzYWN3oFtfyoX7Th9wArmntg+PjcQjk9lhsSjcajHeL2si69Sx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321430; c=relaxed/simple;
-	bh=UcRpu7p1jKQyG+pfEXtk4kRecvA2V6BI+5dODNtRxC4=;
+	s=arc-20240116; t=1711321435; c=relaxed/simple;
+	bh=2diJNys690X5vuo8K0Z2rkLA90NikcwwPE7MwS9PceI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H0zRAmYL+GyxoALCOf1g/kZZPKxmYAIgCZr/efo5k+zEeLm1Vs4UAWiCdaiCqwr4itEjAwT0D6RskMc/BwIshJKGvXSqjyM+icQTHC7TYE1wrnGhOuFeebG+HBSaMJ8Kfemhg7KG9ZLe4Hl3W6t0wDz1rHIgXWCmXpHiheBgLrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sIKNwS0M; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=pCsmFYN+x8mvPfBY2vjPCsLjL8qYfZ/JYXegEU+Aw5xZ2qaTiLaMMBoF2aviML3Yht9FOG5O2rcBmGIFmx8jySRJ/s/tQQ5cvpU4jmQAUCPmDz91zdjaEGRxk78dkPalc2rHH+78MdpHf7S8WbM+j0S7mN9X0z+z0Wtitk47LiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pHnSEQtX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sIKNwS0M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06D03C43390;
-	Sun, 24 Mar 2024 23:03:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pHnSEQtX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF2F0C43394;
+	Sun, 24 Mar 2024 23:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321428;
-	bh=UcRpu7p1jKQyG+pfEXtk4kRecvA2V6BI+5dODNtRxC4=;
+	s=k20201202; t=1711321434;
+	bh=2diJNys690X5vuo8K0Z2rkLA90NikcwwPE7MwS9PceI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sIKNwS0M3m02bpBbeWmg3P5pvIsC0zYwq2gtzfhXSDR5GdUOMrL1yRHZzs+jNeUPn
-	 OAybEgl5PqMMCwpUSMxqSGuEmH51HOxzHxWBYVhDazz52hGww/7KKFf2qs4dzoZsrC
-	 cnDEGC8aCR9HoSof1rD9gmxHY/MemtI0rp9mxvL5xLo0TerDcJNgaDUn2LwYPD6k0w
-	 LAq4ZvXXMVF/KjAEfIaXmTQtW55sJ0Io1chuDapW65oAKQ2fL2XyVGAWiD+qNGWEBm
-	 jWzleSDcmWpi2rX9zkTOD48c2Caevva+z76e7AEhh431HTd7C3KezdsBDHloYb5KKa
-	 7tGkV5HztrVrQ==
+	b=pHnSEQtXFcutg+muB6UYim6PlKL61sdGCj8R2WsXKSx/EpDAetzKD650ecZRbwV+W
+	 vXNcQMb/gCplhKGLG+h6iT8gB++irJ1OQZAl5TGPcNBf808Mv2Wqvs6YxceIjvfQTo
+	 /n5zMb9mdJ0qLl86vzF8SqthefxLlwNkaONFrYDrY8eO6wsz/EJC/j24I23B2UrQoN
+	 g6CFZaTRkcuH7YaYfImf/RINGgEPoPDGafnApoJkCoCrbCGhqjqXhEfeibqltJCr2Y
+	 +2iBjePlk7CjxARV/SVUAWQn4vATmGC3cbt9dJ0xR1WV88DI0PPAJMFIG17GE/GdHH
+	 427gebtaCTPiQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bjorn Andersson <quic_bjorande@quicinc.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Shawn Guo <shawnguo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 152/638] arm64: dts: qcom: sa8540p: Drop gfx.lvl as power-domain for gpucc
-Date: Sun, 24 Mar 2024 18:53:09 -0400
-Message-ID: <20240324230116.1348576-153-sashal@kernel.org>
+Subject: [PATCH 6.6 158/638] arm64: dts: imx8mm-kontron: Disable pullups for onboard UART signals on BL OSM-S board
+Date: Sun, 24 Mar 2024 18:53:15 -0400
+Message-ID: <20240324230116.1348576-159-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,38 +48,54 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Bjorn Andersson <quic_bjorande@quicinc.com>
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-[ Upstream commit fd5821a1a83c969ed2dcc72fef885f3a82c1d978 ]
+[ Upstream commit c6d9b5672a0e2c4b1079a50d2fc8780c40cfd3eb ]
 
-The SA8295P and SA8540P uses an external regulator (max20411), and
-gfx.lvl is not provided by rpmh. Drop the power-domains property of the
-gpucc node to reflect this.
+These signals are actively driven by the SoC or by the onboard
+transceiver. There's no need to enable the internal pull resistors
+and due to silicon errata ERR050080 let's disable the internal ones
+to prevent any unwanted behavior in case they wear out.
 
-Fixes: eec51ab2fd6f ("arm64: dts: qcom: sc8280xp: Add GPU related nodes")
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
-Link: https://lore.kernel.org/r/20240125-sa8295p-gpu-v4-5-7011c2a63037@quicinc.com
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Fixes: de9618e84f76 ("arm64: dts: Add support for Kontron SL/BL i.MX8MM OSM-S")
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sa8540p.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ .../dts/freescale/imx8mm-kontron-bl-osm-s.dts    | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sa8540p.dtsi b/arch/arm64/boot/dts/qcom/sa8540p.dtsi
-index 96b2c59ad02b4..23888029cc117 100644
---- a/arch/arm64/boot/dts/qcom/sa8540p.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sa8540p.dtsi
-@@ -168,6 +168,9 @@ opp-2592000000 {
- };
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
+index 0730c22e5b6b9..1dd03ef0a7835 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
+@@ -313,19 +313,19 @@ MX8MM_IOMUXC_SAI5_MCLK_GPIO3_IO25		0x19
  
- &gpucc {
-+	/* SA8295P and SA8540P doesn't provide gfx.lvl */
-+	/delete-property/ power-domains;
-+
- 	status = "disabled";
- };
+ 	pinctrl_uart1: uart1grp {
+ 		fsl,pins = <
+-			MX8MM_IOMUXC_SAI2_RXC_UART1_DCE_RX		0x140
+-			MX8MM_IOMUXC_SAI2_RXFS_UART1_DCE_TX		0x140
+-			MX8MM_IOMUXC_SAI2_RXD0_UART1_DCE_RTS_B		0x140
+-			MX8MM_IOMUXC_SAI2_TXFS_UART1_DCE_CTS_B		0x140
++			MX8MM_IOMUXC_SAI2_RXC_UART1_DCE_RX		0x0
++			MX8MM_IOMUXC_SAI2_RXFS_UART1_DCE_TX		0x0
++			MX8MM_IOMUXC_SAI2_RXD0_UART1_DCE_RTS_B		0x0
++			MX8MM_IOMUXC_SAI2_TXFS_UART1_DCE_CTS_B		0x0
+ 		>;
+ 	};
+ 
+ 	pinctrl_uart2: uart2grp {
+ 		fsl,pins = <
+-			MX8MM_IOMUXC_SAI3_TXFS_UART2_DCE_RX		0x140
+-			MX8MM_IOMUXC_SAI3_TXC_UART2_DCE_TX		0x140
+-			MX8MM_IOMUXC_SAI3_RXD_UART2_DCE_RTS_B		0x140
+-			MX8MM_IOMUXC_SAI3_RXC_UART2_DCE_CTS_B		0x140
++			MX8MM_IOMUXC_SAI3_TXFS_UART2_DCE_RX		0x0
++			MX8MM_IOMUXC_SAI3_TXC_UART2_DCE_TX		0x0
++			MX8MM_IOMUXC_SAI3_RXD_UART2_DCE_RTS_B		0x0
++			MX8MM_IOMUXC_SAI3_RXC_UART2_DCE_CTS_B		0x0
+ 		>;
+ 	};
  
 -- 
 2.43.0
