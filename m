@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877A6137C32;
-	Sun, 24 Mar 2024 23:06:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD6F1DCC81;
+	Sun, 24 Mar 2024 23:06:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321568; cv=none; b=iOrOQ1bxjxPed3oK/7Kct7251PNrehNo5LvROJ4cjaKFzchVl9Oj6DO2kBGn1rXYtm/PB/4upUDREv7ThcwPjtSYylkZnPzpB9xZBn2Vns8DaPW1GqO3y6TkF2DbAiY4Z53VSVCWp1WhepszA+cKVs/iyeWkXhQooqI2g0C44JM=
+	t=1711321572; cv=none; b=VEelyXSozs6mW5dxsXAkR+fIBcneFBq8rMdF5uS2s9X7do9v1n7XIL/4wq9uWsxFKbz/AxQpTcWwbBnmK+3uxQ8QDTHTqqzGqUiS7pW8PK0RIaIfVVITsWH56L8e10HWWjG7snmyOhtnIyaDnxSqB65rzzczhTnOCbpEnLlBjFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321568; c=relaxed/simple;
-	bh=xugdmSYwMuWoMycuaG+jFuw+gky5u1f9lWH9XzODijo=;
+	s=arc-20240116; t=1711321572; c=relaxed/simple;
+	bh=fxh2FzIss8jfV/LFAffOsp5nCtgdW3PvQ5ctpWMXbPg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d2VEHLjdAcInbqa2ycYZVenb4mLEOHRqKqAmUp+FEGNICZ6OYXkIjWMtBUEogU0Zi7b49Z1kkVEFuaE4uqAKYjHxNobtImFx17gqcVnxNv7YXXfKKLhGAvOwNwY0yBtQ2HwTGA4DK1tpBAlGI6dqsdeCbnBItDWVZEGoVdd6adA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jtmffhM1; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=t6CwacSqG9mJcrnQRorx+G0FAyrOO6+T7blNSZ45chwdp7kr1zs0iS9DT+8dzR+1oHVEUDf54bd1+994O4Go3fC6YyQxtcRLninjFrqkAJno7GOynCjRtYy2Y18AMEvL1PBSL2GqWBwbUev6O4I3DfJtMLwwNbg0ROLw8O7BAlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EWaYO1iQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jtmffhM1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 944D7C43399;
-	Sun, 24 Mar 2024 23:06:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EWaYO1iQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15F36C433C7;
+	Sun, 24 Mar 2024 23:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321567;
-	bh=xugdmSYwMuWoMycuaG+jFuw+gky5u1f9lWH9XzODijo=;
+	s=k20201202; t=1711321571;
+	bh=fxh2FzIss8jfV/LFAffOsp5nCtgdW3PvQ5ctpWMXbPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jtmffhM1E98L3Ku//ViJoFyhF89KHboow/RfU/Rx5s6FgyMziSgjOqHS1wVzZMY5b
-	 nMAeStQGIVHvJUcYJ441qmWlB2xFZlLyrmIcS9/qKJCIf03yXoBN6zyvqp/rHWMa8d
-	 Ygf8s0CKrq3jy5etnrsq4MoeTyqP9tclP3bIuarw47pLFGF9E4VGf3cV8PD2s6nV2O
-	 BNTG56f8r/7PtrdDeHLOzdKP85dTkowTErwv3GRp91RMVFr6vSA1MLLAp8ilR80t4s
-	 F8UOPIOzXQm/blBfH3P8OPs/UnU70zv6UayfHX2sE2+wjVOH/qOQ/B9g9hGNCmviR9
-	 34DcYR8olS0cw==
+	b=EWaYO1iQx1LawQu51vqRURydQox6+RrIxzJvbFbnVr466ZLVi+hq9Cq4R6Flcm0K8
+	 nmdzwj0sW6SAjlVeoWe3QMZpeYgZzSLkQ/V6f+Rb57sd+993HxdqoVjT6XQbiBaLcV
+	 Cj/DTf67hZM/GDkWwSW22ZlKQ7Ulym//EP9RiJjjn6j57pBuwROPClkdQljbyrl4P5
+	 84gIdNzNgoFSkjoTNoEMiczbwrgVxdFOI9OeugnwFYnHaEg19sMguJbjkd0iU6sgBG
+	 UPl8rzxXH1LaMuE3KdAKB5gdtdD5tyUUE5/i6ZQJeea5Y7MLHnj7aalNTGL4d96ihI
+	 5nkUj6+22286Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	Kurt Kanzenbach <kurt@linutronix.de>,
-	Naama Meir <naamax.meir@linux.intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
+Cc: =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>,
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 295/638] igc: Fix missing time sync events
-Date: Sun, 24 Mar 2024 18:55:32 -0400
-Message-ID: <20240324230116.1348576-296-sashal@kernel.org>
+Subject: [PATCH 6.6 299/638] Bluetooth: mgmt: Remove leftover queuing of power_off work
+Date: Sun, 24 Mar 2024 18:55:36 -0400
+Message-ID: <20240324230116.1348576-300-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -46,110 +44,78 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+From: Jonas Dreßler <verdre@v0yd.nl>
 
-[ Upstream commit 244ae992e3e80e5c9c272c77324c831148457f95 ]
+[ Upstream commit fee054b7579fe252f8b9e6c17b9c5bfdaa84dd7e ]
 
-Fix "double" clearing of interrupts, which can cause external events
-or timestamps to be missed.
+Queuing of power_off work was introduced in these functions with commits
+8b064a3ad377 ("Bluetooth: Clean up HCI state when doing power off") and
+c9910d0fb4fc ("Bluetooth: Fix disconnecting connections in non-connected
+states") in an effort to clean up state and do things like disconnecting
+devices before actually powering off the device.
 
-The IGC_TSIRC Time Sync Interrupt Cause register can be cleared in two
-ways, by either reading it or by writing '1' into the specific cause
-bit. This is documented in section 8.16.1.
+After that, commit a3172b7eb4a2 ("Bluetooth: Add timer to force power off")
+introduced a timeout to ensure that the device actually got powered off,
+even if some of the cleanup work would never complete.
 
-The following flow was used:
- 1. read IGC_TSIRC into 'tsicr';
- 2. handle the interrupts present in 'tsirc' and mark them in 'ack';
- 3. write 'ack' into IGC_TSICR;
+This code later got refactored with commit cf75ad8b41d2 ("Bluetooth:
+hci_sync: Convert MGMT_SET_POWERED"), which made powering off the device
+synchronous and removed the need for initiating the power_off work from
+other places. The timeout mentioned above got removed too, because we now
+also made use of the command timeout during power on/off.
 
-As both (1) and (3) will clear the interrupt cause, if the same
-interrupt happens again between (1) and (3) it will be ignored,
-causing events to be missed.
+These days the power_off work still exists, but it only seems to only be
+used for HCI_AUTO_OFF functionality, which is why we never noticed
+those two leftover places where we queue power_off work. So let's remove
+that code.
 
-Remove the extra clear in (3).
-
-Fixes: 2c344ae24501 ("igc: Add support for TX timestamping")
-Reviewed-by: Kurt Kanzenbach <kurt@linutronix.de>
-Tested-by: Kurt Kanzenbach <kurt@linutronix.de> # Intel i225
-Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Tested-by: Naama Meir <naamax.meir@linux.intel.com>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Fixes: cf75ad8b41d2 ("Bluetooth: hci_sync: Convert MGMT_SET_POWERED")
+Signed-off-by: Jonas Dreßler <verdre@v0yd.nl>
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/igc/igc_main.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+ net/bluetooth/mgmt.c | 16 ----------------
+ 1 file changed, 16 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-index e549ffca88e39..fc1de116d5548 100644
---- a/drivers/net/ethernet/intel/igc/igc_main.c
-+++ b/drivers/net/ethernet/intel/igc/igc_main.c
-@@ -5304,25 +5304,22 @@ igc_features_check(struct sk_buff *skb, struct net_device *dev,
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index 2448a154a4069..324f06e2e9ddb 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -9766,14 +9766,6 @@ void mgmt_device_disconnected(struct hci_dev *hdev, bdaddr_t *bdaddr,
+ 	struct mgmt_ev_device_disconnected ev;
+ 	struct sock *sk = NULL;
  
- static void igc_tsync_interrupt(struct igc_adapter *adapter)
- {
--	u32 ack, tsauxc, sec, nsec, tsicr;
- 	struct igc_hw *hw = &adapter->hw;
-+	u32 tsauxc, sec, nsec, tsicr;
- 	struct ptp_clock_event event;
- 	struct timespec64 ts;
- 
- 	tsicr = rd32(IGC_TSICR);
--	ack = 0;
- 
- 	if (tsicr & IGC_TSICR_SYS_WRAP) {
- 		event.type = PTP_CLOCK_PPS;
- 		if (adapter->ptp_caps.pps)
- 			ptp_clock_event(adapter->ptp_clock, &event);
--		ack |= IGC_TSICR_SYS_WRAP;
- 	}
- 
- 	if (tsicr & IGC_TSICR_TXTS) {
- 		/* retrieve hardware timestamp */
- 		igc_ptp_tx_tstamp_event(adapter);
--		ack |= IGC_TSICR_TXTS;
- 	}
- 
- 	if (tsicr & IGC_TSICR_TT0) {
-@@ -5336,7 +5333,6 @@ static void igc_tsync_interrupt(struct igc_adapter *adapter)
- 		wr32(IGC_TSAUXC, tsauxc);
- 		adapter->perout[0].start = ts;
- 		spin_unlock(&adapter->tmreg_lock);
--		ack |= IGC_TSICR_TT0;
- 	}
- 
- 	if (tsicr & IGC_TSICR_TT1) {
-@@ -5350,7 +5346,6 @@ static void igc_tsync_interrupt(struct igc_adapter *adapter)
- 		wr32(IGC_TSAUXC, tsauxc);
- 		adapter->perout[1].start = ts;
- 		spin_unlock(&adapter->tmreg_lock);
--		ack |= IGC_TSICR_TT1;
- 	}
- 
- 	if (tsicr & IGC_TSICR_AUTT0) {
-@@ -5360,7 +5355,6 @@ static void igc_tsync_interrupt(struct igc_adapter *adapter)
- 		event.index = 0;
- 		event.timestamp = sec * NSEC_PER_SEC + nsec;
- 		ptp_clock_event(adapter->ptp_clock, &event);
--		ack |= IGC_TSICR_AUTT0;
- 	}
- 
- 	if (tsicr & IGC_TSICR_AUTT1) {
-@@ -5370,11 +5364,7 @@ static void igc_tsync_interrupt(struct igc_adapter *adapter)
- 		event.index = 1;
- 		event.timestamp = sec * NSEC_PER_SEC + nsec;
- 		ptp_clock_event(adapter->ptp_clock, &event);
--		ack |= IGC_TSICR_AUTT1;
- 	}
+-	/* The connection is still in hci_conn_hash so test for 1
+-	 * instead of 0 to know if this is the last one.
+-	 */
+-	if (mgmt_powering_down(hdev) && hci_conn_count(hdev) == 1) {
+-		cancel_delayed_work(&hdev->power_off);
+-		queue_work(hdev->req_workqueue, &hdev->power_off.work);
+-	}
 -
--	/* acknowledge the interrupts */
--	wr32(IGC_TSICR, ack);
- }
+ 	if (!mgmt_connected)
+ 		return;
  
- /**
+@@ -9830,14 +9822,6 @@ void mgmt_connect_failed(struct hci_dev *hdev, bdaddr_t *bdaddr, u8 link_type,
+ {
+ 	struct mgmt_ev_connect_failed ev;
+ 
+-	/* The connection is still in hci_conn_hash so test for 1
+-	 * instead of 0 to know if this is the last one.
+-	 */
+-	if (mgmt_powering_down(hdev) && hci_conn_count(hdev) == 1) {
+-		cancel_delayed_work(&hdev->power_off);
+-		queue_work(hdev->req_workqueue, &hdev->power_off.work);
+-	}
+-
+ 	bacpy(&ev.addr.bdaddr, bdaddr);
+ 	ev.addr.type = link_to_bdaddr(link_type, addr_type);
+ 	ev.status = mgmt_status(status);
 -- 
 2.43.0
 
