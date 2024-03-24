@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23001FDA27;
-	Sun, 24 Mar 2024 23:17:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8067A14C581;
+	Sun, 24 Mar 2024 23:17:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322224; cv=none; b=ZXBofWlTgjG79BdCwLvY4/tlx3xmjRrzajtlmgQw0kX4Kad/cmuevX8THMd4N8GXTfWgq2QRAfrV+gTZUjFjT5xuYtiOJSNKyBgDSRCZUoOxuiUlW/rOGQNqvSEdW/OFMVWjPg8XWJAI0hxbz4+iDmjb7ldUr2siRdUlrEMbos8=
+	t=1711322234; cv=none; b=L1aYEKx70Dd6I8h3H/LhHDN58+uxZlOan8fm3Oz5zGDiwWdQyZ2dSVZrpwOCEy3EJoMnitvE+HWrlu9j3VdnBggaqWZGWAafh2f3m14EBVeLwCqwlLu9FaxIiAIcegyzZTGDK4IYBLdN01yYwi4HWwoIWZNF2kgfvj+xyAFuZDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322224; c=relaxed/simple;
-	bh=lh1tWZ+Q5ip5maxsWS3cRTsoCijckQtevMH31uUa3aI=;
+	s=arc-20240116; t=1711322234; c=relaxed/simple;
+	bh=iZgMns2rA9Thds77z35AZf+v1OfqQkQbsN5QHiFZhtk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mxitt/lcznzeG8jDSC7l9PYrA5glans2je3uRaYVIH4uA1GUOxhAqxFB/wvbmBXm6NM4PaBklqeTIKfMBVFd78+LZIfOHZsocsLkibxZmfSREBSpTEKcYOetbjkVfbZg4e0yBqMDcpPhMnGMjzXFpFQYl1hbYfyhsDHw9EH+s0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jod0NAwJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=YDd5C2s4WzsJ0plgo4mHtg+0y6g5/1G3ldsAyfnLKVoKN+SsBUfY0NXd7232rn1E/IZluREwYS2OYZZ6n4EzVWmUItjVU2GwaRNdjFfVXWOleQj4OBlefKN7tG7kfI/5X32fSWW63wNBoIUhc1uKAEeYTeuSYcXkfmDIJc554zA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KPrAZrZf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jod0NAwJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CD0DC433F1;
-	Sun, 24 Mar 2024 23:17:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KPrAZrZf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF871C433C7;
+	Sun, 24 Mar 2024 23:17:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322222;
-	bh=lh1tWZ+Q5ip5maxsWS3cRTsoCijckQtevMH31uUa3aI=;
+	s=k20201202; t=1711322234;
+	bh=iZgMns2rA9Thds77z35AZf+v1OfqQkQbsN5QHiFZhtk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jod0NAwJiNEr3xWMEitMbiW8+MqN5qe5CCF4KGvaarJoa5VJdlBzd+3XC2l0NFi6+
-	 yAB/ZPZy7xPsLkZweU8lakKMy0LLyRzZt6UoxCQogQeW+B/QI/llq1A5R0DKA+TTYe
-	 tR6ShrYqWmRv1UIZ4Y13IAo3LBr1DQjn0F0OnggbPYKfeUL3MVnAdCUFmArcDEcv+z
-	 ZdFgEkAWNw5GIQHQzNtsc2QkIt/M1SCF27MCnDNl1moIbOKKjAQoEj6o2r/kXYPpgA
-	 mdkeRKtqZN4QyOZ4MCpVA4l3W4JEKQCA1400XBuSbL7QlEe2BJ9aZckYLsdp/8MCnq
-	 jsIbq7bnN/ihA==
+	b=KPrAZrZfuoXTwkW1yUbx3eplNg/U5bcbBNsKz/63BfX5p2SZcS9u2pelsZVkSyWoT
+	 dtGzpvTqxpOYxNav4kF8jCVCBU8isZHmBFuxVu1seZEtZCRhcohO9hOQIfNI6sAMSv
+	 N4juDidR8Kf/rUuFO5ZaPZ3Cjx69GF1ZKkNMHZQ7CcfzI7N/a+T3ygZ3Rmie2JGpfK
+	 F1gip9ffQXro+k8c3oHvm5qfrJCBeMIwpjPhy7POoy9BvGDq4QPqotaG+dGk7Pa5Ui
+	 4ICj2bJ5r28IffCbBabEDnJmDSFOirvL09cNTmWGzImvPo08J4v2ne6BTtVjfbm35O
+	 2Yx50C9q1H/UA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Daniil Dulov <d.dulov@aladdin.ru>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Aradhya Bhatia <a-bhatia1@ti.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 303/451] media: pvrusb2: remove redundant NULL check
-Date: Sun, 24 Mar 2024 19:09:39 -0400
-Message-ID: <20240324231207.1351418-304-sashal@kernel.org>
+Subject: [PATCH 6.1 315/451] drm/tidss: Fix initial plane zpos values
+Date: Sun, 24 Mar 2024 19:09:51 -0400
+Message-ID: <20240324231207.1351418-316-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,39 +48,54 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Daniil Dulov <d.dulov@aladdin.ru>
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 
-[ Upstream commit 95ac1210fb2753f968ebce0730d4fbc553c2a3dc ]
+[ Upstream commit 3ec948ccb2c4b99e8fbfdd950adbe92ea577b395 ]
 
-Pointer dip->stream cannot be NULL due to a shift, thus remove redundant
-NULL check.
+When the driver sets up the zpos property it sets the default zpos value
+to the HW id of the plane. That is fine as such, but as on many DSS
+versions the driver arranges the DRM planes in a different order than
+the HW planes (to keep the non-scalable planes first), this leads to odd
+initial zpos values. An example is J721e, where the initial zpos values
+for DRM planes are 1, 3, 0, 2.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+In theory the userspace should configure the zpos values properly when
+using multiple planes, and in that sense the initial zpos values
+shouldn't matter, but there's really no reason not to fix this and help
+the userspace apps which don't handle zpos perfectly. In particular,
+some versions of Weston seem to have issues dealing with the planes
+with the current default zpos values.
 
-Fixes: c74e0062684b ("V4L/DVB (5059): Pvrusb2: Be smarter about mode restoration")
-Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+So let's change the zpos values for the DRM planes to 0, 1, 2, 3.
+
+Another option would be to configure the planes marked as primary planes
+to zpos 0. On a two display system this would give us plane zpos values
+of 0, 0, 1, 2. The end result and behavior would be very similar in this
+option, and I'm not aware that this would actually help us in any way.
+So, to keep the code simple, I opted for the 0, 1, 2, 3 values.
+
+Fixes: 32a1795f57ee ("drm/tidss: New driver for TI Keystone platform Display SubSystem")
+Reviewed-by: Aradhya Bhatia <a-bhatia1@ti.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20240213-tidss-fixes-v1-1-d709e8dfa505@ideasonboard.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/pvrusb2/pvrusb2-v4l2.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/gpu/drm/tidss/tidss_plane.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-index c04ab7258d645..d195bd6a2248b 100644
---- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-@@ -1198,11 +1198,6 @@ static void pvr2_v4l2_dev_init(struct pvr2_v4l2_dev *dip,
- 		dip->minor_type = pvr2_v4l_type_video;
- 		nr_ptr = video_nr;
- 		caps |= V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_AUDIO;
--		if (!dip->stream) {
--			pr_err(KBUILD_MODNAME
--				": Failed to set up pvrusb2 v4l video dev due to missing stream instance\n");
--			return;
--		}
- 		break;
- 	case VFL_TYPE_VBI:
- 		dip->config = pvr2_config_vbi;
+diff --git a/drivers/gpu/drm/tidss/tidss_plane.c b/drivers/gpu/drm/tidss/tidss_plane.c
+index 42d50ec5526d7..435b3b66ae632 100644
+--- a/drivers/gpu/drm/tidss/tidss_plane.c
++++ b/drivers/gpu/drm/tidss/tidss_plane.c
+@@ -211,7 +211,7 @@ struct tidss_plane *tidss_plane_create(struct tidss_device *tidss,
+ 
+ 	drm_plane_helper_add(&tplane->plane, &tidss_plane_helper_funcs);
+ 
+-	drm_plane_create_zpos_property(&tplane->plane, hw_plane_id, 0,
++	drm_plane_create_zpos_property(&tplane->plane, tidss->num_planes, 0,
+ 				       num_planes - 1);
+ 
+ 	ret = drm_plane_create_color_properties(&tplane->plane,
 -- 
 2.43.0
 
