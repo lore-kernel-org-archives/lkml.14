@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001AC80632;
-	Sun, 24 Mar 2024 22:48:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E46A80021;
+	Sun, 24 Mar 2024 22:48:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320514; cv=none; b=OclBjzXTQ9Y8yxWn7BK/7VmRx/twPpI+AozsFBmmeNS2jBqL69K9cMITX6aPyYb1TeKQ4Im/jBtH5s8pVOyNK97FzUh/Ri5sL019RqKzac1Ol7z8H7e2hMQjfkiRQBFs8tljY8XZu6sVmhiCnX802kP7CISR2ZbISeDmtWMzONM=
+	t=1711320502; cv=none; b=akeDqbjbG2t52+0kIBh3ZUmM2sN47P0zpyj42aH1N+wsK8loCQ2mNKOkzejdIcJoxoCTiIqgu0L+sQ0A7T8wnh20fnKpfVLuxmrKxZx4w7ilFhtGj+nfYgKZSHwglDgtG7CMJ2z5TdhbChJ/N6q3aLQl5IxYFvcLNbWEYe866WI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320514; c=relaxed/simple;
-	bh=aDa8LlvKm/2ZXeeUmHNzrvWDnXaqmsLoBFx0k0dXmCk=;
+	s=arc-20240116; t=1711320502; c=relaxed/simple;
+	bh=vGsRcugzQXk3Cte7pTGXjU6O3+vYXY4P4bjFaOnISPY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ndbSVuoia0Iy5fTX1//lCCtZXT7seiM0KqfmDHwBGP8t1KWGxQHS/Q7edL4etEwA7joGdh6HNiSq1fnBBiXkDmMOZyVlE63FF+MZg5aau+/CKqBvBt0r1U8JTTINLuWbvX70ZovNlXiYYwZY4467mg85pq8aiMuwpH0tLDyO3Hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pKDfpw/h; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qZlG8GRip18HlgoIF+DUbhbMdZSf4mrOOFu584q+5IrQ2Vn4G3qwht0NBFlnxfxqqbXWgA6vxQigBqf3Aq3QfLoKTkZ4il2nGV7kqSmH+4oJQqzDIwQ15ZXEKHUK/ziMcL8g0mv7vijxb2WqFM0Evd8cQJaxpF9m7sT4EMIWCgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EmJt0wq7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pKDfpw/h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27FABC433F1;
-	Sun, 24 Mar 2024 22:48:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EmJt0wq7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE854C433C7;
+	Sun, 24 Mar 2024 22:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320513;
-	bh=aDa8LlvKm/2ZXeeUmHNzrvWDnXaqmsLoBFx0k0dXmCk=;
+	s=k20201202; t=1711320502;
+	bh=vGsRcugzQXk3Cte7pTGXjU6O3+vYXY4P4bjFaOnISPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pKDfpw/hZgVc2nayIouybOhHSQibMyL5SvELwINtJNpESipW69yIaXQ0IMH1qHqLe
-	 zqXank+WMm+KVIKvhqqxJDqINyzTAHRFIeayqtNj3Z5h79vVIx/0TuGMYhCmS1Kn3E
-	 qebSIqJmnlro/akJvx2TcKudexNuaLVRPZM00HIjBGTU4lADrvuSYFvTFL3+x6TzTK
-	 EjYGYsDuk8MAqcu0wECE3/oiAV/ZiwTLEf8XCgVIoA4KZILqSqBIFaCwhRiD9VzxdK
-	 zwOuOYAN+vPRvPatliPaOEKfHy0a8XFTOvgxaeOMqNGWM9oPVH/K0N419A1PoG8rNs
-	 sqfQhoFg5VePQ==
+	b=EmJt0wq7bppQzJwOP7KIZzDelfh3Ns6Qhq2aBM8I92gyWxp0nbJxcVVZ6D9KzNzMe
+	 ZtIPHM2TNLtBqpD9ZYKrnBAEGWySRhbrNNLKYODoASeEPi2p17qg66qMhI/LKIO9LU
+	 zTiLGlA0rVtlBIyMGIenJKU6tpfbvWhL+tDEQMAKyQKbiRuXHKlF7lRm/UtUcXEqlh
+	 RzN46kreuYMeY5vw86TLq4QYITFKUV+4gv61lB+w8aWB1ctEtFKntm/n68FqUwvwOF
+	 EpegNPaMPxtBS36H4hhm0EvaJG4hheTICTNcZ6g2HMyb9i5ylxDFGpSv4vDkP3qL+Y
+	 BuEF199UZ330Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Al Raj Hassain <alrajhassain@gmail.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Prike Liang <Prike.Liang@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 074/713] ASoC: amd: yc: Add HP Pavilion Aero Laptop 13-be2xxx(8BD6) into DMI quirk table
-Date: Sun, 24 Mar 2024 18:36:40 -0400
-Message-ID: <20240324224720.1345309-75-sashal@kernel.org>
+Subject: [PATCH 6.7 062/713] drm/amdgpu: Enable gpu reset for S3 abort cases on Raven series
+Date: Sun, 24 Mar 2024 18:36:28 -0400
+Message-ID: <20240324224720.1345309-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,39 +48,88 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Al Raj Hassain <alrajhassain@gmail.com>
+From: Prike Liang <Prike.Liang@amd.com>
 
-[ Upstream commit b3a51137607cee7c814cd3a75d96f78b9ee1dc1f ]
+[ Upstream commit c671ec01311b4744b377f98b0b4c6d033fe569b3 ]
 
-The HP Pavilion Aero Laptop 13-be2xxx(8BD6) requires a quirk entry for its internal microphone to function.
+Currently, GPU resets can now be performed successfully on the Raven
+series. While GPU reset is required for the S3 suspend abort case.
+So now can enable gpu reset for S3 abort cases on the Raven series.
 
-Signed-off-by: Al Raj Hassain <alrajhassain@gmail.com>
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-Link: https://msgid.link/r/20240304103924.13673-1-alrajhassain@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Prike Liang <Prike.Liang@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/amd/yc/acp6x-mach.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/soc15.c | 45 +++++++++++++++++-------------
+ 1 file changed, 25 insertions(+), 20 deletions(-)
 
-diff --git a/sound/soc/amd/yc/acp6x-mach.c b/sound/soc/amd/yc/acp6x-mach.c
-index abb9589b8477c..90360f8b3e81b 100644
---- a/sound/soc/amd/yc/acp6x-mach.c
-+++ b/sound/soc/amd/yc/acp6x-mach.c
-@@ -416,6 +416,13 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
- 			DMI_MATCH(DMI_BOARD_NAME, "8B2F"),
- 		}
- 	},
-+	{
-+		.driver_data = &acp6x_card,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "HP"),
-+			DMI_MATCH(DMI_BOARD_NAME, "8BD6"),
-+		}
-+	},
- 	{
- 		.driver_data = &acp6x_card,
- 		.matches = {
+diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
+index 9b5af3f1383a7..f9ba1803046d9 100644
+--- a/drivers/gpu/drm/amd/amdgpu/soc15.c
++++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
+@@ -574,11 +574,34 @@ soc15_asic_reset_method(struct amdgpu_device *adev)
+ 		return AMD_RESET_METHOD_MODE1;
+ }
+ 
++static bool soc15_need_reset_on_resume(struct amdgpu_device *adev)
++{
++	u32 sol_reg;
++
++	sol_reg = RREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_81);
++
++	/* Will reset for the following suspend abort cases.
++	 * 1) Only reset limit on APU side, dGPU hasn't checked yet.
++	 * 2) S3 suspend abort and TOS already launched.
++	 */
++	if (adev->flags & AMD_IS_APU && adev->in_s3 &&
++			!adev->suspend_complete &&
++			sol_reg)
++		return true;
++
++	return false;
++}
++
+ static int soc15_asic_reset(struct amdgpu_device *adev)
+ {
+ 	/* original raven doesn't have full asic reset */
+-	if ((adev->apu_flags & AMD_APU_IS_RAVEN) ||
+-	    (adev->apu_flags & AMD_APU_IS_RAVEN2))
++	/* On the latest Raven, the GPU reset can be performed
++	 * successfully. So now, temporarily enable it for the
++	 * S3 suspend abort case.
++	 */
++	if (((adev->apu_flags & AMD_APU_IS_RAVEN) ||
++	    (adev->apu_flags & AMD_APU_IS_RAVEN2)) &&
++		!soc15_need_reset_on_resume(adev))
+ 		return 0;
+ 
+ 	switch (soc15_asic_reset_method(adev)) {
+@@ -1297,24 +1320,6 @@ static int soc15_common_suspend(void *handle)
+ 	return soc15_common_hw_fini(adev);
+ }
+ 
+-static bool soc15_need_reset_on_resume(struct amdgpu_device *adev)
+-{
+-	u32 sol_reg;
+-
+-	sol_reg = RREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_81);
+-
+-	/* Will reset for the following suspend abort cases.
+-	 * 1) Only reset limit on APU side, dGPU hasn't checked yet.
+-	 * 2) S3 suspend abort and TOS already launched.
+-	 */
+-	if (adev->flags & AMD_IS_APU && adev->in_s3 &&
+-			!adev->suspend_complete &&
+-			sol_reg)
+-		return true;
+-
+-	return false;
+-}
+-
+ static int soc15_common_resume(void *handle)
+ {
+ 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
 -- 
 2.43.0
 
