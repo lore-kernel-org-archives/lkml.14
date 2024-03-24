@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3282D206CA4;
-	Sun, 24 Mar 2024 23:05:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC611E8E58;
+	Sun, 24 Mar 2024 23:05:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321514; cv=none; b=Ymvktw3x/C62j1xDRFKhHALb6YO6sNoyNXk3xiwXIhG8+VVyWfNS5ywh8ytUTPbDrG5DekVvKnSieZ6LKW5Fx2tyGPMHe9RUKbTOy04DwxLjHT437nylNGgON4zhdVMEX45naGJ46WcKnwWODvZYrETPlwuHBISyJQ54YMKu+zE=
+	t=1711321525; cv=none; b=JkGqaGvLxK/L42VGV0R/vnbJ8MU2HZzsMXsWhTtU4VRUFCsW38crsGZAAUhB8L6j/WWkVzN4jG9yZLuq29cx/H47oiiUfl0zpOkyT4Vq4HBkjD/QiHRH6v0TbIce4zf0Ir0vSOur1wQh8BP5Ad0MCdCdOoOoivh/IgC8hQiOPGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321514; c=relaxed/simple;
-	bh=hwBbYoWGEEKSopLdY4x77EeEvapUEV0W9UCXR8bjLI0=;
+	s=arc-20240116; t=1711321525; c=relaxed/simple;
+	bh=YKVcdpL5+OrlaJ4q8k+EUbtblJGBjMh/yaBxJ7pH7dk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aVlQFMGacgMMeVTvfjLdgMcAsHjlzkTneMOd2bXuzlq1qvZLh3KheA4BMMnEg6GbcX9ohOZncRkDxbbLc8/R7eNbUE4d3oSHPY4L2bzKidFgYGWY47mtPLaoXIbsMHDke1HWc1wH4JRkaCGFjZZc9ppUM0QZo/mWivDS7iKs2Qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=teiLZrff; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=S55Du/kX6YLgMvKS3dSwz6+XIJdxF6V/aVezEaW1bkGtbKI+3JkyktJqpD6CbvkMH6xBFURK16totd7ljnP/o4komvSPOJsQzvJ/lZe/LAwIcfxxiMgepmMUc8bnNeylREE5D1TGSa+yqdXZkvKqyEfZEQVNDFSU9IY11AyixPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eDuHfAOr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="teiLZrff"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70AD2C433C7;
-	Sun, 24 Mar 2024 23:05:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eDuHfAOr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38485C433F1;
+	Sun, 24 Mar 2024 23:05:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321513;
-	bh=hwBbYoWGEEKSopLdY4x77EeEvapUEV0W9UCXR8bjLI0=;
+	s=k20201202; t=1711321523;
+	bh=YKVcdpL5+OrlaJ4q8k+EUbtblJGBjMh/yaBxJ7pH7dk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=teiLZrfffInjRN3Me4iaq+liq6/qYUowyb3RVOp+6/ZBDQYHfHcAdSfJtkbk/tn1k
-	 xGf7oO6JS6I+WKStcOt+oC4C89eF60c4CO0Bwo9bMxG4n1yuDqr/rfoc+vdY+2vrep
-	 6O9kcrkh0x57TOqtEuajCxP3cyxzgruZgtV4xcWP4BuEkPsCoD+IIk19kEyTneC8C/
-	 ExJLylM8DF2s9yoXlD1LpHxeMGuqVWwxhpkGq0b8bHzOWBPvII6Uz6fYLNXsm1eoIR
-	 6QIkzLW3aHUMyFMaWvwkPskgLhBDTXzXsxSHwpm1KU4zu45eipbya2F4Kxim9f1rdi
-	 gN1YhpDLJsoDg==
+	b=eDuHfAOrPS30Gd+qlxqu2n85Hlki9OsZokjbzWUwA482Ysc0mIJcu0qMCn/bVa53f
+	 7HVszLob8bNizWcteq+kCnTOLxGQo7pBetJcaR3sJ9LTJd1ZygfH+x8fAcyikpd+TG
+	 GNiFPhUfJ2lE0aqJb9t3ijFpKP4hfySDxnCkMMANylzznMZR42Cs6abDlz311W9YjQ
+	 S45/cBTGzW168rXceo48xdXbQ4P/qzpT1ITthrMcbqsV22pfgckPgwoMF2WtaRdxah
+	 SgTdffB+Rf+jxxtop39PabiYi81T2/aqtKKNJNZsFsGHATTHTH/8sWkoAKx/CRO+cs
+	 qpgL3v3Aa/fFA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bhavya Kapoor <b-kapoor@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 239/638] arm64: dts: ti: k3-j784s4-evm: Remove Pinmux for CTS and RTS in wkup_uart0
-Date: Sun, 24 Mar 2024 18:54:36 -0400
-Message-ID: <20240324230116.1348576-240-sashal@kernel.org>
+Subject: [PATCH 6.6 250/638] ARM: dts: arm: realview: Fix development chip ROM compatible value
+Date: Sun, 24 Mar 2024 18:54:47 -0400
+Message-ID: <20240324230116.1348576-251-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,37 +48,41 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Bhavya Kapoor <b-kapoor@ti.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit d29a6cf980572d8cf7b63935716fca663e2610f0 ]
+[ Upstream commit 3baa4c5143d65ebab2de0d99a395e5f4f1f46608 ]
 
-Only Tx and Rx Signal lines for wkup_uart0 are brought out on
-the J784S4 EVM from SoC, but CTS and RTS signal lines are not
-brought on the EVM. Thus, remove pinmux for CTS and RTS signal
-lines for wkup_uart0 in J784S4.
+When the development chip ROM was added, the "direct-mapped" compatible
+value was already obsolete.  In addition, the device node lacked the
+accompanying "probe-type" property, causing the old physmap_of_core
+driver to fall back to trying all available probe types.
+Unfortunately this fallback was lost when the DT and pdata cases were
+merged.
 
-Fixes: 6fa5d37a2f34 ("arm64: dts: ti: k3-j784s4-evm: Add mcu and wakeup uarts")
-Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
-Link: https://lore.kernel.org/r/20240214105846.1096733-5-b-kapoor@ti.com
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Fix this by using the modern "mtd-rom" compatible value instead.
+
+Fixes: 5c3f5edbe0a1dff3 ("ARM: realview: add flash devices to the PB1176 DTS")
+Fixes: 642b1e8dbed7bbbf ("mtd: maps: Merge physmap_of.c into physmap-core.c")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/ti/k3-j784s4-evm.dts | 2 --
- 1 file changed, 2 deletions(-)
+ arch/arm/boot/dts/arm/arm-realview-pb1176.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-index 5991c2e1d994c..39f99ee39dab9 100644
---- a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-@@ -296,8 +296,6 @@ &wkup_pmx2 {
- 	wkup_uart0_pins_default: wkup-uart0-default-pins {
- 		bootph-all;
- 		pinctrl-single,pins = <
--			J721S2_WKUP_IOPAD(0x070, PIN_INPUT, 0) /* (L37) WKUP_GPIO0_6.WKUP_UART0_CTSn */
--			J721S2_WKUP_IOPAD(0x074, PIN_INPUT, 0) /* (L36) WKUP_GPIO0_7.WKUP_UART0_RTSn */
- 			J721S2_WKUP_IOPAD(0x048, PIN_INPUT, 0) /* (K35) WKUP_UART0_RXD */
- 			J721S2_WKUP_IOPAD(0x04c, PIN_INPUT, 0) /* (K34) WKUP_UART0_TXD */
- 		>;
+diff --git a/arch/arm/boot/dts/arm/arm-realview-pb1176.dts b/arch/arm/boot/dts/arm/arm-realview-pb1176.dts
+index efed325af88d2..d99bac02232b3 100644
+--- a/arch/arm/boot/dts/arm/arm-realview-pb1176.dts
++++ b/arch/arm/boot/dts/arm/arm-realview-pb1176.dts
+@@ -451,7 +451,7 @@ pb1176_serial3: serial@1010f000 {
+ 
+ 		/* Direct-mapped development chip ROM */
+ 		pb1176_rom@10200000 {
+-			compatible = "direct-mapped";
++			compatible = "mtd-rom";
+ 			reg = <0x10200000 0x4000>;
+ 			bank-width = <1>;
+ 		};
 -- 
 2.43.0
 
