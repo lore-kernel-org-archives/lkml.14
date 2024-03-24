@@ -1,71 +1,30 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B4615E89
-	for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 10:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EEF7168B9;
+	Sun, 24 Mar 2024 10:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711276071; cv=none; b=OIXXXqWfyqOEXSXTUp91bWGF5JX1ioFZon1FNK8/nj5BBzD+LxFYdPBsKmE2Ichkg6hlLYpknxjO/uWa99ut8IRjffK1vPrNVdX97D7BCknbkWIUVI4L6Nw3WFIFNQfFxfz8rbKU/aPc5q3AVds6/rqtvIH2FQ6FLJdTPJ3sOII=
+	t=1711276100; cv=none; b=FOpH4tK3H5K3ECdiKqjTRqdsGapUsxlbd5vNQe9jSTwcadxF3xWGb3V7U/8VLQUe+WwY38asIDuQnx8W80xxRlzlLYi6+dLSrOKC46WdpjelTb+4a+YjIv6Vd+u6ucSPWrfll3+9uYD4YfgZWxMG+VKvRb1QYKXOqBOQuyJls1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711276071; c=relaxed/simple;
-	bh=g5o4Usv6iCgLDxofD0zUG1xxJtGV/DtXPWmHDLxqyrQ=;
+	s=arc-20240116; t=1711276100; c=relaxed/simple;
+	bh=R92CvuI0wRWplyImURWd+63ngxUZuydpFkQzB8D+C8Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YrCOCUpSDrh6XktYOfJtXCzHuMhXwMHVrBYOJhtIsl/IXzrkhONgu2uQnQRvhK1GQN8+EAw8ZU2kdXEWsRNFPy0cnY81dvFEst5FSU6xJkvBNbYB3PaC5fTxh5A6Rpj5eFgDVIj5dnkfyJ8QZL7xwxsZNytX8g6fFrg0ehj3WNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a88nlKwt; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a88nlKwt"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-513e89d0816so4307449e87.0
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 03:27:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711276068; x=1711880868; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bauhf/2rjBkok/hrNxsx2Lp6yFKty71agj7qYN59Fb4=;
-        b=a88nlKwtLMDtpmkVgKn7iCcZLp4xcfsLF/PRb8fI2tUjrpxa+XHAKfL3mLDzVOXIe2
-         zXwW8hpfWOijIvX+eWHB9gdtY2z6cMrHIm9NrTyCPvmiY+I1JtqyECoyIIQ9uAfDuA1s
-         ihSOvWluIfTsuQ4UzRzMRbZyHNC3DT59tP8BqDQFoThBgRFdji1CCDb91DmBOTXdvsF8
-         Y/RdhXMKZ9A6XTnHdBjvtVr51CuQLmxflcUacyVloz2gIsQVmVfVVis6rqK9tUmHa+1W
-         I8qQE40s0AARbFnEHIEaqlk0JTDABlAhS/BUgpjgT+JRECapAXDHmuB8MN4wdhVYAeuM
-         UzhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711276068; x=1711880868;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bauhf/2rjBkok/hrNxsx2Lp6yFKty71agj7qYN59Fb4=;
-        b=qOv4vQz6QgDv/FE3K7baiLOl2Y2YLHPreSfK2EgkGNtnYb28cn6rsQ6lzNwgrLV+ei
-         150HwCvXhkzLcbaEr1Q9G5E01VNCiphpj+2XnDRq/jYRI1Y1XII2rTLdMN4ctx8KvJdH
-         9ikJedbarhqyL+m8PfE+LkZAFA8PFPU3N1sFEh7Dyl3bZwBvgtDOIrmwNwa9KM75wyfC
-         FCQUKTUtwVXGLx/dq3Nih13S5pbRt0lzPZW+MgDxqvPV6/T1+aPP2U8W3DzcrNQ01dHf
-         BffsKU21rW3mm/iVcMiftZY1d4ctN+k5nI+c+FZotO7ET/a1djGDVYZhi6PtMNkGVDeP
-         cp2g==
-X-Forwarded-Encrypted: i=1; AJvYcCXh5vlY/eBVtqXQ7GIV5A6m7tKk696+B8FylAeXTo4gw7ix8R5dNL2qMEGAl9WM6bir2iau3CtX+DHPV+Gf25msclxkgsUaghLBGuVI
-X-Gm-Message-State: AOJu0Yw4kwsF1XDPPqDSdHixrr/hW9HV/ZQ6FuvCTUvEQqdtXR83vWW/
-	22xCF53cDE/1odrhRHwMguKiYquBHWJbbBhSVOv26p/gatRsyqrQ
-X-Google-Smtp-Source: AGHT+IFqkThVpXulVzVhNJekNUYVHumLnBKOTdbzFKyjcLlJN4lf7UbH8vVeWJuT2lsfD35b007Cug==
-X-Received: by 2002:ac2:4643:0:b0:513:4705:a4f3 with SMTP id s3-20020ac24643000000b005134705a4f3mr2753394lfo.65.1711276067486;
-        Sun, 24 Mar 2024 03:27:47 -0700 (PDT)
-Received: from gmail.com (195-38-112-2.pool.digikabel.hu. [195.38.112.2])
-        by smtp.gmail.com with ESMTPSA id r18-20020a05600c35d200b00414808dea22sm1107606wmq.0.2024.03.24.03.27.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Mar 2024 03:27:46 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Sun, 24 Mar 2024 11:27:44 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-	akpm@linux-foundation.org, chenhuacai@loongson.cn,
-	dyoung@redhat.com, jbohac@suse.cz, lihuafei1@huawei.com,
-	chenhaixiang3@huawei.com
-Subject: Re: [PATCH] crash: use macro to add crashk_res into iomem early for
- specific arch
-Message-ID: <ZgAAIB6H+7+t7YpW@gmail.com>
-References: <20240324033513.1027427-1-bhe@redhat.com>
- <Zf+m4YtKtmdrjw4Q@gmail.com>
- <Zf/51a+QonYj6sI7@MiWiFi-R3L-srv>
+	 Content-Type:Content-Disposition:In-Reply-To; b=WwE1DPV/FU6RIdYyrA2k7Qf2xsBcOybC0co9wj1oQ2vR5oNVIR6y6YYrUTFdaJ+uBK+f746Z5LKsOSMJbjkOWKAE20H7mG3DdbJxCuvyPyhKub3A4WgNEaXmVbQKS9Yfd+Jc92BGuXC+Zd+k/x1ui9i2yYC7EnlcfG+Cj+ubEKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1roKme-0008DD-00; Sun, 24 Mar 2024 11:08:56 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 8DA64C0267; Sun, 24 Mar 2024 10:37:54 +0100 (CET)
+Date: Sun, 24 Mar 2024 10:37:54 +0100
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: mengfanhui <mengfanhui@kylinos.cn>
+Cc: geert+renesas@glider.be, linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] config/mips: support zswap function
+Message-ID: <Zf/0clNxqiEUb0VS@alpha.franken.de>
+References: <20240126075547.1521556-1-mengfanhui@kylinos.cn>
+ <a38359d5-0fde-439c-bc04-3452a34482da@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,58 +33,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zf/51a+QonYj6sI7@MiWiFi-R3L-srv>
+In-Reply-To: <a38359d5-0fde-439c-bc04-3452a34482da@kylinos.cn>
 
+On Wed, Mar 20, 2024 at 10:00:49AM +0800, mengfanhui wrote:
+> Who will be responsible for reviewing this? This is a necessary feature of the kernel that many testing agencies need to test
 
-* Baoquan He <bhe@redhat.com> wrote:
+so they should add it to their kernel config. I don't see why a default config
+should collect every bell and whistle somebody out in the world needs.
 
-> On 03/24/24 at 05:06am, Ingo Molnar wrote:
-> > 
-> > * Baoquan He <bhe@redhat.com> wrote:
-> > 
-> ......snip
-> > > ---
-> > >  arch/x86/include/asm/crash_reserve.h | 2 ++
-> > >  kernel/crash_reserve.c               | 7 +++++++
-> > >  2 files changed, 9 insertions(+)
-> > > 
-> > > diff --git a/arch/x86/include/asm/crash_reserve.h b/arch/x86/include/asm/crash_reserve.h
-> > > index 152239f95541..4681a543eba3 100644
-> > > --- a/arch/x86/include/asm/crash_reserve.h
-> > > +++ b/arch/x86/include/asm/crash_reserve.h
-> > > @@ -39,4 +39,6 @@ static inline unsigned long crash_low_size_default(void)
-> > >  #endif
-> > >  }
-> > >  
-> > > +# define HAVE_ARCH_ADD_CRASH_RES_TO_IOMEM_EARLY
-> > > +
-> > 
-> > Any reason for that stray space?
-> 
-> No clear reason. I saw stray space was added for macro definning when my
-> below patch was merged, not sure if this is preferred.
+Thomas.
 
-No, it's not preferred - and I don't see any stray spaces added in the 
-code added by:
-
-> commit 85fcde402db1 ("kexec: split crashkernel reservation code out from crash_core.c")
-
-Anyway, please just remove it.
-
-> And there are a lot of "# define " when searching with 'git grep "# 
-> define " arch/x86/include/'.
-
-The overwhelming majority of those are not standalone defines like 
-yours, but nested/conditional defines where the space is justified:
-
-#ifdef CONFIG_X86_32
-# define MAX_IO_APICS 64
-# define MAX_LOCAL_APIC 256
-#else
-# define MAX_IO_APICS 128
-# define MAX_LOCAL_APIC 32768
-#endif
-
-Thanks,
-
-	Ingo
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
