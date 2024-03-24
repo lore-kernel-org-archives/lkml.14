@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761B2174977;
-	Sun, 24 Mar 2024 23:35:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47EA174ED2;
+	Sun, 24 Mar 2024 23:35:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323316; cv=none; b=tgz2TSOWzdDL9PV5eaKcljSsYdaAGbeCeph9peVBCIt5JzHpATJ2W65nC2uxRJVBDdaLD7RY9QeEsvFR+PGAW4OpDvekuJGcBEhc8jvB5K25V8anmjZij/nT84gCDaON2rMhSgOK7WMGuB1v+67EzTIupo75BU1XVIsl7WG4Vf8=
+	t=1711323326; cv=none; b=kvLzGZ7U81hfbZw2d7iyxqOTdydTFD83zcQ3fntaIQpmgkKkuaSNgeVeDBgAwt0kVjIITwy/iW59FLgd10zk9F6qTkmlMpbsJJf8jWfRCAN0Fb2nUR/hP1v/wUFtPme7EmZWK6afLWjSTzBmNIlp+JlD8SuOq0ZdDNyYi9d3mb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323316; c=relaxed/simple;
-	bh=Ifa5IzyFNPy2F0ERf9CRSKVTAjr0fTtnABmLN3lY9NA=;
+	s=arc-20240116; t=1711323326; c=relaxed/simple;
+	bh=gAqdm49DZG7gHX8FLf99AYsnKM/Po+UYbJY+eyoQle0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Gffia+PTWp6YKBitvRSM2lIde5k1jrX+vBDrVQSdKCOvw6xvIAf3vm8QlpNH4bmm4IEUGH2gz26y07iYDNrKpri3LPFWQNJUlabH9Mxu1RIdamhmb3eW2MmIY8/2Z1xg57zGOoaqaO4PJ7YMlPo7ABoAM7+m7jY2f6ib8FsdG3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JVHSe2I8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Ln0RZRK8jh3/uPqHe7bL+uMf0qva90BxkC5HbMfES3TMeBr7iUWfOo3hjj7nQCewumaOapW4R/Qr3USrgkffiJDBG0AxarajlXCqNtukyKWyiqbHqNEndRUuYGxljWb9SXJtHBIi4zmO+56mWX7kgJBMIXLICeZVNaTtft3ftEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fptCTFpw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JVHSe2I8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F920C43394;
-	Sun, 24 Mar 2024 23:35:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fptCTFpw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A787C433A6;
+	Sun, 24 Mar 2024 23:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323315;
-	bh=Ifa5IzyFNPy2F0ERf9CRSKVTAjr0fTtnABmLN3lY9NA=;
+	s=k20201202; t=1711323324;
+	bh=gAqdm49DZG7gHX8FLf99AYsnKM/Po+UYbJY+eyoQle0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JVHSe2I81X1EQwf0YL+moc/IdJkikpeR7aljbedAGhIJETOAmhslXFhAr60KMtJC6
-	 wmPv496cBUVLxg/3HFExfB9WUOOhjSgloUzDqnH1kBgywMD6AVyeG0QQInjJGr4hUP
-	 ivpyrXbJAAltybhwvB+kC7IUu07TeMm10USCqaM3QTR/Yt9ML2sZosk2+9aCwpvBB5
-	 /mDTdPFDk7PbLDcaaVoWHzp+1fLm0dapFbH6JfWLwLCxCCJItUXzp07nWkx71o+cvb
-	 7d4K+JYLMacGKmdLZiLtGkwmZKhcAG92eaG5h3sI3WdImMDm+RYgjXVfMOIq8U0Nj1
-	 uqrOpmTVGRTjA==
+	b=fptCTFpwxF+yiTOQft/RcW2DAuDJBSfEen6HPrQvJwfvp2/GyvYV0claeDUWvDtG7
+	 0/8SJ2j+5d9eVniS9BRb7ZRKhG9LxWbH6SUsf/LGGrmKIBR7CJU7o/R9FvOAOWsqoJ
+	 atDUjuckdJbKB9NKGR/rlQC3fhaHgSU4erWRjuLMNEgJL4ariIHMO6Td4xJIEILuO1
+	 WRZagIXB2HYWGr5a7p5Vm3TJyTql00o2nNdadlS3Yrdbi4MPMoGbSqBvWE09dpbKP1
+	 uCkIbXEDP/b5C3z9lrjH0D31Ryu+s011sHXViTQK9+E1+0TlMNpDuRAjFQST7P+rRa
+	 t8zxKpwSByLqw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hou Tao <houtao1@huawei.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Alexei Starovoitov <ast@kernel.org>,
+Cc: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	Adam Goldman <adamg@pobox.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 015/317] x86/mm: Move is_vsyscall_vaddr() into asm/vsyscall.h
-Date: Sun, 24 Mar 2024 19:29:55 -0400
-Message-ID: <20240324233458.1352854-16-sashal@kernel.org>
+Subject: [PATCH 5.15 025/317] firewire: core: use long bus reset on gap count error
+Date: Sun, 24 Mar 2024 19:30:05 -0400
+Message-ID: <20240324233458.1352854-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,69 +48,63 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Hou Tao <houtao1@huawei.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-[ Upstream commit ee0e39a63b78849f8abbef268b13e4838569f646 ]
+[ Upstream commit d0b06dc48fb15902d7da09c5c0861e7f042a9381 ]
 
-Move is_vsyscall_vaddr() into asm/vsyscall.h to make it available for
-copy_from_kernel_nofault_allowed() in arch/x86/mm/maccess.c.
+When resetting the bus after a gap count error, use a long rather than
+short bus reset.
 
-Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Link: https://lore.kernel.org/r/20240202103935.3154011-2-houtao@huaweicloud.com
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+IEEE 1394-1995 uses only long bus resets. IEEE 1394a adds the option of
+short bus resets. When video or audio transmission is in progress and a
+device is hot-plugged elsewhere on the bus, the resulting bus reset can
+cause video frame drops or audio dropouts. Short bus resets reduce or
+eliminate this problem. Accordingly, short bus resets are almost always
+preferred.
+
+However, on a mixed 1394/1394a bus, a short bus reset can trigger an
+immediate additional bus reset. This double bus reset can be interpreted
+differently by different nodes on the bus, resulting in an inconsistent gap
+count after the bus reset. An inconsistent gap count will cause another bus
+reset, leading to a neverending bus reset loop. This only happens for some
+bus topologies, not for all mixed 1394/1394a buses.
+
+By instead sending a long bus reset after a gap count inconsistency, we
+avoid the doubled bus reset, restoring the bus to normal operation.
+
+Signed-off-by: Adam Goldman <adamg@pobox.com>
+Link: https://sourceforge.net/p/linux1394/mailman/message/58741624/
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/vsyscall.h | 10 ++++++++++
- arch/x86/mm/fault.c             |  9 ---------
- 2 files changed, 10 insertions(+), 9 deletions(-)
+ drivers/firewire/core-card.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/vsyscall.h b/arch/x86/include/asm/vsyscall.h
-index ab60a71a8dcb9..472f0263dbc61 100644
---- a/arch/x86/include/asm/vsyscall.h
-+++ b/arch/x86/include/asm/vsyscall.h
-@@ -4,6 +4,7 @@
- 
- #include <linux/seqlock.h>
- #include <uapi/asm/vsyscall.h>
-+#include <asm/page_types.h>
- 
- #ifdef CONFIG_X86_VSYSCALL_EMULATION
- extern void map_vsyscall(void);
-@@ -24,4 +25,13 @@ static inline bool emulate_vsyscall(unsigned long error_code,
- }
- #endif
- 
-+/*
-+ * The (legacy) vsyscall page is the long page in the kernel portion
-+ * of the address space that has user-accessible permissions.
-+ */
-+static inline bool is_vsyscall_vaddr(unsigned long vaddr)
-+{
-+	return unlikely((vaddr & PAGE_MASK) == VSYSCALL_ADDR);
-+}
-+
- #endif /* _ASM_X86_VSYSCALL_H */
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 4bfed53e210ec..abc6fbc3d5f21 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -787,15 +787,6 @@ show_signal_msg(struct pt_regs *regs, unsigned long error_code,
- 	show_opcodes(regs, loglvl);
- }
- 
--/*
-- * The (legacy) vsyscall page is the long page in the kernel portion
-- * of the address space that has user-accessible permissions.
-- */
--static bool is_vsyscall_vaddr(unsigned long vaddr)
--{
--	return unlikely((vaddr & PAGE_MASK) == VSYSCALL_ADDR);
--}
--
- static void
- __bad_area_nosemaphore(struct pt_regs *regs, unsigned long error_code,
- 		       unsigned long address, u32 pkey, int si_code)
+diff --git a/drivers/firewire/core-card.c b/drivers/firewire/core-card.c
+index be195ba834632..d446a72629414 100644
+--- a/drivers/firewire/core-card.c
++++ b/drivers/firewire/core-card.c
+@@ -500,7 +500,19 @@ static void bm_work(struct work_struct *work)
+ 		fw_notice(card, "phy config: new root=%x, gap_count=%d\n",
+ 			  new_root_id, gap_count);
+ 		fw_send_phy_config(card, new_root_id, generation, gap_count);
+-		reset_bus(card, true);
++		/*
++		 * Where possible, use a short bus reset to minimize
++		 * disruption to isochronous transfers. But in the event
++		 * of a gap count inconsistency, use a long bus reset.
++		 *
++		 * As noted in 1394a 8.4.6.2, nodes on a mixed 1394/1394a bus
++		 * may set different gap counts after a bus reset. On a mixed
++		 * 1394/1394a bus, a short bus reset can get doubled. Some
++		 * nodes may treat the double reset as one bus reset and others
++		 * may treat it as two, causing a gap count inconsistency
++		 * again. Using a long bus reset prevents this.
++		 */
++		reset_bus(card, card->gap_count != 0);
+ 		/* Will allocate broadcast channel after the reset. */
+ 		goto out;
+ 	}
 -- 
 2.43.0
 
